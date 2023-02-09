@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ theorem algebraMap_eq : algebraMap R A = (algebraMap S A).comp (algebraMap R S) 
 #align is_scalar_tower.algebra_map_eq IsScalarTower.algebraMap_eq
 
 theorem algebraMap_apply (x : R) : algebraMap R A x = algebraMap S A (algebraMap R S x) := by
-  rw [algebra_map_eq R S A, RingHom.comp_apply]
+  rw [algebraMap_eq R S A, RingHom.comp_apply]
 #align is_scalar_tower.algebra_map_apply IsScalarTower.algebraMap_apply
 
 @[ext]
@@ -119,7 +119,7 @@ theorem Algebra.ext {S : Type u} {A : Type v} [CommSemiring S] [Semiring A] (h1 
           r • x) :
     h1 = h2 :=
   Algebra.algebra_ext _ _ fun r => by
-    simpa only [@Algebra.smul_def _ _ _ _ h1, @Algebra.smul_def _ _ _ _ h2, mul_one] using h r 1
+    simpa only [@algebra.smul_def _ _ _ _ h1, @algebra.smul_def _ _ _ _ h2, mul_one] using h r 1
 #align is_scalar_tower.algebra.ext IsScalarTower.Algebra.ext
 
 /-- In a tower, the canonical map from the middle element to the top element is an
@@ -146,7 +146,7 @@ variable {R S A B}
 
 @[simp]
 theorem AlgHom.map_algebraMap (f : A →ₐ[S] B) (r : R) : f (algebraMap R A r) = algebraMap R B r :=
-  by rw [algebra_map_apply R S A r, f.commutes, ← algebra_map_apply R S B]
+  by rw [algebraMap_apply R S A r, f.commutes, ← algebraMap_apply R S B]
 #align alg_hom.map_algebra_map AlgHom.map_algebraMap
 
 variable (R)
@@ -169,7 +169,7 @@ instance of_ring_hom {R A B : Type _} [CommSemiring R] [CommSemiring A] [CommSem
     [Algebra R A] [Algebra R B] (f : A →ₐ[R] B) :
     @IsScalarTower R A B _ f.toRingHom.toAlgebra.toSMul _ :=
   letI := (f : A →+* B).toAlgebra
-  of_algebra_map_eq fun x => (f.commutes x).symm
+  of_algebraMap_eq fun x => (f.commutes x).symm
 #align is_scalar_tower.of_ring_hom IsScalarTower.of_ring_hom
 
 end Semiring
@@ -195,9 +195,8 @@ namespace AlgHom
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A →ₐ[S] B) : A →ₐ[R] B :=
   { (f : A →+* B) with
-    commutes' := fun r =>
-      by
-      rw [algebra_map_apply R S A, algebra_map_apply R S B]
+    commutes' := fun r => by
+      rw [algebraMap_apply R S A, algebraMap_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_hom.restrict_scalars AlgHom.restrictScalars
 
@@ -227,9 +226,8 @@ namespace AlgEquiv
 /-- R ⟶ S induces S-Alg ⥤ R-Alg -/
 def restrictScalars (f : A ≃ₐ[S] B) : A ≃ₐ[R] B :=
   { (f : A ≃+* B) with
-    commutes' := fun r =>
-      by
-      rw [algebra_map_apply R S A, algebra_map_apply R S B]
+    commutes' := fun r => by
+      rw [algebraMap_apply R S A, algebraMap_apply R S B]
       exact f.commutes (algebraMap R S r) }
 #align alg_equiv.restrict_scalars AlgEquiv.restrictScalars
 
@@ -377,7 +375,7 @@ theorem map_mem_span_algebraMap_image {S T : Type _} [CommSemiring S] [Semiring 
     [Algebra R T] [Algebra S T] [IsScalarTower R S T] (x : S) (a : Set S)
     (hx : x ∈ Submodule.span R a) : algebraMap S T x ∈ Submodule.span R (algebraMap S T '' a) :=
   by
-  rw [span_algebra_map_image_of_tower, mem_map]
+  rw [span_algebraMap_image_of_tower, mem_map]
   exact ⟨x, hx, rfl⟩
 #align submodule.map_mem_span_algebra_map_image Submodule.map_mem_span_algebraMap_image
 

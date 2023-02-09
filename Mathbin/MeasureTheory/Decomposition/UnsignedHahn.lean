@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   by
   let d : Set α → ℝ := fun s => ((μ s).toNnreal : ℝ) - (ν s).toNnreal
   let c : Set ℝ := d '' { s | MeasurableSet s }
-  let γ : ℝ := Sup c
+  let γ : ℝ := supₛ c
   have hμ : ∀ s, μ s ≠ ∞ := measure_ne_top μ
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
   have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_toNnreal <| hμ _
@@ -66,23 +66,23 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     simp only [sub_eq_add_neg, neg_add]
     ac_rfl
   have d_Union :
-    ∀ s : ℕ → Set α, Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) :=
+    ∀ s : ℕ → Set α, Monotone s → Tendsto (fun n => d (s n)) atTop (𝓝 (d (⋃ n, s n))) :=
     by
     intro s hm
-    refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_toNnreal _).comp <| tendsto_measure_Union hm
+    refine' Tendsto.sub _ _ <;>
+      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_toNnreal _).comp <| tendsto_measure_unionᵢ hm
     exact hμ _
     exact hν _
   have d_Inter :
     ∀ s : ℕ → Set α,
       (∀ n, MeasurableSet (s n)) →
-        (∀ n m, n ≤ m → s m ⊆ s n) → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋂ n, s n))) :=
+        (∀ n m, n ≤ m → s m ⊆ s n) → Tendsto (fun n => d (s n)) atTop (𝓝 (d (⋂ n, s n))) :=
     by
     intro s hs hm
-    refine' tendsto.sub _ _ <;>
+    refine' Tendsto.sub _ _ <;>
       refine'
         Nnreal.tendsto_coe.2 <|
-          (Ennreal.tendsto_toNnreal <| _).comp <| tendsto_measure_Inter hs hm _
+          (Ennreal.tendsto_toNnreal <| _).comp <| tendsto_measure_interᵢ hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
     use (μ univ).toNnreal
@@ -90,7 +90,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     refine' le_trans (sub_le_self _ <| Nnreal.coe_nonneg _) _
     rw [Nnreal.coe_le_coe, ← Ennreal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
     exact measure_mono (subset_univ _)
-  have c_nonempty : c.nonempty := nonempty.image _ ⟨_, MeasurableSet.empty⟩
+  have c_nonempty : c.nonempty := Nonempty.image _ ⟨_, MeasurableSet.empty⟩
   have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_csupₛ bdd_c ⟨s, hs, rfl⟩
   have : ∀ n : ℕ, ∃ s : Set α, MeasurableSet s ∧ γ - (1 / 2) ^ n < d s :=
     by
@@ -112,7 +112,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro a b c d hab hcd
     dsimp only [f]
     rw [Finset.inf_eq_infᵢ, Finset.inf_eq_infᵢ]
-    exact bInter_subset_bInter_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
+    exact binterᵢ_subset_binterᵢ_left (Finset.Ico_subset_Ico hab <| Nat.succ_le_succ hcd)
   have f_succ : ∀ n m, n ≤ m → f n (m + 1) = f n m ∩ e (m + 1) :=
     by
     intro n m hnm
@@ -154,28 +154,28 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
   let s := ⋃ m, ⋂ n, f m n
   have γ_le_d_s : γ ≤ d s :=
     by
-    have hγ : tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 γ) :=
+    have hγ : Tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) atTop (𝓝 γ) :=
       by
-      suffices tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 (γ - 2 * 0)) by simpa
+      suffices Tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) atTop (𝓝 (γ - 2 * 0)) by simpa
       exact
         tendsto_const_nhds.sub <|
           tendsto_const_nhds.mul <|
             tendsto_pow_atTop_nhds_0_of_lt_1 (le_of_lt <| half_pos <| zero_lt_one)
               (half_lt_self zero_lt_one)
-    have hd : tendsto (fun m => d (⋂ n, f m n)) at_top (𝓝 (d (⋃ m, ⋂ n, f m n))) :=
+    have hd : Tendsto (fun m => d (⋂ n, f m n)) atTop (𝓝 (d (⋃ m, ⋂ n, f m n))) :=
       by
       refine' d_Union _ _
       exact fun n m hnm =>
-        subset_Inter fun i => subset.trans (Inter_subset (f n) i) <| f_subset_f hnm <| le_rfl
+        subset_interᵢ fun i => Subset.trans (interᵢ_subset (f n) i) <| f_subset_f hnm <| le_rfl
     refine' le_of_tendsto_of_tendsto' hγ hd fun m => _
-    have : tendsto (fun n => d (f m n)) at_top (𝓝 (d (⋂ n, f m n))) :=
+    have : Tendsto (fun n => d (f m n)) atTop (𝓝 (d (⋂ n, f m n))) :=
       by
       refine' d_Inter _ _ _
       · intro n
         exact hf _ _
       · intro n m hnm
         exact f_subset_f le_rfl hnm
-    refine' ge_of_tendsto this (eventually_at_top.2 ⟨m, fun n hmn => _⟩)
+    refine' ge_of_tendsto this (eventually_atTop.2 ⟨m, fun n hmn => _⟩)
     change γ - 2 * (1 / 2) ^ m ≤ d (f m n)
     refine' le_trans _ (le_d_f _ _ hmn)
     exact le_add_of_le_of_nonneg le_rfl (pow_nonneg (le_of_lt <| half_pos <| zero_lt_one) _)

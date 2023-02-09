@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem toFun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
 
 @[continuity]
 theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
-  h.toFun.Continuous
+  h.toFun.continuous
 #align continuous_map.homotopy_equiv.continuous ContinuousMap.HomotopyEquiv.continuous
 
 end HomotopyEquiv
@@ -152,19 +152,19 @@ def trans (h₁ : X ≃ₕ Y) (h₂ : Y ≃ₕ Z) : X ≃ₕ Z
   toFun := h₂.toFun.comp h₁.toFun
   invFun := h₁.invFun.comp h₂.invFun
   left_inv := by
-    refine' homotopic.trans _ h₁.left_inv
+    refine' Homotopic.trans _ h₁.left_inv
     change (h₁.inv_fun.comp h₂.inv_fun).comp (h₂.to_fun.comp h₁.to_fun) with
       h₁.inv_fun.comp ((h₂.inv_fun.comp h₂.to_fun).comp h₁.to_fun)
-    refine' homotopic.hcomp _ (homotopic.refl _)
-    refine' homotopic.trans ((homotopic.refl _).hcomp h₂.left_inv) _
+    refine' Homotopic.hcomp _ (Homotopic.refl _)
+    refine' Homotopic.trans ((Homotopic.refl _).hcomp h₂.left_inv) _
     -- simp,
     rw [ContinuousMap.id_comp]
   right_inv := by
-    refine' homotopic.trans _ h₂.right_inv
+    refine' Homotopic.trans _ h₂.right_inv
     change (h₂.to_fun.comp h₁.to_fun).comp (h₁.inv_fun.comp h₂.inv_fun) with
       h₂.to_fun.comp ((h₁.to_fun.comp h₁.inv_fun).comp h₂.inv_fun)
-    refine' homotopic.hcomp _ (homotopic.refl _)
-    refine' homotopic.trans ((homotopic.refl _).hcomp h₁.right_inv) _
+    refine' Homotopic.hcomp _ (Homotopic.refl _)
+    refine' Homotopic.trans ((Homotopic.refl _).hcomp h₁.right_inv) _
     rw [id_comp]
 #align continuous_map.homotopy_equiv.trans ContinuousMap.HomotopyEquiv.trans
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 
 ! This file was ported from Lean 3 source module topology.instances.complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,13 +29,13 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
   by
   suffices range (coe : ℝ → ℂ) ⊆ K
     by
-    rw [range_subset_iff, ← coe_algebra_map] at this
+    rw [range_subset_iff, ← coe_algebraMap] at this
     have :=
       (Subalgebra.isSimpleOrder_of_finrank finrank_real_complex).eq_bot_or_eq_top
         (Subfield.toIntermediateField K this).toSubalgebra
     simp_rw [← SetLike.coe_set_eq] at this⊢
     convert this using 2
-    simpa only [RingHom.coe_fieldRange, Algebra.coe_bot, coe_algebra_map]
+    simpa only [RingHom.coe_fieldRange, Algebra.coe_bot, coe_algebraMap]
   suffices range (coe : ℝ → ℂ) ⊆ closure (Set.range ((coe : ℝ → ℂ) ∘ (coe : ℚ → ℝ)))
     by
     refine' subset_trans this _
@@ -53,7 +53,7 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
 continuous, then `ψ` is either the inclusion map or the composition of the inclusion map with the
 complex conjugation. -/
 theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ : K →+* ℂ}
-    (hc : UniformContinuous ψ) : ψ.toFun = K.Subtype ∨ ψ.toFun = conj ∘ K.Subtype :=
+    (hc : UniformContinuous ψ) : ψ.toFun = K.subtype ∨ ψ.toFun = conj ∘ K.subtype :=
   by
   letI : TopologicalDivisionRing ℂ := TopologicalDivisionRing.mk
   letI : TopologicalRing K.topological_closure :=
@@ -66,7 +66,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
   let di := ui.dense_inducing _
   · -- extψ : closure(K) →+* ℂ is the extension of ψ : K →+* ℂ
     let extψ := DenseInducing.extendRingHom ui di.dense hc
-    haveI := (uniformContinuous_uniformly_extend ui di.dense hc).Continuous
+    haveI := (uniformContinuous_uniformly_extend ui di.dense hc).continuous
     cases Complex.subfield_eq_of_closed (Subfield.isClosed_topologicalClosure K)
     · left
       let j := RingEquiv.subfieldCongr h
@@ -76,7 +76,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       ext1 x
       rsuffices ⟨r, hr⟩ : ∃ r : ℝ, of_real.range_restrict r = j (ι x)
       · have :=
-          RingHom.congr_fun (ring_hom_eq_of_real_of_continuous (by continuity! : Continuous ψ₁)) r
+          RingHom.congr_fun (ringHom_eq_ofReal_of_continuous (by continuity! : Continuous ψ₁)) r
         rw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this
         convert this using 1
         · exact (DenseInducing.extend_eq di hc.continuous _).symm
@@ -89,8 +89,8 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       let ψ₁ :=
         RingHom.comp extψ
           (RingHom.comp (RingEquiv.subfieldCongr h).symm.toRingHom
-            (@Subfield.topEquiv ℂ _).symm.toRingHom)
-      cases' ring_hom_eq_id_or_conj_of_continuous (by continuity! : Continuous ψ₁) with h h
+            (@subfield.top_equiv ℂ _).symm.toRingHom)
+      cases' ringHom_eq_id_or_conj_of_continuous (by continuity! : Continuous ψ₁) with h h
       · left
         ext1 z
         convert RingHom.congr_fun h z using 1
@@ -106,7 +106,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
         simpa only [id.def, Set.image_id'] ⟩
     convert
       DenseRange.comp (Function.Surjective.denseRange _)
-        (DenseEmbedding.subtype denseEmbedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
+        (DenseEmbedding.subtype dense_embedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
     rintro ⟨y, hy⟩
     use
       ⟨y, by

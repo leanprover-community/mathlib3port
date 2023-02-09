@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fun_like.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,7 +260,7 @@ but is expected to have type
   forall {F : Sort.{u3}} {α : Sort.{u2}} {β : α -> Sort.{u1}} [i : FunLike.{u3, u2, u1} F α β] {f : F} {g : F}, Iff (Ne.{u3} F f g) (Exists.{u2} α (fun (a : α) => Ne.{u1} (β a) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => β _x) i f a) (FunLike.coe.{u3, u2, u1} F α (fun (_x : α) => β _x) i g a)))
 Case conversion may be inaccurate. Consider using '#align fun_like.ne_iff FunLike.ne_iffₓ'. -/
 theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
-  ext_iff.Not.trans not_forall
+  ext_iff.not.trans not_forall
 #align fun_like.ne_iff FunLike.ne_iff
 
 /- warning: fun_like.exists_ne -> FunLike.exists_ne is a dubious translation:

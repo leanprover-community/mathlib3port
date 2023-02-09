@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.dihedral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,8 +27,8 @@ represents the rotations of the `n`-gon by `2πi/n`, and `sr i` represents the r
 the `n`-gon. `dihedral_group 0` corresponds to the infinite dihedral group.
 -/
 inductive DihedralGroup (n : ℕ) : Type
-  | r : ZMod n → DihedralGroup
-  | sr : ZMod n → DihedralGroup
+  | r : ZMod n → dihedral_group
+  | sr : ZMod n → dihedral_group
   deriving DecidableEq
 #align dihedral_group DihedralGroup
 
@@ -113,8 +113,8 @@ private def fintype_helper : Sum (ZMod n) (ZMod n) ≃ DihedralGroup n
     | sr j => Sum.inr j
   toFun i :=
     match i with
-    | Sum.inl j => r j
-    | Sum.inr j => sr j
+    | sum.inl j => r j
+    | sum.inr j => sr j
   left_inv := by rintro (x | x) <;> rfl
   right_inv := by rintro (x | x) <;> rfl
 #align dihedral_group.fintype_helper dihedral_group.fintype_helper
@@ -130,7 +130,7 @@ instance : Nontrivial (DihedralGroup n) :=
 /-- If `0 < n`, then `dihedral_group n` has `2n` elements.
 -/
 theorem card [NeZero n] : Fintype.card (DihedralGroup n) = 2 * n := by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, ZMod.card, two_mul]
+  rw [← fintype.card_eq.mpr ⟨fintypeHelper⟩, Fintype.card_sum, ZMod.card, two_mul]
 #align dihedral_group.card DihedralGroup.card
 
 @[simp]
@@ -188,7 +188,7 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
     rw [r_one_pow] at h1
     injection h1 with h2
     rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
-    exact absurd h2.symm (orderOf_pos _).Ne
+    exact absurd h2.symm (orderOf_pos _).ne
 #align dihedral_group.order_of_r_one DihedralGroup.orderOf_r_one
 
 /-- If `0 < n`, then `i : zmod n` has order `n / gcd n i`.
@@ -196,27 +196,27 @@ theorem orderOf_r_one : orderOf (r 1 : DihedralGroup n) = n :=
 theorem orderOf_r [NeZero n] (i : ZMod n) : orderOf (r i) = n / Nat.gcd n i.val :=
   by
   conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
-  rw [← r_one_pow, orderOf_pow, order_of_r_one]
+  rw [← r_one_pow, orderOf_pow, orderOf_r_one]
 #align dihedral_group.order_of_r DihedralGroup.orderOf_r
 
 theorem exponent : Monoid.exponent (DihedralGroup n) = lcm n 2 :=
   by
   rcases eq_zero_or_neZero n with (rfl | hn)
-  · exact Monoid.exponent_eq_zero_of_order_zero order_of_r_one
+  · exact Monoid.exponent_eq_zero_of_order_zero orderOf_r_one
   skip
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
-    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_r]
+    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_r]
       refine' Nat.dvd_trans ⟨gcd n m.val, _⟩ (dvd_lcm_left n 2)
       · exact (Nat.div_mul_cancel (Nat.gcd_dvd_left n m.val)).symm
-    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_sr]
+    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_sr]
       exact dvd_lcm_right n 2
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (r 1)
       exact order_of_r_one.symm
     · convert Monoid.order_dvd_exponent (sr 0)
-      exact (order_of_sr 0).symm
+      exact (orderOf_sr 0).symm
 #align dihedral_group.exponent DihedralGroup.exponent
 
 end DihedralGroup

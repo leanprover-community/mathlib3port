@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 
 ! This file was ported from Lean 3 source module field_theory.separable_degree
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f 
   by
   obtain ⟨m, rfl⟩ := hf.2
   use m
-  rw [nat_degree_expand]
+  rw [natDegree_expand]
 #align polynomial.is_separable_contraction.dvd_degree' Polynomial.IsSeparableContraction.dvd_degree'
 
 theorem HasSeparableContraction.dvd_degree' : ∃ m : ℕ, hf.degree * q ^ m = f.natDegree :=
@@ -114,7 +114,7 @@ theorem Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[
   by
   cases hF
   · exact ⟨f, irred.separable, ⟨0, by rw [pow_zero, expand_one]⟩⟩
-  · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
+  · rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
 #align irreducible.has_separable_contraction Irreducible.hasSeparableContraction
 
@@ -128,9 +128,9 @@ theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X])
   obtain ⟨s, rfl⟩ := exists_add_of_le hm
   rw [pow_add, expand_mul, expand_inj (pow_pos (NeZero.pos q) m)] at h_expand
   subst h_expand
-  rcases is_unit_or_eq_zero_of_separable_expand q s (NeZero.pos q) hg with (h | rfl)
-  · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, zero_mul]
-  · rw [nat_degree_expand, pow_zero, mul_one]
+  rcases isUnit_or_eq_zero_of_separable_expand q s (NeZero.pos q) hg with (h | rfl)
+  · rw [natDegree_expand, natDegree_eq_zero_of_isUnit h, zero_mul]
+  · rw [natDegree_expand, pow_zero, mul_one]
 #align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insep
 
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/

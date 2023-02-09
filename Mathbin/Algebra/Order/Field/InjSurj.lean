@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.inj_surj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y))
     (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) : LinearOrderedSemifield β :=
-  { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
-    hf.Semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
+  { hf.linearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
+    hf.semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
 #align function.injective.linear_ordered_semifield Function.Injective.linearOrderedSemifield
 
 /- warning: function.injective.linear_ordered_field -> Function.Injective.linearOrderedField is a dubious translation:
@@ -68,8 +68,8 @@ def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedField β :=
-  { hf.LinearOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast hsup hinf,
-    hf.Field f zero one add mul neg sub inv div nsmul zsmul qsmul npow zpow nat_cast int_cast
+  { hf.linearOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast hsup hinf,
+    hf.field f zero one add mul neg sub inv div nsmul zsmul qsmul npow zpow nat_cast int_cast
       rat_cast with }
 #align function.injective.linear_ordered_field Function.Injective.linearOrderedField
 

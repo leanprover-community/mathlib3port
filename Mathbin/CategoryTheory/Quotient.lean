@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,17 +63,17 @@ inductive CompClosure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
 #align category_theory.quotient.comp_closure CategoryTheory.Quotient.CompClosure
 
 theorem CompClosure.of {a b} (m₁ m₂ : a ⟶ b) (h : r m₁ m₂) : CompClosure r m₁ m₂ := by
-  simpa using comp_closure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
+  simpa using CompClosure.intro (𝟙 _) m₁ m₂ (𝟙 _) h
 #align category_theory.quotient.comp_closure.of CategoryTheory.Quotient.CompClosure.of
 
 theorem comp_left {a b c : C} (f : a ⟶ b) :
     ∀ (g₁ g₂ : b ⟶ c) (h : CompClosure r g₁ g₂), CompClosure r (f ≫ g₁) (f ≫ g₂)
-  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
+  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using CompClosure.intro (f ≫ x) m₁ m₂ y h
 #align category_theory.quotient.comp_left CategoryTheory.Quotient.comp_left
 
 theorem comp_right {a b c : C} (g : b ⟶ c) :
     ∀ (f₁ f₂ : a ⟶ b) (h : CompClosure r f₁ f₂), CompClosure r (f₁ ≫ g) (f₂ ≫ g)
-  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
+  | _, _, ⟨x, m₁, m₂, y, h⟩ => by simpa using CompClosure.intro x m₁ m₂ (y ≫ g) h
 #align category_theory.quotient.comp_right CategoryTheory.Quotient.comp_right
 
 /-- Hom-sets of the quotient category. -/
@@ -132,7 +132,7 @@ protected theorem induction {P : ∀ {a b : Quotient r}, (a ⟶ b) → Prop}
 
 protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) :
     (functor r).map f₁ = (functor r).map f₂ := by
-  simpa using Quot.sound (comp_closure.intro (𝟙 a) f₁ f₂ (𝟙 b) h)
+  simpa using Quot.sound (CompClosure.intro (𝟙 a) f₁ f₂ (𝟙 b) h)
 #align category_theory.quotient.sound CategoryTheory.Quotient.sound
 
 theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) :
@@ -143,8 +143,8 @@ theorem functor_map_eq_iff [Congruence r] {X Y : C} (f f' : X ⟶ Y) :
     intro h
     induction' h with m m' hm
     · cases hm
-      apply congruence.comp_left
-      apply congruence.comp_right
+      apply Congruence.comp_left
+      apply Congruence.comp_right
       assumption
     · apply refl
     · apply symm
@@ -185,17 +185,17 @@ theorem lift_spec : functor r ⋙ lift r F H = F :=
 theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H :=
   by
   subst_vars
-  apply functor.hext
+  apply Functor.hext
   · rintro X
-    dsimp [lift, Functor]
+    dsimp [lift, functor]
     congr
     ext
     rfl
   · rintro X Y f
-    dsimp [lift, Functor]
+    dsimp [lift, functor]
     apply Quot.inductionOn f
     rintro ff
-    simp only [Quot.liftOn_mk, functor.comp_map]
+    simp only [Quot.liftOn_mk, Functor.comp_map]
     congr <;> ext <;> rfl
 #align category_theory.quotient.lift_unique CategoryTheory.Quotient.lift_unique
 
@@ -205,7 +205,7 @@ def lift.isLift : functor r ⋙ lift r F H ≅ F :=
 #align category_theory.quotient.lift.is_lift CategoryTheory.Quotient.lift.isLift
 
 @[simp]
-theorem lift.isLift_hom (X : C) : (lift.isLift r F H).Hom.app X = 𝟙 (F.obj X) :=
+theorem lift.isLift_hom (X : C) : (lift.isLift r F H).hom.app X = 𝟙 (F.obj X) :=
   rfl
 #align category_theory.quotient.lift.is_lift_hom CategoryTheory.Quotient.lift.isLift_hom
 
@@ -217,7 +217,7 @@ theorem lift.isLift_inv (X : C) : (lift.isLift r F H).inv.app X = 𝟙 (F.obj X)
 theorem lift_map_functor_map {X Y : C} (f : X ⟶ Y) :
     (lift r F H).map ((functor r).map f) = F.map f :=
   by
-  rw [← nat_iso.naturality_1 (lift.is_lift r F H)]
+  rw [← NatIso.naturality_1 (lift.isLift r F H)]
   dsimp
   simp
 #align category_theory.quotient.lift_map_functor_map CategoryTheory.Quotient.lift_map_functor_map

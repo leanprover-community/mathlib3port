@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ instance hasZero : Zero (ModularForm Γ k) :=
         SlashInvariantForm Γ
           k) with
       holo' := fun _ => mdifferentiableAt_const 𝓘(ℂ, ℂ) 𝓘(ℂ, ℂ)
-      bdd_at_infty' := fun A => by simpa using zero_form_is_bounded_at_im_infty }⟩
+      bdd_at_infty' := fun A => by simpa using zero_form_isBoundedAtImInfty }⟩
 #align modular_form.has_zero ModularForm.hasZero
 
 @[simp]
@@ -253,7 +253,7 @@ theorem sub_apply (f g : ModularForm Γ k) (z : ℍ) : (f - g) z = f z - g z :=
 #align modular_form.sub_apply ModularForm.sub_apply
 
 instance : AddCommGroup (ModularForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  FunLike.coe_injective.addCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 /-- Additive coercion from `modular_form` to `ℍ → ℂ`. -/
 @[simps]
@@ -398,7 +398,7 @@ theorem sub_apply (f g : CuspForm Γ k) (z : ℍ) : (f - g) z = f z - g z :=
 #align cusp_form.sub_apply CuspForm.sub_apply
 
 instance : AddCommGroup (CuspForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  FunLike.coe_injective.addCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 /-- Additive coercion from `cusp_form` to `ℍ → ℂ`. -/
 @[simps]
@@ -420,7 +420,7 @@ instance (priority := 99) [CuspFormClass F Γ k] : ModularFormClass F Γ k
   coe_injective' := FunLike.coe_injective'
   slash_action_eq := CuspFormClass.slash_action_eq
   holo := CuspFormClass.holo
-  bdd_at_infty _ _ := (CuspFormClass.zero_at_infty _ _).BoundedAtFilter
+  bdd_at_infty _ _ := (CuspFormClass.zero_at_infty _ _).boundedAtFilter
 
 end CuspForm
 

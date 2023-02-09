@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.binder_matching
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ binder.
 @[inline]
 unsafe def get_binder (do_whnf : Option (Transparency × Bool)) (pi_or_lambda : Bool) (e : expr) :
     tactic (Option (Name × BinderInfo × expr × expr)) := do
-  let e ← do_whnf.elim (pure e) fun p => whnf e p.1 p.2
+  let e ← do_whnf.elim' (pure e) fun p => whnf e p.1 p.2
   pure <| if pi_or_lambda then match_pi e else match_lam e
 #align tactic.get_binder tactic.get_binder
 
@@ -94,7 +94,7 @@ constant with `b`'s display name, `binder_info` and type; otherwise a fresh
 metavariable with `b`'s type.
 -/
 unsafe def mk_binder_replacement (local_or_meta : Bool) (b : binder) : tactic expr :=
-  if local_or_meta then mk_local' b.Name b.info b.type else mk_meta_var b.type
+  if local_or_meta then mk_local' b.name b.info b.type else mk_meta_var b.type
 #align tactic.mk_binder_replacement tactic.mk_binder_replacement
 
 /-- `open_binders` is a generalisation of functions like `open_pis`,
@@ -114,9 +114,9 @@ binders.
 -/
 unsafe def open_binders (do_whnf : Option (Transparency × Bool)) (pis_or_lambdas : Bool)
     (locals_or_metas : Bool) : expr → tactic (List expr × expr) := fun e => do
-  let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
+  let some (name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
     pure ([], e)
-  let replacement ← mk_binder_replacement locals_or_metas ⟨Name, bi, type⟩
+  let replacement ← mk_binder_replacement locals_or_metas ⟨name, bi, type⟩
   let (rs, rest) ← open_binders (body.instantiate_var replacement)
   pure (replacement :: rs, rest)
 #align tactic.open_binders tactic.open_binders
@@ -130,9 +130,9 @@ unsafe def open_n_binders (do_whnf : Option (Transparency × Bool)) (pis_or_lamb
     (locals_or_metas : Bool) : expr → ℕ → tactic (List expr × expr)
   | e, 0 => pure ([], e)
   | e, d + 1 => do
-    let some (Name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
+    let some (name, bi, type, body) ← get_binder do_whnf pis_or_lambdas e |
       failed
-    let replacement ← mk_binder_replacement locals_or_metas ⟨Name, bi, type⟩
+    let replacement ← mk_binder_replacement locals_or_metas ⟨name, bi, type⟩
     let (rs, rest) ← open_n_binders (body.instantiate_var replacement) d
     pure (replacement :: rs, rest)
 #align tactic.open_n_binders tactic.open_n_binders
@@ -227,9 +227,9 @@ unsafe def get_pi_binders (e : expr) : tactic (List binder × expr) := do
 
 private unsafe def get_pi_binders_nondep_aux : ℕ → expr → tactic (List (ℕ × binder) × expr) :=
   fun i e => do
-  let some (Name, bi, type, body) ← get_binder none true e |
+  let some (name, bi, type, body) ← get_binder none true e |
     pure ([], e)
-  let replacement ← mk_local' Name bi type
+  let replacement ← mk_local' name bi type
   let (rs, rest) ← get_pi_binders_nondep_aux (i + 1) (body.instantiate_var replacement)
   let rs' := if body.has_var then rs else (i, replacement.to_binder) :: rs
   pure (rs', rest)

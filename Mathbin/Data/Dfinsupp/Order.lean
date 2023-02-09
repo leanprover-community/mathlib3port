@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.dfinsupp.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,13 +113,13 @@ instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
       α with
     inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem
     inf_le_left := fun f g i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact inf_le_left
     inf_le_right := fun f g i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact inf_le_right
     le_inf := fun f g h hf hg i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact le_inf (hf i) (hg i) }
 
 /- warning: dfinsupp.inf_apply -> Dfinsupp.inf_apply is a dubious translation:
@@ -139,13 +139,13 @@ instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
       α with
     sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem
     le_sup_left := fun f g i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact le_sup_left
     le_sup_right := fun f g i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact le_sup_right
     sup_le := fun f g h hf hg i => by
-      rw [zip_with_apply]
+      rw [zipWith_apply]
       exact sup_le (hf i) (hg i) }
 
 /- warning: dfinsupp.sup_apply -> Dfinsupp.sup_apply is a dubious translation:
@@ -408,7 +408,7 @@ theorem support_sup : (f ⊔ g).support = f.support ∪ g.support :=
   by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
-  rw [_root_.sup_eq_bot_iff, not_and_or]
+  rw [sup_eq_bot_iff, not_and_or]
 #align dfinsupp.support_sup Dfinsupp.support_sup
 
 /- warning: dfinsupp.disjoint_iff -> Dfinsupp.disjoint_iff is a dubious translation:

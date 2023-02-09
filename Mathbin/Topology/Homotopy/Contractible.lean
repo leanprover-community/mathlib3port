@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module topology.homotopy.contractible
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,14 +37,14 @@ theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, 
     (g.comp f).Nullhomotopic := by
   cases' hf with y hy
   use g y
-  exact homotopic.hcomp hy (homotopic.refl g)
+  exact Homotopic.hcomp hy (Homotopic.refl g)
 #align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_right
 
 theorem Nullhomotopic.comp_left {f : C(Y, Z)} (hf : f.Nullhomotopic) (g : C(X, Y)) :
     (f.comp g).Nullhomotopic := by
   cases' hf with y hy
   use y
-  exact homotopic.hcomp (homotopic.refl g) hy
+  exact Homotopic.hcomp (Homotopic.refl g) hy
 #align continuous_map.nullhomotopic.comp_left ContinuousMap.Nullhomotopic.comp_left
 
 end ContinuousMap
@@ -78,10 +78,10 @@ theorem contractible_iff_id_nullhomotopic (Y : Type _) [TopologicalSpace Y] :
   refine_struct
     {
       hequiv_unit :=
-        ⟨{  toFun := ContinuousMap.const _ ()
-            invFun := ContinuousMap.const _ p }⟩ }
+        ⟨{  toFun := continuous_map.const _ ()
+            invFun := continuous_map.const _ p }⟩ }
   · exact h.symm;
-  · convert homotopic.refl (ContinuousMap.id Unit)
+  · convert Homotopic.refl (ContinuousMap.id Unit)
     ext
 #align contractible_iff_id_nullhomotopic contractible_iff_id_nullhomotopic
 
@@ -103,7 +103,7 @@ protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace_iff (e : X ≃�
 
 protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃ₜ Y) :
     ContractibleSpace X :=
-  e.toHomotopyEquiv.ContractibleSpace
+  e.toHomotopyEquiv.contractibleSpace
 #align homeomorph.contractible_space Homeomorph.contractibleSpace
 
 protected theorem Homeomorph.contractibleSpace_iff (e : X ≃ₜ Y) :

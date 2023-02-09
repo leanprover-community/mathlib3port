@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.function.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = 
 
 #print Function.ne_iff /-
 theorem ne_iff {β : α → Sort _} {f₁ f₂ : ∀ a, β a} : f₁ ≠ f₂ ↔ ∃ a, f₁ a ≠ f₂ a :=
-  funext_iff.Not.trans not_forall
+  funext_iff.not.trans not_forall
 #align function.ne_iff Function.ne_iff
 -/
 
@@ -214,7 +214,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} {f : α -> β}, (Function.Injective.{u2, u1} α β f) -> (forall {x : α} {y : α}, Iff (Ne.{u1} β (f x) (f y)) (Ne.{u2} α x y))
 Case conversion may be inaccurate. Consider using '#align function.injective.ne_iff Function.Injective.ne_iffₓ'. -/
 theorem Injective.ne_iff (hf : Injective f) {x y : α} : f x ≠ f y ↔ x ≠ y :=
-  ⟨mt <| congr_arg f, hf.Ne⟩
+  ⟨mt <| congr_arg f, hf.ne⟩
 #align function.injective.ne_iff Function.Injective.ne_iff
 
 /- warning: function.injective.ne_iff' -> Function.Injective.ne_iff' is a dubious translation:
@@ -261,10 +261,10 @@ Case conversion may be inaccurate. Consider using '#align function.injective.of_
 theorem Injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : Bijective g) :
     Injective (f ∘ g) ↔ Injective f :=
   ⟨fun h x y =>
-    let ⟨x', hx⟩ := hg.Surjective x
-    let ⟨y', hy⟩ := hg.Surjective y
+    let ⟨x', hx⟩ := hg.surjective x
+    let ⟨y', hy⟩ := hg.surjective y
     hx ▸ hy ▸ fun hf => h hf ▸ rfl,
-    fun h => h.comp hg.Injective⟩
+    fun h => h.comp hg.injective⟩
 #align function.injective.of_comp_iff' Function.Injective.of_comp_iff'
 
 /- warning: function.injective.comp_left -> Function.Injective.comp_left is a dubious translation:
@@ -340,8 +340,8 @@ theorem Surjective.of_comp_iff' (hf : Bijective f) (g : γ → α) :
     Surjective (f ∘ g) ↔ Surjective g :=
   ⟨fun h x =>
     let ⟨x', hx'⟩ := h (f x)
-    ⟨x', hf.Injective hx'⟩,
-    hf.Surjective.comp⟩
+    ⟨x', hf.injective hx'⟩,
+    hf.surjective.comp⟩
 #align function.surjective.of_comp_iff' Function.Surjective.of_comp_iff'
 
 #print Function.decidableEqPfun /-
@@ -468,8 +468,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.bijective_iff_exists_unique Function.bijective_iff_existsUniqueₓ'. -/
 theorem bijective_iff_existsUnique (f : α → β) : Bijective f ↔ ∀ b : β, ∃! a : α, f a = b :=
   ⟨fun hf b =>
-    let ⟨a, ha⟩ := hf.Surjective b
-    ⟨a, ha, fun a' ha' => hf.Injective (ha'.trans ha.symm)⟩,
+    let ⟨a, ha⟩ := hf.surjective b
+    ⟨a, ha, fun a' ha' => hf.injective (ha'.trans ha.symm)⟩,
     fun he =>
     ⟨fun a a' h => ExistsUnique.unique (he (f a')) h rfl, fun b => ExistsUnique.exists (he b)⟩⟩
 #align function.bijective_iff_exists_unique Function.bijective_iff_existsUnique
@@ -495,11 +495,11 @@ Case conversion may be inaccurate. Consider using '#align function.bijective.exi
 theorem Bijective.existsUnique_iff {f : α → β} (hf : Bijective f) {p : β → Prop} :
     (∃! y, p y) ↔ ∃! x, p (f x) :=
   ⟨fun ⟨y, hpy, hy⟩ =>
-    let ⟨x, hx⟩ := hf.Surjective y
-    ⟨x, by rwa [hx], fun z (hz : p (f z)) => hf.Injective <| hx.symm ▸ hy _ hz⟩,
+    let ⟨x, hx⟩ := hf.surjective y
+    ⟨x, by rwa [hx], fun z (hz : p (f z)) => hf.injective <| hx.symm ▸ hy _ hz⟩,
     fun ⟨x, hpx, hx⟩ =>
     ⟨f x, hpx, fun y hy =>
-      let ⟨z, hz⟩ := hf.Surjective y
+      let ⟨z, hz⟩ := hf.surjective y
       hz ▸ congr_arg f <| hx _ <| by rwa [hz]⟩⟩
 #align function.bijective.exists_unique_iff Function.Bijective.existsUnique_iff
 
@@ -511,7 +511,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.bijective.of_comp_iff Function.Bijective.of_comp_iffₓ'. -/
 theorem Bijective.of_comp_iff (f : α → β) {g : γ → α} (hg : Bijective g) :
     Bijective (f ∘ g) ↔ Bijective f :=
-  and_congr (Injective.of_comp_iff' _ hg) (Surjective.of_comp_iff _ hg.Surjective)
+  and_congr (Injective.of_comp_iff' _ hg) (Surjective.of_comp_iff _ hg.surjective)
 #align function.bijective.of_comp_iff Function.Bijective.of_comp_iff
 
 /- warning: function.bijective.of_comp_iff' -> Function.Bijective.of_comp_iff' is a dubious translation:
@@ -522,7 +522,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.bijective.of_comp_iff' Function.Bijective.of_comp_iff'ₓ'. -/
 theorem Bijective.of_comp_iff' {f : α → β} (hf : Bijective f) (g : γ → α) :
     Function.Bijective (f ∘ g) ↔ Function.Bijective g :=
-  and_congr (Injective.of_comp_iff hf.Injective _) (Surjective.of_comp_iff' hf _)
+  and_congr (Injective.of_comp_iff hf.injective _) (Surjective.of_comp_iff' hf _)
 #align function.bijective.of_comp_iff' Function.Bijective.of_comp_iff'
 
 #print Function.cantor_surjective /-
@@ -555,7 +555,7 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   let T : Type max u v := Sigma f
   cases' hf (Set T) with U hU
   let g : Set T → T := fun s => ⟨U, cast hU.symm s⟩
-  have hg : injective g := by
+  have hg : Injective g := by
     intro s t h
     suffices cast hU (g s).2 = cast hU (g t).2
       by
@@ -675,13 +675,13 @@ theorem RightInverse.leftInverse {f : α → β} {g : β → α} (h : RightInver
 
 #print Function.LeftInverse.surjective /-
 theorem LeftInverse.surjective {f : α → β} {g : β → α} (h : LeftInverse f g) : Surjective f :=
-  h.RightInverse.Surjective
+  h.rightInverse.surjective
 #align function.left_inverse.surjective Function.LeftInverse.surjective
 -/
 
 #print Function.RightInverse.injective /-
 theorem RightInverse.injective {f : α → β} {g : β → α} (h : RightInverse f g) : Injective f :=
-  h.LeftInverse.Injective
+  h.leftInverse.injective
 #align function.right_inverse.injective Function.RightInverse.injective
 -/
 
@@ -747,10 +747,10 @@ theorem partialInv_of_injective {α β} {f : α → β} (I : Injective f) : IsPa
   | a, b =>
     ⟨fun h =>
       if h' : ∃ a, f a = b then by
-        rw [partial_inv, dif_pos h'] at h
+        rw [partialInv, dif_pos h'] at h
         injection h with h; subst h
         apply Classical.choose_spec h'
-      else by rw [partial_inv, dif_neg h'] at h <;> contradiction,
+      else by rw [partialInv, dif_neg h'] at h <;> contradiction,
       fun e =>
       e ▸
         have h : ∃ a', f a' = f a := ⟨_, rfl⟩
@@ -779,7 +779,7 @@ attribute [local instance] Classical.propDecidable
 /-- The inverse of a function (which is a left inverse if `f` is injective
   and a right inverse if `f` is surjective). -/
 noncomputable def invFun (f : α → β) : β → α := fun y =>
-  if h : ∃ x, f x = y then h.some else Classical.arbitrary α
+  if h : ∃ x, f x = y then h.choose else Classical.arbitrary α
 #align function.inv_fun Function.invFun
 -/
 
@@ -790,7 +790,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Nonempty.{u2} α] {f : α -> β} {b : β}, (Exists.{u2} α (fun (a : α) => Eq.{u1} β (f a) b)) -> (Eq.{u1} β (f (Function.invFun.{u2, u1} α β _inst_1 f b)) b)
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_eq Function.invFun_eqₓ'. -/
 theorem invFun_eq (h : ∃ a, f a = b) : f (invFun f b) = b := by
-  simp only [inv_fun, dif_pos h, h.some_spec]
+  simp only [invFun, dif_pos h, h.some_spec]
 #align function.inv_fun_eq Function.invFun_eq
 
 /- warning: function.inv_fun_neg -> Function.invFun_neg is a dubious translation:
@@ -811,7 +811,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_eq_of_injective_of_right_inverse Function.invFun_eq_of_injective_of_rightInverseₓ'. -/
 theorem invFun_eq_of_injective_of_rightInverse {g : β → α} (hf : Injective f)
     (hg : RightInverse g f) : invFun f = g :=
-  funext fun b => hf (by rw [hg b]; exact inv_fun_eq ⟨g b, hg b⟩)
+  funext fun b => hf (by rw [hg b]; exact invFun_eq ⟨g b, hg b⟩)
 #align function.inv_fun_eq_of_injective_of_right_inverse Function.invFun_eq_of_injective_of_rightInverse
 
 /- warning: function.right_inverse_inv_fun -> Function.rightInverse_invFun is a dubious translation:
@@ -841,7 +841,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Nonempty.{u2} α] {f : α -> β}, (Function.Injective.{u2, u1} α β f) -> (Function.Surjective.{u1, u2} β α (Function.invFun.{u2, u1} α β _inst_1 f))
 Case conversion may be inaccurate. Consider using '#align function.inv_fun_surjective Function.invFun_surjectiveₓ'. -/
 theorem invFun_surjective (hf : Injective f) : Surjective (invFun f) :=
-  (leftInverse_invFun hf).Surjective
+  (leftInverse_invFun hf).surjective
 #align function.inv_fun_surjective Function.invFun_surjective
 
 /- warning: function.inv_fun_comp -> Function.invFun_comp is a dubious translation:
@@ -921,13 +921,13 @@ theorem surjective_iff_hasRightInverse : Surjective f ↔ HasRightInverse f :=
 #print Function.bijective_iff_has_inverse /-
 theorem bijective_iff_has_inverse : Bijective f ↔ ∃ g, LeftInverse g f ∧ RightInverse g f :=
   ⟨fun hf => ⟨_, leftInverse_surjInv hf, rightInverse_surjInv hf.2⟩, fun ⟨g, gl, gr⟩ =>
-    ⟨gl.Injective, gr.Surjective⟩⟩
+    ⟨gl.injective, gr.surjective⟩⟩
 #align function.bijective_iff_has_inverse Function.bijective_iff_has_inverse
 -/
 
 #print Function.injective_surjInv /-
 theorem injective_surjInv (h : Surjective f) : Injective (surjInv h) :=
-  (rightInverse_surjInv h).Injective
+  (rightInverse_surjInv h).injective
 #align function.injective_surj_inv Function.injective_surjInv
 -/
 
@@ -951,7 +951,7 @@ theorem Surjective.comp_left {g : β → γ} (hg : Surjective g) :
 /-- Composition by an bijective function on the left is itself bijective. -/
 theorem Bijective.comp_left {g : β → γ} (hg : Bijective g) :
     Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
-  ⟨hg.Injective.compLeft, hg.Surjective.compLeft⟩
+  ⟨hg.injective.comp_left, hg.surjective.comp_left⟩
 #align function.bijective.comp_left Function.Bijective.comp_left
 -/
 
@@ -1015,7 +1015,7 @@ theorem update_noteq {a a' : α} (h : a ≠ a') (v : β a') (f : ∀ a, β a) : 
 #align function.update_noteq Function.update_noteq
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.forall_update_iff /-
 theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∀ x, p x (update f a b x)) ↔ p a b ∧ ∀ (x) (_ : x ≠ a), p x (f x) :=
@@ -1025,7 +1025,7 @@ theorem forall_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
 #align function.forall_update_iff Function.forall_update_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.exists_update_iff /-
 theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a → Prop) :
     (∃ x, p x (update f a b x)) ↔ p a b ∨ ∃ (x : _)(_ : x ≠ a), p x (f x) :=
@@ -1035,7 +1035,7 @@ theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
 #align function.exists_update_iff Function.exists_update_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.update_eq_iff /-
 theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} :
     update f a b = g ↔ b = g a ∧ ∀ (x) (_ : x ≠ a), f x = g x :=
@@ -1043,7 +1043,7 @@ theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} :
 #align function.update_eq_iff Function.update_eq_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » a) -/
 #print Function.eq_update_iff /-
 theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} :
     g = update f a b ↔ g a = b ∧ ∀ (x) (_ : x ≠ a), g x = f x :=
@@ -1065,13 +1065,13 @@ theorem eq_update_self_iff : f = update f a b ↔ f a = b := by simp [eq_update_
 
 #print Function.ne_update_self_iff /-
 theorem ne_update_self_iff : f ≠ update f a b ↔ f a ≠ b :=
-  eq_update_self_iff.Not
+  eq_update_self_iff.not
 #align function.ne_update_self_iff Function.ne_update_self_iff
 -/
 
 #print Function.update_ne_self_iff /-
 theorem update_ne_self_iff : update f a b ≠ f ↔ b ≠ f a :=
-  update_eq_self_iff.Not
+  update_eq_self_iff.not
 #align function.update_ne_self_iff Function.update_ne_self_iff
 -/
 
@@ -1108,7 +1108,7 @@ theorem update_comp_eq_of_forall_ne {α β : Sort _} (g : α' → β) {f : α �
 #print Function.update_comp_eq_of_injective' /-
 theorem update_comp_eq_of_injective' (g : ∀ a, β a) {f : α' → α} (hf : Function.Injective f)
     (i : α') (a : β (f i)) : (fun j => update g (f i) a (f j)) = update (fun i => g (f i)) i a :=
-  eq_update_iff.2 ⟨update_same _ _ _, fun j hj => update_noteq (hf.Ne hj) _ _⟩
+  eq_update_iff.2 ⟨update_same _ _ _, fun j hj => update_noteq (hf.ne hj) _ _⟩
 #align function.update_comp_eq_of_injective' Function.update_comp_eq_of_injective'
 -/
 
@@ -1293,7 +1293,7 @@ Case conversion may be inaccurate. Consider using '#align function.factors_throu
 theorem factorsThrough_iff (g : α → γ) [Nonempty γ] : g.FactorsThrough f ↔ ∃ e : β → γ, g = e ∘ f :=
   ⟨fun hf =>
     ⟨extend f g (const β (Classical.arbitrary γ)),
-      funext fun x => by simp only [comp_app, hf.extend_apply]⟩,
+      funext fun x => by simp only [comp_apply, hf.extend_apply]⟩,
     fun h a b hf => by rw [Classical.choose_spec h, comp_apply, hf]⟩
 #align function.factors_through_iff Function.factorsThrough_iff
 
@@ -1309,7 +1309,7 @@ theorem FactorsThrough.apply_extend {δ} {g : α → γ} (hf : FactorsThrough g 
   by_cases hb : ∃ a, f a = b
   · cases' hb with a ha
     subst b
-    rw [factors_through.extend_apply, factors_through.extend_apply]
+    rw [FactorsThrough.extend_apply, FactorsThrough.extend_apply]
     · intro a b h
       simp only [comp_apply]
       apply congr_arg
@@ -1352,7 +1352,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.factors_through.extend_comp Function.FactorsThrough.extend_compₓ'. -/
 theorem FactorsThrough.extend_comp {g : α → γ} (e' : β → γ) (hf : FactorsThrough g f) :
     extend f g e' ∘ f = g :=
-  funext fun a => by simp only [comp_app, hf.extend_apply e']
+  funext fun a => by simp only [comp_apply, hf.extend_apply e']
 #align function.factors_through.extend_comp Function.FactorsThrough.extend_comp
 
 /- warning: function.extend_comp -> Function.extend_comp is a dubious translation:
@@ -1394,9 +1394,9 @@ but is expected to have type
   forall {α : Sort.{u3}} {β : Sort.{u2}} {γ : Sort.{u1}} {f : α -> β}, (Function.Bijective.{u3, u2} α β f) -> (Function.Bijective.{imax u2 u1, imax u3 u1} (β -> γ) (α -> γ) (fun (g : β -> γ) => Function.comp.{u3, u2, u1} α β γ g f))
 Case conversion may be inaccurate. Consider using '#align function.bijective.comp_right Function.Bijective.comp_rightₓ'. -/
 theorem Bijective.comp_right (hf : Bijective f) : Bijective fun g : β → γ => g ∘ f :=
-  ⟨hf.Surjective.injective_comp_right, fun g =>
-    ⟨g ∘ surjInv hf.Surjective, by
-      simp only [comp.assoc g _ f, (left_inverse_surj_inv hf).comp_eq_id, comp.right_id]⟩⟩
+  ⟨hf.surjective.injective_comp_right, fun g =>
+    ⟨g ∘ surjInv hf.surjective, by
+      simp only [comp.assoc g _ f, (leftInverse_surjInv hf).comp_eq_id, comp.right_id]⟩⟩
 #align function.bijective.comp_right Function.Bijective.comp_right
 
 end Extend
@@ -1560,7 +1560,7 @@ protected theorem rightInverse : RightInverse f f :=
 
 #print Function.Involutive.injective /-
 protected theorem injective : Injective f :=
-  h.LeftInverse.Injective
+  h.leftInverse.injective
 #align function.involutive.injective Function.Involutive.injective
 -/
 
@@ -1571,7 +1571,7 @@ protected theorem surjective : Surjective f := fun x => ⟨f x, h x⟩
 
 #print Function.Involutive.bijective /-
 protected theorem bijective : Bijective f :=
-  ⟨h.Injective, h.Surjective⟩
+  ⟨h.injective, h.surjective⟩
 #align function.involutive.bijective Function.Involutive.bijective
 -/
 
@@ -1585,7 +1585,7 @@ protected theorem ite_not (P : Prop) [Decidable P] (x : α) : f (ite P x (f x)) 
 #print Function.Involutive.eq_iff /-
 /-- An involution commutes across an equality. Compare to `function.injective.eq_iff`. -/
 protected theorem eq_iff {x y : α} : f x = y ↔ x = f y :=
-  h.Injective.eq_iff' (h y)
+  h.injective.eq_iff' (h y)
 #align function.involutive.eq_iff Function.Involutive.eq_iff
 -/
 
@@ -1754,13 +1754,13 @@ Case conversion may be inaccurate. Consider using '#align eq_rec_inj eq_rec_inj�
 @[simp]
 theorem eq_rec_inj {α : Sort _} {a a' : α} (h : a = a') {C : α → Type _} (x y : C a) :
     (Eq.ndrec x h : C a') = Eq.ndrec y h ↔ x = y :=
-  (eq_rec_on_bijective h).Injective.eq_iff
+  (eq_rec_on_bijective h).injective.eq_iff
 #align eq_rec_inj eq_rec_inj
 
 #print cast_inj /-
 @[simp]
 theorem cast_inj {α β : Type _} (h : α = β) {x y : α} : cast h x = cast h y ↔ x = y :=
-  (cast_bijective h).Injective.eq_iff
+  (cast_bijective h).injective.eq_iff
 #align cast_inj cast_inj
 -/
 
@@ -1772,7 +1772,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_rec_eqₓ'. -/
 theorem Function.LeftInverse.eq_rec_eq {α β : Sort _} {γ : β → Sort v} {f : α → β} {g : β → α}
     (h : Function.LeftInverse g f) (C : ∀ a : α, γ (f a)) (a : α) :
-    (congr_arg f (h a)).rec (C (g (f a))) = C a :=
+    (congr_arg f (h a)).ndrec (C (g (f a))) = C a :=
   eq_of_hEq <| (eq_rec_hEq _ _).trans <| by rw [h]
 #align function.left_inverse.eq_rec_eq Function.LeftInverse.eq_rec_eq
 

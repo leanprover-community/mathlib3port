@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.krein_milman
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,16 +88,16 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
     ⟨⋂₀ F,
       ⟨_, isClosed_interₛ fun t ht => (hFS ht).2.1,
         isExtreme_interₛ hFnemp fun t ht => (hFS ht).2.2⟩,
-      fun t ht => sInter_subset_of_mem ht⟩
+      fun t ht => interₛ_subset_of_mem ht⟩
   haveI : Nonempty ↥F := hFnemp.to_subtype
-  rw [sInter_eq_Inter]
+  rw [interₛ_eq_interᵢ]
   refine'
     IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed _ (fun t u => _)
-      (fun t => (hFS t.Mem).1)
+      (fun t => (hFS t.mem).1)
       (fun t => isCompact_of_isClosed_subset hscomp (hFS t.Mem).2.1 (hFS t.Mem).2.2.1) fun t =>
       (hFS t.Mem).2.1
   obtain htu | hut := hF.total t.mem u.mem
-  exacts[⟨t, subset.rfl, htu⟩, ⟨u, hut, subset.rfl⟩]
+  exacts[⟨t, Subset.rfl, htu⟩, ⟨u, hut, Subset.rfl⟩]
 #align is_compact.has_extreme_point IsCompact.has_extreme_point
 
 /-- **Krein-Milman theorem**: In a LCTVS, any compact convex set is the closure of the convex hull

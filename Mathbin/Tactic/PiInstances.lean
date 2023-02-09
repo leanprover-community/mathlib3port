@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.pi_instances
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       reset_instance_cache
       let xn ← get_unused_name
       try (() <$ ext1 [rcases_patt.one xn] <|> () <$ intro xn)
-      let xv ← Option.iget <$> try_core (get_local xn)
-      applyc Field
+      let xv ← option.iget <$> try_core (get_local xn)
+      applyc field
       hs fun h =>
           try <|
             () <$ (to_expr ``(congr_fun $(h) $(xv)) >>= apply) <|>
@@ -41,10 +41,10 @@ unsafe def pi_instance_derive_field : tactic Unit := do
       return ()
     else
       focus1 do
-        let expl_arity ← mk_const Field >>= get_expl_arity
-        let xs ← (List.iota expl_arity).mapM fun _ => intro1
+        let expl_arity ← mk_const field >>= get_expl_arity
+        let xs ← (list.iota expl_arity).mapM fun _ => intro1
         let x ← intro1
-        applyc Field
+        applyc field
         (xs fun h =>
               try <| () <$ (apply (h x) <|> apply h) <|> refine ``(Set.image (· <| $(x)) $(h))) <|>
             fail "args"

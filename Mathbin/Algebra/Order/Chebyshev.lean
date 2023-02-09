@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.chebyshev
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem MonovaryOn.sum_smul_sum_le_card_smul_sum (hfg : MonovaryOn f g s) :
     rw [← card_range s.card, sum_smul_sum_eq_sum_perm hσ]
     exact
       sum_le_card_nsmul _ _ _ fun n _ =>
-        hfg.sum_smul_comp_perm_le_sum_smul fun x hx => hs fun h => hx <| is_fixed_pt.perm_pow h _
+        hfg.sum_smul_comp_perm_le_sum_smul fun x hx => hs fun h => hx <| IsFixedPt.perm_pow h _
 #align monovary_on.sum_smul_sum_le_card_smul_sum MonovaryOn.sum_smul_sum_le_card_smul_sum
 
 /-- **Chebyshev's Sum Inequality**: When `f` and `g` antivary together (eg one is monotone, the
@@ -82,7 +82,7 @@ monotone/antitone), the scalar product of their sum is less than the size of the
 scalar product. -/
 theorem Monovary.sum_smul_sum_le_card_smul_sum (hfg : Monovary f g) :
     ((∑ i, f i) • ∑ i, g i) ≤ Fintype.card ι • ∑ i, f i • g i :=
-  (hfg.MonovaryOn _).sum_smul_sum_le_card_smul_sum
+  (hfg.monovaryOn _).sum_smul_sum_le_card_smul_sum
 #align monovary.sum_smul_sum_le_card_smul_sum Monovary.sum_smul_sum_le_card_smul_sum
 
 /-- **Chebyshev's Sum Inequality**: When `f` and `g` antivary together (eg one is monotone, the
@@ -141,7 +141,7 @@ monotone/antitone), the product of their sum is less than the size of the set ti
 product. -/
 theorem Monovary.sum_mul_sum_le_card_mul_sum (hfg : Monovary f g) :
     ((∑ i, f i) * ∑ i, g i) ≤ Fintype.card ι * ∑ i, f i * g i :=
-  (hfg.MonovaryOn _).sum_mul_sum_le_card_mul_sum
+  (hfg.monovaryOn _).sum_mul_sum_le_card_mul_sum
 #align monovary.sum_mul_sum_le_card_mul_sum Monovary.sum_mul_sum_le_card_mul_sum
 
 /-- **Chebyshev's Sum Inequality**: When `f` and `g` antivary together (eg one is monotone, the
@@ -149,7 +149,7 @@ other is antitone), the product of their sum is less than the size of the set ti
 product. -/
 theorem Antivary.card_mul_sum_le_sum_mul_sum (hfg : Antivary f g) :
     ((Fintype.card ι : α) * ∑ i, f i * g i) ≤ (∑ i, f i) * ∑ i, g i :=
-  (hfg.AntivaryOn _).card_mul_sum_le_sum_mul_sum
+  (hfg.antivaryOn _).card_mul_sum_le_sum_mul_sum
 #align antivary.card_mul_sum_le_sum_mul_sum Antivary.card_mul_sum_le_sum_mul_sum
 
 end Mul
@@ -161,7 +161,7 @@ theorem sum_div_card_sq_le_sum_sq_div_card :
   by
   obtain rfl | hs := s.eq_empty_or_nonempty
   · simp
-  rw [← card_pos, ← @Nat.cast_pos α] at hs
+  rw [← card_pos, ← @nat.cast_pos α] at hs
   rw [div_pow, div_le_div_iff (sq_pos_of_ne_zero _ hs.ne') hs, sq (s.card : α), mul_left_comm, ←
     mul_assoc]
   exact mul_le_mul_of_nonneg_right sq_sum_le_card_mul_sum_sq hs.le

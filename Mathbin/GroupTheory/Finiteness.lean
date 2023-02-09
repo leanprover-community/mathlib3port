@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module group_theory.finiteness
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -425,14 +425,14 @@ theorem Group.rank_le_of_surjective [Group.Fg G] [Group.Fg G'] (f : G →* G')
 
 @[to_additive]
 theorem Group.rank_range_le [Group.Fg G] {f : G →* G'} : Group.rank f.range ≤ Group.rank G :=
-  Group.rank_le_of_surjective f.range_restrict f.rangeRestrict_surjective
+  Group.rank_le_of_surjective f.rangeRestrict f.rangeRestrict_surjective
 #align group.rank_range_le Group.rank_range_le
 #align add_group.rank_range_le AddGroup.rank_range_le
 
 @[to_additive]
 theorem Group.rank_congr [Group.Fg G] [Group.Fg G'] (f : G ≃* G') : Group.rank G = Group.rank G' :=
-  le_antisymm (Group.rank_le_of_surjective f.symm f.symm.Surjective)
-    (Group.rank_le_of_surjective f f.Surjective)
+  le_antisymm (Group.rank_le_of_surjective f.symm f.symm.surjective)
+    (Group.rank_le_of_surjective f f.surjective)
 #align group.rank_congr Group.rank_congr
 #align add_group.rank_congr AddGroup.rank_congr
 

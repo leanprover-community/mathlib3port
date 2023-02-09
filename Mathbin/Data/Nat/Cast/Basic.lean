@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.cast.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} α] (n : Nat) (x : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) (Nat.cast.{u1} α (NonAssocSemiring.toNatCast.{u1} α _inst_1) n) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α _inst_1))) x (Nat.cast.{u1} α (NonAssocSemiring.toNatCast.{u1} α _inst_1) n))
 Case conversion may be inaccurate. Consider using '#align nat.cast_comm Nat.cast_commₓ'. -/
 theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
-  (cast_commute n x).Eq
+  (cast_commute n x).eq
 #align nat.cast_comm Nat.cast_comm
 
 /- warning: nat.commute_cast -> Nat.commute_cast is a dubious translation:
@@ -323,7 +323,7 @@ variable [AddMonoidWithOne A]
 -- these versions are primed so that the `ring_hom_class` versions aren't
 theorem eq_natCast' [AddMonoidHomClass F ℕ A] (f : F) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n
   | 0 => by simp
-  | n + 1 => by rw [map_add, h1, eq_natCast' n, Nat.cast_add_one]
+  | n + 1 => by rw [map_add, h1, eq_nat_cast' n, Nat.cast_add_one]
 #align eq_nat_cast' eq_natCast'
 -/
 
@@ -332,7 +332,7 @@ theorem map_natCast' {A} [AddMonoidWithOne A] [AddMonoidHomClass F A B] (f : F) 
     ∀ n : ℕ, f n = n
   | 0 => by simp
   | n + 1 => by
-    rw [Nat.cast_add, map_add, Nat.cast_add, map_natCast', Nat.cast_one, h, Nat.cast_one]
+    rw [Nat.cast_add, map_add, Nat.cast_add, map_nat_cast', Nat.cast_one, h, Nat.cast_one]
 #align map_nat_cast' map_natCast'
 -/
 

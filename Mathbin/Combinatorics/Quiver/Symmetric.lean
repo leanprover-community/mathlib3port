@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.symmetric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,11 +153,11 @@ instance Prefunctor.mapReverseId : (Prefunctor.id U).MapReverse where map_revers
 end MapReverse
 
 instance : HasReverse (Symmetrify V) :=
-  ⟨fun a b e => e.symm⟩
+  ⟨fun a b e => e.swap⟩
 
 instance : HasInvolutiveReverse (Symmetrify V)
     where
-  reverse' _ _ e := e.symm
+  reverse' _ _ e := e.swap
   inv' _ _ e := congr_fun Sum.swap_swap_eq e
 
 /- warning: quiver.symmetrify_reverse -> Quiver.symmetrify_reverse is a dubious translation:
@@ -167,7 +167,7 @@ but is expected to have type
   forall {V : Type.{u1}} [_inst_2 : Quiver.{succ u2, u1} V] {a : Quiver.Symmetrify.{u1} V} {b : Quiver.Symmetrify.{u1} V} (e : Quiver.Hom.{succ u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) a b), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) b a) (Quiver.reverse.{u2, u1} (Quiver.Symmetrify.{u1} V) (Quiver.symmetrifyQuiver.{u1, u2} V _inst_2) (Quiver.instHasReverseSymmetrifySymmetrifyQuiver.{u2, u1} V _inst_2) a b e) (Sum.swap.{u2, u2} (Quiver.Hom.{succ u2, u1} V _inst_2 a b) (Quiver.Hom.{succ u2, u1} V _inst_2 b a) e)
 Case conversion may be inaccurate. Consider using '#align quiver.symmetrify_reverse Quiver.symmetrify_reverseₓ'. -/
 @[simp]
-theorem symmetrify_reverse {a b : Symmetrify V} (e : a ⟶ b) : reverse e = e.symm :=
+theorem symmetrify_reverse {a b : Symmetrify V} (e : a ⟶ b) : reverse e = e.swap :=
   rfl
 #align quiver.symmetrify_reverse Quiver.symmetrify_reverse
 
@@ -232,7 +232,7 @@ theorem Path.reverse_reverse [HasInvolutiveReverse V] {a b : V} (p : Path a b) :
     p.reverse.reverse = p := by
   induction p
   · simp
-  · simp only [path.reverse, path.reverse_comp, path.reverse_to_path, reverse_reverse, p_ih]
+  · simp only [Path.reverse, Path.reverse_comp, Path.reverse_toPath, reverse_reverse, p_ih]
     rfl
 #align quiver.path.reverse_reverse Quiver.Path.reverse_reverse
 
@@ -318,7 +318,7 @@ def Prefunctor.symmetrify (φ : U ⥤q V) : Symmetrify U ⥤q Symmetrify V
   map X Y := Sum.map φ.map φ.map
 #align prefunctor.symmetrify Prefunctor.symmetrify
 
-instance Prefunctor.symmetrifyMapReverse (φ : U ⥤q V) : Prefunctor.MapReverse φ.Symmetrify :=
+instance Prefunctor.symmetrifyMapReverse (φ : U ⥤q V) : Prefunctor.MapReverse φ.symmetrify :=
   ⟨fun u v e => by cases e <;> rfl⟩
 #align prefunctor.symmetrify_map_reverse Prefunctor.symmetrifyMapReverse
 

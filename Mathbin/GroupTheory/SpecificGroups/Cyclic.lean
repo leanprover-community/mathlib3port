@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.cyclic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,10 +247,10 @@ open Classical
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([2, 3]) } -/
 @[to_additive IsAddCyclic.card_pow_eq_one_le]
 theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
-    (univ.filterₓ fun a : α => a ^ n = 1).card ≤ n :=
+    (univ.filter fun a : α => a ^ n = 1).card ≤ n :=
   let ⟨g, hg⟩ := IsCyclic.exists_generator α
   calc
-    (univ.filterₓ fun a : α => a ^ n = 1).card ≤
+    (univ.filter fun a : α => a ^ n = 1).card ≤
         (zpowers (g ^ (Fintype.card α / Nat.gcd n (Fintype.card α))) : Set α).toFinset.card :=
       card_le_of_subset fun x hx =>
         let ⟨m, hm⟩ := show x ∈ Submonoid.powers g from mem_powers_iff_mem_zpowers.2 <| hg x
@@ -318,20 +318,20 @@ end
 section Totient
 
 variable [DecidableEq α] [Fintype α]
-  (hn : ∀ n : ℕ, 0 < n → (univ.filterₓ fun a : α => a ^ n = 1).card ≤ n)
+  (hn : ∀ n : ℕ, 0 < n → (univ.filter fun a : α => a ^ n = 1).card ≤ n)
 
 include hn
 
 private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
-    (Finset.univ.filterₓ fun b : α => b ^ orderOf a = 1).card = orderOf a :=
+    (Finset.univ.filter fun b : α => b ^ orderOf a = 1).card = orderOf a :=
   le_antisymm (hn _ (orderOf_pos a))
     (calc
       orderOf a = @Fintype.card (zpowers a) (id _) := order_eq_card_zpowers
       _ ≤
-          @Fintype.card (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α)
+          @Fintype.card (↑(univ.filter fun b : α => b ^ orderOf a = 1) : Set α)
             (Fintype.ofFinset _ fun _ => Iff.rfl) :=
         @Fintype.card_le_of_injective (zpowers a)
-          (↑(univ.filterₓ fun b : α => b ^ orderOf a = 1) : Set α) (id _) (id _)
+          (↑(univ.filter fun b : α => b ^ orderOf a = 1) : Set α) (id _) (id _)
           (fun b =>
             ⟨b.1,
               mem_filter.2
@@ -340,7 +340,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
                   rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h)
-      _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
+      _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
       )
 #align card_pow_eq_one_eq_order_of_aux card_pow_eq_one_eq_order_of_aux
 
@@ -350,8 +350,8 @@ open Nat
 private theorem card_order_of_eq_totient_aux₁ :
     ∀ {d : ℕ},
       d ∣ Fintype.card α →
-        0 < (univ.filterₓ fun a : α => orderOf a = d).card →
-          (univ.filterₓ fun a : α => orderOf a = d).card = φ d :=
+        0 < (univ.filter fun a : α => orderOf a = d).card →
+          (univ.filter fun a : α => orderOf a = d).card = φ d :=
   by
   intro d hd hpos
   induction' d using Nat.strongRec' with d IH
@@ -364,7 +364,7 @@ private theorem card_order_of_eq_totient_aux₁ :
       ∑ m in d.proper_divisors, φ m :=
     by
     refine' Finset.sum_congr rfl fun m hm => _
-    simp only [mem_filter, mem_range, mem_proper_divisors] at hm
+    simp only [mem_filter, mem_range, mem_properDivisors] at hm
     refine' IH m hm.2 (hm.1.trans hd) (Finset.card_pos.2 ⟨a ^ (d / m), _⟩)
     simp only [mem_filter, mem_univ, orderOf_pow a, ha, true_and_iff,
       Nat.gcd_eq_right (div_dvd_of_dvd hm.1), Nat.div_div_self hm.1 hd0]
@@ -372,18 +372,18 @@ private theorem card_order_of_eq_totient_aux₁ :
     (∑ m in d.divisors, (univ.filter fun a : α => orderOf a = m).card) = ∑ m in d.divisors, φ m :=
     by
     rw [← filter_dvd_eq_divisors hd0, sum_card_orderOf_eq_card_pow_eq_one hd0,
-      filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
-  simpa [← cons_self_proper_divisors hd0, ← h1] using h2
+      filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_orderOf_aux hn a]
+  simpa [← cons_self_properDivisors hd0, ← h1] using h2
 #align card_order_of_eq_totient_aux₁ card_order_of_eq_totient_aux₁
 
 theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
-    (univ.filterₓ fun a : α => orderOf a = d).card = φ d :=
+    (univ.filter fun a : α => orderOf a = d).card = φ d :=
   by
   let c := Fintype.card α
   have hc0 : 0 < c := Fintype.card_pos_iff.2 ⟨1⟩
-  apply card_order_of_eq_totient_aux₁ hn hd
+  apply card_orderOf_eq_totient_aux₁ hn hd
   by_contra h0
-  simp only [not_lt, _root_.le_zero_iff, card_eq_zero] at h0
+  simp only [not_lt, le_zero_iff, card_eq_zero] at h0
   apply lt_irrefl c
   calc
     c = ∑ m in c.divisors, (univ.filter fun a : α => orderOf a = m).card :=
@@ -405,9 +405,9 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
       have hmc : m ∣ c := by
         simp only [mem_erase, mem_divisors] at hm
         tauto
-      rcases(Filter (fun a : α => orderOf a = m) univ).card.eq_zero_or_pos with (h1 | h1)
+      rcases(filter (fun a : α => orderOf a = m) univ).card.eq_zero_or_pos with (h1 | h1)
       · simp [h1]
-      · simp [card_order_of_eq_totient_aux₁ hn hmc h1]
+      · simp [card_orderOf_eq_totient_aux₁ hn hmc h1]
     _ < ∑ m in c.divisors, φ m :=
       sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos (pos_of_dvd_of_pos hd hc0))
     _ = c := sum_totient _
@@ -415,7 +415,7 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
 #align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂
 
 theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
-  have : (univ.filterₓ fun a : α => orderOf a = Fintype.card α).Nonempty :=
+  have : (univ.filter fun a : α => orderOf a = Fintype.card α).Nonempty :=
     card_pos.1 <| by
       rw [card_orderOf_eq_totient_aux₂ hn dvd_rfl] <;>
         exact totient_pos (Fintype.card_pos_iff.2 ⟨1⟩)
@@ -424,9 +424,9 @@ theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
 #align is_cyclic_of_card_pow_eq_one_le isCyclic_of_card_pow_eq_one_le
 
 theorem isAddCyclic_of_card_pow_eq_one_le {α} [AddGroup α] [DecidableEq α] [Fintype α]
-    (hn : ∀ n : ℕ, 0 < n → (univ.filterₓ fun a : α => n • a = 0).card ≤ n) : IsAddCyclic α :=
+    (hn : ∀ n : ℕ, 0 < n → (univ.filter fun a : α => n • a = 0).card ≤ n) : IsAddCyclic α :=
   by
-  obtain ⟨g, hg⟩ := @isCyclic_of_card_pow_eq_one_le (Multiplicative α) _ _ _ hn
+  obtain ⟨g, hg⟩ := @is_cyclic_of_card_pow_eq_one_le (Multiplicative α) _ _ _ hn
   exact ⟨⟨g, hg⟩⟩
 #align is_add_cyclic_of_card_pow_eq_one_le isAddCyclic_of_card_pow_eq_one_le
 
@@ -435,15 +435,15 @@ attribute [to_additive isCyclic_of_card_pow_eq_one_le] isAddCyclic_of_card_pow_e
 end Totient
 
 theorem IsCyclic.card_orderOf_eq_totient [IsCyclic α] [Fintype α] {d : ℕ}
-    (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => orderOf a = d).card = totient d := by
+    (hd : d ∣ Fintype.card α) : (univ.filter fun a : α => orderOf a = d).card = totient d := by
   classical apply card_orderOf_eq_totient_aux₂ (fun n => IsCyclic.card_pow_eq_one_le) hd
 #align is_cyclic.card_order_of_eq_totient IsCyclic.card_orderOf_eq_totient
 
 theorem IsAddCyclic.card_order_of_eq_totient {α} [AddGroup α] [IsAddCyclic α] [Fintype α] {d : ℕ}
-    (hd : d ∣ Fintype.card α) : (univ.filterₓ fun a : α => addOrderOf a = d).card = totient d :=
+    (hd : d ∣ Fintype.card α) : (univ.filter fun a : α => addOrderOf a = d).card = totient d :=
   by
   obtain ⟨g, hg⟩ := id ‹IsAddCyclic α›
-  exact @IsCyclic.card_orderOf_eq_totient (Multiplicative α) _ ⟨⟨g, hg⟩⟩ _ _ hd
+  exact @is_cyclic.card_order_of_eq_totient (Multiplicative α) _ ⟨⟨g, hg⟩⟩ _ _ hd
 #align is_add_cyclic.card_order_of_eq_totient IsAddCyclic.card_order_of_eq_totient
 
 attribute [to_additive IsCyclic.card_orderOf_eq_totient] IsAddCyclic.card_order_of_eq_totient

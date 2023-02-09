@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.sites
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem supᵢ_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendi
     intro f
     exact f.2.1.le
   intro x hxU
-  rw [opens.mem_coe, opens.mem_supr]
+  rw [Opens.mem_coe, Opens.mem_supᵢ]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU
   exact ⟨⟨W, ⟨iWU, hiWU⟩⟩, iVW.le hxV⟩
 #align Top.presheaf.covering_of_presieve.supr_eq_of_mem_grothendieck TopCat.Presheaf.coveringOfPresieve.supᵢ_eq_of_mem_grothendieck
@@ -108,7 +108,7 @@ theorem mem_grothendieckTopology :
   by
   intro x hx
   obtain ⟨i, hxi⟩ := opens.mem_supr.mp hx
-  exact ⟨U i, opens.le_supr U i, ⟨U i, 𝟙 _, opens.le_supr U i, ⟨i, rfl⟩, category.id_comp _⟩, hxi⟩
+  exact ⟨U i, Opens.leSupr U i, ⟨U i, 𝟙 _, Opens.leSupr U i, ⟨i, rfl⟩, Category.id_comp _⟩, hxi⟩
 #align Top.presheaf.presieve_of_covering.mem_grothendieck_topology TopCat.Presheaf.presieveOfCovering.mem_grothendieckTopology
 
 /-- An index `i : ι` can be turned into a dependent pair `(V, f)`, where `V` is an open set and
@@ -122,7 +122,7 @@ def homOfIndex (i : ι) : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f } 
 `presieve_of_covering U f` can be turned into an index `i : ι`, such that `V = U i`.
 -/
 def indexOfHom (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) : ι :=
-  f.2.2.some
+  f.2.2.choose
 #align Top.presheaf.presieve_of_covering.index_of_hom TopCat.Presheaf.presieveOfCovering.indexOfHom
 
 theorem indexOfHom_spec (f : ΣV, { f : V ⟶ supᵢ U // presieveOfCovering U f }) :
@@ -141,7 +141,7 @@ variable {X : TopCat} {ι : Type _}
 theorem coverDense_iff_isBasis [Category ι] (B : ι ⥤ Opens X) :
     CoverDense (Opens.grothendieckTopology X) B ↔ Opens.IsBasis (Set.range B.obj) :=
   by
-  rw [opens.is_basis_iff_nbhd]
+  rw [Opens.isBasis_iff_nbhd]
   constructor; intro hd U x hx; rcases hd.1 U x hx with ⟨V, f, ⟨i, f₁, f₂, hc⟩, hV⟩
   exact ⟨B.obj i, ⟨i, rfl⟩, f₁.le hV, f₂.le⟩
   intro hb; constructor; intro U x hx; rcases hb hx with ⟨_, ⟨i, rfl⟩, hx, hi⟩
@@ -164,19 +164,19 @@ variable {C : Type u} [Category.{v} C]
 variable {X Y : TopCat.{w}} {f : X ⟶ Y} {F : Y.Presheaf C}
 
 theorem OpenEmbedding.compatiblePreserving (hf : OpenEmbedding f) :
-    CompatiblePreserving (Opens.grothendieckTopology Y) hf.IsOpenMap.Functor :=
+    CompatiblePreserving (Opens.grothendieckTopology Y) hf.isOpenMap.functor :=
   by
-  haveI : mono f := (TopCat.mono_iff_injective f).mpr hf.inj
-  apply compatible_preserving_of_downwards_closed
+  haveI : Mono f := (TopCat.mono_iff_injective f).mpr hf.inj
+  apply compatiblePreservingOfDownwardsClosed
   intro U V i
   refine'
-    ⟨(opens.map f).obj V, eq_to_iso <| opens.ext <| Set.image_preimage_eq_of_subset fun x h => _⟩
+    ⟨(Opens.map f).obj V, eqToIso <| Opens.ext <| Set.image_preimage_eq_of_subset fun x h => _⟩
   obtain ⟨_, _, rfl⟩ := i.le h
   exact ⟨_, rfl⟩
 #align open_embedding.compatible_preserving OpenEmbedding.compatiblePreserving
 
 theorem IsOpenMap.coverPreserving (hf : IsOpenMap f) :
-    CoverPreserving (Opens.grothendieckTopology X) (Opens.grothendieckTopology Y) hf.Functor :=
+    CoverPreserving (Opens.grothendieckTopology X) (Opens.grothendieckTopology Y) hf.functor :=
   by
   constructor
   rintro U S hU _ ⟨x, hx, rfl⟩
@@ -185,8 +185,8 @@ theorem IsOpenMap.coverPreserving (hf : IsOpenMap f) :
 #align is_open_map.cover_preserving IsOpenMap.coverPreserving
 
 theorem TopCat.Presheaf.isSheaf_of_openEmbedding (h : OpenEmbedding f) (hF : F.IsSheaf) :
-    IsSheaf (h.IsOpenMap.Functor.op ⋙ F) :=
-  pullback_isSheaf_of_coverPreserving h.CompatiblePreserving h.IsOpenMap.CoverPreserving ⟨_, hF⟩
+    IsSheaf (h.isOpenMap.functor.op ⋙ F) :=
+  pullback_isSheaf_of_coverPreserving h.compatiblePreserving h.isOpenMap.coverPreserving ⟨_, hF⟩
 #align Top.presheaf.is_sheaf_of_open_embedding TopCat.Presheaf.isSheaf_of_openEmbedding
 
 end OpenEmbedding
@@ -223,7 +223,7 @@ def restrictHomEquivHom : ((inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op
 theorem extend_hom_app (α : (inducedFunctor B).op ⋙ F ⟶ (inducedFunctor B).op ⋙ F'.1) (i : ι) :
     (restrictHomEquivHom F F' h α).app (op (B i)) = α.app (op i) :=
   by
-  nth_rw 2 [← (restrict_hom_equiv_hom F F' h).left_inv α]
+  nth_rw 2 [← (restrictHomEquivHom F F' h).left_inv α]
   rfl
 #align Top.sheaf.extend_hom_app TopCat.Sheaf.extend_hom_app
 
@@ -231,7 +231,7 @@ include h
 
 theorem hom_ext {α β : F ⟶ F'.1} (he : ∀ i, α.app (op (B i)) = β.app (op (B i))) : α = β :=
   by
-  apply (restrict_hom_equiv_hom F F' h).symm.Injective
+  apply (restrictHomEquivHom F F' h).symm.injective
   ext i
   exact he i.unop
 #align Top.sheaf.hom_ext TopCat.Sheaf.hom_ext

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.ideal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,17 +52,17 @@ theorem supᵢ_infᵢ_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : 
     rw [Finset.sum_cons] at hμ
     refine' ⟨ih.mp ⟨Pi.single h.some ⟨μ a, _⟩ + fun i => ⟨μ i, _⟩, _⟩, fun b hb ab => _⟩
     · have := Submodule.coe_mem (μ a)
-      rw [mem_infi] at this⊢
+      rw [mem_infᵢ] at this⊢
       --for some reason `simp only [mem_infi]` times out
       intro i
       specialize this i
-      rw [mem_infi, mem_infi] at this⊢
+      rw [mem_infᵢ, mem_infᵢ] at this⊢
       intro hi _
       apply this (Finset.subset_cons _ hi)
       rintro rfl
       exact hat hi
     · have := Submodule.coe_mem (μ i)
-      simp only [mem_infi] at this⊢
+      simp only [mem_infᵢ] at this⊢
       intro j hj ij
       exact this _ (Finset.subset_cons _ hj) ij
     · rw [← @if_pos _ _ h.some_spec R (μ a) 0, ← Finset.sum_pi_single', ← Finset.sum_add_distrib] at
@@ -78,29 +78,29 @@ theorem supᵢ_infᵢ_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : 
       refine' ⟨_, _, _, _, hμ⟩
       · refine' sum_mem _ fun x hx => _
         have := Submodule.coe_mem (μ x)
-        simp only [mem_infi] at this
+        simp only [mem_infᵢ] at this
         apply this _ (Finset.mem_cons_self _ _)
         rintro rfl
         exact hat hx
       · have := Submodule.coe_mem (μ a)
-        simp only [mem_infi] at this
+        simp only [mem_infᵢ] at this
         exact this _ (Finset.subset_cons _ hb) ab.symm
   · rintro ⟨hs, Hb⟩
     obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, hu, v, hv, huv⟩ :=
       submodule.mem_sup.mp
         ((eq_top_iff_one _).mp <|
-          sup_infi_eq_top fun b hb =>
+          sup_infᵢ_eq_top fun b hb =>
             Hb b hb <| by
               rintro rfl
               exact hat hb)
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩
-    · simp only [mem_infi] at hv⊢
+    · simp only [mem_infᵢ] at hv⊢
       intro j hj ij
       rw [Finset.mem_cons, ← hi] at hj
       exact hv _ (hj.resolve_left ij)
     · have := Submodule.coe_mem (μ i)
-      simp only [mem_infi] at this⊢
+      simp only [mem_infᵢ] at this⊢
       intro j hj ij
       rcases finset.mem_cons.mp hj with (rfl | hj)
       · exact mul_mem_right _ _ hu

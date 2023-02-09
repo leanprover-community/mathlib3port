@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.bitwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem bodd_coe (n : ℕ) : Int.bodd n = Nat.bodd n :=
 #print Int.bodd_subNatNat /-
 @[simp]
 theorem bodd_subNatNat (m n : ℕ) : bodd (subNatNat m n) = xor m.bodd n.bodd := by
-  apply sub_nat_nat_elim m n fun m n i => bodd i = xor m.bodd n.bodd <;> intros <;> simp <;>
+  apply subNatNat_elim m n fun m n i => bodd i = xor m.bodd n.bodd <;> intros <;> simp <;>
       cases i.bodd <;>
     simp
 #align int.bodd_sub_nat_nat Int.bodd_subNatNat
@@ -76,7 +76,7 @@ theorem bodd_negOfNat (n : ℕ) : bodd (negOfNat n) = n.bodd := by cases n <;> s
 #print Int.bodd_neg /-
 @[simp]
 theorem bodd_neg (n : ℤ) : bodd (-n) = bodd n := by
-  cases n <;> simp [Neg.neg, Int.coe_nat_eq, Int.neg, bodd, -of_nat_eq_coe]
+  cases n <;> simp [has_neg.neg, Int.coe_nat_eq, Int.neg, bodd, -of_nat_eq_coe]
 #align int.bodd_neg Int.bodd_neg
 -/
 
@@ -100,9 +100,9 @@ theorem bodd_mul (m n : ℤ) : bodd (m * n) = (bodd m && bodd n) := by
 theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | (n : ℕ) => by
     rw [show (cond (bodd n) 1 0 : ℤ) = (cond (bodd n) 1 0 : ℕ) by cases bodd n <;> rfl] <;>
-      exact congr_arg of_nat n.bodd_add_div2
+      exact congr_arg ofNat n.bodd_add_div2
   | -[n+1] => by
-    refine' Eq.trans _ (congr_arg neg_succ_of_nat n.bodd_add_div2)
+    refine' Eq.trans _ (congr_arg negSucc n.bodd_add_div2)
     dsimp [bodd]; cases Nat.bodd n <;> dsimp [cond, not, div2, Int.mul]
     · change -[2 * Nat.div2 n+1] = _
       rw [zero_add]
@@ -217,7 +217,7 @@ theorem bit1_ne_zero (m : ℤ) : bit1 m ≠ 0 := by simpa only [bit0_zero] using
 theorem testBit_zero (b) : ∀ n, testBit (bit b n) 0 = b
   | (n : ℕ) => by rw [bit_coe_nat] <;> apply Nat.testBit_zero
   | -[n+1] => by
-    rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.testBit_zero] <;> clear test_bit_zero <;>
+    rw [bit_negSucc] <;> dsimp [testBit] <;> rw [Nat.testBit_zero] <;> clear test_bit_zero <;>
         cases b <;>
       rfl
 #align int.test_bit_zero Int.testBit_zero
@@ -227,11 +227,11 @@ theorem testBit_zero (b) : ∀ n, testBit (bit b n) 0 = b
 @[simp]
 theorem testBit_succ (m b) : ∀ n, testBit (bit b n) (Nat.succ m) = testBit n m
   | (n : ℕ) => by rw [bit_coe_nat] <;> apply Nat.testBit_succ
-  | -[n+1] => by rw [bit_neg_succ] <;> dsimp [test_bit] <;> rw [Nat.testBit_succ]
+  | -[n+1] => by rw [bit_negSucc] <;> dsimp [testBit] <;> rw [Nat.testBit_succ]
 #align int.test_bit_succ Int.testBit_succ
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def bitwise_tac : tactic Unit :=
   sorry
 #align int.bitwise_tac int.bitwise_tac
@@ -275,13 +275,13 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
     bitwise f (bit a m) (bit b n) = bit (f a b) (bitwise f m n) :=
   by
   cases' m with m m <;> cases' n with n n <;>
-        repeat' first |rw [← Int.coe_nat_eq]|rw [bit_coe_nat]|rw [bit_neg_succ] <;>
+        repeat' first |rw [← Int.coe_nat_eq]|rw [bit_coe_nat]|rw [bit_negSucc] <;>
       unfold bitwise nat_bitwise not <;>
-    [induction' h : f ff ff with , induction' h : f ff tt with , induction' h : f tt ff with ,
-    induction' h : f tt tt with ]
+    [induction' h : f false false with , induction' h : f false true with ,
+    induction' h : f true false with , induction' h : f true true with ]
   all_goals
     unfold cond; rw [Nat.bitwise'_bit]
-    repeat' first |rw [bit_coe_nat]|rw [bit_neg_succ]|rw [Bool.not_not]
+    repeat' first |rw [bit_coe_nat]|rw [bit_negSucc]|rw [Bool.not_not]
   all_goals unfold not <;> rw [h] <;> rfl
 #align int.bitwise_bit Int.bitwise_bit
 -/
@@ -316,7 +316,7 @@ theorem lxor_bit (a m b n) : lxor' (bit a m) (bit b n) = bit (xor a b) (lxor' m 
 
 #print Int.lnot_bit /-
 @[simp]
-theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (not b) (lnot n)
+theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (bnot b) (lnot n)
   | (n : ℕ) => by simp [lnot]
   | -[n+1] => by simp [lnot]
 #align int.lnot_bit Int.lnot_bit
@@ -327,48 +327,48 @@ theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (not b) (lnot n)
 theorem testBit_bitwise (f : Bool → Bool → Bool) (m n k) :
     testBit (bitwise f m n) k = f (testBit m k) (testBit n k) :=
   by
-  induction' k with k IH generalizing m n <;> apply bit_cases_on m <;> intro a m' <;>
-        apply bit_cases_on n <;>
+  induction' k with k IH generalizing m n <;> apply bitCasesOn m <;> intro a m' <;>
+        apply bitCasesOn n <;>
       intro b n' <;>
     rw [bitwise_bit]
-  · simp [test_bit_zero]
-  · simp [test_bit_succ, IH]
+  · simp [testBit_zero]
+  · simp [testBit_succ, IH]
 #align int.test_bit_bitwise Int.testBit_bitwise
 -/
 
 #print Int.testBit_lor /-
 @[simp]
 theorem testBit_lor (m n k) : testBit (lor m n) k = (testBit m k || testBit n k) := by
-  rw [← bitwise_or, test_bit_bitwise]
+  rw [← bitwise_or, testBit_bitwise]
 #align int.test_bit_lor Int.testBit_lor
 -/
 
 #print Int.testBit_land /-
 @[simp]
 theorem testBit_land (m n k) : testBit (land m n) k = (testBit m k && testBit n k) := by
-  rw [← bitwise_and, test_bit_bitwise]
+  rw [← bitwise_and, testBit_bitwise]
 #align int.test_bit_land Int.testBit_land
 -/
 
 #print Int.testBit_ldiff /-
 @[simp]
 theorem testBit_ldiff (m n k) : testBit (ldiff' m n) k = (testBit m k && not (testBit n k)) := by
-  rw [← bitwise_diff, test_bit_bitwise]
+  rw [← bitwise_diff, testBit_bitwise]
 #align int.test_bit_ldiff Int.testBit_ldiff
 -/
 
 #print Int.testBit_lxor /-
 @[simp]
 theorem testBit_lxor (m n k) : testBit (lxor' m n) k = xor (testBit m k) (testBit n k) := by
-  rw [← bitwise_xor, test_bit_bitwise]
+  rw [← bitwise_xor, testBit_bitwise]
 #align int.test_bit_lxor Int.testBit_lxor
 -/
 
 #print Int.testBit_lnot /-
 @[simp]
 theorem testBit_lnot : ∀ n k, testBit (lnot n) k = not (testBit n k)
-  | (n : ℕ), k => by simp [lnot, test_bit]
-  | -[n+1], k => by simp [lnot, test_bit]
+  | (n : ℕ), k => by simp [lnot, testBit]
+  | -[n+1], k => by simp [lnot, testBit]
 #align int.test_bit_lnot Int.testBit_lnot
 -/
 
@@ -416,7 +416,7 @@ theorem shiftr_add : ∀ (m : ℤ) (n k : ℕ), shiftr m (n + k) = shiftr (shift
   | (m : ℕ), n, k => by
     rw [shiftr_coe_nat, shiftr_coe_nat, ← Int.ofNat_add, shiftr_coe_nat, Nat.shiftr_add]
   | -[m+1], n, k => by
-    rw [shiftr_neg_succ, shiftr_neg_succ, ← Int.ofNat_add, shiftr_neg_succ, Nat.shiftr_add]
+    rw [shiftr_negSucc, shiftr_negSucc, ← Int.ofNat_add, shiftr_negSucc, Nat.shiftr_add]
 #align int.shiftr_add Int.shiftr_add
 -/
 
@@ -463,8 +463,8 @@ theorem shiftl_eq_mul_pow : ∀ (m : ℤ) (n : ℕ), shiftl m n = m * ↑(2 ^ n)
 theorem shiftr_eq_div_pow : ∀ (m : ℤ) (n : ℕ), shiftr m n = m / ↑(2 ^ n)
   | (m : ℕ), n => by rw [shiftr_coe_nat] <;> exact congr_arg coe (Nat.shiftr_eq_div_pow _ _)
   | -[m+1], n => by
-    rw [shiftr_neg_succ, neg_succ_of_nat_div, Nat.shiftr_eq_div_pow]; rfl
-    exact coe_nat_lt_coe_nat_of_lt (pow_pos (by decide) _)
+    rw [shiftr_negSucc, negSucc_ediv, Nat.shiftr_eq_div_pow]; rfl
+    exact ofNat_lt_ofNat_of_lt (pow_pos (by decide) _)
 #align int.shiftr_eq_div_pow Int.shiftr_eq_div_pow
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.core
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem id_hom (X : Core C) : Iso.hom (𝟙 X) = 𝟙 X :=
 #align category_theory.core.id_hom CategoryTheory.Core.id_hom
 
 @[simp]
-theorem comp_hom {X Y Z : Core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).Hom = f.Hom ≫ g.Hom :=
+theorem comp_hom {X Y Z : Core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).hom = f.hom ≫ g.hom :=
   rfl
 #align category_theory.core.comp_hom CategoryTheory.Core.comp_hom
 
@@ -65,7 +65,7 @@ variable (C)
 /-- The core of a category is naturally included in the category. -/
 def inclusion : Core C ⥤ C where
   obj := id
-  map X Y f := f.Hom
+  map X Y f := f.hom
 #align category_theory.core.inclusion CategoryTheory.Core.inclusion
 
 instance : Faithful (inclusion C) where
@@ -101,9 +101,9 @@ def ofEquivFunctor (m : Type u₁ → Type u₂) [EquivFunctor m] : Core (Type u
   map_id' α := by ext; exact congr_fun (EquivFunctor.map_refl _) x
   map_comp' α β γ f g := by
     ext
-    simp only [EquivFunctor.mapEquiv_apply, Equiv.toIso_hom, Function.comp_apply, core.comp_hom,
+    simp only [EquivFunctor.mapEquiv_apply, Equiv.toIso_hom, Function.comp_apply, Core.comp_hom,
       types_comp]
-    erw [iso.to_equiv_comp, EquivFunctor.map_trans]
+    erw [Iso.toEquiv_comp, EquivFunctor.map_trans]
 #align category_theory.of_equiv_functor CategoryTheory.ofEquivFunctor
 
 end CategoryTheory

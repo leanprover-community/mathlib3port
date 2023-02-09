@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.category.Top.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,12 +106,12 @@ def isoOfHomeo {X Y : TopCat.{u}} (f : X ≃ₜ Y) : X ≅ Y
 @[simps]
 def homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : X ≃ₜ Y
     where
-  toFun := f.Hom
+  toFun := f.hom
   invFun := f.inv
   left_inv x := by simp
   right_inv x := by simp
-  continuous_toFun := f.Hom.Continuous
-  continuous_invFun := f.inv.Continuous
+  continuous_toFun := f.hom.continuous
+  continuous_invFun := f.inv.continuous
 #align Top.homeo_of_iso TopCat.homeoOfIso
 
 @[simp]
@@ -131,7 +131,7 @@ theorem of_homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso 
 @[simp]
 theorem openEmbedding_iff_comp_isIso {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
-  (TopCat.homeoOfIso (asIso g)).OpenEmbedding.of_comp_iff f
+  (TopCat.homeoOfIso (asIso g)).openEmbedding.of_comp_iff f
 #align Top.open_embedding_iff_comp_is_iso TopCat.openEmbedding_iff_comp_isIso
 
 @[simp]
@@ -140,9 +140,9 @@ theorem openEmbedding_iff_isIso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z
   by
   constructor
   · intro h
-    convert h.comp (TopCat.homeoOfIso (as_iso f).symm).OpenEmbedding
-    exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm
-  · exact fun h => h.comp (TopCat.homeoOfIso (as_iso f)).OpenEmbedding
+    convert h.comp (TopCat.homeoOfIso (asIso f).symm).openEmbedding
+    exact congr_arg _ (IsIso.inv_hom_id_assoc f g).symm
+  · exact fun h => h.comp (TopCat.homeoOfIso (asIso f)).openEmbedding
 #align Top.open_embedding_iff_is_iso_comp TopCat.openEmbedding_iff_isIso_comp
 
 end TopCat

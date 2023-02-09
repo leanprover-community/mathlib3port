@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.archimedean
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique_add_zsmul_mem_Ico existsUnique_add_zsmul_mem_Icoₓ'. -/
 theorem existsUnique_add_zsmul_mem_Ico {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b + m • a ∈ Set.Ico c (c + a) :=
-  (Equiv.neg ℤ).Bijective.existsUnique_iff.2 <| by
+  (Equiv.neg ℤ).bijective.existsUnique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, ← sub_eq_add_neg] using
       existsUnique_sub_zsmul_mem_Ico ha b c
 #align exists_unique_add_zsmul_mem_Ico existsUnique_add_zsmul_mem_Ico
@@ -132,7 +132,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique_add_zsmul_mem_Ioc existsUnique_add_zsmul_mem_Iocₓ'. -/
 theorem existsUnique_add_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b + m • a ∈ Set.Ioc c (c + a) :=
-  (Equiv.addRight (1 : ℤ)).Bijective.existsUnique_iff.2 <| by
+  (Equiv.addRight (1 : ℤ)).bijective.existsUnique_iff.2 <| by
     simpa only [add_one_zsmul, sub_lt_iff_lt_add', le_sub_iff_add_le', ← add_assoc, and_comm,
       mem_Ioc, Equiv.coe_addRight, add_le_add_iff_right] using
       existsUnique_zsmul_near_of_pos ha (c - b)
@@ -146,7 +146,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align exists_unique_sub_zsmul_mem_Ioc existsUnique_sub_zsmul_mem_Iocₓ'. -/
 theorem existsUnique_sub_zsmul_mem_Ioc {a : α} (ha : 0 < a) (b c : α) :
     ∃! m : ℤ, b - m • a ∈ Set.Ioc c (c + a) :=
-  (Equiv.neg ℤ).Bijective.existsUnique_iff.2 <| by
+  (Equiv.neg ℤ).bijective.existsUnique_iff.2 <| by
     simpa only [Equiv.neg_apply, neg_zsmul, sub_neg_eq_add] using
       existsUnique_add_zsmul_mem_Ioc ha b c
 #align exists_unique_sub_zsmul_mem_Ioc existsUnique_sub_zsmul_mem_Ioc
@@ -557,7 +557,7 @@ theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x <
       let ⟨q, h⟩ := H x
       ⟨⌈q⌉₊,
         lt_of_lt_of_le h <| by
-          simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
+          simpa only [Rat.cast_coe_nat] using (@rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 #align archimedean_iff_rat_lt archimedean_iff_rat_lt
 
 /- warning: archimedean_iff_rat_le -> archimedean_iff_rat_le is a dubious translation:

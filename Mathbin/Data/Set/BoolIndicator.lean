@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dagur Tómas Ásgeirsson, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.bool_indicator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ theorem preimage_boolIndicator_eq_union (t : Set Bool) :
     s.boolIndicator ⁻¹' t = (if true ∈ t then s else ∅) ∪ if false ∈ t then sᶜ else ∅ :=
   by
   ext x
-  dsimp [bool_indicator]
+  dsimp [boolIndicator]
   split_ifs <;> tauto
 #align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_union
 
@@ -94,7 +94,7 @@ theorem preimage_boolIndicator (t : Set Bool) :
     s.boolIndicator ⁻¹' t = univ ∨
       s.boolIndicator ⁻¹' t = s ∨ s.boolIndicator ⁻¹' t = sᶜ ∨ s.boolIndicator ⁻¹' t = ∅ :=
   by
-  simp only [preimage_bool_indicator_eq_union]
+  simp only [preimage_boolIndicator_eq_union]
   split_ifs <;> simp [s.union_compl_self]
 #align set.preimage_bool_indicator Set.preimage_boolIndicator
 

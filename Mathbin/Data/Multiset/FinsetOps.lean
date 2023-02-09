@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.finset_ops
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndinsert_self Multiset.le_ndinsert_selfₓ'. -/
 @[simp]
 theorem le_ndinsert_self (a : α) (s : Multiset α) : s ≤ ndinsert a s :=
-  Quot.inductionOn s fun l => (sublist_insert _ _).Subperm
+  Quot.inductionOn s fun l => (sublist_insert _ _).subperm
 #align multiset.le_ndinsert_self Multiset.le_ndinsert_self
 
 #print Multiset.mem_ndinsert_self /-
@@ -163,14 +163,14 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
   have :
     ∀ (t) (eq : s.ndinsert a = t),
       t.attach =
-        ndinsert ⟨a, Eq ▸ mem_ndinsert_self a s⟩
-          (s.attach.map fun p => ⟨p.1, Eq ▸ mem_ndinsert_of_mem p.2⟩) :=
+        ndinsert ⟨a, eq ▸ mem_ndinsert_self a s⟩
+          (s.attach.map fun p => ⟨p.1, eq ▸ mem_ndinsert_of_mem p.2⟩) :=
     by
     intro t ht
     by_cases a ∈ s
     · rw [ndinsert_of_mem h] at ht
       subst ht
-      rw [Eq, map_id, ndinsert_of_mem (mem_attach _ _)]
+      rw [eq, map_id, ndinsert_of_mem (mem_attach _ _)]
     · rw [ndinsert_of_not_mem h] at ht
       subst ht
       simp [attach_cons, h]
@@ -242,7 +242,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) t (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.le_ndunion_right Multiset.le_ndunion_rightₓ'. -/
 theorem le_ndunion_right (s t : Multiset α) : t ≤ ndunion s t :=
-  Quotient.induction_on₂ s t fun l₁ l₂ => (suffix_union_right _ _).Sublist.Subperm
+  Quotient.induction_on₂ s t fun l₁ l₂ => (suffix_union_right _ _).sublist.subperm
 #align multiset.le_ndunion_right Multiset.le_ndunion_right
 
 #print Multiset.subset_ndunion_right /-
@@ -258,7 +258,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α) (t : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.ndunion.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s t) (HAdd.hAdd.{u1, u1, u1} (Multiset.{u1} α) (Multiset.{u1} α) (Multiset.{u1} α) (instHAdd.{u1} (Multiset.{u1} α) (Multiset.instAddMultiset.{u1} α)) s t)
 Case conversion may be inaccurate. Consider using '#align multiset.ndunion_le_add Multiset.ndunion_le_addₓ'. -/
 theorem ndunion_le_add (s t : Multiset α) : ndunion s t ≤ s + t :=
-  Quotient.induction_on₂ s t fun l₁ l₂ => (union_sublist_append _ _).Subperm
+  Quotient.induction_on₂ s t fun l₁ l₂ => (union_sublist_append _ _).subperm
 #align multiset.ndunion_le_add Multiset.ndunion_le_add
 
 /- warning: multiset.ndunion_le -> Multiset.ndunion_le is a dubious translation:

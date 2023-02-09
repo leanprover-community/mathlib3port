@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.contractible
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,11 +46,11 @@ protected theorem StarConvex.contractibleSpace (h : StarConvex ℝ x s) (hne : s
 protected theorem Convex.contractibleSpace (hs : Convex ℝ s) (hne : s.Nonempty) :
     ContractibleSpace s :=
   let ⟨x, hx⟩ := hne
-  (hs.StarConvex hx).ContractibleSpace hne
+  (hs.starConvex hx).contractibleSpace hne
 #align convex.contractible_space Convex.contractibleSpace
 
 instance (priority := 100) RealTopologicalVectorSpace.contractibleSpace : ContractibleSpace E :=
   (Homeomorph.Set.univ E).contractibleSpace_iff.mp <|
-    convex_univ.ContractibleSpace Set.univ_nonempty
+    convex_univ.contractibleSpace Set.univ_nonempty
 #align real_topological_vector_space.contractible_space RealTopologicalVectorSpace.contractibleSpace
 

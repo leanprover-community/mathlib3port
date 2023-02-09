@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module linear_algebra.unitary_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,13 +170,13 @@ def toLinearEquiv (A : unitaryGroup n α) : (n → α) ≃ₗ[α] n → α :=
     invFun := toLin' A⁻¹
     left_inv := fun x =>
       calc
-        (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by rw [← to_lin'_mul]
-        _ = x := by rw [mul_left_inv, to_lin'_one, id_apply]
+        (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by rw [← toLin'_mul]
+        _ = x := by rw [mul_left_inv, toLin'_one, id_apply]
         
     right_inv := fun x =>
       calc
-        (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by rw [← to_lin'_mul]
-        _ = x := by rw [mul_right_inv, to_lin'_one, id_apply]
+        (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by rw [← toLin'_mul]
+        _ = x := by rw [mul_right_inv, toLin'_one, id_apply]
          }
 #align matrix.unitary_group.to_linear_equiv Matrix.unitaryGroup.toLinearEquiv
 
@@ -193,7 +193,7 @@ theorem coe_toGL (A : unitaryGroup n α) : ↑(toGL A) = toLin' A :=
 theorem toGL_one : toGL (1 : unitaryGroup n α) = 1 :=
   by
   ext1 v i
-  rw [coe_to_GL, to_lin'_one]
+  rw [coe_toGL, toLin'_one]
   rfl
 #align matrix.unitary_group.to_GL_one Matrix.unitaryGroup.toGL_one
 
@@ -201,7 +201,7 @@ theorem toGL_one : toGL (1 : unitaryGroup n α) = 1 :=
 theorem toGL_mul (A B : unitaryGroup n α) : toGL (A * B) = toGL A * toGL B :=
   by
   ext1 v i
-  rw [coe_to_GL, to_lin'_mul]
+  rw [coe_toGL, toLin'_mul]
   rfl
 #align matrix.unitary_group.to_GL_mul Matrix.unitaryGroup.toGL_mul
 

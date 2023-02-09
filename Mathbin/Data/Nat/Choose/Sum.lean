@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Patrick Stevens
 
 ! This file was ported from Lean 3 source module data.nat.choose.sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     rw [choose_succ_succ, Nat.cast_add, mul_add]
     congr 1
     · rw [pow_succ x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
-    · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).Eq]
+    · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).eq]
       by_cases h_eq : i = n
       · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
       · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
@@ -97,7 +97,7 @@ also with the binomial coefficient applied via scalar action of ℕ. -/
 theorem add_pow' :
     (x + y) ^ n = ∑ m in Nat.antidiagonal n, choose n m.fst • (x ^ m.fst * y ^ m.snd) := by
   simp_rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun m p => choose n m • (x ^ m * y ^ p),
-    _root_.nsmul_eq_mul, cast_comm, h.add_pow]
+    nsmul_eq_mul, cast_comm, h.add_pow]
 #align commute.add_pow' Commute.add_pow'
 
 end Commute
@@ -224,9 +224,9 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
     rw [mem_powerset] at hy
     exact card_le_of_subset hy
   · refine' sum_congr rfl fun y hy => _
-    rw [← card_powerset_len, ← sum_const]
+    rw [← card_powersetLen, ← sum_const]
     refine' sum_congr powerset_len_eq_filter.symm fun z hz => _
-    rw [(mem_powerset_len.1 hz).2]
+    rw [(mem_powersetLen.1 hz).2]
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 /- warning: finset.sum_powerset_neg_one_pow_card -> Finset.sum_powerset_neg_one_pow_card is a dubious translation:

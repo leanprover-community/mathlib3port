@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.field.unit_ball
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,13 +38,13 @@ instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitBall 𝕜)
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (ball (0 : 𝕜) 1) :=
-  (Subsemigroup.unitBall 𝕜).HasContinuousMul
+  (Subsemigroup.unitBall 𝕜).hasContinuousMul
 
 instance [SemiNormedCommRing 𝕜] : CommSemigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toCommSemigroup (Subsemigroup.unitBall 𝕜)
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (ball (0 : 𝕜) 1) :=
-  Subtype.coe_injective.HasDistribNeg (coe : ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.hasDistribNeg (coe : ball (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 @[simp, norm_cast]
 theorem coe_mul_unit_ball [NonUnitalSemiNormedRing 𝕜] (x y : ball (0 : 𝕜) 1) :
@@ -65,10 +65,10 @@ instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (closedBall (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitClosedBall 𝕜)
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (closedBall (0 : 𝕜) 1) :=
-  Subtype.coe_injective.HasDistribNeg (coe : closedBall (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.hasDistribNeg (coe : closedBall (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (closedBall (0 : 𝕜) 1) :=
-  (Subsemigroup.unitClosedBall 𝕜).HasContinuousMul
+  (Subsemigroup.unitClosedBall 𝕜).hasContinuousMul
 
 @[simp, norm_cast]
 theorem coe_mul_unit_closedBall [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
@@ -168,7 +168,7 @@ theorem coe_pow_unit_sphere [NormedDivisionRing 𝕜] (x : sphere (0 : 𝕜) 1) 
 
 /-- Monoid homomorphism from the unit sphere to the group of units. -/
 def unitSphereToUnits (𝕜 : Type _) [NormedDivisionRing 𝕜] : sphere (0 : 𝕜) 1 →* Units 𝕜 :=
-  Units.liftRight (Submonoid.unitSphere 𝕜).Subtype
+  Units.liftRight (Submonoid.unitSphere 𝕜).subtype
     (fun x => Units.mk0 x <| ne_zero_of_mem_unit_sphere _) fun x => rfl
 #align unit_sphere_to_units unitSphereToUnits
 
@@ -184,17 +184,17 @@ theorem unitSphereToUnits_injective [NormedDivisionRing 𝕜] :
 #align unit_sphere_to_units_injective unitSphereToUnits_injective
 
 instance [NormedDivisionRing 𝕜] : Group (sphere (0 : 𝕜) 1) :=
-  unitSphereToUnits_injective.Group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
+  unitSphereToUnits_injective.group (unitSphereToUnits 𝕜) (Units.ext rfl) (fun x y => Units.ext rfl)
     (fun x => Units.ext rfl) (fun x y => Units.ext <| div_eq_mul_inv _ _)
     (fun x n => Units.ext (Units.val_pow_eq_pow_val (unitSphereToUnits 𝕜 x) n).symm) fun x n =>
     Units.ext (Units.val_zpow_eq_zpow_val (unitSphereToUnits 𝕜 x) n).symm
 
 instance [NormedDivisionRing 𝕜] : HasDistribNeg (sphere (0 : 𝕜) 1) :=
-  Subtype.coe_injective.HasDistribNeg (coe : sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.hasDistribNeg (coe : sphere (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
 instance [NormedDivisionRing 𝕜] : TopologicalGroup (sphere (0 : 𝕜) 1)
     where
-  to_hasContinuousMul := (Submonoid.unitSphere 𝕜).HasContinuousMul
+  to_hasContinuousMul := (Submonoid.unitSphere 𝕜).hasContinuousMul
   continuous_inv := (continuous_subtype_val.inv₀ ne_zero_of_mem_unit_sphere).subtype_mk _
 
 instance [NormedField 𝕜] : CommGroup (sphere (0 : 𝕜) 1) :=

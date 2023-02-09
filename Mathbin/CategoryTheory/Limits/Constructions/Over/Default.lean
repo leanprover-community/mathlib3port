@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.default
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,36 +36,36 @@ namespace CategoryTheory.Over
 /-- Make sure we can derive pullbacks in `over B`. -/
 instance {B : C} [HasPullbacks C] : HasPullbacks (Over B) :=
   by
-  letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_cospan)) C :=
-    has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
-  letI : category (UliftHom.{v} (ULift.{v} walking_cospan)) := inferInstance
-  exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
+  letI : HasLimitsOfShape (UliftHom.{v} (ULift.{v} WalkingCospan)) C :=
+    hasLimitsOfShapeOfEquivalence (UliftHomUliftCategory.equiv.{v} _)
+  letI : Category (UliftHom.{v} (ULift.{v} WalkingCospan)) := inferInstance
+  exact hasLimitsOfShapeOfEquivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
 
 /-- Make sure we can derive equalizers in `over B`. -/
 instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) :=
   by
-  letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_parallel_pair)) C :=
-    has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
-  letI : category (UliftHom.{v} (ULift.{v} walking_parallel_pair)) := inferInstance
-  exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
+  letI : HasLimitsOfShape (UliftHom.{v} (ULift.{v} WalkingParallelPair)) C :=
+    hasLimitsOfShapeOfEquivalence (UliftHomUliftCategory.equiv.{v} _)
+  letI : Category (UliftHom.{v} (ULift.{v} WalkingParallelPair)) := inferInstance
+  exact hasLimitsOfShapeOfEquivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
 
 instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) :=
   by
   apply @has_finite_limits_of_has_equalizers_and_finite_products _ _ _ _
-  · exact construct_products.over_finite_products_of_finite_wide_pullbacks
+  · exact ConstructProducts.overFiniteProductsOfFiniteWidePullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
-    · haveI : has_pullbacks C := ⟨by infer_instance⟩
-      exact construct_products.over_binary_product_of_pullback
+    · haveI : HasPullbacks C := ⟨by infer_instance⟩
+      exact ConstructProducts.over_binary_product_of_pullback
     · infer_instance
 #align category_theory.over.has_finite_limits CategoryTheory.Over.hasFiniteLimits
 
 instance hasLimits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w} (Over B) :=
   by
   apply @has_limits_of_has_equalizers_and_products _ _ _ _
-  · exact construct_products.over_products_of_wide_pullbacks
+  · exact ConstructProducts.over_products_of_wide_pullbacks
   · apply @has_equalizers_of_has_pullbacks_and_binary_products _ _ _ _
-    · haveI : has_pullbacks C := ⟨inferInstance⟩
-      exact construct_products.over_binary_product_of_pullback
+    · haveI : HasPullbacks C := ⟨inferInstance⟩
+      exact ConstructProducts.over_binary_product_of_pullback
     · infer_instance
 #align category_theory.over.has_limits CategoryTheory.Over.hasLimits
 

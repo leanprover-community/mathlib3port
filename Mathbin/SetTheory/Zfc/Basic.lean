@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.zfc.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ universe u v
 /-- The type of `n`-ary functions `α → α → ... → α`. -/
 def Arity (α : Type u) : ℕ → Type u
   | 0 => α
-  | n + 1 => α → Arity n
+  | n + 1 => α → arity n
 #align arity Arity
 
 @[simp]
@@ -115,7 +115,7 @@ end Arity
   The ZFC universe is defined as a quotient of this
   to ensure extensionality. -/
 inductive PSet : Type (u + 1)
-  | mk (α : Type u) (A : α → PSet) : PSet
+  | mk (α : Type u) (A : α → pSet) : pSet
 #align pSet PSet
 
 namespace PSet
@@ -126,7 +126,7 @@ def Type : PSet → Type u
 #align pSet.type PSet.Type
 
 /-- The underlying pre-set family of a pre-set -/
-def func : ∀ x : PSet, x.type → PSet
+def func : ∀ x : PSet, x.Type → PSet
   | ⟨α, A⟩ => A
 #align pSet.func PSet.func
 
@@ -141,7 +141,7 @@ theorem mk_func (α A) : func ⟨α, A⟩ = A :=
 #align pSet.mk_func PSet.mk_func
 
 @[simp]
-theorem eta : ∀ x : PSet, mk x.type x.func = x
+theorem eta : ∀ x : PSet, mk x.Type x.func = x
   | ⟨α, A⟩ => rfl
 #align pSet.eta PSet.eta
 
@@ -201,7 +201,7 @@ protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv 
   h1.euc h2.symm
 #align pSet.equiv.trans PSet.Equiv.trans
 
-protected theorem equiv_of_isEmpty (x y : PSet) [IsEmpty x.type] [IsEmpty y.type] : Equiv x y :=
+protected theorem equiv_of_isEmpty (x y : rfl) [IsEmpty x.Type] [IsEmpty y.Type] : Equiv x y :=
   equiv_iff.2 <| by simp
 #align pSet.equiv_of_is_empty PSet.equiv_of_isEmpty
 
@@ -275,10 +275,10 @@ theorem Mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
   ⟨a, Equiv.refl (A a)⟩
 #align pSet.mem.mk PSet.Mem.mk
 
-theorem func_mem (x : PSet) (i : x.type) : x.func i ∈ x :=
+theorem func_mem (x : PSet) (i : x.Type) : x.func i ∈ x :=
   by
   cases x
-  apply mem.mk
+  apply Mem.mk
 #align pSet.func_mem PSet.func_mem
 
 theorem Mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
@@ -329,7 +329,7 @@ instance : WellFoundedRelation PSet :=
   ⟨_, mem_wf⟩
 
 instance : IsAsymm PSet (· ∈ ·) :=
-  mem_wf.IsAsymm
+  mem_wf.isAsymm
 
 theorem mem_asymm {x y : PSet} : x ∈ y → y ∉ x :=
   asymm
@@ -367,11 +367,11 @@ theorem nonempty_toSet_iff {u : PSet} : u.toSet.Nonempty ↔ u.Nonempty :=
   Iff.rfl
 #align pSet.nonempty_to_set_iff PSet.nonempty_toSet_iff
 
-theorem nonempty_type_iff_nonempty {x : PSet} : Nonempty x.type ↔ PSet.Nonempty x :=
+theorem nonempty_type_iff_nonempty {x : PSet} : Nonempty x.Type ↔ PSet.Nonempty x :=
   ⟨fun ⟨i⟩ => ⟨_, func_mem _ i⟩, fun ⟨i, j, h⟩ => ⟨j⟩⟩
 #align pSet.nonempty_type_iff_nonempty PSet.nonempty_type_iff_nonempty
 
-theorem nonempty_of_nonempty_type (x : PSet) [h : Nonempty x.type] : PSet.Nonempty x :=
+theorem nonempty_of_nonempty_type (x : PSet) [h : Nonempty x.Type] : PSet.Nonempty x :=
   nonempty_type_iff_nonempty.1 h
 #align pSet.nonempty_of_nonempty_type PSet.nonempty_of_nonempty_type
 
@@ -403,7 +403,7 @@ theorem not_mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
 #align pSet.not_mem_empty PSet.not_mem_empty
 
 @[simp]
-theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
+theorem toSet_empty : toSet ∅ = ∅ := by simp [toSet]
 #align pSet.to_set_empty PSet.toSet_empty
 
 @[simp]
@@ -414,13 +414,13 @@ theorem empty_subset (x : PSet.{u}) : (∅ : PSet) ⊆ x := fun x => x.elim
 theorem not_nonempty_empty : ¬PSet.Nonempty ∅ := by simp [PSet.Nonempty]
 #align pSet.not_nonempty_empty PSet.not_nonempty_empty
 
-protected theorem equiv_empty (x : PSet) [IsEmpty x.type] : Equiv x ∅ :=
+protected theorem equiv_empty (x : PSet) [IsEmpty x.Type] : Equiv x ∅ :=
   PSet.equiv_of_isEmpty x _
 #align pSet.equiv_empty PSet.equiv_empty
 
 /-- Insert an element into a pre-set -/
 protected def insert (x y : PSet) : PSet :=
-  ⟨Option y.type, fun o => Option.rec x y.func o⟩
+  ⟨Option y.Type, fun o => Option.rec x y.func o⟩
 #align pSet.insert PSet.insert
 
 instance : Insert PSet PSet :=
@@ -432,7 +432,7 @@ instance : Singleton PSet PSet :=
 instance : IsLawfulSingleton PSet PSet :=
   ⟨fun _ => rfl⟩
 
-instance (x y : PSet) : Inhabited (insert x y).type :=
+instance (x y : PSet) : Inhabited (insert x y).Type :=
   Option.inhabited _
 
 /-- The n-th von Neumann ordinal -/
@@ -456,7 +456,7 @@ instance : Sep PSet PSet :=
 
 /-- The pre-set powerset operator -/
 def powerset (x : PSet) : PSet :=
-  ⟨Set x.type, fun p => ⟨{ a // p a }, fun y => x.func y.1⟩⟩
+  ⟨Set x.Type, fun p => ⟨{ a // p a }, fun y => x.func y.1⟩⟩
 #align pSet.powerset PSet.powerset
 
 @[simp]
@@ -471,7 +471,7 @@ theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
 
 /-- The pre-set union operator -/
 def sUnion (a : PSet) : PSet :=
-  ⟨Σx, (a.func x).type, fun ⟨x, y⟩ => (a.func x).func y⟩
+  ⟨Σx, (a.func x).Type, fun ⟨x, y⟩ => (a.func x).func y⟩
 #align pSet.sUnion PSet.sUnion
 
 -- mathport name: pSet.sUnion
@@ -481,10 +481,10 @@ prefix:110 "⋃₀ " => PSet.sUnion
 @[simp]
 theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
-    ⟨fun ⟨⟨a, c⟩, (e : Equiv y ((A a).func c))⟩ =>
-      have : func (A a) c ∈ mk (A a).type (A a).func := Mem.mk (A a).func c
+    ⟨fun ⟨⟨a, c⟩, (e : equiv y ((A a).func c))⟩ =>
+      have : func (A a) c ∈ mk (A a).Type (A a).func := Mem.mk (A a).func c
       ⟨_, Mem.mk _ _, (Mem.congr_left e).2 (by rwa [eta] at this)⟩,
-      fun ⟨⟨β, B⟩, ⟨a, (e : Equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ =>
+      fun ⟨⟨β, B⟩, ⟨a, (e : equiv (mk β B) (A a))⟩, ⟨b, yb⟩⟩ =>
       by
       rw [← eta (A a)] at e
       exact
@@ -504,7 +504,7 @@ theorem toSet_sUnion (x : PSet.{u}) : (⋃₀ x).toSet = ⋃₀ (toSet '' x.toSe
 
 /-- The image of a function from pre-sets to pre-sets. -/
 def image (f : PSet.{u} → PSet.{u}) (x : PSet.{u}) : PSet :=
-  ⟨x.type, f ∘ x.func⟩
+  ⟨x.Type, f ∘ x.func⟩
 #align pSet.image PSet.image
 
 theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equiv (f x) (f y)) :
@@ -658,16 +658,16 @@ noncomputable def allDefinable : ∀ {n} (F : Arity SetCat.{u} n), Definable n F
   | 0, F =>
     let p := @Quotient.exists_rep PSet _ F
     Definable.eqMk ⟨choose p, Equiv.rfl⟩ (choose_spec p)
-  | n + 1, (F : Arity SetCat.{u} (n + 1)) =>
+  | n + 1, (F : arity SetCat.{u} (n + 1)) =>
     by
     have I := fun x => all_definable (F x)
-    refine' definable.eq_mk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
-    · dsimp [arity.equiv]
+    refine' Definable.eqMk ⟨fun x : PSet => (@definable.resp _ _ (I ⟦x⟧)).1, _⟩ _
+    · dsimp [Arity.Equiv]
       intro x y h
-      rw [@Quotient.sound PSet _ _ _ h]
-      exact (definable.resp (F ⟦y⟧)).2
+      rw [@quotient.sound PSet _ _ _ h]
+      exact (Definable.resp (F ⟦y⟧)).2
     refine' funext fun q => Quotient.inductionOn q fun x => _
-    simp_rw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
+    simp_rw [Resp.eval_val, Resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
     exact @definable.eq _ (F ⟦x⟧) (I ⟦x⟧)
 #align classical.all_definable Classical.allDefinable
 
@@ -833,7 +833,7 @@ theorem not_mem_empty (x) : x ∉ (∅ : SetCat.{u}) :=
 #align Set.not_mem_empty SetCat.not_mem_empty
 
 @[simp]
-theorem toSet_empty : toSet ∅ = ∅ := by simp [to_set]
+theorem toSet_empty : toSet ∅ = ∅ := by simp [toSet]
 #align Set.to_set_empty SetCat.toSet_empty
 
 @[simp]
@@ -903,8 +903,8 @@ theorem mem_insert_iff {x y z : SetCat.{u}} : x ∈ insert y z ↔ x = y ∨ x �
         | ⟨none, h⟩ => Or.inl (Quotient.sound h),
         fun m =>
         match m with
-        | Or.inr ⟨a, ha⟩ => ⟨some a, ha⟩
-        | Or.inl h => ⟨none, Quotient.exact h⟩⟩
+        | or.inr ⟨a, ha⟩ => ⟨some a, ha⟩
+        | or.inl h => ⟨none, Quotient.exact h⟩⟩
 #align Set.mem_insert_iff SetCat.mem_insert_iff
 
 theorem mem_insert (x y : SetCat) : x ∈ insert x y :=
@@ -985,7 +985,7 @@ instance : Sep SetCat SetCat :=
 @[simp]
 theorem mem_sep {p : SetCat.{u} → Prop} {x y : SetCat.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
-    ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@Quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
+    ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
       ⟨⟨a, by
           rw [mk_func] at h
           rwa [mk_func, ← SetCat.sound h]⟩,
@@ -1030,7 +1030,7 @@ theorem sUnion_lem {α β : Type u} (A : α → PSet) (B : β → PSet) (αβ : 
     rw [ea, eb] at hb
     cases' hb with γδ δγ
     exact
-      let c : type (A a) := c
+      let c : Type (A a) := c
       let ⟨d, hd⟩ := γδ (by rwa [ea] at c)
       have : PSet.Equiv ((A a).func c) ((B b).func (Eq.ndrec d (Eq.symm eb))) :=
         match A a, B b, ea, eb, c, d, hd with
@@ -1154,7 +1154,7 @@ theorem toSet_sdiff (x y : SetCat.{u}) : (x \ y).toSet = x.toSet \ y.toSet :=
 @[simp]
 theorem mem_union {x y z : SetCat.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :=
   by
-  rw [← mem_to_set]
+  rw [← mem_toSet]
   simp
 #align Set.mem_union SetCat.mem_union
 
@@ -1177,7 +1177,7 @@ theorem induction_on {p : SetCat → Prop} (x) (h : ∀ x, (∀ y ∈ x, p y) �
         show @Membership.Mem _ _ SetCat.hasMem y ⟦⟨α, A⟩⟧ → p y from
           Quotient.inductionOn y fun v ⟨a, ha⟩ =>
             by
-            rw [@Quotient.sound PSet _ _ _ ha]
+            rw [@quotient.sound PSet _ _ _ ha]
             exact IH a
 #align Set.induction_on SetCat.induction_on
 
@@ -1189,7 +1189,7 @@ instance : WellFoundedRelation SetCat :=
   ⟨_, mem_wf⟩
 
 instance : IsAsymm SetCat (· ∈ ·) :=
-  mem_wf.IsAsymm
+  mem_wf.isAsymm
 
 theorem mem_asymm {x y : SetCat} : x ∈ y → y ∉ x :=
   asymm
@@ -1205,7 +1205,7 @@ theorem regularity (x : SetCat.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅
       (eq_empty x).2 fun y =>
         induction_on y fun z (IH : ∀ w : SetCat.{u}, w ∈ z → w ∉ x) =>
           show z ∉ x from fun zx =>
-            Ne
+            ne
               ⟨z, zx,
                 (eq_empty _).2 fun w wxz =>
                   let ⟨wx, wz⟩ := mem_inter.1 wxz
@@ -1220,8 +1220,8 @@ def image (f : SetCat → SetCat) [H : Definable 1 f] : SetCat → SetCat :=
       Mem.ext fun z =>
         Iff.trans (mem_image r.2) <|
           Iff.trans
-              ⟨fun ⟨w, h1, h2⟩ => ⟨w, (mem.congr_right e).1 h1, h2⟩, fun ⟨w, h1, h2⟩ =>
-                ⟨w, (mem.congr_right e).2 h1, h2⟩⟩ <|
+              ⟨fun ⟨w, h1, h2⟩ => ⟨w, (Mem.congr_right e).1 h1, h2⟩, fun ⟨w, h1, h2⟩ =>
+                ⟨w, (Mem.congr_right e).2 h1, h2⟩⟩ <|
             Iff.symm (mem_image r.2)⟩
 #align Set.image SetCat.image
 
@@ -1309,7 +1309,7 @@ def prod : SetCat.{u} → SetCat.{u} → SetCat.{u} :=
 
 @[simp]
 theorem mem_prod {x y z : SetCat.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
-  simp [Prod]
+  simp [prod]
 #align Set.mem_prod SetCat.mem_prod
 
 @[simp]
@@ -1333,7 +1333,7 @@ def funs (x y : SetCat.{u}) : SetCat.{u} :=
 #align Set.funs SetCat.funs
 
 @[simp]
-theorem mem_funs {x y f : SetCat.{u}} : f ∈ funs x y ↔ IsFunc x y f := by simp [funs, is_func]
+theorem mem_funs {x y f : SetCat.{u}} : f ∈ funs x y ↔ IsFunc x y f := by simp [funs, IsFunc]
 #align Set.mem_funs SetCat.mem_funs
 
 -- TODO(Mario): Prove this computably
@@ -1386,7 +1386,7 @@ section Hereditarily
 variable {p : SetCat.{u} → Prop} {x y : SetCat.{u}}
 
 theorem hereditarily_iff : Hereditarily p x ↔ p x ∧ ∀ y ∈ x, Hereditarily p y := by
-  rw [← hereditarily]
+  rw [← Hereditarily]
 #align Set.hereditarily_iff SetCat.hereditarily_iff
 
 alias hereditarily_iff ↔ hereditarily.def _
@@ -1481,7 +1481,7 @@ theorem mem_univ_hom (x : SetCat.{u}) : univ.{u} x :=
 
 theorem mem_wf : @WellFounded Class.{u} (· ∈ ·) :=
   ⟨by
-    have H : ∀ x : SetCat.{u}, @Acc Class.{u} (· ∈ ·) ↑x :=
+    have H : ∀ x : SetCat.{u}, @acc Class.{u} (· ∈ ·) ↑x :=
       by
       refine' fun a => SetCat.induction_on a fun x IH => ⟨x, _⟩
       rintro A ⟨z, rfl, hz⟩
@@ -1495,7 +1495,7 @@ instance : WellFoundedRelation Class :=
   ⟨_, mem_wf⟩
 
 instance : IsAsymm Class (· ∈ ·) :=
-  mem_wf.IsAsymm
+  mem_wf.isAsymm
 
 theorem mem_asymm {x y : Class} : x ∈ y → y ∉ x :=
   asymm
@@ -1522,7 +1522,7 @@ def congToClass (x : Set Class.{u}) : Class.{u} :=
 theorem congToClass_empty : congToClass ∅ = ∅ :=
   by
   ext
-  simp [Cong_to_Class]
+  simp [congToClass]
 #align Class.Cong_to_Class_empty Class.congToClass_empty
 
 /-- Convert a class into a conglomerate (a collection of classes) -/
@@ -1534,7 +1534,7 @@ def classToCong (x : Class.{u}) : Set Class.{u} :=
 theorem classToCong_empty : classToCong ∅ = ∅ :=
   by
   ext
-  simp [Class_to_Cong]
+  simp [classToCong]
 #align Class.Class_to_Cong_empty Class.classToCong_empty
 
 /-- The power class of a class is the class of all subclasses that are ZFC sets -/
@@ -1559,7 +1559,7 @@ theorem ofSet.inj {x y : SetCat.{u}} (h : (x : Class.{u}) = y) : x = y :=
 
 @[simp]
 theorem toSet_of_setCat (A : Class.{u}) (x : SetCat.{u}) : ToSet A x ↔ A x :=
-  ⟨fun ⟨y, yx, py⟩ => by rwa [of_Set.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
+  ⟨fun ⟨y, yx, py⟩ => by rwa [ofSet.inj yx] at py, fun px => ⟨x, rfl, px⟩⟩
 #align Class.to_Set_of_Set Class.toSet_of_setCat
 
 @[simp]

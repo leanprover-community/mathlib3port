@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.independence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
     convert hh.units_smul a
     ext i
     exact (ha i).symm
-  · convert independent.mk _ _ h
+  · convert Independent.mk _ _ h
     · ext
       simp only [mk_rep]
     · intro i
@@ -66,7 +66,7 @@ theorem independent_iff : Independent f ↔ LinearIndependent K (Projectivizatio
 /-- A family of points in projective space is independent if and only if the family of
 submodules which the points determine is independent in the lattice-theoretic sense. -/
 theorem independent_iff_completeLattice_independent :
-    Independent f ↔ CompleteLattice.Independent fun i => (f i).Submodule :=
+    Independent f ↔ CompleteLattice.Independent fun i => (f i).submodule :=
   by
   refine' ⟨_, fun h => _⟩
   · rintro ⟨f, hf, hi⟩
@@ -96,7 +96,7 @@ theorem dependent_iff : Dependent f ↔ ¬LinearIndependent K (Projectivization.
     convert hh1.units_smul a⁻¹
     ext i
     simp only [← ha, inv_smul_smul, Pi.smul_apply', Pi.inv_apply, Function.comp_apply]
-  · convert dependent.mk _ _ h
+  · convert Dependent.mk _ _ h
     · ext i
       simp only [mk_rep]
     · exact fun i => rep_nonzero (f i)

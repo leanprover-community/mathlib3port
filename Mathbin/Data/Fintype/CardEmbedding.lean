@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.fintype.card_embedding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
     · letI := Fintype.ofEquiv _ e.symm
       rw [← card_congr (Equiv.embeddingCongr e (Equiv.refl β)), ih, card_congr e]
     · rw [card_pempty, Nat.descFactorial_zero, card_eq_one_iff]
-      exact ⟨embedding.of_is_empty, fun x => FunLike.ext _ _ isEmptyElim⟩
-    · rw [card_option, Nat.descFactorial_succ, card_congr (embedding.option_embedding_equiv α β),
+      exact ⟨Embedding.ofIsEmpty, fun x => FunLike.ext _ _ isEmptyElim⟩
+    · rw [card_option, Nat.descFactorial_succ, card_congr (Embedding.optionEmbeddingEquiv α β),
         card_sigma, ← ih]
       simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ,
         smul_eq_mul, mul_comm]

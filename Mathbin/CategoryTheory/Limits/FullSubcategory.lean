@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.full_subcategory
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem hasLimitOfClosedUnderLimits (h : ClosedUnderLimitsOfShape J P) (F : J �
     [HasLimit (F ⋙ fullSubcategoryInclusion P)] : HasLimit F :=
   have : CreatesLimit F (fullSubcategoryInclusion P) :=
     createsLimitFullSubcategoryInclusionOfClosed h F
-  has_limit_of_created F (full_subcategory_inclusion P)
+  hasLimitOfCreated F (fullSubcategoryInclusion P)
 #align category_theory.limits.has_limit_of_closed_under_limits CategoryTheory.Limits.hasLimitOfClosedUnderLimits
 
 theorem hasLimitsOfShapeOfClosedUnderLimits (h : ClosedUnderLimitsOfShape J P)
@@ -137,7 +137,7 @@ theorem hasColimitOfClosedUnderColimits (h : ClosedUnderColimitsOfShape J P)
     (F : J ⥤ FullSubcategory P) [HasColimit (F ⋙ fullSubcategoryInclusion P)] : HasColimit F :=
   have : CreatesColimit F (fullSubcategoryInclusion P) :=
     createsColimitFullSubcategoryInclusionOfClosed h F
-  has_colimit_of_created F (full_subcategory_inclusion P)
+  hasColimitOfCreated F (fullSubcategoryInclusion P)
 #align category_theory.limits.has_colimit_of_closed_under_colimits CategoryTheory.Limits.hasColimitOfClosedUnderColimits
 
 theorem hasColimitsOfShapeOfClosedUnderColimits (h : ClosedUnderColimitsOfShape J P)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Simon Hudon
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.of_has_finite_products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,10 +81,10 @@ def symmetricOfHasFiniteProducts [HasTerminal C] [HasBinaryProducts C] : Symmetr
     dsimp [tensor_hom]
     simp
   hexagon_forward' X Y Z := by
-    dsimp [monoidal_of_has_finite_products]
+    dsimp [monoidalOfHasFiniteProducts]
     simp
   hexagon_reverse' X Y Z := by
-    dsimp [monoidal_of_has_finite_products]
+    dsimp [monoidalOfHasFiniteProducts]
     simp
   symmetry' X Y := by
     dsimp
@@ -113,7 +113,7 @@ theorem tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.p
 #align category_theory.monoidal_of_has_finite_products.tensor_hom CategoryTheory.monoidalOfHasFiniteProducts.tensorHom
 
 @[simp]
-theorem leftUnitor_hom (X : C) : (λ_ X).Hom = Limits.prod.snd :=
+theorem leftUnitor_hom (X : C) : (λ_ X).hom = Limits.prod.snd :=
   rfl
 #align category_theory.monoidal_of_has_finite_products.left_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.leftUnitor_hom
 
@@ -123,7 +123,7 @@ theorem leftUnitor_inv (X : C) : (λ_ X).inv = prod.lift (terminal.from X) (𝟙
 #align category_theory.monoidal_of_has_finite_products.left_unitor_inv CategoryTheory.monoidalOfHasFiniteProducts.leftUnitor_inv
 
 @[simp]
-theorem rightUnitor_hom (X : C) : (ρ_ X).Hom = Limits.prod.fst :=
+theorem rightUnitor_hom (X : C) : (ρ_ X).hom = Limits.prod.fst :=
   rfl
 #align category_theory.monoidal_of_has_finite_products.right_unitor_hom CategoryTheory.monoidalOfHasFiniteProducts.rightUnitor_hom
 
@@ -136,7 +136,7 @@ theorem rightUnitor_inv (X : C) : (ρ_ X).inv = prod.lift (𝟙 _) (terminal.fro
 -- categories the right hand side will simplify significantly further.
 -- For now, we'll plan to create specialised simp lemmas in each particular category.
 theorem associator_hom (X Y Z : C) :
-    (α_ X Y Z).Hom =
+    (α_ X Y Z).hom =
       prod.lift (Limits.prod.fst ≫ Limits.prod.fst)
         (prod.lift (Limits.prod.fst ≫ Limits.prod.snd) Limits.prod.snd) :=
   rfl
@@ -180,10 +180,10 @@ def symmetricOfHasFiniteCoproducts [HasInitial C] [HasBinaryCoproducts C] : Symm
     dsimp [tensor_hom]
     simp
   hexagon_forward' X Y Z := by
-    dsimp [monoidal_of_has_finite_coproducts]
+    dsimp [monoidalOfHasFiniteCoproducts]
     simp
   hexagon_reverse' X Y Z := by
-    dsimp [monoidal_of_has_finite_coproducts]
+    dsimp [monoidalOfHasFiniteCoproducts]
     simp
   symmetry' X Y := by
     dsimp
@@ -212,12 +212,12 @@ theorem tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : f ⊗ g = Limits.c
 #align category_theory.monoidal_of_has_finite_coproducts.tensor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.tensorHom
 
 @[simp]
-theorem leftUnitor_hom (X : C) : (λ_ X).Hom = coprod.desc (initial.to X) (𝟙 _) :=
+theorem leftUnitor_hom (X : C) : (λ_ X).hom = coprod.desc (initial.to X) (𝟙 _) :=
   rfl
 #align category_theory.monoidal_of_has_finite_coproducts.left_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.leftUnitor_hom
 
 @[simp]
-theorem rightUnitor_hom (X : C) : (ρ_ X).Hom = coprod.desc (𝟙 _) (initial.to X) :=
+theorem rightUnitor_hom (X : C) : (ρ_ X).hom = coprod.desc (𝟙 _) (initial.to X) :=
   rfl
 #align category_theory.monoidal_of_has_finite_coproducts.right_unitor_hom CategoryTheory.monoidalOfHasFiniteCoproducts.rightUnitor_hom
 
@@ -235,7 +235,7 @@ theorem rightUnitor_inv (X : C) : (ρ_ X).inv = Limits.coprod.inl :=
 -- categories the right hand side will simplify significantly further.
 -- For now, we'll plan to create specialised simp lemmas in each particular category.
 theorem associator_hom (X Y Z : C) :
-    (α_ X Y Z).Hom =
+    (α_ X Y Z).hom =
       coprod.desc (coprod.desc coprod.inl (coprod.inl ≫ coprod.inr)) (coprod.inr ≫ coprod.inr) :=
   rfl
 #align category_theory.monoidal_of_has_finite_coproducts.associator_hom CategoryTheory.monoidalOfHasFiniteCoproducts.associator_hom

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedRing 𝔸] [
 theorem hasStrictFderivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasStrictFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
   by
-  convert (hasFpowerSeriesAtExpZeroOfRadiusPos h).HasStrictFderivAt
+  convert (hasFpowerSeriesAtExpZeroOfRadiusPos h).hasStrictFderivAt
   ext x
   change x = expSeries 𝕂 𝔸 1 fun _ => x
   simp [expSeries_apply_eq]
@@ -74,7 +74,7 @@ theorem hasStrictFderivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).
 `1 : 𝔸 →L[𝕂] 𝔸` at zero, as long as it converges on a neighborhood of zero. -/
 theorem hasFderivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
-  (hasStrictFderivAt_exp_zero_of_radius_pos h).HasFderivAt
+  (hasStrictFderivAt_exp_zero_of_radius_pos h).hasFderivAt
 #align has_fderiv_at_exp_zero_of_radius_pos hasFderivAt_exp_zero_of_radius_pos
 
 end AnyFieldAnyAlgebra
@@ -97,7 +97,7 @@ theorem hasFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     (fun h => exp 𝕂 x * (exp 𝕂 (0 + h) - exp 𝕂 0 - ContinuousLinearMap.id 𝕂 𝔸 h)) =ᶠ[𝓝 0] fun h =>
       exp 𝕂 (x + h) - exp 𝕂 x - exp 𝕂 x • ContinuousLinearMap.id 𝕂 𝔸 h
     by
-    refine' (is_o.const_mul_left _ _).congr' this (eventually_eq.refl _ _)
+    refine' (IsOCat.const_mul_left _ _).congr' this (EventuallyEq.refl _ _)
     rw [← hasFderivAt_iff_isOCat_nhds_zero]
     exact hasFderivAt_exp_zero_of_radius_pos hpos
   have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
@@ -114,7 +114,7 @@ theorem hasStrictFderivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     HasStrictFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
   let ⟨p, hp⟩ := analyticAt_exp_of_mem_ball x hx
-  hp.HasFderivAt.unique (hasFderivAt_exp_of_mem_ball hx) ▸ hp.HasStrictFderivAt
+  hp.hasFderivAt.unique (hasFderivAt_exp_of_mem_ball hx) ▸ hp.hasStrictFderivAt
 #align has_strict_fderiv_at_exp_of_mem_ball hasStrictFderivAt_exp_of_mem_ball
 
 end AnyFieldCommAlgebra
@@ -127,28 +127,28 @@ variable {𝕂 : Type _} [NontriviallyNormedField 𝕂] [CompleteSpace 𝕂]
 `exp 𝕂 x` at any point `x` in the disk of convergence. -/
 theorem hasStrictDerivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝕂}
     (hx : x ∈ Emetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasStrictDerivAt (exp 𝕂) (exp 𝕂 x) x :=
-  by simpa using (hasStrictFderivAt_exp_of_mem_ball hx).HasStrictDerivAt
+  by simpa using (hasStrictFderivAt_exp_of_mem_ball hx).hasStrictDerivAt
 #align has_strict_deriv_at_exp_of_mem_ball hasStrictDerivAt_exp_of_mem_ball
 
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has derivative
 `exp 𝕂 x` at any point `x` in the disk of convergence. -/
 theorem hasDerivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝕂}
     (hx : x ∈ Emetric.ball (0 : 𝕂) (expSeries 𝕂 𝕂).radius) : HasDerivAt (exp 𝕂) (exp 𝕂 x) x :=
-  (hasStrictDerivAt_exp_of_mem_ball hx).HasDerivAt
+  (hasStrictDerivAt_exp_of_mem_ball hx).hasDerivAt
 #align has_deriv_at_exp_of_mem_ball hasDerivAt_exp_of_mem_ball
 
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has strict derivative
 `1` at zero, as long as it converges on a neighborhood of zero. -/
 theorem hasStrictDerivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝕂).radius) :
     HasStrictDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
-  (hasStrictFderivAt_exp_zero_of_radius_pos h).HasStrictDerivAt
+  (hasStrictFderivAt_exp_zero_of_radius_pos h).hasStrictDerivAt
 #align has_strict_deriv_at_exp_zero_of_radius_pos hasStrictDerivAt_exp_zero_of_radius_pos
 
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has derivative
 `1` at zero, as long as it converges on a neighborhood of zero. -/
 theorem hasDerivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝕂).radius) :
     HasDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
-  (hasStrictDerivAt_exp_zero_of_radius_pos h).HasDerivAt
+  (hasStrictDerivAt_exp_zero_of_radius_pos h).hasDerivAt
 #align has_deriv_at_exp_zero_of_radius_pos hasDerivAt_exp_zero_of_radius_pos
 
 end deriv
@@ -166,7 +166,7 @@ theorem hasStrictFderivAt_exp_zero : HasStrictFderivAt (exp 𝕂) (1 : 𝔸 →L
 /-- The exponential in a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has Fréchet-derivative
 `1 : 𝔸 →L[𝕂] 𝔸` at zero. -/
 theorem hasFderivAt_exp_zero : HasFderivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
-  hasStrictFderivAt_exp_zero.HasFderivAt
+  hasStrictFderivAt_exp_zero.hasFderivAt
 #align has_fderiv_at_exp_zero hasFderivAt_exp_zero
 
 end IsROrCAnyAlgebra
@@ -184,7 +184,7 @@ theorem hasStrictFderivAt_exp {x : 𝔸} : HasStrictFderivAt (exp 𝕂) (exp �
 /-- The exponential map in a commutative Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has
 Fréchet-derivative `exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸` at any point `x`. -/
 theorem hasFderivAt_exp {x : 𝔸} : HasFderivAt (exp 𝕂) (exp 𝕂 x • 1 : 𝔸 →L[𝕂] 𝔸) x :=
-  hasStrictFderivAt_exp.HasFderivAt
+  hasStrictFderivAt_exp.hasFderivAt
 #align has_fderiv_at_exp hasFderivAt_exp
 
 end IsROrCCommAlgebra
@@ -201,7 +201,7 @@ theorem hasStrictDerivAt_exp {x : 𝕂} : HasStrictDerivAt (exp 𝕂) (exp 𝕂 
 
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has derivative `exp 𝕂 x` at any point `x`. -/
 theorem hasDerivAt_exp {x : 𝕂} : HasDerivAt (exp 𝕂) (exp 𝕂 x) x :=
-  hasStrictDerivAt_exp.HasDerivAt
+  hasStrictDerivAt_exp.hasDerivAt
 #align has_deriv_at_exp hasDerivAt_exp
 
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has strict derivative `1` at zero. -/
@@ -211,34 +211,22 @@ theorem hasStrictDerivAt_exp_zero : HasStrictDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
 
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has derivative `1` at zero. -/
 theorem hasDerivAt_exp_zero : HasDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
-  hasStrictDerivAt_exp_zero.HasDerivAt
+  hasStrictDerivAt_exp_zero.hasDerivAt
 #align has_deriv_at_exp_zero hasDerivAt_exp_zero
 
 end DerivROrC
-
-section Complex
 
 theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
   by
   refine' funext fun x => _
   rw [Complex.exp, exp_eq_tsum_div]
   exact
-    tendsto_nhds_unique x.exp'.tendsto_limit (exp_series_div_summable ℝ x).HasSum.tendsto_sum_nat
+    tendsto_nhds_unique x.exp'.tendsto_limit (exp_series_div_summable ℝ x).hasSum.tendsto_sum_nat
 #align complex.exp_eq_exp_ℂ Complex.exp_eq_exp_ℂ
-
-end Complex
-
-section Real
 
 theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ :=
   by
-  refine' funext fun x => _
-  rw [Real.exp, Complex.exp_eq_exp_ℂ, ← exp_ℝ_ℂ_eq_exp_ℂ_ℂ, exp_eq_tsum, exp_eq_tsum_div, ←
-    re_to_complex, ← re_clm_apply, re_clm.map_tsum (exp_series_summable' (x : ℂ))]
-  refine' tsum_congr fun n => _
-  rw [re_clm.map_smul, ← Complex.of_real_pow, re_clm_apply, re_to_complex, Complex.of_real_re,
-    smul_eq_mul, div_eq_inv_mul]
+  ext x
+  exact_mod_cast congr_fun Complex.exp_eq_exp_ℂ x
 #align real.exp_eq_exp_ℝ Real.exp_eq_exp_ℝ
-
-end Real
 

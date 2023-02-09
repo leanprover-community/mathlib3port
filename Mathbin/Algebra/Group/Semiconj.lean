@@ -6,7 +6,7 @@ Authors: Yury Kudryashov
 Some proofs and docs came from `algebra/commute` (c) Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.group.semiconj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,7 +283,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align semiconj_by.inv_inv_symm_iff SemiconjBy.inv_inv_symm_iffₓ'. -/
 @[simp, to_additive]
 theorem inv_inv_symm_iff : SemiconjBy a⁻¹ x⁻¹ y⁻¹ ↔ SemiconjBy a y x :=
-  inv_involutive.Injective.eq_iff.symm.trans <| by
+  inv_involutive.injective.eq_iff.symm.trans <| by
     simp_rw [mul_inv_rev, inv_inv, eq_comm, SemiconjBy]
 #align semiconj_by.inv_inv_symm_iff SemiconjBy.inv_inv_symm_iff
 #align add_semiconj_by.neg_neg_symm_iff AddSemiconjBy.neg_neg_symm_iff

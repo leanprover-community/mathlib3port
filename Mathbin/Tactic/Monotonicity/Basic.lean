@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,10 +48,10 @@ unsafe def find_one_difference :
     List expr → List expr → tactic (List expr × expr × expr × List expr)
   | x :: xs, y :: ys => do
     let c ← try_core (compare x y)
-    if c then Prod.map (cons x) id <$> find_one_difference xs ys
+    if c then prod.map (cons x) id <$> find_one_difference xs ys
       else do
         guard (xs = ys)
-        zipWithM' compare xs ys
+        mzip_with' compare xs ys
         return ([], x, y, xs)
   | xs, ys => fail f! "find_one_difference: {xs }, {ys}"
 #align tactic.interactive.find_one_difference tactic.interactive.find_one_difference
@@ -107,12 +107,12 @@ unsafe def mono_head_candidates : ℕ → List expr → expr → tactic MonoKey
   | 0, _, h => throwError "Cannot find relation in {← h}"
   | succ n, xs, h =>
     (do
-        let (Rel, l, r) ←
+        let (rel, l, r) ←
           if h.is_arrow then pure (none, h.binding_domain, h.binding_body)
             else
               guard h.get_app_fn.is_constant >>
                 Prod.mk (some h.get_app_fn.const_name) <$> lastTwo h.get_app_args
-        Prod.mk <$> monotonicity.check_rel l r <*> pure Rel) <|>
+        prod.mk <$> monotonicity.check_rel l r <*> pure rel) <|>
       match xs with
       | [] => fail f! "oh? {h}"
       | x :: xs => mono_head_candidates n xs (h.pis [x])
@@ -181,7 +181,7 @@ unsafe def filter_instances (e : MonoSelection) (ns : List Name) : tactic (List 
   ns.filterM fun n => do
     let d ← user_attribute.get_param_untyped monotonicity.attr n
     let (_, d) ← to_expr ``(id $(d)) >>= eval_expr (Option MonoKey × MonoSelection)
-    return (e = d : Bool)
+    return (e = d : bool)
 #align tactic.interactive.filter_instances tactic.interactive.filter_instances
 
 unsafe def get_monotonicity_lemmas (k : expr) (e : MonoSelection) : tactic (List Name) := do

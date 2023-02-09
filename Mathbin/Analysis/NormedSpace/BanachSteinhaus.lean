@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.banach_steinhaus
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
     have h_point_bdd : ∀ x : E, ∃ C : ℝ, ∀ n : ℕ, ‖g n x‖ ≤ C :=
       by
       intro x
-      rcases cauchySeq_bdd (tendsto_pi_nhds.mp h x).CauchySeq with ⟨C, C_pos, hC⟩
+      rcases cauchySeq_bdd (tendsto_pi_nhds.mp h x).cauchySeq with ⟨C, C_pos, hC⟩
       refine' ⟨C + ‖g 0 x‖, fun n => _⟩
       simp_rw [dist_eq_norm] at hC
       calc

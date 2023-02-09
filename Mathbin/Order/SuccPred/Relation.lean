@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.succ_pred.relation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,9 +34,9 @@ theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ 
     (hnm : n ≤ m) : ReflTransGen r n m := by
   revert h; refine' Succ.rec _ _ hnm
   · intro h
-    exact refl_trans_gen.refl
+    exact ReflTransGen.refl
   · intro m hnm ih h
-    have : refl_trans_gen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le <| le_succ m⟩
+    have : ReflTransGen r n m := ih fun i hi => h i ⟨hi.1, hi.2.trans_le <| le_succ m⟩
     cases' (le_succ m).eq_or_lt with hm hm
     · rwa [← hm]
     exact this.tail (h m ⟨hnm, hm⟩)
@@ -49,7 +49,7 @@ theorem reflTransGen_of_succ_of_le (r : α → α → Prop) {n m : α} (h : ∀ 
 theorem reflTransGen_of_succ_of_ge (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
     (hmn : m ≤ n) : ReflTransGen r n m :=
   by
-  rw [← refl_trans_gen_swap]
+  rw [← reflTransGen_swap]
   exact reflTransGen_of_succ_of_le (swap r) h hmn
 #align refl_trans_gen_of_succ_of_ge reflTransGen_of_succ_of_ge
 -/
@@ -68,7 +68,7 @@ theorem transGen_of_succ_of_lt (r : α → α → Prop) {n m : α} (h : ∀ i �
   for all `i` between `n` and `m`. -/
 theorem transGen_of_succ_of_gt (r : α → α → Prop) {n m : α} (h : ∀ i ∈ Ico m n, r (succ i) i)
     (hmn : m < n) : TransGen r n m :=
-  (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_ge r h hmn.le).resolve_left hmn.Ne
+  (reflTransGen_iff_eq_or_transGen.mp <| reflTransGen_of_succ_of_ge r h hmn.le).resolve_left hmn.ne
 #align trans_gen_of_succ_of_gt transGen_of_succ_of_gt
 -/
 
@@ -102,7 +102,7 @@ theorem transGen_of_succ_of_ne (r : α → α → Prop) {n m : α} (h1 : ∀ i �
 theorem transGen_of_succ_of_reflexive (r : α → α → Prop) {n m : α} (hr : Reflexive r)
     (h1 : ∀ i ∈ Ico n m, r i (succ i)) (h2 : ∀ i ∈ Ico m n, r (succ i) i) : TransGen r n m :=
   by
-  rcases eq_or_ne m n with (rfl | hmn); · exact trans_gen.single (hr m)
+  rcases eq_or_ne m n with (rfl | hmn); · exact TransGen.single (hr m)
   exact transGen_of_succ_of_ne r h1 h2 hmn.symm
 #align trans_gen_of_succ_of_reflexive transGen_of_succ_of_reflexive
 -/

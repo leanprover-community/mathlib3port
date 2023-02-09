@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem star_univ [Star α] : (univ : Set α)⋆ = univ :=
 #print Set.nonempty_star /-
 @[simp]
 theorem nonempty_star [InvolutiveStar α] {s : Set α} : s⋆.Nonempty ↔ s.Nonempty :=
-  star_involutive.Surjective.nonempty_preimage
+  star_involutive.surjective.nonempty_preimage
 #align set.nonempty_star Set.nonempty_star
 -/
 
@@ -159,7 +159,7 @@ instance [InvolutiveStar α] : InvolutiveStar (Set α)
 #print Set.star_subset_star /-
 @[simp]
 theorem star_subset_star [InvolutiveStar α] {s t : Set α} : s⋆ ⊆ t⋆ ↔ s ⊆ t :=
-  Equiv.star.Surjective.preimage_subset_preimage_iff
+  Equiv.star.surjective.preimage_subset_preimage_iff
 #align set.star_subset_star Set.star_subset_star
 -/
 
@@ -171,7 +171,7 @@ theorem star_subset [InvolutiveStar α] {s t : Set α} : s⋆ ⊆ t ↔ s ⊆ t�
 
 #print Set.Finite.star /-
 theorem Finite.star [InvolutiveStar α] {s : Set α} (hs : s.Finite) : s⋆.Finite :=
-  hs.Preimage <| star_injective.InjOn _
+  hs.preimage <| star_injective.injOn _
 #align set.finite.star Set.Finite.star
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.left_invariant_derivation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,7 +199,7 @@ instance hasIntScalar : SMul ℤ (LeftInvariantDerivation I G)
 #align left_invariant_derivation.has_int_scalar LeftInvariantDerivation.hasIntScalar
 
 instance : AddCommGroup (LeftInvariantDerivation I G) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance : SMul 𝕜 (LeftInvariantDerivation I G)
     where smul r X := ⟨r • X, fun g => by simp_rw [LinearMap.map_smul, left_invariant']⟩
@@ -227,7 +227,7 @@ def coeFnAddMonoidHom : LeftInvariantDerivation I G →+ C^∞⟮I, G; 𝕜⟯ �
 variable {I G}
 
 instance : Module 𝕜 (LeftInvariantDerivation I G) :=
-  coe_injective.Module _ (coeFnAddMonoidHom I G) coe_smul
+  coe_injective.module _ (coeFnAddMonoidHom I G) coe_smul
 
 /-- Evaluation at a point for left invariant derivation. Same thing as for generic global
 derivations (`derivation.eval_at`). -/
@@ -261,8 +261,8 @@ theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) :=
 
 theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
   ext h <;>
-    rw [ContMdiffMap.comp_apply, L_apply, ← eval_at_apply, eval_at_mul, apply_hfdifferential,
-      apply_fdifferential, eval_at_apply]
+    rw [ContMdiffMap.comp_apply, L_apply, ← evalAt_apply, evalAt_mul, apply_hfdifferential,
+      apply_fdifferential, evalAt_apply]
 #align left_invariant_derivation.comp_L LeftInvariantDerivation.comp_L
 
 instance : Bracket (LeftInvariantDerivation I G) (LeftInvariantDerivation I G)

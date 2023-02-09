@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_p
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,15 +58,15 @@ theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x
   by
   induction' n with n ih generalizing k
   ·
-    simp only [Nat.zero_eq, Nat.cast_zero, mul_zero, zero_coeff, witt_mul_n, AlgHom.map_zero,
+    simp only [Nat.zero_eq, Nat.cast_zero, mul_zero, zero_coeff, wittMulN, AlgHom.map_zero,
       Pi.zero_apply]
-  · rw [witt_mul_n, Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, mul_add, mul_one, aeval_bind₁,
+  · rw [wittMulN, Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one, mul_add, mul_one, aeval_bind₁,
       add_coeff]
-    apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
+    apply eval₂Hom_congr (RingHom.ext_int _ _) _ rfl
     ext1 ⟨b, i⟩
     fin_cases b
     · simp only [Function.uncurry, Matrix.cons_val_zero, ih]
-    · simp only [Function.uncurry, Matrix.cons_val_one, Matrix.head_cons, aeval_X]
+    · simp only [Function.uncurry, Matrix.cons_val_one, Matrix.head_cons, aeval_x]
 #align witt_vector.mul_n_coeff WittVector.mul_n_coeff
 
 variable (p)
@@ -84,11 +84,11 @@ theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :
     bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k :=
   by
   induction' n with n ih
-  · simp only [witt_mul_n, Nat.cast_zero, zero_mul, bind₁_zero_witt_polynomial]
-  · rw [witt_mul_n, ← bind₁_bind₁, witt_add, wittStructureInt_prop]
-    simp only [AlgHom.map_add, Nat.cast_succ, bind₁_X_right]
+  · simp only [wittMulN, Nat.cast_zero, zero_mul, bind₁_zero_wittPolynomial]
+  · rw [wittMulN, ← bind₁_bind₁, wittAdd, wittStructureInt_prop]
+    simp only [AlgHom.map_add, Nat.cast_succ, bind₁_x_right]
     rw [add_mul, one_mul, bind₁_rename, bind₁_rename]
-    simp only [ih, Function.uncurry, Function.comp, bind₁_X_left, AlgHom.id_apply,
+    simp only [ih, Function.uncurry, Function.comp, bind₁_x_left, AlgHom.id_apply,
       Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
 #align witt_vector.bind₁_witt_mul_n_witt_polynomial WittVector.bind₁_wittMulN_wittPolynomial
 

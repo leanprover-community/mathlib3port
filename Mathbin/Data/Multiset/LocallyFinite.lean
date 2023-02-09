@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.multiset.locally_finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,7 +203,7 @@ theorem right_not_mem_Ioo : b ∉ Ioo a b :=
 
 #print Multiset.Ico_filter_lt_of_le_left /-
 theorem Ico_filter_lt_of_le_left [DecidablePred (· < c)] (hca : c ≤ a) :
-    ((Ico a b).filterₓ fun x => x < c) = ∅ :=
+    ((Ico a b).filter fun x => x < c) = ∅ :=
   by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_left hca]
   rfl
@@ -212,14 +212,14 @@ theorem Ico_filter_lt_of_le_left [DecidablePred (· < c)] (hca : c ≤ a) :
 
 #print Multiset.Ico_filter_lt_of_right_le /-
 theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) :
-    ((Ico a b).filterₓ fun x => x < c) = Ico a b := by
+    ((Ico a b).filter fun x => x < c) = Ico a b := by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_right_le hbc]
 #align multiset.Ico_filter_lt_of_right_le Multiset.Ico_filter_lt_of_right_le
 -/
 
 #print Multiset.Ico_filter_lt_of_le_right /-
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    ((Ico a b).filterₓ fun x => x < c) = Ico a c :=
+    ((Ico a b).filter fun x => x < c) = Ico a c :=
   by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_lt_of_le_right hcb]
   rfl
@@ -228,14 +228,14 @@ theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
 
 #print Multiset.Ico_filter_le_of_le_left /-
 theorem Ico_filter_le_of_le_left [DecidablePred ((· ≤ ·) c)] (hca : c ≤ a) :
-    ((Ico a b).filterₓ fun x => c ≤ x) = Ico a b := by
+    ((Ico a b).filter fun x => c ≤ x) = Ico a b := by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_le_left hca]
 #align multiset.Ico_filter_le_of_le_left Multiset.Ico_filter_le_of_le_left
 -/
 
 #print Multiset.Ico_filter_le_of_right_le /-
 theorem Ico_filter_le_of_right_le [DecidablePred ((· ≤ ·) b)] :
-    ((Ico a b).filterₓ fun x => b ≤ x) = ∅ :=
+    ((Ico a b).filter fun x => b ≤ x) = ∅ :=
   by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_right_le]
   rfl
@@ -244,7 +244,7 @@ theorem Ico_filter_le_of_right_le [DecidablePred ((· ≤ ·) b)] :
 
 #print Multiset.Ico_filter_le_of_left_le /-
 theorem Ico_filter_le_of_left_le [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    ((Ico a b).filterₓ fun x => c ≤ x) = Ico c b :=
+    ((Ico a b).filter fun x => c ≤ x) = Ico c b :=
   by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_of_left_le hac]
   rfl
@@ -296,7 +296,7 @@ theorem Ico_inter_Ico_of_le [DecidableEq α] {a b c d : α} (h : b ≤ c) : Ico 
 
 #print Multiset.Ico_filter_le_left /-
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
-    ((Ico a b).filterₓ fun x => x ≤ a) = {a} :=
+    ((Ico a b).filter fun x => x ≤ a) = {a} :=
   by
   rw [Ico, ← Finset.filter_val, Finset.Ico_filter_le_left hab]
   rfl
@@ -376,14 +376,14 @@ theorem Ico_inter_Ico : Ico a b ∩ Ico c d = Ico (max a c) (min b d) := by
 
 #print Multiset.Ico_filter_lt /-
 @[simp]
-theorem Ico_filter_lt (a b c : α) : ((Ico a b).filterₓ fun x => x < c) = Ico a (min b c) := by
+theorem Ico_filter_lt (a b c : α) : ((Ico a b).filter fun x => x < c) = Ico a (min b c) := by
   rw [Ico, Ico, ← Finset.filter_val, Finset.Ico_filter_lt]
 #align multiset.Ico_filter_lt Multiset.Ico_filter_lt
 -/
 
 #print Multiset.Ico_filter_le /-
 @[simp]
-theorem Ico_filter_le (a b c : α) : ((Ico a b).filterₓ fun x => c ≤ x) = Ico (max a c) b := by
+theorem Ico_filter_le (a b c : α) : ((Ico a b).filter fun x => c ≤ x) = Ico (max a c) b := by
   rw [Ico, Ico, ← Finset.filter_val, Finset.Ico_filter_le]
 #align multiset.Ico_filter_le Multiset.Ico_filter_le
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.circular
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ class CircularPreorder (α : Type _) extends Btw α, SBtw α where
   sbtw_iff_btw_not_btw {a b c : α} : sbtw a b c ↔ btw a b c ∧ ¬btw c b a := by
     run_tac
       order_laws_tac
-  sbtw_trans_left {a b c d : α} : sbtw a b c → sbtw b d c → sbtw a d c
+  sbtw_trans_left {a b c d : α} : sbtw a b c → sbtw b d c → not_and' mp d c
 #align circular_preorder CircularPreorder
 -/
 
@@ -167,7 +167,7 @@ theorem btw_rfl {a : α} : Btw a a a :=
 #print Btw.btw.cyclic_left /-
 -- TODO: `alias` creates a def instead of a lemma.
 -- alias btw_cyclic_left        ← has_btw.btw.cyclic_left
-theorem Btw.btw.cyclic_left {a b c : α} (h : Btw a b c) : Btw b c a :=
+theorem Btw.btw.cyclic_left {a b c : of_not_not} (h : Btw a b c) : Btw b c a :=
   btw_cyclic_left h
 #align has_btw.btw.cyclic_left Btw.btw.cyclic_left
 -/
@@ -232,7 +232,7 @@ alias sbtw_of_btw_not_btw ← Btw.btw.sbtw_of_not_btw
 
 #print sbtw_cyclic_left /-
 theorem sbtw_cyclic_left {a b c : α} (h : Sbtw a b c) : Sbtw b c a :=
-  h.Btw.cyclic_left.sbtw_of_not_btw fun h' => h.not_btw h'.cyclic_left
+  h.btw.cyclic_left.sbtw_of_not_btw fun h' => h.not_btw h'.cyclic_left
 #align sbtw_cyclic_left sbtw_cyclic_left
 -/
 
@@ -275,7 +275,7 @@ alias sbtw_trans_right ← SBtw.sbtw.trans_right
 
 #print sbtw_asymm /-
 theorem sbtw_asymm {a b c : α} (h : Sbtw a b c) : ¬Sbtw c b a :=
-  h.Btw.not_sbtw
+  h.btw.not_sbtw
 #align sbtw_asymm sbtw_asymm
 -/
 
@@ -283,7 +283,7 @@ alias sbtw_asymm ← SBtw.sbtw.not_sbtw
 #align has_sbtw.sbtw.not_sbtw SBtw.sbtw.not_sbtw
 
 #print sbtw_irrefl_left_right /-
-theorem sbtw_irrefl_left_right {a b : α} : ¬Sbtw a b a := fun h => h.not_btw h.Btw
+theorem sbtw_irrefl_left_right {a b : α} : ¬Sbtw a b a := fun h => h.not_btw h.btw
 #align sbtw_irrefl_left_right sbtw_irrefl_left_right
 -/
 

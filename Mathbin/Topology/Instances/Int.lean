@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.int
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,19 +67,19 @@ theorem ball_eq_Ioo (x : ℤ) (r : ℝ) : ball x r = Ioo ⌊↑x - r⌋ ⌈↑x 
 #align int.ball_eq_Ioo Int.ball_eq_Ioo
 
 theorem closedBall_eq_Icc (x : ℤ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉ ⌊↑x + r⌋ := by
-  rw [← preimage_closed_ball, Real.closedBall_eq_Icc, preimage_Icc]
+  rw [← preimage_closedBall, Real.closedBall_eq_Icc, preimage_Icc]
 #align int.closed_ball_eq_Icc Int.closedBall_eq_Icc
 
 instance : ProperSpace ℤ :=
   ⟨by
     intro x r
-    rw [closed_ball_eq_Icc]
-    exact (Set.finite_Icc _ _).IsCompact⟩
+    rw [closedBall_eq_Icc]
+    exact (Set.finite_Icc _ _).isCompact⟩
 
 @[simp]
 theorem cocompact_eq : cocompact ℤ = atBot ⊔ atTop := by
   simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℤ), dist_eq, sub_zero, cast_zero, ←
-    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_at_top]
+    cast_abs, ← @comap_comap _ _ _ _ abs, Int.comap_cast_atTop, comap_abs_atTop]
 #align int.cocompact_eq Int.cocompact_eq
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def coalgebraToOver : Coalgebra (prodComonad X) ⥤ Over X
   map A₁ A₂ f :=
     Over.homMk f.f
       (by
-        rw [over.mk_hom, ← f.h_assoc]
+        rw [Over.mk_hom, ← f.h_assoc]
         dsimp
         simp)
 #align category_theory.coalgebra_to_over CategoryTheory.coalgebraToOver
@@ -74,7 +74,7 @@ def overToCoalgebra : Over X ⥤ Coalgebra (prodComonad X)
     where
   obj f :=
     { a := f.left
-      a := prod.lift f.Hom (𝟙 _) }
+      a := prod.lift f.hom (𝟙 _) }
   map f₁ f₂ g := { f := g.left }
 #align category_theory.over_to_coalgebra CategoryTheory.overToCoalgebra
 
@@ -127,7 +127,7 @@ def algebraToUnder : Monad.Algebra (coprodMonad X) ⥤ Under X
   map A₁ A₂ f :=
     Under.homMk f.f
       (by
-        rw [under.mk_hom, assoc, ← f.h]
+        rw [Under.mk_hom, assoc, ← f.h]
         dsimp
         simp)
 #align category_theory.algebra_to_under CategoryTheory.algebraToUnder
@@ -140,7 +140,7 @@ def underToAlgebra : Under X ⥤ Monad.Algebra (coprodMonad X)
     where
   obj f :=
     { a := f.right
-      a := coprod.desc f.Hom (𝟙 _) }
+      a := coprod.desc f.hom (𝟙 _) }
   map f₁ f₂ g := { f := g.right }
 #align category_theory.under_to_algebra CategoryTheory.underToAlgebra
 

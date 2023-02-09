@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.cartan_matrix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,13 +164,13 @@ def adF : B × B → FreeLieAlgebra R (Generators B) :=
 private theorem ad_E_of_eq_eq_zero (i : B) (h : A i i = 2) : adE R A ⟨i, i⟩ = 0 :=
   by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
-  simp [ad_E, h, h']
+  simp [adE, h, h']
 #align cartan_matrix.relations.ad_E_of_eq_eq_zero cartan_matrix.relations.ad_E_of_eq_eq_zero
 
 private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ = 0 :=
   by
   have h' : (-2 : ℤ).toNat = 0 := by rfl
-  simp [ad_F, h, h']
+  simp [adF, h, h']
 #align cartan_matrix.relations.ad_F_of_eq_eq_zero cartan_matrix.relations.ad_F_of_eq_eq_zero
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/
@@ -202,7 +202,7 @@ def Matrix.ToLieAlgebra :=
 namespace CartanMatrix
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The Cartan matrix of type e₆. See [bourbaki1968] plate V, page 277.
 
 The corresponding Dynkin diagram is:
@@ -214,11 +214,11 @@ o --- o --- o --- o --- o
 -/
 def e₆ : Matrix (Fin 6) (Fin 6) ℤ :=
   «expr!![ »
-    "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation"
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₆ CartanMatrix.e₆
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
@@ -230,11 +230,11 @@ o --- o --- o --- o --- o --- o
 -/
 def e₇ : Matrix (Fin 7) (Fin 7) ℤ :=
   «expr!![ »
-    "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation"
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₇ CartanMatrix.e₇
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
@@ -246,11 +246,11 @@ o --- o --- o --- o --- o --- o --- o
 -/
 def e₈ : Matrix (Fin 8) (Fin 8) ℤ :=
   «expr!![ »
-    "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation"
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.E₈ CartanMatrix.e₈
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
 The corresponding Dynkin diagram is:
@@ -260,11 +260,11 @@ o --- o =>= o --- o
 -/
 def f₄ : Matrix (Fin 4) (Fin 4) ℤ :=
   «expr!![ »
-    "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation"
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.F₄ CartanMatrix.f₄
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
 The corresponding Dynkin diagram is:
@@ -275,7 +275,7 @@ Actually we are using the transpose of Bourbaki's matrix. This is to make this m
 with `cartan_matrix.F₄`, in the sense that all non-zero values below the diagonal are -1. -/
 def g₂ : Matrix (Fin 2) (Fin 2) ℤ :=
   «expr!![ »
-    "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation"
+    "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation"
 #align cartan_matrix.G₂ CartanMatrix.g₂
 
 end CartanMatrix

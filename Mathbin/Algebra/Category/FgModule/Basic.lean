@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,19 +137,19 @@ def forget₂Monoidal : MonoidalFunctor (FgModule R) (ModuleCat.{u} R) :=
 
 instance forget₂Monoidal_faithful : Faithful (forget₂Monoidal R).toFunctor :=
   by
-  dsimp [forget₂_monoidal]
+  dsimp [forget₂Monoidal]
   infer_instance
 #align fgModule.forget₂_monoidal_faithful FgModule.forget₂Monoidal_faithful
 
 instance forget₂Monoidal_additive : (forget₂Monoidal R).toFunctor.Additive :=
   by
-  dsimp [forget₂_monoidal]
+  dsimp [forget₂Monoidal]
   infer_instance
 #align fgModule.forget₂_monoidal_additive FgModule.forget₂Monoidal_additive
 
 instance forget₂MonoidalLinear : (forget₂Monoidal R).toFunctor.Linear R :=
   by
-  dsimp [forget₂_monoidal]
+  dsimp [forget₂Monoidal]
   infer_instance
 #align fgModule.forget₂_monoidal_linear FgModule.forget₂MonoidalLinear
 
@@ -169,7 +169,7 @@ instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
 
 instance closedPredicateModuleFinite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K => Module.Finite K V
-    where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
+    where prop_ihom' X Y hX hY := @linear_map.finite_dimensional K _ X _ _ hX Y _ _ hY
 #align fgModule.closed_predicate_module_finite FgModule.closedPredicateModuleFinite
 
 instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance
@@ -196,7 +196,7 @@ def fgModuleCoevaluation : 𝟙_ (FgModule K) ⟶ V ⊗ fgModuleDual K V := by a
 theorem fgModuleCoevaluation_apply_one :
     fgModuleCoevaluation K V (1 : K) =
       ∑ i : Basis.ofVectorSpaceIndex K V.obj,
-        (Basis.ofVectorSpace K V.obj) i ⊗ₜ[K] (Basis.ofVectorSpace K V.obj).Coord i :=
+        (Basis.ofVectorSpace K V.obj) i ⊗ₜ[K] (Basis.ofVectorSpace K V.obj).coord i :=
   by apply coevaluation_apply_one K V.obj
 #align fgModule.fgModule_coevaluation_apply_one FgModule.fgModuleCoevaluation_apply_one
 
@@ -215,7 +215,7 @@ theorem fgModuleEvaluation_apply (f : (fgModuleDual K V).obj) (x : V.obj) :
 private theorem coevaluation_evaluation :
     let V' : FgModule K := fgModuleDual K V
     (𝟙 V' ⊗ fgModuleCoevaluation K V) ≫ (α_ V' V V').inv ≫ (fgModuleEvaluation K V ⊗ 𝟙 V') =
-      (ρ_ V').Hom ≫ (λ_ V').inv :=
+      (ρ_ V').hom ≫ (λ_ V').inv :=
   by apply contractLeft_assoc_coevaluation K V.obj
 #align fgModule.coevaluation_evaluation fgModule.coevaluation_evaluation
 
@@ -223,8 +223,8 @@ private theorem coevaluation_evaluation :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem evaluation_coevaluation :
     (fgModuleCoevaluation K V ⊗ 𝟙 V) ≫
-        (α_ V (fgModuleDual K V) V).Hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
-      (λ_ V).Hom ≫ (ρ_ V).inv :=
+        (α_ V (fgModuleDual K V) V).hom ≫ (𝟙 V ⊗ fgModuleEvaluation K V) =
+      (λ_ V).hom ≫ (ρ_ V).inv :=
   by apply contractLeft_assoc_coevaluation' K V.obj
 #align fgModule.evaluation_coevaluation fgModule.evaluation_coevaluation
 

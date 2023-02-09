@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.uniform
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,6 +143,6 @@ variable [NormedAddCommGroup E] [NormedSpace ℝ E] [UniformConvexSpace E]
 instance (priority := 100) UniformConvexSpace.toStrictConvexSpace : StrictConvexSpace ℝ E :=
   StrictConvexSpace.ofNormAddNeTwo fun x y hx hy hxy =>
     let ⟨δ, hδ, h⟩ := exists_forall_closed_ball_dist_add_le_two_sub E (norm_sub_pos_iff.2 hxy)
-    ((h hx.le hy.le le_rfl).trans_lt <| sub_lt_self _ hδ).Ne
+    ((h hx.le hy.le le_rfl).trans_lt <| sub_lt_self _ hδ).ne
 #align uniform_convex_space.to_strict_convex_space UniformConvexSpace.toStrictConvexSpace
 

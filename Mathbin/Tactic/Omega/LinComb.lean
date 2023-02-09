@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.lin_comb
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,12 +29,12 @@ def linComb : List Nat → List Term → Term
 
 theorem linComb_holds {v : Nat → Int} :
     ∀ {ts} (ns), (∀ t ∈ ts, 0 ≤ Term.val v t) → 0 ≤ (linComb ns ts).val v
-  | [], [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
-  | [], _ :: _, h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
-  | _ :: _, [], h => by simp only [add_zero, term.val, lin_comb, coeffs.val_nil]
+  | [], [], h => by simp only [add_zero, Term.val, linComb, Coeffs.val_nil]
+  | [], _ :: _, h => by simp only [add_zero, Term.val, linComb, Coeffs.val_nil]
+  | _ :: _, [], h => by simp only [add_zero, Term.val, linComb, Coeffs.val_nil]
   | t :: ts, n :: ns, h =>
     by
-    have : 0 ≤ ↑n * term.val v t + term.val v (lin_comb ns ts) :=
+    have : 0 ≤ ↑n * Term.val v t + Term.val v (linComb ns ts) :=
       by
       apply add_nonneg
       · apply mul_nonneg
@@ -42,7 +42,7 @@ theorem linComb_holds {v : Nat → Int} :
         apply h _ (Or.inl rfl)
       · apply lin_comb_holds
         apply List.forall_mem_of_forall_mem_cons h
-    simpa only [lin_comb, term.val_mul, term.val_add]
+    simpa only [linComb, Term.val_mul, Term.val_add]
 #align omega.lin_comb_holds Omega.linComb_holds
 
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
@@ -62,11 +62,11 @@ theorem unsat_of_unsatLinComb (ns : List Nat) (ts : List Term) :
     UnsatLinComb ns ts → Clause.Unsat ([], ts) :=
   by
   intro h1 h2; cases' h2 with v h2
-  have h3 := lin_comb_holds ns h2.right
+  have h3 := linComb_holds ns h2.right
   cases' h1 with hl hr
-  cases' lin_comb ns ts with b as
+  cases' linComb ns ts with b as
   unfold term.val at h3
-  rw [coeffs.val_eq_zero hr, add_zero, ← not_lt] at h3
+  rw [Coeffs.val_eq_zero hr, add_zero, ← not_lt] at h3
   apply h3 hl
 #align omega.unsat_of_unsat_lin_comb Omega.unsat_of_unsatLinComb
 

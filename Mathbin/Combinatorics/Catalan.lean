@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module combinatorics.catalan
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem catalan_succ (n : ℕ) : catalan (n + 1) = ∑ i : Fin n.succ, catalan i
 
 theorem catalan_succ' (n : ℕ) :
     catalan (n + 1) = ∑ ij in Nat.antidiagonal n, catalan ij.1 * catalan ij.2 := by
-  rw [catalan_succ, nat.sum_antidiagonal_eq_sum_range_succ (fun x y => catalan x * catalan y) n,
+  rw [catalan_succ, Nat.sum_antidiagonal_eq_sum_range_succ (fun x y => catalan x * catalan y) n,
     sum_range]
 #align catalan_succ' catalan_succ'
 
@@ -105,7 +105,7 @@ private theorem gosper_trick {n i : ℕ} (h : i ≤ n) :
   have h₂ :
     ((n : ℚ) - i + 1) * (n - i + 1).centralBinom = 2 * (2 * (n - i) + 1) * (n - i).centralBinom :=
     by exact_mod_cast Nat.succ_mul_centralBinom_succ (n - i)
-  simp only [gosper_catalan]
+  simp only [gosperCatalan]
   push_cast
   field_simp
   rw [Nat.succ_sub h]
@@ -120,7 +120,7 @@ private theorem gosper_catalan_sub_eq_central_binom_div (n : ℕ) :
   have : (n : ℚ) + 1 ≠ 0 := by exact_mod_cast n.succ_ne_zero
   have : (n : ℚ) + 1 + 1 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
   have h : (n : ℚ) + 2 ≠ 0 := by exact_mod_cast (n + 1).succ_ne_zero
-  simp only [gosper_catalan, Nat.sub_zero, Nat.centralBinom_zero, Nat.sub_self]
+  simp only [gosperCatalan, Nat.sub_zero, Nat.centralBinom_zero, Nat.sub_self]
   field_simp
   ring
 #align gosper_catalan_sub_eq_central_binom_div gosper_catalan_sub_eq_central_binom_div
@@ -144,12 +144,12 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
         push_cast
         rw [Nat.cast_sub i.is_le]
         exact tsub_le_self
-    · trans ∑ i : Fin d.succ, gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i
+    · trans ∑ i : Fin d.succ, gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i
       · refine' sum_congr rfl fun i _ => _
         rw_mod_cast [gosper_trick i.is_le, mul_div]
-      · rw [← sum_range fun i => gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i,
+      · rw [← sum_range fun i => gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i,
           sum_range_sub, Nat.succ_eq_add_one]
-        exact_mod_cast gosper_catalan_sub_eq_central_binom_div d
+        exact_mod_cast gosperCatalan_sub_eq_centralBinom_div d
 #align catalan_eq_central_binom_div catalan_eq_centralBinom_div
 
 theorem succ_mul_catalan_eq_centralBinom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=
@@ -187,7 +187,7 @@ def treesOfNumNodesEq : ℕ → Finset (Tree Unit)
 #align tree.trees_of_num_nodes_eq Tree.treesOfNumNodesEq
 
 @[simp]
-theorem trees_of_nodes_eq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_num_nodes_eq]
+theorem trees_of_nodes_eq_zero : treesOfNumNodesEq 0 = {nil} := by rw [treesOfNumNodesEq]
 #align tree.trees_of_nodes_eq_zero Tree.trees_of_nodes_eq_zero
 
 theorem trees_of_nodes_eq_succ (n : ℕ) :
@@ -195,7 +195,7 @@ theorem trees_of_nodes_eq_succ (n : ℕ) :
       (Nat.antidiagonal n).bunionᵢ fun ij =>
         pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
   by
-  rw [trees_of_num_nodes_eq]
+  rw [treesOfNumNodesEq]
   ext
   simp
 #align tree.trees_of_nodes_eq_succ Tree.trees_of_nodes_eq_succ
@@ -222,7 +222,7 @@ theorem trees_of_nodes_eq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card
   by
   induction' n using Nat.case_strong_induction_on with n ih
   · simp
-  rw [trees_of_nodes_eq_succ, card_bUnion, catalan_succ']
+  rw [trees_of_nodes_eq_succ, card_bunionᵢ, catalan_succ']
   · apply sum_congr rfl
     rintro ⟨i, j⟩ H
     simp [ih _ (fst_le H), ih _ (snd_le H)]

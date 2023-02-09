@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.homological_complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ def obj (P : Karoubi (HomologicalComplex C c)) : HomologicalComplex (Karoubi C) 
   d i j :=
     { f := P.p.f i ≫ P.x.d i j
       comm := by tidy }
-  shape' i j hij := by simp only [hom_eq_zero_iff, P.X.shape i j hij, limits.comp_zero]
+  shape' i j hij := by simp only [hom_eq_zero_iff, P.X.shape i j hij, Limits.comp_zero]
 #align category_theory.idempotents.karoubi_homological_complex_equivalence.functor.obj CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.Functor.obj
 
 /-- The functor `karoubi (homological_complex C c) ⥤ homological_complex (karoubi C) c`,
@@ -159,41 +159,41 @@ def unitIso : 𝟭 (Karoubi (HomologicalComplex C c)) ≅ functor ⋙ inverse
               comm' := fun i j hij => by
                 dsimp
                 simp only [HomologicalComplex.Hom.comm, HomologicalComplex.Hom.comm_assoc,
-                  homological_complex.p_idem] }
+                  HomologicalComplex.p_idem] }
           comm := by
             ext n
             dsimp
-            simp only [homological_complex.p_idem] }
+            simp only [HomologicalComplex.p_idem] }
       naturality' := fun P Q φ => by
         ext
         dsimp
-        simp only [comp_f, HomologicalComplex.comp_f, homological_complex.comp_p_d, inverse.map_f_f,
-          functor.map_f_f, homological_complex.p_comp_d] }
+        simp only [comp_f, HomologicalComplex.comp_f, HomologicalComplex.comp_p_d, Inverse.map_f_f,
+          Functor.map_f_f, HomologicalComplex.p_comp_d] }
   inv :=
     { app := fun P =>
         { f :=
             { f := fun n => P.p.f n
               comm' := fun i j hij => by
                 dsimp
-                simp only [HomologicalComplex.Hom.comm, assoc, homological_complex.p_idem] }
+                simp only [HomologicalComplex.Hom.comm, assoc, HomologicalComplex.p_idem] }
           comm := by
             ext n
             dsimp
-            simp only [homological_complex.p_idem] }
+            simp only [HomologicalComplex.p_idem] }
       naturality' := fun P Q φ => by
         ext
         dsimp
-        simp only [comp_f, HomologicalComplex.comp_f, inverse.map_f_f, functor.map_f_f,
-          homological_complex.comp_p_d, homological_complex.p_comp_d] }
+        simp only [comp_f, HomologicalComplex.comp_f, Inverse.map_f_f, Functor.map_f_f,
+          HomologicalComplex.comp_p_d, HomologicalComplex.p_comp_d] }
   hom_inv_id' := by
     ext
     dsimp
-    simp only [homological_complex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq]
+    simp only [HomologicalComplex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq]
   inv_hom_id' := by
     ext
     dsimp
-    simp only [homological_complex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq,
-      inverse.obj_p_f, functor.obj_X_p]
+    simp only [HomologicalComplex.p_idem, comp_f, HomologicalComplex.comp_f, id_eq, Inverse.obj_p_f,
+      Functor.obj_x_p]
 #align category_theory.idempotents.karoubi_homological_complex_equivalence.unit_iso CategoryTheory.Idempotents.KaroubiHomologicalComplexEquivalence.unitIso
 
 end KaroubiHomologicalComplexEquivalence

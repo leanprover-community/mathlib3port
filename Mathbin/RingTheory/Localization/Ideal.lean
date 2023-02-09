@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.ideal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem mem_map_algebraMap_iff {I : Ideal R} {z} :
     z ∈ Ideal.map (algebraMap R S) I ↔ ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 :=
   by
   constructor
-  · change _ → z ∈ map_ideal M S I
+  · change _ → z ∈ mapIdeal M S I
     refine' fun h => Ideal.mem_infₛ.1 h fun z hz => _
     obtain ⟨y, hy⟩ := hz
     use ⟨⟨⟨y, hy.left⟩, 1⟩, by simp [hy.right]⟩
@@ -88,7 +88,7 @@ theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjo
     Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I :=
   by
   refine' le_antisymm (fun a ha => _) Ideal.le_comap_map
-  obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebra_map_iff M S).1 (Ideal.mem_comap.1 ha)
+  obtain ⟨⟨b, s⟩, h⟩ := (mem_map_algebraMap_iff M S).1 (Ideal.mem_comap.1 ha)
   replace h : algebraMap R S (s * a) = algebraMap R S b := by
     simpa only [← map_mul, mul_comm] using h
   obtain ⟨c, hc⟩ := (eq_iff_exists M S).1 h
@@ -123,13 +123,13 @@ theorem isPrime_iff_isPrime_disjoint (J : Ideal S) :
         set.disjoint_left.mpr fun m hm1 hm2 =>
           h.ne_top (Ideal.eq_top_of_isUnit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
     · refine' fun hJ => h.ne_top _
-      rw [eq_top_iff, ← (OrderEmbedding M S).le_iff_le]
+      rw [eq_top_iff, ← (orderEmbedding M S).le_iff_le]
       exact le_of_eq hJ.symm
     · intro x y hxy
       rw [Ideal.mem_comap, RingHom.map_mul] at hxy
       exact h.mem_or_mem hxy
   · refine' fun h => ⟨fun hJ => h.left.ne_top (eq_top_iff.2 _), _⟩
-    · rwa [eq_top_iff, ← (OrderEmbedding M S).le_iff_le] at hJ
+    · rwa [eq_top_iff, ← (orderEmbedding M S).le_iff_le] at hJ
     · intro x y hxy
       obtain ⟨a, s, ha⟩ := mk'_surjective M x
       obtain ⟨b, t, hb⟩ := mk'_surjective M y
@@ -147,7 +147,7 @@ see `le_rel_iso_of_prime` for the more general relation isomorphism, and the rev
 theorem isPrime_of_isPrime_disjoint (I : Ideal R) (hp : I.IsPrime) (hd : Disjoint (M : Set R) ↑I) :
     (Ideal.map (algebraMap R S) I).IsPrime :=
   by
-  rw [is_prime_iff_is_prime_disjoint M S, comap_map_of_is_prime_disjoint M S I hp hd]
+  rw [isPrime_iff_isPrime_disjoint M S, comap_map_of_isPrime_disjoint M S I hp hd]
   exact ⟨hp, hd⟩
 #align is_localization.is_prime_of_is_prime_disjoint IsLocalization.isPrime_of_isPrime_disjoint
 
@@ -219,9 +219,9 @@ open nonZeroDivisors
 theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p.IsPrime]
     (hp0 : p ≠ ⊥) : ⊥ < Ideal.comap (algebraMap R S) p :=
   by
-  haveI : IsDomain S := is_domain_of_le_non_zero_divisors _ hM
+  haveI : IsDomain S := isDomain_of_le_nonZeroDivisors _ hM
   convert
-    (order_iso_of_prime M S).lt_iff_lt.mpr
+    (orderIsoOfPrime M S).lt_iff_lt.mpr
       (show (⟨⊥, Ideal.bot_prime⟩ : { p : Ideal S // p.IsPrime }) < ⟨p, hpp⟩ from hp0.bot_lt)
   exact (Ideal.comap_bot_of_injective (algebraMap R S) (IsLocalization.injective _ hM)).symm
 #align is_localization.bot_lt_comap_prime IsLocalization.bot_lt_comap_prime

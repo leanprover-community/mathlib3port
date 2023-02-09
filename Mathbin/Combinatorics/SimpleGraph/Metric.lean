@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Vincent Beffara
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.metric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem dist_le {u v : V} (p : G.Walk u v) : G.dist u v ≤ p.length :=
 
 @[simp]
 theorem dist_eq_zero_iff_eq_or_not_reachable {u v : V} :
-    G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by simp [dist, Nat.infₛ_eq_zero, reachable]
+    G.dist u v = 0 ↔ u = v ∨ ¬G.Reachable u v := by simp [dist, Nat.infₛ_eq_zero, Reachable]
 #align simple_graph.dist_eq_zero_iff_eq_or_not_reachable SimpleGraph.dist_eq_zero_iff_eq_or_not_reachable
 
 theorem dist_self {v : V} : dist G v v = 0 := by simp
@@ -110,14 +110,14 @@ protected theorem Connected.dist_triangle (hconn : G.Connected) {u v w : V} :
   by
   obtain ⟨p, hp⟩ := hconn.exists_walk_of_dist u v
   obtain ⟨q, hq⟩ := hconn.exists_walk_of_dist v w
-  rw [← hp, ← hq, ← walk.length_append]
+  rw [← hp, ← hq, ← Walk.length_append]
   apply dist_le
 #align simple_graph.connected.dist_triangle SimpleGraph.Connected.dist_triangle
 
 private theorem dist_comm_aux {u v : V} (h : G.Reachable u v) : G.dist u v ≤ G.dist v u :=
   by
   obtain ⟨p, hp⟩ := h.symm.exists_walk_of_dist
-  rw [← hp, ← walk.length_reverse]
+  rw [← hp, ← Walk.length_reverse]
   apply dist_le
 #align simple_graph.dist_comm_aux simple_graph.dist_comm_aux
 

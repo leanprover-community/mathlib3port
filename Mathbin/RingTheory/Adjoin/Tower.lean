@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,8 +65,8 @@ theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiri
     (Algebra.adjoin E (algebraMap D F '' S)).restrictScalars C =
       (Algebra.adjoin D (algebraMap E F '' T)).restrictScalars C :=
   by
-  rw [adjoin_restrict_scalars C E, adjoin_restrict_scalars C D, ← hS, ← hT, ← Algebra.adjoin_image,
-    ← Algebra.adjoin_image, ← AlgHom.coe_to_ringHom, ← AlgHom.coe_to_ringHom,
+  rw [adjoin_restrictScalars C E, adjoin_restrictScalars C D, ← hS, ← hT, ← Algebra.adjoin_image, ←
+    Algebra.adjoin_image, ← AlgHom.coe_to_ringHom, ← AlgHom.coe_to_ringHom,
     IsScalarTower.coe_toAlgHom, IsScalarTower.coe_toAlgHom, ← adjoin_union_eq_adjoin_adjoin, ←
     adjoin_union_eq_adjoin_adjoin, Set.union_comm]
 #align algebra.adjoin_res_eq_adjoin_res Algebra.adjoin_res_eq_adjoin_res
@@ -80,7 +80,7 @@ open Classical
 theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).Fg)
     (hSA : (⊤ : Subalgebra S A).Fg) : (⊤ : Subalgebra R A).Fg :=
-  let ⟨s, hs⟩ := hRS
+  let ⟨Mem, hs⟩ := hRS
   let ⟨t, ht⟩ := hSA
   ⟨s.image (algebraMap S A) ∪ t, by
     rw [Finset.coe_union, Finset.coe_image, Algebra.adjoin_union_eq_adjoin_adjoin,
@@ -144,8 +144,8 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).Fg) (hBC : (⊤ : 
                   mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
               (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
   refine' ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, _⟩
-  refine' restrict_scalars_injective A _ _ _
-  rw [restrict_scalars_top, eq_top_iff, ← Algebra.top_toSubmodule, ← hx, Algebra.adjoin_eq_span,
+  refine' restrictScalars_injective A _ _ _
+  rw [restrictScalars_top, eq_top_iff, ← Algebra.top_toSubmodule, ← hx, Algebra.adjoin_eq_span,
     span_le]
   refine' fun r hr =>
     Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _)

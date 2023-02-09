@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.birthday
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,8 +83,8 @@ theorem lt_birthday_iff {x : Pgame} {o : Ordinal} :
     · right
       rwa [lt_lsub_iff] at h'
   · rintro (⟨i, hi⟩ | ⟨i, hi⟩)
-    · exact hi.trans_lt (birthday_move_left_lt i)
-    · exact hi.trans_lt (birthday_move_right_lt i)
+    · exact hi.trans_lt (birthday_moveLeft_lt i)
+    · exact hi.trans_lt (birthday_moveRight_lt i)
 #align pgame.lt_birthday_iff Pgame.lt_birthday_iff
 
 theorem Relabelling.birthday_congr : ∀ {x y : Pgame.{u}}, x ≡r y → birthday x = birthday y
@@ -136,8 +136,8 @@ theorem neg_birthday : ∀ x : Pgame, (-x).birthday = x.birthday
 theorem toPgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
   by
   induction' o using Ordinal.induction with o IH
-  rw [to_pgame_def, Pgame.birthday]
-  simp only [lsub_empty, max_zero_right]
+  rw [toPgame_def, Pgame.birthday]
+  simp only [moveRight, mk_left]
   nth_rw 1 [← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
@@ -162,15 +162,15 @@ theorem birthday_add : ∀ x y : Pgame.{u}, (x + y).birthday = x.birthday ♯ y.
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ =>
     by
     rw [birthday_def, nadd_def]
-    simp only [birthday_add, lsub_sum, mk_add_move_left_inl, move_left_mk, mk_add_move_left_inr,
-      mk_add_move_right_inl, move_right_mk, mk_add_move_right_inr]
+    simp only [birthday_add, lsub_sum, mk_add_moveLeft_inl, moveLeft_mk, mk_add_moveLeft_inr,
+      mk_add_moveRight_inl, moveRight_mk, mk_add_moveRight_inr]
     rw [max_max_max_comm]
     congr <;> apply le_antisymm
     any_goals
       exact
         max_le_iff.2
-          ⟨lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_left_lt i),
-            lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_move_right_lt i)⟩
+          ⟨lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_moveLeft_lt i),
+            lsub_le_iff.2 fun i => lt_blsub _ _ (birthday_moveRight_lt i)⟩
     all_goals
       apply blsub_le_iff.2 fun i hi => _
       rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)

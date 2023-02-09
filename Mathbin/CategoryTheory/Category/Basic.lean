@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,7 +325,7 @@ theorem mono_of_mono {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Mono (f ≫ g)] : 
   constructor; intro Z a b w
   replace w := congr_arg (fun k => k ≫ g) w
   dsimp at w
-  rw [category.assoc, category.assoc] at w
+  rw [Category.assoc, Category.assoc] at w
   exact (cancel_mono _).1 w
 #align category_theory.mono_of_mono CategoryTheory.mono_of_mono
 -/
@@ -344,7 +344,7 @@ theorem epi_of_epi {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) [Epi (f ≫ g)] : Epi
   constructor; intro Z a b w
   replace w := congr_arg (fun k => f ≫ k) w
   dsimp at w
-  rw [← category.assoc, ← category.assoc] at w
+  rw [← Category.assoc, ← Category.assoc] at w
   exact (cancel_epi _).1 w
 #align category_theory.epi_of_epi CategoryTheory.epi_of_epi
 -/

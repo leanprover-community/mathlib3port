@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : CommMonoid.{u1} M] {f : α -> M} (a : α), (forall (x : α), (Ne.{succ u2} α x a) -> (Eq.{succ u1} M (f x) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_2)))))) -> (Eq.{succ u1} M (Finset.prod.{u1, u2} M α _inst_2 (Finset.univ.{u2} α _inst_1) (fun (x : α) => f x)) (f a))
 Case conversion may be inaccurate. Consider using '#align fintype.prod_eq_single Fintype.prod_eq_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_single {f : α → M} (a : α) (h : ∀ (x) (_ : x ≠ a), f x = 1) : (∏ x, f x) = f a :=
   Finset.prod_eq_single a (fun x _ hx => h x hx) fun ha => (ha (Finset.mem_univ a)).elim
@@ -318,7 +318,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.prod_comp Equiv.
 @[to_additive]
 theorem Equiv.prod_comp [Fintype α] [Fintype β] [CommMonoid γ] (e : α ≃ β) (f : β → γ) :
     (∏ i, f (e i)) = ∏ i, f i :=
-  e.Bijective.prod_comp f
+  e.bijective.prod_comp f
 #align equiv.prod_comp Equiv.prod_comp
 #align equiv.sum_comp Equiv.sum_comp
 
@@ -384,7 +384,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_fiberwise Finset.prod_fiberwiseₓ'. -/
 @[to_additive]
 theorem Finset.prod_fiberwise [DecidableEq β] [Fintype β] [CommMonoid γ] (s : Finset α) (f : α → β)
-    (g : α → γ) : (∏ b : β, ∏ a in s.filterₓ fun a => f a = b, g a) = ∏ a in s, g a :=
+    (g : α → γ) : (∏ b : β, ∏ a in s.filter fun a => f a = b, g a) = ∏ a in s, g a :=
   Finset.prod_fiberwise_of_maps_to (fun x _ => mem_univ _) _
 #align finset.prod_fiberwise Finset.prod_fiberwise
 #align finset.sum_fiberwise Finset.sum_fiberwise

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.reindex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem reindexLinearEquiv_comp (e₁ : m ≃ m') (e₂ : n ≃ n') (e₁' : m' 
     reindexLinearEquiv R A e₁' e₂' ∘ reindexLinearEquiv R A e₁ e₂ =
       reindexLinearEquiv R A (e₁.trans e₁') (e₂.trans e₂') :=
   by
-  rw [← reindex_linear_equiv_trans]
+  rw [← reindexLinearEquiv_trans]
   rfl
 #align matrix.reindex_linear_equiv_comp Matrix.reindexLinearEquiv_comp
 
@@ -131,7 +131,7 @@ def reindexAlgEquiv (e : m ≃ n) : Matrix m m R ≃ₐ[R] Matrix n n R :=
   { reindexLinearEquiv R R e e with
     toFun := reindex e e
     map_mul' := fun a b => (reindexLinearEquiv_mul R R e e e a b).symm
-    commutes' := fun r => by simp [algebraMap, Algebra.toRingHom, submatrix_smul] }
+    commutes' := fun r => by simp [algebraMap, algebra.to_ring_hom, submatrix_smul] }
 #align matrix.reindex_alg_equiv Matrix.reindexAlgEquiv
 
 @[simp]

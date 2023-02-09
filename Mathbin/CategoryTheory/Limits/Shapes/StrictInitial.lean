@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.strict_initial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ theorem hasStrictInitialObjects_of_initial_is_strict [HasInitial C]
   {
     out := fun I A f hI =>
       haveI := h A (f ≫ hI.to _)
-      ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, is_iso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
+      ⟨⟨hI.to _ ≫ inv (f ≫ hI.to (⊥_ C)), by rw [← assoc, IsIso.hom_inv_id], hI.hom_ext _ _⟩⟩ }
 #align category_theory.limits.has_strict_initial_objects_of_initial_is_strict CategoryTheory.Limits.hasStrictInitialObjects_of_initial_is_strict
 
 end StrictInitial
@@ -206,7 +206,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 
 variable {J : Type v} [SmallCategory J]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
@@ -217,7 +217,7 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
       exact fun j =>
         dite (j = i)
           (fun h =>
-            eq_to_hom
+            eqToHom
               (by
                 cases h
                 rfl))
@@ -229,9 +229,9 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
         obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
         simpa
       · cases h
-        erw [category.comp_id]
-        haveI : is_iso (F.map f) := (H _ h_1).isIso_from _
-        rw [← is_iso.comp_inv_eq]
+        erw [Category.comp_id]
+        haveI : IsIso (F.map f) := (H _ h_1).isIso_from _
+        rw [← IsIso.comp_inv_eq]
         apply (H _ h_1).hom_ext
       · cases h_1
         apply (H _ h).hom_ext
@@ -241,7 +241,7 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
       dsimp only
       split_ifs
       · cases h
-        rw [id_comp, eq_to_hom_refl]
+        rw [id_comp, eqToHom_refl]
         exact comp_id _
       · apply (H _ h).hom_ext
     · rw [limit.lift_π]
@@ -272,7 +272,7 @@ theorem hasStrictTerminalObjects_of_terminal_is_strict (I : C) (h : ∀ (A) (f :
   {
     out := fun I' A f hI' =>
       haveI := h A (hI'.from _ ≫ f)
-      ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, is_iso.inv_hom_id]⟩⟩ }
+      ⟨⟨inv (hI'.from I ≫ f) ≫ hI'.from I, hI'.hom_ext _ _, by rw [assoc, IsIso.inv_hom_id]⟩⟩ }
 #align category_theory.limits.has_strict_terminal_objects_of_terminal_is_strict CategoryTheory.Limits.hasStrictTerminalObjects_of_terminal_is_strict
 
 end StrictTerminal

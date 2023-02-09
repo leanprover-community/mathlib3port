@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,11 +134,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {_inst_1 : Set.{u1} α} {s : Set.{u1} α} {t : α -> α -> (Set.{u1} α)}, Iff (Filter.TendstoIxxClass.{u1} α t (Filter.principal.{u1} α _inst_1) (Filter.principal.{u1} α s)) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x _inst_1) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y _inst_1) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (t x y) s)))
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_Ixx_class_principal Filter.tendstoIxxClass_principalₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem tendstoIxxClass_principal {s t : Set α} {Ixx : α → α → Set α} :
     TendstoIxxClass Ixx (𝓟 s) (𝓟 t) ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), Ixx x y ⊆ t :=
   Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ <| by
-    simp only [small_sets_principal, prod_principal_principal, tendsto_principal_principal,
+    simp only [smallSets_principal, prod_principal_principal, tendsto_principal_principal,
       forall_prod_set, mem_powerset_iff, mem_principal]
 #align filter.tendsto_Ixx_class_principal Filter.tendstoIxxClass_principal
 
@@ -150,7 +150,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_Ixx_class_inf Filter.tendstoIxxClass_infₓ'. -/
 theorem tendstoIxxClass_inf {l₁ l₁' l₂ l₂' : Filter α} {Ixx} [h : TendstoIxxClass Ixx l₁ l₂]
     [h' : TendstoIxxClass Ixx l₁' l₂'] : TendstoIxxClass Ixx (l₁ ⊓ l₁') (l₂ ⊓ l₂') :=
-  ⟨by simpa only [prod_inf_prod, small_sets_inf] using h.1.inf h'.1⟩
+  ⟨by simpa only [prod_inf_prod, smallSets_inf] using h.1.inf h'.1⟩
 #align filter.tendsto_Ixx_class_inf Filter.tendstoIxxClass_inf
 
 /- warning: filter.tendsto_Ixx_class_of_subset -> Filter.tendstoIxxClass_of_subset is a dubious translation:
@@ -173,12 +173,12 @@ Case conversion may be inaccurate. Consider using '#align filter.has_basis.tends
 theorem HasBasis.tendstoIxxClass {ι : Type _} {p : ι → Prop} {s} {l : Filter α}
     (hl : l.HasBasis p s) {Ixx : α → α → Set α}
     (H : ∀ i, p i → ∀ x ∈ s i, ∀ y ∈ s i, Ixx x y ⊆ s i) : TendstoIxxClass Ixx l l :=
-  ⟨(hl.prod_self.tendsto_iffₓ hl.smallSets).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
+  ⟨(hl.prod_self.tendsto_iff hl.smallSets).2 fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 #align filter.has_basis.tendsto_Ixx_class Filter.HasBasis.tendstoIxxClass
 
 #print Filter.tendsto_Icc_atTop_atTop /-
 instance tendsto_Icc_atTop_atTop : TendstoIxxClass Icc (atTop : Filter α) atTop :=
-  (hasBasis_infᵢ_principal_finite _).TendstoIxxClass fun s hs =>
+  (hasBasis_infᵢ_principal_finite _).tendstoIxxClass fun s hs =>
     Set.OrdConnected.out <| ordConnected_binterᵢ fun i hi => ordConnected_Ici
 #align filter.tendsto_Icc_at_top_at_top Filter.tendsto_Icc_atTop_atTop
 -/
@@ -203,7 +203,7 @@ instance tendsto_Ioo_atTop_atTop : TendstoIxxClass Ioo (atTop : Filter α) atTop
 
 #print Filter.tendsto_Icc_atBot_atBot /-
 instance tendsto_Icc_atBot_atBot : TendstoIxxClass Icc (atBot : Filter α) atBot :=
-  (hasBasis_infᵢ_principal_finite _).TendstoIxxClass fun s hs =>
+  (hasBasis_infᵢ_principal_finite _).tendstoIxxClass fun s hs =>
     Set.OrdConnected.out <| ordConnected_binterᵢ fun i hi => ordConnected_Iic
 #align filter.tendsto_Icc_at_bot_at_bot Filter.tendsto_Icc_atBot_atBot
 -/
@@ -327,7 +327,7 @@ variable [PartialOrder α]
 instance tendsto_Icc_pure_pure {a : α} : TendstoIxxClass Icc (pure a) (pure a : Filter α) :=
   by
   rw [← principal_singleton]
-  exact tendsto_Ixx_class_principal.2 ord_connected_singleton.out
+  exact tendstoIxxClass_principal.2 ord_connected_singleton.out
 #align filter.tendsto_Icc_pure_pure Filter.tendsto_Icc_pure_pure
 -/
 

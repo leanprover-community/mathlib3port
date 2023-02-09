@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.factors
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,14 +196,14 @@ theorem coePNat_nat (v : PrimeMultiset) : ((v : Multiset ℕ+) : Multiset ℕ) =
 #print PrimeMultiset.prod /-
 /-- The product of a `prime_multiset`, as a `ℕ+`. -/
 def prod (v : PrimeMultiset) : ℕ+ :=
-  (v : Multiset PNat).Prod
+  (v : Multiset PNat).prod
 #align prime_multiset.prod PrimeMultiset.prod
 -/
 
 #print PrimeMultiset.coe_prod /-
-theorem coe_prod (v : PrimeMultiset) : (v.Prod : ℕ) = (v : Multiset ℕ).Prod :=
+theorem coe_prod (v : PrimeMultiset) : (v.prod : ℕ) = (v : Multiset ℕ).prod :=
   by
-  let h : (v.prod : ℕ) = ((v.map coe).map coe).Prod :=
+  let h : (v.prod : ℕ) = ((v.map coe).map coe).prod :=
     pnat.coe_monoid_hom.map_multiset_prod v.to_pnat_multiset
   rw [Multiset.map_map] at h
   have : (coe : ℕ+ → ℕ) ∘ (coe : Nat.Primes → ℕ+) = coe := funext fun p => rfl
@@ -212,7 +212,7 @@ theorem coe_prod (v : PrimeMultiset) : (v.Prod : ℕ) = (v : Multiset ℕ).Prod 
 -/
 
 #print PrimeMultiset.prod_ofPrime /-
-theorem prod_ofPrime (p : Nat.Primes) : (ofPrime p).Prod = (p : ℕ+) :=
+theorem prod_ofPrime (p : Nat.Primes) : (ofPrime p).prod = (p : ℕ+) :=
   Multiset.prod_singleton _
 #align prime_multiset.prod_of_prime PrimeMultiset.prod_ofPrime
 -/
@@ -228,7 +228,7 @@ def ofNatMultiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.Prime) : Pr
 theorem to_ofNatMultiset (v : Multiset ℕ) (h) : (ofNatMultiset v h : Multiset ℕ) = v :=
   by
   unfold_coes
-  dsimp [of_nat_multiset, to_nat_multiset]
+  dsimp [ofNatMultiset, toNatMultiset]
   have : (fun (p : ℕ) (h : p.Prime) => ((⟨p, h⟩ : Nat.Primes) : ℕ)) = fun p h => id p :=
     by
     funext p h
@@ -238,8 +238,8 @@ theorem to_ofNatMultiset (v : Multiset ℕ) (h) : (ofNatMultiset v h : Multiset 
 -/
 
 #print PrimeMultiset.prod_ofNatMultiset /-
-theorem prod_ofNatMultiset (v : Multiset ℕ) (h) : ((ofNatMultiset v h).Prod : ℕ) = (v.Prod : ℕ) :=
-  by rw [coe_prod, to_of_nat_multiset]
+theorem prod_ofNatMultiset (v : Multiset ℕ) (h) : ((ofNatMultiset v h).prod : ℕ) = (v.prod : ℕ) :=
+  by rw [coe_prod, to_ofNatMultiset]
 #align prime_multiset.prod_of_nat_multiset PrimeMultiset.prod_ofNatMultiset
 -/
 
@@ -253,7 +253,7 @@ def ofPNatMultiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.Prime) :
 #print PrimeMultiset.to_ofPNatMultiset /-
 theorem to_ofPNatMultiset (v : Multiset ℕ+) (h) : (ofPNatMultiset v h : Multiset ℕ+) = v :=
   by
-  unfold_coes; dsimp [of_pnat_multiset, to_pnat_multiset]
+  unfold_coes; dsimp [ofPNatMultiset, toPNatMultiset]
   have : (fun (p : ℕ+) (h : p.Prime) => (coe : Nat.Primes → ℕ+) ⟨p, h⟩) = fun p h => id p :=
     by
     funext p h
@@ -264,10 +264,10 @@ theorem to_ofPNatMultiset (v : Multiset ℕ+) (h) : (ofPNatMultiset v h : Multis
 -/
 
 #print PrimeMultiset.prod_ofPNatMultiset /-
-theorem prod_ofPNatMultiset (v : Multiset ℕ+) (h) : ((ofPNatMultiset v h).Prod : ℕ+) = v.Prod :=
+theorem prod_ofPNatMultiset (v : Multiset ℕ+) (h) : ((ofPNatMultiset v h).prod : ℕ+) = v.prod :=
   by
-  dsimp [Prod]
-  rw [to_of_pnat_multiset]
+  dsimp [prod]
+  rw [to_ofPNatMultiset]
 #align prime_multiset.prod_of_pnat_multiset PrimeMultiset.prod_ofPNatMultiset
 -/
 
@@ -280,9 +280,9 @@ def ofNatList (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.Prime) : PrimeMulti
 -/
 
 #print PrimeMultiset.prod_ofNatList /-
-theorem prod_ofNatList (l : List ℕ) (h) : ((ofNatList l h).Prod : ℕ) = l.Prod :=
+theorem prod_ofNatList (l : List ℕ) (h) : ((ofNatList l h).prod : ℕ) = l.prod :=
   by
-  have := prod_of_nat_multiset (l : Multiset ℕ) h
+  have := prod_ofNatMultiset (l : Multiset ℕ) h
   rw [Multiset.coe_prod] at this
   exact this
 #align prime_multiset.prod_of_nat_list PrimeMultiset.prod_ofNatList
@@ -302,9 +302,9 @@ lean 3 declaration is
 but is expected to have type
   forall (l : List.{0} PNat) (h : forall (p : PNat), (Membership.mem.{0, 0} PNat (List.{0} PNat) (List.instMembershipList.{0} PNat) p l) -> (PNat.Prime p)), Eq.{1} PNat (PrimeMultiset.prod (PrimeMultiset.ofPNatList l h)) (List.prod.{0} PNat instPNatMul instOnePNat l)
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_of_pnat_list PrimeMultiset.prod_ofPNatListₓ'. -/
-theorem prod_ofPNatList (l : List ℕ+) (h) : (ofPNatList l h).Prod = l.Prod :=
+theorem prod_ofPNatList (l : List ℕ+) (h) : (ofPNatList l h).prod = l.prod :=
   by
-  have := prod_of_pnat_multiset (l : Multiset ℕ+) h
+  have := prod_ofPNatMultiset (l : Multiset ℕ+) h
   rw [Multiset.coe_prod] at this
   exact this
 #align prime_multiset.prod_of_pnat_list PrimeMultiset.prod_ofPNatList
@@ -317,9 +317,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_zero PrimeMultiset.prod_zeroₓ'. -/
 /-- The product map gives a homomorphism from the additive monoid
 of multisets to the multiplicative monoid ℕ+. -/
-theorem prod_zero : (0 : PrimeMultiset).Prod = 1 :=
+theorem prod_zero : (0 : PrimeMultiset).prod = 1 :=
   by
-  dsimp [Prod]
+  dsimp [prod]
   exact Multiset.prod_zero
 #align prime_multiset.prod_zero PrimeMultiset.prod_zero
 
@@ -329,9 +329,9 @@ lean 3 declaration is
 but is expected to have type
   forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HAdd.hAdd.{0, 0, 0} PrimeMultiset PrimeMultiset PrimeMultiset (instHAdd.{0} PrimeMultiset (AddZeroClass.toAdd.{0} PrimeMultiset (AddMonoid.toAddZeroClass.{0} PrimeMultiset (AddCommMonoid.toAddMonoid.{0} PrimeMultiset (OrderedAddCommMonoid.toAddCommMonoid.{0} PrimeMultiset (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{0} PrimeMultiset instPrimeMultisetCanonicallyOrderedAddMonoid)))))) u v)) (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_add PrimeMultiset.prod_addₓ'. -/
-theorem prod_add (u v : PrimeMultiset) : (u + v).Prod = u.Prod * v.Prod :=
+theorem prod_add (u v : PrimeMultiset) : (u + v).prod = u.prod * v.prod :=
   by
-  change (coe_pnat_monoid_hom (u + v)).Prod = _
+  change (coePNatMonoidHom (u + v)).prod = _
   rw [coe_pnat_monoid_hom.map_add]
   exact Multiset.prod_add _ _
 #align prime_multiset.prod_add PrimeMultiset.prod_add
@@ -342,7 +342,7 @@ lean 3 declaration is
 but is expected to have type
   forall (d : Nat) (u : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HSMul.hSMul.{0, 0, 0} Nat PrimeMultiset PrimeMultiset (instHSMul.{0, 0} Nat PrimeMultiset (AddMonoid.SMul.{0} PrimeMultiset (AddCommMonoid.toAddMonoid.{0} PrimeMultiset (OrderedAddCommMonoid.toAddCommMonoid.{0} PrimeMultiset (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{0} PrimeMultiset instPrimeMultisetCanonicallyOrderedAddMonoid))))) d u)) (Pow.pow.{0, 0} PNat Nat (Monoid.Pow.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid)))))) (PrimeMultiset.prod u) d)
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_smul PrimeMultiset.prod_smulₓ'. -/
-theorem prod_smul (d : ℕ) (u : PrimeMultiset) : (d • u).Prod = u.Prod ^ d :=
+theorem prod_smul (d : ℕ) (u : PrimeMultiset) : (d • u).prod = u.prod ^ d :=
   by
   induction' d with d ih
   rfl
@@ -362,9 +362,9 @@ def factorMultiset (n : ℕ+) : PrimeMultiset :=
 
 #print PNat.prod_factorMultiset /-
 /-- The product of the factors is the original number -/
-theorem prod_factorMultiset (n : ℕ+) : (factorMultiset n).Prod = n :=
+theorem prod_factorMultiset (n : ℕ+) : (factorMultiset n).prod = n :=
   eq <| by
-    dsimp [factor_multiset]
+    dsimp [factorMultiset]
     rw [PrimeMultiset.prod_ofNatList]
     exact Nat.prod_factors n.ne_zero
 #align pnat.prod_factor_multiset PNat.prod_factorMultiset
@@ -384,7 +384,7 @@ namespace PrimeMultiset
 #print PrimeMultiset.factorMultiset_prod /-
 /-- If we start with a multiset of primes, take the product and
  then factor it, we get back the original multiset. -/
-theorem factorMultiset_prod (v : PrimeMultiset) : v.Prod.factorMultiset = v :=
+theorem factorMultiset_prod (v : PrimeMultiset) : v.prod.factorMultiset = v :=
   by
   apply PrimeMultiset.coeNat_injective
   rw [v.prod.coe_nat_factor_multiset, PrimeMultiset.coe_prod]
@@ -397,7 +397,7 @@ theorem factorMultiset_prod (v : PrimeMultiset) : v.Prod.factorMultiset = v :=
     by
     rcases list.mem_map.mp hp with ⟨⟨p', hp'⟩, ⟨h_mem, h_eq⟩⟩
     exact h_eq ▸ hp'
-  exact multiset.coe_eq_coe.mpr (@Nat.factors_unique _ l' rfl this).symm
+  exact multiset.coe_eq_coe.mpr (@nat.factors_unique _ l' rfl this).symm
 #align prime_multiset.factor_multiset_prod PrimeMultiset.factorMultiset_prod
 -/
 
@@ -425,7 +425,7 @@ Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_o
 /-- Factoring gives a homomorphism from the multiplicative
  monoid ℕ+ to the additive monoid of multisets. -/
 theorem factorMultiset_one : factorMultiset 1 = 0 := by
-  simp [factor_multiset, PrimeMultiset.ofNatList, PrimeMultiset.ofNatMultiset]
+  simp [factorMultiset, PrimeMultiset.ofNatList, PrimeMultiset.ofNatMultiset]
 #align pnat.factor_multiset_one PNat.factorMultiset_one
 
 /- warning: pnat.factor_multiset_mul -> PNat.factorMultiset_mul is a dubious translation:
@@ -437,10 +437,10 @@ Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_m
 theorem factorMultiset_mul (n m : ℕ+) :
     factorMultiset (n * m) = factorMultiset n + factorMultiset m :=
   by
-  let u := factor_multiset n
-  let v := factor_multiset m
-  have : n = u.prod := (prod_factor_multiset n).symm; rw [this]
-  have : m = v.prod := (prod_factor_multiset m).symm; rw [this]
+  let u := factorMultiset n
+  let v := factorMultiset m
+  have : n = u.prod := (prod_factorMultiset n).symm; rw [this]
+  have : m = v.prod := (prod_factorMultiset m).symm; rw [this]
   rw [← PrimeMultiset.prod_add]
   repeat' rw [PrimeMultiset.factorMultiset_prod]
 #align pnat.factor_multiset_mul PNat.factorMultiset_mul
@@ -453,8 +453,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_pow PNat.factorMultiset_powₓ'. -/
 theorem factorMultiset_pow (n : ℕ+) (m : ℕ) : factorMultiset (n ^ m) = m • factorMultiset n :=
   by
-  let u := factor_multiset n
-  have : n = u.prod := (prod_factor_multiset n).symm
+  let u := factorMultiset n
+  have : n = u.prod := (prod_factorMultiset n).symm
   rw [this, ← PrimeMultiset.prod_smul]
   repeat' rw [PrimeMultiset.factorMultiset_prod]
 #align pnat.factor_multiset_pow PNat.factorMultiset_pow
@@ -465,7 +465,7 @@ theorem factorMultiset_ofPrime (p : Nat.Primes) :
     (p : ℕ+).factorMultiset = PrimeMultiset.ofPrime p :=
   by
   apply factor_multiset_equiv.symm.injective
-  change (p : ℕ+).factorMultiset.Prod = (PrimeMultiset.ofPrime p).Prod
+  change (p : ℕ+).factorMultiset.prod = (PrimeMultiset.ofPrime p).prod
   rw [(p : ℕ+).prod_factorMultiset, PrimeMultiset.prod_ofPrime]
 #align pnat.factor_multiset_of_prime PNat.factorMultiset_ofPrime
 -/
@@ -483,12 +483,12 @@ theorem factorMultiset_le_iff {m n : ℕ+} : factorMultiset m ≤ factorMultiset
   by
   constructor
   · intro h
-    rw [← prod_factor_multiset m, ← prod_factor_multiset m]
-    apply Dvd.intro (n.factor_multiset - m.factor_multiset).Prod
+    rw [← prod_factorMultiset m, ← prod_factorMultiset m]
+    apply Dvd.intro (n.factor_multiset - m.factor_multiset).prod
     rw [← PrimeMultiset.prod_add, PrimeMultiset.factorMultiset_prod, add_tsub_cancel_of_le h,
-      prod_factor_multiset]
+      prod_factorMultiset]
   · intro h
-    rw [← mul_div_exact h, factor_multiset_mul]
+    rw [← mul_div_exact h, factorMultiset_mul]
     exact le_self_add
 #align pnat.factor_multiset_le_iff PNat.factorMultiset_le_iff
 
@@ -498,7 +498,7 @@ lean 3 declaration is
 but is expected to have type
   forall {m : PNat} {v : PrimeMultiset}, Iff (LE.le.{0} PrimeMultiset (Preorder.toLE.{0} PrimeMultiset (PartialOrder.toPreorder.{0} PrimeMultiset (OrderedAddCommMonoid.toPartialOrder.{0} PrimeMultiset (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{0} PrimeMultiset instPrimeMultisetCanonicallyOrderedAddMonoid)))) (PNat.factorMultiset m) v) (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) m (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align pnat.factor_multiset_le_iff' PNat.factorMultiset_le_iff'ₓ'. -/
-theorem factorMultiset_le_iff' {m : ℕ+} {v : PrimeMultiset} : factorMultiset m ≤ v ↔ m ∣ v.Prod :=
+theorem factorMultiset_le_iff' {m : ℕ+} {v : PrimeMultiset} : factorMultiset m ≤ v ↔ m ∣ v.prod :=
   by
   let h := @factor_multiset_le_iff m v.prod
   rw [v.factor_multiset_prod] at h
@@ -515,9 +515,9 @@ lean 3 declaration is
 but is expected to have type
   forall {u : PrimeMultiset} {v : PrimeMultiset}, Iff (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) (PrimeMultiset.prod u) (PrimeMultiset.prod v)) (LE.le.{0} PrimeMultiset (Preorder.toLE.{0} PrimeMultiset (PartialOrder.toPreorder.{0} PrimeMultiset (OrderedAddCommMonoid.toPartialOrder.{0} PrimeMultiset (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{0} PrimeMultiset instPrimeMultisetCanonicallyOrderedAddMonoid)))) u v)
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_dvd_iff PrimeMultiset.prod_dvd_iffₓ'. -/
-theorem prod_dvd_iff {u v : PrimeMultiset} : u.Prod ∣ v.Prod ↔ u ≤ v :=
+theorem prod_dvd_iff {u v : PrimeMultiset} : u.prod ∣ v.prod ↔ u ≤ v :=
   by
-  let h := @PNat.factorMultiset_le_iff' u.prod v
+  let h := @pnat.factor_multiset_le_iff' u.prod v
   rw [u.factor_multiset_prod] at h
   exact h.symm
 #align prime_multiset.prod_dvd_iff PrimeMultiset.prod_dvd_iff
@@ -528,7 +528,7 @@ lean 3 declaration is
 but is expected to have type
   forall {u : PrimeMultiset} {n : PNat}, Iff (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) (PrimeMultiset.prod u) n) (LE.le.{0} PrimeMultiset (Preorder.toLE.{0} PrimeMultiset (PartialOrder.toPreorder.{0} PrimeMultiset (OrderedAddCommMonoid.toPartialOrder.{0} PrimeMultiset (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{0} PrimeMultiset instPrimeMultisetCanonicallyOrderedAddMonoid)))) u (PNat.factorMultiset n))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_dvd_iff' PrimeMultiset.prod_dvd_iff'ₓ'. -/
-theorem prod_dvd_iff' {u : PrimeMultiset} {n : ℕ+} : u.Prod ∣ n ↔ u ≤ n.factorMultiset :=
+theorem prod_dvd_iff' {u : PrimeMultiset} {n : ℕ+} : u.prod ∣ n ↔ u ≤ n.factorMultiset :=
   by
   let h := @prod_dvd_iff u n.factor_multiset
   rw [n.prod_factor_multiset] at h
@@ -554,7 +554,7 @@ theorem factorMultiset_gcd (m n : ℕ+) :
   · apply le_inf_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
     exact gcd_dvd_left m n
     exact gcd_dvd_right m n
-  · rw [← PrimeMultiset.prod_dvd_iff, prod_factor_multiset]
+  · rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
     apply dvd_gcd <;> rw [PrimeMultiset.prod_dvd_iff']
     exact inf_le_left
     exact inf_le_right
@@ -570,8 +570,8 @@ theorem factorMultiset_lcm (m n : ℕ+) :
     factorMultiset (lcm m n) = factorMultiset m ⊔ factorMultiset n :=
   by
   apply le_antisymm
-  · rw [← PrimeMultiset.prod_dvd_iff, prod_factor_multiset]
-    apply lcm_dvd <;> rw [← factor_multiset_le_iff']
+  · rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
+    apply lcm_dvd <;> rw [← factorMultiset_le_iff']
     exact le_sup_left
     exact le_sup_right
   · apply sup_le_iff.mpr <;> constructor <;> apply factor_multiset_le_iff.mpr
@@ -592,7 +592,7 @@ theorem count_factorMultiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) :
   by
   intros
   rw [Multiset.le_count_iff_replicate_le]
-  rw [← factor_multiset_le_iff, factor_multiset_pow, factor_multiset_of_prime]
+  rw [← factorMultiset_le_iff, factorMultiset_pow, factorMultiset_ofPrime]
   congr 2
   apply multiset.eq_replicate.mpr
   constructor
@@ -612,11 +612,11 @@ lean 3 declaration is
 but is expected to have type
   forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasInf.inf.{0} PrimeMultiset (Lattice.toHasInf.{0} PrimeMultiset (DistribLattice.toLattice.{0} PrimeMultiset instPrimeMultisetDistribLattice)) u v)) (PNat.gcd (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_inf PrimeMultiset.prod_infₓ'. -/
-theorem prod_inf (u v : PrimeMultiset) : (u ⊓ v).Prod = PNat.gcd u.Prod v.Prod :=
+theorem prod_inf (u v : PrimeMultiset) : (u ⊓ v).prod = PNat.gcd u.prod v.prod :=
   by
   let n := u.prod
   let m := v.prod
-  change (u ⊓ v).Prod = PNat.gcd n m
+  change (u ⊓ v).prod = PNat.gcd n m
   have : u = n.factor_multiset := u.factor_multiset_prod.symm; rw [this]
   have : v = m.factor_multiset := v.factor_multiset_prod.symm; rw [this]
   rw [← PNat.factorMultiset_gcd n m, PNat.prod_factorMultiset]
@@ -628,11 +628,11 @@ lean 3 declaration is
 but is expected to have type
   forall (u : PrimeMultiset) (v : PrimeMultiset), Eq.{1} PNat (PrimeMultiset.prod (HasSup.sup.{0} PrimeMultiset (SemilatticeSup.toHasSup.{0} PrimeMultiset instPrimeMultisetSemilatticeSup) u v)) (PNat.lcm (PrimeMultiset.prod u) (PrimeMultiset.prod v))
 Case conversion may be inaccurate. Consider using '#align prime_multiset.prod_sup PrimeMultiset.prod_supₓ'. -/
-theorem prod_sup (u v : PrimeMultiset) : (u ⊔ v).Prod = PNat.lcm u.Prod v.Prod :=
+theorem prod_sup (u v : PrimeMultiset) : (u ⊔ v).prod = PNat.lcm u.prod v.prod :=
   by
   let n := u.prod
   let m := v.prod
-  change (u ⊔ v).Prod = PNat.lcm n m
+  change (u ⊔ v).prod = PNat.lcm n m
   have : u = n.factor_multiset := u.factor_multiset_prod.symm; rw [this]
   have : v = m.factor_multiset := v.factor_multiset_prod.symm; rw [this]
   rw [← PNat.factorMultiset_lcm n m, PNat.prod_factorMultiset]

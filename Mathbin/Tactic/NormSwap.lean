@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module tactic.norm_swap
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,11 +64,11 @@ unsafe def eval : expr → tactic (expr × expr) := fun e => do
       else do
         let nic ← mk_instance_cache α
         let hca ←
-          Prod.snd <$> prove_ne nic c a nc na <|> do
+          prod.snd <$> prove_ne nic c a nc na <|> do
               let (_, ff, p) ← norm_fin.prove_eq_ne_fin c a
               pure p
         let hcb ←
-          Prod.snd <$> prove_ne nic c b nc nb <|> do
+          prod.snd <$> prove_ne nic c b nc nb <|> do
               let (_, ff, p) ← norm_fin.prove_eq_ne_fin c b
               pure p
         let p ← mk_mapp `equiv.swap_apply_of_ne_of_ne [α, deceq_inst, a, b, c, hca, hcb]

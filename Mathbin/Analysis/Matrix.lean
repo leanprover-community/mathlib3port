@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.matrix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -300,12 +300,12 @@ theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
   by
   simp_rw [linfty_op_nnnorm_def, Matrix.mul_apply]
   calc
-    (finset.univ.sup fun i => ∑ k, ‖∑ j, A i j * B j k‖₊) ≤
+    (Finset.univ fun i => ∑ k, ‖∑ j, A i j * B j k‖₊) ≤
         finset.univ.sup fun i => ∑ (k) (j), ‖A i j‖₊ * ‖B j k‖₊ :=
       Finset.sup_mono_fun fun i hi =>
         Finset.sum_le_sum fun k hk => nnnorm_sum_le_of_le _ fun j hj => nnnorm_mul_le _ _
     _ = finset.univ.sup fun i => ∑ j, ‖A i j‖₊ * ∑ k, ‖B j k‖₊ := by
-      simp_rw [@Finset.sum_comm _ m n, Finset.mul_sum]
+      simp_rw [@finset.sum_comm _ m n, Finset.mul_sum]
     _ ≤ finset.univ.sup fun i => ∑ j, ‖A i j‖₊ * finset.univ.sup fun i => ∑ j, ‖B i j‖₊ :=
       Finset.sup_mono_fun fun i hi =>
         Finset.sum_le_sum fun j hj => mul_le_mul_of_nonneg_left (Finset.le_sup hj) (zero_le _)
@@ -539,7 +539,7 @@ variable [IsROrC α]
 theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
   by
   simp_rw [frobenius_nnnorm_def, Matrix.mul_apply]
-  rw [← Nnreal.mul_rpow, @Finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
+  rw [← Nnreal.mul_rpow, @finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
   refine' Nnreal.rpow_le_rpow _ one_half_pos.le
   refine' Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => _
   rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul,

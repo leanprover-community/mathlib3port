@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module analysis.sum_integral_comparisons
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
   have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) :=
     by
     intro k hk
-    refine' (hf.mono _).IntervalIntegrable
+    refine' (hf.mono _).intervalIntegrable
     rw [uIcc_of_le]
     · apply Icc_subset_Icc
       · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]
@@ -114,7 +114,7 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
   have hint : ∀ k : ℕ, k < a → IntervalIntegrable f volume (x₀ + k) (x₀ + (k + 1 : ℕ)) :=
     by
     intro k hk
-    refine' (hf.mono _).IntervalIntegrable
+    refine' (hf.mono _).intervalIntegrable
     rw [uIcc_of_le]
     · apply Icc_subset_Icc
       · simp only [le_add_iff_nonneg_right, Nat.cast_nonneg]

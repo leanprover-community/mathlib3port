@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.aut
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,13 +55,14 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (MulAut M) := by
   refine_struct
-            { mul := fun g h => MulEquiv.trans h g
-              one := MulEquiv.refl M
-              inv := MulEquiv.symm
+            { mul := fun g h => mul_equiv.trans h g
+              one := mul_equiv.refl M
+              inv := mul_equiv.symm
               div := _
-              npow := @npowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩
+              npow := @npow_rec _ ⟨mul_equiv.refl M⟩ ⟨fun g h => mul_equiv.trans h g⟩
               zpow :=
-                @zpowRec _ ⟨MulEquiv.refl M⟩ ⟨fun g h => MulEquiv.trans h g⟩ ⟨MulEquiv.symm⟩ } <;>
+                @zpow_rec _ ⟨mul_equiv.refl M⟩ ⟨fun g h => mul_equiv.trans h g⟩
+                  ⟨mul_equiv.symm⟩ } <;>
           intros <;>
         ext <;>
       try rfl <;>
@@ -174,7 +175,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_aut.to_perm MulAut.toPermₓ'. -/
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
 def toPerm : MulAut M →* Equiv.Perm M := by
-  refine_struct { toFun := MulEquiv.toEquiv } <;> intros <;> rfl
+  refine_struct { toFun := mul_equiv.to_equiv } <;> intros <;> rfl
 #align mul_aut.to_perm MulAut.toPerm
 
 /- warning: mul_aut.apply_mul_distrib_mul_action -> MulAut.applyMulDistribMulAction is a dubious translation:
@@ -285,13 +286,14 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance group : Group (AddAut A) := by
   refine_struct
-            { mul := fun g h => AddEquiv.trans h g
-              one := AddEquiv.refl A
-              inv := AddEquiv.symm
+            { mul := fun g h => add_equiv.trans h g
+              one := add_equiv.refl A
+              inv := add_equiv.symm
               div := _
-              npow := @npowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩
+              npow := @npow_rec _ ⟨add_equiv.refl A⟩ ⟨fun g h => add_equiv.trans h g⟩
               zpow :=
-                @zpowRec _ ⟨AddEquiv.refl A⟩ ⟨fun g h => AddEquiv.trans h g⟩ ⟨AddEquiv.symm⟩ } <;>
+                @zpow_rec _ ⟨add_equiv.refl A⟩ ⟨fun g h => add_equiv.trans h g⟩
+                  ⟨add_equiv.symm⟩ } <;>
           intros <;>
         ext <;>
       try rfl <;>
@@ -401,7 +403,7 @@ theorem inv_apply_self (e : AddAut A) (a : A) : e (e⁻¹ a) = a :=
 #print AddAut.toPerm /-
 /-- Monoid hom from the group of multiplicative automorphisms to the group of permutations. -/
 def toPerm : AddAut A →* Equiv.Perm A := by
-  refine_struct { toFun := AddEquiv.toEquiv } <;> intros <;> rfl
+  refine_struct { toFun := add_equiv.to_equiv } <;> intros <;> rfl
 #align add_aut.to_perm AddAut.toPerm
 -/
 

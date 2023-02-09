@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.frontend
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,8 +77,8 @@ If `slow` is false, it only uses the fast default tests. -/
 unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) :
     tactic (List (Name × linter)) := do
   let default ← if use_only then return [] else attribute.get_instances `linter >>= get_linters
-  let default := if slow then default else default.filterₓ fun l => l.2.is_fast
-  List.append default <$> get_linters extra
+  let default := if slow then default else default.filter fun l => l.2.is_fast
+  list.append default <$> get_linters extra
 #align get_checks get_checks
 
 /-- `lint_core all_decls non_auto_decls checks` applies the linters `checks` to the list of
@@ -96,14 +96,14 @@ unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : Lis
       let s ← read
       let results :=
         test_decls fun decl =>
-          Prod.mk decl <|
+          prod.mk decl <|
             match linter decl s with
             | result.success w _ => w
             | result.exception msg _ _ =>
-              some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => toString <| msg ()
+              some <| "LINTER FAILED:\n" ++ msg "(no message)" fun msg => to_string <| msg ()
       let results :=
         results
-          (fun (results : rb_map Name String) warning =>
+          (fun (results : rb_map name string) warning =>
             match warning with
             | (decl_name, some w) => results decl_name w
             | (_, none) => results)
@@ -151,7 +151,7 @@ unsafe def print_workflow_command (env : environment) (linter_name decl_name : N
       ((s! "
             ::error file={ol },line={po },col={po},title=") ++
           s! "Warning from {linter_name} linter::") ++
-        s!"{(escapeWorkflowCommand <| toString decl_name)} - {escapeWorkflowCommand warning}"
+        s!"{(escape_workflow_command <| to_string decl_name)} - {escape_workflow_command warning}"
 #align print_workflow_command print_workflow_command
 
 /-- Formats a map of linter warnings using `print_warning`, sorted by line number. -/
@@ -175,7 +175,7 @@ unsafe def grouped_by_filename (e : environment) (results : rb_map Name String) 
       let fn := (e.decl_olean decl_name).getD ""
       results.insert fn (((results.find fn).getD mk_rb_map).insert decl_name linter_warning)
   let l :=
-    results.toList.reverse.map fun ⟨fn, results⟩ =>
+    results.to_list.reverse.map fun ⟨fn, results⟩ =>
       ("-- " ++ fn.popn drop_fn_chars ++ "\n" ++ formatter results : format)
   format.intercalate "\n\n" l ++ "\n"
 #align grouped_by_filename grouped_by_filename
@@ -192,7 +192,7 @@ unsafe def format_linter_results (env : environment)
   let formatted_results :=
     results.map fun ⟨linter_name, linter, results⟩ =>
       let report_str : format := to_fmt "/- The `" ++ to_fmt linter_name ++ "` linter reports: -/\n"
-      if ¬results.Empty then
+      if ¬results.empty then
         let warnings :=
           match group_by_filename with
           | none => print_warnings env emit_workflow_commands linter_name results
@@ -203,7 +203,7 @@ unsafe def format_linter_results (env : environment)
       else
         if verbose = LintVerbosity.high then "/- OK: " ++ linter.no_errors_found ++ " -/"
         else format.nil
-  let s := format.intercalate "\n" (formatted_results.filterₓ fun f => ¬f.is_nil)
+  let s := format.intercalate "\n" (formatted_results.filter fun f => ¬f.is_nil)
   let s :=
     if verbose = LintVerbosity.low then s
     else
@@ -229,7 +229,7 @@ unsafe def lint_aux (decls : List declaration) (group_by_filename : Option ℕ) 
     (slow : Bool) (verbose : LintVerbosity) (checks : List (Name × linter)) :
     tactic (name_set × format) := do
   let e ← get_env
-  let non_auto_decls := decls.filterₓ fun d => ¬d.is_auto_or_internal e
+  let non_auto_decls := decls.filter fun d => ¬d.is_auto_or_internal e
   let results ← lint_core decls non_auto_decls checks
   let s :=
     format_linter_results e results decls non_auto_decls group_by_filename where_desc slow verbose
@@ -246,7 +246,7 @@ unsafe def lint (slow : Bool := true) (verbose : LintVerbosity := LintVerbosity.
     (extra : List Name := []) (use_only : Bool := false) : tactic (name_set × format) := do
   let checks ← get_checks slow extra use_only
   let e ← get_env
-  let l := e.filterₓ fun d => e.in_current_file d.to_name
+  let l := e.filter fun d => e.in_current_file d.to_name
   lint_aux l none "in the current file" slow verbose checks
 #align lint lint
 
@@ -316,8 +316,8 @@ unsafe def lint_cmd_aux
   let (use_only, extra) ← parse_lint_additions
   let (failed, s) ← scope fast_only.isNone verbosity extra use_only
   when ¬s <| trace s
-  when (verbosity = LintVerbosity.low ∧ ¬failed) <| fail "Linting did not succeed"
-  when (verbosity = LintVerbosity.medium ∧ failed) <| trace "/- All linting checks passed! -/"
+  when (verbosity = lint_verbosity.low ∧ ¬failed) <| fail "Linting did not succeed"
+  when (verbosity = lint_verbosity.medium ∧ failed) <| trace "/- All linting checks passed! -/"
 #align lint_cmd_aux lint_cmd_aux
 
 /-- The command `#lint` at the bottom of a file will warn you about some common mistakes

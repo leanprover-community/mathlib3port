@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.lazy_list.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
   | nil, nil => isTrue rfl
   | cons x xs, cons y ys =>
     if h : x = y then
-      match DecidableEq (xs ()) (ys ()) with
+      match decidable_eq (xs ()) (ys ()) with
       | is_false h2 => isFalse (by intro <;> cc)
       | is_true h2 =>
         have : xs = ys := by ext u <;> cases u <;> assumption
@@ -89,8 +89,8 @@ instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
 /-- Traversal of lazy lists using an applicative effect. -/
 protected def traverse {m : Type u → Type u} [Applicative m] {α β : Type u} (f : α → m β) :
     LazyList α → m (LazyList β)
-  | LazyList.nil => pure LazyList.nil
-  | LazyList.cons x xs => LazyList.cons <$> f x <*> Thunk.pure <$> traverse (xs ())
+  | lazy_list.nil => pure LazyList.nil
+  | lazy_list.cons x xs => LazyList.cons <$> f x <*> Thunk.pure <$> traverse (xs ())
 #align lazy_list.traverse LazyList.traverse
 -/
 
@@ -101,23 +101,23 @@ instance : Traversable LazyList
 
 instance : IsLawfulTraversable LazyList :=
   by
-  apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros <;> skip <;> ext
+  apply Equiv.isLawfulTraversable' listEquivLazyList <;> intros <;> skip <;> ext
   · induction x
     rfl
-    simp! [Equiv.map, Functor.map] at *
+    simp! [Equiv.map, functor.map] at *
     simp [*]
     rfl
   · induction x
     rfl
-    simp! [Equiv.map, Functor.mapConst] at *
+    simp! [Equiv.map, functor.map_const] at *
     simp [*]
     rfl
   · induction x
-    · simp! [Traversable.traverse, Equiv.traverse, functor_norm]
+    · simp! [traversable.traverse, Equiv.traverse, functor_norm]
       rfl
-    simp! [Equiv.map, Functor.mapConst, Traversable.traverse] at *
+    simp! [Equiv.map, functor.map_const, traversable.traverse] at *
     rw [x_ih]
-    dsimp [list_equiv_lazy_list, Equiv.traverse, to_list, Traversable.traverse, List.traverse]
+    dsimp [listEquivLazyList, Equiv.traverse, toList, traversable.traverse, List.traverse]
     simp! [functor_norm]
     rfl
 
@@ -125,12 +125,12 @@ instance : IsLawfulTraversable LazyList :=
 /-- `init xs`, if `xs` non-empty, drops the last element of the list.
 Otherwise, return the empty list. -/
 def init {α} : LazyList α → LazyList α
-  | LazyList.nil => LazyList.nil
-  | LazyList.cons x xs =>
+  | lazy_list.nil => LazyList.nil
+  | lazy_list.cons x xs =>
     let xs' := xs ()
     match xs' with
-    | LazyList.nil => LazyList.nil
-    | LazyList.cons _ _ => LazyList.cons x (init xs')
+    | lazy_list.nil => LazyList.nil
+    | lazy_list.cons _ _ => LazyList.cons x (init xs')
 #align lazy_list.init LazyList.init
 -/
 
@@ -146,9 +146,9 @@ def find {α} (p : α → Prop) [DecidablePred p] : LazyList α → Option α
 #print LazyList.interleave /-
 /-- `interleave xs ys` creates a list where elements of `xs` and `ys` alternate. -/
 def interleave {α} : LazyList α → LazyList α → LazyList α
-  | LazyList.nil, xs => xs
-  | a@(LazyList.cons x xs), LazyList.nil => a
-  | LazyList.cons x xs, LazyList.cons y ys =>
+  | lazy_list.nil, xs => xs
+  | a@(lazy_list.cons x xs), lazy_list.nil => a
+  | lazy_list.cons x xs, lazy_list.cons y ys =>
     LazyList.cons x (LazyList.cons y (interleave (xs ()) (ys ())))
 #align lazy_list.interleave LazyList.interleave
 -/
@@ -166,8 +166,8 @@ def interleaveAll {α} : List (LazyList α) → LazyList α
 #print LazyList.bind /-
 /-- Monadic bind operation for `lazy_list`. -/
 protected def bind {α β} : LazyList α → (α → LazyList β) → LazyList β
-  | LazyList.nil, _ => LazyList.nil
-  | LazyList.cons x xs, f => LazyList.append (f x) (bind (xs ()) f)
+  | lazy_list.nil, _ => LazyList.nil
+  | lazy_list.cons x xs, f => LazyList.append (f x) (bind (xs ()) f)
 #align lazy_list.bind LazyList.bind
 -/
 
@@ -250,8 +250,8 @@ def mfirst {m} [Alternative m] {α β} (f : α → m β) : LazyList α → m β
 #print LazyList.Mem /-
 /-- Membership in lazy lists -/
 protected def Mem {α} (x : α) : LazyList α → Prop
-  | LazyList.nil => False
-  | LazyList.cons y ys => x = y ∨ mem (ys ())
+  | lazy_list.nil => False
+  | lazy_list.cons y ys => x = y ∨ mem (ys ())
 #align lazy_list.mem LazyList.Mem
 -/
 
@@ -260,8 +260,8 @@ instance {α} : Membership α (LazyList α) :=
 
 #print LazyList.Mem.decidable /-
 instance Mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
-  | LazyList.nil => Decidable.false
-  | LazyList.cons y ys =>
+  | lazy_list.nil => Decidable.false
+  | lazy_list.cons y ys =>
     if h : x = y then Decidable.isTrue (Or.inl h)
     else decidable_of_decidable_of_iff (mem.decidable (ys ())) (by simp [*, (· ∈ ·), LazyList.Mem])
 #align lazy_list.mem.decidable LazyList.Mem.decidable
@@ -294,7 +294,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lazy_list.forall_mem_cons LazyList.forall_mem_consₓ'. -/
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
-  simp only [Membership.Mem, LazyList.Mem, or_imp, forall_and, forall_eq]
+  simp only [has_mem.mem, LazyList.Mem, or_imp, forall_and, forall_eq]
 #align lazy_list.forall_mem_cons LazyList.forall_mem_cons
 
 /-! ### map for partial functions -/
@@ -307,8 +307,8 @@ theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)
   to apply `f`. -/
 @[simp]
 def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α, (∀ a ∈ l, p a) → LazyList β
-  | LazyList.nil, H => LazyList.nil
-  | LazyList.cons x xs, H =>
+  | lazy_list.nil, H => LazyList.nil
+  | lazy_list.cons x xs, H =>
     LazyList.cons (f x (forall_mem_cons.1 H).1) (pmap (xs ()) (forall_mem_cons.1 H).2)
 #align lazy_list.pmap LazyList.pmap
 -/

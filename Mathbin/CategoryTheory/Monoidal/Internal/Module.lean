@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.Module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.x :=
     map_mul' := fun x y =>
       by
       have h := LinearMap.congr_fun A.one_mul.symm (x ⊗ₜ A.one y)
-      rwa [monoidal_category.left_unitor_hom_apply, ← A.one.map_smul] at h
+      rwa [monoidalCategory.leftUnitor_hom_apply, ← A.one.map_smul] at h
     commutes' := fun r a => by
       dsimp
       have h₁ := LinearMap.congr_fun A.one_mul (r ⊗ₜ a)
@@ -90,11 +90,11 @@ def functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R
     where
   obj A := AlgebraCat.of R A.x
   map A B f :=
-    { f.Hom.toAddMonoidHom with
-      toFun := f.Hom
-      map_one' := LinearMap.congr_fun f.OneHom (1 : R)
-      map_mul' := fun x y => LinearMap.congr_fun f.MulHom (x ⊗ₜ y)
-      commutes' := fun r => LinearMap.congr_fun f.OneHom r }
+    { f.hom.toAddMonoidHom with
+      toFun := f.hom
+      map_one' := LinearMap.congr_fun f.one_hom (1 : R)
+      map_mul' := fun x y => LinearMap.congr_fun f.mul_hom (x ⊗ₜ y)
+      commutes' := fun r => LinearMap.congr_fun f.one_hom r }
 #align Module.Mon_Module_equivalence_Algebra.functor ModuleCat.MonModuleEquivalenceAlgebra.functor
 
 /-- Converting a bundled algebra to a monoid object in `Module R`.
@@ -111,7 +111,7 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
       LinearMap.compr₂_apply, Function.comp_apply, RingHom.map_one,
       ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
       ModuleCat.monoidalCategory.leftUnitor_hom_apply]
-    rw [LinearMap.mul'_apply, monoidal_category.left_unitor_hom_apply, ← Algebra.smul_def]
+    rw [LinearMap.mul'_apply, monoidalCategory.leftUnitor_hom_apply, ← Algebra.smul_def]
   mul_one' := by
     ext x
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, Algebra.linearMap_apply,
@@ -123,7 +123,7 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
     ext (x y z)
     dsimp only [AlgebraCat.id_apply, TensorProduct.mk_apply, LinearMap.compr₂_apply,
       Function.comp_apply, ModuleCat.monoidalCategory.hom_apply, AlgebraCat.coe_comp,
-      monoidal_category.associator_hom_apply]
+      monoidalCategory.associator_hom_apply]
     simp only [LinearMap.mul'_apply, mul_assoc]
 #align Module.Mon_Module_equivalence_Algebra.inverse_obj ModuleCat.MonModuleEquivalenceAlgebra.inverseObj
 

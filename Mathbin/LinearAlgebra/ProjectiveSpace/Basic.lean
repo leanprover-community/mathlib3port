@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,23 +142,23 @@ theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h))
 #align projectivization.ind Projectivization.ind
 
 @[simp]
-theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K ∙ v :=
+theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).submodule = K ∙ v :=
   rfl
 #align projectivization.submodule_mk Projectivization.submodule_mk
 
-theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep :=
+theorem submodule_eq (v : ℙ K V) : v.submodule = K ∙ v.rep :=
   by
   conv_lhs => rw [← v.mk_rep]
   rfl
 #align projectivization.submodule_eq Projectivization.submodule_eq
 
-theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 :=
+theorem finrank_submodule (v : ℙ K V) : finrank K v.submodule = 1 :=
   by
   rw [submodule_eq]
   exact finrank_span_singleton v.rep_nonzero
 #align projectivization.finrank_submodule Projectivization.finrank_submodule
 
-instance (v : ℙ K V) : FiniteDimensional K v.Submodule :=
+instance (v : ℙ K V) : FiniteDimensional K v.submodule :=
   by
   rw [← v.mk_rep]
   change FiniteDimensional K (K ∙ v.rep)
@@ -182,7 +182,7 @@ variable (K V)
 /-- The equivalence between the projectivization and the
 collection of subspaces of dimension 1. -/
 noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K H = 1 } :=
-  Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
+  Equiv.ofBijective (fun v => ⟨v.submodule, v.finrank_submodule⟩)
     (by
       constructor
       · intro u v h
@@ -215,15 +215,15 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 #align projectivization.mk'' Projectivization.mk''
 
 @[simp]
-theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H :=
+theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).submodule = H :=
   by
-  suffices (equiv_submodule K V) (mk'' H h) = ⟨H, h⟩ by exact congr_arg coe this
+  suffices (equivSubmodule K V) (mk'' H h) = ⟨H, h⟩ by exact congr_arg coe this
   dsimp [mk'']
   simp
 #align projectivization.submodule_mk'' Projectivization.submodule_mk''
 
 @[simp]
-theorem mk''_submodule (v : ℙ K V) : mk'' v.Submodule v.finrank_submodule = v :=
+theorem mk''_submodule (v : ℙ K V) : mk'' v.submodule v.finrank_submodule = v :=
   show (equivSubmodule K V).symm (equivSubmodule K V _) = _ by simp
 #align projectivization.mk''_submodule Projectivization.mk''_submodule
 
@@ -261,7 +261,7 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
 #align projectivization.map_injective Projectivization.map_injective
 
 @[simp]
-theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injective = id :=
+theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).injective = id :=
   by
   ext v
   induction v using Projectivization.ind

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.infinite_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ alias ContinuousLinearMap.hasSum ← HasSum.mapL
 
 protected theorem ContinuousLinearMap.summable {f : ι → M} (φ : M →SL[σ] M₂) (hf : Summable f) :
     Summable fun b : ι => φ (f b) :=
-  (hf.HasSum.mapL φ).Summable
+  (hf.hasSum.mapL φ).summable
 #align continuous_linear_map.summable ContinuousLinearMap.summable
 
 alias ContinuousLinearMap.summable ← Summable.mapL
@@ -41,7 +41,7 @@ alias ContinuousLinearMap.summable ← Summable.mapL
 
 protected theorem ContinuousLinearMap.map_tsum [T2Space M₂] {f : ι → M} (φ : M →SL[σ] M₂)
     (hf : Summable f) : φ (∑' z, f z) = ∑' z, φ (f z) :=
-  (hf.HasSum.mapL φ).tsum_eq.symm
+  (hf.hasSum.mapL φ).tsum_eq.symm
 #align continuous_linear_map.map_tsum ContinuousLinearMap.map_tsum
 
 include σ'
@@ -50,7 +50,7 @@ include σ'
 protected theorem ContinuousLinearEquiv.hasSum {f : ι → M} (e : M ≃SL[σ] M₂) {y : M₂} :
     HasSum (fun b : ι => e (f b)) y ↔ HasSum f (e.symm y) :=
   ⟨fun h => by simpa only [e.symm.coe_coe, e.symm_apply_apply] using h.mapL (e.symm : M₂ →SL[σ'] M),
-    fun h => by simpa only [e.coe_coe, e.apply_symm_apply] using (e : M →SL[σ] M₂).HasSum h⟩
+    fun h => by simpa only [e.coe_coe, e.apply_symm_apply] using (e : M →SL[σ] M₂).hasSum h⟩
 #align continuous_linear_equiv.has_sum ContinuousLinearEquiv.hasSum
 
 /-- Applying a continuous linear map commutes with taking an (infinite) sum. -/
@@ -61,7 +61,7 @@ protected theorem ContinuousLinearEquiv.has_sum' {f : ι → M} (e : M ≃SL[σ]
 
 protected theorem ContinuousLinearEquiv.summable {f : ι → M} (e : M ≃SL[σ] M₂) :
     (Summable fun b : ι => e (f b)) ↔ Summable f :=
-  ⟨fun hf => (e.HasSum.1 hf.HasSum).Summable, (e : M →SL[σ] M₂).Summable⟩
+  ⟨fun hf => (e.hasSum.1 hf.hasSum).summable, (e : M →SL[σ] M₂).summable⟩
 #align continuous_linear_equiv.summable ContinuousLinearEquiv.summable
 
 theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃SL[σ] M₂)

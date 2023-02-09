@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module order.filter.partial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ def rcomap (r : Rel α β) (f : Filter β) : Filter α
   univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
-    ⟨a' ∩ b', inter_mem ha₁ hb₁, (r.core_inter a' b').Subset.trans (Set.inter_subset_inter ha₂ hb₂)⟩
+    ⟨a' ∩ b', inter_mem ha₁ hb₁, (r.core_inter a' b').subset.trans (Set.inter_subset_inter ha₂ hb₂)⟩
 #align filter.rcomap Filter.rcomap
 -/
 
@@ -178,7 +178,7 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
 to relations. -/
 def rcomap' (r : Rel α β) (f : Filter β) : Filter α
     where
-  sets := Rel.image (fun s t => r.Preimage s ⊆ t) f.sets
+  sets := Rel.image (fun s t => r.preimage s ⊆ t) f.sets
   univ_sets := ⟨Set.univ, univ_mem, Set.subset_univ _⟩
   sets_of_superset := fun a b ⟨a', ha', ma'a⟩ ab => ⟨a', ha', ma'a.trans ab⟩
   inter_sets := fun a b ⟨a', ha₁, ha₂⟩ ⟨b', hb₁, hb₂⟩ =>
@@ -195,13 +195,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.mem_rcomap' Filter.mem_rcomap'ₓ'. -/
 @[simp]
 theorem mem_rcomap' (r : Rel α β) (l : Filter β) (s : Set α) :
-    s ∈ l.rcomap' r ↔ ∃ t ∈ l, r.Preimage t ⊆ s :=
+    s ∈ l.rcomap' r ↔ ∃ t ∈ l, r.preimage t ⊆ s :=
   Iff.rfl
 #align filter.mem_rcomap' Filter.mem_rcomap'
 
 #print Filter.rcomap'_sets /-
 theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
-    (rcomap' r f).sets = Rel.image (fun s t => r.Preimage s ⊆ t) f.sets :=
+    (rcomap' r f).sets = Rel.image (fun s t => r.preimage s ⊆ t) f.sets :=
   rfl
 #align filter.rcomap'_sets Filter.rcomap'_sets
 -/
@@ -237,7 +237,7 @@ def Rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
 
 #print Filter.rtendsto'_def /-
 theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
-    Rtendsto' r l₁ l₂ ↔ ∀ s ∈ l₂, r.Preimage s ∈ l₁ :=
+    Rtendsto' r l₁ l₂ ↔ ∀ s ∈ l₂, r.preimage s ∈ l₁ :=
   by
   unfold rtendsto' rcomap'; simp [le_def, Rel.mem_image]; constructor
   · exact fun h s hs => h _ _ hs Set.Subset.rfl
@@ -321,7 +321,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendstoₓ'. -/
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
     Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ Ptendsto (PFun.res f s) l₁ l₂ := by
-  simp only [tendsto, ptendsto, pmap_res]
+  simp only [Tendsto, Ptendsto, pmap_res]
 #align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendsto
 
 #print Filter.tendsto_iff_ptendsto_univ /-
@@ -352,7 +352,7 @@ def Ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
 
 #print Filter.ptendsto'_def /-
 theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :
-    Ptendsto' f l₁ l₂ ↔ ∀ s ∈ l₂, f.Preimage s ∈ l₁ :=
+    Ptendsto' f l₁ l₂ ↔ ∀ s ∈ l₂, f.preimage s ∈ l₁ :=
   rtendsto'_def _ _ _
 #align filter.ptendsto'_def Filter.ptendsto'_def
 -/

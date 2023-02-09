@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,7 +307,7 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
     cases h <;> rw [h] <;> simp [h, hpq.pos, hpq.symm.pos]
   push_neg  at h
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
-  rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
+  rw [← coe_toNnreal h.left, ← coe_toNnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
     coe_rpow_of_nonneg _ hpq.symm.nonneg, Ennreal.ofReal, Ennreal.ofReal, ←
     @coe_div (Real.toNnreal p) _ (by simp [hpq.pos]), ←
     @coe_div (Real.toNnreal q) _ (by simp [hpq.symm.pos]), ← coe_add, coe_le_coe]
@@ -329,8 +329,8 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : 
     (hpq : p.IsConjugateExponent q) (hf : (∑ i in s, f i ^ p) ≤ 1) (hg : (∑ i in s, g i ^ q) ≤ 1) :
     (∑ i in s, f i * g i) ≤ 1 :=
   by
-  have hp_ne_zero : Real.toNnreal p ≠ 0 := (zero_lt_one.trans hpq.one_lt_nnreal).Ne.symm
-  have hq_ne_zero : Real.toNnreal q ≠ 0 := (zero_lt_one.trans hpq.symm.one_lt_nnreal).Ne.symm
+  have hp_ne_zero : Real.toNnreal p ≠ 0 := (zero_lt_one.trans hpq.one_lt_nnreal).ne.symm
+  have hq_ne_zero : Real.toNnreal q ≠ 0 := (zero_lt_one.trans hpq.symm.one_lt_nnreal).ne.symm
   calc
     (∑ i in s, f i * g i) ≤ ∑ i in s, f i ^ p / Real.toNnreal p + g i ^ q / Real.toNnreal q :=
       Finset.sum_le_sum fun i his => young_inequality_real (f i) (g i) hpq
@@ -419,7 +419,7 @@ theorem inner_le_Lp_mul_Lq_tsum {f g : ι → ℝ≥0} {p q : ℝ} (hpq : p.IsCo
     refine' ⟨(∑' i, f i ^ p) ^ (1 / p) * (∑' i, g i ^ q) ^ (1 / q), _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
-  have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_csupᵢ bdd)).Summable
+  have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_csupᵢ bdd)).summable
   exact ⟨H₂, tsum_le_of_sum_le H₂ H₁⟩
 #align nnreal.inner_le_Lp_mul_Lq_tsum Nnreal.inner_le_Lp_mul_Lq_tsum
 
@@ -488,7 +488,7 @@ theorem isGreatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExpon
         simpa [h, hpq.ne_zero]
       simp only [Set.mem_setOf_eq, div_rpow, ← sum_div, ← rpow_mul,
         div_mul_cancel _ hpq.symm.ne_zero, rpow_one, div_le_iff hf, one_mul, hpq.mul_eq_add, ←
-        rpow_sub' _ A, _root_.add_sub_cancel, le_refl, true_and_iff, ← mul_div_assoc, B]
+        rpow_sub' _ A, add_sub_cancel, le_refl, true_and_iff, ← mul_div_assoc, B]
       rw [div_eq_iff, ← rpow_add hf, hpq.inv_add_inv_conj, rpow_one]
       simpa [hpq.symm.ne_zero] using hf
   · rintro _ ⟨g, hg, rfl⟩
@@ -507,12 +507,11 @@ theorem Lp_add_le (f g : ι → ℝ≥0) {p : ℝ} (hp : 1 ≤ p) :
   rcases eq_or_lt_of_le hp with (rfl | hp);
   · simp [Finset.sum_add_distrib]
   have hpq := Real.isConjugateExponent_conjugateExponent hp
-  have := is_greatest_Lp s (f + g) hpq
+  have := isGreatest_Lp s (f + g) hpq
   simp only [Pi.add_apply, add_mul, sum_add_distrib] at this
   rcases this.1 with ⟨φ, hφ, H⟩
   rw [← H]
-  exact
-    add_le_add ((is_greatest_Lp s f hpq).2 ⟨φ, hφ, rfl⟩) ((is_greatest_Lp s g hpq).2 ⟨φ, hφ, rfl⟩)
+  exact add_le_add ((isGreatest_Lp s f hpq).2 ⟨φ, hφ, rfl⟩) ((isGreatest_Lp s g hpq).2 ⟨φ, hφ, rfl⟩)
 #align nnreal.Lp_add_le Nnreal.Lp_add_le
 
 /-- Minkowski inequality: the `L_p` seminorm of the infinite sum of two vectors is less than or
@@ -530,9 +529,9 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
       (∑ i in s, (f i + g i) ^ p) ≤ ((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p :=
     by
     intro s
-    rw [← Nnreal.rpow_one_div_le_iff Pos]
+    rw [← Nnreal.rpow_one_div_le_iff pos]
     refine' le_trans (Lp_add_le s f g hp) (add_le_add _ _) <;>
-        rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr Pos)] <;>
+        rw [Nnreal.rpow_le_rpow_iff (one_div_pos.mpr pos)] <;>
       refine' sum_le_tsum _ (fun _ _ => zero_le _) _
     exacts[hf, hg]
   have bdd : BddAbove (Set.range fun s => ∑ i in s, (f i + g i) ^ p) :=
@@ -540,9 +539,9 @@ theorem Lp_add_le_tsum {f g : ι → ℝ≥0} {p : ℝ} (hp : 1 ≤ p) (hf : Sum
     refine' ⟨((∑' i, f i ^ p) ^ (1 / p) + (∑' i, g i ^ p) ^ (1 / p)) ^ p, _⟩
     rintro a ⟨s, rfl⟩
     exact H₁ s
-  have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_csupᵢ bdd)).Summable
+  have H₂ : Summable _ := (hasSum_of_isLUB _ (isLUB_csupᵢ bdd)).summable
   refine' ⟨H₂, _⟩
-  rw [Nnreal.rpow_one_div_le_iff Pos]
+  rw [Nnreal.rpow_one_div_le_iff pos]
   refine' tsum_le_of_sum_le H₂ H₁
 #align nnreal.Lp_add_le_tsum Nnreal.Lp_add_le_tsum
 
@@ -779,7 +778,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
       Ennreal.sum_eq_top_iff, not_or] using H'
   have :=
     Ennreal.coe_le_coe.2
-      (@Nnreal.inner_le_Lp_mul_Lq _ s (fun i => Ennreal.toNnreal (f i))
+      (@nnreal.inner_le_Lp_mul_Lq _ s (fun i => Ennreal.toNnreal (f i))
         (fun i => Ennreal.toNnreal (g i)) _ _ hpq)
   simp [← Ennreal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
     le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this
@@ -818,12 +817,12 @@ theorem Lp_add_le (hp : 1 ≤ p) :
   · cases H' <;> simp [H', -one_div]
   have pos : 0 < p := lt_of_lt_of_le zero_lt_one hp
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
-  · simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or] using H'
+  · simpa [Ennreal.rpow_eq_top_iff, asymm pos, pos, Ennreal.sum_eq_top_iff, not_or] using H'
   have :=
     Ennreal.coe_le_coe.2
-      (@Nnreal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _
+      (@nnreal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _
         hp)
-  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
+  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_lt pos, le_of_lt (one_div_pos.2 pos)] at this
   convert this using 2 <;> [skip, congr 1, congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi]

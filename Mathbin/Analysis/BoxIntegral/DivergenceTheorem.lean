@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.divergence_theorem
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,8 +75,8 @@ open MeasureTheory
 
 /-- Auxiliary lemma for the divergence theorem. -/
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
-    (hfc : ContinuousOn f I.Icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.Icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
-    (hε : ∀ y ∈ I.Icc, ‖f y - a - f' (y - x)‖ ≤ ε * ‖y - x‖) {c : ℝ≥0} (hc : I.distortion ≤ c) :
+    (hfc : ContinuousOn f I.icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
+    (hε : ∀ y ∈ I.icc, ‖f y - a - f' (y - x)‖ ≤ ε * ‖y - x‖) {c : ℝ≥0} (hc : I.distortion ≤ c) :
     ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
           (integral (I.face i) ⊥ (f ∘ i.insertNth (I.upper i)) BoxAdditiveMap.volume -
             integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)‖ ≤
@@ -93,14 +93,14 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
   have Hu : I.upper i ∈ Icc (I.lower i) (I.upper i) := Set.right_mem_Icc.2 (I.lower_le_upper i)
   have Hi :
     ∀ x ∈ Icc (I.lower i) (I.upper i),
-      Integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) box_additive_map.volume :=
-    fun x hx => integrable_of_continuous_on _ (box.continuous_on_face_Icc hfc hx) volume
+      Integrable.{0, u, u} (I.face i) ⊥ (f ∘ i.insert_nth x) BoxAdditiveMap.volume :=
+    fun x hx => integrableOfContinuousOn _ (Box.continuousOn_face_icc hfc hx) volume
   /- We start with an estimate: the difference of the values of `f` at the corresponding points
     of the faces `x i = I.lower i` and `x i = I.upper i` is `(2 * ε * diam I.Icc)`-close to the value
     of `f'` on `pi.single i (I.upper i - I.lower i) = lᵢ • eᵢ`, where `lᵢ = I.upper i - I.lower i`
     is the length of `i`-th edge of `I` and `eᵢ = pi.single i 1` is the `i`-th unit vector. -/
   have :
-    ∀ y ∈ (I.face i).Icc,
+    ∀ y ∈ (I.face i).icc,
       ‖f' (Pi.single i (I.upper i - I.lower i)) -
             (f (i.insert_nth (I.upper i) y) - f (i.insert_nth (I.lower i) y))‖ ≤
         2 * ε * diam I.Icc :=
@@ -126,17 +126,17 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       exact norm_sub_le_of_le (hε _ (this _ Hl)) (hε _ (this _ Hu))
   calc
     ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
-            (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
-              integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)‖ =
+            (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) BoxAdditiveMap.volume -
+              integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) BoxAdditiveMap.volume)‖ =
         ‖integral.{0, u, u} (I.face i) ⊥
             (fun x : Fin n → ℝ =>
               f' (Pi.single i (I.upper i - I.lower i)) -
                 (f (i.insert_nth (I.upper i) x) - f (i.insert_nth (I.lower i) x)))
-            box_additive_map.volume‖ :=
+            BoxAdditiveMap.volume‖ :=
       by
-      rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← box.volume_face_mul i, mul_smul, ← box.volume_apply,
-        ← box_additive_map.to_smul_apply, ← integral_const, ← box_additive_map.volume, ←
-        integral_sub (integrable_const _) ((Hi _ Hu).sub (Hi _ Hl))]
+      rw [← integral_sub (Hi _ Hu) (Hi _ Hl), ← Box.volume_face_mul i, mul_smul, ← Box.volume_apply,
+        ← BoxAdditiveMap.toSmul_apply, ← integral_const, ← BoxAdditiveMap.volume, ←
+        integral_sub (integrableConst _) ((Hi _ Hu).sub (Hi _ Hl))]
       simp only [(· ∘ ·), Pi.sub_def, ← f'.map_smul, ← Pi.single_smul', smul_eq_mul, mul_one]
     _ ≤ (volume (I.face i : Set ℝⁿ)).toReal * (2 * ε * c * (I.upper i - I.lower i)) :=
       by
@@ -149,12 +149,12 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
           (mul_nonneg zero_le_two h0.le)
     _ = 2 * ε * c * ∏ j, I.upper j - I.lower j :=
       by
-      rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
+      rw [← Measure.toBoxAdditive_apply, Box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
     
 #align box_integral.norm_volume_sub_integral_face_upper_sub_lower_smul_le BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball[metric.closed_ball] x δ, I.Icc)) -/
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -166,8 +166,8 @@ TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weak
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
 theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹)
-    (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
-    (Hd : ∀ x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x) (i : Fin (n + 1)) :
+    (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.icc x)
+    (Hd : ∀ x ∈ I.icc \ s, HasFderivWithinAt f (f' x) I.icc x) (i : Fin (n + 1)) :
     HasIntegral.{0, u, u} I gP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
       (integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x))
           BoxAdditiveMap.volume -
@@ -180,17 +180,17 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   have Hc : ContinuousOn f I.Icc := by
     intro x hx
     by_cases hxs : x ∈ s
-    exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).ContinuousWithinAt]
-  set fI : ℝ → box (Fin n) → E := fun y J =>
-    integral.{0, u, u} J GP (fun x => f (i.insert_nth y x)) box_additive_map.volume
+    exacts[Hs x hxs, (Hd x ⟨hx, hxs⟩).continuousWithinAt]
+  set fI : ℝ → Box (Fin n) → E := fun y J =>
+    integral.{0, u, u} J gP (fun x => f (i.insert_nth y x)) BoxAdditiveMap.volume
   set fb : Icc (I.lower i) (I.upper i) → Fin n →ᵇᵃ[↑(I.face i)] E := fun x =>
-    (integrable_of_continuous_on GP (box.continuous_on_face_Icc Hc x.2) volume).toBoxAdditive
-  set F : Fin (n + 1) →ᵇᵃ[I] E := box_additive_map.upper_sub_lower I i fI fb fun x hx J => rfl
+    (integrableOfContinuousOn gP (Box.continuousOn_face_icc Hc x.2) volume).toBoxAdditive
+  set F : Fin (n + 1) →ᵇᵃ[I] E := BoxAdditiveMap.upperSubLower I i fI fb fun x hx J => rfl
   -- Thus our statement follows from some local estimates.
-  change has_integral I GP (fun x => f' x (Pi.single i 1)) _ (F I)
-  refine' has_integral_of_le_Henstock_of_forall_is_o GP_le _ _ _ s hs _ _
+  change HasIntegral I gP (fun x => f' x (Pi.single i 1)) _ (F I)
+  refine' hasIntegralOfLeHenstockOfForallIsO gP_le _ _ _ s hs _ _
   ·-- We use the volume as an upper estimate.
-    exact (volume : Measure ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
+    exact (volume : measure ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
   · exact fun J => Ennreal.toReal_nonneg
   · intro c x hx ε ε0
     /- Near `x ∈ s` we choose `δ` so that both vectors are small. `volume J • eᵢ` is small because
@@ -200,17 +200,17 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     have :
       ∀ᶠ δ in 𝓝[>] (0 : ℝ),
         δ ∈ Ioc (0 : ℝ) (1 / 2) ∧
-          (∀ (y₁) (_ : y₁ ∈ closed_ball x δ ∩ I.Icc) (y₂) (_ : y₂ ∈ closed_ball x δ ∩ I.Icc),
+          (∀ (y₁) (_ : y₁ ∈ closedBall x δ ∩ I.Icc) (y₂) (_ : y₂ ∈ closedBall x δ ∩ I.Icc),
               ‖f y₁ - f y₂‖ ≤ ε / 2) ∧
             (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖ ≤ ε / 2 :=
       by
-      refine' eventually.and _ (eventually.and _ _)
+      refine' Eventually.and _ (Eventually.and _ _)
       · exact Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, one_half_pos⟩
-      · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iffₓ nhds_basis_closed_ball).1
+      · rcases((nhdsWithin_hasBasis nhds_basis_closedBall _).tendsto_iff nhds_basis_closedBall).1
             (Hs x hx.2) _ (half_pos <| half_pos ε0) with ⟨δ₁, δ₁0, hδ₁⟩
         filter_upwards [Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, δ₁0⟩]with δ hδ y₁ hy₁ y₂ hy₂
-        have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
-          inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
+        have : closedBall x δ ∩ I.Icc ⊆ closedBall x δ₁ ∩ I.Icc :=
+          inter_subset_inter_left _ (closedBall_subset_closedBall hδ.2)
         rw [← dist_eq_norm]
         calc
           dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) := dist_triangle_right _ _ _
@@ -229,21 +229,20 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     have Hu : J.upper i ∈ Icc (J.lower i) (J.upper i) := Set.right_mem_Icc.2 (J.lower_le_upper i)
     have Hi :
       ∀ x ∈ Icc (J.lower i) (J.upper i),
-        Integrable.{0, u, u} (J.face i) GP (fun y => f (i.insert_nth x y))
-          box_additive_map.volume :=
+        Integrable.{0, u, u} (J.face i) gP (fun y => f (i.insert_nth x y)) BoxAdditiveMap.volume :=
       fun x hx =>
-      integrable_of_continuous_on _
-        (box.continuous_on_face_Icc (Hc.mono <| box.le_iff_Icc.1 hJI) hx) volume
-    have hJδ' : J.Icc ⊆ closed_ball x δ ∩ I.Icc := subset_inter hJδ (box.le_iff_Icc.1 hJI)
+      integrableOfContinuousOn _ (Box.continuousOn_face_icc (Hc.mono <| Box.le_iff_icc.1 hJI) hx)
+        volume
+    have hJδ' : J.Icc ⊆ closedBall x δ ∩ I.Icc := subset_inter hJδ (Box.le_iff_icc.1 hJI)
     have Hmaps :
       ∀ z ∈ Icc (J.lower i) (J.upper i),
-        maps_to (i.insert_nth z) (J.face i).Icc (closed_ball x δ ∩ I.Icc) :=
+        MapsTo (i.insert_nth z) (J.face i).icc (closedBall x δ ∩ I.Icc) :=
       fun z hz => (J.maps_to_insert_nth_face_Icc hz).mono subset.rfl hJδ'
     simp only [dist_eq_norm, F, fI]
     dsimp
     rw [← integral_sub (Hi _ Hu) (Hi _ Hl)]
     refine' (norm_sub_le _ _).trans (add_le_add _ _)
-    · simp_rw [box_additive_map.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
+    · simp_rw [BoxAdditiveMap.volume_apply, norm_smul, Real.norm_eq_abs, abs_prod]
       refine' (mul_le_mul_of_nonneg_right _ <| norm_nonneg _).trans hδ
       have : ∀ j, |J.upper j - J.lower j| ≤ 2 * δ :=
         by
@@ -264,8 +263,8 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
               _).trans
           _
       refine' (mul_le_mul_of_nonneg_right _ (half_pos ε0).le).trans_eq (one_mul _)
-      rw [box.coe_eq_pi, Real.volume_pi_Ioc_toReal (box.lower_le_upper _)]
-      refine' prod_le_one (fun _ _ => sub_nonneg.2 <| box.lower_le_upper _ _) fun j hj => _
+      rw [Box.coe_eq_pi, Real.volume_pi_Ioc_toReal (Box.lower_le_upper _)]
+      refine' prod_le_one (fun _ _ => sub_nonneg.2 <| Box.lower_le_upper _ _) fun j hj => _
       calc
         J.upper (i.succ_above j) - J.lower (i.succ_above j) ≤
             dist (J.upper (i.succ_above j)) (J.lower (i.succ_above j)) :=
@@ -280,16 +279,16 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     /- At a point `x ∉ s`, we unfold the definition of Fréchet differentiability, then use
         an estimate we proved earlier in this file. -/
     rcases exists_pos_mul_lt ε0 (2 * c) with ⟨ε', ε'0, hlt⟩
-    rcases(nhdsWithin_hasBasis nhds_basis_closed_ball _).mem_iff.1 ((Hd x hx).def ε'0) with
+    rcases(nhdsWithin_hasBasis nhds_basis_closedBall _).mem_iff.1 ((Hd x hx).def ε'0) with
       ⟨δ, δ0, Hδ⟩
     refine' ⟨δ, δ0, fun J hle hJδ hxJ hJc => _⟩
-    simp only [box_additive_map.volume_apply, box.volume_apply, dist_eq_norm]
+    simp only [BoxAdditiveMap.volume_apply, Box.volume_apply, dist_eq_norm]
     refine'
-      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono <| box.le_iff_Icc.1 hle) hxJ
+      (norm_volume_sub_integral_face_upper_sub_lower_smul_le _ (Hc.mono <| Box.le_iff_icc.1 hle) hxJ
             ε'0 (fun y hy => Hδ _) (hJc rfl)).trans
         _
-    · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩
-    · rw [mul_right_comm (2 : ℝ), ← box.volume_apply]
+    · exact ⟨hJδ hy, Box.le_iff_icc.1 hle hy⟩
+    · rw [mul_right_comm (2 : ℝ), ← Box.volume_apply]
       exact mul_le_mul_of_nonneg_right hlt.le Ennreal.toReal_nonneg
 #align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegralGPPderiv
 
@@ -303,8 +302,8 @@ More precisely, we use a non-standard generalization of the Henstock-Kurzweil in
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
 theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → Eⁿ⁺¹)
     (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
-    (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
-    (Hd : ∀ x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x) :
+    (Hs : ∀ x ∈ s, ContinuousWithinAt f I.icc x)
+    (Hd : ∀ x ∈ I.icc \ s, HasFderivWithinAt f (f' x) I.icc x) :
     HasIntegral.{0, u, u} I gP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
         integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.upper i) x) i)
@@ -312,9 +311,9 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
           integral.{0, u, u} (I.face i) gP (fun x => f (i.insertNth (I.lower i) x) i)
             BoxAdditiveMap.volume) :=
   by
-  refine' has_integral_sum fun i hi => _; clear hi
+  refine' hasIntegralSum fun i hi => _; clear hi
   simp only [hasFderivWithinAt_pi', continuousWithinAt_pi] at Hd Hs
-  convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
+  convert hasIntegralGPPderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 #align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegralGPDivergenceOfForallHasDerivWithinAt
 
 end BoxIntegral

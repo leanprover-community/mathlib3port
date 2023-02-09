@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Aaron Anderson, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.perm.support
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint_in
 @[simp]
 theorem disjoint_inv_left_iff : Disjoint f⁻¹ g ↔ Disjoint f g :=
   by
-  refine' ⟨fun h => _, disjoint.inv_left⟩
+  refine' ⟨fun h => _, Disjoint.inv_left⟩
   convert h.inv_left
   exact (inv_inv _).symm
 #align equiv.perm.disjoint_inv_left_iff Equiv.Perm.disjoint_inv_left_iff
@@ -202,12 +202,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {f : Equiv.Perm.{succ u1} α} (l : List.{u1} (Equiv.Perm.{succ u1} α)), (forall (g : Equiv.Perm.{succ u1} α), (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) g l) -> (Equiv.Perm.Disjoint.{u1} α f g)) -> (Equiv.Perm.Disjoint.{u1} α f (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint_prod_right Equiv.Perm.disjoint_prod_rightₓ'. -/
-theorem disjoint_prod_right (l : List (Perm α)) (h : ∀ g ∈ l, Disjoint f g) : Disjoint f l.Prod :=
+theorem disjoint_prod_right (l : List (Perm α)) (h : ∀ g ∈ l, Disjoint f g) : Disjoint f l.prod :=
   by
   induction' l with g l ih
   · exact disjoint_one_right _
   · rw [List.prod_cons]
-    exact (h _ (List.mem_cons_self _ _)).mulRight (ih fun g hg => h g (List.mem_cons_of_mem _ hg))
+    exact (h _ (List.mem_cons_self _ _)).mul_right (ih fun g hg => h g (List.mem_cons_of_mem _ hg))
 #align equiv.perm.disjoint_prod_right Equiv.Perm.disjoint_prod_right
 
 /- warning: equiv.perm.disjoint_prod_perm -> Equiv.Perm.disjoint_prod_perm is a dubious translation:
@@ -217,7 +217,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l₁ : List.{u1} (Equiv.Perm.{succ u1} α)} {l₂ : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l₁) -> (List.Perm.{u1} (Equiv.Perm.{succ u1} α) l₁ l₂) -> (Eq.{succ u1} (Equiv.Perm.{succ u1} α) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₁) (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l₂))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.disjoint_prod_perm Equiv.Perm.disjoint_prod_permₓ'. -/
 theorem disjoint_prod_perm {l₁ l₂ : List (Perm α)} (hl : l₁.Pairwise Disjoint) (hp : l₁ ~ l₂) :
-    l₁.Prod = l₂.Prod :=
+    l₁.prod = l₂.prod :=
   hp.prod_eq' <| hl.imp fun f g => Disjoint.commute
 #align equiv.perm.disjoint_prod_perm Equiv.Perm.disjoint_prod_perm
 
@@ -334,7 +334,7 @@ theorem ofSubtype_swap_eq {p : α → Prop} [DecidablePred p] (x y : Subtype p) 
     (Equiv.swap x y).ofSubtype = Equiv.swap ↑x ↑y :=
   Equiv.ext fun z => by
     by_cases hz : p z
-    · rw [swap_apply_def, of_subtype_apply_of_mem _ hz]
+    · rw [swap_apply_def, ofSubtype_apply_of_mem _ hz]
       split_ifs with hzx hzy
       · simp_rw [hzx, Subtype.coe_eta, swap_apply_left]
       · simp_rw [hzy, Subtype.coe_eta, swap_apply_right]
@@ -348,7 +348,7 @@ theorem ofSubtype_swap_eq {p : α → Prop} [DecidablePred p] (x y : Subtype p) 
         apply hzy
         rw [← h]
         rfl
-    · rw [of_subtype_apply_of_not_mem _ hz, swap_apply_of_ne_of_ne]
+    · rw [ofSubtype_apply_of_not_mem _ hz, swap_apply_of_ne_of_ne]
       intro h
       apply hz
       rw [h]
@@ -371,7 +371,7 @@ theorem IsSwap.of_subtype_isSwap {p : α → Prop} [DecidablePred p] {f : Perm (
   ⟨x, y, by
     simp only [Ne.def] at hxy
     exact hxy.1, by
-    simp only [hxy.2, of_subtype_swap_eq]
+    simp only [hxy.2, ofSubtype_swap_eq]
     rfl⟩
 #align equiv.perm.is_swap.of_subtype_is_swap Equiv.Perm.IsSwap.of_subtype_isSwap
 
@@ -423,7 +423,7 @@ theorem set_support_zpow_subset (n : ℤ) : { x | (p ^ n) x ≠ x } ⊆ { x | p 
 theorem set_support_mul_subset : { x | (p * q) x ≠ x } ⊆ { x | p x ≠ x } ∪ { x | q x ≠ x } :=
   by
   intro x
-  simp only [perm.coe_mul, Function.comp_apply, Ne.def, Set.mem_union, Set.mem_setOf_eq]
+  simp only [Perm.coe_mul, Function.comp_apply, Ne.def, Set.mem_union, Set.mem_setOf_eq]
   by_cases hq : q x = x <;> simp [hq]
 #align equiv.perm.set_support_mul_subset Equiv.Perm.set_support_mul_subset
 -/
@@ -435,14 +435,14 @@ variable [DecidableEq α] [Fintype α] {f g : Perm α}
 #print Equiv.Perm.Support /-
 /-- The `finset` of nonfixed points of a permutation. -/
 def Support (f : Perm α) : Finset α :=
-  univ.filterₓ fun x => f x ≠ x
+  univ.filter fun x => f x ≠ x
 #align equiv.perm.support Equiv.Perm.Support
 -/
 
 #print Equiv.Perm.mem_support /-
 @[simp]
 theorem mem_support {x : α} : x ∈ f.Support ↔ f x ≠ x := by
-  rw [support, mem_filter, and_iff_right (mem_univ x)]
+  rw [Support, mem_filter, and_iff_right (mem_univ x)]
 #align equiv.perm.mem_support Equiv.Perm.mem_support
 -/
 
@@ -520,7 +520,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)} {x : α}, (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) -> (Exists.{succ u1} (Equiv.Perm.{succ u1} α) (fun (f : Equiv.Perm.{succ u1} α) => And (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f))))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.exists_mem_support_of_mem_support_prod Equiv.Perm.exists_mem_support_of_mem_support_prodₓ'. -/
 theorem exists_mem_support_of_mem_support_prod {l : List (Perm α)} {x : α}
-    (hx : x ∈ l.Prod.Support) : ∃ f : Perm α, f ∈ l ∧ x ∈ f.Support :=
+    (hx : x ∈ l.prod.Support) : ∃ f : Perm α, f ∈ l ∧ x ∈ f.Support :=
   by
   contrapose! hx
   simp_rw [mem_support, Classical.not_not] at hx⊢
@@ -560,7 +560,7 @@ theorem pow_apply_mem_support {n : ℕ} {x : α} : (f ^ n) x ∈ f.Support ↔ x
   by
   induction' n with n ih
   · rfl
-  rw [pow_succ, perm.mul_apply, apply_mem_support, ih]
+  rw [pow_succ, Perm.mul_apply, apply_mem_support, ih]
 #align equiv.perm.pow_apply_mem_support Equiv.Perm.pow_apply_mem_support
 -/
 
@@ -628,7 +628,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{succ u1} (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4050 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4052 : Finset.{u1} α) => HasSup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4050 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4052) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_prod_of_pairwise_disjoint Equiv.Perm.support_prod_of_pairwise_disjointₓ'. -/
 theorem support_prod_of_pairwise_disjoint (l : List (Perm α)) (h : l.Pairwise Disjoint) :
-    l.Prod.Support = (l.map Support).foldr (· ⊔ ·) ⊥ :=
+    l.prod.Support = (l.map Support).foldr (· ⊔ ·) ⊥ :=
   by
   induction' l with hd tl hl
   · simp
@@ -643,7 +643,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] (l : List.{u1} (Equiv.Perm.{succ u1} α)), LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)) (List.foldr.{u1, u1} (Finset.{u1} α) (Finset.{u1} α) (fun (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4161 : Finset.{u1} α) (x._@.Mathlib.GroupTheory.Perm.Support._hyg.4163 : Finset.{u1} α) => HasSup.sup.{u1} (Finset.{u1} α) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} α) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))) x._@.Mathlib.GroupTheory.Perm.Support._hyg.4161 x._@.Mathlib.GroupTheory.Perm.Support._hyg.4163) (Bot.bot.{u1} (Finset.{u1} α) (BooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.instBooleanAlgebraFinset.{u1} α _inst_2 (fun (a : α) (b : α) => _inst_1 a b)))) (List.map.{u1, u1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2) l))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_prod_le Equiv.Perm.support_prod_leₓ'. -/
-theorem support_prod_le (l : List (Perm α)) : l.Prod.Support ≤ (l.map Support).foldr (· ⊔ ·) ⊥ :=
+theorem support_prod_le (l : List (Perm α)) : l.prod.Support ≤ (l.map Support).foldr (· ⊔ ·) ⊥ :=
   by
   induction' l with hd tl hl
   · simp
@@ -716,7 +716,7 @@ theorem support_swap_mul_ge_support_diff (f : Perm α) (x y : α) :
     f.Support \ {x, y} ≤ (swap x y * f).Support :=
   by
   intro
-  simp only [and_imp, perm.coe_mul, Function.comp_apply, Ne.def, mem_support, mem_insert, mem_sdiff,
+  simp only [and_imp, Perm.coe_mul, Function.comp_apply, Ne.def, mem_support, mem_insert, mem_sdiff,
     mem_singleton]
   push_neg
   rintro ha ⟨hx, hy⟩ H
@@ -764,7 +764,7 @@ theorem Disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.Support) : x 
 
 #print Equiv.Perm.eq_on_support_mem_disjoint /-
 theorem eq_on_support_mem_disjoint {l : List (Perm α)} (h : f ∈ l) (hl : l.Pairwise Disjoint) :
-    ∀ x ∈ f.Support, f x = l.Prod x :=
+    ∀ x ∈ f.Support, f x = l.prod x :=
   by
   induction' l with hd tl IH
   · simpa using h
@@ -797,7 +797,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {f : Equiv.Perm.{succ u1} α} {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (Membership.mem.{u1, u1} (Equiv.Perm.{succ u1} α) (List.{u1} (Equiv.Perm.{succ u1} α)) (List.instMembershipList.{u1} (Equiv.Perm.{succ u1} α)) f l) -> (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 f) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.support_le_prod_of_mem Equiv.Perm.support_le_prod_of_memₓ'. -/
 theorem support_le_prod_of_mem {l : List (Perm α)} (h : f ∈ l) (hl : l.Pairwise Disjoint) :
-    f.Support ≤ l.Prod.Support := by
+    f.Support ≤ l.prod.Support := by
   intro x hx
   rwa [mem_support, ← eq_on_support_mem_disjoint h hl _ hx, ← mem_support]
 #align equiv.perm.support_le_prod_of_mem Equiv.Perm.support_le_prod_of_mem
@@ -817,10 +817,10 @@ theorem support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
     Support (g.extendDomain f) = g.Support.map f.asEmbedding :=
   by
   ext b
-  simp only [exists_prop, Function.Embedding.coeFn_mk, to_embedding_apply, mem_map, Ne.def,
+  simp only [exists_prop, Function.Embedding.coeFn_mk, toEmbedding_apply, mem_map, Ne.def,
     Function.Embedding.trans_apply, mem_support]
   by_cases pb : p b
-  · rw [extend_domain_apply_subtype _ _ pb]
+  · rw [extendDomain_apply_subtype _ _ pb]
     constructor
     · rintro h
       refine' ⟨f.symm ⟨b, pb⟩, _, by simp⟩
@@ -833,7 +833,7 @@ theorem support_extend_domain (f : α ≃ Subtype p) {g : Perm α} :
         exact Subtype.coe_injective hb
       rw [eq_symm_apply]
       exact Subtype.coe_injective ha
-  · rw [extend_domain_apply_not_subtype _ _ pb]
+  · rw [extendDomain_apply_not_subtype _ _ pb]
     simp only [not_exists, false_iff_iff, not_and, eq_self_iff_true, not_true]
     rintro a ha rfl
     exact pb (Subtype.prop _)
@@ -972,7 +972,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {l : List.{u1} (Equiv.Perm.{succ u1} α)}, (List.Pairwise.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.Disjoint.{u1} α) l) -> (Eq.{1} Nat (Finset.card.{u1} α (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 (List.prod.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) (InvOneClass.toOne.{u1} (Equiv.Perm.{succ u1} α) (DivInvOneMonoid.toInvOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivisionMonoid.toDivInvOneMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivisionMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α))))) l))) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} (Equiv.Perm.{succ u1} α) Nat (Function.comp.{succ u1, succ u1, 1} (Equiv.Perm.{succ u1} α) (Finset.{u1} α) Nat (Finset.card.{u1} α) (Equiv.Perm.Support.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2)) l)))
 Case conversion may be inaccurate. Consider using '#align equiv.perm.card_support_prod_list_of_pairwise_disjoint Equiv.Perm.card_support_prod_list_of_pairwise_disjointₓ'. -/
 theorem card_support_prod_list_of_pairwise_disjoint {l : List (Perm α)} (h : l.Pairwise Disjoint) :
-    l.Prod.Support.card = (l.map (Finset.card ∘ Support)).Sum :=
+    l.prod.Support.card = (l.map (Finset.card ∘ Support)).sum :=
   by
   induction' l with a t ih
   · exact card_support_eq_zero.mpr rfl
@@ -988,7 +988,7 @@ end Support
 #print Equiv.Perm.support_subtype_perm /-
 @[simp]
 theorem support_subtype_perm [DecidableEq α] {s : Finset α} (f : Perm α) (h) :
-    (f.subtypePerm h : Perm { x // x ∈ s }).Support = s.attach.filterₓ fun x => f x ≠ x :=
+    (f.subtypePerm h : Perm { x // x ∈ s }).Support = s.attach.filter fun x => f x ≠ x :=
   by
   ext
   simp [Subtype.ext_iff]

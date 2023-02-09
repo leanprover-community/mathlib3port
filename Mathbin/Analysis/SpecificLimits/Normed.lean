@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Sébastien Gouëzel, Yury G. Kudryashov, Dylan MacKenzie, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.normed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem tendsto_norm_zpow_nhdsWithin_0_atTop {𝕜 : Type _} [NormedField 𝕜] 
   rcases neg_surjective m with ⟨m, rfl⟩
   rw [neg_lt_zero] at hm; lift m to ℕ using hm.le; rw [Int.coe_nat_pos] at hm
   simp only [norm_pow, zpow_neg, zpow_ofNat, ← inv_pow]
-  exact (tendsto_pow_at_top hm.ne').comp NormedField.tendsto_norm_inverse_nhdsWithin_0_atTop
+  exact (tendsto_pow_atTop hm.ne').comp NormedField.tendsto_norm_inverse_nhdsWithin_0_atTop
 #align normed_field.tendsto_norm_zpow_nhds_within_0_at_top NormedField.tendsto_norm_zpow_nhdsWithin_0_atTop
 
 /-- The (scalar) product of a sequence that tends to zero with a bounded one also tends to zero. -/
@@ -72,8 +72,8 @@ theorem tendsto_zero_smul_of_tendsto_zero_of_bounded {ι 𝕜 𝔸 : Type _} [No
     [NormedAddCommGroup 𝔸] [NormedSpace 𝕜 𝔸] {l : Filter ι} {ε : ι → 𝕜} {f : ι → 𝔸}
     (hε : Tendsto ε l (𝓝 0)) (hf : Filter.IsBoundedUnder (· ≤ ·) l (norm ∘ f)) :
     Tendsto (ε • f) l (𝓝 0) := by
-  rw [← is_o_one_iff 𝕜] at hε⊢
-  simpa using is_o.smul_is_O hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
+  rw [← isOCat_one_iff 𝕜] at hε⊢
+  simpa using IsOCat.smul_isO hε (hf.is_O_const (one_ne_zero : (1 : 𝕜) ≠ 0))
 #align normed_field.tendsto_zero_smul_of_tendsto_zero_of_bounded NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded
 
 @[simp]
@@ -84,13 +84,13 @@ theorem continuousAt_zpow {𝕜 : Type _} [NontriviallyNormedField 𝕜] {m : �
   contrapose!; rintro ⟨rfl, hm⟩ hc
   exact
     not_tendsto_atTop_of_tendsto_nhds (hc.tendsto.mono_left nhdsWithin_le_nhds).norm
-      (tendsto_norm_zpow_nhds_within_0_at_top hm)
+      (tendsto_norm_zpow_nhdsWithin_0_atTop hm)
 #align normed_field.continuous_at_zpow NormedField.continuousAt_zpow
 
 @[simp]
 theorem continuousAt_inv {𝕜 : Type _} [NontriviallyNormedField 𝕜] {x : 𝕜} :
     ContinuousAt Inv.inv x ↔ x ≠ 0 := by
-  simpa [(zero_lt_one' ℤ).not_le] using @continuousAt_zpow _ _ (-1) x
+  simpa [(zero_lt_one' ℤ).not_le] using @continuous_at_zpow _ _ (-1) x
 #align normed_field.continuous_at_inv NormedField.continuousAt_inv
 
 end NormedField
@@ -105,13 +105,13 @@ theorem isOCat_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : 
 
 theorem isO_pow_pow_of_le_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ ≤ r₂) :
     (fun n : ℕ => r₁ ^ n) =O[atTop] fun n => r₂ ^ n :=
-  h₂.eq_or_lt.elim (fun h => h ▸ isO_refl _ _) fun h => (isOCat_pow_pow_of_lt_left h₁ h).IsO
+  h₂.eq_or_lt.elim (fun h => h ▸ isO_refl _ _) fun h => (isOCat_pow_pow_of_lt_left h₁ h).isO
 #align is_O_pow_pow_of_le_left isO_pow_pow_of_le_left
 
 theorem isOCat_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
     (fun n : ℕ => r₁ ^ n) =o[atTop] fun n => r₂ ^ n :=
   by
-  refine' (is_o.of_norm_left _).of_norm_right
+  refine' (IsOCat.of_norm_left _).of_norm_right
   exact (isOCat_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
 #align is_o_pow_pow_of_abs_lt_left isOCat_pow_pow_of_abs_lt_left
 
@@ -142,7 +142,7 @@ theorem tFAE_exists_lt_isOCat_pow (f : ℕ → ℝ) (R : ℝ) :
   have B : Ioo 0 R ⊆ Ioo (-R) R := subset.trans Ioo_subset_Ico_self A
   -- First we prove that 1-4 are equivalent using 2 → 3 → 4, 1 → 3, and 2 → 1
   tfae_have 1 → 3
-  exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.IsO⟩
+  exact fun ⟨a, ha, H⟩ => ⟨a, ha, H.isO⟩
   tfae_have 2 → 1
   exact fun ⟨a, ha, H⟩ => ⟨a, B ha, H⟩
   tfae_have 3 → 2
@@ -158,7 +158,7 @@ theorem tFAE_exists_lt_isOCat_pow (f : ℕ → ℝ) (R : ℝ) :
   -- Add 5 and 6 using 4 → 6 → 5 → 3
   tfae_have 4 → 6
   · rintro ⟨a, ha, H⟩
-    rcases bound_of_is_O_nat_at_top H with ⟨C, hC₀, hC⟩
+    rcases bound_of_isO_nat_atTop H with ⟨C, hC₀, hC⟩
     refine' ⟨a, ha, C, hC₀, fun n => _⟩
     simpa only [Real.norm_eq_abs, abs_pow, abs_of_nonneg ha.1.le] using hC (pow_ne_zero n ha.1.ne')
   tfae_have 6 → 5
@@ -171,10 +171,10 @@ theorem tFAE_exists_lt_isOCat_pow (f : ℕ → ℝ) (R : ℝ) :
         ext n
         simpa using H n
       simp only [lt_irrefl, false_or_iff] at h₀
-      exact ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, is_O_zero _ _⟩
+      exact ⟨0, ⟨neg_lt_zero.2 h₀, h₀⟩, isO_zero _ _⟩
     exact
       ⟨a, A ⟨ha₀, ha⟩,
-        is_O_of_le' _ fun n => (H n).trans <| mul_le_mul_of_nonneg_left (le_abs_self _) hC₀.le⟩
+        isO_of_le' _ fun n => (H n).trans <| mul_le_mul_of_nonneg_left (le_abs_self _) hC₀.le⟩
   -- Add 7 and 8 using 2 → 8 → 7 → 3
   tfae_have 2 → 8
   · rintro ⟨a, ha, H⟩
@@ -185,7 +185,7 @@ theorem tFAE_exists_lt_isOCat_pow (f : ℕ → ℝ) (R : ℝ) :
   tfae_have 7 → 3
   · rintro ⟨a, ha, H⟩
     have : 0 ≤ a := nonneg_of_eventually_pow_nonneg (H.mono fun n => (abs_nonneg _).trans)
-    refine' ⟨a, A ⟨this, ha⟩, is_O.of_bound 1 _⟩
+    refine' ⟨a, A ⟨this, ha⟩, IsO.of_bound 1 _⟩
     simpa only [Real.norm_eq_abs, one_mul, abs_pow, abs_of_nonneg this]
   tfae_finish
 #align tfae_exists_lt_is_o_pow tFAE_exists_lt_isOCat_pow
@@ -194,16 +194,16 @@ theorem tFAE_exists_lt_isOCat_pow (f : ℕ → ℝ) (R : ℝ) :
 theorem isOCat_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : ℕ) {r : ℝ}
     (hr : 1 < r) : (fun n => n ^ k : ℕ → R) =o[atTop] fun n => r ^ n :=
   by
-  have : tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
+  have : Tendsto (fun x : ℝ => x ^ k) (𝓝[>] 1) (𝓝 1) :=
     ((continuous_id.pow k).tendsto' (1 : ℝ) 1 (one_pow _)).mono_left inf_le_left
   obtain ⟨r' : ℝ, hr' : r' ^ k < r, h1 : 1 < r'⟩ :=
-    ((this.eventually (gt_mem_nhds hr)).And self_mem_nhdsWithin).exists
+    ((this.eventually (gt_mem_nhds hr)).and self_mem_nhdsWithin).exists
   have h0 : 0 ≤ r' := zero_le_one.trans h1.le
-  suffices : (fun n => n ^ k : ℕ → R) =O[at_top] fun n : ℕ => (r' ^ k) ^ n
+  suffices : (fun n => n ^ k : ℕ → R) =O[atTop] fun n : ℕ => (r' ^ k) ^ n
   exact this.trans_is_o (isOCat_pow_pow_of_lt_left (pow_nonneg h0 _) hr')
   conv in (r' ^ _) ^ _ => rw [← pow_mul, mul_comm, pow_mul]
   suffices : ∀ n : ℕ, ‖(n : R)‖ ≤ (r' - 1)⁻¹ * ‖(1 : R)‖ * ‖r' ^ n‖
-  exact (is_O_of_le' _ this).pow _
+  exact (isO_of_le' _ this).pow _
   intro n
   rw [mul_right_comm]
   refine' n.norm_cast_le.trans (mul_le_mul_of_nonneg_right _ (norm_nonneg _))
@@ -213,7 +213,7 @@ theorem isOCat_pow_const_const_pow_of_one_lt {R : Type _} [NormedRing R] (k : �
 /-- For a real `r > 1` we have `n = o(r ^ n)` as `n → ∞`. -/
 theorem isOCat_coe_const_pow_of_one_lt {R : Type _} [NormedRing R] {r : ℝ} (hr : 1 < r) :
     (coe : ℕ → R) =o[atTop] fun n => r ^ n := by
-  simpa only [pow_one] using @isOCat_pow_const_const_pow_of_one_lt R _ 1 _ hr
+  simpa only [pow_one] using @is_o_pow_const_const_pow_of_one_lt R _ 1 _ hr
 #align is_o_coe_const_pow_of_one_lt isOCat_coe_const_pow_of_one_lt
 
 /-- If `‖r₁‖ < r₂`, then for any naturak `k` we have `n ^ k r₁ ^ n = o (r₂ ^ n)` as `n → ∞`. -/
@@ -222,14 +222,14 @@ theorem isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt {R : Type _} [Normed
     (fun n => n ^ k * r₁ ^ n : ℕ → R) =o[atTop] fun n => r₂ ^ n :=
   by
   by_cases h0 : r₁ = 0
-  · refine' (is_o_zero _ _).congr' (mem_at_top_sets.2 <| ⟨1, fun n hn => _⟩) eventually_eq.rfl
+  · refine' (isOCat_zero _ _).congr' (mem_atTop_sets.2 <| ⟨1, fun n hn => _⟩) EventuallyEq.rfl
     simp [zero_pow (zero_lt_one.trans_le hn), h0]
   rw [← Ne.def, ← norm_pos_iff] at h0
-  have A : (fun n => n ^ k : ℕ → R) =o[at_top] fun n => (r₂ / ‖r₁‖) ^ n :=
+  have A : (fun n => n ^ k : ℕ → R) =o[atTop] fun n => (r₂ / ‖r₁‖) ^ n :=
     isOCat_pow_const_const_pow_of_one_lt k ((one_lt_div h0).2 h)
-  suffices (fun n => r₁ ^ n) =O[at_top] fun n => ‖r₁‖ ^ n by
+  suffices (fun n => r₁ ^ n) =O[atTop] fun n => ‖r₁‖ ^ n by
     simpa [div_mul_cancel _ (pow_pos h0 _).ne'] using A.mul_is_O this
-  exact is_O.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
+  exact IsO.of_bound 1 (by simpa using eventually_norm_pow_le r₁)
 #align is_o_pow_const_mul_const_pow_const_pow_of_norm_lt isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt
 
 theorem tendsto_pow_const_div_const_pow_of_one_lt (k : ℕ) {r : ℝ} (hr : 1 < r) :
@@ -245,7 +245,7 @@ theorem tendsto_pow_const_mul_const_pow_of_abs_lt_one (k : ℕ) {r : ℝ} (hr : 
   ·
     exact
       tendsto_const_nhds.congr'
-        (mem_at_top_sets.2 ⟨1, fun n hn => by simp [zero_lt_one.trans_le hn, h0]⟩)
+        (mem_atTop_sets.2 ⟨1, fun n hn => by simp [zero_lt_one.trans_le hn, h0]⟩)
   have hr' : 1 < (|r|)⁻¹ := one_lt_inv (abs_pos.2 h0) hr
   rw [tendsto_zero_iff_norm_tendsto_zero]
   simpa [div_eq_mul_inv] using tendsto_pow_const_div_const_pow_of_one_lt k hr'
@@ -297,7 +297,7 @@ theorem hasSum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : HasSum (fun n : ℕ =
   have xi_ne_one : ξ ≠ 1 := by
     contrapose! h
     simp [h]
-  have A : tendsto (fun n => (ξ ^ n - 1) * (ξ - 1)⁻¹) at_top (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
+  have A : Tendsto (fun n => (ξ ^ n - 1) * (ξ - 1)⁻¹) atTop (𝓝 ((0 - 1) * (ξ - 1)⁻¹)) :=
     ((tendsto_pow_atTop_nhds_0_of_norm_lt_1 h).sub tendsto_const_nhds).mul tendsto_const_nhds
   rw [hasSum_iff_tendsto_nat_of_summable_norm]
   · simpa [geom_sum_eq, xi_ne_one, neg_inv, div_eq_mul_inv] using A
@@ -348,7 +348,7 @@ theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R]
   rcases exists_between hr with ⟨r', hrr', h⟩
   exact
     summable_of_isO_nat (summable_geometric_of_lt_1 ((norm_nonneg _).trans hrr'.le) h)
-      (isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').IsO.norm_left
+      (isOCat_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').isO.norm_left
 #align summable_norm_pow_mul_geometric_of_norm_lt_1 summable_norm_pow_mul_geometric_of_norm_lt_1
 
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R]
@@ -409,7 +409,7 @@ Cauchy sequence. This lemma does not assume `0 ≤ r` or `0 ≤ C`. -/
 theorem cauchySeq_finset_of_geometric_bound (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) :
     CauchySeq fun s : Finset ℕ => ∑ x in s, f x :=
   cauchySeq_finset_of_norm_bounded _
-    (aux_hasSum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).Summable hf
+    (aux_hasSum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).summable hf
 #align cauchy_seq_finset_of_geometric_bound cauchySeq_finset_of_geometric_bound
 
 /-- If `‖f n‖ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` are within
@@ -504,9 +504,9 @@ theorem NormedRing.tsum_geometric_of_norm_lt_1 (x : R) (h : ‖x‖ < 1) :
 
 theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * (1 - x) = 1 :=
   by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_right (1 - x)
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).hasSum.mul_right (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
-  have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (𝓝 1) := by
+  have : Tendsto (fun n : ℕ => 1 - x ^ n) atTop (𝓝 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_0_of_norm_lt_1 h)
   convert ← this
   ext n
@@ -515,9 +515,9 @@ theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * 
 
 theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 :=
   by
-  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
+  have := (NormedRing.summable_geometric_of_norm_lt_1 x h).hasSum.mul_left (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _
-  have : tendsto (fun n : ℕ => 1 - x ^ n) at_top (nhds 1) := by
+  have : Tendsto (fun n : ℕ => 1 - x ^ n) atTop (nhds 1) := by
     simpa using tendsto_const_nhds.sub (tendsto_pow_atTop_nhds_0_of_norm_lt_1 h)
   convert ← this
   ext n
@@ -534,7 +534,7 @@ theorem summable_of_ratio_norm_eventually_le {α : Type _} [SeminormedAddCommGro
     (h : ∀ᶠ n in atTop, ‖f (n + 1)‖ ≤ r * ‖f n‖) : Summable f :=
   by
   by_cases hr₀ : 0 ≤ r
-  · rw [eventually_at_top] at h
+  · rw [eventually_atTop] at h
     rcases h with ⟨N, hN⟩
     rw [← @summable_nat_add_iff α _ _ _ _ N]
     refine'
@@ -566,9 +566,9 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
     {r : ℝ} (hr : 1 < r) (hf : ∃ᶠ n in atTop, ‖f n‖ ≠ 0)
     (h : ∀ᶠ n in atTop, r * ‖f n‖ ≤ ‖f (n + 1)‖) : ¬Summable f :=
   by
-  rw [eventually_at_top] at h
+  rw [eventually_atTop] at h
   rcases h with ⟨N₀, hN₀⟩
-  rw [frequently_at_top] at hf
+  rw [frequently_atTop] at hf
   rcases hf N₀ with ⟨N, hNN₀ : N₀ ≤ N, hN⟩
   rw [← @summable_nat_add_iff α _ _ _ _ N]
   refine'
@@ -578,10 +578,10 @@ theorem not_summable_of_ratio_norm_eventually_ge {α : Type _} [SeminormedAddCom
   · refine' lt_of_le_of_ne (norm_nonneg _) _
     intro h''
     specialize hN₀ N hNN₀
-    simp only [comp_app, zero_add] at h''
+    simp only [comp_apply, zero_add] at h''
     exact hN h''.symm
   · intro i
-    dsimp only [comp_app]
+    dsimp only [comp_apply]
     convert hN₀ (i + N) (hNN₀.trans (N.le_add_left i)) using 3
     ac_rfl
 #align not_summable_of_ratio_norm_eventually_ge not_summable_of_ratio_norm_eventually_ge
@@ -590,7 +590,7 @@ theorem not_summable_of_ratio_test_tendsto_gt_one {α : Type _} [SeminormedAddCo
     {f : ℕ → α} {l : ℝ} (hl : 1 < l) (h : Tendsto (fun n => ‖f (n + 1)‖ / ‖f n‖) atTop (𝓝 l)) :
     ¬Summable f :=
   by
-  have key : ∀ᶠ n in at_top, ‖f n‖ ≠ 0 :=
+  have key : ∀ᶠ n in atTop, ‖f n‖ ≠ 0 :=
     by
     filter_upwards [eventually_ge_of_tendsto_gt hl h]with _ hn hc
     rw [hc, div_zero] at hn
@@ -619,12 +619,12 @@ theorem Monotone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Monotone
     tsub_zero]
   apply
     (NormedField.tendsto_zero_smul_of_tendsto_zero_of_bounded hf0
-          ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).CauchySeq.add
+          ⟨b, eventually_map.mpr <| eventually_of_forall fun n => hgb <| n + 1⟩).cauchySeq.add
   refine' (cauchySeq_range_of_norm_bounded _ _ (fun n => _ : ∀ n, _ ≤ b * |f (n + 1) - f n|)).neg
   · simp_rw [abs_of_nonneg (sub_nonneg_of_le (hfa (Nat.le_succ _))), ← mul_sum]
     apply real.uniform_continuous_const_mul.comp_cauchy_seq
     simp_rw [sum_range_sub, sub_eq_add_neg]
-    exact (tendsto.cauchy_seq hf0).AddConst
+    exact (Tendsto.cauchySeq hf0).add_const
   · rw [norm_smul, mul_comm]
     exact mul_le_mul_of_nonneg_right (hgb _) (abs_nonneg _)
 #align monotone.cauchy_seq_series_mul_of_tendsto_zero_of_bounded Monotone.cauchySeq_series_mul_of_tendsto_zero_of_bounded
@@ -635,7 +635,7 @@ theorem Antitone.cauchySeq_series_mul_of_tendsto_zero_of_bounded (hfa : Antitone
     CauchySeq fun n => ∑ i in range (n + 1), f i • z i :=
   by
   have hfa' : Monotone fun n => -f n := fun _ _ hab => neg_le_neg <| hfa hab
-  have hf0' : tendsto (fun n => -f n) at_top (𝓝 0) :=
+  have hf0' : Tendsto (fun n => -f n) atTop (𝓝 0) :=
     by
     convert hf0.neg
     norm_num
@@ -699,7 +699,7 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
   have B : ‖x‖ / (⌊‖x‖⌋₊ + 1) < 1 := (div_lt_one A).2 (Nat.lt_floor_add_one _)
   -- Then we apply the ratio test. The estimate works for `n ≥ ⌊‖x‖⌋₊`.
   suffices : ∀ n ≥ ⌊‖x‖⌋₊, ‖x ^ (n + 1) / (n + 1)!‖ ≤ ‖x‖ / (⌊‖x‖⌋₊ + 1) * ‖x ^ n / ↑n !‖
-  exact summable_of_ratio_norm_eventually_le B (eventually_at_top.2 ⟨⌊‖x‖⌋₊, this⟩)
+  exact summable_of_ratio_norm_eventually_le B (eventually_atTop.2 ⟨⌊‖x‖⌋₊, this⟩)
   -- Finally, we prove the upper estimate
   intro n hn
   calc

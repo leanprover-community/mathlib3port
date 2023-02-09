@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -236,13 +236,13 @@ variable (p)
 
 #print SubMulAction.subtype /-
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
-protected def subtype : p →[R] M := by refine' { toFun := coe.. } <;> simp [coe_smul]
+protected def subtype : p →[R] M := by refine' { toFun := coe.. } <;> simp [val_smul]
 #align sub_mul_action.subtype SubMulAction.subtype
 -/
 
 #print SubMulAction.subtype_apply /-
 @[simp]
-theorem subtype_apply (x : p) : p.Subtype x = x :=
+theorem subtype_apply (x : p) : p.subtype x = x :=
   rfl
 #align sub_mul_action.subtype_apply SubMulAction.subtype_apply
 -/
@@ -267,7 +267,7 @@ include hA
 -- Prefer subclasses of `mul_action` over `smul_mem_class`.
 /-- A `sub_mul_action` of a `mul_action` is a `mul_action`.  -/
 instance (priority := 75) toMulAction : MulAction R S' :=
-  Subtype.coe_injective.MulAction coe (SetLike.val_smul S')
+  Subtype.coe_injective.mulAction coe (SetLike.val_smul S')
 #align sub_mul_action.smul_mem_class.to_mul_action SubMulAction.SMulMemClass.toMulAction
 -/
 
@@ -401,7 +401,7 @@ theorem stabilizer_of_subMul {p : SubMulAction R M} (m : p) :
     MulAction.stabilizer R m = MulAction.stabilizer R (m : M) :=
   by
   rw [← Subgroup.toSubmonoid_eq]
-  exact stabilizer_of_sub_mul.submonoid m
+  exact stabilizer_of_subMul.submonoid m
 #align sub_mul_action.stabilizer_of_sub_mul SubMulAction.stabilizer_of_subMul
 -/
 
@@ -429,7 +429,7 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
 instance [n_empty : Nonempty p] : Zero p
-    where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.Prop⟩⟩
+    where zero := ⟨0, n_empty.elim fun x => p.zero_mem ⟨x, x.prop⟩⟩
 
 end Module
 

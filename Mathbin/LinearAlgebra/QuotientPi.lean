@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Alex J. Best
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient_pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,8 +48,7 @@ def piQuotientLift [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
 theorem piQuotientLift_mk [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (x : ∀ i, Ms i) :
     (piQuotientLift p q f hf fun i => Quotient.mk (x i)) = Quotient.mk (lsum _ _ R f x) := by
-  rw [pi_quotient_lift, lsum_apply, sum_apply, ← mkq_apply, lsum_apply, sum_apply,
-      _root_.map_sum] <;>
+  rw [piQuotientLift, lsum_apply, sum_apply, ← mkq_apply, lsum_apply, sum_apply, map_sum] <;>
     simp only [coe_proj, mapq_apply, mkq_apply, comp_apply]
 #align submodule.pi_quotient_lift_mk Submodule.piQuotientLift_mk
 
@@ -58,11 +57,11 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i)
     (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapq _ _ (f i) (hf i) x :=
   by
-  simp_rw [pi_quotient_lift, lsum_apply, sum_apply, comp_apply, proj_apply]
+  simp_rw [piQuotientLift, lsum_apply, sum_apply, comp_apply, proj_apply]
   rw [Finset.sum_eq_single i]
   · rw [Pi.single_eq_same]
   · rintro j - hj
-    rw [Pi.single_eq_of_ne hj, _root_.map_zero]
+    rw [Pi.single_eq_of_ne hj, map_zero]
   · intros
     have := Finset.mem_univ i
     contradiction
@@ -95,17 +94,17 @@ def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by
-        simp_rw [Quotient.mk''_eq_mk', quotient_pi_lift_mk, mkq_apply, pi_quotient_lift_mk,
-          lsum_single, id_apply]
+        simp_rw [Quotient.mk''_eq_mk, quotientPiLift_mk, mkq_apply, piQuotientLift_mk, lsum_single,
+          id_apply]
     right_inv := by
       rw [Function.rightInverse_iff_comp, ← coe_comp, ← @id_coe R]
       refine' congr_arg _ (pi_ext fun i x => Quotient.inductionOn' x fun x' => funext fun j => _)
-      rw [comp_apply, pi_quotient_lift_single, Quotient.mk''_eq_mk', mapq_apply,
-        quotient_pi_lift_mk, id_apply]
+      rw [comp_apply, piQuotientLift_single, Quotient.mk''_eq_mk, mapq_apply, quotientPiLift_mk,
+        id_apply]
       by_cases hij : i = j <;> simp only [mkq_apply, coe_single]
       · subst hij
         simp only [Pi.single_eq_same]
-      · simp only [Pi.single_eq_of_ne (Ne.symm hij), quotient.mk_zero] }
+      · simp only [Pi.single_eq_of_ne (Ne.symm hij), Quotient.mk_zero] }
 #align submodule.quotient_pi Submodule.quotientPi
 
 end Submodule

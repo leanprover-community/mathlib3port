@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.skew_adjoint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,12 +48,12 @@ variable (B : BilinForm R M)
 theorem BilinForm.is_skew_adjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
     (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
   by
-  rw [mem_skew_adjoint_submodule] at *
-  have hfg : is_adjoint_pair B B (f * g) (g * f) :=
+  rw [mem_skewAdjointSubmodule] at *
+  have hfg : IsAdjointPair B B (f * g) (g * f) :=
     by
     rw [← neg_mul_neg g f]
     exact hf.mul hg
-  have hgf : is_adjoint_pair B B (g * f) (f * g) :=
+  have hgf : IsAdjointPair B B (g * f) (f * g) :=
     by
     rw [← neg_mul_neg f g]
     exact hg.mul hf

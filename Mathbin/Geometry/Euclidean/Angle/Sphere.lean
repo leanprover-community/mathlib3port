@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.sphere
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,8 +122,8 @@ theorem Cospherical.two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P}
     (hp₃p₁ : p₃ ≠ p₁) (hp₃p₄ : p₃ ≠ p₄) : (2 : ℤ) • ∡ p₁ p₂ p₄ = (2 : ℤ) • ∡ p₁ p₃ p₄ :=
   by
   obtain ⟨s, hs⟩ := cospherical_iff_exists_sphere.1 h
-  simp_rw [Set.insert_subset, Set.singleton_subset_iff, sphere.mem_coe] at hs
-  exact sphere.two_zsmul_oangle_eq hs.1 hs.2.1 hs.2.2.1 hs.2.2.2 hp₂p₁ hp₂p₄ hp₃p₁ hp₃p₄
+  simp_rw [Set.insert_subset, Set.singleton_subset_iff, Sphere.mem_coe] at hs
+  exact Sphere.two_zsmul_oangle_eq hs.1 hs.2.1 hs.2.2.1 hs.2.2.2 hp₂p₁ hp₂p₄ hp₃p₁ hp₃p₄
 #align euclidean_geometry.cospherical.two_zsmul_oangle_eq EuclideanGeometry.Cospherical.two_zsmul_oangle_eq
 
 namespace Sphere
@@ -247,8 +247,8 @@ theorem dist_div_sin_oangle_div_two_eq_radius {s : Sphere P} {p₁ p₂ p₃ : P
   rw [←
     Real.Angle.abs_cos_eq_abs_sin_of_two_zsmul_add_two_zsmul_eq_pi
       (two_zsmul_oangle_center_add_two_zsmul_oangle_eq_pi hp₁ hp₂ hp₃ hp₁p₂.symm hp₂p₃ hp₁p₃),
-    _root_.abs_of_nonneg (Real.Angle.cos_nonneg_iff_abs_toReal_le_pi_div_two.2 _)]
-  exact (abs_oangle_center_right_to_real_lt_pi_div_two hp₁ hp₃).le
+    abs_of_nonneg (Real.Angle.cos_nonneg_iff_abs_toReal_le_pi_div_two.2 _)]
+  exact (abs_oangle_center_right_toReal_lt_pi_div_two hp₁ hp₃).le
 #align euclidean_geometry.sphere.dist_div_sin_oangle_div_two_eq_radius EuclideanGeometry.Sphere.dist_div_sin_oangle_div_two_eq_radius
 
 /-- Given three points on a circle, twice the radius of that circle may be expressed explicitly as
@@ -290,8 +290,8 @@ theorem inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_circumcenter (
         midpoint ℝ (t.points i₁) (t.points i₃) =
       t.circumcenter :=
   Sphere.inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_center (t.mem_circumsphere _)
-    (t.mem_circumsphere _) (t.mem_circumsphere _) (t.Independent.Injective.Ne h₁₂)
-    (t.Independent.Injective.Ne h₁₃) (t.Independent.Injective.Ne h₂₃)
+    (t.mem_circumsphere _) (t.mem_circumsphere _) (t.independent.injective.ne h₁₂)
+    (t.independent.injective.ne h₁₃) (t.independent.injective.ne h₂₃)
 #align affine.triangle.inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_circumcenter Affine.Triangle.inv_tan_div_two_smul_rotation_pi_div_two_vadd_midpoint_eq_circumcenter
 
 /-- The circumradius of a triangle may be expressed explicitly as half the length of a side
@@ -304,8 +304,8 @@ theorem dist_div_sin_oangle_div_two_eq_circumradius (t : Triangle ℝ P) {i₁ i
         2 =
       t.circumradius :=
   Sphere.dist_div_sin_oangle_div_two_eq_radius (t.mem_circumsphere _) (t.mem_circumsphere _)
-    (t.mem_circumsphere _) (t.Independent.Injective.Ne h₁₂) (t.Independent.Injective.Ne h₁₃)
-    (t.Independent.Injective.Ne h₂₃)
+    (t.mem_circumsphere _) (t.independent.injective.ne h₁₂) (t.independent.injective.ne h₁₃)
+    (t.independent.injective.ne h₂₃)
 #align affine.triangle.dist_div_sin_oangle_div_two_eq_circumradius Affine.Triangle.dist_div_sin_oangle_div_two_eq_circumradius
 
 /-- Twice the circumradius of a triangle may be expressed explicitly as the length of a side
@@ -317,8 +317,8 @@ theorem dist_div_sin_oangle_eq_two_mul_circumradius (t : Triangle ℝ P) {i₁ i
         |Real.Angle.sin (∡ (t.points i₁) (t.points i₂) (t.points i₃))| =
       2 * t.circumradius :=
   Sphere.dist_div_sin_oangle_eq_two_mul_radius (t.mem_circumsphere _) (t.mem_circumsphere _)
-    (t.mem_circumsphere _) (t.Independent.Injective.Ne h₁₂) (t.Independent.Injective.Ne h₁₃)
-    (t.Independent.Injective.Ne h₂₃)
+    (t.mem_circumsphere _) (t.independent.injective.ne h₁₂) (t.independent.injective.ne h₁₃)
+    (t.independent.injective.ne h₂₃)
 #align affine.triangle.dist_div_sin_oangle_eq_two_mul_circumradius Affine.Triangle.dist_div_sin_oangle_eq_two_mul_circumradius
 
 /-- The circumsphere of a triangle may be expressed explicitly in terms of two points and the
@@ -379,7 +379,7 @@ theorem mem_circumsphere_of_two_zsmul_oangle_eq {t : Triangle ℝ P} {p : P} {i�
       collinear_iff_of_two_zsmul_oangle_eq h, ←
       affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃]
     exact t.independent
-  let t' : triangle ℝ P := ⟨t'p, ha⟩
+  let t' : Triangle ℝ P := ⟨t'p, ha⟩
   have h₁' : t'.points i₁ = t.points i₁ := h₁
   have h₂' : t'.points i₂ = p := h₂
   have h₃' : t'.points i₃ = t.points i₃ := h₃
@@ -389,7 +389,7 @@ theorem mem_circumsphere_of_two_zsmul_oangle_eq {t : Triangle ℝ P} {p : P} {i�
     by rwa [h₁', h₂', h₃']
   rw [← circumsphere_eq_circumsphere_of_eq_of_eq_of_two_zsmul_oangle_eq h₁₂ h₁₃ h₂₃ h₁' h₃' h', ←
     h₂']
-  exact simplex.mem_circumsphere _ _
+  exact Simplex.mem_circumsphere _ _
 #align affine.triangle.mem_circumsphere_of_two_zsmul_oangle_eq Affine.Triangle.mem_circumsphere_of_two_zsmul_oangle_eq
 
 end Triangle

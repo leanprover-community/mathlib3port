@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.list.forall2
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = (· = 
 #print List.forall₂_nil_left_iff /-
 @[simp]
 theorem forall₂_nil_left_iff {l} : Forall₂ R nil l ↔ l = nil :=
-  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact forall₂.nil⟩
+  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact Forall₂.nil⟩
 #align list.forall₂_nil_left_iff List.forall₂_nil_left_iff
 -/
 
@@ -122,7 +122,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.forall₂_nil_right_iff List.forall₂_nil_right_iffₓ'. -/
 @[simp]
 theorem forall₂_nil_right_iff {l} : Forall₂ R l nil ↔ l = nil :=
-  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact forall₂.nil⟩
+  ⟨fun H => by cases H <;> rfl, by rintro rfl <;> exact Forall₂.nil⟩
 #align list.forall₂_nil_right_iff List.forall₂_nil_right_iff
 
 /- warning: list.forall₂_cons_left_iff -> List.forall₂_cons_left_iff is a dubious translation:
@@ -306,8 +306,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> β -> Prop} {l₁ : List.{u2} α} {l₂ : List.{u1} β}, (List.Forall₂.{u2, u1} α β R l₁ l₂) -> (forall {a : α} {b : β}, (Membership.mem.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (List.{max u1 u2} (Prod.{u2, u1} α β)) (List.instMembershipList.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.mk.{u2, u1} α β a b) (List.zip.{u2, u1} α β l₁ l₂)) -> (R a b))
 Case conversion may be inaccurate. Consider using '#align list.forall₂_zip List.forall₂_zipₓ'. -/
 theorem forall₂_zip : ∀ {l₁ l₂}, Forall₂ R l₁ l₂ → ∀ {a b}, (a, b) ∈ zip l₁ l₂ → R a b
-  | _, _, forall₂.cons h₁ h₂, x, y, Or.inl rfl => h₁
-  | _, _, forall₂.cons h₁ h₂, x, y, Or.inr h₃ => forall₂_zip h₂ h₃
+  | _, _, forall₂.cons h₁ h₂, x, y, or.inl rfl => h₁
+  | _, _, forall₂.cons h₁ h₂, x, y, or.inr h₃ => forall₂_zip h₂ h₃
 #align list.forall₂_zip List.forall₂_zip
 
 /- warning: list.forall₂_iff_zip -> List.forall₂_iff_zip is a dubious translation:
@@ -325,7 +325,7 @@ theorem forall₂_iff_zip {l₁ l₂} :
     · cases length_eq_zero.1 h₁.symm
       constructor
     · cases' l₂ with b l₂ <;> injection h₁ with h₁
-      exact forall₂.cons (h₂ <| Or.inl rfl) (IH h₁ fun a b h => h₂ <| Or.inr h)⟩
+      exact Forall₂.cons (h₂ <| Or.inl rfl) (IH h₁ fun a b h => h₂ <| Or.inr h)⟩
 #align list.forall₂_iff_zip List.forall₂_iff_zip
 
 /- warning: list.forall₂_take -> List.forall₂_take is a dubious translation:
@@ -335,8 +335,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {R : α -> β -> Prop} (n : Nat) {l₁ : List.{u2} α} {l₂ : List.{u1} β}, (List.Forall₂.{u2, u1} α β R l₁ l₂) -> (List.Forall₂.{u2, u1} α β R (List.take.{u2} α n l₁) (List.take.{u1} β n l₂))
 Case conversion may be inaccurate. Consider using '#align list.forall₂_take List.forall₂_takeₓ'. -/
 theorem forall₂_take : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (take n l₁) (take n l₂)
-  | 0, _, _, _ => by simp only [forall₂.nil, take]
-  | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, take]
+  | 0, _, _, _ => by simp only [Forall₂.nil, take]
+  | n + 1, _, _, forall₂.nil => by simp only [Forall₂.nil, take]
   | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_take n]
 #align list.forall₂_take List.forall₂_take
 
@@ -348,7 +348,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.forall₂_drop List.forall₂_dropₓ'. -/
 theorem forall₂_drop : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (drop n l₁) (drop n l₂)
   | 0, _, _, h => by simp only [drop, h]
-  | n + 1, _, _, forall₂.nil => by simp only [forall₂.nil, drop]
+  | n + 1, _, _, forall₂.nil => by simp only [Forall₂.nil, drop]
   | n + 1, _, _, forall₂.cons h₁ h₂ => by simp [And.intro h₁ h₂, forall₂_drop n]
 #align list.forall₂_drop List.forall₂_drop
 
@@ -424,7 +424,7 @@ theorem rel_reverse : (Forall₂ R ⇒ Forall₂ R) reverse reverse
   | a :: as, b :: bs, forall₂.cons h₁ h₂ =>
     by
     simp only [reverse_cons]
-    exact rel_append (rel_reverse h₂) (forall₂.cons h₁ forall₂.nil)
+    exact rel_append (rel_reverse h₂) (Forall₂.cons h₁ Forall₂.nil)
 #align list.rel_reverse List.rel_reverse
 
 /- warning: list.forall₂_reverse_iff -> List.forall₂_reverse_iff is a dubious translation:
@@ -512,11 +512,11 @@ Case conversion may be inaccurate. Consider using '#align list.rel_filter_map Li
 theorem rel_filterMap : ((R ⇒ Option.Rel P) ⇒ Forall₂ R ⇒ Forall₂ P) filterMap filterMap
   | f, g, hfg, _, _, forall₂.nil => Forall₂.nil
   | f, g, hfg, a :: as, b :: bs, forall₂.cons h₁ h₂ => by
-    rw [filter_map_cons, filter_map_cons] <;>
+    rw [filterMap_cons, filterMap_cons] <;>
       exact
         match f a, g b, hfg h₁ with
-        | _, _, Option.Rel.none => rel_filter_map (@hfg) h₂
-        | _, _, Option.Rel.some h => forall₂.cons h (rel_filter_map (@hfg) h₂)
+        | _, _, option.rel.none => rel_filter_map (@hfg) h₂
+        | _, _, option.rel.some h => Forall₂.cons h (rel_filter_map (@hfg) h₂)
 #align list.rel_filter_map List.rel_filterMap
 
 /- warning: list.rel_prod -> List.rel_prod is a dubious translation:
@@ -553,19 +553,19 @@ theorem sublistForall₂_iff {l₁ : List α} {l₂ : List β} :
   by
   constructor <;> intro h
   · induction' h with _ a b l1 l2 rab rll ih b l1 l2 hl ih
-    · exact ⟨nil, forall₂.nil, nil_sublist _⟩
+    · exact ⟨nil, Forall₂.nil, nil_sublist _⟩
     · obtain ⟨l, hl1, hl2⟩ := ih
-      refine' ⟨b :: l, forall₂.cons rab hl1, hl2.cons_cons b⟩
+      refine' ⟨b :: l, Forall₂.cons rab hl1, hl2.cons_cons b⟩
     · obtain ⟨l, hl1, hl2⟩ := ih
-      exact ⟨l, hl1, hl2.trans (sublist.cons _ _ _ (sublist.refl _))⟩
+      exact ⟨l, hl1, hl2.trans (Sublist.cons _ _ _ (Sublist.refl _))⟩
   · obtain ⟨l, hl1, hl2⟩ := h
     revert l₁
     induction' hl2 with _ _ _ _ ih _ _ _ _ ih <;> intro l₁ hl1
     · rw [forall₂_nil_right_iff.1 hl1]
-      exact sublist_forall₂.nil
-    · exact sublist_forall₂.cons_right (ih hl1)
+      exact SublistForall₂.nil
+    · exact SublistForall₂.cons_right (ih hl1)
     · cases' hl1 with _ _ _ _ hr hl _
-      exact sublist_forall₂.cons hr (ih hl)
+      exact SublistForall₂.cons hr (ih hl)
 #align list.sublist_forall₂_iff List.sublistForall₂_iff
 
 #print List.SublistForall₂.is_refl /-
@@ -584,12 +584,12 @@ instance SublistForall₂.is_trans [IsTrans α Rₐ] : IsTrans (List α) (Sublis
     · rintro a b h1 h2
       cases' h2 with _ _ _ _ _ hbc tbc _ _ y1 btc
       · cases h1
-        exact sublist_forall₂.nil
+        exact SublistForall₂.nil
       · cases' h1 with _ _ _ _ _ hab tab _ _ _ atb
-        · exact sublist_forall₂.nil
-        · exact sublist_forall₂.cons (trans hab hbc) (ih _ _ tab tbc)
-        · exact sublist_forall₂.cons_right (ih _ _ atb tbc)
-      · exact sublist_forall₂.cons_right (ih _ _ h1 btc)⟩
+        · exact SublistForall₂.nil
+        · exact SublistForall₂.cons (trans hab hbc) (ih _ _ tab tbc)
+        · exact SublistForall₂.cons_right (ih _ _ atb tbc)
+      · exact SublistForall₂.cons_right (ih _ _ h1 btc)⟩
 #align list.sublist_forall₂.is_trans List.SublistForall₂.is_trans
 -/
 
@@ -602,7 +602,7 @@ theorem Sublist.sublistForall₂ {l₁ l₂ : List α} (h : l₁ <+ l₂) [IsRef
 
 #print List.tail_sublistForall₂_self /-
 theorem tail_sublistForall₂_self [IsRefl α Rₐ] (l : List α) : SublistForall₂ Rₐ l.tail l :=
-  l.tail_sublist.SublistForall₂
+  l.tail_sublist.sublistForall₂
 #align list.tail_sublist_forall₂_self List.tail_sublistForall₂_self
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,9 +56,9 @@ theorem antidiagonal_coe' (l : List α) : @antidiagonal α l = revzip (powersetA
 theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} :
     x ∈ antidiagonal s ↔ x.1 + x.2 = s :=
   Quotient.inductionOn s fun l => by
-    simp [antidiagonal_coe]; refine' ⟨fun h => revzip_powerset_aux h, fun h => _⟩
+    simp [antidiagonal_coe]; refine' ⟨fun h => revzip_powersetAux h, fun h => _⟩
     haveI := Classical.decEq α
-    simp [revzip_powerset_aux_lemma l revzip_powerset_aux, h.symm]
+    simp [revzip_powersetAux_lemma l revzip_powersetAux, h.symm]
     cases' x with x₁ x₂
     dsimp only
     exact ⟨x₁, le_add_right _ _, by rw [add_tsub_cancel_left x₁ x₂]⟩
@@ -68,14 +68,14 @@ theorem mem_antidiagonal {s : Multiset α} {x : Multiset α × Multiset α} :
 #print Multiset.antidiagonal_map_fst /-
 @[simp]
 theorem antidiagonal_map_fst (s : Multiset α) : (antidiagonal s).map Prod.fst = powerset s :=
-  Quotient.inductionOn s fun l => by simp [powerset_aux']
+  Quotient.inductionOn s fun l => by simp [powersetAux']
 #align multiset.antidiagonal_map_fst Multiset.antidiagonal_map_fst
 -/
 
 #print Multiset.antidiagonal_map_snd /-
 @[simp]
 theorem antidiagonal_map_snd (s : Multiset α) : (antidiagonal s).map Prod.snd = powerset s :=
-  Quotient.inductionOn s fun l => by simp [powerset_aux']
+  Quotient.inductionOn s fun l => by simp [powersetAux']
 #align multiset.antidiagonal_map_snd Multiset.antidiagonal_map_snd
 -/
 
@@ -93,7 +93,7 @@ theorem antidiagonal_cons (a : α) (s) :
       map (Prod.map id (cons a)) (antidiagonal s) + map (Prod.map (cons a) id) (antidiagonal s) :=
   Quotient.inductionOn s fun l =>
     by
-    simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powerset_aux'_cons, cons_coe,
+    simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powersetAux'_cons, cons_coe,
       coe_map, antidiagonal_coe', coe_add]
     rw [← zip_map, ← zip_map, zip_append, (_ : _ ++ _ = _)]
     · congr <;> simp; · simp
@@ -134,7 +134,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.prod_map_add Multiset.prod_map_addₓ'. -/
 theorem prod_map_add [CommSemiring β] {s : Multiset α} {f g : α → β} :
     prod (s.map fun a => f a + g a) =
-      sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) :=
+      sum ((antidiagonal s).map fun p => (p.1.map f).prod * (p.2.map g).prod) :=
   by
   refine' s.induction_on _ _
   · simp

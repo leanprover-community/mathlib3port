@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.inj_surj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,8 +38,8 @@ def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : OrderedCommGroup β :=
-  { PartialOrder.lift f hf, hf.OrderedCommMonoid f one mul npow,
-    hf.CommGroup f one mul inv div npow zpow with }
+  { PartialOrder.lift f hf, hf.orderedCommMonoid f one mul npow,
+    hf.commGroup f one mul inv div npow zpow with }
 #align function.injective.ordered_comm_group Function.Injective.orderedCommGroup
 #align function.injective.ordered_add_comm_group Function.Injective.orderedAddCommGroup
 
@@ -61,7 +61,7 @@ def Function.Injective.linearOrderedCommGroup [LinearOrderedCommGroup α] {β : 
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommGroup β :=
-  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
+  { LinearOrder.lift f hf hsup hinf, hf.orderedCommGroup f one mul inv div npow zpow with }
 #align function.injective.linear_ordered_comm_group Function.Injective.linearOrderedCommGroup
 #align function.injective.linear_ordered_add_comm_group Function.Injective.linearOrderedAddCommGroup
 

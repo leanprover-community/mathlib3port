@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,9 +51,9 @@ abbrev AssocMonoidHom (M N : Type _) [Monoid M] [Monoid N] :=
 
 @[to_additive]
 instance bundledHom : BundledHom AssocMonoidHom :=
-  ⟨fun M N [Monoid M] [Monoid N] => @MonoidHom.toFun M N _ _, fun M [Monoid M] => @MonoidHom.id M _,
-    fun M N P [Monoid M] [Monoid N] [Monoid P] => @MonoidHom.comp M N P _ _ _,
-    fun M N [Monoid M] [Monoid N] => @MonoidHom.coe_inj M N _ _⟩
+  ⟨fun M N [Monoid M] [Monoid N] => @monoid_hom.to_fun M N _ _, fun M [Monoid M] =>
+    @monoid_hom.id M _, fun M N P [Monoid M] [Monoid N] [Monoid P] => @monoid_hom.comp M N P _ _ _,
+    fun M N [Monoid M] [Monoid N] => @monoid_hom.coe_inj M N _ _⟩
 #align Mon.bundled_hom Mon.bundledHom
 #align AddMon.bundled_hom AddMon.bundledHom
 
@@ -234,14 +234,14 @@ namespace CategoryTheory.Iso
 @[to_additive AddMon_iso_to_add_equiv
       "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
 def monIsoToMulEquiv {X Y : Mon} (i : X ≅ Y) : X ≃* Y :=
-  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+  i.hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Mon_iso_to_mul_equiv CategoryTheory.Iso.monIsoToMulEquiv
 #align category_theory.iso.AddMon_iso_to_add_equiv CategoryTheory.Iso.addMonIsoToAddEquiv
 
 /-- Build a `mul_equiv` from an isomorphism in the category `CommMon`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddCommMon`."]
 def commMonIsoToMulEquiv {X Y : CommMon} (i : X ≅ Y) : X ≃* Y :=
-  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+  i.hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.CommMon_iso_to_mul_equiv CategoryTheory.Iso.commMonIsoToMulEquiv
 #align category_theory.iso.CommMon_iso_to_add_equiv CategoryTheory.Iso.commMonIsoToAddEquiv
 
@@ -271,12 +271,12 @@ def mulEquivIsoCommMonIso {X Y : Type u} [CommMonoid X] [CommMonoid Y] :
 #align add_equiv_iso_AddCommMon_iso addEquivIsoAddCommMonIso
 
 @[to_additive]
-instance Mon.forget_reflects_isos : ReflectsIsomorphisms (forget Mon.{u})
+instance Mon.forget_reflects_isos : ReflectsIsomorphisms (forget CommMon.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget Mon).map f)
+    let i := asIso ((forget Mon).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Mon_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Mon_iso).1⟩
 #align Mon.forget_reflects_isos Mon.forget_reflects_isos
 #align AddMon.forget_reflects_isos AddMon.forget_reflects_isos
 
@@ -284,9 +284,9 @@ instance Mon.forget_reflects_isos : ReflectsIsomorphisms (forget Mon.{u})
 instance CommMon.forget_reflects_isos : ReflectsIsomorphisms (forget CommMon.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget CommMon).map f)
+    let i := asIso ((forget CommMon).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_CommMon_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_CommMon_iso).1⟩
 #align CommMon.forget_reflects_isos CommMon.forget_reflects_isos
 #align AddCommMon.forget_reflects_isos AddCommMon.forget_reflects_isos
 

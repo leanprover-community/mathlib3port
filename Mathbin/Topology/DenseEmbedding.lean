@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.dense_embedding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {i : α -> β}, (DenseInducing.{u2, u1} α β _inst_1 _inst_2 i) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 i)
 Case conversion may be inaccurate. Consider using '#align dense_inducing.continuous DenseInducing.continuousₓ'. -/
 protected theorem continuous (di : DenseInducing i) : Continuous i :=
-  di.to_inducing.Continuous
+  di.to_inducing.continuous
 #align dense_inducing.continuous DenseInducing.continuous
 
 #print DenseInducing.closure_range /-
@@ -89,7 +89,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dense_inducing.preconnected_space DenseInducing.preconnectedSpaceₓ'. -/
 protected theorem preconnectedSpace [PreconnectedSpace α] (di : DenseInducing i) :
     PreconnectedSpace β :=
-  di.dense.PreconnectedSpace di.Continuous
+  di.dense.preconnectedSpace di.continuous
 #align dense_inducing.preconnected_space DenseInducing.preconnectedSpace
 
 /- warning: dense_inducing.closure_image_mem_nhds -> DenseInducing.closure_image_mem_nhds is a dubious translation:
@@ -105,7 +105,7 @@ theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs 
   rcases hs with ⟨U, ⟨haU, hUo⟩, sub : i ⁻¹' U ⊆ s⟩
   refine' mem_of_superset (hUo.mem_nhds haU) _
   calc
-    U ⊆ closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
+    U ⊆ Mem (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
     _ ⊆ closure (i '' s) := closure_mono (image_subset i sub)
     
 #align dense_inducing.closure_image_mem_nhds DenseInducing.closure_image_mem_nhds
@@ -137,7 +137,7 @@ theorem interior_compact_eq_empty [T2Space β] (di : DenseInducing i) (hd : Dens
   refine' eq_empty_iff_forall_not_mem.2 fun x hx => _
   rw [mem_interior_iff_mem_nhds] at hx
   have := di.closure_image_mem_nhds hx
-  rw [(hs.image di.continuous).IsClosed.closure_eq] at this
+  rw [(hs.image di.continuous).isClosed.closure_eq] at this
   rcases hd.inter_nhds_nonempty this with ⟨y, hyi, hys⟩
   exact hyi (image_subset_range _ _ hys)
 #align dense_inducing.interior_compact_eq_empty DenseInducing.interior_compact_eq_empty
@@ -152,8 +152,8 @@ Case conversion may be inaccurate. Consider using '#align dense_inducing.prod De
 protected theorem prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ}
     (de₁ : DenseInducing e₁) (de₂ : DenseInducing e₂) :
     DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced
-    dense := de₁.dense.Prod_map de₂.dense }
+  { induced := (de₁.to_inducing.prod_map de₂.to_inducing).induced
+    dense := de₁.dense.prod_map de₂.dense }
 #align dense_inducing.prod DenseInducing.prod
 
 open TopologicalSpace
@@ -166,7 +166,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dense_inducing.separable_space DenseInducing.separableSpaceₓ'. -/
 /-- If the domain of a `dense_inducing` map is a separable space, then so is the codomain. -/
 protected theorem separableSpace [SeparableSpace α] : SeparableSpace β :=
-  di.dense.SeparableSpace di.Continuous
+  di.dense.separableSpace di.continuous
 #align dense_inducing.separable_space DenseInducing.separableSpace
 
 variable [TopologicalSpace δ] {f : γ → α} {g : γ → δ} {h : δ → β}
@@ -269,7 +269,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {i : α -> β} (di : DenseInducing.{u2, u1} α β _inst_1 _inst_2 i) [_inst_4 : TopologicalSpace.{u3} γ] [_inst_5 : T2Space.{u3} γ _inst_4] {f : α -> γ}, (Continuous.{u2, u3} α γ _inst_1 _inst_4 f) -> (forall (a : α), Eq.{succ u3} γ (DenseInducing.extend.{u2, u1, u3} α β γ _inst_1 _inst_2 i _inst_4 di f (i a)) (f a))
 Case conversion may be inaccurate. Consider using '#align dense_inducing.extend_eq DenseInducing.extend_eqₓ'. -/
 theorem extend_eq [T2Space γ] {f : α → γ} (hf : Continuous f) (a : α) : di.extend f (i a) = f a :=
-  di.extend_eq_at hf.ContinuousAt
+  di.extend_eq_at hf.continuousAt
 #align dense_inducing.extend_eq DenseInducing.extend_eq
 
 /- warning: dense_inducing.extend_eq' -> DenseInducing.extend_eq' is a dubious translation:
@@ -315,7 +315,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dense_inducing.extend_unique DenseInducing.extend_uniqueₓ'. -/
 theorem extend_unique [T2Space γ] {f : α → γ} {g : β → γ} (di : DenseInducing i)
     (hf : ∀ x, g (i x) = f x) (hg : Continuous g) : di.extend f = g :=
-  funext fun b => extend_unique_at di (eventually_of_forall hf) hg.ContinuousAt
+  funext fun b => extend_unique_at di (eventually_of_forall hf) hg.continuousAt
 #align dense_inducing.extend_unique DenseInducing.extend_unique
 
 /- warning: dense_inducing.continuous_at_extend -> DenseInducing.continuousAt_extend is a dubious translation:
@@ -332,7 +332,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
   suffices ∀ V' ∈ 𝓝 (φ b), IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
     simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
-  set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
+  set V₁ := { x | Tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
@@ -340,7 +340,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
     rwa [di.extend_eq_of_tendsto hc]
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀ x ∈ i ⁻¹' V₂, f x ∈ V' := by
     simpa [and_assoc'] using
-      ((nhds_basis_opens' b).comap i).tendsto_left_iffₓ.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
+      ((nhds_basis_opens' b).comap i).tendsto_left_iff.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
   suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in]using this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
@@ -370,7 +370,7 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ closure (ra
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (i a), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2 fun a =>
-        le_antisymm (tendsto_iff_comap.1 <| c.Tendsto _) (by simpa [Filter.le_def] using H a)
+        le_antisymm (tendsto_iff_comap.1 <| c.tendsto _) (by simpa [Filter.le_def] using H a)
     dense }
 #align dense_inducing.mk' DenseInducing.mk'
 
@@ -393,7 +393,7 @@ Case conversion may be inaccurate. Consider using '#align dense_embedding.mk' De
 theorem DenseEmbedding.mk' [TopologicalSpace α] [TopologicalSpace β] (e : α → β) (c : Continuous e)
     (dense : DenseRange e) (inj : Function.Injective e)
     (H : ∀ (a : α), ∀ s ∈ 𝓝 a, ∃ t ∈ 𝓝 (e a), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
-  { DenseInducing.mk' e c Dense H with inj }
+  { DenseInducing.mk' e c dense H with inj }
 #align dense_embedding.mk' DenseEmbedding.mk'
 
 namespace DenseEmbedding
@@ -429,7 +429,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align dense_embedding.separable_space DenseEmbedding.separableSpaceₓ'. -/
 /-- If the domain of a `dense_embedding` is a separable space, then so is its codomain. -/
 protected theorem separableSpace [SeparableSpace α] : SeparableSpace β :=
-  de.to_denseInducing.SeparableSpace
+  de.to_denseInducing.separableSpace
 #align dense_embedding.separable_space DenseEmbedding.separableSpace
 
 /- warning: dense_embedding.prod -> DenseEmbedding.prod is a dubious translation:
@@ -450,7 +450,7 @@ protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 @[simps]
 def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) :
     { x // x ∈ closure (e '' { x | p x }) } :=
-  ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
+  ⟨e x, subset_closure <| mem_image_of_mem e x.prop⟩
 #align dense_embedding.subtype_emb DenseEmbedding.subtypeEmb
 -/
 
@@ -469,7 +469,7 @@ protected theorem subtype (p : α → Prop) : DenseEmbedding (subtypeEmb p e) :=
     inj := (de.inj.comp Subtype.coe_injective).codRestrict _
     induced :=
       (induced_iff_nhds_eq _).2 fun ⟨x, hx⟩ => by
-        simp [subtype_emb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap,
+        simp [subtypeEmb, nhds_subtype_eq_comap, de.to_inducing.nhds_eq_comap, comap_comap,
           (· ∘ ·)] }
 #align dense_embedding.subtype DenseEmbedding.subtype
 
@@ -519,7 +519,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_closed_property2 isClosed_property2ₓ'. -/
 theorem isClosed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
     (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.Prod_map he) hp fun _ => h _ _
+  have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.prod_map he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 #align is_closed_property2 isClosed_property2
 
@@ -529,11 +529,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} β] {e : α -> β} {p : β -> β -> β -> Prop}, (DenseRange.{u2, u1} β _inst_1 α e) -> (IsClosed.{u2} (Prod.{u2, u2} β (Prod.{u2, u2} β β)) (instTopologicalSpaceProd.{u2, u2} β (Prod.{u2, u2} β β) _inst_1 (instTopologicalSpaceProd.{u2, u2} β β _inst_1 _inst_1)) (setOf.{u2} (Prod.{u2, u2} β (Prod.{u2, u2} β β)) (fun (q : Prod.{u2, u2} β (Prod.{u2, u2} β β)) => p (Prod.fst.{u2, u2} β (Prod.{u2, u2} β β) q) (Prod.fst.{u2, u2} β β (Prod.snd.{u2, u2} β (Prod.{u2, u2} β β) q)) (Prod.snd.{u2, u2} β β (Prod.snd.{u2, u2} β (Prod.{u2, u2} β β) q))))) -> (forall (a₁ : α) (a₂ : α) (a₃ : α), p (e a₁) (e a₂) (e a₃)) -> (forall (b₁ : β) (b₂ : β) (b₃ : β), p b₁ b₂ b₃)
 Case conversion may be inaccurate. Consider using '#align is_closed_property3 isClosed_property3ₓ'. -/
-theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
+theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → False → β → Prop}
     (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
-    isClosed_property (he.Prod_map <| he.Prod_map he) hp fun _ => h _ _ _
+    isClosed_property (he.prod_map <| he.prod_map he) hp fun _ => h _ _ _
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 #align is_closed_property3 isClosed_property3
 
@@ -586,7 +586,7 @@ Case conversion may be inaccurate. Consider using '#align dense_range.equalizer 
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g)
     (hh : Continuous h) (H : g ∘ f = h ∘ f) : g = h :=
-  funext fun y => hfd.inductionOn y (isClosed_eq hg hh) <| congr_fun H
+  funext fun y => hfd.induction_on y (isClosed_eq hg hh) <| congr_fun H
 #align dense_range.equalizer DenseRange.equalizer
 
 end
@@ -608,15 +608,15 @@ theorem Filter.HasBasis.hasBasis_of_denseInducing [TopologicalSpace α] [Topolog
   · obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_isClosed_subset hT
     have hT₄ : f ⁻¹' T' ∈ 𝓝 x := by
       rw [hf.to_inducing.nhds_eq_comap x]
-      exact ⟨T', hT₁, subset.rfl⟩
+      exact ⟨T', hT₁, Subset.rfl⟩
     obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄
     exact
       ⟨i, hi,
         (closure_mono (image_subset f hi')).trans
-          (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₂) hT₃)⟩
+          (Subset.trans (closure_minimal (image_subset_iff.mpr Subset.rfl) hT₂) hT₃)⟩
   · obtain ⟨i, hi, hi'⟩ := hT
     suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this]using hi'
-    replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
+    replace h := (h (s i)).mpr ⟨i, hi, Subset.rfl⟩
     exact hf.closure_image_mem_nhds h
 #align filter.has_basis.has_basis_of_dense_inducing Filter.HasBasis.hasBasis_of_denseInducing
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module topology.omega_complete_partial_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ def IsωSup {α : Type u} [Preorder α] (c : Chain α) (x : α) : Prop :=
 
 #print Scott.isωSup_iff_isLUB /-
 theorem isωSup_iff_isLUB {α : Type u} [Preorder α] {c : Chain α} {x : α} :
-    IsωSup c x ↔ IsLUB (range c) x := by simp [is_ωSup, IsLUB, IsLeast, upperBounds, lowerBounds]
+    IsωSup c x ↔ IsLUB (range c) x := by simp [IsωSup, IsLUB, IsLeast, upperBounds, lowerBounds]
 #align Scott.is_ωSup_iff_is_lub Scott.isωSup_iff_isLUB
 -/
 
@@ -81,7 +81,7 @@ theorem isOpen_unionₛ (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsO
   convert CompleteLattice.supₛ_continuous' (setOf ⁻¹' s) _
   · ext1 x
     simp only [supₛ_apply, set_of_bijective.surjective.exists, exists_prop, mem_preimage,
-      SetCoe.exists, supᵢ_Prop_eq, mem_set_of_eq, Subtype.coe_mk, mem_sUnion]
+      SetCoe.exists, supᵢ_Prop_eq, mem_setOf_eq, Subtype.coe_mk, mem_unionₛ]
   · intro p hp
     exact hs (setOf p) (mem_preimage.1 hp)
 #align Scott.is_open_sUnion Scott.isOpen_unionₛ
@@ -122,7 +122,7 @@ def notBelow :=
 -/
 
 #print notBelow_isOpen /-
-theorem notBelow_isOpen : IsOpen (notBelow y) :=
+theorem notBelow_isOpen : IsOpen (notBelow not_or_of_imp) :=
   by
   have h : Monotone (notBelow y) := by
     intro x y' h
@@ -134,7 +134,7 @@ theorem notBelow_isOpen : IsOpen (notBelow y) :=
   apply eq_of_forall_ge_iff
   intro z
   rw [ωSup_le_iff]
-  simp only [ωSup_le_iff, notBelow, mem_set_of_eq, le_Prop_eq, OrderHom.coe_fun_mk, chain.map_coe,
+  simp only [ωSup_le_iff, notBelow, mem_setOf_eq, le_Prop_eq, OrderHom.coe_fun_mk, Chain.map_coe,
     Function.comp_apply, exists_imp, not_forall]
 #align not_below_is_open notBelow_isOpen
 -/
@@ -171,7 +171,7 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     cases' hf { x | ¬x ≤ f y } (notBelow_isOpen _) with hf hf'
     clear hf'
     specialize hf h
-    simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf
+    simp only [preimage, mem_setOf_eq, le_Prop_eq] at hf
     by_contra H
     apply hf H le_rfl
   exists h
@@ -182,10 +182,10 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     «./././Mathport/Syntax/Translate/Tactic/Lean3.lean:565:11: unsupported: specialize non-hyp»
   cases hf
   specialize hf_h c
-  simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_set_of_eq] at hf_h
+  simp only [notBelow, OrderHom.coe_fun_mk, eq_iff_iff, mem_setOf_eq] at hf_h
   rw [← not_iff_not]
-  simp only [ωSup_le_iff, hf_h, ωSup, supᵢ, Sup, CompleteLattice.sup, CompleteSemilatticeSup.sup,
-    exists_prop, mem_range, OrderHom.coe_fun_mk, chain.map_coe, Function.comp_apply, eq_iff_iff,
+  simp only [ωSup_le_iff, hf_h, ωSup, supᵢ, Sup, complete_lattice.Sup, complete_semilattice_Sup.Sup,
+    exists_prop, mem_range, OrderHom.coe_fun_mk, Chain.map_coe, Function.comp_apply, eq_iff_iff,
     not_forall]
   tauto
 #align Scott_continuous_of_continuous scottContinuous_of_continuous
@@ -202,10 +202,10 @@ theorem continuous_of_scottContinuous {α β} [OmegaCompletePartialOrder α]
   by
   rw [continuous_def]
   intro s hs
-  change continuous' (s ∘ f)
+  change Continuous' (s ∘ f)
   cases' hs with hs hs'
   cases' hf with hf hf'
-  apply continuous.of_bundled
+  apply Continuous.of_bundled
   apply continuous_comp _ _ hf' hs'
 #align continuous_of_Scott_continuous continuous_of_scottContinuous
 

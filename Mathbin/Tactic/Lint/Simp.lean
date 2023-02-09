@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.simp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ private unsafe def simp_lhs (ty : expr) : tactic expr :=
                   let l ← mk_local' n bi a
                     let some lhs ← simp_is_conditional_core ( b l ) | pure none
                     if
-                      bi ≠ BinderInfo.inst_implicit ∧ ¬ ( lhs l ) . has_var
+                      bi ≠ binder_info.inst_implicit ∧ ¬ ( lhs l ) . has_var
                       then
                       pure none
                       else
@@ -93,7 +93,7 @@ private unsafe def simp_is_conditional (ty : expr) : tactic Bool :=
 #align simp_is_conditional simp_is_conditional
 
 private unsafe def heuristic_simp_lemma_extraction (prf : expr) : tactic (List Name) :=
-  prf.list_constant.toList.filterM is_simp_lemma
+  prf.list_constant.to_list.filterM is_simp_lemma
 #align heuristic_simp_lemma_extraction heuristic_simp_lemma_extraction
 
 /-- Checks whether two expressions are equal for the simplifier. That is,
@@ -138,7 +138,7 @@ unsafe def simp_nf_linter (timeout := 200000) (d : declaration) : tactic (Option
                 let used_lemmas ← heuristic_simp_lemma_extraction (prf1 prf2)
                 pure <|
                     pure <|
-                      "simp can prove this:\n" ++ "  by simp only " ++ toString used_lemmas ++
+                      "simp can prove this:\n" ++ "  by simp only " ++ to_string used_lemmas ++
                             "\n" ++
                           "One of the lemmas above could be a duplicate.\n" ++
                         "If that's not the case try reordering lemmas or adding @[priority].\n"
@@ -263,7 +263,7 @@ private unsafe def simp_comm (d : declaration) : tactic (Option String) := do
   let (lhs, rhs) ← simp_lhs_rhs d.type
   if lhs ≠ rhs then pure none
     else do
-      let (lhs', rhs') ← Prod.snd <$> open_pis_metas d >>= simp_lhs_rhs
+      let (lhs', rhs') ← prod.snd <$> open_pis_metas d >>= simp_lhs_rhs
       let tt ← succeeds <| unify rhs lhs' transparency.reducible |
         pure none
       let tt ← succeeds <| is_def_eq rhs lhs' transparency.reducible |

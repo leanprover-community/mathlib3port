@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.whiskering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ protected def whiskerRight (adj : F ⊣ G) :
   mkOfUnitCounit
     { Unit :=
         { app := fun X =>
-            (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.Unit ≫ (Functor.associator _ _ _).inv
+            (Functor.rightUnitor _).inv ≫ whiskerLeft X adj.unit ≫ (Functor.associator _ _ _).inv
           naturality' := by
             intros
             ext
@@ -43,7 +43,7 @@ protected def whiskerRight (adj : F ⊣ G) :
             simp }
       counit :=
         { app := fun X =>
-            (Functor.associator _ _ _).Hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).Hom
+            (Functor.associator _ _ _).hom ≫ whiskerLeft X adj.counit ≫ (Functor.rightUnitor _).hom
           naturality' := by
             intros
             ext
@@ -68,7 +68,7 @@ protected def whiskerLeft (adj : F ⊣ G) :
   mkOfUnitCounit
     { Unit :=
         { app := fun X =>
-            (Functor.leftUnitor _).inv ≫ whiskerRight adj.Unit X ≫ (Functor.associator _ _ _).Hom
+            (Functor.leftUnitor _).inv ≫ whiskerRight adj.unit X ≫ (Functor.associator _ _ _).hom
           naturality' := by
             intros
             ext
@@ -76,7 +76,7 @@ protected def whiskerLeft (adj : F ⊣ G) :
             simp }
       counit :=
         { app := fun X =>
-            (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).Hom
+            (Functor.associator _ _ _).inv ≫ whiskerRight adj.counit X ≫ (Functor.leftUnitor _).hom
           naturality' := by
             intros
             ext
@@ -85,12 +85,12 @@ protected def whiskerLeft (adj : F ⊣ G) :
       left_triangle' := by
         ext x
         dsimp
-        simp only [category.id_comp, category.comp_id, ← x.map_comp]
+        simp only [Category.id_comp, Category.comp_id, ← x.map_comp]
         simp
       right_triangle' := by
         ext x
         dsimp
-        simp only [category.id_comp, category.comp_id, ← x.map_comp]
+        simp only [Category.id_comp, Category.comp_id, ← x.map_comp]
         simp }
 #align category_theory.adjunction.whisker_left CategoryTheory.Adjunction.whiskerLeft
 

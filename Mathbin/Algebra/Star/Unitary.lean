@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.unitary
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem star_mem_iff {U : R} : star U ∈ unitary R ↔ U ∈ unitary R :=
 #align unitary.star_mem_iff unitary.star_mem_iff
 
 instance : Star (unitary R) :=
-  ⟨fun U => ⟨star U, star_mem U.Prop⟩⟩
+  ⟨fun U => ⟨star U, star_mem U.prop⟩⟩
 
 /- warning: unitary.coe_star -> unitary.coe_star is a dubious translation:
 lean 3 declaration is
@@ -137,7 +137,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : StarSemigroup.{u1} R (Monoid.toSemigroup.{u1} R _inst_1)] (U : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x (unitary.{u1} R _inst_1 _inst_2))), Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarSemigroup.toInvolutiveStar.{u1} R (Monoid.toSemigroup.{u1} R _inst_1) _inst_2)) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (unitary.{u1} R _inst_1 _inst_2))) U)) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (unitary.{u1} R _inst_1 _inst_2))) U)) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align unitary.coe_star_mul_self unitary.coe_star_mul_selfₓ'. -/
 theorem coe_star_mul_self (U : unitary R) : (star U : R) * U = 1 :=
-  star_mul_self_of_mem U.Prop
+  star_mul_self_of_mem U.prop
 #align unitary.coe_star_mul_self unitary.coe_star_mul_self
 
 /- warning: unitary.coe_mul_star_self -> unitary.coe_mul_star_self is a dubious translation:
@@ -147,7 +147,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] [_inst_2 : StarSemigroup.{u1} R (Monoid.toSemigroup.{u1} R _inst_1)] (U : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x (unitary.{u1} R _inst_1 _inst_2))), Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (unitary.{u1} R _inst_1 _inst_2))) U) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (unitary.{u1} R _inst_1 _inst_2))) (Star.star.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x (unitary.{u1} R _inst_1 _inst_2))) (unitary.instStarSubtypeMemSubmonoidToMulOneClassInstMembershipInstSetLikeSubmonoidUnitary.{u1} R _inst_1 _inst_2) U))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (Monoid.toOne.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align unitary.coe_mul_star_self unitary.coe_mul_star_selfₓ'. -/
 theorem coe_mul_star_self (U : unitary R) : (U : R) * star U = 1 :=
-  mul_star_self_of_mem U.Prop
+  mul_star_self_of_mem U.prop
 #align unitary.coe_mul_star_self unitary.coe_mul_star_self
 
 /- warning: unitary.star_mul_self -> unitary.star_mul_self is a dubious translation:
@@ -330,7 +330,7 @@ theorem coe_neg (U : unitary R) : ↑(-U) = (-U : R) :=
 #align unitary.coe_neg unitary.coe_neg
 
 instance : HasDistribNeg (unitary R) :=
-  Subtype.coe_injective.HasDistribNeg _ coe_neg (unitary R).val_mul
+  Subtype.coe_injective.hasDistribNeg _ coe_neg (unitary R).coe_mul
 
 end Ring
 

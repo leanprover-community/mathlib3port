@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.finsupp.ne_locus
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ variable [DecidableEq N] [Zero N] (f g : α →₀ N)
 /-- Given two finitely supported functions `f g : α →₀ N`, `finsupp.ne_locus f g` is the `finset`
 where `f` and `g` differ. This generalizes `(f - g).support` to situations without subtraction. -/
 def neLocus (f g : α →₀ N) : Finset α :=
-  (f.support ∪ g.support).filterₓ fun x => f x ≠ g x
+  (f.support ∪ g.support).filter fun x => f x ≠ g x
 #align finsupp.ne_locus Finsupp.neLocus
 -/
 
@@ -54,7 +54,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.mem_ne_locus Finsupp.mem_neLocusₓ'. -/
 @[simp]
 theorem mem_neLocus {f g : α →₀ N} {a : α} : a ∈ f.neLocus g ↔ f a ≠ g a := by
-  simpa only [ne_locus, Finset.mem_filter, Finset.mem_union, mem_support_iff,
+  simpa only [neLocus, Finset.mem_filter, Finset.mem_union, mem_support_iff,
     and_iff_right_iff_imp] using Ne.ne_or_ne _
 #align finsupp.mem_ne_locus Finsupp.mem_neLocus
 
@@ -65,7 +65,7 @@ but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : Zero.{u1} N] {f : Finsupp.{u2, u1} α N _inst_3} {g : Finsupp.{u2, u1} α N _inst_3} {a : α}, Iff (Not (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) _inst_3 f g))) (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α N _inst_3) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) _x) (Finsupp.funLike.{u2, u1} α N _inst_3) f a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α N _inst_3) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => N) _x) (Finsupp.funLike.{u2, u1} α N _inst_3) g a))
 Case conversion may be inaccurate. Consider using '#align finsupp.not_mem_ne_locus Finsupp.not_mem_neLocusₓ'. -/
 theorem not_mem_neLocus {f g : α →₀ N} {a : α} : a ∉ f.neLocus g ↔ f a = g a :=
-  mem_neLocus.Not.trans not_ne_iff
+  mem_neLocus.not.trans not_ne_iff
 #align finsupp.not_mem_ne_locus Finsupp.not_mem_neLocus
 
 /- warning: finsupp.coe_ne_locus -> Finsupp.coe_neLocus is a dubious translation:
@@ -78,7 +78,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.coe_ne_locus F
 theorem coe_neLocus : ↑(f.neLocus g) = { x | f x ≠ g x } :=
   by
   ext
-  exact mem_ne_locus
+  exact mem_neLocus
 #align finsupp.coe_ne_locus Finsupp.coe_neLocus
 
 /- warning: finsupp.ne_locus_eq_empty -> Finsupp.neLocus_eq_empty is a dubious translation:
@@ -91,8 +91,8 @@ Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_eq_em
 theorem neLocus_eq_empty {f g : α →₀ N} : f.neLocus g = ∅ ↔ f = g :=
   ⟨fun h =>
     ext fun a =>
-      Classical.not_not.mp (mem_neLocus.Not.mp (Finset.eq_empty_iff_forall_not_mem.mp h a)),
-    fun h => h ▸ by simp only [ne_locus, Ne.def, eq_self_iff_true, not_true, Finset.filter_False]⟩
+      Classical.not_not.mp (mem_neLocus.not.mp (Finset.eq_empty_iff_forall_not_mem.mp h a)),
+    fun h => h ▸ by simp only [neLocus, Ne.def, eq_self_iff_true, not_true, Finset.filter_False]⟩
 #align finsupp.ne_locus_eq_empty Finsupp.neLocus_eq_empty
 
 /- warning: finsupp.nonempty_ne_locus_iff -> Finsupp.nonempty_neLocus_iff is a dubious translation:
@@ -103,7 +103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.nonempty_ne_locus_iff Finsupp.nonempty_neLocus_iffₓ'. -/
 @[simp]
 theorem nonempty_neLocus_iff {f g : α →₀ N} : (f.neLocus g).Nonempty ↔ f ≠ g :=
-  Finset.nonempty_iff_ne_empty.trans neLocus_eq_empty.Not
+  Finset.nonempty_iff_ne_empty.trans neLocus_eq_empty.not
 #align finsupp.nonempty_ne_locus_iff Finsupp.nonempty_neLocus_iff
 
 /- warning: finsupp.ne_locus_comm -> Finsupp.neLocus_comm is a dubious translation:
@@ -112,8 +112,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : Zero.{u1} N] (f : Finsupp.{u2, u1} α N _inst_3) (g : Finsupp.{u2, u1} α N _inst_3), Eq.{succ u2} (Finset.{u2} α) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) _inst_3 f g) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) _inst_3 g f)
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_comm Finsupp.neLocus_commₓ'. -/
-theorem neLocus_comm : f.neLocus g = g.neLocus f := by
-  simp_rw [ne_locus, Finset.union_comm, ne_comm]
+theorem neLocus_comm : f.neLocus g = g.neLocus f := by simp_rw [neLocus, Finset.union_comm, ne_comm]
 #align finsupp.ne_locus_comm Finsupp.neLocus_comm
 
 /- warning: finsupp.ne_locus_zero_right -> Finsupp.neLocus_zero_right is a dubious translation:
@@ -126,7 +125,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_zero_
 theorem neLocus_zero_right : f.neLocus 0 = f.support :=
   by
   ext
-  rw [mem_ne_locus, mem_support_iff, coe_zero, Pi.zero_apply]
+  rw [mem_neLocus, mem_support_iff, coe_zero, Pi.zero_apply]
 #align finsupp.ne_locus_zero_right Finsupp.neLocus_zero_right
 
 /- warning: finsupp.ne_locus_zero_left -> Finsupp.neLocus_zero_left is a dubious translation:
@@ -147,7 +146,7 @@ section NeLocusAndMaps
 #print Finsupp.subset_mapRange_neLocus /-
 theorem subset_mapRange_neLocus [DecidableEq N] [Zero N] [DecidableEq M] [Zero M] (f g : α →₀ N)
     {F : N → M} (F0 : F 0 = 0) : (f.mapRange F F0).neLocus (g.mapRange F F0) ⊆ f.neLocus g :=
-  fun x => by simpa only [mem_ne_locus, map_range_apply, not_imp_not] using congr_arg F
+  fun x => by simpa only [mem_neLocus, mapRange_apply, not_imp_not] using congr_arg F
 #align finsupp.subset_map_range_ne_locus Finsupp.subset_mapRange_neLocus
 -/
 
@@ -163,7 +162,7 @@ theorem zipWith_neLocus_eq_left [DecidableEq N] [Zero M] [DecidableEq P] [Zero P
     (zipWith F F0 f g₁).neLocus (zipWith F F0 f g₂) = g₁.neLocus g₂ :=
   by
   ext
-  simpa only [mem_ne_locus] using (hF _).ne_iff
+  simpa only [mem_neLocus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_left Finsupp.zipWith_neLocus_eq_left
 
 /- warning: finsupp.zip_with_ne_locus_eq_right -> Finsupp.zipWith_neLocus_eq_right is a dubious translation:
@@ -178,7 +177,7 @@ theorem zipWith_neLocus_eq_right [DecidableEq M] [Zero M] [DecidableEq P] [Zero 
     (zipWith F F0 f₁ g).neLocus (zipWith F F0 f₂ g) = f₁.neLocus f₂ :=
   by
   ext
-  simpa only [mem_ne_locus] using (hF _).ne_iff
+  simpa only [mem_neLocus] using (hF _).ne_iff
 #align finsupp.zip_with_ne_locus_eq_right Finsupp.zipWith_neLocus_eq_right
 
 #print Finsupp.mapRange_neLocus_eq /-
@@ -187,7 +186,7 @@ theorem mapRange_neLocus_eq [DecidableEq N] [DecidableEq M] [Zero M] [Zero N] (f
     (f.mapRange F F0).neLocus (g.mapRange F F0) = f.neLocus g :=
   by
   ext
-  simpa only [mem_ne_locus] using hF.ne_iff
+  simpa only [mem_neLocus] using hF.ne_iff
 #align finsupp.map_range_ne_locus_eq Finsupp.mapRange_neLocus_eq
 -/
 
@@ -240,7 +239,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : AddGroup.{u1} N] (f : Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (g : Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))), Eq.{succ u2} (Finset.{u2} α) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) (Neg.neg.{max u2 u1} (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (Finsupp.instNegFinsuppToZero.{u2, u1} α N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) f) g) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) f (Neg.neg.{max u2 u1} (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (Finsupp.instNegFinsuppToZero.{u2, u1} α N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) g))
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_neg Finsupp.neLocus_negₓ'. -/
-theorem neLocus_neg : neLocus (-f) g = f.neLocus (-g) := by rw [← ne_locus_neg_neg, neg_neg]
+theorem neLocus_neg : neLocus (-f) g = f.neLocus (-g) := by rw [← neLocus_neg_neg, neg_neg]
 #align finsupp.ne_locus_neg Finsupp.neLocus_neg
 
 /- warning: finsupp.ne_locus_eq_support_sub -> Finsupp.neLocus_eq_support_sub is a dubious translation:
@@ -250,7 +249,7 @@ but is expected to have type
   forall {α : Type.{u2}} {N : Type.{u1}} [_inst_1 : DecidableEq.{succ u2} α] [_inst_2 : DecidableEq.{succ u1} N] [_inst_3 : AddGroup.{u1} N] (f : Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (g : Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))), Eq.{succ u2} (Finset.{u2} α) (Finsupp.neLocus.{u2, u1} α N (fun (a : α) (b : α) => _inst_1 a b) (fun (a : N) (b : N) => _inst_2 a b) (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) f g) (Finsupp.support.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) (HSub.hSub.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (instHSub.{max u2 u1} (Finsupp.{u2, u1} α N (NegZeroClass.toZero.{u1} N (SubNegZeroMonoid.toNegZeroClass.{u1} N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3))))) (Finsupp.instSubFinsuppToZeroToNegZeroClass.{u2, u1} α N (SubtractionMonoid.toSubNegZeroMonoid.{u1} N (AddGroup.toSubtractionMonoid.{u1} N _inst_3)))) f g))
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_eq_support_sub Finsupp.neLocus_eq_support_subₓ'. -/
 theorem neLocus_eq_support_sub : f.neLocus g = (f - g).support := by
-  rw [← ne_locus_add_right _ _ (-g), add_right_neg, ne_locus_zero_right, sub_eq_add_neg]
+  rw [← neLocus_add_right _ _ (-g), add_right_neg, neLocus_zero_right, sub_eq_add_neg]
 #align finsupp.ne_locus_eq_support_sub Finsupp.neLocus_eq_support_sub
 
 /- warning: finsupp.ne_locus_sub_left -> Finsupp.neLocus_sub_left is a dubious translation:
@@ -261,7 +260,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_sub_left Finsupp.neLocus_sub_leftₓ'. -/
 @[simp]
 theorem neLocus_sub_left : neLocus (f - g₁) (f - g₂) = neLocus g₁ g₂ := by
-  simp only [sub_eq_add_neg, ne_locus_add_left, ne_locus_neg_neg]
+  simp only [sub_eq_add_neg, neLocus_add_left, neLocus_neg_neg]
 #align finsupp.ne_locus_sub_left Finsupp.neLocus_sub_left
 
 /- warning: finsupp.ne_locus_sub_right -> Finsupp.neLocus_sub_right is a dubious translation:
@@ -272,7 +271,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_sub_right Finsupp.neLocus_sub_rightₓ'. -/
 @[simp]
 theorem neLocus_sub_right : neLocus (f₁ - g) (f₂ - g) = neLocus f₁ f₂ := by
-  simpa only [sub_eq_add_neg] using ne_locus_add_right _ _ _
+  simpa only [sub_eq_add_neg] using neLocus_add_right _ _ _
 #align finsupp.ne_locus_sub_right Finsupp.neLocus_sub_right
 
 /- warning: finsupp.ne_locus_self_add_right -> Finsupp.neLocus_self_add_right is a dubious translation:
@@ -283,7 +282,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_self_add_right Finsupp.neLocus_self_add_rightₓ'. -/
 @[simp]
 theorem neLocus_self_add_right : neLocus f (f + g) = g.support := by
-  rw [← ne_locus_zero_left, ← ne_locus_add_left f 0 g, add_zero]
+  rw [← neLocus_zero_left, ← neLocus_add_left f 0 g, add_zero]
 #align finsupp.ne_locus_self_add_right Finsupp.neLocus_self_add_right
 
 /- warning: finsupp.ne_locus_self_add_left -> Finsupp.neLocus_self_add_left is a dubious translation:
@@ -294,7 +293,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_self_add_left Finsupp.neLocus_self_add_leftₓ'. -/
 @[simp]
 theorem neLocus_self_add_left : neLocus (f + g) f = g.support := by
-  rw [ne_locus_comm, ne_locus_self_add_right]
+  rw [neLocus_comm, neLocus_self_add_right]
 #align finsupp.ne_locus_self_add_left Finsupp.neLocus_self_add_left
 
 /- warning: finsupp.ne_locus_self_sub_right -> Finsupp.neLocus_self_sub_right is a dubious translation:
@@ -305,7 +304,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_self_sub_right Finsupp.neLocus_self_sub_rightₓ'. -/
 @[simp]
 theorem neLocus_self_sub_right : neLocus f (f - g) = g.support := by
-  rw [sub_eq_add_neg, ne_locus_self_add_right, support_neg]
+  rw [sub_eq_add_neg, neLocus_self_add_right, support_neg]
 #align finsupp.ne_locus_self_sub_right Finsupp.neLocus_self_sub_right
 
 /- warning: finsupp.ne_locus_self_sub_left -> Finsupp.neLocus_self_sub_left is a dubious translation:
@@ -316,7 +315,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.ne_locus_self_sub_left Finsupp.neLocus_self_sub_leftₓ'. -/
 @[simp]
 theorem neLocus_self_sub_left : neLocus (f - g) f = g.support := by
-  rw [ne_locus_comm, ne_locus_self_sub_right]
+  rw [neLocus_comm, neLocus_self_sub_right]
 #align finsupp.ne_locus_self_sub_left Finsupp.neLocus_self_sub_left
 
 end AddGroup

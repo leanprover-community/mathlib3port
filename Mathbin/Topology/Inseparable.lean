@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.inseparable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,7 +263,7 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {x : X} {y : X} {f : X -> Y}, (Specializes.{u2} X _inst_1 x y) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 f) -> (Specializes.{u1} Y _inst_2 (f x) (f y))
 Case conversion may be inaccurate. Consider using '#align specializes.map Specializes.mapₓ'. -/
 theorem Specializes.map (h : x ⤳ y) (hf : Continuous f) : f x ⤳ f y :=
-  h.map_of_continuousAt hf.ContinuousAt
+  h.map_of_continuousAt hf.continuousAt
 #align specializes.map Specializes.map
 
 /- warning: inducing.specializes_iff -> Inducing.specializes_iff is a dubious translation:
@@ -499,7 +499,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_4 : forall (i : ι), TopologicalSpace.{u1} (π i)] {f : forall (i : ι), π i} {g : forall (i : ι), π i}, Iff (Inseparable.{max u2 u1} (forall (i : ι), π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_4 a)) f g) (forall (i : ι), Inseparable.{u1} (π i) (_inst_4 i) (f i) (g i))
 Case conversion may be inaccurate. Consider using '#align inseparable_pi inseparable_piₓ'. -/
 @[simp]
-theorem inseparable_pi {f g : ∀ i, π i} : (f ~ g) ↔ ∀ i, f i ~ g i := by
+theorem inseparable_pi {f g : ∀ i, π i} : (f ~ g) ↔ ∀ i, f i ~ surjective_mk i := by
   simp only [Inseparable, nhds_pi, funext_iff, pi_inj]
 #align inseparable_pi inseparable_pi
 
@@ -564,7 +564,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inseparable.map_of_continuous_at Inseparable.map_of_continuousAtₓ'. -/
 theorem map_of_continuousAt (h : x ~ y) (hx : ContinuousAt f x) (hy : ContinuousAt f y) :
     f x ~ f y :=
-  (h.Specializes.map_of_continuousAt hy).antisymm (h.specializes'.map_of_continuousAt hx)
+  (h.specializes.map_of_continuousAt hy).antisymm (h.specializes'.map_of_continuousAt hx)
 #align inseparable.map_of_continuous_at Inseparable.map_of_continuousAt
 
 /- warning: inseparable.map -> Inseparable.map is a dubious translation:
@@ -574,7 +574,7 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] {x : X} {y : X} {f : X -> Y}, (Inseparable.{u2} X _inst_1 x y) -> (Continuous.{u2, u1} X Y _inst_1 _inst_2 f) -> (Inseparable.{u1} Y _inst_2 (f x) (f y))
 Case conversion may be inaccurate. Consider using '#align inseparable.map Inseparable.mapₓ'. -/
 theorem map (h : x ~ y) (hf : Continuous f) : f x ~ f y :=
-  h.map_of_continuousAt hf.ContinuousAt hf.ContinuousAt
+  h.map_of_continuousAt hf.continuousAt hf.continuousAt
 #align inseparable.map Inseparable.map
 
 end Inseparable
@@ -665,12 +665,12 @@ instance [Inhabited X] : Inhabited (SeparationQuotient X) :=
   ⟨mk default⟩
 
 instance [Subsingleton X] : Subsingleton (SeparationQuotient X) :=
-  surjective_mk.Subsingleton
+  surjective_mk.subsingleton
 
 #print SeparationQuotient.preimage_image_mk_open /-
 theorem preimage_image_mk_open (hs : IsOpen s) : mk ⁻¹' (mk '' s) = s :=
   by
-  refine' subset.antisymm _ (subset_preimage_image _ _)
+  refine' Subset.antisymm _ (subset_preimage_image _ _)
   rintro x ⟨y, hys, hxy⟩
   exact ((mk_eq_mk.1 hxy).mem_open_iff hs).1 hys
 #align separation_quotient.preimage_image_mk_open SeparationQuotient.preimage_image_mk_open
@@ -685,7 +685,7 @@ theorem isOpenMap_mk : IsOpenMap (mk : X → SeparationQuotient X) := fun s hs =
 #print SeparationQuotient.preimage_image_mk_closed /-
 theorem preimage_image_mk_closed (hs : IsClosed s) : mk ⁻¹' (mk '' s) = s :=
   by
-  refine' subset.antisymm _ (subset_preimage_image _ _)
+  refine' Subset.antisymm _ (subset_preimage_image _ _)
   rintro x ⟨y, hys, hxy⟩
   exact ((mk_eq_mk.1 hxy).mem_closed_iff hs).1 hys
 #align separation_quotient.preimage_image_mk_closed SeparationQuotient.preimage_image_mk_closed
@@ -700,7 +700,7 @@ theorem inducing_mk : Inducing (mk : X → SeparationQuotient X) :=
 
 #print SeparationQuotient.isClosedMap_mk /-
 theorem isClosedMap_mk : IsClosedMap (mk : X → SeparationQuotient X) :=
-  inducing_mk.IsClosedMap <| by
+  inducing_mk.isClosedMap <| by
     rw [range_mk]
     exact isClosed_univ
 #align separation_quotient.is_closed_map_mk SeparationQuotient.isClosedMap_mk
@@ -728,13 +728,13 @@ theorem map_mk_nhds : map mk (𝓝 x) = 𝓝 (mk x) := by
 
 #print SeparationQuotient.map_mk_nhdsSet /-
 theorem map_mk_nhdsSet : map mk (𝓝ˢ s) = 𝓝ˢ (mk '' s) := by
-  rw [← comap_mk_nhds_set_image, map_comap_of_surjective surjective_mk]
+  rw [← comap_mk_nhdsSet_image, map_comap_of_surjective surjective_mk]
 #align separation_quotient.map_mk_nhds_set SeparationQuotient.map_mk_nhdsSet
 -/
 
 #print SeparationQuotient.comap_mk_nhdsSet /-
 theorem comap_mk_nhdsSet : comap mk (𝓝ˢ t) = 𝓝ˢ (mk ⁻¹' t) := by
-  conv_lhs => rw [← image_preimage_eq t surjective_mk, comap_mk_nhds_set_image]
+  conv_lhs => rw [← image_preimage_eq t surjective_mk, comap_mk_nhdsSet_image]
 #align separation_quotient.comap_mk_nhds_set SeparationQuotient.comap_mk_nhdsSet
 -/
 
@@ -832,7 +832,7 @@ Case conversion may be inaccurate. Consider using '#align separation_quotient.te
 theorem tendsto_lift_nhdsWithin_mk {f : X → α} {hf : ∀ x y, (x ~ y) → f x = f y} {x : X}
     {s : Set (SeparationQuotient X)} {l : Filter α} :
     Tendsto (lift f hf) (𝓝[s] mk x) l ↔ Tendsto f (𝓝[mk ⁻¹' s] x) l := by
-  simp only [← map_mk_nhds_within_preimage, tendsto_map'_iff, lift_comp_mk]
+  simp only [← map_mk_nhdsWithin_preimage, tendsto_map'_iff, lift_comp_mk]
 #align separation_quotient.tendsto_lift_nhds_within_mk SeparationQuotient.tendsto_lift_nhdsWithin_mk
 
 /- warning: separation_quotient.continuous_at_lift -> SeparationQuotient.continuousAt_lift is a dubious translation:
@@ -869,7 +869,7 @@ Case conversion may be inaccurate. Consider using '#align separation_quotient.co
 @[simp]
 theorem continuousOn_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y}
     {s : Set (SeparationQuotient X)} : ContinuousOn (lift f hf) s ↔ ContinuousOn f (mk ⁻¹' s) := by
-  simp only [ContinuousOn, surjective_mk.forall, continuous_within_at_lift, mem_preimage]
+  simp only [ContinuousOn, surjective_mk.forall, continuousWithinAt_lift, mem_preimage]
 #align separation_quotient.continuous_on_lift SeparationQuotient.continuousOn_lift
 
 /- warning: separation_quotient.continuous_lift -> SeparationQuotient.continuous_lift is a dubious translation:
@@ -881,7 +881,7 @@ Case conversion may be inaccurate. Consider using '#align separation_quotient.co
 @[simp]
 theorem continuous_lift {f : X → Y} {hf : ∀ x y, (x ~ y) → f x = f y} :
     Continuous (lift f hf) ↔ Continuous f := by
-  simp only [continuous_iff_continuousOn_univ, continuous_on_lift, preimage_univ]
+  simp only [continuous_iff_continuousOn_univ, continuousOn_lift, preimage_univ]
 #align separation_quotient.continuous_lift SeparationQuotient.continuous_lift
 
 #print SeparationQuotient.lift₂ /-
@@ -974,7 +974,7 @@ theorem continuousOn_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → 
     ContinuousOn (uncurry <| lift₂ f hf) s ↔ ContinuousOn (uncurry f) (Prod.map mk mk ⁻¹' s) :=
   by
   simp_rw [ContinuousOn, (surjective_mk.prod_map surjective_mk).forall, Prod.forall, Prod.map,
-    continuous_within_at_lift₂]
+    continuousWithinAt_lift₂]
   rfl
 #align separation_quotient.continuous_on_lift₂ SeparationQuotient.continuousOn_lift₂
 
@@ -987,7 +987,7 @@ Case conversion may be inaccurate. Consider using '#align separation_quotient.co
 @[simp]
 theorem continuous_lift₂ {f : X → Y → Z} {hf : ∀ a b c d, (a ~ c) → (b ~ d) → f a b = f c d} :
     Continuous (uncurry <| lift₂ f hf) ↔ Continuous (uncurry f) := by
-  simp only [continuous_iff_continuousOn_univ, continuous_on_lift₂, preimage_univ]
+  simp only [continuous_iff_continuousOn_univ, continuousOn_lift₂, preimage_univ]
 #align separation_quotient.continuous_lift₂ SeparationQuotient.continuous_lift₂
 
 end SeparationQuotient

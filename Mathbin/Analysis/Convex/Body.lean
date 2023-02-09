@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,8 +88,8 @@ instance : AddMonoid (ConvexBody V)
     where
   -- we cannot write K + L to avoid reducibility issues with the set.has_add instance
   add K L :=
-    ⟨Set.image2 (· + ·) K L, K.Convex.add L.Convex, K.IsCompact.add L.IsCompact,
-      K.Nonempty.add L.Nonempty⟩
+    ⟨Set.image2 (· + ·) K L, K.convex.add L.convex, K.isCompact.add L.isCompact,
+      K.nonempty.add L.nonempty⟩
   add_assoc K L M := by
     ext
     simp only [coe_mk, Set.image2_add, add_assoc]
@@ -121,7 +121,7 @@ instance : AddCommMonoid (ConvexBody V) :=
       simp only [coe_add, add_comm] }
 
 instance : SMul ℝ (ConvexBody V)
-    where smul c K := ⟨c • (K : Set V), K.Convex.smul _, K.IsCompact.smul _, K.Nonempty.smul_set⟩
+    where smul c K := ⟨c • (K : Set V), K.convex.smul _, K.isCompact.smul _, K.nonempty.smul_set⟩
 
 @[simp]
 theorem coe_smul (c : ℝ) (K : ConvexBody V) : (↑(c • K) : Set V) = c • (K : Set V) :=

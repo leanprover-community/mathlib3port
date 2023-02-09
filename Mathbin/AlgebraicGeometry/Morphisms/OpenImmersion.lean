@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.open_immersion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} :
   · intro h
     exact ⟨h.1, inferInstance⟩
   · rintro ⟨h₁, h₂⟩
-    exact is_open_immersion.of_stalk_iso f h₁
+    exact IsOpenImmersion.of_stalk_iso f h₁
 #align algebraic_geometry.is_open_immersion_iff_stalk AlgebraicGeometry.isOpenImmersion_iff_stalk
 
 theorem isOpenImmersion_stableUnderComposition :
@@ -58,28 +58,25 @@ theorem isOpenImmersion_respectsIso : MorphismProperty.RespectsIso @IsOpenImmers
 theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersion :=
   by
   constructor
-  · exact is_open_immersion_respects_iso
+  · exact isOpenImmersion_respectsIso
   · intros
     infer_instance
   · intro X Y f 𝒰 H
-    rw [is_open_immersion_iff_stalk]
+    rw [isOpenImmersion_iff_stalk]
     constructor
     · apply (openEmbedding_iff_openEmbedding_of_supᵢ_eq_top 𝒰.supr_opens_range f.1.base.2).mpr
       intro i
       have :=
-        ((is_open_immersion_respects_iso.arrow_iso_iff
-                (morphism_restrict_opens_range f (𝒰.map i))).mpr
+        ((is_open_immersion_respects_iso.arrow_iso_iff (morphismRestrictOpensRange f (𝒰.map i))).mpr
             (H i)).1
-      rwa [arrow.mk_hom, morphism_restrict_val_base] at this
+      rwa [Arrow.mk_hom, morphismRestrict_val_base] at this
     · intro x
       have :=
-        arrow.iso_w
-          (morphism_restrict_stalk_map f (𝒰.map <| 𝒰.f <| f.1 x).opensRange ⟨x, 𝒰.covers _⟩)
-      dsimp only [arrow.mk_hom] at this
+        Arrow.iso_w (morphismRestrictStalkMap f (𝒰.map <| 𝒰.f <| f.1 x).opensRange ⟨x, 𝒰.covers _⟩)
+      dsimp only [Arrow.mk_hom] at this
       rw [this]
-      haveI : is_open_immersion (f ∣_ (𝒰.map <| 𝒰.f <| f.1 x).opensRange) :=
-        (is_open_immersion_respects_iso.arrow_iso_iff
-              (morphism_restrict_opens_range f (𝒰.map _))).mpr
+      haveI : IsOpenImmersion (f ∣_ (𝒰.map <| 𝒰.f <| f.1 x).opensRange) :=
+        (is_open_immersion_respects_iso.arrow_iso_iff (morphismRestrictOpensRange f (𝒰.map _))).mpr
           (H _)
       infer_instance
 #align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget

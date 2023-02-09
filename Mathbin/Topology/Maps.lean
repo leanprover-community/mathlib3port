@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.maps
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inducing.nhds_set_eq_comap Inducing.nhdsSet_eq_comapₓ'. -/
 theorem Inducing.nhdsSet_eq_comap {f : α → β} (hf : Inducing f) (s : Set α) :
     𝓝ˢ s = comap f (𝓝ˢ (f '' s)) := by
-  simp only [nhdsSet, supₛ_image, comap_supr, hf.nhds_eq_comap, supᵢ_image]
+  simp only [nhdsSet, supₛ_image, comap_supᵢ, hf.nhds_eq_comap, supᵢ_image]
 #align inducing.nhds_set_eq_comap Inducing.nhdsSet_eq_comap
 
 /- warning: inducing.map_nhds_eq -> Inducing.map_nhds_eq is a dubious translation:
@@ -694,7 +694,7 @@ theorem of_sections {f : α → β}
 #print IsOpenMap.of_inverse /-
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f')
     (r_inv : RightInverse f f') : IsOpenMap f :=
-  of_sections fun x => ⟨f', h.ContinuousAt, r_inv _, l_inv⟩
+  of_sections fun x => ⟨f', h.continuousAt, r_inv _, l_inv⟩
 #align is_open_map.of_inverse IsOpenMap.of_inverse
 -/
 
@@ -708,7 +708,7 @@ Case conversion may be inaccurate. Consider using '#align is_open_map.to_quotien
 theorem to_quotientMap {f : α → β} (open_map : IsOpenMap f) (cont : Continuous f)
     (surj : Surjective f) : QuotientMap f :=
   quotientMap_iff.2
-    ⟨surj, fun s => ⟨fun h => h.Preimage cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
+    ⟨surj, fun s => ⟨fun h => h.preimage cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
 #align is_open_map.to_quotient_map IsOpenMap.to_quotientMap
 
 /- warning: is_open_map.interior_preimage_subset_preimage_interior -> IsOpenMap.interior_preimage_subset_preimage_interior is a dubious translation:
@@ -877,7 +877,7 @@ theorem closure_image_subset {f : α → β} (hf : IsClosedMap f) (s : Set α) :
 theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv : LeftInverse f f')
     (r_inv : RightInverse f f') : IsClosedMap f := fun s hs =>
   have : f' ⁻¹' s = f '' s := by ext x <;> simp [mem_image_iff_of_inverse r_inv l_inv]
-  this ▸ hs.Preimage h
+  this ▸ hs.preimage h
 #align is_closed_map.of_inverse IsClosedMap.of_inverse
 -/
 
@@ -956,7 +956,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (IsOpenMap.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align open_embedding.is_open_map OpenEmbedding.isOpenMapₓ'. -/
 theorem OpenEmbedding.isOpenMap {f : α → β} (hf : OpenEmbedding f) : IsOpenMap f :=
-  hf.toEmbedding.to_inducing.IsOpenMap hf.open_range
+  hf.to_embedding.to_inducing.isOpenMap hf.open_range
 #align open_embedding.is_open_map OpenEmbedding.isOpenMap
 
 /- warning: open_embedding.map_nhds_eq -> OpenEmbedding.map_nhds_eq is a dubious translation:
@@ -967,7 +967,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.map_nhds_eq OpenEmbedding.map_nhds_eqₓ'. -/
 theorem OpenEmbedding.map_nhds_eq {f : α → β} (hf : OpenEmbedding f) (a : α) :
     map f (𝓝 a) = 𝓝 (f a) :=
-  hf.toEmbedding.map_nhds_of_mem _ <| hf.open_range.mem_nhds <| mem_range_self _
+  hf.to_embedding.map_nhds_of_mem _ <| hf.open_range.mem_nhds <| mem_range_self _
 #align open_embedding.map_nhds_eq OpenEmbedding.map_nhds_eq
 
 /- warning: open_embedding.open_iff_image_open -> OpenEmbedding.open_iff_image_open is a dubious translation:
@@ -978,7 +978,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.open_iff_image_open OpenEmbedding.open_iff_image_openₓ'. -/
 theorem OpenEmbedding.open_iff_image_open {f : α → β} (hf : OpenEmbedding f) {s : Set α} :
     IsOpen s ↔ IsOpen (f '' s) :=
-  ⟨hf.IsOpenMap s, fun h =>
+  ⟨hf.isOpenMap s, fun h =>
     by
     convert ← h.preimage hf.to_embedding.continuous
     apply preimage_image_eq _ hf.inj⟩
@@ -992,7 +992,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.tendsto_nhds_iff OpenEmbedding.tendsto_nhds_iffₓ'. -/
 theorem OpenEmbedding.tendsto_nhds_iff {ι : Type _} {f : ι → β} {g : β → γ} {a : Filter ι} {b : β}
     (hg : OpenEmbedding g) : Tendsto f a (𝓝 b) ↔ Tendsto (g ∘ f) a (𝓝 (g b)) :=
-  hg.toEmbedding.tendsto_nhds_iff
+  hg.to_embedding.tendsto_nhds_iff
 #align open_embedding.tendsto_nhds_iff OpenEmbedding.tendsto_nhds_iff
 
 /- warning: open_embedding.continuous -> OpenEmbedding.continuous is a dubious translation:
@@ -1002,7 +1002,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align open_embedding.continuous OpenEmbedding.continuousₓ'. -/
 theorem OpenEmbedding.continuous {f : α → β} (hf : OpenEmbedding f) : Continuous f :=
-  hf.toEmbedding.Continuous
+  hf.to_embedding.continuous
 #align open_embedding.continuous OpenEmbedding.continuous
 
 /- warning: open_embedding.open_iff_preimage_open -> OpenEmbedding.open_iff_preimage_open is a dubious translation:
@@ -1037,7 +1037,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding_iff_embedding_open openEmbedding_iff_embedding_openₓ'. -/
 theorem openEmbedding_iff_embedding_open {f : α → β} :
     OpenEmbedding f ↔ Embedding f ∧ IsOpenMap f :=
-  ⟨fun h => ⟨h.1, h.IsOpenMap⟩, fun h => openEmbedding_of_embedding_open h.1 h.2⟩
+  ⟨fun h => ⟨h.1, h.isOpenMap⟩, fun h => openEmbedding_of_embedding_open h.1 h.2⟩
 #align open_embedding_iff_embedding_open openEmbedding_iff_embedding_open
 
 /- warning: open_embedding_of_continuous_injective_open -> openEmbedding_of_continuous_injective_open is a dubious translation:
@@ -1062,7 +1062,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding_iff_continuous_injective_open openEmbedding_iff_continuous_injective_openₓ'. -/
 theorem openEmbedding_iff_continuous_injective_open {f : α → β} :
     OpenEmbedding f ↔ Continuous f ∧ Injective f ∧ IsOpenMap f :=
-  ⟨fun h => ⟨h.Continuous, h.inj, h.IsOpenMap⟩, fun h =>
+  ⟨fun h => ⟨h.continuous, h.inj, h.isOpenMap⟩, fun h =>
     openEmbedding_of_continuous_injective_open h.1 h.2.1 h.2.2⟩
 #align open_embedding_iff_continuous_injective_open openEmbedding_iff_continuous_injective_open
 
@@ -1080,7 +1080,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.comp OpenEmbedding.compₓ'. -/
 theorem OpenEmbedding.comp {g : β → γ} {f : α → β} (hg : OpenEmbedding g) (hf : OpenEmbedding f) :
     OpenEmbedding (g ∘ f) :=
-  ⟨hg.1.comp hf.1, (hg.IsOpenMap.comp hf.IsOpenMap).isOpen_range⟩
+  ⟨hg.1.comp hf.1, (hg.isOpenMap.comp hf.isOpenMap).isOpen_range⟩
 #align open_embedding.comp OpenEmbedding.comp
 
 /- warning: open_embedding.is_open_map_iff -> OpenEmbedding.isOpenMap_iff is a dubious translation:
@@ -1141,7 +1141,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closed_embedding.tendsto_nhds_iff ClosedEmbedding.tendsto_nhds_iffₓ'. -/
 theorem ClosedEmbedding.tendsto_nhds_iff {ι : Type _} {g : ι → α} {a : Filter ι} {b : α}
     (hf : ClosedEmbedding f) : Tendsto g a (𝓝 b) ↔ Tendsto (f ∘ g) a (𝓝 (f b)) :=
-  hf.toEmbedding.tendsto_nhds_iff
+  hf.to_embedding.tendsto_nhds_iff
 #align closed_embedding.tendsto_nhds_iff ClosedEmbedding.tendsto_nhds_iff
 
 /- warning: closed_embedding.continuous -> ClosedEmbedding.continuous is a dubious translation:
@@ -1151,7 +1151,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (ClosedEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (Continuous.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align closed_embedding.continuous ClosedEmbedding.continuousₓ'. -/
 theorem ClosedEmbedding.continuous (hf : ClosedEmbedding f) : Continuous f :=
-  hf.toEmbedding.Continuous
+  hf.to_embedding.continuous
 #align closed_embedding.continuous ClosedEmbedding.continuous
 
 /- warning: closed_embedding.is_closed_map -> ClosedEmbedding.isClosedMap is a dubious translation:
@@ -1161,7 +1161,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {f : α -> β}, (ClosedEmbedding.{u2, u1} α β _inst_1 _inst_2 f) -> (IsClosedMap.{u2, u1} α β _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align closed_embedding.is_closed_map ClosedEmbedding.isClosedMapₓ'. -/
 theorem ClosedEmbedding.isClosedMap (hf : ClosedEmbedding f) : IsClosedMap f :=
-  hf.toEmbedding.to_inducing.IsClosedMap hf.closed_range
+  hf.to_embedding.to_inducing.isClosedMap hf.closed_range
 #align closed_embedding.is_closed_map ClosedEmbedding.isClosedMap
 
 /- warning: closed_embedding.closed_iff_image_closed -> ClosedEmbedding.closed_iff_image_closed is a dubious translation:
@@ -1172,7 +1172,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closed_embedding.closed_iff_image_closed ClosedEmbedding.closed_iff_image_closedₓ'. -/
 theorem ClosedEmbedding.closed_iff_image_closed (hf : ClosedEmbedding f) {s : Set α} :
     IsClosed s ↔ IsClosed (f '' s) :=
-  ⟨hf.IsClosedMap s, fun h =>
+  ⟨hf.isClosedMap s, fun h =>
     by
     convert ← continuous_iff_is_closed.mp hf.continuous _ h
     apply preimage_image_eq _ hf.inj⟩
@@ -1236,7 +1236,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closed_embedding.comp ClosedEmbedding.compₓ'. -/
 theorem ClosedEmbedding.comp {g : β → γ} {f : α → β} (hg : ClosedEmbedding g)
     (hf : ClosedEmbedding f) : ClosedEmbedding (g ∘ f) :=
-  ⟨hg.toEmbedding.comp hf.toEmbedding,
+  ⟨hg.to_embedding.comp hf.to_embedding,
     show IsClosed (range (g ∘ f)) by
       rw [range_comp, ← hg.closed_iff_image_closed] <;> exact hf.closed_range⟩
 #align closed_embedding.comp ClosedEmbedding.comp
@@ -1249,8 +1249,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closed_embedding.closure_image_eq ClosedEmbedding.closure_image_eqₓ'. -/
 theorem ClosedEmbedding.closure_image_eq {f : α → β} (hf : ClosedEmbedding f) (s : Set α) :
     closure (f '' s) = f '' closure s :=
-  (hf.IsClosedMap.closure_image_subset _).antisymm
-    (image_closure_subset_closure_image hf.Continuous)
+  (hf.isClosedMap.closure_image_subset _).antisymm
+    (image_closure_subset_closure_image hf.continuous)
 #align closed_embedding.closure_image_eq ClosedEmbedding.closure_image_eq
 
 end ClosedEmbedding

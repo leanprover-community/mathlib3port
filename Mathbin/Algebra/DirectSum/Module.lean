@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ theorem linearMap_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄
 into a larger subset of the direct summands, as a linear map.
 -/
 def lsetToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, M i) →ₗ[R] ⨁ i : T, M i :=
-  toModule R _ _ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.Prop⟩
+  toModule R _ _ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.prop⟩
 #align direct_sum.lset_to_set DirectSum.lsetToSet
 
 omit dec_ι
@@ -182,7 +182,7 @@ theorem linearEquivFunOnFintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (m : 
   by
   ext a
   change (Dfinsupp.equivFunOnFintype (lof R ι M i m)) a = _
-  convert _root_.congr_fun (Dfinsupp.equivFunOnFintype_single i m) a
+  convert congr_fun (Dfinsupp.equivFunOnFintype_single i m) a
 #align direct_sum.linear_equiv_fun_on_fintype_lof DirectSum.linearEquivFunOnFintype_lof
 
 @[simp]
@@ -200,7 +200,7 @@ theorem linearEquivFunOnFintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
     (linearEquivFunOnFintype R ι M).symm f = f :=
   by
   ext
-  simp [linear_equiv_fun_on_fintype]
+  simp [linearEquivFunOnFintype]
 #align direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linearEquivFunOnFintype_symm_coe
 
 /-- The natural linear equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
@@ -276,7 +276,7 @@ variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σi, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
-  { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigmaCurry_smul _ _ _ δ _ _ _ r }
+  { sigmaCurry with map_smul' := fun r => by convert @dfinsupp.sigma_curry_smul _ _ _ δ _ _ _ r }
 #align direct_sum.sigma_lcurry DirectSum.sigmaLcurry
 
 @[simp]
@@ -342,7 +342,7 @@ variable (A : ι → Submodule R M)
 /-- The canonical embedding from `⨁ i, A i` to `M`  where `A` is a collection of `submodule R M`
 indexed by `ι`. This is `direct_sum.coe_add_monoid_hom` as a `linear_map`. -/
 def coeLinearMap : (⨁ i, A i) →ₗ[R] M :=
-  toModule R ι M fun i => (A i).Subtype
+  toModule R ι M fun i => (A i).subtype
 #align direct_sum.coe_linear_map DirectSum.coeLinearMap
 
 @[simp]
@@ -361,7 +361,7 @@ theorem IsInternal.submodule_supᵢ_eq_top (h : IsInternal A) : supᵢ A = ⊤ :
 
 /-- If a direct sum of submodules is internal then the submodules are independent. -/
 theorem IsInternal.submodule_independent (h : IsInternal A) : CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_lsum_injective _ h.Injective
+  CompleteLattice.independent_of_dfinsupp_lsum_injective _ h.injective
 #align direct_sum.is_internal.submodule_independent DirectSum.IsInternal.submodule_independent
 
 /-- Given an internal direct sum decomposition of a module `M`, and a basis for each of the
@@ -379,13 +379,13 @@ theorem IsInternal.collectedBasis_coe (h : IsInternal A) {α : ι → Type _}
     (v : ∀ i, Basis (α i) R (A i)) : ⇑(h.collectedBasis v) = fun a : Σi, α i => ↑(v a.1 a.2) :=
   by
   funext a
-  simp only [is_internal.collected_basis, to_module, coe_linear_map, [anonymous], Basis.coe_of_repr,
+  simp only [IsInternal.collectedBasis, toModule, coeLinearMap, [anonymous], Basis.coe_of_repr,
     Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linearEquiv_apply,
     Dfinsupp.mapRange.linearEquiv_symm, Dfinsupp.mapRange_single, Finsupp.total_single,
     LinearEquiv.ofBijective_apply, LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
     sigmaFinsuppAddEquivDfinsupp_apply, sigmaFinsuppEquivDfinsupp_single,
     sigmaFinsuppLequivDfinsupp_apply]
-  convert Dfinsupp.sumAddHom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)
+  convert Dfinsupp.sumAddHom_single (fun i => (A i).subtype.toAddMonoidHom) a.1 (v a.1 a.2)
 #align direct_sum.is_internal.collected_basis_coe DirectSum.IsInternal.collectedBasis_coe
 
 theorem IsInternal.collectedBasis_mem (h : IsInternal A) {α : ι → Type _}
@@ -397,7 +397,7 @@ the two submodules are complementary. Over a `ring R`, this is true as an iff, a
 `direct_sum.is_internal_iff_is_compl`. -/
 theorem IsInternal.isCompl {A : ι → Submodule R M} {i j : ι} (hij : i ≠ j)
     (h : (Set.univ : Set ι) = {i, j}) (hi : IsInternal A) : IsCompl (A i) (A j) :=
-  ⟨hi.submodule_independent.PairwiseDisjoint hij,
+  ⟨hi.submodule_independent.pairwiseDisjoint hij,
     codisjoint_iff.mpr <|
       Eq.symm <|
         hi.submodule_supᵢ_eq_top.symm.trans <| by
@@ -439,7 +439,7 @@ theorem isInternal_submodule_iff_isCompl (A : ι → Submodule R M) {i j : ι} (
     (h : (Set.univ : Set ι) = {i, j}) : IsInternal A ↔ IsCompl (A i) (A j) :=
   by
   have : ∀ k, k = i ∨ k = j := fun k => by simpa using set.ext_iff.mp h k
-  rw [is_internal_submodule_iff_independent_and_supr_eq_top, supᵢ, ← Set.image_univ, h,
+  rw [isInternal_submodule_iff_independent_and_supᵢ_eq_top, supᵢ, ← Set.image_univ, h,
     Set.image_insert_eq, Set.image_singleton, supₛ_pair, CompleteLattice.independent_pair hij this]
   exact ⟨fun ⟨hd, ht⟩ => ⟨hd, codisjoint_iff.mpr ht⟩, fun ⟨hd, ht⟩ => ⟨hd, ht.eq_top⟩⟩
 #align direct_sum.is_internal_submodule_iff_is_compl DirectSum.isInternal_submodule_iff_isCompl
@@ -449,12 +449,12 @@ theorem isInternal_submodule_iff_isCompl (A : ι → Submodule R M) {i j : ι} (
 
 theorem IsInternal.addSubmonoid_independent {M : Type _} [AddCommMonoid M] {A : ι → AddSubmonoid M}
     (h : IsInternal A) : CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_sumAddHom_injective _ h.Injective
+  CompleteLattice.independent_of_dfinsupp_sumAddHom_injective _ h.injective
 #align direct_sum.is_internal.add_submonoid_independent DirectSum.IsInternal.addSubmonoid_independent
 
 theorem IsInternal.addSubgroup_independent {M : Type _} [AddCommGroup M] {A : ι → AddSubgroup M}
     (h : IsInternal A) : CompleteLattice.Independent A :=
-  CompleteLattice.independent_of_dfinsupp_sumAddHom_injective' _ h.Injective
+  CompleteLattice.independent_of_dfinsupp_sumAddHom_injective' _ h.injective
 #align direct_sum.is_internal.add_subgroup_independent DirectSum.IsInternal.addSubgroup_independent
 
 end Ring

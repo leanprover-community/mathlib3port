@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.preprocessing
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -283,8 +283,8 @@ unsafe def cancel_denoms : preprocessor
           then
           do let s ← find_squares s e1 return ( s ( e1 , ff ) )
           else
-          e . foldlM find_squares s
-      | s , e => e . foldlM find_squares s
+          e . mfoldl find_squares s
+      | s , e => e . mfoldl find_squares s
 #align linarith.find_squares linarith.find_squares
 
 /-- `nlinarith_extras` is the preprocessor corresponding to the `nlinarith` tactic.
@@ -313,7 +313,7 @@ unsafe def nlinarith_extras : global_preprocessor
     let with_comps ←
       (new_es ++ ls).mapM fun e => do
           let tp ← infer_type e
-          return <| (parse_into_comp_and_expr tp).elim (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
+          return <| (parse_into_comp_and_expr tp).elim' (ineq.lt, e) fun ⟨ine, _⟩ => (ine, e)
     let products ←
       with_comps.mapDiagM fun ⟨posa, a⟩ ⟨posb, b⟩ =>
           (some <$>
@@ -347,7 +347,7 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
       let do_goal : expr → tactic (List branch) := fun g => do
           set_goals [g]
           let h ← intro1
-          let ls ← remove_ne_aux <| hs.removeAllₓ [e]
+          let ls ← remove_ne_aux <| hs.removeAll [e]
           return <| ls fun b : branch => (b.1, h :: b.2)
         (· ++ ·) <$> do_goal ng1 <*> do_goal ng2) <|>
     do
@@ -381,7 +381,7 @@ so the size of the list may change.
 unsafe def preprocess (pps : List global_branching_preprocessor) (l : List expr) :
     tactic (List branch) := do
   let g ← get_goal
-  pps (fun ls pp => List.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
+  pps (fun ls pp => list.join <$> ls fun b => set_goals [b.1] >> pp b.2) [(g, l)]
 #align linarith.preprocess linarith.preprocess
 
 end Linarith

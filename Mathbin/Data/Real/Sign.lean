@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.real.sign
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ lean 3 declaration is
 but is expected to have type
   forall {r : Real}, (LT.lt.{0} Real Real.instLTReal r (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) -> (Eq.{1} Real (Real.sign r) (Neg.neg.{0} Real Real.instNegReal (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))))
 Case conversion may be inaccurate. Consider using '#align real.sign_of_neg Real.sign_of_negₓ'. -/
-theorem sign_of_neg {r : ℝ} (hr : r < 0) : sign r = -1 := by rw [SignType.sign, if_pos hr]
+theorem sign_of_neg {r : ℝ} (hr : r < 0) : sign r = -1 := by rw [sign, if_pos hr]
 #align real.sign_of_neg Real.sign_of_neg
 
 /- warning: real.sign_of_pos -> Real.sign_of_pos is a dubious translation:
@@ -56,8 +56,7 @@ lean 3 declaration is
 but is expected to have type
   forall {r : Real}, (LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) r) -> (Eq.{1} Real (Real.sign r) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal)))
 Case conversion may be inaccurate. Consider using '#align real.sign_of_pos Real.sign_of_posₓ'. -/
-theorem sign_of_pos {r : ℝ} (hr : 0 < r) : sign r = 1 := by
-  rw [SignType.sign, if_pos hr, if_neg hr.not_lt]
+theorem sign_of_pos {r : ℝ} (hr : 0 < r) : sign r = 1 := by rw [sign, if_pos hr, if_neg hr.not_lt]
 #align real.sign_of_pos Real.sign_of_pos
 
 /- warning: real.sign_zero -> Real.sign_zero is a dubious translation:
@@ -67,7 +66,7 @@ but is expected to have type
   Eq.{1} Real (Real.sign (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
 Case conversion may be inaccurate. Consider using '#align real.sign_zero Real.sign_zeroₓ'. -/
 @[simp]
-theorem sign_zero : sign 0 = 0 := by rw [SignType.sign, if_neg (lt_irrefl _), if_neg (lt_irrefl _)]
+theorem sign_zero : sign 0 = 0 := by rw [sign, if_neg (lt_irrefl _), if_neg (lt_irrefl _)]
 #align real.sign_zero Real.sign_zero
 
 /- warning: real.sign_one -> Real.sign_one is a dubious translation:

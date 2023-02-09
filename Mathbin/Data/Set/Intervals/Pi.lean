@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{u2} ι} [_inst_2 : forall (j : ι), Decidable (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) j s)] {f₁ : forall (i : ι), α i} {f₂ : forall (i : ι), α i} {g₁ : forall (i : ι), α i} {g₂ : forall (i : ι), α i}, (forall (i : ι), (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s) -> (Membership.mem.{u1, u1} (α i) (Set.{u1} (α i)) (Set.instMembershipSet.{u1} (α i)) (f₁ i) (Set.Icc.{u1} (α i) (_inst_1 i) (g₁ i) (g₂ i)))) -> (forall (i : ι), (Not (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i s)) -> (Membership.mem.{u1, u1} (α i) (Set.{u1} (α i)) (Set.instMembershipSet.{u1} (α i)) (f₂ i) (Set.Icc.{u1} (α i) (_inst_1 i) (g₁ i) (g₂ i)))) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) (Set.piecewise.{u2, succ u1} ι (fun (i : ι) => α i) s f₁ f₂ (fun (j : ι) => _inst_2 j)) (Set.Icc.{max u2 u1} (forall (i : ι), α i) (Pi.preorder.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) g₁ g₂))
 Case conversion may be inaccurate. Consider using '#align set.piecewise_mem_Icc Set.piecewise_mem_Iccₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem piecewise_mem_Icc {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g₁ g₂ : ∀ i, α i}
     (h₁ : ∀ i ∈ s, f₁ i ∈ Icc (g₁ i) (g₂ i)) (h₂ : ∀ (i) (_ : i ∉ s), f₂ i ∈ Icc (g₁ i) (g₂ i)) :
     s.piecewise f₁ f₂ ∈ Icc g₁ g₂ :=
@@ -200,7 +200,7 @@ theorem pi_univ_Ioc_update_union (x y : ∀ i, α i) (i₀ : ι) (m : α i₀) (
       pi univ fun i => Ioc (x i) (y i) :=
   by
   simp_rw [pi_univ_Ioc_update_left hm.1, pi_univ_Ioc_update_right hm.2, ← union_inter_distrib_right,
-    ← set_of_or, le_or_lt, set_of_true, univ_inter]
+    ← setOf_or, le_or_lt, setOf_true, univ_inter]
 #align set.pi_univ_Ioc_update_union Set.pi_univ_Ioc_update_union
 
 /- warning: set.Icc_diff_pi_univ_Ioo_subset -> Set.Icc_diff_pi_univ_Ioo_subset is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.list.zip
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ Case conversion may be inaccurate. Consider using '#align list.length_zip_with L
 theorem length_zipWith (f : α → β → γ) :
     ∀ (l₁ : List α) (l₂ : List β), length (zipWith f l₁ l₂) = min (length l₁) (length l₂)
   | [], l₂ => rfl
-  | l₁, [] => by simp only [length, min_zero, zip_with_nil_right]
+  | l₁, [] => by simp only [length, min_zero, zipWith_nil_right]
   | a :: l₁, b :: l₂ => by simp [length, zip_cons_cons, length_zip_with l₁ l₂, min_add_add_right]
 #align list.length_zip_with List.length_zipWith
 
@@ -179,7 +179,7 @@ Case conversion may be inaccurate. Consider using '#align list.lt_length_left_of
 theorem lt_length_left_of_zipWith {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
     (h : i < (zipWith f l l').length) : i < l.length :=
   by
-  rw [length_zip_with, lt_min_iff] at h
+  rw [length_zipWith, lt_min_iff] at h
   exact h.left
 #align list.lt_length_left_of_zip_with List.lt_length_left_of_zipWith
 
@@ -192,7 +192,7 @@ Case conversion may be inaccurate. Consider using '#align list.lt_length_right_o
 theorem lt_length_right_of_zipWith {f : α → β → γ} {i : ℕ} {l : List α} {l' : List β}
     (h : i < (zipWith f l l').length) : i < l'.length :=
   by
-  rw [length_zip_with, lt_min_iff] at h
+  rw [length_zipWith, lt_min_iff] at h
   exact h.right
 #align list.lt_length_right_of_zip_with List.lt_length_right_of_zipWith
 
@@ -291,7 +291,7 @@ Case conversion may be inaccurate. Consider using '#align list.zip_with_map_left
 theorem zipWith_map_left (f : α → β → γ) (g : δ → α) (l : List δ) (l' : List β) :
     zipWith f (l.map g) l' = zipWith (f ∘ g) l l' :=
   by
-  convert zip_with_map f g id l l'
+  convert zipWith_map f g id l l'
   exact Eq.symm (List.map_id _)
 #align list.zip_with_map_left List.zipWith_map_left
 
@@ -343,9 +343,8 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {a : α} {b : β} {l₁ : List.{u2} α} {l₂ : List.{u1} β}, (Membership.mem.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (List.{max u1 u2} (Prod.{u2, u1} α β)) (List.instMembershipList.{max u1 u2} (Prod.{u2, u1} α β)) (Prod.mk.{u2, u1} α β a b) (List.zip.{u2, u1} α β l₁ l₂)) -> (And (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l₁) (Membership.mem.{u1, u1} β (List.{u1} β) (List.instMembershipList.{u1} β) b l₂))
 Case conversion may be inaccurate. Consider using '#align list.mem_zip List.mem_zipₓ'. -/
 theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zip l₁ l₂ → a ∈ l₁ ∧ b ∈ l₂
-  | _ :: l₁, _ :: l₂, Or.inl rfl => ⟨Or.inl rfl, Or.inl rfl⟩
-  | a' :: l₁, b' :: l₂, Or.inr h => by
-    constructor <;> simp only [mem_cons_iff, or_true_iff, mem_zip h]
+  | _ :: l₁, _ :: l₂, or.inl rfl => ⟨Or.inl rfl, Or.inl rfl⟩
+  | a' :: l₁, b' :: l₂, or.inr h => by constructor <;> simp only [mem_cons, or_true_iff, mem_zip h]
 #align list.mem_zip List.mem_zip
 
 /- warning: list.map_fst_zip -> List.map_fst_zip is a dubious translation:
@@ -442,7 +441,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (l : List.{max u1 u2} (Prod.{u2, u1} α β)), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} (List.{u1} β) (List.{u2} α)) (List.unzip.{u1, u2} β α (List.map.{max u1 u2, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β) l)) (Prod.swap.{u2, u1} (List.{u2} α) (List.{u1} β) (List.unzip.{u2, u1} α β l))
 Case conversion may be inaccurate. Consider using '#align list.unzip_swap List.unzip_swapₓ'. -/
-theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).symm := by
+theorem unzip_swap (l : List (α × β)) : unzip (l.map Prod.swap) = (unzip l).swap := by
   simp only [unzip_eq_map, map_map] <;> constructor <;> rfl
 #align list.unzip_swap List.unzip_swap
 
@@ -490,7 +489,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.unzip_zip List.unzip_zipₓ'. -/
 theorem unzip_zip {l₁ : List α} {l₂ : List β} (h : length l₁ = length l₂) :
     unzip (zip l₁ l₂) = (l₁, l₂) := by
-  rw [← @Prod.mk.eta _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eq h),
+  rw [← @prod.mk.eta _ _ (unzip (zip l₁ l₂)), unzip_zip_left (le_of_eq h),
     unzip_zip_right (ge_of_eq h)]
 #align list.unzip_zip List.unzip_zip
 
@@ -569,7 +568,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.zip_with_comm_of_comm List.zipWith_comm_of_commₓ'. -/
 theorem zipWith_comm_of_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x) (l l' : List α) :
     zipWith f l l' = zipWith f l' l := by
-  rw [zip_with_comm]
+  rw [zipWith_comm]
   simp only [comm]
 #align list.zip_with_comm_of_comm List.zipWith_comm_of_comm
 
@@ -709,10 +708,10 @@ theorem get?_zip_with (f : α → β → γ) (l₁ : List α) (l₂ : List β) (
     (zipWith f l₁ l₂).get? i = ((l₁.get? i).map f).bind fun g => (l₂.get? i).map g :=
   by
   induction l₁ generalizing l₂ i
-  · simp [zip_with, (· <*> ·)]
-  · cases l₂ <;> simp only [zip_with, Seq.seq, Functor.map, nth, Option.map_none']
+  · simp [zipWith, (· <*> ·)]
+  · cases l₂ <;> simp only [zipWith, has_seq.seq, functor.map, get?, Option.map_none']
     · cases (l₁_hd :: l₁_tl).get? i <;> rfl
-    · cases i <;> simp only [Option.map_some', nth, Option.some_bind', *]
+    · cases i <;> simp only [Option.map_some', get?, Option.some_bind', *]
 #align list.nth_zip_with List.get?_zip_with
 
 /- warning: list.nth_zip_with_eq_some -> List.get?_zip_with_eq_some is a dubious translation:
@@ -726,8 +725,8 @@ theorem get?_zip_with_eq_some {α β γ} (f : α → β → γ) (l₁ : List α)
       ∃ x y, l₁.get? i = some x ∧ l₂.get? i = some y ∧ f x y = z :=
   by
   induction l₁ generalizing l₂ i
-  · simp [zip_with]
-  · cases l₂ <;> simp only [zip_with, nth, exists_false, and_false_iff, false_and_iff]
+  · simp [zipWith]
+  · cases l₂ <;> simp only [zipWith, get?, exists_false, and_false_iff, false_and_iff]
     cases i <;> simp [*]
 #align list.nth_zip_with_eq_some List.get?_zip_with_eq_some
 
@@ -741,7 +740,7 @@ theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : �
     (zip l₁ l₂).get? i = some z ↔ l₁.get? i = some z.1 ∧ l₂.get? i = some z.2 :=
   by
   cases z
-  rw [zip, nth_zip_with_eq_some]; constructor
+  rw [zip, get?_zip_with_eq_some]; constructor
   · rintro ⟨x, y, h₀, h₁, h₂⟩
     cc
   · rintro ⟨h₀, h₁⟩
@@ -760,11 +759,11 @@ theorem nthLe_zipWith {f : α → β → γ} {l : List α} {l' : List β} {i : �
     (zipWith f l l').nthLe i h =
       f (l.nthLe i (lt_length_left_of_zipWith h)) (l'.nthLe i (lt_length_right_of_zipWith h)) :=
   by
-  rw [← Option.some_inj, ← nth_le_nth, nth_zip_with_eq_some]
+  rw [← Option.some_inj, ← nthLe_get?, get?_zip_with_eq_some]
   refine'
-    ⟨l.nth_le i (lt_length_left_of_zip_with h), l'.nth_le i (lt_length_right_of_zip_with h),
-      nth_le_nth _, _⟩
-  simp only [← nth_le_nth, eq_self_iff_true, and_self_iff]
+    ⟨l.nth_le i (lt_length_left_of_zipWith h), l'.nth_le i (lt_length_right_of_zipWith h),
+      nthLe_get? _, _⟩
+  simp only [← nthLe_get?, eq_self_iff_true, and_self_iff]
 #align list.nth_le_zip_with List.nthLe_zipWith
 
 /- warning: list.nth_le_zip -> List.nthLe_zip is a dubious translation:
@@ -786,7 +785,7 @@ theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
   by
   induction l generalizing init tail <;> simp_rw [tails, inits, zip_cons_cons]
   · simp
-  · constructor <;> rw [mem_cons_iff, zip_map_left, mem_map, Prod.exists]
+  · constructor <;> rw [mem_cons, zip_map_left, mem_map', Prod.exists]
     · rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
       · simp
       · simp [l_ih.mp h]
@@ -823,7 +822,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.sum_zip_with_distrib_left List.sum_zipWith_distrib_leftₓ'. -/
 @[simp]
 theorem sum_zipWith_distrib_left {γ : Type _} [Semiring γ] (f : α → β → γ) (n : γ) (l : List α)
-    (l' : List β) : (l.zipWith (fun x y => n * f x y) l').Sum = n * (l.zipWith f l').Sum :=
+    (l' : List β) : (l.zipWith (fun x y => n * f x y) l').sum = n * (l.zipWith f l').sum :=
   by
   induction' l with hd tl hl generalizing f n l'
   · simp
@@ -880,7 +879,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (f : α -> β -> γ) (l : List.{u3} α) (l' : List.{u1} β), Eq.{succ u2} (List.{u2} γ) (List.tail.{u2} γ (List.zipWith.{u3, u1, u2} α β γ f l l')) (List.zipWith.{u3, u1, u2} α β γ f (List.tail.{u3} α l) (List.tail.{u1} β l'))
 Case conversion may be inaccurate. Consider using '#align list.zip_with_distrib_tail List.zipWith_distrib_tailₓ'. -/
 theorem zipWith_distrib_tail : (zipWith f l l').tail = zipWith f l.tail l'.tail := by
-  simp_rw [← drop_one, zip_with_distrib_drop]
+  simp_rw [← drop_one, zipWith_distrib_drop]
 #align list.zip_with_distrib_tail List.zipWith_distrib_tail
 
 /- warning: list.zip_with_append -> List.zipWith_append is a dubious translation:
@@ -916,7 +915,7 @@ theorem zipWith_distrib_reverse (h : l.length = l'.length) :
     · simp
     · simp only [add_left_inj, length] at h
       have : tl.reverse.length = tl'.reverse.length := by simp [h]
-      simp [hl _ h, zip_with_append _ _ _ _ _ this]
+      simp [hl _ h, zipWith_append _ _ _ _ _ this]
 #align list.zip_with_distrib_reverse List.zipWith_distrib_reverse
 
 end Distrib
@@ -934,13 +933,13 @@ Case conversion may be inaccurate. Consider using '#align list.prod_mul_prod_eq_
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zipWith_mul_prod_drop :
     ∀ L L' : List α,
-      L.Prod * L'.Prod =
-        (zipWith (· * ·) L L').Prod * (L.drop L'.length).Prod * (L'.drop L.length).Prod
+      L.prod * L'.prod =
+        (zipWith (· * ·) L L').prod * (L.drop L'.length).prod * (L'.drop L.length).prod
   | [], ys => by simp [Nat.zero_le]
   | xs, [] => by simp [Nat.zero_le]
   | x :: xs, y :: ys =>
     by
-    simp only [drop, length, zip_with_cons_cons, prod_cons]
+    simp only [drop, length, zipWith_cons_cons, prod_cons]
     rw [mul_assoc x, mul_comm xs.prod, mul_assoc y, mul_comm ys.prod,
       prod_mul_prod_eq_prod_zip_with_mul_prod_drop xs ys, mul_assoc, mul_assoc, mul_assoc,
       mul_assoc]
@@ -955,7 +954,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_mul_prod_eq_prod_zip_with_of_length_eq List.prod_mul_prod_eq_prod_zipWith_of_length_eqₓ'. -/
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zipWith_of_length_eq (L L' : List α) (h : L.length = L'.length) :
-    L.Prod * L'.Prod = (zipWith (· * ·) L L').Prod :=
+    L.prod * L'.prod = (zipWith (· * ·) L L').prod :=
   (prod_mul_prod_eq_prod_zipWith_mul_prod_drop L L').trans (by simp [h])
 #align list.prod_mul_prod_eq_prod_zip_with_of_length_eq List.prod_mul_prod_eq_prod_zipWith_of_length_eq
 #align list.sum_add_sum_eq_sum_zip_with_of_length_eq List.sum_add_sum_eq_sum_zipWith_of_length_eq

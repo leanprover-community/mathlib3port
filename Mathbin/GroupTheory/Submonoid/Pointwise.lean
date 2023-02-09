@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ theorem mem_inv {g : G} {S : Submonoid G} : g ∈ S⁻¹ ↔ g⁻¹ ∈ S :=
 
 @[to_additive]
 instance : InvolutiveInv (Submonoid G) :=
-  SetLike.coe_injective.InvolutiveInv _ fun _ => rfl
+  SetLike.coe_injective.involutiveInv _ fun _ => rfl
 
 /- warning: submonoid.inv_le_inv -> Submonoid.inv_le_inv is a dubious translation:
 lean 3 declaration is

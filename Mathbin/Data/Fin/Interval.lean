@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fin.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Icc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b) (Finset.fin n (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Icc_eq_finset_subtype Fin.Icc_eq_finset_subtypeₓ'. -/
-theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Fin n :=
+theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).fin n :=
   rfl
 #align fin.Icc_eq_finset_subtype Fin.Icc_eq_finset_subtype
 
@@ -58,7 +58,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ico.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b) (Finset.fin n (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Ico_eq_finset_subtype Fin.Ico_eq_finset_subtypeₓ'. -/
-theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).Fin n :=
+theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).fin n :=
   rfl
 #align fin.Ico_eq_finset_subtype Fin.Ico_eq_finset_subtype
 
@@ -68,7 +68,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ioc.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b) (Finset.fin n (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Ioc_eq_finset_subtype Fin.Ioc_eq_finset_subtypeₓ'. -/
-theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).Fin n :=
+theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).fin n :=
   rfl
 #align fin.Ioc_eq_finset_subtype Fin.Ioc_eq_finset_subtype
 
@@ -78,7 +78,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n) (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ioo.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderFinToPreorderInstPartialOrderFin n) a b) (Finset.fin n (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtypeₓ'. -/
-theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Fin n :=
+theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).fin n :=
   rfl
 #align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtype
 
@@ -220,7 +220,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ici.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a) (Finset.fin n (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) n))
 Case conversion may be inaccurate. Consider using '#align fin.Ici_eq_finset_subtype Fin.Ici_eq_finset_subtypeₓ'. -/
-theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).Fin n :=
+theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).fin n :=
   by
   ext
   simp
@@ -232,7 +232,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (a : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Ioi.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instForAllNatLocallyFiniteOrderTopFinToPreorderInstPartialOrderFin n) a) (Finset.fin n (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (Fin.val n a) n))
 Case conversion may be inaccurate. Consider using '#align fin.Ioi_eq_finset_subtype Fin.Ioi_eq_finset_subtypeₓ'. -/
-theorem Ioi_eq_finset_subtype : Ioi a = (Ioc (a : ℕ) n).Fin n :=
+theorem Ioi_eq_finset_subtype : Ioi a = (Ioc (a : ℕ) n).fin n :=
   by
   ext
   simp
@@ -244,7 +244,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Iic.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderBotFinToPreorderInstPartialOrderFin n) b) (Finset.fin n (Finset.Iic.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Iic_eq_finset_subtype Fin.Iic_eq_finset_subtypeₓ'. -/
-theorem Iic_eq_finset_subtype : Iic b = (Iic (b : ℕ)).Fin n :=
+theorem Iic_eq_finset_subtype : Iic b = (Iic (b : ℕ)).fin n :=
   rfl
 #align fin.Iic_eq_finset_subtype Fin.Iic_eq_finset_subtype
 
@@ -254,7 +254,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Nat} (b : Fin n), Eq.{1} (Finset.{0} (Fin n)) (Finset.Iio.{0} (Fin n) (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) (instLocallyFiniteOrderBotFinToPreorderInstPartialOrderFin n) b) (Finset.fin n (Finset.Iio.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) (Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) Nat.orderBot instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring) (Fin.val n b)))
 Case conversion may be inaccurate. Consider using '#align fin.Iio_eq_finset_subtype Fin.Iio_eq_finset_subtypeₓ'. -/
-theorem Iio_eq_finset_subtype : Iio b = (Iio (b : ℕ)).Fin n :=
+theorem Iio_eq_finset_subtype : Iio b = (Iio (b : ℕ)).fin n :=
   rfl
 #align fin.Iio_eq_finset_subtype Fin.Iio_eq_finset_subtype
 
@@ -268,7 +268,7 @@ Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedd
 theorem map_subtype_embedding_Ici : (Ici a).map Fin.valEmbedding = Icc a (n - 1) :=
   by
   ext x
-  simp only [exists_prop, embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
+  simp only [exists_prop, Embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩
@@ -287,7 +287,7 @@ Case conversion may be inaccurate. Consider using '#align fin.map_subtype_embedd
 theorem map_subtype_embedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc a (n - 1) :=
   by
   ext x
-  simp only [exists_prop, embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
+  simp only [exists_prop, Embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
   · rintro ⟨x, hx, rfl⟩
     exact ⟨hx, le_tsub_of_add_le_right <| x.2⟩

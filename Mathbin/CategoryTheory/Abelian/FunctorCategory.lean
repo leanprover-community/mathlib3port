@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.abelian.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,8 @@ def coimageObjIso : (Abelian.coimage α).obj X ≅ Abelian.coimage (α.app X) :=
     cokernel.mapIso _ _ (PreservesKernel.iso ((evaluation C D).obj X) _) (Iso.refl _)
       (by
         dsimp
-        simp only [category.comp_id]
-        exact (kernel_comparison_comp_ι _ ((evaluation C D).obj X)).symm)
+        simp only [Category.comp_id]
+        exact (kernelComparison_comp_ι _ ((evaluation C D).obj X)).symm)
 #align category_theory.abelian.functor_category.coimage_obj_iso CategoryTheory.Abelian.FunctorCategory.coimageObjIso
 
 /-- The abelian image in a functor category can be calculated componentwise. -/
@@ -56,44 +56,44 @@ def imageObjIso : (Abelian.image α).obj X ≅ Abelian.image (α.app X) :=
   PreservesKernel.iso ((evaluation C D).obj X) _ ≪≫
     kernel.mapIso _ _ (Iso.refl _) (PreservesCokernel.iso ((evaluation C D).obj X) _)
       (by
-        apply (cancel_mono (preserves_cokernel.iso ((evaluation C D).obj X) α).inv).1
-        simp only [category.assoc, iso.hom_inv_id]
+        apply (cancel_mono (PreservesCokernel.iso ((evaluation C D).obj X) α).inv).1
+        simp only [Category.assoc, Iso.hom_inv_id]
         dsimp
-        simp only [category.id_comp, category.comp_id]
-        exact (π_comp_cokernel_comparison _ ((evaluation C D).obj X)).symm)
+        simp only [Category.id_comp, Category.comp_id]
+        exact (π_comp_cokernelComparison _ ((evaluation C D).obj X)).symm)
 #align category_theory.abelian.functor_category.image_obj_iso CategoryTheory.Abelian.FunctorCategory.imageObjIso
 
 theorem coimageImageComparison_app :
     coimageImageComparison (α.app X) =
-      (coimage_obj_iso α X).inv ≫ (coimageImageComparison α).app X ≫ (image_obj_iso α X).Hom :=
+      (coimage_obj_iso α X).inv ≫ (coimageImageComparison α).app X ≫ (image_obj_iso α X).hom :=
   by
   ext
   dsimp
-  simp only [category.comp_id, category.id_comp, category.assoc, coimage_image_factorisation,
-    limits.cokernel.π_desc_assoc, limits.kernel.lift_ι]
+  simp only [Category.comp_id, Category.id_comp, Category.assoc, coimage_image_factorisation,
+    Limits.cokernel.π_desc_assoc, Limits.kernel.lift_ι]
   simp only [← evaluation_obj_map C D X]
-  erw [kernel_comparison_comp_ι _ ((evaluation C D).obj X)]
-  erw [π_comp_cokernel_comparison_assoc _ ((evaluation C D).obj X)]
-  simp only [← functor.map_comp]
+  erw [kernelComparison_comp_ι _ ((evaluation C D).obj X)]
+  erw [π_comp_cokernelComparison_assoc _ ((evaluation C D).obj X)]
+  simp only [← Functor.map_comp]
   simp only [coimage_image_factorisation, evaluation_obj_map]
 #align category_theory.abelian.functor_category.coimage_image_comparison_app CategoryTheory.Abelian.FunctorCategory.coimageImageComparison_app
 
 theorem coimageImageComparison_app' :
     (coimageImageComparison α).app X =
-      (coimage_obj_iso α X).Hom ≫ coimageImageComparison (α.app X) ≫ (image_obj_iso α X).inv :=
+      (coimage_obj_iso α X).hom ≫ coimageImageComparison (α.app X) ≫ (image_obj_iso α X).inv :=
   by
-  simp only [coimage_image_comparison_app, iso.hom_inv_id_assoc, iso.hom_inv_id, category.assoc,
-    category.comp_id]
+  simp only [coimageImageComparison_app, Iso.hom_inv_id_assoc, Iso.hom_inv_id, Category.assoc,
+    Category.comp_id]
 #align category_theory.abelian.functor_category.coimage_image_comparison_app' CategoryTheory.Abelian.FunctorCategory.coimageImageComparison_app'
 
 instance functor_category_isIso_coimageImageComparison : IsIso (Abelian.coimageImageComparison α) :=
   by
-  have : ∀ X : C, is_iso ((abelian.coimage_image_comparison α).app X) :=
+  have : ∀ X : C, IsIso ((Abelian.coimageImageComparison α).app X) :=
     by
     intros
-    rw [coimage_image_comparison_app']
+    rw [coimageImageComparison_app']
     infer_instance
-  apply nat_iso.is_iso_of_is_iso_app
+  apply NatIso.isIso_of_isIso_app
 #align category_theory.abelian.functor_category.functor_category_is_iso_coimage_image_comparison CategoryTheory.Abelian.FunctorCategory.functor_category_isIso_coimageImageComparison
 
 end FunctorCategory

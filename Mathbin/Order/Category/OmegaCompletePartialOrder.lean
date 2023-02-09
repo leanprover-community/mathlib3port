@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.category.omega_complete_partial_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ def product {J : Type v} (f : J → ωCPO.{v}) : Fan f :=
 def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f)
     where
   lift s :=
-    ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).Monotone h⟩, fun x =>
-      funext fun j => (s.π.app ⟨j⟩).Continuous x⟩
+    ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).monotone h⟩, fun x =>
+      funext fun j => (s.π.app ⟨j⟩).continuous x⟩
   uniq' s m w := by
     ext (t j)
     change m t j = s.π.app ⟨j⟩ t
@@ -130,14 +130,14 @@ def equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : Fork f g :=
 /-- The equalizer fork is a limit. -/
 def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
   Fork.IsLimit.mk' _ fun s =>
-    ⟨{  toFun := fun x => ⟨s.ι x, by apply continuous_hom.congr_fun s.condition⟩
-        monotone' := fun x y h => s.ι.Monotone h
-        cont := fun x => Subtype.ext (s.ι.Continuous x) },
+    ⟨{  toFun := fun x => ⟨s.ι x, by apply ContinuousHom.congr_fun s.condition⟩
+        monotone' := fun x y h => s.ι.monotone h
+        cont := fun x => Subtype.ext (s.ι.continuous x) },
       by
       ext
       rfl, fun m hm => by
       ext
-      apply continuous_hom.congr_fun hm⟩
+      apply ContinuousHom.congr_fun hm⟩
 #align ωCPO.has_equalizers.is_equalizer ωCPO.HasEqualizers.isEqualizer
 
 end HasEqualizers

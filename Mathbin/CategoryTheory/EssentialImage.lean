@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.essential_image
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ def essImage (F : C ⥤ D) : Set D := fun Y => ∃ X : C, Nonempty (F.obj X ≅ 
 #print CategoryTheory.Functor.essImage.witness /-
 /-- Get the witnessing object that `Y` is in the subcategory given by `F`. -/
 def essImage.witness {Y : D} (h : Y ∈ F.essImage) : C :=
-  h.some
+  h.choose
 #align category_theory.functor.ess_image.witness CategoryTheory.Functor.essImage.witness
 -/
 
@@ -189,8 +189,8 @@ instance Faithful.toEssImage (F : C ⥤ D) [Faithful F] : Faithful F.toEssImage 
 #print CategoryTheory.Full.toEssImage /-
 /-- The induced functor of a full functor is full -/
 instance Full.toEssImage (F : C ⥤ D) [Full F] : Full F.toEssImage :=
-  haveI := full.of_iso F.to_ess_image_comp_essential_image_inclusion.symm
-  full.of_comp_faithful F.to_ess_image F.ess_image_inclusion
+  haveI := Full.ofIso F.to_ess_image_comp_essential_image_inclusion.symm
+  Full.ofCompFaithful F.to_ess_image F.ess_image_inclusion
 #align category_theory.full.to_ess_image CategoryTheory.Full.toEssImage
 -/
 

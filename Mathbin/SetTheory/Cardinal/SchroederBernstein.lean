@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.schroeder_bernstein
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   by
   cases' isEmpty_or_nonempty β with hβ hβ
   · have : IsEmpty α := Function.isEmpty f
-    exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).Bijective⟩
+    exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).bijective⟩
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ
       monotone' := fun s t hst =>
@@ -63,12 +63,12 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   set s : Set α := F.lfp
   have hs : (g '' (f '' s)ᶜ)ᶜ = s := F.map_lfp
   have hns : g '' (f '' s)ᶜ = sᶜ := compl_injective (by simp [hs])
-  set g' := inv_fun g
-  have g'g : left_inverse g' g := left_inverse_inv_fun hg
+  set g' := invFun g
+  have g'g : LeftInverse g' g := leftInverse_invFun hg
   have hg'ns : g' '' sᶜ = (f '' s)ᶜ := by rw [← hns, g'g.image_image]
   set h : α → β := s.piecewise f g'
-  have : surjective h := by rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
-  have : injective h :=
+  have : Surjective h := by rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
+  have : Injective h :=
     by
     refine' (injective_piecewise_iff _).2 ⟨hf.inj_on _, _, _⟩
     · intro x hx y hy hxy
@@ -80,7 +80,7 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
       obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
       rw [g'g _] at hxy
       exact hy' ⟨x, hx, hxy⟩
-  exact ⟨h, ‹injective h›, ‹surjective h›⟩
+  exact ⟨h, ‹Injective h›, ‹Surjective h›⟩
 #align function.embedding.schroeder_bernstein Function.Embedding.schroeder_bernstein
 -/
 
@@ -114,7 +114,7 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
     show ∃ s ∈ sets, ∀ a ∈ sets, s ⊆ a → a = s from
       zorn_subset sets fun c hc hcc =>
         ⟨⋃₀ c, fun x ⟨p, hpc, hxp⟩ y ⟨q, hqc, hyq⟩ i hi =>
-          (hcc.Total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h =>
+          (hcc.total hpc hqc).elim (fun h => hc hqc x (h hxp) y hyq i hi) fun h =>
             hc hpc x hxp y (h hyq) i hi,
           fun _ => subset_unionₛ_of_mem⟩
   let ⟨i, e⟩ :=

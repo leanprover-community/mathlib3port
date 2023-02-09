@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module logic.equiv.embedding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,8 +41,8 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
   invFun := fun ⟨⟨f, g⟩, disj⟩ =>
     ⟨fun x =>
       match x with
-      | Sum.inl a => f a
-      | Sum.inr b => g b,
+      | sum.inl a => f a
+      | sum.inr b => g b,
       by
       rintro (a₁ | b₁) (a₂ | b₂) f_eq <;>
         simp only [Equiv.coe_fn_symm_mk, Sum.elim_inl, Sum.elim_inr] at f_eq
@@ -69,8 +69,8 @@ def sumEmbeddingEquivProdEmbeddingDisjoint {α β γ : Type _} :
 This is `function.embedding.cod_restrict` as an equiv. -/
 def codRestrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // ∀ a, f a ∈ bs } ≃ (α ↪ bs)
     where
-  toFun f := (f : α ↪ β).codRestrict bs f.Prop
-  invFun f := ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).Prop⟩
+  toFun f := (f : α ↪ β).codRestrict bs f.prop
+  invFun f := ⟨f.trans (Function.Embedding.subtype _), fun a => (f a).prop⟩
   left_inv x := by ext <;> rfl
   right_inv x := by ext <;> rfl
 #align equiv.cod_restrict Equiv.codRestrict

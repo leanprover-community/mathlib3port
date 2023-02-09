@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Pim Otte
 
 ! This file was ported from Lean 3 source module data.nat.choose.multinomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem multinomial_singleton : multinomial {a} f = 1 := by
 
 @[simp]
 theorem multinomial_insert_one [DecidableEq α] (h : a ∉ s) (h₁ : f a = 1) :
-    multinomial (insert a s) f = (s.Sum f).succ * multinomial s f :=
+    multinomial (insert a s) f = (s.sum f).succ * multinomial s f :=
   by
   simp only [multinomial, one_mul, factorial]
   rw [Finset.sum_insert h, Finset.prod_insert h, h₁, add_comm, ← succ_eq_add_one, factorial_succ]
@@ -78,7 +78,7 @@ theorem multinomial_insert_one [DecidableEq α] (h : a ∉ s) (h₁ : f a = 1) :
 #align nat.multinomial_insert_one Nat.multinomial_insert_one
 
 theorem multinomial_insert [DecidableEq α] (h : a ∉ s) :
-    multinomial (insert a s) f = (f a + s.Sum f).choose (f a) * multinomial s f :=
+    multinomial (insert a s) f = (f a + s.sum f).choose (f a) * multinomial s f :=
   by
   rw [choose_eq_factorial_div_factorial (le.intro rfl)]
   simp only [multinomial, Nat.add_sub_cancel_left, Finset.sum_insert h, Finset.prod_insert h,
@@ -171,7 +171,7 @@ variable {α : Type _}
   for the big operations
 -/
 def multinomial (f : α →₀ ℕ) : ℕ :=
-  (f.Sum fun _ => id)! / f.Prod fun _ n => n !
+  (f.sum fun _ => id)! / f.prod fun _ n => n !
 #align finsupp.multinomial Finsupp.multinomial
 
 theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.support f :=
@@ -179,7 +179,7 @@ theorem multinomial_eq (f : α →₀ ℕ) : f.multinomial = Nat.multinomial f.s
 #align finsupp.multinomial_eq Finsupp.multinomial_eq
 
 theorem multinomial_update (a : α) (f : α →₀ ℕ) :
-    f.multinomial = (f.Sum fun _ => id).choose (f a) * (f.update a 0).multinomial :=
+    f.multinomial = (f.sum fun _ => id).choose (f a) * (f.update a 0).multinomial :=
   by
   simp only [multinomial_eq]
   classical
@@ -207,15 +207,15 @@ noncomputable def multinomial (m : Multiset α) : ℕ :=
 #align multiset.multinomial Multiset.multinomial
 
 theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
-    m.multinomial = m.card.choose (m.count a) * (m.filterₓ ((· ≠ ·) a)).multinomial :=
+    m.multinomial = m.card.choose (m.count a) * (m.filter ((· ≠ ·) a)).multinomial :=
   by
   dsimp only [multinomial]
   convert Finsupp.multinomial_update a _
   · rw [← Finsupp.card_toMultiset, m.to_finsupp_to_multiset]
   · ext1 a'
-    rw [to_finsupp_apply, count_filter, Finsupp.coe_update]
+    rw [toFinsupp_apply, count_filter, Finsupp.coe_update]
     split_ifs
-    · rw [Function.update_noteq h.symm, to_finsupp_apply]
+    · rw [Function.update_noteq h.symm, toFinsupp_apply]
     · rw [not_ne_iff.1 h, Function.update_same]
 #align multiset.multinomial_filter_ne Multiset.multinomial_filter_ne
 
@@ -235,8 +235,8 @@ variable {α : Type _} [DecidableEq α] (s : Finset α) {R : Type _}
 theorem sum_pow_of_commute [Semiring R] (x : α → R)
     (hc : (s : Set α).Pairwise fun i j => Commute (x i) (x j)) :
     ∀ n,
-      s.Sum x ^ n =
-        ∑ k : s.Sym n,
+      s.sum x ^ n =
+        ∑ k : s.sym n,
           k.1.1.multinomial *
             (k.1.1.map <| x).noncommProd
               (Multiset.map_set_pairwise <| hc.mono <| mem_sym_iff.1 k.2) :=
@@ -257,7 +257,7 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
   rw [sum_insert ha, (Commute.sum_right s _ _ fun b hb => _).add_pow, sum_range]; swap
   · exact hc (mem_insert_self a s) (mem_insert_of_mem hb) (ne_of_mem_of_not_mem hb ha).symm
   simp_rw [ih, mul_sum, sum_mul, sum_sigma', univ_sigma_univ]
-  refine' (Fintype.sum_equiv (sym_insert_equiv ha) _ _ fun m => _).symm
+  refine' (Fintype.sum_equiv (symInsertEquiv ha) _ _ fun m => _).symm
   rw [m.1.1.multinomial_filter_ne a]
   conv in m.1.1.map _ => rw [← m.1.1.filter_add_not ((· = ·) a), Multiset.map_add]
   simp_rw [Multiset.noncommProd_add, m.1.1.filter_eq, Multiset.map_replicate, m.1.2]
@@ -267,7 +267,7 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
 #align finset.sum_pow_of_commute Finset.sum_pow_of_commute
 
 theorem sum_pow [CommSemiring R] (x : α → R) (n : ℕ) :
-    s.Sum x ^ n = ∑ k in s.Sym n, k.val.multinomial * (k.val.map x).Prod :=
+    s.sum x ^ n = ∑ k in s.sym n, k.val.multinomial * (k.val.map x).prod :=
   by
   conv_rhs => rw [← sum_coe_sort]
   convert sum_pow_of_commute s x (fun _ _ _ _ _ => mul_comm _ _) n

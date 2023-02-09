@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_inner
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ include _i
 parallelepiped associated to any orthonormal basis. This is a rephrasing of
 `abs_volume_form_apply_of_orthonormal` in terms of measures. -/
 theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
-    (b : OrthonormalBasis ι ℝ F) : o.volumeForm.Measure (parallelepiped b) = 1 :=
+    (b : OrthonormalBasis ι ℝ F) : o.volumeForm.measure (parallelepiped b) = 1 :=
   by
   have e : ι ≃ Fin n := by
     refine' Fintype.equivFinOfCardEq _
@@ -52,7 +52,7 @@ theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
 /-- In an oriented inner product space, the measure coming from the canonical volume form
 associated to an orientation coincides with the volume. -/
 theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
-    o.volumeForm.Measure = volume :=
+    o.volumeForm.measure = volume :=
   by
   have A : o.volume_form.measure (stdOrthonormalBasis ℝ F).toBasis.parallelepiped = 1 :=
     Orientation.measure_orthonormalBasis o (stdOrthonormalBasis ℝ F)
@@ -70,7 +70,7 @@ theorem OrthonormalBasis.volume_parallelepiped (b : OrthonormalBasis ι ℝ F) :
     volume (parallelepiped b) = 1 :=
   by
   haveI : Fact (finrank ℝ F = finrank ℝ F) := ⟨rfl⟩
-  let o := (stdOrthonormalBasis ℝ F).toBasis.Orientation
+  let o := (stdOrthonormalBasis ℝ F).toBasis.orientation
   rw [← o.measure_eq_volume]
   exact o.measure_orthonormal_basis b
 #align orthonormal_basis.volume_parallelepiped OrthonormalBasis.volume_parallelepiped

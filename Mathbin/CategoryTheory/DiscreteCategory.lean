@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.discrete_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ def discreteEquiv {α : Type u₁} : Discrete α ≃ α
 #align category_theory.discrete_equiv CategoryTheory.discreteEquiv
 
 instance {α : Type u₁} [DecidableEq α] : DecidableEq (Discrete α) :=
-  discreteEquiv.DecidableEq
+  discreteEquiv.decidableEq
 
 /-- The "discrete" category on a type, whose morphisms are equalities.
 
@@ -105,7 +105,7 @@ instance [Subsingleton α] : Subsingleton (Discrete α) :=
     ext
     apply Subsingleton.elim⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry
@@ -281,10 +281,10 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
 @[simps]
 def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β
     where
-  toFun := Discrete.as ∘ h.Functor.obj ∘ Discrete.mk
+  toFun := Discrete.as ∘ h.functor.obj ∘ Discrete.mk
   invFun := Discrete.as ∘ h.inverse.obj ∘ Discrete.mk
-  left_inv a := by simpa using eq_of_hom (h.unit_iso.app (discrete.mk a)).2
-  right_inv a := by simpa using eq_of_hom (h.counit_iso.app (discrete.mk a)).1
+  left_inv a := by simpa using eq_of_hom (h.unit_iso.app (Discrete.mk a)).2
+  right_inv a := by simpa using eq_of_hom (h.counit_iso.app (Discrete.mk a)).1
 #align category_theory.discrete.equiv_of_equivalence CategoryTheory.Discrete.equivOfEquivalence
 
 end Discrete
@@ -304,14 +304,14 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
   by
   let F : Discrete α ⥤ (Discrete α)ᵒᵖ := Discrete.functor fun x => op (Discrete.mk x)
   refine'
-    equivalence.mk (functor.left_op F) F _
-      (discrete.nat_iso fun X =>
+    Equivalence.mk (Functor.leftOp F) F _
+      (Discrete.natIso fun X =>
         by
         trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
         simp [F])
   refine'
-    nat_iso.of_components
+    NatIso.ofComponents
       (fun X =>
         by
         run_tac

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.quasiconvex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem QuasiconvexOn.convex [IsDirected β (· ≤ ·)] (hf : QuasiconvexOn �
 #align quasiconvex_on.convex QuasiconvexOn.convex
 
 theorem QuasiconcaveOn.convex [IsDirected β (· ≥ ·)] (hf : QuasiconcaveOn 𝕜 s f) : Convex 𝕜 s :=
-  hf.dual.Convex
+  hf.dual.convex
 #align quasiconcave_on.convex QuasiconcaveOn.convex
 
 end OrderedAddCommMonoid
@@ -131,7 +131,7 @@ theorem quasiconvexOn_iff_le_max :
               y ∈ s →
                 ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → a + b = 1 → f (a • x + b • y) ≤ max (f x) (f y) :=
   ⟨fun hf =>
-    ⟨hf.Convex, fun x hx y hy a b ha hb hab =>
+    ⟨hf.convex, fun x hx y hy a b ha hb hab =>
       (hf _ ⟨hx, le_max_left _ _⟩ ⟨hy, le_max_right _ _⟩ ha hb hab).2⟩,
     fun hf r x hx y hy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha hb hab, (hf.2 hx.1 hy.1 ha hb hab).trans <| max_le hx.2 hy.2⟩⟩
@@ -210,7 +210,7 @@ theorem MonotoneOn.quasiconcaveOn (hf : MonotoneOn f s) (hs : Convex 𝕜 s) : Q
 #align monotone_on.quasiconcave_on MonotoneOn.quasiconcaveOn
 
 theorem MonotoneOn.quasilinearOn (hf : MonotoneOn f s) (hs : Convex 𝕜 s) : QuasilinearOn 𝕜 s f :=
-  ⟨hf.QuasiconvexOn hs, hf.QuasiconcaveOn hs⟩
+  ⟨hf.quasiconvexOn hs, hf.quasiconcaveOn hs⟩
 #align monotone_on.quasilinear_on MonotoneOn.quasilinearOn
 
 theorem AntitoneOn.quasiconvexOn (hf : AntitoneOn f s) (hs : Convex 𝕜 s) : QuasiconvexOn 𝕜 s f :=
@@ -222,31 +222,31 @@ theorem AntitoneOn.quasiconcaveOn (hf : AntitoneOn f s) (hs : Convex 𝕜 s) : Q
 #align antitone_on.quasiconcave_on AntitoneOn.quasiconcaveOn
 
 theorem AntitoneOn.quasilinearOn (hf : AntitoneOn f s) (hs : Convex 𝕜 s) : QuasilinearOn 𝕜 s f :=
-  ⟨hf.QuasiconvexOn hs, hf.QuasiconcaveOn hs⟩
+  ⟨hf.quasiconvexOn hs, hf.quasiconcaveOn hs⟩
 #align antitone_on.quasilinear_on AntitoneOn.quasilinearOn
 
 theorem Monotone.quasiconvexOn (hf : Monotone f) : QuasiconvexOn 𝕜 univ f :=
-  (hf.MonotoneOn _).QuasiconvexOn convex_univ
+  (hf.monotoneOn _).quasiconvexOn convex_univ
 #align monotone.quasiconvex_on Monotone.quasiconvexOn
 
 theorem Monotone.quasiconcaveOn (hf : Monotone f) : QuasiconcaveOn 𝕜 univ f :=
-  (hf.MonotoneOn _).QuasiconcaveOn convex_univ
+  (hf.monotoneOn _).quasiconcaveOn convex_univ
 #align monotone.quasiconcave_on Monotone.quasiconcaveOn
 
 theorem Monotone.quasilinearOn (hf : Monotone f) : QuasilinearOn 𝕜 univ f :=
-  ⟨hf.QuasiconvexOn, hf.QuasiconcaveOn⟩
+  ⟨hf.quasiconvexOn, hf.quasiconcaveOn⟩
 #align monotone.quasilinear_on Monotone.quasilinearOn
 
 theorem Antitone.quasiconvexOn (hf : Antitone f) : QuasiconvexOn 𝕜 univ f :=
-  (hf.AntitoneOn _).QuasiconvexOn convex_univ
+  (hf.antitoneOn _).quasiconvexOn convex_univ
 #align antitone.quasiconvex_on Antitone.quasiconvexOn
 
 theorem Antitone.quasiconcaveOn (hf : Antitone f) : QuasiconcaveOn 𝕜 univ f :=
-  (hf.AntitoneOn _).QuasiconcaveOn convex_univ
+  (hf.antitoneOn _).quasiconcaveOn convex_univ
 #align antitone.quasiconcave_on Antitone.quasiconcaveOn
 
 theorem Antitone.quasilinearOn (hf : Antitone f) : QuasilinearOn 𝕜 univ f :=
-  ⟨hf.QuasiconvexOn, hf.QuasiconcaveOn⟩
+  ⟨hf.quasiconvexOn, hf.quasiconcaveOn⟩
 #align antitone.quasilinear_on Antitone.quasilinearOn
 
 end LinearOrderedAddCommMonoid
@@ -260,7 +260,7 @@ variable [LinearOrderedField 𝕜] [LinearOrderedAddCommMonoid β] {s : Set 𝕜
 theorem QuasilinearOn.monotoneOn_or_antitoneOn (hf : QuasilinearOn 𝕜 s f) :
     MonotoneOn f s ∨ AntitoneOn f s :=
   by
-  simp_rw [monotone_on_or_antitone_on_iff_uIcc, ← segment_eq_uIcc]
+  simp_rw [monotoneOn_or_antitoneOn_iff_uIcc, ← segment_eq_uIcc]
   rintro a ha b hb c hc h
   refine' ⟨((hf.2 _).segment_subset _ _ h).2, ((hf.1 _).segment_subset _ _ h).2⟩ <;> simp [*]
 #align quasilinear_on.monotone_on_or_antitone_on QuasilinearOn.monotoneOn_or_antitoneOn
@@ -268,7 +268,7 @@ theorem QuasilinearOn.monotoneOn_or_antitoneOn (hf : QuasilinearOn 𝕜 s f) :
 theorem quasilinearOn_iff_monotoneOn_or_antitoneOn (hs : Convex 𝕜 s) :
     QuasilinearOn 𝕜 s f ↔ MonotoneOn f s ∨ AntitoneOn f s :=
   ⟨fun h => h.monotoneOn_or_antitoneOn, fun h =>
-    h.elim (fun h => h.QuasilinearOn hs) fun h => h.QuasilinearOn hs⟩
+    h.elim (fun h => h.quasilinearOn hs) fun h => h.quasilinearOn hs⟩
 #align quasilinear_on_iff_monotone_on_or_antitone_on quasilinearOn_iff_monotoneOn_or_antitoneOn
 
 end LinearOrderedField

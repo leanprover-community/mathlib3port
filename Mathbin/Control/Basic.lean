@@ -6,7 +6,7 @@ Authors: Johannes Hölzl
 Extends the theory on functors, applicatives and monads.
 
 ! This file was ported from Lean 3 source module control.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,14 +46,14 @@ variable {F : Type u → Type v} [Applicative F]
 
 #print zipWithM /-
 def zipWithM {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
-  | x :: xs, y :: ys => (· :: ·) <$> f x y <*> zipWithM xs ys
+  | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzip_with xs ys
   | _, _ => pure []
 #align mzip_with zipWithM
 -/
 
 #print zipWithM' /-
 def zipWithM' (f : α → β → F γ) : List α → List β → F PUnit
-  | x :: xs, y :: ys => f x y *> zipWithM' xs ys
+  | x :: xs, y :: ys => f x y *> mzip_with' xs ys
   | [], _ => pure PUnit.unit
   | _, [] => pure PUnit.unit
 #align mzip_with' zipWithM'
@@ -86,9 +86,9 @@ Case conversion may be inaccurate. Consider using '#align seq_map_assoc seq_map_
 theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
     x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y :=
   by
-  simp [(pure_seq_eq_map _ _).symm]
+  simp [(pure_seq _ _).symm]
   simp [seq_assoc, (comp_map _ _ _).symm, (· ∘ ·)]
-  simp [pure_seq_eq_map]
+  simp [pure_seq]
 #align seq_map_assoc seq_map_assoc
 
 /- warning: map_seq -> map_seq is a dubious translation:
@@ -99,7 +99,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_seq map_seqₓ'. -/
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y :=
-  by simp [(pure_seq_eq_map _ _).symm] <;> simp [seq_assoc]
+  by simp [(pure_seq _ _).symm] <;> simp [seq_assoc]
 #align map_seq map_seq
 
 end Applicative
@@ -118,8 +118,8 @@ def List.partitionM {f : Type → Type} [Monad f] {α : Type} (p : α → f Bool
     List α → f (List α × List α)
   | [] => pure ([], [])
   | x :: xs =>
-    condM (p x) (Prod.map (cons x) id <$> List.partitionM xs)
-      (Prod.map id (cons x) <$> List.partitionM xs)
+    condM (p x) (Prod.map (cons x) id <$> list.mpartition xs)
+      (Prod.map id (cons x) <$> list.mpartition xs)
 #align list.mpartition List.partitionM
 -/
 
@@ -188,7 +188,7 @@ variable {m' : Type v → Type w} [Monad m']
 def List.mapAccumRM (f : α → β' → m' (β' × γ')) : β' → List α → m' (β' × List γ')
   | a, [] => pure (a, [])
   | a, x :: xs => do
-    let (a', ys) ← List.mapAccumRM a xs
+    let (a', ys) ← list.mmap_accumr a xs
     let (a'', y) ← f x a'
     pure (a'', y :: ys)
 #align list.mmap_accumr List.mapAccumRM
@@ -199,7 +199,7 @@ def List.mapAccumLM (f : β' → α → m' (β' × γ')) : β' → List α → m
   | a, [] => pure (a, [])
   | a, x :: xs => do
     let (a', y) ← f a x
-    let (a'', ys) ← List.mapAccumLM a' xs
+    let (a'', ys) ← list.mmap_accuml a' xs
     pure (a'', y :: ys)
 #align list.mmap_accuml List.mapAccumLM
 -/

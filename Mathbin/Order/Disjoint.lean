@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.disjoint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -784,7 +784,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {x : α} {y : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 x y) -> (Eq.{succ u1} α (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α _inst_1) x y) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_compl.inf_eq_bot IsCompl.inf_eq_botₓ'. -/
 theorem inf_eq_bot (h : IsCompl x y) : x ⊓ y = ⊥ :=
-  h.Disjoint.eq_bot
+  h.disjoint.eq_bot
 #align is_compl.inf_eq_bot IsCompl.inf_eq_bot
 
 /- warning: is_compl.sup_eq_top -> IsCompl.sup_eq_top is a dubious translation:
@@ -794,7 +794,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Lattice.{u1} α] [_inst_2 : BoundedOrder.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1))))] {x : α} {y : α}, (IsCompl.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)) _inst_2 x y) -> (Eq.{succ u1} α (HasSup.sup.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α _inst_1)) x y) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) (BoundedOrder.toOrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α _inst_1)))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align is_compl.sup_eq_top IsCompl.sup_eq_topₓ'. -/
 theorem sup_eq_top (h : IsCompl x y) : x ⊔ y = ⊤ :=
-  h.Codisjoint.eq_top
+  h.codisjoint.eq_top
 #align is_compl.sup_eq_top IsCompl.sup_eq_top
 
 end BoundedLattice
@@ -878,7 +878,7 @@ theorem right_le_iff (h : IsCompl x y) : y ≤ z ↔ Codisjoint z x :=
 
 #print IsCompl.Antitone /-
 protected theorem Antitone {x' y'} (h : IsCompl x y) (h' : IsCompl x' y') (hx : x ≤ x') : y' ≤ y :=
-  h'.right_le_iff.2 <| h.symm.Codisjoint.mono_right hx
+  h'.right_le_iff.2 <| h.symm.codisjoint.mono_right hx
 #align is_compl.antitone IsCompl.Antitone
 -/
 
@@ -890,7 +890,7 @@ theorem right_unique (hxy : IsCompl x y) (hxz : IsCompl x z) : y = z :=
 
 #print IsCompl.left_unique /-
 theorem left_unique (hxz : IsCompl x z) (hyz : IsCompl y z) : x = y :=
-  hxz.symm.RightUnique hyz.symm
+  hxz.symm.right_unique hyz.symm
 #align is_compl.left_unique IsCompl.left_unique
 -/
 

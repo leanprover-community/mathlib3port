@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Chris Hughes, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module data.list.min_max
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ def argAux (a : Option α) (b : α) : Option α :=
 @[simp]
 theorem foldl_argAux_eq_none : l.foldl (argAux r) o = none ↔ l = [] ∧ o = none :=
   List.reverseRecOn l (by simp) fun tl hd => by
-    simp [arg_aux] <;> cases foldl (arg_aux r) o tl <;> simp <;> try split_ifs <;> simp
+    simp [argAux] <;> cases foldl (argAux r) o tl <;> simp <;> try split_ifs <;> simp
 #align list.foldl_arg_aux_eq_none List.foldl_argAux_eq_none
 -/
 
@@ -56,15 +56,15 @@ private theorem foldl_arg_aux_mem (l) : ∀ a m : α, m ∈ foldl (argAux r) (so
   List.reverseRecOn l (by simp [eq_comm])
     (by
       intro tl hd ih a m
-      simp only [foldl_append, foldl_cons, foldl_nil, arg_aux]
-      cases hf : foldl (arg_aux r) (some a) tl
+      simp only [foldl_append, foldl_cons, foldl_nil, argAux]
+      cases hf : foldl (argAux r) (some a) tl
       · simp (config := { contextual := true })
       · dsimp only
         split_ifs
         · simp (config := { contextual := true })
         · -- `finish [ih _ _ hf]` closes this goal
           rcases ih _ _ hf with (rfl | H)
-          · simp only [mem_cons_iff, mem_append, mem_singleton, Option.mem_def]
+          · simp only [mem_cons, mem_append, mem_singleton, Option.mem_def]
             tauto
           · apply fun hm => Or.inr (list.mem_append.mpr <| Or.inl _)
             exact option.mem_some_iff.mp hm ▸ H)
@@ -84,10 +84,10 @@ theorem not_of_mem_foldl_argAux (hr₀ : Irreflexive r) (hr₁ : Transitive r) :
   induction' l using List.reverseRecOn with tl a ih
   · exact fun _ _ _ h => absurd h <| not_mem_nil _
   intro b m o hb ho
-  rw [foldl_append, foldl_cons, foldl_nil, arg_aux] at ho
-  cases' hf : foldl (arg_aux r) o tl with c
+  rw [foldl_append, foldl_cons, foldl_nil, argAux] at ho
+  cases' hf : foldl (argAux r) o tl with c
   · rw [hf] at ho
-    rw [foldl_arg_aux_eq_none] at hf
+    rw [foldl_argAux_eq_none] at hf
     simp_all [hf.1, hf.2, hr₀ _]
   rw [hf, Option.mem_def] at ho
   dsimp only at ho
@@ -196,7 +196,7 @@ Case conversion may be inaccurate. Consider using '#align list.argmax_concat Lis
 theorem argmax_concat (f : α → β) (a : α) (l : List α) :
     argmax f (l ++ [a]) =
       Option.casesOn (argmax f l) (some a) fun c => if f c < f a then some a else some c :=
-  by rw [argmax, argmax] <;> simp [arg_aux]
+  by rw [argmax, argmax] <;> simp [argAux]
 #align list.argmax_concat List.argmax_concat
 
 /- warning: list.argmin_concat -> List.argmin_concat is a dubious translation:
@@ -219,7 +219,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.argmax_mem List.argmax_memₓ'. -/
 theorem argmax_mem : ∀ {l : List α} {m : α}, m ∈ argmax f l → m ∈ l
   | [], m => by simp
-  | hd :: tl, m => by simpa [argmax, arg_aux] using foldl_arg_aux_mem _ tl hd m
+  | hd :: tl, m => by simpa [argmax, argAux] using foldl_argAux_mem _ tl hd m
 #align list.argmax_mem List.argmax_mem
 
 /- warning: list.argmin_mem -> List.argmin_mem is a dubious translation:
@@ -322,11 +322,11 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β] {f : α -> β} [_inst_2 : DecidableEq.{succ u2} α] {l : List.{u2} α} {m : α}, (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmax.{u2, u1} α β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_1 a b) f l)) -> (forall {a : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f m) (f a)) -> (LE.le.{0} Nat instLENat (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) m l) (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a l)))
 Case conversion may be inaccurate. Consider using '#align list.index_of_argmax List.index_of_argmaxₓ'. -/
 theorem index_of_argmax :
-    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a
+    ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOf m ≤ l.indexOf a
   | [], m, _, _, _, _ => by simp
   | hd :: tl, m, hm, a, ha, ham =>
     by
-    simp only [index_of_cons, argmax_cons, Option.mem_def] at hm⊢
+    simp only [indexOf_cons, argmax_cons, Option.mem_def] at hm⊢
     cases h : argmax f tl
     · rw [h] at hm
       simp_all
@@ -349,8 +349,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u1} β] {f : α -> β} [_inst_2 : DecidableEq.{succ u2} α] {l : List.{u2} α} {m : α}, (Membership.mem.{u2, u2} α (Option.{u2} α) (Option.instMembershipOption.{u2} α) m (List.argmin.{u2, u1} α β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1))))) (fun (a : β) (b : β) => instDecidableLtToLTToPreorderToPartialOrder.{u1} β _inst_1 a b) f l)) -> (forall {a : α}, (Membership.mem.{u2, u2} α (List.{u2} α) (List.instMembershipList.{u2} α) a l) -> (LE.le.{u1} β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_1)))))) (f a) (f m)) -> (LE.le.{0} Nat instLENat (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) m l) (List.indexOf.{u2} α (instBEq.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a l)))
 Case conversion may be inaccurate. Consider using '#align list.index_of_argmin List.index_of_argminₓ'. -/
 theorem index_of_argmin :
-    ∀ {l : List α} {m : α},
-      m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
+    ∀ {l : List α} {m : α}, m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   @index_of_argmax _ βᵒᵈ _ _ _
 #align list.index_of_argmin List.index_of_argmin
 
@@ -362,7 +361,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_argmax_iff List.mem_argmax_iffₓ'. -/
 theorem mem_argmax_iff :
     m ∈ argmax f l ↔
-      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
+      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   ⟨fun hm => ⟨argmax_mem hm, fun a ha => le_of_mem_argmax ha hm, fun _ => index_of_argmax hm⟩,
     by
     rintro ⟨hml, ham, hma⟩
@@ -371,7 +370,7 @@ theorem mem_argmax_iff :
     · have :=
         le_antisymm (hma n (argmax_mem harg) (le_of_mem_argmax hml harg))
           (index_of_argmax harg hml (ham _ (argmax_mem harg)))
-      rw [(index_of_inj hml (argmax_mem harg)).1 this, Option.mem_def]⟩
+      rw [(indexOf_inj hml (argmax_mem harg)).1 this, Option.mem_def]⟩
 #align list.mem_argmax_iff List.mem_argmax_iff
 
 /- warning: list.argmax_eq_some_iff -> List.argmax_eq_some_iff is a dubious translation:
@@ -382,7 +381,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.argmax_eq_some_iff List.argmax_eq_some_iffₓ'. -/
 theorem argmax_eq_some_iff :
     argmax f l = some m ↔
-      m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
+      True ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOf m ≤ l.indexOf a :=
   mem_argmax_iff
 #align list.argmax_eq_some_iff List.argmax_eq_some_iff
 
@@ -394,7 +393,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_argmin_iff List.mem_argmin_iffₓ'. -/
 theorem mem_argmin_iff :
     m ∈ argmin f l ↔
-      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   @mem_argmax_iff _ βᵒᵈ _ _ _ _ _
 #align list.mem_argmin_iff List.mem_argmin_iff
 
@@ -406,7 +405,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.argmin_eq_some_iff List.argmin_eq_some_iffₓ'. -/
 theorem argmin_eq_some_iff :
     argmin f l = some m ↔
-      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
+      m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOf m ≤ l.indexOf a :=
   mem_argmin_iff
 #align list.argmin_eq_some_iff List.argmin_eq_some_iff
 

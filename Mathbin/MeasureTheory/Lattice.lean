@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,13 +138,13 @@ theorem Measurable.sup (hf : Measurable f) (hg : Measurable g) : Measurable fun 
 @[measurability]
 theorem AeMeasurable.sup' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (f ⊔ g) μ :=
-  measurable_sup.compAeMeasurable (hf.prod_mk hg)
+  measurable_sup.compAeMeasurable (hf.prodMk hg)
 #align ae_measurable.sup' AeMeasurable.sup'
 
 @[measurability]
 theorem AeMeasurable.sup (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (fun a => f a ⊔ g a) μ :=
-  measurable_sup.compAeMeasurable (hf.prod_mk hg)
+  measurable_sup.compAeMeasurable (hf.prodMk hg)
 #align ae_measurable.sup AeMeasurable.sup
 
 omit m
@@ -206,13 +206,13 @@ theorem Measurable.inf (hf : Measurable f) (hg : Measurable g) : Measurable fun 
 @[measurability]
 theorem AeMeasurable.inf' (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (f ⊓ g) μ :=
-  measurable_inf.compAeMeasurable (hf.prod_mk hg)
+  measurable_inf.compAeMeasurable (hf.prodMk hg)
 #align ae_measurable.inf' AeMeasurable.inf'
 
 @[measurability]
 theorem AeMeasurable.inf (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     AeMeasurable (fun a => f a ⊓ g a) μ :=
-  measurable_inf.compAeMeasurable (hf.prod_mk hg)
+  measurable_inf.compAeMeasurable (hf.prodMk hg)
 #align ae_measurable.inf AeMeasurable.inf
 
 omit m

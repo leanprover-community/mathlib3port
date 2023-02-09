@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.accumulate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,9 +81,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bUnion_accumulate Set.bunionᵢ_accumulateₓ'. -/
 theorem bunionᵢ_accumulate [Preorder α] (x : α) : (⋃ y ≤ x, Accumulate s y) = ⋃ y ≤ x, s y :=
   by
-  apply subset.antisymm
-  · exact Union₂_subset fun y hy => monotone_accumulate hy
-  · exact Union₂_mono fun y hy => subset_accumulate
+  apply Subset.antisymm
+  · exact unionᵢ₂_subset fun y hy => monotone_accumulate hy
+  · exact unionᵢ₂_mono fun y hy => subset_accumulate
 #align set.bUnion_accumulate Set.bunionᵢ_accumulate
 
 /- warning: set.Union_accumulate -> Set.unionᵢ_accumulate is a dubious translation:
@@ -94,11 +94,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Union_accumulate Set.unionᵢ_accumulateₓ'. -/
 theorem unionᵢ_accumulate [Preorder α] : (⋃ x, Accumulate s x) = ⋃ x, s x :=
   by
-  apply subset.antisymm
-  · simp only [subset_def, mem_Union, exists_imp, mem_accumulate]
+  apply Subset.antisymm
+  · simp only [subset_def, mem_unionᵢ, exists_imp, mem_accumulate]
     intro z x x' hx'x hz
     exact ⟨x', hz⟩
-  · exact Union_mono fun i => subset_accumulate
+  · exact unionᵢ_mono fun i => subset_accumulate
 #align set.Union_accumulate Set.unionᵢ_accumulate
 
 end Set

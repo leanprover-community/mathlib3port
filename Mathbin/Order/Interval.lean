@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ instance [IsEmpty α] : IsEmpty (NonemptyInterval α) :=
   ⟨fun s => isEmptyElim s.fst⟩
 
 instance [Subsingleton α] : Subsingleton (NonemptyInterval α) :=
-  toDualProd_injective.Subsingleton
+  toDualProd_injective.subsingleton
 
 instance : LE (NonemptyInterval α) :=
   ⟨fun s t => t.fst ≤ s.fst ∧ s.snd ≤ t.snd⟩
@@ -87,8 +87,8 @@ def toDualProdHom : NonemptyInterval α ↪o αᵒᵈ × α
 /-- Turn an interval into an interval in the dual order. -/
 def dual : NonemptyInterval α ≃ NonemptyInterval αᵒᵈ
     where
-  toFun s := ⟨s.toProd.symm, s.fst_le_snd⟩
-  invFun s := ⟨s.toProd.symm, s.fst_le_snd⟩
+  toFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
+  invFun s := ⟨s.toProd.swap, s.fst_le_snd⟩
   left_inv s := ext _ _ <| Prod.swap_swap _
   right_inv s := ext _ _ <| Prod.swap_swap _
 #align nonempty_interval.dual NonemptyInterval.dual
@@ -159,7 +159,7 @@ instance : ∀ [Nonempty α], Nonempty (NonemptyInterval α) :=
   Nonempty.map pure
 
 instance [Nontrivial α] : Nontrivial (NonemptyInterval α) :=
-  pure_injective.Nontrivial
+  pure_injective.nontrivial
 
 /-- Pushforward of nonempty intervals. -/
 @[simps]
@@ -233,7 +233,7 @@ def coeHom : NonemptyInterval α ↪o Set α :=
 instance : SetLike (NonemptyInterval α) α
     where
   coe s := Icc s.fst s.snd
-  coe_injective' := coeHom.Injective
+  coe_injective' := coeHom.injective
 
 @[simp, norm_cast]
 theorem coe_subset_coe : (s : Set α) ⊆ t ↔ s ≤ t :=
@@ -283,7 +283,7 @@ instance : HasSup (NonemptyInterval α) :=
   ⟨fun s t => ⟨⟨s.fst ⊓ t.fst, s.snd ⊔ t.snd⟩, inf_le_left.trans <| s.fst_le_snd.trans le_sup_left⟩⟩
 
 instance : SemilatticeSup (NonemptyInterval α) :=
-  toDualProd_injective.SemilatticeSup _ fun _ _ => rfl
+  toDualProd_injective.semilatticeSup _ fun _ _ => rfl
 
 @[simp]
 theorem fst_sup (s t : NonemptyInterval α) : (s ⊔ t).fst = s.fst ⊓ t.fst :=
@@ -448,7 +448,7 @@ def coeHom : Interval α ↪o Set α :=
 
 instance : SetLike (Interval α) α where
   coe := coeHom
-  coe_injective' := coeHom.Injective
+  coe_injective' := coeHom.injective
 
 @[simp, norm_cast]
 theorem coe_subset_coe : (s : Set α) ⊆ t ↔ s ≤ t :=
@@ -490,7 +490,7 @@ theorem coe_dual (s : Interval α) : (s.dual : Set αᵒᵈ) = ofDual ⁻¹' s :
 
 theorem subset_coe_map (f : α →o β) : ∀ s : Interval α, f '' s ⊆ s.map f
   | ⊥ => by simp
-  | (s : NonemptyInterval α) => s.subset_coe_map _
+  | (s : nonempty_interval α) => s.subset_coe_map _
 #align interval.subset_coe_map Interval.subset_coe_map
 
 @[simp]
@@ -707,10 +707,10 @@ theorem coe_infₛ [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
   simp_rw [not_and_or, Classical.not_not] at h
   cases h
   · refine' (eq_empty_of_subset_empty _).symm
-    exact Inter₂_subset_of_subset _ h subset.rfl
+    exact interᵢ₂_subset_of_subset _ h Subset.rfl
   · refine' (not_nonempty_iff_eq_empty.1 _).symm
     rintro ⟨x, hx⟩
-    rw [mem_Inter₂] at hx
+    rw [mem_interᵢ₂] at hx
     exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
 #align interval.coe_Inf Interval.coe_infₛ
 
@@ -723,7 +723,7 @@ theorem coe_infᵢ [@DecidableRel α (· ≤ ·)] (f : ι → Interval α) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
 theorem coe_infi₂ [@DecidableRel α (· ≤ ·)] (f : ∀ i, κ i → Interval α) :
-    ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) := by simp_rw [coe_infi]
+    ↑(⨅ (i) (j), f i j) = ⋂ (i) (j), (f i j : Set α) := by simp_rw [coe_infᵢ]
 #align interval.coe_infi₂ Interval.coe_infi₂
 
 end CompleteLattice

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.definability
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ variable {α : Type _} {β : Type _}
 /-- A subset of a finite Cartesian product of a structure is definable over a set `A` when
   membership in the set is given by a first-order formula with parameters from `A`. -/
 def Definable (s : Set (α → M)) : Prop :=
-  ∃ φ : L[[A]].Formula α, s = setOf φ.realize
+  ∃ φ : L[[A]].Formula α, s = setOf φ.Realize
 #align set.definable Set.Definable
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
@@ -59,12 +59,12 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h :
   obtain ⟨ψ, rfl⟩ := h
   refine' ⟨(φ.add_constants A).onFormula ψ, _⟩
   ext x
-  simp only [mem_set_of_eq, Lhom.realize_on_formula]
+  simp only [mem_setOf_eq, Lhom.realize_onFormula]
 #align set.definable.map_expansion Set.Definable.map_expansion
 
-theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = setOf φ.realize :=
+theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = setOf φ.Realize :=
   by
-  rw [definable, Equiv.exists_congr_left (Lequiv.add_empty_constants L (∅ : Set M)).onFormula]
+  rw [Definable, Equiv.exists_congr_left (Lequiv.addEmptyConstants L (∅ : Set M)).onFormula]
   simp
 #align set.empty_definable_iff Set.empty_definable_iff
 
@@ -110,7 +110,7 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   rcases hg with ⟨θ, hθ⟩
   refine' ⟨φ ⊔ θ, _⟩
   ext
-  rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union, mem_set_of_eq, mem_set_of_eq]
+  rw [hφ, hθ, mem_setOf_eq, Formula.realize_sup, mem_union, mem_setOf_eq, mem_setOf_eq]
 #align set.definable.union Set.Definable.union
 
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
@@ -164,7 +164,7 @@ theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Defi
   obtain ⟨φ, rfl⟩ := h
   refine' ⟨φ.relabel f, _⟩
   ext
-  simp only [Set.preimage_setOf_eq, mem_set_of_eq, formula.realize_relabel]
+  simp only [Set.preimage_setOf_eq, mem_setOf_eq, Formula.realize_relabel]
 #align set.definable.preimage_comp Set.Definable.preimage_comp
 
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :
@@ -185,10 +185,10 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
     (h : A.Definable L s) : A.Definable L ((fun g : Sum α (Fin m) → M => g ∘ Sum.inl) '' s) :=
   by
   obtain ⟨φ, rfl⟩ := h
-  refine' ⟨(bounded_formula.relabel id φ).exs, _⟩
+  refine' ⟨(BoundedFormula.relabel id φ).exs, _⟩
   ext x
-  simp only [Set.mem_image, mem_set_of_eq, bounded_formula.realize_exs,
-    bounded_formula.realize_relabel, Function.comp.right_id, Fin.castAdd_zero, Fin.cast_refl]
+  simp only [Set.mem_image, mem_setOf_eq, BoundedFormula.realize_exs,
+    BoundedFormula.realize_relabel, Function.comp.right_id, Fin.castAdd_zero, Fin.cast_refl]
   constructor
   · rintro ⟨y, hy, rfl⟩
     exact
@@ -221,23 +221,22 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
     cases nonempty_fintype β
     have h :=
       (((h.image_comp_equiv (Equiv.Set.sumCompl (range f))).image_comp_equiv
-                (Equiv.sumCongr (_root_.equiv.refl _)
-                  (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
+                (Equiv.sumCongr (Equiv.refl _) (Fintype.equivFin _).symm)).image_comp_sum_inl_fin
             _).preimage_comp
-        (range_splitting f)
+        (rangeSplitting f)
     have h' :
-      A.definable L { x : α → M | ∀ a, x a = x (range_splitting f (range_factorization f a)) } :=
+      A.definable L { x : α → M | ∀ a, x a = x (rangeSplitting f (rangeFactorization f a)) } :=
       by
       have h' :
-        ∀ a, A.definable L { x : α → M | x a = x (range_splitting f (range_factorization f a)) } :=
+        ∀ a, A.definable L { x : α → M | x a = x (rangeSplitting f (rangeFactorization f a)) } :=
         by
-        refine' fun a => ⟨(var a).equal (var (range_splitting f (range_factorization f a))), ext _⟩
+        refine' fun a => ⟨(var a).equal (var (rangeSplitting f (rangeFactorization f a))), ext _⟩
         simp
       refine' (congr rfl (ext _)).mp (definable_finset_bInter h' Finset.univ)
       simp
     refine' (congr rfl (ext fun x => _)).mp (h.inter h')
     simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and,
-      mem_set_of_eq]
+      mem_setOf_eq]
     constructor
     · rintro ⟨⟨y, ys, hy⟩, hx⟩
       refine' ⟨y, ys, _⟩
@@ -249,8 +248,8 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
       · ext
         simp [Set.apply_rangeSplitting f]
       ·
-        rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f,
-          range_factorization_coe]
+        rw [Function.comp_apply, Function.comp_apply, apply_rangeSplitting f,
+          rangeFactorization_coe]
 #align set.definable.image_comp Set.Definable.image_comp
 
 variable (L) {M} (A)
@@ -376,7 +375,7 @@ theorem coe_sdiff (s t : L.DefinableSet A α) : (↑(s \ t) : Set (α → M)) = 
 #align first_order.language.definable_set.coe_sdiff FirstOrder.Language.DefinableSet.coe_sdiff
 
 instance : BooleanAlgebra (L.DefinableSet A α) :=
-  Subtype.coe_injective.BooleanAlgebra _ coe_sup coe_inf coe_top coe_bot coe_compl coe_sdiff
+  Subtype.coe_injective.booleanAlgebra _ coe_sup coe_inf coe_top coe_bot coe_compl coe_sdiff
 
 end DefinableSet
 

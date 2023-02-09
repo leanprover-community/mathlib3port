@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.order.with_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,8 +95,8 @@ def Function.Injective.linearOrderedCommMonoidWithZero {β : Type _} [Zero β] [
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommMonoidWithZero β :=
-  { LinearOrder.lift f hf hsup hinf, hf.OrderedCommMonoid f one mul npow,
-    hf.CommMonoidWithZero f zero one mul npow with
+  { LinearOrder.lift f hf hsup hinf, hf.orderedCommMonoid f one mul npow,
+    hf.commMonoidWithZero f zero one mul npow with
     zero_le_one :=
       show f 0 ≤ f 1 by simp only [zero, one, LinearOrderedCommMonoidWithZero.zero_le_one] }
 #align function.injective.linear_ordered_comm_monoid_with_zero Function.Injective.linearOrderedCommMonoidWithZero
@@ -284,7 +284,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.zero_lt Units.zero_ltₓ'. -/
 @[simp]
 theorem Units.zero_lt (u : αˣ) : (0 : α) < u :=
-  zero_lt_iff.2 <| u.NeZero
+  zero_lt_iff.2 <| u.ne_zero
 #align units.zero_lt Units.zero_lt
 
 /- warning: mul_lt_mul_of_lt_of_le₀ -> mul_lt_mul_of_lt_of_le₀ is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.emetric_paracompact
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,10 +52,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       simp [pow_succ, ← mul_assoc, Ennreal.mul_inv_cancel]
     -- Consider an open covering `S : set (set α)`
     refine' ⟨fun ι s ho hcov => _⟩
-    simp only [Union_eq_univ_iff] at hcov
+    simp only [unionᵢ_eq_univ_iff] at hcov
     -- choose a well founded order on `S`
     letI : LinearOrder ι := linearOrderOfSTO WellOrderingRel
-    have wf : WellFounded ((· < ·) : ι → ι → Prop) := @IsWellFounded.wf ι WellOrderingRel _
+    have wf : WellFounded ((· < ·) : ι → ι → Prop) := @is_well_founded.wf ι WellOrderingRel _
     -- Let `ind x` be the minimal index `s : S` such that `x ∈ s`.
     set ind : α → ι := fun x => wf.min { i : ι | x ∈ s i } (hcov x)
     have mem_ind : ∀ x, x ∈ s (ind x) := fun x => wf.min_mem _ (hcov x)
@@ -90,7 +90,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       by
       intro n i y
       rw [Dn n i]
-      simp only [mem_Union, mem_ball]
+      simp only [mem_unionᵢ, mem_ball]
     -- The sets `D n i` cover the whole space. Indeed, for each `x` we can choose `n` such that
     -- `ball x (3 / 2 ^ n) ⊆ s (ind x)`, then either `x ∈ D n i`, or `x ∈ D m i` for some `m < n`.
     have Dcov : ∀ x, ∃ n i, x ∈ D n i := by
@@ -98,10 +98,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       obtain ⟨n, hn⟩ : ∃ n : ℕ, ball x (3 * 2⁻¹ ^ n) ⊆ s (ind x) :=
         by
         -- This proof takes 5 lines because we can't import `specific_limits` here
-        rcases is_open_iff.1 (ho <| ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
+        rcases isOpen_iff.1 (ho <| ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
         have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
         rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
-        refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
+        refine' ⟨n, Subset.trans (ball_subset_ball _) hε⟩
         simpa only [div_eq_mul_inv, mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
       by_contra' h
       apply h n (ind x)
@@ -111,7 +111,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       intro n i
       rw [Dn]
       iterate 4 refine' isOpen_unionᵢ fun _ => _
-      exact is_open_ball
+      exact isOpen_ball
     -- the covering `D n i` is a refinement of the original covering: `D n i ⊆ s i`
     have HDS : ∀ n i, D n i ⊆ s i := by
       intro n s x
@@ -129,7 +129,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     -- by a single parameter, we use `ℕ × ι` as the domain.
     refine' ⟨ℕ × ι, fun ni => D ni.1 ni.2, fun _ => Dopen _ _, _, _, fun ni => ⟨ni.2, HDS _ _⟩⟩
     -- The sets `D n i` cover the whole space as we proved earlier
-    · refine' Union_eq_univ_iff.2 fun x => _
+    · refine' unionᵢ_eq_univ_iff.2 fun x => _
       rcases Dcov x with ⟨n, i, h⟩
       exact ⟨⟨n, i⟩, h⟩
     · /- Let us prove that the covering `D n i` is locally finite. Take a point `x` and choose
@@ -183,9 +183,9 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       -- Finally, we glue `Hgt` and `Hle`
       have : (⋃ (m ≤ n + k) (i ∈ { i : ι | (D m i ∩ B).Nonempty }), {(m, i)}).Finite :=
         (finite_le_nat _).bunionᵢ' fun i hi =>
-          (Hle i hi).Finite.bunionᵢ' fun _ _ => finite_singleton _
+          (Hle i hi).finite.bunionᵢ' fun _ _ => finite_singleton _
       refine' this.subset fun I hI => _
-      simp only [mem_Union]
+      simp only [mem_unionᵢ]
       refine' ⟨I.1, _, I.2, hI, prod.mk.eta.symm⟩
       exact not_lt.1 fun hlt => (Hgt I.1 hlt I.2).le_bot hI.some_spec
 

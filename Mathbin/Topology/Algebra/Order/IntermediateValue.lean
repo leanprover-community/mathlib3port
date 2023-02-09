@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alistair Tucker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.intermediate_value
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,10 +81,10 @@ theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → 
 -/
 
 #print intermediate_value_univ₂_eventually₁ /-
-theorem intermediate_value_univ₂_eventually₁ [PreconnectedSpace X] {a : X} {l : Filter X} [NeBot l]
-    {f g : X → α} (hf : Continuous f) (hg : Continuous g) (ha : f a ≤ g a) (he : g ≤ᶠ[l] f) :
-    ∃ x, f x = g x :=
-  let ⟨c, hc⟩ := he.Frequently.exists
+theorem intermediate_value_univ₂_eventually₁ [PreconnectedSpace X] {a : Mem} {l : Filter X}
+    [NeBot l] {f g : X → α} (hf : Continuous f) (hg : Continuous g) (ha : f a ≤ g a)
+    (he : g ≤ᶠ[l] f) : ∃ x, f x = g x :=
+  let ⟨c, hc⟩ := he.frequently.exists
   intermediate_value_univ₂ hf hg ha hc
 #align intermediate_value_univ₂_eventually₁ intermediate_value_univ₂_eventually₁
 -/
@@ -93,8 +93,8 @@ theorem intermediate_value_univ₂_eventually₁ [PreconnectedSpace X] {a : X} {
 theorem intermediate_value_univ₂_eventually₂ [PreconnectedSpace X] {l₁ l₂ : Filter X} [NeBot l₁]
     [NeBot l₂] {f g : X → α} (hf : Continuous f) (hg : Continuous g) (he₁ : f ≤ᶠ[l₁] g)
     (he₂ : g ≤ᶠ[l₂] f) : ∃ x, f x = g x :=
-  let ⟨c₁, hc₁⟩ := he₁.Frequently.exists
-  let ⟨c₂, hc₂⟩ := he₂.Frequently.exists
+  let ⟨c₁, hc₁⟩ := he₁.frequently.exists
+  let ⟨c₂, hc₂⟩ := he₂.frequently.exists
   intermediate_value_univ₂ hf hg hc₁ hc₂
 #align intermediate_value_univ₂_eventually₂ intermediate_value_univ₂_eventually₂
 -/
@@ -131,7 +131,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₁ {s : Set X} (hs : IsP
   rw [continuousOn_iff_continuous_restrict] at hf hg
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₁ _ _ _ _ _ _ (Subtype.preconnectedSpace hs) ⟨a, ha⟩ _
-      (comap_coe_ne_bot_of_le_principal hl) _ _ hf hg ha' (he.comap _)
+      (comap_coe_neBot_of_le_principal hl) _ _ hf hg ha' (he.comap _)
   exact ⟨b, b.prop, h⟩
 #align is_preconnected.intermediate_value₂_eventually₁ IsPreconnected.intermediate_value₂_eventually₁
 
@@ -149,7 +149,7 @@ theorem IsPreconnected.intermediate_value₂_eventually₂ {s : Set X} (hs : IsP
   rw [continuousOn_iff_continuous_restrict] at hf hg
   obtain ⟨b, h⟩ :=
     @intermediate_value_univ₂_eventually₂ _ _ _ _ _ _ (Subtype.preconnectedSpace hs) _ _
-      (comap_coe_ne_bot_of_le_principal hl₁) (comap_coe_ne_bot_of_le_principal hl₂) _ _ hf hg
+      (comap_coe_neBot_of_le_principal hl₁) (comap_coe_neBot_of_le_principal hl₂) _ _ hf hg
       (he₁.comap _) (he₂.comap _)
   exact ⟨b, b.prop, h⟩
 #align is_preconnected.intermediate_value₂_eventually₂ IsPreconnected.intermediate_value₂_eventually₂
@@ -359,8 +359,8 @@ Case conversion may be inaccurate. Consider using '#align is_connected.Ioo_cInf_
 `(Inf s, Sup s)`. -/
 theorem IsConnected.Ioo_cinfₛ_csupₛ_subset {s : Set α} (hs : IsConnected s) (hb : BddBelow s)
     (ha : BddAbove s) : Ioo (infₛ s) (supₛ s) ⊆ s := fun x hx =>
-  let ⟨y, ys, hy⟩ := (isGLB_lt_iff (isGLB_cinfₛ hs.Nonempty hb)).1 hx.1
-  let ⟨z, zs, hz⟩ := (lt_isLUB_iff (isLUB_csupₛ hs.Nonempty ha)).1 hx.2
+  let ⟨y, ys, hy⟩ := (isGLB_lt_iff (isGLB_cinfₛ hs.nonempty hb)).1 hx.1
+  let ⟨z, zs, hz⟩ := (lt_isLUB_iff (isLUB_csupₛ hs.nonempty ha)).1 hx.2
   hs.Icc_subset ys zs ⟨le_of_lt hy, le_of_lt hz⟩
 #align is_connected.Ioo_cInf_cSup_subset IsConnected.Ioo_cinfₛ_csupₛ_subset
 
@@ -373,7 +373,7 @@ Case conversion may be inaccurate. Consider using '#align eq_Icc_cInf_cSup_of_co
 theorem eq_Icc_cinfₛ_csupₛ_of_connected_bdd_closed {s : Set α} (hc : IsConnected s)
     (hb : BddBelow s) (ha : BddAbove s) (hcl : IsClosed s) : s = Icc (infₛ s) (supₛ s) :=
   Subset.antisymm (subset_Icc_cinfₛ_csupₛ hb ha) <|
-    hc.Icc_subset (hcl.cinfₛ_mem hc.Nonempty hb) (hcl.csupₛ_mem hc.Nonempty ha)
+    hc.Icc_subset (hcl.cinfₛ_mem hc.nonempty hb) (hcl.csupₛ_mem hc.nonempty ha)
 #align eq_Icc_cInf_cSup_of_connected_bdd_closed eq_Icc_cinfₛ_csupₛ_of_connected_bdd_closed
 
 /- warning: is_preconnected.Ioi_cInf_subset -> IsPreconnected.Ioi_cinfₛ_subset is a dubious translation:
@@ -385,7 +385,7 @@ Case conversion may be inaccurate. Consider using '#align is_preconnected.Ioi_cI
 theorem IsPreconnected.Ioi_cinfₛ_subset {s : Set α} (hs : IsPreconnected s) (hb : BddBelow s)
     (ha : ¬BddAbove s) : Ioi (infₛ s) ⊆ s :=
   by
-  have sne : s.nonempty := @nonempty_of_not_bddAbove α _ s ⟨Inf ∅⟩ ha
+  have sne : s.nonempty := @nonempty_of_not_bdd_above α _ s ⟨infₛ ∅⟩ ha
   intro x hx
   obtain ⟨y, ys, hy⟩ : ∃ y ∈ s, y < x := (isGLB_lt_iff (isGLB_cinfₛ sne hb)).1 hx
   obtain ⟨z, zs, hz⟩ : ∃ z ∈ s, x < z := not_bddAbove_iff.1 ha x
@@ -472,14 +472,14 @@ theorem setOf_isPreconnected_subset_of_ordered :
   by
   intro s hs
   rcases hs.mem_intervals with (hs | hs | hs | hs | hs | hs | hs | hs | hs | hs)
-  · exact Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨(Inf s, Sup s), hs.symm⟩
-  · exact Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-  · exact Or.inl <| Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-  · exact Or.inl <| Or.inr ⟨(Inf s, Sup s), hs.symm⟩
-  · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨Inf s, hs.symm⟩
-  · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨Inf s, hs.symm⟩
-  · exact Or.inr <| Or.inl <| Or.inl <| Or.inr ⟨Sup s, hs.symm⟩
-  · exact Or.inr <| Or.inl <| Or.inr ⟨Sup s, hs.symm⟩
+  · exact Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨(infₛ s, supₛ s), hs.symm⟩
+  · exact Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨(infₛ s, supₛ s), hs.symm⟩
+  · exact Or.inl <| Or.inl <| Or.inr ⟨(infₛ s, supₛ s), hs.symm⟩
+  · exact Or.inl <| Or.inr ⟨(infₛ s, supₛ s), hs.symm⟩
+  · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inl ⟨infₛ s, hs.symm⟩
+  · exact Or.inr <| Or.inl <| Or.inl <| Or.inl <| Or.inr ⟨infₛ s, hs.symm⟩
+  · exact Or.inr <| Or.inl <| Or.inl <| Or.inr ⟨supₛ s, hs.symm⟩
+  · exact Or.inr <| Or.inl <| Or.inr ⟨supₛ s, hs.symm⟩
   · exact Or.inr <| Or.inr <| Or.inl hs
   · exact Or.inr <| Or.inr <| Or.inr hs
 #align set_of_is_preconnected_subset_of_ordered setOf_isPreconnected_subset_of_ordered
@@ -507,7 +507,7 @@ theorem IsClosed.mem_of_ge_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsC
   replace ha : a ∈ S
   exact ⟨ha, left_mem_Icc.2 hab⟩
   have Sbd : BddAbove S := ⟨b, fun z hz => hz.2.2⟩
-  let c := Sup (s ∩ Icc a b)
+  let c := supₛ (s ∩ Icc a b)
   have c_mem : c ∈ S := hs.cSup_mem ⟨_, ha⟩ Sbd
   have c_le : c ≤ b := csupₛ_le ⟨_, ha⟩ fun x hx => hx.2.2
   cases' eq_or_lt_of_le c_le with hc hc
@@ -585,7 +585,7 @@ theorem isPreconnected_Icc_aux (x y : α) (s t : Set α) (hxy : x ≤ y) (hs : I
   have : tᶜ ∩ Ioc z y ∈ 𝓝[>] z :=
     by
     rw [← nhdsWithin_Ioc_eq_nhdsWithin_Ioi hz.2]
-    exact mem_nhdsWithin.2 ⟨tᶜ, ht.is_open_compl, zt, subset.refl _⟩
+    exact mem_nhdsWithin.2 ⟨tᶜ, ht.is_open_compl, zt, Subset.refl _⟩
   apply mem_of_superset this
   have : Ioc z y ⊆ s ∪ t := fun w hw => hab (xyab ⟨le_trans hz.1 (le_of_lt hw.1), hw.2⟩)
   exact fun w ⟨wt, wzy⟩ => (this wzy).elim id fun h => (wt h).elim
@@ -627,43 +627,43 @@ theorem isPreconnected_iff_ordConnected {s : Set α} : IsPreconnected s ↔ OrdC
 
 #print isPreconnected_Ici /-
 theorem isPreconnected_Ici : IsPreconnected (Ici a) :=
-  ordConnected_Ici.IsPreconnected
+  ordConnected_Ici.isPreconnected
 #align is_preconnected_Ici isPreconnected_Ici
 -/
 
 #print isPreconnected_Iic /-
 theorem isPreconnected_Iic : IsPreconnected (Iic a) :=
-  ordConnected_Iic.IsPreconnected
+  ordConnected_Iic.isPreconnected
 #align is_preconnected_Iic isPreconnected_Iic
 -/
 
 #print isPreconnected_Iio /-
 theorem isPreconnected_Iio : IsPreconnected (Iio a) :=
-  ordConnected_Iio.IsPreconnected
+  ordConnected_Iio.isPreconnected
 #align is_preconnected_Iio isPreconnected_Iio
 -/
 
 #print isPreconnected_Ioi /-
 theorem isPreconnected_Ioi : IsPreconnected (Ioi a) :=
-  ordConnected_Ioi.IsPreconnected
+  ordConnected_Ioi.isPreconnected
 #align is_preconnected_Ioi isPreconnected_Ioi
 -/
 
 #print isPreconnected_Ioo /-
 theorem isPreconnected_Ioo : IsPreconnected (Ioo a b) :=
-  ordConnected_Ioo.IsPreconnected
+  ordConnected_Ioo.isPreconnected
 #align is_preconnected_Ioo isPreconnected_Ioo
 -/
 
 #print isPreconnected_Ioc /-
 theorem isPreconnected_Ioc : IsPreconnected (Ioc a b) :=
-  ordConnected_Ioc.IsPreconnected
+  ordConnected_Ioc.isPreconnected
 #align is_preconnected_Ioc isPreconnected_Ioc
 -/
 
 #print isPreconnected_Ico /-
 theorem isPreconnected_Ico : IsPreconnected (Ico a b) :=
-  ordConnected_Ico.IsPreconnected
+  ordConnected_Ico.isPreconnected
 #align is_preconnected_Ico isPreconnected_Ico
 -/
 
@@ -717,7 +717,7 @@ theorem isConnected_Ico (h : a < b) : IsConnected (Ico a b) :=
 
 #print ordered_connected_space /-
 instance (priority := 100) ordered_connected_space : PreconnectedSpace α :=
-  ⟨ordConnected_univ.IsPreconnected⟩
+  ⟨ordConnected_univ.isPreconnected⟩
 #align ordered_connected_space ordered_connected_space
 -/
 
@@ -746,12 +746,12 @@ theorem setOf_isPreconnected_eq_of_ordered :
             range Iio ∪
           {univ, ∅}) :=
   by
-  refine' subset.antisymm setOf_isPreconnected_subset_of_ordered _
+  refine' Subset.antisymm setOf_isPreconnected_subset_of_ordered _
   simp only [subset_def, -mem_range, forall_range_iff, uncurry, or_imp, forall_and, mem_union,
-    mem_set_of_eq, insert_eq, mem_singleton_iff, forall_eq, forall_true_iff, and_true_iff,
+    mem_setOf_eq, insert_eq, mem_singleton_iff, forall_eq, forall_true_iff, and_true_iff,
     isPreconnected_Icc, isPreconnected_Ico, isPreconnected_Ioc, isPreconnected_Ioo,
     isPreconnected_Ioi, isPreconnected_Iio, isPreconnected_Ici, isPreconnected_Iic,
-    is_preconnected_univ, isPreconnected_empty]
+    isPreconnected_univ, isPreconnected_empty]
 #align set_of_is_preconnected_eq_of_ordered setOf_isPreconnected_eq_of_ordered
 
 /-!
@@ -813,7 +813,7 @@ theorem intermediate_value_Ico {a b : α} (hab : a ≤ b) {f : α → δ} (hf : 
   Or.elim (eq_or_lt_of_le hab) (fun he y h => absurd h.2 (not_lt_of_le (he ▸ h.1))) fun hlt =>
     @IsPreconnected.intermediate_value_Ico _ _ _ _ _ _ _ isPreconnected_Ico _ _ ⟨refl a, hlt⟩
       (right_nhdsWithin_Ico_neBot hlt) inf_le_right _ (hf.mono Ico_subset_Icc_self) _
-      ((hf.ContinuousWithinAt ⟨hab, refl b⟩).mono Ico_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨hab, refl b⟩).mono Ico_subset_Icc_self)
 #align intermediate_value_Ico intermediate_value_Ico
 
 /- warning: intermediate_value_Ico' -> intermediate_value_Ico' is a dubious translation:
@@ -827,7 +827,7 @@ theorem intermediate_value_Ico' {a b : α} (hab : a ≤ b) {f : α → δ}
   Or.elim (eq_or_lt_of_le hab) (fun he y h => absurd h.1 (not_lt_of_le (he ▸ h.2))) fun hlt =>
     @IsPreconnected.intermediate_value_Ioc _ _ _ _ _ _ _ isPreconnected_Ico _ _ ⟨refl a, hlt⟩
       (right_nhdsWithin_Ico_neBot hlt) inf_le_right _ (hf.mono Ico_subset_Icc_self) _
-      ((hf.ContinuousWithinAt ⟨hab, refl b⟩).mono Ico_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨hab, refl b⟩).mono Ico_subset_Icc_self)
 #align intermediate_value_Ico' intermediate_value_Ico'
 
 /- warning: intermediate_value_Ioc -> intermediate_value_Ioc is a dubious translation:
@@ -841,7 +841,7 @@ theorem intermediate_value_Ioc {a b : α} (hab : a ≤ b) {f : α → δ} (hf : 
   Or.elim (eq_or_lt_of_le hab) (fun he y h => absurd h.2 (not_le_of_lt (he ▸ h.1))) fun hlt =>
     @IsPreconnected.intermediate_value_Ioc _ _ _ _ _ _ _ isPreconnected_Ioc _ _ ⟨hlt, refl b⟩
       (left_nhdsWithin_Ioc_neBot hlt) inf_le_right _ (hf.mono Ioc_subset_Icc_self) _
-      ((hf.ContinuousWithinAt ⟨refl a, hab⟩).mono Ioc_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨refl a, hab⟩).mono Ioc_subset_Icc_self)
 #align intermediate_value_Ioc intermediate_value_Ioc
 
 /- warning: intermediate_value_Ioc' -> intermediate_value_Ioc' is a dubious translation:
@@ -855,7 +855,7 @@ theorem intermediate_value_Ioc' {a b : α} (hab : a ≤ b) {f : α → δ}
   Or.elim (eq_or_lt_of_le hab) (fun he y h => absurd h.1 (not_le_of_lt (he ▸ h.2))) fun hlt =>
     @IsPreconnected.intermediate_value_Ico _ _ _ _ _ _ _ isPreconnected_Ioc _ _ ⟨hlt, refl b⟩
       (left_nhdsWithin_Ioc_neBot hlt) inf_le_right _ (hf.mono Ioc_subset_Icc_self) _
-      ((hf.ContinuousWithinAt ⟨refl a, hab⟩).mono Ioc_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨refl a, hab⟩).mono Ioc_subset_Icc_self)
 #align intermediate_value_Ioc' intermediate_value_Ioc'
 
 /- warning: intermediate_value_Ioo -> intermediate_value_Ioo is a dubious translation:
@@ -870,8 +870,8 @@ theorem intermediate_value_Ioo {a b : α} (hab : a ≤ b) {f : α → δ} (hf : 
     @IsPreconnected.intermediate_value_Ioo _ _ _ _ _ _ _ isPreconnected_Ioo _ _
       (left_nhdsWithin_Ioo_neBot hlt) (right_nhdsWithin_Ioo_neBot hlt) inf_le_right inf_le_right _
       (hf.mono Ioo_subset_Icc_self) _ _
-      ((hf.ContinuousWithinAt ⟨refl a, hab⟩).mono Ioo_subset_Icc_self)
-      ((hf.ContinuousWithinAt ⟨hab, refl b⟩).mono Ioo_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨refl a, hab⟩).mono Ioo_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨hab, refl b⟩).mono Ioo_subset_Icc_self)
 #align intermediate_value_Ioo intermediate_value_Ioo
 
 /- warning: intermediate_value_Ioo' -> intermediate_value_Ioo' is a dubious translation:
@@ -886,8 +886,8 @@ theorem intermediate_value_Ioo' {a b : α} (hab : a ≤ b) {f : α → δ}
     @IsPreconnected.intermediate_value_Ioo _ _ _ _ _ _ _ isPreconnected_Ioo _ _
       (right_nhdsWithin_Ioo_neBot hlt) (left_nhdsWithin_Ioo_neBot hlt) inf_le_right inf_le_right _
       (hf.mono Ioo_subset_Icc_self) _ _
-      ((hf.ContinuousWithinAt ⟨hab, refl b⟩).mono Ioo_subset_Icc_self)
-      ((hf.ContinuousWithinAt ⟨refl a, hab⟩).mono Ioo_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨hab, refl b⟩).mono Ioo_subset_Icc_self)
+      ((hf.continuousWithinAt ⟨refl a, hab⟩).mono Ioo_subset_Icc_self)
 #align intermediate_value_Ioo' intermediate_value_Ioo'
 
 /- warning: continuous_on.surj_on_Icc -> ContinuousOn.surjOn_Icc is a dubious translation:
@@ -900,7 +900,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_on.surj_on_
 `b` are two points of this set, then `f` sends `s` to a superset of `Icc (f x) (f y)`. -/
 theorem ContinuousOn.surjOn_Icc {s : Set α} [hs : OrdConnected s] {f : α → δ}
     (hf : ContinuousOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) : SurjOn f s (Icc (f a) (f b)) :=
-  hs.IsPreconnected.intermediate_value ha hb hf
+  hs.isPreconnected.intermediate_value ha hb hf
 #align continuous_on.surj_on_Icc ContinuousOn.surjOn_Icc
 
 /- warning: continuous_on.surj_on_uIcc -> ContinuousOn.surjOn_uIcc is a dubious translation:
@@ -925,8 +925,8 @@ Case conversion may be inaccurate. Consider using '#align continuous.surjective 
 /-- A continuous function which tendsto `at_top` `at_top` and to `at_bot` `at_bot` is surjective. -/
 theorem Continuous.surjective {f : α → δ} (hf : Continuous f) (h_top : Tendsto f atTop atTop)
     (h_bot : Tendsto f atBot atBot) : Function.Surjective f := fun p =>
-  mem_range_of_exists_le_of_exists_ge hf (h_bot.Eventually (eventually_le_atBot p)).exists
-    (h_top.Eventually (eventually_ge_atTop p)).exists
+  mem_range_of_exists_le_of_exists_ge hf (h_bot.eventually (eventually_le_atBot p)).exists
+    (h_top.eventually (eventually_ge_atTop p)).exists
 #align continuous.surjective Continuous.surjective
 
 /- warning: continuous.surjective' -> Continuous.surjective' is a dubious translation:
@@ -955,7 +955,7 @@ theorem ContinuousOn.surjOn_of_tendsto {f : α → δ} {s : Set α} [OrdConnecte
     (hf : ContinuousOn f s) (hbot : Tendsto (fun x : s => f x) atBot atBot)
     (htop : Tendsto (fun x : s => f x) atTop atTop) : SurjOn f s univ :=
   haveI := Classical.inhabited_of_nonempty hs.to_subtype
-  surj_on_iff_surjective.2 <| (continuousOn_iff_continuous_restrict.1 hf).Surjective htop hbot
+  surjOn_iff_surjective.2 <| (continuousOn_iff_continuous_restrict.1 hf).surjective htop hbot
 #align continuous_on.surj_on_of_tendsto ContinuousOn.surjOn_of_tendsto
 
 /- warning: continuous_on.surj_on_of_tendsto' -> ContinuousOn.surjOn_of_tendsto' is a dubious translation:

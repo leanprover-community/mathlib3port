@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.main
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,9 +24,9 @@ theorem isSearchable_of_wellFormed {t : Rbnode α} [IsStrictWeakOrder α lt] :
   by
   intro h; induction h
   · constructor
-    simp [lift]
+    simp [Lift]
   · subst h_n'
-    apply is_searchable_insert
+    apply isSearchable_insert
     assumption
 #align rbnode.is_searchable_of_well_formed Rbnode.isSearchable_of_wellFormed
 
@@ -41,7 +41,7 @@ theorem isRedBlack_of_wellFormed {t : Rbnode α} : t.WellFormed lt → ∃ c n, 
   · cases' h_ih with c ih
     cases' ih with n ih
     subst h_n'
-    apply insert_is_red_black
+    apply insert_isRedBlack
     assumption
 #align rbnode.is_red_black_of_well_formed Rbnode.isRedBlack_of_wellFormed
 
@@ -60,18 +60,17 @@ theorem balanced (t : Rbtree α lt) : t.depth max ≤ 2 * t.depth min + 1 :=
 #align rbtree.balanced Rbtree.balanced
 
 theorem not_mem_mkRbtree : ∀ a : α, a ∉ mkRbtree α lt := by
-  simp [Membership.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
+  simp [has_mem.mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
 #align rbtree.not_mem_mk_rbtree Rbtree.not_mem_mkRbtree
 
-theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.Empty = true → a ∉ t := by
-  cases' t with n p <;> cases n <;>
-    simp [Empty, Membership.Mem, Rbtree.Mem, Rbnode.Mem, false_imp_iff]
+theorem not_mem_of_empty {t : Rbtree α lt} (a : α) : t.empty = true → a ∉ t := by
+  cases' t with n p <;> cases n <;> simp [empty, has_mem.mem, Rbtree.Mem, Rbnode.Mem, false_imp_iff]
 #align rbtree.not_mem_of_empty Rbtree.not_mem_of_empty
 
 theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α} :
     a ∈ t → a ≈[lt]b → b ∈ t :=
   by
-  cases' t with n p <;> simp [Membership.Mem, Rbtree.Mem] <;> clear p <;> induction n <;>
+  cases' t with n p <;> simp [has_mem.mem, Rbtree.Mem] <;> clear p <;> induction n <;>
         simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_imp_iff] <;>
       intro h₁ h₂ <;>
     cases_type*or.1
@@ -104,7 +103,7 @@ theorem find_correct_of_total [IsStrictTotalOrder α lt] (a : α) (t : Rbtree α
   Iff.intro
     (fun h =>
       match Iff.mp (find_correct a t) h with
-      | ⟨b, HEq, heqv⟩ => by simp [HEq, (eq_of_eqv_lt heqv).symm])
+      | ⟨b, heq, heqv⟩ => by simp [heq, (eq_of_eqv_lt heqv).symm])
     fun h => Iff.mpr (find_correct a t) ⟨a, ⟨h, refl a⟩⟩
 #align rbtree.find_correct_of_total Rbtree.find_correct_of_total
 
@@ -188,11 +187,11 @@ theorem contains_correct [IsStrictWeakOrder α lt] (a : α) (t : Rbtree α lt) :
     simp [Option.isSome]
   · intro h'
     cases' heq : find t a with v
-    simp [HEq, Option.isSome] at h'
+    simp [heq, Option.isSome] at h'
     contradiction
     exists v
     simp
-    apply eqv_of_find_some HEq
+    apply eqv_of_find_some heq
 #align rbtree.contains_correct Rbtree.contains_correct
 
 theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b a → a ∈ t.insert b := by

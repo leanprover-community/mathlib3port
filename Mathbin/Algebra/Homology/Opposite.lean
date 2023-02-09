@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Amelia Livingston
 
 ! This file was ported from Lean 3 source module algebra.homology.opposite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,29 +41,29 @@ variable {V : Type _} [Category V] [Abelian V]
 
 theorem imageToKernel_op {X Y Z : V} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
     imageToKernel g.op f.op (by rw [← op_comp, w, op_zero]) =
-      (imageSubobjectIso _ ≪≫ (imageOpOp _).symm).Hom ≫
+      (imageSubobjectIso _ ≪≫ (imageOpOp _).symm).hom ≫
         (cokernel.desc f (factorThruImage g)
-              (by rw [← cancel_mono (image.ι g), category.assoc, image.fac, w, zero_comp])).op ≫
+              (by rw [← cancel_mono (image.ι g), Category.assoc, image.fac, w, zero_comp])).op ≫
           (kernelSubobjectIso _ ≪≫ kernelOpOp _).inv :=
   by
   ext
-  simpa only [iso.trans_hom, iso.symm_hom, iso.trans_inv, kernel_op_op_inv, category.assoc,
-    imageToKernel_arrow, kernel_subobject_arrow', kernel.lift_ι, ← op_comp, cokernel.π_desc, ←
-    image_subobject_arrow, ← image_unop_op_inv_comp_op_factor_thru_image g.op]
+  simpa only [Iso.trans_hom, Iso.symm_hom, Iso.trans_inv, kernelOpOp_inv, Category.assoc,
+    imageToKernel_arrow, kernelSubobject_arrow', kernel.lift_ι, ← op_comp, cokernel.π_desc, ←
+    imageSubobject_arrow, ← imageUnopOp_inv_comp_op_factorThruImage g.op]
 #align image_to_kernel_op imageToKernel_op
 
 theorem imageToKernel_unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
     imageToKernel g.unop f.unop (by rw [← unop_comp, w, unop_zero]) =
-      (imageSubobjectIso _ ≪≫ (imageUnopUnop _).symm).Hom ≫
+      (imageSubobjectIso _ ≪≫ (imageUnopUnop _).symm).hom ≫
         (cokernel.desc f (factorThruImage g)
-              (by rw [← cancel_mono (image.ι g), category.assoc, image.fac, w, zero_comp])).unop ≫
+              (by rw [← cancel_mono (image.ι g), Category.assoc, image.fac, w, zero_comp])).unop ≫
           (kernelSubobjectIso _ ≪≫ kernelUnopUnop _).inv :=
   by
   ext
   dsimp only [image_unop_unop]
-  simp only [iso.trans_hom, iso.symm_hom, iso.trans_inv, kernel_unop_unop_inv, category.assoc,
-    imageToKernel_arrow, kernel_subobject_arrow', kernel.lift_ι, cokernel.π_desc, iso.unop_inv, ←
-    unop_comp, factor_thru_image_comp_image_unop_op_inv, Quiver.Hom.unop_op, image_subobject_arrow]
+  simp only [Iso.trans_hom, Iso.symm_hom, Iso.trans_inv, kernelUnopUnop_inv, Category.assoc,
+    imageToKernel_arrow, kernelSubobject_arrow', kernel.lift_ι, cokernel.π_desc, Iso.unop_inv, ←
+    unop_comp, factorThruImage_comp_imageUnopOp_inv, Quiver.Hom.unop_op, imageSubobject_arrow]
 #align image_to_kernel_unop imageToKernel_unop
 
 /-- Given `f, g` with `f ≫ g = 0`, the homology of `g.op, f.op` is the opposite of the homology of
@@ -172,7 +172,7 @@ def opInverse : HomologicalComplex Vᵒᵖ c.symm ⥤ (HomologicalComplex V c)�
   map X Y f :=
     Quiver.Hom.op
       { f := fun i => (f.f i).unop
-        comm' := fun i j hij => by simp only [unop_symm_d, ← unop_comp, f.comm] }
+        comm' := fun i j hij => by simp only [unopSymm_d, ← unop_comp, f.comm] }
 #align homological_complex.op_inverse HomologicalComplex.opInverse
 
 /-- Auxilliary definition for `op_equivalence`. -/
@@ -180,16 +180,16 @@ def opUnitIso : 𝟭 (HomologicalComplex V c)ᵒᵖ ≅ opFunctor V c ⋙ opInve
   NatIso.ofComponents
     (fun X =>
       (HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-            simp only [iso.refl_hom, category.id_comp, unop_symm_d, op_d, Quiver.Hom.unop_op,
-              category.comp_id] :
+            simp only [Iso.refl_hom, Category.id_comp, unopSymm_d, op_d, Quiver.Hom.unop_op,
+              Category.comp_id] :
           (Opposite.unop X).op.unopSymm ≅ unop X).op)
     (by
       intro X Y f
       refine' Quiver.Hom.unop_inj _
       ext
-      simp only [Quiver.Hom.unop_op, functor.id_map, iso.op_hom, functor.comp_map, unop_comp,
-        comp_f, hom.iso_of_components_hom_f]
-      erw [category.id_comp, category.comp_id (f.unop.f x)])
+      simp only [Quiver.Hom.unop_op, Functor.id_map, Iso.op_hom, Functor.comp_map, unop_comp,
+        comp_f, Hom.isoOfComponents_hom_f]
+      erw [Category.id_comp, Category.comp_id (f.unop.f x)])
 #align homological_complex.op_unit_iso HomologicalComplex.opUnitIso
 
 /-- Auxilliary definition for `op_equivalence`. -/
@@ -197,12 +197,12 @@ def opCounitIso : opInverse V c ⋙ opFunctor V c ≅ 𝟭 (HomologicalComplex V
   NatIso.ofComponents
     (fun X =>
       HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-        simpa only [iso.refl_hom, category.id_comp, category.comp_id] )
+        simpa only [Iso.refl_hom, Category.id_comp, Category.comp_id] )
     (by
       intro X Y f
       ext
-      simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, functor.comp_map, functor.id_map,
-        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f] )
+      simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, Functor.comp_map, Functor.id_map,
+        Iso.refl_hom, Category.id_comp, Category.comp_id, comp_f, Hom.isoOfComponents_hom_f] )
 #align homological_complex.op_counit_iso HomologicalComplex.opCounitIso
 
 /-- Given a category of complexes with objects in `V`, there is a natural equivalence between its
@@ -217,9 +217,9 @@ def opEquivalence : (HomologicalComplex V c)ᵒᵖ ≌ HomologicalComplex Vᵒ�
   functor_unitIso_comp' := by
     intro X
     ext
-    simp only [op_unit_iso, op_counit_iso, nat_iso.of_components_hom_app, iso.op_hom, comp_f,
-      op_functor_map_f, Quiver.Hom.unop_op, hom.iso_of_components_hom_f]
-    exact category.comp_id _
+    simp only [opUnitIso, opCounitIso, NatIso.ofComponents_hom_app, Iso.op_hom, comp_f,
+      opFunctor_map_f, Quiver.Hom.unop_op, Hom.isoOfComponents_hom_f]
+    exact Category.comp_id _
 #align homological_complex.op_equivalence HomologicalComplex.opEquivalence
 
 /-- Auxilliary definition for `unop_equivalence`. -/
@@ -240,7 +240,7 @@ def unopInverse : HomologicalComplex V c.symm ⥤ (HomologicalComplex Vᵒᵖ c)
   map X Y f :=
     Quiver.Hom.op
       { f := fun i => (f.f i).op
-        comm' := fun i j hij => by simp only [op_symm_d, ← op_comp, f.comm] }
+        comm' := fun i j hij => by simp only [opSymm_d, ← op_comp, f.comm] }
 #align homological_complex.unop_inverse HomologicalComplex.unopInverse
 
 /-- Auxilliary definition for `unop_equivalence`. -/
@@ -248,16 +248,16 @@ def unopUnitIso : 𝟭 (HomologicalComplex Vᵒᵖ c)ᵒᵖ ≅ unopFunctor V c 
   NatIso.ofComponents
     (fun X =>
       (HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-            simp only [iso.refl_hom, category.id_comp, unop_symm_d, op_d, Quiver.Hom.unop_op,
-              category.comp_id] :
+            simp only [Iso.refl_hom, Category.id_comp, unopSymm_d, op_d, Quiver.Hom.unop_op,
+              Category.comp_id] :
           (Opposite.unop X).op.unopSymm ≅ unop X).op)
     (by
       intro X Y f
       refine' Quiver.Hom.unop_inj _
       ext
-      simp only [Quiver.Hom.unop_op, functor.id_map, iso.op_hom, functor.comp_map, unop_comp,
-        comp_f, hom.iso_of_components_hom_f]
-      erw [category.id_comp, category.comp_id (f.unop.f x)])
+      simp only [Quiver.Hom.unop_op, Functor.id_map, Iso.op_hom, Functor.comp_map, unop_comp,
+        comp_f, Hom.isoOfComponents_hom_f]
+      erw [Category.id_comp, Category.comp_id (f.unop.f x)])
 #align homological_complex.unop_unit_iso HomologicalComplex.unopUnitIso
 
 /-- Auxilliary definition for `unop_equivalence`. -/
@@ -265,12 +265,12 @@ def unopCounitIso : unopInverse V c ⋙ unopFunctor V c ≅ 𝟭 (HomologicalCom
   NatIso.ofComponents
     (fun X =>
       HomologicalComplex.Hom.isoOfComponents (fun i => Iso.refl _) fun i j hij => by
-        simpa only [iso.refl_hom, category.id_comp, category.comp_id] )
+        simpa only [Iso.refl_hom, Category.id_comp, Category.comp_id] )
     (by
       intro X Y f
       ext
-      simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, functor.comp_map, functor.id_map,
-        iso.refl_hom, category.id_comp, category.comp_id, comp_f, hom.iso_of_components_hom_f] )
+      simpa only [Quiver.Hom.unop_op, Quiver.Hom.op_unop, Functor.comp_map, Functor.id_map,
+        Iso.refl_hom, Category.id_comp, Category.comp_id, comp_f, Hom.isoOfComponents_hom_f] )
 #align homological_complex.unop_counit_iso HomologicalComplex.unopCounitIso
 
 /-- Given a category of complexes with objects in `Vᵒᵖ`, there is a natural equivalence between its
@@ -285,9 +285,9 @@ def unopEquivalence : (HomologicalComplex Vᵒᵖ c)ᵒᵖ ≌ HomologicalComple
   functor_unitIso_comp' := by
     intro X
     ext
-    simp only [op_unit_iso, op_counit_iso, nat_iso.of_components_hom_app, iso.op_hom, comp_f,
-      op_functor_map_f, Quiver.Hom.unop_op, hom.iso_of_components_hom_f]
-    exact category.comp_id _
+    simp only [opUnitIso, opCounitIso, NatIso.ofComponents_hom_app, Iso.op_hom, comp_f,
+      opFunctor_map_f, Quiver.Hom.unop_op, Hom.isoOfComponents_hom_f]
+    exact Category.comp_id _
 #align homological_complex.unop_equivalence HomologicalComplex.unopEquivalence
 
 variable {V c}

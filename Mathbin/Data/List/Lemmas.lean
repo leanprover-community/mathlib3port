@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,12 +68,12 @@ theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
     simp [hn, hm]
   · intro n hn m hm h
     simp only [length, Set.mem_setOf_eq] at hn hm
-    simp only [mem_cons_iff, not_or] at hx
+    simp only [mem_cons, not_or] at hx
     cases n <;> cases m
     · rfl
     · simpa [hx.left] using h
     · simpa [Ne.symm hx.left] using h
-    · simp only [true_and_iff, eq_self_iff_true, insert_nth_succ_cons] at h
+    · simp only [true_and_iff, eq_self_iff_true, insertNth_succ_cons] at h
       rw [Nat.succ_inj']
       refine' IH hx.right _ _ h
       · simpa [Nat.succ_le_succ_iff] using hn

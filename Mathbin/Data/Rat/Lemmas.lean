@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem den_dvd (a b : ℤ) : ((a /. b).den : ℤ) ∣ b :=
   by
   by_cases b0 : b = 0; · simp [b0]
   cases' e : a /. b with n d h c
-  rw [num_denom', mk_eq b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
+  rw [num_den', divInt_eq_iff b0 (ne_of_gt (Int.coe_nat_pos.2 h))] at e
   refine' Int.dvd_natAbs.1 <| Int.coe_nat_dvd.2 <| c.symm.dvd_of_dvd_mul_left _
   rw [← Int.natAbs_mul, ← Int.coe_nat_dvd, Int.dvd_natAbs, ← e]; simp
 #align rat.denom_dvd Rat.den_dvd
@@ -72,7 +72,7 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
     by
     refine' (Rat.divInt_eq_iff _ hd).mp _
     · exact int.coe_nat_ne_zero.mpr (Rat.den_nz _)
-    · rwa [num_denom]
+    · rwa [num_den]
   have hqdn : q.num ∣ n := by
     rw [qdf]
     exact Rat.num_dvd _ hd
@@ -80,7 +80,7 @@ theorem num_den_mk {q : ℚ} {n d : ℤ} (hd : d ≠ 0) (qdf : q = n /. d) :
   · rw [Int.ediv_mul_cancel hqdn]
   · refine' Int.eq_mul_div_of_mul_eq_mul_of_dvd_left _ hqdn this
     rw [qdf]
-    exact Rat.num_ne_zero_of_ne_zero ((mk_ne_zero hd).mpr hn)
+    exact Rat.num_ne_zero_of_ne_zero ((divInt_ne_zero hd).mpr hn)
 #align rat.num_denom_mk Rat.num_den_mk
 
 /- warning: rat.mk_pnat_num clashes with [anonymous] -> [anonymous]
@@ -113,8 +113,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.num_mk Rat.num_mkₓ'. -/
 theorem num_mk (n d : ℤ) : (n /. d).num = d.sign * n / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ,
-      Int.zero_div]
+    simp [Rat.mk, mkRat, [anonymous], Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ,
+      -Int.ofNat_succ, Int.zero_div]
 #align rat.num_mk Rat.num_mk
 
 /- warning: rat.denom_mk -> Rat.den_mk is a dubious translation:
@@ -125,7 +125,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.denom_mk Rat.den_mkₓ'. -/
 theorem den_mk (n d : ℤ) : (n /. d).den = if d = 0 then 1 else d.natAbs / n.gcd d := by
   rcases d with ((_ | _) | _) <;>
-    simp [Rat.mk, mk_nat, mk_pnat, Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ, -Int.ofNat_succ]
+    simp [Rat.mk, mkRat, [anonymous], Nat.succPNat, Int.sign, Int.gcd, -Nat.cast_succ,
+      -Int.ofNat_succ]
 #align rat.denom_mk Rat.den_mk
 
 /- warning: rat.mk_pnat_denom_dvd clashes with [anonymous] -> [anonymous]
@@ -137,7 +138,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_denom_dvd [anonymous]ₓ'. -/
 theorem [anonymous] (n : ℤ) (d : ℕ+) : ([anonymous] n d).den ∣ d.1 :=
   by
-  rw [mk_pnat_denom]
+  rw [[anonymous]]
   apply Nat.div_dvd_of_dvd
   apply Nat.gcd_dvd_right
 #align rat.mk_pnat_denom_dvd [anonymous]
@@ -147,7 +148,7 @@ theorem add_den_dvd (q₁ q₂ : ℚ) : (q₁ + q₂).den ∣ q₁.den * q₂.de
   by
   cases q₁
   cases q₂
-  apply mk_pnat_denom_dvd
+  apply [anonymous]
 #align rat.add_denom_dvd Rat.add_den_dvd
 -/
 
@@ -156,7 +157,7 @@ theorem mul_den_dvd (q₁ q₂ : ℚ) : (q₁ * q₂).den ∣ q₁.den * q₂.de
   by
   cases q₁
   cases q₂
-  apply mk_pnat_denom_dvd
+  apply [anonymous]
 #align rat.mul_denom_dvd Rat.mul_den_dvd
 -/
 
@@ -218,7 +219,7 @@ theorem mul_num_den' (q r : ℚ) : (q * r).num * q.den * r.den = q.num * r.num *
   let s := q.num * r.num /. (q.denom * r.denom : ℤ)
   have hs : (q.denom * r.denom : ℤ) ≠ 0 := int.coe_nat_ne_zero_iff_pos.mpr (mul_pos q.pos r.pos)
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
-    exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.num) hs
+    exists_eq_mul_div_num_and_eq_mul_div_den (q.num * r.num) hs
   rw [c_mul_num, mul_assoc, mul_comm]
   nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
@@ -228,11 +229,11 @@ theorem mul_num_den' (q r : ℚ) : (q * r).num * q.den * r.den = q.num * r.num *
   have h : _ = s :=
     @mul_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos)
       (int.coe_nat_ne_zero_iff_pos.mpr r.pos)
-  rw [num_denom, num_denom] at h
+  rw [num_den, num_den] at h
   rw [h]
   rw [mul_comm]
   apply rat.eq_iff_mul_eq_mul.mp
-  rw [← mk_eq_div]
+  rw [← divInt_eq_div]
 #align rat.mul_num_denom' Rat.mul_num_den'
 -/
 
@@ -243,7 +244,7 @@ theorem add_num_den' (q r : ℚ) :
   let s := mk (q.num * r.denom + r.num * q.denom) (q.denom * r.denom : ℤ)
   have hs : (q.denom * r.denom : ℤ) ≠ 0 := int.coe_nat_ne_zero_iff_pos.mpr (mul_pos q.pos r.pos)
   obtain ⟨c, ⟨c_mul_num, c_mul_denom⟩⟩ :=
-    exists_eq_mul_div_num_and_eq_mul_div_denom (q.num * r.denom + r.num * q.denom) hs
+    exists_eq_mul_div_num_and_eq_mul_div_den (q.num * r.denom + r.num * q.denom) hs
   rw [c_mul_num, mul_assoc, mul_comm]
   nth_rw 1 [c_mul_denom]
   repeat' rw [mul_assoc]
@@ -253,11 +254,11 @@ theorem add_num_den' (q r : ℚ) :
   have h : _ = s :=
     @add_def q.num q.denom r.num r.denom (int.coe_nat_ne_zero_iff_pos.mpr q.pos)
       (int.coe_nat_ne_zero_iff_pos.mpr r.pos)
-  rw [num_denom, num_denom] at h
+  rw [num_den, num_den] at h
   rw [h]
   rw [mul_comm]
   apply rat.eq_iff_mul_eq_mul.mp
-  rw [← mk_eq_div]
+  rw [← divInt_eq_div]
 #align rat.add_num_denom' Rat.add_num_den'
 -/
 
@@ -269,8 +270,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.substr_num_denom' Rat.substr_num_den'ₓ'. -/
 theorem substr_num_den' (q r : ℚ) :
     (q - r).num * q.den * r.den = (q.num * r.den - r.num * q.den) * (q - r).den := by
-  rw [sub_eq_add_neg, sub_eq_add_neg, ← neg_mul, ← num_neg_eq_neg_num, ← denom_neg_eq_denom r,
-    add_num_denom' q (-r)]
+  rw [sub_eq_add_neg, sub_eq_add_neg, ← neg_mul, ← num_neg_eq_neg_num, ← den_neg_eq_den r,
+    add_num_den' q (-r)]
 #align rat.substr_num_denom' Rat.substr_num_den'
 
 end Casts
@@ -279,7 +280,7 @@ end Casts
 theorem inv_def'' {q : ℚ} : q⁻¹ = (q.den : ℚ) / q.num :=
   by
   conv_lhs => rw [← @num_denom q]
-  rw [inv_def, mk_eq_div, Int.cast_ofNat]
+  rw [inv_def', divInt_eq_div, Int.cast_ofNat]
 #align rat.inv_def' Rat.inv_def''
 -/
 
@@ -298,9 +299,9 @@ theorem mul_den_eq_num {q : ℚ} : q * q.den = q.num :=
   suffices mk q.num ↑q.denom * mk (↑q.denom) 1 = mk q.num 1
     by
     conv => pattern (occs := 1) q <;> (rw [← @num_denom q])
-    rwa [coe_int_eq_mk, coe_nat_eq_mk]
+    rwa [coe_int_eq_divInt, coe_nat_eq_divInt]
   have : (q.denom : ℤ) ≠ 0 := ne_of_gt (by exact_mod_cast q.pos)
-  rw [Rat.mul_def' this one_ne_zero, mul_comm (q.denom : ℤ) 1, div_mk_div_cancel_left this]
+  rw [Rat.mul_def' this one_ne_zero, mul_comm (q.denom : ℤ) 1, divInt_mul_right this]
 #align rat.mul_denom_eq_num Rat.mul_den_eq_num
 -/
 
@@ -348,7 +349,7 @@ theorem div_int_inj {a b c d : ℤ} (hb0 : 0 < b) (hd0 : 0 < d) (h1 : Nat.coprim
   by
   apply And.intro
   · rw [← num_div_eq_of_coprime hb0 h1, h, num_div_eq_of_coprime hd0 h2]
-  · rw [← denom_div_eq_of_coprime hb0 h1, h, denom_div_eq_of_coprime hd0 h2]
+  · rw [← den_div_eq_of_coprime hb0 h1, h, den_div_eq_of_coprime hd0 h2]
 #align rat.div_int_inj Rat.div_int_inj
 -/
 
@@ -413,7 +414,7 @@ theorem inv_coe_nat_num_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.num = 1 
 theorem inv_coe_int_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : ℤ) = a :=
   by
   rw [Rat.inv_def'', Rat.coe_int_num, Rat.coe_int_den, Nat.cast_one, ← Int.cast_one]
-  apply denom_div_eq_of_coprime ha0
+  apply den_div_eq_of_coprime ha0
   rw [Int.natAbs_one]
   exact Nat.coprime_one_left _
 #align rat.inv_coe_int_denom_of_pos Rat.inv_coe_int_den_of_pos
@@ -422,7 +423,7 @@ theorem inv_coe_int_den_of_pos {a : ℤ} (ha0 : 0 < a) : ((a : ℚ)⁻¹.den : �
 #print Rat.inv_coe_nat_den_of_pos /-
 theorem inv_coe_nat_den_of_pos {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.den = a :=
   by
-  rw [← Int.ofNat_inj, ← Int.cast_ofNat a, inv_coe_int_denom_of_pos]
+  rw [← Int.ofNat_inj, ← Int.cast_ofNat a, inv_coe_int_den_of_pos]
   rwa [← Nat.cast_zero, Nat.cast_lt]
 #align rat.inv_coe_nat_denom_of_pos Rat.inv_coe_nat_den_of_pos
 -/
@@ -454,7 +455,7 @@ Case conversion may be inaccurate. Consider using '#align rat.inv_coe_int_denom 
 theorem inv_coe_int_den (a : ℤ) : (a : ℚ)⁻¹.den = if a = 0 then 1 else a.natAbs := by
   induction a using Int.induction_on <;>
     simp [← Int.negSucc_coe', Int.negSucc_coe, -neg_add_rev, Rat.inv_neg, Int.ofNat_add_one_out,
-      -Nat.cast_succ, inv_coe_nat_denom_of_pos, -Int.cast_negSucc]
+      -Nat.cast_succ, inv_coe_nat_den_of_pos, -Int.cast_negSucc]
 #align rat.inv_coe_int_denom Rat.inv_coe_int_den
 
 /- warning: rat.inv_coe_nat_denom -> Rat.inv_coe_nat_den is a dubious translation:
@@ -465,7 +466,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.inv_coe_nat_denom Rat.inv_coe_nat_denₓ'. -/
 @[simp]
 theorem inv_coe_nat_den (a : ℕ) : (a : ℚ)⁻¹.den = if a = 0 then 1 else a := by
-  simpa using inv_coe_int_denom a
+  simpa using inv_coe_int_den a
 #align rat.inv_coe_nat_denom Rat.inv_coe_nat_den
 
 #print Rat.forall /-
@@ -476,7 +477,7 @@ protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ a b : ℤ, p 
 
 #print Rat.exists /-
 protected theorem exists {p : ℚ → Prop} : (∃ r, p r) ↔ ∃ a b : ℤ, p (a / b) :=
-  ⟨fun ⟨r, hr⟩ => ⟨r.num, r.den, by rwa [← mk_eq_div, num_denom]⟩, fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
+  ⟨fun ⟨r, hr⟩ => ⟨r.num, r.den, by rwa [← divInt_eq_div, num_den]⟩, fun ⟨a, b, h⟩ => ⟨_, h⟩⟩
 #align rat.exists Rat.exists
 -/
 
@@ -490,7 +491,7 @@ section PnatDenom
 #print Rat.pnatDen /-
 /-- Denominator as `ℕ+`. -/
 def pnatDen (x : ℚ) : ℕ+ :=
-  ⟨x.den, x.Pos⟩
+  ⟨x.den, x.pos⟩
 #align rat.pnat_denom Rat.pnatDen
 -/
 
@@ -510,7 +511,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.mk_pnat_pnat_denom_eq [anonymous]ₓ'. -/
 @[simp]
 theorem [anonymous] (x : ℚ) : [anonymous] x.num x.pnatDen = x := by
-  rw [pnat_denom, mk_pnat_eq, num_denom]
+  rw [pnatDen, [anonymous], num_den]
 #align rat.mk_pnat_pnat_denom_eq [anonymous]
 
 #print Rat.pnatDen_eq_iff_den_eq /-

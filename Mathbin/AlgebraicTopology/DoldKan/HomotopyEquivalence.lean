@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.homotopy_equivalence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ noncomputable def homotopyPToId : ∀ q : ℕ, Homotopy (p q : K[X] ⟶ _) (𝟙
     refine'
       Homotopy.trans (Homotopy.ofEq _)
         (Homotopy.trans
-          (Homotopy.add (homotopy_P_to_id q) (Homotopy.compLeft (homotopy_Hσ_to_zero q) (P q)))
+          (Homotopy.add (homotopy_P_to_id q) (Homotopy.compLeft (homotopyHσToZero q) (p q)))
           (Homotopy.ofEq _))
     · unfold P
       simp only [comp_add, comp_id]
@@ -54,11 +54,11 @@ def homotopyQToZero (q : ℕ) : Homotopy (q q : K[X] ⟶ _) 0 :=
 #align algebraic_topology.dold_kan.homotopy_Q_to_zero AlgebraicTopology.DoldKan.homotopyQToZero
 
 theorem homotopyPToId_eventually_constant {q n : ℕ} (hqn : n < q) :
-    ((homotopyPToId X (q + 1)).Hom n (n + 1) : X _[n] ⟶ X _[n + 1]) =
-      (homotopyPToId X q).Hom n (n + 1) :=
+    ((homotopyPToId X (q + 1)).hom n (n + 1) : X _[n] ⟶ X _[n + 1]) =
+      (homotopyPToId X q).hom n (n + 1) :=
   by
   unfold homotopy_P_to_id
-  simp only [homotopy_Hσ_to_zero, hσ'_eq_zero hqn (c_mk (n + 1) n rfl), Homotopy.trans_hom,
+  simp only [homotopyHσToZero, hσ'_eq_zero hqn (c_mk (n + 1) n rfl), Homotopy.trans_hom,
     Pi.add_apply, Homotopy.ofEq_hom, Pi.zero_apply, Homotopy.add_hom, Homotopy.compLeft_hom,
     Homotopy.nullHomotopy'_hom, ComplexShape.down_Rel, eq_self_iff_true, dite_eq_ite, if_true,
     comp_zero, add_zero, zero_add]
@@ -71,18 +71,18 @@ variable (X)
 @[simps]
 def homotopyPInftyToId : Homotopy (pInfty : K[X] ⟶ _) (𝟙 _)
     where
-  Hom i j := (homotopyPToId X (j + 1)).Hom i j
+  Hom i j := (homotopyPToId X (j + 1)).hom i j
   zero' i j hij := Homotopy.zero _ i j hij
   comm n := by
     cases n
     ·
-      simpa only [Homotopy.dNext_zero_chainComplex, Homotopy.prevD_chainComplex, P_f_0_eq, zero_add,
-        HomologicalComplex.id_f, P_infty_f] using (homotopy_P_to_id X 2).comm 0
+      simpa only [Homotopy.dNext_zero_chainComplex, Homotopy.prevD_chainComplex, p_f_0_eq, zero_add,
+        HomologicalComplex.id_f, pInfty_f] using (homotopyPToId X 2).comm 0
     ·
       simpa only [Homotopy.dNext_succ_chainComplex, Homotopy.prevD_chainComplex,
-        HomologicalComplex.id_f, P_infty_f, ← P_is_eventually_constant (rfl.le : n + 1 ≤ n + 1),
-        homotopy_P_to_id_eventually_constant X (lt_add_one (n + 1))] using
-        (homotopy_P_to_id X (n + 2)).comm (n + 1)
+        HomologicalComplex.id_f, pInfty_f, ← p_is_eventually_constant (rfl.le : n + 1 ≤ n + 1),
+        homotopyPToId_eventually_constant X (lt_add_one (n + 1))] using
+        (homotopyPToId X (n + 2)).comm (n + 1)
 #align algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
 
 /-- The inclusion of the Moore complex in the alternating face map complex

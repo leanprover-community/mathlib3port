@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.segment
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,13 +64,13 @@ scoped[Convex] notation "[" x " -[" 𝕜 "] " y "]" => segment 𝕜 x y
 theorem segment_eq_image₂ (x y : E) :
     [x -[𝕜] y] =
       (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } :=
-  by simp only [segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
+  by simp only [segment, image, Prod.exists, mem_setOf_eq, exists_prop, and_assoc']
 #align segment_eq_image₂ segment_eq_image₂
 
 theorem openSegment_eq_image₂ (x y : E) :
     openSegment 𝕜 x y =
       (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } :=
-  by simp only [openSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
+  by simp only [openSegment, image, Prod.exists, mem_setOf_eq, exists_prop, and_assoc']
 #align open_segment_eq_image₂ openSegment_eq_image₂
 
 theorem segment_symm (x y : E) : [x -[𝕜] y] = [y -[𝕜] x] :=
@@ -390,24 +390,24 @@ theorem openSegment_subset_union (x y : E) {z : E} (hz : z ∈ range (lineMap x 
     openSegment 𝕜 x y ⊆ insert z (openSegment 𝕜 x z ∪ openSegment 𝕜 z y) :=
   by
   rcases hz with ⟨c, rfl⟩
-  simp only [openSegment_eq_image_lineMap, ← maps_to']
+  simp only [openSegment_eq_image_lineMap, ← mapsTo']
   rintro a ⟨h₀, h₁⟩
   rcases lt_trichotomy a c with (hac | rfl | hca)
   · right
     left
     have hc : 0 < c := h₀.trans hac
     refine' ⟨a / c, ⟨div_pos h₀ hc, (div_lt_one hc).2 hac⟩, _⟩
-    simp only [← homothety_eq_line_map, ← homothety_mul_apply, div_mul_cancel _ hc.ne']
+    simp only [← homothety_eq_lineMap, ← homothety_mul_apply, div_mul_cancel _ hc.ne']
   · left
     rfl
   · right
     right
     have hc : 0 < 1 - c := sub_pos.2 (hca.trans h₁)
-    simp only [← line_map_apply_one_sub y]
+    simp only [← lineMap_apply_one_sub y]
     refine'
       ⟨(a - c) / (1 - c), ⟨div_pos (sub_pos.2 hca) hc, (div_lt_one hc).2 <| sub_lt_sub_right h₁ _⟩,
         _⟩
-    simp only [← homothety_eq_line_map, ← homothety_mul_apply, sub_mul, one_mul,
+    simp only [← homothety_eq_lineMap, ← homothety_mul_apply, sub_mul, one_mul,
       div_mul_cancel _ hc.ne', sub_sub_sub_cancel_right]
 #align open_segment_subset_union openSegment_subset_union
 
@@ -516,7 +516,7 @@ theorem segment_eq_Icc (h : x ≤ y) : [x -[𝕜] y] = Icc x y :=
 #align segment_eq_Icc segment_eq_Icc
 
 theorem Ioo_subset_openSegment : Ioo x y ⊆ openSegment 𝕜 x y := fun z hz =>
-  mem_openSegment_of_ne_left_right hz.1.Ne hz.2.ne' <| Icc_subset_segment <| Ioo_subset_Icc_self hz
+  mem_openSegment_of_ne_left_right hz.1.ne hz.2.ne' <| Icc_subset_segment <| Ioo_subset_Icc_self hz
 #align Ioo_subset_open_segment Ioo_subset_openSegment
 
 @[simp]
@@ -571,7 +571,7 @@ theorem Convex.mem_Ioc (h : x < y) :
     obtain rfl | hb' := hb.eq_or_lt
     · rw [add_zero] at hab
       rw [hab, one_mul, zero_mul, add_zero] at hz
-      exact (hz.1.Ne rfl).elim
+      exact (hz.1.ne rfl).elim
     · exact ⟨a, b, ha, hb', hab, rfl⟩
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     obtain rfl | ha' := ha.eq_or_lt
@@ -590,7 +590,7 @@ theorem Convex.mem_Ico (h : x < y) :
     obtain rfl | ha' := ha.eq_or_lt
     · rw [zero_add] at hab
       rw [hab, one_mul, zero_mul, zero_add] at hz
-      exact (hz.2.Ne rfl).elim
+      exact (hz.2.ne rfl).elim
     · exact ⟨a, b, ha', hb, hab, rfl⟩
   · rintro ⟨a, b, ha, hb, hab, rfl⟩
     obtain rfl | hb' := hb.eq_or_lt

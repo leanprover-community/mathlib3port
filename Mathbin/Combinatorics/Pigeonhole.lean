@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module combinatorics.pigeonhole
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ if the total weight of a finite set of pigeons is greater than `n • b`, and th
 `n` pigeonholes, then for some pigeonhole, the total weight of the pigeons in this pigeonhole is
 greater than `b`. -/
 theorem exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum (hf : ∀ a ∈ s, f a ∈ t)
-    (hb : t.card • b < ∑ x in s, w x) : ∃ y ∈ t, b < ∑ x in s.filterₓ fun x => f x = y, w x :=
+    (hb : t.card • b < ∑ x in s, w x) : ∃ y ∈ t, b < ∑ x in s.filter fun x => f x = y, w x :=
   exists_lt_of_sum_lt <| by simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 #align finset.exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum Finset.exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum
 
@@ -143,7 +143,7 @@ if the total weight of a finite set of pigeons is less than `n • b`, and they 
 pigeonholes, then for some pigeonhole, the total weight of the pigeons in this pigeonhole is less
 than `b`. -/
 theorem exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul (hf : ∀ a ∈ s, f a ∈ t)
-    (hb : (∑ x in s, w x) < t.card • b) : ∃ y ∈ t, (∑ x in s.filterₓ fun x => f x = y, w x) < b :=
+    (hb : (∑ x in s, w x) < t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) < b :=
   @exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum α β Mᵒᵈ _ _ _ _ _ _ _ hf hb
 #align finset.exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul Finset.exists_sum_fiber_lt_of_maps_to_of_sum_lt_nsmul
 
@@ -153,19 +153,19 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> β} {w : α -> M} {b : M} [_inst_2 : LinearOrderedCancelAddCommMonoid.{u3} M], (forall (y : β), (Not (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t)) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)) (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddRightCancelMonoid.toZero.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))))) -> (LT.lt.{u3} M (Preorder.toLT.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (HSMul.hSMul.{0, u3, u3} Nat M M (instHSMul.{0, u3} Nat M (AddMonoid.SMul.{u3} M (AddRightCancelMonoid.toAddMonoid.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.card.{u2} β t) b) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) s (fun (x : α) => w x))) -> (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t) (LT.lt.{u3} M (Preorder.toLT.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) b (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)))))
 Case conversion may be inaccurate. Consider using '#align finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum Finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sumₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is greater than `n • b`, they are sorted into some
 pigeonholes, and for all but `n` pigeonholes the total weight of the pigeons there is nonpositive,
 then for at least one of these `n` pigeonholes, the total weight of the pigeons in this pigeonhole
 is greater than `b`. -/
 theorem exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
-    (ht : ∀ (y) (_ : y ∉ t), (∑ x in s.filterₓ fun x => f x = y, w x) ≤ 0)
-    (hb : t.card • b < ∑ x in s, w x) : ∃ y ∈ t, b < ∑ x in s.filterₓ fun x => f x = y, w x :=
+    (ht : ∀ (y) (_ : y ∉ t), (∑ x in s.filter fun x => f x = y, w x) ≤ 0)
+    (hb : t.card • b < ∑ x in s, w x) : ∃ y ∈ t, b < ∑ x in s.filter fun x => f x = y, w x :=
   exists_lt_of_sum_lt <|
     calc
       (∑ y in t, b) < ∑ x in s, w x := by simpa
-      _ ≤ ∑ y in t, ∑ x in s.filterₓ fun x => f x = y, w x :=
+      _ ≤ ∑ y in t, ∑ x in s.filter fun x => f x = y, w x :=
         sum_le_sum_fiberwise_of_sum_fiber_nonpos ht
       
 #align finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum Finset.exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum
@@ -176,15 +176,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> β} {w : α -> M} {b : M} [_inst_2 : LinearOrderedCancelAddCommMonoid.{u3} M], (forall (y : β), (Not (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t)) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddRightCancelMonoid.toZero.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)))) -> (LT.lt.{u3} M (Preorder.toLT.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) s (fun (x : α) => w x)) (HSMul.hSMul.{0, u3, u3} Nat M M (instHSMul.{0, u3} Nat M (AddMonoid.SMul.{u3} M (AddRightCancelMonoid.toAddMonoid.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.card.{u2} β t) b)) -> (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t) (LT.lt.{u3} M (Preorder.toLT.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)) b)))
 Case conversion may be inaccurate. Consider using '#align finset.exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul Finset.exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmulₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, strict inequality version:
 if the total weight of a finite set of pigeons is less than `n • b`, they are sorted into some
 pigeonholes, and for all but `n` pigeonholes the total weight of the pigeons there is nonnegative,
 then for at least one of these `n` pigeonholes, the total weight of the pigeons in this pigeonhole
 is less than `b`. -/
 theorem exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul
-    (ht : ∀ (y) (_ : y ∉ t), (0 : M) ≤ ∑ x in s.filterₓ fun x => f x = y, w x)
-    (hb : (∑ x in s, w x) < t.card • b) : ∃ y ∈ t, (∑ x in s.filterₓ fun x => f x = y, w x) < b :=
+    (ht : ∀ (y) (_ : y ∉ t), (0 : M) ≤ ∑ x in s.filter fun x => f x = y, w x)
+    (hb : (∑ x in s, w x) < t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) < b :=
   @exists_lt_sum_fiber_of_sum_fiber_nonpos_of_nsmul_lt_sum α β Mᵒᵈ _ _ _ _ _ _ _ ht hb
 #align finset.exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul Finset.exists_sum_fiber_lt_of_sum_fiber_nonneg_of_sum_lt_nsmul
 
@@ -204,7 +204,7 @@ version: if the total weight of a finite set of pigeons is greater than or equal
 they are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total weight of the pigeons
 in this pigeonhole is greater than or equal to `b`. -/
 theorem exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
-    (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filterₓ fun x => f x = y, w x :=
+    (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
   exists_le_of_sum_le ht <| by simpa only [sum_fiberwise_of_maps_to hf, sum_const]
 #align finset.exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum Finset.exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum
 
@@ -219,7 +219,7 @@ version: if the total weight of a finite set of pigeons is less than or equal to
 are sorted into `n > 0` pigeonholes, then for some pigeonhole, the total weight of the pigeons in
 this pigeonhole is less than or equal to `b`. -/
 theorem exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
-    (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filterₓ fun x => f x = y, w x) ≤ b :=
+    (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum α β Mᵒᵈ _ _ _ _ _ _ _ hf ht hb
 #align finset.exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul Finset.exists_sum_fiber_le_of_maps_to_of_sum_le_nsmul
 
@@ -229,19 +229,19 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> β} {w : α -> M} {b : M} [_inst_2 : LinearOrderedCancelAddCommMonoid.{u3} M], (forall (y : β), (Not (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t)) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)) (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddRightCancelMonoid.toZero.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))))) -> (Finset.Nonempty.{u2} β t) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (HSMul.hSMul.{0, u3, u3} Nat M M (instHSMul.{0, u3} Nat M (AddMonoid.SMul.{u3} M (AddRightCancelMonoid.toAddMonoid.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.card.{u2} β t) b) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) s (fun (x : α) => w x))) -> (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t) (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) b (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)))))
 Case conversion may be inaccurate. Consider using '#align finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum Finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sumₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is greater than or equal to `n • b`, they
 are sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total weight of the
 pigeons there is nonpositive, then for at least one of these `n` pigeonholes, the total weight of
 the pigeons in this pigeonhole is greater than or equal to `b`. -/
 theorem exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
-    (hf : ∀ (y) (_ : y ∉ t), (∑ x in s.filterₓ fun x => f x = y, w x) ≤ 0) (ht : t.Nonempty)
-    (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filterₓ fun x => f x = y, w x :=
+    (hf : ∀ (y) (_ : y ∉ t), (∑ x in s.filter fun x => f x = y, w x) ≤ 0) (ht : t.Nonempty)
+    (hb : t.card • b ≤ ∑ x in s, w x) : ∃ y ∈ t, b ≤ ∑ x in s.filter fun x => f x = y, w x :=
   exists_le_of_sum_le ht <|
     calc
       (∑ y in t, b) ≤ ∑ x in s, w x := by simpa
-      _ ≤ ∑ y in t, ∑ x in s.filterₓ fun x => f x = y, w x :=
+      _ ≤ ∑ y in t, ∑ x in s.filter fun x => f x = y, w x :=
         sum_le_sum_fiberwise_of_sum_fiber_nonpos hf
       
 #align finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum Finset.exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum
@@ -252,15 +252,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {M : Type.{u3}} [_inst_1 : DecidableEq.{succ u2} β] {s : Finset.{u1} α} {t : Finset.{u2} β} {f : α -> β} {w : α -> M} {b : M} [_inst_2 : LinearOrderedCancelAddCommMonoid.{u3} M], (forall (y : β), (Not (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t)) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (OfNat.ofNat.{u3} M 0 (Zero.toOfNat0.{u3} M (AddRightCancelMonoid.toZero.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)))) -> (Finset.Nonempty.{u2} β t) -> (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) s (fun (x : α) => w x)) (HSMul.hSMul.{0, u3, u3} Nat M M (instHSMul.{0, u3} Nat M (AddMonoid.SMul.{u3} M (AddRightCancelMonoid.toAddMonoid.{u3} M (AddCancelMonoid.toAddRightCancelMonoid.{u3} M (AddCancelCommMonoid.toAddCancelMonoid.{u3} M (OrderedCancelAddCommMonoid.toCancelAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2))))))) (Finset.card.{u2} β t) b)) -> (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) y t) (LE.le.{u3} M (Preorder.toLE.{u3} M (PartialOrder.toPreorder.{u3} M (OrderedCancelAddCommMonoid.toPartialOrder.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)))) (Finset.sum.{u3, u1} M α (OrderedCancelAddCommMonoid.toAddCommMonoid.{u3} M (LinearOrderedCancelAddCommMonoid.toOrderedCancelAddCommMonoid.{u3} M _inst_2)) (Finset.filter.{u1} α (fun (x : α) => Eq.{succ u2} β (f x) y) (fun (a : α) => _inst_1 (f a) y) s) (fun (x : α) => w x)) b)))
 Case conversion may be inaccurate. Consider using '#align finset.exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul Finset.exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmulₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 /-- The pigeonhole principle for finitely many pigeons counted by weight, non-strict inequality
 version: if the total weight of a finite set of pigeons is less than or equal to `n • b`, they are
 sorted into some pigeonholes, and for all but `n > 0` pigeonholes the total weight of the pigeons
 there is nonnegative, then for at least one of these `n` pigeonholes, the total weight of the
 pigeons in this pigeonhole is less than or equal to `b`. -/
 theorem exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
-    (hf : ∀ (y) (_ : y ∉ t), (0 : M) ≤ ∑ x in s.filterₓ fun x => f x = y, w x) (ht : t.Nonempty)
-    (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filterₓ fun x => f x = y, w x) ≤ b :=
+    (hf : ∀ (y) (_ : y ∉ t), (0 : M) ≤ ∑ x in s.filter fun x => f x = y, w x) (ht : t.Nonempty)
+    (hb : (∑ x in s, w x) ≤ t.card • b) : ∃ y ∈ t, (∑ x in s.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_sum_fiber_nonpos_of_nsmul_le_sum α β Mᵒᵈ _ _ _ _ _ _ _ hf ht hb
 #align finset.exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul Finset.exists_sum_fiber_le_of_sum_fiber_nonneg_of_sum_le_nsmul
 
@@ -295,7 +295,7 @@ Case conversion may be inaccurate. Consider using '#align finset.exists_lt_card_
 /-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
 at least as many pigeons as the ceiling of the average number of pigeons across all pigeonholes. -/
 theorem exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t)
-    (ht : t.card • b < s.card) : ∃ y ∈ t, b < (s.filterₓ fun x => f x = y).card :=
+    (ht : t.card • b < s.card) : ∃ y ∈ t, b < (s.filter fun x => f x = y).card :=
   by
   simp_rw [cast_card] at ht⊢
   exact exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum hf ht
@@ -315,7 +315,7 @@ More formally, given a function between finite sets `s` and `t` and a natural nu
 `card t * n < card s`, there exists `y ∈ t` such that its preimage in `s` has more than `n`
 elements. -/
 theorem exists_lt_card_fiber_of_mul_lt_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t)
-    (hn : t.card * n < s.card) : ∃ y ∈ t, n < (s.filterₓ fun x => f x = y).card :=
+    (hn : t.card * n < s.card) : ∃ y ∈ t, n < (s.filter fun x => f x = y).card :=
   exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to hf hn
 #align finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to Finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to
 
@@ -328,7 +328,7 @@ Case conversion may be inaccurate. Consider using '#align finset.exists_card_fib
 /-- The pigeonhole principle for finitely many pigeons counted by heads: there is a pigeonhole with
 at most as many pigeons as the floor of the average number of pigeons across all pigeonholes. -/
 theorem exists_card_fiber_lt_of_card_lt_nsmul (ht : ↑s.card < t.card • b) :
-    ∃ y ∈ t, ↑(s.filterₓ fun x => f x = y).card < b :=
+    ∃ y ∈ t, ↑(s.filter fun x => f x = y).card < b :=
   by
   simp_rw [cast_card] at ht⊢
   exact
@@ -350,7 +350,7 @@ More formally, given a function `f`, a finite sets `s` in its domain, a finite s
 codomain, and a natural number `n` such that `card s < card t * n`, there exists `y ∈ t` such that
 its preimage in `s` has less than `n` elements. -/
 theorem exists_card_fiber_lt_of_card_lt_mul (hn : s.card < t.card * n) :
-    ∃ y ∈ t, (s.filterₓ fun x => f x = y).card < n :=
+    ∃ y ∈ t, (s.filter fun x => f x = y).card < n :=
   exists_card_fiber_lt_of_card_lt_nsmul hn
 #align finset.exists_card_fiber_lt_of_card_lt_mul Finset.exists_card_fiber_lt_of_card_lt_mul
 
@@ -365,7 +365,7 @@ finite sets `s` and `t` and a number `b` such that `card t • b ≤ card s`, th
 that its preimage in `s` has at least `b` elements.
 See also `finset.exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to` for a stronger statement. -/
 theorem exists_le_card_fiber_of_nsmul_le_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
-    (hb : t.card • b ≤ s.card) : ∃ y ∈ t, b ≤ (s.filterₓ fun x => f x = y).card :=
+    (hb : t.card • b ≤ s.card) : ∃ y ∈ t, b ≤ (s.filter fun x => f x = y).card :=
   by
   simp_rw [cast_card] at hb⊢
   exact exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum hf ht hb
@@ -382,7 +382,7 @@ finite sets `s` and `t` and a natural number `b` such that `card t * n ≤ card 
 t` such that its preimage in `s` has at least `n` elements. See also
 `finset.exists_lt_card_fiber_of_mul_lt_card_of_maps_to` for a stronger statement. -/
 theorem exists_le_card_fiber_of_mul_le_card_of_maps_to (hf : ∀ a ∈ s, f a ∈ t) (ht : t.Nonempty)
-    (hn : t.card * n ≤ s.card) : ∃ y ∈ t, n ≤ (s.filterₓ fun x => f x = y).card :=
+    (hn : t.card * n ≤ s.card) : ∃ y ∈ t, n ≤ (s.filter fun x => f x = y).card :=
   exists_le_card_fiber_of_nsmul_le_card_of_maps_to hf ht hn
 #align finset.exists_le_card_fiber_of_mul_le_card_of_maps_to Finset.exists_le_card_fiber_of_mul_le_card_of_maps_to
 
@@ -397,7 +397,7 @@ finite sets `s` and `t`, and a number `b` such that `card s ≤ card t • b`, t
 that its preimage in `s` has no more than `b` elements.
 See also `finset.exists_card_fiber_lt_of_card_lt_nsmul` for a stronger statement. -/
 theorem exists_card_fiber_le_of_card_le_nsmul (ht : t.Nonempty) (hb : ↑s.card ≤ t.card • b) :
-    ∃ y ∈ t, ↑(s.filterₓ fun x => f x = y).card ≤ b :=
+    ∃ y ∈ t, ↑(s.filter fun x => f x = y).card ≤ b :=
   by
   simp_rw [cast_card] at hb⊢
   refine'
@@ -416,7 +416,7 @@ finite sets `s` in its domain, a finite set `t` in its codomain, and a natural n
 `card s ≤ card t * n`, there exists `y ∈ t` such that its preimage in `s` has no more than `n`
 elements. See also `finset.exists_card_fiber_lt_of_card_lt_mul` for a stronger statement. -/
 theorem exists_card_fiber_le_of_card_le_mul (ht : t.Nonempty) (hn : s.card ≤ t.card * n) :
-    ∃ y ∈ t, (s.filterₓ fun x => f x = y).card ≤ n :=
+    ∃ y ∈ t, (s.filter fun x => f x = y).card ≤ n :=
   exists_card_fiber_le_of_card_le_nsmul ht hn
 #align finset.exists_card_fiber_le_of_card_le_mul Finset.exists_card_fiber_le_of_card_le_mul
 
@@ -445,7 +445,7 @@ holds, so we have four theorems instead of eight. -/
 version: there is a pigeonhole with the total weight of pigeons in it greater than `b` provided that
 the total number of pigeonholes times `b` is less than the total weight of all pigeons. -/
 theorem exists_lt_sum_fiber_of_nsmul_lt_sum (hb : card β • b < ∑ x, w x) :
-    ∃ y, b < ∑ x in univ.filterₓ fun x => f x = y, w x :=
+    ∃ y, b < ∑ x in univ.filter fun x => f x = y, w x :=
   let ⟨y, _, hy⟩ := exists_lt_sum_fiber_of_maps_to_of_nsmul_lt_sum (fun _ _ => mem_univ _) hb
   ⟨y, hy⟩
 #align fintype.exists_lt_sum_fiber_of_nsmul_lt_sum Fintype.exists_lt_sum_fiber_of_nsmul_lt_sum
@@ -457,7 +457,7 @@ version: there is a pigeonhole with the total weight of pigeons in it greater th
 provided that the total number of pigeonholes times `b` is less than or equal to the total weight of
 all pigeons. -/
 theorem exists_le_sum_fiber_of_nsmul_le_sum [Nonempty β] (hb : card β • b ≤ ∑ x, w x) :
-    ∃ y, b ≤ ∑ x in univ.filterₓ fun x => f x = y, w x :=
+    ∃ y, b ≤ ∑ x in univ.filter fun x => f x = y, w x :=
   let ⟨y, _, hy⟩ :=
     exists_le_sum_fiber_of_maps_to_of_nsmul_le_sum (fun _ _ => mem_univ _) univ_nonempty hb
   ⟨y, hy⟩
@@ -469,7 +469,7 @@ theorem exists_le_sum_fiber_of_nsmul_le_sum [Nonempty β] (hb : card β • b �
 version: there is a pigeonhole with the total weight of pigeons in it less than `b` provided that
 the total number of pigeonholes times `b` is greater than the total weight of all pigeons. -/
 theorem exists_sum_fiber_lt_of_sum_lt_nsmul (hb : (∑ x, w x) < card β • b) :
-    ∃ y, (∑ x in univ.filterₓ fun x => f x = y, w x) < b :=
+    ∃ y, (∑ x in univ.filter fun x => f x = y, w x) < b :=
   @exists_lt_sum_fiber_of_nsmul_lt_sum α β Mᵒᵈ _ _ _ _ _ _ _ hb
 #align fintype.exists_sum_fiber_lt_of_sum_lt_nsmul Fintype.exists_sum_fiber_lt_of_sum_lt_nsmul
 -/
@@ -480,7 +480,7 @@ version: there is a pigeonhole with the total weight of pigeons in it less than 
 provided that the total number of pigeonholes times `b` is greater than or equal to the total weight
 of all pigeons. -/
 theorem exists_sum_fiber_le_of_sum_le_nsmul [Nonempty β] (hb : (∑ x, w x) ≤ card β • b) :
-    ∃ y, (∑ x in univ.filterₓ fun x => f x = y, w x) ≤ b :=
+    ∃ y, (∑ x in univ.filter fun x => f x = y, w x) ≤ b :=
   @exists_le_sum_fiber_of_nsmul_le_sum α β Mᵒᵈ _ _ _ _ _ _ _ _ hb
 #align fintype.exists_sum_fiber_le_of_sum_le_nsmul Fintype.exists_sum_fiber_le_of_sum_le_nsmul
 -/
@@ -494,7 +494,7 @@ variable [LinearOrderedCommSemiring M]
 with at least as many pigeons as the ceiling of the average number of pigeons across all
 pigeonholes. -/
 theorem exists_lt_card_fiber_of_nsmul_lt_card (hb : card β • b < card α) :
-    ∃ y : β, b < (univ.filterₓ fun x => f x = y).card :=
+    ∃ y : β, b < (univ.filter fun x => f x = y).card :=
   let ⟨y, _, h⟩ := exists_lt_card_fiber_of_nsmul_lt_card_of_maps_to (fun _ _ => mem_univ _) hb
   ⟨y, h⟩
 #align fintype.exists_lt_card_fiber_of_nsmul_lt_card Fintype.exists_lt_card_fiber_of_nsmul_lt_card
@@ -510,7 +510,7 @@ More formally, given a function `f` between finite types `α` and `β` and a num
 `card β * n < card α`, there exists an element `y : β` such that its preimage has more than `n`
 elements. -/
 theorem exists_lt_card_fiber_of_mul_lt_card (hn : card β * n < card α) :
-    ∃ y : β, n < (univ.filterₓ fun x => f x = y).card :=
+    ∃ y : β, n < (univ.filter fun x => f x = y).card :=
   exists_lt_card_fiber_of_nsmul_lt_card _ hn
 #align fintype.exists_lt_card_fiber_of_mul_lt_card Fintype.exists_lt_card_fiber_of_mul_lt_card
 -/
@@ -520,7 +520,7 @@ theorem exists_lt_card_fiber_of_mul_lt_card (hn : card β * n < card α) :
 with at most as many pigeons as the floor of the average number of pigeons across all pigeonholes.
 -/
 theorem exists_card_fiber_lt_of_card_lt_nsmul (hb : ↑(card α) < card β • b) :
-    ∃ y : β, ↑(univ.filterₓ fun x => f x = y).card < b :=
+    ∃ y : β, ↑(univ.filter fun x => f x = y).card < b :=
   let ⟨y, _, h⟩ := exists_card_fiber_lt_of_card_lt_nsmul hb
   ⟨y, h⟩
 #align fintype.exists_card_fiber_lt_of_card_lt_nsmul Fintype.exists_card_fiber_lt_of_card_lt_nsmul
@@ -536,7 +536,7 @@ More formally, given a function `f` between finite types `α` and `β` and a num
 `card α < card β * n`, there exists an element `y : β` such that its preimage has less than `n`
 elements. -/
 theorem exists_card_fiber_lt_of_card_lt_mul (hn : card α < card β * n) :
-    ∃ y : β, (univ.filterₓ fun x => f x = y).card < n :=
+    ∃ y : β, (univ.filter fun x => f x = y).card < n :=
   exists_card_fiber_lt_of_card_lt_nsmul _ hn
 #align fintype.exists_card_fiber_lt_of_card_lt_mul Fintype.exists_card_fiber_lt_of_card_lt_mul
 -/
@@ -547,7 +547,7 @@ between finite types `α` and `β` and a number `b` such that `card β • b ≤
 element `y : β` such that its preimage has at least `b` elements.
 See also `fintype.exists_lt_card_fiber_of_nsmul_lt_card` for a stronger statement. -/
 theorem exists_le_card_fiber_of_nsmul_le_card [Nonempty β] (hb : card β • b ≤ card α) :
-    ∃ y : β, b ≤ (univ.filterₓ fun x => f x = y).card :=
+    ∃ y : β, b ≤ (univ.filter fun x => f x = y).card :=
   let ⟨y, _, h⟩ :=
     exists_le_card_fiber_of_nsmul_le_card_of_maps_to (fun _ _ => mem_univ _) univ_nonempty hb
   ⟨y, h⟩
@@ -560,7 +560,7 @@ between finite types `α` and `β` and a number `n` such that `card β * n ≤ c
 element `y : β` such that its preimage has at least `n` elements. See also
 `fintype.exists_lt_card_fiber_of_mul_lt_card` for a stronger statement. -/
 theorem exists_le_card_fiber_of_mul_le_card [Nonempty β] (hn : card β * n ≤ card α) :
-    ∃ y : β, n ≤ (univ.filterₓ fun x => f x = y).card :=
+    ∃ y : β, n ≤ (univ.filter fun x => f x = y).card :=
   exists_le_card_fiber_of_nsmul_le_card _ hn
 #align fintype.exists_le_card_fiber_of_mul_le_card Fintype.exists_le_card_fiber_of_mul_le_card
 -/
@@ -571,7 +571,7 @@ between finite types `α` and `β` and a number `b` such that `card α ≤ card 
 element `y : β` such that its preimage has at most `b` elements.
 See also `fintype.exists_card_fiber_lt_of_card_lt_nsmul` for a stronger statement. -/
 theorem exists_card_fiber_le_of_card_le_nsmul [Nonempty β] (hb : ↑(card α) ≤ card β • b) :
-    ∃ y : β, ↑(univ.filterₓ fun x => f x = y).card ≤ b :=
+    ∃ y : β, ↑(univ.filter fun x => f x = y).card ≤ b :=
   let ⟨y, _, h⟩ := exists_card_fiber_le_of_card_le_nsmul univ_nonempty hb
   ⟨y, h⟩
 #align fintype.exists_card_fiber_le_of_card_le_nsmul Fintype.exists_card_fiber_le_of_card_le_nsmul
@@ -583,7 +583,7 @@ between finite types `α` and `β` and a number `n` such that `card α ≤ card 
 element `y : β` such that its preimage has at most `n` elements. See also
 `fintype.exists_card_fiber_lt_of_card_lt_mul` for a stronger statement. -/
 theorem exists_card_fiber_le_of_card_le_mul [Nonempty β] (hn : card α ≤ card β * n) :
-    ∃ y : β, (univ.filterₓ fun x => f x = y).card ≤ n :=
+    ∃ y : β, (univ.filter fun x => f x = y).card ≤ n :=
   exists_card_fiber_le_of_card_le_nsmul _ hn
 #align fintype.exists_card_fiber_le_of_card_le_mul Fintype.exists_card_fiber_le_of_card_le_mul
 -/

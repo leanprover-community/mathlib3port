@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.nodup_equiv_fin
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,7 +118,7 @@ variable [DecidableEq α]
 `fin (length l)` and the set of elements of `l`. -/
 def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x ∈ l }
     where
-  toEquiv := H.Nodup.getEquiv l
+  toEquiv := H.nodup.getEquiv l
   map_rel_iff' i j := H.get_strictMono.le_iff_le
 #align list.sorted.nth_le_iso List.Sorted.getIso
 -/
@@ -210,7 +210,7 @@ theorem sublist_iff_exists_orderEmbedding_get?_eq {l l' : List α} :
         · simp
         · simpa using hf _
   · rintro ⟨f, hf⟩
-    exact sublist_of_order_embedding_nth_eq f hf
+    exact sublist_of_orderEmbedding_get?_eq f hf
 #align list.sublist_iff_exists_order_embedding_nth_eq List.sublist_iff_exists_orderEmbedding_get?_eq
 
 /- warning: list.sublist_iff_exists_fin_order_embedding_nth_le_eq -> List.sublist_iff_exists_fin_orderEmbedding_get_eq is a dubious translation:
@@ -228,21 +228,21 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
       ∃ f : Fin l.length ↪o Fin l'.length,
         ∀ ix : Fin l.length, l.nthLe ix ix.is_lt = l'.nthLe (f ix) (f ix).is_lt :=
   by
-  rw [sublist_iff_exists_order_embedding_nth_eq]
+  rw [sublist_iff_exists_orderEmbedding_get?_eq]
   constructor
   · rintro ⟨f, hf⟩
     have h : ∀ {i : ℕ} (h : i < l.length), f i < l'.length :=
       by
       intro i hi
       specialize hf i
-      rw [nth_le_nth hi, eq_comm, nth_eq_some] at hf
+      rw [nthLe_get? hi, eq_comm, get?_eq_some'] at hf
       obtain ⟨h, -⟩ := hf
       exact h
     refine' ⟨OrderEmbedding.ofMapLeIff (fun ix => ⟨f ix, h ix.is_lt⟩) _, _⟩
     · simp
     · intro i
       apply Option.some_injective
-      simpa [← nth_le_nth] using hf _
+      simpa [← nthLe_get?] using hf _
   · rintro ⟨f, hf⟩
     refine'
       ⟨OrderEmbedding.ofStrictMono (fun i => if hi : i < l.length then f ⟨i, hi⟩ else i + l'.length)
@@ -259,9 +259,9 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
     · intro i
       simp only [OrderEmbedding.coe_ofStrictMono]
       split_ifs with hi
-      · rw [nth_le_nth hi, nth_le_nth, ← hf]
+      · rw [nthLe_get? hi, nthLe_get?, ← hf]
         simp
-      · rw [nth_len_le, nth_len_le]
+      · rw [get?_len_le, get?_len_le]
         · simp
         · simpa using hi
 #align list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_orderEmbedding_get_eq
@@ -277,7 +277,7 @@ theorem duplicate_iff_exists_distinct_nthLe {l : List α} {x : α} :
   by
   classical
     rw [duplicate_iff_two_le_count, le_count_iff_replicate_sublist,
-      sublist_iff_exists_fin_order_embedding_nth_le_eq]
+      sublist_iff_exists_fin_orderEmbedding_get_eq]
     constructor
     · rintro ⟨f, hf⟩
       refine' ⟨f ⟨0, by simp⟩, Fin.is_lt _, f ⟨1, by simp⟩, Fin.is_lt _, by simp, _, _⟩

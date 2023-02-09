@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.char_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ theorem cast_eq_zero [AddGroupWithOne α] [CharZero α] {n : ℤ} : (n : α) = 0
     cases n
     · rw [Int.cast_ofNat] at h
       exact congr_arg coe (Nat.cast_eq_zero.1 h)
-    · rw [cast_neg_succ_of_nat, neg_eq_zero, Nat.cast_eq_zero] at h
+    · rw [cast_negSucc, neg_eq_zero, Nat.cast_eq_zero] at h
       contradiction, fun h => by rw [h, cast_zero]⟩
 #align int.cast_eq_zero Int.cast_eq_zero
 

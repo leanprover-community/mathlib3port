@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.filtration
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -241,7 +241,7 @@ omit h
 theorem stable_iff_exists_pow_smul_eq_of_ge :
     F.Stable ↔ ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ (n - n₀) • F.n n₀ :=
   by
-  refine' ⟨stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.some, fun n hn => _⟩⟩
+  refine' ⟨Stable.exists_pow_smul_eq_of_ge, fun h => ⟨h.choose, fun n hn => _⟩⟩
   rw [h.some_spec n hn, h.some_spec (n + 1) (by linarith), smul_smul, ← pow_succ,
     tsub_add_eq_add_tsub hn]
 #align ideal.filtration.stable_iff_exists_pow_smul_eq_of_ge Ideal.Filtration.stable_iff_exists_pow_smul_eq_of_ge
@@ -290,11 +290,11 @@ protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M)
 #align ideal.filtration.submodule Ideal.Filtration.submodule
 
 @[simp]
-theorem mem_submodule (f : PolynomialModule R M) : f ∈ F.Submodule ↔ ∀ i, f i ∈ F.n i :=
+theorem mem_submodule (f : PolynomialModule R M) : f ∈ F.submodule ↔ ∀ i, f i ∈ F.n i :=
   Iff.rfl
 #align ideal.filtration.mem_submodule Ideal.Filtration.mem_submodule
 
-theorem inf_submodule : (F ⊓ F').Submodule = F.Submodule ⊓ F'.Submodule :=
+theorem inf_submodule : (F ⊓ F').submodule = F.submodule ⊓ F'.submodule :=
   by
   ext
   exact forall_and
@@ -312,7 +312,7 @@ def submoduleInfHom : InfHom (I.Filtration M) (Submodule (reesAlgebra I) (Polyno
 variable {I M}
 
 theorem submodule_closure_single :
-    AddSubmonoid.closure (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule.toAddSubmonoid :=
+    AddSubmonoid.closure (⋃ i, single R i '' (F.n i : Set M)) = F.submodule.toAddSubmonoid :=
   by
   apply le_antisymm
   · rw [AddSubmonoid.closure_le, Set.unionᵢ_subset_iff]
@@ -329,14 +329,14 @@ theorem submodule_closure_single :
 #align ideal.filtration.submodule_closure_single Ideal.Filtration.submodule_closure_single
 
 theorem submodule_span_single :
-    Submodule.span (reesAlgebra I) (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule :=
+    Submodule.span (reesAlgebra I) (⋃ i, single R i '' (F.n i : Set M)) = F.submodule :=
   by
   rw [← Submodule.span_closure, submodule_closure_single]
   simp
 #align ideal.filtration.submodule_span_single Ideal.Filtration.submodule_span_single
 
 theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
-    F.Submodule = Submodule.span _ (⋃ i ≤ n₀, single R i '' (F.n i : Set M)) ↔
+    F.submodule = Submodule.span _ (⋃ i ≤ n₀, single R i '' (F.n i : Set M)) ↔
       ∀ n ≥ n₀, I • F.n n = F.n (n + 1) :=
   by
   rw [← submodule_span_single, ← LE.le.le_iff_eq, Submodule.span_le, Set.unionᵢ_subset_iff]
@@ -382,7 +382,7 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
 
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/
-theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.Submodule.Fg ↔ F.Stable := by
+theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).Fg) : F.submodule.Fg ↔ F.Stable := by
   classical
     delta Ideal.Filtration.Stable
     simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
@@ -433,7 +433,7 @@ theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable
   any_goals intro i; exact IsNoetherian.noetherian _
   have := isNoetherian_of_fg_of_noetherian _ hF
   rw [isNoetherian_submodule] at this
-  exact this _ (OrderHomClass.mono (submodule_inf_hom M I) hf)
+  exact this _ (OrderHomClass.mono (submoduleInfHom M I) hf)
 #align ideal.filtration.stable.of_le Ideal.Filtration.Stable.of_le
 
 theorem Stable.inter_right [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
@@ -479,7 +479,7 @@ theorem Ideal.mem_infᵢ_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.F
     intro i
     induction' i with i hi
     · simp
-    · rw [Nat.succ_eq_one_add, pow_add, ← smul_smul, pow_one, ← Eq]
+    · rw [Nat.succ_eq_one_add, pow_add, ← smul_smul, pow_one, ← eq]
       exact Submodule.smul_mem_smul r.prop hi
 #align ideal.mem_infi_smul_pow_eq_bot_iff Ideal.mem_infᵢ_smul_pow_eq_bot_iff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -266,7 +266,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {f : Finsupp.{u2, u1} α M _inst_1}, Iff (Eq.{max (succ u2) (succ u1)} (forall (a : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) f) (OfNat.ofNat.{max u2 u1} (forall (a : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{max u2 u1} (forall (a : α), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (Pi.instZero.{u2, u1} α (fun (a : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (fun (i : α) => _inst_1))))) (Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) f (OfNat.ofNat.{max u2 u1} (Finsupp.{u2, u1} α M _inst_1) 0 (Zero.toOfNat0.{max u2 u1} (Finsupp.{u2, u1} α M _inst_1) (Finsupp.zero.{u2, u1} α M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align finsupp.coe_eq_zero Finsupp.coe_eq_zeroₓ'. -/
 @[simp, norm_cast]
-theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← coe_zero, coe_fn_inj]
+theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 := by rw [← coe_zero, coeFn_inj]
 #align finsupp.coe_eq_zero Finsupp.coe_eq_zero
 
 /- warning: finsupp.ext_iff' -> Finsupp.ext_iff' is a dubious translation:
@@ -294,7 +294,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.support_eq_empty Finsupp.support_eq_emptyₓ'. -/
 @[simp]
 theorem support_eq_empty {f : α →₀ M} : f.support = ∅ ↔ f = 0 := by
-  exact_mod_cast @Function.support_eq_empty_iff _ _ _ f
+  exact_mod_cast @function.support_eq_empty_iff _ _ _ f
 #align finsupp.support_eq_empty Finsupp.support_eq_empty
 
 /- warning: finsupp.support_nonempty_iff -> Finsupp.support_nonempty_iff is a dubious translation:
@@ -345,7 +345,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {s : Set.{u2} α} {f : Finsupp.{u2, u1} α M _inst_1}, Iff (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Finset.toSet.{u2} α (Finsupp.support.{u2, u1} α M _inst_1 f)) s) (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) f a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_subset_iff Finsupp.support_subset_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem support_subset_iff {s : Set α} {f : α →₀ M} : ↑f.support ⊆ s ↔ ∀ (a) (_ : a ∉ s), f a = 0 :=
   by
   simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congr' fun a => not_imp_comm
@@ -546,7 +546,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.support_single
 theorem support_single_subset : (single a b).support ⊆ {a} := by
   classical
     show ite _ _ _ ⊆ _
-    split_ifs <;> [exact empty_subset _, exact subset.refl _]
+    split_ifs <;> [exact empty_subset _, exact Subset.refl _]
 #align finsupp.support_single_subset Finsupp.support_single_subset
 
 #print Finsupp.single_apply_mem /-
@@ -566,7 +566,7 @@ theorem range_single_subset : Set.range (single a b) ⊆ {0, b} :=
 `finsupp.single_left_injective` -/
 theorem single_injective (a : α) : Function.Injective (single a : M → α →₀ M) := fun b₁ b₂ eq =>
   by
-  have : (single a b₁ : α →₀ M) a = (single a b₂ : α →₀ M) a := by rw [Eq]
+  have : (single a b₁ : α →₀ M) a = (single a b₂ : α →₀ M) a := by rw [eq]
   rwa [single_eq_same, single_eq_same] at this
 #align finsupp.single_injective Finsupp.single_injective
 -/
@@ -623,8 +623,8 @@ theorem single_eq_single_iff (a₁ a₂ : α) (b₁ b₂ : M) :
     · refine' Or.inl ⟨h, _⟩
       rwa [h, (single_injective a₂).eq_iff] at eq
     · rw [ext_iff] at eq
-      have h₁ := Eq a₁
-      have h₂ := Eq a₂
+      have h₁ := eq a₁
+      have h₂ := eq a₂
       simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂
       exact Or.inr ⟨h₁, h₂.symm⟩
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
@@ -732,7 +732,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {f : Finsupp.{u2, u1} α M _inst_1} {a : α}, Iff (Eq.{succ u2} (Finset.{u2} α) (Finsupp.support.{u2, u1} α M _inst_1 f) (Singleton.singleton.{u2, u2} α (Finset.{u2} α) (Finset.instSingletonFinset.{u2} α) a)) (Exists.{succ u1} M (fun (b : M) => Exists.{0} (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (fun (H : Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) => Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) f (Finsupp.single.{u2, u1} α M _inst_1 a b))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_eq_singleton' Finsupp.support_eq_singleton'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem support_eq_singleton' {f : α →₀ M} {a : α} :
     f.support = {a} ↔ ∃ (b : _)(_ : b ≠ 0), f = single a b :=
   ⟨fun h =>
@@ -757,7 +757,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {f : Finsupp.{u2, u1} α M _inst_1}, Iff (Eq.{1} Nat (Finset.card.{u2} α (Finsupp.support.{u2, u1} α M _inst_1 f)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Exists.{succ u2} α (fun (a : α) => Exists.{succ u1} M (fun (b : M) => Exists.{0} (Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (fun (H : Ne.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) => Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M _inst_1) f (Finsupp.single.{u2, u1} α M _inst_1 a b)))))
 Case conversion may be inaccurate. Consider using '#align finsupp.card_support_eq_one' Finsupp.card_support_eq_one'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » 0) -/
 theorem card_support_eq_one' {f : α →₀ M} :
     card f.support = 1 ↔ ∃ (a : _)(b : _)(_ : b ≠ 0), f = single a b := by
   simp only [card_eq_one, support_eq_singleton']
@@ -829,7 +829,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.equiv_fun_on_f
 @[simp]
 theorem equivFunOnFinite_symm_single [DecidableEq α] [Finite α] (x : α) (m : M) :
     Finsupp.equivFunOnFinite.symm (Pi.single x m) = Finsupp.single x m := by
-  rw [← equiv_fun_on_finite_single, Equiv.symm_apply_apply]
+  rw [← equivFunOnFinite_single, Equiv.symm_apply_apply]
 #align finsupp.equiv_fun_on_finite_symm_single Finsupp.equivFunOnFinite_symm_single
 
 end Single
@@ -906,7 +906,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (f : Finsupp.{u2, u1} α M _inst_1) (a : α) (b : M) [_inst_2 : DecidableEq.{succ u2} α] [_inst_3 : DecidableEq.{succ u1} M], Eq.{succ u2} (Finset.{u2} α) (Finsupp.support.{u2, u1} α M _inst_1 (Finsupp.update.{u2, u1} α M _inst_1 f a b)) (ite.{succ u2} (Finset.{u2} α) (Eq.{succ u1} M b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (_inst_3 b (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_2 a b) (Finsupp.support.{u2, u1} α M _inst_1 f) a) (Insert.insert.{u2, u2} α (Finset.{u2} α) (Finset.instInsertFinset.{u2} α (fun (a : α) (b : α) => _inst_2 a b)) a (Finsupp.support.{u2, u1} α M _inst_1 f)))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_update Finsupp.support_updateₓ'. -/
 theorem support_update [DecidableEq α] [DecidableEq M] :
-    support (f.update a b) = if b = 0 then f.support.eraseₓ a else insert a f.support := by
+    support (f.update a b) = if b = 0 then f.support.erase a else insert a f.support := by
   convert rfl
 #align finsupp.support_update Finsupp.support_update
 
@@ -917,7 +917,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (f : Finsupp.{u2, u1} α M _inst_1) (a : α) [_inst_2 : DecidableEq.{succ u2} α], Eq.{succ u2} (Finset.{u2} α) (Finsupp.support.{u2, u1} α M _inst_1 (Finsupp.update.{u2, u1} α M _inst_1 f a (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1)))) (Finset.erase.{u2} α (fun (a : α) (b : α) => _inst_2 a b) (Finsupp.support.{u2, u1} α M _inst_1 f) a)
 Case conversion may be inaccurate. Consider using '#align finsupp.support_update_zero Finsupp.support_update_zeroₓ'. -/
 @[simp]
-theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.support.eraseₓ a := by
+theorem support_update_zero [DecidableEq α] : support (f.update a 0) = f.support.erase a := by
   convert if_pos rfl
 #align finsupp.support_update_zero Finsupp.support_update_zero
 
@@ -969,7 +969,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.support_erase Finsupp.support_eraseₓ'. -/
 @[simp]
 theorem support_erase [DecidableEq α] {a : α} {f : α →₀ M} :
-    (f.eraseₓ a).support = f.support.eraseₓ a := by convert rfl
+    (f.erase a).support = f.support.erase a := by convert rfl
 #align finsupp.support_erase Finsupp.support_erase
 
 /- warning: finsupp.erase_same -> Finsupp.erase_same is a dubious translation:
@@ -979,7 +979,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {a : α} {f : Finsupp.{u2, u1} α M _inst_1}, Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (Finsupp.erase.{u2, u1} α M _inst_1 a f) a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1))
 Case conversion may be inaccurate. Consider using '#align finsupp.erase_same Finsupp.erase_sameₓ'. -/
 @[simp]
-theorem erase_same {a : α} {f : α →₀ M} : (f.eraseₓ a) a = 0 := by convert if_pos rfl
+theorem erase_same {a : α} {f : α →₀ M} : (f.erase a) a = 0 := by convert if_pos rfl
 #align finsupp.erase_same Finsupp.erase_same
 
 /- warning: finsupp.erase_ne -> Finsupp.erase_ne is a dubious translation:
@@ -989,7 +989,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] {a : α} {a' : α} {f : Finsupp.{u2, u1} α M _inst_1}, (Ne.{succ u2} α a' a) -> (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (Finsupp.erase.{u2, u1} α M _inst_1 a f) a') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) f a'))
 Case conversion may be inaccurate. Consider using '#align finsupp.erase_ne Finsupp.erase_neₓ'. -/
 @[simp]
-theorem erase_ne {a a' : α} {f : α →₀ M} (h : a' ≠ a) : (f.eraseₓ a) a' = f a' := by
+theorem erase_ne {a a' : α} {f : α →₀ M} (h : a' ≠ a) : (f.erase a) a' = f a' := by
   classical convert if_neg h
 #align finsupp.erase_ne Finsupp.erase_ne
 
@@ -1107,7 +1107,7 @@ theorem mem_support_onFinset {s : Finset α} {f : α → M} (hf : ∀ a : α, f 
 #print Finsupp.support_onFinset /-
 theorem support_onFinset [DecidableEq M] {s : Finset α} {f : α → M}
     (hf : ∀ a : α, f a ≠ 0 → a ∈ s) :
-    (Finsupp.onFinset s f hf).support = s.filterₓ fun a => f a ≠ 0 := by convert rfl
+    (Finsupp.onFinset s f hf).support = s.filter fun a => f a ≠ 0 := by convert rfl
 #align finsupp.support_on_finset Finsupp.support_onFinset
 -/
 
@@ -1184,7 +1184,7 @@ theorem mapRange_apply {f : M → N} {hf : f 0 = 0} {g : α →₀ M} {a : α} :
 #print Finsupp.mapRange_zero /-
 @[simp]
 theorem mapRange_zero {f : M → N} {hf : f 0 = 0} : mapRange f hf (0 : α →₀ M) = 0 :=
-  ext fun a => by simp only [hf, zero_apply, map_range_apply]
+  ext fun a => by simp only [hf, zero_apply, mapRange_apply]
 #align finsupp.map_range_zero Finsupp.mapRange_zero
 -/
 
@@ -1325,7 +1325,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] (f : Function.Embedding.{succ u3, succ u2} α β), Function.Injective.{max (succ u3) (succ u1), max (succ u2) (succ u1)} (Finsupp.{u3, u1} α M _inst_1) (Finsupp.{u2, u1} β M _inst_1) (Finsupp.embDomain.{u3, u2, u1} α β M _inst_1 f)
 Case conversion may be inaccurate. Consider using '#align finsupp.emb_domain_injective Finsupp.embDomain_injectiveₓ'. -/
 theorem embDomain_injective (f : α ↪ β) : Function.Injective (embDomain f : (α →₀ M) → β →₀ M) :=
-  fun l₁ l₂ h => ext fun a => by simpa only [emb_domain_apply] using ext_iff.1 h (f a)
+  fun l₁ l₂ h => ext fun a => by simpa only [embDomain_apply] using ext_iff.1 h (f a)
 #align finsupp.emb_domain_injective Finsupp.embDomain_injective
 
 /- warning: finsupp.emb_domain_inj -> Finsupp.embDomain_inj is a dubious translation:
@@ -1362,8 +1362,8 @@ theorem embDomain_mapRange (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg :
   ext a
   by_cases a ∈ Set.range f
   · rcases h with ⟨a', rfl⟩
-    rw [map_range_apply, emb_domain_apply, emb_domain_apply, map_range_apply]
-  · rw [map_range_apply, emb_domain_notin_range, emb_domain_notin_range, ← hg] <;> assumption
+    rw [mapRange_apply, embDomain_apply, embDomain_apply, mapRange_apply]
+  · rw [mapRange_apply, embDomain_notin_range, embDomain_notin_range, ← hg] <;> assumption
 #align finsupp.emb_domain_map_range Finsupp.embDomain_mapRange
 
 /- warning: finsupp.single_of_emb_domain_single -> Finsupp.single_of_embDomain_single is a dubious translation:
@@ -1376,13 +1376,13 @@ theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b
     (h : l.embDomain f = single a b) : ∃ x, l = single x b ∧ f x = a := by
   classical
     have h_map_support : Finset.map f l.support = {a} := by
-      rw [← support_emb_domain, h, support_single_ne_zero _ hb] <;> rfl
+      rw [← support_embDomain, h, support_single_ne_zero _ hb] <;> rfl
     have ha : a ∈ Finset.map f l.support := by simp only [h_map_support, Finset.mem_singleton]
     rcases Finset.mem_map.1 ha with ⟨c, hc₁, hc₂⟩
     use c
     constructor
     · ext d
-      rw [← emb_domain_apply f l, h]
+      rw [← embDomain_apply f l, h]
       by_cases h_cases : c = d
       · simp only [Eq.symm h_cases, hc₂, single_eq_same]
       · rw [single_apply, single_apply, if_neg, if_neg h_cases]
@@ -1405,7 +1405,7 @@ theorem embDomain_single (f : α ↪ β) (a : α) (m : M) : embDomain f (single 
     by_cases h : b ∈ Set.range f
     · rcases h with ⟨a', rfl⟩
       simp [single_apply]
-    · simp only [emb_domain_notin_range, h, single_apply, not_false_iff]
+    · simp only [embDomain_notin_range, h, single_apply, not_false_iff]
       rw [if_neg]
       rintro rfl
       simpa using h
@@ -1455,7 +1455,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.support_zip_with Finsupp.support_zipWithₓ'. -/
 theorem support_zipWith [D : DecidableEq α] {f : M → N → P} {hf : f 0 0 = 0} {g₁ : α →₀ M}
     {g₂ : α →₀ N} : (zipWith f hf g₁ g₂).support ⊆ g₁.support ∪ g₂.support := by
-  rw [Subsingleton.elim D] <;> exact support_on_finset_subset
+  rw [Subsingleton.elim D] <;> exact support_onFinset_subset
 #align finsupp.support_zip_with Finsupp.support_zipWith
 
 end ZipWith
@@ -1536,7 +1536,7 @@ theorem single_add (a : α) (b₁ b₂ : M) : single a (b₁ + b₂) = single a 
 #align finsupp.single_add Finsupp.single_add
 
 instance : AddZeroClass (α →₀ M) :=
-  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
+  FunLike.coe_injective.addZeroClass _ coe_zero coe_add
 
 /- warning: finsupp.single_add_hom -> Finsupp.singleAddHom is a dubious translation:
 lean 3 declaration is
@@ -1588,7 +1588,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : AddZeroClass.{u1} M] (f : Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (a : α) (b : M), Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.update.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) f a b) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (instHAdd.{max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.add.{u2, u1} α M _inst_1)) (Finsupp.single.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a b) (Finsupp.erase.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a f))
 Case conversion may be inaccurate. Consider using '#align finsupp.update_eq_single_add_erase Finsupp.update_eq_single_add_eraseₓ'. -/
 theorem update_eq_single_add_erase (f : α →₀ M) (a : α) (b : M) :
-    f.update a b = single a b + f.eraseₓ a := by
+    f.update a b = single a b + f.erase a := by
   classical
     ext j
     rcases eq_or_ne a j with (rfl | h)
@@ -1603,7 +1603,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : AddZeroClass.{u1} M] (f : Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (a : α) (b : M), Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.update.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) f a b) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (instHAdd.{max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.add.{u2, u1} α M _inst_1)) (Finsupp.erase.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a f) (Finsupp.single.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a b))
 Case conversion may be inaccurate. Consider using '#align finsupp.update_eq_erase_add_single Finsupp.update_eq_erase_add_singleₓ'. -/
 theorem update_eq_erase_add_single (f : α →₀ M) (a : α) (b : M) :
-    f.update a b = f.eraseₓ a + single a b := by
+    f.update a b = f.erase a + single a b := by
   classical
     ext j
     rcases eq_or_ne a j with (rfl | h)
@@ -1617,7 +1617,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : AddZeroClass.{u1} M] (a : α) (f : Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)), Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (instHAdd.{max u2 u1} (Finsupp.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (Finsupp.add.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (Finsupp.single.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1) a (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) f a)) (Finsupp.erase.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a f)) f
 Case conversion may be inaccurate. Consider using '#align finsupp.single_add_erase Finsupp.single_add_eraseₓ'. -/
-theorem single_add_erase (a : α) (f : α →₀ M) : single a (f a) + f.eraseₓ a = f := by
+theorem single_add_erase (a : α) (f : α →₀ M) : single a (f a) + f.erase a = f := by
   rw [← update_eq_single_add_erase, update_self]
 #align finsupp.single_add_erase Finsupp.single_add_erase
 
@@ -1627,7 +1627,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : AddZeroClass.{u1} M] (a : α) (f : Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)), Eq.{max (succ u2) (succ u1)} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (HAdd.hAdd.{max u2 u1, max u2 u1, max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1)) (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (instHAdd.{max u2 u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) (Finsupp.add.{u2, u1} α M _inst_1)) (Finsupp.erase.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1) a f) (Finsupp.single.{u2, u1} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (AddZeroClass.toZero.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1) a (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M (AddZeroClass.toZero.{u1} M _inst_1)) f a))) f
 Case conversion may be inaccurate. Consider using '#align finsupp.erase_add_single Finsupp.erase_add_singleₓ'. -/
-theorem erase_add_single (a : α) (f : α →₀ M) : f.eraseₓ a + single a (f a) = f := by
+theorem erase_add_single (a : α) (f : α →₀ M) : f.erase a + single a (f a) = f := by
   rw [← update_eq_erase_add_single, update_self]
 #align finsupp.erase_add_single Finsupp.erase_add_single
 
@@ -1673,7 +1673,7 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
-    suffices p (single a (f a) + f.eraseₓ a) by rwa [single_add_erase] at this
+    suffices p (single a (f a) + f.erase a) by rwa [single_add_erase] at this
     classical
       apply ha
       · rw [support_erase, mem_erase]
@@ -1696,7 +1696,7 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
   fun s =>
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf =>
     by
-    suffices p (f.eraseₓ a + single a (f a)) by rwa [erase_add_single] at this
+    suffices p (f.erase a + single a (f a)) by rwa [erase_add_single] at this
     classical
       apply ha
       · rw [support_erase, mem_erase]
@@ -1743,7 +1743,7 @@ then they are equal. -/
 theorem addHom_ext [AddZeroClass N] ⦃f g : (α →₀ M) →+ N⦄
     (H : ∀ x y, f (single x y) = g (single x y)) : f = g :=
   by
-  refine' AddMonoidHom.eq_of_eqOn_denseM add_closure_set_of_eq_single _
+  refine' AddMonoidHom.eq_of_eqOn_denseM add_closure_setOf_eq_single _
   rintro _ ⟨x, y, rfl⟩
   apply H
 #align finsupp.add_hom_ext Finsupp.addHom_ext
@@ -1801,7 +1801,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.map_range_add 
 theorem mapRange_add [AddZeroClass N] {f : M → N} {hf : f 0 = 0}
     (hf' : ∀ x y, f (x + y) = f x + f y) (v₁ v₂ : α →₀ M) :
     mapRange f hf (v₁ + v₂) = mapRange f hf v₁ + mapRange f hf v₂ :=
-  ext fun _ => by simp only [hf', add_apply, map_range_apply]
+  ext fun _ => by simp only [hf', add_apply, mapRange_apply]
 #align finsupp.map_range_add Finsupp.mapRange_add
 
 /- warning: finsupp.map_range_add' -> Finsupp.mapRange_add' is a dubious translation:
@@ -1832,7 +1832,7 @@ def embDomain.addMonoidHom (f : α ↪ β) : (α →₀ M) →+ β →₀ M
     by_cases h : b ∈ Set.range f
     · rcases h with ⟨a, rfl⟩
       simp
-    · simp [emb_domain_notin_range, h]
+    · simp [embDomain_notin_range, h]
 #align finsupp.emb_domain.add_monoid_hom Finsupp.embDomain.addMonoidHom
 
 /- warning: finsupp.emb_domain_add -> Finsupp.embDomain_add is a dubious translation:
@@ -1866,12 +1866,12 @@ instance hasNatScalar : SMul ℕ (α →₀ M) :=
 #align finsupp.has_nat_scalar Finsupp.hasNatScalar
 
 instance : AddMonoid (α →₀ M) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.addMonoid _ coe_zero coe_add fun _ _ => rfl
 
 end AddMonoid
 
 instance [AddCommMonoid M] : AddCommMonoid (α →₀ M) :=
-  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.addCommMonoid _ coe_zero coe_add fun _ _ => rfl
 
 instance [NegZeroClass G] : Neg (α →₀ G) :=
   ⟨mapRange Neg.neg neg_zero⟩
@@ -1905,7 +1905,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.map_range_neg Finsupp.mapRange_negₓ'. -/
 theorem mapRange_neg [NegZeroClass G] [NegZeroClass H] {f : G → H} {hf : f 0 = 0}
     (hf' : ∀ x, f (-x) = -f x) (v : α →₀ G) : mapRange f hf (-v) = -mapRange f hf v :=
-  ext fun _ => by simp only [hf', neg_apply, map_range_apply]
+  ext fun _ => by simp only [hf', neg_apply, mapRange_apply]
 #align finsupp.map_range_neg Finsupp.mapRange_neg
 
 /- warning: finsupp.map_range_neg' -> Finsupp.mapRange_neg' is a dubious translation:
@@ -1952,7 +1952,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.map_range_sub 
 theorem mapRange_sub [SubNegZeroMonoid G] [SubNegZeroMonoid H] {f : G → H} {hf : f 0 = 0}
     (hf' : ∀ x y, f (x - y) = f x - f y) (v₁ v₂ : α →₀ G) :
     mapRange f hf (v₁ - v₂) = mapRange f hf v₁ - mapRange f hf v₂ :=
-  ext fun _ => by simp only [hf', sub_apply, map_range_apply]
+  ext fun _ => by simp only [hf', sub_apply, mapRange_apply]
 #align finsupp.map_range_sub Finsupp.mapRange_sub
 
 /- warning: finsupp.map_range_sub' -> Finsupp.mapRange_sub' is a dubious translation:
@@ -1980,10 +1980,10 @@ instance hasIntScalar [AddGroup G] : SMul ℤ (α →₀ G) :=
 #align finsupp.has_int_scalar Finsupp.hasIntScalar
 
 instance [AddGroup G] : AddGroup (α →₀ G) :=
-  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.addGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddCommGroup G] : AddCommGroup (α →₀ G) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
+  FunLike.coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
     rfl
 
 /- warning: finsupp.single_add_single_eq_single_add_single -> Finsupp.single_add_single_eq_single_add_single is a dubious translation:
@@ -2036,7 +2036,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {G : Type.{u2}} [_inst_1 : AddGroup.{u2} G] (f : Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) (a : α), Eq.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) (Finsupp.erase.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1)))) a f) (HSub.hSub.{max u1 u2, max u1 u2, max u1 u2} (Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) (Finsupp.{u1, u2} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (NegZeroClass.toZero.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (SubNegZeroMonoid.toNegZeroClass.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (SubtractionMonoid.toSubNegZeroMonoid.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (AddGroup.toSubtractionMonoid.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) _inst_1))))) (Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) (instHSub.{max u1 u2} (Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) (Finsupp.instSubFinsuppToZeroToNegZeroClass.{u1, u2} α G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1)))) f (Finsupp.single.{u1, u2} α ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (NegZeroClass.toZero.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (SubNegZeroMonoid.toNegZeroClass.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (SubtractionMonoid.toSubNegZeroMonoid.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) (AddGroup.toSubtractionMonoid.{u2} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) a) _inst_1)))) a (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Finsupp.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => G) _x) (Finsupp.funLike.{u1, u2} α G (NegZeroClass.toZero.{u2} G (SubNegZeroMonoid.toNegZeroClass.{u2} G (SubtractionMonoid.toSubNegZeroMonoid.{u2} G (AddGroup.toSubtractionMonoid.{u2} G _inst_1))))) f a)))
 Case conversion may be inaccurate. Consider using '#align finsupp.erase_eq_sub_single Finsupp.erase_eq_sub_singleₓ'. -/
-theorem erase_eq_sub_single [AddGroup G] (f : α →₀ G) (a : α) : f.eraseₓ a = f - single a (f a) :=
+theorem erase_eq_sub_single [AddGroup G] (f : α →₀ G) (a : α) : f.erase a = f - single a (f a) :=
   by
   ext a'
   rcases eq_or_ne a a' with (rfl | h)

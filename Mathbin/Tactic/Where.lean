@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.where
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,11 +29,11 @@ namespace Where
 
 /-- Assigns a priority to each binder for determining the order in which variables are traced. -/
 unsafe def binder_priority : BinderInfo → ℕ
-  | BinderInfo.implicit => 1
-  | BinderInfo.strict_implicit => 2
-  | BinderInfo.default => 3
-  | BinderInfo.inst_implicit => 4
-  | BinderInfo.aux_decl => 5
+  | binder_info.implicit => 1
+  | binder_info.strict_implicit => 2
+  | binder_info.default => 3
+  | binder_info.inst_implicit => 4
+  | binder_info.aux_decl => 5
 #align where.binder_priority where.binder_priority
 
 /-- The relation on binder priorities. -/
@@ -120,7 +120,7 @@ unsafe def get_open_namespaces (ns : Name) : tactic (List Name) := do
 /-- Give a slightly friendlier name for `name.anonymous` in the context of your current namespace.
 -/
 private unsafe def explain_anonymous_name : Name → String
-  | Name.anonymous => "[root namespace]"
+  | name.anonymous => "[root namespace]"
   | ns => toString ns
 #align where.explain_anonymous_name where.explain_anonymous_name
 

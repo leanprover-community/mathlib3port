@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff_realized
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,10 +230,10 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
       apply add_le_add
       apply
         mul_le_mul_of_nonneg_left (le_max_left (dist x z) (dist t y))
-          (zero_le_one.trans (one_le_max_var X Y))
+          (zero_le_one.trans (one_le_maxVar X Y))
       apply
         mul_le_mul_of_nonneg_left (le_max_right (dist x z) (dist t y))
-          (zero_le_one.trans (one_le_max_var X Y))
+          (zero_le_one.trans (one_le_maxVar X Y))
     _ = 2 * maxVar X Y * max (dist x z) (dist y t) :=
       by
       simp [dist_comm]
@@ -255,7 +255,7 @@ private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith
 
 /-- candidates give rise to elements of bounded_continuous_functions -/
 def candidatesBOfCandidates (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) : Cb X Y :=
-  BoundedContinuousFunction.mkOfCompact ⟨f, (candidates_lipschitz fA).Continuous⟩
+  BoundedContinuousFunction.mkOfCompact ⟨f, (candidates_lipschitz fA).continuous⟩
 #align Gromov_Hausdorff.candidates_b_of_candidates GromovHausdorff.candidatesBOfCandidates
 
 theorem candidatesBOfCandidates_mem (f : ProdSpaceFun X Y) (fA : f ∈ candidates X Y) :
@@ -272,7 +272,7 @@ private theorem dist_mem_candidates :
   repeat'
     first
       |constructor|exact fun a y z =>
-        dist_triangle_left _ _ _|exact fun x y => by rfl|exact fun x y => max_var_bound
+        dist_triangle_left _ _ _|exact fun x y => by rfl|exact fun x y => maxVar_bound
 #align Gromov_Hausdorff.dist_mem_candidates Gromov_Hausdorff.dist_mem_candidates
 
 /-- The distance on `X ⊕ Y` as a candidate -/
@@ -308,19 +308,19 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
     isClosed_le continuous_eval_const (continuous_eval_const.add continuous_eval_const)
   have I5 : ∀ x, IsClosed { f : Cb X Y | f (x, x) = 0 } := fun x =>
     isClosed_eq continuous_eval_const continuous_const
-  have I6 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) ≤ max_var X Y } := fun x y =>
+  have I6 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) ≤ maxVar X Y } := fun x y =>
     isClosed_le continuous_eval_const continuous_const
   have :
-    candidates_b X Y =
+    candidatesB X Y =
       (((((⋂ (x) (y), { f : Cb X Y | f (@inl X Y x, @inl X Y y) = dist x y }) ∩
                 ⋂ (x) (y), { f : Cb X Y | f (@inr X Y x, @inr X Y y) = dist x y }) ∩
               ⋂ (x) (y), { f : Cb X Y | f (x, y) = f (y, x) }) ∩
             ⋂ (x) (y) (z), { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) }) ∩
           ⋂ x, { f : Cb X Y | f (x, x) = 0 }) ∩
-        ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
+        ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ maxVar X Y } :=
     by
     ext
-    simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
+    simp only [candidatesB, candidates, mem_inter_iff, mem_interᵢ, mem_setOf_eq]
   rw [this]
   repeat'
     first
@@ -334,13 +334,12 @@ private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
 /-- Compactness of candidates (in bounded_continuous_functions) follows. -/
 private theorem is_compact_candidates_b : IsCompact (candidatesB X Y) :=
   by
-  refine'
-    arzela_ascoli₂ (Icc 0 (max_var X Y)) is_compact_Icc (candidates_b X Y) closed_candidates_b _ _
+  refine' arzela_ascoli₂ (Icc 0 (maxVar X Y)) isCompact_Icc (candidatesB X Y) closed_candidatesB _ _
   · rintro f ⟨x1, x2⟩ hf
     simp only [Set.mem_Icc]
-    exact ⟨candidates_nonneg hf, candidates_le_max_var hf⟩
-  · refine' equicontinuous_of_continuity_modulus (fun t => 2 * max_var X Y * t) _ _ _
-    · have : tendsto (fun t : ℝ => 2 * (max_var X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * max_var X Y * 0)) :=
+    exact ⟨candidates_nonneg hf, candidates_le_maxVar hf⟩
+  · refine' equicontinuous_of_continuity_modulus (fun t => 2 * maxVar X Y * t) _ _ _
+    · have : Tendsto (fun t : ℝ => 2 * (maxVar X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * maxVar X Y * 0)) :=
         tendsto_const_nhds.mul tendsto_id
       simpa using this
     · rintro x y ⟨f, hf⟩
@@ -399,8 +398,7 @@ theorem hD_candidatesBDist_le :
     hD (candidatesBDist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
   by
   refine' max_le (csupᵢ_le fun x => _) (csupᵢ_le fun y => _)
-  · have A :
-      (⨅ y, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl x, inr default) :=
+  · have A : (⨅ y, candidatesBDist X Y (inl x, inr y)) ≤ candidatesBDist X Y (inl x, inr default) :=
       cinfᵢ_le (by simpa using HD_below_aux1 0) default
     have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
@@ -408,14 +406,13 @@ theorem hD_candidatesBDist_le :
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
           by
           apply add_le_add (add_le_add _ le_rfl)
-          exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
+          exact dist_le_diam_of_mem bounded_of_compactSpace (mem_univ _) (mem_univ _)
           any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
           any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
-          exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
+          exact dist_le_diam_of_mem bounded_of_compactSpace (mem_univ _) (mem_univ _)
         
     exact le_trans A B
-  · have A :
-      (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl default, inr y) :=
+  · have A : (⨅ x, candidatesBDist X Y (inl x, inr y)) ≤ candidatesBDist X Y (inl default, inr y) :=
       cinfᵢ_le (by simpa using HD_below_aux2 0) default
     have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
       calc
@@ -423,10 +420,10 @@ theorem hD_candidatesBDist_le :
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
           by
           apply add_le_add (add_le_add _ le_rfl)
-          exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
+          exact dist_le_diam_of_mem bounded_of_compactSpace (mem_univ _) (mem_univ _)
           any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
           any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
-          exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
+          exact dist_le_diam_of_mem bounded_of_compactSpace (mem_univ _) (mem_univ _)
         
     exact le_trans A B
 #align Gromov_Hausdorff.HD_candidates_b_dist_le GromovHausdorff.hD_candidatesBDist_le
@@ -519,7 +516,7 @@ variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X]
 we can finally select a candidate minimizing HD. This will be the candidate realizing the
 optimal coupling. -/
 private theorem exists_minimizer : ∃ f ∈ candidatesB X Y, ∀ g ∈ candidatesB X Y, hD f ≤ hD g :=
-  isCompact_candidatesB.exists_forall_le candidatesB_nonempty hD_continuous.ContinuousOn
+  isCompact_candidatesB.exists_forall_le candidatesB_nonempty hD_continuous.continuousOn
 #align Gromov_Hausdorff.exists_minimizer Gromov_Hausdorff.exists_minimizer
 
 private def optimal_GH_dist : Cb X Y :=
@@ -565,7 +562,7 @@ theorem isometry_optimalGHInjl : Isometry (optimalGHInjl X Y) :=
   by
   refine' Isometry.of_dist_eq fun x y => _
   change dist ⟦inl x⟧ ⟦inl y⟧ = dist x y
-  exact candidates_dist_inl (optimal_GH_dist_mem_candidates_b X Y) _ _
+  exact candidates_dist_inl (optimalGHDist_mem_candidatesB X Y) _ _
 #align Gromov_Hausdorff.isometry_optimal_GH_injl GromovHausdorff.isometry_optimalGHInjl
 
 /-- Injection of `Y` in the optimal coupling between `X` and `Y` -/
@@ -578,29 +575,29 @@ theorem isometry_optimalGHInjr : Isometry (optimalGHInjr X Y) :=
   by
   refine' Isometry.of_dist_eq fun x y => _
   change dist ⟦inr x⟧ ⟦inr y⟧ = dist x y
-  exact candidates_dist_inr (optimal_GH_dist_mem_candidates_b X Y) _ _
+  exact candidates_dist_inr (optimalGHDist_mem_candidatesB X Y) _ _
 #align Gromov_Hausdorff.isometry_optimal_GH_injr GromovHausdorff.isometry_optimalGHInjr
 
 /-- The optimal coupling between two compact spaces `X` and `Y` is still a compact space -/
 instance compactSpace_optimalGHCoupling : CompactSpace (OptimalGHCoupling X Y) :=
   ⟨by
     have :
-      (univ : Set (optimal_GH_coupling X Y)) =
-        optimal_GH_injl X Y '' univ ∪ optimal_GH_injr X Y '' univ :=
+      (univ : Set (OptimalGHCoupling X Y)) =
+        optimalGHInjl X Y '' univ ∪ optimalGHInjr X Y '' univ :=
       by
-      refine' subset.antisymm (fun xc hxc => _) (subset_univ _)
+      refine' Subset.antisymm (fun xc hxc => _) (subset_univ _)
       rcases Quotient.exists_rep xc with ⟨x, hx⟩
       cases x <;> rw [← hx]
-      · have : ⟦inl x⟧ = optimal_GH_injl X Y x := rfl
+      · have : ⟦inl x⟧ = optimalGHInjl X Y x := rfl
         rw [this]
         exact mem_union_left _ (mem_image_of_mem _ (mem_univ _))
-      · have : ⟦inr x⟧ = optimal_GH_injr X Y x := rfl
+      · have : ⟦inr x⟧ = optimalGHInjr X Y x := rfl
         rw [this]
         exact mem_union_right _ (mem_image_of_mem _ (mem_univ _))
     rw [this]
     exact
-      (is_compact_univ.image (isometry_optimal_GH_injl X Y).Continuous).union
-        (is_compact_univ.image (isometry_optimal_GH_injr X Y).Continuous)⟩
+      (is_compact_univ.image (isometry_optimalGHInjl X Y).continuous).union
+        (is_compact_univ.image (isometry_optimalGHInjr X Y).continuous)⟩
 #align Gromov_Hausdorff.compact_space_optimal_GH_coupling GromovHausdorff.compactSpace_optimalGHCoupling
 
 /-- For any candidate `f`, `HD(f)` is larger than or equal to the Hausdorff distance in the
@@ -610,44 +607,44 @@ we need. -/
 theorem hausdorffDist_optimal_le_hD {f} (h : f ∈ candidatesB X Y) :
     hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ hD f :=
   by
-  refine' le_trans (le_of_forall_le_of_dense fun r hr => _) (HD_optimal_GH_dist_le X Y f h)
-  have A : ∀ x ∈ range (optimal_GH_injl X Y), ∃ y ∈ range (optimal_GH_injr X Y), dist x y ≤ r :=
+  refine' le_trans (le_of_forall_le_of_dense fun r hr => _) (hD_optimalGHDist_le X Y f h)
+  have A : ∀ x ∈ range (optimalGHInjl X Y), ∃ y ∈ range (optimalGHInjr X Y), dist x y ≤ r :=
     by
     intro x hx
     rcases mem_range.1 hx with ⟨z, hz⟩
     rw [← hz]
-    have I1 : (⨆ x, ⨅ y, optimal_GH_dist X Y (inl x, inr y)) < r :=
+    have I1 : (⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y)) < r :=
       lt_of_le_of_lt (le_max_left _ _) hr
     have I2 :
-      (⨅ y, optimal_GH_dist X Y (inl z, inr y)) ≤ ⨆ x, ⨅ y, optimal_GH_dist X Y (inl x, inr y) :=
+      (⨅ y, optimalGHDist X Y (inl z, inr y)) ≤ ⨆ x, ⨅ y, optimalGHDist X Y (inl x, inr y) :=
       le_csupₛ (by simpa using HD_bound_aux1 _ 0) (mem_range_self _)
-    have I : (⨅ y, optimal_GH_dist X Y (inl z, inr y)) < r := lt_of_le_of_lt I2 I1
+    have I : (⨅ y, optimalGHDist X Y (inl z, inr y)) < r := lt_of_le_of_lt I2 I1
     rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
     rcases mem_range.1 r'range with ⟨z', hz'⟩
-    exists optimal_GH_injr X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z, inr z') ≤ r :=
+    exists optimalGHInjr X Y z', mem_range_self _
+    have : (optimalGHDist X Y) (inl z, inr z') ≤ r :=
       by
       rw [hz']
       exact le_of_lt hr'
     exact this
-  refine' Hausdorff_dist_le_of_mem_dist _ A _
+  refine' hausdorffDist_le_of_mem_dist _ A _
   · rcases exists_mem_of_nonempty X with ⟨xX, _⟩
-    have : optimal_GH_injl X Y xX ∈ range (optimal_GH_injl X Y) := mem_range_self _
+    have : optimalGHInjl X Y xX ∈ range (optimalGHInjl X Y) := mem_range_self _
     rcases A _ this with ⟨y, yrange, hy⟩
     exact le_trans dist_nonneg hy
   · intro y hy
     rcases mem_range.1 hy with ⟨z, hz⟩
     rw [← hz]
-    have I1 : (⨆ y, ⨅ x, optimal_GH_dist X Y (inl x, inr y)) < r :=
+    have I1 : (⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y)) < r :=
       lt_of_le_of_lt (le_max_right _ _) hr
     have I2 :
-      (⨅ x, optimal_GH_dist X Y (inl x, inr z)) ≤ ⨆ y, ⨅ x, optimal_GH_dist X Y (inl x, inr y) :=
+      (⨅ x, optimalGHDist X Y (inl x, inr z)) ≤ ⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y) :=
       le_csupₛ (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
-    have I : (⨅ x, optimal_GH_dist X Y (inl x, inr z)) < r := lt_of_le_of_lt I2 I1
+    have I : (⨅ x, optimalGHDist X Y (inl x, inr z)) < r := lt_of_le_of_lt I2 I1
     rcases exists_lt_of_cinfₛ_lt (range_nonempty _) I with ⟨r', r'range, hr'⟩
     rcases mem_range.1 r'range with ⟨z', hz'⟩
-    exists optimal_GH_injl X Y z', mem_range_self _
-    have : (optimal_GH_dist X Y) (inl z', inr z) ≤ r :=
+    exists optimalGHInjl X Y z', mem_range_self _
+    have : (optimalGHDist X Y) (inl z', inr z) ≤ r :=
       by
       rw [hz']
       exact le_of_lt hr'

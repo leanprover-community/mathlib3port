@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.hom.freiman
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,8 +65,8 @@ variable {F α β γ δ G : Type _}
 structure AddFreimanHom (A : Set α) (β : Type _) [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) where
   toFun : α → β
   map_sum_eq_map_sum' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
-    (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) :
-    (s.map to_fun).Sum = (t.map to_fun).Sum
+    (hs : s.card = n) (ht : t.card = n) (h : s.sum = t.sum) :
+    (s.map to_fun).sum = (t.map to_fun).sum
 #align add_freiman_hom AddFreimanHom
 -/
 
@@ -76,8 +76,8 @@ structure AddFreimanHom (A : Set α) (β : Type _) [AddCommMonoid α] [AddCommMo
 structure FreimanHom (A : Set α) (β : Type _) [CommMonoid α] [CommMonoid β] (n : ℕ) where
   toFun : α → β
   map_prod_eq_map_prod' {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A)
-    (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
-    (s.map to_fun).Prod = (t.map to_fun).Prod
+    (hs : s.card = n) (ht : t.card = n) (h : s.prod = t.prod) :
+    (s.map to_fun).prod = (t.map to_fun).prod
 #align freiman_hom FreimanHom
 #align add_freiman_hom AddFreimanHom
 -/
@@ -94,8 +94,8 @@ You should extend this class when you extend `add_freiman_hom`. -/
 class AddFreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _)
   [AddCommMonoid α] [AddCommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_sum_eq_map_sum' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
-    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Sum = t.Sum) :
-    (s.map f).Sum = (t.map f).Sum
+    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.sum = t.sum) :
+    (s.map f).sum = (t.map f).sum
 #align add_freiman_hom_class AddFreimanHomClass
 -/
 
@@ -107,8 +107,8 @@ You should extend this class when you extend `freiman_hom`. -/
 class FreimanHomClass (F : Type _) (A : outParam <| Set α) (β : outParam <| Type _) [CommMonoid α]
   [CommMonoid β] (n : ℕ) [FunLike F α fun _ => β] : Prop where
   map_prod_eq_map_prod' (f : F) {s t : Multiset α} (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A)
-    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.Prod = t.Prod) :
-    (s.map f).Prod = (t.map f).Prod
+    (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n) (h : s.prod = t.prod) :
+    (s.map f).prod = (t.map f).prod
 #align freiman_hom_class FreimanHomClass
 #align add_freiman_hom_class AddFreimanHomClass
 -/
@@ -129,7 +129,7 @@ Case conversion may be inaccurate. Consider using '#align map_prod_eq_map_prod m
 @[to_additive]
 theorem map_prod_eq_map_prod [FreimanHomClass F A β n] (f : F) {s t : Multiset α}
     (hsA : ∀ ⦃x⦄, x ∈ s → x ∈ A) (htA : ∀ ⦃x⦄, x ∈ t → x ∈ A) (hs : s.card = n) (ht : t.card = n)
-    (h : s.Prod = t.Prod) : (s.map f).Prod = (t.map f).Prod :=
+    (h : s.prod = t.prod) : (s.map f).prod = (t.map f).prod :=
   FreimanHomClass.map_prod_eq_map_prod' f hsA htA hs ht h
 #align map_prod_eq_map_prod map_prod_eq_map_prod
 #align map_sum_eq_map_sum map_sum_eq_map_sum
@@ -214,7 +214,7 @@ theorem coe_mk (f : α → β)
       ∀ s t : Multiset α,
         (∀ ⦃x⦄, x ∈ s → x ∈ A) →
           (∀ ⦃x⦄, x ∈ t → x ∈ A) →
-            s.card = n → t.card = n → s.Prod = t.Prod → (s.map f).Prod = (t.map f).Prod) :
+            s.card = n → t.card = n → s.prod = t.prod → (s.map f).prod = (t.map f).prod) :
     ⇑(mk f h) = f :=
   rfl
 #align freiman_hom.coe_mk FreimanHom.coe_mk
@@ -664,14 +664,14 @@ Case conversion may be inaccurate. Consider using '#align map_prod_eq_map_prod_o
 @[to_additive]
 theorem map_prod_eq_map_prod_of_le [FreimanHomClass F A β n] (f : F) {s t : Multiset α}
     (hsA : ∀ x ∈ s, x ∈ A) (htA : ∀ x ∈ t, x ∈ A) (hs : s.card = m) (ht : t.card = m)
-    (hst : s.Prod = t.Prod) (h : m ≤ n) : (s.map f).Prod = (t.map f).Prod :=
+    (hst : s.prod = t.prod) (h : m ≤ n) : (s.map f).prod = (t.map f).prod :=
   by
   obtain rfl | hm := m.eq_zero_or_pos
   · rw [card_eq_zero] at hs ht
     rw [hs, ht]
   rw [← hs, card_pos_iff_exists_mem] at hm
   obtain ⟨a, ha⟩ := hm
-  suffices ((s + replicate (n - m) a).map f).Prod = ((t + replicate (n - m) a).map f).Prod
+  suffices ((s + replicate (n - m) a).map f).prod = ((t + replicate (n - m) a).map f).prod
     by
     simp_rw [Multiset.map_add, prod_add] at this
     exact mul_right_cancel this

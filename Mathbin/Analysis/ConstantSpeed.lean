@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module analysis.constant_speed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
         exacts[Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
       · rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
         exacts[⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
-    rw [this, @evariationOn.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt), ←
+    rw [this, @evariation_on.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt), ←
       Ennreal.ofReal_add (mul_nonneg l.prop (sub_nonneg.mpr (hs.2 zs)))
         (mul_nonneg l.prop (sub_nonneg.mpr (ht.2 yt)))]
     ring_nf
@@ -174,7 +174,7 @@ theorem HasConstantSpeedOnWith.Icc_Icc {x y z : ℝ} (hfs : HasConstantSpeedOnWi
       inf_of_le_right vz]
 #align has_constant_speed_on_with.Icc_Icc HasConstantSpeedOnWith.Icc_Icc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by
@@ -253,10 +253,10 @@ theorem unique_unit_speed_on_Icc_zero {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) 
   convert unique_unit_speed φm hfφ hf ⟨le_rfl, hs⟩
   have : φ 0 = 0 :=
     by
-    obtain ⟨x, xs, hx⟩ := φst.rec_on (surj_on_image φ (Icc 0 s)) ⟨le_rfl, ht⟩
+    obtain ⟨x, xs, hx⟩ := φst.rec_on (surjOn_image φ (Icc 0 s)) ⟨le_rfl, ht⟩
     exact
       le_antisymm (hx.rec_on (φm ⟨le_rfl, hs⟩ xs xs.1))
-        (φst.rec_on (maps_to_image φ (Icc 0 s)) ⟨le_rfl, hs⟩).1
+        (φst.rec_on (mapsTo_image φ (Icc 0 s)) ⟨le_rfl, hs⟩).1
   simp only [tsub_zero, this, add_zero]
   rfl
 #align unique_unit_speed_on_Icc_zero unique_unit_speed_on_Icc_zero
@@ -279,7 +279,7 @@ theorem edist_naturalParameterization_eq_zero {f : α → E} {s : Set α}
   haveI : Nonempty α := ⟨a⟩
   let c := Function.invFunOn (variationOnFromTo f s a) s (variationOnFromTo f s a b)
   obtain ⟨cs, hc⟩ :=
-    @Function.invFunOn_pos _ _ _ s (variationOnFromTo f s a) (variationOnFromTo f s a b)
+    @function.inv_fun_on_pos _ _ _ s (variationOnFromTo f s a) (variationOnFromTo f s a b)
       ⟨b, bs, rfl⟩
   rw [variationOnFromTo.eq_left_iff hf as cs bs] at hc
   apply variationOnFromTo.edist_zero_of_eq_zero hf cs bs hc
@@ -301,7 +301,7 @@ theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
     rw [←
       evariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
         (variationOnFromTo.monotoneOn hf as) bs cs]
-    rw [@evariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
+    rw [@evariation_on.eq_of_edist_zero_on _ _ _ _ _ f]
     · rw [variationOnFromTo.eq_of_le _ _ bc, Ennreal.ofReal_toReal (hf b c bs cs)]
     · rintro x ⟨xs, bx, xc⟩
       exact edist_naturalParameterization_eq_zero hf as xs

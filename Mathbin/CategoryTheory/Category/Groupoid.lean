@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.category.Groupoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ def piLimitFanIsLimit ⦃J : Type u⦄ (F : J → GroupoidCat.{u, u}) : Limits.I
       simp [hom_to_functor])
     (by
       intro s m w
-      apply functor.pi_ext
+      apply Functor.pi_ext
       intro j; specialize w j
       simpa)
 #align category_theory.Groupoid.pi_limit_fan_is_limit CategoryTheory.GroupoidCat.piLimitFanIsLimit
@@ -142,9 +142,9 @@ noncomputable def piIsoPi (J : Type u) (f : J → GroupoidCat.{u, u}) : @of (∀
 
 @[simp]
 theorem piIsoPi_hom_π (J : Type u) (f : J → GroupoidCat.{u, u}) (j : J) :
-    (piIsoPi J f).Hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j :=
+    (piIsoPi J f).hom ≫ Limits.Pi.π f j = CategoryTheory.pi.eval _ j :=
   by
-  simp [pi_iso_pi]
+  simp [piIsoPi]
   rfl
 #align category_theory.Groupoid.pi_iso_pi_hom_π CategoryTheory.GroupoidCat.piIsoPi_hom_π
 

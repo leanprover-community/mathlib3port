@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,23 +148,23 @@ variable (M)
 
 theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| ExteriorAlgebra R M) := fun x => by
-  simp [algebra_map_inv]
+  simp [algebraMapInv]
 #align exterior_algebra.algebra_map_left_inverse ExteriorAlgebra.algebraMap_leftInverse
 
 @[simp]
 theorem algebraMap_inj (x y : R) :
     algebraMap R (ExteriorAlgebra R M) x = algebraMap R (ExteriorAlgebra R M) y ↔ x = y :=
-  (algebraMap_leftInverse M).Injective.eq_iff
+  (algebraMap_leftInverse M).injective.eq_iff
 #align exterior_algebra.algebra_map_inj ExteriorAlgebra.algebraMap_inj
 
 @[simp]
 theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x = 0 ↔ x = 0 :=
-  map_eq_zero_iff (algebraMap _ _) (algebraMap_leftInverse _).Injective
+  map_eq_zero_iff (algebraMap _ _) (algebraMap_leftInverse _).injective
 #align exterior_algebra.algebra_map_eq_zero_iff ExteriorAlgebra.algebraMap_eq_zero_iff
 
 @[simp]
 theorem algebraMap_eq_one_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x = 1 ↔ x = 1 :=
-  map_eq_one_iff (algebraMap _ _) (algebraMap_leftInverse _).Injective
+  map_eq_one_iff (algebraMap _ _) (algebraMap_leftInverse _).injective
 #align exterior_algebra.algebra_map_eq_one_iff ExteriorAlgebra.algebraMap_eq_one_iff
 
 theorem isUnit_algebraMap (r : R) : IsUnit (algebraMap R (ExteriorAlgebra R M) r) ↔ IsUnit r :=
@@ -200,14 +200,14 @@ def ιInv : ExteriorAlgebra R M →ₗ[R] M :=
 #align exterior_algebra.ι_inv ExteriorAlgebra.ιInv
 
 theorem ι_leftInverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
-  simp [ι_inv]
+  simp [ιInv]
 #align exterior_algebra.ι_left_inverse ExteriorAlgebra.ι_leftInverse
 
 variable (R)
 
 @[simp]
 theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
-  ι_leftInverse.Injective.eq_iff
+  ι_leftInverse.injective.eq_iff
 #align exterior_algebra.ι_inj ExteriorAlgebra.ι_inj
 
 variable {R}
@@ -220,7 +220,7 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0
 theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
   by
   refine' ⟨fun h => _, _⟩
-  · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
+  · have hf0 : toTrivSqZeroExt (ι R x) = (0, x) := toTrivSqZeroExt_ι _
     rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm
@@ -231,7 +231,7 @@ theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x =
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 :=
   by
-  rw [← (algebraMap R (ExteriorAlgebra R M)).map_one, Ne.def, ι_eq_algebra_map_iff]
+  rw [← (algebraMap R (ExteriorAlgebra R M)).map_one, Ne.def, ι_eq_algebraMap_iff]
   exact one_ne_zero ∘ And.right
 #align exterior_algebra.ι_ne_one ExteriorAlgebra.ι_ne_one
 
@@ -242,7 +242,7 @@ theorem ι_range_disjoint_one :
   by
   rw [Submodule.disjoint_def]
   rintro _ ⟨x, hx⟩ ⟨r, rfl : algebraMap _ _ _ = _⟩
-  rw [ι_eq_algebra_map_iff x] at hx
+  rw [ι_eq_algebraMap_iff x] at hx
   rw [hx.2, RingHom.map_zero]
 #align exterior_algebra.ι_range_disjoint_one ExteriorAlgebra.ι_range_disjoint_one
 
@@ -255,7 +255,7 @@ theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
 #align exterior_algebra.ι_add_mul_swap ExteriorAlgebra.ι_add_mul_swap
 
 theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :
-    (ι R <| f i) * (List.ofFn fun i => ι R <| f i).Prod = 0 :=
+    (ι R <| f i) * (List.ofFn fun i => ι R <| f i).prod = 0 :=
   by
   induction' n with n hn
   · exact i.elim0
@@ -305,7 +305,7 @@ def ιMulti (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Fin n) :=
 
 variable {R}
 
-theorem ιMulti_apply {n : ℕ} (v : Fin n → M) : ιMulti R n v = (List.ofFn fun i => ι R (v i)).Prod :=
+theorem ιMulti_apply {n : ℕ} (v : Fin n → M) : ιMulti R n v = (List.ofFn fun i => ι R (v i)).prod :=
   rfl
 #align exterior_algebra.ι_multi_apply ExteriorAlgebra.ιMulti_apply
 
@@ -342,7 +342,7 @@ def toExterior : TensorAlgebra R M →ₐ[R] ExteriorAlgebra R M :=
 
 @[simp]
 theorem toExterior_ι (m : M) : (TensorAlgebra.ι R m).toExterior = ExteriorAlgebra.ι R m := by
-  simp [to_exterior]
+  simp [toExterior]
 #align tensor_algebra.to_exterior_ι TensorAlgebra.toExterior_ι
 
 end TensorAlgebra

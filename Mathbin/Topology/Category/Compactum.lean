@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Compactum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ def incl (X : Compactum) : X → Ultrafilter X :=
 theorem str_incl (X : Compactum) (x : X) : X.str (X.incl x) = x :=
   by
   change (β.η.app _ ≫ X.a) _ = _
-  rw [monad.algebra.unit]
+  rw [Monad.Algebra.unit]
   rfl
 #align Compactum.str_incl Compactum.str_incl
 
@@ -155,7 +155,7 @@ theorem join_distrib (X : Compactum) (uux : Ultrafilter (Ultrafilter X)) :
     X.str (X.join uux) = X.str (map X.str uux) :=
   by
   change (β.μ.app _ ≫ X.a) _ = _
-  rw [monad.algebra.assoc]
+  rw [Monad.Algebra.assoc]
   rfl
 #align Compactum.join_distrib Compactum.join_distrib
 
@@ -218,7 +218,7 @@ private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A := fun a ha =
   ⟨X.incl a, ha, by simp⟩
 #align Compactum.subset_cl Compactum.subset_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (B C «expr ∈ » C0) -/
 private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   by
   rintro _ ⟨F, hF, rfl⟩
@@ -229,7 +229,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   let C0 : ssu := { Z | ∃ B ∈ F, X.str ⁻¹' B = Z }
   let AA := { G : Ultrafilter X | A ∈ G }
   let C1 := insert AA C0
-  let C2 := finite_inter_closure C1
+  let C2 := finiteInterClosure C1
   -- C0 is closed under intersections.
   have claim1 : ∀ (B) (_ : B ∈ C0) (C) (_ : C ∈ C0), B ∩ C ∈ C0 :=
     by
@@ -262,7 +262,7 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
     rw [join_distrib, this]
     exact ⟨h1 (Or.inl rfl), rfl⟩
   -- C2 is closed under finite intersections (by construction!).
-  have claim4 := finite_inter_closure_has_finite_inter C1
+  have claim4 := finiteInterClosure_finiteInter C1
   -- C0 is closed under finite intersections by claim1.
   have claim5 : FiniteInter C0 := ⟨⟨_, univ_mem, Set.preimage_univ⟩, claim1⟩
   -- Every element of C2 is nonempty.
@@ -283,17 +283,17 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   -- Finish
   apply claim4.finite_inter_mem
   intro t ht
-  exact finite_inter_closure.basic (@hT t ht)
+  exact finiteInterClosure.basic (@hT t ht)
 #align Compactum.cl_cl Compactum.cl_cl
 
 theorem isClosed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
   by
-  rw [is_closed_iff]
+  rw [isClosed_iff]
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl Compactum.isClosed_cl
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by
   -- Notation to be used in this proof.
@@ -303,7 +303,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   let T0 : ssu := { S | ∃ A ∈ F, S = basic A }
   let AA := X.str ⁻¹' {x}
   let T1 := insert AA T0
-  let T2 := finite_inter_closure T1
+  let T2 := finiteInterClosure T1
   intro cond
   -- If F contains a closed set A, then x is contained in A.
   have claim1 : ∀ A : Set X, IsClosed A → A ∈ F → x ∈ A :=
@@ -318,7 +318,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   have claim2 : ∀ A : Set X, A ∈ F → x ∈ cl A :=
     by
     intro A hA
-    exact claim1 (cl A) (is_closed_cl A) (mem_of_superset hA (subset_cl A))
+    exact claim1 (cl A) (isClosed_cl A) (mem_of_superset hA (subset_cl A))
   -- T0 is closed under intersections.
   have claim3 : ∀ (S1) (_ : S1 ∈ T0) (S2) (_ : S2 ∈ T0), S1 ∩ S2 ∈ T0 :=
     by
@@ -346,7 +346,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
       · rcases h with ⟨Q, hQ, rfl⟩
         exact claim4 Q hQ
     intro S hS
-    apply finite_inter_closure_insert
+    apply finiteInterClosure_insert
     · constructor
       · use Set.univ
         refine' ⟨Filter.univ_sets _, _⟩
@@ -370,9 +370,9 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
     simp [← c1, c2]
   -- Finish...
   intro T hT
-  refine' claim6 _ (finite_inter_mem (finite_inter_closure_has_finite_inter _) _ _)
+  refine' claim6 _ (finiteInter_mem (finiteInterClosure_finiteInter _) _ _)
   intro t ht
-  exact finite_inter_closure.basic (@hT t ht)
+  exact finiteInterClosure.basic (@hT t ht)
 #align Compactum.str_eq_of_le_nhds Compactum.str_eq_of_le_nhds
 
 theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x :=
@@ -409,7 +409,7 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
   by
   rw [continuous_iff_ultrafilter]
   intro x _ h
-  rw [tendsto, ← coe_map]
+  rw [Tendsto, ← coe_map]
   apply le_nhds_of_str_eq
   rw [← str_hom_commute, str_eq_of_le_nhds _ x h]
 #align Compactum.continuous_of_hom Compactum.continuous_of_hom
@@ -457,7 +457,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
       have := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont
-      simpa only [← this, types_comp_apply, of_type_functor_map] }
+      simpa only [← this, types_comp_apply, ofTypeFunctor_map] }
 #align Compactum.hom_of_continuous Compactum.homOfContinuous
 
 end Compactum
@@ -509,7 +509,7 @@ theorem essSurj : EssSurj compactumToCompHaus :=
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
 noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
   by
-  apply equivalence.of_fully_faithfully_ess_surj _
+  apply Equivalence.ofFullyFaithfullyEssSurj _
   exact compactumToCompHaus.full
   exact compactumToCompHaus.faithful
   exact compactumToCompHaus.essSurj
@@ -538,18 +538,18 @@ monadicity.
 noncomputable instance CompHaus.forgetCreatesLimits : CreatesLimits (forget CompHaus) :=
   by
   let e : forget CompHaus ≅ Compactum_to_CompHaus.inv ⋙ Compactum.forget :=
-    _ ≪≫ iso_whisker_left _ compactumToCompHausCompForget
+    _ ≪≫ isoWhiskerLeft _ compactumToCompHausCompForget
   swap
-  refine' _ ≪≫ functor.associator _ _ _
-  refine' (functor.left_unitor _).symm ≪≫ _
-  refine' iso_whisker_right _ _
+  refine' _ ≪≫ Functor.associator _ _ _
+  refine' (Functor.leftUnitor _).symm ≪≫ _
+  refine' isoWhiskerRight _ _
   exact Compactum_to_CompHaus.as_equivalence.symm.unit_iso
-  exact creates_limits_of_nat_iso e.symm
+  exact createsLimitsOfNatIso e.symm
 #align CompHaus.forget_creates_limits CompHaus.forgetCreatesLimits
 
 noncomputable instance Profinite.forgetCreatesLimits : CreatesLimits (forget Profinite) :=
   by
-  change creates_limits (profiniteToCompHaus ⋙ forget _)
+  change CreatesLimits (profiniteToCompHaus ⋙ forget _)
   infer_instance
 #align Profinite.forget_creates_limits Profinite.forgetCreatesLimits
 

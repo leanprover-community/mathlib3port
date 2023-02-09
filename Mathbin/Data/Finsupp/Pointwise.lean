@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finsupp.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,32 +88,32 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
 #align finsupp.support_mul Finsupp.support_mul
 
 instance : MulZeroClass (α →₀ β) :=
-  Finsupp.coeFn_injective.MulZeroClass _ coe_zero coe_mul
+  Finsupp.coeFn_injective.mulZeroClass _ coe_zero coe_mul
 
 end
 
 instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
-  Finsupp.coeFn_injective.SemigroupWithZero _ coe_zero coe_mul
+  Finsupp.coeFn_injective.semigroupWithZero _ coe_zero coe_mul
 
 instance [NonUnitalNonAssocSemiring β] : NonUnitalNonAssocSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coeFn_injective.nonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coeFn_injective.nonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalCommSemiring β] : NonUnitalCommSemiring (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  Finsupp.coeFn_injective.nonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] : NonUnitalNonAssocRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  Finsupp.coeFn_injective.nonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalRing β] : NonUnitalRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
+  Finsupp.coeFn_injective.nonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
     fun _ _ => rfl
 
 instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
-  Finsupp.coeFn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  Finsupp.coeFn_injective.nonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 /- warning: finsupp.pointwise_scalar -> Finsupp.pointwiseScalar is a dubious translation:

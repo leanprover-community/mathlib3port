@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module algebra.char_p.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -246,14 +246,14 @@ theorem CharP.neg_one_pow_char [CommRing R] (p : ℕ) [CharP R p] [Fact p.Prime]
     (-1 : R) ^ p = -1 := by
   rw [eq_neg_iff_add_eq_zero]
   nth_rw 2 [← one_pow p]
-  rw [← add_pow_char, add_left_neg, zero_pow (Fact.out (Nat.Prime p)).Pos]
+  rw [← add_pow_char, add_left_neg, zero_pow (Fact.out (Nat.Prime p)).pos]
 #align char_p.neg_one_pow_char CharP.neg_one_pow_char
 
 theorem CharP.neg_one_pow_char_pow [CommRing R] (p n : ℕ) [CharP R p] [Fact p.Prime] :
     (-1 : R) ^ p ^ n = -1 := by
   rw [eq_neg_iff_add_eq_zero]
   nth_rw 2 [← one_pow (p ^ n)]
-  rw [← add_pow_char_pow, add_left_neg, zero_pow (pow_pos (Fact.out (Nat.Prime p)).Pos _)]
+  rw [← add_pow_char_pow, add_left_neg, zero_pow (pow_pos (Fact.out (Nat.Prime p)).pos _)]
 #align char_p.neg_one_pow_char_pow CharP.neg_one_pow_char_pow
 
 theorem RingHom.charP_iff_charP {K L : Type _} [DivisionRing K] [Semiring L] [Nontrivial L]
@@ -273,7 +273,7 @@ def frobenius : R →+* R where
   toFun x := x ^ p
   map_one' := one_pow p
   map_mul' x y := mul_pow x y p
-  map_zero' := zero_pow (Fact.out (Nat.Prime p)).Pos
+  map_zero' := zero_pow (Fact.out (Nat.Prime p)).pos
   map_add' := add_pow_char R
 #align frobenius frobenius
 
@@ -343,11 +343,11 @@ open BigOperators
 
 variable {R}
 
-theorem list_sum_pow_char (l : List R) : l.Sum ^ p = (l.map (· ^ p)).Sum :=
+theorem list_sum_pow_char (l : List R) : l.sum ^ p = (l.map (· ^ p)).sum :=
   (frobenius R p).map_list_sum _
 #align list_sum_pow_char list_sum_pow_char
 
-theorem multiset_sum_pow_char (s : Multiset R) : s.Sum ^ p = (s.map (· ^ p)).Sum :=
+theorem multiset_sum_pow_char (s : Multiset R) : s.sum ^ p = (s.map (· ^ p)).sum :=
   (frobenius R p).map_multiset_sum _
 #align multiset_sum_pow_char multiset_sum_pow_char
 
@@ -390,7 +390,7 @@ theorem isSquare_of_char_two' {R : Type _} [Finite R] [CommRing R] [IsReduced R]
   cases nonempty_fintype R
   exact
     Exists.imp (fun b h => pow_two b ▸ Eq.symm h)
-      (((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).Surjective a)
+      (((Fintype.bijective_iff_injective_and_card _).mpr ⟨frobenius_inj R 2, rfl⟩).surjective a)
 #align is_square_of_char_two' isSquare_of_char_two'
 
 namespace CharP
@@ -414,7 +414,7 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
 theorem char_ne_zero_of_finite (p : ℕ) [CharP R p] [Finite R] : p ≠ 0 :=
   by
   rintro rfl
-  haveI : CharZero R := char_p_to_char_zero R
+  haveI : CharZero R := charP_to_charZero R
   cases nonempty_fintype R
   exact absurd Nat.cast_injective (not_injective_infinite_finite (coe : ℕ → R))
 #align char_p.char_ne_zero_of_finite CharP.char_ne_zero_of_finite
@@ -458,7 +458,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (d «expr ∣ » p) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (d «expr ∣ » p) -/
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ (d) (_ : d ∣ p), d = 1 ∨ d = p from Nat.prime_def_lt''.mpr ⟨hp, this⟩
   fun (d : ℕ) (hdvd : ∃ e, p = d * e) =>
@@ -684,7 +684,7 @@ namespace NeZero
 variable (R) [AddMonoidWithOne R] {r : R} {n p : ℕ} {a : ℕ+}
 
 theorem of_not_dvd [CharP R p] (h : ¬p ∣ n) : NeZero (n : R) :=
-  ⟨(CharP.cast_eq_zero_iff R p n).Not.mpr h⟩
+  ⟨(CharP.cast_eq_zero_iff R p n).not.mpr h⟩
 #align ne_zero.of_not_dvd NeZero.of_not_dvd
 
 theorem not_char_dvd (p : ℕ) [CharP R p] (k : ℕ) [h : NeZero (k : R)] : ¬p ∣ k := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 
 @[to_additive]
 instance : SemilatticeSup (GroupSeminorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  FunLike.coe_injective.semilatticeSup _ coe_sup
 
 /-- Composition of a group seminorm with a monoid homomorphism as a group seminorm. -/
 @[to_additive
@@ -410,7 +410,7 @@ noncomputable instance : HasInf (GroupSeminorm E) :=
       mul_le' := fun x y =>
         le_cinfᵢ_add_cinfᵢ fun u v =>
           by
-          refine' cinfᵢ_le_of_le mul_bdd_below_range_add (u * v) _
+          refine' cinfᵢ_le_of_le mul_bddBelow_range_add (u * v) _
           rw [mul_div_mul_comm, add_add_add_comm]
           exact add_le_add (map_mul_le_add p _ _) (map_mul_le_add q _ _)
       inv' := fun x =>
@@ -491,7 +491,7 @@ instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R 
 theorem smul_sup (r : R) (p q : AddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).prop
   ext fun x => real.smul_max _ _
 #align add_group_seminorm.smul_sup AddGroupSeminorm.smul_sup
 
@@ -590,7 +590,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 #align nonarch_add_group_seminorm.sup_apply NonarchAddGroupSeminorm.sup_apply
 
 noncomputable instance : SemilatticeSup (NonarchAddGroupSeminorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  FunLike.coe_injective.semilatticeSup _ coe_sup
 
 end AddGroup
 
@@ -668,7 +668,7 @@ theorem smul_apply (r : R) (p : GroupSeminorm E) (x : E) : (r • p) x = r • p
 theorem smul_sup (r : R) (p q : GroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).prop
   ext fun x => real.smul_max _ _
 #align group_seminorm.smul_sup GroupSeminorm.smul_sup
 #align add_group_seminorm.smul_sup AddGroupSeminorm.smul_sup
@@ -727,7 +727,7 @@ theorem smul_apply (r : R) (p : NonarchAddGroupSeminorm E) (x : E) : (r • p) x
 theorem smul_sup (r : R) (p q : NonarchAddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
     simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
-      mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
+      mul_max_of_nonneg x y (r • 1 : ℝ≥0).prop
   ext fun x => real.smul_max _ _
 #align nonarch_add_group_seminorm.smul_sup NonarchAddGroupSeminorm.smul_sup
 
@@ -844,7 +844,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 
 @[to_additive]
 instance : SemilatticeSup (GroupNorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  FunLike.coe_injective.semilatticeSup _ coe_sup
 
 end Group
 
@@ -958,7 +958,7 @@ theorem sup_apply (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 #align nonarch_add_group_norm.sup_apply NonarchAddGroupNorm.sup_apply
 
 noncomputable instance : SemilatticeSup (NonarchAddGroupNorm E) :=
-  FunLike.coe_injective.SemilatticeSup _ coe_sup
+  FunLike.coe_injective.semilatticeSup _ coe_sup
 
 instance [DecidableEq E] : One (NonarchAddGroupNorm E) :=
   ⟨{ (1 : NonarchAddGroupSeminorm E) with

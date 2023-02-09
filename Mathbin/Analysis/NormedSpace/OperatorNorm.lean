@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.operator_norm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -384,20 +384,19 @@ protected theorem tmp_topology_eq :
   by
   refine'
     continuous_linear_map.tmp_topological_add_group.ext inferInstance
-      ((@Metric.nhds_basis_closedBall _ ContinuousLinearMap.tmpPseudoMetricSpace 0).ext
+      ((@metric.nhds_basis_closed_ball _ ContinuousLinearMap.tmpPseudoMetricSpace 0).ext
         (ContinuousLinearMap.hasBasis_nhds_zero_of_basis Metric.nhds_basis_closedBall) _ _)
   · rcases NormedField.exists_norm_lt_one 𝕜 with ⟨c, hc₀, hc₁⟩
     refine' fun ε hε =>
-      ⟨⟨closed_ball 0 (1 / ‖c‖), ε⟩, ⟨NormedSpace.isVonNBounded_closedBall _ _ _, hε⟩, fun f hf =>
-        _⟩
+      ⟨⟨closedBall 0 (1 / ‖c‖), ε⟩, ⟨NormedSpace.isVonNBounded_closedBall _ _ _, hε⟩, fun f hf => _⟩
     change ∀ x, _ at hf
     simp_rw [mem_closedBall_zero_iff] at hf
-    rw [@mem_closedBall_zero_iff _ SeminormedAddCommGroup.toSeminormedAddGroup]
+    rw [@mem_closed_ball_zero_iff _ SeminormedAddCommGroup.toSeminormedAddGroup]
     refine' op_norm_le_of_shell' (div_pos one_pos hc₀) hε.le hc₁ fun x hx₁ hxc => _
     rw [div_mul_cancel 1 hc₀.ne.symm] at hx₁
     exact (hf x hxc.le).trans (le_mul_of_one_le_right hε.le hx₁)
   · rintro ⟨S, ε⟩ ⟨hS, hε⟩
-    rw [NormedSpace.isVonNBounded_iff, ← bounded_iff_is_bounded] at hS
+    rw [NormedSpace.isVonNBounded_iff, ← bounded_iff_isBounded] at hS
     rcases hS.subset_ball_lt 0 0 with ⟨δ, hδ, hSδ⟩
     exact
       ⟨ε / δ, div_pos hε hδ,
@@ -408,8 +407,8 @@ protected theorem tmpUniformSpace_eq :
     (ContinuousLinearMap.tmpUniformSpace : UniformSpace (E →SL[σ₁₂] F)) =
       ContinuousLinearMap.uniformSpace :=
   by
-  rw [← @UniformAddGroup.toUniformSpace_eq _ ContinuousLinearMap.tmpUniformSpace, ←
-    @UniformAddGroup.toUniformSpace_eq _ ContinuousLinearMap.uniformSpace]
+  rw [← @uniform_add_group.to_uniform_space_eq _ ContinuousLinearMap.tmpUniformSpace, ←
+    @uniform_add_group.to_uniform_space_eq _ ContinuousLinearMap.uniformSpace]
   congr 1
   exact ContinuousLinearMap.tmp_topology_eq
 #align continuous_linear_map.tmp_uniform_space_eq ContinuousLinearMap.tmpUniformSpace_eq
@@ -429,7 +428,7 @@ theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = infₛ { c | ∀ x, 
   by
   ext
   rw [Nnreal.coe_infₛ, coe_nnnorm, norm_def, Nnreal.coe_image]
-  simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk,
+  simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_setOf_eq, Subtype.coe_mk,
     exists_prop]
 #align continuous_linear_map.nnnorm_def ContinuousLinearMap.nnnorm_def
 
@@ -522,7 +521,7 @@ variable [RingHomIsometric σ₁₂]
 theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ‖f‖₊) :
     ∃ x, r * ‖x‖₊ < ‖f x‖₊ := by
   simpa only [not_forall, not_le, Set.mem_setOf] using
-    not_mem_of_lt_cinfₛ (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
+    not_mem_of_lt_cinfₛ (nnnorm_def f ▸ hr : r < infₛ { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
       (OrderBot.bddBelow _)
 #align continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
 
@@ -540,7 +539,7 @@ theorem exists_lt_apply_of_lt_op_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCo
   obtain ⟨y, hy⟩ := f.exists_mul_lt_apply_of_lt_op_nnnorm hr
   have hy' : ‖y‖₊ ≠ 0 :=
     nnnorm_ne_zero_iff.2 fun heq => by
-      simpa only [HEq, nnnorm_zero, map_zero, not_lt_zero'] using hy
+      simpa only [heq, nnnorm_zero, map_zero, not_lt_zero'] using hy
   have hfy : ‖f y‖₊ ≠ 0 := (zero_le'.trans_lt hy).ne'
   rw [← inv_inv ‖f y‖₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero hfy), mul_assoc, mul_comm ‖y‖₊, ←
     mul_assoc, ← Nnreal.lt_inv_iff_mul_lt hy'] at hy
@@ -587,15 +586,15 @@ theorem supₛ_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAdd
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     supₛ ((fun x => ‖f x‖₊) '' closedBall 0 1) = ‖f‖₊ :=
   by
-  have hbdd : ∀ y ∈ (fun x => ‖f x‖₊) '' closed_ball 0 1, y ≤ ‖f‖₊ :=
+  have hbdd : ∀ y ∈ (fun x => ‖f x‖₊) '' closedBall 0 1, y ≤ ‖f‖₊ :=
     by
     rintro - ⟨x, hx, rfl⟩
     exact f.unit_le_op_norm x (mem_closedBall_zero_iff.1 hx)
   refine' le_antisymm (csupₛ_le ((nonempty_closed_ball.mpr zero_le_one).image _) hbdd) _
-  rw [← Sup_unit_ball_eq_nnnorm]
+  rw [← supₛ_unit_ball_eq_nnnorm]
   exact
     csupₛ_le_csupₛ ⟨‖f‖₊, hbdd⟩ ((nonempty_ball.2 zero_lt_one).image _)
-      (Set.image_subset _ ball_subset_closed_ball)
+      (Set.image_subset _ ball_subset_closedBall)
 #align continuous_linear_map.Sup_closed_unit_ball_eq_nnnorm ContinuousLinearMap.supₛ_closed_unit_ball_eq_nnnorm
 
 theorem supₛ_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
@@ -637,20 +636,20 @@ theorem le_op_norm₂ [RingHomIsometric σ₁₃] (f : E →SL[σ₁₃] F →SL
 end
 
 @[simp]
-theorem op_norm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.Prod g‖ = ‖(f, g)‖ :=
+theorem op_norm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.prod g‖ = ‖(f, g)‖ :=
   le_antisymm
       (op_norm_le_bound _ (norm_nonneg _) fun x => by
         simpa only [prod_apply, Prod.norm_def, max_mul_of_nonneg, norm_nonneg] using
           max_le_max (le_op_norm f x) (le_op_norm g x)) <|
     max_le
       (op_norm_le_bound _ (norm_nonneg _) fun x =>
-        (le_max_left _ _).trans ((f.Prod g).le_op_norm x))
+        (le_max_left _ _).trans ((f.prod g).le_op_norm x))
       (op_norm_le_bound _ (norm_nonneg _) fun x =>
-        (le_max_right _ _).trans ((f.Prod g).le_op_norm x))
+        (le_max_right _ _).trans ((f.prod g).le_op_norm x))
 #align continuous_linear_map.op_norm_prod ContinuousLinearMap.op_norm_prod
 
 @[simp]
-theorem op_nnnorm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.Prod g‖₊ = ‖(f, g)‖₊ :=
+theorem op_nnnorm_prod (f : E →L[𝕜] Fₗ) (g : E →L[𝕜] Gₗ) : ‖f.prod g‖₊ = ‖(f, g)‖₊ :=
   Subtype.ext <| op_norm_prod f g
 #align continuous_linear_map.op_nnnorm_prod ContinuousLinearMap.op_nnnorm_prod
 
@@ -685,7 +684,7 @@ theorem isOWith_id (l : Filter E) : IsOWith ‖f‖ l f fun x => x :=
 #align continuous_linear_map.is_O_with_id ContinuousLinearMap.isOWith_id
 
 theorem isO_id (l : Filter E) : f =O[l] fun x => x :=
-  (f.isOWith_id l).IsO
+  (f.isOWith_id l).isO
 #align continuous_linear_map.is_O_id ContinuousLinearMap.isO_id
 
 theorem isOWith_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F)
@@ -695,7 +694,7 @@ theorem isOWith_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ�
 
 theorem isO_comp [RingHomIsometric σ₂₃] {α : Type _} (g : F →SL[σ₂₃] G) (f : α → F) (l : Filter α) :
     (fun x' => g (f x')) =O[l] f :=
-  (g.isOWith_comp f l).IsO
+  (g.isOWith_comp f l).isO
 #align continuous_linear_map.is_O_comp ContinuousLinearMap.isO_comp
 
 theorem isOWith_sub (f : E →SL[σ₁₂] F) (l : Filter E) (x : E) :
@@ -748,11 +747,11 @@ def mkContinuous₂ (f : E →ₛₗ[σ₁₃] F →ₛₗ[σ₂₃] G) (C : ℝ
     { toFun := fun x => (f x).mkContinuous (C * ‖x‖) (hC x)
       map_add' := fun x y => by
         ext z
-        rw [ContinuousLinearMap.add_apply, mk_continuous_apply, mk_continuous_apply,
-          mk_continuous_apply, map_add, add_apply]
+        rw [ContinuousLinearMap.add_apply, mkContinuous_apply, mkContinuous_apply,
+          mkContinuous_apply, map_add, add_apply]
       map_smul' := fun c x => by
         ext z
-        rw [ContinuousLinearMap.smul_apply, mk_continuous_apply, mk_continuous_apply, map_smulₛₗ,
+        rw [ContinuousLinearMap.smul_apply, mkContinuous_apply, mkContinuous_apply, map_smulₛₗ,
           smul_apply] }
     (max C 0) fun x =>
     (mkContinuous_norm_le' _ _).trans_eq <| by rw [max_mul_of_nonneg _ _ (norm_nonneg x), zero_mul]
@@ -940,7 +939,7 @@ theorem compSL_apply (f : F →SL[σ₂₃] G) (g : E →SL[σ₁₂] F) : compS
 theorem Continuous.const_clm_comp {X} [TopologicalSpace X] {f : X → E →SL[σ₁₂] F}
     (hf : Continuous f) (g : F →SL[σ₂₃] G) :
     Continuous (fun x => g.comp (f x) : X → E →SL[σ₁₃] G) :=
-  (compSL E F G σ₁₂ σ₂₃ g).Continuous.comp hf
+  (compSL E F G σ₁₂ σ₂₃ g).continuous.comp hf
 #align continuous.const_clm_comp Continuous.const_clm_comp
 
 -- Giving the implicit argument speeds up elaboration significantly
@@ -948,7 +947,7 @@ theorem Continuous.clm_comp_const {X} [TopologicalSpace X] {g : X → F →SL[σ
     (hg : Continuous g) (f : E →SL[σ₁₂] F) :
     Continuous (fun x => (g x).comp f : X → E →SL[σ₁₃] G) :=
   (@ContinuousLinearMap.flip _ _ _ _ _ (E →SL[σ₁₃] G) _ _ _ _ _ _ _ _ _ _ _ _ _
-          (compSL E F G σ₁₂ σ₂₃) f).Continuous.comp
+          (compSL E F G σ₁₂ σ₂₃) f).continuous.comp
     hg
 #align continuous.clm_comp_const Continuous.clm_comp_const
 
@@ -1005,13 +1004,13 @@ def prodMapL : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₁ 
     have Ψ₂ : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) →L[𝕜] M₃ →L[𝕜] M₄ :=
       ContinuousLinearMap.snd 𝕜 (M₁ →L[𝕜] M₂) (M₃ →L[𝕜] M₄)
     Φ₁' ∘L Φ₁ ∘L Ψ₁ + Φ₂' ∘L Φ₂ ∘L Ψ₂)
-    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.Prod_map p.2)
+    (fun p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄) => p.1.prodMap p.2)
     (by
       apply funext
       rintro ⟨φ, ψ⟩
       apply ContinuousLinearMap.ext fun x => _
       simp only [add_apply, coe_comp', coe_fst', Function.comp_apply, compL_apply, flip_apply,
-        coe_snd', inl_apply, inr_apply, Prod.mk_add_mk, add_zero, zero_add, coe_prod_map', Prod_map,
+        coe_snd', inl_apply, inr_apply, Prod.mk_add_mk, add_zero, zero_add, coe_prod_map', prodMap,
         Prod.mk.inj_iff, eq_self_iff_true, and_self_iff]
       rfl)
 #align continuous_linear_map.prod_mapL ContinuousLinearMap.prodMapL
@@ -1020,34 +1019,34 @@ variable {M₁ M₂ M₃ M₄}
 
 @[simp]
 theorem prodMapL_apply (p : (M₁ →L[𝕜] M₂) × (M₃ →L[𝕜] M₄)) :
-    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.Prod_map p.2 :=
+    ContinuousLinearMap.prodMapL 𝕜 M₁ M₂ M₃ M₄ p = p.1.prodMap p.2 :=
   rfl
 #align continuous_linear_map.prod_mapL_apply ContinuousLinearMap.prodMapL_apply
 
 variable {X : Type _} [TopologicalSpace X]
 
 theorem Continuous.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} (hf : Continuous f)
-    (hg : Continuous g) : Continuous fun x => (f x).Prod_map (g x) :=
-  (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp (hf.prod_mk hg)
+    (hg : Continuous g) : Continuous fun x => (f x).prodMap (g x) :=
+  (prodMapL 𝕜 M₁ M₂ M₃ M₄).continuous.comp (hf.prod_mk hg)
 #align continuous.prod_mapL Continuous.prod_mapL
 
 theorem Continuous.prod_map_equivL {f : X → M₁ ≃L[𝕜] M₂} {g : X → M₃ ≃L[𝕜] M₄}
     (hf : Continuous fun x => (f x : M₁ →L[𝕜] M₂)) (hg : Continuous fun x => (g x : M₃ →L[𝕜] M₄)) :
-    Continuous fun x => ((f x).Prod (g x) : M₁ × M₃ →L[𝕜] M₂ × M₄) :=
-  (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp (hf.prod_mk hg)
+    Continuous fun x => ((f x).prod (g x) : M₁ × M₃ →L[𝕜] M₂ × M₄) :=
+  (prodMapL 𝕜 M₁ M₂ M₃ M₄).continuous.comp (hf.prod_mk hg)
 #align continuous.prod_map_equivL Continuous.prod_map_equivL
 
 theorem ContinuousOn.prod_mapL {f : X → M₁ →L[𝕜] M₂} {g : X → M₃ →L[𝕜] M₄} {s : Set X}
     (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
-    ContinuousOn (fun x => (f x).Prod_map (g x)) s :=
-  ((prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuousOn (hf.Prod hg) : _)
+    ContinuousOn (fun x => (f x).prodMap (g x)) s :=
+  ((prodMapL 𝕜 M₁ M₂ M₃ M₄).continuous.comp_continuousOn (hf.prod hg) : _)
 #align continuous_on.prod_mapL ContinuousOn.prod_mapL
 
 theorem ContinuousOn.prod_map_equivL {f : X → M₁ ≃L[𝕜] M₂} {g : X → M₃ ≃L[𝕜] M₄} {s : Set X}
     (hf : ContinuousOn (fun x => (f x : M₁ →L[𝕜] M₂)) s)
     (hg : ContinuousOn (fun x => (g x : M₃ →L[𝕜] M₄)) s) :
-    ContinuousOn (fun x => ((f x).Prod (g x) : M₁ × M₃ →L[𝕜] M₂ × M₄)) s :=
-  (prodMapL 𝕜 M₁ M₂ M₃ M₄).Continuous.comp_continuousOn (hf.Prod hg)
+    ContinuousOn (fun x => ((f x).prod (g x) : M₁ × M₃ →L[𝕜] M₂ × M₄)) s :=
+  (prodMapL 𝕜 M₁ M₂ M₃ M₄).continuous.comp_continuousOn (hf.prod hg)
 #align continuous_on.prod_map_equivL ContinuousOn.prod_map_equivL
 
 end Prod
@@ -1157,9 +1156,9 @@ variable {𝕜'}
 theorem norm_toSpanSingleton (x : E) : ‖toSpanSingleton 𝕜 x‖ = ‖x‖ :=
   by
   refine' op_norm_eq_of_bounds (norm_nonneg _) (fun x => _) fun N hN_nonneg h => _
-  · rw [to_span_singleton_apply, norm_smul, mul_comm]
+  · rw [toSpanSingleton_apply, norm_smul, mul_comm]
   · specialize h 1
-    rw [to_span_singleton_apply, norm_smul, mul_comm] at h
+    rw [toSpanSingleton_apply, norm_smul, mul_comm] at h
     exact (mul_le_mul_right (by simp)).mp h
 #align continuous_linear_map.norm_to_span_singleton ContinuousLinearMap.norm_toSpanSingleton
 
@@ -1366,7 +1365,7 @@ that produces a concrete bound.
 theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] Fₗ)
     (h : ∀ z ∈ Metric.ball (0 : E) r, ‖f z‖ ≤ c) : ∃ C, ∀ z : E, ‖f z‖ ≤ C * ‖z‖ :=
   by
-  cases' @NontriviallyNormedField.non_trivial 𝕜 _ with k hk
+  cases' @nontrivially_normed_field.non_trivial 𝕜 _ with k hk
   use c * (‖k‖ / r)
   intro z
   refine' LinearMap.bound_of_shell _ r_pos hk (fun x hko hxo => _) _
@@ -1445,7 +1444,7 @@ theorem antilipschitz_of_uniformEmbedding (f : E →L[𝕜] Fₗ) (hf : UniformE
     ∃ K, AntilipschitzWith K f :=
   by
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : ℝ)(H : ε > 0), ∀ {x y : E}, dist (f x) (f y) < ε → dist x y < 1
-  exact (uniform_embedding_iff.1 hf).2.2 1 zero_lt_one
+  exact (uniformEmbedding_iff.1 hf).2.2 1 zero_lt_one
   let δ := ε / 2
   have δ_pos : δ > 0 := half_pos εpos
   have H : ∀ {x}, ‖f x‖ ≤ δ → ‖x‖ ≤ 1 := by
@@ -1460,7 +1459,7 @@ theorem antilipschitz_of_uniformEmbedding (f : E →L[𝕜] Fₗ) (hf : UniformE
   exact inv_nonneg.2 (le_of_lt δ_pos)
   by_cases hx : f x = 0
   · have : f x = f 0 := by simp [hx]
-    have : x = 0 := (uniform_embedding_iff.1 hf).1 this
+    have : x = 0 := (uniformEmbedding_iff.1 hf).1 this
     simp [this]
   · rcases rescale_to_shell hc δ_pos hx with ⟨d, hd, dxlt, ledx, dinv⟩
     rw [← f.map_smul d] at dxlt
@@ -1505,7 +1504,7 @@ def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} 
 that takes values in a bounded set and converges to `f` pointwise along a nontrivial filter. Then
 `f` is a continuous (semi)linear map. -/
 @[simps (config := { fullyApplied := false }) apply]
-def ofTendstoOfBoundedRange {α : Type _} {l : Filter α} [l.ne_bot] (f : E' → F)
+def ofTendstoOfBoundedRange {α : Type _} {l : Filter α} [l.NeBot] (f : E' → F)
     (g : α → E' →SL[σ₁₂] F) (hf : Tendsto (fun a x => g a x) l (𝓝 f)) (hg : Bounded (Set.range g)) :
     E' →SL[σ₁₂] F :=
   ofMemClosureImageCoeBounded f hg <|
@@ -1529,10 +1528,10 @@ theorem tendsto_of_tendsto_pointwise_of_cauchySeq {f : ℕ → E' →SL[σ₁₂
       (squeeze_zero (fun n => norm_nonneg _) (fun n => op_norm_le_bound _ (hb₀ n) (this n)) hb_lim)
   intro n x
   -- Note that `f m x → g x`, hence `‖f n x - f m x‖ → ‖f n x - g x‖` as `m → ∞`
-  have : tendsto (fun m => ‖f n x - f m x‖) at_top (𝓝 ‖f n x - g x‖) :=
+  have : Tendsto (fun m => ‖f n x - f m x‖) atTop (𝓝 ‖f n x - g x‖) :=
     (tendsto_const_nhds.sub <| tendsto_pi_nhds.1 hg _).norm
   -- Thus it suffices to verify `‖f n x - f m x‖ ≤ b n * ‖x‖` for `m ≥ n`.
-  refine' le_of_tendsto this (eventually_at_top.2 ⟨n, fun m hm => _⟩)
+  refine' le_of_tendsto this (eventually_atTop.2 ⟨n, fun m hm => _⟩)
   -- This inequality follows from `‖f n - f m‖ ≤ b n`.
   exact (f n - f m).le_of_op_norm_le (hfb _ _ _ le_rfl hm) _
 #align continuous_linear_map.tendsto_of_tendsto_pointwise_of_cauchy_seq ContinuousLinearMap.tendsto_of_tendsto_pointwise_of_cauchySeq
@@ -1544,18 +1543,17 @@ instance [CompleteSpace F] : CompleteSpace (E' →SL[σ₁₂] F) :=
   -- We show that every Cauchy sequence converges.
   refine' Metric.complete_of_cauchySeq_tendsto fun f hf => _
   -- The evaluation at any point `v : E` is Cauchy.
-  have cau : ∀ v, CauchySeq fun n => f n v := fun v => hf.map (lipschitz_apply v).UniformContinuous
+  have cau : ∀ v, CauchySeq fun n => f n v := fun v => hf.map (lipschitz_apply v).uniformContinuous
   -- We assemble the limits points of those Cauchy sequences
   -- (which exist as `F` is complete)
   -- into a function which we call `G`.
   choose G hG using fun v => cauchySeq_tendsto_of_complete (cau v)
   -- Next, we show that this `G` is a continuous linear map.
   -- This is done in `continuous_linear_map.of_tendsto_of_bounded_range`.
-  set Glin : E' →SL[σ₁₂] F :=
-    of_tendsto_of_bounded_range _ _ (tendsto_pi_nhds.mpr hG) hf.bounded_range
+  set Glin : E' →SL[σ₁₂] F := ofTendstoOfBoundedRange _ _ (tendsto_pi_nhds.mpr hG) hf.bounded_range
   -- Finally, `f n` converges to `Glin` in norm because of
   -- `continuous_linear_map.tendsto_of_tendsto_pointwise_of_cauchy_seq`
-  exact ⟨Glin, tendsto_of_tendsto_pointwise_of_cauchy_seq (tendsto_pi_nhds.2 hG) hf⟩
+  exact ⟨Glin, tendsto_of_tendsto_pointwise_of_cauchySeq (tendsto_pi_nhds.2 hG) hf⟩
 
 /-- Let `s` be a bounded set in the space of continuous (semi)linear maps `E →SL[σ] F` taking values
 in a proper space. Then `s` interpreted as a set in the space of maps `E → F` with topology of
@@ -1609,7 +1607,7 @@ theorem is_weak_closed_closedBall (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f :
     (hf : ⇑f ∈ closure ((coeFn : (E' →SL[σ₁₂] F) → E' → F) '' closedBall f₀ r)) :
     f ∈ closedBall f₀ r :=
   by
-  have hr : 0 ≤ r := nonempty_closed_ball.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
+  have hr : 0 ≤ r := nonempty_closedBall.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
   refine' mem_closedBall_iff_norm.2 (op_norm_le_bound _ hr fun x => _)
   have : IsClosed { g : E' → F | ‖g x - f₀ x‖ ≤ r * ‖x‖ } :=
     is_closed_Iic.preimage ((@continuous_apply E' (fun _ => F) _ x).sub continuous_const).norm
@@ -1650,10 +1648,10 @@ def extend : Fₗ →SL[σ₁₂] F :=
   have cont :=
     (-- extension of `f` is continuous
         uniformContinuous_uniformly_extend
-        h_e h_dense f.UniformContinuous).Continuous
+        h_e h_dense f.uniformContinuous).continuous
   -- extension of `f` agrees with `f` on the domain of the embedding `e`
-  have eq := uniformly_extend_of_ind h_e h_dense f.UniformContinuous
-  { toFun := (h_e.DenseInducing h_dense).extend f
+  have eq := uniformly_extend_of_ind h_e h_dense f.uniformContinuous
+  { toFun := (h_e.denseInducing h_dense).extend f
     map_add' := by
       refine' h_dense.induction_on₂ _ _
       ·
@@ -1661,7 +1659,7 @@ def extend : Fₗ →SL[σ₁₂] F :=
           isClosed_eq (cont.comp continuous_add)
             ((cont.comp continuous_fst).add (cont.comp continuous_snd))
       · intro x y
-        simp only [Eq, ← e.map_add]
+        simp only [eq, ← e.map_add]
         exact f.map_add _ _
     map_smul' := fun k => by
       refine' fun b => h_dense.induction_on b _ _
@@ -1670,7 +1668,7 @@ def extend : Fₗ →SL[σ₁₂] F :=
           isClosed_eq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp cont)
       · intro x
         rw [← map_smul]
-        simp only [Eq]
+        simp only [eq]
         exact ContinuousLinearMap.map_smulₛₗ _ _ _
     cont }
 #align continuous_linear_map.extend ContinuousLinearMap.extend
@@ -1682,7 +1680,7 @@ theorem extend_eq (x : E) : extend f e h_dense h_e (e x) = f x :=
 
 theorem extend_unique (g : Fₗ →SL[σ₁₂] F) (H : g.comp e = f) : extend f e h_dense h_e = g :=
   ContinuousLinearMap.coeFn_injective <|
-    uniformly_extend_unique h_e h_dense (ContinuousLinearMap.ext_iff.1 H) g.Continuous
+    uniformly_extend_unique h_e h_dense (ContinuousLinearMap.ext_iff.1 H) g.continuous
 #align continuous_linear_map.extend_unique ContinuousLinearMap.extend_unique
 
 @[simp]
@@ -1703,7 +1701,7 @@ local notation "ψ" => f.extend e h_dense (uniformEmbedding_of_bound _ h_e).to_u
 norm of the extension of `f` along `e` is bounded by `N * ‖f‖`. -/
 theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
   by
-  have uni : UniformInducing e := (uniform_embedding_of_bound _ h_e).to_uniformInducing
+  have uni : UniformInducing e := (uniformEmbedding_of_bound _ h_e).to_uniformInducing
   have eq : ∀ x, ψ (e x) = f x := uniformly_extend_of_ind uni h_dense f.uniform_continuous
   by_cases N0 : 0 ≤ N
   · refine' op_norm_le_bound ψ _ (isClosed_property h_dense (isClosed_le _ _) _)
@@ -1711,7 +1709,7 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
     · exact continuous_norm.comp (cont ψ)
     · exact continuous_const.mul continuous_norm
     · intro x
-      rw [Eq]
+      rw [eq]
       calc
         ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
         _ ≤ ‖f‖ * (N * ‖e x‖) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
@@ -1756,7 +1754,7 @@ the operator norm. -/
 theorem norm_toContinuousLinearMap_comp [RingHomIsometric σ₁₂] (f : F →ₛₗᵢ[σ₂₃] G)
     {g : E →SL[σ₁₂] F} : ‖f.toContinuousLinearMap.comp g‖ = ‖g‖ :=
   op_norm_ext (f.toContinuousLinearMap.comp g) g fun x => by
-    simp only [norm_map, coe_to_continuous_linear_map, coe_comp']
+    simp only [norm_map, coe_toContinuousLinearMap, coe_comp']
 #align linear_isometry.norm_to_continuous_linear_map_comp LinearIsometry.norm_toContinuousLinearMap_comp
 
 omit σ₁₃
@@ -1820,8 +1818,8 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
       rw [div_mul_eq_mul_div, le_div_iff this]
       calc
         ‖c x‖ * ‖f‖ = ‖c x • f‖ := (norm_smul _ _).symm
-        _ = ‖smul_right c f x‖ := rfl
-        _ ≤ ‖smul_right c f‖ * ‖x‖ := le_op_norm _ _
+        _ = ‖smulRight c f x‖ := rfl
+        _ ≤ ‖smulRight c f‖ * ‖x‖ := le_op_norm _ _
         
 #align continuous_linear_map.norm_smul_right_apply ContinuousLinearMap.norm_smulRight_apply
 
@@ -1841,12 +1839,12 @@ def smulRightL : (E →L[𝕜] 𝕜) →L[𝕜] Fₗ →L[𝕜] E →L[𝕜] F�
     { toFun := smulRightₗ
       map_add' := fun c₁ c₂ => by
         ext x
-        simp only [add_smul, coe_smul_rightₗ, add_apply, smul_right_apply, LinearMap.add_apply]
+        simp only [add_smul, coe_smulRightₗ, add_apply, smulRight_apply, LinearMap.add_apply]
       map_smul' := fun m c => by
         ext x
-        simp only [smul_smul, coe_smul_rightₗ, Algebra.id.smul_eq_mul, coe_smul', smul_right_apply,
+        simp only [smul_smul, coe_smulRightₗ, Algebra.id.smul_eq_mul, coe_smul', smulRight_apply,
           LinearMap.smul_apply, RingHom.id_apply, Pi.smul_apply] }
-    1 fun c x => by simp only [coe_smul_rightₗ, one_mul, norm_smul_right_apply, LinearMap.coe_mk]
+    1 fun c x => by simp only [coe_smulRightₗ, one_mul, norm_smulRight_apply, LinearMap.coe_mk]
 #align continuous_linear_map.smul_rightL ContinuousLinearMap.smulRightL
 
 variable {𝕜 E Fₗ}
@@ -1971,7 +1969,7 @@ theorem coord_norm (x : E) (h : x ≠ 0) : ‖coord 𝕜 x h‖ = ‖x‖⁻¹ :
   haveI : Nontrivial (𝕜 ∙ x) := Submodule.nontrivial_span_singleton h
   exact
     ContinuousLinearMap.homothety_norm _ fun y =>
-      homothety_inverse _ hx _ (to_span_nonzero_singleton_homothety 𝕜 x h) _
+      homothety_inverse _ hx _ (toSpanNonzeroSingleton_homothety 𝕜 x h) _
 #align continuous_linear_equiv.coord_norm ContinuousLinearEquiv.coord_norm
 
 variable {𝕜} {𝕜₄ : Type _} [NontriviallyNormedField 𝕜₄]

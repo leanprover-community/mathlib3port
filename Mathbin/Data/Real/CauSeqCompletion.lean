@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.real.cau_seq_completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zeroₓ'. -/
 @[simp]
 theorem mk_eq_zero {f : CauSeq _ abv} : mk f = 0 ↔ LimZero f := by
-  have : mk f = 0 ↔ lim_zero (f - 0) := Quotient.eq' <;> rwa [sub_zero] at this
+  have : mk f = 0 ↔ LimZero (f - 0) := Quotient.eq' <;> rwa [sub_zero] at this
 #align cau_seq.completion.mk_eq_zero CauSeq.Completion.mk_eq_zero
 
 instance : Add (Cauchy abv) :=
@@ -328,8 +328,8 @@ noncomputable instance : Inv (Cauchy abv) :=
   ⟨fun x =>
     Quotient.liftOn x (fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg =>
       by
-      have := lim_zero_congr fg
-      by_cases hf : lim_zero f
+      have := limZero_congr fg
+      by_cases hf : LimZero f
       · simp [hf, this.1 hf, Setoid.refl]
       · have hg := mt this.2 hf
         simp [hf, hg]
@@ -347,7 +347,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.inv_zero CauSeq.Completion.inv_zeroₓ'. -/
 @[simp]
 theorem inv_zero : (0 : Cauchy abv)⁻¹ = 0 :=
-  congr_arg mk <| by rw [dif_pos] <;> [rfl, exact zero_lim_zero]
+  congr_arg mk <| by rw [dif_pos] <;> [rfl, exact zero_limZero]
 #align cau_seq.completion.inv_zero CauSeq.Completion.inv_zero
 
 /- warning: cau_seq.completion.inv_mk -> CauSeq.Completion.inv_mk is a dubious translation:
@@ -413,7 +413,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : DivisionRing.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (DivisionSemiring.toSemiring.{u2} β (DivisionRing.toDivisionSemiring.{u2} β _inst_2)) abv] (x : β), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 (Inv.inv.{u2} β (DivisionRing.toInv.{u2} β _inst_2) x)) (Inv.inv.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.instInvCauchyToRing.{u1, u2} α _inst_1 β _inst_2 abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x))
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.of_rat_inv CauSeq.Completion.ofRat_invₓ'. -/
 theorem ofRat_inv (x : β) : ofRat x⁻¹ = ((ofRat x)⁻¹ : Cauchy abv) :=
-  congr_arg mk <| by split_ifs with h <;> [simp [const_lim_zero.1 h], rfl]
+  congr_arg mk <| by split_ifs with h <;> [simp [const_limZero.1 h], rfl]
 #align cau_seq.completion.of_rat_inv CauSeq.Completion.ofRat_inv
 
 /-- The Cauchy completion forms a division ring. -/
@@ -425,7 +425,7 @@ noncomputable instance : DivisionRing (Cauchy abv) :=
     inv_zero := inv_zero
     ratCast := fun q => ofRat q
     ratCast_mk := fun n d hd hnd => by
-      rw [Rat.cast_mk', of_rat_mul, of_rat_int_cast, of_rat_inv, of_rat_nat_cast] }
+      rw [Rat.cast_mk', ofRat_mul, ofRat_intCast, ofRat_inv, ofRat_natCast] }
 
 /- warning: cau_seq.completion.of_rat_div -> CauSeq.Completion.ofRat_div is a dubious translation:
 lean 3 declaration is
@@ -434,7 +434,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {β : Type.{u2}} [_inst_2 : DivisionRing.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (DivisionSemiring.toSemiring.{u2} β (DivisionRing.toDivisionSemiring.{u2} β _inst_2)) abv] (x : β) (y : β), Eq.{succ u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 (HDiv.hDiv.{u2, u2, u2} β β β (instHDiv.{u2} β (DivisionRing.toDiv.{u2} β _inst_2)) x y)) (HDiv.hDiv.{u2, u2, u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (instHDiv.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (DivisionRing.toDiv.{u2} (CauSeq.Completion.Cauchy.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3) (CauSeq.Completion.Cauchy.divisionRing.{u1, u2} α _inst_1 β _inst_2 abv _inst_3))) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x) (CauSeq.Completion.ofRat.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 y))
 Case conversion may be inaccurate. Consider using '#align cau_seq.completion.of_rat_div CauSeq.Completion.ofRat_divₓ'. -/
 theorem ofRat_div (x y : β) : ofRat (x / y) = (ofRat x / ofRat y : Cauchy abv) := by
-  simp only [div_eq_mul_inv, of_rat_inv, of_rat_mul]
+  simp only [div_eq_mul_inv, ofRat_inv, ofRat_mul]
 #align cau_seq.completion.of_rat_div CauSeq.Completion.ofRat_div
 
 /-- Show the first 10 items of a representative of this equivalence class of cauchy sequences.
@@ -531,7 +531,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : LinearOrderedField.{u2} α] {β : Type.{u1}} [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] [_inst_4 : CauSeq.IsComplete.{u2, u1} α _inst_1 β _inst_2 abv _inst_3] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {x : β}, (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f (CauSeq.const.{u2, u1} α β _inst_1 _inst_2 abv _inst_3 x)) -> (Eq.{succ u1} β (CauSeq.lim.{u2, u1} α _inst_1 β _inst_2 abv _inst_3 _inst_4 f) x)
 Case conversion may be inaccurate. Consider using '#align cau_seq.lim_eq_of_equiv_const CauSeq.lim_eq_of_equiv_constₓ'. -/
-theorem lim_eq_of_equiv_const {f : CauSeq β abv} {x : β} (h : f ≈ CauSeq.const abv x) : lim f = x :=
+theorem lim_eq_of_equiv_const {f : cau_seq β abv} {x : β} (h : f ≈ CauSeq.const abv x) :
+    lim f = x :=
   (eq_lim_of_const_equiv <| Setoid.symm h).symm
 #align cau_seq.lim_eq_of_equiv_const CauSeq.lim_eq_of_equiv_const
 
@@ -562,7 +563,7 @@ theorem lim_add (f g : CauSeq β abv) : lim f + lim g = lim (f + g) :=
   eq_lim_of_const_equiv <|
     show LimZero (const abv (lim f + lim g) - (f + g)) by
       rw [const_add, add_sub_add_comm] <;>
-        exact add_lim_zero (Setoid.symm (equiv_lim f)) (Setoid.symm (equiv_lim g))
+        exact add_limZero (Setoid.symm (equiv_lim f)) (Setoid.symm (equiv_lim g))
 #align cau_seq.lim_add CauSeq.lim_add
 
 /- warning: cau_seq.lim_mul_lim -> CauSeq.lim_mul_lim is a dubious translation:
@@ -578,11 +579,11 @@ theorem lim_mul_lim (f g : CauSeq β abv) : lim f * lim g = lim (f * g) :=
       have h :
         const abv (lim f * lim g) - f * g =
           (const abv (lim f) - f) * g + const abv (lim f) * (const abv (lim g) - g) :=
-        by simp [const_mul (limUnder f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm]
+        by simp [const_mul (lim f), mul_add, add_mul, sub_eq_add_neg, add_comm, add_left_comm]
       rw [h] <;>
         exact
-          add_lim_zero (mul_lim_zero_left _ (Setoid.symm (equiv_lim _)))
-            (mul_lim_zero_right _ (Setoid.symm (equiv_lim _)))
+          add_limZero (mul_limZero_left _ (Setoid.symm (equiv_lim _)))
+            (mul_limZero_right _ (Setoid.symm (equiv_lim _)))
 #align cau_seq.lim_mul_lim CauSeq.lim_mul_lim
 
 /- warning: cau_seq.lim_mul -> CauSeq.lim_mul is a dubious translation:
@@ -617,7 +618,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.lim_eq_zero_if
 theorem lim_eq_zero_iff (f : CauSeq β abv) : lim f = 0 ↔ LimZero f :=
   ⟨fun h => by
     have hf := equiv_lim f <;> rw [h] at hf <;>
-      exact (lim_zero_congr hf).mpr (const_lim_zero.mpr rfl),
+      exact (limZero_congr hf).mpr (const_lim_zero.mpr rfl),
     fun h =>
     by
     have h₁ : f = f - const abv 0 := ext fun n => by simp [sub_apply, const_apply]
@@ -643,7 +644,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
       have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬LimZero f), LimZero (g - f * inv f hf * g) :=
         fun g f hf => by
         rw [← one_mul g, ← mul_assoc, ← sub_mul, mul_one, mul_comm, mul_comm f] <;>
-          exact mul_lim_zero_right _ (Setoid.symm (CauSeq.inv_mul_cancel _))
+          exact mul_limZero_right _ (Setoid.symm (CauSeq.inv_mul_cancel _))
       have h₂ :
         LimZero
           (inv f hf - const abv (lim f)⁻¹ -
@@ -652,11 +653,11 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬LimZero f) : lim (inv f hf) = (lim f
         rw [sub_mul, ← sub_add, sub_sub, sub_add_eq_sub_sub, sub_right_comm, sub_add] <;>
           exact
             show
-              lim_zero
-                (inv f hf - const abv (limUnder f) * (inv f hf * const abv (limUnder f)⁻¹) -
-                  (const abv (limUnder f)⁻¹ - f * (inv f hf * const abv (limUnder f)⁻¹)))
+              LimZero
+                (inv f hf - const abv (lim f) * (inv f hf * const abv (lim f)⁻¹) -
+                  (const abv (lim f)⁻¹ - f * (inv f hf * const abv (lim f)⁻¹)))
               from
-              sub_lim_zero (by rw [← mul_assoc, mul_right_comm, const_inv hl] <;> exact h₁ _ _ _)
+              sub_limZero (by rw [← mul_assoc, mul_right_comm, const_inv hl] <;> exact h₁ _ _ _)
                 (by rw [← mul_assoc] <;> exact h₁ _ _ _)
       (limZero_congr h₂).mpr <| mul_limZero_left _ (Setoid.symm (equiv_lim f))
 #align cau_seq.lim_inv CauSeq.lim_inv

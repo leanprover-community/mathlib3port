@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.lawful_fix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) :=
     dsimp [approx]
     rfl
   · apply ωSup_le _ _ _
-    simp only [fix.approx_chain, OrderHom.coe_fun_mk]
+    simp only [fix.approxChain, OrderHom.coe_fun_mk]
     intro y x
     apply approx_le_fix f
 #align part.fix_eq_ωSup Part.fix_eq_ωSup
@@ -178,9 +178,9 @@ theorem fix_le {X : ∀ a, Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X :=
   by
   rw [fix_eq_ωSup f]
   apply ωSup_le _ _ _
-  simp only [fix.approx_chain, OrderHom.coe_fun_mk]
+  simp only [fix.approxChain, OrderHom.coe_fun_mk]
   intro i
-  induction i; dsimp [fix.approx]; apply bot_le
+  induction i; dsimp [Fix.approx]; apply bot_le
   trans f X; apply f.monotone i_ih
   apply hX
 #align part.fix_le Part.fix_le
@@ -214,14 +214,14 @@ namespace Part
 def toUnitMono (f : Part α →o Part α) : (Unit → Part α) →o Unit → Part α
     where
   toFun x u := f (x u)
-  monotone' x y (h : x ≤ y) u := f.Monotone <| h u
+  monotone' x y (h : x ≤ y) u := f.monotone <| h u
 #align part.to_unit_mono Part.toUnitMono
 
 theorem to_unit_cont (f : Part α →o Part α) (hc : Continuous f) : Continuous (toUnitMono f)
   | c => by
     ext ⟨⟩ : 1
-    dsimp [OmegaCompletePartialOrder.ωSup]
-    erw [hc, chain.map_comp]; rfl
+    dsimp [omega_complete_partial_order.ωSup]
+    erw [hc, Chain.map_comp]; rfl
 #align part.to_unit_cont Part.to_unit_cont
 
 instance : LawfulFix (Part α) :=

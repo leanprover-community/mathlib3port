@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
   by_contra hnz
   have := degree_le_of_ne_zero A x hnz (by simp [hp])
   contrapose! this
-  apply degree_sub_lt _ (NeZero hx)
+  apply degree_sub_lt _ (ne_zero hx)
   · rw [(monic hx).leadingCoeff, pmonic.leading_coeff]
   · exact le_antisymm (min A x pmonic hp) (pmin (minpoly A x) (monic hx) (aeval A x))
 #align minpoly.unique minpoly.unique
@@ -79,12 +79,12 @@ theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p :=
   have hx : IsIntegral A x := by
     rw [← isAlgebraic_iff_isIntegral]
     exact ⟨p, hp0, hp⟩
-  rw [← dvd_iff_mod_by_monic_eq_zero (monic hx)]
+  rw [← dvd_iff_modByMonic_eq_zero (monic hx)]
   by_contra hnz
   have := degree_le_of_ne_zero A x hnz _
   · contrapose! this
-    exact degree_mod_by_monic_lt _ (monic hx)
-  · rw [← mod_by_monic_add_div p (monic hx)] at hp
+    exact degree_modByMonic_lt _ (monic hx)
+  · rw [← modByMonic_add_div p (monic hx)] at hp
     simpa using hp
 #align minpoly.dvd minpoly.dvd
 
@@ -93,11 +93,11 @@ theorem dvd_map_of_isScalarTower (A K : Type _) {R : Type _} [CommRing A] [Field
     minpoly K x ∣ (minpoly A x).map (algebraMap A K) :=
   by
   refine' minpoly.dvd K x _
-  rw [aeval_map_algebra_map, minpoly.aeval]
+  rw [aeval_map_algebraMap, minpoly.aeval]
 #align minpoly.dvd_map_of_is_scalar_tower minpoly.dvd_map_of_isScalarTower
 
 theorem dvd_map_of_is_scalar_tower' (R : Type _) {S : Type _} (K L : Type _) [CommRing R]
-    [CommRing S] [Field K] [CommRing L] [Algebra R S] [Algebra R K] [Algebra S L] [Algebra K L]
+    [CommRing S] [Field K] [CommRing L] [Algebra R S] [Algebra R K] [algebra S L] [Algebra K L]
     [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L] (s : S) :
     minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (minpoly R s) :=
   by
@@ -134,12 +134,12 @@ theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)
   ·
     exact
       Associated.irreducible
-        ⟨⟨C p.leading_coeff⁻¹, C p.leading_coeff, by rwa [← C_mul, inv_mul_cancel, C_1], by
-            rwa [← C_mul, mul_inv_cancel, C_1]⟩,
+        ⟨⟨c p.leading_coeff⁻¹, c p.leading_coeff, by rwa [← c_mul, inv_mul_cancel, c_1], by
+            rwa [← c_mul, mul_inv_cancel, c_1]⟩,
           rfl⟩
         hp1
   · rw [aeval_mul, hp2, zero_mul]
-  · rwa [Polynomial.Monic, leading_coeff_mul, leading_coeff_C, mul_inv_cancel]
+  · rwa [Polynomial.Monic, leadingCoeff_mul, leadingCoeff_c, mul_inv_cancel]
 #align minpoly.eq_of_irreducible minpoly.eq_of_irreducible
 
 /-- If `y` is the image of `x` in an extension, their minimal polynomials coincide.
@@ -151,7 +151,7 @@ theorem eq_of_algebraMap_eq {K S T : Type _} [Field K] [CommRing S] [CommRing T]
     [Algebra K T] [Algebra S T] [IsScalarTower K S T] (hST : Function.Injective (algebraMap S T))
     {x : S} {y : T} (hx : IsIntegral K x) (h : y = algebraMap S T x) : minpoly K x = minpoly K y :=
   minpoly.unique _ _ (minpoly.monic hx)
-    (by rw [h, aeval_algebra_map_apply, minpoly.aeval, RingHom.map_zero]) fun q q_monic root_q =>
+    (by rw [h, aeval_algebraMap_apply, minpoly.aeval, RingHom.map_zero]) fun q q_monic root_q =>
     minpoly.min _ _ q_monic
       ((aeval_algebraMap_eq_zero_iff_of_injective hST).mp
         (h ▸ root_q : Polynomial.aeval (algebraMap S T x) q = 0))
@@ -162,19 +162,18 @@ theorem add_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsI
   by
   refine' (minpoly.unique _ _ ((minpoly.monic hx).comp_x_sub_c _) _ fun q qmo hq => _).symm
   · simp [aeval_comp]
-  · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
+  · have : (Polynomial.aeval x) (q.comp (x + c a)) = 0 := by simpa [aeval_comp] using hq
     have H := minpoly.min A x (qmo.comp_X_add_C _) this
-    rw [degree_eq_nat_degree qmo.ne_zero,
-      degree_eq_nat_degree ((minpoly.monic hx).comp_x_sub_c _).NeZero, WithBot.coe_le_coe,
-      nat_degree_comp, nat_degree_X_sub_C, mul_one]
-    rwa [degree_eq_nat_degree (minpoly.ne_zero hx),
-      degree_eq_nat_degree (qmo.comp_X_add_C _).NeZero, WithBot.coe_le_coe, nat_degree_comp,
-      nat_degree_X_add_C, mul_one] at H
+    rw [degree_eq_natDegree qmo.ne_zero,
+      degree_eq_natDegree ((minpoly.monic hx).comp_x_sub_c _).ne_zero, WithBot.coe_le_coe,
+      natDegree_comp, natDegree_x_sub_c, mul_one]
+    rwa [degree_eq_natDegree (minpoly.ne_zero hx), degree_eq_natDegree (qmo.comp_X_add_C _).ne_zero,
+      WithBot.coe_le_coe, natDegree_comp, natDegree_x_add_c, mul_one] at H
 #align minpoly.add_algebra_map minpoly.add_algebraMap
 
 theorem sub_algebraMap {B : Type _} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
     (a : A) : minpoly A (x - algebraMap A B a) = (minpoly A x).comp (x + c a) := by
-  simpa [sub_eq_add_neg] using add_algebra_map hx (-a)
+  simpa [sub_eq_add_neg] using add_algebraMap hx (-a)
 #align minpoly.sub_algebra_map minpoly.sub_algebraMap
 
 section AlgHomFintype
@@ -197,7 +196,7 @@ noncomputable def rootsOfMinPolyPiType (φ : E →ₐ[F] K)
     { l : K // l ∈ (((minpoly F x.1).map (algebraMap F K)).roots : Multiset K) } :=
   ⟨φ x, by
     rw [mem_roots_map (minpoly.ne_zero_of_finite_field_extension F x.val), Subtype.val_eq_coe, ←
-      aeval_def, aeval_alg_hom_apply, minpoly.aeval, map_zero]⟩
+      aeval_def, aeval_algHom_apply, minpoly.aeval, map_zero]⟩
 #align minpoly.roots_of_min_poly_pi_type minpoly.rootsOfMinPolyPiType
 
 theorem aux_inj_roots_of_min_poly : Injective (rootsOfMinPolyPiType F E K) :=
@@ -226,7 +225,7 @@ variable (B) [Nontrivial B]
 /-- If `B/K` is a nontrivial algebra over a field, and `x` is an element of `K`,
 then the minimal polynomial of `algebra_map K B x` is `X - C x`. -/
 theorem eq_x_sub_c (a : A) : minpoly A (algebraMap A B a) = x - c a :=
-  eq_x_sub_c_of_algebraMap_inj a (algebraMap A B).Injective
+  eq_x_sub_c_of_algebraMap_inj a (algebraMap A B).injective
 #align minpoly.eq_X_sub_C minpoly.eq_x_sub_c
 
 theorem eq_x_sub_C' (a : A) : minpoly A a = x - c a :=
@@ -238,13 +237,13 @@ variable (A)
 /-- The minimal polynomial of `0` is `X`. -/
 @[simp]
 theorem zero : minpoly A (0 : B) = x := by
-  simpa only [add_zero, C_0, sub_eq_add_neg, neg_zero, RingHom.map_zero] using eq_X_sub_C B (0 : A)
+  simpa only [add_zero, c_0, sub_eq_add_neg, neg_zero, RingHom.map_zero] using eq_x_sub_c B (0 : A)
 #align minpoly.zero minpoly.zero
 
 /-- The minimal polynomial of `1` is `X - 1`. -/
 @[simp]
 theorem one : minpoly A (1 : B) = x - 1 := by
-  simpa only [RingHom.map_one, C_1, sub_eq_add_neg] using eq_X_sub_C B (1 : A)
+  simpa only [RingHom.map_one, c_1, sub_eq_add_neg] using eq_x_sub_c B (1 : A)
 #align minpoly.one minpoly.one
 
 end Ring
@@ -258,7 +257,7 @@ variable {A} {x : B}
 /-- A minimal polynomial is prime. -/
 theorem prime (hx : IsIntegral A x) : Prime (minpoly A x) :=
   by
-  refine' ⟨NeZero hx, not_is_unit A x, _⟩
+  refine' ⟨ne_zero hx, not_isUnit A x, _⟩
   rintro p q ⟨d, h⟩
   have : Polynomial.aeval x (p * q) = 0 := by simp [h, aeval A x]
   replace : Polynomial.aeval x p = 0 ∨ Polynomial.aeval x q = 0 := by simpa
@@ -276,7 +275,7 @@ theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) 
         ((irreducible_x_sub_c y).dvd_symm (irreducible hx) (dvd_iff_isRoot.2 h))
         (dvd_iff_isRoot.2 h))
   have := aeval A x
-  rwa [key, AlgHom.map_sub, aeval_X, aeval_C, sub_eq_zero, eq_comm] at this
+  rwa [key, AlgHom.map_sub, aeval_x, aeval_c, sub_eq_zero, eq_comm] at this
 #align minpoly.root minpoly.root
 
 /-- The constant coefficient of the minimal polynomial of `x` is `0` if and only if `x = 0`. -/
@@ -285,7 +284,7 @@ theorem coeff_zero_eq_zero (hx : IsIntegral A x) : coeff (minpoly A x) 0 = 0 ↔
   by
   constructor
   · intro h
-    have zero_root := zero_is_root_of_coeff_zero_eq_zero h
+    have zero_root := zero_isRoot_of_coeff_zero_eq_zero h
     rw [← root hx zero_root]
     exact RingHom.map_zero _
   · rintro rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.real.cau_seq
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : Nat -> β}, (IsCauSeq.{u2, u1} α _inst_1 β _inst_2 abv f) -> (forall {ε : α}, (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (CommMonoidWithZero.toZero.{u2} α (CommGroupWithZero.toCommMonoidWithZero.{u2} α (Semifield.toCommGroupWithZero.{u2} α (LinearOrderedSemifield.toSemifield.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))))) ε) -> (Exists.{1} Nat (fun (i : Nat) => forall (j : Nat), (GE.ge.{0} Nat instLENat j i) -> (forall (k : Nat), (GE.ge.{0} Nat instLENat k i) -> (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) (abv (HSub.hSub.{u1, u1, u1} β β β (instHSub.{u1} β (Ring.toSub.{u1} β _inst_2)) (f j) (f k))) ε)))))
 Case conversion may be inaccurate. Consider using '#align is_cau_seq.cauchy₂ IsCauSeq.cauchy₂ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
@@ -253,7 +253,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] (f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) {ε : α}, (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (CommMonoidWithZero.toZero.{u2} α (CommGroupWithZero.toCommMonoidWithZero.{u2} α (Semifield.toCommGroupWithZero.{u2} α (LinearOrderedSemifield.toSemifield.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))))) ε) -> (Exists.{1} Nat (fun (i : Nat) => forall (j : Nat), (GE.ge.{0} Nat instLENat j i) -> (forall (k : Nat), (GE.ge.{0} Nat instLENat k i) -> (LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) (abv (HSub.hSub.{u1, u1, u1} β β β (instHSub.{u1} β (Ring.toSub.{u1} β _inst_2)) (Subtype.val.{succ u1} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{u2, u1} α _inst_1 β _inst_2 abv f) f j) (Subtype.val.{succ u1} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{u2, u1} α _inst_1 β _inst_2 abv f) f k))) ε))))
 Case conversion may be inaccurate. Consider using '#align cau_seq.cauchy₂ CauSeq.cauchy₂ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j k «expr ≥ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j k «expr ≥ » i) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} :
@@ -280,7 +280,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.bounded CauSeq
 theorem bounded (f : CauSeq β abv) : ∃ r, ∀ i, abv (f i) < r :=
   by
   cases' f.cauchy zero_lt_one with i h
-  set R : ℕ → α := @Nat.rec (fun n => α) (abv (f 0)) fun i c => max c (abv (f i.succ)) with hR
+  set R : ℕ → α := @nat.rec (fun n => α) (abv (f 0)) fun i c => max c (abv (f i.succ)) with hR
   have : ∀ i, ∀ j ≤ i, abv (f j) ≤ R i :=
     by
     refine' Nat.rec (by simp [hR]) _
@@ -302,7 +302,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] (f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (x : α), Exists.{succ u2} α (fun (r : α) => And (GT.gt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) r x) (forall (i : Nat), LT.lt.{u2} α (Preorder.toLT.{u2} α (PartialOrder.toPreorder.{u2} α (StrictOrderedRing.toPartialOrder.{u2} α (LinearOrderedRing.toStrictOrderedRing.{u2} α (LinearOrderedCommRing.toLinearOrderedRing.{u2} α (LinearOrderedField.toLinearOrderedCommRing.{u2} α _inst_1)))))) (abv (Subtype.val.{succ u1} (Nat -> β) (fun (f : Nat -> β) => IsCauSeq.{u2, u1} α _inst_1 β _inst_2 abv f) f i)) r))
 Case conversion may be inaccurate. Consider using '#align cau_seq.bounded' CauSeq.bounded'ₓ'. -/
 theorem bounded' (f : CauSeq β abv) (x : α) : ∃ r > x, ∀ i, abv (f i) < r :=
-  let ⟨r, h⟩ := f.Bounded
+  let ⟨r, h⟩ := f.bounded
   ⟨max r (x + 1), lt_of_lt_of_le (lt_add_one _) (le_max_right _ _), fun i =>
     lt_of_lt_of_le (h i) (le_max_left _ _)⟩
 #align cau_seq.bounded' CauSeq.bounded'
@@ -709,7 +709,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv f) -> (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv (Neg.neg.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instNegCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3) f))
 Case conversion may be inaccurate. Consider using '#align cau_seq.neg_lim_zero CauSeq.neg_limZeroₓ'. -/
 theorem neg_limZero {f : CauSeq β abv} (hf : LimZero f) : LimZero (-f) := by
-  rw [← neg_one_mul] <;> exact mul_lim_zero_right _ hf
+  rw [← neg_one_mul] <;> exact mul_limZero_right _ hf
 #align cau_seq.neg_lim_zero CauSeq.neg_limZero
 
 /- warning: cau_seq.sub_lim_zero -> CauSeq.sub_limZero is a dubious translation:
@@ -719,7 +719,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv f) -> (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv g) -> (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv (HSub.hSub.{u1, u1, u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHSub.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instSubCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f g))
 Case conversion may be inaccurate. Consider using '#align cau_seq.sub_lim_zero CauSeq.sub_limZeroₓ'. -/
 theorem sub_limZero {f g : CauSeq β abv} (hf : LimZero f) (hg : LimZero g) : LimZero (f - g) := by
-  simpa only [sub_eq_add_neg] using add_lim_zero hf (neg_lim_zero hg)
+  simpa only [sub_eq_add_neg] using add_limZero hf (neg_limZero hg)
 #align cau_seq.sub_lim_zero CauSeq.sub_limZero
 
 /- warning: cau_seq.lim_zero_sub_rev -> CauSeq.limZero_sub_rev is a dubious translation:
@@ -729,7 +729,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv (HSub.hSub.{u1, u1, u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHSub.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instSubCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f g)) -> (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv (HSub.hSub.{u1, u1, u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHSub.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instSubCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) g f))
 Case conversion may be inaccurate. Consider using '#align cau_seq.lim_zero_sub_rev CauSeq.limZero_sub_revₓ'. -/
 theorem limZero_sub_rev {f g : CauSeq β abv} (hfg : LimZero (f - g)) : LimZero (g - f) := by
-  simpa using neg_lim_zero hfg
+  simpa using neg_limZero hfg
 #align cau_seq.lim_zero_sub_rev CauSeq.limZero_sub_rev
 
 /- warning: cau_seq.zero_lim_zero -> CauSeq.zero_limZero is a dubious translation:
@@ -760,8 +760,8 @@ theorem const_limZero {x : β} : LimZero (const x) ↔ x = 0 :=
 #print CauSeq.equiv /-
 instance equiv : Setoid (CauSeq β abv) :=
   ⟨fun f g => LimZero (f - g),
-    ⟨fun f => by simp [zero_lim_zero], fun f g h => by simpa using neg_lim_zero h,
-      fun f g h fg gh => by simpa [sub_eq_add_neg, add_assoc] using add_lim_zero fg gh⟩⟩
+    ⟨fun f => by simp [zero_limZero], fun f g h => by simpa using neg_limZero h, fun f g h fg gh =>
+      by simpa [sub_eq_add_neg, add_assoc] using add_limZero fg gh⟩⟩
 #align cau_seq.equiv CauSeq.equiv
 -/
 
@@ -772,7 +772,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f1 : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {f2 : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g1 : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g2 : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f1 f2) -> (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) g1 g2) -> (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) (HAdd.hAdd.{u1, u1, u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHAdd.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instAddCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f1 g1) (HAdd.hAdd.{u1, u1, u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHAdd.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instAddCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f2 g2))
 Case conversion may be inaccurate. Consider using '#align cau_seq.add_equiv_add CauSeq.add_equiv_addₓ'. -/
 theorem add_equiv_add {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) :
-    f1 + g1 ≈ f2 + g2 := by simpa only [← add_sub_add_comm] using add_lim_zero hf hg
+    f1 + g1 ≈ f2 + g2 := by simpa only [← add_sub_add_comm] using add_limZero hf hg
 #align cau_seq.add_equiv_add CauSeq.add_equiv_add
 
 /- warning: cau_seq.neg_equiv_neg -> CauSeq.neg_equiv_neg is a dubious translation:
@@ -782,7 +782,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f g) -> (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) (Neg.neg.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instNegCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3) f) (Neg.neg.{u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.instNegCauSeq.{u2, u1} α β _inst_1 _inst_2 abv _inst_3) g))
 Case conversion may be inaccurate. Consider using '#align cau_seq.neg_equiv_neg CauSeq.neg_equiv_negₓ'. -/
 theorem neg_equiv_neg {f g : CauSeq β abv} (hf : f ≈ g) : -f ≈ -g := by
-  simpa only [neg_sub'] using neg_lim_zero hf
+  simpa only [neg_sub'] using neg_limZero hf
 #align cau_seq.neg_equiv_neg CauSeq.neg_equiv_neg
 
 /- warning: cau_seq.sub_equiv_sub -> CauSeq.sub_equiv_sub is a dubious translation:
@@ -817,7 +817,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrderedField.{u2} α] [_inst_2 : Ring.{u1} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u2, u1} α (OrderedCommSemiring.toOrderedSemiring.{u2} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u2} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u2} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u2} α (LinearOrderedField.toLinearOrderedSemifield.{u2} α _inst_1))))) β (Ring.toSemiring.{u1} β _inst_2) abv] {f : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv} {g : CauSeq.{u2, u1} α _inst_1 β _inst_2 abv}, (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (instHasEquiv.{succ u1} (CauSeq.{u2, u1} α _inst_1 β _inst_2 abv) (CauSeq.equiv.{u2, u1} α β _inst_1 _inst_2 abv _inst_3)) f g) -> (Iff (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv f) (CauSeq.LimZero.{u2, u1} α β _inst_1 _inst_2 abv g))
 Case conversion may be inaccurate. Consider using '#align cau_seq.lim_zero_congr CauSeq.limZero_congrₓ'. -/
 theorem limZero_congr {f g : CauSeq β abv} (h : f ≈ g) : LimZero f ↔ LimZero g :=
-  ⟨fun l => by simpa using add_lim_zero (Setoid.symm h) l, fun l => by simpa using add_lim_zero h l⟩
+  ⟨fun l => by simpa using add_limZero (Setoid.symm h) l, fun l => by simpa using add_limZero h l⟩
 #align cau_seq.lim_zero_congr CauSeq.limZero_congr
 
 /- warning: cau_seq.abv_pos_of_not_lim_zero -> CauSeq.abv_pos_of_not_limZero is a dubious translation:
@@ -903,10 +903,10 @@ theorem mul_not_equiv_zero {f g : CauSeq _ abv} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0
   fun this : LimZero (f * g - 0) =>
   by
   have hlz : LimZero (f * g) := by simpa
-  have hf' : ¬LimZero f := by simpa using show ¬lim_zero (f - 0) from hf
-  have hg' : ¬LimZero g := by simpa using show ¬lim_zero (g - 0) from hg
-  rcases abv_pos_of_not_lim_zero hf' with ⟨a1, ha1, N1, hN1⟩
-  rcases abv_pos_of_not_lim_zero hg' with ⟨a2, ha2, N2, hN2⟩
+  have hf' : ¬LimZero f := by simpa using show ¬LimZero (f - 0) from hf
+  have hg' : ¬LimZero g := by simpa using show ¬LimZero (g - 0) from hg
+  rcases abv_pos_of_not_limZero hf' with ⟨a1, ha1, N1, hN1⟩
+  rcases abv_pos_of_not_limZero hg' with ⟨a2, ha2, N2, hN2⟩
   have : 0 < a1 * a2 := mul_pos ha1 ha2
   cases' hlz _ this with N hN
   let i := max N (max N1 N2)
@@ -923,7 +923,7 @@ theorem mul_not_equiv_zero {f g : CauSeq _ abv} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0
 
 #print CauSeq.const_equiv /-
 theorem const_equiv {x y : β} : const x ≈ const y ↔ x = y :=
-  show LimZero _ ↔ _ by rw [← const_sub, const_lim_zero, sub_eq_zero]
+  show LimZero _ ↔ _ by rw [← const_sub, const_limZero, sub_eq_zero]
 #align cau_seq.const_equiv CauSeq.const_equiv
 -/
 
@@ -936,7 +936,7 @@ Case conversion may be inaccurate. Consider using '#align cau_seq.mul_equiv_mul 
 theorem mul_equiv_mul {f1 f2 g1 g2 : CauSeq β abv} (hf : f1 ≈ f2) (hg : g1 ≈ g2) :
     f1 * g1 ≈ f2 * g2 := by
   simpa only [mul_sub, sub_mul, sub_add_sub_cancel] using
-    add_lim_zero (mul_lim_zero_left g1 hf) (mul_lim_zero_right f2 hg)
+    add_limZero (mul_limZero_left g1 hf) (mul_limZero_right f2 hg)
 #align cau_seq.mul_equiv_mul CauSeq.mul_equiv_mul
 
 /- warning: cau_seq.smul_equiv_smul -> CauSeq.smul_equiv_smul is a dubious translation:
@@ -1068,7 +1068,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : LinearOrderedField.{u1} α] [_inst_2 : DivisionRing.{u2} β] {abv : β -> α} [_inst_3 : IsAbsoluteValue.{u1, u2} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (StrictOrderedCommSemiring.toOrderedCommSemiring.{u1} α (LinearOrderedCommSemiring.toStrictOrderedCommSemiring.{u1} α (LinearOrderedSemifield.toLinearOrderedCommSemiring.{u1} α (LinearOrderedField.toLinearOrderedSemifield.{u1} α _inst_1))))) β (DivisionSemiring.toSemiring.{u2} β (DivisionRing.toDivisionSemiring.{u2} β _inst_2)) abv] {x : β} (hx : Ne.{succ u2} β x (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β (MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (DivisionSemiring.toSemiring.{u2} β (DivisionRing.toDivisionSemiring.{u2} β _inst_2))))))), Eq.{succ u2} (CauSeq.{u1, u2} α _inst_1 β (DivisionRing.toRing.{u2} β _inst_2) abv) (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 (Inv.inv.{u2} β (DivisionRing.toInv.{u2} β _inst_2) x)) (CauSeq.inv.{u1, u2} α β _inst_1 _inst_2 abv _inst_3 (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x) (Eq.mpr.{0} (Not (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x))) (Not (Eq.{succ u2} β x (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β (MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (Ring.toSemiring.{u2} β (DivisionRing.toRing.{u2} β _inst_2)))))))) (id.{0} (Eq.{1} Prop (Not (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x))) (Not (Eq.{succ u2} β x (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β (MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (Ring.toSemiring.{u2} β (DivisionRing.toRing.{u2} β _inst_2))))))))) (Eq.ndrec.{0, 1} Prop (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x)) (fun (_a : Prop) => Eq.{1} Prop (Not (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x))) (Not _a)) (Eq.refl.{1} Prop (Not (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x)))) (Eq.{succ u2} β x (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β (MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (Ring.toSemiring.{u2} β (DivisionRing.toRing.{u2} β _inst_2))))))) (propext (CauSeq.LimZero.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv (CauSeq.const.{u1, u2} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x)) (Eq.{succ u2} β x (OfNat.ofNat.{u2} β 0 (Zero.toOfNat0.{u2} β (MonoidWithZero.toZero.{u2} β (Semiring.toMonoidWithZero.{u2} β (Ring.toSemiring.{u2} β (DivisionRing.toRing.{u2} β _inst_2))))))) (CauSeq.const_limZero.{u2, u1} α β _inst_1 (DivisionRing.toRing.{u2} β _inst_2) abv _inst_3 x)))) hx))
 Case conversion may be inaccurate. Consider using '#align cau_seq.const_inv CauSeq.const_invₓ'. -/
 theorem const_inv {x : β} (hx : x ≠ 0) :
-    const abv x⁻¹ = inv (const abv x) (by rwa [const_lim_zero]) :=
+    const abv x⁻¹ = inv (const abv x) (by rwa [const_limZero]) :=
   rfl
 #align cau_seq.const_inv CauSeq.const_inv
 
@@ -1164,8 +1164,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.trichotomy CauSeq.trichotomyₓ'. -/
 theorem trichotomy (f : CauSeq α abs) : Pos f ∨ LimZero f ∨ Pos (-f) :=
   by
-  cases Classical.em (lim_zero f) <;> simp [*]
-  rcases abv_pos_of_not_lim_zero h with ⟨K, K0, hK⟩
+  cases Classical.em (LimZero f) <;> simp [*]
+  rcases abv_pos_of_not_limZero h with ⟨K, K0, hK⟩
   rcases exists_forall_ge_and hK (f.cauchy₃ K0) with ⟨i, hi⟩
   refine' (le_total 0 (f i)).imp _ _ <;> refine' fun h => ⟨K, K0, i, fun j ij => _⟩ <;>
       have := (hi _ ij).1 <;>
@@ -1195,7 +1195,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cau_seq.lt_of_lt_of_eq CauSeq.lt_of_lt_of_eqₓ'. -/
 theorem lt_of_lt_of_eq {f g h : CauSeq α abs} (fg : f < g) (gh : g ≈ h) : f < h :=
   show Pos (h - f) by
-    simpa [sub_eq_add_neg, add_comm, add_left_comm] using pos_add_lim_zero fg (neg_lim_zero gh)
+    simpa [sub_eq_add_neg, add_comm, add_left_comm] using pos_add_limZero fg (neg_limZero gh)
 #align cau_seq.lt_of_lt_of_eq CauSeq.lt_of_lt_of_eq
 
 /- warning: cau_seq.lt_of_eq_of_lt -> CauSeq.lt_of_eq_of_lt is a dubious translation:
@@ -1205,7 +1205,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {f : CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))} {g : CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))} {h : CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))}, (HasEquiv.Equiv.{succ u1, 0} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (instHasEquiv.{succ u1} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (CauSeq.equiv.{u1, u1} α α _inst_1 (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))))))) (IsAbsoluteValue.abs_isAbsoluteValue.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))) f g) -> (LT.lt.{u1} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (CauSeq.instLTCauSeqToRingToDivisionRingToFieldAbsToHasAbsToNegToHasSupToSemilatticeSupToLatticeInstDistribLatticeToLinearOrderToLinearOrderedRingToLinearOrderedCommRing.{u1} α _inst_1) g h) -> (LT.lt.{u1} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (CauSeq.instLTCauSeqToRingToDivisionRingToFieldAbsToHasAbsToNegToHasSupToSemilatticeSupToLatticeInstDistribLatticeToLinearOrderToLinearOrderedRingToLinearOrderedCommRing.{u1} α _inst_1) f h)
 Case conversion may be inaccurate. Consider using '#align cau_seq.lt_of_eq_of_lt CauSeq.lt_of_eq_of_ltₓ'. -/
 theorem lt_of_eq_of_lt {f g h : CauSeq α abs} (fg : f ≈ g) (gh : g < h) : f < h := by
-  have := pos_add_lim_zero gh (neg_lim_zero fg) <;>
+  have := pos_add_limZero gh (neg_limZero fg) <;>
     rwa [← sub_eq_add_neg, sub_sub_sub_cancel_right] at this
 #align cau_seq.lt_of_eq_of_lt CauSeq.lt_of_eq_of_lt
 
@@ -1226,7 +1226,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] {f : CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))}, Not (LT.lt.{u1} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (CauSeq.instLTCauSeqToRingToDivisionRingToFieldAbsToHasAbsToNegToHasSupToSemilatticeSupToLatticeInstDistribLatticeToLinearOrderToLinearOrderedRingToLinearOrderedCommRing.{u1} α _inst_1) f f)
 Case conversion may be inaccurate. Consider using '#align cau_seq.lt_irrefl CauSeq.lt_irreflₓ'. -/
 theorem lt_irrefl {f : CauSeq α abs} : ¬f < f
-  | h => not_limZero_of_pos h (by simp [zero_lim_zero])
+  | h => not_limZero_of_pos h (by simp [zero_limZero])
 #align cau_seq.lt_irrefl CauSeq.lt_irrefl
 
 /- warning: cau_seq.le_of_eq_of_le -> CauSeq.le_of_eq_of_le is a dubious translation:
@@ -1255,10 +1255,10 @@ instance : Preorder (CauSeq α abs) where
   le_refl f := Or.inr (Setoid.refl _)
   le_trans f g h fg :=
     match fg with
-    | Or.inl fg, Or.inl gh => Or.inl <| lt_trans fg gh
-    | Or.inl fg, Or.inr gh => Or.inl <| lt_of_lt_of_eq fg gh
-    | Or.inr fg, Or.inl gh => Or.inl <| lt_of_eq_of_lt fg gh
-    | Or.inr fg, Or.inr gh => Or.inr <| Setoid.trans fg gh
+    | or.inl fg, or.inl gh => Or.inl <| lt_trans fg gh
+    | or.inl fg, or.inr gh => Or.inl <| lt_of_lt_of_eq fg gh
+    | or.inr fg, or.inl gh => Or.inl <| lt_of_eq_of_lt fg gh
+    | or.inr fg, or.inr gh => Or.inr <| Setoid.trans fg gh
   lt_iff_le_not_le f g :=
     ⟨fun h => ⟨Or.inl h, not_or_of_not (mt (lt_trans h) lt_irrefl) (not_limZero_of_pos h)⟩,
       fun ⟨h₁, h₂⟩ => h₁.resolve_right (mt (fun h => Or.inr (Setoid.symm h)) h₂)⟩
@@ -1336,7 +1336,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedField.{u1} α] (f : CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))), Exists.{succ u1} α (fun (a : α) => LT.lt.{u1} (CauSeq.{u1, u1} α _inst_1 α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1)))))))))) (CauSeq.instLTCauSeqToRingToDivisionRingToFieldAbsToHasAbsToNegToHasSupToSemilatticeSupToLatticeInstDistribLatticeToLinearOrderToLinearOrderedRingToLinearOrderedCommRing.{u1} α _inst_1) f (CauSeq.const.{u1, u1} α α _inst_1 (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (Ring.toNeg.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α (LinearOrderedField.toField.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α (LinearOrderedRing.toLinearOrder.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))))))))) (IsAbsoluteValue.abs_isAbsoluteValue.{u1} α (LinearOrderedCommRing.toLinearOrderedRing.{u1} α (LinearOrderedField.toLinearOrderedCommRing.{u1} α _inst_1))) a))
 Case conversion may be inaccurate. Consider using '#align cau_seq.exists_gt CauSeq.exists_gtₓ'. -/
 theorem exists_gt (f : CauSeq α abs) : ∃ a : α, f < const a :=
-  let ⟨K, H⟩ := f.Bounded
+  let ⟨K, H⟩ := f.bounded
   ⟨K + 1, 1, zero_lt_one, 0, fun i _ =>
     by
     rw [sub_apply, const_apply, le_sub_iff_add_le', add_le_add_iff_right]

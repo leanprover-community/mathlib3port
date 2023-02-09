@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Junyan Xu
 
 ! This file was ported from Lean 3 source module analysis.complex.polynomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,8 +32,8 @@ theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :
   by
   contrapose! hf
   obtain ⟨c, hc⟩ := (f.differentiable.inv hf).exists_const_forall_eq_of_bounded _
-  · obtain rfl : f = C c⁻¹ := Polynomial.funext fun z => by rw [eval_C, ← hc z, inv_inv]
-    exact degree_C_le
+  · obtain rfl : f = c c⁻¹ := Polynomial.funext fun z => by rw [eval_c, ← hc z, inv_inv]
+    exact degree_c_le
   · obtain ⟨z₀, h₀⟩ := f.exists_forall_norm_le
     simp only [bounded_iff_forall_norm_le, Set.forall_range_iff, norm_inv]
     exact ⟨‖eval z₀ f‖⁻¹, fun z => inv_le_inv_of_le (norm_pos_iff.2 <| hf z₀) (h₀ z)⟩

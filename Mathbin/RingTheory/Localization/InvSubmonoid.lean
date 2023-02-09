@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.inv_submonoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ variable (M S)
 
 /-- The submonoid of `S = M⁻¹R` consisting of `{ 1 / x | x ∈ M }`. -/
 def invSubmonoid : Submonoid S :=
-  (M.map (algebraMap R S)).left_inv
+  (M.map (algebraMap R S)).leftInv
 #align is_localization.inv_submonoid IsLocalization.invSubmonoid
 
 variable [IsLocalization M S]
@@ -85,7 +85,7 @@ theorem mul_toInvSubmonoid (m : M) : algebraMap R S m * (toInvSubmonoid M S m : 
 @[simp]
 theorem smul_toInvSubmonoid (m : M) : m • (toInvSubmonoid M S m : S) = 1 :=
   by
-  convert mul_to_inv_submonoid M S m
+  convert mul_toInvSubmonoid M S m
   rw [← Algebra.smul_def]
   rfl
 #align is_localization.smul_to_inv_submonoid IsLocalization.smul_toInvSubmonoid
@@ -108,10 +108,10 @@ theorem toInvSubmonoid_eq_mk' (x : M) : (toInvSubmonoid M S x : S) = mk' S 1 x :
 
 theorem mem_invSubmonoid_iff_exists_mk' (x : S) : x ∈ invSubmonoid M S ↔ ∃ m : M, mk' S 1 m = x :=
   by
-  simp_rw [← to_inv_submonoid_eq_mk']
+  simp_rw [← toInvSubmonoid_eq_mk']
   exact
-    ⟨fun h => ⟨_, congr_arg Subtype.val (to_inv_submonoid_surjective M S ⟨x, h⟩).choose_spec⟩,
-      fun h => h.choose_spec ▸ (to_inv_submonoid M S h.some).Prop⟩
+    ⟨fun h => ⟨_, congr_arg Subtype.val (toInvSubmonoid_surjective M S ⟨x, h⟩).choose_spec⟩,
+      fun h => h.choose_spec ▸ (toInvSubmonoid M S h.choose).prop⟩
 #align is_localization.mem_inv_submonoid_iff_exists_mk' IsLocalization.mem_invSubmonoid_iff_exists_mk'
 
 variable (S)
@@ -121,19 +121,19 @@ theorem span_invSubmonoid : Submodule.span R (invSubmonoid M S : Set S) = ⊤ :=
   rw [eq_top_iff]
   rintro x -
   rcases IsLocalization.surj' M x with ⟨r, m, rfl⟩
-  exact Submodule.smul_mem _ _ (Submodule.subset_span (to_inv_submonoid M S m).Prop)
+  exact Submodule.smul_mem _ _ (Submodule.subset_span (toInvSubmonoid M S m).prop)
 #align is_localization.span_inv_submonoid IsLocalization.span_invSubmonoid
 
 theorem finiteType_of_monoid_fg [Monoid.Fg M] : Algebra.FiniteType R S :=
   by
-  have := Monoid.fg_of_surjective _ (to_inv_submonoid_surjective M S)
+  have := Monoid.fg_of_surjective _ (toInvSubmonoid_surjective M S)
   rw [Monoid.fg_iff_submonoid_fg] at this
   rcases this with ⟨s, hs⟩
   refine' ⟨⟨s, _⟩⟩
   rw [eq_top_iff]
   rintro x -
   change x ∈ ((Algebra.adjoin R _ : Subalgebra R S).toSubmodule : Set S)
-  rw [Algebra.adjoin_eq_span, hs, span_inv_submonoid]
+  rw [Algebra.adjoin_eq_span, hs, span_invSubmonoid]
   trivial
 #align is_localization.finite_type_of_monoid_fg IsLocalization.finiteType_of_monoid_fg
 

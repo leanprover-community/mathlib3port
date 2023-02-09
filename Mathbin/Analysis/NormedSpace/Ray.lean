@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.ray
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem sameRay_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : SameRay ℝ x y ↔ x =
 #align same_ray_iff_of_norm_eq sameRay_iff_of_norm_eq
 
 theorem not_sameRay_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : ¬SameRay ℝ x y ↔ x ≠ y :=
-  (sameRay_iff_of_norm_eq h).Not
+  (sameRay_iff_of_norm_eq h).not
 #align not_same_ray_iff_of_norm_eq not_sameRay_iff_of_norm_eq
 
 /-- If two points on the same ray have the same norm, then they are equal. -/

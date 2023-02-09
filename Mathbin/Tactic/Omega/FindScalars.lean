@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.find_scalars
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,9 +26,9 @@ unsafe def trisect (m : Nat) :
       List (List Nat × Term) × List (List Nat × Term) × List (List Nat × Term)
   | [] => ([], [], [])
   | (p, t) :: pts =>
-    let (neg, zero, Pos) := trisect pts
-    if get m t.snd < 0 then ((p, t) :: neg, zero, Pos)
-    else if get m t.snd = 0 then (neg, (p, t) :: zero, Pos) else (neg, zero, (p, t) :: Pos)
+    let (neg, zero, pos) := trisect pts
+    if get m t.snd < 0 then ((p, t) :: neg, zero, pos)
+    else if get m t.snd = 0 then (neg, (p, t) :: zero, pos) else (neg, zero, (p, t) :: pos)
 #align omega.trisect omega.trisect
 
 /-- Use two linear combinations to obtain a third linear combination
@@ -49,7 +49,7 @@ unsafe def elim_var_aux (m : Nat) : (List Nat × Term) × List Nat × Term → t
     possible way that eliminates the `m`th variable. -/
 unsafe def elim_var (m : Nat) (neg pos : List (List Nat × Term)) :
     tactic (List (List Nat × Term)) :=
-  let pairs := List.product neg Pos
+  let pairs := List.product neg pos
   Monad.mapM (elim_var_aux m) pairs
 #align omega.elim_var omega.elim_var
 
@@ -68,9 +68,9 @@ unsafe def find_neg_const : List (List Nat × Term) → tactic (List Nat)
 unsafe def find_scalars_core : Nat → List (List Nat × Term) → tactic (List Nat)
   | 0, pts => find_neg_const pts
   | m + 1, pts =>
-    let (neg, zero, Pos) := trisect m pts
+    let (neg, zero, pos) := trisect m pts
     do
-    let new ← elim_var m neg Pos
+    let new ← elim_var m neg pos
     find_scalars_core m (new ++ zero)
 #align omega.find_scalars_core omega.find_scalars_core
 

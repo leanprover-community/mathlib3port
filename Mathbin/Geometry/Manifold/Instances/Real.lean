@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.real
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ theorem range_quadrant (n : ℕ) :
 
 end
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
@@ -173,16 +173,16 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
   target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
   toFun := fun z : Icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
-  map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
+  map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_setOf_eq, forall_true_iff]
   map_target' := by
-    simp only [min_lt_iff, mem_set_of_eq]
+    simp only [min_lt_iff, mem_setOf_eq]
     intro z hz
     left
     dsimp [-Subtype.val_eq_coe] at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
-    simp only [mem_set_of_eq, mem_Icc] at hz h'z
+    simp only [mem_setOf_eq, mem_Icc] at hz h'z
     simp only [hz, min_eq_left, sub_add_cancel]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -225,16 +225,16 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
   toFun := fun z : Icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
   invFun z :=
     ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
-  map_source' := by simp only [imp_self, mem_set_of_eq, sub_lt_sub_iff_left, forall_true_iff]
+  map_source' := by simp only [imp_self, mem_setOf_eq, sub_lt_sub_iff_left, forall_true_iff]
   map_target' := by
-    simp only [lt_max_iff, mem_set_of_eq]
+    simp only [lt_max_iff, mem_setOf_eq]
     intro z hz
     left
     dsimp [-Subtype.val_eq_coe] at hz
     linarith
   left_inv' := by
     rintro ⟨z, hz⟩ h'z
-    simp only [mem_set_of_eq, mem_Icc] at hz h'z
+    simp only [mem_setOf_eq, mem_Icc] at hz h'z
     simp only [hz, sub_eq_add_neg, max_eq_left, add_add_neg_cancel'_right, neg_add_rev, neg_neg]
   right_inv' := by
     rintro ⟨z, hz⟩ h'z
@@ -317,7 +317,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
   · -- `e = right chart`, `e' = left chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
-    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff,
+    simp only [model_with_corners_euclidean_half_space, iccLeftChart, iccRightChart, max_lt_iff,
       update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂
     rw [lt_sub_comm] at hz₁
     ext i

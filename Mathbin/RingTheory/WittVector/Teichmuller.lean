@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.teichmuller
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ include hp
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
   by
-  rw [ghost_component_apply, aeval_wittPolynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
+  rw [ghostComponent_apply, aeval_wittPolynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
     tsub_zero]
   · rfl
   · intro i hi h0
@@ -77,7 +77,7 @@ private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     · cases i
       · contradiction
       · rfl
-    · exact pow_pos hp.1.Pos _
+    · exact pow_pos hp.1.pos _
   · rw [Finset.mem_range]
     intro h
     exact (h (Nat.succ_pos n)).elim
@@ -95,10 +95,10 @@ private theorem map_teichmuller_fun (f : R →+* S) (r : R) :
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y :=
   by
-  apply (ghost_map.bijective_of_invertible p (MvPolynomial R ℚ)).1
+  apply (ghostMap.bijective_of_invertible p (MvPolynomial R ℚ)).1
   rw [RingHom.map_mul]
   ext1 n
-  simp only [Pi.mul_apply, ghost_map_apply, ghost_component_teichmuller_fun, mul_pow]
+  simp only [Pi.mul_apply, ghostMap_apply, ghostComponent_teichmullerFun, mul_pow]
 #align witt_vector.teichmuller_mul_aux₁ witt_vector.teichmuller_mul_aux₁
 
 private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
@@ -107,7 +107,7 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
   refine'
     map_injective (MvPolynomial.map (Int.castRingHom ℚ))
       (MvPolynomial.map_injective _ Int.cast_injective) _
-  simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
+  simp only [teichmuller_mul_aux₁, map_teichmullerFun, RingHom.map_mul]
 #align witt_vector.teichmuller_mul_aux₂ witt_vector.teichmuller_mul_aux₂
 
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
@@ -125,7 +125,7 @@ def teichmuller : R →* 𝕎 R where
     intro x y
     rcases counit_surjective R x with ⟨x, rfl⟩
     rcases counit_surjective R y with ⟨y, rfl⟩
-    simp only [← map_teichmuller_fun, ← RingHom.map_mul, teichmuller_mul_aux₂]
+    simp only [← map_teichmullerFun, ← RingHom.map_mul, teichmuller_mul_aux₂]
 #align witt_vector.teichmuller WittVector.teichmuller
 
 @[simp]

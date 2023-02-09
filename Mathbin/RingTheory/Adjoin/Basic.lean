@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem adjoin_unionᵢ {α : Type _} (s : α → Set A) :
 #align algebra.adjoin_Union Algebra.adjoin_unionᵢ
 
 theorem adjoin_attach_bunionᵢ [DecidableEq A] {α : Type _} {s : Finset α} (f : s → Finset A) :
-    adjoin R (s.attach.bunionᵢ f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_Union]
+    adjoin R (s.attach.bunionᵢ f : Set A) = ⨆ x, adjoin R (f x) := by simpa [adjoin_unionᵢ]
 #align algebra.adjoin_attach_bUnion Algebra.adjoin_attach_bunionᵢ
 
 @[elab_as_elim]
@@ -191,7 +191,7 @@ theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s)
     rw [List.prod_cons, ← hzr]
     rcases HL.1 with (⟨hd, rfl⟩ | hs)
     · refine' ⟨hd * z, r, hr, _⟩
-      rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_mul, _root_.mul_assoc]
+      rw [Algebra.smul_def, Algebra.smul_def, (algebraMap _ _).map_mul, mul_assoc]
     ·
       exact
         ⟨z, hd * r, Submonoid.mul_mem _ (Submonoid.subset_closure hs) hr,
@@ -236,7 +236,7 @@ theorem adjoin_insert_adjoin (x : A) : adjoin R (insert x ↑(adjoin R s)) = adj
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem adjoin_prod_le (s : Set A) (t : Set B) :
-    adjoin R (s ×ˢ t) ≤ (adjoin R s).Prod (adjoin R t) :=
+    adjoin R (s ×ˢ t) ≤ (adjoin R s).prod (adjoin R t) :=
   adjoin_le <| Set.prod_mono subset_adjoin subset_adjoin
 #align algebra.adjoin_prod_le Algebra.adjoin_prod_le
 
@@ -252,13 +252,13 @@ theorem mem_adjoin_of_map_mul {s} {x : A} {f : A →ₗ[R] B} (hf : ∀ a₁ a�
     subset_adjoin ⟨1, ⟨Set.subset_union_right _ _ <| Set.mem_singleton 1, rfl⟩⟩
   replace this := Subalgebra.smul_mem (adjoin R (f '' (s ∪ {1}))) this r
   convert this
-  rw [algebra_map_eq_smul_one]
+  rw [algebraMap_eq_smul_one]
   exact f.map_smul _ _
 #align algebra.mem_adjoin_of_map_mul Algebra.mem_adjoin_of_map_mul
 
 theorem adjoin_inl_union_inr_eq_prod (s) (t) :
     adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1})) =
-      (adjoin R s).Prod (adjoin R t) :=
+      (adjoin R s).prod (adjoin R t) :=
   by
   apply le_antisymm
   ·
@@ -271,9 +271,9 @@ theorem adjoin_inl_union_inr_eq_prod (s) (t) :
   · rintro ⟨a, b⟩ ⟨ha, hb⟩
     let P := adjoin R (LinearMap.inl R A B '' (s ∪ {1}) ∪ LinearMap.inr R A B '' (t ∪ {1}))
     have Ha : (a, (0 : B)) ∈ adjoin R (LinearMap.inl R A B '' (s ∪ {1})) :=
-      mem_adjoin_of_map_mul R LinearMap.inl_map_mul ha
+      mem_adjoin_of_map_mul R linear_map.inl_map_mul ha
     have Hb : ((0 : A), b) ∈ adjoin R (LinearMap.inr R A B '' (t ∪ {1})) :=
-      mem_adjoin_of_map_mul R LinearMap.inr_map_mul hb
+      mem_adjoin_of_map_mul R linear_map.inr_map_mul hb
     replace Ha : (a, (0 : B)) ∈ P := adjoin_mono (Set.subset_union_left _ _) Ha
     replace Hb : ((0 : A), b) ∈ P := adjoin_mono (Set.subset_union_right _ _) Hb
     simpa using Subalgebra.add_mem _ Ha Hb
@@ -351,7 +351,7 @@ theorem pow_smul_mem_of_smul_subset_of_mem_adjoin [CommSemiring B] [Algebra R B]
   change x ∈ (adjoin R s).toSubmodule at hx
   rw [adjoin_eq_span, Finsupp.mem_span_iff_total] at hx
   rcases hx with ⟨l, rfl : (l.sum fun (i : Submonoid.closure s) (c : R) => c • ↑i) = x⟩
-  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.Prop
+  choose n₁ n₂ using fun x : Submonoid.closure s => Submonoid.pow_smul_mem_closure_smul r s x.prop
   use l.support.sup n₁
   intro n hn
   rw [Finsupp.smul_sum]

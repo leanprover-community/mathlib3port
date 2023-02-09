@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.monad.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,16 +273,16 @@ direction is a monad morphism. -/
 def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N
     where
   Hom :=
-    { toNatTrans := f.Hom
+    { toNatTrans := f.hom
       app_η' := f_η
       app_μ' := f_μ }
   inv :=
     { toNatTrans := f.inv
       app_η' := fun X => by simp [← f_η]
       app_μ' := fun X => by
-        rw [← nat_iso.cancel_nat_iso_hom_right f]
-        simp only [nat_trans.naturality, iso.inv_hom_id_app, assoc, comp_id, f_μ,
-          nat_trans.naturality_assoc, iso.inv_hom_id_app_assoc, ← functor.map_comp_assoc]
+        rw [← NatIso.cancel_natIso_hom_right f]
+        simp only [NatTrans.naturality, Iso.inv_hom_id_app, assoc, comp_id, f_μ,
+          NatTrans.naturality_assoc, Iso.inv_hom_id_app_assoc, ← Functor.map_comp_assoc]
         simp }
 #align category_theory.monad_iso.mk CategoryTheory.MonadIso.mk
 
@@ -292,16 +292,16 @@ direction is a comonad morphism. -/
 def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M ≅ N
     where
   Hom :=
-    { toNatTrans := f.Hom
+    { toNatTrans := f.hom
       app_ε' := f_ε
       app_δ' := f_δ }
   inv :=
     { toNatTrans := f.inv
       app_ε' := fun X => by simp [← f_ε]
       app_δ' := fun X => by
-        rw [← nat_iso.cancel_nat_iso_hom_left f]
-        simp only [reassoc_of (f_δ X), iso.hom_inv_id_app_assoc, nat_trans.naturality_assoc]
-        rw [← functor.map_comp, iso.hom_inv_id_app, Functor.map_id]
+        rw [← NatIso.cancel_natIso_hom_left f]
+        simp only [reassoc_of (f_δ X), Iso.hom_inv_id_app_assoc, NatTrans.naturality_assoc]
+        rw [← Functor.map_comp, Iso.hom_inv_id_app, Functor.map_id]
         apply (comp_id _).symm }
 #align category_theory.comonad_iso.mk CategoryTheory.ComonadIso.mk
 
@@ -328,7 +328,7 @@ theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) �
 instance : ReflectsIsomorphisms (monadToFunctor C)
     where reflects M N f i := by
     skip
-    convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
+    convert IsIso.of_iso (MonadIso.mk (asIso ((monadToFunctor C).map f)) f.app_η f.app_μ)
     ext <;> rfl
 
 /-- The forgetful functor from the category of comonads to the category of endofunctors.
@@ -352,7 +352,7 @@ theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤
 instance : ReflectsIsomorphisms (comonadToFunctor C)
     where reflects M N f i := by
     skip
-    convert is_iso.of_iso (comonad_iso.mk (as_iso ((comonad_to_functor C).map f)) f.app_ε f.app_δ)
+    convert IsIso.of_iso (ComonadIso.mk (asIso ((comonadToFunctor C).map f)) f.app_ε f.app_δ)
     ext <;> rfl
 
 variable {C}

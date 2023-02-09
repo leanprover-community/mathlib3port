@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,8 +48,8 @@ variable {G : Type _} [Group G] [MeasurableSpace G] [TopologicalSpace G] [Topolo
 instance QuotientGroup.hasMeasurableSmul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)] :
     HasMeasurableSmul G (G ⧸ Γ)
     where
-  measurable_const_smul g := (continuous_const_smul g).Measurable
-  measurable_smul_const x := (QuotientGroup.continuous_smul₁ x).Measurable
+  measurable_const_smul g := (continuous_const_smul g).measurable
+  measurable_smul_const x := (QuotientGroup.continuous_smul₁ x).measurable
 #align quotient_group.has_measurable_smul QuotientGroup.hasMeasurableSmul
 #align quotient_add_group.has_measurable_vadd quotientAddGroup.has_measurable_vadd
 
@@ -70,12 +70,12 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
     measure_preimage_smul := by
       let π : G → G ⧸ Γ := QuotientGroup.mk
       have meas_π : Measurable π := continuous_quotient_mk.measurable
-      have 𝓕meas : null_measurable_set 𝓕 μ := h𝓕.null_measurable_set
+      have 𝓕meas : NullMeasurableSet 𝓕 μ := h𝓕.null_measurable_set
       intro g A hA
       have meas_πA : MeasurableSet (π ⁻¹' A) := measurableSet_preimage meas_π hA
-      rw [measure.map_apply meas_π hA,
-        measure.map_apply meas_π (measurableSet_preimage (measurable_const_smul g) hA),
-        measure.restrict_apply₀' 𝓕meas, measure.restrict_apply₀' 𝓕meas]
+      rw [Measure.map_apply meas_π hA,
+        Measure.map_apply meas_π (measurableSet_preimage (measurable_const_smul g) hA),
+        Measure.restrict_apply₀' 𝓕meas, Measure.restrict_apply₀' 𝓕meas]
       set π_preA := π ⁻¹' A
       have : QuotientGroup.mk ⁻¹' ((fun x : G ⧸ Γ => g • x) ⁻¹' A) = Mul.mul g ⁻¹' π_preA :=
         by
@@ -92,7 +92,7 @@ theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasureMap [μ.IsMulLeftI
           simp
         rw [measure_preimage_mul]
       rw [this]
-      have h𝓕_translate_fundom : is_fundamental_domain Γ.opposite (g • 𝓕) μ := h𝓕.smul_of_comm g
+      have h𝓕_translate_fundom : IsFundamentalDomain Γ.opposite (g • 𝓕) μ := h𝓕.smul_of_comm g
       rw [h𝓕.measure_set_eq h𝓕_translate_fundom meas_πA, ← preimage_smul_inv]
       rfl
       rintro ⟨γ, γ_in_Γ⟩
@@ -113,12 +113,12 @@ theorem MeasureTheory.IsFundamentalDomain.isMulLeftInvariantMap [Subgroup.Normal
   {
     map_mul_left_eq_self := by
       intro x
-      apply measure.ext
+      apply Measure.ext
       intro A hA
-      obtain ⟨x₁, _⟩ := @Quotient.exists_rep _ (QuotientGroup.leftRel Γ) x
+      obtain ⟨x₁, _⟩ := @quotient.exists_rep _ (QuotientGroup.leftRel Γ) x
       haveI := h𝓕.smul_invariant_measure_map
-      convert measure_preimage_smul x₁ ((measure.map QuotientGroup.mk) (μ.restrict 𝓕)) A using 1
-      rw [← h, measure.map_apply]
+      convert measure_preimage_smul x₁ ((Measure.map QuotientGroup.mk) (μ.restrict 𝓕)) A using 1
+      rw [← h, Measure.map_apply]
       · rfl
       · exact measurable_const_mul _
       · exact hA }
@@ -139,17 +139,17 @@ theorem MeasureTheory.IsFundamentalDomain.map_restrict_quotient [Subgroup.Normal
   by
   let π : G →* G ⧸ Γ := QuotientGroup.mk' Γ
   have meas_π : Measurable π := continuous_quotient_mk.measurable
-  have 𝓕meas : null_measurable_set 𝓕 μ := h𝓕.null_measurable_set
-  haveI : is_finite_measure (μ.restrict 𝓕) :=
+  have 𝓕meas : NullMeasurableSet 𝓕 μ := h𝓕.null_measurable_set
+  haveI : IsFiniteMeasure (μ.restrict 𝓕) :=
     ⟨by
-      rw [measure.restrict_apply₀' 𝓕meas, univ_inter]
+      rw [Measure.restrict_apply₀' 𝓕meas, univ_inter]
       exact h𝓕_finite⟩
   -- the measure is left-invariant, so by the uniqueness of Haar measure it's enough to show that
   -- it has the stated size on the reference compact set `K`.
-  haveI : (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)).IsMulLeftInvariant :=
+  haveI : (Measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)).IsMulLeftInvariant :=
     h𝓕.is_mul_left_invariant_map
-  rw [measure.haar_measure_unique (measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)) K,
-    measure.map_apply meas_π, measure.restrict_apply₀' 𝓕meas, inter_comm]
+  rw [Measure.haarMeasure_unique (Measure.map (QuotientGroup.mk' Γ) (μ.restrict 𝓕)) K,
+    Measure.map_apply meas_π, Measure.restrict_apply₀' 𝓕meas, inter_comm]
   exact K.is_compact.measurable_set
 #align measure_theory.is_fundamental_domain.map_restrict_quotient MeasureTheory.IsFundamentalDomain.map_restrict_quotient
 #align measure_theory.is_add_fundamental_domain.map_restrict_quotient MeasureTheory.IsAddFundamentalDomain.map_restrict_quotient
@@ -164,7 +164,7 @@ theorem MeasurePreservingQuotientGroup.mk' [Subgroup.Normal Γ]
     (h : μ (𝓕 ∩ QuotientGroup.mk' Γ ⁻¹' K) = c) :
     MeasurePreserving (QuotientGroup.mk' Γ) (μ.restrict 𝓕)
       (c • MeasureTheory.Measure.haarMeasure K) :=
-  { Measurable := continuous_quotient_mk'.Measurable
+  { Measurable := continuous_quotient_mk'.measurable
     map_eq := by rw [h𝓕.map_restrict_quotient K h𝓕_finite, h] <;> rfl }
 #align measure_preserving_quotient_group.mk' MeasurePreservingQuotientGroup.mk'
 #align measure_preserving_quotient_add_group.mk' MeasurePreservingQuotientAddGroup.mk'

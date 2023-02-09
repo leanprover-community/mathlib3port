@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.nonneg.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ protected theorem coe_add [AddZeroClass α] [Preorder α] [CovariantClass α α 
 
 instance hasNsmul [AddMonoid α] [Preorder α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     SMul ℕ { x : α // 0 ≤ x } :=
-  ⟨fun n x => ⟨n • x, nsmul_nonneg x.Prop n⟩⟩
+  ⟨fun n x => ⟨n • x, nsmul_nonneg x.prop n⟩⟩
 #align nonneg.has_nsmul Nonneg.hasNsmul
 
 @[simp]
@@ -159,23 +159,23 @@ protected theorem coe_nsmul [AddMonoid α] [Preorder α] [CovariantClass α α (
 #align nonneg.coe_nsmul Nonneg.coe_nsmul
 
 instance orderedAddCommMonoid [OrderedAddCommMonoid α] : OrderedAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
 #align nonneg.ordered_add_comm_monoid Nonneg.orderedAddCommMonoid
 
 instance linearOrderedAddCommMonoid [LinearOrderedAddCommMonoid α] :
     LinearOrderedAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align nonneg.linear_ordered_add_comm_monoid Nonneg.linearOrderedAddCommMonoid
 
 instance orderedCancelAddCommMonoid [OrderedCancelAddCommMonoid α] :
     OrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedCancelAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCancelAddCommMonoid _ rfl (fun x y => rfl) fun _ _ => rfl
 #align nonneg.ordered_cancel_add_comm_monoid Nonneg.orderedCancelAddCommMonoid
 
 instance linearOrderedCancelAddCommMonoid [LinearOrderedCancelAddCommMonoid α] :
     LinearOrderedCancelAddCommMonoid { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCancelAddCommMonoid _ rfl (fun x y => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align nonneg.linear_ordered_cancel_add_comm_monoid Nonneg.linearOrderedCancelAddCommMonoid
 
@@ -255,24 +255,24 @@ theorem mk_pow [OrderedSemiring α] {x : α} (hx : 0 ≤ x) (n : ℕ) :
 #align nonneg.mk_pow Nonneg.mk_pow
 
 instance orderedSemiring [OrderedSemiring α] : OrderedSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ => rfl
 #align nonneg.ordered_semiring Nonneg.orderedSemiring
 
 instance strictOrderedSemiring [StrictOrderedSemiring α] :
     StrictOrderedSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.StrictOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
+  Subtype.coe_injective.strictOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align nonneg.strict_ordered_semiring Nonneg.strictOrderedSemiring
 
 instance orderedCommSemiring [OrderedCommSemiring α] : OrderedCommSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.OrderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
+  Subtype.coe_injective.orderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align nonneg.ordered_comm_semiring Nonneg.orderedCommSemiring
 
 instance strictOrderedCommSemiring [StrictOrderedCommSemiring α] :
     StrictOrderedCommSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.StrictOrderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
+  Subtype.coe_injective.strictOrderedCommSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align nonneg.strict_ordered_comm_semiring Nonneg.strictOrderedCommSemiring
 
@@ -299,7 +299,7 @@ instance nontrivial [LinearOrderedSemiring α] : Nontrivial { x : α // 0 ≤ x 
 
 instance linearOrderedSemiring [LinearOrderedSemiring α] :
     LinearOrderedSemiring { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
+  Subtype.coe_injective.linearOrderedSemiring _ rfl rfl (fun x y => rfl) (fun x y => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align nonneg.linear_ordered_semiring Nonneg.linearOrderedSemiring
 
@@ -334,7 +334,7 @@ instance canonicallyOrderedCommSemiring [OrderedCommRing α] [NoZeroDivisors α]
 
 instance canonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
     CanonicallyLinearOrderedAddMonoid { x : α // 0 ≤ x } :=
-  { Subtype.linearOrder _, Nonneg.canonicallyOrderedAddMonoid with }
+  { Subtype.linearOrder _, nonneg.canonically_ordered_add_monoid with }
 #align nonneg.canonically_linear_ordered_add_monoid Nonneg.canonicallyLinearOrderedAddMonoid
 
 section LinearOrder
@@ -352,28 +352,28 @@ theorem coe_toNonneg {a : α} : (toNonneg a : α) = max a 0 :=
 #align nonneg.coe_to_nonneg Nonneg.coe_toNonneg
 
 @[simp]
-theorem toNonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [to_nonneg, h]
+theorem toNonneg_of_nonneg {a : α} (h : 0 ≤ a) : toNonneg a = ⟨a, h⟩ := by simp [toNonneg, h]
 #align nonneg.to_nonneg_of_nonneg Nonneg.toNonneg_of_nonneg
 
 @[simp]
 theorem toNonneg_coe {a : { x : α // 0 ≤ x }} : toNonneg (a : α) = a :=
   by
   cases' a with a ha
-  exact to_nonneg_of_nonneg ha
+  exact toNonneg_of_nonneg ha
 #align nonneg.to_nonneg_coe Nonneg.toNonneg_coe
 
 @[simp]
 theorem toNonneg_le {a : α} {b : { x : α // 0 ≤ x }} : toNonneg a ≤ b ↔ a ≤ b :=
   by
   cases' b with b hb
-  simp [to_nonneg, hb]
+  simp [toNonneg, hb]
 #align nonneg.to_nonneg_le Nonneg.toNonneg_le
 
 @[simp]
 theorem toNonneg_lt {a : { x : α // 0 ≤ x }} {b : α} : a < toNonneg b ↔ ↑a < b :=
   by
   cases' a with a ha
-  simp [to_nonneg, ha.not_lt]
+  simp [toNonneg, ha.not_lt]
 #align nonneg.to_nonneg_lt Nonneg.toNonneg_lt
 
 instance hasSub [Sub α] : Sub { x : α // 0 ≤ x } :=
@@ -391,7 +391,7 @@ end LinearOrder
 instance hasOrderedSub [LinearOrderedRing α] : OrderedSub { x : α // 0 ≤ x } :=
   ⟨by
     rintro ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩
-    simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, to_nonneg_le,
+    simp only [sub_le_iff_le_add, Subtype.mk_le_mk, mk_sub_mk, mk_add_mk, toNonneg_le,
       Subtype.coe_mk]⟩
 #align nonneg.has_ordered_sub Nonneg.hasOrderedSub
 

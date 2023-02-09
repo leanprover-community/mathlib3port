@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.comm_sq
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem flip (p : CommSq f g h i) : CommSq g f i h :=
   ⟨p.w.symm⟩
 #align category_theory.comm_sq.flip CategoryTheory.CommSq.flip
 
-theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.Hom h.left h.right g.Hom :=
+theorem of_arrow {f g : Arrow C} (h : f ⟶ g) : CommSq f.hom h.left h.right g.hom :=
   ⟨h.w.symm⟩
 #align category_theory.comm_sq.of_arrow CategoryTheory.CommSq.of_arrow
 
@@ -158,14 +158,14 @@ instance subsingleton_liftStruct_of_epi (sq : CommSq f i p g) [Epi i] :
     Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
-    simp only [← cancel_epi i, lift_struct.fac_left]⟩
+    simp only [← cancel_epi i, LiftStruct.fac_left]⟩
 #align category_theory.comm_sq.subsingleton_lift_struct_of_epi CategoryTheory.CommSq.subsingleton_liftStruct_of_epi
 
 instance subsingleton_liftStruct_of_mono (sq : CommSq f i p g) [Mono p] :
     Subsingleton (LiftStruct sq) :=
   ⟨fun l₁ l₂ => by
     ext
-    simp only [← cancel_mono p, lift_struct.fac_right]⟩
+    simp only [← cancel_mono p, LiftStruct.fac_right]⟩
 #align category_theory.comm_sq.subsingleton_lift_struct_of_mono CategoryTheory.CommSq.subsingleton_liftStruct_of_mono
 
 variable (sq : CommSq f i p g)
@@ -193,15 +193,15 @@ theorem iff : HasLift sq ↔ Nonempty sq.LiftStruct :=
 
 theorem iff_op : HasLift sq ↔ HasLift sq.op :=
   by
-  rw [Iff, Iff]
-  exact Nonempty.congr (lift_struct.op_equiv sq).toFun (lift_struct.op_equiv sq).invFun
+  rw [iff, iff]
+  exact Nonempty.congr (LiftStruct.opEquiv sq).toFun (LiftStruct.opEquiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_op CategoryTheory.CommSq.HasLift.iff_op
 
 theorem iff_unop {A B X Y : Cᵒᵖ} {f : A ⟶ X} {i : A ⟶ B} {p : X ⟶ Y} {g : B ⟶ Y}
     (sq : CommSq f i p g) : HasLift sq ↔ HasLift sq.unop :=
   by
-  rw [Iff, Iff]
-  exact Nonempty.congr (lift_struct.unop_equiv sq).toFun (lift_struct.unop_equiv sq).invFun
+  rw [iff, iff]
+  exact Nonempty.congr (LiftStruct.unopEquiv sq).toFun (LiftStruct.unopEquiv sq).invFun
 #align category_theory.comm_sq.has_lift.iff_unop CategoryTheory.CommSq.HasLift.iff_unop
 
 end HasLift

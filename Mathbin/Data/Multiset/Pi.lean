@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.multiset.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
   refine' hfunext (by rw [cons_swap]) fun ha₁ ha₂ _ => _
   rcases ne_or_eq a'' a with (h₁ | rfl)
   rcases eq_or_ne a'' a' with (rfl | h₂)
-  all_goals simp [*, pi.cons_same, pi.cons_ne]
+  all_goals simp [*, Pi.cons_same, Pi.cons_ne]
 #align multiset.pi.cons_swap Multiset.Pi.cons_swap
 
 #print Multiset.pi /-
@@ -93,7 +93,7 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, �
     (by
       intro a a' m n
       by_cases eq : a = a'
-      · subst Eq
+      · subst eq
       · simp [map_bind, bind_bind (t a') (t a)]
         apply bind_hcongr
         · rw [cons_swap a a']
@@ -104,7 +104,7 @@ def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a ∈ m, �
         apply map_hcongr
         · rw [cons_swap a a']
         intro f hf
-        exact pi.cons_swap Eq)
+        exact Pi.cons_swap eq)
 #align multiset.pi Multiset.pi
 -/
 
@@ -140,9 +140,9 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
       have ne : a ≠ a' := fun h => hs <| h.symm ▸ h'
       have : a' ∈ a ::ₘ s := mem_cons_of_mem h'
       calc
-        f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
-        _ = Pi.cons s a b f₂ a' this := by rw [Eq]
-        _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
+        f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [Pi.cons_ne this ne.symm]
+        _ = Pi.cons s a b f₂ a' this := by rw [eq]
+        _ = f₂ a' h' := by rw [Pi.cons_ne this ne.symm]
         
 #align multiset.pi_cons_injective Multiset.pi_cons_injective
 
@@ -169,17 +169,17 @@ protected theorem Nodup.pi {s : Multiset α} {t : ∀ a, Multiset (δ a)} :
     (by
       intro a s ih hs ht
       have has : a ∉ s := by simp at hs <;> exact hs.1
-      have hs : nodup s := by simp at hs <;> exact hs.2
+      have hs : Nodup s := by simp at hs <;> exact hs.2
       simp
       refine'
         ⟨fun b hb => (ih hs fun a' h' => ht a' <| mem_cons_of_mem h').map (pi_cons_injective has),
           _⟩
-      refine' (ht a <| mem_cons_self _ _).Pairwise _
+      refine' (ht a <| mem_cons_self _ _).pairwise _
       exact fun b₁ hb₁ b₂ hb₂ neb =>
         disjoint_map_map.2 fun f hf g hg eq =>
-          have : pi.cons s a b₁ f a (mem_cons_self _ _) = pi.cons s a b₂ g a (mem_cons_self _ _) :=
-            by rw [Eq]
-          neb <| show b₁ = b₂ by rwa [pi.cons_same, pi.cons_same] at this)
+          have : Pi.cons s a b₁ f a (mem_cons_self _ _) = Pi.cons s a b₂ g a (mem_cons_self _ _) :=
+            by rw [eq]
+          neb <| show b₁ = b₂ by rwa [Pi.cons_same, Pi.cons_same] at this)
 #align multiset.nodup.pi Multiset.Nodup.pi
 
 /- warning: multiset.pi.cons_ext -> Multiset.pi.cons_ext is a dubious translation:
@@ -195,8 +195,8 @@ theorem pi.cons_ext {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a')
   ext (a' h')
   by_cases a' = a
   · subst h
-    rw [pi.cons_same]
-  · rw [pi.cons_ne _ h]
+    rw [Pi.cons_same]
+  · rw [Pi.cons_ne _ h]
 #align multiset.pi.cons_ext Multiset.pi.cons_ext
 
 /- warning: multiset.mem_pi -> Multiset.mem_pi is a dubious translation:
@@ -210,14 +210,14 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
   by
   intro f
   induction' m using Multiset.induction_on with a m ih
-  · simpa using show f = pi.empty δ by funext a ha <;> exact ha.elim
+  · simpa using show f = Pi.empty δ by funext a ha <;> exact ha.elim
   simp_rw [pi_cons, mem_bind, mem_map, ih]
   constructor
   · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
     by_cases a' = a
     · subst h
-      rwa [pi.cons_same]
-    · rw [pi.cons_ne _ h]
+      rwa [Pi.cons_same]
+    · rw [Pi.cons_ne _ h]
       apply hf'
   · intro hf
     refine' ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), _⟩

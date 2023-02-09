@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.radon_nikodym
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,17 +51,17 @@ include m
 theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
     ν.withDensity (rnDeriv μ ν) = μ :=
   by
-  obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := have_lebesgue_decomposition_spec μ ν
-  have : singular_part μ ν = 0 :=
+  obtain ⟨hf₁, ⟨E, hE₁, hE₂, hE₃⟩, hadd⟩ := haveLebesgueDecomposition_spec μ ν
+  have : singularPart μ ν = 0 :=
     by
-    refine' le_antisymm (fun A hA => _) (measure.zero_le _)
-    suffices singular_part μ ν Set.univ = 0
+    refine' le_antisymm (fun A hA => _) (Measure.zero_le _)
+    suffices singularPart μ ν Set.univ = 0
       by
-      rw [measure.coe_zero, Pi.zero_apply, ← this]
+      rw [Measure.coe_zero, Pi.zero_apply, ← this]
       exact measure_mono (Set.subset_univ _)
     rw [← measure_add_measure_compl hE₁, hE₂, zero_add]
-    have : (singular_part μ ν + ν.with_density (rn_deriv μ ν)) (Eᶜ) = μ (Eᶜ) := by rw [← hadd]
-    rw [measure.coe_add, Pi.add_apply, h hE₃] at this
+    have : (singularPart μ ν + ν.with_density (rnDeriv μ ν)) (Eᶜ) = μ (Eᶜ) := by rw [← hadd]
+    rw [Measure.coe_add, Pi.add_apply, h hE₃] at this
     exact (add_eq_zero_iff.1 this).1
   rw [this, zero_add] at hadd
   exact hadd.symm
@@ -79,11 +79,11 @@ theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
     (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal :=
   by
-  rw [integral_to_real, ← with_density_apply _ hi, with_density_rn_deriv_eq μ ν h]
+  rw [integral_toReal, ← withDensity_apply _ hi, withDensity_rnDeriv_eq μ ν h]
   · measurability
   · refine'
-      ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).Ne
-    rw [← with_density_apply _ MeasurableSet.univ, with_density_rn_deriv_eq μ ν h]
+      ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).ne
+    rw [← withDensity_apply _ MeasurableSet.univ, withDensity_rnDeriv_eq μ ν h]
     exact measure_lt_top _ _
 #align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rnDeriv_toReal_eq
 
@@ -98,22 +98,22 @@ open Measure VectorMeasure
 theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
     (h : s ≪ᵥ μ.toEnnrealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s :=
   by
-  rw [absolutely_continuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
-    total_variation_absolutely_continuous_iff] at h
+  rw [absolutelyContinuous_ennreal_iff, (_ : μ.to_ennreal_vector_measure.ennreal_to_measure = μ),
+    totalVariation_absolutelyContinuous_iff] at h
   · ext1 i hi
-    rw [with_densityᵥ_apply (integrable_rn_deriv _ _) hi, rn_deriv, integral_sub,
-      with_density_rn_deriv_to_real_eq h.1 hi, with_density_rn_deriv_to_real_eq h.2 hi]
+    rw [withDensityᵥ_apply (integrableRnDeriv _ _) hi, rnDeriv, integral_sub,
+      with_density_rnDeriv_toReal_eq h.1 hi, with_density_rnDeriv_toReal_eq h.2 hi]
     · conv_rhs => rw [← s.to_signed_measure_to_jordan_decomposition]
-      erw [vector_measure.sub_apply]
-      rw [to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi]
+      erw [VectorMeasure.sub_apply]
+      rw [toSignedMeasure_apply_measurable hi, toSignedMeasure_apply_measurable hi]
     all_goals
-      rw [← integrable_on_univ]
-      refine' integrable_on.restrict _ MeasurableSet.univ
-      refine' ⟨_, has_finite_integral_to_real_of_lintegral_ne_top _⟩
+      rw [← integrableOn_univ]
+      refine' IntegrableOn.restrict _ MeasurableSet.univ
+      refine' ⟨_, hasFiniteIntegralToRealOfLintegralNeTop _⟩
       · apply Measurable.aeStronglyMeasurable
         measurability
       · rw [set_lintegral_univ]
-        exact (lintegral_rn_deriv_lt_top _ _).Ne
+        exact (lintegral_rnDeriv_lt_top _ _).ne
   · exact equiv_measure.right_inv μ
 #align measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.withDensityᵥ_rnDeriv_eq
 

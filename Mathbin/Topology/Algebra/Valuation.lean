@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valuation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
         change v (x * y) < _
         rw [Valuation.map_mul, Hx, zero_mul]
         exact Units.zero_lt γ
-      · simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
+      · simp only [image_subset_iff, setOf_subset_setOf, preimage_setOf_eq, Valuation.map_mul]
         use γx⁻¹ * γ
         rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
         change (v (x * y) : Γ₀) < γ
@@ -109,7 +109,7 @@ def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
     to_uniformAddGroup := @topological_add_commGroup_is_uniform _ _ v.subgroups_basis.topology _
     is_topological_valuation :=
       by
-      letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
+      letI := @topological_add_group.to_uniform_space R _ v.subgroups_basis.topology _
       intro s
       rw [filter.has_basis_iff.mp v.subgroups_basis.has_basis_nhds_zero s]
       exact exists_congr fun γ => by simpa }
@@ -128,7 +128,7 @@ theorem hasBasis_uniformity :
     (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
   by
   rw [uniformity_eq_comap_nhds_zero]
-  exact (has_basis_nhds_zero R Γ₀).comap _
+  exact (hasBasis_nhds_zero R Γ₀).comap _
 #align valued.has_basis_uniformity Valued.hasBasis_uniformity
 
 theorem toUniformSpace_eq :
@@ -140,8 +140,8 @@ theorem toUniformSpace_eq :
 variable {R Γ₀}
 
 theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Γ₀ˣ, { y | (v (y - x) : Γ₀) < γ } ⊆ s := by
-  simp only [← nhds_translation_add_neg x, ← sub_eq_add_neg, preimage_set_of_eq, exists_true_left,
-    ((has_basis_nhds_zero R Γ₀).comap fun y => y - x).mem_iff]
+  simp only [← nhds_translation_add_neg x, ← sub_eq_add_neg, preimage_setOf_eq, exists_true_left,
+    ((hasBasis_nhds_zero R Γ₀).comap fun y => y - x).mem_iff]
 #align valued.mem_nhds Valued.mem_nhds
 
 theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x | v x < (γ : Γ₀) } ⊆ s := by
@@ -161,12 +161,12 @@ theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 
 instance (priority := 100) : TopologicalRing R :=
   (toUniformSpace_eq R Γ₀).symm ▸ v.subgroups_basis.toRingFilterBasis.is_topologicalRing
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 theorem cauchy_iff {F : Filter R} :
     Cauchy F ↔
-      F.ne_bot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=
+      F.NeBot ∧ ∀ γ : Γ₀ˣ, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), (v (y - x) : Γ₀) < γ :=
   by
-  rw [to_uniform_space_eq, AddGroupFilterBasis.cauchy_iff]
+  rw [toUniformSpace_eq, AddGroupFilterBasis.cauchy_iff]
   apply and_congr Iff.rfl
   simp_rw [valued.v.subgroups_basis.mem_add_group_filter_basis_iff]
   constructor

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module meta.rb_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ unsafe instance {key} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
 unsafe def filter {key} (s : rb_set key) (P : key → Bool) : rb_set key :=
-  s.fold s fun a m => if P a then m else m.eraseₓ a
+  s.fold s fun a m => if P a then m else m.erase a
 #align native.rb_set.filter native.rb_set.filter
 
 /-- `mfilter s P` returns the subset of elements of `s` satisfying `P`,
@@ -42,7 +42,7 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monad m] {key} (s : rb_set key) (P : key → m Bool) : m (rb_set key) :=
   s.fold (pure s) fun a m => do
     let x ← m
-    condM (P a) (pure x) (pure <| x a)
+    mcond (P a) (pure x) (pure <| x a)
 #align native.rb_set.mfilter native.rb_set.mfilter
 
 /-- `union s t` returns an rb_set containing every element that appears in either `s` or `t`. -/
@@ -73,7 +73,7 @@ It does so by folding over `s2`. If `s1` is significantly smaller than `s2`,
 it may be worth it to reverse the fold.
 -/
 unsafe def sdiff {α} (s1 s2 : rb_set α) : rb_set α :=
-  s2.fold s1 fun v s => s.eraseₓ v
+  s2.fold s1 fun v s => s.erase v
 #align native.rb_set.sdiff native.rb_set.sdiff
 
 /-- `insert_list s l` inserts each element of `l` into `s`.
@@ -116,7 +116,7 @@ unsafe def add {key value} [Add value] [Zero value] [DecidableEq value] (m1 m2 :
     rb_map key value :=
   m1.fold m2 fun n v m =>
     let nv := v + m2.zfind n
-    if nv = 0 then m.eraseₓ n else m.insert n nv
+    if nv = 0 then m.erase n else m.insert n nv
 #align native.rb_map.add native.rb_map.add
 
 variable {m : Type → Type _} [Monad m]
@@ -126,13 +126,13 @@ open Function
 /-- `mfilter P s` filters `s` by the monadic predicate `P` on keys and values. -/
 unsafe def mfilter {key val} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
     (P : key → val → m Bool) (s : rb_map key val) : m (rb_map.{0, 0} key val) :=
-  rb_map.of_list <$> s.toList.filterM (uncurry P)
+  rb_map.of_list <$> s.to_list.filterM (uncurry P)
 #align native.rb_map.mfilter native.rb_map.mfilter
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/
 unsafe def mmap {key val val'} [LT key] [DecidableRel ((· < ·) : key → key → Prop)]
     (f : val → m val') (s : rb_map key val) : m (rb_map.{0, 0} key val') :=
-  rb_map.of_list <$> s.toList.mapM fun ⟨a, b⟩ => Prod.mk a <$> f b
+  rb_map.of_list <$> s.to_list.mapM fun ⟨a, b⟩ => Prod.mk a <$> f b
 #align native.rb_map.mmap native.rb_map.mmap
 
 /-- `scale b m` multiplies every value in `m` by `b`. -/
@@ -161,7 +161,7 @@ unsafe instance : has_to_tactic_format (rb_map key data) :=
           let p ← p
           let pkd ← pp_key_data k d (snd p)
           return (fst p ++ pkd, ff)
-    return <| Group <| to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
+    return <| group <| to_fmt "⟨" ++ nest 1 fmt ++ to_fmt "⟩"⟩
 
 end
 
@@ -202,7 +202,7 @@ unsafe instance : Inhabited name_set :=
 
 /-- `filter P s` returns the subset of elements of `s` satisfying `P`. -/
 unsafe def filter (P : Name → Bool) (s : name_set) : name_set :=
-  s.fold s fun a m => if P a then m else m.eraseₓ a
+  s.fold s fun a m => if P a then m else m.erase a
 #align name_set.filter name_set.filter
 
 /-- `mfilter P s` returns the subset of elements of `s` satisfying `P`,
@@ -210,7 +210,7 @@ where the check `P` is monadic. -/
 unsafe def mfilter {m} [Monad m] (P : Name → m Bool) (s : name_set) : m name_set :=
   s.fold (pure s) fun a m => do
     let x ← m
-    condM (P a) (pure x) (pure <| x a)
+    mcond (P a) (pure x) (pure <| x a)
 #align name_set.mfilter name_set.mfilter
 
 /-- `mmap f s` maps the monadic function `f` over values in `s`. -/

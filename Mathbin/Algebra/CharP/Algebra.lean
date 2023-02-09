@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_p.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem charP_of_injective_algebraMap {R A : Type _} [CommSemiring R] [Semiring 
 
 theorem charP_of_injective_algebra_map' (R A : Type _) [Field R] [Semiring A] [Algebra R A]
     [Nontrivial A] (p : ℕ) [CharP R p] : CharP A p :=
-  charP_of_injective_algebraMap (algebraMap R A).Injective p
+  charP_of_injective_algebraMap (algebraMap R A).injective p
 #align char_p_of_injective_algebra_map' charP_of_injective_algebra_map'
 
 /-- If the algebra map `R →+* A` is injective and `R` has characteristic zero then so does `A`. -/
@@ -80,7 +80,7 @@ instance `algebra_rat`. It's probably easier to go the other way: prove `char_ze
 automatically receive an `algebra ℚ R` instance.
 -/
 theorem algebraRat.charP_zero [Semiring R] [Algebra ℚ R] : CharP R 0 :=
-  charP_of_injective_algebraMap (algebraMap ℚ R).Injective 0
+  charP_of_injective_algebraMap (algebraMap ℚ R).injective 0
 #align algebra_rat.char_p_zero algebraRat.charP_zero
 
 /-- A nontrivial `ℚ`-algebra has characteristic zero.
@@ -122,12 +122,12 @@ variable {R X : Type _} [CommSemiring R] (p : ℕ)
 
 /-- If `R` has characteristic `p`, then so does `free_algebra R X`. -/
 instance charP [CharP R p] : CharP (FreeAlgebra R X) p :=
-  charP_of_injective_algebraMap FreeAlgebra.algebraMap_leftInverse.Injective p
+  charP_of_injective_algebraMap FreeAlgebra.algebraMap_leftInverse.injective p
 #align free_algebra.char_p FreeAlgebra.charP
 
 /-- If `R` has characteristic `0`, then so does `free_algebra R X`. -/
 instance charZero [CharZero R] : CharZero (FreeAlgebra R X) :=
-  charZero_of_injective_algebraMap FreeAlgebra.algebraMap_leftInverse.Injective
+  charZero_of_injective_algebraMap FreeAlgebra.algebraMap_leftInverse.injective
 #align free_algebra.char_zero FreeAlgebra.charZero
 
 end FreeAlgebra

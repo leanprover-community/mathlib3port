@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.order_iso_nat
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem coe_natLt {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n + 1))} : ⇑(
 /-- If `f` is a strictly `r`-decreasing sequence, then this returns `f` as an order embedding. -/
 def natGt (f : ℕ → α) (H : ∀ n : ℕ, r (f (n + 1)) (f n)) : ((· > ·) : ℕ → ℕ → Prop) ↪r r :=
   haveI := IsStrictOrder.swap r
-  RelEmbedding.swap (nat_lt f H)
+  RelEmbedding.swap (natLt f H)
 #align rel_embedding.nat_gt RelEmbedding.natGt
 -/
 
@@ -107,7 +107,7 @@ theorem acc_iff_no_decreasing_seq {x} :
       exact ⟨⟨w, h.1⟩, h.2⟩
     obtain ⟨f, h⟩ := Classical.axiom_of_choice this
     refine' fun E =>
-      by_contradiction fun hx => E.elim' ⟨nat_gt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
+      by_contradiction fun hx => E.elim' ⟨natGt (fun n => ((f^[n]) ⟨x, hx⟩).1) fun n => _, 0, rfl⟩
     rw [Function.iterate_succ']
     apply h
 #align rel_embedding.acc_iff_no_decreasing_seq RelEmbedding.acc_iff_no_decreasing_seq
@@ -140,7 +140,7 @@ theorem wellFounded_iff_no_descending_seq :
 #print RelEmbedding.not_wellFounded_of_decreasing_seq /-
 theorem not_wellFounded_of_decreasing_seq (f : ((· > ·) : ℕ → ℕ → Prop) ↪r r) : ¬WellFounded r :=
   by
-  rw [well_founded_iff_no_descending_seq, not_isEmpty_iff]
+  rw [wellFounded_iff_no_descending_seq, not_isEmpty_iff]
   exact ⟨f⟩
 #align rel_embedding.not_well_founded_of_decreasing_seq RelEmbedding.not_wellFounded_of_decreasing_seq
 -/
@@ -207,7 +207,7 @@ Case conversion may be inaccurate. Consider using '#align nat.subtype.order_iso_
 theorem Subtype.orderIsoOfNat_apply [DecidablePred (· ∈ s)] {n : ℕ} :
     Subtype.orderIsoOfNat s n = Subtype.ofNat s n :=
   by
-  simp [subtype.order_iso_of_nat]
+  simp [Subtype.orderIsoOfNat]
   congr
 #align nat.subtype.order_iso_of_nat_apply Nat.Subtype.orderIsoOfNat_apply
 
@@ -281,7 +281,7 @@ theorem exists_increasing_or_nonincreasing_subseq' (r : α → α → Prop) (f :
         refine' ⟨n + x, add_lt_add_left hpos n, _⟩
         rw [add_assoc, add_comm x m, ← add_assoc]
         exact hn2
-      let g' : ℕ → ℕ := @Nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
+      let g' : ℕ → ℕ := @nat.rec (fun _ => ℕ) m fun n gn => Nat.find (h gn)
       exact
         ⟨(RelEmbedding.natLt (fun n => g' n + m) fun n =>
               Nat.add_lt_add_right (Nat.find_spec (h (g' n))).1 m).orderEmbeddingOfLTEmbedding,
@@ -372,12 +372,12 @@ theorem WellFounded.supᵢ_eq_monotonicSequenceLimit [CompleteLattice α]
   · exact a.monotone hm
   · replace hm := le_of_not_le hm
     let S := { n | ∀ m, n ≤ m → a n = a m }
-    have hInf : Inf S ∈ S := by
+    have hInf : infₛ S ∈ S := by
       refine' Nat.infₛ_mem _
       rw [WellFounded.monotone_chain_condition] at h
       exact h a
-    change Inf S ≤ m at hm
-    change a m ≤ a (Inf S)
+    change infₛ S ≤ m at hm
+    change a m ≤ a (infₛ S)
     rw [hInf m hm]
 #align well_founded.supr_eq_monotonic_sequence_limit WellFounded.supᵢ_eq_monotonicSequenceLimit
 

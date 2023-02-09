@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbmap.default
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,13 +59,13 @@ private theorem to_rbmap_mem [IsStrictWeakOrder α lt] {k : α} {v : β} {m : Rb
   by
   cases' m with n p <;> cases n <;> intro h
   · exact False.elim h
-  · simp [Membership.Mem, Rbmap.Mem]
+  · simp [has_mem.mem, Rbmap.Mem]
     exact
-      @Rbtree.mem_of_mem_of_eqv _ _ _ ⟨Rbnode.red_node n_lchild n_val n_rchild, p⟩ _ _ h
+      @rbtree.mem_of_mem_of_eqv _ _ _ ⟨Rbnode.red_node n_lchild n_val n_rchild, p⟩ _ _ h
         (eqv_entries _ _ _)
-  · simp [Membership.Mem, Rbmap.Mem]
+  · simp [has_mem.mem, Rbmap.Mem]
     exact
-      @Rbtree.mem_of_mem_of_eqv _ _ _ ⟨Rbnode.black_node n_lchild n_val n_rchild, p⟩ _ _ h
+      @rbtree.mem_of_mem_of_eqv _ _ _ ⟨Rbnode.black_node n_lchild n_val n_rchild, p⟩ _ _ h
         (eqv_entries _ _ _)
 #align rbmap.to_rbmap_mem rbmap.to_rbmap_mem
 
@@ -80,23 +80,23 @@ private theorem to_rbtree_mem' [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α 
 theorem eq_some_of_toValue_eq_some {e : Option (α × β)} {v : β} :
     toValue e = some v → ∃ k, e = some (k, v) :=
   by
-  cases' e with val <;> simp [to_value, false_imp_iff]
+  cases' e with val <;> simp [toValue, false_imp_iff]
   · cases val
     simp
 #align rbmap.eq_some_of_to_value_eq_some Rbmap.eq_some_of_toValue_eq_some
 
 theorem eq_none_of_toValue_eq_none {e : Option (α × β)} : toValue e = none → e = none := by
-  cases e <;> simp [to_value, false_imp_iff]
+  cases e <;> simp [toValue, false_imp_iff]
 #align rbmap.eq_none_of_to_value_eq_none Rbmap.eq_none_of_toValue_eq_none
 
 -- Lemmas
 theorem not_mem_mkRbmap : ∀ k : α, k ∉ mkRbmap α β lt := by
-  simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem]
+  simp [has_mem.mem, mkRbmap, mkRbtree, Rbmap.Mem]
 #align rbmap.not_mem_mk_rbmap Rbmap.not_mem_mkRbmap
 
-theorem not_mem_of_empty {m : Rbmap α β lt} (k : α) : m.Empty = true → k ∉ m := by
+theorem not_mem_of_empty {m : Rbmap α β lt} (k : α) : m.empty = true → k ∉ m := by
   cases' m with n p <;> cases n <;>
-    simp [Membership.Mem, mkRbmap, mkRbtree, Rbmap.Mem, Rbmap.empty, Rbtree.empty, false_imp_iff]
+    simp [has_mem.mem, mkRbmap, mkRbtree, Rbmap.Mem, Rbmap.empty, Rbtree.empty, false_imp_iff]
 #align rbmap.not_mem_of_empty Rbmap.not_mem_of_empty
 
 theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {m : Rbmap α β lt} {k₁ k₂ : α} :
@@ -112,43 +112,43 @@ variable [DecidableRel lt]
 
 theorem not_mem_of_findEntry_none [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β lt} :
     m.findEntry k = none → k ∉ m := by
-  cases' m with t p; cases t <;> simp [find_entry]
+  cases' m with t p; cases t <;> simp [findEntry]
   · intros
-    simp [Membership.Mem, Rbmap.Mem]
+    simp [has_mem.mem, Rbmap.Mem]
   all_goals intro h; exact Rbtree.not_mem_of_find_none h
 #align rbmap.not_mem_of_find_entry_none Rbmap.not_mem_of_findEntry_none
 
 theorem not_mem_of_find_none [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β lt} :
     m.find k = none → k ∉ m := by
   simp [find]; intro h
-  have := eq_none_of_to_value_eq_none h
-  exact not_mem_of_find_entry_none this
+  have := eq_none_of_toValue_eq_none h
+  exact not_mem_of_findEntry_none this
 #align rbmap.not_mem_of_find_none Rbmap.not_mem_of_find_none
 
 theorem mem_of_findEntry_some [IsStrictWeakOrder α lt] {k₁ : α} {e : α × β} {m : Rbmap α β lt} :
     m.findEntry k₁ = some e → k₁ ∈ m := by
-  cases' m with t p; cases t <;> simp [find_entry, false_imp_iff]
+  cases' m with t p; cases t <;> simp [findEntry, false_imp_iff]
   all_goals intro h; exact Rbtree.mem_of_find_some h
 #align rbmap.mem_of_find_entry_some Rbmap.mem_of_findEntry_some
 
 theorem mem_of_find_some [IsStrictWeakOrder α lt] {k : α} {v : β} {m : Rbmap α β lt} :
     m.find k = some v → k ∈ m := by
   simp [find]; intro h
-  have := eq_some_of_to_value_eq_some h
+  have := eq_some_of_toValue_eq_some h
   cases' this with _ he
-  exact mem_of_find_entry_some he
+  exact mem_of_findEntry_some he
 #align rbmap.mem_of_find_some Rbmap.mem_of_find_some
 
 theorem findEntry_eq_findEntry_of_eqv [IsStrictWeakOrder α lt] {m : Rbmap α β lt} {k₁ k₂ : α} :
     k₁ ≈[lt]k₂ → m.findEntry k₁ = m.findEntry k₂ :=
   by
-  intro h; cases' m with t p; cases t <;> simp [find_entry]
+  intro h; cases' m with t p; cases t <;> simp [findEntry]
   all_goals apply Rbtree.find_eq_find_of_eqv; apply eqv_entries_of_eqv_keys; assumption
 #align rbmap.find_entry_eq_find_entry_of_eqv Rbmap.findEntry_eq_findEntry_of_eqv
 
 theorem find_eq_find_of_eqv [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) :
     k₁ ≈[lt]k₂ → m.find k₁ = m.find k₂ := by intro h; simp [find]; apply congr_arg;
-  apply find_entry_eq_find_entry_of_eqv; assumption
+  apply findEntry_eq_findEntry_of_eqv; assumption
 #align rbmap.find_eq_find_of_eqv Rbmap.find_eq_find_of_eqv
 
 theorem findEntry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
@@ -161,7 +161,7 @@ theorem findEntry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt
     have hex := Iff.mp (Rbtree.find_correct _ _) h₁
     cases' hex with e h₂
     exists e
-    cases t <;> simp [find_entry] at h₂⊢
+    cases t <;> simp [findEntry] at h₂⊢
     · simp [Rbtree.find, Rbnode.find] at h₂
       cases h₂
     · cases' h₂ with h₂₁ h₂₂
@@ -185,7 +185,7 @@ theorem findEntry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt
   · intro h
     cases' h with e h
     cases' h with h₁ h₂
-    cases t <;> simp [find_entry] at h₁
+    cases t <;> simp [findEntry] at h₁
     · contradiction
     all_goals exact to_rbmap_mem (Rbtree.mem_of_find_some h₁)
 #align rbmap.find_entry_correct Rbmap.findEntry_correct
@@ -193,7 +193,7 @@ theorem findEntry_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt
 theorem eqv_of_findEntry_some [IsStrictWeakOrder α lt] {k₁ k₂ : α} {v : β} {m : Rbmap α β lt} :
     m.findEntry k₁ = some (k₂, v) → k₁ ≈[lt]k₂ :=
   by
-  cases' m with t p; cases t <;> simp [find_entry, false_imp_iff]
+  cases' m with t p; cases t <;> simp [findEntry, false_imp_iff]
   all_goals intro h; exact eqv_keys_of_eqv_entries (Rbtree.eqv_of_find_some h)
 #align rbmap.eqv_of_find_entry_some Rbmap.eqv_of_findEntry_some
 
@@ -207,35 +207,35 @@ theorem find_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
     k ∈ m ↔ ∃ v, m.find k = some v := by
   apply Iff.intro
   · intro h
-    have := Iff.mp (find_entry_correct k m) h
+    have := Iff.mp (findEntry_correct k m) h
     cases' this with e h
     cases' h with h₁ h₂
     exists e.2
-    simp [find, h₁, to_value]
+    simp [find, h₁, toValue]
   · intro h
     cases' h with v h
     simp [find] at h
-    have h := eq_some_of_to_value_eq_some h
+    have h := eq_some_of_toValue_eq_some h
     cases' h with k' h
-    have heqv := eqv_of_find_entry_some h
-    exact Iff.mpr (find_entry_correct k m) ⟨(k', v), ⟨h, heqv⟩⟩
+    have heqv := eqv_of_findEntry_some h
+    exact Iff.mpr (findEntry_correct k m) ⟨(k', v), ⟨h, heqv⟩⟩
 #align rbmap.find_correct Rbmap.find_correct
 
 theorem constains_correct [IsStrictWeakOrder α lt] (k : α) (m : Rbmap α β lt) :
     k ∈ m ↔ m.contains k = true := by
   apply Iff.intro
   · intro h
-    have h := Iff.mp (find_entry_correct k m) h
+    have h := Iff.mp (findEntry_correct k m) h
     cases' h with e h
     cases' h with h₁ h₂
     simp [contains, h₁, Option.isSome]
   · simp [contains]
     intro h
-    generalize he : find_entry m k = e
+    generalize he : findEntry m k = e
     cases e
     · simp [he, Option.isSome] at h
       contradiction
-    · exact mem_of_find_entry_some he
+    · exact mem_of_findEntry_some he
 #align rbmap.constains_correct Rbmap.constains_correct
 
 theorem mem_insert_of_incomp [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
@@ -283,9 +283,9 @@ theorem findEntry_insert_of_eqv [IsStrictWeakOrder α lt] (m : Rbmap α β lt) {
   · have := mem_insert k₁ m v
     rw [h₁] at this
     apply absurd this
-    apply not_mem_mk_rbmap
+    apply not_mem_mkRbmap
   all_goals
-    simp [find_entry]; rw [← h₁, insert]; apply Rbtree.find_insert_of_eqv
+    simp [findEntry]; rw [← h₁, insert]; apply Rbtree.find_insert_of_eqv
     apply eqv_entries_of_eqv_keys _ _ h
 #align rbmap.find_entry_insert_of_eqv Rbmap.findEntry_insert_of_eqv
 
@@ -298,8 +298,8 @@ theorem find_insert_of_eqv [IsStrictWeakOrder α lt] (m : Rbmap α β lt) {k₁ 
     k₁ ≈[lt]k₂ → (m.insert k₁ v).find k₂ = some v :=
   by
   intro h
-  have := find_entry_insert_of_eqv m v h
-  simp [find, this, to_value]
+  have := findEntry_insert_of_eqv m v h
+  simp [find, this, toValue]
 #align rbmap.find_insert_of_eqv Rbmap.find_insert_of_eqv
 
 theorem find_insert [IsStrictWeakOrder α lt] (m : Rbmap α β lt) (k : α) (v : β) :
@@ -322,14 +322,14 @@ theorem findEntry_insert_of_disj [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m :
     rw [h₂]
     conv =>
       lhs
-      simp [find_entry]
+      simp [findEntry]
     rw [← h₂, insert, Rbtree.find_insert_of_disj _ h', h₁]
     rfl
   any_goals
     simp [insert] at h₂
     exact absurd h₂ (Rbtree.insert_ne_mkRbtree m (k₁, v))
   any_goals
-    rw [h₂, h₁]; simp [find_entry]; rw [← h₂, ← h₁, insert, Rbtree.find_insert_of_disj _ h']
+    rw [h₂, h₁]; simp [findEntry]; rw [← h₂, ← h₁, insert, Rbtree.find_insert_of_disj _ h']
     apply Rbtree.find_eq_find_of_eqv; apply eqv_entries
 #align rbmap.find_entry_insert_of_disj Rbmap.findEntry_insert_of_disj
 
@@ -341,7 +341,7 @@ theorem findEntry_insert_of_not_eqv [IsStrictWeakOrder α lt] {k₁ k₂ : α} (
     by
     simp [StrictWeakOrder.Equiv, Decidable.not_and_iff_or_not, Decidable.not_not_iff] at hn
     assumption
-  apply find_entry_insert_of_disj _ _ he
+  apply findEntry_insert_of_disj _ _ he
 #align rbmap.find_entry_insert_of_not_eqv Rbmap.findEntry_insert_of_not_eqv
 
 theorem findEntry_insert_of_ne [IsStrictTotalOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
@@ -349,22 +349,22 @@ theorem findEntry_insert_of_ne [IsStrictTotalOrder α lt] {k₁ k₂ : α} (m : 
   by
   intro h
   have : ¬k₁ ≈[lt]k₂ := fun h' => h (eq_of_eqv_lt h')
-  apply find_entry_insert_of_not_eqv _ _ this
+  apply findEntry_insert_of_not_eqv _ _ this
 #align rbmap.find_entry_insert_of_ne Rbmap.findEntry_insert_of_ne
 
 theorem find_insert_of_disj [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
     lt k₁ k₂ ∨ lt k₂ k₁ → (m.insert k₁ v).find k₂ = m.find k₂ := by intro h;
-  have := find_entry_insert_of_disj m v h; simp [find, this]
+  have := findEntry_insert_of_disj m v h; simp [find, this]
 #align rbmap.find_insert_of_disj Rbmap.find_insert_of_disj
 
 theorem find_insert_of_not_eqv [IsStrictWeakOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
     ¬k₁ ≈[lt]k₂ → (m.insert k₁ v).find k₂ = m.find k₂ := by intro h;
-  have := find_entry_insert_of_not_eqv m v h; simp [find, this]
+  have := findEntry_insert_of_not_eqv m v h; simp [find, this]
 #align rbmap.find_insert_of_not_eqv Rbmap.find_insert_of_not_eqv
 
 theorem find_insert_of_ne [IsStrictTotalOrder α lt] {k₁ k₂ : α} (m : Rbmap α β lt) (v : β) :
     k₁ ≠ k₂ → (m.insert k₁ v).find k₂ = m.find k₂ := by intro h;
-  have := find_entry_insert_of_ne m v h; simp [find, this]
+  have := findEntry_insert_of_ne m v h; simp [find, this]
 #align rbmap.find_insert_of_ne Rbmap.find_insert_of_ne
 
 end Decidable
@@ -400,15 +400,15 @@ theorem max_is_maximal [IsStrictWeakOrder α lt] {k : α} {v : β} {m : Rbmap α
 theorem min_is_minimal_of_total [IsStrictTotalOrder α lt] {k : α} {v : β} {m : Rbmap α β lt} :
     m.min = some (k, v) → ∀ {k'}, k' ∈ m → k = k' ∨ lt k k' := fun h k' hm =>
   match min_is_minimal h hm with
-  | Or.inl h => Or.inl (eq_of_eqv_lt h)
-  | Or.inr h => Or.inr h
+  | or.inl h => Or.inl (eq_of_eqv_lt h)
+  | or.inr h => Or.inr h
 #align rbmap.min_is_minimal_of_total Rbmap.min_is_minimal_of_total
 
 theorem max_is_maximal_of_total [IsStrictTotalOrder α lt] {k : α} {v : β} {m : Rbmap α β lt} :
     m.max = some (k, v) → ∀ {k'}, k' ∈ m → k = k' ∨ lt k' k := fun h k' hm =>
   match max_is_maximal h hm with
-  | Or.inl h => Or.inl (eq_of_eqv_lt h)
-  | Or.inr h => Or.inr h
+  | or.inl h => Or.inl (eq_of_eqv_lt h)
+  | or.inr h => Or.inr h
 #align rbmap.max_is_maximal_of_total Rbmap.max_is_maximal_of_total
 
 end Rbmap

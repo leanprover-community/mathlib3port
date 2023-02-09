@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.pnat.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PNat) (b : PNat), Eq.{1} (Finset.{0} PNat) (Finset.Icc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b) (Finset.subtype.{0} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (a : Nat) => Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) (Finset.Icc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (PNat.val a) (PNat.val b)))
 Case conversion may be inaccurate. Consider using '#align pnat.Icc_eq_finset_subtype PNat.Icc_eq_finset_subtypeₓ'. -/
-theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Icc_eq_finset_subtype PNat.Icc_eq_finset_subtype
 
@@ -47,7 +47,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PNat) (b : PNat), Eq.{1} (Finset.{0} PNat) (Finset.Ico.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b) (Finset.subtype.{0} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (a : Nat) => Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) (Finset.Ico.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (PNat.val a) (PNat.val b)))
 Case conversion may be inaccurate. Consider using '#align pnat.Ico_eq_finset_subtype PNat.Ico_eq_finset_subtypeₓ'. -/
-theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ico_eq_finset_subtype PNat.Ico_eq_finset_subtype
 
@@ -57,7 +57,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PNat) (b : PNat), Eq.{1} (Finset.{0} PNat) (Finset.Ioc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b) (Finset.subtype.{0} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (a : Nat) => Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) (Finset.Ioc.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (PNat.val a) (PNat.val b)))
 Case conversion may be inaccurate. Consider using '#align pnat.Ioc_eq_finset_subtype PNat.Ioc_eq_finset_subtypeₓ'. -/
-theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ioc_eq_finset_subtype PNat.Ioc_eq_finset_subtype
 
@@ -67,7 +67,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : PNat) (b : PNat), Eq.{1} (Finset.{0} PNat) (Finset.Ioo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b) (Finset.subtype.{0} Nat (fun (n : Nat) => LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) (fun (a : Nat) => Nat.decLt (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) a) (Finset.Ioo.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)) instLocallyFiniteOrderNatToPreorderToPartialOrderStrictOrderedSemiring (PNat.val a) (PNat.val b)))
 Case conversion may be inaccurate. Consider using '#align pnat.Ioo_eq_finset_subtype PNat.Ioo_eq_finset_subtypeₓ'. -/
-theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.Ioo_eq_finset_subtype PNat.Ioo_eq_finset_subtype
 

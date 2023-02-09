@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.character_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ instance : NonUnitalAlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
     characterSpace.continuousLinearMapClass with
     map_smul := fun φ => map_smul φ
     map_zero := fun φ => map_zero φ
-    map_mul := fun φ => φ.Prop.2 }
+    map_mul := fun φ => φ.prop.2 }
 
 /-- An element of the character space, as an non-unital algebra homomorphism. -/
 def toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : A →ₙₐ[𝕜] 𝕜
@@ -112,7 +112,7 @@ theorem coe_toNonUnitalAlgHom (φ : characterSpace 𝕜 A) : ⇑(toNonUnitalAlgH
 
 instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
   ⟨fun φ =>
-    φ.Prop.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
+    φ.prop.1 <| ContinuousLinearMap.ext fun x => by simp only [Subsingleton.elim x 0, map_zero]⟩
 
 variable (𝕜 A)
 
@@ -160,7 +160,7 @@ instance : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
       by
       rw [Algebra.algebraMap_eq_smul_one, Algebra.id.map_eq_id, RingHom.id_apply]
       change ((φ : WeakDual 𝕜 A) : A →L[𝕜] 𝕜) (r • 1) = r
-      rw [map_smul, Algebra.id.smul_eq_mul, character_space.coe_coe, map_one' φ, mul_one] }
+      rw [map_smul, Algebra.id.smul_eq_mul, characterSpace.coe_coe, map_one' φ, mul_one] }
 
 /-- An element of the character space of a unital algebra, as an algebra homomorphism. -/
 @[simps]
@@ -174,7 +174,7 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
     characterSpace 𝕜 A = { φ : WeakDual 𝕜 A | φ 1 = 1 ∧ ∀ x y : A, φ (x * y) = φ x * φ y } :=
   by
   ext x
-  refine' ⟨fun h => ⟨map_one (⟨x, h⟩ : character_space 𝕜 A), h.2⟩, fun h => ⟨_, h.2⟩⟩
+  refine' ⟨fun h => ⟨map_one (⟨x, h⟩ : characterSpace 𝕜 A), h.2⟩, fun h => ⟨_, h.2⟩⟩
   rintro rfl
   simpa using h.1
 #align weak_dual.character_space.eq_set_map_one_map_mul WeakDual.characterSpace.eq_set_map_one_map_mul
@@ -186,7 +186,7 @@ protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul �
   by
   rw [eq_set_map_one_map_mul, Set.setOf_and]
   refine' IsClosed.inter (isClosed_eq (eval_continuous _) continuous_const) _
-  simpa only [(union_zero 𝕜 A).symm] using union_zero_is_closed _ _
+  simpa only [(union_zero 𝕜 A).symm] using union_zero_isClosed _ _
 #align weak_dual.character_space.is_closed WeakDual.characterSpace.isClosed
 
 end Unital

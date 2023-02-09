@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ theorem ne_zero (n : ℕ+) : (n : ℕ) ≠ 0 :=
 
 #print NeZero.pnat /-
 instance NeZero.pnat {a : ℕ+} : NeZero (a : ℕ) :=
-  ⟨a.NeZero⟩
+  ⟨a.ne_zero⟩
 #align ne_zero.pnat NeZero.pnat
 -/
 
@@ -211,7 +211,7 @@ theorem toPNat'_coe {n : ℕ} : 0 < n → (n.toPNat' : ℕ) = n :=
 #print PNat.coe_toPNat' /-
 @[simp]
 theorem coe_toPNat' (n : ℕ+) : (n : ℕ).toPNat' = n :=
-  eq (toPNat'_coe n.Pos)
+  eq (toPNat'_coe n.pos)
 #align pnat.coe_to_pnat' PNat.coe_toPNat'
 -/
 
@@ -320,7 +320,7 @@ Case conversion may be inaccurate. Consider using '#align pnat.mod_coe PNat.mod_
 theorem mod_coe (m k : ℕ+) :
     (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) :=
   by
-  dsimp [mod, mod_div]
+  dsimp [mod, modDiv]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl
@@ -337,7 +337,7 @@ Case conversion may be inaccurate. Consider using '#align pnat.div_coe PNat.div_
 theorem div_coe (m k : ℕ+) :
     (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
-  dsimp [div, mod_div]
+  dsimp [div, modDiv]
   cases (m : ℕ) % (k : ℕ)
   · rw [if_pos rfl]
     rfl

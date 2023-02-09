@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joe Hendrix, Sebastian Ullrich
 
 ! This file was ported from Lean 3 source module data.bitvec.core
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -349,8 +349,8 @@ protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
 #print Bitvec.ofInt /-
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
-  | n, Int.ofNat m => false ::ᵥ Bitvec.ofNat n m
-  | n, Int.negSucc m => true ::ᵥ not (Bitvec.ofNat n m)
+  | n, int.of_nat m => false ::ᵥ Bitvec.ofNat n m
+  | n, int.neg_succ_of_nat m => true ::ᵥ not (Bitvec.ofNat n m)
 #align bitvec.of_int Bitvec.ofInt
 -/
 
@@ -391,11 +391,11 @@ theorem toNat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
     Bitvec.toNat (xs++ₜb ::ᵥ nil) = Bitvec.toNat xs * 2 + Bitvec.toNat (b ::ᵥ nil) :=
   by
   cases' xs with xs P
-  simp [bits_to_nat_to_list]; clear P
+  simp [bitsToNat_toList]; clear P
   unfold bits_to_nat List.foldl
   -- generalize the accumulator of foldl
   generalize h : 0 = x;
-  conv in add_lsb x b => rw [← h]; clear h
+  conv in addLsb x b => rw [← h]; clear h
   simp
   induction' xs with x xs generalizing x
   · simp
@@ -414,9 +414,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decideₓ'. -/
 theorem bits_toNat_decide (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
   by
-  simp [bits_to_nat_to_list]
+  simp [bitsToNat_toList]
   unfold bits_to_nat add_lsb List.foldl cond
-  simp [cond_to_bool_mod_two]
+  simp [cond_decide_mod_two]
 #align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decide
 
 /- warning: bitvec.of_nat_succ -> Bitvec.ofNat_succ is a dubious translation:
@@ -436,7 +436,7 @@ theorem toNat_ofNat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=
   induction' k with k ih generalizing n
   · simp [Nat.mod_one]
     rfl
-  · rw [of_nat_succ, to_nat_append, ih, bits_to_nat_to_bool, mod_pow_succ, Nat.mul_comm]
+  · rw [ofNat_succ, toNat_append, ih, bits_toNat_decide, mod_pow_succ, Nat.mul_comm]
 #align bitvec.to_nat_of_nat Bitvec.toNat_ofNat
 -/
 

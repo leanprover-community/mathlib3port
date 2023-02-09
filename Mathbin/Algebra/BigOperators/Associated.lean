@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.associated
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,12 +41,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α _inst_1 p) -> (forall {s : Multiset.{u1} α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p (Multiset.prod.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α _inst_1) s)) -> (Exists.{succ u1} α (fun (a : α) => And (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) a s) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p a))))
 Case conversion may be inaccurate. Consider using '#align prime.exists_mem_multiset_dvd Prime.exists_mem_multiset_dvdₓ'. -/
-theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.Prod → ∃ a ∈ s, p ∣ a :=
+theorem exists_mem_multiset_dvd {s : Multiset α} : p ∣ s.prod → ∃ a ∈ s, p ∣ a :=
   Multiset.induction_on s (fun h => (hp.not_dvd_one h).elim) fun a s ih h =>
-    have : p ∣ a * s.Prod := by simpa using h
+    have : p ∣ a * s.prod := by simpa using h
     match hp.dvd_or_dvd this with
-    | Or.inl h => ⟨a, Multiset.mem_cons_self a s, h⟩
-    | Or.inr h =>
+    | or.inl h => ⟨a, Multiset.mem_cons_self a s, h⟩
+    | or.inr h =>
       let ⟨a, has, h⟩ := ih h
       ⟨a, Multiset.mem_cons_of_mem has, h⟩
 #align prime.exists_mem_multiset_dvd Prime.exists_mem_multiset_dvd
@@ -60,7 +60,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α _inst_1 p) -> (forall {s : Multiset.{u2} β} {f : β -> α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p (Multiset.prod.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α _inst_1) (Multiset.map.{u2, u1} β α f s))) -> (Exists.{succ u2} β (fun (a : β) => And (Membership.mem.{u2, u2} β (Multiset.{u2} β) (Multiset.instMembershipMultiset.{u2} β) a s) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p (f a)))))
 Case conversion may be inaccurate. Consider using '#align prime.exists_mem_multiset_map_dvd Prime.exists_mem_multiset_map_dvdₓ'. -/
 theorem exists_mem_multiset_map_dvd {s : Multiset β} {f : β → α} :
-    p ∣ (s.map f).Prod → ∃ a ∈ s, p ∣ f a := fun h => by
+    p ∣ (s.map f).prod → ∃ a ∈ s, p ∣ f a := fun h => by
   simpa only [exists_prop, Multiset.mem_map, exists_exists_and_eq_and] using
     hp.exists_mem_multiset_dvd h
 #align prime.exists_mem_multiset_map_dvd Prime.exists_mem_multiset_map_dvd
@@ -71,7 +71,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α _inst_1 p) -> (forall {s : Finset.{u2} β} {f : β -> α}, (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p (Finset.prod.{u1, u2} α β (CommMonoidWithZero.toCommMonoid.{u1} α _inst_1) s f)) -> (Exists.{succ u2} β (fun (i : β) => And (Membership.mem.{u2, u2} β (Finset.{u2} β) (Finset.instMembershipFinset.{u2} β) i s) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α _inst_1)))) p (f i)))))
 Case conversion may be inaccurate. Consider using '#align prime.exists_mem_finset_dvd Prime.exists_mem_finset_dvdₓ'. -/
-theorem exists_mem_finset_dvd {s : Finset β} {f : β → α} : p ∣ s.Prod f → ∃ i ∈ s, p ∣ f i :=
+theorem exists_mem_finset_dvd {s : Finset β} {f : β → α} : p ∣ s.prod f → ∃ i ∈ s, p ∣ f i :=
   hp.exists_mem_multiset_map_dvd
 #align prime.exists_mem_finset_dvd Prime.exists_mem_finset_dvd
 
@@ -84,7 +84,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (forall {s : Multiset.{u1} α}, (forall (r : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) r s) -> (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) r)) -> (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (MonoidWithZero.toSemigroupWithZero.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p (Multiset.prod.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)) s)) -> (Exists.{succ u1} α (fun (q : α) => And (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) q s) (Associated.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) p q))))
 Case conversion may be inaccurate. Consider using '#align exists_associated_mem_of_dvd_prod exists_associated_mem_of_dvd_prodₓ'. -/
 theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α} (hp : Prime p)
-    {s : Multiset α} : (∀ r ∈ s, Prime r) → p ∣ s.Prod → ∃ q ∈ s, p ~ᵤ q :=
+    {s : Multiset α} : (∀ r ∈ s, Prime r) → p ∣ s.prod → ∃ q ∈ s, p ~ᵤ q :=
   Multiset.induction_on s (by simp [mt isUnit_iff_dvd_one.2 hp.not_unit]) fun a s ih hs hps =>
     by
     rw [Multiset.prod_cons] at hps
@@ -98,7 +98,7 @@ theorem exists_associated_mem_of_dvd_prod [CancelCommMonoidWithZero α] {p : α}
 #print Multiset.prod_primes_dvd /-
 theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
     [∀ a : α, DecidablePred (Associated a)] {s : Multiset α} (n : α) (h : ∀ a ∈ s, Prime a)
-    (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.Prod ∣ n :=
+    (div : ∀ a ∈ s, a ∣ n) (uniq : ∀ a, s.countp (Associated a) ≤ 1) : s.prod ∣ n :=
   by
   induction' s using Multiset.induction_on with a s induct n primes divs generalizing n
   · simp only [Multiset.prod_zero, one_dvd]
@@ -145,7 +145,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {p : Multiset.{u1} α}, Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Multiset.prod.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1) (Multiset.map.{u1, u1} α (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) p)) (Associates.mk.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1) (Multiset.prod.{u1} α _inst_1 p))
 Case conversion may be inaccurate. Consider using '#align associates.prod_mk Associates.prod_mkₓ'. -/
-theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p.Prod :=
+theorem prod_mk {p : Multiset α} : (p.map Associates.mk).prod = Associates.mk p.prod :=
   Multiset.induction_on p (by simp) fun a s ih => by simp [ih, Associates.mk_mul_mk]
 #align associates.prod_mk Associates.prod_mk
 
@@ -176,7 +176,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {p : Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))}, Iff (Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Multiset.prod.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1) p) (OfNat.ofNat.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (One.toOfNat1.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instOneAssociates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) (forall (a : Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)), (Membership.mem.{u1, u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Multiset.instMembershipMultiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) a p) -> (Eq.{succ u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) a (OfNat.ofNat.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) 1 (One.toOfNat1.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instOneAssociates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align associates.prod_eq_one_iff Associates.prod_eq_one_iffₓ'. -/
 theorem prod_eq_one_iff {p : Multiset (Associates α)} :
-    p.Prod = 1 ↔ ∀ a ∈ p, (a : Associates α) = 1 :=
+    p.prod = 1 ↔ ∀ a ∈ p, (a : Associates α) = 1 :=
   Multiset.induction_on p (by simp)
     (by simp (config := { contextual := true }) [mul_eq_one_iff, or_imp, forall_and])
 #align associates.prod_eq_one_iff Associates.prod_eq_one_iff
@@ -187,12 +187,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoid.{u1} α] {p : Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))} {q : Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))}, (LE.le.{u1} (Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Preorder.toLE.{u1} (Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (PartialOrder.toPreorder.{u1} (Multiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))) (Multiset.instPartialOrderMultiset.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1))))) p q) -> (LE.le.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Preorder.toLE.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instPreorderAssociatesToMonoid.{u1} α _inst_1)) (Multiset.prod.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1) p) (Multiset.prod.{u1} (Associates.{u1} α (CommMonoid.toMonoid.{u1} α _inst_1)) (Associates.instCommMonoidAssociatesToMonoid.{u1} α _inst_1) q))
 Case conversion may be inaccurate. Consider using '#align associates.prod_le_prod Associates.prod_le_prodₓ'. -/
-theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.Prod ≤ q.Prod :=
+theorem prod_le_prod {p q : Multiset (Associates α)} (h : p ≤ q) : p.prod ≤ q.prod :=
   by
   haveI := Classical.decEq (Associates α)
   haveI := Classical.decEq α
-  suffices p.prod ≤ (p + (q - p)).Prod by rwa [add_tsub_cancel_of_le h] at this
-  suffices p.prod * 1 ≤ p.prod * (q - p).Prod by simpa
+  suffices p.prod ≤ (p + (q - p)).prod by rwa [add_tsub_cancel_of_le h] at this
+  suffices p.prod * 1 ≤ p.prod * (q - p).prod by simpa
   exact mul_mono (le_refl p.prod) one_le
 #align associates.prod_le_prod Associates.prod_le_prod
 
@@ -209,13 +209,13 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {s : Multiset.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))} {p : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))}, (Prime.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instCommMonoidWithZeroAssociatesToMonoidToMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)) p) -> (LE.le.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Preorder.toLE.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instPreorderAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) p (Multiset.prod.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instCommMonoidAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))) s)) -> (Exists.{succ u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (fun (a : Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) => And (Membership.mem.{u1, u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Multiset.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (Multiset.instMembershipMultiset.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) a s) (LE.le.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Preorder.toLE.{u1} (Associates.{u1} α (MonoidWithZero.toMonoid.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) (Associates.instPreorderAssociatesToMonoid.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))) p a)))
 Case conversion may be inaccurate. Consider using '#align associates.exists_mem_multiset_le_of_prime Associates.exists_mem_multiset_le_of_primeₓ'. -/
 theorem exists_mem_multiset_le_of_prime {s : Multiset (Associates α)} {p : Associates α}
-    (hp : Prime p) : p ≤ s.Prod → ∃ a ∈ s, p ≤ a :=
-  Multiset.induction_on s (fun ⟨d, Eq⟩ => (hp.ne_one (mul_eq_one_iff.1 Eq.symm).1).elim)
+    (hp : Prime p) : p ≤ s.prod → ∃ a ∈ s, p ≤ a :=
+  Multiset.induction_on s (fun ⟨d, eq⟩ => (hp.ne_one (mul_eq_one_iff.1 eq.symm).1).elim)
     fun a s ih h =>
-    have : p ≤ a * s.Prod := by simpa using h
+    have : p ≤ a * s.prod := by simpa using h
     match Prime.le_or_le hp this with
-    | Or.inl h => ⟨a, Multiset.mem_cons_self a s, h⟩
-    | Or.inr h =>
+    | or.inl h => ⟨a, Multiset.mem_cons_self a s, h⟩
+    | or.inr h =>
       let ⟨a, has, h⟩ := ih h
       ⟨a, Multiset.mem_cons_of_mem has, h⟩
 #align associates.exists_mem_multiset_le_of_prime Associates.exists_mem_multiset_le_of_prime
@@ -233,7 +233,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : Nontrivial.{u1} α] (s : Multiset.{u1} α), (forall (x : α), (Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) x s) -> (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) x)) -> (Ne.{succ u1} α (Multiset.prod.{u1} α (CommMonoidWithZero.toCommMonoid.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)) s) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align multiset.prod_ne_zero_of_prime Multiset.prod_ne_zero_of_primeₓ'. -/
 theorem prod_ne_zero_of_prime [CancelCommMonoidWithZero α] [Nontrivial α] (s : Multiset α)
-    (h : ∀ x ∈ s, Prime x) : s.Prod ≠ 0 :=
+    (h : ∀ x ∈ s, Prime x) : s.prod ≠ 0 :=
   Multiset.prod_ne_zero fun h0 => Prime.ne_zero (h 0 h0) rfl
 #align multiset.prod_ne_zero_of_prime Multiset.prod_ne_zero_of_prime
 
@@ -252,7 +252,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} M] {S : Finset.{u2} α} {p : M}, (Prime.{u1} M _inst_1 p) -> (forall (g : α -> M), Iff (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p (Finset.prod.{u1, u2} M α (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1) S g)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a S) (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p (g a)))))
 Case conversion may be inaccurate. Consider using '#align prime.dvd_finset_prod_iff Prime.dvd_finset_prod_iffₓ'. -/
 theorem Prime.dvd_finset_prod_iff {S : Finset α} {p : M} (pp : Prime p) (g : α → M) :
-    p ∣ S.Prod g ↔ ∃ a ∈ S, p ∣ g a :=
+    p ∣ S.prod g ↔ ∃ a ∈ S, p ∣ g a :=
   ⟨pp.exists_mem_finset_dvd, fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod_of_mem g ha1)⟩
 #align prime.dvd_finset_prod_iff Prime.dvd_finset_prod_iff
 
@@ -263,7 +263,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} M] {f : Finsupp.{u2, u1} α M (CommMonoidWithZero.toZero.{u1} M _inst_1)} {g : α -> M -> Nat} {p : Nat}, (Prime.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) p) -> (Iff (Dvd.dvd.{0} Nat Nat.instDvdNat p (Finsupp.prod.{u2, u1, 0} α M Nat (CommMonoidWithZero.toZero.{u1} M _inst_1) Nat.commMonoid f g)) (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a (Finsupp.support.{u2, u1} α M (CommMonoidWithZero.toZero.{u1} M _inst_1) f)) (Dvd.dvd.{0} Nat Nat.instDvdNat p (g a (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M (CommMonoidWithZero.toZero.{u1} M _inst_1)) α (fun (a : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (Finsupp.funLike.{u2, u1} α M (CommMonoidWithZero.toZero.{u1} M _inst_1)) f a))))))
 Case conversion may be inaccurate. Consider using '#align prime.dvd_finsupp_prod_iff Prime.dvd_finsupp_prod_iffₓ'. -/
 theorem Prime.dvd_finsupp_prod_iff {f : α →₀ M} {g : α → M → ℕ} {p : ℕ} (pp : Prime p) :
-    p ∣ f.Prod g ↔ ∃ a ∈ f.support, p ∣ g a (f a) :=
+    p ∣ f.prod g ↔ ∃ a ∈ f.support, p ∣ g a (f a) :=
   Prime.dvd_finset_prod_iff pp _
 #align prime.dvd_finsupp_prod_iff Prime.dvd_finsupp_prod_iff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Scott Morrison
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.path
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -230,8 +230,8 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
   · cases hq
   simp only [comp_cons] at h
   obtain rfl := h.1
-  obtain ⟨rfl, rfl⟩ := ih (Nat.succ.inj hq) h.2.1.Eq
-  rw [h.2.2.Eq]
+  obtain ⟨rfl, rfl⟩ := ih (Nat.succ.inj hq) h.2.1.eq
+  rw [h.2.2.eq]
   exact ⟨rfl, rfl⟩
 #align quiver.path.comp_inj Quiver.Path.comp_inj
 
@@ -339,7 +339,7 @@ theorem toList_injective (a : V) : ∀ b, Injective (toList : Path a b → List 
   | b, @cons _ _ _ c _ p f, nil, h => by cases h
   | b, @cons _ _ _ c _ p f, @cons _ _ s t u C D, h =>
     by
-    simp only [to_list] at h
+    simp only [toList] at h
     obtain ⟨rfl, hAC⟩ := h
     simp [to_list_injective _ hAC]
 #align quiver.path.to_list_injective Quiver.Path.toList_injective

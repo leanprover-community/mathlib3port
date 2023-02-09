@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.choose
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,11 +91,11 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) :
                                   ←
                                   try_core
                                     (
-                                      mk_instance Ne
+                                      mk_instance ne
                                         <|>
                                         retrieve'
                                           do
-                                            let m ← mk_meta_var Ne
+                                            let m ← mk_meta_var ne
                                               set_goals [ m ]
                                               ctxt
                                                 fun
@@ -103,7 +103,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) :
                                                     =>
                                                     do
                                                       let b ← is_proof e
-                                                        Monad.unlessb b
+                                                        monad.unlessb b
                                                           <|
                                                           (
                                                               mk_app ` ` Nonempty.intro [ e ]
@@ -116,10 +116,10 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) :
                                               apply_instance
                                               instantiate_mvars m
                                       )
-                              pure ( some ( Option.guard ( fun _ => nonemp ) Ne ) , nonemp )
+                              pure ( some ( option.guard ( fun _ => nonemp ) ne ) , nonemp )
                           else
                           pure ( none , none )
-                    let ctxt' ← if nonemp then ctxt fun e => not <$> is_proof e else pure ctxt
+                    let ctxt' ← if nonemp then ctxt fun e => bnot <$> is_proof e else pure ctxt
                     let value ← mk_local_def data ( α ctxt' )
                     let t' ← head_beta ( p ( value ctxt' ) )
                     let spec ← mk_local_def spec ( t' ctxt )
@@ -163,8 +163,8 @@ an error complaining about the first attempt.
 unsafe def choose (nondep : Bool) :
     expr → List Name → optParam (Option (Option expr)) none → tactic Unit
   | h, [], _ => fail "expect list of variables"
-  | h, [n], some (some Ne) => do
-    let g ← mk_meta_var Ne
+  | h, [n], some (some ne) => do
+    let g ← mk_meta_var ne
     set_goals [g]
     -- make a reasonable error state
         fail

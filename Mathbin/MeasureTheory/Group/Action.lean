@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem measurePreservingSmul : MeasurePreserving ((· • ·) c) μ μ :=
     map_eq := by
       ext1 s hs
       rw [map_apply (measurable_const_smul c) hs]
-      exact smul_invariant_measure.measure_preimage_smul μ c hs }
+      exact SmulInvariantMeasure.measure_preimage_smul μ c hs }
 #align measure_theory.measure_preserving_smul MeasureTheory.measurePreservingSmul
 #align measure_theory.measure_preserving_vadd MeasureTheory.measure_preserving_vadd
 
@@ -136,7 +136,7 @@ theorem smulInvariantMeasure_tFAE :
   tfae_have 1 ↔ 2; exact ⟨fun h => h.1, fun h => ⟨h⟩⟩
   tfae_have 1 → 6;
   · intro h c
-    exact (measure_preserving_smul c μ).map_eq
+    exact (measurePreservingSmul c μ).map_eq
   tfae_have 6 → 7; exact fun H c => ⟨measurable_const_smul c, H c⟩
   tfae_have 7 → 4; exact fun H c => (H c).measure_preimage_emb (measurableEmbedding_const_smul c)
   tfae_have 4 → 5;
@@ -189,7 +189,7 @@ variable {μ}
 theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) :
     NullMeasurableSet (c • s) μ := by
   simpa only [← preimage_smul_inv] using
-    hs.preimage (measure_preserving_smul _ _).QuasiMeasurePreserving
+    hs.preimage (measurePreservingSmul _ _).quasiMeasurePreserving
 #align measure_theory.null_measurable_set.smul MeasureTheory.NullMeasurableSet.smul
 #align measure_theory.null_measurable_set.vadd MeasureTheory.NullMeasurableSet.vadd
 
@@ -225,7 +225,7 @@ theorem isLocallyFiniteMeasureOfSmulInvariant (hU : IsOpen U) (hne : U.Nonempty)
     IsLocallyFiniteMeasure μ :=
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
-    ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
+    ⟨(· • ·) g ⁻¹' U, (hU.preimage (continuous_id.const_smul _)).mem_nhds hg,
       Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
 #align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasureOfSmulInvariant
 #align measure_theory.is_locally_finite_measure_of_vadd_invariant MeasureTheory.is_locally_finite_measure_of_vadd_invariant
@@ -265,9 +265,9 @@ theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[�
   by
   obtain ⟨k, rfl⟩ := subgroup.mem_zpowers_iff.mp hy
   let e : α ≃ α := MulAction.toPermHom G α x
-  have he : quasi_measure_preserving e μ μ := (measure_preserving_smul x μ).QuasiMeasurePreserving
-  have he' : quasi_measure_preserving e.symm μ μ :=
-    (measure_preserving_smul x⁻¹ μ).QuasiMeasurePreserving
+  have he : QuasiMeasurePreserving e μ μ := (measurePreservingSmul x μ).quasiMeasurePreserving
+  have he' : QuasiMeasurePreserving e.symm μ μ :=
+    (measurePreservingSmul x⁻¹ μ).quasiMeasurePreserving
   simpa only [MulAction.toPermHom_apply, MulAction.toPerm_apply, image_smul, ←
     MonoidHom.map_zpow] using he.image_zpow_ae_eq he' k hs
 #align measure_theory.smul_ae_eq_self_of_mem_zpowers MeasureTheory.smul_ae_eq_self_of_mem_zpowers
@@ -278,8 +278,8 @@ theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddG
     (y +ᵥ s : Set α) =ᵐ[μ] s :=
   by
   letI : MeasurableSpace (Multiplicative G) := (by infer_instance : MeasurableSpace G)
-  letI : smul_invariant_measure (Multiplicative G) α μ :=
-    ⟨fun g => vadd_invariant_measure.measure_preimage_vadd μ (Multiplicative.toAdd g)⟩
+  letI : SmulInvariantMeasure (Multiplicative G) α μ :=
+    ⟨fun g => VaddInvariantMeasure.measure_preimage_vadd μ (Multiplicative.toAdd g)⟩
   letI : HasMeasurableSmul (Multiplicative G) α :=
     { measurable_const_smul := fun g => measurable_const_vadd (Multiplicative.toAdd g)
       measurable_smul_const := fun a =>

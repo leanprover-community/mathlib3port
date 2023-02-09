@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.augment
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ def truncateAugment (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 
 
 @[simp]
 theorem truncateAugment_hom_f (C : ChainComplex V ℕ) {X : V} (f : C.x 0 ⟶ X) (w : C.d 1 0 ≫ f = 0)
-    (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.x i) :=
+    (i : ℕ) : (truncateAugment C f w).hom.f i = 𝟙 (C.x i) :=
   rfl
 #align chain_complex.truncate_augment_hom_f ChainComplex.truncateAugment_hom_f
 
@@ -190,13 +190,13 @@ def augmentTruncate (C : ChainComplex V ℕ) :
 
 @[simp]
 theorem augmentTruncate_hom_f_zero (C : ChainComplex V ℕ) :
-    (augmentTruncate C).Hom.f 0 = 𝟙 (C.x 0) :=
+    (augmentTruncate C).hom.f 0 = 𝟙 (C.x 0) :=
   rfl
 #align chain_complex.augment_truncate_hom_f_zero ChainComplex.augmentTruncate_hom_f_zero
 
 @[simp]
 theorem augmentTruncate_hom_f_succ (C : ChainComplex V ℕ) (i : ℕ) :
-    (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
+    (augmentTruncate C).hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
 #align chain_complex.augment_truncate_hom_f_succ ChainComplex.augmentTruncate_hom_f_succ
 
@@ -283,7 +283,7 @@ def augment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 
     · exact w
     · rw [C.shape, comp_zero]
       simp only [Nat.zero_eq, ComplexShape.up_Rel, zero_add]
-      exact (Nat.one_lt_succ_succ _).Ne
+      exact (Nat.one_lt_succ_succ _).ne
 #align cochain_complex.augment CochainComplex.augment
 
 @[simp]
@@ -337,7 +337,7 @@ def truncateAugment (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f 
 
 @[simp]
 theorem truncateAugment_hom_f (C : CochainComplex V ℕ) {X : V} (f : X ⟶ C.x 0) (w : f ≫ C.d 0 1 = 0)
-    (i : ℕ) : (truncateAugment C f w).Hom.f i = 𝟙 (C.x i) :=
+    (i : ℕ) : (truncateAugment C f w).hom.f i = 𝟙 (C.x i) :=
   rfl
 #align cochain_complex.truncate_augment_hom_f CochainComplex.truncateAugment_hom_f
 
@@ -352,7 +352,7 @@ theorem cochainComplex_d_succ_succ_zero (C : CochainComplex V ℕ) (i : ℕ) : C
   by
   rw [C.shape]
   simp only [ComplexShape.up_Rel, zero_add]
-  exact (Nat.one_lt_succ_succ _).Ne
+  exact (Nat.one_lt_succ_succ _).ne
 #align cochain_complex.cochain_complex_d_succ_succ_zero CochainComplex.cochainComplex_d_succ_succ_zero
 
 /-- Augmenting a truncated complex with the original object and morphism is isomorphic
@@ -387,13 +387,13 @@ def augmentTruncate (C : CochainComplex V ℕ) :
 
 @[simp]
 theorem augmentTruncate_hom_f_zero (C : CochainComplex V ℕ) :
-    (augmentTruncate C).Hom.f 0 = 𝟙 (C.x 0) :=
+    (augmentTruncate C).hom.f 0 = 𝟙 (C.x 0) :=
   rfl
 #align cochain_complex.augment_truncate_hom_f_zero CochainComplex.augmentTruncate_hom_f_zero
 
 @[simp]
 theorem augmentTruncate_hom_f_succ (C : CochainComplex V ℕ) (i : ℕ) :
-    (augmentTruncate C).Hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
+    (augmentTruncate C).hom.f (i + 1) = 𝟙 (C.x (i + 1)) :=
   rfl
 #align cochain_complex.augment_truncate_hom_f_succ CochainComplex.augmentTruncate_hom_f_succ
 

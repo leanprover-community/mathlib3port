@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.bornology.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₂ s₁) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) B))) -> (forall (x : α), Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) x) B) -> (Bornology.{u1} α)
 Case conversion may be inaccurate. Consider using '#align bornology.of_bounded Bornology.ofBoundedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -96,7 +96,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (B : Set.{u1} (Set.{u1} α)), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α)) B) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₂ s₁) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B))) -> (forall (s₁ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₁ B) -> (forall (s₂ : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) s₂ B) -> (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂) B))) -> (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α B) (Set.univ.{u1} α)) -> (Bornology.{u1} α)
 Case conversion may be inaccurate. Consider using '#align bornology.of_bounded' Bornology.ofBounded'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (s₁ s₂ «expr ∈ » B) -/
 /-- A constructor for bornologies by specifying the bounded sets,
 and showing that they satisfy the appropriate conditions. -/
 @[simps]
@@ -106,7 +106,7 @@ def Bornology.ofBounded' {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B
     Bornology α :=
   Bornology.ofBounded B empty_mem subset_mem union_mem fun x =>
     by
-    rw [sUnion_eq_univ_iff] at sUnion_univ
+    rw [unionₛ_eq_univ_iff] at sUnion_univ
     rcases sUnion_univ x with ⟨s, hs, hxs⟩
     exact subset_mem s hs {x} (singleton_subset_iff.mpr hxs)
 #align bornology.of_bounded' Bornology.ofBounded'
@@ -156,7 +156,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_compl_iff Bornology.isBounded_compl_iffₓ'. -/
 @[simp]
 theorem isBounded_compl_iff : IsBounded (sᶜ) ↔ IsCobounded s := by
-  rw [is_bounded_def, is_cobounded_def, compl_compl]
+  rw [isBounded_def, isCobounded_def, compl_compl]
 #align bornology.is_bounded_compl_iff Bornology.isBounded_compl_iff
 
 /- warning: bornology.is_cobounded_compl_iff -> Bornology.isCobounded_compl_iff is a dubious translation:
@@ -206,7 +206,7 @@ alias is_cobounded_compl_iff ↔ is_cobounded.of_compl is_bounded.compl
 @[simp]
 theorem isBounded_empty : IsBounded (∅ : Set α) :=
   by
-  rw [is_bounded_def, compl_empty]
+  rw [isBounded_def, compl_empty]
   exact univ_mem
 #align bornology.is_bounded_empty Bornology.isBounded_empty
 -/
@@ -215,7 +215,7 @@ theorem isBounded_empty : IsBounded (∅ : Set α) :=
 @[simp]
 theorem isBounded_singleton : IsBounded ({x} : Set α) :=
   by
-  rw [is_bounded_def]
+  rw [isBounded_def]
   exact le_cofinite _ (finite_singleton x).compl_mem_cofinite
 #align bornology.is_bounded_singleton Bornology.isBounded_singleton
 -/
@@ -256,7 +256,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_union Bornology.isBounded_unionₓ'. -/
 @[simp]
 theorem isBounded_union : IsBounded (s ∪ t) ↔ IsBounded s ∧ IsBounded t := by
-  simp only [← is_cobounded_compl_iff, compl_union, is_cobounded_inter]
+  simp only [← isCobounded_compl_iff, compl_union, isCobounded_inter]
 #align bornology.is_bounded_union Bornology.isBounded_union
 
 /- warning: bornology.is_bounded.union -> Bornology.IsBounded.union is a dubious translation:
@@ -277,7 +277,7 @@ theorem IsCobounded.superset (hs : IsCobounded s) (ht : s ⊆ t) : IsCobounded t
 
 #print Bornology.IsBounded.subset /-
 theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
-  ht.Superset (compl_subset_compl.mpr hs)
+  ht.superset (compl_subset_compl.mpr hs)
 #align bornology.is_bounded.subset Bornology.IsBounded.subset
 -/
 
@@ -299,10 +299,10 @@ theorem comap_cobounded_le_iff [Bornology β] {f : α → β} :
   by
   refine'
     ⟨fun h s hs => _, fun h t ht =>
-      ⟨(f '' tᶜ)ᶜ, h <| is_cobounded.compl ht, compl_subset_comm.1 <| subset_preimage_image _ _⟩⟩
+      ⟨(f '' tᶜ)ᶜ, h <| IsCobounded.compl ht, compl_subset_comm.1 <| subset_preimage_image _ _⟩⟩
   obtain ⟨t, ht, hts⟩ := h hs.compl
   rw [subset_compl_comm, ← preimage_compl] at hts
-  exact (is_cobounded.compl ht).Subset ((image_subset f hts).trans <| image_preimage_subset _ _)
+  exact (IsCobounded.compl ht).subset ((image_subset f hts).trans <| image_preimage_subset _ _)
 #align bornology.comap_cobounded_le_iff Bornology.comap_cobounded_le_iff
 
 end
@@ -319,7 +319,7 @@ theorem ext_iff_isBounded {t t' : Bornology α} :
     t = t' ↔ ∀ s, @IsBounded α t s ↔ @IsBounded α t' s :=
   ⟨fun h s => h ▸ Iff.rfl, fun h => by
     ext
-    simpa only [is_bounded_def, compl_compl] using h (sᶜ)⟩
+    simpa only [isBounded_def, compl_compl] using h (sᶜ)⟩
 #align bornology.ext_iff_is_bounded Bornology.ext_iff_isBounded
 -/
 
@@ -344,7 +344,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_of_bounded_iff Bornology.isBounded_ofBounded_iffₓ'. -/
 theorem isBounded_ofBounded_iff (B : Set (Set α)) {empty_mem subset_mem union_mem sUnion_univ} :
     @IsBounded _ (ofBounded B empty_mem subset_mem union_mem sUnion_univ) s ↔ s ∈ B := by
-  rw [is_bounded_def, ← Filter.mem_sets, of_bounded_cobounded_sets, Set.mem_setOf_eq, compl_compl]
+  rw [isBounded_def, ← Filter.mem_sets, ofBounded_cobounded_sets, Set.mem_setOf_eq, compl_compl]
 #align bornology.is_bounded_of_bounded_iff Bornology.isBounded_ofBounded_iff
 
 variable [Bornology α]
@@ -399,7 +399,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_bUnion Bornology.isBounded_bunionᵢₓ'. -/
 theorem isBounded_bunionᵢ {s : Set ι} {f : ι → Set α} (hs : s.Finite) :
     IsBounded (⋃ i ∈ s, f i) ↔ ∀ i ∈ s, IsBounded (f i) := by
-  simp only [← is_cobounded_compl_iff, compl_Union, is_cobounded_bInter hs]
+  simp only [← isCobounded_compl_iff, compl_unionᵢ, isCobounded_binterᵢ hs]
 #align bornology.is_bounded_bUnion Bornology.isBounded_bunionᵢ
 
 /- warning: bornology.is_bounded_bUnion_finset -> Bornology.isBounded_bunionᵢ_finset is a dubious translation:
@@ -415,7 +415,7 @@ theorem isBounded_bunionᵢ_finset (s : Finset ι) {f : ι → Set α} :
 
 #print Bornology.isBounded_unionₛ /-
 theorem isBounded_unionₛ {S : Set (Set α)} (hs : S.Finite) :
-    IsBounded (⋃₀ S) ↔ ∀ s ∈ S, IsBounded s := by rw [sUnion_eq_bUnion, is_bounded_bUnion hs]
+    IsBounded (⋃₀ S) ↔ ∀ s ∈ S, IsBounded s := by rw [unionₛ_eq_bunionᵢ, isBounded_bunionᵢ hs]
 #align bornology.is_bounded_sUnion Bornology.isBounded_unionₛ
 -/
 
@@ -427,7 +427,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_Union Bornology.isBounded_unionᵢₓ'. -/
 @[simp]
 theorem isBounded_unionᵢ [Finite ι] {s : ι → Set α} : IsBounded (⋃ i, s i) ↔ ∀ i, IsBounded (s i) :=
-  by rw [← sUnion_range, is_bounded_sUnion (finite_range s), forall_range_iff]
+  by rw [← unionₛ_range, isBounded_unionₛ (finite_range s), forall_range_iff]
 #align bornology.is_bounded_Union Bornology.isBounded_unionᵢ
 
 end Bornology
@@ -477,14 +477,14 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Bornology.{u1} α], Iff (Eq.{succ u1} (Filter.{u1} α) (Bornology.cobounded.{u1} α _inst_1) (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (BoundedSpace.{u1} α _inst_1)
 Case conversion may be inaccurate. Consider using '#align bornology.cobounded_eq_bot_iff Bornology.cobounded_eq_bot_iffₓ'. -/
 theorem cobounded_eq_bot_iff : cobounded α = ⊥ ↔ BoundedSpace α := by
-  rw [← is_bounded_univ, is_bounded_def, compl_univ, empty_mem_iff_bot]
+  rw [← isBounded_univ, isBounded_def, compl_univ, empty_mem_iff_bot]
 #align bornology.cobounded_eq_bot_iff Bornology.cobounded_eq_bot_iff
 
 variable [BoundedSpace α]
 
 #print Bornology.IsBounded.all /-
 theorem IsBounded.all (s : Set α) : IsBounded s :=
-  BoundedSpace.bounded_univ.Subset s.subset_univ
+  BoundedSpace.bounded_univ.subset s.subset_univ
 #align bornology.is_bounded.all Bornology.IsBounded.all
 -/
 

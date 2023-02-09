@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interactive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ unsafe def unfold_wf :=
 unsafe def unfold_aux : tactic Unit := do
   let tgt ← target
   let name ← decl_name
-  let to_unfold := tgt.list_names_with_prefix Name
+  let to_unfold := tgt.list_names_with_prefix name
   guard ¬to_unfold
   -- should we be using simp_lemmas.mk_default?
         simp_lemmas.mk
@@ -171,7 +171,7 @@ unsafe def clear_ : tactic Unit :=
   tactic.repeat do
     let l ← local_context
     l fun h => do
-        let Name.mk_string s p ← return <| local_pp_name h
+        let name.mk_string s p ← return <| local_pp_name h
         guard (s = '_')
         let cl ← infer_type h >>= is_class
         guard ¬cl
@@ -252,7 +252,7 @@ unsafe def generalize_hyp (h : parse (parser.optional ident)) (_ : parse <| tk "
   let g ←
     if ¬l.include_goal then do
         refine ``(generalizeAAux _)
-        some <$> (Prod.mk <$> tactic.intro x' <*> tactic.intro h')
+        some <$> (prod.mk <$> tactic.intro x' <*> tactic.intro h')
       else pure none
   let n ← l.get_locals >>= tactic.revert_lst
   generalize h () p
@@ -308,8 +308,8 @@ unsafe def source_fields (missing : List Name) (e : pexpr) : tactic (List (Name 
   let t ← infer_type e
   let struct_n : Name := t.get_app_fn.const_name
   let fields ← expanded_field_list struct_n
-  let exp_fields := fields.filterₓ fun x => x.2 ∈ missing
-  exp_fields fun ⟨p, n⟩ => (Prod.mk n ∘ to_pexpr) <$> mk_mapp (n p) [none, some e]
+  let exp_fields := fields.filter fun x => x.2 ∈ missing
+  exp_fields fun ⟨p, n⟩ => (prod.mk n ∘ to_pexpr) <$> mk_mapp (n p) [none, some e]
 #align tactic.interactive.source_fields tactic.interactive.source_fields
 
 unsafe def collect_struct' : pexpr → StateT (List <| expr × structure_instance_info) tactic pexpr
@@ -317,7 +317,7 @@ unsafe def collect_struct' : pexpr → StateT (List <| expr × structure_instanc
     let some str ← pure e.get_structure_instance_info |
       e.traverse collect_struct'
     let v ← monadLift mk_mvar
-    modify (List.cons (v, str))
+    modify (list.cons (v, str))
     pure <| to_pexpr v
 #align tactic.interactive.collect_struct' tactic.interactive.collect_struct'
 
@@ -330,11 +330,11 @@ unsafe def refine_one (str : structure_instance_info) :
   let tgt ← target >>= whnf
   let struct_n : Name := tgt.get_app_fn.const_name
   let exp_fields ← expanded_field_list struct_n
-  let missing_f := exp_fields.filterₓ fun f => (f.2 : Name) ∉ str.field_names
+  let missing_f := exp_fields.filter fun f => (f.2 : Name) ∉ str.field_names
   let (src_field_names, src_field_vals) ←
     (@List.unzip Name _ ∘ List.join) <$> str.sources.mapM (source_fields <| missing_f.map Prod.snd)
-  let provided := exp_fields.filterₓ fun f => (f.2 : Name) ∈ str.field_names
-  let missing_f' := missing_f.filterₓ fun x => x.2 ∉ src_field_names
+  let provided := exp_fields.filter fun f => (f.2 : Name) ∈ str.field_names
+  let missing_f' := missing_f.filter fun x => x.2 ∉ src_field_names
   let vs ← mk_mvar_list missing_f'.length
   let (field_values, new_goals) ← List.unzip <$> (str.field_values.mapM collect_struct : tactic _)
   let e' ←
@@ -486,7 +486,7 @@ unsafe def guard_target_mod_implicit (p : parse texpr) : tactic Unit := do
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.many -/
 /-- Test that `t` is the tag of the main goal. -/
 unsafe def guard_tags (tags : parse (parser.many ident)) : tactic Unit := do
-  let (t : List Name) ← get_main_tag
+  let (t : list name) ← get_main_tag
   guard (t = tags)
 #align tactic.interactive.guard_tags tactic.interactive.guard_tags
 
@@ -508,18 +508,18 @@ unsafe def success_if_fail_with_msg (tac : tactic.interactive.itactic) :=
 
 /-- Get the field of the current goal. -/
 unsafe def get_current_field : tactic Name := do
-  let [_, Field, str] ← get_main_tag
-  expr.const_name <$> resolve_name (Field str)
+  let [_, field, str] ← get_main_tag
+  expr.const_name <$> resolve_name (field str)
 #align tactic.interactive.get_current_field tactic.interactive.get_current_field
 
 unsafe def field (n : parse ident) (tac : itactic) : tactic Unit := do
   let gs ← get_goals
   let ts ← gs.mapM get_tag
-  let ([g], gs') ← pure <| (List.zip gs ts).partitionₓ fun x => x.snd.get? 1 = some n
+  let ([g], gs') ← pure <| (List.zip gs ts).partition fun x => x.snd.get? 1 = some n
   set_goals [g.1]
   tac
   done
-  set_goals <| gs' Prod.fst
+  set_goals <| gs' prod.fst
 #align tactic.interactive.field tactic.interactive.field
 
 /-- `have_field`, used after `refine_struct _` poses `field` as a local constant
@@ -849,7 +849,7 @@ unsafe def change' (q : parse texpr) :
   | none, loc.ns [some h] => do
     let eq ← i_to_expr q
     let eh ← get_local h
-    change_core Eq (some eh)
+    change_core eq (some eh)
   | none, _ => fail "change-at does not support multiple locations"
   | some w, l => do
     let l' ← loc.get_local_pp_names l
@@ -905,7 +905,7 @@ unsafe def set (h_simp : parse (parser.optional (tk "!"))) (a : parse ident)
   let pv ← to_expr ``(($(pv) : $(tp)))
   let tp ← instantiate_mvars tp
   definev a tp pv
-  when h_simp <| change' ``($(pv)) (some (expr.const a [])) <| Interactive.Loc.wildcard
+  when h_simp <| change' ``($(pv)) (some (expr.const a [])) <| interactive.loc.wildcard
   match rev_name with
     | some (flip, id) => do
       let nv ← get_local a
@@ -947,19 +947,19 @@ private unsafe def indent_bindents (l r : String) : Option (List Name) → expr 
   | some ns, e => do
     let e ← pp e
     let ns := format_names ns
-    let margin := l.length + ns.toString.length + " : ".length
+    let margin := l.length + ns.to_string.length + " : ".length
     f!"{(← l)}{(← ns)} : {(← format.nest margin e)}{← r}"
 #align tactic.interactive.indent_bindents tactic.interactive.indent_bindents
 
 private unsafe def format_binders : List Name × BinderInfo × expr → tactic format
-  | (ns, BinderInfo.default, t) => indent_bindents "(" ")" ns t
-  | (ns, BinderInfo.implicit, t) => indent_bindents "{" "}" ns t
-  | (ns, BinderInfo.strict_implicit, t) => indent_bindents "⦃" "⦄" ns t
-  | ([n], BinderInfo.inst_implicit, t) =>
-    if "_".isPrefixOfₓ n.toString then indent_bindents "[" "]" none t
+  | (ns, binder_info.default, t) => indent_bindents "(" ")" ns t
+  | (ns, binder_info.implicit, t) => indent_bindents "{" "}" ns t
+  | (ns, binder_info.strict_implicit, t) => indent_bindents "⦃" "⦄" ns t
+  | ([n], binder_info.inst_implicit, t) =>
+    if "_".isPrefixOf n.toString then indent_bindents "[" "]" none t
     else indent_bindents "[" "]" [n] t
-  | (ns, BinderInfo.inst_implicit, t) => indent_bindents "[" "]" ns t
-  | (ns, BinderInfo.aux_decl, t) => indent_bindents "(" ")" ns t
+  | (ns, binder_info.inst_implicit, t) => indent_bindents "[" "]" ns t
+  | (ns, binder_info.aux_decl, t) => indent_bindents "(" ")" ns t
 #align tactic.interactive.format_binders tactic.interactive.format_binders
 
 private unsafe def partition_vars' (s : name_set) :
@@ -1068,14 +1068,14 @@ unsafe def extract_goal (print_use : parse <| tk "!" *> pure true <|> pure false
         | none, _ => to_fmt "example"
         | some n, tt => f! "lemma {n}"
         | some n, ff => f! "def {n}"
-      let cxt₀ ← compact_decl cxt₀ >>= List.mapM format_binders
-      let cxt₁ ← compact_decl cxt₁ >>= List.mapM format_binders
+      let cxt₀ ← compact_decl cxt₀ >>= list.mmap format_binders
+      let cxt₁ ← compact_decl cxt₁ >>= list.mmap format_binders
       let stmt ← f!"{← tgt} :="
       let fmt :=
         format.group <|
           format.nest 2 <|
-            title ++ cxt₀ (fun acc x => Acc ++ format.group (format.line ++ x)) "" ++
-                    format.join (List.map (fun x => format.line ++ x) cxt₁) ++
+            title ++ cxt₀ (fun acc x => acc ++ format.group (format.line ++ x)) "" ++
+                    format.join (list.map (fun x => format.line ++ x) cxt₁) ++
                   " :" ++
                 format.line ++
               stmt

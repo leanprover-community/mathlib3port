@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 
 ! This file was ported from Lean 3 source module measure_theory.measure.sub
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
   by
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measure α :=
-    @MeasureTheory.Measure.ofMeasurable α _
+    @measure_theory.measure.of_measurable α _
       (fun (t : Set α) (h_t_measurable_set : MeasurableSet t) => μ t - ν t) (by simp)
       (by
         intro g h_meas h_disj; simp only; rw [Ennreal.tsum_sub]
@@ -94,14 +94,14 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
       by
       rw [MeasureTheory.Measure.sub_def]
       apply le_antisymm
-      · apply @infₛ_le (Measure α) measure.complete_semilattice_Inf
+      · apply @Inf_le (Measure α) Measure.completeSemilatticeInf
         simp [le_refl, add_comm, h_measure_sub_add]
-      apply @le_infₛ (Measure α) measure.complete_semilattice_Inf
+      apply @le_Inf (Measure α) Measure.completeSemilatticeInf
       intro d h_d
-      rw [← h_measure_sub_add, mem_set_of_eq, add_comm d] at h_d
-      apply measure.le_of_add_le_add_left h_d
+      rw [← h_measure_sub_add, mem_setOf_eq, add_comm d] at h_d
+      apply Measure.le_of_add_le_add_left h_d
     rw [h_measure_sub_eq]
-    apply measure.of_measurable_apply _ h₁
+    apply Measure.ofMeasurable_apply _ h₁
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
 theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
@@ -114,15 +114,15 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     (μ - ν).restrict s = μ.restrict s - ν.restrict s :=
   by
   repeat' rw [sub_def]
-  have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
-  rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
+  have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, Measure.le_add_right le_rfl⟩
+  rw [restrict_infₛ_eq_infₛ_restrict h_nonempty h_meas_s]
   apply le_antisymm
   · refine' infₛ_le_infₛ_of_forall_exists_le _
     intro ν' h_ν'_in
-    rw [mem_set_of_eq] at h_ν'_in
+    rw [mem_setOf_eq] at h_ν'_in
     refine' ⟨ν'.restrict s, _, restrict_le_self⟩
     refine' ⟨ν' + (⊤ : Measure α).restrict (sᶜ), _, _⟩
-    · rw [mem_set_of_eq, add_right_comm, measure.le_iff]
+    · rw [mem_setOf_eq, add_right_comm, Measure.le_iff]
       intro t h_meas_t
       repeat' rw [← measure_inter_add_diff t h_meas_s]
       refine' add_le_add _ _
@@ -134,13 +134,13 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
       · rw [add_apply, restrict_apply (h_meas_t.diff h_meas_s), diff_eq, inter_assoc, inter_self, ←
           add_apply]
         have h_mu_le_add_top : μ ≤ ν' + ν + ⊤ := by simp only [add_top, le_top]
-        exact measure.le_iff'.1 h_mu_le_add_top _
+        exact Measure.le_iff'.1 h_mu_le_add_top _
     · ext1 t h_meas_t
       simp [restrict_apply h_meas_t, restrict_apply (h_meas_t.inter h_meas_s), inter_assoc]
   · refine' infₛ_le_infₛ_of_forall_exists_le _
     refine' ball_image_iff.2 fun t h_t_in => ⟨t.restrict s, _, le_rfl⟩
     rw [Set.mem_setOf_eq, ← restrict_add]
-    exact restrict_mono subset.rfl h_t_in
+    exact restrict_mono Subset.rfl h_t_in
 #align measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict
 
 theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.restrict s)

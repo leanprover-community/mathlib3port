@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.aut
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,14 +55,14 @@ This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
 instance : Group (RingAut R) := by
   refine_struct
-            { mul := fun g h => RingEquiv.trans h g
-              one := RingEquiv.refl R
-              inv := RingEquiv.symm
+            { mul := fun g h => ring_equiv.trans h g
+              one := ring_equiv.refl R
+              inv := ring_equiv.symm
               div := _
-              npow := @npowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩
+              npow := @npow_rec _ ⟨ring_equiv.refl R⟩ ⟨fun g h => ring_equiv.trans h g⟩
               zpow :=
-                @zpowRec _ ⟨RingEquiv.refl R⟩ ⟨fun g h => RingEquiv.trans h g⟩
-                  ⟨RingEquiv.symm⟩ } <;>
+                @zpow_rec _ ⟨ring_equiv.refl R⟩ ⟨fun g h => ring_equiv.trans h g⟩
+                  ⟨ring_equiv.symm⟩ } <;>
           intros <;>
         ext <;>
       try rfl <;>
@@ -79,7 +79,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_aut.to_add_aut RingAut.toAddAutₓ'. -/
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
 def toAddAut : RingAut R →* AddAut R := by
-  refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
+  refine_struct { toFun := ring_equiv.to_add_equiv } <;> intros <;> rfl
 #align ring_aut.to_add_aut RingAut.toAddAut
 
 /- warning: ring_aut.to_mul_aut -> RingAut.toMulAut is a dubious translation:
@@ -90,7 +90,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_aut.to_mul_aut RingAut.toMulAutₓ'. -/
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
 def toMulAut : RingAut R →* MulAut R := by
-  refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
+  refine_struct { toFun := ring_equiv.to_mul_equiv } <;> intros <;> rfl
 #align ring_aut.to_mul_aut RingAut.toMulAut
 
 /- warning: ring_aut.to_perm -> RingAut.toPerm is a dubious translation:
@@ -101,7 +101,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_aut.to_perm RingAut.toPermₓ'. -/
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
 def toPerm : RingAut R →* Equiv.Perm R := by
-  refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
+  refine_struct { toFun := ring_equiv.to_equiv } <;> intros <;> rfl
 #align ring_aut.to_perm RingAut.toPerm
 
 end mul_add

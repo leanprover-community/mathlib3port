@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.sigma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
 protected def p : Mvpfunctor n :=
-  ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
+  ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).b x.2⟩
 #align mvqpf.sigma.P Mvqpf.Sigma.p
 
 /-- abstraction function for dependent sums -/
@@ -75,10 +75,10 @@ instance : Mvqpf (Sigma F) where
   p := Sigma.p F
   abs := Sigma.abs F
   repr := Sigma.repr F
-  abs_repr := by rintro α ⟨x, f⟩ <;> simp [sigma.repr, sigma.abs, abs_repr]
+  abs_repr := by rintro α ⟨x, f⟩ <;> simp [Sigma.repr, Sigma.abs, abs_repr]
   abs_map := by
-    rintro α β f ⟨x, g⟩ <;> simp [sigma.abs, Mvpfunctor.map_eq] <;>
-      simp [(· <$$> ·), mvfunctor._match_1, ← abs_map, ← Mvpfunctor.map_eq]
+    rintro α β f ⟨x, g⟩ <;> simp [Sigma.abs, Mvpfunctor.map_eq] <;>
+      simp [(· <$$> ·), Mvfunctor._match1, ← abs_map, ← Mvpfunctor.map_eq]
 
 end Sigma
 
@@ -90,7 +90,7 @@ variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
 protected def p : Mvpfunctor n :=
-  ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
+  ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).b (x a) i⟩
 #align mvqpf.pi.P Mvqpf.Pi.p
 
 /-- abstraction function for dependent products -/
@@ -107,9 +107,9 @@ instance : Mvqpf (Pi F) where
   p := Pi.p F
   abs := Pi.abs F
   repr := Pi.repr F
-  abs_repr := by rintro α f <;> ext <;> simp [pi.repr, pi.abs, abs_repr]
+  abs_repr := by rintro α f <;> ext <;> simp [Pi.repr, Pi.abs, abs_repr]
   abs_map := by
-    rintro α β f ⟨x, g⟩ <;> simp only [pi.abs, Mvpfunctor.map_eq] <;> ext <;>
+    rintro α β f ⟨x, g⟩ <;> simp only [Pi.abs, Mvpfunctor.map_eq] <;> ext <;>
           simp only [(· <$$> ·)] <;>
         simp only [← abs_map, Mvpfunctor.map_eq] <;>
       rfl

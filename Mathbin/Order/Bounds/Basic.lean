@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.bounds.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -431,13 +431,13 @@ theorem IsGLB.lowerBounds_eq (h : IsGLB s a) : lowerBounds s = Iic a :=
 
 #print IsLeast.lowerBounds_eq /-
 theorem IsLeast.lowerBounds_eq (h : IsLeast s a) : lowerBounds s = Iic a :=
-  h.IsGLB.lowerBounds_eq
+  h.isGLB.lowerBounds_eq
 #align is_least.lower_bounds_eq IsLeast.lowerBounds_eq
 -/
 
 #print IsGreatest.upperBounds_eq /-
 theorem IsGreatest.upperBounds_eq (h : IsGreatest s a) : upperBounds s = Ici a :=
-  h.IsLUB.upperBounds_eq
+  h.isLUB.upperBounds_eq
 #align is_greatest.upper_bounds_eq IsGreatest.upperBounds_eq
 -/
 
@@ -690,7 +690,7 @@ then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
 theorem IsLUB.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLUB s a) (ht : IsLUB t b) :
     IsLUB (s ∪ t) (a ⊔ b) :=
   ⟨fun c h =>
-    h.casesOn (fun h => le_sup_of_le_left <| hs.left h) fun h => le_sup_of_le_right <| ht.left h,
+    h.cases_on (fun h => le_sup_of_le_left <| hs.left h) fun h => le_sup_of_le_right <| ht.left h,
     fun c hc =>
     sup_le (hs.right fun d hd => hc <| Or.inl hd) (ht.right fun d hd => hc <| Or.inr hd)⟩
 #align is_lub.union IsLUB.union
@@ -718,7 +718,7 @@ Case conversion may be inaccurate. Consider using '#align is_least.union IsLeast
 then `min a b` is the least element of `s ∪ t`. -/
 theorem IsLeast.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsLeast s a)
     (hb : IsLeast t b) : IsLeast (s ∪ t) (min a b) :=
-  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGLB.union hb.IsGLB).1⟩
+  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.isGLB.union hb.isGLB).1⟩
 #align is_least.union IsLeast.union
 
 /- warning: is_greatest.union -> IsGreatest.union is a dubious translation:
@@ -731,7 +731,7 @@ Case conversion may be inaccurate. Consider using '#align is_greatest.union IsGr
 then `max a b` is the greatest element of `s ∪ t`. -/
 theorem IsGreatest.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsGreatest s a)
     (hb : IsGreatest t b) : IsGreatest (s ∪ t) (max a b) :=
-  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLUB.union hb.IsLUB).1⟩
+  ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.isLUB.union hb.isLUB).1⟩
 #align is_greatest.union IsGreatest.union
 
 /- warning: is_lub.inter_Ici_of_mem -> IsLUB.inter_Ici_of_mem is a dubious translation:
@@ -809,13 +809,13 @@ theorem isGreatest_Iic : IsGreatest (Iic a) a :=
 
 #print isLUB_Iic /-
 theorem isLUB_Iic : IsLUB (Iic a) a :=
-  isGreatest_Iic.IsLUB
+  isGreatest_Iic.isLUB
 #align is_lub_Iic isLUB_Iic
 -/
 
 #print isGLB_Ici /-
 theorem isGLB_Ici : IsGLB (Ici a) a :=
-  isLeast_Ici.IsGLB
+  isLeast_Ici.isGLB
 #align is_glb_Ici isGLB_Ici
 -/
 
@@ -833,13 +833,13 @@ theorem lowerBounds_Ici : lowerBounds (Ici a) = Iic a :=
 
 #print bddAbove_Iic /-
 theorem bddAbove_Iic : BddAbove (Iic a) :=
-  isLUB_Iic.BddAbove
+  isLUB_Iic.bddAbove
 #align bdd_above_Iic bddAbove_Iic
 -/
 
 #print bddBelow_Ici /-
 theorem bddBelow_Ici : BddBelow (Ici a) :=
-  isGLB_Ici.BddBelow
+  isGLB_Ici.bddBelow
 #align bdd_below_Ici bddBelow_Ici
 -/
 
@@ -957,25 +957,25 @@ theorem isLeast_singleton : IsLeast {a} a :=
 
 #print isLUB_singleton /-
 theorem isLUB_singleton : IsLUB {a} a :=
-  isGreatest_singleton.IsLUB
+  isGreatest_singleton.isLUB
 #align is_lub_singleton isLUB_singleton
 -/
 
 #print isGLB_singleton /-
 theorem isGLB_singleton : IsGLB {a} a :=
-  isLeast_singleton.IsGLB
+  isLeast_singleton.isGLB
 #align is_glb_singleton isGLB_singleton
 -/
 
 #print bddAbove_singleton /-
 theorem bddAbove_singleton : BddAbove ({a} : Set α) :=
-  isLUB_singleton.BddAbove
+  isLUB_singleton.bddAbove
 #align bdd_above_singleton bddAbove_singleton
 -/
 
 #print bddBelow_singleton /-
 theorem bddBelow_singleton : BddBelow ({a} : Set α) :=
-  isGLB_singleton.BddBelow
+  isGLB_singleton.bddBelow
 #align bdd_below_singleton bddBelow_singleton
 -/
 
@@ -1054,7 +1054,7 @@ theorem isGreatest_Icc (h : a ≤ b) : IsGreatest (Icc a b) b :=
 
 #print isLUB_Icc /-
 theorem isLUB_Icc (h : a ≤ b) : IsLUB (Icc a b) b :=
-  (isGreatest_Icc h).IsLUB
+  (isGreatest_Icc h).isLUB
 #align is_lub_Icc isLUB_Icc
 -/
 
@@ -1072,7 +1072,7 @@ theorem isLeast_Icc (h : a ≤ b) : IsLeast (Icc a b) a :=
 
 #print isGLB_Icc /-
 theorem isGLB_Icc (h : a ≤ b) : IsGLB (Icc a b) a :=
-  (isLeast_Icc h).IsGLB
+  (isLeast_Icc h).isGLB
 #align is_glb_Icc isGLB_Icc
 -/
 
@@ -1090,7 +1090,7 @@ theorem isGreatest_Ioc (h : a < b) : IsGreatest (Ioc a b) b :=
 
 #print isLUB_Ioc /-
 theorem isLUB_Ioc (h : a < b) : IsLUB (Ioc a b) b :=
-  (isGreatest_Ioc h).IsLUB
+  (isGreatest_Ioc h).isLUB
 #align is_lub_Ioc isLUB_Ioc
 -/
 
@@ -1108,7 +1108,7 @@ theorem isLeast_Ico (h : a < b) : IsLeast (Ico a b) a :=
 
 #print isGLB_Ico /-
 theorem isGLB_Ico (h : a < b) : IsGLB (Ico a b) a :=
-  (isLeast_Ico h).IsGLB
+  (isLeast_Ico h).isGLB
 #align is_glb_Ico isGLB_Ico
 -/
 
@@ -1244,7 +1244,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsLUB.{u1} α _inst_1 (Set.univ.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_lub_univ isLUB_univₓ'. -/
 theorem isLUB_univ [OrderTop α] : IsLUB (univ : Set α) ⊤ :=
-  isGreatest_univ.IsLUB
+  isGreatest_univ.isLUB
 #align is_lub_univ isLUB_univ
 
 /- warning: order_bot.lower_bounds_univ -> OrderBot.lowerBounds_univ is a dubious translation:
@@ -1283,7 +1283,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], IsGLB.{u1} α _inst_1 (Set.univ.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3))
 Case conversion may be inaccurate. Consider using '#align is_glb_univ isGLB_univₓ'. -/
 theorem isGLB_univ [OrderBot α] : IsGLB (univ : Set α) ⊥ :=
-  isLeast_univ.IsGLB
+  isLeast_univ.isGLB
 #align is_glb_univ isGLB_univ
 
 #print NoMaxOrder.upperBounds_univ /-
@@ -1323,7 +1323,7 @@ theorem not_bddBelow_univ [NoMinOrder α] : ¬BddBelow (univ : Set α) :=
 #print upperBounds_empty /-
 @[simp]
 theorem upperBounds_empty : upperBounds (∅ : Set α) = univ := by
-  simp only [upperBounds, eq_univ_iff_forall, mem_set_of_eq, ball_empty_iff, forall_true_iff]
+  simp only [upperBounds, eq_univ_iff_forall, mem_setOf_eq, ball_empty_iff, forall_true_iff]
 #align upper_bounds_empty upperBounds_empty
 -/
 
@@ -1391,7 +1391,7 @@ theorem IsLUB.nonempty [NoMinOrder α] (hs : IsLUB s a) : s.Nonempty :=
 
 #print IsGLB.nonempty /-
 theorem IsGLB.nonempty [NoMaxOrder α] (hs : IsGLB s a) : s.Nonempty :=
-  hs.dual.Nonempty
+  hs.dual.nonempty
 #align is_glb.nonempty IsGLB.nonempty
 -/
 

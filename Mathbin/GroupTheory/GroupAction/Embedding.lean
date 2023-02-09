@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.embedding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ instance [Group G] [MulAction G β] [MulAction Gᵐᵒᵖ β] [IsCentralScalar G
 
 @[to_additive]
 instance [Group G] [MulAction G β] : MulAction G (α ↪ β) :=
-  FunLike.coe_injective.MulAction _ coe_smul
+  FunLike.coe_injective.mulAction _ coe_smul
 
 end Function.Embedding
 

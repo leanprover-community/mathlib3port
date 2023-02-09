@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.terminated_stable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,8 +34,8 @@ variable [DivisionRing K]
 theorem continuantsAux_stable_step_of_terminated (terminated_at_n : g.TerminatedAt n) :
     g.continuantsAux (n + 2) = g.continuantsAux (n + 1) :=
   by
-  rw [terminated_at_iff_s_none] at terminated_at_n
-  simp only [terminated_at_n, continuants_aux]
+  rw [terminatedAt_iff_s_none] at terminated_at_n
+  simp only [terminated_at_n, continuantsAux]
 #align generalized_continued_fraction.continuants_aux_stable_step_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_step_of_terminated
 
 theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : g.TerminatedAt n) :
@@ -43,7 +43,7 @@ theorem continuantsAux_stable_of_terminated (n_lt_m : n < m) (terminated_at_n : 
   by
   refine' Nat.le_induction rfl (fun k hnk hk => _) _ n_lt_m
   rcases Nat.exists_eq_add_of_lt hnk with ⟨k, rfl⟩
-  refine' (continuants_aux_stable_step_of_terminated _).trans hk
+  refine' (continuantsAux_stable_step_of_terminated _).trans hk
   exact terminated_stable (Nat.le_add_right _ _) terminated_at_n
 #align generalized_continued_fraction.continuants_aux_stable_of_terminated GeneralizedContinuedFraction.continuantsAux_stable_of_terminated
 
@@ -52,15 +52,15 @@ theorem convergents'Aux_stable_step_of_terminated {s : SeqCat <| Pair K}
   by
   change s.nth n = none at terminated_at_n
   induction' n with n IH generalizing s
-  case zero => simp only [convergents'_aux, terminated_at_n, SeqCat.head]
+  case zero => simp only [convergents'Aux, terminated_at_n, SeqCat.head]
   case succ =>
     cases' s_head_eq : s.head with gp_head
-    case none => simp only [convergents'_aux, s_head_eq]
+    case none => simp only [convergents'Aux, s_head_eq]
     case
       some =>
       have : s.tail.terminated_at n := by
         simp only [SeqCat.TerminatedAt, s.nth_tail, terminated_at_n]
-      simp only [convergents'_aux, s_head_eq, IH this]
+      simp only [convergents'Aux, s_head_eq, IH this]
 #align generalized_continued_fraction.convergents'_aux_stable_step_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_step_of_terminated
 
 theorem convergents'Aux_stable_of_terminated {s : SeqCat <| Pair K} (n_le_m : n ≤ m)
@@ -68,14 +68,14 @@ theorem convergents'Aux_stable_of_terminated {s : SeqCat <| Pair K} (n_le_m : n 
   by
   induction' n_le_m with m n_le_m IH
   · rfl
-  · refine' (convergents'_aux_stable_step_of_terminated _).trans IH
+  · refine' (convergents'Aux_stable_step_of_terminated _).trans IH
     exact s.terminated_stable n_le_m terminated_at_n
 #align generalized_continued_fraction.convergents'_aux_stable_of_terminated GeneralizedContinuedFraction.convergents'Aux_stable_of_terminated
 
 theorem continuants_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :
     g.continuants m = g.continuants n := by
   simp only [nth_cont_eq_succ_nth_cont_aux,
-    continuants_aux_stable_of_terminated (nat.pred_le_iff.elim_left n_le_m) terminated_at_n]
+    continuantsAux_stable_of_terminated (nat.pred_le_iff.elim_left n_le_m) terminated_at_n]
 #align generalized_continued_fraction.continuants_stable_of_terminated GeneralizedContinuedFraction.continuants_stable_of_terminated
 
 theorem numerators_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :
@@ -96,7 +96,7 @@ theorem convergents_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g
 
 theorem convergents'_stable_of_terminated (n_le_m : n ≤ m) (terminated_at_n : g.TerminatedAt n) :
     g.convergents' m = g.convergents' n := by
-  simp only [convergents', convergents'_aux_stable_of_terminated n_le_m terminated_at_n]
+  simp only [convergents', convergents'Aux_stable_of_terminated n_le_m terminated_at_n]
 #align generalized_continued_fraction.convergents'_stable_of_terminated GeneralizedContinuedFraction.convergents'_stable_of_terminated
 
 end GeneralizedContinuedFraction

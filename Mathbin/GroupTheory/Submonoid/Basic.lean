@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -460,7 +460,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.mem_infi Submonoid.mem_infᵢₓ'. -/
 @[to_additive]
 theorem mem_infᵢ {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
+  simp only [infᵢ, mem_infₛ, Set.forall_range_iff]
 #align submonoid.mem_infi Submonoid.mem_infᵢ
 #align add_submonoid.mem_infi AddSubmonoid.mem_infᵢ
 
@@ -472,7 +472,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.coe_infi Submonoid.coe_infᵢₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_infᵢ {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
+  simp only [infᵢ, coe_infₛ, Set.binterᵢ_range]
 #align submonoid.coe_infi Submonoid.coe_infᵢ
 #align add_submonoid.coe_infi AddSubmonoid.coe_infᵢ
 
@@ -869,7 +869,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_3 : MulOneClass.{u1} N] (f : MonoidHom.{u2, u1} M N _inst_1 _inst_3), Eq.{succ u2} (Submonoid.{u2} M _inst_1) (MonoidHom.eqLocusM.{u2, u1} M N _inst_1 _inst_3 f f) (Top.top.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instTopSubmonoid.{u2} M _inst_1))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_sameₓ'. -/
 @[simp, to_additive]
-theorem eqLocusM_same (f : M →* N) : f.eqLocus f = ⊤ :=
+theorem eqLocusM_same (f : M →* N) : f.eqLocusM f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
 #align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_same
 #align add_monoid_hom.eq_mlocus_same AddMonoidHom.eqLocusM_same
@@ -884,7 +884,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.eq_on_mclos
 @[to_additive
       "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
 theorem eqOn_closureM {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=
-  show closure s ≤ f.eqLocus g from closure_le.2 h
+  show closure s ≤ f.eqLocusM g from closure_le.2 h
 #align monoid_hom.eq_on_mclosure MonoidHom.eqOn_closureM
 #align add_monoid_hom.eq_on_mclosure AddMonoidHom.eqOn_closureM
 

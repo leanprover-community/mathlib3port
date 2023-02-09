@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.order.floor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ variable {α β γ : Type _} [LinearOrderedRing α] [FloorRing α]
 theorem tendsto_floor_atTop : Tendsto (floor : α → ℤ) atTop atTop :=
   floor_mono.tendsto_atTop_atTop fun b =>
     ⟨(b + 1 : ℤ), by
-      rw [floor_int_cast]
+      rw [floor_intCast]
       exact (lt_add_one _).le⟩
 #align tendsto_floor_at_top tendsto_floor_atTop
 
@@ -53,7 +53,7 @@ theorem tendsto_ceil_atTop : Tendsto (ceil : α → ℤ) atTop atTop :=
 theorem tendsto_ceil_atBot : Tendsto (ceil : α → ℤ) atBot atBot :=
   ceil_mono.tendsto_atBot_atBot fun b =>
     ⟨(b - 1 : ℤ), by
-      rw [ceil_int_cast]
+      rw [ceil_intCast]
       exact (sub_one_lt _).le⟩
 #align tendsto_ceil_at_bot tendsto_ceil_atBot
 
@@ -73,16 +73,16 @@ theorem tendsto_floor_right' [OrderClosedTopology α] (n : ℤ) :
     Tendsto (fun x => floor x : α → α) (𝓝[≥] n) (𝓝 n) :=
   by
   rw [← nhdsWithin_Ico_eq_nhdsWithin_Ici (lt_add_one (n : α))]
-  simpa only [floor_int_cast] using
-    (continuousOn_floor n _ (left_mem_Ico.mpr <| lt_add_one (_ : α))).Tendsto
+  simpa only [floor_intCast] using
+    (continuousOn_floor n _ (left_mem_Ico.mpr <| lt_add_one (_ : α))).tendsto
 #align tendsto_floor_right' tendsto_floor_right'
 
 theorem tendsto_ceil_left' [OrderClosedTopology α] (n : ℤ) :
     Tendsto (fun x => ceil x : α → α) (𝓝[≤] n) (𝓝 n) :=
   by
   rw [← nhdsWithin_Ioc_eq_nhdsWithin_Iic (sub_one_lt (n : α))]
-  simpa only [ceil_int_cast] using
-    (continuousOn_ceil _ _ (right_mem_Ioc.mpr <| sub_one_lt (_ : α))).Tendsto
+  simpa only [ceil_intCast] using
+    (continuousOn_ceil _ _ (right_mem_Ioc.mpr <| sub_one_lt (_ : α))).tendsto
 #align tendsto_ceil_left' tendsto_ceil_left'
 
 theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) :
@@ -203,30 +203,30 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
       exact ⟨trivial, lt_or_le p.2 _⟩
     refine' ContinuousWithinAt.mono _ this
     refine' ContinuousWithinAt.union _ _
-    · simp only [ContinuousWithinAt, fract_int_cast, nhdsWithin_prod_eq, nhdsWithin_univ, id.def,
-        comp_app, Prod.map_mk]
+    · simp only [ContinuousWithinAt, fract_intCast, nhdsWithin_prod_eq, nhdsWithin_univ, id.def,
+        comp_apply, Prod.map_mk]
       have : (uncurry f) (s, 0) = (uncurry f) (s, (1 : α)) := by simp [uncurry, hf]
       rw [this]
-      refine' (h _ ⟨⟨⟩, by exact_mod_cast right_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp _
+      refine' (h _ ⟨⟨⟩, by exact_mod_cast right_mem_Icc.2 (zero_le_one' α)⟩).tendsto.comp _
       rw [nhdsWithin_prod_eq, nhdsWithin_univ]
       rw [nhdsWithin_Icc_eq_nhdsWithin_Iic (zero_lt_one' α)]
       exact
         tendsto_id.prod_map
           (tendsto_nhdsWithin_mono_right Iio_subset_Iic_self <| tendsto_fract_left _)
-    · simp only [ContinuousWithinAt, fract_int_cast, nhdsWithin_prod_eq, nhdsWithin_univ, id.def,
-        comp_app, Prod.map_mk]
-      refine' (h _ ⟨⟨⟩, by exact_mod_cast left_mem_Icc.2 (zero_le_one' α)⟩).Tendsto.comp _
+    · simp only [ContinuousWithinAt, fract_intCast, nhdsWithin_prod_eq, nhdsWithin_univ, id.def,
+        comp_apply, Prod.map_mk]
+      refine' (h _ ⟨⟨⟩, by exact_mod_cast left_mem_Icc.2 (zero_le_one' α)⟩).tendsto.comp _
       rw [nhdsWithin_prod_eq, nhdsWithin_univ, nhdsWithin_Icc_eq_nhdsWithin_Ici (zero_lt_one' α)]
       exact tendsto_id.prod_map (tendsto_fract_right _)
   · have : t ∈ Ioo (floor t : α) ((floor t : α) + 1) :=
       ⟨lt_of_le_of_ne (floor_le t) (Ne.symm ht), lt_floor_add_one _⟩
-    apply (h ((Prod.map _ fract) _) ⟨trivial, ⟨fract_nonneg _, (fract_lt_one _).le⟩⟩).Tendsto.comp
+    apply (h ((Prod.map _ fract) _) ⟨trivial, ⟨fract_nonneg _, (fract_lt_one _).le⟩⟩).tendsto.comp
     simp only [nhds_prod_eq, nhdsWithin_prod_eq, nhdsWithin_univ, id.def, Prod.map_mk]
     exact
       continuous_at_id.tendsto.prod_map
         (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
           (((continuousOn_fract _ _ (Ioo_subset_Ico_self this)).mono
-                Ioo_subset_Ico_self).ContinuousAt
+                Ioo_subset_Ico_self).continuousAt
             (Ioo_mem_nhds this.1 this.2))
           (eventually_of_forall fun x => ⟨fract_nonneg _, (fract_lt_one _).le⟩))
 #align continuous_on.comp_fract' ContinuousOn.comp_fract'

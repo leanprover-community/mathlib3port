@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.circulant
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
     circulant v ⬝ circulant w = circulant (mulVec (circulant v) w) :=
   by
   ext (i j)
-  simp only [mul_apply, mul_vec, circulant, dot_product]
+  simp only [mul_apply, mulVec, circulant, dotProduct]
   refine' Fintype.sum_equiv (Equiv.subRight j) _ _ _
   intro x
   simp only [Equiv.subRight_apply, sub_sub_sub_cancel_right]
@@ -197,7 +197,7 @@ theorem circulant_isSymm_iff [AddGroup n] {v : n → α} : (circulant v).IsSymm 
 #align matrix.circulant_is_symm_iff Matrix.circulant_isSymm_iff
 
 theorem Fin.circulant_isSymm_iff : ∀ {n} {v : Fin n → α}, (circulant v).IsSymm ↔ ∀ i, v (-i) = v i
-  | 0 => fun v => by simp [is_symm.ext_iff, IsEmpty.forall_iff]
+  | 0 => fun v => by simp [IsSymm.ext_iff, IsEmpty.forall_iff]
   | n + 1 => fun v => circulant_isSymm_iff
 #align matrix.fin.circulant_is_symm_iff Matrix.Fin.circulant_isSymm_iff
 

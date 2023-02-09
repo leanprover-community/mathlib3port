@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.local_cache
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ unsafe def load_data (dn : Name) : tactic α := do
 
 unsafe def poke_data (dn : Name) : tactic Bool := do
   let e ← tactic.get_env
-  return (e dn).decide
+  return (e dn).to_bool
 #align tactic.local_cache.internal.poke_data tactic.local_cache.internal.poke_data
 
 unsafe def run_once_under_name {α : Type} [reflected _ α] [has_reflect α] (t : tactic α)
@@ -71,7 +71,7 @@ private unsafe def get_name_aux (ns : Name) (mk_new : options → Name → tacti
   let opt := mk_full_namespace ns
   match o opt "" with
     | "" => mk_new o opt
-    | s => return <| Name.fromComponents <| s (· = '.')
+    | s => return <| name.from_components <| s (· = '.')
 #align tactic.local_cache.internal.block_local.get_name_aux tactic.local_cache.internal.block_local.get_name_aux
 
 unsafe def get_name (ns : Name) : tactic Name :=
@@ -132,7 +132,7 @@ unsafe def hash_context : tactic String := do
   let ns ← open_namespaces
   let dn ← decl_name
   let flat := ((List.cons dn ns).map toString).foldl String.append ""
-  return <| toString dn ++ toString (hash_string flat)
+  return <| to_string dn ++ to_string (hash_string flat)
 #align tactic.local_cache.internal.def_local.hash_context tactic.local_cache.internal.def_local.hash_context
 
 unsafe def get_root_name (ns : Name) : tactic Name := do
@@ -155,7 +155,7 @@ unsafe def kill_name (n : Name) : tactic Unit :=
 unsafe def is_name_dead (n : Name) : tactic Bool :=
   (do
       let witness : Unit ← load_data <| mk_dead_name n
-      return True) <|>
+      return true) <|>
     return False
 #align tactic.local_cache.internal.def_local.is_name_dead tactic.local_cache.internal.def_local.is_name_dead
 
@@ -168,8 +168,8 @@ private unsafe def get_with_status_tag_aux (rn : Name) : ℕ → tactic (ℕ × 
     if ¬present then fail f! "{rn} never seen in cache!"
       else do
         let is_dead ← is_name_dead n
-        if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, False)
-          else return (tag, True)
+        if is_dead then get_with_status_tag_aux (tag + 1) <|> return (tag, false)
+          else return (tag, true)
 #align tactic.local_cache.internal.def_local.get_with_status_tag_aux tactic.local_cache.internal.def_local.get_with_status_tag_aux
 
 -- Find the latest tag for the name `rn` and report whether it is alive.
@@ -191,7 +191,7 @@ unsafe def try_get_name (ns : Name) : tactic Name := do
 
 unsafe def present (ns : Name) : tactic Bool := do
   let rn ← get_root_name ns
-  Prod.snd <$> get_tag_with_status rn <|> return False
+  prod.snd <$> get_tag_with_status rn <|> return false
 #align tactic.local_cache.internal.def_local.present tactic.local_cache.internal.def_local.present
 
 unsafe def clear (ns : Name) : tactic Unit :=

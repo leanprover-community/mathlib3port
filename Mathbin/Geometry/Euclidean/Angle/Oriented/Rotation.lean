@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.rotation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,12 +98,12 @@ theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem rotation_eq_matrix_toLin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
     (o.rotation θ).toLinearMap =
       Matrix.toLin (o.basisRightAngleRotation x hx) (o.basisRightAngleRotation x hx)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") :=
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") :=
   by
   apply (o.basis_right_angle_rotation x hx).ext
   intro i
@@ -168,7 +168,7 @@ theorem rotation_rotation (θ₁ θ₂ : Real.Angle) (x : V) :
   by
   simp only [o.rotation_apply, ← mul_smul, Real.Angle.cos_add, Real.Angle.sin_add, add_smul,
     sub_smul, LinearIsometryEquiv.trans_apply, smul_add, LinearIsometryEquiv.map_add,
-    LinearIsometryEquiv.map_smul, right_angle_rotation_right_angle_rotation, smul_neg]
+    LinearIsometryEquiv.map_smul, rightAngleRotation_rightAngleRotation, smul_neg]
   ring_nf
   abel
 #align orientation.rotation_rotation Orientation.rotation_rotation
@@ -186,8 +186,8 @@ theorem kahler_rotation_left (x y : V) (θ : Real.Angle) :
     o.kahler (o.rotation θ x) y = conj (θ.expMapCircle : ℂ) * o.kahler x y :=
   by
   simp only [o.rotation_apply, map_add, map_mul, LinearMap.map_smulₛₗ, RingHom.id_apply,
-    LinearMap.add_apply, LinearMap.smul_apply, real_smul, kahler_right_angle_rotation_left,
-    Real.Angle.coe_expMapCircle, IsROrC.conj_of_real, conj_I]
+    LinearMap.add_apply, LinearMap.smul_apply, real_smul, kahler_rightAngleRotation_left,
+    Real.Angle.coe_expMapCircle, IsROrC.conj_of_real, conj_i]
   ring
 #align orientation.kahler_rotation_left Orientation.kahler_rotation_left
 
@@ -221,7 +221,7 @@ theorem kahler_rotation_right (x y : V) (θ : Real.Angle) :
     o.kahler x (o.rotation θ y) = θ.expMapCircle * o.kahler x y :=
   by
   simp only [o.rotation_apply, map_add, LinearMap.map_smulₛₗ, RingHom.id_apply, real_smul,
-    kahler_right_angle_rotation_right, Real.Angle.coe_expMapCircle]
+    kahler_rightAngleRotation_right, Real.Angle.coe_expMapCircle]
   ring
 #align orientation.kahler_rotation_right Orientation.kahler_rotation_right
 
@@ -437,7 +437,7 @@ theorem rotation_neg_orientation_eq_neg (θ : Real.Angle) : (-o).rotation θ = o
 /-- The inner product between a `π / 2` rotation of a vector and that vector is zero. -/
 @[simp]
 theorem inner_rotation_pi_div_two_left (x : V) : ⟪o.rotation (π / 2 : ℝ) x, x⟫ = 0 := by
-  rw [rotation_pi_div_two, inner_right_angle_rotation_self]
+  rw [rotation_pi_div_two, inner_rightAngleRotation_self]
 #align orientation.inner_rotation_pi_div_two_left Orientation.inner_rotation_pi_div_two_left
 
 /-- The inner product between a vector and a `π / 2` rotation of that vector is zero. -/

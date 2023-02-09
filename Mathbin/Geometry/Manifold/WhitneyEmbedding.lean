@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.whitney_embedding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,12 +75,12 @@ theorem embeddingPiTangent_coe :
 theorem embeddingPiTangent_injOn : InjOn f.embeddingPiTangent s :=
   by
   intro x hx y hy h
-  simp only [embedding_pi_tangent_coe, funext_iff] at h
+  simp only [embeddingPiTangent_coe, funext_iff] at h
   obtain ⟨h₁, h₂⟩ := Prod.mk.inj_iff.1 (h (f.ind x hx))
   rw [f.apply_ind x hx] at h₂
   rw [← h₂, f.apply_ind x hx, one_smul, one_smul] at h₁
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm
-  exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
+  exact (extChartAt I (f.c _)).injOn (f.mem_ext_chart_at_ind_source x hx) this h₁
 #align smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embeddingPiTangent_injOn
 
 theorem embeddingPiTangent_injective (f : SmoothBumpCovering ι I M) :
@@ -97,12 +97,12 @@ theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
   by
   set L :=
     (ContinuousLinearMap.fst ℝ E ℝ).comp
-      (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
+      (@continuous_linear_map.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance) (f.ind x hx))
   have := L.has_mfderiv_at.comp x f.embedding_pi_tangent.mdifferentiable_at.has_mfderiv_at
   convert hasMfderivAt_unique this _
   refine' (hasMfderivAt_extChartAt I (f.mem_chart_at_ind_source x hx)).congr_of_eventuallyEq _
   refine' (f.eventually_eq_one x hx).mono fun y hy => _
-  simp only [embedding_pi_tangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·),
+  simp only [embeddingPiTangent_coe, ContinuousLinearMap.coe_comp', (· ∘ ·),
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
 #align smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embeddingPiTangent_mfderiv
@@ -114,7 +114,7 @@ theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
   rw [←
     (mdifferentiable_chart I (f.c (f.ind x hx))).ker_mfderiv_eq_bot
       (f.mem_chart_at_ind_source x hx),
-    ← comp_embedding_pi_tangent_mfderiv]
+    ← comp_embeddingPiTangent_mfderiv]
   exact LinearMap.ker_le_ker_comp _ _
 #align smooth_bump_covering.embedding_pi_tangent_ker_mfderiv SmoothBumpCovering.embeddingPiTangent_ker_mfderiv
 

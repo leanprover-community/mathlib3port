@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.operations
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -329,7 +329,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.apply_coe_mem_map Subsemigroup.apply_coe_mem_mapₓ'. -/
 @[to_additive]
 theorem apply_coe_mem_map (f : M →ₙ* N) (S : Subsemigroup M) (x : S) : f x ∈ S.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.prop
 #align subsemigroup.apply_coe_mem_map Subsemigroup.apply_coe_mem_map
 #align add_subsemigroup.apply_coe_mem_map AddSubsemigroup.apply_coe_mem_map
 
@@ -881,7 +881,7 @@ Case conversion may be inaccurate. Consider using '#align mul_mem_class.to_semig
 @[to_additive "An `add_subsemigroup` of an `add_semigroup` inherits an `add_semigroup` structure."]
 instance toSemigroup {M : Type _} [Semigroup M] {A : Type _} [SetLike A M] [MulMemClass A M]
     (S : A) : Semigroup S :=
-  Subtype.coe_injective.Semigroup coe fun _ _ => rfl
+  Subtype.coe_injective.semigroup coe fun _ _ => rfl
 #align mul_mem_class.to_semigroup MulMemClass.toSemigroup
 #align add_mem_class.to_add_semigroup AddMemClass.toAddSemigroup
 
@@ -895,7 +895,7 @@ Case conversion may be inaccurate. Consider using '#align mul_mem_class.to_comm_
 @[to_additive "An `add_subsemigroup` of an `add_comm_semigroup` is an `add_comm_semigroup`."]
 instance toCommSemigroup {M} [CommSemigroup M] {A : Type _} [SetLike A M] [MulMemClass A M]
     (S : A) : CommSemigroup S :=
-  Subtype.coe_injective.CommSemigroup coe fun _ _ => rfl
+  Subtype.coe_injective.commSemigroup coe fun _ _ => rfl
 #align mul_mem_class.to_comm_semigroup MulMemClass.toCommSemigroup
 #align add_mem_class.to_add_comm_semigroup AddMemClass.toAddCommSemigroup
 
@@ -1008,7 +1008,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_prod Subsemigroup.coe_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive coe_prod]
-theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
+theorem coe_prod (s : Subsemigroup M) (t : Subsemigroup N) : (s.prod t : Set (M × N)) = s ×ˢ t :=
   rfl
 #align subsemigroup.coe_prod Subsemigroup.coe_prod
 #align add_subsemigroup.coe_prod AddSubsemigroup.coe_prod
@@ -1021,7 +1021,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_prod Subsemigroup.mem_prodₓ'. -/
 @[to_additive mem_prod]
 theorem mem_prod {s : Subsemigroup M} {t : Subsemigroup N} {p : M × N} :
-    p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
+    p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align subsemigroup.mem_prod Subsemigroup.mem_prod
 #align add_subsemigroup.mem_prod AddSubsemigroup.mem_prod
@@ -1034,7 +1034,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.prod_mono Subsemigroup.prod_monoₓ'. -/
 @[to_additive prod_mono]
 theorem prod_mono {s₁ s₂ : Subsemigroup M} {t₁ t₂ : Subsemigroup N} (hs : s₁ ≤ s₂) (ht : t₁ ≤ t₂) :
-    s₁.Prod t₁ ≤ s₂.Prod t₂ :=
+    s₁.prod t₁ ≤ s₂.prod t₂ :=
   Set.prod_mono hs ht
 #align subsemigroup.prod_mono Subsemigroup.prod_mono
 #align add_subsemigroup.prod_mono AddSubsemigroup.prod_mono
@@ -1046,14 +1046,14 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] (s : Subsemigroup.{u2} M _inst_1), Eq.{max (succ u2) (succ u1)} (Subsemigroup.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) (Subsemigroup.prod.{u2, u1} M N _inst_1 _inst_2 s (Top.top.{u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instTopSubsemigroup.{u1} N _inst_2))) (Subsemigroup.comap.{max u2 u1, u2} (Prod.{u2, u1} M N) M (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2) _inst_1 (MulHom.fst.{u2, u1} M N _inst_1 _inst_2) s)
 Case conversion may be inaccurate. Consider using '#align subsemigroup.prod_top Subsemigroup.prod_topₓ'. -/
 @[to_additive prod_top]
-theorem prod_top (s : Subsemigroup M) : s.Prod (⊤ : Subsemigroup N) = s.comap (MulHom.fst M N) :=
+theorem prod_top (s : Subsemigroup M) : s.prod (⊤ : Subsemigroup N) = s.comap (MulHom.fst M N) :=
   ext fun x => by simp [mem_prod, MulHom.coe_fst]
 #align subsemigroup.prod_top Subsemigroup.prod_top
 #align add_subsemigroup.prod_top AddSubsemigroup.prod_top
 
 #print Subsemigroup.top_prod /-
 @[to_additive top_prod]
-theorem top_prod (s : Subsemigroup N) : (⊤ : Subsemigroup M).Prod s = s.comap (MulHom.snd M N) :=
+theorem top_prod (s : Subsemigroup N) : (⊤ : Subsemigroup M).prod s = s.comap (MulHom.snd M N) :=
   ext fun x => by simp [mem_prod, MulHom.coe_snd]
 #align subsemigroup.top_prod Subsemigroup.top_prod
 #align add_subsemigroup.top_prod AddSubsemigroup.top_prod
@@ -1066,7 +1066,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N], Eq.{max (succ u2) (succ u1)} (Subsemigroup.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) (Subsemigroup.prod.{u2, u1} M N _inst_1 _inst_2 (Top.top.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instTopSubsemigroup.{u2} M _inst_1)) (Top.top.{u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instTopSubsemigroup.{u1} N _inst_2))) (Top.top.{max u2 u1} (Subsemigroup.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) (Subsemigroup.instTopSubsemigroup.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align subsemigroup.top_prod_top Subsemigroup.top_prod_topₓ'. -/
 @[simp, to_additive top_prod_top]
-theorem top_prod_top : (⊤ : Subsemigroup M).Prod (⊤ : Subsemigroup N) = ⊤ :=
+theorem top_prod_top : (⊤ : Subsemigroup M).prod (⊤ : Subsemigroup N) = ⊤ :=
   (top_prod _).trans <| comap_top _
 #align subsemigroup.top_prod_top Subsemigroup.top_prod_top
 #align add_subsemigroup.top_prod_top AddSubsemigroup.top_prod_top
@@ -1078,7 +1078,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N], Eq.{max (succ u2) (succ u1)} (Subsemigroup.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) (Subsemigroup.prod.{u2, u1} M N _inst_1 _inst_2 (Bot.bot.{u2} (Subsemigroup.{u2} M _inst_1) (Subsemigroup.instBotSubsemigroup.{u2} M _inst_1)) (Bot.bot.{u1} (Subsemigroup.{u1} N _inst_2) (Subsemigroup.instBotSubsemigroup.{u1} N _inst_2))) (Bot.bot.{max u2 u1} (Subsemigroup.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) (Subsemigroup.instBotSubsemigroup.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align subsemigroup.bot_prod_bot Subsemigroup.bot_prod_botₓ'. -/
 @[to_additive]
-theorem bot_prod_bot : (⊥ : Subsemigroup M).Prod (⊥ : Subsemigroup N) = ⊥ :=
+theorem bot_prod_bot : (⊥ : Subsemigroup M).prod (⊥ : Subsemigroup N) = ⊥ :=
   SetLike.coe_injective <| by simp [coe_prod, Prod.one_eq_mk]
 #align subsemigroup.bot_prod_bot Subsemigroup.bot_prod_bot
 #align add_subsemigroup.bot_sum_bot AddSubsemigroup.bot_prod_bot
@@ -1087,7 +1087,7 @@ theorem bot_prod_bot : (⊥ : Subsemigroup M).Prod (⊥ : Subsemigroup N) = ⊥ 
 /-- The product of subsemigroups is isomorphic to their product as semigroups. -/
 @[to_additive prod_equiv
       "The product of additive subsemigroups is isomorphic to their product\nas additive semigroups"]
-def prodEquiv (s : Subsemigroup M) (t : Subsemigroup N) : s.Prod t ≃* s × t :=
+def prodEquiv (s : Subsemigroup M) (t : Subsemigroup N) : s.prod t ≃* s × t :=
   { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
 #align subsemigroup.prod_equiv Subsemigroup.prodEquiv
 #align add_subsemigroup.prod_equiv AddSubsemigroup.prodEquiv
@@ -1138,7 +1138,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.map_equiv_top Subsemigroup.map_equiv_topₓ'. -/
 @[simp, to_additive]
 theorem map_equiv_top (f : M ≃* N) : (⊤ : Subsemigroup M).map f.toMulHom = ⊤ :=
-  SetLike.coe_injective <| Set.image_univ.trans f.Surjective.range_eq
+  SetLike.coe_injective <| Set.image_univ.trans f.surjective.range_eq
 #align subsemigroup.map_equiv_top Subsemigroup.map_equiv_top
 #align add_subsemigroup.map_equiv_top AddSubsemigroup.map_equiv_top
 
@@ -1150,7 +1150,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.le_prod_iff Subsemigroup.le_prod_iffₓ'. -/
 @[to_additive le_prod_iff]
 theorem le_prod_iff {s : Subsemigroup M} {t : Subsemigroup N} {u : Subsemigroup (M × N)} :
-    u ≤ s.Prod t ↔ u.map (fst M N) ≤ s ∧ u.map (snd M N) ≤ t :=
+    u ≤ s.prod t ↔ u.map (fst M N) ≤ s ∧ u.map (snd M N) ≤ t :=
   by
   constructor
   · intro h
@@ -1346,7 +1346,7 @@ Case conversion may be inaccurate. Consider using '#align mul_hom.prod_map_comap
 @[to_additive]
 theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [Mul M'] [Mul N'] (f : M →ₙ* N)
     (g : M' →ₙ* N') (S : Subsemigroup N) (S' : Subsemigroup N') :
-    (S.Prod S').comap (prodMap f g) = (S.comap f).Prod (S'.comap g) :=
+    (S.prod S').comap (prodMap f g) = (S.comap f).prod (S'.comap g) :=
   SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 #align mul_hom.prod_map_comap_prod' MulHom.prod_map_comap_prod'
 #align add_hom.sum_map_comap_sum' AddHom.prod_map_comap_prod'
@@ -1356,7 +1356,7 @@ theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [Mul M'] [Mul N'] (f : 
 @[to_additive "the `add_hom` from the preimage of an additive subsemigroup to itself.", simps]
 def subsemigroupComap (f : M →ₙ* N) (N' : Subsemigroup N) : N'.comap f →ₙ* N'
     where
-  toFun x := ⟨f x, x.Prop⟩
+  toFun x := ⟨f x, x.prop⟩
   map_mul' x y := Subtype.eq (@map_mul M N _ _ _ _ f x y)
 #align mul_hom.subsemigroup_comap MulHom.subsemigroupComap
 #align add_hom.subsemigroup_comap AddHom.subsemigroupComap
@@ -1370,7 +1370,7 @@ See `mul_equiv.subsemigroup_map` for a variant for `mul_equiv`s. -/
   simps]
 def subsemigroupMap (f : M →ₙ* N) (M' : Subsemigroup M) : M' →ₙ* M'.map f
     where
-  toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
+  toFun x := ⟨f x, ⟨x, x.prop, rfl⟩⟩
   map_mul' x y := Subtype.eq <| @map_mul M N _ _ _ _ f x y
 #align mul_hom.subsemigroup_map MulHom.subsemigroupMap
 #align add_hom.subsemigroup_map AddHom.subsemigroupMap
@@ -1427,7 +1427,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.prod_eq_top_iff Subsemigroup.prod_eq_top_iffₓ'. -/
 @[to_additive]
 theorem prod_eq_top_iff [Nonempty M] [Nonempty N] {s : Subsemigroup M} {t : Subsemigroup N} :
-    s.Prod t = ⊤ ↔ s = ⊤ ∧ t = ⊤ := by
+    s.prod t = ⊤ ↔ s = ⊤ ∧ t = ⊤ := by
   simp only [eq_top_iff, le_prod_iff, ← (gc_map_comap _).le_iff_le, ← srange_eq_map, srange_fst,
     srange_snd]
 #align subsemigroup.prod_eq_top_iff Subsemigroup.prod_eq_top_iff
@@ -1495,7 +1495,7 @@ def ofLeftInverse (f : M →ₙ* N) {g : N → M} (h : Function.LeftInverse g f)
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := MulHom.mem_srange.mp x.Prop
+        let ⟨x', hx'⟩ := MulHom.mem_srange.mp x.prop
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse MulEquiv.ofLeftInverse
 #align add_equiv.of_left_inverse AddEquiv.ofLeftInverse

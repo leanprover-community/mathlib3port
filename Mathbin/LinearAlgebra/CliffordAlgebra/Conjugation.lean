@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.conjugation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ section List
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
-theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.map <| ι Q).reverse.Prod
+theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).prod = (l.map <| ι Q).reverse.prod
   | [] => by simp
   | x::xs => by simp [reverse_prod_map_ι xs]
 #align clifford_algebra.reverse_prod_map_ι CliffordAlgebra.reverse_prod_map_ι
@@ -186,7 +186,7 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map <| ι Q).Prod = (l.
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
 theorem involute_prod_map_ι :
-    ∀ l : List M, involute (l.map <| ι Q).Prod = (-1 : R) ^ l.length • (l.map <| ι Q).Prod
+    ∀ l : List M, involute (l.map <| ι Q).prod = (-1 : R) ^ l.length • (l.map <| ι Q).prod
   | [] => by simp
   | x::xs => by simp [pow_add, involute_prod_map_ι xs]
 #align clifford_algebra.involute_prod_map_ι CliffordAlgebra.involute_prod_map_ι
@@ -228,14 +228,14 @@ theorem ι_range_comap_involute :
 theorem evenOdd_map_involute (n : ZMod 2) :
     (evenOdd Q n).map (involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q).toLinearMap =
       evenOdd Q n :=
-  by simp_rw [even_odd, Submodule.map_supᵢ, Submodule.map_pow, ι_range_map_involute]
+  by simp_rw [evenOdd, Submodule.map_supᵢ, Submodule.map_pow, ι_range_map_involute]
 #align clifford_algebra.even_odd_map_involute CliffordAlgebra.evenOdd_map_involute
 
 @[simp]
 theorem evenOdd_comap_involute (n : ZMod 2) :
     (evenOdd Q n).comap (involute : CliffordAlgebra Q →ₐ[R] CliffordAlgebra Q).toLinearMap =
       evenOdd Q n :=
-  by rw [← submodule_map_involute_eq_comap, even_odd_map_involute]
+  by rw [← submodule_map_involute_eq_comap, evenOdd_map_involute]
 #align clifford_algebra.even_odd_comap_involute CliffordAlgebra.evenOdd_comap_involute
 
 end Involute
@@ -297,13 +297,13 @@ theorem submodule_comap_pow_reverse (p : Submodule R (CliffordAlgebra Q)) (n : �
 @[simp]
 theorem evenOdd_map_reverse (n : ZMod 2) :
     (evenOdd Q n).map (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = evenOdd Q n := by
-  simp_rw [even_odd, Submodule.map_supᵢ, submodule_map_pow_reverse, ι_range_map_reverse]
+  simp_rw [evenOdd, Submodule.map_supᵢ, submodule_map_pow_reverse, ι_range_map_reverse]
 #align clifford_algebra.even_odd_map_reverse CliffordAlgebra.evenOdd_map_reverse
 
 @[simp]
 theorem evenOdd_comap_reverse (n : ZMod 2) :
     (evenOdd Q n).comap (reverse : CliffordAlgebra Q →ₗ[R] CliffordAlgebra Q) = evenOdd Q n := by
-  rw [← submodule_map_reverse_eq_comap, even_odd_map_reverse]
+  rw [← submodule_map_reverse_eq_comap, evenOdd_map_reverse]
 #align clifford_algebra.even_odd_comap_reverse CliffordAlgebra.evenOdd_comap_reverse
 
 end Reverse
@@ -331,7 +331,7 @@ TODO: show that these are `iff`s when `invertible (2 : R)`.
 
 theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) : involute x = x :=
   by
-  refine' even_induction Q (AlgHom.commutes _) _ _ x h
+  refine' evenInduction Q (AlgHom.commutes _) _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy]
   · intro m₁ m₂ x hx ihx
@@ -340,7 +340,7 @@ theorem involute_eq_of_mem_even {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 0) 
 
 theorem involute_eq_of_mem_odd {x : CliffordAlgebra Q} (h : x ∈ evenOdd Q 1) : involute x = -x :=
   by
-  refine' odd_induction Q involute_ι _ _ x h
+  refine' oddInduction Q involute_ι _ _ x h
   · rintro x y hx hy ihx ihy
     rw [map_add, ihx, ihy, neg_add]
   · intro m₁ m₂ x hx ihx

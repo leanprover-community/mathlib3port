@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module topology.category.CompHaus.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ instance : CoeSort CompHaus (Type _) :=
   ⟨fun X => X.toTop⟩
 
 instance {X : CompHaus} : CompactSpace X :=
-  X.IsCompact
+  X.is_compact
 
 instance {X : CompHaus} : T2Space X :=
   X.is_hausdorff
@@ -88,7 +88,7 @@ theorem coe_of : (CompHaus.of X : Type _) = X :=
 
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem isClosedMap {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
-  (hC.IsCompact.image f.Continuous).IsClosed
+  (hC.isCompact.image f.continuous).isClosed
 #align CompHaus.is_closed_map CompHaus.isClosedMap
 
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
@@ -99,7 +99,7 @@ theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bi
     rw [continuous_iff_isClosed]
     intro S hS
     rw [← E.image_eq_preimage]
-    exact IsClosedMap f S hS
+    exact isClosedMap f S hS
   refine' ⟨⟨⟨E.symm, hE⟩, _, _⟩⟩
   · ext x
     apply E.symm_apply_apply
@@ -110,8 +110,8 @@ theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bi
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     X ≅ Y :=
-  letI := is_iso_of_bijective _ bij
-  as_iso f
+  letI := isIso_of_bijective _ bij
+  asIso f
 #align CompHaus.iso_of_bijective CompHaus.isoOfBijective
 
 end CompHaus
@@ -123,7 +123,7 @@ def compHausToTop : CompHaus.{u} ⥤ TopCat.{u} :=
 #align CompHaus_to_Top compHausToTop
 
 instance CompHaus.forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget CompHaus.{u}) :=
-  ⟨by intro A B f hf <;> exact CompHaus.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+  ⟨by intro A B f hf <;> exact CompHaus.isIso_of_bijective _ ((isIso_iff_bijective f).mp hf)⟩
 #align CompHaus.forget_reflects_isomorphisms CompHaus.forget_reflectsIsomorphisms
 
 /-- (Implementation) The object part of the compactification functor from topological spaces to
@@ -226,7 +226,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
       naturality' := by
         intro _ _ _
         ext ⟨x, hx⟩
-        simp only [comp_apply, functor.const_obj_map, id_apply]
+        simp only [comp_apply, Functor.const_obj_map, id_apply]
         exact (hx f).symm }
 #align CompHaus.limit_cone CompHaus.limitCone
 
@@ -244,7 +244,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
   · contrapose!
     rintro ⟨y, hy⟩ hf
     let C := Set.range f
-    have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
+    have hC : IsClosed C := (isCompact_range f.continuous).isClosed
     let D := {y}
     have hD : IsClosed D := isClosed_singleton
     have hCD : Disjoint C D := by

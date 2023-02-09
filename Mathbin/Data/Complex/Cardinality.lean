@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module data.complex.cardinality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem mk_univ_complex : (#(Set.univ : Set ℂ)) = 𝔠 := by rw [mk_univ, mk_c
 /-- The complex numbers are not countable. -/
 theorem not_countable_complex : ¬(Set.univ : Set ℂ).Countable :=
   by
-  rw [← le_aleph_0_iff_set_countable, not_le, mk_univ_complex]
+  rw [← le_aleph0_iff_set_countable, not_le, mk_univ_complex]
   apply cantor
 #align not_countable_complex not_countable_complex
 

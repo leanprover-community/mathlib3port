@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ variable (hA : A.IsHermitian)
 /-- The eigenvalues of a hermitian matrix, indexed by `fin (fintype.card n)` where `n` is the index
 type of the matrix. -/
 noncomputable def eigenvalues₀ : Fin (Fintype.card n) → ℝ :=
-  (isHermitian_iff_isSymmetric.1 hA).Eigenvalues finrank_euclideanSpace
+  (isHermitian_iff_isSymmetric.1 hA).eigenvalues finrank_euclideanSpace
 #align matrix.is_hermitian.eigenvalues₀ Matrix.IsHermitian.eigenvalues₀
 
 /-- The eigenvalues of a hermitian matrix, reusing the index `n` of the matrix entries. -/
@@ -75,13 +75,13 @@ noncomputable instance : Invertible hA.eigenvectorMatrix :=
   invertibleOfRightInverse _ _ hA.eigenvectorMatrix_mul_inv
 
 theorem eigenvectorMatrix_apply (i j : n) : hA.eigenvectorMatrix i j = hA.eigenvectorBasis j i := by
-  simp_rw [eigenvector_matrix, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis,
+  simp_rw [eigenvectorMatrix, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis,
     PiLp.basisFun_repr]
 #align matrix.is_hermitian.eigenvector_matrix_apply Matrix.IsHermitian.eigenvectorMatrix_apply
 
 theorem eigenvectorMatrixInv_apply (i j : n) :
     hA.eigenvectorMatrixInv i j = star (hA.eigenvectorBasis i j) := by
-  rw [eigenvector_matrix_inv, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
+  rw [eigenvectorMatrixInv, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
     OrthonormalBasis.repr_apply_apply, PiLp.basisFun_apply, PiLp.equiv_symm_single,
     EuclideanSpace.inner_single_right, one_mul, IsROrC.star_def]
 #align matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvectorMatrixInv_apply
@@ -89,11 +89,11 @@ theorem eigenvectorMatrixInv_apply (i j : n) :
 theorem conjTranspose_eigenvectorMatrixInv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
   by
   ext (i j)
-  rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
+  rw [conjTranspose_apply, eigenvectorMatrixInv_apply, eigenvectorMatrix_apply, star_star]
 #align matrix.is_hermitian.conj_transpose_eigenvector_matrix_inv Matrix.IsHermitian.conjTranspose_eigenvectorMatrixInv
 
 theorem conjTranspose_eigenvectorMatrix : hA.eigenvectorMatrixᴴ = hA.eigenvectorMatrixInv := by
-  rw [← conj_transpose_eigenvector_matrix_inv, conj_transpose_conj_transpose]
+  rw [← conjTranspose_eigenvectorMatrixInv, conjTranspose_conjTranspose]
 #align matrix.is_hermitian.conj_transpose_eigenvector_matrix Matrix.IsHermitian.conjTranspose_eigenvectorMatrix
 
 /-- *Diagonalization theorem*, *spectral theorem* for matrices; A hermitian matrix can be
@@ -101,42 +101,42 @@ diagonalized by a change of basis.
 
 For the spectral theorem on linear maps, see `diagonalization_basis_apply_self_apply`. -/
 theorem spectral_theorem :
-    hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv :=
+    hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.eigenvalues) ⬝ hA.eigenvectorMatrixInv :=
   by
-  rw [eigenvector_matrix_inv, PiLp.basis_toMatrix_basisFun_mul]
+  rw [eigenvectorMatrixInv, PiLp.basis_toMatrix_basisFun_mul]
   ext (i j)
-  have : LinearMap.IsSymmetric _ := is_hermitian_iff_is_symmetric.1 hA
+  have : LinearMap.IsSymmetric _ := isHermitian_iff_isSymmetric.1 hA
   convert
     this.diagonalization_basis_apply_self_apply finrank_euclideanSpace (EuclideanSpace.single j 1)
       ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)
   · dsimp only [LinearEquiv.conj_apply_apply, PiLp.linearEquiv_apply, PiLp.linearEquiv_symm_apply,
       PiLp.equiv_single, LinearMap.stdBasis, LinearMap.coe_single, PiLp.equiv_symm_single,
-      LinearEquiv.symm_symm, eigenvector_basis, to_lin'_apply]
+      LinearEquiv.symm_symm, eigenvectorBasis, toLin'_apply]
     simp only [Basis.toMatrix, Basis.coe_toOrthonormalBasis_repr, Basis.equivFun_apply]
     simp_rw [OrthonormalBasis.coe_toBasis_repr_apply, OrthonormalBasis.repr_reindex,
-      LinearEquiv.symm_symm, PiLp.linearEquiv_apply, PiLp.equiv_single, mul_vec_single, mul_one]
+      LinearEquiv.symm_symm, PiLp.linearEquiv_apply, PiLp.equiv_single, mulVec_single, mul_one]
     rfl
-  · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvector_basis]
+  · simp only [diagonal_mul, (· ∘ ·), eigenvalues, eigenvectorBasis]
     rw [Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
       OrthonormalBasis.repr_reindex, eigenvalues₀, PiLp.basisFun_apply, PiLp.equiv_symm_single]
 #align matrix.is_hermitian.spectral_theorem Matrix.IsHermitian.spectral_theorem
 
 theorem eigenvalues_eq (i : n) :
-    hA.Eigenvalues i =
+    hA.eigenvalues i =
       IsROrC.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
   by
   have := hA.spectral_theorem
   rw [← Matrix.mul_inv_eq_iff_eq_mul_of_invertible] at this
   have := congr_arg IsROrC.re (congr_fun (congr_fun this i) i)
   rw [diagonal_apply_eq, IsROrC.of_real_re, inv_eq_left_inv hA.eigenvector_matrix_mul_inv, ←
-    conj_transpose_eigenvector_matrix, mul_mul_apply] at this
+    conjTranspose_eigenvectorMatrix, mul_mul_apply] at this
   exact this.symm
 #align matrix.is_hermitian.eigenvalues_eq Matrix.IsHermitian.eigenvalues_eq
 
 /-- The determinant of a hermitian matrix is the product of its eigenvalues. -/
-theorem det_eq_prod_eigenvalues : det A = ∏ i, hA.Eigenvalues i :=
+theorem det_eq_prod_eigenvalues : det A = ∏ i, hA.eigenvalues i :=
   by
-  apply mul_left_cancel₀ (det_ne_zero_of_left_inverse (eigenvector_matrix_mul_inv hA))
+  apply mul_left_cancel₀ (det_ne_zero_of_left_inverse (eigenvectorMatrix_mul_inv hA))
   rw [← det_mul, spectral_theorem, det_mul, mul_comm, det_diagonal]
 #align matrix.is_hermitian.det_eq_prod_eigenvalues Matrix.IsHermitian.det_eq_prod_eigenvalues
 

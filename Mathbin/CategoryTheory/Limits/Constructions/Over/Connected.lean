@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.connected
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ namespace CreatesConnected
 diagram legs to the specific object.
 -/
 def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B
-    where app j := (F.obj j).Hom
+    where app j := (F.obj j).hom
 #align category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOver
 
 attribute [local tidy] tactic.case_bash
@@ -52,7 +52,7 @@ where the connected assumption is used.
 @[simps]
 def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget B)) : Cone F
     where
-  x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).Hom)
+  x := Over.mk (c.π.app (Classical.arbitrary J) ≫ (F.obj (Classical.arbitrary J)).hom)
   π :=
     {
       app := fun j =>

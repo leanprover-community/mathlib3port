@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ theorem of_injective {R M} [Zero R] {r : R} [NeZero r] [Zero M] [ZeroHomClass F 
     (hf : Function.Injective f) : NeZero (f r) :=
   ⟨by
     rw [← ZeroHomClass.map_zero f]
-    exact hf.ne (Ne r)⟩
+    exact hf.ne (ne r)⟩
 #align ne_zero.of_injective NeZero.of_injective
 
 end NeZero
@@ -280,7 +280,7 @@ Case conversion may be inaccurate. Consider using '#align map_ne_one_iff map_ne_
 @[to_additive]
 theorem map_ne_one_iff {R S F : Type _} [One R] [One S] [OneHomClass F R S] (f : F)
     (hf : Function.Injective f) {x : R} : f x ≠ 1 ↔ x ≠ 1 :=
-  (map_eq_one_iff f hf).Not
+  (map_eq_one_iff f hf).not
 #align map_ne_one_iff map_ne_one_iff
 #align map_ne_zero_iff map_ne_zero_iff
 

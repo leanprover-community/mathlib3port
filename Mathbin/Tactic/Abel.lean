@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.abel
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ This is used to choose between declarations taking `add_comm_monoid` and those
 taking `add_comm_group` instances.
 -/
 unsafe def add_g : Name → Name
-  | Name.mk_string s p => Name.mk_string (s ++ "g") p
+  | name.mk_string s p => Name.mk_string (s ++ "g") p
   | n => n
 #align tactic.abel.add_g tactic.abel.add_g
 
@@ -132,7 +132,7 @@ unsafe def normal_expr.zero' (c : context) : normal_expr :=
 
 unsafe def normal_expr.to_list : normal_expr → List (ℤ × expr)
   | normal_expr.zero _ => []
-  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.toList
+  | normal_expr.nterm _ (_, n) x a => (n, x) :: a.to_list
 #align tactic.abel.normal_expr.to_list tactic.abel.normal_expr.to_list
 
 open NormalExpr
@@ -395,7 +395,7 @@ unsafe
         =>
         do
           let inst' := c . iapp ` ` nat_smul_inst [ ]
-            condM
+            mcond
               ( succeeds ( is_def_eq inst inst' ) )
                 ( eval_smul' c eval ff e e₁ e₂ )
                 ( eval_atom c e )
@@ -405,7 +405,7 @@ unsafe
         do
           let tt ← pure c . is_group | eval_atom c e
             let inst' := c . app ` ` int_smul_instg c . inst [ ]
-            condM
+            mcond
               ( succeeds ( is_def_eq inst inst' ) )
                 ( eval_smul' c eval tt e e₁ e₂ )
                 ( eval_atom c e )
@@ -524,7 +524,7 @@ example {α : Type*} {a b : α} [add_comm_group α] : (a + b) - (id a + b) = 0 :
 unsafe def abel (red : parse (tk "!")?) (SOP : parse abel.mode) (loc : parse location) :
     tactic Unit :=
   (match loc with
-    | Interactive.Loc.ns [none] => abel1 red
+    | interactive.loc.ns [none] => abel1 red
     | _ => failed) <|>
     do
     let ns ← loc.get_locals

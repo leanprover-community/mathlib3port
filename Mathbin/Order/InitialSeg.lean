@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.initial_seg
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (f : InitialSeg.{u2, u1} α β r s) {a : α} {b : β}, (s b (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a)) -> (Exists.{succ u2} α (fun (a' : α) => Eq.{succ u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a') (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (InitialSeg.{u2, u1} α β r s) α β (InitialSeg.instEmbeddingLikeInitialSeg.{u2, u1} α β r s)) f a') b))
 Case conversion may be inaccurate. Consider using '#align initial_seg.init' InitialSeg.init'ₓ'. -/
 theorem init' (f : r ≼i s) {a : α} {b : β} : s b (f a) → ∃ a', f a' = b :=
-  f.dropLast _ _
+  f.init _ _
 #align initial_seg.init' InitialSeg.init'
 
 /- warning: initial_seg.map_rel_iff -> InitialSeg.map_rel_iff is a dubious translation:
@@ -205,7 +205,7 @@ theorem unique_of_trichotomous_of_irrefl [IsTrichotomous β s] [IsIrrefl β s] :
 #align initial_seg.unique_of_trichotomous_of_irrefl InitialSeg.unique_of_trichotomous_of_irrefl
 -/
 
-instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
+instance [IsWellOrder β rfl] : Subsingleton (r ≼i s) :=
   ⟨fun a =>
     @Subsingleton.elim _
       (unique_of_trichotomous_of_irrefl (@RelEmbedding.wellFounded _ _ r s a IsWellFounded.wf)) a⟩
@@ -235,7 +235,7 @@ theorem Antisymm.aux [IsWellOrder α r] (f : r ≼i s) (g : s ≼i r) : LeftInve
 is a well-order then `α` and `β` are order-isomorphic. -/
 def antisymm [IsWellOrder β s] (f : r ≼i s) (g : s ≼i r) : r ≃r s :=
   haveI := f.to_rel_embedding.is_well_order
-  ⟨⟨f, g, antisymm.aux f g, antisymm.aux g f⟩, fun _ _ => f.map_rel_iff'⟩
+  ⟨⟨f, g, Antisymm.aux f g, Antisymm.aux g f⟩, fun _ _ => f.map_rel_iff'⟩
 #align initial_seg.antisymm InitialSeg.antisymm
 -/
 
@@ -420,7 +420,7 @@ theorem init [IsTrans β s] (f : r ≺i s) {a : α} {b : β} (h : s b (f a)) : �
 #print PrincipalSeg.hasCoeInitialSeg /-
 /-- A principal segment is in particular an initial segment. -/
 instance hasCoeInitialSeg [IsTrans β s] : Coe (r ≺i s) (r ≼i s) :=
-  ⟨fun f => ⟨f.toRelEmbedding, fun a b => f.dropLast⟩⟩
+  ⟨fun f => ⟨f.toRelEmbedding, fun a b => f.init⟩⟩
 #align principal_seg.has_coe_initial_seg PrincipalSeg.hasCoeInitialSeg
 -/
 
@@ -568,12 +568,12 @@ instance [IsWellOrder β s] : Subsingleton (r ≺i s) :=
     by
     have ef : (f : α → β) = g := by
       show ((f : r ≼i s) : α → β) = g
-      rw [@Subsingleton.elim _ _ (f : r ≼i s) g]
+      rw [@subsingleton.elim _ _ (f : r ≼i s) g]
       rfl
     have et : f.top = g.top :=
       by
       refine' extensional_of_trichotomous_of_irrefl s fun x => _
-      simp only [f.down, g.down, ef, coe_fn_to_rel_embedding]
+      simp only [f.down, g.down, ef, coeFn_toRelEmbedding]
     cases f
     cases g
     have := RelEmbedding.coe_fn_injective ef <;> congr ⟩
@@ -701,7 +701,7 @@ segment (if the range is not everything, hence one can take as top the minimum o
 of the range) or an order isomorphism (if the range is everything). -/
 noncomputable def InitialSeg.ltOrEq [IsWellOrder β s] (f : r ≼i s) : Sum (r ≺i s) (r ≃r s) :=
   by
-  by_cases h : surjective f
+  by_cases h : Surjective f
   · exact Sum.inr (RelIso.ofSurjective f h)
   · have h' : _ := (InitialSeg.eq_or_principal f).resolve_left h
     exact Sum.inl ⟨f, Classical.choose h', Classical.choose_spec h'⟩
@@ -734,9 +734,9 @@ theorem InitialSeg.ltOrEq_apply_right [IsWellOrder β s] (f : r ≼i s) (g : r �
 /-- Composition of an initial segment taking values in a well order and a principal segment. -/
 noncomputable def InitialSeg.leLT [IsWellOrder β s] [IsTrans γ t] (f : r ≼i s) (g : s ≺i t) :
     r ≺i t :=
-  match f.lt_or_eq with
-  | Sum.inl f' => f'.trans g
-  | Sum.inr f' => PrincipalSeg.equivLT f' g
+  match f.ltOrEq with
+  | sum.inl f' => f'.trans g
+  | sum.inr f' => PrincipalSeg.equivLT f' g
 #align initial_seg.le_lt InitialSeg.leLT
 -/
 
@@ -793,7 +793,7 @@ theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
   unfold collapse_F; rw [WellFounded.fix_eq]
   exact
     WellFounded.not_lt_min _ _ _
-      (show b ∈ { b | ∀ (a') (h : r a' a), s (collapse_F f a').1 b } from h)
+      (show b ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b } from h)
 #align rel_embedding.collapse_F.not_lt RelEmbedding.collapseF.not_lt
 -/
 
@@ -802,15 +802,15 @@ theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
 to fill the gaps. -/
 noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   haveI := RelEmbedding.isWellOrder f
-  ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
+  ⟨RelEmbedding.ofMonotone (fun a => (collapseF f a).1) fun a b => collapseF.lt f, fun a b =>
     Acc.recOn (is_well_founded.wf.apply b : Acc s b)
       (fun b H IH a h => by
-        let S := { a | ¬s (collapse_F f a).1 b }
+        let S := { a | ¬s (collapseF f a).1 b }
         have : S.nonempty := ⟨_, asymm h⟩
         exists (IsWellFounded.wf : WellFounded r).min S this
         refine' ((@trichotomous _ s _ _ _).resolve_left _).resolve_right _
         · exact (IsWellFounded.wf : WellFounded r).min_mem S this
-        · refine' collapse_F.not_lt f _ fun a' h' => _
+        · refine' collapseF.not_lt f _ fun a' h' => _
           by_contra hn
           exact is_well_founded.wf.not_lt_min S this hn h')
       a⟩

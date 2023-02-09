@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,15 +67,15 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
           { app := fun j => limit.π F j ⊗ limit.π G j
             naturality' := fun j j' f => by
               dsimp
-              simp only [category.id_comp, ← tensor_comp, limit.w] } }
+              simp only [Category.id_comp, ← tensor_comp, limit.w] } }
   μ_natural' X Y X' Y' f g := by
     ext; dsimp
-    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.tensor_hom_app, limit.lift_map,
-      nat_trans.comp_app, category.assoc, ← tensor_comp, lim_map_π]
+    simp only [limit.lift_π, Cones.postcompose_obj_π, Monoidal.tensorHom_app, limit.lift_map,
+      NatTrans.comp_app, Category.assoc, ← tensor_comp, limMap_π]
   associativity' X Y Z := by
     ext; dsimp
-    simp only [limit.lift_π, cones.postcompose_obj_π, monoidal.associator_hom_app, limit.lift_map,
-      nat_trans.comp_app, category.assoc]
+    simp only [limit.lift_π, Cones.postcompose_obj_π, Monoidal.associator_hom_app, limit.lift_map,
+      NatTrans.comp_app, Category.assoc]
     slice_lhs 2 2 => rw [← tensor_id_comp_id_tensor]
     slice_lhs 1 2 =>
       rw [← comp_tensor_id, limit.lift_π]
@@ -95,7 +95,7 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
       rw [← comp_tensor_id]
       erw [limit.lift_π]
       dsimp
-    slice_rhs 2 3 => rw [left_unitor_naturality]
+    slice_rhs 2 3 => rw [leftUnitor_naturality]
     simp
   right_unitality' X := by
     ext; dsimp
@@ -105,7 +105,7 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
       rw [← id_tensor_comp]
       erw [limit.lift_π]
       dsimp
-    slice_rhs 2 3 => rw [right_unitor_naturality]
+    slice_rhs 2 3 => rw [rightUnitor_naturality]
     simp
 #align category_theory.limits.limit_lax_monoidal CategoryTheory.Limits.limitLaxMonoidal
 
@@ -149,7 +149,7 @@ theorem limLax_μ (F G : J ⥤ C) :
             { app := fun j => limit.π F j ⊗ limit.π G j
               naturality' := fun j j' f => by
                 dsimp
-                simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
+                simp only [Category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
 #align category_theory.limits.lim_lax_μ CategoryTheory.Limits.limLax_μ
 

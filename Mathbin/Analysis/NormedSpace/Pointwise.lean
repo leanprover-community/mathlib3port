@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,10 +74,10 @@ fixed neighborhood of `x`. -/
 theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s) {u : Set E}
     (hu : u ∈ 𝓝 x) : ∀ᶠ r in 𝓝 (0 : 𝕜), {x} + r • s ⊆ u :=
   by
-  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closed_ball x ε ⊆ u :=
+  obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _)(hε : 0 < ε), closedBall x ε ⊆ u :=
     nhds_basis_closed_ball.mem_iff.1 hu
-  obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
-  have : Metric.closedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closed_ball_mem_nhds _ (div_pos εpos Rpos)
+  obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closedBall 0 R := hs.subset_ball_lt 0 0
+  have : Metric.closedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closedBall_mem_nhds _ (div_pos εpos Rpos)
   filter_upwards [this]with r hr
   simp only [image_add_left, singleton_add]
   intro y hy
@@ -92,7 +92,7 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
       
   have : y = x + r • z := by simp only [hz, add_neg_cancel_left]
   apply hε
-  simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I
+  simpa only [this, dist_eq_norm, add_sub_cancel', mem_closedBall] using I
 #align eventually_singleton_add_smul_subset eventually_singleton_add_smul_subset
 
 variable [NormedSpace ℝ E] {x y z : E} {δ ε : ℝ}
@@ -180,7 +180,7 @@ theorem disjoint_ball_ball_iff (hδ : 0 < δ) (hε : 0 < ε) :
 theorem disjoint_ball_closedBall_iff (hδ : 0 < δ) (hε : 0 ≤ ε) :
     Disjoint (ball x δ) (closedBall y ε) ↔ δ + ε ≤ dist x y :=
   by
-  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_closed_ball⟩
+  refine' ⟨fun h => le_of_not_lt fun hxy => _, ball_disjoint_closedBall⟩
   rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_lt_le hδ hε hxy
   rw [dist_comm] at hxz
@@ -196,7 +196,7 @@ theorem disjoint_closedBall_ball_iff (hδ : 0 ≤ δ) (hε : 0 < ε) :
 theorem disjoint_closedBall_closedBall_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
     Disjoint (closedBall x δ) (closedBall y ε) ↔ δ + ε < dist x y :=
   by
-  refine' ⟨fun h => lt_of_not_ge fun hxy => _, closed_ball_disjoint_closed_ball⟩
+  refine' ⟨fun h => lt_of_not_ge fun hxy => _, closedBall_disjoint_closedBall⟩
   rw [add_comm] at hxy
   obtain ⟨z, hxz, hzy⟩ := exists_dist_le_le hδ hε hxy
   rw [dist_comm] at hxz
@@ -209,30 +209,29 @@ open Emetric Ennreal
 theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     infEdist x (thickening δ s) = infEdist x s - Ennreal.ofReal δ :=
   by
-  obtain hs | hs := lt_or_le (inf_edist x s) (Ennreal.ofReal δ)
-  · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
+  obtain hs | hs := lt_or_le (infEdist x s) (Ennreal.ofReal δ)
+  · rw [infEdist_zero_of_mem, tsub_eq_zero_of_le hs.le]
     exact hs
-  refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
-  refine' le_sub_of_add_le_right of_real_ne_top _
-  refine' le_inf_edist.2 fun z hz => le_of_forall_lt' fun r h => _
+  refine' (tsub_le_iff_right.2 infEdist_le_infEdist_thickening_add).antisymm' _
+  refine' le_sub_of_add_le_right ofReal_ne_top _
+  refine' le_infEdist.2 fun z hz => le_of_forall_lt' fun r h => _
   cases r
   ·
     exact
       add_lt_top.2
-        ⟨lt_top_iff_ne_top.2 <| inf_edist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩,
-          of_real_lt_top⟩
+        ⟨lt_top_iff_ne_top.2 <| infEdist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩, ofReal_lt_top⟩
   have hr : 0 < ↑r - δ := by
     refine' sub_pos_of_lt _
-    have := hs.trans_lt ((inf_edist_le_edist_of_mem hz).trans_lt h)
-    rw [of_real_eq_coe_nnreal hδ.le, some_eq_coe] at this
+    have := hs.trans_lt ((infEdist_le_edist_of_mem hz).trans_lt h)
+    rw [ofReal_eq_coe_nnreal hδ.le, some_eq_coe] at this
     exact_mod_cast this
   rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine'
-    (Ennreal.add_lt_add_right of_real_ne_top <|
-          inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_ofReal.2 hxy⟩).trans_le
+    (Ennreal.add_lt_add_right ofReal_ne_top <|
+          infEdist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_ofReal.2 hxy⟩).trans_le
       _
-  rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
+  rw [← ofReal_add hr.le hδ.le, sub_add_cancel, ofReal_coe_nnreal]
   exact le_rfl
 #align inf_edist_thickening infEdist_thickening
 
@@ -270,8 +269,8 @@ theorem infEdist_cthickening (δ : ℝ) (s : Set E) (x : E) :
     infEdist x (cthickening δ s) = infEdist x s - Ennreal.ofReal δ :=
   by
   obtain hδ | hδ := le_or_lt δ 0
-  · rw [cthickening_of_nonpos hδ, inf_edist_closure, of_real_of_nonpos hδ, tsub_zero]
-  · rw [← closure_thickening hδ, inf_edist_closure, infEdist_thickening hδ] <;> infer_instance
+  · rw [cthickening_of_nonpos hδ, infEdist_closure, ofReal_of_nonpos hδ, tsub_zero]
+  · rw [← closure_thickening hδ, infEdist_closure, infEdist_thickening hδ] <;> infer_instance
 #align inf_edist_cthickening infEdist_cthickening
 
 @[simp]
@@ -353,7 +352,7 @@ theorem closedBall_sub_ball (hε : 0 ≤ ε) (hδ : 0 < δ) (a b : E) :
 
 theorem closedBall_add_closedBall [ProperSpace E] (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (a b : E) :
     closedBall a ε + closedBall b δ = closedBall (a + b) (ε + δ) := by
-  rw [(is_compact_closed_ball _ _).add_closedBall hδ b, cthickening_closedBall hδ hε a,
+  rw [(isCompact_closedBall _ _).add_closedBall hδ b, cthickening_closedBall hδ hε a,
     Metric.vadd_closedBall, vadd_eq_add, add_comm, add_comm δ]
 #align closed_ball_add_closed_ball closedBall_add_closedBall
 
@@ -372,12 +371,12 @@ theorem smul_closedBall (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) :
     c • closedBall x r = closedBall (c • x) (‖c‖ * r) :=
   by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [hr, zero_smul_set, Set.singleton_zero, ← nonempty_closed_ball]
+  · simp [hr, zero_smul_set, Set.singleton_zero, ← nonempty_closedBall]
   · exact smul_closed_ball' hc x r
 #align smul_closed_ball smul_closedBall
 
 theorem smul_closed_unit_ball (c : 𝕜) : c • closedBall (0 : E) (1 : ℝ) = closedBall (0 : E) ‖c‖ :=
-  by rw [smul_closedBall _ _ zero_le_one, smul_zero, mul_one]
+  by rw [smul_closed_ball _ _ zero_le_one, smul_zero, mul_one]
 #align smul_closed_unit_ball smul_closed_unit_ball
 
 variable [NormedSpace ℝ E]
@@ -397,7 +396,7 @@ theorem NormedSpace.sphere_nonempty [Nontrivial E] {x : E} {r : ℝ} :
   by
   obtain ⟨y, hy⟩ := exists_ne x
   refine'
-    ⟨fun h => nonempty_closed_ball.1 (h.mono sphere_subset_closed_ball), fun hr =>
+    ⟨fun h => nonempty_closedBall.1 (h.mono sphere_subset_closedBall), fun hr =>
       ⟨r • ‖y - x‖⁻¹ • (y - x) + x, _⟩⟩
   have : ‖y - x‖ ≠ 0 := by simpa [sub_eq_zero]
   simp [norm_smul, this, Real.norm_of_nonneg hr]

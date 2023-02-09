@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.independence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,8 +183,8 @@ theorem indepBotLeft (m' : MeasurableSpace Ω) {m : MeasurableSpace Ω} {μ : Me
 theorem indepSetEmptyRight {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
     (s : Set Ω) : IndepSetCat s ∅ μ :=
   by
-  simp only [indep_set, generate_from_singleton_empty]
-  exact indep_bot_right _
+  simp only [IndepSetCat, generateFrom_singleton_empty]
+  exact indepBotRight _
 #align probability_theory.indep_set_empty_right ProbabilityTheory.indepSetEmptyRight
 
 theorem indepSetEmptyLeft {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
@@ -327,8 +327,8 @@ theorem IndepSets.indepSets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ :
 theorem Indep.indep {m : ι → MeasurableSpace Ω} [MeasurableSpace Ω] {μ : Measure Ω}
     (h_indep : Indep m μ) {i j : ι} (hij : i ≠ j) : IndepCat (m i) (m j) μ :=
   by
-  change indep_sets ((fun x => measurable_set[m x]) i) ((fun x => measurable_set[m x]) j) μ
-  exact Indep_sets.indep_sets h_indep hij
+  change IndepSetsCat ((fun x => measurable_set[m x]) i) ((fun x => measurable_set[m x]) j) μ
+  exact IndepSets.indepSets h_indep hij
 #align probability_theory.Indep.indep ProbabilityTheory.Indep.indep
 
 theorem IndepFun.indepFun {m₀ : MeasurableSpace Ω} {μ : Measure Ω} {β : ι → Type _}
@@ -379,15 +379,15 @@ private theorem indep_sets.indep_aux {m2 : MeasurableSpace Ω} {m : MeasurableSp
   let μ_inter := μ.restrict t1
   let ν := μ t1 • μ
   have h_univ : μ_inter Set.univ = ν Set.univ := by
-    rw [measure.restrict_apply_univ, measure.smul_apply, smul_eq_mul, measure_univ, mul_one]
-  haveI : is_finite_measure μ_inter := @restrict.is_finite_measure Ω _ t1 μ ⟨measure_lt_top μ t1⟩
-  rw [Set.inter_comm, ← measure.restrict_apply (h2 t2 ht2m)]
-  refine' ext_on_measurable_space_of_generate_finite m p2 (fun t ht => _) h2 hpm2 hp2 h_univ ht2m
+    rw [Measure.restrict_apply_univ, Measure.smul_apply, smul_eq_mul, measure_univ, mul_one]
+  haveI : IsFiniteMeasure μ_inter := @restrict.is_finite_measure Ω _ t1 μ ⟨measure_lt_top μ t1⟩
+  rw [Set.inter_comm, ← Measure.restrict_apply (h2 t2 ht2m)]
+  refine' ext_on_measurableSpace_of_generate_finite m p2 (fun t ht => _) h2 hpm2 hp2 h_univ ht2m
   have ht2 : measurable_set[m] t := by
     refine' h2 _ _
     rw [hpm2]
-    exact measurable_set_generate_from ht
-  rw [measure.restrict_apply ht2, measure.smul_apply, Set.inter_comm]
+    exact measurableSet_generateFrom ht
+  rw [Measure.restrict_apply ht2, Measure.smul_apply, Set.inter_comm]
   exact hyp t1 t ht1 ht
 #align probability_theory.indep_sets.indep_aux probability_theory.indep_sets.indep_aux
 
@@ -400,16 +400,16 @@ theorem IndepSetsCat.indep {m1 m2 : MeasurableSpace Ω} {m : MeasurableSpace Ω}
   let μ_inter := μ.restrict t2
   let ν := μ t2 • μ
   have h_univ : μ_inter Set.univ = ν Set.univ := by
-    rw [measure.restrict_apply_univ, measure.smul_apply, smul_eq_mul, measure_univ, mul_one]
-  haveI : is_finite_measure μ_inter := @restrict.is_finite_measure Ω _ t2 μ ⟨measure_lt_top μ t2⟩
-  rw [mul_comm, ← measure.restrict_apply (h1 t1 ht1)]
-  refine' ext_on_measurable_space_of_generate_finite m p1 (fun t ht => _) h1 hpm1 hp1 h_univ ht1
+    rw [Measure.restrict_apply_univ, Measure.smul_apply, smul_eq_mul, measure_univ, mul_one]
+  haveI : IsFiniteMeasure μ_inter := @restrict.is_finite_measure Ω _ t2 μ ⟨measure_lt_top μ t2⟩
+  rw [mul_comm, ← Measure.restrict_apply (h1 t1 ht1)]
+  refine' ext_on_measurableSpace_of_generate_finite m p1 (fun t ht => _) h1 hpm1 hp1 h_univ ht1
   have ht1 : measurable_set[m] t := by
     refine' h1 _ _
     rw [hpm1]
-    exact measurable_set_generate_from ht
-  rw [measure.restrict_apply ht1, measure.smul_apply, smul_eq_mul, mul_comm]
-  exact indep_sets.indep_aux h2 hp2 hpm2 hyp ht ht2
+    exact measurableSet_generateFrom ht
+  rw [Measure.restrict_apply ht1, Measure.smul_apply, smul_eq_mul, mul_comm]
+  exact IndepSets.indep_aux h2 hp2 hpm2 hyp ht ht2
 #align probability_theory.indep_sets.indep ProbabilityTheory.IndepSetsCat.indep
 
 theorem IndepSetsCat.indep' {m : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
@@ -470,14 +470,14 @@ theorem IndepSet.indepGenerateFromOfDisjoint [IsProbabilityMeasure μ] {s : ι �
   by
   rw [← generateFrom_piUnionInter_singleton_left, ← generateFrom_piUnionInter_singleton_left]
   refine'
-    indep_sets.indep'
-      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurable_set_generate_from ht))
-      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurable_set_generate_from ht)) _ _ _
-  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
-  · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+    IndepSetsCat.indep'
+      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurableSet_generateFrom ht))
+      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurableSet_generateFrom ht)) _ _ _
+  · exact fun k => generateFrom_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
+  · exact fun k => generateFrom_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
   · exact isPiSystem_piUnionInter _ (fun k => IsPiSystem.singleton _) _
   · exact isPiSystem_piUnionInter _ (fun k => IsPiSystem.singleton _) _
-  · classical exact indep_sets_pi_Union_Inter_of_disjoint (Indep.Indep_sets (fun n => rfl) hs) hST
+  · classical exact indepSetsPiUnionInterOfDisjoint (Indep.indepSets (fun n => rfl) hs) hST
 #align probability_theory.Indep_set.indep_generate_from_of_disjoint ProbabilityTheory.IndepSet.indepGenerateFromOfDisjoint
 
 theorem indepSuprOfDisjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpace Ω}
@@ -485,12 +485,12 @@ theorem indepSuprOfDisjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpac
     IndepCat (⨆ i ∈ S, m i) (⨆ i ∈ T, m i) μ :=
   by
   refine'
-    indep_sets.indep (supᵢ₂_le fun i _ => h_le i) (supᵢ₂_le fun i _ => h_le i) _ _
+    IndepSetsCat.indep (supᵢ₂_le fun i _ => h_le i) (supᵢ₂_le fun i _ => h_le i) _ _
       (generateFrom_piUnionInter_measurableSet m S).symm
       (generateFrom_piUnionInter_measurableSet m T).symm _
   · exact isPiSystem_piUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
   · exact isPiSystem_piUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
-  · classical exact indep_sets_pi_Union_Inter_of_disjoint h_indep hST
+  · classical exact indepSetsPiUnionInterOfDisjoint h_indep hST
 #align probability_theory.indep_supr_of_disjoint ProbabilityTheory.indepSuprOfDisjoint
 
 theorem indepSuprOfDirectedLe {Ω} {m : ι → MeasurableSpace Ω} {m' m0 : MeasurableSpace Ω}
@@ -499,21 +499,21 @@ theorem indepSuprOfDirectedLe {Ω} {m : ι → MeasurableSpace Ω} {m' m0 : Meas
   by
   let p : ι → Set (Set Ω) := fun n => { t | measurable_set[m n] t }
   have hp : ∀ n, IsPiSystem (p n) := fun n => @is_pi_system_measurable_set Ω (m n)
-  have h_gen_n : ∀ n, m n = generate_from (p n) := fun n =>
+  have h_gen_n : ∀ n, m n = generateFrom (p n) := fun n =>
     (@generate_from_measurable_set Ω (m n)).symm
   have hp_supr_pi : IsPiSystem (⋃ n, p n) := isPiSystem_unionᵢ_of_directed_le p hp hm
   let p' := { t : Set Ω | measurable_set[m'] t }
   have hp'_pi : IsPiSystem p' := @is_pi_system_measurable_set Ω m'
-  have h_gen' : m' = generate_from p' := (@generate_from_measurable_set Ω m').symm
+  have h_gen' : m' = generateFrom p' := (@generate_from_measurable_set Ω m').symm
   -- the π-systems defined are independent
-  have h_pi_system_indep : indep_sets (⋃ n, p n) p' μ :=
+  have h_pi_system_indep : IndepSetsCat (⋃ n, p n) p' μ :=
     by
-    refine' indep_sets.Union _
+    refine' IndepSetsCat.union _
     simp_rw [h_gen_n, h_gen'] at h_indep
-    exact fun n => (h_indep n).IndepSetsCat
+    exact fun n => (h_indep n).indepSets
   -- now go from π-systems to σ-algebras
-  refine' indep_sets.indep (supᵢ_le h_le) h_le' hp_supr_pi hp'_pi _ h_gen' h_pi_system_indep
-  exact (generate_from_Union_measurable_set _).symm
+  refine' IndepSetsCat.indep (supᵢ_le h_le) h_le' hp_supr_pi hp'_pi _ h_gen' h_pi_system_indep
+  exact (generateFrom_unionᵢ_measurableSet _).symm
 #align probability_theory.indep_supr_of_directed_le ProbabilityTheory.indepSuprOfDirectedLe
 
 theorem IndepSet.indepGenerateFromLt [Preorder ι] [IsProbabilityMeasure μ] {s : ι → Set Ω}
@@ -595,7 +595,7 @@ theorem IndepSets.piUnionInterOfNotMem {π : ι → Set (Set Ω)} {a : ι} {S : 
       have h_t1_inter_t2 : t1 ∩ t2 = ⋂ n ∈ insert a s, f n := by
         rw [h_t1, h_t2, Finset.set_binterᵢ_insert, Set.inter_comm]
       rw [h_t1_inter_t2, ← hp_ind (insert a s) h_f_mem]
-    have has : a ∉ s := fun has_mem => haS (hs_mem Membership)
+    have has : a ∉ s := fun has_mem => haS (hs_mem has_mem)
     rw [h_μ_inter, Finset.prod_insert has, h_t2, mul_comm, h_μ_t1]
 #align probability_theory.Indep_sets.pi_Union_Inter_of_not_mem ProbabilityTheory.IndepSets.piUnionInterOfNotMem
 
@@ -612,14 +612,14 @@ theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω
     have hf_m_S : ∀ x ∈ S, measurable_set[m x] (f x) := fun x hx => hf_m x (by simp [hx])
     rw [Finset.set_binterᵢ_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
     let p := piUnionInter π S
-    set m_p := generate_from p with hS_eq_generate
-    have h_indep : indep m_p (m a) μ :=
+    set m_p := generateFrom p with hS_eq_generate
+    have h_indep : IndepCat m_p (m a) μ :=
       by
       have hp : IsPiSystem p := isPiSystem_piUnionInter π h_pi S
-      have h_le' : ∀ i, generate_from (π i) ≤ m0 := fun i => (h_generate i).symm.trans_le (h_le i)
+      have h_le' : ∀ i, generateFrom (π i) ≤ m0 := fun i => (h_generate i).symm.trans_le (h_le i)
       have hm_p : m_p ≤ m0 := generateFrom_piUnionInter_le π h_le' S
       exact
-        indep_sets.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
+        IndepSetsCat.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
           (h_ind.pi_Union_Inter_of_not_mem ha_notin_S)
     refine' h_indep.symm (f a) (⋂ n ∈ S, f n) (hf_m a (Finset.mem_insert_self a S)) _
     have h_le_p : ∀ i ∈ S, m i ≤ m_p := by
@@ -671,14 +671,14 @@ theorem IndepCat.indepSetOfMeasurableSet {m₁ m₂ m0 : MeasurableSpace Ω} {μ
     (ht : measurable_set[m₂] t) : IndepSetCat s t μ :=
   by
   refine' fun s' t' hs' ht' => h_indep s' t' _ _
-  · refine' generate_from_induction (fun u => measurable_set[m₁] u) {s} _ _ _ _ hs'
+  · refine' generateFrom_induction (fun u => measurable_set[m₁] u) {s} _ _ _ _ hs'
     · simp only [hs, Set.mem_singleton_iff, Set.mem_setOf_eq, forall_eq]
-    · exact @MeasurableSet.empty _ m₁
+    · exact @measurable_set.empty _ m₁
     · exact fun u hu => hu.compl
     · exact fun f hf => MeasurableSet.unionᵢ hf
-  · refine' generate_from_induction (fun u => measurable_set[m₂] u) {t} _ _ _ _ ht'
+  · refine' generateFrom_induction (fun u => measurable_set[m₂] u) {t} _ _ _ _ ht'
     · simp only [ht, Set.mem_singleton_iff, Set.mem_setOf_eq, forall_eq]
-    · exact @MeasurableSet.empty _ m₂
+    · exact @measurable_set.empty _ m₂
     · exact fun u hu => hu.compl
     · exact fun f hf => MeasurableSet.unionᵢ hf
 #align probability_theory.indep.indep_set_of_measurable_set ProbabilityTheory.IndepCat.indepSetOfMeasurableSet
@@ -724,7 +724,7 @@ theorem indepFun_iff_measure_inter_preimage_eq_mul {ι : Type _} {β : ι → Ty
   intro h S setsΩ h_meas
   classical
     let setsβ : ∀ i : ι, Set (β i) := fun i =>
-      dite (i ∈ S) (fun hi_mem => (h_meas i hi_mem).some) fun _ => Set.univ
+      dite (i ∈ S) (fun hi_mem => (h_meas i hi_mem).choose) fun _ => Set.univ
     have h_measβ : ∀ i ∈ S, measurable_set[m i] (setsβ i) :=
       by
       intro i hi_mem
@@ -757,8 +757,8 @@ theorem indepFunCat_iff_indepSetCat_preimage {mβ : MeasurableSpace β} {mβ' : 
   by
   refine' indep_fun_iff_measure_inter_preimage_eq_mul.trans _
   constructor <;> intro h s t hs ht <;> specialize h s t hs ht
-  · rwa [indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
-  · rwa [← indep_set_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
+  · rwa [indepSetCat_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
+  · rwa [← indepSetCat_iff_measure_inter_eq_mul (hf hs) (hg ht) μ]
 #align probability_theory.indep_fun_iff_indep_set_preimage ProbabilityTheory.indepFunCat_iff_indepSetCat_preimage
 
 @[symm]
@@ -802,9 +802,9 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
       Set.pi (Set.univ : Set S) fun i => { s : Set (β i) | measurable_set[m i] s }
   let πS := { s : Set Ω | ∃ t ∈ πSβ, (fun a (i : S) => f i a) ⁻¹' t = s }
   have hπS_pi : IsPiSystem πS := is_pi_system_pi.comap fun a i => f i a
-  have hπS_gen : (measurable_space.pi.comap fun a (i : S) => f i a) = generate_from πS :=
+  have hπS_gen : (measurable_space.pi.comap fun a (i : S) => f i a) = generateFrom πS :=
     by
-    rw [generate_from_pi.symm, comap_generate_from]
+    rw [generate_from_pi.symm, comap_generateFrom]
     · congr with s
       simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop]
     · infer_instance
@@ -813,15 +813,15 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
       Set.pi (Set.univ : Set T) fun i => { s : Set (β i) | measurable_set[m i] s }
   let πT := { s : Set Ω | ∃ t ∈ πTβ, (fun a (i : T) => f i a) ⁻¹' t = s }
   have hπT_pi : IsPiSystem πT := is_pi_system_pi.comap fun a i => f i a
-  have hπT_gen : (measurable_space.pi.comap fun a (i : T) => f i a) = generate_from πT :=
+  have hπT_gen : (measurable_space.pi.comap fun a (i : T) => f i a) = generateFrom πT :=
     by
-    rw [generate_from_pi.symm, comap_generate_from]
+    rw [generate_from_pi.symm, comap_generateFrom]
     · congr with s
       simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop]
     · infer_instance
   -- To prove independence, we prove independence of the generating π-systems.
   refine'
-    indep_sets.indep (Measurable.comap_le (measurable_pi_iff.mpr fun i => hf_meas i))
+    IndepSetsCat.indep (Measurable.comap_le (measurable_pi_iff.mpr fun i => hf_meas i))
       (Measurable.comap_le (measurable_pi_iff.mpr fun i => hf_meas i)) hπS_pi hπT_pi hπS_gen hπT_gen
       _
   rintro _ _ ⟨s, ⟨sets_s, hs1, hs2⟩, rfl⟩ ⟨t, ⟨sets_t, ht1, ht2⟩, rfl⟩
@@ -880,7 +880,7 @@ theorem IndepFun.indepFunFinset [IsProbabilityMeasure μ] {ι : Type _} {β : ι
         specialize h i hi
         simp_rw [sets_t', dif_pos hi] at h
         exact h
-    rw [Indep_fun_iff_measure_inter_preimage_eq_mul] at hf_Indep
+    rw [indepFun_iff_measure_inter_preimage_eq_mul] at hf_Indep
     rw [h_eq_inter_S, h_eq_inter_T, hf_Indep S h_meas_s', hf_Indep T h_meas_t']
     have h_Inter_inter :
       ((⋂ i ∈ S, f i ⁻¹' sets_s' i) ∩ ⋂ i ∈ T, f i ⁻¹' sets_t' i) =
@@ -956,10 +956,10 @@ theorem IndepFun.mul [IsProbabilityMeasure μ] {ι : Type _} {β : Type _} {m : 
     (hf_meas : ∀ i, Measurable (f i)) (i j k : ι) (hik : i ≠ k) (hjk : j ≠ k) :
     IndepFunCat (f i * f j) (f k) μ :=
   by
-  have : indep_fun (fun ω => (f i ω, f j ω)) (f k) μ :=
+  have : IndepFunCat (fun ω => (f i ω, f j ω)) (f k) μ :=
     hf_Indep.indep_fun_prod hf_meas i j k hik hjk
-  change indep_fun ((fun p : β × β => p.fst * p.snd) ∘ fun ω => (f i ω, f j ω)) (id ∘ f k) μ
-  exact indep_fun.comp this (measurable_fst.mul measurable_snd) measurable_id
+  change IndepFunCat ((fun p : β × β => p.fst * p.snd) ∘ fun ω => (f i ω, f j ω)) (id ∘ f k) μ
+  exact IndepFunCat.comp this (measurable_fst.mul measurable_snd) measurable_id
 #align probability_theory.Indep_fun.mul ProbabilityTheory.IndepFun.mul
 #align probability_theory.Indep_fun.add ProbabilityTheory.IndepFun.add
 
@@ -1003,17 +1003,17 @@ theorem IndepFun.indepFunProdRangeSucc [IsProbabilityMeasure μ] {β : Type _} {
 theorem IndepSet.indepFunIndicator [Zero β] [One β] {m : MeasurableSpace β} {s : ι → Set Ω}
     (hs : IndepSet s μ) : IndepFun (fun n => m) (fun n => (s n).indicator fun ω => 1) μ := by
   classical
-    rw [Indep_fun_iff_measure_inter_preimage_eq_mul]
+    rw [indepFun_iff_measure_inter_preimage_eq_mul]
     rintro S π hπ
     simp_rw [Set.indicator_const_preimage_eq_union]
     refine' @hs S (fun i => ite (1 ∈ π i) (s i) ∅ ∪ ite ((0 : β) ∈ π i) (s iᶜ) ∅) fun i hi => _
-    have hsi : measurable_set[generate_from {s i}] (s i) :=
-      measurable_set_generate_from (Set.mem_singleton _)
+    have hsi : measurable_set[generateFrom {s i}] (s i) :=
+      measurableSet_generateFrom (Set.mem_singleton _)
     refine'
       MeasurableSet.union (MeasurableSet.ite' (fun _ => hsi) fun _ => _)
         (MeasurableSet.ite' (fun _ => hsi.compl) fun _ => _)
-    · exact @MeasurableSet.empty _ (generate_from {s i})
-    · exact @MeasurableSet.empty _ (generate_from {s i})
+    · exact @measurable_set.empty _ (generateFrom {s i})
+    · exact @measurable_set.empty _ (generateFrom {s i})
 #align probability_theory.Indep_set.Indep_fun_indicator ProbabilityTheory.IndepSet.indepFunIndicator
 
 end IndepFun
@@ -1033,8 +1033,8 @@ theorem measure_eq_zero_or_one_or_top_of_indepSetCat_self {t : Set Ω}
     (h_indep : IndepSetCat t t μ) : μ t = 0 ∨ μ t = 1 ∨ μ t = ∞ :=
   by
   specialize
-    h_indep t t (measurable_set_generate_from (Set.mem_singleton t))
-      (measurable_set_generate_from (Set.mem_singleton t))
+    h_indep t t (measurableSet_generateFrom (Set.mem_singleton t))
+      (measurableSet_generateFrom (Set.mem_singleton t))
   by_cases h0 : μ t = 0
   · exact Or.inl h0
   by_cases h_top : μ t = ∞
@@ -1046,7 +1046,7 @@ theorem measure_eq_zero_or_one_or_top_of_indepSetCat_self {t : Set Ω}
 theorem measure_eq_zero_or_one_of_indepSetCat_self [IsFiniteMeasure μ] {t : Set Ω}
     (h_indep : IndepSetCat t t μ) : μ t = 0 ∨ μ t = 1 :=
   by
-  have h_0_1_top := measure_eq_zero_or_one_or_top_of_indep_set_self h_indep
+  have h_0_1_top := measure_eq_zero_or_one_or_top_of_indepSetCat_self h_indep
   simpa [measure_ne_top μ] using h_0_1_top
 #align probability_theory.measure_eq_zero_or_one_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_of_indepSetCat_self
 
@@ -1077,9 +1077,9 @@ For the example of `f = at_top`, we can take `p = bdd_above` and `ns : ι → se
 theorem indepBsuprLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     {t : Set ι} (ht : p t) : IndepCat (⨆ n ∈ t, s n) (limsup s f) μ :=
   by
-  refine' indep_of_indep_of_le_right (indep_bsupr_compl h_le h_indep t) _
+  refine' indepOfIndepOfLeRight (indepBsuprCompl h_le h_indep t) _
   refine'
-    Limsup_le_of_le
+    limsupₛ_le_of_le
       (by
         run_tac
           is_bounded_default)
@@ -1092,8 +1092,8 @@ theorem indepSuprDirectedLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) :
     IndepCat (⨆ a, ⨆ n ∈ ns a, s n) (limsup s f) μ :=
   by
-  refine' indep_supr_of_directed_le _ _ _ _
-  · exact fun a => indep_bsupr_limsup h_le h_indep hf (hnsp a)
+  refine' indepSuprOfDirectedLe _ _ _ _
+  · exact fun a => indepBsuprLimsup h_le h_indep hf (hnsp a)
   · exact fun a => supᵢ₂_le fun n hn => h_le n
   · exact limsup_le_supr.trans (supᵢ_le h_le)
   · intro a b
@@ -1109,7 +1109,7 @@ theorem indepSuprLimsup (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) (hf : 
   by
   suffices (⨆ a, ⨆ n ∈ ns a, s n) = ⨆ n, s n by
     rw [← this]
-    exact indep_supr_directed_limsup h_le h_indep hf hns hnsp
+    exact indepSuprDirectedLimsup h_le h_indep hf hns hnsp
   rw [supᵢ_comm]
   refine' supᵢ_congr fun n => _
   have : (⨆ (i : α) (H : n ∈ ns i), s n) = ⨆ h : ∃ i, n ∈ ns i, s n := by rw [supᵢ_exists]
@@ -1142,8 +1142,8 @@ theorem indepLimsupAtTopSelf (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) :
   by
   let ns : ι → Set ι := Set.Iic
   have hnsp : ∀ i, BddAbove (ns i) := fun i => bddAbove_Iic
-  refine' indep_limsup_self h_le h_indep _ _ hnsp _
-  · simp only [mem_at_top_sets, ge_iff_le, Set.mem_compl_iff, BddAbove, upperBounds, Set.Nonempty]
+  refine' indepLimsupSelf h_le h_indep _ _ hnsp _
+  · simp only [mem_atTop_sets, ge_iff_le, Set.mem_compl_iff, BddAbove, upperBounds, Set.Nonempty]
     rintro t ⟨a, ha⟩
     obtain ⟨b, hb⟩ : ∃ b, a < b := exists_gt a
     refine' ⟨b, fun c hc hct => _⟩
@@ -1175,8 +1175,8 @@ theorem indepLimsupAtBotSelf (h_le : ∀ n, s n ≤ m0) (h_indep : Indep s μ) :
   by
   let ns : ι → Set ι := Set.Ici
   have hnsp : ∀ i, BddBelow (ns i) := fun i => bddBelow_Ici
-  refine' indep_limsup_self h_le h_indep _ _ hnsp _
-  · simp only [mem_at_bot_sets, ge_iff_le, Set.mem_compl_iff, BddBelow, lowerBounds, Set.Nonempty]
+  refine' indepLimsupSelf h_le h_indep _ _ hnsp _
+  · simp only [mem_atBot_sets, ge_iff_le, Set.mem_compl_iff, BddBelow, lowerBounds, Set.Nonempty]
     rintro t ⟨a, ha⟩
     obtain ⟨b, hb⟩ : ∃ b, b < a := exists_lt a
     refine' ⟨b, fun c hc hct => _⟩

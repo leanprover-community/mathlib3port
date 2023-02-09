@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.pullbacks
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,14 +36,14 @@ theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : 
   let e := equalizer.ι (π₁ ≫ f) (π₂ ≫ g)
   HasLimit.mk
     { Cone :=
-        PullbackCone.mk (e ≫ π₁) (e ≫ π₂) <| by simp only [category.assoc, equalizer.condition]
+        PullbackCone.mk (e ≫ π₁) (e ≫ π₂) <| by simp only [Category.assoc, equalizer.condition]
       IsLimit :=
         PullbackCone.IsLimit.mk _
           (fun s =>
             equalizer.lift (prod.lift (s.π.app WalkingCospan.left) (s.π.app WalkingCospan.right)) <|
               by
-              rw [← category.assoc, limit.lift_π, ← category.assoc, limit.lift_π] <;>
-                exact pullback_cone.condition _)
+              rw [← Category.assoc, limit.lift_π, ← Category.assoc, limit.lift_π] <;>
+                exact PullbackCone.condition _)
           (by simp) (by simp) fun s m h₁ h₂ => by
           ext
           · simpa using h₁
@@ -75,14 +75,14 @@ theorem hasColimitSpanOfHasColimitPairOfHasColimitParallelPair {C : Type u} [�
   HasColimit.mk
     { Cocone :=
         PushoutCocone.mk (ι₁ ≫ c) (ι₂ ≫ c) <| by
-          rw [← category.assoc, ← category.assoc, coequalizer.condition]
+          rw [← Category.assoc, ← Category.assoc, coequalizer.condition]
       IsColimit :=
         PushoutCocone.IsColimit.mk _
           (fun s =>
             coequalizer.desc (coprod.desc (s.ι.app WalkingSpan.left) (s.ι.app WalkingSpan.right)) <|
               by
-              rw [category.assoc, colimit.ι_desc, category.assoc, colimit.ι_desc] <;>
-                exact pushout_cocone.condition _)
+              rw [Category.assoc, colimit.ι_desc, Category.assoc, colimit.ι_desc] <;>
+                exact PushoutCocone.condition _)
           (by simp) (by simp) fun s m h₁ h₂ => by
           ext
           · simpa using h₁

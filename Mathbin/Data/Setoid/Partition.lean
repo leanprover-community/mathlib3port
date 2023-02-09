@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.setoid.partition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ namespace Setoid
 
 variable {α : Type _}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eq_of_mem_eqv_class /-
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x b b'}
@@ -56,7 +56,7 @@ theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
 #align setoid.eq_of_mem_eqv_class Setoid.eq_of_mem_eqv_class
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.mkClasses /-
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
 def mkClasses (c : Set (Set α)) (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) : Setoid α :=
@@ -104,7 +104,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Finite.{succ u1} β] (f : α -> β), Set.Finite.{u2} (Set.{u2} α) (Setoid.classes.{u2} α (Setoid.ker.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align setoid.finite_classes_ker Setoid.finite_classes_kerₓ'. -/
 theorem finite_classes_ker {α β : Type _} [Finite β] (f : α → β) : (Setoid.ker f).classes.Finite :=
-  (Set.finite_range _).Subset <| classes_ker_subset_fiber_set f
+  (Set.finite_range _).subset <| classes_ker_subset_fiber_set f
 #align setoid.finite_classes_ker Setoid.finite_classes_ker
 
 /- warning: setoid.card_classes_ker_le -> Setoid.card_classes_ker_le is a dubious translation:
@@ -154,7 +154,7 @@ theorem empty_not_mem_classes {r : Setoid α} : ∅ ∉ r.classes := fun ⟨y, h
 #align setoid.empty_not_mem_classes Setoid.empty_not_mem_classes
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » r.classes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » r.{ident := classes, full_name := setoid.classes}) -/
 #print Setoid.classes_eqv_classes /-
 /-- Equivalence classes partition the type. -/
 theorem classes_eqv_classes {r : Setoid α} (a) : ∃! (b : _)(_ : b ∈ r.classes), a ∈ b :=
@@ -174,7 +174,7 @@ theorem eq_of_mem_classes {r : Setoid α} {x b} (hc : b ∈ r.classes) (hb : x �
 #align setoid.eq_of_mem_classes Setoid.eq_of_mem_classes
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eq_eqv_class_of_mem /-
 /-- The elements of a set of sets partitioning α are the equivalence classes of the
     equivalence relation defined by the set of sets. -/
@@ -188,7 +188,7 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b �
 #align setoid.eq_eqv_class_of_mem Setoid.eq_eqv_class_of_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_class_mem /-
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
@@ -198,7 +198,7 @@ theorem eqv_class_mem {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), 
 #align setoid.eqv_class_mem Setoid.eqv_class_mem
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.eqv_class_mem' /-
 theorem eqv_class_mem' {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) {x} :
     { y : α | (mkClasses c H).Rel x y } ∈ c :=
@@ -215,7 +215,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b))) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align setoid.eqv_classes_disjoint Setoid.eqv_classes_disjointₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- Distinct elements of a set of sets partitioning α are disjoint. -/
 theorem eqv_classes_disjoint {c : Set (Set α)} (H : ∀ a, ∃! (b : _)(_ : b ∈ c), a ∈ b) :
     c.PairwiseDisjoint id := fun b₁ h₁ b₂ h₂ h =>
@@ -229,7 +229,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) -> (Set.PairwiseDisjoint.{u1, u1} (Set.{u1} α) (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) c (id.{succ u1} (Set.{u1} α))) -> (forall (a : α), ExistsUnique.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => ExistsUnique.{0} (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (fun (H : Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b)))
 Case conversion may be inaccurate. Consider using '#align setoid.eqv_classes_of_disjoint_union Setoid.eqv_classes_of_disjoint_unionₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 /-- A set of disjoint sets covering α partition α (classical). -/
 theorem eqv_classes_of_disjoint_union {c : Set (Set α)} (hu : Set.unionₛ c = @Set.univ α)
     (H : c.PairwiseDisjoint id) (a) : ∃! (b : _)(_ : b ∈ c), a ∈ b :=
@@ -268,7 +268,7 @@ theorem unionₛ_classes (r : Setoid α) : ⋃₀ r.classes = Set.univ :=
 
 section Partition
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ∈ » c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ∈ » c) -/
 #print Setoid.IsPartition /-
 /-- A collection `c : set (set α)` of sets is a partition of `α` into pairwise
 disjoint sets if `∅ ∉ c` and each element `a : α` belongs to a unique set `b ∈ c`. -/
@@ -332,7 +332,7 @@ theorem classes_mkClasses (c : Set (Set α)) (hc : IsPartition c) : (mkClasses c
         rwa [show s = b from
             hs.symm ▸
               Set.ext fun x =>
-                ⟨fun hx => symm' (mk_classes c hc.2) hx b hm hb, fun hx b' hc' hx' =>
+                ⟨fun hx => symm' (mkClasses c hc.2) hx b hm hb, fun hx b' hc' hx' =>
                   eq_of_mem_eqv_class hc.2 hm hx hc' hx' ▸ hb⟩],
       exists_of_mem_partition hc⟩
 #align setoid.classes_mk_classes Setoid.classes_mkClasses
@@ -357,7 +357,7 @@ instance Partition.partialOrder : PartialOrder (Subtype (@IsPartition α))
   lt_iff_le_not_le _ _ := Iff.rfl
   le_antisymm x y hx hy := by
     let h := @le_antisymm (Setoid α) _ _ _ hx hy
-    rw [Subtype.ext_iff_val, ← classes_mk_classes x.1 x.2, ← classes_mk_classes y.1 y.2, h]
+    rw [Subtype.ext_iff_val, ← classes_mkClasses x.1 x.2, ← classes_mkClasses y.1 y.2, h]
 #align setoid.partition.partial_order Setoid.Partition.partialOrder
 -/
 
@@ -371,10 +371,10 @@ protected def Partition.orderIso : Setoid α ≃o { C : Set (Set α) // IsPartit
   toFun r := ⟨r.classes, empty_not_mem_classes, classes_eqv_classes⟩
   invFun C := mkClasses C.1 C.2.2
   left_inv := mkClasses_classes
-  right_inv C := by rw [Subtype.ext_iff_val, ← classes_mk_classes C.1 C.2]
+  right_inv C := by rw [Subtype.ext_iff_val, ← classes_mkClasses C.1 C.2]
   map_rel_iff' r s :=
     by
-    conv_rhs => rw [← mk_classes_classes r, ← mk_classes_classes s]
+    conv_rhs => rw [← mkClasses_classes r, ← mkClasses_classes s]
     rfl
 #align setoid.partition.order_iso Setoid.Partition.orderIso
 -/
@@ -422,7 +422,7 @@ theorem Finpartition.isPartition_parts {α} (f : Finpartition (Set.univ : Set α
     Setoid.IsPartition (f.parts : Set (Set α)) :=
   ⟨f.not_bot_mem,
     Setoid.eqv_classes_of_disjoint_union (f.parts.sup_id_set_eq_unionₛ.symm.trans f.supParts)
-      f.SupIndep.PairwiseDisjoint⟩
+      f.supIndep.pairwiseDisjoint⟩
 #align finpartition.is_partition_parts Finpartition.isPartition_parts
 
 #print IndexedPartition /-
@@ -455,9 +455,9 @@ noncomputable def IndexedPartition.mk' {ι α : Type _} (s : ι → Set α)
     (ex : ∀ x, ∃ i, x ∈ s i) : IndexedPartition s
     where
   eq_of_mem x i j hxi hxj := by_contradiction fun h => (dis _ _ h).le_bot ⟨hxi, hxj⟩
-  some i := (Nonempty i).some
-  some_mem i := (Nonempty i).choose_spec
-  index x := (ex x).some
+  some i := (nonempty i).some
+  some_mem i := (nonempty i).choose_spec
+  index x := (ex x).choose
   mem_index x := (ex x).choose_spec
 #align indexed_partition.mk' IndexedPartition.mk'
 
@@ -503,7 +503,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} {s : ι -> (Set.{u1} α)}, (IndexedPartition.{u2, u1} ι α s) -> (forall {i : ι} {j : ι}, (Ne.{succ u2} ι i j) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (s i) (s j)))
 Case conversion may be inaccurate. Consider using '#align indexed_partition.disjoint IndexedPartition.disjointₓ'. -/
 theorem disjoint : ∀ {i j}, i ≠ j → Disjoint (s i) (s j) := fun i j h =>
-  disjoint_left.mpr fun x hxi hxj => h (hs.eq_of_mem hxi hxj)
+  disjoint_left.mpr fun x hxi hxj => Exists (hs.eq_of_mem hxi True)
 #align indexed_partition.disjoint IndexedPartition.disjoint
 
 #print IndexedPartition.mem_iff_index_eq /-
@@ -538,7 +538,7 @@ theorem index_some (i : ι) : hs.index (hs.some i) = i :=
 #align indexed_partition.index_some IndexedPartition.index_some
 
 #print IndexedPartition.some_index /-
-theorem some_index (x : α) : hs.Setoid.Rel (hs.some (hs.index x)) x :=
+theorem some_index (x : α) : hs.setoid.Rel (hs.some (hs.index x)) x :=
   hs.index_some (hs.index x)
 #align indexed_partition.some_index IndexedPartition.some_index
 -/
@@ -546,7 +546,7 @@ theorem some_index (x : α) : hs.Setoid.Rel (hs.some (hs.index x)) x :=
 #print IndexedPartition.Quotient /-
 /-- The quotient associated to an indexed partition. -/
 protected def Quotient :=
-  Quotient hs.Setoid
+  Quotient hs.setoid
 #align indexed_partition.quotient IndexedPartition.Quotient
 -/
 
@@ -568,7 +568,7 @@ theorem proj_eq_iff {x y : α} : hs.proj x = hs.proj y ↔ hs.index x = hs.index
 
 #print IndexedPartition.proj_some_index /-
 @[simp]
-theorem proj_some_index (x : α) : hs.proj (hs.some (hs.index x)) = hs.proj x :=
+theorem proj_some_index (x : α) : hs.proj (True.some (hs.index x)) = hs.proj x :=
   Quotient.eq''.2 (hs.some_index x)
 #align indexed_partition.proj_some_index IndexedPartition.proj_some_index
 -/
@@ -645,7 +645,7 @@ theorem proj_out (x : hs.Quotient) : hs.proj (hs.out x) = x :=
 #align indexed_partition.proj_out IndexedPartition.proj_out
 
 #print IndexedPartition.class_of /-
-theorem class_of {x : α} : setOf (hs.Setoid.Rel x) = s (hs.index x) :=
+theorem class_of {x : α} : setOf (hs.setoid.Rel x) = s (hs.index x) :=
   Set.ext fun y => eq_comm.trans hs.mem_iff_index_eq.symm
 #align indexed_partition.class_of IndexedPartition.class_of
 -/

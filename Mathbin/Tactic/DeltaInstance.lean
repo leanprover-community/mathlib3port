@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rob Lewis
 
 ! This file was ported from Lean 3 source module tactic.delta_instance
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ unsafe def delta_instance_name : pexpr → String
   | expr.app f _ => delta_instance_name f
   | expr.pi _ _ _ body => delta_instance_name body
   | expr.lam _ _ _ body => delta_instance_name body
-  | expr.const nm _ => nm.getLast
+  | expr.const nm _ => nm.last
   | _ => "inst"
 #align tactic.delta_instance_name tactic.delta_instance_name
 

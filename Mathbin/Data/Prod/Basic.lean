@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.prod.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -406,7 +406,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}}, Function.Injective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β)
 Case conversion may be inaccurate. Consider using '#align prod.swap_injective Prod.swap_injectiveₓ'. -/
 theorem swap_injective : Function.Injective (@swap α β) :=
-  swap_leftInverse.Injective
+  swap_leftInverse.injective
 #align prod.swap_injective Prod.swap_injective
 
 /- warning: prod.swap_surjective -> Prod.swap_surjective is a dubious translation:
@@ -416,7 +416,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}}, Function.Surjective.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α) (Prod.swap.{u2, u1} α β)
 Case conversion may be inaccurate. Consider using '#align prod.swap_surjective Prod.swap_surjectiveₓ'. -/
 theorem swap_surjective : Function.Surjective (@swap α β) :=
-  swap_leftInverse.Surjective
+  swap_leftInverse.surjective
 #align prod.swap_surjective Prod.swap_surjective
 
 /- warning: prod.swap_bijective -> Prod.swap_bijective is a dubious translation:
@@ -482,8 +482,8 @@ theorem lex_def (r : α → α → Prop) (s : β → β → Prop) {p q : α × �
     Prod.Lex r s p q ↔ r p.1 q.1 ∨ p.1 = q.1 ∧ s p.2 q.2 :=
   ⟨fun h => by cases h <;> simp [*], fun h =>
     match p, q, h with
-    | (a, b), (c, d), Or.inl h => Lex.left _ _ h
-    | (a, b), (c, d), Or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact lex.right _ h⟩
+    | (a, b), (c, d), or.inl h => Lex.left _ _ h
+    | (a, b), (c, d), or.inr ⟨e, h⟩ => by change a = c at e <;> subst e <;> exact Lex.right _ h⟩
 #align prod.lex_def Prod.lex_def
 
 /- warning: prod.lex_iff -> Prod.lex_iff is a dubious translation:
@@ -579,9 +579,9 @@ instance isTotal_right {r : α → α → Prop} {s : β → β → Prop} [IsTric
     IsTotal (α × β) (Lex r s) :=
   ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
-    · exact Or.inl (lex.left _ _ hij)
-    · exact (total_of s a b).imp (lex.right _) (lex.right _)
-    · exact Or.inr (lex.left _ _ hji)⟩
+    · exact Or.inl (Lex.left _ _ hij)
+    · exact (total_of s a b).imp (Lex.right _) (Lex.right _)
+    · exact Or.inr (Lex.left _ _ hji)⟩
 #align prod.is_total_right Prod.isTotal_right
 -/
 
@@ -589,9 +589,9 @@ instance isTrichotomous [IsTrichotomous α r] [IsTrichotomous β s] :
     IsTrichotomous (α × β) (Lex r s) :=
   ⟨fun ⟨i, a⟩ ⟨j, b⟩ => by
     obtain hij | rfl | hji := trichotomous_of r i j
-    · exact Or.inl (lex.left _ _ hij)
-    · exact (trichotomous_of s a b).imp3 (lex.right _) (congr_arg _) (lex.right _)
-    · exact Or.inr (Or.inr <| lex.left _ _ hji)⟩
+    · exact Or.inl (Lex.left _ _ hij)
+    · exact (trichotomous_of s a b).imp3 (Lex.right _) (congr_arg _) (Lex.right _)
+    · exact Or.inr (Or.inr <| Lex.left _ _ hji)⟩
 #align prod.is_trichotomous Prod.isTrichotomous
 
 end Prod

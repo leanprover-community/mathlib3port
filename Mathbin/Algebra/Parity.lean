@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.parity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulOneClass.{u1} α], IsSquare.{u1} α (MulOneClass.toMul.{u1} α _inst_1) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (MulOneClass.toOne.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align is_square_one isSquare_oneₓ'. -/
 @[simp, to_additive]
-theorem isSquare_one [MulOneClass α] : IsSquare (1 : α) :=
+theorem isSquare_one [MulOneClass α] : is_square (1 : α) :=
   ⟨1, (mul_one _).symm⟩
 #align is_square_one isSquare_one
 #align even_zero even_zero
@@ -391,7 +391,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Semiring.{u1} α] {a : α}, Iff (Even.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α _inst_1)))) a) (Dvd.dvd.{u1} α (semigroupDvd.{u1} α (SemigroupWithZero.toSemigroup.{u1} α (NonUnitalSemiring.toSemigroupWithZero.{u1} α (Semiring.toNonUnitalSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 2 (instOfNat.{u1} α 2 (Semiring.toNatCast.{u1} α _inst_1) (instAtLeastTwoHAddNatInstHAddInstAddNatOfNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))))) a)
 Case conversion may be inaccurate. Consider using '#align even_iff_two_dvd even_iff_two_dvdₓ'. -/
-theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, Dvd.Dvd, two_mul]
+theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a := by simp [Even, has_dvd.dvd, two_mul]
 #align even_iff_two_dvd even_iff_two_dvd
 
 /- warning: even.two_dvd -> Even.two_dvd is a dubious translation:
@@ -648,7 +648,7 @@ theorem Odd.pow (hm : Odd m) : ∀ {a : ℕ}, Odd (m ^ a)
     exact odd_one
   | a + 1 => by
     rw [pow_succ]
-    exact hm.mul Odd.pow
+    exact hm.mul odd.pow
 #align odd.pow Odd.pow
 -/
 

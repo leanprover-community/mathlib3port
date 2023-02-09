@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,19 +54,19 @@ theorem fg_def {N : Submodule R M} : N.Fg ↔ ∃ S : Set M, S.Finite ∧ span R
   ⟨fun ⟨t, h⟩ => ⟨_, Finset.finite_toSet t, h⟩,
     by
     rintro ⟨t', h, rfl⟩
-    rcases finite.exists_finset_coe h with ⟨t, rfl⟩
+    rcases Finite.exists_finset_coe h with ⟨t, rfl⟩
     exact ⟨t, rfl⟩⟩
 #align submodule.fg_def Submodule.fg_def
 
 theorem fg_iff_add_submonoid_fg (P : Submodule ℕ M) : P.Fg ↔ P.toAddSubmonoid.Fg :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, by simpa [← span_nat_eq_add_submonoid_closure] using hS⟩, fun ⟨S, hS⟩ =>
-    ⟨S, by simpa [← span_nat_eq_add_submonoid_closure] using hS⟩⟩
+  ⟨fun ⟨S, hS⟩ => ⟨S, by simpa [← span_nat_eq_addSubmonoid_closure] using hS⟩, fun ⟨S, hS⟩ =>
+    ⟨S, by simpa [← span_nat_eq_addSubmonoid_closure] using hS⟩⟩
 #align submodule.fg_iff_add_submonoid_fg Submodule.fg_iff_add_submonoid_fg
 
 theorem fg_iff_add_subgroup_fg {G : Type _} [AddCommGroup G] (P : Submodule ℤ G) :
     P.Fg ↔ P.toAddSubgroup.Fg :=
-  ⟨fun ⟨S, hS⟩ => ⟨S, by simpa [← span_int_eq_add_subgroup_closure] using hS⟩, fun ⟨S, hS⟩ =>
-    ⟨S, by simpa [← span_int_eq_add_subgroup_closure] using hS⟩⟩
+  ⟨fun ⟨S, hS⟩ => ⟨S, by simpa [← span_int_eq_addSubgroup_closure] using hS⟩, fun ⟨S, hS⟩ =>
+    ⟨S, by simpa [← span_int_eq_addSubgroup_closure] using hS⟩⟩
 #align submodule.fg_iff_add_subgroup_fg Submodule.fg_iff_add_subgroup_fg
 
 theorem fg_iff_exists_fin_generating_family {N : Submodule R M} :
@@ -203,7 +203,7 @@ variable {f}
 theorem fg_of_fg_map_injective (f : M →ₗ[R] P) (hf : Function.Injective f) {N : Submodule R M}
     (hfn : (N.map f).Fg) : N.Fg :=
   let ⟨t, ht⟩ := hfn
-  ⟨t.Preimage f fun x _ y _ h => hf h,
+  ⟨t.preimage f fun x _ y _ h => hf h,
     Submodule.map_injective_of_injective hf <|
       by
       rw [f.map_span, Finset.coe_preimage, Set.image_preimage_eq_inter_range,
@@ -218,8 +218,8 @@ theorem fg_of_fg_map {R M P : Type _} [Ring R] [AddCommGroup M] [Module R M] [Ad
 #align submodule.fg_of_fg_map Submodule.fg_of_fg_map
 
 theorem fg_top (N : Submodule R M) : (⊤ : Submodule R N).Fg ↔ N.Fg :=
-  ⟨fun h => N.range_subtype ▸ map_top N.Subtype ▸ h.map _, fun h =>
-    fg_of_fg_map_injective N.Subtype Subtype.val_injective <| by rwa [map_top, range_subtype]⟩
+  ⟨fun h => N.range_subtype ▸ map_top N.subtype ▸ h.map _, fun h =>
+    fg_of_fg_map_injective N.subtype Subtype.val_injective <| by rwa [map_top, range_subtype]⟩
 #align submodule.fg_top Submodule.fg_top
 
 theorem fg_of_linearEquiv (e : M ≃ₗ[R] P) (h : (⊤ : Submodule R P).Fg) : (⊤ : Submodule R M).Fg :=
@@ -227,7 +227,7 @@ theorem fg_of_linearEquiv (e : M ≃ₗ[R] P) (h : (⊤ : Submodule R P).Fg) : (
 #align submodule.fg_of_linear_equiv Submodule.fg_of_linearEquiv
 
 theorem Fg.prod {sb : Submodule R M} {sc : Submodule R P} (hsb : sb.Fg) (hsc : sc.Fg) :
-    (sb.Prod sc).Fg :=
+    (sb.prod sc).Fg :=
   let ⟨tb, htb⟩ := fg_def.1 hsb
   let ⟨tc, htc⟩ := fg_def.1 hsc
   fg_def.2
@@ -243,7 +243,7 @@ theorem fg_pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoi
     choose t htf hts using hsb
     refine'
       ⟨⋃ i, (LinearMap.single i : _ →ₗ[R] _) '' t i, Set.finite_unionᵢ fun i => (htf i).image _, _⟩
-    simp_rw [span_Union, span_image, hts, Submodule.supᵢ_map_single]
+    simp_rw [span_unionᵢ, span_image, hts, Submodule.supᵢ_map_single]
 #align submodule.fg_pi Submodule.fg_pi
 
 /-- If 0 → M' → M → M'' → 0 is exact and M' and M'' are
@@ -385,13 +385,13 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
     have supr_rw : ∀ t : Finset M, (⨆ x ∈ t, sp x) = ⨆ x ∈ (↑t : Set M), sp x := fun t => by rfl
     constructor
     · rintro ⟨t, rfl⟩
-      rw [span_eq_supr_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_supᵢ t sp]
+      rw [span_eq_supᵢ_of_singleton_spans, ← supr_rw, ← Finset.sup_eq_supᵢ t sp]
       apply CompleteLattice.finset_sup_compact_of_compact
-      exact fun n _ => singleton_span_is_compact_element n
+      exact fun n _ => singleton_span_isCompactElement n
     · intro h
       -- s is the Sup of the spans of its elements.
-      have sSup : s = Sup (sp '' ↑s) := by
-        rw [supₛ_eq_supᵢ, supᵢ_image, ← span_eq_supr_of_singleton_spans, eq_comm, span_eq]
+      have sSup : s = supₛ (sp '' ↑s) := by
+        rw [supₛ_eq_supᵢ, supᵢ_image, ← span_eq_supᵢ_of_singleton_spans, eq_comm, span_eq]
       -- by h, s is then below (and equal to) the sup of the spans of finitely many elements.
       obtain ⟨u, ⟨huspan, husup⟩⟩ := h (sp '' ↑s) (le_of_eq sSup)
       have ssup : s = u.sup id := by
@@ -401,7 +401,7 @@ theorem fg_iff_compact (s : Submodule R M) : s.Fg ↔ CompleteLattice.IsCompactE
         exact supₛ_le_supₛ huspan
       obtain ⟨t, ⟨hts, rfl⟩⟩ := finset.subset_image_iff.mp huspan
       rw [Finset.sup_finset_image, Function.comp.left_id, Finset.sup_eq_supᵢ, supr_rw, ←
-        span_eq_supr_of_singleton_spans, eq_comm] at ssup
+        span_eq_supᵢ_of_singleton_spans, eq_comm] at ssup
       exact ⟨t, ssup⟩
 #align submodule.fg_iff_compact Submodule.fg_iff_compact
 
@@ -435,7 +435,7 @@ variable {R : Type _} {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 variable {M N : Submodule R A}
 
 theorem Fg.mul (hm : M.Fg) (hn : N.Fg) : (M * N).Fg :=
-  hm.zipWith _ hn
+  hm.map₂ _ hn
 #align submodule.fg.mul Submodule.Fg.mul
 
 theorem Fg.pow (h : M.Fg) (n : ℕ) : (M ^ n).Fg :=
@@ -570,7 +570,7 @@ variable {R M}
 instance prod [hM : Finite R M] [hN : Finite R N] : Finite R (M × N) :=
   ⟨by
     rw [← Submodule.prod_top]
-    exact hM.1.Prod hN.1⟩
+    exact hM.1.prod hN.1⟩
 #align module.finite.prod Module.Finite.prod
 
 instance pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoid (M i)]
@@ -581,7 +581,7 @@ instance pi {ι : Type _} {M : ι → Type _} [Finite ι] [∀ i, AddCommMonoid 
 #align module.finite.pi Module.Finite.pi
 
 theorem equiv [hM : Finite R M] (e : M ≃ₗ[R] N) : Finite R N :=
-  of_surjective (e : M →ₗ[R] N) e.Surjective
+  of_surjective (e : M →ₗ[R] N) e.surjective
 #align module.finite.equiv Module.Finite.equiv
 
 section Algebra
@@ -622,7 +622,7 @@ instance Module.Finite.base_change [CommSemiring R] [Semiring A] [Algebra R A] [
 instance Module.Finite.tensorProduct [CommSemiring R] [AddCommMonoid M] [Module R M]
     [AddCommMonoid N] [Module R N] [hM : Module.Finite R M] [hN : Module.Finite R N] :
     Module.Finite R (TensorProduct R M N)
-    where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.zipWith _ hN.out)
+    where out := (TensorProduct.map₂_mk_top_top_eq_top R M N).subst (hM.out.map₂ _ hN.out)
 #align module.finite.tensor_product Module.Finite.tensorProduct
 
 namespace Algebra

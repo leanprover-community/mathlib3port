@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta, Huỳnh Trần Khanh, Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.sym.card
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ as demonstrated by respectively erasing or appending `0`.
 -/
 protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃ Sym (Fin n.succ) k
     where
-  toFun s := s.1.eraseₓ 0 s.2
+  toFun s := s.1.erase 0 s.2
   invFun s := ⟨cons 0 s, mem_cons_self 0 s⟩
   left_inv s := by simp
   right_inv s := by simp
@@ -89,15 +89,15 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
       (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Fin.succAbove_ne _ t)⟩
   left_inv s := by
     obtain ⟨s, hs⟩ := s
-    simp only [map_map, comp_app]
+    simp only [map_map, comp_apply]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
     simp [Fin.predAbove_zero (ne_of_mem_of_not_mem hv hs)]
   right_inv s := by
-    simp only [Fin.zero_succAbove, map_map, comp_app]
+    simp only [Fin.zero_succAbove, map_map, comp_apply]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    rw [← Fin.zero_succAbove v, ← @Fin.castSucc_zero n.succ, Fin.predAbove_succAbove 0 v]
+    rw [← Fin.zero_succAbove v, ← @fin.cast_succ_zero n.succ, Fin.predAbove_succAbove 0 v]
 #align sym.E2 Sym.e2
 
 theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k :=
@@ -125,7 +125,7 @@ theorem card_sym_eq_multichoose (α : Type _) (k : ℕ) [Fintype α] [Fintype (S
     card (Sym α k) = multichoose (card α) k :=
   by
   rw [← card_sym_fin_eq_multichoose]
-  exact card_congr (equiv_congr (equiv_fin α))
+  exact card_congr (equivCongr (equiv_fin α))
 #align sym.card_sym_eq_multichoose Sym.card_sym_eq_multichoose
 
 /-- The *stars and bars* lemma: the cardinality of `sym α k` is equal to
@@ -146,7 +146,7 @@ variable [DecidableEq α]
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
 theorem card_image_diag (s : Finset α) : (s.diag.image Quotient.mk').card = s.card :=
   by
-  rw [card_image_of_inj_on, diag_card]
+  rw [card_image_of_injOn, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Quotient.eq'.1 h
   · rfl
@@ -162,7 +162,7 @@ theorem two_mul_card_image_offDiag (s : Finset α) :
         ∀ x ∈ s.off_diag, Quotient.mk' x ∈ s.off_diag.image Quotient.mk'),
     sum_const_nat (Quotient.ind _), mul_comm]
   rintro ⟨x, y⟩ hxy
-  simp_rw [mem_image, exists_prop, mem_off_diag, Quotient.eq'] at hxy
+  simp_rw [mem_image, exists_prop, mem_offDiag, Quotient.eq'] at hxy
   obtain ⟨a, ⟨ha₁, ha₂, ha⟩, h⟩ := hxy
   obtain ⟨hx, hy, hxy⟩ : x ∈ s ∧ y ∈ s ∧ x ≠ y := by
     cases h <;> have := ha.symm <;> exact ⟨‹_›, ‹_›, ‹_›⟩
@@ -172,7 +172,7 @@ theorem two_mul_card_image_offDiag (s : Finset α) :
     ext ⟨x₁, y₁⟩
     rw [mem_filter, mem_insert, mem_singleton, Sym2.eq_iff, Prod.mk.inj_iff, Prod.mk.inj_iff,
       and_iff_right_iff_imp]
-    rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_off_diag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
+    rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> rw [mem_offDiag] <;> exact ⟨‹_›, ‹_›, ‹_›⟩
   -- hxy' is used here
   rw [this, card_insert_of_not_mem, card_singleton]
   simp only [not_and, Prod.mk.inj_iff, mem_singleton]
@@ -184,14 +184,14 @@ This is because every element `⟦(x, y)⟧` of `sym2 α` not on the diagonal co
 pairs: `(x, y)` and `(y, x)`. -/
 theorem card_image_offDiag (s : Finset α) : (s.offDiag.image Quotient.mk').card = s.card.choose 2 :=
   by
-  rw [Nat.choose_two_right, mul_tsub, mul_one, ← off_diag_card,
-    Nat.div_eq_of_eq_mul_right zero_lt_two (two_mul_card_image_off_diag s).symm]
+  rw [Nat.choose_two_right, mul_tsub, mul_one, ← offDiag_card,
+    Nat.div_eq_of_eq_mul_right zero_lt_two (two_mul_card_image_offDiag s).symm]
 #align sym2.card_image_off_diag Sym2.card_image_offDiag
 
 theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card α :=
   by
   convert card_image_diag (univ : Finset α)
-  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_is_diag]
+  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk''_isDiag]
   rintro x
   rw [mem_filter, univ_product_univ, mem_image]
   obtain ⟨a, ha⟩ := Quotient.exists_rep x
@@ -200,8 +200,8 @@ theorem card_subtype_diag [Fintype α] : card { a : Sym2 α // a.IsDiag } = card
 
 theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } = (card α).choose 2 :=
   by
-  convert card_image_off_diag (univ : Finset α)
-  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk_not_is_diag]
+  convert card_image_offDiag (univ : Finset α)
+  rw [Fintype.card_of_subtype, ← filter_image_quotient_mk''_not_isDiag]
   rintro x
   rw [mem_filter, univ_product_univ, mem_image]
   obtain ⟨a, ha⟩ := Quotient.exists_rep x
@@ -209,18 +209,18 @@ theorem card_subtype_not_diag [Fintype α] : card { a : Sym2 α // ¬a.IsDiag } 
 #align sym2.card_subtype_not_diag Sym2.card_subtype_not_diag
 
 /-- Finset **stars and bars** for the case `n = 2`. -/
-theorem Finset.card_sym2 (s : Finset α) : s.Sym2.card = s.card * (s.card + 1) / 2 :=
+theorem Finset.card_sym2 (s : Finset α) : s.sym2.card = s.card * (s.card + 1) / 2 :=
   by
-  rw [← image_diag_union_image_off_diag, card_union_eq, Sym2.card_image_diag,
+  rw [← image_diag_union_image_offDiag, card_union_eq, Sym2.card_image_diag,
     Sym2.card_image_offDiag, Nat.choose_two_right, add_comm, ← Nat.triangle_succ, Nat.succ_sub_one,
     mul_comm]
   rw [disjoint_left]
   rintro m ha hb
   rw [mem_image] at ha hb
   obtain ⟨⟨a, ha, rfl⟩, ⟨b, hb, hab⟩⟩ := ha, hb
-  refine' not_is_diag_mk_of_mem_off_diag hb _
+  refine' not_isDiag_mk'_of_mem_offDiag hb _
   rw [hab]
-  exact is_diag_mk_of_mem_diag ha
+  exact isDiag_mk'_of_mem_diag ha
 #align finset.card_sym2 Finset.card_sym2
 
 /-- Type **stars and bars** for the case `n = 2`. -/

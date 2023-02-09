@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Alexey Soloyev, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.real.golden_ratio
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -188,7 +188,7 @@ open Polynomial
 theorem fibRec_charPoly_eq {β : Type _} [CommRing β] : fibRec.charPoly = x ^ 2 - (x + (1 : β[X])) :=
   by
   rw [fibRec, LinearRecurrence.charPoly]
-  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', ← smul_X_eq_monomial]
+  simp [Finset.sum_fin_eq_sum_range, Finset.sum_range_succ', ← smul_x_eq_monomial]
 #align fib_rec_char_poly_eq fibRec_charPoly_eq
 
 end Poly
@@ -220,7 +220,8 @@ theorem geom_gold_conj_is_sol_fibRec : fibRec.IsSolution (pow ψ) :=
 end Fibrec
 
 /-- Binet's formula as a function equality. -/
-theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 :=
+theorem Real.coe_fib_eq' :
+    (fun n => Nat.fib Finset : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / Real.sqrt 5 :=
   by
   rw [fib_rec.sol_eq_of_eq_init]
   · intro i hi
@@ -232,7 +233,7 @@ theorem Real.coe_fib_eq' : (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n
   · exact fib_is_sol_fibRec
   · ring_nf
     exact
-      (@fibRec ℝ _).solSpace.sub_mem
+      (@fib_rec ℝ _).solSpace.sub_mem
         (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_is_sol_fibRec)
         (Submodule.smul_mem fib_rec.sol_space (Real.sqrt 5)⁻¹ geom_gold_conj_is_sol_fibRec)
 #align real.coe_fib_eq' Real.coe_fib_eq'

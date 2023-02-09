@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl (CMU)
 
 ! This file was ported from Lean 3 source module tactic.transfer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ private unsafe def analyse_rule (u' : List Name) (pr : expr) : tactic rule_data 
   let a_vars ← return <| Prod.fst <$> args
   let p ← head_beta (app_of_list f a_vars)
   let p_data ← return <| mark_occurences (app R p) params
-  let p_vars ← return <| List.map Prod.fst (p_data.filterₓ fun x => ↑x.2)
+  let p_vars ← return <| List.map Prod.fst (p_data.filter fun x => ↑x.2)
   let u ← return <| collect_univ_params (app R p) ∩ u'
   let pat ←
     mk_pattern (level.param <$> u) (p_vars ++ a_vars) (app R p) (level.param <$> u)
@@ -151,7 +151,7 @@ private unsafe def param_substitutions (ctxt : List expr) :
           let ctxt' := List.filter (fun v => occurs v t) ctxt
           let ty := pis ctxt' t
           if bi = BinderInfo.inst_implicit then do
-            guard (bi = BinderInfo.inst_implicit)
+            guard (bi = binder_info.inst_implicit)
             let e ← instantiate_mvars ty >>= mk_instance
             return (e, [])
           else do
@@ -202,7 +202,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
             let a' ← head_beta (app_of_list a a_vars)
             let (b, pr, ms) ← compute_transfer (rds ++ rds') (ctxt ++ a_vars) (app r a')
             let b' ← head_eta (lambdas b_vars b)
-            return (b', [a, b', lambdas (List.join bnds) pr], ms)) >>=
+            return (b', [a, b', lambdas (list.join bnds) pr], ms)) >>=
           return ∘ Prod.map id unzip ∘ unzip
     let b
       ←-- Combine

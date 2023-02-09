@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ protected theorem uniformContinuous_dist :
 /-- The new distance is continuous. -/
 protected theorem continuous_dist [TopologicalSpace β] {f g : β → Completion α} (hf : Continuous f)
     (hg : Continuous g) : Continuous fun x => dist (f x) (g x) :=
-  Completion.uniformContinuous_dist.Continuous.comp (hf.prod_mk hg : _)
+  Completion.uniformContinuous_dist.continuous.comp (hf.prod_mk hg : _)
 #align uniform_space.completion.continuous_dist UniformSpace.Completion.continuous_dist
 
 /-- The new distance is an extension of the original distance. -/
@@ -63,9 +63,9 @@ protected theorem dist_self (x : Completion α) : dist x x = 0 :=
   by
   apply induction_on x
   · refine' isClosed_eq _ continuous_const
-    exact completion.continuous_dist continuous_id continuous_id
+    exact Completion.continuous_dist continuous_id continuous_id
   · intro a
-    rw [completion.dist_eq, dist_self]
+    rw [Completion.dist_eq, dist_self]
 #align uniform_space.completion.dist_self UniformSpace.Completion.dist_self
 
 protected theorem dist_comm (x y : Completion α) : dist x y = dist y x :=
@@ -73,10 +73,10 @@ protected theorem dist_comm (x y : Completion α) : dist x y = dist y x :=
   apply induction_on₂ x y
   ·
     exact
-      isClosed_eq (completion.continuous_dist continuous_fst continuous_snd)
-        (completion.continuous_dist continuous_snd continuous_fst)
+      isClosed_eq (Completion.continuous_dist continuous_fst continuous_snd)
+        (Completion.continuous_dist continuous_snd continuous_fst)
   · intro a b
-    rw [completion.dist_eq, completion.dist_eq, dist_comm]
+    rw [Completion.dist_eq, Completion.dist_eq, dist_comm]
 #align uniform_space.completion.dist_comm UniformSpace.Completion.dist_comm
 
 protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y + dist y z :=
@@ -84,9 +84,9 @@ protected theorem dist_triangle (x y z : Completion α) : dist x z ≤ dist x y 
   apply induction_on₃ x y z
   ·
     refine' isClosed_le _ (Continuous.add _ _) <;>
-      apply_rules [completion.continuous_dist, Continuous.fst, Continuous.snd, continuous_id]
+      apply_rules [Completion.continuous_dist, Continuous.fst, Continuous.snd, continuous_id]
   · intro a b c
-    rw [completion.dist_eq, completion.dist_eq, completion.dist_eq]
+    rw [Completion.dist_eq, Completion.dist_eq, Completion.dist_eq]
     exact dist_triangle a b c
 #align uniform_space.completion.dist_triangle UniformSpace.Completion.dist_triangle
 
@@ -104,20 +104,20 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
     intro hs
     rcases mem_uniformity_isClosed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
     have A : { x : α × α | (coe x.1, coe x.2) ∈ t } ∈ uniformity α :=
-      uniformContinuous_def.1 (uniform_continuous_coe α) t ht
+      uniformContinuous_def.1 (uniformContinuous_coe α) t ht
     rcases mem_uniformity_dist.1 A with ⟨ε, εpos, hε⟩
     refine' ⟨ε, εpos, fun x y hxy => _⟩
     have : ε ≤ dist x y ∨ (x, y) ∈ t := by
       apply induction_on₂ x y
       · have :
-          { x : completion α × completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t } =
-            { p : completion α × completion α | ε ≤ dist p.1 p.2 } ∪ t :=
+          { x : Completion α × Completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t } =
+            { p : Completion α × Completion α | ε ≤ dist p.1 p.2 } ∪ t :=
           by ext <;> simp
         rw [this]
         apply IsClosed.union _ tclosed
         exact isClosed_le continuous_const completion.uniform_continuous_dist.continuous
       · intro x y
-        rw [completion.dist_eq]
+        rw [Completion.dist_eq]
         by_cases h : ε ≤ dist x y
         · exact Or.inl h
         · have Z := hε (not_le.1 h)
@@ -140,12 +140,12 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
       Set.mem_setOf_eq] at T
     rcases T with ⟨t1, ht1, t2, ht2, ht⟩
     refine' mem_of_superset ht1 _
-    have A : ∀ a b : completion α, (a, b) ∈ t1 → dist a b < ε :=
+    have A : ∀ a b : Completion α, (a, b) ∈ t1 → dist a b < ε :=
       by
       intro a b hab
       have : ((a, b), (a, a)) ∈ t1 ×ˢ t2 := ⟨hab, refl_mem_uniformity ht2⟩
       have I := ht this
-      simp [completion.dist_self, Real.dist_eq, completion.dist_comm] at I
+      simp [Completion.dist_self, Real.dist_eq, Completion.dist_comm] at I
       exact lt_of_le_of_lt (le_abs_self _) I
     show t1 ⊆ s
     · rintro ⟨a, b⟩ hp
@@ -158,9 +158,9 @@ protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : 
   by
   /- This follows from the separation of `completion α` and from the description of
     entourages in terms of the distance. -/
-  have : SeparatedSpace (completion α) := by infer_instance
+  have : SeparatedSpace (Completion α) := by infer_instance
   refine' separated_def.1 this x y fun s hs => _
-  rcases(completion.mem_uniformity_dist s).1 hs with ⟨ε, εpos, hε⟩
+  rcases(Completion.mem_uniformity_dist s).1 hs with ⟨ε, εpos, hε⟩
   rw [← h] at εpos
   exact hε εpos
 #align uniform_space.completion.eq_of_dist_eq_zero UniformSpace.Completion.eq_of_dist_eq_zero
@@ -170,8 +170,8 @@ of the metric space structure. -/
 protected theorem uniformity_dist' :
     𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } :=
   by
-  ext s; rw [mem_infi_of_directed]
-  · simp [completion.mem_uniformity_dist, subset_def]
+  ext s; rw [mem_infᵢ_of_directed]
+  · simp [Completion.mem_uniformity_dist, subset_def]
   · rintro ⟨r, hr⟩ ⟨p, hp⟩
     use ⟨min r p, lt_min hr hp⟩
     simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]

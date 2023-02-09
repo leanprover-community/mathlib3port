@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.sub_mul_action.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ theorem subset_coe_pow (p : SubMulAction R M) : ∀ {n : ℕ}, (p ^ n : Set M) �
   | 0 => by
     rw [pow_zero, pow_zero]
     exact subset_coe_one
-  | n + 1 => (coe_pow p n.succ_ne_zero).Superset
+  | n + 1 => (coe_pow p n.succ_ne_zero).superset
 #align sub_mul_action.subset_coe_pow SubMulAction.subset_coe_pow
 
 end Monoid

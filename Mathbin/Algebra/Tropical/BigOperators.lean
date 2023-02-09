@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] (l : List.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (List.sum.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)) (AddMonoid.toZero.{u1} R _inst_1) l)) (List.prod.{u1} (Tropical.{u1} R) (Tropical.instMulTropical.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1))) (Tropical.instOneTropical.{u1} R (AddMonoid.toZero.{u1} R _inst_1)) (List.map.{u1, u1} R (Tropical.{u1} R) (Tropical.trop.{u1} R) l))
 Case conversion may be inaccurate. Consider using '#align list.trop_sum List.trop_sumₓ'. -/
-theorem List.trop_sum [AddMonoid R] (l : List R) : trop l.Sum = List.prod (l.map trop) :=
+theorem List.trop_sum [AddMonoid R] (l : List R) : trop l.sum = List.prod (l.map trop) :=
   by
   induction' l with hd tl IH
   · simp
@@ -66,7 +66,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} R] (s : Multiset.{u1} R), Eq.{succ u1} (Tropical.{u1} R) (Tropical.trop.{u1} R (Multiset.sum.{u1} R _inst_1 s)) (Multiset.prod.{u1} (Tropical.{u1} R) (Tropical.instCommMonoidTropical.{u1} R _inst_1) (Multiset.map.{u1, u1} R (Tropical.{u1} R) (Tropical.trop.{u1} R) s))
 Case conversion may be inaccurate. Consider using '#align multiset.trop_sum Multiset.trop_sumₓ'. -/
 theorem Multiset.trop_sum [AddCommMonoid R] (s : Multiset R) :
-    trop s.Sum = Multiset.prod (s.map trop) :=
+    trop s.sum = Multiset.prod (s.map trop) :=
   Quotient.inductionOn s (by simpa using List.trop_sum)
 #align multiset.trop_sum Multiset.trop_sum
 
@@ -91,7 +91,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] (l : List.{u1} (Tropical.{u1} R)), Eq.{succ u1} R (Tropical.untrop.{u1} R (List.prod.{u1} (Tropical.{u1} R) (Tropical.instMulTropical.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1))) (Tropical.instOneTropical.{u1} R (AddMonoid.toZero.{u1} R _inst_1)) l)) (List.sum.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)) (AddMonoid.toZero.{u1} R _inst_1) (List.map.{u1, u1} (Tropical.{u1} R) R (Tropical.untrop.{u1} R) l))
 Case conversion may be inaccurate. Consider using '#align list.untrop_prod List.untrop_prodₓ'. -/
 theorem List.untrop_prod [AddMonoid R] (l : List (Tropical R)) :
-    untrop l.Prod = List.sum (l.map untrop) :=
+    untrop l.prod = List.sum (l.map untrop) :=
   by
   induction' l with hd tl IH
   · simp
@@ -105,7 +105,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddCommMonoid.{u1} R] (s : Multiset.{u1} (Tropical.{u1} R)), Eq.{succ u1} R (Tropical.untrop.{u1} R (Multiset.prod.{u1} (Tropical.{u1} R) (Tropical.instCommMonoidTropical.{u1} R _inst_1) s)) (Multiset.sum.{u1} R _inst_1 (Multiset.map.{u1, u1} (Tropical.{u1} R) R (Tropical.untrop.{u1} R) s))
 Case conversion may be inaccurate. Consider using '#align multiset.untrop_prod Multiset.untrop_prodₓ'. -/
 theorem Multiset.untrop_prod [AddCommMonoid R] (s : Multiset (Tropical R)) :
-    untrop s.Prod = Multiset.sum (s.map untrop) :=
+    untrop s.prod = Multiset.sum (s.map untrop) :=
   Quotient.inductionOn s (by simpa using List.untrop_prod)
 #align multiset.untrop_prod Multiset.untrop_prod
 
@@ -171,7 +171,7 @@ theorem trop_infₛ_image [ConditionallyCompleteLinearOrder R] (s : Finset S) (f
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, trop_top]
-  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, s.trop_inf]
+  rw [← inf'_eq_cinfₛ_image _ h, inf'_eq_inf, s.trop_inf]
 #align trop_Inf_image trop_infₛ_image
 
 /- warning: trop_infi -> trop_infᵢ is a dubious translation:
@@ -192,7 +192,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : LinearOrder.{u1} R] [_inst_2 : OrderTop.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (SemilatticeInf.toPartialOrder.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))))))] (s : Multiset.{u1} (Tropical.{u1} R)), Eq.{succ u1} R (Tropical.untrop.{u1} R (Multiset.sum.{u1} (Tropical.{u1} R) (Tropical.instAddCommMonoidTropical.{u1} R _inst_1 _inst_2) s)) (Multiset.inf.{u1} R (Lattice.toSemilatticeInf.{u1} R (DistribLattice.toLattice.{u1} R (instDistribLattice.{u1} R _inst_1))) _inst_2 (Multiset.map.{u1, u1} (Tropical.{u1} R) R (Tropical.untrop.{u1} R) s))
 Case conversion may be inaccurate. Consider using '#align multiset.untrop_sum Multiset.untrop_sumₓ'. -/
 theorem Multiset.untrop_sum [LinearOrder R] [OrderTop R] (s : Multiset (Tropical R)) :
-    untrop s.Sum = Multiset.inf (s.map untrop) :=
+    untrop s.sum = Multiset.inf (s.map untrop) :=
   by
   induction' s using Multiset.induction with s x IH
   · simp
@@ -224,7 +224,7 @@ theorem untrop_sum_eq_infₛ_image [ConditionallyCompleteLinearOrder R] (s : Fin
   by
   rcases s.eq_empty_or_nonempty with (rfl | h)
   · simp only [Set.image_empty, coe_empty, sum_empty, WithTop.infₛ_empty, untrop_zero]
-  rw [← inf'_eq_cInf_image _ h, inf'_eq_inf, Finset.untrop_sum']
+  rw [← inf'_eq_cinfₛ_image _ h, inf'_eq_inf, Finset.untrop_sum']
 #align untrop_sum_eq_Inf_image untrop_sum_eq_infₛ_image
 
 /- warning: untrop_sum -> untrop_sum is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.well_founded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,9 +77,9 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
   split_ifs  at hs
   classical
     on_goal 1 =>
-      refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
+      refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, GameAdd.fst ⟨i, _⟩, _⟩
     on_goal 3 =>
-      refine' ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩, game_add.snd ⟨i, _⟩, _⟩
+      refine' ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩, GameAdd.snd ⟨i, _⟩, _⟩
     pick_goal 3
     iterate 2 
       simp_rw [piecewise_apply]
@@ -100,11 +100,11 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
 variable {r s}
 
 theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
-    (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.eraseₓ i) :
+    (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.erase i) :
     Acc (Dfinsupp.Lex r s) x := by
   classical
     convert ←
-      @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
+      @acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
         (InvImage.accessible snd <| hs.prod_game_add hu)
     convert piecewise_single_erase x i
 #align dfinsupp.lex.acc_of_single_erase Dfinsupp.Lex.acc_of_single_erase
@@ -125,8 +125,8 @@ theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠
     induction' t using Finset.induction with b t hb ih
     · intro x ht
       rw [support_eq_empty.1 ht]
-      exact fun _ => lex.acc_zero hbot
-    refine' fun x ht h => lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
+      exact fun _ => Lex.acc_zero hbot
+    refine' fun x ht h => Lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
     refine' ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => _
     rw [erase_ne (ha.ne_of_not_mem hb)]
     exact h a (Finset.mem_insert_of_mem ha)
@@ -149,12 +149,12 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
     swap
     · exact (hbot hs).elim
     subst hik
-    refine' lex.acc_of_single hbot x fun j hj => _
+    refine' Lex.acc_of_single hbot x fun j hj => _
     obtain rfl | hij := eq_or_ne i j
     · exact ha _ hs
     by_cases r j i
     · rw [hr j h, single_eq_of_ne hij, single_zero]
-      exact lex.acc_zero hbot
+      exact Lex.acc_zero hbot
     · exact ih _ ⟨h, hij.symm⟩ _
 #align dfinsupp.lex.acc_single Dfinsupp.Lex.acc_single
 
@@ -164,10 +164,10 @@ theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : 
 #align dfinsupp.lex.acc Dfinsupp.Lex.acc
 
 theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Dfinsupp.Lex r s) :=
-  ⟨fun x => by classical exact lex.acc hbot hs x fun i _ => hr.apply i⟩
+  ⟨fun x => by classical exact Lex.acc hbot hs x fun i _ => hr.apply i⟩
 #align dfinsupp.lex.well_founded Dfinsupp.Lex.wellFounded
 
-theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.symm) :
+theorem Lex.well_founded' [IsTrichotomous ι r] (hr : WellFounded r.swap) :
     WellFounded (Dfinsupp.Lex r s) :=
   Lex.wellFounded hbot hs <|
     Subrelation.wf
@@ -197,7 +197,7 @@ theorem Pi.Lex.wellFounded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, We
     exact (h.1 x).elim
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
   haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
-  refine' InvImage.wf equiv_fun_on_fintype.symm (lex.well_founded' (fun i a => _) hs _)
+  refine' InvImage.wf equiv_fun_on_fintype.symm (Lex.well_founded' (fun i a => _) hs _)
   exacts[(hs i).not_lt_min ⊤ _ trivial, Finite.wellFounded_of_trans_of_irrefl r.swap]
 #align pi.lex.well_founded Pi.Lex.wellFounded
 
@@ -214,7 +214,7 @@ instance Function.Lex.wellFoundedLT {α} [LinearOrder ι] [Finite ι] [LT α] [W
 theorem Dfinsupp.Lex.wellFounded_of_finite [IsStrictTotalOrder ι r] [Finite ι] [∀ i, Zero (α i)]
     (hs : ∀ i, WellFounded (s i)) : WellFounded (Dfinsupp.Lex r s) :=
   have := Fintype.ofFinite ι
-  InvImage.wf equiv_fun_on_fintype (Pi.Lex.wellFounded r hs)
+  InvImage.wf equivFunOnFintype (Pi.Lex.wellFounded r hs)
 #align dfinsupp.lex.well_founded_of_finite Dfinsupp.Lex.wellFounded_of_finite
 
 instance Dfinsupp.Lex.wellFoundedLT_of_finite [LinearOrder ι] [Finite ι] [∀ i, Zero (α i)]
@@ -226,10 +226,10 @@ protected theorem Dfinsupp.wellFoundedLT [∀ i, Zero (α i)] [∀ i, Preorder (
     [∀ i, WellFoundedLT (α i)] (hbot : ∀ ⦃i⦄ ⦃a : α i⦄, ¬a < 0) : WellFoundedLT (Π₀ i, α i) :=
   ⟨by
     letI : ∀ i, Zero (Antisymmetrization (α i) (· ≤ ·)) := fun i => ⟨toAntisymmetrization (· ≤ ·) 0⟩
-    let f := map_range (fun i => @toAntisymmetrization (α i) (· ≤ ·) _) fun i => rfl
-    refine' Subrelation.wf (fun x y h => _) (InvImage.wf f <| lex.well_founded' _ (fun i => _) _)
+    let f := mapRange (fun i => @to_antisymmetrization (α i) (· ≤ ·) _) fun i => rfl
+    refine' Subrelation.wf (fun x y h => _) (InvImage.wf f <| Lex.well_founded' _ (fun i => _) _)
     · exact well_ordering_rel.swap; · exact fun i => (· < ·)
-    · haveI := IsStrictOrder.swap (@WellOrderingRel ι)
+    · haveI := IsStrictOrder.swap (@well_ordering_rel ι)
       obtain ⟨i, he, hl⟩ := lex_lt_of_lt_of_preorder well_ordering_rel.swap h
       exact ⟨i, fun j hj => Quot.sound (he j hj), hl⟩
     · rintro i ⟨a⟩
@@ -263,6 +263,6 @@ instance Function.wellFoundedLT {α} [Finite ι] [Preorder α] [WellFoundedLT α
 instance Dfinsupp.wellFoundedLT_of_finite [Finite ι] [∀ i, Zero (α i)] [∀ i, Preorder (α i)]
     [∀ i, WellFoundedLT (α i)] : WellFoundedLT (Π₀ i, α i) :=
   have := Fintype.ofFinite ι
-  ⟨InvImage.wf equiv_fun_on_fintype pi.well_founded_lt.wf⟩
+  ⟨InvImage.wf equivFunOnFintype pi.well_founded_lt.wf⟩
 #align dfinsupp.well_founded_lt_of_finite Dfinsupp.wellFoundedLT_of_finite
 

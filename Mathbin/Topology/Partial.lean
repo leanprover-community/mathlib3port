@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module topology.partial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,12 +26,12 @@ open Topology
 variable {α β : Type _} [TopologicalSpace α]
 
 theorem rtendsto_nhds {r : Rel β α} {l : Filter β} {a : α} :
-    Rtendsto r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Core s ∈ l :=
+    Rtendsto r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.core s ∈ l :=
   all_mem_nhds_filter _ _ (fun s t => id) _
 #align rtendsto_nhds rtendsto_nhds
 
 theorem rtendsto'_nhds {r : Rel β α} {l : Filter β} {a : α} :
-    Rtendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Preimage s ∈ l :=
+    Rtendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.preimage s ∈ l :=
   by
   rw [rtendsto'_def]
   apply all_mem_nhds_filter
@@ -39,12 +39,12 @@ theorem rtendsto'_nhds {r : Rel β α} {l : Filter β} {a : α} :
 #align rtendsto'_nhds rtendsto'_nhds
 
 theorem ptendsto_nhds {f : β →. α} {l : Filter β} {a : α} :
-    Ptendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Core s ∈ l :=
+    Ptendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.core s ∈ l :=
   rtendsto_nhds
 #align ptendsto_nhds ptendsto_nhds
 
 theorem ptendsto'_nhds {f : β →. α} {l : Filter β} {a : α} :
-    Ptendsto' f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Preimage s ∈ l :=
+    Ptendsto' f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.preimage s ∈ l :=
   rtendsto'_nhds
 #align ptendsto'_nhds ptendsto'_nhds
 
@@ -55,7 +55,7 @@ variable [TopologicalSpace β]
 
 /-- Continuity of a partial function -/
 def Pcontinuous (f : α →. β) :=
-  ∀ s, IsOpen s → IsOpen (f.Preimage s)
+  ∀ s, IsOpen s → IsOpen (f.preimage s)
 #align pcontinuous Pcontinuous
 
 theorem open_dom_of_pcontinuous {f : α →. β} (h : Pcontinuous f) : IsOpen f.Dom := by
@@ -79,7 +79,7 @@ theorem pcontinuous_iff' {f : α →. β} :
   apply mem_of_superset _ h
   have h' : ∀ s ∈ 𝓝 y, f.preimage s ∈ 𝓝 x := by
     intro s hs
-    have : ptendsto' f (𝓝 x) (𝓝 y) := hf fxy
+    have : Ptendsto' f (𝓝 x) (𝓝 y) := hf fxy
     rw [ptendsto'_def] at this
     exact this s hs
   show f.preimage s ∈ 𝓝 x

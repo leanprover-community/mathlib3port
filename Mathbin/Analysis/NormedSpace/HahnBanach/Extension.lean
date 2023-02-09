@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.hahn_banach.extension
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,16 +89,16 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
   have h : ∀ x : p, g.extend_to_𝕜 x = f x := by
     intro x
     rw [ContinuousLinearMap.extendTo𝕜_apply, ← Submodule.coe_smul, hextends, hextends]
-    have : (fr x : 𝕜) - I * ↑(fr (I • x)) = (re (f x) : 𝕜) - (I : 𝕜) * re (f ((I : 𝕜) • x)) := by
+    have : (fr x : 𝕜) - i * ↑(fr (i • x)) = (re (f x) : 𝕜) - (i : 𝕜) * re (f ((i : 𝕜) • x)) := by
       rfl
     rw [this]
     apply ext
     ·
-      simp only [add_zero, Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub,
-        I_im', zero_mul, of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re,
+      simp only [add_zero, Algebra.id.smul_eq_mul, i_re, of_real_im, AddMonoidHom.map_add, zero_sub,
+        i_im', zero_mul, of_real_re, eq_self_iff_true, sub_zero, mul_neg, of_real_neg, mul_re,
         mul_zero, sub_neg_eq_add, ContinuousLinearMap.map_smul]
     ·
-      simp only [Algebra.id.smul_eq_mul, I_re, of_real_im, AddMonoidHom.map_add, zero_sub, I_im',
+      simp only [Algebra.id.smul_eq_mul, i_re, of_real_im, AddMonoidHom.map_add, zero_sub, i_im',
         zero_mul, of_real_re, mul_neg, mul_im, zero_add, of_real_neg, mul_re, sub_neg_eq_add,
         ContinuousLinearMap.map_smul]
   -- And we derive the equality of the norms by bounding on both sides.
@@ -107,8 +107,8 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
     calc
       ‖g.extend_to_𝕜‖ ≤ ‖g‖ := g.extend_to_𝕜.op_norm_le_bound g.op_norm_nonneg (norm_bound _)
       _ = ‖fr‖ := hnormeq
-      _ ≤ ‖re_clm‖ * ‖f‖ := ContinuousLinearMap.op_norm_comp_le _ _
-      _ = ‖f‖ := by rw [re_clm_norm, one_mul]
+      _ ≤ ‖reClm‖ * ‖f‖ := ContinuousLinearMap.op_norm_comp_le _ _
+      _ = ‖f‖ := by rw [reClm_norm, one_mul]
       
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
 #align exists_extension_norm_eq exists_extension_norm_eq

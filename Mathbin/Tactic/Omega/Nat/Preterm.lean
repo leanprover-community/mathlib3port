@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.preterm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ scoped notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Helper tactic for proof by induction over preterms -/
 unsafe def induce (tac : tactic Unit := tactic.skip) : tactic Unit :=
   sorry
@@ -160,12 +160,12 @@ def canonize : Preterm → Term
 @[simp]
 theorem val_canonize {v : Nat → Nat} :
     ∀ {t : Preterm}, t.SubFree → ((canonize t).val fun x => ↑(v x)) = t.val v
-  | &i, h1 => by simp only [canonize, preterm.val_const, term.val, coeffs.val_nil, add_zero]
+  | &i, h1 => by simp only [canonize, Preterm.val_const, Term.val, Coeffs.val_nil, add_zero]
   | i ** n, h1 => by
-    simp only [preterm.val_var, coeffs.val_set, term.val, zero_add, Int.ofNat_mul, canonize]
+    simp only [Preterm.val_var, Coeffs.val_set, Term.val, zero_add, Int.ofNat_mul, canonize]
   | t +* s, h1 => by
-    simp only [val_canonize h1.left, val_canonize h1.right, Int.ofNat_add, canonize, term.val_add,
-      preterm.val_add]
+    simp only [val_canonize h1.left, val_canonize h1.right, Int.ofNat_add, canonize, Term.val_add,
+      Preterm.val_add]
 #align omega.nat.val_canonize Omega.Nat.val_canonize
 
 end Nat

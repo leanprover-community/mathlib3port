@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.cofiltered_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
     TopCat.isTopologicalBasis_cofiltered_limit.{u} (F ⋙ Profinite.toTop)
-      (Profinite.to_Top.map_cone C) (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _
+      (Profinite.to_Top.map_cone C) (isLimitOfPreserves _ hC) (fun j => { W | IsClopen W }) _
       (fun i => isClopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
   rotate_left
   · intro i
@@ -63,13 +63,13 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- are preimages of clopens from the factors in the limit.
   obtain ⟨S, hS, h⟩ := hB.open_eq_sUnion hU.1
   clear hB
-  let j : S → J := fun s => (hS s.2).some
-  let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).choose_spec.some
+  let j : S → J := fun s => (hS s.2).choose
+  let V : ∀ s : S, Set (F.obj (j s)) := fun s => (hS s.2).choose_spec.choose
   have hV : ∀ s : S, IsClopen (V s) ∧ s.1 = C.π.app (j s) ⁻¹' V s := fun s =>
     (hS s.2).choose_spec.choose_spec
   -- Since `U` is also closed, hence compact, it is covered by finitely many of the
   -- clopens constructed in the previous step.
-  have := hU.2.IsCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _
+  have := hU.2.isCompact.elim_finite_subcover (fun s : S => C.π.app (j s) ⁻¹' V s) _ _
   rotate_left
   · intro s
     refine' (hV s).1.1.preimage _
@@ -86,7 +86,7 @@ theorem exists_clopen_of_cofiltered {U : Set C.x} (hU : IsClopen U) :
   -- Since `J` is cofiltered, we can find a single `j0` dominating all the `j ∈ G`.
   -- Pulling back all of the sets from the previous step to `F.obj j0` and taking a union,
   -- we obtain a clopen set in `F.obj j0` which works.
-  obtain ⟨j0, hj0⟩ := is_cofiltered.inf_objs_exists (G.image j)
+  obtain ⟨j0, hj0⟩ := IsCofiltered.inf_objs_exists (G.image j)
   let f : ∀ (s : S) (hs : s ∈ G), j0 ⟶ j s := fun s hs =>
     (hj0 (finset.mem_image.mpr ⟨s, hs, rfl⟩)).some
   let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.univ
@@ -123,7 +123,7 @@ theorem exists_locallyConstant_fin_two (f : LocallyConstant C.x (Fin 2)) :
   obtain ⟨j, V, hV, h⟩ := exists_clopen_of_cofiltered C hC hU
   use j, LocallyConstant.ofClopen hV
   apply LocallyConstant.locallyConstant_eq_of_fiber_zero_eq
-  rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
+  rw [LocallyConstant.coe_comap _ _ (C.π.app j).continuous]
   conv_rhs => rw [Set.preimage_comp]
   rw [LocallyConstant.ofClopen_fiber_zero hV, ← h]
 #align Profinite.exists_locally_constant_fin_two Profinite.exists_locallyConstant_fin_two
@@ -135,10 +135,10 @@ theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : Locally
   cases nonempty_fintype α
   let ι : α → α → Fin 2 := fun x y => if x = y then 0 else 1
   let ff := (f.map ι).flip
-  have hff := fun a : α => exists_locally_constant_fin_two _ hC (ff a)
+  have hff := fun a : α => exists_locallyConstant_fin_two _ hC (ff a)
   choose j g h using hff
   let G : Finset J := finset.univ.image j
-  obtain ⟨j0, hj0⟩ := is_cofiltered.inf_objs_exists G
+  obtain ⟨j0, hj0⟩ := IsCofiltered.inf_objs_exists G
   have hj : ∀ a, j a ∈ G := by
     intro a
     simp [G]
@@ -175,12 +175,12 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
     ∃ (j : J)(g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
   by
   inhabit α
-  obtain ⟨j, gg, h⟩ := exists_locally_constant_finite_aux _ hC f
+  obtain ⟨j, gg, h⟩ := exists_locallyConstant_finite_aux _ hC f
   let ι : α → α → Fin 2 := fun a b => if a = b then 0 else 1
-  let σ : (α → Fin 2) → α := fun f => if h : ∃ a : α, ι a = f then h.some else Inhabited.default _
+  let σ : (α → Fin 2) → α := fun f => if h : ∃ a : α, ι a = f then h.choose else Inhabited.default _
   refine' ⟨j, gg.map σ, _⟩
   ext
-  rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous]
+  rw [LocallyConstant.coe_comap _ _ (C.π.app j).continuous]
   dsimp [σ]
   have h1 : ι (f x) = gg (C.π.app j x) :=
     by
@@ -212,7 +212,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.x α) :
       refine' this.imp fun j hj => _
       refine' ⟨⟨hj.elim, fun A => _⟩, _⟩
       · convert isOpen_empty
-        exact @Set.eq_empty_of_isEmpty _ hj _
+        exact @set.eq_empty_of_is_empty _ hj _
       · ext x
         exact hj.elim' (C.π.app j x)
     simp only [← not_nonempty_iff, ← not_forall]
@@ -226,15 +226,15 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.x α) :
     suffices : Nonempty C.X
     exact IsEmpty.false (S.proj this.some)
     let D := Profinite.to_Top.map_cone C
-    have hD : is_limit D := is_limit_of_preserves Profinite.toTop hC
+    have hD : IsLimit D := isLimitOfPreserves Profinite.toTop hC
     have CD := (hD.cone_point_unique_up_to_iso (TopCat.limitConeIsLimit.{u} _)).inv
     exact cond.map CD
   · let f' : LocallyConstant C.X S := ⟨S.proj, S.proj_is_locally_constant⟩
-    obtain ⟨j, g', hj⟩ := exists_locally_constant_finite_nonempty _ hC f'
+    obtain ⟨j, g', hj⟩ := exists_locallyConstant_finite_nonempty _ hC f'
     refine' ⟨j, ⟨ff ∘ g', g'.is_locally_constant.comp _⟩, _⟩
     ext1 t
     apply_fun fun e => e t  at hj
-    rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj⊢
+    rw [LocallyConstant.coe_comap _ _ (C.π.app j).continuous] at hj⊢
     dsimp at hj⊢
     rw [← hj]
     rfl

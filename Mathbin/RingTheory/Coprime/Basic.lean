@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Ken Lee, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,7 +262,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : CommSemiring.{u1} R] {x : R} {y : R} {z : R}, Iff (IsCoprime.{u1} R _inst_1 x (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R (CommSemiring.toSemiring.{u1} R _inst_1))))) y z)) (And (IsCoprime.{u1} R _inst_1 x y) (IsCoprime.{u1} R _inst_1 x z))
 Case conversion may be inaccurate. Consider using '#align is_coprime.mul_right_iff IsCoprime.mul_right_iffₓ'. -/
 theorem IsCoprime.mul_right_iff : IsCoprime x (y * z) ↔ IsCoprime x y ∧ IsCoprime x z := by
-  rw [isCoprime_comm, IsCoprime.mul_left_iff, isCoprime_comm, @isCoprime_comm _ _ z]
+  rw [isCoprime_comm, IsCoprime.mul_left_iff, isCoprime_comm, @is_coprime_comm _ _ z]
 #align is_coprime.mul_right_iff IsCoprime.mul_right_iff
 
 #print IsCoprime.of_isCoprime_of_dvd_left /-

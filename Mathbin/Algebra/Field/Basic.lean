@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.field.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -517,8 +517,8 @@ protected def Function.Injective.divisionSemiring [DivisionSemiring β] [Zero α
     (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : DivisionSemiring α :=
-  { hf.GroupWithZero f zero one mul inv div npow zpow,
-    hf.Semiring f zero one add mul nsmul npow nat_cast with }
+  { hf.groupWithZero f zero one mul inv div npow zpow,
+    hf.semiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.division_semiring Function.Injective.divisionSemiring
 
 /- warning: function.injective.division_ring -> Function.Injective.divisionRing is a dubious translation:
@@ -541,8 +541,8 @@ protected def Function.Injective.divisionRing [DivisionRing K] {K'} [Zero K'] [O
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     DivisionRing K' :=
-  { hf.GroupWithZero f zero one mul inv div npow zpow,
-    hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast
+  { hf.groupWithZero f zero one mul inv div npow zpow,
+    hf.ring f zero one add mul neg sub nsmul zsmul npow nat_cast
       int_cast with
     ratCast := coe
     ratCast_mk := fun a b h1 h2 =>
@@ -569,8 +569,8 @@ protected def Function.Injective.semifield [Semifield β] [Zero α] [Mul α] [Ad
     (div : ∀ x y, f (x / y) = f x / f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) : Semifield α :=
-  { hf.CommGroupWithZero f zero one mul inv div npow zpow,
-    hf.CommSemiring f zero one add mul nsmul npow nat_cast with }
+  { hf.commGroupWithZero f zero one mul inv div npow zpow,
+    hf.commSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.semifield Function.Injective.semifield
 
 /- warning: function.injective.field -> Function.Injective.field is a dubious translation:
@@ -592,8 +592,8 @@ protected def Function.Injective.field [Field K] {K'} [Zero K'] [Mul K'] [Add K'
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (int_cast : ∀ n : ℤ, f n = n) (rat_cast : ∀ n : ℚ, f n = n) :
     Field K' :=
-  { hf.CommGroupWithZero f zero one mul inv div npow zpow,
-    hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast
+  { hf.commGroupWithZero f zero one mul inv div npow zpow,
+    hf.commRing f zero one add mul neg sub nsmul zsmul npow nat_cast
       int_cast with
     ratCast := coe
     ratCast_mk := fun a b h1 h2 =>

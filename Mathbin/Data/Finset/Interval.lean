@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,10 +32,10 @@ variable [DecidableEq α] (s t : Finset α)
 
 instance : LocallyFiniteOrder (Finset α)
     where
-  finsetIcc s t := t.powerset.filterₓ ((· ⊆ ·) s)
-  finsetIco s t := t.ssubsets.filterₓ ((· ⊆ ·) s)
-  finsetIoc s t := t.powerset.filterₓ ((· ⊂ ·) s)
-  finsetIoo s t := t.ssubsets.filterₓ ((· ⊂ ·) s)
+  finsetIcc s t := t.powerset.filter ((· ⊆ ·) s)
+  finsetIco s t := t.ssubsets.filter ((· ⊆ ·) s)
+  finsetIoc s t := t.powerset.filter ((· ⊂ ·) s)
+  finsetIoo s t := t.ssubsets.filter ((· ⊂ ·) s)
   finset_mem_Icc s t u := by
     rw [mem_filter, mem_powerset]
     exact and_comm' _ _
@@ -49,19 +49,19 @@ instance : LocallyFiniteOrder (Finset α)
     rw [mem_filter, mem_ssubsets]
     exact and_comm' _ _
 
-theorem Icc_eq_filter_powerset : Icc s t = t.powerset.filterₓ ((· ⊆ ·) s) :=
+theorem Icc_eq_filter_powerset : Icc s t = t.powerset.filter ((· ⊆ ·) s) :=
   rfl
 #align finset.Icc_eq_filter_powerset Finset.Icc_eq_filter_powerset
 
-theorem Ico_eq_filter_ssubsets : Ico s t = t.ssubsets.filterₓ ((· ⊆ ·) s) :=
+theorem Ico_eq_filter_ssubsets : Ico s t = t.ssubsets.filter ((· ⊆ ·) s) :=
   rfl
 #align finset.Ico_eq_filter_ssubsets Finset.Ico_eq_filter_ssubsets
 
-theorem Ioc_eq_filter_powerset : Ioc s t = t.powerset.filterₓ ((· ⊂ ·) s) :=
+theorem Ioc_eq_filter_powerset : Ioc s t = t.powerset.filter ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioc_eq_filter_powerset Finset.Ioc_eq_filter_powerset
 
-theorem Ioo_eq_filter_ssubsets : Ioo s t = t.ssubsets.filterₓ ((· ⊂ ·) s) :=
+theorem Ioo_eq_filter_ssubsets : Ioo s t = t.ssubsets.filter ((· ⊂ ·) s) :=
   rfl
 #align finset.Ioo_eq_filter_ssubsets Finset.Ioo_eq_filter_ssubsets
 

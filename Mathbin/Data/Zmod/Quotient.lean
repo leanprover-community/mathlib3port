@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.zmod.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,12 +82,11 @@ noncomputable def zmultiplesQuotientStabilizerEquiv :
             (by
               rw [zmultiples_le, mem_comap, mem_stabilizer_iff, zmultiplesHom_apply, coe_nat_zsmul,
                 ← vadd_iterate]
-              exact is_periodic_pt_minimal_period ((· +ᵥ ·) a) b))
+              exact isPeriodicPt_minimalPeriod ((· +ᵥ ·) a) b))
           ⟨by
             rw [← ker_eq_bot_iff, eq_bot_iff]
             refine' fun q => induction_on' q fun n hn => _
-            rw [mem_bot, eq_zero_iff, Int.mem_zmultiples_iff, ←
-              zsmul_vadd_eq_iff_minimal_period_dvd]
+            rw [mem_bot, eq_zero_iff, Int.mem_zmultiples_iff, ← zsmul_vadd_eq_iff_minimalPeriod_dvd]
             exact (eq_zero_iff _).mp hn, fun q =>
             induction_on' q fun ⟨_, n, rfl⟩ => ⟨n, rfl⟩⟩).symm.trans
     (Int.quotientZmultiplesNatEquivZmod (minimalPeriod ((· +ᵥ ·) a) b))
@@ -146,8 +145,8 @@ theorem orbitZpowersEquiv_symm_apply (k : ZMod (minimalPeriod ((· • ·) a) b)
 theorem orbitZpowersEquiv_symm_apply' (k : ℤ) :
     (orbitZpowersEquiv a b).symm k = (⟨a, mem_zpowers a⟩ : zpowers a) ^ k • ⟨b, mem_orbit_self b⟩ :=
   by
-  rw [orbit_zpowers_equiv_symm_apply, ZMod.coe_int_cast]
-  exact Subtype.ext (zpow_smul_mod_minimal_period _ _ k)
+  rw [orbitZpowersEquiv_symm_apply, ZMod.coe_int_cast]
+  exact Subtype.ext (zpow_smul_mod_minimalPeriod _ _ k)
 #align mul_action.orbit_zpowers_equiv_symm_apply' MulAction.orbitZpowersEquiv_symm_apply'
 
 theorem AddAction.orbitZmultiplesEquiv_symm_apply' {α β : Type _} [AddGroup α] (a : α)
@@ -156,7 +155,7 @@ theorem AddAction.orbitZmultiplesEquiv_symm_apply' {α β : Type _} [AddGroup α
       k • (⟨a, mem_zmultiples a⟩ : zmultiples a) +ᵥ ⟨b, AddAction.mem_orbit_self b⟩ :=
   by
   rw [AddAction.orbit_zmultiples_equiv_symm_apply, ZMod.coe_int_cast]
-  exact Subtype.ext (zsmul_vadd_mod_minimal_period _ _ k)
+  exact Subtype.ext (zsmul_vadd_mod_minimalPeriod _ _ k)
 #align add_action.orbit_zmultiples_equiv_symm_apply' AddAction.orbitZmultiplesEquiv_symm_apply'
 
 attribute [to_additive orbit_zmultiples_equiv_symm_apply'] orbit_zpowers_equiv_symm_apply'
@@ -164,7 +163,7 @@ attribute [to_additive orbit_zmultiples_equiv_symm_apply'] orbit_zpowers_equiv_s
 @[to_additive]
 theorem minimalPeriod_eq_card [Fintype (orbit (zpowers a) b)] :
     minimalPeriod ((· • ·) a) b = Fintype.card (orbit (zpowers a) b) := by
-  rw [← Fintype.ofEquiv_card (orbit_zpowers_equiv a b), ZMod.card]
+  rw [← Fintype.ofEquiv_card (orbitZpowersEquiv a b), ZMod.card]
 #align mul_action.minimal_period_eq_card MulAction.minimalPeriod_eq_card
 #align add_action.minimal_period_eq_card AddAction.minimal_period_eq_card
 
@@ -174,7 +173,7 @@ instance minimalPeriod_pos [Finite <| orbit (zpowers a) b] :
   ⟨by
     cases nonempty_fintype (orbit (zpowers a) b)
     haveI : Nonempty (orbit (zpowers a) b) := (orbit_nonempty b).to_subtype
-    rw [minimal_period_eq_card]
+    rw [minimalPeriod_eq_card]
     exact Fintype.card_ne_zero⟩
 #align mul_action.minimal_period_pos MulAction.minimalPeriod_pos
 #align add_action.minimal_period_pos AddAction.minimal_period_pos

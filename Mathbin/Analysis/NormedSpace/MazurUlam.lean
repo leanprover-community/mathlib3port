@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.mazur_ulam
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,17 +68,17 @@ theorem midpoint_fixed {x y : PE} :
   -- On the other hand, consider the map `f : (E ≃ᵢ E) → (E ≃ᵢ E)`
   -- sending each `e` to `R ∘ e⁻¹ ∘ R ∘ e`, where `R` is the point reflection in the
   -- midpoint `z` of `[x, y]`.
-  set R : PE ≃ᵢ PE := (point_reflection ℝ z).toIsometryEquiv
+  set R : PE ≃ᵢ PE := (pointReflection ℝ z).toIsometryEquiv
   set f : PE ≃ᵢ PE → PE ≃ᵢ PE := fun e => ((e.trans R).trans e.symm).trans R
   -- Note that `f` doubles the value of ``dist (e z) z`
   have hf_dist : ∀ e, dist (f e z) z = 2 * dist (e z) z :=
     by
     intro e
     dsimp [f]
-    rw [dist_point_reflection_fixed, ← e.dist_eq, e.apply_symm_apply,
-      dist_point_reflection_self_real, dist_comm]
+    rw [dist_pointReflection_fixed, ← e.dist_eq, e.apply_symm_apply, dist_pointReflection_self_real,
+      dist_comm]
   -- Also note that `f` maps `s` to itself
-  have hf_maps_to : maps_to f s s := by
+  have hf_maps_to : MapsTo f s s := by
     rintro e ⟨hx, hy⟩
     constructor <;> simp [hx, hy, e.symm_apply_eq.2 hx.symm, e.symm_apply_eq.2 hy.symm]
   -- Therefore, `dist (e z) z = 0` for all `e ∈ s`.
@@ -100,14 +100,14 @@ include F
 theorem map_midpoint (f : PE ≃ᵢ PF) (x y : PE) : f (midpoint ℝ x y) = midpoint ℝ (f x) (f y) :=
   by
   set e : PE ≃ᵢ PE :=
-    ((f.trans <| (point_reflection ℝ <| midpoint ℝ (f x) (f y)).toIsometryEquiv).trans f.symm).trans
-      (point_reflection ℝ <| midpoint ℝ x y).toIsometryEquiv
+    ((f.trans <| (pointReflection ℝ <| midpoint ℝ (f x) (f y)).toIsometryEquiv).trans f.symm).trans
+      (pointReflection ℝ <| midpoint ℝ x y).toIsometryEquiv
   have hx : e x = x := by simp
   have hy : e y = y := by simp
   have hm := e.midpoint_fixed hx hy
   simp only [e, trans_apply] at hm
-  rwa [← eq_symm_apply, to_isometry_equiv_symm, point_reflection_symm, coe_to_isometry_equiv,
-    coe_to_isometry_equiv, point_reflection_self, symm_apply_eq, point_reflection_fixed_iff] at hm
+  rwa [← eq_symm_apply, toIsometryEquiv_symm, pointReflection_symm, coe_toIsometryEquiv,
+    coe_toIsometryEquiv, pointReflection_self, symm_apply_eq, pointReflection_fixed_iff] at hm
 #align isometry_equiv.map_midpoint IsometryEquiv.map_midpoint
 
 /-!
@@ -119,7 +119,7 @@ We define a conversion to a `continuous_linear_equiv` first, then a conversion t
 /-- **Mazur-Ulam Theorem**: if `f` is an isometric bijection between two normed vector spaces
 over `ℝ` and `f 0 = 0`, then `f` is a linear isometry equivalence. -/
 def toRealLinearIsometryEquivOfMapZero (f : E ≃ᵢ F) (h0 : f 0 = 0) : E ≃ₗᵢ[ℝ] F :=
-  { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.Continuous, f with
+  { (AddMonoidHom.ofMapMidpoint ℝ ℝ f h0 f.map_midpoint).toRealLinearMap f.continuous, f with
     norm_map' := fun x => show ‖f x‖ = ‖x‖ by simp only [← dist_zero_right, ← h0, f.dist_eq] }
 #align isometry_equiv.to_real_linear_isometry_equiv_of_map_zero IsometryEquiv.toRealLinearIsometryEquivOfMapZero
 

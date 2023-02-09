@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.Cat.limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,15 +51,15 @@ def homDiagram {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v})) :
     where
   obj j := limit.π (F ⋙ Cat.objects) j X ⟶ limit.π (F ⋙ Cat.objects) j Y
   map j j' f g := by
-    refine' eq_to_hom _ ≫ (F.map f).map g ≫ eq_to_hom _
+    refine' eqToHom _ ≫ (F.map f).map g ≫ eqToHom _
     exact (congr_fun (limit.w (F ⋙ Cat.objects) f) X).symm
     exact congr_fun (limit.w (F ⋙ Cat.objects) f) Y
   map_id' X := by
     ext f; dsimp
-    simp [functor.congr_hom (F.map_id X) f]
+    simp [Functor.congr_hom (F.map_id X) f]
   map_comp' X Y Z f g := by
     ext h; dsimp
-    simp [functor.congr_hom (F.map_comp f g) h, eq_to_hom_map]
+    simp [Functor.congr_hom (F.map_comp f g) h, eqToHom_map]
     rfl
 #align category_theory.Cat.has_limits.hom_diagram CategoryTheory.Cat.HasLimits.homDiagram
 
@@ -72,15 +72,15 @@ instance (F : J ⥤ Cat.{v, v}) : Category (limit (F ⋙ Cat.objects))
     Types.Limit.mk.{v, v} (homDiagram X Z)
       (fun j => limit.π (homDiagram X Y) j f ≫ limit.π (homDiagram Y Z) j g) fun j j' h =>
       by
-      rw [← congr_fun (limit.w (hom_diagram X Y) h) f, ← congr_fun (limit.w (hom_diagram Y Z) h) g]
+      rw [← congr_fun (limit.w (homDiagram X Y) h) f, ← congr_fun (limit.w (homDiagram Y Z) h) g]
       dsimp
       simp
   id_comp' _ _ _ := by
     ext
-    simp only [category.id_comp, types.limit.π_mk']
+    simp only [Category.id_comp, Types.Limit.π_mk']
   comp_id' _ _ _ := by
     ext
-    simp only [types.limit.π_mk', category.comp_id]
+    simp only [Types.Limit.π_mk', Category.comp_id]
 
 /-- Auxiliary definition: the limit category. -/
 @[simps]
@@ -114,19 +114,18 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.x ⟶ limitConeX F
   map X Y f := by
     fapply Types.Limit.mk.{v, v}
     · intro j
-      refine' eq_to_hom _ ≫ (s.π.app j).map f ≫ eq_to_hom _ <;> simp
+      refine' eqToHom _ ≫ (s.π.app j).map f ≫ eqToHom _ <;> simp
     · intro j j' h
       dsimp
-      simp only [category.assoc, functor.map_comp, eq_to_hom_map, eq_to_hom_trans,
-        eq_to_hom_trans_assoc]
-      rw [← functor.comp_map]
+      simp only [Category.assoc, Functor.map_comp, eqToHom_map, eqToHom_trans, eqToHom_trans_assoc]
+      rw [← Functor.comp_map]
       have := (s.π.naturality h).symm
       conv at this =>
         congr
         skip
         dsimp
         simp
-      erw [functor.congr_hom this f]
+      erw [Functor.congr_hom this f]
       dsimp
       simp
   map_id' X := by simp
@@ -154,11 +153,11 @@ def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)
     · intro X
       ext
       dsimp
-      simp only [types.limit.lift_π_apply', ← w j]
+      simp only [Types.Limit.lift_π_apply', ← w j]
       rfl
     · intro X Y f
       dsimp
-      simp [fun j => functor.congr_hom (w j).symm f]
+      simp [fun j => Functor.congr_hom (w j).symm f]
       congr
 #align category_theory.Cat.has_limits.limit_cone_is_limit CategoryTheory.Cat.HasLimits.limitConeIsLimit
 
@@ -167,15 +166,15 @@ end HasLimits
 /-- The category of small categories has all small limits. -/
 instance : HasLimits Cat.{v, v}
     where HasLimitsOfShape J _ :=
-    { HasLimit := fun F => ⟨⟨⟨has_limits.limit_cone F, has_limits.limit_cone_is_limit F⟩⟩⟩ }
+    { HasLimit := fun F => ⟨⟨⟨HasLimits.limitCone F, HasLimits.limitConeIsLimit F⟩⟩⟩ }
 
 instance : PreservesLimits Cat.objects.{v, v}
     where PreservesLimitsOfShape J _ :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (has_limits.limit_cone_is_limit F)
-          (limits.is_limit.of_iso_limit (limit.is_limit (F ⋙ Cat.objects))
-            (cones.ext (by rfl) (by tidy))) }
+        preservesLimitOfPreservesLimitCone (HasLimits.limitConeIsLimit F)
+          (Limits.IsLimit.ofIsoLimit (limit.isLimit (F ⋙ Cat.objects))
+            (Cones.ext (by rfl) (by tidy))) }
 
 end Cat
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.simply_connected
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem simply_connected_iff_unique_homotopic (X : Type _) [TopologicalSpace X] 
     SimplyConnectedSpace X ↔
       Nonempty X ∧ ∀ x y : X, Nonempty (Unique (Path.Homotopic.Quotient x y)) :=
   by
-  rw [simply_connected_def, equiv_punit_iff_unique]
+  rw [simply_connected_def, equiv_pUnit_iff_unique]
   rfl
 #align simply_connected_iff_unique_homotopic simply_connected_iff_unique_homotopic
 
@@ -73,7 +73,7 @@ instance (priority := 100) : PathConnectedSpace X :=
 
 /-- In a simply connected space, any two paths are homotopic -/
 theorem paths_homotopic {x y : X} (p₁ p₂ : Path x y) : Path.Homotopic p₁ p₂ := by
-  simpa using @Subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
+  simpa using @subsingleton.elim (Path.Homotopic.Quotient x y) _ ⟦p₁⟧ ⟦p₂⟧
 #align simply_connected_space.paths_homotopic SimplyConnectedSpace.paths_homotopic
 
 instance (priority := 100) ofContractible (Y : Type _) [TopologicalSpace Y] [ContractibleSpace Y] :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.left_derived
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,20 +114,20 @@ theorem Functor.leftDerived_map_eq (F : C ⥤ D) [F.Additive] (n : ℕ) {X Y : C
     {P : ProjectiveResolution X} {Q : ProjectiveResolution Y} (g : P.complex ⟶ Q.complex)
     (w : g ≫ Q.π = P.π ≫ (ChainComplex.single₀ C).map f) :
     (F.leftDerived n).map f =
-      (F.leftDerivedObjIso n P).Hom ≫
+      (F.leftDerivedObjIso n P).hom ≫
         (homologyFunctor D _ n).map ((F.mapHomologicalComplex _).map g) ≫
           (F.leftDerivedObjIso n Q).inv :=
   by
-  dsimp only [functor.left_derived, functor.left_derived_obj_iso]
-  dsimp; simp only [category.comp_id, category.id_comp]
+  dsimp only [Functor.leftDerived, Functor.leftDerivedObjIso]
+  dsimp; simp only [Category.comp_id, Category.id_comp]
   rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
-  simp only [← functor.map_comp]
+  simp only [← Functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
-  apply functor.map_homotopy
+  apply Functor.mapHomotopy
   apply Homotopy.trans
   exact HomotopyCategory.homotopyOutMap _
-  apply ProjectiveResolution.lift_homotopy f
+  apply ProjectiveResolution.liftHomotopy f
   · simp
   · simp [w]
 #align category_theory.functor.left_derived_map_eq CategoryTheory.Functor.leftDerived_map_eq
@@ -144,7 +144,7 @@ def NatTrans.leftDerived {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G
 theorem NatTrans.leftDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
     NatTrans.leftDerived (𝟙 F) n = 𝟙 (F.leftDerived n) :=
   by
-  simp [nat_trans.left_derived]
+  simp [NatTrans.leftDerived]
   rfl
 #align category_theory.nat_trans.left_derived_id CategoryTheory.NatTrans.leftDerived_id
 
@@ -153,7 +153,7 @@ theorem NatTrans.leftDerived_id (F : C ⥤ D) [F.Additive] (n : ℕ) :
 theorem NatTrans.leftDerived_comp {F G H : C ⥤ D} [F.Additive] [G.Additive] [H.Additive] (α : F ⟶ G)
     (β : G ⟶ H) (n : ℕ) :
     NatTrans.leftDerived (α ≫ β) n = NatTrans.leftDerived α n ≫ NatTrans.leftDerived β n := by
-  simp [nat_trans.left_derived]
+  simp [NatTrans.leftDerived]
 #align category_theory.nat_trans.left_derived_comp CategoryTheory.NatTrans.leftDerived_comp
 
 /-- A component of the natural transformation between left-derived functors can be computed
@@ -162,21 +162,21 @@ using a chosen projective resolution.
 theorem NatTrans.leftDerived_eq {F G : C ⥤ D} [F.Additive] [G.Additive] (α : F ⟶ G) (n : ℕ) {X : C}
     (P : ProjectiveResolution X) :
     (NatTrans.leftDerived α n).app X =
-      (F.leftDerivedObjIso n P).Hom ≫
+      (F.leftDerivedObjIso n P).hom ≫
         (homologyFunctor D _ n).map ((NatTrans.mapHomologicalComplex α _).app P.complex) ≫
           (G.leftDerivedObjIso n P).inv :=
   by
   symm
-  dsimp [nat_trans.left_derived, functor.left_derived_obj_iso]
-  simp only [category.comp_id, category.id_comp]
+  dsimp [NatTrans.leftDerived, Functor.leftDerivedObjIso]
+  simp only [Category.comp_id, Category.id_comp]
   rw [← homologyFunctor_map, HomotopyCategory.homologyFunctor_map_factors]
-  simp only [← functor.map_comp]
+  simp only [← Functor.map_comp]
   congr 1
   apply HomotopyCategory.eq_of_homotopy
-  simp only [nat_trans.map_homological_complex_naturality_assoc, ← functor.map_comp]
+  simp only [NatTrans.mapHomologicalComplex_naturality_assoc, ← Functor.map_comp]
   apply Homotopy.compLeftId
   rw [← Functor.map_id]
-  apply functor.map_homotopy
+  apply Functor.mapHomotopy
   apply HomotopyEquiv.homotopyHomInvId
 #align category_theory.nat_trans.left_derived_eq CategoryTheory.NatTrans.leftDerived_eq
 

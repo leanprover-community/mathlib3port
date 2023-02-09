@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.euclidean_dist
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem ball_subset_closedBall {x : E} {r : ℝ} : ball x r ⊆ closedBall x r :
 #align euclidean.ball_subset_closed_ball Euclidean.ball_subset_closedBall
 
 theorem isOpen_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
-  Metric.isOpen_ball.Preimage toEuclidean.Continuous
+  Metric.isOpen_ball.preimage toEuclidean.continuous
 #align euclidean.is_open_ball Euclidean.isOpen_ball
 
 theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r :=
@@ -80,22 +80,22 @@ theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r :=
 
 theorem closedBall_eq_image (x : E) (r : ℝ) :
     closedBall x r = toEuclidean.symm '' Metric.closedBall (toEuclidean x) r := by
-  rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
+  rw [to_euclidean.image_symm_eq_preimage, closedBall_eq_preimage]
 #align euclidean.closed_ball_eq_image Euclidean.closedBall_eq_image
 
 theorem isCompact_closedBall {x : E} {r : ℝ} : IsCompact (closedBall x r) :=
   by
-  rw [closed_ball_eq_image]
-  exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
+  rw [closedBall_eq_image]
+  exact (isCompact_closedBall _ _).image to_euclidean.symm.continuous
 #align euclidean.is_compact_closed_ball Euclidean.isCompact_closedBall
 
 theorem isClosed_closedBall {x : E} {r : ℝ} : IsClosed (closedBall x r) :=
-  isCompact_closedBall.IsClosed
+  isCompact_closedBall.isClosed
 #align euclidean.is_closed_closed_ball Euclidean.isClosed_closedBall
 
 theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = closedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h,
-    closed_ball_eq_preimage]
+    closedBall_eq_preimage]
 #align euclidean.closure_ball Euclidean.closure_ball
 
 theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs : IsClosed s)
@@ -134,8 +134,8 @@ theorem ContDiff.euclidean_dist (hf : ContDiff ℝ n f) (hg : ContDiff ℝ n g) 
     ContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=
   by
   simp only [Euclidean.dist]
-  apply @ContDiff.dist ℝ
-  exacts[(@toEuclidean E _ _ _).ContDiff.comp hf, (@toEuclidean E _ _ _).ContDiff.comp hg, fun x =>
-    to_euclidean.injective.ne (h x)]
+  apply @cont_diff.dist ℝ
+  exacts[(@to_euclidean E _ _ _).contDiff.comp hf, (@to_euclidean E _ _ _).contDiff.comp hg,
+    fun x => to_euclidean.injective.ne (h x)]
 #align cont_diff.euclidean_dist ContDiff.euclidean_dist
 

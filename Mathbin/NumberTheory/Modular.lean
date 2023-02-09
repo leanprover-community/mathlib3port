@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module number_theory.modular
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,8 +142,8 @@ theorem tendsto_normSq_coprime_pair :
     dsimp only [LinearMap.coe_proj, real_smul, LinearMap.coe_smulRight, LinearMap.add_apply]
     rw [mul_one]
   have :
-    (fun p : Fin 2 → ℤ => norm_sq ((p 0 : ℂ) * ↑z + ↑(p 1))) =
-      norm_sq ∘ f ∘ fun p : Fin 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
+    (fun p : Fin 2 → ℤ => normSq ((p 0 : ℂ) * ↑z + ↑(p 1))) =
+      normSq ∘ f ∘ fun p : Fin 2 → ℤ => (coe : ℤ → ℝ) ∘ p :=
     by
     ext1
     rw [f_def]
@@ -153,7 +153,7 @@ theorem tendsto_normSq_coprime_pair :
   have hf : f.ker = ⊥ :=
     by
     let g : ℂ →ₗ[ℝ] Fin 2 → ℝ :=
-      LinearMap.pi ![im_lm, im_lm.comp ((z : ℂ) • ((conj_ae : ℂ →ₐ[ℝ] ℂ) : ℂ →ₗ[ℝ] ℂ))]
+      LinearMap.pi ![imLm, im_lm.comp ((z : ℂ) • ((conjAe : ℂ →ₐ[ℝ] ℂ) : ℂ →ₗ[ℝ] ℂ))]
     suffices ((z : ℂ).im⁻¹ • g).comp f = LinearMap.id by exact LinearMap.ker_eq_bot_of_inverse this
     apply LinearMap.ext
     intro c
@@ -172,15 +172,15 @@ theorem tendsto_normSq_coprime_pair :
   have hf' : ClosedEmbedding f :=
     by
     -- for some reason we get a timeout if we try and apply this lemma in a more sensible way
-    have := @LinearEquiv.closedEmbedding_of_injective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
+    have := @linear_equiv.closed_embedding_of_injective ℝ _ (Fin 2 → ℝ) _ (id _) ℂ _ _ _ _
     rotate_left 2
     exact f
     exact this hf
-  have h₂ : tendsto (fun p : Fin 2 → ℤ => (coe : ℤ → ℝ) ∘ p) cofinite (cocompact _) :=
+  have h₂ : Tendsto (fun p : Fin 2 → ℤ => (coe : ℤ → ℝ) ∘ p) cofinite (cocompact _) :=
     by
-    convert tendsto.pi_map_Coprod fun i => Int.tendsto_coe_cofinite
-    · rw [Coprod_cofinite]
-    · rw [Coprod_cocompact]
+    convert Tendsto.pi_map_coprodᵢ fun i => Int.tendsto_coe_cofinite
+    · rw [coprodᵢ_cofinite]
+    · rw [coprodᵢ_cocompact]
   exact tendsto_norm_sq_cocompact_at_top.comp (hf'.tendsto_cocompact.comp h₂)
 #align modular_group.tendsto_norm_sq_coprime_pair ModularGroup.tendsto_normSq_coprime_pair
 
@@ -207,7 +207,7 @@ def lcRow0Extend {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
     ![by
       refine'
         LinearMap.GeneralLinearGroup.generalLinearEquiv ℝ (Fin 2 → ℝ)
-          (general_linear_group.to_linear (plane_conformal_matrix (cd 0 : ℝ) (-(cd 1 : ℝ)) _))
+          (GeneralLinearGroup.toLinear (planeConformalMatrix (cd 0 : ℝ) (-(cd 1 : ℝ)) _))
       norm_cast
       rw [neg_sq]
       exact hcd.sq_add_sq_ne_zero, LinearEquiv.refl ℝ (Fin 2 → ℝ)]
@@ -228,30 +228,30 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
   let f₁ : SL(2, ℤ) → Matrix (Fin 2) (Fin 2) ℝ := fun g =>
     Matrix.map (↑g : Matrix _ _ ℤ) (coe : ℤ → ℝ)
   have cocompact_ℝ_to_cofinite_ℤ_matrix :
-    tendsto (fun m : Matrix (Fin 2) (Fin 2) ℤ => Matrix.map m (coe : ℤ → ℝ)) cofinite
+    Tendsto (fun m : Matrix (Fin 2) (Fin 2) ℤ => Matrix.map m (coe : ℤ → ℝ)) cofinite
       (cocompact _) :=
     by
-    simpa only [Coprod_cofinite, Coprod_cocompact] using
-      tendsto.pi_map_Coprod fun i : Fin 2 =>
-        tendsto.pi_map_Coprod fun j : Fin 2 => Int.tendsto_coe_cofinite
-  have hf₁ : tendsto f₁ cofinite (cocompact _) :=
+    simpa only [coprodᵢ_cofinite, coprodᵢ_cocompact] using
+      Tendsto.pi_map_coprodᵢ fun i : Fin 2 =>
+        Tendsto.pi_map_coprodᵢ fun j : Fin 2 => Int.tendsto_coe_cofinite
+  have hf₁ : Tendsto f₁ cofinite (cocompact _) :=
     cocompact_ℝ_to_cofinite_ℤ_matrix.comp subtype.coe_injective.tendsto_cofinite
-  have hf₂ : ClosedEmbedding (lc_row0_extend hcd) :=
-    (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
+  have hf₂ : ClosedEmbedding (lcRow0Extend hcd) :=
+    (lcRow0Extend hcd).toContinuousLinearEquiv.toHomeomorph.closedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
   ext (⟨g, rfl⟩i j) : 3
   fin_cases i <;> [fin_cases j, skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   ·
-    simp only [mB, mul_vec, dot_product, Fin.sum_univ_two, _root_.coe_coe, coe_matrix_coe,
-      Int.coe_castRingHom, lc_row0_apply, Function.comp_apply, cons_val_zero, lc_row0_extend_apply,
-      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, general_linear_group.to_linear_apply,
-      coe_plane_conformal_matrix, neg_neg, mul_vec_lin_apply, cons_val_one, head_cons, of_apply]
+    simp only [mB, mulVec, dotProduct, Fin.sum_univ_two, coe_coe, coe_matrix_coe,
+      Int.coe_castRingHom, lcRow0_apply, Function.comp_apply, cons_val_zero, lcRow0Extend_apply,
+      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.toLinear_apply,
+      coe_planeConformalMatrix, neg_neg, mulVecLin_apply, cons_val_one, head_cons, of_apply]
   · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
-    simp only [f₁, mul_vec, dot_product, Fin.sum_univ_two, Matrix.det_fin_two, Function.comp_apply,
-      Subtype.coe_mk, lc_row0_extend_apply, cons_val_zero,
-      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, general_linear_group.to_linear_apply,
-      coe_plane_conformal_matrix, mul_vec_lin_apply, cons_val_one, head_cons, map_apply, neg_mul,
+    simp only [f₁, mulVec, dotProduct, Fin.sum_univ_two, Matrix.det_fin_two, Function.comp_apply,
+      Subtype.coe_mk, lcRow0Extend_apply, cons_val_zero,
+      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.toLinear_apply,
+      coe_planeConformalMatrix, mulVecLin_apply, cons_val_one, head_cons, map_apply, neg_mul,
       Int.cast_sub, Int.cast_mul, neg_sub, of_apply]
     ring
   · rfl
@@ -272,7 +272,7 @@ theorem smul_eq_lcRow0_add {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) (hg 
   rw [(by simp : (p 1 : ℂ) * z - p 0 = (p 1 * z - p 0) * ↑(det (↑g : Matrix (Fin 2) (Fin 2) ℤ)))]
   rw [← hg, det_fin_two]
   simp only [Int.coe_castRingHom, coe_matrix_coe, Int.cast_mul, of_real_int_cast, map_apply, denom,
-    Int.cast_sub, _root_.coe_coe, coe_GL_pos_coe_GL_coe_matrix]
+    Int.cast_sub, coe_coe, coe_gLPos_coe_GL_coe_matrix]
   ring
 #align modular_group.smul_eq_lc_row0_add ModularGroup.smul_eq_lcRow0_add
 
@@ -280,7 +280,7 @@ theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
     Tendsto (fun g : { g : SL(2, ℤ) // ↑ₘg 1 = p } => |((g : SL(2, ℤ)) • z).re|) cofinite atTop :=
   by
   suffices
-    tendsto (fun g : (fun g : SL(2, ℤ) => ↑ₘg 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite
+    Tendsto (fun g : (fun g : SL(2, ℤ) => ↑ₘg 1) ⁻¹' {p} => ((g : SL(2, ℤ)) • z).re) cofinite
       (cocompact ℝ)
     by exact tendsto_norm_cocompact_at_top.comp this
   have : ((p 0 : ℝ) ^ 2 + p 1 ^ 2)⁻¹ ≠ 0 :=
@@ -289,13 +289,13 @@ theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
     exact_mod_cast hp.sq_add_sq_ne_zero
   let f := Homeomorph.mulRight₀ _ this
   let ff := Homeomorph.addRight (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  convert (f.trans ff).ClosedEmbedding.tendsto_cocompact.comp (tendsto_lc_row0 hp)
+  convert (f.trans ff).closedEmbedding.tendsto_cocompact.comp (tendsto_lcRow0 hp)
   ext g
   change
     ((g : SL(2, ℤ)) • z).re =
-      lc_row0 p ↑(↑g : SL(2, ℝ)) / (p 0 ^ 2 + p 1 ^ 2) +
+      lcRow0 p ↑(↑g : SL(2, ℝ)) / (p 0 ^ 2 + p 1 ^ 2) +
         (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  exact_mod_cast congr_arg Complex.re (smul_eq_lc_row0_add z hp g.2)
+  exact_mod_cast congr_arg Complex.re (smul_eq_lcRow0_add z hp g.2)
 #align modular_group.tendsto_abs_re_smul ModularGroup.tendsto_abs_re_smul
 
 end TendstoLemmas
@@ -310,15 +310,15 @@ theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im �
     let s : Set (Fin 2 → ℤ) := { cd | IsCoprime (cd 0) (cd 1) }
     have hs : s.nonempty := ⟨![1, 1], isCoprime_one_left⟩
     obtain ⟨p, hp_coprime, hp⟩ :=
-      Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
+      Filter.Tendsto.exists_within_forall_le hs (tendsto_normSq_coprime_pair z)
     obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
     refine' ⟨g, fun g' => _⟩
-    rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq,
+    rw [SpecialLinearGroup.im_smul_eq_div_normSq, SpecialLinearGroup.im_smul_eq_div_normSq,
       div_le_div_left]
     · simpa [← hg] using hp (↑ₘg' 1) (bottom_row_coprime g')
     · exact z.im_pos
-    · exact norm_sq_denom_pos g' z
-    · exact norm_sq_denom_pos g z
+    · exact normSq_denom_pos g' z
+    · exact normSq_denom_pos g z
 #align modular_group.exists_max_im ModularGroup.exists_max_im
 
 /-- Given `z : ℍ` and a bottom row `(c,d)`, among the `g : SL(2,ℤ)` with this bottom row, minimize
@@ -340,66 +340,66 @@ theorem exists_row_one_eq_and_min_re {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0
 #align modular_group.exists_row_one_eq_and_min_re ModularGroup.exists_row_one_eq_and_min_re
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The matrix `T = [[1,1],[0,1]]` as an element of `SL(2,ℤ)` -/
 def t : SL(2, ℤ) :=
   ⟨«expr!![ »
-      "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation",
+      "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation",
     by norm_num [Matrix.det_fin_two_of] ⟩
 #align modular_group.T ModularGroup.t
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The matrix `S = [[0,-1],[1,0]]` as an element of `SL(2,ℤ)` -/
 def s : SL(2, ℤ) :=
   ⟨«expr!![ »
-      "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation",
+      "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation",
     by norm_num [Matrix.det_fin_two_of] ⟩
 #align modular_group.S ModularGroup.s
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem coe_s :
     ↑ₘs =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   rfl
 #align modular_group.coe_S ModularGroup.coe_s
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem coe_t :
     ↑ₘt =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   rfl
 #align modular_group.coe_T ModularGroup.coe_t
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem coe_t_inv :
     ↑ₘt⁻¹ =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
-  by simp [coe_inv, coe_T, adjugate_fin_two]
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
+  by simp [coe_inv, coe_t, adjugate_fin_two]
 #align modular_group.coe_T_inv ModularGroup.coe_t_inv
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem coe_t_zpow (n : ℤ) :
     ↑ₘ(t ^ n) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   induction' n using Int.induction_on with n h n h
   · rw [zpow_zero, coe_one, Matrix.one_fin_two]
-  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
+  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_t, Matrix.mul_fin_two]
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]"
     rw [mul_one, mul_one, add_comm]
-  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
+  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_t_inv, Matrix.mul_fin_two]
     trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
       ring
@@ -407,40 +407,40 @@ theorem coe_t_zpow (n : ℤ) :
 
 @[simp]
 theorem t_pow_mul_apply_one (n : ℤ) (g : SL(2, ℤ)) : ↑ₘ(t ^ n * g) 1 = ↑ₘg 1 := by
-  simp [coe_T_zpow, Matrix.mul, Matrix.dotProduct, Fin.sum_univ_succ]
+  simp [coe_t_zpow, Matrix.mul, Matrix.dotProduct, Fin.sum_univ_succ]
 #align modular_group.T_pow_mul_apply_one ModularGroup.t_pow_mul_apply_one
 
 @[simp]
 theorem t_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(t * g) 1 = ↑ₘg 1 := by
-  simpa using T_pow_mul_apply_one 1 g
+  simpa using t_pow_mul_apply_one 1 g
 #align modular_group.T_mul_apply_one ModularGroup.t_mul_apply_one
 
 @[simp]
 theorem t_inv_mul_apply_one (g : SL(2, ℤ)) : ↑ₘ(t⁻¹ * g) 1 = ↑ₘg 1 := by
-  simpa using T_pow_mul_apply_one (-1) g
+  simpa using t_pow_mul_apply_one (-1) g
 #align modular_group.T_inv_mul_apply_one ModularGroup.t_inv_mul_apply_one
 
-theorem coe_t_zpow_smul_eq {n : ℤ} : (↑(t ^ n • z) : ℂ) = z + n := by simp [coe_T_zpow]
+theorem coe_t_zpow_smul_eq {n : ℤ} : (↑(t ^ n • z) : ℂ) = z + n := by simp [coe_t_zpow]
 #align modular_group.coe_T_zpow_smul_eq ModularGroup.coe_t_zpow_smul_eq
 
 theorem re_t_zpow_smul (n : ℤ) : (t ^ n • z).re = z.re + n := by
-  rw [← coe_re, coe_T_zpow_smul_eq, add_re, int_cast_re, coe_re]
+  rw [← coe_re, coe_t_zpow_smul_eq, add_re, int_cast_re, coe_re]
 #align modular_group.re_T_zpow_smul ModularGroup.re_t_zpow_smul
 
 theorem im_t_zpow_smul (n : ℤ) : (t ^ n • z).im = z.im := by
-  rw [← coe_im, coe_T_zpow_smul_eq, add_im, int_cast_im, add_zero, coe_im]
+  rw [← coe_im, coe_t_zpow_smul_eq, add_im, int_cast_im, add_zero, coe_im]
 #align modular_group.im_T_zpow_smul ModularGroup.im_t_zpow_smul
 
-theorem re_t_smul : (t • z).re = z.re + 1 := by simpa using re_T_zpow_smul z 1
+theorem re_t_smul : (t • z).re = z.re + 1 := by simpa using re_t_zpow_smul z 1
 #align modular_group.re_T_smul ModularGroup.re_t_smul
 
-theorem im_t_smul : (t • z).im = z.im := by simpa using im_T_zpow_smul z 1
+theorem im_t_smul : (t • z).im = z.im := by simpa using im_t_zpow_smul z 1
 #align modular_group.im_T_smul ModularGroup.im_t_smul
 
-theorem re_t_inv_smul : (t⁻¹ • z).re = z.re - 1 := by simpa using re_T_zpow_smul z (-1)
+theorem re_t_inv_smul : (t⁻¹ • z).re = z.re - 1 := by simpa using re_t_zpow_smul z (-1)
 #align modular_group.re_T_inv_smul ModularGroup.re_t_inv_smul
 
-theorem im_t_inv_smul : (t⁻¹ • z).im = z.im := by simpa using im_T_zpow_smul z (-1)
+theorem im_t_inv_smul : (t⁻¹ • z).im = z.im := by simpa using im_t_zpow_smul z (-1)
 #align modular_group.im_T_inv_smul ModularGroup.im_t_inv_smul
 
 variable {z}
@@ -454,17 +454,17 @@ theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
     linarith
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
   · use ↑ₘg 0 1
-    suffices g = T ^ ↑ₘg 0 1 by
+    suffices g = t ^ ↑ₘg 0 1 by
       intro z
       conv_lhs => rw [this]
     ext (i j)
-    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_t_zpow]
   · use -↑ₘg 0 1
-    suffices g = -T ^ (-↑ₘg 0 1) by
+    suffices g = -t ^ (-↑ₘg 0 1) by
       intro z
       conv_lhs => rw [this, SL_neg_smul]
     ext (i j)
-    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_t_zpow]
 #align modular_group.exists_eq_T_zpow_of_c_eq_zero ModularGroup.exists_eq_t_zpow_of_c_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/
@@ -478,7 +478,7 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = t ^ ↑ₘg 0 0 * s * t ^ 
   refine' Subtype.ext _
   conv_lhs => rw [Matrix.eta_fin_two ↑ₘg]
   rw [hc, hg]
-  simp only [coe_mul, coe_T_zpow, coe_S, mul_fin_two]
+  simp only [coe_mul, coe_t_zpow, coe_s, mul_fin_two]
   trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, \",\", expr _, \";\", expr _, \",\", expr _, \"]\"] [])]]" <;>
     ring
@@ -486,20 +486,20 @@ theorem g_eq_of_c_eq_one (hc : ↑ₘg 1 0 = 1) : g = t ^ ↑ₘg 0 0 * s * t ^ 
 
 /-- If `1 < |z|`, then `|S • z| < 1`. -/
 theorem normSq_s_smul_lt_one (h : 1 < normSq z) : normSq ↑(s • z) < 1 := by
-  simpa [coe_S] using (inv_lt_inv z.norm_sq_pos zero_lt_one).mpr h
+  simpa [coe_s] using (inv_lt_inv z.norm_sq_pos zero_lt_one).mpr h
 #align modular_group.norm_sq_S_smul_lt_one ModularGroup.normSq_s_smul_lt_one
 
 /-- If `|z| < 1`, then applying `S` strictly decreases `im`. -/
 theorem im_lt_im_s_smul (h : normSq z < 1) : z.im < (s • z).im :=
   by
-  have : z.im < z.im / norm_sq (z : ℂ) :=
+  have : z.im < z.im / normSq (z : ℂ) :=
     by
     have imz : 0 < z.im := im_pos z
     apply (lt_div_iff z.norm_sq_pos).mpr
     nlinarith
   convert this
-  simp only [special_linear_group.im_smul_eq_div_norm_sq]
-  field_simp [norm_sq_denom_ne_zero, norm_sq_ne_zero, S]
+  simp only [SpecialLinearGroup.im_smul_eq_div_normSq]
+  field_simp [normSq_denom_ne_zero, normSq_ne_zero, s]
 #align modular_group.im_lt_im_S_smul ModularGroup.im_lt_im_s_smul
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
@@ -537,7 +537,7 @@ theorem one_lt_normSq_t_zpow_smul (hz : z ∈ 𝒟ᵒ) (n : ℤ) : 1 < normSq (t
   have hz₁ : 1 < z.re * z.re + z.im * z.im := hz.1
   have hzn := Int.nneg_mul_add_sq_of_abs_le_one n (abs_two_mul_re_lt_one_of_mem_fdo hz).le
   have : 1 < (z.re + ↑n) * (z.re + ↑n) + z.im * z.im := by linarith
-  simpa [coe_T_zpow, norm_sq]
+  simpa [coe_t_zpow, normSq]
 #align modular_group.one_lt_norm_sq_T_zpow_smul ModularGroup.one_lt_normSq_t_zpow_smul
 
 theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg : t ^ n • z ∈ 𝒟ᵒ) : n = 0 :=
@@ -546,7 +546,7 @@ theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg 
     rwa [← Int.cast_abs, ← Int.cast_one, Int.cast_lt, Int.abs_lt_one_iff] at this
   have h₁ := hz.2
   have h₂ := hg.2
-  rw [re_T_zpow_smul] at h₂
+  rw [re_t_zpow_smul] at h₂
   calc
     |(n : ℝ)| ≤ |z.re| + |z.re + (n : ℝ)| := abs_add' (n : ℝ) z.re
     _ < 1 / 2 + 1 / 2 := add_lt_add h₁ h₂
@@ -566,26 +566,26 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 :=
   have hg₀' : ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im :=
     by
     have hg'' : (g • z).im = (g₀ • z).im := by
-      rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq,
+      rw [SpecialLinearGroup.im_smul_eq_div_normSq, SpecialLinearGroup.im_smul_eq_div_normSq,
         denom_apply, denom_apply, hg]
     simpa only [hg''] using hg₀
   constructor
   · -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
     contrapose! hg₀'
-    refine' ⟨S * g, _⟩
+    refine' ⟨s * g, _⟩
     rw [mul_smul]
-    exact im_lt_im_S_smul hg₀'
+    exact im_lt_im_s_smul hg₀'
   · show |(g • z).re| ≤ 1 / 2
     -- if not, then either `T` or `T'` decrease |Re|.
     rw [abs_le]
     constructor
     · contrapose! hg'
-      refine' ⟨T * g, (T_mul_apply_one _).symm, _⟩
-      rw [mul_smul, re_T_smul]
+      refine' ⟨t * g, (t_mul_apply_one _).symm, _⟩
+      rw [mul_smul, re_t_smul]
       cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
     · contrapose! hg'
-      refine' ⟨T⁻¹ * g, (T_inv_mul_apply_one _).symm, _⟩
-      rw [mul_smul, re_T_inv_smul]
+      refine' ⟨t⁻¹ * g, (t_inv_mul_apply_one _).symm, _⟩
+      rw [mul_smul, re_t_inv_smul]
       cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
 #align modular_group.exists_smul_mem_fd ModularGroup.exists_smul_mem_fd
 
@@ -620,16 +620,16 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 
       (mul_lt_mul'' (three_lt_four_mul_im_sq_of_mem_fdo hg) (three_lt_four_mul_im_sq_of_mem_fdo hz)
         (by linarith) (by linarith))
       hc
-  have h₂ : (c * z.im) ^ 4 / norm_sq (denom (↑g) z) ^ 2 ≤ 1 :=
+  have h₂ : (c * z.im) ^ 4 / normSq (denom (↑g) z) ^ 2 ≤ 1 :=
     div_le_one_of_le
       (pow_four_le_pow_two_of_pow_two_le (UpperHalfPlane.c_mul_im_sq_le_normSq_denom z g))
       (sq_nonneg _)
-  let nsq := norm_sq (denom g z)
+  let nsq := normSq (denom g z)
   calc
     9 * c ^ 4 < c ^ 4 * z.im ^ 2 * (g • z).im ^ 2 * 16 := by linarith
     _ = c ^ 4 * z.im ^ 4 / nsq ^ 2 * 16 :=
       by
-      rw [special_linear_group.im_smul_eq_div_norm_sq, div_pow]
+      rw [SpecialLinearGroup.im_smul_eq_div_normSq, div_pow]
       ring
     _ ≤ 16 := by
       rw [← mul_pow]
@@ -646,14 +646,14 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
     by_contra hc
     let a := ↑ₘg' 0 0
     let d := ↑ₘg' 1 1
-    have had : T ^ (-a) * g' = S * T ^ d :=
+    have had : t ^ (-a) * g' = s * t ^ d :=
       by
       rw [g_eq_of_c_eq_one hc]
       group
-    let w := T ^ (-a) • g' • z
-    have h₁ : w = S • T ^ d • z := by simp only [w, ← mul_smul, had]
-    replace h₁ : norm_sq w < 1 := h₁.symm ▸ norm_sq_S_smul_lt_one (one_lt_norm_sq_T_zpow_smul hz d)
-    have h₂ : 1 < norm_sq w := one_lt_norm_sq_T_zpow_smul hg' (-a)
+    let w := t ^ (-a) • g' • z
+    have h₁ : w = s • t ^ d • z := by simp only [w, ← mul_smul, had]
+    replace h₁ : normSq w < 1 := h₁.symm ▸ normSq_s_smul_lt_one (one_lt_normSq_t_zpow_smul hz d)
+    have h₂ : 1 < normSq w := one_lt_normSq_t_zpow_smul hg' (-a)
     linarith
   have hn : ↑ₘg 1 0 ≠ -1 := by
     intro hc
@@ -669,9 +669,9 @@ theorem c_eq_zero (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : ↑ₘg 1 0 
 where `z : ℍ` and `g : SL(2,ℤ)`, then `z = g • z`. -/
 theorem eq_smul_self_of_mem_fdo_mem_fdo (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : z = g • z :=
   by
-  obtain ⟨n, hn⟩ := exists_eq_T_zpow_of_c_eq_zero (c_eq_zero hz hg)
+  obtain ⟨n, hn⟩ := exists_eq_t_zpow_of_c_eq_zero (c_eq_zero hz hg)
   rw [hn] at hg⊢
-  simp [eq_zero_of_mem_fdo_of_T_zpow_mem_fdo hz hg, one_smul]
+  simp [eq_zero_of_mem_fdo_of_t_zpow_mem_fdo hz hg, one_smul]
 #align modular_group.eq_smul_self_of_mem_fdo_mem_fdo ModularGroup.eq_smul_self_of_mem_fdo_mem_fdo
 
 end UniqueRepresentative

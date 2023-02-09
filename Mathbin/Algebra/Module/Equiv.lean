@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -896,7 +896,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align linear_equiv.mk_coe' LinearEquiv.mk_coe'ₓ'. -/
 @[simp]
 theorem mk_coe' (f h₁ h₂ h₃ h₄) : (LinearEquiv.mk f h₁ h₂ (⇑e) h₃ h₄ : M₂ ≃ₛₗ[σ'] M) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.injective <| ext fun x => rfl
 #align linear_equiv.mk_coe' LinearEquiv.mk_coe'
 
 /- warning: linear_equiv.symm_mk -> LinearEquiv.symm_mk is a dubious translation:
@@ -936,7 +936,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} {M : Type.{u4}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_2 : Semiring.{u1} S] [_inst_6 : AddCommMonoid.{u4} M] [_inst_8 : AddCommMonoid.{u3} M₂] {module_M : Module.{u2, u4} R M _inst_1 _inst_6} {module_S_M₂ : Module.{u1, u3} S M₂ _inst_2 _inst_8} {σ : RingHom.{u2, u1} R S (Semiring.toNonAssocSemiring.{u2} R _inst_1) (Semiring.toNonAssocSemiring.{u1} S _inst_2)} {σ' : RingHom.{u1, u2} S R (Semiring.toNonAssocSemiring.{u1} S _inst_2) (Semiring.toNonAssocSemiring.{u2} R _inst_1)} {re₁ : RingHomInvPair.{u2, u1} R S _inst_1 _inst_2 σ σ'} {re₂ : RingHomInvPair.{u1, u2} S R _inst_2 _inst_1 σ' σ} (e : LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂), Function.Bijective.{succ u4, succ u3} M M₂ (FunLike.coe.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M (fun (_x : M) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : M) => M₂) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (EquivLike.toEmbeddingLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddEquivClass.toEquivLike.{max u4 u3, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddZeroClass.toAdd.{u4} M (AddMonoid.toAddZeroClass.{u4} M (AddCommMonoid.toAddMonoid.{u4} M _inst_6))) (AddZeroClass.toAdd.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_8))) (SemilinearEquivClass.toAddEquivClass.{max u4 u3, u2, u1, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂ (LinearEquiv.instSemilinearEquivClassLinearEquiv.{u2, u1, u4, u3} R S M M₂ _inst_1 _inst_2 _inst_6 _inst_8 module_M module_S_M₂ σ σ' re₁ re₂))))) e)
 Case conversion may be inaccurate. Consider using '#align linear_equiv.bijective LinearEquiv.bijectiveₓ'. -/
 protected theorem bijective : Function.Bijective e :=
-  e.toEquiv.Bijective
+  e.toEquiv.bijective
 #align linear_equiv.bijective LinearEquiv.bijective
 
 /- warning: linear_equiv.injective -> LinearEquiv.injective is a dubious translation:
@@ -946,7 +946,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} {M : Type.{u4}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_2 : Semiring.{u1} S] [_inst_6 : AddCommMonoid.{u4} M] [_inst_8 : AddCommMonoid.{u3} M₂] {module_M : Module.{u2, u4} R M _inst_1 _inst_6} {module_S_M₂ : Module.{u1, u3} S M₂ _inst_2 _inst_8} {σ : RingHom.{u2, u1} R S (Semiring.toNonAssocSemiring.{u2} R _inst_1) (Semiring.toNonAssocSemiring.{u1} S _inst_2)} {σ' : RingHom.{u1, u2} S R (Semiring.toNonAssocSemiring.{u1} S _inst_2) (Semiring.toNonAssocSemiring.{u2} R _inst_1)} {re₁ : RingHomInvPair.{u2, u1} R S _inst_1 _inst_2 σ σ'} {re₂ : RingHomInvPair.{u1, u2} S R _inst_2 _inst_1 σ' σ} (e : LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂), Function.Injective.{succ u4, succ u3} M M₂ (FunLike.coe.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M (fun (_x : M) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : M) => M₂) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (EquivLike.toEmbeddingLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddEquivClass.toEquivLike.{max u4 u3, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddZeroClass.toAdd.{u4} M (AddMonoid.toAddZeroClass.{u4} M (AddCommMonoid.toAddMonoid.{u4} M _inst_6))) (AddZeroClass.toAdd.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_8))) (SemilinearEquivClass.toAddEquivClass.{max u4 u3, u2, u1, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂ (LinearEquiv.instSemilinearEquivClassLinearEquiv.{u2, u1, u4, u3} R S M M₂ _inst_1 _inst_2 _inst_6 _inst_8 module_M module_S_M₂ σ σ' re₁ re₂))))) e)
 Case conversion may be inaccurate. Consider using '#align linear_equiv.injective LinearEquiv.injectiveₓ'. -/
 protected theorem injective : Function.Injective e :=
-  e.toEquiv.Injective
+  e.toEquiv.injective
 #align linear_equiv.injective LinearEquiv.injective
 
 /- warning: linear_equiv.surjective -> LinearEquiv.surjective is a dubious translation:
@@ -956,7 +956,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} {M : Type.{u4}} {M₂ : Type.{u3}} [_inst_1 : Semiring.{u2} R] [_inst_2 : Semiring.{u1} S] [_inst_6 : AddCommMonoid.{u4} M] [_inst_8 : AddCommMonoid.{u3} M₂] {module_M : Module.{u2, u4} R M _inst_1 _inst_6} {module_S_M₂ : Module.{u1, u3} S M₂ _inst_2 _inst_8} {σ : RingHom.{u2, u1} R S (Semiring.toNonAssocSemiring.{u2} R _inst_1) (Semiring.toNonAssocSemiring.{u1} S _inst_2)} {σ' : RingHom.{u1, u2} S R (Semiring.toNonAssocSemiring.{u1} S _inst_2) (Semiring.toNonAssocSemiring.{u2} R _inst_1)} {re₁ : RingHomInvPair.{u2, u1} R S _inst_1 _inst_2 σ σ'} {re₂ : RingHomInvPair.{u1, u2} S R _inst_2 _inst_1 σ' σ} (e : LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂), Function.Surjective.{succ u4, succ u3} M M₂ (FunLike.coe.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M (fun (_x : M) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : M) => M₂) _x) (EmbeddingLike.toFunLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (EquivLike.toEmbeddingLike.{max (succ u4) (succ u3), succ u4, succ u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddEquivClass.toEquivLike.{max u4 u3, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) M M₂ (AddZeroClass.toAdd.{u4} M (AddMonoid.toAddZeroClass.{u4} M (AddCommMonoid.toAddMonoid.{u4} M _inst_6))) (AddZeroClass.toAdd.{u3} M₂ (AddMonoid.toAddZeroClass.{u3} M₂ (AddCommMonoid.toAddMonoid.{u3} M₂ _inst_8))) (SemilinearEquivClass.toAddEquivClass.{max u4 u3, u2, u1, u4, u3} (LinearEquiv.{u2, u1, u4, u3} R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂) R S _inst_1 _inst_2 σ σ' re₁ re₂ M M₂ _inst_6 _inst_8 module_M module_S_M₂ (LinearEquiv.instSemilinearEquivClassLinearEquiv.{u2, u1, u4, u3} R S M M₂ _inst_1 _inst_2 _inst_6 _inst_8 module_M module_S_M₂ σ σ' re₁ re₂))))) e)
 Case conversion may be inaccurate. Consider using '#align linear_equiv.surjective LinearEquiv.surjectiveₓ'. -/
 protected theorem surjective : Function.Surjective e :=
-  e.toEquiv.Surjective
+  e.toEquiv.surjective
 #align linear_equiv.surjective LinearEquiv.surjective
 
 /- warning: linear_equiv.image_eq_preimage -> LinearEquiv.image_eq_preimage is a dubious translation:
@@ -1201,7 +1201,7 @@ Case conversion may be inaccurate. Consider using '#align module.comp_hom.to_lin
 /-- `g : R ≃+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
 def compHom.toLinearEquiv {R S : Type _} [Semiring R] [Semiring S] (g : R ≃+* S) :
-    haveI := comp_hom S (↑g : R →+* S)
+    haveI := compHom S (↑g : R →+* S)
     R ≃ₗ[R] S :=
   { g with
     toFun := (g : R → S)

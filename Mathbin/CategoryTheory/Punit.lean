@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.punit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,16 +64,16 @@ def equiv : Discrete PUnit ⥤ C ≌ C
       map := fun F G θ => θ.app ⟨⟨⟩⟩ }
   inverse := Functor.const _
   unitIso := by
-    apply nat_iso.of_components _ _
+    apply NatIso.ofComponents _ _
     intro X
-    apply discrete.nat_iso
+    apply Discrete.natIso
     rintro ⟨⟨⟩⟩
-    apply iso.refl _
+    apply Iso.refl _
     intros
     ext ⟨⟨⟩⟩
     simp
   counitIso := by
-    refine' nat_iso.of_components iso.refl _
+    refine' NatIso.ofComponents Iso.refl _
     intro X Y f
     dsimp; simp
 #align category_theory.functor.equiv CategoryTheory.Functor.equiv
@@ -101,16 +101,16 @@ theorem equiv_pUnit_iff_unique :
     apply Subsingleton.intro
     intro a b
     rw [this a, this b]
-    simp only [functor.comp_map]
+    simp only [Functor.comp_map]
     congr
   · rintro ⟨⟨p⟩, h⟩
     haveI := fun x y => (h x y).some
     refine'
       Nonempty.intro
-        (CategoryTheory.Equivalence.mk ((Functor.Const _).obj ⟨⟨⟩⟩) ((Functor.Const _).obj p) _
-          (by apply functor.punit_ext))
+        (CategoryTheory.Equivalence.mk ((Functor.const _).obj ⟨⟨⟩⟩) ((Functor.const _).obj p) _
+          (by apply Functor.punitExt))
     exact
-      nat_iso.of_components
+      NatIso.ofComponents
         (fun _ =>
           { Hom := default
             inv := default })

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem tendsto_inv₀ {x : G₀} (hx : x ≠ 0) : Tendsto Inv.inv (𝓝 x) (�
 #align tendsto_inv₀ tendsto_inv₀
 
 theorem continuousOn_inv₀ : ContinuousOn (Inv.inv : G₀ → G₀) ({0}ᶜ) := fun x hx =>
-  (continuousAt_inv₀ hx).ContinuousWithinAt
+  (continuousAt_inv₀ hx).continuousWithinAt
 #align continuous_on_inv₀ continuousOn_inv₀
 
 /-- If a function converges to a nonzero value, its inverse converges to the inverse of this value.
@@ -137,7 +137,7 @@ theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) :
 
 @[continuity]
 theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => (f x)⁻¹ :=
-  continuous_iff_continuousAt.2 fun x => (hf.Tendsto x).inv₀ (h0 x)
+  continuous_iff_continuousAt.2 fun x => (hf.tendsto x).inv₀ (h0 x)
 #align continuous.inv₀ Continuous.inv₀
 
 theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x ∈ s, f x ≠ 0) :
@@ -170,8 +170,8 @@ theorem Filter.tendsto_mul_iff_of_ne_zero [T1Space G₀] {f g : α → G₀} {l 
   by
   refine' ⟨fun hfg => _, fun hf => hf.mul hg⟩
   rw [← mul_div_cancel x hy]
-  refine' tendsto.congr' _ (hfg.div hg hy)
-  refine' eventually.mp (hg.eventually_ne hy) (eventually_of_forall fun n hn => mul_div_cancel _ hn)
+  refine' Tendsto.congr' _ (hfg.div hg hy)
+  refine' Eventually.mp (hg.eventually_ne hy) (eventually_of_forall fun n hn => mul_div_cancel _ hn)
 #align filter.tendsto_mul_iff_of_ne_zero Filter.tendsto_mul_iff_of_ne_zero
 
 variable [TopologicalSpace α] [TopologicalSpace β] {s : Set α} {a : α}
@@ -215,7 +215,7 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
   by_cases hga : g a = 0
   · rw [ContinuousAt]
-    simp_rw [comp_app, hga, div_zero]
+    simp_rw [comp_apply, hga, div_zero]
     exact (h2h hga).comp (continuous_at_id.prod_mk tendsto_top)
   · exact ContinuousAt.comp (hh hga) (continuous_at_id.prod (hf.div hg hga))
 #align continuous_at.comp_div_cases ContinuousAt.comp_div_cases
@@ -227,7 +227,7 @@ theorem Continuous.comp_div_cases {f g : α → G₀} (h : α → G₀ → β) (
     (h2h : ∀ a, g a = 0 → Tendsto (↿h) (𝓝 a ×ᶠ ⊤) (𝓝 (h a 0))) :
     Continuous fun x => h x (f x / g x) :=
   continuous_iff_continuousAt.mpr fun a =>
-    hf.ContinuousAt.comp_div_cases _ hg.ContinuousAt (hh a) (h2h a)
+    hf.continuousAt.comp_div_cases _ hg.continuousAt (hh a) (h2h a)
 #align continuous.comp_div_cases Continuous.comp_div_cases
 
 end Div
@@ -293,12 +293,12 @@ theorem continuousAt_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) : Co
 #align continuous_at_zpow₀ continuousAt_zpow₀
 
 theorem continuousOn_zpow₀ (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) ({0}ᶜ) := fun x hx =>
-  (continuousAt_zpow₀ _ _ (Or.inl hx)).ContinuousWithinAt
+  (continuousAt_zpow₀ _ _ (Or.inl hx)).continuousWithinAt
 #align continuous_on_zpow₀ continuousOn_zpow₀
 
 theorem Filter.Tendsto.zpow₀ {f : α → G₀} {l : Filter α} {a : G₀} (hf : Tendsto f l (𝓝 a)) (m : ℤ)
     (h : a ≠ 0 ∨ 0 ≤ m) : Tendsto (fun x => f x ^ m) l (𝓝 (a ^ m)) :=
-  (continuousAt_zpow₀ _ m h).Tendsto.comp hf
+  (continuousAt_zpow₀ _ m h).tendsto.comp hf
 #align filter.tendsto.zpow₀ Filter.Tendsto.zpow₀
 
 variable {X : Type _} [TopologicalSpace X] {a : X} {s : Set X} {f : X → G₀}
@@ -320,7 +320,7 @@ theorem ContinuousOn.zpow₀ (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a ∈ s,
 @[continuity]
 theorem Continuous.zpow₀ (hf : Continuous f) (m : ℤ) (h0 : ∀ a, f a ≠ 0 ∨ 0 ≤ m) :
     Continuous fun x => f x ^ m :=
-  continuous_iff_continuousAt.2 fun x => (hf.Tendsto x).zpow₀ m (h0 x)
+  continuous_iff_continuousAt.2 fun x => (hf.tendsto x).zpow₀ m (h0 x)
 #align continuous.zpow₀ Continuous.zpow₀
 
 end Zpow

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.part
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -432,7 +432,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align part.elim_to_option Part.elim_toOptionₓ'. -/
 @[simp]
 theorem elim_toOption {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β) (f : α → β) :
-    a.toOption.elim b f = if h : a.Dom then f (a.get h) else b :=
+    a.toOption.elim' b f = if h : a.Dom then f (a.get h) else b :=
   by
   split_ifs
   · rw [h.to_option]
@@ -444,24 +444,24 @@ theorem elim_toOption {α β : Type _} (a : Part α) [Decidable a.Dom] (b : β) 
 #print Part.ofOption /-
 /-- Converts an `option α` into a `part α`. -/
 def ofOption : Option α → Part α
-  | Option.none => none
-  | Option.some a => some a
+  | option.none => none
+  | option.some a => some a
 #align part.of_option Part.ofOption
 -/
 
 #print Part.mem_ofOption /-
 @[simp]
 theorem mem_ofOption {a : α} : ∀ {o : Option α}, a ∈ ofOption o ↔ a ∈ o
-  | Option.none => ⟨fun h => h.fst.elim, fun h => Option.noConfusion h⟩
-  | Option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivial, Option.some.inj h⟩⟩
+  | option.none => ⟨fun h => h.fst.elim, fun h => Option.noConfusion h⟩
+  | option.some b => ⟨fun h => congr_arg Option.some h.snd, fun h => ⟨trivial, Option.some.inj h⟩⟩
 #align part.mem_of_option Part.mem_ofOption
 -/
 
 #print Part.ofOption_dom /-
 @[simp]
 theorem ofOption_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
-  | Option.none => by simp [of_option, none]
-  | Option.some a => by simp [of_option]
+  | option.none => by simp [ofOption, none]
+  | option.some a => by simp [ofOption]
 #align part.of_option_dom Part.ofOption_dom
 -/
 
@@ -506,8 +506,8 @@ protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P n
 
 #print Part.ofOptionDecidable /-
 instance ofOptionDecidable : ∀ o : Option α, Decidable (ofOption o).Dom
-  | Option.none => Part.noneDecidable
-  | Option.some a => Part.someDecidable a
+  | option.none => Part.noneDecidable
+  | option.some a => Part.someDecidable a
 #align part.of_option_decidable Part.ofOptionDecidable
 -/
 
@@ -528,8 +528,8 @@ theorem of_toOption (o : Part α) [Decidable o.Dom] : ofOption (toOption o) = o 
 /-- `part α` is (classically) equivalent to `option α`. -/
 noncomputable def equivOption : Part α ≃ Option α :=
   haveI := Classical.dec
-  ⟨fun o => to_option o, of_option, fun o => of_to_option o, fun o =>
-    Eq.trans (by dsimp <;> congr ) (to_of_option o)⟩
+  ⟨fun o => toOption o, ofOption, fun o => of_toOption o, fun o =>
+    Eq.trans (by dsimp <;> congr ) (to_ofOption o)⟩
 #align part.equiv_option Part.equivOption
 -/
 
@@ -705,7 +705,7 @@ protected theorem Dom.bind {o : Part α} (h : o.Dom) (f : α → Part β) : o.bi
 
 #print Part.Dom.of_bind /-
 theorem Dom.of_bind {f : α → Part β} {a : Part α} (h : (a.bind f).Dom) : a.Dom :=
-  h.some
+  h.choose
 #align part.dom.of_bind Part.Dom.of_bind
 -/
 
@@ -746,7 +746,7 @@ theorem bind_some_eq_map (f : α → β) (x : Part α) : x.bind (some ∘ f) = m
 #print Part.bind_toOption /-
 theorem bind_toOption (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ a, Decidable (f a).Dom]
     [Decidable (o.bind f).Dom] :
-    (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption :=
+    (o.bind f).toOption = o.toOption.elim' Option.none fun a => (f a).toOption :=
   by
   by_cases o.dom
   · simp_rw [h.to_option, h.bind]

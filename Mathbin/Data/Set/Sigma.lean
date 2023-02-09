@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.set.sigma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ Case conversion may be inaccurate. Consider using '#align set.range_sigma_mk Set
 @[simp]
 theorem range_sigmaMk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} :=
   by
-  apply subset.antisymm
+  apply Subset.antisymm
   · rintro _ ⟨b, rfl⟩
     simp
   · rintro ⟨x, y⟩ (rfl | _)
@@ -75,7 +75,7 @@ theorem image_sigmaMk_preimage_sigmaMap {β : ι' → Type _} {f : ι → ι'} (
     (g : ∀ i, α i → β (f i)) (i : ι) (s : Set (β (f i))) :
     Sigma.mk i '' (g i ⁻¹' s) = Sigma.map f g ⁻¹' (Sigma.mk (f i) '' s) :=
   by
-  refine' (image_sigma_mk_preimage_sigma_map_subset f g i s).antisymm _
+  refine' (image_sigmaMk_preimage_sigmaMap_subset f g i s).antisymm _
   rintro ⟨j, x⟩ ⟨y, hys, hxy⟩
   simp only [hf.eq_iff, Sigma.map] at hxy
   rcases hxy with ⟨rfl, hxy⟩; rw [heq_iff_eq] at hxy; subst y
@@ -453,7 +453,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sigma_eq_empty_iff Set.sigma_eq_empty_iffₓ'. -/
 theorem sigma_eq_empty_iff : s.Sigma t = ∅ ↔ ∀ i ∈ s, t i = ∅ :=
   not_nonempty_iff_eq_empty.symm.trans <|
-    sigma_nonempty_iff.Not.trans <| by simp only [not_nonempty_iff_eq_empty, not_exists]
+    sigma_nonempty_iff.not.trans <| by simp only [not_nonempty_iff_eq_empty, not_exists]
 #align set.sigma_eq_empty_iff Set.sigma_eq_empty_iff
 
 #print Set.image_sigmaMk_subset_sigma_left /-

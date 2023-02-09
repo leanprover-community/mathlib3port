@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.encodable.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem encode_inj [Encodable α] {a b : α} : encode a = encode b ↔ a = b :=
 -- The priority of the instance below is less than the priorities of `subtype.countable`
 -- and `quotient.countable`
 instance (priority := 400) [Encodable α] : Countable α :=
-  encode_injective.Countable
+  encode_injective.countable
 
 #print Encodable.surjective_decode_iget /-
 theorem surjective_decode_iget (α : Type _) [Encodable α] [Inhabited α] :
@@ -343,8 +343,8 @@ variable [Encodable α] [Encodable β]
 #print Encodable.encodeSum /-
 /-- Explicit encoding function for the sum of two encodable types. -/
 def encodeSum : Sum α β → ℕ
-  | Sum.inl a => bit0 <| encode a
-  | Sum.inr b => bit1 <| encode b
+  | sum.inl a => bit0 <| encode a
+  | sum.inr b => bit1 <| encode b
 #align encodable.encode_sum Encodable.encodeSum
 -/
 
@@ -360,7 +360,7 @@ def decodeSum (n : ℕ) : Option (Sum α β) :=
 #print Encodable.Sum.encodable /-
 /-- If `α` and `β` are encodable, then so is their sum. -/
 instance Encodable.Sum.encodable : Encodable (Sum α β) :=
-  ⟨encodeSum, decodeSum, fun s => by cases s <;> simp [encode_sum, decode_sum, encodek] <;> rfl⟩
+  ⟨encodeSum, decodeSum, fun s => by cases s <;> simp [encodeSum, decodeSum, encodek] <;> rfl⟩
 #align sum.encodable Encodable.Sum.encodable
 -/
 
@@ -424,15 +424,15 @@ theorem decode_one : decode Bool 1 = some true :=
 #print Encodable.decode_ge_two /-
 theorem decode_ge_two (n) (h : 2 ≤ n) : decode Bool n = none :=
   by
-  suffices decode_sum n = none by
-    change (decode_sum n).map _ = none
+  suffices decodeSum n = none by
+    change (decodeSum n).map _ = none
     rw [this]
     rfl
   have : 1 ≤ div2 n := by
     rw [div2_val, Nat.le_div_iff_mul_le]
     exacts[h, by decide]
   cases' exists_eq_succ_of_ne_zero (ne_of_gt this) with m e
-  simp [decode_sum] <;> cases bodd n <;> simp [decode_sum] <;> rw [e] <;> rfl
+  simp [decodeSum] <;> cases bodd n <;> simp [decodeSum] <;> rw [e] <;> rfl
 #align encodable.decode_ge_two Encodable.decode_ge_two
 -/
 
@@ -464,7 +464,7 @@ def decodeSigma (n : ℕ) : Option (Sigma γ) :=
 #print Encodable.Sigma.encodable /-
 instance Encodable.Sigma.encodable : Encodable (Sigma γ) :=
   ⟨encodeSigma, decodeSigma, fun ⟨a, b⟩ => by
-    simp [encode_sigma, decode_sigma, unpair_mkpair, encodek]⟩
+    simp [encodeSigma, decodeSigma, unpair_mkpair, encodek]⟩
 #align sigma.encodable Encodable.Sigma.encodable
 -/
 
@@ -548,7 +548,7 @@ def decodeSubtype (v : ℕ) : Option { a : α // P a } :=
 #print Encodable.Subtype.encodable /-
 /-- A decidable subtype of an encodable type is encodable. -/
 instance Encodable.Subtype.encodable : Encodable { a : α // P a } :=
-  ⟨encodeSubtype, decodeSubtype, fun ⟨v, h⟩ => by simp [encode_subtype, decode_subtype, encodek, h]⟩
+  ⟨encodeSubtype, decodeSubtype, fun ⟨v, h⟩ => by simp [encodeSubtype, decodeSubtype, encodek, h]⟩
 #align subtype.encodable Encodable.Subtype.encodable
 -/
 
@@ -603,7 +603,7 @@ noncomputable def ofInj [Encodable β] (f : α → β) (hf : Injective f) : Enco
 noncomputable def ofCountable (α : Type _) [Countable α] : Encodable α :=
   Nonempty.some <|
     let ⟨f, hf⟩ := exists_injective_nat α
-    ⟨ofInj f hf⟩
+    ⟨ofInj f rfl⟩
 #align encodable.of_countable Encodable.ofCountable
 -/
 
@@ -741,7 +741,7 @@ variable {p}
 def chooseX (h : ∃ x, p x) : { a : α // p a } :=
   have : ∃ n, Good p (decode α n) :=
     let ⟨w, pw⟩ := h
-    ⟨encode w, by simp [good, encodek, pw]⟩
+    ⟨encode w, by simp [Good, encodek, pw]⟩
   match (motive := ∀ o, Good p o → { a // p a }) _, Nat.find_spec this with
   | some a, h => ⟨a, h⟩
 #align encodable.choose_x Encodable.chooseX
@@ -797,13 +797,13 @@ def encode' (α) [Encodable α] : α ↪ ℕ :=
 -/
 
 instance {α} [Encodable α] : IsTrans _ (encode' α ⁻¹'o (· ≤ ·)) :=
-  (RelEmbedding.preimage _ _).IsTrans
+  (RelEmbedding.preimage _ _).isTrans
 
 instance {α} [Encodable α] : IsAntisymm _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
-  (RelEmbedding.preimage _ _).IsAntisymm
+  (RelEmbedding.preimage _ _).isAntisymm
 
 instance {α} [Encodable α] : IsTotal _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
-  (RelEmbedding.preimage _ _).IsTotal
+  (RelEmbedding.preimage _ _).isTotal
 
 end Encodable
 

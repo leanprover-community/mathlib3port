@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,7 +280,7 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
         apply_fun (coe : _ → K)  at h
         dsimp at h
         exact IsFractionRing.injective _ _ h
-      · rintro ⟨a, ha : a ∈ (Valuation A K).integer⟩
+      · rintro ⟨a, ha : a ∈ (valuation A K).integer⟩
         rw [mem_integer_iff] at ha
         obtain ⟨a, rfl⟩ := ha
         use a, rfl)
@@ -349,14 +349,14 @@ variable [Field K] [Algebra R K] [IsFractionRing R K]
 theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
   classical
     refine' ⟨fun H => ⟨fun a b => _⟩, fun H => ⟨fun a b => _⟩⟩ <;> skip
-    · obtain ⟨c, rfl | rfl⟩ := @ValuationRing.cond _ _ H a b <;> simp
-    · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
+    · obtain ⟨c, rfl | rfl⟩ := @valuation_ring.cond _ _ H a b <;> simp
+    · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @is_total.total _ _ H a b <;> use c <;> simp
 #align valuation_ring.iff_dvd_total ValuationRing.iff_dvd_total
 
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
   classical
     refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
-    have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
+    have := @is_total.total _ _ H (Ideal.span {a}) (Ideal.span {b})
     simp_rw [Ideal.span_singleton_le_span_singleton] at this
     exact this.symm
 #align valuation_ring.iff_ideal_total ValuationRing.iff_ideal_total
@@ -470,7 +470,7 @@ protected theorem tFAE (R : Type u) [CommRing R] [IsDomain R] :
         ∀ x : FractionRing R, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹,
         IsTotal R (· ∣ ·), IsTotal (Ideal R) (· ≤ ·), LocalRing R ∧ IsBezout R] :=
   by
-  tfae_have 1 ↔ 2; · exact iff_is_integer_or_is_integer R _
+  tfae_have 1 ↔ 2; · exact iff_isInteger_or_isInteger R _
   tfae_have 1 ↔ 3; · exact iff_dvd_total
   tfae_have 1 ↔ 4; · exact iff_ideal_total
   tfae_have 1 ↔ 5; · exact iff_local_bezout_domain

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.star
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,14 +131,14 @@ theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) :
 theorem starConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋃ i, s i) := by
   rintro y hy a b ha hb hab
-  rw [mem_Union] at hy⊢
+  rw [mem_unionᵢ] at hy⊢
   obtain ⟨i, hy⟩ := hy
   exact ⟨i, hs i hy ha hb hab⟩
 #align star_convex_Union starConvex_unionᵢ
 
 theorem starConvex_unionₛ {S : Set (Set E)} (hS : ∀ s ∈ S, StarConvex 𝕜 x s) :
     StarConvex 𝕜 x (⋃₀ S) := by
-  rw [sUnion_eq_Union]
+  rw [unionₛ_eq_unionᵢ]
   exact starConvex_unionᵢ fun s => hS _ s.2
 #align star_convex_sUnion starConvex_unionₛ
 
@@ -223,7 +223,7 @@ theorem StarConvex.is_linear_image (hs : StarConvex 𝕜 x s) {f : E → F} (hf 
 #align star_convex.is_linear_image StarConvex.is_linear_image
 
 theorem StarConvex.linear_preimage {s : Set F} (f : E →ₗ[𝕜] F) (hs : StarConvex 𝕜 (f x) s) :
-    StarConvex 𝕜 x (s.Preimage f) := by
+    StarConvex 𝕜 x (s.preimage f) := by
   intro y hy a b ha hb hab
   rw [mem_preimage, f.map_add, f.map_smul, f.map_smul]
   exact hs hy ha hb hab
@@ -479,7 +479,7 @@ theorem Set.OrdConnected.starConvex [OrderedSemiring 𝕜] [OrderedAddCommMonoid
 
 theorem starConvex_iff_ordConnected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ s.OrdConnected := by
-  simp_rw [ord_connected_iff_uIcc_subset_left hx, starConvex_iff_segment_subset, segment_eq_uIcc]
+  simp_rw [ordConnected_iff_uIcc_subset_left hx, starConvex_iff_segment_subset, segment_eq_uIcc]
 #align star_convex_iff_ord_connected starConvex_iff_ordConnected
 
 alias starConvex_iff_ordConnected ↔ StarConvex.ordConnected _

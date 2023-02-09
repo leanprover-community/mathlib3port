@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,7 +219,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.to_add_submonoid_mono Submodule.toAddSubmonoid_monoₓ'. -/
 @[mono]
 theorem toAddSubmonoid_mono : Monotone (toAddSubmonoid : Submodule R M → AddSubmonoid M) :=
-  toAddSubmonoid_strictMono.Monotone
+  toAddSubmonoid_strictMono.monotone
 #align submodule.to_add_submonoid_mono Submodule.toAddSubmonoid_mono
 
 /- warning: submodule.coe_to_add_submonoid -> Submodule.coe_toAddSubmonoid is a dubious translation:
@@ -265,7 +265,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.to_sub_mul_action_mono Submodule.toSubMulAction_monoₓ'. -/
 @[mono]
 theorem toSubMulAction_mono : Monotone (toSubMulAction : Submodule R M → SubMulAction R M) :=
-  toSubMulAction_strictMono.Monotone
+  toSubMulAction_strictMono.monotone
 #align submodule.to_sub_mul_action_mono Submodule.toSubMulAction_mono
 
 /- warning: submodule.coe_to_sub_mul_action -> Submodule.coe_toSubMulAction is a dubious translation:
@@ -292,7 +292,7 @@ include hA
 -- Prefer subclasses of `module` over `submodule_class`.
 /-- A submodule of a `module` is a `module`.  -/
 instance (priority := 75) toModule : Module R S' :=
-  Subtype.coe_injective.Module R (AddSubmonoidClass.Subtype S') (SetLike.val_smul S')
+  Subtype.coe_injective.module R (AddSubmonoidClass.Subtype S') (SetLike.val_smul S')
 #align submodule_class.to_module SubmoduleClass.toModule
 -/
 
@@ -431,7 +431,7 @@ instance [SMul S R] [SMul S M] [IsScalarTower S R M] : SMul S p :=
   ⟨fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩⟩
 
 instance [SMul S R] [SMul S M] [IsScalarTower S R M] : IsScalarTower S R p :=
-  p.toSubMulAction.IsScalarTower
+  p.toSubMulAction.isScalarTower
 
 /- warning: submodule.is_scalar_tower' -> Submodule.is_scalar_tower' is a dubious translation:
 lean 3 declaration is
@@ -446,7 +446,7 @@ instance is_scalar_tower' {S' : Type _} [SMul S R] [SMul S M] [SMul S' R] [SMul 
 
 instance [SMul S R] [SMul S M] [IsScalarTower S R M] [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M]
     [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] : IsCentralScalar S p :=
-  p.toSubMulAction.IsCentralScalar
+  p.toSubMulAction.isCentralScalar
 
 /- warning: submodule.nonempty -> Submodule.nonempty is a dubious translation:
 lean 3 declaration is
@@ -600,7 +600,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] {module_M : Module.{u1, u2} R M _inst_1 _inst_2} (p : Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (x : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) => M) x) (FunLike.coe.{succ u2, succ u2, succ u2} (LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) M (Submodule.instAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) _inst_2 (Submodule.instModuleSubtypeMemSubmoduleInstMembershipInstSetLikeSubmoduleInstAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) module_M) (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) (fun (_x : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) => M) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u2, u2} R R (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) M _inst_1 _inst_1 (Submodule.instAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) _inst_2 (Submodule.instModuleSubtypeMemSubmoduleInstMembershipInstSetLikeSubmoduleInstAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) module_M (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Submodule.subtype.{u1, u2} R M _inst_1 _inst_2 module_M p) x) (Subtype.val.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Set.{u2} M) (Set.instMembershipSet.{u2} M) x (SetLike.coe.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M) p)) x)
 Case conversion may be inaccurate. Consider using '#align submodule.subtype_apply Submodule.subtype_applyₓ'. -/
-theorem subtype_apply (x : p) : p.Subtype x = x :=
+theorem subtype_apply (x : p) : p.subtype x = x :=
   rfl
 #align submodule.subtype_apply Submodule.subtype_apply
 
@@ -621,7 +621,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : AddCommMonoid.{u2} M] {module_M : Module.{u1, u2} R M _inst_1 _inst_2} (p : Submodule.{u1, u2} R M _inst_1 _inst_2 module_M), Function.Injective.{succ u2, succ u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) M (FunLike.coe.{succ u2, succ u2, succ u2} (LinearMap.{u1, u1, u2, u2} R R _inst_1 _inst_1 (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) M (Submodule.instAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) _inst_2 (Submodule.instModuleSubtypeMemSubmoduleInstMembershipInstSetLikeSubmoduleInstAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) module_M) (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) (fun (_x : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) => M) _x) (LinearMap.instFunLikeLinearMap.{u1, u1, u2, u2} R R (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_2 module_M) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M)) x p)) M _inst_1 _inst_1 (Submodule.instAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) _inst_2 (Submodule.instModuleSubtypeMemSubmoduleInstMembershipInstSetLikeSubmoduleInstAddCommMonoidSubtypeMemSubmoduleInstMembershipInstSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_2 module_M p) module_M (RingHom.id.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (Submodule.subtype.{u1, u2} R M _inst_1 _inst_2 module_M p))
 Case conversion may be inaccurate. Consider using '#align submodule.injective_subtype Submodule.injective_subtypeₓ'. -/
-theorem injective_subtype : Injective p.Subtype :=
+theorem injective_subtype : Injective p.subtype :=
   Subtype.coe_injective
 #align submodule.injective_subtype Submodule.injective_subtype
 
@@ -634,7 +634,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.coe_sum Subm
 /-- Note the `add_submonoid` version of this lemma is called `add_submonoid.coe_finset_sum`. -/
 @[simp]
 theorem coe_sum (x : ι → p) (s : Finset ι) : ↑(∑ i in s, x i) = ∑ i in s, (x i : M) :=
-  map_sum p.Subtype _ _
+  map_sum p.subtype _ _
 #align submodule.coe_sum Submodule.coe_sum
 
 section RestrictScalars
@@ -740,7 +740,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.restrict_sca
 as turning it into a type and adding a module structure. -/
 @[simps (config := { simpRhs := true })]
 def restrictScalarsEquiv (p : Submodule R M) : p.restrictScalars S ≃ₗ[R] p :=
-  { AddEquiv.refl p with
+  { add_equiv.refl p with
     toFun := id
     invFun := id
     map_smul' := fun c x => rfl }
@@ -846,7 +846,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.to_add_subgroup_mono Submodule.toAddSubgroup_monoₓ'. -/
 @[mono]
 theorem toAddSubgroup_mono : Monotone (toAddSubgroup : Submodule R M → AddSubgroup M) :=
-  toAddSubgroup_strictMono.Monotone
+  toAddSubgroup_strictMono.monotone
 #align submodule.to_add_subgroup_mono Submodule.toAddSubgroup_mono
 
 omit module_M
@@ -984,7 +984,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_ordered_a
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
 instance toOrderedAddCommMonoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
     OrderedAddCommMonoid S :=
-  Subtype.coe_injective.OrderedAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_ordered_add_comm_monoid Submodule.toOrderedAddCommMonoid
 
 /- warning: submodule.to_linear_ordered_add_comm_monoid -> Submodule.toLinearOrderedAddCommMonoid is a dubious translation:
@@ -996,7 +996,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_linear_or
 /-- A submodule of a `linear_ordered_add_comm_monoid` is a `linear_ordered_add_comm_monoid`. -/
 instance toLinearOrderedAddCommMonoid {M} [LinearOrderedAddCommMonoid M] [Module R M]
     (S : Submodule R M) : LinearOrderedAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_linear_ordered_add_comm_monoid Submodule.toLinearOrderedAddCommMonoid
 
@@ -1009,7 +1009,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_ordered_c
 /-- A submodule of an `ordered_cancel_add_comm_monoid` is an `ordered_cancel_add_comm_monoid`. -/
 instance toOrderedCancelAddCommMonoid {M} [OrderedCancelAddCommMonoid M] [Module R M]
     (S : Submodule R M) : OrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_ordered_cancel_add_comm_monoid Submodule.toOrderedCancelAddCommMonoid
 
 /- warning: submodule.to_linear_ordered_cancel_add_comm_monoid -> Submodule.toLinearOrderedCancelAddCommMonoid is a dubious translation:
@@ -1022,7 +1022,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_linear_or
 `linear_ordered_cancel_add_comm_monoid`. -/
 instance toLinearOrderedCancelAddCommMonoid {M} [LinearOrderedCancelAddCommMonoid M] [Module R M]
     (S : Submodule R M) : LinearOrderedCancelAddCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCancelAddCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_linear_ordered_cancel_add_comm_monoid Submodule.toLinearOrderedCancelAddCommMonoid
 
@@ -1041,7 +1041,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_ordered_a
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
 instance toOrderedAddCommGroup {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
     OrderedAddCommGroup S :=
-  Subtype.coe_injective.OrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_ordered_add_comm_group Submodule.toOrderedAddCommGroup
 
@@ -1055,7 +1055,7 @@ Case conversion may be inaccurate. Consider using '#align submodule.to_linear_or
 `linear_ordered_add_comm_group`. -/
 instance toLinearOrderedAddCommGroup {M} [LinearOrderedAddCommGroup M] [Module R M]
     (S : Submodule R M) : LinearOrderedAddCommGroup S :=
-  Subtype.coe_injective.LinearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl)
+  Subtype.coe_injective.linearOrderedAddCommGroup coe rfl (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align submodule.to_linear_ordered_add_comm_group Submodule.toLinearOrderedAddCommGroup
 

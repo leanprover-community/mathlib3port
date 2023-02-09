@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Minchao Wu
 
 ! This file was ported from Lean 3 source module tactic.explode
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ unsafe inductive thm : Type
 /-- Turn a thm into a string.
 -/
 unsafe def thm.to_string : thm → String
-  | thm.expr e => e.toString
+  | thm.expr e => e.to_string
   | thm.name n => n.toString
   | thm.string s => s
 #align tactic.explode.thm.to_string tactic.explode.thm.to_string
@@ -92,7 +92,7 @@ unsafe def format_aux : List String → List String → List String → List ent
       do
         let margin := String.join (List.replicate en.depth " │")
         let margin :=
-          match en.Status with
+          match en.status with
           | status.sintro => " ├" ++ margin
           | status.intro => " │" ++ margin ++ " ┌"
           | status.reg => " │" ++ margin ++ ""
@@ -108,21 +108,21 @@ unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
     let lines := pad_right <| es.l.map fun en => toString en.line
     let deps := pad_right <| es.l.map fun en => String.intercalate "," (en.deps.map toString)
-    let thms := pad_right <| es.l.map fun en => (entry.thm en).toString
+    let thms := pad_right <| es.l.map fun en => (entry.thm en).to_string
     format_aux lines deps thms es.l⟩
 
 unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) :
     tactic (List Nat) :=
   (do
       let ei ← es.find e
-      Filter ei
+      filter ei
       return (ei :: deps)) <|>
     return deps
 #align tactic.explode.append_dep tactic.explode.append_dep
 
 unsafe def may_be_proof (e : expr) : tactic Bool := do
   let expr.sort u ← infer_type e >>= infer_type
-  return <| not u
+  return <| bnot u
 #align tactic.explode.may_be_proof tactic.explode.may_be_proof
 
 end Explode
@@ -147,13 +147,13 @@ mutual
           let deps'
             ←-- in case of a "have" clause, the b' here has an annotation
                 explode.append_dep
-                Filter es' b' []
-          let deps' ← explode.append_dep Filter es' l deps'
+                filter es' b' []
+          let deps' ← explode.append_dep filter es' l deps'
           return <| es' ⟨e, es', depth, status.lam, thm.string "∀I", deps'⟩
     | e@(elet n t a b), si, depth, es => explode.core (reduce_lets e) si depth es
     | e@(macro n l), si, depth, es => explode.core l.headI si depth es
     | e, si, depth, es =>
-      Filter e >>
+      filter e >>
         match get_app_fn_args e with
         | (nm@(const n _), args) => explode.args e args depth es (thm.expr nm) []
         | (fn, []) => do
@@ -164,13 +164,13 @@ mutual
           let deps
             ←-- in case of a "have" clause, the fn here has an annotation
                 explode.append_dep
-                Filter es' fn.erase_annotations []
+                filter es' fn.erase_annotations []
           explode.args e args depth es' (thm.string "∀E") deps
   unsafe def explode.args (filter : expr → tactic Unit) :
       expr → List expr → Nat → entries → thm → List Nat → tactic entries
     | e, arg :: args, depth, es, thm, deps => do
       let es' ← explode.core arg false depth es <|> return es
-      let deps' ← explode.append_dep Filter es' arg deps
+      let deps' ← explode.append_dep filter es' arg deps
       explode.args e args depth es' thm deps'
     | e, [], depth, es, thm, deps =>
       return (es.add ⟨e, es.size, depth, Status.reg, thm, deps.reverse⟩)
@@ -180,7 +180,7 @@ end
 
 unsafe def explode_expr (e : expr) (hide_non_prop := true) : tactic entries :=
   let filter := if hide_non_prop then fun e => may_be_proof e >>= guardb else fun _ => skip
-  tactic.explode.core Filter e true 0 default
+  tactic.explode.core filter e true 0 default
 #align tactic.explode_expr tactic.explode_expr
 
 unsafe def explode (n : Name) : tactic Unit := do

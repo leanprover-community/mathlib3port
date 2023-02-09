@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baumann, Stephen Morgan, Scott Morrison, Floris van Doorn
 
 ! This file was ported from Lean 3 source module category_theory.functor.category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.nat_tr
 theorem mono_of_mono_app (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
   ⟨fun H g h eq => by
     ext X
-    rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
+    rw [← cancel_mono (α.app X), ← comp_app, eq, comp_app]⟩
 #align category_theory.nat_trans.mono_of_mono_app CategoryTheory.NatTrans.mono_of_mono_app
 
 /- warning: category_theory.nat_trans.epi_of_epi_app -> CategoryTheory.NatTrans.epi_of_epi_app is a dubious translation:
@@ -156,7 +156,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.nat_tr
 theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
   ⟨fun H g h eq => by
     ext X
-    rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
+    rw [← cancel_epi (α.app X), ← comp_app, eq, comp_app]⟩
 #align category_theory.nat_trans.epi_of_epi_app CategoryTheory.NatTrans.epi_of_epi_app
 
 #print CategoryTheory.NatTrans.hcomp /-
@@ -166,7 +166,7 @@ def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I
     where
   app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X)
   naturality' X Y f := by
-    rw [functor.comp_map, functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality,
+    rw [Functor.comp_map, Functor.comp_map, ← assoc, naturality, assoc, ← map_comp I, naturality,
       map_comp, assoc]
 #align category_theory.nat_trans.hcomp CategoryTheory.NatTrans.hcomp
 -/
@@ -237,8 +237,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.map_hom_inv_app CategoryTheory.map_hom_inv_appₓ'. -/
 @[simp, reassoc.1]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
+  simp [← NatTrans.comp_app, ← Functor.map_comp]
 #align category_theory.map_hom_inv_app CategoryTheory.map_hom_inv_app
 
 /- warning: category_theory.map_inv_hom_app -> CategoryTheory.map_inv_hom_app is a dubious translation:
@@ -249,8 +249,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.map_inv_hom_app CategoryTheory.map_inv_hom_appₓ'. -/
 @[simp, reassoc.1]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
-    (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
-  simp [← nat_trans.comp_app, ← functor.map_comp]
+    (F.map e.inv).app Z ≫ (F.map e.hom).app Z = 𝟙 _ := by
+  simp [← NatTrans.comp_app, ← Functor.map_comp]
 #align category_theory.map_inv_hom_app CategoryTheory.map_inv_hom_app
 
 end CategoryTheory

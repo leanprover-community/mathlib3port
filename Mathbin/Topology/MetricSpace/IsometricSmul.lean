@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.isometric_smul
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ export HasIsometricSmul (isometry_smul)
 @[to_additive]
 instance (priority := 100) HasIsometricSmul.to_hasContinuousConstSMul [PseudoEmetricSpace X]
     [SMul M X] [HasIsometricSmul M X] : HasContinuousConstSMul M X :=
-  ⟨fun c => (isometry_smul X c).Continuous⟩
+  ⟨fun c => (isometry_smul X c).continuous⟩
 #align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_hasContinuousConstSMul
 #align has_isometric_vadd.to_has_continuous_const_vadd HasIsometricVadd.to_has_continuous_const_vadd
 
@@ -265,7 +265,7 @@ theorem smul_closedBall (c : G) (x : X) (r : ℝ≥0∞) : c • closedBall x r 
 
 @[simp, to_additive]
 theorem preimage_smul_closedBall (c : G) (x : X) (r : ℝ≥0∞) :
-    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closed_ball]
+    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closedBall]
 #align emetric.preimage_smul_closed_ball Emetric.preimage_smul_closedBall
 #align emetric.preimage_vadd_closed_ball Emetric.preimage_vadd_closedBall
 
@@ -299,7 +299,7 @@ theorem preimage_mul_right_closedBall [HasIsometricSmul Gᵐᵒᵖ G] (a b : G) 
     (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r :=
   by
   rw [div_eq_mul_inv]
-  exact preimage_smul_closed_ball (MulOpposite.op a) b r
+  exact preimage_smul_closedBall (MulOpposite.op a) b r
 #align emetric.preimage_mul_right_closed_ball Emetric.preimage_mul_right_closedBall
 #align emetric.preimage_add_right_closed_ball Emetric.preimage_add_right_closedBall
 
@@ -414,7 +414,7 @@ theorem smul_closedBall (c : G) (x : X) (r : ℝ) : c • closedBall x r = close
 
 @[simp, to_additive]
 theorem preimage_smul_closedBall (c : G) (x : X) (r : ℝ) :
-    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closed_ball]
+    (· • ·) c ⁻¹' closedBall x r = closedBall (c⁻¹ • x) r := by rw [preimage_smul, smul_closedBall]
 #align metric.preimage_smul_closed_ball Metric.preimage_smul_closedBall
 #align metric.preimage_vadd_closed_ball Metric.preimage_vadd_closedBall
 
@@ -460,7 +460,7 @@ theorem preimage_mul_right_closedBall [HasIsometricSmul Gᵐᵒᵖ G] (a b : G) 
     (fun x => x * a) ⁻¹' closedBall b r = closedBall (b / a) r :=
   by
   rw [div_eq_mul_inv]
-  exact preimage_smul_closed_ball (MulOpposite.op a) b r
+  exact preimage_smul_closedBall (MulOpposite.op a) b r
 #align metric.preimage_mul_right_closed_ball Metric.preimage_mul_right_closedBall
 #align metric.preimage_add_right_closed_ball Metric.preimage_add_right_closedBall
 
@@ -473,12 +473,12 @@ variable {Y : Type _} [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [SMul M X]
 
 @[to_additive]
 instance [SMul M Y] [HasIsometricSmul M Y] : HasIsometricSmul M (X × Y) :=
-  ⟨fun c => (isometry_smul X c).Prod_map (isometry_smul Y c)⟩
+  ⟨fun c => (isometry_smul X c).prod_map (isometry_smul Y c)⟩
 
 @[to_additive]
 instance Prod.has_isometric_smul' {N} [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul M M] [Mul N]
     [PseudoEmetricSpace N] [HasIsometricSmul N N] : HasIsometricSmul (M × N) (M × N) :=
-  ⟨fun c => (isometry_smul M c.1).Prod_map (isometry_smul N c.2)⟩
+  ⟨fun c => (isometry_smul M c.1).prod_map (isometry_smul N c.2)⟩
 #align prod.has_isometric_smul' Prod.has_isometric_smul'
 #align prod.has_isometric_vadd' Prod.has_isometric_vadd'
 
@@ -486,7 +486,7 @@ instance Prod.has_isometric_smul' {N} [Mul M] [PseudoEmetricSpace M] [HasIsometr
 instance Prod.has_isometric_smul'' {N} [Mul M] [PseudoEmetricSpace M] [HasIsometricSmul Mᵐᵒᵖ M]
     [Mul N] [PseudoEmetricSpace N] [HasIsometricSmul Nᵐᵒᵖ N] :
     HasIsometricSmul (M × N)ᵐᵒᵖ (M × N) :=
-  ⟨fun c => (isometry_mul_right c.unop.1).Prod_map (isometry_mul_right c.unop.2)⟩
+  ⟨fun c => (isometry_mul_right c.unop.1).prod_map (isometry_mul_right c.unop.2)⟩
 #align prod.has_isometric_smul'' Prod.has_isometric_smul''
 #align prod.has_isometric_vadd'' Prod.has_isometric_vadd''
 

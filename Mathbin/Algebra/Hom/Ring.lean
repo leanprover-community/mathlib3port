@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.hom.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -855,7 +855,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {rα : NonAssocSemiring.{u2} α} {rβ : NonAssocSemiring.{u1} β} {f : RingHom.{u2, u1} α β rα rβ} {g : RingHom.{u2, u1} α β rα rβ}, (Eq.{max (succ u2) (succ u1)} (RingHom.{u2, u1} α β rα rβ) f g) -> (forall (x : α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => β) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} α β rα rβ) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α rα)) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β rβ)) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α rα) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β rβ) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β rα rβ (RingHom.instRingHomClassRingHom.{u2, u1} α β rα rβ)))) f x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} α β rα rβ) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : α) => β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α rα)) (NonUnitalNonAssocSemiring.toMul.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β rβ)) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α rα) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β rβ) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} α β rα rβ) α β rα rβ (RingHom.instRingHomClassRingHom.{u2, u1} α β rα rβ)))) g x))
 Case conversion may be inaccurate. Consider using '#align ring_hom.congr_fun RingHom.congr_funₓ'. -/
 theorem congr_fun {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
-  FunLike.congr_fun h x
+  fun_like.congr_fun h x
 #align ring_hom.congr_fun RingHom.congr_fun
 
 /- warning: ring_hom.congr_arg -> RingHom.congr_arg is a dubious translation:

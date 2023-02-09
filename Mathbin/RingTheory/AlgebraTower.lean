@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.algebra_tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] :
 when coerced to any `R`-algebra. -/
 def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
   haveI : Invertible (algebraMap ℕ R n) := inv
-  invertible.algebra_tower ℕ R A n
+  Invertible.algebraTower ℕ R A n
 #align is_scalar_tower.invertible_algebra_coe_nat IsScalarTower.invertibleAlgebraCoeNat
 
 end Semiring
@@ -180,7 +180,7 @@ variable [CommRing R] [Ring S] [Algebra R S]
 
 theorem Basis.algebraMap_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
     (b : Basis ι R S) : Function.Injective (algebraMap R S) :=
-  have : NoZeroSMulDivisors R S := b.NoZeroSMulDivisors
+  have : NoZeroSMulDivisors R S := b.noZeroSMulDivisors
   NoZeroSMulDivisors.algebraMap_injective R S
 #align basis.algebra_map_injective Basis.algebraMap_injective
 

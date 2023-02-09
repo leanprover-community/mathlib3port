@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.kernel_pair
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ pair of `f`.
 -/
 noncomputable def lift' {S : C} (k : IsKernelPair f a b) (p q : S ⟶ X) (w : p ≫ f = q ≫ f) :
     { t : S ⟶ R // t ≫ a = p ∧ t ≫ b = q } :=
-  PullbackCone.IsLimit.lift' k.IsLimit _ _ w
+  PullbackCone.IsLimit.lift' k.isLimit _ _ w
 #align category_theory.is_kernel_pair.lift' CategoryTheory.IsKernelPair.lift'
 
 /--
@@ -98,15 +98,15 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
     is_limit' :=
       ⟨PullbackCone.isLimitAux' _ fun s =>
           by
-          let s' : pullback_cone (f₁ ≫ f₂) (f₁ ≫ f₂) :=
-            pullback_cone.mk s.fst s.snd (s.condition_assoc _)
+          let s' : PullbackCone (f₁ ≫ f₂) (f₁ ≫ f₂) :=
+            PullbackCone.mk s.fst s.snd (s.condition_assoc _)
           refine'
-            ⟨big_k.is_limit.lift s', big_k.is_limit.fac _ walking_cospan.left,
-              big_k.is_limit.fac _ walking_cospan.right, fun m m₁ m₂ => _⟩
+            ⟨big_k.is_limit.lift s', big_k.is_limit.fac _ WalkingCospan.left,
+              big_k.is_limit.fac _ WalkingCospan.right, fun m m₁ m₂ => _⟩
           apply big_k.is_limit.hom_ext
-          refine' (pullback_cone.mk a b _ : pullback_cone (f₁ ≫ f₂) _).equalizer_ext _ _
-          apply m₁.trans (big_k.is_limit.fac s' walking_cospan.left).symm
-          apply m₂.trans (big_k.is_limit.fac s' walking_cospan.right).symm⟩ }
+          refine' (PullbackCone.mk a b _ : PullbackCone (f₁ ≫ f₂) _).equalizer_ext _ _
+          apply m₁.trans (big_k.is_limit.fac s' WalkingCospan.left).symm
+          apply m₂.trans (big_k.is_limit.fac s' WalkingCospan.right).symm⟩ }
 #align category_theory.is_kernel_pair.cancel_right CategoryTheory.IsKernelPair.cancel_right
 
 /-- If `(a,b)` is a kernel pair for `f₁ ≫ f₂` and `f₂` is mono, then `(a,b)` is a kernel pair for
@@ -128,15 +128,15 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
     is_limit' :=
       ⟨PullbackCone.isLimitAux' _ fun s => by
           refine' ⟨_, _, _, _⟩
-          apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).1
+          apply (PullbackCone.IsLimit.lift' small_k.is_limit s.fst s.snd _).1
           rw [← cancel_mono f₂, assoc, s.condition, assoc]
-          apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.1
-          apply (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.2
+          apply (PullbackCone.IsLimit.lift' small_k.is_limit s.fst s.snd _).2.1
+          apply (PullbackCone.IsLimit.lift' small_k.is_limit s.fst s.snd _).2.2
           intro m m₁ m₂
           apply small_k.is_limit.hom_ext
-          refine' (pullback_cone.mk a b _ : pullback_cone f₁ _).equalizer_ext _ _
-          · exact m₁.trans (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.1.symm
-          · exact m₂.trans (pullback_cone.is_limit.lift' small_k.is_limit s.fst s.snd _).2.2.symm⟩ }
+          refine' (PullbackCone.mk a b _ : PullbackCone f₁ _).equalizer_ext _ _
+          · exact m₁.trans (PullbackCone.IsLimit.lift' small_k.is_limit s.fst s.snd _).2.1.symm
+          · exact m₂.trans (PullbackCone.IsLimit.lift' small_k.is_limit s.fst s.snd _).2.2.symm⟩ }
 #align category_theory.is_kernel_pair.comp_of_mono CategoryTheory.IsKernelPair.comp_of_mono
 
 /--
@@ -145,24 +145,24 @@ If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some
 -/
 def toCoequalizer (k : IsKernelPair f a b) [r : RegularEpi f] : IsColimit (Cofork.ofπ f k.w) :=
   by
-  let t := k.is_limit.lift (pullback_cone.mk _ _ r.w)
-  have ht : t ≫ a = r.left := k.is_limit.fac _ walking_cospan.left
-  have kt : t ≫ b = r.right := k.is_limit.fac _ walking_cospan.right
-  apply cofork.is_colimit.mk _ _ _ _
+  let t := k.is_limit.lift (PullbackCone.mk _ _ r.w)
+  have ht : t ≫ a = r.left := k.is_limit.fac _ WalkingCospan.left
+  have kt : t ≫ b = r.right := k.is_limit.fac _ WalkingCospan.right
+  apply Cofork.IsColimit.mk _ _ _ _
   · intro s
-    apply (cofork.is_colimit.desc' r.is_colimit s.π _).1
+    apply (Cofork.IsColimit.desc' r.is_colimit s.π _).1
     rw [← ht, assoc, s.condition, reassoc_of kt]
   · intro s
-    apply (cofork.is_colimit.desc' r.is_colimit s.π _).2
+    apply (Cofork.IsColimit.desc' r.is_colimit s.π _).2
   · intro s m w
     apply r.is_colimit.hom_ext
     rintro ⟨⟩
     change (r.left ≫ f) ≫ m = (r.left ≫ f) ≫ _
     rw [assoc, assoc]
     congr 1
-    erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
+    erw [(Cofork.IsColimit.desc' r.is_colimit s.π _).2]
     apply w
-    erw [(cofork.is_colimit.desc' r.is_colimit s.π _).2]
+    erw [(Cofork.IsColimit.desc' r.is_colimit s.π _).2]
     apply w
 #align category_theory.is_kernel_pair.to_coequalizer CategoryTheory.IsKernelPair.toCoequalizer
 
@@ -176,64 +176,64 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
   by
   refine' ⟨⟨_⟩, ⟨_⟩⟩
   · rw [pullback.lift_fst, pullback.lift_fst]
-  · fapply pullback_cone.is_limit_aux'
+  · fapply PullbackCone.isLimitAux'
     intro s
     refine'
       ⟨pullback.lift (s.fst ≫ pullback.fst)
           (h.lift' (s.fst ≫ pullback.snd) (s.snd ≫ pullback.snd) _).1 _,
         _, _, _⟩
-    · simp_rw [category.assoc, ← pullback.condition, ← category.assoc, s.condition]
-    · rw [← category.assoc, (h.lift' _ _ _).2.1, category.assoc, category.assoc, pullback.condition]
-    · rw [limits.pullback_cone.mk_fst]
+    · simp_rw [Category.assoc, ← pullback.condition, ← Category.assoc, s.condition]
+    · rw [← Category.assoc, (h.lift' _ _ _).2.1, Category.assoc, Category.assoc, pullback.condition]
+    · rw [Limits.PullbackCone.mk_fst]
       ext <;>
-        simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_snd_assoc,
-          category.comp_id, (h.lift' _ _ _).2.1]
-    · rw [limits.pullback_cone.mk_snd]
+        simp only [Category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_snd_assoc,
+          Category.comp_id, (h.lift' _ _ _).2.1]
+    · rw [Limits.PullbackCone.mk_snd]
       ext <;>
-        simp only [category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_snd_assoc,
-          category.comp_id, (h.lift' _ _ _).2.2, s.condition]
+        simp only [Category.assoc, pullback.lift_fst, pullback.lift_snd, pullback.lift_snd_assoc,
+          Category.comp_id, (h.lift' _ _ _).2.2, s.condition]
     · intro m h₁ h₂
       ext
       · rw [pullback.lift_fst]
-        conv_rhs => rw [← h₁, category.assoc, pullback_cone.mk_fst]
+        conv_rhs => rw [← h₁, Category.assoc, PullbackCone.mk_fst]
         congr 1
-        refine' ((pullback.lift_fst _ _ _).trans <| category.comp_id _).symm
+        refine' ((pullback.lift_fst _ _ _).trans <| Category.comp_id _).symm
       · rw [pullback.lift_snd]
-        apply pullback_cone.is_limit.hom_ext h.is_limit <;>
-            dsimp only [is_pullback.cone, comm_sq.cone] <;>
-          simp only [pullback_cone.mk_fst, pullback_cone.mk_snd, category.assoc,
-            (h.lift' _ _ _).2.1, (h.lift' _ _ _).2.2]
-        · conv_rhs => rw [← h₁, category.assoc, pullback_cone.mk_fst, pullback.lift_snd]
-        · conv_rhs => rw [← h₂, category.assoc, pullback_cone.mk_snd, pullback.lift_snd]
+        apply PullbackCone.IsLimit.hom_ext h.is_limit <;>
+            dsimp only [IsPullback.cone, CommSq.cone] <;>
+          simp only [PullbackCone.mk_fst, PullbackCone.mk_snd, Category.assoc, (h.lift' _ _ _).2.1,
+            (h.lift' _ _ _).2.2]
+        · conv_rhs => rw [← h₁, Category.assoc, PullbackCone.mk_fst, pullback.lift_snd]
+        · conv_rhs => rw [← h₂, Category.assoc, PullbackCone.mk_snd, pullback.lift_snd]
 #align category_theory.is_kernel_pair.pullback CategoryTheory.IsKernelPair.pullback
 
 theorem mono_of_isIso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f :=
   by
-  obtain ⟨l, h₁, h₂⟩ := limits.pullback_cone.is_limit.lift' h.is_limit (𝟙 _) (𝟙 _) (by simp [h.w])
-  rw [is_pullback.cone_fst, ← is_iso.eq_comp_inv, category.id_comp] at h₁
-  rw [h₁, is_iso.inv_comp_eq, category.comp_id] at h₂
+  obtain ⟨l, h₁, h₂⟩ := Limits.PullbackCone.IsLimit.lift' h.is_limit (𝟙 _) (𝟙 _) (by simp [h.w])
+  rw [IsPullback.cone_fst, ← IsIso.eq_comp_inv, Category.id_comp] at h₁
+  rw [h₁, IsIso.inv_comp_eq, Category.comp_id] at h₂
   constructor
   intro Z g₁ g₂ e
-  obtain ⟨l', rfl, rfl⟩ := limits.pullback_cone.is_limit.lift' h.is_limit _ _ e
-  rw [is_pullback.cone_fst, h₂]
+  obtain ⟨l', rfl, rfl⟩ := Limits.PullbackCone.IsLimit.lift' h.is_limit _ _ e
+  rw [IsPullback.cone_fst, h₂]
 #align category_theory.is_kernel_pair.mono_of_is_iso_fst CategoryTheory.IsKernelPair.mono_of_isIso_fst
 
 theorem isIso_of_mono (h : IsKernelPair f a b) [Mono f] : IsIso a :=
   by
   rw [←
     show _ = a from
-      (category.comp_id _).symm.trans
-        ((is_kernel_pair.id_of_mono f).IsLimit.conePointUniqueUpToIso_inv_comp h.is_limit
-          walking_cospan.left)]
+      (Category.comp_id _).symm.trans
+        ((IsKernelPair.id_of_mono f).isLimit.conePointUniqueUpToIso_inv_comp h.is_limit
+          WalkingCospan.left)]
   infer_instance
 #align category_theory.is_kernel_pair.is_iso_of_mono CategoryTheory.IsKernelPair.isIso_of_mono
 
 theorem of_isIso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
   by
   delta is_kernel_pair
-  convert_to is_pullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
-  · rw [category.comp_id]; · rw [category.id_comp]
-  exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).pasteVert (is_kernel_pair.id_of_mono f)
+  convert_to IsPullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
+  · rw [Category.comp_id]; · rw [Category.id_comp]
+  exact (IsPullback.ofHorizIsIso ⟨rfl⟩).pasteVert (IsKernelPair.id_of_mono f)
 #align category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_isIso_of_mono
 
 end IsKernelPair

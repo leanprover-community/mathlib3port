@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Ashwin Iyengar, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
         apply emb.continuous.tendsto
         rwa [f.map_one]
       let ⟨V, hV⟩ := is_nonarchimedean (f ⁻¹' U) h₁
-      ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
+      ⟨{ Subgroup.map f V with is_open' := emb.isOpenMap _ V.isOpen }, Set.image_subset_iff.2 hV⟩ }
 #align nonarchimedean_group.nonarchimedean_of_emb NonarchimedeanGroup.nonarchimedean_of_emb
 #align nonarchimedean_add_group.nonarchimedean_of_emb NonarchimedeanAddGroup.nonarchimedean_of_emb
 
@@ -121,7 +121,7 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) :
 instance : NonarchimedeanGroup (G × K)
     where is_nonarchimedean U hU :=
     let ⟨V, W, h⟩ := prod_subset hU
-    ⟨V.Prod W, ‹_›⟩
+    ⟨V.prod W, ‹_›⟩
 
 end NonarchimedeanGroup
 
@@ -153,7 +153,7 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
   by
   let ⟨V, H⟩ :=
     prod_self_subset
-      (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.IsOpen)
+      (IsOpen.mem_nhds (IsOpen.preimage continuous_mul U.isOpen)
         (by
           simpa only [Set.mem_preimage, OpenAddSubgroup.mem_coe, Prod.snd_zero, mul_zero] using
             U.zero_mem))

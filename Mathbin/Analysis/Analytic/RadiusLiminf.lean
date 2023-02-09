@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.radius_liminf
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,13 +50,13 @@ theorem radius_eq_liminf : p.radius = liminf (fun n => 1 / (‖p n‖₊ ^ (1 / 
   apply le_antisymm <;> refine' Ennreal.le_of_forall_nnreal_lt fun r hr => _
   · rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 7).1
         (p.is_o_of_lt_radius hr) with ⟨a, ha, H⟩
-    refine' le_Liminf_of_le (by infer_param) (eventually_map.2 <| _)
+    refine' le_liminfₛ_of_le (by infer_param) (eventually_map.2 <| _)
     refine'
-      H.mp ((eventually_gt_at_top 0).mono fun n hn₀ hn => (this _ hn₀).2 (Nnreal.coe_le_coe.1 _))
+      H.mp ((eventually_gt_atTop 0).mono fun n hn₀ hn => (this _ hn₀).2 (Nnreal.coe_le_coe.1 _))
     push_cast
     exact (le_abs_self _).trans (hn.trans (pow_le_one _ ha.1.le ha.2.le))
-  · refine' p.le_radius_of_is_O (is_O.of_bound 1 _)
-    refine' (eventually_lt_of_lt_liminf hr).mp ((eventually_gt_at_top 0).mono fun n hn₀ hn => _)
+  · refine' p.le_radius_of_is_O (IsO.of_bound 1 _)
+    refine' (eventually_lt_of_lt_liminf hr).mp ((eventually_gt_atTop 0).mono fun n hn₀ hn => _)
     simpa using Nnreal.coe_le_coe.2 ((this _ hn₀).1 hn.le)
 #align formal_multilinear_series.radius_eq_liminf FormalMultilinearSeries.radius_eq_liminf
 

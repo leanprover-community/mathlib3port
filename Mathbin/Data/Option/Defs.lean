@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ def toList : Option α → List α
 #print Option.mem_toList /-
 @[simp]
 theorem mem_toList {a : α} {o : Option α} : a ∈ toList o ↔ a ∈ o := by
-  cases o <;> simp [to_list, eq_comm]
+  cases o <;> simp [toList, eq_comm]
 #align option.mem_to_list Option.mem_toList
 -/
 
@@ -172,33 +172,33 @@ def liftOrGet (f : α → α → α) : Option α → Option α → Option α
 -- lift f
 instance liftOrGet_isCommutative (f : α → α → α) [h : IsCommutative α f] :
     IsCommutative (Option α) (liftOrGet f) :=
-  ⟨fun a b => by cases a <;> cases b <;> simp [lift_or_get, h.comm]⟩
+  ⟨fun a b => by cases a <;> cases b <;> simp [liftOrGet, h.comm]⟩
 #align option.lift_or_get_comm Option.liftOrGet_isCommutative
 -/
 
 #print Option.liftOrGet_isAssociative /-
 instance liftOrGet_isAssociative (f : α → α → α) [h : IsAssociative α f] :
     IsAssociative (Option α) (liftOrGet f) :=
-  ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [lift_or_get, h.assoc]⟩
+  ⟨fun a b c => by cases a <;> cases b <;> cases c <;> simp [liftOrGet, h.assoc]⟩
 #align option.lift_or_get_assoc Option.liftOrGet_isAssociative
 -/
 
 #print Option.liftOrGet_isIdempotent /-
 instance liftOrGet_isIdempotent (f : α → α → α) [h : IsIdempotent α f] :
     IsIdempotent (Option α) (liftOrGet f) :=
-  ⟨fun a => by cases a <;> simp [lift_or_get, h.idempotent]⟩
+  ⟨fun a => by cases a <;> simp [liftOrGet, h.idempotent]⟩
 #align option.lift_or_get_idem Option.liftOrGet_isIdempotent
 -/
 
 #print Option.liftOrGet_isLeftId /-
 instance liftOrGet_isLeftId (f : α → α → α) : IsLeftId (Option α) (liftOrGet f) none :=
-  ⟨fun a => by cases a <;> simp [lift_or_get]⟩
+  ⟨fun a => by cases a <;> simp [liftOrGet]⟩
 #align option.lift_or_get_is_left_id Option.liftOrGet_isLeftId
 -/
 
 #print Option.liftOrGet_isRightId /-
 instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (liftOrGet f) none :=
-  ⟨fun a => by cases a <;> simp [lift_or_get]⟩
+  ⟨fun a => by cases a <;> simp [liftOrGet]⟩
 #align option.lift_or_get_is_right_id Option.liftOrGet_isRightId
 -/
 
@@ -208,9 +208,9 @@ instance liftOrGet_isRightId (f : α → α → α) : IsRightId (Option α) (lif
 inductive Rel (r : α → β → Prop) : Option α → Option β → Prop/--
 If `a ~ b`, then `some a ~ some b` -/
 
-  | some {a b} : r a b → Rel (some a) (some b)/-- `none ~ none` -/
+  | some {a b} : r a b → rel (some a) (some b)/-- `none ~ none` -/
 
-  | none : Rel none none
+  | none : rel none none
 #align option.rel Option.Rel
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.arborescence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,17 +80,17 @@ noncomputable def arborescenceMk {V : Type u} [Quiver V] (r : V) (height : V →
           induction' n with n ih generalizing b
           · exact False.elim (Nat.not_lt_zero _ hn)
           rcases root_or_arrow b with (⟨⟨⟩⟩ | ⟨a, ⟨e⟩⟩)
-          · exact ⟨path.nil⟩
+          · exact ⟨Path.nil⟩
           · rcases ih a (lt_of_lt_of_le (height_lt e) (nat.lt_succ_iff.mp hn)) with ⟨p⟩
             exact ⟨p.cons e⟩),
       by
-      have height_le : ∀ {a b}, path a b → height a ≤ height b :=
+      have height_le : ∀ {a b}, Path a b → height a ≤ height b :=
         by
         intro a b p
         induction' p with b c p e ih
         rfl
         exact le_of_lt (lt_of_le_of_lt ih (height_lt e))
-      suffices ∀ p q : path r b, p = q by
+      suffices ∀ p q : Path r b, p = q by
         intro p
         apply this
       intro p q
@@ -142,7 +142,7 @@ noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :
   arborescenceMk r (fun a => (shortestPath r a).length)
     (by
       rintro a b ⟨e, p, h⟩
-      rw [h, path.length_cons, Nat.lt_succ_iff]
+      rw [h, Path.length_cons, Nat.lt_succ_iff]
       apply shortest_path_spec)
     (by
       rintro a b c ⟨e, p, h⟩ ⟨f, q, j⟩
@@ -150,7 +150,7 @@ noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :
       constructor <;> rfl)
     (by
       intro b
-      rcases hp : shortest_path r b with (_ | ⟨p, e⟩)
+      rcases hp : shortestPath r b with (_ | ⟨p, e⟩)
       · exact Or.inl rfl
       · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩)
 #align quiver.geodesic_arborescence Quiver.geodesicArborescence

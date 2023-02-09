@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ def limitCone (F : J ⥤ Mon_ C) : Cone F where
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j }
       naturality' := fun j j' f => by
         ext
-        exact (limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
+        exact (Limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
 #align Mon_.limit_cone Mon_.limitCone
 
 /-- The image of the proposed limit cone for `F : J ⥤ Mon_ C` under the forgetful functor
@@ -79,14 +79,14 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F)
       mul_hom' := by
         ext; dsimp; simp; dsimp
         slice_rhs 1 2 =>
-          rw [← monoidal_category.tensor_comp, limit.lift_π]
+          rw [← MonoidalCategory.tensor_comp, limit.lift_π]
           dsimp }
   fac' s h := by
     ext
     simp
   uniq' s m w := by
     ext
-    dsimp; simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
+    dsimp; simp only [Mon_.forget_map, limit.lift_π, Functor.mapCone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)
 #align Mon_.limit_cone_is_limit Mon_.limitConeIsLimit
 
@@ -94,18 +94,18 @@ instance hasLimits : HasLimits (Mon_ C)
     where HasLimitsOfShape J 𝒥 :=
     {
       HasLimit := fun F =>
-        has_limit.mk
-          { Cone := limit_cone F
-            IsLimit := limit_cone_is_limit F } }
+        HasLimit.mk
+          { Cone := limitCone F
+            IsLimit := limitConeIsLimit F } }
 #align Mon_.has_limits Mon_.hasLimits
 
 instance forgetPreservesLimits : PreservesLimits (Mon_.forget C)
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F : J ⥤ Mon_ C =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C))
-            (forget_map_cone_limit_cone_iso F).symm) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (IsLimit.ofIsoLimit (limit.isLimit (F ⋙ Mon_.forget C))
+            (forgetMapConeLimitConeIso F).symm) }
 #align Mon_.forget_preserves_limits Mon_.forgetPreservesLimits
 
 end Mon_

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu
 
 ! This file was ported from Lean 3 source module tactic.explode_widget
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,8 +125,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
       Sum.casesOn a some fun _ => none) <|
     (component.with_effects fun _ (a : Sum γ widget.effect) =>
         match a with
-        | Sum.inl g => []
-        | Sum.inr s => [s]) <|
+        | sum.inl g => []
+        | sum.inr s => [s]) <|
       tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
         (fun e ⟨ca, sa⟩ act =>
           pure <|
@@ -157,7 +157,7 @@ unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <|
   pure <|
       h "div" []
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
-          List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
+          list.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
 #align tactic.explode_widget.implicit_arg_list tactic.explode_widget.implicit_arg_list
 
 /-- Component for the type tooltip.
@@ -217,7 +217,7 @@ unsafe def rule_row : thm → tactic (List (html Empty))
   | thm.expr e => do
     let t ← explode_widget.show_constant_component e
     return <| [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t]
-  | t => return <| [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t.toString]
+  | t => return <| [h "td" [cn "ba bg-dark-green tc"] "Rule", h "td" [cn "ba tc"] t.to_string]
 #align tactic.explode_widget.rule_row tactic.explode_widget.rule_row
 
 /-- Render a row that contains the sub-proofs, i.e., the proofs of the

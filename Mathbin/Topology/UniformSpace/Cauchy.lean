@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.uniform_space.cauchy
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,12 +51,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {p : ι -> Prop} {s : ι -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) ι (uniformity.{u2} α _inst_1) p s) -> (forall {f : Filter.{u2} α}, Iff (Cauchy.{u2} α _inst_1 f) (And (Filter.NeBot.{u2} α f) (forall (i : ι), (p i) -> (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t f) (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x t) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y t) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) (s i)))))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » t) -/
 theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s)
     {f : Filter α} :
     Cauchy f ↔ NeBot f ∧ ∀ i, p i → ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s i :=
   and_congr Iff.rfl <|
-    (f.basis_sets.prod_self.le_basis_iffₓ h).trans <| by
+    (f.basis_sets.prod_self.le_basis_iff h).trans <| by
       simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id, ball_mem_comm]
 #align filter.has_basis.cauchy_iff Filter.HasBasis.cauchy_iff
 
@@ -66,8 +66,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {f : Filter.{u1} α}, Iff (Cauchy.{u1} α _inst_1 f) (And (Filter.NeBot.{u1} α f) (forall (s : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) s (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t f) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t) -> (forall (y : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) -> (Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) s)))))))
 Case conversion may be inaccurate. Consider using '#align cauchy_iff' cauchy_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » t) -/
-theorem cauchy_iff' {f : Filter α} :
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » t) -/
+theorem cauchy_iff' {f : Filter Mem} :
     Cauchy f ↔ NeBot f ∧ ∀ s ∈ 𝓤 α, ∃ t ∈ f, ∀ (x) (_ : x ∈ t) (y) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 #align cauchy_iff' cauchy_iff'
@@ -97,13 +97,13 @@ theorem Cauchy.ultrafilter_of {l : Filter α} (h : Cauchy l) :
 #print cauchy_map_iff /-
 theorem cauchy_map_iff {l : Filter β} {f : β → α} :
     Cauchy (l.map f) ↔ NeBot l ∧ Tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) := by
-  rw [Cauchy, map_ne_bot_iff, prod_map_map_eq, tendsto]
+  rw [Cauchy, map_neBot_iff, prod_map_map_eq, Tendsto]
 #align cauchy_map_iff cauchy_map_iff
 -/
 
 #print cauchy_map_iff' /-
 theorem cauchy_map_iff' {l : Filter β} [hl : NeBot l] {f : β → α} :
-    Cauchy (l.map f) ↔ Tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
+    Cauchy (l.map Subset) ↔ Tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
   cauchy_map_iff.trans <| and_iff_right hl
 #align cauchy_map_iff' cauchy_map_iff'
 -/
@@ -155,7 +155,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cauchy.prod Cauchy.prodₓ'. -/
 theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauchy f) (hg : Cauchy g) :
     Cauchy (f ×ᶠ g) := by
-  refine' ⟨hf.1.Prod hg.1, _⟩
+  refine' ⟨hf.1.prod hg.1, _⟩
   simp only [uniformity_prod, le_inf_iff, ← map_le_iff_le_comap, ← prod_map_map_eq]
   exact
     ⟨le_trans (prod_mono tendsto_fst tendsto_fst) hf.2,
@@ -204,7 +204,7 @@ theorem le_nhds_of_cauchy_adhp {f : Filter α} {x : α} (hf : Cauchy f) (adhs : 
       obtain ⟨t, t_mem, ht⟩ : ∃ t ∈ f, t ×ˢ t ⊆ s
       exact (cauchy_iff.1 hf).2 s hs
       use t, t_mem, ht
-      exact forall_mem_nonempty_iff_ne_bot.2 adhs _ (inter_mem_inf (mem_nhds_left x hs) t_mem))
+      exact forall_mem_nonempty_iff_neBot.2 adhs _ (inter_mem_inf (mem_nhds_left x hs) t_mem))
 #align le_nhds_of_cauchy_adhp le_nhds_of_cauchy_adhp
 
 /- warning: le_nhds_iff_adhp_of_cauchy -> le_nhds_iff_adhp_of_cauchy is a dubious translation:
@@ -277,7 +277,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cauchy_seq.tendsto_uniformity CauchySeq.tendsto_uniformityₓ'. -/
 theorem CauchySeq.tendsto_uniformity [SemilatticeSup β] {u : β → α} (h : CauchySeq u) :
     Tendsto (Prod.map u u) atTop (𝓤 α) := by
-  simpa only [tendsto, prod_map_map_eq', prod_at_top_at_top_eq] using h.right
+  simpa only [Tendsto, prod_map_map_eq', prod_atTop_atTop_eq] using h.right
 #align cauchy_seq.tendsto_uniformity CauchySeq.tendsto_uniformity
 
 #print CauchySeq.nonempty /-
@@ -296,8 +296,8 @@ theorem CauchySeq.mem_entourage {β : Type _} [SemilatticeSup β] {u : β → α
     {V : Set (α × α)} (hV : V ∈ 𝓤 α) : ∃ k₀, ∀ i j, k₀ ≤ i → k₀ ≤ j → (u i, u j) ∈ V :=
   by
   haveI := h.nonempty
-  have := h.tendsto_uniformity; rw [← prod_at_top_at_top_eq] at this
-  simpa [maps_to] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
+  have := h.tendsto_uniformity; rw [← prod_atTop_atTop_eq] at this
+  simpa [MapsTo] using at_top_basis.prod_self.tendsto_left_iff.1 this V hV
 #align cauchy_seq.mem_entourage CauchySeq.mem_entourage
 
 #print Filter.Tendsto.cauchySeq /-
@@ -309,7 +309,7 @@ theorem Filter.Tendsto.cauchySeq [SemilatticeSup β] [Nonempty β] {f : β → �
 
 #print cauchySeq_const /-
 theorem cauchySeq_const [SemilatticeSup β] [Nonempty β] (x : α) : CauchySeq fun n : β => x :=
-  tendsto_const_nhds.CauchySeq
+  tendsto_const_nhds.cauchySeq
 #align cauchy_seq_const cauchySeq_const
 -/
 
@@ -321,7 +321,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cauchy_seq_iff_tendsto cauchySeq_iff_tendstoₓ'. -/
 theorem cauchySeq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ Tendsto (Prod.map u u) atTop (𝓤 α) :=
-  cauchy_map_iff'.trans <| by simp only [prod_at_top_at_top_eq, Prod.map_def]
+  cauchy_map_iff'.trans <| by simp only [prod_atTop_atTop_eq, Prod.map_def]
 #align cauchy_seq_iff_tendsto cauchySeq_iff_tendsto
 
 /- warning: cauchy_seq.comp_tendsto -> CauchySeq.comp_tendsto is a dubious translation:
@@ -358,7 +358,7 @@ theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V 
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, ((u ∘ f ∘ φ) n, (u ∘ g ∘ φ) n) ∈ V n :=
   by
   rw [cauchySeq_iff_tendsto] at hu
-  exact ((hu.comp <| hf.prod_at_top hg).comp tendsto_at_top_diagonal).subseq_mem hV
+  exact ((hu.comp <| hf.prod_at_top hg).comp tendsto_atTop_diagonal).subseq_mem hV
 #align cauchy_seq.subseq_subseq_mem CauchySeq.subseq_subseq_mem
 -/
 
@@ -388,7 +388,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cauchy_seq.prod_map CauchySeq.prod_mapₓ'. -/
 theorem CauchySeq.prod_map {γ δ} [UniformSpace β] [SemilatticeSup γ] [SemilatticeSup δ] {u : γ → α}
     {v : δ → β} (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq (Prod.map u v) := by
-  simpa only [CauchySeq, prod_map_map_eq', prod_at_top_at_top_eq] using hu.prod hv
+  simpa only [CauchySeq, prod_map_map_eq', prod_atTop_atTop_eq] using hu.prod hv
 #align cauchy_seq.prod_map CauchySeq.prod_map
 
 /- warning: cauchy_seq.prod -> CauchySeq.prod is a dubious translation:
@@ -400,7 +400,7 @@ Case conversion may be inaccurate. Consider using '#align cauchy_seq.prod Cauchy
 theorem CauchySeq.prod {γ} [UniformSpace β] [SemilatticeSup γ] {u : γ → α} {v : γ → β}
     (hu : CauchySeq u) (hv : CauchySeq v) : CauchySeq fun x => (u x, v x) :=
   haveI := hu.nonempty
-  (hu.prod hv).mono (tendsto.prod_mk le_rfl le_rfl)
+  (hu.prod hv).mono (Tendsto.prod_mk le_rfl le_rfl)
 #align cauchy_seq.prod CauchySeq.prod
 
 #print CauchySeq.eventually_eventually /-
@@ -442,8 +442,8 @@ theorem Filter.Tendsto.subseq_mem_entourage {V : ℕ → Set (α × α)} (hV : �
     {a : α} (hu : Tendsto u atTop (𝓝 a)) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (u (φ 0), a) ∈ V 0 ∧ ∀ n, (u <| φ (n + 1), u <| φ n) ∈ V (n + 1) :=
   by
-  rcases mem_at_top_sets.1 (hu (ball_mem_nhds a (symm_le_uniformity <| hV 0))) with ⟨n, hn⟩
-  rcases(hu.comp (tendsto_add_at_top_nat n)).CauchySeq.subseq_mem fun n => hV (n + 1) with
+  rcases mem_atTop_sets.1 (hu (ball_mem_nhds a (symm_le_uniformity <| hV 0))) with ⟨n, hn⟩
+  rcases(hu.comp (tendsto_add_atTop_nat n)).cauchySeq.subseq_mem fun n => hV (n + 1) with
     ⟨φ, φ_mono, hφV⟩
   exact ⟨fun k => φ k + n, φ_mono.add_const _, hn _ le_add_self, hφV⟩
 #align filter.tendsto.subseq_mem_entourage Filter.Tendsto.subseq_mem_entourage
@@ -468,17 +468,17 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u3}} [_inst_1 : UniformSpace.{u2} α] {γ : Sort.{u1}} [_inst_2 : Nonempty.{succ u3} β] [_inst_3 : SemilatticeSup.{u3} β] {u : β -> α} {p : γ -> Prop} {s : γ -> (Set.{u2} (Prod.{u2, u2} α α))}, (Filter.HasBasis.{u2, u1} (Prod.{u2, u2} α α) γ (uniformity.{u2} α _inst_1) p s) -> (Iff (CauchySeq.{u2, u3} α β _inst_1 _inst_3 u) (forall (i : γ), (p i) -> (Exists.{succ u3} β (fun (N : β) => forall (m : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N m) -> (forall (n : β), (LE.le.{u3} β (Preorder.toLE.{u3} β (PartialOrder.toPreorder.{u3} β (SemilatticeSup.toPartialOrder.{u3} β _inst_3))) N n) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α (u m) (u n)) (s i)))))))
 Case conversion may be inaccurate. Consider using '#align filter.has_basis.cauchy_seq_iff Filter.HasBasis.cauchySeq_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (m n «expr ≥ » N) -/
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchySeq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
     {s : γ → Set (α × α)} (h : (𝓤 α).HasBasis p s) :
     CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), (u m, u n) ∈ s i :=
   by
-  rw [cauchySeq_iff_tendsto, ← prod_at_top_at_top_eq]
+  rw [cauchySeq_iff_tendsto, ← prod_atTop_atTop_eq]
   refine' (at_top_basis.prod_self.tendsto_iff h).trans _
-  simp only [exists_prop, true_and_iff, maps_to, preimage, subset_def, Prod.forall, mem_prod_eq,
-    mem_set_of_eq, mem_Ici, and_imp, Prod.map, ge_iff_le, @forall_swap (_ ≤ _) β]
+  simp only [exists_prop, true_and_iff, MapsTo, preimage, subset_def, Prod.forall, mem_prod_eq,
+    mem_setOf_eq, mem_Ici, and_imp, Prod.map, ge_iff_le, @forall_swap (_ ≤ _) β]
 #align filter.has_basis.cauchy_seq_iff Filter.HasBasis.cauchySeq_iff
 
 /- warning: filter.has_basis.cauchy_seq_iff' -> Filter.HasBasis.cauchySeq_iff' is a dubious translation:
@@ -507,7 +507,7 @@ theorem cauchySeq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Se
   cauchySeq_iff_tendsto.2
     (by
       intro s hs
-      rw [mem_map, mem_at_top_sets]
+      rw [mem_map, mem_atTop_sets]
       cases' hU s hs with N hN
       refine' ⟨(N, N), fun mn hmn => _⟩
       cases' mn with m n
@@ -573,7 +573,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : UniformSpace.{u2} α] {ι : Sort.{u1}} {s : ι -> (Set.{u2} α)}, (forall (i : ι), IsComplete.{u2} α _inst_1 (s i)) -> (forall {U : Set.{u2} (Prod.{u2, u2} α α)}, (Membership.mem.{u2, u2} (Set.{u2} (Prod.{u2, u2} α α)) (Filter.{u2} (Prod.{u2, u2} α α)) (instMembershipSetFilter.{u2} (Prod.{u2, u2} α α)) U (uniformity.{u2} α _inst_1)) -> (forall (i : ι) (j : ι) (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (s i)) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y (s j)) -> (Membership.mem.{u2, u2} (Prod.{u2, u2} α α) (Set.{u2} (Prod.{u2, u2} α α)) (Set.instMembershipSet.{u2} (Prod.{u2, u2} α α)) (Prod.mk.{u2, u2} α α x y) U) -> (Eq.{u1} ι i j))) -> (IsComplete.{u2} α _inst_1 (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => s i))))
 Case conversion may be inaccurate. Consider using '#align is_complete_Union_separated isComplete_unionᵢ_separatedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » S) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » S) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isComplete_unionᵢ_separated {ι : Sort _} {s : ι → Set α} (hs : ∀ i, IsComplete (s i))
     {U : Set (α × α)} (hU : U ∈ 𝓤 α) (hd : ∀ (i j : ι), ∀ x ∈ s i, ∀ y ∈ s j, (x, y) ∈ U → i = j) :
@@ -591,13 +591,13 @@ theorem isComplete_unionᵢ_separated {ι : Sort _} {s : ι → Set α} (hs : �
   obtain ⟨i, hi⟩ : ∃ i, t ⊆ s i :=
     by
     rcases Filter.nonempty_of_mem htl with ⟨x, hx⟩
-    rcases mem_Union.1 (htS hx) with ⟨i, hi⟩
+    rcases mem_unionᵢ.1 (htS hx) with ⟨i, hi⟩
     refine' ⟨i, fun y hy => _⟩
-    rcases mem_Union.1 (htS hy) with ⟨j, hj⟩
+    rcases mem_unionᵢ.1 (htS hy) with ⟨j, hj⟩
     convert hj
     exact hd i j x hi y hj (htU <| mk_mem_prod hx hy)
   rcases hs i l hl (le_principal_iff.2 <| mem_of_superset htl hi) with ⟨x, hxs, hlx⟩
-  exact ⟨x, mem_Union.2 ⟨i, hxs⟩, hlx⟩
+  exact ⟨x, mem_unionᵢ.2 ⟨i, hxs⟩, hlx⟩
 #align is_complete_Union_separated isComplete_unionᵢ_separated
 
 #print CompleteSpace /-
@@ -668,7 +668,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cauchy_iff_exists_le_nhds cauchy_iff_exists_le_nhdsₓ'. -/
 theorem cauchy_iff_exists_le_nhds [CompleteSpace α] {l : Filter α} [NeBot l] :
     Cauchy l ↔ ∃ x, l ≤ 𝓝 x :=
-  ⟨CompleteSpace.complete, fun ⟨x, hx⟩ => cauchy_nhds.mono hx⟩
+  ⟨CompleteSpace.complete, fun ⟨exists_prop, hx⟩ => cauchy_nhds.mono hx⟩
 #align cauchy_iff_exists_le_nhds cauchy_iff_exists_le_nhds
 
 #print cauchy_map_iff_exists_tendsto /-
@@ -744,7 +744,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, (TotallyBounded.{u1} α _inst_1 s) -> (forall {U : Set.{u1} (Prod.{u1, u1} α α)}, (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) U (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.5625 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) U)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded.exists_subset TotallyBounded.exists_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
     (hU : U ∈ 𝓤 α) : ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } :=
   by
@@ -754,12 +754,12 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
   choose hk f hfs hfr using fun x : u => x.coe_prop
   refine' ⟨range f, _, _, _⟩
   · exact range_subset_iff.2 hfs
-  · haveI : Fintype u := (fk.inter_of_left _).Fintype
+  · haveI : Fintype u := (fk.inter_of_left _).fintype
     exact finite_range f
   · intro x xs
     obtain ⟨y, hy, xy⟩ : ∃ y ∈ k, (x, y) ∈ r
-    exact mem_Union₂.1 (ks xs)
-    rw [bUnion_range, mem_Union]
+    exact mem_unionᵢ₂.1 (ks xs)
+    rw [bunionᵢ_range, mem_unionᵢ]
     set z : ↥u := ⟨y, hy, ⟨x, xs, xy⟩⟩
     exact ⟨z, rU <| mem_compRel.2 ⟨y, xy, rs (hfr z)⟩⟩
 #align totally_bounded.exists_subset TotallyBounded.exists_subset
@@ -770,7 +770,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : UniformSpace.{u1} α] {s : Set.{u1} α}, Iff (TotallyBounded.{u1} α _inst_1 s) (forall (d : Set.{u1} (Prod.{u1, u1} α α)), (Membership.mem.{u1, u1} (Set.{u1} (Prod.{u1, u1} α α)) (Filter.{u1} (Prod.{u1, u1} α α)) (instMembershipSetFilter.{u1} (Prod.{u1, u1} α α)) d (uniformity.{u1} α _inst_1)) -> (Exists.{succ u1} (Set.{u1} α) (fun (t : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) (And (Set.Finite.{u1} α t) (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s (Set.unionᵢ.{u1, succ u1} α α (fun (y : α) => Set.unionᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) (fun (h._@.Mathlib.Topology.UniformSpace.Cauchy._hyg.6553 : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) y t) => setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} (Prod.{u1, u1} α α) (Set.{u1} (Prod.{u1, u1} α α)) (Set.instMembershipSet.{u1} (Prod.{u1, u1} α α)) (Prod.mk.{u1, u1} α α x y) d)))))))))
 Case conversion may be inaccurate. Consider using '#align totally_bounded_iff_subset totallyBounded_iff_subsetₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff_subset {s : Set α} :
     TotallyBounded s ↔
       ∀ d ∈ 𝓤 α, ∃ (t : _)(_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
@@ -822,7 +822,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
     let ⟨t, htf, hst⟩ := h V hV.1
     ⟨t, htf,
       closure_minimal hst <|
-        isClosed_bunionᵢ htf fun y hy => hV.2.Preimage (continuous_id.prod_mk continuous_const)⟩
+        isClosed_bunionᵢ htf fun y hy => hV.2.preimage (continuous_id.prod_mk continuous_const)⟩
 #align totally_bounded.closure TotallyBounded.closure
 -/
 
@@ -877,10 +877,10 @@ theorem totallyBounded_iff_filter {s : Set α} :
   · intro H d hd
     contrapose! H with hd_cover
     set f := ⨅ t : Finset α, 𝓟 (s \ ⋃ y ∈ t, { x | (x, y) ∈ d })
-    have : ne_bot f := by
-      refine' infi_ne_bot_of_directed' (directed_of_sup _) _
+    have : NeBot f := by
+      refine' infᵢ_neBot_of_directed' (directed_of_sup _) _
       · intro t₁ t₂ h
-        exact principal_mono.2 (diff_subset_diff_right <| bUnion_subset_bUnion_left h)
+        exact principal_mono.2 (diff_subset_diff_right <| bunionᵢ_subset_bunionᵢ_left h)
       · intro t
         simpa [nonempty_diff] using hd_cover t t.finite_to_set
     have : f ≤ 𝓟 s := infᵢ_le_of_le ∅ (by simp)
@@ -891,7 +891,7 @@ theorem totallyBounded_iff_filter {s : Set α} :
     set ys := ⋃ y' ∈ ({y} : Finset α), { x | (x, y') ∈ d }
     have : m ⊆ ys := by simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
     have : c ≤ 𝓟 (s \ ys) := hcf.trans (infᵢ_le_of_le {y} le_rfl)
-    refine' hc.1.Ne (empty_mem_iff_bot.mp _)
+    refine' hc.1.ne (empty_mem_iff_bot.mp _)
     filter_upwards [le_principal_iff.1 this, hm]
     refine' fun x hx hxm => hx.2 _
     simpa [ys] using hmd (mk_mem_prod hxm hym)
@@ -950,7 +950,7 @@ instance (priority := 100) complete_of_compact {α : Type u} [UniformSpace α] [
 #print isCompact_of_totallyBounded_isClosed /-
 theorem isCompact_of_totallyBounded_isClosed [CompleteSpace α] {s : Set α} (ht : TotallyBounded s)
     (hc : IsClosed s) : IsCompact s :=
-  (@isCompact_iff_totallyBounded_isComplete α _ s).2 ⟨ht, hc.IsComplete⟩
+  (@isCompact_iff_totallyBounded_isComplete α _ s).2 ⟨ht, hc.isComplete⟩
 #align is_compact_of_totally_bounded_is_closed isCompact_of_totallyBounded_isClosed
 -/
 
@@ -961,9 +961,9 @@ theorem CauchySeq.totallyBounded_range {s : ℕ → α} (hs : CauchySeq s) : Tot
   refine' totallyBounded_iff_subset.2 fun a ha => _
   cases' cauchySeq_iff.1 hs a ha with n hn
   refine' ⟨s '' { k | k ≤ n }, image_subset_range _ _, (finite_le_nat _).image _, _⟩
-  rw [range_subset_iff, bUnion_image]
+  rw [range_subset_iff, bunionᵢ_image]
   intro m
-  rw [mem_Union₂]
+  rw [mem_unionᵢ₂]
   cases' le_total m n with hm hm
   exacts[⟨m, hm, refl_mem_uniformity ha⟩, ⟨n, le_refl n, hn m hm n le_rfl⟩]
 #align cauchy_seq.totally_bounded_range CauchySeq.totallyBounded_range
@@ -1036,9 +1036,9 @@ theorem setSeq_prod_subset {N m n} (hm : N ≤ m) (hn : N ≤ n) :
     setSeq hf U_mem m ×ˢ setSeq hf U_mem n ⊆ U N :=
   by
   intro p hp
-  refine' (set_seq_aux hf U_mem N).2.snd ⟨_, _⟩ <;> apply set_seq_sub_aux
-  exact set_seq_mono hf U_mem hm hp.1
-  exact set_seq_mono hf U_mem hn hp.2
+  refine' (setSeqAux hf U_mem N).2.snd ⟨_, _⟩ <;> apply setSeq_sub_aux
+  exact setSeq_mono hf U_mem hm hp.1
+  exact setSeq_mono hf U_mem hn hp.2
 #align sequentially_complete.set_seq_prod_subset SequentiallyComplete.setSeq_prod_subset
 -/
 
@@ -1084,12 +1084,12 @@ theorem le_nhds_of_seq_tendsto_nhds ⦃a : α⦄ (ha : Tendsto (seq hf U_mem) at
     (by
       intro s hs
       rcases U_le s hs with ⟨m, hm⟩
-      rcases tendsto_at_top'.1 ha _ (mem_nhds_left a (U_mem m)) with ⟨n, hn⟩
+      rcases tendsto_atTop'.1 ha _ (mem_nhds_left a (U_mem m)) with ⟨n, hn⟩
       refine'
-        ⟨set_seq hf U_mem (max m n), set_seq_mem hf U_mem _, _, seq hf U_mem (max m n), _,
+        ⟨setSeq hf U_mem (max m n), setSeq_mem hf U_mem _, _, seq hf U_mem (max m n), _,
           seq_mem hf U_mem _⟩
       · have := le_max_left m n
-        exact Set.Subset.trans (set_seq_prod_subset hf U_mem this this) hm
+        exact Set.Subset.trans (setSeq_prod_subset hf U_mem this this) hm
       · exact hm (hn _ <| le_max_right m n))
 #align sequentially_complete.le_nhds_of_seq_tendsto_nhds SequentiallyComplete.le_nhds_of_seq_tendsto_nhds
 
@@ -1109,12 +1109,12 @@ theorem complete_of_convergent_controlled_sequences (U : ℕ → Set (α × α))
     CompleteSpace α :=
   by
   obtain ⟨U', U'_mono, hU'⟩ := (𝓤 α).exists_antitone_seq
-  have Hmem : ∀ n, U n ∩ U' n ∈ 𝓤 α := fun n => inter_mem (U_mem n) (hU'.2 ⟨n, subset.refl _⟩)
+  have Hmem : ∀ n, U n ∩ U' n ∈ 𝓤 α := fun n => inter_mem (U_mem n) (hU'.2 ⟨n, Subset.refl _⟩)
   refine'
     ⟨fun f hf =>
       (HU (seq hf Hmem) fun N m n hm hn => _).imp <| le_nhds_of_seq_tendsto_nhds _ _ fun s hs => _⟩
   · rcases hU'.1 hs with ⟨N, hN⟩
-    exact ⟨N, subset.trans (inter_subset_right _ _) hN⟩
+    exact ⟨N, Subset.trans (inter_subset_right _ _) hN⟩
   · exact inter_subset_left _ _ (seq_pair_mem hf Hmem hm hn)
 #align uniform_space.complete_of_convergent_controlled_sequences UniformSpace.complete_of_convergent_controlled_sequences
 -/
@@ -1152,22 +1152,22 @@ theorem secondCountable_of_separable [SeparableSpace α] : SecondCountableTopolo
   obtain
     ⟨t : ℕ → Set (α × α), hto : ∀ i : ℕ, t i ∈ (𝓤 α).sets ∧ IsOpen (t i) ∧ SymmetricRel (t i),
       h_basis : (𝓤 α).HasAntitoneBasis t⟩ :=
-    (@uniformity_hasBasis_open_symmetric α _).exists_antitone_subbasis
+    (@uniformity_has_basis_open_symmetric α _).exists_antitone_subbasis
   choose ht_mem hto hts using hto
   refine' ⟨⟨⋃ x ∈ s, range fun k => ball x (t k), hsc.bUnion fun x hx => countable_range _, _⟩⟩
-  refine' (is_topological_basis_of_open_of_nhds _ _).eq_generateFrom
-  · simp only [mem_Union₂, mem_range]
+  refine' (isTopologicalBasis_of_open_of_nhds _ _).eq_generateFrom
+  · simp only [mem_unionᵢ₂, mem_range]
     rintro _ ⟨x, hxs, k, rfl⟩
-    exact is_open_ball x (hto k)
+    exact isOpen_ball x (hto k)
   · intro x V hxV hVo
-    simp only [mem_Union₂, mem_range, exists_prop]
+    simp only [mem_unionᵢ₂, mem_range, exists_prop]
     rcases UniformSpace.mem_nhds_iff.1 (IsOpen.mem_nhds hVo hxV) with ⟨U, hU, hUV⟩
     rcases comp_symm_of_uniformity hU with ⟨U', hU', hsymm, hUU'⟩
     rcases h_basis.to_has_basis.mem_iff.1 hU' with ⟨k, -, hk⟩
-    rcases hsd.inter_open_nonempty (ball x <| t k) (is_open_ball x (hto k))
+    rcases hsd.inter_open_nonempty (ball x <| t k) (isOpen_ball x (hto k))
         ⟨x, UniformSpace.mem_ball_self _ (ht_mem k)⟩ with
       ⟨y, hxy, hys⟩
-    refine' ⟨_, ⟨y, hys, k, rfl⟩, (hts k).Subset hxy, fun z hz => _⟩
+    refine' ⟨_, ⟨y, hys, k, rfl⟩, (hts k).subset hxy, fun z hz => _⟩
     exact hUV (ball_subset_of_comp_subset (hk hxy) hUU' (hk hz))
 #align uniform_space.second_countable_of_separable UniformSpace.secondCountable_of_separable
 -/

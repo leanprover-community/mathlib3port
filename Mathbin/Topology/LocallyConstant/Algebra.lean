@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem one_apply [One Y] (x : X) : (1 : LocallyConstant X Y) x = 1 :=
 #align locally_constant.zero_apply LocallyConstant.zero_apply
 
 @[to_additive]
-instance [Inv Y] : Inv (LocallyConstant X Y) where inv f := ⟨f⁻¹, f.IsLocallyConstant.inv⟩
+instance [Inv Y] : Inv (LocallyConstant X Y) where inv f := ⟨f⁻¹, f.isLocallyConstant.inv⟩
 
 @[simp, to_additive]
 theorem coe_inv [Inv Y] (f : LocallyConstant X Y) : ⇑f⁻¹ = f⁻¹ :=
@@ -56,7 +56,7 @@ theorem inv_apply [Inv Y] (f : LocallyConstant X Y) (x : X) : f⁻¹ x = (f x)�
 
 @[to_additive]
 instance [Mul Y] : Mul (LocallyConstant X Y)
-    where mul f g := ⟨f * g, f.IsLocallyConstant.mul g.IsLocallyConstant⟩
+    where mul f g := ⟨f * g, f.isLocallyConstant.mul g.isLocallyConstant⟩
 
 @[simp, to_additive]
 theorem coe_mul [Mul Y] (f g : LocallyConstant X Y) : ⇑(f * g) = f * g :=
@@ -149,7 +149,7 @@ end CharFn
 
 @[to_additive]
 instance [Div Y] : Div (LocallyConstant X Y)
-    where div f g := ⟨f / g, f.IsLocallyConstant.div g.IsLocallyConstant⟩
+    where div f g := ⟨f / g, f.isLocallyConstant.div g.isLocallyConstant⟩
 
 @[to_additive]
 theorem coe_div [Div Y] (f g : LocallyConstant X Y) : ⇑(f / g) = f / g :=
@@ -276,7 +276,7 @@ variable {R : Type _}
 instance [SMul R Y] : SMul R (LocallyConstant X Y)
     where smul r f :=
     { toFun := r • f
-      IsLocallyConstant := (f.IsLocallyConstant.comp ((· • ·) r) : _) }
+      IsLocallyConstant := (f.isLocallyConstant.comp ((· • ·) r) : _) }
 
 @[simp]
 theorem coe_smul [SMul R Y] (r : R) (f : LocallyConstant X Y) : ⇑(r • f) = r • f :=

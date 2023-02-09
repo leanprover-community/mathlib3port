@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.ring.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,8 +82,8 @@ instance semiring [∀ i, Semiring <| f i] : Semiring (∀ i : I, f i) := by
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul
-        npow := Monoid.npow } <;>
+        nsmul := add_monoid.nsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.semiring Pi.semiring
 -/
@@ -95,7 +95,7 @@ instance nonUnitalCommSemiring [∀ i, NonUnitalCommSemiring <| f i] :
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 #align pi.non_unital_comm_semiring Pi.nonUnitalCommSemiring
 -/
@@ -107,8 +107,8 @@ instance commSemiring [∀ i, CommSemiring <| f i] : CommSemiring (∀ i : I, f 
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul
-        npow := Monoid.npow } <;>
+        nsmul := add_monoid.nsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.comm_semiring Pi.commSemiring
 -/
@@ -120,9 +120,9 @@ instance nonUnitalNonAssocRing [∀ i, NonUnitalNonAssocRing <| f i] :
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align pi.non_unital_non_assoc_ring Pi.nonUnitalNonAssocRing
 -/
@@ -133,9 +133,9 @@ instance nonUnitalRing [∀ i, NonUnitalRing <| f i] : NonUnitalRing (∀ i : I,
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align pi.non_unital_ring Pi.nonUnitalRing
 -/
@@ -146,9 +146,9 @@ instance nonAssocRing [∀ i, NonAssocRing <| f i] : NonAssocRing (∀ i : I, f 
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align pi.non_assoc_ring Pi.nonAssocRing
 -/
@@ -160,10 +160,10 @@ instance ring [∀ i, Ring <| f i] : Ring (∀ i : I, f i) := by
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul
-        npow := Monoid.npow } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.ring Pi.ring
 -/
@@ -174,9 +174,9 @@ instance nonUnitalCommRing [∀ i, NonUnitalCommRing <| f i] : NonUnitalCommRing
       { zero := (0 : ∀ i, f i)
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align pi.non_unital_comm_ring Pi.nonUnitalCommRing
 -/
@@ -188,10 +188,10 @@ instance commRing [∀ i, CommRing <| f i] : CommRing (∀ i : I, f i) := by
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul
-        npow := Monoid.npow } <;>
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.comm_ring Pi.commRing
 -/

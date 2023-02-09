@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem ContMdiffWithinAt.mdifferentiableWithinAt (hf : ContMdiffWithinAt I I' n
     apply hf.1.preimage_mem_nhdsWithin
     exact extChartAt_source_mem_nhds I' (f x)
   rw [mdifferentiableWithinAt_iff]
-  exact ⟨hf.1.mono (inter_subset_left _ _), (hf.2.DifferentiableWithinAt hn).mono (by mfld_set_tac)⟩
+  exact ⟨hf.1.mono (inter_subset_left _ _), (hf.2.differentiableWithinAt hn).mono (by mfld_set_tac)⟩
 #align cont_mdiff_within_at.mdifferentiable_within_at ContMdiffWithinAt.mdifferentiableWithinAt
 
 theorem ContMdiffAt.mdifferentiableAt (hf : ContMdiffAt I I' n f x) (hn : 1 ≤ n) :
@@ -78,24 +78,24 @@ theorem ContMdiffAt.mdifferentiableAt (hf : ContMdiffAt I I' n f x) (hn : 1 ≤ 
 #align cont_mdiff_at.mdifferentiable_at ContMdiffAt.mdifferentiableAt
 
 theorem ContMdiffOn.mdifferentiableOn (hf : ContMdiffOn I I' n f s) (hn : 1 ≤ n) :
-    MdifferentiableOn I I' f s := fun x hx => (hf x hx).MdifferentiableWithinAt hn
+    MdifferentiableOn I I' f s := fun x hx => (hf x hx).mdifferentiableWithinAt hn
 #align cont_mdiff_on.mdifferentiable_on ContMdiffOn.mdifferentiableOn
 
 theorem ContMdiff.mdifferentiable (hf : ContMdiff I I' n f) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  fun x => (hf x).MdifferentiableAt hn
+  fun x => (hf x).mdifferentiableAt hn
 #align cont_mdiff.mdifferentiable ContMdiff.mdifferentiable
 
 theorem SmoothWithinAt.mdifferentiableWithinAt (hf : SmoothWithinAt I I' f s x) :
     MdifferentiableWithinAt I I' f s x :=
-  hf.MdifferentiableWithinAt le_top
+  hf.mdifferentiableWithinAt le_top
 #align smooth_within_at.mdifferentiable_within_at SmoothWithinAt.mdifferentiableWithinAt
 
 theorem SmoothAt.mdifferentiableAt (hf : SmoothAt I I' f x) : MdifferentiableAt I I' f x :=
-  hf.MdifferentiableAt le_top
+  hf.mdifferentiableAt le_top
 #align smooth_at.mdifferentiable_at SmoothAt.mdifferentiableAt
 
 theorem SmoothOn.mdifferentiableOn (hf : SmoothOn I I' f s) : MdifferentiableOn I I' f s :=
-  hf.MdifferentiableOn le_top
+  hf.mdifferentiableOn le_top
 #align smooth_on.mdifferentiable_on SmoothOn.mdifferentiableOn
 
 theorem Smooth.mdifferentiable (hf : Smooth I I' f) : Mdifferentiable I I' f :=
@@ -103,11 +103,11 @@ theorem Smooth.mdifferentiable (hf : Smooth I I' f) : Mdifferentiable I I' f :=
 #align smooth.mdifferentiable Smooth.mdifferentiable
 
 theorem Smooth.mdifferentiableAt (hf : Smooth I I' f) : MdifferentiableAt I I' f x :=
-  hf.Mdifferentiable x
+  hf.mdifferentiable x
 #align smooth.mdifferentiable_at Smooth.mdifferentiableAt
 
 theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MdifferentiableWithinAt I I' f s x :=
-  hf.MdifferentiableAt.MdifferentiableWithinAt
+  hf.mdifferentiableAt.mdifferentiableWithinAt
 #align smooth.mdifferentiable_within_at Smooth.mdifferentiableWithinAt
 
 /-! ### The tangent map of a smooth function is smooth -/
@@ -132,10 +132,10 @@ theorem ContMdiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
               E →L[𝕜] E')
             p.snd))
       (Prod.fst ⁻¹' s)
-  · have A := (tangentBundleModelSpaceHomeomorph H I).Continuous
+  · have A := (tangentBundleModelSpaceHomeomorph H I).continuous
     rw [continuous_iff_continuousOn_univ] at A
     have B :=
-      ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuousOn h).comp' A
+      ((tangentBundleModelSpaceHomeomorph H' I').symm.continuous.comp_continuousOn h).comp' A
     have :
       univ ∩ ⇑(tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) =
         TangentBundle.proj I H ⁻¹' s :=
@@ -161,12 +161,12 @@ theorem ContMdiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   · dsimp [writtenInExtChartAt, extChartAt]
     apply
       ContinuousOn.prod
-        (ContinuousOn.comp hf.continuous_on continuous_fst.continuous_on (subset.refl _))
+        (ContinuousOn.comp hf.continuous_on continuous_fst.continuous_on (Subset.refl _))
     apply h.congr
     intro p hp
     rfl
   suffices h : ContinuousOn (fderivWithin 𝕜 (I' ∘ f ∘ I.symm) (I.symm ⁻¹' s ∩ range I)) (I '' s)
-  · have C := ContinuousOn.comp h I.continuous_to_fun.continuous_on (subset.refl _)
+  · have C := ContinuousOn.comp h I.continuous_to_fun.continuous_on (Subset.refl _)
     have A : Continuous fun q : (E →L[𝕜] E') × E => q.1 q.2 :=
       is_bounded_bilinear_map_apply.continuous
     have B :
@@ -300,12 +300,12 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
   refine' contMdiffOn_of_locally_contMdiffOn fun p hp => _
   have hf' := contMdiffOn_iff.1 hf
   simp [TangentBundle.proj] at hp
-  let l := chart_at H p.1
-  set Dl := chart_at (ModelProd H E) p with hDl
-  let r := chart_at H' (f p.1)
-  let Dr := chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)
-  let il := chart_at (ModelProd H E) (tangentMap I I l p)
-  let ir := chart_at (ModelProd H' E') (tangentMap I I' (r ∘ f) p)
+  let l := chartAt H p.1
+  set Dl := chartAt (ModelProd H E) p with hDl
+  let r := chartAt H' (f p.1)
+  let Dr := chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)
+  let il := chartAt (ModelProd H E) (tangentMap I I l p)
+  let ir := chartAt (ModelProd H' E') (tangentMap I I' (r ∘ f) p)
   let s' := f ⁻¹' r.source ∩ s ∩ l.source
   let s'_lift := TangentBundle.proj I M ⁻¹' s'
   let s'l := l.target ∩ l.symm ⁻¹' s'
@@ -314,7 +314,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
   suffices h : ContMdiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) s'_lift
   · refine' ⟨TangentBundle.proj I M ⁻¹' (o ∩ l.source), _, _, _⟩
     show IsOpen (TangentBundle.proj I M ⁻¹' (o ∩ l.source))
-    exact (IsOpen.inter o_open l.open_source).Preimage (tangentBundle_proj_continuous _ _)
+    exact (IsOpen.inter o_open l.open_source).preimage (tangentBundle_proj_continuous _ _)
     show p ∈ TangentBundle.proj I M ⁻¹' (o ∩ l.source)
     · simp [TangentBundle.proj]
       have : p.1 ∈ f ⁻¹' r.source ∩ s := by simp [hp]
@@ -365,7 +365,7 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
     have A : ContMdiffOn I'.tangent I'.tangent m Dr.symm Dr.target := contMdiffOn_chart_symm
     apply ContMdiffOn.comp A diff_irrfl_lift fun p hp => _
     simp only [s'l_lift, TangentBundle.proj, mfld_simps] at hp
-    simp only [ir, @LocalEquiv.refl_coe (ModelProd H' E'), hp, mfld_simps]
+    simp only [ir, @local_equiv.refl_coe (ModelProd H' E'), hp, mfld_simps]
   -- conclusion of this step: the composition of all the maps above is smooth
   have diff_DrirrflilDl :
     ContMdiffOn I.tangent I'.tangent m
@@ -420,8 +420,8 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
         simp only [hq, mfld_simps]
       rw [this, tangentMap_chart_symm, hDl]
       · simp only [hq, mfld_simps]
-        have : q ∈ (chart_at (ModelProd H E) p).source := by simp only [hq, mfld_simps]
-        exact (chart_at (ModelProd H E) p).left_inv this
+        have : q ∈ (chartAt (ModelProd H E) p).source := by simp only [hq, mfld_simps]
+        exact (chartAt (ModelProd H E) p).left_inv this
       · simp only [hq, mfld_simps]
     have C :
       tangentMapWithin I I' (r ∘ f) s' q =
@@ -454,9 +454,9 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin (hf : ContMdiffOn I I' n f s) (
       · simp only [hq, mfld_simps]
         have :
           tangentMapWithin I I' f s' q ∈
-            (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).source :=
+            (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).source :=
           by simp only [hq, mfld_simps]
-        exact (chart_at (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
+        exact (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
       · simp only [hq, mfld_simps]
     have E : tangentMapWithin I I' f s' q = tangentMapWithin I I' f s q :=
       by
@@ -509,28 +509,28 @@ variable (Z : BasicSmoothVectorBundleCore I M E')
 /-- A version of `cont_mdiff_at_iff_target` when the codomain is the total space of
   a `basic_smooth_vector_bundle_core`. The continuity condition in the RHS is weaker. -/
 theorem contMdiffAt_iff_target {f : N → Z.toVectorBundleCore.TotalSpace} {x : N} {n : ℕ∞} :
-    ContMdiffAt J (I.Prod 𝓘(𝕜, E')) n f x ↔
+    ContMdiffAt J (I.prod 𝓘(𝕜, E')) n f x ↔
       ContinuousAt (Bundle.TotalSpace.proj ∘ f) x ∧
-        ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
+        ContMdiffAt J 𝓘(𝕜, E × E') n (extChartAt (I.prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
   by
   let Z' := Z.to_vector_bundle_core
   rw [contMdiffAt_iff_target, and_congr_left_iff]
   refine' fun hf => ⟨fun h => Z'.continuous_proj.continuous_at.comp h, fun h => _⟩
   exact
-    (Z'.local_triv ⟨chart_at _ (f x).1, chart_mem_atlas _ _⟩).continuousAt_of_comp_left h
+    (Z'.local_triv ⟨chartAt _ (f x).1, chart_mem_atlas _ _⟩).continuousAt_of_comp_left h
       (mem_chart_source _ _) (h.prod hf.continuous_at.snd)
 #align basic_smooth_vector_bundle_core.cont_mdiff_at_iff_target BasicSmoothVectorBundleCore.contMdiffAt_iff_target
 
 theorem smooth_iff_target {f : N → Z.toVectorBundleCore.TotalSpace} :
-    Smooth J (I.Prod 𝓘(𝕜, E')) f ↔
+    Smooth J (I.prod 𝓘(𝕜, E')) f ↔
       Continuous (Bundle.TotalSpace.proj ∘ f) ∧
-        ∀ x, SmoothAt J 𝓘(𝕜, E × E') (extChartAt (I.Prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
+        ∀ x, SmoothAt J 𝓘(𝕜, E × E') (extChartAt (I.prod 𝓘(𝕜, E')) (f x) ∘ f) x :=
   by
   simp_rw [Smooth, SmoothAt, ContMdiff, Z.cont_mdiff_at_iff_target, forall_and,
     continuous_iff_continuousAt]
 #align basic_smooth_vector_bundle_core.smooth_iff_target BasicSmoothVectorBundleCore.smooth_iff_target
 
-theorem contMdiff_proj : ContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj :=
+theorem contMdiff_proj : ContMdiff (I.prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj :=
   by
   intro x
   rw [ContMdiffAt, contMdiffWithinAt_iff']
@@ -543,39 +543,39 @@ theorem contMdiff_proj : ContMdiff (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleC
   · simp only [mfld_simps]
 #align basic_smooth_vector_bundle_core.cont_mdiff_proj BasicSmoothVectorBundleCore.contMdiff_proj
 
-theorem smooth_proj : Smooth (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj :=
+theorem smooth_proj : Smooth (I.prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj :=
   contMdiff_proj Z
 #align basic_smooth_vector_bundle_core.smooth_proj BasicSmoothVectorBundleCore.smooth_proj
 
 theorem contMdiffOn_proj {s : Set Z.toVectorBundleCore.TotalSpace} :
-    ContMdiffOn (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s :=
-  Z.contMdiff_proj.ContMdiffOn
+    ContMdiffOn (I.prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s :=
+  Z.contMdiff_proj.contMdiffOn
 #align basic_smooth_vector_bundle_core.cont_mdiff_on_proj BasicSmoothVectorBundleCore.contMdiffOn_proj
 
 theorem smoothOn_proj {s : Set Z.toVectorBundleCore.TotalSpace} :
-    SmoothOn (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj s :=
+    SmoothOn (I.prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj s :=
   contMdiffOn_proj Z
 #align basic_smooth_vector_bundle_core.smooth_on_proj BasicSmoothVectorBundleCore.smoothOn_proj
 
 theorem contMdiffAt_proj {p : Z.toVectorBundleCore.TotalSpace} :
-    ContMdiffAt (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj p :=
-  Z.contMdiff_proj.ContMdiffAt
+    ContMdiffAt (I.prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj p :=
+  Z.contMdiff_proj.contMdiffAt
 #align basic_smooth_vector_bundle_core.cont_mdiff_at_proj BasicSmoothVectorBundleCore.contMdiffAt_proj
 
 theorem smoothAt_proj {p : Z.toVectorBundleCore.TotalSpace} :
-    SmoothAt (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj p :=
+    SmoothAt (I.prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj p :=
   Z.contMdiffAt_proj
 #align basic_smooth_vector_bundle_core.smooth_at_proj BasicSmoothVectorBundleCore.smoothAt_proj
 
 theorem contMdiffWithinAt_proj {s : Set Z.toVectorBundleCore.TotalSpace}
     {p : Z.toVectorBundleCore.TotalSpace} :
-    ContMdiffWithinAt (I.Prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s p :=
-  Z.contMdiffAt_proj.ContMdiffWithinAt
+    ContMdiffWithinAt (I.prod 𝓘(𝕜, E')) I n Z.toVectorBundleCore.proj s p :=
+  Z.contMdiffAt_proj.contMdiffWithinAt
 #align basic_smooth_vector_bundle_core.cont_mdiff_within_at_proj BasicSmoothVectorBundleCore.contMdiffWithinAt_proj
 
 theorem smoothWithinAt_proj {s : Set Z.toVectorBundleCore.TotalSpace}
     {p : Z.toVectorBundleCore.TotalSpace} :
-    SmoothWithinAt (I.Prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj s p :=
+    SmoothWithinAt (I.prod 𝓘(𝕜, E')) I Z.toVectorBundleCore.proj s p :=
   Z.contMdiffWithinAt_proj
 #align basic_smooth_vector_bundle_core.smooth_within_at_proj BasicSmoothVectorBundleCore.smoothWithinAt_proj
 
@@ -585,7 +585,7 @@ zero section of a vector bundle. Another example (not yet defined) would be the 
 section of the endomorphism bundle of a vector bundle. -/
 theorem smooth_const_section (v : E')
     (h : ∀ i j : atlas H M, ∀ x ∈ i.1.source ∩ j.1.source, Z.coordChange i j (i.1 x) v = v) :
-    Smooth I (I.Prod 𝓘(𝕜, E')) (show M → Z.toVectorBundleCore.TotalSpace from fun x => ⟨x, v⟩) :=
+    Smooth I (I.prod 𝓘(𝕜, E')) (show M → Z.toVectorBundleCore.TotalSpace from fun x => ⟨x, v⟩) :=
   by
   intro x
   rw [ContMdiffAt, contMdiffWithinAt_iff']
@@ -598,10 +598,10 @@ theorem smooth_const_section (v : E')
     apply this.cont_diff_within_at.congr
     · intro y hy
       simp only [mfld_simps] at hy
-      simp only [chart, hy, chart_at, Prod.mk.inj_iff, to_vector_bundle_core, mfld_simps]
+      simp only [chart, hy, chart_at, Prod.mk.inj_iff, toVectorBundleCore, mfld_simps]
       apply h
       simp only [hy, Subtype.val_eq_coe, mfld_simps]
-    · simp only [chart, chart_at, Prod.mk.inj_iff, to_vector_bundle_core, mfld_simps]
+    · simp only [chart, chart_at, Prod.mk.inj_iff, toVectorBundleCore, mfld_simps]
       apply h
       simp only [Subtype.val_eq_coe, mfld_simps]
 #align basic_smooth_vector_bundle_core.smooth_const_section BasicSmoothVectorBundleCore.smooth_const_section
@@ -685,15 +685,15 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     tangentMap I I.tangent (TangentBundle.zeroSection I M) p = ⟨⟨p.1, 0⟩, ⟨p.2, 0⟩⟩ :=
   by
   rcases p with ⟨x, v⟩
-  have N : I.symm ⁻¹' (chart_at H x).target ∈ 𝓝 (I ((chart_at H x) x)) :=
+  have N : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x)) :=
     by
     apply IsOpen.mem_nhds
-    apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun
+    apply (LocalHomeomorph.open_target _).preimage I.continuous_inv_fun
     simp only [mfld_simps]
   have A : MdifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
     tangent_bundle.smooth_zero_section.mdifferentiable_at
   have B :
-    fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.range ⇑I) (I ((chart_at H x) x)) v =
+    fderivWithin 𝕜 (fun x_1 : E => (x_1, (0 : E))) (Set.range ⇑I) (I ((chartAt H x) x)) v =
       (v, 0) :=
     by
     rw [fderivWithin_eq_fderiv, DifferentiableAt.fderiv_prod]
@@ -705,8 +705,8 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
   simp only [TangentBundle.zeroSection, tangentMap, mfderiv, A, if_pos, chart_at,
     BasicSmoothVectorBundleCore.chart, BasicSmoothVectorBundleCore.toVectorBundleCore,
     tangentBundleCore, Function.comp, ContinuousLinearMap.map_zero, mfld_simps]
-  rw [← fderivWithin_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _))] at B
-  rw [← fderivWithin_inter N (I.unique_diff (I ((chart_at H x) x)) (Set.mem_range_self _)), ← B]
+  rw [← fderivWithin_inter N (I.unique_diff (I ((chartAt H x) x)) (Set.mem_range_self _))] at B
+  rw [← fderivWithin_inter N (I.unique_diff (I ((chartAt H x) x)) (Set.mem_range_self _)), ← B]
   congr 2
   apply fderivWithin_congr _ fun y hy => _
   · simp only [Prod.mk.inj_iff, mfld_simps]

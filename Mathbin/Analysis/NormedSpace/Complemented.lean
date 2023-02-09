@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.complemented
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem ker_closedComplemented_of_finiteDimensional_range (f : E →L[𝕜] F)
   by
   set f' : E →L[𝕜] range f := f.cod_restrict _ (f : E →ₗ[𝕜] F).mem_range_self
   rcases f'.exists_right_inverse_of_surjective (f : E →ₗ[𝕜] F).range_rangeRestrict with ⟨g, hg⟩
-  simpa only [ker_cod_restrict] using f'.closed_complemented_ker_of_right_inverse g (ext_iff.1 hg)
+  simpa only [ker_codRestrict] using f'.closed_complemented_ker_of_right_inverse g (ext_iff.1 hg)
 #align continuous_linear_map.ker_closed_complemented_of_finite_dimensional_range ContinuousLinearMap.ker_closedComplemented_of_finiteDimensional_range
 
 end
@@ -58,13 +58,13 @@ def equivProdOfSurjectiveOfIsCompl (f : E →L[𝕜] F) (g : E →L[𝕜] G) (hf
     (hg : range g = ⊤) (hfg : IsCompl (ker f) (ker g)) : E ≃L[𝕜] F × G :=
   ((f : E →ₗ[𝕜] F).equivProdOfSurjectiveOfIsCompl (↑g) hf hg
         hfg).toContinuousLinearEquivOfContinuous
-    (f.Continuous.prod_mk g.Continuous)
+    (f.continuous.prod_mk g.continuous)
 #align continuous_linear_map.equiv_prod_of_surjective_of_is_compl ContinuousLinearMap.equivProdOfSurjectiveOfIsCompl
 
 @[simp]
 theorem coe_equivProdOfSurjectiveOfIsCompl {f : E →L[𝕜] F} {g : E →L[𝕜] G} (hf : range f = ⊤)
     (hg : range g = ⊤) (hfg : IsCompl (ker f) (ker g)) :
-    (equivProdOfSurjectiveOfIsCompl f g hf hg hfg : E →ₗ[𝕜] F × G) = f.Prod g :=
+    (equivProdOfSurjectiveOfIsCompl f g hf hg hfg : E →ₗ[𝕜] F × G) = f.prod g :=
   rfl
 #align continuous_linear_map.coe_equiv_prod_of_surjective_of_is_compl ContinuousLinearMap.coe_equivProdOfSurjectiveOfIsCompl
 
@@ -96,7 +96,7 @@ def prodEquivOfClosedCompl (h : IsCompl p q) (hp : IsClosed (p : Set E))
   by
   haveI := hp.complete_space_coe; haveI := hq.complete_space_coe
   refine' (p.prod_equiv_of_is_compl q h).toContinuousLinearEquivOfContinuous _
-  exact (p.subtypeL.coprod q.subtypeL).Continuous
+  exact (p.subtypeL.coprod q.subtypeL).continuous
 #align subspace.prod_equiv_of_closed_compl Subspace.prodEquivOfClosedCompl
 
 /-- Projection to a closed submodule along a closed complement. -/
@@ -143,7 +143,7 @@ theorem closedComplemented_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p :
 theorem closedComplemented_iff_has_closed_compl :
     p.ClosedComplemented ↔
       IsClosed (p : Set E) ∧ ∃ (q : Subspace 𝕜 E)(hq : IsClosed (q : Set E)), IsCompl p q :=
-  ⟨fun h => ⟨h.IsClosed, h.has_closed_complement⟩, fun ⟨hp, ⟨q, hq, hpq⟩⟩ =>
+  ⟨fun h => ⟨h.isClosed, h.has_closed_complement⟩, fun ⟨hp, ⟨q, hq, hpq⟩⟩ =>
     closedComplemented_of_closed_compl hpq hp hq⟩
 #align subspace.closed_complemented_iff_has_closed_compl Subspace.closedComplemented_iff_has_closed_compl
 
@@ -151,8 +151,8 @@ theorem closedComplemented_of_quotient_finiteDimensional [CompleteSpace 𝕜]
     [FiniteDimensional 𝕜 (E ⧸ p)] (hp : IsClosed (p : Set E)) : p.ClosedComplemented :=
   by
   obtain ⟨q, hq⟩ : ∃ q, IsCompl p q := p.exists_is_compl
-  haveI : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).FiniteDimensional
-  exact closed_complemented_of_closed_compl hq hp q.closed_of_finite_dimensional
+  haveI : FiniteDimensional 𝕜 q := (p.quotient_equiv_of_is_compl q hq).finiteDimensional
+  exact closedComplemented_of_closed_compl hq hp q.closed_of_finite_dimensional
 #align subspace.closed_complemented_of_quotient_finite_dimensional Subspace.closedComplemented_of_quotient_finiteDimensional
 
 end Subspace

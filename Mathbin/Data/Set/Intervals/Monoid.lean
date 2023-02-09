@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.intervals.monoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ Case conversion may be inaccurate. Consider using '#align set.Ici_add_bij Set.Ic
 theorem Ici_add_bij : BijOn (· + d) (Ici a) (Ici (a + d)) :=
   by
   refine'
-    ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).InjOn _, fun _ h => _⟩
+    ⟨fun x h => add_le_add_right (mem_Ici.mp h) _, (add_left_injective d).injOn _, fun _ h => _⟩
   obtain ⟨c, rfl⟩ := exists_add_of_le (mem_Ici.mp h)
   rw [mem_Ici, add_right_comm, add_le_add_iff_right] at h
   exact ⟨a + c, h, by rw [add_right_comm]⟩

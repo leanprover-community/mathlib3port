@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ protected def shrink : ShrinkFn (TotalFunction α β)
     (Sampleable.shrink (m, x)).map fun ⟨⟨m', x'⟩, h⟩ =>
       ⟨⟨List.dedupKeys m', x'⟩,
         lt_of_le_of_lt
-          (by unfold_wf <;> refine' @List.sizeOf_dedupKeys _ _ _ (@sampleable.wf _ _) _) h⟩
+          (by unfold_wf <;> refine' @list.sizeof_dedupkeys _ _ _ (@sampleable.wf _ _) _) h⟩
 #align slim_check.total_function.shrink SlimCheck.TotalFunction.shrink
 
 variable [Repr α] [Repr β]
@@ -164,7 +164,7 @@ variable [DecidableEq α] [DecidableEq β]
 @[simp]
 def zeroDefaultSupp : TotalFunction α β → Finset α
   | with_default A y =>
-    List.toFinset <| (A.dedupKeys.filterₓ fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
+    List.toFinset <| (A.dedupKeys.filter fun ab => Sigma.snd ab ≠ 0).map Sigma.fst
 #align slim_check.total_function.zero_default_supp SlimCheck.TotalFunction.zeroDefaultSupp
 
 /-- Create a finitely supported function from a total function by taking the default value to
@@ -176,8 +176,8 @@ def applyFinsupp (tf : TotalFunction α β) : α →₀ β
   mem_support_toFun := by
     intro a
     rcases tf with ⟨A, y⟩
-    simp only [apply, zero_default_supp, List.mem_map', List.mem_filter, exists_and_right,
-      List.mem_toFinset, exists_eq_right, Sigma.exists, Ne.def, zero_default]
+    simp only [apply, zeroDefaultSupp, List.mem_map', List.mem_filter, exists_and_right,
+      List.mem_toFinset, exists_eq_right, Sigma.exists, Ne.def, zeroDefault]
     constructor
     · rintro ⟨od, hval, hod⟩
       have := List.mem_dlookup (List.nodupKeys_dedupKeys A) hval
@@ -295,7 +295,7 @@ def List.applyId [DecidableEq α] (xs : List (α × α)) (x : α) : α :=
 @[simp]
 theorem List.applyId_cons [DecidableEq α] (xs : List (α × α)) (x y z : α) :
     List.applyId ((y, z)::xs) x = if y = x then z else List.applyId xs x := by
-  simp only [list.apply_id, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
+  simp only [List.applyId, List.dlookup, eq_rec_constant, Prod.toSigma, List.map] <;> split_ifs <;>
     rfl
 #align slim_check.injective_function.list.apply_id_cons SlimCheck.InjectiveFunction.List.applyId_cons
 
@@ -318,24 +318,24 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
       cases ys
       · cases h₁
       ·
-        simp only [list.apply_id, to_sigma, Option.getD_some, nth, lookup_cons_eq, zip_cons_cons,
+        simp only [List.applyId, toSigma, Option.getD_some, get?, dlookup_cons_eq, zip_cons_cons,
           List.map]
     · cases ys
       · cases h₁
       · cases' h₀ with _ _ h₀ h₁
-        simp only [nth, zip_cons_cons, list.apply_id_cons] at h₂⊢
+        simp only [get?, zip_cons_cons, List.applyId_cons] at h₂⊢
         rw [if_neg]
         · apply xs_ih <;> solve_by_elim [succ.inj]
         · apply h₀
-          apply nth_mem h₂
+          apply get?_mem h₂
 #align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
 theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
   by
-  simp only [list.apply_id]
-  cases h₃ : lookup x (map Prod.toSigma (xs.zip ys))
+  simp only [List.applyId]
+  cases h₃ : dlookup x (map Prod.toSigma (xs.zip ys))
   · dsimp [Option.getD]
     rw [h₁.mem_iff]
   · have h₂ : ys.nodup := h₁.nodup_iff.1 h₀
@@ -346,24 +346,24 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
     case cons x' xs xs_ih ys h₃ h₂ h₁ =>
       cases' ys with y ys
       · cases h₃
-      dsimp [lookup] at h₃; split_ifs  at h₃
+      dsimp [dlookup] at h₃; split_ifs  at h₃
       · subst x'
         subst val
-        simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
+        simp only [mem_cons, true_or_iff, eq_self_iff_true]
       · cases' h₀ with _ _ h₀ h₅
         cases' h₂ with _ _ h₂ h₄
         have h₆ := Nat.succ.inj h₁
         specialize xs_ih h₅ ys h₃ h₄ h₆
-        simp only [Ne.symm h, xs_ih, mem_cons_iff, false_or_iff]
+        simp only [Ne.symm h, xs_ih, mem_cons, false_or_iff]
         suffices : val ∈ ys
         tauto
-        erw [← Option.mem_def, mem_lookup_iff] at h₃
-        simp only [to_sigma, mem_map, heq_iff_eq, Prod.exists] at h₃
+        erw [← Option.mem_def, mem_dlookup_iff] at h₃
+        simp only [toSigma, mem_map', heq_iff_eq, Prod.exists] at h₃
         rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
         subst a
         subst b
         apply (mem_zip h₃).2
-        simp only [nodupkeys, keys, comp, Prod.fst_toSigma, map_map]
+        simp only [NodupKeys, keys, comp, Prod.fst_toSigma, map_map]
         rwa [map_fst_zip _ _ (le_of_eq h₆)]
 #align slim_check.injective_function.apply_id_mem_iff SlimCheck.InjectiveFunction.applyId_mem_iff
 
@@ -371,9 +371,9 @@ theorem List.applyId_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
     x ∉ xs → List.applyId.{u} (xs.zip ys) x = x :=
   by
   intro h
-  dsimp [list.apply_id]
-  rw [lookup_eq_none.2]; rfl
-  simp only [keys, not_exists, to_sigma, exists_and_right, exists_eq_right, mem_map, comp_app,
+  dsimp [List.applyId]
+  rw [dlookup_eq_none.2]; rfl
+  simp only [keys, not_exists, toSigma, exists_and_right, exists_eq_right, mem_map', comp_apply,
     map_map, Prod.exists]
   intro y hy
   exact h (mem_zip hy).1
@@ -384,29 +384,29 @@ theorem applyId_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup 
   by
   intro x y h
   by_cases hx : x ∈ xs <;> by_cases hy : y ∈ xs
-  · rw [mem_iff_nth] at hx hy
+  · rw [mem_iff_get?] at hx hy
     cases' hx with i hx
     cases' hy with j hy
     suffices some x = some y by injection this
     have h₂ := h₁.length_eq
-    rw [list.apply_id_zip_eq h₀ h₂ _ _ _ hx] at h
+    rw [List.applyId_zip_eq h₀ h₂ _ _ _ hx] at h
     rw [← hx, ← hy]
     congr
-    apply nth_injective _ (h₁.nodup_iff.1 h₀)
+    apply get?_injective _ (h₁.nodup_iff.1 h₀)
     · symm
       rw [h]
-      rw [← list.apply_id_zip_eq] <;> assumption
+      rw [← List.applyId_zip_eq] <;> assumption
     · rw [← h₁.length_eq]
-      rw [nth_eq_some] at hx
+      rw [get?_eq_some'] at hx
       cases' hx with hx hx'
       exact hx
-  · rw [← apply_id_mem_iff h₀ h₁] at hx hy
+  · rw [← applyId_mem_iff h₀ h₁] at hx hy
     rw [h] at hx
     contradiction
-  · rw [← apply_id_mem_iff h₀ h₁] at hx hy
-    rw [h] at hx
+  · rw [← applyId_mem_iff h₀ rfl] at hx hy
+    rw [Exists] at hx
     contradiction
-  · rwa [list.apply_id_eq_self, list.apply_id_eq_self] at h <;> assumption
+  · rwa [List.applyId_eq_self, List.applyId_eq_self] at h <;> assumption
 #align slim_check.injective_function.apply_id_injective SlimCheck.InjectiveFunction.applyId_injective
 
 open TotalFunction (list.to_finmap')
@@ -448,12 +448,12 @@ protected def shrinkPerm {α : Type} [DecidableEq α] [SizeOf α] :
     let n ← sliceSizes k
     let i ← LazyList.ofList <| List.finRange <| k / n
     have : ↑i * ↑n < xs.1.length :=
-        Nat.lt_of_div_lt_div
+        nat.lt_of_div_lt_div
           (lt_of_le_of_lt (by simp only [Nat.mul_div_cancel, gt_iff_lt, [anonymous], PNat.pos]) i.2)
       pure
         ⟨perm.slice (i * n) n xs, by
-          rcases xs with ⟨a, b, c, d⟩ <;> dsimp [sizeof_lt] <;> unfold_wf <;>
-                simp only [perm.slice] <;>
+          rcases xs with ⟨a, b, c, d⟩ <;> dsimp [SizeofLt] <;> unfold_wf <;>
+                simp only [Perm.slice] <;>
               unfold_wf <;>
             apply List.sizeOf_dropSlice_lt _ _ n.2 _ this⟩
 #align slim_check.injective_function.shrink_perm SlimCheck.InjectiveFunction.shrinkPerm
@@ -471,14 +471,13 @@ protected def shrink {α : Type} [SizeOf α] [DecidableEq α] : ShrinkFn (Inject
     have h₃ : xs' ≤ ys' := le_of_eq (perm.length_eq h₀)
       have h₄ : ys' ≤ xs' := le_of_eq (perm.length_eq h₀)
       pure
-        ⟨⟨(List.zip xs' ys').map Prod.toSigma, by
+        ⟨⟨(list.zip xs' ys').map prod.to_sigma, by
             simp only [comp, map_fst_zip, map_snd_zip, *, Prod.fst_toSigma, Prod.snd_toSigma,
               map_map],
             by simp only [comp, map_snd_zip, *, Prod.snd_toSigma, map_map]⟩,
           by
-          revert h₂ <;> dsimp [sizeof_lt] <;> unfold_wf <;>
-                  simp only [has_sizeof._match_1, map_map, comp, map_fst_zip, *,
-                    Prod.fst_toSigma] <;>
+          revert h₂ <;> dsimp [SizeofLt] <;> unfold_wf <;>
+                  simp only [HasSizeof._match1, map_map, comp, map_fst_zip, *, Prod.fst_toSigma] <;>
                 unfold_wf <;>
               intro h₂ <;>
             convert h₂⟩
@@ -490,31 +489,31 @@ protected def mk (xs ys : List α) (h : xs ~ ys) (h' : ys.Nodup) : InjectiveFunc
   have h₁ : ys.length ≤ xs.length := le_of_eq h.length_eq.symm
   InjectiveFunction.map_to_self (List.toFinmap' (xs.zip ys))
     (by
-      simp only [list.to_finmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_toSigma,
+      simp only [List.toFinmap', comp, map_fst_zip, map_snd_zip, *, Prod.fst_toSigma,
         Prod.snd_toSigma, map_map])
-    (by simp only [list.to_finmap', comp, map_snd_zip, *, Prod.snd_toSigma, map_map])
+    (by simp only [List.toFinmap', comp, map_snd_zip, *, Prod.snd_toSigma, map_map])
 #align slim_check.injective_function.mk SlimCheck.InjectiveFunction.mk
 
 protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Injective (apply f) :=
   by
   cases' f with xs hperm hnodup
   generalize h₀ : map Sigma.fst xs = xs₀
-  generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @Sigma.snd α fun _ : α => α) = xs₁
+  generalize h₁ : xs.map (@id ((Σ_ : α, α) → α) <| @sigma.snd α fun _ : α => α) = xs₁
   dsimp [id] at h₁
-  have hxs : xs = total_function.list.to_finmap' (xs₀.zip xs₁) :=
+  have hxs : xs = TotalFunction.List.toFinmap' (xs₀.zip xs₁) :=
     by
-    rw [← h₀, ← h₁, list.to_finmap']
+    rw [← h₀, ← h₁, List.toFinmap']
     clear h₀ h₁ xs₀ xs₁ hperm hnodup
     induction xs
     case nil => simp only [zip_nil_right, map_nil]
     case
       cons xs_hd xs_tl xs_ih =>
-      simp only [true_and_iff, to_sigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
+      simp only [true_and_iff, toSigma, eq_self_iff_true, Sigma.eta, zip_cons_cons, List.map]
       exact xs_ih
   revert hperm hnodup
   rw [hxs]
   intros
-  apply apply_id_injective
+  apply applyId_injective
   · rwa [← h₀, hxs, hperm.nodup_iff]
   · rwa [← hxs, h₀, h₁] at hperm
 #align slim_check.injective_function.injective SlimCheck.InjectiveFunction.injective
@@ -522,13 +521,13 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
 instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f }
     where
   ProxyRepr := InjectiveFunction ℤ
-  interp f := ⟨apply f, f.Injective⟩
+  interp f := ⟨apply f, f.injective⟩
   sample :=
     Gen.sized fun sz => do
       let xs' := Int.range (-(2 * sz + 2)) (2 * sz + 2)
       let ys ← Gen.permutationOf xs'
       have Hinj : injective fun r : ℕ => -(2 * sz + 2 : ℤ) + ↑r := fun x y h =>
-          Int.ofNat.inj (add_right_injective _ h)
+          int.coe_nat_inj (add_right_injective _ h)
         let r : injective_function ℤ :=
           InjectiveFunction.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1 <| (nodup_range _).map Hinj)
         pure r

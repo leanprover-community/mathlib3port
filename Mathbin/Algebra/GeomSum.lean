@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.geom_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ protected theorem Commute.geom_sum₂_mul_add {x y : α} (h : Commute x y) (n : 
       rw [add_comm (i + 1)] at this
       rw [← this, add_tsub_cancel_right, add_comm i 1, ← add_assoc, add_tsub_cancel_right]
     rw [pow_succ (x + y), add_mul, sum_range_succ_comm, add_mul, f_last, add_assoc]
-    rw [(((Commute.refl x).add_right h).pow_right n).Eq]
+    rw [(((Commute.refl x).add_right h).pow_right n).eq]
     congr 1
     rw [sum_congr rfl f_succ, ← mul_sum, pow_succ y, mul_assoc, ← mul_add y, ih]
 #align commute.geom_sum₂_mul_add Commute.geom_sum₂_mul_add
@@ -495,7 +495,7 @@ protected theorem Commute.geom_sum₂_succ_eq {α : Type u} [Ring α] {x y : α}
       x ^ n + y * ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
   by
   simp_rw [mul_sum, sum_range_succ_comm, tsub_self, pow_zero, mul_one, add_right_inj, ← mul_assoc,
-    (h.symm.pow_right _).Eq, mul_assoc, ← pow_succ]
+    (h.symm.pow_right _).eq, mul_assoc, ← pow_succ]
   refine' sum_congr rfl fun i hi => _
   suffices n - 1 - i + 1 = n - i by rw [this]
   cases n

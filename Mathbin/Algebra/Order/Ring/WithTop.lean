@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -192,8 +192,8 @@ Case conversion may be inaccurate. Consider using '#align monoid_with_zero_hom.w
 protected def WithTop.MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneClass R]
     [DecidableEq R] [Nontrivial R] [MulZeroOneClass S] [DecidableEq S] [Nontrivial S] (f : R →*₀ S)
     (hf : Function.Injective f) : WithTop R →*₀ WithTop S :=
-  { f.toZeroHom.withTop_map,
-    f.toMonoidHom.toOneHom.withTop_map with
+  { f.toZeroHom.withTopMap,
+    f.toMonoidHom.toOneHom.withTopMap with
     toFun := WithTop.map f
     map_mul' := fun x y =>
       by
@@ -233,7 +233,7 @@ instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] :
     mul := (· * ·)
     zero := 0
     mul_comm := fun a b => by
-      simp only [or_comm', mul_def, mul_comm, @Option.map₂_comm _ _ _ _ a b _ mul_comm] }
+      simp only [or_comm', mul_def, mul_comm, @option.map₂_comm _ _ _ _ a b _ mul_comm] }
 
 variable [CanonicallyOrderedCommSemiring α]
 
@@ -274,7 +274,8 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.with_top_map 
 protected def WithTop.RingHom.withTopMap {R S : Type _} [CanonicallyOrderedCommSemiring R]
     [DecidableEq R] [Nontrivial R] [CanonicallyOrderedCommSemiring S] [DecidableEq S] [Nontrivial S]
     (f : R →+* S) (hf : Function.Injective f) : WithTop R →+* WithTop S :=
-  { f.toMonoidWithZeroHom.withTop_map hf, f.toAddMonoidHom.withTop_map with toFun := WithTop.map f }
+  { f.toMonoidWithZeroHom.WithTop.MonoidWithZeroHom.withTopMap hf, f.toAddMonoidHom.withTopMap with
+    toFun := WithTop.map f }
 #align ring_hom.with_top_map WithTop.RingHom.withTopMap
 
 end WithTop

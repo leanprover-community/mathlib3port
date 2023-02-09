@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,7 +294,7 @@ theorem neg_linear (f : P1 →ᵃ[k] V2) : (-f).linear = -f.linear :=
 
 /-- The set of affine maps to a vector space is an additive commutative group. -/
 instance : AddCommGroup (P1 →ᵃ[k] V2) :=
-  coeFn_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _)
+  coeFn_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _)
     fun _ _ => coe_smul _ _
 
 /-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
@@ -511,7 +511,7 @@ omit V2
 
 /-- The affine map from `k` to `P1` sending `0` to `p₀` and `1` to `p₁`. -/
 def lineMap (p₀ p₁ : P1) : k →ᵃ[k] P1 :=
-  ((LinearMap.id : k →ₗ[k] k).smul_right (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
+  ((LinearMap.id : k →ₗ[k] k).smulRight (p₁ -ᵥ p₀)).toAffineMap +ᵥ const k k p₀
 #align affine_map.line_map AffineMap.lineMap
 
 theorem coe_lineMap (p₀ p₁ : P1) : (lineMap p₀ p₁ : k → P1) = fun c => c • (p₁ -ᵥ p₀) +ᵥ p₀ :=
@@ -527,7 +527,7 @@ theorem lineMap_apply_module' (p₀ p₁ : V1) (c : k) : lineMap p₀ p₁ c = c
 #align affine_map.line_map_apply_module' AffineMap.lineMap_apply_module'
 
 theorem lineMap_apply_module (p₀ p₁ : V1) (c : k) : lineMap p₀ p₁ c = (1 - c) • p₀ + c • p₁ := by
-  simp [line_map_apply_module', smul_sub, sub_smul] <;> abel
+  simp [lineMap_apply_module', smul_sub, sub_smul] <;> abel
 #align affine_map.line_map_apply_module AffineMap.lineMap_apply_module
 
 omit V1
@@ -543,16 +543,16 @@ theorem lineMap_apply_ring (a b c : k) : lineMap a b c = (1 - c) * a + c * b :=
 include V1
 
 theorem lineMap_vadd_apply (p : P1) (v : V1) (c : k) : lineMap p (v +ᵥ p) c = c • v +ᵥ p := by
-  rw [line_map_apply, vadd_vsub]
+  rw [lineMap_apply, vadd_vsub]
 #align affine_map.line_map_vadd_apply AffineMap.lineMap_vadd_apply
 
 @[simp]
 theorem lineMap_linear (p₀ p₁ : P1) :
-    (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smul_right (p₁ -ᵥ p₀) :=
+    (lineMap p₀ p₁ : k →ᵃ[k] P1).linear = LinearMap.id.smulRight (p₁ -ᵥ p₀) :=
   add_zero _
 #align affine_map.line_map_linear AffineMap.lineMap_linear
 
-theorem lineMap_same_apply (p : P1) (c : k) : lineMap p p c = p := by simp [line_map_apply]
+theorem lineMap_same_apply (p : P1) (c : k) : lineMap p p c = p := by simp [lineMap_apply]
 #align affine_map.line_map_same_apply AffineMap.lineMap_same_apply
 
 @[simp]
@@ -561,30 +561,30 @@ theorem lineMap_same (p : P1) : lineMap p p = const k k p :=
 #align affine_map.line_map_same AffineMap.lineMap_same
 
 @[simp]
-theorem lineMap_apply_zero (p₀ p₁ : P1) : lineMap p₀ p₁ (0 : k) = p₀ := by simp [line_map_apply]
+theorem lineMap_apply_zero (p₀ p₁ : P1) : lineMap p₀ p₁ (0 : k) = p₀ := by simp [lineMap_apply]
 #align affine_map.line_map_apply_zero AffineMap.lineMap_apply_zero
 
 @[simp]
-theorem lineMap_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ := by simp [line_map_apply]
+theorem lineMap_apply_one (p₀ p₁ : P1) : lineMap p₀ p₁ (1 : k) = p₁ := by simp [lineMap_apply]
 #align affine_map.line_map_apply_one AffineMap.lineMap_apply_one
 
 @[simp]
 theorem lineMap_eq_lineMap_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c₁ c₂ : k} :
     lineMap p₀ p₁ c₁ = lineMap p₀ p₁ c₂ ↔ p₀ = p₁ ∨ c₁ = c₂ := by
-  rw [line_map_apply, line_map_apply, ← @vsub_eq_zero_iff_eq V1, vadd_vsub_vadd_cancel_right, ←
+  rw [lineMap_apply, lineMap_apply, ← @vsub_eq_zero_iff_eq V1, vadd_vsub_vadd_cancel_right, ←
     sub_smul, smul_eq_zero, sub_eq_zero, vsub_eq_zero_iff_eq, or_comm', eq_comm]
 #align affine_map.line_map_eq_line_map_iff AffineMap.lineMap_eq_lineMap_iff
 
 @[simp]
 theorem lineMap_eq_left_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c : k} :
     lineMap p₀ p₁ c = p₀ ↔ p₀ = p₁ ∨ c = 0 := by
-  rw [← @line_map_eq_line_map_iff k V1, line_map_apply_zero]
+  rw [← @line_map_eq_line_map_iff k V1, lineMap_apply_zero]
 #align affine_map.line_map_eq_left_iff AffineMap.lineMap_eq_left_iff
 
 @[simp]
 theorem lineMap_eq_right_iff [NoZeroSMulDivisors k V1] {p₀ p₁ : P1} {c : k} :
     lineMap p₀ p₁ c = p₁ ↔ p₀ = p₁ ∨ c = 1 := by
-  rw [← @line_map_eq_line_map_iff k V1, line_map_apply_one]
+  rw [← @line_map_eq_line_map_iff k V1, lineMap_apply_one]
 #align affine_map.line_map_eq_right_iff AffineMap.lineMap_eq_right_iff
 
 variable (k)
@@ -600,7 +600,7 @@ include V2
 
 @[simp]
 theorem apply_lineMap (f : P1 →ᵃ[k] P2) (p₀ p₁ : P1) (c : k) :
-    f (lineMap p₀ p₁ c) = lineMap (f p₀) (f p₁) c := by simp [line_map_apply]
+    f (lineMap p₀ p₁ c) = lineMap (f p₀) (f p₁) c := by simp [lineMap_apply]
 #align affine_map.apply_line_map AffineMap.apply_lineMap
 
 @[simp]
@@ -624,15 +624,15 @@ omit V2
 theorem lineMap_symm (p₀ p₁ : P1) :
     lineMap p₀ p₁ = (lineMap p₁ p₀).comp (lineMap (1 : k) (0 : k)) :=
   by
-  rw [comp_line_map]
+  rw [comp_lineMap]
   simp
 #align affine_map.line_map_symm AffineMap.lineMap_symm
 
 theorem lineMap_apply_one_sub (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ (1 - c) = lineMap p₁ p₀ c :=
   by
-  rw [line_map_symm p₀, comp_apply]
+  rw [lineMap_symm p₀, comp_apply]
   congr
-  simp [line_map_apply]
+  simp [lineMap_apply]
 #align affine_map.line_map_apply_one_sub AffineMap.lineMap_apply_one_sub
 
 @[simp]
@@ -642,17 +642,17 @@ theorem lineMap_vsub_left (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ c -ᵥ p�
 
 @[simp]
 theorem left_vsub_lineMap (p₀ p₁ : P1) (c : k) : p₀ -ᵥ lineMap p₀ p₁ c = c • (p₀ -ᵥ p₁) := by
-  rw [← neg_vsub_eq_vsub_rev, line_map_vsub_left, ← smul_neg, neg_vsub_eq_vsub_rev]
+  rw [← neg_vsub_eq_vsub_rev, lineMap_vsub_left, ← smul_neg, neg_vsub_eq_vsub_rev]
 #align affine_map.left_vsub_line_map AffineMap.left_vsub_lineMap
 
 @[simp]
 theorem lineMap_vsub_right (p₀ p₁ : P1) (c : k) : lineMap p₀ p₁ c -ᵥ p₁ = (1 - c) • (p₀ -ᵥ p₁) := by
-  rw [← line_map_apply_one_sub, line_map_vsub_left]
+  rw [← lineMap_apply_one_sub, lineMap_vsub_left]
 #align affine_map.line_map_vsub_right AffineMap.lineMap_vsub_right
 
 @[simp]
 theorem right_vsub_lineMap (p₀ p₁ : P1) (c : k) : p₁ -ᵥ lineMap p₀ p₁ c = (1 - c) • (p₁ -ᵥ p₀) := by
-  rw [← line_map_apply_one_sub, left_vsub_line_map]
+  rw [← lineMap_apply_one_sub, left_vsub_lineMap]
 #align affine_map.right_vsub_line_map AffineMap.right_vsub_lineMap
 
 theorem lineMap_vadd_lineMap (v₁ v₂ : V1) (p₁ p₂ : P1) (c : k) :

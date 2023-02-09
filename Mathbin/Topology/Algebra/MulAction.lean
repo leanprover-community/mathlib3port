@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.mul_action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ instance (priority := 100) HasContinuousSmul.hasContinuousConstSMul : HasContinu
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X}
     (hf : Tendsto f l (𝓝 c)) (hg : Tendsto g l (𝓝 a)) :
     Tendsto (fun x => f x • g x) l (𝓝 <| c • a) :=
-  (continuous_smul.Tendsto _).comp (hf.prod_mk_nhds hg)
+  (continuous_smul.tendsto _).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.smul Filter.Tendsto.smul
 #align filter.tendsto.vadd Filter.Tendsto.vadd
 
@@ -128,7 +128,7 @@ theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun
 instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasContinuousSmul Mᵐᵒᵖ X :=
   ⟨by
     suffices Continuous fun p : M × X => MulOpposite.op p.fst • p.snd from
-      this.comp (MulOpposite.continuous_unop.Prod_map continuous_id)
+      this.comp (MulOpposite.continuous_unop.prod_map continuous_id)
     simpa only [op_smul_eq_smul] using (continuous_smul : Continuous fun p : M × X => _)⟩
 #align has_continuous_smul.op HasContinuousSmul.op
 #align has_continuous_vadd.op HasContinuousVadd.op
@@ -136,7 +136,7 @@ instance HasContinuousSmul.op [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : HasCon
 @[to_additive]
 instance MulOpposite.hasContinuousSmul : HasContinuousSmul M Xᵐᵒᵖ :=
   ⟨MulOpposite.continuous_op.comp <|
-      continuous_smul.comp <| continuous_id.Prod_map MulOpposite.continuous_unop⟩
+      continuous_smul.comp <| continuous_id.prod_map MulOpposite.continuous_unop⟩
 #align mul_opposite.has_continuous_smul MulOpposite.hasContinuousSmul
 #align add_opposite.has_continuous_vadd AddOpposite.has_continuous_vadd
 
@@ -180,11 +180,11 @@ theorem hasContinuousSmul_infₛ {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @HasContinuousSmul M X _ _ t) : @HasContinuousSmul M X _ _ (infₛ ts) :=
   {
     continuous_smul := by
-      rw [← @infₛ_singleton _ _ ‹TopologicalSpace M›]
+      rw [← @Inf_singleton _ _ ‹TopologicalSpace M›]
       exact
         continuous_infₛ_rng.2 fun t ht =>
           continuous_infₛ_dom₂ (Eq.refl _) ht
-            (@HasContinuousSmul.continuous_smul _ _ _ _ t (h t ht)) }
+            (@has_continuous_smul.continuous_smul _ _ _ _ t (h t ht)) }
 #align has_continuous_smul_Inf hasContinuousSmul_infₛ
 #align has_continuous_vadd_Inf has_continuous_vadd_infₛ
 
@@ -222,7 +222,7 @@ protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
       by
       convert
         is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)
-          (continuous_id.vadd continuous_const).ContinuousOn
+          (continuous_id.vadd continuous_const).continuousOn
       rw [Set.image_univ, Equiv.range_eq_univ]
     to_nonempty := inferInstance }
 #align add_torsor.connected_space AddTorsor.connectedSpace

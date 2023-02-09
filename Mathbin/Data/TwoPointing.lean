@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.two_pointing
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,20 +63,20 @@ def swap : TwoPointing α :=
 -/
 
 #print TwoPointing.swap_fst /-
-theorem swap_fst : p.symm.fst = p.snd :=
+theorem swap_fst : p.swap.fst = p.snd :=
   rfl
 #align two_pointing.swap_fst TwoPointing.swap_fst
 -/
 
 #print TwoPointing.swap_snd /-
-theorem swap_snd : p.symm.snd = p.fst :=
+theorem swap_snd : p.swap.snd = p.fst :=
   rfl
 #align two_pointing.swap_snd TwoPointing.swap_snd
 -/
 
 #print TwoPointing.swap_swap /-
 @[simp]
-theorem swap_swap : p.symm.symm = p := by ext <;> rfl
+theorem swap_swap : p.swap.swap = p := by ext <;> rfl
 #align two_pointing.swap_swap TwoPointing.swap_swap
 -/
 
@@ -152,7 +152,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.fst.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Prod.{u2, u1} α β) (TwoPointing.prod.{u2, u1} α β p q))) (Prod.mk.{u2, u1} α β (Prod.fst.{u2, u2} α α (TwoPointing.toProd.{u2} α p)) (Prod.fst.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
 Case conversion may be inaccurate. Consider using '#align two_pointing.prod_fst TwoPointing.prod_fstₓ'. -/
 @[simp]
-theorem prod_fst : (p.Prod q).fst = (p.fst, q.fst) :=
+theorem prod_fst : (p.prod q).fst = (p.fst, q.fst) :=
   rfl
 #align two_pointing.prod_fst TwoPointing.prod_fst
 
@@ -163,7 +163,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.snd.{max u2 u1, max u2 u1} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Prod.{u2, u1} α β) (TwoPointing.prod.{u2, u1} α β p q))) (Prod.mk.{u2, u1} α β (Prod.snd.{u2, u2} α α (TwoPointing.toProd.{u2} α p)) (Prod.snd.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
 Case conversion may be inaccurate. Consider using '#align two_pointing.prod_snd TwoPointing.prod_sndₓ'. -/
 @[simp]
-theorem prod_snd : (p.Prod q).snd = (p.snd, q.snd) :=
+theorem prod_snd : (p.prod q).snd = (p.snd, q.snd) :=
   rfl
 #align two_pointing.prod_snd TwoPointing.prod_snd
 
@@ -182,7 +182,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Prod.fst.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Sum.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Sum.{u2, u1} α β) (TwoPointing.sum.{u2, u1} α β p q))) (Sum.inl.{u2, u1} α β (Prod.fst.{u2, u2} α α (TwoPointing.toProd.{u2} α p)))
 Case conversion may be inaccurate. Consider using '#align two_pointing.sum_fst TwoPointing.sum_fstₓ'. -/
 @[simp]
-theorem sum_fst : (p.Sum q).fst = Sum.inl p.fst :=
+theorem sum_fst : (p.sum q).fst = Sum.inl p.fst :=
   rfl
 #align two_pointing.sum_fst TwoPointing.sum_fst
 
@@ -193,7 +193,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (p : TwoPointing.{u2} α) (q : TwoPointing.{u1} β), Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Prod.snd.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Sum.{u2, u1} α β) (TwoPointing.toProd.{max u2 u1} (Sum.{u2, u1} α β) (TwoPointing.sum.{u2, u1} α β p q))) (Sum.inr.{u2, u1} α β (Prod.snd.{u1, u1} β β (TwoPointing.toProd.{u1} β q)))
 Case conversion may be inaccurate. Consider using '#align two_pointing.sum_snd TwoPointing.sum_sndₓ'. -/
 @[simp]
-theorem sum_snd : (p.Sum q).snd = Sum.inr q.snd :=
+theorem sum_snd : (p.sum q).snd = Sum.inr q.snd :=
   rfl
 #align two_pointing.sum_snd TwoPointing.sum_snd
 

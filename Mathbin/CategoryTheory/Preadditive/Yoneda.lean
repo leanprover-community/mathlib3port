@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.yoneda
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,8 +150,8 @@ instance preadditiveYonedaFull : Full (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ Add
       (preadditiveYoneda ⋙
         (whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     yoneda.yonedaFull
-  full.of_comp_faithful preadditive_yoneda
-    ((whiskering_right Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
+  Full.ofCompFaithful preadditiveYoneda
+    ((whiskeringRight Cᵒᵖ AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
 #align category_theory.preadditive_yoneda_full CategoryTheory.preadditiveYonedaFull
 
 instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤ AddCommGroupCat) :=
@@ -160,8 +160,8 @@ instance preadditiveCoyonedaFull : Full (preadditiveCoyoneda : Cᵒᵖ ⥤ C ⥤
       (preadditiveCoyoneda ⋙
         (whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat)) :=
     coyoneda.coyonedaFull
-  full.of_comp_faithful preadditive_coyoneda
-    ((whiskering_right C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
+  Full.ofCompFaithful preadditiveCoyoneda
+    ((whiskeringRight C AddCommGroupCat (Type v)).obj (forget AddCommGroupCat))
 #align category_theory.preadditive_coyoneda_full CategoryTheory.preadditiveCoyonedaFull
 
 instance preadditiveYoneda_faithful : Faithful (preadditiveYoneda : C ⥤ Cᵒᵖ ⥤ AddCommGroupCat) :=
@@ -176,14 +176,14 @@ instance preadditiveCoyoneda_faithful :
 instance preservesLimitsPreadditiveYonedaObj (X : C) : PreservesLimits (preadditiveYonedaObj X) :=
   have : PreservesLimits (preadditiveYonedaObj X ⋙ forget _) :=
     (inferInstance : PreservesLimits (yoneda.obj X))
-  preserves_limits_of_reflects_of_preserves _ (forget _)
+  preservesLimitsOfReflectsOfPreserves _ (forget _)
 #align category_theory.preserves_limits_preadditive_yoneda_obj CategoryTheory.preservesLimitsPreadditiveYonedaObj
 
 instance preservesLimitsPreadditiveCoyonedaObj (X : Cᵒᵖ) :
     PreservesLimits (preadditiveCoyonedaObj X) :=
   have : PreservesLimits (preadditiveCoyonedaObj X ⋙ forget _) :=
     (inferInstance : PreservesLimits (coyoneda.obj X))
-  preserves_limits_of_reflects_of_preserves _ (forget _)
+  preservesLimitsOfReflectsOfPreserves _ (forget _)
 #align category_theory.preserves_limits_preadditive_coyoneda_obj CategoryTheory.preservesLimitsPreadditiveCoyonedaObj
 
 instance PreservesLimitsPreadditiveYoneda.obj (X : C) : PreservesLimits (preadditiveYoneda.obj X) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_affine_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ variable [Monoid S] [DistribMulAction S W] [SMulCommClass R S W]
 variable [HasContinuousConstSMul S W]
 
 instance : SMul S (P →A[R] W)
-    where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
+    where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.continuous.const_smul t }
 
 @[norm_cast, simp]
 theorem coe_smul (t : S) (f : P →A[R] W) : ⇑(t • f) = t • f :=
@@ -243,7 +243,7 @@ variable [TopologicalAddGroup W]
 
 instance : Add (P →A[R] W)
     where add f g :=
-    { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.Continuous.add g.Continuous }
+    { (f : P →ᵃ[R] W) + (g : P →ᵃ[R] W) with cont := f.continuous.add g.continuous }
 
 @[norm_cast, simp]
 theorem coe_add (f g : P →A[R] W) : ⇑(f + g) = f + g :=
@@ -256,7 +256,7 @@ theorem add_apply (f g : P →A[R] W) (x : P) : (f + g) x = f x + g x :=
 
 instance : Sub (P →A[R] W)
     where sub f g :=
-    { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.Continuous.sub g.Continuous }
+    { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.continuous.sub g.continuous }
 
 @[norm_cast, simp]
 theorem coe_sub (f g : P →A[R] W) : ⇑(f - g) = f - g :=
@@ -267,7 +267,7 @@ theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 #align continuous_affine_map.sub_apply ContinuousAffineMap.sub_apply
 
-instance : Neg (P →A[R] W) where neg f := { -(f : P →ᵃ[R] W) with cont := f.Continuous.neg }
+instance : Neg (P →A[R] W) where neg f := { -(f : P →ᵃ[R] W) with cont := f.continuous.neg }
 
 @[norm_cast, simp]
 theorem coe_neg (f : P →A[R] W) : ⇑(-f) = -f :=
@@ -279,7 +279,7 @@ theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
 #align continuous_affine_map.neg_apply ContinuousAffineMap.neg_apply
 
 instance : AddCommGroup (P →A[R] W) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
+  coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
     coe_smul _ _
 
 instance [Monoid S] [DistribMulAction S W] [SMulCommClass R S W] [HasContinuousConstSMul S W] :

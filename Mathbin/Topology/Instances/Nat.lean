@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.nat
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,9 +69,9 @@ theorem preimage_closedBall (x : ℕ) (r : ℝ) : coe ⁻¹' closedBall (x : ℝ
 theorem closedBall_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r⌉₊ ⌊↑x + r⌋₊ :=
   by
   rcases le_or_lt 0 r with (hr | hr)
-  · rw [← preimage_closed_ball, Real.closedBall_eq_Icc, preimage_Icc]
+  · rw [← preimage_closedBall, Real.closedBall_eq_Icc, preimage_Icc]
     exact add_nonneg (cast_nonneg x) hr
-  · rw [closed_ball_eq_empty.2 hr]
+  · rw [closedBall_eq_empty.2 hr]
     apply (Icc_eq_empty _).symm
     rw [not_le]
     calc
@@ -87,8 +87,8 @@ theorem closedBall_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r
 instance : ProperSpace ℕ :=
   ⟨by
     intro x r
-    rw [closed_ball_eq_Icc]
-    exact (Set.finite_Icc _ _).IsCompact⟩
+    rw [closedBall_eq_Icc]
+    exact (Set.finite_Icc _ _).isCompact⟩
 
 instance : NoncompactSpace ℕ :=
   noncompactSpace_of_neBot <| by simp [Filter.atTop_neBot]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 
 ! This file was ported from Lean 3 source module topology.continuous_function.t0_sierpinski
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     exact fun u => Continuous.le_induced (is_open_iff_continuous_mem.mp u.2)
   · intro u h
     rw [← generateFrom_unionᵢ_isOpen]
-    apply is_open_generate_from_of_mem
+    apply isOpen_generateFrom_of_mem
     simp only [Set.mem_unionᵢ, Set.mem_setOf_eq, isOpen_induced_iff]
     exact ⟨⟨u, h⟩, {True}, isOpen_singleton_true, by simp [Set.preimage]⟩
 #align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
@@ -54,7 +54,7 @@ def productOfMemOpens : C(X, Opens X → Prop)
 
 theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=
   by
-  convert inducing_infᵢ_to_pi fun (u : opens X) (x : X) => x ∈ u
+  convert inducing_infᵢ_to_pi fun (u : Opens X) (x : X) => x ∈ u
   apply eq_induced_by_maps_to_sierpinski
 #align topological_space.product_of_mem_opens_inducing TopologicalSpace.productOfMemOpens_inducing
 
@@ -62,7 +62,7 @@ theorem productOfMemOpens_injective [T0Space X] : Function.Injective (productOfM
   by
   intro x1 x2 h
   apply Inseparable.eq
-  rw [← Inducing.inseparable_iff (product_of_mem_opens_inducing X), h]
+  rw [← Inducing.inseparable_iff (productOfMemOpens_inducing X), h]
 #align topological_space.product_of_mem_opens_injective TopologicalSpace.productOfMemOpens_injective
 
 theorem productOfMemOpens_embedding [T0Space X] : Embedding (productOfMemOpens X) :=

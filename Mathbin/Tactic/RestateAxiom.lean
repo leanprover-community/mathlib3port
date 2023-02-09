@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.restate_axiom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ unsafe def restate_axiom (d : declaration) (new_name : Name) : tactic Unit := do
   let (levels, type, value, reducibility, trusted) ←
     pure
         (match d.to_definition with
-        | declaration.defn Name levels type value reducibility trusted =>
+        | declaration.defn name levels type value reducibility trusted =>
           (levels, type, value, reducibility, trusted)
         | _ => undefined)
   let (s, u) ← mk_simp_set false [] []
@@ -44,7 +44,7 @@ private unsafe def name_lemma (old : Name) (new : Option Name := none) : tactic 
           let last :=
             if last.toList.getLastI = ''' then (last.toList.reverse.drop 1).reverse.asString
             else last ++ "_lemma"
-          return (mkStrName old last)) <|>
+          return (mk_str_name old last)) <|>
         failed
     | nil => undefined
   | some new => return (mkStrName old.getPrefix new.toString)

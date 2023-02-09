@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.exposed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ protected theorem refl (A : Set E) : IsExposed 𝕜 A A := fun ⟨w, hw⟩ =>
 #align is_exposed.refl IsExposed.refl
 
 protected theorem antisymm (hB : IsExposed 𝕜 A B) (hA : IsExposed 𝕜 B A) : A = B :=
-  hA.Subset.antisymm hB.Subset
+  hA.subset.antisymm hB.subset
 #align is_exposed.antisymm IsExposed.antisymm
 
 /- `is_exposed` is *not* transitive: Consider a (topologically) open cube with vertices
@@ -114,7 +114,7 @@ protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B)
   obtain ⟨l, rfl⟩ := hC ⟨w, hw⟩
   exact
     ⟨l,
-      subset.antisymm (fun x hx => ⟨hCB hx, fun y hy => hx.2 y (hBA hy)⟩) fun x hx =>
+      Subset.antisymm (fun x hx => ⟨hCB hx, fun y hy => hx.2 y (hBA hy)⟩) fun x hx =>
         ⟨hBA hx.1, fun y hy => (hw.2 y hy).trans (hx.2 w (hCB hw))⟩⟩
 #align is_exposed.mono IsExposed.mono
 
@@ -128,7 +128,7 @@ theorem eq_inter_halfspace' {A B : Set E} (hAB : IsExposed 𝕜 A B) (hB : B.Non
   obtain ⟨w, hw⟩ := hB
   exact
     ⟨l, l w,
-      subset.antisymm (fun x hx => ⟨hx.1, hx.2 w hw.1⟩) fun x hx =>
+      Subset.antisymm (fun x hx => ⟨hx.1, hx.2 w hw.1⟩) fun x hx =>
         ⟨hx.1, fun y hy => (hw.2 y hy).trans hx.2⟩⟩
 #align is_exposed.eq_inter_halfspace' IsExposed.eq_inter_halfspace'
 
@@ -154,7 +154,7 @@ protected theorem inter [HasContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 
   rintro ⟨w, hwB, hwC⟩
   obtain ⟨l₁, rfl⟩ := hB ⟨w, hwB⟩
   obtain ⟨l₂, rfl⟩ := hC ⟨w, hwC⟩
-  refine' ⟨l₁ + l₂, subset.antisymm _ _⟩
+  refine' ⟨l₁ + l₂, Subset.antisymm _ _⟩
   · rintro x ⟨⟨hxA, hxB⟩, ⟨-, hxC⟩⟩
     exact ⟨hxA, fun z hz => add_le_add (hxB z hz) (hxC z hz)⟩
   rintro x ⟨hxA, hx⟩
@@ -176,9 +176,9 @@ theorem interₛ [HasContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
     exfalso
     exact not_nonempty_empty h
   rintro C F _ hF _ hCF
-  rw [Finset.coe_insert, sInter_insert]
+  rw [Finset.coe_insert, interₛ_insert]
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
-  · rw [Finset.coe_empty, sInter_empty, inter_univ]
+  · rw [Finset.coe_empty, interₛ_empty, inter_univ]
     exact hCF C (Finset.mem_singleton_self C)
   exact
     (hCF C (Finset.mem_insert_self C F)).inter
@@ -191,7 +191,7 @@ theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A
   obtain ⟨l, rfl⟩ := hC ⟨w, hw⟩
   exact
     ⟨l,
-      subset.antisymm (fun x hx => ⟨⟨hx.1, hCB hx⟩, fun y hy => hx.2 y hy.1⟩)
+      Subset.antisymm (fun x hx => ⟨⟨hx.1, hCB hx⟩, fun y hy => hx.2 y hy.1⟩)
         fun x ⟨⟨hxC, _⟩, hx⟩ => ⟨hxC, fun y hy => (hw.2 y hy).trans (hx w ⟨hC.subset hw, hCB hw⟩)⟩⟩
 #align is_exposed.inter_left IsExposed.inter_left
 
@@ -212,7 +212,7 @@ protected theorem isClosed [OrderClosedTopology 𝕜] {A B : Set E} (hAB : IsExp
 
 protected theorem isCompact [OrderClosedTopology 𝕜] [T2Space E] {A B : Set E}
     (hAB : IsExposed 𝕜 A B) (hA : IsCompact A) : IsCompact B :=
-  isCompact_of_isClosed_subset hA (hAB.IsClosed hA.IsClosed) hAB.Subset
+  isCompact_of_isClosed_subset hA (hAB.isClosed hA.isClosed) hAB.subset
 #align is_exposed.is_compact IsExposed.isCompact
 
 end IsExposed
@@ -284,7 +284,7 @@ protected theorem isExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
   have hlx₁ := hxB.2 x₁ hx₁A
   have hlx₂ := hxB.2 x₂ hx₂A
   refine' ⟨⟨hx₁A, fun y hy => _⟩, ⟨hx₂A, fun y hy => _⟩⟩
-  · have := @ConvexOn.le_left_of_right_le 𝕜 E 𝕜 _ _ _
+  · have := @convex_on.le_left_of_right_le 𝕜 E 𝕜 _ _ _
     rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
     exact hxB.2 y hy
   · rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
@@ -294,7 +294,7 @@ protected theorem isExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B :=
 end IsExposed
 
 theorem exposedPoints_subset_extremePoints : A.exposedPoints 𝕜 ⊆ A.extremePoints 𝕜 := fun x hx =>
-  mem_extremePoints_iff_extreme_singleton.2 (mem_exposedPoints_iff_exposed_singleton.1 hx).IsExtreme
+  mem_extremePoints_iff_extreme_singleton.2 (mem_exposedPoints_iff_exposed_singleton.1 hx).isExtreme
 #align exposed_points_subset_extreme_points exposedPoints_subset_extremePoints
 
 end LinearOrderedRing

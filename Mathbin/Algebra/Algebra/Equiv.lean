@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,7 +216,7 @@ theorem map_sum {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∑ x in s,
 #align alg_equiv.map_sum AlgEquiv.map_sum
 
 theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
-    e (f.Sum g) = f.Sum fun i b => e (g i b) :=
+    e (f.sum g) = f.sum fun i b => e (g i b) :=
   e.map_sum _ _
 #align alg_equiv.map_finsupp_sum AlgEquiv.map_finsupp_sum
 
@@ -334,7 +334,7 @@ theorem symm_bijective : Function.Bijective (symm : (A₁ ≃ₐ[R] A₂) → A�
 @[simp]
 theorem mk_coe' (e : A₁ ≃ₐ[R] A₂) (f h₁ h₂ h₃ h₄ h₅) :
     (⟨f, e, h₁, h₂, h₃, h₄, h₅⟩ : A₂ ≃ₐ[R] A₁) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.injective <| ext fun x => rfl
 #align alg_equiv.mk_coe' AlgEquiv.mk_coe'
 
 @[simp]
@@ -426,10 +426,10 @@ def arrowCongr {A₁' A₂' : Type _} [Semiring A₁'] [Semiring A₂'] [Algebra
   toFun f := (e₂.toAlgHom.comp f).comp e₁.symm.toAlgHom
   invFun f := (e₂.symm.toAlgHom.comp f).comp e₁.toAlgHom
   left_inv f := by
-    simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, symm_comp]
+    simp only [AlgHom.comp_assoc, toAlgHom_eq_coe, symm_comp]
     simp only [← AlgHom.comp_assoc, symm_comp, AlgHom.id_comp, AlgHom.comp_id]
   right_inv f := by
-    simp only [AlgHom.comp_assoc, to_alg_hom_eq_coe, comp_symm]
+    simp only [AlgHom.comp_assoc, toAlgHom_eq_coe, comp_symm]
     simp only [← AlgHom.comp_assoc, comp_symm, AlgHom.id_comp, AlgHom.comp_id]
 #align alg_equiv.arrow_congr AlgEquiv.arrowCongr
 
@@ -439,7 +439,7 @@ theorem arrowCongr_comp {A₁' A₂' A₃' : Type _} [Semiring A₁'] [Semiring 
     arrowCongr e₁ e₃ (g.comp f) = (arrowCongr e₂ e₃ g).comp (arrowCongr e₁ e₂ f) :=
   by
   ext
-  simp only [arrow_congr, Equiv.coe_fn_mk, AlgHom.comp_apply]
+  simp only [arrowCongr, Equiv.coe_fn_mk, AlgHom.comp_apply]
   congr
   exact (e₂.symm_apply_apply _).symm
 #align alg_equiv.arrow_congr_comp AlgEquiv.arrowCongr_comp
@@ -734,7 +734,7 @@ theorem map_prod {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∏ x in s
 #align alg_equiv.map_prod AlgEquiv.map_prod
 
 theorem map_finsupp_prod {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A₁) :
-    e (f.Prod g) = f.Prod fun i a => e (g i a) :=
+    e (f.prod g) = f.prod fun i a => e (g i a) :=
   map_finsupp_prod _ f g
 #align alg_equiv.map_finsupp_prod AlgEquiv.map_finsupp_prod
 

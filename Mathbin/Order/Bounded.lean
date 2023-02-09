@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module order.bounded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.248 : α) (x._@.Mathlib.Order.Bounded._hyg.250 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.248 x._@.Mathlib.Order.Bounded._hyg.250) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_le_iff Set.unbounded_le_iffₓ'. -/
 theorem unbounded_le_iff [LinearOrder α] : Unbounded (· ≤ ·) s ↔ ∀ a, ∃ b ∈ s, a < b := by
-  simp only [unbounded, not_le]
+  simp only [Unbounded, not_le]
 #align set.unbounded_le_iff Set.unbounded_le_iff
 
 /- warning: set.unbounded_lt_of_forall_exists_le -> Set.unbounded_lt_of_forall_exists_le is a dubious translation:
@@ -87,7 +87,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} [_inst_1 : LinearOrder.{u1} α], Iff (Set.Unbounded.{u1} α (fun (x._@.Mathlib.Order.Bounded._hyg.412 : α) (x._@.Mathlib.Order.Bounded._hyg.414 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.Bounded._hyg.412 x._@.Mathlib.Order.Bounded._hyg.414) s) (forall (a : α), Exists.{succ u1} α (fun (b : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b s) (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) a b)))
 Case conversion may be inaccurate. Consider using '#align set.unbounded_lt_iff Set.unbounded_lt_iffₓ'. -/
 theorem unbounded_lt_iff [LinearOrder α] : Unbounded (· < ·) s ↔ ∀ a, ∃ b ∈ s, a ≤ b := by
-  simp only [unbounded, not_lt]
+  simp only [Unbounded, not_lt]
 #align set.unbounded_lt_iff Set.unbounded_lt_iff
 
 /- warning: set.unbounded_ge_of_forall_exists_gt -> Set.unbounded_ge_of_forall_exists_gt is a dubious translation:
@@ -453,7 +453,7 @@ Case conversion may be inaccurate. Consider using '#align set.bounded_inter_not 
 theorem bounded_inter_not (H : ∀ a b, ∃ m, ∀ c, r c a ∨ r c b → r c m) (a : α) :
     Bounded r (s ∩ { b | ¬r b a }) ↔ Bounded r s :=
   by
-  refine' ⟨_, bounded.mono (Set.inter_subset_left s _)⟩
+  refine' ⟨_, Bounded.mono (Set.inter_subset_left s _)⟩
   rintro ⟨b, hb⟩
   cases' H a b with m hm
   exact ⟨m, fun c hc => hm c (or_iff_not_imp_left.2 fun hca => hb c ⟨hc, hca⟩)⟩
@@ -531,9 +531,9 @@ Case conversion may be inaccurate. Consider using '#align set.bounded_le_inter_l
 theorem bounded_le_inter_le [LinearOrder α] (a : α) :
     Bounded (· ≤ ·) (s ∩ { b | a ≤ b }) ↔ Bounded (· ≤ ·) s :=
   by
-  refine' ⟨_, bounded.mono (Set.inter_subset_left s _)⟩
+  refine' ⟨_, Bounded.mono (Set.inter_subset_left s _)⟩
   rw [← @bounded_le_inter_lt _ s _ a]
-  exact bounded.mono fun x ⟨hx, hx'⟩ => ⟨hx, le_of_lt hx'⟩
+  exact Bounded.mono fun x ⟨hx, hx'⟩ => ⟨hx, le_of_lt hx'⟩
 #align set.bounded_le_inter_le Set.bounded_le_inter_le
 
 /- warning: set.unbounded_le_inter_le -> Set.unbounded_le_inter_le is a dubious translation:

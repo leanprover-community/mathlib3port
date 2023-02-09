@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module field_theory.laurent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def laurentAux : Ratfunc R →+* Ratfunc R :=
 theorem laurentAux_of_fraction_ring_mk (q : R[X]⁰) :
     laurentAux r (of_fraction_ring (Localization.mk p q)) =
       of_fraction_ring
-        (Localization.mk (taylor r p) ⟨taylor r q, taylor_mem_nonZeroDivisors r q q.Prop⟩) :=
+        (Localization.mk (taylor r p) ⟨taylor r q, taylor_mem_nonZeroDivisors r q q.prop⟩) :=
   map_apply_of_fraction_ring_mk _ _ _ _
 #align ratfunc.laurent_aux_of_fraction_ring_mk Ratfunc.laurentAux_of_fraction_ring_mk
 
@@ -75,7 +75,7 @@ theorem laurentAux_div :
 
 @[simp]
 theorem laurentAux_algebraMap : laurentAux r (algebraMap _ _ p) = algebraMap _ _ (taylor r p) := by
-  rw [← mk_one, ← mk_one, mk_eq_div, laurent_aux_div, mk_eq_div, taylor_one, _root_.map_one]
+  rw [← mk_one, ← mk_one, mk_eq_div, laurentAux_div, mk_eq_div, taylor_one, map_one]
 #align ratfunc.laurent_aux_algebra_map Ratfunc.laurentAux_algebraMap
 
 /-- The Laurent expansion of rational functions about a value. -/
@@ -99,12 +99,12 @@ theorem laurent_algebraMap : laurent r (algebraMap _ _ p) = algebraMap _ _ (tayl
 
 @[simp]
 theorem laurent_x : laurent r x = x + c r := by
-  rw [← algebra_map_X, laurent_algebra_map, taylor_X, _root_.map_add, algebra_map_C]
+  rw [← algebraMap_x, laurent_algebraMap, taylor_x, map_add, algebraMap_c]
 #align ratfunc.laurent_X Ratfunc.laurent_x
 
 @[simp]
 theorem laurent_c (x : R) : laurent r (c x) = c x := by
-  rw [← algebra_map_C, laurent_algebra_map, taylor_C]
+  rw [← algebraMap_c, laurent_algebraMap, taylor_c]
 #align ratfunc.laurent_C Ratfunc.laurent_c
 
 @[simp]

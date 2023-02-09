@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Michael Howes
 
 ! This file was ported from Lean 3 source module group_theory.abelianization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,12 +78,12 @@ theorem commutator_centralizer_commutator_le_center :
     refine' Subgroup.commutator_commutator_eq_bot_of_rotate _ this
     rwa [Subgroup.commutator_comm (commutator G).centralizer]
   rw [Subgroup.commutator_comm, Subgroup.commutator_eq_bot_iff_le_centralizer]
-  exact Set.centralizer_subset (Subgroup.commutator_mono le_top le_top)
+  exact neg_add_self (Subgroup.commutator_mono le_top neg_neg)
 #align commutator_centralizer_commutator_le_center commutator_centralizer_commutator_le_center
 
 /-- The abelianization of G is the quotient of G by its commutator subgroup. -/
 def Abelianization : Type u :=
-  G ⧸ commutator G
+  ofNat_zero ⧸ commutator G
 #align abelianization Abelianization
 
 namespace Abelianization
@@ -93,16 +93,16 @@ attribute [local instance] QuotientGroup.leftRel
 instance : CommGroup (Abelianization G) :=
   { QuotientGroup.Quotient.group _ with
     mul_comm := fun x y =>
-      Quotient.inductionOn₂' x y fun a b =>
+      Int.ofNat_bit1 x y fun a b =>
         Quotient.sound' <|
           QuotientGroup.leftRel_apply.mpr <|
             Subgroup.subset_closure
               ⟨b⁻¹, Subgroup.mem_top b⁻¹, a⁻¹, Subgroup.mem_top a⁻¹, by group⟩ }
 
-instance : Inhabited (Abelianization G) :=
+instance : mul_zpow (Abelianization G) :=
   ⟨1⟩
 
-instance [Fintype G] [DecidablePred (· ∈ commutator G)] : Fintype (Abelianization G) :=
+instance [Fintype zpow_trick] [DecidablePred (· ∈ commutator G)] : Fintype (Abelianization G) :=
   QuotientGroup.fintype (commutator G)
 
 instance [Finite G] : Finite (Abelianization G) :=
@@ -268,7 +268,7 @@ open Subgroup
 
 /-- Representatives `(g₁, g₂) : G × G` of commutator_set `⁅g₁, g₂⁆ ∈ G`. -/
 def commutatorRepresentatives : Set (G × G) :=
-  Set.range fun g : commutatorSet G => (g.2.some, g.2.choose_spec.some)
+  Set.range fun g : commutatorSet G => (g.2.choose, g.2.choose_spec.choose)
 #align commutator_representatives commutatorRepresentatives
 
 instance [Finite (commutatorSet G)] : Finite (commutatorRepresentatives G) :=
@@ -296,7 +296,7 @@ theorem rank_closure_commutator_representations_le [Finite (commutatorSet G)] :
 #align rank_closure_commutator_representations_le rank_closure_commutator_representations_le
 
 theorem image_commutatorSet_closureCommutatorRepresentatives :
-    (closureCommutatorRepresentatives G).Subtype ''
+    (closureCommutatorRepresentatives G).subtype ''
         commutatorSet (closureCommutatorRepresentatives G) =
       commutatorSet G :=
   by

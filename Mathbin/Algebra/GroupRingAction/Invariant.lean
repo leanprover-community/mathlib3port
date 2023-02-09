@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.group_ring_action.invariant
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ variable (U : Subring R') [IsInvariantSubring M U]
 
 /-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
-  { U.Subtype with map_smul' := fun m s => rfl }
+  { U.subtype with map_smul' := fun m s => rfl }
 #align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHom
 
 @[simp]
@@ -62,7 +62,7 @@ theorem IsInvariantSubring.coeSubtype_hom : (IsInvariantSubring.subtypeHom M U :
 
 @[simp]
 theorem IsInvariantSubring.coe_subtype_hom' :
-    (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
+    (IsInvariantSubring.subtypeHom M U : U →+* R') = U.subtype :=
   rfl
 #align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtype_hom'
 

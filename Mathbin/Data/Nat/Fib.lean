@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann, Kyle Miller, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.fib
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ theorem fast_fib_aux_bit_ff (n : ℕ) :
       let p := fastFibAux n
       (p.1 * (2 * p.2 - p.1), p.2 ^ 2 + p.1 ^ 2) :=
   by
-  rw [fast_fib_aux, binary_rec_eq]
+  rw [fastFibAux, binaryRec_eq]
   · rfl
   · simp
 #align nat.fast_fib_aux_bit_ff Nat.fast_fib_aux_bit_ff
@@ -268,7 +268,7 @@ theorem fast_fib_aux_bit_tt (n : ℕ) :
       let p := fastFibAux n
       (p.2 ^ 2 + p.1 ^ 2, p.2 * (2 * p.1 + p.2)) :=
   by
-  rw [fast_fib_aux, binary_rec_eq]
+  rw [fastFibAux, binaryRec_eq]
   · rfl
   · simp
 #align nat.fast_fib_aux_bit_tt Nat.fast_fib_aux_bit_tt
@@ -278,7 +278,7 @@ theorem fast_fib_aux_bit_tt (n : ℕ) :
 theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) :=
   by
   apply Nat.binaryRec _ (fun b n' ih => _) n
-  · simp [fast_fib_aux]
+  · simp [fastFibAux]
   ·
     cases b <;>
           simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih,
@@ -289,7 +289,7 @@ theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) :=
 -/
 
 #print Nat.fast_fib_eq /-
-theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by rw [fast_fib, fast_fib_aux_eq]
+theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by rw [fastFib, fast_fib_aux_eq]
 #align nat.fast_fib_eq Nat.fast_fib_eq
 -/
 
@@ -433,9 +433,9 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
     | match_numeral_result.one => pure (ic, q((1 : ℕ)), q((1 : ℕ)), q(is_fib_aux_one))
     | match_numeral_result.bit0 e => do
       let (ic, a, b, H) ← prove_fib_aux e
-      let na ← a.toNat
-      let nb ← b.toNat
-      let (ic, c) ← ic.ofNat (2 * nb - na)
+      let na ← a.to_nat
+      let nb ← b.to_nat
+      let (ic, c) ← ic.of_nat (2 * nb - na)
       let (ic, h1) ← prove_add_nat ic a c (q((bit0 : ℕ → ℕ)).mk_app [b])
       let (ic, a', h2) ← prove_mul_nat ic a c
       let (ic, a2, h3) ← prove_mul_nat ic a a
@@ -446,9 +446,9 @@ unsafe def prove_fib_aux (ic : instance_cache) : expr → tactic (instance_cache
             q(@is_fib_aux_bit0).mk_app [e, a, b, c, a2, b2, a', b', H, h1, h2, h3, h4, h5])
     | match_numeral_result.bit1 e => do
       let (ic, a, b, H) ← prove_fib_aux e
-      let na ← a.toNat
-      let nb ← b.toNat
-      let (ic, c) ← ic.ofNat (2 * na + nb)
+      let na ← a.to_nat
+      let nb ← b.to_nat
+      let (ic, c) ← ic.of_nat (2 * na + nb)
       let (ic, a2, h1) ← prove_mul_nat ic a a
       let (ic, b2, h2) ← prove_mul_nat ic b b
       let (ic, a', h3) ← prove_add_nat' ic a2 b2
@@ -468,9 +468,9 @@ unsafe def prove_fib (ic : instance_cache) (e : expr) : tactic (instance_cache �
   | match_numeral_result.one => pure (ic, q((1 : ℕ)), q(fib_one))
   | match_numeral_result.bit0 e => do
     let (ic, a, b, H) ← prove_fib_aux ic e
-    let na ← a.toNat
-    let nb ← b.toNat
-    let (ic, c) ← ic.ofNat (2 * nb - na)
+    let na ← a.to_nat
+    let nb ← b.to_nat
+    let (ic, c) ← ic.of_nat (2 * nb - na)
     let (ic, h1) ← prove_add_nat ic a c (q((bit0 : ℕ → ℕ)).mk_app [b])
     let (ic, a', h2) ← prove_mul_nat ic a c
     pure (ic, a', q(@is_fib_aux_bit0_done).mk_app [e, a, b, c, a', H, h1, h2])
@@ -488,14 +488,14 @@ Uses the binary representation of `n` like `nat.fast_fib`. -/
 @[norm_num]
 unsafe def eval_fib : expr → tactic (expr × expr)
   | q(fib $(en)) => do
-    let n ← en.toNat
+    let n ← en.to_nat
     match n with
       | 0 => pure (q((0 : ℕ)), q(fib_zero))
       | 1 => pure (q((1 : ℕ)), q(fib_one))
       | 2 => pure (q((1 : ℕ)), q(fib_two))
       | _ => do
         let c ← mk_instance_cache q(ℕ)
-        Prod.snd <$> prove_fib c en
+        prod.snd <$> prove_fib c en
   | _ => failed
 #align norm_num.eval_fib norm_num.eval_fib
 

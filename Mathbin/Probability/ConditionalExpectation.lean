@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.conditional_expectation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,35 +43,35 @@ almost everywhere. -/
 theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)]
     (hf : strongly_measurable[m₁] f) (hindp : IndepCat m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] :=
   by
-  by_cases hfint : integrable f μ
+  by_cases hfint : Integrable f μ
   swap;
   · rw [condexp_undef hfint, integral_undef hfint]
     rfl
   have hfint₁ := hfint.trim hle₁ hf
   refine'
     (ae_eq_condexp_of_forall_set_integral_eq hle₂ hfint
-        (fun s _ hs => integrable_on_const.2 (Or.inr hs)) (fun s hms hs => _)
+        (fun s _ hs => integrableOn_const.2 (Or.inr hs)) (fun s hms hs => _)
         strongly_measurable_const.ae_strongly_measurable').symm
   rw [set_integral_const]
-  rw [← mem_ℒp_one_iff_integrable] at hfint
+  rw [← memℒp_one_iff_integrable] at hfint
   refine' hfint.induction_strongly_measurable hle₁ Ennreal.one_ne_top _ _ _ _ _ _
   · intro c t hmt ht
     rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← Ennreal.toReal_mul,
       mul_comm, ← hindp _ _ hmt hms, set_integral_indicator (hle₁ _ hmt), set_integral_const,
       Set.inter_comm]
   · intro u v hdisj huint hvint hu hv hu_eq hv_eq
-    rw [mem_ℒp_one_iff_integrable] at huint hvint
+    rw [memℒp_one_iff_integrable] at huint hvint
     rw [integral_add' huint hvint, smul_add, hu_eq, hv_eq,
       integral_add' huint.integrable_on hvint.integrable_on]
   · have heq₁ :
-      (fun f : Lp_meas E ℝ m₁ 1 μ => ∫ x, f x ∂μ) =
-        (fun f : Lp E 1 μ => ∫ x, f x ∂μ) ∘ Submodule.subtypeL _ :=
+      (fun f : lpMeas E ℝ m₁ 1 μ => ∫ x, f x ∂μ) =
+        (fun f : lp E 1 μ => ∫ x, f x ∂μ) ∘ Submodule.subtypeL _ :=
       by
       refine' funext fun f => integral_congr_ae _
       simp_rw [Submodule.coe_subtypeL', Submodule.coeSubtype, ← coeFn_coeBase]
     have heq₂ :
-      (fun f : Lp_meas E ℝ m₁ 1 μ => ∫ x in s, f x ∂μ) =
-        (fun f : Lp E 1 μ => ∫ x in s, f x ∂μ) ∘ Submodule.subtypeL _ :=
+      (fun f : lpMeas E ℝ m₁ 1 μ => ∫ x in s, f x ∂μ) =
+        (fun f : lp E 1 μ => ∫ x in s, f x ∂μ) ∘ Submodule.subtypeL _ :=
       by
       refine' funext fun f => integral_congr_ae (ae_restrict_of_ae _)
       simp_rw [Submodule.coe_subtypeL', Submodule.coeSubtype, ← coeFn_coeBase]
@@ -85,7 +85,7 @@ theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFi
     rwa [← integral_congr_ae huv, ←
       (set_integral_congr_ae (hle₂ _ hms) _ : (∫ x in s, u x ∂μ) = ∫ x in s, v x ∂μ)]
     filter_upwards [huv]with x hx _ using hx
-  · exact ⟨f, hf, eventually_eq.rfl⟩
+  · exact ⟨f, hf, EventuallyEq.rfl⟩
 #align measure_theory.condexp_indep_eq MeasureTheory.condexp_indepCat_eq
 
 end MeasureTheory

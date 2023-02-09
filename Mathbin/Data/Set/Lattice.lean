@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.set.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ Case conversion may be inaccurate. Consider using '#align set.mem_Inter Set.mem_
 @[simp]
 theorem mem_interᵢ {x : α} {s : ι → Set α} : (x ∈ ⋂ i, s i) ↔ ∀ i, x ∈ s i :=
   ⟨fun (h : ∀ a ∈ { a : Set α | ∃ i, s i = a }, x ∈ a) a => h (s a) ⟨a, rfl⟩,
-    fun h t ⟨a, (Eq : s a = t)⟩ => Eq ▸ h a⟩
+    fun h t ⟨a, (eq : s a = t)⟩ => eq ▸ h a⟩
 #align set.mem_Inter Set.mem_interᵢ
 
 /- warning: set.mem_Union₂ -> Set.mem_unionᵢ₂ is a dubious translation:
@@ -204,7 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mem_Union₂ Set.mem_unionᵢ₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem mem_unionᵢ₂ {x : γ} {s : ∀ i, κ i → Set γ} : (x ∈ ⋃ (i) (j), s i j) ↔ ∃ i j, x ∈ s i j := by
-  simp_rw [mem_Union]
+  simp_rw [mem_unionᵢ]
 #align set.mem_Union₂ Set.mem_unionᵢ₂
 
 /- warning: set.mem_Inter₂ -> Set.mem_interᵢ₂ is a dubious translation:
@@ -215,7 +215,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mem_Inter₂ Set.mem_interᵢ₂ₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem mem_interᵢ₂ {x : γ} {s : ∀ i, κ i → Set γ} : (x ∈ ⋂ (i) (j), s i j) ↔ ∀ i j, x ∈ s i j := by
-  simp_rw [mem_Inter]
+  simp_rw [mem_interᵢ]
 #align set.mem_Inter₂ Set.mem_interᵢ₂
 
 /- warning: set.mem_Union_of_mem -> Set.mem_unionᵢ_of_mem is a dubious translation:
@@ -396,7 +396,7 @@ lean 3 declaration is
 but is expected to have type
   forall {β : Type.{u1}} {ι : Type.{u2}} (t : Set.{u2} ι) (s : ι -> (Set.{u1} β)), (Eq.{succ u1} (Set.{u1} β) (Set.unionᵢ.{u1, succ u2} β ι (fun (i : ι) => Set.unionᵢ.{u1, 0} β (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) (fun (H : Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) => s i))) (Top.top.{u1} (Set.{u1} β) (CompleteLattice.toTop.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) -> (forall (x : β), Exists.{succ u2} ι (fun (i : ι) => And (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i t) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) x (s i))))
 Case conversion may be inaccurate. Consider using '#align set.exists_set_mem_of_union_eq_top Set.exists_set_mem_of_union_eq_topₓ'. -/
-theorem exists_set_mem_of_union_eq_top {ι : Type _} (t : Set ι) (s : ι → Set β)
+theorem exists_set_mem_of_union_eq_top {ι : Type _} (t : Set ι) (s : exists_prop → Set β)
     (w : (⋃ i ∈ t, s i) = ⊤) (x : β) : ∃ i ∈ t, x ∈ s i :=
   by
   have p : x ∈ ⊤ := Set.mem_univ x
@@ -499,7 +499,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Union₂_subset_iff Set.unionᵢ₂_subset_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem unionᵢ₂_subset_iff {s : ∀ i, κ i → Set α} {t : Set α} :
-    (⋃ (i) (j), s i j) ⊆ t ↔ ∀ i j, s i j ⊆ t := by simp_rw [Union_subset_iff]
+    (⋃ (i) (j), s i j) ⊆ t ↔ ∀ i j, s i j ⊆ t := by simp_rw [unionᵢ_subset_iff]
 #align set.Union₂_subset_iff Set.unionᵢ₂_subset_iff
 
 /- warning: set.subset_Inter_iff -> Set.subset_interᵢ_iff is a dubious translation:
@@ -522,7 +522,7 @@ Case conversion may be inaccurate. Consider using '#align set.subset_Inter₂_if
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem subset_interᵢ₂_iff {s : Set α} {t : ∀ i, κ i → Set α} :
-    (s ⊆ ⋂ (i) (j), t i j) ↔ ∀ i j, s ⊆ t i j := by simp_rw [subset_Inter_iff]
+    (s ⊆ ⋂ (i) (j), t i j) ↔ ∀ i j, s ⊆ t i j := by simp_rw [subset_interᵢ_iff]
 #align set.subset_Inter₂_iff Set.subset_interᵢ₂_iff
 
 /- warning: set.subset_Union -> Set.subset_unionᵢ is a dubious translation:
@@ -749,7 +749,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_set_of Set.u
 theorem unionᵢ_setOf (P : ι → α → Prop) : (⋃ i, { x : α | P i x }) = { x : α | ∃ i, P i x } :=
   by
   ext
-  exact mem_Union
+  exact mem_unionᵢ
 #align set.Union_set_of Set.unionᵢ_setOf
 
 /- warning: set.Inter_set_of -> Set.interᵢ_setOf is a dubious translation:
@@ -761,7 +761,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_set_of Set.i
 theorem interᵢ_setOf (P : ι → α → Prop) : (⋂ i, { x : α | P i x }) = { x : α | ∀ i, P i x } :=
   by
   ext
-  exact mem_Inter
+  exact mem_interᵢ
 #align set.Inter_set_of Set.interᵢ_setOf
 
 /- warning: set.Union_congr_of_surjective -> Set.unionᵢ_congr_of_surjective is a dubious translation:
@@ -898,7 +898,7 @@ Case conversion may be inaccurate. Consider using '#align set.compl_Union₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem compl_unionᵢ₂ (s : ∀ i, κ i → Set α) : (⋃ (i) (j), s i j)ᶜ = ⋂ (i) (j), s i jᶜ := by
-  simp_rw [compl_Union]
+  simp_rw [compl_unionᵢ]
 #align set.compl_Union₂ Set.compl_unionᵢ₂
 
 /- warning: set.compl_Inter -> Set.compl_interᵢ is a dubious translation:
@@ -921,7 +921,7 @@ Case conversion may be inaccurate. Consider using '#align set.compl_Inter₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem compl_interᵢ₂ (s : ∀ i, κ i → Set α) : (⋂ (i) (j), s i j)ᶜ = ⋃ (i) (j), s i jᶜ := by
-  simp_rw [compl_Inter]
+  simp_rw [compl_interᵢ]
 #align set.compl_Inter₂ Set.compl_interᵢ₂
 
 /- warning: set.Union_eq_compl_Inter_compl -> Set.unionᵢ_eq_compl_interᵢ_compl is a dubious translation:
@@ -932,7 +932,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Union_eq_compl_Inter_compl Set.unionᵢ_eq_compl_interᵢ_complₓ'. -/
 -- classical -- complete_boolean_algebra
 theorem unionᵢ_eq_compl_interᵢ_compl (s : ι → Set β) : (⋃ i, s i) = (⋂ i, s iᶜ)ᶜ := by
-  simp only [compl_Inter, compl_compl]
+  simp only [compl_interᵢ, compl_compl]
 #align set.Union_eq_compl_Inter_compl Set.unionᵢ_eq_compl_interᵢ_compl
 
 /- warning: set.Inter_eq_compl_Union_compl -> Set.interᵢ_eq_compl_unionᵢ_compl is a dubious translation:
@@ -943,7 +943,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Inter_eq_compl_Union_compl Set.interᵢ_eq_compl_unionᵢ_complₓ'. -/
 -- classical -- complete_boolean_algebra
 theorem interᵢ_eq_compl_unionᵢ_compl (s : ι → Set β) : (⋂ i, s i) = (⋃ i, s iᶜ)ᶜ := by
-  simp only [compl_Union, compl_compl]
+  simp only [compl_unionᵢ, compl_compl]
 #align set.Inter_eq_compl_Union_compl Set.interᵢ_eq_compl_unionᵢ_compl
 
 /- warning: set.inter_Union -> Set.inter_unionᵢ is a dubious translation:
@@ -1066,7 +1066,7 @@ but is expected to have type
   forall {β : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (s : Set.{u1} β) (t : ι -> (Set.{u1} β)), Eq.{succ u1} (Set.{u1} β) (SDiff.sdiff.{u1} (Set.{u1} β) (Set.instSDiffSet.{u1} β) s (Set.unionᵢ.{u1, u2} β ι (fun (i : ι) => t i))) (Set.interᵢ.{u1, u2} β ι (fun (i : ι) => SDiff.sdiff.{u1} (Set.{u1} β) (Set.instSDiffSet.{u1} β) s (t i)))
 Case conversion may be inaccurate. Consider using '#align set.diff_Union Set.diff_unionᵢₓ'. -/
 theorem diff_unionᵢ [Nonempty ι] (s : Set β) (t : ι → Set β) : (s \ ⋃ i, t i) = ⋂ i, s \ t i := by
-  rw [diff_eq, compl_Union, inter_Inter] <;> rfl
+  rw [diff_eq, compl_unionᵢ, inter_interᵢ] <;> rfl
 #align set.diff_Union Set.diff_unionᵢ
 
 /- warning: set.diff_Inter -> Set.diff_interᵢ is a dubious translation:
@@ -1076,7 +1076,7 @@ but is expected to have type
   forall {β : Type.{u2}} {ι : Sort.{u1}} (s : Set.{u2} β) (t : ι -> (Set.{u2} β)), Eq.{succ u2} (Set.{u2} β) (SDiff.sdiff.{u2} (Set.{u2} β) (Set.instSDiffSet.{u2} β) s (Set.interᵢ.{u2, u1} β ι (fun (i : ι) => t i))) (Set.unionᵢ.{u2, u1} β ι (fun (i : ι) => SDiff.sdiff.{u2} (Set.{u2} β) (Set.instSDiffSet.{u2} β) s (t i)))
 Case conversion may be inaccurate. Consider using '#align set.diff_Inter Set.diff_interᵢₓ'. -/
 theorem diff_interᵢ (s : Set β) (t : ι → Set β) : (s \ ⋂ i, t i) = ⋃ i, s \ t i := by
-  rw [diff_eq, compl_Inter, inter_Union] <;> rfl
+  rw [diff_eq, compl_interᵢ, inter_unionᵢ] <;> rfl
 #align set.diff_Inter Set.diff_interᵢ
 
 /- warning: set.directed_on_Union -> Set.directed_on_unionᵢ is a dubious translation:
@@ -1087,7 +1087,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.directed_on_Union Set.directed_on_unionᵢₓ'. -/
 theorem directed_on_unionᵢ {r} {f : ι → Set α} (hd : Directed (· ⊆ ·) f)
     (h : ∀ x, DirectedOn r (f x)) : DirectedOn r (⋃ x, f x) := by
-  simp only [DirectedOn, exists_prop, mem_Union, exists_imp] <;>
+  simp only [DirectedOn, exists_prop, mem_unionᵢ, exists_imp] <;>
     exact fun a₁ b₁ fb₁ a₂ b₂ fb₂ =>
       let ⟨z, zb₁, zb₂⟩ := hd b₁ b₂
       let ⟨x, xf, xa₁, xa₂⟩ := h z a₁ (zb₁ fb₁) a₂ (zb₂ fb₂)
@@ -1239,10 +1239,10 @@ theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
   classical
-    apply subset.antisymm
-    · simp [Inter_subset]
+    apply Subset.antisymm
+    · simp [interᵢ_subset]
     · intro y y_in
-      simp only [mem_image, mem_Inter, mem_preimage]
+      simp only [mem_image, mem_interᵢ, mem_preimage]
       rcases hv with ⟨z, hz⟩
       refine' ⟨Function.update z i y, _, update_same i y z⟩
       rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
@@ -1505,7 +1505,7 @@ Case conversion may be inaccurate. Consider using '#align set.bUnion_and Set.bun
 theorem bunionᵢ_and (p : ι → Prop) (q : ι → ι' → Prop) (s : ∀ x y, p x ∧ q x y → Set α) :
     (⋃ (x : ι) (y : ι') (h : p x ∧ q x y), s x y h) =
       ⋃ (x : ι) (hx : p x) (y : ι') (hy : q x y), s x y ⟨hx, hy⟩ :=
-  by simp only [Union_and, @Union_comm _ ι']
+  by simp only [unionᵢ_and, @Union_comm _ ι']
 #align set.bUnion_and Set.bunionᵢ_and
 
 /- warning: set.bUnion_and' -> Set.bunionᵢ_and' is a dubious translation:
@@ -1518,7 +1518,7 @@ Case conversion may be inaccurate. Consider using '#align set.bUnion_and' Set.bu
 theorem bunionᵢ_and' (p : ι' → Prop) (q : ι → ι' → Prop) (s : ∀ x y, p y ∧ q x y → Set α) :
     (⋃ (x : ι) (y : ι') (h : p y ∧ q x y), s x y h) =
       ⋃ (y : ι') (hy : p y) (x : ι) (hx : q x y), s x y ⟨hy, hx⟩ :=
-  by simp only [Union_and, @Union_comm _ ι]
+  by simp only [unionᵢ_and, @Union_comm _ ι]
 #align set.bUnion_and' Set.bunionᵢ_and'
 
 /- warning: set.bInter_and -> Set.binterᵢ_and is a dubious translation:
@@ -1531,7 +1531,7 @@ Case conversion may be inaccurate. Consider using '#align set.bInter_and Set.bin
 theorem binterᵢ_and (p : ι → Prop) (q : ι → ι' → Prop) (s : ∀ x y, p x ∧ q x y → Set α) :
     (⋂ (x : ι) (y : ι') (h : p x ∧ q x y), s x y h) =
       ⋂ (x : ι) (hx : p x) (y : ι') (hy : q x y), s x y ⟨hx, hy⟩ :=
-  by simp only [Inter_and, @Inter_comm _ ι']
+  by simp only [interᵢ_and, @Inter_comm _ ι']
 #align set.bInter_and Set.binterᵢ_and
 
 /- warning: set.bInter_and' -> Set.binterᵢ_and' is a dubious translation:
@@ -1544,7 +1544,7 @@ Case conversion may be inaccurate. Consider using '#align set.bInter_and' Set.bi
 theorem binterᵢ_and' (p : ι' → Prop) (q : ι → ι' → Prop) (s : ∀ x y, p y ∧ q x y → Set α) :
     (⋂ (x : ι) (y : ι') (h : p y ∧ q x y), s x y h) =
       ⋂ (y : ι') (hy : p y) (x : ι) (hx : q x y), s x y ⟨hy, hx⟩ :=
-  by simp only [Inter_and, @Inter_comm _ ι]
+  by simp only [interᵢ_and, @Inter_comm _ ι]
 #align set.bInter_and' Set.binterᵢ_and'
 
 /- warning: set.Union_Union_eq_or_left -> Set.unionᵢ_unionᵢ_eq_or_left is a dubious translation:
@@ -1557,7 +1557,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_Union_eq_or_
 @[simp]
 theorem unionᵢ_unionᵢ_eq_or_left {b : β} {p : β → Prop} {s : ∀ x : β, x = b ∨ p x → Set α} :
     (⋃ (x) (h), s x h) = s b (Or.inl rfl) ∪ ⋃ (x) (h : p x), s x (Or.inr h) := by
-  simp only [Union_or, Union_union_distrib, Union_Union_eq_left]
+  simp only [unionᵢ_or, unionᵢ_union_distrib, unionᵢ_unionᵢ_eq_left]
 #align set.Union_Union_eq_or_left Set.unionᵢ_unionᵢ_eq_or_left
 
 /- warning: set.Inter_Inter_eq_or_left -> Set.interᵢ_interᵢ_eq_or_left is a dubious translation:
@@ -1570,7 +1570,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_Inter_eq_or_
 @[simp]
 theorem interᵢ_interᵢ_eq_or_left {b : β} {p : β → Prop} {s : ∀ x : β, x = b ∨ p x → Set α} :
     (⋂ (x) (h), s x h) = s b (Or.inl rfl) ∩ ⋂ (x) (h : p x), s x (Or.inr h) := by
-  simp only [Inter_or, Inter_inter_distrib, Inter_Inter_eq_left]
+  simp only [interᵢ_or, interᵢ_inter_distrib, interᵢ_interᵢ_eq_left]
 #align set.Inter_Inter_eq_or_left Set.interᵢ_interᵢ_eq_or_left
 
 /-! ### Bounded unions and intersections -/
@@ -1733,7 +1733,7 @@ theorem bunionᵢ_self (s : Set α) : (⋃ x ∈ s, s) = s :=
 #print Set.unionᵢ_nonempty_self /-
 @[simp]
 theorem unionᵢ_nonempty_self (s : Set α) : (⋃ h : s.Nonempty, s) = s := by
-  rw [Union_nonempty_index, bUnion_self]
+  rw [unionᵢ_nonempty_index, bunionᵢ_self]
 #align set.Union_nonempty_self Set.unionᵢ_nonempty_self
 -/
 
@@ -1775,7 +1775,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bInter_pair Set.binterᵢ_pairₓ'. -/
 -- TODO(Jeremy): another example of where an annotation is needed
 theorem binterᵢ_pair (a b : α) (s : α → Set β) : (⋂ x ∈ ({a, b} : Set α), s x) = s a ∩ s b := by
-  rw [bInter_insert, bInter_singleton]
+  rw [binterᵢ_insert, binterᵢ_singleton]
 #align set.bInter_pair Set.binterᵢ_pair
 
 /- warning: set.bInter_inter -> Set.binterᵢ_inter is a dubious translation:
@@ -1788,7 +1788,7 @@ theorem binterᵢ_inter {ι α : Type _} {s : Set ι} (hs : s.Nonempty) (f : ι 
     (⋂ i ∈ s, f i ∩ t) = (⋂ i ∈ s, f i) ∩ t :=
   by
   haveI : Nonempty s := hs.to_subtype
-  simp [bInter_eq_Inter, ← Inter_inter]
+  simp [binterᵢ_eq_interᵢ, ← interᵢ_inter]
 #align set.bInter_inter Set.binterᵢ_inter
 
 /- warning: set.inter_bInter -> Set.inter_binterᵢ is a dubious translation:
@@ -1800,7 +1800,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_bInter Set.i
 theorem inter_binterᵢ {ι α : Type _} {s : Set ι} (hs : s.Nonempty) (f : ι → Set α) (t : Set α) :
     (⋂ i ∈ s, t ∩ f i) = t ∩ ⋂ i ∈ s, f i :=
   by
-  rw [inter_comm, ← bInter_inter hs]
+  rw [inter_comm, ← binterᵢ_inter hs]
   simp [inter_comm]
 #align set.inter_bInter Set.inter_binterᵢ
 
@@ -1893,7 +1893,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_Union₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem inter_unionᵢ₂ (s : Set α) (t : ∀ i, κ i → Set α) :
-    (s ∩ ⋃ (i) (j), t i j) = ⋃ (i) (j), s ∩ t i j := by simp only [inter_Union]
+    (s ∩ ⋃ (i) (j), t i j) = ⋃ (i) (j), s ∩ t i j := by simp only [inter_unionᵢ]
 #align set.inter_Union₂ Set.inter_unionᵢ₂
 
 /- warning: set.Union₂_inter -> Set.unionᵢ₂_inter is a dubious translation:
@@ -1905,7 +1905,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union₂_inter Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem unionᵢ₂_inter (s : ∀ i, κ i → Set α) (t : Set α) :
-    (⋃ (i) (j), s i j) ∩ t = ⋃ (i) (j), s i j ∩ t := by simp_rw [Union_inter]
+    (⋃ (i) (j), s i j) ∩ t = ⋃ (i) (j), s i j ∩ t := by simp_rw [unionᵢ_inter]
 #align set.Union₂_inter Set.unionᵢ₂_inter
 
 /- warning: set.union_Inter₂ -> Set.union_interᵢ₂ is a dubious translation:
@@ -1917,7 +1917,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_Inter₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem union_interᵢ₂ (s : Set α) (t : ∀ i, κ i → Set α) :
-    (s ∪ ⋂ (i) (j), t i j) = ⋂ (i) (j), s ∪ t i j := by simp_rw [union_Inter]
+    (s ∪ ⋂ (i) (j), t i j) = ⋂ (i) (j), s ∪ t i j := by simp_rw [union_interᵢ]
 #align set.union_Inter₂ Set.union_interᵢ₂
 
 /- warning: set.Inter₂_union -> Set.interᵢ₂_union is a dubious translation:
@@ -1929,7 +1929,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter₂_union Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem interᵢ₂_union (s : ∀ i, κ i → Set α) (t : Set α) :
-    (⋂ (i) (j), s i j) ∪ t = ⋂ (i) (j), s i j ∪ t := by simp_rw [Inter_union]
+    (⋂ (i) (j), s i j) ∪ t = ⋂ (i) (j), s i j ∪ t := by simp_rw [interᵢ_union]
 #align set.Inter₂_union Set.interᵢ₂_union
 
 #print Set.mem_unionₛ_of_mem /-
@@ -2196,7 +2196,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} {f : ι -> (Set.{u2} α)}, Iff (Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => f i)) (Set.univ.{u2} α)) (forall (x : α), Exists.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (f i)))
 Case conversion may be inaccurate. Consider using '#align set.Union_eq_univ_iff Set.unionᵢ_eq_univ_iffₓ'. -/
 theorem unionᵢ_eq_univ_iff {f : ι → Set α} : (⋃ i, f i) = univ ↔ ∀ x, ∃ i, x ∈ f i := by
-  simp only [eq_univ_iff_forall, mem_Union]
+  simp only [eq_univ_iff_forall, mem_unionᵢ]
 #align set.Union_eq_univ_iff Set.unionᵢ_eq_univ_iff
 
 /- warning: set.Union₂_eq_univ_iff -> Set.unionᵢ₂_eq_univ_iff is a dubious translation:
@@ -2207,7 +2207,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Union₂_eq_univ_iff Set.unionᵢ₂_eq_univ_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem unionᵢ₂_eq_univ_iff {s : ∀ i, κ i → Set α} :
-    (⋃ (i) (j), s i j) = univ ↔ ∀ a, ∃ i j, a ∈ s i j := by simp only [Union_eq_univ_iff, mem_Union]
+    (⋃ (i) (j), s i j) = univ ↔ ∀ a, ∃ i j, a ∈ s i j := by
+  simp only [unionᵢ_eq_univ_iff, mem_unionᵢ]
 #align set.Union₂_eq_univ_iff Set.unionᵢ₂_eq_univ_iff
 
 /- warning: set.sUnion_eq_univ_iff -> Set.unionₛ_eq_univ_iff is a dubious translation:
@@ -2217,7 +2218,7 @@ but is expected to have type
   forall {α : Type.{u1}} {c : Set.{u1} (Set.{u1} α)}, Iff (Eq.{succ u1} (Set.{u1} α) (Set.unionₛ.{u1} α c) (Set.univ.{u1} α)) (forall (a : α), Exists.{succ u1} (Set.{u1} α) (fun (b : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) b c) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a b)))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_eq_univ_iff Set.unionₛ_eq_univ_iffₓ'. -/
 theorem unionₛ_eq_univ_iff {c : Set (Set α)} : ⋃₀ c = univ ↔ ∀ a, ∃ b ∈ c, a ∈ b := by
-  simp only [eq_univ_iff_forall, mem_sUnion]
+  simp only [eq_univ_iff_forall, mem_unionₛ]
 #align set.sUnion_eq_univ_iff Set.unionₛ_eq_univ_iff
 
 /- warning: set.Inter_eq_empty_iff -> Set.interᵢ_eq_empty_iff is a dubious translation:
@@ -2241,7 +2242,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter₂_eq_empty_
 -- classical
 theorem interᵢ₂_eq_empty_iff {s : ∀ i, κ i → Set α} :
     (⋂ (i) (j), s i j) = ∅ ↔ ∀ a, ∃ i j, a ∉ s i j := by
-  simp only [eq_empty_iff_forall_not_mem, mem_Inter, not_forall]
+  simp only [eq_empty_iff_forall_not_mem, mem_interᵢ, not_forall]
 #align set.Inter₂_eq_empty_iff Set.interᵢ₂_eq_empty_iff
 
 /- warning: set.sInter_eq_empty_iff -> Set.interₛ_eq_empty_iff is a dubious translation:
@@ -2264,7 +2265,7 @@ Case conversion may be inaccurate. Consider using '#align set.nonempty_Inter Set
 -- classical
 @[simp]
 theorem nonempty_interᵢ {f : ι → Set α} : (⋂ i, f i).Nonempty ↔ ∃ x, ∀ i, x ∈ f i := by
-  simp [nonempty_iff_ne_empty, Inter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, interᵢ_eq_empty_iff]
 #align set.nonempty_Inter Set.nonempty_interᵢ
 
 /- warning: set.nonempty_Inter₂ -> Set.nonempty_interᵢ₂ is a dubious translation:
@@ -2278,14 +2279,14 @@ Case conversion may be inaccurate. Consider using '#align set.nonempty_Inter₂ 
 @[simp]
 theorem nonempty_interᵢ₂ {s : ∀ i, κ i → Set α} :
     (⋂ (i) (j), s i j).Nonempty ↔ ∃ a, ∀ i j, a ∈ s i j := by
-  simp [nonempty_iff_ne_empty, Inter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, interᵢ_eq_empty_iff]
 #align set.nonempty_Inter₂ Set.nonempty_interᵢ₂
 
 #print Set.nonempty_interₛ /-
 -- classical
 @[simp]
 theorem nonempty_interₛ {c : Set (Set α)} : (⋂₀ c).Nonempty ↔ ∃ a, ∀ b ∈ c, a ∈ b := by
-  simp [nonempty_iff_ne_empty, sInter_eq_empty_iff]
+  simp [nonempty_iff_ne_empty, interₛ_eq_empty_iff]
 #align set.nonempty_sInter Set.nonempty_interₛ
 -/
 
@@ -2308,7 +2309,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sUnion_eq_compl_sInter_compl Set.unionₛ_eq_compl_interₛ_complₓ'. -/
 -- classical
 theorem unionₛ_eq_compl_interₛ_compl (S : Set (Set α)) : ⋃₀ S = (⋂₀ (compl '' S))ᶜ := by
-  rw [← compl_compl (⋃₀ S), compl_sUnion]
+  rw [← compl_compl (⋃₀ S), compl_unionₛ]
 #align set.sUnion_eq_compl_sInter_compl Set.unionₛ_eq_compl_interₛ_compl
 
 /- warning: set.compl_sInter -> Set.compl_interₛ is a dubious translation:
@@ -2319,7 +2320,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.compl_sInter Set.compl_interₛₓ'. -/
 -- classical
 theorem compl_interₛ (S : Set (Set α)) : (⋂₀ S)ᶜ = ⋃₀ (compl '' S) := by
-  rw [sUnion_eq_compl_sInter_compl, compl_compl_image]
+  rw [unionₛ_eq_compl_interₛ_compl, compl_compl_image]
 #align set.compl_sInter Set.compl_interₛ
 
 /- warning: set.sInter_eq_compl_sUnion_compl -> Set.interₛ_eq_compl_unionₛ_compl is a dubious translation:
@@ -2330,7 +2331,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sInter_eq_compl_sUnion_compl Set.interₛ_eq_compl_unionₛ_complₓ'. -/
 -- classical
 theorem interₛ_eq_compl_unionₛ_compl (S : Set (Set α)) : ⋂₀ S = (⋃₀ (compl '' S))ᶜ := by
-  rw [← compl_compl (⋂₀ S), compl_sInter]
+  rw [← compl_compl (⋂₀ S), compl_interₛ]
 #align set.sInter_eq_compl_sUnion_compl Set.interₛ_eq_compl_unionₛ_compl
 
 /- warning: set.inter_empty_of_inter_sUnion_empty -> Set.inter_empty_of_inter_unionₛ_empty is a dubious translation:
@@ -2342,7 +2343,7 @@ Case conversion may be inaccurate. Consider using '#align set.inter_empty_of_int
 theorem inter_empty_of_inter_unionₛ_empty {s t : Set α} {S : Set (Set α)} (hs : t ∈ S)
     (h : s ∩ ⋃₀ S = ∅) : s ∩ t = ∅ :=
   eq_empty_of_subset_empty <| by
-    rw [← h] <;> exact inter_subset_inter_right _ (subset_sUnion_of_mem hs)
+    rw [← h] <;> exact inter_subset_inter_right _ (subset_unionₛ_of_mem hs)
 #align set.inter_empty_of_inter_sUnion_empty Set.inter_empty_of_inter_unionₛ_empty
 
 /- warning: set.range_sigma_eq_Union_range -> Set.range_sigma_eq_unionᵢ_range is a dubious translation:
@@ -2382,7 +2383,7 @@ theorem unionᵢ_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type
     (⋃ i, Sigma.mk i '' (Sigma.mk i ⁻¹' s)) = s :=
   by
   ext x
-  simp only [mem_Union, mem_image, mem_preimage]
+  simp only [mem_unionᵢ, mem_image, mem_preimage]
   constructor
   · rintro ⟨i, a, h, rfl⟩
     exact h
@@ -2439,25 +2440,25 @@ theorem unionᵢ_of_singleton_coe (s : Set α) : (⋃ i : s, {i} : Set α) = s :
 
 #print Set.unionₛ_eq_bunionᵢ /-
 theorem unionₛ_eq_bunionᵢ {s : Set (Set α)} : ⋃₀ s = ⋃ (i : Set α) (h : i ∈ s), i := by
-  rw [← sUnion_image, image_id']
+  rw [← unionₛ_image, image_id']
 #align set.sUnion_eq_bUnion Set.unionₛ_eq_bunionᵢ
 -/
 
 #print Set.interₛ_eq_binterᵢ /-
 theorem interₛ_eq_binterᵢ {s : Set (Set α)} : ⋂₀ s = ⋂ (i : Set α) (h : i ∈ s), i := by
-  rw [← sInter_image, image_id']
+  rw [← interₛ_image, image_id']
 #align set.sInter_eq_bInter Set.interₛ_eq_binterᵢ
 -/
 
 #print Set.unionₛ_eq_unionᵢ /-
 theorem unionₛ_eq_unionᵢ {s : Set (Set α)} : ⋃₀ s = ⋃ i : s, i := by
-  simp only [← sUnion_range, Subtype.range_coe]
+  simp only [← unionₛ_range, Subtype.range_coe]
 #align set.sUnion_eq_Union Set.unionₛ_eq_unionᵢ
 -/
 
 #print Set.interₛ_eq_interᵢ /-
 theorem interₛ_eq_interᵢ {s : Set (Set α)} : ⋂₀ s = ⋂ i : s, i := by
-  simp only [← sInter_range, Subtype.range_coe]
+  simp only [← interₛ_range, Subtype.range_coe]
 #align set.sInter_eq_Inter Set.interₛ_eq_interᵢ
 -/
 
@@ -2546,7 +2547,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} (s : ι -> (Set.{u2} (Set.{u2} α))), Eq.{succ u2} (Set.{u2} α) (Set.unionₛ.{u2} α (Set.unionᵢ.{u2, u1} (Set.{u2} α) ι (fun (i : ι) => s i))) (Set.unionᵢ.{u2, u1} α ι (fun (i : ι) => Set.unionₛ.{u2} α (s i)))
 Case conversion may be inaccurate. Consider using '#align set.sUnion_Union Set.unionₛ_unionᵢₓ'. -/
 theorem unionₛ_unionᵢ (s : ι → Set (Set α)) : (⋃₀ ⋃ i, s i) = ⋃ i, ⋃₀ s i := by
-  simp only [sUnion_eq_bUnion, bUnion_Union]
+  simp only [unionₛ_eq_bunionᵢ, bunionᵢ_unionᵢ]
 #align set.sUnion_Union Set.unionₛ_unionᵢ
 
 /- warning: set.sInter_Union -> Set.interₛ_unionᵢ is a dubious translation:
@@ -2556,7 +2557,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} (s : ι -> (Set.{u2} (Set.{u2} α))), Eq.{succ u2} (Set.{u2} α) (Set.interₛ.{u2} α (Set.unionᵢ.{u2, u1} (Set.{u2} α) ι (fun (i : ι) => s i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => Set.interₛ.{u2} α (s i)))
 Case conversion may be inaccurate. Consider using '#align set.sInter_Union Set.interₛ_unionᵢₓ'. -/
 theorem interₛ_unionᵢ (s : ι → Set (Set α)) : (⋂₀ ⋃ i, s i) = ⋂ i, ⋂₀ s i := by
-  simp only [sInter_eq_bInter, bInter_Union]
+  simp only [interₛ_eq_binterᵢ, binterᵢ_unionᵢ]
 #align set.sInter_Union Set.interₛ_unionᵢ
 
 /- warning: set.Union_range_eq_sUnion -> Set.unionᵢ_range_eq_unionₛ is a dubious translation:
@@ -2587,7 +2588,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_range_eq_Uni
 theorem unionᵢ_range_eq_unionᵢ (C : ι → Set α) {f : ∀ x : ι, β → C x}
     (hf : ∀ x : ι, Surjective (f x)) : (⋃ y : β, range fun x : ι => (f x y).val) = ⋃ x, C x :=
   by
-  ext x; rw [mem_Union, mem_Union]; constructor
+  ext x; rw [mem_unionᵢ, mem_unionᵢ]; constructor
   · rintro ⟨y, i, rfl⟩
     exact ⟨i, (f i y).2⟩
   · rintro ⟨i, hx⟩
@@ -2614,7 +2615,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_distrib_Inte
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem union_distrib_interᵢ₂_left (s : Set α) (t : ∀ i, κ i → Set α) :
-    (s ∪ ⋂ (i) (j), t i j) = ⋂ (i) (j), s ∪ t i j := by simp_rw [union_distrib_Inter_left]
+    (s ∪ ⋂ (i) (j), t i j) = ⋂ (i) (j), s ∪ t i j := by simp_rw [union_distrib_interᵢ_left]
 #align set.union_distrib_Inter₂_left Set.union_distrib_interᵢ₂_left
 
 /- warning: set.union_distrib_Inter_right -> Set.union_distrib_interᵢ_right is a dubious translation:
@@ -2636,7 +2637,7 @@ Case conversion may be inaccurate. Consider using '#align set.union_distrib_Inte
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem union_distrib_interᵢ₂_right (s : ∀ i, κ i → Set α) (t : Set α) :
-    (⋂ (i) (j), s i j) ∪ t = ⋂ (i) (j), s i j ∪ t := by simp_rw [union_distrib_Inter_right]
+    (⋂ (i) (j), s i j) ∪ t = ⋂ (i) (j), s i j ∪ t := by simp_rw [union_distrib_interᵢ_right]
 #align set.union_distrib_Inter₂_right Set.union_distrib_interᵢ₂_right
 
 section Function
@@ -2788,8 +2789,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_sInter_subset Set.image_interₛ_subsetₓ'. -/
 theorem image_interₛ_subset (S : Set (Set α)) (f : α → β) : f '' ⋂₀ S ⊆ ⋂ s ∈ S, f '' s :=
   by
-  rw [sInter_eq_bInter]
-  apply image_Inter₂_subset
+  rw [interₛ_eq_binterᵢ]
+  apply image_interᵢ₂_subset
 #align set.image_sInter_subset Set.image_interₛ_subset
 
 /-! ### `restrict_preimage` -/
@@ -2847,8 +2848,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bijective_iff_bijective_of_Union_eq_univ Set.bijective_iff_bijective_of_unionᵢ_eq_univₓ'. -/
 theorem bijective_iff_bijective_of_unionᵢ_eq_univ :
     Bijective f ↔ ∀ i, Bijective ((U i).restrictPreimage f) := by
-  simp_rw [bijective, forall_and, injective_iff_injective_of_Union_eq_univ hU,
-    surjective_iff_surjective_of_Union_eq_univ hU]
+  simp_rw [Bijective, forall_and, injective_iff_injective_of_unionᵢ_eq_univ hU,
+    surjective_iff_surjective_of_unionᵢ_eq_univ hU]
 #align set.bijective_iff_bijective_of_Union_eq_univ Set.bijective_iff_bijective_of_unionᵢ_eq_univ
 
 end
@@ -2865,14 +2866,14 @@ Case conversion may be inaccurate. Consider using '#align set.inj_on.image_Inter
 theorem InjOn.image_interᵢ_eq [Nonempty ι] {s : ι → Set α} {f : α → β} (h : InjOn f (⋃ i, s i)) :
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   inhabit ι
-  refine' subset.antisymm (image_Inter_subset s f) fun y hy => _
-  simp only [mem_Inter, mem_image_iff_bex] at hy
+  refine' Subset.antisymm (image_interᵢ_subset s f) fun y hy => _
+  simp only [mem_interᵢ, mem_image_iff_bex] at hy
   choose x hx hy using hy
-  refine' ⟨x default, mem_Inter.2 fun i => _, hy _⟩
+  refine' ⟨x default, mem_interᵢ.2 fun i => _, hy _⟩
   suffices x default = x i by
     rw [this]
     apply hx
-  replace hx : ∀ i, x i ∈ ⋃ j, s j := fun i => (subset_Union _ _) (hx i)
+  replace hx : ∀ i, x i ∈ ⋃ j, s j := fun i => (subset_unionᵢ _ _) (hx i)
   apply h (hx _) (hx _)
   simp only [hy]
 #align set.inj_on.image_Inter_eq Set.InjOn.image_interᵢ_eq
@@ -2890,10 +2891,10 @@ theorem InjOn.image_binterᵢ_eq {p : ι → Prop} {s : ∀ (i) (hi : p i), Set 
     {f : α → β} (h : InjOn f (⋃ (i) (hi), s i hi)) :
     (f '' ⋂ (i) (hi), s i hi) = ⋂ (i) (hi), f '' s i hi :=
   by
-  simp only [Inter, infᵢ_subtype']
+  simp only [interᵢ, infᵢ_subtype']
   haveI : Nonempty { i // p i } := nonempty_subtype.2 hp
-  apply inj_on.image_Inter_eq
-  simpa only [Union, supᵢ_subtype'] using h
+  apply InjOn.image_interᵢ_eq
+  simpa only [unionᵢ, supᵢ_subtype'] using h
 #align set.inj_on.image_bInter_eq Set.InjOn.image_binterᵢ_eq
 
 /- warning: set.image_Inter -> Set.image_interᵢ is a dubious translation:
@@ -2906,7 +2907,7 @@ theorem image_interᵢ {f : α → β} (hf : Bijective f) (s : ι → Set α) :
     (f '' ⋂ i, s i) = ⋂ i, f '' s i :=
   by
   cases isEmpty_or_nonempty ι
-  · simp_rw [Inter_of_empty, image_univ_of_surjective hf.surjective]
+  · simp_rw [interᵢ_of_empty, image_univ_of_surjective hf.surjective]
   · exact (hf.injective.inj_on _).image_interᵢ_eq
 #align set.image_Inter Set.image_interᵢ
 
@@ -2919,7 +2920,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_Inter₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem image_interᵢ₂ {f : α → β} (hf : Bijective f) (s : ∀ i, κ i → Set α) :
-    (f '' ⋂ (i) (j), s i j) = ⋂ (i) (j), f '' s i j := by simp_rw [image_Inter hf]
+    (f '' ⋂ (i) (j), s i j) = ⋂ (i) (j), f '' s i j := by simp_rw [image_interᵢ hf]
 #align set.image_Inter₂ Set.image_interᵢ₂
 
 /- warning: set.inj_on_Union_of_directed -> Set.inj_on_unionᵢ_of_directed is a dubious translation:
@@ -2932,8 +2933,8 @@ theorem inj_on_unionᵢ_of_directed {s : ι → Set α} (hs : Directed (· ⊆ �
     (hf : ∀ i, InjOn f (s i)) : InjOn f (⋃ i, s i) :=
   by
   intro x hx y hy hxy
-  rcases mem_Union.1 hx with ⟨i, hx⟩
-  rcases mem_Union.1 hy with ⟨j, hy⟩
+  rcases mem_unionᵢ.1 hx with ⟨i, hx⟩
+  rcases mem_unionᵢ.1 hy with ⟨j, hy⟩
   rcases hs i j with ⟨k, hi, hj⟩
   exact hf k (hi hx) (hj hy) hxy
 #align set.inj_on_Union_of_directed Set.inj_on_unionᵢ_of_directed
@@ -3008,7 +3009,7 @@ theorem surjOn_interᵢ [hi : Nonempty ι] {s : ι → Set α} {t : Set β} {f :
     (H : ∀ i, SurjOn f (s i) t) (Hinj : InjOn f (⋃ i, s i)) : SurjOn f (⋂ i, s i) t :=
   by
   intro y hy
-  rw [Hinj.image_Inter_eq, mem_Inter]
+  rw [Hinj.image_Inter_eq, mem_interᵢ]
   exact fun i => H i hy
 #align set.surj_on_Inter Set.surjOn_interᵢ
 
@@ -3034,7 +3035,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bij_on_Union Set.bijOn_unionᵢₓ'. -/
 theorem bijOn_unionᵢ {s : ι → Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, BijOn f (s i) (t i))
     (Hinj : InjOn f (⋃ i, s i)) : BijOn f (⋃ i, s i) (⋃ i, t i) :=
-  ⟨mapsTo_unionᵢ_unionᵢ fun i => (H i).MapsTo, Hinj, surjOn_unionᵢ_unionᵢ fun i => (H i).SurjOn⟩
+  ⟨mapsTo_unionᵢ_unionᵢ fun i => (H i).mapsTo, Hinj, surjOn_unionᵢ_unionᵢ fun i => (H i).surjOn⟩
 #align set.bij_on_Union Set.bijOn_unionᵢ
 
 /- warning: set.bij_on_Inter -> Set.bijOn_interᵢ is a dubious translation:
@@ -3045,9 +3046,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bij_on_Inter Set.bijOn_interᵢₓ'. -/
 theorem bijOn_interᵢ [hi : Nonempty ι] {s : ι → Set α} {t : ι → Set β} {f : α → β}
     (H : ∀ i, BijOn f (s i) (t i)) (Hinj : InjOn f (⋃ i, s i)) : BijOn f (⋂ i, s i) (⋂ i, t i) :=
-  ⟨mapsTo_interᵢ_interᵢ fun i => (H i).MapsTo,
-    hi.elim fun i => (H i).InjOn.mono (interᵢ_subset _ _),
-    surjOn_interᵢ_interᵢ (fun i => (H i).SurjOn) Hinj⟩
+  ⟨mapsTo_interᵢ_interᵢ fun i => (H i).mapsTo,
+    hi.elim fun i => (H i).injOn.mono (interᵢ_subset _ _),
+    surjOn_interᵢ_interᵢ (fun i => (H i).surjOn) Hinj⟩
 #align set.bij_on_Inter Set.bijOn_interᵢ
 
 /- warning: set.bij_on_Union_of_directed -> Set.bijOn_unionᵢ_of_directed is a dubious translation:
@@ -3058,7 +3059,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bij_on_Union_of_directed Set.bijOn_unionᵢ_of_directedₓ'. -/
 theorem bijOn_unionᵢ_of_directed {s : ι → Set α} (hs : Directed (· ⊆ ·) s) {t : ι → Set β}
     {f : α → β} (H : ∀ i, BijOn f (s i) (t i)) : BijOn f (⋃ i, s i) (⋃ i, t i) :=
-  bijOn_unionᵢ H <| inj_on_unionᵢ_of_directed hs fun i => (H i).InjOn
+  bijOn_unionᵢ H <| inj_on_unionᵢ_of_directed hs fun i => (H i).injOn
 #align set.bij_on_Union_of_directed Set.bijOn_unionᵢ_of_directed
 
 /- warning: set.bij_on_Inter_of_directed -> Set.bijOn_interᵢ_of_directed is a dubious translation:
@@ -3069,7 +3070,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.bij_on_Inter_of_directed Set.bijOn_interᵢ_of_directedₓ'. -/
 theorem bijOn_interᵢ_of_directed [Nonempty ι] {s : ι → Set α} (hs : Directed (· ⊆ ·) s)
     {t : ι → Set β} {f : α → β} (H : ∀ i, BijOn f (s i) (t i)) : BijOn f (⋂ i, s i) (⋂ i, t i) :=
-  bijOn_interᵢ H <| inj_on_unionᵢ_of_directed hs fun i => (H i).InjOn
+  bijOn_interᵢ H <| inj_on_unionᵢ_of_directed hs fun i => (H i).injOn
 #align set.bij_on_Inter_of_directed Set.bijOn_interᵢ_of_directed
 
 end Function
@@ -3100,7 +3101,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_Union₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem image_unionᵢ₂ (f : α → β) (s : ∀ i, κ i → Set α) :
-    (f '' ⋃ (i) (j), s i j) = ⋃ (i) (j), f '' s i j := by simp_rw [image_Union]
+    (f '' ⋃ (i) (j), s i j) = ⋃ (i) (j), f '' s i j := by simp_rw [image_unionᵢ]
 #align set.image_Union₂ Set.image_unionᵢ₂
 
 #print Set.univ_subtype /-
@@ -3144,7 +3145,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_Union_eq' Se
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[simp]
 theorem unionᵢ_unionᵢ_eq' {f : ι → α} {g : α → Set β} :
-    (⋃ (x) (y) (h : f y = x), g x) = ⋃ y, g (f y) := by simpa using bUnion_range
+    (⋃ (x) (y) (h : f y = x), g x) = ⋃ y, g (f y) := by simpa using bunionᵢ_range
 #align set.Union_Union_eq' Set.unionᵢ_unionᵢ_eq'
 
 /- warning: set.bInter_range -> Set.binterᵢ_range is a dubious translation:
@@ -3166,7 +3167,7 @@ Case conversion may be inaccurate. Consider using '#align set.Inter_Inter_eq' Se
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (x y) -/
 @[simp]
 theorem interᵢ_interᵢ_eq' {f : ι → α} {g : α → Set β} :
-    (⋂ (x) (y) (h : f y = x), g x) = ⋂ y, g (f y) := by simpa using bInter_range
+    (⋂ (x) (y) (h : f y = x), g x) = ⋂ y, g (f y) := by simpa using binterᵢ_range
 #align set.Inter_Inter_eq' Set.interᵢ_interᵢ_eq'
 
 variable {s : Set γ} {f : γ → α} {g : α → Set β}
@@ -3224,13 +3225,13 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_Union₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem preimage_unionᵢ₂ {f : α → β} {s : ∀ i, κ i → Set β} :
-    (f ⁻¹' ⋃ (i) (j), s i j) = ⋃ (i) (j), f ⁻¹' s i j := by simp_rw [preimage_Union]
+    (f ⁻¹' ⋃ (i) (j), s i j) = ⋃ (i) (j), f ⁻¹' s i j := by simp_rw [preimage_unionᵢ]
 #align set.preimage_Union₂ Set.preimage_unionᵢ₂
 
 #print Set.preimage_unionₛ /-
 @[simp]
 theorem preimage_unionₛ {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋃₀ s = ⋃ t ∈ s, f ⁻¹' t := by
-  rw [sUnion_eq_bUnion, preimage_Union₂]
+  rw [unionₛ_eq_bunionᵢ, preimage_unionᵢ₂]
 #align set.preimage_sUnion Set.preimage_unionₛ
 -/
 
@@ -3253,20 +3254,20 @@ Case conversion may be inaccurate. Consider using '#align set.preimage_Inter₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem preimage_interᵢ₂ {f : α → β} {s : ∀ i, κ i → Set β} :
-    (f ⁻¹' ⋂ (i) (j), s i j) = ⋂ (i) (j), f ⁻¹' s i j := by simp_rw [preimage_Inter]
+    (f ⁻¹' ⋂ (i) (j), s i j) = ⋂ (i) (j), f ⁻¹' s i j := by simp_rw [preimage_interᵢ]
 #align set.preimage_Inter₂ Set.preimage_interᵢ₂
 
 #print Set.preimage_interₛ /-
 @[simp]
 theorem preimage_interₛ {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋂₀ s = ⋂ t ∈ s, f ⁻¹' t := by
-  rw [sInter_eq_bInter, preimage_Inter₂]
+  rw [interₛ_eq_binterᵢ, preimage_interᵢ₂]
 #align set.preimage_sInter Set.preimage_interₛ
 -/
 
 #print Set.bunionᵢ_preimage_singleton /-
 @[simp]
 theorem bunionᵢ_preimage_singleton (f : α → β) (s : Set β) : (⋃ y ∈ s, f ⁻¹' {y}) = f ⁻¹' s := by
-  rw [← preimage_Union₂, bUnion_of_singleton]
+  rw [← preimage_unionᵢ₂, bunionᵢ_of_singleton]
 #align set.bUnion_preimage_singleton Set.bunionᵢ_preimage_singleton
 -/
 
@@ -3277,7 +3278,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β), Eq.{succ u2} (Set.{u2} α) (Set.unionᵢ.{u2, succ u1} α β (fun (y : β) => Set.unionᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) y (Set.range.{u1, succ u2} β α f)) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) y (Set.range.{u1, succ u2} β α f)) => Set.preimage.{u2, u1} α β f (Singleton.singleton.{u1, u1} β (Set.{u1} β) (Set.instSingletonSet.{u1} β) y)))) (Set.univ.{u2} α)
 Case conversion may be inaccurate. Consider using '#align set.bUnion_range_preimage_singleton Set.bunionᵢ_range_preimage_singletonₓ'. -/
 theorem bunionᵢ_range_preimage_singleton (f : α → β) : (⋃ y ∈ range f, f ⁻¹' {y}) = univ := by
-  rw [bUnion_preimage_singleton, preimage_range]
+  rw [bunionᵢ_preimage_singleton, preimage_range]
 #align set.bUnion_range_preimage_singleton Set.bunionᵢ_range_preimage_singleton
 
 end Preimage
@@ -3309,7 +3310,7 @@ Case conversion may be inaccurate. Consider using '#align set.prod_Union₂ Set.
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_unionᵢ₂ {s : Set α} {t : ∀ i, κ i → Set β} :
-    (s ×ˢ ⋃ (i) (j), t i j) = ⋃ (i) (j), s ×ˢ t i j := by simp_rw [prod_Union]
+    (s ×ˢ ⋃ (i) (j), t i j) = ⋃ (i) (j), s ×ˢ t i j := by simp_rw [prod_unionᵢ]
 #align set.prod_Union₂ Set.prod_unionᵢ₂
 
 /- warning: set.prod_sUnion -> Set.prod_unionₛ is a dubious translation:
@@ -3321,7 +3322,7 @@ Case conversion may be inaccurate. Consider using '#align set.prod_sUnion Set.pr
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_unionₛ {s : Set α} {C : Set (Set β)} : s ×ˢ ⋃₀ C = ⋃₀ ((fun t => s ×ˢ t) '' C) := by
-  simp_rw [sUnion_eq_bUnion, bUnion_image, prod_Union₂]
+  simp_rw [unionₛ_eq_bunionᵢ, bunionᵢ_image, prod_unionᵢ₂]
 #align set.prod_sUnion Set.prod_unionₛ
 
 /- warning: set.Union_prod_const -> Set.unionᵢ_prod_const is a dubious translation:
@@ -3349,7 +3350,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union₂_prod_cons
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem unionᵢ₂_prod_const {s : ∀ i, κ i → Set α} {t : Set β} :
-    (⋃ (i) (j), s i j) ×ˢ t = ⋃ (i) (j), s i j ×ˢ t := by simp_rw [Union_prod_const]
+    (⋃ (i) (j), s i j) ×ˢ t = ⋃ (i) (j), s i j ×ˢ t := by simp_rw [unionᵢ_prod_const]
 #align set.Union₂_prod_const Set.unionᵢ₂_prod_const
 
 /- warning: set.sUnion_prod_const -> Set.unionₛ_prod_const is a dubious translation:
@@ -3362,7 +3363,7 @@ Case conversion may be inaccurate. Consider using '#align set.sUnion_prod_const 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem unionₛ_prod_const {C : Set (Set α)} {t : Set β} :
     ⋃₀ C ×ˢ t = ⋃₀ ((fun s : Set α => s ×ˢ t) '' C) := by
-  simp only [sUnion_eq_bUnion, Union₂_prod_const, bUnion_image]
+  simp only [unionₛ_eq_bunionᵢ, unionᵢ₂_prod_const, bunionᵢ_image]
 #align set.sUnion_prod_const Set.unionₛ_prod_const
 
 /- warning: set.Union_prod -> Set.unionᵢ_prod is a dubious translation:
@@ -3391,7 +3392,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_prod_of_mono
 theorem unionᵢ_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α → Set γ} (hs : Monotone s)
     (ht : Monotone t) : (⋃ x, s x ×ˢ t x) = (⋃ x, s x) ×ˢ ⋃ x, t x :=
   by
-  ext ⟨z, w⟩; simp only [mem_prod, mem_Union, exists_imp, and_imp, iff_def]; constructor
+  ext ⟨z, w⟩; simp only [mem_prod, mem_unionᵢ, exists_imp, and_imp, iff_def]; constructor
   · intro x hz hw
     exact ⟨⟨x, hz⟩, x, hw⟩
   · intro x hz x' hw
@@ -3426,8 +3427,8 @@ theorem interₛ_prod_interₛ {S : Set (Set α)} {T : Set (Set β)} (hS : S.Non
   by
   obtain ⟨s₁, h₁⟩ := hS
   obtain ⟨s₂, h₂⟩ := hT
-  refine' Set.Subset.antisymm (sInter_prod_sInter_subset S T) fun x hx => _
-  rw [mem_Inter₂] at hx
+  refine' Set.Subset.antisymm (interₛ_prod_interₛ_subset S T) fun x hx => _
+  rw [mem_interᵢ₂] at hx
   exact ⟨fun s₀ h₀ => (hx (s₀, s₂) ⟨h₀, h₂⟩).1, fun s₀ h₀ => (hx (s₁, s₀) ⟨h₁, h₀⟩).2⟩
 #align set.sInter_prod_sInter Set.interₛ_prod_interₛ
 
@@ -3441,8 +3442,8 @@ Case conversion may be inaccurate. Consider using '#align set.sInter_prod Set.in
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem interₛ_prod {S : Set (Set α)} (hS : S.Nonempty) (t : Set β) : ⋂₀ S ×ˢ t = ⋂ s ∈ S, s ×ˢ t :=
   by
-  rw [← sInter_singleton t, sInter_prod_sInter hS (singleton_nonempty t), sInter_singleton]
-  simp_rw [prod_singleton, mem_image, Inter_exists, bInter_and', Inter_Inter_eq_right]
+  rw [← interₛ_singleton t, interₛ_prod_interₛ hS (singleton_nonempty t), interₛ_singleton]
+  simp_rw [prod_singleton, mem_image, interᵢ_exists, binterᵢ_and', interᵢ_interᵢ_eq_right]
 #align set.sInter_prod Set.interₛ_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -3450,8 +3451,8 @@ theorem interₛ_prod {S : Set (Set α)} (hS : S.Nonempty) (t : Set β) : ⋂₀
 #print Set.prod_interₛ /-
 theorem prod_interₛ {T : Set (Set β)} (hT : T.Nonempty) (s : Set α) : s ×ˢ ⋂₀ T = ⋂ t ∈ T, s ×ˢ t :=
   by
-  rw [← sInter_singleton s, sInter_prod_sInter (singleton_nonempty s) hT, sInter_singleton]
-  simp_rw [singleton_prod, mem_image, Inter_exists, bInter_and', Inter_Inter_eq_right]
+  rw [← interₛ_singleton s, interₛ_prod_interₛ (singleton_nonempty s) hT, interₛ_singleton]
+  simp_rw [singleton_prod, mem_image, interᵢ_exists, binterᵢ_and', interᵢ_interᵢ_eq_right]
 #align set.prod_sInter Set.prod_interₛ
 -/
 
@@ -3470,14 +3471,14 @@ Case conversion may be inaccurate. Consider using '#align set.Union_image_left S
 theorem unionᵢ_image_left : (⋃ a ∈ s, f a '' t) = image2 f s t :=
   by
   ext y
-  constructor <;> simp only [mem_Union] <;> rintro ⟨a, ha, x, hx, ax⟩ <;> exact ⟨a, x, ha, hx, ax⟩
+  constructor <;> simp only [mem_unionᵢ] <;> rintro ⟨a, ha, x, hx, ax⟩ <;> exact ⟨a, x, ha, hx, ax⟩
 #align set.Union_image_left Set.unionᵢ_image_left
 
 #print Set.unionᵢ_image_right /-
 theorem unionᵢ_image_right : (⋃ b ∈ t, (fun a => f a b) '' s) = image2 f s t :=
   by
   ext y
-  constructor <;> simp only [mem_Union] <;> rintro ⟨a, b, c, d, e⟩
+  constructor <;> simp only [mem_unionᵢ] <;> rintro ⟨a, b, c, d, e⟩
   exact ⟨c, a, d, b, e⟩
   exact ⟨b, d, a, c, e⟩
 #align set.Union_image_right Set.unionᵢ_image_right
@@ -3491,7 +3492,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image2_Union_left Set.image2_unionᵢ_leftₓ'. -/
 theorem image2_unionᵢ_left (s : ι → Set α) (t : Set β) :
     image2 f (⋃ i, s i) t = ⋃ i, image2 f (s i) t := by
-  simp only [← image_prod, Union_prod_const, image_Union]
+  simp only [← image_prod, unionᵢ_prod_const, image_unionᵢ]
 #align set.image2_Union_left Set.image2_unionᵢ_left
 
 /- warning: set.image2_Union_right -> Set.image2_unionᵢ_right is a dubious translation:
@@ -3502,7 +3503,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image2_Union_right Set.image2_unionᵢ_rightₓ'. -/
 theorem image2_unionᵢ_right (s : Set α) (t : ι → Set β) :
     image2 f s (⋃ i, t i) = ⋃ i, image2 f s (t i) := by
-  simp only [← image_prod, prod_Union, image_Union]
+  simp only [← image_prod, prod_unionᵢ, image_unionᵢ]
 #align set.image2_Union_right Set.image2_unionᵢ_right
 
 /- warning: set.image2_Union₂_left -> Set.image2_unionᵢ₂_left is a dubious translation:
@@ -3514,7 +3515,7 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Union₂_le
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem image2_unionᵢ₂_left (s : ∀ i, κ i → Set α) (t : Set β) :
-    image2 f (⋃ (i) (j), s i j) t = ⋃ (i) (j), image2 f (s i j) t := by simp_rw [image2_Union_left]
+    image2 f (⋃ (i) (j), s i j) t = ⋃ (i) (j), image2 f (s i j) t := by simp_rw [image2_unionᵢ_left]
 #align set.image2_Union₂_left Set.image2_unionᵢ₂_left
 
 /- warning: set.image2_Union₂_right -> Set.image2_unionᵢ₂_right is a dubious translation:
@@ -3526,7 +3527,8 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Union₂_ri
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem image2_unionᵢ₂_right (s : Set α) (t : ∀ i, κ i → Set β) :
-    image2 f s (⋃ (i) (j), t i j) = ⋃ (i) (j), image2 f s (t i j) := by simp_rw [image2_Union_right]
+    image2 f s (⋃ (i) (j), t i j) = ⋃ (i) (j), image2 f s (t i j) := by
+  simp_rw [image2_unionᵢ_right]
 #align set.image2_Union₂_right Set.image2_unionᵢ₂_right
 
 /- warning: set.image2_Inter_subset_left -> Set.image2_interᵢ_subset_left is a dubious translation:
@@ -3538,7 +3540,7 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Inter_subse
 theorem image2_interᵢ_subset_left (s : ι → Set α) (t : Set β) :
     image2 f (⋂ i, s i) t ⊆ ⋂ i, image2 f (s i) t :=
   by
-  simp_rw [image2_subset_iff, mem_Inter]
+  simp_rw [image2_subset_iff, mem_interᵢ]
   exact fun x hx y hy i => mem_image2_of_mem (hx _) hy
 #align set.image2_Inter_subset_left Set.image2_interᵢ_subset_left
 
@@ -3551,7 +3553,7 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Inter_subse
 theorem image2_interᵢ_subset_right (s : Set α) (t : ι → Set β) :
     image2 f s (⋂ i, t i) ⊆ ⋂ i, image2 f s (t i) :=
   by
-  simp_rw [image2_subset_iff, mem_Inter]
+  simp_rw [image2_subset_iff, mem_interᵢ]
   exact fun x hx y hy i => mem_image2_of_mem hx (hy _)
 #align set.image2_Inter_subset_right Set.image2_interᵢ_subset_right
 
@@ -3566,7 +3568,7 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Inter₂_su
 theorem image2_interᵢ₂_subset_left (s : ∀ i, κ i → Set α) (t : Set β) :
     image2 f (⋂ (i) (j), s i j) t ⊆ ⋂ (i) (j), image2 f (s i j) t :=
   by
-  simp_rw [image2_subset_iff, mem_Inter]
+  simp_rw [image2_subset_iff, mem_interᵢ]
   exact fun x hx y hy i j => mem_image2_of_mem (hx _ _) hy
 #align set.image2_Inter₂_subset_left Set.image2_interᵢ₂_subset_left
 
@@ -3581,7 +3583,7 @@ Case conversion may be inaccurate. Consider using '#align set.image2_Inter₂_su
 theorem image2_interᵢ₂_subset_right (s : Set α) (t : ∀ i, κ i → Set β) :
     image2 f s (⋂ (i) (j), t i j) ⊆ ⋂ (i) (j), image2 f s (t i j) :=
   by
-  simp_rw [image2_subset_iff, mem_Inter]
+  simp_rw [image2_subset_iff, mem_interᵢ]
   exact fun x hx y hy i j => mem_image2_of_mem hx (hy _ _)
 #align set.image2_Inter₂_subset_right Set.image2_interᵢ₂_subset_right
 
@@ -3593,7 +3595,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image2_eq_Union Set.image2_eq_unionᵢₓ'. -/
 /-- The `set.image2` version of `set.image_eq_Union` -/
 theorem image2_eq_unionᵢ (s : Set α) (t : Set β) : image2 f s t = ⋃ (i ∈ s) (j ∈ t), {f i j} := by
-  simp_rw [← image_eq_Union, Union_image_left]
+  simp_rw [← image_eq_unionᵢ, unionᵢ_image_left]
 #align set.image2_eq_Union Set.image2_eq_unionᵢ
 
 /- warning: set.prod_eq_bUnion_left -> Set.prod_eq_bunionᵢ_left is a dubious translation:
@@ -3604,7 +3606,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_eq_bUnion_left Set.prod_eq_bunionᵢ_leftₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_bunionᵢ_left : s ×ˢ t = ⋃ a ∈ s, (fun b => (a, b)) '' t := by
-  rw [Union_image_left, image2_mk_eq_prod]
+  rw [unionᵢ_image_left, image2_mk_eq_prod]
 #align set.prod_eq_bUnion_left Set.prod_eq_bunionᵢ_left
 
 /- warning: set.prod_eq_bUnion_right -> Set.prod_eq_bunionᵢ_right is a dubious translation:
@@ -3615,7 +3617,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.prod_eq_bUnion_right Set.prod_eq_bunionᵢ_rightₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_bunionᵢ_right : s ×ˢ t = ⋃ b ∈ t, (fun a => (a, b)) '' s := by
-  rw [Union_image_right, image2_mk_eq_prod]
+  rw [unionᵢ_image_right, image2_mk_eq_prod]
 #align set.prod_eq_bUnion_right Set.prod_eq_bunionᵢ_right
 
 end Image2
@@ -3660,8 +3662,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.seq_subset Set.seq_subsetₓ'. -/
 theorem seq_subset {s : Set (α → β)} {t : Set α} {u : Set β} :
     seq s t ⊆ u ↔ ∀ f ∈ s, ∀ a ∈ t, (f : α → β) a ∈ u :=
-  Iff.intro (fun h f hf a ha => h ⟨f, hf, a, ha, rfl⟩) fun h b ⟨f, hf, a, ha, Eq⟩ =>
-    Eq ▸ h f hf a ha
+  Iff.intro (fun h f hf a ha => h ⟨f, hf, a, ha, rfl⟩) fun h b ⟨f, hf, a, ha, eq⟩ =>
+    eq ▸ h f hf a ha
 #align set.seq_subset Set.seq_subset
 
 /- warning: set.seq_mono -> Set.seq_mono is a dubious translation:
@@ -3671,7 +3673,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s₀ : Set.{max u2 u1} (α -> β)} {s₁ : Set.{max u2 u1} (α -> β)} {t₀ : Set.{u2} α} {t₁ : Set.{u2} α}, (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (α -> β)) (Set.instHasSubsetSet.{max u2 u1} (α -> β)) s₀ s₁) -> (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) t₀ t₁) -> (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Set.seq.{u2, u1} α β s₀ t₀) (Set.seq.{u2, u1} α β s₁ t₁))
 Case conversion may be inaccurate. Consider using '#align set.seq_mono Set.seq_monoₓ'. -/
 theorem seq_mono {s₀ s₁ : Set (α → β)} {t₀ t₁ : Set α} (hs : s₀ ⊆ s₁) (ht : t₀ ⊆ t₁) :
-    seq s₀ t₀ ⊆ seq s₁ t₁ := fun b ⟨f, hf, a, ha, Eq⟩ => ⟨f, hs hf, a, ht ha, Eq⟩
+    seq s₀ t₀ ⊆ seq s₁ t₁ := fun b ⟨f, hf, a, ha, eq⟩ => ⟨f, hs hf, a, ht ha, eq⟩
 #align set.seq_mono Set.seq_mono
 
 /- warning: set.singleton_seq -> Set.singleton_seq is a dubious translation:
@@ -3735,7 +3737,7 @@ theorem prod_eq_seq {s : Set α} {t : Set β} : s ×ˢ t = (Prod.mk '' s).seq t 
   · rintro ⟨ha, hb⟩
     exact ⟨Prod.mk a, ⟨a, ha, rfl⟩, b, hb, rfl⟩
   · rintro ⟨f, ⟨x, hx, rfl⟩, y, hy, eq⟩
-    rw [← Eq]
+    rw [← eq]
     exact ⟨hx, hy⟩
 #align set.prod_eq_seq Set.prod_eq_seq
 
@@ -3782,7 +3784,7 @@ theorem pi_def (i : Set α) (s : ∀ a, Set (π a)) : pi i s = ⋂ a ∈ i, eval
 
 #print Set.univ_pi_eq_interᵢ /-
 theorem univ_pi_eq_interᵢ (t : ∀ i, Set (π i)) : pi univ t = ⋂ i, eval i ⁻¹' t i := by
-  simp only [pi_def, Inter_true, mem_univ]
+  simp only [pi_def, interᵢ_true, mem_univ]
 #align set.univ_pi_eq_Inter Set.univ_pi_eq_interᵢ
 -/
 
@@ -3796,7 +3798,7 @@ theorem pi_diff_pi_subset (i : Set α) (s t : ∀ a, Set (π a)) :
     pi i s \ pi i t ⊆ ⋃ a ∈ i, eval a ⁻¹' (s a \ t a) :=
   by
   refine' diff_subset_comm.2 fun x hx a ha => _
-  simp only [mem_diff, mem_pi, mem_Union, not_exists, mem_preimage, not_and, Classical.not_not,
+  simp only [mem_diff, mem_pi, mem_unionᵢ, not_exists, mem_preimage, not_and, Classical.not_not,
     eval_apply] at hx
   exact hx.2 _ ha (hx.1 _ ha)
 #align set.pi_diff_pi_subset Set.pi_diff_pi_subset
@@ -3951,7 +3953,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (Set.{u2} α) (Set.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (supᵢ.{u2, u1} α (CompleteLattice.toSupSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => Set.Ici.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
 Case conversion may be inaccurate. Consider using '#align set.Ici_supr Set.Ici_supᵢₓ'. -/
 theorem Ici_supᵢ (f : ι → α) : Ici (⨆ i, f i) = ⋂ i, Ici (f i) :=
-  ext fun _ => by simp only [mem_Ici, supᵢ_le_iff, mem_Inter]
+  ext fun _ => by simp only [mem_Ici, supᵢ_le_iff, mem_interᵢ]
 #align set.Ici_supr Set.Ici_supᵢ
 
 /- warning: set.Iic_infi -> Set.Iic_infᵢ is a dubious translation:
@@ -3961,7 +3963,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : CompleteLattice.{u2} α] (f : ι -> α), Eq.{succ u2} (Set.{u2} α) (Set.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (infᵢ.{u2, u1} α (CompleteLattice.toInfSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (Set.interᵢ.{u2, u1} α ι (fun (i : ι) => Set.Iic.{u2} α (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1))) (f i)))
 Case conversion may be inaccurate. Consider using '#align set.Iic_infi Set.Iic_infᵢₓ'. -/
 theorem Iic_infᵢ (f : ι → α) : Iic (⨅ i, f i) = ⋂ i, Iic (f i) :=
-  ext fun _ => by simp only [mem_Iic, le_infᵢ_iff, mem_Inter]
+  ext fun _ => by simp only [mem_Iic, le_infᵢ_iff, mem_interᵢ]
 #align set.Iic_infi Set.Iic_infᵢ
 
 /- warning: set.Ici_supr₂ -> Set.Ici_supᵢ₂ is a dubious translation:
@@ -3973,7 +3975,7 @@ Case conversion may be inaccurate. Consider using '#align set.Ici_supr₂ Set.Ic
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem Ici_supᵢ₂ (f : ∀ i, κ i → α) : Ici (⨆ (i) (j), f i j) = ⋂ (i) (j), Ici (f i j) := by
-  simp_rw [Ici_supr]
+  simp_rw [Ici_supᵢ]
 #align set.Ici_supr₂ Set.Ici_supᵢ₂
 
 /- warning: set.Iic_infi₂ -> Set.Iic_infᵢ₂ is a dubious translation:
@@ -3985,7 +3987,7 @@ Case conversion may be inaccurate. Consider using '#align set.Iic_infi₂ Set.Ii
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem Iic_infᵢ₂ (f : ∀ i, κ i → α) : Iic (⨅ (i) (j), f i j) = ⋂ (i) (j), Iic (f i j) := by
-  simp_rw [Iic_infi]
+  simp_rw [Iic_infᵢ]
 #align set.Iic_infi₂ Set.Iic_infᵢ₂
 
 /- warning: set.Ici_Sup -> Set.Ici_supₛ is a dubious translation:
@@ -3994,7 +3996,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) s)) (Set.interᵢ.{u1, succ u1} α α (fun (a : α) => Set.interᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.Ici.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
 Case conversion may be inaccurate. Consider using '#align set.Ici_Sup Set.Ici_supₛₓ'. -/
-theorem Ici_supₛ (s : Set α) : Ici (supₛ s) = ⋂ a ∈ s, Ici a := by rw [supₛ_eq_supᵢ, Ici_supr₂]
+theorem Ici_supₛ (s : Set α) : Ici (supₛ s) = ⋂ a ∈ s, Ici a := by rw [supₛ_eq_supᵢ, Ici_supᵢ₂]
 #align set.Ici_Sup Set.Ici_supₛ
 
 /- warning: set.Iic_Inf -> Set.Iic_infₛ is a dubious translation:
@@ -4003,7 +4005,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] (s : Set.{u1} α), Eq.{succ u1} (Set.{u1} α) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (InfSet.infₛ.{u1} α (CompleteLattice.toInfSet.{u1} α _inst_1) s)) (Set.interᵢ.{u1, succ u1} α α (fun (a : α) => Set.interᵢ.{u1, 0} α (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) a)))
 Case conversion may be inaccurate. Consider using '#align set.Iic_Inf Set.Iic_infₛₓ'. -/
-theorem Iic_infₛ (s : Set α) : Iic (infₛ s) = ⋂ a ∈ s, Iic a := by rw [infₛ_eq_infᵢ, Iic_infi₂]
+theorem Iic_infₛ (s : Set α) : Iic (infₛ s) = ⋂ a ∈ s, Iic a := by rw [infₛ_eq_infᵢ, Iic_infᵢ₂]
 #align set.Iic_Inf Set.Iic_infₛ
 
 end Set
@@ -4021,8 +4023,8 @@ Case conversion may be inaccurate. Consider using '#align set.bUnion_diff_bUnion
 theorem bunionᵢ_diff_bunionᵢ_subset (s₁ s₂ : Set α) :
     ((⋃ x ∈ s₁, t x) \ ⋃ x ∈ s₂, t x) ⊆ ⋃ x ∈ s₁ \ s₂, t x :=
   by
-  simp only [diff_subset_iff, ← bUnion_union]
-  apply bUnion_subset_bUnion_left
+  simp only [diff_subset_iff, ← bunionᵢ_union]
+  apply bunionᵢ_subset_bunionᵢ_left
   rw [union_diff_self]
   apply subset_union_right
 #align set.bUnion_diff_bUnion_subset Set.bunionᵢ_diff_bunionᵢ_subset
@@ -4056,12 +4058,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.sigma_to_Union_injective Set.sigmaToUnionᵢ_injectiveₓ'. -/
 theorem sigmaToUnionᵢ_injective (h : ∀ i j, i ≠ j → Disjoint (t i) (t j)) :
     Injective (sigmaToUnionᵢ t)
-  | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, Eq =>
-    have b_eq : b₁ = b₂ := congr_arg Subtype.val Eq
+  | ⟨a₁, b₁, h₁⟩, ⟨a₂, b₂, h₂⟩, eq =>
+    have b_eq : b₁ = b₂ := congr_arg Subtype.val eq
     have a_eq : a₁ = a₂ :=
       by_contradiction fun ne =>
         have : b₁ ∈ t a₁ ∩ t a₂ := ⟨h₁, b_eq.symm ▸ h₂⟩
-        (h _ _ Ne).le_bot this
+        (h _ _ ne).le_bot this
     Sigma.eq a_eq <| Subtype.eq <| by subst b_eq <;> subst a_eq
 #align set.sigma_to_Union_injective Set.sigmaToUnionᵢ_injective
 
@@ -4165,7 +4167,7 @@ Case conversion may be inaccurate. Consider using '#align supr_Union supᵢ_unio
 theorem supᵢ_unionᵢ (s : ι → Set α) (f : α → β) : (⨆ a ∈ ⋃ i, s i, f a) = ⨆ (i) (a ∈ s i), f a :=
   by
   rw [supᵢ_comm]
-  simp_rw [mem_Union, supᵢ_exists]
+  simp_rw [mem_unionᵢ, supᵢ_exists]
 #align supr_Union supᵢ_unionᵢ
 
 /- warning: infi_Union -> infᵢ_unionᵢ is a dubious translation:
@@ -4185,7 +4187,7 @@ but is expected to have type
   forall {β : Type.{u1}} [_inst_1 : CompleteLattice.{u1} β] (s : Set.{u1} (Set.{u1} β)), Eq.{succ u1} β (SupSet.supₛ.{u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Set.unionₛ.{u1} β s)) (supᵢ.{u1, succ u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Set.{u1} β) (fun (t : Set.{u1} β) => supᵢ.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) (fun (H : Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t s) => SupSet.supₛ.{u1} β (CompleteLattice.toSupSet.{u1} β _inst_1) t)))
 Case conversion may be inaccurate. Consider using '#align Sup_sUnion supₛ_unionₛₓ'. -/
 theorem supₛ_unionₛ (s : Set (Set β)) : supₛ (⋃₀ s) = ⨆ t ∈ s, supₛ t := by
-  simp only [sUnion_eq_bUnion, supₛ_eq_supᵢ, supᵢ_unionᵢ]
+  simp only [unionₛ_eq_bunionᵢ, supₛ_eq_supᵢ, supᵢ_unionᵢ]
 #align Sup_sUnion supₛ_unionₛ
 
 /- warning: Inf_sUnion -> infₛ_unionₛ is a dubious translation:

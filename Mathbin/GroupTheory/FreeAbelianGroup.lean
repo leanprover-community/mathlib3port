@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ open FreeAbelianGroup
 @[simp]
 protected theorem of (x : α) : lift f (of x) = f x :=
   by
-  convert @Abelianization.lift.of (FreeGroup α) _ (Multiplicative β) _ _ _
+  convert @abelianization.lift.of (FreeGroup α) _ (Multiplicative β) _ _ _
   convert free_group.lift.of.symm
 #align free_abelian_group.lift.of FreeAbelianGroup.lift.of
 
@@ -122,7 +122,7 @@ protected theorem unique (g : FreeAbelianGroup α →+ β) (hg : ∀ x, g (of x)
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 protected theorem ext (g h : FreeAbelianGroup α →+ β) (H : ∀ x, g (of x) = h (of x)) : g = h :=
-  lift.symm.Injective <| funext H
+  lift.symm.injective <| funext H
 #align free_abelian_group.lift.ext FreeAbelianGroup.lift.ext
 
 theorem map_hom {α β γ} [AddCommGroup β] [AddCommGroup γ] (a : FreeAbelianGroup α) (f : α → β)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed.group.hom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -264,12 +264,12 @@ theorem lipschitz : LipschitzWith ⟨‖f‖, op_norm_nonneg f⟩ f :=
 #align normed_add_group_hom.lipschitz NormedAddGroupHom.lipschitz
 
 protected theorem uniformContinuous (f : NormedAddGroupHom V₁ V₂) : UniformContinuous f :=
-  f.lipschitz.UniformContinuous
+  f.lipschitz.uniformContinuous
 #align normed_add_group_hom.uniform_continuous NormedAddGroupHom.uniformContinuous
 
 @[continuity]
 protected theorem continuous (f : NormedAddGroupHom V₁ V₂) : Continuous f :=
-  f.UniformContinuous.Continuous
+  f.uniformContinuous.continuous
 #align normed_add_group_hom.continuous NormedAddGroupHom.continuous
 
 theorem ratio_le_op_norm (x : V₁) : ‖f x‖ / ‖x‖ ≤ ‖f‖ :=
@@ -580,7 +580,7 @@ theorem zsmul_apply (r : ℤ) (f : NormedAddGroupHom V₁ V₂) (v : V₁) : (r 
 
 /-- Homs between two given normed groups form a commutative additive group. -/
 instance : AddCommGroup (NormedAddGroupHom V₁ V₂) :=
-  coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  coe_injective.addCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ _ => rfl
 
 /-- Normed group homomorphisms themselves form a seminormed group with respect to
@@ -789,7 +789,7 @@ theorem coe_ker : (f.ker : Set V₁) = (f : V₁ → V₂) ⁻¹' {0} :=
 
 theorem isClosed_ker {V₂ : Type _} [NormedAddCommGroup V₂] (f : NormedAddGroupHom V₁ V₂) :
     IsClosed (f.ker : Set V₁) :=
-  f.coe_ker ▸ IsClosed.preimage f.Continuous (T1Space.t1 0)
+  f.coe_ker ▸ IsClosed.preimage f.continuous (T1Space.t1 0)
 #align normed_add_group_hom.is_closed_ker NormedAddGroupHom.isClosed_ker
 
 end Kernels
@@ -954,7 +954,7 @@ theorem ι_comp_lift (φ : NormedAddGroupHom V₁ V) (h : f.comp φ = g.comp φ)
 def liftEquiv :
     { φ : NormedAddGroupHom V₁ V // f.comp φ = g.comp φ } ≃ NormedAddGroupHom V₁ (f.equalizer g)
     where
-  toFun φ := lift φ φ.Prop
+  toFun φ := lift φ φ.prop
   invFun ψ := ⟨(ι f g).comp ψ, by rw [← comp_assoc, ← comp_assoc, comp_ι_eq]⟩
   left_inv φ := by simp
   right_inv ψ := by

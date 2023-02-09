@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.endo_functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,22 +37,22 @@ instance Endofunctor.algebraPreadditive : Preadditive (Endofunctor.Algebra F)
   homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f
-          h' := by simp only [functor.map_add, add_comp, endofunctor.algebra.hom.h, comp_add] }
+          h' := by simp only [Functor.map_add, add_comp, Endofunctor.Algebra.Hom.h, comp_add] }
       zero :=
         { f := 0
-          h' := by simp only [functor.map_zero, zero_comp, comp_zero] }
+          h' := by simp only [Functor.map_zero, zero_comp, comp_zero] }
       nsmul := fun n α =>
         { f := n • α.f
-          h' := by rw [comp_nsmul, functor.map_nsmul, nsmul_comp, endofunctor.algebra.hom.h] }
+          h' := by rw [comp_nsmul, Functor.map_nsmul, nsmul_comp, Endofunctor.Algebra.Hom.h] }
       neg := fun α =>
         { f := -α.f
-          h' := by simp only [functor.map_neg, neg_comp, endofunctor.algebra.hom.h, comp_neg] }
+          h' := by simp only [Functor.map_neg, neg_comp, Endofunctor.Algebra.Hom.h, comp_neg] }
       sub := fun α β =>
         { f := α.f - β.f
-          h' := by simp only [functor.map_sub, sub_comp, endofunctor.algebra.hom.h, comp_sub] }
+          h' := by simp only [Functor.map_sub, sub_comp, Endofunctor.Algebra.Hom.h, comp_sub] }
       zsmul := fun r α =>
         { f := r • α.f
-          h' := by rw [comp_zsmul, functor.map_zsmul, zsmul_comp, endofunctor.algebra.hom.h] }
+          h' := by rw [comp_zsmul, Functor.map_zsmul, zsmul_comp, Endofunctor.Algebra.Hom.h] }
       add_assoc := by
         intros
         ext
@@ -118,22 +118,22 @@ instance Endofunctor.coalgebraPreadditive : Preadditive (Endofunctor.Coalgebra F
   homGroup A₁ A₂ :=
     { add := fun α β =>
         { f := α.f + β.f
-          h' := by simp only [functor.map_add, comp_add, endofunctor.coalgebra.hom.h, add_comp] }
+          h' := by simp only [Functor.map_add, comp_add, Endofunctor.Coalgebra.Hom.h, add_comp] }
       zero :=
         { f := 0
-          h' := by simp only [functor.map_zero, zero_comp, comp_zero] }
+          h' := by simp only [Functor.map_zero, zero_comp, comp_zero] }
       nsmul := fun n α =>
         { f := n • α.f
-          h' := by rw [functor.map_nsmul, comp_nsmul, endofunctor.coalgebra.hom.h, nsmul_comp] }
+          h' := by rw [Functor.map_nsmul, comp_nsmul, Endofunctor.Coalgebra.Hom.h, nsmul_comp] }
       neg := fun α =>
         { f := -α.f
-          h' := by simp only [functor.map_neg, comp_neg, endofunctor.coalgebra.hom.h, neg_comp] }
+          h' := by simp only [Functor.map_neg, comp_neg, Endofunctor.Coalgebra.Hom.h, neg_comp] }
       sub := fun α β =>
         { f := α.f - β.f
-          h' := by simp only [functor.map_sub, comp_sub, endofunctor.coalgebra.hom.h, sub_comp] }
+          h' := by simp only [Functor.map_sub, comp_sub, Endofunctor.Coalgebra.Hom.h, sub_comp] }
       zsmul := fun r α =>
         { f := r • α.f
-          h' := by rw [functor.map_zsmul, comp_zsmul, endofunctor.coalgebra.hom.h, zsmul_comp] }
+          h' := by rw [Functor.map_zsmul, comp_zsmul, Endofunctor.Coalgebra.Hom.h, zsmul_comp] }
       add_assoc := by
         intros
         ext

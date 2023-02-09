@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antisymmetrization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -306,7 +306,7 @@ def OrderHom.toAntisymmetrization : α →o Antisymmetrization α (· ≤ ·) :=
 #align order_hom.to_antisymmetrization OrderHom.toAntisymmetrization
 
 private theorem lift_fun_antisymm_rel (f : α →o β) :
-    ((AntisymmRel.setoid α (· ≤ ·)).R ⇒ (AntisymmRel.setoid β (· ≤ ·)).R) f f := fun a b h =>
+    ((AntisymmRel.setoid α (· ≤ ·)).r ⇒ (AntisymmRel.setoid β (· ≤ ·)).r) f f := fun a b h =>
   ⟨f.mono h.1, f.mono h.2⟩
 #align lift_fun_antisymm_rel lift_fun_antisymm_rel
 
@@ -332,7 +332,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_hom.coe_antisymmetrization OrderHom.coe_antisymmetrizationₓ'. -/
 @[simp]
 theorem OrderHom.coe_antisymmetrization (f : α →o β) :
-    ⇑f.Antisymmetrization = Quotient.map' f (liftFun_antisymm_rel f) :=
+    ⇑f.antisymmetrization = Quotient.map' f (liftFun_antisymm_rel f) :=
   rfl
 #align order_hom.coe_antisymmetrization OrderHom.coe_antisymmetrization
 
@@ -344,7 +344,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_hom.antisymmetrization_apply OrderHom.antisymmetrization_applyₓ'. -/
 @[simp]
 theorem OrderHom.antisymmetrization_apply (f : α →o β) (a : Antisymmetrization α (· ≤ ·)) :
-    f.Antisymmetrization a = Quotient.map' f (liftFun_antisymm_rel f) a :=
+    f.antisymmetrization a = Quotient.map' f (liftFun_antisymm_rel f) a :=
   rfl
 #align order_hom.antisymmetrization_apply OrderHom.antisymmetrization_apply
 
@@ -356,7 +356,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order_hom.antisymmetrization_apply_mk OrderHom.antisymmetrization_apply_mkₓ'. -/
 @[simp]
 theorem OrderHom.antisymmetrization_apply_mk (f : α →o β) (a : α) :
-    f.Antisymmetrization (toAntisymmetrization _ a) = toAntisymmetrization _ (f a) :=
+    f.antisymmetrization (toAntisymmetrization _ a) = toAntisymmetrization _ (f a) :=
   Quotient.map'_mk'' f (liftFun_antisymm_rel f) _
 #align order_hom.antisymmetrization_apply_mk OrderHom.antisymmetrization_apply_mk
 

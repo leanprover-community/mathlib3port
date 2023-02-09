@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Zhao
 
 ! This file was ported from Lean 3 source module number_theory.frobenius_number
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,16 +79,16 @@ theorem frobeniusNumber_pair (cop : coprime m n) (hm : 1 < m) (hn : 1 < n) :
   · intro k hk
     dsimp at hk
     contrapose! hk
-    let x := chinese_remainder cop 0 k
-    have hx : x.val < m * n := chinese_remainder_lt_mul cop 0 k (ne_bot_of_gt hm) (ne_bot_of_gt hn)
+    let x := chineseRemainder cop 0 k
+    have hx : x.val < m * n := chineseRemainder_lt_mul cop 0 k (ne_bot_of_gt hm) (ne_bot_of_gt hn)
     suffices key : x.1 ≤ k
     · obtain ⟨a, ha⟩ := modeq_zero_iff_dvd.mp x.2.1
-      obtain ⟨b, hb⟩ := (modeq_iff_dvd' key).mp x.2.2
+      obtain ⟨b, hb⟩ := (modEq_iff_dvd' key).mp x.2.2
       exact ⟨a, b, by rw [mul_comm, ← ha, mul_comm, ← hb, Nat.add_sub_of_le key]⟩
-    refine' modeq.le_of_lt_add x.2.2 (lt_of_le_of_lt _ (add_lt_add_right hk n))
+    refine' ModEq.le_of_lt_add x.2.2 (lt_of_le_of_lt _ (add_lt_add_right hk n))
     rw [Nat.sub_add_cancel (le_tsub_of_add_le_left hmn)]
     exact
-      modeq.le_of_lt_add
+      ModEq.le_of_lt_add
         (x.2.1.trans (modeq_zero_iff_dvd.mpr (Nat.dvd_sub' (dvd_mul_right m n) dvd_rfl)).symm)
         (lt_of_lt_of_le hx le_tsub_add)
 #align is_frobenius_number_pair frobeniusNumber_pair

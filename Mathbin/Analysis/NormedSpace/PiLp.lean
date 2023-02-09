@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ theorem edist_eq_card (f g : PiLp 0 β) : edist f g = { i | f i ≠ g i }.toFini
 theorem edist_eq_sum {p : ℝ≥0∞} (hp : 0 < p.toReal) (f g : PiLp p β) :
     edist f g = (∑ i, edist (f i) (g i) ^ p.toReal) ^ (1 / p.toReal) :=
   let hp' := Ennreal.toReal_pos_iff.mp hp
-  (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
+  (if_neg hp'.1.ne').trans (if_neg hp'.2.ne)
 #align pi_Lp.edist_eq_sum PiLp.edist_eq_sum
 
 theorem edist_eq_supᵢ (f g : PiLp ∞ β) : edist f g = ⨆ i, edist (f i) (g i) :=
@@ -166,7 +166,7 @@ protected theorem edist_self (f : PiLp p β) : edist f f = 0 :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
   · simp [edist_eq_card]
-  · simp [edist_eq_supr]
+  · simp [edist_eq_supᵢ]
   · simp [edist_eq_sum h, Ennreal.zero_rpow_of_pos h, Ennreal.zero_rpow_of_pos (inv_pos.2 <| h)]
 #align pi_Lp.edist_self PiLp.edist_self
 
@@ -176,7 +176,7 @@ protected theorem edist_comm (f g : PiLp p β) : edist f g = edist g f :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
   · simp only [edist_eq_card, eq_comm, Ne.def]
-  · simp only [edist_eq_supr, edist_comm]
+  · simp only [edist_eq_supᵢ, edist_comm]
   · simp only [edist_eq_sum h, edist_comm]
 #align pi_Lp.edist_comm PiLp.edist_comm
 
@@ -208,7 +208,7 @@ theorem dist_eq_card (f g : PiLp 0 α) : dist f g = { i | f i ≠ g i }.toFinite
 theorem dist_eq_sum {p : ℝ≥0∞} (hp : 0 < p.toReal) (f g : PiLp p α) :
     dist f g = (∑ i, dist (f i) (g i) ^ p.toReal) ^ (1 / p.toReal) :=
   let hp' := Ennreal.toReal_pos_iff.mp hp
-  (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
+  (if_neg hp'.1.ne').trans (if_neg hp'.2.ne)
 #align pi_Lp.dist_eq_sum PiLp.dist_eq_sum
 
 theorem dist_eq_csupr (f g : PiLp ∞ α) : dist f g = ⨆ i, dist (f i) (g i) :=
@@ -250,7 +250,7 @@ theorem norm_eq_csupr (f : PiLp ∞ β) : ‖f‖ = ⨆ i, ‖f i‖ :=
 theorem norm_eq_sum (hp : 0 < p.toReal) (f : PiLp p β) :
     ‖f‖ = (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal) :=
   let hp' := Ennreal.toReal_pos_iff.mp hp
-  (if_neg hp'.1.ne').trans (if_neg hp'.2.Ne)
+  (if_neg hp'.1.ne').trans (if_neg hp'.2.ne)
 #align pi_Lp.norm_eq_sum PiLp.norm_eq_sum
 
 end Norm
@@ -290,7 +290,7 @@ def pseudoEmetricAux : PseudoEmetricSpace (PiLp p β)
   edist_comm := PiLp.edist_comm p
   edist_triangle f g h := by
     rcases p.dichotomy with (rfl | hp)
-    · simp only [edist_eq_supr]
+    · simp only [edist_eq_supᵢ]
       cases isEmpty_or_nonempty ι
       · simp only [csupᵢ_of_empty, Ennreal.bot_eq_zero, add_zero, nonpos_iff_eq_zero]
       exact
@@ -319,7 +319,7 @@ theorem supᵢ_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _}
   by
   cases nonempty_fintype ι
   obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0)
-  refine' ne_of_lt ((supᵢ_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
+  refine' ne_of_lt ((supᵢ_le fun i => _).trans_lt (@ennreal.coe_lt_top M))
   simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.ofReal_eq_coe_nnreal dist_nonneg]
   exact_mod_cast hM i
 #align pi_Lp.supr_edist_ne_top_aux PiLp.supᵢ_edist_ne_top_aux
@@ -338,7 +338,7 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
   PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist
     (fun f g => by
       rcases p.dichotomy with (rfl | h)
-      · exact supr_edist_ne_top_aux f g
+      · exact supᵢ_edist_ne_top_aux f g
       · rw [edist_eq_sum (zero_lt_one.trans_le h)]
         exact
           Ennreal.rpow_ne_top_of_nonneg (one_div_nonneg.2 (zero_le_one.trans h))
@@ -347,11 +347,11 @@ def pseudoMetricAux : PseudoMetricSpace (PiLp p α) :=
                 Ennreal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)))
     fun f g => by
     rcases p.dichotomy with (rfl | h)
-    · rw [edist_eq_supr, dist_eq_csupr]
+    · rw [edist_eq_supᵢ, dist_eq_csupr]
       · cases isEmpty_or_nonempty ι
         · simp only [Real.csupᵢ_empty, csupᵢ_of_empty, Ennreal.bot_eq_zero, Ennreal.zero_toReal]
         · refine' le_antisymm (csupᵢ_le fun i => _) _
-          · rw [← Ennreal.ofReal_le_iff_le_toReal (supr_edist_ne_top_aux f g), ←
+          · rw [← Ennreal.ofReal_le_iff_le_toReal (supᵢ_edist_ne_top_aux f g), ←
               PseudoMetricSpace.edist_dist]
             exact le_supᵢ _ i
           · refine' Ennreal.toReal_le_of_le_ofReal (Real.supₛ_nonneg _ _) (supᵢ_le fun i => _)
@@ -373,7 +373,7 @@ theorem lipschitzWith_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) :=
   intro x y
   rcases p.dichotomy with (rfl | h)
   ·
-    simpa only [Ennreal.coe_one, one_mul, edist_eq_supr, edist, Finset.sup_le_iff, Finset.mem_univ,
+    simpa only [Ennreal.coe_one, one_mul, edist_eq_supᵢ, edist, Finset.sup_le_iff, Finset.mem_univ,
       forall_true_left] using le_supᵢ fun i => edist (x i) (y i)
   · have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le h).ne'
     rw [edist_eq_sum (zero_lt_one.trans_le h)]
@@ -395,13 +395,13 @@ theorem antilipschitzWith_equiv_aux :
   by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero,
+  · simp only [edist_eq_supᵢ, Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero,
       Ennreal.coe_one, one_mul, supᵢ_le_iff]
     exact fun i => Finset.le_sup (Finset.mem_univ i)
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
-    have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_lt Pos)
-    have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (ne_of_gt Pos)
-    rw [edist_eq_sum Pos, Ennreal.toReal_div 1 p]
+    have nonneg : 0 ≤ 1 / p.to_real := one_div_nonneg.2 (le_of_lt pos)
+    have cancel : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (ne_of_gt pos)
+    rw [edist_eq_sum pos, Ennreal.toReal_div 1 p]
     simp only [edist, ← one_div, Ennreal.one_toReal]
     calc
       (∑ i, edist (x i) (y i) ^ p.to_real) ^ (1 / p.to_real) ≤
@@ -409,7 +409,7 @@ theorem antilipschitzWith_equiv_aux :
         by
         apply Ennreal.rpow_le_rpow _ nonneg
         apply Finset.sum_le_sum fun i hi => _
-        apply Ennreal.rpow_le_rpow _ (le_of_lt Pos)
+        apply Ennreal.rpow_le_rpow _ (le_of_lt pos)
         exact Finset.le_sup (Finset.mem_univ i)
       _ =
           ((Fintype.card ι : ℝ≥0) ^ (1 / p.to_real) : ℝ≥0) *
@@ -426,8 +426,8 @@ theorem antilipschitzWith_equiv_aux :
 theorem aux_uniformity_eq : 𝓤 (PiLp p β) = 𝓤[Pi.uniformSpace _] :=
   by
   have A : UniformInducing (PiLp.equiv p β) :=
-    (antilipschitz_with_equiv_aux p β).UniformInducing
-      (lipschitz_with_equiv_aux p β).UniformContinuous
+    (antilipschitzWith_equiv_aux p β).uniformInducing
+      (lipschitzWith_equiv_aux p β).uniformContinuous
   have : (fun x : PiLp p β × PiLp p β => ((PiLp.equiv p β) x.fst, (PiLp.equiv p β) x.snd)) = id :=
     by ext i <;> rfl
   rw [← A.comap_uniformity, this, comap_id]
@@ -450,6 +450,25 @@ end Aux
 instance uniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
   Pi.uniformSpace _
 #align pi_Lp.uniform_space PiLp.uniformSpace
+
+theorem uniformContinuous_equiv [∀ i, UniformSpace (β i)] : UniformContinuous (PiLp.equiv p β) :=
+  uniformContinuous_id
+#align pi_Lp.uniform_continuous_equiv PiLp.uniformContinuous_equiv
+
+theorem uniformContinuous_equiv_symm [∀ i, UniformSpace (β i)] :
+    UniformContinuous (PiLp.equiv p β).symm :=
+  uniformContinuous_id
+#align pi_Lp.uniform_continuous_equiv_symm PiLp.uniformContinuous_equiv_symm
+
+@[continuity]
+theorem continuous_equiv [∀ i, UniformSpace (β i)] : Continuous (PiLp.equiv p β) :=
+  continuous_id
+#align pi_Lp.continuous_equiv PiLp.continuous_equiv
+
+@[continuity]
+theorem continuous_equiv_symm [∀ i, UniformSpace (β i)] : Continuous (PiLp.equiv p β).symm :=
+  continuous_id
+#align pi_Lp.continuous_equiv_symm PiLp.continuous_equiv_symm
 
 variable [Fintype ι]
 
@@ -507,10 +526,10 @@ theorem antilipschitzWith_equiv [∀ i, PseudoEmetricSpace (β i)] :
 
 theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp.equiv ∞ β) :=
   fun x y =>
-  le_antisymm (by simpa only [Ennreal.coe_one, one_mul] using lipschitz_with_equiv ∞ β x y)
+  le_antisymm (by simpa only [Ennreal.coe_one, one_mul] using lipschitzWith_equiv ∞ β x y)
     (by
       simpa only [Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero, Ennreal.coe_one,
-        one_mul] using antilipschitz_with_equiv ∞ β x y)
+        one_mul] using antilipschitzWith_equiv ∞ β x y)
 #align pi_Lp.infty_equiv_isometry PiLp.infty_equiv_isometry
 
 variable (p β)
@@ -555,7 +574,7 @@ theorem norm_eq_of_nat {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _}
     ‖f‖ = (∑ i, ‖f i‖ ^ n) ^ (1 / (n : ℝ)) :=
   by
   have := p.to_real_pos_iff_ne_top.mpr (ne_of_eq_of_ne h <| Ennreal.nat_ne_top n)
-  simp only [one_div, h, Real.rpow_nat_cast, Ennreal.toReal_nat, eq_self_iff_true, Finset.sum_congr,
+  simp only [one_div, h, Real.rpow_nat_cast, Ennreal.toReal_nat, eq_self_iff_true, finset.sum_congr,
     norm_eq_sum this]
 #align pi_Lp.norm_eq_of_nat PiLp.norm_eq_of_nat
 
@@ -781,8 +800,8 @@ theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞
   · exact False.elim (hp h)
   · have ne_zero : p.to_real ≠ 0 := (zero_lt_one.trans_le h).ne'
     simp_rw [nnnorm_eq_sum hp, equiv_symm_apply, Function.const_apply, Finset.sum_const,
-      Finset.card_univ, nsmul_eq_mul, Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel NeZero,
-      Nnreal.rpow_one, Ennreal.toReal_div, Ennreal.one_toReal]
+      Finset.card_univ, nsmul_eq_mul, Nnreal.mul_rpow, ← Nnreal.rpow_mul,
+      mul_one_div_cancel ne_zero, Nnreal.rpow_one, Ennreal.toReal_div, Ennreal.one_toReal]
 #align pi_Lp.nnnorm_equiv_symm_const PiLp.nnnorm_equiv_symm_const
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
@@ -852,7 +871,7 @@ def basisFun : Basis ι 𝕜 (PiLp p fun _ => 𝕜) :=
 @[simp]
 theorem basisFun_apply [DecidableEq ι] (i) :
     basisFun p 𝕜 ι i = (PiLp.equiv p _).symm (Pi.single i 1) := by
-  simp_rw [basis_fun, Basis.coe_ofEquivFun, PiLp.linearEquiv_symm_apply, Pi.single]
+  simp_rw [basisFun, Basis.coe_ofEquivFun, PiLp.linearEquiv_symm_apply, Pi.single]
 #align pi_Lp.basis_fun_apply PiLp.basisFun_apply
 
 @[simp]

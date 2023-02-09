@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.partition.equipartition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,14 +53,14 @@ theorem isEquipartition_iff_card_parts_eq_average :
     P.IsEquipartition ↔
       ∀ a : Finset α,
         a ∈ P.parts → a.card = s.card / P.parts.card ∨ a.card = s.card / P.parts.card + 1 :=
-  by simp_rw [is_equipartition, Finset.equitableOn_iff, P.sum_card_parts]
+  by simp_rw [IsEquipartition, Finset.equitableOn_iff, P.sum_card_parts]
 #align finpartition.is_equipartition_iff_card_parts_eq_average Finpartition.isEquipartition_iff_card_parts_eq_average
 
 variable {P}
 
 theorem Set.Subsingleton.isEquipartition (h : (P.parts : Set (Finset α)).Subsingleton) :
     P.IsEquipartition :=
-  h.EquitableOn _
+  h.equitableOn _
 #align set.subsingleton.is_equipartition Set.Subsingleton.isEquipartition
 
 /- warning: finpartition.is_equipartition.card_parts_eq_average -> Finpartition.IsEquipartition.card_parts_eq_average is a dubious translation:
@@ -83,7 +83,7 @@ Case conversion may be inaccurate. Consider using '#align finpartition.is_equipa
 theorem IsEquipartition.average_le_card_part (hP : P.IsEquipartition) (ht : t ∈ P.parts) :
     s.card / P.parts.card ≤ t.card := by
   rw [← P.sum_card_parts]
-  exact equitable_on.le hP ht
+  exact EquitableOn.le hP ht
 #align finpartition.is_equipartition.average_le_card_part Finpartition.IsEquipartition.average_le_card_part
 
 /- warning: finpartition.is_equipartition.card_part_le_average_add_one -> Finpartition.IsEquipartition.card_part_le_average_add_one is a dubious translation:
@@ -96,7 +96,7 @@ theorem IsEquipartition.card_part_le_average_add_one (hP : P.IsEquipartition) (h
     t.card ≤ s.card / P.parts.card + 1 :=
   by
   rw [← P.sum_card_parts]
-  exact equitable_on.le_add_one hP ht
+  exact EquitableOn.le_add_one hP ht
 #align finpartition.is_equipartition.card_part_le_average_add_one Finpartition.IsEquipartition.card_part_le_average_add_one
 
 /-! ### Discrete and indiscrete finpartition -/
@@ -117,13 +117,13 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Finset.{u1} α) [inst._@.Mathlib.Order.Partition.Equipartition._hyg.372 : Decidable (Eq.{succ u1} (Finset.{u1} α) s (Bot.bot.{u1} (Finset.{u1} α) (GeneralizedBooleanAlgebra.toBot.{u1} (Finset.{u1} α) (Finset.instGeneralizedBooleanAlgebraFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)))))], Finpartition.IsEquipartition.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s (Top.top.{u1} (Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (OrderTop.toTop.{u1} (Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (Finpartition.instLEFinpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (Finpartition.instOrderTopFinpartitionInstLEFinpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s inst._@.Mathlib.Order.Partition.Equipartition._hyg.372)))
 Case conversion may be inaccurate. Consider using '#align finpartition.top_is_equipartition Finpartition.top_isEquipartitionₓ'. -/
 theorem top_isEquipartition : (⊤ : Finpartition s).IsEquipartition :=
-  (parts_top_subsingleton _).IsEquipartition
+  (parts_top_subsingleton _).isEquipartition
 #align finpartition.top_is_equipartition Finpartition.top_isEquipartition
 
 #print Finpartition.indiscrete_isEquipartition /-
 theorem indiscrete_isEquipartition {hs : s ≠ ∅} : (indiscrete hs).IsEquipartition :=
   by
-  rw [is_equipartition, indiscrete_parts, coe_singleton]
+  rw [IsEquipartition, indiscrete_parts, coe_singleton]
   exact Set.equitableOn_singleton s _
 #align finpartition.indiscrete_is_equipartition Finpartition.indiscrete_isEquipartition
 -/

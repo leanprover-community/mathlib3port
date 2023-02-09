@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.additive.ruzsa_covering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   rw [mem_filter, mem_powerset] at hu
   refine'
     ⟨u,
-      (card_mul_iff.2 <| pairwise_disjoint_smul_iff.1 hu.2).ge.trans
+      (card_mul_iff.2 <| pairwiseDisjoint_smul_iff.1 hu.2).ge.trans
         (card_le_of_subset <| mul_subset_mul_right hu.1),
       fun a ha => _⟩
   rw [mul_div_assoc]

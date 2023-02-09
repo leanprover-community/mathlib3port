@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,8 +270,8 @@ theorem IsPrime.mem_of_pow_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : ℕ
     exact Or.cases_on (hI.mem_or_mem H) id ih
 #align ideal.is_prime.mem_of_pow_mem Ideal.IsPrime.mem_of_pow_mem
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » I) -/
 theorem not_isPrime_iff {I : Ideal α} :
     ¬I.IsPrime ↔ I = ⊤ ∨ ∃ (x : _)(_ : x ∉ I)(y : _)(_ : y ∉ I), x * y ∈ I :=
   by
@@ -399,7 +399,7 @@ theorem span_pair_add_mul_right {R : Type u} [CommRing R] {x y : R} (z : R) :
 theorem IsMaximal.exists_inv {I : Ideal α} (hI : I.IsMaximal) {x} (hx : x ∉ I) :
     ∃ y, ∃ i ∈ I, y * x + i = 1 :=
   by
-  cases' is_maximal_iff.1 hI with H₁ H₂
+  cases' isMaximal_iff.1 hI with H₁ H₂
   rcases mem_span_insert.1
       (H₂ (span (insert x I)) x (Set.Subset.trans (subset_insert _ _) subset_span) hx
         (subset_span (mem_insert _ _))) with
@@ -533,7 +533,7 @@ theorem span_singleton_eq_top {x} : span ({x} : Set α) = ⊤ ↔ IsUnit x := by
 #align ideal.span_singleton_eq_top Ideal.span_singleton_eq_top
 
 theorem span_singleton_prime {p : α} (hp : p ≠ 0) : IsPrime (span ({p} : Set α)) ↔ Prime p := by
-  simp [is_prime_iff, Prime, span_singleton_eq_top, hp, mem_span_singleton]
+  simp [isPrime_iff, Prime, span_singleton_eq_top, hp, mem_span_singleton]
 #align ideal.span_singleton_prime Ideal.span_singleton_prime
 
 theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
@@ -543,7 +543,7 @@ theorem IsMaximal.isPrime {I : Ideal α} (H : I.IsMaximal) : I.IsPrime :=
       let J : Ideal α := Submodule.span α (insert x ↑I)
       have IJ : I ≤ J := Set.Subset.trans (subset_insert _ _) subset_span
       have xJ : x ∈ J := Ideal.subset_span (Set.mem_insert x I)
-      cases' is_maximal_iff.1 H with _ oJ
+      cases' isMaximal_iff.1 H with _ oJ
       specialize oJ J x IJ hx xJ
       rcases submodule.mem_span_insert.mp oJ with ⟨a, b, h, oe⟩
       obtain F : y * 1 = y * (a • x + b) := congr_arg (fun g : α => y * g) oe
@@ -598,11 +598,11 @@ theorem IsPrime.pow_mem_iff_mem {I : Ideal α} (hI : I.IsPrime) {r : α} (n : �
 #align ideal.is_prime.pow_mem_iff_mem Ideal.IsPrime.pow_mem_iff_mem
 
 theorem pow_multiset_sum_mem_span_pow (s : Multiset α) (n : ℕ) :
-    s.Sum ^ (s.card * n + 1) ∈ span ((s.map fun x => x ^ (n + 1)).toFinset : Set α) :=
+    s.sum ^ (s.card * n + 1) ∈ span ((s.map fun x => x ^ (n + 1)).toFinset : Set α) :=
   by
   induction' s using Multiset.induction_on with a s hs
   · simp
-  simp only [Finset.coe_insert, Multiset.map_cons, Multiset.toFinset_cons, Multiset.sum_cons,
+  simp only [exists_prop, Multiset.map_cons, Multiset.toFinset_cons, Multiset.sum_cons,
     Multiset.card_cons, add_pow]
   refine' Submodule.sum_mem _ _
   intro c hc
@@ -763,7 +763,7 @@ namespace Ring
 
 variable {R : Type _} [CommSemiring R]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » (0 : R)) -/
 theorem exists_not_isUnit_of_not_isField [Nontrivial R] (hf : ¬IsField R) :
     ∃ (x : _)(_ : x ≠ (0 : R)), ¬IsUnit x :=
   by
@@ -779,14 +779,14 @@ theorem not_isField_iff_exists_ideal_bot_lt_and_lt_top [Nontrivial R] :
   by
   constructor
   · intro h
-    obtain ⟨x, nz, nu⟩ := exists_not_is_unit_of_not_is_field h
+    obtain ⟨x, nz, nu⟩ := exists_not_isUnit_of_not_isField h
     use Ideal.span {x}
     rw [bot_lt_iff_ne_bot, lt_top_iff_ne_top]
     exact ⟨mt ideal.span_singleton_eq_bot.mp nz, mt ideal.span_singleton_eq_top.mp nu⟩
   · rintro ⟨I, bot_lt, lt_top⟩ hf
     obtain ⟨x, mem, ne_zero⟩ := SetLike.exists_of_lt bot_lt
     rw [Submodule.mem_bot] at ne_zero
-    obtain ⟨y, hy⟩ := hf.mul_inv_cancel NeZero
+    obtain ⟨y, hy⟩ := hf.mul_inv_cancel ne_zero
     rw [lt_top_iff_ne_top, Ne.def, Ideal.eq_top_iff_one, ← hy] at lt_top
     exact lt_top (I.mul_mem_right _ mem)
 #align ring.not_is_field_iff_exists_ideal_bot_lt_and_lt_top Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top
@@ -796,8 +796,8 @@ theorem not_isField_iff_exists_prime [Nontrivial R] :
   not_isField_iff_exists_ideal_bot_lt_and_lt_top.trans
     ⟨fun ⟨I, bot_lt, lt_top⟩ =>
       let ⟨p, hp, le_p⟩ := I.exists_le_maximal (lt_top_iff_ne_top.mp lt_top)
-      ⟨p, bot_lt_iff_ne_bot.mp (lt_of_lt_of_le bot_lt le_p), hp.IsPrime⟩,
-      fun ⟨p, ne_bot, Prime⟩ => ⟨p, bot_lt_iff_ne_bot.mpr ne_bot, lt_top_iff_ne_top.mpr Prime.1⟩⟩
+      ⟨p, bot_lt_iff_ne_bot.mp (lt_of_lt_of_le bot_lt le_p), hp.isPrime⟩,
+      fun ⟨p, ne_bot, prime⟩ => ⟨p, bot_lt_iff_ne_bot.mpr ne_bot, lt_top_iff_ne_top.mpr prime.1⟩⟩
 #align ring.not_is_field_iff_exists_prime Ring.not_isField_iff_exists_prime
 
 /-- Also see `ideal.is_simple_order` for the forward direction as an instance when `R` is a

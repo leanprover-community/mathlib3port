@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.intersecting
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {a : α}, Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align set.intersecting_singleton Set.intersecting_singletonₓ'. -/
 @[simp]
-theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by simp [intersecting]
+theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by simp [Intersecting]
 #align set.intersecting_singleton Set.intersecting_singleton
 
 /- warning: set.intersecting.insert -> Set.Intersecting.insert is a dubious translation:
@@ -132,7 +132,7 @@ theorem intersecting_iff_pairwise_not_disjoint :
   refine' ⟨fun h => ⟨fun a ha b hb _ => h ha hb, _⟩, fun h a ha b hb hab => _⟩
   · rintro rfl
     exact intersecting_singleton.1 h rfl
-  · have := h.1.Eq ha hb (Classical.not_not.2 hab)
+  · have := h.1.eq ha hb (Classical.not_not.2 hab)
     rw [this, disjoint_self] at hab
     rw [hab] at hb
     exact
@@ -148,7 +148,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (Iff (Set.Intersecting.{u1} α _inst_1 _inst_2 s) (Ne.{succ u1} (Set.{u1} α) s (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.intersecting Set.Subsingleton.intersectingₓ'. -/
 protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecting ↔ s ≠ {⊥} :=
-  intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.Pairwise _
+  intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.pairwise _
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
 
 #print Set.intersecting_iff_eq_empty_of_subsingleton /-
@@ -213,7 +213,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.intersecting.exists_mem_finset Set.Intersecting.exists_mem_finsetₓ'. -/
 theorem Intersecting.exists_mem_finset [DecidableEq α] {𝒜 : Set (Finset α)} (h𝒜 : 𝒜.Intersecting)
     {s t : Finset α} (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
-  not_disjoint_iff.1 <| disjoint_coe.Not.2 <| h𝒜 hs ht
+  not_disjoint_iff.1 <| disjoint_coe.not.2 <| h𝒜 hs ht
 #align set.intersecting.exists_mem_finset Set.Intersecting.exists_mem_finset
 
 variable [BooleanAlgebra α]
@@ -250,7 +250,7 @@ theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Int
     2 * s.card ≤ Fintype.card α := by
   classical
     refine' (s.disj_union _ hs.disjoint_map_compl).card_le_univ.trans_eq' _
-    rw [two_mul, card_disj_union, card_map]
+    rw [two_mul, card_disjUnion, card_map]
 #align set.intersecting.card_le Set.Intersecting.card_le
 -/
 
@@ -266,8 +266,8 @@ theorem Intersecting.is_max_iff_card_eq (hs : (s : Set α).Intersecting) :
         Finset.eq_of_subset_of_card_le hst <|
           le_of_mul_le_mul_left (ht.card_le.trans_eq h.symm) two_pos⟩
     suffices s.disj_union (s.map ⟨compl, compl_injective⟩) hs.disjoint_map_compl = Finset.univ by
-      rw [Fintype.card, ← this, two_mul, card_disj_union, card_map]
-    rw [← coe_eq_univ, disj_union_eq_union, coe_union, coe_map, Function.Embedding.coeFn_mk,
+      rw [Fintype.card, ← this, two_mul, card_disjUnion, card_map]
+    rw [← coe_eq_univ, disjUnion_eq_union, coe_union, coe_map, Function.Embedding.coeFn_mk,
       image_eq_preimage_of_inverse compl_compl compl_compl]
     refine' eq_univ_of_forall fun a => _
     simp_rw [mem_union, mem_preimage]
@@ -297,10 +297,10 @@ theorem Intersecting.exists_card_eq (hs : (s : Set α).Intersecting) :
   refine' s.strong_downward_induction_on _ this
   rintro s ih hcard hs
   by_cases ∀ t : Finset α, (t : Set α).Intersecting → s ⊆ t → s = t
-  · exact ⟨s, subset.rfl, hs.is_max_iff_card_eq.1 h, hs⟩
+  · exact ⟨s, Subset.rfl, hs.is_max_iff_card_eq.1 h, hs⟩
   push_neg  at h
   obtain ⟨t, ht, hst⟩ := h
-  refine' (ih _ (_root_.ssubset_iff_subset_ne.2 hst) ht).imp fun u => And.imp_left hst.1.trans
+  refine' (ih _ (ssubset_iff_subset_ne.2 hst) ht).imp fun u => And.imp_left hst.1.trans
   rw [Nat.le_div_iff_mul_le' two_pos, mul_comm]
   exact ht.card_le
 #align set.intersecting.exists_card_eq Set.Intersecting.exists_card_eq

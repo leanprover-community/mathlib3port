@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.finset.pimage
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,21 +40,21 @@ def toFinset (o : Part α) [Decidable o.Dom] : Finset α :=
 #print Part.mem_toFinset /-
 @[simp]
 theorem mem_toFinset {o : Part α} [Decidable o.Dom] {x : α} : x ∈ o.toFinset ↔ x ∈ o := by
-  simp [to_finset]
+  simp [toFinset]
 #align part.mem_to_finset Part.mem_toFinset
 -/
 
 #print Part.toFinset_none /-
 @[simp]
 theorem toFinset_none [Decidable (none : Part α).Dom] : none.toFinset = (∅ : Finset α) := by
-  simp [to_finset]
+  simp [toFinset]
 #align part.to_finset_none Part.toFinset_none
 -/
 
 #print Part.toFinset_some /-
 @[simp]
 theorem toFinset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a} := by
-  simp [to_finset]
+  simp [toFinset]
 #align part.to_finset_some Part.toFinset_some
 -/
 

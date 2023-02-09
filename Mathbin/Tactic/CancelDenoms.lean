@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.cancel_denoms
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,9 +151,9 @@ open Tree
       | _ => ( 1 , node 1 Tree.nil Tree.nil )
 #align cancel_factors.find_cancel_factor cancel_factors.find_cancel_factor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
@@ -184,9 +184,9 @@ open Tree
           let tp ← infer_type e1
             let v1 ← mk_prod_prf ln lhs e1
             let v2 ← mk_prod_prf ( v / ln ) rhs e2
-            let ln' ← tp . ofNat ln
-            let vln' ← tp . ofNat ( v / ln )
-            let v' ← tp . ofNat v
+            let ln' ← tp . of_nat ln
+            let vln' ← tp . of_nat ( v / ln )
+            let v' ← tp . of_nat v
             let ntp ← to_expr ` `( $ ( ln' ) * $ ( vln' ) = $ ( v' ) )
             let ( _ , npf ) ← solve_aux ntp sorry
             mk_app ` ` mul_subst [ v1 , v2 , npf ]
@@ -196,10 +196,10 @@ open Tree
         do
           let tp ← infer_type e1
             let v1 ← mk_prod_prf ( v / rn ) lhs e1
-            let rn' ← tp . ofNat rn
-            let vrn' ← tp . ofNat ( v / rn )
-            let n' ← tp . ofNat n
-            let v' ← tp . ofNat v
+            let rn' ← tp . of_nat rn
+            let vrn' ← tp . of_nat ( v / rn )
+            let n' ← tp . of_nat n
+            let v' ← tp . of_nat v
             let ntp ← to_expr ` `( $ ( rn' ) / $ ( e2 ) = 1 )
             let ( _ , npf ) ← solve_aux ntp sorry
             let ntp2 ← to_expr ` `( $ ( vrn' ) * $ ( n' ) = $ ( v' ) )
@@ -211,7 +211,7 @@ open Tree
         =>
         do
           let tp ← infer_type e
-            let v' ← tp . ofNat v
+            let v' ← tp . of_nat v
             let e' ← to_expr ` `( $ ( v' ) * $ ( e ) )
             mk_app `eq.refl [ e' ]
 #align cancel_factors.mk_prod_prf cancel_factors.mk_prod_prf
@@ -227,7 +227,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 #align cancel_factors.derive cancel_factors.derive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
@@ -241,10 +241,10 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       do
         let ( n , p ) ← derive e
           let tp ← infer_type e
-          let n' ← tp . ofNat n
+          let n' ← tp . of_nat n
           let tgt ← to_expr ` `( $ ( n' ) ≠ 0 )
           let ( _ , pn ) ← solve_aux tgt sorry
-          Prod.mk n
+          prod.mk n
             <$>
             mk_mapp ` ` cancel_factors_eq_div [ none , none , n' , none , none , p , pn ]
 #align cancel_factors.derive_div cancel_factors.derive_div
@@ -266,9 +266,9 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       | _ => none
 #align cancel_factors.find_comp_lemma cancel_factors.find_comp_lemma
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.
@@ -281,9 +281,9 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
   let (ar, rhs_p) ← derive rhs
   let gcd := al.gcd ar
   let tp ← infer_type lhs
-  let al ← tp.ofNat al
-  let ar ← tp.ofNat ar
-  let gcd ← tp.ofNat gcd
+  let al ← tp.of_nat al
+  let ar ← tp.of_nat ar
+  let gcd ← tp.of_nat gcd
   let al_pos ← to_expr ``(0 < $(al))
   let ar_pos ← to_expr ``(0 < $(ar))
   let gcd_pos ← to_expr ``(0 < $(gcd))
@@ -292,7 +292,7 @@ unsafe def cancel_denominators_in_type (h : expr) : tactic (expr × expr) := do
   let (_, gcd_pos) ← solve_aux gcd_pos sorry
   let pf ← mk_app lem [lhs_p, rhs_p, al_pos, ar_pos, gcd_pos]
   let pf_tp ← infer_type pf
-  return ((find_comp_lemma pf_tp).elim default (Prod.fst ∘ Prod.snd), pf)
+  return ((find_comp_lemma pf_tp).elim' default (prod.fst ∘ prod.snd), pf)
 #align cancel_factors.cancel_denominators_in_type cancel_factors.cancel_denominators_in_type
 
 end CancelFactors

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.decomposition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,18 +58,18 @@ theorem decomposition_q (n q : ℕ) :
   by
   induction' q with q hq
   ·
-    simp only [Q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_False,
+    simp only [q_eq_zero, HomologicalComplex.zero_f_apply, Nat.not_lt_zero, Finset.filter_False,
       Finset.sum_empty]
   · by_cases hqn : q + 1 ≤ n + 1
     swap
-    · rw [Q_is_eventually_constant (show n + 1 ≤ q by linarith), hq]
+    · rw [q_is_eventually_constant (show n + 1 ≤ q by linarith), hq]
       congr
       ext
       have hx := x.is_lt
       simp only [Nat.succ_eq_add_one]
       constructor <;> intro h <;> linarith
     · cases' Nat.le.dest (nat.succ_le_succ_iff.mp hqn) with a ha
-      rw [Q_eq, HomologicalComplex.sub_f_apply, HomologicalComplex.comp_f, hq]
+      rw [q_eq, HomologicalComplex.sub_f_apply, HomologicalComplex.comp_f, hq]
       symm
       conv_rhs => rw [sub_eq_add_neg, add_comm]
       let q' : Fin (n + 1) := ⟨q, nat.succ_le_iff.mp hqn⟩
@@ -79,7 +79,7 @@ theorem decomposition_q (n q : ℕ) :
           Nat.lt_succ_iff_lt_or_eq, Fin.ext_iff]
         tauto
       · have hnaq' : n = a + q := by linarith
-        simpa only [Fin.val_mk, (higher_faces_vanish.of_P q n).comp_hσ_eq hnaq', q'.rev_eq hnaq',
+        simpa only [Fin.val_mk, (HigherFacesVanish.of_p q n).comp_hσ_eq hnaq', q'.rev_eq hnaq',
           neg_neg]
       · simp only [Finset.mem_filter, Fin.val_mk, lt_self_iff_false, and_false_iff, not_false_iff]
 #align algebraic_topology.dold_kan.decomposition_Q AlgebraicTopology.DoldKan.decomposition_q
@@ -120,10 +120,10 @@ def id : MorphComponents X n (X _[n + 1])
 @[simp]
 theorem id_φ : (id X n).φ = 𝟙 _ :=
   by
-  simp only [← P_add_Q_f (n + 1) (n + 1), φ]
+  simp only [← p_add_q_f (n + 1) (n + 1), φ]
   congr 1
-  · simp only [id, P_infty_f, P_f_idem]
-  · convert (decomposition_Q n (n + 1)).symm
+  · simp only [id, pInfty_f, p_f_idem]
+  · convert (decomposition_q n (n + 1)).symm
     ext i
     simpa only [Finset.mem_univ, Finset.mem_filter, true_and_iff, true_iff_iff] using Fin.is_lt i
 #align algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ
@@ -156,10 +156,10 @@ def preComp : MorphComponents X' n Z
 theorem preComp_φ : (f.preComp g).φ = g.app (op [n + 1]) ≫ f.φ :=
   by
   unfold φ pre_comp
-  simp only [P_infty_f, comp_add]
+  simp only [pInfty_f, comp_add]
   congr 1
-  · simp only [P_f_naturality_assoc]
-  · simp only [comp_sum, P_f_naturality_assoc, simplicial_object.δ_naturality_assoc]
+  · simp only [p_f_naturality_assoc]
+  · simp only [comp_sum, p_f_naturality_assoc, SimplicialObject.δ_naturality_assoc]
 #align algebraic_topology.dold_kan.morph_components.pre_comp_φ AlgebraicTopology.DoldKan.MorphComponents.preComp_φ
 
 end MorphComponents

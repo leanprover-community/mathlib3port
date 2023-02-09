@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.split_simplicial_object
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem ext (A₁ A₂ : IndexSet Δ) (h₁ : A₁.1 = A₂.1) (h₂ : A₁.e �
   rcases A₂ with ⟨Δ₂, ⟨α₂, hα₂⟩⟩
   simp only at h₁
   subst h₁
-  simp only [eq_to_hom_refl, comp_id, index_set.e] at h₂
+  simp only [eqToHom_refl, comp_id, IndexSet.e] at h₂
   simp only [h₂]
 #align simplicial_object.splitting.index_set.ext SimplicialObject.Splitting.IndexSet.ext
 
@@ -138,13 +138,13 @@ theorem eqId_iff_eq : A.EqId ↔ A.1 = Δ := by
     subst h
     refine' ext _ _ rfl _
     · haveI := hf
-      simp only [eq_to_hom_refl, comp_id]
+      simp only [eqToHom_refl, comp_id]
       exact eq_id_of_epi f
 #align simplicial_object.splitting.index_set.eq_id_iff_eq SimplicialObject.Splitting.IndexSet.eqId_iff_eq
 
 theorem eqId_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len :=
   by
-  rw [eq_id_iff_eq]
+  rw [eqId_iff_eq]
   constructor
   · intro h
     rw [h]
@@ -156,11 +156,11 @@ theorem eqId_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len :=
 
 theorem eqId_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len :=
   by
-  rw [eq_id_iff_len_eq]
+  rw [eqId_iff_len_eq]
   constructor
   · intro h
     rw [h]
-  · exact le_antisymm (len_le_of_epi (inferInstance : epi A.e))
+  · exact le_antisymm (len_le_of_epi (inferInstance : Epi A.e))
 #align simplicial_object.splitting.index_set.eq_id_iff_len_le SimplicialObject.Splitting.IndexSet.eqId_iff_len_le
 
 theorem eqId_iff_mono : A.EqId ↔ Mono A.e :=
@@ -172,7 +172,7 @@ theorem eqId_iff_mono : A.EqId ↔ Mono A.e :=
     dsimp only [id, e]
     infer_instance
   · intro h
-    rw [eq_id_iff_len_le]
+    rw [eqId_iff_len_le]
     exact len_le_of_mono h
 #align simplicial_object.splitting.index_set.eq_id_iff_mono SimplicialObject.Splitting.IndexSet.eqId_iff_mono
 
@@ -267,20 +267,20 @@ def iso (Δ : SimplexCategoryᵒᵖ) : coprod s.n Δ ≅ X.obj Δ :=
 /-- Via the isomorphism `s.iso Δ`, this is the inclusion of a summand
 in the direct sum decomposition given by the splitting `s : splitting X`. -/
 def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len ⟶ X.obj Δ :=
-  Splitting.ιCoprod s.n A ≫ (s.Iso Δ).Hom
+  Splitting.ιCoprod s.n A ≫ (s.iso Δ).hom
 #align simplicial_object.splitting.ι_summand SimplicialObject.Splitting.ιSummand
 
 @[reassoc.1]
 theorem ιSummand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op :=
   by
-  dsimp only [ι_summand, iso.hom]
-  erw [colimit.ι_desc, cofan.mk_ι_app]
+  dsimp only [ιSummand, iso.hom]
+  erw [colimit.ι_desc, Cofan.mk_ι_app]
 #align simplicial_object.splitting.ι_summand_eq SimplicialObject.Splitting.ιSummand_eq
 
 theorem ιSummand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n :=
   by
-  erw [ι_summand_eq, X.map_id, comp_id]
+  erw [ιSummand_eq, X.map_id, comp_id]
   rfl
 #align simplicial_object.splitting.ι_summand_id SimplicialObject.Splitting.ιSummand_id
 
@@ -295,18 +295,18 @@ def φ (f : X ⟶ Y) (n : ℕ) : s.n n ⟶ Y _[n] :=
 @[simp, reassoc.1]
 theorem ιSummand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
-  simp only [ι_summand_eq_assoc, φ, nat_trans.naturality, assoc]
+  simp only [ιSummand_eq_assoc, φ, NatTrans.naturality, assoc]
 #align simplicial_object.splitting.ι_summand_comp_app SimplicialObject.Splitting.ιSummand_comp_app
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g :=
   by
-  rw [← cancel_epi (s.iso Δ).Hom]
+  rw [← cancel_epi (s.iso Δ).hom]
   ext A
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
-  simpa only [ι_summand_eq, iso_hom, colimit.ι_desc_assoc, cofan.mk_ι_app, assoc] using h A
+  simpa only [ιSummand_eq, iso_hom, colimit.ι_desc_assoc, Cofan.mk_ι_app, assoc] using h A
 #align simplicial_object.splitting.hom_ext' SimplicialObject.Splitting.hom_ext'
 
 theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :=
@@ -324,35 +324,35 @@ theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :
 terms of decomposition given by a splitting `s : splitting X`  -/
 def desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z) :
     X.obj Δ ⟶ Z :=
-  (s.Iso Δ).inv ≫ Sigma.desc F
+  (s.iso Δ).inv ≫ Sigma.desc F
 #align simplicial_object.splitting.desc SimplicialObject.Splitting.desc
 
 @[simp, reassoc.1]
 theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z)
     (A : IndexSet Δ) : s.ιSummand A ≫ s.desc Δ F = F A :=
   by
-  dsimp only [ι_summand, desc]
-  simp only [assoc, iso.hom_inv_id_assoc, ι_coprod]
-  erw [colimit.ι_desc, cofan.mk_ι_app]
+  dsimp only [ιSummand, desc]
+  simp only [assoc, Iso.hom_inv_id_assoc, ιCoprod]
+  erw [colimit.ι_desc, Cofan.mk_ι_app]
 #align simplicial_object.splitting.ι_desc SimplicialObject.Splitting.ι_desc
 
 /-- A simplicial object that is isomorphic to a split simplicial object is split. -/
 @[simps]
 def ofIso (e : X ≅ Y) : Splitting Y where
   n := s.n
-  ι n := s.ι n ≫ e.Hom.app (op [n])
+  ι n := s.ι n ≫ e.hom.app (op [n])
   map_is_iso' Δ := by
-    convert (inferInstance : is_iso ((s.iso Δ).Hom ≫ e.hom.app Δ))
+    convert (inferInstance : IsIso ((s.iso Δ).hom ≫ e.hom.app Δ))
     tidy
 #align simplicial_object.splitting.of_iso SimplicialObject.Splitting.ofIso
 
 @[reassoc.1]
 theorem ιSummand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂)
-    [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) :=
+    [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epiComp p) :=
   by
-  dsimp [ι_summand]
-  erw [colimit.ι_desc, colimit.ι_desc, cofan.mk_ι_app, cofan.mk_ι_app]
-  dsimp only [index_set.epi_comp, index_set.e]
+  dsimp [ιSummand]
+  erw [colimit.ι_desc, colimit.ι_desc, Cofan.mk_ι_app, Cofan.mk_ι_app]
+  dsimp only [IndexSet.epiComp, IndexSet.e]
   rw [op_comp, X.map_comp, assoc, Quiver.Hom.op_unop]
 #align simplicial_object.splitting.ι_summand_epi_naturality SimplicialObject.Splitting.ιSummand_epi_naturality
 

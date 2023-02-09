@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem uniformInducing_equivBoundedOfCompact : UniformInducing (equivBoundedOfC
 #align continuous_map.uniform_inducing_equiv_bounded_of_compact ContinuousMap.uniformInducing_equivBoundedOfCompact
 
 theorem uniformEmbedding_equivBoundedOfCompact : UniformEmbedding (equivBoundedOfCompact α β) :=
-  { uniformInducing_equivBoundedOfCompact α β with inj := (equivBoundedOfCompact α β).Injective }
+  { uniformInducing_equivBoundedOfCompact α β with inj := (equivBoundedOfCompact α β).injective }
 #align continuous_map.uniform_embedding_equiv_bounded_of_compact ContinuousMap.uniformEmbedding_equivBoundedOfCompact
 
 /-- When `α` is compact, the bounded continuous maps `α →ᵇ 𝕜` are
@@ -119,20 +119,20 @@ variable {α β} {f g : C(α, β)} {C : ℝ}
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_apply_le_dist (x : α) : dist (f x) (g x) ≤ dist f g := by
-  simp only [← dist_mk_of_compact, dist_coe_le_dist, ← mk_of_compact_apply]
+  simp only [← dist_mkOfCompact, dist_coe_le_dist, ← mkOfCompact_apply]
 #align continuous_map.dist_apply_le_dist ContinuousMap.dist_apply_le_dist
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
 theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C := by
-  simp only [← dist_mk_of_compact, dist_le C0, mk_of_compact_apply]
+  simp only [← dist_mkOfCompact, dist_le C0, mkOfCompact_apply]
 #align continuous_map.dist_le ContinuousMap.dist_le
 
 theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (f x) (g x) ≤ C := by
-  simp only [← dist_mk_of_compact, dist_le_iff_of_nonempty, mk_of_compact_apply]
+  simp only [← dist_mkOfCompact, dist_le_iff_of_nonempty, mkOfCompact_apply]
 #align continuous_map.dist_le_iff_of_nonempty ContinuousMap.dist_le_iff_of_nonempty
 
 theorem dist_lt_iff_of_nonempty [Nonempty α] : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
-  simp only [← dist_mk_of_compact, dist_lt_iff_of_nonempty_compact, mk_of_compact_apply]
+  simp only [← dist_mkOfCompact, dist_lt_iff_of_nonempty_compact, mkOfCompact_apply]
 #align continuous_map.dist_lt_iff_of_nonempty ContinuousMap.dist_lt_iff_of_nonempty
 
 theorem dist_lt_of_nonempty [Nonempty α] (w : ∀ x : α, dist (f x) (g x) < C) : dist f g < C :=
@@ -140,18 +140,18 @@ theorem dist_lt_of_nonempty [Nonempty α] (w : ∀ x : α, dist (f x) (g x) < C)
 #align continuous_map.dist_lt_of_nonempty ContinuousMap.dist_lt_of_nonempty
 
 theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
-  simp only [← dist_mk_of_compact, dist_lt_iff_of_compact C0, mk_of_compact_apply]
+  simp only [← dist_mkOfCompact, dist_lt_iff_of_compact C0, mkOfCompact_apply]
 #align continuous_map.dist_lt_iff ContinuousMap.dist_lt_iff
 
 end
 
 instance [CompleteSpace β] : CompleteSpace C(α, β) :=
-  (isometryEquivBoundedOfCompact α β).CompleteSpace
+  (isometryEquivBoundedOfCompact α β).completeSpace
 
 /-- See also `continuous_map.continuous_eval'` -/
 @[continuity]
 theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).Continuous.Prod_map continuous_id)
+  continuous_eval.comp ((isometryEquivBoundedOfCompact α β).continuous.prod_map continuous_id)
 #align continuous_map.continuous_eval ContinuousMap.continuous_eval
 
 /-- See also `continuous_map.continuous_eval_const` -/
@@ -186,12 +186,12 @@ instance : NormedAddCommGroup C(α, E) :=
   { ContinuousMap.metricSpace _ _,
     ContinuousMap.addCommGroup with
     dist_eq := fun x y => by
-      rw [← norm_mk_of_compact, ← dist_mk_of_compact, dist_eq_norm, mk_of_compact_sub]
+      rw [← norm_mkOfCompact, ← dist_mkOfCompact, dist_eq_norm, mkOfCompact_sub]
     dist := dist
     norm := norm }
 
 instance [Nonempty α] [One E] [NormOneClass E] : NormOneClass C(α, E)
-    where norm_one := by simp only [← norm_mk_of_compact, mk_of_compact_one, norm_one]
+    where norm_one := by simp only [← norm_mkOfCompact, mkOfCompact_one, norm_one]
 
 section
 
@@ -352,7 +352,7 @@ We now set up some declarations making it convenient to use uniform continuity.
 
 theorem uniform_continuity (f : C(α, β)) (ε : ℝ) (h : 0 < ε) :
     ∃ δ > 0, ∀ {x y}, dist x y < δ → dist (f x) (f y) < ε :=
-  Metric.uniformContinuous_iff.mp (CompactSpace.uniformContinuous_of_continuous f.Continuous) ε h
+  Metric.uniformContinuous_iff.mp (CompactSpace.uniformContinuous_of_continuous f.continuous) ε h
 #align continuous_map.uniform_continuity ContinuousMap.uniform_continuity
 
 -- This definition allows us to separate the choice of some `δ`,
@@ -483,7 +483,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
     (hF : ∀ K : Compacts X, Summable fun i => ‖(F i).restrict K‖) : Summable F :=
   by
   refine' (ContinuousMap.exists_tendsto_compactOpen_iff_forall _).2 fun K hK => _
-  lift K to compacts X using hK
+  lift K to Compacts X using hK
   have A : ∀ s : Finset ι, restrict (↑K) (∑ i in s, F i) = ∑ i in s, restrict K (F i) :=
     by
     intro s

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.bornology.constructions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ Case conversion may be inaccurate. Consider using '#align bornology.is_bounded.p
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsBounded.prod (hs : IsBounded s) (ht : IsBounded t) : IsBounded (s ×ˢ t) :=
   isBounded_image_fst_and_snd.1
-    ⟨hs.Subset <| fst_image_prod_subset _ _, ht.Subset <| snd_image_prod_subset _ _⟩
+    ⟨hs.subset <| fst_image_prod_subset _ _, ht.subset <| snd_image_prod_subset _ _⟩
 #align bornology.is_bounded.prod Bornology.IsBounded.prod
 
 /- warning: bornology.is_bounded_prod_of_nonempty -> Bornology.isBounded_prod_of_nonempty is a dubious translation:
@@ -127,7 +127,7 @@ Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_p
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem isBounded_prod_of_nonempty (hne : Set.Nonempty (s ×ˢ t)) :
     IsBounded (s ×ˢ t) ↔ IsBounded s ∧ IsBounded t :=
-  ⟨fun h => ⟨h.fst_of_prod hne.snd, h.snd_of_prod hne.fst⟩, fun h => h.1.Prod h.2⟩
+  ⟨fun h => ⟨h.fst_of_prod hne.snd, h.snd_of_prod hne.fst⟩, fun h => h.1.prod h.2⟩
 #align bornology.is_bounded_prod_of_nonempty Bornology.isBounded_prod_of_nonempty
 
 /- warning: bornology.is_bounded_prod -> Bornology.isBounded_prod is a dubious translation:
@@ -141,7 +141,7 @@ theorem isBounded_prod : IsBounded (s ×ˢ t) ↔ s = ∅ ∨ t = ∅ ∨ IsBoun
   by
   rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
   rcases t.eq_empty_or_nonempty with (rfl | ht); · simp
-  simp only [hs.ne_empty, ht.ne_empty, is_bounded_prod_of_nonempty (hs.prod ht), false_or_iff]
+  simp only [hs.ne_empty, ht.ne_empty, isBounded_prod_of_nonempty (hs.prod ht), false_or_iff]
 #align bornology.is_bounded_prod Bornology.isBounded_prod
 
 /- warning: bornology.is_bounded_prod_self -> Bornology.isBounded_prod_self is a dubious translation:
@@ -154,7 +154,7 @@ Case conversion may be inaccurate. Consider using '#align bornology.is_bounded_p
 theorem isBounded_prod_self : IsBounded (s ×ˢ s) ↔ IsBounded s :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | hs); · simp
-  exact (is_bounded_prod_of_nonempty (hs.prod hs)).trans (and_self_iff _)
+  exact (isBounded_prod_of_nonempty (hs.prod hs)).trans (and_self_iff _)
 #align bornology.is_bounded_prod_self Bornology.isBounded_prod_self
 
 /-!
@@ -190,7 +190,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {π : ι -> Type.{u2}} [_inst_1 : Fintype.{u1} ι] [_inst_4 : forall (i : ι), Bornology.{u2} (π i)] {S : forall (i : ι), Set.{u2} (π i)}, (forall (i : ι), Bornology.IsBounded.{u2} (π i) (_inst_4 i) (S i)) -> (Bornology.IsBounded.{max u2 u1} (forall (i : ι), π i) (instBornologyForAll.{u1, u2} ι (fun (i : ι) => π i) _inst_1 (fun (i : ι) => _inst_4 i)) (Set.pi.{u1, u2} ι (fun (i : ι) => π i) (Set.univ.{u1} ι) S))
 Case conversion may be inaccurate. Consider using '#align bornology.is_bounded.pi Bornology.IsBounded.piₓ'. -/
 theorem IsBounded.pi (h : ∀ i, IsBounded (S i)) : IsBounded (pi univ S) :=
-  forall_isBounded_image_eval_iff.1 fun i => (h i).Subset eval_image_univ_pi_subset
+  forall_isBounded_image_eval_iff.1 fun i => (h i).subset eval_image_univ_pi_subset
 #align bornology.is_bounded.pi Bornology.IsBounded.pi
 
 /- warning: bornology.is_bounded_pi_of_nonempty -> Bornology.isBounded_pi_of_nonempty is a dubious translation:
@@ -216,7 +216,7 @@ theorem isBounded_pi : IsBounded (pi univ S) ↔ (∃ i, S i = ∅) ∨ ∀ i, I
   · simp [hne, univ_pi_eq_empty_iff.2 hne]
   · simp only [hne, false_or_iff]
     simp only [not_exists, ← Ne.def, ← nonempty_iff_ne_empty, ← univ_pi_nonempty_iff] at hne
-    exact is_bounded_pi_of_nonempty hne
+    exact isBounded_pi_of_nonempty hne
 #align bornology.is_bounded_pi Bornology.isBounded_pi
 
 /-!
@@ -265,7 +265,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align bounded_space_induced_iff boundedSpace_induced_iffₓ'. -/
 theorem boundedSpace_induced_iff {α β : Type _} [Bornology β] {f : α → β} :
     @BoundedSpace α (Bornology.induced f) ↔ IsBounded (range f) := by
-  rw [← is_bounded_univ, is_bounded_induced, image_univ]
+  rw [← isBounded_univ, isBounded_induced, image_univ]
 #align bounded_space_induced_iff boundedSpace_induced_iff
 
 #print boundedSpace_subtype_iff /-

@@ -8,7 +8,7 @@ Haskell's `Cont`, `ContT` and `MonadCont`:
 <http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Cont.html>
 
 ! This file was ported from Lean 3 source module control.monad.cont
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ theorem monadLift_bind [Monad m] [LawfulMonad m] {α β} (x : m α) (f : α → 
     (monadLift (x >>= f) : ContT r m β) = monadLift x >>= monadLift ∘ f :=
   by
   ext
-  simp only [monad_lift, HasMonadLift.monadLift, (· ∘ ·), (· >>= ·), bind_assoc, id.def, run,
+  simp only [monadLift, has_monad_lift.monad_lift, (· ∘ ·), (· >>= ·), bind_assoc, id.def, run,
     ContT.monadLift]
 #align cont_t.monad_lift_bind ContT.monadLift_bind
 
@@ -150,13 +150,13 @@ instance {ε} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ExceptT �
     where
   callCc_bind_right := by
     intros
-    simp [call_cc, ExceptT.callCc, call_cc_bind_right]
+    simp [call_cc, ExceptT.callCc, callCc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [ExceptT.bindCont, @call_cc_dummy m _]
   callCc_bind_left := by
     intros
-    simp [call_cc, ExceptT.callCc, call_cc_bind_right, ExceptT.goto_mkLabel, map_eq_bind_pure_comp,
+    simp [call_cc, ExceptT.callCc, callCc_bind_right, ExceptT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
@@ -185,13 +185,13 @@ instance [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (OptionT m)
     where
   callCc_bind_right := by
     intros
-    simp [call_cc, OptionT.callCc, call_cc_bind_right]
+    simp [call_cc, OptionT.callCc, callCc_bind_right]
     ext
     dsimp
     congr with ⟨⟩ <;> simp [OptionT.bindCont, @call_cc_dummy m _]
   callCc_bind_left := by
     intros
-    simp [call_cc, OptionT.callCc, call_cc_bind_right, OptionT.goto_mkLabel, map_eq_bind_pure_comp,
+    simp [call_cc, OptionT.callCc, callCc_bind_right, OptionT.goto_mkLabel, map_eq_bind_pure_comp,
       bind_assoc, @call_cc_bind_left m _]
     ext
     rfl
@@ -248,19 +248,19 @@ instance {σ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (StateT σ
     where
   callCc_bind_right := by
     intros
-    simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind]
+    simp [call_cc, StateT.callCc, callCc_bind_right, (· >>= ·), StateT.bind]
     ext
     dsimp
     congr with ⟨x₀, x₁⟩
     rfl
   callCc_bind_left := by
     intros
-    simp [call_cc, StateT.callCc, call_cc_bind_left, (· >>= ·), StateT.bind, StateT.goto_mkLabel]
+    simp [call_cc, StateT.callCc, callCc_bind_left, (· >>= ·), StateT.bind, StateT.goto_mkLabel]
     ext
     rfl
   callCc_dummy := by
     intros
-    simp [call_cc, StateT.callCc, call_cc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
+    simp [call_cc, StateT.callCc, callCc_bind_right, (· >>= ·), StateT.bind, @call_cc_dummy m _]
     ext
     rfl
 
@@ -289,12 +289,12 @@ instance {ρ} [MonadCont m] [IsLawfulMonadCont m] : IsLawfulMonadCont (ReaderT �
     where
   callCc_bind_right := by
     intros
-    simp [call_cc, ReaderT.callCc, call_cc_bind_right]
+    simp [call_cc, ReaderT.callCc, callCc_bind_right]
     ext
     rfl
   callCc_bind_left := by
     intros
-    simp [call_cc, ReaderT.callCc, call_cc_bind_left, ReaderT.goto_mkLabel]
+    simp [call_cc, ReaderT.callCc, callCc_bind_left, ReaderT.goto_mkLabel]
     ext
     rfl
   callCc_dummy := by

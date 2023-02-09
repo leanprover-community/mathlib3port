@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.epi_mono
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,19 +26,19 @@ namespace CategoryTheory
 variable {C : Type u₁} [Category.{v₁} C]
 
 instance unop_mono_of_epi {A B : Cᵒᵖ} (f : A ⟶ B) [Epi f] : Mono f.unop :=
-  ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_epi f).1 (Quiver.Hom.unop_inj Eq))⟩
+  ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_epi f).1 (Quiver.Hom.unop_inj eq))⟩
 #align category_theory.unop_mono_of_epi CategoryTheory.unop_mono_of_epi
 
 instance unop_epi_of_mono {A B : Cᵒᵖ} (f : A ⟶ B) [Mono f] : Epi f.unop :=
-  ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_mono f).1 (Quiver.Hom.unop_inj Eq))⟩
+  ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_mono f).1 (Quiver.Hom.unop_inj eq))⟩
 #align category_theory.unop_epi_of_mono CategoryTheory.unop_epi_of_mono
 
 instance op_mono_of_epi {A B : C} (f : A ⟶ B) [Epi f] : Mono f.op :=
-  ⟨fun Z g h eq => Quiver.Hom.unop_inj ((cancel_epi f).1 (Quiver.Hom.op_inj Eq))⟩
+  ⟨fun Z g h eq => Quiver.Hom.unop_inj ((cancel_epi f).1 (Quiver.Hom.op_inj eq))⟩
 #align category_theory.op_mono_of_epi CategoryTheory.op_mono_of_epi
 
 instance op_epi_of_mono {A B : C} (f : A ⟶ B) [Mono f] : Epi f.op :=
-  ⟨fun Z g h eq => Quiver.Hom.unop_inj ((cancel_mono f).1 (Quiver.Hom.op_inj Eq))⟩
+  ⟨fun Z g h eq => Quiver.Hom.unop_inj ((cancel_mono f).1 (Quiver.Hom.op_inj eq))⟩
 #align category_theory.op_epi_of_mono CategoryTheory.op_epi_of_mono
 
 /-- A split monomorphism is a morphism `f : X ⟶ Y` with a given retraction `retraction f : Y ⟶ X`
@@ -48,7 +48,7 @@ Every split monomorphism is a monomorphism.
 -/
 @[ext, nolint has_nonempty_instance]
 structure SplitMono {X Y : C} (f : X ⟶ Y) where
-  retraction : Y ⟶ X
+  retraction : Y ⟶ comp
   id' : f ≫ retraction = 𝟙 X := by obviously
 #align category_theory.split_mono CategoryTheory.SplitMono
 
@@ -161,7 +161,7 @@ theorem SplitMono.mono {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) : Mono f :=
 
 /-- Every split mono is a mono. -/
 instance (priority := 100) IsSplitMono.mono {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] : Mono f :=
-  hf.exists_splitMono.some.Mono
+  hf.exists_splitMono.some.mono
 #align category_theory.is_split_mono.mono CategoryTheory.IsSplitMono.mono
 
 theorem SplitEpi.epi {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : Epi f :=
@@ -170,7 +170,7 @@ theorem SplitEpi.epi {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) : Epi f :=
 
 /-- Every split epi is an epi. -/
 instance (priority := 100) IsSplitEpi.epi {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] : Epi f :=
-  hf.exists_splitEpi.some.Epi
+  hf.exists_splitEpi.some.epi
 #align category_theory.is_split_epi.epi CategoryTheory.IsSplitEpi.epi
 
 /-- Every split mono whose retraction is mono is an iso. -/
@@ -202,11 +202,11 @@ theorem IsIso.of_epi_section {X Y : C} (f : X ⟶ Y) [hf : IsSplitEpi f] [hf' : 
 noncomputable def Groupoid.ofTruncSplitMono
     (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), Trunc (IsSplitMono f)) : Groupoid.{v₁} C :=
   by
-  apply groupoid.of_is_iso
+  apply Groupoid.ofIsIso
   intro X Y f
   trunc_cases all_split_mono f
   trunc_cases all_split_mono (retraction f)
-  apply is_iso.of_mono_retraction
+  apply IsIso.of_mono_retraction
 #align category_theory.groupoid.of_trunc_split_mono CategoryTheory.Groupoid.ofTruncSplitMono
 
 section
@@ -246,7 +246,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : SplitMono (F.map f)
     where
   retraction := F.map sm.retraction
-  id' := by rw [← functor.map_comp, split_mono.id, Functor.map_id]
+  id' := by rw [← Functor.map_comp, SplitMono.id, Functor.map_id]
 #align category_theory.split_mono.map CategoryTheory.SplitMono.map
 
 /-- Split epimorphisms are also absolute epimorphisms. -/
@@ -254,7 +254,7 @@ def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : Spl
 def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : SplitEpi (F.map f)
     where
   section_ := F.map se.section_
-  id' := by rw [← functor.map_comp, split_epi.id, Functor.map_id]
+  id' := by rw [← Functor.map_comp, SplitEpi.id, Functor.map_id]
 #align category_theory.split_epi.map CategoryTheory.SplitEpi.map
 
 instance {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] (F : C ⥤ D) : IsSplitMono (F.map f) :=

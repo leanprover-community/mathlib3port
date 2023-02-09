@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,8 @@ theorem nhdsSet_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) 
     rw [uniformity_prod_eq_comap_prod]
     exact (𝓤 α).basis_sets.prod_self.comap _
   refine' (is_compact_diagonal.nhds_set_basis_uniformity this).ge_iff.2 fun U hU => _
-  exact mem_of_superset hU fun ⟨x, y⟩ hxy => mem_Union₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
+  exact
+    mem_of_superset hU fun ⟨x, y⟩ hxy => mem_unionᵢ₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
 #align nhds_set_diagonal_eq_uniformity nhdsSet_diagonal_eq_uniformity
 
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
@@ -76,8 +77,8 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
     u = u' := by
   apply uniformSpace_eq
   change uniformity _ = uniformity _
-  have : @CompactSpace γ u.to_topological_space := by rwa [h]
-  have : @CompactSpace γ u'.to_topological_space := by rwa [h']
+  have : @compact_space γ u.to_topological_space := by rwa [h]
+  have : @compact_space γ u'.to_topological_space := by rwa [h']
   rw [compactSpace_uniformity, compactSpace_uniformity, h, h']
 #align unique_uniformity_of_compact unique_uniformity_of_compact
 
@@ -87,7 +88,7 @@ theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » x) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ≠ » x) -/
 /-- The unique uniform structure inducing a given compact topological structure. -/
 def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ] : UniformSpace γ
     where
@@ -108,7 +109,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
     rw [le_iff_forall_inf_principal_compl]
     intro V V_in
     by_contra H
-    haveI : ne_bot (F ⊓ 𝓟 (Vᶜ)) := ⟨H⟩
+    haveI : NeBot (F ⊓ 𝓟 (Vᶜ)) := ⟨H⟩
     -- Hence compactness would give us a cluster point (x, y) for F ⊓ 𝓟 Vᶜ
     obtain ⟨⟨x, y⟩, hxy⟩ : ∃ p : γ × γ, ClusterPt p (F ⊓ 𝓟 (Vᶜ)) := cluster_point_of_compact _
     -- In particular (x, y) is a cluster point of 𝓟 Vᶜ, hence is not in the interior of V,
@@ -168,7 +169,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
       intro s
       simp_rw [isOpen_fold, isOpen_iff_mem_nhds, ← mem_comap_prod_mk, this]
     intro x
-    simp_rw [nhdsSet_diagonal, comap_supr, nhds_prod_eq, comap_prod, (· ∘ ·), comap_id']
+    simp_rw [nhdsSet_diagonal, comap_supᵢ, nhds_prod_eq, comap_prod, (· ∘ ·), comap_id']
     rw [supᵢ_split_single _ x, comap_const_of_mem fun V => mem_of_mem_nhds]
     suffices ∀ (y) (_ : y ≠ x), comap (fun y : γ => x) (𝓝 y) ⊓ 𝓝 y ≤ 𝓝 x by simpa
     intro y hxy
@@ -185,7 +186,7 @@ continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
     (h : Continuous f) : UniformContinuous f :=
   have : Tendsto (Prod.map f f) (𝓝ˢ (diagonal α)) (𝓝ˢ (diagonal β)) :=
-    (h.Prod_map h).tendsto_nhdsSet mapsTo_prod_map_diagonal
+    (h.prod_map h).tendsto_nhdsSet mapsTo_prod_map_diagonal
   (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
 
@@ -213,12 +214,12 @@ theorem IsCompact.uniform_continuousAt_of_continuousAt {r : Set (β × β)} {s :
   choose U hU T hT hb using fun a ha =>
     exists_mem_nhds_ball_subset_of_mem_nhds ((hf a ha).preimage_mem_nhds <| mem_nhds_left _ ht)
   obtain ⟨fs, hsU⟩ := hs.elim_nhds_subcover' U hU
-  apply mem_of_superset ((bInter_finset_mem fs).2 fun a _ => hT a a.2)
+  apply mem_of_superset ((binterᵢ_finset_mem fs).2 fun a _ => hT a a.2)
   rintro ⟨a₁, a₂⟩ h h₁
   obtain ⟨a, ha, haU⟩ := Set.mem_unionᵢ₂.1 (hsU h₁)
   apply htr
   refine' ⟨f a, htsymm.mk_mem_comm.1 (hb _ _ _ haU _), hb _ _ _ haU _⟩
-  exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
+  exacts[mem_ball_self _ (hT a a.2), mem_interᵢ₂.1 h a ha]
 #align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniform_continuousAt_of_continuousAt
 
 theorem Continuous.uniformContinuous_of_zero_at_infty {f : α → β} [Zero β] (h_cont : Continuous f)
@@ -250,7 +251,7 @@ theorem ContinuousOn.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β]
   rcases LocallyCompactSpace.local_compact_nhds _ _ hxU with ⟨K, hxK, hKU, hK⟩
   have : UniformContinuousOn (↿f) (K ×ˢ univ) :=
     IsCompact.uniformContinuousOn_of_continuous (hK.prod isCompact_univ)
-      (h.mono <| prod_mono hKU subset.rfl)
+      (h.mono <| prod_mono hKU Subset.rfl)
   exact this.tendsto_uniformly hxK
 #align continuous_on.tendsto_uniformly ContinuousOn.tendstoUniformly
 
@@ -258,7 +259,7 @@ theorem ContinuousOn.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β]
 locally compact and `β` is compact. -/
 theorem Continuous.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]
     (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
-  h.ContinuousOn.TendstoUniformly univ_mem
+  h.continuousOn.tendstoUniformly univ_mem
 #align continuous.tendsto_uniformly Continuous.tendstoUniformly
 
 section UniformConvergence

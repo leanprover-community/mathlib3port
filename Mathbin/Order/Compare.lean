@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.compare
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ def cmpLE {α} [LE α] [@DecidableRel α (· ≤ ·)] (x y : α) : Ordering :=
 
 #print cmpLE_swap /-
 theorem cmpLE_swap {α} [LE α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x y : α) :
-    (cmpLE x y).symm = cmpLE y x :=
+    (cmpLE x y).swap = cmpLE y x :=
   by
   by_cases xy : x ≤ y <;> by_cases yx : y ≤ x <;> simp [cmpLE, *, Ordering.swap]
   cases not_or_of_not xy yx (total_of _ _ _)
@@ -64,13 +64,13 @@ that the relation `a < b` is defined. -/
 @[simp]
 def Compares [LT α] : Ordering → α → α → Prop
   | lt, a, b => a < b
-  | Eq, a, b => a = b
-  | GT.gt, a, b => a > b
+  | eq, a, b => a = b
+  | gt, a, b => a > b
 #align ordering.compares Ordering.Compares
 -/
 
 #print Ordering.compares_swap /-
-theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.symm.Compares a b ↔ o.Compares b a :=
+theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a :=
   by
   cases o
   exacts[Iff.rfl, eq_comm, Iff.rfl]
@@ -83,13 +83,13 @@ alias compares_swap ↔ compares.of_swap compares.swap
 
 #print Ordering.swap_inj /-
 @[simp]
-theorem swap_inj (o₁ o₂ : Ordering) : o₁.symm = o₂.symm ↔ o₁ = o₂ := by
+theorem swap_inj (o₁ o₂ : Ordering) : o₁.swap = o₂.swap ↔ o₁ = o₂ := by
   cases o₁ <;> cases o₂ <;> decide
 #align ordering.swap_inj Ordering.swap_inj
 -/
 
 #print Ordering.swap_eq_iff_eq_swap /-
-theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.symm = o' ↔ o = o'.symm := by
+theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.swap = o' ↔ o = o'.swap := by
   rw [← swap_inj, swap_swap]
 #align ordering.swap_eq_iff_eq_swap Ordering.swap_eq_iff_eq_swap
 -/
@@ -97,52 +97,52 @@ theorem swap_eq_iff_eq_swap {o o' : Ordering} : o.symm = o' ↔ o = o'.symm := b
 #print Ordering.Compares.eq_lt /-
 theorem Compares.eq_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = lt ↔ a < b)
   | lt, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
-  | Eq, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h' h).elim⟩
-  | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (lt_asymm h h').elim⟩
+  | eq, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h' h).elim⟩
+  | gt, a, b, h => ⟨fun h => by injection h, fun h' => (lt_asymm h h').elim⟩
 #align ordering.compares.eq_lt Ordering.Compares.eq_lt
 -/
 
 #print Ordering.Compares.ne_lt /-
 theorem Compares.ne_lt [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o ≠ lt ↔ b ≤ a)
   | lt, a, b, h => ⟨absurd rfl, fun h' => (not_le_of_lt h h').elim⟩
-  | Eq, a, b, h => ⟨fun _ => ge_of_eq h, fun _ h => by injection h⟩
-  | GT.gt, a, b, h => ⟨fun _ => le_of_lt h, fun _ h => by injection h⟩
+  | eq, a, b, h => ⟨fun _ => ge_of_eq h, fun _ h => by injection h⟩
+  | gt, a, b, h => ⟨fun _ => le_of_lt h, fun _ h => by injection h⟩
 #align ordering.compares.ne_lt Ordering.Compares.ne_lt
 -/
 
 #print Ordering.Compares.eq_eq /-
 theorem Compares.eq_eq [Preorder α] : ∀ {o} {a b : α}, Compares o a b → (o = eq ↔ a = b)
   | lt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_lt h h').elim⟩
-  | Eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
-  | GT.gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gt h h').elim⟩
+  | eq, a, b, h => ⟨fun _ => h, fun _ => rfl⟩
+  | gt, a, b, h => ⟨fun h => by injection h, fun h' => (ne_of_gt h h').elim⟩
 #align ordering.compares.eq_eq Ordering.Compares.eq_eq
 -/
 
 #print Ordering.Compares.eq_gt /-
 theorem Compares.eq_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o = gt ↔ b < a :=
-  swap_eq_iff_eq_swap.symm.trans h.symm.eq_lt
+  swap_eq_iff_eq_swap.symm.trans h.swap.eq_lt
 #align ordering.compares.eq_gt Ordering.Compares.eq_gt
 -/
 
 #print Ordering.Compares.ne_gt /-
 theorem Compares.ne_gt [Preorder α] {o} {a b : α} (h : Compares o a b) : o ≠ gt ↔ a ≤ b :=
-  (not_congr swap_eq_iff_eq_swap.symm).trans h.symm.ne_lt
+  (not_congr swap_eq_iff_eq_swap.symm).trans h.swap.ne_lt
 #align ordering.compares.ne_gt Ordering.Compares.ne_gt
 -/
 
 #print Ordering.Compares.le_total /-
 theorem Compares.le_total [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b ∨ b ≤ a
   | lt, h => Or.inl (le_of_lt h)
-  | Eq, h => Or.inl (le_of_eq h)
-  | GT.gt, h => Or.inr (le_of_lt h)
+  | eq, h => Or.inl (le_of_eq h)
+  | gt, h => Or.inr (le_of_lt h)
 #align ordering.compares.le_total Ordering.Compares.le_total
 -/
 
 #print Ordering.Compares.le_antisymm /-
 theorem Compares.le_antisymm [Preorder α] {a b : α} : ∀ {o}, Compares o a b → a ≤ b → b ≤ a → a = b
   | lt, h, _, hba => (not_le_of_lt h hba).elim
-  | Eq, h, _, _ => h
-  | GT.gt, h, hab, _ => (not_le_of_lt h hab).elim
+  | eq, h, _, _ => h
+  | gt, h, hab, _ => (not_le_of_lt h hab).elim
 #align ordering.compares.le_antisymm Ordering.Compares.le_antisymm
 -/
 
@@ -150,8 +150,8 @@ theorem Compares.le_antisymm [Preorder α] {a b : α} : ∀ {o}, Compares o a b 
 theorem Compares.inj [Preorder α] {o₁} :
     ∀ {o₂} {a b : α}, Compares o₁ a b → Compares o₂ a b → o₁ = o₂
   | lt, a, b, h₁, h₂ => h₁.eq_lt.2 h₂
-  | Eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
-  | GT.gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
+  | eq, a, b, h₁, h₂ => h₁.eq_eq.2 h₂
+  | gt, a, b, h₁, h₂ => h₁.eq_gt.2 h₂
 #align ordering.compares.inj Ordering.Compares.inj
 -/
 
@@ -167,17 +167,17 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder �
   by
   refine' ⟨h, fun ho => _⟩
   cases' lt_trichotomy a b with hab hab
-  · change compares Ordering.lt a b at hab
+  · change Compares Ordering.lt a b at hab
     rwa [ho.inj (h hab)]
   · cases' hab with hab hab
-    · change compares Ordering.eq a b at hab
+    · change Compares Ordering.eq a b at hab
       rwa [ho.inj (h hab)]
-    · change compares Ordering.gt a b at hab
+    · change Compares Ordering.gt a b at hab
       rwa [ho.inj (h hab)]
 #align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_impl
 
 #print Ordering.swap_orElse /-
-theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).symm = orElse o₁.symm o₂.symm := by
+theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
   cases o₁ <;> try rfl <;> cases o₂ <;> rfl
 #align ordering.swap_or_else Ordering.swap_orElse
 -/
@@ -227,7 +227,7 @@ theorem Ordering.Compares.cmp_eq [LinearOrder α] {a b : α} {o : Ordering} (h :
 
 #print cmp_swap /-
 @[simp]
-theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).symm = cmp b a :=
+theorem cmp_swap [Preorder α] [@DecidableRel α (· < ·)] (a b : α) : (cmp a b).swap = cmp b a :=
   by
   unfold cmp cmpUsing
   by_cases a < b <;> by_cases h₂ : b < a <;> simp [h, h₂, Ordering.swap]
@@ -280,7 +280,7 @@ theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
 #print linearOrderOfCompares /-
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
 def linearOrderOfCompares [Preorder α] (cmp : α → α → Ordering)
-    (h : ∀ a b, (cmp a b).Compares a b) : LinearOrder α :=
+    (h : ∀ a b, (cmp a b).Compares a b) : linear_order α :=
   { ‹Preorder α› with
     le_antisymm := fun a b => (h a b).le_antisymm
     le_total := fun a b => (h a b).le_total

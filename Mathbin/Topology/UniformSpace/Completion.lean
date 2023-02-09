@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,14 +89,14 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
         (𝓤 α).lift' fun s : Set (α × α) => { p | s ∈ p.2.val ×ᶠ p.1.val } :=
       by
       delta gen
-      simp [map_lift'_eq, monotone_set_of, Filter.monotone_mem, Function.comp,
+      simp [map_lift'_eq, monotone_setOf, Filter.monotone_mem, Function.comp,
         image_swap_eq_preimage_swap, -Subtype.val_eq_coe]
     _ ≤ (𝓤 α).lift' gen :=
       uniformity_lift_le_swap
         (monotone_principal.comp
           (monotone_setOf fun p => @Filter.monotone_mem _ (p.2.val ×ᶠ p.1.val)))
         (by
-          have h := fun p : CauchyCat α × CauchyCat α => @Filter.prod_comm _ _ p.2.val p.1.val
+          have h := fun p : CauchyCat α × CauchyCat α => @filter.prod_comm _ _ p.2.val p.1.val
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
           exact le_rfl)
     
@@ -161,7 +161,7 @@ def pureCauchy (a : α) : CauchyCat α :=
 theorem uniformInducing_pureCauchy : UniformInducing (pure_cauchy : α → CauchyCat α) :=
   ⟨have : (preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen = id :=
       funext fun s =>
-        Set.ext fun ⟨a₁, a₂⟩ => by simp [preimage, gen, pure_cauchy, prod_principal_principal]
+        Set.ext fun ⟨a₁, a₂⟩ => by simp [preimage, gen, pureCauchy, prod_principal_principal]
     calc
       comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
           (𝓤 α).lift' ((preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
@@ -191,21 +191,21 @@ theorem denseRange_pureCauchy : DenseRange pure_cauchy := fun f =>
           ht'₂ <| prod_mk_mem_compRel (@h (a, x) ⟨h₁, hx⟩) h₂⟩
     ⟨x, ht''₂ <| by dsimp [gen] <;> exact this⟩
   simp only [closure_eq_cluster_pts, ClusterPt, nhds_eq_uniformity, lift'_inf_principal_eq,
-    Set.inter_comm _ (range pure_cauchy), mem_set_of_eq]
+    Set.inter_comm _ (range pureCauchy), mem_setOf_eq]
   exact
-    (lift'_ne_bot_iff <| monotone_const.inter monotone_preimage).mpr fun s hs =>
+    (lift'_neBot_iff <| monotone_const.inter monotone_preimage).mpr fun s hs =>
       let ⟨y, hy⟩ := h_ex s hs
-      have : pure_cauchy y ∈ range pure_cauchy ∩ { y : CauchyCat α | (f, y) ∈ s } :=
+      have : pureCauchy y ∈ range pureCauchy ∩ { y : CauchyCat α | (f, y) ∈ s } :=
         ⟨mem_range_self y, hy⟩
       ⟨_, this⟩
 #align Cauchy.dense_range_pure_cauchy CauchyCat.denseRange_pureCauchy
 
 theorem denseInducing_pureCauchy : DenseInducing pure_cauchy :=
-  uniform_inducing_pure_cauchy.DenseInducing dense_range_pure_cauchy
+  uniform_inducing_pure_cauchy.denseInducing dense_range_pure_cauchy
 #align Cauchy.dense_inducing_pure_cauchy CauchyCat.denseInducing_pureCauchy
 
 theorem denseEmbedding_pureCauchy : DenseEmbedding pure_cauchy :=
-  uniform_embedding_pure_cauchy.DenseEmbedding dense_range_pure_cauchy
+  uniform_embedding_pure_cauchy.denseEmbedding dense_range_pure_cauchy
 #align Cauchy.dense_embedding_pure_cauchy CauchyCat.denseEmbedding_pureCauchy
 
 theorem nonempty_cauchyCat_iff : Nonempty (CauchyCat α) ↔ Nonempty α :=
@@ -214,7 +214,7 @@ theorem nonempty_cauchyCat_iff : Nonempty (CauchyCat α) ↔ Nonempty α :=
   · have := eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c
     obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ isOpen_univ trivial
     exact ⟨a⟩
-  · exact ⟨pure_cauchy c⟩
+  · exact ⟨pureCauchy c⟩
 #align Cauchy.nonempty_Cauchy_iff CauchyCat.nonempty_cauchyCat_iff
 
 section
@@ -241,7 +241,7 @@ instance [Inhabited α] : Inhabited (CauchyCat α) :=
   ⟨pure_cauchy default⟩
 
 instance [h : Nonempty α] : Nonempty (CauchyCat α) :=
-  h.recOn fun a => Nonempty.intro <| CauchyCat.pureCauchy a
+  h.rec_on fun a => Nonempty.intro <| Cauchy.pure_cauchy a
 
 section Extend
 
@@ -259,7 +259,7 @@ variable [SeparatedSpace β]
 theorem extend_pureCauchy {f : α → β} (hf : UniformContinuous f) (a : α) :
     extend f (pure_cauchy a) = f a := by
   rw [extend, if_pos hf]
-  exact uniformly_extend_of_ind uniform_inducing_pure_cauchy dense_range_pure_cauchy hf _
+  exact uniformly_extend_of_ind uniformInducing_pureCauchy denseRange_pureCauchy hf _
 #align Cauchy.extend_pure_cauchy CauchyCat.extend_pureCauchy
 
 end SeparatedSpace
@@ -270,7 +270,7 @@ theorem uniformContinuous_extend {f : α → β} : UniformContinuous (extend f) 
   by
   by_cases hf : UniformContinuous f
   · rw [extend, if_pos hf]
-    exact uniformContinuous_uniformly_extend uniform_inducing_pure_cauchy dense_range_pure_cauchy hf
+    exact uniformContinuous_uniformly_extend uniformInducing_pureCauchy denseRange_pureCauchy hf
   · rw [extend, if_neg hf]
     exact uniformContinuous_of_const fun a b => by congr
 #align Cauchy.uniform_continuous_extend CauchyCat.uniformContinuous_extend
@@ -351,7 +351,7 @@ instance completeSpace_separation [h : CompleteSpace α] :
     let ⟨x, (hx : (f fun x => ⟦x⟧) ≤ 𝓝 x)⟩ := CompleteSpace.complete this
     ⟨⟦x⟧,
       (comap_le_comap_iff <| by simp).1
-        (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk'.ContinuousAt)⟩⟩
+        (hx.trans <| map_le_iff_le_comap.1 continuous_quotient_mk'.continuousAt)⟩⟩
 #align uniform_space.complete_space_separation UniformSpace.completeSpace_separation
 
 /-- Hausdorff completion of `α` -/
@@ -389,12 +389,12 @@ theorem comap_coe_eq_uniformity :
     ((𝓤 _).comap fun p : α × α => ((p.1 : Completion α), (p.2 : Completion α))) = 𝓤 α :=
   by
   have :
-    (fun x : α × α => ((x.1 : completion α), (x.2 : completion α))) =
+    (fun x : α × α => ((x.1 : Completion α), (x.2 : Completion α))) =
       (fun x : CauchyCat α × CauchyCat α => (⟦x.1⟧, ⟦x.2⟧)) ∘ fun x : α × α =>
-        (pure_cauchy x.1, pure_cauchy x.2) :=
+        (pureCauchy x.1, pureCauchy x.2) :=
     by ext ⟨a, b⟩ <;> simp <;> rfl
   rw [this, ← Filter.comap_comap]
-  change Filter.comap _ (Filter.comap _ (𝓤 <| Quotient <| separation_setoid <| CauchyCat α)) = 𝓤 α
+  change Filter.comap _ (Filter.comap _ (𝓤 <| Quotient <| separationSetoid <| CauchyCat α)) = 𝓤 α
   rw [comap_quotient_eq_uniformity, uniform_embedding_pure_cauchy.comap_uniformity]
 #align uniform_space.completion.comap_coe_eq_uniformity UniformSpace.Completion.comap_coe_eq_uniformity
 
@@ -405,7 +405,7 @@ theorem uniformInducing_coe : UniformInducing (coe : α → Completion α) :=
 variable {α}
 
 theorem denseRange_coe : DenseRange (coe : α → Completion α) :=
-  denseRange_pureCauchy.Quotient
+  denseRange_pureCauchy.quotient
 #align uniform_space.completion.dense_range_coe UniformSpace.Completion.denseRange_coe
 
 variable (α)
@@ -453,7 +453,7 @@ theorem coe_injective [SeparatedSpace α] : Function.Injective (coe : α → Com
 variable {α}
 
 theorem denseInducing_coe : DenseInducing (coe : α → Completion α) :=
-  { (uniformInducing_coe α).Inducing with dense := denseRange_coe }
+  { (uniformInducing_coe α).inducing with dense := denseRange_coe }
 #align uniform_space.completion.dense_inducing_coe UniformSpace.Completion.denseInducing_coe
 
 /-- The uniform bijection between a complete space and its uniform completion. -/
@@ -464,7 +464,7 @@ def UniformCompletion.completeEquivSelf [CompleteSpace α] [SeparatedSpace α] :
 open TopologicalSpace
 
 instance separableSpace_completion [SeparableSpace α] : SeparableSpace (Completion α) :=
-  Completion.denseInducing_coe.SeparableSpace
+  Completion.denseInducing_coe.separableSpace
 #align uniform_space.completion.separable_space_completion UniformSpace.Completion.separableSpace_completion
 
 theorem denseEmbedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → Completion α) :=
@@ -473,13 +473,13 @@ theorem denseEmbedding_coe [SeparatedSpace α] : DenseEmbedding (coe : α → Co
 
 theorem denseRange_coe₂ :
     DenseRange fun x : α × β => ((x.1 : Completion α), (x.2 : Completion β)) :=
-  denseRange_coe.Prod_map denseRange_coe
+  denseRange_coe.prod_map denseRange_coe
 #align uniform_space.completion.dense_range_coe₂ UniformSpace.Completion.denseRange_coe₂
 
 theorem denseRange_coe₃ :
     DenseRange fun x : α × β × γ =>
       ((x.1 : Completion α), ((x.2.1 : Completion β), (x.2.2 : Completion γ))) :=
-  denseRange_coe.Prod_map denseRange_coe₂
+  denseRange_coe.prod_map denseRange_coe₂
 #align uniform_space.completion.dense_range_coe₃ UniformSpace.Completion.denseRange_coe₃
 
 @[elab_as_elim]
@@ -620,25 +620,25 @@ def completionSeparationQuotientEquiv (α : Type u) [UniformSpace α] :
     Completion (SeparationQuotient α) ≃ Completion α :=
   by
   refine'
-    ⟨completion.extension (SeparationQuotient.lift (coe : α → completion α)),
-      completion.map Quotient.mk', _, _⟩
+    ⟨Completion.extension (SeparationQuotient.lift (coe : α → Completion α)),
+      Completion.map Quotient.mk', _, _⟩
   · intro a
-    refine' induction_on a (isClosed_eq (ContinuousMap.comp continuous_extension) continuous_id) _
+    refine' induction_on a (isClosed_eq (continuous_map.comp continuous_extension) continuous_id) _
     rintro ⟨a⟩
     show
-      completion.map Quotient.mk' (completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
+      Completion.map Quotient.mk' (Completion.extension (SeparationQuotient.lift coe) ↑(⟦a⟧)) =
         ↑(⟦a⟧)
-    rw [extension_coe (separation_quotient.uniform_continuous_lift _),
-        SeparationQuotient.lift_mk (uniform_continuous_coe α),
-        completion.map_coe uniform_continuous_quotient_mk] <;>
+    rw [extension_coe (SeparationQuotient.uniformContinuous_lift _),
+        SeparationQuotient.lift_mk (uniformContinuous_coe α),
+        Completion.map_coe uniformContinuous_quotient_mk'] <;>
       infer_instance
   · intro a
     refine'
-      completion.induction_on a
-        (isClosed_eq (continuous_extension.comp ContinuousMap) continuous_id) fun a => _
-    rw [map_coe uniform_continuous_quotient_mk,
-        extension_coe (separation_quotient.uniform_continuous_lift _),
-        SeparationQuotient.lift_mk (uniform_continuous_coe α) _] <;>
+      Completion.induction_on a
+        (isClosed_eq (continuous_extension.comp continuous_map) continuous_id) fun a => _
+    rw [map_coe uniformContinuous_quotient_mk',
+        extension_coe (SeparationQuotient.uniformContinuous_lift _),
+        SeparationQuotient.lift_mk (uniformContinuous_coe α) _] <;>
       infer_instance
 #align uniform_space.completion.completion_separation_quotient_equiv UniformSpace.Completion.completionSeparationQuotientEquiv
 
@@ -691,7 +691,7 @@ open Function
 
 /-- Lift a two variable map to the Hausdorff completions. -/
 protected def map₂ (f : α → β → γ) : Completion α → Completion β → Completion γ :=
-  cpkg.zipWith cpkg cpkg f
+  cpkg.map₂ cpkg cpkg f
 #align uniform_space.completion.map₂ UniformSpace.Completion.map₂
 
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (Completion.map₂ f) :=

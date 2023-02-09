@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Twop
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ instance : Inhabited Twop :=
 /-- Turns a two-pointed type into a bipointed type, by forgetting that the pointed elements are
 distinct. -/
 def toBipointed (X : Twop) : Bipointed :=
-  X.toTwoPointing.toProd.Bipointed
+  X.toTwoPointing.toProd.bipointed
 #align Twop.to_Bipointed Twop.toBipointed
 
 @[simp]
@@ -84,7 +84,7 @@ instance hasForgetToBipointed : HasForget₂ Twop Bipointed :=
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
 @[simps]
 def swap : Twop ⥤ Twop where
-  obj X := ⟨X, X.toTwoPointing.symm⟩
+  obj X := ⟨X, X.toTwoPointing.swap⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Twop.swap Twop.swap
 
@@ -165,7 +165,7 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
-          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩
+          invFun := fun f => ⟨fun o => o.elim' Y.toTwoPointing.toProd.2 f.toFun, f.map_point, rfl⟩
           left_inv := fun f => by
             ext
             cases x
@@ -184,7 +184,7 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
-          invFun := fun f => ⟨fun o => o.elim Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩
+          invFun := fun f => ⟨fun o => o.elim' Y.toTwoPointing.toProd.1 f.toFun, rfl, f.map_point⟩
           left_inv := fun f => by
             ext
             cases x

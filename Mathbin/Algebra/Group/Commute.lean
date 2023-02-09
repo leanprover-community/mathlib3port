@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Neil Strickland, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.commute
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem pow_left (h : Commute a b) (n : ℕ) : Commute (a ^ n) b :=
 
 @[simp, to_additive]
 theorem pow_pow (h : Commute a b) (m n : ℕ) : Commute (a ^ m) (b ^ n) :=
-  (h.pow_leftₓ m).pow_right n
+  (h.pow_left m).pow_right n
 #align commute.pow_pow Commute.pow_powₓ
 #align add_commute.nsmul_nsmul AddCommute.nsmul_nsmulₓ
 
@@ -200,12 +200,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.pow_self Commute.pow_selfₓ'. -/
 @[simp, to_additive]
 theorem pow_self (a : M) (n : ℕ) : Commute (a ^ n) a :=
-  (Commute.refl a).pow_leftₓ n
+  (Commute.refl a).pow_left n
 #align commute.pow_self Commute.pow_self
 
 @[simp, to_additive]
 theorem pow_pow_self (a : M) (m n : ℕ) : Commute (a ^ m) (a ^ n) :=
-  (Commute.refl a).pow_powₓ m n
+  (Commute.refl a).pow_pow m n
 #align commute.pow_pow_self Commute.pow_pow_selfₓ
 #align add_commute.nsmul_nsmul_self AddCommute.nsmul_nsmul_selfₓ
 
@@ -335,7 +335,7 @@ Case conversion may be inaccurate. Consider using '#align units.right_of_mul Uni
 @[to_additive
       "If the sum of two commuting elements is an additive unit, then the right summand is\nan additive unit."]
 def Units.rightOfMul (u : Mˣ) (a b : M) (hu : a * b = u) (hc : Commute a b) : Mˣ :=
-  u.leftOfMul b a (hc.Eq ▸ hu) hc.symm
+  u.leftOfMul b a (hc.eq ▸ hu) hc.symm
 #align units.right_of_mul Units.rightOfMul
 #align add_units.right_of_add AddUnits.rightOfAdd
 
@@ -347,7 +347,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align commute.is_unit_mul_iff Commute.isUnit_mul_iffₓ'. -/
 @[to_additive]
 theorem isUnit_mul_iff (h : Commute a b) : IsUnit (a * b) ↔ IsUnit a ∧ IsUnit b :=
-  ⟨fun ⟨u, hu⟩ => ⟨(u.leftOfMul a b hu.symm h).IsUnit, (u.rightOfMul a b hu.symm h).IsUnit⟩,
+  ⟨fun ⟨u, hu⟩ => ⟨(u.leftOfMul a b hu.symm h).isUnit, (u.rightOfMul a b hu.symm h).isUnit⟩,
     fun H => H.1.mul H.2⟩
 #align commute.is_unit_mul_iff Commute.isUnit_mul_iff
 #align add_commute.is_add_unit_add_iff AddCommute.isAddUnit_add_iff

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module data.holor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ def drop : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds
 
 #print HolorIndex.cast_type /-
 theorem cast_type (is : List ℕ) (eq : ds₁ = ds₂) (h : Forall₂ (· < ·) is ds₁) :
-    (cast (congr_arg HolorIndex Eq) ⟨is, h⟩).val = is := by subst Eq <;> rfl
+    (cast (congr_arg HolorIndex eq) ⟨is, h⟩).val = is := by subst eq <;> rfl
 #align holor_index.cast_type HolorIndex.cast_type
 -/
 
@@ -91,19 +91,19 @@ def assocLeft : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ 
 theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.take = t.take.take
   | ⟨is, h⟩ =>
     Subtype.eq <| by
-      simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_right, min_eq_left]
+      simp [assocRight, take, cast_type, List.take_take, Nat.le_add_right, min_eq_left]
 #align holor_index.take_take HolorIndex.take_take
 -/
 
 #print HolorIndex.drop_take /-
 theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.take = t.take.drop
-  | ⟨is, h⟩ => Subtype.eq (by simp [assoc_right, take, drop, cast_type, List.drop_take])
+  | ⟨is, h⟩ => Subtype.eq (by simp [assocRight, take, drop, cast_type, List.drop_take])
 #align holor_index.drop_take HolorIndex.drop_take
 -/
 
 #print HolorIndex.drop_drop /-
 theorem drop_drop : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assocRight.drop.drop = t.drop
-  | ⟨is, h⟩ => Subtype.eq (by simp [add_comm, assoc_right, drop, cast_type, List.drop_drop])
+  | ⟨is, h⟩ => Subtype.eq (by simp [add_comm, assocRight, drop, cast_type, List.drop_drop])
 #align holor_index.drop_drop HolorIndex.drop_drop
 -/
 
@@ -140,32 +140,32 @@ instance [AddCommSemigroup α] : AddCommSemigroup (Holor α ds) := by
 
 instance [AddMonoid α] : AddMonoid (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds)
+      { zero := (0 : holor α ds)
         add := (· + ·)
         nsmul := fun n x i => n • x i } <;>
     pi_instance_derive_field
 
 instance [AddCommMonoid α] : AddCommMonoid (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds)
+      { zero := (0 : holor α ds)
         add := (· + ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 
 instance [AddGroup α] : AddGroup (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds)
+      { zero := (0 : holor α ds)
         add := (· + ·)
-        nsmul := AddMonoid.nsmul
+        nsmul := add_monoid.nsmul
         zsmul := fun n x i => n • x i } <;>
     pi_instance_derive_field
 
 instance [AddCommGroup α] : AddCommGroup (Holor α ds) := by
   refine_struct
-      { zero := (0 : Holor α ds)
+      { zero := (0 : holor α ds)
         add := (· + ·)
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 
 -- scalar product
@@ -187,8 +187,8 @@ local infixl:70 " ⊗ " => mul
 
 #print Holor.cast_type /-
 theorem cast_type (eq : ds₁ = ds₂) (a : Holor α ds₁) :
-    cast (congr_arg (Holor α) Eq) a = fun t => a (cast (congr_arg HolorIndex Eq.symm) t) := by
-  subst Eq <;> rfl
+    cast (congr_arg (Holor α) eq) a = fun t => a (cast (congr_arg HolorIndex eq.symm) t) := by
+  subst eq <;> rfl
 #align holor.cast_type Holor.cast_type
 -/
 
@@ -214,7 +214,7 @@ theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z :
     x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
   funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) =>
     by
-    rw [assoc_left]
+    rw [assocLeft]
     unfold mul
     rw [mul_assoc]
     rw [← HolorIndex.take_take, ← HolorIndex.drop_take, ← HolorIndex.drop_drop]
@@ -230,7 +230,7 @@ but is expected to have type
   forall {α : Type} {ds₁ : List.{0} Nat} {ds₂ : List.{0} Nat} {ds₃ : List.{0} Nat} [_inst_1 : Semigroup.{0} α] (x : Holor.{0} α ds₁) (y : Holor.{0} α ds₂) (z : Holor.{0} α ds₃), HEq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃)) (Holor.mul α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ ds₂) ds₃ (Semigroup.toMul.{0} α _inst_1) (Holor.mul α ds₁ ds₂ (Semigroup.toMul.{0} α _inst_1) x y) z) (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₁ (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₂ ds₃))) (Holor.mul α ds₁ (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) ds₂ ds₃) (Semigroup.toMul.{0} α _inst_1) x (Holor.mul α ds₂ ds₃ (Semigroup.toMul.{0} α _inst_1) y z))
 Case conversion may be inaccurate. Consider using '#align holor.mul_assoc Holor.mul_assocₓ'. -/
 theorem mul_assoc [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
-    HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_hEq, mul_assoc0, assoc_left]
+    HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_hEq, mul_assoc0, assocLeft]
 #align holor.mul_assoc Holor.mul_assoc
 
 /- warning: holor.mul_left_distrib -> Holor.mul_left_distrib is a dubious translation:
@@ -285,7 +285,8 @@ but is expected to have type
   forall {α : Type} {ds : List.{0} Nat} [_inst_1 : Monoid.{0} α] (x : Holor.{0} α (List.nil.{0} Nat)) (y : Holor.{0} α ds), Eq.{1} (Holor.{0} α (HAppend.hAppend.{0, 0, 0} (List.{0} Nat) (List.{0} Nat) (List.{0} Nat) (instHAppend.{0} (List.{0} Nat) (List.instAppendList.{0} Nat)) (List.nil.{0} Nat) ds)) (Holor.mul α (List.nil.{0} Nat) ds (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)) x y) (HSMul.hSMul.{0, 0, 0} α (Holor.{0} α ds) (Holor.{0} α ds) (instHSMul.{0, 0} α (Holor.{0} α ds) (Holor.instSMulHolor α ds (MulOneClass.toMul.{0} α (Monoid.toMulOneClass.{0} α _inst_1)))) (x (Subtype.mk.{1} (List.{0} Nat) (fun (is : List.{0} Nat) => List.Forall₂.{0, 0} Nat Nat (fun (x._@.Mathlib.Data.Holor._hyg.27 : Nat) (x._@.Mathlib.Data.Holor._hyg.29 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Data.Holor._hyg.27 x._@.Mathlib.Data.Holor._hyg.29) is (List.nil.{0} Nat)) (List.nil.{0} Nat) (List.Forall₂.nil.{0, 0} Nat Nat (fun (x._@.Mathlib.Data.Holor._hyg.27 : Nat) (x._@.Mathlib.Data.Holor._hyg.29 : Nat) => LT.lt.{0} Nat instLTNat x._@.Mathlib.Data.Holor._hyg.27 x._@.Mathlib.Data.Holor._hyg.29)))) y)
 Case conversion may be inaccurate. Consider using '#align holor.mul_scalar_mul Holor.mul_scalar_mulₓ'. -/
 theorem mul_scalar_mul [Monoid α] (x : Holor α []) (y : Holor α ds) :
-    x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by simp [mul, SMul.smul, HolorIndex.take, HolorIndex.drop]
+    x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by
+  simp [mul, has_smul.smul, HolorIndex.take, HolorIndex.drop]
 #align holor.mul_scalar_mul Holor.mul_scalar_mul
 
 #print Holor.slice /-
@@ -337,12 +338,12 @@ Case conversion may be inaccurate. Consider using '#align holor.slice_unit_vec_m
 theorem slice_unit_vec_mul [Ring α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
   funext fun t : HolorIndex ds =>
-    if h : i = j then by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
-    else by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
+    if h : i = j then by simp [slice, mul, HolorIndex.take, unitVec, HolorIndex.drop, h]
+    else by simp [slice, mul, HolorIndex.take, unitVec, HolorIndex.drop, h] <;> rfl
 #align holor.slice_unit_vec_mul Holor.slice_unit_vec_mul
 
 #print Holor.slice_add /-
-theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
+theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : holor α (d :: ds)) :
     slice x i hid + slice y i hid = slice (x + y) i hid :=
   funext fun t => by simp [slice, (· + ·)]
 #align holor.slice_add Holor.slice_add
@@ -381,7 +382,7 @@ summing up. -/
 @[simp]
 theorem sum_unit_vec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     (∑ i in (Finset.range d).attach,
-        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop))) =
+        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.prop))) =
       x :=
   by
   apply slice_eq _ _ _
@@ -456,7 +457,7 @@ theorem cprankMax_add [Monoid α] [AddMonoid α] :
   | m + 1, n, _, y, cprank_max.succ k x₁ x₂ hx₁ hx₂, hy =>
     by
     simp only [add_comm, add_assoc]
-    apply cprank_max.succ
+    apply CPRankMax.succ
     · assumption
     · exact cprank_max_add hx₂ hy
 #align holor.cprank_max_add Holor.cprankMax_add
@@ -469,13 +470,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align holor.cprank_max_mul Holor.cprankMax_mulₓ'. -/
 theorem cprankMax_mul [Ring α] :
     ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CPRankMax n y → CPRankMax n (x ⊗ y)
-  | 0, x, _, cprank_max.zero => by simp [mul_zero x, cprank_max.zero]
+  | 0, x, _, cprank_max.zero => by simp [mul_zero x, CPRankMax.zero]
   | n + 1, x, _, cprank_max.succ k y₁ y₂ hy₁ hy₂ =>
     by
     rw [mul_left_distrib]
     rw [Nat.add_comm]
-    apply cprank_max_add
-    · exact cprank_max_1 (cprank_max1.cons _ _ hy₁)
+    apply cprankMax_add
+    · exact cprankMax_1 (CPRankMax1.cons _ _ hy₁)
     · exact cprank_max_mul k x y₂ hy₂
 #align holor.cprank_max_mul Holor.cprankMax_mul
 
@@ -488,18 +489,18 @@ Case conversion may be inaccurate. Consider using '#align holor.cprank_max_sum H
 theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
     (∀ x ∈ s, CPRankMax n (f x)) → CPRankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
-  Finset.induction_on s (by simp [cprank_max.zero])
+  Finset.induction_on s (by simp [CPRankMax.zero])
     (by
       intro x s(h_x_notin_s : x ∉ s)ih h_cprank
       simp only [Finset.sum_insert h_x_notin_s, Finset.card_insert_of_not_mem h_x_notin_s]
       rw [Nat.right_distrib]
       simp only [Nat.one_mul, Nat.add_comm]
-      have ih' : cprank_max (Finset.card s * n) (∑ x in s, f x) :=
+      have ih' : CPRankMax (Finset.card s * n) (∑ x in s, f x) :=
         by
         apply ih
         intro (x : β)(h_x_in_s : x ∈ s)
         simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
-      exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
+      exact cprankMax_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 #align holor.cprank_max_sum Holor.cprankMax_sum
 
 /- warning: holor.cprank_max_upper_bound -> Holor.cprankMax_upper_bound is a dubious translation:
@@ -508,15 +509,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type} [_inst_1 : Ring.{0} α] {ds : List.{0} Nat} (x : Holor.{0} α ds), Holor.CPRankMax α (NonUnitalNonAssocRing.toMul.{0} α (NonAssocRing.toNonUnitalNonAssocRing.{0} α (Ring.toNonAssocRing.{0} α _inst_1))) (AddMonoidWithOne.toAddMonoid.{0} α (AddGroupWithOne.toAddMonoidWithOne.{0} α (Ring.toAddGroupWithOne.{0} α _inst_1))) (List.prod.{0} Nat instMulNat (CanonicallyOrderedCommSemiring.toOne.{0} Nat Nat.canonicallyOrderedCommSemiring) ds) ds x
 Case conversion may be inaccurate. Consider using '#align holor.cprank_max_upper_bound Holor.cprankMax_upper_boundₓ'. -/
-theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankMax ds.Prod x
+theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankMax ds.prod x
   | [], x => cprankMax_nil x
   | d :: ds, x =>
     by
     have h_summands :
       ∀ i : { x // x ∈ Finset.range d },
-        CPRankMax ds.Prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
+        CPRankMax ds.prod (unitVec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
       fun i => cprankMax_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))
-    have h_dds_prod : (List.cons d ds).Prod = Finset.card (Finset.range d) * Prod ds := by
+    have h_dds_prod : (List.cons d ds).prod = Finset.card (Finset.range d) * Prod ds := by
       simp [Finset.card_range]
     have :
       CPRankMax (Finset.card (Finset.attach (Finset.range d)) * Prod ds)
@@ -537,16 +538,16 @@ theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankM
 /-- The CP rank of a holor `x`: the smallest N such that
   `x` can be written as the sum of N holors of rank at most 1. -/
 noncomputable def cprank [Ring α] (x : Holor α ds) : Nat :=
-  @Nat.find (fun n => CPRankMax n x) (Classical.decPred _) ⟨ds.Prod, cprankMax_upper_bound x⟩
+  @Nat.find (fun n => CPRankMax n x) (Classical.decPred _) ⟨ds.prod, cprankMax_upper_bound x⟩
 #align holor.cprank Holor.cprank
 -/
 
 #print Holor.cprank_upper_bound /-
-theorem cprank_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.Prod :=
+theorem cprank_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, cprank x ≤ ds.prod :=
   fun ds (x : Holor α ds) =>
-  letI := Classical.decPred fun n : ℕ => cprank_max n x
-  Nat.find_min' ⟨ds.prod, show (fun n => cprank_max n x) ds.prod from cprank_max_upper_bound x⟩
-    (cprank_max_upper_bound x)
+  letI := Classical.decPred fun n : ℕ => CPRankMax n x
+  Nat.find_min' ⟨ds.prod, show (fun n => CPRankMax n x) ds.prod from cprankMax_upper_bound x⟩
+    (cprankMax_upper_bound x)
 #align holor.cprank_upper_bound Holor.cprank_upper_bound
 -/
 

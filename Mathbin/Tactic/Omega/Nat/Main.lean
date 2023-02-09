@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.main
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ run_cmd
 attribute [sugar_nat]
   Ne not_le not_lt Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul mul_comm one_mul mul_one imp_iff_not_or iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.nat.desugar omega.nat.desugar
@@ -38,9 +38,9 @@ unsafe def desugar :=
 theorem univClose_of_unsat_negElim_not (m) (p : Preform) :
     (negElim (¬* p)).Unsat → UnivClose p (fun _ => 0) m :=
   by
-  intro h1; apply univ_close_of_valid
+  intro h1; apply univClose_of_valid
   apply valid_of_unsat_not; intro h2; apply h1
-  apply preform.sat_of_implies_of_sat implies_neg_elim h2
+  apply Preform.sat_of_implies_of_sat implies_negElim h2
 #align omega.nat.univ_close_of_unsat_neg_elim_not Omega.Nat.univClose_of_unsat_negElim_not
 
 /-- Return expr of proof that argument is free of subtractions -/
@@ -183,7 +183,7 @@ unsafe def exprform.exprs : exprform → List expr
 unsafe def exprterm.to_preterm (xs : List expr) : exprterm → tactic Preterm
   | exprterm.cst k => return (&k)
   | exprterm.exp k x =>
-    let m := xs.indexOfₓ x
+    let m := xs.indexOf x
     if m < xs.length then return (k ** m) else failed
   | exprterm.add xa xb => do
     let a ← xa.to_preterm

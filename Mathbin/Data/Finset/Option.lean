@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Mario Carneiro, Sean Leather
 
 ! This file was ported from Lean 3 source module data.finset.option
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ namespace Option
 #print Option.toFinset /-
 /-- Construct an empty or singleton finset from an `option` -/
 def toFinset (o : Option α) : Finset α :=
-  o.elim ∅ singleton
+  o.elim' ∅ singleton
 #align option.to_finset Option.toFinset
 -/
 
@@ -68,7 +68,7 @@ theorem mem_toFinset {a : α} {o : Option α} : a ∈ o.toFinset ↔ a ∈ o := 
 -/
 
 #print Option.card_toFinset /-
-theorem card_toFinset (o : Option α) : o.toFinset.card = o.elim 0 1 := by cases o <;> rfl
+theorem card_toFinset (o : Option α) : o.toFinset.card = o.elim' 0 1 := by cases o <;> rfl
 #align option.card_to_finset Option.card_toFinset
 -/
 
@@ -115,7 +115,7 @@ but is expected to have type
   forall {α : Type.{u1}} (s : Finset.{u1} α), Eq.{1} Nat (Finset.card.{u1} (Option.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α))) (Finset.{u1} α) (fun (_x : Finset.{u1} α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Finset.{u1} α) => Finset.{u1} (Option.{u1} α)) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, succ u1} (Function.Embedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α))) (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (Function.instEmbeddingLikeEmbedding.{succ u1, succ u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)))) (RelEmbedding.toEmbedding.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Option.{u1} α)) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Finset.{u1} α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Finset.{u1} α) => LE.le.{u1} (Finset.{u1} α) (Preorder.toLE.{u1} (Finset.{u1} α) (PartialOrder.toPreorder.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α))) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Finset.{u1} (Option.{u1} α)) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Finset.{u1} (Option.{u1} α)) => LE.le.{u1} (Finset.{u1} (Option.{u1} α)) (Preorder.toLE.{u1} (Finset.{u1} (Option.{u1} α)) (PartialOrder.toPreorder.{u1} (Finset.{u1} (Option.{u1} α)) (Finset.partialOrder.{u1} (Option.{u1} α)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Finset.insertNone.{u1} α)) s)) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α s) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
 Case conversion may be inaccurate. Consider using '#align finset.card_insert_none Finset.card_insertNoneₓ'. -/
 @[simp]
-theorem card_insertNone (s : Finset α) : s.insertNone.card = s.card + 1 := by simp [insert_none]
+theorem card_insertNone (s : Finset α) : s.insertNone.card = s.card + 1 := by simp [insertNone]
 #align finset.card_insert_none Finset.card_insertNone
 
 #print Finset.eraseNone /-
@@ -130,7 +130,7 @@ def eraseNone : Finset (Option α) →o Finset α :=
 #print Finset.mem_eraseNone /-
 @[simp]
 theorem mem_eraseNone {s : Finset (Option α)} {x : α} : x ∈ s.eraseNone ↔ some x ∈ s := by
-  simp [erase_none]
+  simp [eraseNone]
 #align finset.mem_erase_none Finset.mem_eraseNone
 -/
 
@@ -154,7 +154,7 @@ theorem eraseNone_map_some (s : Finset α) : (s.map Embedding.some).eraseNone = 
 #print Finset.eraseNone_image_some /-
 @[simp]
 theorem eraseNone_image_some [DecidableEq (Option α)] (s : Finset α) :
-    (s.image some).eraseNone = s := by simpa only [map_eq_image] using erase_none_map_some s
+    (s.image some).eraseNone = s := by simpa only [map_eq_image] using eraseNone_map_some s
 #align finset.erase_none_image_some Finset.eraseNone_image_some
 -/
 
@@ -206,15 +206,15 @@ theorem eraseNone_none : ({none} : Finset (Option α)).eraseNone = ∅ :=
 #print Finset.image_some_eraseNone /-
 @[simp]
 theorem image_some_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.image some = s.eraseₓ none := by ext (_ | x) <;> simp
+    s.eraseNone.image some = s.erase none := by ext (_ | x) <;> simp
 #align finset.image_some_erase_none Finset.image_some_eraseNone
 -/
 
 #print Finset.map_some_eraseNone /-
 @[simp]
 theorem map_some_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
-    s.eraseNone.map Embedding.some = s.eraseₓ none := by
-  rw [map_eq_image, embedding.some_apply, image_some_erase_none]
+    s.eraseNone.map Embedding.some = s.erase none := by
+  rw [map_eq_image, Embedding.some_apply, image_some_eraseNone]
 #align finset.map_some_erase_none Finset.map_some_eraseNone
 -/
 

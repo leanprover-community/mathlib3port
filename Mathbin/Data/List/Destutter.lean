@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.list.destutter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem destutter'_sublist (a) : l.destutter' R a <+ a :: l :=
   · simp
   rw [destutter']
   split_ifs
-  · exact sublist.cons2 _ _ _ (hl b)
+  · exact Sublist.cons₂ _ _ _ (hl b)
   · exact (hl a).trans ((l.sublist_cons b).cons_cons a)
 #align list.destutter'_sublist List.destutter'_sublist
 -/
@@ -139,7 +139,7 @@ theorem destutter'_of_chain (h : l.Chain R a) : l.destutter' R a = a :: l :=
 @[simp]
 theorem destutter'_eq_self_iff (a) : l.destutter' R a = a :: l ↔ l.Chain R a :=
   ⟨fun h => by
-    rw [← chain', ← h]
+    rw [← Chain', ← h]
     exact l.destutter'_is_chain' R a, destutter'_of_chain _ _⟩
 #align list.destutter'_eq_self_iff List.destutter'_eq_self_iff
 -/

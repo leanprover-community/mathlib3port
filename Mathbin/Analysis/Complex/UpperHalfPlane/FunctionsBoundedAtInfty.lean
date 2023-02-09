@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.functions_bounded_at_infty
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem atImInfty_basis : atImInfty.HasBasis (fun _ => True) fun i : ℝ => im �
 
 theorem atImInfty_mem (S : Set ℍ) : S ∈ atImInfty ↔ ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → z ∈ S :=
   by
-  simp only [at_im_infty, Filter.mem_comap', Filter.mem_atTop_sets, ge_iff_le, Set.mem_setOf_eq,
+  simp only [atImInfty, Filter.mem_comap', Filter.mem_atTop_sets, ge_iff_le, Set.mem_setOf_eq,
     UpperHalfPlane.coe_im]
   refine' ⟨fun ⟨a, h⟩ => ⟨a, fun z hz => h (im z) hz rfl⟩, _⟩
   rintro ⟨A, h⟩
@@ -81,21 +81,20 @@ theorem IsBoundedAtImInfty.mul {f g : ℍ → ℂ} (hf : IsBoundedAtImInfty f)
 
 theorem bounded_mem (f : ℍ → ℂ) :
     IsBoundedAtImInfty f ↔ ∃ M A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ M := by
-  simp [is_bounded_at_im_infty, bounded_at_filter, Asymptotics.isO_iff, Filter.Eventually,
-    at_im_infty_mem]
+  simp [IsBoundedAtImInfty, BoundedAtFilter, Asymptotics.isO_iff, Filter.Eventually, atImInfty_mem]
 #align upper_half_plane.bounded_mem UpperHalfPlane.bounded_mem
 
 theorem zero_at_im_infty (f : ℍ → ℂ) :
     IsZeroAtImInfty f ↔ ∀ ε : ℝ, 0 < ε → ∃ A : ℝ, ∀ z : ℍ, A ≤ im z → abs (f z) ≤ ε :=
   by
-  rw [is_zero_at_im_infty, zero_at_filter, tendsto_iff_forall_eventually_mem]
+  rw [IsZeroAtImInfty, ZeroAtFilter, tendsto_iff_forall_eventually_mem]
   constructor
-  · simp_rw [Filter.Eventually, at_im_infty_mem]
+  · simp_rw [Filter.Eventually, atImInfty_mem]
     intro h ε hε
     simpa using h (Metric.closedBall (0 : ℂ) ε) (Metric.closedBall_mem_nhds (0 : ℂ) hε)
   · simp_rw [Metric.mem_nhds_iff]
     intro h s hs
-    simp_rw [Filter.Eventually, at_im_infty_mem]
+    simp_rw [Filter.Eventually, atImInfty_mem]
     obtain ⟨ε, h1, h2⟩ := hs
     have h11 : 0 < ε / 2 := by linarith
     obtain ⟨A, hA⟩ := h (ε / 2) h11

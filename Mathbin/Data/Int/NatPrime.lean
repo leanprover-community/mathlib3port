@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module data.int.nat_prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.prime.dvd_nat_abs_of_coe_dvd_sq Int.Prime.dvd_natAbs_of_coe_dvd_sqₓ'. -/
 theorem Prime.dvd_natAbs_of_coe_dvd_sq {p : ℕ} (hp : p.Prime) (k : ℤ) (h : ↑p ∣ k ^ 2) :
     p ∣ k.natAbs := by
-  apply @Nat.Prime.dvd_of_dvd_pow _ _ 2 hp
-  rwa [sq, ← nat_abs_mul, ← coe_nat_dvd_left, ← sq]
+  apply @nat.prime.dvd_of_dvd_pow _ _ 2 hp
+  rwa [sq, ← natAbs_mul, ← coe_nat_dvd_left, ← sq]
 #align int.prime.dvd_nat_abs_of_coe_dvd_sq Int.Prime.dvd_natAbs_of_coe_dvd_sq
 
 end Int

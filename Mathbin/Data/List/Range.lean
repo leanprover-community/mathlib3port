@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.range
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
   | s, succ n =>
     have : m = s → m < s + n + 1 := fun e => e ▸ lt_succ_of_le (Nat.le_add_right _ _)
     have l : m = s ∨ s + 1 ≤ m ↔ s ≤ m := by
-      simpa only [eq_comm] using (@Decidable.le_iff_eq_or_lt _ _ _ s m).symm
+      simpa only [eq_comm] using (@decidable.le_iff_eq_or_lt _ _ _ s m).symm
     (mem_cons _ _ _).trans <| by
       simp only [mem_range', or_and_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
 #align list.mem_range' List.mem_range'
@@ -129,7 +129,7 @@ theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ 
     le_of_not_lt fun hn =>
       lt_irrefl (s + n) <|
         (mem_range'.1 <| h <| mem_range'.2 ⟨Nat.le_add_right _ _, Nat.add_lt_add_left hn s⟩).2,
-    fun h => (range'_sublist_right.2 h).Subset⟩
+    fun h => (range'_sublist_right.2 h).subset⟩
 #align list.range'_subset_right List.range'_subset_right
 -/
 
@@ -144,7 +144,7 @@ theorem get?_range' : ∀ (s) {m n : ℕ}, m < n → get? (range' s n) m = some 
 #print List.nthLe_range' /-
 @[simp]
 theorem nthLe_range' {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
-  Option.some.inj <| by rw [← nth_le_nth _, nth_range' _ (by simpa using H)]
+  Option.some.inj <| by rw [← nthLe_get? _, get?_range' _ (by simpa using H)]
 #align list.nth_le_range' List.nthLe_range'
 -/
 
@@ -246,7 +246,7 @@ theorem self_mem_range_succ (n : ℕ) : n ∈ range (n + 1) := by
 
 #print List.get?_range /-
 theorem get?_range {m n : ℕ} (h : m < n) : get? (range n) m = some m := by
-  simp only [range_eq_range', nth_range' _ h, zero_add]
+  simp only [range_eq_range', get?_range' _ h, zero_add]
 #align list.nth_range List.get?_range
 -/
 
@@ -323,7 +323,7 @@ theorem nodup_iota (n : ℕ) : Nodup (iota n) :=
 
 #print List.mem_iota /-
 theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n := by
-  simp only [iota_eq_reverse_range', mem_reverse, mem_range', add_comm, lt_succ_iff]
+  simp only [iota_eq_reverse_range', mem_reverse', mem_range', add_comm, lt_succ_iff]
 #align list.mem_iota List.mem_iota
 -/
 
@@ -371,14 +371,14 @@ theorem nodup_finRange (n : ℕ) : (finRange n).Nodup :=
 #print List.length_finRange /-
 @[simp]
 theorem length_finRange (n : ℕ) : (finRange n).length = n := by
-  rw [fin_range, length_pmap, length_range]
+  rw [finRange, length_pmap, length_range]
 #align list.length_fin_range List.length_finRange
 -/
 
 #print List.finRange_eq_nil /-
 @[simp]
 theorem finRange_eq_nil {n : ℕ} : finRange n = [] ↔ n = 0 := by
-  rw [← length_eq_zero, length_fin_range]
+  rw [← length_eq_zero, length_finRange]
 #align list.fin_range_eq_nil List.finRange_eq_nil
 -/
 
@@ -390,7 +390,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_range_succ List.prod_range_succₓ'. -/
 @[to_additive]
 theorem prod_range_succ {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
-    ((range n.succ).map f).Prod = ((range n).map f).Prod * f n := by
+    ((range n.succ).map f).prod = ((range n).map f).prod * f n := by
   rw [range_succ, map_append, map_singleton, prod_append, prod_cons, prod_nil, mul_one]
 #align list.prod_range_succ List.prod_range_succ
 #align list.sum_range_succ List.sum_range_succ
@@ -406,7 +406,7 @@ Case conversion may be inaccurate. Consider using '#align list.prod_range_succ' 
 @[to_additive
       "A variant of `sum_range_succ` which pulls off the first term in the sum\n  rather than the last."]
 theorem prod_range_succ' {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
-    ((range n.succ).map f).Prod = f 0 * ((range n).map fun i => f (succ i)).Prod :=
+    ((range n.succ).map f).prod = f 0 * ((range n).map fun i => f (succ i)).prod :=
   Nat.recOn n (show 1 * f 0 = f 0 * 1 by rw [one_mul, mul_one]) fun _ hd => by
     rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 #align list.prod_range_succ' List.prod_range_succ'
@@ -457,14 +457,14 @@ theorem unzip_enum_from_eq_prod (l : List α) {n : ℕ} :
 #print List.nthLe_range /-
 @[simp]
 theorem nthLe_range {n} (i) (H : i < (range n).length) : nthLe (range n) i H = i :=
-  Option.some.inj <| by rw [← nth_le_nth _, nth_range (by simpa using H)]
+  Option.some.inj <| by rw [← nthLe_get? _, get?_range (by simpa using H)]
 #align list.nth_le_range List.nthLe_range
 -/
 
 #print List.nthLe_finRange /-
 @[simp]
 theorem nthLe_finRange {n : ℕ} {i : ℕ} (h) : (finRange n).nthLe i h = ⟨i, length_finRange n ▸ h⟩ :=
-  by simp only [fin_range, nth_le_range, nth_le_pmap]
+  by simp only [finRange, nthLe_range, nthLe_pmap]
 #align list.nth_le_fin_range List.nthLe_finRange
 -/
 

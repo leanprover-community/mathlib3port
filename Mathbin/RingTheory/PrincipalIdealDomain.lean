@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Morenikeji Neri
 
 ! This file was ported from Lean 3 source module ring_theory.principal_ideal_domain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,7 +227,7 @@ instance (priority := 100) EuclideanDomain.to_principal_ideal_domain : IsPrincip
       else
         ⟨0,
           Submodule.ext fun a => by
-            rw [← @Submodule.bot_coe R R _ _ _, span_eq, Submodule.mem_bot] <;>
+            rw [← @submodule.bot_coe R R _ _ _, span_eq, Submodule.mem_bot] <;>
               exact
                 ⟨fun haS => by_contradiction fun ha0 => h ⟨a, ⟨haS, ha0⟩⟩, fun h₁ =>
                   h₁.symm ▸ S.zero_mem⟩⟩⟩
@@ -269,7 +269,7 @@ theorem isMaximal_of_irreducible [CommRing R] [IsPrincipalIdealRing R] {p : R}
 variable [CommRing R] [IsDomain R] [IsPrincipalIdealRing R]
 
 theorem irreducible_iff_prime {p : R} : Irreducible p ↔ Prime p :=
-  ⟨fun hp => (Ideal.span_singleton_prime hp.NeZero).1 <| (isMaximal_of_irreducible hp).IsPrime,
+  ⟨fun hp => (Ideal.span_singleton_prime hp.ne_zero).1 <| (isMaximal_of_irreducible hp).isPrime,
     Prime.irreducible⟩
 #align principal_ideal_ring.irreducible_iff_prime PrincipalIdealRing.irreducible_iff_prime
 
@@ -287,7 +287,7 @@ noncomputable def factors (a : R) : Multiset R :=
 #align principal_ideal_ring.factors PrincipalIdealRing.factors
 
 theorem factors_spec (a : R) (h : a ≠ 0) :
-    (∀ b ∈ factors a, Irreducible b) ∧ Associated (factors a).Prod a :=
+    (∀ b ∈ factors a, Irreducible b) ∧ Associated (factors a).prod a :=
   by
   unfold factors; rw [dif_neg h]
   exact Classical.choose_spec (WfDvdMonoid.exists_factors a h)
@@ -336,7 +336,7 @@ variable [Module R M] [Module R N]
 theorem Submodule.IsPrincipal.of_comap (f : M →ₗ[R] N) (hf : Function.Surjective f)
     (S : Submodule R N) [hI : IsPrincipal (S.comap f)] : IsPrincipal S :=
   ⟨⟨f (IsPrincipal.generator (S.comap f)), by
-      rw [← Set.image_singleton, ← Submodule.map_span, is_principal.span_singleton_generator,
+      rw [← Set.image_singleton, ← Submodule.map_span, IsPrincipal.span_singleton_generator,
         Submodule.map_comap_eq_of_surjective hf]⟩⟩
 #align submodule.is_principal.of_comap Submodule.IsPrincipal.of_comap
 
@@ -453,7 +453,7 @@ theorem Irreducible.coprime_iff_not_dvd {p n : R} (pp : Irreducible p) : IsCopri
 #align irreducible.coprime_iff_not_dvd Irreducible.coprime_iff_not_dvd
 
 theorem Prime.coprime_iff_not_dvd {p n : R} (pp : Prime p) : IsCoprime p n ↔ ¬p ∣ n :=
-  pp.Irreducible.coprime_iff_not_dvd
+  pp.irreducible.coprime_iff_not_dvd
 #align prime.coprime_iff_not_dvd Prime.coprime_iff_not_dvd
 
 theorem Irreducible.dvd_iff_not_coprime {p n : R} (hp : Irreducible p) : p ∣ n ↔ ¬IsCoprime p n :=
@@ -504,11 +504,11 @@ theorem nonPrincipals_zorn (c : Set (Ideal R)) (hs : c ⊆ nonPrincipals R)
     (hchain : IsChain (· ≤ ·) c) {K : Ideal R} (hKmem : K ∈ c) :
     ∃ I ∈ nonPrincipals R, ∀ J ∈ c, J ≤ I :=
   by
-  refine' ⟨Sup c, _, fun J hJ => le_supₛ hJ⟩
+  refine' ⟨supₛ c, _, fun J hJ => le_supₛ hJ⟩
   rintro ⟨x, hx⟩
-  have hxmem : x ∈ Sup c := hx.symm ▸ Submodule.mem_span_singleton_self x
+  have hxmem : x ∈ supₛ c := hx.symm ▸ Submodule.mem_span_singleton_self x
   obtain ⟨J, hJc, hxJ⟩ := (Submodule.mem_supₛ_of_directed ⟨K, hKmem⟩ hchain.directed_on).1 hxmem
-  have hSupJ : Sup c = J := le_antisymm (by simp [hx, Ideal.span_le, hxJ]) (le_supₛ hJc)
+  have hSupJ : supₛ c = J := le_antisymm (by simp [hx, Ideal.span_le, hxJ]) (le_supₛ hJc)
   specialize hs hJc
   rw [← hSupJ, hx, nonPrincipals_def] at hs
   exact hs ⟨⟨x, rfl⟩⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem eventually_nhds_norm_smul_sub_lt (c : α) (x : E) {ε : ℝ} (h : 0 < ε
     ∀ᶠ y in 𝓝 x, ‖c • (y - x)‖ < ε :=
   have : Tendsto (fun y => ‖c • (y - x)‖) (𝓝 x) (𝓝 0) :=
     ((continuous_id.sub continuous_const).const_smul _).norm.tendsto' _ _ (by simp)
-  this.Eventually (gt_mem_nhds h)
+  this.eventually (gt_mem_nhds h)
 #align eventually_nhds_norm_smul_sub_lt eventually_nhds_norm_smul_sub_lt
 
 theorem Filter.Tendsto.zero_smul_isBoundedUnder_le {f : ι → α} {g : ι → E} {l : Filter ι}
@@ -147,16 +147,16 @@ theorem Filter.IsBoundedUnder.smul_tendsto_zero {f : ι → α} {g : ι → E} {
 theorem closure_ball [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     closure (ball x r) = closedBall x r :=
   by
-  refine' subset.antisymm closure_ball_subset_closed_ball fun y hy => _
+  refine' Subset.antisymm closure_ball_subset_closedBall fun y hy => _
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
-    ((continuous_id.smul continuous_const).add continuous_const).ContinuousWithinAt
+    ((continuous_id.smul continuous_const).add continuous_const).continuousWithinAt
   convert this.mem_closure _ _
   · rw [one_smul, sub_add_cancel]
   · simp [closure_Ico zero_ne_one, zero_le_one]
   · rintro c ⟨hc0, hc1⟩
     rw [mem_ball, dist_eq_norm, add_sub_cancel, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc0,
       mul_comm, ← mul_one r]
-    rw [mem_closed_ball, dist_eq_norm] at hy
+    rw [mem_closedBall, dist_eq_norm] at hy
     replace hr : 0 < r
     exact ((norm_nonneg _).trans hy).lt_of_ne hr.symm
     apply mul_lt_mul' <;> assumption
@@ -173,16 +173,16 @@ theorem interior_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0)
     interior (closedBall x r) = ball x r :=
   by
   cases' hr.lt_or_lt with hr hr
-  · rw [closed_ball_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
-  refine' subset.antisymm _ ball_subset_interior_closed_ball
+  · rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
+  refine' Subset.antisymm _ ball_subset_interior_closedBall
   intro y hy
-  rcases(mem_closed_ball.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
+  rcases(mem_closedBall.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
   · exact hr
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
-  suffices f ⁻¹' closed_ball x (dist y x) ⊆ Icc (-1) 1
+  suffices f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1
     by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
-    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closed_ball x <| dist y x) := by simpa [f]
+    have hf1 : (1 : ℝ) ∈ f ⁻¹' interior (closedBall x <| dist y x) := by simpa [f]
     have h1 : (1 : ℝ) ∈ interior (Icc (-1 : ℝ) 1) :=
       interior_mono this (preimage_interior_subset_interior_preimage hfc hf1)
     contrapose h1
@@ -194,7 +194,7 @@ theorem interior_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0)
 
 theorem frontier_closedBall [NormedSpace ℝ E] (x : E) {r : ℝ} (hr : r ≠ 0) :
     frontier (closedBall x r) = sphere x r := by
-  rw [frontier, closure_closed_ball, interior_closedBall x hr, closed_ball_diff_ball]
+  rw [frontier, closure_closedBall, interior_closedBall x hr, closedBall_diff_ball]
 #align frontier_closed_ball frontier_closedBall
 
 instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
@@ -210,7 +210,7 @@ instance {E : Type _} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
     rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff,
       AddSubgroup.coe_mk, AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat,
       Int.norm_eq_abs, ← Int.cast_abs, mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ←
-      @Int.cast_one ℝ _, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
+      @int.cast_one ℝ _, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
 
 /-- A (semi) normed real vector space is homeomorphic to the unit ball in the same space.
 This homeomorphism sends `x : E` to `(1 + ‖x‖²)^(- ½) • x`.
@@ -398,13 +398,13 @@ theorem interior_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : �
     interior (closedBall x r) = ball x r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · rw [closed_ball_zero, ball_zero, interior_singleton]
+  · rw [closedBall_zero, ball_zero, interior_singleton]
   · exact interior_closedBall x hr
 #align interior_closed_ball' interior_closed_ball'
 
 theorem frontier_closed_ball' [NormedSpace ℝ E] [Nontrivial E] (x : E) (r : ℝ) :
     frontier (closedBall x r) = sphere x r := by
-  rw [frontier, closure_closed_ball, interior_closed_ball' x r, closed_ball_diff_ball]
+  rw [frontier, closure_closedBall, interior_closed_ball' x r, closedBall_diff_ball]
 #align frontier_closed_ball' frontier_closed_ball'
 
 variable {α}
@@ -447,7 +447,7 @@ protected theorem NormedSpace.unbounded_univ : ¬Bounded (univ : Set E) := fun h
 an instance because in order to apply it, Lean would have to search for `normed_space 𝕜 E` with
 unknown `𝕜`. We register this as an instance in two cases: `𝕜 = E` and `𝕜 = ℝ`. -/
 protected theorem NormedSpace.noncompactSpace : NoncompactSpace E :=
-  ⟨fun h => NormedSpace.unbounded_univ 𝕜 _ h.Bounded⟩
+  ⟨fun h => NormedSpace.unbounded_univ 𝕜 _ h.bounded⟩
 #align normed_space.noncompact_space NormedSpace.noncompactSpace
 
 instance (priority := 100) NontriviallyNormedField.noncompactSpace : NoncompactSpace 𝕜 :=
@@ -526,7 +526,7 @@ variable [NormOneClass 𝕜'] [NormedAlgebra ℝ 𝕜']
 
 @[simp]
 theorem norm_algebraMap_nnreal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖ = x :=
-  (norm_algebra_map' 𝕜' (x : ℝ)).symm ▸ Real.norm_of_nonneg x.Prop
+  (norm_algebra_map' 𝕜' (x : ℝ)).symm ▸ Real.norm_of_nonneg x.prop
 #align norm_algebra_map_nnreal norm_algebraMap_nnreal
 
 @[simp]
@@ -596,7 +596,7 @@ def NormedAlgebra.induced {F : Type _} (α β γ : Type _) [NormedField α] [Rin
 
 instance Subalgebra.toNormedAlgebra {𝕜 A : Type _} [SemiNormedRing A] [NormedField 𝕜]
     [NormedAlgebra 𝕜 A] (S : Subalgebra 𝕜 A) : NormedAlgebra 𝕜 S :=
-  @NormedAlgebra.induced _ 𝕜 S A _ (SubringClass.toRing S) S.Algebra _ _ _ S.val
+  @NormedAlgebra.induced _ 𝕜 S A _ (SubringClass.toRing S) S.algebra _ _ _ S.val
 #align subalgebra.to_normed_algebra Subalgebra.toNormedAlgebra
 
 section RestrictScalars

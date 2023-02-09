@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.kernels
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- The kernel cone induced by the concrete kernel. -/
 def kernelCone : KernelFork f :=
-  KernelFork.ofι (asHom f.ker.Subtype) <| by tidy
+  KernelFork.ofι (asHom f.ker.subtype) <| by tidy
 #align Module.kernel_cone ModuleCat.kernelCone
 
 /-- The kernel of a linear map is a kernel in the categorical sense. -/
@@ -42,8 +42,8 @@ def kernelIsLimit : IsLimit (kernelCone f) :=
       LinearMap.codRestrict f.ker (Fork.ι s) fun c =>
         LinearMap.mem_ker.2 <|
           by
-          rw [← @Function.comp_apply _ _ _ f (fork.ι s) c, ← coe_comp, fork.condition,
-            has_zero_morphisms.comp_zero (fork.ι s) N]
+          rw [← @function.comp_apply _ _ _ f (Fork.ι s) c, ← coe_comp, Fork.condition,
+            HasZeroMorphisms.comp_zero (Fork.ι s) N]
           rfl)
     (fun s => LinearMap.subtype_comp_codRestrict _ _ _) fun s m h =>
     LinearMap.ext fun x => Subtype.ext_iff_val.2 (by simpa [← h] )
@@ -61,8 +61,8 @@ def cokernelIsColimit : IsColimit (cokernelCocone f) :=
       f.range.liftq (Cofork.π s) <| LinearMap.range_le_ker_iff.2 <| CokernelCofork.condition s)
     (fun s => f.range.liftq_mkq (Cofork.π s) _) fun s m h =>
     by
-    haveI : epi (as_hom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
-    apply (cancel_epi (as_hom f.range.mkq)).1
+    haveI : Epi (asHom f.range.mkq) := (epi_iff_range_eq_top _).mpr (Submodule.range_mkq _)
+    apply (cancel_epi (asHom f.range.mkq)).1
     convert h
     exact Submodule.liftq_mkq _ _ _
 #align Module.cokernel_is_colimit ModuleCat.cokernelIsColimit
@@ -97,12 +97,12 @@ noncomputable def kernelIsoKer {G H : ModuleCat.{v} R} (f : G ⟶ H) :
 
 -- We now show this isomorphism commutes with the inclusion of the kernel into the source.
 @[simp, elementwise]
-theorem kernelIsoKer_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.ker.Subtype :=
+theorem kernelIsoKer_inv_kernel_ι : (kernelIsoKer f).inv ≫ kernel.ι f = f.ker.subtype :=
   limit.isoLimitCone_inv_π _ _
 #align Module.kernel_iso_ker_inv_kernel_ι ModuleCat.kernelIsoKer_inv_kernel_ι
 
 @[simp, elementwise]
-theorem kernelIsoKer_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.Subtype = kernel.ι f :=
+theorem kernelIsoKer_hom_ker_subtype : (kernelIsoKer f).hom ≫ f.ker.subtype = kernel.ι f :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ (limit.isLimit _) WalkingParallelPair.zero
 #align Module.kernel_iso_ker_hom_ker_subtype ModuleCat.kernelIsoKer_hom_ker_subtype
 
@@ -118,13 +118,13 @@ noncomputable def cokernelIsoRangeQuotient {G H : ModuleCat.{v} R} (f : G ⟶ H)
 @[simp, elementwise]
 theorem cokernel_π_cokernelIsoRangeQuotient_hom :
     cokernel.π f ≫ (cokernelIsoRangeQuotient f).hom = f.range.mkq := by
-  convert colimit.iso_colimit_cocone_ι_hom _ _ <;> rfl
+  convert colimit.isoColimitCocone_ι_hom _ _ <;> rfl
 #align Module.cokernel_π_cokernel_iso_range_quotient_hom ModuleCat.cokernel_π_cokernelIsoRangeQuotient_hom
 
 @[simp, elementwise]
 theorem range_mkq_cokernelIsoRangeQuotient_inv :
     ↿f.range.mkq ≫ (cokernelIsoRangeQuotient f).inv = cokernel.π f := by
-  convert colimit.iso_colimit_cocone_ι_inv ⟨_, cokernel_is_colimit f⟩ _ <;> rfl
+  convert colimit.isoColimitCocone_ι_inv ⟨_, cokernelIsColimit f⟩ _ <;> rfl
 #align Module.range_mkq_cokernel_iso_range_quotient_inv ModuleCat.range_mkq_cokernelIsoRangeQuotient_inv
 
 theorem cokernel_π_ext {M N : ModuleCat.{u} R} (f : M ⟶ N) {x y : N} (m : M) (w : x = y + f m) :

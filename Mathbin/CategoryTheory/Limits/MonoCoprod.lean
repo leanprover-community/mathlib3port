@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.limits.mono_coprod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ variable {C}
 instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : MonoCoprod C :=
   ⟨fun A B c hc =>
     by
-    haveI : is_split_mono c.inl :=
-      is_split_mono.mk' (split_mono.mk (hc.desc (binary_cofan.mk (𝟙 A) 0)) (is_colimit.fac _ _ _))
+    haveI : IsSplitMono c.inl :=
+      IsSplitMono.mk' (SplitMono.mk (hc.desc (BinaryCofan.mk (𝟙 A) 0)) (IsColimit.fac _ _ _))
     infer_instance⟩
 #align category_theory.limits.mono_coprod_of_has_zero_morphisms CategoryTheory.Limits.monoCoprodOfHasZeroMorphisms
 
@@ -60,13 +60,13 @@ namespace MonoCoprod
 
 theorem binaryCofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) :
     Mono c.inr :=
-  haveI hc' : is_colimit (binary_cofan.mk c.inr c.inl) :=
-    binary_cofan.is_colimit_mk (fun s => hc.desc (binary_cofan.mk s.inr s.inl)) (by tidy) (by tidy)
+  haveI hc' : IsColimit (BinaryCofan.mk c.inr c.inl) :=
+    BinaryCofan.isColimitMk (fun s => hc.desc (BinaryCofan.mk s.inr s.inl)) (by tidy) (by tidy)
       fun s m h₁ h₂ =>
-      binary_cofan.is_colimit.hom_ext hc
-        (by simp only [h₂, is_colimit.fac, binary_cofan.ι_app_left, binary_cofan.mk_inl])
-        (by simp only [h₁, is_colimit.fac, binary_cofan.ι_app_right, binary_cofan.mk_inr])
-  binary_cofan_inl _ hc'
+      BinaryCofan.IsColimit.hom_ext hc
+        (by simp only [h₂, IsColimit.fac, BinaryCofan.ι_app_left, BinaryCofan.mk_inl])
+        (by simp only [h₁, IsColimit.fac, BinaryCofan.ι_app_right, BinaryCofan.mk_inr])
+  binaryCofan_inl _ hc'
 #align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binaryCofan_inr
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : A ⟶ A ⨿ B) :=
@@ -79,13 +79,13 @@ theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit 
     Mono c₁.inl ↔ Mono c₂.inl :=
   by
   suffices
-    ∀ (c₁ c₂ : binary_cofan A B) (hc₁ : is_colimit c₁) (hc₂ : is_colimit c₂) (h : mono c₁.inl),
-      mono c₂.inl
+    ∀ (c₁ c₂ : BinaryCofan A B) (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂) (h : Mono c₁.inl),
+      Mono c₂.inl
     by exact ⟨fun h₁ => this _ _ hc₁ hc₂ h₁, fun h₂ => this _ _ hc₂ hc₁ h₂⟩
   intro c₁ c₂ hc₁ hc₂
   intro
-  simpa only [is_colimit.comp_cocone_point_unique_up_to_iso_hom] using
-    mono_comp c₁.inl (hc₁.cocone_point_unique_up_to_iso hc₂).Hom
+  simpa only [IsColimit.comp_coconePointUniqueUpToIso_hom] using
+    mono_comp c₁.inl (hc₁.cocone_point_unique_up_to_iso hc₂).hom
 #align category_theory.limits.mono_coprod.mono_inl_iff CategoryTheory.Limits.MonoCoprod.mono_inl_iff
 
 theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono c.inl) : MonoCoprod C :=
@@ -97,9 +97,9 @@ theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B)(hc : IsColimit c), Mono 
 instance monoCoprodType : MonoCoprod (Type u) :=
   MonoCoprod.mk' fun A B =>
     by
-    refine' ⟨binary_cofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
+    refine' ⟨BinaryCofan.mk (Sum.inl : A ⟶ Sum A B) Sum.inr, _, _⟩
     · refine'
-        binary_cofan.is_colimit.mk _
+        BinaryCofan.IsColimit.mk _
           (fun Y f₁ f₂ x => by
             cases x
             exacts[f₁ x, f₂ x])
@@ -113,7 +113,7 @@ instance monoCoprodType : MonoCoprod (Type u) :=
         exact congr_fun h₂ x
     · rw [mono_iff_injective]
       intro a₁ a₂ h
-      simp only [binary_cofan.mk_inl] at h
+      simp only [BinaryCofan.mk_inl] at h
       dsimp at h
       simpa only using h
 #align category_theory.limits.mono_coprod.mono_coprod_type CategoryTheory.Limits.MonoCoprod.monoCoprodType

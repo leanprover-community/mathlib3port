@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.equalizers
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ def walkingParallelPairOp : WalkingParallelPair ⥤ WalkingParallelPairᵒᵖ
       exacts[one, zero]
   map i j f := by
     cases f <;> apply Quiver.Hom.op
-    exacts[left, right, walking_parallel_pair_hom.id _]
+    exacts[left, right, WalkingParallelPairHom.id _]
   map_comp' := by rintro (_ | _) (_ | _) (_ | _) (_ | _ | _) (_ | _ | _) <;> rfl
 #align category_theory.limits.walking_parallel_pair_op CategoryTheory.Limits.walkingParallelPairOp
 
@@ -281,8 +281,8 @@ theorem parallelPairHom_app_one {X' Y' : C} (f g : X ⟶ Y) (f' g' : X' ⟶ Y') 
 its components. -/
 @[simps]
 def parallelPair.ext {F G : WalkingParallelPair ⥤ C} (zero : F.obj zero ≅ G.obj zero)
-    (one : F.obj one ≅ G.obj one) (left : F.map left ≫ one.Hom = zero.Hom ≫ G.map left)
-    (right : F.map right ≫ one.Hom = zero.Hom ≫ G.map right) : F ≅ G :=
+    (one : F.obj one ≅ G.obj one) (left : F.map left ≫ one.hom = zero.hom ≫ G.map left)
+    (right : F.map right ≫ one.hom = zero.hom ≫ G.map right) : F ≅ G :=
   NatIso.ofComponents
     (by
       rintro ⟨j⟩
@@ -336,22 +336,22 @@ theorem Cofork.app_one_eq_π (t : Cofork f g) : t.ι.app one = t.π :=
 
 @[simp]
 theorem Fork.app_one_eq_ι_comp_left (s : Fork f g) : s.π.app one = s.ι ≫ f := by
-  rw [← s.app_zero_eq_ι, ← s.w left, parallel_pair_map_left]
+  rw [← s.app_zero_eq_ι, ← s.w left, parallelPair_map_left]
 #align category_theory.limits.fork.app_one_eq_ι_comp_left CategoryTheory.Limits.Fork.app_one_eq_ι_comp_left
 
 @[reassoc.1]
 theorem Fork.app_one_eq_ι_comp_right (s : Fork f g) : s.π.app one = s.ι ≫ g := by
-  rw [← s.app_zero_eq_ι, ← s.w right, parallel_pair_map_right]
+  rw [← s.app_zero_eq_ι, ← s.w right, parallelPair_map_right]
 #align category_theory.limits.fork.app_one_eq_ι_comp_right CategoryTheory.Limits.Fork.app_one_eq_ι_comp_right
 
 @[simp]
 theorem Cofork.app_zero_eq_comp_π_left (s : Cofork f g) : s.ι.app zero = f ≫ s.π := by
-  rw [← s.app_one_eq_π, ← s.w left, parallel_pair_map_left]
+  rw [← s.app_one_eq_π, ← s.w left, parallelPair_map_left]
 #align category_theory.limits.cofork.app_zero_eq_comp_π_left CategoryTheory.Limits.Cofork.app_zero_eq_comp_π_left
 
 @[reassoc.1]
 theorem Cofork.app_zero_eq_comp_π_right (s : Cofork f g) : s.ι.app zero = g ≫ s.π := by
-  rw [← s.app_one_eq_π, ← s.w right, parallel_pair_map_right]
+  rw [← s.app_one_eq_π, ← s.w right, parallelPair_map_right]
 #align category_theory.limits.cofork.app_zero_eq_comp_π_right CategoryTheory.Limits.Cofork.app_zero_eq_comp_π_right
 
 /-- A fork on `f g : X ⟶ Y` is determined by the morphism `ι : P ⟶ X` satisfying `ι ≫ f = ι ≫ g`.
@@ -407,7 +407,7 @@ theorem Cofork.condition (t : Cofork f g) : f ≫ t.π = g ≫ t.π := by
 
 /-- To check whether two maps are equalized by both maps of a fork, it suffices to check it for the
     first map -/
-theorem Fork.equalizer_ext (s : Fork f g) {W : C} {k l : W ⟶ s.x} (h : k ≫ s.ι = l ≫ s.ι) :
+theorem Fork.equalizer_ext (s : Fork f g) {W : C} {k l : W ⟶ s.x} (h : k ≫ s.condition = l ≫ s.ι) :
     ∀ j : WalkingParallelPair, k ≫ s.π.app j = l ≫ s.π.app j
   | zero => h
   | one => by rw [s.app_one_eq_ι_comp_left, reassoc_of h]
@@ -417,7 +417,7 @@ theorem Fork.equalizer_ext (s : Fork f g) {W : C} {k l : W ⟶ s.x} (h : k ≫ s
     the second map -/
 theorem Cofork.coequalizer_ext (s : Cofork f g) {W : C} {k l : s.x ⟶ W}
     (h : Cofork.π s ≫ k = Cofork.π s ≫ l) : ∀ j : WalkingParallelPair, s.ι.app j ≫ k = s.ι.app j ≫ l
-  | zero => by simp only [s.app_zero_eq_comp_π_left, category.assoc, h]
+  | zero => by simp only [s.app_zero_eq_comp_π_left, Category.assoc, h]
   | one => h
 #align category_theory.limits.cofork.coequalizer_ext CategoryTheory.Limits.Cofork.coequalizer_ext
 
@@ -476,7 +476,7 @@ def Fork.IsLimit.mk (t : Fork f g) (lift : ∀ s : Fork f g, s.x ⟶ t.x)
   { lift
     fac' := fun s j =>
       WalkingParallelPair.casesOn j (fac s) <| by
-        erw [← s.w left, ← t.w left, ← category.assoc, fac] <;> rfl
+        erw [← s.w left, ← t.w left, ← Category.assoc, fac] <;> rfl
     uniq' := fun s m j => by tidy }
 #align category_theory.limits.fork.is_limit.mk CategoryTheory.Limits.Fork.IsLimit.mk
 
@@ -495,7 +495,7 @@ def Cofork.IsColimit.mk (t : Cofork f g) (desc : ∀ s : Cofork f g, t.x ⟶ s.x
     (uniq : ∀ (s : Cofork f g) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) : IsColimit t :=
   { desc
     fac' := fun s j =>
-      WalkingParallelPair.casesOn j (by erw [← s.w left, ← t.w left, category.assoc, fac] <;> rfl)
+      WalkingParallelPair.casesOn j (by erw [← s.w left, ← t.w left, Category.assoc, fac] <;> rfl)
         (fac s)
     uniq' := by tidy }
 #align category_theory.limits.cofork.is_colimit.mk CategoryTheory.Limits.Cofork.IsColimit.mk
@@ -515,7 +515,7 @@ def Fork.IsLimit.ofExistsUnique {t : Fork f g}
     (hs : ∀ s : Fork f g, ∃! l : s.x ⟶ t.x, l ≫ Fork.ι t = Fork.ι s) : IsLimit t :=
   by
   choose d hd hd' using hs
-  exact fork.is_limit.mk _ d hd fun s m hm => hd' _ _ hm
+  exact Fork.IsLimit.mk _ d hd fun s m hm => hd' _ _ hm
 #align category_theory.limits.fork.is_limit.of_exists_unique CategoryTheory.Limits.Fork.IsLimit.ofExistsUnique
 
 /-- Noncomputably make a colimit cocone from the existence of unique factorizations. -/
@@ -523,7 +523,7 @@ def Cofork.IsColimit.ofExistsUnique {t : Cofork f g}
     (hs : ∀ s : Cofork f g, ∃! d : t.x ⟶ s.x, Cofork.π t ≫ d = Cofork.π s) : IsColimit t :=
   by
   choose d hd hd' using hs
-  exact cofork.is_colimit.mk _ d hd fun s m hm => hd' _ _ hm
+  exact Cofork.IsColimit.mk _ d hd fun s m hm => hd' _ _ hm
 #align category_theory.limits.cofork.is_colimit.of_exists_unique CategoryTheory.Limits.Cofork.IsColimit.ofExistsUnique
 
 /--
@@ -536,10 +536,10 @@ This is a special case of `is_limit.hom_iso'`, often useful to construct adjunct
 def Fork.IsLimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Fork f g} (ht : IsLimit t) (Z : C) :
     (Z ⟶ t.x) ≃ { h : Z ⟶ X // h ≫ f = h ≫ g }
     where
-  toFun k := ⟨k ≫ t.ι, by simp only [category.assoc, t.condition]⟩
-  invFun h := (Fork.IsLimit.lift' ht _ h.Prop).1
-  left_inv k := Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).Prop
-  right_inv h := Subtype.ext (Fork.IsLimit.lift' ht _ _).Prop
+  toFun k := ⟨k ≫ t.ι, by simp only [Category.assoc, t.condition]⟩
+  invFun h := (Fork.IsLimit.lift' ht _ h.prop).1
+  left_inv k := Fork.IsLimit.hom_ext ht (Fork.IsLimit.lift' _ _ _).prop
+  right_inv h := Subtype.ext (Fork.IsLimit.lift' ht _ _).prop
 #align category_theory.limits.fork.is_limit.hom_iso CategoryTheory.Limits.Fork.IsLimit.homIso
 
 /-- The bijection of `fork.is_limit.hom_iso` is natural in `Z`. -/
@@ -558,10 +558,10 @@ This is a special case of `is_colimit.hom_iso'`, often useful to construct adjun
 def Cofork.IsColimit.homIso {X Y : C} {f g : X ⟶ Y} {t : Cofork f g} (ht : IsColimit t) (Z : C) :
     (t.x ⟶ Z) ≃ { h : Y ⟶ Z // f ≫ h = g ≫ h }
     where
-  toFun k := ⟨t.π ≫ k, by simp only [← category.assoc, t.condition]⟩
-  invFun h := (Cofork.IsColimit.desc' ht _ h.Prop).1
-  left_inv k := Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).Prop
-  right_inv h := Subtype.ext (Cofork.IsColimit.desc' ht _ _).Prop
+  toFun k := ⟨t.π ≫ k, by simp only [← Category.assoc, t.condition]⟩
+  invFun h := (Cofork.IsColimit.desc' ht _ h.prop).1
+  left_inv k := Cofork.IsColimit.hom_ext ht (Cofork.IsColimit.desc' _ _ _).prop
+  right_inv h := Subtype.ext (Cofork.IsColimit.desc' ht _ _).prop
 #align category_theory.limits.cofork.is_colimit.hom_iso CategoryTheory.Limits.Cofork.IsColimit.homIso
 
 /-- The bijection of `cofork.is_colimit.hom_iso` is natural in `Z`. -/
@@ -666,7 +666,7 @@ def Fork.mkHom {s t : Fork f g} (k : s.x ⟶ t.x) (w : k ≫ t.ι = s.ι) : s �
   w' := by
     rintro ⟨_ | _⟩
     · exact w
-    · simp only [fork.app_one_eq_ι_comp_left, reassoc_of w]
+    · simp only [Fork.app_one_eq_ι_comp_left, reassoc_of w]
 #align category_theory.limits.fork.mk_hom CategoryTheory.Limits.Fork.mkHom
 
 /-- To construct an isomorphism between forks,
@@ -674,15 +674,15 @@ it suffices to give an isomorphism between the cone points
 and check that it commutes with the `ι` morphisms.
 -/
 @[simps]
-def Fork.ext {s t : Fork f g} (i : s.x ≅ t.x) (w : i.Hom ≫ t.ι = s.ι) : s ≅ t
+def Fork.ext {s t : Fork f g} (i : s.x ≅ t.x) (w : i.hom ≫ t.ι = s.ι) : s ≅ t
     where
-  Hom := Fork.mkHom i.Hom w
-  inv := Fork.mkHom i.inv (by rw [← w, iso.inv_hom_id_assoc])
+  Hom := Fork.mkHom i.hom w
+  inv := Fork.mkHom i.inv (by rw [← w, Iso.inv_hom_id_assoc])
 #align category_theory.limits.fork.ext CategoryTheory.Limits.Fork.ext
 
 /-- Every fork is isomorphic to one of the form `fork.of_ι _ _`. -/
 def Fork.isoForkOfι (c : Fork f g) : c ≅ Fork.ofι c.ι c.condition :=
-  Fork.ext (by simp only [fork.of_ι_X, functor.const_obj_obj]) (by simp)
+  Fork.ext (by simp only [Fork.ofι_x, Functor.const_obj_obj]) (by simp)
 #align category_theory.limits.fork.iso_fork_of_ι CategoryTheory.Limits.Fork.isoForkOfι
 
 /-- Helper function for constructing morphisms between coequalizer coforks.
@@ -693,16 +693,16 @@ def Cofork.mkHom {s t : Cofork f g} (k : s.x ⟶ t.x) (w : s.π ≫ k = t.π) : 
   Hom := k
   w' := by
     rintro ⟨_ | _⟩
-    · simp [cofork.app_zero_eq_comp_π_left, w]
+    · simp [Cofork.app_zero_eq_comp_π_left, w]
     · exact w
 #align category_theory.limits.cofork.mk_hom CategoryTheory.Limits.Cofork.mkHom
 
 @[simp, reassoc.1]
-theorem Fork.hom_comp_ι {s t : Fork f g} (f : s ⟶ t) : f.Hom ≫ t.ι = s.ι := by tidy
+theorem Fork.hom_comp_ι {s t : Fork f g} (f : s ⟶ t) : f.hom ≫ t.ι = s.ι := by tidy
 #align category_theory.limits.fork.hom_comp_ι CategoryTheory.Limits.Fork.hom_comp_ι
 
 @[simp, reassoc.1]
-theorem Fork.π_comp_hom {s t : Cofork f g} (f : s ⟶ t) : s.π ≫ f.Hom = t.π := by tidy
+theorem Fork.π_comp_hom {s t : Cofork f g} (f : s ⟶ t) : s.π ≫ f.hom = t.π := by tidy
 #align category_theory.limits.fork.π_comp_hom CategoryTheory.Limits.Fork.π_comp_hom
 
 /-- To construct an isomorphism between coforks,
@@ -710,15 +710,15 @@ it suffices to give an isomorphism between the cocone points
 and check that it commutes with the `π` morphisms.
 -/
 @[simps]
-def Cofork.ext {s t : Cofork f g} (i : s.x ≅ t.x) (w : s.π ≫ i.Hom = t.π) : s ≅ t
+def Cofork.ext {s t : Cofork f g} (i : s.x ≅ t.x) (w : s.π ≫ i.hom = t.π) : s ≅ t
     where
-  Hom := Cofork.mkHom i.Hom w
-  inv := Cofork.mkHom i.inv (by rw [iso.comp_inv_eq, w])
+  Hom := Cofork.mkHom i.hom w
+  inv := Cofork.mkHom i.inv (by rw [Iso.comp_inv_eq, w])
 #align category_theory.limits.cofork.ext CategoryTheory.Limits.Cofork.ext
 
 /-- Every cofork is isomorphic to one of the form `cofork.of_π _ _`. -/
 def Cofork.isoCoforkOfπ (c : Cofork f g) : c ≅ Cofork.ofπ c.π c.condition :=
-  Cofork.ext (by simp only [cofork.of_π_X, functor.const_obj_obj]) (by dsimp <;> simp)
+  Cofork.ext (by simp only [Cofork.ofπ_x, Functor.const_obj_obj]) (by dsimp <;> simp)
 #align category_theory.limits.cofork.iso_cofork_of_π CategoryTheory.Limits.Cofork.isoCoforkOfπ
 
 variable (f g)
@@ -838,7 +838,7 @@ def isLimitIdFork (h : f = g) : IsLimit (idFork h) :=
   Fork.IsLimit.mk _ (fun s => Fork.ι s) (fun s => Category.comp_id _) fun s m h =>
     by
     convert h
-    exact (category.comp_id _).symm
+    exact (Category.comp_id _).symm
 #align category_theory.limits.is_limit_id_fork CategoryTheory.Limits.isLimitIdFork
 
 /-- Every equalizer of `(f, g)`, where `f = g`, is an isomorphism. -/
@@ -891,7 +891,7 @@ def equalizer.isoSourceOfSelf : equalizer f f ≅ X :=
 #align category_theory.limits.equalizer.iso_source_of_self CategoryTheory.Limits.equalizer.isoSourceOfSelf
 
 @[simp]
-theorem equalizer.isoSourceOfSelf_hom : (equalizer.isoSourceOfSelf f).Hom = equalizer.ι f f :=
+theorem equalizer.isoSourceOfSelf_hom : (equalizer.isoSourceOfSelf f).hom = equalizer.ι f f :=
   rfl
 #align category_theory.limits.equalizer.iso_source_of_self_hom CategoryTheory.Limits.equalizer.isoSourceOfSelf_hom
 
@@ -900,7 +900,7 @@ theorem equalizer.isoSourceOfSelf_inv :
     (equalizer.isoSourceOfSelf f).inv = equalizer.lift (𝟙 X) (by simp) :=
   by
   ext
-  simp [equalizer.iso_source_of_self]
+  simp [equalizer.isoSourceOfSelf]
 #align category_theory.limits.equalizer.iso_source_of_self_inv CategoryTheory.Limits.equalizer.isoSourceOfSelf_inv
 
 section
@@ -972,7 +972,7 @@ theorem coequalizer.π_colimMap_desc {X' Y' Z : C} (f' g' : X' ⟶ Y') [HasCoequ
     (wh : f' ≫ h = g' ≫ h) :
     coequalizer.π f g ≫ colimMap (parallelPairHom f g f' g' p q wf wg) ≫ coequalizer.desc h wh =
       q ≫ h :=
-  by rw [ι_colim_map_assoc, parallel_pair_hom_app_one, coequalizer.π_desc]
+  by rw [ι_colimMap_assoc, parallelPairHom_app_one, coequalizer.π_desc]
 #align category_theory.limits.coequalizer.π_colim_map_desc CategoryTheory.Limits.coequalizer.π_colimMap_desc
 
 /-- Any morphism `k : Y ⟶ W` satisfying `f ≫ k = g ≫ k` induces a morphism
@@ -1027,7 +1027,7 @@ def isColimitIdCofork (h : f = g) : IsColimit (idCofork h) :=
   Cofork.IsColimit.mk _ (fun s => Cofork.π s) (fun s => Category.id_comp _) fun s m h =>
     by
     convert h
-    exact (category.id_comp _).symm
+    exact (Category.id_comp _).symm
 #align category_theory.limits.is_colimit_id_cofork CategoryTheory.Limits.isColimitIdCofork
 
 /-- Every coequalizer of `(f, g)`, where `f = g`, is an isomorphism. -/
@@ -1082,10 +1082,10 @@ def coequalizer.isoTargetOfSelf : coequalizer f f ≅ Y :=
 
 @[simp]
 theorem coequalizer.isoTargetOfSelf_hom :
-    (coequalizer.isoTargetOfSelf f).Hom = coequalizer.desc (𝟙 Y) (by simp) :=
+    (coequalizer.isoTargetOfSelf f).hom = coequalizer.desc (𝟙 Y) (by simp) :=
   by
   ext
-  simp [coequalizer.iso_target_of_self]
+  simp [coequalizer.isoTargetOfSelf]
 #align category_theory.limits.coequalizer.iso_target_of_self_hom CategoryTheory.Limits.coequalizer.isoTargetOfSelf_hom
 
 @[simp]
@@ -1194,8 +1194,8 @@ def isSplitMonoEqualizes {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsLimit (cone
   Fork.IsLimit.mk' _ fun s =>
     ⟨s.ι ≫ retraction f, by
       dsimp
-      rw [category.assoc, ← s.condition]
-      apply category.comp_id, fun m hm => by simp [← hm]⟩
+      rw [Category.assoc, ← s.condition]
+      apply Category.comp_id, fun m hm => by simp [← hm]⟩
 #align category_theory.limits.is_split_mono_equalizes CategoryTheory.Limits.isSplitMonoEqualizes
 
 end
@@ -1218,7 +1218,7 @@ def isEqualizerCompMono {c : Fork f g} (i : IsLimit c) {Z : C} (h : Y ⟶ Z) [hm
     let s' : Fork f g := Fork.ofι s.ι (by apply hm.right_cancellation <;> simp [s.condition])
     let l := Fork.IsLimit.lift' i s'.ι s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply fork.is_limit.hom_ext i <;> rw [fork.ι_of_ι] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply Fork.IsLimit.hom_ext i <;> rw [Fork.ι_ofι] at hm <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_equalizer_comp_mono CategoryTheory.Limits.isEqualizerCompMono
 
 variable (C f g)
@@ -1237,9 +1237,9 @@ def splitMonoOfIdempotentOfIsLimitFork {X : C} {f : X ⟶ X} (hf : f ≫ f = f) 
     where
   retraction := i.lift (Fork.ofι f (by simp [hf]))
   id' := by
-    letI := mono_of_is_limit_fork i
-    rw [← cancel_mono_id c.ι, category.assoc, fork.is_limit.lift_ι, fork.ι_of_ι, ← c.condition]
-    exact category.comp_id c.ι
+    letI := mono_of_isLimit_fork i
+    rw [← cancel_mono_id c.ι, Category.assoc, Fork.IsLimit.lift_ι, Fork.ι_ofι, ← c.condition]
+    exact Category.comp_id c.ι
 #align category_theory.limits.split_mono_of_idempotent_of_is_limit_fork CategoryTheory.Limits.splitMonoOfIdempotentOfIsLimitFork
 
 /-- The equalizer of an idempotent morphism and the identity is split mono. -/
@@ -1272,7 +1272,7 @@ def isSplitEpiCoequalizes {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsColimit (co
   Cofork.IsColimit.mk' _ fun s =>
     ⟨section_ f ≫ s.π, by
       dsimp
-      rw [← category.assoc, ← s.condition, category.id_comp], fun m hm => by simp [← hm]⟩
+      rw [← Category.assoc, ← s.condition, Category.id_comp], fun m hm => by simp [← hm]⟩
 #align category_theory.limits.is_split_epi_coequalizes CategoryTheory.Limits.isSplitEpiCoequalizes
 
 end
@@ -1298,10 +1298,10 @@ def isCoequalizerEpiComp {c : Cofork f g} (i : IsColimit c) {W : C} (h : W ⟶ X
     IsColimit (Cofork.ofπ c.π (by simp) : Cofork (h ≫ f) (h ≫ g)) :=
   Cofork.IsColimit.mk' _ fun s =>
     let s' : Cofork f g :=
-      Cofork.ofπ s.π (by apply hm.left_cancellation <;> simp_rw [← category.assoc, s.condition])
+      Cofork.ofπ s.π (by apply hm.left_cancellation <;> simp_rw [← Category.assoc, s.condition])
     let l := Cofork.IsColimit.desc' i s'.π s'.condition
     ⟨l.1, l.2, fun m hm => by
-      apply cofork.is_colimit.hom_ext i <;> rw [cofork.π_of_π] at hm <;> rw [hm] <;> exact l.2.symm⟩
+      apply Cofork.IsColimit.hom_ext i <;> rw [Cofork.π_ofπ] at hm <;> rw [hm] <;> exact l.2.symm⟩
 #align category_theory.limits.is_coequalizer_epi_comp CategoryTheory.Limits.isCoequalizerEpiComp
 
 theorem hasCoequalizer_epi_comp [HasCoequalizer f g] {W : C} (h : W ⟶ X) [hm : Epi h] :
@@ -1319,10 +1319,9 @@ def splitEpiOfIdempotentOfIsColimitCofork {X : C} {f : X ⟶ X} (hf : f ≫ f = 
     where
   section_ := i.desc (Cofork.ofπ f (by simp [hf]))
   id' := by
-    letI := epi_of_is_colimit_cofork i
-    rw [← cancel_epi_id c.π, ← category.assoc, cofork.is_colimit.π_desc, cofork.π_of_π, ←
-      c.condition]
-    exact category.id_comp _
+    letI := epi_of_isColimit_cofork i
+    rw [← cancel_epi_id c.π, ← Category.assoc, Cofork.IsColimit.π_desc, Cofork.π_ofπ, ← c.condition]
+    exact Category.id_comp _
 #align category_theory.limits.split_epi_of_idempotent_of_is_colimit_cofork CategoryTheory.Limits.splitEpiOfIdempotentOfIsColimitCofork
 
 /-- The coequalizer of an idempotent morphism and the identity is split epi. -/

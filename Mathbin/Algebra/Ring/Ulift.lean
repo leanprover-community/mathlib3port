@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.ring.ulift
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ namespace ULift
 #print ULift.mulZeroClass /-
 instance mulZeroClass [MulZeroClass α] : MulZeroClass (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         mul := (· * ·).. } <;>
     pi_instance_derive_field
 #align ulift.mul_zero_class ULift.mulZeroClass
@@ -54,10 +54,10 @@ instance distrib [Distrib α] : Distrib (ULift α) := by
 instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] :
     NonUnitalNonAssocSemiring (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_non_assoc_semiring ULift.nonUnitalNonAssocSemiring
 -/
@@ -66,11 +66,11 @@ instance nonUnitalNonAssocSemiring [NonUnitalNonAssocSemiring α] :
 instance nonAssocSemiring [NonAssocSemiring α] : NonAssocSemiring (ULift α) := by
   refine_struct
       { ULift.addMonoidWithOne with
-        zero := (0 : ULift α)
+        zero := (0 : ulift α)
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_assoc_semiring ULift.nonAssocSemiring
 -/
@@ -78,10 +78,10 @@ instance nonAssocSemiring [NonAssocSemiring α] : NonAssocSemiring (ULift α) :=
 #print ULift.nonUnitalSemiring /-
 instance nonUnitalSemiring [NonUnitalSemiring α] : NonUnitalSemiring (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_semiring ULift.nonUnitalSemiring
 -/
@@ -90,12 +90,12 @@ instance nonUnitalSemiring [NonUnitalSemiring α] : NonUnitalSemiring (ULift α)
 instance semiring [Semiring α] : Semiring (ULift α) := by
   refine_struct
       { ULift.addMonoidWithOne with
-        zero := (0 : ULift α)
+        zero := (0 : ulift α)
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul
-        npow := Monoid.npow } <;>
+        nsmul := add_monoid.nsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align ulift.semiring ULift.semiring
 -/
@@ -121,10 +121,10 @@ def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α
 #print ULift.nonUnitalCommSemiring /-
 instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemiring (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul } <;>
+        nsmul := add_monoid.nsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_comm_semiring ULift.nonUnitalCommSemiring
 -/
@@ -133,12 +133,12 @@ instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemirin
 instance commSemiring [CommSemiring α] : CommSemiring (ULift α) := by
   refine_struct
       { ULift.semiring with
-        zero := (0 : ULift α)
+        zero := (0 : ulift α)
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        nsmul := AddMonoid.nsmul
-        npow := Monoid.npow } <;>
+        nsmul := add_monoid.nsmul
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align ulift.comm_semiring ULift.commSemiring
 -/
@@ -146,13 +146,13 @@ instance commSemiring [CommSemiring α] : CommSemiring (ULift α) := by
 #print ULift.nonUnitalNonAssocRing /-
 instance nonUnitalNonAssocRing [NonUnitalNonAssocRing α] : NonUnitalNonAssocRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        sub := Sub.sub
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        sub := has_sub.sub
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_non_assoc_ring ULift.nonUnitalNonAssocRing
 -/
@@ -160,13 +160,13 @@ instance nonUnitalNonAssocRing [NonUnitalNonAssocRing α] : NonUnitalNonAssocRin
 #print ULift.nonUnitalRing /-
 instance nonUnitalRing [NonUnitalRing α] : NonUnitalRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        sub := Sub.sub
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        sub := has_sub.sub
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_ring ULift.nonUnitalRing
 -/
@@ -175,14 +175,14 @@ instance nonUnitalRing [NonUnitalRing α] : NonUnitalRing (ULift α) := by
 instance nonAssocRing [NonAssocRing α] : NonAssocRing (ULift α) := by
   refine_struct
       { ULift.addGroupWithOne with
-        zero := (0 : ULift α)
+        zero := (0 : ulift α)
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        sub := Sub.sub
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        sub := has_sub.sub
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_assoc_ring ULift.nonAssocRing
 -/
@@ -192,15 +192,15 @@ instance ring [Ring α] : Ring (ULift α) := by
   refine_struct
       { ULift.semiring,
         ULift.addGroupWithOne with
-        zero := (0 : ULift α)
+        zero := (0 : ulift α)
         one := 1
         add := (· + ·)
         mul := (· * ·)
-        sub := Sub.sub
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        npow := Monoid.npow
-        zsmul := SubNegMonoid.zsmul } <;>
+        sub := has_sub.sub
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        npow := monoid.npow
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.ring ULift.ring
 -/
@@ -208,13 +208,13 @@ instance ring [Ring α] : Ring (ULift α) := by
 #print ULift.nonUnitalCommRing /-
 instance nonUnitalCommRing [NonUnitalCommRing α] : NonUnitalCommRing (ULift α) := by
   refine_struct
-      { zero := (0 : ULift α)
+      { zero := (0 : ulift α)
         add := (· + ·)
         mul := (· * ·)
-        sub := Sub.sub
-        neg := Neg.neg
-        nsmul := AddMonoid.nsmul
-        zsmul := SubNegMonoid.zsmul } <;>
+        sub := has_sub.sub
+        neg := has_neg.neg
+        nsmul := add_monoid.nsmul
+        zsmul := sub_neg_monoid.zsmul } <;>
     pi_instance_derive_field
 #align ulift.non_unital_comm_ring ULift.nonUnitalCommRing
 -/
@@ -249,12 +249,12 @@ instance field [Field α] : Field (ULift α) :=
     rw [rat_cast_down, mul_down, inv_down, nat_cast_down, int_cast_down]
     exact Field.ratCast_mk a b h1 h2
   refine_struct
-      { @ULift.nontrivial α _,
+      { @ulift.nontrivial α _,
         ULift.commRing with
-        zero := (0 : ULift α)
-        inv := Inv.inv
-        div := Div.div
-        zpow := fun n a => ULift.up (a.down ^ n)
+        zero := (0 : ulift α)
+        inv := has_inv.inv
+        div := has_div.div
+        zpow := fun n a => ulift.up (a.down ^ n)
         ratCast := coe
         ratCast_mk := of_rat_mk
         qsmul := (· • ·) } <;>

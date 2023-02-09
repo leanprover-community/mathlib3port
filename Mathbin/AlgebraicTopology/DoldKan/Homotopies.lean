@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.homotopies
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
 theorem hσ'_eq' {q n a : ℕ} (ha : n = a + q) :
     (hσ' q n (n + 1) rfl : X _[n] ⟶ X _[n + 1]) =
       (-1 : ℤ) ^ a • X.σ ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro (Eq.symm ha))⟩ :=
-  by rw [hσ'_eq ha rfl, eq_to_hom_refl, comp_id]
+  by rw [hσ'_eq ha rfl, eqToHom_refl, comp_id]
 #align algebraic_topology.dold_kan.hσ'_eq' AlgebraicTopology.DoldKan.hσ'_eq'
 
 /- warning: algebraic_topology.dold_kan.Hσ clashes with algebraic_topology.dold_kan.hσ -> AlgebraicTopology.DoldKan.hσ
@@ -169,13 +169,13 @@ def homotopyHσToZero (q : ℕ) : Homotopy (hσ q : K[X] ⟶ K[X]) 0 :=
 theorem hσ_eq_zero (q : ℕ) : (hσ q : K[X] ⟶ K[X]).f 0 = 0 :=
   by
   unfold Hσ
-  rw [null_homotopic_map'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
+  rw [nullHomotopicMap'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
   cases q
   · rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
-    simp only [pow_zero, Fin.mk_zero, one_zsmul, eq_to_hom_refl, category.comp_id]
+    simp only [pow_zero, Fin.mk_zero, one_zsmul, eqToHom_refl, Category.comp_id]
     erw [ChainComplex.of_d]
-    simp only [alternating_face_map_complex.obj_d, Fin.sum_univ_two, Fin.val_zero, pow_zero,
-      one_zsmul, Fin.val_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
+    simp only [AlternatingFaceMapComplex.objD, Fin.sum_univ_two, Fin.val_zero, pow_zero, one_zsmul,
+      Fin.val_one, pow_one, comp_add, neg_smul, one_zsmul, comp_neg, add_neg_eq_zero]
     erw [δ_comp_σ_self, δ_comp_σ_succ]
   · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
 #align algebraic_topology.dold_kan.Hσ_eq_zero AlgebraicTopology.DoldKan.hσ_eq_zero
@@ -186,7 +186,7 @@ theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : Simplicia
   by
   have h : n + 1 = m := hnm
   subst h
-  simp only [hσ', eq_to_hom_refl, comp_id]
+  simp only [hσ', eqToHom_refl, comp_id]
   unfold hσ
   split_ifs
   · rw [zero_comp, comp_zero]
@@ -201,10 +201,10 @@ def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapCo
   app X := hσ q
   naturality' X Y f := by
     unfold Hσ
-    rw [null_homotopic_map'_comp, comp_null_homotopic_map']
+    rw [nullHomotopicMap'_comp, comp_nullHomotopicMap']
     congr
     ext (n m hnm)
-    simp only [alternating_face_map_complex_map_f, hσ'_naturality]
+    simp only [alternatingFaceMapComplex_map_f, hσ'_naturality]
 #align algebraic_topology.dold_kan.nat_trans_Hσ AlgebraicTopology.DoldKan.natTransHσ
 
 /-- The maps `hσ' q n m hnm` are compatible with the application of additive functors. -/
@@ -215,8 +215,8 @@ theorem map_hσ' {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addi
   by
   unfold hσ' hσ
   split_ifs
-  · simp only [functor.map_zero, zero_comp]
-  · simpa only [eq_to_hom_map, functor.map_comp, functor.map_zsmul]
+  · simp only [Functor.map_zero, zero_comp]
+  · simpa only [eqToHom_map, Functor.map_comp, Functor.map_zsmul]
 #align algebraic_topology.dold_kan.map_hσ' AlgebraicTopology.DoldKan.map_hσ'
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/
@@ -225,10 +225,10 @@ theorem map_hσ {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
     (hσ q : K[((whiskering C D).obj G).obj X] ⟶ _).f n = G.map ((hσ q : K[X] ⟶ _).f n) :=
   by
   unfold Hσ
-  have eq := HomologicalComplex.congr_hom (map_null_homotopic_map' G (hσ' q)) n
-  simp only [functor.map_homological_complex_map_f, ← map_hσ'] at eq
-  rw [Eq]
-  let h := (functor.congr_obj (map_alternating_face_map_complex G) X).symm
+  have eq := HomologicalComplex.congr_hom (map_nullHomotopicMap' G (hσ' q)) n
+  simp only [Functor.mapHomologicalComplex_map_f, ← map_hσ'] at eq
+  rw [eq]
+  let h := (Functor.congr_obj (map_alternatingFaceMapComplex G) X).symm
   congr
 #align algebraic_topology.dold_kan.map_Hσ AlgebraicTopology.DoldKan.map_hσ
 

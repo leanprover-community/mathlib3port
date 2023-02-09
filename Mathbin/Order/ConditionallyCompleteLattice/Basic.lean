@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -352,32 +352,32 @@ def conditionallyCompleteLatticeOfSupₛ (α : Type _) [H1 : PartialOrder α] [H
   { H1, H2 with
     sup := fun a b => supₛ {a, b}
     le_sup_left := fun a b =>
-      (isLUB_supₛ {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
     le_sup_right := fun a b =>
-      (isLUB_supₛ {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).1
         (mem_insert_of_mem _ (mem_singleton _))
     sup_le := fun a b c hac hbc =>
-      (isLUB_supₛ {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).2
+      (is_lub_Sup {a, b} (bdd_above_pair a b) (insert_nonempty _ _)).2
         (forall_insert_of_forall (forall_eq.mpr hbc) hac)
     inf := fun a b => supₛ (lowerBounds {a, b})
     inf_le_left := fun a b =>
-      (isLUB_supₛ (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
+      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
             (bdd_below_pair a b)).2
         fun c hc => hc <| mem_insert _ _
     inf_le_right := fun a b =>
-      (isLUB_supₛ (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
+      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
             (bdd_below_pair a b)).2
         fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _)
     le_inf := fun c a b hca hcb =>
-      (isLUB_supₛ (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
+      (is_lub_Sup (lowerBounds {a, b}) (Nonempty.bddAbove_lowerBounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hcb) hca⟩).1
         (forall_insert_of_forall (forall_eq.mpr hcb) hca)
     infₛ := fun s => supₛ (lowerBounds s)
-    cSup_le := fun s a hs ha => (isLUB_supₛ s ⟨a, ha⟩ hs).2 ha
-    le_cSup := fun s a hs ha => (isLUB_supₛ s hs ⟨a, ha⟩).1 ha
+    cSup_le := fun s a hs ha => (is_lub_Sup s ⟨a, ha⟩ hs).2 ha
+    le_cSup := fun s a hs ha => (is_lub_Sup s hs ⟨a, ha⟩).1 ha
     cInf_le := fun s a hs ha =>
-      (isLUB_supₛ (lowerBounds s) (Nonempty.bddAbove_lowerBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
-    le_cInf := fun s a hs ha => (isLUB_supₛ (lowerBounds s) hs.bddAbove_lowerBounds ⟨a, ha⟩).1 ha }
+      (is_lub_Sup (lowerBounds s) (Nonempty.bddAbove_lowerBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
+    le_cInf := fun s a hs ha => (is_lub_Sup (lowerBounds s) hs.bddAbove_lowerBounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Sup conditionallyCompleteLatticeOfSupₛ
 -/
 
@@ -405,32 +405,32 @@ def conditionallyCompleteLatticeOfInfₛ (α : Type _) [H1 : PartialOrder α] [H
   { H1, H2 with
     inf := fun a b => infₛ {a, b}
     inf_le_left := fun a b =>
-      (isGLB_infₛ {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1 (mem_insert _ _)
     inf_le_right := fun a b =>
-      (isGLB_infₛ {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).1
         (mem_insert_of_mem _ (mem_singleton _))
     le_inf := fun c a b hca hcb =>
-      (isGLB_infₛ {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).2
+      (is_glb_Inf {a, b} (bdd_below_pair a b) (insert_nonempty _ _)).2
         (forall_insert_of_forall (forall_eq.mpr hcb) hca)
     sup := fun a b => infₛ (upperBounds {a, b})
     le_sup_left := fun a b =>
-      (isGLB_infₛ (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
+      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
             (bdd_above_pair a b)).2
         fun c hc => hc <| mem_insert _ _
     le_sup_right := fun a b =>
-      (isGLB_infₛ (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
+      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
             (bdd_above_pair a b)).2
         fun c hc => hc <| mem_insert_of_mem _ (mem_singleton _)
     sup_le := fun a b c hac hbc =>
-      (isGLB_infₛ (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
+      (is_glb_Inf (upperBounds {a, b}) (Nonempty.bddBelow_upperBounds ⟨a, mem_insert _ _⟩)
             ⟨c, forall_insert_of_forall (forall_eq.mpr hbc) hac⟩).1
         (forall_insert_of_forall (forall_eq.mpr hbc) hac)
     supₛ := fun s => infₛ (upperBounds s)
-    le_cInf := fun s a hs ha => (isGLB_infₛ s ⟨a, ha⟩ hs).2 ha
-    cInf_le := fun s a hs ha => (isGLB_infₛ s hs ⟨a, ha⟩).1 ha
+    le_cInf := fun s a hs ha => (is_glb_Inf s ⟨a, ha⟩ hs).2 ha
+    cInf_le := fun s a hs ha => (is_glb_Inf s hs ⟨a, ha⟩).1 ha
     le_cSup := fun s a hs ha =>
-      (isGLB_infₛ (upperBounds s) (Nonempty.bddBelow_upperBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
-    cSup_le := fun s a hs ha => (isGLB_infₛ (upperBounds s) hs.bddBelow_upperBounds ⟨a, ha⟩).1 ha }
+      (is_glb_Inf (upperBounds s) (Nonempty.bddBelow_upperBounds ⟨a, ha⟩) hs).2 fun b hb => hb ha
+    cSup_le := fun s a hs ha => (is_glb_Inf (upperBounds s) hs.bddBelow_upperBounds ⟨a, ha⟩).1 ha }
 #align conditionally_complete_lattice_of_Inf conditionallyCompleteLatticeOfInfₛ
 -/
 
@@ -445,7 +445,7 @@ def conditionallyCompleteLatticeOfLatticeOfSupₛ (α : Type _) [H1 : Lattice α
     conditionallyCompleteLatticeOfSupₛ α
       (fun a b => ⟨a ⊔ b, forall_insert_of_forall (forall_eq.mpr le_sup_right) le_sup_left⟩)
       (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩)
-      isLUB_supₛ with }
+      is_lub_Sup with }
 #align conditionally_complete_lattice_of_lattice_of_Sup conditionallyCompleteLatticeOfLatticeOfSupₛ
 -/
 
@@ -460,7 +460,7 @@ def conditionallyCompleteLatticeOfLatticeOfInfₛ (α : Type _) [H1 : Lattice α
     conditionallyCompleteLatticeOfInfₛ α
       (fun a b => ⟨a ⊔ b, forall_insert_of_forall (forall_eq.mpr le_sup_right) le_sup_left⟩)
       (fun a b => ⟨a ⊓ b, forall_insert_of_forall (forall_eq.mpr inf_le_right) inf_le_left⟩)
-      isGLB_infₛ with }
+      is_glb_Inf with }
 #align conditionally_complete_lattice_of_lattice_of_Inf conditionallyCompleteLatticeOfLatticeOfInfₛ
 -/
 
@@ -576,7 +576,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s) -> (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align is_lub_cSup isLUB_csupₛₓ'. -/
 theorem isLUB_csupₛ (ne : s.Nonempty) (H : BddAbove s) : IsLUB s (supₛ s) :=
-  ⟨fun x => le_csupₛ H, fun x => csupₛ_le Ne⟩
+  ⟨fun x => le_csupₛ H, fun x => csupₛ_le ne⟩
 #align is_lub_cSup isLUB_csupₛ
 
 /- warning: is_lub_csupr -> isLUB_csupᵢ is a dubious translation:
@@ -609,7 +609,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α}, (Set.Nonempty.{u1} α s) -> (BddBelow.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s) -> (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align is_glb_cInf isGLB_cinfₛₓ'. -/
 theorem isGLB_cinfₛ (ne : s.Nonempty) (H : BddBelow s) : IsGLB s (infₛ s) :=
-  ⟨fun x => cinfₛ_le H, fun x => le_cinfₛ Ne⟩
+  ⟨fun x => cinfₛ_le H, fun x => le_cinfₛ ne⟩
 #align is_glb_cInf isGLB_cinfₛ
 
 /- warning: is_glb_cinfi -> isGLB_cinfᵢ is a dubious translation:
@@ -685,7 +685,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α} {a : α}, (IsLUB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s a) -> (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) s) a)
 Case conversion may be inaccurate. Consider using '#align is_lub.cSup_eq IsLUB.csupₛ_eqₓ'. -/
 theorem IsLUB.csupₛ_eq (H : IsLUB s a) (ne : s.Nonempty) : supₛ s = a :=
-  (isLUB_csupₛ Ne ⟨a, H.1⟩).unique H
+  (isLUB_csupₛ ne ⟨a, H.1⟩).unique H
 #align is_lub.cSup_eq IsLUB.csupₛ_eq
 
 /- warning: is_lub.csupr_eq -> IsLUB.csupᵢ_eq is a dubious translation:
@@ -717,7 +717,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_greatest.cSup_eq IsGreatest.csupₛ_eqₓ'. -/
 /-- A greatest element of a set is the supremum of this set. -/
 theorem IsGreatest.csupₛ_eq (H : IsGreatest s a) : supₛ s = a :=
-  H.IsLUB.csupₛ_eq H.Nonempty
+  H.isLUB.csupₛ_eq H.nonempty
 #align is_greatest.cSup_eq IsGreatest.csupₛ_eq
 
 /- warning: is_greatest.Sup_mem -> IsGreatest.csupₛ_mem is a dubious translation:
@@ -737,7 +737,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α} {a : α}, (IsGLB.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s a) -> (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} α (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α _inst_1) s) a)
 Case conversion may be inaccurate. Consider using '#align is_glb.cInf_eq IsGLB.cinfₛ_eqₓ'. -/
 theorem IsGLB.cinfₛ_eq (H : IsGLB s a) (ne : s.Nonempty) : infₛ s = a :=
-  (isGLB_cinfₛ Ne ⟨a, H.1⟩).unique H
+  (isGLB_cinfₛ ne ⟨a, H.1⟩).unique H
 #align is_glb.cInf_eq IsGLB.cinfₛ_eq
 
 /- warning: is_glb.cinfi_eq -> IsGLB.cinfᵢ_eq is a dubious translation:
@@ -769,7 +769,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_least.cInf_eq IsLeast.cinfₛ_eqₓ'. -/
 /-- A least element of a set is the infimum of this set. -/
 theorem IsLeast.cinfₛ_eq (H : IsLeast s a) : infₛ s = a :=
-  H.IsGLB.cinfₛ_eq H.Nonempty
+  H.isGLB.cinfₛ_eq H.nonempty
 #align is_least.cInf_eq IsLeast.cinfₛ_eq
 
 /- warning: is_least.Inf_mem -> IsLeast.cinfₛ_mem is a dubious translation:
@@ -820,7 +820,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cSup_lower_bounds_eq_cInf csupₛ_lower_bounds_eq_cinfₛₓ'. -/
 theorem csupₛ_lower_bounds_eq_cinfₛ {s : Set α} (h : BddBelow s) (hs : s.Nonempty) :
     supₛ (lowerBounds s) = infₛ s :=
-  (isLUB_csupₛ h <| hs.mono fun x hx y hy => hy hx).unique (isGLB_cinfₛ hs h).IsLUB
+  (isLUB_csupₛ h <| hs.mono fun x hx y hy => hy hx).unique (isGLB_cinfₛ hs h).isLUB
 #align cSup_lower_bounds_eq_cInf csupₛ_lower_bounds_eq_cinfₛ
 
 /- warning: cInf_upper_bounds_eq_cSup -> cinfₛ_upper_bounds_eq_csupₛ is a dubious translation:
@@ -831,7 +831,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align cInf_upper_bounds_eq_cSup cinfₛ_upper_bounds_eq_csupₛₓ'. -/
 theorem cinfₛ_upper_bounds_eq_csupₛ {s : Set α} (h : BddAbove s) (hs : s.Nonempty) :
     infₛ (upperBounds s) = supₛ s :=
-  (isGLB_cinfₛ h <| hs.mono fun x hx y hy => hy hx).unique (isLUB_csupₛ hs h).IsGLB
+  (isGLB_cinfₛ h <| hs.mono fun x hx y hy => hy hx).unique (isLUB_csupₛ hs h).isGLB
 #align cInf_upper_bounds_eq_cSup cinfₛ_upper_bounds_eq_csupₛ
 
 /- warning: not_mem_of_lt_cInf -> not_mem_of_lt_cinfₛ is a dubious translation:
@@ -982,7 +982,7 @@ Case conversion may be inaccurate. Consider using '#align cInf_le_cSup cinfₛ_l
 /-- If a set is bounded below and above, and nonempty, its infimum is less than or equal to
 its supremum.-/
 theorem cinfₛ_le_csupₛ (hb : BddBelow s) (ha : BddAbove s) (ne : s.Nonempty) : infₛ s ≤ supₛ s :=
-  isGLB_le_isLUB (isGLB_cinfₛ Ne hb) (isLUB_csupₛ Ne ha) Ne
+  isGLB_le_isLUB (isGLB_cinfₛ ne hb) (isLUB_csupₛ ne ha) ne
 #align cInf_le_cSup cinfₛ_le_csupₛ
 
 /- warning: cSup_union -> csupₛ_union is a dubious translation:
@@ -1415,7 +1415,7 @@ Case conversion may be inaccurate. Consider using '#align monotone.csupr_mem_Int
 theorem Monotone.csupᵢ_mem_Inter_Icc_of_antitone [SemilatticeSup β] {f g : β → α} (hf : Monotone f)
     (hg : Antitone g) (h : f ≤ g) : (⨆ n, f n) ∈ ⋂ n, Icc (f n) (g n) :=
   by
-  refine' mem_Inter.2 fun n => _
+  refine' mem_interᵢ.2 fun n => _
   haveI : Nonempty β := ⟨n⟩
   have : ∀ m, f m ≤ g n := fun m => hf.forall_le_of_antitone hg h m n
   exact ⟨le_csupᵢ ⟨g <| n, forall_range_iff.2 this⟩ _, csupᵢ_le this⟩
@@ -1552,7 +1552,7 @@ Case conversion may be inaccurate. Consider using '#align is_least_Inf isLeast_c
 theorem isLeast_cinfₛ (hs : s.Nonempty) : IsLeast s (infₛ s) :=
   by
   rw [infₛ_eq_argmin_on hs]
-  exact ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
+  exact ⟨argminOn_mem _ _ _ _, fun a ha => argminOn_le id _ _ ha⟩
 #align is_least_Inf isLeast_cinfₛ
 
 /- warning: le_cInf_iff' -> le_cinfₛ_iff' is a dubious translation:
@@ -1562,7 +1562,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Set.{u1} α} {b : α} [_inst_2 : IsWellOrder.{u1} α (fun (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9097 : α) (x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9099 : α) => LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9097 x._@.Mathlib.Order.ConditionallyCompleteLattice.Basic._hyg.9099)], (Set.Nonempty.{u1} α s) -> (Iff (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) b (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) b (lowerBounds.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1))))) s)))
 Case conversion may be inaccurate. Consider using '#align le_cInf_iff' le_cinfₛ_iff'ₓ'. -/
 theorem le_cinfₛ_iff' (hs : s.Nonempty) : b ≤ infₛ s ↔ b ∈ lowerBounds s :=
-  le_isGLB_iff (isLeast_cinfₛ hs).IsGLB
+  le_isGLB_iff (isLeast_cinfₛ hs).isGLB
 #align le_cInf_iff' le_cinfₛ_iff'
 
 /- warning: Inf_mem -> cinfₛ_mem is a dubious translation:
@@ -1726,7 +1726,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align le_cInf_iff'' le_cinfₛ_iff''ₓ'. -/
 theorem le_cinfₛ_iff'' {s : Set α} {a : α} (ne : s.Nonempty) :
     a ≤ infₛ s ↔ ∀ b : α, b ∈ s → a ≤ b :=
-  le_cinfₛ_iff ⟨⊥, fun a _ => bot_le⟩ Ne
+  le_cinfₛ_iff ⟨⊥, fun a _ => bot_le⟩ ne
 #align le_cInf_iff'' le_cinfₛ_iff''
 
 /- warning: le_cinfi_iff' -> le_cinfᵢ_iff' is a dubious translation:
@@ -1895,7 +1895,7 @@ theorem isLUB_supₛ (s : Set (WithTop α)) : IsLUB s (supₛ s) :=
       apply h_1
       use ⊥
       rintro a ⟨⟩
-  exact is_lub_Sup' hs
+  exact isLUB_supₛ' hs
 #align with_top.is_lub_Sup WithTop.isLUB_supₛ
 
 /- warning: with_top.is_glb_Inf' -> WithTop.isGLB_infₛ' is a dubious translation:
@@ -1955,7 +1955,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.is_glb_Inf Wi
 theorem isGLB_infₛ (s : Set (WithTop α)) : IsGLB s (infₛ s) :=
   by
   by_cases hs : BddBelow s
-  · exact is_glb_Inf' hs
+  · exact isGLB_infₛ' hs
   · exfalso
     apply hs
     use ⊥
@@ -1982,7 +1982,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.coe_Sup WithT
 /-- A version of `with_top.coe_Sup'` with a more convenient but less general statement. -/
 @[norm_cast]
 theorem coe_supₛ {s : Set α} (hb : BddAbove s) : ↑(supₛ s) = (⨆ a ∈ s, ↑a : WithTop α) := by
-  rw [coe_Sup' hb, supₛ_image]
+  rw [coe_supₛ' hb, supₛ_image]
 #align with_top.coe_Sup WithTop.coe_supₛ
 
 /- warning: with_top.coe_Inf -> WithTop.coe_infₛ is a dubious translation:
@@ -1994,7 +1994,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.coe_Inf WithT
 /-- A version of `with_top.coe_Inf'` with a more convenient but less general statement. -/
 @[norm_cast]
 theorem coe_infₛ {s : Set α} (hs : s.Nonempty) : ↑(infₛ s) = (⨅ a ∈ s, ↑a : WithTop α) := by
-  rw [coe_Inf' hs, infₛ_image]
+  rw [coe_infₛ' hs, infₛ_image]
 #align with_top.coe_Inf WithTop.coe_infₛ
 
 end WithTop
@@ -2499,7 +2499,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.supr_coe_lt_top WithTop.supr_coe_lt_topₓ'. -/
 theorem WithTop.supr_coe_lt_top {ι : Sort _} {α : Type _} [ConditionallyCompleteLinearOrderBot α]
     (f : ι → α) : (⨆ x, (f x : WithTop α)) < ⊤ ↔ BddAbove (Set.range f) :=
-  lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).Not.trans Classical.not_not
+  lt_top_iff_ne_top.trans <| (WithTop.supr_coe_eq_top f).not.trans Classical.not_not
 #align with_top.supr_coe_lt_top WithTop.supr_coe_lt_top
 
 end WithTopBot

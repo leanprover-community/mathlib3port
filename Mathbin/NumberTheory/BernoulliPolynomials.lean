@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.bernoulli_polynomials
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n :=
   by
   rw [bernoulli, eval_finset_sum, sum_range_succ]
-  have : (∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x)) = 0 :=
+  have : (∑ x : ℕ in range n, bernoulli x * n.choose x * 0 ^ (n - x)) = 0 :=
     by
     apply sum_eq_zero fun x hx => _
     have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
@@ -94,7 +94,7 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n :=
   by
   simp only [bernoulli, eval_finset_sum]
   simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self,
-    (_root_.bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial]
+    (bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_c, eval_monomial]
   by_cases h : n = 1
   · norm_num [h]
   · simp [h]
@@ -112,7 +112,7 @@ theorem derivative_bernoulli_add_one (k : ℕ) :
     zero_add, mul_sum]
   -- the rest of the sum is termwise equal:
   refine' sum_congr (by rfl) fun m hm => _
-  conv_rhs => rw [← Nat.cast_one, ← Nat.cast_add, ← C_eq_nat_cast, C_mul_monomial, mul_comm]
+  conv_rhs => rw [← Nat.cast_one, ← Nat.cast_add, ← c_eq_nat_cast, c_mul_monomial, mul_comm]
   rw [mul_assoc, mul_assoc, ← Nat.cast_mul, ← Nat.cast_mul]
   congr 3
   rw [(choose_mul_succ_eq k m).symm, mul_comm]
@@ -132,7 +132,7 @@ theorem sum_bernoulli (n : ℕ) :
   simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
     Finset.sum_Ico_eq_sum_range]
   simp only [add_tsub_cancel_left, tsub_zero, zero_add, LinearMap.map_add]
-  simp_rw [smul_monomial, mul_comm (_root_.bernoulli _) _, smul_eq_mul, ← mul_assoc]
+  simp_rw [smul_monomial, mul_comm (bernoulli _) _, smul_eq_mul, ← mul_assoc]
   conv_lhs =>
     apply_congr
     skip
@@ -146,8 +146,8 @@ theorem sum_bernoulli (n : ℕ) :
     rw [← sum_smul]
   rw [sum_range_succ_comm]
   simp only [add_right_eq_self, mul_one, cast_one, cast_add, add_tsub_cancel_left,
-    choose_succ_self_right, one_smul, _root_.bernoulli_zero, sum_singleton, zero_add,
-    LinearMap.map_add, range_one]
+    choose_succ_self_right, one_smul, bernoulli_zero, sum_singleton, zero_add, LinearMap.map_add,
+    range_one]
   apply sum_eq_zero fun x hx => _
   have f : ∀ x ∈ range n, ¬n + 1 - x = 1 := by
     rintro x H
@@ -216,7 +216,7 @@ theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
     rw [eval_smul, hd x_1 (mem_range.1 H)]
   rw [eval_sub, eval_finset_sum]
   simp_rw [eval_smul, smul_add]
-  rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, _root_.add_sub_sub_cancel]
+  rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, add_sub_sub_cancel]
   conv_rhs =>
     congr
     skip
@@ -244,11 +244,11 @@ theorem bernoulli_generating_function (t : A) :
   · simp
   -- n ≥ 1, the coefficients is a sum to n+2, so use `sum_range_succ` to write as
   -- last term plus sum to n+1
-  rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul,
-    nat.sum_antidiagonal_eq_sum_range_succ_mk, sum_range_succ]
+  rw [coeff_succ_x_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul,
+    Nat.sum_antidiagonal_eq_sum_range_succ_mk, sum_range_succ]
   -- last term is zero so kill with `add_zero`
-  simp only [RingHom.map_sub, tsub_self, constant_coeff_one, constant_coeff_exp,
-    coeff_zero_eq_constant_coeff, mul_zero, sub_self, add_zero]
+  simp only [RingHom.map_sub, tsub_self, constantCoeff_one, constantCoeff_exp,
+    coeff_zero_eq_constantCoeff, mul_zero, sub_self, add_zero]
   -- Let's multiply both sides by (n+1)! (OK because it's a unit)
   have hnp1 : IsUnit ((n + 1)! : ℚ) := IsUnit.mk0 _ (by exact_mod_cast factorial_ne_zero (n + 1))
   rw [← (hnp1.map (algebraMap ℚ A)).mul_right_inj]

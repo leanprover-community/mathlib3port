@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bifunctor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ instance (priority := 10) Bifunctor.functor {α} : Functor (F α) where map _ _ 
 #align bifunctor.functor Bifunctor.functor
 
 instance (priority := 10) Bifunctor.lawfulFunctor [IsLawfulBifunctor F] {α} : LawfulFunctor (F α) :=
-  by refine' { .. } <;> intros <;> simp [Functor.map, functor_norm]
+  by refine' { .. } <;> intros <;> simp [functor.map, functor_norm]
 #align bifunctor.is_lawful_functor Bifunctor.lawfulFunctor
 
 section Bicompl

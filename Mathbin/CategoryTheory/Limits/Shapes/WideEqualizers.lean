@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.wide_equalizers
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ open WalkingParallelFamily.Hom
 /-- Composition of morphisms in the indexing diagram for wide (co)equalizers. -/
 def WalkingParallelFamily.Hom.comp :
     ∀ (X Y Z : WalkingParallelFamily J) (f : WalkingParallelFamily.Hom J X Y)
-      (g : WalkingParallelFamily.Hom J Y Z), WalkingParallelFamily.Hom J X Z
+      (g : WalkingParallelFamily.Hom J Y Z), WalkingParallelFamily.Hom Hom X Z
   | _, _, _, id _, h => h
   | _, _, _, line j, id one => line j
 #align category_theory.limits.walking_parallel_family.hom.comp CategoryTheory.Limits.WalkingParallelFamily.Hom.comp
@@ -206,12 +206,12 @@ theorem Cotrident.π_eq_app_one (t : Cotrident f) : t.π = t.ι.app one :=
 
 @[simp, reassoc.1]
 theorem Trident.app_zero (s : Trident f) (j : J) : s.π.app zero ≫ f j = s.π.app one := by
-  rw [← s.w (line j), parallel_family_map_left]
+  rw [← s.w (line j), parallelFamily_map_left]
 #align category_theory.limits.trident.app_zero CategoryTheory.Limits.Trident.app_zero
 
 @[simp, reassoc.1]
 theorem Cotrident.app_one (s : Cotrident f) (j : J) : f j ≫ s.ι.app one = s.ι.app zero := by
-  rw [← s.w (line j), parallel_family_map_left]
+  rw [← s.w (line j), parallelFamily_map_left]
 #align category_theory.limits.cotrident.app_one CategoryTheory.Limits.Cotrident.app_one
 
 /-- A trident on `f : J → (X ⟶ Y)` is determined by the morphism `ι : P ⟶ X` satisfying
@@ -279,7 +279,7 @@ theorem Trident.equalizer_ext [Nonempty J] (s : Trident f) {W : C} {k l : W ⟶ 
 for the second map -/
 theorem Cotrident.coequalizer_ext [Nonempty J] (s : Cotrident f) {W : C} {k l : s.x ⟶ W}
     (h : s.π ≫ k = s.π ≫ l) : ∀ j : WalkingParallelFamily J, s.ι.app j ≫ k = s.ι.app j ≫ l
-  | zero => by rw [← s.app_one (Classical.arbitrary J), category.assoc, category.assoc, h]
+  | zero => by rw [← s.app_one (Classical.arbitrary J), Category.assoc, Category.assoc, h]
   | one => h
 #align category_theory.limits.cotrident.coequalizer_ext CategoryTheory.Limits.Cotrident.coequalizer_ext
 
@@ -369,9 +369,9 @@ def Trident.IsLimit.homIso [Nonempty J] {t : Trident f} (ht : IsLimit t) (Z : C)
     (Z ⟶ t.x) ≃ { h : Z ⟶ X // ∀ j₁ j₂, h ≫ f j₁ = h ≫ f j₂ }
     where
   toFun k := ⟨k ≫ t.ι, by simp⟩
-  invFun h := (Trident.IsLimit.lift' ht _ h.Prop).1
-  left_inv k := Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).Prop
-  right_inv h := Subtype.ext (Trident.IsLimit.lift' ht _ _).Prop
+  invFun h := (Trident.IsLimit.lift' ht _ h.prop).1
+  left_inv k := Trident.IsLimit.hom_ext ht (Trident.IsLimit.lift' _ _ _).prop
+  right_inv h := Subtype.ext (Trident.IsLimit.lift' ht _ _).prop
 #align category_theory.limits.trident.is_limit.hom_iso CategoryTheory.Limits.Trident.IsLimit.homIso
 
 /-- The bijection of `trident.is_limit.hom_iso` is natural in `Z`. -/
@@ -391,9 +391,9 @@ def Cotrident.IsColimit.homIso [Nonempty J] {t : Cotrident f} (ht : IsColimit t)
     (t.x ⟶ Z) ≃ { h : Y ⟶ Z // ∀ j₁ j₂, f j₁ ≫ h = f j₂ ≫ h }
     where
   toFun k := ⟨t.π ≫ k, by simp⟩
-  invFun h := (Cotrident.IsColimit.desc' ht _ h.Prop).1
-  left_inv k := Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).Prop
-  right_inv h := Subtype.ext (Cotrident.IsColimit.desc' ht _ _).Prop
+  invFun h := (Cotrident.IsColimit.desc' ht _ h.prop).1
+  left_inv k := Cotrident.IsColimit.hom_ext ht (Cotrident.IsColimit.desc' _ _ _).prop
+  right_inv h := Subtype.ext (Cotrident.IsColimit.desc' ht _ _).prop
 #align category_theory.limits.cotrident.is_colimit.hom_iso CategoryTheory.Limits.Cotrident.IsColimit.homIso
 
 /-- The bijection of `cotrident.is_colimit.hom_iso` is natural in `Z`. -/
@@ -436,7 +436,7 @@ def Cocone.ofCotrident {F : WalkingParallelFamily J ⥤ C} (t : Cotrident fun j 
   x := t.x
   ι :=
     { app := fun X => eqToHom (by tidy) ≫ t.ι.app X
-      naturality' := fun j j' g => by cases g <;> dsimp <;> simp [cotrident.app_one t] }
+      naturality' := fun j j' g => by cases g <;> dsimp <;> simp [Cotrident.app_one t] }
 #align category_theory.limits.cocone.of_cotrident CategoryTheory.Limits.Cocone.ofCotrident
 
 @[simp]
@@ -499,10 +499,10 @@ it suffices to give an isomorphism between the cone points
 and check that it commutes with the `ι` morphisms.
 -/
 @[simps]
-def Trident.ext [Nonempty J] {s t : Trident f} (i : s.x ≅ t.x) (w : i.Hom ≫ t.ι = s.ι) : s ≅ t
+def Trident.ext [Nonempty J] {s t : Trident f} (i : s.x ≅ t.x) (w : i.hom ≫ t.ι = s.ι) : s ≅ t
     where
-  Hom := Trident.mkHom i.Hom w
-  inv := Trident.mkHom i.inv (by rw [← w, iso.inv_hom_id_assoc])
+  Hom := Trident.mkHom i.hom w
+  inv := Trident.mkHom i.inv (by rw [← w, Iso.inv_hom_id_assoc])
 #align category_theory.limits.trident.ext CategoryTheory.Limits.Trident.ext
 
 /-- Helper function for constructing morphisms between coequalizer cotridents.
@@ -521,10 +521,10 @@ def Cotrident.mkHom [Nonempty J] {s t : Cotrident f} (k : s.x ⟶ t.x) (w : s.π
 it suffices to give an isomorphism between the cocone points
 and check that it commutes with the `π` morphisms.
 -/
-def Cotrident.ext [Nonempty J] {s t : Cotrident f} (i : s.x ≅ t.x) (w : s.π ≫ i.Hom = t.π) : s ≅ t
+def Cotrident.ext [Nonempty J] {s t : Cotrident f} (i : s.x ≅ t.x) (w : s.π ≫ i.hom = t.π) : s ≅ t
     where
-  Hom := Cotrident.mkHom i.Hom w
-  inv := Cotrident.mkHom i.inv (by rw [iso.comp_inv_eq, w])
+  Hom := Cotrident.mkHom i.hom w
+  inv := Cotrident.mkHom i.inv (by rw [Iso.comp_inv_eq, w])
 #align category_theory.limits.cotrident.ext CategoryTheory.Limits.Cotrident.ext
 
 variable (f)

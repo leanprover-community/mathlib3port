@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.ring.opposite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ instance [GroupWithZero α] : GroupWithZero αᵐᵒᵖ :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α,
     MulOpposite.nontrivial
       α with
-    mul_inv_cancel := fun x hx => unop_injective <| inv_mul_cancel <| unop_injective.Ne hx
+    mul_inv_cancel := fun x hx => unop_injective <| inv_mul_cancel <| unop_injective.ne hx
     inv_zero := unop_injective inv_zero }
 
 end MulOpposite
@@ -179,7 +179,7 @@ instance [GroupWithZero α] : GroupWithZero αᵃᵒᵖ :=
   { AddOpposite.monoidWithZero α, AddOpposite.divInvMonoid α,
     AddOpposite.nontrivial
       α with
-    mul_inv_cancel := fun x hx => unop_injective <| mul_inv_cancel <| unop_injective.Ne hx
+    mul_inv_cancel := fun x hx => unop_injective <| mul_inv_cancel <| unop_injective.ne hx
     inv_zero := unop_injective inv_zero }
 
 end AddOpposite

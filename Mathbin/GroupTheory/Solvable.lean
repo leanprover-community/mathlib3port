@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module group_theory.solvable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ variable (G)
   taking the commutator of the previous subgroup with itself for `n` times. -/
 def derivedSeries : ℕ → Subgroup G
   | 0 => ⊤
-  | n + 1 => ⁅derivedSeries n, derivedSeries n⁆
+  | n + 1 => ⁅derived_series n, derived_series n⁆
 #align derived_series derivedSeries
 
 @[simp]

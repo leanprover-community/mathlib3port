@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.inj_surj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.mulZeroOneClass [Mul M₀'] [Zero M₀'] [One M₀'] (f : M₀' → M₀)
     (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ a b, f (a * b) = f a * f b) :
     MulZeroOneClass M₀' :=
-  { hf.MulZeroClass f zero mul, hf.MulOneClass f one mul with }
+  { hf.mulZeroClass f zero mul, hf.mulOneClass f one mul with }
 #align function.injective.mul_zero_one_class Function.Injective.mulZeroOneClass
 
 /- warning: function.surjective.mul_zero_one_class -> Function.Surjective.mulZeroOneClass is a dubious translation:
@@ -117,7 +117,7 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.mulZeroOneClass [Mul M₀'] [Zero M₀'] [One M₀'] (f : M₀ → M₀')
     (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1) (mul : ∀ a b, f (a * b) = f a * f b) :
     MulZeroOneClass M₀' :=
-  { hf.MulZeroClass f zero mul, hf.MulOneClass f one mul with }
+  { hf.mulZeroClass f zero mul, hf.mulOneClass f one mul with }
 #align function.surjective.mul_zero_one_class Function.Surjective.mulZeroOneClass
 
 end MulZeroOneClass
@@ -136,7 +136,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.semigroupWithZero [Zero M₀'] [Mul M₀'] [SemigroupWithZero M₀]
     (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (mul : ∀ x y, f (x * y) = f x * f y) :
     SemigroupWithZero M₀' :=
-  { hf.MulZeroClass f zero mul, ‹Zero M₀'›, hf.Semigroup f mul with }
+  { hf.mulZeroClass f zero mul, ‹Zero M₀'›, hf.semigroup f mul with }
 #align function.injective.semigroup_with_zero Function.Injective.semigroupWithZero
 
 /- warning: function.surjective.semigroup_with_zero -> Function.Surjective.semigroupWithZero is a dubious translation:
@@ -151,7 +151,7 @@ See note [reducible non-instances]. -/
 protected def Function.Surjective.semigroupWithZero [SemigroupWithZero M₀] [Zero M₀'] [Mul M₀']
     (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (mul : ∀ x y, f (x * y) = f x * f y) :
     SemigroupWithZero M₀' :=
-  { hf.MulZeroClass f zero mul, ‹Zero M₀'›, hf.Semigroup f mul with }
+  { hf.mulZeroClass f zero mul, ‹Zero M₀'›, hf.semigroup f mul with }
 #align function.surjective.semigroup_with_zero Function.Surjective.semigroupWithZero
 
 end SemigroupWithZero
@@ -171,7 +171,7 @@ protected def Function.Injective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M�
     [MonoidWithZero M₀] (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     MonoidWithZero M₀' :=
-  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with }
+  { hf.monoid f one mul npow, hf.mulZeroClass f zero mul with }
 #align function.injective.monoid_with_zero Function.Injective.monoidWithZero
 
 /- warning: function.surjective.monoid_with_zero -> Function.Surjective.monoidWithZero is a dubious translation:
@@ -187,7 +187,7 @@ protected def Function.Surjective.monoidWithZero [Zero M₀'] [Mul M₀'] [One M
     [MonoidWithZero M₀] (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     MonoidWithZero M₀' :=
-  { hf.Monoid f one mul npow, hf.MulZeroClass f zero mul with }
+  { hf.monoid f one mul npow, hf.mulZeroClass f zero mul with }
 #align function.surjective.monoid_with_zero Function.Surjective.monoidWithZero
 
 /- warning: function.injective.comm_monoid_with_zero -> Function.Injective.commMonoidWithZero is a dubious translation:
@@ -203,7 +203,7 @@ protected def Function.Injective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [On
     [CommMonoidWithZero M₀] (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CommMonoidWithZero M₀' :=
-  { hf.CommMonoid f one mul npow, hf.MulZeroClass f zero mul with }
+  { hf.commMonoid f one mul npow, hf.mulZeroClass f zero mul with }
 #align function.injective.comm_monoid_with_zero Function.Injective.commMonoidWithZero
 
 /- warning: function.surjective.comm_monoid_with_zero -> Function.Surjective.commMonoidWithZero is a dubious translation:
@@ -219,7 +219,7 @@ protected def Function.Surjective.commMonoidWithZero [Zero M₀'] [Mul M₀'] [O
     [CommMonoidWithZero M₀] (f : M₀ → M₀') (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CommMonoidWithZero M₀' :=
-  { hf.CommMonoid f one mul npow, hf.MulZeroClass f zero mul with }
+  { hf.commMonoid f one mul npow, hf.mulZeroClass f zero mul with }
 #align function.surjective.comm_monoid_with_zero Function.Surjective.commMonoidWithZero
 
 end MonoidWithZero
@@ -241,8 +241,8 @@ protected def Function.Injective.cancelMonoidWithZero [Zero M₀'] [Mul M₀'] [
     (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CancelMonoidWithZero M₀' :=
-  { hf.Monoid f one mul npow,
-    hf.MulZeroClass f zero
+  { hf.monoid f one mul npow,
+    hf.mulZeroClass f zero
       mul with
     mul_left_cancel_of_ne_zero := fun x y z hx H =>
       hf <| mul_left_cancel₀ ((hf.ne_iff' zero).2 hx) <| by erw [← mul, ← mul, H] <;> rfl
@@ -269,7 +269,7 @@ protected def Function.Injective.cancelCommMonoidWithZero [Zero M₀'] [Mul M₀
     (f : M₀' → M₀) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CancelCommMonoidWithZero M₀' :=
-  { hf.CommMonoidWithZero f zero one mul npow, hf.CancelMonoidWithZero f zero one mul npow with }
+  { hf.commMonoidWithZero f zero one mul npow, hf.cancelMonoidWithZero f zero one mul npow with }
 #align function.injective.cancel_comm_monoid_with_zero Function.Injective.cancelCommMonoidWithZero
 
 end CancelCommMonoidWithZero
@@ -292,7 +292,7 @@ protected def Function.Injective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : GroupWithZero G₀' :=
-  { hf.MonoidWithZero f zero one mul npow, hf.DivInvMonoid f one mul inv div npow zpow,
+  { hf.monoidWithZero f zero one mul npow, hf.divInvMonoid f one mul inv div npow zpow,
     pullback_nonzero f zero
       one with
     inv_zero := hf <| by erw [inv, zero, inv_zero]
@@ -315,8 +315,8 @@ protected def Function.Surjective.groupWithZero [Zero G₀'] [Mul G₀'] [One G�
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) :
     GroupWithZero G₀' :=
-  { hf.MonoidWithZero f zero one mul npow,
-    hf.DivInvMonoid f one mul inv div npow
+  { hf.monoidWithZero f zero one mul npow,
+    hf.divInvMonoid f one mul inv div npow
       zpow with
     inv_zero := by erw [← zero, ← inv, inv_zero]
     mul_inv_cancel :=
@@ -346,7 +346,7 @@ protected def Function.Injective.commGroupWithZero [Zero G₀'] [Mul G₀'] [One
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : CommGroupWithZero G₀' :=
-  { hf.GroupWithZero f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
+  { hf.groupWithZero f zero one mul inv div npow zpow, hf.commSemigroup f mul with }
 #align function.injective.comm_group_with_zero Function.Injective.commGroupWithZero
 
 /- warning: function.surjective.comm_group_with_zero -> Function.Surjective.commGroupWithZero is a dubious translation:
@@ -362,7 +362,7 @@ protected def Function.Surjective.commGroupWithZero [Zero G₀'] [Mul G₀'] [On
     (inv : ∀ x, f x⁻¹ = (f x)⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) :
     CommGroupWithZero G₀' :=
-  { hf.GroupWithZero h01 f zero one mul inv div npow zpow, hf.CommSemigroup f mul with }
+  { hf.groupWithZero h01 f zero one mul inv div npow zpow, hf.commSemigroup f mul with }
 #align function.surjective.comm_group_with_zero Function.Surjective.commGroupWithZero
 
 end CommGroupWithZero

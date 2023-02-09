@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.linear
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,12 +75,12 @@ theorem monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Line
       intros
       apply F.to_functor.map_injective
       simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r g, F.map_tensor,
-        monoidal_linear.tensor_smul, linear.smul_comp, linear.comp_smul]
+        MonoidalLinear.tensor_smul, Linear.smul_comp, Linear.comp_smul]
     smul_tensor' := by
       intros
       apply F.to_functor.map_injective
       simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor,
-        monoidal_linear.smul_tensor, linear.smul_comp, linear.comp_smul] }
+        MonoidalLinear.smul_tensor, Linear.smul_comp, Linear.comp_smul] }
 #align category_theory.monoidal_linear_of_faithful CategoryTheory.monoidalLinearOfFaithful
 
 end CategoryTheory

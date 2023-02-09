@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.int.conditionally_complete_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,22 +42,22 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
-      exact (greatest_of_bdd _ _ _).2.2 n hns
+      exact (greatestOfBdd _ _ _).2.2 n hns
     cSup_le := by
       intro s n hs hns
       have : s.nonempty ∧ BddAbove s := ⟨hs, ⟨n, hns⟩⟩
       rw [dif_pos this]
-      exact hns (greatest_of_bdd _ (Classical.choose_spec this.2) _).2.1
+      exact hns (greatestOfBdd _ (Classical.choose_spec this.2) _).2.1
     cInf_le := by
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨⟨n, hns⟩, hs⟩
       rw [dif_pos this]
-      exact (least_of_bdd _ _ _).2.2 n hns
+      exact (leastOfBdd _ _ _).2.2 n hns
     le_cInf := by
       intro s n hs hns
       have : s.nonempty ∧ BddBelow s := ⟨hs, ⟨n, hns⟩⟩
       rw [dif_pos this]
-      exact hns (least_of_bdd _ (Classical.choose_spec this.2) _).2.1 }
+      exact hns (leastOfBdd _ (Classical.choose_spec this.2) _).2.1 }
 
 namespace Int
 
@@ -71,7 +71,7 @@ theorem csupₛ_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b :
     (Hinh : ∃ z : ℤ, z ∈ s) : supₛ s = greatestOfBdd b Hb Hinh :=
   by
   convert dif_pos _ using 1
-  · convert coe_greatest_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddAbove s)) _
+  · convert coe_greatestOfBdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddAbove s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cSup_eq_greatest_of_bdd Int.csupₛ_eq_greatest_of_bdd
 
@@ -106,7 +106,7 @@ theorem cinfₛ_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : �
     (Hinh : ∃ z : ℤ, z ∈ s) : infₛ s = leastOfBdd b Hb Hinh :=
   by
   convert dif_pos _ using 1
-  · convert coe_least_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
+  · convert coe_leastOfBdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cInf_eq_least_of_bdd Int.cinfₛ_eq_least_of_bdd
 
@@ -139,7 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cSup_mem Int.csupₛ_memₓ'. -/
 theorem csupₛ_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : supₛ s ∈ s :=
   by
-  convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert (greatestOfBdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cSup_mem Int.csupₛ_mem
 
@@ -151,7 +151,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.cInf_mem Int.cinfₛ_memₓ'. -/
 theorem cinfₛ_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : infₛ s ∈ s :=
   by
-  convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert (leastOfBdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cInf_mem Int.cinfₛ_mem
 

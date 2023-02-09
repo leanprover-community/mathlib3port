@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.print_sorry
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,9 +90,9 @@ unsafe def print_sorry_in (nm : Name) (ignore_mathlib := true) : tactic Unit := 
   let to_print : List format :=
     data.map fun ⟨nm, contains_sorry, desc⟩ =>
       let s1 := if contains_sorry then " contains sorry" else ""
-      let s2 := if contains_sorry && !desc.Empty then " and" else ""
-      let s3 := String.join <| (desc.toList.map toString).intersperse ", "
-      let s4 := if !desc.Empty then f! " depends on {s3}" else ""
+      let s2 := if contains_sorry && !desc.empty then " and" else ""
+      let s3 := String.join <| (desc.to_list.map toString).intersperse ", "
+      let s4 := if !desc.empty then f! " depends on {s3}" else ""
       f! "{nm }{s1 }{s2 }{s4}."
   trace <| format.join <| to_print format.line
 #align print_sorry_in print_sorry_in

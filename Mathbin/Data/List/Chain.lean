@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.list.chain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Chain.iff_mem {a : α} {l : List α} :
 
 #print List.chain_singleton /-
 theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
-  simp only [chain_cons, chain.nil, and_true_iff]
+  simp only [chain_cons, Chain.nil, and_true_iff]
 #align list.chain_singleton List.chain_singleton
 -/
 
@@ -90,7 +90,7 @@ theorem chain_singleton {a b : α} : Chain R a [b] ↔ R a b := by
 theorem chain_split {a b : α} {l₁ l₂ : List α} :
     Chain R a (l₁ ++ b :: l₂) ↔ Chain R a (l₁ ++ [b]) ∧ Chain R b l₂ := by
   induction' l₁ with x l₁ IH generalizing a <;>
-    simp only [*, nil_append, cons_append, chain.nil, chain_cons, and_true_iff, and_assoc']
+    simp only [*, nil_append, cons_append, Chain.nil, chain_cons, and_true_iff, and_assoc']
 #align list.chain_split List.chain_split
 -/
 
@@ -106,21 +106,21 @@ theorem chain_append_cons_cons {a b c : α} {l₁ l₂ : List α} :
 theorem chain_iff_forall₂ :
     ∀ {a : α} {l : List α}, Chain R a l ↔ l = [] ∨ Forall₂ R (a :: dropLast l) l
   | a, [] => by simp
-  | a, [b] => by simp [init]
+  | a, [b] => by simp [dropLast]
   | a, b :: c :: l => by simp [@chain_iff_forall₂ b]
 #align list.chain_iff_forall₂ List.chain_iff_forall₂
 -/
 
 #print List.chain_append_singleton_iff_forall₂ /-
 theorem chain_append_singleton_iff_forall₂ : Chain R a (l ++ [b]) ↔ Forall₂ R (a :: l) (l ++ [b]) :=
-  by simp [chain_iff_forall₂, init]
+  by simp [chain_iff_forall₂, dropLast]
 #align list.chain_append_singleton_iff_forall₂ List.chain_append_singleton_iff_forall₂
 -/
 
 #print List.chain_map /-
 theorem chain_map (f : β → α) {b : β} {l : List β} :
     Chain R (f b) (map f l) ↔ Chain (fun a b : β => R (f a) (f b)) b l := by
-  induction l generalizing b <;> simp only [map, chain.nil, chain_cons, *]
+  induction l generalizing b <;> simp only [map, Chain.nil, chain_cons, *]
 #align list.chain_map List.chain_map
 -/
 
@@ -164,7 +164,7 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
 protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l :=
   by
   cases' pairwise_cons.1 p with r p'; clear p
-  induction' p' with b l r' p IH generalizing a; · exact chain.nil
+  induction' p' with b l r' p IH generalizing a; · exact Chain.nil
   simp only [chain_cons, forall_mem_cons] at r
   exact chain_cons.2 ⟨r.1, IH r'⟩
 #align list.pairwise.chain List.Pairwise.chain
@@ -175,9 +175,9 @@ protected theorem Chain.pairwise [IsTrans α R] :
     ∀ {a : α} {l : List α}, Chain R a l → Pairwise R (a :: l)
   | a, [], chain.nil => pairwise_singleton _ _
   | a, _, @chain.cons _ _ _ b l h hb =>
-    hb.Pairwise.cons
+    hb.pairwise.cons
       (by
-        simp only [mem_cons_iff, forall_eq_or_imp, h, true_and_iff]
+        simp only [mem_cons, forall_eq_or_imp, h, true_and_iff]
         exact fun c hc => trans h (rel_of_pairwise_cons hb.pairwise hc))
 #align list.chain.pairwise List.Chain.pairwise
 -/
@@ -370,7 +370,7 @@ theorem Chain'.rel_head {x y l} (h : Chain' R (x :: y :: l)) : R x y :=
 #print List.Chain'.rel_head? /-
 theorem Chain'.rel_head? {x l} (h : Chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head? l) : R x y :=
   by
-  rw [← cons_head'_tail hy] at h
+  rw [← cons_head?_tail hy] at h
   exact h.rel_head
 #align list.chain'.rel_head' List.Chain'.rel_head?
 -/
@@ -395,7 +395,7 @@ theorem chain'_append :
   | [], l => by simp
   | [a], l => by simp [chain'_cons', and_comm']
   | a :: b :: l₁, l₂ => by
-    rw [cons_append, cons_append, chain'_cons, chain'_cons, ← cons_append, chain'_append, last',
+    rw [cons_append, cons_append, chain'_cons, chain'_cons, ← cons_append, chain'_append, getLast?,
       and_assoc]
 #align list.chain'_append List.chain'_append
 -/
@@ -490,7 +490,7 @@ theorem chain'_iff_nthLe {R} :
   | [a] => by simp
   | a :: b :: t => by
     rw [← and_forall_succ, chain'_cons, chain'_iff_nth_le]
-    simp only [length, nth_le, add_tsub_cancel_right, add_lt_add_iff_right, tsub_pos_iff_lt,
+    simp only [length, nthLe, add_tsub_cancel_right, add_lt_add_iff_right, tsub_pos_iff_lt,
       one_lt_succ_succ, true_imp_iff]
     rfl
 #align list.chain'_iff_nth_le List.chain'_iff_nthLe
@@ -502,7 +502,7 @@ theorem chain'_iff_nthLe {R} :
 theorem Chain'.append_overlap {l₁ l₂ l₃ : List α} (h₁ : Chain' R (l₁ ++ l₂))
     (h₂ : Chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []) : Chain' R (l₁ ++ l₂ ++ l₃) :=
   h₁.append h₂.right_of_append <| by
-    simpa only [last'_append_of_ne_nil _ hn] using (chain'_append.1 h₂).2.2
+    simpa only [getLast?_append_of_ne_nil _ hn] using (chain'_append.1 h₂).2.2
 #align list.chain'.append_overlap List.Chain'.append_overlap
 -/
 
@@ -515,11 +515,11 @@ theorem exists_chain_of_relationReflTransGen (h : Relation.ReflTransGen r a b) :
     ∃ l, Chain r a l ∧ getLast (a :: l) (cons_ne_nil _ _) = b :=
   by
   apply Relation.ReflTransGen.head_induction_on h
-  · exact ⟨[], chain.nil, rfl⟩
+  · exact ⟨[], Chain.nil, rfl⟩
   · intro c d e t ih
     obtain ⟨l, hl₁, hl₂⟩ := ih
-    refine' ⟨d :: l, chain.cons e hl₁, _⟩
-    rwa [last_cons_cons]
+    refine' ⟨d :: l, Chain.cons e hl₁, _⟩
+    rwa [getLast_cons_cons]
 #align list.exists_chain_of_relation_refl_trans_gen List.exists_chain_of_relationReflTransGen
 -/
 

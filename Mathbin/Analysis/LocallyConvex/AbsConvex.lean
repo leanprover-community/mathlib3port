@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,7 +181,7 @@ theorem withGaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   -- We have to show that the intersection contains zero, is open, balanced, and convex
   refine'
     ⟨mem_Inter₂.mpr fun _ _ => by simp [Seminorm.mem_ball_zero, hr],
-      isOpen_binterᵢ (to_finite _) fun S _ => _,
+      isOpen_binterᵢ (toFinite _) fun S _ => _,
       balanced_Inter₂ fun _ _ => Seminorm.balanced_ball_zero _ _,
       convex_Inter₂ fun _ _ => Seminorm.convex_ball _ _ _⟩
   -- The only nontrivial part is to show that the ball is open

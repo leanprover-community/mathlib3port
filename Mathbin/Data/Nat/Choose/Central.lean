@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Thomas Browning
 
 ! This file was ported from Lean 3 source module data.nat.choose.central
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,16 +115,16 @@ theorem four_pow_lt_mul_centralBinom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * c
   rcases lt_trichotomy n 4 with (hn | rfl | hn)
   · clear IH
     decide!
-  · norm_num [central_binom, choose]
+  · norm_num [centralBinom, choose]
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (zero_lt_four.trans hn).ne'
   calc
-    4 ^ (n + 1) < 4 * (n * central_binom n) :=
+    4 ^ (n + 1) < 4 * (n * centralBinom n) :=
       (mul_lt_mul_left <| zero_lt_four' ℕ).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succ hn))
-    _ ≤ 2 * (2 * n + 1) * central_binom n :=
+    _ ≤ 2 * (2 * n + 1) * centralBinom n :=
       by
       rw [← mul_assoc]
       linarith
-    _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
+    _ = (n + 1) * centralBinom (n + 1) := (succ_mul_centralBinom_succ n).symm
     
 #align nat.four_pow_lt_mul_central_binom Nat.four_pow_lt_mul_centralBinom
 -/
@@ -137,10 +137,10 @@ because it appears in Erdős's proof of Bertrand's postulate.
 theorem four_pow_le_two_mul_self_mul_centralBinom :
     ∀ (n : ℕ) (n_pos : 0 < n), 4 ^ n ≤ 2 * n * centralBinom n
   | 0, pr => (Nat.not_lt_zero _ pr).elim
-  | 1, pr => by norm_num [central_binom, choose]
-  | 2, pr => by norm_num [central_binom, choose]
-  | 3, pr => by norm_num [central_binom, choose]
-  | n@(m + 4), _ =>
+  | 1, pr => by norm_num [centralBinom, choose]
+  | 2, pr => by norm_num [centralBinom, choose]
+  | 3, pr => by norm_num [centralBinom, choose]
+  | n@(mpr + 4), _ =>
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_centralBinom _ le_add_self).le
       _ ≤ 2 * n * centralBinom n := by
@@ -154,7 +154,7 @@ theorem four_pow_le_two_mul_self_mul_centralBinom :
 theorem two_dvd_centralBinom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) :=
   by
   use (n + 1 + n).choose n
-  rw [central_binom_eq_two_mul_choose, two_mul, ← add_assoc, choose_succ_succ, choose_symm_add, ←
+  rw [centralBinom_eq_two_mul_choose, two_mul, ← add_assoc, choose_succ_succ, choose_symm_add, ←
     two_mul]
 #align nat.two_dvd_central_binom_succ Nat.two_dvd_centralBinom_succ
 -/
@@ -163,7 +163,7 @@ theorem two_dvd_centralBinom_succ (n : ℕ) : 2 ∣ centralBinom (n + 1) :=
 theorem two_dvd_centralBinom_of_one_le {n : ℕ} (h : 0 < n) : 2 ∣ centralBinom n :=
   by
   rw [← Nat.succ_pred_eq_of_pos h]
-  exact two_dvd_central_binom_succ n.pred
+  exact two_dvd_centralBinom_succ n.pred
 #align nat.two_dvd_central_binom_of_one_le Nat.two_dvd_centralBinom_of_one_le
 -/
 
@@ -178,8 +178,8 @@ theorem succ_dvd_centralBinom (n : ℕ) : n + 1 ∣ n.centralBinom :=
     exact coprime_one_left n
   apply h_s.dvd_of_dvd_mul_left
   apply dvd_of_mul_dvd_mul_left zero_lt_two
-  rw [← mul_assoc, ← succ_mul_central_binom_succ, mul_comm]
-  exact mul_dvd_mul_left _ (two_dvd_central_binom_succ n)
+  rw [← mul_assoc, ← succ_mul_centralBinom_succ, mul_comm]
+  exact mul_dvd_mul_left _ (two_dvd_centralBinom_succ n)
 #align nat.succ_dvd_central_binom Nat.succ_dvd_centralBinom
 -/
 

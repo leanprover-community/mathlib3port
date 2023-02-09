@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module logic.equiv.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem mapEquiv_symm_apply (h : α ≃ β) (y : f β) :
 theorem mapEquiv_refl : mapEquiv f (Equiv.refl α) = Equiv.refl (f α) :=
   by
   ext x
-  simp only [map_equiv_apply, refl_apply]
+  simp only [mapEquiv_apply, refl_apply]
   exact LawfulFunctor.id_map x
 #align functor.map_equiv_refl Functor.mapEquiv_refl
 

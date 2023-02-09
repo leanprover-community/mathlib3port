@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn, Eric Wieser, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.is_free_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_free_group.ext_hom IsFreeGroup.ext_homₓ'. -/
 @[ext]
 theorem ext_hom ⦃f g : G →* H⦄ (h : ∀ a : Generators G, f (of a) = g (of a)) : f = g :=
-  lift.symm.Injective (funext h)
+  lift.symm.injective (funext h)
 #align is_free_group.ext_hom IsFreeGroup.ext_hom
 
 /- warning: is_free_group.unique_lift -> IsFreeGroup.unique_lift is a dubious translation:

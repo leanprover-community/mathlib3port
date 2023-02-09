@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.dual
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,10 +86,10 @@ variable {𝕜}
 theorem ext_inner_left_basis {ι : Type _} {x y : E} (b : Basis ι 𝕜 E)
     (h : ∀ i : ι, ⟪b i, x⟫ = ⟪b i, y⟫) : x = y :=
   by
-  apply (to_dual_map 𝕜 E).map_eq_iff.mp
+  apply (toDualMap 𝕜 E).map_eq_iff.mp
   refine' (Function.Injective.eq_iff ContinuousLinearMap.coe_injective).mp (Basis.ext b _)
   intro i
-  simp only [to_dual_map_apply, ContinuousLinearMap.coe_coe]
+  simp only [toDualMap_apply, ContinuousLinearMap.coe_coe]
   rw [← inner_conj_sym]
   nth_rw_rhs 1 [← inner_conj_sym]
   exact congr_arg conj (h i)
@@ -168,7 +168,7 @@ theorem toDual_apply {x y : E} : toDual 𝕜 E x y = ⟪x, y⟫ :=
 @[simp]
 theorem toDual_symm_apply {x : E} {y : NormedSpace.Dual 𝕜 E} : ⟪(toDual 𝕜 E).symm y, x⟫ = y x :=
   by
-  rw [← to_dual_apply]
+  rw [← toDual_apply]
   simp only [LinearIsometryEquiv.apply_symm_apply]
 #align inner_product_space.to_dual_symm_apply InnerProductSpace.toDual_symm_apply
 
@@ -189,14 +189,14 @@ variable (B : E →L⋆[𝕜] E →L[𝕜] 𝕜)
 
 @[simp]
 theorem continuousLinearMapOfBilin_apply (v w : E) : ⟪B♯ v, w⟫ = B v w := by
-  simp [continuous_linear_map_of_bilin]
+  simp [continuousLinearMapOfBilin]
 #align inner_product_space.continuous_linear_map_of_bilin_apply InnerProductSpace.continuousLinearMapOfBilin_apply
 
 theorem unique_continuousLinearMapOfBilin {v f : E} (is_lax_milgram : ∀ w, ⟪f, w⟫ = B v w) :
     f = B♯ v := by
   refine' ext_inner_right 𝕜 _
   intro w
-  rw [continuous_linear_map_of_bilin_apply]
+  rw [continuousLinearMapOfBilin_apply]
   exact is_lax_milgram w
 #align inner_product_space.unique_continuous_linear_map_of_bilin InnerProductSpace.unique_continuousLinearMapOfBilin
 

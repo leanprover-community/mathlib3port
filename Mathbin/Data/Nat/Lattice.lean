@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Gabriel Ebner, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.nat.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem infₛ_eq_zero {s : Set ℕ} : infₛ s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
   by
   cases eq_empty_or_nonempty s
   · subst h
-    simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, InfSet.infₛ, mem_empty_iff_false,
+    simp only [or_true_iff, eq_self_iff_true, iff_true_iff, Inf, has_Inf.Inf, mem_empty_iff_false,
       exists_false, dif_neg, not_false_iff]
   · simp only [h.ne_empty, or_false_iff, Nat.infₛ_def, h, Nat.find_eq_zero]
 #align nat.Inf_eq_zero Nat.infₛ_eq_zero
@@ -71,7 +71,7 @@ theorem infₛ_eq_zero {s : Set ℕ} : infₛ s = 0 ↔ 0 ∈ s ∨ s = ∅ :=
 #print Nat.infₛ_empty /-
 @[simp]
 theorem infₛ_empty : infₛ ∅ = 0 := by
-  rw [Inf_eq_zero]
+  rw [infₛ_eq_zero]
   right
   rfl
 #align nat.Inf_empty Nat.infₛ_empty
@@ -116,7 +116,7 @@ theorem nonempty_of_pos_infₛ {s : Set ℕ} (h : 0 < infₛ s) : s.Nonempty :=
   by
   by_contra contra
   rw [Set.not_nonempty_iff_eq_empty] at contra
-  have h' : Inf s ≠ 0 := ne_of_gt h
+  have h' : infₛ s ≠ 0 := ne_of_gt h
   apply h'
   rw [Nat.infₛ_eq_zero]
   right
@@ -143,10 +143,10 @@ theorem infₛ_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ
   by
   constructor
   · intro H
-    rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_Inf_eq_succ H) hs, H, mem_Ici, mem_Ici]
+    rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_infₛ_eq_succ H) hs, H, mem_Ici, mem_Ici]
     exact ⟨le_rfl, k.not_succ_le_self⟩
   · rintro ⟨H, H'⟩
-    rw [Inf_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
+    rw [infₛ_def (⟨_, H⟩ : s.nonempty), find_eq_iff]
     exact ⟨H, fun n hnk hns => H' <| hs n k (lt_succ_iff.mp hnk) hns⟩
 #align nat.Inf_upward_closed_eq_succ_iff Nat.infₛ_upward_closed_eq_succ_iff
 -/
@@ -161,14 +161,14 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
     (inferInstance : LinearOrder ℕ) with
     supₛ := supₛ
     infₛ := infₛ
-    le_cSup := fun s a hb ha => by rw [Sup_def hb] <;> revert a ha <;> exact @Nat.find_spec _ _ hb
-    cSup_le := fun s a hs ha => by rw [Sup_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
+    le_cSup := fun s a hb ha => by rw [supₛ_def hb] <;> revert a ha <;> exact @nat.find_spec _ _ hb
+    cSup_le := fun s a hs ha => by rw [supₛ_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
     le_cInf := fun s a hs hb => by
-      rw [Inf_def hs] <;> exact hb (@Nat.find_spec (fun n => n ∈ s) _ _)
-    cInf_le := fun s a hb ha => by rw [Inf_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
+      rw [infₛ_def hs] <;> exact hb (@nat.find_spec (fun n => n ∈ s) _ _)
+    cInf_le := fun s a hb ha => by rw [infₛ_def ⟨a, ha⟩] <;> exact Nat.find_min' _ ha
     supₛ_empty :=
       by
-      simp only [Sup_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false,
+      simp only [supₛ_def, Set.mem_empty_iff_false, forall_const, forall_prop_of_false,
         not_false_iff, exists_const]
       apply bot_unique (Nat.find_min' _ _)
       trivial }
@@ -176,7 +176,7 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
 #print Nat.supₛ_mem /-
 theorem supₛ_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : supₛ s ∈ s :=
   let ⟨k, hk⟩ := h₂
-  h₁.cSup_mem ((finite_le_nat k).Subset hk)
+  h₁.cSup_mem ((finite_le_nat k).subset hk)
 #align nat.Sup_mem Nat.supₛ_mem
 -/
 
@@ -188,10 +188,10 @@ theorem infₛ_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ infₛ { m | p m }) 
   · rw [h, Nat.infₛ_empty, zero_add]
     obtain hnp | hnp := hn.eq_or_lt
     · exact hnp
-    suffices hp : p (Inf { m | p m } - n + n)
+    suffices hp : p (infₛ { m | p m } - n + n)
     · exact (h.subset hp).elim
     rw [tsub_add_cancel_of_le hn]
-    exact cinfₛ_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
+    exact infₛ_mem (nonempty_of_pos_infₛ <| n.zero_le.trans_lt hnp)
   · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
     rw [Nat.infₛ_def ⟨m, hm⟩, Nat.infₛ_def hp]
     rw [Nat.infₛ_def hp] at hn
@@ -205,11 +205,11 @@ theorem infₛ_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < infₛ { m | p m }) :
   by
   convert infₛ_add _
   · simp_rw [add_tsub_cancel_right]
-  obtain ⟨m, hm⟩ := nonempty_of_pos_Inf h
+  obtain ⟨m, hm⟩ := nonempty_of_pos_infₛ h
   refine'
     le_cinfₛ ⟨m + n, _⟩ fun b hb =>
       le_of_not_lt fun hbn =>
-        ne_of_mem_of_not_mem _ (not_mem_of_lt_Inf h) (tsub_eq_zero_of_le hbn.le)
+        ne_of_mem_of_not_mem _ (not_mem_of_lt_infₛ h) (tsub_eq_zero_of_le hbn.le)
   · dsimp
     rwa [add_tsub_cancel_right]
   · exact hb

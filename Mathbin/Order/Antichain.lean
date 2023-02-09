@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.antichain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,20 +72,20 @@ theorem mono_on (hs : IsAntichain r₁ s) (h : s.Pairwise fun ⦃a b⦄ => r₂ 
 #print IsAntichain.eq /-
 protected theorem eq (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r a b) :
     a = b :=
-  hs.Eq ha hb <| not_not_intro h
+  hs.eq ha hb <| not_not_intro h
 #align is_antichain.eq IsAntichain.eq
 -/
 
 #print IsAntichain.eq' /-
 protected theorem eq' (hs : IsAntichain r s) {a b : α} (ha : a ∈ s) (hb : b ∈ s) (h : r b a) :
     a = b :=
-  (hs.Eq hb ha h).symm
+  (hs.eq hb ha h).symm
 #align is_antichain.eq' IsAntichain.eq'
 -/
 
 #print IsAntichain.isAntisymm /-
 protected theorem isAntisymm (h : IsAntichain r univ) : IsAntisymm α r :=
-  ⟨fun a b ha _ => h.Eq trivial trivial ha⟩
+  ⟨fun a b ha _ => h.eq trivial trivial ha⟩
 #align is_antichain.is_antisymm IsAntichain.isAntisymm
 -/
 
@@ -133,7 +133,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage IsAntichain.preimageₓ'. -/
 theorem preimage (hs : IsAntichain r s) {f : β → α} (hf : Injective f)
     (h : ∀ ⦃a b⦄, r' a b → r (f a) (f b)) : IsAntichain r' (f ⁻¹' s) := fun b hb c hc hbc hr =>
-  hs hb hc (hf.Ne hbc) <| h hr
+  hs hb hc (hf.ne hbc) <| h hr
 #align is_antichain.preimage IsAntichain.preimage
 
 #print isAntichain_insert /-
@@ -186,7 +186,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_antichain.preimage_rel_embedding IsAntichain.preimage_relEmbeddingₓ'. -/
 theorem preimage_relEmbedding {t : Set β} (ht : IsAntichain r' t) (φ : r ↪r r') :
     IsAntichain r (φ ⁻¹' t) := fun a ha a' ha' hne hle =>
-  ht ha ha' (fun h => hne (φ.Injective h)) (φ.map_rel_iff.mpr hle)
+  ht ha ha' (fun h => hne (φ.injective h)) (φ.map_rel_iff.mpr hle)
 #align is_antichain.preimage_rel_embedding IsAntichain.preimage_relEmbedding
 
 /- warning: is_antichain.image_rel_iso -> IsAntichain.image_relIso is a dubious translation:
@@ -217,7 +217,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {r' : β -> β -> Prop} {s : Set.{u2} α} {φ : RelEmbedding.{u2, u1} α β r r'}, Iff (IsAntichain.{u1} β r' (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r r' φ)) s)) (IsAntichain.{u2} α r s)
 Case conversion may be inaccurate. Consider using '#align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iffₓ'. -/
 theorem image_relEmbedding_iff {φ : r ↪r r'} : IsAntichain r' (φ '' s) ↔ IsAntichain r s :=
-  ⟨fun h => (φ.Injective.preimage_image s).subst (h.preimage_relEmbedding φ), fun h =>
+  ⟨fun h => (φ.injective.preimage_image s).subst (h.preimage_relEmbedding φ), fun h =>
     h.image_relEmbedding φ⟩
 #align is_antichain.image_rel_embedding_iff IsAntichain.image_relEmbedding_iff
 
@@ -344,7 +344,7 @@ theorem isAntichain_singleton (a : α) (r : α → α → Prop) : IsAntichain r 
 
 #print Set.Subsingleton.isAntichain /-
 theorem Set.Subsingleton.isAntichain (hs : s.Subsingleton) (r : α → α → Prop) : IsAntichain r s :=
-  hs.Pairwise _
+  hs.pairwise _
 #align set.subsingleton.is_antichain Set.Subsingleton.isAntichain
 -/
 
@@ -354,7 +354,7 @@ variable [Preorder α]
 
 #print isAntichain_and_least_iff /-
 theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq'' hb h.2.1 (h.2.2 hb)⟩,
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq' hb h.2.1 (h.2.2 hb)⟩,
     by
     rintro rfl
     exact ⟨isAntichain_singleton _ _, isLeast_singleton⟩⟩
@@ -363,7 +363,7 @@ theorem isAntichain_and_least_iff : IsAntichain (· ≤ ·) s ∧ IsLeast s a �
 
 #print isAntichain_and_greatest_iff /-
 theorem isAntichain_and_greatest_iff : IsAntichain (· ≤ ·) s ∧ IsGreatest s a ↔ s = {a} :=
-  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.Eq hb h.2.1 (h.2.2 hb)⟩,
+  ⟨fun h => eq_singleton_iff_unique_mem.2 ⟨h.2.1, fun b hb => h.1.eq hb h.2.1 (h.2.2 hb)⟩,
     by
     rintro rfl
     exact ⟨isAntichain_singleton _ _, isGreatest_singleton⟩⟩
@@ -444,7 +444,7 @@ theorem mono (hs : IsStrongAntichain r₁ s) (h : r₂ ≤ r₁) : IsStrongAntic
 #print IsStrongAntichain.eq /-
 theorem eq (hs : IsStrongAntichain r s) {a b c : α} (ha : a ∈ s) (hb : b ∈ s) (hac : r a c)
     (hbc : r b c) : a = b :=
-  hs.Eq ha hb fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
+  hs.eq ha hb fun h => False.elim <| (h c).elim (not_not_intro hac) (not_not_intro hbc)
 #align is_strong_antichain.eq IsStrongAntichain.eq
 -/
 
@@ -458,7 +458,7 @@ protected theorem isAntichain [IsRefl α r] (h : IsStrongAntichain r s) : IsAnti
 protected theorem subsingleton [IsDirected α r] (h : IsStrongAntichain r s) : s.Subsingleton :=
   fun a ha b hb =>
   let ⟨c, hac, hbc⟩ := directed_of r a b
-  h.Eq ha hb hac hbc
+  h.eq ha hb hac hbc
 #align is_strong_antichain.subsingleton IsStrongAntichain.subsingleton
 -/
 
@@ -496,7 +496,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_strong_antichain.preimage IsStrongAntichain.preimageₓ'. -/
 theorem preimage (hs : IsStrongAntichain r s) {f : β → α} (hf : Injective f)
     (h : ∀ a b, r' a b → r (f a) (f b)) : IsStrongAntichain r' (f ⁻¹' s) := fun a ha b hb hab c =>
-  (hs ha hb (hf.Ne hab) _).imp (mt <| h _ _) (mt <| h _ _)
+  (hs ha hb (hf.ne hab) _).imp (mt <| h _ _) (mt <| h _ _)
 #align is_strong_antichain.preimage IsStrongAntichain.preimage
 
 #print isStrongAntichain_insert /-
@@ -519,7 +519,7 @@ end IsStrongAntichain
 #print Set.Subsingleton.isStrongAntichain /-
 theorem Set.Subsingleton.isStrongAntichain (hs : s.Subsingleton) (r : α → α → Prop) :
     IsStrongAntichain r s :=
-  hs.Pairwise _
+  hs.pairwise _
 #align set.subsingleton.is_strong_antichain Set.Subsingleton.isStrongAntichain
 -/
 
@@ -553,7 +553,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {t : Set.{max u2 u1} (forall (i : ι), α i)}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (HasSubset.Subset.{max u2 u1} (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instHasSubsetSet.{max u2 u1} (forall (i : ι), α i)) t s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) t)
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain.subset IsWeakAntichain.subsetₓ'. -/
 protected theorem subset (hs : IsWeakAntichain s) : t ⊆ s → IsWeakAntichain t :=
-  hs.Subset
+  hs.subset
 #align is_weak_antichain.subset IsWeakAntichain.subset
 
 /- warning: is_weak_antichain.eq -> IsWeakAntichain.eq is a dubious translation:
@@ -563,7 +563,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)} {a : forall (i : ι), α i} {b : forall (i : ι), α i}, (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) a s) -> (Membership.mem.{max u2 u1, max u2 u1} (forall (i : ι), α i) (Set.{max u2 u1} (forall (i : ι), α i)) (Set.instMembershipSet.{max u2 u1} (forall (i : ι), α i)) b s) -> (StrongLT.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => Preorder.toLT.{u1} (α i) (_inst_1 i)) a b) -> (Eq.{max (succ u2) (succ u1)} (forall (i : ι), α i) a b)
 Case conversion may be inaccurate. Consider using '#align is_weak_antichain.eq IsWeakAntichain.eqₓ'. -/
 protected theorem eq (hs : IsWeakAntichain s) : a ∈ s → b ∈ s → a ≺ b → a = b :=
-  hs.Eq
+  hs.eq
 #align is_weak_antichain.eq IsWeakAntichain.eq
 
 /- warning: is_weak_antichain.insert -> IsWeakAntichain.insert is a dubious translation:
@@ -608,7 +608,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Preorder.{u1} (α i)] {s : Set.{max u2 u1} (forall (i : ι), α i)}, (Set.Subsingleton.{max u2 u1} (forall (i : ι), α i) s) -> (IsWeakAntichain.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) s)
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_weak_antichain Set.Subsingleton.isWeakAntichainₓ'. -/
 theorem Set.Subsingleton.isWeakAntichain (hs : s.Subsingleton) : IsWeakAntichain s :=
-  hs.IsAntichain _
+  hs.isAntichain _
 #align set.subsingleton.is_weak_antichain Set.Subsingleton.isWeakAntichain
 
 end Pi

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.group_action.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,7 +119,7 @@ theorem quotient.coe_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : �
 theorem QuotientGroup.out'_conj_pow_minimalPeriod_mem (a : α) (q : α ⧸ H) :
     q.out'⁻¹ * a ^ Function.minimalPeriod ((· • ·) a) q * q.out' ∈ H := by
   rw [mul_assoc, ← QuotientGroup.eq', QuotientGroup.out_eq', ← smul_eq_mul, quotient.mk_smul_out',
-    eq_comm, pow_smul_eq_iff_minimal_period_dvd]
+    eq_comm, pow_smul_eq_iff_minimalPeriod_dvd]
 #align quotient_group.out'_conj_pow_minimal_period_mem QuotientGroup.out'_conj_pow_minimalPeriod_mem
 
 end QuotientAction
@@ -179,7 +179,7 @@ theorem injective_ofQuotientStabilizer : Function.Injective (ofQuotientStabilize
   fun y₁ y₂ =>
   Quotient.inductionOn₂' y₁ y₂ fun g₁ g₂ (H : g₁ • x = g₂ • x) =>
     Quotient.sound' <| by
-      rw [left_rel_apply]
+      rw [leftRel_apply]
       show (g₁⁻¹ * g₂) • x = x
       rw [mul_smul, ← H, inv_smul_smul]
 #align mul_action.injective_of_quotient_stabilizer MulAction.injective_ofQuotientStabilizer
@@ -208,7 +208,7 @@ noncomputable def orbitProdStabilizerEquivGroup (b : β) : orbit α b × stabili
 theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| orbit α b]
     [Fintype <| stabilizer α b] :
     Fintype.card (orbit α b) * Fintype.card (stabilizer α b) = Fintype.card α := by
-  rw [← Fintype.card_prod, Fintype.card_congr (orbit_prod_stabilizer_equiv_group α b)]
+  rw [← Fintype.card_prod, Fintype.card_congr (orbitProdStabilizerEquivGroup α b)]
 #align mul_action.card_orbit_mul_card_stabilizer_eq_card_group MulAction.card_orbit_mul_card_stabilizer_eq_card_group
 #align add_action.card_orbit_add_card_stabilizer_eq_card_add_group AddAction.card_orbit_add_card_stabilizer_eq_card_add_group
 
@@ -267,11 +267,12 @@ theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [F
           Fintype.card (α ⧸ stabilizer α (φ ω)) :=
       by
       intro ω
-      rw [Fintype.card_congr (@Subgroup.groupEquivQuotientProdSubgroup α _ (stabilizer α <| φ ω)),
+      rw [Fintype.card_congr
+          (@subgroup.group_equiv_quotient_times_subgroup α _ (stabilizer α <| φ ω)),
         Fintype.card_prod, Nat.mul_div_cancel]
       exact fintype.card_pos_iff.mpr (by infer_instance)
     simp_rw [this, ← Fintype.card_sigma,
-      Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
+      Fintype.card_congr (selfEquivSigmaOrbitsQuotientStabilizer' α β hφ)]
 #align mul_action.card_eq_sum_card_group_div_card_stabilizer' MulAction.card_eq_sum_card_group_div_card_stabilizer'
 #align add_action.card_eq_sum_card_add_group_sub_card_stabilizer' AddAction.card_eq_sum_card_add_group_sub_card_stabilizer'
 
@@ -327,7 +328,7 @@ elements fixed by each `g ∈ G` is the number of orbits. -/
 theorem sum_card_fixedBy_eq_card_orbits_mul_card_group [Fintype α] [∀ a, Fintype <| fixedBy α β a]
     [Fintype Ω] : (∑ a : α, Fintype.card (fixedBy α β a)) = Fintype.card Ω * Fintype.card α := by
   rw [← Fintype.card_prod, ← Fintype.card_sigma,
-    Fintype.card_congr (sigma_fixed_by_equiv_orbits_prod_group α β)]
+    Fintype.card_congr (sigmaFixedByEquivOrbitsProdGroup α β)]
 #align mul_action.sum_card_fixed_by_eq_card_orbits_mul_card_group MulAction.sum_card_fixedBy_eq_card_orbits_mul_card_group
 #align add_action.sum_card_fixed_by_eq_card_orbits_add_card_add_group AddAction.sum_card_fixedBy_eq_card_orbits_add_card_add_group
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ noncomputable def resolvent (a : A) (r : R) : A :=
 noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ
     where
   val := ↑ₐ s - r⁻¹ • a
-  inv := r • ↑h.Unit⁻¹
+  inv := r • ↑h.unit⁻¹
   val_inv := by rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
   inv_val := by rw [smul_mul_assoc, ← mul_smul_comm, smul_sub, smul_inv_smul, h.coe_inv_mul]
 #align is_unit.sub_inv_smul IsUnit.subInvSmul
@@ -152,11 +152,11 @@ theorem resolventSet_of_subsingleton [Subsingleton A] (a : A) : resolventSet R a
 
 @[simp]
 theorem of_subsingleton [Subsingleton A] (a : A) : spectrum R a = ∅ := by
-  rw [spectrum, resolvent_set_of_subsingleton, Set.compl_univ]
+  rw [spectrum, resolventSet_of_subsingleton, Set.compl_univ]
 #align spectrum.of_subsingleton spectrum.of_subsingleton
 
-theorem resolvent_eq {a : A} {r : R} (h : r ∈ resolventSet R a) : resolvent a r = ↑h.Unit⁻¹ :=
-  Ring.inverse_unit h.Unit
+theorem resolvent_eq {a : A} {r : R} (h : r ∈ resolventSet R a) : resolvent a r = ↑h.unit⁻¹ :=
+  Ring.inverse_unit h.unit
 #align spectrum.resolvent_eq spectrum.resolvent_eq
 
 theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
@@ -191,7 +191,7 @@ theorem isUnit_resolvent {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit (re
 theorem inv_mem_resolventSet {r : Rˣ} {a : Aˣ} (h : (r : R) ∈ resolventSet R (a : A)) :
     (↑r⁻¹ : R) ∈ resolventSet R (↑a⁻¹ : A) :=
   by
-  rw [mem_resolvent_set_iff, Algebra.algebraMap_eq_smul_one, ← Units.smul_def] at h⊢
+  rw [mem_resolventSet_iff, Algebra.algebraMap_eq_smul_one, ← Units.smul_def] at h⊢
   rw [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv, IsUnit.sub_iff]
   have h₁ : (a : A) * (r • (↑a⁻¹ : A) - 1) = r • 1 - a := by
     rw [mul_sub, mul_smul_comm, a.mul_inv, mul_one]
@@ -206,7 +206,7 @@ theorem inv_mem_iff {r : Rˣ} {a : Aˣ} : (r : R) ∈ σ (a : A) ↔ (↑r⁻¹ 
 #align spectrum.inv_mem_iff spectrum.inv_mem_iff
 
 theorem zero_mem_resolventSet_of_unit (a : Aˣ) : 0 ∈ resolventSet R (a : A) := by
-  simpa only [mem_resolvent_set_iff, ← not_mem_iff, zero_not_mem_iff] using a.is_unit
+  simpa only [mem_resolventSet_iff, ← not_mem_iff, zero_not_mem_iff] using a.is_unit
 #align spectrum.zero_mem_resolvent_set_of_unit spectrum.zero_mem_resolventSet_of_unit
 
 theorem ne_zero_of_mem_of_unit {a : Aˣ} {r : R} (hr : r ∈ σ (a : A)) : r ≠ 0 := fun hn =>
@@ -275,7 +275,7 @@ variable [InvolutiveStar R] [StarRing A] [StarModule R A]
 theorem star_mem_resolventSet_iff {r : R} {a : A} :
     star r ∈ resolventSet R a ↔ r ∈ resolventSet R (star a) := by
   refine' ⟨fun h => _, fun h => _⟩ <;>
-    simpa only [mem_resolvent_set_iff, Algebra.algebraMap_eq_smul_one, star_sub, star_smul,
+    simpa only [mem_resolventSet_iff, Algebra.algebraMap_eq_smul_one, star_sub, star_smul,
       star_star, star_one] using IsUnit.star h
 #align spectrum.star_mem_resolvent_set_iff spectrum.star_mem_resolventSet_iff
 
@@ -309,7 +309,7 @@ theorem subset_subalgebra {S : Subalgebra R A} (a : S) : spectrum R (a : A) ⊆ 
 -- this is why it would be nice if `subset_subalgebra` was registered for `subalgebra_class`.
 theorem subset_starSubalgebra [StarRing R] [StarRing A] [StarModule R A] {S : StarSubalgebra R A}
     (a : S) : spectrum R (a : A) ⊆ spectrum R a :=
-  compl_subset_compl.2 fun _ => IsUnit.map S.Subtype
+  compl_subset_compl.2 fun _ => IsUnit.map S.subtype
 #align spectrum.subset_star_subalgebra spectrum.subset_starSubalgebra
 
 theorem singleton_add_eq (a : A) (r : R) : {r} + σ a = σ (↑ₐ r + a) :=
@@ -341,15 +341,15 @@ theorem sub_singleton_eq (a : A) (r : R) : σ a - {r} = σ (a - ↑ₐ r) := by
 open Polynomial
 
 theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
-    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => x - c x) p.roots).Prod)) :
+    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => x - c x) p.roots).prod)) :
     ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
   by
   rw [← Multiset.prod_toList, AlgHom.map_list_prod] at h
   replace h := mt List.prod_isUnit h
-  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_toList, List.mem_map', aeval_X,
+  simp only [not_forall, exists_prop, aeval_c, Multiset.mem_toList, List.mem_map', aeval_x,
     exists_exists_and_eq_and, Multiset.mem_map, AlgHom.map_sub] at h
   rcases h with ⟨r, r_mem, r_nu⟩
-  exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← is_root.def, ← mem_roots hp]⟩
+  exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← IsRoot.def, ← mem_roots hp]⟩
 #align spectrum.exists_mem_of_not_is_unit_aeval_prod spectrum.exists_mem_of_not_isUnit_aeval_prod
 
 end ScalarRing
@@ -375,7 +375,7 @@ theorem zero_eq [Nontrivial A] : σ (0 : A) = {0} :=
   intro k hk
   rw [Set.mem_compl_singleton_iff] at hk
   have : IsUnit (Units.mk0 k hk • (1 : A)) := IsUnit.smul (Units.mk0 k hk) isUnit_one
-  simpa [mem_resolvent_set_iff, Algebra.algebraMap_eq_smul_one]
+  simpa [mem_resolventSet_iff, Algebra.algebraMap_eq_smul_one]
 #align spectrum.zero_eq spectrum.zero_eq
 
 @[simp]
@@ -429,15 +429,15 @@ because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degre
 theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) :=
   by
   rintro _ ⟨k, hk, rfl⟩
-  let q := C (eval k p) - p
-  have hroot : is_root q k := by simp only [eval_C, eval_sub, sub_self, is_root.def]
-  rw [← mul_div_eq_iff_is_root, ← neg_mul_neg, neg_sub] at hroot
+  let q := c (eval k p) - p
+  have hroot : IsRoot q k := by simp only [eval_c, eval_sub, sub_self, IsRoot.def]
+  rw [← mul_div_eq_iff_isRoot, ← neg_mul_neg, neg_sub] at hroot
   have aeval_q_eq : ↑ₐ (eval k p) - aeval a p = aeval a q := by
-    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
+    simp only [aeval_c, AlgHom.map_sub, sub_left_inj]
   rw [mem_iff, aeval_q_eq, ← hroot, aeval_mul]
-  have hcomm := (Commute.all (C k - X) (-(q / (X - C k)))).map (aeval a)
+  have hcomm := (Commute.all (c k - x) (-(q / (x - c k)))).map (aeval a)
   apply mt fun h => (hcomm.is_unit_mul_iff.mp h).1
-  simpa only [aeval_X, aeval_C, AlgHom.map_sub] using hk
+  simpa only [aeval_x, aeval_c, AlgHom.map_sub] using hk
 #align spectrum.subset_polynomial_aeval spectrum.subset_polynomial_aeval
 
 /-- The *spectral mapping theorem* for polynomials.  Note: the assumption `degree p > 0`
@@ -449,21 +449,21 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
   -- handle the easy direction via `spectrum.subset_polynomial_aeval`
   refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
   -- write `C k - p` product of linear factors and a constant; show `C k - p ≠ 0`.
-  have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
-  have h_ne : C k - p ≠ 0 :=
+  have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (c k - p))
+  have h_ne : c k - p ≠ 0 :=
     ne_zero_of_degree_gt
-      (by rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_lt degree_C_le hdeg)])
+      (by rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_lt degree_c_le hdeg)])
   have lead_ne := leading_coeff_ne_zero.mpr h_ne
-  have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).IsUnit
+  have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).isUnit
   /- leading coefficient is a unit so product of linear factors is not a unit;
     apply `exists_mem_of_not_is_unit_aeval_prod`. -/
-  have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
-    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
+  have p_a_eq : aeval a (c k - p) = ↑ₐ k - aeval a p := by
+    simp only [aeval_c, AlgHom.map_sub, sub_left_inj]
   rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).isUnit_mul_iff,
-    aeval_C] at hk
-  replace hk := exists_mem_of_not_is_unit_aeval_prod h_ne (not_and.mp hk lead_unit)
+    aeval_c] at hk
+  replace hk := exists_mem_of_not_isUnit_aeval_prod h_ne (not_and.mp hk lead_unit)
   rcases hk with ⟨r, r_mem, r_ev⟩
-  exact ⟨r, r_mem, symm (by simpa [eval_sub, eval_C, sub_eq_zero] using r_ev)⟩
+  exact ⟨r, r_mem, symm (by simpa [eval_sub, eval_c, sub_eq_zero] using r_ev)⟩
 #align spectrum.map_polynomial_aeval_of_degree_pos spectrum.map_polynomial_aeval_of_degree_pos
 
 /-- In this version of the spectral mapping theorem, we assume the spectrum
@@ -473,23 +473,23 @@ theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X]
   by
   nontriviality A
   refine' Or.elim (le_or_gt (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
-  · rw [eq_C_of_degree_le_zero h]
-    simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
+  · rw [eq_c_of_degree_le_zero h]
+    simp only [set.image_congr, eval_c, aeval_c, scalar_eq, Set.Nonempty.image_const hnon]
 #align spectrum.map_polynomial_aeval_of_nonempty spectrum.map_polynomial_aeval_of_nonempty
 
 /-- A specialization of `spectrum.subset_polynomial_aeval` to monic monomials for convenience. -/
 theorem pow_image_subset (a : A) (n : ℕ) : (fun x => x ^ n) '' σ a ⊆ σ (a ^ n) := by
-  simpa only [eval_pow, eval_X, aeval_X_pow] using subset_polynomial_aeval a (X ^ n : 𝕜[X])
+  simpa only [eval_pow, eval_x, aeval_x_pow] using subset_polynomial_aeval a (x ^ n : 𝕜[X])
 #align spectrum.pow_image_subset spectrum.pow_image_subset
 
 /-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
 convenience. -/
 theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
-  simpa only [aeval_X_pow, eval_pow, eval_X] using
-    map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X])
+  simpa only [aeval_x_pow, eval_pow, eval_x] using
+    map_polynomial_aeval_of_degree_pos a (x ^ n : 𝕜[X])
       (by
-        rw_mod_cast [degree_X_pow]
+        rw_mod_cast [degree_x_pow]
         exact hn)
 #align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
 
@@ -497,7 +497,7 @@ theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
 convenience. -/
 theorem map_pow_of_nonempty [IsAlgClosed 𝕜] {a : A} (ha : (σ a).Nonempty) (n : ℕ) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
-  simpa only [aeval_X_pow, eval_pow, eval_X] using map_polynomial_aeval_of_nonempty a (X ^ n) ha
+  simpa only [aeval_x_pow, eval_pow, eval_x] using map_polynomial_aeval_of_nonempty a (x ^ n) ha
 #align spectrum.map_pow_of_nonempty spectrum.map_pow_of_nonempty
 
 variable (𝕜)
@@ -514,7 +514,7 @@ theorem nonempty_of_isAlgClosed_of_finiteDimensional [IsAlgClosed 𝕜] [Nontriv
     rw [h_eval_p]
     simp
   rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu
-  obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
+  obtain ⟨k, hk, _⟩ := exists_mem_of_not_isUnit_aeval_prod (Monic.ne_zero h_mon) nu
   exact ⟨k, hk⟩
 #align spectrum.nonempty_of_is_alg_closed_of_finite_dimensional spectrum.nonempty_of_isAlgClosed_of_finiteDimensional
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.form
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,24 +104,24 @@ def freshIndex : Preform → Nat
 theorem holds_constant {v w : Nat → Nat} :
     ∀ p : Preform, (∀ x < p.freshIndex, v x = w x) → (p.Holds v ↔ p.Holds w)
   | t =* s, h1 => by
-    simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
+    simp only [Holds]
+    apply pred_mono_2 <;> apply Preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
   | t ≤* s, h1 => by
-    simp only [holds]
-    apply pred_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
+    simp only [Holds]
+    apply pred_mono_2 <;> apply Preterm.val_constant <;> intro x h2 <;>
       apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
   | ¬* p, h1 => by
     apply not_congr
     apply holds_constant p h1
   | p ∨* q, h1 => by
-    simp only [holds]
+    simp only [Holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
   | p ∧* q, h1 => by
-    simp only [holds]
+    simp only [Holds]
     apply pred_mono_2' <;> apply holds_constant <;> intro x h2 <;> apply h1 _ (lt_of_lt_of_le h2 _)
     apply le_max_left; apply le_max_right
 #align omega.nat.preform.holds_constant Omega.Nat.Preform.holds_constant
@@ -181,18 +181,18 @@ unsafe instance has_to_format : has_to_format Preform :=
 
 end Preform
 
-theorem univClose_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.valid → UnivClose p v m
+theorem univClose_of_valid {p : Preform} : ∀ {m : Nat} {v : Nat → Nat}, p.Valid → UnivClose p v m
   | 0, v, h1 => h1 _
   | m + 1, v, h1 => fun i => univ_close_of_valid h1
 #align omega.nat.univ_close_of_valid Omega.Nat.univClose_of_valid
 
-theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
+theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.Valid :=
   by
-  simp only [preform.sat, preform.unsat, preform.valid, preform.holds]
+  simp only [Preform.Sat, Preform.Unsat, Preform.Valid, Preform.Holds]
   rw [not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

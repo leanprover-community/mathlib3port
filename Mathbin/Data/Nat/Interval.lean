@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -343,7 +343,7 @@ theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a :=
 theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) :=
   by
   induction' n with n ih
-  · simp only [zero_add, nat_zero_eq_zero, Ico_zero_eq_range]
+  · simp only [zero_add, zero_eq, Ico_zero_eq_range]
     rintro k hk l hl (hkl : k % a = l % a)
     simp only [Finset.mem_range, Finset.mem_coe] at hk hl
     rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
@@ -410,8 +410,8 @@ open Multiset
 theorem multiset_Ico_map_mod (n a : ℕ) : (Multiset.Ico n (n + a)).map (· % a) = range a :=
   by
   convert congr_arg Finset.val (image_Ico_mod n a)
-  refine' ((nodup_map_iff_inj_on (Finset.Ico _ _).Nodup).2 <| _).dedup.symm
-  exact mod_inj_on_Ico _ _
+  refine' ((nodup_map_iff_inj_on (Finset.Ico _ _).nodup).2 <| _).dedup.symm
+  exact mod_injOn_Ico _ _
 #align nat.multiset_Ico_map_mod Nat.multiset_Ico_map_mod
 -/
 
@@ -475,7 +475,7 @@ theorem Nat.cauchy_induction' (seed : ℕ) (hs : P seed) (hi : ∀ x, seed ≤ x
     (n : ℕ) : P n := by
   apply Nat.decreasing_induction_of_infinite h fun hf => _
   obtain ⟨m, hP, hm⟩ := hf.exists_maximal_wrt id _ ⟨seed, hs⟩
-  obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.Ne <| hm seed hs hl.le) hP
+  obtain ⟨y, hl, hy⟩ := hi m (le_of_not_lt fun hl => hl.ne <| hm seed hs hl.le) hP
   exact hl.ne (hm y hy hl.le)
 #align nat.cauchy_induction' Nat.cauchy_induction'
 -/

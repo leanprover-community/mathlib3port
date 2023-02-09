@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.rat_lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,8 +71,8 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
 theorem not_countably_generated_nhds_infty_alexandroff : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
   by
   intro
-  have : is_countably_generated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
-  rw [Alexandroff.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this
+  have : IsCountablyGenerated (comap (coe : ℚ → ℚ∞) (𝓝 ∞)) := by infer_instance
+  rw [Alexandroff.comap_coe_nhds_infty, coclosedCompact_eq_cocompact] at this
   exact not_countably_generated_cocompact this
 #align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_alexandroff
 
@@ -85,7 +85,7 @@ theorem not_firstCountableTopology_alexandroff : ¬FirstCountableTopology ℚ∞
 theorem not_secondCountableTopology_alexandroff : ¬SecondCountableTopology ℚ∞ :=
   by
   intro
-  exact not_first_countable_topology_alexandroff inferInstance
+  exact not_firstCountableTopology_alexandroff inferInstance
 #align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_alexandroff
 
 instance : TotallyDisconnectedSpace ℚ :=

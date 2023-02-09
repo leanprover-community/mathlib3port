@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.join
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,26 +83,26 @@ theorem convexJoin_singletons (x : E) : convexJoin 𝕜 {x} {y} = segment 𝕜 x
 @[simp]
 theorem convexJoin_union_left (s₁ s₂ t : Set E) :
     convexJoin 𝕜 (s₁ ∪ s₂) t = convexJoin 𝕜 s₁ t ∪ convexJoin 𝕜 s₂ t := by
-  simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
+  simp_rw [convexJoin, mem_union, unionᵢ_or, unionᵢ_union_distrib]
 #align convex_join_union_left convexJoin_union_left
 
 @[simp]
 theorem convexJoin_union_right (s t₁ t₂ : Set E) :
     convexJoin 𝕜 s (t₁ ∪ t₂) = convexJoin 𝕜 s t₁ ∪ convexJoin 𝕜 s t₂ := by
-  simp_rw [convexJoin, mem_union, Union_or, Union_union_distrib]
+  simp_rw [convexJoin, mem_union, unionᵢ_or, unionᵢ_union_distrib]
 #align convex_join_union_right convexJoin_union_right
 
 @[simp]
 theorem convexJoin_unionᵢ_left (s : ι → Set E) (t : Set E) :
     convexJoin 𝕜 (⋃ i, s i) t = ⋃ i, convexJoin 𝕜 (s i) t :=
   by
-  simp_rw [convexJoin, mem_Union, Union_exists]
-  exact Union_comm _
+  simp_rw [convexJoin, mem_unionᵢ, unionᵢ_exists]
+  exact unionᵢ_comm _
 #align convex_join_Union_left convexJoin_unionᵢ_left
 
 @[simp]
 theorem convexJoin_unionᵢ_right (s : Set E) (t : ι → Set E) :
-    convexJoin 𝕜 s (⋃ i, t i) = ⋃ i, convexJoin 𝕜 s (t i) := by
+    convexJoin Mem s (⋃ i, t i) = ⋃ i, convexJoin 𝕜 s (t i) := by
   simp_rw [convexJoin_comm s, convexJoin_unionᵢ_left]
 #align convex_join_Union_right convexJoin_unionᵢ_right
 

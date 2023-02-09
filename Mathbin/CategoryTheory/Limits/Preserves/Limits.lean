@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,19 +62,19 @@ def preservesLimitIso : G.obj (limit F) ≅ limit (F ⋙ G) :=
 
 @[simp, reassoc.1]
 theorem preserves_limits_iso_hom_π (j) :
-    (preservesLimitIso G F).Hom ≫ limit.π _ j = G.map (limit.π F j) :=
+    (preservesLimitIso G F).hom ≫ limit.π _ j = Hom.map (limit.π F j) :=
   IsLimit.conePointUniqueUpToIso_hom_comp _ _ j
 #align category_theory.preserves_limits_iso_hom_π CategoryTheory.preserves_limits_iso_hom_π
 
 @[simp, reassoc.1]
 theorem preserves_limits_iso_inv_π (j) :
-    (preservesLimitIso G F).inv ≫ G.map (limit.π F j) = limit.π _ j :=
+    (preservesLimitIso G F).inv ≫ G.map (limit.π F comp) = limit.π _ j :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ j
 #align category_theory.preserves_limits_iso_inv_π CategoryTheory.preserves_limits_iso_inv_π
 
 @[simp, reassoc.1]
 theorem lift_comp_preserves_limits_iso_hom (t : Cone F) :
-    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).Hom = limit.lift (F ⋙ G) (G.mapCone _) :=
+    G.map (limit.lift _ t) ≫ (preservesLimitIso G F).hom = limit.lift (F ⋙ G) (G.mapCone _) :=
   by
   ext
   simp [← G.map_comp]
@@ -91,7 +91,7 @@ def preservesLimitNatIso : lim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ lim :
       intro _ _ f
       ext
       dsimp
-      simp only [preserves_limits_iso_hom_π, whisker_right_app, lim_map_π, category.assoc,
+      simp only [preserves_limits_iso_hom_π, whiskerRight_app, limMap_π, Category.assoc,
         preserves_limits_iso_hom_π_assoc, ← G.map_comp])
 #align category_theory.preserves_limit_nat_iso CategoryTheory.preservesLimitNatIso
 
@@ -125,7 +125,7 @@ theorem ι_preserves_colimits_iso_inv (j : J) :
 
 @[simp, reassoc.1]
 theorem ι_preserves_colimits_iso_hom (j : J) :
-    G.map (colimit.ι F j) ≫ (preservesColimitIso G F).Hom = colimit.ι (F ⋙ G) j :=
+    G.map (colimit.ι F j) ≫ (preservesColimitIso G F).hom = colimit.ι (F ⋙ G) j :=
   (PreservesColimit.preserves (colimit.isColimit _)).comp_coconePointUniqueUpToIso_hom _ j
 #align category_theory.ι_preserves_colimits_iso_hom CategoryTheory.ι_preserves_colimits_iso_hom
 
@@ -146,13 +146,13 @@ def preservesColimitNatIso : colim ⋙ G ≅ (whiskeringRight J C D).obj G ⋙ c
   NatIso.ofComponents (fun F => preservesColimitIso G F)
     (by
       intro _ _ f
-      rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv]
+      rw [← Iso.inv_comp_eq, ← Category.assoc, ← Iso.eq_comp_inv]
       ext
       dsimp
-      erw [ι_colim_map_assoc]
-      simp only [ι_preserves_colimits_iso_inv, whisker_right_app, category.assoc,
+      erw [ι_colimMap_assoc]
+      simp only [ι_preserves_colimits_iso_inv, whiskerRight_app, Category.assoc,
         ι_preserves_colimits_iso_inv_assoc, ← G.map_comp]
-      erw [ι_colim_map])
+      erw [ι_colimMap])
 #align category_theory.preserves_colimit_nat_iso CategoryTheory.preservesColimitNatIso
 
 end

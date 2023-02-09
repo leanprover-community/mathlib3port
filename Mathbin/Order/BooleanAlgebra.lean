@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module order.boolean_algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1037,19 +1037,19 @@ theorem compl_involutive : Function.Involutive (compl : α → α) :=
 
 #print compl_bijective /-
 theorem compl_bijective : Function.Bijective (compl : α → α) :=
-  compl_involutive.Bijective
+  compl_involutive.bijective
 #align compl_bijective compl_bijective
 -/
 
 #print compl_surjective /-
 theorem compl_surjective : Function.Surjective (compl : α → α) :=
-  compl_involutive.Surjective
+  compl_involutive.surjective
 #align compl_surjective compl_surjective
 -/
 
 #print compl_injective /-
 theorem compl_injective : Function.Injective (compl : α → α) :=
-  compl_involutive.Injective
+  compl_involutive.injective
 #align compl_injective compl_injective
 -/
 
@@ -1284,8 +1284,8 @@ protected def Function.Injective.generalizedBooleanAlgebra [HasSup α] [HasInf �
     [GeneralizedBooleanAlgebra β] (f : α → β) (hf : Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : GeneralizedBooleanAlgebra α :=
-  { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff,
-    hf.DistribLattice f map_sup
+  { hf.generalizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff,
+    hf.distribLattice f map_sup
       map_inf with
     sup_inf_sdiff := fun a b => hf <| by erw [map_sup, map_sdiff, map_inf, sup_inf_sdiff]
     inf_inf_sdiff := fun a b => hf <| by erw [map_inf, map_sdiff, map_inf, inf_inf_sdiff, map_bot] }
@@ -1306,7 +1306,7 @@ protected def Function.Injective.booleanAlgebra [HasSup α] [HasInf α] [Top α]
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BooleanAlgebra α :=
   {
-    hf.GeneralizedBooleanAlgebra f map_sup map_inf map_bot
+    hf.generalizedBooleanAlgebra f map_sup map_inf map_bot
       map_sdiff with
     compl := compl
     top := ⊤
@@ -1328,5 +1328,5 @@ end lift
 
 instance : BooleanAlgebra PUnit := by
   refine_struct { PUnit.biheytingAlgebra with } <;> intros <;>
-    first |trivial|exact Subsingleton.elim _ _
+    first |trivial|exact subsingleton.elim _ _
 

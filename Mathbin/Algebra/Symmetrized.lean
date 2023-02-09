@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.symmetrized
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,27 +91,27 @@ theorem unsym_symm : (@unsym α).symm = sym :=
 #align sym_alg.unsym_symm SymAlg.unsym_symm
 
 theorem sym_bijective : Bijective (sym : α → αˢʸᵐ) :=
-  sym.Bijective
+  sym.bijective
 #align sym_alg.sym_bijective SymAlg.sym_bijective
 
 theorem unsym_bijective : Bijective (unsym : αˢʸᵐ → α) :=
-  unsym.symm.Bijective
+  unsym.symm.bijective
 #align sym_alg.unsym_bijective SymAlg.unsym_bijective
 
 theorem sym_injective : Injective (sym : α → αˢʸᵐ) :=
-  sym.Injective
+  sym.injective
 #align sym_alg.sym_injective SymAlg.sym_injective
 
 theorem sym_surjective : Surjective (sym : α → αˢʸᵐ) :=
-  sym.Surjective
+  sym.surjective
 #align sym_alg.sym_surjective SymAlg.sym_surjective
 
 theorem unsym_injective : Injective (unsym : αˢʸᵐ → α) :=
-  unsym.Injective
+  unsym.injective
 #align sym_alg.unsym_injective SymAlg.unsym_injective
 
 theorem unsym_surjective : Surjective (unsym : αˢʸᵐ → α) :=
-  unsym.Surjective
+  unsym.surjective
 #align sym_alg.unsym_surjective SymAlg.unsym_surjective
 
 @[simp]
@@ -125,13 +125,13 @@ theorem unsym_inj {a b : αˢʸᵐ} : unsym a = unsym b ↔ a = b :=
 #align sym_alg.unsym_inj SymAlg.unsym_inj
 
 instance [Nontrivial α] : Nontrivial αˢʸᵐ :=
-  sym_injective.Nontrivial
+  sym_injective.nontrivial
 
 instance [Inhabited α] : Inhabited αˢʸᵐ :=
   ⟨sym default⟩
 
 instance [Subsingleton α] : Subsingleton αˢʸᵐ :=
-  unsym_injective.Subsingleton
+  unsym_injective.subsingleton
 
 instance [Unique α] : Unique αˢʸᵐ :=
   Unique.mk' _
@@ -259,13 +259,13 @@ theorem sym_ne_one_iff [One α] (a : α) : sym a ≠ (1 : αˢʸᵐ) ↔ a ≠ (
 #align sym_alg.sym_ne_zero_iff SymAlg.sym_ne_zero_iff
 
 instance [AddCommSemigroup α] : AddCommSemigroup αˢʸᵐ :=
-  unsym_injective.AddCommSemigroup _ unsym_add
+  unsym_injective.addCommSemigroup _ unsym_add
 
 instance [AddMonoid α] : AddMonoid αˢʸᵐ :=
-  unsym_injective.AddMonoid _ unsym_zero unsym_add fun _ _ => rfl
+  unsym_injective.addMonoid _ unsym_zero unsym_add fun _ _ => rfl
 
 instance [AddGroup α] : AddGroup αˢʸᵐ :=
-  unsym_injective.AddGroup _ unsym_zero unsym_add unsym_neg unsym_sub (fun _ _ => rfl) fun _ _ =>
+  unsym_injective.addGroup _ unsym_zero unsym_add unsym_neg unsym_sub (fun _ _ => rfl) fun _ _ =>
     rfl
 
 instance [AddCommMonoid α] : AddCommMonoid αˢʸᵐ :=
@@ -306,12 +306,12 @@ instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
       rw [mul_def, unsym_one, mul_one, one_mul, ← two_mul, invOf_mul_self_assoc, sym_unsym]
     left_distrib := fun a b c =>
       match a, b, c with
-      | Sym a, Sym b, Sym c => by
+      | sym a, sym b, sym c => by
         rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_add a, add_mul _ _ a,
           add_add_add_comm, mul_add]
     right_distrib := fun a b c =>
       match a, b, c with
-      | Sym a, Sym b, Sym c => by
+      | sym a, sym b, sym c => by
         rw [sym_mul_sym, sym_mul_sym, ← sym_add, sym_mul_sym, ← sym_add, mul_add c, add_mul _ _ c,
           add_add_add_comm, mul_add] }
 
@@ -340,7 +340,7 @@ instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ
   lmul_comm_rmul_rmul a b :=
     by
     -- Rearrange LHS
-    have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.invOf_left.Eq
+    have commute_half_left := fun a : α => (Commute.one_left a).bit0_left.invOf_left.eq
     rw [mul_def, mul_def a b, unsym_sym, ← mul_assoc, ← commute_half_left (unsym (a * a)),
       mul_assoc, mul_assoc, ← mul_add, ← mul_assoc, add_mul, mul_add (unsym (a * a)), ← add_assoc, ←
       mul_assoc, ← mul_assoc]

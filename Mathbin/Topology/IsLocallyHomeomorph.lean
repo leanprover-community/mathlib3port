@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.is_locally_homeomorph
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ protected theorem continuousAt (hf : IsLocallyHomeomorphOn f s) {x : X} (hx : x 
 #align is_locally_homeomorph_on.continuous_at IsLocallyHomeomorphOn.continuousAt
 
 protected theorem continuousOn (hf : IsLocallyHomeomorphOn f s) : ContinuousOn f s :=
-  ContinuousAt.continuousOn fun x => hf.ContinuousAt
+  ContinuousAt.continuousOn fun x => hf.continuousAt
 #align is_locally_homeomorph_on.continuous_on IsLocallyHomeomorphOn.continuousOn
 
 protected theorem comp (hg : IsLocallyHomeomorphOn g t) (hf : IsLocallyHomeomorphOn f s)
@@ -117,11 +117,11 @@ theorem mk (h : ∀ x : X, ∃ e : LocalHomeomorph X Y, x ∈ e.source ∧ ∀ y
 variable {g f}
 
 theorem map_nhds_eq (hf : IsLocallyHomeomorph f) (x : X) : (𝓝 x).map f = 𝓝 (f x) :=
-  hf.IsLocallyHomeomorphOn.map_nhds_eq (Set.mem_univ x)
+  hf.isLocallyHomeomorphOn.map_nhds_eq (Set.mem_univ x)
 #align is_locally_homeomorph.map_nhds_eq IsLocallyHomeomorph.map_nhds_eq
 
 protected theorem continuous (hf : IsLocallyHomeomorph f) : Continuous f :=
-  continuous_iff_continuousOn_univ.mpr hf.IsLocallyHomeomorphOn.ContinuousOn
+  continuous_iff_continuousOn_univ.mpr hf.isLocallyHomeomorphOn.continuousOn
 #align is_locally_homeomorph.continuous IsLocallyHomeomorph.continuous
 
 protected theorem isOpenMap (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
@@ -131,7 +131,7 @@ protected theorem isOpenMap (hf : IsLocallyHomeomorph f) : IsOpenMap f :=
 protected theorem comp (hg : IsLocallyHomeomorph g) (hf : IsLocallyHomeomorph f) :
     IsLocallyHomeomorph (g ∘ f) :=
   isLocallyHomeomorph_iff_isLocallyHomeomorphOn_univ.mpr
-    (hg.IsLocallyHomeomorphOn.comp hf.IsLocallyHomeomorphOn (Set.univ.mapsTo_univ f))
+    (hg.isLocallyHomeomorphOn.comp hf.isLocallyHomeomorphOn (Set.univ.mapsTo_univ f))
 #align is_locally_homeomorph.comp IsLocallyHomeomorph.comp
 
 end IsLocallyHomeomorph

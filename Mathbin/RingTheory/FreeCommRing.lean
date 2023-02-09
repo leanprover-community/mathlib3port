@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.free_comm_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ currently exist. -/
 private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →* R)
     where
   toFun f :=
-    { toFun := fun s => (s.toAdd.map f).Prod
+    { toFun := fun s => (s.toAdd.map f).prod
       map_mul' := fun x y =>
         calc
           _ = Multiset.prod (Multiset.map f x + Multiset.map f y) :=
@@ -110,12 +110,12 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
           
       map_one' := rfl }
   invFun F x := F (Multiplicative.ofAdd ({x} : Multiset α))
-  left_inv f := funext fun x => show (Multiset.map f {x}).Prod = _ by simp
+  left_inv f := funext fun x => show (Multiset.map f {x}).prod = _ by simp
   right_inv F :=
     MonoidHom.ext fun x =>
       let F' := F.toAdditive''
       let x' := x.toAdd
-      show (Multiset.map (fun a => F' {a}) x').Sum = F' x'
+      show (Multiset.map (fun a => F' {a}) x').sum = F' x'
         by
         rw [← Multiset.map_map, ← AddMonoidHom.map_multiset_sum]
         exact F.congr_arg (Multiset.sum_map_singleton x')
@@ -142,7 +142,7 @@ theorem lift_comp_of (f : FreeCommRing α →+* R) : lift (f ∘ of) = f :=
 
 @[ext]
 theorem hom_ext ⦃f g : FreeCommRing α →+* R⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
-  lift.symm.Injective (funext h)
+  lift.symm.injective (funext h)
 #align free_comm_ring.hom_ext FreeCommRing.hom_ext
 
 end lift
@@ -198,8 +198,8 @@ theorem isSupported_one : IsSupported 1 s :=
 
 theorem isSupported_int {i : ℤ} {s : Set α} : IsSupported (↑i) s :=
   Int.induction_on i isSupported_zero
-    (fun i hi => by rw [Int.cast_add, Int.cast_one] <;> exact is_supported_add hi is_supported_one)
-    fun i hi => by rw [Int.cast_sub, Int.cast_one] <;> exact is_supported_sub hi is_supported_one
+    (fun i hi => by rw [Int.cast_add, Int.cast_one] <;> exact isSupported_add hi isSupported_one)
+    fun i hi => by rw [Int.cast_sub, Int.cast_one] <;> exact isSupported_sub hi isSupported_one
 #align free_comm_ring.is_supported_int FreeCommRing.isSupported_int
 
 end IsSupported
@@ -228,8 +228,7 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
   haveI := Classical.decPred s
   have :
     ∀ x,
-      is_supported x s →
-        ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n :=
+      IsSupported x s → ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.x) x = n :=
     by
     intro x hx
     refine' Subring.InClosure.rec_on hx _ _ _ _
@@ -387,7 +386,7 @@ def subsingletonEquivFreeCommRing [Subsingleton α] : FreeRing α ≃+* FreeComm
   RingEquiv.ofBijective (coeRingHom _)
     (by
       have :
-        (coe_ring_hom _ : FreeRing α → FreeCommRing α) =
+        (coeRingHom _ : FreeRing α → FreeCommRing α) =
           Functor.mapEquiv FreeAbelianGroup (Multiset.subsingletonEquiv α) :=
         coe_eq α
       rw [this]
@@ -397,10 +396,10 @@ def subsingletonEquivFreeCommRing [Subsingleton α] : FreeRing α ≃+* FreeComm
 instance [Subsingleton α] : CommRing (FreeRing α) :=
   { FreeRing.ring α with
     mul_comm := fun x y => by
-      rw [← (subsingleton_equiv_free_comm_ring α).symm_apply_apply (y * x),
-        (subsingleton_equiv_free_comm_ring α).map_mul, mul_comm, ←
-        (subsingleton_equiv_free_comm_ring α).map_mul,
-        (subsingleton_equiv_free_comm_ring α).symm_apply_apply] }
+      rw [← (subsingletonEquivFreeCommRing α).symm_apply_apply (y * x),
+        (subsingletonEquivFreeCommRing α).map_mul, mul_comm, ←
+        (subsingletonEquivFreeCommRing α).map_mul,
+        (subsingletonEquivFreeCommRing α).symm_apply_apply] }
 
 end FreeRing
 

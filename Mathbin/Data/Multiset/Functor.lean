@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Simon Hudon, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.multiset.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ def traverse : Multiset α' → F (Multiset β') :=
           rw [CommApplicative.commutative_map]
           congr
           funext a b l
-          simpa [flip] using perm.swap b a l
+          simpa [flip] using Perm.swap b a l
         simp [(· ∘ ·), this, functor_norm]
       case trans => simp [*])
 #align multiset.traverse Multiset.traverse
@@ -130,7 +130,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.map_comp_coe 
 @[simp]
 theorem map_comp_coe {α β} (h : α → β) :
     Functor.map h ∘ coe = (coe ∘ Functor.map h : List α → Multiset β) := by
-  funext <;> simp [Functor.map]
+  funext <;> simp [functor.map]
 #align multiset.map_comp_coe Multiset.map_comp_coe
 
 /- warning: multiset.id_traverse -> Multiset.id_traverse is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.path_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,12 +72,12 @@ def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C
   map_id' X := by rfl
   map_comp' X Y Z f g := by
     induction' g with _ _ g' p ih _ _ _
-    · rw [category.comp_id]
+    · rw [Category.comp_id]
       rfl
     · have : f ≫ g'.cons p = (f ≫ g').cons p := by apply Quiver.Path.comp_cons
       rw [this]
       simp only
-      rw [ih, category.assoc]
+      rw [ih, Category.assoc]
 #align category_theory.paths.lift CategoryTheory.Paths.lift
 
 @[simp]
@@ -108,7 +108,7 @@ theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunc
   · rintro X Y f
     rcases φ with ⟨φo, φm⟩
     dsimp [lift, Quiver.Hom.toPath]
-    simp only [category.id_comp]
+    simp only [Category.id_comp]
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
 
 theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
@@ -121,11 +121,11 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
   · rintro X Y f
     dsimp [lift]
     induction' f with _ _ p f' ih
-    · simp only [category.comp_id]
+    · simp only [Category.comp_id]
       apply Functor.map_id
-    · simp only [category.comp_id, category.id_comp] at ih⊢
+    · simp only [Category.comp_id, Category.id_comp] at ih⊢
       have : Φ.map (p.cons f') = Φ.map p ≫ Φ.map f'.to_path := by
-        convert functor.map_comp Φ p f'.to_path
+        convert Functor.map_comp Φ p f'.to_path
       rw [this, ih]
 #align category_theory.paths.lift_unique CategoryTheory.Paths.lift_unique
 
@@ -139,9 +139,9 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
     F = G := by
   ext (X Y f)
   · induction' f with Y' Z' g e ih
-    · erw [F.map_id, G.map_id, category.id_comp, eq_to_hom_trans, eq_to_hom_refl]
+    · erw [F.map_id, G.map_id, Category.id_comp, eqToHom_trans, eqToHom_refl]
     · erw [F.map_comp g e.to_path, G.map_comp g e.to_path, ih, h]
-      simp only [category.id_comp, eq_to_hom_refl, eq_to_hom_trans_assoc, category.assoc]
+      simp only [Category.id_comp, eqToHom_refl, eqToHom_trans_assoc, Category.assoc]
   · intro X
     rw [h_obj]
 #align category_theory.paths.ext_functor CategoryTheory.Paths.ext_functor
@@ -256,10 +256,10 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
         cases X; cases Y
         induction f
         dsimp
-        simp only [category.comp_id, category.id_comp]
+        simp only [Category.comp_id, Category.id_comp]
         apply Quot.sound
-        apply quotient.comp_closure.of
-        simp [paths_hom_rel])
+        apply Quotient.CompClosure.of
+        simp [pathsHomRel])
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
   functor_unitIso_comp' := by
     intros

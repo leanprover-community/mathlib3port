@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.integer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,8 +80,8 @@ variable (M) {S} [IsLocalization M S]
 This version multiplies `a` on the right, matching the argument order in `localization_map.surj`.
 -/
 theorem exists_integer_multiple' (a : S) : ∃ b : M, IsInteger R (a * algebraMap R S b) :=
-  let ⟨⟨Num, denom⟩, h⟩ := IsLocalization.surj _ a
-  ⟨denom, Set.mem_range.mpr ⟨Num, h.symm⟩⟩
+  let ⟨⟨num, denom⟩, h⟩ := IsLocalization.surj _ a
+  ⟨denom, Set.mem_range.mpr ⟨num, h.symm⟩⟩
 #align is_localization.exists_integer_multiple' IsLocalization.exists_integer_multiple'
 
 /-- Each element `a : S` has an `M`-multiple which is an integer.
@@ -125,19 +125,19 @@ theorem exist_integer_multiples_of_finset (s : Finset S) :
 
 /-- A choice of a common multiple of the denominators of a `finset`-indexed family of fractions. -/
 noncomputable def commonDenom {ι : Type _} (s : Finset ι) (f : ι → S) : M :=
-  (exist_integer_multiples M s f).some
+  (exist_integer_multiples M s f).choose
 #align is_localization.common_denom IsLocalization.commonDenom
 
 /-- The numerator of a fraction after clearing the denominators
 of a `finset`-indexed family of fractions. -/
 noncomputable def integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) : R :=
-  ((exist_integer_multiples M s f).choose_spec i i.Prop).some
+  ((exist_integer_multiples M s f).choose_spec i i.prop).choose
 #align is_localization.integer_multiple IsLocalization.integerMultiple
 
 @[simp]
 theorem map_integerMultiple {ι : Type _} (s : Finset ι) (f : ι → S) (i : s) :
     algebraMap R S (integerMultiple M s f i) = commonDenom M s f • f i :=
-  ((exist_integer_multiples M s f).choose_spec _ i.Prop).choose_spec
+  ((exist_integer_multiples M s f).choose_spec _ i.prop).choose_spec
 #align is_localization.map_integer_multiple IsLocalization.map_integerMultiple
 
 /-- A choice of a common multiple of the denominators of a finite set of fractions. -/
@@ -160,10 +160,10 @@ theorem finsetIntegerMultiple_image [DecidableEq R] (s : Finset S) :
   ext
   constructor
   · rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
-    rw [map_integer_multiple]
+    rw [map_integerMultiple]
     exact Set.mem_image_of_mem _ x.prop
   · rintro ⟨x, hx, rfl⟩
-    exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integer_multiple M s id _⟩
+    exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integerMultiple M s id _⟩
 #align is_localization.finset_integer_multiple_image IsLocalization.finsetIntegerMultiple_image
 
 end IsLocalization

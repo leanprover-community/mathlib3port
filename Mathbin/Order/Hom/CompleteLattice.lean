@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.complete_lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ but is expected to have type
   forall {F : Type.{u2}} {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : SupSet.{u4} α] [_inst_2 : SupSet.{u3} β] [_inst_3 : SupₛHomClass.{u2, u4, u3} F α β _inst_1 _inst_2] (f : F) (g : ι -> α), Eq.{succ u3} ((fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.309 : α) => β) (supᵢ.{u4, u1} α _inst_1 ι (fun (i : ι) => g i))) (FunLike.coe.{succ u2, succ u4, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.309 : α) => β) _x) (SupₛHomClass.toFunLike.{u2, u4, u3} F α β _inst_1 _inst_2 _inst_3) f (supᵢ.{u4, u1} α _inst_1 ι (fun (i : ι) => g i))) (supᵢ.{u3, u1} β _inst_2 ι (fun (i : ι) => FunLike.coe.{succ u2, succ u4, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.309 : α) => β) _x) (SupₛHomClass.toFunLike.{u2, u4, u3} F α β _inst_1 _inst_2 _inst_3) f (g i)))
 Case conversion may be inaccurate. Consider using '#align map_supr map_supᵢₓ'. -/
 theorem map_supᵢ [SupSet α] [SupSet β] [SupₛHomClass F α β] (f : F) (g : ι → α) :
-    f (⨆ i, g i) = ⨆ i, f (g i) := by rw [supᵢ, supᵢ, map_Sup, Set.range_comp]
+    f (⨆ i, g i) = ⨆ i, f (g i) := by rw [supᵢ, supᵢ, map_supₛ, Set.range_comp]
 #align map_supr map_supᵢ
 
 /- warning: map_supr₂ -> map_supᵢ₂ is a dubious translation:
@@ -162,7 +162,7 @@ but is expected to have type
   forall {F : Type.{u2}} {α : Type.{u4}} {β : Type.{u3}} {ι : Sort.{u1}} [_inst_1 : InfSet.{u4} α] [_inst_2 : InfSet.{u3} β] [_inst_3 : InfₛHomClass.{u2, u4, u3} F α β _inst_1 _inst_2] (f : F) (g : ι -> α), Eq.{succ u3} ((fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : α) => β) (infᵢ.{u4, u1} α _inst_1 ι (fun (i : ι) => g i))) (FunLike.coe.{succ u2, succ u4, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : α) => β) _x) (InfₛHomClass.toFunLike.{u2, u4, u3} F α β _inst_1 _inst_2 _inst_3) f (infᵢ.{u4, u1} α _inst_1 ι (fun (i : ι) => g i))) (infᵢ.{u3, u1} β _inst_2 ι (fun (i : ι) => FunLike.coe.{succ u2, succ u4, succ u3} F α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : α) => β) _x) (InfₛHomClass.toFunLike.{u2, u4, u3} F α β _inst_1 _inst_2 _inst_3) f (g i)))
 Case conversion may be inaccurate. Consider using '#align map_infi map_infᵢₓ'. -/
 theorem map_infᵢ [InfSet α] [InfSet β] [InfₛHomClass F α β] (f : F) (g : ι → α) :
-    f (⨅ i, g i) = ⨅ i, f (g i) := by rw [infᵢ, infᵢ, map_Inf, Set.range_comp]
+    f (⨅ i, g i) = ⨅ i, f (g i) := by rw [infᵢ, infᵢ, map_infₛ, Set.range_comp]
 #align map_infi map_infᵢ
 
 /- warning: map_infi₂ clashes with map_infi -> map_infᵢ
@@ -190,8 +190,8 @@ instance (priority := 100) SupₛHomClass.toSupBotHomClass [CompleteLattice α] 
   {
     ‹SupₛHomClass F α
         β› with
-    map_sup := fun f a b => by rw [← supₛ_pair, map_Sup, Set.image_pair, supₛ_pair]
-    map_bot := fun f => by rw [← supₛ_empty, map_Sup, Set.image_empty, supₛ_empty] }
+    map_sup := fun f a b => by rw [← supₛ_pair, map_supₛ, Set.image_pair, supₛ_pair]
+    map_bot := fun f => by rw [← supₛ_empty, map_supₛ, Set.image_empty, supₛ_empty] }
 #align Sup_hom_class.to_sup_bot_hom_class SupₛHomClass.toSupBotHomClass
 
 /- warning: Inf_hom_class.to_inf_top_hom_class -> InfₛHomClass.toInfTopHomClass is a dubious translation:
@@ -206,8 +206,8 @@ instance (priority := 100) InfₛHomClass.toInfTopHomClass [CompleteLattice α] 
   {
     ‹InfₛHomClass F α
         β› with
-    map_inf := fun f a b => by rw [← infₛ_pair, map_Inf, Set.image_pair, infₛ_pair]
-    map_top := fun f => by rw [← infₛ_empty, map_Inf, Set.image_empty, infₛ_empty] }
+    map_inf := fun f a b => by rw [← infₛ_pair, map_infₛ, Set.image_pair, infₛ_pair]
+    map_top := fun f => by rw [← infₛ_empty, map_infₛ, Set.image_empty, infₛ_empty] }
 #align Inf_hom_class.to_inf_top_hom_class InfₛHomClass.toInfTopHomClass
 
 /- warning: frame_hom_class.to_Sup_hom_class -> FrameHomClass.toSupₛHomClass is a dubious translation:
@@ -418,7 +418,7 @@ theorem id_apply (a : α) : SupₛHom.id α a = a :=
 def comp (f : SupₛHom β γ) (g : SupₛHom α β) : SupₛHom α γ
     where
   toFun := f ∘ g
-  map_Sup' s := by rw [comp_apply, map_Sup, map_Sup, Set.image_image]
+  map_Sup' s := by rw [comp_apply, map_supₛ, map_supₛ, Set.image_image]
 #align Sup_hom.comp SupₛHom.comp
 -/
 
@@ -660,7 +660,7 @@ theorem id_apply (a : α) : InfₛHom.id α a = a :=
 def comp (f : InfₛHom β γ) (g : InfₛHom α β) : InfₛHom α γ
     where
   toFun := f ∘ g
-  map_Inf' s := by rw [comp_apply, map_Inf, map_Inf, Set.image_image]
+  map_Inf' s := by rw [comp_apply, map_infₛ, map_infₛ, Set.image_image]
 #align Inf_hom.comp InfₛHom.comp
 -/
 
@@ -1441,7 +1441,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (s : Set.{u2} β), Eq.{succ u1} ((fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : Set.{u2} β) => Set.{u1} α) s) (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (CompleteLatticeHom.{u2, u1} (Set.{u2} β) (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β)))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))) (Set.{u2} β) (fun (_x : Set.{u2} β) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : Set.{u2} β) => Set.{u1} α) _x) (InfₛHomClass.toFunLike.{max u1 u2, u2, u1} (CompleteLatticeHom.{u2, u1} (Set.{u2} β) (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β)))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))) (Set.{u2} β) (Set.{u1} α) (CompleteLattice.toInfSet.{u2} (Set.{u2} β) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β))))) (CompleteLattice.toInfSet.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))) (CompleteLatticeHomClass.toInfₛHomClass.{max u1 u2, u2, u1} (CompleteLatticeHom.{u2, u1} (Set.{u2} β) (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β)))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))) (Set.{u2} β) (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β)))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))) (CompleteLatticeHom.instCompleteLatticeHomClassCompleteLatticeHom.{u2, u1} (Set.{u2} β) (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} β) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} β) (Set.instCompleteBooleanAlgebraSet.{u2} β)))) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) (CompleteLatticeHom.setPreimage.{u1, u2} α β f) s) (Set.preimage.{u1, u2} α β f s)
 Case conversion may be inaccurate. Consider using '#align complete_lattice_hom.set_preimage_apply CompleteLatticeHom.setPreimage_applyₓ'. -/
 @[simp]
-theorem setPreimage_apply (f : α → β) (s : Set β) : setPreimage f s = s.Preimage f :=
+theorem setPreimage_apply (f : α → β) (s : Set β) : setPreimage f s = s.preimage f :=
   rfl
 #align complete_lattice_hom.set_preimage_apply CompleteLatticeHom.setPreimage_apply
 
@@ -1479,7 +1479,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_Sup Set.imag
 theorem Set.image_supₛ {f : α → β} (s : Set (Set α)) : f '' supₛ s = supₛ (image f '' s) :=
   by
   ext b
-  simp only [Sup_eq_sUnion, mem_image, mem_sUnion, exists_prop, sUnion_image, mem_Union]
+  simp only [supₛ_eq_unionₛ, mem_image, mem_unionₛ, exists_prop, unionₛ_image, mem_unionᵢ]
   constructor
   · rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
     exact ⟨t, ht₁, a, ht₂, rfl⟩

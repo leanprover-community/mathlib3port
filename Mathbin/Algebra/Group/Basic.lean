@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ is equal to an associative operation on the left.
 theorem comp_assoc_left : f x ∘ f y = f (f x y) :=
   by
   ext z
-  rw [Function.comp_apply, @IsAssociative.assoc _ f]
+  rw [Function.comp_apply, @is_associative.assoc _ f]
 #align comp_assoc_left comp_assoc_left
 
 /-- Composing two associative operations of `f : α → α → α` on the right
@@ -47,7 +47,7 @@ is equal to an associative operation on the right.
 theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) :=
   by
   ext z
-  rw [Function.comp_apply, @IsAssociative.assoc _ f]
+  rw [Function.comp_apply, @is_associative.assoc _ f]
 #align comp_assoc_right comp_assoc_right
 
 end Associative
@@ -396,7 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inv_surjective inv_surjectiveₓ'. -/
 @[simp, to_additive]
 theorem inv_surjective : Function.Surjective (Inv.inv : G → G) :=
-  inv_involutive.Surjective
+  inv_involutive.surjective
 #align inv_surjective inv_surjective
 #align neg_surjective neg_surjective
 
@@ -408,7 +408,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inv_injective inv_injectiveₓ'. -/
 @[to_additive]
 theorem inv_injective : Function.Injective (Inv.inv : G → G) :=
-  inv_involutive.Injective
+  inv_involutive.injective
 #align inv_injective inv_injective
 #align neg_injective neg_injective
 
@@ -807,7 +807,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align inv_ne_one inv_ne_oneₓ'. -/
 @[to_additive]
 theorem inv_ne_one : a⁻¹ ≠ 1 ↔ a ≠ 1 :=
-  inv_eq_one.Not
+  inv_eq_one.not
 #align inv_ne_one inv_ne_one
 #align neg_ne_zero neg_ne_zero
 

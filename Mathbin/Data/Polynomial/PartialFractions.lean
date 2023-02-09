@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Sidharth Hariharan
 
 ! This file was ported from Lean 3 source module data.polynomial.partial_fractions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,16 +68,16 @@ theorem div_eq_quo_add_rem_div_add_rem_div (f : R[X]) {g₁ g₂ : R[X]} (hg₁ 
   by
   rcases hcoprime with ⟨c, d, hcd⟩
   refine'
-    ⟨f * d /ₘ g₁ + f * c /ₘ g₂, f * d %ₘ g₁, f * c %ₘ g₂, degree_mod_by_monic_lt _ hg₁,
-      degree_mod_by_monic_lt _ hg₂, _⟩
+    ⟨f * d /ₘ g₁ + f * c /ₘ g₂, f * d %ₘ g₁, f * c %ₘ g₂, degree_modByMonic_lt _ hg₁,
+      degree_modByMonic_lt _ hg₂, _⟩
   have hg₁' : (↑g₁ : K) ≠ 0 := by
     norm_cast
     exact hg₁.ne_zero_of_ne zero_ne_one
   have hg₂' : (↑g₂ : K) ≠ 0 := by
     norm_cast
     exact hg₂.ne_zero_of_ne zero_ne_one
-  have hfc := mod_by_monic_add_div (f * c) hg₂
-  have hfd := mod_by_monic_add_div (f * d) hg₁
+  have hfc := modByMonic_add_div (f * c) hg₂
+  have hfd := modByMonic_add_div (f * d) hg₁
   field_simp
   norm_cast
   linear_combination -1 * f * hcd + -1 * g₁ * hfc + -1 * g₂ * hfd
@@ -103,7 +103,7 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type _} {g : ι → R[X]} {s
   · refine' ⟨f, fun i : ι => (0 : R[X]), fun i => _, by simp⟩
     rintro ⟨⟩
   obtain ⟨q₀, r₁, r₂, hdeg₁, hdeg₂, hf : (↑f : K) / _ = _⟩ :=
-    div_eq_quo_add_rem_div_add_rem_div R K f (_ : monic (g a)) (_ : monic (∏ i : ι in b, g i)) _
+    div_eq_quo_add_rem_div_add_rem_div R K f (_ : Monic (g a)) (_ : Monic (∏ i : ι in b, g i)) _
   · obtain ⟨q, r, hrdeg, IH⟩ :=
       Hind (fun i hi => hg i (Finset.mem_insert_of_mem hi))
         (Set.Pairwise.mono (Finset.coe_subset.2 fun i hi => Finset.mem_insert_of_mem hi) hcop) r₂

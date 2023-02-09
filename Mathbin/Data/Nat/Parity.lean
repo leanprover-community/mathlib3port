@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) :=
 #print Nat.two_dvd_ne_zero /-
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
-  even_iff_two_dvd.symm.Not.trans not_even_iff
+  even_iff_two_dvd.symm.not.trans not_even_iff
 #align nat.two_dvd_ne_zero Nat.two_dvd_ne_zero
 -/
 
@@ -527,7 +527,7 @@ theorem Even.mod_even {n a : ℕ} (hn : Even n) (ha : Even a) : Even (n % a) :=
 
 #print Odd.of_dvd_nat /-
 theorem Odd.of_dvd_nat {m n : ℕ} (hn : Odd n) (hm : m ∣ n) : Odd m :=
-  odd_iff_not_even.2 <| mt hm.Even (odd_iff_not_even.1 hn)
+  odd_iff_not_even.2 <| mt hm.even (odd_iff_not_even.1 hn)
 #align odd.of_dvd_nat Odd.of_dvd_nat
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} R] (a : R) (l : List.{u1} R), (forall (b : R), (Membership.mem.{u1, u1} R (List.{u1} R) (List.instMembershipList.{u1} R) b l) -> (Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R _inst_1) a b)) -> (Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R _inst_1) a (List.sum.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R _inst_1)) (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R _inst_1)) l))
 Case conversion may be inaccurate. Consider using '#align commute.list_sum_right Commute.list_sum_rightₓ'. -/
 theorem list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R)
-    (h : ∀ b ∈ l, Commute a b) : Commute a l.Sum :=
+    (h : ∀ b ∈ l, Commute a b) : Commute a l.sum :=
   by
   induction' l with x xs ih
   · exact Commute.zero_right _
@@ -54,7 +54,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} R] (b : R) (l : List.{u1} R), (forall (a : R), (Membership.mem.{u1, u1} R (List.{u1} R) (List.instMembershipList.{u1} R) a l) -> (Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R _inst_1) a b)) -> (Commute.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R _inst_1) (List.sum.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R _inst_1)) (MulZeroClass.toZero.{u1} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} R _inst_1)) l) b)
 Case conversion may be inaccurate. Consider using '#align commute.list_sum_left Commute.list_sum_leftₓ'. -/
 theorem list_sum_left [NonUnitalNonAssocSemiring R] (b : R) (l : List R)
-    (h : ∀ a ∈ l, Commute a b) : Commute l.Sum b :=
+    (h : ∀ a ∈ l, Commute a b) : Commute l.sum b :=
   (Commute.list_sum_right _ _ fun x hx => (h _ hx).symm).symm
 #align commute.list_sum_left Commute.list_sum_left
 
@@ -71,7 +71,7 @@ Case conversion may be inaccurate. Consider using '#align list.pow_card_le_prod 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod [Monoid M] [Preorder M]
     [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] [CovariantClass M M (· * ·) (· ≤ ·)]
-    (l : List M) (n : M) (h : ∀ x ∈ l, n ≤ x) : n ^ l.length ≤ l.Prod :=
+    (l : List M) (n : M) (h : ∀ x ∈ l, n ≤ x) : n ^ l.length ≤ l.prod :=
   @prod_le_pow_card Mᵒᵈ _ _ _ _ l n h
 #align list.pow_card_le_prod List.pow_card_le_prod
 #align list.card_nsmul_le_sum List.card_nsmul_le_sum
@@ -84,7 +84,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.prod_eq_one_iff List.prod_eq_one_iffₓ'. -/
 @[to_additive]
 theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) :
-    l.Prod = 1 ↔ ∀ x ∈ l, x = (1 : M) :=
+    l.prod = 1 ↔ ∀ x ∈ l, x = (1 : M) :=
   ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
     rw [eq_replicate.2 ⟨rfl, h⟩, prod_replicate, one_pow]⟩
 #align list.prod_eq_one_iff List.prod_eq_one_iff
@@ -92,7 +92,7 @@ theorem prod_eq_one_iff [CanonicallyOrderedMonoid M] (l : List M) :
 
 #print List.neg_one_mem_of_prod_eq_neg_one /-
 /-- If a product of integers is `-1`, then at least one factor must be `-1`. -/
-theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : ℤ) ∈ l :=
+theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.prod = -1) : (-1 : ℤ) ∈ l :=
   by
   obtain ⟨x, h₁, h₂⟩ := exists_mem_ne_one_of_prod_ne_one (ne_of_eq_of_ne h (by decide))
   exact
@@ -107,7 +107,7 @@ theorem neg_one_mem_of_prod_eq_neg_one {l : List ℤ} (h : l.Prod = -1) : (-1 : 
 #print List.length_le_sum_of_one_le /-
 /-- If all elements in a list are bounded below by `1`, then the length of the list is bounded
 by the sum of the elements. -/
-theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.Sum :=
+theorem length_le_sum_of_one_le (L : List ℕ) (h : ∀ i ∈ L, 1 ≤ i) : L.length ≤ L.sum :=
   by
   induction' L with j L IH h; · simp
   rw [sum_cons, length, add_comm]
@@ -121,7 +121,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] {a : M} {l : List.{u1} M}, (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) a l) -> (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (Monoid.toSemigroup.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) a (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (Monoid.toOne.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)) l))
 Case conversion may be inaccurate. Consider using '#align list.dvd_prod List.dvd_prodₓ'. -/
-theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.Prod :=
+theorem dvd_prod [CommMonoid M] {a} {l : List M} (ha : a ∈ l) : a ∣ l.prod :=
   by
   let ⟨s, t, h⟩ := mem_split ha
   rw [h, prod_append, prod_cons, mul_left_comm]
@@ -134,7 +134,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {a : R} {l : List.{u1} R}, (forall (x : R), (Membership.mem.{u1, u1} R (List.{u1} R) (List.instMembershipList.{u1} R) x l) -> (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (NonUnitalSemiring.toSemigroupWithZero.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)))) a x)) -> (Dvd.dvd.{u1} R (semigroupDvd.{u1} R (SemigroupWithZero.toSemigroup.{u1} R (NonUnitalSemiring.toSemigroupWithZero.{u1} R (Semiring.toNonUnitalSemiring.{u1} R _inst_1)))) a (List.sum.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) l))
 Case conversion may be inaccurate. Consider using '#align list.dvd_sum List.dvd_sumₓ'. -/
-theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣ l.Sum :=
+theorem dvd_sum [Semiring R] {a} {l : List R} (h : ∀ x ∈ l, a ∣ x) : a ∣ l.sum :=
   by
   induction' l with x l ih
   · exact dvd_zero _
@@ -158,7 +158,7 @@ theorem alternatingProd_append :
       alternatingProd (l₁ ++ l₂) = alternatingProd l₁ * alternatingProd l₂ ^ (-1 : ℤ) ^ length l₁
   | [], l₂ => by simp
   | a :: l₁, l₂ => by
-    simp_rw [cons_append, alternating_prod_cons, alternating_prod_append, length_cons, pow_succ,
+    simp_rw [cons_append, alternatingProd_cons, alternating_prod_append, length_cons, pow_succ,
       neg_mul, one_mul, zpow_neg, ← div_eq_mul_inv, div_div]
 #align list.alternating_prod_append List.alternatingProd_append
 #align list.alternating_sum_append List.alternatingSum_append
@@ -172,11 +172,11 @@ Case conversion may be inaccurate. Consider using '#align list.alternating_prod_
 @[to_additive]
 theorem alternatingProd_reverse :
     ∀ l : List α, alternatingProd (reverse l) = alternatingProd l ^ (-1 : ℤ) ^ (length l + 1)
-  | [] => by simp only [alternating_prod_nil, one_zpow, reverse_nil]
+  | [] => by simp only [alternatingProd_nil, one_zpow, reverse_nil]
   | a :: l =>
     by
-    simp_rw [reverse_cons, alternating_prod_append, alternating_prod_reverse,
-      alternating_prod_singleton, alternating_prod_cons, length_reverse, length, pow_succ, neg_mul,
+    simp_rw [reverse_cons, alternatingProd_append, alternating_prod_reverse,
+      alternatingProd_singleton, alternatingProd_cons, length_reverse, length, pow_succ, neg_mul,
       one_mul, zpow_neg, inv_inv]
     rw [mul_comm, ← div_eq_mul_inv, div_zpow]
 #align list.alternating_prod_reverse List.alternatingProd_reverse
@@ -191,7 +191,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : NonUnitalNonAssocSemiring.{u2} R] (L : List.{u1} ι) (f : ι -> R) (r : R), Eq.{succ u2} R (List.sum.{u2} R (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R _inst_1)) (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_1)) (List.map.{u1, u2} ι R (fun (b : ι) => HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (NonUnitalNonAssocSemiring.toMul.{u2} R _inst_1)) r (f b)) L)) (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (NonUnitalNonAssocSemiring.toMul.{u2} R _inst_1)) r (List.sum.{u2} R (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R _inst_1)) (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_1)) (List.map.{u1, u2} ι R f L)))
 Case conversion may be inaccurate. Consider using '#align list.sum_map_mul_left List.sum_map_mul_leftₓ'. -/
 theorem sum_map_mul_left [NonUnitalNonAssocSemiring R] (L : List ι) (f : ι → R) (r : R) :
-    (L.map fun b => r * f b).Sum = r * (L.map f).Sum :=
+    (L.map fun b => r * f b).sum = r * (L.map f).sum :=
   sum_map_hom L f <| AddMonoidHom.mulLeft r
 #align list.sum_map_mul_left List.sum_map_mul_left
 
@@ -202,7 +202,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : NonUnitalNonAssocSemiring.{u2} R] (L : List.{u1} ι) (f : ι -> R) (r : R), Eq.{succ u2} R (List.sum.{u2} R (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R _inst_1)) (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_1)) (List.map.{u1, u2} ι R (fun (b : ι) => HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (NonUnitalNonAssocSemiring.toMul.{u2} R _inst_1)) (f b) r) L)) (HMul.hMul.{u2, u2, u2} R R R (instHMul.{u2} R (NonUnitalNonAssocSemiring.toMul.{u2} R _inst_1)) (List.sum.{u2} R (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R _inst_1)) (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_1)) (List.map.{u1, u2} ι R f L)) r)
 Case conversion may be inaccurate. Consider using '#align list.sum_map_mul_right List.sum_map_mul_rightₓ'. -/
 theorem sum_map_mul_right [NonUnitalNonAssocSemiring R] (L : List ι) (f : ι → R) (r : R) :
-    (L.map fun b => f b * r).Sum = (L.map f).Sum * r :=
+    (L.map fun b => f b * r).sum = (L.map f).sum * r :=
   sum_map_hom L f <| AddMonoidHom.mulRight r
 #align list.sum_map_mul_right List.sum_map_mul_right
 
@@ -220,7 +220,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (l : List.{u1} M), Eq.{succ u1} (MulOpposite.{u1} M) (MulOpposite.op.{u1} M (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Monoid.toOne.{u1} M _inst_1) l)) (List.prod.{u1} (MulOpposite.{u1} M) (MulOpposite.instMulMulOpposite.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (MulOpposite.instOneMulOpposite.{u1} M (Monoid.toOne.{u1} M _inst_1)) (List.reverse.{u1} (MulOpposite.{u1} M) (List.map.{u1, u1} M (MulOpposite.{u1} M) (MulOpposite.op.{u1} M) l)))
 Case conversion may be inaccurate. Consider using '#align mul_opposite.op_list_prod MulOpposite.op_list_prodₓ'. -/
-theorem op_list_prod : ∀ l : List M, op l.Prod = (l.map op).reverse.Prod
+theorem op_list_prod : ∀ l : List M, op l.Prod = (l.map op).reverse.prod
   | [] => rfl
   | x :: xs => by
     rw [List.prod_cons, List.map_cons, List.reverse_cons', List.prod_concat, op_mul, op_list_prod]
@@ -232,7 +232,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (l : List.{u1} (MulOpposite.{u1} M)), Eq.{succ u1} M (MulOpposite.unop.{u1} M (List.prod.{u1} (MulOpposite.{u1} M) (MulOpposite.instMulMulOpposite.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (MulOpposite.instOneMulOpposite.{u1} M (Monoid.toOne.{u1} M _inst_1)) l)) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Monoid.toOne.{u1} M _inst_1) (List.reverse.{u1} M (List.map.{u1, u1} (MulOpposite.{u1} M) M (MulOpposite.unop.{u1} M) l)))
 Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_list_prod MulOpposite.unop_list_prodₓ'. -/
-theorem MulOpposite.unop_list_prod (l : List Mᵐᵒᵖ) : l.Prod.unop = (l.map unop).reverse.Prod := by
+theorem MulOpposite.unop_list_prod (l : List Mᵐᵒᵖ) : l.Prod.unop = (l.map unop).reverse.prod := by
   rw [← op_inj, op_unop, MulOpposite.op_list_prod, map_reverse, map_map, reverse_reverse,
     op_comp_unop, map_id]
 #align mul_opposite.unop_list_prod MulOpposite.unop_list_prod
@@ -251,7 +251,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align unop_map_list_prod unop_map_list_prodₓ'. -/
 /-- A morphism into the opposite monoid acts on the product by acting on the reversed elements. -/
 theorem unop_map_list_prod {F : Type _} [MonoidHomClass F M Nᵐᵒᵖ] (f : F) (l : List M) :
-    (f l.Prod).unop = (l.map (MulOpposite.unop ∘ f)).reverse.Prod := by
+    (f l.prod).unop = (l.map (MulOpposite.unop ∘ f)).reverse.prod := by
   rw [map_list_prod f l, MulOpposite.unop_list_prod, List.map_map]
 #align unop_map_list_prod unop_map_list_prod
 
@@ -267,7 +267,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.unop_map_li
 
 Deprecated, use `_root_.unop_map_list_prod` instead. -/
 protected theorem unop_map_list_prod (f : M →* Nᵐᵒᵖ) (l : List M) :
-    (f l.Prod).unop = (l.map (MulOpposite.unop ∘ f)).reverse.Prod :=
+    (f l.prod).unop = (l.map (MulOpposite.unop ∘ f)).reverse.prod :=
   unop_map_list_prod f l
 #align monoid_hom.unop_map_list_prod MonoidHom.unop_map_list_prod
 

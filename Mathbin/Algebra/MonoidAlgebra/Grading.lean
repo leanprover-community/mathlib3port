@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.grading
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,10 +123,10 @@ instance gradeBy.gradedMonoid [AddMonoid M] [AddMonoid ι] [CommSemiring R] (f :
 
 instance grade.gradedMonoid [AddMonoid M] [CommSemiring R] :
     SetLike.GradedMonoid (grade R : M → Submodule R (AddMonoidAlgebra R M)) := by
-  apply grade_by.graded_monoid (AddMonoidHom.id _)
+  apply gradeBy.gradedMonoid (AddMonoidHom.id _)
 #align add_monoid_algebra.grade.graded_monoid AddMonoidAlgebra.grade.gradedMonoid
 
-variable {R} [AddMonoid M] [DecidableEq ι] [AddMonoid ι] [CommSemiring R] (f : M →+ ι)
+variable {R} [AddMonoid M] [DecidableEq ι] [add_monoid ι] [CommSemiring R] (f : M →+ ι)
 
 /-- Auxiliary definition; the canonical grade decomposition, used to provide
 `direct_sum.decompose`. -/
@@ -177,14 +177,14 @@ theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
   · intro m b y hmy hb ih hmby
     have : Disjoint (Finsupp.single m b).support y.support := by
       simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
-    rw [mem_grade_by_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at
+    rw [mem_gradeBy_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff] at
       hmby
     cases' hmby with h1 h2
     have : f m = i := by
       rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff] at
         h1
     subst this
-    simp only [AlgHom.map_add, Submodule.coe_mk, decompose_aux_single f m]
+    simp only [AlgHom.map_add, Submodule.coe_mk, decomposeAux_single f m]
     let ih' := ih h2
     dsimp at ih'
     rw [ih', ← AddMonoidHom.map_add]
@@ -198,8 +198,8 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
       ext : 2
       simp only [AlgHom.coe_to_monoidHom, Function.comp_apply, AlgHom.coe_comp,
         Function.comp.left_id, AlgHom.coe_id, AddMonoidAlgebra.of_apply, MonoidHom.coe_comp]
-      rw [decompose_aux_single, DirectSum.coeAlgHom_of, Subtype.coe_mk])
-    fun i x => by rw [decompose_aux_coe f x]
+      rw [decomposeAux_single, DirectSum.coeAlgHom_of, Subtype.coe_mk])
+    fun i x => by rw [decomposeAux_coe f x]
 #align add_monoid_algebra.grade_by.graded_algebra AddMonoidAlgebra.gradeBy.gradedAlgebra
 
 -- Lean can't find this later without us repeating it

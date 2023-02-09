@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module data.polynomial.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ instance is_scalar_tower' (M : Type u) [AddCommGroup M] [Module R M] [Module S M
   haveI : IsScalarTower R R[X] (PolynomialModule R M) := modulePolynomialOfEndo.isScalarTower _
   constructor
   intro x y z
-  rw [← @IsScalarTower.algebraMap_smul S R, ← @IsScalarTower.algebraMap_smul S R, smul_assoc]
+  rw [← @is_scalar_tower.algebra_map_smul S R, ← @is_scalar_tower.algebra_map_smul S R, smul_assoc]
 #align polynomial_module.is_scalar_tower' PolynomialModule.is_scalar_tower'
 
 @[simp]
@@ -239,7 +239,7 @@ theorem map_smul (f : M →ₗ[R] M') (p : R[X]) (q : PolynomialModule R M) :
 @[simps (config := lemmasOnly)]
 def eval (r : R) : PolynomialModule R M →ₗ[R] M
     where
-  toFun p := p.Sum fun i m => r ^ i • m
+  toFun p := p.sum fun i m => r ^ i • m
   map_add' x y := Finsupp.sum_add_index' (fun _ => smul_zero _) fun _ _ _ => smul_add _ _ _
   map_smul' s m := by
     refine' (Finsupp.sum_smul_index' _).trans _

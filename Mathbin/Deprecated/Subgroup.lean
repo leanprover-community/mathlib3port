@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Additive.isAddSubgroup {s : Set G} (hs : IsSubgroup s) : @IsAddSubgroup 
 
 #print Additive.isAddSubgroup_iff /-
 theorem Additive.isAddSubgroup_iff {s : Set G} : @IsAddSubgroup (Additive G) _ s ↔ IsSubgroup s :=
-  ⟨by rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @IsSubgroup.mk G _ _ ⟨h₁, @h₂⟩ @h₃, fun h =>
+  ⟨by rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @is_subgroup.mk G _ _ ⟨h₁, @h₂⟩ @h₃, fun h =>
     Additive.isAddSubgroup h⟩
 #align additive.is_add_subgroup_iff Additive.isAddSubgroup_iff
 -/
@@ -98,7 +98,7 @@ theorem Multiplicative.isSubgroup {s : Set A} (hs : IsAddSubgroup s) :
 #print Multiplicative.isSubgroup_iff /-
 theorem Multiplicative.isSubgroup_iff {s : Set A} :
     @IsSubgroup (Multiplicative A) _ s ↔ IsAddSubgroup s :=
-  ⟨by rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @IsAddSubgroup.mk A _ _ ⟨h₁, @h₂⟩ @h₃, fun h =>
+  ⟨by rintro ⟨⟨h₁, h₂⟩, h₃⟩ <;> exact @is_add_subgroup.mk A _ _ ⟨h₁, @h₂⟩ @h₃, fun h =>
     Multiplicative.isSubgroup h⟩
 #align multiplicative.is_subgroup_iff Multiplicative.isSubgroup_iff
 -/
@@ -170,7 +170,7 @@ theorem isSubgroup_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : �
   { inv_mem := fun a ha =>
       let ⟨i, hi⟩ := Set.mem_unionᵢ.1 ha
       Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
-    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (hs i).to_isSubmonoid) Directed }
+    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (hs i).to_isSubmonoid) directed }
 #align is_subgroup_Union_of_directed isSubgroup_unionᵢ_of_directed
 #align is_add_subgroup_Union_of_directed isAddSubgroup_unionᵢ_of_directed
 -/
@@ -263,7 +263,7 @@ theorem Additive.isNormalAddSubgroup [Group G] {s : Set G} (hs : IsNormalSubgrou
 #print Additive.isNormalAddSubgroup_iff /-
 theorem Additive.isNormalAddSubgroup_iff [Group G] {s : Set G} :
     @IsNormalAddSubgroup (Additive G) _ s ↔ IsNormalSubgroup s :=
-  ⟨by rintro ⟨h₁, h₂⟩ <;> exact @IsNormalSubgroup.mk G _ _ (Additive.isAddSubgroup_iff.1 h₁) @h₂,
+  ⟨by rintro ⟨h₁, h₂⟩ <;> exact @is_normal_subgroup.mk G _ _ (Additive.isAddSubgroup_iff.1 h₁) @h₂,
     fun h => Additive.isNormalAddSubgroup h⟩
 #align additive.is_normal_add_subgroup_iff Additive.isNormalAddSubgroup_iff
 -/
@@ -281,7 +281,7 @@ theorem Multiplicative.isNormalSubgroup_iff [AddGroup A] {s : Set A} :
     @IsNormalSubgroup (Multiplicative A) _ s ↔ IsNormalAddSubgroup s :=
   ⟨by
     rintro ⟨h₁, h₂⟩ <;>
-      exact @IsNormalAddSubgroup.mk A _ _ (Multiplicative.isSubgroup_iff.1 h₁) @h₂,
+      exact @is_normal_add_subgroup.mk A _ _ (Multiplicative.isSubgroup_iff.1 h₁) @h₂,
     fun h => Multiplicative.isNormalSubgroup h⟩
 #align multiplicative.is_normal_subgroup_iff Multiplicative.isNormalSubgroup_iff
 -/
@@ -300,7 +300,7 @@ Case conversion may be inaccurate. Consider using '#align is_subgroup.mem_norm_c
 @[to_additive]
 theorem mem_norm_comm {s : Set G} (hs : IsNormalSubgroup s) {a b : G} (hab : a * b ∈ s) :
     b * a ∈ s := by
-  have h : a⁻¹ * (a * b) * a⁻¹⁻¹ ∈ s := hs.Normal (a * b) hab a⁻¹
+  have h : a⁻¹ * (a * b) * a⁻¹⁻¹ ∈ s := hs.normal (a * b) hab a⁻¹
   simp at h <;> exact h
 #align is_subgroup.mem_norm_comm IsSubgroup.mem_norm_comm
 #align is_add_subgroup.mem_norm_comm IsAddSubgroup.mem_norm_comm
@@ -587,7 +587,7 @@ theorem image_subgroup {f : G → H} (hf : IsGroupHom f) {s : Set G} (hs : IsSub
   { mul_mem := fun a₁ a₂ ⟨b₁, hb₁, eq₁⟩ ⟨b₂, hb₂, eq₂⟩ =>
       ⟨b₁ * b₂, hs.mul_mem hb₁ hb₂, by simp [eq₁, eq₂, hf.map_mul]⟩
     one_mem := ⟨1, hs.to_isSubmonoid.one_mem, hf.map_one⟩
-    inv_mem := fun a ⟨b, hb, Eq⟩ =>
+    inv_mem := fun a ⟨b, hb, eq⟩ =>
       ⟨b⁻¹, hs.inv_mem hb, by
         rw [hf.map_inv]
         simp [*]⟩ }
@@ -825,7 +825,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.exists_list_of_mem_closure Group.exists_list_of_mem_closureₓ'. -/
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
-    ∃ l : List G, (∀ x ∈ l, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.Prod = a :=
+    ∃ l : List G, (∀ x ∈ l, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.prod = a :=
   InClosure.rec_on h (fun x hxs => ⟨[x], List.forall_mem_singleton.2 <| Or.inl hxs, one_mul _⟩)
     ⟨[], List.forall_mem_nil _, rfl⟩
     (fun x _ ⟨L, HL1, HL2⟩ =>
@@ -848,15 +848,15 @@ theorem image_closure [Group H] {f : G → H} (hf : IsGroupHom f) (s : Set G) :
   le_antisymm
     (by
       rintro _ ⟨x, hx, rfl⟩
-      apply in_closure.rec_on hx <;> intros
+      apply InClosure.rec_on hx <;> intros
       · solve_by_elim [subset_closure, Set.mem_image_of_mem]
       · rw [hf.to_is_monoid_hom.map_one]
-        apply IsSubmonoid.one_mem (closure.is_subgroup _).to_isSubmonoid
+        apply IsSubmonoid.one_mem (closure.isSubgroup _).to_isSubmonoid
       · rw [hf.map_inv]
-        apply IsSubgroup.inv_mem (closure.is_subgroup _)
+        apply IsSubgroup.inv_mem (closure.isSubgroup _)
         assumption
       · rw [hf.to_is_monoid_hom.map_mul]
-        solve_by_elim [IsSubmonoid.mul_mem (closure.is_subgroup _).to_isSubmonoid] )
+        solve_by_elim [IsSubmonoid.mul_mem (closure.isSubgroup _).to_isSubmonoid] )
     (closure_subset (hf.image_subgroup <| closure.isSubgroup _) <|
       Set.image_subset _ subset_closure)
 #align group.image_closure Group.image_closure
@@ -1007,12 +1007,12 @@ theorem normalClosure.is_normal : IsNormalSubgroup (normalClosure s) :=
   { normalClosure.isSubgroup _ with
     Normal := fun n h g => by
       induction' h with x hx x hx ihx x y hx hy ihx ihy
-      · exact conjugates_of_set_subset_normal_closure (conj_mem_conjugates_of_set hx)
-      · simpa using (normal_closure.is_subgroup s).one_mem
+      · exact conjugatesOfSet_subset_normalClosure (conj_mem_conjugatesOfSet hx)
+      · simpa using (normalClosure.isSubgroup s).one_mem
       · rw [← conj_inv]
-        exact (normal_closure.is_subgroup _).inv_mem ihx
+        exact (normalClosure.isSubgroup _).inv_mem ihx
       · rw [← conj_mul]
-        exact (normal_closure.is_subgroup _).to_isSubmonoid.mul_mem ihx ihy }
+        exact (normalClosure.isSubgroup _).to_isSubmonoid.mul_mem ihx ihy }
 #align group.normal_closure.is_normal Group.normalClosure.is_normal
 -/
 
@@ -1022,7 +1022,7 @@ theorem normalClosure_subset {s t : Set G} (ht : IsNormalSubgroup t) (h : s ⊆ 
     normalClosure s ⊆ t := fun a w =>
   by
   induction' w with x hx x hx ihx x y hx hy ihx ihy
-  · exact conjugates_of_set_subset' ht h <| hx
+  · exact conjugatesOfSet_subset' ht h <| hx
   · exact ht.to_is_subgroup.to_is_submonoid.one_mem
   · exact ht.to_is_subgroup.inv_mem ihx
   · exact ht.to_is_subgroup.to_is_submonoid.mul_mem ihx ihy
@@ -1076,7 +1076,7 @@ theorem Subgroup.isSubgroup [Group G] (K : Subgroup G) : IsSubgroup (K : Set G) 
 @[to_additive]
 theorem Subgroup.of_normal [Group G] (s : Set G) (h : IsSubgroup s) (n : IsNormalSubgroup s) :
     Subgroup.Normal (Subgroup.of h) :=
-  { conj_mem := n.Normal }
+  { conj_mem := n.normal }
 #align subgroup.of_normal Subgroup.of_normal
 #align add_subgroup.of_normal AddSubgroup.of_normal
 -/

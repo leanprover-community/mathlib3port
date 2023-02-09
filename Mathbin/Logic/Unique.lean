@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module logic.unique
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -312,21 +312,21 @@ Case conversion may be inaccurate. Consider using '#align function.surjective.su
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
-  ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
+  ⟨hf.forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
 #align function.surjective.subsingleton Function.Surjective.subsingleton
 
 #print Function.Surjective.unique /-
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
 protected def Surjective.unique (hf : Surjective f) [Unique α] : Unique β :=
-  @Unique.mk' _ ⟨f default⟩ hf.Subsingleton
+  @Unique.mk' _ ⟨f default⟩ hf.subsingleton
 #align function.surjective.unique Function.Surjective.unique
 -/
 
 #print Function.Injective.unique /-
 /-- If `α` is inhabited and admits an injective map to a subsingleton type, then `α` is `unique`. -/
 protected def Injective.unique [Inhabited α] [Subsingleton β] (hf : Injective f) : Unique α :=
-  @Unique.mk' _ _ hf.Subsingleton
+  @Unique.mk' _ _ hf.subsingleton
 #align function.injective.unique Function.Injective.unique
 -/
 

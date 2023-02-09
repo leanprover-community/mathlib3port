@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.pnat.find
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,13 +71,13 @@ protected def find : ℕ+ :=
 
 #print PNat.find_spec /-
 protected theorem find_spec : p (PNat.find h) :=
-  (PNat.findX h).Prop.left
+  (PNat.findX h).prop.left
 #align pnat.find_spec PNat.find_spec
 -/
 
 #print PNat.find_min /-
 protected theorem find_min : ∀ {m : ℕ+}, m < PNat.find h → ¬p m :=
-  (PNat.findX h).Prop.right
+  (PNat.findX h).prop.right
 #align pnat.find_min PNat.find_min
 -/
 

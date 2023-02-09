@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,13 +144,13 @@ noncomputable def basisOf (i : ι) : Basis { j : ι // j ≠ i } k V :=
 
 @[simp]
 theorem basisOf_apply (i : ι) (j : { j : ι // j ≠ i }) : b.basisOf i j = b ↑j -ᵥ b i := by
-  simp [basis_of]
+  simp [basisOf]
 #align affine_basis.basis_of_apply AffineBasis.basisOf_apply
 
 @[simp]
 theorem basisOf_reindex (i : ι') :
     (b.reindex e).basisOf i =
-      (b.basisOf <| e.symm i).reindex (e.subtypeEquiv fun _ => e.eq_symm_apply.Not) :=
+      (b.basisOf <| e.symm i).reindex (e.subtypeEquiv fun _ => e.eq_symm_apply.not) :=
   by
   ext j
   simp
@@ -167,51 +167,51 @@ noncomputable def coord (i : ι) : P →ᵃ[k] k
 #align affine_basis.coord AffineBasis.coord
 
 @[simp]
-theorem linear_eq_sumCoords (i : ι) : (b.Coord i).linear = -(b.basisOf i).sumCoords :=
+theorem linear_eq_sumCoords (i : ι) : (b.coord i).linear = -(b.basisOf i).sumCoords :=
   rfl
 #align affine_basis.linear_eq_sum_coords AffineBasis.linear_eq_sumCoords
 
 @[simp]
-theorem coord_reindex (i : ι') : (b.reindex e).Coord i = b.Coord (e.symm i) :=
+theorem coord_reindex (i : ι') : (b.reindex e).coord i = b.coord (e.symm i) :=
   by
   ext
   classical simp [AffineBasis.coord]
 #align affine_basis.coord_reindex AffineBasis.coord_reindex
 
 @[simp]
-theorem coord_apply_eq (i : ι) : b.Coord i (b i) = 1 := by
+theorem coord_apply_eq (i : ι) : b.coord i (b i) = 1 := by
   simp only [coord, Basis.coe_sumCoords, LinearEquiv.map_zero, LinearEquiv.coe_coe, sub_zero,
     AffineMap.coe_mk, Finsupp.sum_zero_index, vsub_self]
 #align affine_basis.coord_apply_eq AffineBasis.coord_apply_eq
 
 @[simp]
-theorem coord_apply_ne (h : i ≠ j) : b.Coord i (b j) = 0 := by
+theorem coord_apply_ne (h : i ≠ j) : b.coord i (b j) = 0 := by
   rw [coord, AffineMap.coe_mk, ← Subtype.coe_mk j h.symm, ← b.basis_of_apply,
     Basis.sumCoords_self_apply, sub_self]
 #align affine_basis.coord_apply_ne AffineBasis.coord_apply_ne
 
-theorem coord_apply [DecidableEq ι] (i j : ι) : b.Coord i (b j) = if i = j then 1 else 0 := by
+theorem coord_apply [DecidableEq ι] (i j : ι) : b.coord i (b j) = if i = j then 1 else 0 := by
   cases eq_or_ne i j <;> simp [h]
 #align affine_basis.coord_apply AffineBasis.coord_apply
 
 @[simp]
-theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.Sum w = 1) :
-    b.Coord i (s.affineCombination b w) = w i := by
+theorem coord_apply_combination_of_mem (hi : i ∈ s) {w : ι → k} (hw : s.sum w = 1) :
+    b.coord i (s.affineCombination b w) = w i := by
   classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_true,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b w hw]
 #align affine_basis.coord_apply_combination_of_mem AffineBasis.coord_apply_combination_of_mem
 
 @[simp]
-theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s.Sum w = 1) :
-    b.Coord i (s.affineCombination b w) = 0 := by
+theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s.sum w = 1) :
+    b.coord i (s.affineCombination b w) = 0 := by
   classical simp only [coord_apply, hi, Finset.affineCombination_eq_linear_combination, if_false,
       mul_boole, hw, Function.comp_apply, smul_eq_mul, s.sum_ite_eq,
       s.map_affine_combination b w hw]
 #align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
 
 @[simp]
-theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=
+theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.coord i q) = 1 :=
   by
   have hq : q ∈ affineSpan k (range b) := by
     rw [b.tot]
@@ -224,7 +224,7 @@ theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :
 
 @[simp]
 theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
-    (Finset.univ.affineCombination b fun i => b.Coord i q) = q :=
+    (Finset.univ.affineCombination b fun i => b.coord i q) = q :=
   by
   have hq : q ∈ affineSpan k (range b) := by
     rw [b.tot]
@@ -239,13 +239,13 @@ theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
 affine space is a module so we can talk about linear combinations. -/
 @[simp]
 theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (v : V) :
-    (∑ i, b.Coord i v • b i) = v :=
+    (∑ i, b.coord i v • b i) = v :=
   by
   have hb := b.affine_combination_coord_eq_self v
   rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb
 #align affine_basis.linear_combination_coord_eq_self AffineBasis.linear_combination_coord_eq_self
 
-theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coord i q₂) : q₁ = q₂ :=
+theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.coord i q₁ = b.coord i q₂) : q₁ = q₂ :=
   by
   cases nonempty_fintype ι
   rw [← b.affine_combination_coord_eq_self q₁, ← b.affine_combination_coord_eq_self q₂]
@@ -253,12 +253,12 @@ theorem ext_elem [Finite ι] {q₁ q₂ : P} (h : ∀ i, b.Coord i q₁ = b.Coor
 #align affine_basis.ext_elem AffineBasis.ext_elem
 
 @[simp]
-theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i : P → k) = 1 :=
+theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.coord i : P → k) = 1 :=
   by
   ext q
   have hp : (range b).Subsingleton := by
     rw [← image_univ]
-    apply subsingleton.image
+    apply Subsingleton.image
     apply subsingleton_of_subsingleton
   haveI := AffineSubspace.subsingleton_of_subsingleton_span_eq_top hp b.tot
   let s : Finset ι := {i}
@@ -268,7 +268,7 @@ theorem coe_coord_of_subsingleton_eq_one [Subsingleton ι] (i : ι) : (b.Coord i
   rw [Pi.one_apply, hq, b.coord_apply_combination_of_mem hi hw]
 #align affine_basis.coe_coord_of_subsingleton_eq_one AffineBasis.coe_coord_of_subsingleton_eq_one
 
-theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coord i := by
+theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.coord i := by
   classical
     intro x
     obtain ⟨j, hij⟩ := exists_ne i
@@ -284,7 +284,7 @@ theorem surjective_coord [Nontrivial ι] (i : ι) : Function.Surjective <| b.Coo
 /-- Barycentric coordinates as an affine map. -/
 noncomputable def coords : P →ᵃ[k] ι → k
     where
-  toFun q i := b.Coord i q
+  toFun q i := b.coord i q
   linear :=
     { toFun := fun v i => -(b.basisOf i).sumCoords v
       map_add' := fun v w => by
@@ -295,12 +295,12 @@ noncomputable def coords : P →ᵃ[k] ι → k
         simpa only [LinearMap.map_smul, Pi.smul_apply, smul_neg] }
   map_vadd' p v := by
     ext i
-    simp only [linear_eq_sum_coords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply',
+    simp only [linear_eq_sumCoords, LinearMap.coe_mk, LinearMap.neg_apply, Pi.vadd_apply',
       AffineMap.map_vadd]
 #align affine_basis.coords AffineBasis.coords
 
 @[simp]
-theorem coords_apply (q : P) (i : ι) : b.coords q i = b.Coord i q :=
+theorem coords_apply (q : P) (i : ι) : b.coords q i = b.coord i q :=
   rfl
 #align affine_basis.coords_apply AffineBasis.coords_apply
 
@@ -314,13 +314,13 @@ include V
 
 @[simp]
 theorem coord_apply_centroid [CharZero k] (b : AffineBasis ι k P) {s : Finset ι} {i : ι}
-    (hi : i ∈ s) : b.Coord i (s.centroid k b) = (s.card : k)⁻¹ := by
+    (hi : i ∈ s) : b.coord i (s.centroid k b) = (s.card : k)⁻¹ := by
   rw [Finset.centroid,
     b.coord_apply_combination_of_mem hi (s.sum_centroid_weights_eq_one_of_nonempty _ ⟨i, hi⟩),
     Finset.centroidWeights]
 #align affine_basis.coord_apply_centroid AffineBasis.coord_apply_centroid
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem exists_affine_subbasis {t : Set P} (ht : affineSpan k t = ⊤) :
     ∃ (s : _)(_ : s ⊆ t)(b : AffineBasis (↥s) k P), ⇑b = coe :=
   by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.supported
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,13 +64,13 @@ theorem supportedEquivMvPolynomial_symm_c (s : Set σ) (x : R) :
     (supportedEquivMvPolynomial s).symm (c x) = algebraMap R (supported R s) x :=
   by
   ext1
-  simp [supported_equiv_mv_polynomial, MvPolynomial.algebraMap_eq]
+  simp [supportedEquivMvPolynomial, MvPolynomial.algebraMap_eq]
 #align mv_polynomial.supported_equiv_mv_polynomial_symm_C MvPolynomial.supportedEquivMvPolynomial_symm_c
 
 @[simp]
 theorem supportedEquivMvPolynomial_symm_x (s : Set σ) (i : s) :
     (↑((supportedEquivMvPolynomial s).symm (x i : MvPolynomial s R)) : MvPolynomial σ R) = x i := by
-  simp [supported_equiv_mv_polynomial]
+  simp [supportedEquivMvPolynomial]
 #align mv_polynomial.supported_equiv_mv_polynomial_symm_X MvPolynomial.supportedEquivMvPolynomial_symm_x
 
 variable {s t : Set σ}
@@ -107,7 +107,7 @@ theorem supported_univ : supported R (Set.univ : Set σ) = ⊤ := by
 #align mv_polynomial.supported_univ MvPolynomial.supported_univ
 
 @[simp]
-theorem supported_empty : supported R (∅ : Set σ) = ⊥ := by simp [supported_eq_adjoin_X]
+theorem supported_empty : supported R (∅ : Set σ) = ⊥ := by simp [supported_eq_adjoin_x]
 #align mv_polynomial.supported_empty MvPolynomial.supported_empty
 
 variable {s}
@@ -126,7 +126,7 @@ theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported 
   by
   constructor
   · intro h i
-    simpa using @h (X i)
+    simpa using @h (x i)
   · exact supported_mono
 #align mv_polynomial.supported_le_supported_iff MvPolynomial.supported_le_supported_iff
 

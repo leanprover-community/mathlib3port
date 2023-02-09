@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.nonarchimedean.adic_topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
 variable (I : Ideal R) (M : Type _) [AddCommGroup M] [Module R M]
 
 theorem adicModuleBasis :
-    I.RingFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
+    I.ringFilterBasis.SubmodulesBasis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter := fun i j =>
       ⟨max i j,
         le_inf_iff.mpr
@@ -132,7 +132,7 @@ theorem adicModuleBasis :
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/
 def adicModuleTopology : TopologicalSpace M :=
   @ModuleFilterBasis.topology R M _ I.adicBasis.topology _ _
-    (I.RingFilterBasis.ModuleFilterBasis (I.adicModuleBasis M))
+    (I.ringFilterBasis.moduleFilterBasis (I.adicModuleBasis M))
 #align ideal.adic_module_topology Ideal.adicModuleTopology
 
 /-- The elements of the basis of neighborhoods of zero for the `I`-adic topology
@@ -141,7 +141,7 @@ def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
     is_open' := by
       letI := I.adic_topology
-      convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
+      convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).isOpen
       simp }
 #align ideal.open_add_subgroup Ideal.openAddSubgroup
 
@@ -174,7 +174,7 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
       simpa using J.has_basis_nhds_zero_adic.mem_iff.mp hs
   · rintro ⟨H₁, H₂⟩
     apply TopologicalAddGroup.ext
-    · apply @TopologicalRing.to_topologicalAddGroup
+    · apply @topological_ring.to_topological_add_group
     · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.is_topological_add_group
     · ext s
       letI := Ideal.adicBasis J

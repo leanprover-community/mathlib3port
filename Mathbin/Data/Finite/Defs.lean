@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ While this could be defined as `nonempty (fintype α)`, it is defined
 in this way to allow there to be `finite` instances for propositions.
 -/
 class inductive Finite (α : Sort _) : Prop
-  | intro {n : ℕ} : α ≃ Fin n → Finite
+  | intro {n : ℕ} : α ≃ Fin n → finite
 #align finite Finite
 -/
 
@@ -160,7 +160,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}}, (Equiv.{u2, u1} α β) -> (Iff (Infinite.{u2} α) (Infinite.{u1} β))
 Case conversion may be inaccurate. Consider using '#align equiv.infinite_iff Equiv.infinite_iffₓ'. -/
 theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
-  not_finite_iff_infinite.symm.trans <| e.finite_iff.Not.trans not_finite_iff_infinite
+  not_finite_iff_infinite.symm.trans <| e.finite_iff.not.trans not_finite_iff_infinite
 #align equiv.infinite_iff Equiv.infinite_iff
 
 instance [Infinite α] : Infinite (PLift α) :=

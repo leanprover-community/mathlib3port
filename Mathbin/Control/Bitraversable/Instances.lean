@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bitraversable.instances
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,8 +66,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sum.bitraverse Sum.bitraverseₓ'. -/
 /-- The bitraverse function for `α ⊕ β`. -/
 def Sum.bitraverse {α α' β β'} (f : α → F α') (f' : β → F β') : Sum α β → F (Sum α' β')
-  | Sum.inl x => Sum.inl <$> f x
-  | Sum.inr x => Sum.inr <$> f' x
+  | sum.inl x => Sum.inl <$> f x
+  | sum.inr x => Sum.inr <$> f' x
 #align sum.bitraverse Sum.bitraverse
 
 instance : Bitraversable Sum where bitraverse := @Sum.bitraverse

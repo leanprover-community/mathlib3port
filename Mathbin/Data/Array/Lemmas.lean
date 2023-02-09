@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.array.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem revList_reverse : a.revList.reverse = a.toList :=
 
 @[simp]
 theorem toList_reverse : a.toList.reverse = a.revList := by
-  rw [← rev_list_reverse, List.reverse_reverse]
+  rw [← revList_reverse, List.reverse_reverse]
 #align array.to_list_reverse Array'.toList_reverse
 
 end RevList
@@ -97,7 +97,7 @@ theorem mem_revList : v ∈ a.revList ↔ v ∈ a :=
 
 @[simp]
 theorem mem_toList : v ∈ a.toList ↔ v ∈ a := by
-  rw [← rev_list_reverse] <;> exact list.mem_reverse.trans mem_rev_list
+  rw [← revList_reverse] <;> exact list.mem_reverse.trans mem_revList
 #align array.mem_to_list Array'.mem_toList
 
 end Mem
@@ -127,7 +127,7 @@ section Foldl
 variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : β → α → β} {a : Array' n α}
 
 theorem toList_foldl : a.toList.foldl f b = a.foldl b (Function.swap f) := by
-  rw [← rev_list_reverse, List.foldl_reverse, rev_list_foldr]
+  rw [← revList_reverse, List.foldl_reverse, revList_foldr]
 #align array.to_list_foldl Array'.toList_foldl
 
 end Foldl
@@ -149,7 +149,7 @@ theorem revList_length (a : Array' n α) : a.revList.length = n :=
 
 @[simp]
 theorem toList_length (a : Array' n α) : a.toList.length = n := by
-  rw [← rev_list_reverse, List.length_reverse, rev_list_length]
+  rw [← revList_reverse, List.length_reverse, revList_length]
 #align array.to_list_length Array'.toList_length
 
 end Length
@@ -181,23 +181,23 @@ theorem toList_nthLe (i : ℕ) (h h') : List.nthLe a.toList i h' = a.read ⟨i, 
 
 @[simp]
 theorem toList_nth_le' (a : Array' n α) (i : Fin n) (h') : List.nthLe a.toList i h' = a.read i := by
-  cases i <;> apply to_list_nth_le
+  cases i <;> apply toList_nthLe
 #align array.to_list_nth_le' Array'.toList_nth_le'
 
 theorem toList_get? {i v} : List.get? a.toList i = some v ↔ ∃ h, a.read ⟨i, h⟩ = v :=
   by
   rw [List.get?_eq_some']
-  have ll := to_list_length a
+  have ll := toList_length a
   constructor <;> intro h <;> cases' h with h e <;> subst v
-  · exact ⟨ll ▸ h, (to_list_nth_le _ _ _).symm⟩
-  · exact ⟨ll.symm ▸ h, to_list_nth_le _ _ _⟩
+  · exact ⟨ll ▸ h, (toList_nthLe _ _ _).symm⟩
+  · exact ⟨ll.symm ▸ h, toList_nthLe _ _ _⟩
 #align array.to_list_nth Array'.toList_get?
 
 theorem write_toList {i v} : (a.write i v).toList = a.toList.set i v :=
   List.ext_nthLe (by simp) fun j h₁ h₂ =>
     by
     have h₃ : j < n := by simpa using h₁
-    rw [to_list_nth_le _ h₃]
+    rw [toList_nthLe _ h₃]
     refine'
       let ⟨_, e⟩ := List.get?_eq_some'.1 _
       e.symm
@@ -206,7 +206,7 @@ theorem write_toList {i v} : (a.write i v).toList = a.toList.set i v :=
       rw [show (⟨(i : ℕ), h₃⟩ : Fin _) = i from Fin.eq_of_veq rfl, Array'.read_write,
         List.get?_set_eq_of_lt]
       simp [h₃]
-    · rw [List.get?_set_ne _ _ ij, a.read_write_of_ne, to_list_nth.2 ⟨h₃, rfl⟩]
+    · rw [List.get?_set_ne _ _ ij, a.read_write_of_ne, toList_get?.2 ⟨h₃, rfl⟩]
       exact Fin.ne_of_vne ij
 #align array.write_to_list Array'.write_toList
 
@@ -218,7 +218,7 @@ section Enum
 variable {n : ℕ} {α : Type u} {a : Array' n α}
 
 theorem mem_toList_enum {i v} : (i, v) ∈ a.toList.enum ↔ ∃ h, a.read ⟨i, h⟩ = v := by
-  simp [List.mem_iff_get?, to_list_nth, and_comm, and_assoc, and_left_comm]
+  simp [List.mem_iff_get?, toList_get?, and_comm, and_assoc, and_left_comm]
 #align array.mem_to_list_enum Array'.mem_toList_enum
 
 end Enum
@@ -259,7 +259,7 @@ theorem pushBack_rev_list_aux :
   | i + 1, h, h' => by
     simp [DArray.iterateAux]
     refine' ⟨_, push_back_rev_list_aux _ _ _⟩
-    dsimp [read, DArray.read, push_back]
+    dsimp [read, DArray.read, pushBack]
     rw [dif_neg]; rfl
     exact ne_of_lt h'
 #align array.push_back_rev_list_aux Array'.pushBack_rev_list_aux
@@ -268,23 +268,23 @@ theorem pushBack_rev_list_aux :
 theorem pushBack_revList : (a.pushBack v).revList = v :: a.revList :=
   by
   unfold push_back rev_list foldl iterate DArray.iterate
-  dsimp [DArray.iterateAux, read, DArray.read, push_back]
+  dsimp [DArray.iterateAux, read, DArray.read, pushBack]
   rw [dif_pos (Eq.refl n)]
   apply congr_arg
-  apply push_back_rev_list_aux
+  apply pushBack_rev_list_aux
 #align array.push_back_rev_list Array'.pushBack_revList
 
 @[simp]
 theorem pushBack_toList : (a.pushBack v).toList = a.toList ++ [v] := by
-  rw [← rev_list_reverse, ← rev_list_reverse, push_back_rev_list, List.reverse_cons]
+  rw [← revList_reverse, ← revList_reverse, pushBack_revList, List.reverse_cons]
 #align array.push_back_to_list Array'.pushBack_toList
 
 @[simp]
-theorem read_pushBack_left (i : Fin n) : (a.pushBack v).read i.cast_succ = a.read i :=
+theorem read_pushBack_left (i : Fin n) : (a.pushBack v).read i.castSucc = a.read i :=
   by
   cases' i with i hi
   have : ¬i = n := ne_of_lt hi
-  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
+  simp [pushBack, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
 #align array.read_push_back_left Array'.read_pushBack_left
 
 @[simp]
@@ -292,7 +292,7 @@ theorem read_pushBack_right : (a.pushBack v).read (Fin.last _) = v :=
   by
   cases' hn : Fin.last n with k hk
   have : k = n := by simpa [Fin.eq_iff_veq] using hn.symm
-  simp [push_back, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
+  simp [pushBack, this, Fin.castSucc, Fin.castAdd, Fin.castLe, Fin.castLt, read, DArray.read]
 #align array.read_push_back_right Array'.read_pushBack_right
 
 end PushBack

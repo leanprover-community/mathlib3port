@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.algebraic_independent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem algebraicIndependent_empty_type_iff [IsEmpty ι] :
     ext i
     exact IsEmpty.elim' ‹IsEmpty ι› i
   rw [AlgebraicIndependent, this, ←
-    injective.of_comp_iff' _ (@is_empty_alg_equiv R ι _ _).Bijective]
+    Injective.of_comp_iff' _ (@is_empty_alg_equiv R ι _ _).bijective]
   rfl
 #align algebraic_independent_empty_type_iff algebraicIndependent_empty_type_iff
 
@@ -114,29 +114,29 @@ include hx
 
 theorem algebraMap_injective : Injective (algebraMap R A) := by
   simpa [← MvPolynomial.algebraMap_eq, Function.comp] using
-    (injective.of_comp_iff (algebraicIndependent_iff_injective_aeval.1 hx) MvPolynomial.c).2
+    (Injective.of_comp_iff (algebraicIndependent_iff_injective_aeval.1 hx) mv_polynomial.C).2
       (MvPolynomial.c_injective _ _)
 #align algebraic_independent.algebra_map_injective AlgebraicIndependent.algebraMap_injective
 
 theorem linearIndependent : LinearIndependent R x :=
   by
   rw [linearIndependent_iff_injective_total]
-  have : Finsupp.total ι A R x = (MvPolynomial.aeval x).toLinearMap.comp (Finsupp.total ι _ R X) :=
+  have : Finsupp.total ι A R x = (MvPolynomial.aeval x).toLinearMap.comp (Finsupp.total ι _ R x) :=
     by
     ext
     simp
   rw [this]
   refine' hx.comp _
   rw [← linearIndependent_iff_injective_total]
-  exact linear_independent_X _ _
+  exact linearIndependent_x _ _
 #align algebraic_independent.linear_independent AlgebraicIndependent.linearIndependent
 
 protected theorem injective [Nontrivial R] : Injective x :=
-  hx.LinearIndependent.Injective
+  hx.linearIndependent.injective
 #align algebraic_independent.injective AlgebraicIndependent.injective
 
 theorem ne_zero [Nontrivial R] (i : ι) : x i ≠ 0 :=
-  hx.LinearIndependent.NeZero i
+  hx.linearIndependent.ne_zero i
 #align algebraic_independent.ne_zero AlgebraicIndependent.ne_zero
 
 theorem comp (f : ι' → ι) (hf : Function.Injective f) : AlgebraicIndependent R (x ∘ f) := fun p q =>
@@ -144,7 +144,7 @@ theorem comp (f : ι' → ι) (hf : Function.Injective f) : AlgebraicIndependent
 #align algebraic_independent.comp AlgebraicIndependent.comp
 
 theorem coe_range : AlgebraicIndependent R (coe : range x → A) := by
-  simpa using hx.comp _ (range_splitting_injective x)
+  simpa using hx.comp _ (rangeSplitting_injective x)
 #align algebraic_independent.coe_range AlgebraicIndependent.coe_range
 
 theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) :
@@ -155,7 +155,7 @@ theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) :
     by
     intro p
     rw [AlgHom.mem_range]
-    refine' ⟨MvPolynomial.rename (cod_restrict x (range x) mem_range_self) p, _⟩
+    refine' ⟨MvPolynomial.rename (codRestrict x (range x) mem_range_self) p, _⟩
     simp [Function.comp, aeval_rename]
   intro x y hxy
   rw [this] at hxy
@@ -192,8 +192,8 @@ theorem algebraicIndependent_of_subsingleton [Subsingleton R] : AlgebraicIndepen
 
 theorem algebraicIndependent_equiv (e : ι ≃ ι') {f : ι' → A} :
     AlgebraicIndependent R (f ∘ e) ↔ AlgebraicIndependent R f :=
-  ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.Injective, fun h =>
-    h.comp _ e.Injective⟩
+  ⟨fun h => Function.comp.right_id f ▸ e.self_comp_symm ▸ h.comp _ e.symm.injective, fun h =>
+    h.comp _ e.injective⟩
 #align algebraic_independent_equiv algebraicIndependent_equiv
 
 theorem algebraicIndependent_equiv' (e : ι ≃ ι') {f : ι' → A} {g : ι → A} (h : f ∘ e = g) :
@@ -229,10 +229,10 @@ theorem AlgebraicIndependent.restrict_scalars {K : Type _} [CommRing K] [Algebra
   have :
     (aeval x : MvPolynomial ι K →ₐ[K] A).toRingHom.comp (MvPolynomial.map (algebraMap R K)) =
       (aeval x : MvPolynomial ι R →ₐ[R] A).toRingHom :=
-    by ext <;> simp [algebra_map_eq_smul_one]
-  show injective (aeval x).toRingHom
+    by ext <;> simp [algebraMap_eq_smul_one]
+  show Injective (aeval x).toRingHom
   rw [← this]
-  exact injective.comp ai (MvPolynomial.map_injective _ hinj)
+  exact Injective.comp ai (MvPolynomial.map_injective _ hinj)
 #align algebraic_independent.restrict_scalars AlgebraicIndependent.restrict_scalars
 
 /-- Every finite subset of an algebraically independent set is algebraically independent. -/
@@ -240,12 +240,12 @@ theorem algebraicIndependent_finset_map_embedding_subtype (s : Set A)
     (li : AlgebraicIndependent R (coe : s → A)) (t : Finset s) :
     AlgebraicIndependent R (coe : Finset.map (Embedding.subtype s) t → A) :=
   by
-  let f : t.map (embedding.subtype s) → s := fun x =>
+  let f : t.map (Embedding.subtype s) → s := fun x =>
     ⟨x.1, by
       obtain ⟨x, h⟩ := x
       rw [Finset.mem_map] at h
       obtain ⟨a, ha, rfl⟩ := h
-      simp only [Subtype.coe_prop, embedding.coe_subtype]⟩
+      simp only [Subtype.coe_prop, Embedding.coe_subtype]⟩
   convert AlgebraicIndependent.comp li f _
   rintro ⟨x, hx⟩ ⟨y, hy⟩
   rw [Finset.mem_map] at hx hy
@@ -264,7 +264,7 @@ theorem algebraicIndependent_bounded_of_finset_algebraicIndependent_bounded {n :
   intro s li
   apply Cardinal.card_le_of
   intro t
-  rw [← Finset.card_map (embedding.subtype s)]
+  rw [← Finset.card_map (Embedding.subtype s)]
   apply H
   apply algebraicIndependent_finset_map_embedding_subtype _ li
 #align algebraic_independent_bounded_of_finset_algebraic_independent_bounded algebraicIndependent_bounded_of_finset_algebraicIndependent_bounded
@@ -318,10 +318,10 @@ theorem algebraicIndependent_comp_subtype {s : Set ι} :
 theorem algebraicIndependent_subtype {s : Set A} :
     AlgebraicIndependent R (fun x => x : s → A) ↔
       ∀ p : MvPolynomial A R, p ∈ MvPolynomial.supported R s → aeval id p = 0 → p = 0 :=
-  by apply @algebraicIndependent_comp_subtype _ _ _ id
+  by apply @algebraic_independent_comp_subtype _ _ _ id
 #align algebraic_independent_subtype algebraicIndependent_subtype
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem algebraicIndependent_of_finite (s : Set A)
     (H : ∀ (t) (_ : t ⊆ s), t.Finite → AlgebraicIndependent R (fun x => x : t → A)) :
     AlgebraicIndependent R (fun x => x : s → A) :=
@@ -334,7 +334,7 @@ theorem AlgebraicIndependent.image_of_comp {ι ι'} (s : Set ι) (f : ι → ι'
     AlgebraicIndependent R fun x : f '' s => g x :=
   by
   nontriviality R
-  have : inj_on f s := inj_on_iff_injective.2 hs.injective.of_comp
+  have : InjOn f s := injOn_iff_injective.2 hs.injective.of_comp
   exact (algebraicIndependent_equiv' (Equiv.Set.imageOfInjOn f s this) rfl).1 hs
 #align algebraic_independent.image_of_comp AlgebraicIndependent.image_of_comp
 
@@ -349,16 +349,16 @@ theorem algebraicIndependent_unionᵢ_of_directed {η : Type _} [Nonempty η] {s
     AlgebraicIndependent R (fun x => x : (⋃ i, s i) → A) :=
   by
   refine' algebraicIndependent_of_finite (⋃ i, s i) fun t ht ft => _
-  rcases finite_subset_Union ft ht with ⟨I, fi, hI⟩
+  rcases finite_subset_unionᵢ ft ht with ⟨I, fi, hI⟩
   rcases hs.finset_le fi.to_finset with ⟨i, hi⟩
-  exact (h i).mono (subset.trans hI <| Union₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
+  exact (h i).mono (Subset.trans hI <| unionᵢ₂_subset fun j hj => hi j (fi.mem_to_finset.2 hj))
 #align algebraic_independent_Union_of_directed algebraicIndependent_unionᵢ_of_directed
 
 theorem algebraicIndependent_unionₛ_of_directed {s : Set (Set A)} (hsn : s.Nonempty)
     (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, AlgebraicIndependent R (fun x => x : (a : Set A) → A)) :
     AlgebraicIndependent R (fun x => x : ⋃₀ s → A) := by
-  letI : Nonempty s := nonempty.to_subtype hsn <;> rw [sUnion_eq_Union] <;>
+  letI : Nonempty s := Nonempty.to_subtype hsn <;> rw [unionₛ_eq_unionᵢ] <;>
     exact algebraicIndependent_unionᵢ_of_directed hs.directed_coe (by simpa using h)
 #align algebraic_independent_sUnion_of_directed algebraicIndependent_unionₛ_of_directed
 
@@ -377,10 +377,10 @@ theorem exists_maximal_algebraicIndependent (s t : Set A) (hst : s ⊆ t)
                 _, _⟩,
               _⟩
           · cases' hcn with x hx
-            exact subset_sUnion_of_subset _ x (hc hx).2.1 hx
-          · exact sUnion_subset fun x hx => (hc hx).2.2
+            exact subset_unionₛ_of_subset _ x (hc hx).2.1 hx
+          · exact unionₛ_subset fun x hx => (hc hx).2.2
           · intro s
-            exact subset_sUnion_of_mem⟩)
+            exact subset_unionₛ_of_mem⟩)
       s ⟨hs, Set.Subset.refl s, hst⟩ with
     ⟨u, ⟨huai, hsu, hut⟩, hsu, hx⟩
   use u, huai, hsu, hut
@@ -458,7 +458,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply
     (hx : AlgebraicIndependent R x) (y) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin y =
       Polynomial.map (hx.aevalEquiv : MvPolynomial ι R →+* adjoin R (range x))
-        (aeval (fun o : Option ι => o.elim Polynomial.x fun s : ι => Polynomial.c (x s)) y) :=
+        (aeval (fun o : Option ι => o.elim' Polynomial.x fun s : ι => Polynomial.c (x s)) y) :=
   rfl
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply
 
@@ -469,9 +469,9 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
   by
   -- TODO: this instance is slow to infer
   have h : IsScalarTower R (MvPolynomial ι R) (Polynomial (MvPolynomial ι R)) :=
-    @Polynomial.isScalarTower (MvPolynomial ι R) _ R _ _ _ _ _ _ _
-  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_C,
-    @IsScalarTower.algebraMap_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.c_eq_algebraMap,
+    @polynomial.is_scalar_tower (MvPolynomial ι R) _ R _ _ _ _ _ _ _
+  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_c,
+    @is_scalar_tower.algebra_map_apply _ _ _ _ _ _ _ _ _ h, ← Polynomial.c_eq_algebraMap,
     Polynomial.map_c, RingHom.coe_coe, AlgEquiv.commutes]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_C AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
 
@@ -479,7 +479,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_c
 theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_none
     (hx : AlgebraicIndependent R x) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x none) = Polynomial.x := by
-  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_X, Option.elim',
+  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_x, Option.elim',
     Polynomial.map_x]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_none AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_none
 
@@ -488,7 +488,7 @@ theorem AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_some
     (hx : AlgebraicIndependent R x) (i) :
     hx.mvPolynomialOptionEquivPolynomialAdjoin (x (some i)) = Polynomial.c (hx.aevalEquiv (x i)) :=
   by
-  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_X, Option.elim',
+  rw [AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_apply, aeval_x, Option.elim',
     Polynomial.map_c, RingHom.coe_coe]
 #align algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_X_some AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin_x_some
 
@@ -498,30 +498,30 @@ theorem AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
         (↑(Polynomial.aeval a : Polynomial (adjoin R (Set.range x)) →ₐ[_] A) :
           Polynomial (adjoin R (Set.range x)) →+* A)
         hx.mvPolynomialOptionEquivPolynomialAdjoin.toRingHom =
-      ↑(MvPolynomial.aeval fun o : Option ι => o.elim a x : MvPolynomial (Option ι) R →ₐ[R] A) :=
+      ↑(MvPolynomial.aeval fun o : Option ι => o.elim' a x : MvPolynomial (Option ι) R →ₐ[R] A) :=
   by
   refine' MvPolynomial.ringHom_ext _ _ <;>
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
       AlgHom.coe_to_ringHom, AlgHom.coe_to_ringHom]
   · intro r
-    rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_c,
+    rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_c, Polynomial.aeval_c,
       IsScalarTower.algebraMap_apply R (adjoin R (range x)) A]
   · rintro (⟨⟩ | ⟨i⟩)
     ·
-      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_x,
+      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_x, Polynomial.aeval_x,
         Option.elim']
     ·
       rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_c,
-        hx.algebra_map_aeval_equiv, aeval_X, aeval_X, Option.elim']
+        hx.algebra_map_aeval_equiv, aeval_x, aeval_x, Option.elim']
 #align algebraic_independent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
 
 theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) :
-    (AlgebraicIndependent R fun o : Option ι => o.elim a x) ↔
+    (AlgebraicIndependent R fun o : Option ι => o.elim' a x) ↔
       ¬IsAlgebraic (adjoin R (Set.range x)) a :=
   by
   erw [algebraicIndependent_iff_injective_aeval, isAlgebraic_iff_not_injective, Classical.not_not, ←
     AlgHom.coe_to_ringHom, ← hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin,
-    RingHom.coe_comp, injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_to_ringHom]
+    RingHom.coe_comp, Injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_to_ringHom]
 #align algebraic_independent.option_iff AlgebraicIndependent.option_iff
 
 variable (R)
@@ -542,7 +542,7 @@ theorem exists_isTranscendenceBasis (h : Injective (algebraMap R A)) :
     s hs
   use s, hs.1
   intro t ht hr
-  simp only [Subtype.range_coe_subtype, set_of_mem_eq] at *
+  simp only [Subtype.range_coe_subtype, setOf_mem_eq] at *
   exact Eq.symm (hs.2.2.2 t ht hr (Set.subset_univ _))
 #align exists_is_transcendence_basis exists_isTranscendenceBasis
 
@@ -579,7 +579,7 @@ theorem IsTranscendenceBasis.isAlgebraic [Nontrivial R] (hx : IsTranscendenceBas
   intro a
   rw [← not_iff_comm.1 (hx.1.option_iff _).symm]
   intro ai
-  have h₁ : range x ⊆ range fun o : Option ι => o.elim a x :=
+  have h₁ : range x ⊆ range fun o : Option ι => o.elim' a x :=
     by
     rintro x ⟨y, rfl⟩
     exact ⟨some y, rfl⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.succ_pred.interval_succ
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,14 @@ theorem bunionᵢ_Ico_Ioc_map_succ [SuccOrder α] [IsSuccArchimedean α] [Linear
     (hf : Monotone f) (m n : α) : (⋃ i ∈ Ico m n, Ioc (f i) (f (succ i))) = Ioc (f m) (f n) :=
   by
   cases' le_total n m with hnm hmn
-  · rw [Ico_eq_empty_of_le hnm, Ioc_eq_empty_of_le (hf hnm), bUnion_empty]
+  · rw [Ico_eq_empty_of_le hnm, Ioc_eq_empty_of_le (hf hnm), bunionᵢ_empty]
   · refine' Succ.rec _ _ hmn
-    · simp only [Ioc_self, Ico_self, bUnion_empty]
+    · simp only [Ioc_self, Ico_self, bunionᵢ_empty]
     · intro k hmk ihk
       rw [← Ioc_union_Ioc_eq_Ioc (hf hmk) (hf <| le_succ _), union_comm, ← ihk]
       by_cases hk : IsMax k
       · rw [hk.succ_eq, Ioc_self, empty_union]
-      · rw [Ico_succ_right_eq_insert_of_not_is_max hmk hk, bUnion_insert]
+      · rw [Ico_succ_right_eq_insert_of_not_isMax hmk hk, bunionᵢ_insert]
 #align monotone.bUnion_Ico_Ioc_map_succ Monotone.bunionᵢ_Ico_Ioc_map_succ
 
 /- warning: monotone.pairwise_disjoint_on_Ioc_succ -> Monotone.pairwise_disjoint_on_Ioc_succ is a dubious translation:

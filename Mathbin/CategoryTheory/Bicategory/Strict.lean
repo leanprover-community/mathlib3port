@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.strict
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem whiskerLeft_eqToHom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = 
     f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) :=
   by
   cases η
-  simp only [whisker_left_id, eq_to_hom_refl]
+  simp only [whiskerLeft_id, eqToHom_refl]
 #align category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whiskerLeft_eqToHom
 
 @[simp]
@@ -91,7 +91,7 @@ theorem eqToHom_whiskerRight {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶
     eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) :=
   by
   cases η
-  simp only [id_whisker_right, eq_to_hom_refl]
+  simp only [id_whiskerRight, eqToHom_refl]
 #align category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eqToHom_whiskerRight
 
 end Bicategory

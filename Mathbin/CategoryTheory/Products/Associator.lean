@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.products.associator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def associativity : (C × D) × E ≌ C × D × E :=
 #align category_theory.prod.associativity CategoryTheory.prod.associativity
 
 instance associatorIsEquivalence : IsEquivalence (associator C D E) :=
-  (by infer_instance : IsEquivalence (associativity C D E).Functor)
+  (by infer_instance : IsEquivalence (associativity C D E).functor)
 #align category_theory.prod.associator_is_equivalence CategoryTheory.prod.associatorIsEquivalence
 
 instance inverseAssociatorIsEquivalence : IsEquivalence (inverseAssociator C D E) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.ring.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -344,24 +344,24 @@ variable [LinearOrder α]
 -- see Note [lower instance priority]
 instance (priority := 100) PosMulStrictMono.to_posMulMonoRev [PosMulStrictMono α] :
     PosMulMonoRev α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_left h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_left h' x.prop⟩
 #align pos_mul_strict_mono.to_pos_mul_mono_rev PosMulStrictMono.to_posMulMonoRev
 
 -- see Note [lower instance priority]
 instance (priority := 100) MulPosStrictMono.to_mulPosMonoRev [MulPosStrictMono α] :
     MulPosMonoRev α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_right h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| mul_lt_mul_of_pos_right h' x.prop⟩
 #align mul_pos_strict_mono.to_mul_pos_mono_rev MulPosStrictMono.to_mulPosMonoRev
 
 #print PosMulMonoRev.toPosMulStrictMono /-
 theorem PosMulMonoRev.toPosMulStrictMono [PosMulMonoRev α] : PosMulStrictMono α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_left h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_left h' x.prop⟩
 #align pos_mul_mono_rev.to_pos_mul_strict_mono PosMulMonoRev.toPosMulStrictMono
 -/
 
 #print MulPosMonoRev.toMulPosStrictMono /-
 theorem MulPosMonoRev.toMulPosStrictMono [MulPosMonoRev α] : MulPosStrictMono α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_right h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| le_of_mul_le_mul_of_pos_right h' x.prop⟩
 #align mul_pos_mono_rev.to_mul_pos_strict_mono MulPosMonoRev.toMulPosStrictMono
 -/
 
@@ -379,25 +379,25 @@ theorem mulPosStrictMono_iff_mulPosMonoRev : MulPosStrictMono α ↔ MulPosMonoR
 
 #print PosMulReflectLT.toPosMulMono /-
 theorem PosMulReflectLT.toPosMulMono [PosMulReflectLT α] : PosMulMono α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_left h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_left h' x.prop⟩
 #align pos_mul_reflect_lt.to_pos_mul_mono PosMulReflectLT.toPosMulMono
 -/
 
 #print MulPosReflectLT.toMulPosMono /-
 theorem MulPosReflectLT.toMulPosMono [MulPosReflectLT α] : MulPosMono α :=
-  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_right h' x.Prop⟩
+  ⟨fun x a b h => le_of_not_lt fun h' => h.not_lt <| lt_of_mul_lt_mul_right h' x.prop⟩
 #align mul_pos_reflect_lt.to_mul_pos_mono MulPosReflectLT.toMulPosMono
 -/
 
 #print PosMulMono.toPosMulReflectLT /-
 theorem PosMulMono.toPosMulReflectLT [PosMulMono α] : PosMulReflectLT α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_left h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_left h' x.prop⟩
 #align pos_mul_mono.to_pos_mul_reflect_lt PosMulMono.toPosMulReflectLT
 -/
 
 #print MulPosMono.toMulPosReflectLT /-
 theorem MulPosMono.toMulPosReflectLT [MulPosMono α] : MulPosReflectLT α :=
-  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_right h' x.Prop⟩
+  ⟨fun x a b h => lt_of_not_le fun h' => h.not_le <| mul_le_mul_of_nonneg_right h' x.prop⟩
 #align mul_pos_mono.to_mul_pos_reflect_lt MulPosMono.toMulPosReflectLT
 -/
 
@@ -679,7 +679,7 @@ theorem posMulMono_iff_covariant_pos :
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simp only [ha, zero_mul]
-      · exact @CovariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
+      · exact @covariant_class.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align pos_mul_mono_iff_covariant_pos posMulMono_iff_covariant_pos
 
 /- warning: mul_pos_mono_iff_covariant_pos -> mulPosMono_iff_covariant_pos is a dubious translation:
@@ -694,7 +694,7 @@ theorem mulPosMono_iff_covariant_pos :
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simp only [ha, mul_zero]
-      · exact @CovariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
+      · exact @covariant_class.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align mul_pos_mono_iff_covariant_pos mulPosMono_iff_covariant_pos
 
 /- warning: pos_mul_reflect_lt_iff_contravariant_pos -> posMulReflectLT_iff_contravariant_pos is a dubious translation:
@@ -709,7 +709,7 @@ theorem posMulReflectLT_iff_contravariant_pos :
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simpa [ha] using h
-      · exact @ContravariantClass.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨_, ha⟩ _ _ h⟩⟩
+      · exact @contravariant_class.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align pos_mul_reflect_lt_iff_contravariant_pos posMulReflectLT_iff_contravariant_pos
 
 /- warning: mul_pos_reflect_lt_iff_contravariant_pos -> mulPosReflectLT_iff_contravariant_pos is a dubious translation:
@@ -724,7 +724,7 @@ theorem mulPosReflectLT_iff_contravariant_pos :
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_gt
       · simpa [ha] using h
-      · exact @ContravariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨_, ha⟩ _ _ h⟩⟩
+      · exact @contravariant_class.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨_, ha⟩ _ _ h⟩⟩
 #align mul_pos_reflect_lt_iff_contravariant_pos mulPosReflectLT_iff_contravariant_pos
 
 /- warning: pos_mul_strict_mono.to_pos_mul_mono -> PosMulStrictMono.toPosMulMono is a dubious translation:
@@ -821,7 +821,7 @@ theorem mul_eq_mul_iff_eq_and_eq_of_pos [PosMulStrictMono α] [MulPosStrictMono 
   · exact ⟨rfl, (mul_left_cancel_iff_of_pos a0).mp h⟩
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨(mul_right_cancel_iff_of_pos d0).mp h, rfl⟩
-  exact ((mul_lt_mul_of_pos_of_pos hac hbd a0 d0).Ne h).elim
+  exact ((mul_lt_mul_of_pos_of_pos hac hbd a0 d0).ne h).elim
 #align mul_eq_mul_iff_eq_and_eq_of_pos mul_eq_mul_iff_eq_and_eq_of_pos
 
 /- warning: mul_eq_mul_iff_eq_and_eq_of_pos' -> mul_eq_mul_iff_eq_and_eq_of_pos' is a dubious translation:
@@ -839,7 +839,7 @@ theorem mul_eq_mul_iff_eq_and_eq_of_pos' [PosMulStrictMono α] [MulPosStrictMono
   · exact ⟨rfl, (mul_left_cancel_iff_of_pos b0).mp h⟩
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨(mul_right_cancel_iff_of_pos c0).mp h, rfl⟩
-  exact ((mul_lt_mul_of_lt_of_lt' hac hbd b0 c0).Ne h).elim
+  exact ((mul_lt_mul_of_lt_of_lt' hac hbd b0 c0).ne h).elim
 #align mul_eq_mul_iff_eq_and_eq_of_pos' mul_eq_mul_iff_eq_and_eq_of_pos'
 
 end PartialOrder
@@ -1706,7 +1706,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pos_mul_mono.to_pos_mul_strict_mono PosMulMono.toPosMulStrictMonoₓ'. -/
 theorem PosMulMono.toPosMulStrictMono [PosMulMono α] : PosMulStrictMono α :=
   ⟨fun x a b h =>
-    (mul_le_mul_of_nonneg_left h.le x.2.le).lt_of_ne (h.Ne ∘ mul_left_cancel₀ x.2.ne')⟩
+    (mul_le_mul_of_nonneg_left h.le x.2.le).lt_of_ne (h.ne ∘ mul_left_cancel₀ x.2.ne')⟩
 #align pos_mul_mono.to_pos_mul_strict_mono PosMulMono.toPosMulStrictMono
 
 /- warning: pos_mul_mono_iff_pos_mul_strict_mono -> posMulMono_iff_posMulStrictMono is a dubious translation:
@@ -1727,7 +1727,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_pos_mono.to_mul_pos_strict_mono MulPosMono.toMulPosStrictMonoₓ'. -/
 theorem MulPosMono.toMulPosStrictMono [MulPosMono α] : MulPosStrictMono α :=
   ⟨fun x a b h =>
-    (mul_le_mul_of_nonneg_right h.le x.2.le).lt_of_ne (h.Ne ∘ mul_right_cancel₀ x.2.ne')⟩
+    (mul_le_mul_of_nonneg_right h.le x.2.le).lt_of_ne (h.ne ∘ mul_right_cancel₀ x.2.ne')⟩
 #align mul_pos_mono.to_mul_pos_strict_mono MulPosMono.toMulPosStrictMono
 
 /- warning: mul_pos_mono_iff_mul_pos_strict_mono -> mulPosMono_iff_mulPosStrictMono is a dubious translation:
@@ -1748,7 +1748,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pos_mul_reflect_lt.to_pos_mul_mono_rev PosMulReflectLT.toPosMulMonoRevₓ'. -/
 theorem PosMulReflectLT.toPosMulMonoRev [PosMulReflectLT α] : PosMulMonoRev α :=
   ⟨fun x a b h =>
-    h.eq_or_lt.elim (le_of_eq ∘ mul_left_cancel₀ x.2.Ne.symm) fun h' =>
+    h.eq_or_lt.elim (le_of_eq ∘ mul_left_cancel₀ x.2.ne.symm) fun h' =>
       (lt_of_mul_lt_mul_left h' x.2.le).le⟩
 #align pos_mul_reflect_lt.to_pos_mul_mono_rev PosMulReflectLT.toPosMulMonoRev
 
@@ -1770,7 +1770,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_pos_reflect_lt.to_mul_pos_mono_rev MulPosReflectLT.toMulPosMonoRevₓ'. -/
 theorem MulPosReflectLT.toMulPosMonoRev [MulPosReflectLT α] : MulPosMonoRev α :=
   ⟨fun x a b h =>
-    h.eq_or_lt.elim (le_of_eq ∘ mul_right_cancel₀ x.2.Ne.symm) fun h' =>
+    h.eq_or_lt.elim (le_of_eq ∘ mul_right_cancel₀ x.2.ne.symm) fun h' =>
       (lt_of_mul_lt_mul_right h' x.2.le).le⟩
 #align mul_pos_reflect_lt.to_mul_pos_mono_rev MulPosReflectLT.toMulPosMonoRev
 

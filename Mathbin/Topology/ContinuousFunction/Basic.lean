@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ section
 
 You should extend this class when you extend `continuous_map`. -/
 class ContinuousMapClass (F : Type _) (α β : outParam <| Type _) [TopologicalSpace α]
-  [TopologicalSpace β] extends FunLike F α fun _ => β where
+  [TopologicalSpace β] extends FunLike F α fun _ => comp where
   map_continuous (f : F) : Continuous f
 #align continuous_map_class ContinuousMapClass
 -/
@@ -74,7 +74,7 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u3} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : ContinuousMapClass.{u1, u3, u2} F α β _inst_1 _inst_2] (f : F) (a : α), ContinuousAt.{u3, u2} α β _inst_1 _inst_2 (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.669 : α) => β) _x) (ContinuousMapClass.toFunLike.{u1, u3, u2} F α β _inst_1 _inst_2 _inst_3) f) a
 Case conversion may be inaccurate. Consider using '#align map_continuous_at map_continuousAtₓ'. -/
 theorem map_continuousAt (f : F) (a : α) : ContinuousAt f a :=
-  (map_continuous f).ContinuousAt
+  (map_continuous f).continuousAt
 #align map_continuous_at map_continuousAt
 
 /- warning: map_continuous_within_at -> map_continuousWithinAt is a dubious translation:
@@ -84,7 +84,7 @@ but is expected to have type
   forall {F : Type.{u1}} {α : Type.{u3}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u3} α] [_inst_2 : TopologicalSpace.{u2} β] [_inst_3 : ContinuousMapClass.{u1, u3, u2} F α β _inst_1 _inst_2] (f : F) (s : Set.{u3} α) (a : α), ContinuousWithinAt.{u3, u2} α β _inst_1 _inst_2 (FunLike.coe.{succ u1, succ u3, succ u2} F α (fun (_x : α) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.669 : α) => β) _x) (ContinuousMapClass.toFunLike.{u1, u3, u2} F α β _inst_1 _inst_2 _inst_3) f) s a
 Case conversion may be inaccurate. Consider using '#align map_continuous_within_at map_continuousWithinAtₓ'. -/
 theorem map_continuousWithinAt (f : F) (s : Set α) (a : α) : ContinuousWithinAt f s a :=
-  (map_continuous f).ContinuousWithinAt
+  (map_continuous f).continuousWithinAt
 #align map_continuous_within_at map_continuousWithinAt
 
 instance : CoeTC F C(α, β) :=
@@ -205,7 +205,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_set_coe ContinuousMap.continuous_set_coeₓ'. -/
 @[continuity]
 theorem continuous_set_coe (s : Set C(α, β)) (f : s) : Continuous f :=
-  f.1.Continuous
+  f.1.continuous
 #align continuous_map.continuous_set_coe ContinuousMap.continuous_set_coe
 
 /- warning: continuous_map.continuous_at -> ContinuousMap.continuousAt is a dubious translation:
@@ -216,7 +216,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_at ContinuousMap.continuousAtₓ'. -/
 /-- Deprecated. Use `map_continuous_at` instead. -/
 protected theorem continuousAt (f : C(α, β)) (x : α) : ContinuousAt f x :=
-  f.Continuous.ContinuousAt
+  f.continuous.continuousAt
 #align continuous_map.continuous_at ContinuousMap.continuousAt
 
 /- warning: continuous_map.congr_fun -> ContinuousMap.congr_fun is a dubious translation:
@@ -484,7 +484,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.prod_mk
 def prodMk (f : C(α, β₁)) (g : C(α, β₂)) : C(α, β₁ × β₂)
     where
   toFun x := (f x, g x)
-  continuous_toFun := Continuous.prod_mk f.Continuous g.Continuous
+  continuous_toFun := Continuous.prod_mk f.continuous g.continuous
 #align continuous_map.prod_mk ContinuousMap.prodMk
 
 /- warning: continuous_map.prod_map -> ContinuousMap.prodMap is a dubious translation:
@@ -498,7 +498,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.prod_ma
 def prodMap (f : C(α₁, α₂)) (g : C(β₁, β₂)) : C(α₁ × β₁, α₂ × β₂)
     where
   toFun := Prod.map f g
-  continuous_toFun := Continuous.prod_map f.Continuous g.Continuous
+  continuous_toFun := Continuous.prod_map f.continuous g.continuous
 #align continuous_map.prod_map ContinuousMap.prodMap
 
 /- warning: continuous_map.prod_eval -> ContinuousMap.prod_eval is a dubious translation:
@@ -568,7 +568,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_map.restric
 /-- The restriction of a continuous map onto the preimage of a set. -/
 @[simps]
 def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
-  ⟨s.restrictPreimage f, continuous_iff_continuousAt.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩
+  ⟨s.restrictPreimage f, continuous_iff_continuousAt.mpr fun x => f.2.continuousAt.restrictPreimage⟩
 #align continuous_map.restrict_preimage ContinuousMap.restrictPreimage
 
 end Restrict
@@ -600,7 +600,7 @@ noncomputable def liftCover : C(α, β) :=
     exact ⟨i, mem_of_mem_nhds hi⟩
   refine' ⟨Set.liftCover S (fun i => φ i) hφ H, continuous_subtype_nhds_cover hS _⟩
   intro i
-  convert (φ i).Continuous
+  convert (φ i).continuous
   ext x
   exact Set.liftCover_coe x
 #align continuous_map.lift_cover ContinuousMap.liftCover
@@ -651,8 +651,8 @@ pairwise on intersections, can be glued to construct a continuous map in `C(α, 
 noncomputable def liftCover' : C(α, β) :=
   by
   let S : A → Set α := coe
-  let F : ∀ i : A, C(i, β) := fun i => F i i.Prop
-  refine' lift_cover S F (fun i j => hF i i.Prop j j.Prop) _
+  let F : ∀ i : A, C(i, β) := fun i => F i i.prop
+  refine' liftCover S F (fun i j => hF i i.prop j j.Prop) _
   intro x
   obtain ⟨s, hs, hsx⟩ := hA x
   exact ⟨⟨s, hs⟩, hsx⟩
@@ -743,14 +743,14 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.symm_comp_t
 /-- Left inverse to a continuous map from a homeomorphism, mirroring `equiv.symm_comp_self`. -/
 @[simp]
 theorem symm_comp_to_continuousMap : (f.symm : C(β, α)).comp (f : C(α, β)) = ContinuousMap.id α :=
-  by rw [← coeTrans, self_trans_symm, coe_refl]
+  by rw [← coe_trans, self_trans_symm, coe_refl]
 #align homeomorph.symm_comp_to_continuous_map Homeomorph.symm_comp_to_continuousMap
 
 #print Homeomorph.to_continuousMap_comp_symm /-
 /-- Right inverse to a continuous map from a homeomorphism, mirroring `equiv.self_comp_symm`. -/
 @[simp]
 theorem to_continuousMap_comp_symm : (f : C(α, β)).comp (f.symm : C(β, α)) = ContinuousMap.id β :=
-  by rw [← coeTrans, symm_trans_self, coe_refl]
+  by rw [← coe_trans, symm_trans_self, coe_refl]
 #align homeomorph.to_continuous_map_comp_symm Homeomorph.to_continuousMap_comp_symm
 -/
 

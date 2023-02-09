@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.additive_functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,23 +138,23 @@ instance (priority := 100) preservesFiniteBiproductsOfAdditive [Additive F] :
       preserves := fun f =>
         {
           preserves := fun b hb =>
-            is_bilimit_of_total _
+            isBilimitOfTotal _
               (by
                 simp_rw [F.map_bicone_π, F.map_bicone_ι, ← F.map_comp, ← F.map_sum]
-                dsimp only [map_bicone_X]
+                dsimp only [mapBicone_x]
                 simp_rw [← F.map_id]
                 refine' congr_arg _ (hb.is_limit.hom_ext fun j => hb.is_colimit.hom_ext fun j' => _)
                 cases j; cases j'
-                dsimp only [limits.bicone.to_cone_π_app]
-                simp [sum_comp, comp_sum, bicone.ι_π, comp_dite, dite_comp]) } }
+                dsimp only [Limits.Bicone.toCone_π_app]
+                simp [sum_comp, comp_sum, Bicone.ι_π, comp_dite, dite_comp]) } }
 #align category_theory.functor.preserves_finite_biproducts_of_additive CategoryTheory.Functor.preservesFiniteBiproductsOfAdditive
 
 theorem additive_of_preservesBinaryBiproducts [HasBinaryBiproducts C] [PreservesZeroMorphisms F]
     [PreservesBinaryBiproducts F] : Additive F :=
   {
     map_add' := fun X Y f g => by
-      rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_map_biprod, ←
-        biprod.map_biprod_hom_desc, category.assoc, iso.inv_hom_id_assoc, F.map_id,
+      rw [biprod.add_eq_lift_id_desc, F.map_comp, ← biprod.lift_mapBiprod, ←
+        biprod.mapBiprod_hom_desc, Category.assoc, Iso.inv_hom_id_assoc, F.map_id,
         biprod.add_eq_lift_id_desc] }
 #align category_theory.functor.additive_of_preserves_binary_biproducts CategoryTheory.Functor.additive_of_preservesBinaryBiproducts
 
@@ -166,7 +166,7 @@ namespace Equivalence
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
 
-instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additive
+instance inverse_additive (e : C ≌ D) [e.functor.Additive] : e.inverse.Additive
     where map_add' X Y f g := by
     apply e.functor.map_injective
     simp
@@ -248,7 +248,7 @@ attribute [local instance] preserves_binary_biproducts_of_preserves_binary_copro
 def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
-    functor.additive_of_preserves_binary_biproducts F deriving
+    Functor.additive_of_preservesBinaryBiproducts F deriving
   Full, Faithful
 #align category_theory.AdditiveFunctor.of_left_exact CategoryTheory.AdditiveFunctor.ofLeftExact
 
@@ -256,7 +256,7 @@ def AdditiveFunctor.ofLeftExact : (C ⥤ₗ D) ⥤ C ⥤+ D :=
 def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h
-    functor.additive_of_preserves_binary_biproducts F deriving
+    Functor.additive_of_preservesBinaryBiproducts F deriving
   Full, Faithful
 #align category_theory.AdditiveFunctor.of_right_exact CategoryTheory.AdditiveFunctor.ofRightExact
 
@@ -264,7 +264,7 @@ def AdditiveFunctor.ofRightExact : (C ⥤ᵣ D) ⥤ C ⥤+ D :=
 def AdditiveFunctor.ofExact : (C ⥤ₑ D) ⥤ C ⥤+ D :=
   FullSubcategory.map fun F h =>
     let hF := Classical.choice h.1
-    functor.additive_of_preserves_binary_biproducts F deriving
+    Functor.additive_of_preservesBinaryBiproducts F deriving
   Full, Faithful
 #align category_theory.AdditiveFunctor.of_exact CategoryTheory.AdditiveFunctor.ofExact
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.weak_dual
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,14 +70,14 @@ theorem toSeminorm_apply {f : E →ₗ[𝕜] 𝕜} {x : E} : f.toSeminorm x = �
 
 theorem toSeminorm_ball_zero {f : E →ₗ[𝕜] 𝕜} {r : ℝ} :
     Seminorm.ball f.toSeminorm 0 r = { x : E | ‖f x‖ < r } := by
-  simp only [Seminorm.ball_zero_eq, to_seminorm_apply]
+  simp only [Seminorm.ball_zero_eq, toSeminorm_apply]
 #align linear_map.to_seminorm_ball_zero LinearMap.toSeminorm_ball_zero
 
 theorem toSeminorm_comp (f : F →ₗ[𝕜] 𝕜) (g : E →ₗ[𝕜] F) :
     f.toSeminorm.comp g = (f.comp g).toSeminorm :=
   by
   ext
-  simp only [Seminorm.comp_apply, to_seminorm_apply, coe_comp]
+  simp only [Seminorm.comp_apply, toSeminorm_apply, coe_comp]
 #align linear_map.to_seminorm_comp LinearMap.toSeminorm_comp
 
 /-- Construct a family of seminorms from a bilinear form. -/
@@ -103,12 +103,12 @@ variable [Nonempty ι]
 variable {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜}
 
 theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
-    (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basis_sets id :=
+    (𝓝 (0 : WeakBilin B)).HasBasis B.toSeminormFamily.basisSets id :=
   by
   let p := B.to_seminorm_family
   rw [nhds_induced, nhds_pi]
   simp only [map_zero, LinearMap.zero_apply]
-  have h := @Metric.nhds_basis_ball 𝕜 _ 0
+  have h := @metric.nhds_basis_ball 𝕜 _ 0
   have h' := Filter.hasBasis_pi fun i : F => h
   have h'' := Filter.HasBasis.comap (fun x y => B x y) h'
   refine' h''.to_has_basis _ _

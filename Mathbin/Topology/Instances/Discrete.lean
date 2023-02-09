@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module topology.instances.discrete
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,17 +35,17 @@ instance (priority := 100) DiscreteTopology.firstCountableTopology [DiscreteTopo
     FirstCountableTopology α
     where nhds_generated_countable := by
     rw [nhds_discrete]
-    exact is_countably_generated_pure
+    exact isCountablyGenerated_pure
 #align discrete_topology.first_countable_topology DiscreteTopology.firstCountableTopology
 
 instance (priority := 100) DiscreteTopology.secondCountableTopology_of_encodable
     [hd : DiscreteTopology α] [Encodable α] : SecondCountableTopology α :=
-  haveI : ∀ i : α, second_countable_topology ↥({i} : Set α) := fun i =>
+  haveI : ∀ i : α, SecondCountableTopology ↥({i} : Set α) := fun i =>
     {
       is_open_generated_countable :=
         ⟨{univ}, countable_singleton _, by simp only [eq_iff_true_of_subsingleton]⟩ }
-  second_countable_topology_of_countable_cover (singletons_open_iff_discrete.mpr hd)
-    (Union_of_singleton α)
+  secondCountableTopology_of_countable_cover (singletons_open_iff_discrete.mpr hd)
+    (unionᵢ_of_singleton α)
 #align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.secondCountableTopology_of_encodable
 
 theorem bot_topologicalSpace_eq_generateFrom_of_pred_succOrder {α} [PartialOrder α] [PredOrder α]
@@ -60,8 +60,8 @@ theorem bot_topologicalSpace_eq_generateFrom_of_pred_succOrder {α} [PartialOrde
     rw [inter_comm, Ici_inter_Iic, Icc_self a]
   rw [h_singleton_eq_inter]
   apply IsOpen.inter
-  · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-  · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+  · exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
+  · exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
 #align bot_topological_space_eq_generate_from_of_pred_succ_order bot_topologicalSpace_eq_generateFrom_of_pred_succOrder
 
 theorem discreteTopology_iff_orderTopology_of_pred_succ' [PartialOrder α] [PredOrder α]
@@ -91,21 +91,21 @@ theorem LinearOrder.bot_topologicalSpace_eq_generateFrom {α} [LinearOrder α] [
       rw [h_singleton_eq_inter]
       apply isOpen_univ
     · rw [isBot_iff_isMin] at ha_bot
-      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
+      rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
-      exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+      exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
   · rw [isTop_iff_isMax] at ha_top
-    rw [← Iio_succ_of_not_is_max ha_top] at h_singleton_eq_inter
+    rw [← Iio_succ_of_not_isMax ha_top] at h_singleton_eq_inter
     by_cases ha_bot : IsBot a
     · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
-      exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
+      exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
     · rw [isBot_iff_isMin] at ha_bot
-      rw [← Ioi_pred_of_not_is_min ha_bot] at h_singleton_eq_inter
+      rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
       rw [h_singleton_eq_inter]
       apply IsOpen.inter
-      · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
-      · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
+      · exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
+      · exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
 #align linear_order.bot_topological_space_eq_generate_from LinearOrder.bot_topologicalSpace_eq_generateFrom
 
 theorem discreteTopology_iff_orderTopology_of_pred_succ [LinearOrder α] [PredOrder α]
@@ -126,6 +126,6 @@ instance (priority := 100) DiscreteTopology.orderTopology_of_pred_succ [h : Disc
 instance (priority := 100) DiscreteTopology.metrizableSpace [DiscreteTopology α] :
     MetrizableSpace α := by
   obtain rfl := DiscreteTopology.eq_bot α
-  exact @UniformSpace.metrizableSpace α ⊥ (is_countably_generated_principal _) _
+  exact @uniform_space.metrizable_space α ⊥ (isCountablyGenerated_principal _) _
 #align discrete_topology.metrizable_space DiscreteTopology.metrizableSpace
 

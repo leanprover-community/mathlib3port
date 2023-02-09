@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.pochhammer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ theorem pochhammer_eval_zero {n : ℕ} : (pochhammer S n).eval 0 = if n = 0 then
   by
   cases n
   · simp
-  · simp [X_mul, Nat.succ_ne_zero, pochhammer_succ_left]
+  · simp [x_mul, Nat.succ_ne_zero, pochhammer_succ_left]
 #align pochhammer_eval_zero pochhammer_eval_zero
 
 theorem pochhammer_zero_eval_zero : (pochhammer S 0).eval 0 = 1 := by simp
@@ -100,22 +100,22 @@ theorem pochhammer_ne_zero_eval_zero {n : ℕ} (h : n ≠ 0) : (pochhammer S n).
 
 theorem pochhammer_succ_right (n : ℕ) : pochhammer S (n + 1) = pochhammer S n * (x + n) :=
   by
-  suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (X + n)
+  suffices h : pochhammer ℕ (n + 1) = pochhammer ℕ n * (x + n)
   · apply_fun Polynomial.map (algebraMap ℕ S)  at h
-    simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
+    simpa only [pochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_x,
       Polynomial.map_nat_cast] using h
   induction' n with n ih
   · simp
   ·
     conv_lhs =>
-      rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, X_comp,
+      rw [pochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← pochhammer_succ_left, add_comp, x_comp,
         nat_cast_comp, add_assoc, add_comm (1 : ℕ[X]), ← Nat.cast_succ]
 #align pochhammer_succ_right pochhammer_succ_right
 
 theorem pochhammer_succ_eval {S : Type _} [Semiring S] (n : ℕ) (k : S) :
     (pochhammer S (n + 1)).eval k = (pochhammer S n).eval k * (k + n) := by
-  rw [pochhammer_succ_right, mul_add, eval_add, eval_mul_X, ← Nat.cast_comm, ← C_eq_nat_cast,
-    eval_C_mul, Nat.cast_comm, ← mul_add]
+  rw [pochhammer_succ_right, mul_add, eval_add, eval_mul_x, ← Nat.cast_comm, ← c_eq_nat_cast,
+    eval_c_mul, Nat.cast_comm, ← mul_add]
 #align pochhammer_succ_eval pochhammer_succ_eval
 
 theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
@@ -123,17 +123,17 @@ theorem pochhammer_succ_comp_x_add_one (n : ℕ) :
       pochhammer S (n + 1) + (n + 1) • (pochhammer S n).comp (x + 1) :=
   by
   suffices
-    (pochhammer ℕ (n + 1)).comp (X + 1) =
-      pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (X + 1)
+    (pochhammer ℕ (n + 1)).comp (x + 1) =
+      pochhammer ℕ (n + 1) + (n + 1) * (pochhammer ℕ n).comp (x + 1)
     by simpa [map_comp] using congr_arg (Polynomial.map (Nat.castRingHom S)) this
   nth_rw 2 [pochhammer_succ_left]
-  rw [← add_mul, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, X_comp, nat_cast_comp,
+  rw [← add_mul, pochhammer_succ_right ℕ n, mul_comp, mul_comm, add_comp, x_comp, nat_cast_comp,
     add_comm ↑n, ← add_assoc]
 #align pochhammer_succ_comp_X_add_one pochhammer_succ_comp_x_add_one
 
 theorem Polynomial.mul_x_add_nat_cast_comp {p q : S[X]} {n : ℕ} :
     (p * (x + n)).comp q = p.comp q * (q + n) := by
-  rw [mul_add, add_comp, mul_X_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
+  rw [mul_add, add_comp, mul_x_comp, ← Nat.cast_comm, nat_cast_mul_comp, Nat.cast_comm, mul_add]
 #align polynomial.mul_X_add_nat_cast_comp Polynomial.mul_x_add_nat_cast_comp
 
 theorem pochhammer_mul (n m : ℕ) :
@@ -150,7 +150,7 @@ theorem pochhammer_nat_eq_ascFactorial (n : ℕ) :
     ∀ k, (pochhammer ℕ k).eval (n + 1) = n.ascFactorial k
   | 0 => by erw [eval_one] <;> rfl
   | t + 1 => by
-    rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_ascFactorial t]
+    rw [pochhammer_succ_right, eval_mul, pochhammer_nat_eq_asc_factorial t]
     suffices n.asc_factorial t * (n + 1 + t) = n.asc_factorial (t + 1) by simpa
     rw [Nat.ascFactorial_succ, add_right_comm, mul_comm]
 #align pochhammer_nat_eq_asc_factorial pochhammer_nat_eq_ascFactorial
@@ -181,7 +181,7 @@ theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval
   induction' n with n ih
   · simp only [Nat.zero_eq, pochhammer_zero, eval_one]
     exact zero_lt_one
-  · rw [pochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_X,
+  · rw [pochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_nat_cast_mul, eval_mul_x,
       Nat.cast_comm, ← mul_add]
     exact mul_pos ih (lt_of_lt_of_le h ((le_add_iff_nonneg_right _).mpr (Nat.cast_nonneg n)))
 #align pochhammer_pos pochhammer_pos

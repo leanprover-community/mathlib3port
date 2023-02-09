@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.instances.add_circle
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod a hp) (Iic x) x 
   rw [(funext fun y => Eq.trans (by rw [neg_neg]) <| toIocMod_neg _ _ _ :
       toIocMod a hp = (fun x => p - x) ∘ toIcoMod (-a) hp ∘ Neg.neg)]
   exact
-    (continuous_sub_left _).ContinuousAt.comp_continuousWithinAt <|
+    (continuous_sub_left _).continuousAt.comp_continuousWithinAt <|
       (continuous_right_toIcoMod _ _ _).comp continuous_neg.continuous_within_at fun y => neg_le_neg
 #align continuous_left_to_Ioc_mod continuous_left_toIocMod
 
@@ -140,7 +140,7 @@ theorem coe_nsmul {n : ℕ} {x : 𝕜} : (↑(n • x) : AddCircle p) = n • (x
   rfl
 #align add_circle.coe_nsmul AddCircle.coe_nsmul
 
-theorem coe_zsmul {n : ℤ} {x : 𝕜} : (↑(n • x) : AddCircle p) = n • (x : AddCircle p) :=
+theorem coe_zsmul {n : ℤ} {x : 𝕜} : (↑(n • x) : inducing_subtype_val p) = n • (x : AddCircle p) :=
   rfl
 #align add_circle.coe_zsmul AddCircle.coe_zsmul
 
@@ -224,28 +224,28 @@ theorem coe_eq_coe_iff_of_mem_Ico {x y : 𝕜} (hx : x ∈ Ico a (a + p)) (hy : 
   by
   refine' ⟨fun h => _, by tauto⟩
   suffices (⟨x, hx⟩ : Ico a (a + p)) = ⟨y, hy⟩ by exact Subtype.mk.inj this
-  apply_fun equiv_Ico p a  at h
-  rw [← (equiv_Ico p a).right_inv ⟨x, hx⟩, ← (equiv_Ico p a).right_inv ⟨y, hy⟩]
+  apply_fun equivIco p a  at h
+  rw [← (equivIco p a).right_inv ⟨x, hx⟩, ← (equivIco p a).right_inv ⟨y, hy⟩]
   exact h
 #align add_circle.coe_eq_coe_iff_of_mem_Ico AddCircle.coe_eq_coe_iff_of_mem_Ico
 
 theorem liftIco_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ico a (a + p)) : liftIco p a f ↑x = f x :=
   by
-  have : (equiv_Ico p a) x = ⟨x, hx⟩ :=
+  have : (equivIco p a) x = ⟨x, hx⟩ :=
     by
     rw [Equiv.apply_eq_iff_eq_symm_apply]
     rfl
-  rw [lift_Ico, comp_apply, this]
+  rw [liftIco, comp_apply, this]
   rfl
 #align add_circle.lift_Ico_coe_apply AddCircle.liftIco_coe_apply
 
 theorem liftIoc_coe_apply {f : 𝕜 → B} {x : 𝕜} (hx : x ∈ Ioc a (a + p)) : liftIoc p a f ↑x = f x :=
   by
-  have : (equiv_Ioc p a) x = ⟨x, hx⟩ :=
+  have : (equivIoc p a) x = ⟨x, hx⟩ :=
     by
     rw [Equiv.apply_eq_iff_eq_symm_apply]
     rfl
-  rw [lift_Ioc, comp_apply, this]
+  rw [liftIoc, comp_apply, this]
   rfl
 #align add_circle.lift_Ioc_coe_apply AddCircle.liftIoc_coe_apply
 
@@ -289,7 +289,7 @@ the entire space. -/
 theorem coe_image_Ico_eq : (coe : 𝕜 → AddCircle p) '' Ico a (a + p) = univ :=
   by
   rw [image_eq_range]
-  exact (equiv_Ico p a).symm.range_eq_univ
+  exact (equivIco p a).symm.range_eq_univ
 #align add_circle.coe_image_Ico_eq AddCircle.coe_image_Ico_eq
 
 /-- The image of the closed-open interval `[a, a + p)` under the quotient map `𝕜 → add_circle p` is
@@ -298,7 +298,7 @@ the entire space. -/
 theorem coe_image_Ioc_eq : (coe : 𝕜 → AddCircle p) '' Ioc a (a + p) = univ :=
   by
   rw [image_eq_range]
-  exact (equiv_Ioc p a).symm.range_eq_univ
+  exact (equivIoc p a).symm.range_eq_univ
 #align add_circle.coe_image_Ioc_eq AddCircle.coe_image_Ioc_eq
 
 /-- The image of the closed interval `[0, p]` under the quotient map `𝕜 → add_circle p` is the
@@ -355,9 +355,9 @@ instance : DivisibleBy (AddCircle p) ℤ
     replace hn : (n : 𝕜) ≠ 0;
     · norm_cast
       assumption
-    change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equiv_Ico p 0 x)) = x
+    change n • QuotientAddGroup.mk' _ ((n : 𝕜)⁻¹ * ↑(equivIco p 0 x)) = x
     rw [← map_zsmul, ← smul_mul_assoc, zsmul_eq_mul, mul_inv_cancel hn, one_mul]
-    exact (equiv_Ico p 0).symm_apply_apply x
+    exact (equivIco p 0).symm_apply_apply x
 
 end FloorRing
 
@@ -384,9 +384,9 @@ theorem gcd_mul_addOrderOf_div_eq {n : ℕ} (m : ℕ) (hn : 0 < n) :
     m.gcd n * addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n :=
   by
   rw [mul_comm_div, ← nsmul_eq_mul, coe_nsmul, add_orderOf_nsmul'']
-  · rw [add_order_of_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
+  · rw [addOrderOf_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
     exacts[n.gcd_dvd_left m, hp]
-  · rw [← add_orderOf_pos_iff, add_order_of_period_div hn]
+  · rw [← add_orderOf_pos_iff, addOrderOf_period_div hn]
     exacts[hn, hp]
 #align add_circle.gcd_mul_add_order_of_div_eq AddCircle.gcd_mul_addOrderOf_div_eq
 
@@ -395,7 +395,7 @@ variable {p}
 theorem addOrderOf_div_of_gcd_eq_one {m n : ℕ} (hn : 0 < n) (h : m.gcd n = 1) :
     addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n :=
   by
-  convert gcd_mul_add_order_of_div_eq p m hn
+  convert gcd_mul_addOrderOf_div_eq p m hn
   rw [h, one_mul]
 #align add_circle.add_order_of_div_of_gcd_eq_one AddCircle.addOrderOf_div_of_gcd_eq_one
 
@@ -404,9 +404,9 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
   by
   induction m
   · simp only [Int.ofNat_eq_coe, Int.cast_ofNat, Int.natAbs_ofNat] at h⊢
-    exact add_order_of_div_of_gcd_eq_one hn h
+    exact addOrderOf_div_of_gcd_eq_one hn h
   · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, orderOf_neg]
-    exact add_order_of_div_of_gcd_eq_one hn h
+    exact addOrderOf_div_of_gcd_eq_one hn h
 #align add_circle.add_order_of_div_of_gcd_eq_one' AddCircle.addOrderOf_div_of_gcd_eq_one'
 
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den :=
@@ -414,8 +414,8 @@ theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) 
   have : (↑(q.denom : ℤ) : 𝕜) ≠ 0 := by
     norm_cast
     exact q.pos.ne.symm
-  rw [← @Rat.num_den q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_ofNat, Rat.num_den,
-    add_order_of_div_of_gcd_eq_one' q.pos q.cop]
+  rw [← @rat.num_denom q, Rat.cast_mk_of_ne_zero _ _ this, Int.cast_ofNat, Rat.num_den,
+    addOrderOf_div_of_gcd_eq_one' q.pos q.cop]
   infer_instance
 #align add_circle.add_order_of_coe_rat AddCircle.addOrderOf_coe_rat
 
@@ -424,7 +424,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   by
   refine' ⟨QuotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
   · rintro ⟨m, h₀, h₁, rfl⟩
-    exact add_order_of_div_of_gcd_eq_one h h₁
+    exact addOrderOf_div_of_gcd_eq_one h h₁
   have h0 := add_orderOf_nsmul_eq_zero (k : AddCircle p)
   rw [hk, ← coe_nsmul, coe_eq_zero_iff] at h0
   obtain ⟨a, ha⟩ := h0
@@ -435,7 +435,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   have he := _; refine' ⟨(a % n).toNat, _, _, he⟩
   · rw [← Int.ofNat_lt, han]
     exact Int.emod_lt_of_pos _ (Int.ofNat_lt.2 h)
-  · have := (gcd_mul_add_order_of_div_eq p _ h).trans ((congr_arg addOrderOf he).trans hk).symm
+  · have := (gcd_mul_addOrderOf_div_eq p _ h).trans ((congr_arg addOrderOf he).trans hk).symm
     rw [he, Nat.mul_left_eq_self_iff] at this
     · exact this
     · rwa [hk]
@@ -458,7 +458,7 @@ satisfies `0 ≤ m < n`. -/
 def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
     { u : AddCircle p | addOrderOf u = n } ≃ { m | m < n ∧ m.gcd n = 1 } :=
   Equiv.symm <|
-    Equiv.ofBijective (fun m => ⟨↑((m : 𝕜) / n * p), addOrderOf_div_of_gcd_eq_one hn m.Prop.2⟩)
+    Equiv.ofBijective (fun m => ⟨↑((m : 𝕜) / n * p), addOrderOf_div_of_gcd_eq_one hn m.prop.2⟩)
       (by
         refine' ⟨fun m₁ m₂ h => Subtype.ext _, fun u => _⟩
         · simp_rw [Subtype.ext_iff, Subtype.coe_mk] at h
@@ -467,14 +467,14 @@ def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
           obtain ⟨m, hm⟩ := h
           rw [← mul_div_right_comm, eq_div_iff, mul_comm, ← zsmul_eq_mul, mul_smul_comm, ←
             nsmul_eq_mul, ← coe_nat_zsmul, smul_smul,
-            (zsmul_strictMono_left hp.out).Injective.eq_iff, mul_comm] at hm
+            (zsmul_strictMono_left hp.out).injective.eq_iff, mul_comm] at hm
           swap
           · exact Nat.cast_ne_zero.2 hn.ne'
-          rw [← @Nat.cast_inj ℤ, ← sub_eq_zero]
+          rw [← @nat.cast_inj ℤ, ← sub_eq_zero]
           refine' Int.eq_zero_of_abs_lt_dvd ⟨_, hm.symm⟩ (abs_sub_lt_iff.2 ⟨_, _⟩) <;>
             apply (Int.sub_le_self _ <| Nat.cast_nonneg _).trans_lt (Nat.cast_lt.2 _)
           exacts[m₁.2.1, m₂.2.1]
-        obtain ⟨m, hmn, hg, he⟩ := (add_order_of_eq_pos_iff hn).mp u.2
+        obtain ⟨m, hmn, hg, he⟩ := (addOrderOf_eq_pos_iff hn).mp u.2
         exact ⟨⟨m, hmn, hg⟩, Subtype.ext he⟩)
 #align add_circle.set_add_order_of_equiv AddCircle.setAddOrderOfEquiv
 
@@ -492,8 +492,7 @@ theorem card_addOrderOf_eq_totient {n : ℕ} :
       exact Nat.card_eq_zero_of_infinite
     · have : IsEmpty { u : AddCircle p // ¬IsOfFinAddOrder u } := by simpa using h
       exact Nat.card_of_isEmpty
-  · rw [← coe_set_of, Nat.card_congr (set_add_order_of_equiv p hn),
-      n.totient_eq_card_lt_and_coprime]
+  · rw [← coe_setOf, Nat.card_congr (setAddOrderOfEquiv p hn), n.totient_eq_card_lt_and_coprime]
     simp only [Nat.gcd_comm]
 #align add_circle.card_add_order_of_eq_totient AddCircle.card_addOrderOf_eq_totient
 
@@ -501,7 +500,7 @@ theorem finite_setOf_add_order_eq {n : ℕ} (hn : 0 < n) :
     { u : AddCircle p | addOrderOf u = n }.Finite :=
   finite_coe_iff.mp <|
     Nat.finite_of_card_ne_zero <| by
-      simpa only [coe_set_of, card_add_order_of_eq_totient p] using (Nat.totient_pos hn).ne'
+      simpa only [coe_setOf, card_addOrderOf_eq_totient p] using (Nat.totient_pos hn).ne'
 #align add_circle.finite_set_of_add_order_eq AddCircle.finite_setOf_add_order_eq
 
 end FiniteOrderPoints
@@ -589,12 +588,12 @@ def equivIccQuot : 𝕋 ≃ Quot (EndpointIdent p a)
       rcases ne_or_eq x (a + p) with (h | rfl)
       · revert x
         exact this
-      · rw [← Quot.sound endpoint_ident.mk]
-        exact this _ _ (lt_add_of_pos_right a hp.out).Ne
+      · rw [← Quot.sound EndpointIdent.mk]
+        exact this _ _ (lt_add_of_pos_right a hp.out).ne
       intro x hx h
       congr
       ext1
-      apply congr_arg Subtype.val ((equiv_Ico p a).right_inv ⟨x, hx.1, hx.2.lt_of_ne h⟩)
+      apply congr_arg Subtype.val ((equivIco p a).right_inv ⟨x, hx.1, hx.2.lt_of_ne h⟩)
 #align add_circle.equiv_Icc_quot AddCircle.equivIccQuot
 
 theorem equivIccQuot_comp_mk_eq_toIcoMod :
@@ -607,12 +606,12 @@ theorem equivIccQuot_comp_mk_eq_toIocMod :
     equivIccQuot p a ∘ Quotient.mk'' = fun x =>
       Quot.mk _ ⟨toIocMod a hp.out x, Ioc_subset_Icc_self <| toIocMod_mem_Ioc a _ x⟩ :=
   by
-  rw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]; funext
+  rw [equivIccQuot_comp_mk_eq_toIcoMod]; funext
   by_cases MemIooMod a p x
   · simp_rw [(memIooMod_iff_toIcoMod_eq_toIocMod hp.out).1 h]
   · simp_rw [not_imp_comm.1 (memIooMod_iff_toIcoMod_ne_left hp.out).2 h,
       not_imp_comm.1 (memIooMod_iff_toIocMod_ne_right hp.out).2 h]
-    exact Quot.sound endpoint_ident.mk
+    exact Quot.sound EndpointIdent.mk
 #align add_circle.equiv_Icc_quot_comp_mk_eq_to_Ioc_mod AddCircle.equivIccQuot_comp_mk_eq_toIocMod
 
 /-- The natural map from `[a, a + p] ⊂ 𝕜` with endpoints identified to `𝕜 / ℤ • p`, as a
@@ -625,8 +624,8 @@ def homeoIccQuot : 𝕋 ≃ₜ Quot (EndpointIdent p a)
     simp_rw [quotient_map_quotient_mk.continuous_iff, continuous_iff_continuousAt,
       continuousAt_iff_continuous_left_right]
     intro x; constructor
-    on_goal 1 => erw [equiv_Icc_quot_comp_mk_eq_to_Ioc_mod]
-    on_goal 2 => erw [equiv_Icc_quot_comp_mk_eq_to_Ico_mod]
+    on_goal 1 => erw [equivIccQuot_comp_mk_eq_toIocMod]
+    on_goal 2 => erw [equivIccQuot_comp_mk_eq_toIcoMod]
     all_goals
       apply continuous_quot_mk.continuous_at.comp_continuous_within_at
       rw [inducing_coe.continuous_within_at_iff]
@@ -655,8 +654,8 @@ theorem liftIco_eq_lift_Icc {f : 𝕜 → B} (h : f a = f (a + p)) :
 theorem liftIco_continuous [TopologicalSpace B] {f : 𝕜 → B} (hf : f a = f (a + p))
     (hc : ContinuousOn f <| Icc a (a + p)) : Continuous (liftIco p a f) :=
   by
-  rw [lift_Ico_eq_lift_Icc hf]
-  refine' Continuous.comp _ (homeo_Icc_quot p a).continuous_toFun
+  rw [liftIco_eq_lift_Icc hf]
+  refine' Continuous.comp _ (homeoIccQuot p a).continuous_toFun
   exact continuous_coinduced_dom.mpr (continuous_on_iff_continuous_restrict.mp hc)
 #align add_circle.lift_Ico_continuous AddCircle.liftIco_continuous
 

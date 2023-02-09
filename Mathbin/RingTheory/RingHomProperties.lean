@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom_properties
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,14 +54,14 @@ variable {P}
 theorem RespectsIso.cancel_left_isIso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso f] : P (f ≫ g) ↔ P g :=
   ⟨fun H => by
-    convert hP.2 (f ≫ g) (as_iso f).symm.commRingIsoToRingEquiv H
-    exact (is_iso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
+    convert hP.2 (f ≫ g) (asIso f).symm.commRingIsoToRingEquiv H
+    exact (IsIso.inv_hom_id_assoc _ _).symm, hP.2 g (asIso f).commRingIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_left_is_iso RingHom.RespectsIso.cancel_left_isIso
 
 theorem RespectsIso.cancel_right_isIso (hP : RespectsIso @P) {R S T : CommRingCat} (f : R ⟶ S)
     (g : S ⟶ T) [IsIso g] : P (f ≫ g) ↔ P f :=
   ⟨fun H => by
-    convert hP.1 (f ≫ g) (as_iso g).symm.commRingIsoToRingEquiv H
+    convert hP.1 (f ≫ g) (asIso g).symm.commRingIsoToRingEquiv H
     change f = f ≫ g ≫ inv g
     simp, hP.1 f (asIso g).commRingIsoToRingEquiv⟩
 #align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_isIso
@@ -79,7 +79,7 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
   refine' (hP.cancel_right_is_iso (CommRingCat.ofHom _) e₂.to_CommRing_iso.hom).symm.trans _
   rw [← eq_iff_iff]
   congr 1
-  dsimp [CommRingCat.ofHom, CommRingCat.of, bundled.of]
+  dsimp [CommRingCat.ofHom, CommRingCat.of, Bundled.of]
   refine' IsLocalization.ringHom_ext (Submonoid.powers r) _
   ext1
   revert e₁ e₂
@@ -138,7 +138,7 @@ theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
     StableUnderBaseChange @P := by
   introv R h H
   skip
-  let e := h.symm.1.Equiv
+  let e := h.symm.1.equiv
   let f' :=
     Algebra.TensorProduct.productMap (IsScalarTower.toAlgHom R R' S')
       (IsScalarTower.toAlgHom R S S')
@@ -171,12 +171,11 @@ theorem StableUnderBaseChange.pushout_inl (hP : RingHom.StableUnderBaseChange @P
   by
   rw [←
     show _ = pushout.inl from
-      colimit.iso_colimit_cocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩
-        walking_span.left,
+      colimit.isoColimitCocone_ι_inv ⟨_, CommRingCat.pushoutCoconeIsColimit f g⟩ WalkingSpan.left,
     hP'.cancel_right_is_iso]
   letI := f.to_algebra
   letI := g.to_algebra
-  dsimp only [CommRingCat.pushoutCocone_inl, pushout_cocone.ι_app_left]
+  dsimp only [CommRingCat.pushoutCocone_inl, PushoutCocone.ι_app_left]
   apply hP R T S (TensorProduct R S T)
   exact H
 #align ring_hom.stable_under_base_change.pushout_inl RingHom.StableUnderBaseChange.pushout_inl

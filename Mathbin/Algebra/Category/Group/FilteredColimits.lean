@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Group.filtered_colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem colimitInvAux_eq_of_rel (x y : Σj, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget GroupCat) x y) :
     colimit_inv_aux x = colimit_inv_aux y :=
   by
-  apply G.mk_eq
+  apply g.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
   rw [MonoidHom.map_inv, MonoidHom.map_inv, inv_inj]
@@ -97,10 +97,10 @@ theorem colimitInvAux_eq_of_rel (x y : Σj, F.obj j)
 @[to_additive "Negation in the colimit. See also `colimit_neg_aux`."]
 instance colimitHasInv : Inv G
     where inv x := by
-    refine' Quot.lift (colimit_inv_aux F) _ x
+    refine' Quot.lift (colimitInvAux F) _ x
     intro x y h
-    apply colimit_inv_aux_eq_of_rel
-    apply types.filtered_colimit.rel_of_quot_rel
+    apply colimitInvAux_eq_of_rel
+    apply Types.FilteredColimit.rel_of_quot_rel
     exact h
 #align Group.filtered_colimits.colimit_has_inv GroupCat.FilteredColimits.colimitHasInv
 #align AddGroup.filtered_colimits.colimit_has_neg AddGroupCat.FilteredColimits.colimitHasNeg
@@ -113,7 +113,7 @@ theorem colimit_inv_mk_eq (x : Σj, F.obj j) : (G.mk x)⁻¹ = G.mk ⟨x.1, x.2�
 
 @[to_additive]
 instance colimitGroup : Group G :=
-  { G.Monoid, colimit_has_inv with
+  { G.monoid, colimit_has_inv with
     mul_left_inv := fun x => by
       apply Quot.inductionOn x; clear x; intro x
       cases' x with j x
@@ -162,7 +162,7 @@ instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forg
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ GroupCat Mon.{u})) }
 #align Group.filtered_colimits.forget₂_Mon_preserves_filtered_colimits GroupCat.FilteredColimits.forget₂MonPreservesFilteredColimits
 #align AddGroup.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddGroupCat.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits
@@ -197,7 +197,7 @@ abbrev g : GroupCat :=
 
 @[to_additive]
 instance colimitCommGroup : CommGroup G :=
-  { G.Group,
+  { G.group,
     CommMon.FilteredColimits.colimitCommMonoid (F ⋙ forget₂ CommGroupCat CommMon.{max v u}) with }
 #align CommGroup.filtered_colimits.colimit_comm_group CommGroupCat.FilteredColimits.colimitCommGroup
 #align AddCommGroup.filtered_colimits.colimit_add_comm_group AddCommGroupCat.FilteredColimits.colimitAddCommGroup
@@ -245,7 +245,7 @@ instance forget₂GroupPreservesFilteredColimits :
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (GroupCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ CommGroupCat GroupCat.{u})) }
 #align CommGroup.filtered_colimits.forget₂_Group_preserves_filtered_colimits CommGroupCat.FilteredColimits.forget₂GroupPreservesFilteredColimits

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.pderiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ def pderiv (i : σ) : Derivation R (MvPolynomial σ R) (MvPolynomial σ R) :=
 @[simp]
 theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) :=
   by
-  simp only [pderiv, mk_derivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc, ←
+  simp only [pderiv, mkDerivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc, ←
     (monomial _).map_smul]
   refine' (Finset.sum_eq_single i (fun j hj hne => _) fun hi => _).trans _
   · simp [Pi.single_eq_of_ne hne]

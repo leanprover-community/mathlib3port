@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jalex Stark, Scott Morrison, Eric Wieser, Oliver Nash
 
 ! This file was ported from Lean 3 source module data.matrix.basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,9 +70,9 @@ theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
   ext; symm
   iterate 2 rw [Finset.sum_apply]
   convert Fintype.sum_eq_single i _
-  · simp [std_basis_matrix]
+  · simp [stdBasisMatrix]
   · intro j hj
-    simp [std_basis_matrix, hj]
+    simp [stdBasisMatrix, hj]
 #align matrix.matrix_eq_sum_std_basis Matrix.matrix_eq_sum_std_basis
 
 -- TODO: tie this up with the `basis` machinery of linear algebra
@@ -82,7 +82,7 @@ theorem std_basis_eq_basis_mul_basis (i : m) (j : n) :
     stdBasisMatrix i j 1 = vecMulVec (fun i' => ite (i = i') 1 0) fun j' => ite (j = j') 1 0 :=
   by
   ext
-  norm_num [std_basis_matrix, vec_mul_vec]
+  norm_num [stdBasisMatrix, vecMulVec]
   exact ite_and _ _ _ _
 #align matrix.std_basis_eq_basis_mul_basis Matrix.std_basis_eq_basis_mul_basis
 
@@ -124,7 +124,7 @@ theorem apply_same : stdBasisMatrix i j c i j = c :=
 @[simp]
 theorem apply_of_ne (h : ¬(i = i' ∧ j = j')) : stdBasisMatrix i j c i' j' = 0 :=
   by
-  simp only [std_basis_matrix, and_imp, ite_eq_right_iff]
+  simp only [stdBasisMatrix, and_imp, ite_eq_right_iff]
   tauto
 #align matrix.std_basis_matrix.apply_of_ne Matrix.stdBasisMatrix.apply_of_ne
 
@@ -168,12 +168,12 @@ theorem trace_eq : trace (stdBasisMatrix i i c) = c := by simp [trace]
 
 @[simp]
 theorem mul_left_apply_same (b : n) (M : Matrix n n α) :
-    (stdBasisMatrix i j c ⬝ M) i b = c * M j b := by simp [mul_apply, std_basis_matrix]
+    (stdBasisMatrix i j c ⬝ M) i b = c * M j b := by simp [mul_apply, stdBasisMatrix]
 #align matrix.std_basis_matrix.mul_left_apply_same Matrix.stdBasisMatrix.mul_left_apply_same
 
 @[simp]
 theorem mul_right_apply_same (a : n) (M : Matrix n n α) :
-    (M ⬝ stdBasisMatrix i j c) a j = M a i * c := by simp [mul_apply, std_basis_matrix, mul_comm]
+    (M ⬝ stdBasisMatrix i j c) a j = M a i * c := by simp [mul_apply, stdBasisMatrix, mul_comm]
 #align matrix.std_basis_matrix.mul_right_apply_same Matrix.stdBasisMatrix.mul_right_apply_same
 
 @[simp]
@@ -191,7 +191,7 @@ theorem mul_same (k : n) (d : α) :
     stdBasisMatrix i j c ⬝ stdBasisMatrix j k d = stdBasisMatrix i k (c * d) :=
   by
   ext (a b)
-  simp only [mul_apply, std_basis_matrix, boole_mul]
+  simp only [mul_apply, stdBasisMatrix, boole_mul]
   by_cases h₁ : i = a <;> by_cases h₂ : k = b <;> simp [h₁, h₂]
 #align matrix.std_basis_matrix.mul_same Matrix.stdBasisMatrix.mul_same
 
@@ -199,7 +199,7 @@ theorem mul_same (k : n) (d : α) :
 theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) : stdBasisMatrix i j c ⬝ stdBasisMatrix k l d = 0 :=
   by
   ext (a b)
-  simp only [mul_apply, boole_mul, std_basis_matrix]
+  simp only [mul_apply, boole_mul, stdBasisMatrix]
   by_cases h₁ : i = a <;> simp [h₁, h, h.symm]
 #align matrix.std_basis_matrix.mul_of_ne Matrix.stdBasisMatrix.mul_of_ne
 

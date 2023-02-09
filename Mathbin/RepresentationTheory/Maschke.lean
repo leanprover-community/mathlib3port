@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.maschke
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,10 +118,10 @@ def sumOfConjugates : W →ₗ[k] V :=
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
   MonoidAlgebra.equivariantOfLinearOfComm (π.sumOfConjugates G) fun g v =>
     by
-    simp only [sum_of_conjugates,
+    simp only [sumOfConjugates,
       LinearMap.sum_apply,-- We have a `module (monoid_algebra k G)` instance but are working with `finsupp`s,
         -- so help the elaborator unfold everything correctly.
-        @Finset.smul_sum
+        @finset.smul_sum
         (MonoidAlgebra k G)]
     dsimp [conjugate]
     conv_lhs =>
@@ -148,8 +148,8 @@ include h
 
 theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
   by
-  rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
-    equivariant_of_linear_of_comm_apply, sum_of_conjugates]
+  rw [equivariantProjection, smul_apply, sumOfConjugatesEquivariant,
+    equivariantOfLinearOfComm_apply, sumOfConjugates]
   rw [LinearMap.sum_apply]
   simp only [conjugate_i π i h]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul,
@@ -206,7 +206,7 @@ namespace Submodule
 
 theorem exists_isCompl (p : Submodule (MonoidAlgebra k G) V) :
     ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
-  let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.Subtype p.ker_subtype
+  let ⟨f, hf⟩ := MonoidAlgebra.exists_left_inverse_of_injective p.subtype p.ker_subtype
   ⟨f.ker, LinearMap.isCompl_of_proj <| LinearMap.ext_iff.1 hf⟩
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_isCompl
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.partition.measure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,12 +45,12 @@ namespace Box
 
 variable (I : Box ι)
 
-theorem measure_icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
-  show μ (Icc I.lower I.upper) < ∞ from I.isCompact_Icc.measure_lt_top
+theorem measure_icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.icc < ∞ :=
+  show μ (Icc I.lower I.upper) < ∞ from I.isCompact_icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_icc_lt_top
 
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
-  (measure_mono <| coe_subset_icc).trans_lt (I.measure_Icc_lt_top μ)
+  (measure_mono <| coe_subset_icc).trans_lt (I.measure_icc_lt_top μ)
 #align box_integral.box.measure_coe_lt_top BoxIntegral.Box.measure_coe_lt_top
 
 section Countable
@@ -63,11 +63,11 @@ theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) :=
   exact MeasurableSet.univ_pi fun i => measurableSet_Ioc
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSet_coe
 
-theorem measurableSet_icc : MeasurableSet I.Icc :=
+theorem measurableSet_icc : MeasurableSet I.icc :=
   measurableSet_Icc
 #align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSet_icc
 
-theorem measurableSet_ioo : MeasurableSet I.Ioo :=
+theorem measurableSet_ioo : MeasurableSet I.ioo :=
   MeasurableSet.univ_pi fun i => measurableSet_Ioo
 #align box_integral.box.measurable_set_Ioo BoxIntegral.Box.measurableSet_ioo
 
@@ -75,13 +75,13 @@ end Countable
 
 variable [Fintype ι]
 
-theorem coe_ae_eq_icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.Icc :=
+theorem coe_ae_eq_icc : (I : Set (ι → ℝ)) =ᵐ[volume] I.icc :=
   by
   rw [coe_eq_pi]
-  exact measure.univ_pi_Ioc_ae_eq_Icc
+  exact Measure.univ_pi_Ioc_ae_eq_Icc
 #align box_integral.box.coe_ae_eq_Icc BoxIntegral.Box.coe_ae_eq_icc
 
-theorem ioo_ae_eq_icc : I.Ioo =ᵐ[volume] I.Icc :=
+theorem ioo_ae_eq_icc : I.ioo =ᵐ[volume] I.icc :=
   Measure.univ_pi_Ioo_ae_eq_Icc
 #align box_integral.box.Ioo_ae_eq_Icc BoxIntegral.Box.ioo_ae_eq_icc
 
@@ -89,10 +89,10 @@ end Box
 
 theorem Prepartition.measure_union_toReal [Finite ι] {I : Box ι} (π : Prepartition I)
     (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] :
-    (μ π.unionᵢ).toReal = ∑ J in π.boxes, (μ J).toReal :=
+    (μ π.union).toReal = ∑ J in π.boxes, (μ J).toReal :=
   by
   erw [← Ennreal.toReal_sum, π.Union_def, measure_bUnion_finset π.pairwise_disjoint]
-  exacts[fun J hJ => J.measurableSet_coe, fun J hJ => (J.measure_coe_lt_top μ).Ne]
+  exacts[fun J hJ => J.measurableSet_coe, fun J hJ => (J.measure_coe_lt_top μ).ne]
 #align box_integral.prepartition.measure_Union_to_real BoxIntegral.Prepartition.measure_union_toReal
 
 end BoxIntegral
@@ -127,7 +127,7 @@ namespace Box
 @[simp]
 theorem volume_apply (I : Box ι) :
     (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
-  rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_toReal I.lower_le_upper]
+  rw [Measure.toBoxAdditive_apply, coe_eq_pi, Real.volume_pi_Ioc_toReal I.lower_le_upper]
 #align box_integral.box.volume_apply BoxIntegral.Box.volume_apply
 
 theorem volume_face_mul {n} (i : Fin (n + 1)) (I : Box (Fin (n + 1))) :

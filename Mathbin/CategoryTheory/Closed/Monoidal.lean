@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.monoidal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ def tensorClosed {X Y : C} (hX : Closed X) (hY : Closed Y) : Closed (X ⊗ Y)
     where isAdj := by
     haveI := hX.is_adj
     haveI := hY.is_adj
-    exact adjunction.left_adjoint_of_nat_iso (monoidal_category.tensor_left_tensor _ _).symm
+    exact Adjunction.leftAdjointOfNatIso (MonoidalCategory.tensorLeftTensor _ _).symm
 #align category_theory.tensor_closed CategoryTheory.tensorClosed
 
 /-- The unit object is always closed.
@@ -71,13 +71,13 @@ def unitClosed : Closed (𝟙_ C)
         Adjunction.mkOfHomEquiv
           { homEquiv := fun X _ =>
               { toFun := fun a => (leftUnitor X).inv ≫ a
-                invFun := fun a => (leftUnitor X).Hom ≫ a
+                invFun := fun a => (leftUnitor X).hom ≫ a
                 left_inv := by tidy
                 right_inv := by tidy }
             homEquiv_naturality_left_symm' := fun X' X Y f g =>
               by
               dsimp
-              rw [left_unitor_naturality_assoc] } }
+              rw [leftUnitor_naturality_assoc] } }
 #align category_theory.unit_closed CategoryTheory.unitClosed
 
 variable (A B : C) {X X' Y Y' Z : C}
@@ -104,7 +104,7 @@ def ev : ihom A ⋙ tensorLeft A ⟶ 𝟭 C :=
 
 /-- The coevaluation natural transformation. -/
 def coev : 𝟭 C ⟶ tensorLeft A ⋙ ihom A :=
-  (ihom.adjunction A).Unit
+  (ihom.adjunction A).unit
 #align category_theory.ihom.coev CategoryTheory.ihom.coev
 
 @[simp]
@@ -113,7 +113,7 @@ theorem ihom_adjunction_counit : (ihom.adjunction A).counit = ev A :=
 #align category_theory.ihom.ihom_adjunction_counit CategoryTheory.ihom.ihom_adjunction_counit
 
 @[simp]
-theorem ihom_adjunction_unit : (ihom.adjunction A).Unit = coev A :=
+theorem ihom_adjunction_unit : (ihom.adjunction A).unit = coev A :=
   rfl
 #align category_theory.ihom.ihom_adjunction_unit CategoryTheory.ihom.ihom_adjunction_unit
 
@@ -244,12 +244,12 @@ theorem curry_eq (g : A ⊗ Y ⟶ X) : curry g = (ihom.coev A).app Y ≫ (ihom A
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem curry_injective : Function.Injective (curry : (A ⊗ Y ⟶ X) → (Y ⟶ A ⟶[C] X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).Injective
+  (Closed.isAdj.adj.homEquiv _ _).injective
 #align category_theory.monoidal_closed.curry_injective CategoryTheory.MonoidalClosed.curry_injective
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟶[C] X) → (A ⊗ Y ⟶ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).symm.Injective
+  (Closed.isAdj.adj.homEquiv _ _).symm.injective
 #align category_theory.monoidal_closed.uncurry_injective CategoryTheory.MonoidalClosed.uncurry_injective
 
 variable (A X)
@@ -308,7 +308,7 @@ theorem pre_id (A : C) [Closed A] : pre (𝟙 A) = 𝟙 _ :=
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Closed A₁] [Closed A₂] [Closed A₃] (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) :
     pre (f ≫ g) = pre g ≫ pre f := by
-  rw [pre, pre, pre, transfer_nat_trans_self_comp, (tensoring_left C).map_comp]
+  rw [pre, pre, pre, transferNatTransSelf_comp, (tensoringLeft C).map_comp]
 #align category_theory.monoidal_closed.pre_map CategoryTheory.MonoidalClosed.pre_map
 
 theorem pre_comm_ihom_map {W X Y Z : C} [Closed W] [Closed X] (f : W ⟶ X) (g : Y ⟶ Z) :
@@ -335,10 +335,10 @@ noncomputable def ofEquiv (F : MonoidalFunctor C D) [IsEquivalence F.toFunctor]
     where closed' X :=
     {
       isAdj := by
-        haveI q : closed (F.to_functor.obj X) := inferInstance
-        haveI : is_left_adjoint (tensor_left (F.to_functor.obj X)) := q.is_adj
-        have i := comp_inv_iso (monoidal_functor.comm_tensor_left F X)
-        exact adjunction.left_adjoint_of_nat_iso i }
+        haveI q : Closed (F.to_functor.obj X) := inferInstance
+        haveI : IsLeftAdjoint (tensorLeft (F.to_functor.obj X)) := q.is_adj
+        have i := compInvIso (MonoidalFunctor.commTensorLeft F X)
+        exact Adjunction.leftAdjointOfNatIso i }
 #align category_theory.monoidal_closed.of_equiv CategoryTheory.MonoidalClosed.ofEquiv
 
 end OfEquiv

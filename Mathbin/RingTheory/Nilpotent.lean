@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module ring_theory.nilpotent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,8 +111,8 @@ theorem RingHom.ker_isRadical_iff_reduced_of_surjective {S F} [CommSemiring R] [
 theorem Ideal.isRadical_iff_quotient_reduced [CommRing R] (I : Ideal R) :
     I.IsRadical ↔ IsReduced (R ⧸ I) :=
   by
-  conv_lhs => rw [← @Ideal.mk_ker R _ I]
-  exact RingHom.ker_isRadical_iff_reduced_of_surjective (@Ideal.Quotient.mk_surjective R _ I)
+  conv_lhs => rw [← @ideal.mk_ker R _ I]
+  exact RingHom.ker_isRadical_iff_reduced_of_surjective (@ideal.quotient.mk_surjective R _ I)
 #align ideal.is_radical_iff_quotient_reduced Ideal.isRadical_iff_quotient_reduced
 
 /-- An element `y` in a monoid is radical if for any element `x`, `y` divides `x` whenever it
@@ -243,14 +243,14 @@ variable (R) {A : Type v} [CommSemiring R] [Semiring A] [Algebra R A]
 @[simp]
 theorem isNilpotent_mulLeft_iff (a : A) : IsNilpotent (mulLeft R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
-      simp only [mul_left_eq_zero_iff, pow_mul_left] at hn⊢ <;>
+      simp only [mulLeft_eq_zero_iff, pow_mulLeft] at hn⊢ <;>
     exact hn
 #align linear_map.is_nilpotent_mul_left_iff LinearMap.isNilpotent_mulLeft_iff
 
 @[simp]
 theorem isNilpotent_mulRight_iff (a : A) : IsNilpotent (mulRight R a) ↔ IsNilpotent a := by
   constructor <;> rintro ⟨n, hn⟩ <;> use n <;>
-      simp only [mul_right_eq_zero_iff, pow_mul_right] at hn⊢ <;>
+      simp only [mulRight_eq_zero_iff, pow_mulRight] at hn⊢ <;>
     exact hn
 #align linear_map.is_nilpotent_mul_right_iff LinearMap.isNilpotent_mulRight_iff
 
@@ -328,7 +328,7 @@ theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal 
     skip
     obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
     have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1 := by
-      rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
+      rw [map_one, map_mul, hy, IsUnit.mul_val_inv]
     rw [Ideal.Quotient.eq] at this
     have : (x * y - 1) ^ 2 = 0 := by
       rw [← Ideal.mem_bot, ← e]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Edward Ayers, Thomas Read
 
 ! This file was ported from Lean 3 source module category_theory.closed.cartesian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,11 +213,11 @@ theorem curry_id_eq_coev (A X : C) [Exponentiable A] : curry (𝟙 _) = (exp.coe
 #align category_theory.cartesian_closed.curry_id_eq_coev CategoryTheory.CartesianClosed.curry_id_eq_coev
 
 theorem curry_injective : Function.Injective (curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).Injective
+  (Closed.isAdj.adj.homEquiv _ _).injective
 #align category_theory.cartesian_closed.curry_injective CategoryTheory.CartesianClosed.curry_injective
 
 theorem uncurry_injective : Function.Injective (uncurry : (Y ⟶ A ⟹ X) → (A ⨯ Y ⟶ X)) :=
-  (Closed.isAdj.adj.homEquiv _ _).symm.Injective
+  (Closed.isAdj.adj.homEquiv _ _).symm.injective
 #align category_theory.cartesian_closed.uncurry_injective CategoryTheory.CartesianClosed.uncurry_injective
 
 end CartesianClosed
@@ -230,9 +230,9 @@ The typeclass argument is explicit: any instance can be used.
 -/
 def expTerminalIsoSelf [Exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
   yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.leftUnitor Y).inv ≫ CartesianClosed.uncurry f)
-    (fun Y f => CartesianClosed.curry ((prod.leftUnitor Y).Hom ≫ f))
-    (fun Z g => by rw [curry_eq_iff, iso.hom_inv_id_assoc]) (fun Z g => by simp) fun Z W f g => by
-    rw [uncurry_natural_left, prod.left_unitor_inv_naturality_assoc f]
+    (fun Y f => CartesianClosed.curry ((prod.leftUnitor Y).hom ≫ f))
+    (fun Z g => by rw [curry_eq_iff, Iso.hom_inv_id_assoc]) (fun Z g => by simp) fun Z W f g => by
+    rw [uncurry_natural_left, prod.leftUnitor_inv_naturality_assoc f]
 #align category_theory.exp_terminal_iso_self CategoryTheory.expTerminalIsoSelf
 
 /-- The internal element which points at the given morphism. -/
@@ -273,7 +273,7 @@ theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by simp [pre
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃]
     (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) : pre (f ≫ g) = pre g ≫ pre f := by
-  rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
+  rw [pre, pre, pre, transferNatTransSelf_comp, prod.functor.map_comp]
 #align category_theory.pre_map CategoryTheory.pre_map
 
 end Pre
@@ -293,7 +293,7 @@ def zeroMul {I : C} (t : IsInitial I) : A ⨯ I ≅ I
   inv := t.to _
   hom_inv_id' :=
     by
-    have : (limits.prod.snd : A ⨯ I ⟶ I) = cartesian_closed.uncurry (t.to _)
+    have : (Limits.prod.snd : A ⨯ I ⟶ I) = CartesianClosed.uncurry (t.to _)
     rw [← curry_eq_iff]
     apply t.hom_ext
     rw [this, ← uncurry_natural_right, ← eq_curry_iff]
@@ -310,10 +310,10 @@ def mulZero {I : C} (t : IsInitial I) : I ⨯ A ≅ I :=
 def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C
     where
   Hom := default
-  inv := CartesianClosed.curry ((mulZero t).Hom ≫ t.to _)
+  inv := CartesianClosed.curry ((mulZero t).hom ≫ t.to _)
   hom_inv_id' :=
     by
-    rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mul_zero t).inv]
+    rw [← curry_natural_left, curry_eq_iff, ← cancel_epi (mulZero t).inv]
     · apply t.hom_ext
     · infer_instance
     · infer_instance
@@ -349,10 +349,10 @@ exponentiable object is an isomorphism.
 -/
 theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f :=
   by
-  haveI : mono (limits.prod.lift (𝟙 A) f ≫ (zero_mul t).Hom) := mono_comp _ _
-  rw [zero_mul_hom, prod.lift_snd] at _inst
-  haveI : is_split_epi f := is_split_epi.mk' ⟨t.to _, t.hom_ext _ _⟩
-  apply is_iso_of_mono_of_is_split_epi
+  haveI : Mono (Limits.prod.lift (𝟙 A) f ≫ (zeroMul t).hom) := mono_comp _ _
+  rw [zeroMul_hom, prod.lift_snd] at _inst
+  haveI : IsSplitEpi f := IsSplitEpi.mk' ⟨t.to _, t.hom_ext _ _⟩
+  apply isIso_of_mono_of_isSplitEpi
 #align category_theory.strict_initial CategoryTheory.strict_initial
 
 instance to_initial_isIso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
@@ -386,33 +386,33 @@ def cartesianClosedOfEquiv (e : C ≌ D) [h : CartesianClosed C] : CartesianClos
     where closed' X :=
     {
       isAdj := by
-        haveI q : exponentiable (e.inverse.obj X) := inferInstance
-        have : is_left_adjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
+        haveI q : Exponentiable (e.inverse.obj X) := inferInstance
+        have : IsLeftAdjoint (prod.functor.obj (e.inverse.obj X)) := q.is_adj
         have : e.functor ⋙ prod.functor.obj X ⋙ e.inverse ≅ prod.functor.obj (e.inverse.obj X)
-        apply nat_iso.of_components _ _
+        apply NatIso.ofComponents _ _
         intro Y
-        · apply as_iso (prod_comparison e.inverse X (e.functor.obj Y)) ≪≫ _
-          apply prod.map_iso (iso.refl _) (e.unit_iso.app Y).symm
+        · apply asIso (prodComparison e.inverse X (e.functor.obj Y)) ≪≫ _
+          apply prod.mapIso (Iso.refl _) (e.unit_iso.app Y).symm
         · intro Y Z g
-          dsimp [prod_comparison]
+          dsimp [prodComparison]
           simp [prod.comp_lift, ← e.inverse.map_comp, ← e.inverse.map_comp_assoc]
           -- I wonder if it would be a good idea to make `map_comp` a simp lemma the other way round
           dsimp
           simp
         -- See note [dsimp, simp]
-        · have : is_left_adjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
-            adjunction.left_adjoint_of_nat_iso this.symm
-          have : is_left_adjoint (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
-            adjunction.left_adjoint_of_comp e.inverse _
+        · have : IsLeftAdjoint (e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
+            Adjunction.leftAdjointOfNatIso this.symm
+          have : IsLeftAdjoint (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) :=
+            Adjunction.leftAdjointOfComp e.inverse _
           have :
             (e.inverse ⋙ e.functor ⋙ prod.functor.obj X ⋙ e.inverse) ⋙ e.functor ≅
               prod.functor.obj X :=
             by
-            apply iso_whisker_right e.counit_iso (prod.functor.obj X ⋙ e.inverse ⋙ e.functor) ≪≫ _
+            apply isoWhiskerRight e.counit_iso (prod.functor.obj X ⋙ e.inverse ⋙ e.functor) ≪≫ _
             change prod.functor.obj X ⋙ e.inverse ⋙ e.functor ≅ prod.functor.obj X
-            apply iso_whisker_left (prod.functor.obj X) e.counit_iso
+            apply isoWhiskerLeft (prod.functor.obj X) e.counit_iso
           skip
-          apply adjunction.left_adjoint_of_nat_iso this }
+          apply Adjunction.leftAdjointOfNatIso this }
 #align category_theory.cartesian_closed_of_equiv CategoryTheory.cartesianClosedOfEquiv
 
 end Functor

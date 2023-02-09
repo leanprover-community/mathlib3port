@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.symmetric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
   by
   constructor
   · intro hT v
-    apply is_symmetric.conj_inner_sym hT
+    apply IsSymmetric.conj_inner_sym hT
   · intro h x y
     nth_rw 2 [← inner_conj_sym]
     nth_rw 2 [inner_map_polarization]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.enorm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ def finiteSubspace : Subspace 𝕜 V
   smul_mem' c x (hx : _ < _) :=
     calc
       e (c • x) = ‖c‖₊ * e x := e.map_smul c x
-      _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
+      _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.ne
       
 #align enorm.finite_subspace Enorm.finiteSubspace
 
@@ -221,7 +221,7 @@ instance : MetricSpace e.finiteSubspace :=
   letI := e.emetric_space
   refine' EmetricSpace.toMetricSpace fun x y => _
   change e (x - y) ≠ ⊤
-  exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
+  exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).ne (e.map_sub_le x y)
 
 theorem finite_dist_eq (x y : e.finiteSubspace) : dist x y = (e (x - y)).toReal :=
   rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.quaternion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,8 +54,8 @@ presentation $\langle a, x | a^{2n} = 1, x^2 = a^n, x^{-1}ax=a^{-1}\rangle$. We 
 $a^i$ and `xa i` for $x * a^i$.
 -/
 inductive QuaternionGroup (n : ℕ) : Type
-  | a : ZMod (2 * n) → QuaternionGroup
-  | xa : ZMod (2 * n) → QuaternionGroup
+  | a : ZMod (2 * n) → quaternion_group
+  | xa : ZMod (2 * n) → quaternion_group
   deriving DecidableEq
 #align quaternion_group QuaternionGroup
 
@@ -151,8 +151,8 @@ private def fintype_helper : Sum (ZMod (2 * n)) (ZMod (2 * n)) ≃ QuaternionGro
     | xa j => Sum.inr j
   toFun i :=
     match i with
-    | Sum.inl j => a j
-    | Sum.inr j => xa j
+    | sum.inl j => a j
+    | sum.inr j => xa j
   left_inv := by rintro (x | x) <;> rfl
   right_inv := by rintro (x | x) <;> rfl
 #align quaternion_group.fintype_helper quaternion_group.fintype_helper
@@ -164,8 +164,8 @@ def quaternionGroupZeroEquivDihedralGroupZero : QuaternionGroup 0 ≃* DihedralG
   toFun i := QuaternionGroup.recOn i DihedralGroup.r DihedralGroup.sr
   invFun i :=
     match i with
-    | DihedralGroup.r j => a j
-    | DihedralGroup.sr j => xa j
+    | dihedral_group.r j => a j
+    | dihedral_group.sr j => xa j
   left_inv := by rintro (k | k) <;> rfl
   right_inv := by rintro (k | k) <;> rfl
   map_mul' := by
@@ -186,7 +186,7 @@ instance : Nontrivial (QuaternionGroup n) :=
 -/
 theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n :=
   by
-  rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, ZMod.card, two_mul]
+  rw [← fintype.card_eq.mpr ⟨fintypeHelper⟩, Fintype.card_sum, ZMod.card, two_mul]
   ring
 #align quaternion_group.card QuaternionGroup.card
 
@@ -230,7 +230,7 @@ theorem xa_pow_four (i : ZMod (2 * n)) : xa i ^ 4 = 1 :=
 theorem orderOf_xa [NeZero n] (i : ZMod (2 * n)) : orderOf (xa i) = 4 :=
   by
   change _ = 2 ^ 2
-  haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
+  haveI : Fact (Nat.Prime 2) := Fact.mk nat.prime_two
   apply orderOf_eq_prime_pow
   · intro h
     simp only [pow_one, xa_sq] at h
@@ -248,7 +248,7 @@ theorem quaternionGroup_one_isCyclic : IsCyclic (QuaternionGroup 1) :=
   by
   apply isCyclic_of_orderOf_eq_card
   rw [card, mul_one]
-  exact order_of_xa 0
+  exact orderOf_xa 0
 #align quaternion_group.quaternion_group_one_is_cyclic QuaternionGroup.quaternionGroup_one_isCyclic
 
 /-- If `0 < n`, then `a 1` has order `2 * n`.
@@ -272,7 +272,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
   rw [a_one_pow] at h1
   injection h1 with h2
   rw [← ZMod.val_eq_zero, ZMod.val_nat_cast, Nat.mod_eq_of_lt h] at h2
-  exact absurd h2.symm (orderOf_pos _).Ne
+  exact absurd h2.symm (orderOf_pos _).ne
 #align quaternion_group.order_of_a_one QuaternionGroup.orderOf_a_one
 
 /-- If `0 < n`, then `a i` has order `(2 * n) / gcd (2 * n) i`.
@@ -280,7 +280,7 @@ theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n :=
 theorem orderOf_a [NeZero n] (i : ZMod (2 * n)) : orderOf (a i) = 2 * n / Nat.gcd (2 * n) i.val :=
   by
   conv_lhs => rw [← ZMod.nat_cast_zMod_val i]
-  rw [← a_one_pow, orderOf_pow, order_of_a_one]
+  rw [← a_one_pow, orderOf_pow, orderOf_a_one]
 #align quaternion_group.order_of_a QuaternionGroup.orderOf_a
 
 theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 :=
@@ -290,20 +290,20 @@ theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 :=
   cases' eq_zero_or_neZero n with hn hn
   · subst hn
     simp only [lcm_zero_left, mul_zero]
-    exact Monoid.exponent_eq_zero_of_order_zero order_of_a_one
+    exact Monoid.exponent_eq_zero_of_order_zero orderOf_a_one
   apply Nat.dvd_antisymm
   · apply Monoid.exponent_dvd_of_forall_pow_eq_one
     rintro (m | m)
-    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_a]
+    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_a]
       refine' Nat.dvd_trans ⟨gcd (2 * n) m.val, _⟩ (dvd_lcm_left (2 * n) 4)
       exact (Nat.div_mul_cancel (Nat.gcd_dvd_left (2 * n) m.val)).symm
-    · rw [← orderOf_dvd_iff_pow_eq_one, order_of_xa]
+    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_xa]
       exact dvd_lcm_right (2 * n) 4
   · apply lcm_dvd
     · convert Monoid.order_dvd_exponent (a 1)
       exact order_of_a_one.symm
     · convert Monoid.order_dvd_exponent (xa 0)
-      exact (order_of_xa 0).symm
+      exact (orderOf_xa 0).symm
 #align quaternion_group.exponent QuaternionGroup.exponent
 
 end QuaternionGroup

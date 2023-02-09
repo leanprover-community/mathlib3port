@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.conj_act
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -504,7 +504,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align conj_act.subgroup.conj_mul_distrib_mul_action ConjAct.Subgroup.conjMulDistribMulActionₓ'. -/
 instance Subgroup.conjMulDistribMulAction {H : Subgroup G} [hH : H.Normal] :
     MulDistribMulAction (ConjAct G) H :=
-  Subtype.coe_injective.MulDistribMulAction H.Subtype Subgroup.val_conj_smul
+  Subtype.coe_injective.mulDistribMulAction H.subtype Subgroup.val_conj_smul
 #align conj_act.subgroup.conj_mul_distrib_mul_action ConjAct.Subgroup.conjMulDistribMulAction
 
 /- warning: mul_aut.conj_normal -> MulAut.conjNormal is a dubious translation:
@@ -575,7 +575,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} [hH : Subgroup.Normal.{u1} G _inst_1 H] {K : Subgroup.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.toGroup.{u1} G _inst_1 H)} [h : Subgroup.Characteristic.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.toGroup.{u1} G _inst_1 H) K], Subgroup.Normal.{u1} G _inst_1 (Subgroup.map.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.toGroup.{u1} G _inst_1 H) G _inst_1 (Subgroup.subtype.{u1} G _inst_1 H) K)
 Case conversion may be inaccurate. Consider using '#align conj_act.normal_of_characteristic_of_normal ConjAct.normal_of_characteristic_of_normalₓ'. -/
 instance normal_of_characteristic_of_normal {H : Subgroup G} [hH : H.Normal] {K : Subgroup H}
-    [h : K.Characteristic] : (K.map H.Subtype).Normal :=
+    [h : K.Characteristic] : (K.map H.subtype).Normal :=
   ⟨fun a ha b => by
     obtain ⟨a, ha, rfl⟩ := ha
     exact

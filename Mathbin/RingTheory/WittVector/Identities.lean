@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.identities
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem coeff_p_pow [CharP R p] (i : ℕ) : (p ^ i : 𝕎 R).coeff i = 1 :=
   induction' i with i h
   · simp only [one_coeff_zero, Ne.def, pow_zero]
   ·
-    rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ, h,
+    rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_charP, verschiebung_coeff_succ, h,
       one_pow]
 #align witt_vector.coeff_p_pow WittVector.coeff_p_pow
 
@@ -71,7 +71,7 @@ theorem coeff_p_pow_eq_zero [CharP R p] {i j : ℕ} (hj : j ≠ i) : (p ^ i : �
   induction' i with i hi generalizing j
   · rw [pow_zero, one_coeff_eq_of_pos]
     exact Nat.pos_of_ne_zero hj
-  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_char_p]
+  · rw [pow_succ', ← frobenius_verschiebung, coeff_frobenius_charP]
     cases j
     · rw [verschiebung_coeff_zero, zero_pow]
       exact Nat.Prime.pos hp.out
@@ -105,7 +105,7 @@ theorem p_nonzero [Nontrivial R] [CharP R p] : (p : 𝕎 R) ≠ 0 :=
 #align witt_vector.p_nonzero WittVector.p_nonzero
 
 theorem FractionRing.p_nonzero [Nontrivial R] [CharP R p] : (p : FractionRing (𝕎 R)) ≠ 0 := by
-  simpa using (IsFractionRing.injective (𝕎 R) (FractionRing (𝕎 R))).Ne (p_nonzero _ _)
+  simpa using (IsFractionRing.injective (𝕎 R) (FractionRing (𝕎 R))).ne (p_nonzero _ _)
 #align witt_vector.fraction_ring.p_nonzero WittVector.FractionRing.p_nonzero
 
 variable {p R}
@@ -120,20 +120,20 @@ theorem verschiebung_mul_frobenius (x y : 𝕎 R) :
 
 theorem mul_charP_coeff_zero [CharP R p] (x : 𝕎 R) : (x * p).coeff 0 = 0 :=
   by
-  rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_zero, zero_pow]
+  rw [← frobenius_verschiebung, coeff_frobenius_charP, verschiebung_coeff_zero, zero_pow]
   exact Nat.Prime.pos hp.out
 #align witt_vector.mul_char_p_coeff_zero WittVector.mul_charP_coeff_zero
 
 theorem mul_charP_coeff_succ [CharP R p] (x : 𝕎 R) (i : ℕ) :
     (x * p).coeff (i + 1) = x.coeff i ^ p := by
-  rw [← frobenius_verschiebung, coeff_frobenius_char_p, verschiebung_coeff_succ]
+  rw [← frobenius_verschiebung, coeff_frobenius_charP, verschiebung_coeff_succ]
 #align witt_vector.mul_char_p_coeff_succ WittVector.mul_charP_coeff_succ
 
 theorem verschiebung_frobenius [CharP R p] (x : 𝕎 R) : verschiebung (frobenius x) = x * p :=
   by
   ext ⟨i⟩
-  · rw [mul_char_p_coeff_zero, verschiebung_coeff_zero]
-  · rw [mul_char_p_coeff_succ, verschiebung_coeff_succ, coeff_frobenius_char_p]
+  · rw [mul_charP_coeff_zero, verschiebung_coeff_zero]
+  · rw [mul_charP_coeff_succ, verschiebung_coeff_succ, coeff_frobenius_charP]
 #align witt_vector.verschiebung_frobenius WittVector.verschiebung_frobenius
 
 theorem verschiebung_frobenius_comm [CharP R p] :
@@ -195,7 +195,7 @@ theorem iterate_frobenius_coeff (x : 𝕎 R) (i k : ℕ) :
   by
   induction' i with i ih
   · simp
-  · rw [iterate_succ_apply', coeff_frobenius_char_p, ih]
+  · rw [iterate_succ_apply', coeff_frobenius_charP, ih]
     ring
 #align witt_vector.iterate_frobenius_coeff WittVector.iterate_frobenius_coeff
 

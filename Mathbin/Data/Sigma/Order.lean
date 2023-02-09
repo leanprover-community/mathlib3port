@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem mk_lt_mk_iff [∀ i, LT (α i)] {i : ι} {a b : α i} : (⟨i, a⟩ : Si
 -/
 
 #print Sigma.le_def /-
-theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
+theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = b.1, h.ndrec a.2 ≤ b.2 :=
   by
   constructor
   · rintro ⟨i, a, b, h⟩
@@ -101,7 +101,7 @@ theorem le_def [∀ i, LE (α i)] {a b : Σi, α i} : a ≤ b ↔ ∃ h : a.1 = 
 -/
 
 #print Sigma.lt_def /-
-theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
+theorem lt_def [∀ i, LT (α i)] {a b : Σi, α i} : a < b ↔ ∃ h : a.1 = b.1, h.ndrec a.2 < b.2 :=
   by
   constructor
   · rintro ⟨i, a, b, h⟩
@@ -169,7 +169,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : LT.{u2} ι] [_inst_2 : forall (i : ι), LE.{u1} (α i)] {a : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))}, Iff (LE.le.{max u2 u1} (Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Sigma.Lex.LE.{u2, u1} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u2} ι _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => LE.le.{u1} (α (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Order._hyg.1523 : ι) (x._@.Mathlib.Data.Sigma.Order._hyg.1522 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Order._hyg.1523) => α x._@.Mathlib.Data.Sigma.Order._hyg.1523) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align sigma.lex.le_def Sigma.Lex.le_defₓ'. -/
 theorem le_def [LT ι] [∀ i, LE (α i)] {a b : Σₗ i, α i} :
-    a ≤ b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
+    a ≤ b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.ndrec a.2 ≤ b.2 :=
   Sigma.lex_iff
 #align sigma.lex.le_def Sigma.Lex.le_def
 
@@ -180,7 +180,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : LT.{u2} ι] [_inst_2 : forall (i : ι), LT.{u1} (α i)] {a : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))} {b : Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))}, Iff (LT.lt.{max u2 u1} (Lex.{max u1 u2} (Sigma.{u2, u1} ι (fun (i : ι) => α i))) (Sigma.Lex.LT.{u2, u1} ι (fun (i : ι) => α i) _inst_1 (fun (i : ι) => _inst_2 i)) a b) (Or (LT.lt.{u2} ι _inst_1 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => LT.lt.{u1} (α (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (_inst_2 (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Order._hyg.1623 : ι) (x._@.Mathlib.Data.Sigma.Order._hyg.1622 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Order._hyg.1623) => α x._@.Mathlib.Data.Sigma.Order._hyg.1623) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align sigma.lex.lt_def Sigma.Lex.lt_defₓ'. -/
 theorem lt_def [LT ι] [∀ i, LT (α i)] {a b : Σₗ i, α i} :
-    a < b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
+    a < b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.ndrec a.2 < b.2 :=
   Sigma.lex_iff
 #align sigma.lex.lt_def Sigma.Lex.lt_def
 
@@ -199,8 +199,8 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ i, α
         · exact lt_irrefl _ hij
         · exact hab.not_le hba
       · rintro ⟨⟨a, b, hij⟩ | ⟨a, b, hab⟩, hba⟩
-        · exact lex.left _ _ hij
-        · exact lex.right _ _ (hab.lt_of_not_le fun h => hba <| lex.right _ _ h) }
+        · exact Lex.left _ _ hij
+        · exact Lex.right _ _ (hab.lt_of_not_le fun h => hba <| Lex.right _ _ h) }
 #align sigma.lex.preorder Sigma.Lex.preorder
 -/
 
@@ -233,8 +233,8 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
   bot := ⟨⊥, ⊥⟩
   bot_le := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_bot_or_bot_lt a
-    · exact lex.right _ _ bot_le
-    · exact lex.left _ _ ha
+    · exact Lex.right _ _ bot_le
+    · exact Lex.left _ _ ha
 #align sigma.lex.order_bot Sigma.Lex.orderBot
 
 /- warning: sigma.lex.order_top -> Sigma.Lex.orderTop is a dubious translation:
@@ -249,8 +249,8 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
   top := ⟨⊤, ⊤⟩
   le_top := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_top_or_lt_top a
-    · exact lex.right _ _ le_top
-    · exact lex.left _ _ ha
+    · exact Lex.right _ _ le_top
+    · exact Lex.left _ _ ha
 #align sigma.lex.order_top Sigma.Lex.orderTop
 
 /- warning: sigma.lex.bounded_order -> Sigma.Lex.boundedOrder is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.choose.cast
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,11 +39,11 @@ theorem cast_add_choose {a b : ℕ} : ((a + b).choose a : K) = (a + b)! / (a ! *
 theorem cast_choose_eq_pochhammer_div (a b : ℕ) :
     (a.choose b : K) = (pochhammer K b).eval (a - (b - 1) : ℕ) / b ! := by
   rw [eq_div_iff_mul_eq (Nat.cast_ne_zero.2 b.factorial_ne_zero : (b ! : K) ≠ 0), ← Nat.cast_mul,
-    mul_comm, ← Nat.descFactorial_eq_factorial_mul_choose, ← cast_desc_factorial]
+    mul_comm, ← Nat.descFactorial_eq_factorial_mul_choose, ← cast_descFactorial]
 #align nat.cast_choose_eq_pochhammer_div Nat.cast_choose_eq_pochhammer_div
 
 theorem cast_choose_two (a : ℕ) : (a.choose 2 : K) = a * (a - 1) / 2 := by
-  rw [← cast_desc_factorial_two, desc_factorial_eq_factorial_mul_choose, factorial_two, mul_comm,
+  rw [← cast_descFactorial_two, descFactorial_eq_factorial_mul_choose, factorial_two, mul_comm,
     cast_mul, cast_two, eq_div_iff_mul_eq (two_ne_zero : (2 : K) ≠ 0)]
 #align nat.cast_choose_two Nat.cast_choose_two
 

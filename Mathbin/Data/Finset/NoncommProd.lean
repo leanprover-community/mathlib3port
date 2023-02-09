@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finset.noncomm_prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ Case conversion may be inaccurate. Consider using '#align multiset.noncomm_foldr
 theorem noncommFoldr_coe (l : List α) (comm) (b : β) :
     noncommFoldr f (l : Multiset α) comm b = l.foldr f b :=
   by
-  simp only [noncomm_foldr, coe_foldr, coe_attach, List.attach]
+  simp only [noncommFoldr, coe_foldr, coe_attach, List.attach]
   rw [← List.foldr_map]
   simp [List.map_pmap, List.pmap_eq_map]
 #align multiset.noncomm_foldr_coe Multiset.noncommFoldr_coe
@@ -122,7 +122,7 @@ def noncommFold (s : Multiset α) (comm : { x | x ∈ s }.Pairwise fun x y => op
 #print Multiset.noncommFold_coe /-
 @[simp]
 theorem noncommFold_coe (l : List α) (comm) (a : α) :
-    noncommFold op (l : Multiset α) comm a = l.foldr op a := by simp [noncomm_fold]
+    noncommFold op (l : Multiset α) comm a = l.foldr op a := by simp [noncommFold]
 #align multiset.noncomm_fold_coe Multiset.noncommFold_coe
 -/
 
@@ -177,10 +177,10 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] (l : List.{u1} α) (comm : Set.Pairwise.{u1} α (setOf.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Multiset.{u1} α) (Multiset.instMembershipMultiset.{u1} α) x (Multiset.ofList.{u1} α l))) (Commute.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)))), Eq.{succ u1} α (Multiset.noncommProd.{u1} α _inst_1 (Multiset.ofList.{u1} α l) comm) (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) (Monoid.toOne.{u1} α _inst_1) l)
 Case conversion may be inaccurate. Consider using '#align multiset.noncomm_prod_coe Multiset.noncommProd_coeₓ'. -/
 @[simp, to_additive]
-theorem noncommProd_coe (l : List α) (comm) : noncommProd (l : Multiset α) comm = l.Prod :=
+theorem noncommProd_coe (l : List α) (comm) : noncommProd (l : Multiset α) comm = l.prod :=
   by
-  rw [noncomm_prod]
-  simp only [noncomm_fold_coe]
+  rw [noncommProd]
+  simp only [noncommFold_coe]
   induction' l with hd tl hl
   · simp
   · rw [List.prod_cons, List.foldr, hl]
@@ -227,7 +227,7 @@ theorem noncommProd_cons' (s : Multiset α) (a : α) (comm) :
     noncommProd (a ::ₘ s) comm = noncommProd s (comm.mono fun _ => mem_cons_of_mem) * a :=
   by
   induction' s using Quotient.inductionOn with s
-  simp only [quot_mk_to_coe, cons_coe, noncomm_prod_coe, List.prod_cons]
+  simp only [quot_mk_to_coe, cons_coe, noncommProd_coe, List.prod_cons]
   induction' s with hd tl IH
   · simp
   · rw [List.prod_cons, mul_assoc, ← IH, ← mul_assoc, ← mul_assoc]
@@ -301,7 +301,7 @@ theorem noncommProd_eq_pow_card (s : Multiset α) (comm) (m : α) (h : ∀ x ∈
     s.noncommProd comm = m ^ s.card :=
   by
   induction s using Quotient.inductionOn
-  simp only [quot_mk_to_coe, noncomm_prod_coe, coe_card, mem_coe] at *
+  simp only [quot_mk_to_coe, noncommProd_coe, coe_card, mem_coe] at *
   exact List.prod_eq_pow_card _ m h
 #align multiset.noncomm_prod_eq_pow_card Multiset.noncommProd_eq_pow_card
 #align multiset.noncomm_sum_eq_card_nsmul Multiset.noncommSum_eq_card_nsmul
@@ -328,7 +328,7 @@ theorem noncommProd_commute (s : Multiset α) (comm) (y : α) (h : ∀ x ∈ s, 
     Commute y (s.noncommProd comm) :=
   by
   induction s using Quotient.inductionOn
-  simp only [quot_mk_to_coe, noncomm_prod_coe]
+  simp only [quot_mk_to_coe, noncommProd_coe]
   exact Commute.list_prod_right _ _ h
 #align multiset.noncomm_prod_commute Multiset.noncommProd_commute
 #align multiset.noncomm_sum_add_commute Multiset.noncommSum_addCommute
@@ -373,7 +373,7 @@ theorem noncommProd_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s₁
         rw [← h₂ _ hx, ← h₂ _ hy]
         subst h₁
         exact comm hx hy h :=
-  by simp_rw [noncomm_prod, Multiset.map_congr (congr_arg _ h₁) h₂]
+  by simp_rw [noncommProd, Multiset.map_congr (congr_arg _ h₁) h₂]
 #align finset.noncomm_prod_congr Finset.noncommProd_congr
 #align finset.noncomm_sum_congr Finset.noncommSum_congr
 
@@ -385,10 +385,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.noncomm_prod_to_finset Finset.noncommProd_toFinsetₓ'. -/
 @[simp, to_additive]
 theorem noncommProd_toFinset [DecidableEq α] (l : List α) (f : α → β) (comm) (hl : l.Nodup) :
-    noncommProd l.toFinset f comm = (l.map f).Prod :=
+    noncommProd l.toFinset f comm = (l.map f).prod :=
   by
   rw [← List.dedup_eq_self] at hl
-  simp [noncomm_prod, hl]
+  simp [noncommProd, hl]
 #align finset.noncomm_prod_to_finset Finset.noncommProd_toFinset
 #align finset.noncomm_sum_to_finset Finset.noncommSum_toFinset
 
@@ -415,7 +415,7 @@ theorem noncommProd_insert_of_not_mem [DecidableEq α] (s : Finset α) (a : α) 
     (ha : a ∉ s) :
     noncommProd (insert a s) f comm =
       f a * noncommProd s f (comm.mono fun _ => mem_insert_of_mem) :=
-  by simp [insert_val_of_not_mem ha, noncomm_prod]
+  by simp [insert_val_of_not_mem ha, noncommProd]
 #align finset.noncomm_prod_insert_of_not_mem Finset.noncommProd_insert_of_not_mem
 #align finset.noncomm_sum_insert_of_not_mem Finset.noncommSum_insert_of_not_mem
 
@@ -430,7 +430,7 @@ theorem noncommProd_insert_of_not_mem' [DecidableEq α] (s : Finset α) (a : α)
     (ha : a ∉ s) :
     noncommProd (insert a s) f comm =
       noncommProd s f (comm.mono fun _ => mem_insert_of_mem) * f a :=
-  by simp [noncomm_prod, insert_val_of_not_mem ha, Multiset.noncommProd_cons']
+  by simp [noncommProd, insert_val_of_not_mem ha, Multiset.noncommProd_cons']
 #align finset.noncomm_prod_insert_of_not_mem' Finset.noncommProd_insert_of_not_mem'
 #align finset.noncomm_sum_insert_of_not_mem' Finset.noncommSum_insert_of_not_mem'
 
@@ -442,7 +442,7 @@ theorem noncommProd_singleton (a : α) (f : α → β) :
           norm_cast
           exact Set.pairwise_singleton _ _) =
       f a :=
-  by simp [noncomm_prod, ← Multiset.cons_zero]
+  by simp [noncommProd, ← Multiset.cons_zero]
 #align finset.noncomm_prod_singleton Finset.noncommProd_singleton
 #align finset.noncomm_sum_singleton Finset.noncommSum_singleton
 -/
@@ -457,7 +457,7 @@ Case conversion may be inaccurate. Consider using '#align finset.noncomm_prod_ma
 theorem noncommProd_map [MonoidHomClass F β γ] (s : Finset α) (f : α → β) (comm) (g : F) :
     g (s.noncommProd f comm) =
       s.noncommProd (fun i => g (f i)) fun x hx y hy h => (comm.of_refl hx hy).map g :=
-  by simp [noncomm_prod, Multiset.noncommProd_map]
+  by simp [noncommProd, Multiset.noncommProd_map]
 #align finset.noncomm_prod_map Finset.noncommProd_map
 #align finset.noncomm_sum_map Finset.noncommSum_map
 
@@ -471,7 +471,7 @@ Case conversion may be inaccurate. Consider using '#align finset.noncomm_prod_eq
 theorem noncommProd_eq_pow_card (s : Finset α) (f : α → β) (comm) (m : β) (h : ∀ x ∈ s, f x = m) :
     s.noncommProd f comm = m ^ s.card :=
   by
-  rw [noncomm_prod, Multiset.noncommProd_eq_pow_card _ _ m]
+  rw [noncommProd, Multiset.noncommProd_eq_pow_card _ _ m]
   simp only [Finset.card_def, Multiset.card_map]
   simpa using h
 #align finset.noncomm_prod_eq_pow_card Finset.noncommProd_eq_pow_card
@@ -498,7 +498,7 @@ theorem noncommProd_commute (s : Finset α) (f : α → β) (comm) (y : β)
 #print Finset.noncommProd_eq_prod /-
 @[to_additive]
 theorem noncommProd_eq_prod {β : Type _} [CommMonoid β] (s : Finset α) (f : α → β) :
-    (noncommProd s f fun _ _ _ _ _ => Commute.all _ _) = s.Prod f := by
+    (noncommProd s f fun _ _ _ _ _ => Commute.all _ _) = s.prod f := by
   classical
     induction' s using Finset.induction_on with a s ha IH
     · simp
@@ -524,7 +524,7 @@ theorem noncommProd_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : Di
   obtain ⟨sl, sl', rfl⟩ := exists_list_nodup_eq s
   obtain ⟨tl, tl', rfl⟩ := exists_list_nodup_eq t
   rw [List.disjoint_toFinset_iff_disjoint] at h
-  simp [sl', tl', noncomm_prod_to_finset, ← List.prod_append, ← List.toFinset_append,
+  simp [sl', tl', noncommProd_toFinset, ← List.prod_append, ← List.toFinset_append,
     sl'.append tl' h]
 #align finset.noncomm_prod_union_of_disjoint Finset.noncommProd_union_of_disjoint
 #align finset.noncomm_sum_union_of_disjoint Finset.noncommSum_union_of_disjoint
@@ -575,7 +575,7 @@ theorem noncommProd_mul_distrib {s : Finset α} (f : α → β) (g : α → β) 
     congr 1
     simp only [← mul_assoc]
     congr 1
-    refine' noncomm_prod_commute _ _ _ _ fun y hy => _
+    refine' noncommProd_commute _ _ _ _ fun y hy => _
     exact comm_gf (mem_insert_self x s) (mem_insert_of_mem hy) (ne_of_mem_of_not_mem hy hnmem).symm
 #align finset.noncomm_prod_mul_distrib Finset.noncommProd_mul_distrib
 #align finset.noncomm_sum_add_distrib Finset.noncommSum_add_distrib
@@ -598,8 +598,8 @@ theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
   by
   ext i
   apply (univ.noncomm_prod_map (fun i => MonoidHom.single M i (x i)) _ (Pi.evalMonoidHom M i)).trans
-  rw [← insert_erase (mem_univ i), noncomm_prod_insert_of_not_mem' _ _ _ _ (not_mem_erase _ _),
-    noncomm_prod_eq_pow_card, one_pow]
+  rw [← insert_erase (mem_univ i), noncommProd_insert_of_not_mem' _ _ _ _ (not_mem_erase _ _),
+    noncommProd_eq_pow_card, one_pow]
   · simp
   · intro i h
     simp at h
@@ -619,7 +619,7 @@ theorem MonoidHom.pi_ext [Finite ι] [DecidableEq ι] {f g : (∀ i, M i) →* �
   by
   cases nonempty_fintype ι
   ext x
-  rw [← noncomm_prod_mul_single x, univ.noncomm_prod_map, univ.noncomm_prod_map]
+  rw [← noncommProd_mul_single x, univ.noncomm_prod_map, univ.noncomm_prod_map]
   congr 1 with i; exact h i (x i)
 #align monoid_hom.pi_ext MonoidHom.pi_ext
 #align add_monoid_hom.pi_ext AddMonoidHom.pi_ext

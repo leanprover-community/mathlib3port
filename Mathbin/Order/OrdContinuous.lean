@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.ord_continuous
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ protected theorem order_dual : LeftOrdContinuous f → RightOrdContinuous (toDua
 #print LeftOrdContinuous.map_isGreatest /-
 theorem map_isGreatest (hf : LeftOrdContinuous f) {s : Set α} {x : α} (h : IsGreatest s x) :
     IsGreatest (f '' s) (f x) :=
-  ⟨mem_image_of_mem f h.1, (hf h.IsLUB).1⟩
+  ⟨mem_image_of_mem f h.1, (hf h.isLUB).1⟩
 #align left_ord_continuous.map_is_greatest LeftOrdContinuous.map_isGreatest
 -/
 
@@ -241,26 +241,26 @@ protected theorem orderDual : RightOrdContinuous f → LeftOrdContinuous (toDual
 #print RightOrdContinuous.map_isLeast /-
 theorem map_isLeast (hf : RightOrdContinuous f) {s : Set α} {x : α} (h : IsLeast s x) :
     IsLeast (f '' s) (f x) :=
-  hf.OrderDual.map_isGreatest h
+  hf.orderDual.map_isGreatest h
 #align right_ord_continuous.map_is_least RightOrdContinuous.map_isLeast
 -/
 
 #print RightOrdContinuous.mono /-
 theorem mono (hf : RightOrdContinuous f) : Monotone f :=
-  hf.OrderDual.mono.dual
+  hf.orderDual.mono.dual
 #align right_ord_continuous.mono RightOrdContinuous.mono
 -/
 
 #print RightOrdContinuous.comp /-
 theorem comp (hg : RightOrdContinuous g) (hf : RightOrdContinuous f) : RightOrdContinuous (g ∘ f) :=
-  hg.OrderDual.comp hf.OrderDual
+  hg.orderDual.comp hf.orderDual
 #align right_ord_continuous.comp RightOrdContinuous.comp
 -/
 
 #print RightOrdContinuous.iterate /-
 protected theorem iterate {f : α → α} (hf : RightOrdContinuous f) (n : ℕ) :
     RightOrdContinuous (f^[n]) :=
-  hf.OrderDual.iterate n
+  hf.orderDual.iterate n
 #align right_ord_continuous.iterate RightOrdContinuous.iterate
 -/
 
@@ -272,19 +272,19 @@ variable [SemilatticeInf α] [SemilatticeInf β] {f : α → β}
 
 #print RightOrdContinuous.map_inf /-
 theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x ⊓ y) = f x ⊓ f y :=
-  hf.OrderDual.map_sup x y
+  hf.orderDual.map_sup x y
 #align right_ord_continuous.map_inf RightOrdContinuous.map_inf
 -/
 
 #print RightOrdContinuous.le_iff /-
 theorem le_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x ≤ f y ↔ x ≤ y :=
-  hf.OrderDual.le_iff h
+  hf.orderDual.le_iff h
 #align right_ord_continuous.le_iff RightOrdContinuous.le_iff
 -/
 
 #print RightOrdContinuous.lt_iff /-
 theorem lt_iff (hf : RightOrdContinuous f) (h : Injective f) {x y} : f x < f y ↔ x < y :=
-  hf.OrderDual.lt_iff h
+  hf.orderDual.lt_iff h
 #align right_ord_continuous.lt_iff RightOrdContinuous.lt_iff
 -/
 
@@ -324,7 +324,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {f : α -> β}, (RightOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (forall (s : Set.{u1} α), Eq.{succ u2} β (f (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (InfSet.infₛ.{u2} β (ConditionallyCompleteLattice.toInfSet.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2)) (Set.image.{u1, u2} α β f s)))
 Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_Inf' RightOrdContinuous.map_infₛ'ₓ'. -/
 theorem map_infₛ' (hf : RightOrdContinuous f) (s : Set α) : f (infₛ s) = infₛ (f '' s) :=
-  hf.OrderDual.map_supₛ' s
+  hf.orderDual.map_supₛ' s
 #align right_ord_continuous.map_Inf' RightOrdContinuous.map_infₛ'
 
 /- warning: right_ord_continuous.map_Inf -> RightOrdContinuous.map_infₛ is a dubious translation:
@@ -334,7 +334,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {f : α -> β}, (RightOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (forall (s : Set.{u1} α), Eq.{succ u2} β (f (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) s)) (infᵢ.{u2, succ u1} β (ConditionallyCompleteLattice.toInfSet.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2)) α (fun (x : α) => infᵢ.{u2, 0} β (ConditionallyCompleteLattice.toInfSet.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) => f x))))
 Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_Inf RightOrdContinuous.map_infₛₓ'. -/
 theorem map_infₛ (hf : RightOrdContinuous f) (s : Set α) : f (infₛ s) = ⨅ x ∈ s, f x :=
-  hf.OrderDual.map_supₛ s
+  hf.orderDual.map_supₛ s
 #align right_ord_continuous.map_Inf RightOrdContinuous.map_infₛ
 
 /- warning: right_ord_continuous.map_infi -> RightOrdContinuous.map_infᵢ is a dubious translation:
@@ -344,7 +344,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {ι : Sort.{u3}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] {f : α -> β}, (RightOrdContinuous.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1))) (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2))) f) -> (forall (g : ι -> α), Eq.{succ u2} β (f (infᵢ.{u1, u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) ι (fun (i : ι) => g i))) (infᵢ.{u2, u3} β (ConditionallyCompleteLattice.toInfSet.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2)) ι (fun (i : ι) => f (g i))))
 Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_infi RightOrdContinuous.map_infᵢₓ'. -/
 theorem map_infᵢ (hf : RightOrdContinuous f) (g : ι → α) : f (⨅ i, g i) = ⨅ i, f (g i) :=
-  hf.OrderDual.map_supᵢ g
+  hf.orderDual.map_supᵢ g
 #align right_ord_continuous.map_infi RightOrdContinuous.map_infᵢ
 
 end CompleteLattice
@@ -361,7 +361,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_cInf RightOrdContinuous.map_cinfₛₓ'. -/
 theorem map_cinfₛ (hf : RightOrdContinuous f) {s : Set α} (sne : s.Nonempty) (sbdd : BddBelow s) :
     f (infₛ s) = infₛ (f '' s) :=
-  hf.OrderDual.map_csupₛ sne sbdd
+  hf.orderDual.map_csupₛ sne sbdd
 #align right_ord_continuous.map_cInf RightOrdContinuous.map_cinfₛ
 
 /- warning: right_ord_continuous.map_cinfi -> RightOrdContinuous.map_cinfᵢ is a dubious translation:
@@ -372,7 +372,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right_ord_continuous.map_cinfi RightOrdContinuous.map_cinfᵢₓ'. -/
 theorem map_cinfᵢ (hf : RightOrdContinuous f) {g : ι → α} (hg : BddBelow (range g)) :
     f (⨅ i, g i) = ⨅ i, f (g i) :=
-  hf.OrderDual.map_csupᵢ hg
+  hf.orderDual.map_csupᵢ hg
 #align right_ord_continuous.map_cinfi RightOrdContinuous.map_cinfᵢ
 
 end ConditionallyCompleteLattice

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.subtype
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -249,7 +249,7 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
     Surjective fun f : ∀ x, β x => restrict p f :=
   by
   letI := Classical.decPred p
-  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (Ne x), funext <| _⟩
+  refine' fun f => ⟨fun x => if h : p x then f ⟨x, h⟩ else Nonempty.some (ne x), funext <| _⟩
   rintro ⟨x, hx⟩
   exact dif_pos hx
 #align subtype.surjective_restrict Subtype.surjective_restrict

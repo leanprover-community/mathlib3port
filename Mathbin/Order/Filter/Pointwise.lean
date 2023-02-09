@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ theorem principal_one : 𝓟 1 = (1 : Filter α) :=
 
 #print Filter.one_neBot /-
 @[to_additive]
-theorem one_neBot : (1 : Filter α).ne_bot :=
+theorem one_neBot : (1 : Filter α).NeBot :=
   Filter.pure_neBot
 #align filter.one_ne_bot Filter.one_neBot
 #align filter.zero_ne_bot Filter.zero_neBot
@@ -155,7 +155,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : One.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1)))) (Eq.{succ u1} (Filter.{u1} α) f (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.le_one_iff Filter.NeBot.le_one_iffₓ'. -/
 @[to_additive]
-protected theorem NeBot.le_one_iff (h : f.ne_bot) : f ≤ 1 ↔ f = 1 :=
+protected theorem NeBot.le_one_iff (h : f.NeBot) : f ≤ 1 ↔ f = 1 :=
   h.le_pure_iff
 #align filter.ne_bot.le_one_iff Filter.NeBot.le_one_iff
 #align filter.ne_bot.nonpos_iff Filter.NeBot.nonpos_iff
@@ -287,7 +287,7 @@ theorem inv_eq_bot_iff : f⁻¹ = ⊥ ↔ f = ⊥ :=
 
 #print Filter.neBot_inv_iff /-
 @[simp, to_additive]
-theorem neBot_inv_iff : f⁻¹.ne_bot ↔ NeBot f :=
+theorem neBot_inv_iff : f⁻¹.NeBot ↔ NeBot f :=
   map_neBot_iff _
 #align filter.ne_bot_inv_iff Filter.neBot_inv_iff
 #align filter.ne_bot_neg_iff Filter.neBot_neg_iff
@@ -295,7 +295,7 @@ theorem neBot_inv_iff : f⁻¹.ne_bot ↔ NeBot f :=
 
 #print Filter.NeBot.inv /-
 @[to_additive]
-theorem NeBot.inv : f.ne_bot → f⁻¹.ne_bot := fun h => h.map _
+theorem NeBot.inv : f.NeBot → f⁻¹.NeBot := fun h => h.map _
 #align filter.ne_bot.inv Filter.NeBot.inv
 #align filter.ne_bot.neg Filter.NeBot.neg
 -/
@@ -448,7 +448,7 @@ theorem mul_eq_bot_iff : f * g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 
 #print Filter.mul_neBot_iff /-
 @[simp, to_additive]
-theorem mul_neBot_iff : (f * g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem mul_neBot_iff : (f * g).NeBot ↔ f.NeBot ∧ g.NeBot :=
   map₂_neBot_iff
 #align filter.mul_ne_bot_iff Filter.mul_neBot_iff
 #align filter.add_ne_bot_iff Filter.add_neBot_iff
@@ -464,7 +464,7 @@ theorem NeBot.mul : NeBot f → NeBot g → NeBot (f * g) :=
 
 #print Filter.NeBot.of_mul_left /-
 @[to_additive]
-theorem NeBot.of_mul_left : (f * g).ne_bot → f.ne_bot :=
+theorem NeBot.of_mul_left : (f * g).NeBot → f.NeBot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_mul_left Filter.NeBot.of_mul_left
 #align filter.ne_bot.of_add_left Filter.NeBot.of_add_left
@@ -472,7 +472,7 @@ theorem NeBot.of_mul_left : (f * g).ne_bot → f.ne_bot :=
 
 #print Filter.NeBot.of_mul_right /-
 @[to_additive]
-theorem NeBot.of_mul_right : (f * g).ne_bot → g.ne_bot :=
+theorem NeBot.of_mul_right : (f * g).NeBot → g.NeBot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_mul_right Filter.NeBot.of_mul_right
 #align filter.ne_bot.of_add_right Filter.NeBot.of_add_right
@@ -657,7 +657,7 @@ theorem div_eq_bot_iff : f / g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 
 #print Filter.div_neBot_iff /-
 @[simp, to_additive]
-theorem div_neBot_iff : (f / g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem div_neBot_iff : (f / g).NeBot ↔ f.NeBot ∧ g.NeBot :=
   map₂_neBot_iff
 #align filter.div_ne_bot_iff Filter.div_neBot_iff
 #align filter.sub_ne_bot_iff Filter.sub_neBot_iff
@@ -673,7 +673,7 @@ theorem NeBot.div : NeBot f → NeBot g → NeBot (f / g) :=
 
 #print Filter.NeBot.of_div_left /-
 @[to_additive]
-theorem NeBot.of_div_left : (f / g).ne_bot → f.ne_bot :=
+theorem NeBot.of_div_left : (f / g).NeBot → f.NeBot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_div_left Filter.NeBot.of_div_left
 #align filter.ne_bot.of_sub_left Filter.NeBot.of_sub_left
@@ -681,7 +681,7 @@ theorem NeBot.of_div_left : (f / g).ne_bot → f.ne_bot :=
 
 #print Filter.NeBot.of_div_right /-
 @[to_additive]
-theorem NeBot.of_div_right : (f / g).ne_bot → g.ne_bot :=
+theorem NeBot.of_div_right : (f / g).NeBot → g.NeBot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_div_right Filter.NeBot.of_div_right
 #align filter.ne_bot.of_sub_right Filter.NeBot.of_sub_right
@@ -1095,7 +1095,7 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
   by
   refine' ⟨fun hfg => _, _⟩
   · obtain ⟨t₁, t₂, h₁, h₂, h⟩ : (1 : Set α) ∈ f * g := hfg.symm.subst one_mem_one
-    have hfg : (f * g).ne_bot := hfg.symm.subst one_ne_bot
+    have hfg : (f * g).NeBot := hfg.symm.subst one_neBot
     rw [(hfg.nonempty_of_mem <| mul_mem_mul h₁ h₂).subset_one_iff, Set.mul_eq_one_iff] at h
     obtain ⟨a, b, rfl, rfl, h⟩ := h
     refine' ⟨a, b, _, _, h⟩
@@ -1209,7 +1209,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.mul_zero_nonneg Filter.NeBot.mul_zero_nonnegₓ'. -/
-theorem NeBot.mul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f * 0 :=
+theorem NeBot.mul_zero_nonneg (hf : f.NeBot) : 0 ≤ f * 0 :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, mul_zero _⟩
@@ -1221,7 +1221,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : MulZeroClass.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) (HMul.hMul.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHMul.{u1} (Filter.{u1} α) (Filter.instMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MulZeroClass.toZero.{u1} α _inst_1)))) g))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_mul_nonneg Filter.NeBot.zero_mul_nonnegₓ'. -/
-theorem NeBot.zero_mul_nonneg (hg : g.ne_bot) : 0 ≤ 0 * g :=
+theorem NeBot.zero_mul_nonneg (hg : g.NeBot) : 0 ≤ 0 * g :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_mul _⟩
@@ -1273,7 +1273,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 1 (One.toOfNat1.{u1} (Filter.{u1} α) (Filter.instOne.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (DivInvMonoid.toDiv.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) f f))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.one_le_div Filter.NeBot.one_le_divₓ'. -/
 @[to_additive]
-theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
+theorem NeBot.one_le_div (h : f.NeBot) : 1 ≤ f / f :=
   by
   rintro s ⟨t₁, t₂, h₁, h₂, hs⟩
   obtain ⟨a, ha₁, ha₂⟩ := Set.not_disjoint_iff.1 (h.not_disjoint h₁ h₂)
@@ -1285,7 +1285,7 @@ theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
 #print Filter.isUnit_pure /-
 @[to_additive]
 theorem isUnit_pure (a : α) : IsUnit (pure a : Filter α) :=
-  (Group.isUnit a).filterₓ
+  (Group.isUnit a).filter
 #align filter.is_unit_pure Filter.isUnit_pure
 #align filter.is_add_unit_pure Filter.isAddUnit_pure
 -/
@@ -1293,7 +1293,7 @@ theorem isUnit_pure (a : α) : IsUnit (pure a : Filter α) :=
 #print Filter.isUnit_iff_singleton /-
 @[simp]
 theorem isUnit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by
-  simp only [is_unit_iff, Group.isUnit, and_true_iff]
+  simp only [isUnit_iff, Group.isUnit, and_true_iff]
 #align filter.is_unit_iff_singleton Filter.isUnit_iff_singleton
 -/
 
@@ -1361,7 +1361,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {f : Filter.{u1} α}, (Filter.NeBot.{u1} α f) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) f (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.div_zero_nonneg Filter.NeBot.div_zero_nonnegₓ'. -/
-theorem NeBot.div_zero_nonneg (hf : f.ne_bot) : 0 ≤ f / 0 :=
+theorem NeBot.div_zero_nonneg (hf : f.NeBot) : 0 ≤ f / 0 :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, div_zero _⟩
@@ -1373,7 +1373,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GroupWithZero.{u1} α] {g : Filter.{u1} α}, (Filter.NeBot.{u1} α g) -> (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) (HDiv.hDiv.{u1, u1, u1} (Filter.{u1} α) (Filter.{u1} α) (Filter.{u1} α) (instHDiv.{u1} (Filter.{u1} α) (Filter.instDiv.{u1} α (GroupWithZero.toDiv.{u1} α _inst_1))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) g))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_div_nonneg Filter.NeBot.zero_div_nonnegₓ'. -/
-theorem NeBot.zero_div_nonneg (hg : g.ne_bot) : 0 ≤ 0 / g :=
+theorem NeBot.zero_div_nonneg (hg : g.NeBot) : 0 ≤ 0 / g :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_div _⟩
@@ -1469,7 +1469,7 @@ theorem smul_eq_bot_iff : f • g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
 
 #print Filter.smul_neBot_iff /-
 @[simp, to_additive]
-theorem smul_neBot_iff : (f • g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem smul_neBot_iff : (f • g).NeBot ↔ f.NeBot ∧ g.NeBot :=
   map₂_neBot_iff
 #align filter.smul_ne_bot_iff Filter.smul_neBot_iff
 #align filter.vadd_ne_bot_iff Filter.vadd_neBot_iff
@@ -1489,7 +1489,7 @@ theorem NeBot.smul : NeBot f → NeBot g → NeBot (f • g) :=
 
 #print Filter.NeBot.of_smul_left /-
 @[to_additive]
-theorem NeBot.of_smul_left : (f • g).ne_bot → f.ne_bot :=
+theorem NeBot.of_smul_left : (f • g).NeBot → f.NeBot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_smul_left Filter.NeBot.of_smul_left
 #align filter.ne_bot.of_vadd_left Filter.NeBot.of_vadd_left
@@ -1497,7 +1497,7 @@ theorem NeBot.of_smul_left : (f • g).ne_bot → f.ne_bot :=
 
 #print Filter.NeBot.of_smul_right /-
 @[to_additive]
-theorem NeBot.of_smul_right : (f • g).ne_bot → g.ne_bot :=
+theorem NeBot.of_smul_right : (f • g).NeBot → g.NeBot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_smul_right Filter.NeBot.of_smul_right
 #align filter.ne_bot.of_vadd_right Filter.NeBot.of_vadd_right
@@ -1676,7 +1676,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, Iff (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) (And (Filter.NeBot.{u1} β f) (Filter.NeBot.{u1} β g))
 Case conversion may be inaccurate. Consider using '#align filter.vsub_ne_bot_iff Filter.vsub_neBot_iffₓ'. -/
 @[simp]
-theorem vsub_neBot_iff : (f -ᵥ g : Filter α).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem vsub_neBot_iff : (f -ᵥ g : Filter α).NeBot ↔ f.NeBot ∧ g.NeBot :=
   map₂_neBot_iff
 #align filter.vsub_ne_bot_iff Filter.vsub_neBot_iff
 
@@ -1692,7 +1692,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β f)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_leftₓ'. -/
-theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
+theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).NeBot → f.NeBot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_left
 
@@ -1702,7 +1702,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : VSub.{u2, u1} α β] {f : Filter.{u1} β} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α (VSub.vsub.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instVSub.{u2, u1} α β _inst_1) f g)) -> (Filter.NeBot.{u1} β g)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_rightₓ'. -/
-theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
+theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).NeBot → g.NeBot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_right
 
@@ -1851,7 +1851,7 @@ theorem smul_filter_eq_bot_iff : a • f = ⊥ ↔ f = ⊥ :=
 
 #print Filter.smul_filter_neBot_iff /-
 @[simp, to_additive]
-theorem smul_filter_neBot_iff : (a • f).ne_bot ↔ f.ne_bot :=
+theorem smul_filter_neBot_iff : (a • f).NeBot ↔ f.NeBot :=
   map_neBot_iff _
 #align filter.smul_filter_ne_bot_iff Filter.smul_filter_neBot_iff
 #align filter.vadd_filter_ne_bot_iff Filter.vadd_filter_neBot_iff
@@ -1859,14 +1859,14 @@ theorem smul_filter_neBot_iff : (a • f).ne_bot ↔ f.ne_bot :=
 
 #print Filter.NeBot.smul_filter /-
 @[to_additive]
-theorem NeBot.smul_filter : f.ne_bot → (a • f).ne_bot := fun h => h.map _
+theorem NeBot.smul_filter : f.NeBot → (a • f).NeBot := fun h => h.map _
 #align filter.ne_bot.smul_filter Filter.NeBot.smul_filter
 #align filter.ne_bot.vadd_filter Filter.NeBot.vadd_filter
 -/
 
 #print Filter.NeBot.of_smul_filter /-
 @[to_additive]
-theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
+theorem NeBot.of_smul_filter : (a • f).NeBot → f.NeBot :=
   NeBot.of_map
 #align filter.ne_bot.of_smul_filter Filter.NeBot.of_smul_filter
 #align filter.ne_bot.of_vadd_filter Filter.NeBot.of_vadd_filter
@@ -2045,7 +2045,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Zero.{u2} α] [_inst_2 : Zero.{u1} β] [_inst_3 : SMulWithZero.{u2, u1} α β _inst_1 _inst_2] {f : Filter.{u2} α}, (Filter.NeBot.{u2} α f) -> (LE.le.{u1} (Filter.{u1} β) (Preorder.toLE.{u1} (Filter.{u1} β) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β))) (OfNat.ofNat.{u1} (Filter.{u1} β) 0 (Zero.toOfNat0.{u1} (Filter.{u1} β) (Filter.instZero.{u1} β _inst_2))) (HSMul.hSMul.{u2, u1, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.{u1} β) (instHSMul.{u2, u1} (Filter.{u2} α) (Filter.{u1} β) (Filter.instSMul.{u2, u1} α β (SMulZeroClass.toSMul.{u2, u1} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u2, u1} α β _inst_1 _inst_2 _inst_3)))) f (OfNat.ofNat.{u1} (Filter.{u1} β) 0 (Zero.toOfNat0.{u1} (Filter.{u1} β) (Filter.instZero.{u1} β _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.smul_zero_nonneg Filter.NeBot.smul_zero_nonnegₓ'. -/
-theorem NeBot.smul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f • (0 : Filter β) :=
+theorem NeBot.smul_zero_nonneg (hf : f.NeBot) : 0 ≤ f • (0 : Filter β) :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, smul_zero _⟩
@@ -2057,7 +2057,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Zero.{u1} α] [_inst_2 : Zero.{u2} β] [_inst_3 : SMulWithZero.{u1, u2} α β _inst_1 _inst_2] {g : Filter.{u2} β}, (Filter.NeBot.{u2} β g) -> (LE.le.{u2} (Filter.{u2} β) (Preorder.toLE.{u2} (Filter.{u2} β) (PartialOrder.toPreorder.{u2} (Filter.{u2} β) (Filter.instPartialOrderFilter.{u2} β))) (OfNat.ofNat.{u2} (Filter.{u2} β) 0 (Zero.toOfNat0.{u2} (Filter.{u2} β) (Filter.instZero.{u2} β _inst_2))) (HSMul.hSMul.{u1, u2, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.{u2} β) (instHSMul.{u1, u2} (Filter.{u1} α) (Filter.{u2} β) (Filter.instSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β _inst_2 (SMulWithZero.toSMulZeroClass.{u1, u2} α β _inst_1 _inst_2 _inst_3)))) (OfNat.ofNat.{u1} (Filter.{u1} α) 0 (Zero.toOfNat0.{u1} (Filter.{u1} α) (Filter.instZero.{u1} α _inst_1))) g))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.zero_smul_nonneg Filter.NeBot.zero_smul_nonnegₓ'. -/
-theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
+theorem NeBot.zero_smul_nonneg (hg : g.NeBot) : 0 ≤ (0 : Filter α) • g :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_smul _ _⟩
@@ -2078,7 +2078,7 @@ theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 :=
 #align filter.zero_smul_filter_nonpos Filter.zero_smul_filter_nonpos
 
 #print Filter.zero_smul_filter /-
-theorem zero_smul_filter (hg : g.ne_bot) : (0 : α) • g = 0 :=
+theorem zero_smul_filter (hg : g.NeBot) : (0 : α) • g = 0 :=
   zero_smul_filter_nonpos.antisymm <|
     le_map_iff.2 fun s hs =>
       by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: E.W.Ayers
 
 ! This file was ported from Lean 3 source module tactic.interactive_expr
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,15 +69,15 @@ unsafe instance : has_to_format sf :=
   ⟨sf.repr⟩
 
 unsafe instance : ToString sf :=
-  ⟨fun s => s.repr.toString⟩
+  ⟨fun s => s.repr.to_string⟩
 
 unsafe instance : Repr sf :=
-  ⟨fun s => s.repr.toString⟩
+  ⟨fun s => s.repr.to_string⟩
 
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/
 unsafe def sf.of_eformat : eformat → sf
   | tag ⟨ea, e⟩ m => sf.tag_expr ea e <| sf.of_eformat m
-  | Group m => sf.block 0 <| sf.of_eformat m
+  | group m => sf.block 0 <| sf.of_eformat m
   | nest i m => sf.block i <| sf.of_eformat m
   | highlight c m => sf.highlight c <| sf.of_eformat m
   | of_format f => sf.of_string <| format.to_string f
@@ -105,13 +105,13 @@ unsafe def sf.flatten : sf → sf
 #align widget_override.interactive_expression.sf.flatten widget_override.interactive_expression.sf.flatten
 
 private unsafe def elim_part_apps : sf → Expr.Address → sf
-  | sf.tag_expr ea e m, Acc =>
-    if ∀ c ∈ ea, c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea)
-    else sf.tag_expr (Acc ++ ea) e (elim_part_apps m [])
-  | sf.compose a b, Acc => (elim_part_apps a Acc).compose (elim_part_apps b Acc)
+  | sf.tag_expr ea e m, acc =>
+    if ∀ c ∈ ea, c = Expr.Coord.app_fn then elim_part_apps m (acc ++ ea)
+    else sf.tag_expr (acc ++ ea) e (elim_part_apps m [])
+  | sf.compose a b, acc => (elim_part_apps a acc).compose (elim_part_apps b acc)
   | sf.of_string s, _ => sf.of_string s
-  | sf.block i a, Acc => sf.block i <| elim_part_apps a Acc
-  | sf.highlight c a, Acc => sf.highlight c <| elim_part_apps a Acc
+  | sf.block i a, acc => sf.block i <| elim_part_apps a acc
+  | sf.highlight c a, acc => sf.highlight c <| elim_part_apps a acc
 #align widget_override.interactive_expression.elim_part_apps widget_override.interactive_expression.elim_part_apps
 
 /-- Post-process an `sf` object to eliminate tags for partial applications by
@@ -167,7 +167,7 @@ unsafe def goto_def_button {γ} : expr → tactic (List (html (action γ)))
         pure <|
             [h "button"
                 [cn "pointer ba br3 mr1",
-                  on_click fun _ => action.effect <| widget.effect.reveal_position file Pos,
+                  on_click fun _ => action.effect <| widget.effect.reveal_position file pos,
                   attr.val "title" "go to definition"]
                 ["↪"]]) <|>
       pure []
@@ -250,8 +250,8 @@ unsafe def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
       Sum.casesOn a some fun _ => none) <|
     (component.with_effects fun _ (a : Sum γ widget.effect) =>
         match a with
-        | Sum.inl g => []
-        | Sum.inr s => [s]) <|
+        | sum.inl g => []
+        | sum.inr s => [s]) <|
       tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure <| (none, none))
         (fun e ⟨ca, sa⟩ act =>
           pure <|
@@ -283,7 +283,7 @@ unsafe def implicit_arg_list (tooltip : tc subexpr Empty) (e : expr) : tactic <|
   pure <|
       h "div" [style [("display", "flex"), ("flexWrap", "wrap"), ("alignItems", "baseline")]]
         (h "span" [className "bg-blue br3 ma1 ph2 white"] [fn] ::
-          List.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
+          list.map (fun a => h "span" [className "bg-gray br3 ma1 ph2 white"] [a]) args)
 #align widget_override.interactive_expression.implicit_arg_list widget_override.interactive_expression.implicit_arg_list
 
 /-- Component for the type tooltip.
@@ -319,7 +319,7 @@ unsafe def filter_local : filter_type → expr → tactic Bool
   | filter_type.none, e => pure true
   | filter_type.no_instances, e => do
     let t ← tactic.infer_type e
-    not <$> tactic.is_class t
+    bnot <$> tactic.is_class t
   | filter_type.only_props, e => do
     let t ← tactic.infer_type e
     tactic.is_prop t

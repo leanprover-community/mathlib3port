@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.log
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem log_im_le_pi (x : ℂ) : (log x).im ≤ π := by simp only [log_im, arg_
 #align complex.log_im_le_pi Complex.log_im_le_pi
 
 theorem exp_log {x : ℂ} (hx : x ≠ 0) : exp (log x) = x := by
-  rw [log, exp_add_mul_I, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp,
+  rw [log, exp_add_mul_i, ← of_real_sin, sin_arg, ← of_real_cos, cos_arg hx, ← of_real_exp,
     Real.exp_log (abs.pos hx), mul_add, of_real_div, of_real_div,
     mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), ← mul_assoc,
     mul_div_cancel' _ (of_real_ne_zero.2 <| abs.ne_zero hx), re_add_im]
@@ -62,7 +62,7 @@ theorem range_exp : range exp = {0}ᶜ :=
 
 theorem log_exp {x : ℂ} (hx₁ : -π < x.im) (hx₂ : x.im ≤ π) : log (exp x) = x := by
   rw [log, abs_exp, Real.log_exp, exp_eq_exp_re_mul_sin_add_cos, ← of_real_exp,
-    arg_mul_cos_add_sin_mul_I (Real.exp_pos _) ⟨hx₁, hx₂⟩, re_add_im]
+    arg_mul_cos_add_sin_mul_i (Real.exp_pos _) ⟨hx₁, hx₂⟩, re_add_im]
 #align complex.log_exp Complex.log_exp
 
 theorem exp_inj_of_neg_pi_lt_of_le_pi {x y : ℂ} (hx₁ : -π < x.im) (hx₂ : x.im ≤ π) (hy₁ : -π < y.im)
@@ -112,7 +112,7 @@ theorem log_conj_eq_ite (x : ℂ) : log (conj x) = if x.arg = π then log x else
   simp_rw [log, abs_conj, arg_conj, map_add, map_mul, conj_of_real]
   split_ifs with hx
   · rw [hx]
-  simp_rw [of_real_neg, conj_I, mul_neg, neg_mul]
+  simp_rw [of_real_neg, conj_i, mul_neg, neg_mul]
 #align complex.log_conj_eq_ite Complex.log_conj_eq_ite
 
 theorem log_conj (x : ℂ) (h : x.arg ≠ π) : log (conj x) = conj (log x) := by
@@ -124,8 +124,8 @@ theorem log_inv_eq_ite (x : ℂ) : log x⁻¹ = if x.arg = π then -conj (log x)
   by_cases hx : x = 0
   · simp [hx]
   rw [inv_def, log_mul_of_real, Real.log_inv, of_real_neg, ← sub_eq_neg_add, log_conj_eq_ite]
-  · simp_rw [log, map_add, map_mul, conj_of_real, conj_I, norm_sq_eq_abs, Real.log_pow,
-      Nat.cast_two, of_real_mul, of_real_bit0, of_real_one, neg_add, mul_neg, two_mul, neg_neg]
+  · simp_rw [log, map_add, map_mul, conj_of_real, conj_i, normSq_eq_abs, Real.log_pow, Nat.cast_two,
+      of_real_mul, of_real_bit0, of_real_one, neg_add, mul_neg, two_mul, neg_neg]
     split_ifs
     · rw [add_sub_right_comm, sub_add_cancel']
     · rw [add_sub_right_comm, sub_add_cancel']
@@ -136,7 +136,7 @@ theorem log_inv_eq_ite (x : ℂ) : log x⁻¹ = if x.arg = π then -conj (log x)
 theorem log_inv (x : ℂ) (hx : x.arg ≠ π) : log x⁻¹ = -log x := by rw [log_inv_eq_ite, if_neg hx]
 #align complex.log_inv Complex.log_inv
 
-theorem two_pi_i_ne_zero : (2 * π * i : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, I_ne_zero]
+theorem two_pi_i_ne_zero : (2 * π * i : ℂ) ≠ 0 := by norm_num [Real.pi_ne_zero, i_ne_zero]
 #align complex.two_pi_I_ne_zero Complex.two_pi_i_ne_zero
 
 theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * i) :=
@@ -146,10 +146,10 @@ theorem exp_eq_one_iff {x : ℂ} : exp x = 1 ↔ ∃ n : ℤ, x = n * (2 * π * 
     rcases existsUnique_add_zsmul_mem_Ioc Real.two_pi_pos x.im (-π) with ⟨n, hn, -⟩
     use -n
     rw [Int.cast_neg, neg_mul, eq_neg_iff_add_eq_zero]
-    have : (x + n * (2 * π * I)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
+    have : (x + n * (2 * π * i)).im ∈ Ioc (-π) π := by simpa [two_mul, mul_add] using hn
     rw [← log_exp this.1 this.2, exp_periodic.int_mul n, h, log_one]
   · rintro ⟨n, rfl⟩
-    exact (exp_periodic.int_mul n).Eq.trans exp_zero
+    exact (exp_periodic.int_mul n).eq.trans exp_zero
 #align complex.exp_eq_one_iff Complex.exp_eq_one_iff
 
 theorem exp_eq_exp_iff_exp_sub_eq_one {x y : ℂ} : exp x = exp y ↔ exp (x - y) = 1 := by
@@ -167,11 +167,11 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
   · refine' ((hs.image exp).insert 0).mono _
     rw [image_preimage_eq_inter_range, range_exp, ← diff_eq, ← union_singleton, diff_union_self]
     exact subset_union_left _ _
-  · rw [← bUnion_preimage_singleton]
+  · rw [← bunionᵢ_preimage_singleton]
     refine' hs.bUnion fun z hz => _
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
-    · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
-      exact countable_Union fun m => countable_singleton _
+    · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, setOf_exists]
+      exact countable_unionᵢ fun m => countable_singleton _
     · push_neg  at hne
       simp [preimage, hne]
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
@@ -184,9 +184,9 @@ theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
-            (continuous_abs.continuous_within_at.log _)).Tendsto.add
+            (continuous_abs.continuous_within_at.log _)).tendsto.add
       (((continuous_of_real.tendsto _).comp <|
-            tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero hre him).mul
+            tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
   · simp [sub_eq_add_neg]
@@ -199,9 +199,9 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
-            (continuous_abs.continuous_within_at.log _)).Tendsto.add
+            (continuous_abs.continuous_within_at.log _)).tendsto.add
       ((continuous_of_real.continuous_at.comp_continuous_within_at <|
-            continuous_within_at_arg_of_re_neg_of_im_zero hre him).mul
+            continuousWithinAt_arg_of_re_neg_of_im_zero hre him).mul
         tendsto_const_nhds)
   convert this
   · lift z to ℝ using him
@@ -211,7 +211,7 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
 theorem tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
     (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * i) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using
-    (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
+    (continuousWithinAt_log_of_re_neg_of_im_zero hre him).tendsto
 #align complex.tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
 
 @[simp]
@@ -222,7 +222,7 @@ theorem map_exp_comap_re_atBot : map exp (comap re atBot) = 𝓝[≠] 0 := by
 @[simp]
 theorem map_exp_comap_re_atTop : map exp (comap re atTop) = comap abs atTop :=
   by
-  rw [← comap_exp_comap_abs_at_top, map_comap, range_exp, inf_eq_left, le_principal_iff]
+  rw [← comap_exp_comap_abs_atTop, map_comap, range_exp, inf_eq_left, le_principal_iff]
   exact eventually_ne_of_tendsto_norm_atTop tendsto_comap 0
 #align complex.map_exp_comap_re_at_top Complex.map_exp_comap_re_atTop
 
@@ -244,14 +244,14 @@ theorem continuousAt_clog {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt
     rw [complex.abs.ne_zero_iff]
     rintro rfl
     simpa using h
-  · have h_cont_mul : Continuous fun x : ℂ => x * I := continuous_id'.mul continuous_const
+  · have h_cont_mul : Continuous fun x : ℂ => x * i := continuous_id'.mul continuous_const
     refine' h_cont_mul.continuous_at.comp (continuous_of_real.continuous_at.comp _)
-    exact continuous_at_arg h
+    exact continuousAt_arg h
 #align continuous_at_clog continuousAt_clog
 
 theorem Filter.Tendsto.clog {l : Filter α} {f : α → ℂ} {x : ℂ} (h : Tendsto f l (𝓝 x))
     (hx : 0 < x.re ∨ x.im ≠ 0) : Tendsto (fun t => log (f t)) l (𝓝 <| log x) :=
-  (continuousAt_clog hx).Tendsto.comp h
+  (continuousAt_clog hx).tendsto.comp h
 #align filter.tendsto.clog Filter.Tendsto.clog
 
 variable [TopologicalSpace α]
@@ -273,7 +273,7 @@ theorem ContinuousOn.clog {f : α → ℂ} {s : Set α} (h₁ : ContinuousOn f s
 
 theorem Continuous.clog {f : α → ℂ} (h₁ : Continuous f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :
     Continuous fun t => log (f t) :=
-  continuous_iff_continuousAt.2 fun x => h₁.ContinuousAt.clog (h₂ x)
+  continuous_iff_continuousAt.2 fun x => h₁.continuousAt.clog (h₂ x)
 #align continuous.clog Continuous.clog
 
 end LogDeriv

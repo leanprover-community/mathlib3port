@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ structure IsIdeal {P} [LE P] (I : Set P) : Prop where
 /-- Create an element of type `order.ideal` from a set satisfying the predicate
 `order.is_ideal`. -/
 def IsIdeal.toIdeal [LE P] {I : Set P} (h : IsIdeal I) : Ideal P :=
-  ⟨⟨I, h.IsLowerSet⟩, h.Nonempty, h.Directed⟩
+  ⟨⟨I, h.isLowerSet⟩, h.nonempty, h.directed⟩
 #align order.is_ideal.to_ideal Order.IsIdeal.toIdeal
 -/
 
@@ -154,7 +154,7 @@ protected theorem directed (s : Ideal P) : DirectedOn (· ≤ ·) (s : Set P) :=
 
 #print Order.Ideal.isIdeal /-
 protected theorem isIdeal (s : Ideal P) : IsIdeal (s : Set P) :=
-  ⟨s.lower, s.Nonempty, s.Directed⟩
+  ⟨s.lower, s.nonempty, s.directed⟩
 #align order.ideal.is_ideal Order.Ideal.isIdeal
 -/
 
@@ -201,7 +201,7 @@ but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {x : P} {I : Order.Ideal.{u1} P _inst_1} {J : Order.Ideal.{u1} P _inst_1}, (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) x I) -> (LE.le.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLE.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) I J) -> (Membership.mem.{u1, u1} P (Order.Ideal.{u1} P _inst_1) (SetLike.instMembership.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1)) x J)
 Case conversion may be inaccurate. Consider using '#align order.ideal.mem_of_mem_of_le Order.Ideal.mem_of_mem_of_leₓ'. -/
 @[trans]
-theorem mem_of_mem_of_le {x : P} {I J : Ideal P} : x ∈ I → I ≤ J → x ∈ J :=
+theorem mem_of_mem_of_le {x : P} {I J : Ideal P} : x ∈ I → not_or_of_imp ≤ J → x ∈ J :=
   @Set.mem_of_mem_of_subset P x I J
 #align order.ideal.mem_of_mem_of_le Order.Ideal.mem_of_mem_of_le
 
@@ -358,7 +358,7 @@ but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] [_inst_2 : IsDirected.{u1} P (fun (x._@.Mathlib.Order.Ideal._hyg.1475 : P) (x._@.Mathlib.Order.Ideal._hyg.1477 : P) => LE.le.{u1} P _inst_1 x._@.Mathlib.Order.Ideal._hyg.1475 x._@.Mathlib.Order.Ideal._hyg.1477)] [_inst_3 : Nonempty.{succ u1} P] {I : Order.Ideal.{u1} P _inst_1}, Iff (Order.Ideal.IsMaximal.{u1} P _inst_1 I) (IsCoatom.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1)) (Order.Ideal.instOrderTopIdealToLEToPreorderInstPartialOrderIdeal.{u1} P _inst_1 _inst_2 _inst_3) I)
 Case conversion may be inaccurate. Consider using '#align order.ideal.is_maximal_iff_is_coatom Order.Ideal.isMaximal_iff_isCoatomₓ'. -/
 theorem isMaximal_iff_isCoatom : IsMaximal I ↔ IsCoatom I :=
-  ⟨fun h => h.IsCoatom, fun h => h.IsMaximal⟩
+  ⟨fun h => h.isCoatom, fun h => h.Order.Ideal.IsCoatom.isMaximal⟩
 #align order.ideal.is_maximal_iff_is_coatom Order.Ideal.isMaximal_iff_isCoatom
 
 end Directed
@@ -375,7 +375,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.ideal.bot_mem Order.Ideal.bot_memₓ'. -/
 @[simp]
 theorem bot_mem (s : Ideal P) : ⊥ ∈ s :=
-  s.lower bot_le s.Nonempty.some_mem
+  s.lower bot_le s.nonempty.some_mem
 #align order.ideal.bot_mem Order.Ideal.bot_mem
 
 end OrderBot
@@ -497,7 +497,7 @@ variable [SemilatticeSup P] {x y : P} {I s : Ideal P}
 #print Order.Ideal.sup_mem /-
 /-- A specific witness of `I.directed` when `P` has joins. -/
 theorem sup_mem (hx : x ∈ s) (hy : y ∈ s) : x ⊔ y ∈ s :=
-  let ⟨z, hz, hx, hy⟩ := s.Directed x hx y hy
+  let ⟨z, hz, hx, hy⟩ := s.directed x hx y hy
   s.lower (sup_le hx hy) hz
 #align order.ideal.sup_mem Order.Ideal.sup_mem
 -/
@@ -545,8 +545,8 @@ instance : HasSup (Ideal P) :=
           le_sup_left, le_sup_right⟩
       lower' := fun x y h ⟨yi, _, yj, _, _⟩ => ⟨yi, ‹_›, yj, ‹_›, h.trans ‹_›⟩ }⟩
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∈ » I) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ∈ » J) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∈ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ∈ » J) -/
 instance : Lattice (Ideal P) :=
   { Ideal.partialOrder with
     sup := (· ⊔ ·)
@@ -659,16 +659,16 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.ideal.mem_Inf Order.Ideal.mem_infₛₓ'. -/
 @[simp]
 theorem mem_infₛ : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by
-  simp_rw [← SetLike.mem_coe, coe_Inf, mem_Inter₂]
+  simp_rw [← SetLike.mem_coe, coe_infₛ, mem_interᵢ₂]
 #align order.ideal.mem_Inf Order.Ideal.mem_infₛ
 
 instance : CompleteLattice (Ideal P) :=
   { Ideal.lattice,
     completeLatticeOfInf (Ideal P) fun S =>
       by
-      refine' ⟨fun s hs => _, fun s hs => by rwa [← coe_subset_coe, coe_Inf, subset_Inter₂_iff]⟩
-      rw [← coe_subset_coe, coe_Inf]
-      exact bInter_subset_of_mem hs with }
+      refine' ⟨fun s hs => _, fun s hs => by rwa [← coe_subset_coe, coe_infₛ, subset_interᵢ₂_iff]⟩
+      rw [← coe_subset_coe, coe_infₛ]
+      exact binterᵢ_subset_of_mem hs with }
 
 end SemilatticeSupOrderBot
 
@@ -702,7 +702,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align order.ideal.coe_sup_eq Order.Ideal.coe_sup_eqₓ'. -/
 theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
   Set.ext fun _ =>
-    ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ =>
+    ⟨fun ⟨_, _, _, _, _⟩ => Exists ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ =>
       ⟨i, ‹_›, j, ‹_›, le_of_eq ‹_›⟩⟩
 #align order.ideal.coe_sup_eq Order.Ideal.coe_sup_eq
 
@@ -807,7 +807,7 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) :=
   dsimp only [sequence_of_cofinals]
   cases Encodable.decode ι n
   · rfl
-  · apply cofinal.le_above
+  · apply Cofinal.le_above
 #align order.sequence_of_cofinals.monotone Order.sequenceOfCofinals.monotone
 
 /- warning: order.sequence_of_cofinals.encode_mem -> Order.sequenceOfCofinals.encode_mem is a dubious translation:
@@ -821,7 +821,7 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   by
   dsimp only [sequence_of_cofinals]
   rw [Encodable.encodek]
-  apply cofinal.above_mem
+  apply Cofinal.above_mem
 #align order.sequence_of_cofinals.encode_mem Order.sequenceOfCofinals.encode_mem
 
 #print Order.idealOfCofinals /-

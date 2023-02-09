@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SMulCommClass R
 
 instance (priority := 100) noZeroSMulDivisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
-  b.NoZeroSMulDivisors
+  b.noZeroSMulDivisors
 #align module.free.no_zero_smul_divisors Module.Free.noZeroSMulDivisors
 
 instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
@@ -137,14 +137,14 @@ instance self : Module.Free R R :=
 #align module.free.self Module.Free.self
 
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
-  ofBasis <| (chooseBasis R M).Prod (chooseBasis R N)
+  ofBasis <| (chooseBasis R M).prod (chooseBasis R N)
 #align module.free.prod Module.Free.prod
 
 /-- The product of finitely many free modules is free. -/
 instance pi (M : ι → Type _) [Finite ι] [∀ i : ι, AddCommMonoid (M i)] [∀ i : ι, Module R (M i)]
     [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
   let ⟨_⟩ := nonempty_fintype ι
-  of_basis <| Pi.basis fun i => choose_basis R (M i)
+  ofBasis <| Pi.basis fun i => chooseBasis R (M i)
 #align module.free.pi Module.Free.pi
 
 /-- The module of finite matrices is free. -/

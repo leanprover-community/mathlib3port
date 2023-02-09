@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,16 +97,16 @@ theorem stereoToFun_apply [CompleteSpace E] (x : E) :
 theorem contDiffOn_stereoToFun [CompleteSpace E] :
     ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
   by
-  refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).ContDiff.ContDiffOn
+  refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).contDiff.contDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
-  · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).ContDiff).ContDiffOn
+  · exact (cont_diff_const.sub (innerSL v : E →L[ℝ] ℝ).contDiff).contDiffOn
   · intro x h h'
     exact h (sub_eq_zero.mp h').symm
 #align cont_diff_on_stereo_to_fun contDiffOn_stereoToFun
 
 theorem continuousOn_stereoToFun [CompleteSpace E] :
     ContinuousOn (stereoToFun v) { x : E | innerSL v x ≠ (1 : ℝ) } :=
-  (@contDiffOn_stereoToFun E _ v _).ContinuousOn
+  (@contDiffOn_stereoToFun E _ v _).continuousOn
 #align continuous_on_stereo_to_fun continuousOn_stereoToFun
 
 variable (v)
@@ -153,7 +153,7 @@ theorem hasFderivAt_stereoInvFunAux (v : E) :
   by
   have h₀ : HasFderivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
     by
-    convert (hasStrictFderivAt_norm_sq _).HasFderivAt
+    convert (hasStrictFderivAt_norm_sq _).hasFderivAt
     simp
   have h₁ : HasFderivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
     convert (hasFderivAt_inv _).comp _ (h₀.add (hasFderivAt_const 4 0)) <;> simp
@@ -223,7 +223,7 @@ theorem stereoInvFun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
 #align stereo_inv_fun_ne_north_pole stereoInvFun_ne_north_pole
 
 theorem continuous_stereoInvFun (hv : ‖v‖ = 1) : Continuous (stereoInvFun hv) :=
-  continuous_induced_rng.2 (contDiff_stereoInvFunAux.Continuous.comp continuous_subtype_val)
+  continuous_induced_rng.2 (contDiff_stereoInvFunAux.continuous.comp continuous_subtype_val)
 #align continuous_stereo_inv_fun continuous_stereoInvFun
 
 variable [CompleteSpace E]
@@ -314,9 +314,9 @@ def stereographic (hv : ‖v‖ = 1) : LocalHomeomorph (sphere (0 : E) 1) (ℝ �
   open_source := isOpen_compl_singleton
   open_target := isOpen_univ
   continuous_toFun :=
-    continuousOn_stereoToFun.comp continuous_subtype_val.ContinuousOn fun w h =>
+    continuousOn_stereoToFun.comp continuous_subtype_val.continuousOn fun w h =>
       h ∘ Subtype.ext ∘ Eq.symm ∘ (inner_eq_norm_mul_iff_of_norm_one hv (by simp)).mp
-  continuous_invFun := (continuous_stereoInvFun hv).ContinuousOn
+  continuous_invFun := (continuous_stereoInvFun hv).continuousOn
 #align stereographic stereographic
 
 theorem stereographic_apply (hv : ‖v‖ = 1) (x : sphere (0 : E) 1) :
@@ -449,7 +449,7 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
         rfl
       have H₁ := U'.cont_diff.comp_cont_diff_on contDiffOn_stereoToFun
       have H₂ :=
-        (cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (v : E))ᗮ.subtypeL.ContDiff).comp U.symm.cont_diff
+        (cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (v : E))ᗮ.subtypeL.contDiff).comp U.symm.cont_diff
       convert H₁.comp' (H₂.cont_diff_on : ContDiffOn ℝ ⊤ _ Set.univ) using 1
       ext
       simp [sphere_ext_iff, stereographic'_symm_apply, real_inner_comm])
@@ -467,8 +467,8 @@ theorem contMdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
           OrthonormalBasis.fromOrthogonalSpanSingleton
           n (ne_zero_of_mem_unit_sphere (-v))).repr
     exact
-      ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.ContDiff).comp
-          U.symm.cont_diff).ContDiffOn
+      ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.contDiff).comp
+          U.symm.cont_diff).contDiffOn
 #align cont_mdiff_coe_sphere contMdiff_coe_sphere
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -491,7 +491,7 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
         OrthonormalBasis.fromOrthogonalSpanSingleton
         n (ne_zero_of_mem_unit_sphere (-v))).repr
   have h : ContDiffOn ℝ ⊤ _ Set.univ := U.cont_diff.cont_diff_on
-  have H₁ := (h.comp' contDiffOn_stereoToFun).ContMdiffOn
+  have H₁ := (h.comp' contDiffOn_stereoToFun).contMdiffOn
   have H₂ : ContMdiffOn _ _ _ _ Set.univ := hf.cont_mdiff_on
   convert (H₁.of_le le_top).comp' H₂ using 1
   ext x
@@ -525,7 +525,7 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
     (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v : TangentSpace (𝓡 n) v →L[ℝ] E).range =
       (ℝ ∙ (v : E))ᗮ :=
   by
-  rw [((contMdiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
+  rw [((contMdiff_coe_sphere v).mdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderivWithin_univ,
     LinearIsometryEquiv.toHomeomorph_symm, LinearIsometryEquiv.coe_toHomeomorph,
     LinearIsometryEquiv.map_zero, mfld_simps]
@@ -540,7 +540,7 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
   convert
     (U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
-      (ℝ ∙ (↑(-v) : E))ᗮ.Subtype using
+      (ℝ ∙ (↑(-v) : E))ᗮ.subtype using
     1
   simp only [Submodule.range_subtype, coe_neg_sphere]
   congr 1
@@ -559,12 +559,12 @@ linear map from `tangent_space (𝓡 n) v` to `E`.  This map is injective. -/
 theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     Injective (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v) :=
   by
-  rw [((contMdiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
+  rw [((contMdiff_coe_sphere v).mdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderivWithin_univ,
     LinearIsometryEquiv.toHomeomorph_symm, LinearIsometryEquiv.coe_toHomeomorph,
     LinearIsometryEquiv.map_zero, mfld_simps]
   let U := (OrthonormalBasis.fromOrthogonalSpanSingleton n (ne_zero_of_mem_unit_sphere (-v))).repr
-  change injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0)
+  change Injective (fderiv ℝ ((stereoInvFunAux (-v : E) ∘ coe) ∘ U.symm) 0)
   have :
     HasFderivAt (stereoInvFunAux (-v : E) ∘ (coe : (ℝ ∙ (↑(-v) : E))ᗮ → E))
       (ℝ ∙ (↑(-v) : E))ᗮ.subtypeL (U.symm 0) :=
@@ -597,7 +597,7 @@ instance : LieGroup (𝓡 1) circle
   smooth_mul := by
     apply ContMdiff.codRestrict_sphere
     let c : circle → ℂ := coe
-    have h₂ : ContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd :=
+    have h₂ : ContMdiff (𝓘(ℝ, ℂ).prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd :=
       by
       rw [contMdiff_iff]
       exact ⟨continuous_mul, fun x y => cont_diff_mul.cont_diff_on⟩

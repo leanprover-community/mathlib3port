@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,8 +95,8 @@ def limitCone (F : J ⥤ SemiRing.{max v u}) : Cone F
 -/
 def limitConeIsLimit (F : J ⥤ SemiRing.{max v u}) : IsLimit (limitCone F) := by
   refine'
-      is_limit.of_faithful (forget SemiRing) (types.limit_cone_is_limit _)
-        (fun s => ⟨_, _, _, _, _⟩) fun s => rfl <;>
+      IsLimit.ofFaithful (forget SemiRing) (Types.limitConeIsLimit _) (fun s => ⟨_, _, _, _, _⟩)
+        fun s => rfl <;>
     tidy
 #align SemiRing.has_limits.limit_cone_is_limit SemiRing.HasLimits.limitConeIsLimit
 
@@ -111,9 +111,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRing.{max v u} :=
     HasLimitsOfShape := fun J 𝒥 =>
       {
         HasLimit := fun F =>
-          has_limit.mk
+          HasLimit.mk
             { Cone := limit_cone F
-              IsLimit := limit_cone_is_limit F } } }
+              IsLimit := limitConeIsLimit F } } }
 #align SemiRing.has_limits_of_size SemiRing.hasLimitsOfSize
 
 instance hasLimits : HasLimits SemiRing.{u} :=
@@ -134,8 +134,8 @@ instance forget₂AddCommMonPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_AddCommMon_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (forget₂AddCommMonPreservesLimitsAux F) }
 #align SemiRing.forget₂_AddCommMon_preserves_limits_of_size SemiRing.forget₂AddCommMonPreservesLimitsOfSize
 
 instance forget₂AddCommMonPreservesLimits : PreservesLimits (forget₂ SemiRing AddCommMon.{u}) :=
@@ -156,8 +156,7 @@ instance forget₂MonPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_Mon_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F) (forget₂MonPreservesLimitsAux F) }
 #align SemiRing.forget₂_Mon_preserves_limits_of_size SemiRing.forget₂MonPreservesLimitsOfSize
 
 instance forget₂MonPreservesLimits : PreservesLimits (forget₂ SemiRing Mon.{u}) :=
@@ -170,8 +169,8 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Semi
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (types.limit_cone_is_limit (F ⋙ forget _)) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (Types.limitConeIsLimit (F ⋙ forget _)) }
 #align SemiRing.forget_preserves_limits_of_size SemiRing.forgetPreservesLimitsOfSize
 
 instance forgetPreservesLimits : PreservesLimits (forget SemiRing.{u}) :=
@@ -212,7 +211,7 @@ instance (F : J ⥤ CommSemiRing.{max v u}) :
               naturality' :=
                 (SemiRing.HasLimits.limitCone
                       (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (SemiRing.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ CommSemiRing SemiRing.{max v u})
           (by apply SemiRing.HasLimits.limitConeIsLimit _)
@@ -238,7 +237,7 @@ def limitConeIsLimit (F : J ⥤ CommSemiRing.{max v u}) : IsLimit (limitCone F) 
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRing.{max v u} :=
   {
     HasLimitsOfShape := fun J 𝒥 =>
-      { HasLimit := fun F => has_limit_of_created F (forget₂ CommSemiRing SemiRing.{max v u}) } }
+      { HasLimit := fun F => hasLimitOfCreated F (forget₂ CommSemiRing SemiRing.{max v u}) } }
 #align CommSemiRing.has_limits_of_size CommSemiRing.hasLimitsOfSize
 
 instance hasLimits : HasLimits CommSemiRing.{u} :=
@@ -263,7 +262,7 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Comm
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        limits.comp_preserves_limit (forget₂ CommSemiRing SemiRing) (forget SemiRing) }
+        Limits.compPreservesLimit (forget₂ CommSemiRing SemiRing) (forget SemiRing) }
 #align CommSemiRing.forget_preserves_limits_of_size CommSemiRing.forgetPreservesLimitsOfSize
 
 instance forgetPreservesLimits : PreservesLimits (forget CommSemiRing.{u}) :=
@@ -312,7 +311,7 @@ instance (F : J ⥤ RingCat.{max v u}) : CreatesLimit F (forget₂ RingCat SemiR
               naturality' :=
                 (SemiRing.HasLimits.limitCone
                       (F ⋙ forget₂ RingCat SemiRing.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (SemiRing.HasLimits.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (SemiRing.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ RingCat SemiRing.{max v u})
           (by apply SemiRing.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
@@ -336,7 +335,7 @@ def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
   {
     HasLimitsOfShape := fun J 𝒥 =>
-      { HasLimit := fun F => has_limit_of_created F (forget₂ RingCat SemiRing.{max v u}) } }
+      { HasLimit := fun F => hasLimitOfCreated F (forget₂ RingCat SemiRing.{max v u}) } }
 #align Ring.has_limits_of_size RingCat.hasLimitsOfSize
 
 instance hasLimits : HasLimits RingCat.{u} :=
@@ -368,8 +367,8 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_AddCommGroup_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (forget₂AddCommGroupPreservesLimitsAux F) }
 #align Ring.forget₂_AddCommGroup_preserves_limits_of_size RingCat.forget₂AddCommGroupPreservesLimitsOfSize
 
 instance forget₂AddCommGroupPreservesLimits :
@@ -384,7 +383,7 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Ring
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        limits.comp_preserves_limit (forget₂ RingCat SemiRing) (forget SemiRing.{max v u}) }
+        Limits.compPreservesLimit (forget₂ RingCat SemiRing) (forget SemiRing.{max v u}) }
 #align Ring.forget_preserves_limits_of_size RingCat.forgetPreservesLimitsOfSize
 
 instance forgetPreservesLimits : PreservesLimits (forget RingCat.{u}) :=
@@ -437,7 +436,7 @@ instance (F : J ⥤ CommRingCat.{max v u}) : CreatesLimit F (forget₂ CommRingC
                       (F ⋙
                         forget₂ _ RingCat.{max v u} ⋙
                           forget₂ _ SemiRing.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (RingCat.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (RingCat.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ _ RingCat.{max v u})
           (by apply RingCat.limitConeIsLimit (F ⋙ forget₂ CommRingCat RingCat.{max v u}))
@@ -463,7 +462,7 @@ def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
   {
     HasLimitsOfShape := fun J 𝒥 =>
-      { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingCat RingCat.{max v u}) } }
+      { HasLimit := fun F => hasLimitOfCreated F (forget₂ CommRingCat RingCat.{max v u}) } }
 #align CommRing.has_limits_of_size CommRingCat.hasLimitsOfSize
 
 instance hasLimits : HasLimits CommRingCat.{u} :=
@@ -498,8 +497,8 @@ instance forget₂CommSemiRingPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_CommSemiRing_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (forget₂CommSemiRingPreservesLimitsAux F) }
 #align CommRing.forget₂_CommSemiRing_preserves_limits_of_size CommRingCat.forget₂CommSemiRingPreservesLimitsOfSize
 
 instance forget₂CommSemiRingPreservesLimits :
@@ -514,7 +513,7 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Comm
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        limits.comp_preserves_limit (forget₂ CommRingCat RingCat) (forget RingCat) }
+        Limits.compPreservesLimit (forget₂ CommRingCat RingCat) (forget RingCat) }
 #align CommRing.forget_preserves_limits_of_size CommRingCat.forgetPreservesLimitsOfSize
 
 instance forgetPreservesLimits : PreservesLimits (forget CommRingCat.{u}) :=

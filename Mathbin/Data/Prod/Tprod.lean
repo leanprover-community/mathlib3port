@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.prod.tprod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ but is expected to have type
   forall {ι : Type.{u}} {α : ι -> Type.{v}} {i : ι} {l : List.{u} ι} [_inst_1 : DecidableEq.{succ u} ι] (v : List.TProd.{u, v} ι α (List.cons.{u} ι i l)), Eq.{succ v} (α i) (List.TProd.elim.{u, v} ι α (fun (a : ι) (b : ι) => _inst_1 a b) (List.cons.{u} ι i l) v i (List.mem_cons_self.{u} ι i l)) (Prod.fst.{v, v} (α i) (List.foldr.{u, succ v} ι Type.{v} (fun (i : ι) (β : Type.{v}) => Prod.{v, v} (α i) β) PUnit.{succ v} l) v)
 Case conversion may be inaccurate. Consider using '#align list.tprod.elim_self List.TProd.elim_selfₓ'. -/
 @[simp]
-theorem elim_self (v : TProd α (i :: l)) : v.elim (l.mem_cons_self i) = v.1 := by simp [tprod.elim]
+theorem elim_self (v : TProd α (i :: l)) : v.elim (l.mem_cons_self i) = v.1 := by simp [TProd.elim]
 #align list.tprod.elim_self List.TProd.elim_self
 
 /- warning: list.tprod.elim_of_ne -> List.TProd.elim_of_ne is a dubious translation:
@@ -140,7 +140,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.tprod.elim_of_ne List.TProd.elim_of_neₓ'. -/
 @[simp]
 theorem elim_of_ne (hj : j ∈ i :: l) (hji : j ≠ i) (v : TProd α (i :: l)) :
-    v.elim hj = TProd.elim v.2 (hj.resolve_left hji) := by simp [tprod.elim, hji]
+    v.elim hj = TProd.elim v.2 (hj.resolve_left hji) := by simp [TProd.elim, hji]
 #align list.tprod.elim_of_ne List.TProd.elim_of_ne
 
 /- warning: list.tprod.elim_of_mem -> List.TProd.elim_of_mem is a dubious translation:
@@ -256,12 +256,12 @@ theorem mk_preimage_tprod :
   | [], t => by simp [Set.tprod]
   | i :: l, t => by
     ext f
-    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
+    have : f ∈ TProd.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
       rw [mk_preimage_tprod l t]
-    change tprod.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
+    change TProd.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
-    rw [Set.tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
-    simp_rw [mem_set_of_eq, mem_cons_iff]
+    rw [Set.tprod, TProd.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
+    simp_rw [mem_setOf_eq, mem_cons]
     rw [forall_eq_or_imp, and_congr_right_iff]
     exact fun _ => this
 #align set.mk_preimage_tprod Set.mk_preimage_tprod
@@ -280,7 +280,7 @@ theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀
     simp [h]
   rw [← this, ← mk_preimage_tprod, preimage_preimage]
   convert preimage_id
-  simp [tprod.mk_elim hnd h, id_def]
+  simp [TProd.mk_elim hnd h, id_def]
 #align set.elim_preimage_pi Set.elim_preimage_pi
 
 end Set

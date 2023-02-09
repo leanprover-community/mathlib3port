@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.opposites
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ def opEquiv : α ≃ αᵐᵒᵖ :=
 #print MulOpposite.op_bijective /-
 @[to_additive]
 theorem op_bijective : Bijective (op : α → αᵐᵒᵖ) :=
-  opEquiv.Bijective
+  opEquiv.bijective
 #align mul_opposite.op_bijective MulOpposite.op_bijective
 #align add_opposite.op_bijective AddOpposite.op_bijective
 -/
@@ -149,7 +149,7 @@ theorem op_bijective : Bijective (op : α → αᵐᵒᵖ) :=
 #print MulOpposite.unop_bijective /-
 @[to_additive]
 theorem unop_bijective : Bijective (unop : αᵐᵒᵖ → α) :=
-  opEquiv.symm.Bijective
+  opEquiv.symm.bijective
 #align mul_opposite.unop_bijective MulOpposite.unop_bijective
 #align add_opposite.unop_bijective AddOpposite.unop_bijective
 -/
@@ -157,7 +157,7 @@ theorem unop_bijective : Bijective (unop : αᵐᵒᵖ → α) :=
 #print MulOpposite.op_injective /-
 @[to_additive]
 theorem op_injective : Injective (op : α → αᵐᵒᵖ) :=
-  op_bijective.Injective
+  op_bijective.injective
 #align mul_opposite.op_injective MulOpposite.op_injective
 #align add_opposite.op_injective AddOpposite.op_injective
 -/
@@ -165,7 +165,7 @@ theorem op_injective : Injective (op : α → αᵐᵒᵖ) :=
 #print MulOpposite.op_surjective /-
 @[to_additive]
 theorem op_surjective : Surjective (op : α → αᵐᵒᵖ) :=
-  op_bijective.Surjective
+  op_bijective.surjective
 #align mul_opposite.op_surjective MulOpposite.op_surjective
 #align add_opposite.op_surjective AddOpposite.op_surjective
 -/
@@ -173,7 +173,7 @@ theorem op_surjective : Surjective (op : α → αᵐᵒᵖ) :=
 #print MulOpposite.unop_injective /-
 @[to_additive]
 theorem unop_injective : Injective (unop : αᵐᵒᵖ → α) :=
-  unop_bijective.Injective
+  unop_bijective.injective
 #align mul_opposite.unop_injective MulOpposite.unop_injective
 #align add_opposite.unop_injective AddOpposite.unop_injective
 -/
@@ -181,7 +181,7 @@ theorem unop_injective : Injective (unop : αᵐᵒᵖ → α) :=
 #print MulOpposite.unop_surjective /-
 @[to_additive]
 theorem unop_surjective : Surjective (unop : αᵐᵒᵖ → α) :=
-  unop_bijective.Surjective
+  unop_bijective.surjective
 #align mul_opposite.unop_surjective MulOpposite.unop_surjective
 #align add_opposite.unop_surjective AddOpposite.unop_surjective
 -/
@@ -206,7 +206,7 @@ variable (α)
 
 @[to_additive]
 instance [Nontrivial α] : Nontrivial αᵐᵒᵖ :=
-  op_injective.Nontrivial
+  op_injective.nontrivial
 
 @[to_additive]
 instance [Inhabited α] : Inhabited αᵐᵒᵖ :=
@@ -214,7 +214,7 @@ instance [Inhabited α] : Inhabited αᵐᵒᵖ :=
 
 @[to_additive]
 instance [Subsingleton α] : Subsingleton αᵐᵒᵖ :=
-  unop_injective.Subsingleton
+  unop_injective.subsingleton
 
 @[to_additive]
 instance [Unique α] : Unique αᵐᵒᵖ :=

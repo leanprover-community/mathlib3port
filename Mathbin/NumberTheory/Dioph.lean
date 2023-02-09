@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.dioph
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,10 +81,10 @@ variable {α β γ : Type _}
   rather than only allowing monomials and addition, but the definition is equivalent
   and this is easier to use.) -/
 inductive IsPoly : ((α → ℕ) → ℤ) → Prop
-  | proj : ∀ i, IsPoly fun x : α → ℕ => x i
-  | const : ∀ n : ℤ, IsPoly fun x : α → ℕ => n
-  | sub : ∀ {f g : (α → ℕ) → ℤ}, IsPoly f → IsPoly g → IsPoly fun x => f x - g x
-  | mul : ∀ {f g : (α → ℕ) → ℤ}, IsPoly f → IsPoly g → IsPoly fun x => f x * g x
+  | proj : ∀ i, is_poly fun x : α → ℕ => x i
+  | const : ∀ n : ℤ, is_poly fun x : α → ℕ => n
+  | sub : ∀ {f g : (α → ℕ) → ℤ}, is_poly f → is_poly g → is_poly fun x => f x - g x
+  | mul : ∀ {f g : (α → ℕ) → ℤ}, is_poly f → is_poly g → is_poly fun x => f x * g x
 #align is_poly IsPoly
 
 theorem IsPoly.neg {f : (α → ℕ) → ℤ} : IsPoly f → IsPoly (-f) :=
@@ -231,12 +231,12 @@ instance (α : Type _) : Inhabited (Poly α) :=
 
 instance : AddCommGroup (Poly α) := by
   refine_struct
-            { add := ((· + ·) : Poly α → Poly α → Poly α)
-              neg := (Neg.neg : Poly α → Poly α)
-              sub := Sub.sub
+            { add := ((· + ·) : poly α → poly α → poly α)
+              neg := (has_neg.neg : poly α → poly α)
+              sub := has_sub.sub
               zero := 0
-              zsmul := @zsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
-              nsmul := @nsmulRec _ ⟨(0 : Poly α)⟩ ⟨(· + ·)⟩ } <;>
+              zsmul := @zsmul_rec _ ⟨(0 : poly α)⟩ ⟨(· + ·)⟩ ⟨has_neg.neg⟩
+              nsmul := @nsmul_rec _ ⟨(0 : poly α)⟩ ⟨(· + ·)⟩ } <;>
           intros <;>
         try rfl <;>
       refine' ext fun _ => _ <;>
@@ -252,11 +252,11 @@ instance : CommRing (Poly α) := by
   refine_struct
             { Poly.addGroupWithOne,
               Poly.addCommGroup with
-              add := ((· + ·) : Poly α → Poly α → Poly α)
+              add := ((· + ·) : poly α → poly α → poly α)
               zero := 0
               mul := (· * ·)
               one := 1
-              npow := @npowRec _ ⟨(1 : Poly α)⟩ ⟨(· * ·)⟩ } <;>
+              npow := @npow_rec _ ⟨(1 : poly α)⟩ ⟨(· * ·)⟩ } <;>
           intros <;>
         try rfl <;>
       refine' ext fun _ => _ <;>
@@ -390,7 +390,7 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
     let ⟨β, pl, h⟩ := this
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
-  exact ⟨ULift Empty, [], fun v => by simp <;> exact ⟨fun ⟨t⟩ => Empty.rec _ t, trivial⟩⟩
+  exact ⟨ULift Empty, [], fun v => by simp <;> exact ⟨fun ⟨t⟩ => empty.rec _ t, trivial⟩⟩
   simp at d
   exact
     let ⟨⟨β, p, pe⟩, dl⟩ := d
@@ -604,8 +604,8 @@ theorem diophFn_compn :
         exact fun df dfl =>
           have : Dioph { v | (v ∘ inl ⊗ f (v ∘ inl)::v ∘ inr) ∈ S } :=
             ext
-              (dioph_fn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none::some ∘ inr) d) <|
-                reindex_dioph_fn inl df)
+              (diophFn_comp1 (reindex_dioph _ (some ∘ inl ⊗ none::some ∘ inr) d) <|
+                reindex_diophFn inl df)
               fun v => by
               dsimp
               congr
@@ -633,7 +633,7 @@ theorem diophFn_comp {f : Vector3 ℕ n → ℕ} (df : DiophFn f) (g : Vector3 (
       exact
         ⟨proj_dioph none,
           (vectorAllp_iff_forall _ _).2 fun i =>
-            reindex_dioph_fn _ <| (vectorAllp_iff_forall _ _).1 dg _⟩
+            reindex_diophFn _ <| (vectorAllp_iff_forall _ _).1 dg _⟩
 #align dioph.dioph_fn_comp Dioph.diophFn_comp
 
 -- mathport name: dioph.inter

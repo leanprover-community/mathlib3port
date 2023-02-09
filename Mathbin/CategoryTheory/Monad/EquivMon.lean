@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.monad.equiv_mon
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,14 +87,14 @@ def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
     μ' := M.mul
     left_unit' := fun X =>
       by
-      rw [← M.one.id_hcomp_app, ← nat_trans.comp_app, M.mul_one]
+      rw [← M.one.id_hcomp_app, ← NatTrans.comp_app, M.mul_one]
       rfl
     right_unit' := fun X =>
       by
-      rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]
+      rw [← M.one.hcomp_id_app, ← NatTrans.comp_app, M.one_mul]
       rfl
     assoc' := fun X => by
-      rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]
+      rw [← NatTrans.hcomp_id_app, ← NatTrans.comp_app]
       simp }
 #align category_theory.Monad.of_Mon CategoryTheory.Monad.ofMon
 
@@ -106,16 +106,15 @@ def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
   obj := ofMon
   map _ _ f :=
     {-- `finish` closes this goal
-        f.Hom with
+        f.hom with
       app_η' := by
         intro X
-        erw [← nat_trans.comp_app, f.one_hom]
+        erw [← NatTrans.comp_app, f.one_hom]
         rfl
       app_μ' := by
         intro X
-        erw [← nat_trans.comp_app, f.mul_hom]
-        simpa only [nat_trans.naturality, nat_trans.hcomp_app, assoc, nat_trans.comp_app,
-          of_Mon_μ] }
+        erw [← NatTrans.comp_app, f.mul_hom]
+        simpa only [NatTrans.naturality, NatTrans.hcomp_app, assoc, NatTrans.comp_app, ofMon_μ] }
 #align category_theory.Monad.Mon_to_Monad CategoryTheory.Monad.monToMonad
 
 namespace MonadMonEquiv
@@ -183,7 +182,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
 
 -- `obviously`, slowly
 -- Sanity check
-example (A : Monad C) {X : C} : ((monadMonEquiv C).unitIso.app A).Hom.app X = 𝟙 _ :=
+example (A : Monad C) {X : C} : ((monadMonEquiv C).unitIso.app A).hom.app X = 𝟙 _ :=
   rfl
 
 end Monad

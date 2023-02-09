@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ theorem generator_maximal_submoduleImage_dvd {N O : Submodule R M} (hNO : N ≤ 
     generator (ϕ.submoduleImage N) ∣ ψ ⟨y, hNO yN⟩ :=
   by
   let a : R := generator (ϕ.submodule_image N)
-  let d : R := is_principal.generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})
+  let d : R := IsPrincipal.generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})
   have d_dvd_left : d ∣ a := (mem_iff_generator_dvd _).mp (subset_span (mem_insert _ _))
   have d_dvd_right : d ∣ ψ ⟨y, hNO yN⟩ :=
     (mem_iff_generator_dvd _).mp (subset_span (mem_insert_of_mem _ (mem_singleton _)))
@@ -140,7 +140,7 @@ theorem generator_maximal_submoduleImage_dvd {N O : Submodule R M} (hNO : N ≤ 
   obtain ⟨r₁, r₂, d_eq⟩ : ∃ r₁ r₂ : R, d = r₁ * a + r₂ * ψ ⟨y, hNO yN⟩ :=
     by
     obtain ⟨r₁, r₂', hr₂', hr₁⟩ :=
-      mem_span_insert.mp (is_principal.generator_mem (Submodule.span R {a, ψ ⟨y, hNO yN⟩}))
+      mem_span_insert.mp (IsPrincipal.generator_mem (Submodule.span R {a, ψ ⟨y, hNO yN⟩}))
     obtain ⟨r₂, rfl⟩ := mem_span_singleton.mp hr₂'
     exact ⟨r₁, r₂, hr₁⟩
   let ψ' : O →ₗ[R] R := r₁ • ϕ + r₂ • ψ
@@ -247,14 +247,14 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   have ϕy'_ne_zero : ϕ ⟨y', y'M⟩ ≠ 0 := by simpa only [ϕy'_eq] using one_ne_zero
   -- `M' := ker (ϕ : M → R)` is smaller than `M` and `N' := ker (ϕ : N → R)` is smaller than `N`.
   let M' : Submodule R O := ϕ.ker.map M.subtype
-  let N' : Submodule R O := (ϕ.comp (of_le N_le_M)).ker.map N.subtype
+  let N' : Submodule R O := (ϕ.comp (ofLe N_le_M)).ker.map N.subtype
   have M'_le_M : M' ≤ M := M.map_subtype_le ϕ.ker
   have N'_le_M' : N' ≤ M' := by
     intro x hx
     simp only [mem_map, LinearMap.mem_ker] at hx⊢
     obtain ⟨⟨x, xN⟩, hx, rfl⟩ := hx
     exact ⟨⟨x, N_le_M xN⟩, hx, rfl⟩
-  have N'_le_N : N' ≤ N := N.map_subtype_le (ϕ.comp (of_le N_le_M)).ker
+  have N'_le_N : N' ≤ N := N.map_subtype_le (ϕ.comp (ofLe N_le_M)).ker
   -- So fill in those results as well.
   refine' ⟨M', M'_le_M, N', N'_le_N, N'_le_M', _⟩
   -- Note that `y'` is orthogonal to `M'`.
@@ -279,7 +279,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
       refine' ay'_ortho_N' c z zN' _
       rwa [← a_smul_y'] at hc
     · intro z zN
-      obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submodule_image_dvd_of_mem N_le_M ϕ zN
+      obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submoduleImage_dvd_of_mem N_le_M ϕ zN
       refine' ⟨-b, submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, _, _⟩⟩
       · refine' linear_map.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from _)
         rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
@@ -303,7 +303,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
   · simp only [Fin.cons_zero, Fin.castLe_zero]
     exact a_smul_y'.symm
   · rw [Fin.castLe_succ]
-    simp only [Fin.cons_succ, coe_of_le, h i]
+    simp only [Fin.cons_succ, coe_ofLe, h i]
 #align submodule.basis_of_pid_aux Submodule.basis_of_pid_aux
 
 /-- A submodule of a free `R`-module of finite rank is also a free `R`-module of finite rank,
@@ -358,7 +358,7 @@ See also the stronger version `submodule.smith_normal_form_of_le`.
 -/
 noncomputable def Submodule.basisOfPidOfLe {ι : Type _} [Finite ι] {N O : Submodule R M}
     (hNO : N ≤ O) (b : Basis ι R O) : Σn : ℕ, Basis (Fin n) R N :=
-  let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.Subtype)
+  let ⟨n, bN'⟩ := Submodule.basisOfPid b (N.comap O.subtype)
   ⟨n, bN'.map (Submodule.comapSubtypeEquivOfLe hNO)⟩
 #align submodule.basis_of_pid_of_le Submodule.basisOfPidOfLe
 
@@ -372,7 +372,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Finite ι] {b : ι
 
 variable {M}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » I) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∉ » I) -/
 /-- A finite type torsion free module over a PID is free. -/
 noncomputable def Module.freeOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M}
     (hs : span R (range s) = ⊤) [NoZeroSMulDivisors R M] : Σn : ℕ, Basis (Fin n) R M := by
@@ -465,7 +465,7 @@ theorem Submodule.exists_smith_normal_form_of_le [Finite ι] (b : Basis ι R M) 
   by
   cases nonempty_fintype ι
   revert N
-  refine' induction_on_rank b _ _ O
+  refine' inductionOnRank b _ _ O
   intro M ih N N_le_M
   obtain ⟨m, b'M⟩ := M.basis_of_pid b
   by_cases N_bot : N = ⊥
@@ -490,12 +490,12 @@ need to map `N` into a submodule of `O`.
 This is a strengthening of `submodule.basis_of_pid_of_le`.
 -/
 noncomputable def Submodule.smithNormalFormOfLe [Finite ι] (b : Basis ι R M) (N O : Submodule R M)
-    (N_le_O : N ≤ O) : Σo n : ℕ, Basis.SmithNormalForm (N.comap O.Subtype) (Fin o) n :=
+    (N_le_O : N ≤ O) : Σo n : ℕ, Basis.SmithNormalForm (N.comap O.subtype) (Fin o) n :=
   by
   choose n o hno bO bN a snf using N.exists_smith_normal_form_of_le b O N_le_O
   refine'
-    ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Fin.castLe hno).toEmbedding, a,
-      fun i => _⟩
+    ⟨o, n, bO, bN.map (comapSubtypeEquivOfLe N_le_O).symm, (Fin.castLe hno).toEmbedding, a, fun i =>
+      _⟩
   ext
   simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symm_apply_coe_coe,
     Submodule.coe_smul_of_tower, RelEmbedding.coeFn_toEmbedding]
@@ -537,9 +537,9 @@ This is a strengthening of `submodule.basis_of_pid`.
 -/
 noncomputable def Ideal.smithNormalForm [Fintype ι] (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) :
     Basis.SmithNormalForm (I.restrictScalars R) ι (Fintype.card ι) :=
-  let ⟨n, bS, bI, f, a, snf⟩ := (I.restrictScalars R).SmithNormalForm b
+  let ⟨n, bS, bI, f, a, snf⟩ := (I.restrictScalars R).smithNormalForm b
   have eq := Ideal.rank_eq bS hI (bI.map ((restrictScalarsEquiv R S S I).restrictScalars _))
-  let e : Fin n ≃ Fin (Fintype.card ι) := Fintype.equivOfCardEq (by rw [Eq, Fintype.card_fin])
+  let e : Fin n ≃ Fin (Fintype.card ι) := Fintype.equivOfCardEq (by rw [eq, Fintype.card_fin])
   ⟨bS, bI.reindex e, e.symm.toEmbedding.trans f, a ∘ e.symm, fun i => by
     simp only [snf, Basis.coe_reindex, Function.Embedding.trans_apply, Equiv.toEmbedding_apply]⟩
 #align ideal.smith_normal_form Ideal.smithNormalForm
@@ -564,9 +564,9 @@ theorem Ideal.exists_smith_normal_form (b : Basis ι R S) (I : Ideal S) (hI : I 
       let ⟨bS, bI, f, a, snf⟩ := I.smith_normal_form b hI
       let e : Fin (Fintype.card ι) ≃ ι :=
         Equiv.ofBijective f
-          ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.Injective, Fintype.card_fin _⟩)
+          ((Fintype.bijective_iff_injective_and_card f).mpr ⟨f.injective, Fintype.card_fin _⟩)
       have fe : ∀ i, f (e.symm i) = i := e.apply_symm_apply
-      ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrict_scalars_equiv _ _ _ _).restrictScalars R),
+      ⟨bS, a ∘ e.symm, (bI.reindex e).map ((restrictScalarsEquiv _ _ _ _).restrictScalars R),
         fun i => by
         simp only [snf, fe, Basis.map_apply, LinearEquiv.restrictScalars_apply,
           Submodule.restrictScalarsEquiv_apply, Basis.coe_reindex]⟩
@@ -581,7 +581,7 @@ see `ideal.smith_coeffs` for the entries of the diagonal matrix
 and `ideal.self_basis_def` for the proof that the inclusion map forms a square diagonal matrix.
 -/
 noncomputable def Ideal.ringBasis (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : Basis ι R S :=
-  (Ideal.exists_smith_normal_form b I hI).some
+  (Ideal.exists_smith_normal_form b I hI).choose
 #align ideal.ring_basis Ideal.ringBasis
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
@@ -593,7 +593,7 @@ see `ideal.smith_coeffs` for the entries of the diagonal matrix
 and `ideal.self_basis_def` for the proof that the inclusion map forms a square diagonal matrix.
 -/
 noncomputable def Ideal.selfBasis (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : Basis ι R I :=
-  (Ideal.exists_smith_normal_form b I hI).choose_spec.choose_spec.some
+  (Ideal.exists_smith_normal_form b I hI).choose_spec.choose_spec.choose
 #align ideal.self_basis Ideal.selfBasis
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,
@@ -605,7 +605,7 @@ see `ideal.self_basis` for the basis on `I`,
 and `ideal.self_basis_def` for the proof that the inclusion map forms a square diagonal matrix.
 -/
 noncomputable def Ideal.smithCoeffs (b : Basis ι R S) (I : Ideal S) (hI : I ≠ ⊥) : ι → R :=
-  (Ideal.exists_smith_normal_form b I hI).choose_spec.some
+  (Ideal.exists_smith_normal_form b I hI).choose_spec.choose
 #align ideal.smith_coeffs Ideal.smithCoeffs
 
 /-- If `S` a finite-dimensional ring extension of a PID `R` which is free as an `R`-module,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.char_zero.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,8 +82,8 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   induction θ using Quotient.inductionOn'
   have : (Quotient.mk'' : R → R ⧸ AddSubgroup.zmultiples p) = coe := rfl
   simp only [this]
-  simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
-    sub_sub, AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
+  simp_rw [← mk_zsmul, ← mk_nsmul, ← mk_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ← sub_sub,
+    AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
 #align quotient_add_group.zmultiples_zsmul_eq_zsmul_iff quotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
 
 /- warning: quotient_add_group.zmultiples_nsmul_eq_nsmul_iff -> quotientAddGroup.zmultiples_nsmul_eq_nsmul_iff is a dubious translation:

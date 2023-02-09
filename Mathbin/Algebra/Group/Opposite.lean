@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.group.opposite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,22 +34,22 @@ namespace MulOpposite
 
 
 instance [AddSemigroup α] : AddSemigroup αᵐᵒᵖ :=
-  unop_injective.AddSemigroup _ fun x y => rfl
+  unop_injective.addSemigroup _ fun x y => rfl
 
 instance [AddLeftCancelSemigroup α] : AddLeftCancelSemigroup αᵐᵒᵖ :=
-  unop_injective.AddLeftCancelSemigroup _ fun x y => rfl
+  unop_injective.addLeftCancelSemigroup _ fun x y => rfl
 
 instance [AddRightCancelSemigroup α] : AddRightCancelSemigroup αᵐᵒᵖ :=
-  unop_injective.AddRightCancelSemigroup _ fun x y => rfl
+  unop_injective.addRightCancelSemigroup _ fun x y => rfl
 
 instance [AddCommSemigroup α] : AddCommSemigroup αᵐᵒᵖ :=
-  unop_injective.AddCommSemigroup _ fun x y => rfl
+  unop_injective.addCommSemigroup _ fun x y => rfl
 
 instance [AddZeroClass α] : AddZeroClass αᵐᵒᵖ :=
-  unop_injective.AddZeroClass _ rfl fun x y => rfl
+  unop_injective.addZeroClass _ rfl fun x y => rfl
 
 instance [AddMonoid α] : AddMonoid αᵐᵒᵖ :=
-  unop_injective.AddMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.addMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
   { MulOpposite.addMonoid α,
@@ -59,14 +59,14 @@ instance [AddMonoidWithOne α] : AddMonoidWithOne αᵐᵒᵖ :=
     natCast_succ := show ∀ n, op ((n + 1 : ℕ) : α) = op (n : ℕ) + 1 by simp }
 
 instance [AddCommMonoid α] : AddCommMonoid αᵐᵒᵖ :=
-  unop_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.addCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [SubNegMonoid α] : SubNegMonoid αᵐᵒᵖ :=
-  unop_injective.SubNegMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  unop_injective.subNegMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance [AddGroup α] : AddGroup αᵐᵒᵖ :=
-  unop_injective.AddGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  unop_injective.addGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ _ => rfl
 
 instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
@@ -78,7 +78,7 @@ instance [AddGroupWithOne α] : AddGroupWithOne αᵐᵒᵖ :=
       show op _ = op (-unop (op ((n + 1 : ℕ) : α))) by erw [unop_op, Int.cast_negSucc] <;> rfl }
 
 instance [AddCommGroup α] : AddCommGroup αᵐᵒᵖ :=
-  unop_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  unop_injective.addCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 /-!
@@ -212,7 +212,7 @@ theorem semiconjBy_op [Mul α] {a x y : α} : SemiconjBy (op a) (op y) (op x) �
 @[simp, to_additive]
 theorem semiconjBy_unop [Mul α] {a x y : αᵐᵒᵖ} :
     SemiconjBy (unop a) (unop y) (unop x) ↔ SemiconjBy a x y := by
-  conv_rhs => rw [← op_unop a, ← op_unop x, ← op_unop y, semiconj_by_op]
+  conv_rhs => rw [← op_unop a, ← op_unop x, ← op_unop y, semiconjBy_op]
 #align mul_opposite.semiconj_by_unop MulOpposite.semiconjBy_unop
 #align add_opposite.semiconj_by_unop AddOpposite.semiconjBy_unop
 -/
@@ -294,19 +294,19 @@ end MulOpposite
 namespace AddOpposite
 
 instance [Semigroup α] : Semigroup αᵃᵒᵖ :=
-  unop_injective.Semigroup _ fun x y => rfl
+  unop_injective.semigroup _ fun x y => rfl
 
 instance [LeftCancelSemigroup α] : LeftCancelSemigroup αᵃᵒᵖ :=
-  unop_injective.LeftCancelSemigroup _ fun x y => rfl
+  unop_injective.leftCancelSemigroup _ fun x y => rfl
 
 instance [RightCancelSemigroup α] : RightCancelSemigroup αᵃᵒᵖ :=
-  unop_injective.RightCancelSemigroup _ fun x y => rfl
+  unop_injective.rightCancelSemigroup _ fun x y => rfl
 
 instance [CommSemigroup α] : CommSemigroup αᵃᵒᵖ :=
-  unop_injective.CommSemigroup _ fun x y => rfl
+  unop_injective.commSemigroup _ fun x y => rfl
 
 instance [MulOneClass α] : MulOneClass αᵃᵒᵖ :=
-  unop_injective.MulOneClass _ rfl fun x y => rfl
+  unop_injective.mulOneClass _ rfl fun x y => rfl
 
 instance {β} [Pow α β] : Pow αᵃᵒᵖ β where pow a b := op (unop a ^ b)
 
@@ -333,21 +333,21 @@ theorem unop_pow {β} [Pow α β] (a : αᵃᵒᵖ) (b : β) : unop (a ^ b) = un
 #align add_opposite.unop_pow AddOpposite.unop_pow
 
 instance [Monoid α] : Monoid αᵃᵒᵖ :=
-  unop_injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [CommMonoid α] : CommMonoid αᵃᵒᵖ :=
-  unop_injective.CommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  unop_injective.commMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DivInvMonoid α] : DivInvMonoid αᵃᵒᵖ :=
-  unop_injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  unop_injective.divInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance [Group α] : Group αᵃᵒᵖ :=
-  unop_injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  unop_injective.group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ _ => rfl
 
 instance [CommGroup α] : CommGroup αᵃᵒᵖ :=
-  unop_injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  unop_injective.commGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     fun _ _ => rfl
 
 variable {α}
@@ -401,7 +401,7 @@ def MulHom.toOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
     (hf : ∀ x y, Commute (f x) (f y)) : M →ₙ* Nᵐᵒᵖ
     where
   toFun := MulOpposite.op ∘ f
-  map_mul' x y := by simp [(hf x y).Eq]
+  map_mul' x y := by simp [(hf x y).eq]
 #align mul_hom.to_opposite MulHom.toOpposite
 #align add_hom.to_opposite AddHom.toOpposite
 -/
@@ -416,7 +416,7 @@ def MulHom.fromOpposite {M N : Type _} [Mul M] [Mul N] (f : M →ₙ* N)
     (hf : ∀ x y, Commute (f x) (f y)) : Mᵐᵒᵖ →ₙ* N
     where
   toFun := f ∘ MulOpposite.unop
-  map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
+  map_mul' x y := (f.map_mul _ _).trans (hf _ _).eq
 #align mul_hom.from_opposite MulHom.fromOpposite
 #align add_hom.from_opposite AddHom.fromOpposite
 -/
@@ -437,7 +437,7 @@ def MonoidHom.toOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M �
     where
   toFun := MulOpposite.op ∘ f
   map_one' := congr_arg op f.map_one
-  map_mul' x y := by simp [(hf x y).Eq]
+  map_mul' x y := by simp [(hf x y).eq]
 #align monoid_hom.to_opposite MonoidHom.toOpposite
 #align add_monoid_hom.to_opposite AddMonoidHom.toOpposite
 
@@ -457,7 +457,7 @@ def MonoidHom.fromOpposite {M N : Type _} [MulOneClass M] [MulOneClass N] (f : M
     where
   toFun := f ∘ MulOpposite.unop
   map_one' := f.map_one
-  map_mul' x y := (f.map_mul _ _).trans (hf _ _).Eq
+  map_mul' x y := (f.map_mul _ _).trans (hf _ _).eq
 #align monoid_hom.from_opposite MonoidHom.fromOpposite
 #align add_monoid_hom.from_opposite AddMonoidHom.fromOpposite
 

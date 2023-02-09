@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.hom.centroid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -544,7 +544,7 @@ theorem toEnd_nsmul (x : CentroidHom α) (n : ℕ) : (n • x).toEnd = n • x.t
 
 -- cf.`add_monoid_hom.add_comm_monoid`
 instance : AddCommMonoid (CentroidHom α) :=
-  coe_toAddMonoidHom_injective.AddCommMonoid _ toEnd_zero toEnd_add toEnd_nsmul
+  coe_toAddMonoidHom_injective.addCommMonoid _ toEnd_zero toEnd_add toEnd_nsmul
 
 instance : NatCast (CentroidHom α) where natCast n := n • 1
 
@@ -605,7 +605,7 @@ theorem toEnd_nat_cast (n : ℕ) : (n : CentroidHom α).toEnd = ↑n :=
 
 -- cf `add_monoid.End.semiring`
 instance : Semiring (CentroidHom α) :=
-  toEnd_injective.Semiring _ toEnd_zero toEnd_one toEnd_add toEnd_mul toEnd_nsmul toEnd_pow
+  toEnd_injective.semiring _ toEnd_zero toEnd_one toEnd_add toEnd_mul toEnd_nsmul toEnd_pow
     toEnd_nat_cast
 
 /- warning: centroid_hom.comp_mul_comm -> CentroidHom.comp_mul_comm is a dubious translation:
@@ -615,7 +615,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonUnitalNonAssocSemiring.{u1} α] (T : CentroidHom.{u1} α _inst_1) (S : CentroidHom.{u1} α _inst_1) (a : α) (b : α), Eq.{succ u1} α (Function.comp.{succ u1, succ u1, succ u1} α α α (FunLike.coe.{succ u1, succ u1, succ u1} (CentroidHom.{u1} α _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (CentroidHomClass.toAddMonoidHomClass.{u1, u1} (CentroidHom.{u1} α _inst_1) α _inst_1 (CentroidHom.instCentroidHomClassCentroidHom.{u1} α _inst_1)))) T) (FunLike.coe.{succ u1, succ u1, succ u1} (CentroidHom.{u1} α _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (CentroidHomClass.toAddMonoidHomClass.{u1, u1} (CentroidHom.{u1} α _inst_1) α _inst_1 (CentroidHom.instCentroidHomClassCentroidHom.{u1} α _inst_1)))) S) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1)) a b)) (Function.comp.{succ u1, succ u1, succ u1} α α α (FunLike.coe.{succ u1, succ u1, succ u1} (CentroidHom.{u1} α _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (CentroidHomClass.toAddMonoidHomClass.{u1, u1} (CentroidHom.{u1} α _inst_1) α _inst_1 (CentroidHom.instCentroidHomClassCentroidHom.{u1} α _inst_1)))) S) (FunLike.coe.{succ u1, succ u1, succ u1} (CentroidHom.{u1} α _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.398 : α) => α) _x) (AddHomClass.toFunLike.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1)))) (AddMonoidHomClass.toAddHomClass.{u1, u1, u1} (CentroidHom.{u1} α _inst_1) α α (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (AddMonoid.toAddZeroClass.{u1} α (AddCommMonoid.toAddMonoid.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α _inst_1))) (CentroidHomClass.toAddMonoidHomClass.{u1, u1} (CentroidHom.{u1} α _inst_1) α _inst_1 (CentroidHom.instCentroidHomClassCentroidHom.{u1} α _inst_1)))) T) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocSemiring.toMul.{u1} α _inst_1)) a b))
 Case conversion may be inaccurate. Consider using '#align centroid_hom.comp_mul_comm CentroidHom.comp_mul_commₓ'. -/
 theorem comp_mul_comm (T S : CentroidHom α) (a b : α) : (T ∘ S) (a * b) = (S ∘ T) (a * b) := by
-  rw [comp_app, map_mul_right, map_mul_left, ← map_mul_right, ← map_mul_left]
+  rw [comp_apply, map_mul_right, map_mul_left, ← map_mul_right, ← map_mul_left]
 #align centroid_hom.comp_mul_comm CentroidHom.comp_mul_comm
 
 end NonUnitalNonAssocSemiring
@@ -711,7 +711,7 @@ theorem toEnd_zsmul (x : CentroidHom α) (n : ℤ) : (n • x).toEnd = n • x.t
 #align centroid_hom.to_End_zsmul CentroidHom.toEnd_zsmul
 
 instance : AddCommGroup (CentroidHom α) :=
-  toEnd_injective.AddCommGroup _ toEnd_zero toEnd_add toEnd_neg toEnd_sub toEnd_nsmul toEnd_zsmul
+  toEnd_injective.addCommGroup _ toEnd_zero toEnd_add toEnd_neg toEnd_sub toEnd_nsmul toEnd_zsmul
 
 /- warning: centroid_hom.coe_neg -> CentroidHom.coe_neg is a dubious translation:
 lean 3 declaration is
@@ -769,7 +769,7 @@ theorem toEnd_int_cast (z : ℤ) : (z : CentroidHom α).toEnd = ↑z :=
 #align centroid_hom.to_End_int_cast CentroidHom.toEnd_int_cast
 
 instance : Ring (CentroidHom α) :=
-  toEnd_injective.Ring _ toEnd_zero toEnd_one toEnd_add toEnd_mul toEnd_neg toEnd_sub toEnd_nsmul
+  toEnd_injective.ring _ toEnd_zero toEnd_one toEnd_add toEnd_mul toEnd_neg toEnd_sub toEnd_nsmul
     toEnd_zsmul toEnd_pow toEnd_nat_cast toEnd_int_cast
 
 end NonUnitalNonAssocRing

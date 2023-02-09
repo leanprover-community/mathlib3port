@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.int.preterm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,14 +91,14 @@ def canonize : Preterm → Term
 
 @[simp]
 theorem val_canonize {v : Nat → Int} : ∀ {t : Preterm}, (canonize t).val v = t.val v
-  | &i => by simp only [preterm.val, add_zero, term.val, canonize, coeffs.val_nil]
+  | &i => by simp only [Preterm.val, add_zero, Term.val, canonize, Coeffs.val_nil]
   | i ** n => by
-    simp only [coeffs.val_set, canonize, preterm.val, zero_add, term.val]
+    simp only [Coeffs.val_set, canonize, Preterm.val, zero_add, Term.val]
     split_ifs with h1 h2
     · simp only [one_mul, h1]
     · simp only [neg_mul, one_mul, h2]
     · rw [mul_comm]
-  | t +* s => by simp only [canonize, val_canonize, term.val_add, preterm.val]
+  | t +* s => by simp only [canonize, val_canonize, Term.val_add, Preterm.val]
 #align omega.int.val_canonize Omega.Int.val_canonize
 
 end Int

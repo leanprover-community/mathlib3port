@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.homology.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,11 +44,11 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
       d := fun i j => (C.d i j).app t
       d_comp_d' := fun i j k hij hjk => by
         have := C.d_comp_d i j k
-        rw [nat_trans.ext_iff, Function.funext_iff] at this
+        rw [NatTrans.ext_iff, Function.funext_iff] at this
         exact this t
       shape' := fun i j h => by
         have := C.shape _ _ h
-        rw [nat_trans.ext_iff, Function.funext_iff] at this
+        rw [NatTrans.ext_iff, Function.funext_iff] at this
         exact this t }
   map t₁ t₂ h :=
     { f := fun i => (C.x i).map h
@@ -60,7 +60,7 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
   map_comp' t₁ t₂ t₃ h₁ h₂ := by
     ext i
     dsimp
-    rw [functor.map_comp]
+    rw [Functor.map_comp]
 #align homological_complex.as_functor HomologicalComplex.asFunctor
 
 -- TODO in fact, this is an equivalence of categories.

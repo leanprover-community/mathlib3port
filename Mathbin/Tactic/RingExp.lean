@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen
 
 ! This file was ported from Lean 3 source module tactic.ring_exp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,10 +235,10 @@ unsafe inductive ex : ExType → Type
 /-- Return the proof information associated to the `ex`.
 -/
 unsafe def ex.info : ∀ {et : ExType} (ps : ex et), ex_info
-  | Sum, ex.zero i => i
-  | Sum, ex.sum i _ _ => i
-  | Prod, ex.coeff i _ => i
-  | Prod, ex.prod i _ _ => i
+  | sum, ex.zero i => i
+  | sum, ex.sum i _ _ => i
+  | prod, ex.coeff i _ => i
+  | prod, ex.prod i _ _ => i
   | base, ex.var i _ => i
   | base, ex.sum_b i _ => i
   | exp, ex.exp i _ _ => i
@@ -266,7 +266,7 @@ To get an actual term, use `ex.proof_term`,
 or use `mk_proof` with the correct set of arguments.
 -/
 unsafe def ex.proof {et : ExType} (ps : ex et) : Option expr :=
-  ps.info.Proof
+  ps.info.proof
 #align tactic.ring_exp.ex.proof tactic.ring_exp.ex.proof
 
 /-- Update the `orig` and `proof` fields of the `ex_info`.
@@ -285,13 +285,13 @@ Since `pretty` only depends on the subexpressions,
 which do not change, we do not set `pretty`.
 -/
 unsafe def ex.set_info : ∀ {et : ExType} (ps : ex et), Option expr → Option expr → ex et
-  | Sum, ex.zero i, o, pf => ex.zero (i.Set o pf)
-  | Sum, ex.sum i p ps, o, pf => ex.sum (i.Set o pf) p ps
-  | Prod, ex.coeff i x, o, pf => ex.coeff (i.Set o pf) x
-  | Prod, ex.prod i p ps, o, pf => ex.prod (i.Set o pf) p ps
-  | base, ex.var i x, o, pf => ex.var (i.Set o pf) x
-  | base, ex.sum_b i ps, o, pf => ex.sum_b (i.Set o pf) ps
-  | exp, ex.exp i p ps, o, pf => ex.exp (i.Set o pf) p ps
+  | sum, ex.zero i, o, pf => ex.zero (i.set o pf)
+  | sum, ex.sum i p ps, o, pf => ex.sum (i.set o pf) p ps
+  | prod, ex.coeff i x, o, pf => ex.coeff (i.set o pf) x
+  | prod, ex.prod i p ps, o, pf => ex.prod (i.set o pf) p ps
+  | base, ex.var i x, o, pf => ex.var (i.set o pf) x
+  | base, ex.sum_b i ps, o, pf => ex.sum_b (i.set o pf) ps
+  | exp, ex.exp i p ps, o, pf => ex.exp (i.set o pf) p ps
 #align tactic.ring_exp.ex.set_info tactic.ring_exp.ex.set_info
 
 instance coeffHasRepr : Repr Coeff :=
@@ -300,10 +300,10 @@ instance coeffHasRepr : Repr Coeff :=
 
 /-- Convert an `ex` to a `string`. -/
 unsafe def ex.repr : ∀ {et : ExType}, ex et → String
-  | Sum, ex.zero _ => "0"
-  | Sum, ex.sum _ p ps => ex.repr p ++ " + " ++ ex.repr ps
-  | Prod, ex.coeff _ x => repr x
-  | Prod, ex.prod _ p ps => ex.repr p ++ " * " ++ ex.repr ps
+  | sum, ex.zero _ => "0"
+  | sum, ex.sum _ p ps => ex.repr p ++ " + " ++ ex.repr ps
+  | prod, ex.coeff _ x => repr x
+  | prod, ex.prod _ p ps => ex.repr p ++ " * " ++ ex.repr ps
   | base, ex.var _ x => repr x
   | base, ex.sum_b _ ps => "(" ++ ex.repr ps ++ ")"
   | exp, ex.exp _ p ps => ex.repr p ++ " ^ " ++ ex.repr ps
@@ -318,19 +318,19 @@ Since equivalence of `atom`s is not the same as equality,
 we cannot make a true `(=)` operator for `ex` either.
 -/
 unsafe def ex.eq : ∀ {et : ExType}, ex et → ex et → Bool
-  | Sum, ex.zero _, ex.zero _ => true
-  | Sum, ex.zero _, ex.sum _ _ _ => false
-  | Sum, ex.sum _ _ _, ex.zero _ => false
-  | Sum, ex.sum _ p ps, ex.sum _ q qs => p.Eq q && ps.Eq qs
-  | Prod, ex.coeff _ x, ex.coeff _ y => x = y
-  | Prod, ex.coeff _ _, ex.prod _ _ _ => false
-  | Prod, ex.prod _ _ _, ex.coeff _ _ => false
-  | Prod, ex.prod _ p ps, ex.prod _ q qs => p.Eq q && ps.Eq qs
-  | base, ex.var _ x, ex.var _ y => x.Eq y
+  | sum, ex.zero _, ex.zero _ => true
+  | sum, ex.zero _, ex.sum _ _ _ => false
+  | sum, ex.sum _ _ _, ex.zero _ => false
+  | sum, ex.sum _ p ps, ex.sum _ q qs => p.eq q && ps.eq qs
+  | prod, ex.coeff _ x, ex.coeff _ y => x = y
+  | prod, ex.coeff _ _, ex.prod _ _ _ => false
+  | prod, ex.prod _ _ _, ex.coeff _ _ => false
+  | prod, ex.prod _ p ps, ex.prod _ q qs => p.eq q && ps.eq qs
+  | base, ex.var _ x, ex.var _ y => x.eq y
   | base, ex.var _ _, ex.sum_b _ _ => false
   | base, ex.sum_b _ _, ex.var _ _ => false
-  | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.Eq qs
-  | exp, ex.exp _ p ps, ex.exp _ q qs => p.Eq q && ps.Eq qs
+  | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.eq qs
+  | exp, ex.exp _ p ps, ex.exp _ q qs => p.eq q && ps.eq qs
 #align tactic.ring_exp.ex.eq tactic.ring_exp.ex.eq
 
 /-- The ordering on expressions.
@@ -338,18 +338,18 @@ unsafe def ex.eq : ∀ {et : ExType}, ex et → ex et → Bool
 As for `ex.eq`, this is a linear order only in one context.
 -/
 unsafe def ex.lt : ∀ {et : ExType}, ex et → ex et → Bool
-  | Sum, _, ex.zero _ => false
-  | Sum, ex.zero _, _ => true
-  | Sum, ex.sum _ p ps, ex.sum _ q qs => p.lt q || p.Eq q && ps.lt qs
-  | Prod, ex.coeff _ x, ex.coeff _ y => x.1 < y.1
-  | Prod, ex.coeff _ _, _ => true
-  | Prod, _, ex.coeff _ _ => false
-  | Prod, ex.prod _ p ps, ex.prod _ q qs => p.lt q || p.Eq q && ps.lt qs
+  | sum, _, ex.zero _ => false
+  | sum, ex.zero _, _ => true
+  | sum, ex.sum _ p ps, ex.sum _ q qs => p.lt q || p.eq q && ps.lt qs
+  | prod, ex.coeff _ x, ex.coeff _ y => x.1 < y.1
+  | prod, ex.coeff _ _, _ => true
+  | prod, _, ex.coeff _ _ => false
+  | prod, ex.prod _ p ps, ex.prod _ q qs => p.lt q || p.eq q && ps.lt qs
   | base, ex.var _ x, ex.var _ y => x.lt y
   | base, ex.var _ _, ex.sum_b _ _ => true
   | base, ex.sum_b _ _, ex.var _ _ => false
   | base, ex.sum_b _ ps, ex.sum_b _ qs => ps.lt qs
-  | exp, ex.exp _ p ps, ex.exp _ q qs => p.lt q || p.Eq q && ps.lt qs
+  | exp, ex.exp _ p ps, ex.exp _ q qs => p.lt q || p.eq q && ps.lt qs
 #align tactic.ring_exp.ex.lt tactic.ring_exp.ex.lt
 
 end Expression
@@ -434,7 +434,7 @@ instead of the base ring.
 -/
 unsafe def in_exponent {α} (mx : ring_exp_m α) : ring_exp_m α := do
   let ctx ← get_context
-  ReaderT.lift <| mx ⟨ctx, ctx, ctx⟩
+  reader_t.lift <| mx ⟨ctx, ctx, ctx⟩
 #align tactic.ring_exp.in_exponent tactic.ring_exp.in_exponent
 
 /-- Specialized version of `mk_app` where the first two arguments are `{α}` `[some_class α]`.
@@ -480,7 +480,7 @@ unsafe def mk_pow (args : List expr) : ring_exp_m expr := do
 
 /-- Construct a normalization proof term or return the cached one. -/
 unsafe def ex_info.proof_term (ps : ex_info) : ring_exp_m expr :=
-  match ps.Proof with
+  match ps.proof with
   | none => lift <| tactic.mk_eq_refl ps.pretty
   | some p => pure p
 #align tactic.ring_exp.ex_info.proof_term tactic.ring_exp.ex_info.proof_term
@@ -805,7 +805,7 @@ unsafe def add_overlap : ex Prod → ex Prod → ring_exp_m overlap
   | ex.prod _ _ _, ex.coeff _ _ => pure overlap.none
   | ex.coeff _ _, ex.prod _ _ _ => pure overlap.none
   | pps@(ex.prod _ p ps), qqs@(ex.prod _ q qs) =>
-    if p.Eq q then do
+    if p.eq q then do
       let pq_ol ← add_overlap ps qs
       let pqs_o ← add_orig pps qqs
       match pq_ol with
@@ -1223,7 +1223,7 @@ unsafe def pow_p : ex Sum → ex Prod → ring_exp_m (ex Sum)
     let pf ←
       mk_proof `` pow_p_pf_singleton [pps.orig, p.pretty, pqs.pretty, qqs.orig] [pps.info, pqs.info]
     prod_to_sum <| pqs pqs_o pf
-  | ps, qs@(ex.coeff qs_i ⟨⟨Int.ofNat (succ n), 1, den_pos, _⟩⟩) => do
+  | ps, qs@(ex.coeff qs_i ⟨⟨int.of_nat (succ n), 1, den_pos, _⟩⟩) => do
     let qs' ← in_exponent <| ex_coeff ⟨Int.ofNat n, 1, den_pos, coprime_one_right _⟩
     let pqs ← pow_p ps qs'
     let pqqs ← mul ps pqs
@@ -1309,36 +1309,36 @@ This tactic gets rid of the dummy additions, multiplications and exponentiations
 Returns a normalized expression `e'` and a proof that `e.pretty = e'`.
 -/
 unsafe def ex.simple : ∀ {et : ExType}, ex et → ring_exp_m (expr × expr)
-  | Sum, pps@(ex.sum pps_i p (ex.zero _)) => do
+  | sum, pps@(ex.sum pps_i p (ex.zero _)) => do
     let (p_p, p_pf) ← p.simple
-    Prod.mk p_p <$> mk_app_csr `` simple_pf_sum_zero [p, p_p, p_pf]
-  | Sum, ex.sum pps_i p ps => do
+    prod.mk p_p <$> mk_app_csr `` simple_pf_sum_zero [p, p_p, p_pf]
+  | sum, ex.sum pps_i p ps => do
     let (p_p, p_pf) ← p.simple
     let (ps_p, ps_pf) ← ps.simple
-    Prod.mk <$> mk_add [p_p, ps_p] <*> mk_app_csr `` sum_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
-  | Prod, ex.prod pps_i p (ex.coeff _ ⟨⟨1, 1, _, _⟩⟩) => do
+    prod.mk <$> mk_add [p_p, ps_p] <*> mk_app_csr `` sum_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
+  | prod, ex.prod pps_i p (ex.coeff _ ⟨⟨1, 1, _, _⟩⟩) => do
     let (p_p, p_pf) ← p.simple
-    Prod.mk p_p <$> mk_app_csr `` simple_pf_prod_one [p, p_p, p_pf]
-  | Prod, pps@(ex.prod pps_i p (ex.coeff _ ⟨⟨-1, 1, _, _⟩⟩)) => do
+    prod.mk p_p <$> mk_app_csr `` simple_pf_prod_one [p, p_p, p_pf]
+  | prod, pps@(ex.prod pps_i p (ex.coeff _ ⟨⟨-1, 1, _, _⟩⟩)) => do
     let ctx ← get_context
     match ctx with
-      | none => Prod.mk pps <$> lift (mk_eq_refl pps)
+      | none => prod.mk pps <$> lift (mk_eq_refl pps)
       | some ringi => do
         let (p_p, p_pf) ← p
-        Prod.mk <$> lift (mk_app `` Neg.neg [p_p]) <*>
+        prod.mk <$> lift (mk_app `` Neg.neg [p_p]) <*>
             mk_app_class `` simple_pf_prod_neg_one ringi [p, p_p, p_pf]
-  | Prod, ex.prod pps_i p ps => do
+  | prod, ex.prod pps_i p ps => do
     let (p_p, p_pf) ← p.simple
     let (ps_p, ps_pf) ← ps.simple
-    Prod.mk <$> mk_mul [p_p, ps_p] <*> mk_app_csr `` prod_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
+    prod.mk <$> mk_mul [p_p, ps_p] <*> mk_app_csr `` prod_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
   | base, ex.sum_b pps_i ps => ps.simple
   | exp, ex.exp pps_i p (ex.coeff _ ⟨⟨1, 1, _, _⟩⟩) => do
     let (p_p, p_pf) ← p.simple
-    Prod.mk p_p <$> mk_app_csr `` simple_pf_exp_one [p, p_p, p_pf]
+    prod.mk p_p <$> mk_app_csr `` simple_pf_exp_one [p, p_p, p_pf]
   | exp, ex.exp pps_i p ps => do
     let (p_p, p_pf) ← p.simple
     let (ps_p, ps_pf) ← in_exponent <| ps.simple
-    Prod.mk <$> mk_pow [p_p, ps_p] <*> mk_app_csr `` exp_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
+    prod.mk <$> mk_pow [p_p, ps_p] <*> mk_app_csr `` exp_congr [p, p_p, ps, ps_p, p_pf, ps_pf]
   | et, ps => Prod.mk ps.pretty <$> lift (mk_eq_refl ps.pretty)
 #align tactic.ring_exp.ex.simple tactic.ring_exp.ex.simple
 
@@ -1374,7 +1374,7 @@ since `eval_base` can also handle numerals.
 unsafe def resolve_atom (a : expr) : ring_exp_m atom := do
   let atoms ← ReaderT.lift <| StateT.get
   let (atm, atoms') ← resolve_atom_aux a atoms 0
-  ReaderT.lift <| StateT.put atoms'
+  reader_t.lift <| state_t.put atoms'
   pure atm
 #align tactic.ring_exp.resolve_atom tactic.ring_exp.resolve_atom
 
@@ -1569,7 +1569,7 @@ See also `eval_simple` if you want something that behaves like `norm_num`.
 -/
 unsafe def eval_with_proof (e : expr) : ring_exp_m (ex Sum × expr) := do
   let e' ← eval e
-  Prod.mk e' <$> e'
+  prod.mk e' <$> e'
 #align tactic.ring_exp.eval_with_proof tactic.ring_exp.eval_with_proof
 
 /-- Run `eval` on the expression and simplify the result.
@@ -1581,7 +1581,7 @@ See also `eval_with_proof` if you just want to check the equality of two express
 unsafe def eval_simple (e : expr) : ring_exp_m (expr × expr) := do
   let (complicated, complicated_pf) ← eval_with_proof e
   let (simple, simple_pf) ← complicated.simple
-  Prod.mk simple <$> lift (mk_eq_trans complicated_pf simple_pf)
+  prod.mk simple <$> lift (mk_eq_trans complicated_pf simple_pf)
 #align tactic.ring_exp.eval_simple tactic.ring_exp.eval_simple
 
 /-- Compute the `eval_info` for a given type `α`. -/
@@ -1604,7 +1604,7 @@ unsafe def make_eval_info (α : expr) : tactic eval_info := do
 unsafe def run_ring_exp {α} (transp : Transparency) (e : expr) (mx : ring_exp_m α) : tactic α := do
   let info_b ← infer_type e >>= make_eval_info
   let info_e ← mk_const `` Nat >>= make_eval_info
-  (fun x : _ × _ => x.1) <$> StateT.run (ReaderT.run mx ⟨info_b, info_e, transp⟩) []
+  (fun x : _ × _ => x.1) <$> state_t.run (reader_t.run mx ⟨info_b, info_e, transp⟩) []
 #align tactic.ring_exp.run_ring_exp tactic.ring_exp.run_ring_exp
 
 /-- Repeatedly apply `eval_simple` on (sub)expressions. -/
@@ -1667,7 +1667,7 @@ example (x y : ℕ) : x + id y = y + id x := by ring_exp!
 -/
 unsafe def ring_exp (red : parse (tk "!")?) (loc : parse location) : tactic Unit :=
   (match loc with
-    | Interactive.Loc.ns [none] => ring_exp_eq red
+    | interactive.loc.ns [none] => ring_exp_eq red
     | _ => failed) <|>
     do
     let ns ← loc.get_locals

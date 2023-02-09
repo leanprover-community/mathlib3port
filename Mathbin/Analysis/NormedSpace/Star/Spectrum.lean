@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.spectrum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ local notation "↑ₐ" => algebraMap ℂ A
 theorem IsSelfAdjoint.spectralRadius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
     spectralRadius ℂ a = ‖a‖₊ :=
   by
-  have hconst : tendsto (fun n : ℕ => (‖a‖₊ : ℝ≥0∞)) at_top _ := tendsto_const_nhds
+  have hconst : Tendsto (fun n : ℕ => (‖a‖₊ : ℝ≥0∞)) atTop _ := tendsto_const_nhds
   refine' tendsto_nhds_unique _ hconst
   convert
     (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius (a : A)).comp
@@ -79,7 +79,7 @@ theorem IsSelfAdjoint.spectralRadius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
 theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
     spectralRadius ℂ a = ‖a‖₊ :=
   by
-  refine' (Ennreal.pow_strictMono two_ne_zero).Injective _
+  refine' (Ennreal.pow_strictMono two_ne_zero).injective _
   have heq :
     (fun n : ℕ => (‖(a⋆ * a) ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
       (fun x => x ^ 2) ∘ fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
@@ -88,10 +88,10 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
     rw [Function.comp_apply, ← rpow_nat_cast, ← rpow_mul, mul_comm, rpow_mul, rpow_nat_cast, ←
       coe_pow, sq, ← nnnorm_star_mul_self, Commute.mul_pow (star_comm_self' a), star_pow]
   have h₂ :=
-    ((Ennreal.continuous_pow 2).Tendsto (spectralRadius ℂ a)).comp
+    ((Ennreal.continuous_pow 2).tendsto (spectralRadius ℂ a)).comp
       (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius a)
-  rw [← HEq] at h₂
-  convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a⋆ * a))
+  rw [← heq] at h₂
+  convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius (a⋆ * a))
   rw [(IsSelfAdjoint.star_mul_self a).spectralRadius_eq_nnnorm, sq, nnnorm_star_mul_self, coe_mul]
 #align is_star_normal.spectral_radius_eq_nnnorm IsStarNormal.spectralRadius_eq_nnnorm
 
@@ -99,22 +99,22 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
 theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
     (hz : z ∈ spectrum ℂ a) : z = z.re :=
   by
-  let Iu := Units.mk0 I I_ne_zero
-  have : exp ℂ (I • z) ∈ spectrum ℂ (exp ℂ (I • a)) := by
+  let Iu := Units.mk0 i i_ne_zero
+  have : exp ℂ (i • z) ∈ spectrum ℂ (exp ℂ (i • a)) := by
     simpa only [Units.smul_def, Units.val_mk0] using
       spectrum.exp_mem_exp (Iu • a) (smul_mem_smul_iff.mpr hz)
   exact
     Complex.ext (of_real_re _)
       (by
         simpa only [← Complex.exp_eq_exp_ℂ, mem_sphere_zero_iff_norm, norm_eq_abs, abs_exp,
-          Real.exp_eq_one_iff, smul_eq_mul, I_mul, neg_eq_zero] using
+          Real.exp_eq_one_iff, smul_eq_mul, i_mul, neg_eq_zero] using
           spectrum.subset_circle_of_unitary ha.exp_i_smul_unitary this)
 #align is_self_adjoint.mem_spectrum_eq_re IsSelfAdjoint.mem_spectrum_eq_re
 
 /-- Any element of the spectrum of a selfadjoint is real. -/
 theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] (a : selfAdjoint A) {z : ℂ}
     (hz : z ∈ spectrum ℂ (a : A)) : z = z.re :=
-  a.Prop.mem_spectrum_eq_re hz
+  a.prop.mem_spectrum_eq_re hz
 #align self_adjoint.mem_spectrum_eq_re selfAdjoint.mem_spectrum_eq_re
 
 /-- The spectrum of a selfadjoint is real -/
@@ -199,7 +199,7 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
       have := AlgHom.apply_mem_spectrum φ (s : A)
       rw [selfAdjoint.coe_re_map_spectrum s] at this
       rcases this with ⟨⟨_, _⟩, _, heq⟩
-      rw [← HEq, IsROrC.star_def, IsROrC.conj_of_real]
+      rw [← heq, IsROrC.star_def, IsROrC.conj_of_real]
 
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module data.set.pointwise.iterate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem smul_eq_self_of_preimage_zpow_eq_self {G : Type _} [CommGroup G] {n : �
     replace hg : g⁻¹ ^ n ^ j = 1
     · rw [inv_zpow, hg, inv_one]
     simpa only [le_eq_subset, set_smul_subset_set_smul_iff] using this hg
-  rw [(is_fixed_pt.preimage_iterate hs j : zpowGroupHom n^[j] ⁻¹' s = s).symm]
+  rw [(IsFixedPt.preimage_iterate hs j : zpowGroupHom n^[j] ⁻¹' s = s).symm]
   rintro g' hg' - ⟨y, hy, rfl⟩
   change (zpowGroupHom n^[j]) (g' * y) ∈ s
   replace hg' : (zpowGroupHom n^[j]) g' = 1

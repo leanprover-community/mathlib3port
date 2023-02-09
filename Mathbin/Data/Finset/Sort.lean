@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.sort
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem sort_singleton (a : α) : sort r {a} = [a] :=
 theorem sort_perm_toList (s : Finset α) : sort r s ~ s.toList :=
   by
   rw [← Multiset.coe_eq_coe]
-  simp only [coe_to_list, sort_eq]
+  simp only [coe_toList, sort_eq]
 #align finset.sort_perm_to_list Finset.sort_perm_toList
 -/
 
@@ -232,7 +232,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Finset.{u1} α) {k : Nat} (h : Eq.{1} Nat (Finset.card.{u1} α s) k) (x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)), Eq.{1} Nat (Fin.val k (FunLike.coe.{succ u1, succ u1, 1} (Function.Embedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (fun (_x : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) => Fin k) _x) (EmbeddingLike.toFunLike.{succ u1, succ u1, 1} (Function.Embedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k)) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k) (Function.instEmbeddingLikeEmbedding.{succ u1, 1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k))) (RelEmbedding.toEmbedding.{u1, 0} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin k) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin k) => LE.le.{0} (Fin k) (instLEFin k) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u1, 0} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Fin k) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) => LE.le.{u1} (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : Fin k) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : Fin k) => LE.le.{0} (Fin k) (instLEFin k) x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (OrderIso.symm.{0, u1} (Fin k) (Subtype.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (instLEFin k) (Subtype.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s)) (Finset.orderIsoOfFin.{u1} α _inst_1 s k h)))) x)) (List.indexOf.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) x) (Finset.sort.{u1} α (fun (x._@.Mathlib.Data.Finset.Sort._hyg.1784 : α) (x._@.Mathlib.Data.Finset.Sort._hyg.1786 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x._@.Mathlib.Data.Finset.Sort._hyg.1784 x._@.Mathlib.Data.Finset.Sort._hyg.1786) (fun (a : α) (b : α) => instDecidableLeToLEToPreorderToPartialOrder.{u1} α _inst_1 a b) (instIsTransLeToLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) (instIsAntisymmLeToLEToPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) (instIsTotalLeToLEToPreorderToPartialOrder.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align finset.order_iso_of_fin_symm_apply Finset.orderIsoOfFin_symm_applyₓ'. -/
 theorem orderIsoOfFin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (x : s) :
-    ↑((s.orderIsoOfFin h).symm x) = (s.sort (· ≤ ·)).indexOfₓ x :=
+    ↑((s.orderIsoOfFin h).symm x) = (s.sort (· ≤ ·)).indexOf x :=
   rfl
 #align finset.order_iso_of_fin_symm_apply Finset.orderIsoOfFin_symm_apply
 
@@ -272,7 +272,7 @@ Case conversion may be inaccurate. Consider using '#align finset.range_order_emb
 @[simp]
 theorem range_orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) :
     Set.range (s.orderEmbOfFin h) = s := by
-  simp only [order_emb_of_fin, Set.range_comp coe (s.order_iso_of_fin h), RelEmbedding.coe_trans,
+  simp only [orderEmbOfFin, Set.range_comp coe (s.order_iso_of_fin h), RelEmbedding.coe_trans,
     Set.image_univ, Finset.orderEmbOfFin.equations._eqn_1, RelIso.range_eq,
     OrderEmbedding.subtype_apply, OrderIso.coe_toOrderEmbedding, eq_self_iff_true,
     Subtype.range_coe_subtype, Finset.setOf_mem, Finset.coe_inj]
@@ -287,7 +287,7 @@ Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fi
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem orderEmbOfFin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
-  simp only [order_emb_of_fin_apply, Fin.val_mk, sorted_zero_eq_min']
+  simp only [orderEmbOfFin_apply, Fin.val_mk, sorted_zero_eq_min']
 #align finset.order_emb_of_fin_zero Finset.orderEmbOfFin_zero
 
 /- warning: finset.order_emb_of_fin_last -> Finset.orderEmbOfFin_last is a dubious translation:
@@ -299,7 +299,7 @@ Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fi
 /-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
 theorem orderEmbOfFin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨k - 1, Buffer.lt_aux_2 hz⟩ = s.max' (card_pos.mp (h.symm ▸ hz)) := by
-  simp [order_emb_of_fin_apply, max'_eq_sorted_last, h]
+  simp [orderEmbOfFin_apply, max'_eq_sorted_last, h]
 #align finset.order_emb_of_fin_last Finset.orderEmbOfFin_last
 
 /- warning: finset.order_emb_of_fin_singleton -> Finset.orderEmbOfFin_singleton is a dubious translation:
@@ -311,7 +311,7 @@ Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fi
 /-- `order_emb_of_fin {a} h` sends any argument to `a`. -/
 @[simp]
 theorem orderEmbOfFin_singleton (a : α) (i : Fin 1) : orderEmbOfFin {a} (card_singleton a) i = a :=
-  by rw [Subsingleton.elim i ⟨0, zero_lt_one⟩, order_emb_of_fin_zero _ zero_lt_one, min'_singleton]
+  by rw [Subsingleton.elim i ⟨0, zero_lt_one⟩, orderEmbOfFin_zero _ zero_lt_one, min'_singleton]
 #align finset.order_emb_of_fin_singleton Finset.orderEmbOfFin_singleton
 
 /- warning: finset.order_emb_of_fin_unique -> Finset.orderEmbOfFin_unique is a dubious translation:
@@ -325,8 +325,8 @@ the increasing bijection `order_emb_of_fin s h`. -/
 theorem orderEmbOfFin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k → α}
     (hfs : ∀ x, f x ∈ s) (hmono : StrictMono f) : f = s.orderEmbOfFin h :=
   by
-  apply Fin.strictMono_unique hmono (s.order_emb_of_fin h).StrictMono
-  rw [range_order_emb_of_fin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
+  apply Fin.strictMono_unique hmono (s.order_emb_of_fin h).strictMono
+  rw [range_orderEmbOfFin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine' eq_of_subset_of_card_le (fun x hx => _) _
   · rcases mem_image.1 hx with ⟨x, hx, rfl⟩
     exact hfs x
@@ -343,7 +343,7 @@ Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_fi
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem orderEmbOfFin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k ↪o α}
     (hfs : ∀ x, f x ∈ s) : f = s.orderEmbOfFin h :=
-  RelEmbedding.ext <| Function.funext_iff.1 <| orderEmbOfFin_unique h hfs f.StrictMono
+  RelEmbedding.ext <| Function.funext_iff.1 <| orderEmbOfFin_unique h hfs f.strictMono
 #align finset.order_emb_of_fin_unique' Finset.orderEmbOfFin_unique'
 
 /- warning: finset.order_emb_of_fin_eq_order_emb_of_fin_iff -> Finset.orderEmbOfFin_eq_orderEmbOfFin_iff is a dubious translation:
@@ -381,7 +381,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.order_emb_of_card_le_mem Finset.orderEmbOfCardLe_memₓ'. -/
 theorem orderEmbOfCardLe_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) (a) :
     orderEmbOfCardLe s h a ∈ s := by
-  simp only [order_emb_of_card_le, RelEmbedding.coe_trans, Finset.orderEmbOfFin_mem]
+  simp only [orderEmbOfCardLe, RelEmbedding.coe_trans, Finset.orderEmbOfFin_mem]
 #align finset.order_emb_of_card_le_mem Finset.orderEmbOfCardLe_mem
 
 end SortLinearOrder

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module topology.sheaves.functors
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ namespace Presheaf.SheafConditionPairwiseIntersections
 
 theorem map_diagram : Pairwise.diagram U ⋙ Opens.map f = Pairwise.diagram ((Opens.map f).obj ∘ U) :=
   by
-  apply functor.hext
+  apply Functor.hext
   abstract obj_eq intro i; cases i <;> rfl
   intro i j g; apply Subsingleton.helim
   iterate 2 rw [map_diagram.obj_eq]
@@ -54,18 +54,18 @@ theorem mapCocone :
     HEq ((Opens.map f).mapCocone (Pairwise.cocone U)) (Pairwise.cocone ((Opens.map f).obj ∘ U)) :=
   by
   unfold functor.map_cocone cocones.functoriality; dsimp; congr
-  iterate 2 rw [map_diagram]; rw [opens.map_supr]
-  apply Subsingleton.helim; rw [map_diagram, opens.map_supr]
+  iterate 2 rw [map_diagram]; rw [Opens.map_supᵢ]
+  apply Subsingleton.helim; rw [map_diagram, Opens.map_supᵢ]
   apply proof_irrel_heq
 #align Top.presheaf.sheaf_condition_pairwise_intersections.map_cocone TopCat.Presheaf.SheafConditionPairwiseIntersections.mapCocone
 
 theorem pushforward_sheaf_of_sheaf {F : Presheaf C X} (h : F.IsSheafPairwiseIntersections) :
     (f _* F).IsSheafPairwiseIntersections := fun ι U =>
   by
-  convert h ((opens.map f).obj ∘ U) using 2
+  convert h ((Opens.map f).obj ∘ U) using 2
   rw [← map_diagram]; rfl
-  change HEq (F.map_cone ((opens.map f).mapCocone _).op) _
-  congr ; iterate 2 rw [map_diagram]; apply map_cocone
+  change HEq (F.map_cone ((Opens.map f).mapCocone _).op) _
+  congr ; iterate 2 rw [map_diagram]; apply mapCocone
 #align Top.presheaf.sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf TopCat.Presheaf.SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf
 
 end Presheaf.SheafConditionPairwiseIntersections
@@ -77,8 +77,8 @@ open Presheaf
 /-- The pushforward of a sheaf (by a continuous map) is a sheaf.
 -/
 theorem pushforward_sheaf_of_sheaf {F : X.Presheaf C} (h : F.IsSheaf) : (f _* F).IsSheaf := by
-  rw [is_sheaf_iff_is_sheaf_pairwise_intersections] at h⊢ <;>
-    exact sheaf_condition_pairwise_intersections.pushforward_sheaf_of_sheaf f h
+  rw [isSheaf_iff_isSheafPairwiseIntersections] at h⊢ <;>
+    exact SheafConditionPairwiseIntersections.pushforward_sheaf_of_sheaf f h
 #align Top.sheaf.pushforward_sheaf_of_sheaf TopCat.Sheaf.pushforward_sheaf_of_sheaf
 
 /-- The pushforward functor.

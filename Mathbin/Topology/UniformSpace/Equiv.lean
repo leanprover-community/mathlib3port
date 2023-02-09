@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Re
 Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ protected theorem uniformContinuous (h : α ≃ᵤ β) : UniformContinuous h :=
 
 @[continuity]
 protected theorem continuous (h : α ≃ᵤ β) : Continuous h :=
-  h.UniformContinuous.Continuous
+  h.uniformContinuous.continuous
 #align uniform_equiv.continuous UniformEquiv.continuous
 
 protected theorem uniformContinuous_symm (h : α ≃ᵤ β) : UniformContinuous h.symm :=
@@ -147,14 +147,14 @@ protected theorem uniformContinuous_symm (h : α ≃ᵤ β) : UniformContinuous 
 -- otherwise `by continuity` can't prove continuity of `h.to_equiv.symm`
 @[continuity]
 protected theorem continuous_symm (h : α ≃ᵤ β) : Continuous h.symm :=
-  h.uniformContinuous_symm.Continuous
+  h.uniformContinuous_symm.continuous
 #align uniform_equiv.continuous_symm UniformEquiv.continuous_symm
 
 /-- A uniform isomorphism as a homeomorphism. -/
 @[simps]
 protected def toHomeomorph (e : α ≃ᵤ β) : α ≃ₜ β :=
   { e.toEquiv with
-    continuous_toFun := e.Continuous
+    continuous_toFun := e.continuous
     continuous_invFun := e.continuous_symm }
 #align uniform_equiv.to_homeomorph UniformEquiv.toHomeomorph
 
@@ -169,15 +169,15 @@ theorem symm_apply_apply (h : α ≃ᵤ β) (x : α) : h.symm (h x) = x :=
 #align uniform_equiv.symm_apply_apply UniformEquiv.symm_apply_apply
 
 protected theorem bijective (h : α ≃ᵤ β) : Function.Bijective h :=
-  h.toEquiv.Bijective
+  h.toEquiv.bijective
 #align uniform_equiv.bijective UniformEquiv.bijective
 
 protected theorem injective (h : α ≃ᵤ β) : Function.Injective h :=
-  h.toEquiv.Injective
+  h.toEquiv.injective
 #align uniform_equiv.injective UniformEquiv.injective
 
 protected theorem surjective (h : α ≃ᵤ β) : Function.Surjective h :=
-  h.toEquiv.Surjective
+  h.toEquiv.surjective
 #align uniform_equiv.surjective UniformEquiv.surjective
 
 /-- Change the uniform equiv `f` to make the inverse function definitionally equal to `g`. -/
@@ -192,7 +192,7 @@ def changeInv (f : α ≃ᵤ β) (g : β → α) (hg : Function.RightInverse g f
     invFun := g
     left_inv := by convert f.left_inv
     right_inv := by convert f.right_inv
-    uniformContinuous_toFun := f.UniformContinuous
+    uniformContinuous_toFun := f.uniformContinuous
     uniformContinuous_invFun := by convert f.symm.uniform_continuous }
 #align uniform_equiv.change_inv UniformEquiv.changeInv
 
@@ -208,7 +208,7 @@ theorem self_comp_symm (h : α ≃ᵤ β) : ⇑h ∘ ⇑h.symm = id :=
 
 @[simp]
 theorem range_coe (h : α ≃ᵤ β) : range h = univ :=
-  h.Surjective.range_eq
+  h.surjective.range_eq
 #align uniform_equiv.range_coe UniformEquiv.range_coe
 
 theorem image_symm (h : α ≃ᵤ β) : image h.symm = preimage h :=
@@ -230,7 +230,7 @@ theorem preimage_image (h : α ≃ᵤ β) (s : Set α) : h ⁻¹' (h '' s) = s :
 #align uniform_equiv.preimage_image UniformEquiv.preimage_image
 
 protected theorem uniformInducing (h : α ≃ᵤ β) : UniformInducing h :=
-  uniformInducing_of_compose h.UniformContinuous h.symm.UniformContinuous <| by
+  uniformInducing_of_compose h.uniformContinuous h.symm.uniformContinuous <| by
     simp only [symm_comp_self, uniformInducing_id]
 #align uniform_equiv.uniform_inducing UniformEquiv.uniformInducing
 
@@ -239,13 +239,13 @@ theorem comap_eq (h : α ≃ᵤ β) : UniformSpace.comap h ‹_› = ‹_› := 
 #align uniform_equiv.comap_eq UniformEquiv.comap_eq
 
 protected theorem uniformEmbedding (h : α ≃ᵤ β) : UniformEmbedding h :=
-  ⟨h.UniformInducing, h.Injective⟩
+  ⟨h.uniformInducing, h.injective⟩
 #align uniform_equiv.uniform_embedding UniformEquiv.uniformEmbedding
 
 /-- Uniform equiv given a uniform embedding. -/
 noncomputable def ofUniformEmbedding (f : α → β) (hf : UniformEmbedding f) : α ≃ᵤ Set.range f
     where
-  uniformContinuous_toFun := hf.to_uniformInducing.UniformContinuous.subtype_mk _
+  uniformContinuous_toFun := hf.to_uniformInducing.uniformContinuous.subtype_mk _
   uniformContinuous_invFun := by
     simp [hf.to_uniform_inducing.uniform_continuous_iff, uniformContinuous_subtype_val]
   toEquiv := Equiv.ofInjective f hf.inj
@@ -263,11 +263,11 @@ def setCongr {s t : Set α} (h : s = t) : s ≃ᵤ t
 def prodCongr (h₁ : α ≃ᵤ β) (h₂ : γ ≃ᵤ δ) : α × γ ≃ᵤ β × δ
     where
   uniformContinuous_toFun :=
-    (h₁.UniformContinuous.comp uniformContinuous_fst).prod_mk
-      (h₂.UniformContinuous.comp uniformContinuous_snd)
+    (h₁.uniformContinuous.comp uniformContinuous_fst).prod_mk
+      (h₂.uniformContinuous.comp uniformContinuous_snd)
   uniformContinuous_invFun :=
-    (h₁.symm.UniformContinuous.comp uniformContinuous_fst).prod_mk
-      (h₂.symm.UniformContinuous.comp uniformContinuous_snd)
+    (h₁.symm.uniformContinuous.comp uniformContinuous_fst).prod_mk
+      (h₂.symm.uniformContinuous.comp uniformContinuous_snd)
   toEquiv := h₁.toEquiv.prodCongr h₂.toEquiv
 #align uniform_equiv.prod_congr UniformEquiv.prodCongr
 
@@ -376,9 +376,9 @@ def finTwoArrow : (Fin 2 → α) ≃ᵤ α × α :=
 -/
 def image (e : α ≃ᵤ β) (s : Set α) : s ≃ᵤ e '' s
     where
-  uniformContinuous_toFun := (e.UniformContinuous.comp uniformContinuous_subtype_val).subtype_mk _
+  uniformContinuous_toFun := (e.uniformContinuous.comp uniformContinuous_subtype_val).subtype_mk _
   uniformContinuous_invFun :=
-    (e.symm.UniformContinuous.comp uniformContinuous_subtype_val).subtype_mk _
+    (e.symm.uniformContinuous.comp uniformContinuous_subtype_val).subtype_mk _
   toEquiv := e.toEquiv.image s
 #align uniform_equiv.image UniformEquiv.image
 
@@ -389,7 +389,7 @@ end UniformEquiv
 def Equiv.toUniformEquivOfUniformInducing [UniformSpace α] [UniformSpace β] (f : α ≃ β)
     (hf : UniformInducing f) : α ≃ᵤ β :=
   { f with
-    uniformContinuous_toFun := hf.UniformContinuous
+    uniformContinuous_toFun := hf.uniformContinuous
     uniformContinuous_invFun := hf.uniformContinuous_iff.2 <| by simpa using uniformContinuous_id }
 #align equiv.to_uniform_equiv_of_uniform_inducing Equiv.toUniformEquivOfUniformInducing
 

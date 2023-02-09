@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Matej Penciak, Moritz Doll, Fabien Clery
 
 ! This file was ported from Lean 3 source module linear_algebra.symplectic_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,30 +44,30 @@ def j : Matrix (Sum l l) (Sum l l) R :=
 @[simp]
 theorem j_transpose : (j l R)ᵀ = -j l R :=
   by
-  rw [J, from_blocks_transpose, ← neg_one_smul R (from_blocks _ _ _ _), from_blocks_smul,
+  rw [j, fromBlocks_transpose, ← neg_one_smul R (fromBlocks _ _ _ _), fromBlocks_smul,
     Matrix.transpose_zero, Matrix.transpose_one, transpose_neg]
-  simp [from_blocks]
+  simp [fromBlocks]
 #align matrix.J_transpose Matrix.j_transpose
 
 variable [Fintype l]
 
 theorem j_squared : j l R ⬝ j l R = -1 :=
   by
-  rw [J, from_blocks_multiply]
+  rw [j, fromBlocks_multiply]
   simp only [Matrix.zero_mul, Matrix.neg_mul, zero_add, neg_zero, Matrix.one_mul, add_zero]
-  rw [← neg_zero, ← Matrix.fromBlocks_neg, ← from_blocks_one]
+  rw [← neg_zero, ← Matrix.fromBlocks_neg, ← fromBlocks_one]
 #align matrix.J_squared Matrix.j_squared
 
 theorem j_inv : (j l R)⁻¹ = -j l R :=
   by
   refine' Matrix.inv_eq_right_inv _
-  rw [Matrix.mul_neg, J_squared]
+  rw [Matrix.mul_neg, j_squared]
   exact neg_neg 1
 #align matrix.J_inv Matrix.j_inv
 
 theorem j_det_mul_j_det : det (j l R) * det (j l R) = 1 :=
   by
-  rw [← det_mul, J_squared]
+  rw [← det_mul, j_squared]
   rw [← one_smul R (-1 : Matrix _ _ R)]
   rw [smul_neg, ← neg_smul, det_smul]
   simp only [Fintype.card_sum, det_one, mul_one]
@@ -104,7 +104,7 @@ variable {l} {R} [DecidableEq l] [Fintype l] [CommRing R]
 open Matrix
 
 theorem mem_iff {A : Matrix (Sum l l) (Sum l l) R} :
-    A ∈ symplecticGroup l R ↔ A ⬝ j l R ⬝ Aᵀ = j l R := by simp [symplectic_group]
+    A ∈ symplecticGroup l R ↔ A ⬝ j l R ⬝ Aᵀ = j l R := by simp [symplecticGroup]
 #align symplectic_group.mem_iff SymplecticGroup.mem_iff
 
 instance coeMatrix : Coe (symplecticGroup l R) (Matrix (Sum l l) (Sum l l) R) := by infer_instance
@@ -116,7 +116,7 @@ variable (l) (R)
 
 theorem j_mem : j l R ∈ symplecticGroup l R :=
   by
-  rw [mem_iff, J, from_blocks_multiply, from_blocks_transpose, from_blocks_multiply]
+  rw [mem_iff, j, fromBlocks_multiply, fromBlocks_transpose, fromBlocks_multiply]
   simp
 #align symplectic_group.J_mem SymplecticGroup.j_mem
 
@@ -146,7 +146,7 @@ theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A :=
   by
   rw [isUnit_iff_exists_inv]
   use A.det
-  refine' (is_unit_det_J l R).mul_left_cancel _
+  refine' (isUnit_det_j l R).mul_left_cancel _
   rw [mul_one]
   rw [mem_iff] at hA
   apply_fun det  at hA
@@ -164,15 +164,15 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
     rw [Matrix.det_transpose]
     exact huA
   calc
-    Aᵀ ⬝ J l R ⬝ A = (-Aᵀ) ⬝ (J l R)⁻¹ ⬝ A := by
-      rw [J_inv]
+    Aᵀ ⬝ j l R ⬝ A = (-Aᵀ) ⬝ (j l R)⁻¹ ⬝ A := by
+      rw [j_inv]
       simp
-    _ = (-Aᵀ) ⬝ (A ⬝ J l R ⬝ Aᵀ)⁻¹ ⬝ A := by rw [hA]
-    _ = (-Aᵀ ⬝ (Aᵀ⁻¹ ⬝ (J l R)⁻¹)) ⬝ A⁻¹ ⬝ A := by
+    _ = (-Aᵀ) ⬝ (A ⬝ j l R ⬝ Aᵀ)⁻¹ ⬝ A := by rw [hA]
+    _ = (-Aᵀ ⬝ (Aᵀ⁻¹ ⬝ (j l R)⁻¹)) ⬝ A⁻¹ ⬝ A := by
       simp only [Matrix.mul_inv_rev, Matrix.mul_assoc, Matrix.neg_mul]
-    _ = -(J l R)⁻¹ := by
+    _ = -(j l R)⁻¹ := by
       rw [mul_nonsing_inv_cancel_left _ _ huAT, nonsing_inv_mul_cancel_right _ _ huA]
-    _ = J l R := by simp [J_inv]
+    _ = j l R := by simp [j_inv]
     
 #align symplectic_group.transpose_mem SymplecticGroup.transpose_mem
 
@@ -202,7 +202,7 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -j l R ⬝ Aᵀ ⬝ 
       rw [mem_iff'] at hA
       rw [hA]
     _ = (-1 : R) • j l R ⬝ j l R := by simp only [Matrix.neg_mul, neg_smul, one_smul]
-    _ = (-1 : R) • -1 := by rw [J_squared]
+    _ = (-1 : R) • -1 := by rw [j_squared]
     _ = 1 := by simp only [neg_smul_neg, one_smul]
     
 #align symplectic_group.inv_left_mul_aux SymplecticGroup.inv_left_mul_aux

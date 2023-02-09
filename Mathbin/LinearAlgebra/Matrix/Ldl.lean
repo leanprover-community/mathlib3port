@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.ldl
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ noncomputable instance LDL.invertibleLowerInv : Invertible (LDL.lowerInv hS) :=
   rw [LDL.lowerInv_eq_gramSchmidtBasis]
   haveI :=
     Basis.invertibleToMatrix (Pi.basisFun 𝕜 n)
-      (@gramSchmidtBasis 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _
+      (@gram_schmidt_basis 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _
         (Pi.basisFun 𝕜 n))
   infer_instance
 #align LDL.invertible_lower_inv LDL.invertibleLowerInv
@@ -97,7 +97,7 @@ noncomputable def LDL.diag : Matrix n n 𝕜 :=
 
 theorem LDL.lowerInv_triangular {i j : n} (hij : i < j) : LDL.lowerInv hS i j = 0 := by
   rw [←
-    @gramSchmidt_triangular 𝕜 (n → 𝕜) _ (inner_product_space.of_matrix hS.transpose) n _ _ _ i j hij
+    @gram_schmidt_triangular 𝕜 (n → 𝕜) _ (InnerProductSpace.ofMatrix hS.transpose) n _ _ _ i j hij
       (Pi.basisFun 𝕜 n),
     Pi.basisFun_repr, LDL.lowerInv]
 #align LDL.lower_inv_triangular LDL.lowerInv_triangular
@@ -112,10 +112,10 @@ theorem LDL.diag_eq_lowerInv_conj : LDL.diag hS = LDL.lowerInv hS ⬝ S ⬝ (LDL
     simpa only [hij, LDL.diag, diagonal_apply_eq, LDL.diagEntries, Matrix.mul_assoc, inner,
       Pi.star_apply, IsROrC.star_def, starRingEnd_self_apply]
   · simp only [LDL.diag, hij, diagonal_apply_ne, Ne.def, not_false_iff, mul_mul_apply]
-    rw [conj_transpose, transpose_map, transpose_transpose, dot_product_mul_vec,
+    rw [conjTranspose, transpose_map, transpose_transpose, dotProduct_mulVec,
       (LDL.lowerInv_orthogonal hS fun h : j = i => hij h.symm).symm, ← inner_conj_sym,
-      mul_vec_transpose, EuclideanSpace.inner_eq_star_dotProduct, ← IsROrC.star_def, ←
-      star_dot_product_star, dot_product_comm, star_star]
+      mulVec_transpose, EuclideanSpace.inner_eq_star_dotProduct, ← IsROrC.star_def, ←
+      star_dotProduct_star, dotProduct_comm, star_star]
     rfl
 #align LDL.diag_eq_lower_inv_conj LDL.diag_eq_lowerInv_conj
 
@@ -128,7 +128,7 @@ noncomputable def LDL.lower :=
 decomposed as `S = LDLᴴ` where `L` is a lower-triangular matrix and `D` is a diagonal matrix.  -/
 theorem LDL.lower_conj_diag : LDL.lower hS ⬝ LDL.diag hS ⬝ (LDL.lower hS)ᴴ = S :=
   by
-  rw [LDL.lower, conj_transpose_nonsing_inv, Matrix.mul_assoc,
+  rw [LDL.lower, conjTranspose_nonsing_inv, Matrix.mul_assoc,
     Matrix.inv_mul_eq_iff_eq_mul_of_invertible (LDL.lowerInv hS),
     Matrix.mul_inv_eq_iff_eq_mul_of_invertible]
   exact LDL.diag_eq_lowerInv_conj hS

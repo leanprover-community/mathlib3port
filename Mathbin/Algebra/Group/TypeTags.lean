@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.type_tags
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,10 +162,10 @@ instance [Infinite α] : Infinite (Additive α) := by tauto
 instance [Infinite α] : Infinite (Multiplicative α) := by tauto
 
 instance [Nontrivial α] : Nontrivial (Additive α) :=
-  Additive.ofMul.Injective.Nontrivial
+  Additive.ofMul.injective.nontrivial
 
 instance [Nontrivial α] : Nontrivial (Multiplicative α) :=
-  Multiplicative.ofAdd.Injective.Nontrivial
+  Multiplicative.ofAdd.injective.nontrivial
 
 instance Additive.hasAdd [Mul α] : Add (Additive α)
     where add x y := Additive.ofMul (x.toMul * y.toMul)

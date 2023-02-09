@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ open Emetric
 
 @[to_additive]
 theorem infEdist_inv (x : E) (s : Set E) : infEdist x⁻¹ s = infEdist x s⁻¹ :=
-  eq_of_forall_le_iff fun r => by simp_rw [le_inf_edist, ← image_inv, ball_image_iff, edist_inv]
+  eq_of_forall_le_iff fun r => by simp_rw [le_infEdist, ← image_inv, ball_image_iff, edist_inv]
 #align inf_edist_inv infEdist_inv
 #align inf_edist_neg infEdist_neg
 
@@ -107,7 +107,7 @@ theorem inv_ball : (ball x δ)⁻¹ = ball x⁻¹ δ :=
 @[simp, to_additive]
 theorem inv_closedBall : (closedBall x δ)⁻¹ = closedBall x⁻¹ δ :=
   by
-  simp_rw [closed_ball, ← dist_inv]
+  simp_rw [closedBall, ← dist_inv]
   rfl
 #align inv_closed_ball inv_closedBall
 #align neg_closed_ball neg_closedBall
@@ -233,7 +233,7 @@ attribute [to_additive] smul_closedBall_one
 theorem mul_ball_one : s * ball 1 δ = thickening δ s :=
   by
   rw [thickening_eq_bUnion_ball]
-  convert Union₂_mul (fun x (_ : x ∈ s) => {x}) (ball (1 : E) δ)
+  convert unionᵢ₂_mul (fun x (_ : x ∈ s) => {x}) (ball (1 : E) δ)
   exact s.bUnion_of_singleton.symm
   ext (x y)
   simp_rw [singleton_mul_ball, mul_one]
@@ -284,7 +284,7 @@ theorem IsCompact.mul_closedBall_one (hs : IsCompact s) (hδ : 0 ≤ δ) :
   by
   rw [hs.cthickening_eq_bUnion_closed_ball hδ]
   ext x
-  simp only [mem_mul, dist_eq_norm_div, exists_prop, mem_Union, mem_closed_ball, exists_and_left,
+  simp only [mem_mul, dist_eq_norm_div, exists_prop, mem_unionᵢ, mem_closedBall, exists_and_left,
     mem_closedBall_one_iff, ← eq_div_iff_mul_eq'', exists_eq_right]
 #align is_compact.mul_closed_ball_one IsCompact.mul_closedBall_one
 #align is_compact.add_closed_ball_zero IsCompact.add_closedBall_zero

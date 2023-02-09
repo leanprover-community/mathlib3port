@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.sigma.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,9 +53,9 @@ instance [Inhabited α] [Inhabited (β default)] : Inhabited (Sigma β) :=
 instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Sigma β)
   | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
     match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with
-    | _, b₁, _, b₂, is_true (Eq.refl a) =>
+    | _, b₁, _, b₂, is_true (eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
-      | _, _, is_true (Eq.refl b) => isTrue rfl
+      | _, _, is_true (eq.refl b) => isTrue rfl
       | b₁, b₂, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_hEq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
 
@@ -354,9 +354,9 @@ instance [Inhabited α] [Inhabited (β default)] : Inhabited (PSigma β) :=
 instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (PSigma β)
   | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
     match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with
-    | _, b₁, _, b₂, is_true (Eq.refl a) =>
+    | _, b₁, _, b₂, is_true (eq.refl a) =>
       match b₁, b₂, h₂ a b₁ b₂ with
-      | _, _, is_true (Eq.refl b) => isTrue rfl
+      | _, _, is_true (eq.refl b) => isTrue rfl
       | b₁, b₂, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n <| eq_of_hEq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n e₁
 
@@ -370,7 +370,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
   Iff.intro PSigma.mk.inj fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
-    | _, _, _, _, Eq.refl a, HEq.refl b => rfl
+    | _, _, _, _, eq.refl a, heq.refl b => rfl
 #align psigma.mk.inj_iff PSigma.mk.inj_iff
 
 /- warning: psigma.ext -> PSigma.ext is a dubious translation:

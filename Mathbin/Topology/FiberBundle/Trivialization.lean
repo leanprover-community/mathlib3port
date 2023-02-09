@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.trivialization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -258,7 +258,7 @@ theorem coe_symm_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉
 
 theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
     totalSpaceMk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
-  rw [e.symm_apply hb, total_space.mk_cast, total_space.eta]
+  rw [e.symm_apply hb, TotalSpace.mk_cast, TotalSpace.eta]
 #align pretrivialization.mk_symm Pretrivialization.mk_symm
 
 theorem symm_proj_apply (e : Pretrivialization F (π E)) (z : TotalSpace E)
@@ -327,7 +327,7 @@ theorem coe_coe : ⇑e.toLocalHomeomorph = e :=
 
 @[simp, mfld_simps]
 theorem coe_fst (ex : x ∈ e.source) : (e x).1 = proj x :=
-  e.proj_toFun x ex
+  e.proj_to_fun x ex
 #align trivialization.coe_fst Trivialization.coe_fst
 
 protected theorem eqOn : EqOn (Prod.fst ∘ e) proj e.source := fun x hx => e.coe_fst hx
@@ -428,7 +428,7 @@ theorem image_preimage_eq_prod_univ {s : Set B} (hb : s ⊆ e.baseSet) :
     e '' (proj ⁻¹' s) = s ×ˢ univ :=
   Subset.antisymm
     (image_subset_iff.mpr fun p hp =>
-      ⟨(e.proj_toFun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivial⟩)
+      ⟨(e.proj_to_fun p (e.preimage_subset_source hb hp)).symm ▸ hp, trivial⟩)
     fun p hp =>
     let hp' : p ∈ e.target := e.mem_target.mpr (hb hp.1)
     ⟨e.invFun p, mem_preimage.mpr ((e.proj_symm_apply hp').symm ▸ hp.1), e.apply_symm_apply hp'⟩
@@ -444,7 +444,7 @@ def preimageHomeomorph {s : Set B} (hb : s ⊆ e.baseSet) : proj ⁻¹' s ≃ₜ
 @[simp]
 theorem preimageHomeomorph_apply {s : Set B} (hb : s ⊆ e.baseSet) (p : proj ⁻¹' s) :
     e.preimageHomeomorph hb p = (⟨proj p, p.2⟩, (e p).2) :=
-  Prod.ext (Subtype.ext (e.proj_toFun p (e.mem_source.mpr (hb p.2)))) rfl
+  Prod.ext (Subtype.ext (e.proj_to_fun p (e.mem_source.mpr (hb p.2)))) rfl
 #align trivialization.preimage_homeomorph_apply Trivialization.preimageHomeomorph_apply
 
 @[simp]
@@ -619,7 +619,7 @@ theorem continuousOn_symm (e : Trivialization F (π E)) :
   by
   have :
     ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
-      total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
+      totalSpaceMk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
     by
     rintro x ⟨hx : x.1 ∈ e.base_set, _⟩
     simp_rw [e.mk_symm hx, Prod.mk.eta]
@@ -641,7 +641,7 @@ def transFiberHomeomorph {F' : Type _} [TopologicalSpace F'] (e : Trivialization
   open_baseSet := e.open_baseSet
   source_eq := e.source_eq
   target_eq := by simp [e.target_eq, prod_univ, preimage_preimage]
-  proj_toFun := e.proj_toFun
+  proj_toFun := e.proj_to_fun
 #align trivialization.trans_fiber_homeomorph Trivialization.transFiberHomeomorph
 
 @[simp]
@@ -668,11 +668,11 @@ theorem mk_coordChange (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b ∈
 
 theorem coordChange_apply_snd (e₁ e₂ : Trivialization F proj) {p : Z} (h : proj p ∈ e₁.baseSet) :
     e₁.coordChange e₂ (proj p) (e₁ p).snd = (e₂ p).snd := by
-  rw [coord_change, e₁.symm_apply_mk_proj (e₁.mem_source.2 h)]
+  rw [coordChange, e₁.symm_apply_mk_proj (e₁.mem_source.2 h)]
 #align trivialization.coord_change_apply_snd Trivialization.coordChange_apply_snd
 
 theorem coordChange_same_apply (e : Trivialization F proj) {b : B} (h : b ∈ e.baseSet) (x : F) :
-    e.coordChange e b x = x := by rw [coord_change, e.apply_symm_apply' h]
+    e.coordChange e b x = x := by rw [coordChange, e.apply_symm_apply' h]
 #align trivialization.coord_change_same_apply Trivialization.coordChange_same_apply
 
 theorem coordChange_same (e : Trivialization F proj) {b : B} (h : b ∈ e.baseSet) :
@@ -684,8 +684,8 @@ theorem coordChange_coordChange (e₁ e₂ e₃ : Trivialization F proj) {b : B}
     (h₂ : b ∈ e₂.baseSet) (x : F) :
     e₂.coordChange e₃ b (e₁.coordChange e₂ b x) = e₁.coordChange e₃ b x :=
   by
-  rw [coord_change, e₁.mk_coord_change _ h₁ h₂, ← e₂.coe_coe, e₂.to_local_homeomorph.left_inv,
-    coord_change]
+  rw [coordChange, e₁.mk_coord_change _ h₁ h₂, ← e₂.coe_coe, e₂.to_local_homeomorph.left_inv,
+    coordChange]
   rwa [e₂.mem_source, e₁.proj_symm_apply' h₁]
 #align trivialization.coord_change_coord_change Trivialization.coordChange_coordChange
 
@@ -709,8 +709,8 @@ protected def coordChangeHomeomorph (e₁ e₂ : Trivialization F proj) {b : B} 
     where
   toFun := e₁.coordChange e₂ b
   invFun := e₂.coordChange e₁ b
-  left_inv x := by simp only [*, coord_change_coord_change, coord_change_same_apply]
-  right_inv x := by simp only [*, coord_change_coord_change, coord_change_same_apply]
+  left_inv x := by simp only [*, coordChange_coordChange, coordChange_same_apply]
+  right_inv x := by simp only [*, coordChange_coordChange, coordChange_same_apply]
   continuous_toFun := e₁.continuous_coordChange e₂ h₁ h₂
   continuous_invFun := e₂.continuous_coordChange e₁ h₂ h₁
 #align trivialization.coord_change_homeomorph Trivialization.coordChangeHomeomorph
@@ -733,12 +733,12 @@ protected def restrOpen (e : Trivialization F proj) (s : Set B) (hs : IsOpen s) 
     Trivialization F proj
     where
   toLocalHomeomorph :=
-    ((e.isImage_preimage_prod s).symm.restr (IsOpen.inter e.open_target (hs.Prod isOpen_univ))).symm
+    ((e.isImage_preimage_prod s).symm.restr (IsOpen.inter e.open_target (hs.prod isOpen_univ))).symm
   baseSet := e.baseSet ∩ s
   open_baseSet := IsOpen.inter e.open_baseSet hs
   source_eq := by simp [e.source_eq]
   target_eq := by simp [e.target_eq, prod_univ]
-  proj_toFun p hp := e.proj_toFun p hp.1
+  proj_toFun p hp := e.proj_to_fun p hp.1
 #align trivialization.restr_open Trivialization.restrOpen
 
 section Piecewise

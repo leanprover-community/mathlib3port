@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.shrinking_lemma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X], (ι -> (Set.{u2} X)) -> (Set.{u2} X) -> Sort.{max (succ u1) (succ u2)}
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement ShrinkingLemma.PartialRefinementₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∉ » carrier) -/
 -- the trivial refinement needs `u` to be a covering
 /-- Auxiliary definition for the proof of `shrinking_lemma`. A partial refinement of a covering
 `⋃ i, u i` of a set `s` is a map `v : ι → set X` and a set `carrier : set ι` such that
@@ -139,7 +139,7 @@ instance : PartialOrder (PartialRefinement u s)
   le v₁ v₂ := v₁.carrier ⊆ v₂.carrier ∧ ∀ i ∈ v₁.carrier, v₁ i = v₂ i
   le_refl v := ⟨Subset.refl _, fun _ _ => rfl⟩
   le_trans v₁ v₂ v₃ h₁₂ h₂₃ :=
-    ⟨Subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
+    ⟨Subset.trans Not.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i <| h₁₂.1 hi)⟩
   le_antisymm v₁ v₂ h₁₂ h₂₁ :=
     have hc : v₁.carrier = v₂.carrier := Subset.antisymm h₁₂.1 h₂₁.1
     ext _ _
@@ -185,7 +185,7 @@ Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partia
 /-- Choice of an element of a nonempty chain of partial refinements. If `i` belongs to one of
 `carrier v`, `v ∈ c`, then `find c ne i` is one of these partial refinements. -/
 def find (c : Set (PartialRefinement u s)) (ne : c.Nonempty) (i : ι) : PartialRefinement u s :=
-  if hi : ∃ v ∈ c, i ∈ carrier v then hi.some else Ne.some
+  if hi : ∃ v ∈ c, i ∈ carrier v then hi.choose else ne.some
 #align shrinking_lemma.partial_refinement.find ShrinkingLemma.PartialRefinement.find
 
 /- warning: shrinking_lemma.partial_refinement.find_mem -> ShrinkingLemma.PartialRefinement.find_mem is a dubious translation:
@@ -194,7 +194,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)} (c : ι) (i : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s), Membership.mem.{max u2 u1, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (Set.instMembershipSet.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (ShrinkingLemma.PartialRefinement.find.{u1, u2} ι X _inst_1 _inst_2 u s i c) s
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.find_mem ShrinkingLemma.PartialRefinement.find_memₓ'. -/
-theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c Ne i ∈ c :=
+theorem find_mem {c : Set (PartialRefinement u s)} (i : ι) (ne : c.Nonempty) : find c ne i ∈ c :=
   by
   rw [find]
   split_ifs
@@ -208,14 +208,14 @@ but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)} {c : ι} (i : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s), Iff (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) c (ShrinkingLemma.PartialRefinement.carrier.{u1, u2} ι X _inst_1 _inst_2 u (ShrinkingLemma.PartialRefinement.find.{u1, u2} ι X _inst_1 _inst_2 u s i c))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) c (ShrinkingLemma.PartialRefinement.chainSupCarrier.{u1, u2} ι X _inst_1 _inst_2 u s))
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.mem_find_carrier_iff ShrinkingLemma.PartialRefinement.mem_find_carrier_iffₓ'. -/
 theorem mem_find_carrier_iff {c : Set (PartialRefinement u s)} {i : ι} (ne : c.Nonempty) :
-    i ∈ (find c Ne i).carrier ↔ i ∈ chainSupCarrier c :=
+    i ∈ (find c ne i).carrier ↔ i ∈ chainSupCarrier c :=
   by
   rw [find]
   split_ifs
-  · have : i ∈ h.some.carrier ∧ i ∈ chain_Sup_carrier c := ⟨h.some_spec.snd, mem_Union₂.2 h⟩
+  · have : i ∈ h.some.carrier ∧ i ∈ chainSupCarrier c := ⟨h.some_spec.snd, mem_unionᵢ₂.2 h⟩
     simp only [this]
-  · have : i ∉ ne.some.carrier ∧ i ∉ chain_Sup_carrier c :=
-      ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_Union₂.1 h⟩
+  · have : i ∉ ne.some.carrier ∧ i ∉ chainSupCarrier c :=
+      ⟨fun hi => h ⟨_, ne.some_spec, hi⟩, mt mem_unionᵢ₂.1 h⟩
     simp only [this]
 #align shrinking_lemma.partial_refinement.mem_find_carrier_iff ShrinkingLemma.PartialRefinement.mem_find_carrier_iff
 
@@ -226,7 +226,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} {s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)}, (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.890 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.892 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.890 x._@.Mathlib.Topology.ShrinkingLemma._hyg.892) s) -> (forall (hc : Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) {ne : ι} {i : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u}, (Membership.mem.{max u1 u2, max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) (Set.instMembershipSet.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)) i s) -> (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) ne (ShrinkingLemma.PartialRefinement.carrier.{u1, u2} ι X _inst_1 _inst_2 u i)) -> (Eq.{succ u2} (Set.{u2} X) (ShrinkingLemma.PartialRefinement.toFun.{u1, u2} ι X _inst_1 _inst_2 u (ShrinkingLemma.PartialRefinement.find.{u1, u2} ι X _inst_1 _inst_2 u s hc ne) ne) (ShrinkingLemma.PartialRefinement.toFun.{u1, u2} ι X _inst_1 _inst_2 u i ne)))
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_memₓ'. -/
 theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c)
-    (ne : c.Nonempty) {i v} (hv : v ∈ c) (hi : i ∈ carrier v) : find c Ne i i = v i :=
+    (ne : c.Nonempty) {i v} (hv : v ∈ c) (hi : i ∈ carrier v) : find c ne i i = v i :=
   apply_eq_of_chain hc (find_mem _ _) hv ((mem_find_carrier_iff _).2 <| mem_unionᵢ₂.2 ⟨v, hv, hi⟩)
     hi
 #align shrinking_lemma.partial_refinement.find_apply_of_mem ShrinkingLemma.PartialRefinement.find_apply_of_mem
@@ -237,28 +237,28 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {X : Type.{u2}} [_inst_1 : TopologicalSpace.{u2} X] {_inst_2 : ι -> (Set.{u2} X)} {u : Set.{u2} X} (s : Set.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)), (IsChain.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (fun (x._@.Mathlib.Topology.ShrinkingLemma._hyg.979 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (x._@.Mathlib.Topology.ShrinkingLemma._hyg.981 : ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) => LE.le.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (Preorder.toLE.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (PartialOrder.toPreorder.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u))) x._@.Mathlib.Topology.ShrinkingLemma._hyg.979 x._@.Mathlib.Topology.ShrinkingLemma._hyg.981) s) -> (Set.Nonempty.{max u1 u2} (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u) s) -> (forall (x : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x u) -> (Set.Finite.{u1} ι (setOf.{u1} ι (fun (i : ι) => Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x (_inst_2 i))))) -> (HasSubset.Subset.{u2} (Set.{u2} X) (Set.instHasSubsetSet.{u2} X) u (Set.unionᵢ.{u2, succ u1} X ι (fun (i : ι) => _inst_2 i))) -> (ShrinkingLemma.PartialRefinement.{u1, u2} ι X _inst_1 _inst_2 u)
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.chain_Sup ShrinkingLemma.PartialRefinement.chainSupₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier[shrinking_lemma.partial_refinement.chain_Sup_carrier] c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s :=
   by
   refine'
-    ⟨fun i => find c Ne i i, chain_Sup_carrier c, fun i => (find _ _ _).IsOpen i, fun x hxs =>
-      mem_Union.2 _, fun i hi => (find c Ne i).closure_subset ((mem_find_carrier_iff _).2 hi),
-      fun i hi => (find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)⟩
-  rcases em (∃ (i : _)(_ : i ∉ chain_Sup_carrier c), x ∈ u i) with (⟨i, hi, hxi⟩ | hx)
+    ⟨fun i => find c ne i i, chainSupCarrier c, fun i => (find _ _ _).isOpen i, fun x hxs =>
+      mem_unionᵢ.2 _, fun i hi => (find c ne i).closure_subset ((mem_find_carrier_iff _).2 hi),
+      fun i hi => (find c ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)⟩
+  rcases em (∃ (i : _)(_ : i ∉ chainSupCarrier c), x ∈ u i) with (⟨i, hi, hxi⟩ | hx)
   · use i
-    rwa [(find c Ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
-  · simp_rw [not_exists, not_imp_not, chain_Sup_carrier, mem_Union₂] at hx
-    haveI : Nonempty (partial_refinement u s) := ⟨ne.some⟩
+    rwa [(find c ne i).apply_eq (mt (mem_find_carrier_iff _).1 hi)]
+  · simp_rw [not_exists, not_imp_not, chainSupCarrier, mem_unionᵢ₂] at hx
+    haveI : Nonempty (PartialRefinement u s) := ⟨ne.some⟩
     choose! v hvc hiv using hx
-    rcases(hfin x hxs).exists_maximal_wrt v _ (mem_Union.1 (hU hxs)) with
+    rcases(hfin x hxs).exists_maximal_wrt v _ (mem_unionᵢ.1 (hU hxs)) with
       ⟨i, hxi : x ∈ u i, hmax : ∀ j, x ∈ u j → v i ≤ v j → v i = v j⟩
-    rcases mem_Union.1 ((v i).subset_unionᵢ hxs) with ⟨j, hj⟩
+    rcases mem_unionᵢ.1 ((v i).subset_unionᵢ hxs) with ⟨j, hj⟩
     use j
-    have hj' : x ∈ u j := (v i).Subset _ hj
+    have hj' : x ∈ u j := (v i).subset _ hj
     have : v j ≤ v i := (hc.total (hvc _ hxi) (hvc _ hj')).elim (fun h => (hmax j hj' h).ge) id
-    rwa [find_apply_of_mem hc Ne (hvc _ hxi) (this.1 <| hiv _ hj')]
+    rwa [find_apply_of_mem hc ne (hvc _ hxi) (this.1 <| hiv _ hj')]
 #align shrinking_lemma.partial_refinement.chain_Sup ShrinkingLemma.PartialRefinement.chainSup
 
 /- warning: shrinking_lemma.partial_refinement.le_chain_Sup -> ShrinkingLemma.PartialRefinement.le_chainSup is a dubious translation:
@@ -270,7 +270,7 @@ Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partia
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
 theorem le_chainSup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
     (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) :
-    v ≤ chainSup c hc Ne hfin hU :=
+    v ≤ chainSup c hc ne hfin hU :=
   ⟨fun i hi => mem_bunionᵢ hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 #align shrinking_lemma.partial_refinement.le_chain_Sup ShrinkingLemma.PartialRefinement.le_chainSup
 
@@ -280,9 +280,9 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {X : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} X] [_inst_2 : NormalSpace.{u1} X _inst_1] {u : ι -> (Set.{u1} X)} {s : Set.{u1} X} (v : ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s), (IsClosed.{u1} X _inst_1 s) -> (forall (i : ι), (Not (Membership.mem.{u2, u2} ι (Set.{u2} ι) (Set.instMembershipSet.{u2} ι) i (ShrinkingLemma.PartialRefinement.carrier.{u2, u1} ι X _inst_1 u s v))) -> (Exists.{max (succ u2) (succ u1)} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (fun (v' : ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) => LT.lt.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (Preorder.toLT.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (PartialOrder.toPreorder.{max u2 u1} (ShrinkingLemma.PartialRefinement.{u2, u1} ι X _inst_1 u s) (ShrinkingLemma.PartialRefinement.instPartialOrderPartialRefinement.{u2, u1} ι X _inst_1 u s))) v v')))
 Case conversion may be inaccurate. Consider using '#align shrinking_lemma.partial_refinement.exists_gt ShrinkingLemma.PartialRefinement.exists_gtₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- If `s` is a closed set, `v` is a partial refinement, and `i` is an index such that
 `i ∉ v.carrier`, then there exists a partial refinement that is strictly greater than `v`. -/
 theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i ∉ v.carrier) :
@@ -290,9 +290,9 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   by
   have I : (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) ⊆ v i :=
     by
-    simp only [subset_def, mem_inter_iff, mem_Inter, and_imp]
+    simp only [subset_def, mem_inter_iff, mem_interᵢ, and_imp]
     intro x hxs H
-    rcases mem_Union.1 (v.subset_Union hxs) with ⟨j, hj⟩
+    rcases mem_unionᵢ.1 (v.subset_Union hxs) with ⟨j, hj⟩
     exact (em (j = i)).elim (fun h => h ▸ hj) fun h => (H j h hj).elim
   have C : IsClosed (s ∩ ⋂ (j) (_ : j ≠ i), v jᶜ) :=
     IsClosed.inter hs (isClosed_binterᵢ fun _ _ => isClosed_compl_iff.2 <| v.is_open _)
@@ -300,14 +300,14 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   refine' ⟨⟨update v i vi, insert i v.carrier, _, _, _, _⟩, _, _⟩
   · intro j
     by_cases h : j = i <;> simp [h, ovi, v.is_open]
-  · refine' fun x hx => mem_Union.2 _
+  · refine' fun x hx => mem_unionᵢ.2 _
     rcases em (∃ (j : _)(_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
     · use j
       rwa [update_noteq hji]
     · push_neg  at h
       use i
       rw [update_same]
-      exact hvi ⟨hx, mem_bInter h⟩
+      exact hvi ⟨hx, mem_binterᵢ h⟩
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
     · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
@@ -336,13 +336,13 @@ theorem exists_subset_unionᵢ_closure_subset (hs : IsClosed s) (uo : ∀ i, IsO
     (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ unionᵢ v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
   classical
-    haveI : Nonempty (partial_refinement u s) :=
+    haveI : Nonempty (PartialRefinement u s) :=
       ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
     have :
-      ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀ v ∈ c, v ≤ ub :=
+      ∀ c : Set (PartialRefinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀ v ∈ c, v ≤ ub :=
       fun c hc ne =>
-      ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv =>
-        partial_refinement.le_chain_Sup _ _ _ _ hv⟩
+      ⟨PartialRefinement.chainSup c hc ne uf us, fun v hv =>
+        PartialRefinement.le_chainSup _ _ _ _ hv⟩
     rcases zorn_nonempty_partialOrder this with ⟨v, hv⟩
     suffices : ∀ i, i ∈ v.carrier
     exact ⟨v, v.subset_Union, fun i => v.is_open _, fun i => v.closure_subset (this i)⟩

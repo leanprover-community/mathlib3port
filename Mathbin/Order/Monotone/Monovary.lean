@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.monovary
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : ι -> α) (b : β), Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f (Function.const.{succ u1, succ u3} β ι b)
 Case conversion may be inaccurate. Consider using '#align monovary_const_right monovary_const_rightₓ'. -/
 theorem monovary_const_right (f : ι → α) (b : β) : Monovary f (const ι b) := fun i j h =>
-  (h.Ne rfl).elim
+  (h.ne rfl).elim
 #align monovary_const_right monovary_const_right
 
 /- warning: antivary_const_right -> antivary_const_right is a dubious translation:
@@ -186,7 +186,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : ι -> α) (b : β), Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f (Function.const.{succ u1, succ u3} β ι b)
 Case conversion may be inaccurate. Consider using '#align antivary_const_right antivary_const_rightₓ'. -/
 theorem antivary_const_right (f : ι → α) (b : β) : Antivary f (const ι b) := fun i j h =>
-  (h.Ne rfl).elim
+  (h.ne rfl).elim
 #align antivary_const_right antivary_const_right
 
 /- warning: monovary_self -> monovary_self is a dubious translation:
@@ -214,7 +214,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β), Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g
 Case conversion may be inaccurate. Consider using '#align subsingleton.monovary Subsingleton.monovaryₓ'. -/
 protected theorem Subsingleton.monovary [Subsingleton ι] (f : ι → α) (g : ι → β) : Monovary f g :=
-  fun i j h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
+  fun i j h => (ne_of_apply_ne _ h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.monovary Subsingleton.monovary
 
 /- warning: subsingleton.antivary -> Subsingleton.antivary is a dubious translation:
@@ -224,7 +224,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β), Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g
 Case conversion may be inaccurate. Consider using '#align subsingleton.antivary Subsingleton.antivaryₓ'. -/
 protected theorem Subsingleton.antivary [Subsingleton ι] (f : ι → α) (g : ι → β) : Antivary f g :=
-  fun i j h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
+  fun i j h => (ne_of_apply_ne _ h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.antivary Subsingleton.antivary
 
 /- warning: subsingleton.monovary_on -> Subsingleton.monovaryOn is a dubious translation:
@@ -234,7 +234,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u3} ι), MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s
 Case conversion may be inaccurate. Consider using '#align subsingleton.monovary_on Subsingleton.monovaryOnₓ'. -/
 protected theorem Subsingleton.monovaryOn [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
-    MonovaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
+    MonovaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.monovary_on Subsingleton.monovaryOn
 
 /- warning: subsingleton.antivary_on -> Subsingleton.antivaryOn is a dubious translation:
@@ -244,7 +244,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] [_inst_4 : Subsingleton.{succ u3} ι] (f : ι -> α) (g : ι -> β) (s : Set.{u3} ι), AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f g s
 Case conversion may be inaccurate. Consider using '#align subsingleton.antivary_on Subsingleton.antivaryOnₓ'. -/
 protected theorem Subsingleton.antivaryOn [Subsingleton ι] (f : ι → α) (g : ι → β) (s : Set ι) :
-    AntivaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.Ne <| Subsingleton.elim _ _).elim
+    AntivaryOn f g s := fun i _ j _ h => (ne_of_apply_ne _ h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.antivary_on Subsingleton.antivaryOn
 
 /- warning: monovary_on_const_left -> monovaryOn_const_left is a dubious translation:
@@ -274,7 +274,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : ι -> α) (b : β) (s : Set.{u3} ι), MonovaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f (Function.const.{succ u1, succ u3} β ι b) s
 Case conversion may be inaccurate. Consider using '#align monovary_on_const_right monovaryOn_const_rightₓ'. -/
 theorem monovaryOn_const_right (f : ι → α) (b : β) (s : Set ι) : MonovaryOn f (const ι b) s :=
-  fun i _ j _ h => (h.Ne rfl).elim
+  fun i _ j _ h => (h.ne rfl).elim
 #align monovary_on_const_right monovaryOn_const_right
 
 /- warning: antivary_on_const_right -> antivaryOn_const_right is a dubious translation:
@@ -284,7 +284,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] (f : ι -> α) (b : β) (s : Set.{u3} ι), AntivaryOn.{u3, u2, u1} ι α β _inst_1 _inst_2 f (Function.const.{succ u1, succ u3} β ι b) s
 Case conversion may be inaccurate. Consider using '#align antivary_on_const_right antivaryOn_const_rightₓ'. -/
 theorem antivaryOn_const_right (f : ι → α) (b : β) (s : Set ι) : AntivaryOn f (const ι b) s :=
-  fun i _ j _ h => (h.Ne rfl).elim
+  fun i _ j _ h => (h.ne rfl).elim
 #align antivary_on_const_right antivaryOn_const_right
 
 /- warning: monovary.comp_right -> Monovary.comp_right is a dubious translation:
@@ -690,7 +690,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} [_inst_4 : LinearOrder.{u3} ι], (Monotone.{u3, u2} ι α (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_1 f) -> (Antitone.{u3, u1} ι β (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_2 g) -> (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align monotone.antivary Monotone.antivaryₓ'. -/
 protected theorem Monotone.antivary (hf : Monotone f) (hg : Antitone g) : Antivary f g :=
-  (hf.Monovary hg.dual_right).dual_right
+  (hf.monovary hg.dual_right).dual_right
 #align monotone.antivary Monotone.antivary
 
 /- warning: antitone.monovary -> Antitone.monovary is a dubious translation:
@@ -700,7 +700,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} [_inst_4 : LinearOrder.{u3} ι], (Antitone.{u3, u2} ι α (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_1 f) -> (Antitone.{u3, u1} ι β (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_2 g) -> (Monovary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align antitone.monovary Antitone.monovaryₓ'. -/
 protected theorem Antitone.monovary (hf : Antitone f) (hg : Antitone g) : Monovary f g :=
-  (hf.dual_right.Antivary hg).dual_left
+  (hf.dual_right.antivary hg).dual_left
 #align antitone.monovary Antitone.monovary
 
 /- warning: antitone.antivary -> Antitone.antivary is a dubious translation:
@@ -710,7 +710,7 @@ but is expected to have type
   forall {ι : Type.{u3}} {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {f : ι -> α} {g : ι -> β} [_inst_4 : LinearOrder.{u3} ι], (Antitone.{u3, u2} ι α (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_1 f) -> (Monotone.{u3, u1} ι β (PartialOrder.toPreorder.{u3} ι (SemilatticeInf.toPartialOrder.{u3} ι (Lattice.toSemilatticeInf.{u3} ι (DistribLattice.toLattice.{u3} ι (instDistribLattice.{u3} ι _inst_4))))) _inst_2 g) -> (Antivary.{u3, u2, u1} ι α β _inst_1 _inst_2 f g)
 Case conversion may be inaccurate. Consider using '#align antitone.antivary Antitone.antivaryₓ'. -/
 protected theorem Antitone.antivary (hf : Antitone f) (hg : Monotone g) : Antivary f g :=
-  (hf.Monovary hg.dual_right).dual_right
+  (hf.monovary hg.dual_right).dual_right
 #align antitone.antivary Antitone.antivary
 
 /- warning: monotone_on.monovary_on -> MonotoneOn.monovaryOn is a dubious translation:
@@ -731,7 +731,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monotone_on.antivary_on MonotoneOn.antivaryOnₓ'. -/
 protected theorem MonotoneOn.antivaryOn (hf : MonotoneOn f s) (hg : AntitoneOn g s) :
     AntivaryOn f g s :=
-  (hf.MonovaryOn hg.dual_right).dual_right
+  (hf.monovaryOn hg.dual_right).dual_right
 #align monotone_on.antivary_on MonotoneOn.antivaryOn
 
 /- warning: antitone_on.monovary_on -> AntitoneOn.monovaryOn is a dubious translation:
@@ -742,7 +742,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.monovary_on AntitoneOn.monovaryOnₓ'. -/
 protected theorem AntitoneOn.monovaryOn (hf : AntitoneOn f s) (hg : AntitoneOn g s) :
     MonovaryOn f g s :=
-  (hf.dual_right.AntivaryOn hg).dual_left
+  (hf.dual_right.antivaryOn hg).dual_left
 #align antitone_on.monovary_on AntitoneOn.monovaryOn
 
 /- warning: antitone_on.antivary_on -> AntitoneOn.antivaryOn is a dubious translation:
@@ -753,7 +753,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align antitone_on.antivary_on AntitoneOn.antivaryOnₓ'. -/
 protected theorem AntitoneOn.antivaryOn (hf : AntitoneOn f s) (hg : MonotoneOn g s) :
     AntivaryOn f g s :=
-  (hf.MonovaryOn hg.dual_right).dual_right
+  (hf.monovaryOn hg.dual_right).dual_right
 #align antitone_on.antivary_on AntitoneOn.antivaryOn
 
 end Preorder

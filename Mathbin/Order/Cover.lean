@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Floris van Doorn
 
 ! This file was ported from Lean 3 source module order.cover
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem Wcovby.wcovby_iff_le (hab : a ⩿ b) : b ⩿ a ↔ b ≤ a :=
 
 #print wcovby_of_eq_or_eq /-
 theorem wcovby_of_eq_or_eq (hab : a ≤ b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⩿ b :=
-  ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.Ne⟩
+  ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.ne⟩
 #align wcovby_of_eq_or_eq wcovby_of_eq_or_eq
 -/
 
@@ -377,7 +377,7 @@ theorem Covby.le (h : a ⋖ b) : a ≤ b :=
 
 #print Covby.ne /-
 protected theorem Covby.ne (h : a ⋖ b) : a ≠ b :=
-  h.lt.Ne
+  h.lt.ne
 #align covby.ne Covby.ne
 -/
 
@@ -413,20 +413,20 @@ theorem not_covby_of_lt_of_lt (h₁ : a < b) (h₂ : b < c) : ¬a ⋖ c :=
 
 #print covby_iff_wcovby_and_lt /-
 theorem covby_iff_wcovby_and_lt : a ⋖ b ↔ a ⩿ b ∧ a < b :=
-  ⟨fun h => ⟨h.Wcovby, h.lt⟩, fun h => h.1.covby_of_lt h.2⟩
+  ⟨fun h => ⟨h.wcovby, h.lt⟩, fun h => h.1.covby_of_lt h.2⟩
 #align covby_iff_wcovby_and_lt covby_iff_wcovby_and_lt
 -/
 
 #print covby_iff_wcovby_and_not_le /-
 theorem covby_iff_wcovby_and_not_le : a ⋖ b ↔ a ⩿ b ∧ ¬b ≤ a :=
-  ⟨fun h => ⟨h.Wcovby, h.lt.not_le⟩, fun h => h.1.covby_of_not_le h.2⟩
+  ⟨fun h => ⟨h.wcovby, h.lt.not_le⟩, fun h => h.1.covby_of_not_le h.2⟩
 #align covby_iff_wcovby_and_not_le covby_iff_wcovby_and_not_le
 -/
 
 #print wcovby_iff_covby_or_le_and_le /-
 theorem wcovby_iff_covby_or_le_and_le : a ⩿ b ↔ a ⋖ b ∨ a ≤ b ∧ b ≤ a :=
   ⟨fun h => or_iff_not_imp_right.mpr fun h' => h.covby_of_not_le fun hba => h' ⟨h.le, hba⟩,
-    fun h' => h'.elim (fun h => h.Wcovby) fun h => h.1.wcovby_of_le h.2⟩
+    fun h' => h'.elim (fun h => h.wcovby) fun h => h.1.wcovby_of_le h.2⟩
 #align wcovby_iff_covby_or_le_and_le wcovby_iff_covby_or_le_and_le
 -/
 
@@ -450,23 +450,23 @@ theorem Covby.trans_antisymmRel (hab : a ⋖ b) (hbc : AntisymmRel (· ≤ ·) b
 
 #print covby_congr_right /-
 theorem covby_congr_right (hab : AntisymmRel (· ≤ ·) a b) : c ⋖ a ↔ c ⋖ b :=
-  ⟨fun h => h.trans_antisymm_rel hab, fun h => h.trans_antisymm_rel hab.symm⟩
+  ⟨fun h => h.trans_antisymmRel hab, fun h => h.trans_antisymmRel hab.symm⟩
 #align covby_congr_right covby_congr_right
 -/
 
 instance : IsNonstrictStrictOrder α (· ⩿ ·) (· ⋖ ·) :=
   ⟨fun a b =>
-    covby_iff_wcovby_and_not_le.trans <| and_congr_right fun h => h.wcovby_iff_le.Not.symm⟩
+    covby_iff_wcovby_and_not_le.trans <| and_congr_right fun h => h.wcovby_iff_le.not.symm⟩
 
 #print Covby.isIrrefl /-
 instance Covby.isIrrefl : IsIrrefl α (· ⋖ ·) :=
-  ⟨fun a ha => ha.Ne rfl⟩
+  ⟨fun a ha => ha.ne rfl⟩
 #align covby.is_irrefl Covby.isIrrefl
 -/
 
 #print Covby.Ioo_eq /-
 theorem Covby.Ioo_eq (h : a ⋖ b) : Ioo a b = ∅ :=
-  h.Wcovby.Ioo_eq
+  h.wcovby.Ioo_eq
 #align covby.Ioo_eq Covby.Ioo_eq
 -/
 
@@ -493,7 +493,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β] {a : α} {b : α} (f : OrderEmbedding.{u2, u1} α β (Preorder.toLE.{u2} α _inst_1) (Preorder.toLE.{u1} β _inst_2)), (Covby.{u2} α (Preorder.toLT.{u2} α _inst_1) a b) -> (Set.OrdConnected.{u1} β _inst_2 (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) f)))) -> (Covby.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) _inst_2) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) f) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : α) => LE.le.{u2} α (Preorder.toLE.{u2} α _inst_1) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : β) => LE.le.{u1} β (Preorder.toLE.{u1} β _inst_2) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) f) b))
 Case conversion may be inaccurate. Consider using '#align covby.image Covby.imageₓ'. -/
 theorem Covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (range f).OrdConnected) : f a ⋖ f b :=
-  (hab.Wcovby.image f h).covby_of_lt <| f.StrictMono hab.lt
+  (hab.wcovby.image f h).covby_of_lt <| f.strictMono hab.lt
 #align covby.image Covby.image
 
 /- warning: set.ord_connected.apply_covby_apply_iff -> Set.OrdConnected.apply_covby_apply_iff is a dubious translation:
@@ -520,7 +520,7 @@ theorem apply_covby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e a
 
 #print covby_of_eq_or_eq /-
 theorem covby_of_eq_or_eq (hab : a < b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⋖ b :=
-  ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.Ne⟩
+  ⟨hab, fun c ha hb => (h c ha.le hb.le).elim ha.ne' hb.ne⟩
 #align covby_of_eq_or_eq covby_of_eq_or_eq
 -/
 
@@ -538,7 +538,7 @@ theorem Wcovby.covby_of_ne (h : a ⩿ b) (h2 : a ≠ b) : a ⋖ b :=
 
 #print covby_iff_wcovby_and_ne /-
 theorem covby_iff_wcovby_and_ne : a ⋖ b ↔ a ⩿ b ∧ a ≠ b :=
-  ⟨fun h => ⟨h.Wcovby, h.Ne⟩, fun h => h.1.covby_of_ne h.2⟩
+  ⟨fun h => ⟨h.wcovby, h.ne⟩, fun h => h.1.covby_of_ne h.2⟩
 #align covby_iff_wcovby_and_ne covby_iff_wcovby_and_ne
 -/
 
@@ -562,7 +562,7 @@ alias wcovby_iff_eq_or_covby ↔ Wcovby.eq_or_covby _
 
 #print Covby.eq_or_eq /-
 theorem Covby.eq_or_eq (h : a ⋖ b) (h2 : a ≤ c) (h3 : c ≤ b) : c = a ∨ c = b :=
-  h.Wcovby.eq_or_eq h2 h3
+  h.wcovby.eq_or_eq h2 h3
 #align covby.eq_or_eq Covby.eq_or_eq
 -/
 
@@ -587,7 +587,7 @@ theorem Covby.Ioc_eq (h : a ⋖ b) : Ioc a b = {b} := by
 
 #print Covby.Icc_eq /-
 theorem Covby.Icc_eq (h : a ⋖ b) : Icc a b = {a, b} :=
-  h.Wcovby.Icc_eq
+  h.wcovby.Icc_eq
 #align covby.Icc_eq Covby.Icc_eq
 -/
 
@@ -623,13 +623,13 @@ theorem Wcovby.ge_of_gt (hab : a ⩿ b) (hac : a < c) : b ≤ c :=
 
 #print Covby.le_of_lt /-
 theorem Covby.le_of_lt (hab : a ⋖ b) : c < b → c ≤ a :=
-  hab.Wcovby.le_of_lt
+  hab.wcovby.le_of_lt
 #align covby.le_of_lt Covby.le_of_lt
 -/
 
 #print Covby.ge_of_gt /-
 theorem Covby.ge_of_gt (hab : a ⋖ b) : a < c → b ≤ c :=
-  hab.Wcovby.ge_of_gt
+  hab.wcovby.ge_of_gt
 #align covby.ge_of_gt Covby.ge_of_gt
 -/
 
@@ -695,7 +695,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Wcovby.{max u2 u1} (Prod.{u1, u2} β α) (Prod.instPreorderProd.{u1, u2} β α (PartialOrder.toPreorder.{u1} β _inst_2) (PartialOrder.toPreorder.{u2} α _inst_1)) (Prod.swap.{u2, u1} α β x) (Prod.swap.{u2, u1} α β y)) (Wcovby.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2)) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_wcovby_swap Prod.swap_wcovby_swapₓ'. -/
 @[simp]
-theorem swap_wcovby_swap : x.symm ⩿ y.symm ↔ x ⩿ y :=
+theorem swap_wcovby_swap : x.swap ⩿ y.swap ↔ x ⩿ y :=
   apply_wcovby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_wcovby_swap Prod.swap_wcovby_swap
 
@@ -706,7 +706,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {x : Prod.{u2, u1} α β} {y : Prod.{u2, u1} α β}, Iff (Covby.{max u2 u1} (Prod.{u1, u2} β α) (Preorder.toLT.{max u2 u1} (Prod.{u1, u2} β α) (Prod.instPreorderProd.{u1, u2} β α (PartialOrder.toPreorder.{u1} β _inst_2) (PartialOrder.toPreorder.{u2} α _inst_1))) (Prod.swap.{u2, u1} α β x) (Prod.swap.{u2, u1} α β y)) (Covby.{max u2 u1} (Prod.{u2, u1} α β) (Preorder.toLT.{max u2 u1} (Prod.{u2, u1} α β) (Prod.instPreorderProd.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2))) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_covby_swap Prod.swap_covby_swapₓ'. -/
 @[simp]
-theorem swap_covby_swap : x.symm ⋖ y.symm ↔ x ⋖ y :=
+theorem swap_covby_swap : x.swap ⋖ y.swap ↔ x ⋖ y :=
   apply_covby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_covby_swap Prod.swap_covby_swap
 
@@ -755,7 +755,7 @@ theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
   by
   refine' ⟨Wcovby.fst, And.imp mk_le_mk_iff_left.2 fun h c h₁ h₂ => _⟩
   have : c.2 = b := h₂.le.2.antisymm h₁.le.2
-  rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
+  rw [← @prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂
   exact h h₁ h₂
 #align prod.mk_wcovby_mk_iff_left Prod.mk_wcovby_mk_iff_left
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.final
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,15 +126,15 @@ theorem initial_of_final_op (F : C ⥤ D) [Final F.op] : Initial F :=
 theorem final_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Final R :=
   {
     out := fun c =>
-      let u : StructuredArrow c R := StructuredArrow.mk (adj.Unit.app c)
+      let u : StructuredArrow c R := StructuredArrow.mk (adj.unit.app c)
       @zigzag_isConnected _ _ ⟨u⟩ fun f g =>
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
-              Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.Hom) (by simp)⟩))
+              Or.inr ⟨StructuredArrow.homMk ((adj.homEquiv c f.right).symm f.hom) (by simp)⟩))
           (Relation.ReflTransGen.single
             (show Zag u g from
-              Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.Hom) (by simp)⟩)) }
+              Or.inl ⟨StructuredArrow.homMk ((adj.homEquiv c g.right).symm g.hom) (by simp)⟩)) }
 #align category_theory.functor.final_of_adjunction CategoryTheory.Functor.final_of_adjunction
 
 /-- If a functor `L : C ⥤ D` is a left adjoint, it is initial. -/
@@ -146,10 +146,10 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : Init
         Relation.ReflTransGen.trans
           (Relation.ReflTransGen.single
             (show Zag f u from
-              Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.Hom) (by simp)⟩))
+              Or.inl ⟨CostructuredArrow.homMk (adj.homEquiv f.left d f.hom) (by simp)⟩))
           (Relation.ReflTransGen.single
             (show Zag u g from
-              Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.Hom) (by simp)⟩)) }
+              Or.inr ⟨CostructuredArrow.homMk (adj.homEquiv g.left d g.hom) (by simp)⟩)) }
 #align category_theory.functor.initial_of_adjunction CategoryTheory.Functor.initial_of_adjunction
 
 instance (priority := 100) final_of_isRightAdjoint (F : C ⥤ D) [h : IsRightAdjoint F] : Final F :=
@@ -181,7 +181,7 @@ def lift (d : D) : C :=
 `d ⟶ F.obj (lift F d)`.
 -/
 def homToLift (d : D) : d ⟶ F.obj (lift F d) :=
-  (Classical.arbitrary (StructuredArrow d F)).Hom
+  (Classical.arbitrary (StructuredArrow d F)).hom
 #align category_theory.functor.final.hom_to_lift CategoryTheory.Functor.Final.homToLift
 
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
@@ -203,7 +203,7 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
   by
   apply Nonempty.some
   apply
-    @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _
+    @is_preconnected_induction _ _ _ (fun Y : StructuredArrow d F => Z Y.right Y.hom) _ _
       { right := X₀
         Hom := k₀ } z
   · intro j₁ j₂ f a
@@ -235,14 +235,14 @@ def extendCocone : Cocone (F ⋙ G) ⥤ Cocone G
             -- and `hom_to_lift F X` to be `f ≫ hom_to_lift F Y`.
             apply
               induction F fun Z k =>
-                G.map f ≫ G.map (hom_to_lift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
+                G.map f ≫ G.map (homToLift F Y) ≫ c.ι.app (lift F Y) = G.map k ≫ c.ι.app Z
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w, z]
+              rw [← a, Functor.map_comp, Category.assoc, ← Functor.comp_map, c.w, z]
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, category.assoc, ← functor.comp_map, c.w] at z
+              rw [← a, Functor.map_comp, Category.assoc, ← Functor.comp_map, c.w] at z
               rw [z]
-            · rw [← functor.map_comp_assoc] } }
-  map X Y f := { Hom := f.Hom }
+            · rw [← Functor.map_comp_assoc] } }
+  map X Y f := { Hom := f.hom }
 #align category_theory.functor.final.extend_cocone CategoryTheory.Functor.Final.extendCocone
 
 @[simp]
@@ -310,7 +310,7 @@ instance (priority := 100) compHasColimit [HasColimit G] : HasColimit (F ⋙ G) 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x :=
   by
-  dsimp [is_colimit_whisker_equiv]
+  dsimp [isColimitWhiskerEquiv]
   apply P.hom_ext
   intro j
   dsimp; simp
@@ -318,7 +318,7 @@ theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
 
 instance colimit_pre_isIso [HasColimit G] : IsIso (colimit.pre G F) :=
   by
-  rw [colimit.pre_eq (colimit_cocone_comp F (get_colimit_cocone G)) (get_colimit_cocone G)]
+  rw [colimit.pre_eq (colimitCoconeComp F (getColimitCocone G)) (getColimitCocone G)]
   erw [colimit_pre_is_iso_aux]
   dsimp
   infer_instance
@@ -343,7 +343,7 @@ end
 @[simps]
 def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G
     where
-  Cocone := extendCocone.obj t.Cocone
+  Cocone := extendCocone.obj t.cocone
   IsColimit := (isColimitExtendCoconeEquiv F _).symm t.IsColimit
 #align category_theory.functor.final.colimit_cocone_of_comp CategoryTheory.Functor.Final.colimitCoconeOfComp
 
@@ -415,22 +415,22 @@ theorem cofinal_of_colimit_comp_coyoneda_iso_pUnit
     (I : ∀ d, colimit (F ⋙ coyoneda.obj (op d)) ≅ PUnit) : Final F :=
   ⟨fun d =>
     by
-    have : Nonempty (structured_arrow d F) :=
+    have : Nonempty (StructuredArrow d F) :=
       by
       have := (I d).inv PUnit.unit
       obtain ⟨j, y, rfl⟩ := Limits.Types.jointly_surjective'.{v, v} this
-      exact ⟨structured_arrow.mk y⟩
-    apply zigzag_is_connected
+      exact ⟨StructuredArrow.mk y⟩
+    apply zigzag_isConnected
     rintro ⟨⟨⟨⟩⟩, X₁, f₁⟩ ⟨⟨⟨⟩⟩, X₂, f₂⟩
     dsimp at *
     let y₁ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₁ f₁
     let y₂ := colimit.ι (F ⋙ coyoneda.obj (op d)) X₂ f₂
     have e : y₁ = y₂ := by
-      apply (I d).toEquiv.Injective
+      apply (I d).toEquiv.injective
       ext
     have t := Types.colimit_eq.{v, v} e
     clear e y₁ y₂
-    exact zigzag_of_eqv_gen_quot_rel t⟩
+    exact zigzag_of_eqvGen_quot_rel t⟩
 #align category_theory.functor.final.cofinal_of_colimit_comp_coyoneda_iso_punit CategoryTheory.Functor.Final.cofinal_of_colimit_comp_coyoneda_iso_pUnit
 
 end Final
@@ -456,7 +456,7 @@ def lift (d : D) : C :=
 `F.obj (lift F d) ⟶ d`.
 -/
 def homToLift (d : D) : F.obj (lift F d) ⟶ d :=
-  (Classical.arbitrary (CostructuredArrow F d)).Hom
+  (Classical.arbitrary (CostructuredArrow F d)).hom
 #align category_theory.functor.initial.hom_to_lift CategoryTheory.Functor.Initial.homToLift
 
 /-- We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
@@ -478,7 +478,7 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
   by
   apply Nonempty.some
   apply
-    @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _
+    @is_preconnected_induction _ _ _ (fun Y : CostructuredArrow F d => Z Y.left Y.hom) _ _
       { left := X₀
         Hom := k₀ } z
   · intro j₁ j₂ f a
@@ -511,16 +511,16 @@ def extendCone : Cone (F ⋙ G) ⥤ Cone G
             apply
               induction F fun Z k =>
                 (c.π.app Z ≫ G.map k : c.X ⟶ _) =
-                  c.π.app (lift F X) ≫ G.map (hom_to_lift F X) ≫ G.map f
+                  c.π.app (lift F X) ≫ G.map (homToLift F X) ≫ G.map f
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
+              rw [← a, Functor.map_comp, ← Functor.comp_map, ← Category.assoc, ← Category.assoc,
                 c.w] at z
-              rw [z, category.assoc]
+              rw [z, Category.assoc]
             · intro Z₁ Z₂ k₁ k₂ g a z
-              rw [← a, functor.map_comp, ← functor.comp_map, ← category.assoc, ← category.assoc,
-                c.w, z, category.assoc]
-            · rw [← functor.map_comp] } }
-  map X Y f := { Hom := f.Hom }
+              rw [← a, Functor.map_comp, ← Functor.comp_map, ← Category.assoc, ← Category.assoc,
+                c.w, z, Category.assoc]
+            · rw [← Functor.map_comp] } }
+  map X Y f := { Hom := f.hom }
 #align category_theory.functor.initial.extend_cone CategoryTheory.Functor.Initial.extendCone
 
 @[simp]
@@ -587,7 +587,7 @@ instance (priority := 100) compHasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x :=
   by
-  dsimp [is_limit_whisker_equiv]
+  dsimp [isLimitWhiskerEquiv]
   apply P.hom_ext
   intro j
   simp
@@ -595,7 +595,7 @@ theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
 
 instance limit_pre_isIso [HasLimit G] : IsIso (limit.pre G F) :=
   by
-  rw [limit.pre_eq (limit_cone_comp F (get_limit_cone G)) (get_limit_cone G)]
+  rw [limit.pre_eq (limitConeComp F (getLimitCone G)) (getLimitCone G)]
   erw [limit_pre_is_iso_aux]
   dsimp
   infer_instance
@@ -620,7 +620,7 @@ end
 @[simps]
 def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G
     where
-  Cone := extendCone.obj t.Cone
+  Cone := extendCone.obj t.cone
   IsLimit := (isLimitExtendConeEquiv F _).symm t.IsLimit
 #align category_theory.functor.initial.limit_cone_of_comp CategoryTheory.Functor.Initial.limitConeOfComp
 

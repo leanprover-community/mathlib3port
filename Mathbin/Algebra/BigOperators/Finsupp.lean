@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.big_operators.finsupp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_of_support_subset Finsupp.prod_of_support_subsetₓ'. -/
 @[to_additive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.support ⊆ s) (g : α → M → N)
-    (h : ∀ i ∈ s, g i 0 = 1) : f.Prod g = ∏ x in s, g x (f x) :=
+    (h : ∀ i ∈ s, g i 0 = 1) : f.prod g = ∏ x in s, g x (f x) :=
   Finset.prod_subset hs fun x hxs hx => h x hxs ▸ congr_arg (g x) <| not_mem_support_iff.1 hx
 #align finsupp.prod_of_support_subset Finsupp.prod_of_support_subset
 #align finsupp.sum_of_support_subset Finsupp.sum_of_support_subset
@@ -83,7 +83,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_fintype Finsupp.prod_fintypeₓ'. -/
 @[to_additive]
 theorem prod_fintype [Fintype α] (f : α →₀ M) (g : α → M → N) (h : ∀ i, g i 0 = 1) :
-    f.Prod g = ∏ i, g i (f i) :=
+    f.prod g = ∏ i, g i (f i) :=
   f.prod_of_support_subset (subset_univ _) g fun x _ => h x
 #align finsupp.prod_fintype Finsupp.prod_fintype
 #align finsupp.sum_fintype Finsupp.sum_fintype
@@ -96,9 +96,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_single_index Finsupp.prod_single_indexₓ'. -/
 @[simp, to_additive]
 theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 = 1) :
-    (single a b).Prod h = h a b :=
+    (single a b).prod h = h a b :=
   calc
-    (single a b).Prod h = ∏ x in {a}, h x (single a b x) :=
+    (single a b).prod h = ∏ x in {a}, h x (single a b x) :=
       prod_of_support_subset _ support_single_subset h fun x hx =>
         (mem_singleton.1 hx).symm ▸ h_zero
     _ = h a b := by simp
@@ -114,7 +114,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_map_range_index Finsupp.prod_mapRange_indexₓ'. -/
 @[to_additive]
 theorem prod_mapRange_index {f : M → M'} {hf : f 0 = 0} {g : α →₀ M} {h : α → M' → N}
-    (h0 : ∀ a, h a 0 = 1) : (mapRange f hf g).Prod h = g.Prod fun a b => h a (f b) :=
+    (h0 : ∀ a, h a 0 = 1) : (mapRange f hf g).prod h = g.prod fun a b => h a (f b) :=
   Finset.prod_subset support_mapRange fun _ _ H => by rw [not_mem_support_iff.1 H, h0]
 #align finsupp.prod_map_range_index Finsupp.prod_mapRange_index
 #align finsupp.sum_map_range_index Finsupp.sum_mapRange_index
@@ -126,7 +126,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} {N : Type.{u3}} [_inst_4 : Zero.{u1} M] [_inst_6 : CommMonoid.{u3} N] {h : α -> M -> N}, Eq.{succ u3} N (Finsupp.prod.{u2, u1, u3} α M N _inst_4 _inst_6 (OfNat.ofNat.{max u2 u1} (Finsupp.{u2, u1} α M _inst_4) 0 (Zero.toOfNat0.{max u2 u1} (Finsupp.{u2, u1} α M _inst_4) (Finsupp.zero.{u2, u1} α M _inst_4))) h) (OfNat.ofNat.{u3} N 1 (One.toOfNat1.{u3} N (Monoid.toOne.{u3} N (CommMonoid.toMonoid.{u3} N _inst_6))))
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_zero_index Finsupp.prod_zero_indexₓ'. -/
 @[simp, to_additive]
-theorem prod_zero_index {h : α → M → N} : (0 : α →₀ M).Prod h = 1 :=
+theorem prod_zero_index {h : α → M → N} : (0 : α →₀ M).prod h = 1 :=
   rfl
 #align finsupp.prod_zero_index Finsupp.prod_zero_index
 #align finsupp.sum_zero_index Finsupp.sum_zero_index
@@ -139,8 +139,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_comm Finsupp.prod_commₓ'. -/
 @[to_additive]
 theorem prod_comm (f : α →₀ M) (g : β →₀ M') (h : α → M → β → M' → N) :
-    (f.Prod fun x v => g.Prod fun x' v' => h x v x' v') =
-      g.Prod fun x' v' => f.Prod fun x v => h x v x' v' :=
+    (f.prod fun x v => g.prod fun x' v' => h x v x' v') =
+      g.prod fun x' v' => f.prod fun x v => h x v x' v' :=
   Finset.prod_comm
 #align finsupp.prod_comm Finsupp.prod_comm
 #align finsupp.sum_comm Finsupp.sum_comm
@@ -153,7 +153,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_ite_eq Finsupp.prod_ite_eqₓ'. -/
 @[simp, to_additive]
 theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
-    (f.Prod fun x v => ite (a = x) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
+    (f.prod fun x v => ite (a = x) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
   by
   dsimp [Finsupp.prod]
   rw [f.support.prod_ite_eq]
@@ -168,7 +168,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_ite_self_eq Finsupp.sum_ite_self_eqₓ'. -/
 @[simp]
 theorem sum_ite_self_eq [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
-    (f.Sum fun x v => ite (a = x) v 0) = f a := by
+    (f.sum fun x v => ite (a = x) v 0) = f a := by
   classical
     convert f.sum_ite_eq a fun x => id
     simp [ite_eq_right_iff.2 Eq.symm]
@@ -183,7 +183,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.prod_ite_eq' F
 /-- A restatement of `prod_ite_eq` with the equality test reversed. -/
 @[simp, to_additive "A restatement of `sum_ite_eq` with the equality test reversed."]
 theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M → N) :
-    (f.Prod fun x v => ite (x = a) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
+    (f.prod fun x v => ite (x = a) (b x v) 1) = ite (a ∈ f.support) (b a (f a)) 1 :=
   by
   dsimp [Finsupp.prod]
   rw [f.support.prod_ite_eq']
@@ -198,7 +198,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_ite_self_eq' Finsupp.sum_ite_self_eq'ₓ'. -/
 @[simp]
 theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
-    (f.Sum fun x v => ite (x = a) v 0) = f a := by
+    (f.sum fun x v => ite (x = a) v 0) = f a := by
   classical
     convert f.sum_ite_eq' a fun x => id
     simp [ite_eq_right_iff.2 Eq.symm]
@@ -212,7 +212,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_pow Finsupp.prod_powₓ'. -/
 @[simp]
 theorem prod_pow [Fintype α] (f : α →₀ ℕ) (g : α → N) :
-    (f.Prod fun a b => g a ^ b) = ∏ a, g a ^ f a :=
+    (f.prod fun a b => g a ^ b) = ∏ a, g a ^ f a :=
   f.prod_fintype _ fun a => pow_zero _
 #align finsupp.prod_pow Finsupp.prod_pow
 
@@ -228,7 +228,7 @@ result of `on_finset` is the same as multiplying it over the original
 @[to_additive
       "If `g` maps a second argument of 0 to 0, summing it over the\nresult of `on_finset` is the same as summing it over the original\n`finset`."]
 theorem onFinset_prod {s : Finset α} {f : α → M} {g : α → M → N} (hf : ∀ a, f a ≠ 0 → a ∈ s)
-    (hg : ∀ a, g a 0 = 1) : (onFinset s f hf).Prod g = ∏ a in s, g a (f a) :=
+    (hg : ∀ a, g a 0 = 1) : (onFinset s f hf).prod g = ∏ a in s, g a (f a) :=
   Finset.prod_subset support_onFinset_subset <| by simp (config := { contextual := true }) [*]
 #align finsupp.on_finset_prod Finsupp.onFinset_prod
 #align finsupp.on_finset_sum Finsupp.onFinset_sum
@@ -244,7 +244,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.mul_prod_erase
 @[to_additive
       " Taking a sum over over `f : α →₀ M` is the same as adding the value on a\nsingle element `y ∈ f.support` to the sum over `erase y f`. "]
 theorem mul_prod_erase (f : α →₀ M) (y : α) (g : α → M → N) (hyf : y ∈ f.support) :
-    g y (f y) * (erase y f).Prod g = f.Prod g := by
+    g y (f y) * (erase y f).prod g = f.prod g := by
   classical
     rw [Finsupp.prod, Finsupp.prod, ← Finset.mul_prod_erase _ _ hyf, Finsupp.support_erase,
       Finset.prod_congr rfl]
@@ -265,7 +265,7 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
 @[to_additive
       " Generalization of `finsupp.add_sum_erase`: if `g` maps a second argument of 0\nto 0, then its sum over `f : α →₀ M` is the same as adding the value on any element\n`y : α` to the sum over `erase y f`. "]
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
-    g y (f y) * (erase y f).Prod g = f.Prod g := by
+    g y (f y) * (erase y f).prod g = f.prod g := by
   classical
     by_cases hyf : y ∈ f.support
     · exact Finsupp.mul_prod_erase f y g hyf
@@ -281,7 +281,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid_class.finsupp_prod_mem SubmonoidClass.finsupp_prod_memₓ'. -/
 @[to_additive]
 theorem SubmonoidClass.finsupp_prod_mem {S : Type _} [SetLike S N] [SubmonoidClass S N] (s : S)
-    (f : α →₀ M) (g : α → M → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : f.Prod g ∈ s :=
+    (f : α →₀ M) (g : α → M → N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : f.prod g ∈ s :=
   prod_mem fun i hi => h _ (Finsupp.mem_support_iff.mp hi)
 #align submonoid_class.finsupp_prod_mem SubmonoidClass.finsupp_prod_mem
 #align add_submonoid_class.finsupp_sum_mem AddSubmonoidClass.finsupp_sum_mem
@@ -294,7 +294,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_congr Finsupp.prod_congrₓ'. -/
 @[to_additive]
 theorem prod_congr {f : α →₀ M} {g1 g2 : α → M → N} (h : ∀ x ∈ f.support, g1 x (f x) = g2 x (f x)) :
-    f.Prod g1 = f.Prod g2 :=
+    f.prod g1 = f.prod g2 :=
   Finset.prod_congr rfl h
 #align finsupp.prod_congr Finsupp.prod_congr
 #align finsupp.sum_congr Finsupp.sum_congr
@@ -311,7 +311,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align map_finsupp_prod map_finsupp_prodₓ'. -/
 @[to_additive]
 theorem map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] {H : Type _} [MonoidHomClass H N P]
-    (h : H) (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+    (h : H) (f : α →₀ M) (g : α → M → N) : h (f.prod g) = f.prod fun a b => h (g a b) :=
   map_prod h _ _
 #align map_finsupp_prod map_finsupp_prod
 #align map_finsupp_sum map_finsupp_sum
@@ -325,7 +325,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.map_finsupp_
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
 @[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
 protected theorem MulEquiv.map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N ≃* P)
-    (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+    (f : α →₀ M) (g : α → M → N) : h (f.prod g) = f.prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
 #align mul_equiv.map_finsupp_prod MulEquiv.map_finsupp_prod
 #align add_equiv.map_finsupp_sum AddEquiv.map_finsupp_sum
@@ -339,7 +339,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.map_finsupp
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
 @[to_additive "Deprecated, use `_root_.map_finsupp_sum` instead."]
 protected theorem MonoidHom.map_finsupp_prod [Zero M] [CommMonoid N] [CommMonoid P] (h : N →* P)
-    (f : α →₀ M) (g : α → M → N) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+    (f : α →₀ M) (g : α → M → N) : h (f.prod g) = f.prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
 #align monoid_hom.map_finsupp_prod MonoidHom.map_finsupp_prod
 #align add_monoid_hom.map_finsupp_sum AddMonoidHom.map_finsupp_sum
@@ -352,7 +352,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.map_finsupp_sum RingHom.map_finsupp_sumₓ'. -/
 /-- Deprecated, use `_root_.map_finsupp_sum` instead. -/
 protected theorem RingHom.map_finsupp_sum [Zero M] [Semiring R] [Semiring S] (h : R →+* S)
-    (f : α →₀ M) (g : α → M → R) : h (f.Sum g) = f.Sum fun a b => h (g a b) :=
+    (f : α →₀ M) (g : α → M → R) : h (f.sum g) = f.sum fun a b => h (g a b) :=
   map_finsupp_sum h f g
 #align ring_hom.map_finsupp_sum RingHom.map_finsupp_sum
 
@@ -364,7 +364,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.map_finsupp_prod RingHom.map_finsupp_prodₓ'. -/
 /-- Deprecated, use `_root_.map_finsupp_prod` instead. -/
 protected theorem RingHom.map_finsupp_prod [Zero M] [CommSemiring R] [CommSemiring S] (h : R →+* S)
-    (f : α →₀ M) (g : α → M → R) : h (f.Prod g) = f.Prod fun a b => h (g a b) :=
+    (f : α →₀ M) (g : α → M → R) : h (f.prod g) = f.prod fun a b => h (g a b) :=
   map_finsupp_prod h f g
 #align ring_hom.map_finsupp_prod RingHom.map_finsupp_prod
 
@@ -376,7 +376,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_finsupp_prod MonoidHom.coe_finsupp_prodₓ'. -/
 @[to_additive]
 theorem MonoidHom.coe_finsupp_prod [Zero β] [Monoid N] [CommMonoid P] (f : α →₀ β)
-    (g : α → β → N →* P) : ⇑(f.Prod g) = f.Prod fun i fi => g i fi :=
+    (g : α → β → N →* P) : ⇑(f.prod g) = f.prod fun i fi => g i fi :=
   MonoidHom.coe_finset_prod _ _
 #align monoid_hom.coe_finsupp_prod MonoidHom.coe_finsupp_prod
 #align add_monoid_hom.coe_finsupp_sum AddMonoidHom.coe_finsupp_sum
@@ -389,7 +389,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.finsupp_prod_apply MonoidHom.finsupp_prod_applyₓ'. -/
 @[simp, to_additive]
 theorem MonoidHom.finsupp_prod_apply [Zero β] [Monoid N] [CommMonoid P] (f : α →₀ β)
-    (g : α → β → N →* P) (x : N) : f.Prod g x = f.Prod fun i fi => g i fi x :=
+    (g : α → β → N →* P) (x : N) : f.prod g x = f.prod fun i fi => g i fi x :=
   MonoidHom.finset_prod_apply _ _ _
 #align monoid_hom.finsupp_prod_apply MonoidHom.finsupp_prod_apply
 #align add_monoid_hom.finsupp_sum_apply AddMonoidHom.finsupp_sum_apply
@@ -403,7 +403,7 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} M] (s : Multiset.{u2} M) (a : α), Eq.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (Finsupp.single.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)) a (Multiset.sum.{u2} M _inst_4 s)) (Multiset.sum.{max u1 u2} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (Finsupp.addCommMonoid.{u1, u2} α M _inst_4) (Multiset.map.{u2, max u2 u1} M (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (Finsupp.single.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)) a) s))
 Case conversion may be inaccurate. Consider using '#align finsupp.single_multiset_sum Finsupp.single_multiset_sumₓ'. -/
 theorem single_multiset_sum [AddCommMonoid M] (s : Multiset M) (a : α) :
-    single a s.Sum = (s.map (single a)).Sum :=
+    single a s.sum = (s.map (single a)).sum :=
   Multiset.induction_on s (single_zero _) fun a s ih => by
     rw [Multiset.sum_cons, single_add, ih, Multiset.map_cons, Multiset.sum_cons]
 #align finsupp.single_multiset_sum Finsupp.single_multiset_sum
@@ -430,7 +430,7 @@ but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} {M : Type.{u4}} {N : Type.{u3}} [_inst_4 : Zero.{u4} M] [_inst_5 : AddCommMonoid.{u3} N] (s : Finsupp.{u2, u4} ι M _inst_4) (f : ι -> M -> N) (a : α), Eq.{max (succ u1) (succ u3)} (Finsupp.{u1, u3} α N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (Finsupp.single.{u1, u3} α N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5)) a (Finsupp.sum.{u2, u4, u3} ι M N _inst_4 _inst_5 s f)) (Finsupp.sum.{u2, u4, max u3 u1} ι M (Finsupp.{u1, u3} α N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) _inst_4 (Finsupp.addCommMonoid.{u1, u3} α N _inst_5) s (fun (d : ι) (c : M) => Finsupp.single.{u1, u3} α N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5)) a (f d c)))
 Case conversion may be inaccurate. Consider using '#align finsupp.single_sum Finsupp.single_sumₓ'. -/
 theorem single_sum [Zero M] [AddCommMonoid N] (s : ι →₀ M) (f : ι → M → N) (a : α) :
-    single a (s.Sum f) = s.Sum fun d c => single a (f d c) :=
+    single a (s.sum f) = s.sum fun d c => single a (f d c) :=
   single_finset_sum _ _ _
 #align finsupp.single_sum Finsupp.single_sum
 
@@ -442,7 +442,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_neg_index Finsupp.prod_neg_indexₓ'. -/
 @[to_additive]
 theorem prod_neg_index [AddGroup G] [CommMonoid M] {g : α →₀ G} {h : α → G → M}
-    (h0 : ∀ a, h a 0 = 1) : (-g).Prod h = g.Prod fun a b => h a (-b) :=
+    (h0 : ∀ a, h a 0 = 1) : (-g).prod h = g.prod fun a b => h a (-b) :=
   prod_mapRange_index h0
 #align finsupp.prod_neg_index Finsupp.prod_neg_index
 #align finsupp.sum_neg_index Finsupp.sum_neg_index
@@ -470,7 +470,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_apply Finsupp.sum_applyₓ'. -/
 @[simp]
 theorem sum_apply [Zero M] [AddCommMonoid N] {f : α →₀ M} {g : α → M → β →₀ N} {a₂ : β} :
-    (f.Sum g) a₂ = f.Sum fun a₁ b => g a₁ b a₂ :=
+    (f.sum g) a₂ = f.sum fun a₁ b => g a₁ b a₂ :=
   finset_sum_apply _ _ _
 #align finsupp.sum_apply Finsupp.sum_apply
 
@@ -492,7 +492,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {M : Type.{u4}} {N : Type.{u3}} [_inst_4 : Zero.{u4} M] [_inst_5 : AddCommMonoid.{u3} N] (f : Finsupp.{u2, u4} α M _inst_4) (g : α -> M -> (Finsupp.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5)))), Eq.{max (succ u1) (succ u3)} (forall (ᾰ : β), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : β) => N) ᾰ) (FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Finsupp.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) β (fun (_x : β) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : β) => N) _x) (Finsupp.funLike.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (Finsupp.sum.{u2, u4, max u1 u3} α M (Finsupp.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) _inst_4 (Finsupp.addCommMonoid.{u1, u3} β N _inst_5) f g)) (Finsupp.sum.{u2, u4, max u1 u3} α M (forall (ᾰ : β), (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : β) => N) ᾰ) _inst_4 (Pi.addCommMonoid.{u1, u3} β (fun (ᾰ : β) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : β) => N) ᾰ) (fun (i : β) => _inst_5)) f (fun (a₁ : α) (b : M) => FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Finsupp.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) β (fun (_x : β) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : β) => N) _x) (Finsupp.funLike.{u1, u3} β N (AddMonoid.toZero.{u3} N (AddCommMonoid.toAddMonoid.{u3} N _inst_5))) (g a₁ b)))
 Case conversion may be inaccurate. Consider using '#align finsupp.coe_sum Finsupp.coe_sumₓ'. -/
 theorem coe_sum [Zero M] [AddCommMonoid N] (f : α →₀ M) (g : α → M → β →₀ N) :
-    ⇑(f.Sum g) = f.Sum fun a₁ b => g a₁ b :=
+    ⇑(f.sum g) = f.sum fun a₁ b => g a₁ b :=
   coe_finset_sum _ _
 #align finsupp.coe_sum Finsupp.coe_sum
 
@@ -503,11 +503,11 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u4}} {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : DecidableEq.{succ u4} β] [_inst_5 : Zero.{u3} M] [_inst_6 : AddCommMonoid.{u2} N] {f : Finsupp.{u1, u3} α M _inst_5} {g : α -> M -> (Finsupp.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)))}, HasSubset.Subset.{u4} (Finset.{u4} β) (Finset.instHasSubsetFinset.{u4} β) (Finsupp.support.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)) (Finsupp.sum.{u1, u3, max u4 u2} α M (Finsupp.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6))) _inst_5 (Finsupp.addCommMonoid.{u4, u2} β N _inst_6) f g)) (Finset.bunionᵢ.{u1, u4} α β (fun (a : β) (b : β) => _inst_4 a b) (Finsupp.support.{u1, u3} α M _inst_5 f) (fun (a : α) => Finsupp.support.{u4, u2} β N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_6)) (g a (FunLike.coe.{max (succ u1) (succ u3), succ u1, succ u3} (Finsupp.{u1, u3} α M _inst_5) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u1, u3} α M _inst_5) f a))))
 Case conversion may be inaccurate. Consider using '#align finsupp.support_sum Finsupp.support_sumₓ'. -/
 theorem support_sum [DecidableEq β] [Zero M] [AddCommMonoid N] {f : α →₀ M} {g : α → M → β →₀ N} :
-    (f.Sum g).support ⊆ f.support.bunionᵢ fun a => (g a (f a)).support :=
+    (f.sum g).support ⊆ f.support.bunionᵢ fun a => (g a (f a)).support :=
   by
-  have : ∀ c, (f.Sum fun a b => g a b c) ≠ 0 → ∃ a, f a ≠ 0 ∧ ¬(g a (f a)) c = 0 := fun a₁ h =>
-    let ⟨a, ha, Ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
-    ⟨a, mem_support_iff.mp ha, Ne⟩
+  have : ∀ c, (f.sum fun a b => g a b c) ≠ 0 → ∃ a, f a ≠ 0 ∧ ¬(g a (f a)) c = 0 := fun a₁ h =>
+    let ⟨a, ha, ne⟩ := Finset.exists_ne_zero_of_sum_ne_zero h
+    ⟨a, mem_support_iff.mp ha, ne⟩
   simpa only [Finset.subset_iff, mem_support_iff, Finset.mem_bunionᵢ, sum_apply, exists_prop]
 #align finsupp.support_sum Finsupp.support_sum
 
@@ -534,7 +534,7 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : Zero.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] {f : Finsupp.{u1, u3} α M _inst_4}, Eq.{succ u2} N (Finsupp.sum.{u1, u3, u2} α M N _inst_4 _inst_5 f (fun (a : α) (b : M) => OfNat.ofNat.{u2} N 0 (Zero.toOfNat0.{u2} N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5))))) (OfNat.ofNat.{u2} N 0 (Zero.toOfNat0.{u2} N (AddMonoid.toZero.{u2} N (AddCommMonoid.toAddMonoid.{u2} N _inst_5))))
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_zero Finsupp.sum_zeroₓ'. -/
 @[simp]
-theorem sum_zero [Zero M] [AddCommMonoid N] {f : α →₀ M} : (f.Sum fun a b => (0 : N)) = 0 :=
+theorem sum_zero [Zero M] [AddCommMonoid N] {f : α →₀ M} : (f.sum fun a b => (0 : N)) = 0 :=
   Finset.sum_const_zero
 #align finsupp.sum_zero Finsupp.sum_zero
 
@@ -546,7 +546,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_mul Finsupp.prod_mulₓ'. -/
 @[simp, to_additive]
 theorem prod_mul [Zero M] [CommMonoid N] {f : α →₀ M} {h₁ h₂ : α → M → N} :
-    (f.Prod fun a b => h₁ a b * h₂ a b) = f.Prod h₁ * f.Prod h₂ :=
+    (f.prod fun a b => h₁ a b * h₂ a b) = f.prod h₁ * f.prod h₂ :=
   Finset.prod_mul_distrib
 #align finsupp.prod_mul Finsupp.prod_mul
 #align finsupp.sum_add Finsupp.sum_add
@@ -559,7 +559,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_inv Finsupp.prod_invₓ'. -/
 @[simp, to_additive]
 theorem prod_inv [Zero M] [CommGroup G] {f : α →₀ M} {h : α → M → G} :
-    (f.Prod fun a b => (h a b)⁻¹) = (f.Prod h)⁻¹ :=
+    (f.prod fun a b => (h a b)⁻¹) = (f.prod h)⁻¹ :=
   (map_prod (MonoidHom.id G)⁻¹ _ _).symm
 #align finsupp.prod_inv Finsupp.prod_inv
 #align finsupp.sum_neg Finsupp.sum_neg
@@ -572,7 +572,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_sub Finsupp.sum_subₓ'. -/
 @[simp]
 theorem sum_sub [Zero M] [AddCommGroup G] {f : α →₀ M} {h₁ h₂ : α → M → G} :
-    (f.Sum fun a b => h₁ a b - h₂ a b) = f.Sum h₁ - f.Sum h₂ :=
+    (f.sum fun a b => h₁ a b - h₂ a b) = f.sum h₁ - f.sum h₂ :=
   Finset.sum_sub_distrib
 #align finsupp.sum_sub Finsupp.sum_sub
 
@@ -590,7 +590,7 @@ This is a more general version of `finsupp.prod_add_index'`; the latter has simp
 theorem prod_add_index [DecidableEq α] [AddZeroClass M] [CommMonoid N] {f g : α →₀ M}
     {h : α → M → N} (h_zero : ∀ a ∈ f.support ∪ g.support, h a 0 = 1)
     (h_add : ∀ a ∈ f.support ∪ g.support, ∀ (b₁ b₂), h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (f + g).Prod h = f.Prod h * g.Prod h :=
+    (f + g).prod h = f.prod h * g.prod h :=
   by
   rw [Finsupp.prod_of_support_subset f (subset_union_left _ g.support) h h_zero,
     Finsupp.prod_of_support_subset g (subset_union_right f.support _) h h_zero, ←
@@ -612,7 +612,7 @@ This is a more specialized version of `finsupp.prod_add_index` with simpler hypo
       "Taking the sum under `h` is an additive homomorphism of finsupps,\nif `h` is an additive homomorphism.\nThis is a more specific version of `finsupp.sum_add_index` with simpler hypotheses."]
 theorem prod_add_index' [AddZeroClass M] [CommMonoid N] {f g : α →₀ M} {h : α → M → N}
     (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (f + g).Prod h = f.Prod h * g.Prod h := by
+    (f + g).prod h = f.prod h * g.prod h := by
   classical exact prod_add_index (fun a ha => h_zero a) fun a ha => h_add a
 #align finsupp.prod_add_index' Finsupp.prod_add_index'
 #align finsupp.sum_add_index' Finsupp.sum_add_index'
@@ -625,7 +625,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_hom_add_index Finsupp.sum_hom_add_indexₓ'. -/
 @[simp]
 theorem sum_hom_add_index [AddZeroClass M] [AddCommMonoid N] {f g : α →₀ M} (h : α → M →+ N) :
-    ((f + g).Sum fun x => h x) = (f.Sum fun x => h x) + g.Sum fun x => h x :=
+    ((f + g).sum fun x => h x) = (f.sum fun x => h x) + g.sum fun x => h x :=
   sum_add_index' (fun a => (h a).map_zero) fun a => (h a).map_add
 #align finsupp.sum_hom_add_index Finsupp.sum_hom_add_index
 
@@ -638,9 +638,9 @@ Case conversion may be inaccurate. Consider using '#align finsupp.prod_hom_add_i
 @[simp]
 theorem prod_hom_add_index [AddZeroClass M] [CommMonoid N] {f g : α →₀ M}
     (h : α → Multiplicative M →* N) :
-    ((f + g).Prod fun a b => h a (Multiplicative.ofAdd b)) =
-      (f.Prod fun a b => h a (Multiplicative.ofAdd b)) *
-        g.Prod fun a b => h a (Multiplicative.ofAdd b) :=
+    ((f + g).prod fun a b => h a (Multiplicative.ofAdd b)) =
+      (f.prod fun a b => h a (Multiplicative.ofAdd b)) *
+        g.prod fun a b => h a (Multiplicative.ofAdd b) :=
   prod_add_index' (fun a => (h a).map_one) fun a => (h a).map_mul
 #align finsupp.prod_hom_add_index Finsupp.prod_hom_add_index
 
@@ -655,7 +655,7 @@ and monoid homomorphisms `(α →₀ M) →+ N`. -/
 def liftAddHom [AddZeroClass M] [AddCommMonoid N] : (α → M →+ N) ≃+ ((α →₀ M) →+ N)
     where
   toFun F :=
-    { toFun := fun f => f.Sum fun x => F x
+    { toFun := fun f => f.sum fun x => F x
       map_zero' := Finset.sum_empty
       map_add' := fun _ _ => sum_add_index' (fun x => (F x).map_zero) fun x => (F x).map_add }
   invFun F x := F.comp <| singleAddHom x
@@ -678,7 +678,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.lift_add_hom_apply Finsupp.liftAddHom_applyₓ'. -/
 @[simp]
 theorem liftAddHom_apply [AddCommMonoid M] [AddCommMonoid N] (F : α → M →+ N) (f : α →₀ M) :
-    liftAddHom F f = f.Sum fun x => F x :=
+    liftAddHom F f = f.sum fun x => F x :=
   rfl
 #align finsupp.lift_add_hom_apply Finsupp.liftAddHom_apply
 
@@ -724,7 +724,7 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_4 : AddCommMonoid.{u2} M] (f : Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))), Eq.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (Finsupp.sum.{u1, u2, max u1 u2} α M (Finsupp.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)) (Finsupp.addCommMonoid.{u1, u2} α M _inst_4) f (Finsupp.single.{u1, u2} α M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_4)))) f
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_single Finsupp.sum_singleₓ'. -/
 @[simp]
-theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.Sum single = f :=
+theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.sum single = f :=
   AddMonoidHom.congr_fun liftAddHom_singleAddHom f
 #align finsupp.sum_single Finsupp.sum_single
 
@@ -783,8 +783,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.comp_lift_add_
 theorem comp_liftAddHom [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] (g : N →+ P)
     (f : α → M →+ N) : g.comp (liftAddHom f) = liftAddHom fun a => g.comp (f a) :=
   liftAddHom.symm_apply_eq.1 <|
-    funext fun a => by
-      rw [lift_add_hom_symm_apply, AddMonoidHom.comp_assoc, lift_add_hom_comp_single]
+    funext fun a => by rw [liftAddHom_symm_apply, AddMonoidHom.comp_assoc, liftAddHom_comp_single]
 #align finsupp.comp_lift_add_hom Finsupp.comp_liftAddHom
 
 /- warning: finsupp.sum_sub_index -> Finsupp.sum_sub_index is a dubious translation:
@@ -794,7 +793,7 @@ but is expected to have type
   forall {α : Type.{u1}} {γ : Type.{u2}} {β : Type.{u3}} [_inst_4 : AddCommGroup.{u3} β] [_inst_5 : AddCommGroup.{u2} γ] {f : Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))} {g : Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))} {h : α -> β -> γ}, (forall (a : α) (b₁ : β) (b₂ : β), Eq.{succ u2} γ (h a (HSub.hSub.{u3, u3, u3} β β β (instHSub.{u3} β (SubNegMonoid.toSub.{u3} β (AddGroup.toSubNegMonoid.{u3} β (AddCommGroup.toAddGroup.{u3} β _inst_4)))) b₁ b₂)) (HSub.hSub.{u2, u2, u2} γ γ γ (instHSub.{u2} γ (SubNegMonoid.toSub.{u2} γ (AddGroup.toSubNegMonoid.{u2} γ (AddCommGroup.toAddGroup.{u2} γ _inst_5)))) (h a b₁) (h a b₂))) -> (Eq.{succ u2} γ (Finsupp.sum.{u1, u3, u2} α β γ (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4))))) (AddCommGroup.toAddCommMonoid.{u2} γ _inst_5) (HSub.hSub.{max u1 u3, max u1 u3, max u1 u3} (Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))) (Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))) (Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))) (instHSub.{max u1 u3} (Finsupp.{u1, u3} α β (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4)))))) (Finsupp.instSubFinsuppToZeroToNegZeroClass.{u1, u3} α β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4))))) f g) h) (HSub.hSub.{u2, u2, u2} γ γ γ (instHSub.{u2} γ (SubNegMonoid.toSub.{u2} γ (AddGroup.toSubNegMonoid.{u2} γ (AddCommGroup.toAddGroup.{u2} γ _inst_5)))) (Finsupp.sum.{u1, u3, u2} α β γ (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4))))) (AddCommGroup.toAddCommMonoid.{u2} γ _inst_5) f h) (Finsupp.sum.{u1, u3, u2} α β γ (NegZeroClass.toZero.{u3} β (SubNegZeroMonoid.toNegZeroClass.{u3} β (SubtractionMonoid.toSubNegZeroMonoid.{u3} β (SubtractionCommMonoid.toSubtractionMonoid.{u3} β (AddCommGroup.toDivisionAddCommMonoid.{u3} β _inst_4))))) (AddCommGroup.toAddCommMonoid.{u2} γ _inst_5) g h)))
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_sub_index Finsupp.sum_sub_indexₓ'. -/
 theorem sum_sub_index [AddCommGroup β] [AddCommGroup γ] {f g : α →₀ β} {h : α → β → γ}
-    (h_sub : ∀ a b₁ b₂, h a (b₁ - b₂) = h a b₁ - h a b₂) : (f - g).Sum h = f.Sum h - g.Sum h :=
+    (h_sub : ∀ a b₁ b₂, h a (b₁ - b₂) = h a b₁ - h a b₂) : (f - g).sum h = f.sum h - g.sum h :=
   (liftAddHom fun a => AddMonoidHom.ofMapSub (h a) (h_sub a)).map_sub f g
 #align finsupp.sum_sub_index Finsupp.sum_sub_index
 
@@ -806,10 +805,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_emb_domain Finsupp.prod_embDomainₓ'. -/
 @[to_additive]
 theorem prod_embDomain [Zero M] [CommMonoid N] {v : α →₀ M} {f : α ↪ β} {g : β → M → N} :
-    (v.embDomain f).Prod g = v.Prod fun a b => g (f a) b :=
+    (v.embDomain f).prod g = v.prod fun a b => g (f a) b :=
   by
-  rw [Prod, Prod, support_emb_domain, Finset.prod_map]
-  simp_rw [emb_domain_apply]
+  rw [prod, prod, support_embDomain, Finset.prod_map]
+  simp_rw [embDomain_apply]
 #align finsupp.prod_emb_domain Finsupp.prod_embDomain
 #align finsupp.sum_emb_domain Finsupp.sum_embDomain
 
@@ -822,7 +821,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.prod_finset_su
 @[to_additive]
 theorem prod_finset_sum_index [AddCommMonoid M] [CommMonoid N] {s : Finset ι} {g : ι → α →₀ M}
     {h : α → M → N} (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h :=
+    (∏ i in s, (g i).prod h) = (∑ i in s, g i).prod h :=
   Finset.cons_induction_on s rfl fun a s has ih => by
     rw [prod_cons, ih, sum_cons, prod_add_index' h_zero h_add]
 #align finsupp.prod_finset_sum_index Finsupp.prod_finset_sum_index
@@ -838,7 +837,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.prod_sum_index
 theorem prod_sum_index [AddCommMonoid M] [AddCommMonoid N] [CommMonoid P] {f : α →₀ M}
     {g : α → M → β →₀ N} {h : β → N → P} (h_zero : ∀ a, h a 0 = 1)
     (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (f.Sum g).Prod h = f.Prod fun a b => (g a b).Prod h :=
+    (f.sum g).prod h = f.prod fun a b => (g a b).prod h :=
   (prod_finset_sum_index h_zero h_add).symm
 #align finsupp.prod_sum_index Finsupp.prod_sum_index
 #align finsupp.sum_sum_index Finsupp.sum_sum_index
@@ -852,7 +851,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.multiset_sum_s
 theorem multiset_sum_sum_index [AddCommMonoid M] [AddCommMonoid N] (f : Multiset (α →₀ M))
     (h : α → M → N) (h₀ : ∀ a, h a 0 = 0)
     (h₁ : ∀ (a : α) (b₁ b₂ : M), h a (b₁ + b₂) = h a b₁ + h a b₂) :
-    f.Sum.Sum h = (f.map fun g : α →₀ M => g.Sum h).Sum :=
+    f.sum.sum h = (f.map fun g : α →₀ M => g.sum h).sum :=
   Multiset.induction_on f rfl fun a s ih => by
     rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index' h₀ h₁, ih]
 #align finsupp.multiset_sum_sum_index Finsupp.multiset_sum_sum_index
@@ -871,7 +870,7 @@ theorem support_sum_eq_bunionᵢ {α : Type _} {ι : Type _} {M : Type _} [Decid
     apply Finset.induction_on s
     · simp
     · intro i s hi
-      simp only [hi, sum_insert, not_false_iff, bUnion_insert]
+      simp only [hi, sum_insert, not_false_iff, bunionᵢ_insert]
       intro hs
       rw [Finsupp.support_add_eq, hs]
       rw [hs, Finset.disjoint_bunionᵢ_right]
@@ -886,7 +885,7 @@ but is expected to have type
   forall {α : Type.{u3}} {γ : Type.{u1}} {β : Type.{u2}} {M : Type.{u4}} [_inst_4 : Zero.{u4} M] {f : Finsupp.{u3, u4} α M _inst_4} {m : β -> γ} {h : α -> M -> (Multiset.{u2} β)}, Eq.{succ u1} (Multiset.{u1} γ) (Multiset.map.{u2, u1} β γ m (Finsupp.sum.{u3, u4, u2} α M (Multiset.{u2} β) _inst_4 (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} (Multiset.{u2} β) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} β)) f h)) (Finsupp.sum.{u3, u4, u1} α M (Multiset.{u1} γ) _inst_4 (OrderedCancelAddCommMonoid.toAddCommMonoid.{u1} (Multiset.{u1} γ) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u1} γ)) f (fun (a : α) (b : M) => Multiset.map.{u2, u1} β γ m (h a b)))
 Case conversion may be inaccurate. Consider using '#align finsupp.multiset_map_sum Finsupp.multiset_map_sumₓ'. -/
 theorem multiset_map_sum [Zero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
-    Multiset.map m (f.Sum h) = f.Sum fun a b => (h a b).map m :=
+    Multiset.map m (f.sum h) = f.sum fun a b => (h a b).map m :=
   (Multiset.mapAddMonoidHom m).map_sum _ f.support
 #align finsupp.multiset_map_sum Finsupp.multiset_map_sum
 
@@ -897,7 +896,7 @@ but is expected to have type
   forall {α : Type.{u1}} {M : Type.{u3}} {N : Type.{u2}} [_inst_4 : Zero.{u3} M] [_inst_5 : AddCommMonoid.{u2} N] {f : Finsupp.{u1, u3} α M _inst_4} {h : α -> M -> (Multiset.{u2} N)}, Eq.{succ u2} N (Multiset.sum.{u2} N _inst_5 (Finsupp.sum.{u1, u3, u2} α M (Multiset.{u2} N) _inst_4 (OrderedCancelAddCommMonoid.toAddCommMonoid.{u2} (Multiset.{u2} N) (Multiset.instOrderedCancelAddCommMonoidMultiset.{u2} N)) f h)) (Finsupp.sum.{u1, u3, u2} α M N _inst_4 _inst_5 f (fun (a : α) (b : M) => Multiset.sum.{u2} N _inst_5 (h a b)))
 Case conversion may be inaccurate. Consider using '#align finsupp.multiset_sum_sum Finsupp.multiset_sum_sumₓ'. -/
 theorem multiset_sum_sum [Zero M] [AddCommMonoid N] {f : α →₀ M} {h : α → M → Multiset N} :
-    Multiset.sum (f.Sum h) = f.Sum fun a b => Multiset.sum (h a b) :=
+    Multiset.sum (f.sum h) = f.sum fun a b => Multiset.sum (h a b) :=
   (Multiset.sumAddMonoidHom : Multiset N →+ N).map_sum _ f.support
 #align finsupp.multiset_sum_sum Finsupp.multiset_sum_sum
 
@@ -913,11 +912,11 @@ over `f1` and `f2` equals the product of `g` over `f1 + f2` -/
       "For disjoint `f1` and `f2`, and function `g`, the sum of the sums of `g`\nover `f1` and `f2` equals the sum of `g` over `f1 + f2`"]
 theorem prod_add_index_of_disjoint [AddCommMonoid M] {f1 f2 : α →₀ M}
     (hd : Disjoint f1.support f2.support) {β : Type _} [CommMonoid β] (g : α → M → β) :
-    (f1 + f2).Prod g = f1.Prod g * f2.Prod g :=
+    (f1 + f2).prod g = f1.prod g * f2.prod g :=
   by
   have :
     ∀ {f1 f2 : α →₀ M},
-      Disjoint f1.support f2.support → (∏ x in f1.support, g x (f1 x + f2 x)) = f1.Prod g :=
+      Disjoint f1.support f2.support → (∏ x in f1.support, g x (f1 x + f2 x)) = f1.prod g :=
     fun f1 f2 hd =>
     Finset.prod_congr rfl fun x hx => by
       simp only [not_mem_support_iff.mp (disjoint_left.mp hd hx), add_zero]
@@ -934,7 +933,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.prod_dvd_prod_of_subset_of_dvd Finsupp.prod_dvd_prod_of_subset_of_dvdₓ'. -/
 theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 : α →₀ M}
     {g1 g2 : α → M → N} (h1 : f1.support ⊆ f2.support)
-    (h2 : ∀ a : α, a ∈ f1.support → g1 a (f1 a) ∣ g2 a (f2 a)) : f1.Prod g1 ∣ f2.Prod g2 := by
+    (h2 : ∀ a : α, a ∈ f1.support → g1 a (f1 a) ∣ g2 a (f2 a)) : f1.prod g1 ∣ f2.prod g2 := by
   classical
     simp only [Finsupp.prod, Finsupp.prod_mul]
     rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
@@ -961,7 +960,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u3}} {γ : Type.{u1}} {A : Type.{u2}} {B : Type.{u4}} [_inst_1 : AddCommMonoid.{u2} A] [_inst_2 : AddCommMonoid.{u4} B] (g : Finsupp.{u3, u2} ι A (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1))) (k : ι -> A -> γ -> B) (x : γ), Eq.{succ u4} B (Finsupp.sum.{u3, u2, max u1 u4} ι A (γ -> B) (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)) (Pi.addCommMonoid.{u1, u4} γ (fun (ᾰ : γ) => B) (fun (i : γ) => _inst_2)) g k x) (Finsupp.sum.{u3, u2, u4} ι A B (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)) _inst_2 g (fun (i : ι) (b : A) => k i b x))
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_apply' Finsupp.sum_apply'ₓ'. -/
-theorem Finsupp.sum_apply' : g.Sum k x = g.Sum fun i b => k i b x :=
+theorem Finsupp.sum_apply' : g.sum k x = g.sum fun i b => k i b x :=
   Finset.sum_apply _ _ _
 #align finsupp.sum_apply' Finsupp.sum_apply'
 
@@ -977,7 +976,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u3}} {A : Type.{u2}} {C : Type.{u4}} [_inst_1 : AddCommMonoid.{u2} A] [_inst_3 : AddCommMonoid.{u4} C] {t : ι -> A -> C}, (forall (i : ι), Eq.{succ u4} C (t i (OfNat.ofNat.{u2} A 0 (Zero.toOfNat0.{u2} A (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1))))) (OfNat.ofNat.{u4} C 0 (Zero.toOfNat0.{u4} C (AddMonoid.toZero.{u4} C (AddCommMonoid.toAddMonoid.{u4} C _inst_3))))) -> (forall (i : ι) (x : A) (y : A), Eq.{succ u4} C (t i (HAdd.hAdd.{u2, u2, u2} A A A (instHAdd.{u2} A (AddZeroClass.toAdd.{u2} A (AddMonoid.toAddZeroClass.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)))) x y)) (HAdd.hAdd.{u4, u4, u4} C C C (instHAdd.{u4} C (AddZeroClass.toAdd.{u4} C (AddMonoid.toAddZeroClass.{u4} C (AddCommMonoid.toAddMonoid.{u4} C _inst_3)))) (t i x) (t i y))) -> (forall {s : Finset.{u1} α} {f : α -> (Finsupp.{u3, u2} ι A (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)))}, Eq.{succ u4} C (Finsupp.sum.{u3, u2, u4} ι A C (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)) _inst_3 (Finset.sum.{max u3 u2, u1} (Finsupp.{u3, u2} ι A (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1))) α (Finsupp.addCommMonoid.{u3, u2} ι A _inst_1) s (fun (x : α) => f x)) t) (Finset.sum.{u4, u1} C α _inst_3 s (fun (x : α) => Finsupp.sum.{u3, u2, u4} ι A C (AddMonoid.toZero.{u2} A (AddCommMonoid.toAddMonoid.{u2} A _inst_1)) _inst_3 (f x) t)))
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_sum_index' Finsupp.sum_sum_index'ₓ'. -/
-theorem Finsupp.sum_sum_index' : (∑ x in s, f x).Sum t = ∑ x in s, (f x).Sum t :=
+theorem Finsupp.sum_sum_index' : (∑ x in s, f x).sum t = ∑ x in s, (f x).sum t :=
   Finset.induction_on s rfl fun a s has ih => by
     simp_rw [Finset.sum_insert has, Finsupp.sum_add_index' h0 h1, ih]
 #align finsupp.sum_sum_index' Finsupp.sum_sum_index'
@@ -995,7 +994,7 @@ but is expected to have type
   forall {α : Type.{u3}} {R : Type.{u2}} {S : Type.{u1}} [_inst_4 : NonUnitalNonAssocSemiring.{u2} R] [_inst_5 : NonUnitalNonAssocSemiring.{u1} S] (b : S) (s : Finsupp.{u3, u2} α R (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4))) {f : α -> R -> S}, Eq.{succ u1} S (HMul.hMul.{u1, u1, u1} S S S (instHMul.{u1} S (NonUnitalNonAssocSemiring.toMul.{u1} S _inst_5)) (Finsupp.sum.{u3, u2, u1} α R S (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S _inst_5) s f) b) (Finsupp.sum.{u3, u2, u1} α R S (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S _inst_5) s (fun (a : α) (c : R) => HMul.hMul.{u1, u1, u1} S S S (instHMul.{u1} S (NonUnitalNonAssocSemiring.toMul.{u1} S _inst_5)) (f a c) b))
 Case conversion may be inaccurate. Consider using '#align finsupp.sum_mul Finsupp.sum_mulₓ'. -/
 theorem Finsupp.sum_mul (b : S) (s : α →₀ R) {f : α → R → S} :
-    s.Sum f * b = s.Sum fun a c => f a c * b := by simp only [Finsupp.sum, Finset.sum_mul]
+    s.sum f * b = s.sum fun a c => f a c * b := by simp only [Finsupp.sum, Finset.sum_mul]
 #align finsupp.sum_mul Finsupp.sum_mul
 
 /- warning: finsupp.mul_sum -> Finsupp.mul_sum is a dubious translation:
@@ -1005,7 +1004,7 @@ but is expected to have type
   forall {α : Type.{u3}} {R : Type.{u2}} {S : Type.{u1}} [_inst_4 : NonUnitalNonAssocSemiring.{u2} R] [_inst_5 : NonUnitalNonAssocSemiring.{u1} S] (b : S) (s : Finsupp.{u3, u2} α R (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4))) {f : α -> R -> S}, Eq.{succ u1} S (HMul.hMul.{u1, u1, u1} S S S (instHMul.{u1} S (NonUnitalNonAssocSemiring.toMul.{u1} S _inst_5)) b (Finsupp.sum.{u3, u2, u1} α R S (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S _inst_5) s f)) (Finsupp.sum.{u3, u2, u1} α R S (MulZeroClass.toZero.{u2} R (NonUnitalNonAssocSemiring.toMulZeroClass.{u2} R _inst_4)) (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} S _inst_5) s (fun (a : α) (c : R) => HMul.hMul.{u1, u1, u1} S S S (instHMul.{u1} S (NonUnitalNonAssocSemiring.toMul.{u1} S _inst_5)) b (f a c)))
 Case conversion may be inaccurate. Consider using '#align finsupp.mul_sum Finsupp.mul_sumₓ'. -/
 theorem Finsupp.mul_sum (b : S) (s : α →₀ R) {f : α → R → S} :
-    b * s.Sum f = s.Sum fun a c => b * f a c := by simp only [Finsupp.sum, Finset.mul_sum]
+    b * s.sum f = s.sum fun a c => b * f a c := by simp only [Finsupp.sum, Finset.mul_sum]
 #align finsupp.mul_sum Finsupp.mul_sum
 
 end
@@ -1014,7 +1013,7 @@ namespace Nat
 
 #print Nat.prod_pow_pos_of_zero_not_mem_support /-
 /-- If `0 : ℕ` is not in the support of `f : ℕ →₀ ℕ` then `0 < ∏ x in f.support, x ^ (f x)`. -/
-theorem prod_pow_pos_of_zero_not_mem_support {f : ℕ →₀ ℕ} (hf : 0 ∉ f.support) : 0 < f.Prod pow :=
+theorem prod_pow_pos_of_zero_not_mem_support {f : ℕ →₀ ℕ} (hf : 0 ∉ f.support) : 0 < f.prod pow :=
   Finset.prod_pos fun a ha =>
     pos_iff_ne_zero.mpr
       (pow_ne_zero _ fun H => by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module category_theory.sites.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,15 +96,15 @@ def eval (P : Type uᵒᵖ ⥤ Type u) (α : Type u) (s : P.obj (op α)) (x : α
 `(α → S(*)) → S(α)` that is inverse to `eval`. -/
 noncomputable def typesGlue (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGrothendieckTopology S)
     (α : Type u) (f : α → S.obj (op PUnit)) : S.obj (op α) :=
-  (hs.IsSheafFor _ _ (generate_discretePresieve_mem α)).amalgamate
+  (hs.isSheafFor _ _ (generate_discretePresieve_mem α)).amalgamate
     (fun β g hg => S.map (↾fun x => PUnit.unit).op <| f <| g <| Classical.choose hg)
     fun β γ δ g₁ g₂ f₁ f₂ hf₁ hf₂ h =>
-    (hs.IsSheafFor _ _ (generate_discretePresieve_mem δ)).IsSeparatedFor.ext fun ε g ⟨x, hx⟩ =>
+    (hs.isSheafFor _ _ (generate_discretePresieve_mem δ)).isSeparatedFor.ext fun ε g ⟨x, hx⟩ =>
       by
       have : f₁ (Classical.choose hf₁) = f₂ (Classical.choose hf₂) :=
         Classical.choose_spec hf₁ (g₁ <| g x) ▸
           Classical.choose_spec hf₂ (g₂ <| g x) ▸ congr_fun h _
-      simp_rw [← functor_to_types.map_comp_apply, this, ← op_comp]
+      simp_rw [← FunctorToTypes.map_comp_apply, this, ← op_comp]
       rfl
 #align category_theory.types_glue CategoryTheory.typesGlue
 
@@ -112,13 +112,13 @@ theorem eval_typesGlue {S hs α} (f) : eval.{u} S α (typesGlue S hs α f) = f :
   funext fun x =>
     (IsSheafFor.valid_glue _ _ _ <| ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩).trans <|
       by
-      convert functor_to_types.map_id_apply _ _
+      convert FunctorToTypes.map_id_apply _ _
       rw [← op_id]
       congr
 #align category_theory.eval_types_glue CategoryTheory.eval_typesGlue
 
 theorem typesGlue_eval {S hs α} (s) : typesGlue.{u} S hs α (eval S α s) = s :=
-  (hs.IsSheafFor _ _ (generate_discretePresieve_mem α)).IsSeparatedFor.ext fun β f hf =>
+  (hs.isSheafFor _ _ (generate_discretePresieve_mem α)).isSeparatedFor.ext fun β f hf =>
     (IsSheafFor.valid_glue _ _ _ hf).trans <|
       (FunctorToTypes.map_comp_apply _ _ _ _).symm.trans <|
         by
@@ -141,7 +141,7 @@ noncomputable def evalEquiv (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesGro
 theorem eval_map (S : Type uᵒᵖ ⥤ Type u) (α β) (f : β ⟶ α) (s x) :
     eval S β (S.map f.op s) x = eval S α s (f x) :=
   by
-  simp_rw [eval, ← functor_to_types.map_comp_apply, ← op_comp]
+  simp_rw [eval, ← FunctorToTypes.map_comp_apply, ← op_comp]
   rfl
 #align category_theory.eval_map CategoryTheory.eval_map
 
@@ -158,14 +158,14 @@ noncomputable def equivYoneda (S : Type uᵒᵖ ⥤ Type u) (hs : IsSheaf typesG
 noncomputable def equivYoneda' (S : SheafOfTypes typesGrothendieckTopology) :
     S ≅ yoneda'.obj (S.1.obj (op PUnit))
     where
-  Hom := ⟨(equivYoneda S.1 S.2).Hom⟩
+  Hom := ⟨(equivYoneda S.1 S.2).hom⟩
   inv := ⟨(equivYoneda S.1 S.2).inv⟩
   hom_inv_id' := by
     ext1
-    apply (equiv_yoneda S.1 S.2).hom_inv_id
+    apply (equivYoneda S.1 S.2).hom_inv_id
   inv_hom_id' := by
     ext1
-    apply (equiv_yoneda S.1 S.2).inv_hom_id
+    apply (equivYoneda S.1 S.2).inv_hom_id
 #align category_theory.equiv_yoneda' CategoryTheory.equivYoneda'
 
 theorem eval_app (S₁ S₂ : SheafOfTypes.{u} typesGrothendieckTopology) (f : S₁ ⟶ S₂) (α : Type u)
@@ -211,7 +211,7 @@ theorem typesGrothendieckTopology_eq_canonical :
                   have :
                     (fun _ => ULift.up true : (yoneda.obj (ULift Bool)).obj (op PUnit)) = fun _ =>
                       ULift.up false :=
-                    (hs PUnit fun _ => x).IsSeparatedFor.ext fun β f hf =>
+                    (hs PUnit fun _ => x).isSeparatedFor.ext fun β f hf =>
                       funext fun y => hsx.elim <| S.2 hf fun _ => y
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
                 fun hs β f => isSheaf_yoneda' _ fun y => hs _⟩⟩

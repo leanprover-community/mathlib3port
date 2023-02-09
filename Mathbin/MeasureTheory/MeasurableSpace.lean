@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ protected def map (f : α → β) (m : MeasurableSpace α) : MeasurableSpace β
   measurable_set_empty := m.measurable_set_empty
   measurable_set_compl s hs := m.measurable_set_compl _ hs
   measurable_set_unionᵢ f hf := by
-    rw [preimage_Union]
+    rw [preimage_unionᵢ]
     exact m.measurable_set_Union _ hf
 #align measurable_space.map MeasurableSpace.map
 
@@ -127,7 +127,7 @@ theorem comap_comp {f : β → α} {g : γ → β} : (m.comap f).comap g = m.com
 #align measurable_space.comap_comp MeasurableSpace.comap_comp
 
 theorem comap_le_iff_le_map {f : α → β} : m'.comap f ≤ m ↔ m' ≤ m.map f :=
-  ⟨fun h s hs => h _ ⟨_, hs, rfl⟩, fun h s ⟨t, ht, HEq⟩ => HEq ▸ h _ ht⟩
+  ⟨fun h s hs => h _ ⟨_, hs, rfl⟩, fun h s ⟨t, ht, heq⟩ => heq ▸ h _ ht⟩
 #align measurable_space.comap_le_iff_le_map MeasurableSpace.comap_le_iff_le_map
 
 theorem gc_comap_map (f : α → β) :
@@ -155,7 +155,7 @@ theorem comap_bot : (⊥ : MeasurableSpace α).comap g = ⊥ :=
 #align measurable_space.comap_bot MeasurableSpace.comap_bot
 
 @[simp]
-theorem comap_sup : (m₁ ⊔ m₂).comap g = m₁.comap g ⊔ m₂.comap g :=
+theorem comap_sup : (m₁ ⊔ m₂).comap plift = m₁.comap g ⊔ m₂.comap g :=
   (gc_comap_map g).l_sup
 #align measurable_space.comap_sup MeasurableSpace.comap_sup
 
@@ -194,7 +194,7 @@ theorem comap_generateFrom {f : α → β} {s : Set (Set β)} :
   le_antisymm
     (comap_le_iff_le_map.2 <|
       generateFrom_le fun t hts => GenerateMeasurable.basic _ <| mem_image_of_mem _ <| hts)
-    (generateFrom_le fun t ⟨u, hu, Eq⟩ => Eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)
+    (generateFrom_le fun t ⟨u, hu, eq⟩ => eq ▸ ⟨u, GenerateMeasurable.basic _ hu, rfl⟩)
 #align measurable_space.comap_generate_from MeasurableSpace.comap_generateFrom
 
 end MeasurableSpace
@@ -281,11 +281,11 @@ theorem measurable_const' {f : β → α} (hf : ∀ x y, f x = f y) : Measurable
 #align measurable_const' measurable_const'
 
 theorem measurable_of_finite [Finite α] [MeasurableSingletonClass α] (f : α → β) : Measurable f :=
-  fun s hs => (f ⁻¹' s).toFinite.MeasurableSet
+  fun s hs => (f ⁻¹' s).toFinite.measurableSet
 #align measurable_of_finite measurable_of_finite
 
 theorem measurable_of_countable [Countable α] [MeasurableSingletonClass α] (f : α → β) :
-    Measurable f := fun s hs => (f ⁻¹' s).to_countable.MeasurableSet
+    Measurable f := fun s hs => (f ⁻¹' s).to_countable.measurableSet
 #align measurable_of_countable measurable_of_countable
 
 end TypeclassMeasurableSpace
@@ -297,7 +297,7 @@ include m
 @[measurability]
 theorem Measurable.iterate {f : α → α} (hf : Measurable f) : ∀ n, Measurable (f^[n])
   | 0 => measurable_id
-  | n + 1 => (Measurable.iterate n).comp hf
+  | n + 1 => (measurable.iterate n).comp hf
 #align measurable.iterate Measurable.iterate
 
 variable {mβ : MeasurableSpace β}
@@ -350,7 +350,7 @@ theorem Measurable.measurable_of_countable_ne [MeasurableSingletonClass α] (hf 
   have : g ⁻¹' t = g ⁻¹' t ∩ { x | f x = g x }ᶜ ∪ g ⁻¹' t ∩ { x | f x = g x } := by
     simp [← inter_union_distrib_left]
   rw [this]
-  apply MeasurableSet.union (h.mono (inter_subset_right _ _)).MeasurableSet
+  apply MeasurableSet.union (h.mono (inter_subset_right _ _)).measurableSet
   have : g ⁻¹' t ∩ { x : α | f x = g x } = f ⁻¹' t ∩ { x : α | f x = g x } :=
     by
     ext x
@@ -404,7 +404,7 @@ theorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableS
     (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) : Measurable f :=
   by
   intro s hs
-  rw [← bUnion_preimage_singleton]
+  rw [← bunionᵢ_preimage_singleton]
   refine' MeasurableSet.unionᵢ fun y => MeasurableSet.unionᵢ fun hy => _
   by_cases hyf : y ∈ range f
   · rcases hyf with ⟨y, rfl⟩
@@ -440,7 +440,7 @@ theorem measurable_findGreatest {p : α → ℕ → Prop} [∀ x, DecidablePred 
     (hN : ∀ k ≤ N, MeasurableSet { x | p x k }) : Measurable fun x => Nat.findGreatest (p x) N :=
   by
   refine' measurable_find_greatest' fun k hk => _
-  simp only [Nat.findGreatest_eq_iff, set_of_and, set_of_forall, ← compl_set_of]
+  simp only [Nat.findGreatest_eq_iff, setOf_and, setOf_forall, ← compl_setOf]
   repeat'
     apply_rules [MeasurableSet.inter, MeasurableSet.const, MeasurableSet.interᵢ,
         MeasurableSet.compl, hN] <;>
@@ -533,7 +533,7 @@ theorem measurable_subtype_coe {p : α → Prop} : Measurable (coe : Subtype p �
 instance {p : α → Prop} [MeasurableSingletonClass α] : MeasurableSingletonClass (Subtype p)
     where measurableSet_singleton x :=
     by
-    have : MeasurableSet {(x : α)} := measurable_set_singleton _
+    have : MeasurableSet {(x : α)} := measurableSet_singleton _
     convert @measurable_subtype_coe α _ p _ this
     ext y
     simp [Subtype.ext_iff]
@@ -546,9 +546,9 @@ include m
 
 theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet s) :
     MeasurableSet t → MeasurableSet ((coe : s → α) '' t)
-  | ⟨u, (hu : MeasurableSet u), (Eq : coe ⁻¹' u = t)⟩ =>
+  | ⟨u, (hu : measurable_set u), (eq : coe ⁻¹' u = t)⟩ =>
     by
-    rw [← Eq, Subtype.image_preimage_coe]
+    rw [← eq, Subtype.image_preimage_coe]
     exact hu.inter hs
 #align measurable_set.subtype_image MeasurableSet.subtype_image
 
@@ -590,7 +590,7 @@ theorem Measurable.dite [∀ x, Decidable (x ∈ s)] {f : s → β} (hf : Measur
 
 theorem measurable_of_measurable_on_compl_finite [MeasurableSingletonClass α] {f : α → β}
     (s : Set α) (hs : s.Finite) (hf : Measurable (sᶜ.restrict f)) : Measurable f :=
-  letI : Fintype s := finite.fintype hs
+  letI : Fintype s := Finite.fintype hs
   measurable_of_restrict_of_restrict_compl hs.measurable_set (measurable_of_finite _) hf
 #align measurable_of_measurable_on_compl_finite measurable_of_measurable_on_compl_finite
 
@@ -610,7 +610,7 @@ def MeasurableSpace.prod {α β} (m₁ : MeasurableSpace α) (m₂ : MeasurableS
 #align measurable_space.prod MeasurableSpace.prod
 
 instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
-  m₁.Prod m₂
+  m₁.prod m₂
 
 @[measurability]
 theorem measurable_fst {ma : MeasurableSpace α} {mb : MeasurableSpace β} :
@@ -716,7 +716,7 @@ theorem measurableSet_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t)
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t :=
   by
   rcases h with ⟨⟨x, y⟩, hx, hy⟩
-  refine' ⟨fun hst => _, fun h => h.1.Prod h.2⟩
+  refine' ⟨fun hst => _, fun h => h.1.prod h.2⟩
   have : MeasurableSet ((fun x => (x, y)) ⁻¹' s ×ˢ t) := measurable_prod_mk_right hst
   have : MeasurableSet (Prod.mk x ⁻¹' s ×ˢ t) := measurable_prod_mk_left hst
   simp_all
@@ -744,7 +744,7 @@ instance [MeasurableSingletonClass α] [MeasurableSingletonClass β] :
     MeasurableSingletonClass (α × β) :=
   ⟨fun ⟨a, b⟩ =>
     @singleton_prod_singleton _ _ a b ▸
-      (measurableSet_singleton a).Prod (measurableSet_singleton b)⟩
+      (measurableSet_singleton a).prod (measurableSet_singleton b)⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass β]
@@ -756,7 +756,7 @@ theorem measurable_from_prod_countable [Countable β] [MeasurableSingletonClass 
     ext1 ⟨x, y⟩
     simp [and_assoc', and_left_comm]
   rw [this]
-  exact MeasurableSet.unionᵢ fun y => (hf y hs).Prod (measurable_set_singleton y)
+  exact MeasurableSet.unionᵢ fun y => (hf y hs).prod (measurableSet_singleton y)
 #align measurable_from_prod_countable measurable_from_prod_countable
 
 /-- A piecewise function on countably many pieces is measurable if all the data is measurable. -/
@@ -780,7 +780,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
     have P : ∀ x, ∃ n, p n x := by
       intro x
       by_cases H : ∀ i : ℕ, x ∉ t i
-      · exact ⟨0, Or.inr (by simpa only [mem_Inter, compl_Union] using H)⟩
+      · exact ⟨0, Or.inr (by simpa only [mem_interᵢ, compl_unionᵢ] using H)⟩
       · simp only [not_forall, not_not_mem] at H
         rcases H with ⟨n, hn⟩
         exact ⟨n, Or.inl hn⟩
@@ -793,7 +793,7 @@ theorem exists_measurable_piecewise_nat {m : MeasurableSpace α} (t : ℕ → Se
         by
         simp only [iff_false_iff, not_forall, not_not_mem]
         exact ⟨n, hx⟩
-      simpa only [B', mem_union, mem_Inter, or_false_iff, compl_Union, mem_compl_iff] using B
+      simpa only [B', mem_union, mem_interᵢ, or_false_iff, compl_unionᵢ, mem_compl_iff] using B
     congr
     by_contra h
     exact (t_disj (Ne.symm h)).le_bot ⟨hx, this⟩
@@ -908,7 +908,7 @@ theorem measurable_piEquivPiSubtypeProd (p : δ → Prop) [DecidablePred p] :
   refine' measurable_prod.2 _
   constructor <;>
     · apply measurable_pi_iff.2 fun j => _
-      simp only [pi_equiv_pi_subtype_prod_apply, measurable_pi_apply]
+      simp only [piEquivPiSubtypeProd_apply, measurable_pi_apply]
 #align measurable_pi_equiv_pi_subtype_prod measurable_piEquivPiSubtypeProd
 
 end Pi
@@ -923,7 +923,7 @@ Case conversion may be inaccurate. Consider using '#align tprod.measurable_space
 instance Tprod.measurableSpace (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
     ∀ l : List δ, MeasurableSpace (List.TProd π l)
   | [] => PUnit.measurableSpace
-  | i::is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpace is)
+  | i::is => @Prod.measurableSpace _ _ _ (tprod.measurable_space is)
 #align tprod.measurable_space Tprod.measurableSpace
 
 section Tprod
@@ -946,8 +946,8 @@ theorem measurable_tProd_elim [DecidableEq δ] :
     by_cases hji : j = i
     · subst hji
       simp [measurable_fst]
-    · rw [funext <| tprod.elim_of_ne _ hji]
-      exact (measurable_tProd_elim (hj.resolve_left hji)).comp measurable_snd
+    · rw [funext <| TProd.elim_of_ne _ hji]
+      exact (measurable_tprod_elim (hj.resolve_left hji)).comp measurable_snd
 #align measurable_tprod_elim measurable_tProd_elim
 
 theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
@@ -959,7 +959,7 @@ theorem MeasurableSet.tProd (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, M
     MeasurableSet (Set.tprod l s) := by
   induction' l with i l ih
   exact MeasurableSet.univ
-  exact (hs i).Prod ih
+  exact (hs i).prod ih
 #align measurable_set.tprod MeasurableSet.tProd
 
 end Tprod
@@ -1002,7 +1002,7 @@ theorem MeasurableSet.inl_image {s : Set α} (hs : MeasurableSet s) :
       rwa [preimage_image_eq]
       exact fun a b => Sum.inl.inj,
     have : Sum.inr ⁻¹' (Sum.inl '' s : Set (Sum α β)) = ∅ :=
-      eq_empty_of_subset_empty fun x ⟨y, hy, Eq⟩ => by contradiction
+      eq_empty_of_subset_empty fun x ⟨y, hy, eq⟩ => by contradiction
     show MeasurableSet (Sum.inr ⁻¹' _) by
       rw [this]
       exact MeasurableSet.empty⟩
@@ -1011,7 +1011,7 @@ theorem MeasurableSet.inl_image {s : Set α} (hs : MeasurableSet s) :
 theorem measurableSet_inr_image {s : Set β} (hs : MeasurableSet s) :
     MeasurableSet (Sum.inr '' s : Set (Sum α β)) :=
   ⟨have : Sum.inl ⁻¹' (Sum.inr '' s : Set (Sum α β)) = ∅ :=
-      eq_empty_of_subset_empty fun x ⟨y, hy, Eq⟩ => by contradiction
+      eq_empty_of_subset_empty fun x ⟨y, hy, eq⟩ => by contradiction
     show MeasurableSet (Sum.inl ⁻¹' _) by
       rw [this]
       exact MeasurableSet.empty,
@@ -1080,7 +1080,7 @@ theorem id : MeasurableEmbedding (id : α → α) :=
 
 theorem comp (hg : MeasurableEmbedding g) (hf : MeasurableEmbedding f) :
     MeasurableEmbedding (g ∘ f) :=
-  ⟨hg.Injective.comp hf.Injective, hg.Measurable.comp hf.Measurable, fun s hs => by
+  ⟨hg.injective.comp hf.injective, hg.measurable.comp hf.measurable, fun s hs => by
     rwa [← image_image, hg.measurable_set_image, hf.measurable_set_image]⟩
 #align measurable_embedding.comp MeasurableEmbedding.comp
 
@@ -1103,9 +1103,9 @@ theorem measurableSet_preimage (hf : MeasurableEmbedding f) {s : Set β} :
 
 theorem measurable_rangeSplitting (hf : MeasurableEmbedding f) : Measurable (rangeSplitting f) :=
   fun s hs => by
-  rwa [preimage_range_splitting hf.injective, ←
+  rwa [preimage_rangeSplitting hf.injective, ←
     (subtype_coe hf.measurable_set_range).measurableSet_image, ← image_comp,
-    coe_comp_range_factorization, hf.measurable_set_image]
+    coe_comp_rangeFactorization, hf.measurable_set_image]
 #align measurable_embedding.measurable_range_splitting MeasurableEmbedding.measurable_rangeSplitting
 
 theorem measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} {g' : β → γ} (hg : Measurable g)
@@ -1113,7 +1113,7 @@ theorem measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} {g' : β 
   by
   refine' measurable_of_restrict_of_restrict_compl hf.measurable_set_range _ _
   · rw [restrict_extend_range]
-    simpa only [range_splitting] using hg.comp hf.measurable_range_splitting
+    simpa only [rangeSplitting] using hg.comp hf.measurable_range_splitting
   · rw [restrict_extend_compl_range]
     exact hg'.comp measurable_subtype_coe
 #align measurable_embedding.measurable_extend MeasurableEmbedding.measurable_extend
@@ -1122,14 +1122,14 @@ theorem exists_measurable_extend (hf : MeasurableEmbedding f) {g : α → γ} (h
     (hne : β → Nonempty γ) : ∃ g' : β → γ, Measurable g' ∧ g' ∘ f = g :=
   ⟨extend f g fun x => Classical.choice (hne x),
     hf.measurable_extend hg (measurable_const' fun _ _ => rfl),
-    funext fun x => hf.Injective.extend_apply _ _ _⟩
+    funext fun x => hf.injective.extend_apply _ _ _⟩
 #align measurable_embedding.exists_measurable_extend MeasurableEmbedding.exists_measurable_extend
 
 theorem measurable_comp_iff (hg : MeasurableEmbedding g) : Measurable (g ∘ f) ↔ Measurable f :=
   by
   refine' ⟨fun H => _, hg.measurable.comp⟩
-  suffices Measurable ((range_splitting g ∘ range_factorization g) ∘ f) by
-    rwa [(right_inverse_range_splitting hg.injective).comp_eq_id] at this
+  suffices Measurable ((rangeSplitting g ∘ rangeFactorization g) ∘ f) by
+    rwa [(rightInverse_rangeSplitting hg.injective).comp_eq_id] at this
   exact hg.measurable_range_splitting.comp H.subtype_mk
 #align measurable_embedding.measurable_comp_iff MeasurableEmbedding.measurable_comp_iff
 
@@ -1278,15 +1278,15 @@ theorem self_trans_symm (e : α ≃ᵐ β) : e.trans e.symm = refl α :=
 #align measurable_equiv.self_trans_symm MeasurableEquiv.self_trans_symm
 
 protected theorem surjective (e : α ≃ᵐ β) : Surjective e :=
-  e.toEquiv.Surjective
+  e.toEquiv.surjective
 #align measurable_equiv.surjective MeasurableEquiv.surjective
 
 protected theorem bijective (e : α ≃ᵐ β) : Bijective e :=
-  e.toEquiv.Bijective
+  e.toEquiv.bijective
 #align measurable_equiv.bijective MeasurableEquiv.bijective
 
 protected theorem injective (e : α ≃ᵐ β) : Injective e :=
-  e.toEquiv.Injective
+  e.toEquiv.injective
 #align measurable_equiv.injective MeasurableEquiv.injective
 
 @[simp]
@@ -1302,7 +1302,7 @@ theorem image_eq_preimage (e : α ≃ᵐ β) (s : Set α) : e '' s = e.symm ⁻�
 theorem measurableSet_preimage (e : α ≃ᵐ β) {s : Set β} :
     MeasurableSet (e ⁻¹' s) ↔ MeasurableSet s :=
   ⟨fun h => by simpa only [symm_preimage_preimage] using e.symm.measurable h, fun h =>
-    e.Measurable h⟩
+    e.measurable h⟩
 #align measurable_equiv.measurable_set_preimage MeasurableEquiv.measurableSet_preimage
 
 @[simp]
@@ -1312,8 +1312,8 @@ theorem measurableSet_image (e : α ≃ᵐ β) {s : Set α} : MeasurableSet (e '
 
 /-- A measurable equivalence is a measurable embedding. -/
 protected theorem measurableEmbedding (e : α ≃ᵐ β) : MeasurableEmbedding e :=
-  { Injective := e.Injective
-    Measurable := e.Measurable
+  { Injective := e.injective
+    Measurable := e.measurable
     measurableSet_image' := fun s => e.measurableSet_image.2 }
 #align measurable_equiv.measurable_embedding MeasurableEquiv.measurableEmbedding
 
@@ -1336,9 +1336,9 @@ protected theorem measurable_comp_iff {f : β → γ} (e : α ≃ᵐ β) :
   Iff.intro
     (fun hfe =>
       by
-      have : Measurable (f ∘ (e.symm.trans e).toEquiv) := hfe.comp e.symm.Measurable
-      rwa [coe_to_equiv, symm_trans_self] at this)
-    fun h => h.comp e.Measurable
+      have : Measurable (f ∘ (e.symm.trans e).toEquiv) := hfe.comp e.symm.measurable
+      rwa [coe_toEquiv, symm_trans_self] at this)
+    fun h => h.comp e.measurable
 #align measurable_equiv.measurable_comp_iff MeasurableEquiv.measurable_comp_iff
 
 /-- Any two types with unique elements are measurably equivalent. -/
@@ -1394,16 +1394,16 @@ def Set.prod (s : Set α) (t : Set β) : ↥(s ×ˢ t) ≃ᵐ s × t
     where
   toEquiv := Equiv.Set.prod s t
   measurable_to_fun :=
-    measurable_id.subtype_val.fst.subtype_mk.prod_mk measurable_id.subtype_val.snd.subtype_mk
+    measurable_id.subtype_coe.fst.subtype_mk.prod_mk measurable_id.subtype_coe.snd.subtype_mk
   measurable_inv_fun :=
-    Measurable.subtype_mk <| measurable_id.fst.subtype_val.prod_mk measurable_id.snd.subtype_val
+    Measurable.subtype_mk <| measurable_id.fst.subtype_coe.prod_mk measurable_id.snd.subtype_coe
 #align measurable_equiv.set.prod MeasurableEquiv.Set.prod
 
 /-- `univ α ≃ α` as measurable spaces. -/
 def Set.univ (α : Type _) [MeasurableSpace α] : (univ : Set α) ≃ᵐ α
     where
   toEquiv := Equiv.Set.univ α
-  measurable_to_fun := measurable_id.subtype_val
+  measurable_to_fun := measurable_id.subtype_coe
   measurable_inv_fun := measurable_id.subtype_mk
 #align measurable_equiv.set.univ MeasurableEquiv.Set.univ
 
@@ -1420,8 +1420,8 @@ def Set.rangeInl : (range Sum.inl : Set (Sum α β)) ≃ᵐ α
     where
   toFun ab :=
     match ab with
-    | ⟨Sum.inl a, _⟩ => a
-    | ⟨Sum.inr b, p⟩ =>
+    | ⟨sum.inl a, _⟩ => a
+    | ⟨sum.inr b, p⟩ =>
       have : False := by
         cases p
         contradiction
@@ -1435,7 +1435,7 @@ def Set.rangeInl : (range Sum.inl : Set (Sum α β)) ≃ᵐ α
     by
     refine' ⟨_, hs.inl_image, Set.ext _⟩
     rintro ⟨ab, a, rfl⟩
-    simp [set.range_inl._match_1]
+    simp [Set.RangeInl._match1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inl
 #align measurable_equiv.set.range_inl MeasurableEquiv.Set.rangeInl
 
@@ -1444,8 +1444,8 @@ def Set.rangeInr : (range Sum.inr : Set (Sum α β)) ≃ᵐ β
     where
   toFun ab :=
     match ab with
-    | ⟨Sum.inr b, _⟩ => b
-    | ⟨Sum.inl a, p⟩ =>
+    | ⟨sum.inr b, _⟩ => b
+    | ⟨sum.inl a, p⟩ =>
       have : False := by
         cases p
         contradiction
@@ -1459,7 +1459,7 @@ def Set.rangeInr : (range Sum.inr : Set (Sum α β)) ≃ᵐ β
     by
     refine' ⟨_, measurableSet_inr_image hs, Set.ext _⟩
     rintro ⟨ab, b, rfl⟩
-    simp [set.range_inr._match_1]
+    simp [Set.RangeInr._match1]
   measurable_inv_fun := Measurable.subtype_mk measurable_inr
 #align measurable_equiv.set.range_inr MeasurableEquiv.Set.rangeInr
 
@@ -1478,13 +1478,13 @@ def sumProdDistrib (α β γ) [MeasurableSpace α] [MeasurableSpace β] [Measura
         (measurable_set_range_inr.prod MeasurableSet.univ)
         (by rintro ⟨a | b, c⟩ <;> simp [Set.prod_eq]) _ _
     · refine' (Set.prod (range Sum.inl) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr Set.range_inl (Set.univ _)).symm.measurable_comp_iff.1 _
+      refine' (prodCongr Set.rangeInl (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inl
       ext ⟨a, c⟩
       rfl
     · refine' (Set.prod (range Sum.inr) univ).symm.measurable_comp_iff.1 _
-      refine' (prod_congr Set.range_inr (Set.univ _)).symm.measurable_comp_iff.1 _
+      refine' (prodCongr Set.rangeInr (Set.univ _)).symm.measurable_comp_iff.1 _
       dsimp [(· ∘ ·)]
       convert measurable_inr
       ext ⟨b, c⟩
@@ -1599,10 +1599,10 @@ variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α 
   if `f` is a measurable embedding -/
 noncomputable def equivImage (s : Set α) (hf : MeasurableEmbedding f) : s ≃ᵐ f '' s
     where
-  toEquiv := Equiv.Set.image f s hf.Injective
-  measurable_to_fun := (hf.Measurable.comp measurable_id.subtype_val).subtype_mk
+  toEquiv := Equiv.Set.image f s hf.injective
+  measurable_to_fun := (hf.measurable.comp measurable_id.subtype_coe).subtype_mk
   measurable_inv_fun := by
-    rintro t ⟨u, hu, rfl⟩; simp [preimage_preimage, set.image_symm_preimage hf.injective]
+    rintro t ⟨u, hu, rfl⟩; simp [preimage_preimage, Set.image_symm_preimage hf.injective]
     exact measurable_subtype_coe (hf.measurable_set_image' hu)
 #align measurable_embedding.equiv_image MeasurableEmbedding.equivImage
 
@@ -1618,7 +1618,7 @@ theorem of_measurable_inverse_on_range {g : range f → α} (hf₁ : Measurable 
     MeasurableEmbedding f :=
   by
   set e : α ≃ᵐ range f :=
-    ⟨⟨range_factorization f, g, H, H.right_inverse_of_surjective surjective_onto_range⟩,
+    ⟨⟨rangeFactorization f, g, H, H.right_inverse_of_surjective surjective_onto_range⟩,
       hf₁.subtype_mk, hg⟩
   exact (MeasurableEmbedding.subtype_coe hf₂).comp e.measurable_embedding
 #align measurable_embedding.of_measurable_inverse_on_range MeasurableEmbedding.of_measurable_inverse_on_range
@@ -1658,7 +1658,7 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
   have Fmono : ∀ {A B}, A ⊆ B → F A ⊆ F B := fun A B hAB =>
     compl_subset_compl.mpr <| Set.image_subset _ <| compl_subset_compl.mpr <| Set.image_subset _ hAB
   let X : ℕ → Set α := fun n => (F^[n]) univ
-  refine' ⟨Inter X, _, _⟩
+  refine' ⟨interᵢ X, _, _⟩
   · apply MeasurableSet.interᵢ
     intro n
     induction' n with n ih
@@ -1666,19 +1666,19 @@ noncomputable def schroederBernstein {f : α → β} {g : β → α} (hf : Measu
     rw [Function.iterate_succ', Function.comp_apply]
     exact (hg.measurable_set_image' (hf.measurable_set_image' ih).compl).compl
   apply subset_antisymm
-  · apply subset_Inter
+  · apply subset_interᵢ
     intro n
     cases n
     · exact subset_univ _
     rw [Function.iterate_succ', Function.comp_apply]
-    exact Fmono (Inter_subset _ _)
+    exact Fmono (interᵢ_subset _ _)
   rintro x hx ⟨y, hy, rfl⟩
-  rw [mem_Inter] at hx
+  rw [mem_interᵢ] at hx
   apply hy
-  rw [(inj_on_of_injective hf.injective _).image_interᵢ_eq]
+  rw [(injOn_of_injective hf.injective _).image_interᵢ_eq]
   swap
   · infer_instance
-  rw [mem_Inter]
+  rw [mem_interᵢ]
   intro n
   specialize hx n.succ
   rw [Function.iterate_succ', Function.comp_apply] at hx
@@ -1723,8 +1723,8 @@ instance inf_isMeasurablyGenerated (f g : Filter α) [IsMeasurablyGenerated f]
   by
   refine' ⟨_⟩
   rintro t ⟨sf, hsf, sg, hsg, rfl⟩
-  rcases is_measurably_generated.exists_measurable_subset hsf with ⟨s'f, hs'f, hmf, hs'sf⟩
-  rcases is_measurably_generated.exists_measurable_subset hsg with ⟨s'g, hs'g, hmg, hs'sg⟩
+  rcases IsMeasurablyGenerated.exists_measurable_subset hsf with ⟨s'f, hs'f, hmf, hs'sf⟩
+  rcases IsMeasurablyGenerated.exists_measurable_subset hsg with ⟨s'g, hs'g, hmg, hs'sg⟩
   refine' ⟨s'f ∩ s'g, inter_mem_inf hs'f hs'g, hmf.inter hmg, _⟩
   exact inter_subset_inter hs'sf hs'sg
 #align filter.inf_is_measurably_generated Filter.inf_isMeasurablyGenerated
@@ -1735,7 +1735,7 @@ theorem principal_isMeasurablyGenerated_iff {s : Set α} :
   refine' ⟨_, fun hs => ⟨fun t ht => ⟨s, mem_principal_self s, hs, ht⟩⟩⟩
   rintro ⟨hs⟩
   rcases hs (mem_principal_self s) with ⟨t, ht, htm, hts⟩
-  have : t = s := subset.antisymm hts ht
+  have : t = s := Subset.antisymm hts ht
   rwa [← this]
 #align filter.principal_is_measurably_generated_iff Filter.principal_isMeasurablyGenerated_iff
 
@@ -1747,15 +1747,15 @@ instance infᵢ_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurabl
     IsMeasurablyGenerated (⨅ i, f i) :=
   by
   refine' ⟨fun s hs => _⟩
-  rw [← equiv.plift.surjective.infi_comp, mem_infi] at hs
+  rw [← equiv.plift.surjective.infi_comp, mem_infᵢ] at hs
   rcases hs with ⟨t, ht, ⟨V, hVf, rfl⟩⟩
-  choose U hUf hU using fun i => is_measurably_generated.exists_measurable_subset (hVf i)
+  choose U hUf hU using fun i => IsMeasurablyGenerated.exists_measurable_subset (hVf i)
   refine' ⟨⋂ i : t, U i, _, _, _⟩
-  · rw [← equiv.plift.surjective.infi_comp, mem_infi]
+  · rw [← equiv.plift.surjective.infi_comp, mem_infᵢ]
     refine' ⟨t, ht, U, hUf, rfl⟩
   · haveI := ht.countable.to_encodable
     exact MeasurableSet.interᵢ fun i => (hU i).1
-  · exact Inter_mono fun i => (hU i).2
+  · exact interᵢ_mono fun i => (hU i).2
 #align filter.infi_is_measurably_generated Filter.infᵢ_isMeasurablyGenerated
 
 end Filter
@@ -1799,7 +1799,7 @@ theorem coe_empty : ↑(∅ : Subtype (MeasurableSet : Set α → Prop)) = (∅ 
 #align measurable_set.coe_empty MeasurableSet.coe_empty
 
 instance [MeasurableSingletonClass α] : Insert α (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun a s => ⟨Insert.insert a s, s.Prop.insert a⟩⟩
+  ⟨fun a s => ⟨Insert.insert a s, s.prop.insert a⟩⟩
 
 @[simp]
 theorem coe_insert [MeasurableSingletonClass α] (a : α)
@@ -1809,7 +1809,7 @@ theorem coe_insert [MeasurableSingletonClass α] (a : α)
 #align measurable_set.coe_insert MeasurableSet.coe_insert
 
 instance : HasCompl (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x => ⟨xᶜ, x.Prop.compl⟩⟩
+  ⟨fun x => ⟨xᶜ, x.prop.compl⟩⟩
 
 @[simp]
 theorem coe_compl (s : Subtype (MeasurableSet : Set α → Prop)) : ↑(sᶜ) = (sᶜ : Set α) :=
@@ -1817,7 +1817,7 @@ theorem coe_compl (s : Subtype (MeasurableSet : Set α → Prop)) : ↑(sᶜ) = 
 #align measurable_set.coe_compl MeasurableSet.coe_compl
 
 instance : Union (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x ∪ y, x.Prop.union y.Prop⟩⟩
+  ⟨fun x y => ⟨x ∪ y, x.prop.union y.prop⟩⟩
 
 @[simp]
 theorem coe_union (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∪ t) = (s ∪ t : Set α) :=
@@ -1825,7 +1825,7 @@ theorem coe_union (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∪ 
 #align measurable_set.coe_union MeasurableSet.coe_union
 
 instance : Inter (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x ∩ y, x.Prop.inter y.Prop⟩⟩
+  ⟨fun x y => ⟨x ∩ y, x.prop.inter y.prop⟩⟩
 
 @[simp]
 theorem coe_inter (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∩ t) = (s ∩ t : Set α) :=
@@ -1833,7 +1833,7 @@ theorem coe_inter (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s ∩ 
 #align measurable_set.coe_inter MeasurableSet.coe_inter
 
 instance : SDiff (Subtype (MeasurableSet : Set α → Prop)) :=
-  ⟨fun x y => ⟨x \ y, x.Prop.diffₓ y.Prop⟩⟩
+  ⟨fun x y => ⟨x \ y, x.prop.diff y.prop⟩⟩
 
 @[simp]
 theorem coe_sdiff (s t : Subtype (MeasurableSet : Set α → Prop)) : ↑(s \ t) = (s \ t : Set α) :=
@@ -1891,7 +1891,7 @@ instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
 theorem measurableSet_blimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.blimsup s Filter.atTop p :=
   by
-  simp only [Filter.blimsup_eq_infᵢ_bsupᵢ_of_nat, supr_eq_Union, infi_eq_Inter]
+  simp only [Filter.blimsup_eq_infᵢ_bsupᵢ_of_nat, supᵢ_eq_unionᵢ, infᵢ_eq_interᵢ]
   exact
     MeasurableSet.interᵢ fun n =>
       MeasurableSet.unionᵢ fun m => MeasurableSet.unionᵢ fun hm => h m hm.1
@@ -1901,7 +1901,7 @@ theorem measurableSet_blimsup {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n
 theorem measurableSet_bliminf {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n, p n → MeasurableSet (s n)) :
     MeasurableSet <| Filter.bliminf s Filter.atTop p :=
   by
-  simp only [Filter.bliminf_eq_supᵢ_binfᵢ_of_nat, infi_eq_Inter, supr_eq_Union]
+  simp only [Filter.bliminf_eq_supᵢ_binfᵢ_of_nat, infᵢ_eq_interᵢ, supᵢ_eq_unionᵢ]
   exact
     MeasurableSet.unionᵢ fun n =>
       MeasurableSet.interᵢ fun m => MeasurableSet.interᵢ fun hm => h m hm.1
@@ -1911,7 +1911,7 @@ theorem measurableSet_bliminf {s : ℕ → Set α} {p : ℕ → Prop} (h : ∀ n
 theorem measurableSet_limsup {s : ℕ → Set α} (hs : ∀ n, MeasurableSet <| s n) :
     MeasurableSet <| Filter.limsup s Filter.atTop :=
   by
-  convert measurable_set_blimsup (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
+  convert measurableSet_blimsup (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
   simp
 #align measurable_set.measurable_set_limsup MeasurableSet.measurableSet_limsup
 
@@ -1919,7 +1919,7 @@ theorem measurableSet_limsup {s : ℕ → Set α} (hs : ∀ n, MeasurableSet <| 
 theorem measurableSet_liminf {s : ℕ → Set α} (hs : ∀ n, MeasurableSet <| s n) :
     MeasurableSet <| Filter.liminf s Filter.atTop :=
   by
-  convert measurable_set_bliminf (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
+  convert measurableSet_bliminf (fun n h => hs n : ∀ n, True → MeasurableSet (s n))
   simp
 #align measurable_set.measurable_set_liminf MeasurableSet.measurableSet_liminf
 

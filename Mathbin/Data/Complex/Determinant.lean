@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module data.complex.determinant
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ namespace Complex
 @[simp]
 theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
   by
-  rw [← LinearMap.det_toMatrix basis_one_I, to_matrix_conj_ae, Matrix.det_fin_two_of]
+  rw [← LinearMap.det_toMatrix basisOneI, toMatrix_conjAe, Matrix.det_fin_two_of]
   simp
 #align complex.det_conj_ae Complex.det_conjAe
 
@@ -34,7 +34,7 @@ theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
 @[simp]
 theorem linearEquiv_det_conjAe : conjAe.toLinearEquiv.det = -1 := by
   rw [← Units.eq_iff, LinearEquiv.coe_det, ← LinearEquiv.toLinearMap_eq_coe,
-    AlgEquiv.toLinearEquiv_toLinearMap, det_conj_ae, Units.coe_neg_one]
+    AlgEquiv.toLinearEquiv_toLinearMap, det_conjAe, Units.coe_neg_one]
 #align complex.linear_equiv_det_conj_ae Complex.linearEquiv_det_conjAe
 
 end Complex

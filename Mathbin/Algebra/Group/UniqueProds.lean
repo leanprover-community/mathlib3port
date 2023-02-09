@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.group.unique_prods
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) 
 #align unique_add.set_subsingleton UniqueAdd.set_subsingleton
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print UniqueMul.iff_existsUnique /-
 @[to_additive]
@@ -105,7 +105,7 @@ theorem iff_existsUnique (aA : a0 ∈ A) (bB : b0 ∈ B) :
 #align unique_add.iff_exists_unique UniqueAdd.iff_existsUnique
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (ab «expr ∈ » [finset.product/multiset.product/set.prod/list.product](A, B)) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print UniqueMul.exists_iff_exists_existsUnique /-
 @[to_additive]
@@ -117,7 +117,7 @@ theorem exists_iff_exists_existsUnique :
     have h' := h
     rcases h' with ⟨⟨a, b⟩, ⟨hab, rfl, -⟩, -⟩
     cases' finset.mem_product.mp hab with ha hb
-    exact ⟨a, b, ha, hb, (iff_exists_unique ha hb).mpr h⟩⟩
+    exact ⟨a, b, ha, hb, (iff_existsUnique ha hb).mpr h⟩⟩
 #align unique_mul.exists_iff_exists_exists_unique UniqueMul.exists_iff_exists_existsUnique
 #align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_existsUnique
 -/
@@ -132,8 +132,8 @@ Case conversion may be inaccurate. Consider using '#align unique_mul.mul_hom_pre
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
 theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G) {A B : Finset H}
     (u : UniqueMul A B (f a0) (f b0)) :
-    UniqueMul (A.Preimage f (Set.injOn_of_injective hf _))
-      (B.Preimage f (Set.injOn_of_injective hf _)) a0 b0 :=
+    UniqueMul (A.preimage f (Set.injOn_of_injective hf _))
+      (B.preimage f (Set.injOn_of_injective hf _)) a0 b0 :=
   by
   intro a b ha hb ab
   rw [← hf.eq_iff, ← hf.eq_iff]
@@ -179,7 +179,7 @@ See `unique_mul.mul_hom_image_iff` for a version with swapped bundling. -/
       "`unique_add` is preserved under embeddings that are additive.\n\nSee `unique_add.add_hom_image_iff` for a version with swapped bundling."]
 theorem mulHom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
     UniqueMul (A.map f) (B.map f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
-  classical convert mul_hom_image_iff ⟨f, mul⟩ f.2 <;>
+  classical convert mulHom_image_iff ⟨f, mul⟩ f.2 <;>
       · ext
         simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
 #align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iff
@@ -217,7 +217,7 @@ instance {M} [Add M] [UniqueSums M] : UniqueProds (Multiplicative M)
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueSums.uniqueAdd_of_nonempty hA' hB
-    exact ⟨of_add a0, hA0, of_add b0, hB0, fun a b aA bB H => J aA bB H⟩
+    exact ⟨ofAdd a0, hA0, ofAdd b0, hB0, fun a b aA bB H => J aA bB H⟩
 
 end Multiplicative
 
@@ -229,7 +229,7 @@ instance {M} [Mul M] [UniqueProds M] : UniqueSums (Additive M)
     let A' : Finset M := A
     have hA' : A'.Nonempty := hA
     obtain ⟨a0, hA0, b0, hB0, J⟩ := UniqueProds.uniqueMul_of_nonempty hA' hB
-    exact ⟨of_mul a0, hA0, of_mul b0, hB0, fun a b aA bB H => J aA bB H⟩
+    exact ⟨ofMul a0, hA0, ofMul b0, hB0, fun a b aA bB H => J aA bB H⟩
 
 end Additive
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ instance : One (Completion α) :=
   ⟨(1 : α)⟩
 
 instance : Mul (Completion α) :=
-  ⟨curry <| (denseInducing_coe.Prod denseInducing_coe).extend (coe ∘ uncurry (· * ·))⟩
+  ⟨curry <| (denseInducing_coe.prod denseInducing_coe).extend (coe ∘ uncurry (· * ·))⟩
 
 @[norm_cast]
 theorem coe_one : ((1 : α) : Completion α) = 1 :=
@@ -67,7 +67,7 @@ variable {α} [TopologicalRing α]
 
 @[norm_cast]
 theorem coe_mul (a b : α) : ((a * b : α) : Completion α) = a * b :=
-  ((denseInducing_coe.Prod denseInducing_coe).extend_eq
+  ((denseInducing_coe.prod denseInducing_coe).extend_eq
       ((continuous_coe α).comp (@continuous_mul α _ _ _)) (a, b)).symm
 #align uniform_space.completion.coe_mul UniformSpace.Completion.coe_mul
 
@@ -75,9 +75,9 @@ variable [UniformAddGroup α]
 
 theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.1 * p.2 :=
   by
-  let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl
+  let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ toCompl
   have : Continuous fun p : α × α => m p.1 p.2 := (continuous_coe α).comp continuous_mul
-  have di : DenseInducing (to_compl : α → completion α) := dense_inducing_coe
+  have di : DenseInducing (toCompl : α → Completion α) := denseInducing_coe
   convert di.extend_Z_bilin di this
   ext ⟨x, y⟩
   rfl
@@ -185,9 +185,9 @@ theorem map_smul_eq_mul_coe (r : R) :
     Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) :=
   by
   ext x
-  refine' completion.induction_on x _ fun a => _
+  refine' Completion.induction_on x _ fun a => _
   · exact isClosed_eq completion.continuous_map (continuous_mul_left _)
-  · rw [map_coe (uniform_continuous_const_smul r) a, Algebra.smul_def, coe_mul]
+  · rw [map_coe (uniformContinuous_const_smul r) a, Algebra.smul_def, coe_mul]
 #align uniform_space.completion.map_smul_eq_mul_coe UniformSpace.Completion.map_smul_eq_mul_coe
 
 instance : Algebra R (Completion A) :=
@@ -198,7 +198,7 @@ instance : Algebra R (Completion A) :=
     commutes' := fun r x =>
       Completion.induction_on x (isClosed_eq (continuous_mul_left _) (continuous_mul_right _))
         fun a => by
-        simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a)
+        simpa only [coe_mul] using congr_arg (coe : A → Completion A) (Algebra.commutes r a)
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
 
 theorem algebraMap_def (r : R) :
@@ -279,7 +279,7 @@ variable [T2Space γ] [CompleteSpace γ]
 noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ} (ue : UniformInducing i)
     (dr : DenseRange i) (hf : UniformContinuous f) : β →+* γ
     where
-  toFun := (ue.DenseInducing dr).extend f
+  toFun := (ue.denseInducing dr).extend f
   map_one' := by
     convert DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous 1
     exacts[i.map_one.symm, f.map_one.symm]
@@ -297,7 +297,7 @@ noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ
       simp_rw [← i.map_add, DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous _, ←
         f.map_add]
   map_mul' := by
-    have h := (uniformContinuous_uniformly_extend ue dr hf).Continuous
+    have h := (uniformContinuous_uniformly_extend ue dr hf).continuous
     refine' fun x y => DenseRange.induction_on₂ dr _ (fun a b => _) x y
     ·
       exact

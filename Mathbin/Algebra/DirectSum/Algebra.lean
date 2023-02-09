@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ instance : Algebra R (⨁ i, A i)
   map_mul' a b := by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
+    apply Dfinsupp.single_eq_of_sigma_eq (Galgebra.map_mul a b)
   commutes' r x :=
     by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
@@ -80,7 +80,7 @@ instance : Algebra R (⨁ i, A i)
     ext (i xi) : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
+    apply Dfinsupp.single_eq_of_sigma_eq (Galgebra.commutes r ⟨i, xi⟩)
   smul_def' r x :=
     by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
@@ -89,7 +89,7 @@ instance : Algebra R (⨁ i, A i)
     dsimp only [AddMonoidHom.comp_apply, DistribMulAction.toAddMonoidHom_apply,
       AddMonoidHom.mul_apply]
     rw [DirectSum.of_mul_of, ← of_smul]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
+    apply Dfinsupp.single_eq_of_sigma_eq (Galgebra.smul_def r ⟨i, xi⟩)
 
 theorem algebraMap_apply (r : R) :
     algebraMap R (⨁ i, A i) r = DirectSum.of A 0 (Galgebra.toFun r) :=

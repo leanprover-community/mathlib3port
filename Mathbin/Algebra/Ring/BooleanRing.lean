@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.ring.boolean_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,13 +379,13 @@ protected def RingHom.asBoolalg (f : α →+* β) : BoundedLatticeHom (AsBoolalg
 #align ring_hom.as_boolalg RingHom.asBoolalg
 
 @[simp]
-theorem RingHom.asBoolalg_id : (RingHom.id α).AsBoolalg = BoundedLatticeHom.id _ :=
+theorem RingHom.asBoolalg_id : (RingHom.id α).asBoolalg = BoundedLatticeHom.id _ :=
   rfl
 #align ring_hom.as_boolalg_id RingHom.asBoolalg_id
 
 @[simp]
 theorem RingHom.asBoolalg_comp (g : β →+* γ) (f : α →+* β) :
-    (g.comp f).AsBoolalg = g.AsBoolalg.comp f.AsBoolalg :=
+    (g.comp f).asBoolalg = g.asBoolalg.comp f.asBoolalg :=
   rfl
 #align ring_hom.as_boolalg_comp RingHom.asBoolalg_comp
 
@@ -575,13 +575,13 @@ protected def BoundedLatticeHom.asBoolring (f : BoundedLatticeHom α β) :
 #align bounded_lattice_hom.as_boolring BoundedLatticeHom.asBoolring
 
 @[simp]
-theorem BoundedLatticeHom.asBoolring_id : (BoundedLatticeHom.id α).AsBoolring = RingHom.id _ :=
+theorem BoundedLatticeHom.asBoolring_id : (BoundedLatticeHom.id α).asBoolring = RingHom.id _ :=
   rfl
 #align bounded_lattice_hom.as_boolring_id BoundedLatticeHom.asBoolring_id
 
 @[simp]
 theorem BoundedLatticeHom.asBoolring_comp (g : BoundedLatticeHom β γ) (f : BoundedLatticeHom α β) :
-    (g.comp f).AsBoolring = g.AsBoolring.comp f.AsBoolring :=
+    (g.comp f).asBoolring = g.asBoolring.comp f.asBoolring :=
   rfl
 #align bounded_lattice_hom.as_boolring_comp BoundedLatticeHom.asBoolring_comp
 

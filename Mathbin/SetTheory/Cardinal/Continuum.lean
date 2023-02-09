@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.continuum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem two_power_aleph0 : 2 ^ aleph0.{u} = continuum.{u} :=
 
 @[simp]
 theorem lift_continuum : lift.{v} 𝔠 = 𝔠 := by
-  rw [← two_power_aleph_0, lift_two_power, lift_aleph_0, two_power_aleph_0]
+  rw [← two_power_aleph0, lift_two_power, lift_aleph0, two_power_aleph0]
 #align cardinal.lift_continuum Cardinal.lift_continuum
 
 /-!
@@ -80,8 +80,8 @@ theorem continuum_ne_zero : 𝔠 ≠ 0 :=
 
 theorem aleph_one_le_continuum : aleph 1 ≤ 𝔠 :=
   by
-  rw [← succ_aleph_0]
-  exact Order.succ_le_of_lt aleph_0_lt_continuum
+  rw [← succ_aleph0]
+  exact Order.succ_le_of_lt aleph0_lt_continuum
 #align cardinal.aleph_one_le_continuum Cardinal.aleph_one_le_continuum
 
 @[simp]
@@ -171,7 +171,7 @@ theorem nat_power_aleph0 {n : ℕ} (hn : 2 ≤ n) : (n ^ aleph0.{u} : Cardinal.{
 
 @[simp]
 theorem continuum_power_aleph0 : continuum.{u} ^ aleph0.{u} = 𝔠 := by
-  rw [← two_power_aleph_0, ← power_mul, mul_eq_left le_rfl le_rfl aleph_0_ne_zero]
+  rw [← two_power_aleph0, ← power_mul, mul_eq_left le_rfl le_rfl aleph0_ne_zero]
 #align cardinal.continuum_power_aleph_0 Cardinal.continuum_power_aleph0
 
 end Cardinal

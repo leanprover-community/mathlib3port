@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.measure.giry_monad
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,11 +64,11 @@ theorem measurable_of_measurable_coe (f : β → Measure α)
 
 instance {α : Type _} {m : MeasurableSpace α} : HasMeasurableAdd₂ (Measure α) :=
   by
-  refine' ⟨measure.measurable_of_measurable_coe _ fun s hs => _⟩
-  simp_rw [measure.coe_add, Pi.add_apply]
+  refine' ⟨Measure.measurable_of_measurable_coe _ fun s hs => _⟩
+  simp_rw [Measure.coe_add, Pi.add_apply]
   refine' Measurable.add _ _
-  · exact (measure.measurable_coe hs).comp measurable_fst
-  · exact (measure.measurable_coe hs).comp measurable_snd
+  · exact (Measure.measurable_coe hs).comp measurable_fst
+  · exact (Measure.measurable_coe hs).comp measurable_snd
 
 theorem measurable_measure {μ : α → Measure β} :
     Measurable μ ↔ ∀ (s : Set β) (hs : MeasurableSet s), Measurable fun b => μ b s :=
@@ -92,10 +92,10 @@ theorem measurable_dirac : Measurable (Measure.dirac : α → Measure α) :=
 theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun μ : Measure α => ∫⁻ x, f x ∂μ :=
   by
-  simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
+  simp only [lintegral_eq_supᵢ_eapprox_lintegral, hf, SimpleFunc.lintegral]
   refine' measurable_supᵢ fun n => Finset.measurable_sum _ fun i _ => _
   refine' Measurable.const_mul _ _
-  exact measurable_coe ((simple_func.eapprox f n).measurableSet_preimage _)
+  exact measurable_coe ((SimpleFunc.eapprox f n).measurableSet_preimage _)
 #align measure_theory.measure.measurable_lintegral MeasureTheory.Measure.measurable_lintegral
 
 /-- Monadic join on `measure` in the category of measurable spaces and measurable
@@ -105,9 +105,9 @@ def join (m : Measure (Measure α)) : Measure α :=
     (by simp only [measure_empty, lintegral_const, zero_mul])
     (by
       intro f hf h
-      simp_rw [measure_Union h hf]
+      simp_rw [measure_unionᵢ h hf]
       apply lintegral_tsum
-      intro i; exact (measurable_coe (hf i)).AeMeasurable)
+      intro i; exact (measurable_coe (hf i)).aeMeasurable)
 #align measure_theory.measure.join MeasureTheory.Measure.join
 
 @[simp]
@@ -131,20 +131,20 @@ theorem measurable_join : Measurable (join : Measure (Measure α) → Measure α
 theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : Measurable f) :
     (∫⁻ x, f x ∂join m) = ∫⁻ μ, ∫⁻ x, f x ∂μ ∂m :=
   by
-  simp_rw [lintegral_eq_supr_eapprox_lintegral hf, simple_func.lintegral,
-    join_apply (simple_func.measurable_set_preimage _ _)]
+  simp_rw [lintegral_eq_supᵢ_eapprox_lintegral hf, SimpleFunc.lintegral,
+    join_apply (SimpleFunc.measurableSet_preimage _ _)]
   suffices
     ∀ (s : ℕ → Finset ℝ≥0∞) (f : ℕ → ℝ≥0∞ → Measure α → ℝ≥0∞) (hf : ∀ n r, Measurable (f n r))
       (hm : Monotone fun n μ => ∑ r in s n, r * f n r μ),
       (⨆ n, ∑ r in s n, r * ∫⁻ μ, f n r μ ∂m) = ∫⁻ μ, ⨆ n, ∑ r in s n, r * f n r μ ∂m
     by
     refine'
-      this (fun n => simple_func.range (simple_func.eapprox f n))
-        (fun n r μ => μ (simple_func.eapprox f n ⁻¹' {r})) _ _
-    · exact fun n r => measurable_coe (simple_func.measurable_set_preimage _ _)
-    · exact fun n m h μ => simple_func.lintegral_mono (simple_func.monotone_eapprox _ h) le_rfl
+      this (fun n => SimpleFunc.range (SimpleFunc.eapprox f n))
+        (fun n r μ => μ (SimpleFunc.eapprox f n ⁻¹' {r})) _ _
+    · exact fun n r => measurable_coe (SimpleFunc.measurableSet_preimage _ _)
+    · exact fun n m h μ => SimpleFunc.lintegral_mono (SimpleFunc.monotone_eapprox _ h) le_rfl
   intro s f hf hm
-  rw [lintegral_supr _ hm]
+  rw [lintegral_supᵢ _ hm]
   swap
   · exact fun n => Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
   congr

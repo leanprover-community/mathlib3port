@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ in `C`.
 @[reducible]
 def widePullbackDiagramOfDiagramOver (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     WidePullbackShape J ⥤ C :=
-  WidePullbackShape.wideCospan B (fun j => (F.obj ⟨j⟩).left) fun j => (F.obj ⟨j⟩).Hom
+  WidePullbackShape.wideCospan B (fun j => (F.obj ⟨j⟩).left) fun j => (F.obj ⟨j⟩).hom
 #align category_theory.over.construct_products.wide_pullback_diagram_of_diagram_over CategoryTheory.Over.ConstructProducts.widePullbackDiagramOfDiagramOver
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
@@ -54,13 +54,13 @@ def conesEquivInverseObj (B : C) {J : Type w} (F : Discrete J ⥤ Over B) (c : C
     where
   x := c.x.left
   π :=
-    { app := fun X => Option.casesOn X c.x.Hom fun j : J => (c.π.app ⟨j⟩).left
+    { app := fun X => Option.casesOn X c.x.hom fun j : J => (c.π.app ⟨j⟩).left
       -- `tidy` can do this using `case_bash`, but let's try to be a good `-T50000` citizen:
       naturality' := fun X Y f => by
         dsimp; cases X <;> cases Y <;> cases f
-        · rw [category.id_comp, category.comp_id]
-        · rw [over.w, category.id_comp]
-        · rw [category.id_comp, category.comp_id] }
+        · rw [Category.id_comp, Category.comp_id]
+        · rw [Over.w, Category.id_comp]
+        · rw [Category.id_comp, Category.comp_id] }
 #align category_theory.over.construct_products.cones_equiv_inverse_obj CategoryTheory.Over.ConstructProducts.conesEquivInverseObj
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
@@ -70,7 +70,7 @@ def conesEquivInverse (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
     where
   obj := conesEquivInverseObj B F
   map c₁ c₂ f :=
-    { Hom := f.Hom.left
+    { Hom := f.hom.left
       w' := fun j => by
         cases j
         · simp
@@ -91,8 +91,8 @@ def conesEquivFunctor (B : C) {J : Type w} (F : Discrete J ⥤ Over B) :
       π :=
         {
           app := fun ⟨j⟩ =>
-            Over.homMk (c.π.app (some j)) (by apply c.w (wide_pullback_shape.hom.term j)) } }
-  map c₁ c₂ f := { Hom := Over.homMk f.Hom }
+            Over.homMk (c.π.app (some j)) (by apply c.w (WidePullbackShape.Hom.term j)) } }
+  map c₁ c₂ f := { Hom := Over.homMk f.hom }
 #align category_theory.over.construct_products.cones_equiv_functor CategoryTheory.Over.ConstructProducts.conesEquivFunctor
 
 attribute [local tidy] tactic.case_bash
@@ -142,7 +142,7 @@ theorem hasOverLimitDiscreteOfWidePullbackLimit {B : C} (F : Discrete J ⥤ Over
   HasLimit.mk
     { Cone := _
       IsLimit :=
-        IsLimit.ofRightAdjoint (conesEquiv B F).Functor
+        IsLimit.ofRightAdjoint (conesEquiv B F).functor
           (limit.isLimit (widePullbackDiagramOfDiagramOver B F)) }
 #align category_theory.over.construct_products.has_over_limit_discrete_of_wide_pullback_limit CategoryTheory.Over.ConstructProducts.hasOverLimitDiscreteOfWidePullbackLimit
 
@@ -189,10 +189,10 @@ theorem over_hasTerminal (B : C) : HasTerminal (Over B) :=
               fac' := fun _ j => j.as.elim
               uniq' := fun s m _ => by
                 ext
-                rw [over.hom_mk_left]
+                rw [Over.homMk_left]
                 have := m.w
                 dsimp at this
-                rwa [category.comp_id, category.comp_id] at this } } }
+                rwa [Category.comp_id, Category.comp_id] at this } } }
 #align category_theory.over.over_has_terminal CategoryTheory.Over.over_hasTerminal
 
 end CategoryTheory.Over

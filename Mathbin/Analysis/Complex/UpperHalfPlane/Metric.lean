@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.metric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ theorem cosh_dist' (z w : ℍ) :
     Real.cosh (dist z w) = ((z.re - w.re) ^ 2 + z.im ^ 2 + w.im ^ 2) / (2 * z.im * w.im) :=
   by
   have H : 0 < 2 * z.im * w.im := mul_pos (mul_pos two_pos z.im_pos) w.im_pos
-  field_simp [cosh_dist, Complex.dist_eq, Complex.sq_abs, norm_sq_apply, H, H.ne']
+  field_simp [cosh_dist, Complex.dist_eq, Complex.sq_abs, normSq_apply, H, H.ne']
   ring
 #align upper_half_plane.cosh_dist' UpperHalfPlane.cosh_dist'
 
@@ -183,7 +183,7 @@ theorem dist_coe_center_sq (z w : ℍ) (r : ℝ) :
       2 * z.im * w.im * (cosh (dist z w) - cosh r) + (w.im * sinh r) ^ 2 :=
   by
   have H : 2 * z.im * w.im ≠ 0 := by apply_rules [mul_ne_zero, two_ne_zero, im_ne_zero]
-  simp only [Complex.dist_eq, Complex.sq_abs, norm_sq_apply, coe_re, coe_im, center_re, center_im,
+  simp only [Complex.dist_eq, Complex.sq_abs, normSq_apply, coe_re, coe_im, center_re, center_im,
     cosh_dist', mul_div_cancel' _ H, sub_sq z.im, mul_pow, Real.cosh_sq, sub_re, sub_im, mul_sub, ←
     sq]
   ring
@@ -198,7 +198,7 @@ theorem dist_coe_center (z w : ℍ) (r : ℝ) :
 theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
     cmp (dist z w) r = cmp (dist (z : ℂ) (w.center r)) (w.im * sinh r) :=
   by
-  letI := metric_space_aux
+  letI := metricSpaceAux
   cases' lt_or_le r 0 with hr₀ hr₀
   · trans Ordering.gt
     exacts[(hr₀.trans_le dist_nonneg).cmp_eq_gt,
@@ -206,7 +206,7 @@ theorem cmp_dist_eq_cmp_dist_coe_center (z w : ℍ) (r : ℝ) :
   have hr₀' : 0 ≤ w.im * sinh r := mul_nonneg w.im_pos.le (sinh_nonneg_iff.2 hr₀)
   have hzw₀ : 0 < 2 * z.im * w.im := mul_pos (mul_pos two_pos z.im_pos) w.im_pos
   simp only [← cosh_strict_mono_on.cmp_map_eq dist_nonneg hr₀, ←
-    (@strictMonoOn_pow ℝ _ _ two_pos).cmp_map_eq dist_nonneg hr₀', dist_coe_center_sq]
+    (@strict_mono_on_pow ℝ _ _ two_pos).cmp_map_eq dist_nonneg hr₀', dist_coe_center_sq]
   rw [← cmp_mul_pos_left hzw₀, ← cmp_sub_zero, ← mul_sub, ← cmp_add_right, zero_add]
 #align upper_half_plane.cmp_dist_eq_cmp_dist_coe_center UpperHalfPlane.cmp_dist_eq_cmp_dist_coe_center
 
@@ -251,7 +251,7 @@ theorem dist_of_re_eq (h : z.re = w.re) : dist z w = dist (log z.im) (log w.im) 
       sinh_log h₀, dist_of_re_eq, coe_im, coe_im, center_im, cosh_abs, cosh_log h₀, inv_div] <;>
     [skip, exact h]
   nth_rw 4 [← abs_of_pos w.im_pos]
-  simp only [← _root_.abs_mul, coe_im, Real.dist_eq]
+  simp only [← abs_mul, coe_im, Real.dist_eq]
   congr 1
   field_simp [z.im_pos, w.im_pos, z.im_ne_zero, w.im_ne_zero]
   ring
@@ -319,7 +319,7 @@ instance : MetricSpace ℍ :=
       apply_rules [Continuous.div, Continuous.mul, continuous_const, Continuous.arsinh,
         Continuous.dist, continuous_coe.comp, continuous_fst, continuous_snd,
         real.continuous_sqrt.comp, continuous_im.comp]
-    · letI : MetricSpace ℍ := metric_space_aux
+    · letI : MetricSpace ℍ := metricSpaceAux
       refine' le_of_nhds_le_nhds fun z => _
       rw [nhds_induced]
       refine' (nhds_basis_ball.le_basis_iff (nhds_basis_ball.comap _)).2 fun R hR => _
@@ -357,7 +357,7 @@ theorem image_coe_ball (z : ℍ) (r : ℝ) :
   · rintro ⟨w, hw, rfl⟩
     exact dist_lt_iff_dist_coe_center_lt.1 hw
   · intro hw
-    lift w to ℍ using im_pos_of_dist_center_le (ball_subset_closed_ball hw)
+    lift w to ℍ using im_pos_of_dist_center_le (ball_subset_closedBall hw)
     exact mem_image_of_mem _ (dist_lt_iff_dist_coe_center_lt.2 hw)
 #align upper_half_plane.image_coe_ball UpperHalfPlane.image_coe_ball
 
@@ -368,14 +368,14 @@ theorem image_coe_sphere (z : ℍ) (r : ℝ) :
   · rintro ⟨w, hw, rfl⟩
     exact dist_eq_iff_dist_coe_center_eq.1 hw
   · intro hw
-    lift w to ℍ using im_pos_of_dist_center_le (sphere_subset_closed_ball hw)
+    lift w to ℍ using im_pos_of_dist_center_le (sphere_subset_closedBall hw)
     exact mem_image_of_mem _ (dist_eq_iff_dist_coe_center_eq.2 hw)
 #align upper_half_plane.image_coe_sphere UpperHalfPlane.image_coe_sphere
 
 instance : ProperSpace ℍ := by
   refine' ⟨fun z r => _⟩
-  rw [← inducing_coe.is_compact_iff, image_coe_closed_ball]
-  apply is_compact_closed_ball
+  rw [← inducing_coe.is_compact_iff, image_coe_closedBall]
+  apply isCompact_closedBall
 
 theorem isometry_vertical_line (a : ℝ) : Isometry fun y => mk ⟨a, exp y⟩ (exp_pos y) :=
   by
@@ -394,7 +394,7 @@ theorem isometry_pos_mul (a : { x : ℝ // 0 < x }) : Isometry ((· • ·) a : 
   simp only [dist_eq, coe_pos_real_smul, pos_real_im]; congr 2
   rw [dist_smul₀, mul_mul_mul_comm, Real.sqrt_mul (mul_self_nonneg _), Real.sqrt_mul_self_eq_abs,
     Real.norm_eq_abs, mul_left_comm]
-  exact mul_div_mul_left _ _ (mt _root_.abs_eq_zero.1 a.2.ne')
+  exact mul_div_mul_left _ _ (mt abs_eq_zero.1 a.2.ne')
 #align upper_half_plane.isometry_pos_mul UpperHalfPlane.isometry_pos_mul
 
 end UpperHalfPlane

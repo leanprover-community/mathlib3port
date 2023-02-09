@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.grading
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem ι_mul_ι_mem_evenOdd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ e
 
 theorem evenOdd_mul_le (i j : ZMod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q (i + j) :=
   by
-  simp_rw [even_odd, Submodule.supᵢ_eq_span, Submodule.span_mul_span]
+  simp_rw [evenOdd, Submodule.supᵢ_eq_span, Submodule.span_mul_span]
   apply Submodule.span_mono
   intro z hz
   obtain ⟨x, y, hx, hy, rfl⟩ := hz
@@ -94,12 +94,12 @@ theorem GradedAlgebra.ι_apply (m : M) :
 theorem GradedAlgebra.ι_sq_scalar (m : M) :
     GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) :=
   by
-  rw [graded_algebra.ι_apply Q, DirectSum.of_mul_of, DirectSum.algebraMap_apply]
+  rw [GradedAlgebra.ι_apply Q, DirectSum.of_mul_of, DirectSum.algebraMap_apply]
   refine' DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext rfl <| ι_sq_scalar _ _)
 #align clifford_algebra.graded_algebra.ι_sq_scalar CliffordAlgebra.GradedAlgebra.ι_sq_scalar
 
 theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
-    lift Q ⟨by apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩ x' =
+    lift Q ⟨by apply GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩ x' =
       DirectSum.of (fun i => evenOdd Q i) i' x' :=
   by
   cases' x' with x' hx'
@@ -115,7 +115,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
     · rw [AlgHom.map_add, ihx, ihy, ← map_add]
       rfl
     · obtain ⟨_, rfl⟩ := hm
-      rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.of_mul_of]
+      rw [AlgHom.map_mul, ih, lift_ι_apply, GradedAlgebra.ι_apply Q, DirectSum.of_mul_of]
       refine' DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext _ _) <;>
         dsimp only [GradedMonoid.mk, Subtype.coe_mk]
       · rw [Nat.succ_eq_add_one, add_comm, Nat.cast_add, Nat.cast_one]
@@ -133,20 +133,20 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
   GradedAlgebra.ofAlgHom (evenOdd Q)
     (-- while not necessary, the `by apply` makes this elaborate faster
       lift
-      Q ⟨by apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
+      Q ⟨by apply GradedAlgebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩)
     (-- the proof from here onward is mostly similar to the `tensor_algebra` case, with some extra
     -- handling for the `supr` in `even_odd`.
     by
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply,
         AlgHom.id_apply]
-      rw [lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.coeAlgHom_of, Subtype.coe_mk])
-    (by apply graded_algebra.lift_ι_eq Q)
+      rw [lift_ι_apply, GradedAlgebra.ι_apply Q, DirectSum.coeAlgHom_of, Subtype.coe_mk])
+    (by apply GradedAlgebra.lift_ι_eq Q)
 #align clifford_algebra.graded_algebra CliffordAlgebra.gradedAlgebra
 
 theorem supᵢ_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
   by
-  rw [← (DirectSum.Decomposition.isInternal (even_odd Q)).submodule_supᵢ_eq_top, eq_comm]
+  rw [← (DirectSum.Decomposition.isInternal (evenOdd Q)).submodule_supᵢ_eq_top, eq_comm]
   calc
     (⨆ (i : ZMod 2) (j : { n // ↑n = i }), (ι Q).range ^ ↑j) =
         ⨆ i : Σi : ZMod 2, { n : ℕ // ↑n = i }, (ι Q).range ^ (i.2 : ℕ) :=
@@ -157,7 +157,7 @@ theorem supᵢ_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
 #align clifford_algebra.supr_ι_range_eq_top CliffordAlgebra.supᵢ_ι_range_eq_top
 
 theorem evenOdd_isCompl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
-  (DirectSum.Decomposition.isInternal (evenOdd Q)).IsCompl zero_ne_one <|
+  (DirectSum.Decomposition.isInternal (evenOdd Q)).isCompl zero_ne_one <|
     by
     have : (Finset.univ : Finset (ZMod 2)) = {0, 1} := rfl
     simpa using congr_arg (coe : Finset (ZMod 2) → Set (ZMod 2)) this
@@ -221,7 +221,7 @@ theorem evenInduction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
             (zero_add 0 ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_evenOdd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q 0) : P x hx :=
   by
-  refine' even_odd_induction Q 0 (fun rx => _) (@hadd) hιι_mul x hx
+  refine' evenOddInduction Q 0 (fun rx => _) (@hadd) hιι_mul x hx
   simp_rw [ZMod.val_zero, pow_zero]
   rintro ⟨r, rfl⟩
   exact hr r
@@ -239,7 +239,7 @@ theorem oddInduction {P : ∀ x, x ∈ evenOdd Q 1 → Prop} (hι : ∀ v, P (ι
             (zero_add (1 : ZMod 2) ▸ SetLike.mul_mem_graded (ι_mul_ι_mem_evenOdd_zero Q m₁ m₂) hx))
     (x : CliffordAlgebra Q) (hx : x ∈ evenOdd Q 1) : P x hx :=
   by
-  refine' even_odd_induction Q 1 (fun ιv => _) (@hadd) hιι_mul x hx
+  refine' evenOddInduction Q 1 (fun ιv => _) (@hadd) hιι_mul x hx
   simp_rw [ZMod.val_one, pow_one]
   rintro ⟨v, rfl⟩
   exact hι v

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.measure.doubling
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,32 +69,32 @@ theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
     ∃ C : ℝ≥0,
       ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) :=
   by
-  let C := doubling_constant μ
+  let C := doublingConstant μ
   have hμ :
-    ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closed_ball x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closed_ball x ε) :=
+    ∀ n : ℕ, ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 ^ n * ε)) ≤ ↑(C ^ n) * μ (closedBall x ε) :=
     by
     intro n
     induction' n with n ih
     · simp
     replace ih := eventually_nhdsWithin_pos_mul_left (two_pos : 0 < (2 : ℝ)) ih
-    refine' (ih.and (exists_measure_closed_ball_le_mul' μ)).mono fun ε hε x => _
+    refine' (ih.and (exists_measure_closedBall_le_mul' μ)).mono fun ε hε x => _
     calc
-      μ (closed_ball x (2 ^ (n + 1) * ε)) = μ (closed_ball x (2 ^ n * (2 * ε))) := by
+      μ (closedBall x (2 ^ (n + 1) * ε)) = μ (closedBall x (2 ^ n * (2 * ε))) := by
         rw [pow_succ', mul_assoc]
-      _ ≤ ↑(C ^ n) * μ (closed_ball x (2 * ε)) := hε.1 x
-      _ ≤ ↑(C ^ n) * (C * μ (closed_ball x ε)) := Ennreal.mul_left_mono (hε.2 x)
-      _ = ↑(C ^ (n + 1)) * μ (closed_ball x ε) := by rw [← mul_assoc, pow_succ', Ennreal.coe_mul]
+      _ ≤ ↑(C ^ n) * μ (closedBall x (2 * ε)) := hε.1 x
+      _ ≤ ↑(C ^ n) * (C * μ (closedBall x ε)) := Ennreal.mul_left_mono (hε.2 x)
+      _ = ↑(C ^ (n + 1)) * μ (closedBall x ε) := by rw [← mul_assoc, pow_succ', Ennreal.coe_mul]
       
   rcases lt_or_le K 1 with (hK | hK)
   · refine' ⟨1, _⟩
     simp only [Ennreal.coe_one, one_mul]
     exact
       eventually_mem_nhds_within.mono fun ε hε x t ht =>
-        measure_mono <| closed_ball_subset_closed_ball (by nlinarith [mem_Ioi.mp hε])
+        measure_mono <| closedBall_subset_closedBall (by nlinarith [mem_Ioi.mp hε])
   · refine'
       ⟨C ^ ⌈Real.logb 2 K⌉₊,
-        ((hμ ⌈Real.logb 2 K⌉₊).And eventually_mem_nhdsWithin).mono fun ε hε x t ht =>
-          le_trans (measure_mono <| closed_ball_subset_closed_ball _) (hε.1 x)⟩
+        ((hμ ⌈Real.logb 2 K⌉₊).and eventually_mem_nhdsWithin).mono fun ε hε x t ht =>
+          le_trans (measure_mono <| closedBall_subset_closedBall _) (hε.1 x)⟩
     refine' mul_le_mul_of_nonneg_right (ht.trans _) (mem_Ioi.mp hε.2).le
     conv_lhs => rw [← Real.rpow_logb two_pos (by norm_num) (by linarith : 0 < K)]
     rw [← Real.rpow_nat_cast]
@@ -118,13 +118,13 @@ theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
         ∀ (x t r) (ht : t ∈ Ioc 0 K) (hr : r ≤ R),
           μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
-  have h := Classical.choose_spec (exists_eventually_forall_measure_closed_ball_le_mul μ K)
+  have h := Classical.choose_spec (exists_eventually_forall_measure_closedBall_le_mul μ K)
   rcases mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 h with ⟨R, Rpos, hR⟩
   refine' ⟨R, Rpos, fun x t r ht hr => _⟩
   rcases lt_trichotomy r 0 with (rneg | rfl | rpos)
   · have : t * r < 0 := mul_neg_of_pos_of_neg ht.1 rneg
-    simp only [closed_ball_eq_empty.2 this, measure_empty, zero_le']
-  · simp only [mul_zero, closed_ball_zero]
+    simp only [closedBall_eq_empty.2 this, measure_empty, zero_le']
+  · simp only [mul_zero, closedBall_zero]
     refine' le_mul_of_one_le_of_le _ le_rfl
     apply Ennreal.one_le_coe_iff.2 (le_max_right _ _)
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
@@ -135,7 +135,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
   filter_upwards [Classical.choose_spec
-      (exists_eventually_forall_measure_closed_ball_le_mul μ K)]with r hr x
+      (exists_eventually_forall_measure_closedBall_le_mul μ K)]with r hr x
   exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
 #align is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
 
@@ -151,7 +151,7 @@ theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
 multiplies the radius of balls by at most `K`, as stated
 in `measure_mul_le_scaling_constant_of_mul`. -/
 def scalingScaleOf (K : ℝ) : ℝ :=
-  (eventually_measure_mul_le_scalingConstantOf_mul μ K).some
+  (eventually_measure_mul_le_scalingConstantOf_mul μ K).choose
 #align is_doubling_measure.scaling_scale_of IsDoublingMeasure.scalingScaleOf
 
 theorem scalingScaleOf_pos (K : ℝ) : 0 < scalingScaleOf μ K :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.hom.set
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] (e : OrderIso.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u1} (Set.{u1} β) (Set.range.{u1, succ u2} β α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) (RelIso.toRelEmbedding.{u2, u1} α β (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1281 : α) (x._@.Mathlib.Order.Hom.Basic._hyg.1283 : α) => LE.le.{u2} α _inst_1 x._@.Mathlib.Order.Hom.Basic._hyg.1281 x._@.Mathlib.Order.Hom.Basic._hyg.1283) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.1296 : β) (x._@.Mathlib.Order.Hom.Basic._hyg.1298 : β) => LE.le.{u1} β _inst_2 x._@.Mathlib.Order.Hom.Basic._hyg.1296 x._@.Mathlib.Order.Hom.Basic._hyg.1298) e)))) (Set.univ.{u1} β)
 Case conversion may be inaccurate. Consider using '#align order_iso.range_eq OrderIso.range_eqₓ'. -/
 theorem range_eq (e : α ≃o β) : Set.range e = Set.univ :=
-  e.Surjective.range_eq
+  e.surjective.range_eq
 #align order_iso.range_eq OrderIso.range_eq
 
 /- warning: order_iso.symm_image_image -> OrderIso.symm_image_image is a dubious translation:
@@ -148,7 +148,7 @@ between `s` and its image. -/
 protected noncomputable def StrictMonoOn.orderIso {α β} [LinearOrder α] [Preorder β] (f : α → β)
     (s : Set α) (hf : StrictMonoOn f s) : s ≃o f '' s
     where
-  toEquiv := hf.InjOn.bijOn_image.Equiv _
+  toEquiv := hf.injOn.bijOn_image.equiv _
   map_rel_iff' x y := hf.le_iff_le x.2 y.2
 #align strict_mono_on.order_iso StrictMonoOn.orderIso
 -/
@@ -165,7 +165,7 @@ its range. -/
 @[simps apply]
 protected noncomputable def orderIso : α ≃o Set.range f
     where
-  toEquiv := Equiv.ofInjective f h_mono.Injective
+  toEquiv := Equiv.ofInjective f h_mono.injective
   map_rel_iff' a b := h_mono.le_iff_le
 #align strict_mono.order_iso StrictMono.orderIso
 -/
@@ -173,7 +173,7 @@ protected noncomputable def orderIso : α ≃o Set.range f
 #print StrictMono.orderIsoOfSurjective /-
 /-- A strictly monotone surjective function from a linear order is an order isomorphism. -/
 noncomputable def orderIsoOfSurjective : α ≃o β :=
-  (h_mono.OrderIso f).trans <| (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
+  (h_mono.orderIso f).trans <| (OrderIso.setCongr _ _ h_surj.range_eq).trans OrderIso.Set.univ
 #align strict_mono.order_iso_of_surjective StrictMono.orderIsoOfSurjective
 -/
 
@@ -231,13 +231,13 @@ def OrderIso.compl : α ≃o αᵒᵈ where
 
 #print compl_strictAnti /-
 theorem compl_strictAnti : StrictAnti (compl : α → α) :=
-  (OrderIso.compl α).StrictMono
+  (OrderIso.compl α).strictMono
 #align compl_strict_anti compl_strictAnti
 -/
 
 #print compl_antitone /-
 theorem compl_antitone : Antitone (compl : α → α) :=
-  (OrderIso.compl α).Monotone
+  (OrderIso.compl α).monotone
 #align compl_antitone compl_antitone
 -/
 

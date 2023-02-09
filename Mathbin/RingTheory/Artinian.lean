@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.artinian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem isArtinian_of_injective (f : M →ₗ[R] P) (h : Function.Injective f) [
 #align is_artinian_of_injective isArtinian_of_injective
 
 instance isArtinian_submodule' [IsArtinian R M] (N : Submodule R M) : IsArtinian R N :=
-  isArtinian_of_injective N.Subtype Subtype.val_injective
+  isArtinian_of_injective N.subtype Subtype.val_injective
 #align is_artinian_submodule' isArtinian_submodule'
 
 theorem isArtinian_of_le {s t : Submodule R M} [ht : IsArtinian R t] (h : s ≤ t) : IsArtinian R s :=
@@ -94,7 +94,7 @@ theorem isArtinian_of_surjective (f : M →ₗ[R] P) (hf : Function.Surjective f
 variable {M}
 
 theorem isArtinian_of_linearEquiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinian R P :=
-  isArtinian_of_surjective _ f.toLinearMap f.toEquiv.Surjective
+  isArtinian_of_surjective _ f.toLinearMap f.toEquiv.surjective
 #align is_artinian_of_linear_equiv isArtinian_of_linearEquiv
 
 theorem isArtinian_of_range_eq_ker [IsArtinian R M] [IsArtinian R P] (f : M →ₗ[R] N) (g : N →ₗ[R] P)
@@ -161,7 +161,7 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
   by
   refine'
     by_contradiction fun hf =>
-      (RelEmbedding.wellFounded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
+      (RelEmbedding.wellFounded_iff_no_descending_seq.1 (wellFounded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
   have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s :=
     by
@@ -250,7 +250,7 @@ theorem surjective_of_injective_endomorphism (f : M →ₗ[R] M) (s : Injective 
   obtain ⟨n, ne, w⟩ := exists_endomorphism_iterate_ker_sup_range_eq_top f
   rw [linear_map.ker_eq_bot.mpr (LinearMap.iterate_injective s n), bot_sup_eq,
     LinearMap.range_eq_top] at w
-  exact LinearMap.surjective_of_iterate_surjective Ne w
+  exact LinearMap.surjective_of_iterate_surjective ne w
 #align is_artinian.surjective_of_injective_endomorphism IsArtinian.surjective_of_injective_endomorphism
 
 /-- Any injective endomorphism of an Artinian module is bijective. -/
@@ -364,7 +364,7 @@ theorem isArtinian_of_tower (R) {S M} [CommRing R] [Ring S] [AddCommGroup M] [Al
     [Module S M] [Module R M] [IsScalarTower R S M] (h : IsArtinian R M) : IsArtinian S M :=
   by
   rw [isArtinian_iff_wellFounded] at h⊢
-  refine' (Submodule.restrictScalarsEmbedding R S M).WellFounded h
+  refine' (Submodule.restrictScalarsEmbedding R S M).wellFounded h
 #align is_artinian_of_tower isArtinian_of_tower
 
 theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M]
@@ -374,7 +374,7 @@ theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M
   haveI := Classical.decEq M
   haveI := Classical.decEq R
   have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
-  refine' @isArtinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isArtinian_pi
+  refine' @is_artinian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isArtinian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
     · intro f g
@@ -393,7 +393,7 @@ theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change (∑ i in s.attach, l i • (i : M)) = n
-  rw [@Finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
+  rw [@finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
   refine' Finset.sum_subset hl1 fun x _ hx => _
   rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
 #align is_artinian_of_fg_of_artinian isArtinian_of_fg_of_artinian
@@ -415,12 +415,12 @@ theorem Function.Surjective.isArtinianRing {R} [Ring R] {S} [Ring S] {F} [RingHo
     {f : F} (hf : Function.Surjective f) [H : IsArtinianRing R] : IsArtinianRing S :=
   by
   rw [isArtinianRing_iff, isArtinian_iff_wellFounded] at H⊢
-  exact (Ideal.orderEmbeddingOfSurjective f hf).WellFounded H
+  exact (Ideal.orderEmbeddingOfSurjective f hf).wellFounded H
 #align function.surjective.is_artinian_ring Function.Surjective.isArtinianRing
 
 instance isArtinianRing_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsArtinianRing R] :
     IsArtinianRing f.range :=
-  f.rangeRestrict_surjective.IsArtinianRing
+  f.rangeRestrict_surjective.isArtinianRing
 #align is_artinian_ring_range isArtinianRing_range
 
 namespace IsArtinianRing
@@ -493,7 +493,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) :=
 #align is_artinian_ring.localization_surjective IsArtinianRing.localization_surjective
 
 theorem localization_artinian : IsArtinianRing L :=
-  (localization_surjective S L).IsArtinianRing
+  (localization_surjective S L).isArtinianRing
 #align is_artinian_ring.localization_artinian IsArtinianRing.localization_artinian
 
 /-- `is_artinian_ring.localization_artinian` can't be made an instance, as it would make `S` + `R`

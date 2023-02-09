@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,8 +58,8 @@ instance {C : Type v₁} [SmallCategory C] : CartesianClosed (C ⥤ Type v₁)
     where closed' F :=
     {
       isAdj := by
-        letI := functor_category.prod_preserves_colimits F
-        apply is_left_adjoint_of_preserves_colimits (prod.functor.obj F) }
+        letI := FunctorCategory.prodPreservesColimits F
+        apply isLeftAdjointOfPreservesColimits (prod.functor.obj F) }
 
 end CartesianClosed
 

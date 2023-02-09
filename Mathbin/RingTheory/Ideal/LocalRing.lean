@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.local_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ theorem isUnit_or_isUnit_of_isUnit_add {a b : R} (h : IsUnit (a + b)) : IsUnit a
   by
   rcases h with ⟨u, hu⟩
   rw [← Units.inv_mul_eq_one, mul_add] at hu
-  apply Or.imp _ _ (is_unit_or_is_unit_of_add_one hu) <;> exact isUnit_of_mul_isUnit_right
+  apply Or.imp _ _ (isUnit_or_isUnit_of_add_one hu) <;> exact isUnit_of_mul_isUnit_right
 #align local_ring.is_unit_or_is_unit_of_is_unit_add LocalRing.isUnit_or_isUnit_of_isUnit_add
 
 theorem nonunits_add {a b : R} (ha : a ∈ nonunits R) (hb : b ∈ nonunits R) : a + b ∈ nonunits R :=
@@ -137,7 +137,7 @@ theorem eq_maximalIdeal {I : Ideal R} (hI : I.IsMaximal) : I = maximalIdeal R :=
 theorem le_maximalIdeal {J : Ideal R} (hJ : J ≠ ⊤) : J ≤ maximalIdeal R :=
   by
   rcases Ideal.exists_le_maximal J hJ with ⟨M, hM1, hM2⟩
-  rwa [← eq_maximal_ideal hM1]
+  rwa [← eq_maximalIdeal hM1]
 #align local_ring.le_maximal_ideal LocalRing.le_maximalIdeal
 
 @[simp]
@@ -186,7 +186,7 @@ theorem of_surjective' [CommRing S] [Nontrivial S] (f : R →+* S) (hf : Functio
     (by
       intro b
       obtain ⟨a, rfl⟩ := hf b
-      apply (is_unit_or_is_unit_one_sub_self a).imp f.is_unit_map _
+      apply (isUnit_or_isUnit_one_sub_self a).imp f.is_unit_map _
       rw [← f.map_one, ← f.map_sub]
       apply f.is_unit_map)
 #align local_ring.of_surjective' LocalRing.of_surjective'
@@ -322,7 +322,7 @@ theorem of_surjective [CommSemiring R] [LocalRing R] [CommSemiring S] [Nontrivia
       obtain ⟨b, rfl⟩ := hf b
       rw [← map_add] at hab
       exact
-        (is_unit_or_is_unit_of_is_unit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map
+        (isUnit_or_isUnit_of_isUnit_add <| IsLocalRingHom.map_nonunit _ hab).imp f.is_unit_map
           f.is_unit_map)
 #align local_ring.of_surjective LocalRing.of_surjective
 
@@ -337,7 +337,7 @@ theorem surjective_units_map_of_local_ringHom [CommRing R] [CommRing S] (f : R �
     (isUnit_of_map_unit f _
         (by
           rw [hb]
-          exact Units.isUnit _)).Unit;
+          exact Units.isUnit _)).unit;
   ext; exact hb
 #align local_ring.surjective_units_map_of_local_ring_hom LocalRing.surjective_units_map_of_local_ringHom
 
@@ -369,7 +369,7 @@ theorem ResidueField.algebraMap_eq : algebraMap R (ResidueField R) = residue R :
 
 instance : IsLocalRingHom (LocalRing.residue R) :=
   ⟨fun a ha =>
-    Classical.not_not.mp (Ideal.Quotient.eq_zero_iff_mem.Not.mp (isUnit_iff_ne_zero.mp ha))⟩
+    Classical.not_not.mp (Ideal.Quotient.eq_zero_iff_mem.not.mp (isUnit_iff_ne_zero.mp ha))⟩
 
 variable {R}
 

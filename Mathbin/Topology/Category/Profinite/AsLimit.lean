@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.as_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ abbrev diagram : DiscreteQuotient X ⥤ Profinite :=
 /-- A cone over `X.diagram` whose cone point is `X`. -/
 def asLimitCone : CategoryTheory.Limits.Cone X.diagram :=
   { x
-    π := { app := fun S => ⟨S.proj, S.proj_isLocallyConstant.Continuous⟩ } }
+    π := { app := fun S => ⟨S.proj, S.proj_isLocallyConstant.continuous⟩ } }
 #align Profinite.as_limit_cone Profinite.asLimitCone
 
 instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asLimitCone) :=
@@ -69,10 +69,10 @@ instance isIso_asLimitCone_lift : IsIso ((limitConeIsLimit X.diagram).lift X.asL
     (by
       refine' ⟨fun a b h => _, fun a => _⟩
       · refine' DiscreteQuotient.eq_of_forall_proj_eq fun S => _
-        apply_fun fun f : (limit_cone X.diagram).x => f.val S  at h
+        apply_fun fun f : (limitCone X.diagram).x => f.val S  at h
         exact h
       · obtain ⟨b, hb⟩ :=
-          DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
+          DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (homOfLe h)
         refine' ⟨b, _⟩
         ext S : 3
         apply hb)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.finite.polynomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,11 +38,11 @@ theorem frobenius_zMod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand
   by
   apply induction_on f
   · intro a
-    rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
+    rw [expand_c, frobenius_def, ← c_pow, ZMod.pow_card]
   · simp only [AlgHom.map_add, RingHom.map_add]
     intro _ _ hf hg
     rw [hf, hg]
-  · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
+  · simp only [expand_x, RingHom.map_mul, AlgHom.map_mul]
     intro _ _ hf
     rw [hf, frobenius_def]
 #align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zMod
@@ -82,7 +82,7 @@ theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 :=
   by
   nontriviality
   have : 0 < Fintype.card K - 1 := tsub_pos_of_lt Fintype.one_lt_card
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_x, eval_c, sub_self,
     zero_pow this, sub_zero, Finset.prod_const_one]
 #align mv_polynomial.eval_indicator_apply_eq_one MvPolynomial.eval_indicator_apply_eq_one
 
@@ -95,14 +95,14 @@ theorem degrees_indicator (c : σ → K) :
   rw [degrees_one, ← bot_eq_zero, bot_sup_eq]
   refine' le_trans (degrees_pow _ _) (nsmul_le_nsmul_of_le_right _ _)
   refine' le_trans (degrees_sub _ _) _
-  rw [degrees_C, ← bot_eq_zero, sup_bot_eq]
+  rw [degrees_c, ← bot_eq_zero, sup_bot_eq]
   exact degrees_X' _
 #align mv_polynomial.degrees_indicator MvPolynomial.degrees_indicator
 
 theorem indicator_mem_restrictDegree (c : σ → K) :
     indicator c ∈ restrictDegree σ K (Fintype.card K - 1) :=
   by
-  rw [mem_restrict_degree_iff_sup, indicator]
+  rw [mem_restrictDegree_iff_sup, indicator]
   intro n
   refine' le_trans (Multiset.count_le_of_le _ <| degrees_indicator _) (le_of_eq _)
   simp_rw [← Multiset.coe_countAddMonoidHom, (Multiset.countAddMonoidHom n).map_sum,
@@ -110,7 +110,7 @@ theorem indicator_mem_restrictDegree (c : σ → K) :
   trans
   refine' Finset.sum_eq_single n _ _
   · intro b hb ne
-    rw [Multiset.count_singleton, if_neg Ne.symm, mul_zero]
+    rw [Multiset.count_singleton, if_neg ne.symm, mul_zero]
   · intro h
     exact (h <| Finset.mem_univ _).elim
   · rw [Multiset.count_singleton_self, mul_one]
@@ -123,7 +123,7 @@ variable [Field K]
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 :=
   by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h
-  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
+  simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_x, eval_c, sub_self,
     Finset.prod_eq_zero_iff]
   refine' ⟨i, Finset.mem_univ _, _⟩
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
@@ -147,7 +147,7 @@ def evalₗ [CommSemiring K] : MvPolynomial σ K →ₗ[K] (σ → K) → K
     rfl
   map_smul' a p := by
     ext e
-    rw [smul_eq_C_mul, RingHom.map_mul, eval_C]
+    rw [smul_eq_c_mul, RingHom.map_mul, eval_c]
     rfl
 #align mv_polynomial.evalₗ MvPolynomial.evalₗ
 
@@ -160,9 +160,9 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
   cases nonempty_fintype σ
   refine' top_unique (SetLike.le_def.2 fun e _ => mem_map.2 _)
   refine' ⟨∑ n : σ → K, e n • indicator n, _, _⟩
-  · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrict_degree _)
+  · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrictDegree _)
   · ext n
-    simp only [LinearMap.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
+    simp only [LinearMap.map_sum, @finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
       LinearMap.map_smul]
     simp only [evalₗ_apply]
     trans
@@ -195,7 +195,7 @@ def R [CommRing K] : Type u :=
 
 /-- Evaluation in the `mv_polynomial.R` subtype. -/
 def evalᵢ [CommRing K] : R σ K →ₗ[K] (σ → K) → K :=
-  (evalₗ K σ).comp (restrictDegree σ K (Fintype.card K - 1)).Subtype
+  (evalₗ K σ).comp (restrictDegree σ K (Fintype.card K - 1)).subtype
 #align mv_polynomial.evalᵢ MvPolynomial.evalᵢ
 
 section CommRing
@@ -239,7 +239,7 @@ instance [Finite σ] : FiniteDimensional K (R σ K) :=
   exact
     IsNoetherian.iff_fg.1
       (is_noetherian.iff_dim_lt_aleph_0.mpr <| by
-        simpa only [dim_R] using Cardinal.nat_lt_aleph0 (Fintype.card (σ → K)))
+        simpa only [dim_r] using Cardinal.nat_lt_aleph0 (Fintype.card (σ → K)))
 
 theorem finrank_r [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.card (σ → K) :=
   FiniteDimensional.finrank_eq_of_dim_eq (dim_r σ K)
@@ -255,7 +255,7 @@ theorem ker_evalₗ [Finite σ] : (evalᵢ σ K).ker = ⊥ :=
   by
   cases nonempty_fintype σ
   refine' (ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank _).mpr (range_evalᵢ _ _)
-  rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_R]
+  rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_r]
 #align mv_polynomial.ker_evalₗ MvPolynomial.ker_evalₗ
 
 theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)

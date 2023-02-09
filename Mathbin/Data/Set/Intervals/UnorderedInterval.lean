@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module data.set.intervals.unordered_interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,8 @@ theorem uIcc_of_le (h : a ≤ b) : [a, b] = Icc a b := by rw [uIcc, inf_eq_left.
 
 #print Set.uIcc_of_ge /-
 @[simp]
-theorem uIcc_of_ge (h : b ≤ a) : [a, b] = Icc b a := by rw [uIcc, inf_eq_right.2 h, sup_eq_left.2 h]
+theorem uIcc_of_ge (h : b ≤ a) : [a, b] = Icc b a := by
+  rw [uIcc, inf_eq_right.2 h, sup_eq_left.2 not_and']
 #align set.uIcc_of_ge Set.uIcc_of_ge
 -/
 
@@ -90,7 +91,7 @@ theorem uIcc_comm (a b : α) : [a, b] = [b, a] := by simp_rw [uIcc, inf_comm, su
 -/
 
 #print Set.uIcc_of_lt /-
-theorem uIcc_of_lt (h : a < b) : [a, b] = Icc a b :=
+theorem uIcc_of_lt (h : a < b) : [mp, b] = Icc a b :=
   uIcc_of_le h.le
 #align set.uIcc_of_lt Set.uIcc_of_lt
 -/
@@ -331,12 +332,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : LinearOrder.{u1} β] {f : α -> β} {s : Set.{u2} α}, Iff (Or (MonotoneOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) f s) (AntitoneOn.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) (PartialOrder.toPreorder.{u1} β (SemilatticeInf.toPartialOrder.{u1} β (Lattice.toSemilatticeInf.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2))))) f s)) (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (forall (b : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) b s) -> (forall (c : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) c s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) c (Set.uIcc.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)) a b)) -> (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) (f c) (Set.uIcc.{u1} β (DistribLattice.toLattice.{u1} β (instDistribLattice.{u1} β _inst_2)) (f a) (f b))))))
 Case conversion may be inaccurate. Consider using '#align set.monotone_on_or_antitone_on_iff_uIcc Set.monotoneOn_or_antitoneOn_iff_uIccₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔
       ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s) (c) (_ : c ∈ s), c ∈ [a, b] → f c ∈ [f a, f b] :=
   by
-  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, monotone_or_antitone_iff_uIcc, mem_uIcc]
+  simp [monotoneOn_iff_monotone, antitoneOn_iff_antitone, monotone_or_antitone_iff_uIcc, mem_uIcc]
 #align set.monotone_on_or_antitone_on_iff_uIcc Set.monotoneOn_or_antitoneOn_iff_uIcc
 
 #print Set.uIoc /-
@@ -451,7 +452,7 @@ theorem uIoc_injective_right (a : α) : Injective fun b => Ι b a :=
   rintro b c h
   rw [ext_iff] at h
   obtain ha | ha := le_or_lt b a
-  · have hb := (h b).Not
+  · have hb := (h b).not
     simp only [ha, left_mem_uIoc, not_lt, true_iff_iff, not_mem_uIoc, ← not_le, and_true_iff,
       not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
     refine' hb.eq_of_not_lt fun hc => _
@@ -459,7 +460,7 @@ theorem uIoc_injective_right (a : α) : Injective fun b => Ι b a :=
   · refine'
       eq_of_mem_uIoc_of_mem_uIoc ((h _).1 <| left_mem_uIoc.2 ha)
         ((h _).2 <| left_mem_uIoc.2 <| ha.trans_le _)
-    simpa [ha, ha.not_le, mem_uIoc] using h b
+    simpa [ha, ha.not_le, mem_uIoc] using h False
 #align set.uIoc_injective_right Set.uIoc_injective_right
 -/
 

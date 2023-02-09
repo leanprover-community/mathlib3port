@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.regularity.equitabilise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Order.Partition.Equipartition
 
 /-!
 # Equitabilising a partition
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file allows to blow partitions up into parts of controlled size. Given a partition `P` and
 `a b m : ℕ`, we want to find a partition `Q` with `a` parts of size `m` and `b` parts of size
@@ -47,13 +50,13 @@ union of parts of `Q` plus at most `m` extra elements, there are `b` parts of si
 theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card) :
     ∃ Q : Finpartition s,
       (∀ x : Finset α, x ∈ Q.parts → x.card = m ∨ x.card = m + 1) ∧
-        (∀ x, x ∈ P.parts → (x \ (Q.parts.filterₓ fun y => y ⊆ x).bunionᵢ id).card ≤ m) ∧
-          (Q.parts.filterₓ fun i => card i = m + 1).card = b :=
+        (∀ x, x ∈ P.parts → (x \ (Q.parts.filter fun y => y ⊆ x).bunionᵢ id).card ≤ m) ∧
+          (Q.parts.filter fun i => card i = m + 1).card = b :=
   by
   -- Get rid of the easy case `m = 0`
   obtain rfl | m_pos := m.eq_zero_or_pos
   · refine' ⟨⊥, by simp, _, by simpa using hs.symm⟩
-    simp only [le_zero_iff, card_eq_zero, mem_bUnion, exists_prop, mem_filter, id.def, and_assoc',
+    simp only [le_zero_iff, card_eq_zero, mem_bunionᵢ, exists_prop, mem_filter, id.def, and_assoc',
       sdiff_eq_empty_iff_subset, subset_iff]
     exact fun x hx a ha =>
       ⟨{a}, mem_map_of_mem _ (P.le hx ha), singleton_subset_iff.2 ha, mem_singleton_self _⟩
@@ -119,19 +122,19 @@ theorem equitabilise_aux (P : Finpartition s) (hs : a * m + b * (m + 1) = s.card
   · conv in _ ∈ _ => rw [← insert_erase hu₁]
     simp only [and_imp, mem_insert, forall_eq_or_imp, Ne.def, extend_parts]
     refine' ⟨_, fun x hx => (card_le_of_subset _).trans <| hR₂ x _⟩
-    · simp only [filter_insert, if_pos htu, bUnion_insert, mem_erase, id.def]
+    · simp only [filter_insert, if_pos htu, bunionᵢ_insert, mem_erase, id.def]
       obtain rfl | hut := eq_or_ne u t
       · rw [sdiff_eq_empty_iff_subset.2 (subset_union_left _ _)]
         exact bot_le
       refine'
         (card_le_of_subset fun i => _).trans
           (hR₂ (u \ t) <| P.mem_avoid.2 ⟨u, hu₁, fun i => hut <| i.antisymm htu, rfl⟩)
-      simp only [not_exists, mem_bUnion, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or]
+      simp only [not_exists, mem_bunionᵢ, and_imp, mem_union, mem_filter, mem_sdiff, id.def, not_or]
       exact fun hi₁ hi₂ hi₃ =>
         ⟨⟨hi₁, hi₂⟩, fun x hx hx' => hi₃ _ hx <| hx'.trans <| sdiff_subset _ _⟩
-    · apply sdiff_subset_sdiff subset.rfl (bUnion_subset_bUnion_of_subset_left _ _)
+    · apply sdiff_subset_sdiff Subset.rfl (bunionᵢ_subset_bunionᵢ_of_subset_left _ _)
       exact filter_subset_filter _ (subset_insert _ _)
-    simp only [avoid, of_erase, mem_erase, mem_image, bot_eq_empty]
+    simp only [avoid, ofErase, mem_erase, mem_image, bot_eq_empty]
     exact
       ⟨(nonempty_of_mem_parts _ <| mem_of_mem_erase hx).ne_empty, _, mem_of_mem_erase hx,
         (disjoint_of_subset_right htu <|
@@ -157,7 +160,7 @@ parts of `Q` plus at most `m` extra elements, there are `b` parts of size `m + 1
 `m > 0`, because a partition does not have parts of size `0`) there are `a` parts of size `m` and
 hence `a + b` parts in total. -/
 noncomputable def equitabilise : Finpartition s :=
-  (P.equitabilise_aux h).some
+  (P.equitabilise_aux h).choose
 #align finpartition.equitabilise Finpartition.equitabilise
 
 variable {P h}
@@ -192,7 +195,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {m : Nat} {a : Nat} {b : Nat} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (h : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a m) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) b (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.card.{u1} α s)), Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.filter.{u1} (Finset.{u1} α) (fun (u : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α u) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Finpartition.equitabilise.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s m a b P h)))) b
 Case conversion may be inaccurate. Consider using '#align finpartition.card_filter_equitabilise_big Finpartition.card_filter_equitabilise_bigₓ'. -/
 theorem card_filter_equitabilise_big :
-    ((P.equitabilise h).parts.filterₓ fun u : Finset α => u.card = m + 1).card = b :=
+    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m + 1).card = b :=
   (P.equitabilise_aux h).choose_spec.2.2
 #align finpartition.card_filter_equitabilise_big Finpartition.card_filter_equitabilise_big
 
@@ -203,13 +206,13 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {m : Nat} {a : Nat} {b : Nat} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (h : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a m) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) b (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.card.{u1} α s)), (Ne.{1} Nat m (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Finset.card.{u1} (Finset.{u1} α) (Finset.filter.{u1} (Finset.{u1} α) (fun (u : Finset.{u1} α) => Eq.{1} Nat (Finset.card.{u1} α u) m) (fun (a : Finset.{u1} α) => instDecidableEqNat (Finset.card.{u1} α a) m) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Finpartition.equitabilise.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s m a b P h)))) a)
 Case conversion may be inaccurate. Consider using '#align finpartition.card_filter_equitabilise_small Finpartition.card_filter_equitabilise_smallₓ'. -/
 theorem card_filter_equitabilise_small (hm : m ≠ 0) :
-    ((P.equitabilise h).parts.filterₓ fun u : Finset α => u.card = m).card = a :=
+    ((P.equitabilise h).parts.filter fun u : Finset α => u.card = m).card = a :=
   by
   refine' (mul_eq_mul_right_iff.1 <| (add_left_inj (b * (m + 1))).1 _).resolve_right hm
   rw [h, ← (P.equitabilise h).sum_card_parts]
   have hunion :
     (P.equitabilise h).parts =
-      ((P.equitabilise h).parts.filterₓ fun u => u.card = m) ∪
+      ((P.equitabilise h).parts.filter fun u => u.card = m) ∪
         (P.equitabilise h).parts.filterₓ fun u => u.card = m + 1 :=
     by
     rw [← filter_or, filter_true_of_mem]
@@ -244,7 +247,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α} {m : Nat} {a : Nat} {b : Nat} (P : Finpartition.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s) (h : Eq.{1} Nat (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) a m) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) b (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Finset.card.{u1} α s)), (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s P)) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) t (Finset.bunionᵢ.{u1, u1} (Finset.{u1} α) α (fun (a : α) (b : α) => _inst_1 a b) (Finset.filter.{u1} (Finset.{u1} α) (fun (u : Finset.{u1} α) => HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) u t) (fun (a : Finset.{u1} α) => Finset.decidableSubsetFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b) a t) (Finpartition.parts.{u1} (Finset.{u1} α) (Finset.instLatticeFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) s (Finpartition.equitabilise.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s m a b P h))) (id.{succ u1} (Finset.{u1} α))))) m)
 Case conversion may be inaccurate. Consider using '#align finpartition.card_parts_equitabilise_subset_le Finpartition.card_parts_equitabilise_subset_leₓ'. -/
 theorem card_parts_equitabilise_subset_le :
-    t ∈ P.parts → (t \ ((P.equitabilise h).parts.filterₓ fun u => u ⊆ t).bunionᵢ id).card ≤ m :=
+    t ∈ P.parts → (t \ ((P.equitabilise h).parts.filter fun u => u ⊆ t).bunionᵢ id).card ≤ m :=
   (Classical.choose_spec <| P.equitabilise_aux h).2.1 t
 #align finpartition.card_parts_equitabilise_subset_le Finpartition.card_parts_equitabilise_subset_le
 
@@ -267,7 +270,7 @@ theorem exists_equipartition_card_eq (hn : n ≠ 0) (hs : n ≤ s.card) :
       mod_add_div]
   refine'
     ⟨(indiscrete (card_pos.1 <| hn.trans_le hs).ne_empty).equitabilise this,
-      equitabilise_is_equipartition, _⟩
+      equitabilise_isEquipartition, _⟩
   rw [card_parts_equitabilise _ _ (Nat.div_pos hs hn).ne', tsub_add_cancel_of_le (mod_lt _ hn).le]
 #align finpartition.exists_equipartition_card_eq Finpartition.exists_equipartition_card_eq
 

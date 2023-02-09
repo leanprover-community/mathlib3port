@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wrenna Robson
 
 ! This file was ported from Lean 3 source module information_theory.hamming
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ variable {γ : ι → Type _} [∀ i, DecidableEq (γ i)]
 
 /-- The Hamming distance function to the naturals. -/
 def hammingDist (x y : ∀ i, β i) : ℕ :=
-  (univ.filterₓ fun i => x i ≠ y i).card
+  (univ.filter fun i => x i ≠ y i).card
 #align hamming_dist hammingDist
 
 /-- Corresponds to `dist_self`. -/
@@ -120,7 +120,7 @@ theorem hamming_zero_eq_dist {x y : ∀ i, β i} : 0 = hammingDist x y ↔ x = y
 
 /-- Corresponds to `dist_ne_zero`. -/
 theorem hammingDist_ne_zero {x y : ∀ i, β i} : hammingDist x y ≠ 0 ↔ x ≠ y :=
-  hammingDist_eq_zero.Not
+  hammingDist_eq_zero.not
 #align hamming_dist_ne_zero hammingDist_ne_zero
 
 /-- Corresponds to `dist_pos`. -/
@@ -167,7 +167,7 @@ variable [∀ i, Zero (β i)] [∀ i, Zero (γ i)]
 
 /-- The Hamming weight function to the naturals. -/
 def hammingNorm (x : ∀ i, β i) : ℕ :=
-  (univ.filterₓ fun i => x i ≠ 0).card
+  (univ.filter fun i => x i ≠ 0).card
 #align hamming_norm hammingNorm
 
 /-- Corresponds to `dist_zero_right`. -/
@@ -202,7 +202,7 @@ theorem hammingNorm_eq_zero {x : ∀ i, β i} : hammingNorm x = 0 ↔ x = 0 :=
 
 /-- Corresponds to `norm_ne_zero_iff`. -/
 theorem hammingNorm_ne_zero_iff {x : ∀ i, β i} : hammingNorm x ≠ 0 ↔ x ≠ 0 :=
-  hammingNorm_eq_zero.Not
+  hammingNorm_eq_zero.not
 #align hamming_norm_ne_zero_iff hammingNorm_ne_zero_iff
 
 /-- Corresponds to `norm_pos_iff`. -/
@@ -452,7 +452,7 @@ instance : PseudoMetricSpace (Hamming β) :=
         constructor
         · refine' fun hs => ⟨1, zero_lt_one, fun _ _ hab => _⟩
           rw_mod_cast [hammingDist_lt_one]  at hab
-          rw [of_hamming_inj, ← mem_idRel] at hab
+          rw [ofHamming_inj, ← mem_idRel] at hab
           exact hs hab
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab
           rw [mem_idRel] at hab
@@ -476,7 +476,7 @@ instance : MetricSpace (Hamming β) :=
   { Hamming.pseudoMetricSpace with
     eq_of_dist_eq_zero := by
       push_cast
-      exact_mod_cast @eq_of_hammingDist_eq_zero _ _ _ _ }
+      exact_mod_cast @eq_of_hamming_dist_eq_zero _ _ _ _ }
 
 instance [∀ i, Zero (β i)] : HasNorm (Hamming β) :=
   ⟨fun x => hammingNorm (ofHamming x)⟩

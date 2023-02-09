@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Heather Macbeth, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.infinite_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem tsum_of_norm_bounded {f : ι → E} {g : ι → ℝ} {a : ℝ} (hg : Has
 that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete space. -/
 theorem norm_tsum_le_tsum_norm {f : ι → E} (hf : Summable fun i => ‖f i‖) :
     ‖∑' i, f i‖ ≤ ∑' i, ‖f i‖ :=
-  tsum_of_norm_bounded hf.HasSum fun i => le_rfl
+  tsum_of_norm_bounded hf.hasSum fun i => le_rfl
 #align norm_tsum_le_tsum_norm norm_tsum_le_tsum_norm
 
 /-- Quantitative result associated to the direct comparison test for series: If `∑' i, g i` is
@@ -162,7 +162,7 @@ theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0} {a : ℝ≥0}
 we do not assume that `∑' i, f i` is summable, and it might not be the case if `α` is not a complete
 space. -/
 theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ‖f i‖₊) : ‖∑' i, f i‖₊ ≤ ∑' i, ‖f i‖₊ :=
-  tsum_of_nnnorm_bounded hf.HasSum fun i => le_rfl
+  tsum_of_nnnorm_bounded hf.hasSum fun i => le_rfl
 #align nnnorm_tsum_le nnnorm_tsum_le
 
 variable [CompleteSpace E]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem Matrix.vecMul_stdBasis (M : Matrix m n R) (i j) :
     simp_rw [boole_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
   convert this
   ext
-  split_ifs with h <;> simp only [std_basis_apply]
+  split_ifs with h <;> simp only [stdBasis_apply]
   · rw [h, Function.update_same]
   · rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
 #align matrix.vec_mul_std_basis Matrix.vecMul_stdBasis
@@ -164,7 +164,7 @@ theorem Matrix.toLinearMapRight'_mul_apply [Fintype l] [DecidableEq l] (M : Matr
 theorem Matrix.toLinearMapRight'_one : Matrix.toLinearMapRight' (1 : Matrix m m R) = id :=
   by
   ext
-  simp [LinearMap.one_apply, std_basis_apply]
+  simp [LinearMap.one_apply, stdBasis_apply]
 #align matrix.to_linear_map_right'_one Matrix.toLinearMapRight'_one
 
 /-- If `M` and `M'` are each other's inverse matrices, they provide an equivalence between `n → A`
@@ -276,8 +276,8 @@ theorem LinearMap.toMatrix'_apply (f : (n → R) →ₗ[R] m → R) (i j) :
   congr
   ext j'
   split_ifs with h
-  · rw [h, std_basis_same]
-  apply std_basis_ne _ _ _ _ h
+  · rw [h, stdBasis_same]
+  apply stdBasis_ne _ _ _ _ h
 #align linear_map.to_matrix'_apply LinearMap.toMatrix'_apply
 
 @[simp]
@@ -289,7 +289,7 @@ theorem Matrix.toLin'_apply (M : Matrix m n R) (v : n → R) : Matrix.toLin' M v
 theorem Matrix.toLin'_one : Matrix.toLin' (1 : Matrix n n R) = id :=
   by
   ext
-  simp [LinearMap.one_apply, std_basis_apply]
+  simp [LinearMap.one_apply, stdBasis_apply]
 #align matrix.to_lin'_one Matrix.toLin'_one
 
 @[simp]
@@ -335,9 +335,9 @@ theorem Matrix.ker_toLin'_eq_bot_iff {M : Matrix n n R} :
 #align matrix.ker_to_lin'_eq_bot_iff Matrix.ker_toLin'_eq_bot_iff
 
 theorem Matrix.range_toLin' (M : Matrix m n R) : M.toLin'.range = span R (range Mᵀ) := by
-  simp_rw [range_eq_map, ← supr_range_std_basis, map_supᵢ, range_eq_map, ← Ideal.span_singleton_one,
+  simp_rw [range_eq_map, ← supᵢ_range_stdBasis, map_supᵢ, range_eq_map, ← Ideal.span_singleton_one,
     Ideal.span, Submodule.map_span, image_image, image_singleton, Matrix.toLin'_apply,
-    M.mul_vec_std_basis_apply, supr_span, range_eq_Union]
+    M.mul_vec_std_basis_apply, supᵢ_span, range_eq_unionᵢ]
 #align matrix.range_to_lin' Matrix.range_toLin'
 
 /-- If `M` and `M'` are each other's inverse matrices, they provide an equivalence between `m → A`
@@ -428,7 +428,7 @@ theorem LinearMap.toMatrixAlgEquiv'_mul (f g : (n → R) →ₗ[R] n → R) :
 theorem Matrix.rank_vecMulVec {K m n : Type u} [Field K] [Fintype n] [DecidableEq n] (w : m → K)
     (v : n → K) : rank (vecMulVec w v).toLin' ≤ 1 :=
   by
-  rw [vec_mul_vec_eq, Matrix.toLin'_mul]
+  rw [vecMulVec_eq, Matrix.toLin'_mul]
   refine' le_trans (rank_comp_le1 _ _) _
   refine' (rank_le_domain _).trans_eq _
   rw [dim_fun', Fintype.card_unit, Nat.cast_one]
@@ -532,7 +532,7 @@ theorem Matrix.toLin_self (M : Matrix m n R) (i : n) :
     Matrix.toLin v₁ v₂ M (v₁ i) = ∑ j, M j i • v₂ j :=
   by
   rw [Matrix.toLin_apply, Finset.sum_congr rfl fun j hj => _]
-  rw [Basis.repr_self, Matrix.mulVec, dot_product, Finset.sum_eq_single i, Finsupp.single_eq_same,
+  rw [Basis.repr_self, Matrix.mulVec, dotProduct, Finset.sum_eq_single i, Finsupp.single_eq_same,
     mul_one]
   · intro i' _ i'_ne
     rw [Finsupp.single_eq_of_ne i'_ne.symm, mul_zero]
@@ -576,7 +576,8 @@ theorem LinearMap.toMatrix_comp [Fintype l] [DecidableEq m] (f : M₂ →ₗ[R] 
 
 theorem LinearMap.toMatrix_mul (f g : M₁ →ₗ[R] M₁) :
     LinearMap.toMatrix v₁ v₁ (f * g) = LinearMap.toMatrix v₁ v₁ f ⬝ LinearMap.toMatrix v₁ v₁ g := by
-  rw [show @Mul.mul (M₁ →ₗ[R] M₁) _ = LinearMap.comp from rfl, LinearMap.toMatrix_comp v₁ v₁ v₁ f g]
+  rw [show @has_mul.mul (M₁ →ₗ[R] M₁) _ = LinearMap.comp from rfl,
+    LinearMap.toMatrix_comp v₁ v₁ v₁ f g]
 #align linear_map.to_matrix_mul LinearMap.toMatrix_mul
 
 @[simp]
@@ -597,7 +598,7 @@ theorem LinearMap.toMatrix_mulVec_repr (f : M₁ →ₗ[R] M₂) (x : M₁) :
 
 @[simp]
 theorem LinearMap.toMatrix_basis_equiv [Fintype l] [DecidableEq l] (b : Basis l R M₁)
-    (b' : Basis l R M₂) : LinearMap.toMatrix b' b (b'.Equiv b (Equiv.refl l) : M₂ →ₗ[R] M₁) = 1 :=
+    (b' : Basis l R M₂) : LinearMap.toMatrix b' b (b'.equiv b (Equiv.refl l) : M₂ →ₗ[R] M₁) = 1 :=
   by
   ext (i j)
   simp [LinearMap.toMatrix_apply, Matrix.one_apply, Finsupp.single_apply, eq_comm]
@@ -606,7 +607,7 @@ theorem LinearMap.toMatrix_basis_equiv [Fintype l] [DecidableEq l] (b : Basis l 
 theorem Matrix.toLin_mul [Fintype l] [DecidableEq m] (A : Matrix l m R) (B : Matrix m n R) :
     Matrix.toLin v₁ v₃ (A ⬝ B) = (Matrix.toLin v₂ v₃ A).comp (Matrix.toLin v₁ v₂ B) :=
   by
-  apply (LinearMap.toMatrix v₁ v₃).Injective
+  apply (LinearMap.toMatrix v₁ v₃).injective
   haveI : DecidableEq l := fun _ _ => Classical.propDecidable _
   rw [LinearMap.toMatrix_comp v₁ v₂ v₃]
   repeat' rw [LinearMap.toMatrix_toLin]
@@ -724,7 +725,7 @@ theorem LinearMap.toMatrixAlgEquiv_mul (f g : M₁ →ₗ[R] M₁) :
     LinearMap.toMatrixAlgEquiv v₁ (f * g) =
       LinearMap.toMatrixAlgEquiv v₁ f ⬝ LinearMap.toMatrixAlgEquiv v₁ g :=
   by
-  rw [show @Mul.mul (M₁ →ₗ[R] M₁) _ = LinearMap.comp from rfl,
+  rw [show @has_mul.mul (M₁ →ₗ[R] M₁) _ = LinearMap.comp from rfl,
     LinearMap.toMatrixAlgEquiv_comp v₁ f g]
 #align linear_map.to_matrix_alg_equiv_mul LinearMap.toMatrixAlgEquiv_mul
 
@@ -735,24 +736,24 @@ theorem Matrix.toLinAlgEquiv_mul (A B : Matrix n n R) :
 #align matrix.to_lin_alg_equiv_mul Matrix.toLinAlgEquiv_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem Matrix.toLin_finTwoProd_apply (a b c d : R) (x : R × R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
         x =
       (a * x.fst + b * x.snd, c * x.fst + d * x.snd) :=
   by simp [Matrix.toLin_apply, Matrix.mulVec, Matrix.dotProduct]
 #align matrix.to_lin_fin_two_prod_apply Matrix.toLin_finTwoProd_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem Matrix.toLin_finTwoProd (a b c d : R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") =
-      (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
+      (a • LinearMap.fst R R R + b • LinearMap.snd R R R).prod
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _
 #align matrix.to_lin_fin_two_prod Matrix.toLin_finTwoProd
@@ -804,7 +805,7 @@ noncomputable def leftMulMatrix : S →ₐ[R] Matrix m m R
   map_mul' x y := by rw [AlgHom.map_mul, LinearMap.toMatrix_mul, Matrix.mul_eq_mul]
   commutes' r := by
     ext
-    rw [lmul_algebra_map, to_matrix_lsmul, algebra_map_eq_diagonal, Pi.algebraMap_def,
+    rw [lmul_algebraMap, toMatrix_lsmul, algebraMap_eq_diagonal, Pi.algebraMap_def,
       Algebra.id.map_eq_self]
 #align algebra.left_mul_matrix Algebra.leftMulMatrix
 
@@ -815,7 +816,7 @@ theorem leftMulMatrix_apply (x : S) : leftMulMatrix b x = LinearMap.toMatrix b b
 theorem leftMulMatrix_eq_repr_mul (x : S) (i j) : leftMulMatrix b x i j = b.repr (x * b j) i :=
   by-- This is defeq to just `to_matrix_lmul' b x i j`,
   -- but the unfolding goes a lot faster with this explicit `rw`.
-  rw [left_mul_matrix_apply, to_matrix_lmul' b x i j]
+  rw [leftMulMatrix_apply, toMatrix_lmul' b x i j]
 #align algebra.left_mul_matrix_eq_repr_mul Algebra.leftMulMatrix_eq_repr_mul
 
 theorem leftMulMatrix_mulVec_repr (x y : S) :
@@ -832,7 +833,7 @@ theorem toMatrix_lmul_eq (x : S) :
 theorem leftMulMatrix_injective : Function.Injective (leftMulMatrix b) := fun x x' h =>
   calc
     x = Algebra.lmul R S x 1 := (mul_one x).symm
-    _ = Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
+    _ = Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).injective h]
     _ = x' := mul_one x'
     
 #align algebra.left_mul_matrix_injective Algebra.leftMulMatrix_injective
@@ -851,7 +852,7 @@ variable (b : Basis m R S) (c : Basis n S T)
 
 theorem smul_leftMulMatrix (x) (ik jk) :
     leftMulMatrix (b.smul c) x ik jk = leftMulMatrix b (leftMulMatrix c x ik.2 jk.2) ik.1 jk.1 := by
-  simp only [left_mul_matrix_apply, LinearMap.toMatrix_apply, mul_comm, Basis.smul_apply,
+  simp only [leftMulMatrix_apply, LinearMap.toMatrix_apply, mul_comm, Basis.smul_apply,
     Basis.smul_repr, Finsupp.smul_apply, id.smul_eq_mul, LinearEquiv.map_smul, mul_smul_comm,
     coe_lmul_eq_mul, LinearMap.mul_apply']
 #align algebra.smul_left_mul_matrix Algebra.smul_leftMulMatrix
@@ -860,18 +861,18 @@ theorem smul_leftMulMatrix_algebraMap (x : S) :
     leftMulMatrix (b.smul c) (algebraMap _ _ x) = blockDiagonal fun k => leftMulMatrix b x :=
   by
   ext (⟨i, k⟩⟨j, k'⟩)
-  rw [smul_left_mul_matrix, AlgHom.commutes, block_diagonal_apply, algebra_map_matrix_apply]
+  rw [smul_leftMulMatrix, AlgHom.commutes, blockDiagonal_apply, algebraMap_matrix_apply]
   split_ifs with h <;> simp [h]
 #align algebra.smul_left_mul_matrix_algebra_map Algebra.smul_leftMulMatrix_algebraMap
 
 theorem smul_leftMulMatrix_algebraMap_eq (x : S) (i j k) :
     leftMulMatrix (b.smul c) (algebraMap _ _ x) (i, k) (j, k) = leftMulMatrix b x i j := by
-  rw [smul_left_mul_matrix_algebra_map, block_diagonal_apply_eq]
+  rw [smul_leftMulMatrix_algebraMap, blockDiagonal_apply_eq]
 #align algebra.smul_left_mul_matrix_algebra_map_eq Algebra.smul_leftMulMatrix_algebraMap_eq
 
 theorem smul_leftMulMatrix_algebraMap_ne (x : S) (i j) {k k'} (h : k ≠ k') :
     leftMulMatrix (b.smul c) (algebraMap _ _ x) (i, k) (j, k') = 0 := by
-  rw [smul_left_mul_matrix_algebra_map, block_diagonal_apply_ne _ _ _ h]
+  rw [smul_leftMulMatrix_algebraMap, blockDiagonal_apply_ne _ _ _ h]
 #align algebra.smul_left_mul_matrix_algebra_map_ne Algebra.smul_leftMulMatrix_algebraMap_ne
 
 end LmulTower

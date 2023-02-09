@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.weierstrass
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,10 +63,10 @@ theorem polynomialFunctions_closure_eq_top (a b : ℝ) :
   · -- We can pullback continuous functions on `[a,b]` to continuous functions on `[0,1]`,
     -- by precomposing with an affine map.
     let W : C(Set.Icc a b, ℝ) →ₐ[ℝ] C(I, ℝ) :=
-      comp_right_alg_hom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap
+      compRightAlgHom ℝ ℝ (iccHomeoI a b h).symm.toContinuousMap
     -- This operation is itself a homeomorphism
     -- (with respect to the norm topologies on continuous functions).
-    let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := comp_right_homeomorph ℝ (iccHomeoI a b h).symm
+    let W' : C(Set.Icc a b, ℝ) ≃ₜ C(I, ℝ) := compRightHomeomorph ℝ (iccHomeoI a b h).symm
     have w : (W : C(Set.Icc a b, ℝ) → C(I, ℝ)) = W' := rfl
     -- Thus we take the statement of the Weierstrass approximation theorem for `[0,1]`,
     have p := polynomialFunctions_closure_eq_top'
@@ -111,7 +111,7 @@ theorem exists_polynomial_near_continuousMap (a b : ℝ) (f : C(Set.Icc a b, ℝ
   by
   have w := mem_closure_iff_frequently.mp (continuousMap_mem_polynomialFunctions_closure _ _ f)
   rw [metric.nhds_basis_ball.frequently_iff] at w
-  obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε Pos
+  obtain ⟨-, H, ⟨m, ⟨-, rfl⟩⟩⟩ := w ε pos
   rw [Metric.mem_ball, dist_eq_norm] at H
   exact ⟨m, H⟩
 #align exists_polynomial_near_continuous_map exists_polynomial_near_continuousMap
@@ -127,9 +127,9 @@ theorem exists_polynomial_near_of_continuousOn (a b : ℝ) (f : ℝ → ℝ)
     ∃ p : ℝ[X], ∀ x ∈ Set.Icc a b, |p.eval x - f x| < ε :=
   by
   let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
-  obtain ⟨p, b⟩ := exists_polynomial_near_continuousMap a b f' ε Pos
+  obtain ⟨p, b⟩ := exists_polynomial_near_continuousMap a b f' ε pos
   use p
-  rw [norm_lt_iff _ Pos] at b
+  rw [norm_lt_iff _ pos] at b
   intro x m
   exact b ⟨x, m⟩
 #align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuousOn

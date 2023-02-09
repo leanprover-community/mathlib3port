@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.expand
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem expand_monomial (p : ℕ) (d : σ →₀ ℕ) (r : R) :
 #align mv_polynomial.expand_monomial MvPolynomial.expand_monomial
 
 theorem expand_one_apply (f : MvPolynomial σ R) : expand 1 f = f := by
-  simp only [expand, bind₁_X_left, AlgHom.id_apply, RingHom.toFun_eq_coe, eval₂_hom_C_left,
+  simp only [expand, bind₁_x_left, AlgHom.id_apply, RingHom.toFun_eq_coe, eval₂Hom_c_left,
     AlgHom.coe_to_ringHom, pow_one, AlgHom.coe_mk]
 #align mv_polynomial.expand_one_apply MvPolynomial.expand_one_apply
 
@@ -68,9 +68,9 @@ theorem expand_one : expand 1 = AlgHom.id R (MvPolynomial σ R) :=
 theorem expand_comp_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) :
     (expand p).comp (bind₁ f) = bind₁ fun i => expand p (f i) :=
   by
-  apply alg_hom_ext
+  apply algHom_ext
   intro i
-  simp only [AlgHom.comp_apply, bind₁_X_right]
+  simp only [AlgHom.comp_apply, bind₁_x_right]
 #align mv_polynomial.expand_comp_bind₁ MvPolynomial.expand_comp_bind₁
 
 theorem expand_bind₁ (p : ℕ) (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.algebra.continuous_monoid_hom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ def comp (g : ContinuousMonoidHom B C) (f : ContinuousMonoidHom A B) : Continuou
 @[to_additive "Product of two continuous homomorphisms on the same space.", simps]
 def prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) :
     ContinuousMonoidHom A (B × C) :=
-  mk' (f.toMonoidHom.Prod g.toMonoidHom) (f.continuous_toFun.prod_mk g.continuous_toFun)
+  mk' (f.toMonoidHom.prod g.toMonoidHom) (f.continuous_toFun.prod_mk g.continuous_toFun)
 #align continuous_monoid_hom.prod ContinuousMonoidHom.prod
 #align continuous_add_monoid_hom.sum ContinuousAddMonoidHom.sum
 
@@ -164,7 +164,7 @@ def prod (f : ContinuousMonoidHom A B) (g : ContinuousMonoidHom A C) :
 @[to_additive "Product of two continuous homomorphisms on different spaces.", simps]
 def prodMap (f : ContinuousMonoidHom A C) (g : ContinuousMonoidHom B D) :
     ContinuousMonoidHom (A × B) (C × D) :=
-  mk' (f.toMonoidHom.Prod_map g.toMonoidHom) (f.continuous_toFun.Prod_map g.continuous_toFun)
+  mk' (f.toMonoidHom.prodMap g.toMonoidHom) (f.continuous_toFun.prod_map g.continuous_toFun)
 #align continuous_monoid_hom.prod_map ContinuousMonoidHom.prodMap
 #align continuous_add_monoid_hom.sum_map ContinuousAddMonoidHom.sumMap
 
@@ -250,15 +250,15 @@ variable {A B C D E}
 @[to_additive "Coproduct of two continuous homomorphisms to the same space.", simps]
 def coprod (f : ContinuousMonoidHom A E) (g : ContinuousMonoidHom B E) :
     ContinuousMonoidHom (A × B) E :=
-  (mul E).comp (f.Prod_map g)
+  (mul E).comp (f.prodMap g)
 #align continuous_monoid_hom.coprod ContinuousMonoidHom.coprod
 #align continuous_add_monoid_hom.coprod ContinuousAddMonoidHom.coprod
 
 @[to_additive]
 instance : CommGroup (ContinuousMonoidHom A E)
     where
-  mul f g := (mul E).comp (f.Prod g)
-  mul_comm f g := ext fun x => mul_comm (f x) (g x)
+  mul f g := (mul E).comp (f.prod g)
+  mul_comm f g := ext fun x => PontryaginDual (f x) (g x)
   mul_assoc f g h := ext fun x => mul_assoc (f x) (g x) (h x)
   one := one A E
   one_mul f := ext fun x => one_mul (f x)
@@ -293,7 +293,7 @@ theorem closedEmbedding_toContinuousMap [HasContinuousMul B] [T2Space B] :
   ⟨embedding_toContinuousMap A B,
     ⟨by
       suffices
-        Set.range (to_continuous_map : ContinuousMonoidHom A B → C(A, B)) =
+        Set.range (toContinuousMap : ContinuousMonoidHom A B → C(A, B)) =
           ({ f | f '' {1} ⊆ {1}ᶜ } ∪
               ⋃ (x) (y) (U) (V) (W) (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W) (h :
                 Disjoint (U * V) W),
@@ -335,12 +335,12 @@ variable {A B C D E}
 
 @[to_additive]
 instance [T2Space B] : T2Space (ContinuousMonoidHom A B) :=
-  (embedding_toContinuousMap A B).T2Space
+  (embedding_toContinuousMap A B).t2Space
 
 @[to_additive]
 instance : TopologicalGroup (ContinuousMonoidHom A E) :=
   let hi := inducing_toContinuousMap A E
-  let hc := hi.Continuous
+  let hc := hi.continuous
   { continuous_mul := hi.continuous_iff.mpr (continuous_mul.comp (Continuous.prod_map hc hc))
     continuous_inv := hi.continuous_iff.mpr (continuous_inv.comp hc) }
 
@@ -358,7 +358,7 @@ theorem continuous_comp [LocallyCompactSpace B] :
     Continuous fun f : ContinuousMonoidHom A B × ContinuousMonoidHom B C => f.2.comp f.1 :=
   (inducing_toContinuousMap A C).continuous_iff.2 <|
     ContinuousMap.continuous_comp'.comp
-      ((inducing_toContinuousMap A B).prod_mk (inducing_toContinuousMap B C)).Continuous
+      ((inducing_toContinuousMap A B).prod_map (inducing_toContinuousMap B C)).continuous
 #align continuous_monoid_hom.continuous_comp ContinuousMonoidHom.continuous_comp
 #align continuous_add_monoid_hom.continuous_comp ContinuousAddMonoidHom.continuous_comp
 
@@ -366,7 +366,7 @@ theorem continuous_comp [LocallyCompactSpace B] :
 theorem continuous_comp_left (f : ContinuousMonoidHom A B) :
     Continuous fun g : ContinuousMonoidHom B C => g.comp f :=
   (inducing_toContinuousMap A C).continuous_iff.2 <|
-    f.toContinuousMap.continuous_comp_left.comp (inducing_toContinuousMap B C).Continuous
+    f.toContinuousMap.continuous_comp_left.comp (inducing_toContinuousMap B C).continuous
 #align continuous_monoid_hom.continuous_comp_left ContinuousMonoidHom.continuous_comp_left
 #align continuous_add_monoid_hom.continuous_comp_left ContinuousAddMonoidHom.continuous_comp_left
 
@@ -374,7 +374,7 @@ theorem continuous_comp_left (f : ContinuousMonoidHom A B) :
 theorem continuous_comp_right (f : ContinuousMonoidHom B C) :
     Continuous fun g : ContinuousMonoidHom A B => f.comp g :=
   (inducing_toContinuousMap A C).continuous_iff.2 <|
-    f.toContinuousMap.continuous_comp.comp (inducing_toContinuousMap A B).Continuous
+    f.toContinuousMap.continuous_comp.comp (inducing_toContinuousMap A B).continuous
 #align continuous_monoid_hom.continuous_comp_right ContinuousMonoidHom.continuous_comp_right
 #align continuous_add_monoid_hom.continuous_comp_right ContinuousAddMonoidHom.continuous_comp_right
 

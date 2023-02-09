@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.complement
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem IsComplement'.symm (h : IsComplement' H K) : IsComplement' K H :=
       (fun x => Prod.ext (inv_inv _) (inv_inv _)) fun x => Prod.ext (inv_inv _) (inv_inv _)
   let ψ : G ≃ G := Equiv.mk (fun g : G => g⁻¹) (fun g : G => g⁻¹) inv_inv inv_inv
   suffices (ψ ∘ fun x : H × K => x.1.1 * x.2.1) = (fun x : K × H => x.1.1 * x.2.1) ∘ ϕ by
-    rwa [is_complement'_def, is_complement, ← Equiv.bijective_comp, ← this, Equiv.comp_bijective]
+    rwa [isComplement'_def, IsComplement, ← Equiv.bijective_comp, ← this, Equiv.comp_bijective]
   exact funext fun x => mul_inv_rev _ _
 #align subgroup.is_complement'.symm Subgroup.IsComplement'.symm
 #align add_subgroup.is_complement'.symm AddSubgroup.IsComplement'.symm
@@ -126,7 +126,7 @@ theorem isComplement_singleton_top {g : G} : IsComplement ({g} : Set G) ⊤ :=
 theorem isComplement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ :=
   by
   refine'
-    ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_singleton_top⟩
+    ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr isComplement_singleton_top⟩
   obtain ⟨⟨⟨z, rfl : z = g⟩, y, _⟩, hy⟩ := h.2 (g * x)
   rwa [← mul_left_cancel hy]
 #align subgroup.is_complement_singleton_left Subgroup.isComplement_singleton_left
@@ -136,7 +136,7 @@ theorem isComplement_singleton_left {g : G} : IsComplement {g} S ↔ S = ⊤ :=
 theorem isComplement_singleton_right {g : G} : IsComplement S {g} ↔ S = ⊤ :=
   by
   refine'
-    ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr is_complement_top_singleton⟩
+    ⟨fun h => top_le_iff.mp fun x hx => _, fun h => (congr_arg _ h).mpr isComplement_top_singleton⟩
   obtain ⟨y, hy⟩ := h.2 (x * g)
   conv_rhs at hy => rw [← show y.2.1 = g from y.2.2]
   rw [← mul_right_cancel hy]
@@ -155,7 +155,7 @@ theorem isComplement_top_left : IsComplement ⊤ S ↔ ∃ g : G, S = {g} :=
       h.1 ((inv_mul_self a).trans (inv_mul_self b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).2
   · rintro ⟨g, rfl⟩
-    exact is_complement_top_singleton
+    exact isComplement_top_singleton
 #align subgroup.is_complement_top_left Subgroup.isComplement_top_left
 #align add_subgroup.is_complement_top_left AddSubgroup.isComplement_top_left
 
@@ -170,7 +170,7 @@ theorem isComplement_top_right : IsComplement S ⊤ ↔ ∃ g : G, S = {g} :=
       h.1 ((mul_inv_self a).trans (mul_inv_self b).symm)
     exact subtype.ext_iff.mp (prod.ext_iff.mp this).1
   · rintro ⟨g, rfl⟩
-    exact is_complement_singleton_top
+    exact isComplement_singleton_top
 #align subgroup.is_complement_top_right Subgroup.isComplement_top_right
 #align add_subgroup.is_complement_top_right AddSubgroup.isComplement_top_right
 
@@ -214,7 +214,7 @@ theorem isComplement'_top_right : IsComplement' H ⊤ ↔ H = ⊥ :=
 theorem mem_leftTransversals_iff_existsUnique_inv_mul_mem :
     S ∈ leftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T :=
   by
-  rw [left_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
+  rw [leftTransversals, Set.mem_setOf_eq, isComplement_iff_existsUnique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
@@ -231,7 +231,7 @@ theorem mem_leftTransversals_iff_existsUnique_inv_mul_mem :
 theorem mem_rightTransversals_iff_existsUnique_mul_inv_mem :
     S ∈ rightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T :=
   by
-  rw [right_transversals, Set.mem_setOf_eq, is_complement_iff_exists_unique]
+  rw [rightTransversals, Set.mem_setOf_eq, isComplement_iff_existsUnique]
   refine' ⟨fun h g => _, fun h g => _⟩
   · obtain ⟨x, h1, h2⟩ := h g
     exact
@@ -249,8 +249,7 @@ theorem mem_leftTransversals_iff_existsUnique_quotient_mk''_eq :
     S ∈ leftTransversals (H : Set G) ↔
       ∀ q : Quotient (QuotientGroup.leftRel H), ∃! s : S, Quotient.mk'' s.1 = q :=
   by
-  simp_rw [mem_left_transversals_iff_exists_unique_inv_mul_mem, SetLike.mem_coe, ←
-    QuotientGroup.eq']
+  simp_rw [mem_leftTransversals_iff_existsUnique_inv_mul_mem, SetLike.mem_coe, ← QuotientGroup.eq']
   exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk'' g)⟩
 #align subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_leftTransversals_iff_existsUnique_quotient_mk''_eq
 #align add_subgroup.mem_left_transversals_iff_exists_unique_quotient_mk'_eq AddSubgroup.mem_leftTransversals_iff_existsUnique_quotient_mk''_eq
@@ -260,7 +259,7 @@ theorem mem_rightTransversals_iff_existsUnique_quotient_mk''_eq :
     S ∈ rightTransversals (H : Set G) ↔
       ∀ q : Quotient (QuotientGroup.rightRel H), ∃! s : S, Quotient.mk'' s.1 = q :=
   by
-  simp_rw [mem_right_transversals_iff_exists_unique_mul_inv_mem, SetLike.mem_coe, ←
+  simp_rw [mem_rightTransversals_iff_existsUnique_mul_inv_mem, SetLike.mem_coe, ←
     QuotientGroup.rightRel_apply, ← Quotient.eq'']
   exact ⟨fun h q => Quotient.inductionOn' q h, fun h g => h (Quotient.mk'' g)⟩
 #align subgroup.mem_right_transversals_iff_exists_unique_quotient_mk'_eq Subgroup.mem_rightTransversals_iff_existsUnique_quotient_mk''_eq
@@ -324,7 +323,7 @@ theorem range_mem_rightTransversals {f : Quotient (QuotientGroup.rightRel H) →
 theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by
   classical
     refine'
-      ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
+      ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_leftTransversals fun q => _, g,
         Function.update_same g g Quotient.out'⟩
     by_cases hq : q = g
     · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotient.out')
@@ -336,7 +335,7 @@ theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G)
 theorem exists_right_transversal (g : G) : ∃ S ∈ rightTransversals (H : Set G), g ∈ S := by
   classical
     refine'
-      ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
+      ⟨Set.range (Function.update Quotient.out' _ g), range_mem_rightTransversals fun q => _,
         Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
     by_cases hq : q = Quotient.mk'' g
     · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
@@ -365,7 +364,7 @@ theorem toEquiv_apply {f : G ⧸ H → G} (hf : ∀ q, (f q : G ⧸ H) = q) (q :
     (toEquiv (range_mem_leftTransversals hf) q : G) = f q :=
   by
   refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
-  exact (to_equiv (range_mem_left_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
+  exact (toEquiv (range_mem_leftTransversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
 #align subgroup.mem_left_transversals.to_equiv_apply Subgroup.MemLeftTransversals.toEquiv_apply
 #align add_subgroup.mem_left_transversals.to_equiv_apply AddSubgroup.MemLeftTransversals.to_equiv_apply
 
@@ -417,7 +416,7 @@ theorem toEquiv_apply {f : Quotient (QuotientGroup.rightRel H) → G}
     (toEquiv (range_mem_rightTransversals hf) q : G) = f q :=
   by
   refine' (subtype.ext_iff.mp _).trans (Subtype.coe_mk (f q) ⟨q, rfl⟩)
-  exact (to_equiv (range_mem_right_transversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
+  exact (toEquiv (range_mem_rightTransversals hf)).apply_eq_iff_eq_symm_apply.mpr (hf q).symm
 #align subgroup.mem_right_transversals.to_equiv_apply Subgroup.MemRightTransversals.toEquiv_apply
 #align add_subgroup.mem_right_transversals.to_equiv_apply AddSubgroup.MemRightTransversals.to_equiv_apply
 
@@ -462,9 +461,9 @@ instance : MulAction F (leftTransversals (H : Set G))
       refine' mem_left_transversals_iff_exists_unique_inv_mul_mem.mpr fun g => _
       obtain ⟨t, ht1, ht2⟩ := mem_left_transversals_iff_exists_unique_inv_mul_mem.mp T.2 (f⁻¹ • g)
       refine' ⟨⟨f • t, Set.smul_mem_smul_set t.2⟩, _, _⟩
-      · exact (congr_arg _ (smul_inv_smul f g)).mp (quotient_action.inv_mul_mem f ht1)
+      · exact (congr_arg _ (smul_inv_smul f g)).mp (QuotientAction.inv_mul_mem f ht1)
       · rintro ⟨-, t', ht', rfl⟩ h
-        replace h := quotient_action.inv_mul_mem f⁻¹ h
+        replace h := QuotientAction.inv_mul_mem f⁻¹ h
         simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h⊢
         exact subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)⟩
   one_smul T := Subtype.ext (one_smul F T)
@@ -491,7 +490,7 @@ theorem smul_toEquiv (f : F) (T : leftTransversals (H : Set G)) (q : G ⧸ H) :
 @[to_additive]
 theorem smul_apply_eq_smul_apply_inv_smul (f : F) (T : leftTransversals (H : Set G)) (q : G ⧸ H) :
     (toEquiv (f • T).2 q : G) = f • (toEquiv T.2 (f⁻¹ • q) : G) := by
-  rw [smul_to_equiv, smul_inv_smul]
+  rw [smul_toEquiv, smul_inv_smul]
 #align subgroup.smul_apply_eq_smul_apply_inv_smul Subgroup.smul_apply_eq_smul_apply_inv_smul
 #align add_subgroup.vadd_apply_eq_vadd_apply_neg_vadd AddSubgroup.vadd_apply_eq_vadd_apply_neg_vadd
 
@@ -519,11 +518,11 @@ theorem IsComplement'.isCompl (h : IsComplement' H K) : IsCompl H K :=
 #align subgroup.is_complement'.is_compl Subgroup.IsComplement'.isCompl
 
 theorem IsComplement'.sup_eq_top (h : IsComplement' H K) : H ⊔ K = ⊤ :=
-  h.IsCompl.sup_eq_top
+  h.isCompl.sup_eq_top
 #align subgroup.is_complement'.sup_eq_top Subgroup.IsComplement'.sup_eq_top
 
 theorem IsComplement'.disjoint (h : IsComplement' H K) : Disjoint H K :=
-  h.IsCompl.Disjoint
+  h.isCompl.disjoint
 #align subgroup.is_complement'.disjoint Subgroup.IsComplement'.disjoint
 
 theorem IsComplement'.index_eq_card (h : IsComplement' H K) : K.index = Nat.card H :=
@@ -557,7 +556,7 @@ theorem isComplement'_of_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype 
 
 theorem isComplement'_iff_card_mul_and_disjoint [Fintype G] [Fintype H] [Fintype K] :
     IsComplement' H K ↔ Fintype.card H * Fintype.card K = Fintype.card G ∧ Disjoint H K :=
-  ⟨fun h => ⟨h.card_mul, h.Disjoint⟩, fun h => isComplement'_of_card_mul_and_disjoint h.1 h.2⟩
+  ⟨fun h => ⟨h.card_mul, h.disjoint⟩, fun h => isComplement'_of_card_mul_and_disjoint h.1 h.2⟩
 #align subgroup.is_complement'_iff_card_mul_and_disjoint Subgroup.isComplement'_iff_card_mul_and_disjoint
 
 theorem isComplement'_of_coprime [Fintype G] [Fintype H] [Fintype K]
@@ -605,8 +604,8 @@ theorem quotientEquivSigmaZmod_symm_apply (q : orbitRel.Quotient (zpowers g) (G 
 
 theorem quotientEquivSigmaZmod_apply (q : orbitRel.Quotient (zpowers g) (G ⧸ H)) (k : ℤ) :
     quotientEquivSigmaZmod H g (g ^ k • q.out') = ⟨q, k⟩ := by
-  rw [apply_eq_iff_eq_symm_apply, quotient_equiv_sigma_zmod_symm_apply, ZMod.coe_int_cast,
-    zpow_smul_mod_minimal_period]
+  rw [apply_eq_iff_eq_symm_apply, quotientEquivSigmaZmod_symm_apply, ZMod.coe_int_cast,
+    zpow_smul_mod_minimalPeriod]
 #align subgroup.quotient_equiv_sigma_zmod_apply Subgroup.quotientEquivSigmaZmod_apply
 
 /-- The transfer transversal as a function. Given a `⟨g⟩`-orbit `q₀, g • q₀, ..., g ^ (m - 1) • q₀`
@@ -623,7 +622,7 @@ theorem transferFunction_apply (q : G ⧸ H) :
 #align subgroup.transfer_function_apply Subgroup.transferFunction_apply
 
 theorem coe_transferFunction (q : G ⧸ H) : ↑(transferFunction H g q) = q := by
-  rw [transfer_function_apply, ← smul_eq_mul, coe_smul_out', ← quotient_equiv_sigma_zmod_symm_apply,
+  rw [transferFunction_apply, ← smul_eq_mul, coe_smul_out', ← quotientEquivSigmaZmod_symm_apply,
     Sigma.eta, symm_apply_apply]
 #align subgroup.coe_transfer_function Subgroup.coe_transferFunction
 
@@ -651,7 +650,7 @@ theorem transferTransversal_apply (q : G ⧸ H) :
 theorem transferTransversal_apply' (q : orbitRel.Quotient (zpowers g) (G ⧸ H))
     (k : ZMod (minimalPeriod ((· • ·) g) q.out')) :
     ↑(toEquiv (transferTransversal H g).2 (g ^ (k : ℤ) • q.out')) = g ^ (k : ℤ) * q.out'.out' := by
-  rw [transfer_transversal_apply, transfer_function_apply, ← quotient_equiv_sigma_zmod_symm_apply,
+  rw [transferTransversal_apply, transferFunction_apply, ← quotientEquivSigmaZmod_symm_apply,
     apply_symm_apply]
 #align subgroup.transfer_transversal_apply' Subgroup.transferTransversal_apply'
 
@@ -661,9 +660,9 @@ theorem transferTransversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H)
       if k = 0 then g ^ minimalPeriod ((· • ·) g) q.out' * q.out'.out'
       else g ^ (k : ℤ) * q.out'.out' :=
   by
-  rw [smul_apply_eq_smul_apply_inv_smul, transfer_transversal_apply, transfer_function_apply, ←
-    mul_smul, ← zpow_neg_one, ← zpow_add, quotient_equiv_sigma_zmod_apply, smul_eq_mul, ← mul_assoc,
-    ← zpow_one_add, Int.cast_add, Int.cast_neg, Int.cast_one, int_cast_cast, cast_id', id.def, ←
+  rw [smul_apply_eq_smul_apply_inv_smul, transferTransversal_apply, transferFunction_apply, ←
+    mul_smul, ← zpow_neg_one, ← zpow_add, quotientEquivSigmaZmod_apply, smul_eq_mul, ← mul_assoc, ←
+    zpow_one_add, Int.cast_add, Int.cast_neg, Int.cast_one, int_cast_cast, cast_id', id.def, ←
     sub_eq_neg_add, cast_sub_one, add_sub_cancel'_right]
   by_cases hk : k = 0
   · rw [if_pos hk, if_pos hk, zpow_ofNat]

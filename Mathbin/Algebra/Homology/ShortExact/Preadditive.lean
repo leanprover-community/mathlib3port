@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.homology.short_exact.preadditive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,11 @@ structure LeftSplit : Prop where
 theorem LeftSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : ShortExact f g :=
   { Mono := by
       obtain ⟨φ, hφ⟩ := h.left_split
-      haveI : mono (f ≫ φ) := by
+      haveI : Mono (f ≫ φ) := by
         rw [hφ]
         infer_instance
       exact mono_of_mono f φ
-    Epi := h.Epi
+    Epi := h.epi
     exact := h.exact }
 #align category_theory.left_split.short_exact CategoryTheory.LeftSplit.shortExact
 
@@ -80,11 +80,11 @@ structure RightSplit : Prop where
 theorem RightSplit.shortExact {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : ShortExact f g :=
   { Epi := by
       obtain ⟨χ, hχ⟩ := h.right_split
-      haveI : epi (χ ≫ g) := by
+      haveI : Epi (χ ≫ g) := by
         rw [hχ]
         infer_instance
       exact epi_of_epi χ g
-    Mono := h.Mono
+    Mono := h.mono
     exact := h.exact }
 #align category_theory.right_split.short_exact CategoryTheory.RightSplit.shortExact
 
@@ -116,23 +116,23 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
   { w := hfg
     Epi :=
       by
-      let ψ : (kernel_subobject g : 𝒜) ⟶ image_subobject f :=
-        subobject.arrow _ ≫ φ ≫ factor_thru_image_subobject f
+      let ψ : (kernelSubobject g : 𝒜) ⟶ imageSubobject f :=
+        Subobject.arrow _ ≫ φ ≫ factorThruImageSubobject f
       suffices ψ ≫ imageToKernel f g hfg = 𝟙 _
         by
         convert epi_of_epi ψ _
         rw [this]
         infer_instance
-      rw [← cancel_mono (subobject.arrow _)]
+      rw [← cancel_mono (Subobject.arrow _)]
       swap
       · infer_instance
-      simp only [imageToKernel_arrow, image_subobject_arrow_comp, category.id_comp, category.assoc]
+      simp only [imageToKernel_arrow, imageSubobject_arrow_comp, Category.id_comp, Category.assoc]
       calc
-        (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
-        _ = (kernel_subobject g).arrow := category.comp_id _
+        (kernelSubobject g).arrow ≫ φ ≫ f = (kernelSubobject g).arrow ≫ 𝟙 B := _
+        _ = (kernelSubobject g).arrow := Category.comp_id _
         
-      rw [← H, preadditive.comp_add]
-      simp only [add_zero, zero_comp, kernel_subobject_arrow_comp_assoc] }
+      rw [← H, Preadditive.comp_add]
+      simp only [add_zero, zero_comp, kernelSubobject_arrow_comp_assoc] }
 #align category_theory.exact_of_split CategoryTheory.exact_of_split
 
 section
@@ -151,7 +151,7 @@ theorem Split.leftSplit (h : Split f g) : LeftSplit f g :=
       exact ⟨φ, h1⟩
     Epi := by
       obtain ⟨φ, χ, -, h2, -⟩ := h
-      have : epi (χ ≫ g) := by
+      have : Epi (χ ≫ g) := by
         rw [h2]
         infer_instance
       exact epi_of_epi χ g
@@ -164,7 +164,7 @@ theorem Split.rightSplit (h : Split f g) : RightSplit f g :=
       exact ⟨χ, h1⟩
     Mono := by
       obtain ⟨φ, χ, h1, -⟩ := h
-      have : mono (f ≫ φ) := by
+      have : Mono (f ≫ φ) := by
         rw [h1]
         infer_instance
       exact mono_of_mono f φ
@@ -172,7 +172,7 @@ theorem Split.rightSplit (h : Split f g) : RightSplit f g :=
 #align category_theory.split.right_split CategoryTheory.Split.rightSplit
 
 theorem Split.shortExact (h : Split f g) : ShortExact f g :=
-  h.LeftSplit.ShortExact
+  h.leftSplit.shortExact
 #align category_theory.split.short_exact CategoryTheory.Split.shortExact
 
 end
@@ -206,8 +206,8 @@ the vertical maps on the left and the right are the identity. -/
 @[nolint has_nonempty_instance]
 structure Splitting [HasZeroMorphisms 𝒜] [HasBinaryBiproducts 𝒜] where
   Iso : B ≅ A ⊞ C
-  comp_iso_eq_inl : f ≫ iso.Hom = biprod.inl
-  iso_comp_snd_eq : iso.Hom ≫ biprod.snd = g
+  comp_iso_eq_inl : f ≫ iso.hom = biprod.inl
+  iso_comp_snd_eq : iso.hom ≫ biprod.snd = g
 #align category_theory.splitting CategoryTheory.Splitting
 
 variable {f g}
@@ -223,23 +223,23 @@ attribute [simp, reassoc.1] comp_iso_eq_inl iso_comp_snd_eq
 variable (h : Splitting f g)
 
 @[simp, reassoc.1]
-theorem inl_comp_iso_eq : biprod.inl ≫ h.Iso.inv = f := by rw [iso.comp_inv_eq, h.comp_iso_eq_inl]
+theorem inl_comp_iso_eq : biprod.inl ≫ h.iso.inv = f := by rw [Iso.comp_inv_eq, h.comp_iso_eq_inl]
 #align category_theory.splitting.inl_comp_iso_eq CategoryTheory.Splitting.inl_comp_iso_eq
 
 @[simp, reassoc.1]
-theorem iso_comp_eq_snd : h.Iso.inv ≫ g = biprod.snd := by rw [iso.inv_comp_eq, h.iso_comp_snd_eq]
+theorem iso_comp_eq_snd : h.iso.inv ≫ g = biprod.snd := by rw [Iso.inv_comp_eq, h.iso_comp_snd_eq]
 #align category_theory.splitting.iso_comp_eq_snd CategoryTheory.Splitting.iso_comp_eq_snd
 
 /-- If `h` is a splitting of `A -f⟶ B -g⟶ C`,
 then `h.section : C ⟶ B` is the morphism satisfying `h.section ≫ g = 𝟙 C`. -/
 def CategoryTheory.Splitting.section : C ⟶ B :=
-  biprod.inr ≫ h.Iso.inv
+  biprod.inr ≫ h.iso.inv
 #align category_theory.splitting.section CategoryTheory.Splitting.section
 
 /-- If `h` is a splitting of `A -f⟶ B -g⟶ C`,
 then `h.retraction : B ⟶ A` is the morphism satisfying `f ≫ h.retraction = 𝟙 A`. -/
 def retraction : B ⟶ A :=
-  h.Iso.Hom ≫ biprod.fst
+  h.iso.hom ≫ biprod.fst
 #align category_theory.splitting.retraction CategoryTheory.Splitting.retraction
 
 @[simp, reassoc.1]
@@ -274,12 +274,12 @@ protected def splitEpi : SplitEpi g :=
 #align category_theory.splitting.split_epi CategoryTheory.Splitting.splitEpi
 
 @[simp, reassoc.1]
-theorem inr_iso_inv : biprod.inr ≫ h.Iso.inv = h.section :=
+theorem inr_iso_inv : biprod.inr ≫ h.iso.inv = h.section :=
   rfl
 #align category_theory.splitting.inr_iso_inv CategoryTheory.Splitting.inr_iso_inv
 
 @[simp, reassoc.1]
-theorem iso_hom_fst : h.Iso.Hom ≫ biprod.fst = h.retraction :=
+theorem iso_hom_fst : h.iso.hom ≫ biprod.fst = h.retraction :=
   rfl
 #align category_theory.splitting.iso_hom_fst CategoryTheory.Splitting.iso_hom_fst
 
@@ -326,9 +326,9 @@ theorem split_add : h.retraction ≫ f + g ≫ h.section = 𝟙 _ :=
   by
   delta splitting.section retraction
   rw [← cancel_mono h.iso.hom, ← cancel_epi h.iso.inv]
-  simp only [category.comp_id, category.id_comp, category.assoc, iso.inv_hom_id_assoc,
-    iso.inv_hom_id, limits.biprod.total, preadditive.comp_add, preadditive.add_comp,
-    splitting.comp_iso_eq_inl, splitting.iso_comp_eq_snd_assoc]
+  simp only [Category.comp_id, Category.id_comp, Category.assoc, Iso.inv_hom_id_assoc,
+    Iso.inv_hom_id, Limits.biprod.total, Preadditive.comp_add, Preadditive.add_comp,
+    Splitting.comp_iso_eq_inl, Splitting.iso_comp_eq_snd_assoc]
 #align category_theory.splitting.split_add CategoryTheory.Splitting.split_add
 
 @[reassoc.1]
@@ -356,7 +356,7 @@ theorem split : Split f g := by
   let χ := biprod.inr ≫ h.iso.inv
   refine'
     ⟨⟨h.retraction, h.section, h.ι_retraction, h.section_π, _, h.section_retraction, h.split_add⟩⟩
-  rw [← h.inl_comp_iso_eq, category.assoc, h.iso_comp_eq_snd, biprod.inl_snd]
+  rw [← h.inl_comp_iso_eq, Category.assoc, h.iso_comp_eq_snd, biprod.inl_snd]
 #align category_theory.splitting.split CategoryTheory.Splitting.split
 
 @[reassoc.1]
@@ -370,17 +370,17 @@ protected theorem exact : Exact f g :=
   by
   rw [exact_iff_exact_of_iso f g (biprod.inl : A ⟶ A ⊞ C) (biprod.snd : A ⊞ C ⟶ C) _ _ _]
   · exact exact_inl_snd _ _
-  · refine' arrow.iso_mk (iso.refl _) h.iso _
-    simp only [iso.refl_hom, arrow.mk_hom, category.id_comp, comp_iso_eq_inl]
-  · refine' arrow.iso_mk h.iso (iso.refl _) _
+  · refine' Arrow.isoMk (Iso.refl _) h.iso _
+    simp only [Iso.refl_hom, Arrow.mk_hom, Category.id_comp, comp_iso_eq_inl]
+  · refine' Arrow.isoMk h.iso (Iso.refl _) _
     dsimp
     simp
   · rfl
 #align category_theory.splitting.exact CategoryTheory.Splitting.exact
 
 protected theorem shortExact : ShortExact f g :=
-  { Mono := h.Mono
-    Epi := h.Epi
+  { Mono := h.mono
+    Epi := h.epi
     exact := h.exact }
 #align category_theory.splitting.short_exact CategoryTheory.Splitting.shortExact
 

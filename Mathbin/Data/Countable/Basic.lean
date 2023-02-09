@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.countable.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem nonempty_embedding_nat (α) [Countable α] : Nonempty (α ↪ ℕ) :=
 
 #print Function.Embedding.countable /-
 protected theorem Function.Embedding.countable [Countable β] (f : α ↪ β) : Countable α :=
-  f.Injective.Countable
+  f.injective.countable
 #align function.embedding.countable Function.Embedding.countable
 -/
 
@@ -71,7 +71,7 @@ instance [Countable α] [Countable β] : Countable (Sum α β) :=
   by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
-  exact (equiv.nat_sum_nat_equiv_nat.injective.comp <| hf.sum_map hg).Countable
+  exact (equiv.nat_sum_nat_equiv_nat.injective.comp <| hf.sum_map hg).countable
 
 instance [Countable α] : Countable (Option α) :=
   Countable.of_equiv _ (Equiv.optionEquivSumPUnit α).symm
@@ -80,13 +80,13 @@ instance [Countable α] [Countable β] : Countable (α × β) :=
   by
   rcases exists_injective_nat α with ⟨f, hf⟩
   rcases exists_injective_nat β with ⟨g, hg⟩
-  exact (nat.mkpair_equiv.injective.comp <| hf.prod_map hg).Countable
+  exact (nat.mkpair_equiv.injective.comp <| hf.prod_map hg).countable
 
 instance [Countable α] [∀ a, Countable (π a)] : Countable (Sigma π) :=
   by
   rcases exists_injective_nat α with ⟨f, hf⟩
   choose g hg using fun a => exists_injective_nat (π a)
-  exact ((Equiv.sigmaEquivProd ℕ ℕ).Injective.comp <| hf.sigma_map hg).Countable
+  exact ((Equiv.sigmaEquivProd ℕ ℕ).injective.comp <| hf.sigma_map hg).countable
 
 end Type
 
@@ -123,7 +123,7 @@ instance [Finite α] [∀ a, Countable (π a)] : Countable (∀ a, π a) :=
     · exact Countable.of_equiv _ (Equiv.piFinSucc _ _).symm
   rcases Finite.exists_equiv_fin α with ⟨n, ⟨e⟩⟩
   have f := fun a => (nonempty_embedding_nat (π a)).some
-  exact ((embedding.Pi_congr_right f).trans (Equiv.piCongrLeft' _ e).toEmbedding).Countable
+  exact ((Embedding.piCongrRight f).trans (Equiv.piCongrLeft' _ e).toEmbedding).countable
 
 end Sort
 

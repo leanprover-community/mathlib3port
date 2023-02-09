@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,9 +29,9 @@ theorem isThin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) :=
   refine' ⟨fun h c => h c c, fun h c d => Subsingleton.intro fun f g => _⟩
   haveI := h d
   calc
-    f = f ≫ inv g ≫ g := by simp only [inv_eq_inv, is_iso.inv_hom_id, category.comp_id]
+    f = f ≫ inv g ≫ g := by simp only [inv_eq_inv, IsIso.inv_hom_id, Category.comp_id]
     _ = f ≫ inv f ≫ g := by congr
-    _ = g := by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc]
+    _ = g := by simp only [inv_eq_inv, IsIso.hom_inv_id_assoc]
     
 #align category_theory.groupoid.is_thin_iff CategoryTheory.Groupoid.isThin_iff
 

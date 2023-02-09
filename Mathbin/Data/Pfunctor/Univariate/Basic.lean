@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.pfunctor.univariate.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,7 +190,7 @@ Case conversion may be inaccurate. Consider using '#align pfunctor.iget_map PFun
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α)
     (f : α → β) (i : P.IdxCat) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) :=
   by
-  simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
+  simp only [Obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x
   rfl
 #align pfunctor.iget_map PFunctor.iget_map
@@ -292,7 +292,7 @@ open Set
 theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
     @supp.{u} P.Obj _ α (⟨a, f⟩ : P.Obj α) = f '' univ :=
   by
-  ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
+  ext; simp only [supp, image_univ, mem_range, mem_setOf_eq]
   constructor <;> intro h
   · apply @h fun x => ∃ y : P.B a, f y = x
     rw [liftp_iff']

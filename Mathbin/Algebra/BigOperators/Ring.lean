@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,13 +158,13 @@ theorem prod_sum {δ : α → Type _} [DecidableEq α] [∀ a, DecidableEq (δ a
       simp only [disjoint_iff_ne, mem_image]
       rintro _ ⟨p₂, hp, eq₂⟩ _ ⟨p₃, hp₃, eq₃⟩ eq
       have : pi.cons s a x p₂ a (mem_insert_self _ _) = pi.cons s a y p₃ a (mem_insert_self _ _) :=
-        by rw [eq₂, eq₃, Eq]
+        by rw [eq₂, eq₃, eq]
       rw [pi.cons_same, pi.cons_same] at this
       exact h this
-    rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_bUnion h₁]
+    rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_bunionᵢ h₁]
     refine' sum_congr rfl fun b _ => _
     have h₂ : ∀ p₁ ∈ pi s t, ∀ p₂ ∈ pi s t, pi.cons s a b p₁ = pi.cons s a b p₂ → p₁ = p₂ :=
-      fun p₁ h₁ p₂ h₂ eq => pi_cons_injective ha Eq
+      fun p₁ h₁ p₂ h₂ eq => pi_cons_injective ha eq
     rw [sum_image h₂, mul_sum]
     refine' sum_congr rfl fun g _ => _
     rw [attach_insert, prod_insert, prod_image]
@@ -243,12 +243,12 @@ theorem prod_add_ordered {ι R : Type _} [CommSemiring R] [LinearOrder ι] (s : 
     (∏ i in s, f i + g i) =
       (∏ i in s, f i) +
         ∑ i in s,
-          (g i * ∏ j in s.filterₓ (· < i), f j + g j) * ∏ j in s.filterₓ fun j => i < j, f j :=
+          (g i * ∏ j in s.filter (· < i), f j + g j) * ∏ j in s.filter fun j => i < j, f j :=
   by
   refine' Finset.induction_on_max s (by simp) _
   clear s
   intro a s ha ihs
-  have ha' : a ∉ s := fun ha' => (ha a ha').False
+  have ha' : a ∉ s := fun ha' => (ha a ha').false
   rw [prod_insert ha', prod_insert ha', sum_insert ha', filter_insert, if_neg (lt_irrefl a),
     filter_true_of_mem ha, ihs, add_mul, mul_add, mul_add, add_assoc]
   congr 1
@@ -274,7 +274,7 @@ theorem prod_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : Fins
     (∏ i in s, f i - g i) =
       (∏ i in s, f i) -
         ∑ i in s,
-          (g i * ∏ j in s.filterₓ (· < i), f j - g j) * ∏ j in s.filterₓ fun j => i < j, f j :=
+          (g i * ∏ j in s.filter (· < i), f j - g j) * ∏ j in s.filter fun j => i < j, f j :=
   by
   simp only [sub_eq_add_neg]
   convert prod_add_ordered s f fun i => -g i
@@ -290,7 +290,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_one_sub_or
 /-- `∏ i, (1 - f i) = 1 - ∑ i, f i * (∏ j < i, 1 - f j)`. This formula is useful in construction of
 a partition of unity from a collection of “bump” functions.  -/
 theorem prod_one_sub_ordered {ι R : Type _} [CommRing R] [LinearOrder ι] (s : Finset ι)
-    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filterₓ (· < i), 1 - f j :=
+    (f : ι → R) : (∏ i in s, 1 - f i) = 1 - ∑ i in s, f i * ∏ j in s.filter (· < i), 1 - f j :=
   by
   rw [prod_sub_ordered]
   simp
@@ -340,7 +340,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_range_cast
 theorem prod_range_cast_nat_sub (n k : ℕ) :
     (∏ i in range k, (n - i : R)) = (∏ i in range k, n - i : ℕ) :=
   by
-  rw [prod_nat_cast]
+  rw [prod_natCast]
   cases' le_or_lt k n with hkn hnk
   · exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
   · rw [← mem_range] at hnk
@@ -367,7 +367,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoid β] {s : Finset α} {x
   rw [powerset_insert, Finset.prod_union, Finset.prod_image]
   · intro t₁ h₁ t₂ h₂ heq
     rw [← Finset.erase_insert (not_mem_of_mem_powerset_of_not_mem h₁ h), ←
-      Finset.erase_insert (not_mem_of_mem_powerset_of_not_mem h₂ h), HEq]
+      Finset.erase_insert (not_mem_of_mem_powerset_of_not_mem h₂ h), heq]
   · rw [Finset.disjoint_iff_ne]
     intro t₁ h₁ t₂ h₂
     rcases Finset.mem_image.1 h₂ with ⟨t₃, h₃, H₃₂⟩
@@ -383,7 +383,7 @@ theorem prod_powerset_insert [DecidableEq α] [CommMonoid β] {s : Finset α} {x
       "A sum over `powerset s` is equal to the double sum over sets of subsets of `s` with\n`card s = k`, for `k = 1, ..., card s`"]
 theorem prod_powerset [CommMonoid β] (s : Finset α) (f : Finset α → β) :
     (∏ t in powerset s, f t) = ∏ j in range (card s + 1), ∏ t in powersetLen j s, f t := by
-  rw [powerset_card_disj_Union, prod_disj_Union]
+  rw [powerset_card_disjUnionᵢ, prod_disjUnionᵢ]
 #align finset.prod_powerset Finset.prod_powerset
 #align finset.sum_powerset Finset.sum_powerset
 -/

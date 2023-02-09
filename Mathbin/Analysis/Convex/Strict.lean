@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.strict
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem strictConvex_univ : StrictConvex 𝕜 (univ : Set E) :=
 
 protected theorem StrictConvex.eq (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hy : y ∈ s) (ha : 0 < a)
     (hb : 0 < b) (hab : a + b = 1) (h : a • x + b • y ∉ interior s) : x = y :=
-  hs.Eq hx hy fun H => h <| H ha hb hab
+  hs.eq hx hy fun H => h <| H ha hb hab
 #align strict_convex.eq StrictConvex.eq
 
 protected theorem StrictConvex.inter {t : Set E} (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
@@ -87,17 +87,17 @@ theorem Directed.strictConvex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : 
     (hs : ∀ ⦃i : ι⦄, StrictConvex 𝕜 (s i)) : StrictConvex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy hxy a b ha hb hab
-  rw [mem_Union] at hx hy
+  rw [mem_unionᵢ] at hx hy
   obtain ⟨i, hx⟩ := hx
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
-  exact interior_mono (subset_Union s k) (hs (hik hx) (hjk hy) hxy ha hb hab)
+  exact interior_mono (subset_unionᵢ s k) (hs (hik hx) (hjk hy) hxy ha hb hab)
 #align directed.strict_convex_Union Directed.strictConvex_unionᵢ
 
 theorem DirectedOn.strictConvex_unionₛ {S : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) S)
     (hS : ∀ s ∈ S, StrictConvex 𝕜 s) : StrictConvex 𝕜 (⋃₀ S) :=
   by
-  rw [sUnion_eq_Union]
+  rw [unionₛ_eq_unionᵢ]
   exact (directedOn_iff_directed.1 hdir).strictConvex_unionᵢ fun s => hS _ s.2
 #align directed_on.strict_convex_sUnion DirectedOn.strictConvex_unionₛ
 
@@ -126,7 +126,7 @@ theorem strictConvex_singleton (c : E) : StrictConvex 𝕜 ({c} : Set E) :=
 #align strict_convex_singleton strictConvex_singleton
 
 theorem Set.Subsingleton.strictConvex (hs : s.Subsingleton) : StrictConvex 𝕜 s :=
-  hs.Pairwise _
+  hs.pairwise _
 #align set.subsingleton.strict_convex Set.Subsingleton.strictConvex
 
 theorem StrictConvex.linear_image [Semiring 𝕝] [Module 𝕝 E] [Module 𝕝 F]
@@ -144,7 +144,7 @@ theorem StrictConvex.is_linear_image (hs : StrictConvex 𝕜 s) {f : E → F} (h
 #align strict_convex.is_linear_image StrictConvex.is_linear_image
 
 theorem StrictConvex.linear_preimage {s : Set F} (hs : StrictConvex 𝕜 s) (f : E →ₗ[𝕜] F)
-    (hf : Continuous f) (hfinj : Injective f) : StrictConvex 𝕜 (s.Preimage f) :=
+    (hf : Continuous f) (hfinj : Injective f) : StrictConvex 𝕜 (s.preimage f) :=
   by
   intro x hx y hy hxy a b ha hb hab
   refine' preimage_interior_subset_interior_preimage hf _
@@ -154,7 +154,7 @@ theorem StrictConvex.linear_preimage {s : Set F} (hs : StrictConvex 𝕜 s) (f :
 
 theorem StrictConvex.is_linear_preimage {s : Set F} (hs : StrictConvex 𝕜 s) {f : E → F}
     (h : IsLinearMap 𝕜 f) (hf : Continuous f) (hfinj : Injective f) :
-    StrictConvex 𝕜 (s.Preimage f) :=
+    StrictConvex 𝕜 (s.preimage f) :=
   hs.linear_preimage (h.mk' f) hf hfinj
 #align strict_convex.is_linear_preimage StrictConvex.is_linear_preimage
 
@@ -174,35 +174,35 @@ protected theorem Set.OrdConnected.strictConvex {s : Set β} (hs : OrdConnected 
 #align set.ord_connected.strict_convex Set.OrdConnected.strictConvex
 
 theorem strictConvex_Iic (r : β) : StrictConvex 𝕜 (Iic r) :=
-  ordConnected_Iic.StrictConvex
+  ordConnected_Iic.strictConvex
 #align strict_convex_Iic strictConvex_Iic
 
 theorem strictConvex_Ici (r : β) : StrictConvex 𝕜 (Ici r) :=
-  ordConnected_Ici.StrictConvex
+  ordConnected_Ici.strictConvex
 #align strict_convex_Ici strictConvex_Ici
 
 theorem strictConvex_Iio (r : β) : StrictConvex 𝕜 (Iio r) :=
-  ordConnected_Iio.StrictConvex
+  ordConnected_Iio.strictConvex
 #align strict_convex_Iio strictConvex_Iio
 
 theorem strictConvex_Ioi (r : β) : StrictConvex 𝕜 (Ioi r) :=
-  ordConnected_Ioi.StrictConvex
+  ordConnected_Ioi.strictConvex
 #align strict_convex_Ioi strictConvex_Ioi
 
 theorem strictConvex_Icc (r s : β) : StrictConvex 𝕜 (Icc r s) :=
-  ordConnected_Icc.StrictConvex
+  ordConnected_Icc.strictConvex
 #align strict_convex_Icc strictConvex_Icc
 
 theorem strictConvex_Ioo (r s : β) : StrictConvex 𝕜 (Ioo r s) :=
-  ordConnected_Ioo.StrictConvex
+  ordConnected_Ioo.strictConvex
 #align strict_convex_Ioo strictConvex_Ioo
 
 theorem strictConvex_Ico (r s : β) : StrictConvex 𝕜 (Ico r s) :=
-  ordConnected_Ico.StrictConvex
+  ordConnected_Ico.strictConvex
 #align strict_convex_Ico strictConvex_Ico
 
 theorem strictConvex_Ioc (r s : β) : StrictConvex 𝕜 (Ioc r s) :=
-  ordConnected_Ioc.StrictConvex
+  ordConnected_Ioc.strictConvex
 #align strict_convex_Ioc strictConvex_Ioc
 
 theorem strictConvex_uIcc (r s : β) : StrictConvex 𝕜 (uIcc r s) :=
@@ -229,7 +229,7 @@ theorem StrictConvex.preimage_add_right (hs : StrictConvex 𝕜 s) (z : E) :
   by
   intro x hx y hy hxy a b ha hb hab
   refine' preimage_interior_subset_interior_preimage (continuous_add_left _) _
-  have h := hs hx hy ((add_right_injective _).Ne hxy) ha hb hab
+  have h := hs hx hy ((add_right_injective _).ne hxy) ha hb hab
   rwa [smul_add, smul_add, add_add_add_comm, ← add_smul, hab, one_smul] at h
 #align strict_convex.preimage_add_right StrictConvex.preimage_add_right
 
@@ -254,7 +254,7 @@ theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
   rintro _ ⟨v, w, hv, hw, rfl⟩ _ ⟨x, y, hx, hy, rfl⟩ h a b ha hb hab
   rw [smul_add, smul_add, add_add_add_comm]
   obtain rfl | hvx := eq_or_ne v x
-  · refine' interior_mono (add_subset_add (singleton_subset_iff.2 hv) subset.rfl) _
+  · refine' interior_mono (add_subset_add (singleton_subset_iff.2 hv) Subset.rfl) _
     rw [Convex.combo_self hab, singleton_add]
     exact
       (isOpenMap_add_left _).image_interior_subset _
@@ -288,7 +288,7 @@ variable [LinearOrderedField 𝕝] [Module 𝕝 E] [HasContinuousConstSMul 𝕝 
 theorem StrictConvex.smul (hs : StrictConvex 𝕜 s) (c : 𝕝) : StrictConvex 𝕜 (c • s) :=
   by
   obtain rfl | hc := eq_or_ne c 0
-  · exact (subsingleton_zero_smul_set _).StrictConvex
+  · exact (subsingleton_zero_smul_set _).strictConvex
   · exact hs.linear_image (LinearMap.lsmul _ _ c) (isOpenMap_smul₀ hc)
 #align strict_convex.smul StrictConvex.smul
 
@@ -452,7 +452,7 @@ variable [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] 
 /-- A set in a linear ordered field is strictly convex if and only if it is convex. -/
 @[simp]
 theorem strictConvex_iff_convex : StrictConvex 𝕜 s ↔ Convex 𝕜 s :=
-  ⟨StrictConvex.convex, fun hs => hs.OrdConnected.StrictConvex⟩
+  ⟨StrictConvex.convex, fun hs => hs.ordConnected.strictConvex⟩
 #align strict_convex_iff_convex strictConvex_iff_convex
 
 theorem strictConvex_iff_ordConnected : StrictConvex 𝕜 s ↔ s.OrdConnected :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ordered
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,12 +29,12 @@ section
 variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
-def abs (f : C(α, β)) : C(α, β) where toFun x := |f x|
+def abs (f : C(α, β)) : C(α, continuous_const) where toFun x := |f x|
 #align continuous_map.abs ContinuousMap.abs
 
 -- see Note [lower instance priority]
 instance (priority := 100) : Abs C(α, β) :=
-  ⟨fun f => abs f⟩
+  ⟨fun f => continuous_id f⟩
 
 @[simp]
 theorem abs_apply (f : C(α, β)) (x : α) : (|f|) x = |f x| :=

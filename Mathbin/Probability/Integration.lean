@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich, Vincent Beffara
 
 ! This file was ported from Lean 3 source module probability.integration
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T),
       lintegral_indicator _ (hMf _ h_meas_s'), lintegral_indicator _ h_meas_T]
     simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul,
-      MeasurableSet.univ, measure.restrict_apply]
+      MeasurableSet.univ, Measure.restrict_apply]
     ring_nf
     congr
     rw [mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
@@ -73,7 +73,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
   · intro f h_meas_f h_mono_f h_ind_f
     have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
     simp_rw [Ennreal.supᵢ_mul]
-    rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, Ennreal.supᵢ_mul]
+    rw [lintegral_supᵢ h_measM_f h_mono_f, lintegral_supᵢ, Ennreal.supᵢ_mul]
     · simp_rw [← h_ind_f]
     · exact fun n => h_mul_indicator _ (h_measM_f n)
     · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rfl
@@ -95,7 +95,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
   apply Measurable.ennreal_induction
   · intro c s h_s
     apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
-    apply indep_sets_of_indep_sets_of_le_right h_ind
+    apply indepSetsOfIndepSetsOfLeRight h_ind
     rwa [singleton_subset_iff]
   · intro f' g h_univ h_measMg_f' h_measMg_g h_ind_f' h_ind_g'
     have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
@@ -106,7 +106,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
   · intro f' h_meas_f' h_mono_f' h_ind_f'
     have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
     simp_rw [Ennreal.mul_supᵢ]
-    rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', Ennreal.mul_supᵢ]
+    rw [lintegral_supᵢ, lintegral_supᵢ h_measM_f' h_mono_f', Ennreal.mul_supᵢ]
     · simp_rw [← h_ind_f']
     · exact fun n => h_measM_f.mul (h_measM_f' n)
     · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
@@ -133,7 +133,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AeMea
   rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk,
     lintegral_congr_ae fg_ae]
   apply
-    lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk
+    lintegral_mul_eq_lintegral_mul_lintegral_of_indepFunCat h_meas_f.measurable_mk
       h_meas_g.measurable_mk
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
 #align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'
@@ -151,16 +151,16 @@ theorem IndepFunCat.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω �
   by
   let nX : Ω → Ennreal := fun a => ‖X a‖₊
   let nY : Ω → Ennreal := fun a => ‖Y a‖₊
-  have hXY' : indep_fun (fun a => ‖X a‖₊) (fun a => ‖Y a‖₊) μ :=
+  have hXY' : IndepFunCat (fun a => ‖X a‖₊) (fun a => ‖Y a‖₊) μ :=
     hXY.comp measurable_nnnorm measurable_nnnorm
-  have hXY'' : indep_fun nX nY μ :=
+  have hXY'' : IndepFunCat nX nY μ :=
     hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
-  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
-  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coe_nnreal_ennreal
+  have hnX : AeMeasurable nX μ := hX.1.aeMeasurable.nnnorm.coeNnrealEnnreal
+  have hnY : AeMeasurable nY μ := hY.1.aeMeasurable.nnnorm.coeNnrealEnnreal
   have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
     convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
   refine' ⟨hX.1.mul hY.1, _⟩
-  simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
+  simp_rw [HasFiniteIntegral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
   exact ennreal.mul_lt_top_iff.mpr (Or.inl ⟨hX.2, hY.2⟩)
 #align probability_theory.indep_fun.integrable_mul ProbabilityTheory.IndepFunCat.integrableMul
 
@@ -178,10 +178,10 @@ theorem IndepFunCat.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace
     filter_upwards [I]with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
-  have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
+  have J : IndepFunCat (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
     by
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
-    apply indep_fun.comp hXY M M
+    apply IndepFunCat.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
@@ -202,10 +202,10 @@ theorem IndepFunCat.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpac
     filter_upwards [I]with ω hω
     simpa using hω
   apply lt_top_iff_ne_top.2 fun H => _
-  have J : indep_fun (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
+  have J : IndepFunCat (fun ω => ↑‖X ω‖₊) (fun ω => ↑‖Y ω‖₊) μ :=
     by
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
-    apply indep_fun.comp hXY M M
+    apply IndepFunCat.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
   simp only [nnnorm_mul, Ennreal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
@@ -243,12 +243,12 @@ theorem IndepFunCat.integral_mul_of_integrable (hXY : IndepFunCat X Y μ) (hX : 
   by
   let pos : ℝ → ℝ := fun x => max x 0
   let neg : ℝ → ℝ := fun x => max (-x) 0
-  have posm : Measurable Pos := measurable_id'.max measurable_const
+  have posm : Measurable pos := measurable_id'.max measurable_const
   have negm : Measurable neg := measurable_id'.neg.max measurable_const
-  let Xp := Pos ∘ X
+  let Xp := pos ∘ X
   -- `X⁺` would look better but it makes `simp_rw` below fail
   let Xm := neg ∘ X
-  let Yp := Pos ∘ Y
+  let Yp := pos ∘ Y
   let Ym := neg ∘ Y
   have hXpm : X = Xp - Xm := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (X ω)).symm
   have hYpm : Y = Yp - Ym := funext fun ω => (max_zero_sub_max_neg_zero_eq_self (Y ω)).symm
@@ -256,24 +256,24 @@ theorem IndepFunCat.integral_mul_of_integrable (hXY : IndepFunCat X Y μ) (hX : 
   have hp2 : 0 ≤ Xp := fun ω => le_max_right _ _
   have hp3 : 0 ≤ Ym := fun ω => le_max_right _ _
   have hp4 : 0 ≤ Yp := fun ω => le_max_right _ _
-  have hm1 : AeMeasurable Xm μ := hX.1.AeMeasurable.neg.max aeMeasurableConst
+  have hm1 : AeMeasurable Xm μ := hX.1.aeMeasurable.neg.max aeMeasurableConst
   have hm2 : AeMeasurable Xp μ := hX.1.AeMeasurable.max aeMeasurableConst
-  have hm3 : AeMeasurable Ym μ := hY.1.AeMeasurable.neg.max aeMeasurableConst
+  have hm3 : AeMeasurable Ym μ := hY.1.aeMeasurable.neg.max aeMeasurableConst
   have hm4 : AeMeasurable Yp μ := hY.1.AeMeasurable.max aeMeasurableConst
-  have hv1 : integrable Xm μ := hX.neg_part
-  have hv2 : integrable Xp μ := hX.pos_part
-  have hv3 : integrable Ym μ := hY.neg_part
-  have hv4 : integrable Yp μ := hY.pos_part
-  have hi1 : indep_fun Xm Ym μ := hXY.comp negm negm
-  have hi2 : indep_fun Xp Ym μ := hXY.comp posm negm
-  have hi3 : indep_fun Xm Yp μ := hXY.comp negm posm
-  have hi4 : indep_fun Xp Yp μ := hXY.comp posm posm
-  have hl1 : integrable (Xm * Ym) μ := hi1.integrable_mul hv1 hv3
-  have hl2 : integrable (Xp * Ym) μ := hi2.integrable_mul hv2 hv3
-  have hl3 : integrable (Xm * Yp) μ := hi3.integrable_mul hv1 hv4
-  have hl4 : integrable (Xp * Yp) μ := hi4.integrable_mul hv2 hv4
-  have hl5 : integrable (Xp * Yp - Xm * Yp) μ := hl4.sub hl3
-  have hl6 : integrable (Xp * Ym - Xm * Ym) μ := hl2.sub hl1
+  have hv1 : Integrable Xm μ := hX.neg_part
+  have hv2 : Integrable Xp μ := hX.pos_part
+  have hv3 : Integrable Ym μ := hY.neg_part
+  have hv4 : Integrable Yp μ := hY.pos_part
+  have hi1 : IndepFunCat Xm Ym μ := hXY.comp negm negm
+  have hi2 : IndepFunCat Xp Ym μ := hXY.comp posm negm
+  have hi3 : IndepFunCat Xm Yp μ := hXY.comp negm posm
+  have hi4 : IndepFunCat Xp Yp μ := hXY.comp posm posm
+  have hl1 : Integrable (Xm * Ym) μ := hi1.integrable_mul hv1 hv3
+  have hl2 : Integrable (Xp * Ym) μ := hi2.integrable_mul hv2 hv3
+  have hl3 : Integrable (Xm * Yp) μ := hi3.integrable_mul hv1 hv4
+  have hl4 : Integrable (Xp * Yp) μ := hi4.integrable_mul hv2 hv4
+  have hl5 : Integrable (Xp * Yp - Xm * Yp) μ := hl4.sub hl3
+  have hl6 : Integrable (Xp * Ym - Xm * Ym) μ := hl2.sub hl1
   simp_rw [hXpm, hYpm, mul_sub, sub_mul]
   rw [integral_sub' hl5 hl6, integral_sub' hl4 hl3, integral_sub' hl2 hl1, integral_sub' hv2 hv1,
     integral_sub' hv4 hv3, hi1.integral_mul_of_nonneg hp1 hp3 hm1 hm3,
@@ -299,11 +299,11 @@ theorem IndepFunCat.integral_mul (hXY : IndepFunCat X Y μ) (hX : AeStronglyMeas
       simp [hω]
     simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const,
       Algebra.id.smul_eq_mul, mul_zero, zero_mul]
-  by_cases h : integrable (X * Y) μ
-  · have HX : integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
-    have HY : integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
+  by_cases h : Integrable (X * Y) μ
+  · have HX : Integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
+    have HY : Integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
     exact hXY.integral_mul_of_integrable HX HY
-  · have I : ¬(integrable X μ ∧ integrable Y μ) :=
+  · have I : ¬(Integrable X μ ∧ Integrable Y μ) :=
       by
       rintro ⟨HX, HY⟩
       exact h (hXY.integrable_mul HX HY)
@@ -331,12 +331,12 @@ theorem indepFunCat_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _}
               Integrable (ψ ∘ g) μ →
                 integral μ (φ ∘ f * ψ ∘ g) = integral μ (φ ∘ f) * integral μ (ψ ∘ g) :=
   by
-  refine' ⟨fun hfg _ _ hφ hψ => indep_fun.integral_mul_of_integrable (hfg.comp hφ hψ), _⟩
+  refine' ⟨fun hfg _ _ hφ hψ => IndepFunCat.integral_mul_of_integrable (hfg.comp hφ hψ), _⟩
   rintro h _ _ ⟨A, hA, rfl⟩ ⟨B, hB, rfl⟩
   specialize
     h (measurable_one.indicator hA) (measurable_one.indicator hB)
-      ((integrable_const 1).indicator (hfm.comp measurable_id hA))
-      ((integrable_const 1).indicator (hgm.comp measurable_id hB))
+      ((integrableConst 1).indicator (hfm.comp measurable_id hA))
+      ((integrableConst 1).indicator (hgm.comp measurable_id hB))
   rwa [← Ennreal.toReal_eq_toReal (measure_ne_top μ _), Ennreal.toReal_mul, ←
     integral_indicator_one ((hfm hA).inter (hgm hB)), ← integral_indicator_one (hfm hA), ←
     integral_indicator_one (hgm hB), Set.inter_indicator_one]

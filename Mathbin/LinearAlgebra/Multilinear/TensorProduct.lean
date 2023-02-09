@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.tensor_product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,16 +66,16 @@ def domCoprod' :
     LinearMap.mk₂ R domCoprod
       (fun m₁ m₂ n => by
         ext
-        simp only [dom_coprod_apply, TensorProduct.add_tmul, add_apply])
+        simp only [domCoprod_apply, TensorProduct.add_tmul, add_apply])
       (fun c m n => by
         ext
-        simp only [dom_coprod_apply, TensorProduct.smul_tmul', smul_apply])
+        simp only [domCoprod_apply, TensorProduct.smul_tmul', smul_apply])
       (fun m n₁ n₂ => by
         ext
-        simp only [dom_coprod_apply, TensorProduct.tmul_add, add_apply])
+        simp only [domCoprod_apply, TensorProduct.tmul_add, add_apply])
       fun c m n => by
       ext
-      simp only [dom_coprod_apply, TensorProduct.tmul_smul, smul_apply]
+      simp only [domCoprod_apply, TensorProduct.tmul_smul, smul_apply]
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 
 @[simp]

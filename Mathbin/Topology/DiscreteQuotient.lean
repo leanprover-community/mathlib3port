@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Calle Sönne, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.discrete_quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ def ofClopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X
     where
   toSetoid :=
     ⟨fun x y => x ∈ A ↔ y ∈ A, fun _ => Iff.rfl, fun _ _ => Iff.symm, fun _ _ _ => Iff.trans⟩
-  isOpen_setOf_rel x := by by_cases hx : x ∈ A <;> simp [Setoid.Rel, hx, h.1, h.2, ← compl_set_of]
+  isOpen_setOf_rel x := by by_cases hx : x ∈ A <;> simp [Setoid.Rel, hx, h.1, h.2, ← compl_setOf]
 #align discrete_quotient.of_clopen DiscreteQuotient.ofClopen
 
 theorem refl : ∀ x, S.Rel x x :=
@@ -127,7 +127,7 @@ theorem proj_quotientMap : QuotientMap S.proj :=
 #align discrete_quotient.proj_quotient_map DiscreteQuotient.proj_quotientMap
 
 theorem proj_continuous : Continuous S.proj :=
-  S.proj_quotientMap.Continuous
+  S.proj_quotientMap.continuous
 #align discrete_quotient.proj_continuous DiscreteQuotient.proj_continuous
 
 instance : DiscreteTopology S :=
@@ -142,7 +142,7 @@ theorem proj_isLocallyConstant : IsLocallyConstant S.proj :=
 #align discrete_quotient.proj_is_locally_constant DiscreteQuotient.proj_isLocallyConstant
 
 theorem isClopen_preimage (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
-  (isClopen_discrete A).Preimage S.proj_continuous
+  (isClopen_discrete A).preimage S.proj_continuous
 #align discrete_quotient.is_clopen_preimage DiscreteQuotient.isClopen_preimage
 
 theorem isOpen_preimage (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
@@ -156,7 +156,7 @@ theorem isClosed_preimage (A : Set S) : IsClosed (S.proj ⁻¹' A) :=
 theorem isClopen_setOf_rel (x : X) : IsClopen (setOf (S.Rel x)) :=
   by
   rw [← fiber_eq]
-  apply is_clopen_preimage
+  apply isClopen_preimage
 #align discrete_quotient.is_clopen_set_of_rel DiscreteQuotient.isClopen_setOf_rel
 
 instance : HasInf (DiscreteQuotient X) :=
@@ -188,7 +188,7 @@ variable (g : C(Y, Z)) (f : C(X, Y))
 def comap (S : DiscreteQuotient Y) : DiscreteQuotient X
     where
   toSetoid := Setoid.comap f S.1
-  isOpen_setOf_rel y := (S.2 _).Preimage f.Continuous
+  isOpen_setOf_rel y := (S.2 _).preimage f.continuous
 #align discrete_quotient.comap DiscreteQuotient.comap
 
 @[simp]
@@ -382,16 +382,16 @@ theorem eq_of_forall_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconn
     {x y : X} (h : ∀ Q : DiscreteQuotient X, Q.proj x = Q.proj y) : x = y :=
   by
   rw [← mem_singleton_iff, ← connectedComponent_eq_singleton, connectedComponent_eq_interᵢ_clopen,
-    mem_Inter]
+    mem_interᵢ]
   rintro ⟨U, hU1, hU2⟩
-  exact (Quotient.exact' (h (of_clopen hU1))).mpr hU2
+  exact (Quotient.exact' (h (ofClopen hU1))).mpr hU2
 #align discrete_quotient.eq_of_forall_proj_eq DiscreteQuotient.eq_of_forall_proj_eq
 
 theorem fiber_subset_ofLe {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) :
     A.proj ⁻¹' {a} ⊆ B.proj ⁻¹' {ofLe h a} :=
   by
   rcases A.proj_surjective a with ⟨a, rfl⟩
-  rw [fiber_eq, of_le_proj, fiber_eq]
+  rw [fiber_eq, ofLe_proj, fiber_eq]
   exact fun _ h' => h h'
 #align discrete_quotient.fiber_subset_of_le DiscreteQuotient.fiber_subset_ofLe
 
@@ -402,12 +402,12 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
   obtain ⟨x, hx⟩ : (⋂ Q, proj Q ⁻¹' {Qs Q}).Nonempty :=
     IsCompact.nonempty_interᵢ_of_directed_nonempty_compact_closed
       (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _}) (directed_of_inf fun A B h => _)
-      (fun Q => (singleton_nonempty _).Preimage Q.proj_surjective)
-      (fun i => (is_closed_preimage _ _).IsCompact) fun i => is_closed_preimage _ _
+      (fun Q => (singleton_nonempty _).preimage Q.proj_surjective)
+      (fun i => (isClosed_preimage _ _).isCompact) fun i => isClosed_preimage _ _
   · refine' ⟨x, fun Q => _⟩
     exact hx _ ⟨Q, rfl⟩
   · rw [← compat _ _ h]
-    exact fiber_subset_of_le _ _
+    exact fiber_subset_ofLe _ _
 #align discrete_quotient.exists_of_compat DiscreteQuotient.exists_of_compat
 
 instance [CompactSpace X] : Finite S :=
@@ -425,17 +425,17 @@ variable {X} (f : LocallyConstant X α)
 def discreteQuotient : DiscreteQuotient X
     where
   toSetoid := Setoid.comap f ⊥
-  isOpen_setOf_rel x := f.IsLocallyConstant _
+  isOpen_setOf_rel x := f.isLocallyConstant _
 #align locally_constant.discrete_quotient LocallyConstant.discreteQuotient
 
 /-- The (locally constant) function from the discrete quotient associated to a locally constant
 function. -/
-def lift : LocallyConstant f.DiscreteQuotient α :=
+def lift : LocallyConstant f.discreteQuotient α :=
   ⟨fun a => Quotient.liftOn' a f fun a b => id, fun A => isOpen_discrete _⟩
 #align locally_constant.lift LocallyConstant.lift
 
 @[simp]
-theorem lift_comp_proj : f.lift ∘ f.DiscreteQuotient.proj = f :=
+theorem lift_comp_proj : f.lift ∘ f.discreteQuotient.proj = f :=
   by
   ext
   rfl

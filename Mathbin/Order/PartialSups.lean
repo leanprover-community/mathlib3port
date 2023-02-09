@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module order.partial_sups
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ def partialSups.gi : GaloisInsertion (partialSups : (ℕ → α) → ℕ →o α
     where
   choice f h :=
     ⟨f, by
-      convert (partialSups f).Monotone
+      convert (partialSups f).monotone
       exact (le_partialSups f).antisymm h⟩
   gc f g := by
     refine' ⟨(le_partialSups f).trans, fun h => _⟩
@@ -156,7 +156,7 @@ theorem partialSups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
   induction' n with n ih
   · simp
   · dsimp [partialSups] at ih⊢
-    simp_rw [@Finset.range_succ n.succ]
+    simp_rw [@finset.range_succ n.succ]
     rw [ih, Finset.sup'_insert, sup_comm]
 #align partial_sups_eq_sup'_range partialSups_eq_sup'_range
 -/

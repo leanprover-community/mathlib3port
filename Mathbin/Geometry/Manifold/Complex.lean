@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,10 +59,10 @@ variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
 protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
     IsLocallyConstant f :=
   by
-  haveI : LocallyConnectedSpace M := ChartedSpace.locallyConnectedSpace E M
+  haveI : locally_connected_space M := ChartedSpace.locallyConnectedSpace E M
   apply IsLocallyConstant.of_constant_on_preconnected_clopens
   intro s hs₂ hs₃ a ha b hb
-  have hs₁ : IsCompact s := hs₃.2.IsCompact
+  have hs₁ : IsCompact s := hs₃.2.isCompact
   -- for an empty set this fact is trivial
   rcases s.eq_empty_or_nonempty with (rfl | hs')
   · exact False.ndrec _ ha
@@ -79,49 +79,49 @@ protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ
   rintro p ⟨hp : f p = _, hps⟩
   -- let `p` be  in this set
   have hps' : s ∈ 𝓝 p := hs₃.1.mem_nhds hps
-  have key₁ : (chart_at E p).symm ⁻¹' s ∈ 𝓝 (chart_at E p p) :=
+  have key₁ : (chartAt E p).symm ⁻¹' s ∈ 𝓝 (chartAt E p p) :=
     by
-    rw [← Filter.mem_map, (chart_at E p).symm_map_nhds_eq (mem_chart_source E p)]
+    rw [← Filter.mem_map, (chartAt E p).symm_map_nhds_eq (mem_chart_source E p)]
     exact hps'
-  have key₂ : (chart_at E p).target ∈ 𝓝 (chart_at E p p) :=
+  have key₂ : (chartAt E p).target ∈ 𝓝 (chartAt E p p) :=
     (LocalHomeomorph.open_target _).mem_nhds (mem_chart_target E p)
   -- `f` pulled back by the chart at `p` is differentiable around `chart_at E p p`
-  have hf' : ∀ᶠ z : E in 𝓝 (chart_at E p p), DifferentiableAt ℂ (f ∘ (chart_at E p).symm) z :=
+  have hf' : ∀ᶠ z : E in 𝓝 (chartAt E p p), DifferentiableAt ℂ (f ∘ (chartAt E p).symm) z :=
     by
     refine' Filter.eventually_of_mem key₂ fun z hz => _
-    have H₁ : (chart_at E p).symm z ∈ (chart_at E p).source := (chart_at E p).map_target hz
-    have H₂ : f ((chart_at E p).symm z) ∈ (chart_at F (0 : F)).source := trivial
-    have H := (mdifferentiableAt_iff_of_mem_source H₁ H₂).mp (hf ((chart_at E p).symm z))
+    have H₁ : (chartAt E p).symm z ∈ (chartAt E p).source := (chartAt E p).map_target hz
+    have H₂ : f ((chartAt E p).symm z) ∈ (chartAt F (0 : F)).source := trivial
+    have H := (mdifferentiableAt_iff_of_mem_source H₁ H₂).mp (hf ((chartAt E p).symm z))
     simp only [differentiableWithinAt_univ, mfld_simps] at H
     simpa [LocalHomeomorph.right_inv _ hz] using H.2
   -- `f` pulled back by the chart at `p` has a local max at `chart_at E p p`
-  have hf'' : IsLocalMax (norm ∘ f ∘ (chart_at E p).symm) (chart_at E p p) :=
+  have hf'' : IsLocalMax (norm ∘ f ∘ (chartAt E p).symm) (chartAt E p p) :=
     by
     refine' Filter.eventually_of_mem key₁ fun z hz => _
-    refine' (hp₀ ((chart_at E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
+    refine' (hp₀ ((chartAt E p).symm z) hz).trans (_ : ‖f p₀‖ ≤ ‖f _‖)
     rw [← hp, LocalHomeomorph.left_inv _ (mem_chart_source E p)]
   -- so by the maximum principle `f` is equal to `f p` near `p`
   obtain ⟨U, hU, hUf⟩ := (Complex.eventually_eq_of_isLocalMax_norm hf' hf'').exists_mem
-  have H₁ : chart_at E p ⁻¹' U ∈ 𝓝 p := (chart_at E p).ContinuousAt (mem_chart_source E p) hU
-  have H₂ : (chart_at E p).source ∈ 𝓝 p :=
+  have H₁ : chartAt E p ⁻¹' U ∈ 𝓝 p := (chartAt E p).continuousAt (mem_chart_source E p) hU
+  have H₂ : (chartAt E p).source ∈ 𝓝 p :=
     (LocalHomeomorph.open_source _).mem_nhds (mem_chart_source E p)
   apply Filter.mem_of_superset (Filter.inter_mem hps' (Filter.inter_mem H₁ H₂))
-  rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
+  rintro q ⟨hqs, hq : chartAt E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
-  simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
+  simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chartAt E p q) hq
 #align mdifferentiable.is_locally_constant Mdifferentiable.isLocallyConstant
 
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
 theorem apply_eq_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
-  hf.IsLocallyConstant.apply_eq_of_preconnectedSpace _ _
+  hf.isLocallyConstant.apply_eq_of_preconnectedSpace _ _
 #align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compactSpace
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
 theorem exists_eq_const_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
-  hf.IsLocallyConstant.exists_eq_const
+  hf.isLocallyConstant.exists_eq_const
 #align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compactSpace
 
 end Mdifferentiable

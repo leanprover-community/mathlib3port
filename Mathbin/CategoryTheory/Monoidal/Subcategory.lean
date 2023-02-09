@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.subcategory
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,10 +73,10 @@ instance fullMonoidalSubcategory : MonoidalCategory (FullSubcategory P)
     exact f ⊗ g
   tensorUnit := ⟨𝟙_ C, prop_id⟩
   associator X Y Z :=
-    ⟨(α_ X.1 Y.1 Z.1).Hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1),
+    ⟨(α_ X.1 Y.1 Z.1).hom, (α_ X.1 Y.1 Z.1).inv, hom_inv_id (α_ X.1 Y.1 Z.1),
       inv_hom_id (α_ X.1 Y.1 Z.1)⟩
-  leftUnitor X := ⟨(λ_ X.1).Hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩
-  rightUnitor X := ⟨(ρ_ X.1).Hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩
+  leftUnitor X := ⟨(λ_ X.1).hom, (λ_ X.1).inv, hom_inv_id (λ_ X.1), inv_hom_id (λ_ X.1)⟩
+  rightUnitor X := ⟨(ρ_ X.1).hom, (ρ_ X.1).inv, hom_inv_id (ρ_ X.1), inv_hom_id (ρ_ X.1)⟩
   tensor_id' X Y := tensor_id X.1 Y.1
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ f₁ f₂ g₁ g₂ := tensor_comp f₁ f₂ g₁ g₂
   associator_naturality' X₁ X₂ X₃ Y₁ Y₂ Y₃ f₁ f₂ f₃ := associator_naturality f₁ f₂ f₃
@@ -160,7 +160,7 @@ variable (P) [BraidedCategory C]
 instance fullBraidedSubcategory : BraidedCategory (FullSubcategory P) :=
   braidedCategoryOfFaithful (fullMonoidalSubcategoryInclusion P)
     (fun X Y =>
-      ⟨(β_ X.1 Y.1).Hom, (β_ X.1 Y.1).inv, (β_ X.1 Y.1).hom_inv_id, (β_ X.1 Y.1).inv_hom_id⟩)
+      ⟨(β_ X.1 Y.1).hom, (β_ X.1 Y.1).inv, (β_ X.1 Y.1).hom_inv_id, (β_ X.1 Y.1).inv_hom_id⟩)
     fun X Y => by tidy
 #align category_theory.monoidal_category.full_braided_subcategory CategoryTheory.MonoidalCategory.fullBraidedSubcategory
 
@@ -172,7 +172,7 @@ def fullBraidedSubcategoryInclusion : BraidedFunctor (FullSubcategory P) C
     where
   toMonoidalFunctor := fullMonoidalSubcategoryInclusion P
   braided' X Y := by
-    rw [is_iso.eq_inv_comp]
+    rw [IsIso.eq_inv_comp]
     tidy
 #align category_theory.monoidal_category.full_braided_subcategory_inclusion CategoryTheory.MonoidalCategory.fullBraidedSubcategoryInclusion
 
@@ -194,7 +194,7 @@ def fullBraidedSubcategory.map (h : ∀ ⦃X⦄, P X → P' X) :
     where
   toMonoidalFunctor := fullMonoidalSubcategory.map h
   braided' X Y := by
-    rw [is_iso.eq_inv_comp]
+    rw [IsIso.eq_inv_comp]
     tidy
 #align category_theory.monoidal_category.full_braided_subcategory.map CategoryTheory.MonoidalCategory.fullBraidedSubcategory.map
 

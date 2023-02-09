@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.module.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoid M₂] [SMul R M₂] (f : M₂ →+ M)
     (hf : Injective f) (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with
+  { hf.distribMulAction f smul with
     smul := (· • ·)
     add_smul := fun c₁ c₂ x => hf <| by simp only [smul, f.map_add, add_smul]
     zero_smul := fun x => hf <| by simp only [smul, zero_smul, f.map_zero] }
@@ -183,7 +183,7 @@ Case conversion may be inaccurate. Consider using '#align function.surjective.mo
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoid M₂] [SMul R M₂] (f : M →+ M₂)
     (hf : Surjective f) (smul : ∀ (c : R) (x), f (c • x) = c • f x) : Module R M₂ :=
-  { hf.DistribMulAction f smul with
+  { hf.distribMulAction f smul with
     smul := (· • ·)
     add_smul := fun c₁ c₂ x => by
       rcases hf x with ⟨x, rfl⟩
@@ -212,7 +212,7 @@ def Function.Surjective.moduleLeft {R S M : Type _} [Semiring R] [AddCommMonoid 
       hsmul with
     smul := (· • ·)
     zero_smul := fun x => by rw [← f.map_zero, hsmul, zero_smul]
-    add_smul := hf.Forall₂.mpr fun a b x => by simp only [← f.map_add, hsmul, add_smul] }
+    add_smul := hf.forall₂.mpr fun a b x => by simp only [← f.map_add, hsmul, add_smul] }
 #align function.surjective.module_left Function.Surjective.moduleLeft
 
 variable {R} (M)
@@ -592,8 +592,8 @@ end
 /-- Convert back any exotic `ℕ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_monoid`s should normally have exactly one `ℕ`-module structure by design.
 -/
-theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) : @SMul.smul ℕ M h.toSMul n x = n • x :=
-  by rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
+theorem nat_smul_eq_nsmul (h : Module ℕ M) (n : ℕ) (x : M) :
+    @SMul.smul ℕ M h.toHasSmul n x = n • x := by rw [nsmul_eq_smul_cast ℕ n x, Nat.cast_id]
 #align nat_smul_eq_nsmul nat_smul_eq_nsmul
 -/
 
@@ -650,8 +650,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int_smul_eq_zsmul int_smul_eq_zsmulₓ'. -/
 /-- Convert back any exotic `ℤ`-smul to the canonical instance. This should not be needed since in
 mathlib all `add_comm_group`s should normally have exactly one `ℤ`-module structure by design. -/
-theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) : @SMul.smul ℤ M h.toSMul n x = n • x :=
-  by rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
+theorem int_smul_eq_zsmul (h : Module ℤ M) (n : ℤ) (x : M) :
+    @SMul.smul ℤ M h.toHasSmul n x = n • x := by rw [zsmul_eq_smul_cast ℤ n x, Int.cast_id]
 #align int_smul_eq_zsmul int_smul_eq_zsmul
 
 /- warning: add_comm_group.int_module.unique -> AddCommGroup.intModule.unique is a dubious translation:
@@ -977,7 +977,7 @@ variable (R M)
 zero as well. Usually `M` is an `R`-algebra. -/
 theorem CharZero.of_module (M) [AddCommMonoidWithOne M] [CharZero M] [Module R M] : CharZero R :=
   by
-  refine' ⟨fun m n h => @Nat.cast_injective M _ _ _ _ _⟩
+  refine' ⟨fun m n h => @nat.cast_injective M _ _ _ _ _⟩
   rw [← nsmul_one, ← nsmul_one, nsmul_eq_smul_cast R m (1 : M), nsmul_eq_smul_cast R n (1 : M), h]
 #align char_zero.of_module CharZero.of_module
 -/
@@ -1051,7 +1051,7 @@ but is expected to have type
   forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] [_inst_4 : NoZeroSMulDivisors.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulZeroClass.toSMul.{u2, u1} R M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (Module.toMulActionWithZero.{u2, u1} R M _inst_1 (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3))))] [_inst_5 : CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))] {v : M}, Iff (Ne.{succ u1} M v (Neg.neg.{u1} M (NegZeroClass.toNeg.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) v)) (Ne.{succ u1} M v (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))))))
 Case conversion may be inaccurate. Consider using '#align self_ne_neg self_ne_negₓ'. -/
 theorem self_ne_neg {v : M} : v ≠ -v ↔ v ≠ 0 :=
-  (self_eq_neg R M).Not
+  (self_eq_neg R M).not
 #align self_ne_neg self_ne_neg
 
 /- warning: neg_ne_self -> neg_ne_self is a dubious translation:
@@ -1061,7 +1061,7 @@ but is expected to have type
   forall (R : Type.{u2}) (M : Type.{u1}) [_inst_1 : Semiring.{u2} R] [_inst_2 : AddCommGroup.{u1} M] [_inst_3 : Module.{u2, u1} R M _inst_1 (AddCommGroup.toAddCommMonoid.{u1} M _inst_2)] [_inst_4 : NoZeroSMulDivisors.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulZeroClass.toSMul.{u2, u1} R M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (SMulWithZero.toSMulZeroClass.{u2, u1} R M (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1)) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (MulActionWithZero.toSMulWithZero.{u2, u1} R M (Semiring.toMonoidWithZero.{u2} R _inst_1) (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) (Module.toMulActionWithZero.{u2, u1} R M _inst_1 (AddCommGroup.toAddCommMonoid.{u1} M _inst_2) _inst_3))))] [_inst_5 : CharZero.{u2} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u2} R (NonAssocSemiring.toAddCommMonoidWithOne.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))] {v : M}, Iff (Ne.{succ u1} M (Neg.neg.{u1} M (NegZeroClass.toNeg.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))) v) v) (Ne.{succ u1} M v (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (NegZeroClass.toZero.{u1} M (SubNegZeroMonoid.toNegZeroClass.{u1} M (SubtractionMonoid.toSubNegZeroMonoid.{u1} M (SubtractionCommMonoid.toSubtractionMonoid.{u1} M (AddCommGroup.toDivisionAddCommMonoid.{u1} M _inst_2))))))))
 Case conversion may be inaccurate. Consider using '#align neg_ne_self neg_ne_selfₓ'. -/
 theorem neg_ne_self {v : M} : -v ≠ v ↔ v ≠ 0 :=
-  (neg_eq_self R M).Not
+  (neg_eq_self R M).not
 #align neg_ne_self neg_ne_self
 
 end Nat

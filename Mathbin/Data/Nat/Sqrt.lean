@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.sqrt
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ lean 3 declaration is
 but is expected to have type
   forall {r : Type.{u}} {n : Type.{v}}, (Nat -> r -> n) -> Nat -> (List.{u} r) -> (List.{v} n)
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_0 [anonymous]ₓ'. -/
-theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [sqrt_aux] <;> simp
+theorem [anonymous] (r n) : [anonymous] 0 r n = r := by rw [[anonymous]] <;> simp
 #align nat.sqrt_aux_0 [anonymous]
 
 attribute [local simp] sqrt_aux_0
@@ -98,8 +98,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_1 [anonymous]ₓ'. -/
 theorem [anonymous] {r n b} (h : b ≠ 0) {n'} (h₂ : r + b + n' = n) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r + b) n' := by
-  rw [sqrt_aux] <;> simp only [h, h₂.symm, Int.ofNat_add, if_false] <;>
-    rw [add_comm _ (n' : ℤ), add_sub_cancel, sqrt_aux._match_1]
+  rw [[anonymous]] <;> simp only [h, h₂.symm, Int.ofNat_add, if_false] <;>
+    rw [add_comm _ (n' : ℤ), add_sub_cancel, _match1]
 #align nat.sqrt_aux_1 [anonymous]
 
 /- warning: nat.sqrt_aux_2 clashes with [anonymous] -> [anonymous]
@@ -112,9 +112,9 @@ Case conversion may be inaccurate. Consider using '#align nat.sqrt_aux_2 [anonym
 theorem [anonymous] {r n b} (h : b ≠ 0) (h₂ : n < r + b) :
     [anonymous] b r n = [anonymous] (shiftr b 2) (div2 r) n :=
   by
-  rw [sqrt_aux] <;> simp only [h, h₂, if_false]
+  rw [[anonymous]] <;> simp only [h, h₂, if_false]
   cases' Int.eq_negSucc_of_lt_zero (sub_lt_zero.2 (Int.ofNat_lt_ofNat_of_lt h₂)) with k e
-  rw [e, sqrt_aux._match_1]
+  rw [e, _match1]
 #align nat.sqrt_aux_2 [anonymous]
 
 private def is_sqrt (n q : ℕ) : Prop :=
@@ -140,7 +140,7 @@ private theorem sqrt_aux_is_sqrt_lemma (m r n : ℕ) (h₁ : r * r ≤ n) (m')
   have re : div2 (2 * r * 2 ^ m) = r * 2 ^ m := by
     rw [div2_val, mul_assoc, Nat.mul_div_cancel_left _ (by decide : 2 > 0)]
   cases' lt_or_ge n ((r + 2 ^ m) * (r + 2 ^ m)) with hl hl
-  · rw [sqrt_aux_2 b0 (lb.2 hl), hm, re]
+  · rw [[anonymous] b0 (lb.2 hl), hm, re]
     apply H1 hl
   · cases' le.dest hl with n' e
     rw [@sqrt_aux_1 (2 * r * 2 ^ m) (n - r * r) (2 ^ m * 2 ^ m) b0 (n - (r + 2 ^ m) * (r + 2 ^ m)),
@@ -159,15 +159,15 @@ private theorem sqrt_aux_is_sqrt (n) :
         n < (r + 2 ^ (m + 1)) * (r + 2 ^ (m + 1)) →
           IsSqrt n ([anonymous] (2 ^ m * 2 ^ m) (2 * r * 2 ^ m) (n - r * r))
   | 0, r, h₁, h₂ => by
-    apply sqrt_aux_is_sqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;> [exact ⟨h₁, h⟩,
+    apply sqrt_aux_isSqrt_lemma 0 r n h₁ 0 rfl <;> intro h <;> simp <;> [exact ⟨h₁, h⟩,
       exact ⟨h, h₂⟩]
   | m + 1, r, h₁, h₂ =>
     by
     apply
-        sqrt_aux_is_sqrt_lemma (m + 1) r n h₁ (2 ^ m * 2 ^ m)
+        sqrt_aux_isSqrt_lemma (m + 1) r n h₁ (2 ^ m * 2 ^ m)
           (by
             simp [shiftr, pow_succ, div2_val, mul_comm, mul_left_comm] <;>
-              repeat' rw [@Nat.mul_div_cancel_left _ 2 (by decide)]) <;>
+              repeat' rw [@nat.mul_div_cancel_left _ 2 (by decide)]) <;>
       intro h
     · have := sqrt_aux_is_sqrt m r h₁ h
       simpa [pow_succ, mul_comm, mul_assoc]
@@ -180,9 +180,9 @@ private theorem sqrt_aux_is_sqrt (n) :
 private theorem sqrt_is_sqrt (n : ℕ) : IsSqrt n (sqrt n) :=
   by
   generalize e : size n = s; cases' s with s <;> simp [e, sqrt]
-  · rw [size_eq_zero.1 e, is_sqrt]
+  · rw [size_eq_zero.1 e, IsSqrt]
     exact by decide
-  · have := sqrt_aux_is_sqrt n (div2 s) 0 (zero_le _)
+  · have := sqrt_aux_isSqrt n (div2 s) 0 (zero_le _)
     simp [show 2 ^ div2 s * 2 ^ div2 s = shiftl 1 (bit0 (div2 s))
         by
         generalize div2 s = x
@@ -266,7 +266,7 @@ theorem sqrt_le_sqrt {m n : ℕ} (h : m ≤ n) : sqrt m ≤ sqrt n :=
 
 #print Nat.sqrt_zero /-
 @[simp]
-theorem sqrt_zero : sqrt 0 = 0 := by rw [sqrt, size_zero, sqrt._match_1]
+theorem sqrt_zero : sqrt 0 = 0 := by rw [sqrt, size_zero, sqrt._match1]
 #align nat.sqrt_zero Nat.sqrt_zero
 -/
 

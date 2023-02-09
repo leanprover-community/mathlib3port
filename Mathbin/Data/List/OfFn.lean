@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.of_fn
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,8 +75,8 @@ theorem [anonymous] {n} (f : Fin n → α) (i) :
     nth_of_fn_aux m _ _
       (by
         intro j; cases' j with j
-        · simp only [nth, of_fn_nth_val, zero_add, dif_pos (show m < n from h)]
-        · simp only [nth, H, add_succ, succ_add])
+        · simp only [get?, ofFnNthVal, zero_add, dif_pos (show m < n from h)]
+        · simp only [get?, H, add_succ, succ_add])
 #align list.nth_of_fn_aux [anonymous]
 
 #print List.get?_ofFn /-
@@ -84,7 +84,7 @@ theorem [anonymous] {n} (f : Fin n → α) (i) :
 @[simp]
 theorem get?_ofFn {n} (f : Fin n → α) (i) : get? (ofFn f) i = ofFnNthVal f i :=
   [anonymous] f _ _ _ _ fun i => by
-    simp only [of_fn_nth_val, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
+    simp only [ofFnNthVal, dif_neg (not_lt.2 (Nat.le_add_left n i))] <;> rfl
 #align list.nth_of_fn List.get?_ofFn
 -/
 
@@ -92,7 +92,7 @@ theorem get?_ofFn {n} (f : Fin n → α) (i) : get? (ofFn f) i = ofFnNthVal f i 
 theorem nthLe_ofFn {n} (f : Fin n → α) (i : Fin n) :
     nthLe (ofFn f) i ((length_ofFn f).symm ▸ i.2) = f i :=
   Option.some.inj <| by
-    rw [← nth_le_nth] <;> simp only [List.get?_ofFn, of_fn_nth_val, Fin.eta, dif_pos i.is_lt]
+    rw [← nthLe_get?] <;> simp only [List.get?_ofFn, ofFnNthVal, Fin.eta, dif_pos i.is_lt]
 #align list.nth_le_of_fn List.nthLe_ofFn
 -/
 
@@ -121,7 +121,7 @@ theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
   suffices ∀ {m h l}, DArray.revIterateAux a (fun i => cons) m h l = ofFnAux (DArray.read a) m h l
     from this
   intros ; induction' m with m IH generalizing l; · rfl
-  simp only [DArray.revIterateAux, of_fn_aux, IH]
+  simp only [DArray.revIterateAux, ofFnAux, IH]
 #align list.array_eq_of_fn List.array'_eq_ofFn
 
 /- warning: list.of_fn_congr -> List.ofFn_congr is a dubious translation:
@@ -159,7 +159,7 @@ theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => 
     ∀ {m h l}, ofFnAux f (succ m) (succ_le_succ h) l = f 0 :: ofFnAux (fun i => f i.succ) m h l from
     this
   intros ; induction' m with m IH generalizing l; · rfl
-  rw [of_fn_aux, IH]; rfl
+  rw [ofFnAux, IH]; rfl
 #align list.of_fn_succ List.ofFn_succ
 
 /- warning: list.of_fn_succ' -> List.ofFn_succ' is a dubious translation:
@@ -169,12 +169,12 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} (f : (Fin (Nat.succ n)) -> α), Eq.{succ u1} (List.{u1} α) (List.ofFn.{u1} α (Nat.succ n) f) (List.concat.{u1} α (List.ofFn.{u1} α n (fun (i : Fin n) => f (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i))) (f (Fin.last n)))
 Case conversion may be inaccurate. Consider using '#align list.of_fn_succ' List.ofFn_succ'ₓ'. -/
 theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
-    ofFn f = (ofFn fun i => f i.cast_succ).concat (f (Fin.last _)) :=
+    ofFn f = (ofFn fun i => f i.castSucc).concat (f (Fin.last _)) :=
   by
   induction' n with n IH
-  · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]
+  · rw [ofFn_zero, concat_nil, ofFn_succ, ofFn_zero]
     rfl
-  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSucc_zero]
+  · rw [ofFn_succ, IH, ofFn_succ, concat_cons, Fin.castSucc_zero]
     congr 3
     simp_rw [Fin.castSucc_fin_succ]
 #align list.of_fn_succ' List.ofFn_succ'
@@ -182,14 +182,14 @@ theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
 #print List.ofFn_eq_nil_iff /-
 @[simp]
 theorem ofFn_eq_nil_iff {n : ℕ} {f : Fin n → α} : ofFn f = [] ↔ n = 0 := by
-  cases n <;> simp only [of_fn_zero, of_fn_succ, eq_self_iff_true, Nat.succ_ne_zero]
+  cases n <;> simp only [ofFn_zero, ofFn_succ, eq_self_iff_true, Nat.succ_ne_zero]
 #align list.of_fn_eq_nil_iff List.ofFn_eq_nil_iff
 -/
 
 #print List.last_ofFn /-
 theorem last_ofFn {n : ℕ} (f : Fin n → α) (h : ofFn f ≠ [])
-    (hn : n - 1 < n := Nat.pred_lt <| ofFn_eq_nil_iff.Not.mp h) :
-    getLast (ofFn f) h = f ⟨n - 1, hn⟩ := by simp [last_eq_nth_le]
+    (hn : n - 1 < n := Nat.pred_lt <| ofFn_eq_nil_iff.not.mp h) :
+    getLast (ofFn f) h = f ⟨n - 1, hn⟩ := by simp [getLast_eq_nthLe]
 #align list.last_of_fn List.last_ofFn
 -/
 
@@ -213,9 +213,9 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
   by
   induction' n with n IH
-  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]
+  · rw [ofFn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]
     rfl
-  · rw [of_fn_succ', of_fn_succ', IH, append_concat]
+  · rw [ofFn_succ', ofFn_succ', IH, append_concat]
     rfl
 #align list.of_fn_add List.ofFn_add
 
@@ -223,7 +223,7 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
 @[simp]
 theorem ofFn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
     List.ofFn (Fin.append a b) = List.ofFn a ++ List.ofFn b := by
-  simp_rw [of_fn_add, Fin.append_left, Fin.append_right]
+  simp_rw [ofFn_add, Fin.append_left, Fin.append_right]
 #align list.of_fn_fin_append List.ofFn_fin_append
 -/
 
@@ -238,13 +238,13 @@ theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
               ⟨i * n + j,
                 calc
                   ↑i * n + j < (i + 1) * n :=
-                    (add_lt_add_left j.Prop _).trans_eq (add_one_mul _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_right _ i.Prop
+                    (add_lt_add_left j.prop _).trans_eq (add_one_mul _ _).symm
+                  _ ≤ _ := Nat.mul_le_mul_right _ i.prop
                   ⟩) :=
   by
   induction' m with m IH
-  · simp_rw [of_fn_zero, zero_mul, of_fn_zero, join]
-  · simp_rw [of_fn_succ', succ_mul, join_concat, of_fn_add, IH]
+  · simp_rw [ofFn_zero, zero_mul, ofFn_zero, join]
+  · simp_rw [ofFn_succ', succ_mul, join_concat, ofFn_add, IH]
     rfl
 #align list.of_fn_mul List.ofFn_mul
 -/
@@ -260,10 +260,10 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
               ⟨m * i + j,
                 calc
                   m * i + j < m * (i + 1) :=
-                    (add_lt_add_left j.Prop _).trans_eq (mul_add_one _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_left _ i.Prop
+                    (add_lt_add_left j.prop _).trans_eq (mul_add_one _ _).symm
+                  _ ≤ _ := Nat.mul_le_mul_left _ i.prop
                   ⟩) :=
-  by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Fin.cast_mk]
+  by simp_rw [mul_comm m n, mul_comm m, ofFn_mul, Fin.cast_mk]
 #align list.of_fn_mul' List.ofFn_mul'
 -/
 
@@ -271,7 +271,7 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
 theorem ofFn_nthLe : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
   | [] => rfl
   | a :: l => by
-    rw [of_fn_succ]
+    rw [ofFn_succ]
     congr
     simp only [Fin.val_succ]
     exact of_fn_nth_le l
@@ -283,16 +283,16 @@ theorem ofFn_nthLe : ∀ l : List α, (ofFn fun i => nthLe l i i.2) = l
 -- is much more useful
 theorem mem_ofFn {n} (f : Fin n → α) (a : α) : a ∈ ofFn f ↔ a ∈ Set.range f :=
   by
-  simp only [mem_iff_nth_le, Set.mem_range, nth_le_of_fn']
+  simp only [mem_iff_nthLe, Set.mem_range, nthLe_ofFn']
   exact
-    ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ => ⟨i.1, (length_of_fn f).symm ▸ i.2, by simpa using hi⟩⟩
+    ⟨fun ⟨i, hi, h⟩ => ⟨_, h⟩, fun ⟨i, hi⟩ => ⟨i.1, (length_ofFn f).symm ▸ i.2, by simpa using hi⟩⟩
 #align list.mem_of_fn List.mem_ofFn
 -/
 
 #print List.forall_mem_ofFn_iff /-
 @[simp]
 theorem forall_mem_ofFn_iff {n : ℕ} {f : Fin n → α} {P : α → Prop} :
-    (∀ i ∈ ofFn f, P i) ↔ ∀ j : Fin n, P (f j) := by simp only [mem_of_fn, Set.forall_range_iff]
+    (∀ i ∈ ofFn f, P i) ↔ ∀ j : Fin n, P (f j) := by simp only [mem_ofFn, Set.forall_range_iff]
 #align list.forall_mem_of_fn_iff List.forall_mem_ofFn_iff
 -/
 
@@ -307,7 +307,7 @@ theorem ofFn_const (n : ℕ) (c : α) : (ofFn fun i : Fin n => c) = replicate n 
 @[simp]
 theorem ofFn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
     List.ofFn (Fin.repeat n a) = (List.replicate n (List.ofFn a)).join := by
-  simp_rw [of_fn_mul, ← of_fn_const, Fin.repeat, Fin.modNat, Fin.val_mk, add_comm,
+  simp_rw [ofFn_mul, ← ofFn_const, Fin.repeat, Fin.modNat, Fin.val_mk, add_comm,
     Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt (Fin.is_lt _), Fin.eta]
 #align list.of_fn_fin_repeat List.ofFn_fin_repeat
 -/
@@ -316,7 +316,7 @@ theorem ofFn_fin_repeat {m} (a : Fin m → α) (n : ℕ) :
 theorem pairwise_ofFn {R : α → α → Prop} {n} {f : Fin n → α} :
     (ofFn f).Pairwise R ↔ ∀ ⦃i j⦄, i < j → R (f i) (f j) :=
   by
-  simp only [pairwise_iff_nth_le, Fin.forall_iff, length_of_fn, nth_le_of_fn', Fin.mk_lt_mk]
+  simp only [pairwise_iff_nthLe, Fin.forall_iff, length_ofFn, nthLe_ofFn', Fin.mk_lt_mk]
   exact ⟨fun h i hi j hj hij => h _ _ hj hij, fun h i j hj hij => h _ (hij.trans hj) _ hj hij⟩
 #align list.pairwise_of_fn List.pairwise_ofFn
 
@@ -329,7 +329,7 @@ def equivSigmaTuple : List α ≃ Σn, Fin n → α
   invFun f := List.ofFn f.2
   left_inv := List.ofFn_nthLe
   right_inv := fun ⟨n, f⟩ =>
-    Fin.sigma_eq_of_eq_comp_cast (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.Prop
+    Fin.sigma_eq_of_eq_comp_cast (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.prop
 #align list.equiv_sigma_tuple List.equivSigmaTuple
 -/
 
@@ -358,14 +358,14 @@ theorem ofFnRec_ofFn {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C
 #print List.exists_iff_exists_tuple /-
 theorem exists_iff_exists_tuple {P : List α → Prop} :
     (∃ l : List α, P l) ↔ ∃ (n : _)(f : Fin n → α), P (List.ofFn f) :=
-  equivSigmaTuple.symm.Surjective.exists.trans Sigma.exists
+  equivSigmaTuple.symm.surjective.exists.trans Sigma.exists
 #align list.exists_iff_exists_tuple List.exists_iff_exists_tuple
 -/
 
 #print List.forall_iff_forall_tuple /-
 theorem forall_iff_forall_tuple {P : List α → Prop} :
     (∀ l : List α, P l) ↔ ∀ (n) (f : Fin n → α), P (List.ofFn f) :=
-  equivSigmaTuple.symm.Surjective.forall.trans Sigma.forall
+  equivSigmaTuple.symm.surjective.forall.trans Sigma.forall
 #align list.forall_iff_forall_tuple List.forall_iff_forall_tuple
 -/
 
@@ -373,7 +373,7 @@ theorem forall_iff_forall_tuple {P : List α → Prop} :
 /-- `fin.sigma_eq_iff_eq_comp_cast` may be useful to work with the RHS of this expression. -/
 theorem ofFn_inj' {m n : ℕ} {f : Fin m → α} {g : Fin n → α} :
     ofFn f = ofFn g ↔ (⟨m, f⟩ : Σn, Fin n → α) = ⟨n, g⟩ :=
-  Iff.symm <| equivSigmaTuple.symm.Injective.eq_iff.symm
+  Iff.symm <| equivSigmaTuple.symm.injective.eq_iff.symm
 #align list.of_fn_inj' List.ofFn_inj'
 -/
 

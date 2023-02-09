@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.fdRep
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,8 +92,8 @@ def isoToLinearEquiv {V W : FdRep k G} (i : V ≅ W) : V ≃ₗ[k] W :=
 theorem Iso.conj_ρ {V W : FdRep k G} (i : V ≅ W) (g : G) :
     W.ρ g = (FdRep.isoToLinearEquiv i).conj (V.ρ g) :=
   by
-  rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, iso.conj_apply]
-  rw [iso.eq_inv_comp ((Action.forget (FgModule k) (Mon.of G)).mapIso i)]
+  rw [FdRep.isoToLinearEquiv, ← FgModule.Iso.conj_eq_conj, Iso.conj_apply]
+  rw [Iso.eq_inv_comp ((Action.forget (FgModule k) (Mon.of G)).mapIso i)]
   exact (i.hom.comm g).symm
 #align fdRep.iso.conj_ρ FdRep.Iso.conj_ρ
 
@@ -159,7 +159,7 @@ variable {k G : Type u} [Field k] [Group G]
 -- Verify that the right rigid structure is available when the monoid is a group.
 noncomputable instance : RightRigidCategory (FdRep k G) :=
   by
-  change right_rigid_category (Action (FgModule k) (GroupCat.of G))
+  change RightRigidCategory (Action (FgModule k) (GroupCat.of G))
   infer_instance
 
 end FdRep
@@ -184,7 +184,7 @@ variable (ρV : Representation k G V) (W : FdRep k G)
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary definition for `fdRep.dual_tensor_iso_lin_hom`. -/
 noncomputable def dualTensorIsoLinHomAux :
-    (FdRep.of ρV.dual ⊗ W).V ≅ (FdRep.of (linHom ρV W.ρ)).V :=
+    (FdRep.of ρV.dual ⊗ W).v ≅ (FdRep.of (linHom ρV W.ρ)).v :=
   (dualTensorHomEquiv k V W).toFgModuleIso
 #align fdRep.dual_tensor_iso_lin_hom_aux FdRep.dualTensorIsoLinHomAux
 
@@ -193,8 +193,8 @@ noncomputable def dualTensorIsoLinHomAux :
 `dual_tensor_hom_equiv k V W` of vector spaces induces an isomorphism of representations. -/
 noncomputable def dualTensorIsoLinHom : FdRep.of ρV.dual ⊗ W ≅ FdRep.of (linHom ρV W.ρ) :=
   by
-  apply Action.mkIso (dual_tensor_iso_lin_hom_aux ρV W)
-  convert dual_tensor_hom_comm ρV W.ρ
+  apply Action.mkIso (dualTensorIsoLinHomAux ρV W)
+  convert dualTensorHom_comm ρV W.ρ
 #align fdRep.dual_tensor_iso_lin_hom FdRep.dualTensorIsoLinHom
 
 @[simp]

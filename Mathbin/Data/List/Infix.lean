@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.infix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ theorem infix_cons : l₁ <:+: l₂ → l₁ <:+: a :: l₂ := fun ⟨L₁, L₂
 
 #print List.infix_concat /-
 theorem infix_concat : l₁ <:+: l₂ → l₁ <:+: concat l₂ a := fun ⟨L₁, L₂, h⟩ =>
-  ⟨L₁, concat L₂ a, by simp_rw [← h, concat_eq_append, append_assoc]⟩
+  ⟨L₁, concat L₂ a, by simp_rw [← h, concat_eq_append', append_assoc]⟩
 #align list.infix_concat List.infix_concat
 -/
 
@@ -195,31 +195,31 @@ protected theorem isInfix.sublist : l₁ <:+: l₂ → l₁ <+ l₂ := fun ⟨s,
 
 #print List.isInfix.subset /-
 protected theorem isInfix.subset (hl : l₁ <:+: l₂) : l₁ ⊆ l₂ :=
-  hl.Sublist.Subset
+  hl.sublist.subset
 #align list.is_infix.subset List.isInfix.subset
 -/
 
 #print List.isPrefix.sublist /-
 protected theorem isPrefix.sublist (h : l₁ <+: l₂) : l₁ <+ l₂ :=
-  h.isInfix.Sublist
+  h.isInfix.sublist
 #align list.is_prefix.sublist List.isPrefix.sublist
 -/
 
 #print List.isPrefix.subset /-
 protected theorem isPrefix.subset (hl : l₁ <+: l₂) : l₁ ⊆ l₂ :=
-  hl.Sublist.Subset
+  hl.sublist.subset
 #align list.is_prefix.subset List.isPrefix.subset
 -/
 
 #print List.isSuffix.sublist /-
 protected theorem isSuffix.sublist (h : l₁ <:+ l₂) : l₁ <+ l₂ :=
-  h.isInfix.Sublist
+  h.isInfix.sublist
 #align list.is_suffix.sublist List.isSuffix.sublist
 -/
 
 #print List.isSuffix.subset /-
 protected theorem isSuffix.subset (hl : l₁ <:+ l₂) : l₁ ⊆ l₂ :=
-  hl.Sublist.Subset
+  hl.sublist.subset
 #align list.is_suffix.subset List.isSuffix.subset
 -/
 
@@ -261,32 +261,32 @@ alias reverse_infix ↔ _ is_infix.reverse
 
 #print List.isInfix.length_le /-
 theorem isInfix.length_le (h : l₁ <:+: l₂) : l₁.length ≤ l₂.length :=
-  h.Sublist.length_le
+  h.sublist.length_le
 #align list.is_infix.length_le List.isInfix.length_le
 -/
 
 #print List.isPrefix.length_le /-
 theorem isPrefix.length_le (h : l₁ <+: l₂) : l₁.length ≤ l₂.length :=
-  h.Sublist.length_le
+  h.sublist.length_le
 #align list.is_prefix.length_le List.isPrefix.length_le
 -/
 
 #print List.isSuffix.length_le /-
 theorem isSuffix.length_le (h : l₁ <:+ l₂) : l₁.length ≤ l₂.length :=
-  h.Sublist.length_le
+  h.sublist.length_le
 #align list.is_suffix.length_le List.isSuffix.length_le
 -/
 
 #print List.eq_nil_of_infix_nil /-
 theorem eq_nil_of_infix_nil (h : l <:+: []) : l = [] :=
-  eq_nil_of_sublist_nil h.Sublist
+  eq_nil_of_sublist_nil h.sublist
 #align list.eq_nil_of_infix_nil List.eq_nil_of_infix_nil
 -/
 
 #print List.infix_nil_iff /-
 @[simp]
 theorem infix_nil_iff : l <:+: [] ↔ l = [] :=
-  ⟨fun h => eq_nil_of_sublist_nil h.Sublist, fun h => h ▸ infix_rfl⟩
+  ⟨fun h => eq_nil_of_sublist_nil h.sublist, fun h => h ▸ infix_rfl⟩
 #align list.infix_nil_iff List.infix_nil_iff
 -/
 
@@ -322,19 +322,19 @@ theorem infix_iff_prefix_suffix (l₁ l₂ : List α) : l₁ <:+: l₂ ↔ ∃ t
 
 #print List.eq_of_infix_of_length_eq /-
 theorem eq_of_infix_of_length_eq (h : l₁ <:+: l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  h.Sublist.eq_of_length
+  h.sublist.eq_of_length
 #align list.eq_of_infix_of_length_eq List.eq_of_infix_of_length_eq
 -/
 
 #print List.eq_of_prefix_of_length_eq /-
 theorem eq_of_prefix_of_length_eq (h : l₁ <+: l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  h.Sublist.eq_of_length
+  h.sublist.eq_of_length
 #align list.eq_of_prefix_of_length_eq List.eq_of_prefix_of_length_eq
 -/
 
 #print List.eq_of_suffix_of_length_eq /-
 theorem eq_of_suffix_of_length_eq (h : l₁ <:+ l₂) : l₁.length = l₂.length → l₁ = l₂ :=
-  h.Sublist.eq_of_length
+  h.sublist.eq_of_length
 #align list.eq_of_suffix_of_length_eq List.eq_of_suffix_of_length_eq
 -/
 
@@ -402,8 +402,8 @@ theorem infix_cons_iff : l₁ <:+: a :: l₂ ↔ l₁ <+: a :: l₂ ∨ l₁ <:+
 
 #print List.infix_of_mem_join /-
 theorem infix_of_mem_join : ∀ {L : List (List α)}, l ∈ L → l <:+: join L
-  | _ :: L, Or.inl rfl => infix_append [] _ _
-  | l' :: L, Or.inr h => isInfix.trans (infix_of_mem_join h) <| (suffix_append _ _).isInfix
+  | _ :: L, or.inl rfl => infix_append [] _ _
+  | l' :: L, or.inr h => isInfix.trans (infix_of_mem_join h) <| (suffix_append _ _).isInfix
 #align list.infix_of_mem_join List.infix_of_mem_join
 -/
 
@@ -433,25 +433,25 @@ theorem drop_suffix (n) (l : List α) : drop n l <:+ l :=
 
 #print List.take_sublist /-
 theorem take_sublist (n) (l : List α) : take n l <+ l :=
-  (take_prefix n l).Sublist
+  (take_prefix n l).sublist
 #align list.take_sublist List.take_sublist
 -/
 
 #print List.drop_sublist /-
 theorem drop_sublist (n) (l : List α) : drop n l <+ l :=
-  (drop_suffix n l).Sublist
+  (drop_suffix n l).sublist
 #align list.drop_sublist List.drop_sublist
 -/
 
 #print List.take_subset /-
 theorem take_subset (n) (l : List α) : take n l ⊆ l :=
-  (take_sublist n l).Subset
+  (take_sublist n l).subset
 #align list.take_subset List.take_subset
 -/
 
 #print List.drop_subset /-
 theorem drop_subset (n) (l : List α) : drop n l ⊆ l :=
-  (drop_sublist n l).Subset
+  (drop_sublist n l).subset
 #align list.drop_subset List.drop_subset
 -/
 
@@ -471,7 +471,7 @@ theorem mem_of_mem_drop (h : a ∈ l.drop n) : a ∈ l :=
   drop_subset n l h
 #align list.mem_of_mem_drop List.mem_of_mem_drop
 
-theorem dropSlice_sublist (n m : ℕ) (l : List α) : l.slice n m <+ l :=
+theorem dropSlice_sublist (n m : ℕ) (l : List α) : l.dropSlice n m <+ l :=
   by
   rw [List.dropSlice_eq]
   conv_rhs => rw [← List.take_append_drop n l]
@@ -479,11 +479,11 @@ theorem dropSlice_sublist (n m : ℕ) (l : List α) : l.slice n m <+ l :=
   exact List.drop_sublist _ _
 #align list.slice_sublist List.dropSlice_sublist
 
-theorem dropSlice_subset (n m : ℕ) (l : List α) : l.slice n m ⊆ l :=
-  (dropSlice_sublist n m l).Subset
+theorem dropSlice_subset (n m : ℕ) (l : List α) : l.dropSlice n m ⊆ l :=
+  (dropSlice_sublist n m l).subset
 #align list.slice_subset List.dropSlice_subset
 
-theorem mem_of_mem_dropSlice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.slice n m) : a ∈ l :=
+theorem mem_of_mem_dropSlice {n m : ℕ} {l : List α} {a : α} (h : a ∈ l.dropSlice n m) : a ∈ l :=
   dropSlice_subset n m l h
 #align list.mem_of_mem_slice List.mem_of_mem_dropSlice
 
@@ -494,7 +494,7 @@ but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isPrefix.{u1} α (List.takeWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.take_while_prefix List.takeWhile_prefixₓ'. -/
 theorem takeWhile_prefix (p : α → Prop) [DecidablePred p] : l.takeWhile p <+: l :=
-  ⟨l.dropWhileₓ p, takeWhile_append_drop p l⟩
+  ⟨l.dropWhile p, takeWhile_append_drop p l⟩
 #align list.take_while_prefix List.takeWhile_prefix
 
 /- warning: list.drop_while_suffix -> List.dropWhile_suffix is a dubious translation:
@@ -503,13 +503,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : List.{u1} α} (p : α -> Bool), List.isSuffix.{u1} α (List.dropWhile.{u1} α p l) l
 Case conversion may be inaccurate. Consider using '#align list.drop_while_suffix List.dropWhile_suffixₓ'. -/
-theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhileₓ p <:+ l :=
+theorem dropWhile_suffix (p : α → Prop) [DecidablePred p] : l.dropWhile p <:+ l :=
   ⟨l.takeWhile p, takeWhile_append_drop p l⟩
 #align list.drop_while_suffix List.dropWhile_suffix
 
 #print List.dropLast_prefix /-
 theorem dropLast_prefix : ∀ l : List α, l.dropLast <+: l
-  | [] => ⟨nil, by rw [init, List.append_nil]⟩
+  | [] => ⟨nil, by rw [dropLast, List.append_nil]⟩
   | a :: l => ⟨_, dropLast_append_getLast (cons_ne_nil a l)⟩
 #align list.init_prefix List.dropLast_prefix
 -/
@@ -521,25 +521,25 @@ theorem tail_suffix (l : List α) : tail l <:+ l := by rw [← drop_one] <;> app
 
 #print List.dropLast_sublist /-
 theorem dropLast_sublist (l : List α) : l.dropLast <+ l :=
-  (dropLast_prefix l).Sublist
+  (dropLast_prefix l).sublist
 #align list.init_sublist List.dropLast_sublist
 -/
 
 #print List.tail_sublist /-
 theorem tail_sublist (l : List α) : l.tail <+ l :=
-  (tail_suffix l).Sublist
+  (tail_suffix l).sublist
 #align list.tail_sublist List.tail_sublist
 -/
 
 #print List.dropLast_subset /-
 theorem dropLast_subset (l : List α) : l.dropLast ⊆ l :=
-  (dropLast_sublist l).Subset
+  (dropLast_sublist l).subset
 #align list.init_subset List.dropLast_subset
 -/
 
 #print List.tail_subset /-
 theorem tail_subset (l : List α) : tail l ⊆ l :=
-  (tail_sublist l).Subset
+  (tail_sublist l).subset
 #align list.tail_subset List.tail_subset
 -/
 
@@ -674,19 +674,19 @@ theorem isPrefix.filter_map (h : l₁ <+: l₂) (f : α → Option β) :
     l₁.filterMap f <+: l₂.filterMap f :=
   by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
-  · simp only [nil_prefix, filter_map_nil]
+  · simp only [nil_prefix, filterMap_nil]
   · cases' l₂ with hd₂ tl₂
     · simpa only using eq_nil_of_prefix_nil h
     · rw [cons_prefix_iff] at h
-      rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filter_map_append,
-        filter_map_append, h.left, prefix_append_right_inj]
+      rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filterMap_append,
+        filterMap_append, h.left, prefix_append_right_inj]
       exact hl h.right
 #align list.is_prefix.filter_map List.isPrefix.filter_map
 
 #print List.isPrefix.reduceOption /-
 theorem isPrefix.reduceOption {l₁ l₂ : List (Option α)} (h : l₁ <+: l₂) :
     l₁.reduceOption <+: l₂.reduceOption :=
-  h.filterMap id
+  h.filter_map id
 #align list.is_prefix.reduce_option List.isPrefix.reduceOption
 -/
 
@@ -697,7 +697,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isPrefix.{u1} α _inst_1 l₁) -> (List.isPrefix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_prefix.filter List.isPrefix.filterₓ'. -/
 theorem isPrefix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <+: l₂) :
-    l₁.filterₓ p <+: l₂.filterₓ p := by
+    l₁.filter p <+: l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact prefix_append _ _
@@ -710,7 +710,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isSuffix.{u1} α _inst_1 l₁) -> (List.isSuffix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_suffix.filter List.isSuffix.filterₓ'. -/
 theorem isSuffix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+ l₂) :
-    l₁.filterₓ p <:+ l₂.filterₓ p := by
+    l₁.filter p <:+ l₂.filter p := by
   obtain ⟨xs, rfl⟩ := h
   rw [filter_append]
   exact suffix_append _ _
@@ -723,8 +723,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) {{_inst_1 : List.{u1} α}} {{l₁ : List.{u1} α}}, (List.isInfix.{u1} α _inst_1 l₁) -> (List.isInfix.{u1} α (List.filter.{u1} α p _inst_1) (List.filter.{u1} α p l₁))
 Case conversion may be inaccurate. Consider using '#align list.is_infix.filter List.isInfix.filterₓ'. -/
 theorem isInfix.filter (p : α → Prop) [DecidablePred p] ⦃l₁ l₂ : List α⦄ (h : l₁ <:+: l₂) :
-    l₁.filterₓ p <:+: l₂.filterₓ p :=
-  by
+    l₁.filter p <:+: l₂.filter p := by
   obtain ⟨xs, ys, rfl⟩ := h
   rw [filter_append, filter_append]
   exact infix_append _ _ _
@@ -762,8 +761,8 @@ theorem mem_inits : ∀ s t : List α, s ∈ inits t ↔ s <+: t
     suffices (s = nil ∨ ∃ l ∈ inits t, a :: l = s) ↔ s <+: a :: t by simpa
     ⟨fun o =>
       match s, o with
-      | _, Or.inl rfl => ⟨_, rfl⟩
-      | s, Or.inr ⟨r, hr, hs⟩ => by
+      | _, or.inl rfl => ⟨_, rfl⟩
+      | s, or.inr ⟨r, hr, hs⟩ => by
         let ⟨s, ht⟩ := (mem_inits _ _).1 hr
         rw [← hs, ← ht] <;> exact ⟨s, rfl⟩,
       fun mi =>
@@ -782,13 +781,13 @@ theorem mem_tails : ∀ s t : List α, s ∈ tails t ↔ s <:+ t
     simp only [tails, mem_singleton] <;>
       exact ⟨fun h => by rw [h] <;> exact suffix_refl [], eq_nil_of_suffix_nil⟩
   | s, a :: t => by
-    simp only [tails, mem_cons_iff, mem_tails s t] <;>
+    simp only [tails, mem_cons, mem_tails s t] <;>
       exact
         show s = a :: t ∨ s <:+ t ↔ s <:+ a :: t from
           ⟨fun o =>
             match s, t, o with
-            | _, t, Or.inl rfl => suffix_rfl
-            | s, _, Or.inr ⟨l, rfl⟩ => ⟨a :: l, rfl⟩,
+            | _, t, or.inl rfl => suffix_rfl
+            | s, _, or.inr ⟨l, rfl⟩ => ⟨a :: l, rfl⟩,
             fun e =>
             match s, t, e with
             | _, t, ⟨[], rfl⟩ => Or.inl rfl
@@ -975,7 +974,7 @@ theorem mem_insert_iff : a ∈ insert b l ↔ a = b ∨ a ∈ l :=
   · simp only [insert_of_mem h']
     apply (or_iff_right_of_imp _).symm
     exact fun e => e.symm ▸ h'
-  · simp only [insert_of_not_mem h', mem_cons_iff]
+  · simp only [insert_of_not_mem h', mem_cons]
 #align list.mem_insert_iff List.mem_insert_iff
 
 #print List.suffix_insert /-
@@ -993,13 +992,13 @@ theorem infix_insert (a : α) (l : List α) : l <:+: insert a l :=
 
 #print List.sublist_insert /-
 theorem sublist_insert (a : α) (l : List α) : l <+ l.insert a :=
-  (suffix_insert a l).Sublist
+  (suffix_insert a l).sublist
 #align list.sublist_insert List.sublist_insert
 -/
 
 #print List.subset_insert /-
 theorem subset_insert (a : α) (l : List α) : l ⊆ l.insert a :=
-  (sublist_insert a l).Subset
+  (sublist_insert a l).subset
 #align list.subset_insert List.subset_insert
 -/
 
@@ -1056,7 +1055,7 @@ end Insert
 
 #print List.mem_of_mem_suffix /-
 theorem mem_of_mem_suffix (hx : a ∈ l₁) (hl : l₁ <:+ l₂) : a ∈ l₂ :=
-  hl.Subset hx
+  hl.subset hx
 #align list.mem_of_mem_suffix List.mem_of_mem_suffix
 -/
 

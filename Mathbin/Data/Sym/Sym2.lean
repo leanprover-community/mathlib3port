@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.sym2
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,8 +64,8 @@ namespace Sym2
 /-- This is the relation capturing the notion of pairs equivalent up to permutations.
 -/
 inductive Rel (α : Type u) : α × α → α × α → Prop
-  | refl (x y : α) : Rel (x, y) (x, y)
-  | swap (x y : α) : Rel (x, y) (y, x)
+  | refl (x y : α) : rel (x, y) (x, y)
+  | swap (x y : α) : rel (x, y) (y, x)
 #align sym2.rel Sym2.Rel
 -/
 
@@ -80,12 +80,12 @@ theorem Rel.symm {x y : α × α} : Rel α x y → Rel α y x := by rintro ⟨_,
 #print Sym2.Rel.trans /-
 @[trans]
 theorem Rel.trans {x y z : α × α} (a : Rel α x y) (b : Rel α y z) : Rel α x z := by
-  casesm*Rel _ _ _ <;> first |apply rel.refl|apply rel.swap
+  casesm*Rel _ _ _ <;> first |apply Rel.refl|apply Rel.swap
 #align sym2.rel.trans Sym2.Rel.trans
 -/
 
 #print Sym2.Rel.is_equivalence /-
-theorem Rel.is_equivalence : Equivalence (Rel α) := by tidy <;> apply rel.trans <;> assumption
+theorem Rel.is_equivalence : Equivalence (Rel α) := by tidy <;> apply Rel.trans <;> assumption
 #align sym2.rel.is_equivalence Sym2.Rel.is_equivalence
 -/
 
@@ -169,13 +169,13 @@ protected theorem forall {α : Sort _} {f : Sym2 α → Prop} :
 theorem eq_swap {a b : α} : ⟦(a, b)⟧ = ⟦(b, a)⟧ :=
   by
   rw [Quotient.eq']
-  apply rel.swap
+  apply Rel.swap
 #align sym2.eq_swap Sym2.eq_swap
 -/
 
 #print Sym2.mk''_prod_swap_eq /-
 @[simp]
-theorem mk''_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ :=
+theorem mk''_prod_swap_eq {p : α × α} : ⟦p.swap⟧ = ⟦p⟧ :=
   by
   cases p
   exact eq_swap
@@ -183,7 +183,7 @@ theorem mk''_prod_swap_eq {p : α × α} : ⟦p.symm⟧ = ⟦p⟧ :=
 -/
 
 #print Sym2.congr_right /-
-theorem congr_right {a b c : α} : ⟦(a, b)⟧ = ⟦(a, c)⟧ ↔ b = c :=
+theorem congr_right {a b c : α} : ⟦(neg_eq_zero, mpr)⟧ = ⟦(a, c)⟧ ↔ b = c :=
   by
   constructor <;> intro h
   · rw [Quotient.eq'] at h
@@ -208,7 +208,7 @@ theorem eq_iff {x y z w : α} : ⟦(x, y)⟧ = ⟦(z, w)⟧ ↔ x = z ∧ y = w 
 -/
 
 #print Sym2.mk''_eq_mk''_iff /-
-theorem mk''_eq_mk''_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.symm :=
+theorem mk''_eq_mk''_iff {p q : α × α} : ⟦p⟧ = ⟦q⟧ ↔ p = q ∨ p = q.swap :=
   by
   cases p
   cases q
@@ -314,7 +314,7 @@ def map (f : α → β) : Sym2 α → Sym2 β :=
       rintro _ _ h
       cases h
       · rfl
-      apply rel.swap)
+      apply Rel.swap)
 #align sym2.map Sym2.map
 -/
 
@@ -465,7 +465,7 @@ theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
 #print Sym2.ball /-
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ ⟦(a, b)⟧, p c) ↔ p a ∧ p b :=
   by
-  refine' ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => _⟩
+  refine' ⟨fun h => ⟨h _ <| mem_mk''_left _ _, h _ <| mem_mk''_right _ _⟩, fun h c hc => _⟩
   obtain rfl | rfl := Sym2.mem_iff.1 hc
   · exact h.1
   · exact h.2
@@ -491,7 +491,7 @@ theorem other_spec {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(a, h.other)⟧ = z
 #print Sym2.other_mem /-
 theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : h.other ∈ z :=
   by
-  convert mem_mk_right a h.other
+  convert mem_mk''_right a h.other
   rw [other_spec h]
 #align sym2.other_mem Sym2.other_mem
 -/
@@ -630,7 +630,7 @@ theorem isDiag_iff_mem_range_diag (z : Sym2 α) : IsDiag z ↔ z ∈ Set.range (
 instance IsDiag.decidablePred (α : Type u) [DecidableEq α] : DecidablePred (@IsDiag α) :=
   by
   refine' fun z => Quotient.recOnSubsingleton z fun a => _
-  erw [is_diag_iff_proj_eq]
+  erw [isDiag_iff_proj_eq]
   infer_instance
 #align sym2.is_diag.decidable_pred Sym2.IsDiag.decidablePred
 -/
@@ -658,20 +658,20 @@ variable {r : α → α → Prop}
 of elements that are related.
 -/
 def fromRel (sym : Symmetric r) : Set (Sym2 α) :=
-  setOf (lift ⟨r, fun x y => propext ⟨fun h => Sym h, fun h => Sym h⟩⟩)
+  setOf (lift ⟨r, fun x y => propext ⟨fun h => sym h, fun h => sym h⟩⟩)
 #align sym2.from_rel Sym2.fromRel
 -/
 
 #print Sym2.fromRel_proj_prop /-
 @[simp]
-theorem fromRel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ fromRel Sym ↔ r z.1 z.2 :=
+theorem fromRel_proj_prop {sym : Symmetric r} {z : α × α} : ⟦z⟧ ∈ fromRel sym ↔ r z.1 z.2 :=
   Iff.rfl
 #align sym2.from_rel_proj_prop Sym2.fromRel_proj_prop
 -/
 
 #print Sym2.fromRel_prop /-
 @[simp]
-theorem fromRel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel Sym ↔ r a b :=
+theorem fromRel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel sym ↔ r a b :=
   Iff.rfl
 #align sym2.from_rel_prop Sym2.fromRel_prop
 -/
@@ -704,7 +704,7 @@ theorem fromRel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.univ
 
 #print Sym2.fromRel_irreflexive /-
 theorem fromRel_irreflexive {sym : Symmetric r} :
-    Irreflexive r ↔ ∀ {z}, z ∈ fromRel Sym → ¬IsDiag z :=
+    Irreflexive r ↔ ∀ {z}, z ∈ fromRel sym → ¬IsDiag z :=
   { mp := fun h =>
       Sym2.ind <| by
         rintro a b hr (rfl : a = b)
@@ -715,14 +715,14 @@ theorem fromRel_irreflexive {sym : Symmetric r} :
 
 #print Sym2.mem_fromRel_irrefl_other_ne /-
 theorem mem_fromRel_irrefl_other_ne {sym : Symmetric r} (irrefl : Irreflexive r) {a : α}
-    {z : Sym2 α} (hz : z ∈ fromRel Sym) (h : a ∈ z) : h.other ≠ a :=
+    {z : Sym2 α} (hz : z ∈ fromRel sym) (h : a ∈ z) : h.other ≠ a :=
   other_ne (fromRel_irreflexive.mp irrefl hz) h
 #align sym2.mem_from_rel_irrefl_other_ne Sym2.mem_fromRel_irrefl_other_ne
 -/
 
 #print Sym2.fromRel.decidablePred /-
 instance fromRel.decidablePred (sym : Symmetric r) [h : DecidableRel r] :
-    DecidablePred (· ∈ Sym2.fromRel Sym) := fun z => Quotient.recOnSubsingleton z fun x => h _ _
+    DecidablePred (· ∈ Sym2.fromRel sym) := fun z => Quotient.recOnSubsingleton z fun x => h _ _
 #align sym2.from_rel.decidable_pred Sym2.fromRel.decidablePred
 -/
 
@@ -747,7 +747,7 @@ theorem toRel_symmetric (s : Set (Sym2 α)) : Symmetric (ToRel s) := fun x y => 
 -/
 
 #print Sym2.toRel_fromRel /-
-theorem toRel_fromRel (sym : Symmetric r) : ToRel (fromRel Sym) = r :=
+theorem toRel_fromRel (sym : Symmetric r) : ToRel (fromRel sym) = r :=
   rfl
 #align sym2.to_rel_from_rel Sym2.toRel_fromRel
 -/
@@ -868,7 +868,7 @@ def relBool [DecidableEq α] (x y : α × α) : Bool :=
 theorem relBool_spec [DecidableEq α] (x y : α × α) : ↥(relBool x y) ↔ Rel α x y :=
   by
   cases' x with x₁ x₂; cases' y with y₁ y₂
-  dsimp [rel_bool]; split_ifs <;> simp only [false_iff_iff, Bool.coeSort_false, Bool.of_decide_iff]
+  dsimp [relBool]; split_ifs <;> simp only [false_iff_iff, Bool.coeSort_false, Bool.of_decide_iff]
   rotate_left 2;
   · contrapose! h
     cases h <;> cc
@@ -904,19 +904,19 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
       clear h z
       intro x y h
       ext hy
-      convert_to pair_other a x = _
+      convert_to pairOther a x = _
       · have h' :
           ∀ {c e h},
-            @Eq.ndrec _ ⟦x⟧ (fun s => a ∈ s → α) (fun _ => pair_other a x) c e h = pair_other a x :=
+            @eq.rec _ ⟦x⟧ (fun s => a ∈ s → α) (fun _ => pairOther a x) c e h = pairOther a x :=
           by
           intro _ e _
           subst e
         apply h'
-      have h' := (rel_bool_spec x y).mpr h
+      have h' := (relBool_spec x y).mpr h
       cases' x with x₁ x₂; cases' y with y₁ y₂
-      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h' <;> split_ifs  at h' <;>
+      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [relBool] at h' <;> split_ifs  at h' <;>
           try rw [Bool.of_decide_iff] at h'; subst x₁; subst x₂ <;>
-        dsimp [pair_other]
+        dsimp [pairOther]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
       exfalso; exact Bool.not_false' h'
       simp only [h_1, if_true, eq_self_iff_true, if_false]
@@ -931,7 +931,7 @@ theorem other_spec' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : ⟦(
   by
   induction z; cases' z with x y
   have h' := mem_iff.mp h
-  dsimp [mem.other', Quot.rec, pair_other]
+  dsimp [Mem.other', Quot.rec, pairOther]
   cases h' <;> subst a
   · simp only [eq_self_iff_true]
     rfl
@@ -963,8 +963,8 @@ theorem other_mem' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : h.oth
 theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other' ∈ z) :
     hb.other' = a := by
   induction z; cases' z with x y
-  dsimp [mem.other', Quot.rec, pair_other] at hb
-  split_ifs  at hb <;> dsimp [mem.other', Quot.rec, pair_other]
+  dsimp [Mem.other', Quot.rec, pairOther] at hb
+  split_ifs  at hb <;> dsimp [Mem.other', Quot.rec, pairOther]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs; assumption; rfl
   simp only [h, if_false, eq_self_iff_true]
@@ -990,7 +990,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_is_diag Sym2.filter_image_quotient_mk''_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk''_isDiag [DecidableEq α] (s : Finset α) :
-    ((s ×ˢ s).image Quotient.mk').filterₓ IsDiag = s.diag.image Quotient.mk' :=
+    ((s ×ˢ s).image Quotient.mk').filter IsDiag = s.diag.image Quotient.mk' :=
   by
   ext z
   induction z using Quotient.inductionOn
@@ -1013,13 +1013,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym2.filter_image_quotient_mk_not_is_diag Sym2.filter_image_quotient_mk''_not_isDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
-    (((s ×ˢ s).image Quotient.mk').filterₓ fun a : Sym2 α => ¬a.IsDiag) =
+    (((s ×ˢ s).image Quotient.mk').filter fun a : Sym2 α => ¬a.IsDiag) =
       s.offDiag.image Quotient.mk' :=
   by
   ext z
   induction z using Quotient.inductionOn
   rcases z with ⟨x, y⟩
-  simp only [mem_image, mem_off_diag, mem_filter, Prod.exists, mem_product]
+  simp only [mem_image, mem_offDiag, mem_filter, Prod.exists, mem_product]
   constructor
   · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
     rw [← h, Sym2.mk''_isDiag_iff] at hab
@@ -1032,7 +1032,7 @@ theorem filter_image_quotient_mk''_not_isDiag [DecidableEq α] (s : Finset α) :
 end Decidable
 
 instance [Subsingleton α] : Subsingleton (Sym2 α) :=
-  (equivSym α).Injective.Subsingleton
+  (equivSym α).injective.subsingleton
 
 instance [Unique α] : Unique (Sym2 α) :=
   Unique.mk' _
@@ -1041,7 +1041,7 @@ instance [IsEmpty α] : IsEmpty (Sym2 α) :=
   (equivSym α).isEmpty
 
 instance [Nontrivial α] : Nontrivial (Sym2 α) :=
-  diag_injective.Nontrivial
+  diag_injective.nontrivial
 
 end Sym2
 

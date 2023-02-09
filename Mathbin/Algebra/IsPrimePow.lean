@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module algebra.is_prime_pow
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem not_isPrimePow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) :=
 #print IsPrimePow.not_unit /-
 theorem IsPrimePow.not_unit {n : R} (h : IsPrimePow n) : ¬IsUnit n :=
   let ⟨p, k, hp, hk, hn⟩ := h
-  hn ▸ (isUnit_pow_iff hk.ne').Not.mpr hp.not_unit
+  hn ▸ (isUnit_pow_iff hk.ne').not.mpr hp.not_unit
 #align is_prime_pow.not_unit IsPrimePow.not_unit
 -/
 
@@ -126,7 +126,7 @@ theorem isPrimePow_nat_iff (n : ℕ) : IsPrimePow n ↔ ∃ p k : ℕ, Nat.Prime
 
 #print Nat.Prime.isPrimePow /-
 theorem Nat.Prime.isPrimePow {p : ℕ} (hp : p.Prime) : IsPrimePow p :=
-  hp.Prime.IsPrimePow
+  hp.prime.isPrimePow
 #align nat.prime.is_prime_pow Nat.Prime.isPrimePow
 -/
 
@@ -165,7 +165,7 @@ but is expected to have type
   forall {a : Nat} {b : Nat}, (Nat.coprime a b) -> (Disjoint.{0} (Finset.{0} Nat) (Finset.partialOrder.{0} Nat) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{0} Nat) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors a)) (Finset.filter.{0} Nat (IsPrimePow.{0} Nat (LinearOrderedCommMonoidWithZero.toCommMonoidWithZero.{0} Nat Nat.linearOrderedCommMonoidWithZero)) (fun (a : Nat) => instDecidableIsPrimePowNatToCommMonoidWithZeroLinearOrderedCommMonoidWithZero a) (Nat.divisors b)))
 Case conversion may be inaccurate. Consider using '#align nat.disjoint_divisors_filter_prime_pow Nat.disjoint_divisors_filter_isPrimePowₓ'. -/
 theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) :
-    Disjoint (a.divisors.filterₓ IsPrimePow) (b.divisors.filterₓ IsPrimePow) :=
+    Disjoint (a.divisors.filter IsPrimePow) (b.divisors.filter IsPrimePow) :=
   by
   simp only [Finset.disjoint_left, Finset.mem_filter, and_imp, Nat.mem_divisors, not_and]
   rintro n han ha hn hbn hb -

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.bilinear
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ theorem map₂_supᵢ_left (f : M →ₗ[R] N →ₗ[R] P) (s : ι → Submodule
   by
   suffices map₂ f (⨆ i, span R (s i : Set M)) (span R t) = ⨆ i, map₂ f (span R (s i)) (span R t) by
     simpa only [span_eq] using this
-  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_left]
+  simp_rw [map₂_span_span, ← span_unionᵢ, map₂_span_span, Set.image2_unionᵢ_left]
 #align submodule.map₂_supr_left Submodule.map₂_supᵢ_left
 
 theorem map₂_supᵢ_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) (t : ι → Submodule R N) :
@@ -174,7 +174,7 @@ theorem map₂_supᵢ_right (f : M →ₗ[R] N →ₗ[R] P) (s : Submodule R M) 
   by
   suffices map₂ f (span R s) (⨆ i, span R (t i : Set N)) = ⨆ i, map₂ f (span R s) (span R (t i)) by
     simpa only [span_eq] using this
-  simp_rw [map₂_span_span, ← span_Union, map₂_span_span, Set.image2_unionᵢ_right]
+  simp_rw [map₂_span_span, ← span_unionᵢ, map₂_span_span, Set.image2_unionᵢ_right]
 #align submodule.map₂_supr_right Submodule.map₂_supᵢ_right
 
 theorem map₂_span_singleton_eq_map (f : M →ₗ[R] N →ₗ[R] P) (m : M) :

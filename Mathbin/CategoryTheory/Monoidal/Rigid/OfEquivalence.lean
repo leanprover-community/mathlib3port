@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.rigid.of_equivalence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,9 +36,9 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
   evaluation := eval
   coevaluation := coeval
   evaluation_coevaluation' :=
-    F.toFunctor.map_injective (by simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+    F.toFunctor.map_injective (by simp [map_eval, map_coeval, MonoidalFunctor.map_tensor])
   coevaluation_evaluation' :=
-    F.toFunctor.map_injective (by simp [map_eval, map_coeval, monoidal_functor.map_tensor])
+    F.toFunctor.map_injective (by simp [map_eval, map_coeval, MonoidalFunctor.map_tensor])
 #align category_theory.exact_pairing_of_faithful CategoryTheory.exactPairingOfFaithful
 
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
@@ -56,8 +56,8 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
     HasLeftDual X where
   leftDual := F.toFunctor.inv.obj (ᘁF.obj X)
   exact := by
-    apply exact_pairing_of_fully_faithful F _ _
-    apply exact_pairing_congr_left (F.to_functor.as_equivalence.counit_iso.app _)
+    apply exactPairingOfFullyFaithful F _ _
+    apply exactPairingCongrLeft (F.to_functor.as_equivalence.counit_iso.app _)
     dsimp
     infer_instance
 #align category_theory.has_left_dual_of_equivalence CategoryTheory.hasLeftDualOfEquivalence
@@ -68,8 +68,8 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
     HasRightDual X where
   rightDual := F.toFunctor.inv.obj (F.obj Xᘁ)
   exact := by
-    apply exact_pairing_of_fully_faithful F _ _
-    apply exact_pairing_congr_right (F.to_functor.as_equivalence.counit_iso.app _)
+    apply exactPairingOfFullyFaithful F _ _
+    apply exactPairingCongrRight (F.to_functor.as_equivalence.counit_iso.app _)
     dsimp
     infer_instance
 #align category_theory.has_right_dual_of_equivalence CategoryTheory.hasRightDualOfEquivalence

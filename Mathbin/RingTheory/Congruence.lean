@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.congruence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,12 +57,14 @@ variable {α R : Type _}
 /-- The inductively defined smallest ring congruence relation containing a given binary
     relation. -/
 inductive RingConGen.Rel [Add R] [Mul R] (r : R → R → Prop) : R → R → Prop
-  | of : ∀ x y, r x y → RingConGen.Rel x y
-  | refl : ∀ x, RingConGen.Rel x x
-  | symm : ∀ {x y}, RingConGen.Rel x y → RingConGen.Rel y x
-  | trans : ∀ {x y z}, RingConGen.Rel x y → RingConGen.Rel y z → RingConGen.Rel x z
-  | add : ∀ {w x y z}, RingConGen.Rel w x → RingConGen.Rel y z → RingConGen.Rel (w + y) (x + z)
-  | mul : ∀ {w x y z}, RingConGen.Rel w x → RingConGen.Rel y z → RingConGen.Rel (w * y) (x * z)
+  | of : ∀ x y, r x y → ring_con_gen.rel x y
+  | refl : ∀ x, ring_con_gen.rel x x
+  | symm : ∀ {x y}, ring_con_gen.rel x y → ring_con_gen.rel y x
+  | trans : ∀ {x y z}, ring_con_gen.rel x y → ring_con_gen.rel y z → ring_con_gen.rel x z
+  |
+  add : ∀ {w x y z}, ring_con_gen.rel w x → ring_con_gen.rel y z → ring_con_gen.rel (w + y) (x + z)
+  |
+  mul : ∀ {w x y z}, ring_con_gen.rel w x → ring_con_gen.rel y z → ring_con_gen.rel (w * y) (x * z)
 #align ring_con_gen.rel RingConGen.Rel
 -/
 
@@ -100,11 +102,11 @@ def toCon : Con R :=
 
 /-- A coercion from a congruence relation to its underlying binary relation. -/
 instance : CoeFun (RingCon R) fun _ => R → R → Prop :=
-  ⟨fun c => c.R⟩
+  ⟨fun c => c.r⟩
 
 #print RingCon.rel_eq_coe /-
 @[simp]
-theorem rel_eq_coe : c.R = c :=
+theorem rel_eq_coe : c.r = c :=
   rfl
 #align ring_con.rel_eq_coe RingCon.rel_eq_coe
 -/
@@ -206,7 +208,7 @@ section add_mul
 variable [Add R] [Mul R] (c : RingCon R)
 
 instance : Add c.Quotient :=
-  c.toAddCon.Add
+  c.toAddCon.hasAdd
 
 #print RingCon.coe_add /-
 @[simp, norm_cast]
@@ -216,7 +218,7 @@ theorem coe_add (x y : R) : (↑(x + y) : c.Quotient) = ↑x + ↑y :=
 -/
 
 instance : Mul c.Quotient :=
-  c.toCon.Mul
+  c.toCon.hasMul
 
 #print RingCon.coe_mul /-
 @[simp, norm_cast]
@@ -272,7 +274,7 @@ section Smul
 variable [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R] (c : RingCon R)
 
 instance : SMul α c.Quotient :=
-  c.toCon.SMul
+  c.toCon.smulinst
 
 /- warning: ring_con.coe_smul -> RingCon.coe_smul is a dubious translation:
 lean 3 declaration is
@@ -487,14 +489,14 @@ instance [CommRing R] (c : RingCon R) : CommRing c.Quotient :=
 
 instance [Monoid α] [NonAssocSemiring R] [DistribMulAction α R] [IsScalarTower α R R]
     (c : RingCon R) : DistribMulAction α c.Quotient :=
-  { c.toCon.MulAction with
+  { c.toCon.mulAction with
     smul := (· • ·)
     smul_zero := fun r => congr_arg Quotient.mk'' <| smul_zero _
     smul_add := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_add _ _ _ }
 
 instance [Monoid α] [Semiring R] [MulSemiringAction α R] [IsScalarTower α R R] (c : RingCon R) :
     MulSemiringAction α c.Quotient :=
-  { c, c.toCon.MulDistribMulAction with smul := (· • ·) }
+  { c, c.toCon.mulDistribMulAction with smul := (· • ·) }
 
 end Algebraic
 

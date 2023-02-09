@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.squarefree
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem IsUnit.squarefree [CommMonoid R] {x : R} (h : IsUnit x) : Squarefree x :
 
 @[simp]
 theorem squarefree_one [CommMonoid R] : Squarefree (1 : R) :=
-  isUnit_one.Squarefree
+  isUnit_one.squarefree
 #align squarefree_one squarefree_one
 
 @[simp]
@@ -75,7 +75,7 @@ theorem Irreducible.squarefree [CommMonoid R] {x : R} (h : Irreducible x) : Squa
 
 @[simp]
 theorem Prime.squarefree [CancelCommMonoidWithZero R] {x : R} (h : Prime x) : Squarefree x :=
-  h.Irreducible.Squarefree
+  h.irreducible.squarefree
 #align prime.squarefree Prime.squarefree
 
 theorem Squarefree.of_mul_left [CommMonoid R] {m n : R} (hmn : Squarefree (m * n)) : Squarefree m :=
@@ -219,7 +219,7 @@ theorem Squarefree.isRadical {x : R} (hx : Squarefree x) : IsRadical x :=
 #align squarefree.is_radical Squarefree.isRadical
 
 theorem isRadical_iff_squarefree_or_zero {x : R} : IsRadical x ↔ Squarefree x ∨ x = 0 :=
-  ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.Squarefree h,
+  ⟨fun hx => (em <| x = 0).elim Or.inr fun h => Or.inl <| hx.squarefree h,
     Or.ndrec Squarefree.isRadical <| by
       rintro rfl
       rw [zero_isRadical_iff]
@@ -244,11 +244,11 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
   rw [multiplicity.squarefree_iff_multiplicity_le_one, Multiset.nodup_iff_count_le_one]
   haveI := nontrivial_of_ne x 0 x0
   constructor <;> intro h a
-  · by_cases hmem : a ∈ normalized_factors x
+  · by_cases hmem : a ∈ normalizedFactors x
     · have ha := irreducible_of_normalized_factor _ hmem
       rcases h a with (h | h)
       · rw [← normalize_normalized_factor _ hmem]
-        rw [multiplicity_eq_count_normalized_factors ha x0] at h
+        rw [multiplicity_eq_count_normalizedFactors ha x0] at h
         assumption_mod_cast
       · have := ha.1
         contradiction
@@ -259,7 +259,7 @@ theorem squarefree_iff_nodup_normalizedFactors [NormalizationMonoid R] [Decidabl
     · simp [h0, x0]
     rcases WfDvdMonoid.exists_irreducible_factor hu h0 with ⟨b, hib, hdvd⟩
     apply le_trans (multiplicity.multiplicity_le_multiplicity_of_dvd_left hdvd)
-    rw [multiplicity_eq_count_normalized_factors hib x0]
+    rw [multiplicity_eq_count_normalizedFactors hib x0]
     specialize h (normalize b)
     assumption_mod_cast
 #align unique_factorization_monoid.squarefree_iff_nodup_normalized_factors UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors

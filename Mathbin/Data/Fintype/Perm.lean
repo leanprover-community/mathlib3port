@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.perm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ variable [DecidableEq α] [DecidableEq β]
 /-- Given a list, produce a list of all permutations of its elements. -/
 def permsOfList : List α → List (Perm α)
   | [] => [1]
-  | a :: l => permsOfList l ++ l.bind fun b => (permsOfList l).map fun f => swap a b * f
+  | a :: l => perms_of_list l ++ l.bind fun b => (perms_of_list l).map fun f => swap a b * f
 #align perms_of_list permsOfList
 -/
 
@@ -48,7 +48,7 @@ theorem length_permsOfList : ∀ l : List α, length (permsOfList l) = l.length 
   | [] => rfl
   | a :: l => by
     rw [length_cons, Nat.factorial_succ]
-    simp [permsOfList, length_bind, length_permsOfList, Function.comp, Nat.succ_mul]
+    simp [permsOfList, length_bind, length_perms_of_list, Function.comp, Nat.succ_mul]
     cc
 #align length_perms_of_list length_permsOfList
 -/
@@ -78,7 +78,7 @@ theorem mem_permsOfList_of_mem {l : List α} {f : Perm α} (h : ∀ x, f x ≠ x
     simpa only [permsOfList, exists_prop, List.mem_map', mem_append, List.mem_bind]
   refine' or_iff_not_imp_left.2 fun hfl => ⟨f a, _, swap a (f a) * f, IH this, _⟩
   · exact mem_of_ne_of_mem hfa (h _ hfa')
-  · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← perm.one_def, one_mul]
+  · rw [← mul_assoc, mul_def (swap a (f a)) (swap a (f a)), swap_swap, ← Perm.one_def, one_mul]
 #align mem_perms_of_list_of_mem mem_permsOfList_of_mem
 -/
 
@@ -89,7 +89,7 @@ theorem mem_of_mem_permsOfList :
     have : f = 1 := by simpa [permsOfList] using h
     rw [this] <;> simp
   | a :: l, f, h =>
-    (mem_append.1 h).elim (fun h x hx => mem_cons_of_mem _ (mem_of_mem_permsOfList h hx))
+    (mem_append.1 h).elim (fun h x hx => mem_cons_of_mem _ (mem_of_mem_perms_of_list h hx))
       fun h x hx =>
       let ⟨y, hy, hy'⟩ := List.mem_bind.1 h
       let ⟨g, hg₁, hg₂⟩ := List.mem_map'.1 hy'
@@ -98,7 +98,7 @@ theorem mem_of_mem_permsOfList :
         if hxy : x = y then mem_cons_of_mem _ <| by rwa [hxy]
         else
           mem_cons_of_mem _ <|
-            mem_of_mem_permsOfList hg₁ <| by
+            mem_of_mem_perms_of_list hg₁ <| by
               rw [eq_inv_mul_iff_mul_eq.2 hg₂, mul_apply, swap_inv, swap_apply_def] <;>
                   split_ifs <;>
                 [exact Ne.symm hxy, exact Ne.symm hxa, exact hx]
@@ -117,25 +117,25 @@ theorem nodup_permsOfList : ∀ {l : List α} (hl : l.Nodup), (permsOfList l).No
   | [], hl => by simp [permsOfList]
   | a :: l, hl => by
     have hl' : l.Nodup := hl.of_cons
-    have hln' : (permsOfList l).Nodup := nodup_permsOfList hl'
+    have hln' : (permsOfList l).Nodup := nodup_perms_of_list hl'
     have hmeml : ∀ {f : Perm α}, f ∈ permsOfList l → f a = a := fun f hf =>
       Classical.not_not.1 (mt (mem_of_mem_permsOfList hf) (nodup_cons.1 hl).1)
-    rw [permsOfList, List.nodup_append, List.nodup_bind, pairwise_iff_nth_le] <;>
+    rw [permsOfList, List.nodup_append, List.nodup_bind, pairwise_iff_nthLe] <;>
       exact
         ⟨hln',
           ⟨fun _ _ => hln'.map fun _ _ => mul_left_cancel, fun i j hj hij x hx₁ hx₂ =>
             let ⟨f, hf⟩ := List.mem_map'.1 hx₁
             let ⟨g, hg⟩ := List.mem_map'.1 hx₂
-            have hix : x a = nth_le l i (lt_trans hij hj) := by
+            have hix : x a = nthLe l i (lt_trans hij hj) := by
               rw [← hf.2, mul_apply, hmeml hf.1, swap_apply_left]
-            have hiy : x a = nth_le l j hj := by rw [← hg.2, mul_apply, hmeml hg.1, swap_apply_left]
+            have hiy : x a = nthLe l j hj := by rw [← hg.2, mul_apply, hmeml hg.1, swap_apply_left]
             absurd (hf.2.trans hg.2.symm) fun h =>
               ne_of_lt hij <|
-                nodup_iff_nth_le_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
+                nodup_iff_nthLe_inj.1 hl' i j (lt_trans hij hj) hj <| by rw [← hix, hiy]⟩,
           fun f hf₁ hf₂ =>
           let ⟨x, hx, hx'⟩ := List.mem_bind.1 hf₂
           let ⟨g, hg⟩ := List.mem_map'.1 hx'
-          have hgxa : g⁻¹ x = a := f.Injective <| by rw [hmeml hf₁, ← hg.2] <;> simp
+          have hgxa : g⁻¹ x = a := f.injective <| by rw [hmeml hf₁, ← hg.2] <;> simp
           have hxa : x ≠ a := fun h => (List.nodup_cons.1 hl).1 (h ▸ hx)
           (List.nodup_cons.1 hl).1 <|
             hgxa ▸ mem_of_mem_permsOfList hg.1 (by rwa [apply_inv_self, hgxa])⟩

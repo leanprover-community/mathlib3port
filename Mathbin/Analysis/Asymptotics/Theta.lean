@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.theta
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,11 +118,11 @@ theorem Filter.EventuallyEq.trans_isTheta {f₁ f₂ : α → E} {g : α → F} 
 #align filter.eventually_eq.trans_is_Theta Filter.EventuallyEq.trans_isTheta
 
 @[simp]
-theorem isTheta_norm_left : (fun x => ‖f' x‖) =Θ[l] g ↔ f' =Θ[l] g := by simp [is_Theta]
+theorem isTheta_norm_left : (fun x => ‖f' x‖) =Θ[l] g ↔ f' =Θ[l] g := by simp [IsTheta]
 #align asymptotics.is_Theta_norm_left Asymptotics.isTheta_norm_left
 
 @[simp]
-theorem isTheta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := by simp [is_Theta]
+theorem isTheta_norm_right : (f =Θ[l] fun x => ‖g' x‖) ↔ f =Θ[l] g' := by simp [IsTheta]
 #align asymptotics.is_Theta_norm_right Asymptotics.isTheta_norm_right
 
 alias is_Theta_norm_left ↔ is_Theta.of_norm_left is_Theta.norm_left
@@ -176,17 +176,17 @@ theorem IsTheta.eq_zero_iff (h : f'' =Θ[l] g'') : ∀ᶠ x in l, f'' x = 0 ↔ 
 #align asymptotics.is_Theta.eq_zero_iff Asymptotics.IsTheta.eq_zero_iff
 
 theorem IsTheta.tendsto_zero_iff (h : f'' =Θ[l] g'') : Tendsto f'' l (𝓝 0) ↔ Tendsto g'' l (𝓝 0) :=
-  by simp only [← is_o_one_iff ℝ, h.is_o_congr_left]
+  by simp only [← isOCat_one_iff ℝ, h.is_o_congr_left]
 #align asymptotics.is_Theta.tendsto_zero_iff Asymptotics.IsTheta.tendsto_zero_iff
 
 theorem IsTheta.tendsto_norm_atTop_iff (h : f' =Θ[l] g') :
     Tendsto (norm ∘ f') l atTop ↔ Tendsto (norm ∘ g') l atTop := by
-  simp only [← is_o_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
+  simp only [← isOCat_const_left_of_ne (one_ne_zero' ℝ), h.is_o_congr_right]
 #align asymptotics.is_Theta.tendsto_norm_at_top_iff Asymptotics.IsTheta.tendsto_norm_atTop_iff
 
 theorem IsTheta.isBoundedUnder_le_iff (h : f' =Θ[l] g') :
     IsBoundedUnder (· ≤ ·) l (norm ∘ f') ↔ IsBoundedUnder (· ≤ ·) l (norm ∘ g') := by
-  simp only [← is_O_const_of_ne (one_ne_zero' ℝ), h.is_O_congr_left]
+  simp only [← isO_const_of_ne (one_ne_zero' ℝ), h.is_O_congr_left]
 #align asymptotics.is_Theta.is_bounded_under_le_iff Asymptotics.IsTheta.isBoundedUnder_le_iff
 
 theorem IsTheta.smul [NormedSpace 𝕜 E'] [NormedSpace 𝕜' F'] {f₁ : α → 𝕜} {f₂ : α → 𝕜'} {g₁ : α → E'}
@@ -237,12 +237,12 @@ theorem isTheta_const_const {c₁ : E''} {c₂ : F''} (h₁ : c₁ ≠ 0) (h₂ 
 @[simp]
 theorem isTheta_const_const_iff [NeBot l] {c₁ : E''} {c₂ : F''} :
     ((fun x : α => c₁) =Θ[l] fun x => c₂) ↔ (c₁ = 0 ↔ c₂ = 0) := by
-  simpa only [is_Theta, is_O_const_const_iff, ← iff_def] using Iff.comm
+  simpa only [IsTheta, isO_const_const_iff, ← iff_def] using Iff.comm
 #align asymptotics.is_Theta_const_const_iff Asymptotics.isTheta_const_const_iff
 
 @[simp]
 theorem isTheta_zero_left : (fun x => (0 : E')) =Θ[l] g'' ↔ g'' =ᶠ[l] 0 := by
-  simp only [is_Theta, is_O_zero, is_O_zero_right_iff, true_and_iff]
+  simp only [IsTheta, isO_zero, isO_zero_right_iff, true_and_iff]
 #align asymptotics.is_Theta_zero_left Asymptotics.isTheta_zero_left
 
 @[simp]
@@ -270,7 +270,7 @@ alias is_Theta_const_smul_right ↔ is_Theta.of_const_smul_right is_Theta.const_
 
 theorem isTheta_const_mul_left {c : 𝕜} {f : α → 𝕜} (hc : c ≠ 0) :
     (fun x => c * f x) =Θ[l] g ↔ f =Θ[l] g := by
-  simpa only [← smul_eq_mul] using is_Theta_const_smul_left hc
+  simpa only [← smul_eq_mul] using isTheta_const_smul_left hc
 #align asymptotics.is_Theta_const_mul_left Asymptotics.isTheta_const_mul_left
 
 alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_left
@@ -279,7 +279,7 @@ alias is_Theta_const_mul_left ↔ is_Theta.of_const_mul_left is_Theta.const_mul_
 
 theorem isTheta_const_mul_right {c : 𝕜} {g : α → 𝕜} (hc : c ≠ 0) :
     (f =Θ[l] fun x => c * g x) ↔ f =Θ[l] g := by
-  simpa only [← smul_eq_mul] using is_Theta_const_smul_right hc
+  simpa only [← smul_eq_mul] using isTheta_const_smul_right hc
 #align asymptotics.is_Theta_const_mul_right Asymptotics.isTheta_const_mul_right
 
 alias is_Theta_const_mul_right ↔ is_Theta.of_const_mul_right is_Theta.const_mul_right

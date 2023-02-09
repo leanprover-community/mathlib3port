@@ -5,7 +5,7 @@ Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, M
 Scott Morrison
 
 ! This file was ported from Lean 3 source module data.list.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -184,7 +184,7 @@ theorem disjoint_take_drop {m n : ℕ} (hl : l.Nodup) (h : m ≤ n) : Disjoint (
   case
     cons x xs xs_ih m n =>
     cases m <;> cases n <;>
-      simp only [disjoint_cons_left, mem_cons_iff, disjoint_cons_right, drop, true_or_iff,
+      simp only [disjoint_cons_left, mem_cons, disjoint_cons_right, drop, true_or_iff,
         eq_self_iff_true, not_true, false_and_iff, disjoint_nil_left, take]
     · cases h
     cases' hl with _ _ h₀ h₁; constructor
@@ -218,7 +218,7 @@ theorem cons_union (l₁ l₂ : List α) (a : α) : a :: l₁ ∪ l₂ = insert 
 @[simp]
 theorem mem_union : a ∈ l₁ ∪ l₂ ↔ a ∈ l₁ ∨ a ∈ l₂ := by
   induction l₁ <;>
-    simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons_iff,
+    simp only [nil_union, not_mem_nil, false_or_iff, cons_union, mem_insert_iff, mem_cons,
       or_assoc', *]
 #align list.mem_union List.mem_union
 -/
@@ -374,7 +374,7 @@ theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x ∈ l₂, p
 #print List.inter_reverse /-
 @[simp]
 theorem inter_reverse {xs ys : List α} : xs.inter ys.reverse = xs.inter ys := by
-  simp only [List.inter, mem_reverse]
+  simp only [List.inter, mem_reverse']
 #align list.inter_reverse List.inter_reverse
 -/
 
@@ -392,7 +392,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.nil.{u1} α) l) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.nil_bag_inter List.nil_bagInterₓ'. -/
 @[simp]
-theorem nil_bagInter (l : List α) : [].bagInterₓ l = [] := by cases l <;> rfl
+theorem nil_bagInter (l : List α) : [].bagInter l = [] := by cases l <;> rfl
 #align list.nil_bag_inter List.nil_bagInter
 
 /- warning: list.bag_inter_nil -> List.bagInter_nil is a dubious translation:
@@ -402,7 +402,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α), Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l (List.nil.{u1} α)) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.bag_inter_nil List.bagInter_nilₓ'. -/
 @[simp]
-theorem bagInter_nil (l : List α) : l.bagInterₓ [] = [] := by cases l <;> rfl
+theorem bagInter_nil (l : List α) : l.bagInter [] = [] := by cases l <;> rfl
 #align list.bag_inter_nil List.bagInter_nil
 
 /- warning: list.cons_bag_inter_of_pos -> List.cons_bagInter_of_pos is a dubious translation:
@@ -413,7 +413,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.cons_bag_inter_of_pos List.cons_bagInter_of_posₓ'. -/
 @[simp]
 theorem cons_bagInter_of_pos (l₁ : List α) (h : a ∈ l₂) :
-    (a :: l₁).bagInterₓ l₂ = a :: l₁.bagInterₓ (l₂.eraseₓ a) := by cases l₂ <;> exact if_pos h
+    (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by cases l₂ <;> exact if_pos h
 #align list.cons_bag_inter_of_pos List.cons_bagInter_of_pos
 
 /- warning: list.cons_bag_inter_of_neg -> List.cons_bagInter_of_neg is a dubious translation:
@@ -423,10 +423,9 @@ but is expected to have type
   forall {α : Type.{u1}} {l₂ : List.{u1} α} {a : α} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α), (Not (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂)) -> (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) (List.cons.{u1} α a l₁) l₂) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂))
 Case conversion may be inaccurate. Consider using '#align list.cons_bag_inter_of_neg List.cons_bagInter_of_negₓ'. -/
 @[simp]
-theorem cons_bagInter_of_neg (l₁ : List α) (h : a ∉ l₂) :
-    (a :: l₁).bagInterₓ l₂ = l₁.bagInterₓ l₂ :=
+theorem cons_bagInter_of_neg (l₁ : List α) (h : a ∉ l₂) : (a :: l₁).bagInter l₂ = l₁.bagInter l₂ :=
   by
-  cases l₂; · simp only [bag_inter_nil]
+  cases l₂; · simp only [bagInter_nil]
   simp only [erase_of_not_mem h, List.bagInter, if_neg h]
 #align list.cons_bag_inter_of_neg List.cons_bagInter_of_neg
 
@@ -437,15 +436,15 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] {a : α} {l₁ : List.{u1} α} {l₂ : List.{u1} α}, Iff (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂)) (And (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₁) (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a l₂))
 Case conversion may be inaccurate. Consider using '#align list.mem_bag_inter List.mem_bagInterₓ'. -/
 @[simp]
-theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInterₓ l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
-  | [], l₂ => by simp only [nil_bag_inter, not_mem_nil, false_and_iff]
+theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter l₂ ↔ a ∈ l₁ ∧ a ∈ l₂
+  | [], l₂ => by simp only [nil_bagInter, not_mem_nil, false_and_iff]
   | b :: l₁, l₂ => by
     by_cases b ∈ l₂
-    · rw [cons_bag_inter_of_pos _ h, mem_cons_iff, mem_cons_iff, mem_bag_inter]
+    · rw [cons_bagInter_of_pos _ h, mem_cons, mem_cons, mem_bag_inter]
       by_cases ba : a = b
       · simp only [ba, h, eq_self_iff_true, true_or_iff, true_and_iff]
       · simp only [mem_erase_of_ne ba, ba, false_or_iff]
-    · rw [cons_bag_inter_of_neg _ h, mem_bag_inter, mem_cons_iff, or_and_right]
+    · rw [cons_bagInter_of_neg _ h, mem_bag_inter, mem_cons, or_and_right]
       symm
       apply or_iff_right_of_imp
       rintro ⟨rfl, h'⟩
@@ -455,18 +454,18 @@ theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter�
 #print List.count_bagInter /-
 @[simp]
 theorem count_bagInter {a : α} :
-    ∀ {l₁ l₂ : List α}, count a (l₁.bagInterₓ l₂) = min (count a l₁) (count a l₂)
+    ∀ {l₁ l₂ : List α}, count a (l₁.bagInter l₂) = min (count a l₁) (count a l₂)
   | [], l₂ => by simp
   | l₁, [] => by simp
   | b :: l₁, l₂ => by
     by_cases hb : b ∈ l₂
-    · rw [cons_bag_inter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ←
+    · rw [cons_bagInter_of_pos _ hb, count_cons', count_cons', count_bag_inter, count_erase, ←
         min_add_add_right]
       by_cases ab : a = b
       · rw [if_pos ab, tsub_add_cancel_of_le]
         rwa [succ_le_iff, count_pos, ab]
       · rw [if_neg ab, tsub_zero, add_zero, add_zero]
-    · rw [cons_bag_inter_of_neg _ hb, count_bag_inter]
+    · rw [cons_bagInter_of_neg _ hb, count_bag_inter]
       by_cases ab : a = b
       · rw [← ab] at hb
         rw [count_eq_zero.2 hb, min_zero, min_zero]
@@ -480,11 +479,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), List.Sublist.{u1} α (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) l₁
 Case conversion may be inaccurate. Consider using '#align list.bag_inter_sublist_left List.bagInter_sublist_leftₓ'. -/
-theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ <+ l₁
+theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
   | [], l₂ => by simp
   | b :: l₁, l₂ =>
     by
-    by_cases b ∈ l₂ <;> simp only [h, cons_bag_inter_of_pos, cons_bag_inter_of_neg, not_false_iff]
+    by_cases b ∈ l₂ <;> simp only [h, cons_bagInter_of_pos, cons_bagInter_of_neg, not_false_iff]
     · exact (bag_inter_sublist_left _ _).cons_cons _
     · apply sublist_cons_of_sublist
       apply bag_inter_sublist_left
@@ -496,7 +495,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l₁ : List.{u1} α) (l₂ : List.{u1} α), Iff (Eq.{succ u1} (List.{u1} α) (List.bagInter.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.nil.{u1} α)) (Eq.{succ u1} (List.{u1} α) (Inter.inter.{u1} (List.{u1} α) (List.instInterList.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) l₁ l₂) (List.nil.{u1} α))
 Case conversion may be inaccurate. Consider using '#align list.bag_inter_nil_iff_inter_nil List.bagInter_nil_iff_inter_nilₓ'. -/
-theorem bagInter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInterₓ l₂ = [] ↔ l₁ ∩ l₂ = []
+theorem bagInter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
   | b :: l₁, l₂ => by
     by_cases h : b ∈ l₂ <;> simp [h]

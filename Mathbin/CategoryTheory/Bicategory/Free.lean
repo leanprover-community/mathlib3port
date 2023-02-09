@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.free
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,57 +119,57 @@ local notation "ρ⁻¹_" => Hom₂.right_unitor_inv
 inductive Rel : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → Hom₂ f g → Prop
   |
   vcomp_right {a b} {f g h : Hom a b} (η : Hom₂ f g) (θ₁ θ₂ : Hom₂ g h) :
-    Rel θ₁ θ₂ → Rel (η ≫ θ₁) (η ≫ θ₂)
+    rel θ₁ θ₂ → rel (η ≫ θ₁) (η ≫ θ₂)
   |
   vcomp_left {a b} {f g h : Hom a b} (η₁ η₂ : Hom₂ f g) (θ : Hom₂ g h) :
-    Rel η₁ η₂ → Rel (η₁ ≫ θ) (η₂ ≫ θ)
-  | id_comp {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (𝟙 f ≫ η) η
-  | comp_id {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (η ≫ 𝟙 g) η
+    rel η₁ η₂ → rel (η₁ ≫ θ) (η₂ ≫ θ)
+  | id_comp {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (𝟙 f ≫ η) η
+  | comp_id {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (η ≫ 𝟙 g) η
   |
   assoc {a b} {f g h i : Hom a b} (η : Hom₂ f g) (θ : Hom₂ g h) (ι : Hom₂ h i) :
-    Rel ((η ≫ θ) ≫ ι) (η ≫ θ ≫ ι)
+    rel ((η ≫ θ) ≫ ι) (η ≫ θ ≫ ι)
   |
   whisker_left {a b c} (f : Hom a b) (g h : Hom b c) (η η' : Hom₂ g h) :
-    Rel η η' → Rel (f ◁ η) (f ◁ η')
-  | whisker_left_id {a b c} (f : Hom a b) (g : Hom b c) : Rel (f ◁ 𝟙 g) (𝟙 (f.comp g))
+    rel η η' → rel (f ◁ η) (f ◁ η')
+  | whisker_left_id {a b c} (f : Hom a b) (g : Hom b c) : rel (f ◁ 𝟙 g) (𝟙 (f.comp g))
   |
   whisker_left_comp {a b c} (f : Hom a b) {g h i : Hom b c} (η : Hom₂ g h) (θ : Hom₂ h i) :
-    Rel (f ◁ η ≫ θ) ((f ◁ η) ≫ f ◁ θ)
-  | id_whisker_left {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (Hom.id a ◁ η) (λ_ f ≫ η ≫ λ⁻¹_ g)
+    rel (f ◁ η ≫ θ) ((f ◁ η) ≫ f ◁ θ)
+  | id_whisker_left {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (Hom.id a ◁ η) (λ_ f ≫ η ≫ λ⁻¹_ g)
   |
   comp_whisker_left {a b c d} (f : Hom a b) (g : Hom b c) {h h' : Hom c d} (η : Hom₂ h h') :
-    Rel (f.comp g ◁ η) (α_ f g h ≫ (f ◁ g ◁ η) ≫ α⁻¹_ f g h')
+    rel (f.comp g ◁ η) (α_ f g h ≫ (f ◁ g ◁ η) ≫ α⁻¹_ f g h')
   |
   whisker_right {a b c} (f g : Hom a b) (h : Hom b c) (η η' : Hom₂ f g) :
-    Rel η η' → Rel (η ▷ h) (η' ▷ h)
-  | id_whisker_right {a b c} (f : Hom a b) (g : Hom b c) : Rel (𝟙 f ▷ g) (𝟙 (f.comp g))
+    rel η η' → rel (η ▷ h) (η' ▷ h)
+  | id_whisker_right {a b c} (f : Hom a b) (g : Hom b c) : rel (𝟙 f ▷ g) (𝟙 (f.comp g))
   |
   comp_whisker_right {a b c} {f g h : Hom a b} (i : Hom b c) (η : Hom₂ f g) (θ : Hom₂ g h) :
-    Rel ((η ≫ θ) ▷ i) ((η ▷ i) ≫ θ ▷ i)
-  | whisker_right_id {a b} {f g : Hom a b} (η : Hom₂ f g) : Rel (η ▷ Hom.id b) (ρ_ f ≫ η ≫ ρ⁻¹_ g)
+    rel ((η ≫ θ) ▷ i) ((η ▷ i) ≫ θ ▷ i)
+  | whisker_right_id {a b} {f g : Hom a b} (η : Hom₂ f g) : rel (η ▷ Hom.id b) (ρ_ f ≫ η ≫ ρ⁻¹_ g)
   |
   whisker_right_comp {a b c d} {f f' : Hom a b} (g : Hom b c) (h : Hom c d) (η : Hom₂ f f') :
-    Rel (η ▷ g.comp h) (α⁻¹_ f g h ≫ ((η ▷ g) ▷ h) ≫ α_ f' g h)
+    rel (η ▷ g.comp h) (α⁻¹_ f g h ≫ ((η ▷ g) ▷ h) ≫ α_ f' g h)
   |
   whisker_assoc {a b c d} (f : Hom a b) {g g' : Hom b c} (η : Hom₂ g g') (h : Hom c d) :
-    Rel ((f ◁ η) ▷ h) (α_ f g h ≫ (f ◁ η ▷ h) ≫ α⁻¹_ f g' h)
+    rel ((f ◁ η) ▷ h) (α_ f g h ≫ (f ◁ η ▷ h) ≫ α⁻¹_ f g' h)
   |
   whisker_exchange {a b c} {f g : Hom a b} {h i : Hom b c} (η : Hom₂ f g) (θ : Hom₂ h i) :
-    Rel ((f ◁ θ) ≫ η ▷ i) ((η ▷ h) ≫ g ◁ θ)
+    rel ((f ◁ θ) ≫ η ▷ i) ((η ▷ h) ≫ g ◁ θ)
   |
   associator_hom_inv {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
-    Rel (α_ f g h ≫ α⁻¹_ f g h) (𝟙 ((f.comp g).comp h))
+    rel (α_ f g h ≫ α⁻¹_ f g h) (𝟙 ((f.comp g).comp h))
   |
   associator_inv_hom {a b c d} (f : Hom a b) (g : Hom b c) (h : Hom c d) :
-    Rel (α⁻¹_ f g h ≫ α_ f g h) (𝟙 (f.comp (g.comp h)))
-  | left_unitor_hom_inv {a b} (f : Hom a b) : Rel (λ_ f ≫ λ⁻¹_ f) (𝟙 ((Hom.id a).comp f))
-  | left_unitor_inv_hom {a b} (f : Hom a b) : Rel (λ⁻¹_ f ≫ λ_ f) (𝟙 f)
-  | right_unitor_hom_inv {a b} (f : Hom a b) : Rel (ρ_ f ≫ ρ⁻¹_ f) (𝟙 (f.comp (Hom.id b)))
-  | right_unitor_inv_hom {a b} (f : Hom a b) : Rel (ρ⁻¹_ f ≫ ρ_ f) (𝟙 f)
+    rel (α⁻¹_ f g h ≫ α_ f g h) (𝟙 (f.comp (g.comp h)))
+  | left_unitor_hom_inv {a b} (f : Hom a b) : rel (λ_ f ≫ λ⁻¹_ f) (𝟙 ((Hom.id a).comp f))
+  | left_unitor_inv_hom {a b} (f : Hom a b) : rel (λ⁻¹_ f ≫ λ_ f) (𝟙 f)
+  | right_unitor_hom_inv {a b} (f : Hom a b) : rel (ρ_ f ≫ ρ⁻¹_ f) (𝟙 (f.comp (Hom.id b)))
+  | right_unitor_inv_hom {a b} (f : Hom a b) : rel (ρ⁻¹_ f ≫ ρ_ f) (𝟙 f)
   |
   pentagon {a b c d e} (f : Hom a b) (g : Hom b c) (h : Hom c d) (i : Hom d e) :
-    Rel ((α_ f g h ▷ i) ≫ α_ f (g.comp h) i ≫ f ◁ α_ g h i) (α_ (f.comp g) h i ≫ α_ f g (h.comp i))
-  | triangle {a b c} (f : Hom a b) (g : Hom b c) : Rel (α_ f (Hom.id b) g ≫ f ◁ λ_ g) (ρ_ f ▷ g)
+    rel ((α_ f g h ▷ i) ≫ α_ f (g.comp h) i ≫ f ◁ α_ g h i) (α_ (f.comp g) h i ≫ α_ f g (h.comp i))
+  | triangle {a b c} (f : Hom a b) (g : Hom b c) : rel (α_ f (Hom.id b) g ≫ f ◁ λ_ g) (ρ_ f ▷ g)
 #align category_theory.free_bicategory.rel CategoryTheory.FreeBicategory.Rel
 
 end
@@ -183,13 +183,13 @@ instance homCategory (a b : B) : Category (Hom a b)
   comp f g h := Quot.map₂ Hom₂.vcomp Rel.vcomp_right Rel.vcomp_left
   id_comp' := by
     rintro f g ⟨η⟩
-    exact Quot.sound (rel.id_comp η)
+    exact Quot.sound (Rel.id_comp η)
   comp_id' := by
     rintro f g ⟨η⟩
-    exact Quot.sound (rel.comp_id η)
+    exact Quot.sound (Rel.comp_id η)
   assoc' := by
     rintro f g h i ⟨η⟩ ⟨θ⟩ ⟨ι⟩
-    exact Quot.sound (rel.assoc η θ ι)
+    exact Quot.sound (Rel.assoc η θ ι)
 #align category_theory.free_bicategory.hom_category CategoryTheory.FreeBicategory.homCategory
 
 /-- Bicategory structure on the free bicategory. -/
@@ -203,30 +203,30 @@ instance bicategory : Bicategory (FreeBicategory B)
   whiskerLeft_id' a b c f g := Quot.sound (Rel.whisker_left_id f g)
   whiskerLeft_comp' := by
     rintro a b c f g h i ⟨η⟩ ⟨θ⟩
-    exact Quot.sound (rel.whisker_left_comp f η θ)
+    exact Quot.sound (Rel.whisker_left_comp f η θ)
   id_whisker_left' := by
     rintro a b f g ⟨η⟩
-    exact Quot.sound (rel.id_whisker_left η)
+    exact Quot.sound (Rel.id_whisker_left η)
   comp_whisker_left' := by
     rintro a b c d f g h h' ⟨η⟩
-    exact Quot.sound (rel.comp_whisker_left f g η)
+    exact Quot.sound (Rel.comp_whisker_left f g η)
   whiskerRight a b c f g η h := Quot.map (Hom₂.whisker_right h) (Rel.whisker_right f g h) η
   id_whisker_right' a b c f g := Quot.sound (Rel.id_whisker_right f g)
   comp_whisker_right' := by
     rintro a b c f g h ⟨η⟩ ⟨θ⟩ i
-    exact Quot.sound (rel.comp_whisker_right i η θ)
+    exact Quot.sound (Rel.comp_whisker_right i η θ)
   whiskerRight_id' := by
     rintro a b f g ⟨η⟩
-    exact Quot.sound (rel.whisker_right_id η)
+    exact Quot.sound (Rel.whisker_right_id η)
   whiskerRight_comp' := by
     rintro a b c d f f' ⟨η⟩ g h
-    exact Quot.sound (rel.whisker_right_comp g h η)
+    exact Quot.sound (Rel.whisker_right_comp g h η)
   whisker_assoc' := by
     rintro a b c d f g g' ⟨η⟩ h
-    exact Quot.sound (rel.whisker_assoc f η h)
+    exact Quot.sound (Rel.whisker_assoc f η h)
   whisker_exchange' := by
     rintro a b c f g h i ⟨η⟩ ⟨θ⟩
-    exact Quot.sound (rel.whisker_exchange η θ)
+    exact Quot.sound (Rel.whisker_exchange η θ)
   associator a b c d f g h :=
     { Hom := Quot.mk Rel (Hom₂.associator f g h)
       inv := Quot.mk Rel (Hom₂.associator_inv f g h)
@@ -282,7 +282,7 @@ theorem mk_id : Quot.mk _ (Hom₂.id f) = 𝟙 f :=
 #align category_theory.free_bicategory.mk_id CategoryTheory.FreeBicategory.mk_id
 
 @[simp]
-theorem mk_associator_hom : Quot.mk _ (Hom₂.associator f g h) = (α_ f g h).Hom :=
+theorem mk_associator_hom : Quot.mk _ (Hom₂.associator f g h) = (α_ f g h).hom :=
   rfl
 #align category_theory.free_bicategory.mk_associator_hom CategoryTheory.FreeBicategory.mk_associator_hom
 
@@ -292,7 +292,7 @@ theorem mk_associator_inv : Quot.mk _ (Hom₂.associator_inv f g h) = (α_ f g h
 #align category_theory.free_bicategory.mk_associator_inv CategoryTheory.FreeBicategory.mk_associator_inv
 
 @[simp]
-theorem mk_left_unitor_hom : Quot.mk _ (Hom₂.left_unitor f) = (λ_ f).Hom :=
+theorem mk_left_unitor_hom : Quot.mk _ (Hom₂.left_unitor f) = (λ_ f).hom :=
   rfl
 #align category_theory.free_bicategory.mk_left_unitor_hom CategoryTheory.FreeBicategory.mk_left_unitor_hom
 
@@ -302,7 +302,7 @@ theorem mk_left_unitor_inv : Quot.mk _ (Hom₂.left_unitor_inv f) = (λ_ f).inv 
 #align category_theory.free_bicategory.mk_left_unitor_inv CategoryTheory.FreeBicategory.mk_left_unitor_inv
 
 @[simp]
-theorem mk_right_unitor_hom : Quot.mk _ (Hom₂.right_unitor f) = (ρ_ f).Hom :=
+theorem mk_right_unitor_hom : Quot.mk _ (Hom₂.right_unitor f) = (ρ_ f).hom :=
   rfl
 #align category_theory.free_bicategory.mk_right_unitor_hom CategoryTheory.FreeBicategory.mk_right_unitor_hom
 
@@ -369,11 +369,11 @@ Case conversion may be inaccurate. Consider using '#align category_theory.free_b
 @[simp]
 def liftHom₂ : ∀ {a b : B} {f g : Hom a b}, Hom₂ f g → (liftHom F f ⟶ liftHom F g)
   | _, _, _, _, hom₂.id _ => 𝟙 _
-  | _, _, _, _, hom₂.associator _ _ _ => (α_ _ _ _).Hom
+  | _, _, _, _, hom₂.associator _ _ _ => (α_ _ _ _).hom
   | _, _, _, _, hom₂.associator_inv _ _ _ => (α_ _ _ _).inv
-  | _, _, _, _, hom₂.left_unitor _ => (λ_ _).Hom
+  | _, _, _, _, hom₂.left_unitor _ => (λ_ _).hom
   | _, _, _, _, hom₂.left_unitor_inv _ => (λ_ _).inv
-  | _, _, _, _, hom₂.right_unitor _ => (ρ_ _).Hom
+  | _, _, _, _, hom₂.right_unitor _ => (ρ_ _).hom
   | _, _, _, _, hom₂.right_unitor_inv _ => (ρ_ _).inv
   | _, _, _, _, hom₂.vcomp η θ => lift_hom₂ η ≫ lift_hom₂ θ
   | _, _, _, _, hom₂.whisker_left f η => liftHom F f ◁ lift_hom₂ η

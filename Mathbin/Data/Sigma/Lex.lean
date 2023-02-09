@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.lex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,8 +46,8 @@ variable {ι : Type _} {α : ι → Type _} {r r₁ r₂ : ι → ι → Prop} {
 relation for each summand. `a` is related to `b` iff their summands are related or they are in the
 same summand and are related through the summand's relation. -/
 inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀ a b : Σi, α i, Prop
-  | left {i j : ι} (a : α i) (b : α j) : r i j → Lex ⟨i, a⟩ ⟨j, b⟩
-  | right {i : ι} (a b : α i) : s i a b → Lex ⟨i, a⟩ ⟨i, b⟩
+  | left {i j : ι} (a : α i) (b : α j) : r i j → lex ⟨i, a⟩ ⟨j, b⟩
+  | right {i : ι} (a b : α i) : s i a b → lex ⟨i, a⟩ ⟨i, b⟩
 #align sigma.lex Sigma.Lex
 -/
 
@@ -57,7 +57,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u2, u1} ι (fun (i : ι) => α i)} {b : Sigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r s a b) (Or (r (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => s (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) (Eq.rec.{succ u1, succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.390 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.389 : Eq.{succ u2} ι (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.390) => α x._@.Mathlib.Data.Sigma.Lex._hyg.390) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (Sigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (Sigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align sigma.lex_iff Sigma.lex_iffₓ'. -/
-theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
+theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.ndrec a.2) b.2 :=
   by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
@@ -67,8 +67,8 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
     obtain ⟨j, b⟩ := b
     dsimp only
     rintro (h | ⟨rfl, h⟩)
-    · exact lex.left _ _ h
-    · exact lex.right _ _ h
+    · exact Lex.left _ _ h
+    · exact Lex.right _ _ h
 #align sigma.lex_iff Sigma.lex_iff
 
 #print Sigma.Lex.decidable /-
@@ -88,8 +88,8 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
   by
   obtain ⟨a, b, hij⟩ | ⟨a, b, hab⟩ := h
-  · exact lex.left _ _ (hr _ _ hij)
-  · exact lex.right _ _ (hs _ _ _ hab)
+  · exact Lex.left _ _ (hr _ _ hij)
+  · exact Lex.right _ _ (hs _ _ _ hab)
 #align sigma.lex.mono Sigma.Lex.mono
 
 /- warning: sigma.lex.mono_left -> Sigma.Lex.mono_left is a dubious translation:
@@ -120,10 +120,10 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : Sigma.{u2, u1} ι (fun (i : ι) => α i)} {b : Sigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) (Function.swap.{succ u2, succ u2, 1} ι ι (fun (ᾰ : ι) (ᾰ : ι) => Prop) r) s a b) (Sigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r (fun (i : ι) => Function.swap.{succ u1, succ u1, 1} (α i) (α i) (fun (ᾰ : α i) (ᾰ : α i) => Prop) (s i)) b a)
 Case conversion may be inaccurate. Consider using '#align sigma.lex_swap Sigma.lex_swapₓ'. -/
-theorem lex_swap : Lex r.symm s a b ↔ Lex r (fun i => (s i).symm) b a := by
+theorem lex_swap : Lex r.swap s a b ↔ Lex r (fun i => (s i).swap) b a := by
   constructor <;>
     · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩)
-      exacts[lex.left _ _ h, lex.right _ _ h]
+      exacts[Lex.left _ _ h, Lex.right _ _ h]
 #align sigma.lex_swap Sigma.lex_swap
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
@@ -138,16 +138,16 @@ instance [IsIrrefl ι r] [∀ i, IsIrrefl (α i) (s i)] : IsIrrefl _ (Lex r s) :
 instance [IsTrans ι r] [∀ i, IsTrans (α i) (s i)] : IsTrans _ (Lex r s) :=
   ⟨by
     rintro _ _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩) (⟨_, c, hk⟩ | ⟨_, c, hc⟩)
-    · exact lex.left _ _ (trans hij hk)
-    · exact lex.left _ _ hij
-    · exact lex.left _ _ hk
-    · exact lex.right _ _ (trans hab hc)⟩
+    · exact Lex.left _ _ (trans hij hk)
+    · exact Lex.left _ _ hij
+    · exact Lex.left _ _ hk
+    · exact Lex.right _ _ (trans hab hc)⟩
 
 instance [IsSymm ι r] [∀ i, IsSymm (α i) (s i)] : IsSymm _ (Lex r s) :=
   ⟨by
     rintro _ _ (⟨a, b, hij⟩ | ⟨a, b, hab⟩)
-    · exact lex.left _ _ (symm hij)
-    · exact lex.right _ _ (symm hab)⟩
+    · exact Lex.left _ _ (symm hij)
+    · exact Lex.right _ _ (symm hab)⟩
 
 attribute [local instance] IsAsymm.isIrrefl
 
@@ -163,22 +163,22 @@ instance [IsTrichotomous ι r] [∀ i, IsTotal (α i) (s i)] : IsTotal _ (Lex r 
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
-    · exact Or.inl (lex.left _ _ hij)
+    · exact Or.inl (Lex.left _ _ hij)
     · obtain hab | hba := total_of (s i) a b
-      · exact Or.inl (lex.right _ _ hab)
-      · exact Or.inr (lex.right _ _ hba)
-    · exact Or.inr (lex.left _ _ hji)⟩
+      · exact Or.inl (Lex.right _ _ hab)
+      · exact Or.inr (Lex.right _ _ hba)
+    · exact Or.inr (Lex.left _ _ hji)⟩
 
 instance [IsTrichotomous ι r] [∀ i, IsTrichotomous (α i) (s i)] : IsTrichotomous _ (Lex r s) :=
   ⟨by
     rintro ⟨i, a⟩ ⟨j, b⟩
     obtain hij | rfl | hji := trichotomous_of r i j
-    · exact Or.inl (lex.left _ _ hij)
+    · exact Or.inl (Lex.left _ _ hij)
     · obtain hab | rfl | hba := trichotomous_of (s i) a b
-      · exact Or.inl (lex.right _ _ hab)
+      · exact Or.inl (Lex.right _ _ hab)
       · exact Or.inr (Or.inl rfl)
-      · exact Or.inr (Or.inr <| lex.right _ _ hba)
-    · exact Or.inr (Or.inr <| lex.left _ _ hji)⟩
+      · exact Or.inr (Or.inr <| Lex.right _ _ hba)
+    · exact Or.inr (Or.inr <| Lex.left _ _ hji)⟩
 
 end Sigma
 
@@ -195,7 +195,8 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Sort.{u2}} {α : ι -> Sort.{u1}} {r : ι -> ι -> Prop} {s : forall (i : ι), (α i) -> (α i) -> Prop} {a : PSigma.{u2, u1} ι (fun (i : ι) => α i)} {b : PSigma.{u2, u1} ι (fun (i : ι) => α i)}, Iff (PSigma.Lex.{u2, u1} ι (fun (i : ι) => α i) r s a b) (Or (r (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (Exists.{0} (Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) (fun (h : Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b)) => s (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) (Eq.rec.{u1, u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) (fun (x._@.Mathlib.Data.Sigma.Lex._hyg.2408 : ι) (x._@.Mathlib.Data.Sigma.Lex._hyg.2407 : Eq.{u2} ι (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) a) x._@.Mathlib.Data.Sigma.Lex._hyg.2408) => α x._@.Mathlib.Data.Sigma.Lex._hyg.2408) (PSigma.snd.{u2, u1} ι (fun (i : ι) => α i) a) (PSigma.fst.{u2, u1} ι (fun (i : ι) => α i) b) h) (PSigma.snd.{u2, u1} ι (fun (i : ι) => α i) b))))
 Case conversion may be inaccurate. Consider using '#align psigma.lex_iff PSigma.lex_iffₓ'. -/
-theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
+theorem lex_iff {a b : Σ'i, α i} :
+    Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.ndrec a.2) b.2 :=
   by
   constructor
   · rintro (⟨a, b, hij⟩ | ⟨i, hab⟩)
@@ -205,8 +206,8 @@ theorem lex_iff {a b : Σ'i, α i} : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 =
     obtain ⟨j, b⟩ := b
     dsimp only
     rintro (h | ⟨rfl, h⟩)
-    · exact lex.left _ _ h
-    · exact lex.right _ h
+    · exact Lex.left _ _ h
+    · exact Lex.right _ h
 #align psigma.lex_iff PSigma.lex_iff
 
 #print PSigma.Lex.decidable /-
@@ -227,8 +228,8 @@ theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
   by
   obtain ⟨a, b, hij⟩ | ⟨i, hab⟩ := h
-  · exact lex.left _ _ (hr _ _ hij)
-  · exact lex.right _ (hs _ _ _ hab)
+  · exact Lex.left _ _ (hr _ _ hij)
+  · exact Lex.right _ (hs _ _ _ hab)
 #align psigma.lex.mono PSigma.Lex.mono
 
 /- warning: psigma.lex.mono_left -> PSigma.Lex.mono_left is a dubious translation:

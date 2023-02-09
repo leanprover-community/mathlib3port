@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.mixed_char_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -172,7 +172,7 @@ theorem Q_algebra_to_equal_charZero [Nontrivial R] [Algebra ℚ R] :
   -- `↑a - ↑b` is a unit contained in `I`, which contradicts `I ≠ ⊤`.
   refine' I.eq_top_of_is_unit_mem _ (IsUnit.map (algebraMap ℚ R) (IsUnit.mk0 (a - b : ℚ) _))
   · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
-  simpa only [Ne.def, sub_eq_zero] using (@Nat.cast_injective ℚ _ _).Ne hI
+  simpa only [Ne.def, sub_eq_zero] using (@nat.cast_injective ℚ _ _).ne hI
 #align Q_algebra_to_equal_char_zero Q_algebra_to_equal_charZero
 
 section ConstructionOfQAlgebra
@@ -187,7 +187,7 @@ theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → 
   apply not_imp_comm.mp (h.elim (Ideal.span {n}))
   intro h_char_zero
   -- In particular, the image of `n` in the quotient should be nonzero.
-  apply h_char_zero.cast_injective.Ne n.ne_zero
+  apply h_char_zero.cast_injective.ne n.ne_zero
   -- But `n` generates the ideal, so its image is clearly zero.
   rw [← map_natCast (Ideal.Quotient.mk _), Nat.cast_zero, Ideal.Quotient.eq_zero_iff_mem]
   exact Ideal.subset_span (Set.mem_singleton _)
@@ -196,7 +196,7 @@ theorem EqualCharZero.pNat_coe_isUnit [h : Fact (∀ I : Ideal R, I ≠ ⊤ → 
 /-- Internal: Not intended to be used outside this local construction. -/
 noncomputable instance EqualCharZero.pnatHasCoeUnits
     [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))] : CoeTC ℕ+ Rˣ :=
-  ⟨fun n => (EqualCharZero.pNat_coe_isUnit R n).Unit⟩
+  ⟨fun n => (EqualCharZero.pNat_coe_isUnit R n).unit⟩
 #align equal_char_zero.pnat_has_coe_units EqualCharZero.pnatHasCoeUnits
 
 /-- Internal: Not intended to be used outside this local construction. -/
@@ -204,7 +204,7 @@ theorem EqualCharZero.pNat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ �
     ((1 : ℕ+) : Rˣ) = 1 := by
   apply Units.ext
   rw [Units.val_one]
-  change ((EqualCharZero.pNat_coe_isUnit R 1).Unit : R) = 1
+  change ((EqualCharZero.pNat_coe_isUnit R 1).unit : R) = 1
   rw [IsUnit.unit_spec (EqualCharZero.pNat_coe_isUnit R 1)]
   rw [coe_coe, PNat.one_coe, Nat.cast_one]
 #align equal_char_zero.pnat_coe_units_eq_one EqualCharZero.pNat_coe_units_eq_one
@@ -213,7 +213,7 @@ theorem EqualCharZero.pNat_coe_units_eq_one [Fact (∀ I : Ideal R, I ≠ ⊤ �
 theorem EqualCharZero.pNat_coe_units_coe_eq_coe [Fact (∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I))]
     (n : ℕ+) : ((n : Rˣ) : R) = ↑n :=
   by
-  change ((EqualCharZero.pNat_coe_isUnit R n).Unit : R) = ↑n
+  change ((EqualCharZero.pNat_coe_isUnit R n).unit : R) = ↑n
   simp only [IsUnit.unit_spec]
 #align equal_char_zero.pnat_coe_units_coe_eq_coe EqualCharZero.pNat_coe_units_coe_eq_coe
 
@@ -271,7 +271,7 @@ theorem equal_charZero_to_not_mixed_char (h : ∀ I : Ideal R, I ≠ ⊤ → Cha
   intro p p_pos
   by_contra hp_mixed_char
   rcases hp_mixed_char.char_p_quotient with ⟨I, hI_ne_top, hI_p⟩
-  replace hI_zero : CharP (R ⧸ I) 0 := @CharP.of_charZero _ _ (h I hI_ne_top)
+  replace hI_zero : CharP (R ⧸ I) 0 := @char_p.of_char_zero _ _ (h I hI_ne_top)
   exact absurd (CharP.eq (R ⧸ I) hI_p hI_zero) (ne_of_gt p_pos)
 #align equal_char_zero_to_not_mixed_char equal_charZero_to_not_mixed_char
 

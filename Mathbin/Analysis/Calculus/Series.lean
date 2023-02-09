@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.series
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem tendstoUniformlyOn_tsum {f : α → β → F} (hu : Summable u) {s : Set
     TendstoUniformlyOn (fun t : Finset α => fun x => ∑ n in t, f n x) (fun x => ∑' n, f n x) atTop
       s :=
   by
-  refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
+  refine' tendstoUniformlyOn_iff.2 fun ε εpos => _
   filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_atTop_zero u)).2 _ εpos]with t ht x hx
   have A : Summable fun n => ‖f n x‖ :=
     summable_of_nonneg_of_le (fun n => norm_nonneg _) (fun n => hfu n x hx) hu
@@ -60,7 +60,7 @@ theorem tendstoUniformlyOn_tsum_nat {f : ℕ → β → F} {u : ℕ → ℝ} (hu
     (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     TendstoUniformlyOn (fun N => fun x => ∑ n in Finset.range N, f n x) (fun x => ∑' n, f n x) atTop
       s :=
-  fun v hv => tendsto_finset_range.Eventually (tendstoUniformlyOn_tsum hu hfu v hv)
+  fun v hv => tendsto_finset_range.eventually (tendstoUniformlyOn_tsum hu hfu v hv)
 #align tendsto_uniformly_on_tsum_nat tendstoUniformlyOn_tsum_nat
 
 /-- An infinite sum of functions with summable sup norm is the uniform limit of its partial sums.
@@ -78,7 +78,7 @@ theorem tendstoUniformly_tsum_nat {f : ℕ → β → F} {u : ℕ → ℝ} (hu :
     (hfu : ∀ n x, ‖f n x‖ ≤ u n) :
     TendstoUniformly (fun N => fun x => ∑ n in Finset.range N, f n x) (fun x => ∑' n, f n x)
       atTop :=
-  fun v hv => tendsto_finset_range.Eventually (tendstoUniformly_tsum hu hfu v hv)
+  fun v hv => tendsto_finset_range.eventually (tendstoUniformly_tsum hu hfu v hv)
 #align tendsto_uniformly_tsum_nat tendstoUniformly_tsum_nat
 
 /-- An infinite sum of functions with summable sup norm is continuous on a set if each individual
@@ -87,7 +87,7 @@ theorem continuousOn_tsum [TopologicalSpace β] {f : α → β → F} {s : Set �
     (hf : ∀ i, ContinuousOn (f i) s) (hu : Summable u) (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     ContinuousOn (fun x => ∑' n, f n x) s := by
   classical
-    refine' (tendstoUniformlyOn_tsum hu hfu).ContinuousOn (eventually_of_forall _)
+    refine' (tendstoUniformlyOn_tsum hu hfu).continuousOn (eventually_of_forall _)
     intro t
     exact continuousOn_finset_sum _ fun i hi => hf i
 #align continuous_on_tsum continuousOn_tsum
@@ -117,8 +117,8 @@ theorem summable_of_summable_hasFderivAt_of_isPreconnected (hu : Summable u) (hs
     (hx : x ∈ s) : Summable fun n => f n x :=
   by
   rw [summable_iff_cauchySeq_finset] at hf0⊢
-  have A : UniformCauchySeqOn (fun t : Finset α => fun x => ∑ i in t, f' i x) at_top s :=
-    (tendstoUniformlyOn_tsum hu hf').UniformCauchySeqOn
+  have A : UniformCauchySeqOn (fun t : Finset α => fun x => ∑ i in t, f' i x) atTop s :=
+    (tendstoUniformlyOn_tsum hu hf').uniformCauchySeqOn
   apply cauchy_map_of_uniformCauchySeqOn_fderiv hs h's A (fun t y hy => _) hx₀ hx hf0
   exact HasFderivAt.sum fun i hi => hf i y hy
 #align summable_of_summable_has_fderiv_at_of_is_preconnected summable_of_summable_hasFderivAt_of_isPreconnected
@@ -133,7 +133,7 @@ theorem hasFderivAt_tsum_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
     (hx : x ∈ s) : HasFderivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
   classical
     have A :
-      ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) :=
+      ∀ x : E, x ∈ s → Tendsto (fun t : Finset α => ∑ n in t, f n x) atTop (𝓝 (∑' n, f n x)) :=
       by
       intro y hy
       apply Summable.hasSum
@@ -180,7 +180,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (
   by_cases h : ∃ x₀, Summable fun n => f n x₀
   · rcases h with ⟨x₀, hf0⟩
     intro x
-    exact (hasFderivAt_tsum hu hf hf' hf0 x).DifferentiableAt
+    exact (hasFderivAt_tsum hu hf hf' hf0 x).differentiableAt
   · push_neg  at h
     have : (fun x => ∑' n, f n x) = 0 := by
       ext1 x
@@ -192,7 +192,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFderivAt (f n) (
 theorem fderiv_tsum_apply (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
     (hf' : ∀ n x, ‖fderiv 𝕜 (f n) x‖ ≤ u n) (hf0 : Summable fun n => f n x₀) (x : E) :
     fderiv 𝕜 (fun y => ∑' n, f n y) x = ∑' n, fderiv 𝕜 (f n) x :=
-  (hasFderivAt_tsum hu (fun n x => (hf n x).HasFderivAt) hf' hf0 _).fderiv
+  (hasFderivAt_tsum hu (fun n x => (hf n x).hasFderivAt) hf' hf0 _).fderiv
 #align fderiv_tsum_apply fderiv_tsum_apply
 
 theorem fderiv_tsum (hu : Summable u) (hf : ∀ n, Differentiable 𝕜 (f n))
@@ -264,7 +264,7 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
     rw [iteratedFderiv_tsum hf hv h'f hm.le]
     have A :
       ∀ n x, HasFderivAt (iteratedFderiv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFderiv 𝕜 m (f n)) x) x :=
-      fun n x => (ContDiff.differentiable_iteratedFderiv hm (hf n)).DifferentiableAt.HasFderivAt
+      fun n x => (ContDiff.differentiable_iteratedFderiv hm (hf n)).differentiableAt.hasFderivAt
     apply differentiable_tsum (hv _ h'm) A fun n x => _
     rw [fderiv_iteratedFderiv, LinearIsometryEquiv.norm_map]
     exact h'f _ _ _ h'm
@@ -307,12 +307,12 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
     rw [this]
     apply (ContDiff.sum fun i hi => (hf i).of_le hm).add
     have h'u : ∀ k : ℕ, (k : ℕ∞) ≤ m → Summable (v k ∘ (coe : { i // i ∉ T } → α)) := fun k hk =>
-      (hv k (hk.trans hm)).Subtype _
+      (hv k (hk.trans hm)).subtype _
     refine' contDiff_tsum (fun i => (hf i).of_le hm) h'u _
     rintro k ⟨i, hi⟩ x hk
     dsimp
-    simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, not_forall, not_le,
-      exists_prop, not_exists, not_and, not_lt] at hi
+    simp only [Finite.mem_toFinset, mem_setOf_eq, Finset.mem_range, not_forall, not_le, exists_prop,
+      not_exists, not_and, not_lt] at hi
     exact hi k (Nat.lt_succ_iff.2 (WithTop.coe_le_coe.1 hk)) x
 #align cont_diff_tsum_of_eventually contDiff_tsum_of_eventually
 

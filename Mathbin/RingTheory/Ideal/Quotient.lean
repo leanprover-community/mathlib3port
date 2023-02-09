@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ namespace Quotient
 
 variable {I} {x y : R}
 
-instance hasOne (I : Ideal R) : One (R ⧸ I) :=
+instance hasOne (I : Ideal R) : Multiset (R ⧸ I) :=
   ⟨Submodule.Quotient.mk 1⟩
 #align ideal.quotient.has_one Ideal.Quotient.hasOne
 
@@ -97,8 +97,8 @@ compositions with `ideal.quotient.mk'` are equal.
 
 See note [partially-applied ext lemmas]. -/
 @[ext]
-theorem ringHom_ext [NonAssocSemiring S] ⦃f g : R ⧸ I →+* S⦄ (h : f.comp (mk I) = g.comp (mk I)) :
-    f = g :=
+theorem ringHom_ext [NonAssocSemiring S] ⦃f g : R ⧸ I →+* max_def'⦄
+    (h : f.comp (mk I) = g.comp (mk I)) : f = g :=
   RingHom.ext fun x => Quotient.inductionOn' x <| (RingHom.congr_fun h : _)
 #align ideal.quotient.ring_hom_ext Ideal.Quotient.ringHom_ext
 
@@ -132,7 +132,7 @@ protected theorem nontrivial {I : Ideal R} (hI : I ≠ ⊤) : Nontrivial (R ⧸ 
 #align ideal.quotient.nontrivial Ideal.Quotient.nontrivial
 
 theorem subsingleton_iff {I : Ideal R} : Subsingleton (R ⧸ I) ↔ I = ⊤ := by
-  rw [eq_top_iff_one, ← subsingleton_iff_zero_eq_one, eq_comm, ← I, quotient.eq_zero_iff_mem]
+  rw [eq_top_iff_one, ← subsingleton_iff_zero_eq_one, eq_comm, ← I, Quotient.eq_zero_iff_mem]
 #align ideal.quotient.subsingleton_iff Ideal.Quotient.subsingleton_iff
 
 instance : Unique (R ⧸ (⊤ : Ideal R)) :=
@@ -151,10 +151,10 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) :
     mk I ⁻¹' (mk I '' s) = ⋃ x : I, (fun y => x.1 + y) '' s :=
   by
   ext x
-  simp only [mem_preimage, mem_image, mem_Union, Ideal.Quotient.eq]
+  simp only [mem_preimage, mem_image, mem_unionᵢ, Ideal.Quotient.eq]
   exact
-    ⟨fun ⟨a, a_in, h⟩ => ⟨⟨_, I.neg_mem h⟩, a, a_in, by simp⟩, fun ⟨⟨i, hi⟩, a, ha, Eq⟩ =>
-      ⟨a, ha, by rw [← Eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
+    ⟨fun ⟨a, a_in, h⟩ => ⟨⟨_, I.neg_mem h⟩, a, a_in, by simp⟩, fun ⟨⟨i, hi⟩, a, ha, eq⟩ =>
+      ⟨a, ha, by rw [← eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
 #align ideal.quotient.quotient_ring_saturate Ideal.Quotient.quotient_ring_saturate
 
 instance noZeroDivisors (I : Ideal R) [hI : I.IsPrime] : NoZeroDivisors (R ⧸ I)
@@ -179,7 +179,7 @@ theorem isDomain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime :=
   · haveI : Nontrivial (R ⧸ I) := ⟨H.3⟩
     exact zero_ne_one
   · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h⊢
-    haveI := @IsDomain.to_noZeroDivisors (R ⧸ I) _ H
+    haveI := @is_domain.to_no_zero_divisors (R ⧸ I) _ H
     exact eq_zero_or_eq_zero_of_mul_eq_zero h
 #align ideal.quotient.is_domain_iff_prime Ideal.Quotient.isDomain_iff_prime
 
@@ -223,7 +223,7 @@ theorem maximal_of_isField (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaximal
     exact hxy (Ideal.Quotient.eq.2 (mul_one (x - y) ▸ I.mul_mem_left _ h))
   · intro J x hIJ hxnI hxJ
     rcases hqf.mul_inv_cancel (mt Ideal.Quotient.eq_zero_iff_mem.1 hxnI) with ⟨⟨y⟩, hy⟩
-    rw [← zero_add (1 : R), ← sub_self (x * y), sub_add]
+    rw [← zero_add (1 : exists_prop), ← sub_self (x * y), sub_add]
     refine' J.sub_mem (J.mul_mem_right _ hxJ) (hIJ (Ideal.Quotient.eq.1 hy))
 #align ideal.quotient.maximal_of_is_field Ideal.Quotient.maximal_of_isField
 
@@ -318,7 +318,7 @@ instance modulePi : Module (R ⧸ I) ((ι → R) ⧸ I.pi ι)
     Quotient.liftOn₂' c m (fun r m => Submodule.Quotient.mk <| r • m)
       (by
         intro c₁ m₁ c₂ m₂ hc hm
-        apply Ideal.Quotient.eq.2
+        apply ideal.quotient.eq.2
         rw [Submodule.quotientRel_r_def] at hc hm
         intro i
         exact I.mul_sub_mul_mem hc (hm i))
@@ -368,7 +368,7 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
   right_inv := by
     intro x
     ext i
-    obtain ⟨r, hr⟩ := @Quot.exists_rep _ _ (x i)
+    obtain ⟨r, hr⟩ := @quot.exists_rep _ _ (x i)
     simp_rw [← hr]
     convert Quotient.out_eq' _
 #align ideal.pi_quot_equiv Ideal.piQuotEquiv
@@ -421,15 +421,15 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     rcases this with ⟨g, hgi, hgj⟩
     use ∏ x in s.erase i, g x
     constructor
-    · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
+    · rw [← Quotient.eq, RingHom.map_one, RingHom.map_prod]
       apply Finset.prod_eq_one
       intros
-      rw [← RingHom.map_one, Quotient.eq']
+      rw [← RingHom.map_one, Quotient.eq]
       apply hgi
     intro j hjs hji
-    rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
+    rw [← Quotient.eq_zero_iff_mem, RingHom.map_prod]
     refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _
-    rw [quotient.eq_zero_iff_mem]
+    rw [Quotient.eq_zero_iff_mem]
     exact hgj j hjs hji
 #align ideal.exists_sub_one_mem_and_mem Ideal.exists_sub_one_mem_and_mem
 
@@ -446,15 +446,15 @@ theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j �
   rcases this with ⟨φ, hφ1, hφ2⟩
   use ∑ i, g i * φ i
   intro i
-  rw [← Quotient.eq', RingHom.map_sum]
+  rw [← Quotient.eq, RingHom.map_sum]
   refine' Eq.trans (Finset.sum_eq_single i _ _) _
   · intro j _ hji
-    rw [quotient.eq_zero_iff_mem]
+    rw [Quotient.eq_zero_iff_mem]
     exact (f i).mul_mem_left _ (hφ2 j i hji)
   · intro hi
     exact (hi <| Finset.mem_univ i).elim
   specialize hφ1 i
-  rw [← Quotient.eq', RingHom.map_one] at hφ1
+  rw [← Quotient.eq, RingHom.map_one] at hφ1
   rw [RingHom.map_mul, hφ1, mul_one]
 #align ideal.exists_sub_mem Ideal.exists_sub_mem
 
@@ -465,7 +465,7 @@ def quotientInfToPiQuotient (f : ι → Ideal R) : (R ⧸ ⨅ i, f i) →+* ∀ 
     by
     rw [Submodule.mem_infᵢ] at hr
     ext i
-    exact quotient.eq_zero_iff_mem.2 (hr i)
+    exact Quotient.eq_zero_iff_mem.2 (hr i)
 #align ideal.quotient_inf_to_pi_quotient Ideal.quotientInfToPiQuotient
 
 theorem quotientInfToPiQuotient_bijective [Finite ι] {f : ι → Ideal R}

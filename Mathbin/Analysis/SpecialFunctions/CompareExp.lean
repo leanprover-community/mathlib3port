@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.compare_exp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,15 +141,15 @@ theorem isOCat_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) 
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
           have hz₀ : 0 < abs z := one_pos.trans_le hz'
           have hm₀ : 0 < max z.re (|z.im|) := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
-          rw [one_mul, Real.norm_eq_abs, _root_.abs_of_nonneg (Real.log_nonneg hz')]
+          rw [one_mul, Real.norm_eq_abs, abs_of_nonneg (Real.log_nonneg hz')]
           refine' le_trans _ (le_abs_self _)
-          rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_trans zero_le_one hz)]
+          rw [← Real.log_mul, Real.log_le_log, ← abs_of_nonneg (le_trans zero_le_one hz)]
           exacts[abs_le_sqrt_two_mul_max z, one_pos.trans_le hz', mul_pos h2 hm₀, h2.ne', hm₀.ne']
     _ =o[l] re :=
       IsOCat.add (isOCat_const_left.2 <| Or.inr <| hl.tendsto_abs_re) <|
         isOCat_iff_nat_mul_le.2 fun n =>
           by
-          filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n,
+          filter_upwards [isOCat_iff_nat_mul_le.1 hl.is_o_log_re_re n,
             hl.abs_im_pow_eventually_le_exp_re n,
             hl.tendsto_re.eventually_gt_at_top 1]with z hre him h₁
           cases' le_total (|z.im|) z.re with hle hle

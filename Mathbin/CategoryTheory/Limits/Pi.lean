@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,10 +92,10 @@ def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLi
   lift s i := (P i).lift (coneCompEval s i)
   fac' s j := by
     ext i
-    exact (P i).fac (cone_comp_eval s i) j
+    exact (P i).fac (coneCompEval s i) j
   uniq' s m w := by
     ext i
-    exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_fun (w j) i
+    exact (P i).uniq (coneCompEval s i) (m i) fun j => congr_fun (w j) i
 #align category_theory.pi.cone_of_cone_eval_is_limit CategoryTheory.pi.coneOfConeEvalIsLimit
 
 /-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
@@ -107,10 +107,10 @@ def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀
   desc s i := (P i).desc (coconeCompEval s i)
   fac' s j := by
     ext i
-    exact (P i).fac (cocone_comp_eval s i) j
+    exact (P i).fac (coconeCompEval s i) j
   uniq' s m w := by
     ext i
-    exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_fun (w j) i
+    exact (P i).uniq (coconeCompEval s i) (m i) fun j => congr_fun (w j) i
 #align category_theory.pi.cocone_of_cocone_eval_is_colimit CategoryTheory.pi.coconeOfCoconeEvalIsColimit
 
 section

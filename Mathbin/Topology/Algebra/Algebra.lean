@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem continuous_algebraMap_iff_smul :
   refine' ⟨fun h => _, fun h => _⟩
   · simp only [Algebra.smul_def]
     exact (h.comp continuous_fst).mul continuous_snd
-  · rw [algebra_map_eq_smul_one']
+  · rw [algebraMap_eq_smul_one']
     exact h.comp (continuous_id.prod_mk continuous_const)
 #align continuous_algebra_map_iff_smul continuous_algebraMap_iff_smul
 
@@ -91,7 +91,7 @@ variable [Semiring A] [Algebra R A]
 
 instance Subalgebra.hasContinuousSmul [TopologicalSpace R] [HasContinuousSmul R A]
     (s : Subalgebra R A) : HasContinuousSmul R s :=
-  s.toSubmodule.HasContinuousSmul
+  s.toSubmodule.hasContinuousSmul
 #align subalgebra.has_continuous_smul Subalgebra.hasContinuousSmul
 
 variable [TopologicalSemiring A]
@@ -111,7 +111,7 @@ theorem Subalgebra.topologicalClosure_coe (s : Subalgebra R A) :
 #align subalgebra.topological_closure_coe Subalgebra.topologicalClosure_coe
 
 instance Subalgebra.topologicalSemiring (s : Subalgebra R A) : TopologicalSemiring s :=
-  s.toSubsemiring.TopologicalSemiring
+  s.toSubsemiring.topologicalSemiring
 #align subalgebra.topological_semiring Subalgebra.topologicalSemiring
 
 theorem Subalgebra.le_topologicalClosure (s : Subalgebra R A) : s ≤ s.topologicalClosure :=

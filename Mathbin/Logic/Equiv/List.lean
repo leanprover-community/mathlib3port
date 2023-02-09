@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.list
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ def decodeList : ℕ → Option (List α)
 `data.nat.pairing`. -/
 instance List.encodable : Encodable (List α) :=
   ⟨encodeList, decodeList, fun l => by
-    induction' l with a l IH <;> simp [encode_list, decode_list, unpair_mkpair, encodek, *]⟩
+    induction' l with a l IH <;> simp [encodeList, decodeList, unpair_mkpair, encodek, *]⟩
 #align list.encodable List.encodable
 -/
 
@@ -80,7 +80,7 @@ theorem encode_list_nil : encode (@nil α) = 0 :=
 #print Encodable.encode_list_cons /-
 @[simp]
 theorem encode_list_cons (a : α) (l : List α) :
-    encode (a :: l) = succ (mkpair (encode a) (encode l)) :=
+    encode (a :: l) = Mem (mkpair (encode a) (encode l)) :=
   rfl
 #align encodable.encode_list_cons Encodable.encode_list_cons
 -/
@@ -88,7 +88,7 @@ theorem encode_list_cons (a : α) (l : List α) :
 #print Encodable.decode_list_zero /-
 @[simp]
 theorem decode_list_zero : decode (List α) 0 = some [] :=
-  show decodeList 0 = some [] by rw [decode_list]
+  show decodeList 0 = some [] by rw [decodeList]
 #align encodable.decode_list_zero Encodable.decode_list_zero
 -/
 
@@ -103,7 +103,7 @@ theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
   show decodeList (succ v) = _ by
     cases' e : unpair v with v₁ v₂
-    simp [decode_list, e]; rfl
+    simp [decodeList, e]; rfl
 #align encodable.decode_list_succ Encodable.decode_list_succ
 
 #print Encodable.length_le_encode /-
@@ -124,7 +124,7 @@ private def enle : α → α → Prop :=
 #align encodable.enle encodable.enle
 
 private theorem enle.is_linear_order : IsLinearOrder α Enle :=
-  (RelEmbedding.preimage ⟨encode, encode_injective⟩ (· ≤ ·)).IsLinearOrder
+  (RelEmbedding.preimage ⟨encode, encode_injective⟩ (· ≤ ·)).isLinearOrder
 #align encodable.enle.is_linear_order encodable.enle.is_linear_order
 
 private def decidable_enle (a b : α) : Decidable (Enle a b) := by
@@ -150,7 +150,7 @@ def decodeMultiset (n : ℕ) : Option (Multiset α) :=
 #print Multiset.encodable /-
 /-- If `α` is encodable, then so is `multiset α`. -/
 instance Multiset.encodable : Encodable (Multiset α) :=
-  ⟨encodeMultiset, decodeMultiset, fun s => by simp [encode_multiset, decode_multiset, encodek]⟩
+  ⟨encodeMultiset, decodeMultiset, fun s => by simp [encodeMultiset, decodeMultiset, encodek]⟩
 #align multiset.encodable Multiset.encodable
 -/
 
@@ -218,8 +218,8 @@ instance finPi (n) (π : Fin n → Type _) [∀ i, Encodable (π i)] : Encodable
 #print Finset.encodable /-
 /-- If `α` is encodable, then so is `finset α`. -/
 instance Finset.encodable [Encodable α] : Encodable (Finset α) :=
-  haveI := decidable_eq_of_encodable α
-  of_equiv { s : Multiset α // s.Nodup }
+  haveI := decidableEqOfEncodable α
+  ofEquiv { s : Multiset α // s.Nodup }
     ⟨fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => ⟨a, b⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
 #align finset.encodable Finset.encodable
 -/
@@ -227,7 +227,7 @@ instance Finset.encodable [Encodable α] : Encodable (Finset α) :=
 #print Finset.countable /-
 /-- If `α` is countable, then so is `finset α`. -/
 instance Finset.countable [Countable α] : Countable (Finset α) :=
-  Finset.val_injective.Countable
+  Finset.val_injective.countable
 #align finset.countable Finset.countable
 -/
 
@@ -297,8 +297,8 @@ def fintypeEquivFin {α} [Fintype α] [Encodable α] : α ≃ Fin (Fintype.card 
   by
   haveI : DecidableEq α := Encodable.decidableEqOfEncodable _
   trans
-  · exact ((sorted_univ_nodup α).getEquivOfForallMemList _ mem_sorted_univ).symm
-  exact Equiv.cast (congr_arg _ (length_sorted_univ α))
+  · exact ((sortedUniv_nodup α).getEquivOfForallMemList _ mem_sortedUniv).symm
+  exact Equiv.cast (congr_arg _ (length_sortedUniv α))
 #align encodable.fintype_equiv_fin Encodable.fintypeEquivFin
 -/
 
@@ -327,7 +327,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Denumerable.{u1} α] (n : Nat), Exists.{succ u1} (List.{u1} α) (fun (a : List.{u1} α) => And (Membership.mem.{u1, u1} (List.{u1} α) (Option.{u1} (List.{u1} α)) (Option.instMembershipOption.{u1} (List.{u1} α)) a (Encodable.decodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) n)) (Eq.{1} Nat (Encodable.encodeList.{u1} α (Denumerable.toEncodable.{u1} α _inst_1) a) n))
 Case conversion may be inaccurate. Consider using '#align denumerable.denumerable_list_aux Denumerable.denumerable_list_auxₓ'. -/
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
-  | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
+  | 0 => by rw [decodeList] <;> exact ⟨_, rfl, rfl⟩
   | succ v => by
     cases' e : unpair v with v₁ v₂
     have h := unpair_right_le v
@@ -336,8 +336,8 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
       denumerable_list_aux v₂ with
       ⟨a, h₁, h₂⟩
     rw [Option.mem_def] at h₁
-    use of_nat α v₁ :: a
-    simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
+    use ofNat α v₁ :: a
+    simp [decodeList, e, h₂, h₁, encodeList, mkpair_unpair' e]
 #align denumerable.denumerable_list_aux Denumerable.denumerable_list_aux
 
 #print Denumerable.denumerableList /-
@@ -349,7 +349,7 @@ instance denumerableList : Denumerable (List α) :=
 
 #print Denumerable.list_ofNat_zero /-
 @[simp]
-theorem list_ofNat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil α, of_nat_encode]
+theorem list_ofNat_zero : ofNat (List α) 0 = [] := by rw [← @encode_list_nil α, ofNat_encode]
 #align denumerable.list_of_nat_zero Denumerable.list_ofNat_zero
 -/
 
@@ -360,8 +360,8 @@ theorem list_ofNat_succ (v : ℕ) :
   ofNat_of_decode <|
     show decodeList (succ v) = _ by
       cases' e : unpair v with v₁ v₂
-      simp [decode_list, e]
-      rw [show decode_list v₂ = decode (List α) v₂ from rfl, decode_eq_of_nat] <;> rfl
+      simp [decodeList, e]
+      rw [show decodeList v₂ = decode (List α) v₂ from rfl, decode_eq_ofNat] <;> rfl
 #align denumerable.list_of_nat_succ Denumerable.list_ofNat_succ
 -/
 
@@ -505,10 +505,10 @@ instance finset : Denumerable (Finset α) :=
     ⟨fun s : Finset α => encode <| lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0, fun n =>
       Finset.map (eqv α).symm.toEmbedding (raise'Finset (ofNat (List ℕ) n) 0), fun s =>
       Finset.eq_of_veq <| by
-        simp [-Multiset.coe_map, raise'_finset,
+        simp [-Multiset.coe_map, raise'Finset,
           raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
       fun n => by
-      simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,
+      simp [-Multiset.coe_map, Finset.map, raise'Finset, Finset.sort,
         List.mergeSort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_lt _ _)), lower_raise']⟩
 #align denumerable.finset Denumerable.finset
 -/

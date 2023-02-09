@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.darboux
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
     simpa using (hf x hx).sub ((hasDerivWithinAt_id x _).const_mul m)
   obtain ⟨c, cmem, hc⟩ : ∃ c ∈ Icc a b, IsMinOn g (Icc a b) c
   exact
-    is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).ContinuousWithinAt
+    is_compact_Icc.exists_forall_le (nonempty_Icc.2 <| hab) fun x hx => (hg x hx).continuousWithinAt
   have cmem' : c ∈ Ioo a b := by
     cases' eq_or_lt_of_le cmem.1 with hac hac
     -- Show that `c` can't be equal to `a`
@@ -50,7 +50,7 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
       refine'
         absurd (sub_nonneg.1 <| nonneg_of_mul_nonneg_right _ (sub_pos.2 hab')) (not_le_of_lt hma)
       have : b - a ∈ posTangentConeAt (Icc a b) a :=
-        mem_posTangentConeAt_of_segment_subset (segment_eq_Icc hab ▸ subset.refl _)
+        mem_posTangentConeAt_of_segment_subset (segment_eq_Icc hab ▸ Subset.refl _)
       simpa [-sub_nonneg, -ContinuousLinearMap.map_sub] using
         hc.localize.has_fderiv_within_at_nonneg (hg a (left_mem_Icc.2 hab)) this
     cases' eq_or_lt_of_le cmem.2 with hbc hbc
@@ -67,7 +67,7 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
   use c, cmem
   rw [← sub_eq_zero]
   have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
-  exact (hc.is_local_min this).hasDerivAt_eq_zero ((hg c cmem).HasDerivAt this)
+  exact (hc.is_local_min this).hasDerivAt_eq_zero ((hg c cmem).hasDerivAt this)
 #align exists_has_deriv_within_at_eq_of_gt_of_lt exists_hasDerivWithinAt_eq_of_gt_of_lt
 
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.
@@ -85,7 +85,7 @@ theorem exists_hasDerivWithinAt_eq_of_lt_of_gt (hab : a ≤ b)
 theorem convex_image_hasDerivAt {s : Set ℝ} (hs : Convex ℝ s)
     (hf : ∀ x ∈ s, HasDerivAt f (f' x) x) : Convex ℝ (f' '' s) :=
   by
-  refine' ord_connected.convex ⟨_⟩
+  refine' OrdConnected.convex ⟨_⟩
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ m ⟨hma, hmb⟩
   cases' eq_or_lt_of_le hma with hma hma
   · exact hma ▸ mem_image_of_mem f' ha
@@ -94,12 +94,12 @@ theorem convex_image_hasDerivAt {s : Set ℝ} (hs : Convex ℝ s)
   cases' le_total a b with hab hab
   · have : Icc a b ⊆ s := hs.ord_connected.out ha hb
     rcases exists_hasDerivWithinAt_eq_of_gt_of_lt hab
-        (fun x hx => (hf x <| this hx).HasDerivWithinAt) hma hmb with
+        (fun x hx => (hf x <| this hx).hasDerivWithinAt) hma hmb with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
   · have : Icc b a ⊆ s := hs.ord_connected.out hb ha
     rcases exists_hasDerivWithinAt_eq_of_lt_of_gt hab
-        (fun x hx => (hf x <| this hx).HasDerivWithinAt) hmb hma with
+        (fun x hx => (hf x <| this hx).hasDerivWithinAt) hmb hma with
       ⟨c, cmem, hc⟩
     exact ⟨c, this cmem, hc⟩
 #align convex_image_has_deriv_at convex_image_hasDerivAt
@@ -113,7 +113,7 @@ theorem deriv_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ
   contrapose! hf'
   rcases hf' with ⟨⟨b, hb, hmb⟩, ⟨a, ha, hma⟩⟩
   exact
-    (convex_image_hasDerivAt hs hf).OrdConnected.out (mem_image_of_mem f' ha)
+    (convex_image_hasDerivAt hs hf).ordConnected.out (mem_image_of_mem f' ha)
       (mem_image_of_mem f' hb) ⟨hma, hmb⟩
 #align deriv_forall_lt_or_forall_gt_of_forall_ne deriv_forall_lt_or_forall_gt_of_forall_ne
 

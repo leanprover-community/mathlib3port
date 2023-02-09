@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.order.floor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -196,7 +196,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))] {a : α}, (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))))) a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)))) (Nat.cast.{u1} α (Semiring.toNatCast.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))) (Nat.floor.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 a)) a)
 Case conversion may be inaccurate. Consider using '#align nat.floor_le Nat.floor_leₓ'. -/
-theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ a :=
+theorem floor_le (ha : 0 ≤ a) : (⌊a⌋₊ : α) ≤ id :=
   (le_floor_iff ha).1 le_rfl
 #align nat.floor_le Nat.floor_le
 
@@ -480,12 +480,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedSemiring.{u1} α] [_inst_2 : FloorSemiring.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))], Eq.{1} Nat (Nat.ceil.{u1} α (StrictOrderedSemiring.toOrderedSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1)) _inst_2 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α _inst_1))))))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
 Case conversion may be inaccurate. Consider using '#align nat.ceil_zero Nat.ceil_zeroₓ'. -/
 @[simp]
-theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 := by rw [← Nat.cast_zero, ceil_nat_cast]
+theorem ceil_zero : ⌈(0 : α)⌉₊ = 0 := by rw [← Nat.cast_zero, ceil_natCast]
 #align nat.ceil_zero Nat.ceil_zero
 
 #print Nat.ceil_one /-
 @[simp]
-theorem ceil_one : ⌈(1 : α)⌉₊ = 1 := by rw [← Nat.cast_one, ceil_nat_cast]
+theorem ceil_one : ⌈(1 : α)⌉₊ = 1 := by rw [← Nat.cast_one, ceil_natCast]
 #align nat.ceil_one Nat.ceil_one
 -/
 
@@ -1111,7 +1111,7 @@ theorem floor_intCast (z : ℤ) : ⌊(z : α)⌋ = z :=
 #print Int.floor_natCast /-
 @[simp]
 theorem floor_natCast (n : ℕ) : ⌊(n : α)⌋ = n :=
-  eq_of_forall_le_iff fun a => by rw [le_floor, ← cast_coe_nat, cast_le]
+  eq_of_forall_le_iff fun a => by rw [le_floor, ← cast_ofNat, cast_le]
 #align int.floor_nat_cast Int.floor_natCast
 -/
 
@@ -1122,12 +1122,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.floor.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
 Case conversion may be inaccurate. Consider using '#align int.floor_zero Int.floor_zeroₓ'. -/
 @[simp]
-theorem floor_zero : ⌊(0 : α)⌋ = 0 := by rw [← cast_zero, floor_int_cast]
+theorem floor_zero : ⌊(0 : α)⌋ = 0 := by rw [← cast_zero, floor_intCast]
 #align int.floor_zero Int.floor_zero
 
 #print Int.floor_one /-
 @[simp]
-theorem floor_one : ⌊(1 : α)⌋ = 1 := by rw [← cast_one, floor_int_cast]
+theorem floor_one : ⌊(1 : α)⌋ = 1 := by rw [← cast_one, floor_intCast]
 #align int.floor_one Int.floor_one
 -/
 
@@ -1550,7 +1550,7 @@ Case conversion may be inaccurate. Consider using '#align int.fract_int_cast Int
 theorem fract_intCast (z : ℤ) : fract (z : α) = 0 :=
   by
   unfold fract
-  rw [floor_int_cast]
+  rw [floor_intCast]
   exact sub_self _
 #align int.fract_int_cast Int.fract_intCast
 
@@ -1705,7 +1705,7 @@ theorem preimage_fract (s : Set α) :
     fract ⁻¹' s = ⋃ m : ℤ, (fun x => x - m) ⁻¹' (s ∩ Ico (0 : α) 1) :=
   by
   ext x
-  simp only [mem_preimage, mem_Union, mem_inter_iff]
+  simp only [mem_preimage, mem_unionᵢ, mem_inter_iff]
   refine' ⟨fun h => ⟨⌊x⌋, h, fract_nonneg x, fract_lt_one x⟩, _⟩
   rintro ⟨m, hms, hm0, hm1⟩
   obtain rfl : ⌊x⌋ = m; exact floor_eq_iff.2 ⟨sub_nonneg.1 hm0, sub_lt_iff_lt_add'.1 hm1⟩
@@ -1721,7 +1721,7 @@ Case conversion may be inaccurate. Consider using '#align int.image_fract Int.im
 theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x => x - m) '' s ∩ Ico 0 1 :=
   by
   ext x
-  simp only [mem_image, mem_inter_iff, mem_Union]; constructor
+  simp only [mem_image, mem_inter_iff, mem_unionᵢ]; constructor
   · rintro ⟨y, hy, rfl⟩
     exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
   · rintro ⟨m, ⟨y, hys, rfl⟩, h0, h1⟩
@@ -1817,11 +1817,11 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k
     by
     intros
     obtain ⟨l₀, rfl | rfl⟩ := l.eq_coe_or_neg
-    · rw [cast_coe_nat, ← coe_nat_mod, cast_coe_nat, fract_div_nat_cast_eq_div_nat_cast_mod]
+    · rw [cast_ofNat, ← coe_nat_mod, cast_ofNat, fract_div_natCast_eq_div_natCast_mod]
     · rw [Right.nonneg_neg_iff, coe_nat_nonpos_iff] at hl
       simp [hl, zero_mod]
   obtain ⟨m₀, rfl | rfl⟩ := m.eq_coe_or_neg
-  · exact this (of_nat_nonneg m₀)
+  · exact this (ofNat_nonneg m₀)
   let q := ⌈↑m₀ / (n : k)⌉
   let m₁ := q * ↑n - (↑m₀ : ℤ)
   have hm₁ : 0 ≤ m₁ := by
@@ -1836,7 +1836,7 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k
     push_cast
   · congr 2
     change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _
-    rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_mod_self]
+    rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_emod_self]
 #align int.fract_div_int_cast_eq_div_int_cast_mod Int.fract_div_intCast_eq_div_intCast_mod
 
 end LinearOrderedField
@@ -1947,7 +1947,7 @@ theorem ceil_intCast (z : ℤ) : ⌈(z : α)⌉ = z :=
 #print Int.ceil_natCast /-
 @[simp]
 theorem ceil_natCast (n : ℕ) : ⌈(n : α)⌉ = n :=
-  eq_of_forall_ge_iff fun a => by rw [ceil_le, ← cast_coe_nat, cast_le]
+  eq_of_forall_ge_iff fun a => by rw [ceil_le, ← cast_ofNat, cast_le]
 #align int.ceil_nat_cast Int.ceil_natCast
 -/
 
@@ -2079,12 +2079,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} α] [_inst_2 : FloorRing.{u1} α _inst_1], Eq.{1} Int (Int.ceil.{u1} α _inst_1 _inst_2 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} α (LinearOrderedRing.toLinearOrderedSemiring.{u1} α _inst_1)))))))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))
 Case conversion may be inaccurate. Consider using '#align int.ceil_zero Int.ceil_zeroₓ'. -/
 @[simp]
-theorem ceil_zero : ⌈(0 : α)⌉ = 0 := by rw [← cast_zero, ceil_int_cast]
+theorem ceil_zero : ⌈(0 : α)⌉ = 0 := by rw [← cast_zero, ceil_intCast]
 #align int.ceil_zero Int.ceil_zero
 
 #print Int.ceil_one /-
 @[simp]
-theorem ceil_one : ⌈(1 : α)⌉ = 1 := by rw [← cast_one, ceil_int_cast]
+theorem ceil_one : ⌈(1 : α)⌉ = 1 := by rw [← cast_one, ceil_intCast]
 #align int.ceil_one Int.ceil_one
 -/
 
@@ -2177,7 +2177,7 @@ theorem fract_eq_zero_or_add_one_sub_ceil (a : α) : fract a = 0 ∨ fract a = a
     abel
   norm_cast
   rw [ceil_eq_iff]
-  refine' ⟨_, _root_.le_of_lt <| by simp⟩
+  refine' ⟨_, le_of_lt <| by simp⟩
   rw [cast_add, cast_one, add_tsub_cancel_right, ← self_sub_fract a, sub_lt_self_iff]
   exact ha.symm.lt_of_le (fract_nonneg a)
 #align int.fract_eq_zero_or_add_one_sub_ceil Int.fract_eq_zero_or_add_one_sub_ceil
@@ -2593,7 +2593,7 @@ theorem abs_sub_round_div_natCast_eq {m n : ℕ} :
     norm_cast
     assumption
   rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le,
-    fract_div_nat_cast_eq_div_nat_cast_mod, Nat.cast_sub (m.mod_lt hn).le, sub_div,
+    fract_div_natCast_eq_div_natCast_mod, Nat.cast_sub (m.mod_lt hn).le, sub_div,
     div_self hn'.ne.symm]
 #align abs_sub_round_div_nat_cast_eq abs_sub_round_div_natCast_eq
 

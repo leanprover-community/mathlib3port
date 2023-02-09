@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.subquiver
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where
 /-- A wide subquiver of `G` can equivalently be viewed as a total set of arrows. -/
 def wideSubquiverEquivSetTotal {V} [Quiver V] : WideSubquiver V ≃ Set (Total V)
     where
-  toFun H := { e | e.Hom ∈ H e.left e.right }
+  toFun H := { e | e.hom ∈ H e.left e.right }
   invFun S a b := { e | Total.mk a b e ∈ S }
   left_inv H := rfl
   right_inv := by

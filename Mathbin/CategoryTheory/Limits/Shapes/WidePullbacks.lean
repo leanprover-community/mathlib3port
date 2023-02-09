@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.wide_pullbacks
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ instance struct : CategoryStruct (WidePullbackShape J)
     cases f
     exact g
     cases g
-    apply hom.term _
+    apply Hom.term _
 #align category_theory.limits.wide_pullback_shape.struct CategoryTheory.Limits.WidePullbackShape.struct
 
 instance Hom.inhabited : Inhabited (Hom none none) :=
@@ -96,7 +96,7 @@ variable {C : Type u} [Category.{v} C]
 fixed object.
 -/
 @[simps]
-def wideCospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : WidePullbackShape J ⥤ C
+def wideCospan (B : comp) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : WidePullbackShape J ⥤ C
     where
   obj j := Option.casesOn j B objs
   map X Y f := by
@@ -173,7 +173,7 @@ instance struct : CategoryStruct (WidePushoutShape J)
     cases f
     exact g
     cases g
-    apply hom.init _
+    apply Hom.init _
 #align category_theory.limits.wide_pushout_shape.struct CategoryTheory.Limits.WidePushoutShape.struct
 
 instance Hom.inhabited : Inhabited (Hom none none) :=
@@ -288,7 +288,7 @@ noncomputable abbrev base : widePullback _ _ arrows ⟶ B :=
 
 @[simp, reassoc.1]
 theorem π_arrow (j : J) : π arrows j ≫ arrows _ = base arrows := by
-  apply limit.w (wide_pullback_shape.wide_cospan _ _ _) (wide_pullback_shape.hom.term j)
+  apply limit.w (WidePullbackShape.wideCospan _ _ _) (WidePullbackShape.Hom.term j)
 #align category_theory.limits.wide_pullback.π_arrow CategoryTheory.Limits.widePullback.π_arrow
 
 variable {arrows}
@@ -322,8 +322,8 @@ theorem eq_lift_of_comp_eq (g : X ⟶ widePullback _ _ arrows) :
   by
   intro h1 h2
   apply
-    (limit.is_limit (wide_pullback_shape.wide_cospan B objs arrows)).uniq
-      (wide_pullback_shape.mk_cone f fs <| w)
+    (limit.isLimit (WidePullbackShape.wideCospan B objs arrows)).uniq
+      (WidePullbackShape.mkCone f fs <| w)
   rintro (_ | _)
   · apply h2
   · apply h1
@@ -367,7 +367,7 @@ noncomputable abbrev head : B ⟶ widePushout B objs arrows :=
 
 @[simp, reassoc.1]
 theorem arrow_ι (j : J) : arrows j ≫ ι arrows j = head arrows := by
-  apply colimit.w (wide_pushout_shape.wide_span _ _ _) (wide_pushout_shape.hom.init j)
+  apply colimit.w (WidePushoutShape.wideSpan _ _ _) (WidePushoutShape.Hom.init j)
 #align category_theory.limits.wide_pushout.arrow_ι CategoryTheory.Limits.widePushout.arrow_ι
 
 variable {arrows}
@@ -401,8 +401,8 @@ theorem eq_desc_of_comp_eq (g : widePushout _ _ arrows ⟶ X) :
   by
   intro h1 h2
   apply
-    (colimit.is_colimit (wide_pushout_shape.wide_span B objs arrows)).uniq
-      (wide_pushout_shape.mk_cocone f fs <| w)
+    (colimit.isColimit (WidePushoutShape.wideSpan B objs arrows)).uniq
+      (WidePushoutShape.mkCocone f fs <| w)
   rintro (_ | _)
   · apply h2
   · apply h1
@@ -412,7 +412,7 @@ theorem hom_eq_desc (g : widePushout _ _ arrows ⟶ X) :
     g =
       desc (head arrows ≫ g) (fun j => ι arrows j ≫ g) fun j =>
         by
-        rw [← category.assoc]
+        rw [← Category.assoc]
         simp :=
   by
   apply eq_desc_of_comp_eq

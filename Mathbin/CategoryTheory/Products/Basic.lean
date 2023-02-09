@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.products.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ def prod.etaIso (X : C × D) : (X.1, X.2) ≅ X
 @[simps]
 def Iso.prod {P Q : C} {S T : D} (f : P ≅ Q) (g : S ≅ T) : (P, S) ≅ (Q, T)
     where
-  Hom := (f.Hom, g.Hom)
+  Hom := (f.hom, g.hom)
   inv := (f.inv, g.inv)
 #align category_theory.iso.prod CategoryTheory.Iso.prod
 
@@ -176,7 +176,7 @@ def braiding : C × D ≌ D × C :=
 #align category_theory.prod.braiding CategoryTheory.prod.braiding
 
 instance swapIsEquivalence : IsEquivalence (swap C D) :=
-  (by infer_instance : IsEquivalence (braiding C D).Functor)
+  (by infer_instance : IsEquivalence (braiding C D).functor)
 #align category_theory.prod.swap_is_equivalence CategoryTheory.prod.swapIsEquivalence
 
 end Prod
@@ -210,9 +210,9 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D
   map x y f := x.2.map f.1 ≫ f.2.app y.1
   map_comp' X Y Z f g := by
     cases g; cases f; cases Z; cases Y; cases X
-    simp only [prod_comp, nat_trans.comp_app, functor.map_comp, category.assoc]
-    rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app, category.assoc,
-      nat_trans.naturality]
+    simp only [prod_comp, NatTrans.comp_app, Functor.map_comp, Category.assoc]
+    rw [← NatTrans.comp_app, NatTrans.naturality, NatTrans.comp_app, Category.assoc,
+      NatTrans.naturality]
 #align category_theory.evaluation_uncurried CategoryTheory.evaluationUncurried
 
 variable {C}
@@ -287,12 +287,12 @@ namespace NatTrans
 
 /-- The cartesian product of two natural transformations. -/
 @[simps]
-def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod H ⟶ G.Prod I
+def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.prod H ⟶ G.prod I
     where
   app X := (α.app X.1, β.app X.2)
   naturality' X Y f := by
     cases X; cases Y
-    simp only [functor.prod_map, Prod.mk.inj_iff, prod_comp]
+    simp only [Functor.prod_map, Prod.mk.inj_iff, prod_comp]
     constructor <;> rw [naturality]
 #align category_theory.nat_trans.prod CategoryTheory.NatTrans.prod
 
@@ -324,10 +324,10 @@ def functorProdToProdFunctor : (A ⥤ B × C) ⥤ (A ⥤ B) × (A ⥤ C)
   map F G α :=
     ⟨{  app := fun X => (α.app X).1
         naturality' := fun X Y f => by
-          simp only [functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
+          simp only [Functor.comp_map, prod.fst_map, ← prod_comp_fst, α.naturality] },
       { app := fun X => (α.app X).2
         naturality' := fun X Y f => by
-          simp only [functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
+          simp only [Functor.comp_map, prod.snd_map, ← prod_comp_snd, α.naturality] }⟩
 #align category_theory.functor_prod_to_prod_functor CategoryTheory.functorProdToProdFunctor
 
 /-- The unit isomorphism for `functor_prod_functor_equiv` -/
@@ -336,7 +336,7 @@ def functorProdFunctorEquivUnitIso :
     𝟭 _ ≅ prodFunctorToFunctorProd A B C ⋙ functorProdToProdFunctor A B C :=
   NatIso.ofComponents
     (fun F =>
-      (((Functor.prod'CompFst _ _).Prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm)
+      (((Functor.prod'CompFst _ _).prod (Functor.prod'CompSnd _ _)).trans (prod.etaIso F)).symm)
     fun F G α => by tidy
 #align category_theory.functor_prod_functor_equiv_unit_iso CategoryTheory.functorProdFunctorEquivUnitIso
 

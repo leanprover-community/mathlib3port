@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.diagram_lemmas.four
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,12 +178,12 @@ theorem epi_of_epi_of_epi_of_mono (hα : Epi α) (hγ : Epi γ) (hδ : Mono δ) 
     have hzv : z ≫ v = h' ≫ w :=
       (cancel_epi γ).1 <|
         calc
-          γ ≫ z ≫ v = h ≫ δ ≫ w := by rw [← category.assoc, pushout.condition, category.assoc]
+          γ ≫ z ≫ v = h ≫ δ ≫ w := by rw [← Category.assoc, pushout.condition, Category.assoc]
           _ = γ ≫ h' ≫ w := by rw [reassoc_of comm₃]
           
     suffices (r ≫ y) ≫ v = 0 from zero_of_comp_mono _ (zero_of_comp_mono _ this)
     calc
-      (r ≫ y) ≫ v = g' ≫ z ≫ v := by rw [pushout.condition, category.assoc]
+      (r ≫ y) ≫ v = g' ≫ z ≫ v := by rw [pushout.condition, Category.assoc]
       _ = g' ≫ h' ≫ w := by rw [hzv]
       _ = 0 ≫ w := hg'h'.w_assoc _
       _ = 0 := HasZeroMorphisms.zero_comp _ _
@@ -220,7 +220,7 @@ theorem isIso_of_isIso_of_isIso_of_isIso_of_isIso : IsIso γ :=
     apply mono_of_epi_of_mono_of_mono comm₁ comm₂ comm₃ hfg hgh hf'g' <;> infer_instance
   have : Epi γ := by
     apply epi_of_epi_of_epi_of_mono comm₂ comm₃ comm₄ hhi hg'h' hh'i' <;> infer_instance
-  is_iso_of_mono_of_epi _
+  isIso_of_mono_of_epi _
 #align category_theory.abelian.is_iso_of_is_iso_of_is_iso_of_is_iso_of_is_iso CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso
 
 end Five

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.rat
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,15 +47,15 @@ theorem uniformEmbedding_coe_real : UniformEmbedding (coe : ℚ → ℝ) :=
 #align rat.uniform_embedding_coe_real Rat.uniformEmbedding_coe_real
 
 theorem denseEmbedding_coe_real : DenseEmbedding (coe : ℚ → ℝ) :=
-  uniformEmbedding_coe_real.DenseEmbedding Rat.denseRange_cast
+  uniformEmbedding_coe_real.denseEmbedding Rat.denseRange_cast
 #align rat.dense_embedding_coe_real Rat.denseEmbedding_coe_real
 
 theorem embedding_coe_real : Embedding (coe : ℚ → ℝ) :=
-  denseEmbedding_coe_real.toEmbedding
+  denseEmbedding_coe_real.to_embedding
 #align rat.embedding_coe_real Rat.embedding_coe_real
 
 theorem continuous_coe_real : Continuous (coe : ℚ → ℝ) :=
-  uniformContinuous_coe_real.Continuous
+  uniformContinuous_coe_real.continuous
 #align rat.continuous_coe_real Rat.continuous_coe_real
 
 end Rat
@@ -89,7 +89,7 @@ theorem Int.closedEmbedding_coe_rat : ClosedEmbedding (coe : ℤ → ℚ) :=
 namespace Rat
 
 instance : NoncompactSpace ℚ :=
-  Int.closedEmbedding_coe_rat.NoncompactSpace
+  Int.closedEmbedding_coe_rat.noncompactSpace
 
 -- TODO(Mario): Find a way to use rat_add_continuous_lemma
 theorem uniformContinuous_add : UniformContinuous fun p : ℚ × ℚ => p.1 + p.2 :=

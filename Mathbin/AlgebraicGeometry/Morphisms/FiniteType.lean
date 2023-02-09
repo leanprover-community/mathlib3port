@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.finite_type
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
 theorem locallyOfFiniteType_eq : @LocallyOfFiniteType = affineLocally @RingHom.FiniteType :=
   by
   ext (X Y f)
-  rw [locally_of_finite_type_iff, affine_locally_iff_affine_opens_le]
+  rw [locallyOfFiniteType_iff, affineLocally_iff_affineOpens_le]
   exact RingHom.finiteType_respectsIso
 #align algebraic_geometry.locally_of_finite_type_eq AlgebraicGeometry.locallyOfFiniteType_eq
 
@@ -70,7 +70,7 @@ theorem locallyOfFiniteTypeOfComp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
     [hf : LocallyOfFiniteType (f ≫ g)] : LocallyOfFiniteType f :=
   by
   revert hf
-  rw [locally_of_finite_type_eq]
+  rw [locallyOfFiniteType_eq]
   apply ring_hom.finite_type_is_local.affine_locally_of_comp
   introv H
   exact RingHom.FiniteType.of_comp_finiteType H

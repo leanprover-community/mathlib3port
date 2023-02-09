@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.lazy_list
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,8 +30,8 @@ universe u v w
 All elements (except the first) are computed lazily.
 -/
 inductive LazyList (α : Type u) : Type u
-  | nil : LazyList
-  | cons (hd : α) (tl : Thunk LazyList) : LazyList
+  | nil : lazy_list
+  | cons (hd : α) (tl : Thunk lazy_list) : lazy_list
 #align lazy_list LazyList
 -/
 
@@ -158,7 +158,7 @@ then this function will not terminate.
 -/
 def filter (p : α → Prop) [DecidablePred p] : LazyList α → LazyList α
   | nil => nil
-  | cons h t => if p h then cons h (Filter (t ())) else Filter (t ())
+  | cons h t => if p h then cons h (filter (t ())) else filter (t ())
 #align lazy_list.filter LazyList.filter
 -/
 

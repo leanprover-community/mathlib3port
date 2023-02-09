@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module algebra.periodic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.periodic.comp_add_hom Function.Periodic.comp_addHomₓ'. -/
 theorem Periodic.comp_addHom [Add α] [Add γ] (h : Periodic f c) (g : AddHom γ α) (g_inv : α → γ)
     (hg : RightInverse g_inv g) : Periodic (f ∘ g) (g_inv c) := fun x => by
-  simp only [hg c, h (g x), AddHom.map_add, comp_app]
+  simp only [hg c, h (g x), AddHom.map_add, comp_apply]
 #align function.periodic.comp_add_hom Function.Periodic.comp_addHom
 
 /- warning: function.periodic.mul -> Function.Periodic.mul is a dubious translation:
@@ -121,7 +121,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.periodic_prod List.periodic_prodₓ'. -/
 @[to_additive]
 theorem List.periodic_prod [Add α] [Monoid β] (l : List (α → β)) (hl : ∀ f ∈ l, Periodic f c) :
-    Periodic l.Prod c := by
+    Periodic l.prod c := by
   induction' l with g l ih hl
   · simp
   · rw [List.forall_mem_cons] at hl
@@ -137,7 +137,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.periodic_prod Multiset.periodic_prodₓ'. -/
 @[to_additive]
 theorem Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β))
-    (hs : ∀ f ∈ s, Periodic f c) : Periodic s.Prod c :=
+    (hs : ∀ f ∈ s, Periodic f c) : Periodic s.prod c :=
   (s.prod_toList ▸ s.toList.periodic_prod) fun f hf => hs f <| Multiset.mem_toList.mp hf
 #align multiset.periodic_prod Multiset.periodic_prod
 #align multiset.periodic_sum Multiset.periodic_sum
@@ -151,7 +151,7 @@ Case conversion may be inaccurate. Consider using '#align finset.periodic_prod F
 @[to_additive]
 theorem Finset.periodic_prod [Add α] [CommMonoid β] {ι : Type _} {f : ι → α → β} (s : Finset ι)
     (hs : ∀ i ∈ s, Periodic (f i) c) : Periodic (∏ i in s, f i) c :=
-  s.prod_toList f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
+  s.prod_to_list f ▸ (s.toList.map f).periodic_prod (by simpa [-periodic] )
 #align finset.periodic_prod Finset.periodic_prod
 #align finset.periodic_sum Finset.periodic_sum
 
@@ -315,7 +315,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddGroup.{u2} α], (Function.Periodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) f c) -> (Function.Periodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) f (Neg.neg.{u2} α (NegZeroClass.toNeg.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) c))
 Case conversion may be inaccurate. Consider using '#align function.periodic.neg Function.Periodic.negₓ'. -/
 protected theorem Periodic.neg [AddGroup α] (h : Periodic f c) : Periodic f (-c) := by
-  simpa only [sub_eq_add_neg, periodic] using h.sub_eq
+  simpa only [sub_eq_add_neg, Periodic] using h.sub_eq
 #align function.periodic.neg Function.Periodic.neg
 
 /- warning: function.periodic.sub_period -> Function.Periodic.sub_period is a dubious translation:
@@ -530,7 +530,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddGroup.{u2} α], (Function.Periodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) f c) -> (Eq.{succ u1} β (f (Neg.neg.{u2} α (NegZeroClass.toNeg.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) c)) (f (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1))))))))
 Case conversion may be inaccurate. Consider using '#align function.periodic.neg_eq Function.Periodic.neg_eqₓ'. -/
 protected theorem Periodic.neg_eq [AddGroup α] (h : Periodic f c) : f (-c) = f 0 :=
-  h.neg.Eq
+  h.neg.eq
 #align function.periodic.neg_eq Function.Periodic.neg_eq
 
 /- warning: function.periodic.nsmul_eq -> Function.Periodic.nsmul_eq is a dubious translation:
@@ -540,7 +540,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddMonoid.{u2} α], (Function.Periodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α _inst_1)) f c) -> (forall (n : Nat), Eq.{succ u1} β (f (HSMul.hSMul.{0, u2, u2} Nat α α (instHSMul.{0, u2} Nat α (AddMonoid.SMul.{u2} α _inst_1)) n c)) (f (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (AddMonoid.toZero.{u2} α _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align function.periodic.nsmul_eq Function.Periodic.nsmul_eqₓ'. -/
 protected theorem Periodic.nsmul_eq [AddMonoid α] (h : Periodic f c) (n : ℕ) : f (n • c) = f 0 :=
-  (h.nsmul n).Eq
+  (h.nsmul n).eq
 #align function.periodic.nsmul_eq Function.Periodic.nsmul_eq
 
 /- warning: function.periodic.nat_mul_eq -> Function.Periodic.nat_mul_eq is a dubious translation:
@@ -550,7 +550,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : Semiring.{u2} α], (Function.Periodic.{u2, u1} α β (Distrib.toAdd.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)))) f c) -> (forall (n : Nat), Eq.{succ u1} β (f (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (NonUnitalNonAssocSemiring.toMul.{u2} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} α (Semiring.toNonAssocSemiring.{u2} α _inst_1)))) (Nat.cast.{u2} α (Semiring.toNatCast.{u2} α _inst_1) n) c)) (f (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align function.periodic.nat_mul_eq Function.Periodic.nat_mul_eqₓ'. -/
 theorem Periodic.nat_mul_eq [Semiring α] (h : Periodic f c) (n : ℕ) : f (n * c) = f 0 :=
-  (h.nat_mul n).Eq
+  (h.nat_mul n).eq
 #align function.periodic.nat_mul_eq Function.Periodic.nat_mul_eq
 
 /- warning: function.periodic.zsmul_eq -> Function.Periodic.zsmul_eq is a dubious translation:
@@ -560,7 +560,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddGroup.{u2} α], (Function.Periodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) f c) -> (forall (n : Int), Eq.{succ u1} β (f (HSMul.hSMul.{0, u2, u2} Int α α (instHSMul.{0, u2} Int α (SubNegMonoid.SMulInt.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1))) n c)) (f (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (NegZeroClass.toZero.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1))))))))
 Case conversion may be inaccurate. Consider using '#align function.periodic.zsmul_eq Function.Periodic.zsmul_eqₓ'. -/
 theorem Periodic.zsmul_eq [AddGroup α] (h : Periodic f c) (n : ℤ) : f (n • c) = f 0 :=
-  (h.zsmul n).Eq
+  (h.zsmul n).eq
 #align function.periodic.zsmul_eq Function.Periodic.zsmul_eq
 
 /- warning: function.periodic.int_mul_eq -> Function.Periodic.int_mul_eq is a dubious translation:
@@ -570,7 +570,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : Ring.{u2} α], (Function.Periodic.{u2, u1} α β (Distrib.toAdd.{u2} α (NonUnitalNonAssocSemiring.toDistrib.{u2} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1))))) f c) -> (forall (n : Int), Eq.{succ u1} β (f (HMul.hMul.{u2, u2, u2} α α α (instHMul.{u2} α (NonUnitalNonAssocRing.toMul.{u2} α (NonAssocRing.toNonUnitalNonAssocRing.{u2} α (Ring.toNonAssocRing.{u2} α _inst_1)))) (Int.cast.{u2} α (Ring.toIntCast.{u2} α _inst_1) n) c)) (f (OfNat.ofNat.{u2} α 0 (Zero.toOfNat0.{u2} α (MonoidWithZero.toZero.{u2} α (Semiring.toMonoidWithZero.{u2} α (Ring.toSemiring.{u2} α _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align function.periodic.int_mul_eq Function.Periodic.int_mul_eqₓ'. -/
 theorem Periodic.int_mul_eq [Ring α] (h : Periodic f c) (n : ℤ) : f (n * c) = f 0 :=
-  (h.int_mul n).Eq
+  (h.int_mul n).eq
 #align function.periodic.int_mul_eq Function.Periodic.int_mul_eq
 
 /- warning: function.periodic.exists_mem_Ico₀ -> Function.Periodic.exists_mem_Ico₀ is a dubious translation:
@@ -756,7 +756,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.nat_even_mul_periodic Function.Antiperiodic.nat_even_mul_periodicₓ'. -/
 theorem Antiperiodic.nat_even_mul_periodic [Semiring α] [InvolutiveNeg β] (h : Antiperiodic f c)
     (n : ℕ) : Periodic f (n * (2 * c)) :=
-  h.Periodic.nat_mul n
+  h.periodic.nat_mul n
 #align function.antiperiodic.nat_even_mul_periodic Function.Antiperiodic.nat_even_mul_periodic
 
 /- warning: function.antiperiodic.nat_odd_mul_antiperiodic -> Function.Antiperiodic.nat_odd_mul_antiperiodic is a dubious translation:
@@ -778,7 +778,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.int_even_mul_periodic Function.Antiperiodic.int_even_mul_periodicₓ'. -/
 theorem Antiperiodic.int_even_mul_periodic [Ring α] [InvolutiveNeg β] (h : Antiperiodic f c)
     (n : ℤ) : Periodic f (n * (2 * c)) :=
-  h.Periodic.int_mul n
+  h.periodic.int_mul n
 #align function.antiperiodic.int_even_mul_periodic Function.Antiperiodic.int_even_mul_periodic
 
 /- warning: function.antiperiodic.int_odd_mul_antiperiodic -> Function.Antiperiodic.int_odd_mul_antiperiodic is a dubious translation:
@@ -819,7 +819,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {c : α} [_inst_1 : AddGroup.{u2} α] [_inst_2 : InvolutiveNeg.{u1} β], (Function.Antiperiodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) (InvolutiveNeg.toNeg.{u1} β _inst_2) f c) -> (Function.Antiperiodic.{u2, u1} α β (AddZeroClass.toAdd.{u2} α (AddMonoid.toAddZeroClass.{u2} α (SubNegMonoid.toAddMonoid.{u2} α (AddGroup.toSubNegMonoid.{u2} α _inst_1)))) (InvolutiveNeg.toNeg.{u1} β _inst_2) f (Neg.neg.{u2} α (NegZeroClass.toNeg.{u2} α (SubNegZeroMonoid.toNegZeroClass.{u2} α (SubtractionMonoid.toSubNegZeroMonoid.{u2} α (AddGroup.toSubtractionMonoid.{u2} α _inst_1)))) c))
 Case conversion may be inaccurate. Consider using '#align function.antiperiodic.neg Function.Antiperiodic.negₓ'. -/
 protected theorem Antiperiodic.neg [AddGroup α] [InvolutiveNeg β] (h : Antiperiodic f c) :
-    Antiperiodic f (-c) := by simpa only [sub_eq_add_neg, antiperiodic] using h.sub_eq
+    Antiperiodic f (-c) := by simpa only [sub_eq_add_neg, Antiperiodic] using h.sub_eq
 #align function.antiperiodic.neg Function.Antiperiodic.neg
 
 /- warning: function.antiperiodic.neg_eq -> Function.Antiperiodic.neg_eq is a dubious translation:
@@ -1066,7 +1066,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.periodic.add_antiperiod_eq Function.Periodic.add_antiperiod_eqₓ'. -/
 theorem Periodic.add_antiperiod_eq [AddGroup α] [Neg β] (h1 : Periodic f c₁)
     (h2 : Antiperiodic f c₂) : f (c₁ + c₂) = -f 0 :=
-  (h1.add_antiperiod h2).Eq
+  (h1.add_antiperiod h2).eq
 #align function.periodic.add_antiperiod_eq Function.Periodic.add_antiperiod_eq
 
 /- warning: function.periodic.sub_antiperiod_eq -> Function.Periodic.sub_antiperiod_eq is a dubious translation:
@@ -1077,7 +1077,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.periodic.sub_antiperiod_eq Function.Periodic.sub_antiperiod_eqₓ'. -/
 theorem Periodic.sub_antiperiod_eq [AddGroup α] [InvolutiveNeg β] (h1 : Periodic f c₁)
     (h2 : Antiperiodic f c₂) : f (c₁ - c₂) = -f 0 :=
-  (h1.sub_antiperiod h2).Eq
+  (h1.sub_antiperiod h2).eq
 #align function.periodic.sub_antiperiod_eq Function.Periodic.sub_antiperiod_eq
 
 /- warning: function.antiperiodic.mul -> Function.Antiperiodic.mul is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem tensor_apply {W X Y Z : Type u} (f : W ⟶ X) (g : Y ⟶ Z) (p : W ⊗ Y
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem leftUnitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
-    ((λ_ X).Hom : 𝟙_ (Type u) ⊗ X → X) (p, x) = x :=
+    ((λ_ X).hom : 𝟙_ (Type u) ⊗ X → X) (p, x) = x :=
   rfl
 #align category_theory.left_unitor_hom_apply CategoryTheory.leftUnitor_hom_apply
 
@@ -60,7 +60,7 @@ theorem leftUnitor_inv_apply {X : Type u} {x : X} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem rightUnitor_hom_apply {X : Type u} {x : X} {p : PUnit} :
-    ((ρ_ X).Hom : X ⊗ 𝟙_ (Type u) → X) (x, p) = x :=
+    ((ρ_ X).hom : X ⊗ 𝟙_ (Type u) → X) (x, p) = x :=
   rfl
 #align category_theory.right_unitor_hom_apply CategoryTheory.rightUnitor_hom_apply
 
@@ -77,7 +77,7 @@ theorem rightUnitor_inv_apply {X : Type u} {x : X} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem associator_hom_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
-    ((α_ X Y Z).Hom : (X ⊗ Y) ⊗ Z → X ⊗ Y ⊗ Z) ((x, y), z) = (x, (y, z)) :=
+    ((α_ X Y Z).hom : (X ⊗ Y) ⊗ Z → X ⊗ Y ⊗ Z) ((x, y), z) = (x, (y, z)) :=
   rfl
 #align category_theory.associator_hom_apply CategoryTheory.associator_hom_apply
 
@@ -95,7 +95,7 @@ theorem associator_inv_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem braiding_hom_apply {X Y : Type u} {x : X} {y : Y} :
-    ((β_ X Y).Hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) :=
+    ((β_ X Y).hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) :=
   rfl
 #align category_theory.braiding_hom_apply CategoryTheory.braiding_hom_apply
 
@@ -121,16 +121,16 @@ def coyonedaTensorUnit (C : Type u) [Category.{v} C] [MonoidalCategory C] :
     μ_natural' := by tidy
     associativity' := fun X Y Z => by
       ext ⟨⟨f, g⟩, h⟩; dsimp at f g h
-      dsimp; simp only [iso.cancel_iso_inv_left, category.assoc]
+      dsimp; simp only [Iso.cancel_iso_inv_left, Category.assoc]
       conv_lhs =>
-        rw [← category.id_comp h, tensor_comp, category.assoc, associator_naturality, ←
-          category.assoc, unitors_inv_equal, triangle_assoc_comp_right_inv]
-      conv_rhs => rw [← category.id_comp f, tensor_comp]
+        rw [← Category.id_comp h, tensor_comp, Category.assoc, associator_naturality, ←
+          Category.assoc, unitors_inv_equal, triangle_assoc_comp_right_inv]
+      conv_rhs => rw [← Category.id_comp f, tensor_comp]
     left_unitality' := by tidy
     right_unitality' := fun X => by
       ext ⟨f, ⟨⟩⟩; dsimp at f
-      dsimp; simp only [category.assoc]
-      rw [right_unitor_naturality, unitors_inv_equal, iso.inv_hom_id_assoc] }
+      dsimp; simp only [Category.assoc]
+      rw [rightUnitor_naturality, unitors_inv_equal, Iso.inv_hom_id_assoc] }
 #align category_theory.coyoneda_tensor_unit CategoryTheory.coyonedaTensorUnit
 
 noncomputable section

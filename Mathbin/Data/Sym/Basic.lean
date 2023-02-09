@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.sym.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -285,7 +285,7 @@ Case conversion may be inaccurate. Consider using '#align sym.erase Sym.eraseₓ
 /-- `erase s a h` is the sym that subtracts 1 from the
   multiplicity of `a` if a is present in the sym. -/
 def erase [DecidableEq α] (s : Sym α (n + 1)) (a : α) (h : a ∈ s) : Sym α n :=
-  ⟨s.val.eraseₓ a, (Multiset.card_erase_of_mem h).trans <| s.property.symm ▸ n.pred_succ⟩
+  ⟨s.val.erase a, (Multiset.card_erase_of_mem h).trans <| s.property.symm ▸ n.pred_succ⟩
 #align sym.erase Sym.erase
 
 /- warning: sym.erase_mk -> Sym.erase_mk is a dubious translation:
@@ -296,8 +296,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym.erase_mk Sym.erase_mkₓ'. -/
 @[simp]
 theorem erase_mk [DecidableEq α] (m : Multiset α) (hc : m.card = n + 1) (a : α) (h : a ∈ m) :
-    (mk m hc).eraseₓ a h =
-      mk (m.eraseₓ a)
+    (mk m hc).erase a h =
+      mk (m.erase a)
         (by
           rw [Multiset.card_erase_of_mem h, hc]
           rfl) :=
@@ -312,7 +312,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym.coe_erase Sym.coe_eraseₓ'. -/
 @[simp]
 theorem coe_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
-    (s.eraseₓ a h : Multiset α) = Multiset.erase s a :=
+    (s.erase a h : Multiset α) = Multiset.erase s a :=
   rfl
 #align sym.coe_erase Sym.coe_erase
 
@@ -323,8 +323,7 @@ but is expected to have type
   forall {α : Type.{u1}} {n : Nat} [_inst_1 : DecidableEq.{succ u1} α] {s : Sym.{u1} α (Nat.succ n)} {a : α} (h : Membership.mem.{u1, u1} α (Sym.{u1} α (Nat.succ n)) (Sym.instMembershipSym.{u1} α (Nat.succ n)) a s), Eq.{succ u1} (Sym.{u1} α (Nat.succ n)) (Sym.cons.{u1} α n a (Sym.erase.{u1} α n (fun (a : α) (b : α) => _inst_1 a b) s a h)) s
 Case conversion may be inaccurate. Consider using '#align sym.cons_erase Sym.cons_eraseₓ'. -/
 @[simp]
-theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) :
-    a ::ₛ s.eraseₓ a h = s :=
+theorem cons_erase [DecidableEq α] {s : Sym α n.succ} {a : α} (h : a ∈ s) : a ::ₛ s.erase a h = s :=
   coe_injective <| Multiset.cons_erase h
 #align sym.cons_erase Sym.cons_erase
 
@@ -336,7 +335,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym.erase_cons_head Sym.erase_cons_headₓ'. -/
 @[simp]
 theorem erase_cons_head [DecidableEq α] (s : Sym α n) (a : α)
-    (h : a ∈ a ::ₛ s := mem_cons_self a s) : (a ::ₛ s).eraseₓ a h = s :=
+    (h : a ∈ a ::ₛ s := mem_cons_self a s) : (a ::ₛ s).erase a h = s :=
   coe_injective <| Multiset.erase_cons_head a s.1
 #align sym.erase_cons_head Sym.erase_cons_head
 
@@ -462,7 +461,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α} {n : Nat} {s : Sym.{u1} α n}, Iff (Eq.{succ u1} (Sym.{u1} α n) s (Sym.replicate.{u1} α n a)) (forall (b : α), (Membership.mem.{u1, u1} α (Sym.{u1} α n) (Sym.instMembershipSym.{u1} α n) b s) -> (Eq.{succ u1} α b a))
 Case conversion may be inaccurate. Consider using '#align sym.eq_replicate Sym.eq_replicateₓ'. -/
 theorem eq_replicate {a : α} {n : ℕ} {s : Sym α n} : s = replicate n a ↔ ∀ b ∈ s, b = a :=
-  Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.Prop
+  Subtype.ext_iff.trans <| Multiset.eq_replicate.trans <| and_iff_right s.prop
 #align sym.eq_replicate Sym.eq_replicate
 
 #print Sym.eq_replicate_of_subsingleton /-
@@ -513,7 +512,7 @@ theorem replicate_right_injective {n : ℕ} (h : n ≠ 0) :
 -/
 
 instance (n : ℕ) [Nontrivial α] : Nontrivial (Sym α (n + 1)) :=
-  (replicate_right_injective n.succ_ne_zero).Nontrivial
+  (replicate_right_injective n.succ_ne_zero).nontrivial
 
 #print Sym.map /-
 /-- A function `α → β` induces a function `sym α n → sym β n` by applying it to every element of
@@ -600,7 +599,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym.map_mk Sym.map_mkₓ'. -/
 @[simp]
 theorem map_mk {f : α → β} {m : Multiset α} {hc : m.card = n} :
-    map f (mk m hc) = mk (m.map f) (by simp [hc]) :=
+    encode f (mk m hc) = mk (m.map f) (by simp [hc]) :=
   rfl
 #align sym.map_mk Sym.map_mk
 
@@ -715,7 +714,7 @@ Case conversion may be inaccurate. Consider using '#align sym.attach_cons Sym.at
 @[simp]
 theorem attach_cons (x : α) (s : Sym α n) :
     (cons x s).attach =
-      cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.Prop⟩) :=
+      cons ⟨x, mem_cons_self _ _⟩ (s.attach.map fun x => ⟨x, mem_cons_of_mem x.prop⟩) :=
   coe_injective <| Multiset.attach_cons _ _
 #align sym.attach_cons Sym.attach_cons
 
@@ -845,7 +844,7 @@ open Multiset
 Yields the number of copies `i` and a term of `sym α (n - i)`. -/
 def filterNe [DecidableEq α] (a : α) (m : Sym α n) : Σi : Fin (n + 1), Sym α (n - i) :=
   ⟨⟨m.1.count a, (count_le_card _ _).trans_lt <| by rw [m.2, Nat.lt_succ_iff]⟩,
-    m.1.filterₓ ((· ≠ ·) a),
+    m.1.filter ((· ≠ ·) a),
     eq_tsub_of_add_eq <|
       Eq.trans
         (by
@@ -871,7 +870,7 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
     (m.filterNe a).2.fill a (m.filterNe a).1 = m :=
   Subtype.ext
     (by
-      dsimp only [coe_fill, filter_ne, Subtype.coe_mk, Fin.val_mk]
+      dsimp only [coe_fill, filterNe, Subtype.coe_mk, Fin.val_mk]
       ext b; rw [count_add, count_filter, Sym.coe_replicate, count_replicate]
       obtain rfl | h := eq_or_ne a b
       · rw [if_pos rfl, if_neg (Classical.not_not.2 rfl), zero_add]
@@ -891,7 +890,7 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α 
     (m.2.fill a m.1).filterNe a = m :=
   sigma_sub_ext
     (by
-      dsimp only [filter_ne, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
+      dsimp only [filterNe, Subtype.coe_mk, Subtype.val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
       · intro b hb
         rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
@@ -916,7 +915,7 @@ namespace symOptionSuccEquiv
 /-- Function from the symmetric product over `option` splitting on whether or not
 it contains a `none`. -/
 def encode [DecidableEq α] (s : Sym (Option α) n.succ) : Sum (Sym (Option α) n) (Sym α n.succ) :=
-  if h : none ∈ s then Sum.inl (s.eraseₓ none h)
+  if h : none ∈ s then Sum.inl (s.erase none h)
   else
     Sum.inr
       (s.attach.map fun o =>
@@ -932,7 +931,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sym_option_succ_equiv.encode_of_none_mem SymOptionSuccEquiv.encode_of_none_memₓ'. -/
 @[simp]
 theorem encode_of_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h : none ∈ s) :
-    encode s = Sum.inl (s.eraseₓ none h) :=
+    encode s = Sum.inl (s.erase none h) :=
   dif_pos h
 #align sym_option_succ_equiv.encode_of_none_mem SymOptionSuccEquiv.encode_of_none_mem
 
@@ -955,8 +954,8 @@ theorem encode_of_not_none_mem [DecidableEq α] (s : Sym (Option α) n.succ) (h 
 /-- Inverse of `sym_option_succ_equiv.decode`. -/
 @[simp]
 def decode : Sum (Sym (Option α) n) (Sym α n.succ) → Sym (Option α) n.succ
-  | Sum.inl s => none ::ₛ s
-  | Sum.inr s => s.map Embedding.some
+  | sum.inl s => none ::ₛ s
+  | sum.inr s => s.map Embedding.some
 #align sym_option_succ_equiv.decode SymOptionSuccEquiv.decode
 -/
 
@@ -967,7 +966,7 @@ theorem decode_encode [DecidableEq α] (s : Sym (Option α) n.succ) : decode (en
   by_cases h : none ∈ s
   · simp [h]
   · simp only [h, decode, not_false_iff, Subtype.val_eq_coe, encode_of_not_none_mem,
-      embedding.coe_option_apply, map_map, comp_app, Option.coe_get]
+      Embedding.some_apply, map_map, comp_apply, Option.coe_get]
     convert s.attach_map_coe
 #align sym_option_succ_equiv.decode_encode SymOptionSuccEquiv.decode_encode
 -/
@@ -983,7 +982,7 @@ theorem encode_decode [DecidableEq α] (s : Sum (Sym (Option α) n) (Sym α n.su
     · obtain ⟨a, _, ha⟩ := multiset.mem_map.mp h
       exact Option.some_ne_none _ ha
     · refine' map_injective (Option.some_injective _) _ _
-      convert Eq.trans _ (SymOptionSuccEquiv.decode (Sum.inr s)).attach_map_val
+      convert Eq.trans _ (SymOptionSuccEquiv.decode (Sum.inr s)).attach_map_coe
       simp
 #align sym_option_succ_equiv.encode_decode SymOptionSuccEquiv.encode_decode
 -/

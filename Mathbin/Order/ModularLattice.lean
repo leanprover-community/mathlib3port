@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.modular_lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -350,8 +350,8 @@ theorem wellFounded_gt_exact_sequence {β γ : Type _} [Preorder β] [PartialOrd
 @[simps]
 def infIccOrderIsoIccSup (a b : α) : Set.Icc (a ⊓ b) a ≃o Set.Icc b (a ⊔ b)
     where
-  toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.Prop.2 b⟩⟩
-  invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.Prop.1, inf_le_left⟩⟩
+  toFun x := ⟨x ⊔ b, ⟨le_sup_right, sup_le_sup_right x.prop.2 b⟩⟩
+  invFun x := ⟨a ⊓ x, ⟨inf_le_inf_left a x.prop.1, inf_le_left⟩⟩
   left_inv x :=
     Subtype.ext
       (by
@@ -375,13 +375,13 @@ def infIccOrderIsoIccSup (a b : α) : Set.Icc (a ⊓ b) a ≃o Set.Icc b (a ⊔ 
 
 #print inf_strictMonoOn_Icc_sup /-
 theorem inf_strictMonoOn_Icc_sup {a b : α} : StrictMonoOn (fun c => a ⊓ c) (Icc b (a ⊔ b)) :=
-  StrictMono.of_restrict (infIccOrderIsoIccSup a b).symm.StrictMono
+  StrictMono.of_restrict (infIccOrderIsoIccSup a b).symm.strictMono
 #align inf_strict_mono_on_Icc_sup inf_strictMonoOn_Icc_sup
 -/
 
 #print sup_strictMonoOn_Icc_inf /-
 theorem sup_strictMonoOn_Icc_inf {a b : α} : StrictMonoOn (fun c => c ⊔ b) (Icc (a ⊓ b) a) :=
-  StrictMono.of_restrict (infIccOrderIsoIccSup a b).StrictMono
+  StrictMono.of_restrict (infIccOrderIsoIccSup a b).strictMono
 #align sup_strict_mono_on_Icc_inf sup_strictMonoOn_Icc_inf
 -/
 
@@ -418,7 +418,7 @@ def infIooOrderIsoIooSup (a b : α) : Ioo (a ⊓ b) a ≃o Ioo b (a ⊔ b)
 instance (priority := 100) IsModularLattice.to_isLowerModularLattice : IsLowerModularLattice α :=
   ⟨fun a b =>
     by
-    simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← is_empty_coe_sort, right_lt_sup,
+    simp_rw [covby_iff_Ioo_eq, @sup_comm _ _ a, @inf_comm _ _ a, ← isEmpty_coe_sort, right_lt_sup,
       inf_lt_left, (infIooOrderIsoIooSup _ _).symm.toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_lower_modular_lattice IsModularLattice.to_isLowerModularLattice
@@ -429,7 +429,7 @@ instance (priority := 100) IsModularLattice.to_isLowerModularLattice : IsLowerMo
 instance (priority := 100) IsModularLattice.to_isUpperModularLattice : IsUpperModularLattice α :=
   ⟨fun a b =>
     by
-    simp_rw [covby_iff_Ioo_eq, ← is_empty_coe_sort, right_lt_sup, inf_lt_left,
+    simp_rw [covby_iff_Ioo_eq, ← isEmpty_coe_sort, right_lt_sup, inf_lt_left,
       (infIooOrderIsoIooSup _ _).toEquiv.isEmpty_congr]
     exact id⟩
 #align is_modular_lattice.to_is_upper_modular_lattice IsModularLattice.to_isUpperModularLattice

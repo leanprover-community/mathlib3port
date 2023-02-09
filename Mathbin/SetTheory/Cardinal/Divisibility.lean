@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.divisibility
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem isUnit_iff : IsUnit a ↔ a = 1 :=
 
 instance : Unique Cardinal.{u}ˣ where
   default := 1
-  uniq a := Units.val_eq_one.mp <| isUnit_iff.mp a.IsUnit
+  uniq a := Units.val_eq_one.mp <| isUnit_iff.mp a.isUnit
 
 theorem le_of_dvd : ∀ {a b : Cardinal}, b ≠ 0 → a ∣ b → a ≤ b
   | a, _, b0, ⟨b, rfl⟩ => by
@@ -79,7 +79,7 @@ theorem dvd_of_le_of_aleph0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b) 
 theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a :=
   by
   refine' ⟨(aleph_0_pos.trans_le ha).ne', _, fun b c hbc => _⟩
-  · rw [is_unit_iff]
+  · rw [isUnit_iff]
     exact (one_lt_aleph_0.trans_le ha).ne'
   cases' eq_or_ne (b * c) 0 with hz hz
   · rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
@@ -96,7 +96,7 @@ theorem not_irreducible_of_aleph0_le (ha : ℵ₀ ≤ a) : ¬Irreducible a :=
   by
   rw [irreducible_iff, not_and_or]
   refine' Or.inr fun h => _
-  simpa [mul_aleph_0_eq ha, is_unit_iff, (one_lt_aleph_0.trans_le ha).ne', one_lt_aleph_0.ne'] using
+  simpa [mul_aleph0_eq ha, isUnit_iff, (one_lt_aleph_0.trans_le ha).ne', one_lt_aleph_0.ne'] using
     h a ℵ₀
 #align cardinal.not_irreducible_of_aleph_0_le Cardinal.not_irreducible_of_aleph0_le
 
@@ -105,8 +105,8 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m :=
   by
   refine' ⟨_, fun ⟨h, ht⟩ => ⟨h, by exact_mod_cast ht⟩⟩
   rintro ⟨k, hk⟩
-  have : ↑m < ℵ₀ := nat_lt_aleph_0 m
-  rw [hk, mul_lt_aleph_0_iff] at this
+  have : ↑m < ℵ₀ := nat_lt_aleph0 m
+  rw [hk, mul_lt_aleph0_iff] at this
   rcases this with (h | h | ⟨-, hk'⟩)
   iterate 2 simp only [h, mul_zero, zero_mul, Nat.cast_eq_zero] at hk; simp [hk]
   lift k to ℕ using hk'
@@ -118,7 +118,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
   by
   simp only [Prime, Nat.prime_iff]
   refine' and_congr (by simp) (and_congr _ ⟨fun h b c hbc => _, fun h b c hbc => _⟩)
-  · simp only [is_unit_iff, Nat.isUnit_iff]
+  · simp only [isUnit_iff, Nat.isUnit_iff]
     exact_mod_cast Iff.rfl
   · exact_mod_cast h b c (by exact_mod_cast hbc)
   cases' lt_or_le (b * c) ℵ₀ with h' h'
@@ -135,7 +135,7 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime :=
     cases hbc <;> contradiction
   wlog hℵ₀b : ℵ₀ ≤ b
   · refine' (this h c b _ _ hc hb hℵ₀.symm hn (hℵ₀.resolve_left hℵ₀b)).symm <;> rwa [mul_comm]
-  exact Or.inl (dvd_of_le_of_aleph_0_le hn ((nat_lt_aleph_0 n).le.trans hℵ₀b) hℵ₀b)
+  exact Or.inl (dvd_of_le_of_aleph0_le hn ((nat_lt_aleph0 n).le.trans hℵ₀b) hℵ₀b)
 #align cardinal.nat_is_prime_iff Cardinal.nat_is_prime_iff
 
 theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime :=
@@ -149,7 +149,7 @@ theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, 
 theorem isPrimePow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n : ℕ, a = n ∧ IsPrimePow n :=
   by
   by_cases h : ℵ₀ ≤ a
-  · simp [h, (prime_of_aleph_0_le h).IsPrimePow]
+  · simp [h, (prime_of_aleph0_le h).isPrimePow]
   lift a to ℕ using not_le.mp h
   simp only [h, Nat.cast_inj, exists_eq_left', false_or_iff, isPrimePow_nat_iff]
   rw [isPrimePow_def]
@@ -159,7 +159,7 @@ theorem isPrimePow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n 
   have key : _ ≤ p ^ k :=
     power_le_power_left hp.ne_zero (show (1 : Cardinal) ≤ k by exact_mod_cast hk)
   rw [power_one, hpk] at key
-  lift p to ℕ using key.trans_lt (nat_lt_aleph_0 a)
+  lift p to ℕ using key.trans_lt (nat_lt_aleph0 a)
   exact ⟨p, k, nat_is_prime_iff.mp hp, hk, by exact_mod_cast hpk⟩
 #align cardinal.is_prime_pow_iff Cardinal.isPrimePow_iff
 

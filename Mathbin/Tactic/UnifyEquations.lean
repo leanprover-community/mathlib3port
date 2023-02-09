@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.unify_equations
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ private unsafe def injection_with' (h : expr) (ns : List Name) (base := `h) (off
       let tgt
         ←-- Now we generate the actual proof of the target.
           target
-      let proof ← mk_mapp inj_name (List.replicate (inj_arity - 3) none ++ [some h, some tgt])
+      let proof ← mk_mapp inj_name (list.replicate (inj_arity - 3) none ++ [some h, some tgt])
       eapply proof
       let (next, ns) ← intron_with num_equations ns base offset
       let next
@@ -278,8 +278,8 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
           (
               do
                 let sizeof ← get_sizeof type
-                  let hyp_lhs ← to_expr ` `( $ ( SizeOf.sizeOf ) $ ( lhs_whnf ) )
-                  let hyp_rhs ← to_expr ` `( $ ( SizeOf.sizeOf ) $ ( rhs_whnf ) )
+                  let hyp_lhs ← to_expr ` `( $ ( sizeof ) $ ( lhs_whnf ) )
+                  let hyp_rhs ← to_expr ` `( $ ( sizeof ) $ ( rhs_whnf ) )
                   let hyp_type ← to_expr ` `( @ Eq ℕ $ ( hyp_lhs ) $ ( hyp_rhs ) )
                   let
                     hyp_proof
@@ -288,12 +288,7 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
                         `
                           `(
                             @ congr_arg
-                              $ ( type )
-                                ℕ
-                                $ ( lhs_whnf )
-                                $ ( rhs_whnf )
-                                $ ( SizeOf.sizeOf )
-                                $ ( equ )
+                              $ ( type ) ℕ $ ( lhs_whnf ) $ ( rhs_whnf ) $ ( sizeof ) $ ( equ )
                             )
                   let hyp_name ← mk_fresh_name
                   let hyp ← note hyp_name hyp_type hyp_proof

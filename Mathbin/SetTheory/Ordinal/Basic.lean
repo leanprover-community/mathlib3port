@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ open Function
 theorem nonempty_embedding_to_cardinal : Nonempty (σ ↪ Cardinal.{u}) :=
   (Embedding.total _ _).resolve_left fun ⟨⟨f, hf⟩⟩ =>
     let g : σ → Cardinal.{u} := invFun f
-    let ⟨x, (hx : g x = 2 ^ Sum g)⟩ := invFun_surjective hf (2 ^ Sum g)
+    let ⟨x, (hx : g x = 2 ^ sum g)⟩ := invFun_surjective hf (2 ^ Sum g)
     have : g x ≤ Sum g := le_sum.{u, u} g x
     not_le_of_gt (by rw [hx] <;> exact cantor _) this
 #align nonempty_embedding_to_cardinal nonempty_embedding_to_cardinal
@@ -93,15 +93,15 @@ def embeddingToCardinal : σ ↪ Cardinal.{u} :=
 /-- Any type can be endowed with a well order, obtained by pulling back the well order over
 cardinals by some embedding. -/
 def WellOrderingRel : σ → σ → Prop :=
-  embeddingToCardinal ⁻¹'o (· < ·)
+  embedding_to_cardinal ⁻¹'o (· < ·)
 #align well_ordering_rel WellOrderingRel
 
-instance WellOrderingRel.isWellOrder : IsWellOrder σ WellOrderingRel :=
-  (RelEmbedding.preimage _ _).IsWellOrder
+instance WellOrderingRel.isWellOrder : IsWellOrder σ well_ordering_rel :=
+  (RelEmbedding.preimage _ _).isWellOrder
 #align well_ordering_rel.is_well_order WellOrderingRel.isWellOrder
 
 instance IsWellOrder.subtype_nonempty : Nonempty { r // IsWellOrder σ r } :=
-  ⟨⟨WellOrderingRel, inferInstance⟩⟩
+  ⟨⟨well_ordering_rel, inferInstance⟩⟩
 #align is_well_order.subtype_nonempty IsWellOrder.subtype_nonempty
 
 end WellOrderingThm
@@ -326,7 +326,7 @@ instance : PartialOrder Ordinal
   lt_iff_le_not_le a b :=
     Quotient.induction_on₂ a b fun ⟨α, r, _⟩ ⟨β, s, _⟩ =>
       ⟨fun ⟨f⟩ => ⟨⟨f⟩, fun ⟨g⟩ => (f.ltLe g).irrefl⟩, fun ⟨⟨f⟩, h⟩ =>
-        Sum.recOn f.lt_or_eq (fun g => ⟨g⟩) fun g => (h ⟨InitialSeg.ofIso g.symm⟩).elim⟩
+        Sum.recOn f.ltOrEq (fun g => ⟨g⟩) fun g => (h ⟨InitialSeg.ofIso g.symm⟩).elim⟩
   le_antisymm a b :=
     Quotient.induction_on₂ a b fun ⟨α, r, _⟩ ⟨β, s, _⟩ ⟨h₁⟩ ⟨h₂⟩ =>
       Quot.sound ⟨InitialSeg.antisymm h₁ h₂⟩
@@ -505,7 +505,7 @@ def enum (r : α → α → Prop) [IsWellOrder α r] (o) : o < type r → α :=
     have H₁ : type s < type r := by rwa [type_eq.2 ⟨h⟩]
     have :
       ∀ {o e} (H : o < type r),
-        @Eq.ndrec (fun o : Ordinal => o < type r → α)
+        @eq.rec (fun o : Ordinal => o < type r → α)
             (fun h : type s < type r => (Classical.choice h).top) e H =
           (Classical.choice H₁).top :=
       by
@@ -731,10 +731,10 @@ theorem lift_type_eq {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWel
 theorem lift_type_lt {α : Type u} {β : Type v} {r s} [IsWellOrder α r] [IsWellOrder β s] :
     lift.{max v w} (type r) < lift.{max u w} (type s) ↔ Nonempty (r ≺i s) := by
   haveI :=
-        @RelEmbedding.isWellOrder _ _ (@Equiv.ulift.{max v w} α ⁻¹'o r) r
+        @rel_embedding.is_well_order _ _ (@Equiv.ulift.{max v w} α ⁻¹'o r) r
           (RelIso.preimage Equiv.ulift.{max v w} r) _ <;>
       haveI :=
-        @RelEmbedding.isWellOrder _ _ (@Equiv.ulift.{max u w} β ⁻¹'o s) s
+        @rel_embedding.is_well_order _ _ (@Equiv.ulift.{max u w} β ⁻¹'o s) s
           (RelIso.preimage Equiv.ulift.{max u w} s) _ <;>
     exact
       ⟨fun ⟨f⟩ =>
@@ -789,7 +789,7 @@ theorem lift_down' {a : Cardinal.{u}} {b : Ordinal.{max u v}} (h : card b ≤ a.
           lift_mk_eq.{u, max u v, max u v}] at e'
         cases' e' with f
         have g := RelIso.preimage f s
-        haveI := (g : ⇑f ⁻¹'o s ↪r s).IsWellOrder
+        haveI := (g : ⇑f ⁻¹'o s ↪r s).isWellOrder
         have := lift_type_eq.{u, max u v, max u v}.2 ⟨g⟩
         rw [lift_id, lift_umax.{u, v}] at this
         exact ⟨_, this⟩)
@@ -888,7 +888,7 @@ instance : AddMonoidWithOne Ordinal.{u}
       Quot.sound
         ⟨⟨sumAssoc _ _ _, fun a b => by
             rcases a with (⟨a | a⟩ | a) <;> rcases b with (⟨b | b⟩ | b) <;>
-              simp only [sum_assoc_apply_inl_inl, sum_assoc_apply_inl_inr, sum_assoc_apply_inr,
+              simp only [sumAssoc_apply_inl_inl, sumAssoc_apply_inl_inr, sumAssoc_apply_inr,
                 Sum.lex_inl_inl, Sum.lex_inr_inr, Sum.Lex.sep, Sum.lex_inr_inl]⟩⟩
 
 @[simp]
@@ -913,17 +913,17 @@ instance add_covariantClass_le : CovariantClass Ordinal.{u} Ordinal.{u} (· + ·
       induction_on a fun α₁ r₁ _ =>
         induction_on b fun α₂ r₂ _ ⟨⟨⟨f, fo⟩, fi⟩⟩ c =>
           induction_on c fun β s _ =>
-            ⟨⟨⟨(embedding.refl _).sum_map f, fun a b =>
+            ⟨⟨⟨(Embedding.refl _).sumMap f, fun a b =>
                   match a, b with
-                  | Sum.inl a, Sum.inl b => sum.lex_inl_inl.trans sum.lex_inl_inl.symm
-                  | Sum.inl a, Sum.inr b => by apply iff_of_true <;> apply Sum.Lex.sep
-                  | Sum.inr a, Sum.inl b => by apply iff_of_false <;> exact Sum.lex_inr_inl
-                  | Sum.inr a, Sum.inr b => sum.lex_inr_inr.trans <| fo.trans sum.lex_inr_inr.symm⟩,
+                  | sum.inl a, sum.inl b => sum.lex_inl_inl.trans sum.lex_inl_inl.symm
+                  | sum.inl a, sum.inr b => by apply iff_of_true <;> apply Sum.Lex.sep
+                  | sum.inr a, sum.inl b => by apply iff_of_false <;> exact Sum.lex_inr_inl
+                  | sum.inr a, sum.inr b => sum.lex_inr_inr.trans <| fo.trans sum.lex_inr_inr.symm⟩,
                 fun a b H =>
                 match a, b, H with
-                | _, Sum.inl b, _ => ⟨Sum.inl b, rfl⟩
-                | Sum.inl a, Sum.inr b, H => (Sum.lex_inr_inl H).elim
-                | Sum.inr a, Sum.inr b, H =>
+                | _, sum.inl b, _ => ⟨Sum.inl b, rfl⟩
+                | sum.inl a, sum.inr b, H => (Sum.lex_inr_inl H).elim
+                | sum.inr a, sum.inr b, H =>
                   let ⟨w, h⟩ := fi _ _ (Sum.lex_inr_inr.1 H)
                   ⟨Sum.inr w, congr_arg Sum.inr h⟩⟩⟩⟩
 #align ordinal.add_covariant_class_le Ordinal.add_covariantClass_le
@@ -935,8 +935,8 @@ instance add_swap_covariantClass_le :
       induction_on a fun α₁ r₁ hr₁ =>
         induction_on b fun α₂ r₂ hr₂ ⟨⟨⟨f, fo⟩, fi⟩⟩ c =>
           induction_on c fun β s hs =>
-            @RelEmbedding.ordinal_type_le _ _ (Sum.Lex r₁ s) (Sum.Lex r₂ s) _ _
-              ⟨f.sum_map (embedding.refl _), fun a b =>
+            @rel_embedding.ordinal_type_le _ _ (Sum.Lex r₁ s) (Sum.Lex r₂ s) _ _
+              ⟨f.sum_map (Embedding.refl _), fun a b =>
                 by
                 constructor <;> intro H
                 ·
@@ -958,9 +958,9 @@ instance : LinearOrder Ordinal :=
     Ordinal.partialOrder with
     le_total := fun a b =>
       match lt_or_eq_of_le (le_add_left b a), lt_or_eq_of_le (le_add_right a b) with
-      | Or.inr h, _ => by rw [h] <;> exact Or.inl (le_add_right _ _)
-      | _, Or.inr h => by rw [h] <;> exact Or.inr (le_add_left _ _)
-      | Or.inl h₁, Or.inl h₂ =>
+      | or.inr h, _ => by rw [h] <;> exact Or.inl (le_add_right _ _)
+      | _, or.inr h => by rw [h] <;> exact Or.inr (le_add_left _ _)
+      | or.inl h₁, or.inl h₂ =>
         induction_on a
           (fun α₁ r₁ _ =>
             induction_on b fun α₂ r₂ _ ⟨f⟩ ⟨g⟩ => by
@@ -1016,8 +1016,8 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
         by
         haveI := hs
         refine'
-          ⟨⟨@RelEmbedding.ofMonotone (Sum α PUnit) β _ _ _ _ (Sum.rec _ _) fun a b => _, fun a b =>
-              _⟩⟩
+          ⟨⟨@rel_embedding.of_monotone (Sum α PUnit) β _ _ _ _ (Sum.rec _ _) fun a b => _,
+              fun a b => _⟩⟩
         · exact f; · exact fun _ => t
         · rcases a with (a | _) <;> rcases b with (b | _)
           · simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
@@ -1028,7 +1028,7 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
           · exact False.elim ∘ Sum.lex_inr_inr.1
         · rcases a with (a | _)
           · intro h
-            have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
+            have := @principal_seg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
             cases' this with w h
             exact ⟨Sum.inl w, h⟩
           · intro h
@@ -1095,7 +1095,7 @@ theorem nat_cast_succ (n : ℕ) : ↑n.succ = succ (n : Ordinal) :=
 instance uniqueIioOne : Unique (Iio (1 : Ordinal))
     where
   default := ⟨0, zero_lt_one⟩
-  uniq a := Subtype.ext <| lt_one_iff_zero.1 a.Prop
+  uniq a := Subtype.ext <| lt_one_iff_zero.1 a.prop
 #align ordinal.unique_Iio_one Ordinal.uniqueIioOne
 
 instance uniqueOutOne : Unique (1 : Ordinal).out.α
@@ -1217,7 +1217,7 @@ def outOrderBotOfPos {o : Ordinal} (ho : 0 < o) : OrderBot o.out.α :=
 
 theorem enum_zero_eq_bot {o : Ordinal} (ho : 0 < o) :
     enum (· < ·) 0 (by rwa [type_lt]) =
-      haveI H := out_order_bot_of_pos ho
+      haveI H := outOrderBotOfPos ho
       ⊥ :=
   rfl
 #align ordinal.enum_zero_eq_bot Ordinal.enum_zero_eq_bot
@@ -1276,7 +1276,7 @@ def lift.principalSeg : @PrincipalSeg Ordinal.{u} Ordinal.{max (u + 1) v} (· < 
       rw [← e]
       apply induction_on a
       intro α r _
-      exact lift_type_lt.{u, u + 1, max (u + 1) v}.2 ⟨typein.principal_seg r⟩⟩
+      exact lift_type_lt.{u, u + 1, max (u + 1) v}.2 ⟨typein.principalSeg r⟩⟩
 #align ordinal.lift.principal_seg Ordinal.lift.principalSeg
 
 @[simp]
@@ -1291,7 +1291,7 @@ theorem lift.principalSeg_top : lift.principalSeg.top = univ :=
 #align ordinal.lift.principal_seg_top Ordinal.lift.principalSeg_top
 
 theorem lift.principalSeg_top' : lift.principalSeg.{u, u + 1}.top = @type Ordinal (· < ·) _ := by
-  simp only [lift.principal_seg_top, univ_id]
+  simp only [lift.principalSeg_top, univ_id]
 #align ordinal.lift.principal_seg_top' Ordinal.lift.principalSeg_top'
 
 end Ordinal
@@ -1318,11 +1318,11 @@ def ord (c : Cardinal) : Ordinal :=
       exact fun α β h => (this h).antisymm (this (Setoid.symm h))
       rintro α β ⟨f⟩
       refine' le_cinfᵢ_iff'.2 fun i => _
-      haveI := @RelEmbedding.isWellOrder _ _ (f ⁻¹'o i.1) _ (↑(RelIso.preimage f i.1)) i.2
+      haveI := @rel_embedding.is_well_order _ _ (f ⁻¹'o i.1) _ (↑(RelIso.preimage f i.1)) i.2
       exact
         (cinfᵢ_le' _
               (Subtype.mk (⇑f ⁻¹'o i.val)
-                (@RelEmbedding.isWellOrder _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
+                (@rel_embedding.is_well_order _ _ _ _ (↑(RelIso.preimage f i.1)) i.2))).trans_eq
           (Quot.sound ⟨RelIso.preimage f i.1⟩))
 #align cardinal.ord Cardinal.ord
 
@@ -1366,7 +1366,7 @@ theorem lt_ord {c o} : o < ord c ↔ o.card < c :=
 theorem card_ord (c) : (ord c).card = c :=
   Quotient.inductionOn c fun α => by
     let ⟨r, _, e⟩ := ord_eq α
-    simp only [mk_def, e, card_type]
+    simp only [mk'_def, e, card_type]
 #align cardinal.card_ord Cardinal.card_ord
 
 /-- Galois coinsertion between `cardinal.ord` and `ordinal.card`. -/
@@ -1485,7 +1485,7 @@ theorem univ_umax : univ.{u, max (u + 1) v} = univ.{u, v} :=
 #align cardinal.univ_umax Cardinal.univ_umax
 
 theorem lift_lt_univ (c : Cardinal) : lift.{u + 1, u} c < univ.{u, u + 1} := by
-  simpa only [lift.principal_seg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using
+  simpa only [lift.principalSeg_coe, lift_ord, lift_succ, ord_le, succ_le_iff] using
     le_of_lt (lift.principalSeg.{u, u + 1}.lt_top (succ c).ord)
 #align cardinal.lift_lt_univ Cardinal.lift_lt_univ
 
@@ -1500,9 +1500,9 @@ theorem ord_univ : ord univ.{u, v} = Ordinal.univ.{u, v} :=
       lt_ord.2
         (by
           rcases lift.principalSeg.{u, v}.down.1
-              (by simpa only [lift.principal_seg_coe] using h) with
+              (by simpa only [lift.principalSeg_coe] using h) with
             ⟨o', rfl⟩
-          simp only [lift.principal_seg_coe]; rw [← lift_card]
+          simp only [lift.principalSeg_coe]; rw [← lift_card]
           apply lift_lt_univ')
 #align cardinal.ord_univ Cardinal.ord_univ
 
@@ -1510,9 +1510,9 @@ theorem lt_univ {c} : c < univ.{u, u + 1} ↔ ∃ c', c = lift.{u + 1, u} c' :=
   ⟨fun h => by
     have := ord_lt_ord.2 h
     rw [ord_univ] at this
-    cases' lift.principalSeg.{u, u + 1}.down.1 (by simpa only [lift.principal_seg_top] ) with o e
+    cases' lift.principalSeg.{u, u + 1}.down.1 (by simpa only [lift.principalSeg_top] ) with o e
     have := card_ord c
-    rw [← e, lift.principal_seg_coe, ← lift_card] at this
+    rw [← e, lift.principalSeg_coe, ← lift_card] at this
     exact ⟨_, this.symm⟩, fun ⟨c', e⟩ => e.symm ▸ lift_lt_univ _⟩
 #align cardinal.lt_univ Cardinal.lt_univ
 

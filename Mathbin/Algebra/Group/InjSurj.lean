@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.inj_surj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive commutative semigroup,\nif it admits an injective map that preserves `+` to an additive commutative semigroup."]
 protected def commSemigroup [CommSemigroup M₂] (f : M₁ → M₂) (hf : Injective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : CommSemigroup M₁ :=
-  { hf.Semigroup f mul with mul_comm := fun x y => hf <| by erw [mul, mul, mul_comm] }
+  { hf.semigroup f mul with mul_comm := fun x y => hf <| by erw [mul, mul, mul_comm] }
 #align function.injective.comm_semigroup Function.Injective.commSemigroup
 #align function.injective.add_comm_semigroup Function.Injective.addCommSemigroup
 
@@ -94,7 +94,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive left cancel semigroup,\nif it admits an injective map that preserves `+` to an additive left cancel semigroup."]
 protected def leftCancelSemigroup [LeftCancelSemigroup M₂] (f : M₁ → M₂) (hf : Injective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : LeftCancelSemigroup M₁ :=
-  { hf.Semigroup f mul with
+  { hf.semigroup f mul with
     mul := (· * ·)
     mul_left_cancel := fun x y z H =>
       hf <| (mul_right_inj (f x)).1 <| by erw [← mul, ← mul, H] <;> rfl }
@@ -115,7 +115,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive right cancel semigroup,\nif it admits an injective map that preserves `+` to an additive right cancel semigroup."]
 protected def rightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M₂) (hf : Injective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : RightCancelSemigroup M₁ :=
-  { hf.Semigroup f mul with
+  { hf.semigroup f mul with
     mul := (· * ·)
     mul_right_cancel := fun x y z H =>
       hf <| (mul_left_inj (f y)).1 <| by erw [← mul, ← mul, H] <;> rfl }
@@ -161,8 +161,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an additive monoid,\nif it admits an injective map that preserves `0` and `+` to an additive monoid.\nThis version takes a custom `nsmul` as a `[has_smul ℕ M₁]` argument."]
 protected def monoid [Monoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : Monoid M₁ :=
-  { hf.Semigroup f mul,
-    hf.MulOneClass f one mul with
+  { hf.semigroup f mul,
+    hf.mulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero := fun x => hf <| by erw [npow, one, pow_zero]
     npow_succ := fun n x => hf <| by erw [npow, pow_succ, mul, npow] }
@@ -183,7 +183,7 @@ protected def addMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul �
     [AddMonoidWithOne M₂] (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₁ :=
-  { hf.AddMonoid f zero add nsmul with
+  { hf.addMonoid f zero add nsmul with
     natCast := coe
     natCast_zero := hf (by erw [nat_cast, Nat.cast_zero, zero])
     natCast_succ := fun n => hf (by erw [nat_cast, Nat.cast_succ, add, one, nat_cast])
@@ -205,7 +205,7 @@ See note [reducible non-instances]. -/
 protected def leftCancelMonoid [LeftCancelMonoid M₂] (f : M₁ → M₂) (hf : Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : LeftCancelMonoid M₁ :=
-  { hf.LeftCancelSemigroup f mul, hf.Monoid f one mul npow with }
+  { hf.leftCancelSemigroup f mul, hf.monoid f one mul npow with }
 #align function.injective.left_cancel_monoid Function.Injective.leftCancelMonoid
 #align function.injective.add_left_cancel_monoid Function.Injective.addLeftCancelMonoid
 
@@ -224,7 +224,7 @@ See note [reducible non-instances]. -/
 protected def rightCancelMonoid [RightCancelMonoid M₂] (f : M₁ → M₂) (hf : Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : RightCancelMonoid M₁ :=
-  { hf.RightCancelSemigroup f mul, hf.Monoid f one mul npow with }
+  { hf.rightCancelSemigroup f mul, hf.monoid f one mul npow with }
 #align function.injective.right_cancel_monoid Function.Injective.rightCancelMonoid
 #align function.injective.add_right_cancel_monoid Function.Injective.addRightCancelMonoid
 
@@ -243,7 +243,7 @@ See note [reducible non-instances]. -/
 protected def cancelMonoid [CancelMonoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CancelMonoid M₁ :=
-  { hf.LeftCancelMonoid f one mul npow, hf.RightCancelMonoid f one mul npow with }
+  { hf.leftCancelMonoid f one mul npow, hf.rightCancelMonoid f one mul npow with }
 #align function.injective.cancel_monoid Function.Injective.cancelMonoid
 #align function.injective.add_cancel_monoid Function.Injective.addCancelMonoid
 
@@ -262,7 +262,7 @@ See note [reducible non-instances]. -/
 protected def commMonoid [CommMonoid M₂] (f : M₁ → M₂) (hf : Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CommMonoid M₁ :=
-  { hf.CommSemigroup f mul, hf.Monoid f one mul npow with }
+  { hf.commSemigroup f mul, hf.monoid f one mul npow with }
 #align function.injective.comm_monoid Function.Injective.commMonoid
 #align function.injective.add_comm_monoid Function.Injective.addCommMonoid
 
@@ -274,7 +274,7 @@ protected def addCommMonoidWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMu
     [AddCommMonoidWithOne M₂] (f : M₁ → M₂) (hf : Injective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddCommMonoidWithOne M₁ :=
-  { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.AddCommMonoid f zero add nsmul with }
+  { hf.addMonoidWithOne f zero one add nsmul nat_cast, hf.addCommMonoid f zero add nsmul with }
 #align function.injective.add_comm_monoid_with_one Function.Injective.addCommMonoidWithOne
 
 /- warning: function.injective.cancel_comm_monoid -> Function.Injective.cancelCommMonoid is a dubious translation:
@@ -292,7 +292,7 @@ See note [reducible non-instances]. -/
 protected def cancelCommMonoid [CancelCommMonoid M₂] (f : M₁ → M₂) (hf : Injective f)
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y)
     (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : CancelCommMonoid M₁ :=
-  { hf.LeftCancelSemigroup f mul, hf.CommMonoid f one mul npow with }
+  { hf.leftCancelSemigroup f mul, hf.commMonoid f one mul npow with }
 #align function.injective.cancel_comm_monoid Function.Injective.cancelCommMonoid
 #align function.injective.add_cancel_comm_monoid Function.Injective.addCancelCommMonoid
 
@@ -334,7 +334,7 @@ protected def divInvMonoid [DivInvMonoid M₂] (f : M₁ → M₂) (hf : Injecti
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivInvMonoid M₁ :=
-  { hf.Monoid f one mul npow, ‹Inv M₁›,
+  { hf.monoid f one mul npow, ‹Inv M₁›,
     ‹Div M₁› with
     zpow := fun n x => x ^ n
     zpow_zero' := fun x => hf <| by erw [zpow, zpow_zero, one]
@@ -360,8 +360,8 @@ protected def divisionMonoid [DivisionMonoid M₂] (f : M₁ → M₂) (hf : Inj
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivisionMonoid M₁ :=
-  { hf.DivInvMonoid f one mul inv div npow zpow,
-    hf.InvolutiveInv f
+  { hf.divInvMonoid f one mul inv div npow zpow,
+    hf.involutiveInv f
       inv with
     mul_inv_rev := fun x y => hf <| by erw [inv, mul, mul_inv_rev, mul, inv, inv]
     inv_eq_of_mul := fun x y h =>
@@ -386,7 +386,7 @@ protected def divisionCommMonoid [DivisionCommMonoid M₂] (f : M₁ → M₂) (
     (one : f 1 = 1) (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivisionCommMonoid M₁ :=
-  { hf.DivisionMonoid f one mul inv div npow zpow, hf.CommSemigroup f mul with }
+  { hf.divisionMonoid f one mul inv div npow zpow, hf.commSemigroup f mul with }
 #align function.injective.division_comm_monoid Function.Injective.divisionCommMonoid
 #align function.injective.subtraction_comm_monoid Function.Injective.subtractionCommMonoid
 
@@ -406,7 +406,7 @@ protected def group [Group M₂] (f : M₁ → M₂) (hf : Injective f) (one : f
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : Group M₁ :=
-  { hf.DivInvMonoid f one mul inv div npow zpow with
+  { hf.divInvMonoid f one mul inv div npow zpow with
     mul_left_inv := fun x => hf <| by erw [mul, inv, mul_left_inv, one] }
 #align function.injective.group Function.Injective.group
 #align function.injective.add_group Function.Injective.addGroup
@@ -427,8 +427,8 @@ protected def addGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul ℕ
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₁ :=
-  { hf.AddGroup f zero add neg sub nsmul zsmul,
-    hf.AddMonoidWithOne f zero one add nsmul
+  { hf.addGroup f zero add neg sub nsmul zsmul,
+    hf.addMonoidWithOne f zero one add nsmul
       nat_cast with
     intCast := coe
     intCast_ofNat := fun n => hf (by simp only [nat_cast, int_cast, Int.cast_ofNat])
@@ -452,7 +452,7 @@ protected def commGroup [CommGroup M₂] (f : M₁ → M₂) (hf : Injective f) 
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : CommGroup M₁ :=
-  { hf.CommMonoid f one mul npow, hf.Group f one mul inv div npow zpow with }
+  { hf.commMonoid f one mul npow, hf.group f one mul inv div npow zpow with }
 #align function.injective.comm_group Function.Injective.commGroup
 #align function.injective.add_comm_group Function.Injective.addCommGroup
 
@@ -466,8 +466,8 @@ protected def addCommGroupWithOne {M₁} [Zero M₁] [One M₁] [Add M₁] [SMul
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddCommGroupWithOne M₁ :=
-  { hf.AddGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
-    hf.AddCommMonoid f zero add nsmul with }
+  { hf.addGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
+    hf.addCommMonoid f zero add nsmul with }
 #align function.injective.add_comm_group_with_one Function.Injective.addCommGroupWithOne
 
 end Injective
@@ -513,7 +513,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `+` is an additive commutative semigroup,\nif it admits a surjective map that preserves `+` from an additive commutative semigroup."]
 protected def commSemigroup [CommSemigroup M₁] (f : M₁ → M₂) (hf : Surjective f)
     (mul : ∀ x y, f (x * y) = f x * f y) : CommSemigroup M₂ :=
-  { hf.Semigroup f mul with mul_comm := hf.Forall₂.2 fun x y => by erw [← mul, ← mul, mul_comm] }
+  { hf.semigroup f mul with mul_comm := hf.forall₂.2 fun x y => by erw [← mul, ← mul, mul_comm] }
 #align function.surjective.comm_semigroup Function.Surjective.commSemigroup
 #align function.surjective.add_comm_semigroup Function.Surjective.addCommSemigroup
 
@@ -556,8 +556,8 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an additive monoid,\nif it admits a surjective map that preserves `0` and `+` to an additive monoid.\nThis version takes a custom `nsmul` as a `[has_smul ℕ M₂]` argument."]
 protected def monoid [Monoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) : Monoid M₂ :=
-  { hf.Semigroup f mul,
-    hf.MulOneClass f one mul with
+  { hf.semigroup f mul,
+    hf.mulOneClass f one mul with
     npow := fun n x => x ^ n
     npow_zero := hf.forall.2 fun x => by erw [← npow, pow_zero, ← one]
     npow_succ := fun n => hf.forall.2 fun x => by erw [← npow, pow_succ, ← npow, ← mul] }
@@ -578,7 +578,7 @@ protected def addMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [SMul �
     [AddMonoidWithOne M₁] (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddMonoidWithOne M₂ :=
-  { hf.AddMonoid f zero add nsmul with
+  { hf.addMonoid f zero add nsmul with
     natCast := coe
     natCast_zero := by
       rw [← nat_cast, Nat.cast_zero, zero]
@@ -605,7 +605,7 @@ See note [reducible non-instances]. -/
 protected def commMonoid [CommMonoid M₁] (f : M₁ → M₂) (hf : Surjective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     CommMonoid M₂ :=
-  { hf.CommSemigroup f mul, hf.Monoid f one mul npow with }
+  { hf.commSemigroup f mul, hf.monoid f one mul npow with }
 #align function.surjective.comm_monoid Function.Surjective.commMonoid
 #align function.surjective.add_comm_monoid Function.Surjective.addCommMonoid
 
@@ -617,7 +617,7 @@ protected def addCommMonoidWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [SMu
     [AddCommMonoidWithOne M₁] (f : M₁ → M₂) (hf : Surjective f) (zero : f 0 = 0) (one : f 1 = 1)
     (add : ∀ x y, f (x + y) = f x + f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (nat_cast : ∀ n : ℕ, f n = n) : AddCommMonoidWithOne M₂ :=
-  { hf.AddMonoidWithOne f zero one add nsmul nat_cast, hf.AddCommMonoid _ zero _ nsmul with }
+  { hf.addMonoidWithOne f zero one add nsmul nat_cast, hf.addCommMonoid _ zero _ nsmul with }
 #align function.surjective.add_comm_monoid_with_one Function.Surjective.addCommMonoidWithOne
 
 /- warning: function.surjective.has_involutive_inv -> Function.Surjective.involutiveInv is a dubious translation:
@@ -658,7 +658,7 @@ protected def divInvMonoid [DivInvMonoid M₁] (f : M₁ → M₂) (hf : Surject
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : DivInvMonoid M₂ :=
-  { hf.Monoid f one mul npow, ‹Div M₂›,
+  { hf.monoid f one mul npow, ‹Div M₂›,
     ‹Inv M₂› with
     zpow := fun n x => x ^ n
     zpow_zero' := hf.forall.2 fun x => by erw [← zpow, zpow_zero, ← one]
@@ -666,7 +666,7 @@ protected def divInvMonoid [DivInvMonoid M₁] (f : M₁ → M₂) (hf : Surject
       hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_ofNat, zpow_ofNat, pow_succ, ← mul]
     zpow_neg' := fun n =>
       hf.forall.2 fun x => by erw [← zpow, ← zpow, zpow_negSucc, zpow_ofNat, inv]
-    div_eq_mul_inv := hf.Forall₂.2 fun x y => by erw [← inv, ← mul, ← div, div_eq_mul_inv] }
+    div_eq_mul_inv := hf.forall₂.2 fun x y => by erw [← inv, ← mul, ← div, div_eq_mul_inv] }
 #align function.surjective.div_inv_monoid Function.Surjective.divInvMonoid
 #align function.surjective.sub_neg_monoid Function.Surjective.subNegMonoid
 
@@ -686,7 +686,7 @@ protected def group [Group M₁] (f : M₁ → M₂) (hf : Surjective f) (one : 
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : Group M₂ :=
-  { hf.DivInvMonoid f one mul inv div npow zpow with
+  { hf.divInvMonoid f one mul inv div npow zpow with
     mul_left_inv := hf.forall.2 fun x => by erw [← inv, ← mul, mul_left_inv, one] <;> rfl }
 #align function.surjective.group Function.Surjective.group
 #align function.surjective.add_group Function.Surjective.addGroup
@@ -707,8 +707,8 @@ protected def addGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg M₂
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddGroupWithOne M₂ :=
-  { hf.AddMonoidWithOne f zero one add nsmul nat_cast,
-    hf.AddGroup f zero add neg sub nsmul
+  { hf.addMonoidWithOne f zero one add nsmul nat_cast,
+    hf.addGroup f zero add neg sub nsmul
       zsmul with
     intCast := coe
     intCast_ofNat := fun n => by rw [← int_cast, Int.cast_ofNat, nat_cast]
@@ -734,7 +734,7 @@ protected def commGroup [CommGroup M₁] (f : M₁ → M₂) (hf : Surjective f)
     (mul : ∀ x y, f (x * y) = f x * f y) (inv : ∀ x, f x⁻¹ = (f x)⁻¹)
     (div : ∀ x y, f (x / y) = f x / f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (zpow : ∀ (x) (n : ℤ), f (x ^ n) = f x ^ n) : CommGroup M₂ :=
-  { hf.CommMonoid f one mul npow, hf.Group f one mul inv div npow zpow with }
+  { hf.commMonoid f one mul npow, hf.group f one mul inv div npow zpow with }
 #align function.surjective.comm_group Function.Surjective.commGroup
 #align function.surjective.add_comm_group Function.Surjective.addCommGroup
 
@@ -748,8 +748,8 @@ protected def addCommGroupWithOne {M₂} [Zero M₂] [One M₂] [Add M₂] [Neg 
     (sub : ∀ x y, f (x - y) = f x - f y) (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x)
     (zsmul : ∀ (x) (n : ℤ), f (n • x) = n • f x) (nat_cast : ∀ n : ℕ, f n = n)
     (int_cast : ∀ n : ℤ, f n = n) : AddCommGroupWithOne M₂ :=
-  { hf.AddGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
-    hf.AddCommMonoid _ zero add nsmul with }
+  { hf.addGroupWithOne f zero one add neg sub nsmul zsmul nat_cast int_cast,
+    hf.addCommMonoid _ zero add nsmul with }
 #align function.surjective.add_comm_group_with_one Function.Surjective.addCommGroupWithOne
 
 end Surjective

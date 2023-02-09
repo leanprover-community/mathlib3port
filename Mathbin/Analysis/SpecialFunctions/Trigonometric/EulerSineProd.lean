@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.euler_sine_prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
     by
     intro x hx
     have b : HasDerivAt (fun y => ↑(cos y) : ℝ → ℂ) (-sin x) x := by
-      simpa using (has_deriv_at_cos x).of_real_comp
+      simpa using (hasDerivAt_cos x).of_real_comp
     convert HasDerivAt.comp x (hasDerivAt_pow _ _) b using 1
     ring
   convert integral_mul_deriv_eq_deriv_mul der1 (fun x hx => antideriv_cos_comp_const_mul hz x) _ _
@@ -206,7 +206,7 @@ theorem integral_cos_pow_eq (n : ℕ) :
   by
   rw [mul_comm (1 / 2 : ℝ), ← div_eq_iff (one_div_ne_zero (two_ne_zero' ℝ)), ← div_mul, div_one,
     mul_two]
-  have L : IntervalIntegrable _ volume 0 (π / 2) := (continuous_sin.pow n).IntervalIntegrable _ _
+  have L : IntervalIntegrable _ volume 0 (π / 2) := (continuous_sin.pow n).intervalIntegrable _ _
   have R : IntervalIntegrable _ volume (π / 2) π := (continuous_sin.pow n).IntervalIntegrable _ _
   rw [← integral_add_adjacent_intervals L R]
   congr 1
@@ -329,8 +329,8 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
     rw [interior_Icc, closure_Ioo pi_div_two_pos.ne, left_mem_Icc]
     exact pi_div_two_pos.le
   exact
-    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn is_compact_Icc
-      continuous_on_cos c_lt c_nonneg c_zero_pos zero_mem hf
+    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn isCompact_Icc
+      continuousOn_cos c_lt c_nonneg c_zero_pos zero_mem hf
 #align euler_sine.tendsto_integral_cos_pow_mul_div EulerSine.tendsto_integral_cos_pow_mul_div
 
 /-- Euler's infinite product formula for the complex sine function. -/
@@ -339,25 +339,25 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
       (𝓝 <| Complex.sin (π * z)) :=
   by
   have A :
-    tendsto
+    Tendsto
       (fun n : ℕ =>
         ((↑π * z * ∏ j in Finset.range n, 1 - z ^ 2 / (j + 1) ^ 2) *
             ∫ x in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ (2 * n)) /
           ↑(∫ x in 0 ..π / 2, cos x ^ (2 * n)))
-      at_top (𝓝 <| _) :=
-    tendsto.congr (fun n => sin_pi_mul_eq z n) tendsto_const_nhds
+      atTop (𝓝 <| _) :=
+    Tendsto.congr (fun n => sin_pi_mul_eq z n) tendsto_const_nhds
   have : 𝓝 (Complex.sin (π * z)) = 𝓝 (Complex.sin (π * z) * 1) := by rw [mul_one]
   simp_rw [this, mul_div_assoc] at A
   convert (tendsto_mul_iff_of_ne_zero _ one_ne_zero).mp A
   suffices :
-    tendsto
+    Tendsto
       (fun n : ℕ =>
         (∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n) /
           ↑(∫ x : ℝ in 0 ..π / 2, cos x ^ n))
-      at_top (𝓝 1)
+      atTop (𝓝 1)
   exact this.comp (tendsto_id.const_mul_at_top' zero_lt_two)
   have : ContinuousOn (fun x : ℝ => Complex.cos (2 * z * x)) (Icc 0 (π / 2)) :=
-    (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).ContinuousOn
+    (complex.continuous_cos.comp (continuous_const.mul Complex.continuous_of_real)).continuousOn
   convert tendsto_integral_cos_pow_mul_div this
   · ext1 n
     congr 2 with x : 1

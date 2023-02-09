@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.option.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem getD_coe (x y : α) : Option.getD (↑x) y = x :=
 
 #print Option.getD_of_ne_none /-
 theorem getD_of_ne_none {x : Option α} (hx : x ≠ none) (y : α) : some (x.getD y) = x := by
-  cases x <;> [contradiction, rw [get_or_else_some]]
+  cases x <;> [contradiction, rw [getD_some]]
 #align option.get_or_else_of_ne_none Option.getD_of_ne_none
 -/
 
@@ -939,7 +939,7 @@ theorem isSome_some {a : α} : isSome (some a) = true :=
 
 #print Option.isSome_iff_exists /-
 theorem isSome_iff_exists {x : Option α} : isSome x ↔ ∃ a, x = some a := by
-  cases x <;> simp [is_some] <;> exact ⟨_, rfl⟩
+  cases x <;> simp [isSome] <;> exact ⟨_, rfl⟩
 #align option.is_some_iff_exists Option.isSome_iff_exists
 -/
 
@@ -990,7 +990,7 @@ theorem ne_none_iff_exists' {o : Option α} : o ≠ none ↔ ∃ x : α, o = som
 #align option.ne_none_iff_exists' Option.ne_none_iff_exists'
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.bex_ne_none /-
 theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x) ↔ ∃ x, p (some x) :=
   ⟨fun ⟨x, hx, hp⟩ => ⟨get <| ne_none_iff_isSome.1 hx, by rwa [some_get]⟩, fun ⟨x, hx⟩ =>
@@ -998,11 +998,11 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x
 #align option.bex_ne_none Option.bex_ne_none
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ≠ » none[option.none]) -/
 #print Option.ball_ne_none /-
 theorem ball_ne_none {p : Option α → Prop} : (∀ (x) (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x), fun h x hx => by
-    simpa only [some_get] using h (get <| ne_none_iff_is_some.1 hx)⟩
+    simpa only [some_get] using h (get <| ne_none_iff_isSome.1 hx)⟩
 #align option.ball_ne_none Option.ball_ne_none
 -/
 
@@ -1046,7 +1046,7 @@ Case conversion may be inaccurate. Consider using '#align option.guard_eq_some' 
 theorem guard_eq_some' {p : Prop} [Decidable p] (u) : guard p = some u ↔ p :=
   by
   cases u
-  by_cases p <;> simp [_root_.guard, h] <;> first |rfl|contradiction
+  by_cases p <;> simp [guard, h] <;> first |rfl|contradiction
 #align option.guard_eq_some' Option.guard_eq_some'
 
 #print Option.liftOrGet_choice /-
@@ -1055,7 +1055,7 @@ theorem liftOrGet_choice {f : α → α → α} (h : ∀ a b, f a b = a ∨ f a 
   | none, none => Or.inl rfl
   | some a, none => Or.inl rfl
   | none, some b => Or.inr rfl
-  | some a, some b => by simpa [lift_or_get] using h a b
+  | some a, some b => by simpa [liftOrGet] using h a b
 #align option.lift_or_get_choice Option.liftOrGet_choice
 -/
 
@@ -1140,8 +1140,8 @@ theorem orElse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x :=
   by
   cases o
-  · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orelse]
-  · simp only [some_orelse, or_false_iff, false_and_iff]
+  · simp only [true_and_iff, false_or_iff, eq_self_iff_true, none_orElse]
+  · simp only [some_orElse, or_false_iff, false_and_iff]
 #align option.orelse_eq_some Option.orElse_eq_some
 
 /- warning: option.orelse_eq_some' -> Option.orElse_eq_some' is a dubious translation:
@@ -1165,8 +1165,8 @@ Case conversion may be inaccurate. Consider using '#align option.orelse_eq_none 
 theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none :=
   by
   cases o
-  · simp only [true_and_iff, none_orelse, eq_self_iff_true]
-  · simp only [some_orelse, false_and_iff]
+  · simp only [true_and_iff, none_orElse, eq_self_iff_true]
+  · simp only [some_orElse, false_and_iff]
 #align option.orelse_eq_none Option.orElse_eq_none
 
 /- warning: option.orelse_eq_none' -> Option.orElse_eq_none' is a dubious translation:
@@ -1215,7 +1215,7 @@ theorem choice_isSome_iff_nonempty {α : Type _} : (choice α).isSome ↔ Nonemp
   · intro h
     dsimp only [choice]
     rw [dif_pos h]
-    exact is_some_some
+    exact isSome_some
 #align option.choice_is_some_iff_nonempty Option.choice_isSome_iff_nonempty
 -/
 

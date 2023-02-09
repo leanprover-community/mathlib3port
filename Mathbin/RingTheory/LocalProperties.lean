@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.local_properties
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,7 +171,7 @@ theorem RingHom.ofLocalizationSpan_iff_finite :
     exact h s
   · intro h s hs hs'
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
-    exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
+    exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
 #align ring_hom.of_localization_span_iff_finite RingHom.ofLocalizationSpan_iff_finite
 
 theorem RingHom.ofLocalizationSpanTarget_iff_finite :
@@ -186,7 +186,7 @@ theorem RingHom.ofLocalizationSpanTarget_iff_finite :
     exact h s
   · intro h s hs hs'
     obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
-    exact h s' h₂ fun x => hs' ⟨_, h₁ x.Prop⟩
+    exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
 #align ring_hom.of_localization_span_target_iff_finite RingHom.ofLocalizationSpanTarget_iff_finite
 
 variable {P f R' S'}
@@ -258,11 +258,11 @@ theorem Ideal.le_of_localization_maximal {I J : Ideal R}
   intro P hP le
   obtain ⟨⟨⟨a, ha⟩, ⟨s, hs⟩⟩, eq⟩ :=
     (IsLocalization.mem_map_algebraMap_iff P.prime_compl _).mp (h P hP (Ideal.mem_map_of_mem _ hx))
-  rw [← _root_.map_mul, ← sub_eq_zero, ← map_sub] at eq
-  obtain ⟨⟨m, hm⟩, eq⟩ := (IsLocalization.map_eq_zero_iff P.prime_compl _ _).mp Eq
+  rw [← map_mul, ← sub_eq_zero, ← map_sub] at eq
+  obtain ⟨⟨m, hm⟩, eq⟩ := (IsLocalization.map_eq_zero_iff P.prime_compl _ _).mp eq
   refine' hs ((hP.is_prime.mem_or_mem (le (ideal.mem_colon_singleton.mpr _))).resolve_right hm)
   simp only [Subtype.coe_mk, mul_sub, sub_eq_zero, mul_comm x s, mul_left_comm] at eq
-  simpa only [mul_assoc, Eq] using J.mul_mem_left m ha
+  simpa only [mul_assoc, eq] using J.mul_mem_left m ha
 #align ideal.le_of_localization_maximal Ideal.le_of_localization_maximal
 
 /-- Let `I J : ideal R`. If the localization of `I` at each maximal ideal `P` is equal to
@@ -439,7 +439,7 @@ theorem localization_finite : RingHom.LocalizationPreserves @RingHom.Finite :=
 
 theorem localization_away_map_finite (r : R) [IsLocalization.Away r R']
     [IsLocalization.Away (f r) S'] (hf : f.Finite) : (IsLocalization.Away.map R' S' f r).Finite :=
-  localization_finite.Away r hf
+  localization_finite.away r hf
 #align localization_away_map_finite localization_away_map_finite
 
 /-- Let `S` be an `R`-algebra, `M` an submonoid of `R`, and `S' = M⁻¹S`.
@@ -626,7 +626,7 @@ theorem localization_finiteType : RingHom.LocalizationPreserves @RingHom.FiniteT
 theorem localization_away_map_finiteType (r : R) [IsLocalization.Away r R']
     [IsLocalization.Away (f r) S'] (hf : f.FiniteType) :
     (IsLocalization.Away.map R' S' f r).FiniteType :=
-  localization_finiteType.Away r hf
+  localization_finiteType.away r hf
 #align localization_away_map_finite_type localization_away_map_finiteType
 
 variable {S'}
@@ -652,7 +652,7 @@ theorem IsLocalization.exists_smul_mem_of_mem_adjoin [Algebra R S] [Algebra R S'
         exact Set.image_subset _ hA₁)
       hx (Set.mem_image_of_mem _ (hA₂ y.2))
   obtain ⟨x', hx', hx''⟩ := hn n (le_of_eq rfl)
-  rw [Algebra.smul_def, ← _root_.map_mul] at hx''
+  rw [Algebra.smul_def, ← map_mul] at hx''
   obtain ⟨a, ha₂⟩ := (IsLocalization.eq_iff_exists M S').mp hx''
   use a * y ^ n
   convert A.mul_mem hx' (hA₂ a.prop)

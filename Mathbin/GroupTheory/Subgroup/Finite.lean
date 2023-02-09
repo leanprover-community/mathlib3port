@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.list_prod_mem Subgroup.list_prod_memₓ'. -/
 /-- Product of a list of elements in a subgroup is in the subgroup. -/
 @[to_additive "Sum of a list of elements in an `add_subgroup` is in the `add_subgroup`."]
-protected theorem list_prod_mem {l : List G} : (∀ x ∈ l, x ∈ K) → l.Prod ∈ K :=
+protected theorem list_prod_mem {l : List G} : (∀ x ∈ l, x ∈ K) → l.prod ∈ K :=
   list_prod_mem
 #align subgroup.list_prod_mem Subgroup.list_prod_mem
 #align add_subgroup.list_sum_mem AddSubgroup.list_sum_mem
@@ -75,7 +75,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.multiset_prod
 @[to_additive
       "Sum of a multiset of elements in an `add_subgroup` of an `add_comm_group`\nis in the `add_subgroup`."]
 protected theorem multiset_prod_mem {G} [CommGroup G] (K : Subgroup G) (g : Multiset G) :
-    (∀ a ∈ g, a ∈ K) → g.Prod ∈ K :=
+    (∀ a ∈ g, a ∈ K) → g.prod ∈ K :=
   multiset_prod_mem g
 #align subgroup.multiset_prod_mem Subgroup.multiset_prod_mem
 #align add_subgroup.multiset_sum_mem AddSubgroup.multiset_sum_mem
@@ -129,7 +129,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H : Subgroup.{u1} G _inst_1) (l : List.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H))), Eq.{succ u1} G (Subtype.val.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) x (SetLike.coe.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1) H)) (List.prod.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) (Subgroup.mul.{u1} G _inst_1 H) (Subgroup.one.{u1} G _inst_1 H) l)) (List.prod.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1)))) (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))) (List.map.{u1, u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) G (Subtype.val.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H)) l))
 Case conversion may be inaccurate. Consider using '#align subgroup.coe_list_prod Subgroup.val_list_prodₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem val_list_prod (l : List H) : (l.Prod : G) = (l.map coe).Prod :=
+theorem val_list_prod (l : List H) : (l.prod : G) = (l.map coe).prod :=
   SubmonoidClass.coe_list_prod l
 #align subgroup.coe_list_prod Subgroup.val_list_prod
 #align add_subgroup.coe_list_sum AddSubgroup.val_list_sum
@@ -142,7 +142,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.coe_multiset_prod Subgroup.val_multiset_prodₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem val_multiset_prod {G} [CommGroup G] (H : Subgroup G) (m : Multiset H) :
-    (m.Prod : G) = (m.map coe).Prod :=
+    (m.prod : G) = (m.map coe).prod :=
   SubmonoidClass.coe_multiset_prod m
 #align subgroup.coe_multiset_prod Subgroup.val_multiset_prod
 #align add_subgroup.coe_multiset_sum AddSubgroup.val_multiset_sum
@@ -265,7 +265,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.one_lt_card_iff_ne_bot Subgroup.one_lt_card_iff_ne_botₓ'. -/
 @[to_additive]
 theorem one_lt_card_iff_ne_bot [Fintype H] : 1 < Fintype.card H ↔ H ≠ ⊥ :=
-  lt_iff_not_le.trans H.card_le_one_iff_eq_bot.Not
+  lt_iff_not_le.trans H.card_le_one_iff_eq_bot.not
 #align subgroup.one_lt_card_iff_ne_bot Subgroup.one_lt_card_iff_ne_bot
 #align add_subgroup.pos_card_iff_ne_bot AddSubgroup.pos_card_iff_ne_bot
 
@@ -297,20 +297,20 @@ theorem pi_mem_of_mulSingle_mem_aux [DecidableEq η] (I : Finset η) {H : Subgro
       by
       ext j
       by_cases heq : j = i
-      · subst HEq
+      · subst heq
         simp
-      · simp [HEq]
+      · simp [heq]
     rw [this]
     clear this
     apply mul_mem
     · apply ih <;> clear ih
       · intro j hj
         by_cases heq : j = i
-        · subst HEq
+        · subst heq
           simp
-        · simp [HEq]
+        · simp [heq]
           apply h1 j
-          simpa [HEq] using hj
+          simpa [heq] using hj
       · intro j hj
         have : j ≠ i := by
           rintro rfl
@@ -333,7 +333,7 @@ theorem pi_mem_of_mulSingle_mem [Finite η] [DecidableEq η] {H : Subgroup (∀ 
     (h : ∀ i, Pi.mulSingle i (x i) ∈ H) : x ∈ H :=
   by
   cases nonempty_fintype η
-  exact pi_mem_of_mul_single_mem_aux Finset.univ x (by simp) fun i _ => h i
+  exact pi_mem_of_mulSingle_mem_aux Finset.univ x (by simp) fun i _ => h i
 #align subgroup.pi_mem_of_mul_single_mem Subgroup.pi_mem_of_mulSingle_mem
 #align add_subgroup.pi_mem_of_single_mem AddSubgroup.pi_mem_of_single_mem
 
@@ -353,7 +353,7 @@ theorem pi_le_iff [DecidableEq η] [Finite η] {H : ∀ i, Subgroup (f i)} {J : 
   · rintro h i _ ⟨x, hx, rfl⟩
     apply h
     simpa using hx
-  · exact fun h x hx => pi_mem_of_mul_single_mem x fun i => h i (mem_map_of_mem _ (hx i trivial))
+  · exact fun h x hx => pi_mem_of_mulSingle_mem x fun i => h i (mem_map_of_mem _ (hx i trivial))
 #align subgroup.pi_le_iff Subgroup.pi_le_iff
 #align add_subgroup.pi_le_iff AddSubgroup.pi_le_iff
 
@@ -380,7 +380,7 @@ theorem mem_normalizer_fintype {S : Set G} [Finite S] {x : G} (h : ∀ n, n ∈ 
         have heq : (fun n => x * n * x⁻¹) '' S = S :=
           Set.eq_of_subset_of_card_le (fun n ⟨y, hy⟩ => hy.2 ▸ h y hy.1)
             (by rw [Set.card_image_of_injective S conj_injective])
-        have : x * n * x⁻¹ ∈ (fun n => x * n * x⁻¹) '' S := HEq.symm ▸ h₁
+        have : x * n * x⁻¹ ∈ (fun n => x * n * x⁻¹) '' S := heq.symm ▸ h₁
         let ⟨y, hy⟩ := this
         conj_injective hy.2 ▸ hy.1⟩
 #align subgroup.mem_normalizer_fintype Subgroup.mem_normalizer_fintype

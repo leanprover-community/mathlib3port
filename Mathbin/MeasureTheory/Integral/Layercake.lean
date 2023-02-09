@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.layercake
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g := by
       filter_upwards [self_mem_ae_restrict
           (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]with x hx using g_nn x hx.1
-    rw [← of_real_integral_eq_lintegral_of_real (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
+    rw [← ofReal_integral_eq_lintegral_ofReal (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
     congr
     exact intervalIntegral.integral_of_le (f_nn ω)
   simp_rw [integrand_eq, ← lintegral_indicator (fun t => Ennreal.ofReal (g t)) measurableSet_Ioc, ←
@@ -138,7 +138,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     rw [lintegral_indicator]
     swap
     · exact f_mble measurableSet_Ici
-    rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
+    rw [lintegral_one, Measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
       mul_assoc,
       show
         (Ioi 0).indicator (fun _x : ℝ => (1 : ℝ≥0∞)) s * μ { a : α | s ≤ f a } =
@@ -162,7 +162,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   rw [aux₂]
   have mble := measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
   simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble
-  exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AeMeasurable.indicator mble
+  exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).aeMeasurable.indicator mble
 #align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
 
 /-- The layer cake formula / Cavalieri's principle / tail probability formula:
@@ -186,15 +186,15 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G :=
     by
     refine' AeMeasurable.exists_measurable_nonneg _ g_nn
-    exact aeMeasurableIoiOfForallIoc fun t ht => (g_intble t ht).1.1.AeMeasurable
+    exact aeMeasurableIoiOfForallIoc fun t ht => (g_intble t ht).1.1.aeMeasurable
   rcases ex_G with ⟨G, G_mble, G_nn, g_eq_G⟩
   have g_eq_G_on : ∀ t, g =ᵐ[volume.restrict (Ioc 0 t)] G := fun t =>
-    ae_mono (measure.restrict_mono Ioc_subset_Ioi_self le_rfl) g_eq_G
+    ae_mono (Measure.restrict_mono Ioc_subset_Ioi_self le_rfl) g_eq_G
   have G_intble : ∀ t > 0, IntervalIntegrable G volume 0 t :=
     by
-    refine' fun t t_pos => ⟨integrable_on.congr_fun' (g_intble t t_pos).1 (g_eq_G_on t), _⟩
+    refine' fun t t_pos => ⟨IntegrableOn.congrFun' (g_intble t t_pos).1 (g_eq_G_on t), _⟩
     rw [Ioc_eq_empty_of_le t_pos.lt.le]
-    exact integrable_on_empty
+    exact integrableOnEmpty
   have eq₁ :
     (∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (g t)) =
       ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * Ennreal.ofReal (G t) :=
@@ -293,21 +293,21 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
   have uni : { a : α | t ≤ g a } = { a : α | t < g a } ∪ { a : α | t = g a } :=
     by
     ext a
-    simp only [mem_set_of_eq, mem_union]
+    simp only [mem_setOf_eq, mem_union]
     apply le_iff_lt_or_eq
   rw [show { a : α | t = g a } = { a : α | g a = t } by simp_rw [eq_comm]] at uni
   have disj : { a : α | t < g a } ∩ { a : α | g a = t } = ∅ :=
     by
     ext a
-    simp only [mem_inter_iff, mem_set_of_eq, mem_empty_iff_false, iff_false_iff, not_and]
+    simp only [mem_inter_iff, mem_setOf_eq, mem_empty_iff_false, iff_false_iff, not_and]
     exact ne_of_gt
   have μ_add : μ { a : α | t ≤ g a } = μ { a : α | t < g a } + μ { a : α | g a = t } := by
     rw [uni,
       measure_union (disjoint_iff_inter_eq_empty.mpr disj)
-        (g_mble (finite.measurable_set (finite_singleton t)))]
+        (g_mble (Finite.measurableSet (finite_singleton t)))]
   by_contra con
   rw [not_lt, nonpos_iff_eq_zero] at con
-  rw [Con, add_zero] at μ_add
+  rw [con, add_zero] at μ_add
   exact ht μ_add
 #align measure.meas_le_ne_meas_lt_subset_meas_pos Measure.meas_le_ne_meas_lt_subset_meas_pos
 

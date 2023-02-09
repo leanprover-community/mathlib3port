@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.multiset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -341,7 +341,7 @@ theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α)
         conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <|
     by
     contrapose! hs
-    exact s.gcd_eq_zero_iff.1 hs
+    exact PushNeg.not_eq.1 hs
 #align multiset.extract_gcd' Multiset.extract_gcd'
 
 /- warning: multiset.extract_gcd -> Multiset.extract_gcd is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.biproducts
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,22 +57,22 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
       fac' := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
-            simp only [binary_fan.π_app_right, binary_fan.π_app_left, ModuleCat.coe_comp,
+            simp only [BinaryFan.π_app_right, BinaryFan.π_app_left, ModuleCat.coe_comp,
               Function.comp_apply, LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply,
               Pi.prod]
       uniq' := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+        ext <;> [rw [← w ⟨WalkingPair.left⟩], rw [← w ⟨WalkingPair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
 
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_left (M N : ModuleCat.{v} R) :
-    (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.left⟩ = LinearMap.fst R M N :=
+    (binaryProductLimitCone M N).cone.π.app ⟨WalkingPair.left⟩ = LinearMap.fst R M N :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binaryProductLimitCone_cone_π_app_left
 
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_right (M N : ModuleCat.{v} R) :
-    (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.right⟩ = LinearMap.snd R M N :=
+    (binaryProductLimitCone Hom N).cone.π.app ⟨WalkingPair.right⟩ = LinearMap.snd R M hasCoeToFun :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binaryProductLimitCone_cone_π_app_right
 
@@ -82,7 +82,7 @@ the cartesian product of the underlying types:
 @[simps hom_apply]
 noncomputable def biprodIsoProd (M N : ModuleCat.{v} R) :
     (M ⊞ N : ModuleCat.{v} R) ≅ ModuleCat.of R (M × N) :=
-  IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit M N) (binaryProductLimitCone M N).IsLimit
+  IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit M N) (binaryProductLimitCone M N).isLimit
 #align Module.biprod_iso_prod ModuleCat.biprodIsoProd
 
 @[simp, elementwise]
@@ -132,7 +132,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
         simp
       uniq' := fun s m w => by
         ext (x j)
-        dsimp only [has_limit.lift]
+        dsimp only [HasLimit.lift]
         simp only [LinearMap.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 #align Module.has_limit.product_limit_cone ModuleCat.HasLimit.productLimitCone
@@ -149,7 +149,7 @@ on the dependent function type
 @[simps hom_apply]
 noncomputable def biproductIsoPi [Fintype J] (f : J → ModuleCat.{v} R) :
     (⨁ f : ModuleCat.{v} R) ≅ ModuleCat.of R (∀ j, f j) :=
-  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
+  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).isLimit
 #align Module.biproduct_iso_pi ModuleCat.biproductIsoPi
 
 @[simp, elementwise]
@@ -175,7 +175,7 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
     (exac : j.range = g.ker) (h : g.comp f = LinearMap.id) : (A × B) ≃ₗ[R] M :=
   (({             RightSplit := ⟨asHom f, h⟩
                   mono := (ModuleCat.mono_iff_injective <| asHom j).mpr hj
-                  exact := (exact_iff _ _).mpr exac } : RightSplit _ _).Splitting.Iso.trans <|
+                  exact := (exact_iff _ _).mpr exac } : RightSplit _ _).splitting.iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
 
@@ -185,7 +185,7 @@ noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.
     (exac : j.range = g.ker) (h : f.comp j = LinearMap.id) : (A × B) ≃ₗ[R] M :=
   (({             LeftSplit := ⟨asHom f, h⟩
                   Epi := (ModuleCat.epi_iff_surjective <| asHom g).mpr hg
-                  exact := (exact_iff _ _).mpr exac } : LeftSplit _ _).Splitting.Iso.trans <|
+                  exact := (exact_iff _ _).mpr exac } : LeftSplit _ _).splitting.iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExact
 

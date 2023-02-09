@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mitchell Rowett, Scott Morrison
 
 ! This file was ported from Lean 3 source module group_theory.coset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,7 +139,7 @@ end CosetMul
 
 section CosetSemigroup
 
-variable [Semigroup α]
+variable [Semigroup one_mul]
 
 /- warning: left_coset_assoc -> leftCoset_assoc is a dubious translation:
 lean 3 declaration is
@@ -149,7 +149,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align left_coset_assoc leftCoset_assocₓ'. -/
 @[simp, to_additive leftAddCoset_assoc]
 theorem leftCoset_assoc (s : Set α) (a b : α) : a *l (b *l s) = a * b *l s := by
-  simp [leftCoset, rightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
+  simp [tsub_self, rightCoset, (image_comp _ _ _).symm, Int.ofNat_mul, mul_assoc]
 #align left_coset_assoc leftCoset_assoc
 #align left_add_coset_assoc leftAddCoset_assoc
 
@@ -161,7 +161,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align right_coset_assoc rightCoset_assocₓ'. -/
 @[simp, to_additive rightAddCoset_assoc]
 theorem rightCoset_assoc (s : Set α) (a b : α) : s *r a *r b = s *r (a * b) := by
-  simp [leftCoset, rightCoset, (image_comp _ _ _).symm, Function.comp, mul_assoc]
+  simp [leftCoset, rightCoset, (zpow_one_add _ _ _).symm, Function.comp, mul_zpow_neg_one]
 #align right_coset_assoc rightCoset_assoc
 #align right_add_coset_assoc rightAddCoset_assoc
 
@@ -279,7 +279,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mem_left_coset_iff mem_leftCoset_iffₓ'. -/
 @[to_additive mem_leftAddCoset_iff]
 theorem mem_leftCoset_iff (a : α) : x ∈ a *l s ↔ a⁻¹ * x ∈ s :=
-  Iff.intro (fun ⟨b, hb, Eq⟩ => by simp [Eq.symm, hb]) fun h => ⟨a⁻¹ * x, h, by simp⟩
+  Iff.intro (fun ⟨b, hb, eq⟩ => by simp [eq.symm, hb]) fun h => ⟨a⁻¹ * x, h, by simp⟩
 #align mem_left_coset_iff mem_leftCoset_iff
 #align mem_left_add_coset_iff mem_leftAddCoset_iff
 
@@ -291,7 +291,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mem_right_coset_iff mem_rightCoset_iffₓ'. -/
 @[to_additive mem_rightAddCoset_iff]
 theorem mem_rightCoset_iff (a : α) : x ∈ s *r a ↔ x * a⁻¹ ∈ s :=
-  Iff.intro (fun ⟨b, hb, Eq⟩ => by simp [Eq.symm, hb]) fun h => ⟨x * a⁻¹, h, by simp⟩
+  Iff.intro (fun ⟨b, hb, eq⟩ => by simp [eq.symm, hb]) fun h => ⟨x * a⁻¹, h, by simp⟩
 #align mem_right_coset_iff mem_rightCoset_iff
 #align mem_right_add_coset_iff mem_rightAddCoset_iff
 
@@ -493,7 +493,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.left_re
 theorem leftRel_eq : @Setoid.r _ (leftRel s) = fun x y => x⁻¹ * y ∈ s :=
   funext₂ <| by
     simp only [eq_iff_iff]
-    apply left_rel_apply
+    apply leftRel_apply
 #align quotient_group.left_rel_eq QuotientGroup.leftRel_eq
 #align quotient_add_group.left_rel_eq QuotientAddGroup.leftRel_eq
 
@@ -507,7 +507,7 @@ theorem leftRel_r_eq_leftCosetEquivalence :
     @Setoid.r _ (QuotientGroup.leftRel s) = LeftCosetEquivalence s :=
   by
   ext
-  rw [left_rel_eq]
+  rw [leftRel_eq]
   exact (leftCoset_eq_iff s).symm
 #align quotient_group.left_rel_r_eq_left_coset_equivalence QuotientGroup.leftRel_r_eq_leftCosetEquivalence
 
@@ -518,9 +518,9 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Subgroup.{u1} α _inst_1) [_inst_2 : DecidablePred.{succ u1} α (fun (_x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) _x s)], DecidableRel.{succ u1} α (Setoid.r.{succ u1} α (QuotientGroup.leftRel.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align quotient_group.left_rel_decidable QuotientGroup.leftRelDecidableₓ'. -/
 @[to_additive]
-instance leftRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).R := fun x y =>
+instance leftRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (leftRel s).r := fun x y =>
   by
-  rw [left_rel_eq]
+  rw [leftRel_eq]
   exact ‹DecidablePred (· ∈ s)› _
 #align quotient_group.left_rel_decidable QuotientGroup.leftRelDecidable
 #align quotient_add_group.left_rel_decidable QuotientAddGroup.leftRelDecidable
@@ -573,7 +573,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.right_r
 theorem rightRel_eq : @Setoid.r _ (rightRel s) = fun x y => y * x⁻¹ ∈ s :=
   funext₂ <| by
     simp only [eq_iff_iff]
-    apply right_rel_apply
+    apply rightRel_apply
 #align quotient_group.right_rel_eq QuotientGroup.rightRel_eq
 #align quotient_add_group.right_rel_eq QuotientAddGroup.rightRel_eq
 
@@ -587,7 +587,7 @@ theorem rightRel_r_eq_rightCosetEquivalence :
     @Setoid.r _ (QuotientGroup.rightRel s) = RightCosetEquivalence s :=
   by
   ext
-  rw [right_rel_eq]
+  rw [rightRel_eq]
   exact (rightCoset_eq_iff s).symm
 #align quotient_group.right_rel_r_eq_right_coset_equivalence QuotientGroup.rightRel_r_eq_rightCosetEquivalence
 
@@ -598,9 +598,9 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] (s : Subgroup.{u1} α _inst_1) [_inst_2 : DecidablePred.{succ u1} α (fun (_x : α) => Membership.mem.{u1, u1} α (Subgroup.{u1} α _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} α _inst_1) α (Subgroup.instSetLikeSubgroup.{u1} α _inst_1)) _x s)], DecidableRel.{succ u1} α (Setoid.r.{succ u1} α (QuotientGroup.rightRel.{u1} α _inst_1 s))
 Case conversion may be inaccurate. Consider using '#align quotient_group.right_rel_decidable QuotientGroup.rightRelDecidableₓ'. -/
 @[to_additive]
-instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).R := fun x y =>
+instance rightRelDecidable [DecidablePred (· ∈ s)] : DecidableRel (rightRel s).r := fun x y =>
   by
-  rw [right_rel_eq]
+  rw [rightRel_eq]
   exact ‹DecidablePred (· ∈ s)› _
 #align quotient_group.right_rel_decidable QuotientGroup.rightRelDecidable
 #align quotient_add_group.right_rel_decidable QuotientAddGroup.rightRelDecidable
@@ -613,12 +613,12 @@ def quotientRightRelEquivQuotientLeftRel : Quotient (QuotientGroup.rightRel s) �
   toFun :=
     Quotient.map' (fun g => g⁻¹) fun a b =>
       by
-      rw [left_rel_apply, right_rel_apply]
+      rw [leftRel_apply, rightRel_apply]
       exact fun h => (congr_arg (· ∈ s) (by group)).mp (s.inv_mem h)
   invFun :=
     Quotient.map' (fun g => g⁻¹) fun a b =>
       by
-      rw [left_rel_apply, right_rel_apply]
+      rw [leftRel_apply, rightRel_apply]
       exact fun h => (congr_arg (· ∈ s) (by group)).mp (s.inv_mem h)
   left_inv g :=
     Quotient.inductionOn' g fun g =>
@@ -662,7 +662,7 @@ variable [Group α] {s : Subgroup α}
 
 #print QuotientGroup.fintype /-
 @[to_additive]
-instance fintype [Fintype α] (s : Subgroup α) [DecidableRel (leftRel s).R] : Fintype (α ⧸ s) :=
+instance fintype [Fintype α] (s : Subgroup α) [DecidableRel (leftRel s).r] : Fintype (α ⧸ s) :=
   Quotient.fintype (leftRel s)
 #align quotient_group.fintype QuotientGroup.fintype
 #align quotient_add_group.fintype QuotientAddGroup.fintype
@@ -744,7 +744,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.eq Quot
 protected theorem eq {a b : α} : (a : α ⧸ s) = b ↔ a⁻¹ * b ∈ s :=
   calc
     _ ↔ @Setoid.r _ (leftRel s) a b := Quotient.eq''
-    _ ↔ _ := by rw [left_rel_apply]
+    _ ↔ _ := by rw [leftRel_apply]
     
 #align quotient_group.eq QuotientGroup.eq
 #align quotient_add_group.eq QuotientAddGroup.eq
@@ -882,10 +882,10 @@ noncomputable def groupEquivQuotientProdSubgroup : α ≃ (α ⧸ s) × s :=
     α ≃ ΣL : α ⧸ s, { x : α // (x : α ⧸ s) = L } := (Equiv.sigmaFiberEquiv QuotientGroup.mk).symm
     _ ≃ ΣL : α ⧸ s, leftCoset (Quotient.out' L) s :=
       Equiv.sigmaCongrRight fun L => by
-        rw [← eq_class_eq_left_coset]
+        rw [← eq_class_eq_leftCoset]
         show
-          (_root_.subtype fun x : α => Quotient.mk'' x = L) ≃
-            _root_.subtype fun x : α => Quotient.mk'' x = Quotient.mk'' _
+          (Subtype fun x : α => Quotient.mk'' x = L) ≃
+            Subtype fun x : α => Quotient.mk'' x = Quotient.mk'' _
         simp [-Quotient.eq'']
     _ ≃ ΣL : α ⧸ s, s := Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
@@ -933,15 +933,15 @@ def quotientEquivProdOfLe' (h_le : s ≤ t) (f : α ⧸ t → α)
     ⟨a.map' id fun b c h => leftRel_apply.mpr (h_le (leftRel_apply.mp h)),
       a.map' (fun g : α => ⟨(f (Quotient.mk'' g))⁻¹ * g, leftRel_apply.mp (Quotient.exact' (hf g))⟩)
         fun b c h => by
-        rw [left_rel_apply]
+        rw [leftRel_apply]
         change ((f b)⁻¹ * b)⁻¹ * ((f c)⁻¹ * c) ∈ s
         have key : f b = f c :=
           congr_arg f (Quotient.sound' (left_rel_apply.mpr (h_le (left_rel_apply.mp h))))
-        rwa [key, mul_inv_rev, inv_inv, mul_assoc, mul_inv_cancel_left, ← left_rel_apply]⟩
+        rwa [key, mul_inv_rev, inv_inv, mul_assoc, mul_inv_cancel_left, ← leftRel_apply]⟩
   invFun a :=
     a.2.map' (fun b => f a.1 * b) fun b c h =>
       by
-      rw [left_rel_apply] at h⊢
+      rw [leftRel_apply] at h⊢
       change (f a.1 * b)⁻¹ * (f a.1 * c) ∈ s
       rwa [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
   left_inv := by
@@ -988,7 +988,7 @@ def quotientSubgroupOfEmbeddingOfLe (H : Subgroup α) (h : s ≤ t) :
   toFun :=
     Quotient.map' (inclusion h) fun a b =>
       by
-      simp_rw [left_rel_eq]
+      simp_rw [leftRel_eq]
       exact id
   inj' :=
     Quotient.ind₂' <| by
@@ -1022,7 +1022,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.quotient_subg
 def quotientSubgroupOfMapOfLe (H : Subgroup α) (h : s ≤ t) :
     H ⧸ s.subgroupOf H → H ⧸ t.subgroupOf H :=
   Quotient.map' id fun a b => by
-    simp_rw [left_rel_eq]
+    simp_rw [leftRel_eq]
     apply h
 #align subgroup.quotient_subgroup_of_map_of_le Subgroup.quotientSubgroupOfMapOfLe
 #align add_subgroup.quotient_add_subgroup_of_map_of_le AddSubgroup.quotientAddSubgroupOfMapOfLe
@@ -1050,7 +1050,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.quotient_map_
 @[to_additive "If `s ≤ t`, then there is an map `α ⧸ s → α ⧸ t`."]
 def quotientMapOfLe (h : s ≤ t) : α ⧸ s → α ⧸ t :=
   Quotient.map' id fun a b => by
-    simp_rw [left_rel_eq]
+    simp_rw [leftRel_eq]
     apply h
 #align subgroup.quotient_map_of_le Subgroup.quotientMapOfLe
 #align add_subgroup.quotient_map_of_le AddSubgroup.quotientMapOfLe
@@ -1079,7 +1079,7 @@ def quotientInfᵢSubgroupOfEmbedding {ι : Type _} (f : ι → Subgroup α) (H 
   toFun q i := quotientSubgroupOfMapOfLe H (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by
-      simp_rw [funext_iff, quotient_subgroup_of_map_of_le_apply_mk, eq', mem_subgroup_of, mem_infi,
+      simp_rw [funext_iff, quotientSubgroupOfMapOfLe_apply_mk, eq', mem_subgroupOf, mem_infᵢ,
         imp_self, forall_const]
 #align subgroup.quotient_infi_subgroup_of_embedding Subgroup.quotientInfᵢSubgroupOfEmbedding
 #align add_subgroup.quotient_infi_add_subgroup_of_embedding AddSubgroup.quotientInfᵢAddSubgroupOfEmbedding
@@ -1107,7 +1107,7 @@ def quotientInfᵢEmbedding {ι : Type _} (f : ι → Subgroup α) : (α ⧸ ⨅
   toFun q i := quotientMapOfLe (infᵢ_le f i) q
   inj' :=
     Quotient.ind₂' <| by
-      simp_rw [funext_iff, quotient_map_of_le_apply_mk, eq', mem_infi, imp_self, forall_const]
+      simp_rw [funext_iff, quotientMapOfLe_apply_mk, eq', mem_infᵢ, imp_self, forall_const]
 #align subgroup.quotient_infi_embedding Subgroup.quotientInfᵢEmbedding
 #align add_subgroup.quotient_infi_embedding AddSubgroup.quotientInfᵢEmbedding
 -/
@@ -1130,7 +1130,7 @@ Case conversion may be inaccurate. Consider using '#align subgroup.card_eq_card_
 @[to_additive]
 theorem card_eq_card_quotient_mul_card_subgroup [Fintype α] (s : Subgroup α) [Fintype s]
     [DecidablePred fun a => a ∈ s] : Fintype.card α = Fintype.card (α ⧸ s) * Fintype.card s := by
-  rw [← Fintype.card_prod] <;> exact Fintype.card_congr Subgroup.groupEquivQuotientProdSubgroup
+  rw [← Fintype.card_prod] <;> exact Fintype.card_congr subgroup.group_equiv_quotient_times_subgroup
 #align subgroup.card_eq_card_quotient_mul_card_subgroup Subgroup.card_eq_card_quotient_mul_card_subgroup
 #align add_subgroup.card_eq_card_quotient_add_card_add_subgroup AddSubgroup.card_eq_card_quotient_add_card_addSubgroup
 
@@ -1203,11 +1203,10 @@ Case conversion may be inaccurate. Consider using '#align subgroup.card_comap_dv
 @[to_additive]
 theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H) [Fintype (K.comap f)]
     (hf : Function.Injective f) : Fintype.card (K.comap f) ∣ Fintype.card K := by
-  haveI : Fintype ((K.comap f).map f) :=
-      Fintype.ofEquiv _ (equiv_map_of_injective _ _ hf).toEquiv <;>
+  haveI : Fintype ((K.comap f).map f) := Fintype.ofEquiv _ (equivMapOfInjective _ _ hf).toEquiv <;>
     calc
       Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
-        Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv
+        Fintype.card_congr (equivMapOfInjective _ _ hf).toEquiv
       _ ∣ Fintype.card K := card_dvd_of_le (map_comap_le _ _)
       
 #align subgroup.card_comap_dvd_of_injective Subgroup.card_comap_dvd_of_injective

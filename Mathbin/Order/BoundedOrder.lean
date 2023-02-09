@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.bounded_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -143,7 +143,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_max_top isMax_topₓ'. -/
 @[simp]
 theorem isMax_top : IsMax (⊤ : α) :=
-  isTop_top.IsMax
+  isTop_top.isMax
 #align is_max_top isMax_top
 
 /- warning: not_top_lt -> not_top_lt is a dubious translation:
@@ -164,7 +164,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α} {b : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α _inst_1) a b) -> (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ne_top_of_lt ne_top_of_ltₓ'. -/
 theorem ne_top_of_lt (h : a < b) : a ≠ ⊤ :=
-  (h.trans_le le_top).Ne
+  (h.trans_le le_top).ne
 #align ne_top_of_lt ne_top_of_lt
 
 /- warning: has_lt.lt.ne_top -> LT.lt.ne_top is a dubious translation:
@@ -199,7 +199,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_top_iff_eq_top isTop_iff_eq_topₓ'. -/
 @[simp]
 theorem isTop_iff_eq_top : IsTop a ↔ a = ⊤ :=
-  ⟨fun h => h.IsMax.eq_of_le le_top, fun h b => h.symm ▸ le_top⟩
+  ⟨fun h => h.isMax.eq_of_le le_top, fun h b => h.symm ▸ le_top⟩
 #align is_top_iff_eq_top isTop_iff_eq_top
 
 /- warning: not_is_max_iff_ne_top -> not_isMax_iff_ne_top is a dubious translation:
@@ -209,7 +209,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Not (IsMax.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align not_is_max_iff_ne_top not_isMax_iff_ne_topₓ'. -/
 theorem not_isMax_iff_ne_top : ¬IsMax a ↔ a ≠ ⊤ :=
-  isMax_iff_eq_top.Not
+  isMax_iff_eq_top.not
 #align not_is_max_iff_ne_top not_isMax_iff_ne_top
 
 /- warning: not_is_top_iff_ne_top -> not_isTop_iff_ne_top is a dubious translation:
@@ -219,7 +219,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Not (IsTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align not_is_top_iff_ne_top not_isTop_iff_ne_topₓ'. -/
 theorem not_isTop_iff_ne_top : ¬IsTop a ↔ a ≠ ⊤ :=
-  isTop_iff_eq_top.Not
+  isTop_iff_eq_top.not
 #align not_is_top_iff_ne_top not_isTop_iff_ne_top
 
 /- warning: is_max.eq_top -> IsMax.eq_top is a dubious translation:
@@ -339,7 +339,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α} {b : α}, (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a b) -> (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ne_top_of_le_ne_top ne_top_of_le_ne_topₓ'. -/
 theorem ne_top_of_le_ne_top (hb : b ≠ ⊤) (hab : a ≤ b) : a ≠ ⊤ :=
-  (hab.trans_lt hb.lt_top).Ne
+  (hab.trans_lt hb.lt_top).ne
 #align ne_top_of_le_ne_top ne_top_of_le_ne_top
 
 /- warning: strict_mono.apply_eq_top_iff -> StrictMono.apply_eq_top_iff is a dubious translation:
@@ -349,7 +349,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] [_inst_3 : Preorder.{u2} β] {f : α -> β} {a : α}, (StrictMono.{u1, u2} α β (PartialOrder.toPreorder.{u1} α _inst_1) _inst_3 f) -> (Iff (Eq.{succ u2} β (f a) (f (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))) (Eq.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align strict_mono.apply_eq_top_iff StrictMono.apply_eq_top_iffₓ'. -/
 theorem StrictMono.apply_eq_top_iff (hf : StrictMono f) : f a = f ⊤ ↔ a = ⊤ :=
-  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).Ne h, congr_arg _⟩
+  ⟨fun h => not_lt_top_iff.1 fun ha => (hf ha).ne h, congr_arg _⟩
 #align strict_mono.apply_eq_top_iff StrictMono.apply_eq_top_iff
 
 /- warning: strict_anti.apply_eq_top_iff -> StrictAnti.apply_eq_top_iff is a dubious translation:
@@ -529,7 +529,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_min_bot isMin_botₓ'. -/
 @[simp]
 theorem isMin_bot : IsMin (⊥ : α) :=
-  isBot_bot.IsMin
+  isBot_bot.isMin
 #align is_min_bot isMin_bot
 
 /- warning: not_lt_bot -> not_lt_bot is a dubious translation:
@@ -585,7 +585,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_bot_iff_eq_bot isBot_iff_eq_botₓ'. -/
 @[simp]
 theorem isBot_iff_eq_bot : IsBot a ↔ a = ⊥ :=
-  ⟨fun h => h.IsMin.eq_of_ge bot_le, fun h b => h.symm ▸ bot_le⟩
+  ⟨fun h => h.isMin.eq_of_ge bot_le, fun h b => h.symm ▸ bot_le⟩
 #align is_bot_iff_eq_bot isBot_iff_eq_bot
 
 /- warning: not_is_min_iff_ne_bot -> not_isMin_iff_ne_bot is a dubious translation:
@@ -595,7 +595,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Not (IsMin.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align not_is_min_iff_ne_bot not_isMin_iff_ne_botₓ'. -/
 theorem not_isMin_iff_ne_bot : ¬IsMin a ↔ a ≠ ⊥ :=
-  isMin_iff_eq_bot.Not
+  isMin_iff_eq_bot.not
 #align not_is_min_iff_ne_bot not_isMin_iff_ne_bot
 
 /- warning: not_is_bot_iff_ne_bot -> not_isBot_iff_ne_bot is a dubious translation:
@@ -605,7 +605,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1))] {a : α}, Iff (Not (IsBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) a)) (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)) _inst_2)))
 Case conversion may be inaccurate. Consider using '#align not_is_bot_iff_ne_bot not_isBot_iff_ne_botₓ'. -/
 theorem not_isBot_iff_ne_bot : ¬IsBot a ↔ a ≠ ⊥ :=
-  isBot_iff_eq_bot.Not
+  isBot_iff_eq_bot.not
 #align not_is_bot_iff_ne_bot not_isBot_iff_ne_bot
 
 /- warning: is_min.eq_bot -> IsMin.eq_bot is a dubious translation:
@@ -966,8 +966,8 @@ instance (α : Type u) [LE α] [BoundedOrder α] : BoundedOrder αᵒᵈ :=
 #print BoundedOrder.ext /-
 theorem BoundedOrder.ext {α} [PartialOrder α] {A B : BoundedOrder α} : A = B :=
   by
-  have ht : @BoundedOrder.toOrderTop α _ A = @BoundedOrder.toOrderTop α _ B := OrderTop.ext
-  have hb : @BoundedOrder.toOrderBot α _ A = @BoundedOrder.toOrderBot α _ B := OrderBot.ext
+  have ht : @bounded_order.to_order_top α _ A = @bounded_order.to_order_top α _ B := OrderTop.ext
+  have hb : @bounded_order.to_order_bot α _ A = @bounded_order.to_order_bot α _ B := OrderBot.ext
   cases A
   cases B
   injection ht with h

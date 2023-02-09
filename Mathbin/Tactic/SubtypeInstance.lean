@@ -7,7 +7,7 @@ Provides a `subtype_instance` tactic which builds instances for algebraic substr
 (sub-groups, sub-rings...).
 
 ! This file was ported from Lean 3 source module tactic.subtype_instance
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,30 +26,30 @@ def mkMemName (sub : Name) : Name → Name
   | n => n
 #align tactic.mk_mem_name Tactic.mkMemName
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop
   if b then do
       sorry
       intros
-      andthen (applyc Field) assumption
+      andthen (applyc field) assumption
     else do
       let s ← find_local ``(Set _)
       let q(Set $(α)) ← infer_type s
-      let e ← mk_const Field
+      let e ← mk_const field
       let expl_arity ← get_expl_arity <| e α
       let xs ← (iota expl_arity).mapM fun _ => intro1
       let args ← xs fun x => mk_app `subtype.val [x]
       let hyps ← xs fun x => mk_app `subtype.property [x]
-      let val ← mk_app Field args
+      let val ← mk_app field args
       let subname ←
         local_context >>=
-            List.firstM fun h => do
+            list.mfirst fun h => do
               let (expr.const n _, args) ← get_app_fn_args <$> infer_type h
               is_def_eq s args reducible
               return n
-      let mem_field ← resolve_constant <| mk_mem_name subname Field
+      let mem_field ← resolve_constant <| mk_mem_name subname field
       let val_mem ← mk_app mem_field hyps
       let q(coeSort $(s)) ← target >>= instantiate_mvars
       tactic.refine ``(@Subtype.mk _ $(s) $(val) $(val_mem))

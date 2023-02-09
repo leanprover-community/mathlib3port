@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.slice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ Case conversion may be inaccurate. Consider using '#align set.sized_Union₂ Set
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem sized_unionᵢ₂ {f : ∀ i, κ i → Set (Finset α)} :
-    (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_Union]
+    (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_unionᵢ]
 #align set.sized_Union₂ Set.sized_unionᵢ₂
 
 #print Set.Sized.isAntichain /-
@@ -126,13 +126,13 @@ theorem Sized.subsingleton' [Fintype α] (hA : A.Sized (Fintype.card α)) : A.Su
 
 #print Set.Sized.empty_mem_iff /-
 theorem Sized.empty_mem_iff (hA : A.Sized r) : ∅ ∈ A ↔ A = {∅} :=
-  hA.IsAntichain.bot_mem_iff
+  hA.isAntichain.bot_mem_iff
 #align set.sized.empty_mem_iff Set.Sized.empty_mem_iff
 -/
 
 #print Set.Sized.univ_mem_iff /-
 theorem Sized.univ_mem_iff [Fintype α] (hA : A.Sized r) : Finset.univ ∈ A ↔ A = {Finset.univ} :=
-  hA.IsAntichain.top_mem_iff
+  hA.isAntichain.top_mem_iff
 #align set.sized.univ_mem_iff Set.Sized.univ_mem_iff
 -/
 
@@ -163,7 +163,7 @@ alias subset_powerset_len_univ_iff ↔ _ _root_.set.sized.subset_powerset_len_un
 theorem Finset.Set.Sized.card_le (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     card 𝒜 ≤ (Fintype.card α).choose r :=
   by
-  rw [Fintype.card, ← card_powerset_len]
+  rw [Fintype.card, ← card_powersetLen]
   exact card_le_of_subset h𝒜.subset_powerset_len_univ
 #align set.sized.card_le Finset.Set.Sized.card_le
 -/
@@ -180,7 +180,7 @@ variable {𝒜 : Finset (Finset α)} {A A₁ A₂ : Finset α} {r r₁ r₂ : �
 #print Finset.slice /-
 /-- The `r`-th slice of a set family is the subset of its elements which have cardinality `r`. -/
 def slice (𝒜 : Finset (Finset α)) (r : ℕ) : Finset (Finset α) :=
-  𝒜.filterₓ fun i => i.card = r
+  𝒜.filter fun i => i.card = r
 #align finset.slice Finset.slice
 -/
 
@@ -245,7 +245,7 @@ theorem bunionᵢ_slice [DecidableEq α] : (Iic <| Fintype.card α).bunionᵢ �
 theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
   by
   letI := Classical.decEq α
-  rw [← card_bUnion, bUnion_slice]
+  rw [← card_bunionᵢ, bunionᵢ_slice]
   exact finset.pairwise_disjoint_slice.subset (Set.subset_univ _)
 #align finset.sum_card_slice Finset.sum_card_slice
 -/

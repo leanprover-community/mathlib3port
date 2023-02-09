@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem convex_Inter₂ {ι : Sort _} {κ : ι → Sort _} {s : ∀ i, κ i → 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) :
-    Convex 𝕜 (s ×ˢ t) := fun x hx => (hs hx.1).Prod (ht hx.2)
+    Convex 𝕜 (s ×ˢ t) := fun x hx => (hs hx.1).prod (ht hx.2)
 #align convex.prod Convex.prod
 
 theorem convex_pi {ι : Type _} {E : ι → Type _} [∀ i, AddCommMonoid (E i)] [∀ i, SMul 𝕜 (E i)]
@@ -127,7 +127,7 @@ theorem Directed.convex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : Direct
     (hc : ∀ ⦃i : ι⦄, Convex 𝕜 (s i)) : Convex 𝕜 (⋃ i, s i) :=
   by
   rintro x hx y hy a b ha hb hab
-  rw [mem_Union] at hx hy⊢
+  rw [mem_unionᵢ] at hx hy⊢
   obtain ⟨i, hx⟩ := hx
   obtain ⟨j, hy⟩ := hy
   obtain ⟨k, hik, hjk⟩ := hdir i j
@@ -137,7 +137,7 @@ theorem Directed.convex_unionᵢ {ι : Sort _} {s : ι → Set E} (hdir : Direct
 theorem DirectedOn.convex_unionₛ {c : Set (Set E)} (hdir : DirectedOn (· ⊆ ·) c)
     (hc : ∀ ⦃A : Set E⦄, A ∈ c → Convex 𝕜 A) : Convex 𝕜 (⋃₀ c) :=
   by
-  rw [sUnion_eq_Union]
+  rw [unionₛ_eq_unionᵢ]
   exact (directedOn_iff_directed.1 hdir).convex_unionᵢ fun A => hc A.2
 #align directed_on.convex_sUnion DirectedOn.convex_unionₛ
 
@@ -169,15 +169,15 @@ theorem convex_iff_pairwise_pos :
 #align convex_iff_pairwise_pos convex_iff_pairwise_pos
 
 theorem Convex.starConvex_iff (hs : Convex 𝕜 s) (h : s.Nonempty) : StarConvex 𝕜 x s ↔ x ∈ s :=
-  ⟨fun hxs => hxs.Mem h, hs.StarConvex⟩
+  ⟨fun hxs => hxs.mem h, hs.starConvex⟩
 #align convex.star_convex_iff Convex.starConvex_iff
 
 protected theorem Set.Subsingleton.convex {s : Set E} (h : s.Subsingleton) : Convex 𝕜 s :=
-  convex_iff_pairwise_pos.mpr (h.Pairwise _)
+  convex_iff_pairwise_pos.mpr (h.pairwise _)
 #align set.subsingleton.convex Set.Subsingleton.convex
 
 theorem convex_singleton (c : E) : Convex 𝕜 ({c} : Set E) :=
-  subsingleton_singleton.Convex
+  subsingleton_singleton.convex
 #align convex_singleton convex_singleton
 
 theorem convex_segment (x y : E) : Convex 𝕜 [x -[𝕜] y] :=
@@ -392,35 +392,35 @@ theorem AntitoneOn.convex_gt (hf : AntitoneOn f s) (hs : Convex 𝕜 s) (r : β)
 #align antitone_on.convex_gt AntitoneOn.convex_gt
 
 theorem Monotone.convex_le (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.MonotoneOn univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.monotoneOn univ).convex_le convex_univ r)
 #align monotone.convex_le Monotone.convex_le
 
 theorem Monotone.convex_lt (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.MonotoneOn univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.monotoneOn univ).convex_le convex_univ r)
 #align monotone.convex_lt Monotone.convex_lt
 
 theorem Monotone.convex_ge (hf : Monotone f) (r : β) : Convex 𝕜 { x | r ≤ f x } :=
-  Set.sep_univ.subst ((hf.MonotoneOn univ).convex_ge convex_univ r)
+  Set.sep_univ.subst ((hf.monotoneOn univ).convex_ge convex_univ r)
 #align monotone.convex_ge Monotone.convex_ge
 
 theorem Monotone.convex_gt (hf : Monotone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.MonotoneOn univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.monotoneOn univ).convex_le convex_univ r)
 #align monotone.convex_gt Monotone.convex_gt
 
 theorem Antitone.convex_le (hf : Antitone f) (r : β) : Convex 𝕜 { x | f x ≤ r } :=
-  Set.sep_univ.subst ((hf.AntitoneOn univ).convex_le convex_univ r)
+  Set.sep_univ.subst ((hf.antitoneOn univ).convex_le convex_univ r)
 #align antitone.convex_le Antitone.convex_le
 
 theorem Antitone.convex_lt (hf : Antitone f) (r : β) : Convex 𝕜 { x | f x < r } :=
-  Set.sep_univ.subst ((hf.AntitoneOn univ).convex_lt convex_univ r)
+  Set.sep_univ.subst ((hf.antitoneOn univ).convex_lt convex_univ r)
 #align antitone.convex_lt Antitone.convex_lt
 
 theorem Antitone.convex_ge (hf : Antitone f) (r : β) : Convex 𝕜 { x | r ≤ f x } :=
-  Set.sep_univ.subst ((hf.AntitoneOn univ).convex_ge convex_univ r)
+  Set.sep_univ.subst ((hf.antitoneOn univ).convex_ge convex_univ r)
 #align antitone.convex_ge Antitone.convex_ge
 
 theorem Antitone.convex_gt (hf : Antitone f) (r : β) : Convex 𝕜 { x | r < f x } :=
-  Set.sep_univ.subst ((hf.AntitoneOn univ).convex_gt convex_univ r)
+  Set.sep_univ.subst ((hf.antitoneOn univ).convex_gt convex_univ r)
 #align antitone.convex_gt Antitone.convex_gt
 
 end LinearOrderedAddCommMonoid
@@ -608,7 +608,7 @@ theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMono
 #align set.ord_connected.convex Set.OrdConnected.convex
 
 theorem convex_iff_ordConnected [LinearOrderedField 𝕜] {s : Set 𝕜} : Convex 𝕜 s ↔ s.OrdConnected :=
-  by simp_rw [convex_iff_segment_subset, segment_eq_uIcc, ord_connected_iff_uIcc_subset]
+  by simp_rw [convex_iff_segment_subset, segment_eq_uIcc, ordConnected_iff_uIcc_subset]
 #align convex_iff_ord_connected convex_iff_ordConnected
 
 alias convex_iff_ordConnected ↔ Convex.ordConnected _
@@ -630,7 +630,7 @@ protected theorem convex (K : Submodule 𝕜 E) : Convex 𝕜 (↑K : Set E) :=
 #align submodule.convex Submodule.convex
 
 protected theorem starConvex (K : Submodule 𝕜 E) : StarConvex 𝕜 (0 : E) K :=
-  K.Convex K.zero_mem
+  K.convex K.zero_mem
 #align submodule.star_convex Submodule.starConvex
 
 end Submodule

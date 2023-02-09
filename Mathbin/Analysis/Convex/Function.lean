@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, François Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.function
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -407,7 +407,7 @@ theorem StrictConvexOn.convexOn {s : Set E} {f : E → β} (hf : StrictConvexOn 
 
 theorem StrictConcaveOn.concaveOn {s : Set E} {f : E → β} (hf : StrictConcaveOn 𝕜 s f) :
     ConcaveOn 𝕜 s f :=
-  hf.dual.ConvexOn
+  hf.dual.convexOn
 #align strict_concave_on.concave_on StrictConcaveOn.concaveOn
 
 section OrderedSMul
@@ -1015,7 +1015,7 @@ theorem StrictConvexOn.translate_right (hf : StrictConvexOn 𝕜 s f) (c : E) :
     calc
       f (c + (a • x + b • y)) = f (a • (c + x) + b • (c + y)) := by
         rw [smul_add, smul_add, add_add_add_comm, Convex.combo_self hab]
-      _ < a • f (c + x) + b • f (c + y) := hf.2 hx hy ((add_right_injective c).Ne hxy) ha hb hab
+      _ < a • f (c + x) + b • f (c + y) := hf.2 hx hy ((add_right_injective c).ne hxy) ha hb hab
       ⟩
 #align strict_convex_on.translate_right StrictConvexOn.translate_right
 

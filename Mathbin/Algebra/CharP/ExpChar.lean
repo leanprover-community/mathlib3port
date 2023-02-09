@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach
 
 ! This file was ported from Lean 3 source module algebra.char_p.exp_char
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,8 +41,8 @@ variable [Semiring R]
 
 /-- The definition of the exponential characteristic of a semiring. -/
 class inductive ExpChar (R : Type u) [Semiring R] : ℕ → Prop
-  | zero [CharZero R] : ExpChar 1
-  | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : ExpChar q
+  | zero [CharZero R] : exp_char 1
+  | Prime {q : ℕ} (hprime : q.Prime) [hchar : CharP R q] : exp_char q
 #align exp_char ExpChar
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
@@ -50,7 +50,7 @@ theorem expChar_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] :
   by
   cases' hq with q hq_one hq_prime
   · rfl
-  · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).Pos)
+  · exact False.elim (lt_irrefl _ ((hp.eq R hq_hchar).symm ▸ hq_prime : (0 : ℕ).Prime).pos)
 #align exp_char_one_of_char_zero expChar_one_of_char_zero
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/

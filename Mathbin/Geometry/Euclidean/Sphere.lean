@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module geometry.euclidean.sphere
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) :
     dist a b * dist c d + dist b c * dist d a = dist a c * dist b d :=
   by
-  have h' : cospherical ({a, c, b, d} : Set P) := by rwa [Set.insert_comm c b {d}]
+  have h' : Cospherical ({a, c, b, d} : Set P) := by rwa [Set.insert_comm c b {d}]
   have hmul := mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi h' hapc hbpd
   have hbp := left_dist_ne_zero_of_angle_eq_pi hbpd
   have h₁ : dist c d = dist c p / dist b p * dist a b :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.semiconj_Sup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
     Function.Semiconj g' fb fa :=
   by
   refine' fun y => (hg' _).unique _
-  rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
+  rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_setOf_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
 #align function.semiconj.symm_adjoint Function.Semiconj.symm_adjoint
 
@@ -161,8 +161,8 @@ theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃
     Function.Semiconj h (f₂ g) (f₁ g) :=
   by
   refine' fun y => (H _).unique _
-  have := (f₁ g).LeftOrdContinuous (H y)
-  rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this
+  have := (f₁ g).leftOrdContinuous (H y)
+  rw [← range_comp, ← (Equiv.mulRight g).surjective.range_comp _] at this
   simpa [(· ∘ ·)] using this
 #align function.semiconj_of_is_lub Function.semiconj_of_isLUB
 

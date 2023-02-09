@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.rcases
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,9 +149,9 @@ unsafe def name : rcases_patt → Option Name
   | one `_ => none
   | one `rfl => none
   | one n => some n
-  | explicit p => p.Name
-  | typed p _ => p.Name
-  | alts [p] => p.Name
+  | explicit p => p.name
+  | typed p _ => p.name
+  | alts [p] => p.name
   | _ => none
 #align tactic.rcases_patt.name tactic.rcases_patt.name
 
@@ -259,7 +259,7 @@ protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.
         "⟨" ++
             _root_.format.group
               (_root_.format.nest 1 <|
-                _root_.format.join <| List.intersperse ("," ++ _root_.format.line) fs) ++
+                _root_.format.join <| list.intersperse ("," ++ _root_.format.line) fs) ++
           "⟩"
   | br, alts ls => do
     let fs ← ls.mapM <| format true
@@ -293,7 +293,7 @@ unsafe def rcases.process_constructor :
     else
       match l, ps with
       | [], [] => ([`_], [default])
-      | [], [p] => ([p.Name.getD `_], [p])
+      | [], [p] => ([p.name.getD `_], [p])
       |-- The interesting case: we matched the last field against multiple
         -- patterns, so split off the remaining patterns into a subsequent
         -- match. This handles matching `α × β × γ` against `⟨a, b, c⟩`.
@@ -302,7 +302,7 @@ unsafe def rcases.process_constructor :
       | l, ps =>
         let hd := ps.headI
         let (ns, tl) := rcases.process_constructor explicit l ps.tail
-        (hd.Name.getD `_ :: ns, hd :: tl)
+        (hd.name.getD `_ :: ns, hd :: tl)
 #align tactic.rcases.process_constructor tactic.rcases.process_constructor
 
 private unsafe def get_pi_arity_list_aux : expr → tactic (List BinderInfo)
@@ -345,7 +345,7 @@ unsafe def rcases.process_constructors (params : Nat) :
         _)
     let (ns, ps) := rcases.process_constructor explicit (l.drop params) h
     let (l, r) ← rcases.process_constructors cs t
-    pure (Dlist.ofList ns ++ l, (c, ps) :: r)
+    pure (dlist.of_list ns ++ l, (c, ps) :: r)
 #align tactic.rcases.process_constructors tactic.rcases.process_constructors
 
 /-- Like `zip`, but only elements satisfying a matching predicate `p` will go in the list,
@@ -383,7 +383,7 @@ mutual
     | rcases_patt.one `rfl, e => do
       let (t, e) ← get_local_and_type e
       subst' e
-      List.map (Prod.mk []) <$> get_goals
+      list.map (prod.mk []) <$> get_goals
     |-- If the pattern is any other name, we already bound the name in the
         -- top-level `cases` tactic, so there is no more work to do for it.
         rcases_patt.one
@@ -391,7 +391,7 @@ mutual
       _ => List.map (Prod.mk []) <$> get_goals
     | rcases_patt.clear, e => do
       let m ← try_core (get_local_and_type e)
-      List.map (Prod.mk <| m [] fun ⟨_, e⟩ => [e]) <$> get_goals
+      list.map (prod.mk <| m [] fun ⟨_, e⟩ => [e]) <$> get_goals
     | rcases_patt.typed p ty, e => do
       let (t, e) ← get_local_and_type e
       let ty ← i_to_expr_no_subgoals ``(($(ty) : Sort _))
@@ -429,7 +429,7 @@ mutual
       -- documentation.) Match up the new goals with our remaining work
       -- by constructor name.
       ls := align (fun (a : Name × _) (b : _ × Name × _) => a.1 = b.2.1) r (gs.zip l)
-      List.join <$> ls fun ⟨⟨_, ps⟩, g, _, hs, _⟩ => set_goals [g] >> rcases.continue (ps hs)
+      list.join <$> ls fun ⟨⟨_, ps⟩, g, _, hs, _⟩ => set_goals [g] >> rcases.continue (ps hs)
   /-- * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
     It returns the list of subgoals that were produced.
   * `rcases.continue pes` will match a (conjunctive) list of `(p, e)` pairs which refer to
@@ -441,7 +441,7 @@ mutual
     | [] => List.map (Prod.mk []) <$> get_goals
     | (pat, e) :: pes => do
       let gs ← rcases_core pat e
-      List.join <$>
+      list.join <$>
           gs fun ⟨cs, g⟩ => do
             set_goals [g]
             let ugs ← rcases.continue pes
@@ -482,7 +482,7 @@ unsafe def rcases (h : Option Name) (p : pexpr) (pat : rcases_patt) : tactic Uni
   let e ←
     match h with
       | some h => do
-        let x ← get_unused_name <| pat.Name.getD `this
+        let x ← get_unused_name <| pat.name.getD `this
         interactive.generalize h () (p, x)
         get_local x
       | none => i_to_expr p
@@ -534,7 +534,7 @@ unsafe def rcases_many (ps : listΠ pexpr) (pat : rcases_patt) : tactic Unit := 
                 tactic.assertv x t e
                 get_local x >>= tactic.revert
                 pure ()
-            Prod.mk pat <$> tactic.intro1
+            prod.mk pat <$> tactic.intro1
   focus1 (rcases.continue pes >>= clear_goals)
 #align tactic.rcases_many tactic.rcases_many
 
@@ -543,7 +543,7 @@ the same syntax as `rcases`. -/
 unsafe def rintro (ids : listΠ rcases_patt) : tactic Unit := do
   let l ←
     ids.mapM fun id => do
-        let e ← intro <| id.Name.getD `_
+        let e ← intro <| id.name.getD `_
         pure (id, e)
   focus1 (rcases.continue l >>= clear_goals)
 #align tactic.rintro tactic.rintro
@@ -606,15 +606,15 @@ mutual
       (do
             guard (I = `` Eq)
             subst' e
-            Prod.mk (some (rcases_patt.one `rfl)) <$> get_goals) <|>
+            prod.mk (some (rcases_patt.one `rfl)) <$> get_goals) <|>
           do
           let c := env I
           let some l ← try_core (guard (depth ≠ 0) >> cases_core e) |
             let n :=
                 match e with
-                | Name.anonymous => `_
+                | name.anonymous => `_
                 | n => n
-              Prod.mk (some (rcases_patt.one n)) <$> get_goals
+              prod.mk (some (rcases_patt.one n)) <$> get_goals
           let gs ← get_goals
           if gs then pure (some (rcases_patt.tuple []), [])
             else do
@@ -923,16 +923,16 @@ unsafe def rcases_parse : parser rcases_args :=
       | none => do
         let p ←
           (do
-                let Sum.inl (expr.local_const h _ _ _) ← pure p
-                tk ":" *> (@Sum.inl _ (Sum pexpr (List pexpr)) ∘ Prod.mk h) <$> texpr) <|>
-              pure (Sum.inr p)
+                let sum.inl (expr.local_const h _ _ _) ← pure p
+                tk ":" *> (@sum.inl _ (Sum pexpr (list pexpr)) ∘ prod.mk h) <$> texpr) <|>
+              pure (sum.inr p)
         let ids ← parser.optional (tk "with" *> rcases_patt_parse)
         let ids := ids (rcases_patt.tuple [])
         pure <|
             match p with
-            | Sum.inl (Name, tgt) => rcases_args.rcases (some Name) tgt ids
-            | Sum.inr (Sum.inl tgt) => rcases_args.rcases none tgt ids
-            | Sum.inr (Sum.inr tgts) => rcases_args.rcases_many tgts ids
+            | sum.inl (name, tgt) => rcases_args.rcases (some name) tgt ids
+            | sum.inr (sum.inl tgt) => rcases_args.rcases none tgt ids
+            | sum.inr (sum.inr tgts) => rcases_args.rcases_many tgts ids
       | some _ => do
         let depth ← rcases_parse_depth
         pure <| rcases_args.hint p depth
@@ -1103,8 +1103,8 @@ unsafe def rcases : parse rcases_parse → tactic Unit
   | rcases_args.hint p depth => do
     let (pe, patt) ←
       match p with
-        | Sum.inl p => Prod.mk <$> pp p <*> rcases_hint p depth
-        | Sum.inr ps => do
+        | sum.inl p => Prod.mk <$> pp p <*> rcases_hint p depth
+        | sum.inr ps => do
           let patts ← rcases_hint_many ps depth
           let pes ← ps.mapM pp
           pure (format.bracket "⟨" "⟩" (format.comma_separated pes), rcases_patt.tuple patts)
@@ -1135,9 +1135,9 @@ depth of splitting; the default is 5.
 `rintros` is an alias for `rintro`.
 -/
 unsafe def rintro : parse rintro_parse → tactic Unit
-  | Sum.inl [] => intros []
-  | Sum.inl l => tactic.rintro l
-  | Sum.inr depth => do
+  | sum.inl [] => intros []
+  | sum.inl l => tactic.rintro l
+  | sum.inr depth => do
     let ps ← tactic.rintro_hint depth
     let fs ←
       ps.mapM fun p => do
@@ -1174,11 +1174,11 @@ unsafe def obtain_parse :
                 | rcases_patt.typed pat tp => (some pat, some tp)
                 | _ => (some pat, none)) <|>
           Prod.mk none <$> parser.optional (tk ":" >> texpr)
-    Prod.mk (pat, tp) <$>
+    prod.mk (pat, tp) <$>
         parser.optional do
           tk ":="
-          guard tp >> Sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|>
-              Sum.inl <$> texpr
+          guard tp >> sum.inr <$> brackets "⟨" "⟩" (sep_by (tk ",") (parser.pexpr 0)) <|>
+              sum.inl <$> texpr
 #align tactic.interactive.obtain_parse tactic.interactive.obtain_parse
 
 /-- The `obtain` tactic is a combination of `have` and `rcases`. See `rcases` for
@@ -1202,9 +1202,9 @@ If `⟨patt⟩` is omitted, `rcases` will try to infer the pattern.
 If `type` is omitted, `:= proof` is required.
 -/
 unsafe def obtain : parse obtain_parse → tactic Unit
-  | ((pat, _), some (Sum.inr val)) => tactic.rcases_many val (pat.getD default)
-  | ((pat, none), some (Sum.inl val)) => tactic.rcases none val (pat.getD default)
-  | ((pat, some tp), some (Sum.inl val)) => tactic.rcases none val <| (pat.getD default).typed tp
+  | ((pat, _), some (sum.inr val)) => tactic.rcases_many val (pat.getD default)
+  | ((pat, none), some (sum.inl val)) => tactic.rcases none val (pat.getD default)
+  | ((pat, some tp), some (sum.inl val)) => tactic.rcases none val <| (pat.getD default).typed tp
   | ((pat, some tp), none) => do
     let nm ← mk_fresh_name
     let e ← to_expr tp >>= assert nm

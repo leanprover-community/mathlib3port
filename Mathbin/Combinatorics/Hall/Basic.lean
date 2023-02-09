@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.hall.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,11 +83,11 @@ theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
     Nonempty (hallMatchingsOn t ι') := by
   classical
     refine' ⟨Classical.indefiniteDescription _ _⟩
-    apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp
+    apply (all_card_le_bunionᵢ_card_iff_existsInjective' fun i : ι' => t i).mp
     intro s'
     convert h (s'.image coe) using 1
     simp only [card_image_of_injective s' Subtype.coe_injective]
-    rw [image_bUnion]
+    rw [image_bunionᵢ]
 #align hall_matchings_on.nonempty hallMatchingsOn.nonempty
 
 -- TODO: This takes a long time to elaborate for an unknown reason.
@@ -107,7 +107,7 @@ noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : 
       by
       rintro f i
       refine' ⟨f.val i, _⟩
-      rw [mem_bUnion]
+      rw [mem_bunionᵢ]
       exact ⟨i, i.property, f.property.2 i⟩
     apply Fintype.ofInjective g
     intro f f' h
@@ -220,7 +220,7 @@ rather than `rel.image`.
 -/
 theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : Type v} [Fintype β]
     (r : α → β → Prop) [∀ a, DecidablePred (r a)] :
-    (∀ A : Finset α, A.card ≤ (univ.filterₓ fun b : β => ∃ a ∈ A, r a b).card) ↔
+    (∀ A : Finset α, A.card ≤ (univ.filter fun b : β => ∃ a ∈ A, r a b).card) ↔
       ∃ f : α → β, Function.Injective f ∧ ∀ x, r x (f x) :=
   by
   haveI := Classical.decEq β

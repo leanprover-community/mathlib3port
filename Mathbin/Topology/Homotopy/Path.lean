@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.path
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,8 +178,8 @@ def hcomp (F : Homotopy p₀ q₀) (G : Homotopy p₁ q₁) : Homotopy (p₀.tra
     by
     refine'
       continuous_if_le (continuous_induced_dom.comp continuous_snd) continuous_const
-        (F.to_homotopy.continuous.comp (by continuity)).ContinuousOn
-        (G.to_homotopy.continuous.comp (by continuity)).ContinuousOn _
+        (F.to_homotopy.continuous.comp (by continuity)).continuousOn
+        (G.to_homotopy.continuous.comp (by continuity)).continuousOn _
     intro x hx
     norm_num [hx]
   map_zero_left' x := by norm_num [Path.trans]
@@ -257,7 +257,7 @@ Given `F : homotopy p q`, and `f : C(X, Y)`, we can define a homotopy from `p.ma
 -/
 @[simps]
 def map {p q : Path x₀ x₁} (F : p.Homotopy q) (f : C(X, Y)) :
-    Homotopy (p.map f.Continuous) (q.map f.Continuous)
+    Homotopy (p.map f.continuous) (q.map f.continuous)
     where
   toFun := f ∘ F
   map_zero_left' := by simp
@@ -300,7 +300,7 @@ theorem equivalence : Equivalence (@Homotopic X _ x₀ x₁) :=
 #align path.homotopic.equivalence Path.Homotopic.equivalence
 
 theorem map {p q : Path x₀ x₁} (h : p.Homotopic q) (f : C(X, Y)) :
-    Homotopic (p.map f.Continuous) (q.map f.Continuous) :=
+    Homotopic (p.map f.continuous) (q.map f.continuous) :=
   h.map fun F => F.map f
 #align path.homotopic.map Path.Homotopic.map
 
@@ -343,10 +343,10 @@ theorem comp_lift (P₀ : Path x₀ x₁) (P₁ : Path x₁ x₂) : ⟦P₀.tran
     This is `path.map` descended to the quotient -/
 def Quotient.mapFn (P₀ : Path.Homotopic.Quotient x₀ x₁) (f : C(X, Y)) :
     Path.Homotopic.Quotient (f x₀) (f x₁) :=
-  Quotient.map (fun q : Path x₀ x₁ => q.map f.Continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
+  Quotient.map (fun q : Path x₀ x₁ => q.map f.continuous) (fun p₀ p₁ h => Path.Homotopic.map h f) P₀
 #align path.homotopic.quotient.map_fn Path.Homotopic.Quotient.mapFn
 
-theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.Continuous⟧ = Quotient.mapFn ⟦P₀⟧ f :=
+theorem map_lift (P₀ : Path x₀ x₁) (f : C(X, Y)) : ⟦P₀.map f.continuous⟧ = Quotient.mapFn ⟦P₀⟧ f :=
   rfl
 #align path.homotopic.map_lift Path.Homotopic.map_lift
 

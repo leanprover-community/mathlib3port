@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [O
     [Pow β ℕ] (f : β → α) (hf : Function.Injective f) (one : f 1 = 1)
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n) :
     OrderedCommMonoid β :=
-  { PartialOrder.lift f hf, hf.CommMonoid f one mul npow with
+  { PartialOrder.lift f hf, hf.commMonoid f one mul npow with
     mul_le_mul_left := fun a b ab c =>
       show f (c * a) ≤ f (c * b) by
         rw [mul, mul]
@@ -68,7 +68,7 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
     (mul : ∀ x y, f (x * y) = f x * f y) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (hsup : ∀ x y, f (x ⊔ y) = max (f x) (f y)) (hinf : ∀ x y, f (x ⊓ y) = min (f x) (f y)) :
     LinearOrderedCommMonoid β :=
-  { hf.OrderedCommMonoid f one mul npow, LinearOrder.lift f hf hsup hinf with }
+  { hf.orderedCommMonoid f one mul npow, LinearOrder.lift f hf hsup hinf with }
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
 #align function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
 

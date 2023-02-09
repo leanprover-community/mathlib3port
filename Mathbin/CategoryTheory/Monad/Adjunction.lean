@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.adjunction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ the category `C`.
 @[simps]
 def toMonad (h : L ⊣ R) : Monad C where
   toFunctor := L ⋙ R
-  η' := h.Unit
+  η' := h.unit
   μ' := whiskerRight (whiskerLeft L h.counit) R
   assoc' X := by
     dsimp
@@ -68,7 +68,7 @@ def toComonad (h : L ⊣ R) : Comonad D
     where
   toFunctor := R ⋙ L
   ε' := h.counit
-  δ' := whiskerRight (whiskerLeft R h.Unit) L
+  δ' := whiskerRight (whiskerLeft R h.unit) L
   coassoc' X := by
     dsimp
     rw [← L.map_comp]
@@ -119,13 +119,13 @@ def Monad.comparison (h : L ⊣ R) : D ⥤ h.toMonad.Algebra
       a := R.map (h.counit.app X)
       assoc' := by
         dsimp
-        rw [← R.map_comp, ← adjunction.counit_naturality, R.map_comp]
+        rw [← R.map_comp, ← Adjunction.counit_naturality, R.map_comp]
         rfl }
   map X Y f :=
     { f := R.map f
       h' := by
         dsimp
-        rw [← R.map_comp, adjunction.counit_naturality, R.map_comp] }
+        rw [← R.map_comp, Adjunction.counit_naturality, R.map_comp] }
 #align category_theory.monad.comparison CategoryTheory.Monad.comparison
 
 /-- The underlying object of `(monad.comparison R).obj X` is just `R.obj X`.
@@ -164,10 +164,10 @@ def Comonad.comparison (h : L ⊣ R) : C ⥤ h.toComonad.Coalgebra
     where
   obj X :=
     { a := L.obj X
-      a := L.map (h.Unit.app X)
+      a := L.map (h.unit.app X)
       coassoc' := by
         dsimp
-        rw [← L.map_comp, ← adjunction.unit_naturality, L.map_comp]
+        rw [← L.map_comp, ← Adjunction.unit_naturality, L.map_comp]
         rfl }
   map X Y f :=
     { f := L.map f
@@ -241,27 +241,27 @@ attribute [instance] comonadic_left_adjoint.eqv
 namespace Reflective
 
 instance [Reflective R] (X : (Adjunction.ofRightAdjoint R).toMonad.Algebra) :
-    IsIso ((Adjunction.ofRightAdjoint R).Unit.app X.a) :=
+    IsIso ((Adjunction.ofRightAdjoint R).unit.app X.a) :=
   ⟨⟨X.a,
-      ⟨X.Unit, by
-        dsimp only [functor.id_obj]
-        rw [← (adjunction.of_right_adjoint R).unit_naturality]
-        dsimp only [functor.comp_obj, adjunction.to_monad_coe]
-        rw [unit_obj_eq_map_unit, ← functor.map_comp, ← functor.map_comp]
+      ⟨X.unit, by
+        dsimp only [Functor.id_obj]
+        rw [← (Adjunction.ofRightAdjoint R).unit_naturality]
+        dsimp only [Functor.comp_obj, Adjunction.toMonad_coe]
+        rw [unit_obj_eq_map_unit, ← Functor.map_comp, ← Functor.map_comp]
         erw [X.unit]
         simp⟩⟩⟩
 
 instance comparison_essSurj [Reflective R] :
     EssSurj (Monad.comparison (Adjunction.ofRightAdjoint R)) :=
   by
-  refine' ⟨fun X => ⟨(left_adjoint R).obj X.a, ⟨_⟩⟩⟩
+  refine' ⟨fun X => ⟨(leftAdjoint R).obj X.a, ⟨_⟩⟩⟩
   symm
-  refine' monad.algebra.iso_mk _ _
-  · exact as_iso ((adjunction.of_right_adjoint R).Unit.app X.A)
-  dsimp only [functor.comp_map, monad.comparison_obj_a, as_iso_hom, functor.comp_obj,
-    monad.comparison_obj_A, monad_to_functor_eq_coe, adjunction.to_monad_coe]
-  rw [← cancel_epi ((adjunction.of_right_adjoint R).Unit.app X.A), adjunction.unit_naturality_assoc,
-    adjunction.right_triangle_components, comp_id]
+  refine' Monad.Algebra.isoMk _ _
+  · exact asIso ((Adjunction.ofRightAdjoint R).unit.app X.A)
+  dsimp only [Functor.comp_map, Monad.comparison_obj_a, asIso_hom, Functor.comp_obj,
+    Monad.comparison_obj_a, monad_toFunctor_eq_coe, Adjunction.toMonad_coe]
+  rw [← cancel_epi ((Adjunction.ofRightAdjoint R).Unit.app X.A), Adjunction.unit_naturality_assoc,
+    Adjunction.right_triangle_components, comp_id]
   apply (X.unit_assoc _).symm
 #align category_theory.reflective.comparison_ess_surj CategoryTheory.Reflective.comparison_essSurj
 

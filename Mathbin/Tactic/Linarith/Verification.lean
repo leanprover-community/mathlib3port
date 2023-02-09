@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.verification
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,13 +66,13 @@ unsafe def add_exprs : List pexpr → pexpr
 along with the name of a lemma to apply in order to conclude `t1 + t2 R 0`.
 -/
 unsafe def ineq_const_nm : Ineq → Ineq → Name × Ineq
-  | Eq, Eq => (`` eq_of_eq_of_eq, Eq)
-  | Eq, le => (`` le_of_eq_of_le, le)
-  | Eq, lt => (`` lt_of_eq_of_lt, lt)
-  | le, Eq => (`` le_of_le_of_eq, le)
+  | eq, eq => (`` eq_of_eq_of_eq, Eq)
+  | eq, le => (`` le_of_eq_of_le, le)
+  | eq, lt => (`` lt_of_eq_of_lt, lt)
+  | le, eq => (`` le_of_le_of_eq, le)
   | le, le => (`add_nonpos, le)
   | le, lt => (`add_lt_of_le_of_neg, lt)
-  | lt, Eq => (`` lt_of_lt_of_eq, lt)
+  | lt, eq => (`` lt_of_lt_of_eq, lt)
   | lt, le => (`add_lt_of_neg_of_le, lt)
   | lt, lt => (`left.add_neg, lt)
 #align linarith.ineq_const_nm linarith.ineq_const_nm
@@ -85,7 +85,7 @@ along with this proof.
 unsafe def mk_lt_zero_pf_aux (c : Ineq) (pf npf : expr) (coeff : ℕ) : tactic (Ineq × expr) := do
   let (iq, h') ← mk_single_comp_zero_pf coeff npf
   let (nm, niq) := ineq_const_nm c iq
-  Prod.mk niq <$> mk_app nm [pf, h']
+  prod.mk niq <$> mk_app nm [pf, h']
 #align linarith.mk_lt_zero_pf_aux linarith.mk_lt_zero_pf_aux
 
 /-- `mk_lt_zero_pf coeffs pfs` takes a list of proofs of the form `tᵢ Rᵢ 0`,
@@ -97,7 +97,7 @@ unsafe def mk_lt_zero_pf : List (expr × ℕ) → tactic expr
   | [(h, c)] => Prod.snd <$> mk_single_comp_zero_pf c h
   | (h, c) :: t => do
     let (iq, h') ← mk_single_comp_zero_pf c h
-    Prod.snd <$> t (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
+    prod.snd <$> t (fun pr ce => mk_lt_zero_pf_aux pr.1 pr.2 ce.1 ce.2) (iq, h')
 #align linarith.mk_lt_zero_pf linarith.mk_lt_zero_pf
 
 /-- If `prf` is a proof of `t R s`, `term_of_ineq_prf prf` returns `t`. -/
@@ -132,7 +132,7 @@ unsafe def mk_neg_eq_zero_pf (e : expr) : tactic expr :=
   def
     prove_eq_zero_using
     ( tac : tactic Unit ) ( e : expr ) : tactic expr
-    := do let tgt ← to_expr ` `( $ ( e ) = 0 ) Prod.snd <$> solve_aux tgt ( tac >> done )
+    := do let tgt ← to_expr ` `( $ ( e ) = 0 ) prod.snd <$> solve_aux tgt ( tac >> done )
 #align linarith.prove_eq_zero_using linarith.prove_eq_zero_using
 
 /-- `add_neg_eq_pfs l` inspects the list of proofs `l` for proofs of the form `t = 0`. For each such
@@ -147,7 +147,7 @@ unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
         let nep ← mk_neg_eq_zero_pf h
         let tl ← add_neg_eq_pfs t
         return <| h :: nep :: tl
-      | _ => List.cons h <$> add_neg_eq_pfs t
+      | _ => list.cons h <$> add_neg_eq_pfs t
 #align linarith.add_neg_eq_pfs linarith.add_neg_eq_pfs
 
 /-! #### The main method -/
@@ -188,7 +188,7 @@ unsafe def prove_false_by_linarith (cfg : linarith_config) : List expr → tacti
     let inputs := hz :: l'
     let-- perform the elimination and fail if no contradiction is found.
       (comps, max_var)
-      ← linear_forms_and_max_var cfg.Transparency inputs
+      ← linear_forms_and_max_var cfg.transparency inputs
     let certificate ←
       cfg.oracle.getD fourier_motzkin.produce_certificate comps max_var <|>
           fail "linarith failed to find a contradiction"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.archimedean
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,13 +205,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align at_top_countably_generated_of_archimedean atTop_isCountablyGenerated_of_archimedeanₓ'. -/
 instance (priority := 100) atTop_isCountablyGenerated_of_archimedean [LinearOrderedSemiring R]
     [Archimedean R] : (atTop : Filter R).IsCountablyGenerated :=
-  atTop_hasCountableBasis_of_archimedean.IsCountablyGenerated
+  atTop_hasCountableBasis_of_archimedean.isCountablyGenerated
 #align at_top_countably_generated_of_archimedean atTop_isCountablyGenerated_of_archimedean
 
 #print atBot_isCountablyGenerated_of_archimedean /-
 instance (priority := 100) atBot_isCountablyGenerated_of_archimedean [LinearOrderedRing R]
     [Archimedean R] : (atBot : Filter R).IsCountablyGenerated :=
-  atBot_hasCountableBasis_of_archimedean.IsCountablyGenerated
+  atBot_hasCountableBasis_of_archimedean.isCountablyGenerated
 #align at_bot_countably_generated_of_archimedean atBot_isCountablyGenerated_of_archimedean
 -/
 
@@ -236,10 +236,10 @@ given in `filter.tendsto.const_mul_at_top`). -/
 theorem Tendsto.const_mul_atTop' (hr : 0 < r) (hf : Tendsto f l atTop) :
     Tendsto (fun x => r * f x) l atTop :=
   by
-  apply tendsto_at_top.2 fun b => _
+  apply tendsto_atTop.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   rw [nsmul_eq_mul'] at hn
-  filter_upwards [tendsto_at_top.1 hf (n * max b 0)]with x hx
+  filter_upwards [tendsto_atTop.1 hf (n * max b 0)]with x hx
   calc
     b ≤ 1 * max b 0 := by
       rw [one_mul]
@@ -263,10 +263,10 @@ given in `filter.tendsto.at_top_mul_const`). -/
 theorem Tendsto.atTop_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atTop :=
   by
-  apply tendsto_at_top.2 fun b => _
+  apply tendsto_atTop.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   have hn' : 1 ≤ (n : R) * r := by rwa [nsmul_eq_mul] at hn
-  filter_upwards [tendsto_at_top.1 hf (max b 0 * n)]with x hx
+  filter_upwards [tendsto_atTop.1 hf (max b 0 * n)]with x hx
   calc
     b ≤ max b 0 * 1 := by
       rw [mul_one]
@@ -293,7 +293,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_top_
 `linear_ordered_field`s which does not require the `archimedean` assumption. -/
 theorem Tendsto.atTop_mul_neg_const' (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atBot := by
-  simpa only [tendsto_neg_at_top_iff, mul_neg] using hf.at_top_mul_const' (neg_pos.mpr hr)
+  simpa only [tendsto_neg_atTop_iff, mul_neg] using hf.at_top_mul_const' (neg_pos.mpr hr)
 #align filter.tendsto.at_top_mul_neg_const' Filter.Tendsto.atTop_mul_neg_const'
 
 /- warning: filter.tendsto.at_bot_mul_const' -> Filter.Tendsto.atBot_mul_const' is a dubious translation:
@@ -307,7 +307,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_bot_
 theorem Tendsto.atBot_mul_const' (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atBot :=
   by
-  simp only [← tendsto_neg_at_top_iff, ← neg_mul] at hf⊢
+  simp only [← tendsto_neg_atTop_iff, ← neg_mul] at hf⊢
   exact hf.at_top_mul_const' hr
 #align filter.tendsto.at_bot_mul_const' Filter.Tendsto.atBot_mul_const'
 
@@ -321,7 +321,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_bot_
 `linear_ordered_field`s which does not require the `archimedean` assumption. -/
 theorem Tendsto.atBot_mul_neg_const' (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atTop := by
-  simpa only [mul_neg, tendsto_neg_at_bot_iff] using hf.at_bot_mul_const' (neg_pos.2 hr)
+  simpa only [mul_neg, tendsto_neg_atBot_iff] using hf.at_bot_mul_const' (neg_pos.2 hr)
 #align filter.tendsto.at_bot_mul_neg_const' Filter.Tendsto.atBot_mul_neg_const'
 
 end LinearOrderedRing
@@ -394,7 +394,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.at_bot_
 theorem Tendsto.atBot_zsmul_const {f : α → ℤ} (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x • r) l atBot :=
   by
-  simp only [← tendsto_neg_at_top_iff, ← neg_zsmul] at hf⊢
+  simp only [← tendsto_neg_atTop_iff, ← neg_zsmul] at hf⊢
   exact hf.at_top_zsmul_const hr
 #align filter.tendsto.at_bot_zsmul_const Filter.Tendsto.atBot_zsmul_const
 

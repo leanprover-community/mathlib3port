@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.smooth_functions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ namespace SmoothMap
 @[to_additive]
 instance hasMul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
     Mul C^∞⟮I, N; I', G⟯ :=
-  ⟨fun f g => ⟨f * g, f.Smooth.mul g.Smooth⟩⟩
+  ⟨fun f g => ⟨f * g, f.smooth.mul g.smooth⟩⟩
 #align smooth_map.has_mul SmoothMap.hasMul
 #align smooth_map.has_add SmoothMap.has_add
 
@@ -115,9 +115,9 @@ instance commMonoid {G : Type _} [CommMonoid G] [TopologicalSpace G] [ChartedSpa
 instance group {G : Type _} [Group G] [TopologicalSpace G] [ChartedSpace H' G] [LieGroup I' G] :
     Group C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.monoid with
-    inv := fun f => ⟨fun x => (f x)⁻¹, f.Smooth.inv⟩
+    inv := fun f => ⟨fun x => (f x)⁻¹, f.smooth.inv⟩
     mul_left_inv := fun a => by ext <;> exact mul_left_inv _
-    div := fun f g => ⟨f / g, f.Smooth.div g.Smooth⟩
+    div := fun f g => ⟨f / g, f.smooth.div g.smooth⟩
     div_eq_mul_inv := fun f g => by ext <;> exact div_eq_mul_inv _ _ }
 #align smooth_map.group SmoothMap.group
 #align smooth_map.add_group SmoothMap.add_group
@@ -203,7 +203,7 @@ field `𝕜` inherit a vector space structure.
 
 instance hasSmul {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     SMul 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
-  ⟨fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩⟩
+  ⟨fun r f => ⟨r • f, smooth_const.smul f.smooth⟩⟩
 #align smooth_map.has_smul SmoothMap.hasSmul
 
 @[simp]
@@ -261,7 +261,7 @@ def c : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯
 instance algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
   {
     SmoothMap.semiring with
-    smul := fun r f => ⟨r • f, smooth_const.smul f.Smooth⟩
+    smul := fun r f => ⟨r • f, smooth_const.smul f.smooth⟩
     toRingHom := SmoothMap.c
     commutes' := fun c f => by ext x <;> exact Algebra.commutes' _ _
     smul_def' := fun c f => by ext x <;> exact Algebra.smul_def' _ _ }

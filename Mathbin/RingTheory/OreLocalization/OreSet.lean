@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.ore_set
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ def oreSetOfNoZeroDivisors {R : Type _} [Ring R] [NoZeroDivisors R] {S : Submono
     (ore_num : R → S → R) (ore_denom : R → S → S)
     (ore_eq : ∀ (r : R) (s : S), r * ore_denom r s = s * ore_num r s) : OreSet S :=
   letI : CancelMonoidWithZero R := NoZeroDivisors.toCancelMonoidWithZero
-  ore_set_of_cancel_monoid_with_zero ore_num ore_denom ore_eq
+  oreSetOfCancelMonoidWithZero ore_num ore_denom ore_eq
 #align ore_localization.ore_set_of_no_zero_divisors OreLocalization.oreSetOfNoZeroDivisors
 
 end OreLocalization

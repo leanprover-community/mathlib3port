@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.group_action.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddMonoid.{u2} β] [_inst_2 : DistribSMul.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β _inst_1)] {r : α} {l : List.{u2} β}, Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β _inst_1) _inst_2))) r (List.sum.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_1)) (AddMonoid.toZero.{u2} β _inst_1) l)) (List.sum.{u2} β (AddZeroClass.toAdd.{u2} β (AddMonoid.toAddZeroClass.{u2} β _inst_1)) (AddMonoid.toZero.{u2} β _inst_1) (List.map.{u2, u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.59 : α) (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.61 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β _inst_1) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β _inst_1) _inst_2))) x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.59 x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.61) r) l))
 Case conversion may be inaccurate. Consider using '#align list.smul_sum List.smul_sumₓ'. -/
-theorem List.smul_sum {r : α} {l : List β} : r • l.Sum = (l.map ((· • ·) r)).Sum :=
+theorem List.smul_sum {r : α} {l : List β} : r • l.sum = (l.map ((· • ·) r)).sum :=
   (DistribSMul.toAddMonoidHom β r).map_list_sum l
 #align list.smul_sum List.smul_sum
 
@@ -53,7 +53,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Monoid.{u1} α] [_inst_2 : Monoid.{u2} β] [_inst_3 : MulDistribMulAction.{u1, u2} α β _inst_1 _inst_2] {r : α} {l : List.{u2} β}, Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} α β _inst_1 _inst_2 _inst_3))) r (List.prod.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_2)) (Monoid.toOne.{u2} β _inst_2) l)) (List.prod.{u2} β (MulOneClass.toMul.{u2} β (Monoid.toMulOneClass.{u2} β _inst_2)) (Monoid.toOne.{u2} β _inst_2) (List.map.{u2, u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.137 : α) (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.139 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β _inst_1 (MulDistribMulAction.toMulAction.{u1, u2} α β _inst_1 _inst_2 _inst_3))) x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.137 x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.139) r) l))
 Case conversion may be inaccurate. Consider using '#align list.smul_prod List.smul_prodₓ'. -/
-theorem List.smul_prod {r : α} {l : List β} : r • l.Prod = (l.map ((· • ·) r)).Prod :=
+theorem List.smul_prod {r : α} {l : List β} : r • l.prod = (l.map ((· • ·) r)).prod :=
   (MulDistribMulAction.toMonoidHom β r).map_list_prod l
 #align list.smul_prod List.smul_prod
 
@@ -69,7 +69,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} β] [_inst_2 : DistribSMul.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_1))] {r : α} {s : Multiset.{u2} β}, Eq.{succ u2} β (HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_1)) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_1)) _inst_2))) r (Multiset.sum.{u2} β _inst_1 s)) (Multiset.sum.{u2} β _inst_1 (Multiset.map.{u2, u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.208 : α) (x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.210 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (SMulZeroClass.toSMul.{u1, u2} α β (AddMonoid.toZero.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_1)) (DistribSMul.toSMulZeroClass.{u1, u2} α β (AddMonoid.toAddZeroClass.{u2} β (AddCommMonoid.toAddMonoid.{u2} β _inst_1)) _inst_2))) x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.208 x._@.Mathlib.GroupTheory.GroupAction.BigOperators._hyg.210) r) s))
 Case conversion may be inaccurate. Consider using '#align multiset.smul_sum Multiset.smul_sumₓ'. -/
-theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.Sum = (s.map ((· • ·) r)).Sum :=
+theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.sum = (s.map ((· • ·) r)).sum :=
   (DistribSMul.toAddMonoidHom β r).map_multiset_sum s
 #align multiset.smul_sum Multiset.smul_sum
 
@@ -91,7 +91,7 @@ section
 variable [Monoid α] [CommMonoid β] [MulDistribMulAction α β]
 
 #print Multiset.smul_prod /-
-theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.Prod = (s.map ((· • ·) r)).Prod :=
+theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.prod = (s.map ((· • ·) r)).prod :=
   (MulDistribMulAction.toMonoidHom β r).map_multiset_prod s
 #align multiset.smul_prod Multiset.smul_prod
 -/

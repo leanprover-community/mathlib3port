@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.yoneda
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,8 +44,8 @@ def yoneda : C ⥤ Cᵒᵖ ⥤ Type v₁
   obj X :=
     { obj := fun Y => unop Y ⟶ X
       map := fun Y Y' f g => f.unop ≫ g
-      map_comp' := fun _ _ _ f g => by ext; dsimp; erw [category.assoc]
-      map_id' := fun Y => by ext; dsimp; erw [category.id_comp] }
+      map_comp' := fun _ _ _ f g => by ext; dsimp; erw [Category.assoc]
+      map_id' := fun Y => by ext; dsimp; erw [Category.id_comp] }
   map X X' f := { app := fun Y g => g ≫ f }
 #align category_theory.yoneda CategoryTheory.yoneda
 
@@ -193,12 +193,12 @@ variable [F.Representable]
 
 /-- The representing object for the representable functor `F`. -/
 noncomputable def reprX : C :=
-  (Representable.has_representation : ∃ (X : _)(f : _ ⟶ F), _).some
+  (Representable.has_representation : ∃ (X : _)(f : _ ⟶ F), _).choose
 #align category_theory.functor.repr_X CategoryTheory.Functor.reprX
 
 /-- The (forward direction of the) isomorphism witnessing `F` is representable. -/
 noncomputable def reprF : yoneda.obj F.reprX ⟶ F :=
-  Representable.has_representation.choose_spec.some
+  Representable.has_representation.choose_spec.choose
 #align category_theory.functor.repr_f CategoryTheory.Functor.reprF
 
 /- warning: category_theory.functor.repr_x clashes with category_theory.functor.repr_X -> CategoryTheory.Functor.reprX
@@ -226,12 +226,12 @@ noncomputable def reprW : yoneda.obj F.reprX ≅ F :=
 #align category_theory.functor.repr_w CategoryTheory.Functor.reprW
 
 @[simp]
-theorem reprW_hom : F.reprW.Hom = F.reprF :=
+theorem reprW_hom : F.reprW.hom = F.reprF :=
   rfl
 #align category_theory.functor.repr_w_hom CategoryTheory.Functor.reprW_hom
 
 theorem reprW_app_hom (X : Cᵒᵖ) (f : unop X ⟶ F.reprX) :
-    (F.reprW.app X).Hom f = F.map f.op F.reprX :=
+    (F.reprW.app X).hom f = F.map f.op F.reprX :=
   by
   change F.repr_f.app X f = (F.repr_f.app (op F.repr_X) ≫ F.map f.op) (𝟙 F.repr_X)
   rw [← F.repr_f.naturality]
@@ -249,12 +249,12 @@ variable [F.Corepresentable]
 
 /-- The representing object for the corepresentable functor `F`. -/
 noncomputable def coreprX : C :=
-  (Corepresentable.has_corepresentation : ∃ (X : _)(f : _ ⟶ F), _).some.unop
+  (Corepresentable.has_corepresentation : ∃ (X : _)(f : _ ⟶ F), _).choose.unop
 #align category_theory.functor.corepr_X CategoryTheory.Functor.coreprX
 
 /-- The (forward direction of the) isomorphism witnessing `F` is corepresentable. -/
 noncomputable def coreprF : coyoneda.obj (op F.coreprX) ⟶ F :=
-  Corepresentable.has_corepresentation.choose_spec.some
+  Corepresentable.has_corepresentation.choose_spec.choose
 #align category_theory.functor.corepr_f CategoryTheory.Functor.coreprF
 
 /- warning: category_theory.functor.corepr_x clashes with category_theory.functor.corepr_X -> CategoryTheory.Functor.coreprX
@@ -281,7 +281,7 @@ noncomputable def coreprW : coyoneda.obj (op F.coreprX) ≅ F :=
   asIso F.coreprF
 #align category_theory.functor.corepr_w CategoryTheory.Functor.coreprW
 
-theorem coreprW_app_hom (X : C) (f : F.coreprX ⟶ X) : (F.coreprW.app X).Hom f = F.map f F.coreprX :=
+theorem coreprW_app_hom (X : C) (f : F.coreprX ⟶ X) : (F.coreprW.app X).hom f = F.map f F.coreprX :=
   by
   change F.corepr_f.app X f = (F.corepr_f.app F.corepr_X ≫ F.map f) (𝟙 F.corepr_X)
   rw [← F.corepr_f.naturality]
@@ -295,12 +295,12 @@ end Functor
 
 theorem representable_of_nat_iso (F : Cᵒᵖ ⥤ Type v₁) {G} (i : F ≅ G) [F.Representable] :
     G.Representable :=
-  { has_representation := ⟨F.reprX, F.reprF ≫ i.Hom, inferInstance⟩ }
+  { has_representation := ⟨F.reprX, F.reprF ≫ i.hom, inferInstance⟩ }
 #align category_theory.representable_of_nat_iso CategoryTheory.representable_of_nat_iso
 
 theorem corepresentable_of_nat_iso (F : C ⥤ Type v₁) {G} (i : F ≅ G) [F.Corepresentable] :
     G.Corepresentable :=
-  { has_corepresentation := ⟨op F.coreprX, F.coreprF ≫ i.Hom, inferInstance⟩ }
+  { has_corepresentation := ⟨op F.coreprX, F.coreprF ≫ i.hom, inferInstance⟩ }
 #align category_theory.corepresentable_of_nat_iso CategoryTheory.corepresentable_of_nat_iso
 
 instance : Functor.Corepresentable (𝟭 (Type v₁)) :=
@@ -360,25 +360,25 @@ def yonedaLemma : yonedaPairing C ≅ yonedaEvaluation C
     { app := fun F x => ULift.up ((x.app F.1) (𝟙 (unop F.1)))
       naturality' := by
         intro X Y f; ext; dsimp
-        erw [category.id_comp, ← functor_to_types.naturality]
-        simp only [category.comp_id, yoneda_obj_map] }
+        erw [Category.id_comp, ← FunctorToTypes.naturality]
+        simp only [Category.comp_id, yoneda_obj_map] }
   inv :=
     { app := fun F x =>
         { app := fun X a => (F.2.map a.op) x.down
           naturality' := by
             intro X Y f; ext; dsimp
-            rw [functor_to_types.map_comp_apply] }
+            rw [FunctorToTypes.map_comp_apply] }
       naturality' := by
         intro X Y f; ext; dsimp
-        rw [← functor_to_types.naturality, functor_to_types.map_comp_apply] }
+        rw [← FunctorToTypes.naturality, FunctorToTypes.map_comp_apply] }
   hom_inv_id' := by
     ext; dsimp
-    erw [← functor_to_types.naturality, obj_map_id]
+    erw [← FunctorToTypes.naturality, obj_map_id]
     simp only [yoneda_map_app, Quiver.Hom.unop_op]
-    erw [category.id_comp]
+    erw [Category.id_comp]
   inv_hom_id' := by
     ext; dsimp
-    rw [functor_to_types.map_id_apply]
+    rw [FunctorToTypes.map_id_apply]
 #align category_theory.yoneda_lemma CategoryTheory.yonedaLemma
 
 variable {C}
@@ -430,7 +430,7 @@ def yonedaSectionsSmall {C : Type u₁} [SmallCategory C] (X : C) (F : Cᵒᵖ �
 
 @[simp]
 theorem yonedaSectionsSmall_hom {C : Type u₁} [SmallCategory C] (X : C) (F : Cᵒᵖ ⥤ Type u₁)
-    (f : yoneda.obj X ⟶ F) : (yonedaSectionsSmall X F).Hom f = f.app _ (𝟙 _) :=
+    (f : yoneda.obj X ⟶ F) : (yonedaSectionsSmall X F).hom f = f.app _ (𝟙 _) :=
   rfl
 #align category_theory.yoneda_sections_small_hom CategoryTheory.yonedaSectionsSmall_hom
 

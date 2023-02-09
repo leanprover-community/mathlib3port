@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Paul Lezeau, Junyan Xu
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.is_integrally_closed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,8 +57,8 @@ theorem isIntegrallyClosed_eq_field_fractions [IsDomain S] {s : S} (hs : IsInteg
   refine' (eq_of_irreducible_of_monic _ _ _).symm
   ·
     exact
-      (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (monic hs)).1 (Irreducible hs)
-  · rw [aeval_map_algebra_map, aeval_algebra_map_apply, aeval, map_zero]
+      (Polynomial.Monic.irreducible_iff_irreducible_map_fraction_map (monic hs)).1 (irreducible hs)
+  · rw [aeval_map_algebraMap, aeval_algebraMap_apply, aeval, map_zero]
   · exact (monic hs).map _
 #align minpoly.is_integrally_closed_eq_field_fractions minpoly.isIntegrallyClosed_eq_field_fractions
 
@@ -69,7 +69,7 @@ theorem isIntegrallyClosed_eq_field_fractions' [IsDomain S] [Algebra K S] [IsSca
     {s : S} (hs : IsIntegral R s) : minpoly K s = (minpoly R s).map (algebraMap R K) :=
   by
   let L := FractionRing S
-  rw [← is_integrally_closed_eq_field_fractions K L hs]
+  rw [← isIntegrallyClosed_eq_field_fractions K L hs]
   refine'
     minpoly.eq_of_algebraMap_eq (IsFractionRing.injective S L) (isIntegral_of_isScalarTower hs) rfl
 #align minpoly.is_integrally_closed_eq_field_fractions' minpoly.isIntegrallyClosed_eq_field_fractions'
@@ -90,24 +90,24 @@ theorem isIntegrallyClosed_dvd [Nontrivial R] {s : S} (hs : IsIntegral R s) {p :
   let L := FractionRing S
   have : minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (p %ₘ minpoly R s) :=
     by
-    rw [map_mod_by_monic _ (minpoly.monic hs), mod_by_monic_eq_sub_mul_div]
+    rw [map_modByMonic _ (minpoly.monic hs), modByMonic_eq_sub_mul_div]
     refine' dvd_sub (minpoly.dvd K (algebraMap S L s) _) _
     rw [← map_aeval_eq_aeval_map, hp, map_zero]
     rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
     apply dvd_mul_of_dvd_left
-    rw [is_integrally_closed_eq_field_fractions K L hs]
-    exact monic.map _ (minpoly.monic hs)
-  rw [is_integrally_closed_eq_field_fractions _ _ hs,
+    rw [isIntegrallyClosed_eq_field_fractions K L hs]
+    exact Monic.map _ (minpoly.monic hs)
+  rw [isIntegrallyClosed_eq_field_fractions _ _ hs,
     map_dvd_map (algebraMap R K) (IsFractionRing.injective R K) (minpoly.monic hs)] at this
-  rw [← dvd_iff_mod_by_monic_eq_zero (minpoly.monic hs)]
-  refine' Polynomial.eq_zero_of_dvd_of_degree_lt this (degree_mod_by_monic_lt p <| minpoly.monic hs)
+  rw [← dvd_iff_modByMonic_eq_zero (minpoly.monic hs)]
+  refine' Polynomial.eq_zero_of_dvd_of_degree_lt this (degree_modByMonic_lt p <| minpoly.monic hs)
   all_goals infer_instance
 #align minpoly.is_integrally_closed_dvd minpoly.isIntegrallyClosed_dvd
 
 theorem isIntegrallyClosed_dvd_iff [Nontrivial R] {s : S} (hs : IsIntegral R s) (p : R[X]) :
     Polynomial.aeval s p = 0 ↔ minpoly R s ∣ p :=
   ⟨fun hp => isIntegrallyClosed_dvd hs hp, fun hp => by
-    simpa only [RingHom.mem_ker, RingHom.coe_comp, coe_eval_ring_hom, coe_map_ring_hom,
+    simpa only [RingHom.mem_ker, RingHom.coe_comp, coe_evalRingHom, coe_mapRingHom,
       Function.comp_apply, eval_map, ← aeval_def] using
       aeval_eq_zero_of_dvd_aeval_eq_zero hp (minpoly.aeval R s)⟩
 #align minpoly.is_integrally_closed_dvd_iff minpoly.isIntegrallyClosed_dvd_iff
@@ -116,7 +116,7 @@ theorem ker_eval {s : S} (hs : IsIntegral R s) :
     ((Polynomial.aeval s).toRingHom : R[X] →+* S).ker = Ideal.span ({minpoly R s} : Set R[X]) := by
   ext p <;>
     simp_rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom,
-      is_integrally_closed_dvd_iff hs, ← Ideal.mem_span_singleton]
+      isIntegrallyClosed_dvd_iff hs, ← Ideal.mem_span_singleton]
 #align minpoly.ker_eval minpoly.ker_eval
 
 /-- If an element `x` is a root of a nonzero polynomial `p`, then the degree of `p` is at least the
@@ -125,9 +125,9 @@ assumptions on `S` in exchange for stronger assumptions on `R`. -/
 theorem IsIntegrallyClosed.degree_le_of_ne_zero {s : S} (hs : IsIntegral R s) {p : R[X]}
     (hp0 : p ≠ 0) (hp : Polynomial.aeval s p = 0) : degree (minpoly R s) ≤ degree p :=
   by
-  rw [degree_eq_nat_degree (minpoly.ne_zero hs), degree_eq_nat_degree hp0]
+  rw [degree_eq_natDegree (minpoly.ne_zero hs), degree_eq_natDegree hp0]
   norm_cast
-  exact nat_degree_le_of_dvd ((is_integrally_closed_dvd_iff hs _).mp hp) hp0
+  exact natDegree_le_of_dvd ((isIntegrallyClosed_dvd_iff hs _).mp hp) hp0
 #align minpoly.is_integrally_closed.degree_le_of_ne_zero minpoly.IsIntegrallyClosed.degree_le_of_ne_zero
 
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
@@ -141,9 +141,9 @@ theorem IsIntegrallyClosed.Minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
   have hs : IsIntegral R s := ⟨P, hmo, hP⟩
   symm; apply eq_of_sub_eq_zero
   by_contra hnz
-  have := is_integrally_closed.degree_le_of_ne_zero hs hnz (by simp [hP])
+  have := IsIntegrallyClosed.degree_le_of_ne_zero hs hnz (by simp [hP])
   contrapose! this
-  refine' degree_sub_lt _ (NeZero hs) _
+  refine' degree_sub_lt _ (ne_zero hs) _
   · exact le_antisymm (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
   · rw [(monic hs).leadingCoeff, hmo.leading_coeff]
 #align minpoly.is_integrally_closed.minpoly.unique minpoly.IsIntegrallyClosed.Minpoly.unique
@@ -151,10 +151,10 @@ theorem IsIntegrallyClosed.Minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
 theorem prime_of_isIntegrallyClosed {x : S} (hx : IsIntegral R x) : Prime (minpoly R x) :=
   by
   refine'
-    ⟨(minpoly.monic hx).NeZero,
+    ⟨(minpoly.monic hx).ne_zero,
       ⟨by
         by_contra h_contra <;>
-          exact (ne_of_lt (minpoly.degree_pos hx)) (degree_eq_zero_of_is_unit h_contra).symm,
+          exact (ne_of_lt (minpoly.degree_pos hx)) (degree_eq_zero_of_isUnit h_contra).symm,
         fun a b h => or_iff_not_imp_left.mpr fun h' => _⟩⟩
   rw [← minpoly.isIntegrallyClosed_dvd_iff hx] at h' h⊢
   rw [aeval_mul] at h
@@ -175,8 +175,8 @@ theorem ToAdjoin.injective (hx : IsIntegral R x) : Function.Injective (Minpoly.t
   obtain ⟨P, hP⟩ := mk_surjective (minpoly.monic hx) P₁
   by_cases hPzero : P = 0
   · simpa [hPzero] using hP.symm
-  rw [← hP, minpoly.to_adjoin_apply', lift_hom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
-    [anonymous], is_integrally_closed_dvd_iff hx] at hP₁
+  rw [← hP, Minpoly.toAdjoin_apply', liftHom_mk, ← Subalgebra.coe_eq_zero, aeval_subalgebra_coe,
+    [anonymous], isIntegrallyClosed_dvd_iff hx] at hP₁
   obtain ⟨Q, hQ⟩ := hP₁
   rw [← hP, hQ, RingHom.map_mul, mk_self, zero_mul]
 #align minpoly.to_adjoin.injective minpoly.ToAdjoin.injective

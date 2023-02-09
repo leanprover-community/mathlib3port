@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.category.Quiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,14 +80,14 @@ def free : Quiv.{v, u} ⥤ Cat.{max u v, u}
       map := fun X Y f => F.mapPath f
       map_comp' := fun X Y Z f g => F.mapPath_comp f g }
   map_id' V := by
-    change (show paths V ⥤ _ from _) = _
+    change (show Paths V ⥤ _ from _) = _
     ext
-    apply eq_conj_eq_to_hom
+    apply eq_conj_eqToHom
     rfl
   map_comp' U V W F G := by
-    change (show paths U ⥤ _ from _) = _
+    change (show Paths U ⥤ _ from _) = _
     ext
-    apply eq_conj_eq_to_hom
+    apply eq_conj_eqToHom
     rfl
 #align category_theory.Cat.free CategoryTheory.Cat.free
 
@@ -116,20 +116,20 @@ def adj : Cat.free ⊣ Quiv.forget :=
           invFun := fun F => lift F
           left_inv := fun F => by
             ext
-            · erw [(eq_conj_eq_to_hom _).symm]
-              apply category.id_comp
+            · erw [(eq_conj_eqToHom _).symm]
+              apply Category.id_comp
             rfl
           right_inv := by
             rintro ⟨obj, map⟩
             dsimp only [Prefunctor.comp]
             congr
             ext (X Y f)
-            exact category.id_comp _ }
+            exact Category.id_comp _ }
       homEquiv_naturality_left_symm' := fun V W C f g =>
         by
-        change (show paths V ⥤ _ from _) = _
+        change (show Paths V ⥤ _ from _) = _
         ext
-        apply eq_conj_eq_to_hom
+        apply eq_conj_eqToHom
         rfl }
 #align category_theory.Quiv.adj CategoryTheory.Quiv.adj
 

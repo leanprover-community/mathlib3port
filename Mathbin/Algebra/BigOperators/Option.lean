@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.big_operators.option
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_insert_none Finset.prod_insertNoneₓ'. -/
 @[simp, to_additive]
 theorem prod_insertNone (f : Option α → M) (s : Finset α) :
-    (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by simp [insert_none]
+    (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by simp [insertNone]
 #align finset.prod_insert_none Finset.prod_insertNone
 #align finset.sum_insert_none Finset.sum_insertNone
 
@@ -52,9 +52,9 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_erase_none
 theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
     (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elim' 1 f x := by
   classical calc
-      (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elim' 1 f x :=
-        (Prod_map s.erase_none embedding.some <| Option.elim' 1 f).symm
-      _ = ∏ x in s.erase none, Option.elim' 1 f x := by rw [map_some_erase_none]
+      (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map Embedding.some, Option.elim' 1 f x :=
+        (prod_map s.erase_none Embedding.some <| Option.elim' 1 f).symm
+      _ = ∏ x in s.erase none, Option.elim' 1 f x := by rw [map_some_eraseNone]
       _ = ∏ x in s, Option.elim' 1 f x := prod_erase _ rfl
       
 #align finset.prod_erase_none Finset.prod_eraseNone

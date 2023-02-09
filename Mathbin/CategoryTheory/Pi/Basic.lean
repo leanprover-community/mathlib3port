@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.pi.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,10 +126,10 @@ but is expected to have type
   forall {I : Type.{u3}} (C : I -> Type.{u1}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u1} (C i)] {J : Type.{u3}} {D : J -> Type.{u1}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u1} (D j)] (s : Sum.{u3, u3} I J), CategoryTheory.Category.{u2, u1} (Sum.elim.{u3, u3, succ (succ u1)} I J Type.{u1} C D s)
 Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategoryₓ'. -/
 instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
-  | Sum.inl i => by
+  | sum.inl i => by
     dsimp
     infer_instance
-  | Sum.inr j => by
+  | sum.inr j => by
     dsimp
     infer_instance
 #align category_theory.pi.sum_elim_category CategoryTheory.pi.sumElimCategory
@@ -154,12 +154,12 @@ variable {C}
 pair of corresponding components. -/
 @[simps]
 def isoApp {X Y : ∀ i, C i} (f : X ≅ Y) (i : I) : X i ≅ Y i :=
-  ⟨f.Hom i, f.inv i, by
+  ⟨f.hom i, f.inv i, by
     dsimp
-    rw [← comp_apply, iso.hom_inv_id, id_apply],
+    rw [← comp_apply, Iso.hom_inv_id, id_apply],
     by
     dsimp
-    rw [← comp_apply, iso.inv_hom_id, id_apply]⟩
+    rw [← comp_apply, Iso.inv_hom_id, id_apply]⟩
 #align category_theory.pi.iso_app CategoryTheory.pi.isoApp
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.embedding.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ example (s : finset (fin 3)) (f : equiv.perm (fin 3)) : s.map f = s.map f.to_emb
 ```
 -/
 protected def Equiv.toEmbedding : α ↪ β :=
-  ⟨f, f.Injective⟩
+  ⟨f, f.injective⟩
 #align equiv.to_embedding Equiv.toEmbedding
 -/
 
@@ -130,7 +130,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.as_embedding Equ
 set. -/
 @[simps]
 def Equiv.asEmbedding {p : β → Prop} (e : α ≃ Subtype p) : α ↪ β :=
-  ⟨coe ∘ e, Subtype.coe_injective.comp e.Injective⟩
+  ⟨coe ∘ e, Subtype.coe_injective.comp e.injective⟩
 #align equiv.as_embedding Equiv.asEmbedding
 
 end Equiv
@@ -237,7 +237,7 @@ protected def refl (α : Sort _) : α ↪ α :=
 /-- Composition of `f : α ↪ β` and `g : β ↪ γ`. -/
 @[trans, simps (config := { simpRhs := true })]
 protected def trans {α β γ} (f : α ↪ β) (g : β ↪ γ) : α ↪ γ :=
-  ⟨g ∘ f, g.Injective.comp f.Injective⟩
+  ⟨g ∘ f, g.injective.comp f.injective⟩
 #align function.embedding.trans Function.Embedding.trans
 -/
 
@@ -288,7 +288,7 @@ protected noncomputable def ofSurjective {α β} (f : β → α) (hf : Surjectiv
 #print Function.Embedding.equivOfSurjective /-
 /-- Convert a surjective `embedding` to an `equiv` -/
 protected noncomputable def equivOfSurjective {α β} (f : α ↪ β) (hf : Surjective f) : α ≃ β :=
-  Equiv.ofBijective f ⟨f.Injective, hf⟩
+  Equiv.ofBijective f ⟨f.injective, hf⟩
 #align function.embedding.equiv_of_surjective Function.Embedding.equivOfSurjective
 -/
 
@@ -319,7 +319,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} (f : Function.Embedding.{u2, u1} α β) (a : α) (b : β) [_inst_1 : forall (a' : α), Decidable (Eq.{u2} α a' a)] [_inst_2 : forall (a' : α), Decidable (Eq.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a') (FunLike.coe.{max (max 1 u1) u2, u2, u1} (Function.Embedding.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (max 1 u1) u2, u2, u1} (Function.Embedding.{u2, u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, u1} α β)) f a') b)], Eq.{u1} ((fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) a) (FunLike.coe.{max (max 1 u1) u2, u2, u1} (Function.Embedding.{u2, u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (max 1 u1) u2, u2, u1} (Function.Embedding.{u2, u1} α β) α β (Function.instEmbeddingLikeEmbedding.{u2, u1} α β)) (Function.Embedding.setValue.{u2, u1} α β f a b (fun (a' : α) => _inst_1 a') (fun (a' : α) => _inst_2 a')) a) b
 Case conversion may be inaccurate. Consider using '#align function.embedding.set_value_eq Function.Embedding.setValue_eqₓ'. -/
 theorem setValue_eq {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidable (a' = a)]
-    [∀ a', Decidable (f a' = b)] : setValue f a b a = b := by simp [set_value]
+    [∀ a', Decidable (f a' = b)] : setValue f a b a = b := by simp [setValue]
 #align function.embedding.set_value_eq Function.Embedding.setValue_eq
 
 #print Function.Embedding.some /-
@@ -344,7 +344,7 @@ def some {α} : α ↪ Option α :=
 /-- A version of `option.map` for `function.embedding`s. -/
 @[simps (config := { fullyApplied := false })]
 def optionMap {α β} (f : α ↪ β) : Option α ↪ Option β :=
-  ⟨Option.map f, Option.map_injective f.Injective⟩
+  ⟨Option.map f, Option.map_injective f.injective⟩
 #align function.embedding.option_map Function.Embedding.optionMap
 -/
 
@@ -404,7 +404,7 @@ def sectr {α : Sort _} (a : α) (β : Sort _) : β ↪ α × β :=
 #print Function.Embedding.prodMap /-
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/
 def prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
-  ⟨Prod.map e₁ e₂, e₁.Injective.Prod_map e₂.Injective⟩
+  ⟨Prod.map e₁ e₂, e₁.injective.Prod_map e₂.injective⟩
 #align function.embedding.prod_map Function.Embedding.prodMap
 -/
 
@@ -416,14 +416,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.coe_prod_map Function.Embedding.coe_prodMapₓ'. -/
 @[simp]
 theorem coe_prodMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) :
-    ⇑(e₁.Prod_map e₂) = Prod.map e₁ e₂ :=
+    ⇑(e₁.prodMap e₂) = Prod.map e₁ e₂ :=
   rfl
 #align function.embedding.coe_prod_map Function.Embedding.coe_prodMap
 
 #print Function.Embedding.pprodMap /-
 /-- If `e₁` and `e₂` are embeddings, then so is `λ ⟨a, b⟩, ⟨e₁ a, e₂ b⟩ : pprod α γ → pprod β δ`. -/
 def pprodMap {α β γ δ : Sort _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : PProd α γ ↪ PProd β δ :=
-  ⟨fun x => ⟨e₁ x.1, e₂ x.2⟩, e₁.Injective.pprod_map e₂.Injective⟩
+  ⟨fun x => ⟨e₁ x.1, e₂ x.2⟩, e₁.injective.pprod_map e₂.injective⟩
 #align function.embedding.pprod_map Function.Embedding.pprodMap
 -/
 
@@ -436,8 +436,8 @@ open Sum
 def sumMap {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : Sum α γ ↪ Sum β δ :=
   ⟨Sum.map e₁ e₂, fun s₁ s₂ h =>
     match s₁, s₂, h with
-    | inl a₁, inl a₂, h => congr_arg inl <| e₁.Injective <| inl.inj h
-    | inr b₁, inr b₂, h => congr_arg inr <| e₂.Injective <| inr.inj h⟩
+    | inl a₁, inl a₂, h => congr_arg inl <| e₁.injective <| inl.inj h
+    | inr b₁, inr b₂, h => congr_arg inr <| e₂.injective <| inr.inj h⟩
 #align function.embedding.sum_map Function.Embedding.sumMap
 -/
 
@@ -487,7 +487,7 @@ def sigmaMk (a : α) : β a ↪ Σx, β x :=
 of embeddings, then `sigma.map f g` is an embedding. -/
 @[simps apply]
 def sigmaMap (f : α ↪ α') (g : ∀ a, β a ↪ β' (f a)) : (Σa, β a) ↪ Σa', β' a' :=
-  ⟨Sigma.map f fun a => g a, f.Injective.sigma_map fun a => (g a).Injective⟩
+  ⟨Sigma.map f fun a => g a, f.injective.sigma_map fun a => (g a).injective⟩
 #align function.embedding.sigma_map Function.Embedding.sigmaMap
 -/
 
@@ -498,7 +498,7 @@ end Sigma
 `e : Π a, (β a ↪ γ a)`. This embedding sends `f` to `λ a, e a (f a)`. -/
 @[simps]
 def piCongrRight {α : Sort _} {β γ : α → Sort _} (e : ∀ a, β a ↪ γ a) : (∀ a, β a) ↪ ∀ a, γ a :=
-  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).Injective (congr_fun h a)⟩
+  ⟨fun f a => e a (f a), fun f₁ f₂ h => funext fun a => (e a).injective (congr_fun h a)⟩
 #align function.embedding.Pi_congr_right Function.Embedding.piCongrRight
 -/
 
@@ -547,7 +547,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.swap_apply Function.Embedding.swap_applyₓ'. -/
 theorem swap_apply {α β : Type _} [DecidableEq α] [DecidableEq β] (f : α ↪ β) (x y z : α) :
     Equiv.swap (f x) (f y) (f z) = f (Equiv.swap x y z) :=
-  f.Injective.swap_apply x y z
+  f.injective.swap_apply x y z
 #align function.embedding.swap_apply Function.Embedding.swap_apply
 
 /- warning: function.embedding.swap_comp -> Function.Embedding.swap_comp is a dubious translation:
@@ -558,7 +558,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.embedding.swap_comp Function.Embedding.swap_compₓ'. -/
 theorem swap_comp {α β : Type _} [DecidableEq α] [DecidableEq β] (f : α ↪ β) (x y : α) :
     Equiv.swap (f x) (f y) ∘ f = f ∘ Equiv.swap x y :=
-  f.Injective.swap_comp x y
+  f.injective.swap_comp x y
 #align function.embedding.swap_comp Function.Embedding.swap_comp
 
 end Embedding
@@ -580,7 +580,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.subtype_injectiv
 def subtypeInjectiveEquivEmbedding (α β : Sort _) : { f : α → β // Function.Injective f } ≃ (α ↪ β)
     where
   toFun f := ⟨f.val, f.property⟩
-  invFun f := ⟨f, f.Injective⟩
+  invFun f := ⟨f, f.injective⟩
   left_inv f := by simp
   right_inv f := by
     ext
@@ -693,7 +693,7 @@ variable {α : Type _}
 into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right. -/
 def subtypeOrLeftEmbedding (p q : α → Prop) [DecidablePred p] :
     { x // p x ∨ q x } ↪ Sum { x // p x } { x // q x } :=
-  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.Prop.resolve_left h⟩,
+  ⟨fun x => if h : p x then Sum.inl ⟨x, h⟩ else Sum.inr ⟨x, x.prop.resolve_left h⟩,
     by
     intro x y
     dsimp only
@@ -711,7 +711,7 @@ theorem subtypeOrLeftEmbedding_apply_left {p q : α → Prop} [DecidablePred p]
 #print subtypeOrLeftEmbedding_apply_right /-
 theorem subtypeOrLeftEmbedding_apply_right {p q : α → Prop} [DecidablePred p]
     (x : { x // p x ∨ q x }) (hx : ¬p x) :
-    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.Prop.resolve_left hx⟩ :=
+    subtypeOrLeftEmbedding p q x = Sum.inr ⟨x, x.prop.resolve_left hx⟩ :=
   dif_neg hx
 #align subtype_or_left_embedding_apply_right subtypeOrLeftEmbedding_apply_right
 -/
@@ -721,7 +721,7 @@ theorem subtypeOrLeftEmbedding_apply_right {p q : α → Prop} [DecidablePred p]
 if `p x → q x` for all `x : α`. -/
 @[simps]
 def Subtype.impEmbedding (p q : α → Prop) (h : ∀ x, p x → q x) : { x // p x } ↪ { x // q x } :=
-  ⟨fun x => ⟨x, h x x.Prop⟩, fun x y => by simp [Subtype.ext_iff]⟩
+  ⟨fun x => ⟨x, h x x.prop⟩, fun x y => by simp [Subtype.ext_iff]⟩
 #align subtype.imp_embedding Subtype.impEmbedding
 -/
 

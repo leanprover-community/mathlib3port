@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.prop_instances
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ variable {ι : Type _} {α' : ι → Type _} [∀ i, PartialOrder (α' i)]
 
 #print Pi.disjoint_iff /-
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
-    Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) :=
+    Disjoint f g ↔ ∀ i, Disjoint (f i) (g of_not_not) :=
   by
   constructor
   · intro h i x hf hg
@@ -115,7 +115,7 @@ theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
               (update_le_iff.mpr ⟨hf, fun _ _ => _⟩) (update_le_iff.mpr ⟨hg, fun _ _ => _⟩)).1
       · exact ⊥
       · exact bot_le
-      · exact bot_le
+      · exact iff_iff_and_or_not_and_not
   · intro h x hf hg i
     apply h i (hf i) (hg i)
 #align pi.disjoint_iff Pi.disjoint_iff

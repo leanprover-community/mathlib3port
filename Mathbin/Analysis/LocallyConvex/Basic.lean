@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ theorem balanced_univ : Balanced 𝕜 (univ : Set E) := fun a ha => subset_univ 
 #align balanced_univ balanced_univ
 
 theorem Balanced.union (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∪ B) := fun a ha =>
-  smul_set_union.Subset.trans <| union_subset_union (hA _ ha) <| hB _ ha
+  smul_set_union.subset.trans <| union_subset_union (hA _ ha) <| hB _ ha
 #align balanced.union Balanced.union
 
 theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 𝕜 (A ∩ B) := fun a ha =>
@@ -191,7 +191,7 @@ theorem Balanced.inter (hA : Balanced 𝕜 A) (hB : Balanced 𝕜 B) : Balanced 
 #align balanced.inter Balanced.inter
 
 theorem balanced_unionᵢ {f : ι → Set E} (h : ∀ i, Balanced 𝕜 (f i)) : Balanced 𝕜 (⋃ i, f i) :=
-  fun a ha => (smul_set_Union _ _).Subset.trans <| unionᵢ_mono fun _ => h _ _ ha
+  fun a ha => (smul_set_Union _ _).subset.trans <| unionᵢ_mono fun _ => h _ _ ha
 #align balanced_Union balanced_unionᵢ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -213,7 +213,7 @@ theorem balanced_Inter₂ {f : ∀ i, κ i → Set E} (h : ∀ i j, Balanced �
 variable [SMul 𝕝 E] [SMulCommClass 𝕜 𝕝 E]
 
 theorem Balanced.smul (a : 𝕝) (hs : Balanced 𝕜 s) : Balanced 𝕜 (a • s) := fun b hb =>
-  (smul_comm _ _ _).Subset.trans <| smul_set_mono <| hs _ hb
+  (smul_comm _ _ _).subset.trans <| smul_set_mono <| hs _ hb
 #align balanced.smul Balanced.smul
 
 end SMul
@@ -224,22 +224,22 @@ variable [AddCommGroup E] [Module 𝕜 E] {s s₁ s₂ t t₁ t₂ : Set E}
 
 theorem Absorbs.neg : Absorbs 𝕜 s t → Absorbs 𝕜 (-s) (-t) :=
   Exists.imp fun r =>
-    And.imp_right <| forall₂_imp fun _ _ h => (neg_subset_neg.2 h).trans (smul_set_neg _ _).Superset
+    And.imp_right <| forall₂_imp fun _ _ h => (neg_subset_neg.2 h).trans (smul_set_neg _ _).superset
 #align absorbs.neg Absorbs.neg
 
 theorem Balanced.neg : Balanced 𝕜 s → Balanced 𝕜 (-s) :=
-  forall₂_imp fun _ _ h => (smul_set_neg _ _).Subset.trans <| neg_subset_neg.2 h
+  forall₂_imp fun _ _ h => (smul_set_neg _ _).subset.trans <| neg_subset_neg.2 h
 #align balanced.neg Balanced.neg
 
 theorem Absorbs.add : Absorbs 𝕜 s₁ t₁ → Absorbs 𝕜 s₂ t₂ → Absorbs 𝕜 (s₁ + s₂) (t₁ + t₂) :=
   fun ⟨r₁, hr₁, h₁⟩ ⟨r₂, hr₂, h₂⟩ =>
   ⟨max r₁ r₂, lt_max_of_lt_left hr₁, fun a ha =>
     (add_subset_add (h₁ _ <| le_of_max_le_left ha) <| h₂ _ <| le_of_max_le_right ha).trans
-      (smul_add _ _ _).Superset⟩
+      (smul_add _ _ _).superset⟩
 #align absorbs.add Absorbs.add
 
 theorem Balanced.add (hs : Balanced 𝕜 s) (ht : Balanced 𝕜 t) : Balanced 𝕜 (s + t) := fun a ha =>
-  (smul_add _ _ _).Subset.trans <| add_subset_add (hs _ ha) <| ht _ ha
+  (smul_add _ _ _).subset.trans <| add_subset_add (hs _ ha) <| ht _ ha
 #align balanced.add Balanced.add
 
 theorem Absorbs.sub (h₁ : Absorbs 𝕜 s₁ t₁) (h₂ : Absorbs 𝕜 s₂ t₂) : Absorbs 𝕜 (s₁ - s₂) (t₁ - t₂) :=
@@ -254,7 +254,7 @@ theorem Balanced.sub (hs : Balanced 𝕜 s) (ht : Balanced 𝕜 t) : Balanced �
   exact hs.add ht.neg
 #align balanced.sub Balanced.sub
 
-theorem balanced_zero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).Subset
+theorem balanced_zero : Balanced 𝕜 (0 : Set E) := fun a ha => (smul_zero _).subset
 #align balanced_zero balanced_zero
 
 end Module

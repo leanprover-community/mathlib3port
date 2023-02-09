@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.compare
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem commutes_symm' {m : ℕ} (hm : n ≤ m) (x : TruncatedWittVector p m (ZM
     (zmodEquivTrunc p n).symm (truncate hm x) =
       ZMod.castHom (pow_dvd_pow p hm) _ ((zmodEquivTrunc p m).symm x) :=
   by
-  apply (zmod_equiv_trunc p n).Injective
+  apply (zmodEquivTrunc p n).injective
   rw [← commutes']
   simp
 #align truncated_witt_vector.commutes_symm' TruncatedWittVector.commutes_symm'
@@ -166,7 +166,7 @@ theorem toZmodPow_compat (m n : ℕ) (h : m ≤ n) :
           (truncate n) :=
       by rw [commutes_symm, RingHom.comp_assoc]
     _ = (zmodEquivTrunc p m).symm.toRingHom.comp (truncate m) := by
-      rw [RingHom.comp_assoc, truncate_comp_witt_vector_truncate]
+      rw [RingHom.comp_assoc, truncate_comp_wittVector_truncate]
     
 #align witt_vector.to_zmod_pow_compat WittVector.toZmodPow_compat
 
@@ -196,15 +196,15 @@ theorem toPadicInt_comp_fromPadicInt : (toPadicInt p).comp (fromPadicInt p) = Ri
   by
   rw [← PadicInt.toZmodPow_eq_iff_ext]
   intro n
-  rw [← RingHom.comp_assoc, to_padic_int, PadicInt.lift_spec]
-  simp only [from_padic_int, to_zmod_pow, RingHom.comp_id]
+  rw [← RingHom.comp_assoc, toPadicInt, PadicInt.lift_spec]
+  simp only [fromPadicInt, toZmodPow, RingHom.comp_id]
   rw [RingHom.comp_assoc, truncate_comp_lift, ← RingHom.comp_assoc]
   simp only [RingEquiv.symm_toRingHom_comp_toRingHom, RingHom.id_comp]
 #align witt_vector.to_padic_int_comp_from_padic_int WittVector.toPadicInt_comp_fromPadicInt
 
 theorem toPadicInt_comp_fromPadicInt_ext (x) :
     (toPadicInt p).comp (fromPadicInt p) x = RingHom.id ℤ_[p] x := by
-  rw [to_padic_int_comp_from_padic_int]
+  rw [toPadicInt_comp_fromPadicInt]
 #align witt_vector.to_padic_int_comp_from_padic_int_ext WittVector.toPadicInt_comp_fromPadicInt_ext
 
 theorem fromPadicInt_comp_toPadicInt :
@@ -212,14 +212,14 @@ theorem fromPadicInt_comp_toPadicInt :
   by
   apply WittVector.hom_ext
   intro n
-  rw [from_padic_int, ← RingHom.comp_assoc, truncate_comp_lift, RingHom.comp_assoc]
-  simp only [to_padic_int, to_zmod_pow, RingHom.comp_id, PadicInt.lift_spec, RingHom.id_comp, ←
+  rw [fromPadicInt, ← RingHom.comp_assoc, truncate_comp_lift, RingHom.comp_assoc]
+  simp only [toPadicInt, toZmodPow, RingHom.comp_id, PadicInt.lift_spec, RingHom.id_comp, ←
     RingHom.comp_assoc, RingEquiv.toRingHom_comp_symm_toRingHom]
 #align witt_vector.from_padic_int_comp_to_padic_int WittVector.fromPadicInt_comp_toPadicInt
 
 theorem fromPadicInt_comp_toPadicInt_ext (x) :
     (fromPadicInt p).comp (toPadicInt p) x = RingHom.id (𝕎 (ZMod p)) x := by
-  rw [from_padic_int_comp_to_padic_int]
+  rw [fromPadicInt_comp_toPadicInt]
 #align witt_vector.from_padic_int_comp_to_padic_int_ext WittVector.fromPadicInt_comp_toPadicInt_ext
 
 /-- The ring of Witt vectors over `zmod p` is isomorphic to the ring of `p`-adic integers. This

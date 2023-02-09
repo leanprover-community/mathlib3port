@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul van Wamelen
 
 ! This file was ported from Lean 3 source module number_theory.fermat4
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b :=
   apply Nat.le_lt_antisymm (h.2 _ _ _ hf)
   rw [Int.natAbs_mul, lt_mul_iff_one_lt_left, Int.natAbs_pow, Int.natAbs_ofNat]
   · exact Nat.one_lt_pow _ _ zero_lt_two (Nat.Prime.one_lt hp)
-  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero_of_ne_zero (NeZero hf))
+  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero_of_ne_zero (ne_zero hf))
 #align fermat_42.coprime_of_minimal Fermat42.coprime_of_minimal
 
 /-- We can swap `a` and `b` in a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2`. -/
@@ -125,7 +125,7 @@ theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) :=
   rintro ⟨⟨ha, hb, heq⟩, h2⟩
   constructor
   · apply And.intro ha (And.intro hb _)
-    rw [HEq]
+    rw [heq]
     exact (neg_sq c).symm
   rwa [Int.natAbs_neg c]
 #align fermat_42.neg_of_minimal Fermat42.neg_of_minimal
@@ -157,7 +157,7 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
   · use a0, b0, c0
     tauto
   · exfalso
-    exact NeZero hf.1 rfl
+    exact ne_zero hf.1 rfl
   · use a0, b0, -c0, neg_of_minimal hf, hc
     exact neg_pos.mpr h1
 #align fermat_42.exists_pos_odd_minimal Fermat42.exists_pos_odd_minimal
@@ -207,9 +207,9 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   -- a and n are coprime, because a ^ 2 = m ^ 2 - n ^ 2 and m and n are coprime.
   have h3 : Int.gcd a n = 1 := by
     apply int.gcd_eq_one_iff_coprime.mpr
-    apply @IsCoprime.of_mul_left_left _ _ _ a
+    apply @is_coprime.of_mul_left_left _ _ _ a
     rw [← sq, ht1, (by ring : m ^ 2 - n ^ 2 = m ^ 2 + -n * n)]
-    exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_leftₓ.add_mul_right_left (-n)
+    exact (int.gcd_eq_one_iff_coprime.mp ht4).pow_left.add_mul_right_left (-n)
   -- m is positive because b is non-zero and b ^ 2 = 2 * m * n and we already have 0 ≤ m.
   have hb20 : b ^ 2 ≠ 0 := mt pow_eq_zero h.1.2.1
   have h4 : 0 < m := by
@@ -228,7 +228,7 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
       int.gcd_eq_one_iff_coprime.mpr (Int.coprime_of_sq_sum' (int.gcd_eq_one_iff_coprime.mp htt4))
   -- b is even because b ^ 2 = 2 * m * n.
   have hb2 : 2 ∣ b := by
-    apply @Int.Prime.dvd_pow' _ 2 _ Nat.prime_two
+    apply @int.prime.dvd_pow' _ 2 _ Nat.prime_two
     rw [ht2, mul_assoc]
     exact dvd_mul_right 2 (m * n)
   cases' hb2 with b' hb2'
@@ -331,6 +331,6 @@ theorem not_fermat_4 {a b c : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : a ^ 4 + b ^ 4
   by
   intro heq
   apply @not_fermat_42 _ _ (c ^ 2) ha hb
-  rw [HEq]; ring
+  rw [heq]; ring
 #align not_fermat_4 not_fermat_4
 

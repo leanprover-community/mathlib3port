@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.compact
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,26 +80,26 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   have ha : a ∈ s := by simp [hpt, hab]
   rcases hab.eq_or_lt with (rfl | hlt)
   · exact ha.2
-  set c := Sup s
+  set c := supₛ s
   have hsc : IsLUB s c := isLUB_csupₛ ⟨a, ha⟩ sbd
   have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
   specialize hf c hc
   have hcs : c ∈ s := by
     cases' hc.1.eq_or_lt with heq hlt
-    · rwa [← HEq]
+    · rwa [← heq]
     refine' ⟨hc, fun hcf => hf fun U hU => _⟩
     rcases(mem_nhdsWithin_Iic_iff_exists_Ioc_subset' hlt).1 (mem_nhdsWithin_of_mem_nhds hU) with
       ⟨x, hxc, hxU⟩
     rcases((hsc.frequently_mem ⟨a, ha⟩).and_eventually
           (Ioc_mem_nhdsWithin_Iic ⟨hxc, le_rfl⟩)).exists with
       ⟨y, ⟨hyab, hyf⟩, hy⟩
-    refine' mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (subset.trans _ hxU)
+    refine' mem_of_superset (f.diff_mem_iff.2 ⟨hcf, hyf⟩) (Subset.trans _ hxU)
     rw [diff_subset_iff]
     exact
-      subset.trans Icc_subset_Icc_union_Ioc
-        (union_subset_union subset.rfl <| Ioc_subset_Ioc_left hy.1.le)
+      Subset.trans Icc_subset_Icc_union_Ioc
+        (union_subset_union Subset.rfl <| Ioc_subset_Ioc_left hy.1.le)
   cases' hc.2.eq_or_lt with heq hlt
-  · rw [← HEq]
+  · rw [← heq]
     exact hcs.2
   contrapose! hf
   intro U hU
@@ -130,7 +130,7 @@ instance Pi.compact_Icc_space' {α β : Type _} [Preorder β] [TopologicalSpace 
 
 instance {α β : Type _} [Preorder α] [TopologicalSpace α] [CompactIccSpace α] [Preorder β]
     [TopologicalSpace β] [CompactIccSpace β] : CompactIccSpace (α × β) :=
-  ⟨fun a b => (Icc_prod_eq a b).symm ▸ isCompact_Icc.Prod isCompact_Icc⟩
+  ⟨fun a b => (Icc_prod_eq a b).symm ▸ isCompact_Icc.prod isCompact_Icc⟩
 
 #print isCompact_uIcc /-
 /-- An unordered closed interval is compact. -/
@@ -149,7 +149,7 @@ for products (indexed or not) of complete linear orders, and we have instances w
 that cover these cases. -/
 instance (priority := 100) compactSpace_of_completeLinearOrder {α : Type _} [CompleteLinearOrder α]
     [TopologicalSpace α] [OrderTopology α] : CompactSpace α :=
-  ⟨by simp only [← Icc_bot_top, is_compact_Icc]⟩
+  ⟨by simp only [← Icc_bot_top, isCompact_Icc]⟩
 #align compact_space_of_complete_linear_order compactSpace_of_completeLinearOrder
 -/
 
@@ -180,7 +180,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : OrderTopology.{u1} α _inst_2 (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))] {s : Set.{u1} α}, (IsCompact.{u1} α _inst_2 s) -> (Set.Nonempty.{u1} α s) -> (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (InfSet.infₛ.{u1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s) s)
 Case conversion may be inaccurate. Consider using '#align is_compact.Inf_mem IsCompact.infₛ_memₓ'. -/
 theorem IsCompact.infₛ_mem {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) : infₛ s ∈ s :=
-  hs.IsClosed.cinfₛ_mem ne_s hs.BddBelow
+  hs.isClosed.cinfₛ_mem ne_s hs.bddBelow
 #align is_compact.Inf_mem IsCompact.infₛ_mem
 
 /- warning: is_compact.Sup_mem -> IsCompact.supₛ_mem is a dubious translation:
@@ -201,7 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_compact.is_glb_Inf IsCompact.isGLB_infₛₓ'. -/
 theorem IsCompact.isGLB_infₛ {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) :
     IsGLB s (infₛ s) :=
-  isGLB_cinfₛ ne_s hs.BddBelow
+  isGLB_cinfₛ ne_s hs.bddBelow
 #align is_compact.is_glb_Inf IsCompact.isGLB_infₛ
 
 /- warning: is_compact.is_lub_Sup -> IsCompact.isLUB_supₛ is a dubious translation:
@@ -223,7 +223,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_compact.is_least_Inf IsCompact.isLeast_infₛₓ'. -/
 theorem IsCompact.isLeast_infₛ {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) :
     IsLeast s (infₛ s) :=
-  ⟨hs.cinfₛ_mem ne_s, (hs.isGLB_infₛ ne_s).1⟩
+  ⟨hs.infₛ_mem ne_s, (hs.isGLB_infₛ ne_s).1⟩
 #align is_compact.is_least_Inf IsCompact.isLeast_infₛ
 
 /- warning: is_compact.is_greatest_Sup -> IsCompact.isGreatest_supₛ is a dubious translation:
@@ -240,7 +240,7 @@ theorem IsCompact.isGreatest_supₛ {s : Set α} (hs : IsCompact s) (ne_s : s.No
 #print IsCompact.exists_isLeast /-
 theorem IsCompact.exists_isLeast {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) :
     ∃ x, IsLeast s x :=
-  ⟨_, hs.isLeast_cinfₛ ne_s⟩
+  ⟨_, hs.isLeast_infₛ ne_s⟩
 #align is_compact.exists_is_least IsCompact.exists_isLeast
 -/
 
@@ -259,7 +259,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_compact.exists_is_glb IsCompact.exists_isGLBₓ'. -/
 theorem IsCompact.exists_isGLB {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) :
     ∃ x ∈ s, IsGLB s x :=
-  ⟨_, hs.cinfₛ_mem ne_s, hs.isGLB_infₛ ne_s⟩
+  ⟨_, hs.infₛ_mem ne_s, hs.isGLB_infₛ ne_s⟩
 #align is_compact.exists_is_glb IsCompact.exists_isGLB
 
 /- warning: is_compact.exists_is_lub -> IsCompact.exists_isLUB is a dubious translation:
@@ -270,7 +270,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_compact.exists_is_lub IsCompact.exists_isLUBₓ'. -/
 theorem IsCompact.exists_isLUB {s : Set α} (hs : IsCompact s) (ne_s : s.Nonempty) :
     ∃ x ∈ s, IsLUB s x :=
-  ⟨_, hs.csupₛ_mem ne_s, hs.isLUB_supₛ ne_s⟩
+  ⟨_, hs.supₛ_mem ne_s, hs.isLUB_supₛ ne_s⟩
 #align is_compact.exists_is_lub IsCompact.exists_isLUB
 
 /- warning: is_compact.exists_Inf_image_eq_and_le -> IsCompact.exists_infₛ_image_eq_and_le is a dubious translation:
@@ -281,9 +281,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_compact.exists_Inf_image_eq_and_le IsCompact.exists_infₛ_image_eq_and_leₓ'. -/
 theorem IsCompact.exists_infₛ_image_eq_and_le {s : Set β} (hs : IsCompact s) (ne_s : s.Nonempty)
     {f : β → α} (hf : ContinuousOn f s) : ∃ x ∈ s, infₛ (f '' s) = f x ∧ ∀ y ∈ s, f x ≤ f y :=
-  let ⟨x, hxs, hx⟩ := (hs.image_of_continuousOn hf).cinfₛ_mem (ne_s.image f)
+  let ⟨x, hxs, hx⟩ := (hs.image_of_continuousOn hf).infₛ_mem (ne_s.image f)
   ⟨x, hxs, hx.symm, fun y hy =>
-    hx.trans_le <| cinfₛ_le (hs.image_of_continuousOn hf).BddBelow <| mem_image_of_mem f hy⟩
+    hx.trans_le <| cinfₛ_le (hs.image_of_continuousOn hf).bddBelow <| mem_image_of_mem f hy⟩
 #align is_compact.exists_Inf_image_eq_and_le IsCompact.exists_infₛ_image_eq_and_le
 
 /- warning: is_compact.exists_Sup_image_eq_and_ge -> IsCompact.exists_supₛ_image_eq_and_ge is a dubious translation:
@@ -329,7 +329,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_Icc_of_connected_compact eq_Icc_of_connected_compactₓ'. -/
 theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : IsCompact s) :
     s = Icc (infₛ s) (supₛ s) :=
-  eq_Icc_cinfₛ_csupₛ_of_connected_bdd_closed h₁ h₂.BddBelow h₂.BddAbove h₂.IsClosed
+  eq_Icc_cinfₛ_csupₛ_of_connected_bdd_closed h₁ h₂.bddBelow h₂.bddAbove h₂.isClosed
 #align eq_Icc_of_connected_compact eq_Icc_of_connected_compact
 
 /-!
@@ -405,7 +405,7 @@ away from compact sets, then it has a global minimum. -/
 theorem Continuous.exists_forall_le' {f : β → α} (hf : Continuous f) (x₀ : β)
     (h : ∀ᶠ x in cocompact β, f x₀ ≤ f x) : ∃ x : β, ∀ y : β, f x ≤ f y :=
   let ⟨x, _, hx⟩ :=
-    hf.ContinuousOn.exists_forall_le' isClosed_univ (mem_univ x₀)
+    hf.continuousOn.exists_forall_le' isClosed_univ (mem_univ x₀)
       (by rwa [principal_univ, inf_top_eq])
   ⟨x, fun y => hx y (mem_univ y)⟩
 #align continuous.exists_forall_le' Continuous.exists_forall_le'
@@ -427,7 +427,7 @@ theorem Continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuo
     (hlim : Tendsto f (cocompact β) atTop) : ∃ x, ∀ y, f x ≤ f y :=
   by
   inhabit β
-  exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_at_top _)
+  exact hf.exists_forall_le' default (hlim.eventually <| eventually_ge_atTop _)
 #align continuous.exists_forall_le Continuous.exists_forall_le
 -/
 
@@ -510,17 +510,17 @@ theorem IsCompact.continuous_supₛ {f : γ → β → α} {K : Set β} (hK : Is
   intro x
   obtain ⟨y, hyK, h2y, hy⟩ :=
     hK.exists_Sup_image_eq_and_ge h0K
-      (show Continuous fun y => f x y from hf.comp <| Continuous.Prod.mk x).ContinuousOn
+      (show Continuous fun y => f x y from hf.comp <| Continuous.Prod.mk x).continuousOn
   rw [ContinuousAt, h2y, tendsto_order]
   have :=
     tendsto_order.mp
       ((show Continuous fun x => f x y from
-            hf.comp <| continuous_id.prod_mk continuous_const).Tendsto
+            hf.comp <| continuous_id.prod_mk continuous_const).tendsto
         x)
   refine' ⟨fun z hz => _, fun z hz => _⟩
   · refine'
       (this.1 z hz).mono fun x' hx' => hx'.trans_le <| le_csupₛ _ <| mem_image_of_mem (f x') hyK
-    exact hK.bdd_above_image (hf.comp <| Continuous.Prod.mk x').ContinuousOn
+    exact hK.bdd_above_image (hf.comp <| Continuous.Prod.mk x').continuousOn
   · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z :=
       by
       rintro ⟨x', y'⟩ ⟨hx', hy'⟩
@@ -530,7 +530,7 @@ theorem IsCompact.continuous_supₛ {f : γ → β → α} {K : Set β} (hK : Is
       generalized_tube_lemma isCompact_singleton hK (is_open_Iio.preimage hf) h
     refine' eventually_of_mem (hu.mem_nhds (singleton_subset_iff.mp hxu)) fun x' hx' => _
     rw [hK.Sup_lt_iff_of_continuous h0K
-        (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').ContinuousOn]
+        (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').continuousOn]
     exact fun y' hy' => huv (mk_mem_prod hx' (hKv hy'))
 #align is_compact.continuous_Sup IsCompact.continuous_supₛ
 

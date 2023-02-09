@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,12 +107,12 @@ theorem toMatrix_update [DecidableEq ι'] (x : M) :
 /-- The basis constructed by `units_smul` has vectors given by a diagonal matrix. -/
 @[simp]
 theorem toMatrix_unitsSmul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι → R₂ˣ) :
-    e.toMatrix (e.units_smul w) = diagonal (coe ∘ w) :=
+    e.toMatrix (e.unitsSmul w) = diagonal (coe ∘ w) :=
   by
   ext (i j)
   by_cases h : i = j
-  · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def]
-  · simp [h, to_matrix_apply, units_smul_apply, Units.smul_def, Ne.symm h]
+  · simp [h, toMatrix_apply, unitsSmul_apply, Units.smul_def]
+  · simp [h, toMatrix_apply, unitsSmul_apply, Units.smul_def, Ne.symm h]
 #align basis.to_matrix_units_smul Basis.toMatrix_unitsSmul
 
 /-- The basis constructed by `is_unit_smul` has vectors given by a diagonal matrix. -/
@@ -131,14 +131,14 @@ theorem toMatrix_map_vecMul {S : Type _} [Ring S] [Algebra R S] [Fintype ι] (b 
     (v : ι' → S) : ((b.toMatrix v).map <| algebraMap R S).vecMul b = v :=
   by
   ext i
-  simp_rw [vec_mul, dot_product, Matrix.map_apply, ← Algebra.commutes, ← Algebra.smul_def,
-    sum_to_matrix_smul_self]
+  simp_rw [vecMul, dotProduct, Matrix.map_apply, ← Algebra.commutes, ← Algebra.smul_def,
+    sum_toMatrix_smul_self]
 #align basis.to_matrix_map_vec_mul Basis.toMatrix_map_vecMul
 
 @[simp]
 theorem toLin_toMatrix [Fintype ι] [Fintype ι'] [DecidableEq ι'] (v : Basis ι' R M) :
     Matrix.toLin v e (e.toMatrix v) = id :=
-  v.ext fun i => by rw [to_lin_self, id_apply, e.sum_to_matrix_smul_self]
+  v.ext fun i => by rw [toLin_self, id_apply, e.sum_to_matrix_smul_self]
 #align basis.to_lin_to_matrix Basis.toLin_toMatrix
 
 /-- From a basis `e : ι → M`, build a linear equivalence between families of vectors `v : ι → M`,
@@ -187,10 +187,10 @@ variable [Fintype ι'] [Fintype κ] [Fintype κ']
 @[simp]
 theorem basis_toMatrix_mul_linearMap_toMatrix [DecidableEq ι'] :
     c.toMatrix c' ⬝ LinearMap.toMatrix b' c' f = LinearMap.toMatrix b' c f :=
-  (Matrix.toLin b' c).Injective
+  (Matrix.toLin b' c).injective
     (by
       haveI := Classical.decEq κ' <;>
-        rw [to_lin_to_matrix, to_lin_mul b' c' c, to_lin_to_matrix, c.to_lin_to_matrix, id_comp])
+        rw [toLin_toMatrix, toLin_mul b' c' c, toLin_toMatrix, c.to_lin_to_matrix, id_comp])
 #align basis_to_matrix_mul_linear_map_to_matrix basis_toMatrix_mul_linearMap_toMatrix
 
 variable [Fintype ι]
@@ -198,8 +198,8 @@ variable [Fintype ι]
 @[simp]
 theorem linearMap_toMatrix_mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] :
     LinearMap.toMatrix b' c' f ⬝ b'.toMatrix b = LinearMap.toMatrix b c' f :=
-  (Matrix.toLin b c').Injective
-    (by rw [to_lin_to_matrix, to_lin_mul b b' c', to_lin_to_matrix, b'.to_lin_to_matrix, comp_id])
+  (Matrix.toLin b c').injective
+    (by rw [toLin_toMatrix, toLin_mul b b' c', toLin_toMatrix, b'.to_lin_to_matrix, comp_id])
 #align linear_map_to_matrix_mul_basis_to_matrix linearMap_toMatrix_mul_basis_toMatrix
 
 theorem basis_toMatrix_mul_linearMap_toMatrix_mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] :
@@ -237,7 +237,7 @@ theorem LinearMap.toMatrix_id_eq_basis_toMatrix [DecidableEq ι] :
     LinearMap.toMatrix b b' id = b'.toMatrix b :=
   by
   haveI := Classical.decEq ι'
-  rw [← @basis_toMatrix_mul_linearMap_toMatrix _ _ ι, to_matrix_id, Matrix.mul_one]
+  rw [← @basis_to_matrix_mul_linear_map_to_matrix _ _ ι, toMatrix_id, Matrix.mul_one]
 #align linear_map.to_matrix_id_eq_basis_to_matrix LinearMap.toMatrix_id_eq_basis_toMatrix
 
 /-- See also `basis.to_matrix_reindex` which gives the `simp` normal form of this result. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.rat.meta_defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,12 +41,12 @@ want to import `data.rat.basic` there.
 This function is similar to `expr.of_rat` but takes more hypotheses and is not tactic valued.
  -/
 unsafe def rat.mk_numeral (type has_zero has_one has_add has_neg has_div : expr) : ℚ → expr
-  | ⟨Num, denom, _, _⟩ =>
-    let nume := Num.mk_numeral type Zero One Add Neg
+  | ⟨num, denom, _, _⟩ =>
+    let nume := num.mk_numeral type has_zero has_one has_add has_neg
     if denom = 1 then nume
     else
-      let dene := denom.mk_numeral type Zero One Add
-      q(@Div.div.{0} $(type) $(Div) $(nume) $(dene))
+      let dene := denom.mk_numeral type has_zero has_one has_add
+      q(@Div.div.{0} $(type) $(has_div) $(nume) $(dene))
 #align rat.mk_numeral rat.mk_numeral
 
 section
@@ -95,8 +95,8 @@ end
         q( $ ( e₁ ) / $ ( e₂ ) )
         =>
         do
-          let m ← e₁ . toNat
-            let n ← e₂ . toNat
+          let m ← e₁ . to_nat
+            let n ← e₂ . to_nat
             if
               c
               :
@@ -105,7 +105,7 @@ end
               if h : 1 < n then return ⟨ m , n , lt_trans zero_lt_one h , c ⟩ else none
               else
               none
-      | e => do let n ← e . toNat return n
+      | e => do let n ← e . to_nat return n
 #align expr.to_nonneg_rat expr.to_nonneg_rat
 
 /-- Evaluates an expression as a rational number,
@@ -171,17 +171,17 @@ This function is similar to `rat.mk_numeral` but it takes fewer hypotheses and i
 -/
 protected unsafe def of_rat (c : instance_cache) : ℚ → tactic (instance_cache × expr)
   | ⟨(n : ℕ), d, _, _⟩ =>
-    if d = 1 then c.ofNat n
+    if d = 1 then c.of_nat n
     else do
-      let (c, e₁) ← c.ofNat n
-      let (c, e₂) ← c.ofNat d
+      let (c, e₁) ← c.of_nat n
+      let (c, e₂) ← c.of_nat d
       c `` Div.div [e₁, e₂]
   | ⟨-[n+1], d, _, _⟩ => do
     let (c, e) ←
-      if d = 1 then c.ofNat (n + 1)
+      if d = 1 then c.of_nat (n + 1)
         else do
-          let (c, e₁) ← c.ofNat (n + 1)
-          let (c, e₂) ← c.ofNat d
+          let (c, e₁) ← c.of_nat (n + 1)
+          let (c, e₂) ← c.of_nat d
           c `` Div.div [e₁, e₂]
     c `` Neg.neg [e]
 #align tactic.instance_cache.of_rat tactic.instance_cache.of_rat

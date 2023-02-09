@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Bhavik Mehta, Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.choose.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -303,7 +303,7 @@ theorem ascFactorial_eq_factorial_mul_choose (n k : ℕ) :
   by
   rw [mul_comm]
   apply mul_right_cancel₀ (factorial_ne_zero (n + k - k))
-  rw [choose_mul_factorial_mul_factorial, add_tsub_cancel_right, ← factorial_mul_asc_factorial,
+  rw [choose_mul_factorial_mul_factorial, add_tsub_cancel_right, ← factorial_mul_ascFactorial,
     mul_comm]
   exact Nat.le_add_left k n
 #align nat.asc_factorial_eq_factorial_mul_choose Nat.ascFactorial_eq_factorial_mul_choose
@@ -320,8 +320,8 @@ theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) :
     (n + k).choose k = n.ascFactorial k / k ! :=
   by
   apply mul_left_cancel₀ (factorial_ne_zero k)
-  rw [← asc_factorial_eq_factorial_mul_choose]
-  exact (Nat.mul_div_cancel' <| factorial_dvd_asc_factorial _ _).symm
+  rw [← ascFactorial_eq_factorial_mul_choose]
+  exact (Nat.mul_div_cancel' <| factorial_dvd_ascFactorial _ _).symm
 #align nat.choose_eq_asc_factorial_div_factorial Nat.choose_eq_asc_factorial_div_factorial
 -/
 
@@ -329,10 +329,10 @@ theorem choose_eq_asc_factorial_div_factorial (n k : ℕ) :
 theorem descFactorial_eq_factorial_mul_choose (n k : ℕ) : n.descFactorial k = k ! * n.choose k :=
   by
   obtain h | h := Nat.lt_or_ge n k
-  · rw [desc_factorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, mul_zero]
+  · rw [descFactorial_eq_zero_iff_lt.2 h, choose_eq_zero_of_lt h, mul_zero]
   rw [mul_comm]
   apply mul_right_cancel₀ (factorial_ne_zero (n - k))
-  rw [choose_mul_factorial_mul_factorial h, ← factorial_mul_desc_factorial h, mul_comm]
+  rw [choose_mul_factorial_mul_factorial h, ← factorial_mul_descFactorial h, mul_comm]
 #align nat.desc_factorial_eq_factorial_mul_choose Nat.descFactorial_eq_factorial_mul_choose
 -/
 
@@ -346,8 +346,8 @@ theorem factorial_dvd_descFactorial (n k : ℕ) : k ! ∣ n.descFactorial k :=
 theorem choose_eq_descFactorial_div_factorial (n k : ℕ) : n.choose k = n.descFactorial k / k ! :=
   by
   apply mul_left_cancel₀ (factorial_ne_zero k)
-  rw [← desc_factorial_eq_factorial_mul_choose]
-  exact (Nat.mul_div_cancel' <| factorial_dvd_desc_factorial _ _).symm
+  rw [← descFactorial_eq_factorial_mul_choose]
+  exact (Nat.mul_div_cancel' <| factorial_dvd_descFactorial _ _).symm
 #align nat.choose_eq_desc_factorial_div_factorial Nat.choose_eq_descFactorial_div_factorial
 -/
 

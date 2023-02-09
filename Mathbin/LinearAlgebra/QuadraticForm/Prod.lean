@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ from a pair of isometries between the left and right parts. -/
 @[simps toLinearEquiv]
 def Isometry.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₁' : QuadraticForm R N₁}
     {Q₂' : QuadraticForm R N₂} (e₁ : Q₁.Isometry Q₁') (e₂ : Q₂.Isometry Q₂') :
-    (Q₁.Prod Q₂).Isometry (Q₁'.Prod Q₂')
+    (Q₁.prod Q₂).Isometry (Q₁'.prod Q₂')
     where
   map_app' x := congr_arg₂ (· + ·) (e₁.map_app x.1) (e₂.map_app x.2)
   toLinearEquiv := LinearEquiv.prod e₁.toLinearEquiv e₂.toLinearEquiv
@@ -71,16 +71,16 @@ def Isometry.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q
 
 theorem Equivalent.prod {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂}
     {Q₁' : QuadraticForm R N₁} {Q₂' : QuadraticForm R N₂} (e₁ : Q₁.Equivalent Q₁')
-    (e₂ : Q₂.Equivalent Q₂') : (Q₁.Prod Q₂).Equivalent (Q₁'.Prod Q₂') :=
+    (e₂ : Q₂.Equivalent Q₂') : (Q₁.prod Q₂).Equivalent (Q₁'.prod Q₂') :=
   Nonempty.map2 Isometry.prod e₁ e₂
 #align quadratic_form.equivalent.prod QuadraticForm.Equivalent.prod
 
 /-- If a product is anisotropic then its components must be. The converse is not true. -/
 theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂]
-    {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} (h : (Q₁.Prod Q₂).Anisotropic) :
+    {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} (h : (Q₁.prod Q₂).Anisotropic) :
     Q₁.Anisotropic ∧ Q₂.Anisotropic :=
   by
-  simp_rw [anisotropic, prod_apply, Prod.forall, Prod.mk_eq_zero] at h
+  simp_rw [Anisotropic, prod_apply, Prod.forall, Prod.mk_eq_zero] at h
   constructor
   · intro x hx
     refine' (h x 0 _).1
@@ -91,7 +91,7 @@ theorem anisotropic_of_prod {R} [OrderedRing R] [Module R M₁] [Module R M₂]
 #align quadratic_form.anisotropic_of_prod QuadraticForm.anisotropic_of_prod
 
 theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
-    {Q₂ : QuadraticForm R M₂} : (∀ x, 0 ≤ (Q₁.Prod Q₂) x) ↔ (∀ x, 0 ≤ Q₁ x) ∧ ∀ x, 0 ≤ Q₂ x :=
+    {Q₂ : QuadraticForm R M₂} : (∀ x, 0 ≤ (Q₁.prod Q₂) x) ↔ (∀ x, 0 ≤ Q₁ x) ∧ ∀ x, 0 ≤ Q₂ x :=
   by
   simp_rw [Prod.forall, prod_apply]
   constructor
@@ -106,9 +106,9 @@ theorem nonneg_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
 #align quadratic_form.nonneg_prod_iff QuadraticForm.nonneg_prod_iff
 
 theorem posDef_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
-    {Q₂ : QuadraticForm R M₂} : (Q₁.Prod Q₂).PosDef ↔ Q₁.PosDef ∧ Q₂.PosDef :=
+    {Q₂ : QuadraticForm R M₂} : (Q₁.prod Q₂).PosDef ↔ Q₁.PosDef ∧ Q₂.PosDef :=
   by
-  simp_rw [pos_def_iff_nonneg, nonneg_prod_iff]
+  simp_rw [posDef_iff_nonneg, nonneg_prod_iff]
   constructor
   · rintro ⟨⟨hle₁, hle₂⟩, ha⟩
     obtain ⟨ha₁, ha₂⟩ := anisotropic_of_prod ha
@@ -121,7 +121,7 @@ theorem posDef_prod_iff {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q�
 #align quadratic_form.pos_def_prod_iff QuadraticForm.posDef_prod_iff
 
 theorem PosDef.prod {R} [OrderedRing R] [Module R M₁] [Module R M₂] {Q₁ : QuadraticForm R M₁}
-    {Q₂ : QuadraticForm R M₂} (h₁ : Q₁.PosDef) (h₂ : Q₂.PosDef) : (Q₁.Prod Q₂).PosDef :=
+    {Q₂ : QuadraticForm R M₂} (h₁ : Q₁.PosDef) (h₂ : Q₂.PosDef) : (Q₁.prod Q₂).PosDef :=
   posDef_prod_iff.mpr ⟨h₁, h₂⟩
 #align quadratic_form.pos_def.prod QuadraticForm.PosDef.prod
 
@@ -146,7 +146,7 @@ def Isometry.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)} {Q' : ∀ i, 
     where
   map_app' x := by
     simp only [pi_apply, LinearEquiv.piCongrRight_apply, LinearEquiv.toFun_eq_coe,
-      isometry.coe_to_linear_equiv, isometry.map_app]
+      Isometry.coe_to_linearEquiv, Isometry.map_app]
   toLinearEquiv := LinearEquiv.piCongrRight fun i => (e i : Mᵢ i ≃ₗ[R] Nᵢ i)
 #align quadratic_form.isometry.pi QuadraticForm.Isometry.pi
 
@@ -160,7 +160,7 @@ theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)}
 theorem anisotropicOfPi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic :=
   by
-  simp_rw [anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
+  simp_rw [Anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
   intro i x hx
   classical
     have := h (Pi.single i x) _ i
@@ -193,11 +193,11 @@ theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)
 theorem posDef_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} : (pi Q).PosDef ↔ ∀ i, (Q i).PosDef :=
   by
-  simp_rw [pos_def_iff_nonneg, nonneg_pi_iff]
+  simp_rw [posDef_iff_nonneg, nonneg_pi_iff]
   constructor
   · rintro ⟨hle, ha⟩
     intro i
-    exact ⟨hle i, anisotropic_of_pi ha i⟩
+    exact ⟨hle i, anisotropicOfPi ha i⟩
   · intro h
     refine' ⟨fun i => (h i).1, fun x hx => funext fun i => (h i).2 _ _⟩
     rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j hj => _] at hx

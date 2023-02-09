@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.hom.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -523,13 +523,13 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
 linear ordered field. -/
 instance OrderRingIso.subsingleton_right [LinearOrderedField α] [LinearOrderedField β]
     [Archimedean β] : Subsingleton (α ≃+*o β) :=
-  OrderRingIso.toOrderRingHom_injective.Subsingleton
+  OrderRingIso.toOrderRingHom_injective.subsingleton
 #align order_ring_iso.subsingleton_right OrderRingIso.subsingleton_right
 
 /-- There is at most one ordered ring isomorphism between an archimedean linear ordered field and a
 linear ordered field. -/
 instance OrderRingIso.subsingleton_left [LinearOrderedField α] [Archimedean α]
     [LinearOrderedField β] : Subsingleton (α ≃+*o β) :=
-  OrderRingIso.symm_bijective.Injective.Subsingleton
+  OrderRingIso.symm_bijective.injective.subsingleton
 #align order_ring_iso.subsingleton_left OrderRingIso.subsingleton_left
 

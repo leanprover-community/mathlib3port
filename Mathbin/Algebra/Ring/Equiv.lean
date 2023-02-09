@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -461,7 +461,7 @@ Case conversion may be inaccurate. Consider using '#align ring_equiv.mk_coe' Rin
 @[simp]
 theorem mk_coe' (e : R ≃+* S) (f h₁ h₂ h₃ h₄) :
     (RingEquiv.mk f (⇑e) h₁ h₂ h₃ h₄ : S ≃+* R) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.injective <| ext fun x => rfl
 #align ring_equiv.mk_coe' RingEquiv.mk_coe'
 
 /- warning: ring_equiv.symm_mk -> RingEquiv.symm_mk is a dubious translation:

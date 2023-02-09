@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,8 +209,8 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o Mᵒᵈ
     where
   toFun b := OrderDual.toDual (c • b)
   invFun b := c⁻¹ • OrderDual.ofDual b
-  left_inv := inv_smul_smul₀ hc.Ne
-  right_inv := smul_inv_smul₀ hc.Ne
+  left_inv := inv_smul_smul₀ hc.ne
+  right_inv := smul_inv_smul₀ hc.ne
   map_rel_iff' b₁ b₂ := smul_le_smul_iff_of_neg hc
 #align order_iso.smul_left_dual OrderIso.smulLeftDual
 

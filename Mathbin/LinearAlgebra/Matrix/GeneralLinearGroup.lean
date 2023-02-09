@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.general_linear_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem coe_one : ↑(1 : GL n R) = (1 : Matrix n n R) :=
 
 theorem coe_inv : ↑A⁻¹ = (↑A : Matrix n n R)⁻¹ :=
   letI := A.invertible
-  inv_of_eq_nonsing_inv (↑A : Matrix n n R)
+  invOf_eq_nonsing_inv (↑A : Matrix n n R)
 #align matrix.general_linear_group.coe_inv Matrix.GeneralLinearGroup.coe_inv
 
 /-- An element of the matrix general linear group on `(n) [fintype n]` can be considered as an
@@ -150,7 +150,7 @@ instance hasCoeToGeneralLinearGroup : Coe (SpecialLinearGroup n R) (GL n R) :=
 
 @[simp]
 theorem coe_to_GL_det (g : SpecialLinearGroup n R) : (g : GL n R).det = 1 :=
-  Units.ext g.Prop
+  Units.ext g.prop
 #align matrix.special_linear_group.coe_to_GL_det Matrix.SpecialLinearGroup.coe_to_GL_det
 
 end SpecialLinearGroup
@@ -177,7 +177,7 @@ theorem mem_gLPos (A : GL n R) : A ∈ gLPos n R ↔ 0 < (A.det : R) :=
 #align matrix.mem_GL_pos Matrix.mem_gLPos
 
 theorem gLPos.det_ne_zero (A : gLPos n R) : (A : Matrix n n R).det ≠ 0 :=
-  ne_of_gt A.Prop
+  ne_of_gt A.prop
 #align matrix.GL_pos.det_ne_zero Matrix.gLPos.det_ne_zero
 
 end
@@ -193,7 +193,7 @@ instance : Neg (gLPos n R) :=
   ⟨fun g =>
     ⟨-g,
       by
-      rw [mem_GL_pos, general_linear_group.coe_det_apply, Units.val_neg, det_neg,
+      rw [mem_gLPos, GeneralLinearGroup.coe_det_apply, Units.val_neg, det_neg,
         (Fact.out <| Even <| Fintype.card n).neg_one_pow, one_mul]
       exact g.prop⟩⟩
 
@@ -214,7 +214,7 @@ theorem gLPos.coe_neg_apply (g : gLPos n R) (i j : n) :
 #align matrix.GL_pos.coe_neg_apply Matrix.gLPos.coe_neg_apply
 
 instance : HasDistribNeg (gLPos n R) :=
-  Subtype.coe_injective.HasDistribNeg _ gLPos.coe_neg_GL (gLPos n R).val_mul
+  Subtype.coe_injective.hasDistribNeg _ gLPos.coe_neg_GL (gLPos n R).coe_mul
 
 end Neg
 
@@ -225,7 +225,7 @@ variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCom
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def toGLPos : SpecialLinearGroup n R →* gLPos n R
     where
-  toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.Prop.symm ▸ zero_lt_one⟩
+  toFun A := ⟨(A : GL n R), show 0 < (↑A : Matrix n n R).det from A.prop.symm ▸ zero_lt_one⟩
   map_one' := Subtype.ext <| Units.ext <| rfl
   map_mul' A₁ A₂ := Subtype.ext <| Units.ext <| rfl
 #align matrix.special_linear_group.to_GL_pos Matrix.SpecialLinearGroup.toGLPos
@@ -252,7 +252,7 @@ theorem coe_gLPos_coe_GL_coe_matrix (g : SpecialLinearGroup n R) :
 
 @[simp]
 theorem coe_to_gLPos_to_GL_det (g : SpecialLinearGroup n R) : ((g : gLPos n R) : GL n R).det = 1 :=
-  Units.ext g.Prop
+  Units.ext g.prop
 #align matrix.special_linear_group.coe_to_GL_pos_to_GL_det Matrix.SpecialLinearGroup.coe_to_gLPos_to_GL_det
 
 variable [Fact (Even (Fintype.card n))]
@@ -267,7 +267,7 @@ end SpecialLinearGroup
 section Examples
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The matrix [a, -b; b, a] (inspired by multiplication by a complex number); it is an element of
 $GL_2(R)$ if `a ^ 2 + b ^ 2` is nonzero. -/
 @[simps (config := { fullyApplied := false }) coe]
@@ -275,7 +275,7 @@ def planeConformalMatrix {R} [Field R] (a b : R) (hab : a ^ 2 + b ^ 2 ≠ 0) :
     Matrix.GeneralLinearGroup (Fin 2) R :=
   GeneralLinearGroup.mkOfDetNeZero
     («expr!![ »
-      "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
+      "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
     (by simpa [det_fin_two, sq] using hab)
 #align matrix.plane_conformal_matrix Matrix.planeConformalMatrix
 

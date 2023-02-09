@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.units.group_with_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Function.Bijective.{succ u1, succ u1} G G ((fun (x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.79 : G) (x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.81 : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.79 x._@.Mathlib.Algebra.Hom.Equiv.Units.GroupWithZero._hyg.81) a))
 Case conversion may be inaccurate. Consider using '#align mul_left_bijective₀ Equiv.mulLeft_bijective₀ₓ'. -/
 theorem Equiv.mulLeft_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * ·) a : G → G) :=
-  (Equiv.mulLeft₀ a ha).Bijective
+  (Equiv.mulLeft₀ a ha).bijective
 #align mul_left_bijective₀ Equiv.mulLeft_bijective₀
 
 /- warning: equiv.mul_right₀ -> Equiv.mulRight₀ is a dubious translation:
@@ -70,7 +70,7 @@ but is expected to have type
   forall {G : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G] (a : G), (Ne.{succ u1} G a (OfNat.ofNat.{u1} G 0 (Zero.toOfNat0.{u1} G (MonoidWithZero.toZero.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) -> (Function.Bijective.{succ u1, succ u1} G G (fun (_x : G) => HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulZeroClass.toMul.{u1} G (MulZeroOneClass.toMulZeroClass.{u1} G (MonoidWithZero.toMulZeroOneClass.{u1} G (GroupWithZero.toMonoidWithZero.{u1} G _inst_1))))) _x a))
 Case conversion may be inaccurate. Consider using '#align mul_right_bijective₀ Equiv.mulRight_bijective₀ₓ'. -/
 theorem Equiv.mulRight_bijective₀ (a : G) (ha : a ≠ 0) : Function.Bijective ((· * a) : G → G) :=
-  (Equiv.mulRight₀ a ha).Bijective
+  (Equiv.mulRight₀ a ha).bijective
 #align mul_right_bijective₀ Equiv.mulRight_bijective₀
 
 end GroupWithZero

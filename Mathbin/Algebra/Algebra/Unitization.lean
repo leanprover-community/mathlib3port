@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.unitization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -571,12 +571,12 @@ instance algebra : Algebra S (Unitization R A) :=
     commutes' := fun r x => by
       induction x using Unitization.ind
       simp only [mul_add, add_mul, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
-        inl_ring_hom_apply, inl_mul_inl]
+        inlRingHom_apply, inl_mul_inl]
       rw [inl_mul_coe, coe_mul_inl, mul_comm]
     smul_def' := fun s x => by
       induction x using Unitization.ind
       simp only [mul_add, smul_add, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
-        inl_ring_hom_apply, Algebra.algebraMap_eq_smul_one]
+        inlRingHom_apply, Algebra.algebraMap_eq_smul_one]
       rw [inl_mul_inl, inl_mul_coe, smul_one_mul, inl_smul, coe_smul, smul_one_smul] }
 #align unitization.algebra Unitization.algebra
 
@@ -637,7 +637,7 @@ theorem algHom_ext {φ ψ : Unitization R A →ₐ[S] B} (h : ∀ a : A, φ a = 
     φ = ψ := by
   ext
   induction x using Unitization.ind
-  simp only [map_add, ← algebra_map_eq_inl, h, h']
+  simp only [map_add, ← algebraMap_eq_inl, h, h']
 #align unitization.alg_hom_ext Unitization.algHom_ext
 
 /-- See note [partially-applied ext lemmas] -/
@@ -674,7 +674,7 @@ def lift : (A →ₙₐ[R] C) ≃ (Unitization R A →ₐ[R] C)
           zero_add, φ.map_add]
         rw [add_add_add_comm]
       commutes' := fun r => by
-        simp only [algebra_map_eq_inl, fst_inl, snd_inl, φ.map_zero, add_zero] }
+        simp only [algebraMap_eq_inl, fst_inl, snd_inl, φ.map_zero, add_zero] }
   invFun φ := φ.toNonUnitalAlgHom.comp (coeNonUnitalAlgHom R A)
   left_inv φ := by
     ext

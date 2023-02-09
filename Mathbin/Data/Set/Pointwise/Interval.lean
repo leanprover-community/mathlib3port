@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.pointwise.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -821,7 +821,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} α] (a : α) (b : α), Set.BijOn.{u1, u1} α α (fun (_x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α _inst_1))))))) _x a) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α _inst_1)) b) (Set.Iic.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α _inst_1))))))) b a))
 Case conversion may be inaccurate. Consider using '#align set.Iic_add_bij Set.Iic_add_bijₓ'. -/
 theorem Iic_add_bij : BijOn (· + a) (Iic b) (Iic (b + a)) :=
-  image_add_const_Iic a b ▸ ((add_left_injective _).InjOn _).bijOn_image
+  image_add_const_Iic a b ▸ ((add_left_injective _).injOn _).bijOn_image
 #align set.Iic_add_bij Set.Iic_add_bij
 
 /- warning: set.Iio_add_bij -> Set.Iio_add_bij is a dubious translation:
@@ -831,7 +831,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedAddCommGroup.{u1} α] (a : α) (b : α), Set.BijOn.{u1, u1} α α (fun (_x : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α _inst_1))))))) _x a) (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α _inst_1)) b) (Set.Iio.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommGroup.toPartialOrder.{u1} α _inst_1)) (HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α (AddCommGroup.toAddGroup.{u1} α (OrderedAddCommGroup.toAddCommGroup.{u1} α _inst_1))))))) b a))
 Case conversion may be inaccurate. Consider using '#align set.Iio_add_bij Set.Iio_add_bijₓ'. -/
 theorem Iio_add_bij : BijOn (· + a) (Iio b) (Iio (b + a)) :=
-  image_add_const_Iio a b ▸ ((add_left_injective _).InjOn _).bijOn_image
+  image_add_const_Iio a b ▸ ((add_left_injective _).injOn _).bijOn_image
 #align set.Iio_add_bij Set.Iio_add_bij
 
 end OrderedAddCommGroup
@@ -1421,7 +1421,7 @@ theorem image_mul_const_uIcc (a b c : α) : (fun x => x * a) '' [b, c] = [b * a,
   else
     calc
       (fun x => x * a) '' [b, c] = (fun x => x * a⁻¹) ⁻¹' [b, c] :=
-        (Units.mk0 a ha).mul_right.image_eq_preimage _
+        (Units.mk0 a ha).mulRight.image_eq_preimage _
       _ = (fun x => x / a) ⁻¹' [b, c] := by simp only [div_eq_mul_inv]
       _ = [b * a, c * a] := preimage_div_const_uIcc ha _ _
       
@@ -1457,7 +1457,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_mul_right_Icc' Set.image_mul_right_Icc'ₓ'. -/
 theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').mulRight.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Icc' Set.image_mul_right_Icc'
 
 /- warning: set.image_mul_right_Icc -> Set.image_mul_right_Icc is a dubious translation:
@@ -1505,7 +1505,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_mul_right_Ioo Set.image_mul_right_Iooₓ'. -/
 theorem image_mul_right_Ioo (a b : α) {c : α} (h : 0 < c) :
     (fun x => x * c) '' Ioo a b = Ioo (a * c) (b * c) :=
-  ((Units.mk0 c h.ne').mul_right.image_eq_preimage _).trans (by simp [h, division_def])
+  ((Units.mk0 c h.ne').mulRight.image_eq_preimage _).trans (by simp [h, division_def])
 #align set.image_mul_right_Ioo Set.image_mul_right_Ioo
 
 /- warning: set.image_mul_left_Ioo -> Set.image_mul_left_Ioo is a dubious translation:
@@ -1553,7 +1553,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_const_mul_Ioi_zero Set.image_const_mul_Ioi_zeroₓ'. -/
 theorem image_const_mul_Ioi_zero {k : Type _} [LinearOrderedField k] {x : k} (hx : 0 < x) :
     (fun y => x * y) '' Ioi (0 : k) = Ioi 0 := by
-  erw [(Units.mk0 x hx.ne').mul_left.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
+  erw [(Units.mk0 x hx.ne').mulLeft.image_eq_preimage, preimage_const_mul_Ioi 0 (inv_pos.mpr hx),
     zero_div]
 #align set.image_const_mul_Ioi_zero Set.image_const_mul_Ioi_zero
 

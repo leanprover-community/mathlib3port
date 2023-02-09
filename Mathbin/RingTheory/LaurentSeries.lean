@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.laurent_series
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem coe_powerSeries (x : PowerSeries R) :
 @[simp]
 theorem coeff_coe_powerSeries (x : PowerSeries R) (n : ℕ) :
     HahnSeries.coeff (x : LaurentSeries R) n = PowerSeries.coeff R n x := by
-  rw [coe_power_series, of_power_series_apply_coeff]
+  rw [coe_powerSeries, ofPowerSeries_apply_coeff]
 #align laurent_series.coeff_coe_power_series LaurentSeries.coeff_coe_powerSeries
 
 /-- This is a power series that can be multiplied by an integer power of `X` to give our
@@ -101,10 +101,9 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
   by_cases h : x.order ≤ n
   ·
-    rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_power_series,
-      power_series_part_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h),
-      add_sub_cancel'_right]
-  · rw [coe_power_series, of_power_series_apply, emb_domain_notin_range]
+    rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_powerSeries, powerSeriesPart_coeff,
+      ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), add_sub_cancel'_right]
+  · rw [coe_powerSeries, ofPowerSeries_apply, embDomain_notin_range]
     · contrapose! h
       exact order_le_of_coeff_ne_zero h.symm
     · contrapose! h
@@ -118,8 +117,8 @@ theorem ofPowerSeries_powerSeriesPart (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x :=
   by
   refine' Eq.trans _ (congr rfl x.single_order_mul_power_series_part)
-  rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← C_apply, C_one, one_mul,
-    coe_power_series]
+  rw [← mul_assoc, single_mul_single, neg_add_self, mul_one, ← c_apply, c_one, one_mul,
+    coe_powerSeries]
 #align laurent_series.of_power_series_power_series_part LaurentSeries.ofPowerSeries_powerSeriesPart
 
 end Semiring
@@ -149,19 +148,19 @@ instance of_powerSeries_localization [CommRing R] :
   surj := by
     intro z
     by_cases h : 0 ≤ z.order
-    · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * power_series_part z, 1⟩, _⟩
-      simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebra_map, of_power_series_X_pow,
+    · refine' ⟨⟨PowerSeries.x ^ Int.natAbs z.order * powerSeriesPart z, 1⟩, _⟩
+      simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebraMap, ofPowerSeries_x_pow,
         Submonoid.coe_one]
-      rw [Int.natAbs_of_nonneg h, ← coe_power_series, single_order_mul_power_series_part]
-    · refine' ⟨⟨power_series_part z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
-      simp only [coe_algebra_map, of_power_series_power_series_part]
+      rw [Int.natAbs_of_nonneg h, ← coe_powerSeries, single_order_mul_powerSeriesPart]
+    · refine' ⟨⟨powerSeriesPart z, PowerSeries.x ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, _⟩
+      simp only [coe_algebraMap, ofPowerSeries_powerSeriesPart]
       rw [mul_comm _ z]
       refine' congr rfl _
-      rw [Subtype.coe_mk, of_power_series_X_pow, Int.ofNat_natAbs_of_nonpos]
+      rw [Subtype.coe_mk, ofPowerSeries_x_pow, Int.ofNat_natAbs_of_nonpos]
       exact le_of_not_ge h
   eq_iff_exists := by
     intro x y
-    rw [coe_algebra_map, of_power_series_injective.eq_iff]
+    rw [coe_algebraMap, of_power_series_injective.eq_iff]
     constructor
     · rintro rfl
       exact ⟨1, rfl⟩
@@ -224,12 +223,12 @@ theorem coeff_coe (i : ℤ) :
   by
   cases i
   ·
-    rw [Int.natAbs_ofNat_core, Int.ofNat_eq_coe, coeff_coe_power_series,
+    rw [Int.natAbs_ofNat_core, Int.ofNat_eq_coe, coeff_coe_powerSeries,
       if_neg (Int.coe_nat_nonneg _).not_lt]
-  · rw [coe_power_series, of_power_series_apply, emb_domain_notin_image_support,
+  · rw [coe_powerSeries, ofPowerSeries_apply, embDomain_notin_image_support,
       if_pos (Int.negSucc_lt_zero _)]
     simp only [not_exists, RelEmbedding.coeFn_mk, Set.mem_image, not_and,
-      Function.Embedding.coeFn_mk, Ne.def, to_power_series_symm_apply_coeff, mem_support,
+      Function.Embedding.coeFn_mk, Ne.def, toPowerSeries_symm_apply_coeff, mem_support,
       Int.coe_nat_eq, imp_true_iff, not_false_iff]
 #align power_series.coeff_coe PowerSeries.coeff_coe
 

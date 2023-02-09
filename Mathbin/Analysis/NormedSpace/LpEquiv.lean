@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,7 +145,7 @@ section NormedAddCommGroup
 /-- The canonical map between `lp (λ (_ : α), E) ∞` and `α →ᵇ E` as an `add_equiv`. -/
 noncomputable def AddEquiv.lpBcf : lp (fun _ : α => E) ∞ ≃+ (α →ᵇ E)
     where
-  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (memℓp_infty_iff.mp f.Prop)
+  toFun f := ofNormedAddCommGroupDiscrete f ‖f‖ <| le_csupᵢ (memℓp_infty_iff.mp f.prop)
   invFun f := ⟨f, f.bddAbove_range_norm_comp⟩
   left_inv f := lp.ext rfl
   right_inv f := ext fun x => rfl
@@ -165,7 +165,7 @@ noncomputable def lpBcfₗᵢ : lp (fun _ : α => E) ∞ ≃ₗᵢ[𝕜] α →�
   { AddEquiv.lpBcf with
     map_smul' := fun k f => rfl
     norm_map' := fun f => by
-      simp only [norm_eq_supr_norm, lp.norm_eq_csupr]
+      simp only [norm_eq_supᵢ_norm, lp.norm_eq_csupr]
       rfl }
 #align lp_bcfₗᵢ lpBcfₗᵢ
 

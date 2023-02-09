@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.inner
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ protected theorem im {f : α → 𝕜} (hf : AeStronglyMeasurable f μ) :
 protected theorem inner {m : MeasurableSpace α} {μ : Measure α} {f g : α → E}
     (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
     AeStronglyMeasurable (fun x => ⟪f x, g x⟫) μ :=
-  continuous_inner.compAeStronglyMeasurable (hf.prod_mk hg)
+  continuous_inner.compAeStronglyMeasurable (hf.prodMk hg)
 #align measure_theory.ae_strongly_measurable.inner MeasureTheory.AeStronglyMeasurable.inner
 
 end AeStronglyMeasurable

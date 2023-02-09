@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ def quotientRel : Setoid M :=
 theorem quotientRel_r_def {x y : M} : @Setoid.r _ p.quotientRel x y ↔ x - y ∈ p :=
   Iff.trans
     (by
-      rw [left_rel_apply, sub_eq_add_neg, neg_add, neg_neg]
+      rw [leftRel_apply, sub_eq_add_neg, neg_add, neg_neg]
       rfl)
     neg_mem_iff
 #align submodule.quotient_rel_r_def Submodule.quotientRel_r_def
@@ -95,7 +95,7 @@ theorem mk_zero : mk 0 = (0 : M ⧸ p) :=
 #align submodule.quotient.mk_zero Submodule.Quotient.mk_zero
 
 @[simp]
-theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotient.eq' p : mk x = 0 ↔ _)
+theorem mk_eq_zero : (mk x : M ⧸ p) = 0 ↔ x ∈ p := by simpa using (Quotient.eq p : mk x = 0 ↔ _)
 #align submodule.quotient.mk_eq_zero Submodule.Quotient.mk_eq_zero
 
 instance addCommGroup : AddCommGroup (M ⧸ p) :=
@@ -278,7 +278,7 @@ theorem unique_quotient_iff_eq_top : Nonempty (Unique (M ⧸ p)) ↔ p = ⊤ :=
   ⟨fun ⟨h⟩ => subsingleton_quotient_iff_eq_top.mp (@Unique.subsingleton h),
     by
     rintro rfl
-    exact ⟨quotient_top.unique⟩⟩
+    exact ⟨QuotientTop.unique⟩⟩
 #align submodule.unique_quotient_iff_eq_top Submodule.unique_quotient_iff_eq_top
 
 variable (p)
@@ -454,7 +454,7 @@ theorem comap_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftq f h)
 theorem map_liftq [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁₂] M₂) (h) (q : Submodule R (M ⧸ p)) :
     q.map (p.liftq f h) = (q.comap p.mkq).map f :=
   le_antisymm (by rintro _ ⟨⟨x⟩, hxq, rfl⟩ <;> exact ⟨x, hxq, rfl⟩)
-    (by rintro _ ⟨x, hxq, rfl⟩ <;> exact ⟨Quotient.mk' x, hxq, rfl⟩)
+    (by rintro _ ⟨x, hxq, rfl⟩ <;> exact ⟨Quotient.mk x, hxq, rfl⟩)
 #align submodule.map_liftq Submodule.map_liftq
 
 theorem ker_liftq (f : M →ₛₗ[τ₁₂] M₂) (h) : ker (p.liftq f h) = (ker f).map (mkq p) :=
@@ -549,7 +549,7 @@ theorem Quotient.equiv_trans {N O : Type _} [AddCommGroup N] [Module R N] [AddCo
   by
   ext
   -- `simp` can deal with `hef` depending on `e` and `f`
-  simp only [quotient.equiv_apply, LinearEquiv.trans_apply, LinearEquiv.coe_trans]
+  simp only [Quotient.equiv_apply, LinearEquiv.trans_apply, LinearEquiv.coe_trans]
   -- `rw` can deal with `mapq_comp` needing extra hypotheses coming from the RHS
   rw [mapq_comp, LinearMap.comp_apply]
 #align submodule.quotient.equiv_trans Submodule.Quotient.equiv_trans
@@ -579,7 +579,7 @@ theorem range_mkq_comp (f : M →ₛₗ[τ₁₂] M₂) : f.range.mkq.comp f = 0
 #align linear_map.range_mkq_comp LinearMap.range_mkq_comp
 
 theorem ker_le_range_iff {f : M →ₛₗ[τ₁₂] M₂} {g : M₂ →ₛₗ[τ₂₃] M₃} :
-    g.ker ≤ f.range ↔ f.range.mkq.comp g.ker.Subtype = 0 := by
+    g.ker ≤ f.range ↔ f.range.mkq.comp g.ker.subtype = 0 := by
   rw [← range_le_ker_iff, Submodule.ker_mkq, Submodule.range_subtype]
 #align linear_map.ker_le_range_iff LinearMap.ker_le_range_iff
 

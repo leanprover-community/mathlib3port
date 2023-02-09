@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,14 +50,14 @@ instance (priority := 100) PseudoMetricSpace.to_pseudoMetrizableSpace {X : Type 
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpace X]
     [h : PseudoMetrizableSpace X] : PseudoMetricSpace X :=
-  h.exists_pseudo_metric.some.replaceTopology h.exists_pseudo_metric.choose_spec.symm
+  h.exists_pseudo_metric.choose.replaceTopology h.exists_pseudo_metric.choose_spec.symm
 #align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 
 instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) :=
   by
-  letI : PseudoMetricSpace X := pseudo_metrizable_space_pseudo_metric X
-  letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  letI : PseudoMetricSpace X := pseudoMetrizableSpacePseudoMetric X
+  letI : PseudoMetricSpace Y := pseudoMetrizableSpacePseudoMetric Y
   infer_instance
 #align topological_space.pseudo_metrizable_space_prod TopologicalSpace.pseudoMetrizableSpace_prod
 
@@ -65,7 +65,7 @@ instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableS
 is also pseudo metrizable. -/
 theorem Inducing.pseudoMetrizableSpace [PseudoMetrizableSpace Y] {f : X → Y} (hf : Inducing f) :
     PseudoMetrizableSpace X :=
-  letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
+  letI : PseudoMetricSpace Y := pseudoMetrizableSpacePseudoMetric Y
   ⟨⟨hf.comap_pseudo_metric_space, rfl⟩⟩
 #align inducing.pseudo_metrizable_space Inducing.pseudoMetrizableSpace
 
@@ -76,20 +76,20 @@ instance (priority := 100) PseudoMetrizableSpace.firstCountableTopology
   rcases h with ⟨_, hm⟩
   rw [← hm]
   exact
-    @UniformSpace.firstCountableTopology X PseudoMetricSpace.toUniformSpace
+    @uniform_space.first_countable_topology X PseudoMetricSpace.toUniformSpace
       Emetric.Uniformity.Filter.isCountablyGenerated
 #align topological_space.pseudo_metrizable_space.first_countable_topology TopologicalSpace.PseudoMetrizableSpace.firstCountableTopology
 
 instance PseudoMetrizableSpace.subtype [PseudoMetrizableSpace X] (s : Set X) :
     PseudoMetrizableSpace s :=
-  inducing_subtype_val.PseudoMetrizableSpace
+  inducing_subtype_val.pseudoMetrizableSpace
 #align topological_space.pseudo_metrizable_space.subtype TopologicalSpace.PseudoMetrizableSpace.subtype
 
 instance pseudoMetrizableSpace_pi [∀ i, PseudoMetrizableSpace (π i)] :
     PseudoMetrizableSpace (∀ i, π i) :=
   by
   cases nonempty_fintype ι
-  letI := fun i => pseudo_metrizable_space_pseudo_metric (π i)
+  letI := fun i => pseudoMetrizableSpacePseudoMetric (π i)
   infer_instance
 #align topological_space.pseudo_metrizable_space_pi TopologicalSpace.pseudoMetrizableSpace_pi
 
@@ -114,19 +114,19 @@ instance (priority := 100) MetrizableSpace.to_pseudoMetrizableSpace [h : Metriza
 /-- Construct on a metrizable space a metric compatible with the topology. -/
 noncomputable def metrizableSpaceMetric (X : Type _) [TopologicalSpace X] [h : MetrizableSpace X] :
     MetricSpace X :=
-  h.exists_metric.some.replaceTopology h.exists_metric.choose_spec.symm
+  h.exists_metric.choose.replaceTopology h.exists_metric.choose_spec.symm
 #align topological_space.metrizable_space_metric TopologicalSpace.metrizableSpaceMetric
 
 instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Space X :=
   by
-  letI : MetricSpace X := metrizable_space_metric X
+  letI : MetricSpace X := metrizableSpaceMetric X
   infer_instance
 #align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2Space_of_metrizableSpace
 
 instance metrizableSpace_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
   by
-  letI : MetricSpace X := metrizable_space_metric X
-  letI : MetricSpace Y := metrizable_space_metric Y
+  letI : MetricSpace X := metrizableSpaceMetric X
+  letI : MetricSpace Y := metrizableSpaceMetric Y
   infer_instance
 #align topological_space.metrizable_space_prod TopologicalSpace.metrizableSpace_prod
 
@@ -134,18 +134,18 @@ instance metrizableSpace_prod [MetrizableSpace X] [MetrizableSpace Y] : Metrizab
 metrizable. -/
 theorem Embedding.metrizableSpace [MetrizableSpace Y] {f : X → Y} (hf : Embedding f) :
     MetrizableSpace X :=
-  letI : MetricSpace Y := metrizable_space_metric Y
+  letI : MetricSpace Y := metrizableSpaceMetric Y
   ⟨⟨hf.comap_metric_space f, rfl⟩⟩
 #align embedding.metrizable_space Embedding.metrizableSpace
 
 instance MetrizableSpace.subtype [MetrizableSpace X] (s : Set X) : MetrizableSpace s :=
-  embedding_subtype_val.MetrizableSpace
+  embedding_subtype_val.metrizableSpace
 #align topological_space.metrizable_space.subtype TopologicalSpace.MetrizableSpace.subtype
 
 instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (∀ i, π i) :=
   by
   cases nonempty_fintype ι
-  letI := fun i => metrizable_space_metric (π i)
+  letI := fun i => metrizableSpaceMetric (π i)
   infer_instance
 #align topological_space.metrizable_space_pi TopologicalSpace.metrizableSpace_pi
 
@@ -160,7 +160,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
-  set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | closure UV.1 ⊆ UV.2 }
+  set s : Set (set X × Set X) := { UV ∈ B ×ˢ B | closure UV.1 ⊆ UV.2 }
   -- `s` is a countable set.
   haveI : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
@@ -172,13 +172,13 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     exact
       ⟨fun x => (f x).extend (Encodable.encode' s) 0,
         (BoundedContinuousFunction.isometry_extend (Encodable.encode' s)
-                (0 : ℕ →ᵇ ℝ)).Embedding.comp
+                (0 : ℕ →ᵇ ℝ)).embedding.comp
           hf⟩
   have hd : ∀ UV : s, Disjoint (closure UV.1.1) (UV.1.2ᶜ) := fun UV =>
     disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
   -- Choose a sequence of `εₙ > 0`, `n : s`, that is bounded above by `1` and tends to zero
   -- along the `cofinite` filter.
-  obtain ⟨ε, ε01, hε⟩ : ∃ ε : s → ℝ, (∀ UV, ε UV ∈ Ioc (0 : ℝ) 1) ∧ tendsto ε cofinite (𝓝 0) :=
+  obtain ⟨ε, ε01, hε⟩ : ∃ ε : s → ℝ, (∀ UV, ε UV ∈ Ioc (0 : ℝ) 1) ∧ Tendsto ε cofinite (𝓝 0) :=
     by
     rcases posSumOfEncodable zero_lt_one s with ⟨ε, ε0, c, hεc, hc1⟩
     refine' ⟨ε, fun UV => ⟨ε0 UV, _⟩, hεc.summable.tendsto_cofinite_zero⟩
@@ -187,8 +187,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     zero on `U` and is equal to `ε UV` on the complement to `V`. -/
   have :
     ∀ UV : s,
-      ∃ f : C(X, ℝ),
-        eq_on f 0 UV.1.1 ∧ eq_on f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
+      ∃ f : C(X, ℝ), EqOn f 0 UV.1.1 ∧ EqOn f (fun _ => ε UV) (UV.1.2ᶜ) ∧ ∀ x, f x ∈ Icc 0 (ε UV) :=
     by
     intro UV
     rcases exists_continuous_zero_one_of_closed isClosed_closure
@@ -214,7 +213,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     rcases hB.mem_nhds_iff.1 (is_open_ne.mem_nhds Hne) with ⟨V, hVB, hxV, hVy⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
-    apply (ε01 UV).1.Ne
+    apply (ε01 UV).1.ne
     calc
       (0 : ℝ) = F x UV := (hf0 UV hxU).symm
       _ = F y UV := by rw [hxy]
@@ -224,7 +223,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
         `F x` under `F`. Without loss of generality, `V` belongs to `B`. Choose `U ∈ B` such that
         `x ∈ V` and `closure V ⊆ U`. Then the preimage of the `(ε (U, V))`-neighborhood of `F x`
         is included by `V`. -/
-    refine' ((nhds_basis_ball.comap _).le_basis_iffₓ hB.nhds_has_basis).2 _
+    refine' ((nhds_basis_ball.comap _).le_basis_iff hB.nhds_has_basis).2 _
     rintro V ⟨hVB, hxV⟩
     rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
     set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
@@ -244,7 +243,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ :=
       by
       refine' (eventually_all_finite h_fin).2 fun UV hUV => _
-      exact (f UV).Continuous.Tendsto x (closed_ball_mem_nhds _ δ0)
+      exact (f UV).continuous.tendsto x (closedBall_mem_nhds _ δ0)
     refine' this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => _
     cases' le_total δ (ε UV) with hle hle
     exacts[hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
@@ -255,7 +254,7 @@ countable topology `X` is metrizable, i.e., there exists a metric space structur
 same topology. -/
 theorem metrizableSpace_of_t3_second_countable : MetrizableSpace X :=
   let ⟨f, hf⟩ := exists_embedding_l_infty X
-  hf.MetrizableSpace
+  hf.metrizableSpace
 #align topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpace_of_t3_second_countable
 
 instance : MetrizableSpace Ennreal :=

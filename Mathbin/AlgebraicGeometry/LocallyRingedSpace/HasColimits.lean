@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space.has_colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,9 +49,8 @@ theorem colimit_exists_rep (x : colimit F) : ∃ (i : J)(y : F.obj i), (colimit.
 instance {X Y : SheafedSpace C} (f g : X ⟶ Y) : Epi (coequalizer.π f g).base :=
   by
   erw [←
-    show _ = (coequalizer.π f g).base from
-      ι_comp_coequalizer_comparison f g (SheafedSpace.forget C)]
-  rw [← preserves_coequalizer.iso_hom]
+    show _ = (coequalizer.π f g).base from ι_comp_coequalizerComparison f g (SheafedSpace.forget C)]
+  rw [← PreservesCoequalizer.iso_hom]
   apply epi_comp
 
 end SheafedSpace
@@ -68,13 +67,13 @@ noncomputable def coproduct : LocallyRingedSpace
   toSheafedSpace := colimit (F ⋙ forgetToSheafedSpace : _)
   LocalRing x :=
     by
-    obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
-    haveI : _root_.local_ring (((F ⋙ forget_to_SheafedSpace).obj i).toPresheafedSpace.stalk y) :=
-      (F.obj i).LocalRing _
+    obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forgetToSheafedSpace) x
+    haveI : LocalRing (((F ⋙ forgetToSheafedSpace).obj i).toPresheafedSpace.stalk y) :=
+      (F.obj i).localRing _
     exact
-      (as_iso
-              (PresheafedSpace.stalk_map (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
-                y)).symm.commRingIsoToRingEquiv.LocalRing
+      (asIso
+              (PresheafedSpace.stalkMap (colimit.ι (F ⋙ forgetToSheafedSpace) i : _)
+                y)).symm.commRingIsoToRingEquiv.localRing
 #align algebraic_geometry.LocallyRingedSpace.coproduct AlgebraicGeometry.LocallyRingedSpace.coproduct
 
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/
@@ -96,17 +95,17 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
     ⟨colimit.desc (F ⋙ forgetToSheafedSpace) (forgetToSheafedSpace.mapCocone s),
       by
       intro x
-      obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forget_to_SheafedSpace) x
+      obtain ⟨i, y, ⟨⟩⟩ := SheafedSpace.colimit_exists_rep (F ⋙ forgetToSheafedSpace) x
       have :=
-        PresheafedSpace.stalk_map.comp (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
-          (colimit.desc (F ⋙ forget_to_SheafedSpace) (forget_to_SheafedSpace.map_cocone s)) y
-      rw [← is_iso.comp_inv_eq] at this
+        PresheafedSpace.stalkMap.comp (colimit.ι (F ⋙ forgetToSheafedSpace) i : _)
+          (colimit.desc (F ⋙ forgetToSheafedSpace) (forget_to_SheafedSpace.map_cocone s)) y
+      rw [← IsIso.comp_inv_eq] at this
       erw [← this,
-        PresheafedSpace.stalk_map.congr_hom _ _
+        PresheafedSpace.stalkMap.congr_hom _ _
           (colimit.ι_desc (forget_to_SheafedSpace.map_cocone s) i : _)]
       haveI :
         IsLocalRingHom
-          (PresheafedSpace.stalk_map ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
+          (PresheafedSpace.stalkMap ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
         (s.ι.app i).2 y
       infer_instance⟩
   fac' s j := LocallyRingedSpace.Hom.ext _ _ (colimit.ι_desc _ _)
@@ -136,11 +135,10 @@ instance coequalizer_π_app_isLocalRingHom
     (U : TopologicalSpace.Opens (coequalizer f.val g.val).carrier) :
     IsLocalRingHom ((coequalizer.π f.val g.val : _).c.app (op U)) :=
   by
-  have := ι_comp_coequalizer_comparison f.1 g.1 SheafedSpace.forget_to_PresheafedSpace
-  rw [← preserves_coequalizer.iso_hom] at this
+  have := ι_comp_coequalizerComparison f.1 g.1 SheafedSpace.forgetToPresheafedSpace
+  rw [← PreservesCoequalizer.iso_hom] at this
   erw [SheafedSpace.congr_app this.symm (op U)]
-  rw [PresheafedSpace.comp_c_app, ←
-    PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π]
+  rw [PresheafedSpace.comp_c_app, ← PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_hom_π]
   infer_instance
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.coequalizer_π_app_is_local_ring_hom AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_app_isLocalRingHom
 
@@ -165,38 +163,38 @@ are local ring homs.
 
 variable (U : Opens (coequalizer f.1 g.1).carrier)
 
-variable (s : (coequalizer f.1 g.1).Presheaf.obj (op U))
+variable (s : (coequalizer f.1 g.1).presheaf.obj (op U))
 
 /-- (Implementation). The basic open set of the section `π꙳ s`. -/
 noncomputable def imageBasicOpen : Opens Y :=
   Y.toRingedSpace.basicOpen
-    (show Y.Presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
+    (show Y.presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen
 
 theorem imageBasicOpen_image_preimage :
     (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) =
       (imageBasicOpen f g U s).1 :=
   by
-  fapply types.coequalizer_preimage_image_eq_of_preimage_eq f.1.base g.1.base
+  fapply Types.coequalizer_preimage_image_eq_of_preimage_eq f.1.base g.1.base
   · ext
     simp_rw [types_comp_apply, ← TopCat.comp_app, ← PresheafedSpace.comp_base]
     congr 2
     exact coequalizer.condition f.1 g.1
-  · apply is_colimit_cofork_map_of_is_colimit (forget TopCat)
-    apply is_colimit_cofork_map_of_is_colimit (SheafedSpace.forget _)
-    exact coequalizer_is_coequalizer f.1 g.1
+  · apply isColimitCoforkMapOfIsColimit (forget TopCat)
+    apply isColimitCoforkMapOfIsColimit (SheafedSpace.forget _)
+    exact coequalizerIsCoequalizer f.1 g.1
   · suffices
-      (TopologicalSpace.Opens.map f.1.base).obj (image_basic_open f g U s) =
-        (TopologicalSpace.Opens.map g.1.base).obj (image_basic_open f g U s)
+      (TopologicalSpace.Opens.map f.1.base).obj (imageBasicOpen f g U s) =
+        (TopologicalSpace.Opens.map g.1.base).obj (imageBasicOpen f g U s)
       by injection this
     delta image_basic_open
-    rw [preimage_basic_open f, preimage_basic_open g]
-    dsimp only [functor.op, unop_op]
+    rw [preimage_basicOpen f, preimage_basicOpen g]
+    dsimp only [Functor.op, unop_op]
     rw [← comp_apply, ← SheafedSpace.comp_c_app', ← comp_apply, ← SheafedSpace.comp_c_app',
       SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply]
     erw [X.to_RingedSpace.basic_open_res]
     apply inf_eq_right.mpr
-    refine' (RingedSpace.basic_open_le _ _).trans _
+    refine' (RingedSpace.basicOpen_le _ _).trans _
     rw [coequalizer.condition f.1 g.1]
     exact fun _ h => h
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open_image_preimage AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_preimage
@@ -205,13 +203,13 @@ theorem imageBasicOpen_image_open :
     IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) :=
   by
   rw [←
-    (TopCat.homeoOfIso (preserves_coequalizer.iso (SheafedSpace.forget _) f.1 g.1)).isOpen_preimage,
+    (TopCat.homeoOfIso (PreservesCoequalizer.iso (SheafedSpace.forget _) f.1 g.1)).isOpen_preimage,
     TopCat.coequalizer_isOpen_iff, ← Set.preimage_comp]
   erw [← coe_comp]
-  rw [preserves_coequalizer.iso_hom, ι_comp_coequalizer_comparison]
+  rw [PreservesCoequalizer.iso_hom, ι_comp_coequalizerComparison]
   dsimp only [SheafedSpace.forget]
-  rw [image_basic_open_image_preimage]
-  exact (image_basic_open f g U s).2
+  rw [imageBasicOpen_image_preimage]
+  exact (imageBasicOpen f g U s).2
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open_image_open AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_open
 
 instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
@@ -220,26 +218,26 @@ instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
   constructor
   rintro a ha
   rcases TopCat.Presheaf.germ_exist _ _ a with ⟨U, hU, s, rfl⟩
-  erw [PresheafedSpace.stalk_map_germ_apply (coequalizer.π f.1 g.1 : _) U ⟨_, hU⟩] at ha
-  let V := image_basic_open f g U s
+  erw [PresheafedSpace.stalkMap_germ_apply (coequalizer.π f.1 g.1 : _) U ⟨_, hU⟩] at ha
+  let V := imageBasicOpen f g U s
   have hV : (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' V.1) = V.1 :=
-    image_basic_open_image_preimage f g U s
+    imageBasicOpen_image_preimage f g U s
   have hV' :
     V = ⟨(coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' V.1), hV.symm ▸ V.2⟩ :=
     Subtype.eq hV.symm
   have V_open : IsOpen ((coequalizer.π f.val g.val).base '' V.val) :=
-    image_basic_open_image_open f g U s
+    imageBasicOpen_image_open f g U s
   have VleU :
     (⟨(coequalizer.π f.val g.val).base '' V.val, V_open⟩ : TopologicalSpace.Opens _) ≤ U :=
     set.image_subset_iff.mpr (Y.to_RingedSpace.basic_open_le _)
   have hxV : x ∈ V := ⟨⟨_, hU⟩, ha, rfl⟩
   erw [←
-    (coequalizer f.val g.val).Presheaf.germ_res_apply (hom_of_le VleU)
-      ⟨_, @Set.mem_image_of_mem _ _ (coequalizer.π f.val g.val).base x V.1 hxV⟩ s]
+    (coequalizer f.val g.val).presheaf.germ_res_apply (homOfLe VleU)
+      ⟨_, @set.mem_image_of_mem _ _ (coequalizer.π f.val g.val).base x V.1 hxV⟩ s]
   apply RingHom.isUnit_map
-  rw [← isUnit_map_iff ((coequalizer.π f.val g.val : _).c.app _), ← comp_apply,
-    nat_trans.naturality, comp_apply, TopCat.Presheaf.pushforwardObj_map, ←
-    isUnit_map_iff (Y.presheaf.map (eq_to_hom hV').op), ← comp_apply, ← functor.map_comp]
+  rw [← isUnit_map_iff ((coequalizer.π f.val g.val : _).c.app _), ← comp_apply, NatTrans.naturality,
+    comp_apply, TopCat.Presheaf.pushforwardObj_map, ←
+    isUnit_map_iff (Y.presheaf.map (eqToHom hV').op), ← comp_apply, ← Functor.map_comp]
   convert
     @RingedSpace.is_unit_res_basic_open Y.to_RingedSpace (unop _)
       (((coequalizer.π f.val g.val).c.app (op U)) s)
@@ -257,7 +255,7 @@ noncomputable def coequalizer : LocallyRingedSpace
     by
     obtain ⟨y, rfl⟩ :=
       (TopCat.epi_iff_surjective (coequalizer.π f.val g.val).base).mp inferInstance x
-    exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_localRing
+    exact (PresheafedSpace.stalkMap (coequalizer.π f.val g.val : _) y).domain_localRing
 #align algebraic_geometry.LocallyRingedSpace.coequalizer AlgebraicGeometry.LocallyRingedSpace.coequalizer
 
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
@@ -270,37 +268,36 @@ theorem isLocalRingHom_stalkMap_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f
     (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) :
     IsLocalRingHom (PresheafedSpace.stalkMap g x) :=
   by
-  rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]
+  rw [PresheafedSpace.stalkMap.congr_hom _ _ H.symm x]
   infer_instance
 #align algebraic_geometry.LocallyRingedSpace.is_local_ring_hom_stalk_map_congr AlgebraicGeometry.LocallyRingedSpace.isLocalRingHom_stalkMap_congr
 
 /-- The cofork constructed in `coequalizer_cofork` is indeed a colimit cocone. -/
 noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g) :=
   by
-  apply cofork.is_colimit.mk'
+  apply Cofork.IsColimit.mk'
   intro s
   have e : f.val ≫ s.π.val = g.val ≫ s.π.val := by injection s.condition
   use coequalizer.desc s.π.1 e
   · intro x
     rcases(TopCat.epi_iff_surjective (coequalizer.π f.val g.val).base).mp inferInstance x with
       ⟨y, rfl⟩
-    apply isLocalRingHom_of_comp _ (PresheafedSpace.stalk_map (coequalizer_cofork f g).π.1 _)
-    change IsLocalRingHom (_ ≫ PresheafedSpace.stalk_map (coequalizer_cofork f g).π.val y)
-    erw [← PresheafedSpace.stalk_map.comp]
-    apply is_local_ring_hom_stalk_map_congr _ _ (coequalizer.π_desc s.π.1 e).symm y
+    apply isLocalRingHom_of_comp _ (PresheafedSpace.stalkMap (coequalizerCofork f g).π.1 _)
+    change IsLocalRingHom (_ ≫ PresheafedSpace.stalkMap (coequalizerCofork f g).π.val y)
+    erw [← PresheafedSpace.stalkMap.comp]
+    apply isLocalRingHom_stalkMap_congr _ _ (coequalizer.π_desc s.π.1 e).symm y
     infer_instance
   constructor
-  · exact LocallyRingedSpace.hom.ext _ _ (coequalizer.π_desc _ _)
+  · exact LocallyRingedSpace.Hom.ext _ _ (coequalizer.π_desc _ _)
   intro m h
-  replace h : (coequalizer_cofork f g).π.1 ≫ m.1 = s.π.1 :=
+  replace h : (coequalizerCofork f g).π.1 ≫ m.1 = s.π.1 :=
     by
     rw [← h]
     rfl
-  apply LocallyRingedSpace.hom.ext
-  apply (colimit.is_colimit (parallel_pair f.1 g.1)).uniq (cofork.of_π s.π.1 e) m.1
+  apply LocallyRingedSpace.Hom.ext
+  apply (colimit.isColimit (parallelPair f.1 g.1)).uniq (Cofork.ofπ s.π.1 e) m.1
   rintro ⟨⟩
-  · rw [← (colimit.cocone (parallel_pair f.val g.val)).w walking_parallel_pair_hom.left,
-      category.assoc]
+  · rw [← (Colimit.cocone (parallelPair f.val g.val)).w WalkingParallelPairHom.left, Category.assoc]
     change _ ≫ _ ≫ _ = _ ≫ _
     congr
     exact h
@@ -316,11 +313,11 @@ instance : HasCoequalizers LocallyRingedSpace :=
 noncomputable instance preservesCoequalizer :
     PreservesColimitsOfShape WalkingParallelPair forgetToSheafedSpace.{v} :=
   ⟨fun F => by
-    apply preserves_colimit_of_iso_diagram _ (diagram_iso_parallel_pair F).symm
-    apply preserves_colimit_of_preserves_colimit_cocone (coequalizer_cofork_is_colimit _ _)
-    apply (is_colimit_map_cocone_cofork_equiv _ _).symm _
-    dsimp only [forget_to_SheafedSpace]
-    exact coequalizer_is_coequalizer _ _⟩
+    apply preservesColimitOfIsoDiagram _ (diagramIsoParallelPair F).symm
+    apply preservesColimitOfPreservesColimitCocone (coequalizerCoforkIsColimit _ _)
+    apply (isColimitMapCoconeCoforkEquiv _ _).symm _
+    dsimp only [forgetToSheafedSpace]
+    exact coequalizerIsCoequalizer _ _⟩
 #align algebraic_geometry.LocallyRingedSpace.preserves_coequalizer AlgebraicGeometry.LocallyRingedSpace.preservesCoequalizer
 
 end HasCoequalizer

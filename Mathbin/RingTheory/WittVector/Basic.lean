@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,13 +83,13 @@ theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 
   ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n,
     by
     ext n
-    dsimp [map_fun]
+    dsimp [mapFun]
     rw [Classical.choose_spec (hf (x.coeff n))]⟩
 #align witt_vector.map_fun.surjective WittVector.mapFun.surjective
 
 variable (f : R →+* S) (x y : 𝕎 R)
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
   sorry
@@ -171,9 +171,9 @@ section Tactic
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic for proving that `ghost_fun` respects the ring operations. -/
 unsafe def tactic.interactive.ghost_fun_tac (φ fn : parse parser.pexpr) : tactic Unit := do
   let fn ← to_expr `(($(fn) : Fin _ → ℕ → R))
@@ -221,41 +221,40 @@ private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by ghost_fun_tac 1,
 #align witt_vector.ghost_fun_one witt_vector.ghost_fun_one
 
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
-  ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac x 0 + x 1, ![x.coeff, y.coeff]
 #align witt_vector.ghost_fun_add witt_vector.ghost_fun_add
 
 private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.unaryCast = _ by
-    induction i <;>
-      simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
+    induction i <;> simp [*, Nat.unaryCast, ghostFun_zero, ghostFun_one, ghostFun_add, -Pi.coe_nat]
 #align witt_vector.ghost_fun_nat_cast witt_vector.ghost_fun_nat_cast
 
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
-  ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac x 0 - x 1, ![x.coeff, y.coeff]
 #align witt_vector.ghost_fun_sub witt_vector.ghost_fun_sub
 
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
-  ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac x 0 * x 1, ![x.coeff, y.coeff]
 #align witt_vector.ghost_fun_mul witt_vector.ghost_fun_mul
 
-private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac -X 0, ![x.coeff]
+private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac -x 0, ![x.coeff]
 #align witt_vector.ghost_fun_neg witt_vector.ghost_fun_neg
 
 private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.castDef = _ by
-    cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
+    cases i <;> simp [*, Int.castDef, ghostFun_nat_cast, ghostFun_neg, -Pi.coe_nat, -Pi.coe_int]
 #align witt_vector.ghost_fun_int_cast witt_vector.ghost_fun_int_cast
 
 private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+  ghost_fun_tac m • x 0, ![x.coeff]
 #align witt_vector.ghost_fun_nsmul witt_vector.ghost_fun_nsmul
 
 private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+  ghost_fun_tac m • x 0, ![x.coeff]
 #align witt_vector.ghost_fun_zsmul witt_vector.ghost_fun_zsmul
 
 private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
-  ghost_fun_tac X 0 ^ m, ![x.coeff]
+  ghost_fun_tac x 0 ^ m, ![x.coeff]
 #align witt_vector.ghost_fun_pow witt_vector.ghost_fun_pow
 
 end GhostFun
@@ -273,13 +272,13 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
     ext n
     have := bind₁_wittPolynomial_xInTermsOfW p R n
     apply_fun aeval x.coeff  at this
-    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
+    simpa only [aeval_bind₁, aeval_x, ghostFun, aeval_wittPolynomial]
   right_inv := by
     intro x
     ext n
     have := bind₁_xInTermsOfW_wittPolynomial p R n
     apply_fun aeval x  at this
-    simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
+    simpa only [aeval_bind₁, aeval_x, ghostFun, aeval_wittPolynomial]
 #align witt_vector.ghost_equiv' witt_vector.ghost_equiv'
 
 include hp
@@ -287,14 +286,14 @@ include hp
 @[local instance]
 private def comm_ring_aux₁ : CommRing (𝕎 (MvPolynomial R ℚ)) :=
   letI : CommRing (MvPolynomial R ℚ) := MvPolynomial.commRing
-  (ghost_equiv' p (MvPolynomial R ℚ)).Injective.CommRing ghost_fun ghost_fun_zero ghost_fun_one
-    ghost_fun_add ghost_fun_mul ghost_fun_neg ghost_fun_sub ghost_fun_nsmul ghost_fun_zsmul
-    ghost_fun_pow ghost_fun_nat_cast ghost_fun_int_cast
+  (ghostEquiv' p (MvPolynomial R ℚ)).injective.commRing ghost_fun ghostFun_zero ghostFun_one
+    ghostFun_add ghostFun_mul ghostFun_neg ghostFun_sub ghostFun_nsmul ghostFun_zsmul ghostFun_pow
+    ghostFun_nat_cast ghostFun_int_cast
 #align witt_vector.comm_ring_aux₁ witt_vector.comm_ring_aux₁
 
 @[local instance]
 private def comm_ring_aux₂ : CommRing (𝕎 (MvPolynomial R ℤ)) :=
-  (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).CommRing _
+  (mapFun.injective _ <| map_injective (Int.castRingHom ℚ) Int.cast_injective).commRing _
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
     (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
 #align witt_vector.comm_ring_aux₂ witt_vector.comm_ring_aux₂
@@ -303,7 +302,7 @@ attribute [reducible] comm_ring_aux₂
 
 /-- The commutative ring structure on `𝕎 R`. -/
 instance : CommRing (𝕎 R) :=
-  (mapFun.surjective _ <| counit_surjective _).CommRing (mapFun <| MvPolynomial.counit _)
+  (mapFun.surjective _ <| counit_surjective _).commRing (mapFun <| MvPolynomial.counit _)
     (mapFun.zero _) (mapFun.one _) (mapFun.add _) (mapFun.mul _) (mapFun.neg _) (mapFun.sub _)
     (mapFun.nsmul _) (mapFun.zsmul _) (mapFun.pow _) (mapFun.nat_cast _) (mapFun.int_cast _)
 
@@ -373,7 +372,7 @@ theorem ghostEquiv_coe : (ghostEquiv p R : 𝕎 R →+* ℕ → R) = ghostMap :=
 #align witt_vector.ghost_equiv_coe WittVector.ghostEquiv_coe
 
 theorem ghostMap.bijective_of_invertible : Function.Bijective (ghostMap : 𝕎 R → ℕ → R) :=
-  (ghostEquiv p R).Bijective
+  (ghostEquiv p R).bijective
 #align witt_vector.ghost_map.bijective_of_invertible WittVector.ghostMap.bijective_of_invertible
 
 end Invertible

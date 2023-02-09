@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.star.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ variable {S : Type u} [Star R] [SetLike S R] [hS : StarMemClass S R] (s : S)
 
 include hS
 
-instance : Star s where unit r := ⟨star (r : R), star_mem r.Prop⟩
+instance : Star s where unit r := ⟨star (r : R), star_mem r.prop⟩
 
 end StarMemClass
 
@@ -109,7 +109,7 @@ theorem star_star [InvolutiveStar R] (r : R) : star (star r) = r :=
 
 #print star_injective /-
 theorem star_injective [InvolutiveStar R] : Function.Injective (star : R → R) :=
-  star_involutive.Injective
+  star_involutive.injective
 #align star_injective star_injective
 -/
 
@@ -349,7 +349,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] [_inst_2 : StarAddMonoid.{u1} R _inst_1] {x : R}, Iff (Ne.{succ u1} R (Star.star.{u1} R (InvolutiveStar.toStar.{u1} R (StarAddMonoid.toInvolutiveStar.{u1} R _inst_1 _inst_2)) x) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (AddMonoid.toZero.{u1} R _inst_1)))) (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (AddMonoid.toZero.{u1} R _inst_1))))
 Case conversion may be inaccurate. Consider using '#align star_ne_zero star_ne_zeroₓ'. -/
 theorem star_ne_zero [AddMonoid R] [StarAddMonoid R] {x : R} : star x ≠ 0 ↔ x ≠ 0 :=
-  star_eq_zero.Not
+  star_eq_zero.not
 #align star_ne_zero star_ne_zero
 
 /- warning: star_neg -> star_neg is a dubious translation:
@@ -828,7 +828,7 @@ theorem IsUnit.star [Monoid R] [StarSemigroup R] {a : R} : IsUnit a → IsUnit (
 #print isUnit_star /-
 @[simp]
 theorem isUnit_star [Monoid R] [StarSemigroup R] {a : R} : IsUnit (star a) ↔ IsUnit a :=
-  ⟨fun h => star_star a ▸ h.unit, IsUnit.star⟩
+  ⟨fun h => star_star a ▸ h.star, IsUnit.star⟩
 #align is_unit_star isUnit_star
 -/
 

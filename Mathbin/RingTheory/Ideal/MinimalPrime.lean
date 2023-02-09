@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.minimal_prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.mi
   · refine' ⟨show J.is_prime by infer_instance, e⟩
   rintro (c : Set (Ideal R)) hc hc' J' hJ'
   refine'
-    ⟨OrderDual.toDual (Inf c),
+    ⟨OrderDual.toDual (infₛ c),
       ⟨Ideal.infₛ_isPrime_of_isChain ⟨J', hJ'⟩ hc'.symm fun x hx => (hc hx).1, _⟩, _⟩
   · rw [OrderDual.ofDual_toDual]
     convert le_infₛ _
@@ -100,7 +100,7 @@ theorem Ideal.infₛ_minimalPrimes : infₛ I.minimalPrimes = I.radical :=
     exact hI.1.symm
 #align ideal.Inf_minimal_primes Ideal.infₛ_minimalPrimes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » minimal_primes[minimal_primes] R) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (p «expr ∈ » minimal_primes[minimal_primes] R) -/
 theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
     (hf : Function.Injective f) (p) (_ : p ∈ minimalPrimes R) :
     ∃ p' : Ideal S, p'.IsPrime ∧ p'.comap f = p :=
@@ -111,7 +111,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
     refine' ⟨⟨1, 0, _⟩⟩
     convert
       (IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
-            (Localization <| p.prime_compl.map f) hf).Ne
+            (Localization <| p.prime_compl.map f) hf).ne
         one_ne_zero
     · rw [map_one]
     · rw [map_zero]
@@ -119,7 +119,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
   skip
   refine' ⟨M.comap (algebraMap S <| Localization (Submonoid.map f p.prime_compl)), inferInstance, _⟩
   rw [Ideal.comap_comap, ←
-    @IsLocalization.map_comp _ _ _ _ Localization.isLocalization _ p.prime_compl.le_comap_map _
+    @is_localization.map_comp _ _ _ _ Localization.isLocalization _ p.prime_compl.le_comap_map _
       Localization.isLocalization,
     ← Ideal.comap_comap]
   suffices _ ≤ p by exact this.antisymm (H.2 ⟨inferInstance, bot_le⟩ this)
@@ -132,7 +132,8 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
   infer_instance
 #align ideal.exists_comap_eq_of_mem_minimal_primes_of_injective Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (p «expr ∈ » (I.{ident := comap, full_name := ideal.comap}
+  f).{ident := minimal_primes, full_name := ideal.minimal_primes}) -/
 theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S) (p)
     (_ : p ∈ (I.comap f).minimalPrimes) : ∃ p' : Ideal S, p'.IsPrime ∧ I ≤ p' ∧ p'.comap f = p :=
   by
@@ -145,7 +146,7 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     rw [Ideal.mk_ker, e]
     exact H.1.2
   obtain ⟨p', hp₁, hp₂⟩ :=
-    Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective (I f).ker_lift_injective
+    Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective (I f).kerLift_injective
       (p.map (I f).ker) _
   · skip
     refine' ⟨p'.comap I, Ideal.IsPrime.comap _, _, _⟩
@@ -166,7 +167,8 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
       exacts[sup_le rfl.le this, Ideal.Quotient.mk_surjective]
 #align ideal.exists_comap_eq_of_mem_minimal_primes Ideal.exists_comap_eq_of_mem_minimalPrimes
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ∈ » (I.comap f).minimal_primes) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (p «expr ∈ » (I.{ident := comap, full_name := ideal.comap}
+  f).{ident := minimal_primes, full_name := ideal.minimal_primes}) -/
 theorem Ideal.exists_minimalPrimes_comap_eq {I : Ideal S} (f : R →+* S) (p)
     (_ : p ∈ (I.comap f).minimalPrimes) : ∃ p' ∈ I.minimalPrimes, Ideal.comap f p' = p :=
   by

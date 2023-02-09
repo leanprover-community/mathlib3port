@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.removable_singularity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,26 +37,26 @@ neighborhood of a point and is continuous at this point, then it is analytic at 
 theorem analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt {f : ℂ → E} {c : ℂ}
     (hd : ∀ᶠ z in 𝓝[≠] c, DifferentiableAt ℂ f z) (hc : ContinuousAt f c) : AnalyticAt ℂ f c :=
   by
-  rcases(nhdsWithin_hasBasis nhds_basis_closed_ball _).mem_iff.1 hd with ⟨R, hR0, hRs⟩
+  rcases(nhdsWithin_hasBasis nhds_basis_closedBall _).mem_iff.1 hd with ⟨R, hR0, hRs⟩
   lift R to ℝ≥0 using hR0.le
-  replace hc : ContinuousOn f (closed_ball c R)
+  replace hc : ContinuousOn f (closedBall c R)
   · refine' fun z hz => ContinuousAt.continuousWithinAt _
     rcases eq_or_ne z c with (rfl | hne)
-    exacts[hc, (hRs ⟨hz, hne⟩).ContinuousAt]
+    exacts[hc, (hRs ⟨hz, hne⟩).continuousAt]
   exact
-    (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
-        (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
+    (hasFpowerSeriesOnBallOfDifferentiableOffCountable (countable_singleton c) hc
+        (fun z hz => hRs (diff_subset_diff_left ball_subset_closedBall hz)) hR0).analyticAt
 #align complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt
 
 theorem differentiableOn_compl_singleton_and_continuousAt_iff {f : ℂ → E} {s : Set ℂ} {c : ℂ}
     (hs : s ∈ 𝓝 c) : DifferentiableOn ℂ f (s \ {c}) ∧ ContinuousAt f c ↔ DifferentiableOn ℂ f s :=
   by
-  refine' ⟨_, fun hd => ⟨hd.mono (diff_subset _ _), (hd.DifferentiableAt hs).ContinuousAt⟩⟩
+  refine' ⟨_, fun hd => ⟨hd.mono (diff_subset _ _), (hd.differentiableAt hs).continuousAt⟩⟩
   rintro ⟨hd, hc⟩ x hx
   rcases eq_or_ne x c with (rfl | hne)
   · refine'
-      (analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at _
-            hc).DifferentiableAt.DifferentiableWithinAt
+      (analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt _
+            hc).differentiableAt.differentiableWithinAt
     refine' eventually_nhdsWithin_iff.2 ((eventually_mem_nhds.2 hs).mono fun z hz hzx => _)
     exact hd.differentiable_at (inter_mem hz (is_open_ne.mem_nhds hzx))
   ·
@@ -69,7 +69,7 @@ theorem differentiableOn_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s 
   ⟨fun h => h.of_dslope, fun h =>
     (differentiableOn_compl_singleton_and_continuousAt_iff hc).mp <|
       ⟨Iff.mpr (differentiableOn_dslope_of_nmem fun h => h.2 rfl) (h.mono <| diff_subset _ _),
-        continuousAt_dslope_same.2 <| h.DifferentiableAt hc⟩⟩
+        continuousAt_dslope_same.2 <| h.differentiableAt hc⟩⟩
 #align complex.differentiable_on_dslope Complex.differentiableOn_dslope
 
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
@@ -83,16 +83,16 @@ theorem differentiableOn_update_limUnder_of_isOCat {f : ℂ → E} {s : Set ℂ}
   set F : ℂ → E := fun z => (z - c) • f z with hF
   suffices DifferentiableOn ℂ F (s \ {c}) ∧ ContinuousAt F c
     by
-    rw [differentiable_on_compl_singleton_and_continuous_at_iff hc, ← differentiable_on_dslope hc,
+    rw [differentiableOn_compl_singleton_and_continuousAt_iff hc, ← differentiableOn_dslope hc,
         dslope_sub_smul] at this <;>
       try infer_instance
-    have hc : tendsto f (𝓝[≠] c) (𝓝 (deriv F c)) :=
+    have hc : Tendsto f (𝓝[≠] c) (𝓝 (deriv F c)) :=
       continuous_at_update_same.mp (this.continuous_on.continuous_at hc)
     rwa [hc.lim_eq]
   refine' ⟨(differentiable_on_id.sub_const _).smul hd, _⟩
   rw [← continuousWithinAt_compl_self]
   have H := ho.tendsto_inv_smul_nhds_zero
-  have H' : tendsto (fun z => (z - c) • f c) (𝓝[≠] c) (𝓝 (F c)) :=
+  have H' : Tendsto (fun z => (z - c) • f c) (𝓝[≠] c) (𝓝 (F c)) :=
     (continuous_within_at_id.tendsto.sub tendsto_const_nhds).smul tendsto_const_nhds
   simpa [← smul_add, ContinuousWithinAt] using H.add H'
 #align complex.differentiable_on_update_lim_of_is_o Complex.differentiableOn_update_limUnder_of_isOCat
@@ -132,9 +132,9 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isOCat {f : ℂ 
   by
   rw [eventually_nhdsWithin_iff] at hd
   have : DifferentiableOn ℂ f ({ z | z ≠ c → DifferentiableAt ℂ f z } \ {c}) := fun z hz =>
-    (hz.1 hz.2).DifferentiableWithinAt
-  have H := differentiable_on_update_lim_of_is_o hd this ho
-  exact continuousAt_update_same.1 (H.differentiable_at hd).ContinuousAt
+    (hz.1 hz.2).differentiableWithinAt
+  have H := differentiableOn_update_limUnder_of_isOCat hd this ho
+  exact continuousAt_update_same.1 (H.differentiable_at hd).continuousAt
 #align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isOCat
 
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable and
@@ -155,14 +155,14 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : 
   -- We apply the removable singularity theorem and the Cauchy formula to `dslope f w₀`
   have hR : 0 < R := not_le.mp (ball_eq_empty.not.mp (nonempty_of_mem hw₀).ne_empty)
   have hf' : DifferentiableOn ℂ (dslope f w₀) U :=
-    (differentiable_on_dslope (hU.mem_nhds ((ball_subset_closed_ball.trans hc) hw₀))).mpr hf
+    (differentiableOn_dslope (hU.mem_nhds ((ball_subset_closed_ball.trans hc) hw₀))).mpr hf
   have h0 := (hf'.diff_cont_on_cl_ball hc).two_pi_i_inv_smul_circleIntegral_sub_inv_smul hw₀
   rw [← dslope_same, ← h0]
   congr 1
   trans ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • (f z - f w₀)
   · have h1 : ContinuousOn (fun z : ℂ => ((z - w₀) ^ 2)⁻¹) (sphere c R) :=
       by
-      refine' ((continuous_id'.sub continuous_const).pow 2).ContinuousOn.inv₀ fun w hw h => _
+      refine' ((continuous_id'.sub continuous_const).pow 2).continuousOn.inv₀ fun w hw h => _
       exact sphere_disjoint_ball.ne_of_mem hw hw₀ (sub_eq_zero.mp (sq_eq_zero_iff.mp h))
     have h2 : CircleIntegrable (fun z : ℂ => ((z - w₀) ^ 2)⁻¹ • f z) c R :=
       by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.mul_antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ variable [LinearOrderedCancelCommMonoid α]
 
 @[to_additive]
 theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
-  (hs.IsPwo.mul ht.IsPwo).IsWf
+  (hs.isPwo.mul ht.isPwo).isWf
 #align set.is_wf.mul Set.IsWf.mul
 #align set.is_wf.add Set.IsWf.add
 
@@ -44,8 +44,8 @@ theorem IsWf.mul (hs : s.IsWf) (ht : t.IsWf) : IsWf (s * t) :=
 theorem IsWf.min_mul (hs : s.IsWf) (ht : t.IsWf) (hsn : s.Nonempty) (htn : t.Nonempty) :
     (hs.mul ht).min (hsn.mul htn) = hs.min hsn * ht.min htn :=
   by
-  refine' le_antisymm (is_wf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
-  rw [is_wf.le_min_iff]
+  refine' le_antisymm (IsWf.min_le _ _ (mem_mul.2 ⟨_, _, hs.min_mem _, ht.min_mem _, rfl⟩)) _
+  rw [IsWf.le_min_iff]
   rintro _ ⟨x, y, hx, hy, rfl⟩
   exact mul_le_mul' (hs.min_le _ hx) (ht.min_le _ hy)
 #align set.is_wf.min_mul Set.IsWf.min_mul
@@ -75,7 +75,7 @@ variable {hs ht a} {u : Set α} {hu : u.IsPwo} {x : α × α}
 
 @[simp, to_additive]
 theorem mem_mulAntidiagonal : x ∈ mulAntidiagonal hs ht a ↔ x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a := by
-  simp [mul_antidiagonal, and_rotate]
+  simp [mulAntidiagonal, and_rotate]
 #align finset.mem_mul_antidiagonal Finset.mem_mulAntidiagonal
 #align finset.mem_add_antidiagonal Finset.mem_add_antidiagonal
 
@@ -94,7 +94,7 @@ theorem mulAntidiagonal_mono_right (h : u ⊆ t) :
 
 @[simp, to_additive]
 theorem swap_mem_mulAntidiagonal :
-    x.symm ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
+    x.swap ∈ Finset.mulAntidiagonal hs ht a ↔ x ∈ Finset.mulAntidiagonal ht hs a := by
   simp [mul_comm, and_left_comm]
 #align finset.swap_mem_mul_antidiagonal Finset.swap_mem_mulAntidiagonal
 #align finset.swap_mem_add_antidiagonal Finset.swap_mem_add_antidiagonal
@@ -102,7 +102,7 @@ theorem swap_mem_mulAntidiagonal :
 @[to_additive]
 theorem support_mulAntidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
   fun a ⟨b, hb⟩ => by
-  rw [mem_mul_antidiagonal] at hb
+  rw [mem_mulAntidiagonal] at hb
   exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mulAntidiagonal_subset_mul
 #align finset.support_add_antidiagonal_subset_add Finset.support_add_antidiagonal_subset_add
@@ -116,10 +116,10 @@ theorem isPwo_support_mulAntidiagonal : { a | (mulAntidiagonal hs ht a).Nonempty
 @[to_additive]
 theorem mulAntidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t : Set α}
     (hs : s.IsWf) (ht : t.IsWf) (hns : s.Nonempty) (hnt : t.Nonempty) :
-    mulAntidiagonal hs.IsPwo ht.IsPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} :=
+    mulAntidiagonal hs.isPwo ht.isPwo (hs.min hns * ht.min hnt) = {(hs hns, ht hnt)} :=
   by
   ext ⟨a, b⟩
-  simp only [mem_mul_antidiagonal, mem_singleton, Prod.ext_iff]
+  simp only [mem_mulAntidiagonal, mem_singleton, Prod.ext_iff]
   constructor
   · rintro ⟨has, hat, hst⟩
     obtain rfl :=

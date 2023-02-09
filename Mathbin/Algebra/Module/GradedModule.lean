@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.graded_module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem smul_def [DecidableEq ι] [GMonoid A] [Gmodule A M] (x : ⨁ i, A i) (y 
 theorem smulAddMonoidHom_apply_of_of [DecidableEq ι] [GMonoid A] [Gmodule A M] {i j} (x : A i)
     (y : M j) :
     smulAddMonoidHom A M (DirectSum.of A i x) (of M j y) = of M (i + j) (GSmul.smul x y) := by
-  simp [smul_add_monoid_hom]
+  simp [smulAddMonoidHom]
 #align direct_sum.gmodule.smul_add_monoid_hom_apply_of_of DirectSum.Gmodule.smulAddMonoidHom_apply_of_of
 
 @[simp]
@@ -120,7 +120,7 @@ private theorem one_smul [DecidableEq ι] [GMonoid A] [Gmodule A M] (x : ⨁ i, 
   suffices smulAddMonoidHom A M 1 = AddMonoidHom.id (⨁ i, M i) from AddMonoidHom.congr_fun this x
   apply DirectSum.addHom_ext; intro i xi
   unfold One.one
-  rw [smul_add_monoid_hom_apply_of_of]
+  rw [smulAddMonoidHom_apply_of_of]
   exact DirectSum.of_eq_of_gradedMonoid_eq (one_smul (GradedMonoid A) <| GradedMonoid.mk i xi)
 #align direct_sum.gmodule.one_smul direct_sum.gmodule.one_smul
 
@@ -139,9 +139,9 @@ private theorem mul_smul [DecidableEq ι] [Gsemiring A] [Gmodule A M] (a b : ⨁
       AddMonoidHom.congr_fun
       (AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b) c
   ext (ai ax bi bx ci cx) : 6
-  dsimp only [coe_comp, Function.comp_apply, comp_hom_apply_apply, flip_apply, flip_hom_apply]
-  rw [smul_add_monoid_hom_apply_of_of, smul_add_monoid_hom_apply_of_of, DirectSum.mulHom_of_of,
-    smul_add_monoid_hom_apply_of_of]
+  dsimp only [coe_comp, Function.comp_apply, compHom_apply_apply, flip_apply, flipHom_apply]
+  rw [smulAddMonoidHom_apply_of_of, smulAddMonoidHom_apply_of_of, DirectSum.mulHom_of_of,
+    smulAddMonoidHom_apply_of_of]
   exact
     DirectSum.of_eq_of_gradedMonoid_eq
       (mul_smul (GradedMonoid.mk ai ax) (GradedMonoid.mk bi bx) (GradedMonoid.mk ci cx))

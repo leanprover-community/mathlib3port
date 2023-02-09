@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.well_powered
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem wellPowered_of_equiv (e : C ≌ D) [WellPowered C] : WellPowered D :=
 /-- Being well-powered is preserved by equivalences, as long as the two categories involved have
     their morphisms in the same universe. -/
 theorem wellPowered_congr (e : C ≌ D) : WellPowered C ↔ WellPowered D :=
-  ⟨fun i => well_powered_of_equiv e, fun i => well_powered_of_equiv e.symm⟩
+  ⟨fun i => wellPowered_of_equiv e, fun i => wellPowered_of_equiv e.symm⟩
 #align category_theory.well_powered_congr CategoryTheory.wellPowered_congr
 
 end Equivalence

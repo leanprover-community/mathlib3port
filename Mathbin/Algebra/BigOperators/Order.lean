@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,7 +293,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_le_pow_card Finset.prod_le_pow_cardₓ'. -/
 @[to_additive sum_le_card_nsmul]
 theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, f x ≤ n) :
-    s.Prod f ≤ n ^ s.card :=
+    s.prod f ≤ n ^ s.card :=
   by
   refine' (Multiset.prod_le_pow_card (s.val.map f) n _).trans _
   · simpa using h
@@ -309,14 +309,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.pow_card_le_prod Finset.pow_card_le_prodₓ'. -/
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, n ≤ f x) :
-    n ^ s.card ≤ s.Prod f :=
+    n ^ s.card ≤ s.prod f :=
   @Finset.prod_le_pow_card _ Nᵒᵈ _ _ _ _ h
 #align finset.pow_card_le_prod Finset.pow_card_le_prod
 #align finset.card_nsmul_le_sum Finset.card_nsmul_le_sum
 
 #print Finset.card_bunionᵢ_le_card_mul /-
 theorem card_bunionᵢ_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Finset β) (n : ℕ)
-    (h : ∀ a ∈ s, (f a).card ≤ n) : (s.bunionᵢ f).card ≤ s.card * n :=
+    (h : ∀ a ∈ s, (f not_eq).card ≤ n) : (s.bunionᵢ f).card ≤ s.card * n :=
   card_bunionᵢ_le.trans <| sum_le_card_nsmul _ _ _ h
 #align finset.card_bUnion_le_card_mul Finset.card_bunionᵢ_le_card_mul
 -/
@@ -329,14 +329,14 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {N : Type.{u2}} [_inst_2 : OrderedCommMonoid.{u2} N] {s : Finset.{u1} ι} {ι' : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} ι'] {t : Finset.{u3} ι'} {g : ι -> ι'} {f : ι -> N}, (forall (y : ι'), (Not (Membership.mem.{u3, u3} ι' (Finset.{u3} ι') (Finset.instMembershipFinset.{u3} ι') y t)) -> (LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedCommMonoid.toPartialOrder.{u2} N _inst_2))) (OfNat.ofNat.{u2} N 1 (One.toOfNat1.{u2} N (Monoid.toOne.{u2} N (CommMonoid.toMonoid.{u2} N (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2))))) (Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) (Finset.filter.{u1} ι (fun (x : ι) => Eq.{succ u3} ι' (g x) y) (fun (a : ι) => _inst_3 (g a) y) s) (fun (x : ι) => f x)))) -> (LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedCommMonoid.toPartialOrder.{u2} N _inst_2))) (Finset.prod.{u2, u3} N ι' (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) t (fun (y : ι') => Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) (Finset.filter.{u1} ι (fun (x : ι) => Eq.{succ u3} ι' (g x) y) (fun (a : ι) => _inst_3 (g a) y) s) (fun (x : ι) => f x))) (Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) s (fun (x : ι) => f x)))
 Case conversion may be inaccurate. Consider using '#align finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
-    (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filterₓ fun x => g x = y, f x) :
-    (∏ y in t, ∏ x in s.filterₓ fun x => g x = y, f x) ≤ ∏ x in s, f x :=
+    (h : ∀ (y) (_ : y ∉ t), (1 : N) ≤ ∏ x in s.filter fun x => g x = y, f x) :
+    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤ ∏ x in s, f x :=
   calc
-    (∏ y in t, ∏ x in s.filterₓ fun x => g x = y, f x) ≤
-        ∏ y in t ∪ s.image g, ∏ x in s.filterₓ fun x => g x = y, f x :=
+    (∏ y in t, ∏ x in s.filter fun x => g x = y, f x) ≤
+        ∏ y in t ∪ s.image g, ∏ x in s.filter fun x => g x = y, f x :=
       prod_le_prod_of_subset_of_one_le' (subset_union_left _ _) fun y hyts => h y
     _ = ∏ x in s, f x :=
       prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
@@ -350,11 +350,11 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {N : Type.{u2}} [_inst_2 : OrderedCommMonoid.{u2} N] {s : Finset.{u1} ι} {ι' : Type.{u3}} [_inst_3 : DecidableEq.{succ u3} ι'] {t : Finset.{u3} ι'} {g : ι -> ι'} {f : ι -> N}, (forall (y : ι'), (Not (Membership.mem.{u3, u3} ι' (Finset.{u3} ι') (Finset.instMembershipFinset.{u3} ι') y t)) -> (LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedCommMonoid.toPartialOrder.{u2} N _inst_2))) (Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) (Finset.filter.{u1} ι (fun (x : ι) => Eq.{succ u3} ι' (g x) y) (fun (a : ι) => _inst_3 (g a) y) s) (fun (x : ι) => f x)) (OfNat.ofNat.{u2} N 1 (One.toOfNat1.{u2} N (Monoid.toOne.{u2} N (CommMonoid.toMonoid.{u2} N (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2))))))) -> (LE.le.{u2} N (Preorder.toLE.{u2} N (PartialOrder.toPreorder.{u2} N (OrderedCommMonoid.toPartialOrder.{u2} N _inst_2))) (Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) s (fun (x : ι) => f x)) (Finset.prod.{u2, u3} N ι' (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) t (fun (y : ι') => Finset.prod.{u2, u1} N ι (OrderedCommMonoid.toCommMonoid.{u2} N _inst_2) (Finset.filter.{u1} ι (fun (x : ι) => Eq.{succ u3} ι' (g x) y) (fun (a : ι) => _inst_3 (g a) y) s) (fun (x : ι) => f x))))
 Case conversion may be inaccurate. Consider using '#align finset.prod_le_prod_fiberwise_of_prod_fiber_le_one' Finset.prod_le_prod_fiberwise_of_prod_fiber_le_one'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ∉ » t) -/
 @[to_additive sum_le_sum_fiberwise_of_sum_fiber_nonpos]
 theorem prod_le_prod_fiberwise_of_prod_fiber_le_one' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
-    (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filterₓ fun x => g x = y, f x) ≤ 1) :
-    (∏ x in s, f x) ≤ ∏ y in t, ∏ x in s.filterₓ fun x => g x = y, f x :=
+    (h : ∀ (y) (_ : y ∉ t), (∏ x in s.filter fun x => g x = y, f x) ≤ 1) :
+    (∏ x in s, f x) ≤ ∏ y in t, ∏ x in s.filter fun x => g x = y, f x :=
   @prod_fiberwise_le_prod_of_one_le_prod_fiber' _ Nᵒᵈ _ _ _ _ _ _ _ h
 #align finset.prod_le_prod_fiberwise_of_prod_fiber_le_one' Finset.prod_le_prod_fiberwise_of_prod_fiber_le_one'
 #align finset.sum_le_sum_fiberwise_of_sum_fiber_nonpos Finset.sum_le_sum_fiberwise_of_sum_fiber_nonpos
@@ -416,10 +416,10 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} {s : Finset.{u2} α} {t : Finset.{u1} β}, (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s) -> (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (f a) t)) -> (forall (n : Nat), (forall (a : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) a t) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} α (Finset.filter.{u2} α (fun (x : α) => Eq.{succ u1} β (f x) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)) n)) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} α s) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n (Finset.card.{u1} β t))))
 Case conversion may be inaccurate. Consider using '#align finset.card_le_mul_card_image_of_maps_to Finset.card_le_mul_card_image_of_maps_toₓ'. -/
 theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : Finset β}
-    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, (s.filterₓ fun x => f x = a).card ≤ n) :
+    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, (s.filter fun x => f x = a).card ≤ n) :
     s.card ≤ n * t.card :=
   calc
-    s.card = ∑ a in t, (s.filterₓ fun x => f x = a).card := card_eq_sum_card_fiberwise Hf
+    s.card = ∑ a in t, (s.filter fun x => f x = a).card := card_eq_sum_card_fiberwise Hf
     _ ≤ ∑ _ in t, n := sum_le_sum hn
     _ = _ := by simp [mul_comm]
     
@@ -432,7 +432,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} (s : Finset.{u2} α) (n : Nat), (forall (a : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) a (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s)) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} α (Finset.filter.{u2} α (fun (x : α) => Eq.{succ u1} β (f x) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)) n)) -> (LE.le.{0} Nat instLENat (Finset.card.{u2} α s) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n (Finset.card.{u1} β (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s))))
 Case conversion may be inaccurate. Consider using '#align finset.card_le_mul_card_image Finset.card_le_mul_card_imageₓ'. -/
 theorem card_le_mul_card_image {f : α → β} (s : Finset α) (n : ℕ)
-    (hn : ∀ a ∈ s.image f, (s.filterₓ fun x => f x = a).card ≤ n) : s.card ≤ n * (s.image f).card :=
+    (hn : ∀ a ∈ s.image f, (s.filter fun x => f x = a).card ≤ n) : s.card ≤ n * (s.image f).card :=
   card_le_mul_card_image_of_maps_to (fun x => mem_image_of_mem _) n hn
 #align finset.card_le_mul_card_image Finset.card_le_mul_card_image
 
@@ -443,11 +443,11 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} {s : Finset.{u2} α} {t : Finset.{u1} β}, (forall (a : α), (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) a s) -> (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) (f a) t)) -> (forall (n : Nat), (forall (a : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) a t) -> (LE.le.{0} Nat instLENat n (Finset.card.{u2} α (Finset.filter.{u2} α (fun (x : α) => Eq.{succ u1} β (f x) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)))) -> (LE.le.{0} Nat instLENat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n (Finset.card.{u1} β t)) (Finset.card.{u2} α s)))
 Case conversion may be inaccurate. Consider using '#align finset.mul_card_image_le_card_of_maps_to Finset.mul_card_image_le_card_of_maps_toₓ'. -/
 theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : Finset β}
-    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, n ≤ (s.filterₓ fun x => f x = a).card) :
+    (Hf : ∀ a ∈ s, f a ∈ t) (n : ℕ) (hn : ∀ a ∈ t, n ≤ (s.filter fun x => f x = a).card) :
     n * t.card ≤ s.card :=
   calc
     n * t.card = ∑ _ in t, n := by simp [mul_comm]
-    _ ≤ ∑ a in t, (s.filterₓ fun x => f x = a).card := sum_le_sum hn
+    _ ≤ ∑ a in t, (s.filter fun x => f x = a).card := sum_le_sum hn
     _ = s.card := by rw [← card_eq_sum_card_fiberwise Hf]
     
 #align finset.mul_card_image_le_card_of_maps_to Finset.mul_card_image_le_card_of_maps_to
@@ -459,7 +459,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} β] {f : α -> β} (s : Finset.{u2} α) (n : Nat), (forall (a : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) a (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s)) -> (LE.le.{0} Nat instLENat n (Finset.card.{u2} α (Finset.filter.{u2} α (fun (x : α) => Eq.{succ u1} β (f x) a) (fun (a_1 : α) => _inst_1 (f a_1) a) s)))) -> (LE.le.{0} Nat instLENat (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) n (Finset.card.{u1} β (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => _inst_1 a b) f s))) (Finset.card.{u2} α s))
 Case conversion may be inaccurate. Consider using '#align finset.mul_card_image_le_card Finset.mul_card_image_le_cardₓ'. -/
 theorem mul_card_image_le_card {f : α → β} (s : Finset α) (n : ℕ)
-    (hn : ∀ a ∈ s.image f, n ≤ (s.filterₓ fun x => f x = a).card) : n * (s.image f).card ≤ s.card :=
+    (hn : ∀ a ∈ s.image f, n ≤ (s.filter fun x => f x = a).card) : n * (s.image f).card ≤ s.card :=
   mul_card_image_le_card_of_maps_to (fun x => mem_image_of_mem _) n hn
 #align finset.mul_card_image_le_card Finset.mul_card_image_le_card
 
@@ -472,7 +472,7 @@ variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
 #print Finset.sum_card_inter_le /-
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filterₓ <| (· ∈ ·) a).card ≤ n) :
+theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card ≤ n) :
     (∑ t in B, (s ∩ t).card) ≤ s.card * n :=
   by
   refine' le_trans _ (s.sum_le_card_nsmul _ _ h)
@@ -484,7 +484,7 @@ theorem sum_card_inter_le (h : ∀ a ∈ s, (B.filterₓ <| (· ∈ ·) a).card 
 #print Finset.sum_card_le /-
 /-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
 times how many they are. -/
-theorem sum_card_le [Fintype α] (h : ∀ a, (B.filterₓ <| (· ∈ ·) a).card ≤ n) :
+theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card ≤ n) :
     (∑ s in B, s.card) ≤ Fintype.card α * n :=
   calc
     (∑ s in B, s.card) = ∑ s in B, (univ ∩ s).card := by simp_rw [univ_inter]
@@ -496,7 +496,7 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filterₓ <| (· ∈ ·) a).card
 #print Finset.le_sum_card_inter /-
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filterₓ <| (· ∈ ·) a).card) :
+theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filter <| (· ∈ ·) a).card) :
     s.card * n ≤ ∑ t in B, (s ∩ t).card :=
   by
   apply (s.card_nsmul_le_sum _ _ h).trans
@@ -508,7 +508,7 @@ theorem le_sum_card_inter (h : ∀ a ∈ s, n ≤ (B.filterₓ <| (· ∈ ·) a)
 #print Finset.le_sum_card /-
 /-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
 times how many they are. -/
-theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filterₓ <| (· ∈ ·) a).card) :
+theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter <| (· ∈ ·) a).card) :
     Fintype.card α * n ≤ ∑ s in B, s.card :=
   calc
     Fintype.card α * n ≤ ∑ s in B, (univ ∩ s).card := le_sum_card_inter fun a _ => h a
@@ -520,7 +520,7 @@ theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filterₓ <| (· ∈ ·) a
 #print Finset.sum_card_inter /-
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card_inter (h : ∀ a ∈ s, (B.filterₓ <| (· ∈ ·) a).card = n) :
+theorem sum_card_inter (h : ∀ a ∈ s, (B.filter <| (· ∈ ·) a).card = n) :
     (∑ t in B, (s ∩ t).card) = s.card * n :=
   (sum_card_inter_le fun a ha => (h a ha).le).antisymm (le_sum_card_inter fun a ha => (h a ha).ge)
 #align finset.sum_card_inter Finset.sum_card_inter
@@ -529,7 +529,7 @@ theorem sum_card_inter (h : ∀ a ∈ s, (B.filterₓ <| (· ∈ ·) a).card = n
 #print Finset.sum_card /-
 /-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
 many they are. -/
-theorem sum_card [Fintype α] (h : ∀ a, (B.filterₓ <| (· ∈ ·) a).card = n) :
+theorem sum_card [Fintype α] (h : ∀ a, (B.filter <| (· ∈ ·) a).card = n) :
     (∑ s in B, s.card) = Fintype.card α * n := by
   simp_rw [Fintype.card, ← sum_card_inter fun a _ => h a, univ_inter]
 #align finset.sum_card Finset.sum_card
@@ -544,7 +544,7 @@ Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bU
 theorem card_le_card_bunionᵢ {s : Finset ι} {f : ι → Finset α} (hs : (s : Set ι).PairwiseDisjoint f)
     (hf : ∀ i ∈ s, (f i).Nonempty) : s.card ≤ (s.bunionᵢ f).card :=
   by
-  rw [card_bUnion hs, card_eq_sum_ones]
+  rw [card_bunionᵢ hs, card_eq_sum_ones]
   exact sum_le_sum fun i hi => (hf i hi).card_pos
 #align finset.card_le_card_bUnion Finset.card_le_card_bunionᵢ
 
@@ -556,14 +556,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bunionᵢ_add_card_fiberₓ'. -/
 theorem card_le_card_bunionᵢ_add_card_fiber {s : Finset ι} {f : ι → Finset α}
     (hs : (s : Set ι).PairwiseDisjoint f) :
-    s.card ≤ (s.bunionᵢ f).card + (s.filterₓ fun i => f i = ∅).card :=
+    s.card ≤ (s.bunionᵢ f).card + (s.filter fun i => f i = ∅).card :=
   by
   rw [← Finset.filter_card_add_filter_neg_card_eq_card fun i => f i = ∅, add_comm]
   exact
     add_le_add_right
-      ((card_le_card_bUnion (hs.subset <| filter_subset _ _) fun i hi =>
+      ((card_le_card_bunionᵢ (hs.subset <| filter_subset _ _) fun i hi =>
             nonempty_of_ne_empty <| (mem_filter.1 hi).2).trans <|
-        card_le_of_subset <| bUnion_subset_bUnion_of_subset_left _ <| filter_subset _ _)
+        card_le_of_subset <| bunionᵢ_subset_bunionᵢ_of_subset_left _ <| filter_subset _ _)
       _
 #align finset.card_le_card_bUnion_add_card_fiber Finset.card_le_card_bunionᵢ_add_card_fiber
 
@@ -953,7 +953,7 @@ variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {
 
 @[simp]
 theorem CanonicallyOrderedCommSemiring.multiset_prod_pos [Nontrivial R] {m : Multiset R} :
-    0 < m.Prod ↔ ∀ x ∈ m, (0 : R) < x :=
+    0 < m.prod ↔ ∀ x ∈ m, (0 : R) < x :=
   by
   induction m using Quotient.inductionOn
   rw [Multiset.quot_mk_to_coe, Multiset.coe_prod]
@@ -1043,7 +1043,7 @@ open Finset
 /-- A product of finite numbers is still finite -/
 theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι}
     {f : ι → WithTop R} (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
-  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1)
+  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.ne h₂.ne) (coe_lt_top 1)
     fun a ha => lt_top_iff_ne_top.2 (h a ha)
 #align with_top.prod_lt_top WithTop.prod_lt_top
 -/
@@ -1069,7 +1069,7 @@ theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → With
   classical
     constructor
     · contrapose!
-      exact fun h => (sum_lt_top fun i hi => h i hi).Ne
+      exact fun h => (sum_lt_top fun i hi => h i hi).ne
     · rintro ⟨i, his, hi⟩
       rw [sum_eq_add_sum_diff_singleton his, hi, top_add]
 #align with_top.sum_eq_top_iff WithTop.sum_eq_top_iff

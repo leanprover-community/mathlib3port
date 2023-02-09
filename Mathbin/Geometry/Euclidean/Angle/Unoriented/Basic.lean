@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,9 +48,9 @@ def angle (x y : V) : ℝ :=
 
 theorem continuousAt_angle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => angle y.1 y.2) x :=
-  Real.continuous_arccos.ContinuousAt.comp <|
-    continuous_inner.ContinuousAt.div
-      ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).ContinuousAt
+  Real.continuous_arccos.continuousAt.comp <|
+    continuous_inner.continuousAt.div
+      ((continuous_norm.comp continuous_fst).mul (continuous_norm.comp continuous_snd)).continuousAt
       (by simp [hx1, hx2])
 #align inner_product_geometry.continuous_at_angle InnerProductGeometry.continuousAt_angle
 

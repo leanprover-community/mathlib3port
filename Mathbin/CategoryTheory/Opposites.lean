@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.opposites
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,11 +146,11 @@ theorem isIso_of_op {X Y : C} (f : X ⟶ Y) [IsIso f.op] : IsIso f :=
 #align category_theory.is_iso_of_op CategoryTheory.isIso_of_op
 
 theorem isIso_op_iff {X Y : C} (f : X ⟶ Y) : IsIso f.op ↔ IsIso f :=
-  ⟨fun hf => is_iso_of_op _, fun hf => inferInstance⟩
+  ⟨fun hf => isIso_of_op _, fun hf => inferInstance⟩
 #align category_theory.is_iso_op_iff CategoryTheory.isIso_op_iff
 
 theorem isIso_unop_iff {X Y : Cᵒᵖ} (f : X ⟶ Y) : IsIso f.unop ↔ IsIso f := by
-  rw [← is_iso_op_iff f.unop, Quiver.Hom.op_unop]
+  rw [← isIso_op_iff f.unop, Quiver.Hom.op_unop]
 #align category_theory.is_iso_unop_iff CategoryTheory.isIso_unop_iff
 
 instance isIso_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : IsIso f.unop :=
@@ -161,14 +161,14 @@ instance isIso_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : IsIso f.unop :=
 theorem op_inv {X Y : C} (f : X ⟶ Y) [IsIso f] : (inv f).op = inv f.op :=
   by
   ext
-  rw [← op_comp, is_iso.inv_hom_id, op_id]
+  rw [← op_comp, IsIso.inv_hom_id, op_id]
 #align category_theory.op_inv CategoryTheory.op_inv
 
 @[simp]
 theorem unop_inv {X Y : Cᵒᵖ} (f : X ⟶ Y) [IsIso f] : (inv f).unop = inv f.unop :=
   by
   ext
-  rw [← unop_comp, is_iso.inv_hom_id, unop_id]
+  rw [← unop_comp, IsIso.inv_hom_id, unop_id]
 #align category_theory.unop_inv CategoryTheory.unop_inv
 
 namespace Functor
@@ -340,7 +340,7 @@ protected def removeOp (α : F.op ⟶ G.op) : G ⟶ F
     where
   app X := (α.app (op X)).unop
   naturality' X Y f :=
-    Quiver.Hom.op_inj <| by simpa only [functor.op_map] using (α.naturality f.op).symm
+    Quiver.Hom.op_inj <| by simpa only [Functor.op_map] using (α.naturality f.op).symm
 #align category_theory.nat_trans.remove_op CategoryTheory.NatTrans.removeOp
 
 @[simp]
@@ -355,7 +355,7 @@ protected def removeUnop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F.unop ⟶ G.unop) : 
     where
   app X := (α.app (unop X)).op
   naturality' X Y f :=
-    Quiver.Hom.unop_inj <| by simpa only [functor.unop_map] using (α.naturality f.unop).symm
+    Quiver.Hom.unop_inj <| by simpa only [Functor.unop_map] using (α.naturality f.unop).symm
 #align category_theory.nat_trans.remove_unop CategoryTheory.NatTrans.removeUnop
 
 @[simp]
@@ -397,7 +397,7 @@ protected def removeLeftOp (α : F.leftOp ⟶ G.leftOp) : G ⟶ F
     where
   app X := (α.app (op X)).op
   naturality' X Y f :=
-    Quiver.Hom.unop_inj <| by simpa only [functor.left_op_map] using (α.naturality f.op).symm
+    Quiver.Hom.unop_inj <| by simpa only [Functor.leftOp_map] using (α.naturality f.op).symm
 #align category_theory.nat_trans.remove_left_op CategoryTheory.NatTrans.removeLeftOp
 
 @[simp]
@@ -439,7 +439,7 @@ protected def removeRightOp (α : F.rightOp ⟶ G.rightOp) : G ⟶ F
     where
   app X := (α.app X.unop).unop
   naturality' X Y f :=
-    Quiver.Hom.op_inj <| by simpa only [functor.right_op_map] using (α.naturality f.unop).symm
+    Quiver.Hom.op_inj <| by simpa only [Functor.rightOp_map] using (α.naturality f.unop).symm
 #align category_theory.nat_trans.remove_right_op CategoryTheory.NatTrans.removeRightOp
 
 @[simp]
@@ -460,7 +460,7 @@ variable {X Y : C}
 @[simps]
 protected def op (α : X ≅ Y) : op Y ≅ op X
     where
-  Hom := α.Hom.op
+  Hom := α.hom.op
   inv := α.inv.op
   hom_inv_id' := Quiver.Hom.unop_inj α.inv_hom_id
   inv_hom_id' := Quiver.Hom.unop_inj α.hom_inv_id
@@ -470,7 +470,7 @@ protected def op (α : X ≅ Y) : op Y ≅ op X
 @[simps]
 def unop {X Y : Cᵒᵖ} (f : X ≅ Y) : Y.unop ≅ X.unop
     where
-  Hom := f.Hom.unop
+  Hom := f.hom.unop
   inv := f.inv.unop
   hom_inv_id' := by simp only [← unop_comp, f.inv_hom_id, unop_id]
   inv_hom_id' := by simp only [← unop_comp, f.hom_inv_id, unop_id]
@@ -497,7 +497,7 @@ isomorphism between the original functors `F ≅ G`. -/
 @[simps]
 protected def op (α : F ≅ G) : G.op ≅ F.op
     where
-  Hom := NatTrans.op α.Hom
+  Hom := NatTrans.op α.hom
   inv := NatTrans.op α.inv
   hom_inv_id' := by ext; dsimp; rw [← op_comp]; rw [α.inv_hom_id_app]; rfl
   inv_hom_id' := by ext; dsimp; rw [← op_comp]; rw [α.hom_inv_id_app]; rfl
@@ -508,7 +508,7 @@ between the opposite functors `F.op ≅ G.op`. -/
 @[simps]
 protected def removeOp (α : F.op ≅ G.op) : G ≅ F
     where
-  Hom := NatTrans.removeOp α.Hom
+  Hom := NatTrans.removeOp α.hom
   inv := NatTrans.removeOp α.inv
   hom_inv_id' := by ext; dsimp; rw [← unop_comp]; rw [α.inv_hom_id_app]; rfl
   inv_hom_id' := by ext; dsimp; rw [← unop_comp]; rw [α.hom_inv_id_app]; rfl
@@ -519,7 +519,7 @@ between the original functors `F ≅ G`. -/
 @[simps]
 protected def unop {F G : Cᵒᵖ ⥤ Dᵒᵖ} (α : F ≅ G) : G.unop ≅ F.unop
     where
-  Hom := NatTrans.unop α.Hom
+  Hom := NatTrans.unop α.hom
   inv := NatTrans.unop α.inv
   hom_inv_id' := by ext; dsimp; rw [← unop_comp]; rw [α.inv_hom_id_app]; rfl
   inv_hom_id' := by ext; dsimp; rw [← unop_comp]; rw [α.hom_inv_id_app]; rfl
@@ -535,7 +535,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 -/
 @[simps]
 def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
-  Functor := e.Functor.op
+  Functor := e.functor.op
   inverse := e.inverse.op
   unitIso := (NatIso.op e.unitIso).symm
   counitIso := (NatIso.op e.counitIso).symm
@@ -549,7 +549,7 @@ def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
 -/
 @[simps]
 def unop (e : Cᵒᵖ ≌ Dᵒᵖ) : C ≌ D where
-  Functor := e.Functor.unop
+  Functor := e.functor.unop
   inverse := e.inverse.unop
   unitIso := (NatIso.unop e.unitIso).symm
   counitIso := (NatIso.unop e.counitIso).symm
@@ -585,11 +585,11 @@ def opEquiv (A B : Cᵒᵖ) : (A ⟶ B) ≃ (B.unop ⟶ A.unop)
 #align category_theory.op_equiv CategoryTheory.opEquiv
 
 instance subsingleton_of_unop (A B : Cᵒᵖ) [Subsingleton (unop B ⟶ unop A)] : Subsingleton (A ⟶ B) :=
-  (opEquiv A B).Subsingleton
+  (opEquiv A B).subsingleton
 #align category_theory.subsingleton_of_unop CategoryTheory.subsingleton_of_unop
 
 instance decidableEqOfUnop (A B : Cᵒᵖ) [DecidableEq (unop B ⟶ unop A)] : DecidableEq (A ⟶ B) :=
-  (opEquiv A B).DecidableEq
+  (opEquiv A B).decidableEq
 #align category_theory.decidable_eq_of_unop CategoryTheory.decidableEqOfUnop
 
 /-- The equivalence between isomorphisms of the form `A ≅ B` and `B.unop ≅ A.unop`.
@@ -629,7 +629,7 @@ def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ
     NatIso.ofComponents (fun F => F.unop.opUnopIso.op)
       (by
         intro F G f
-        dsimp [op_unop_iso]
+        dsimp [opUnopIso]
         rw [show f = f.unop.op by simp, ← op_comp, ← op_comp]
         congr 1
         tidy)

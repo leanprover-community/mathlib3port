@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Ashvni Narayanan
 
 ! This file was ported from Lean 3 source module number_theory.function_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ namespace RingOfIntegers
 variable [Algebra Fq[X] F]
 
 instance : IsDomain (ringOfIntegers Fq F) :=
-  (ringOfIntegers Fq F).IsDomain
+  (ringOfIntegers Fq F).isDomain
 
 instance : IsIntegralClosure (ringOfIntegers Fq F) Fq[X] F :=
   integralClosure.isIntegralClosure _ _
@@ -126,7 +126,7 @@ theorem algebraMap_injective : Function.Injective ⇑(algebraMap Fq[X] (ringOfIn
     exact
       Function.Injective.comp (algebraMap (Ratfunc Fq) F).Injective
         (IsFractionRing.injective Fq[X] (Ratfunc Fq))
-  rw [injective_iff_map_eq_zero (algebraMap Fq[X] ↥(ring_of_integers Fq F))]
+  rw [injective_iff_map_eq_zero (algebraMap Fq[X] ↥(ringOfIntegers Fq F))]
   intro p hp
   rw [← Subtype.coe_inj, Subalgebra.coe_zero] at hp
   rw [injective_iff_map_eq_zero (algebraMap Fq[X] F)] at hinj
@@ -181,7 +181,7 @@ theorem InftyValuation.map_one' : inftyValuationDef Fq 1 = 1 :=
 theorem InftyValuation.map_mul' (x y : Ratfunc Fq) :
     inftyValuationDef Fq (x * y) = inftyValuationDef Fq x * inftyValuationDef Fq y :=
   by
-  rw [infty_valuation_def, infty_valuation_def, infty_valuation_def]
+  rw [inftyValuationDef, inftyValuationDef, inftyValuationDef]
   by_cases hx : x = 0
   · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
   · by_cases hy : y = 0
@@ -196,18 +196,18 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
   by
   by_cases hx : x = 0
   · rw [hx, zero_add]
-    conv_rhs => rw [infty_valuation_def, if_pos (Eq.refl _)]
-    rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq y))]
+    conv_rhs => rw [inftyValuationDef, if_pos (Eq.refl _)]
+    rw [max_eq_right (WithZero.zero_le (inftyValuationDef Fq y))]
     exact le_refl _
   · by_cases hy : y = 0
     · rw [hy, add_zero]
-      conv_rhs => rw [max_comm, infty_valuation_def, if_pos (Eq.refl _)]
-      rw [max_eq_right (WithZero.zero_le (infty_valuation_def Fq x))]
+      conv_rhs => rw [max_comm, inftyValuationDef, if_pos (Eq.refl _)]
+      rw [max_eq_right (WithZero.zero_le (inftyValuationDef Fq x))]
       exact le_refl _
     · by_cases hxy : x + y = 0
-      · rw [infty_valuation_def, if_pos hxy]
+      · rw [inftyValuationDef, if_pos hxy]
         exact zero_le'
-      · rw [infty_valuation_def, infty_valuation_def, infty_valuation_def, if_neg hx, if_neg hy,
+      · rw [inftyValuationDef, inftyValuationDef, inftyValuationDef, if_neg hx, if_neg hy,
           if_neg hxy]
         rw [le_max_iff, WithZero.coe_le_coe, Multiplicative.ofAdd_le, WithZero.coe_le_coe,
           Multiplicative.ofAdd_le, ← le_max_iff]
@@ -217,7 +217,7 @@ theorem InftyValuation.map_add_le_max' (x y : Ratfunc Fq) :
 @[simp]
 theorem infty_valuation_of_nonzero {x : Ratfunc Fq} (hx : x ≠ 0) :
     inftyValuationDef Fq x = Multiplicative.ofAdd x.intDegree := by
-  rw [infty_valuation_def, if_neg hx]
+  rw [inftyValuationDef, if_neg hx]
 #align function_field.infty_valuation_of_nonzero FunctionField.infty_valuation_of_nonzero
 
 /-- The valuation at infinity on `Fq(t)`. -/
@@ -240,12 +240,12 @@ theorem inftyValuation.c {k : Fq} (hk : k ≠ 0) :
     inftyValuationDef Fq (Ratfunc.c k) = Multiplicative.ofAdd (0 : ℤ) :=
   by
   have hCk : Ratfunc.c k ≠ 0 := (map_ne_zero _).mpr hk
-  rw [infty_valuation_def, if_neg hCk, Ratfunc.intDegree_c]
+  rw [inftyValuationDef, if_neg hCk, Ratfunc.intDegree_c]
 #align function_field.infty_valuation.C FunctionField.inftyValuation.c
 
 @[simp]
 theorem inftyValuation.x : inftyValuationDef Fq Ratfunc.x = Multiplicative.ofAdd (1 : ℤ) := by
-  rw [infty_valuation_def, if_neg Ratfunc.x_ne_zero, Ratfunc.intDegree_x]
+  rw [inftyValuationDef, if_neg Ratfunc.x_ne_zero, Ratfunc.intDegree_x]
 #align function_field.infty_valuation.X FunctionField.inftyValuation.x
 
 @[simp]
@@ -257,7 +257,7 @@ theorem inftyValuation.polynomial {p : Fq[X]} (hp : p ≠ 0) :
     by
     rw [Ne.def, Ratfunc.algebraMap_eq_zero_iff]
     exact hp
-  rw [infty_valuation_def, if_neg hp', Ratfunc.intDegree_polynomial]
+  rw [inftyValuationDef, if_neg hp', Ratfunc.intDegree_polynomial]
 #align function_field.infty_valuation.polynomial FunctionField.inftyValuation.polynomial
 
 /-- The valued field `Fq(t)` with the valuation at infinity. -/
@@ -276,7 +276,7 @@ def FqtInfty :=
 #align function_field.Fqt_infty FunctionField.FqtInfty
 
 instance : Field (FqtInfty Fq) :=
-  letI := infty_valued_Fqt Fq
+  letI := inftyValuedFqt Fq
   UniformSpace.Completion.field
 
 instance : Inhabited (FqtInfty Fq) :=

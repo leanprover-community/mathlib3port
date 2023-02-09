@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.fin_enum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ def ofEquiv (α) {β} [FinEnum α] (h : β ≃ α) : FinEnum β
     where
   card := card α
   Equiv := h.trans (equiv α)
-  decEq := (h.trans (equiv _)).DecidableEq
+  decEq := (h.trans (equiv _)).decidableEq
 #align fin_enum.of_equiv FinEnum.ofEquiv
 -/
 
@@ -63,9 +63,9 @@ def ofNodupList [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' :
     where
   card := xs.length
   Equiv :=
-    ⟨fun x => ⟨xs.indexOfₓ x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
-      xs.nthLe _ h, fun x => by simp [of_nodup_list._match_1], fun ⟨i, h⟩ => by
-      simp [of_nodup_list._match_1, *] <;> rw [List.nthLe_index_of] <;> apply List.nodup_dedup⟩
+    ⟨fun x => ⟨xs.indexOf x, by rw [List.indexOf_lt_length] <;> apply h⟩, fun ⟨i, h⟩ =>
+      xs.nthLe _ h, fun x => by simp [ofNodupList._match1], fun ⟨i, h⟩ => by
+      simp [ofNodupList._match1, *] <;> rw [list.nth_le_index_of] <;> apply list.nodup_dedup⟩
 #align fin_enum.of_nodup_list FinEnum.ofNodupList
 -/
 
@@ -88,14 +88,14 @@ open Function
 #print FinEnum.mem_toList /-
 @[simp]
 theorem mem_toList [FinEnum α] (x : α) : x ∈ toList α := by
-  simp [to_list] <;> exists Equiv α x <;> simp
+  simp [toList] <;> exists equiv α x <;> simp
 #align fin_enum.mem_to_list FinEnum.mem_toList
 -/
 
 #print FinEnum.nodup_toList /-
 @[simp]
 theorem nodup_toList [FinEnum α] : List.Nodup (toList α) := by
-  simp [to_list] <;> apply List.Nodup.map <;> [apply Equiv.injective, apply List.nodup_finRange]
+  simp [toList] <;> apply List.Nodup.map <;> [apply Equiv.injective, apply List.nodup_finRange]
 #align fin_enum.nodup_to_list FinEnum.nodup_toList
 -/
 
@@ -113,7 +113,7 @@ noncomputable def ofInjective {α β} (f : α → β) [DecidableEq α] [FinEnum 
   ofList ((toList β).filterMap (partialInv f))
     (by
       intro x
-      simp only [mem_to_list, true_and_iff, List.mem_filterMap]
+      simp only [mem_toList, true_and_iff, List.mem_filterMap]
       use f x
       simp only [h, Function.partialInv_left])
 #align fin_enum.of_injective FinEnum.ofInjective
@@ -178,7 +178,7 @@ def Finset.enum [DecidableEq α] : List α → List (Finset α)
 theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
     s ∈ Finset.enum xs ↔ ∀ x ∈ s, x ∈ xs :=
   by
-  induction xs generalizing s <;> simp [*, finset.enum]
+  induction xs generalizing s <;> simp [*, Finset.enum]
   · simp [Finset.eq_empty_iff_forall_not_mem, (· ∉ ·)]
     rfl
   · constructor
@@ -199,7 +199,7 @@ theorem Finset.mem_enum [DecidableEq α] (s : Finset α) (xs : List α) :
     exists h
     by_cases xs_hd ∈ s
     · have : {xs_hd} ⊆ s
-      simp only [HasSubset.Subset, *, forall_eq, mem_singleton]
+      simp only [has_subset.subset, *, forall_eq, mem_singleton]
       simp only [union_sdiff_of_subset this, or_true_iff, Finset.union_sdiff_of_subset,
         eq_self_iff_true]
     · left
@@ -262,7 +262,7 @@ instance PSigma.finEnumPropProp {α : Prop} {β : α → Prop} [Decidable α] [�
 instance (priority := 100) [FinEnum α] : Fintype α
     where
   elems := univ.map (equiv α).symm.toEmbedding
-  complete := by intros <;> simp <;> exists Equiv α x <;> simp
+  complete := by intros <;> simp <;> exists equiv α x <;> simp
 
 #print FinEnum.Pi.cons /-
 /-- For `pi.cons x xs y f` create a function where every `i ∈ xs` is mapped to `f i` and
@@ -301,14 +301,14 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
   by
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
   · ext (a⟨⟩)
-  · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
+  · exists Pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
     constructor
     exact ⟨_, rfl⟩
-    exists pi.tail f
+    exists Pi.tail f
     constructor
     · apply xs_ih
     · ext (x h)
-      simp [pi.cons]
+      simp [Pi.cons]
       split_ifs
       subst x
       rfl

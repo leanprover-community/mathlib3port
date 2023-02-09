@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ There, the map in this lemma is called `S`. -/
 @[to_additive measure_preserving_prod_add
       " The shear mapping `(x, y) ↦ (x, x + y)` preserves the measure `μ × ν`. "]
 theorem measurePreservingProdMul [IsMulLeftInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.1, z.1 * z.2)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.1, z.1 * z.2)) (μ.prod ν) (μ.prod ν) :=
   (MeasurePreserving.id μ).skewProduct measurable_mul <|
     Filter.eventually_of_forall <| map_mul_left_eq_self ν
 #align measure_theory.measure_preserving_prod_mul MeasureTheory.measurePreservingProdMul
@@ -103,7 +103,7 @@ This is the map `SR` in [Halmos, §59].
 @[to_additive measure_preserving_prod_add_swap
       " The map `(x, y) ↦ (y, y + x)` sends the measure `μ × ν` to `ν × μ`. "]
 theorem measurePreservingProdMulSwap [IsMulLeftInvariant μ] :
-    MeasurePreserving (fun z : G × G => (z.2, z.2 * z.1)) (μ.Prod ν) (ν.Prod μ) :=
+    MeasurePreserving (fun z : G × G => (z.2, z.2 * z.1)) (μ.prod ν) (ν.prod μ) :=
   (measurePreservingProdMul ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_mul_swap MeasureTheory.measurePreservingProdMulSwap
 #align measure_theory.measure_preserving_prod_add_swap MeasureTheory.measure_preserving_prod_add_swap
@@ -134,7 +134,7 @@ where `S` is the map `(x, y) ↦ (x, xy)`. -/
 @[to_additive measure_preserving_prod_neg_add
       "The map `(x, y) ↦ (x, - x + y)` is measure-preserving."]
 theorem measurePreservingProdInvMul [IsMulLeftInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.1, z.1⁻¹ * z.2)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.1, z.1⁻¹ * z.2)) (μ.prod ν) (μ.prod ν) :=
   (measurePreservingProdMul μ ν).symm <| MeasurableEquiv.shearMulRight G
 #align measure_theory.measure_preserving_prod_inv_mul MeasureTheory.measurePreservingProdInvMul
 #align measure_theory.measure_preserving_prod_neg_add MeasureTheory.measure_preserving_prod_neg_add
@@ -147,7 +147,7 @@ where `S` is the map `(x, y) ↦ (x, xy)` and `R` is `prod.swap`. -/
 @[to_additive measure_preserving_prod_neg_add_swap
       "The map `(x, y) ↦ (y, - y + x)` sends `μ × ν` to `ν × μ`."]
 theorem measurePreservingProdInvMulSwap :
-    MeasurePreserving (fun z : G × G => (z.2, z.2⁻¹ * z.1)) (μ.Prod ν) (ν.Prod μ) :=
+    MeasurePreserving (fun z : G × G => (z.2, z.2⁻¹ * z.1)) (μ.prod ν) (ν.prod μ) :=
   (measurePreservingProdInvMul ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_inv_mul_swap MeasureTheory.measurePreservingProdInvMulSwap
 #align measure_theory.measure_preserving_prod_neg_add_swap MeasureTheory.measure_preserving_prod_neg_add_swap
@@ -158,9 +158,9 @@ where `S` is the map `(x, y) ↦ (x, xy)` and `R` is `prod.swap`. -/
 @[to_additive measure_preserving_add_prod_neg
       "The map `(x, y) ↦ (y + x, - x)` is measure-preserving."]
 theorem measurePreservingMulProdInv [IsMulLeftInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.prod ν) (μ.prod ν) :=
   by
-  convert (measure_preserving_prod_inv_mul_swap ν μ).comp (measure_preserving_prod_mul_swap μ ν)
+  convert (measurePreservingProdInvMulSwap ν μ).comp (measurePreservingProdMulSwap μ ν)
   ext1 ⟨x, y⟩
   simp_rw [Function.comp_apply, mul_inv_rev, inv_mul_cancel_right]
 #align measure_theory.measure_preserving_mul_prod_inv MeasureTheory.measurePreservingMulProdInv
@@ -171,13 +171,13 @@ theorem measurePreservingMulProdInv [IsMulLeftInvariant ν] :
 @[to_additive]
 theorem quasiMeasurePreservingInv : QuasiMeasurePreserving (Inv.inv : G → G) μ μ :=
   by
-  refine' ⟨measurable_inv, absolutely_continuous.mk fun s hsm hμs => _⟩
+  refine' ⟨measurable_inv, AbsolutelyContinuous.mk fun s hsm hμs => _⟩
   rw [map_apply measurable_inv hsm, inv_preimage]
   have hf : Measurable fun z : G × G => (z.2 * z.1, z.1⁻¹) :=
     (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv
   suffices map (fun z : G × G => (z.2 * z.1, z.1⁻¹)) (μ.prod μ) (s⁻¹ ×ˢ s⁻¹) = 0 by
-    simpa only [(measure_preserving_mul_prod_inv μ μ).map_eq, prod_prod, mul_eq_zero,
-      or_self_iff] using this
+    simpa only [(measurePreservingMulProdInv μ μ).map_eq, prod_prod, mul_eq_zero, or_self_iff] using
+      this
   have hsm' : MeasurableSet (s⁻¹ ×ˢ s⁻¹) := hsm.inv.prod hsm.inv
   simp_rw [map_apply hf hsm', prod_apply_symm (hf hsm'), preimage_preimage, mk_preimage_prod,
     inv_preimage, inv_inv, measure_mono_null (inter_subset_right _ _) hμs, lintegral_zero]
@@ -187,40 +187,40 @@ theorem quasiMeasurePreservingInv : QuasiMeasurePreserving (Inv.inv : G → G) �
 @[to_additive]
 theorem measure_inv_null : μ s⁻¹ = 0 ↔ μ s = 0 :=
   by
-  refine' ⟨fun hs => _, (quasi_measure_preserving_inv μ).preimage_null⟩
+  refine' ⟨fun hs => _, (quasiMeasurePreservingInv μ).preimage_null⟩
   rw [← inv_inv s]
-  exact (quasi_measure_preserving_inv μ).preimage_null hs
+  exact (quasiMeasurePreservingInv μ).preimage_null hs
 #align measure_theory.measure_inv_null MeasureTheory.measure_inv_null
 #align measure_theory.measure_neg_null MeasureTheory.measure_neg_null
 
 @[to_additive]
 theorem invAbsolutelyContinuous : μ.inv ≪ μ :=
-  (quasiMeasurePreservingInv μ).AbsolutelyContinuous
+  (quasiMeasurePreservingInv μ).absolutelyContinuous
 #align measure_theory.inv_absolutely_continuous MeasureTheory.invAbsolutelyContinuous
 #align measure_theory.neg_absolutely_continuous MeasureTheory.neg_absolutely_continuous
 
 @[to_additive]
 theorem absolutelyContinuousInv : μ ≪ μ.inv :=
   by
-  refine' absolutely_continuous.mk fun s hs => _
+  refine' AbsolutelyContinuous.mk fun s hs => _
   simp_rw [inv_apply μ s, measure_inv_null, imp_self]
 #align measure_theory.absolutely_continuous_inv MeasureTheory.absolutelyContinuousInv
 #align measure_theory.absolutely_continuous_neg MeasureTheory.absolutely_continuous_neg
 
 @[to_additive]
 theorem lintegral_lintegral_mul_inv [IsMulLeftInvariant ν] (f : G → G → ℝ≥0∞)
-    (hf : AeMeasurable (uncurry f) (μ.Prod ν)) :
+    (hf : AeMeasurable (uncurry f) (μ.prod ν)) :
     (∫⁻ x, ∫⁻ y, f (y * x) x⁻¹ ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ :=
   by
   have h : Measurable fun z : G × G => (z.2 * z.1, z.1⁻¹) :=
     (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv
   have h2f : AeMeasurable (uncurry fun x y => f (y * x) x⁻¹) (μ.prod ν) :=
-    hf.comp_quasi_measure_preserving (measure_preserving_mul_prod_inv μ ν).QuasiMeasurePreserving
+    hf.comp_quasi_measure_preserving (measurePreservingMulProdInv μ ν).quasiMeasurePreserving
   simp_rw [lintegral_lintegral h2f, lintegral_lintegral hf]
-  conv_rhs => rw [← (measure_preserving_mul_prod_inv μ ν).map_eq]
+  conv_rhs => rw [← (measurePreservingMulProdInv μ ν).map_eq]
   symm
   exact
-    lintegral_map' (hf.mono' (measure_preserving_mul_prod_inv μ ν).map_eq.AbsolutelyContinuous)
+    lintegral_map' (hf.mono' (measurePreservingMulProdInv μ ν).map_eq.absolutelyContinuous)
       h.ae_measurable
 #align measure_theory.lintegral_lintegral_mul_inv MeasureTheory.lintegral_lintegral_mul_inv
 #align measure_theory.lintegral_lintegral_add_neg MeasureTheory.lintegral_lintegral_add_neg
@@ -244,7 +244,7 @@ theorem measure_mul_right_ne_zero (h2s : μ s ≠ 0) (y : G) : μ ((fun x => x *
 @[to_additive]
 theorem absolutelyContinuousMapMulRight (g : G) : μ ≪ map (· * g) μ :=
   by
-  refine' absolutely_continuous.mk fun s hs => _
+  refine' AbsolutelyContinuous.mk fun s hs => _
   rw [map_apply (measurable_mul_const g) hs, measure_mul_right_null]; exact id
 #align measure_theory.absolutely_continuous_map_mul_right MeasureTheory.absolutelyContinuousMapMulRight
 #align measure_theory.absolutely_continuous_map_add_right MeasureTheory.absolutely_continuous_map_add_right
@@ -255,7 +255,7 @@ theorem absolutelyContinuousMapDivLeft (g : G) : μ ≪ map (fun h => g / h) μ 
   simp_rw [div_eq_mul_inv]
   rw [← map_map (measurable_const_mul g) measurable_inv]
   conv_lhs => rw [← map_mul_left_eq_self μ g]
-  exact (absolutely_continuous_inv μ).map (measurable_const_mul g)
+  exact (absolutelyContinuousInv μ).map (measurable_const_mul g)
 #align measure_theory.absolutely_continuous_map_div_left MeasureTheory.absolutelyContinuousMapDivLeft
 #align measure_theory.absolutely_continuous_map_sub_left MeasureTheory.absolutely_continuous_map_sub_left
 
@@ -265,13 +265,13 @@ theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (sm : MeasurableSet s) 
     (hf : Measurable f) : (μ s * ∫⁻ y, f y ∂ν) = ∫⁻ x, ν ((fun z => z * x) ⁻¹' s) * f x⁻¹ ∂μ :=
   by
   rw [← set_lintegral_one, ← lintegral_indicator _ sm, ←
-    lintegral_lintegral_mul (measurable_const.indicator sm).AeMeasurable hf.ae_measurable, ←
+    lintegral_lintegral_mul (measurable_const.indicator sm).aeMeasurable hf.ae_measurable, ←
     lintegral_lintegral_mul_inv μ ν]
   swap
   ·
     exact
       (((measurable_const.indicator sm).comp measurable_fst).mul
-          (hf.comp measurable_snd)).AeMeasurable
+          (hf.comp measurable_snd)).aeMeasurable
   have ms :
     ∀ x : G, Measurable fun y => ((fun z => z * x) ⁻¹' s).indicator (fun z => (1 : ℝ≥0∞)) y :=
     fun x => measurable_const.indicator (measurable_mul_const _ sm)
@@ -295,7 +295,7 @@ theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (sm : MeasurableSet s) 
       " Any two nonzero left-invariant measures are absolutely continuous w.r.t. each\nother. "]
 theorem absolutelyContinuousOfIsMulLeftInvariant [IsMulLeftInvariant ν] (hν : ν ≠ 0) : μ ≪ ν :=
   by
-  refine' absolutely_continuous.mk fun s sm hνs => _
+  refine' AbsolutelyContinuous.mk fun s sm hνs => _
   have h1 := measure_mul_lintegral_eq μ ν sm 1 measurable_one
   simp_rw [Pi.one_apply, lintegral_one, mul_one, (measure_mul_right_null ν _).mpr hνs,
     lintegral_zero, mul_eq_zero, measure_univ_eq_zero.not.mpr hν, or_false_iff] at h1
@@ -327,10 +327,10 @@ theorem ae_measure_preimage_mul_right_lt_top_of_ne_zero [IsMulLeftInvariant ν]
     ∀ᵐ x ∂μ, ν ((fun y => y * x) ⁻¹' s) < ∞ :=
   by
   refine' (ae_measure_preimage_mul_right_lt_top ν ν sm h3s).filter_mono _
-  refine' (absolutely_continuous_of_is_mul_left_invariant μ ν _).ae_le
+  refine' (absolutelyContinuousOfIsMulLeftInvariant μ ν _).ae_le
   refine' mt _ h2s
   intro hν
-  rw [hν, measure.coe_zero, Pi.zero_apply]
+  rw [hν, Measure.coe_zero, Pi.zero_apply]
 #align measure_theory.ae_measure_preimage_mul_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_mul_right_lt_top_of_ne_zero
 #align measure_theory.ae_measure_preimage_add_right_lt_top_of_ne_zero MeasureTheory.ae_measure_preimage_add_right_lt_top_of_ne_zero
 
@@ -391,7 +391,7 @@ section RightInvariant
 
 @[to_additive measure_preserving_prod_add_right]
 theorem measurePreservingProdMulRight [IsMulRightInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.1, z.2 * z.1)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.1, z.2 * z.1)) (μ.prod ν) (μ.prod ν) :=
   (MeasurePreserving.id μ).skewProduct (measurable_snd.mul measurable_fst) <|
     Filter.eventually_of_forall <| map_mul_right_eq_self ν
 #align measure_theory.measure_preserving_prod_mul_right MeasureTheory.measurePreservingProdMulRight
@@ -401,7 +401,7 @@ theorem measurePreservingProdMulRight [IsMulRightInvariant ν] :
 @[to_additive measure_preserving_prod_add_swap_right
       " The map `(x, y) ↦ (y, x + y)` sends the measure `μ × ν` to `ν × μ`. "]
 theorem measurePreservingProdMulSwapRight [IsMulRightInvariant μ] :
-    MeasurePreserving (fun z : G × G => (z.2, z.1 * z.2)) (μ.Prod ν) (ν.Prod μ) :=
+    MeasurePreserving (fun z : G × G => (z.2, z.1 * z.2)) (μ.prod ν) (ν.prod μ) :=
   (measurePreservingProdMulRight ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_mul_swap_right MeasureTheory.measurePreservingProdMulSwapRight
 #align measure_theory.measure_preserving_prod_add_swap_right MeasureTheory.measure_preserving_prod_add_swap_right
@@ -410,8 +410,8 @@ theorem measurePreservingProdMulSwapRight [IsMulRightInvariant μ] :
 @[to_additive measure_preserving_add_prod
       " The map `(x, y) ↦ (x + y, y)` preserves the measure `μ × ν`. "]
 theorem measurePreservingMulProd [IsMulRightInvariant μ] :
-    MeasurePreserving (fun z : G × G => (z.1 * z.2, z.2)) (μ.Prod ν) (μ.Prod ν) :=
-  measurePreservingSwap.comp <| by apply measure_preserving_prod_mul_swap_right μ ν
+    MeasurePreserving (fun z : G × G => (z.1 * z.2, z.2)) (μ.prod ν) (μ.prod ν) :=
+  measurePreservingSwap.comp <| by apply measurePreservingProdMulSwapRight μ ν
 #align measure_theory.measure_preserving_mul_prod MeasureTheory.measurePreservingMulProd
 #align measure_theory.measure_preserving_add_prod MeasureTheory.measure_preserving_add_prod
 
@@ -420,7 +420,7 @@ variable [HasMeasurableInv G]
 /-- The map `(x, y) ↦ (x, y / x)` is measure-preserving. -/
 @[to_additive measure_preserving_prod_sub "The map `(x, y) ↦ (x, y - x)` is measure-preserving."]
 theorem measurePreservingProdDiv [IsMulRightInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.1, z.2 / z.1)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.1, z.2 / z.1)) (μ.prod ν) (μ.prod ν) :=
   (measurePreservingProdMulRight μ ν).symm (MeasurableEquiv.shearDivRight G).symm
 #align measure_theory.measure_preserving_prod_div MeasureTheory.measurePreservingProdDiv
 #align measure_theory.measure_preserving_prod_sub MeasureTheory.measure_preserving_prod_sub
@@ -429,7 +429,7 @@ theorem measurePreservingProdDiv [IsMulRightInvariant ν] :
 @[to_additive measure_preserving_prod_sub_swap
       "The map `(x, y) ↦ (y, x - y)` sends `μ × ν` to `ν × μ`."]
 theorem measurePreservingProdDivSwap [IsMulRightInvariant μ] :
-    MeasurePreserving (fun z : G × G => (z.2, z.1 / z.2)) (μ.Prod ν) (ν.Prod μ) :=
+    MeasurePreserving (fun z : G × G => (z.2, z.1 / z.2)) (μ.prod ν) (ν.prod μ) :=
   (measurePreservingProdDiv ν μ).comp measurePreservingSwap
 #align measure_theory.measure_preserving_prod_div_swap MeasureTheory.measurePreservingProdDivSwap
 #align measure_theory.measure_preserving_prod_sub_swap MeasureTheory.measure_preserving_prod_sub_swap
@@ -438,8 +438,8 @@ theorem measurePreservingProdDivSwap [IsMulRightInvariant μ] :
 @[to_additive measure_preserving_sub_prod
       " The map `(x, y) ↦ (x - y, y)` preserves the measure `μ × ν`. "]
 theorem measurePreservingDivProd [IsMulRightInvariant μ] :
-    MeasurePreserving (fun z : G × G => (z.1 / z.2, z.2)) (μ.Prod ν) (μ.Prod ν) :=
-  measurePreservingSwap.comp <| by apply measure_preserving_prod_div_swap μ ν
+    MeasurePreserving (fun z : G × G => (z.1 / z.2, z.2)) (μ.prod ν) (μ.prod ν) :=
+  measurePreservingSwap.comp <| by apply measurePreservingProdDivSwap μ ν
 #align measure_theory.measure_preserving_div_prod MeasureTheory.measurePreservingDivProd
 #align measure_theory.measure_preserving_sub_prod MeasureTheory.measure_preserving_sub_prod
 
@@ -447,9 +447,9 @@ theorem measurePreservingDivProd [IsMulRightInvariant μ] :
 @[to_additive measure_preserving_add_prod_neg_right
       "The map `(x, y) ↦ (x + y, - x)` is measure-preserving."]
 theorem measurePreservingMulProdInvRight [IsMulRightInvariant μ] [IsMulRightInvariant ν] :
-    MeasurePreserving (fun z : G × G => (z.1 * z.2, z.1⁻¹)) (μ.Prod ν) (μ.Prod ν) :=
+    MeasurePreserving (fun z : G × G => (z.1 * z.2, z.1⁻¹)) (μ.prod ν) (μ.prod ν) :=
   by
-  convert (measure_preserving_prod_div_swap ν μ).comp (measure_preserving_prod_mul_swap_right μ ν)
+  convert (measurePreservingProdDivSwap ν μ).comp (measurePreservingProdMulSwapRight μ ν)
   ext1 ⟨x, y⟩
   simp_rw [Function.comp_apply, div_mul_eq_div_div_swap, div_self', one_div]
 #align measure_theory.measure_preserving_mul_prod_inv_right MeasureTheory.measurePreservingMulProdInvRight
@@ -467,8 +467,8 @@ theorem quasiMeasurePreservingInvOfRightInvariant [IsMulRightInvariant μ] :
   by
   rw [← μ.inv_inv]
   exact
-    (quasi_measure_preserving_inv μ.inv).mono (inv_absolutely_continuous μ.inv)
-      (absolutely_continuous_inv μ.inv)
+    (quasiMeasurePreservingInv μ.inv).mono (invAbsolutelyContinuous μ.inv)
+      (absolutelyContinuousInv μ.inv)
 #align measure_theory.quasi_measure_preserving_inv_of_right_invariant MeasureTheory.quasiMeasurePreservingInvOfRightInvariant
 #align measure_theory.quasi_measure_preserving_neg_of_right_invariant MeasureTheory.quasi_measure_preserving_neg_of_right_invariant
 
@@ -477,8 +477,7 @@ theorem quasiMeasurePreservingDivLeft [IsMulLeftInvariant μ] (g : G) :
     QuasiMeasurePreserving (fun h : G => g / h) μ μ :=
   by
   simp_rw [div_eq_mul_inv]
-  exact
-    (measure_preserving_mul_left μ g).QuasiMeasurePreserving.comp (quasi_measure_preserving_inv μ)
+  exact (measurePreservingMulLeft μ g).quasiMeasurePreserving.comp (quasiMeasurePreservingInv μ)
 #align measure_theory.quasi_measure_preserving_div_left MeasureTheory.quasiMeasurePreservingDivLeft
 #align measure_theory.quasi_measure_preserving_sub_left MeasureTheory.quasi_measure_preserving_sub_left
 
@@ -488,25 +487,25 @@ theorem quasiMeasurePreservingDivLeftOfRightInvariant [IsMulRightInvariant μ] (
   by
   rw [← μ.inv_inv]
   exact
-    (quasi_measure_preserving_div_left μ.inv g).mono (inv_absolutely_continuous μ.inv)
-      (absolutely_continuous_inv μ.inv)
+    (quasiMeasurePreservingDivLeft μ.inv g).mono (invAbsolutelyContinuous μ.inv)
+      (absolutelyContinuousInv μ.inv)
 #align measure_theory.quasi_measure_preserving_div_left_of_right_invariant MeasureTheory.quasiMeasurePreservingDivLeftOfRightInvariant
 #align measure_theory.quasi_measure_preserving_sub_left_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_left_of_right_invariant
 
 @[to_additive]
 theorem quasiMeasurePreservingDivOfRightInvariant [IsMulRightInvariant μ] :
-    QuasiMeasurePreserving (fun p : G × G => p.1 / p.2) (μ.Prod ν) μ :=
+    QuasiMeasurePreserving (fun p : G × G => p.1 / p.2) (μ.prod ν) μ :=
   by
-  refine' quasi_measure_preserving.prod_of_left measurable_div (eventually_of_forall fun y => _)
-  exact (measure_preserving_div_right μ y).QuasiMeasurePreserving
+  refine' QuasiMeasurePreserving.prodOfLeft measurable_div (eventually_of_forall fun y => _)
+  exact (measurePreservingDivRight μ y).quasiMeasurePreserving
 #align measure_theory.quasi_measure_preserving_div_of_right_invariant MeasureTheory.quasiMeasurePreservingDivOfRightInvariant
 #align measure_theory.quasi_measure_preserving_sub_of_right_invariant MeasureTheory.quasi_measure_preserving_sub_of_right_invariant
 
 @[to_additive]
 theorem quasiMeasurePreservingDiv [IsMulLeftInvariant μ] :
-    QuasiMeasurePreserving (fun p : G × G => p.1 / p.2) (μ.Prod ν) μ :=
+    QuasiMeasurePreserving (fun p : G × G => p.1 / p.2) (μ.prod ν) μ :=
   (quasiMeasurePreservingDivOfRightInvariant μ.inv ν).mono
-    ((absolutelyContinuousInv μ).Prod AbsolutelyContinuous.rfl) (invAbsolutelyContinuous μ)
+    ((absolutelyContinuousInv μ).prod AbsolutelyContinuous.rfl) (invAbsolutelyContinuous μ)
 #align measure_theory.quasi_measure_preserving_div MeasureTheory.quasiMeasurePreservingDiv
 #align measure_theory.quasi_measure_preserving_sub MeasureTheory.quasi_measure_preserving_sub
 
@@ -517,7 +516,7 @@ This should not be confused with `(measure_preserving_mul_right μ g).quasi_meas
 theorem quasiMeasurePreservingMulRight [IsMulLeftInvariant μ] (g : G) :
     QuasiMeasurePreserving (fun h : G => h * g) μ μ :=
   by
-  refine' ⟨measurable_mul_const g, absolutely_continuous.mk fun s hs => _⟩
+  refine' ⟨measurable_mul_const g, AbsolutelyContinuous.mk fun s hs => _⟩
   rw [map_apply (measurable_mul_const g) hs, measure_mul_right_null]; exact id
 #align measure_theory.quasi_measure_preserving_mul_right MeasureTheory.quasiMeasurePreservingMulRight
 #align measure_theory.quasi_measure_preserving_add_right MeasureTheory.quasi_measure_preserving_add_right
@@ -530,12 +529,12 @@ theorem quasiMeasurePreservingMulLeft [IsMulRightInvariant μ] (g : G) :
     QuasiMeasurePreserving (fun h : G => g * h) μ μ :=
   by
   have :=
-    (quasi_measure_preserving_mul_right μ.inv g⁻¹).mono (inv_absolutely_continuous μ.inv)
-      (absolutely_continuous_inv μ.inv)
+    (quasiMeasurePreservingMulRight μ.inv g⁻¹).mono (invAbsolutelyContinuous μ.inv)
+      (absolutelyContinuousInv μ.inv)
   rw [μ.inv_inv] at this
   have :=
-    (quasi_measure_preserving_inv_of_right_invariant μ).comp
-      (this.comp (quasi_measure_preserving_inv_of_right_invariant μ))
+    (quasiMeasurePreservingInvOfRightInvariant μ).comp
+      (this.comp (quasiMeasurePreservingInvOfRightInvariant μ))
   simp_rw [Function.comp, mul_inv_rev, inv_inv] at this
   exact this
 #align measure_theory.quasi_measure_preserving_mul_left MeasureTheory.quasiMeasurePreservingMulLeft

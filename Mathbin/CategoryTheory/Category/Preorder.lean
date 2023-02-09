@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.preorder
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,12 +71,12 @@ alias hom_of_le ← _root_.has_le.le.hom
 #align has_le.le.hom LE.le.hom
 
 @[simp]
-theorem hom_of_le_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
+theorem hom_of_le_refl {x : X} : (le_refl x).hom = 𝟙 x :=
   rfl
 #align category_theory.hom_of_le_refl CategoryTheory.hom_of_le_refl
 
 @[simp]
-theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom = (h.trans k).Hom :=
+theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.hom ≫ k.hom = (h.trans k).hom :=
   rfl
 #align category_theory.hom_of_le_comp CategoryTheory.hom_of_le_comp
 
@@ -90,12 +90,12 @@ alias le_of_hom ← _root_.quiver.hom.le
 #align quiver.hom.le Quiver.Hom.le
 
 @[simp]
-theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.Hom.le = h :=
+theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.hom.le = h :=
   rfl
 #align category_theory.le_of_hom_hom_of_le CategoryTheory.le_of_hom_hom_of_le
 
 @[simp]
-theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
+theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.hom = h :=
   by
   cases h
   cases h
@@ -104,7 +104,7 @@ theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
 
 /-- Construct a morphism in the opposite of a preorder category from an inequality. -/
 def opHomOfLe {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
-  h.Hom.op
+  h.hom.op
 #align category_theory.op_hom_of_le CategoryTheory.opHomOfLe
 
 theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
@@ -128,11 +128,11 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y
     where
   obj := f
-  map x₁ x₂ g := (h g.le).Hom
+  map x₁ x₂ g := (h g.le).hom
 #align monotone.functor Monotone.functor
 
 @[simp]
-theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f :=
+theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.functor.obj = f :=
   rfl
 #align monotone.functor_obj Monotone.functor_obj
 
@@ -147,7 +147,7 @@ variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 /-- A functor between preorder categories is monotone.
 -/
 @[mono]
-theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.Hom).le
+theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.hom).le
 #align category_theory.functor.monotone CategoryTheory.Functor.monotone
 
 end Preorder
@@ -157,27 +157,27 @@ section PartialOrder
 variable {X : Type u} {Y : Type v} [PartialOrder X] [PartialOrder Y]
 
 theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
-  le_antisymm f.Hom.le f.inv.le
+  le_antisymm f.hom.le f.inv.le
 #align category_theory.iso.to_eq CategoryTheory.Iso.to_eq
 
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
 def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y
     where
-  toFun := e.Functor.obj
+  toFun := e.functor.obj
   invFun := e.inverse.obj
   left_inv a := (e.unitIso.app a).to_eq.symm
   right_inv b := (e.counitIso.app b).to_eq
   map_rel_iff' a a' :=
     ⟨fun h =>
-      ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le,
-      fun h : a ≤ a' => (e.Functor.map h.Hom).le⟩
+      ((Equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (Equivalence.unitInv e).app a').le,
+      fun h : a ≤ a' => (e.functor.map h.hom).le⟩
 #align category_theory.equivalence.to_order_iso CategoryTheory.Equivalence.toOrderIso
 
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
 -- so we provide them by hand:
 @[simp]
-theorem Equivalence.toOrderIso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.Functor.obj x :=
+theorem Equivalence.toOrderIso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.functor.obj x :=
   rfl
 #align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.toOrderIso_apply
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.free.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,7 @@ instance : MonoidalCategory (F C)
   tensorHom X₁ Y₁ X₂ Y₂ :=
     Quotient.map₂ Hom.tensor <| by
       intro _ _ h _ _ h'
-      exact hom_equiv.tensor h h'
+      exact HomEquiv.tensor h h'
   tensor_id' X Y := Quotient.sound tensor_id
   tensor_comp' X₁ Y₁ Z₁ X₂ Y₂ Z₂ := by
     rintro ⟨f₁⟩ ⟨f₂⟩ ⟨g₁⟩ ⟨g₂⟩
@@ -212,7 +212,7 @@ theorem mk'_id {X : F C} : ⟦Hom.id X⟧ = 𝟙 X :=
 #align category_theory.free_monoidal_category.mk_id CategoryTheory.FreeMonoidalCategory.mk'_id
 
 @[simp]
-theorem mk'_α_hom {X Y Z : F C} : ⟦Hom.α_hom X Y Z⟧ = (α_ X Y Z).Hom :=
+theorem mk'_α_hom {X Y Z : F C} : ⟦Hom.α_hom X Y Z⟧ = (α_ X Y Z).hom :=
   rfl
 #align category_theory.free_monoidal_category.mk_α_hom CategoryTheory.FreeMonoidalCategory.mk'_α_hom
 
@@ -222,7 +222,7 @@ theorem mk'_α_inv {X Y Z : F C} : ⟦Hom.α_inv X Y Z⟧ = (α_ X Y Z).inv :=
 #align category_theory.free_monoidal_category.mk_α_inv CategoryTheory.FreeMonoidalCategory.mk'_α_inv
 
 @[simp]
-theorem mk'_ρ_hom {X : F C} : ⟦Hom.ρ_hom X⟧ = (ρ_ X).Hom :=
+theorem mk'_ρ_hom {X : F C} : ⟦Hom.ρ_hom X⟧ = (ρ_ X).hom :=
   rfl
 #align category_theory.free_monoidal_category.mk_ρ_hom CategoryTheory.FreeMonoidalCategory.mk'_ρ_hom
 
@@ -232,7 +232,7 @@ theorem mk'_ρ_inv {X : F C} : ⟦Hom.ρ_inv X⟧ = (ρ_ X).inv :=
 #align category_theory.free_monoidal_category.mk_ρ_inv CategoryTheory.FreeMonoidalCategory.mk'_ρ_inv
 
 @[simp]
-theorem mk'_l_hom {X : F C} : ⟦Hom.l_hom X⟧ = (λ_ X).Hom :=
+theorem mk'_l_hom {X : F C} : ⟦Hom.l_hom X⟧ = (λ_ X).hom :=
   rfl
 #align category_theory.free_monoidal_category.mk_l_hom CategoryTheory.FreeMonoidalCategory.mk'_l_hom
 
@@ -285,11 +285,11 @@ Case conversion may be inaccurate. Consider using '#align category_theory.free_m
 @[simp]
 def projectMapAux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (projectObj f X ⟶ projectObj f Y)
   | _, _, id _ => 𝟙 _
-  | _, _, α_hom _ _ _ => (α_ _ _ _).Hom
+  | _, _, α_hom _ _ _ => (α_ _ _ _).hom
   | _, _, α_inv _ _ _ => (α_ _ _ _).inv
-  | _, _, l_hom _ => (λ_ _).Hom
+  | _, _, l_hom _ => (λ_ _).hom
   | _, _, l_inv _ => (λ_ _).inv
-  | _, _, ρ_hom _ => (ρ_ _).Hom
+  | _, _, ρ_hom _ => (ρ_ _).hom
   | _, _, ρ_inv _ => (ρ_ _).inv
   | _, _, comp f g => project_map_aux f ≫ project_map_aux g
   | _, _, hom.tensor f g => project_map_aux f ⊗ project_map_aux g
@@ -305,31 +305,31 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :
       · rfl
       · exact hfg'.symm
       · exact hfg.trans hgh
-      · simp only [project_map_aux, hf, hg]
-      · simp only [project_map_aux, hfg, hfg']
-      · simp only [project_map_aux, category.comp_id]
-      · simp only [project_map_aux, category.id_comp]
-      · simp only [project_map_aux, category.assoc]
-      · simp only [project_map_aux, monoidal_category.tensor_id]
+      · simp only [projectMapAux, hf, hg]
+      · simp only [projectMapAux, hfg, hfg']
+      · simp only [projectMapAux, Category.comp_id]
+      · simp only [projectMapAux, Category.id_comp]
+      · simp only [projectMapAux, Category.assoc]
+      · simp only [projectMapAux, MonoidalCategory.tensor_id]
         rfl
-      · simp only [project_map_aux, monoidal_category.tensor_comp]
-      · simp only [project_map_aux, iso.hom_inv_id]
-      · simp only [project_map_aux, iso.inv_hom_id]
-      · simp only [project_map_aux, monoidal_category.associator_naturality]
-      · simp only [project_map_aux, iso.hom_inv_id]
-      · simp only [project_map_aux, iso.inv_hom_id]
-      · simp only [project_map_aux]
-        dsimp [project_obj]
-        exact monoidal_category.right_unitor_naturality _
-      · simp only [project_map_aux, iso.hom_inv_id]
-      · simp only [project_map_aux, iso.inv_hom_id]
-      · simp only [project_map_aux]
-        dsimp [project_obj]
-        exact monoidal_category.left_unitor_naturality _
-      · simp only [project_map_aux]
-        exact monoidal_category.pentagon _ _ _ _
-      · simp only [project_map_aux]
-        exact monoidal_category.triangle _ _)
+      · simp only [projectMapAux, MonoidalCategory.tensor_comp]
+      · simp only [projectMapAux, Iso.hom_inv_id]
+      · simp only [projectMapAux, Iso.inv_hom_id]
+      · simp only [projectMapAux, MonoidalCategory.associator_naturality]
+      · simp only [projectMapAux, Iso.hom_inv_id]
+      · simp only [projectMapAux, Iso.inv_hom_id]
+      · simp only [projectMapAux]
+        dsimp [projectObj]
+        exact MonoidalCategory.rightUnitor_naturality _
+      · simp only [projectMapAux, Iso.hom_inv_id]
+      · simp only [projectMapAux, Iso.inv_hom_id]
+      · simp only [projectMapAux]
+        dsimp [projectObj]
+        exact MonoidalCategory.leftUnitor_naturality _
+      · simp only [projectMapAux]
+        exact MonoidalCategory.pentagon _ _ _ _
+      · simp only [projectMapAux]
+        exact MonoidalCategory.triangle _ _)
 #align category_theory.free_monoidal_category.project_map CategoryTheory.FreeMonoidalCategory.projectMap
 
 end

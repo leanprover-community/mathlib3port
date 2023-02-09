@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.invariants
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem mul_average_left (g : G) :
     (Finsupp.single g 1 * average k G : MonoidAlgebra k G) = average k G :=
   by
   simp only [mul_one, Finset.mul_sum, Algebra.mul_smul_comm, average, MonoidAlgebra.of_apply,
-    Finset.sum_congr, MonoidAlgebra.single_mul_single]
+    finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mulLeft_bijective g) _]
@@ -61,7 +61,7 @@ theorem mul_average_left (g : G) :
 theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k G :=
   by
   simp only [mul_one, Finset.sum_mul, Algebra.smul_mul_assoc, average, MonoidAlgebra.of_apply,
-    Finset.sum_congr, MonoidAlgebra.single_mul_single]
+    finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
   show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mulRight_bijective g) _]
@@ -111,7 +111,7 @@ noncomputable def averageMap : V →ₗ[k] V :=
 /-- The `average_map` sends elements of `V` to the subspace of invariants.
 -/
 theorem averageMap_invariant (v : V) : averageMap ρ v ∈ invariants ρ := fun g => by
-  rw [average_map, ← as_algebra_hom_single_one, ← LinearMap.mul_apply, ← map_mul (as_algebra_hom ρ),
+  rw [averageMap, ← asAlgebraHom_single_one, ← LinearMap.mul_apply, ← map_mul (asAlgebraHom ρ),
     mul_average_left]
 #align representation.average_map_invariant Representation.averageMap_invariant
 
@@ -139,13 +139,13 @@ section Rep
 
 variable {k : Type u} [CommRing k] {G : GroupCat.{u}}
 
-theorem mem_invariants_iff_comm {X Y : Rep k G} (f : X.V →ₗ[k] Y.V) (g : G) :
+theorem mem_invariants_iff_comm {X Y : Rep k G} (f : X.v →ₗ[k] Y.v) (g : G) :
     (linHom X.ρ Y.ρ) g f = f ↔ f.comp (X.ρ g) = (Y.ρ g).comp f :=
   by
   dsimp
-  erw [← ρ_Aut_apply_inv]
-  rw [← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def, iso.inv_comp_eq,
-    ρ_Aut_apply_hom]
+  erw [← ρAut_apply_inv]
+  rw [← LinearMap.comp_assoc, ← ModuleCat.comp_def, ← ModuleCat.comp_def, Iso.inv_comp_eq,
+    ρAut_apply_hom]
   exact comm
 #align representation.lin_hom.mem_invariants_iff_comm Representation.linHom.mem_invariants_iff_comm
 
@@ -177,7 +177,7 @@ homomorphisms from `X` to `Y` -/
 def invariantsEquivFdRepHom (X Y : FdRep k G) : (linHom X.ρ Y.ρ).invariants ≃ₗ[k] X ⟶ Y :=
   by
   rw [← FdRep.forget₂_ρ, ← FdRep.forget₂_ρ]
-  exact lin_hom.invariants_equiv_Rep_hom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
+  exact linHom.invariantsEquivRepHom _ _ ≪≫ₗ FdRep.forget₂HomLinearEquiv X Y
 #align representation.lin_hom.invariants_equiv_fdRep_hom Representation.linHom.invariantsEquivFdRepHom
 
 end FdRep

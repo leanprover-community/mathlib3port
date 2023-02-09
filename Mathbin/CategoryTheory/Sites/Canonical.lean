@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.canonical
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,30 +69,30 @@ theorem isSheafFor_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y⦄ 
     Presieve.IsSheafFor P (Sieve.bind U B) :=
   by
   intro s hs
-  let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), presieve.family_of_elements P (B hf) := fun Y f hf Z g hg =>
-    s _ (presieve.bind_comp _ _ hg)
+  let y : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), Presieve.FamilyOfElements P (B hf) := fun Y f hf Z g hg =>
+    s _ (Presieve.bind_comp _ _ hg)
   have hy : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).Compatible :=
     by
     intro Y f H Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
     apply hs
     apply reassoc_of comm
-  let t : presieve.family_of_elements P U := fun Y f hf => (hB hf).amalgamate (y hf) (hy hf)
+  let t : Presieve.FamilyOfElements P U := fun Y f hf => (hB hf).amalgamate (y hf) (hy hf)
   have ht : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : U f), (y hf).IsAmalgamation (t f hf) := fun Y f hf =>
-    (hB hf).IsAmalgamation _
+    (hB hf).isAmalgamation _
   have hT : t.compatible := by
-    rw [presieve.compatible_iff_sieve_compatible]
+    rw [Presieve.compatible_iff_sieveCompatible]
     intro Z W f h hf
-    apply (hB (U.downward_closed hf h)).IsSeparatedFor.ext
+    apply (hB (U.downward_closed hf h)).isSeparatedFor.ext
     intro Y l hl
     apply (hB' hf (l ≫ h)).ext
     intro M m hm
     have : bind U B (m ≫ l ≫ h ≫ f) :=
       by
-      have : bind U B _ := presieve.bind_comp f hf hm
+      have : bind U B _ := Presieve.bind_comp f hf hm
       simpa using this
     trans s (m ≫ l ≫ h ≫ f) this
     · have := ht (U.downward_closed hf h) _ ((B _).downward_closed hl m)
-      rw [op_comp, functor_to_types.map_comp_apply] at this
+      rw [op_comp, FunctorToTypes.map_comp_apply] at this
       rw [this]
       change s _ _ = s _ _
       simp
@@ -102,14 +102,14 @@ theorem isSheafFor_bind (P : Cᵒᵖ ⥤ Type v) (U : Sieve X) (B : ∀ ⦃Y⦄ 
       simp
   refine' ⟨hU.amalgamate t hT, _, _⟩
   · rintro Z _ ⟨Y, f, g, hg, hf, rfl⟩
-    rw [op_comp, functor_to_types.map_comp_apply, presieve.is_sheaf_for.valid_glue _ _ _ hg]
+    rw [op_comp, FunctorToTypes.map_comp_apply, Presieve.IsSheafFor.valid_glue _ _ _ hg]
     apply ht hg _ hf
   · intro y hy
     apply hU.is_separated_for.ext
     intro Y f hf
-    apply (hB hf).IsSeparatedFor.ext
+    apply (hB hf).isSeparatedFor.ext
     intro Z g hg
-    rw [← functor_to_types.map_comp_apply, ← op_comp, hy _ (presieve.bind_comp _ _ hg),
+    rw [← FunctorToTypes.map_comp_apply, ← op_comp, hy _ (Presieve.bind_comp _ _ hg),
       hU.valid_glue _ _ hf, ht hf _ hg]
 #align category_theory.sheaf.is_sheaf_for_bind CategoryTheory.Sheaf.isSheafFor_bind
 
@@ -127,18 +127,18 @@ theorem isSheafFor_trans (P : Cᵒᵖ ⥤ Type v) (R S : Sieve X) (hR : Presieve
     (hS : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : R f), Presieve.IsSheafFor P (S.pullback f)) :
     Presieve.IsSheafFor P S :=
   by
-  have : (bind R fun Y f hf => S.pullback f : presieve X) ≤ S :=
+  have : (bind R fun Y f hf => S.pullback f : Presieve X) ≤ S :=
     by
     rintro Z f ⟨W, f, g, hg, hf : S _, rfl⟩
     apply hf
-  apply presieve.is_sheaf_for_subsieve_aux P this
-  apply is_sheaf_for_bind _ _ _ hR hS
+  apply Presieve.isSheafFor_subsieve_aux P this
+  apply isSheafFor_bind _ _ _ hR hS
   · intro Y f hf Z g
     dsimp
     rw [← pullback_comp]
-    apply (hS (R.downward_closed hf _)).IsSeparatedFor
+    apply (hS (R.downward_closed hf _)).isSeparatedFor
   · intro Y f hf
-    have : sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f :=
+    have : Sieve.pullback f (bind R fun T (k : T ⟶ X) (hf : R k) => pullback k S) = R.pullback f :=
       by
       ext (Z g)
       constructor
@@ -161,8 +161,8 @@ def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C
     where
   sieves X S := ∀ (Y) (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f)
   top_mem' X Y f := by
-    rw [sieve.pullback_top]
-    exact presieve.is_sheaf_for_top_sieve P
+    rw [Sieve.pullback_top]
+    exact Presieve.isSheafFor_top_sieve P
   pullback_stable' X Y S f hS Z g := by
     rw [← pullback_comp]
     apply hS
@@ -170,10 +170,10 @@ def finestTopologySingle (P : Cᵒᵖ ⥤ Type v) : GrothendieckTopology C
     by
     -- This is the hard part of the construction, showing that the given set of sieves satisfies
     -- the transitivity axiom.
-    refine' is_sheaf_for_trans P (pullback g S) _ (hS Z g) _ _
+    refine' isSheafFor_trans P (pullback g S) _ (hS Z g) _ _
     · intro Y f hf
       rw [← pullback_comp]
-      apply (hS _ _).IsSeparatedFor
+      apply (hS _ _).isSeparatedFor
     · intro Y f hf
       have := hR hf _ (𝟙 _)
       rw [pullback_id, pullback_comp] at this

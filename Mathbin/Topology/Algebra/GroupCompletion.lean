@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.group_completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,19 +269,19 @@ def AddMonoidHom.completion (f : α →+ β) (hf : Continuous f) : Completion α
 
 @[continuity]
 theorem AddMonoidHom.continuous_completion (f : α →+ β) (hf : Continuous f) :
-    Continuous (f.Completion hf : Completion α → Completion β) :=
+    Continuous (f.completion hf : Completion α → Completion β) :=
   continuous_map
 #align add_monoid_hom.continuous_completion AddMonoidHom.continuous_completion
 
 theorem AddMonoidHom.completion_coe (f : α →+ β) (hf : Continuous f) (a : α) :
-    f.Completion hf a = f a :=
+    f.completion hf a = f a :=
   map_coe (uniform_continuous_add_monoid_hom_of_continuous hf) a
 #align add_monoid_hom.completion_coe AddMonoidHom.completion_coe
 
-theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_const = 0 :=
+theorem AddMonoidHom.completion_zero : (0 : α →+ β).completion continuous_const = 0 :=
   by
   ext x
-  apply completion.induction_on x
+  apply Completion.induction_on x
   · apply isClosed_eq ((0 : α →+ β).continuous_completion continuous_const)
     simp [continuous_const]
   · intro a
@@ -290,11 +290,11 @@ theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_co
 
 theorem AddMonoidHom.completion_add {γ : Type _} [AddCommGroup γ] [UniformSpace γ]
     [UniformAddGroup γ] (f g : α →+ γ) (hf : Continuous f) (hg : Continuous g) :
-    (f + g).Completion (hf.add hg) = f.Completion hf + g.Completion hg :=
+    (f + g).completion (hf.add hg) = f.completion hf + g.completion hg :=
   by
   have hfg := hf.add hg
   ext x
-  apply completion.induction_on x
+  apply Completion.induction_on x
   ·
     exact
       isClosed_eq ((f + g).continuous_completion hfg)

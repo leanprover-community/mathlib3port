@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.adapted
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem Filtration.adapted_natural [MetrizableSpace β] [mβ : MeasurableSpace �
     {u : ι → Ω → β} (hum : ∀ i, strongly_measurable[m] (u i)) :
     Adapted (Filtration.natural u hum) u := by
   intro i
-  refine' strongly_measurable.mono _ (le_supᵢ₂_of_le i (le_refl i) le_rfl)
+  refine' StronglyMeasurable.mono _ (le_supᵢ₂_of_le i (le_refl i) le_rfl)
   rw [stronglyMeasurable_iff_measurable_separable]
   exact ⟨measurable_iff_comap_le.2 le_rfl, (hum i).isSeparable_range⟩
 #align measure_theory.filtration.adapted_natural MeasureTheory.Filtration.adapted_natural
@@ -117,12 +117,12 @@ measurable with respect to a filtration `f` if at each point in time `i`, `u` re
 The usual definition uses the interval `[0,i]`, which we replace by `set.Iic i`. We recover the
 usual definition for index types `ℝ≥0` or `ℕ`. -/
 def ProgMeasurable [MeasurableSpace ι] (f : Filtration ι m) (u : ι → Ω → β) : Prop :=
-  ∀ i, strongly_measurable[Subtype.measurableSpace.Prod (f i)] fun p : Set.Iic i × Ω => u p.1 p.2
+  ∀ i, strongly_measurable[Subtype.measurableSpace.prod (f i)] fun p : Set.Iic i × Ω => u p.1 p.2
 #align measure_theory.prog_measurable MeasureTheory.ProgMeasurable
 
 theorem progMeasurable_const [MeasurableSpace ι] (f : Filtration ι m) (b : β) :
     ProgMeasurable f (fun _ _ => b : ι → Ω → β) := fun i =>
-  @stronglyMeasurable_const _ _ (Subtype.measurableSpace.Prod (f i)) _ _
+  @stronglyMeasurable_const _ _ (Subtype.measurableSpace.prod (f i)) _ _
 #align measure_theory.prog_measurable_const MeasureTheory.progMeasurable_const
 
 namespace ProgMeasurable
@@ -135,7 +135,7 @@ protected theorem adapted (h : ProgMeasurable f u) : Adapted f u :=
   have : u i = (fun p : Set.Iic i × Ω => u p.1 p.2) ∘ fun x => (⟨i, set.mem_Iic.mpr le_rfl⟩, x) :=
     rfl
   rw [this]
-  exact (h i).compMeasurable measurable_prod_mk_left
+  exact (h i).comp_measurable measurable_prod_mk_left
 #align measure_theory.prog_measurable.adapted MeasureTheory.ProgMeasurable.adapted
 
 protected theorem comp {t : ι → Ω → ι} [TopologicalSpace ι] [BorelSpace ι] [MetrizableSpace ι]
@@ -149,7 +149,7 @@ protected theorem comp {t : ι → Ω → ι} [TopologicalSpace ι] [BorelSpace 
         (⟨t (p.fst : ι) p.snd, set.mem_Iic.mpr ((ht_le _ _).trans p.fst.prop)⟩, p.snd) :=
     rfl
   rw [this]
-  exact (h i).compMeasurable ((ht i).Measurable.subtype_mk.prod_mk measurable_snd)
+  exact (h i).comp_measurable ((ht i).measurable.subtype_mk.prod_mk measurable_snd)
 #align measure_theory.prog_measurable.comp MeasureTheory.ProgMeasurable.comp
 
 section Arithmetic
@@ -174,7 +174,7 @@ protected theorem finset_prod {γ} [CommMonoid β] [HasContinuousMul β] {U : γ
     {s : Finset γ} (h : ∀ c ∈ s, ProgMeasurable f (U c)) :
     ProgMeasurable f fun i a => ∏ c in s, U c i a :=
   by
-  convert prog_measurable.finset_prod' h
+  convert ProgMeasurable.finset_prod' h
   ext (i a)
   simp only [Finset.prod_apply]
 #align measure_theory.prog_measurable.finset_prod MeasureTheory.ProgMeasurable.finset_prod
@@ -198,18 +198,18 @@ end Arithmetic
 end ProgMeasurable
 
 theorem progMeasurable_of_tendsto' {γ} [MeasurableSpace ι] [PseudoMetrizableSpace β]
-    (fltr : Filter γ) [fltr.ne_bot] [fltr.IsCountablyGenerated] {U : γ → ι → Ω → β}
+    (fltr : Filter γ) [fltr.NeBot] [fltr.IsCountablyGenerated] {U : γ → ι → Ω → β}
     (h : ∀ l, ProgMeasurable f (U l)) (h_tendsto : Tendsto U fltr (𝓝 u)) : ProgMeasurable f u :=
   by
   intro i
   apply
-    @stronglyMeasurable_of_tendsto (Set.Iic i × Ω) β γ (MeasurableSpace.prod _ (f i)) _ _ fltr _ _ _
-      _ fun l => h l i
+    @strongly_measurable_of_tendsto (Set.Iic i × Ω) β γ (MeasurableSpace.prod _ (f i)) _ _ fltr _ _
+      _ _ fun l => h l i
   rw [tendsto_pi_nhds] at h_tendsto⊢
   intro x
   specialize h_tendsto x.fst
   rw [tendsto_nhds] at h_tendsto⊢
-  exact fun s hs h_mem => h_tendsto { g | g x.snd ∈ s } (hs.Preimage (continuous_apply x.snd)) h_mem
+  exact fun s hs h_mem => h_tendsto { g | g x.snd ∈ s } (hs.preimage (continuous_apply x.snd)) h_mem
 #align measure_theory.prog_measurable_of_tendsto' MeasureTheory.progMeasurable_of_tendsto'
 
 theorem progMeasurable_of_tendsto [MeasurableSpace ι] [PseudoMetrizableSpace β] {U : ℕ → ι → Ω → β}
@@ -223,7 +223,7 @@ theorem Adapted.progMeasurable_of_continuous [TopologicalSpace ι] [MetrizableSp
     [PseudoMetrizableSpace β] (h : Adapted f u) (hu_cont : ∀ ω, Continuous fun i => u i ω) :
     ProgMeasurable f u := fun i =>
   @stronglyMeasurable_uncurry_of_continuous_of_stronglyMeasurable _ _ (Set.Iic i) _ _ _ _ _ _ _
-    (f i) _ (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.Prop)
+    (f i) _ (fun ω => (hu_cont ω).comp continuous_induced_dom) fun j => (h j).mono (f.mono j.prop)
 #align measure_theory.adapted.prog_measurable_of_continuous MeasureTheory.Adapted.progMeasurable_of_continuous
 
 /-- For filtrations indexed by a discrete order, `adapted` and `prog_measurable` are equivalent.

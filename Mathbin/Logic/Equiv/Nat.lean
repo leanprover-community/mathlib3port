@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.nat
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,8 +36,8 @@ def boolProdNatEquivNat : Bool × ℕ ≃ ℕ
     where
   toFun := uncurry bit
   invFun := boddDiv2
-  left_inv := fun ⟨b, n⟩ => by simp only [bodd_bit, div2_bit, uncurry_apply_pair, bodd_div2_eq]
-  right_inv n := by simp only [bit_decomp, bodd_div2_eq, uncurry_apply_pair]
+  left_inv := fun ⟨b, n⟩ => by simp only [bodd_bit, div2_bit, uncurry_apply_pair, boddDiv2_eq]
+  right_inv n := by simp only [bit_decomp, boddDiv2_eq, uncurry_apply_pair]
 #align equiv.bool_prod_nat_equiv_nat Equiv.boolProdNatEquivNat
 -/
 

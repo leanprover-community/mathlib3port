@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Yury Kudryashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.max
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -227,13 +227,13 @@ theorem noTopOrder_iff_noMaxOrder (α : Type _) [LinearOrder α] : NoTopOrder α
 
 #print NoMinOrder.not_acc /-
 theorem NoMinOrder.not_acc [LT α] [NoMinOrder α] (a : α) : ¬Acc (· < ·) a := fun h =>
-  Acc.recOn h fun x _ => (exists_lt x).recOn
+  Acc.recOn h fun x _ => (exists_lt x).rec_on
 #align no_min_order.not_acc NoMinOrder.not_acc
 -/
 
 #print NoMaxOrder.not_acc /-
 theorem NoMaxOrder.not_acc [LT α] [NoMaxOrder α] (a : α) : ¬Acc (· > ·) a := fun h =>
-  Acc.recOn h fun x _ => (exists_gt x).recOn
+  Acc.recOn h fun x _ => (exists_gt x).rec_on
 #align no_max_order.not_acc NoMaxOrder.not_acc
 -/
 
@@ -495,13 +495,13 @@ protected theorem isTop (a : α) : IsTop a := fun _ => (Subsingleton.elim _ _).l
 
 #print Subsingleton.isMin /-
 protected theorem isMin (a : α) : IsMin a :=
-  (Subsingleton.isBot _).IsMin
+  (Subsingleton.isBot _).isMin
 #align subsingleton.is_min Subsingleton.isMin
 -/
 
 #print Subsingleton.isMax /-
 protected theorem isMax (a : α) : IsMax a :=
-  (Subsingleton.isTop _).IsMax
+  (Subsingleton.isTop _).isMax
 #align subsingleton.is_max Subsingleton.isMax
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,14 +179,14 @@ theorem mem_supp {α : TypeVec n} (x : F α) (i) (u : α i) :
   by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have : liftp (fun i u => u ∈ f i '' univ) x :=
+    have : LiftP (fun i u => u ∈ f i '' univ) x :=
       by
-      rw [liftp_iff]
+      rw [liftP_iff]
       refine' ⟨a, f, haf.symm, _⟩
       intro i u
       exact mem_image_of_mem _ (mem_univ _)
     exact h this
-  intro h p; rw [liftp_iff]
+  intro h p; rw [liftP_iff]
   rintro ⟨a, f, xeq, h'⟩
   rcases h a f xeq.symm with ⟨i, _, hi⟩
   rw [← hi]; apply h'
@@ -202,18 +202,18 @@ theorem has_good_supp_iff {α : TypeVec n} (x : F α) :
   by
   constructor
   · intro h
-    have : liftp (supp x) x := by
+    have : LiftP (supp x) x := by
       rw [h]
       introv
       exact id
-    rw [liftp_iff] at this
+    rw [liftP_iff] at this
     rcases this with ⟨a, f, xeq, h'⟩
     refine' ⟨a, f, xeq.symm, _⟩
     intro a' f' h''
     rintro hu u ⟨j, h₂, hfi⟩
     have hh : u ∈ supp x a' := by rw [← hfi] <;> apply h'
     refine' (mem_supp x _ u).mp hh _ _ hu
-  rintro ⟨a, f, xeq, h⟩ p; rw [liftp_iff]; constructor
+  rintro ⟨a, f, xeq, h⟩ p; rw [liftP_iff]; constructor
   · rintro ⟨a', f', xeq', h'⟩ i u usuppx
     rcases(mem_supp x _ u).mp (@usuppx) a' f' xeq'.symm with ⟨i, _, f'ieq⟩
     rw [← f'ieq]
@@ -231,7 +231,7 @@ variable (q)
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
 def IsUniform : Prop :=
-  ∀ ⦃α : TypeVec n⦄ (a a' : q.p.A) (f : q.p.B a ⟹ α) (f' : q.p.B a' ⟹ α),
+  ∀ ⦃α : TypeVec n⦄ (a a' : q.p.A) (f : q.p.b a ⟹ α) (f' : q.p.b a' ⟹ α),
     abs ⟨a, f⟩ = abs ⟨a', f'⟩ → ∀ i, f i '' univ = f' i '' univ
 #align mvqpf.is_uniform Mvqpf.IsUniform
 
@@ -247,7 +247,7 @@ def SuppPreservation : Prop :=
 
 variable (q)
 
-theorem supp_eq_of_isUniform (h : q.IsUniform) {α : TypeVec n} (a : q.p.A) (f : q.p.B a ⟹ α) :
+theorem supp_eq_of_isUniform (h : q.IsUniform) {α : TypeVec n} (a : q.p.A) (f : q.p.b a ⟹ α) :
     ∀ i, supp (abs ⟨a, f⟩) i = f i '' univ := by
   intro ; ext u; rw [mem_supp]; constructor
   · intro h'
@@ -259,16 +259,16 @@ theorem supp_eq_of_isUniform (h : q.IsUniform) {α : TypeVec n} (a : q.p.A) (f :
 theorem liftP_iff_of_isUniform (h : q.IsUniform) {α : TypeVec n} (x : F α) (p : ∀ i, α i → Prop) :
     LiftP p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u :=
   by
-  rw [liftp_iff, ← abs_repr x]
+  rw [liftP_iff, ← abs_repr x]
   cases' repr x with a f; constructor
   · rintro ⟨a', f', abseq, hf⟩ u
-    rw [supp_eq_of_is_uniform h, h _ _ _ _ abseq]
+    rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
     rintro b ⟨i, _, hi⟩
     rw [← hi]
     apply hf
   intro h'
   refine' ⟨a, f, rfl, fun _ i => h' _ _ _⟩
-  rw [supp_eq_of_is_uniform h]
+  rw [supp_eq_of_isUniform h]
   exact ⟨i, mem_univ i, rfl⟩
 #align mvqpf.liftp_iff_of_is_uniform Mvqpf.liftP_iff_of_isUniform
 
@@ -276,7 +276,7 @@ theorem supp_map (h : q.IsUniform) {α β : TypeVec n} (g : α ⟹ β) (x : F α
     supp (g <$$> x) i = g i '' supp x i :=
   by
   rw [← abs_repr x]; cases' repr x with a f; rw [← abs_map, Mvpfunctor.map_eq]
-  rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, ← image_comp]
+  rw [supp_eq_of_isUniform h, supp_eq_of_isUniform h, ← image_comp]
   rfl
 #align mvqpf.supp_map Mvqpf.supp_map
 
@@ -287,7 +287,7 @@ theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
     rw [← Mvpfunctor.supp_eq, ← Mvpfunctor.supp_eq, ← h, h', h]
   · rintro h α ⟨a, f⟩
     ext
-    rwa [supp_eq_of_is_uniform, Mvpfunctor.supp_eq]
+    rwa [supp_eq_of_isUniform, Mvpfunctor.supp_eq]
 #align mvqpf.supp_preservation_iff_uniform Mvqpf.suppPreservation_iff_uniform
 
 theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpPreservation :=
@@ -295,19 +295,19 @@ theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpP
   constructor <;> intro h
   · rintro α p ⟨a, f⟩
     have h' := h
-    rw [supp_preservation_iff_uniform] at h'
-    dsimp only [supp_preservation, supp] at h
-    simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Mvpfunctor.liftP_iff', h',
-      image_univ, mem_range, exists_imp]
+    rw [suppPreservation_iff_uniform] at h'
+    dsimp only [SuppPreservation, supp] at h
+    simp only [liftP_iff_of_isUniform, supp_eq_of_isUniform, Mvpfunctor.liftP_iff', h', image_univ,
+      mem_range, exists_imp]
     constructor <;> intros <;> subst_vars <;> solve_by_elim
   · rintro α ⟨a, f⟩
-    simp only [liftp_preservation] at h
+    simp only [LiftpPreservation] at h
     ext
     simp [supp, h]
 #align mvqpf.supp_preservation_iff_liftp_preservation Mvqpf.suppPreservation_iff_liftpPreservation
 
 theorem liftpPreservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by
-  rw [← supp_preservation_iff_liftp_preservation, supp_preservation_iff_uniform]
+  rw [← suppPreservation_iff_liftpPreservation, suppPreservation_iff_uniform]
 #align mvqpf.liftp_preservation_iff_uniform Mvqpf.liftpPreservation_iff_uniform
 
 end Mvqpf

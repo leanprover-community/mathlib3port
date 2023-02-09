@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.eilenberg_moore
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,22 +38,22 @@ instance Monad.algebraPreadditive : Preadditive (Monad.Algebra T)
   homGroup F G :=
     { add := fun α β =>
         { f := α.f + β.f
-          h' := by simp only [functor.map_add, add_comp, monad.algebra.hom.h, comp_add] }
+          h' := by simp only [Functor.map_add, add_comp, Monad.Algebra.Hom.h, comp_add] }
       zero :=
         { f := 0
-          h' := by simp only [functor.map_zero, zero_comp, comp_zero] }
+          h' := by simp only [Functor.map_zero, zero_comp, comp_zero] }
       nsmul := fun n α =>
         { f := n • α.f
-          h' := by rw [functor.map_nsmul, nsmul_comp, monad.algebra.hom.h, comp_nsmul] }
+          h' := by rw [Functor.map_nsmul, nsmul_comp, Monad.Algebra.Hom.h, comp_nsmul] }
       neg := fun α =>
         { f := -α.f
-          h' := by simp only [functor.map_neg, neg_comp, monad.algebra.hom.h, comp_neg] }
+          h' := by simp only [Functor.map_neg, neg_comp, Monad.Algebra.Hom.h, comp_neg] }
       sub := fun α β =>
         { f := α.f - β.f
-          h' := by simp only [functor.map_sub, sub_comp, monad.algebra.hom.h, comp_sub] }
+          h' := by simp only [Functor.map_sub, sub_comp, Monad.Algebra.Hom.h, comp_sub] }
       zsmul := fun r α =>
         { f := r • α.f
-          h' := by rw [functor.map_zsmul, zsmul_comp, monad.algebra.hom.h, comp_zsmul] }
+          h' := by rw [Functor.map_zsmul, zsmul_comp, Monad.Algebra.Hom.h, comp_zsmul] }
       add_assoc := by
         intros
         ext
@@ -122,22 +122,22 @@ instance Comonad.coalgebraPreadditive : Preadditive (Comonad.Coalgebra U)
   homGroup F G :=
     { add := fun α β =>
         { f := α.f + β.f
-          h' := by simp only [functor.map_add, comp_add, comonad.coalgebra.hom.h, add_comp] }
+          h' := by simp only [Functor.map_add, comp_add, Comonad.Coalgebra.Hom.h, add_comp] }
       zero :=
         { f := 0
-          h' := by simp only [functor.map_zero, comp_zero, zero_comp] }
+          h' := by simp only [Functor.map_zero, comp_zero, zero_comp] }
       nsmul := fun n α =>
         { f := n • α.f
-          h' := by rw [functor.map_nsmul, comp_nsmul, comonad.coalgebra.hom.h, nsmul_comp] }
+          h' := by rw [Functor.map_nsmul, comp_nsmul, Comonad.Coalgebra.Hom.h, nsmul_comp] }
       neg := fun α =>
         { f := -α.f
-          h' := by simp only [functor.map_neg, comp_neg, comonad.coalgebra.hom.h, neg_comp] }
+          h' := by simp only [Functor.map_neg, comp_neg, Comonad.Coalgebra.Hom.h, neg_comp] }
       sub := fun α β =>
         { f := α.f - β.f
-          h' := by simp only [functor.map_sub, comp_sub, comonad.coalgebra.hom.h, sub_comp] }
+          h' := by simp only [Functor.map_sub, comp_sub, Comonad.Coalgebra.Hom.h, sub_comp] }
       zsmul := fun r α =>
         { f := r • α.f
-          h' := by rw [functor.map_zsmul, comp_zsmul, comonad.coalgebra.hom.h, zsmul_comp] }
+          h' := by rw [Functor.map_zsmul, comp_zsmul, Comonad.Coalgebra.Hom.h, zsmul_comp] }
       add_assoc := by
         intros
         ext

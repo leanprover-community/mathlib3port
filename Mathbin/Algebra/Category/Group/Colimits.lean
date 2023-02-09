@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,52 +123,52 @@ instance : AddCommGroup (ColimitType F)
     where
   zero := Quot.mk _ zero
   neg := by
-    fapply @Quot.lift
+    fapply @quot.lift
     · intro x
       exact Quot.mk _ (neg x)
     · intro x x' r
       apply Quot.sound
-      exact relation.neg_1 _ _ r
+      exact Relation.neg_1 _ _ r
   add := by
-    fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
+    fapply @quot.lift _ _ (ColimitType F → ColimitType F)
     · intro x
-      fapply @Quot.lift
+      fapply @quot.lift
       · intro y
         exact Quot.mk _ (add x y)
       · intro y y' r
         apply Quot.sound
-        exact relation.add_2 _ _ _ r
+        exact Relation.add_2 _ _ _ r
     · intro x x' r
       funext y
       induction y
       dsimp
       apply Quot.sound
-      · exact relation.add_1 _ _ _ r
+      · exact Relation.add_1 _ _ _ r
       · rfl
   zero_add x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.zero_add
+    apply Relation.zero_add
     rfl
   add_zero x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.add_zero
+    apply Relation.add_zero
     rfl
   add_left_neg x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.add_left_neg
+    apply Relation.add_left_neg
     rfl
   add_comm x y := by
     induction x
     induction y
     dsimp
     apply Quot.sound
-    apply relation.add_comm
+    apply Relation.add_comm
     rfl
     rfl
   add_assoc x y z := by
@@ -177,7 +177,7 @@ instance : AddCommGroup (ColimitType F)
     induction z
     dsimp
     apply Quot.sound
-    apply relation.add_assoc
+    apply Relation.add_assoc
     rfl
     rfl
     rfl
@@ -213,8 +213,8 @@ group. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
   toFun := coconeFun F j
-  map_zero' := by apply Quot.sound <;> apply relation.zero
-  map_add' := by intros <;> apply Quot.sound <;> apply relation.add
+  map_zero' := by apply Quot.sound <;> apply Relation.zero
+  map_add' := by intros <;> apply Quot.sound <;> apply Relation.add
 #align AddCommGroup.colimits.cocone_morphism AddCommGroupCat.Colimits.coconeMorphism
 
 @[simp]
@@ -223,7 +223,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   by
   ext
   apply Quot.sound
-  apply Relation.Map
+  apply Relation.map
 #align AddCommGroup.colimits.cocone_naturality AddCommGroupCat.Colimits.cocone_naturality
 
 @[simp]
@@ -254,7 +254,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 def descFun (s : Cocone F) : ColimitType F → s.x :=
   by
   fapply Quot.lift
-  · exact desc_fun_lift F s
+  · exact descFunLift F s
   · intro x y r
     induction r <;> try dsimp
     -- refl
@@ -319,9 +319,9 @@ instance hasColimits_addCommGroupCat : HasColimits AddCommGroupCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
-        has_colimit.mk
-          { Cocone := colimit_cocone F
-            IsColimit := colimit_cocone_is_colimit F } }
+        HasColimit.mk
+          { Cocone := colimitCocone F
+            IsColimit := colimitCoconeIsColimit F } }
 #align AddCommGroup.colimits.has_colimits_AddCommGroup AddCommGroupCat.Colimits.hasColimits_addCommGroupCat
 
 end AddCommGroupCat.Colimits
@@ -354,7 +354,7 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
         simp only [cokernel.condition_apply, zero_apply])
   -- obviously can take care of the next goals, but it is really slow
   hom_inv_id' := by ext1;
-    simp only [coequalizer_as_cokernel, category.comp_id, cokernel.π_desc_assoc]; ext1; rfl
+    simp only [coequalizer_as_cokernel, Category.comp_id, cokernel.π_desc_assoc]; ext1; rfl
   inv_hom_id' := by
     ext x : 2
     simp only [AddMonoidHom.coe_comp, Function.comp_apply, comp_apply, lift_mk,

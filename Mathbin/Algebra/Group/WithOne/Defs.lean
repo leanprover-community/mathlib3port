@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -344,9 +344,9 @@ theorem coe_div [Div α] (a b : α) : ↑(a / b : α) = (a / b : WithZero α) :=
 instance [One α] [Pow α ℤ] : Pow (WithZero α) ℤ :=
   ⟨fun x n =>
     match x, n with
-    | none, Int.ofNat 0 => 1
-    | none, Int.ofNat (Nat.succ n) => 0
-    | none, Int.negSucc n => 0
+    | none, int.of_nat 0 => 1
+    | none, int.of_nat (nat.succ n) => 0
+    | none, int.neg_succ_of_nat n => 0
     | some x, n => ↑(x ^ n)⟩
 
 #print WithZero.coe_zpow /-

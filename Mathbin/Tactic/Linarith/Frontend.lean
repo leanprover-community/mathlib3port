@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.frontend
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -198,7 +198,7 @@ If `pref_type` is given, it will first use the class of proofs of comparisons ov
 unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr)
     (pref_type : Option expr) : tactic Unit :=
   let single_process := fun hyps : List expr => do
-    linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps ++ " facts:") hyps
+    linarith_trace_proofs ("after preprocessing, linarith has " ++ to_string hyps ++ " facts:") hyps
     let hyp_set ← partition_by_type hyps
     linarith_trace f! "hypotheses appear in {hyp_set} different types"
     match pref_type with
@@ -274,7 +274,7 @@ unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pe
             if cfg then linarith_trace "using exfalso" >> exfalso
             else fail "linarith failed: target is not a valid comparison"
         let cfg := cfg reduce_semi
-        let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) (Prod.map some some)
+        let (pref_type, new_var) := pref_type_and_new_var_from_tgt (none, none) (prod.map some some)
         let hyps
           ←-- set up the list of hypotheses, considering the `only_on` and `restrict_type` options
               if only_on then return (new_var [] singleton ++ hyps)

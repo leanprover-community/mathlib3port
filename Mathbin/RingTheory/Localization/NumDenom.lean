@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.num_denom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem isInteger_of_isUnit_denom {x : K} (h : IsUnit (denom A x : A)) : IsInteg
   cases' h with d hd
   have d_ne_zero : algebraMap A K (denom A x) ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (denom A x).2
-  use ↑d⁻¹ * Num A x
+  use ↑d⁻¹ * num A x
   refine' trans _ (mk'_num_denom A x)
   rw [map_mul, map_units_inv, hd]
   apply mul_left_cancel₀ d_ne_zero

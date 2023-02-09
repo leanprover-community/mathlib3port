@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.PartialFun
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,12 +138,12 @@ noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
 @[simps]
 noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
   classical exact
-      equivalence.mk partialFunToPointed pointedToPartialFun
-        (nat_iso.of_components
+      Equivalence.mk partialFunToPointed pointedToPartialFun
+        (NatIso.ofComponents
           (fun X =>
             PartialFun.Iso.mk
               { toFun := fun a => ⟨some a, some_ne_none a⟩
-                invFun := fun a => get <| ne_none_iff_is_some.1 a.2
+                invFun := fun a => get <| ne_none_iff_isSome.1 a.2
                 left_inv := fun a => get_some _ _
                 right_inv := fun a => by
                   simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
@@ -159,7 +159,7 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
             simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
             refine' part.mem_to_option.symm.trans _
             exact eq_comm)
-        (nat_iso.of_components
+        (NatIso.ofComponents
           (fun X =>
             Pointed.Iso.mk
               { toFun := Option.elim' X.point Subtype.val

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.liminf_limsup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ section Relation
 eventually, it is bounded by some uniform bound.
 `r` will be usually instantiated with `≤` or `≥`. -/
 def IsBounded (r : α → α → Prop) (f : Filter α) :=
-  ∃ b, ∀ᶠ x in f, r x b
+  ∃ b, ∀ᶠ x in f, r x GE.ge
 #align filter.is_bounded Filter.IsBounded
 -/
 
@@ -98,7 +98,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop}, Iff (Filter.IsBounded.{u1} α r (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Nonempty.{succ u1} α)
 Case conversion may be inaccurate. Consider using '#align filter.is_bounded_bot Filter.isBounded_botₓ'. -/
-theorem isBounded_bot : IsBounded r ⊥ ↔ Nonempty α := by simp [is_bounded, exists_true_iff_nonempty]
+theorem isBounded_bot : IsBounded r ⊥ ↔ Nonempty α := by simp [IsBounded, exists_true_iff_nonempty]
 #align filter.is_bounded_bot Filter.isBounded_bot
 
 /- warning: filter.is_bounded_top -> Filter.isBounded_top is a dubious translation:
@@ -107,12 +107,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop}, Iff (Filter.IsBounded.{u1} α r (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Exists.{succ u1} α (fun (t : α) => forall (x : α), r x t))
 Case conversion may be inaccurate. Consider using '#align filter.is_bounded_top Filter.isBounded_topₓ'. -/
-theorem isBounded_top : IsBounded r ⊤ ↔ ∃ t, ∀ x, r x t := by simp [is_bounded, eq_univ_iff_forall]
+theorem isBounded_top : IsBounded r ⊤ ↔ ∃ t, ∀ x, r x t := by simp [IsBounded, eq_univ_iff_forall]
 #align filter.is_bounded_top Filter.isBounded_top
 
 #print Filter.isBounded_principal /-
 theorem isBounded_principal (s : Set α) : IsBounded r (𝓟 s) ↔ ∃ t, ∀ x ∈ s, r x t := by
-  simp [is_bounded, subset_def]
+  simp [IsBounded, subset_def]
 #align filter.is_bounded_principal Filter.isBounded_principal
 -/
 
@@ -122,7 +122,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop} {f : Filter.{u1} α} {g : Filter.{u1} α} [_inst_1 : IsTrans.{u1} α r], (forall (b₁ : α) (b₂ : α), Exists.{succ u1} α (fun (b : α) => And (r b₁ b) (r b₂ b))) -> (Filter.IsBounded.{u1} α r f) -> (Filter.IsBounded.{u1} α r g) -> (Filter.IsBounded.{u1} α r (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) f g))
 Case conversion may be inaccurate. Consider using '#align filter.is_bounded_sup Filter.isBounded_supₓ'. -/
-theorem isBounded_sup [IsTrans α r] (hr : ∀ b₁ b₂, ∃ b, r b₁ b ∧ r b₂ b) :
+theorem isBounded_sup [IsTrans α r] (hr : ∀ b₁ b₂, ∃ b, r b₁ b ∧ r b₂ not_or_of_imp) :
     IsBounded r f → IsBounded r g → IsBounded r (f ⊔ g)
   | ⟨b₁, h₁⟩, ⟨b₂, h₂⟩ =>
     let ⟨b, rb₁b, rb₂b⟩ := hr b₁ b₂
@@ -186,7 +186,7 @@ theorem IsBounded.isBoundedUnder {q : β → β → Prop} {u : α → β}
 
 #print Filter.not_isBoundedUnder_of_tendsto_atTop /-
 theorem not_isBoundedUnder_of_tendsto_atTop [Preorder β] [NoMaxOrder β] {f : α → β} {l : Filter α}
-    [l.ne_bot] (hf : Tendsto f l atTop) : ¬IsBoundedUnder (· ≤ ·) l f :=
+    [l.NeBot] (hf : Tendsto f l atTop) : ¬IsBoundedUnder (· ≤ ·) l f :=
   by
   rintro ⟨b, hb⟩
   rw [eventually_map] at hb
@@ -200,7 +200,7 @@ theorem not_isBoundedUnder_of_tendsto_atTop [Preorder β] [NoMaxOrder β] {f : �
 
 #print Filter.not_isBoundedUnder_of_tendsto_atBot /-
 theorem not_isBoundedUnder_of_tendsto_atBot [Preorder β] [NoMinOrder β] {f : α → β} {l : Filter α}
-    [l.ne_bot] (hf : Tendsto f l atBot) : ¬IsBoundedUnder (· ≥ ·) l f :=
+    [l.NeBot] (hf : Tendsto f l atBot) : ¬IsBoundedUnder (· ≥ ·) l f :=
   @not_isBoundedUnder_of_tendsto_atTop α βᵒᵈ _ _ _ _ _ hf
 #align filter.not_is_bounded_under_of_tendsto_at_bot Filter.not_isBoundedUnder_of_tendsto_atBot
 -/
@@ -212,7 +212,7 @@ theorem IsBoundedUnder.bddAbove_range_of_cofinite [SemilatticeSup β] {f : α �
   rcases hf with ⟨b, hb⟩
   haveI : Nonempty β := ⟨b⟩
   rw [← image_univ, ← union_compl_self { x | f x ≤ b }, image_union, bddAbove_union]
-  exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).BddAbove⟩
+  exact ⟨⟨b, ball_image_iff.2 fun x => id⟩, (hb.image f).bddAbove⟩
 #align filter.is_bounded_under.bdd_above_range_of_cofinite Filter.IsBoundedUnder.bddAbove_range_of_cofinite
 -/
 
@@ -286,7 +286,7 @@ direction). At least if the filter is not trivial. -/
 theorem IsBounded.isCobounded_flip [IsTrans α r] [NeBot f] : f.IsBounded r → f.IsCobounded (flip r)
   | ⟨a, ha⟩ =>
     ⟨a, fun b hb =>
-      let ⟨x, rxa, rbx⟩ := (ha.And hb).exists
+      let ⟨x, rxa, rbx⟩ := (ha.and hb).exists
       show r b a from trans rbx rxa⟩
 #align filter.is_bounded.is_cobounded_flip Filter.IsBounded.isCobounded_flip
 -/
@@ -311,7 +311,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop}, Iff (Filter.IsCobounded.{u1} α r (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Exists.{succ u1} α (fun (b : α) => forall (x : α), r b x))
 Case conversion may be inaccurate. Consider using '#align filter.is_cobounded_bot Filter.isCobounded_botₓ'. -/
-theorem isCobounded_bot : IsCobounded r ⊥ ↔ ∃ b, ∀ x, r b x := by simp [is_cobounded]
+theorem isCobounded_bot : IsCobounded r ⊥ ↔ ∃ b, ∀ x, r b x := by simp [IsCobounded]
 #align filter.is_cobounded_bot Filter.isCobounded_bot
 
 /- warning: filter.is_cobounded_top -> Filter.isCobounded_top is a dubious translation:
@@ -321,13 +321,13 @@ but is expected to have type
   forall {α : Type.{u1}} {r : α -> α -> Prop}, Iff (Filter.IsCobounded.{u1} α r (Top.top.{u1} (Filter.{u1} α) (Filter.instTopFilter.{u1} α))) (Nonempty.{succ u1} α)
 Case conversion may be inaccurate. Consider using '#align filter.is_cobounded_top Filter.isCobounded_topₓ'. -/
 theorem isCobounded_top : IsCobounded r ⊤ ↔ Nonempty α := by
-  simp (config := { contextual := true }) [is_cobounded, eq_univ_iff_forall,
+  simp (config := { contextual := true }) [IsCobounded, eq_univ_iff_forall,
     exists_true_iff_nonempty]
 #align filter.is_cobounded_top Filter.isCobounded_top
 
 #print Filter.isCobounded_principal /-
 theorem isCobounded_principal (s : Set α) :
-    (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x ∈ s, r x a) → r b a := by simp [is_cobounded, subset_def]
+    (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x ∈ s, r x a) → r b a := by simp [IsCobounded, subset_def]
 #align filter.is_cobounded_principal Filter.isCobounded_principal
 -/
 
@@ -376,7 +376,7 @@ Case conversion may be inaccurate. Consider using '#align order_iso.is_bounded_u
 @[simp]
 theorem OrderIso.isBoundedUnder_le_comp [Preorder α] [Preorder β] (e : α ≃o β) {l : Filter γ}
     {u : γ → α} : (IsBoundedUnder (· ≤ ·) l fun x => e (u x)) ↔ IsBoundedUnder (· ≤ ·) l u :=
-  e.Surjective.exists.trans <| exists_congr fun a => by simp only [eventually_map, e.le_iff_le]
+  e.surjective.exists.trans <| exists_congr fun a => by simp only [eventually_map, e.le_iff_le]
 #align order_iso.is_bounded_under_le_comp OrderIso.isBoundedUnder_le_comp
 
 /- warning: order_iso.is_bounded_under_ge_comp -> OrderIso.isBoundedUnder_ge_comp is a dubious translation:
@@ -585,7 +585,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u2} α] {f : Filter.{u1} β} {u : β -> α} {p : β -> Prop}, Eq.{succ u2} α (Filter.bliminf.{u2, u1} α β _inst_1 u f p) (SupSet.supₛ.{u2} α (ConditionallyCompleteLattice.toSupSet.{u2} α _inst_1) (setOf.{u2} α (fun (a : α) => Filter.Eventually.{u1} β (fun (x : β) => (p x) -> (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (ConditionallyCompleteLattice.toLattice.{u2} α _inst_1))))) a (u x))) f)))
 Case conversion may be inaccurate. Consider using '#align filter.bliminf_eq Filter.bliminf_eqₓ'. -/
-theorem bliminf_eq : bliminf u f p = supₛ { a | ∀ᶠ x in f, p x → a ≤ u x } :=
+theorem bliminf_eq : bliminf u f p = supₛ { a | ∀ᶠ x in f, p x → or_iff_not_imp_left ≤ mpr x } :=
   rfl
 #align filter.bliminf_eq Filter.bliminf_eq
 
@@ -610,7 +610,7 @@ theorem blimsup_eq_limsup_subtype {f : Filter β} {u : β → α} {p : β → Pr
     blimsup u f p = limsup (u ∘ (coe : { x | p x } → β)) (comap coe f) :=
   by
   simp only [blimsup_eq, limsup_eq, Function.comp_apply, eventually_comap, SetCoe.forall,
-    Subtype.coe_mk, mem_set_of_eq]
+    Subtype.coe_mk, mem_setOf_eq]
   congr
   ext a
   exact
@@ -734,7 +734,7 @@ theorem liminfₛ_le_limsupₛ {f : Filter α} [NeBot f]
   liminfₛ_le_of_le h₂ fun a₀ ha₀ =>
     le_limsupₛ_of_le h₁ fun a₁ ha₁ =>
       show a₀ ≤ a₁ from
-        let ⟨b, hb₀, hb₁⟩ := (ha₀.And ha₁).exists
+        let ⟨b, hb₀, hb₁⟩ := (ha₀.and ha₁).exists
         le_trans hb₀ hb₁
 #align filter.Liminf_le_Limsup Filter.liminfₛ_le_limsupₛ
 -/
@@ -901,7 +901,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] {s : Set.{u1} α}, (BddAbove.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)))) s) -> (Set.Nonempty.{u1} α s) -> (Eq.{succ u1} α (Filter.limsupₛ.{u1} α _inst_1 (Filter.principal.{u1} α s)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) s))
 Case conversion may be inaccurate. Consider using '#align filter.Limsup_principal Filter.limsupₛ_principalₓ'. -/
 theorem limsupₛ_principal {s : Set α} (h : BddAbove s) (hs : s.Nonempty) : limsupₛ (𝓟 s) = supₛ s :=
-  by simp [Limsup] <;> exact cinfₛ_upper_bounds_eq_csupₛ h hs
+  by simp [limsupₛ] <;> exact cinfₛ_upper_bounds_eq_csupₛ h hs
 #align filter.Limsup_principal Filter.limsupₛ_principal
 
 /- warning: filter.Liminf_principal -> Filter.liminfₛ_principal is a dubious translation:
@@ -1165,7 +1165,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CompleteLattice.{u1} α] {u : Nat -> α}, Eq.{succ u1} α (Filter.limsup.{u1, 0} α Nat (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1) u (Filter.atTop.{0} Nat (PartialOrder.toPreorder.{0} Nat (StrictOrderedSemiring.toPartialOrder.{0} Nat Nat.strictOrderedSemiring)))) (infᵢ.{u1, 1} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (n : Nat) => supᵢ.{u1, 1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) Nat (fun (i : Nat) => u (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) i n))))
 Case conversion may be inaccurate. Consider using '#align filter.limsup_eq_infi_supr_of_nat' Filter.limsup_eq_infᵢ_supᵢ_of_nat'ₓ'. -/
 theorem limsup_eq_infᵢ_supᵢ_of_nat' {u : ℕ → α} : limsup u atTop = ⨅ n : ℕ, ⨆ i : ℕ, u (i + n) := by
-  simp only [limsup_eq_infi_supr_of_nat, supᵢ_ge_eq_supᵢ_nat_add]
+  simp only [limsup_eq_infᵢ_supᵢ_of_nat, supᵢ_ge_eq_supᵢ_nat_add]
 #align filter.limsup_eq_infi_supr_of_nat' Filter.limsup_eq_infᵢ_supᵢ_of_nat'
 
 /- warning: filter.has_basis.limsup_eq_infi_supr -> Filter.HasBasis.limsup_eq_infᵢ_supᵢ is a dubious translation:
@@ -1218,14 +1218,14 @@ theorem blimsup_eq_infᵢ_bsupᵢ {f : Filter β} {p : β → Prop} {u : β → 
   by
   refine' le_antisymm (infₛ_le_infₛ _) (infi_le_iff.mpr fun a ha => le_Inf_iff.mpr fun a' ha' => _)
   · rintro - ⟨s, rfl⟩
-    simp only [mem_set_of_eq, le_infᵢ_iff]
+    simp only [mem_setOf_eq, le_infᵢ_iff]
     conv =>
       congr
       ext
       rw [Imp.swap]
     refine'
       eventually_imp_distrib_left.mpr fun h => eventually_iff_exists_mem.2 ⟨s, h, fun x h₁ h₂ => _⟩
-    exact @le_supᵢ₂ α β (fun b => p b ∧ b ∈ s) _ (fun b hb => u b) x ⟨h₂, h₁⟩
+    exact @le_supr₂ α β (fun b => p b ∧ b ∈ s) _ (fun b hb => u b) x ⟨h₂, h₁⟩
   · obtain ⟨s, hs, hs'⟩ := eventually_iff_exists_mem.mp ha'
     simp_rw [Imp.swap] at hs'
     exact (le_infi_iff.mp (ha s) hs).trans (by simpa only [supᵢ₂_le_iff, and_imp] )
@@ -1240,7 +1240,7 @@ Case conversion may be inaccurate. Consider using '#align filter.blimsup_eq_infi
 theorem blimsup_eq_infᵢ_bsupᵢ_of_nat {p : ℕ → Prop} {u : ℕ → α} :
     blimsup u atTop p = ⨅ i, ⨆ (j) (hj : p j ∧ i ≤ j), u j := by
   simp only [blimsup_eq_limsup_subtype, mem_preimage, mem_Ici, Function.comp_apply, cinfᵢ_pos,
-    supᵢ_subtype, (at_top_basis.comap (coe : { x | p x } → ℕ)).limsup_eq_infᵢ_supᵢ, mem_set_of_eq,
+    supᵢ_subtype, (at_top_basis.comap (coe : { x | p x } → ℕ)).limsup_eq_infᵢ_supᵢ, mem_setOf_eq,
     Subtype.coe_mk, supᵢ_and]
 #align filter.blimsup_eq_infi_bsupr_of_nat Filter.blimsup_eq_infᵢ_bsupᵢ_of_nat
 
@@ -1346,7 +1346,7 @@ theorem liminf_eq_supₛ_infₛ {ι R : Type _} (F : Filter ι) [CompleteLattice
 @[simp]
 theorem liminf_nat_add (f : ℕ → α) (k : ℕ) : liminf (fun i => f (i + k)) atTop = liminf f atTop :=
   by
-  simp_rw [liminf_eq_supr_infi_of_nat]
+  simp_rw [liminf_eq_supᵢ_infᵢ_of_nat]
   exact supᵢ_infᵢ_ge_nat_add f k
 #align filter.liminf_nat_add Filter.liminf_nat_add
 -/
@@ -1399,8 +1399,8 @@ Case conversion may be inaccurate. Consider using '#align filter.complete_lattic
 theorem CompleteLatticeHom.apply_limsup_iterate (f : CompleteLatticeHom α α) (a : α) :
     f (limsup (fun n => (f^[n]) a) atTop) = limsup (fun n => (f^[n]) a) atTop :=
   by
-  rw [limsup_eq_infi_supr_of_nat', map_infᵢ]
-  simp_rw [_root_.map_supr, ← Function.comp_apply f, ← Function.iterate_succ' f, ← Nat.add_succ]
+  rw [limsup_eq_infᵢ_supᵢ_of_nat', map_infᵢ]
+  simp_rw [map_supᵢ, ← Function.comp_apply f, ← Function.iterate_succ' f, ← Nat.add_succ]
   conv_rhs => rw [infᵢ_split _ ((· < ·) (0 : ℕ))]
   simp only [not_lt, le_zero_iff, infᵢ_infᵢ_eq_left, add_zero, infᵢ_nat_gt_zero_eq, left_eq_inf]
   refine' (infᵢ_le (fun i => ⨆ j, (f^[j + (i + 1)]) a) 0).trans _
@@ -1445,7 +1445,7 @@ theorem bliminf_antitone (h : ∀ x, p x → q x) : bliminf u f q ≤ bliminf u 
 
 #print Filter.mono_blimsup' /-
 theorem mono_blimsup' (h : ∀ᶠ x in f, p x → u x ≤ v x) : blimsup u f p ≤ blimsup v f p :=
-  infₛ_le_infₛ fun a ha => (ha.And h).mono fun x hx hx' => (hx.2 hx').trans (hx.1 hx')
+  infₛ_le_infₛ fun a ha => (ha.and h).mono fun x hx hx' => (hx.2 hx').trans (hx.1 hx')
 #align filter.mono_blimsup' Filter.mono_blimsup'
 -/
 
@@ -1461,7 +1461,7 @@ theorem mono_blimsup (h : ∀ x, p x → u x ≤ v x) : blimsup u f p ≤ blimsu
 
 #print Filter.mono_bliminf' /-
 theorem mono_bliminf' (h : ∀ᶠ x in f, p x → u x ≤ v x) : bliminf u f p ≤ bliminf v f p :=
-  supₛ_le_supₛ fun a ha => (ha.And h).mono fun x hx hx' => (hx.1 hx').trans (hx.2 hx')
+  supₛ_le_supₛ fun a ha => (ha.and h).mono fun x hx hx' => (hx.1 hx').trans (hx.2 hx')
 #align filter.mono_bliminf' Filter.mono_bliminf'
 -/
 
@@ -1550,7 +1550,7 @@ Case conversion may be inaccurate. Consider using '#align filter.order_iso.apply
 theorem OrderIso.apply_blimsup [CompleteLattice γ] (e : α ≃o γ) :
     e (blimsup u f p) = blimsup (e ∘ u) f p :=
   by
-  simp only [blimsup_eq, map_Inf, Function.comp_apply]
+  simp only [blimsup_eq, map_infₛ, Function.comp_apply]
   congr
   ext c
   obtain ⟨a, rfl⟩ := e.surjective c
@@ -1577,9 +1577,9 @@ Case conversion may be inaccurate. Consider using '#align filter.Sup_hom.apply_b
 theorem SupHom.apply_blimsup_le [CompleteLattice γ] (g : SupₛHom α γ) :
     g (blimsup u f p) ≤ blimsup (g ∘ u) f p :=
   by
-  simp only [blimsup_eq_infi_bsupr]
+  simp only [blimsup_eq_infᵢ_bsupᵢ]
   refine' ((OrderHomClass.mono g).map_infᵢ₂_le _).trans _
-  simp only [_root_.map_supr]
+  simp only [map_supᵢ]
 #align filter.Sup_hom.apply_blimsup_le Filter.SupHom.apply_blimsup_le
 
 /- warning: filter.Inf_hom.le_apply_bliminf -> Filter.InfHom.le_apply_bliminf is a dubious translation:
@@ -1609,8 +1609,8 @@ Case conversion may be inaccurate. Consider using '#align filter.blimsup_or_eq_s
 theorem blimsup_or_eq_sup : (blimsup u f fun x => p x ∨ q x) = blimsup u f p ⊔ blimsup u f q :=
   by
   refine' le_antisymm _ blimsup_sup_le_or
-  simp only [blimsup_eq, infₛ_sup_eq, sup_infₛ_eq, le_infᵢ₂_iff, mem_set_of_eq]
-  refine' fun a' ha' a ha => infₛ_le ((ha.And ha').mono fun b h hb => _)
+  simp only [blimsup_eq, infₛ_sup_eq, sup_infₛ_eq, le_infᵢ₂_iff, mem_setOf_eq]
+  refine' fun a' ha' a ha => infₛ_le ((ha.and ha').mono fun b h hb => _)
   exact Or.elim hb (fun hb => le_sup_of_le_left <| h.1 hb) fun hb => le_sup_of_le_right <| h.2 hb
 #align filter.blimsup_or_eq_sup Filter.blimsup_or_eq_sup
 
@@ -1628,7 +1628,7 @@ theorem bliminf_or_eq_inf : (bliminf u f fun x => p x ∨ q x) = bliminf u f p �
 #print Filter.sup_limsup /-
 theorem sup_limsup [NeBot f] (a : α) : a ⊔ limsup u f = limsup (fun x => a ⊔ u x) f :=
   by
-  simp only [limsup_eq_infi_supr, supᵢ_sup_eq, sup_infᵢ₂_eq]
+  simp only [limsup_eq_infᵢ_supᵢ, supᵢ_sup_eq, sup_infᵢ₂_eq]
   congr ; ext s; congr ; ext hs; congr
   exact (bsupᵢ_const (nonempty_of_mem hs)).symm
 #align filter.sup_limsup Filter.sup_limsup
@@ -1648,7 +1648,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.sup_liminf Filter.sup_liminfₓ'. -/
 theorem sup_liminf (a : α) : a ⊔ liminf u f = liminf (fun x => a ⊔ u x) f :=
   by
-  simp only [liminf_eq_supr_infi]
+  simp only [liminf_eq_supᵢ_infᵢ]
   rw [sup_comm, bsupᵢ_sup (⟨univ, univ_mem⟩ : ∃ i : Set β, i ∈ f)]
   simp_rw [infᵢ₂_sup_eq, @sup_comm _ _ a]
 #align filter.sup_liminf Filter.sup_liminf
@@ -1676,7 +1676,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u2} α] (f : Filter.{u1} β) (u : β -> α), Eq.{succ u2} α (HasCompl.compl.{u2} α (BooleanAlgebra.toHasCompl.{u2} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u2} α _inst_1)) (Filter.limsup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} α (Order.Coframe.toCompleteLattice.{u2} α (CompleteDistribLattice.toCoframe.{u2} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} α _inst_1)))) u f)) (Filter.liminf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} α (Order.Coframe.toCompleteLattice.{u2} α (CompleteDistribLattice.toCoframe.{u2} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} α _inst_1)))) (Function.comp.{succ u1, succ u2, succ u2} β α α (HasCompl.compl.{u2} α (BooleanAlgebra.toHasCompl.{u2} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u2} α _inst_1))) u) f)
 Case conversion may be inaccurate. Consider using '#align filter.limsup_compl Filter.limsup_complₓ'. -/
 theorem limsup_compl : limsup u fᶜ = liminf (compl ∘ u) f := by
-  simp only [limsup_eq_infi_supr, liminf_eq_supr_infi, compl_infᵢ, compl_supᵢ]
+  simp only [limsup_eq_infᵢ_supᵢ, liminf_eq_supᵢ_infᵢ, compl_infᵢ, compl_supᵢ]
 #align filter.limsup_compl Filter.limsup_compl
 
 /- warning: filter.liminf_compl -> Filter.liminf_compl is a dubious translation:
@@ -1686,7 +1686,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteBooleanAlgebra.{u2} α] (f : Filter.{u1} β) (u : β -> α), Eq.{succ u2} α (HasCompl.compl.{u2} α (BooleanAlgebra.toHasCompl.{u2} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u2} α _inst_1)) (Filter.liminf.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} α (Order.Coframe.toCompleteLattice.{u2} α (CompleteDistribLattice.toCoframe.{u2} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} α _inst_1)))) u f)) (Filter.limsup.{u2, u1} α β (CompleteLattice.toConditionallyCompleteLattice.{u2} α (Order.Coframe.toCompleteLattice.{u2} α (CompleteDistribLattice.toCoframe.{u2} α (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} α _inst_1)))) (Function.comp.{succ u1, succ u2, succ u2} β α α (HasCompl.compl.{u2} α (BooleanAlgebra.toHasCompl.{u2} α (CompleteBooleanAlgebra.toBooleanAlgebra.{u2} α _inst_1))) u) f)
 Case conversion may be inaccurate. Consider using '#align filter.liminf_compl Filter.liminf_complₓ'. -/
 theorem liminf_compl : liminf u fᶜ = limsup (compl ∘ u) f := by
-  simp only [limsup_eq_infi_supr, liminf_eq_supr_infi, compl_infᵢ, compl_supᵢ]
+  simp only [limsup_eq_infᵢ_supᵢ, liminf_eq_supᵢ_infᵢ, compl_infᵢ, compl_supᵢ]
 #align filter.liminf_compl Filter.liminf_compl
 
 /- warning: filter.limsup_sdiff -> Filter.limsup_sdiff is a dubious translation:
@@ -1697,7 +1697,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.limsup_sdiff Filter.limsup_sdiffₓ'. -/
 theorem limsup_sdiff (a : α) : limsup u f \ a = limsup (fun b => u b \ a) f :=
   by
-  simp only [limsup_eq_infi_supr, sdiff_eq]
+  simp only [limsup_eq_infᵢ_supᵢ, sdiff_eq]
   rw [binfᵢ_inf (⟨univ, univ_mem⟩ : ∃ i : Set β, i ∈ f)]
   simp_rw [inf_comm, inf_supᵢ₂_eq, inf_comm]
 #align filter.limsup_sdiff Filter.limsup_sdiff
@@ -1750,10 +1750,10 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.cofinite.blimsup_set_eq Filter.cofinite.blimsup_set_eqₓ'. -/
 theorem cofinite.blimsup_set_eq : blimsup s cofinite p = { x | { n | p n ∧ x ∈ s n }.Infinite } :=
   by
-  simp only [blimsup_eq, le_eq_subset, eventually_cofinite, not_forall, Inf_eq_sInter, exists_prop]
+  simp only [blimsup_eq, le_eq_subset, eventually_cofinite, not_forall, infₛ_eq_interₛ, exists_prop]
   ext x
   refine' ⟨fun h => _, fun hx t h => _⟩ <;> contrapose! h
-  · simp only [mem_sInter, mem_set_of_eq, not_forall, exists_prop]
+  · simp only [mem_interₛ, mem_setOf_eq, not_forall, exists_prop]
     exact ⟨{x}ᶜ, by simpa using h, by simp⟩
   · exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
 #align filter.cofinite.blimsup_set_eq Filter.cofinite.blimsup_set_eq
@@ -1767,7 +1767,7 @@ Case conversion may be inaccurate. Consider using '#align filter.cofinite.blimin
 theorem cofinite.bliminf_set_eq : bliminf s cofinite p = { x | { n | p n ∧ x ∉ s n }.Finite } :=
   by
   rw [← compl_inj_iff]
-  simpa only [bliminf_eq_supr_binfi, compl_infᵢ, compl_supᵢ, ← blimsup_eq_infi_bsupr,
+  simpa only [bliminf_eq_supᵢ_binfᵢ, compl_infᵢ, compl_supᵢ, ← blimsup_eq_infᵢ_bsupᵢ,
     cofinite.blimsup_set_eq]
 #align filter.cofinite.bliminf_set_eq Filter.cofinite.bliminf_set_eq
 
@@ -1805,8 +1805,8 @@ theorem exists_forall_mem_of_hasBasis_mem_blimsup {l : Filter β} {b : ι → Se
     (hl : l.HasBasis q b) {u : β → Set α} {p : β → Prop} {x : α} (hx : x ∈ blimsup u l p) :
     ∃ f : { i | q i } → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i :=
   by
-  rw [blimsup_eq_infi_bsupr] at hx
-  simp only [supr_eq_Union, infi_eq_Inter, mem_Inter, mem_Union, exists_prop] at hx
+  rw [blimsup_eq_infᵢ_bsupᵢ] at hx
+  simp only [supᵢ_eq_unionᵢ, infᵢ_eq_interᵢ, mem_interᵢ, mem_unionᵢ, exists_prop] at hx
   choose g hg hg' using hx
   refine' ⟨fun i : { i | q i } => g (b i) (hl.mem_of_mem i.2), fun i => ⟨_, _⟩⟩
   · exact hg' (b i) (hl.mem_of_mem i.2)
@@ -1823,7 +1823,7 @@ theorem exists_forall_mem_of_hasBasis_mem_blimsup' {l : Filter β} {b : ι → S
     (hl : l.HasBasis (fun _ => True) b) {u : β → Set α} {p : β → Prop} {x : α}
     (hx : x ∈ blimsup u l p) : ∃ f : ι → β, ∀ i, x ∈ u (f i) ∧ p (f i) ∧ f i ∈ b i :=
   by
-  obtain ⟨f, hf⟩ := exists_forall_mem_of_has_basis_mem_blimsup hl hx
+  obtain ⟨f, hf⟩ := exists_forall_mem_of_hasBasis_mem_blimsup hl hx
   exact ⟨fun i => f ⟨i, trivial⟩, fun i => hf ⟨i, trivial⟩⟩
 #align filter.exists_forall_mem_of_has_basis_mem_blimsup' Filter.exists_forall_mem_of_hasBasis_mem_blimsup'
 
@@ -1841,7 +1841,7 @@ theorem frequently_lt_of_lt_limsupₛ {f : Filter α} [ConditionallyCompleteLine
   by
   contrapose! h
   simp only [not_frequently, not_lt] at h
-  exact Limsup_le_of_le hf h
+  exact limsupₛ_le_of_le hf h
 #align filter.frequently_lt_of_lt_Limsup Filter.frequently_lt_of_lt_limsupₛ
 -/
 
@@ -1941,7 +1941,7 @@ theorem frequently_lt_of_lt_limsup {α β} [ConditionallyCompleteLinearOrder β]
     (h : b < limsup u f) : ∃ᶠ x in f, b < u x :=
   by
   contrapose! h
-  apply Limsup_le_of_le hu
+  apply limsupₛ_le_of_le hu
   simpa using h
 #align filter.frequently_lt_of_lt_limsup Filter.frequently_lt_of_lt_limsup
 
@@ -1979,9 +1979,9 @@ theorem Monotone.isBoundedUnder_le_comp [Nonempty β] [LinearOrder β] [Preorder
     {g : β → γ} {f : α → β} {l : Filter α} (hg : Monotone g) (hg' : Tendsto g atTop atTop) :
     IsBoundedUnder (· ≤ ·) l (g ∘ f) ↔ IsBoundedUnder (· ≤ ·) l f :=
   by
-  refine' ⟨_, fun h => h.IsBoundedUnder hg⟩
+  refine' ⟨_, fun h => h.isBoundedUnder hg⟩
   rintro ⟨c, hc⟩; rw [eventually_map] at hc
-  obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_at_top.1 (hg'.eventually_gt_at_top c)
+  obtain ⟨b, hb⟩ : ∃ b, ∀ a ≥ b, c < g a := eventually_atTop.1 (hg'.eventually_gt_at_top c)
   exact ⟨b, hc.mono fun x hx => not_lt.1 fun h => (hb _ h.le).not_le hx⟩
 #align monotone.is_bounded_under_le_comp Monotone.isBoundedUnder_le_comp
 
@@ -2040,10 +2040,10 @@ theorem GaloisConnection.l_limsup_le [ConditionallyCompleteLattice β]
         is_bounded_default) :
     l (limsup v f) ≤ limsup (fun x => l (v x)) f :=
   by
-  refine' le_Limsup_of_le hlv fun c hc => _
+  refine' le_limsupₛ_of_le hlv fun c hc => _
   rw [Filter.eventually_map] at hc
   simp_rw [gc _ _] at hc⊢
-  exact Limsup_le_of_le hv_co hc
+  exact limsupₛ_le_of_le hv_co hc
 #align galois_connection.l_limsup_le GaloisConnection.l_limsup_le
 
 /- warning: order_iso.limsup_apply -> OrderIso.limsup_apply is a dubious translation:

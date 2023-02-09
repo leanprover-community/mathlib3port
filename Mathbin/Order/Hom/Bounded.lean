@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.hom.bounded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -456,7 +456,7 @@ instance : HasInf (TopHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_top, map_top, inf_top_eq]⟩⟩
 
 instance : SemilatticeInf (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
+  FunLike.coe_injective.semilatticeInf _ fun _ _ => rfl
 
 /- warning: top_hom.coe_inf -> TopHom.coe_inf is a dubious translation:
 lean 3 declaration is
@@ -490,7 +490,7 @@ instance : HasSup (TopHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_top, map_top, sup_top_eq]⟩⟩
 
 instance : SemilatticeSup (TopHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
+  FunLike.coe_injective.semilatticeSup _ fun _ _ => rfl
 
 /- warning: top_hom.coe_sup -> TopHom.coe_sup is a dubious translation:
 lean 3 declaration is
@@ -517,10 +517,10 @@ theorem sup_apply (a : α) : (f ⊔ g) a = f a ⊔ g a :=
 end SemilatticeSup
 
 instance [Lattice β] [OrderTop β] : Lattice (TopHom α β) :=
-  FunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.lattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DistribLattice β] [OrderTop β] : DistribLattice (TopHom α β) :=
-  FunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.distribLattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 end TopHom
 
@@ -778,7 +778,7 @@ instance : HasInf (BotHom α β) :=
   ⟨fun f g => ⟨f ⊓ g, by rw [Pi.inf_apply, map_bot, map_bot, inf_bot_eq]⟩⟩
 
 instance : SemilatticeInf (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeInf _ fun _ _ => rfl
+  FunLike.coe_injective.semilatticeInf _ fun _ _ => rfl
 
 /- warning: bot_hom.coe_inf -> BotHom.coe_inf is a dubious translation:
 lean 3 declaration is
@@ -812,7 +812,7 @@ instance : HasSup (BotHom α β) :=
   ⟨fun f g => ⟨f ⊔ g, by rw [Pi.sup_apply, map_bot, map_bot, sup_bot_eq]⟩⟩
 
 instance : SemilatticeSup (BotHom α β) :=
-  FunLike.coe_injective.SemilatticeSup _ fun _ _ => rfl
+  FunLike.coe_injective.semilatticeSup _ fun _ _ => rfl
 
 /- warning: bot_hom.coe_sup -> BotHom.coe_sup is a dubious translation:
 lean 3 declaration is
@@ -839,10 +839,10 @@ theorem sup_apply (a : α) : (f ⊔ g) a = f a ⊔ g a :=
 end SemilatticeSup
 
 instance [Lattice β] [OrderBot β] : Lattice (BotHom α β) :=
-  FunLike.coe_injective.Lattice _ (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.lattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 instance [DistribLattice β] [OrderBot β] : DistribLattice (BotHom α β) :=
-  FunLike.coe_injective.DistribLattice _ (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.distribLattice _ (fun _ _ => rfl) fun _ _ => rfl
 
 end BotHom
 

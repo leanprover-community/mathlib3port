@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pi.lex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {β : ι -> Type.{u1}} [_inst_1 : LinearOrder.{u2} ι] [_inst_2 : IsWellOrder.{u2} ι (fun (x._@.Mathlib.Data.Pi.Lex._hyg.1869 : ι) (x._@.Mathlib.Data.Pi.Lex._hyg.1871 : ι) => LT.lt.{u2} ι (Preorder.toLT.{u2} ι (PartialOrder.toPreorder.{u2} ι (SemilatticeInf.toPartialOrder.{u2} ι (Lattice.toSemilatticeInf.{u2} ι (DistribLattice.toLattice.{u2} ι (instDistribLattice.{u2} ι _inst_1)))))) x._@.Mathlib.Data.Pi.Lex._hyg.1869 x._@.Mathlib.Data.Pi.Lex._hyg.1871)] [_inst_3 : forall (i : ι), PartialOrder.{u1} (β i)], StrictMono.{max u2 u1, max u2 u1} (forall (i : ι), β i) (Lex.{max u2 u1} (forall (i : ι), β i)) (Pi.preorder.{u2, u1} ι (fun (i : ι) => β i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (β i) (_inst_3 i))) (PartialOrder.toPreorder.{max u2 u1} (Lex.{max u2 u1} (forall (i : ι), β i)) (Pi.instPartialOrderLexForAll.{u2, u1} ι (fun (i : ι) => β i) _inst_1 (fun (a : ι) => _inst_3 a))) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{succ (max u2 u1), succ (max u2 u1)} (forall (i : ι), β i) (Lex.{max u2 u1} (forall (i : ι), β i))) (forall (i : ι), β i) (fun (_x : forall (i : ι), β i) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : forall (i : ι), β i) => Lex.{max u2 u1} (forall (i : ι), β i)) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (forall (i : ι), β i) (Lex.{max u2 u1} (forall (i : ι), β i))) (toLex.{max u2 u1} (forall (i : ι), β i)))
 Case conversion may be inaccurate. Consider using '#align pi.to_lex_strict_mono Pi.toLex_strictMonoₓ'. -/
 theorem toLex_strictMono : StrictMono (@toLex (∀ i, β i)) := fun a b h =>
-  let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 h.Ne)
+  let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 h.ne)
   ⟨i, fun j hj => by
     contrapose! hl
     exact ⟨j, hl, hj⟩, (h.le i).lt_of_ne hi⟩
@@ -181,7 +181,7 @@ Case conversion may be inaccurate. Consider using '#align pi.lt_to_lex_update_se
 @[simp]
 theorem lt_toLex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :=
   by
-  refine' ⟨_, fun h => to_lex_strict_mono <| lt_update_self_iff.2 h⟩
+  refine' ⟨_, fun h => toLex_strictMono <| lt_update_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
   dsimp at h
   obtain rfl : j = i := by
@@ -200,7 +200,7 @@ Case conversion may be inaccurate. Consider using '#align pi.to_lex_update_lt_se
 @[simp]
 theorem toLex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i :=
   by
-  refine' ⟨_, fun h => to_lex_strict_mono <| update_lt_self_iff.2 h⟩
+  refine' ⟨_, fun h => toLex_strictMono <| update_lt_self_iff.2 h⟩
   rintro ⟨j, hj, h⟩
   dsimp at h
   obtain rfl : j = i := by
@@ -218,7 +218,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.le_to_lex_update_self_iff Pi.le_toLex_update_self_iffₓ'. -/
 @[simp]
 theorem le_toLex_update_self_iff : toLex x ≤ toLex (update x i a) ↔ x i ≤ a := by
-  simp_rw [le_iff_lt_or_eq, lt_to_lex_update_self_iff, toLex_inj, eq_update_self_iff]
+  simp_rw [le_iff_lt_or_eq, lt_toLex_update_self_iff, toLex_inj, eq_update_self_iff]
 #align pi.le_to_lex_update_self_iff Pi.le_toLex_update_self_iff
 
 /- warning: pi.to_lex_update_le_self_iff -> Pi.toLex_update_le_self_iff is a dubious translation:
@@ -229,7 +229,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.to_lex_update_le_self_iff Pi.toLex_update_le_self_iffₓ'. -/
 @[simp]
 theorem toLex_update_le_self_iff : toLex (update x i a) ≤ toLex x ↔ a ≤ x i := by
-  simp_rw [le_iff_lt_or_eq, to_lex_update_lt_self_iff, toLex_inj, update_eq_self_iff]
+  simp_rw [le_iff_lt_or_eq, toLex_update_lt_self_iff, toLex_inj, update_eq_self_iff]
 #align pi.to_lex_update_le_self_iff Pi.toLex_update_le_self_iff
 
 end PartialOrder
@@ -270,7 +270,7 @@ theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (�
     classical
       obtain ⟨b, hb⟩ := exists_gt (a i)
       exact
-        ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
+        ⟨a.update i b, i, fun j hj => (a.update_noteq hj.ne b).symm, by rwa [a.update_same i b]⟩⟩
 #align pi.lex.no_max_order' Pi.Lex.noMaxOrder'
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [Nonempty ι] [∀ i, PartialOrder (β i)]
@@ -304,7 +304,7 @@ instance Lex.orderedCommGroup [LinearOrder ι] [∀ a, OrderedCommGroup (β a)] 
 smaller than the original function. -/
 theorem lex_desc {α} [Preorder ι] [DecidableEq ι] [Preorder α] {f : ι → α} {i j : ι} (h₁ : i < j)
     (h₂ : f j < f i) : toLex (f ∘ Equiv.swap i j) < toLex f :=
-  ⟨i, fun k hik => congr_arg f (Equiv.swap_apply_of_ne_of_ne hik.Ne (hik.trans h₁).Ne), by
+  ⟨i, fun k hik => congr_arg f (Equiv.swap_apply_of_ne_of_ne hik.ne (hik.trans h₁).ne), by
     simpa only [Pi.toLex_apply, Function.comp_apply, Equiv.swap_apply_left] using h₂⟩
 #align pi.lex_desc Pi.lex_desc
 -/

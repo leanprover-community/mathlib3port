@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.int.modeq
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int} {a : Int}, Iff (Int.ModEq n a (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) (Dvd.dvd.{0} Int Int.instDvdInt n a)
 Case conversion may be inaccurate. Consider using '#align int.modeq_zero_iff_dvd Int.modEq_zero_iff_dvdₓ'. -/
-theorem modEq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
+theorem modEq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by rw [ModEq, zero_mod, dvd_iff_emod_eq_zero]
 #align int.modeq_zero_iff_dvd Int.modEq_zero_iff_dvd
 
 /- warning: has_dvd.dvd.modeq_zero_int -> Dvd.dvd.modEq_zero_int is a dubious translation:
@@ -119,13 +119,13 @@ but is expected to have type
   forall {n : Int} {a : Int} {b : Int}, Iff (Int.ModEq n a b) (Dvd.dvd.{0} Int Int.instDvdInt n (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.modeq_iff_dvd Int.modEq_iff_dvdₓ'. -/
 theorem modEq_iff_dvd : a ≡ b [ZMOD n] ↔ n ∣ b - a := by
-  rw [modeq, eq_comm] <;> simp [mod_eq_mod_iff_mod_sub_eq_zero, dvd_iff_mod_eq_zero]
+  rw [ModEq, eq_comm] <;> simp [emod_eq_emod_iff_emod_sub_eq_zero, dvd_iff_emod_eq_zero]
 #align int.modeq_iff_dvd Int.modEq_iff_dvd
 
 #print Int.modEq_iff_add_fac /-
 theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n * t :=
   by
-  rw [modeq_iff_dvd]
+  rw [modEq_iff_dvd]
   exact exists_congr fun t => sub_eq_iff_eq_add'
 #align int.modeq_iff_add_fac Int.modEq_iff_add_fac
 -/
@@ -161,13 +161,13 @@ but is expected to have type
   forall {m : Int} {n : Int} {a : Int} {b : Int}, (Dvd.dvd.{0} Int Int.instDvdInt m n) -> (Int.ModEq n a b) -> (Int.ModEq m a b)
 Case conversion may be inaccurate. Consider using '#align int.modeq.of_dvd Int.ModEq.of_dvdₓ'. -/
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
-  modEq_of_dvd <| d.trans h.Dvd
+  modEq_of_dvd <| d.trans h.dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
 
 #print Int.ModEq.mul_left' /-
 protected theorem mul_left' (hc : 0 ≤ c) (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
   Or.cases_on hc.lt_or_eq
-    (fun hc => by unfold modeq <;> simp [mul_mod_mul_of_pos hc, show _ = _ from h]) fun hc => by
+    (fun hc => by unfold modeq <;> simp [mul_emod_mul_of_pos hc, show _ = _ from h]) fun hc => by
     simp [hc.symm]
 #align int.modeq.mul_left' Int.ModEq.mul_left'
 -/
@@ -291,7 +291,7 @@ protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n
 
 #print Int.ModEq.of_mul_left /-
 theorem of_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n] := by
-  rw [modeq_iff_dvd] at * <;> exact (dvd_mul_left n m).trans h
+  rw [modEq_iff_dvd] at * <;> exact (dvd_mul_left n m).trans h
 #align int.modeq.of_mul_left Int.ModEq.of_mul_left
 -/
 
@@ -319,10 +319,9 @@ theorem modEq_sub (a b : ℤ) : a ≡ b [ZMOD a - b] :=
 theorem modEq_and_modEq_iff_modEq_mul {a b m n : ℤ} (hmn : m.natAbs.coprime n.natAbs) :
     a ≡ b [ZMOD m] ∧ a ≡ b [ZMOD n] ↔ a ≡ b [ZMOD m * n] :=
   ⟨fun h => by
-    rw [modeq_iff_dvd, modeq_iff_dvd] at h
-    rw [modeq_iff_dvd, ← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd, nat_abs_mul]
-    refine' hmn.mul_dvd_of_dvd_of_dvd _ _ <;> rw [← coe_nat_dvd, nat_abs_dvd, dvd_nat_abs] <;>
-      tauto,
+    rw [modEq_iff_dvd, modEq_iff_dvd] at h
+    rw [modEq_iff_dvd, ← natAbs_dvd, ← dvd_natAbs, coe_nat_dvd, natAbs_mul]
+    refine' hmn.mul_dvd_of_dvd_of_dvd _ _ <;> rw [← coe_nat_dvd, natAbs_dvd, dvd_natAbs] <;> tauto,
     fun h => ⟨h.of_mul_right _, h.of_mul_left _⟩⟩
 #align int.modeq_and_modeq_iff_modeq_mul Int.modEq_and_modEq_iff_modEq_mul
 -/
@@ -369,15 +368,14 @@ theorem exists_unique_equiv (a : ℤ) {b : ℤ} (hb : 0 < b) :
   ⟨a % b, emod_nonneg _ (ne_of_gt hb),
     by
     have : a % b < |b| := emod_lt _ (ne_of_gt hb)
-    rwa [abs_of_pos hb] at this, by simp [modeq]⟩
+    rwa [abs_of_pos hb] at this, by simp [ModEq]⟩
 #align int.exists_unique_equiv Int.exists_unique_equiv
 -/
 
 #print Int.exists_unique_equiv_nat /-
 theorem exists_unique_equiv_nat (a : ℤ) {b : ℤ} (hb : 0 < b) : ∃ z : ℕ, ↑z < b ∧ ↑z ≡ a [ZMOD b] :=
   let ⟨z, hz1, hz2, hz3⟩ := exists_unique_equiv a hb
-  ⟨z.natAbs, by
-    constructor <;> rw [← of_nat_eq_coe, of_nat_nat_abs_eq_of_nonneg hz1] <;> assumption⟩
+  ⟨z.natAbs, by constructor <;> rw [← ofNat_eq_coe, ofNat_natAbs_eq_of_nonneg hz1] <;> assumption⟩
 #align int.exists_unique_equiv_nat Int.exists_unique_equiv_nat
 -/
 

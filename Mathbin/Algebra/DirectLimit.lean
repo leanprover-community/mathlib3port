@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes
 
 ! This file was ported from Lean 3 source module algebra.direct_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -200,7 +200,7 @@ theorem toModule_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
       f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
   by
-  rw [← @Dfinsupp.sum_single ι G _ _ _ x]
+  rw [← @dfinsupp.sum_single ι G _ _ _ x]
   unfold Dfinsupp.sum
   simp only [LinearMap.map_sum]
   refine' Finset.sum_congr rfl fun k hk => _
@@ -240,8 +240,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
           (Finset.mem_union.1 (Dfinsupp.support_add hl)).elim (fun hl => le_trans (hi _ hl) hik)
             fun hl => le_trans (hj _ hl) hjk,
           by
-          simp [LinearMap.map_add, hxi, hyj, to_module_totalize_of_le hik hi,
-            to_module_totalize_of_le hjk hj]⟩)
+          simp [LinearMap.map_add, hxi, hyj, toModule_totalize_of_le hik hi,
+            toModule_totalize_of_le hjk hj]⟩)
       fun a x ⟨i, hi, hxi⟩ =>
       ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk), by simp [LinearMap.map_smul, hxi]⟩
 #align module.direct_limit.of.zero_exact_aux Module.DirectLimit.of.zero_exact_aux
@@ -433,7 +433,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
   Polynomial.induction_on q
     (fun z =>
       let ⟨i, x, h⟩ := exists_of z
-      ⟨i, c x, by rw [map_C, h]⟩)
+      ⟨i, c x, by rw [map_c, h]⟩)
     (fun q₁ q₂ ⟨i₁, p₁, ih₁⟩ ⟨i₂, p₂, ih₂⟩ =>
       let ⟨i, h1, h2⟩ := exists_ge_ge i₁ i₂
       ⟨i, p₁.map (f' i₁ i h1) + p₂.map (f' i₂ i h2),
@@ -442,7 +442,7 @@ theorem Polynomial.exists_of [Nonempty ι] [IsDirected ι (· ≤ ·)]
         congr 2 <;> ext x <;> simp_rw [RingHom.comp_apply, of_f]⟩)
     fun n z ih =>
     let ⟨i, x, h⟩ := exists_of z
-    ⟨i, c x * x ^ (n + 1), by rw [Polynomial.map_mul, map_C, h, Polynomial.map_pow, map_X]⟩
+    ⟨i, c x * x ^ (n + 1), by rw [Polynomial.map_mul, map_c, h, Polynomial.map_pow, map_x]⟩
 #align ring.direct_limit.polynomial.exists_of Ring.DirectLimit.Polynomial.exists_of
 
 end
@@ -506,7 +506,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
   · rintro x (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩)
     · refine'
         ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inr rfl) (is_supported_of.2 <| Or.inl rfl), _⟩
+          isSupported_sub (isSupported_of.2 <| Or.inr rfl) (isSupported_of.2 <| Or.inl rfl), _⟩
       · rintro k (rfl | ⟨rfl | _⟩)
         exact hij
         rfl
@@ -518,7 +518,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         rw [this]
         exact sub_self _
         exacts[Or.inr rfl, Or.inl rfl]
-    · refine' ⟨i, {⟨i, 1⟩}, _, is_supported_sub (is_supported_of.2 rfl) is_supported_one, _⟩
+    · refine' ⟨i, {⟨i, 1⟩}, _, isSupported_sub (isSupported_of.2 rfl) isSupported_one, _⟩
       · rintro k (rfl | h)
         rfl
       · rw [(restriction _).map_sub, (FreeCommRing.lift _).map_sub, restriction_of, dif_pos,
@@ -528,9 +528,9 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         · exact Set.mem_singleton _
     · refine'
         ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inl rfl)
-            (is_supported_add (is_supported_of.2 <| Or.inr <| Or.inl rfl)
-              (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
+          isSupported_sub (isSupported_of.2 <| Or.inl rfl)
+            (isSupported_add (isSupported_of.2 <| Or.inr <| Or.inl rfl)
+              (isSupported_of.2 <| Or.inr <| Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
       · rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of,
@@ -542,9 +542,9 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         exacts[Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
     · refine'
         ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, _,
-          is_supported_sub (is_supported_of.2 <| Or.inl rfl)
-            (is_supported_mul (is_supported_of.2 <| Or.inr <| Or.inl rfl)
-              (is_supported_of.2 <| Or.inr <| Or.inr rfl)),
+          isSupported_sub (isSupported_of.2 <| Or.inl rfl)
+            (isSupported_mul (isSupported_of.2 <| Or.inr <| Or.inl rfl)
+              (isSupported_of.2 <| Or.inr <| Or.inr rfl)),
           _⟩
       · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
       · rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of,
@@ -554,7 +554,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         rw [(f' i i _).map_mul]
         exacts[sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
   · refine' Nonempty.elim (by infer_instance) fun ind : ι => _
-    refine' ⟨ind, ∅, fun _ => False.elim, is_supported_zero, _⟩
+    refine' ⟨ind, ∅, fun _ => False.elim, isSupported_zero, _⟩
     rw [(restriction _).map_zero, (FreeCommRing.lift _).map_zero]
   · rintro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
     obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
@@ -565,8 +565,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       exact le_trans (hj z hz) hjk
     refine'
       ⟨k, s ∪ t, this,
-        is_supported_add (is_supported_upwards hxs <| Set.subset_union_left s t)
-          (is_supported_upwards hyt <| Set.subset_union_right s t),
+        isSupported_add (isSupported_upwards hxs <| Set.subset_union_left s t)
+          (isSupported_upwards hyt <| Set.subset_union_right s t),
         _⟩
     ·
       rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, ←
@@ -584,8 +584,8 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
       exacts[(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
     refine'
       ⟨k, ↑s ∪ t, this,
-        is_supported_mul (is_supported_upwards hxs <| Set.subset_union_left (↑s) t)
-          (is_supported_upwards hyt <| Set.subset_union_right (↑s) t),
+        isSupported_mul (isSupported_upwards hxs <| Set.subset_union_left (↑s) t)
+          (isSupported_upwards hyt <| Set.subset_union_right (↑s) t),
         _⟩
     rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, ←
       of.zero_exact_aux2 G f' hyt hj this hjk (Set.subset_union_right (↑s) t), iht,
@@ -598,7 +598,7 @@ theorem of.zero_exact [IsDirected ι (· ≤ ·)] {i x} (hix : of G (fun i j h =
     ∃ (j : _)(hij : i ≤ j), f' i j hij x = 0 :=
   haveI : Nonempty ι := ⟨i⟩
   let ⟨j, s, H, hxs, hx⟩ := of.zero_exact_aux hix
-  have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := is_supported_of.1 hxs
+  have hixs : (⟨i, x⟩ : Σi, G i) ∈ s := isSupported_of.1 hxs
   ⟨j, H ⟨i, x⟩ hixs, by rw [restriction_of, dif_pos hixs, lift_of] at hx <;> exact hx⟩
 #align ring.direct_limit.of.zero_exact Ring.DirectLimit.of.zero_exact
 
@@ -715,11 +715,11 @@ noncomputable def inv (p : Ring.DirectLimit G f) : Ring.DirectLimit G f :=
 #align field.direct_limit.inv Field.DirectLimit.inv
 
 protected theorem mul_inv_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : p * inv G f p = 1 := by
-  rw [inv, dif_neg hp, Classical.choose_spec (direct_limit.exists_inv G f hp)]
+  rw [inv, dif_neg hp, Classical.choose_spec (DirectLimit.exists_inv G f hp)]
 #align field.direct_limit.mul_inv_cancel Field.DirectLimit.mul_inv_cancel
 
 protected theorem inv_mul_cancel {p : Ring.DirectLimit G f} (hp : p ≠ 0) : inv G f p * p = 1 := by
-  rw [_root_.mul_comm, direct_limit.mul_inv_cancel G f hp]
+  rw [mul_comm, DirectLimit.mul_inv_cancel G f hp]
 #align field.direct_limit.inv_mul_cancel Field.DirectLimit.inv_mul_cancel
 
 /-- Noncomputable field structure on the direct limit of fields.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.lifting
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,16 +80,16 @@ def counitCoequalises [∀ X : B, RegularEpi (adj₁.counit.app X)] (X : B) :
     IsColimit (Cofork.ofπ (adj₁.counit.app X) (adj₁.counit_naturality _)) :=
   Cofork.IsColimit.mk' _ fun s =>
     by
-    refine' ⟨(regular_epi.desc' (adj₁.counit.app X) s.π _).1, _, _⟩
-    · rw [← cancel_epi (adj₁.counit.app (regular_epi.W (adj₁.counit.app X)))]
+    refine' ⟨(RegularEpi.desc' (adj₁.counit.app X) s.π _).1, _, _⟩
+    · rw [← cancel_epi (adj₁.counit.app (RegularEpi.w (adj₁.counit.app X)))]
       rw [← adj₁.counit_naturality_assoc]
-      dsimp only [functor.comp_obj]
-      rw [← s.condition, ← F.map_comp_assoc, ← U.map_comp, regular_epi.w, U.map_comp,
+      dsimp only [Functor.comp_obj]
+      rw [← s.condition, ← F.map_comp_assoc, ← U.map_comp, RegularEpi.w, U.map_comp,
         F.map_comp_assoc, s.condition, ← adj₁.counit_naturality_assoc]
-    · apply (regular_epi.desc' (adj₁.counit.app X) s.π _).2
+    · apply (RegularEpi.desc' (adj₁.counit.app X) s.π _).2
     · intro m hm
       rw [← cancel_epi (adj₁.counit.app X)]
-      apply hm.trans (regular_epi.desc' (adj₁.counit.app X) s.π _).2.symm
+      apply hm.trans (RegularEpi.desc' (adj₁.counit.app X) s.π _).2.symm
 #align category_theory.lift_adjoint.counit_coequalises CategoryTheory.LiftAdjoint.counitCoequalises
 
 include adj₁ adj₂
@@ -104,7 +104,7 @@ We will show that this coequalizer exists and that it forms the object map for a
 `R`.
 -/
 def otherMap (X) : F'.obj (U.obj (F.obj (U.obj X))) ⟶ F'.obj (U.obj X) :=
-  F'.map (U.map (F.map (adj₂.Unit.app _) ≫ adj₁.counit.app _)) ≫ adj₂.counit.app _
+  F'.map (U.map (F.map (adj₂.unit.app _) ≫ adj₁.counit.app _)) ≫ adj₂.counit.app _
 #align category_theory.lift_adjoint.other_map CategoryTheory.LiftAdjoint.otherMap
 
 /--
@@ -113,12 +113,12 @@ it has a coequalizer.
 -/
 instance (X : B) :
     IsReflexivePair (F'.map (U.map (adj₁.counit.app X))) (otherMap _ _ adj₁ adj₂ X) :=
-  IsReflexivePair.mk' (F'.map (adj₁.Unit.app (U.obj X)))
+  IsReflexivePair.mk' (F'.map (adj₁.unit.app (U.obj X)))
     (by
       rw [← F'.map_comp, adj₁.right_triangle_components]
       apply F'.map_id)
     (by
-      dsimp [other_map]
+      dsimp [otherMap]
       rw [← F'.map_comp_assoc, U.map_comp, adj₁.unit_naturality_assoc,
         adj₁.right_triangle_components, comp_id, adj₂.left_triangle_components])
 
@@ -146,17 +146,17 @@ noncomputable def constructLeftAdjointEquiv [∀ X : B, RegularEpi (adj₁.couni
       by
       apply (adj₂.hom_equiv _ _).subtypeEquiv _
       intro f
-      rw [← (adj₂.hom_equiv _ _).Injective.eq_iff, eq_comm, adj₂.hom_equiv_naturality_left,
-        other_map, assoc, adj₂.hom_equiv_naturality_left, ← adj₂.counit_naturality,
+      rw [← (adj₂.hom_equiv _ _).injective.eq_iff, eq_comm, adj₂.hom_equiv_naturality_left,
+        otherMap, assoc, adj₂.hom_equiv_naturality_left, ← adj₂.counit_naturality,
         adj₂.hom_equiv_naturality_left, adj₂.hom_equiv_unit, adj₂.right_triangle_components,
-        comp_id, functor.comp_map, ← U.map_comp, assoc, ← adj₁.counit_naturality,
+        comp_id, Functor.comp_map, ← U.map_comp, assoc, ← adj₁.counit_naturality,
         adj₂.hom_equiv_unit, adj₂.hom_equiv_unit, F.map_comp, assoc]
       rfl
     _ ≃ { z : F.obj (U.obj X) ⟶ R.obj Y // _ } :=
       by
       apply (adj₁.hom_equiv _ _).symm.subtypeEquiv
       intro g
-      rw [← (adj₁.hom_equiv _ _).symm.Injective.eq_iff, adj₁.hom_equiv_counit,
+      rw [← (adj₁.hom_equiv _ _).symm.injective.eq_iff, adj₁.hom_equiv_counit,
         adj₁.hom_equiv_counit, adj₁.hom_equiv_counit, F.map_comp, assoc, U.map_comp, F.map_comp,
         assoc, adj₁.counit_naturality, adj₁.counit_naturality_assoc]
       apply eq_comm
@@ -167,16 +167,15 @@ noncomputable def constructLeftAdjointEquiv [∀ X : B, RegularEpi (adj₁.couni
 /-- Construct the left adjoint to `R`, with object map `construct_left_adjoint_obj`. -/
 noncomputable def constructLeftAdjoint [∀ X : B, RegularEpi (adj₁.counit.app X)] : B ⥤ A :=
   by
-  refine'
-    adjunction.left_adjoint_of_equiv (fun X Y => construct_left_adjoint_equiv R _ adj₁ adj₂ Y X) _
+  refine' Adjunction.leftAdjointOfEquiv (fun X Y => constructLeftAdjointEquiv R _ adj₁ adj₂ Y X) _
   intro X Y Y' g h
-  rw [construct_left_adjoint_equiv_apply, construct_left_adjoint_equiv_apply, Function.comp_apply,
+  rw [constructLeftAdjointEquiv_apply, constructLeftAdjointEquiv_apply, Function.comp_apply,
     Function.comp_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply, Equiv.trans_apply,
-    Equiv.symm_apply_eq, Subtype.ext_iff, cofork.is_colimit.hom_iso_natural, Equiv.apply_symm_apply,
+    Equiv.symm_apply_eq, Subtype.ext_iff, Cofork.IsColimit.homIso_natural, Equiv.apply_symm_apply,
     Equiv.subtypeEquiv_apply, Equiv.subtypeEquiv_apply, Equiv.subtypeEquiv_apply,
     Equiv.subtypeEquiv_apply, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk, Subtype.coe_mk, ←
-    adj₁.hom_equiv_naturality_right_symm, cofork.is_colimit.hom_iso_natural,
-    adj₂.hom_equiv_naturality_right, functor.comp_map]
+    adj₁.hom_equiv_naturality_right_symm, Cofork.IsColimit.homIso_natural,
+    adj₂.hom_equiv_naturality_right, Functor.comp_map]
 #align category_theory.lift_adjoint.construct_left_adjoint CategoryTheory.LiftAdjoint.constructLeftAdjoint
 
 end LiftAdjoint
@@ -203,22 +202,22 @@ This is a special case of `adjoint_triangle_lift` which is often more useful in 
 noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint U] {R : A ⥤ B}
     [HasReflexiveCoequalizers A] [IsRightAdjoint (R ⋙ U)] : IsRightAdjoint R :=
   by
-  let R' : A ⥤ _ := R ⋙ monad.comparison (adjunction.of_right_adjoint U)
-  rsuffices : is_right_adjoint R'
-  · let this : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) := by
+  let R' : A ⥤ _ := R ⋙ Monad.comparison (Adjunction.ofRightAdjoint U)
+  rsuffices : IsRightAdjoint R'
+  · let this : IsRightAdjoint (R' ⋙ (Monad.comparison (Adjunction.ofRightAdjoint U)).inv) := by
       infer_instance
-    · let this : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
-        (iso_whisker_left R (monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor
-      exact adjunction.right_adjoint_of_nat_iso this
-  let this : is_right_adjoint (R' ⋙ monad.forget (adjunction.of_right_adjoint U).toMonad) :=
-    adjunction.right_adjoint_of_nat_iso
-      (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)
-  let this : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X) :=
+    · let this : R' ⋙ (Monad.comparison (Adjunction.ofRightAdjoint U)).inv ≅ R :=
+        (isoWhiskerLeft R (Monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor
+      exact Adjunction.rightAdjointOfNatIso this
+  let this : IsRightAdjoint (R' ⋙ Monad.forget (Adjunction.ofRightAdjoint U).toMonad) :=
+    Adjunction.rightAdjointOfNatIso
+      (isoWhiskerLeft R (Monad.comparisonForget (Adjunction.ofRightAdjoint U)).symm : _)
+  let this : ∀ X, RegularEpi ((Monad.adj (Adjunction.ofRightAdjoint U).toMonad).counit.app X) :=
     by
     intro X
-    simp only [monad.adj_counit]
-    exact ⟨_, _, _, _, monad.beck_algebra_coequalizer X⟩
-  exact adjoint_triangle_lift R' (monad.adj _)
+    simp only [Monad.adj_counit]
+    exact ⟨_, _, _, _, Monad.beckAlgebraCoequalizer X⟩
+  exact adjointTriangleLift R' (Monad.adj _)
 #align category_theory.monadic_adjoint_triangle_lift CategoryTheory.monadicAdjointTriangleLift
 
 variable {D : Type u₄}
@@ -242,10 +241,9 @@ See https://ncatlab.org/nlab/show/adjoint+lifting+theorem
 noncomputable def adjointSquareLift (Q : A ⥤ B) (V : B ⥤ D) (U : A ⥤ C) (R : C ⥤ D)
     (comm : U ⋙ R ≅ Q ⋙ V) [IsRightAdjoint U] [IsRightAdjoint V] [IsRightAdjoint R]
     [∀ X, RegularEpi ((Adjunction.ofRightAdjoint V).counit.app X)] [HasReflexiveCoequalizers A] :
-    IsRightAdjoint Q :=
-  by
-  let this := adjunction.right_adjoint_of_nat_iso comm
-  exact adjoint_triangle_lift Q (adjunction.of_right_adjoint V)
+    IsRightAdjoint Q := by
+  let this := Adjunction.rightAdjointOfNatIso comm
+  exact adjointTriangleLift Q (Adjunction.ofRightAdjoint V)
 #align category_theory.adjoint_square_lift CategoryTheory.adjointSquareLift
 
 /-- Suppose we have a commutative square of functors
@@ -265,8 +263,8 @@ noncomputable def monadicAdjointSquareLift (Q : A ⥤ B) (V : B ⥤ D) (U : A �
     (comm : U ⋙ R ≅ Q ⋙ V) [IsRightAdjoint U] [MonadicRightAdjoint V] [IsRightAdjoint R]
     [HasReflexiveCoequalizers A] : IsRightAdjoint Q :=
   by
-  let this := adjunction.right_adjoint_of_nat_iso comm
-  exact monadic_adjoint_triangle_lift V
+  let this := Adjunction.rightAdjointOfNatIso comm
+  exact monadicAdjointTriangleLift V
 #align category_theory.monadic_adjoint_square_lift CategoryTheory.monadicAdjointSquareLift
 
 end CategoryTheory

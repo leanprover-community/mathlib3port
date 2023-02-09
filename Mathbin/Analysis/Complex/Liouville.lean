@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.liouville
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem deriv_eq_smul_circleIntegral [CompleteSpace F] {R : ℝ} {c : ℂ} {f : 
     deriv f c = (2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z :=
   by
   lift R to ℝ≥0 using hR.le
-  refine' (hf.has_fpower_series_on_ball hR).HasFpowerSeriesAt.deriv.trans _
+  refine' (hf.has_fpower_series_on_ball hR).hasFpowerSeriesAt.deriv.trans _
   simp only [cauchyPowerSeries_apply, one_div, zpow_neg, pow_one, smul_smul, zpow_two, mul_inv]
 #align complex.deriv_eq_smul_circle_integral Complex.deriv_eq_smul_circleIntegral
 
@@ -64,8 +64,8 @@ theorem norm_deriv_le_aux [CompleteSpace F] {c : ℂ} {R C : ℝ} {f : ℂ → F
     simpa [-mul_inv_rev, norm_smul, hz, zpow_two, ← div_eq_inv_mul] using
       (div_le_div_right (mul_pos hR hR)).2 (hC z hz)
   calc
-    ‖deriv f c‖ = ‖(2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z‖ :=
-      congr_arg norm (deriv_eq_smul_circle_integral hR hf)
+    ‖deriv f c‖ = ‖(2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), (z - c) ^ (-2 : ℤ) • f z‖ :=
+      congr_arg norm (deriv_eq_smul_circleIntegral hR hf)
     _ ≤ R * (C / (R * R)) :=
       circleIntegral.norm_two_pi_i_inv_smul_integral_le_of_norm_le_const hR.le this
     _ = C / R := by rw [mul_div_left_comm, div_self_mul_self', div_eq_mul_inv]
@@ -81,7 +81,7 @@ theorem norm_deriv_le_of_forall_mem_sphere_norm_le {c : ℂ} {R C : ℝ} {f : �
   set e : F →L[ℂ] F̂ := UniformSpace.Completion.toComplL
   have : HasDerivAt (e ∘ f) (e (deriv f c)) c :=
     e.has_fderiv_at.comp_has_deriv_at c
-      (hd.differentiable_at is_open_ball <| mem_ball_self hR).HasDerivAt
+      (hd.differentiable_at isOpen_ball <| mem_ball_self hR).hasDerivAt
   calc
     ‖deriv f c‖ = ‖deriv (e ∘ f) c‖ := by
       rw [this.deriv]
@@ -126,7 +126,7 @@ theorem apply_eq_apply_of_bounded {f : E → F} (hf : Differentiable ℂ f) (hb 
   set g : ℂ → F := f ∘ fun t : ℂ => t • (w - z) + z
   suffices g 0 = g 1 by simpa [g]
   apply liouville_theorem_aux
-  exacts[hf.comp ((differentiable_id.smul_const (w - z)).AddConst z),
+  exacts[hf.comp ((differentiable_id.smul_const (w - z)).add_const z),
     hb.mono (range_comp_subset_range _ _)]
 #align differentiable.apply_eq_apply_of_bounded Differentiable.apply_eq_apply_of_bounded
 

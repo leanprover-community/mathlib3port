@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.nerve
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ def nerve (C : Type u) [Category.{v} C] : SSet.{max u v}
   map_id' Δ := by
     rw [unop_id, Functor.map_id]
     ext x
-    apply functor.id_comp
+    apply Functor.id_comp
 #align category_theory.nerve CategoryTheory.nerve
 
 instance {C : Type _} [Category C] {Δ : SimplexCategoryᵒᵖ} : Category ((nerve C).obj Δ) :=
@@ -51,7 +51,7 @@ def nerveFunctor : Cat ⥤ SSet where
   map C C' F := { app := fun Δ x => x ⋙ F }
   map_id' C := by
     ext (Δ x)
-    apply functor.comp_id
+    apply Functor.comp_id
 #align category_theory.nerve_functor CategoryTheory.nerveFunctor
 
 end CategoryTheory

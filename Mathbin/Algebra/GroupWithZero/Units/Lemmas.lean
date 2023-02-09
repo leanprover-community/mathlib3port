@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.units.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_self div_selfₓ'. -/
 @[simp]
 theorem div_self (h : a ≠ 0) : a / a = 1 :=
-  h.IsUnit.div_self
+  h.isUnit.div_self
 #align div_self div_self
 
 /- warning: eq_mul_inv_iff_mul_eq₀ -> eq_mul_inv_iff_mul_eq₀ is a dubious translation:
@@ -47,7 +47,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) b (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) c))) (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a c) b))
 Case conversion may be inaccurate. Consider using '#align eq_mul_inv_iff_mul_eq₀ eq_mul_inv_iff_mul_eq₀ₓ'. -/
 theorem eq_mul_inv_iff_mul_eq₀ (hc : c ≠ 0) : a = b * c⁻¹ ↔ a * c = b :=
-  hc.IsUnit.eq_mul_inv_iff_mul_eq
+  hc.isUnit.eq_mul_inv_iff_mul_eq
 #align eq_mul_inv_iff_mul_eq₀ eq_mul_inv_iff_mul_eq₀
 
 /- warning: eq_inv_mul_iff_mul_eq₀ -> eq_inv_mul_iff_mul_eq₀ is a dubious translation:
@@ -57,7 +57,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) b) c)) (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) b a) c))
 Case conversion may be inaccurate. Consider using '#align eq_inv_mul_iff_mul_eq₀ eq_inv_mul_iff_mul_eq₀ₓ'. -/
 theorem eq_inv_mul_iff_mul_eq₀ (hb : b ≠ 0) : a = b⁻¹ * c ↔ b * a = c :=
-  hb.IsUnit.eq_inv_mul_iff_mul_eq
+  hb.isUnit.eq_inv_mul_iff_mul_eq
 #align eq_inv_mul_iff_mul_eq₀ eq_inv_mul_iff_mul_eq₀
 
 /- warning: inv_mul_eq_iff_eq_mul₀ -> inv_mul_eq_iff_eq_mul₀ is a dubious translation:
@@ -67,7 +67,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) a) b) c) (Eq.{succ u1} G₀ b (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a c)))
 Case conversion may be inaccurate. Consider using '#align inv_mul_eq_iff_eq_mul₀ inv_mul_eq_iff_eq_mul₀ₓ'. -/
 theorem inv_mul_eq_iff_eq_mul₀ (ha : a ≠ 0) : a⁻¹ * b = c ↔ b = a * c :=
-  ha.IsUnit.inv_mul_eq_iff_eq_mul
+  ha.isUnit.inv_mul_eq_iff_eq_mul
 #align inv_mul_eq_iff_eq_mul₀ inv_mul_eq_iff_eq_mul₀
 
 /- warning: mul_inv_eq_iff_eq_mul₀ -> mul_inv_eq_iff_eq_mul₀ is a dubious translation:
@@ -77,7 +77,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) b)) c) (Eq.{succ u1} G₀ a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) c b)))
 Case conversion may be inaccurate. Consider using '#align mul_inv_eq_iff_eq_mul₀ mul_inv_eq_iff_eq_mul₀ₓ'. -/
 theorem mul_inv_eq_iff_eq_mul₀ (hb : b ≠ 0) : a * b⁻¹ = c ↔ a = c * b :=
-  hb.IsUnit.mul_inv_eq_iff_eq_mul
+  hb.isUnit.mul_inv_eq_iff_eq_mul
 #align mul_inv_eq_iff_eq_mul₀ mul_inv_eq_iff_eq_mul₀
 
 /- warning: mul_inv_eq_one₀ -> mul_inv_eq_one₀ is a dubious translation:
@@ -87,7 +87,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) b)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2))))))) (Eq.{succ u1} G₀ a b))
 Case conversion may be inaccurate. Consider using '#align mul_inv_eq_one₀ mul_inv_eq_one₀ₓ'. -/
 theorem mul_inv_eq_one₀ (hb : b ≠ 0) : a * b⁻¹ = 1 ↔ a = b :=
-  hb.IsUnit.mul_inv_eq_one
+  hb.isUnit.mul_inv_eq_one
 #align mul_inv_eq_one₀ mul_inv_eq_one₀
 
 /- warning: inv_mul_eq_one₀ -> inv_mul_eq_one₀ is a dubious translation:
@@ -97,7 +97,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) a) b) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2))))))) (Eq.{succ u1} G₀ a b))
 Case conversion may be inaccurate. Consider using '#align inv_mul_eq_one₀ inv_mul_eq_one₀ₓ'. -/
 theorem inv_mul_eq_one₀ (ha : a ≠ 0) : a⁻¹ * b = 1 ↔ a = b :=
-  ha.IsUnit.inv_mul_eq_one
+  ha.isUnit.inv_mul_eq_one
 #align inv_mul_eq_one₀ inv_mul_eq_one₀
 
 /- warning: mul_eq_one_iff_eq_inv₀ -> mul_eq_one_iff_eq_inv₀ is a dubious translation:
@@ -107,7 +107,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a b) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2))))))) (Eq.{succ u1} G₀ a (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) b)))
 Case conversion may be inaccurate. Consider using '#align mul_eq_one_iff_eq_inv₀ mul_eq_one_iff_eq_inv₀ₓ'. -/
 theorem mul_eq_one_iff_eq_inv₀ (hb : b ≠ 0) : a * b = 1 ↔ a = b⁻¹ :=
-  hb.IsUnit.mul_eq_one_iff_eq_inv
+  hb.isUnit.mul_eq_one_iff_eq_inv
 #align mul_eq_one_iff_eq_inv₀ mul_eq_one_iff_eq_inv₀
 
 /- warning: mul_eq_one_iff_inv_eq₀ -> mul_eq_one_iff_inv_eq₀ is a dubious translation:
@@ -117,7 +117,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a b) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2))))))) (Eq.{succ u1} G₀ (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_2) a) b))
 Case conversion may be inaccurate. Consider using '#align mul_eq_one_iff_inv_eq₀ mul_eq_one_iff_inv_eq₀ₓ'. -/
 theorem mul_eq_one_iff_inv_eq₀ (ha : a ≠ 0) : a * b = 1 ↔ a⁻¹ = b :=
-  ha.IsUnit.mul_eq_one_iff_inv_eq
+  ha.isUnit.mul_eq_one_iff_inv_eq
 #align mul_eq_one_iff_inv_eq₀ mul_eq_one_iff_inv_eq₀
 
 /- warning: div_mul_cancel -> div_mul_cancel is a dubious translation:
@@ -128,7 +128,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_mul_cancel div_mul_cancelₓ'. -/
 @[simp]
 theorem div_mul_cancel (a : G₀) (h : b ≠ 0) : a / b * b = a :=
-  h.IsUnit.div_mul_cancelₓ _
+  h.isUnit.div_mul_cancel _
 #align div_mul_cancel div_mul_cancel
 
 /- warning: mul_div_cancel -> mul_div_cancel is a dubious translation:
@@ -139,7 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_div_cancel mul_div_cancelₓ'. -/
 @[simp]
 theorem mul_div_cancel (a : G₀) (h : b ≠ 0) : a * b / b = a :=
-  h.IsUnit.mul_div_cancel _
+  h.isUnit.mul_div_cancel _
 #align mul_div_cancel mul_div_cancel
 
 /- warning: mul_one_div_cancel -> mul_one_div_cancel is a dubious translation:
@@ -149,7 +149,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) a)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align mul_one_div_cancel mul_one_div_cancelₓ'. -/
 theorem mul_one_div_cancel (h : a ≠ 0) : a * (1 / a) = 1 :=
-  h.IsUnit.mul_one_div_cancel
+  h.isUnit.mul_one_div_cancel
 #align mul_one_div_cancel mul_one_div_cancel
 
 /- warning: one_div_mul_cancel -> one_div_mul_cancel is a dubious translation:
@@ -159,7 +159,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) a) a) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align one_div_mul_cancel one_div_mul_cancelₓ'. -/
 theorem one_div_mul_cancel (h : a ≠ 0) : 1 / a * a = 1 :=
-  h.IsUnit.one_div_mul_cancel
+  h.isUnit.one_div_mul_cancel
 #align one_div_mul_cancel one_div_mul_cancel
 
 /- warning: div_left_inj' -> div_left_inj' is a dubious translation:
@@ -169,7 +169,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a c) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) b c)) (Eq.{succ u1} G₀ a b))
 Case conversion may be inaccurate. Consider using '#align div_left_inj' div_left_inj'ₓ'. -/
 theorem div_left_inj' (hc : c ≠ 0) : a / c = b / c ↔ a = b :=
-  hc.IsUnit.div_left_inj
+  hc.isUnit.div_left_inj
 #align div_left_inj' div_left_inj'
 
 /- warning: div_eq_iff -> div_eq_iff is a dubious translation:
@@ -180,7 +180,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_eq_iff div_eq_iffₓ'. -/
 @[field_simps]
 theorem div_eq_iff (hb : b ≠ 0) : a / b = c ↔ a = c * b :=
-  hb.IsUnit.div_eq_iff
+  hb.isUnit.div_eq_iff
 #align div_eq_iff div_eq_iff
 
 /- warning: eq_div_iff -> eq_div_iff is a dubious translation:
@@ -191,7 +191,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eq_div_iff eq_div_iffₓ'. -/
 @[field_simps]
 theorem eq_div_iff (hb : b ≠ 0) : c = a / b ↔ c * b = a :=
-  hb.IsUnit.eq_div_iff
+  hb.isUnit.eq_div_iff
 #align eq_div_iff eq_div_iff
 
 /- warning: div_eq_iff_mul_eq -> div_eq_iff_mul_eq is a dubious translation:
@@ -201,7 +201,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) c) (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) c b) a))
 Case conversion may be inaccurate. Consider using '#align div_eq_iff_mul_eq div_eq_iff_mul_eqₓ'. -/
 theorem div_eq_iff_mul_eq (hb : b ≠ 0) : a / b = c ↔ c * b = a :=
-  hb.IsUnit.div_eq_iff.trans eq_comm
+  hb.isUnit.div_eq_iff.trans eq_comm
 #align div_eq_iff_mul_eq div_eq_iff_mul_eq
 
 /- warning: eq_div_iff_mul_eq -> eq_div_iff_mul_eq is a dubious translation:
@@ -211,7 +211,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ a (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) b c)) (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a c) b))
 Case conversion may be inaccurate. Consider using '#align eq_div_iff_mul_eq eq_div_iff_mul_eqₓ'. -/
 theorem eq_div_iff_mul_eq (hc : c ≠ 0) : a = b / c ↔ a * c = b :=
-  hc.IsUnit.eq_div_iff
+  hc.isUnit.eq_div_iff
 #align eq_div_iff_mul_eq eq_div_iff_mul_eq
 
 /- warning: div_eq_of_eq_mul -> div_eq_of_eq_mul is a dubious translation:
@@ -221,7 +221,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) c b)) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) c)
 Case conversion may be inaccurate. Consider using '#align div_eq_of_eq_mul div_eq_of_eq_mulₓ'. -/
 theorem div_eq_of_eq_mul (hb : b ≠ 0) : a = c * b → a / b = c :=
-  hb.IsUnit.div_eq_of_eq_mul
+  hb.isUnit.div_eq_of_eq_mul
 #align div_eq_of_eq_mul div_eq_of_eq_mul
 
 /- warning: eq_div_of_mul_eq -> eq_div_of_mul_eq is a dubious translation:
@@ -231,7 +231,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀} {c : G₀}, (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a c) b) -> (Eq.{succ u1} G₀ a (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) b c))
 Case conversion may be inaccurate. Consider using '#align eq_div_of_mul_eq eq_div_of_mul_eqₓ'. -/
 theorem eq_div_of_mul_eq (hc : c ≠ 0) : a * c = b → a = b / c :=
-  hc.IsUnit.eq_div_of_mul_eq
+  hc.isUnit.eq_div_of_mul_eq
 #align eq_div_of_mul_eq eq_div_of_mul_eq
 
 /- warning: div_eq_one_iff_eq -> div_eq_one_iff_eq is a dubious translation:
@@ -241,7 +241,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Iff (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2))))))) (Eq.{succ u1} G₀ a b))
 Case conversion may be inaccurate. Consider using '#align div_eq_one_iff_eq div_eq_one_iff_eqₓ'. -/
 theorem div_eq_one_iff_eq (hb : b ≠ 0) : a / b = 1 ↔ a = b :=
-  hb.IsUnit.div_eq_one_iff_eq
+  hb.isUnit.div_eq_one_iff_eq
 #align div_eq_one_iff_eq div_eq_one_iff_eq
 
 /- warning: div_mul_left -> div_mul_left is a dubious translation:
@@ -251,7 +251,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) b (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a b)) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) a))
 Case conversion may be inaccurate. Consider using '#align div_mul_left div_mul_leftₓ'. -/
 theorem div_mul_left (hb : b ≠ 0) : b / (a * b) = 1 / a :=
-  hb.IsUnit.div_mul_left
+  hb.isUnit.div_mul_left
 #align div_mul_left div_mul_left
 
 /- warning: mul_div_mul_right -> mul_div_mul_right is a dubious translation:
@@ -261,7 +261,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {c : G₀} (a : G₀) (b : G₀), (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a c) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) b c)) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b))
 Case conversion may be inaccurate. Consider using '#align mul_div_mul_right mul_div_mul_rightₓ'. -/
 theorem mul_div_mul_right (a b : G₀) (hc : c ≠ 0) : a * c / (b * c) = a / b :=
-  hc.IsUnit.mul_div_mul_right _ _
+  hc.isUnit.mul_div_mul_right _ _
 #align mul_div_mul_right mul_div_mul_right
 
 /- warning: mul_mul_div -> mul_mul_div is a dubious translation:
@@ -271,7 +271,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {b : G₀} (a : G₀), (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) a b) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (GroupWithZero.toDivisionMonoid.{u1} G₀ _inst_2)))))) b)))
 Case conversion may be inaccurate. Consider using '#align mul_mul_div mul_mul_divₓ'. -/
 theorem mul_mul_div (a : G₀) (hb : b ≠ 0) : a = a * b * (1 / b) :=
-  (hb.IsUnit.mul_mul_div _).symm
+  (hb.isUnit.mul_mul_div _).symm
 #align mul_mul_div mul_mul_div
 
 /- warning: div_div_div_cancel_right -> div_div_div_cancel_right is a dubious translation:
@@ -339,7 +339,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {a : G₀} (b : G₀), (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) a b)) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) (OfNat.ofNat.{u1} G₀ 1 (One.toOfNat1.{u1} G₀ (InvOneClass.toOne.{u1} G₀ (DivInvOneMonoid.toInvOneClass.{u1} G₀ (DivisionMonoid.toDivInvOneMonoid.{u1} G₀ (DivisionCommMonoid.toDivisionMonoid.{u1} G₀ (CommGroupWithZero.toDivisionCommMonoid.{u1} G₀ _inst_2))))))) b))
 Case conversion may be inaccurate. Consider using '#align div_mul_right div_mul_rightₓ'. -/
 theorem div_mul_right (b : G₀) (ha : a ≠ 0) : a / (a * b) = 1 / b :=
-  ha.IsUnit.div_mul_right _
+  ha.isUnit.div_mul_right _
 #align div_mul_right div_mul_right
 
 /- warning: mul_div_cancel_left_of_imp -> mul_div_cancel_left_of_imp is a dubious translation:
@@ -359,7 +359,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {a : G₀} (b : G₀), (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) a b) a) b)
 Case conversion may be inaccurate. Consider using '#align mul_div_cancel_left mul_div_cancel_leftₓ'. -/
 theorem mul_div_cancel_left (b : G₀) (ha : a ≠ 0) : a * b / a = b :=
-  ha.IsUnit.mul_div_cancel_left _
+  ha.isUnit.mul_div_cancel_left _
 #align mul_div_cancel_left mul_div_cancel_left
 
 /- warning: mul_div_cancel_of_imp' -> mul_div_cancel_of_imp' is a dubious translation:
@@ -379,7 +379,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {b : G₀} (a : G₀), (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) b (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a b)) a)
 Case conversion may be inaccurate. Consider using '#align mul_div_cancel' mul_div_cancel'ₓ'. -/
 theorem mul_div_cancel' (a : G₀) (hb : b ≠ 0) : b * (a / b) = a :=
-  hb.IsUnit.mul_div_cancel'ₓ _
+  hb.isUnit.mul_div_cancel' _
 #align mul_div_cancel' mul_div_cancel'
 
 /- warning: mul_div_mul_left -> mul_div_mul_left is a dubious translation:
@@ -389,7 +389,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {c : G₀} (a : G₀) (b : G₀), (Ne.{succ u1} G₀ c (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) c a) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ (CommGroupWithZero.toGroupWithZero.{u1} G₀ _inst_2)))))) c b)) (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a b))
 Case conversion may be inaccurate. Consider using '#align mul_div_mul_left mul_div_mul_leftₓ'. -/
 theorem mul_div_mul_left (a b : G₀) (hc : c ≠ 0) : c * a / (c * b) = a / b :=
-  hc.IsUnit.mul_div_mul_left _ _
+  hc.isUnit.mul_div_mul_left _ _
 #align mul_div_mul_left mul_div_mul_left
 
 /- warning: mul_eq_mul_of_div_eq_div -> mul_eq_mul_of_div_eq_div is a dubious translation:
@@ -411,7 +411,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align div_eq_div_iff div_eq_div_iffₓ'. -/
 @[field_simps]
 theorem div_eq_div_iff (hb : b ≠ 0) (hd : d ≠ 0) : a / b = c / d ↔ a * d = c * b :=
-  hb.IsUnit.div_eq_div_iff hd.IsUnit
+  hb.isUnit.div_eq_div_iff hd.isUnit
 #align div_eq_div_iff div_eq_div_iff
 
 /- warning: div_div_cancel' -> div_div_cancel' is a dubious translation:
@@ -421,7 +421,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : CommGroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (CommMonoidWithZero.toZero.{u1} G₀ (CommGroupWithZero.toCommMonoidWithZero.{u1} G₀ _inst_2))))) -> (Eq.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (CommGroupWithZero.toDiv.{u1} G₀ _inst_2)) a b)) b)
 Case conversion may be inaccurate. Consider using '#align div_div_cancel' div_div_cancel'ₓ'. -/
 theorem div_div_cancel' (ha : a ≠ 0) : a / (a / b) = b :=
-  ha.IsUnit.div_div_cancel
+  ha.isUnit.div_div_cancel
 #align div_div_cancel' div_div_cancel'
 
 /- warning: div_helper -> div_helper is a dubious translation:
@@ -450,7 +450,7 @@ but is expected to have type
   forall {M₀ : Type.{u3}} {G₀ : Type.{u1}} {F : Type.{u2}} [_inst_1 : MonoidWithZero.{u3} M₀] [_inst_2 : GroupWithZero.{u1} G₀] [_inst_3 : Nontrivial.{u3} M₀] [_inst_5 : MonoidWithZeroHomClass.{u2, u1, u3} F G₀ M₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) (MonoidWithZero.toMulZeroOneClass.{u3} M₀ _inst_1)] (f : F) {a : G₀}, Iff (Ne.{succ u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : G₀) => M₀) a) (FunLike.coe.{succ u2, succ u1, succ u3} F G₀ (fun (_x : G₀) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : G₀) => M₀) _x) (MulHomClass.toFunLike.{u2, u1, u3} F G₀ M₀ (MulOneClass.toMul.{u1} G₀ (MulZeroOneClass.toMulOneClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))) (MulOneClass.toMul.{u3} M₀ (MulZeroOneClass.toMulOneClass.{u3} M₀ (MonoidWithZero.toMulZeroOneClass.{u3} M₀ _inst_1))) (MonoidHomClass.toMulHomClass.{u2, u1, u3} F G₀ M₀ (MulZeroOneClass.toMulOneClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))) (MulZeroOneClass.toMulOneClass.{u3} M₀ (MonoidWithZero.toMulZeroOneClass.{u3} M₀ _inst_1)) (MonoidWithZeroHomClass.toMonoidHomClass.{u2, u1, u3} F G₀ M₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) (MonoidWithZero.toMulZeroOneClass.{u3} M₀ _inst_1) _inst_5))) f a) (OfNat.ofNat.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : G₀) => M₀) a) 0 (Zero.toOfNat0.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : G₀) => M₀) a) (MonoidWithZero.toZero.{u3} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : G₀) => M₀) a) _inst_1)))) (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)))))
 Case conversion may be inaccurate. Consider using '#align map_ne_zero map_ne_zeroₓ'. -/
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
-  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).NeZero⟩
+  ⟨fun hfa ha => hfa <| ha.symm ▸ map_zero f, fun ha => ((IsUnit.mk0 a ha).map f).ne_zero⟩
 #align map_ne_zero map_ne_zero
 
 /- warning: map_eq_zero -> map_eq_zero is a dubious translation:

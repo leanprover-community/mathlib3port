@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fp.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,7 +21,7 @@ import Mathbin.Data.Rat.Floor
 
 #print Int.shift2 /-
 def Int.shift2 (a b : ℕ) : ℤ → ℕ × ℕ
-  | Int.ofNat e => (a.shiftl e, b)
+  | int.of_nat e => (a.shiftl e, b)
   | -[e+1] => (a, b.shiftl e.succ)
 #align int.shift2 Int.shift2
 -/
@@ -172,7 +172,7 @@ but is expected to have type
   Nat -> Nat -> Int -> Bool
 Case conversion may be inaccurate. Consider using '#align fp.div_nat_lt_two_pow FP.divNatLtTwoPowₓₓ'. -/
 def divNatLtTwoPow (n d : ℕ) : ℤ → Bool
-  | Int.ofNat e => n < d.shiftl e
+  | int.of_nat e => n < d.shiftl e
   | -[e+1] => n.shiftl e.succ < d
 #align fp.div_nat_lt_two_pow FP.divNatLtTwoPowₓ
 
@@ -187,7 +187,7 @@ unsafe def ofPosRatDn (n : ℕ+) (d : ℕ+) : Float × Bool :=
   cases' h₂ : Int.shift2 d.1 n.1 (e₃ + prec) with d₂ n₂
   let r := mkRat n₂ d₂
   let m := r.floor
-  refine' (float.finite ff e₃ (Int.toNat m) _, r.denom = 1)
+  refine' (Float.finite false e₃ (Int.toNat m) _, r.denom = 1)
   · exact undefined
 #align fp.of_pos_rat_dn FP.ofPosRatDn
 -/
@@ -205,7 +205,7 @@ unsafe def nextUpPos (e m) (v : ValidFinite e m) : Float :=
 unsafe def nextDnPos (e m) (v : ValidFinite e m) : Float :=
   match m with
   | 0 => nextUpPos _ _ Float.Zero.valid
-  | Nat.succ m' =>
+  | nat.succ m' =>
     if ss : m'.size = m.size then
       Float.finite false e m' (by unfold valid_finite at * <;> rw [ss] <;> exact v)
     else
@@ -233,7 +233,7 @@ unsafe def nextDn : Float → Float
 #print FP.ofRatUp /-
 unsafe def ofRatUp : ℚ → Float
   | ⟨0, _, _, _⟩ => Float.zero false
-  | ⟨Nat.succ n, d, h, _⟩ =>
+  | ⟨nat.succ n, d, h, _⟩ =>
     let (f, exact) := ofPosRatDn n.succPNat ⟨d, h⟩
     if exact then f else nextUp f
   | ⟨-[n+1], d, h, _⟩ => Float.neg (ofPosRatDn n.succPNat ⟨d, h⟩).1
@@ -279,7 +279,7 @@ unsafe def add (mode : RMode) : Float → Float → Float
   | inf ff, inf tt => nan
   | inf s₁, _ => inf s₁
   | _, inf s₂ => inf s₂
-  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
+  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     ofRat mode (toRat f₁ rfl + toRat f₂ rfl)
@@ -304,7 +304,7 @@ unsafe def mul (mode : RMode) : Float → Float → Float
   | _, nan => nan
   | inf s₁, f₂ => if f₂.isZero then nan else inf (xor s₁ f₂.sign)
   | f₁, inf s₂ => if f₁.isZero then nan else inf (xor f₁.sign s₂)
-  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
+  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     ofRat mode (toRat f₁ rfl * toRat f₂ rfl)
@@ -318,7 +318,7 @@ unsafe def div (mode : RMode) : Float → Float → Float
   | inf s₁, inf s₂ => nan
   | inf s₁, f₂ => inf (xor s₁ f₂.sign)
   | f₁, inf s₂ => zero (xor f₁.sign s₂)
-  | Finite s₁ e₁ m₁ v₁, Finite s₂ e₂ m₂ v₂ =>
+  | finite s₁ e₁ m₁ v₁, finite s₂ e₂ m₂ v₂ =>
     let f₁ := finite s₁ e₁ m₁ v₁
     let f₂ := finite s₂ e₂ m₂ v₂
     if f₂.isZero then inf (xor s₁ s₂) else ofRat mode (toRat f₁ rfl / toRat f₂ rfl)

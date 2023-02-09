@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.base
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem logb_rpow : logb b (b ^ x) = x :=
 
 theorem rpow_logb_eq_abs (hx : x ≠ 0) : b ^ logb b x = |x| :=
   by
-  apply log_inj_on_pos
+  apply log_injOn_pos
   simp only [Set.mem_Ioi]
   apply rpow_pos_of_pos b_pos
   simp only [abs_pos, mem_Ioi, Ne.def, hx, not_false_iff]
@@ -251,7 +251,7 @@ theorem strictAntiOn_logb : StrictAntiOn (logb b) (Set.Iio 0) :=
 #align real.strict_anti_on_logb Real.strictAntiOn_logb
 
 theorem logb_injOn_pos : Set.InjOn (logb b) (Set.Ioi 0) :=
-  (strictMonoOn_logb hb).InjOn
+  (strictMonoOn_logb hb).injOn
 #align real.logb_inj_on_pos Real.logb_injOn_pos
 
 theorem eq_one_of_pos_of_logb_eq_zero (h₁ : 0 < x) (h₂ : logb b x = 0) : x = 1 :=
@@ -360,7 +360,7 @@ theorem strictMonoOn_logb_of_base_lt_one : StrictMonoOn (logb b) (Set.Iio 0) :=
 #align real.strict_mono_on_logb_of_base_lt_one Real.strictMonoOn_logb_of_base_lt_one
 
 theorem logb_injOn_pos_of_base_lt_one : Set.InjOn (logb b) (Set.Ioi 0) :=
-  (strictAntiOn_logb_of_base_lt_one b_pos b_lt_one).InjOn
+  (strictAntiOn_logb_of_base_lt_one b_pos b_lt_one).injOn
 #align real.logb_inj_on_pos_of_base_lt_one Real.logb_injOn_pos_of_base_lt_one
 
 theorem eq_one_of_pos_of_logb_eq_zero_of_base_lt_one (h₁ : 0 < x) (h₂ : logb b x = 0) : x = 1 :=
@@ -374,7 +374,7 @@ theorem logb_ne_zero_of_pos_of_ne_one_of_base_lt_one (hx_pos : 0 < x) (hx : x �
 
 theorem tendsto_logb_atTop_of_base_lt_one : Tendsto (logb b) atTop atBot :=
   by
-  rw [tendsto_at_top_at_bot]
+  rw [tendsto_atTop_atBot]
   intro e
   use 1 ⊔ b ^ e
   intro a

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.graded_monoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ theorem gnpowRec_zero (a : GradedMonoid A) : GradedMonoid.mk _ (gnpowRec 0 a.snd
   Sigma.ext (zero_nsmul _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_zero GradedMonoid.GMonoid.gnpowRec_zero
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_zero'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_zero_tac : tactic Unit :=
@@ -212,7 +212,7 @@ theorem gnpowRec_succ (n : ℕ) (a : GradedMonoid A) :
   Sigma.ext (succ_nsmul _ _) (heq_of_cast_eq _ rfl).symm
 #align graded_monoid.gmonoid.gnpow_rec_succ GradedMonoid.GMonoid.gnpowRec_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic used to autofill `graded_monoid.gmonoid.gnpow_succ'` when the default
 `graded_monoid.gmonoid.gnpow_rec` is used. -/
 unsafe def apply_gnpow_rec_succ_tac : tactic Unit :=
@@ -270,9 +270,9 @@ theorem mk_pow [AddMonoid ι] [GMonoid A] {i} (a : A i) (n : ℕ) :
   by
   induction' n with n
   · rw [pow_zero]
-    exact (gmonoid.gnpow_zero' ⟨_, a⟩).symm
+    exact (GMonoid.gnpow_zero' ⟨_, a⟩).symm
   · rw [pow_succ, n_ih, mk_mul_mk]
-    exact (gmonoid.gnpow_succ' n ⟨_, a⟩).symm
+    exact (GMonoid.gnpow_succ' n ⟨_, a⟩).symm
 #align graded_monoid.mk_pow GradedMonoid.mk_pow
 
 #print GradedMonoid.GCommMonoid /-
@@ -330,7 +330,8 @@ Case conversion may be inaccurate. Consider using '#align graded_monoid.grade_ze
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
 -/
-instance GradeZero.smul (i : ι) : SMul (A 0) (A i) where smul x y := (zero_add i).rec (GMul.mul x y)
+instance GradeZero.smul (i : ι) : SMul (A 0) (A i)
+    where smul x y := (zero_add i).ndrec (GMul.mul x y)
 #align graded_monoid.grade_zero.has_smul GradedMonoid.GradeZero.smul
 
 /- warning: graded_monoid.grade_zero.has_mul -> GradedMonoid.GradeZero.mul is a dubious translation:
@@ -375,7 +376,7 @@ section Monoid
 
 variable [AddMonoid ι] [GMonoid A]
 
-instance : Pow (A 0) ℕ where pow x n := (nsmul_zero n).rec (GMonoid.gnpow n x : A (n • 0))
+instance : Pow (A 0) ℕ where pow x n := (nsmul_zero n).ndrec (GMonoid.gnpow n x : A (n • 0))
 
 variable {A}
 
@@ -449,7 +450,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align graded_monoid.grade_zero.mul_action GradedMonoid.GradeZero.mulActionₓ'. -/
 /-- Each grade `A i` derives a `A 0`-action structure from `gmonoid A`. -/
 instance GradeZero.mulAction {i} : MulAction (A 0) (A i) :=
-  letI := MulAction.compHom (GradedMonoid A) (mk_zero_monoid_hom A)
+  letI := MulAction.compHom (GradedMonoid A) (mkZeroMonoidHom A)
   Function.Injective.mulAction (mk i) sigma_mk_injective mk_zero_smul
 #align graded_monoid.grade_zero.mul_action GradedMonoid.GradeZero.mulAction
 
@@ -503,7 +504,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : AddMonoid.{u1} ι] (l : List.{u2} α) (fι : α -> ι), Eq.{succ u1} ι (List.dProdIndex.{u1, u2} ι α _inst_1 l fι) (List.sum.{u1} ι (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_1)) (AddMonoid.toZero.{u1} ι _inst_1) (List.map.{u2, u1} α ι fι l))
 Case conversion may be inaccurate. Consider using '#align list.dprod_index_eq_map_sum List.dProdIndex_eq_map_sumₓ'. -/
-theorem List.dProdIndex_eq_map_sum (l : List α) (fι : α → ι) : l.dProdIndex fι = (l.map fι).Sum :=
+theorem List.dProdIndex_eq_map_sum (l : List α) (fι : α → ι) : l.dProdIndex fι = (l.map fι).sum :=
   by
   dsimp only [List.dProdIndex]
   induction l
@@ -555,7 +556,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u3}} {A : ι -> Type.{u1}} [_inst_1 : AddMonoid.{u2} ι] [_inst_2 : GradedMonoid.GMonoid.{u2, u1} ι A _inst_1] (l : List.{u3} α) (fι : α -> ι) (fA : forall (a : α), A (fι a)), Eq.{max (succ u2) (succ u1)} (GradedMonoid.{u2, u1} ι A) (GradedMonoid.mk.{u2, u1} ι A (List.dProdIndex.{u2, u3} ι α _inst_1 l fι) (List.dProd.{u2, u3, u1} ι α A _inst_1 _inst_2 l fι fA)) (List.prod.{max u2 u1} (GradedMonoid.{u2, u1} ι A) (GradedMonoid.GMul.toMul.{u2, u1} ι A (AddZeroClass.toAdd.{u2} ι (AddMonoid.toAddZeroClass.{u2} ι _inst_1)) (GradedMonoid.GMonoid.toGMul.{u2, u1} ι A _inst_1 _inst_2)) (GradedMonoid.GOne.toOne.{u2, u1} ι A (AddMonoid.toZero.{u2} ι _inst_1) (GradedMonoid.GMonoid.toGOne.{u2, u1} ι A _inst_1 _inst_2)) (List.map.{u3, max u1 u2} α (GradedMonoid.{u2, u1} ι A) (fun (a : α) => GradedMonoid.mk.{u2, u1} ι A (fι a) (fA a)) l))
 Case conversion may be inaccurate. Consider using '#align graded_monoid.mk_list_dprod GradedMonoid.mk_list_dProdₓ'. -/
 theorem GradedMonoid.mk_list_dProd (l : List α) (fι : α → ι) (fA : ∀ a, A (fι a)) :
-    GradedMonoid.mk _ (l.dProd fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).Prod :=
+    GradedMonoid.mk _ (l.dProd fι fA) = (l.map fun a => GradedMonoid.mk (fι a) (fA a)).prod :=
   by
   induction l
   · simp
@@ -572,7 +573,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align graded_monoid.list_prod_map_eq_dprod GradedMonoid.list_prod_map_eq_dProdₓ'. -/
 /-- A variant of `graded_monoid.mk_list_dprod` for rewriting in the other direction. -/
 theorem GradedMonoid.list_prod_map_eq_dProd (l : List α) (f : α → GradedMonoid A) :
-    (l.map f).Prod = GradedMonoid.mk _ (l.dProd (fun i => (f i).1) fun i => (f i).2) :=
+    (l.map f).prod = GradedMonoid.mk _ (l.dProd (fun i => (f i).1) fun i => (f i).2) :=
   by
   rw [GradedMonoid.mk_list_dProd, GradedMonoid.mk]
   simp_rw [Sigma.eta]
@@ -585,7 +586,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {A : ι -> Type.{u1}} [_inst_1 : AddMonoid.{u2} ι] [_inst_2 : GradedMonoid.GMonoid.{u2, u1} ι A _inst_1] {n : Nat} (f : (Fin n) -> (GradedMonoid.{u2, u1} ι A)), Eq.{max (succ u2) (succ u1)} (GradedMonoid.{u2, u1} ι A) (List.prod.{max u2 u1} (GradedMonoid.{u2, u1} ι A) (GradedMonoid.GMul.toMul.{u2, u1} ι A (AddZeroClass.toAdd.{u2} ι (AddMonoid.toAddZeroClass.{u2} ι _inst_1)) (GradedMonoid.GMonoid.toGMul.{u2, u1} ι A _inst_1 _inst_2)) (GradedMonoid.GOne.toOne.{u2, u1} ι A (AddMonoid.toZero.{u2} ι _inst_1) (GradedMonoid.GMonoid.toGOne.{u2, u1} ι A _inst_1 _inst_2)) (List.ofFn.{max u2 u1} (GradedMonoid.{u2, u1} ι A) n f)) (GradedMonoid.mk.{u2, u1} ι A (List.dProdIndex.{u2, 0} ι (Fin n) _inst_1 (List.finRange n) (fun (i : Fin n) => Sigma.fst.{u2, u1} ι A (f i))) (List.dProd.{u2, 0, u1} ι (Fin n) A _inst_1 _inst_2 (List.finRange n) (fun (i : Fin n) => Sigma.fst.{u2, u1} ι A (f i)) (fun (i : Fin n) => Sigma.snd.{u2, u1} ι A (f i))))
 Case conversion may be inaccurate. Consider using '#align graded_monoid.list_prod_of_fn_eq_dprod GradedMonoid.list_prod_ofFn_eq_dProdₓ'. -/
 theorem GradedMonoid.list_prod_ofFn_eq_dProd {n : ℕ} (f : Fin n → GradedMonoid A) :
-    (List.ofFn f).Prod =
+    (List.ofFn f).prod =
       GradedMonoid.mk _ ((List.finRange n).dProd (fun i => (f i).1) fun i => (f i).2) :=
   by rw [List.ofFn_eq_map, GradedMonoid.list_prod_map_eq_dProd]
 #align graded_monoid.list_prod_of_fn_eq_dprod GradedMonoid.list_prod_ofFn_eq_dProd
@@ -646,7 +647,7 @@ Case conversion may be inaccurate. Consider using '#align list.dprod_monoid List
 /-- When all the indexed types are the same, the dependent product is just the regular product. -/
 @[simp]
 theorem List.dProd_monoid {α} [AddMonoid ι] [Monoid R] (l : List α) (fι : α → ι) (fA : α → R) :
-    (l.dProd fι fA : (fun i : ι => R) _) = ((l.map fA).Prod : _) :=
+    (l.dProd fι fA : (fun i : ι => R) _) = ((l.map fA).prod : _) :=
   by
   induction l
   · rw [List.dProd_nil, List.map_nil, List.prod_nil]
@@ -710,7 +711,7 @@ theorem SetLike.mul_mem_graded {S : Type _} [SetLike S R] [Mul R] [Add ι] {A : 
 #print SetLike.gMul /-
 instance SetLike.gMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.GradedMul A] :
     GradedMonoid.GMul fun i => A i
-    where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.Prop b.Prop⟩
+    where mul i j a b := ⟨(a * b : R), SetLike.mul_mem_graded a.prop b.prop⟩
 #align set_like.ghas_mul SetLike.gMul
 -/
 
@@ -758,7 +759,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : SetLike.{u2, u3} S R] [_inst_2 : Monoid.{u3} R] [_inst_3 : AddMonoid.{u1} ι] {A : ι -> S} [_inst_4 : SetLike.GradedMonoid.{u1, u3, u2} ι R S _inst_1 _inst_2 _inst_3 A] {ι' : Type.{u4}} (l : List.{u4} ι') (i : ι' -> ι) (r : ι' -> R), (forall (j : ι'), (Membership.mem.{u4, u4} ι' (List.{u4} ι') (List.instMembershipList.{u4} ι') j l) -> (Membership.mem.{u3, u2} R S (SetLike.instMembership.{u2, u3} S R _inst_1) (r j) (A (i j)))) -> (Membership.mem.{u3, u2} R S (SetLike.instMembership.{u2, u3} S R _inst_1) (List.prod.{u3} R (MulOneClass.toMul.{u3} R (Monoid.toMulOneClass.{u3} R _inst_2)) (Monoid.toOne.{u3} R _inst_2) (List.map.{u4, u3} ι' R r l)) (A (List.sum.{u1} ι (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_3)) (AddMonoid.toZero.{u1} ι _inst_3) (List.map.{u4, u1} ι' ι i l))))
 Case conversion may be inaccurate. Consider using '#align set_like.list_prod_map_mem_graded SetLike.list_prod_map_mem_gradedₓ'. -/
 theorem list_prod_map_mem_graded {ι'} (l : List ι') (i : ι' → ι) (r : ι' → R)
-    (h : ∀ j ∈ l, r j ∈ A (i j)) : (l.map r).Prod ∈ A (l.map i).Sum :=
+    (h : ∀ j ∈ l, r j ∈ A (i j)) : (l.map r).prod ∈ A (l.map i).sum :=
   by
   induction l
   · rw [List.map_nil, List.map_nil, List.prod_nil, List.sum_nil]
@@ -776,7 +777,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {R : Type.{u3}} {S : Type.{u2}} [_inst_1 : SetLike.{u2, u3} S R] [_inst_2 : Monoid.{u3} R] [_inst_3 : AddMonoid.{u1} ι] {A : ι -> S} [_inst_4 : SetLike.GradedMonoid.{u1, u3, u2} ι R S _inst_1 _inst_2 _inst_3 A] {n : Nat} (i : (Fin n) -> ι) (r : (Fin n) -> R), (forall (j : Fin n), Membership.mem.{u3, u2} R S (SetLike.instMembership.{u2, u3} S R _inst_1) (r j) (A (i j))) -> (Membership.mem.{u3, u2} R S (SetLike.instMembership.{u2, u3} S R _inst_1) (List.prod.{u3} R (MulOneClass.toMul.{u3} R (Monoid.toMulOneClass.{u3} R _inst_2)) (Monoid.toOne.{u3} R _inst_2) (List.ofFn.{u3} R n r)) (A (List.sum.{u1} ι (AddZeroClass.toAdd.{u1} ι (AddMonoid.toAddZeroClass.{u1} ι _inst_3)) (AddMonoid.toZero.{u1} ι _inst_3) (List.ofFn.{u1} ι n i))))
 Case conversion may be inaccurate. Consider using '#align set_like.list_prod_of_fn_mem_graded SetLike.list_prod_ofFn_mem_gradedₓ'. -/
 theorem list_prod_ofFn_mem_graded {n} (i : Fin n → ι) (r : Fin n → R) (h : ∀ j, r j ∈ A (i j)) :
-    (List.ofFn r).Prod ∈ A (List.ofFn i).Sum :=
+    (List.ofFn r).prod ∈ A (List.ofFn i).sum :=
   by
   rw [List.ofFn_eq_map, List.ofFn_eq_map]
   exact list_prod_map_mem_graded _ _ _ fun _ _ => h _
@@ -795,7 +796,7 @@ instance SetLike.gMonoid {S : Type _} [SetLike S R] [Monoid R] [AddMonoid ι] (A
     mul_one := fun ⟨i, a, h⟩ => Sigma.subtype_ext (add_zero _) (mul_one _)
     mul_assoc := fun ⟨i, a, ha⟩ ⟨j, b, hb⟩ ⟨k, c, hc⟩ =>
       Sigma.subtype_ext (add_assoc _ _ _) (mul_assoc _ _ _)
-    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.Prop⟩
+    gnpow := fun n i a => ⟨a ^ n, SetLike.pow_mem_graded n a.prop⟩
     gnpow_zero' := fun n => Sigma.subtype_ext (zero_nsmul _) (pow_zero _)
     gnpow_succ' := fun n a => Sigma.subtype_ext (succ_nsmul _ _) (pow_succ _ _) }
 #align set_like.gmonoid SetLike.gMonoid
@@ -839,8 +840,8 @@ theorem SetLike.coe_list_dProd (A : ι → S) [SetLike.GradedMonoid A] (fι : α
     ↑(l.dProd fι fA : (fun i => ↥(A i)) _) = (List.prod (l.map fun a => fA a) : R) :=
   by
   induction l
-  · rw [List.dProd_nil, coe_ghas_one, List.map_nil, List.prod_nil]
-  · rw [List.dProd_cons, coe_ghas_mul, List.map_cons, List.prod_cons, l_ih]
+  · rw [List.dProd_nil, coe_gOne, List.map_nil, List.prod_nil]
+  · rw [List.dProd_cons, coe_gMul, List.map_cons, List.prod_cons, l_ih]
 #align set_like.coe_list_dprod SetLike.coe_list_dProd
 
 include R
@@ -857,7 +858,7 @@ theorem SetLike.list_dProd_eq (A : ι → S) [SetLike.GradedMonoid A] (fι : α 
     (l.dProd fι fA : (fun i => ↥(A i)) _) =
       ⟨List.prod (l.map fun a => fA a),
         (l.dProdIndex_eq_map_sum fι).symm ▸
-          list_prod_map_mem_graded l _ _ fun i hi => (fA i).Prop⟩ :=
+          list_prod_map_mem_graded l _ _ fun i hi => (fA i).prop⟩ :=
   Subtype.ext <| SetLike.coe_list_dProd _ _ _ _
 #align set_like.list_dprod_eq SetLike.list_dProd_eq
 
@@ -884,7 +885,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set_like.is_homogeneous_coe SetLike.homogeneous_coeₓ'. -/
 @[simp]
 theorem SetLike.homogeneous_coe {A : ι → S} {i} (x : A i) : SetLike.Homogeneous A (x : R) :=
-  ⟨i, x.Prop⟩
+  ⟨i, x.prop⟩
 #align set_like.is_homogeneous_coe SetLike.homogeneous_coe
 
 /- warning: set_like.is_homogeneous_one -> SetLike.homogeneous_one is a dubious translation:

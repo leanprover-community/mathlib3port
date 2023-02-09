@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module number_theory.padics.padic_norm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,8 +99,8 @@ theorem padicNorm_p_of_prime [Fact p.Prime] : padicNorm p p = p⁻¹ :=
 theorem padicNorm_of_prime_of_ne {q : ℕ} [p_prime : Fact p.Prime] [q_prime : Fact q.Prime]
     (neq : p ≠ q) : padicNorm p q = 1 :=
   by
-  have p : padicValRat p q = 0 := by exact_mod_cast @padicValNat_primes p q p_prime q_prime neq
-  simp [padicNorm, p, q_prime.1.1, q_prime.1.NeZero]
+  have p : padicValRat p q = 0 := by exact_mod_cast @padic_val_nat_primes p q p_prime q_prime neq
+  simp [padicNorm, p, q_prime.1.1, q_prime.1.ne_zero]
 #align padic_norm.padic_norm_of_prime_of_ne padicNorm.padicNorm_of_prime_of_ne
 
 /-- The `p`-adic norm of `p` is less than `1` if `1 < p`.
@@ -108,7 +108,7 @@ theorem padicNorm_of_prime_of_ne {q : ℕ} [p_prime : Fact p.Prime] [q_prime : F
 See also `padic_norm.padic_norm_p_lt_one_of_prime` for a version assuming `p` is prime. -/
 theorem padicNorm_p_lt_one (hp : 1 < p) : padicNorm p p < 1 :=
   by
-  rw [padic_norm_p hp, inv_lt_one_iff]
+  rw [padicNorm_p hp, inv_lt_one_iff]
   exact_mod_cast Or.inr hp
 #align padic_norm.padic_norm_p_lt_one padicNorm.padicNorm_p_lt_one
 
@@ -139,7 +139,7 @@ protected theorem nonzero {q : ℚ} (hq : q ≠ 0) : padicNorm p q ≠ 0 :=
   by
   rw [padicNorm.eq_zpow_of_nonzero hq]
   apply zpow_ne_zero_of_ne_zero
-  exact_mod_cast ne_of_gt hp.1.Pos
+  exact_mod_cast ne_of_gt hp.1.pos
 #align padic_norm.nonzero padicNorm.nonzero
 
 /-- If the `p`-adic norm of `q` is 0, then `q` is `0`. -/
@@ -149,7 +149,7 @@ theorem zero_of_padicNorm_eq_zero {q : ℚ} (h : padicNorm p q = 0) : q = 0 :=
   unfold padicNorm at h; rw [if_neg hq] at h
   apply absurd h
   apply zpow_ne_zero_of_ne_zero
-  exact_mod_cast hp.1.NeZero
+  exact_mod_cast hp.1.ne_zero
 #align padic_norm.zero_of_padic_norm_eq_zero padicNorm.zero_of_padicNorm_eq_zero
 
 /-- The `p`-adic norm is multiplicative. -/
@@ -160,7 +160,7 @@ protected theorem mul (q r : ℚ) : padicNorm p (q * r) = padicNorm p q * padicN
     if hr : r = 0 then by simp [hr]
     else by
       have : q * r ≠ 0 := mul_ne_zero hq hr
-      have : (p : ℚ) ≠ 0 := by simp [hp.1.NeZero]
+      have : (p : ℚ) ≠ 0 := by simp [hp.1.ne_zero]
       simp [padicNorm, *, padicValRat.mul, zpow_add₀ this, mul_comm]
 #align padic_norm.mul padicNorm.mul
 
@@ -203,7 +203,7 @@ private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicVal
         · apply neg_le_neg
           have : padicValRat p q = min (padicValRat p q) (padicValRat p r) := (min_eq_left h).symm
           rw [this]
-          apply min_le_padic_val_rat_add <;> assumption
+          apply min_le_padicValRat_add <;> assumption
 #align padic_norm.nonarchimedean_aux padic_norm.nonarchimedean_aux
 
 /-- The `p`-adic norm is nonarchimedean: the norm of `p + q` is at most the max of the norm of `p`
@@ -255,7 +255,7 @@ theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     apply not_lt_of_ge this
     assumption
   have : padicNorm p q ≤ padicNorm p (q + r) := by rwa [max_eq_left hnge] at this
-  apply _root_.le_antisymm
+  apply le_antisymm
   · apply padicNorm.nonarchimedean
   · rwa [max_eq_left_of_lt hlt]
 #align padic_norm.add_eq_max_of_ne padicNorm.add_eq_max_of_ne
@@ -275,7 +275,7 @@ theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z
   · norm_cast  at hz
     have : 0 ≤ (p ^ n : ℚ) := by
       apply pow_nonneg
-      exact_mod_cast le_of_lt hp.1.Pos
+      exact_mod_cast le_of_lt hp.1.pos
     simp [hz, this]
   · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,
       padicValInt.of_ne_one_ne_zero hp.1.ne_one _]

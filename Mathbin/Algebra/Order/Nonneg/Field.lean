@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.nonneg.field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem mk_zpow (hx : 0 ≤ x) (n : ℤ) :
 #align nonneg.mk_zpow Nonneg.mk_zpow
 
 instance linearOrderedSemifield : LinearOrderedSemifield { x : α // 0 ≤ x } :=
-  Subtype.coe_injective.LinearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add
+  Subtype.coe_injective.linearOrderedSemifield _ Nonneg.coe_zero Nonneg.coe_one Nonneg.coe_add
     Nonneg.coe_mul Nonneg.coe_inv Nonneg.coe_div (fun _ _ => rfl) Nonneg.coe_pow Nonneg.coe_zpow
     Nonneg.coe_nat_cast (fun _ _ => rfl) fun _ _ => rfl
 #align nonneg.linear_ordered_semifield Nonneg.linearOrderedSemifield

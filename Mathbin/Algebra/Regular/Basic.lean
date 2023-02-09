@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.regular.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -282,7 +282,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular.subsingleton IsRegular.subsingletonₓ'. -/
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem IsRegular.subsingleton (h : IsRegular (0 : R)) : Subsingleton R :=
-  h.left.Subsingleton
+  h.left.subsingleton
 #align is_regular.subsingleton IsRegular.subsingleton
 
 /- warning: is_left_regular_zero_iff_subsingleton -> isLeftRegular_zero_iff_subsingleton is a dubious translation:
@@ -293,7 +293,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_left_regular_zero_iff_subsingleton isLeftRegular_zero_iff_subsingletonₓ'. -/
 /-- The element `0` is left-regular if and only if `R` is trivial. -/
 theorem isLeftRegular_zero_iff_subsingleton : IsLeftRegular (0 : R) ↔ Subsingleton R :=
-  ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
+  ⟨fun h => h.subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
 #align is_left_regular_zero_iff_subsingleton isLeftRegular_zero_iff_subsingleton
 
 /- warning: not_is_left_regular_zero_iff -> not_isLeftRegular_zero_iff is a dubious translation:
@@ -318,7 +318,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_right_regular_zero_iff_subsingleton isRightRegular_zero_iff_subsingletonₓ'. -/
 /-- The element `0` is right-regular if and only if `R` is trivial. -/
 theorem isRightRegular_zero_iff_subsingleton : IsRightRegular (0 : R) ↔ Subsingleton R :=
-  ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
+  ⟨fun h => h.subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
 #align is_right_regular_zero_iff_subsingleton isRightRegular_zero_iff_subsingleton
 
 /- warning: not_is_right_regular_zero_iff -> not_isRightRegular_zero_iff is a dubious translation:
@@ -343,7 +343,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular_iff_subsingleton isRegular_iff_subsingletonₓ'. -/
 /-- The element `0` is regular if and only if `R` is trivial. -/
 theorem isRegular_iff_subsingleton : IsRegular (0 : R) ↔ Subsingleton R :=
-  ⟨fun h => h.left.Subsingleton, fun h =>
+  ⟨fun h => h.left.subsingleton, fun h =>
     ⟨isLeftRegular_zero_iff_subsingleton.mpr h, isRightRegular_zero_iff_subsingleton.mpr h⟩⟩
 #align is_regular_iff_subsingleton isRegular_iff_subsingleton
 
@@ -385,7 +385,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_regular.ne_zero IsRegular.ne_zeroₓ'. -/
 /-- A regular element of a `nontrivial` `mul_zero_class` is non-zero. -/
 theorem IsRegular.ne_zero [Nontrivial R] (la : IsRegular a) : a ≠ 0 :=
-  la.left.NeZero
+  la.left.ne_zero
 #align is_regular.ne_zero IsRegular.ne_zero
 
 /- warning: not_is_left_regular_zero -> not_isLeftRegular_zero is a dubious translation:

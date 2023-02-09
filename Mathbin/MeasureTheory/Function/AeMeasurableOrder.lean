@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_measurable_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,15 +76,15 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
     calc
       μ t ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u' p ∩ v p q) :=
         by
-        refine' (measure_Union_le _).trans _
+        refine' (measure_unionᵢ_le _).trans _
         apply Ennreal.tsum_le_tsum fun p => _
-        apply measure_Union_le _
+        apply measure_unionᵢ_le _
         exact (s_count.mono (inter_subset_left _ _)).to_subtype
       _ ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u p q ∩ v p q) :=
         by
         apply Ennreal.tsum_le_tsum fun p => _
         refine' Ennreal.tsum_le_tsum fun q => measure_mono _
-        exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
+        exact inter_subset_inter_left _ (binterᵢ_subset_of_mem q.2)
       _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) :=
         by
         congr
@@ -101,7 +101,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       change μ _ = 0
       convert this
       ext y
-      simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_iff, not_not_mem]
+      simp only [not_exists, exists_prop, mem_setOf_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this]with x hx
     apply (infᵢ_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
@@ -113,14 +113,14 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
         dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_Ioo (nonempty_Ioo.2 hx)
       have A : x ∈ v i r := (huv i r).2.2.2.1 rq
-      apply mem_Union.2 ⟨i, _⟩
-      refine' mem_Union.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
+      apply mem_unionᵢ.2 ⟨i, _⟩
+      refine' mem_unionᵢ.2 ⟨⟨r, ⟨rs, xr⟩⟩, _⟩
       exact ⟨H, A⟩
     · intro q hq
       obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
         dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_Ioo (nonempty_Ioo.2 hq)
       refine' ⟨⟨r, rs⟩, _⟩
-      have A : x ∈ u' r := mem_bInter fun i hi => (huv r i).2.2.1 xr
+      have A : x ∈ u' r := mem_binterᵢ fun i hi => (huv r i).2.2.1 xr
       simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
   exact ⟨f', f'_meas, ff'⟩
 #align measure_theory.ae_measurable_of_exist_almost_disjoint_supersets MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets

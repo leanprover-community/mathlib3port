@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime_norm_num
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem minFacHelper_1 {n k k' : ℕ} (e : k + 1 = k') (np : Nat.minFac (bit1 n)
 theorem minFacHelper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1 k))
     (h : MinFacHelper n k) : MinFacHelper n k' :=
   by
-  refine' min_fac_helper_1 e _ h
+  refine' minFacHelper_1 e _ h
   intro e₁; rw [← e₁] at np
   exact np (Nat.minFac_prime <| ne_of_gt <| Nat.bit1_lt h.n_pos)
 #align tactic.norm_num.min_fac_helper_2 Tactic.NormNum.minFacHelper_2
@@ -81,7 +81,7 @@ theorem minFacHelper_2 (n k k' : ℕ) (e : k + 1 = k') (np : ¬Nat.Prime (bit1 k
 theorem minFacHelper_3 (n k k' c : ℕ) (e : k + 1 = k') (nc : bit1 n % bit1 k = c) (c0 : 0 < c)
     (h : MinFacHelper n k) : MinFacHelper n k' :=
   by
-  refine' min_fac_helper_1 e _ h
+  refine' minFacHelper_1 e _ h
   refine' mt _ (ne_of_gt c0); intro e₁
   rw [← nc, ← Nat.dvd_iff_mod_eq_zero, ← e₁]
   apply Nat.minFac_dvd
@@ -125,7 +125,7 @@ unsafe def prove_non_prime (e : expr) (n d₁ : ℕ) : tactic expr := do
 unsafe def prove_min_fac_aux (a a1 : expr) (n1 : ℕ) :
     instance_cache → expr → expr → tactic (instance_cache × expr × expr)
   | ic, b, p => do
-    let k ← b.toNat
+    let k ← b.to_nat
     let k1 := bit1 k
     let b1 := q((bit1 : ℕ → ℕ)).mk_app [b]
     if n1 < k1 * k1 then do
@@ -159,7 +159,7 @@ unsafe def prove_min_fac (ic : instance_cache) (e : expr) : tactic (instance_cac
   | match_numeral_result.one => return (ic, q((1 : ℕ)), q(Nat.minFac_one))
   | match_numeral_result.bit0 e => return (ic, q(2), q(minFac_bit0).mk_app [e])
   | match_numeral_result.bit1 e => do
-    let n ← e.toNat
+    let n ← e.to_nat
     let c ← mk_instance_cache q(Nat)
     let (c, p) ← prove_pos c e
     let a1 := q((bit1 : ℕ → ℕ)).mk_app [e]
@@ -224,7 +224,7 @@ theorem factorsHelper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : N
           then
           do
             let m := n / b
-              let ( c , em ) ← c . ofNat m
+              let ( c , em ) ← c . of_nat m
               if
                 b = a
                 then
@@ -278,7 +278,7 @@ theorem factorsHelper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : N
 @[norm_num]
 unsafe def eval_prime : expr → tactic (expr × expr)
   | q(Nat.Prime $(e)) => do
-    let n ← e.toNat
+    let n ← e.to_nat
     match n with
       | 0 => false_intro q(Nat.not_prime_zero)
       | 1 => false_intro q(Nat.not_prime_one)
@@ -293,9 +293,9 @@ unsafe def eval_prime : expr → tactic (expr × expr)
           true_intro <| q(is_prime_helper).mk_app [e, p₁, p]
   | q(Nat.minFac $(e)) => do
     let ic ← mk_instance_cache q(ℕ)
-    Prod.snd <$> prove_min_fac ic e
+    prod.snd <$> prove_min_fac ic e
   | q(Nat.factors $(e)) => do
-    let n ← e.toNat
+    let n ← e.to_nat
     match n with
       | 0 => pure (q(@List.nil ℕ), q(Nat.factors_zero))
       | 1 => pure (q(@List.nil ℕ), q(Nat.factors_one))

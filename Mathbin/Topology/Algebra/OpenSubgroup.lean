@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.algebra.open_subgroup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,7 +153,7 @@ protected theorem mul_mem {g₁ g₂ : G} (h₁ : g₁ ∈ U) (h₂ : g₂ ∈ U
 
 @[to_additive]
 theorem mem_nhds_one : (U : Set G) ∈ 𝓝 (1 : G) :=
-  IsOpen.mem_nhds U.IsOpen U.one_mem
+  IsOpen.mem_nhds U.isOpen U.one_mem
 #align open_subgroup.mem_nhds_one OpenSubgroup.mem_nhds_one
 #align open_add_subgroup.mem_nhds_zero OpenAddSubgroup.mem_nhds_zero
 
@@ -191,10 +191,10 @@ variable {H : Type _} [Group H] [TopologicalSpace H]
 @[to_additive "The product of two open subgroups as an open subgroup of the product group."]
 def prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
   {
-    (U : Subgroup G).Prod (V : Subgroup
+    (U : Subgroup G).prod (V : Subgroup
           H) with
     carrier := U ×ˢ V
-    is_open' := U.IsOpen.Prod V.IsOpen }
+    is_open' := U.isOpen.prod V.isOpen }
 #align open_subgroup.prod OpenSubgroup.prod
 #align open_add_subgroup.sum OpenAddSubgroup.sum
 
@@ -209,7 +209,7 @@ instance : PartialOrder (OpenSubgroup G) :=
 instance : SemilatticeInf (OpenSubgroup G) :=
   {
     OpenSubgroup.partialOrder with
-    inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.IsOpen V.IsOpen }
+    inf := fun U V => { (U : Subgroup G) ⊓ V with is_open' := IsOpen.inter U.isOpen V.isOpen }
     inf_le_left := fun U V => Set.inter_subset_left _ _
     inf_le_right := fun U V => Set.inter_subset_right _ _
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
@@ -244,7 +244,7 @@ variable {N : Type _} [Group N] [TopologicalSpace N]
 @[to_additive
       "The preimage of an `open_add_subgroup` along a continuous `add_monoid` homomorphism\nis an `open_add_subgroup`."]
 def comap (f : G →* N) (hf : Continuous f) (H : OpenSubgroup N) : OpenSubgroup G :=
-  { (H : Subgroup N).comap f with is_open' := H.IsOpen.Preimage hf }
+  { (H : Subgroup N).comap f with is_open' := H.isOpen.preimage hf }
 #align open_subgroup.comap OpenSubgroup.comap
 #align open_add_subgroup.comap OpenAddSubgroup.comap
 
@@ -282,7 +282,7 @@ theorem isOpen_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : S
   simp only [isOpen_iff_mem_nhds, SetLike.mem_coe] at hg⊢
   intro x hx
   have : Filter.Tendsto (fun y => y * (x⁻¹ * g)) (𝓝 x) (𝓝 <| x * (x⁻¹ * g)) :=
-    (continuous_id.mul continuous_const).Tendsto _
+    (continuous_id.mul continuous_const).tendsto _
   rw [mul_inv_cancel_left] at this
   have := Filter.mem_map'.1 (this hg)
   replace hg : g ∈ H := SetLike.mem_coe.1 (mem_of_mem_nhds hg)
@@ -304,7 +304,7 @@ theorem isOpen_of_one_mem_interior {G : Type _} [Group G] [TopologicalSpace G] [
     {H : Subgroup G} (h_1_int : (1 : G) ∈ interior (H : Set G)) : IsOpen (H : Set G) :=
   by
   have h : 𝓝 1 ≤ Filter.principal (H : Set G) :=
-    nhds_le_of_le h_1_int isOpen_interior (Filter.principal_mono.2 interior_subset)
+    nhds_le_of_le h_1_int is_open_interior (Filter.principal_mono.2 interior_subset)
   rw [isOpen_iff_nhds]
   intro g hg
   rw [show 𝓝 g = Filter.map (⇑(Homeomorph.mulLeft g)) (𝓝 1) by simp]
@@ -337,7 +337,7 @@ instance : SemilatticeSup (OpenSubgroup G) :=
       { (U : Subgroup G) ⊔ V with
         is_open' :=
           show IsOpen (((U : Subgroup G) ⊔ V : Subgroup G) : Set G) from
-            Subgroup.isOpen_mono le_sup_left U.IsOpen }
+            Subgroup.isOpen_mono le_sup_left U.isOpen }
     le_sup_left := fun U V => coe_subgroup_le.1 le_sup_left
     le_sup_right := fun U V => coe_subgroup_le.1 le_sup_right
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }

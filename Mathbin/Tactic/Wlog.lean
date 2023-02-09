@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Johan Commelin, Reid Barton
 
 ! This file was ported from Lean 3 source module tactic.wlog
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ unsafe def wlog (H : parse ident) (t : parse (tk ":" *> texpr))
     swap
   tactic.by_cases t H
   let H ← tactic.get_local H
-  let L := ctx.filterₓ fun n => n ∉ rctx
+  let L := ctx.filter fun n => n ∉ rctx
   tactic.exact <| (e L).app H
 #align tactic.interactive.wlog tactic.interactive.wlog
 

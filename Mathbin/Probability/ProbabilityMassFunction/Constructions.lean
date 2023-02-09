@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.constructions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,16 +81,16 @@ variable (s : Set β)
 
 @[simp]
 theorem toOuterMeasure_map_apply : (p.map f).toOuterMeasure s = p.toOuterMeasure (f ⁻¹' s) := by
-  simp [map, Set.indicator, to_outer_measure_apply p (f ⁻¹' s)]
+  simp [map, Set.indicator, toOuterMeasure_apply p (f ⁻¹' s)]
 #align pmf.to_outer_measure_map_apply Pmf.toOuterMeasure_map_apply
 
 @[simp]
 theorem toMeasure_map_apply [MeasurableSpace α] [MeasurableSpace β] (hf : Measurable f)
     (hs : MeasurableSet s) : (p.map f).toMeasure s = p.toMeasure (f ⁻¹' s) :=
   by
-  rw [to_measure_apply_eq_to_outer_measure_apply _ s hs,
-    to_measure_apply_eq_to_outer_measure_apply _ (f ⁻¹' s) (measurableSet_preimage hf hs)]
-  exact to_outer_measure_map_apply f p s
+  rw [toMeasure_apply_eq_toOuterMeasure_apply _ s hs,
+    toMeasure_apply_eq_toOuterMeasure_apply _ (f ⁻¹' s) (measurableSet_preimage hf hs)]
+  exact toOuterMeasure_map_apply f p s
 #align pmf.to_measure_map_apply Pmf.toMeasure_map_apply
 
 end Measure
@@ -114,7 +114,7 @@ theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 :=
   by
   simp only [seq, mul_boole, bind_apply, pure_apply]
-  refine' tsum_congr fun f => Ennreal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
+  refine' tsum_congr fun f => ennreal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
   simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
 #align pmf.seq_apply Pmf.seq_apply
 
@@ -141,7 +141,7 @@ instance : LawfulMonad Pmf where
 
 section OfFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0∞` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
 def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1)
@@ -149,7 +149,7 @@ def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1)
   ⟨f, h ▸ hasSum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 variable {f : α → ℝ≥0∞} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
@@ -267,29 +267,28 @@ def filter (p : Pmf α) (s : Set α) (h : ∃ a ∈ s, a ∈ p.support) : Pmf α
 variable {p : Pmf α} {s : Set α} (h : ∃ a ∈ s, a ∈ p.support)
 
 @[simp]
-theorem filter_apply (a : α) :
-    (p.filterₓ s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ := by
-  rw [Filter, normalize_apply]
+theorem filter_apply (a : α) : (p.filter s h) a = s.indicator p a * (∑' a', (s.indicator p) a')⁻¹ :=
+  by rw [filter, normalize_apply]
 #align pmf.filter_apply Pmf.filter_apply
 
-theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filterₓ s h) a = 0 := by
+theorem filter_apply_eq_zero_of_not_mem {a : α} (ha : a ∉ s) : (p.filter s h) a = 0 := by
   rw [filter_apply, set.indicator_apply_eq_zero.mpr fun ha' => absurd ha' ha, zero_mul]
 #align pmf.filter_apply_eq_zero_of_not_mem Pmf.filter_apply_eq_zero_of_not_mem
 
-theorem mem_support_filter_iff {a : α} : a ∈ (p.filterₓ s h).support ↔ a ∈ s ∧ a ∈ p.support :=
+theorem mem_support_filter_iff {a : α} : a ∈ (p.filter s h).support ↔ a ∈ s ∧ a ∈ p.support :=
   (mem_support_normalize_iff _ _ _).trans Set.indicator_apply_ne_zero
 #align pmf.mem_support_filter_iff Pmf.mem_support_filter_iff
 
 @[simp]
-theorem support_filter : (p.filterₓ s h).support = s ∩ p.support :=
+theorem support_filter : (p.filter s h).support = s ∩ p.support :=
   Set.ext fun x => mem_support_filter_iff _
 #align pmf.support_filter Pmf.support_filter
 
-theorem filter_apply_eq_zero_iff (a : α) : (p.filterₓ s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
+theorem filter_apply_eq_zero_iff (a : α) : (p.filter s h) a = 0 ↔ a ∉ s ∨ a ∉ p.support := by
   erw [apply_eq_zero_iff, support_filter, Set.mem_inter_iff, not_and_or]
 #align pmf.filter_apply_eq_zero_iff Pmf.filter_apply_eq_zero_iff
 
-theorem filter_apply_ne_zero_iff (a : α) : (p.filterₓ s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
+theorem filter_apply_ne_zero_iff (a : α) : (p.filter s h) a ≠ 0 ↔ a ∈ s ∧ a ∈ p.support := by
   rw [Ne.def, filter_apply_eq_zero_iff, not_or, Classical.not_not, Classical.not_not]
 #align pmf.filter_apply_ne_zero_iff Pmf.filter_apply_ne_zero_iff
 

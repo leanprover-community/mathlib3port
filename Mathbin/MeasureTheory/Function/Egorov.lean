@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.egorov
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ variable {n : ℕ} {i j : ι} {s : Set α} {ε : ℝ} {f : ι → α → β} {g 
 theorem mem_notConvergentSeq_iff [Preorder ι] {x : α} :
     x ∈ notConvergentSeq f g n j ↔ ∃ (k : _)(hk : j ≤ k), 1 / (n + 1 : ℝ) < dist (f k x) (g x) :=
   by
-  simp_rw [not_convergent_seq, mem_Union]
+  simp_rw [notConvergentSeq, mem_unionᵢ]
   rfl
 #align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iff
 
@@ -67,7 +67,7 @@ theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]
   simp_rw [Metric.tendsto_atTop, ae_iff] at hfg
   rw [← nonpos_iff_eq_zero, ← hfg]
   refine' measure_mono fun x => _
-  simp only [mem_inter_iff, mem_Inter, ge_iff_le, mem_not_convergent_seq_iff]
+  simp only [mem_inter_iff, mem_interᵢ, ge_iff_le, mem_notConvergentSeq_iff]
   push_neg
   rintro ⟨hmem, hx⟩
   refine' ⟨hmem, 1 / (n + 1 : ℝ), Nat.one_div_pos_of_nat, fun N => _⟩
@@ -89,15 +89,15 @@ theorem measure_notConvergentSeq_tendsto_zero [SemilatticeSup ι] [Countable ι]
     Tendsto (fun j => μ (s ∩ notConvergentSeq f g n j)) atTop (𝓝 0) :=
   by
   cases isEmpty_or_nonempty ι
-  · have : (fun j => μ (s ∩ not_convergent_seq f g n j)) = fun j => 0 := by
+  · have : (fun j => μ (s ∩ notConvergentSeq f g n j)) = fun j => 0 := by
       simp only [eq_iff_true_of_subsingleton]
     rw [this]
     exact tendsto_const_nhds
-  rw [← measure_inter_not_convergent_seq_eq_zero hfg n, inter_Inter]
+  rw [← measure_inter_notConvergentSeq_eq_zero hfg n, inter_interᵢ]
   refine'
-    tendsto_measure_Inter (fun n => hsm.inter <| not_convergent_seq_measurable_set hf hg)
-      (fun k l hkl => inter_subset_inter_right _ <| not_convergent_seq_antitone hkl)
-      ⟨h.some, (lt_of_le_of_lt (measure_mono <| inter_subset_left _ _) (lt_top_iff_ne_top.2 hs)).Ne⟩
+    tendsto_measure_interᵢ (fun n => hsm.inter <| notConvergentSeq_measurableSet hf hg)
+      (fun k l hkl => inter_subset_inter_right _ <| notConvergentSeq_antitone hkl)
+      ⟨h.some, (lt_of_le_of_lt (measure_mono <| inter_subset_left _ _) (lt_top_iff_ne_top.2 hs)).ne⟩
 #align measure_theory.egorov.measure_not_convergent_seq_tendsto_zero MeasureTheory.Egorov.measure_notConvergentSeq_tendsto_zero
 
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι]
@@ -109,7 +109,7 @@ theorem exists_notConvergentSeq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasurabl
   by
   obtain ⟨N, hN⟩ :=
     (Ennreal.tendsto_atTop Ennreal.zero_ne_top).1
-      (measure_not_convergent_seq_tendsto_zero hf hg hsm hs hfg n) (Ennreal.ofReal (ε * 2⁻¹ ^ n)) _
+      (measure_notConvergentSeq_tendsto_zero hf hg hsm hs hfg n) (Ennreal.ofReal (ε * 2⁻¹ ^ n)) _
   · rw [zero_add] at hN
     exact ⟨N, (hN N le_rfl).2⟩
   · rw [gt_iff_lt, Ennreal.ofReal_pos]
@@ -158,9 +158,9 @@ theorem measure_unionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasur
     μ (unionNotConvergentSeq hε hf hg hsm hs hfg) ≤ Ennreal.ofReal ε :=
   by
   refine'
-    le_trans (measure_Union_le _)
+    le_trans (measure_unionᵢ_le _)
       (le_trans
-        (Ennreal.tsum_le_tsum <| not_convergent_seq_lt_index_spec (half_pos hε) hf hg hsm hs hfg) _)
+        (Ennreal.tsum_le_tsum <| notConvergentSeqLtIndex_spec (half_pos hε) hf hg hsm hs hfg) _)
   simp_rw [Ennreal.ofReal_mul (half_pos hε).le]
   rw [Ennreal.tsum_mul_left, ← Ennreal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
     Ennreal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
@@ -175,7 +175,7 @@ theorem unionNotConvergentSeq_subset (hε : 0 < ε) (hf : ∀ n, StronglyMeasura
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
     unionNotConvergentSeq hε hf hg hsm hs hfg ⊆ s :=
   by
-  rw [Union_not_convergent_seq, ← inter_Union]
+  rw [unionNotConvergentSeq, ← inter_unionᵢ]
   exact inter_subset_left _ _
 #align measure_theory.egorov.Union_not_convergent_seq_subset MeasureTheory.Egorov.unionNotConvergentSeq_subset
 
@@ -187,13 +187,13 @@ theorem tendstoUniformlyOn_diff_unionNotConvergentSeq (hε : 0 < ε)
   rw [Metric.tendstoUniformlyOn_iff]
   intro δ hδ
   obtain ⟨N, hN⟩ := exists_nat_one_div_lt hδ
-  rw [eventually_at_top]
-  refine' ⟨egorov.not_convergent_seq_lt_index (half_pos hε) hf hg hsm hs hfg N, fun n hn x hx => _⟩
-  simp only [mem_diff, egorov.Union_not_convergent_seq, not_exists, mem_Union, mem_inter_iff,
-    not_and, exists_and_left] at hx
+  rw [eventually_atTop]
+  refine' ⟨Egorov.notConvergentSeqLtIndex (half_pos hε) hf hg hsm hs hfg N, fun n hn x hx => _⟩
+  simp only [mem_diff, Egorov.unionNotConvergentSeq, not_exists, mem_unionᵢ, mem_inter_iff, not_and,
+    exists_and_left] at hx
   obtain ⟨hxs, hx⟩ := hx
   specialize hx hxs N
-  rw [egorov.mem_not_convergent_seq_iff] at hx
+  rw [Egorov.mem_notConvergentSeq_iff] at hx
   push_neg  at hx
   rw [dist_comm]
   exact lt_of_le_of_lt (hx n hn) hN
@@ -204,7 +204,7 @@ end Egorov
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι] {γ : Type _} [TopologicalSpace γ]
   {f : ι → α → β} {g : α → β} {s : Set α}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of strongly measurable functions that
 converges to `g : α → β` almost everywhere on a measurable set `s` of finite measure,
 then for all `ε > 0`, there exists a subset `t ⊆ s` such that `μ t ≤ ε` and `f` converges to `g`
@@ -231,7 +231,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, Stro
     ∃ t, MeasurableSet t ∧ μ t ≤ Ennreal.ofReal ε ∧ TendstoUniformlyOn f g atTop (tᶜ) :=
   by
   obtain ⟨t, _, ht, htendsto⟩ :=
-    tendsto_uniformly_on_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε
+    tendstoUniformlyOn_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε
   · refine' ⟨_, ht, _⟩
     rwa [compl_eq_univ_diff]
   · filter_upwards [hfg]with _ htendsto _ using htendsto

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Patrick Massot
 
 ! This file was ported from Lean 3 source module tactic.apply_fun
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
@@ -67,7 +67,7 @@ namespace Tactic
                   | _ => throwError "failed to apply { ( ← e ) } at { ← hyp }"
           clear hyp
           let hyp ← note hyp . local_pp_name none prf
-          try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False beta := True }
+          try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := false beta := true }
 #align tactic.apply_fun_to_hyp tactic.apply_fun_to_hyp
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

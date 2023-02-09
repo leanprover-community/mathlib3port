@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.fully_faithful
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -209,7 +209,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.functo
 @[simps]
 def preimageIso (f : F.obj X ≅ F.obj Y) : X ≅ Y
     where
-  Hom := F.preimage f.Hom
+  Hom := F.preimage f.hom
   inv := F.preimage f.inv
   hom_inv_id' := F.map_injective (by simp)
   inv_hom_id' := F.map_injective (by simp)
@@ -313,10 +313,10 @@ but is expected to have type
   forall {C : Type.{u5}} [_inst_1 : CategoryTheory.Category.{u3, u5} C] {D : Type.{u6}} [_inst_2 : CategoryTheory.Category.{u4, u6} D] {E : Type.{u1}} [_inst_3 : CategoryTheory.Category.{u2, u1} E] {F : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} {G : CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2} (H : CategoryTheory.Functor.{u4, u2, u6, u1} D _inst_2 E _inst_3) [_inst_4 : CategoryTheory.Full.{u4, u2, u6, u1} D _inst_2 E _inst_3 H] [_inst_5 : CategoryTheory.Faithful.{u4, u2, u6, u1} D _inst_2 E _inst_3 H] (i : CategoryTheory.Iso.{max u5 u2, max (max (max u1 u5) u2) u3} (CategoryTheory.Functor.{u3, u2, u5, u1} C _inst_1 E _inst_3) (CategoryTheory.Functor.category.{u3, u2, u5, u1} C _inst_1 E _inst_3) (CategoryTheory.Functor.comp.{u3, u4, u2, u5, u6, u1} C _inst_1 D _inst_2 E _inst_3 F H) (CategoryTheory.Functor.comp.{u3, u4, u2, u5, u6, u1} C _inst_1 D _inst_2 E _inst_3 G H)), Eq.{max (succ u5) (succ u4)} (Quiver.Hom.{succ (max u5 u4), max (max (max u5 u6) u3) u4} (CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{max u5 u4, max (max (max u5 u6) u3) u4} (CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) (CategoryTheory.Category.toCategoryStruct.{max u5 u4, max (max (max u5 u6) u3) u4} (CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u3, u4, u5, u6} C _inst_1 D _inst_2))) F G) (CategoryTheory.Iso.hom.{max u5 u4, max (max (max u5 u6) u3) u4} (CategoryTheory.Functor.{u3, u4, u5, u6} C _inst_1 D _inst_2) (CategoryTheory.Functor.category.{u3, u4, u5, u6} C _inst_1 D _inst_2) F G (CategoryTheory.natIsoOfCompFullyFaithful.{u3, u4, u5, u6, u1, u2} C _inst_1 D _inst_2 E _inst_3 F G H _inst_4 _inst_5 i)) (CategoryTheory.natTransOfCompFullyFaithful.{u3, u4, u5, u6, u1, u2} C _inst_1 D _inst_2 E _inst_3 F G H _inst_4 _inst_5 (CategoryTheory.Iso.hom.{max u5 u2, max (max (max u5 u3) u1) u2} (CategoryTheory.Functor.{u3, u2, u5, u1} C _inst_1 E _inst_3) (CategoryTheory.Functor.category.{u3, u2, u5, u1} C _inst_1 E _inst_3) (CategoryTheory.Functor.comp.{u3, u4, u2, u5, u6, u1} C _inst_1 D _inst_2 E _inst_3 F H) (CategoryTheory.Functor.comp.{u3, u4, u2, u5, u6, u1} C _inst_1 D _inst_2 E _inst_3 G H) i))
 Case conversion may be inaccurate. Consider using '#align category_theory.nat_iso_of_comp_fully_faithful_hom CategoryTheory.natIsoOfCompFullyFaithful_homₓ'. -/
 theorem natIsoOfCompFullyFaithful_hom (i : F ⋙ H ≅ G ⋙ H) :
-    (natIsoOfCompFullyFaithful H i).Hom = natTransOfCompFullyFaithful H i.Hom :=
+    (natIsoOfCompFullyFaithful H i).hom = natTransOfCompFullyFaithful H i.hom :=
   by
   ext
-  simp [nat_iso_of_comp_fully_faithful]
+  simp [natIsoOfCompFullyFaithful]
 #align category_theory.nat_iso_of_comp_fully_faithful_hom CategoryTheory.natIsoOfCompFullyFaithful_hom
 
 /- warning: category_theory.nat_iso_of_comp_fully_faithful_inv -> CategoryTheory.natIsoOfCompFullyFaithful_inv is a dubious translation:
@@ -402,8 +402,8 @@ variable {F F'}
 /-- If `F` is full, and naturally isomorphic to some `F'`, then `F'` is also full. -/
 def Full.ofIso [Full F] (α : F ≅ F') : Full F'
     where
-  preimage X Y f := F.preimage ((α.app X).Hom ≫ f ≫ (α.app Y).inv)
-  witness' X Y f := by simp [← nat_iso.naturality_1 α]
+  preimage X Y f := F.preimage ((α.app X).hom ≫ f ≫ (α.app Y).inv)
+  witness' X Y f := by simp [← NatIso.naturality_1 α]
 #align category_theory.full.of_iso CategoryTheory.Full.ofIso
 -/
 
@@ -411,7 +411,7 @@ def Full.ofIso [Full F] (α : F ≅ F') : Full F'
 theorem Faithful.of_iso [Faithful F] (α : F ≅ F') : Faithful F' :=
   {
     map_injective' := fun X Y f f' h =>
-      F.map_injective (by rw [← nat_iso.naturality_1 α.symm, h, nat_iso.naturality_1 α.symm]) }
+      F.map_injective (by rw [← NatIso.naturality_1 α.symm, h, NatIso.naturality_1 α.symm]) }
 #align category_theory.faithful.of_iso CategoryTheory.Faithful.of_iso
 -/
 
@@ -549,7 +549,7 @@ Case conversion may be inaccurate. Consider using '#align category_theory.fully_
 @[simp]
 theorem fullyFaithfulCancelRight_hom_app {F G : C ⥤ D} {H : D ⥤ E} [Full H] [Faithful H]
     (comp_iso : F ⋙ H ≅ G ⋙ H) (X : C) :
-    (fullyFaithfulCancelRight H comp_iso).Hom.app X = H.preimage (comp_iso.Hom.app X) :=
+    (fullyFaithfulCancelRight H comp_iso).hom.app X = H.preimage (comp_iso.hom.app X) :=
   rfl
 #align category_theory.fully_faithful_cancel_right_hom_app CategoryTheory.fullyFaithfulCancelRight_hom_app
 

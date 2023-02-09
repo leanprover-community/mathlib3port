@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.comma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,12 +85,12 @@ variable {L : A ⥤ T} {R : B ⥤ T}
 structure CommaMorphism (X Y : Comma L R) where
   left : X.left ⟶ Y.left := by obviously
   right : X.right ⟶ Y.right := by obviously
-  w' : L.map left ≫ Y.Hom = X.Hom ≫ R.map right := by obviously
+  w' : L.map left ≫ Y.hom = X.hom ≫ R.map right := by obviously
 #align category_theory.comma_morphism CategoryTheory.CommaMorphism
 
 -- Satisfying the inhabited linter
 instance CommaMorphism.inhabited [Inhabited (Comma L R)] :
-    Inhabited (CommaMorphism (default : Comma L R) default) :=
+    Inhabited (CommaMorphism (default : Comma Hom R) default) :=
   ⟨⟨𝟙 _, 𝟙 _⟩⟩
 #align category_theory.comma_morphism.inhabited CategoryTheory.CommaMorphism.inhabited
 
@@ -158,7 +158,7 @@ def snd : Comma L R ⥤ B where
     to `T`, where the components are given by the morphism that constitutes an object of the comma
     category. -/
 @[simps]
-def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where app X := X.Hom
+def natTrans : fst L R ⋙ L ⟶ snd L R ⋙ R where app X := X.hom
 #align category_theory.comma.nat_trans CategoryTheory.Comma.natTrans
 
 @[simp]
@@ -194,17 +194,17 @@ directions give a commutative square.
 -/
 @[simps]
 def isoMk {X Y : Comma L₁ R₁} (l : X.left ≅ Y.left) (r : X.right ≅ Y.right)
-    (h : L₁.map l.Hom ≫ Y.Hom = X.Hom ≫ R₁.map r.Hom) : X ≅ Y
+    (h : L₁.map l.hom ≫ Y.hom = X.hom ≫ R₁.map r.hom) : X ≅ Y
     where
   Hom :=
-    { left := l.Hom
-      right := r.Hom }
+    { left := l.hom
+      right := r.hom }
   inv :=
     { left := l.inv
       right := r.inv
       w' :=
         by
-        rw [← L₁.map_iso_inv l, iso.inv_comp_eq, L₁.map_iso_hom, reassoc_of h, ← R₁.map_comp]
+        rw [← L₁.map_iso_inv l, Iso.inv_comp_eq, L₁.map_iso_hom, reassoc_of h, ← R₁.map_comp]
         simp }
 #align category_theory.comma.iso_mk CategoryTheory.Comma.isoMk
 
@@ -215,7 +215,7 @@ def mapLeft (l : L₁ ⟶ L₂) : Comma L₂ R ⥤ Comma L₁ R
   obj X :=
     { left := X.left
       right := X.right
-      Hom := l.app X.left ≫ X.Hom }
+      Hom := l.app X.left ≫ X.hom }
   map X Y f :=
     { left := f.left
       right := f.right }
@@ -263,7 +263,7 @@ def mapRight (r : R₁ ⟶ R₂) : Comma L R₁ ⥤ Comma L R₂
   obj X :=
     { left := X.left
       right := X.right
-      Hom := X.Hom ≫ r.app X.right }
+      Hom := X.hom ≫ r.app X.right }
   map X Y f :=
     { left := f.left
       right := f.right }
@@ -317,7 +317,7 @@ def preLeft (F : C ⥤ A) (L : A ⥤ T) (R : B ⥤ T) : Comma (F ⋙ L) R ⥤ Co
   obj X :=
     { left := F.obj X.left
       right := X.right
-      Hom := X.Hom }
+      Hom := X.hom }
   map X Y f :=
     { left := F.map f.left
       right := f.right
@@ -331,7 +331,7 @@ def preRight (L : A ⥤ T) (F : C ⥤ B) (R : B ⥤ T) : Comma L (F ⋙ R) ⥤ C
   obj X :=
     { left := X.left
       right := F.obj X.right
-      Hom := X.Hom }
+      Hom := X.hom }
   map X Y f :=
     { left := f.left
       right := F.map f.right
@@ -345,11 +345,11 @@ def post (L : A ⥤ T) (R : B ⥤ T) (F : T ⥤ C) : Comma L R ⥤ Comma (L ⋙ 
   obj X :=
     { left := X.left
       right := X.right
-      Hom := F.map X.Hom }
+      Hom := F.map X.hom }
   map X Y f :=
     { left := f.left
       right := f.right
-      w' := by simp only [functor.comp_map, ← F.map_comp, f.w] }
+      w' := by simp only [Functor.comp_map, ← F.map_comp, f.w] }
 #align category_theory.comma.post CategoryTheory.Comma.post
 
 end

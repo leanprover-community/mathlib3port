@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.measure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
   /- If `s` is included in a hyperplane, then `frontier s ⊆ closure s` is included in the same
     hyperplane, hence it has measure zero. -/
   cases' ne_or_eq (affineSpan ℝ s) ⊤ with hspan hspan
-  · refine' measure_mono_null _ (add_haar_affine_subspace _ _ hspan)
+  · refine' measure_mono_null _ (add_haar_affineSubspace _ _ hspan)
     exact
       frontier_subset_closure.trans
         (closure_minimal (subset_affineSpan _ _) (affineSpan ℝ s).closed_of_finiteDimensional)
@@ -52,27 +52,27 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
     have : μ (⋃ n : ℕ, frontier (s ∩ B n)) = 0 :=
       by
       refine'
-        measure_Union_null fun n =>
+        measure_unionᵢ_null fun n =>
           H _ (hs.inter (convex_ball _ _)) _ (bounded_ball.mono (inter_subset_right _ _))
       rw [interior_inter, is_open_ball.interior_eq]
       exact ⟨hx, mem_ball_self (add_pos_of_nonneg_of_pos n.cast_nonneg zero_lt_one)⟩
     refine' measure_mono_null (fun y hy => _) this
     clear this
     set N : ℕ := ⌊dist y x⌋₊
-    refine' mem_Union.2 ⟨N, _⟩
+    refine' mem_unionᵢ.2 ⟨N, _⟩
     have hN : y ∈ B N := by
       simp only [B, N]
       simp [Nat.lt_floor_add_one]
     suffices : y ∈ frontier (s ∩ B N) ∩ B N
     exact this.1
-    rw [frontier_inter_open_inter is_open_ball]
+    rw [frontier_inter_open_inter isOpen_ball]
     exact ⟨hy, hN⟩
   clear hx hs s
   intro s hs hx hb
   /- Since `s` is bounded, we have `μ (interior s) ≠ ∞`, hence it suffices to prove
     `μ (closure s) ≤ μ (interior s)`. -/
   replace hb : μ (interior s) ≠ ∞
-  exact (hb.mono interior_subset).measure_lt_top.Ne
+  exact (hb.mono interior_subset).measure_lt_top.ne
   suffices μ (closure s) ≤ μ (interior s) by
     rwa [frontier, measure_diff interior_subset_closure is_open_interior.measurable_set hb,
       tsub_eq_zero_iff_le]

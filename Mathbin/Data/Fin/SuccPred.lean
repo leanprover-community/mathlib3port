@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.fin.succ_pred
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ instance : ∀ {n : ℕ}, SuccOrder (Fin n)
       (by
         intro a ha b
         rw [isMax_iff_eq_top, eq_top_iff, not_le, top_eq_last] at ha
-        rw [if_pos ha, lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_add_one_of_lt ha]
+        rw [if_pos ha, lt_iff_val_lt_val, le_iff_val_le_val, val_add_one_of_lt ha]
         exact Nat.lt_iff_add_one_le)
       (by
         intro a ha
@@ -69,7 +69,7 @@ instance : ∀ {n : ℕ}, PredOrder (Fin n)
       (by
         intro a ha b
         rw [isMin_iff_eq_bot, eq_bot_iff, not_le, bot_eq_zero] at ha
-        rw [if_neg ha.ne', lt_iff_coe_lt_coe, le_iff_coe_le_coe, coe_sub_one, if_neg ha.ne',
+        rw [if_neg ha.ne', lt_iff_val_lt_val, le_iff_val_le_val, coe_sub_one, if_neg ha.ne',
           le_tsub_iff_right, Iff.comm]
         exact Nat.lt_iff_add_one_le
         exact ha)

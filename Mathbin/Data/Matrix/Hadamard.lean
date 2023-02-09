@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.hadamard
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ theorem dotProduct_vecMul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α
     dotProduct (vecMul v (A ⊙ B)) w = trace (diagonal v ⬝ A ⬝ (B ⬝ diagonal w)ᵀ) :=
   by
   rw [← sum_hadamard_eq, Finset.sum_comm]
-  simp [dot_product, vec_mul, Finset.sum_mul, mul_assoc]
+  simp [dotProduct, vecMul, Finset.sum_mul, mul_assoc]
 #align matrix.dot_product_vec_mul_hadamard Matrix.dotProduct_vecMul_hadamard
 
 end trace

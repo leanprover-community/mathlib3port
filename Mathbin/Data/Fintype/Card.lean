@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.card
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ for an equiv `α ≃ fin n` given `fintype.card α = n`.
 -/
 noncomputable def equivFin (α) [Fintype α] : α ≃ Fin (card α) :=
   letI := Classical.decEq α
-  (trunc_equiv_fin α).out
+  (truncEquivFin α).out
 #align fintype.equiv_fin Fintype.equivFin
 -/
 
@@ -153,7 +153,7 @@ theorem card_ofFinset {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈
 
 #print Fintype.card_of_finset' /-
 theorem card_of_finset' {p : Set α} (s : Finset α) (H : ∀ x, x ∈ s ↔ x ∈ p) [Fintype p] :
-    Fintype.card p = s.card := by rw [← card_of_finset s H] <;> congr
+    Fintype.card p = s.card := by rw [← card_ofFinset s H] <;> congr
 #align fintype.card_of_finset' Fintype.card_of_finset'
 -/
 
@@ -178,7 +178,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (Equiv.{succ u2, succ u1} α β) -> (Eq.{1} Nat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2))
 Case conversion may be inaccurate. Consider using '#align fintype.card_congr Fintype.card_congrₓ'. -/
 theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α = card β := by
-  rw [← of_equiv_card f] <;> congr
+  rw [← ofEquiv_card f] <;> congr
 #align fintype.card_congr Fintype.card_congr
 
 #print Fintype.card_congr' /-
@@ -211,7 +211,7 @@ and `fintype.trunc_equiv_fin` and `fintype.equiv_fin` for the bijection `α ≃ 
 -/
 noncomputable def equivFinOfCardEq {n : ℕ} (h : Fintype.card α = n) : α ≃ Fin n :=
   letI := Classical.decEq α
-  (trunc_equiv_fin_of_card_eq h).out
+  (truncEquivFinOfCardEq h).out
 #align fintype.equiv_fin_of_card_eq Fintype.equivFinOfCardEq
 -/
 
@@ -238,7 +238,7 @@ noncomputable def equivOfCardEq (h : card α = card β) : α ≃ β :=
   by
   letI := Classical.decEq α
   letI := Classical.decEq β
-  exact (trunc_equiv_of_card_eq h).out
+  exact (truncEquivOfCardEq h).out
 #align fintype.equiv_of_card_eq Fintype.equivOfCardEq
 -/
 
@@ -253,7 +253,7 @@ Case conversion may be inaccurate. Consider using '#align fintype.card_eq Fintyp
 theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β ↔ Nonempty (α ≃ β) :=
   ⟨fun h =>
     haveI := Classical.propDecidable
-    (trunc_equiv_of_card_eq h).Nonempty,
+    (truncEquivOfCardEq h).nonempty,
     fun ⟨f⟩ => card_congr f⟩
 #align fintype.card_eq Fintype.card_eq
 
@@ -719,7 +719,7 @@ theorem exists_ne_map_eq_of_card_lt (f : α → β) (h : Fintype.card β < Finty
 theorem card_eq_one_iff : card α = 1 ↔ ∃ x : α, ∀ y, y = x := by
   rw [← card_unit, card_eq] <;>
     exact
-      ⟨fun ⟨a⟩ => ⟨a.symm (), fun y => a.Injective (Subsingleton.elim _ _)⟩, fun ⟨x, hx⟩ =>
+      ⟨fun ⟨a⟩ => ⟨a.symm (), fun y => a.injective (Subsingleton.elim _ _)⟩, fun ⟨x, hx⟩ =>
         ⟨⟨fun _ => (), fun _ => x, fun _ => (hx _).trans (hx _).symm, fun _ =>
             Subsingleton.elim _ _⟩⟩⟩
 #align fintype.card_eq_one_iff Fintype.card_eq_one_iff
@@ -862,29 +862,29 @@ variable [Finite α]
 theorem injective_iff_surjective {f : α → α} : Injective f ↔ Surjective f := by
   haveI := Classical.propDecidable <;> cases nonempty_fintype α <;>
     exact
-      have : ∀ {f : α → α}, injective f → surjective f := fun f hinj x =>
+      have : ∀ {f : α → α}, Injective f → Surjective f := fun f hinj x =>
         have h₁ : image f univ = univ :=
           eq_of_subset_of_card_le (subset_univ _)
             ((card_image_of_injective univ hinj).symm ▸ le_rfl)
         have h₂ : x ∈ image f univ := h₁.symm ▸ mem_univ _
         exists_of_bex (mem_image.1 h₂)
       ⟨this, fun hsurj =>
-        has_left_inverse.injective
-          ⟨surj_inv hsurj,
-            left_inverse_of_surjective_of_right_inverse (this (injective_surj_inv _))
-              (right_inverse_surj_inv _)⟩⟩
+        HasLeftInverse.injective
+          ⟨surjInv hsurj,
+            leftInverse_of_surjective_of_rightInverse (this (injective_surjInv _))
+              (rightInverse_surjInv _)⟩⟩
 #align finite.injective_iff_surjective Finite.injective_iff_surjective
 -/
 
 #print Finite.injective_iff_bijective /-
 theorem injective_iff_bijective {f : α → α} : Injective f ↔ Bijective f := by
-  simp [bijective, injective_iff_surjective]
+  simp [Bijective, injective_iff_surjective]
 #align finite.injective_iff_bijective Finite.injective_iff_bijective
 -/
 
 #print Finite.surjective_iff_bijective /-
 theorem surjective_iff_bijective {f : α → α} : Surjective f ↔ Bijective f := by
-  simp [bijective, injective_iff_surjective]
+  simp [Bijective, injective_iff_surjective]
 #align finite.surjective_iff_bijective Finite.surjective_iff_bijective
 -/
 
@@ -1091,8 +1091,8 @@ Note this cannot be an instance as it needs `h`. -/
 theorem is_empty_of_card_lt [Fintype α] [Fintype β] (h : Fintype.card β < Fintype.card α) :
     IsEmpty (α ↪ β) :=
   ⟨fun f =>
-    let ⟨x, y, Ne, feq⟩ := Fintype.exists_ne_map_eq_of_card_lt f h
-    Ne <| f.Injective feq⟩
+    let ⟨x, y, ne, feq⟩ := Fintype.exists_ne_map_eq_of_card_lt f h
+    ne <| f.injective feq⟩
 #align function.embedding.is_empty_of_card_lt Function.Embedding.is_empty_of_card_lt
 
 #print Function.Embedding.truncOfCardLe /-
@@ -1112,7 +1112,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β], (LE.le.{0} Nat instLENat (Fintype.card.{u2} α _inst_1) (Fintype.card.{u1} β _inst_2)) -> (Nonempty.{max (succ u1) (succ u2)} (Function.Embedding.{succ u2, succ u1} α β))
 Case conversion may be inaccurate. Consider using '#align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_leₓ'. -/
 theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ Fintype.card β) :
-    Nonempty (α ↪ β) := by classical exact (trunc_of_card_le h).Nonempty
+    Nonempty (α ↪ β) := by classical exact (truncOfCardLe h).nonempty
 #align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_le
 
 /- warning: function.embedding.nonempty_iff_card_le -> Function.Embedding.nonempty_iff_card_le is a dubious translation:
@@ -1137,7 +1137,7 @@ theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card 
   by
   rw [← Fintype.card_coe] at h
   rcases nonempty_of_card_le h with ⟨f⟩
-  exact ⟨f.trans (embedding.subtype _), by simp [Set.range_subset_iff]⟩
+  exact ⟨f.trans (Embedding.subtype _), by simp [Set.range_subset_iff]⟩
 #align function.embedding.exists_of_card_le_finset Function.Embedding.exists_of_card_le_finset
 
 end Function.Embedding
@@ -1183,7 +1183,7 @@ theorem Fintype.card_subtype_lt [Fintype α] {p : α → Prop} [DecidablePred p]
 
 #print Fintype.card_subtype /-
 theorem Fintype.card_subtype [Fintype α] (p : α → Prop) [DecidablePred p] :
-    Fintype.card { x // p x } = ((Finset.univ : Finset α).filterₓ p).card :=
+    Fintype.card { x // p x } = ((Finset.univ : Finset α).filter p).card :=
   by
   refine' Fintype.card_of_subtype _ _
   simp
@@ -1305,7 +1305,7 @@ protected theorem Fintype.false [Infinite α] (h : Fintype α) : False :=
 #print is_empty_fintype /-
 @[simp]
 theorem is_empty_fintype {α : Type _} : IsEmpty (Fintype α) ↔ Infinite α :=
-  ⟨fun ⟨h⟩ => ⟨fun h' => (@nonempty_fintype α h').elim h⟩, fun ⟨h⟩ => ⟨fun h' => h h'.Finite⟩⟩
+  ⟨fun ⟨h⟩ => ⟨fun h' => (@nonempty_fintype α h').elim h⟩, fun ⟨h⟩ => ⟨fun h' => h h'.finite⟩⟩
 #align is_empty_fintype is_empty_fintype
 -/
 
@@ -1341,7 +1341,7 @@ Case conversion may be inaccurate. Consider using '#align finset.exists_minimal 
 theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀ x ∈ s, ¬x < m := by
   obtain ⟨c, hcs : c ∈ s⟩ := h
-  have : WellFounded (@LT.lt { x // x ∈ s } _) := Finite.wellFounded_of_trans_of_irrefl _
+  have : WellFounded (@has_lt.lt { x // x ∈ s } _) := Finite.wellFounded_of_trans_of_irrefl _
   obtain ⟨⟨m, hms : m ∈ s⟩, -, H⟩ := this.has_min Set.univ ⟨⟨c, hcs⟩, trivial⟩
   exact ⟨m, hms, fun x hx hxm => H ⟨x, hx⟩ trivial hxm⟩
 #align finset.exists_minimal Finset.exists_minimal
@@ -1414,7 +1414,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u1} β] (f : β -> α), (Function.Injective.{u1, u2} β α f) -> (Infinite.{u2} α)
 Case conversion may be inaccurate. Consider using '#align infinite.of_injective Infinite.of_injectiveₓ'. -/
 theorem of_injective {α β} [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
-  ⟨fun I => (Finite.of_injective f hf).False⟩
+  ⟨fun I => (Finite.of_injective f hf).false⟩
 #align infinite.of_injective Infinite.of_injective
 
 /- warning: infinite.of_surjective -> Infinite.of_surjective is a dubious translation:
@@ -1424,7 +1424,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u1} β] (f : α -> β), (Function.Surjective.{u2, u1} α β f) -> (Infinite.{u2} α)
 Case conversion may be inaccurate. Consider using '#align infinite.of_surjective Infinite.of_surjectiveₓ'. -/
 theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
-  ⟨fun I => (Finite.of_surjective f hf).False⟩
+  ⟨fun I => (Finite.of_surjective f hf).false⟩
 #align infinite.of_surjective Infinite.of_surjective
 
 end Infinite
@@ -1503,11 +1503,11 @@ private theorem nat_embedding_aux_injective (α : Type _) [Infinite α] :
   refine'
     (Classical.choose_spec
         (exists_not_mem_finset
-          ((Multiset.range n).pmap (fun m (hm : m < n) => nat_embedding_aux α m) fun _ =>
+          ((Multiset.range n).pmap (fun m (hm : m < n) => natEmbeddingAux α m) fun _ =>
               Multiset.mem_range.1).toFinset))
       _
   refine' Multiset.mem_toFinset.2 (Multiset.mem_pmap.2 ⟨m, Multiset.mem_range.2 hmn, _⟩)
-  rw [h, nat_embedding_aux]
+  rw [h, natEmbeddingAux]
 #align infinite.nat_embedding_aux_injective infinite.nat_embedding_aux_injective
 
 #print Infinite.natEmbedding /-
@@ -1564,7 +1564,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {β : Sort.{u1}} [_inst_1 : Infinite.{u2} α] [_inst_2 : Finite.{u1} β] (f : α -> β), Not (Function.Injective.{u2, u1} α β f)
 Case conversion may be inaccurate. Consider using '#align not_injective_infinite_finite not_injective_infinite_finiteₓ'. -/
 theorem not_injective_infinite_finite {α β} [Infinite α] [Finite β] (f : α → β) : ¬Injective f :=
-  fun hf => (Finite.of_injective f hf).False
+  fun hf => (Finite.of_injective f hf).false
 #align not_injective_infinite_finite not_injective_infinite_finite
 
 /- warning: finite.exists_ne_map_eq_of_infinite -> Finite.exists_ne_map_eq_of_infinite is a dubious translation:
@@ -1581,7 +1581,7 @@ See also: `fintype.exists_ne_map_eq_of_card_lt`, `finite.exists_infinite_fiber`.
 -/
 theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f : α → β) :
     ∃ x y : α, x ≠ y ∧ f x = f y := by
-  simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
+  simpa only [Injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
 #align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infinite
 
 /- warning: function.embedding.is_empty -> Function.Embedding.is_empty is a dubious translation:

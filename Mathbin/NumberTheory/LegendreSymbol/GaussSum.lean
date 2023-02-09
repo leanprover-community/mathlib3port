@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ def gaussSum (χ : MulChar R R') (ψ : AddChar R R') : R' :=
 theorem gaussSum_mulShift (χ : MulChar R R') (ψ : AddChar R R') (a : Rˣ) :
     χ a * gaussSum χ (mulShift ψ a) = gaussSum χ ψ :=
   by
-  simp only [gaussSum, mul_shift_apply, Finset.mul_sum]
+  simp only [gaussSum, mulShift_apply, Finset.mul_sum]
   simp_rw [← mul_assoc, ← map_mul]
   exact Fintype.sum_bijective _ a.mul_left_bijective _ _ fun x => rfl
 #align gauss_sum_mul_shift gaussSum_mulShift
@@ -134,7 +134,7 @@ theorem gaussSum_sq {χ : MulChar R R'} (hχ₁ : IsNontrivial χ) (hχ₂ : IsQ
   by
   rw [pow_two, ← gaussSum_mul_gaussSum_eq_card hχ₁ hψ, hχ₂.inv, mul_rotate']
   congr
-  rw [mul_comm, ← gaussSum_mulShift _ _ (-1 : Rˣ), inv_mul_shift]
+  rw [mul_comm, ← gaussSum_mulShift _ _ (-1 : Rˣ), inv_mulShift]
   rfl
 #align gauss_sum_sq gaussSum_sq
 
@@ -160,7 +160,7 @@ theorem gaussSum_frob (χ : MulChar R R') (ψ : AddChar R R') :
     gaussSum χ ψ ^ p = gaussSum (χ ^ p) (ψ ^ p) :=
   by
   rw [← frobenius_def, gaussSum, gaussSum, map_sum]
-  simp_rw [pow_apply' χ fp.1.Pos, map_mul, frobenius_def]
+  simp_rw [pow_apply' χ fp.1.pos, map_mul, frobenius_def]
   rfl
 #align gauss_sum_frob gaussSum_frob
 
@@ -169,7 +169,7 @@ is a unit in the source ring, the `p`th power of the Gauss sum of`χ` and `ψ` i
 `χ p` times the original Gauss sum. -/
 theorem MulChar.IsQuadratic.gaussSum_frob (hp : IsUnit (p : R)) {χ : MulChar R R'}
     (hχ : IsQuadratic χ) (ψ : AddChar R R') : gaussSum χ ψ ^ p = χ p * gaussSum χ ψ := by
-  rw [gaussSum_frob, pow_mul_shift, hχ.pow_char p, ← gaussSum_mulShift χ ψ hp.unit, ← mul_assoc,
+  rw [gaussSum_frob, pow_mulShift, hχ.pow_char p, ← gaussSum_mulShift χ ψ hp.unit, ← mul_assoc,
     hp.unit_spec, ← pow_two, ← pow_apply' _ (by norm_num : 0 < 2), hχ.sq_eq_one, ← hp.unit_spec,
     one_apply_coe, one_mul]
 #align mul_char.is_quadratic.gauss_sum_frob MulChar.IsQuadratic.gaussSum_frob
@@ -184,7 +184,7 @@ theorem MulChar.IsQuadratic.gaussSum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) {
   · rw [pow_zero, pow_one, pow_zero, MulChar.map_one, one_mul]
   ·
     rw [pow_succ, mul_comm p, pow_mul, ih, mul_pow, hχ.gauss_sum_frob _ hp, ← mul_assoc, pow_succ,
-      mul_comm (p : R), map_mul, ← pow_apply' χ fp.1.Pos (p ^ n), hχ.pow_char p]
+      mul_comm (p : R), map_mul, ← pow_apply' χ fp.1.pos (p ^ n), hχ.pow_char p]
 #align mul_char.is_quadratic.gauss_sum_frob_iter MulChar.IsQuadratic.gaussSum_frob_iter
 
 end gaussSum_frob
@@ -212,7 +212,7 @@ theorem Char.card_pow_char_pow {χ : MulChar R R'} (hχ : IsQuadratic χ) (ψ : 
     rw [hf, zero_pow (by norm_num : 0 < 2), eq_comm, mul_eq_zero] at hg
     exact
       not_isUnit_prime_of_dvd_card p
-        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).NeZero) hp
+        ((CharP.cast_eq_zero_iff R' p _).mp <| hg.resolve_left (is_unit_one.neg.map χ).ne_zero) hp
   rw [← hg]
   apply mul_right_cancel₀ this
   rw [← hχ.gauss_sum_frob_iter p n hp ψ, ← pow_mul, mul_comm, ← pow_succ,
@@ -228,10 +228,10 @@ theorem Char.card_pow_card {F : Type} [Field F] [Fintype F] {F' : Type} [Field F
   by
   obtain ⟨n, hp, hc⟩ := FiniteField.card F (ringChar F)
   obtain ⟨n', hp', hc'⟩ := FiniteField.card F' (ringChar F')
-  let ψ := primitive_char_finite_field F F' hch₁
+  let ψ := primitiveCharFiniteField F F' hch₁
   let FF' := CyclotomicField ψ.n F'
   have hchar := Algebra.ringChar_eq F' FF'
-  apply (algebraMap F' FF').Injective
+  apply (algebraMap F' FF').injective
   rw [map_pow, map_mul, map_natCast, hc', hchar, Nat.cast_pow]
   simp only [← MulChar.ringHomComp_apply]
   haveI := Fact.mk hp'
@@ -280,13 +280,13 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- `ring_char FF ≠ 2`
   have hu : IsUnit (ringChar FF : ZMod 8) :=
     by
-    rw [isUnit_iff_not_dvd_char, ring_char_zmod_n]
+    rw [isUnit_iff_not_dvd_char, ringChar_zMod_n]
     rw [Ne, ← Nat.prime_dvd_prime_iff_eq FFp Nat.prime_two] at hFF
     change ¬_ ∣ 2 ^ 3
     exact mt FFp.dvd_of_dvd_pow hFF
   -- there is a primitive additive character `ℤ/8ℤ → FF`, sending `a + 8ℤ ↦ τ^a`
   -- with a primitive eighth root of unity `τ`
-  let ψ₈ := primitive_zmod_char 8 F (by convert hp2 3 <;> norm_num)
+  let ψ₈ := primitiveZmodChar 8 F (by convert hp2 3 <;> norm_num)
   let τ : FF := ψ₈.char 1
   have τ_spec : τ ^ 4 = -1 := by
     refine' (sq_eq_one_iff.1 _).resolve_left _ <;>
@@ -296,7 +296,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ring_hom_comp (Int.castRingHom FF)
   have hχ : χ (-1) = 1 := NormNum.int_cast_one
-  have hq : is_quadratic χ := is_quadratic_χ₈.comp _
+  have hq : IsQuadratic χ := is_quadratic_χ₈.comp _
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
   have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (ZMod 8) :=
     by
@@ -323,7 +323,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   ·
     rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
       (FiniteField.isSquare_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
-  apply (algebraMap F FF).Injective
+  apply (algebraMap F FF).injective
   simp only [map_pow, map_bit0, map_one, map_intCast]
   convert h
   norm_num

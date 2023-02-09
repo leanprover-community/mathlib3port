@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.comap
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ 
 theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) x = x :=
   by
   funext i
-  simp only [comap, AlgHom.id_apply, id.def, aeval_X]
+  simp only [comap, AlgHom.id_apply, id.def, aeval_x]
 #align mv_polynomial.comap_id_apply MvPolynomial.comap_id_apply
 
 variable (σ R)
@@ -69,15 +69,15 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     comap (g.comp f) x = comap f (comap g x) :=
   by
   funext i
-  trans aeval x (aeval (fun i => g (X i)) (f (X i)))
-  · apply eval₂_hom_congr rfl rfl
+  trans aeval x (aeval (fun i => g (x i)) (f (x i)))
+  · apply eval₂Hom_congr rfl rfl
     rw [AlgHom.comp_apply]
-    suffices g = aeval fun i => g (X i) by rw [← this]
+    suffices g = aeval fun i => g (x i) by rw [← this]
     exact aeval_unique g
-  · simp only [comap, aeval_eq_eval₂_hom, map_eval₂_hom, AlgHom.comp_apply]
-    refine' eval₂_hom_congr _ rfl rfl
+  · simp only [comap, aeval_eq_eval₂Hom, map_eval₂Hom, AlgHom.comp_apply]
+    refine' eval₂Hom_congr _ rfl rfl
     ext r
-    apply aeval_C
+    apply aeval_c
 #align mv_polynomial.comap_comp_apply MvPolynomial.comap_comp_apply
 
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
@@ -97,7 +97,7 @@ theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R)
 theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f :=
   by
   ext i
-  simp only [rename_X, comap_apply, aeval_X]
+  simp only [rename_x, comap_apply, aeval_x]
 #align mv_polynomial.comap_rename MvPolynomial.comap_rename
 
 /-- If two polynomial types over the same coefficient ring `R` are equivalent,

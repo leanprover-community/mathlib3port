@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.list.rdrop
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ Case conversion may be inaccurate. Consider using '#align list.rdrop_while List.
 /-- Drop elements from the tail end of a list that satisfy `p : α → Prop`.
 Implemented naively via `list.reverse` -/
 def rdropWhile : List α :=
-  reverse (l.reverse.dropWhileₓ p)
+  reverse (l.reverse.dropWhile p)
 #align list.rdrop_while List.rdropWhile
 
 /- warning: list.rdrop_while_nil -> List.rdropWhile_nil is a dubious translation:
@@ -139,7 +139,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p (List.nil.{u1} α)) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_nil List.rdropWhile_nilₓ'. -/
 @[simp]
-theorem rdropWhile_nil : rdropWhile p ([] : List α) = [] := by simp [rdrop_while, drop_while]
+theorem rdropWhile_nil : rdropWhile p ([] : List α) = [] := by simp [rdropWhile, dropWhile]
 #align list.rdrop_while_nil List.rdropWhile_nil
 
 /- warning: list.rdrop_while_concat -> List.rdropWhile_concat is a dubious translation:
@@ -151,7 +151,7 @@ Case conversion may be inaccurate. Consider using '#align list.rdrop_while_conca
 theorem rdropWhile_concat (x : α) :
     rdropWhile p (l ++ [x]) = if p x then rdropWhile p l else l ++ [x] :=
   by
-  simp only [rdrop_while, drop_while, reverse_append, reverse_singleton, singleton_append]
+  simp only [rdropWhile, dropWhile, reverse_append, reverse_singleton, singleton_append]
   split_ifs with h h <;> simp [h]
 #align list.rdrop_while_concat List.rdropWhile_concat
 
@@ -163,7 +163,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_concat_pos List.rdropWhile_concat_posₓ'. -/
 @[simp]
 theorem rdropWhile_concat_pos (x : α) (h : p x) : rdropWhile p (l ++ [x]) = rdropWhile p l := by
-  rw [rdrop_while_concat, if_pos h]
+  rw [rdropWhile_concat, if_pos h]
 #align list.rdrop_while_concat_pos List.rdropWhile_concat_pos
 
 /- warning: list.rdrop_while_concat_neg -> List.rdropWhile_concat_neg is a dubious translation:
@@ -174,7 +174,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_concat_neg List.rdropWhile_concat_negₓ'. -/
 @[simp]
 theorem rdropWhile_concat_neg (x : α) (h : ¬p x) : rdropWhile p (l ++ [x]) = l ++ [x] := by
-  rw [rdrop_while_concat, if_neg h]
+  rw [rdropWhile_concat, if_neg h]
 #align list.rdrop_while_concat_neg List.rdropWhile_concat_neg
 
 /- warning: list.rdrop_while_singleton -> List.rdropWhile_singleton is a dubious translation:
@@ -184,7 +184,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : α), Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p (List.cons.{u1} α _inst_1 (List.nil.{u1} α))) (ite.{succ u1} (List.{u1} α) (Eq.{1} Bool (p _inst_1) Bool.true) (instDecidableEqBool (p _inst_1) Bool.true) (List.nil.{u1} α) (List.cons.{u1} α _inst_1 (List.nil.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_singleton List.rdropWhile_singletonₓ'. -/
 theorem rdropWhile_singleton (x : α) : rdropWhile p [x] = if p x then [] else [x] := by
-  rw [← nil_append [x], rdrop_while_concat, rdrop_while_nil]
+  rw [← nil_append [x], rdropWhile_concat, rdropWhile_nil]
 #align list.rdrop_while_singleton List.rdropWhile_singleton
 
 /- warning: list.rdrop_while_last_not -> List.rdropWhile_last_not is a dubious translation:
@@ -195,9 +195,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_last_not List.rdropWhile_last_notₓ'. -/
 theorem rdropWhile_last_not (hl : l.rdropWhile p ≠ []) : ¬p ((rdropWhile p l).getLast hl) :=
   by
-  simp_rw [rdrop_while]
-  rw [last_reverse]
-  exact drop_while_nth_le_zero_not _ _ _
+  simp_rw [rdropWhile]
+  rw [getLast_reverse]
+  exact dropWhile_nthLe_zero_not _ _ _
 #align list.rdrop_while_last_not List.rdropWhile_last_not
 
 /- warning: list.rdrop_while_prefix -> List.rdropWhile_prefix is a dubious translation:
@@ -208,8 +208,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_prefix List.rdropWhile_prefixₓ'. -/
 theorem rdropWhile_prefix : l.rdropWhile p <+: l :=
   by
-  rw [← reverse_suffix, rdrop_while, reverse_reverse]
-  exact drop_while_suffix _
+  rw [← reverse_suffix, rdropWhile, reverse_reverse]
+  exact dropWhile_suffix _
 #align list.rdrop_while_prefix List.rdropWhile_prefix
 
 variable {p} {l}
@@ -221,7 +221,7 @@ but is expected to have type
   forall {α : Type.{u1}} {p : α -> Bool} {_inst_1 : List.{u1} α}, Iff (Eq.{succ u1} (List.{u1} α) (List.rdropWhile.{u1} α p _inst_1) (List.nil.{u1} α)) (forall (x : α), (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x _inst_1) -> (Eq.{1} Bool (p x) Bool.true))
 Case conversion may be inaccurate. Consider using '#align list.rdrop_while_eq_nil_iff List.rdropWhile_eq_nil_iffₓ'. -/
 @[simp]
-theorem rdropWhile_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by simp [rdrop_while]
+theorem rdropWhile_eq_nil_iff : rdropWhile p l = [] ↔ ∀ x ∈ l, p x := by simp [rdropWhile]
 #align list.rdrop_while_eq_nil_iff List.rdropWhile_eq_nil_iff
 
 /- warning: list.drop_while_eq_self_iff -> List.dropWhile_eq_self_iff is a dubious translation:
@@ -236,13 +236,13 @@ theorem dropWhile_eq_self_iff : dropWhile p l = l ↔ ∀ hl : 0 < l.length, ¬p
   by
   induction' l with hd tl IH
   · simp
-  · rw [drop_while]
+  · rw [dropWhile]
     split_ifs
-    · simp only [h, length, nth_le, Nat.succ_pos', not_true, forall_true_left, iff_false_iff]
+    · simp only [h, length, nthLe, Nat.succ_pos', not_true, forall_true_left, iff_false_iff]
       intro H
-      refine' (cons_ne_self hd tl) (sublist.antisymm _ (sublist_cons _ _))
+      refine' (cons_ne_self hd tl) (Sublist.antisymm _ (sublist_cons _ _))
       rw [← H]
-      exact (drop_while_suffix _).Sublist
+      exact (dropWhile_suffix _).sublist
     · simp [h]
 #align list.drop_while_eq_self_iff List.dropWhile_eq_self_iff
 
@@ -255,11 +255,11 @@ Case conversion may be inaccurate. Consider using '#align list.rdrop_while_eq_se
 @[simp]
 theorem rdropWhile_eq_self_iff : rdropWhile p l = l ↔ ∀ hl : l ≠ [], ¬p (l.getLast hl) :=
   by
-  simp only [rdrop_while, reverse_eq_iff, length_reverse, Ne.def, drop_while_eq_self_iff,
-    last_eq_nth_le, ← length_eq_zero, pos_iff_ne_zero]
+  simp only [rdropWhile, reverse_eq_iff, length_reverse, Ne.def, dropWhile_eq_self_iff,
+    getLast_eq_nthLe, ← length_eq_zero, pos_iff_ne_zero]
   refine' forall_congr' _
   intro h
-  rw [nth_le_reverse']
+  rw [nthLe_reverse']
   · simp
   · rw [← Ne.def, ← pos_iff_ne_zero] at h
     simp [tsub_lt_iff_right (Nat.succ_le_of_lt h)]
@@ -306,7 +306,7 @@ but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool), Eq.{succ u1} (List.{u1} α) (List.rtakeWhile.{u1} α p (List.nil.{u1} α)) (List.nil.{u1} α)
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_nil List.rtakeWhile_nilₓ'. -/
 @[simp]
-theorem rtakeWhile_nil : rtakeWhile p ([] : List α) = [] := by simp [rtake_while, take_while]
+theorem rtakeWhile_nil : rtakeWhile p ([] : List α) = [] := by simp [rtakeWhile, takeWhile]
 #align list.rtake_while_nil List.rtakeWhile_nil
 
 /- warning: list.rtake_while_concat -> List.rtakeWhile_concat is a dubious translation:
@@ -318,7 +318,7 @@ Case conversion may be inaccurate. Consider using '#align list.rtake_while_conca
 theorem rtakeWhile_concat (x : α) :
     rtakeWhile p (l ++ [x]) = if p x then rtakeWhile p l ++ [x] else [] :=
   by
-  simp only [rtake_while, take_while, reverse_append, reverse_singleton, singleton_append]
+  simp only [rtakeWhile, takeWhile, reverse_append, reverse_singleton, singleton_append]
   split_ifs with h h <;> simp [h]
 #align list.rtake_while_concat List.rtakeWhile_concat
 
@@ -330,7 +330,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_concat_pos List.rtakeWhile_concat_posₓ'. -/
 @[simp]
 theorem rtakeWhile_concat_pos (x : α) (h : p x) : rtakeWhile p (l ++ [x]) = rtakeWhile p l ++ [x] :=
-  by rw [rtake_while_concat, if_pos h]
+  by rw [rtakeWhile_concat, if_pos h]
 #align list.rtake_while_concat_pos List.rtakeWhile_concat_pos
 
 /- warning: list.rtake_while_concat_neg -> List.rtakeWhile_concat_neg is a dubious translation:
@@ -341,7 +341,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_concat_neg List.rtakeWhile_concat_negₓ'. -/
 @[simp]
 theorem rtakeWhile_concat_neg (x : α) (h : ¬p x) : rtakeWhile p (l ++ [x]) = [] := by
-  rw [rtake_while_concat, if_neg h]
+  rw [rtakeWhile_concat, if_neg h]
 #align list.rtake_while_concat_neg List.rtakeWhile_concat_neg
 
 /- warning: list.rtake_while_suffix -> List.rtakeWhile_suffix is a dubious translation:
@@ -352,8 +352,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_suffix List.rtakeWhile_suffixₓ'. -/
 theorem rtakeWhile_suffix : l.rtakeWhile p <:+ l :=
   by
-  rw [← reverse_prefix, rtake_while, reverse_reverse]
-  exact take_while_prefix _
+  rw [← reverse_prefix, rtakeWhile, reverse_reverse]
+  exact takeWhile_prefix _
 #align list.rtake_while_suffix List.rtakeWhile_suffix
 
 variable {p} {l}
@@ -366,7 +366,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_eq_self_iff List.rtakeWhile_eq_self_iffₓ'. -/
 @[simp]
 theorem rtakeWhile_eq_self_iff : rtakeWhile p l = l ↔ ∀ x ∈ l, p x := by
-  simp [rtake_while, reverse_eq_iff]
+  simp [rtakeWhile, reverse_eq_iff]
 #align list.rtake_while_eq_self_iff List.rtakeWhile_eq_self_iff
 
 /- warning: list.rtake_while_eq_nil_iff -> List.rtakeWhile_eq_nil_iff is a dubious translation:
@@ -377,7 +377,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.rtake_while_eq_nil_iff List.rtakeWhile_eq_nil_iffₓ'. -/
 @[simp]
 theorem rtakeWhile_eq_nil_iff : rtakeWhile p l = [] ↔ ∀ hl : l ≠ [], ¬p (l.getLast hl) := by
-  induction l using List.reverseRecOn <;> simp [rtake_while]
+  induction l using List.reverseRecOn <;> simp [rtakeWhile]
 #align list.rtake_while_eq_nil_iff List.rtakeWhile_eq_nil_iff
 
 /- warning: list.mem_rtake_while_imp -> List.mem_rtakeWhile_imp is a dubious translation:
@@ -388,8 +388,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_rtake_while_imp List.mem_rtakeWhile_impₓ'. -/
 theorem mem_rtakeWhile_imp {x : α} (hx : x ∈ rtakeWhile p l) : p x :=
   by
-  suffices x ∈ take_while p l.reverse by exact mem_take_while_imp this
-  rwa [← mem_reverse, ← rtake_while]
+  suffices x ∈ takeWhile p l.reverse by exact mem_takeWhile_imp this
+  rwa [← mem_reverse', ← rtakeWhile]
 #align list.mem_rtake_while_imp List.mem_rtakeWhile_imp
 
 variable (p) (l)

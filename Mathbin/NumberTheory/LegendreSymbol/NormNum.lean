@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.norm_num
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,44 +69,44 @@ arguments, in a form that is suitable for constructing proofs in `norm_num`.
 
 /-- Base cases: `b = 0`, `b = 1`, `a = 0`, `a = 1`. -/
 theorem jacobiSymNat.zero_right (a : ℕ) : jacobiSymNat a 0 = 1 := by
-  rwa [jacobi_sym_nat, jacobiSym.zero_right]
+  rwa [jacobiSymNat, jacobiSym.zero_right]
 #align norm_num.jacobi_sym_nat.zero_right NormNum.jacobiSymNat.zero_right
 
 theorem jacobiSymNat.one_right (a : ℕ) : jacobiSymNat a 1 = 1 := by
-  rwa [jacobi_sym_nat, jacobiSym.one_right]
+  rwa [jacobiSymNat, jacobiSym.one_right]
 #align norm_num.jacobi_sym_nat.one_right NormNum.jacobiSymNat.one_right
 
 theorem jacobiSymNat.zero_left_even (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit0 b) = 0 := by
-  rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit0 hb)]
+  rw [jacobiSymNat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit0 hb)]
 #align norm_num.jacobi_sym_nat.zero_left_even NormNum.jacobiSymNat.zero_left_even
 
 theorem jacobiSymNat.zero_left_odd (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit1 b) = 0 := by
-  rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit1 hb)]
+  rw [jacobiSymNat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit1 hb)]
 #align norm_num.jacobi_sym_nat.zero_left_odd NormNum.jacobiSymNat.zero_left_odd
 
 theorem jacobiSymNat.one_left_even (b : ℕ) : jacobiSymNat 1 (bit0 b) = 1 := by
-  rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
+  rw [jacobiSymNat, Nat.cast_one, jacobiSym.one_left]
 #align norm_num.jacobi_sym_nat.one_left_even NormNum.jacobiSymNat.one_left_even
 
 theorem jacobiSymNat.one_left_odd (b : ℕ) : jacobiSymNat 1 (bit1 b) = 1 := by
-  rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
+  rw [jacobiSymNat, Nat.cast_one, jacobiSym.one_left]
 #align norm_num.jacobi_sym_nat.one_left_odd NormNum.jacobiSymNat.one_left_odd
 
 /-- Turn a Legendre symbol into a Jacobi symbol. -/
 theorem LegendreSym.to_jacobiSym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
-    legendreSym p a = r := by rwa [@legendreSym.to_jacobiSym p pp a]
+    legendreSym p a = r := by rwa [@legendre_sym.to_jacobi_sym p pp a]
 #align norm_num.legendre_sym.to_jacobi_sym NormNum.LegendreSym.to_jacobiSym
 
 /-- The value depends only on the residue class of `a` mod `b`. -/
 theorem JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ) (hb' : (b : ℤ) = b')
     (hab : a % b' = ab) (h : (ab' : ℤ) = ab) (hr : jacobiSymNat ab' b = r) : jacobiSym a b = r := by
-  rw [← hr, jacobi_sym_nat, jacobiSym.mod_left, hb', hab, ← h]
+  rw [← hr, jacobiSymNat, jacobiSym.mod_left, hb', hab, ← h]
 #align norm_num.jacobi_sym.mod_left NormNum.JacobiSym.mod_left
 
 theorem jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab) (hr : jacobiSymNat ab b = r) :
     jacobiSymNat a b = r :=
   by
-  rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]
+  rw [← hr, jacobiSymNat, jacobiSymNat, jacobiSym.mod_left a b, ← hab]
   rfl
 #align norm_num.jacobi_sym_nat.mod_left NormNum.jacobiSymNat.mod_left
 
@@ -128,11 +128,11 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
     simp only [legendreSym, quadraticChar_apply, quadraticCharFun_one, Int.cast_bit1,
       CharTwo.bit1_eq_one, Pi.one_apply]
   cases' eq_or_ne b 0 with hb hb
-  · rw [← hr, hb, jacobi_sym_nat.zero_right]
+  · rw [← hr, hb, jacobiSymNat.zero_right]
   · haveI : NeZero b := ⟨hb⟩
     -- for `jacobi_sym.mul_right`
-    rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ←
-      _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha, one_mul]
+    rwa [bit0_eq_two_mul b, jacobiSymNat, jacobiSym.mul_right, ← legendreSym.to_jacobiSym,
+      Nat.cast_bit1, ha, one_mul]
 #align norm_num.jacobi_sym_nat.odd_even NormNum.jacobiSymNat.odd_even
 
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/
@@ -142,7 +142,7 @@ theorem jacobiSymNat.double_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
     rw [Int.coe_nat_gcd, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
       Nat.gcd_mul_left_add_right, Nat.gcd_one_right]
-  rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat,
+  rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobiSymNat,
     Nat.cast_mul, Nat.cast_pow, jacobiSym.mul_left, jacobiSym.sq_one' this, one_mul]
 #align norm_num.jacobi_sym_nat.double_even NormNum.jacobiSymNat.double_even
 
@@ -154,7 +154,7 @@ theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   by
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobiSymNat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -165,7 +165,7 @@ theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   by
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobiSymNat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -176,7 +176,7 @@ theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   by
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobiSymNat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -187,7 +187,7 @@ theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
   by
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
-  rw [jacobi_sym_nat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
+  rw [jacobiSymNat, bit0_eq_two_mul a, Nat.cast_mul, jacobiSym.mul_left, Nat.cast_two,
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
@@ -199,7 +199,7 @@ theorem jacobiSymNat.qr₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 b) (bi
   by
   have ha : bit1 (bit0 a) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have hb := Nat.bit1_mod_two
-  rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_one_mod_four ha (nat.odd_iff.mpr hb)]
+  rwa [jacobiSymNat, jacobiSym.quadratic_reciprocity_one_mod_four ha (nat.odd_iff.mpr hb)]
 #align norm_num.jacobi_sym_nat.qr₁ NormNum.jacobiSymNat.qr₁
 
 theorem jacobiSymNat.qr₁_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 b % bit1 (bit0 a) = ab)
@@ -212,7 +212,7 @@ theorem jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit0
   by
   have hb : bit1 (bit0 b) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have ha := Nat.bit1_mod_two
-  rwa [jacobi_sym_nat, ← jacobiSym.quadratic_reciprocity_one_mod_four hb (nat.odd_iff.mpr ha)]
+  rwa [jacobiSymNat, ← jacobiSym.quadratic_reciprocity_one_mod_four hb (nat.odd_iff.mpr ha)]
 #align norm_num.jacobi_sym_nat.qr₁' NormNum.jacobiSymNat.qr₁'
 
 theorem jacobiSymNat.qr₁'_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit0 b) % bit1 a = ab)
@@ -225,7 +225,7 @@ theorem jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit1 
   by
   have hb : bit1 (bit1 b) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   have ha : bit1 (bit1 a) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
-  rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_three_mod_four ha hb, neg_inj]
+  rwa [jacobiSymNat, jacobiSym.quadratic_reciprocity_three_mod_four ha hb, neg_inj]
 #align norm_num.jacobi_sym_nat.qr₃ NormNum.jacobiSymNat.qr₃
 
 theorem jacobiSymNat.qr₃_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit1 b) % bit1 (bit1 a) = ab)
@@ -523,14 +523,14 @@ unsafe def eval_jacobi_sym : expr → tactic (expr × expr)
           mk_instance_cache
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym zc nc ea eb
+    (prod.snd ∘ prod.snd) <$> norm_num.prove_jacobi_sym zc nc ea eb
   | q(NormNum.jacobiSymNat $(ea) $(eb)) => do
     let zc
       ←-- Jacobi symbol on natural numbers
           mk_instance_cache
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym_nat zc nc ea eb
+    (prod.snd ∘ prod.snd) <$> norm_num.prove_jacobi_sym_nat zc nc ea eb
   | q(@legendreSym $(ep) $(inst) $(ea)) => do
     let zc
       ←-- Legendre symbol

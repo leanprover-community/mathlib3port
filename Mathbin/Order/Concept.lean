@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.concept
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -338,7 +338,7 @@ instance : HasInf (Concept α β r) :=
           extentClosure_intentClosure_extentClosure] }⟩
 
 instance : SemilatticeInf (Concept α β r) :=
-  fst_injective.SemilatticeInf _ fun _ _ => rfl
+  fst_injective.semilatticeInf _ fun _ _ => rfl
 
 /- warning: concept.fst_subset_fst_iff -> Concept.fst_subset_fst_iff is a dubious translation:
 lean 3 declaration is
@@ -593,7 +593,7 @@ instance : Inhabited (Concept α β r) :=
 /-- Swap the sets of a concept to make it a concept of the dual context. -/
 @[simps]
 def swap (c : Concept α β r) : Concept β α (swap r) :=
-  ⟨c.toProd.symm, c.closure_snd, c.closure_fst⟩
+  ⟨c.toProd.swap, c.closure_snd, c.closure_fst⟩
 #align concept.swap Concept.swap
 -/
 
@@ -604,7 +604,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} (c : Concept.{u2, u1} α β r), Eq.{max (succ u2) (succ u1)} (Concept.{u2, u1} α β (Function.swap.{succ u1, succ u2, 1} β α (fun (ᾰ : β) (ᾰ : α) => Prop) (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r))) (Concept.swap.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r) (Concept.swap.{u2, u1} α β r c)) c
 Case conversion may be inaccurate. Consider using '#align concept.swap_swap Concept.swap_swapₓ'. -/
 @[simp]
-theorem swap_swap (c : Concept α β r) : c.symm.symm = c :=
+theorem swap_swap (c : Concept α β r) : c.swap.swap = c :=
   ext rfl
 #align concept.swap_swap Concept.swap_swap
 
@@ -615,7 +615,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (LE.le.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toLE.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.instCompleteLatticeConcept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u2, u1} α β r c) (Concept.swap.{u2, u1} α β r d)) (LE.le.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLE.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) d c)
 Case conversion may be inaccurate. Consider using '#align concept.swap_le_swap_iff Concept.swap_le_swap_iffₓ'. -/
 @[simp]
-theorem swap_le_swap_iff : c.symm ≤ d.symm ↔ d ≤ c :=
+theorem swap_le_swap_iff : c.swap ≤ d.swap ↔ d ≤ c :=
   snd_subset_snd_iff
 #align concept.swap_le_swap_iff Concept.swap_le_swap_iff
 
@@ -626,7 +626,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> β -> Prop} {c : Concept.{u2, u1} α β r} {d : Concept.{u2, u1} α β r}, Iff (LT.lt.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Preorder.toLT.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)) (Concept.instCompleteLatticeConcept.{u1, u2} β α (Function.swap.{succ u2, succ u1, 1} α β (fun (ᾰ : α) (ᾰ : β) => Prop) r)))))) (Concept.swap.{u2, u1} α β r c) (Concept.swap.{u2, u1} α β r d)) (LT.lt.{max u2 u1} (Concept.{u2, u1} α β r) (Preorder.toLT.{max u2 u1} (Concept.{u2, u1} α β r) (PartialOrder.toPreorder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Concept.{u2, u1} α β r) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Concept.{u2, u1} α β r) (Concept.instCompleteLatticeConcept.{u2, u1} α β r))))) d c)
 Case conversion may be inaccurate. Consider using '#align concept.swap_lt_swap_iff Concept.swap_lt_swap_iffₓ'. -/
 @[simp]
-theorem swap_lt_swap_iff : c.symm < d.symm ↔ d < c :=
+theorem swap_lt_swap_iff : c.swap < d.swap ↔ d < c :=
   snd_ssubset_snd_iff
 #align concept.swap_lt_swap_iff Concept.swap_lt_swap_iff
 

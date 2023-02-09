@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.subobject
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ variable {R : Type u} [Ring R] (M : ModuleCat.{v} R)
 noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
   OrderIso.symm
     { invFun := fun S => S.arrow.range
-      toFun := fun N => Subobject.mk (↾N.Subtype)
+      toFun := fun N => Subobject.mk (↾N.subtype)
       right_inv := fun S =>
         Eq.symm
           (by
@@ -61,9 +61,9 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
               rfl)
       left_inv := fun N =>
         by
-        convert congr_arg LinearMap.range (underlying_iso_arrow (↾N.subtype)) using 1
+        convert congr_arg LinearMap.range (underlyingIso_arrow (↾N.subtype)) using 1
         · have :
-            (underlying_iso (↾N.subtype)).inv = (underlying_iso (↾N.subtype)).symm.toLinearEquiv :=
+            (underlyingIso (↾N.subtype)).inv = (underlyingIso (↾N.subtype)).symm.toLinearEquiv :=
             by
             apply LinearMap.ext
             intro x
@@ -78,8 +78,8 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
               (by
                 ext
                 rfl)⟩
-        convert LinearMap.range_comp_le_range (of_mk_le_mk _ _ h) (↾T.subtype)
-        · simpa only [← comp_def, of_mk_le_mk_comp] using (Submodule.range_subtype _).symm
+        convert LinearMap.range_comp_le_range (ofMkLeMk _ _ h) (↾T.subtype)
+        · simpa only [← comp_def, ofMkLeMk_comp] using (Submodule.range_subtype _).symm
         · exact (Submodule.range_subtype _).symm }
 #align Module.subobject_Module ModuleCat.subobjectModule
 
@@ -97,7 +97,7 @@ noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} :
 
 @[simp]
 theorem toKernelSubobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
-    (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [to_kernel_subobject]
+    (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [toKernelSubobject]
 #align Module.to_kernel_subobject_arrow ModuleCat.toKernelSubobject_arrow
 
 /-- An extensionality lemma showing that two elements of a cokernel by an image

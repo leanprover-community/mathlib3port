@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.solvable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,8 +88,8 @@ local notation "D" => derivedSeriesOfIdeal R L
 theorem derivedSeriesOfIdeal_add (k l : ℕ) : D (k + l) I = D k (D l I) :=
   by
   induction' k with k ih
-  · rw [zero_add, derived_series_of_ideal_zero]
-  · rw [Nat.succ_add k l, derived_series_of_ideal_succ, derived_series_of_ideal_succ, ih]
+  · rw [zero_add, derivedSeriesOfIdeal_zero]
+  · rw [Nat.succ_add k l, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ, ih]
 #align lie_algebra.derived_series_of_ideal_add LieAlgebra.derivedSeriesOfIdeal_add
 
 @[mono]
@@ -97,13 +97,13 @@ theorem derivedSeriesOfIdeal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J
     D k I ≤ D l J := by
   revert l; induction' k with k ih <;> intro l h₂
   · rw [le_zero_iff] at h₂
-    rw [h₂, derived_series_of_ideal_zero]
+    rw [h₂, derivedSeriesOfIdeal_zero]
     exact h₁
   · have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_lt, Nat.lt_succ_iff] at h₂
     cases h
-    · rw [h, derived_series_of_ideal_succ, derived_series_of_ideal_succ]
+    · rw [h, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ]
       exact LieSubmodule.mono_lie _ _ _ _ (ih (le_refl k)) (ih (le_refl k))
-    · rw [derived_series_of_ideal_succ]
+    · rw [derivedSeriesOfIdeal_succ]
       exact le_trans (LieSubmodule.lie_le_left _ _) (ih h)
 #align lie_algebra.derived_series_of_ideal_le LieAlgebra.derivedSeriesOfIdeal_le
 
@@ -138,17 +138,17 @@ theorem derivedSeriesOfIdeal_add_le_add (J : LieIdeal R L) (k l : ℕ) :
 theorem derived_series_of_bot_eq_bot (k : ℕ) : derivedSeriesOfIdeal R L k ⊥ = ⊥ :=
   by
   rw [eq_bot_iff]
-  exact derived_series_of_ideal_le_self ⊥ k
+  exact derivedSeriesOfIdeal_le_self ⊥ k
 #align lie_algebra.derived_series_of_bot_eq_bot LieAlgebra.derived_series_of_bot_eq_bot
 
 theorem abelian_iff_derived_one_eq_bot : IsLieAbelian I ↔ derivedSeriesOfIdeal R L 1 I = ⊥ := by
-  rw [derived_series_of_ideal_succ, derived_series_of_ideal_zero,
+  rw [derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_zero,
     LieSubmodule.lie_abelian_iff_lie_self_eq_bot]
 #align lie_algebra.abelian_iff_derived_one_eq_bot LieAlgebra.abelian_iff_derived_one_eq_bot
 
 theorem abelian_iff_derived_succ_eq_bot (I : LieIdeal R L) (k : ℕ) :
     IsLieAbelian (derivedSeriesOfIdeal R L k I) ↔ derivedSeriesOfIdeal R L (k + 1) I = ⊥ := by
-  rw [add_comm, derived_series_of_ideal_add I 1 k, abelian_iff_derived_one_eq_bot]
+  rw [add_comm, derivedSeriesOfIdeal_add I 1 k, abelian_iff_derived_one_eq_bot]
 #align lie_algebra.abelian_iff_derived_succ_eq_bot LieAlgebra.abelian_iff_derived_succ_eq_bot
 
 end LieAlgebra
@@ -163,24 +163,24 @@ theorem derivedSeries_eq_derivedSeriesOfIdeal_comap (k : ℕ) :
     derivedSeries R I k = (derivedSeriesOfIdeal R L k I).comap I.incl :=
   by
   induction' k with k ih
-  · simp only [derived_series_def, comap_incl_self, derived_series_of_ideal_zero]
-  · simp only [derived_series_def, derived_series_of_ideal_succ] at ih⊢
+  · simp only [derivedSeries_def, comap_incl_self, derivedSeriesOfIdeal_zero]
+  · simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih⊢
     rw [ih]
     exact
-      comap_bracket_incl_of_le I (derived_series_of_ideal_le_self I k)
-        (derived_series_of_ideal_le_self I k)
+      comap_bracket_incl_of_le I (derivedSeriesOfIdeal_le_self I k)
+        (derivedSeriesOfIdeal_le_self I k)
 #align lie_ideal.derived_series_eq_derived_series_of_ideal_comap LieIdeal.derivedSeries_eq_derivedSeriesOfIdeal_comap
 
 theorem derivedSeries_eq_derivedSeriesOfIdeal_map (k : ℕ) :
     (derivedSeries R I k).map I.incl = derivedSeriesOfIdeal R L k I :=
   by
-  rw [derived_series_eq_derived_series_of_ideal_comap, map_comap_incl, inf_eq_right]
-  apply derived_series_of_ideal_le_self
+  rw [derivedSeries_eq_derivedSeriesOfIdeal_comap, map_comap_incl, inf_eq_right]
+  apply derivedSeriesOfIdeal_le_self
 #align lie_ideal.derived_series_eq_derived_series_of_ideal_map LieIdeal.derivedSeries_eq_derivedSeriesOfIdeal_map
 
 theorem derivedSeries_eq_bot_iff (k : ℕ) :
     derivedSeries R I k = ⊥ ↔ derivedSeriesOfIdeal R L k I = ⊥ := by
-  rw [← derived_series_eq_derived_series_of_ideal_map, map_eq_bot_iff, ker_incl, eq_bot_iff]
+  rw [← derivedSeries_eq_derivedSeriesOfIdeal_map, map_eq_bot_iff, ker_incl, eq_bot_iff]
 #align lie_ideal.derived_series_eq_bot_iff LieIdeal.derivedSeries_eq_bot_iff
 
 theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedSeries R I k = ⊥)
@@ -188,9 +188,9 @@ theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedS
   by
   rw [LieIdeal.derivedSeries_eq_bot_iff] at hI hJ⊢
   rw [← le_bot_iff]
-  let D := derived_series_of_ideal R L; change D k I = ⊥ at hI; change D l J = ⊥ at hJ
+  let D := derivedSeriesOfIdeal R L; change D k I = ⊥ at hI; change D l J = ⊥ at hJ
   calc
-    D (k + l) (I + J) ≤ D k I + D l J := derived_series_of_ideal_add_le_add I J k l
+    D (k + l) (I + J) ≤ D k I + D l J := derivedSeriesOfIdeal_add_le_add I J k l
     _ ≤ ⊥ := by
       rw [hI, hJ]
       simp
@@ -200,8 +200,8 @@ theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedS
 theorem derivedSeries_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derivedSeries R L k :=
   by
   induction' k with k ih
-  · simp only [derived_series_def, derived_series_of_ideal_zero, le_top]
-  · simp only [derived_series_def, derived_series_of_ideal_succ] at ih⊢
+  · simp only [derivedSeries_def, derivedSeriesOfIdeal_zero, le_top]
+  · simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih⊢
     exact le_trans (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ ih ih)
 #align lie_ideal.derived_series_map_le LieIdeal.derivedSeries_map_le
 
@@ -212,7 +212,7 @@ theorem derivedSeries_map_eq (k : ℕ) (h : Function.Surjective f) :
   · change (⊤ : LieIdeal R L').map f = ⊤
     rw [← f.ideal_range_eq_map]
     exact f.ideal_range_eq_top_of_surjective h
-  · simp only [derived_series_def, map_bracket_eq f h, ih, derived_series_of_ideal_succ]
+  · simp only [derivedSeries_def, map_bracket_eq f h, ih, derivedSeriesOfIdeal_succ]
 #align lie_ideal.derived_series_map_eq LieIdeal.derivedSeries_map_eq
 
 end LieIdeal
@@ -298,7 +298,7 @@ instance radicalIsSolvable [IsNoetherian R L] : IsSolvable R (radical R L) :=
   by
   have hwf := LieSubmodule.wellFounded_of_noetherian R L L
   rw [← CompleteLattice.isSupClosedCompact_iff_wellFounded] at hwf
-  refine' hwf { I : LieIdeal R L | is_solvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
+  refine' hwf { I : LieIdeal R L | IsSolvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
   · exact LieAlgebra.isSolvableBot R L
   · apply LieAlgebra.isSolvableAdd R L
     exacts[hI, hJ]
@@ -335,24 +335,24 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
       IsLieAbelian (derivedSeriesOfIdeal R L k I) ∧ derivedSeriesOfIdeal R L k I ≠ ⊥ :=
   by
   rw [abelian_iff_derived_succ_eq_bot]
-  let s := { k | derived_series_of_ideal R L k I = ⊥ }
-  change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
+  let s := { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  change infₛ s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s :=
     by
     intro k₁ k₂ h₁₂ h₁
-    suffices derived_series_of_ideal R L k₂ I ≤ ⊥ by exact eq_bot_iff.mpr this
-    change derived_series_of_ideal R L k₁ I = ⊥ at h₁
+    suffices derivedSeriesOfIdeal R L k₂ I ≤ ⊥ by exact eq_bot_iff.mpr this
+    change derivedSeriesOfIdeal R L k₁ I = ⊥ at h₁
     rw [← h₁]
-    exact derived_series_of_ideal_antitone I h₁₂
+    exact derivedSeriesOfIdeal_antitone I h₁₂
   exact Nat.infₛ_upward_closed_eq_succ_iff hs k
 #align lie_algebra.derived_series_of_derived_length_succ LieAlgebra.derived_series_of_derived_length_succ
 
 theorem derivedLength_eq_derivedLengthOfIdeal (I : LieIdeal R L) :
     derivedLength R I = derivedLengthOfIdeal R L I :=
   by
-  let s₁ := { k | derived_series R I k = ⊥ }
-  let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
-  change Inf s₁ = Inf s₂
+  let s₁ := { k | derivedSeries R I k = ⊥ }
+  let s₂ := { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  change infₛ s₁ = infₛ s₂
   congr ; ext k; exact I.derived_series_eq_bot_iff k
 #align lie_algebra.derived_length_eq_derived_length_of_ideal LieAlgebra.derivedLength_eq_derivedLengthOfIdeal
 
@@ -371,8 +371,8 @@ noncomputable def derivedAbelianOfIdeal (I : LieIdeal R L) : LieIdeal R L :=
 theorem abelian_derivedAbelianOfIdeal (I : LieIdeal R L) : IsLieAbelian (derivedAbelianOfIdeal I) :=
   by
   dsimp only [derived_abelian_of_ideal]
-  cases' h : derived_length_of_ideal R L I with k
-  · exact is_lie_abelian_bot R L
+  cases' h : derivedLengthOfIdeal R L I with k
+  · exact isLieAbelian_bot R L
   · rw [derived_series_of_derived_length_succ] at h
     exact h.1
 #align lie_algebra.abelian_derived_abelian_of_ideal LieAlgebra.abelian_derivedAbelianOfIdeal
@@ -380,12 +380,12 @@ theorem abelian_derivedAbelianOfIdeal (I : LieIdeal R L) : IsLieAbelian (derived
 theorem derived_length_zero (I : LieIdeal R L) [hI : IsSolvable R I] :
     derivedLengthOfIdeal R L I = 0 ↔ I = ⊥ :=
   by
-  let s := { k | derived_series_of_ideal R L k I = ⊥ }
-  change Inf s = 0 ↔ _
+  let s := { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  change infₛ s = 0 ↔ _
   have hne : s ≠ ∅ := by
     obtain ⟨k, hk⟩ := id hI
     refine' Set.Nonempty.ne_empty ⟨k, _⟩
-    rw [derived_series_def, LieIdeal.derivedSeries_eq_bot_iff] at hk
+    rw [derivedSeries_def, LieIdeal.derivedSeries_eq_bot_iff] at hk
     exact hk
   simp [hne]
 #align lie_algebra.derived_length_zero LieAlgebra.derived_length_zero
@@ -394,7 +394,7 @@ theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable 
     derivedAbelianOfIdeal I = ⊥ ↔ I = ⊥ :=
   by
   dsimp only [derived_abelian_of_ideal]
-  cases' h : derived_length_of_ideal R L I with k
+  cases' h : derivedLengthOfIdeal R L I with k
   · rw [derived_length_zero] at h
     rw [h]
     rfl
@@ -404,7 +404,7 @@ theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable 
       apply h₂
       rw [contra]
       apply derived_series_of_bot_eq_bot
-    change derived_series_of_ideal R L k I = ⊥ ↔ I = ⊥
+    change derivedSeriesOfIdeal R L k I = ⊥ ↔ I = ⊥
     constructor <;> contradiction
 #align lie_algebra.abelian_of_solvable_ideal_eq_bot_iff LieAlgebra.abelian_of_solvable_ideal_eq_bot_iff
 

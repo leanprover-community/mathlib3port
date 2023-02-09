@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Weiser
 
 ! This file was ported from Lean 3 source module algebra.star.free
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,17 +69,17 @@ instance : StarRing (FreeAlgebra R X)
   star_add a b := by simp only [Function.comp_apply, map_add, MulOpposite.unop_add]
 
 @[simp]
-theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, Star.star]
+theorem star_ι (x : X) : star (ι R x) = ι R x := by simp [star, has_star.star]
 #align free_algebra.star_ι FreeAlgebra.star_ι
 
 @[simp]
 theorem star_algebraMap (r : R) : star (algebraMap R (FreeAlgebra R X) r) = algebraMap R _ r := by
-  simp [star, Star.star]
+  simp [star, has_star.star]
 #align free_algebra.star_algebra_map FreeAlgebra.star_algebraMap
 
 /-- `star` as an `alg_equiv` -/
 def starHom : FreeAlgebra R X ≃ₐ[R] (FreeAlgebra R X)ᵐᵒᵖ :=
-  { starRingEquiv with commutes' := fun r => by simp [star_algebra_map] }
+  { starRingEquiv with commutes' := fun r => by simp [star_algebraMap] }
 #align free_algebra.star_hom FreeAlgebra.starHom
 
 end FreeAlgebra

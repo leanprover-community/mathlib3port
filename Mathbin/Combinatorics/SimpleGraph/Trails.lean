@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.trails
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem IsTrail.even_countp_edges_iff {u v : V} {p : G.Walk u v} (ht : p.IsTrail
   by
   induction' p with u u v w huv p ih
   · simp
-  · rw [cons_is_trail_iff] at ht
+  · rw [cons_isTrail_iff] at ht
     specialize ih ht.1
     simp only [List.countp_cons, Ne.def, edges_cons, Sym2.mem_iff]
     split_ifs with h
@@ -96,10 +96,10 @@ def IsEulerian {u v : V} (p : G.Walk u v) : Prop :=
 
 theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail :=
   by
-  rw [is_trail_def, List.nodup_iff_count_le_one]
+  rw [isTrail_def, List.nodup_iff_count_le_one]
   intro e
   by_cases he : e ∈ p.edges
-  · exact (h e (edges_subset_edge_set _ he)).le
+  · exact (h e (edges_subset_edgeSet _ he)).le
   · simp [he]
 #align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.isTrail
 
@@ -110,7 +110,7 @@ theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {
 
 /-- The edge set of an Eulerian graph is finite. -/
 def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fintype G.edgeSet :=
-  Fintype.ofFinset h.IsTrail.edgesFinset fun e => by
+  Fintype.ofFinset h.isTrail.edgesFinset fun e => by
     simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSet
 
@@ -130,7 +130,7 @@ theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
 #align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.isEulerian_iff
 
 theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSet] {u v : V} {p : G.Walk u v}
-    (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset :=
+    (h : p.IsEulerian) : h.isTrail.edgesFinset = G.edgeFinset :=
   by
   ext e
   simp [h.mem_edges_iff]
@@ -140,7 +140,7 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
     [DecidableRel G.Adj] : Even (G.degree x) ↔ u ≠ v → x ≠ u ∧ x ≠ v :=
   by
   convert ht.is_trail.even_countp_edges_iff x
-  rw [← Multiset.coe_countp, Multiset.countp_eq_card_filter, ← card_incidence_finset_eq_degree]
+  rw [← Multiset.coe_countp, Multiset.countp_eq_card_filter, ← card_incidenceFinset_eq_degree]
   change Multiset.card _ = _
   congr 1
   convert_to _ = (ht.is_trail.edges_finset.filter (Membership.Mem x)).val
@@ -149,8 +149,8 @@ theorem IsEulerian.even_degree_iff {x u v : V} {p : G.Walk u v} (ht : p.IsEuleri
 
 theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V}
     {p : G.Walk u v} (ht : p.IsEulerian) {s}
-    (h : s = (Finset.univ : Finset V).filterₓ fun v => Odd (G.degree v)) :
-    s.card = 0 ∨ s.card = 2 := by
+    (h : s = (Finset.univ : Finset V).filter fun v => Odd (G.degree v)) : s.card = 0 ∨ s.card = 2 :=
+  by
   subst s
   simp only [Nat.odd_iff_not_even, Finset.card_eq_zero]
   simp only [ht.even_degree_iff, Ne.def, not_forall, not_and, Classical.not_not, exists_prop]
@@ -170,7 +170,7 @@ theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p
     Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 :=
   by
   rw [← Set.toFinset_card]
-  apply is_eulerian.card_filter_odd_degree ht
+  apply IsEulerian.card_filter_odd_degree ht
   ext v
   simp
 #align simple_graph.walk.is_eulerian.card_odd_degree SimpleGraph.Walk.IsEulerian.card_odd_degree

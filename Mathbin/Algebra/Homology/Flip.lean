@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.flip
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,17 +80,17 @@ def flipEquivalenceUnitIso :
             comm' := fun i j h => by
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] }
+              simp only [Category.id_comp, Category.comp_id] }
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] } })
+              simp only [Category.id_comp, Category.comp_id] } })
     fun X Y f => by
     ext
     dsimp
-    simp only [category.id_comp, category.comp_id]
+    simp only [Category.id_comp, Category.comp_id]
 #align homological_complex.flip_equivalence_unit_iso HomologicalComplex.flipEquivalenceUnitIso
 
 /-- Auxiliary definition for `homological_complex.flip_equivalence` .-/
@@ -104,17 +104,17 @@ def flipEquivalenceCounitIso :
             comm' := fun i j h => by
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] }
+              simp only [Category.id_comp, Category.comp_id] }
         inv :=
           { f := fun i => { f := fun j => 𝟙 ((C.x i).x j) }
             comm' := fun i j h => by
               ext
               dsimp
-              simp only [category.id_comp, category.comp_id] } })
+              simp only [Category.id_comp, Category.comp_id] } })
     fun X Y f => by
     ext
     dsimp
-    simp only [category.id_comp, category.comp_id]
+    simp only [Category.id_comp, Category.comp_id]
 #align homological_complex.flip_equivalence_counit_iso HomologicalComplex.flipEquivalenceCounitIso
 
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/

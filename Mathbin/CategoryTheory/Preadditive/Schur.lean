@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.schur
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ that a nonzero morphism between simple objects is an isomorphism.
 theorem isIso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : X ⟶ Y} (w : f ≠ 0) :
     IsIso f :=
   haveI := mono_of_nonzero_from_simple w
-  is_iso_of_mono_of_nonzero w
+  isIso_of_mono_of_nonzero w
 #align category_theory.is_iso_of_hom_simple CategoryTheory.isIso_of_hom_simple
 
 /-- As a corollary of Schur's lemma for preadditive categories,
@@ -58,7 +58,7 @@ theorem isIso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X 
   ⟨fun I => by
     intro h
     apply id_nonzero X
-    simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => isIso_of_hom_simple w⟩
+    simp only [← IsIso.hom_inv_id f, h, zero_comp], fun w => isIso_of_hom_simple w⟩
 #align category_theory.is_iso_iff_nonzero CategoryTheory.isIso_iff_nonzero
 
 /-- In any preadditive category with kernels,
@@ -74,13 +74,13 @@ noncomputable instance [HasKernels C] {X : C} [Simple X] : DivisionRing (End X) 
         inv := fun f =>
           if h : f = 0 then 0
           else
-            haveI := is_iso_of_hom_simple h
+            haveI := isIso_of_hom_simple h
             inv f
         exists_pair_ne := ⟨𝟙 X, 0, id_nonzero _⟩
         inv_zero := dif_pos rfl
         mul_inv_cancel := fun f h => by
-          haveI := is_iso_of_hom_simple h
-          convert is_iso.inv_hom_id f
+          haveI := isIso_of_hom_simple h
+          convert IsIso.inv_hom_id f
           exact dif_neg h }
 
 open FiniteDimensional
@@ -97,9 +97,9 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
   haveI :=
     subsingleton_of_forall_eq (0 : X ⟶ Y) fun f =>
       by
-      have p := not_congr (is_iso_iff_nonzero f)
+      have p := not_congr (isIso_iff_nonzero f)
       simp only [Classical.not_not, Ne.def] at p
-      refine' p.mp fun _ => h (as_iso f)
+      refine' p.mp fun _ => h (asIso f)
   finrank_zero_of_subsingleton
 #align category_theory.finrank_hom_simple_simple_eq_zero_of_not_iso CategoryTheory.finrank_hom_simple_simple_eq_zero_of_not_iso
 
@@ -131,7 +131,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
   · intro f
     haveI : Nontrivial (End X) := nontrivial_of_ne _ _ id_nonzero
     obtain ⟨c, nu⟩ :=
-      @spectrum.nonempty_of_isAlgClosed_of_finiteDimensional 𝕜 (End X) _ _ _ _ _
+      @spectrum.nonempty_of_is_alg_closed_of_finite_dimensional 𝕜 (End X) _ _ _ _ _
         (by
           convert I
           ext
@@ -140,7 +140,7 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
           rfl)
         (End.of f)
     use c
-    rw [spectrum.mem_iff, IsUnit.sub_iff, is_unit_iff_is_iso, is_iso_iff_nonzero, Ne.def,
+    rw [spectrum.mem_iff, IsUnit.sub_iff, isUnit_iff_isIso, is_iso_iff_nonzero, Ne.def,
       Classical.not_not, sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu
     exact nu.symm
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
@@ -190,7 +190,7 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
     rw [finrank_zero_of_subsingleton]
     exact zero_le_one
   · obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h
-    haveI fi := (is_iso_iff_nonzero f).mpr nz
+    haveI fi := (isIso_iff_nonzero f).mpr nz
     apply finrank_le_one f
     intro g
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
@@ -205,12 +205,12 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (
   · intro h
     rw [finrank_eq_one_iff'] at h
     obtain ⟨f, nz, -⟩ := h
-    rw [← is_iso_iff_nonzero] at nz
-    exact ⟨as_iso f⟩
+    rw [← isIso_iff_nonzero] at nz
+    exact ⟨asIso f⟩
   · rintro ⟨f⟩
     have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y
     have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
-      finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
+      finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (isIso_iff_nonzero f.hom).mp inferInstance⟩
     linarith
 #align category_theory.finrank_hom_simple_simple_eq_one_iff CategoryTheory.finrank_hom_simple_simple_eq_one_iff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ def strongUniformity [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     UniformSpace (E →SL[σ] F) :=
   @UniformSpace.replaceTopology _ (strongTopology σ F 𝔖)
     ((UniformOnFun.uniformSpace E F 𝔖).comap coeFn)
-    (by rw [strong_topology, UniformAddGroup.toUniformSpace_eq] <;> rfl)
+    (by rw [strongTopology, UniformAddGroup.toUniformSpace_eq] <;> rfl)
 #align continuous_linear_map.strong_uniformity ContinuousLinearMap.strongUniformity
 
 @[simp]
@@ -101,7 +101,7 @@ theorem strongUniformity.uniformEmbedding_coeFn [UniformSpace F] [UniformAddGrou
     (𝔖 : Set (Set E)) :
     @UniformEmbedding (E →SL[σ] F) (E →ᵤ[𝔖] F) (strongUniformity σ F 𝔖)
       (UniformOnFun.uniformSpace E F 𝔖) coeFn :=
-  letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
+  letI : UniformSpace (E →SL[σ] F) := strongUniformity σ F 𝔖
   ⟨⟨rfl⟩, FunLike.coe_injective⟩
 #align continuous_linear_map.strong_uniformity.uniform_embedding_coe_fn ContinuousLinearMap.strongUniformity.uniformEmbedding_coeFn
 
@@ -114,8 +114,8 @@ theorem strongTopology.embedding_coeFn [UniformSpace F] [UniformAddGroup F] (�
 theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (𝔖 : Set (Set E)) :
     @UniformAddGroup (E →SL[σ] F) (strongUniformity σ F 𝔖) _ :=
   by
-  letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
-  rw [strong_uniformity, UniformSpace.replaceTopology_eq]
+  letI : UniformSpace (E →SL[σ] F) := strongUniformity σ F 𝔖
+  rw [strongUniformity, UniformSpace.replaceTopology_eq]
   let φ : (E →SL[σ] F) →+ E →ᵤ[𝔖] F := ⟨(coeFn : (E →SL[σ] F) → E →ᵤ F), rfl, fun _ _ => rfl⟩
   exact uniform_add_group_comap φ
 #align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroup
@@ -125,8 +125,8 @@ theorem strongTopology.topologicalAddGroup [TopologicalSpace F] [TopologicalAddG
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
-  letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
-  haveI : UniformAddGroup (E →SL[σ] F) := strong_uniformity.uniform_add_group σ F 𝔖
+  letI : UniformSpace (E →SL[σ] F) := strongUniformity σ F 𝔖
+  haveI : UniformAddGroup (E →SL[σ] F) := strongUniformity.uniformAddGroup σ F 𝔖
   infer_instance
 #align continuous_linear_map.strong_topology.topological_add_group ContinuousLinearMap.strongTopology.topologicalAddGroup
 
@@ -135,9 +135,9 @@ theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2S
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
-  letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
+  letI : TopologicalSpace (E →SL[σ] F) := strongTopology σ F 𝔖
   haveI : T2Space (E →ᵤ[𝔖] F) := UniformOnFun.t2Space_of_covering h𝔖
-  exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
+  exact (strongTopology.embedding_coeFn σ F 𝔖).t2Space
 #align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Space
 
 theorem strongTopology.hasContinuousSmul [RingHomSurjective σ] [RingHomIsometric σ]
@@ -147,7 +147,7 @@ theorem strongTopology.hasContinuousSmul [RingHomSurjective σ] [RingHomIsometri
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
-  letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
+  letI : TopologicalSpace (E →SL[σ] F) := strongTopology σ F 𝔖
   let φ : (E →SL[σ] F) →ₗ[𝕜₂] E →ᵤ[𝔖] F :=
     ⟨(coeFn : (E →SL[σ] F) → E → F), fun _ _ => rfl, fun _ _ => rfl⟩
   exact
@@ -180,11 +180,11 @@ theorem strongTopology.locallyConvexSpace [TopologicalSpace F'] [TopologicalAddG
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     @LocallyConvexSpace ℝ (E' →L[ℝ] F') _ _ _ (strongTopology (RingHom.id ℝ) F' 𝔖) :=
   by
-  letI : TopologicalSpace (E' →L[ℝ] F') := strong_topology (RingHom.id ℝ) F' 𝔖
-  haveI : TopologicalAddGroup (E' →L[ℝ] F') := strong_topology.topological_add_group _ _ _
+  letI : TopologicalSpace (E' →L[ℝ] F') := strongTopology (RingHom.id ℝ) F' 𝔖
+  haveI : TopologicalAddGroup (E' →L[ℝ] F') := strongTopology.topologicalAddGroup _ _ _
   refine'
     LocallyConvexSpace.ofBasisZero _ _ _ _
-      (strong_topology.has_basis_nhds_zero_of_basis _ _ _ h𝔖₁ h𝔖₂
+      (strongTopology.hasBasis_nhds_zero_of_basis _ _ _ h𝔖₁ h𝔖₂
         (LocallyConvexSpace.convex_basis_zero ℝ F'))
       _
   rintro ⟨S, V⟩ ⟨hS, hVmem, hVconvex⟩ f hf g hg a b ha hb hab x hx

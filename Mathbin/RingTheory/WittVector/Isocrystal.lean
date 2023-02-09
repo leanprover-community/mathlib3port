@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.isocrystal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   by
   haveI : Nontrivial V := FiniteDimensional.nontrivial_of_finrank_eq_succ h_dim
   obtain ⟨x, hx⟩ : ∃ x : V, x ≠ 0 := exists_ne 0
-  have : Φ(p, k) x ≠ 0 := by simpa only [map_zero] using Φ(p, k).Injective.Ne hx
+  have : Φ(p, k) x ≠ 0 := by simpa only [map_zero] using Φ(p, k).injective.ne hx
   obtain ⟨a, ha, hax⟩ : ∃ a : K(p, k), a ≠ 0 ∧ Φ(p, k) x = a • x :=
     by
     rw [finrank_eq_one_iff_of_nonzero' x hx] at h_dim
@@ -214,8 +214,8 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   obtain ⟨b, hb, m, hmb⟩ := WittVector.exists_frobenius_solution_fractionRing p ha
   replace hmb : φ(p, k) b * a = p ^ m * b := by convert hmb
   use m
-  let F₀ : standard_one_dim_isocrystal p k m →ₗ[K(p, k)] V := LinearMap.toSpanSingleton K(p, k) V x
-  let F : standard_one_dim_isocrystal p k m ≃ₗ[K(p, k)] V :=
+  let F₀ : StandardOneDimIsocrystal p k m →ₗ[K(p, k)] V := LinearMap.toSpanSingleton K(p, k) V x
+  let F : StandardOneDimIsocrystal p k m ≃ₗ[K(p, k)] V :=
     by
     refine' LinearEquiv.ofBijective F₀ ⟨_, _⟩
     · rw [← LinearMap.ker_eq_bot]
@@ -228,7 +228,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   rw [LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.smulOfNeZero_apply,
     LinearEquiv.smulOfNeZero_apply, LinearEquiv.map_smul, LinearEquiv.map_smul]
   simp only [hax, LinearEquiv.ofBijective_apply, LinearMap.toSpanSingleton_apply,
-    LinearEquiv.map_smulₛₗ, standard_one_dim_isocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
+    LinearEquiv.map_smulₛₗ, StandardOneDimIsocrystal.frobenius_apply, Algebra.id.smul_eq_mul]
   simp only [← mul_smul]
   congr 1
   linear_combination φ(p, k) c * hmb

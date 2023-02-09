@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Utensil Song
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ open TensorAlgebra
 The Clifford algebra of `M` is defined as the quotient modulo this relation.
 -/
 inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
-  | of (m : M) : Rel (ι R m * ι R m) (algebraMap R _ (Q m))
+  | of (m : M) : rel (ι R m * ι R m) (algebraMap R _ (Q m))
 #align clifford_algebra.rel CliffordAlgebra.Rel
 
 end CliffordAlgebra
@@ -91,7 +91,7 @@ def ι : M →ₗ[R] CliffordAlgebra Q :=
 @[simp]
 theorem ι_sq_scalar (m : M) : ι Q m * ι Q m = algebraMap R _ (Q m) :=
   by
-  erw [← AlgHom.map_mul, RingQuot.mkAlgHom_rel R (rel.of m), AlgHom.commutes]
+  erw [← AlgHom.map_mul, RingQuot.mkAlgHom_rel R (Rel.of m), AlgHom.commutes]
   rfl
 #align clifford_algebra.ι_sq_scalar CliffordAlgebra.ι_sq_scalar
 
@@ -170,7 +170,7 @@ theorem hom_ext {A : Type _} [Semiring A] [Algebra R A] {f g : CliffordAlgebra Q
     f.toLinearMap.comp (ι Q) = g.toLinearMap.comp (ι Q) → f = g :=
   by
   intro h
-  apply (lift Q).symm.Injective
+  apply (lift Q).symm.injective
   rw [lift_symm_apply, lift_symm_apply]
   simp only [h]
 #align clifford_algebra.hom_ext CliffordAlgebra.hom_ext
@@ -349,28 +349,28 @@ def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m)
 /-- For a vector with invertible quadratic form, $v^{-1} = \frac{v}{Q(v)}$ -/
 theorem invOf_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) :=
   by
-  letI := invertible_ι_of_invertible Q m
+  letI := invertibleιOfInvertible Q m
   convert (rfl : ⅟ (ι Q m) = _)
 #align clifford_algebra.inv_of_ι CliffordAlgebra.invOf_ι
 
 theorem isUnit_ι_of_isUnit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) :=
   by
   cases h.nonempty_invertible
-  letI := invertible_ι_of_invertible Q m
+  letI := invertibleιOfInvertible Q m
   exact isUnit_of_invertible (ι Q m)
 #align clifford_algebra.is_unit_ι_of_is_unit CliffordAlgebra.isUnit_ι_of_isUnit
 
 /-- $aba^{-1}$ is a vector. -/
 theorem ι_mul_ι_mul_invOf_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ι Q a * ι Q b * ⅟ (ι Q a) = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
-  rw [inv_of_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
+  rw [invOf_ι, map_smul, mul_smul_comm, ι_mul_ι_mul_ι, ← map_smul, smul_sub, smul_smul, smul_smul,
     invOf_mul_self, one_smul]
 #align clifford_algebra.ι_mul_ι_mul_inv_of_ι CliffordAlgebra.ι_mul_ι_mul_invOf_ι
 
 /-- $a^{-1}ba$ is a vector. -/
 theorem invOf_ι_mul_ι_mul_ι (a b : M) [Invertible (ι Q a)] [Invertible (Q a)] :
     ⅟ (ι Q a) * ι Q b * ι Q a = ι Q ((⅟ (Q a) * QuadraticForm.polar Q a b) • a - b) := by
-  rw [inv_of_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub,
+  rw [invOf_ι, map_smul, smul_mul_assoc, smul_mul_assoc, ι_mul_ι_mul_ι, ← map_smul, smul_sub,
     smul_smul, smul_smul, invOf_mul_self, one_smul]
 #align clifford_algebra.inv_of_ι_mul_ι_mul_ι CliffordAlgebra.invOf_ι_mul_ι_mul_ι
 
@@ -388,7 +388,7 @@ def toClifford : TensorAlgebra R M →ₐ[R] CliffordAlgebra Q :=
 
 @[simp]
 theorem toClifford_ι (m : M) : (TensorAlgebra.ι R m).toClifford = CliffordAlgebra.ι Q m := by
-  simp [to_clifford]
+  simp [toClifford]
 #align tensor_algebra.to_clifford_ι TensorAlgebra.toClifford_ι
 
 end TensorAlgebra

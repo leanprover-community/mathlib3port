@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_convergence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ instance : UniformGroup (α →ᵤ G) :=
           -- `(/) : (α →ᵤ G) × (α →ᵤ G) → (α →ᵤ G)` is also uniformly continuous
           UniformFun.postcomp_uniformContinuous
           uniformContinuous_div).comp
-      UniformFun.uniformEquivProdArrow.symm.UniformContinuous⟩
+      UniformFun.uniformEquivProdArrow.symm.uniformContinuous⟩
 
 @[to_additive]
 protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
@@ -152,7 +152,7 @@ instance : UniformGroup (α →ᵤ[𝔖] G) :=
           -- `(/) : (α →ᵤ[𝔖] G) × (α →ᵤ[𝔖] G) → (α →ᵤ[𝔖] G)` is also uniformly continuous
           UniformOnFun.postcomp_uniformContinuous
           uniformContinuous_div).comp
-      UniformOnFun.uniformEquivProdArrow.symm.UniformContinuous⟩
+      UniformOnFun.uniformEquivProdArrow.symm.uniformContinuous⟩
 
 @[to_additive]
 protected theorem UniformOnFun.hasBasis_nhds_one_of_basis (𝔖 : Set <| Set α) (h𝔖₁ : 𝔖.Nonempty)
@@ -210,7 +210,7 @@ theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖
     exact (UniformOnFun.hasBasis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
   refine' HasContinuousSmul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
-    have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
+    have : Tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
       continuous_smul.tendsto (0 : 𝕜 × E)
     rw [zero_smul, nhds_prod_eq] at this
     have := this hV
@@ -222,7 +222,7 @@ theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖
     rw [SMulHomClass.map_smul]
     exact hUW (⟨ha, hu x hx⟩ : (a, φ u x) ∈ U ×ˢ W)
   · rintro a ⟨S, V⟩ ⟨hS, hV⟩
-    have : tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
+    have : Tendsto (fun x : E => a • x) (𝓝 0) (𝓝 <| a • 0) := tendsto_id.const_smul a
     rw [smul_zero] at this
     refine' ⟨⟨S, (· • ·) a ⁻¹' V⟩, ⟨hS, this hV⟩, fun f hf x hx => _⟩
     rw [SMulHomClass.map_smul]

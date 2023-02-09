@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.bundled
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ instance : CoeSort T.ModelCat (Type w) :=
   ⟨ModelCat.Carrier⟩
 
 @[simp]
-theorem carrier_eq_coe (M : T.ModelCat) : M.carrier = M :=
+theorem carrier_eq_coe (M : T.ModelCat) : M.Carrier = M :=
   rfl
 #align first_order.language.Theory.Model.carrier_eq_coe FirstOrder.Language.Theory.ModelCat.carrier_eq_coe
 
@@ -126,7 +126,7 @@ def equivInduced {M : ModelCat.{u, v, w} T} {N : Type w'} (e : M ≃ N) : ModelC
   carrier := N
   struc := e.inducedStructure
   is_model := @Equiv.theory_model L M N _ e.inducedStructure T e.inducedStructureEquiv _
-  nonempty' := e.symm.Nonempty
+  nonempty' := e.symm.nonempty
 #align first_order.language.Theory.Model.equiv_induced FirstOrder.Language.Theory.ModelCat.equivInduced
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -171,12 +171,12 @@ noncomputable def defaultExpansion {L' : Language} {φ : L →ᴸ L'} (h : φ.In
       M.is_model
 #align first_order.language.Theory.Model.default_expansion FirstOrder.Language.Theory.ModelCat.defaultExpansion
 
-instance leftStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L.Structure M :=
-  (Lhom.sumInl : L →ᴸ L.Sum L').reduct M
+instance leftStructure {L' : Language} {T : (L.sum L').Theory} (M : T.ModelCat) : L.Structure M :=
+  (Lhom.sumInl : L →ᴸ L.sum L').reduct M
 #align first_order.language.Theory.Model.left_Structure FirstOrder.Language.Theory.ModelCat.leftStructure
 
-instance rightStructure {L' : Language} {T : (L.Sum L').Theory} (M : T.ModelCat) : L'.Structure M :=
-  (Lhom.sumInr : L' →ᴸ L.Sum L').reduct M
+instance rightStructure {L' : Language} {T : (L.sum L').Theory} (M : T.ModelCat) : L'.Structure M :=
+  (Lhom.sumInr : L' →ᴸ L.sum L').reduct M
 #align first_order.language.Theory.Model.right_Structure FirstOrder.Language.Theory.ModelCat.rightStructure
 
 /-- A model of a theory is also a model of any subtheory. -/
@@ -200,12 +200,12 @@ variable {T}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Bundles `M ⊨ T` as a `T.Model`. -/
 def Model.bundled {M : Type w} [LM : L.Structure M] [ne : Nonempty M] (h : M ⊨ T) : T.ModelCat :=
-  @ModelCat.of L T M LM h Ne
+  @ModelCat.of L T M LM h ne
 #align first_order.language.Theory.model.bundled FirstOrder.Language.Theory.Model.bundled
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.Bundled : Type w) = M :=
+theorem coe_of {M : Type w} [L.Structure M] [Nonempty M] (h : M ⊨ T) : (h.bundled : Type w) = M :=
   rfl
 #align first_order.language.Theory.coe_of FirstOrder.Language.Theory.coe_of
 
@@ -216,13 +216,13 @@ def ElementarilyEquivalent.toModel {M : T.ModelCat} {N : Type _} [LN : L.Structu
     (h : M ≅[L] N) : T.ModelCat where
   carrier := N
   struc := LN
-  nonempty' := h.Nonempty
+  nonempty' := h.nonempty
   is_model := h.theory_model
 #align first_order.language.elementarily_equivalent.to_Model FirstOrder.Language.ElementarilyEquivalent.toModel
 
 /-- An elementary substructure of a bundled model as a bundled model. -/
 def ElementarySubstructure.toModel {M : T.ModelCat} (S : L.ElementarySubstructure M) : T.ModelCat :=
-  S.ElementarilyEquivalent.symm.toModel T
+  S.elementarilyEquivalent.symm.toModel T
 #align first_order.language.elementary_substructure.to_Model FirstOrder.Language.ElementarySubstructure.toModel
 
 instance {M : T.ModelCat} (S : L.ElementarySubstructure M) [h : Small S] : Small (S.toModel T) :=

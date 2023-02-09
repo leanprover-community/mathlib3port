@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.subadditive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ protected irreducible_def lim :=
 #align subadditive.lim Subadditive.lim
 
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
-    h.limUnder ≤ u n / n := by
+    h.lim ≤ u n / n := by
   rw [Subadditive.lim]
   apply cinfₛ_le _ _
   · rcases hbdd with ⟨c, hc⟩
@@ -82,7 +82,7 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     obtain ⟨x, hx⟩ : BddAbove ↑(Finset.image (fun i => u i - i * w) (Finset.range n)) :=
       Finset.bddAbove _
     refine' ⟨x, fun i hi => _⟩
-    simp only [upperBounds, mem_image, and_imp, forall_exists_index, mem_set_of_eq,
+    simp only [upperBounds, mem_image, and_imp, forall_exists_index, mem_setOf_eq,
       forall_apply_eq_imp_iff₂, Finset.mem_range, Finset.mem_coe, Finset.coe_image] at hx
     exact hx _ hi
   have A : ∀ p : ℕ, u p ≤ p * w + x := by
@@ -105,16 +105,16 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
         simp only [Nat.cast_add, Nat.cast_mul]
       _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_lt _ hn.bot_lt)) _
       
-  have B : ∀ᶠ p in at_top, u p / p ≤ w + x / p :=
+  have B : ∀ᶠ p in atTop, u p / p ≤ w + x / p :=
     by
-    refine' eventually_at_top.2 ⟨1, fun p hp => _⟩
+    refine' eventually_atTop.2 ⟨1, fun p hp => _⟩
     simp only [I p hp, Ne.def, not_false_iff, field_simps]
     refine' div_le_div_of_le_of_nonneg _ (Nat.cast_nonneg _)
     rw [mul_comm]
     exact A _
-  have C : ∀ᶠ p : ℕ in at_top, w + x / p < L :=
+  have C : ∀ᶠ p : ℕ in atTop, w + x / p < L :=
     by
-    have : tendsto (fun p : ℕ => w + x / p) at_top (𝓝 (w + 0)) :=
+    have : Tendsto (fun p : ℕ => w + x / p) atTop (𝓝 (w + 0)) :=
       tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_nat_cast_atTop_atTop)
     rw [add_zero] at this
     exact (tendsto_order.1 this).2 _ wL
@@ -123,12 +123,12 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
 
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
-    Tendsto (fun n => u n / n) atTop (𝓝 h.limUnder) :=
+    Tendsto (fun n => u n / n) atTop (𝓝 h.lim) :=
   by
   refine' tendsto_order.2 ⟨fun l hl => _, fun L hL => _⟩
   ·
     refine'
-      eventually_at_top.2
+      eventually_atTop.2
         ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
   · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L :=
       by

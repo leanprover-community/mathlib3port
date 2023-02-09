@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem star_isometry : Isometry (star : E → E) :=
 #align star_isometry star_isometry
 
 instance (priority := 100) NormedStarGroup.to_continuousStar : ContinuousStar E :=
-  ⟨star_isometry.Continuous⟩
+  ⟨star_isometry.continuous⟩
 #align normed_star_group.to_has_continuous_star NormedStarGroup.to_continuousStar
 
 end NormedStarGroup
@@ -263,7 +263,7 @@ theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ‖A * U‖ = ‖A‖ :=
   calc
     _ = ‖((U : E)⋆ * A⋆)⋆‖ := by simp only [star_star, star_mul]
     _ = ‖(U : E)⋆ * A⋆‖ := by rw [norm_star]
-    _ = ‖A⋆‖ := norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop)
+    _ = ‖A⋆‖ := norm_mem_unitary_mul (star A) (unitary.star_mem U.prop)
     _ = ‖A‖ := norm_star _
     
 #align cstar_ring.norm_mul_coe_unitary CstarRing.norm_mul_coe_unitary
@@ -288,7 +288,7 @@ theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing 
 
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E)
     (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=
-  x.Prop.nnnorm_pow_two_pow _
+  x.prop.nnnorm_pow_two_pow _
 #align self_adjoint.nnnorm_pow_two_pow selfAdjoint.nnnorm_pow_two_pow
 
 section starₗᵢ

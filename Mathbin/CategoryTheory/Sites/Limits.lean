@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ shape `K` of objects in `D`, with cone point `S.X`.
 See `is_limit_multifork_of_is_limit` for more on how this definition is used.
 -/
 def multiforkEvaluationCone (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPresheaf J D)) (X : C)
-    (W : J.cover X) (S : Multifork (W.index E.x)) :
+    (W : J.Cover X) (S : Multifork (W.index E.x)) :
     Cone (F ⋙ sheafToPresheaf J D ⋙ (evaluation Cᵒᵖ D).obj (op X))
     where
   x := S.x
@@ -73,22 +73,22 @@ def multiforkEvaluationCone (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPreshe
           Multifork.ofι _ S.x (fun i => S.ι i ≫ (E.π.app k).app (op i.y))
             (by
               intro i
-              simp only [category.assoc]
+              simp only [Category.assoc]
               erw [← (E.π.app k).naturality, ← (E.π.app k).naturality]
               dsimp
-              simp only [← category.assoc]
+              simp only [← Category.assoc]
               congr 1
               apply S.condition)
       naturality' := by
         intro i j f
-        dsimp [presheaf.is_limit_of_is_sheaf]
-        rw [category.id_comp]
-        apply presheaf.is_sheaf.hom_ext (F.obj j).2 W
+        dsimp [Presheaf.isLimitOfIsSheaf]
+        rw [Category.id_comp]
+        apply Presheaf.IsSheaf.hom_ext (F.obj j).2 W
         intro ii
-        rw [presheaf.is_sheaf.amalgamate_map, category.assoc, ← (F.map f).val.naturality, ←
-          category.assoc, presheaf.is_sheaf.amalgamate_map]
-        dsimp [multifork.of_ι]
-        erw [category.assoc, ← E.w f]
+        rw [Presheaf.IsSheaf.amalgamate_map, Category.assoc, ← (F.map f).val.naturality, ←
+          Category.assoc, Presheaf.IsSheaf.amalgamate_map]
+        dsimp [Multifork.ofι]
+        erw [Category.assoc, ← E.w f]
         tidy }
 #align category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.Sheaf.multiforkEvaluationCone
 
@@ -101,36 +101,36 @@ condition, at a given covering `W`.
 This is used below in `is_sheaf_of_is_limit` to show that the limit presheaf is indeed a sheaf.
 -/
 def isLimitMultiforkOfIsLimit (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPresheaf J D))
-    (hE : IsLimit E) (X : C) (W : J.cover X) : IsLimit (W.Multifork E.x) :=
+    (hE : IsLimit E) (X : C) (W : J.Cover X) : IsLimit (W.multifork E.x) :=
   Multifork.IsLimit.mk _
     (fun S =>
       (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).lift <|
         multifork_evaluation_cone F E X W S)
     (by
       intro S i
-      apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
+      apply (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op i.Y)) hE).hom_ext
       intro k
-      dsimp [multifork.of_ι]
-      erw [category.assoc, (E.π.app k).naturality]
+      dsimp [Multifork.ofι]
+      erw [Category.assoc, (E.π.app k).naturality]
       dsimp
-      rw [← category.assoc]
-      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac
-          (multifork_evaluation_cone F E X W S)]
-      dsimp [multifork_evaluation_cone, presheaf.is_limit_of_is_sheaf]
-      erw [presheaf.is_sheaf.amalgamate_map]
+      rw [← Category.assoc]
+      erw [(isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac
+          (multiforkEvaluationCone F E X W S)]
+      dsimp [multiforkEvaluationCone, Presheaf.isLimitOfIsSheaf]
+      erw [Presheaf.IsSheaf.amalgamate_map]
       rfl)
     (by
       intro S m hm
-      apply (is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).hom_ext
+      apply (isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).hom_ext
       intro k
       dsimp
-      erw [(is_limit_of_preserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac]
-      apply presheaf.is_sheaf.hom_ext (F.obj k).2 W
+      erw [(isLimitOfPreserves ((evaluation Cᵒᵖ D).obj (op X)) hE).fac]
+      apply Presheaf.IsSheaf.hom_ext (F.obj k).2 W
       intro i
-      erw [presheaf.is_sheaf.amalgamate_map]
-      dsimp [multifork.of_ι]
+      erw [Presheaf.IsSheaf.amalgamate_map]
+      dsimp [Multifork.ofι]
       change _ = S.ι i ≫ _
-      erw [← hm, category.assoc, ← (E.π.app k).naturality, category.assoc]
+      erw [← hm, Category.assoc, ← (E.π.app k).naturality, Category.assoc]
       rfl)
 #align category_theory.Sheaf.is_limit_multifork_of_is_limit CategoryTheory.Sheaf.isLimitMultiforkOfIsLimit
 
@@ -142,9 +142,9 @@ This is used to show that the forgetful functor from sheaves to presheaves creat
 theorem isSheaf_of_isLimit (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPresheaf J D))
     (hE : IsLimit E) : Presheaf.IsSheaf J E.x :=
   by
-  rw [presheaf.is_sheaf_iff_multifork]
+  rw [Presheaf.isSheaf_iff_multifork]
   intro X S
-  exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
+  exact ⟨isLimitMultiforkOfIsLimit _ _ hE _ _⟩
 #align category_theory.Sheaf.is_sheaf_of_is_limit CategoryTheory.Sheaf.isSheaf_of_isLimit
 
 instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
@@ -160,12 +160,11 @@ instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
         { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩
           fac' := fun S j => by
             ext1
-            apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
+            apply hE.fac ((sheafToPresheaf J D).mapCone S) j
           uniq' := fun S m hm => by
             ext1
             exact
-              hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m.val fun j =>
-                congr_arg hom.val (hm j) } }
+              hE.uniq ((sheafToPresheaf J D).mapCone S) m.val fun j => congr_arg Hom.val (hm j) } }
 
 instance : CreatesLimitsOfShape K (sheafToPresheaf J D) where
 
@@ -195,13 +194,13 @@ variable {K : Type max v u} [SmallCategory K]
 -- Now we need a handful of instances to obtain sheafification...
 variable [ConcreteCategory.{max v u} D]
 
-variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.Cover X), HasMultiequalizer (S.index P)]
 
 variable [PreservesLimits (forget D)]
 
-variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
+variable [∀ X : C, HasColimitsOfShape (J.Cover X)ᵒᵖ D]
 
-variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
+variable [∀ X : C, PreservesColimitsOfShape (J.Cover X)ᵒᵖ (forget D)]
 
 variable [ReflectsIsomorphisms (forget D)]
 
@@ -217,7 +216,7 @@ def sheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPresheaf J D)
       naturality' := fun i j f => by
         ext1
         dsimp
-        erw [category.comp_id, ← category.assoc, E.w f] }
+        erw [Category.comp_id, ← Category.assoc, E.w f] }
 #align category_theory.Sheaf.sheafify_cocone CategoryTheory.Sheaf.sheafifyCocone
 
 /-- If `E` is a colimit cocone of presheaves, over a diagram factoring through sheaves,
@@ -230,17 +229,17 @@ def isColimitSheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPres
   fac' := by
     intro S j
     ext1
-    dsimp [sheafify_cocone]
-    erw [category.assoc, J.to_sheafify_sheafify_lift, hE.fac]
+    dsimp [sheafifyCocone]
+    erw [Category.assoc, J.to_sheafify_sheafify_lift, hE.fac]
     rfl
   uniq' := by
     intro S m hm
     ext1
     apply J.sheafify_lift_unique
-    apply hE.uniq ((Sheaf_to_presheaf J D).mapCocone S)
+    apply hE.uniq ((sheafToPresheaf J D).mapCocone S)
     intro j
     dsimp
-    simpa only [← category.assoc, ← hm]
+    simpa only [← Category.assoc, ← hm]
 #align category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.Sheaf.isColimitSheafifyCocone
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (Sheaf J D) :=

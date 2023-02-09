@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.finsupp_vector_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem linearIndependent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
     LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) :=
   by
-  apply @linearIndependent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
+  apply @linear_independent_Union_finite R _ _ _ _ ι φ fun i x => single i (f i x)
   · intro i
     have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i)) :=
       by
@@ -80,7 +80,7 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
   Basis.of_repr
     { toFun := fun g =>
         { toFun := fun ix => (b ix.1).repr (g ix.1) ix.2
-          support := g.support.Sigma fun i => ((b i).repr (g i)).support
+          support := g.support.sigma fun i => ((b i).repr (g i)).support
           mem_support_toFun := fun ix =>
             by
             simp only [Finset.mem_sigma, mem_support_iff, and_iff_right_iff_imp, Ne.def]
@@ -92,18 +92,18 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
           support := g.support.image Sigma.fst
           mem_support_toFun := fun i =>
             by
-            rw [Ne.def, ← (b i).repr.Injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
-            simp only [exists_prop, LinearEquiv.map_zero, comap_domain_apply, zero_apply,
+            rw [Ne.def, ← (b i).repr.injective.eq_iff, (b i).repr.apply_symm_apply, ext_iff]
+            simp only [exists_prop, LinearEquiv.map_zero, comapDomain_apply, zero_apply,
               exists_and_right, mem_support_iff, exists_eq_right, Sigma.exists, Finset.mem_image,
               not_forall] }
       left_inv := fun g => by
         ext i
-        rw [← (b i).repr.Injective.eq_iff]
+        rw [← (b i).repr.injective.eq_iff]
         ext x
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
+        simp only [coe_mk, LinearEquiv.apply_symm_apply, comapDomain_apply]
       right_inv := fun g => by
         ext ⟨i, x⟩
-        simp only [coe_mk, LinearEquiv.apply_symm_apply, comap_domain_apply]
+        simp only [coe_mk, LinearEquiv.apply_symm_apply, comapDomain_apply]
       map_add' := fun g h => by
         ext ⟨i, x⟩
         simp only [coe_mk, add_apply, LinearEquiv.map_add]
@@ -217,7 +217,7 @@ variable [DecidableEq n] [Fintype n]
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 theorem Finset.sum_single_ite (a : R) (i : n) :
-    (Finset.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a :=
+    (Finset.univ.sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a :=
   by
   rw [Finset.sum_congr_set {i} (fun x : n => Finsupp.single x (ite (i = x) a 0)) fun _ =>
       Finsupp.single i a]
@@ -238,7 +238,7 @@ theorem equivFun_symm_stdBasis (b : Basis n R M) (i : n) :
   by
   have := EquivLike.injective b.repr
   apply_fun b.repr
-  simp only [equiv_fun_symm_apply, std_basis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ,
+  simp only [equivFun_symm_apply, stdBasis_apply', LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ,
     RingHom.id_apply, repr_self, Finsupp.smul_single', boole_mul]
   exact Finset.sum_single_ite 1 i
 #align basis.equiv_fun_symm_std_basis Basis.equivFun_symm_stdBasis

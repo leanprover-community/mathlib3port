@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.ring.idempotents
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,7 +146,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_idempotent_elem.iff_eq_one IsIdempotentElem.iff_eq_oneₓ'. -/
 @[simp]
 theorem iff_eq_one {p : G} : IsIdempotentElem p ↔ p = 1 :=
-  Iff.intro (fun h => mul_left_cancel ((mul_one p).symm ▸ h.Eq : p * p = p * 1)) fun h =>
+  Iff.intro (fun h => mul_left_cancel ((mul_one p).symm ▸ h.eq : p * p = p * 1)) fun h =>
     h.symm ▸ one
 #align is_idempotent_elem.iff_eq_one IsIdempotentElem.iff_eq_one
 
@@ -197,7 +197,7 @@ theorem coe_one : ↑(1 : { p : M₁ // IsIdempotentElem p }) = (1 : M₁) :=
 #align is_idempotent_elem.coe_one IsIdempotentElem.coe_one
 
 instance : HasCompl { p : R // IsIdempotentElem p } :=
-  ⟨fun p => ⟨1 - p, p.Prop.one_sub⟩⟩
+  ⟨fun p => ⟨1 - p, p.prop.one_sub⟩⟩
 
 /- warning: is_idempotent_elem.coe_compl -> IsIdempotentElem.coe_compl is a dubious translation:
 lean 3 declaration is

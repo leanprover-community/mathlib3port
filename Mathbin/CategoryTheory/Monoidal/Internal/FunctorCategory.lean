@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,12 +64,12 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
       map := fun X Y f =>
         { Hom := A.x.map f
           one_hom' := by
-            rw [← A.one.naturality, tensor_unit_map]
+            rw [← A.one.naturality, tensorUnit_map]
             dsimp
-            rw [category.id_comp]
+            rw [Category.id_comp]
           mul_hom' := by
             dsimp
-            rw [← A.mul.naturality, tensor_obj_map] }
+            rw [← A.mul.naturality, tensorObj_map] }
       map_id' := fun X => by
         ext
         dsimp
@@ -77,13 +77,13 @@ def functor : Mon_ (C ⥤ D) ⥤ C ⥤ Mon_ D
       map_comp' := fun X Y Z f g => by
         ext
         dsimp
-        rw [functor.map_comp] }
+        rw [Functor.map_comp] }
   map A B f :=
     {
       app := fun X =>
-        { Hom := f.Hom.app X
-          one_hom' := congr_app f.OneHom X
-          mul_hom' := congr_app f.MulHom X } }
+        { Hom := f.hom.app X
+          one_hom' := congr_app f.one_hom X
+          mul_hom' := congr_app f.mul_hom X } }
 #align category_theory.monoidal.Mon_functor_category_equivalence.functor CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.functor
 
 /-- Functor translating a functor into the category of monoid objects
@@ -107,16 +107,16 @@ def inverse : (C ⥤ Mon_ D) ⥤ Mon_ (C ⥤ D)
         exact (F.obj X).mul_assoc }
   map F G α :=
     { Hom :=
-        { app := fun X => (α.app X).Hom
+        { app := fun X => (α.app X).hom
           naturality' := fun X Y f => congr_arg Mon_.Hom.hom (α.naturality f) }
       one_hom' := by
         ext x
         dsimp
-        rw [(α.app x).OneHom]
+        rw [(α.app x).one_hom]
       mul_hom' := by
         ext x
         dsimp
-        rw [(α.app x).MulHom] }
+        rw [(α.app x).mul_hom] }
 #align category_theory.monoidal.Mon_functor_category_equivalence.inverse CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.inverse
 
 /-- The unit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
@@ -130,25 +130,25 @@ def unitIso : 𝟭 (Mon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
             one_hom' := by
               ext X
               dsimp
-              simp only [category.comp_id]
+              simp only [Category.comp_id]
             mul_hom' := by
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] }
+              simp only [tensor_id, Category.id_comp, Category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by
               ext X
               dsimp
-              simp only [category.comp_id]
+              simp only [Category.comp_id]
             mul_hom' := by
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] } })
+              simp only [tensor_id, Category.id_comp, Category.comp_id] } })
     fun A B f => by
     ext X
-    simp only [functor.id_map, functor.comp_map, functor_map_app_hom, Mon_.comp_hom',
-      category.id_comp, category.comp_id, inverse_map_hom_app, nat_trans.comp_app]
+    simp only [Functor.id_map, Functor.comp_map, functor_map_app_hom, Mon_.comp_hom',
+      Category.id_comp, Category.comp_id, inverse_map_hom_app, NatTrans.comp_app]
 #align category_theory.monoidal.Mon_functor_category_equivalence.unit_iso CategoryTheory.Monoidal.MonFunctorCategoryEquivalence.unitIso
 
 /-- The counit for the equivalence `Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D`.
@@ -195,11 +195,11 @@ to a functor into the category of commutative monoid objects.
 def functor : CommMon_ (C ⥤ D) ⥤ C ⥤ CommMon_ D
     where
   obj A :=
-    { (monFunctorCategoryEquivalence C D).Functor.obj A.toMon_ with
+    { (monFunctorCategoryEquivalence C D).functor.obj A.toMon_ with
       obj := fun X =>
-        { ((monFunctorCategoryEquivalence C D).Functor.obj A.toMon_).obj X with
+        { ((monFunctorCategoryEquivalence C D).functor.obj A.toMon_).obj X with
           mul_comm' := congr_app A.mul_comm X } }
-  map A B f := { app := fun X => ((monFunctorCategoryEquivalence C D).Functor.map f).app X }
+  map A B f := { app := fun X => ((monFunctorCategoryEquivalence C D).functor.map f).app X }
 #align category_theory.monoidal.CommMon_functor_category_equivalence.functor CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.functor
 
 /-- Functor translating a functor into the category of commutative monoid objects
@@ -227,25 +227,25 @@ def unitIso : 𝟭 (CommMon_ (C ⥤ D)) ≅ functor ⋙ inverse :=
             one_hom' := by
               ext X
               dsimp
-              simp only [category.comp_id]
+              simp only [Category.comp_id]
             mul_hom' := by
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] }
+              simp only [tensor_id, Category.id_comp, Category.comp_id] }
         inv :=
           { Hom := { app := fun _ => 𝟙 _ }
             one_hom' := by
               ext X
               dsimp
-              simp only [category.comp_id]
+              simp only [Category.comp_id]
             mul_hom' := by
               ext X
               dsimp
-              simp only [tensor_id, category.id_comp, category.comp_id] } })
+              simp only [tensor_id, Category.id_comp, Category.comp_id] } })
     fun A B f => by
     ext X
     dsimp
-    simp only [category.id_comp, category.comp_id]
+    simp only [Category.id_comp, Category.comp_id]
 #align category_theory.monoidal.CommMon_functor_category_equivalence.unit_iso CategoryTheory.Monoidal.CommMonFunctorCategoryEquivalence.unitIso
 
 /-- The counit for the equivalence `CommMon_ (C ⥤ D) ≌ C ⥤ CommMon_ D`.

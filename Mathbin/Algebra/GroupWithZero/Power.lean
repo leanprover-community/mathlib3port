@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.power
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_1 : GroupWithZero.{u1} G₀] (a : G₀) (m : Nat) (n : Nat), Eq.{succ u1} G₀ (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) (HPow.hPow.{u1, 0, u1} G₀ Nat G₀ (instHPow.{u1, 0} G₀ Nat (Monoid.Pow.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_1) a) m) (HPow.hPow.{u1, 0, u1} G₀ Nat G₀ (instHPow.{u1, 0} G₀ Nat (Monoid.Pow.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a n)) (HMul.hMul.{u1, u1, u1} G₀ G₀ G₀ (instHMul.{u1} G₀ (MulZeroClass.toMul.{u1} G₀ (MulZeroOneClass.toMulZeroClass.{u1} G₀ (MonoidWithZero.toMulZeroOneClass.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1))))) (HPow.hPow.{u1, 0, u1} G₀ Nat G₀ (instHPow.{u1, 0} G₀ Nat (Monoid.Pow.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) a n) (HPow.hPow.{u1, 0, u1} G₀ Nat G₀ (instHPow.{u1, 0} G₀ Nat (Monoid.Pow.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_1)))) (Inv.inv.{u1} G₀ (GroupWithZero.toInv.{u1} G₀ _inst_1) a) m))
 Case conversion may be inaccurate. Consider using '#align pow_inv_comm₀ pow_inv_comm₀ₓ'. -/
 theorem pow_inv_comm₀ (a : G₀) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
-  (Commute.refl a).inv_left₀.pow_powₓ m n
+  (Commute.refl a).inv_left₀.pow_pow m n
 #align pow_inv_comm₀ pow_inv_comm₀
 
 /- warning: inv_pow_sub₀ -> inv_pow_sub₀ is a dubious translation:

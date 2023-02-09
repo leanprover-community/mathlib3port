@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,20 +117,20 @@ def ColimitType : Type v :=
 instance monoidColimitType : Monoid (ColimitType F)
     where
   mul := by
-    fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
+    fapply @quot.lift _ _ (ColimitType F → ColimitType F)
     · intro x
-      fapply @Quot.lift
+      fapply @quot.lift
       · intro y
         exact Quot.mk _ (mul x y)
       · intro y y' r
         apply Quot.sound
-        exact relation.mul_2 _ _ _ r
+        exact Relation.mul_2 _ _ _ r
     · intro x x' r
       funext y
       induction y
       dsimp
       apply Quot.sound
-      · exact relation.mul_1 _ _ _ r
+      · exact Relation.mul_1 _ _ _ r
       · rfl
   one := Quot.mk _ one
   mul_assoc x y z := by
@@ -139,7 +139,7 @@ instance monoidColimitType : Monoid (ColimitType F)
     induction z
     dsimp
     apply Quot.sound
-    apply relation.mul_assoc
+    apply Relation.mul_assoc
     rfl
     rfl
     rfl
@@ -147,18 +147,18 @@ instance monoidColimitType : Monoid (ColimitType F)
     induction x
     dsimp
     apply Quot.sound
-    apply relation.one_mul
+    apply Relation.one_mul
     rfl
   mul_one x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.mul_one
+    apply Relation.mul_one
     rfl
 #align Mon.colimits.monoid_colimit_type Mon.Colimits.monoidColimitType
 
 @[simp]
-theorem quot_one : Quot.mk Setoid.r one = (1 : ColimitType F) :=
+theorem quot_one : Quot.mk setoid.r one = (1 : ColimitType F) :=
   rfl
 #align Mon.colimits.quot_one Mon.Colimits.quot_one
 
@@ -192,7 +192,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   by
   ext
   apply Quot.sound
-  apply Relation.Map
+  apply Relation.map
 #align Mon.colimits.cocone_naturality Mon.Colimits.cocone_naturality
 
 @[simp]
@@ -221,7 +221,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 def descFun (s : Cocone F) : ColimitType F → s.x :=
   by
   fapply Quot.lift
-  · exact desc_fun_lift F s
+  · exact descFunLift F s
   · intro x y r
     induction r <;> try dsimp
     -- refl
@@ -277,9 +277,9 @@ instance hasColimits_mon : HasColimits Mon
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
-        has_colimit.mk
-          { Cocone := colimit_cocone F
-            IsColimit := colimit_is_colimit F } }
+        HasColimit.mk
+          { Cocone := colimitCocone F
+            IsColimit := colimitIsColimit F } }
 #align Mon.colimits.has_colimits_Mon Mon.Colimits.hasColimits_mon
 
 end Mon.Colimits

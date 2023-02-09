@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.functor_gamma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem iff {j : ℕ} {i : Fin (j + 2)} : Isδ₀ (SimplexCategory.δ i) ↔ i =
 theorem eq_δ₀ {n : ℕ} {i : [n] ⟶ [n + 1]} [Mono i] (hi : Isδ₀ i) : i = SimplexCategory.δ 0 :=
   by
   obtain ⟨j, rfl⟩ := SimplexCategory.eq_δ_of_mono i
-  rw [Iff] at hi
+  rw [iff] at hi
   rw [hi]
 #align algebraic_topology.dold_kan.is_δ₀.eq_δ₀ AlgebraicTopology.DoldKan.Isδ₀.eq_δ₀
 
@@ -97,8 +97,8 @@ zero otherwise. -/
 def mapMono (K : ChainComplex C ℕ) {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ) [Mono i] :
     K.x Δ.len ⟶ K.x Δ'.len := by
   by_cases Δ = Δ'
-  · exact eq_to_hom (by congr )
-  · by_cases is_δ₀ i
+  · exact eqToHom (by congr )
+  · by_cases Isδ₀ i
     · exact K.d Δ.len Δ'.len
     · exact 0
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono
@@ -108,7 +108,7 @@ variable (Δ)
 theorem mapMono_id : mapMono K (𝟙 Δ) = 𝟙 _ :=
   by
   unfold map_mono
-  simp only [eq_self_iff_true, eq_to_hom_refl, dite_eq_ite, if_true]
+  simp only [eq_self_iff_true, eqToHom_refl, dite_eq_ite, if_true]
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_id AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_id
 
 variable {Δ}
@@ -124,7 +124,7 @@ theorem mapMono_δ₀' (hi : Isδ₀ i) : mapMono K i = K.d Δ.len Δ'.len :=
 
 @[simp]
 theorem mapMono_δ₀ {n : ℕ} : mapMono K (δ (0 : Fin (n + 2))) = K.d (n + 1) n :=
-  mapMono_δ₀' K _ (by rw [is_δ₀.iff])
+  mapMono_δ₀' K _ (by rw [Isδ₀.iff])
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_δ₀ AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_δ₀
 
 theorem mapMono_eq_zero (h₁ : Δ ≠ Δ') (h₂ : ¬Isδ₀ i) : mapMono K i = 0 :=
@@ -143,7 +143,7 @@ theorem mapMono_naturality : mapMono K i ≫ f.f Δ'.len = f.f Δ.len ≫ mapMon
   unfold map_mono
   split_ifs
   · subst h
-    simp only [id_comp, eq_to_hom_refl, comp_id]
+    simp only [id_comp, eqToHom_refl, comp_id]
   · rw [HomologicalComplex.Hom.comm]
   · rw [zero_comp, comp_zero]
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_naturality AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_naturality
@@ -156,27 +156,27 @@ theorem mapMono_comp : mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) :=
   -- case where i : Δ' ⟶ Δ is the identity
   by_cases h₁ : Δ = Δ'
   · subst h₁
-    simp only [SimplexCategory.eq_id_of_mono i, comp_id, id_comp, map_mono_id K, eq_to_hom_refl]
+    simp only [SimplexCategory.eq_id_of_mono i, comp_id, id_comp, mapMono_id K, eqToHom_refl]
   -- case where i' : Δ'' ⟶ Δ' is the identity
   by_cases h₂ : Δ' = Δ''
   · subst h₂
-    simp only [SimplexCategory.eq_id_of_mono i', comp_id, id_comp, map_mono_id K, eq_to_hom_refl]
+    simp only [SimplexCategory.eq_id_of_mono i', comp_id, id_comp, mapMono_id K, eqToHom_refl]
   -- then the RHS is always zero
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_lt (len_lt_of_mono i h₁)
   obtain ⟨k', hk'⟩ := Nat.exists_eq_add_of_lt (len_lt_of_mono i' h₂)
   have eq : Δ.len = Δ''.len + (k + k' + 2) := by linarith
-  rw [map_mono_eq_zero K (i' ≫ i) _ _]; rotate_left
+  rw [mapMono_eq_zero K (i' ≫ i) _ _]; rotate_left
   · by_contra
-    simpa only [self_eq_add_right, h] using Eq
+    simpa only [self_eq_add_right, h] using eq
   · by_contra
     simp only [h.1, add_right_inj] at eq
     linarith
   -- in all cases, the LHS is also zero, either by definition, or because d ≫ d = 0
-  by_cases h₃ : is_δ₀ i
-  · by_cases h₄ : is_δ₀ i'
-    · rw [map_mono_δ₀' K i h₃, map_mono_δ₀' K i' h₄, HomologicalComplex.d_comp_d]
-    · simp only [map_mono_eq_zero K i' h₂ h₄, comp_zero]
-  · simp only [map_mono_eq_zero K i h₁ h₃, zero_comp]
+  by_cases h₃ : Isδ₀ i
+  · by_cases h₄ : Isδ₀ i'
+    · rw [mapMono_δ₀' K i h₃, mapMono_δ₀' K i' h₄, HomologicalComplex.d_comp_d]
+    · simp only [mapMono_eq_zero K i' h₂ h₄, comp_zero]
+  · simp only [mapMono_eq_zero K i h₁ h₃, zero_comp]
 #align algebraic_topology.dold_kan.Γ₀.obj.termwise.map_mono_comp AlgebraicTopology.DoldKan.Γ₀.Obj.Termwise.mapMono_comp
 
 end Termwise
@@ -199,7 +199,7 @@ theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexS
     Sigma.ι (summand K Δ) A ≫ map K θ =
       Termwise.mapMono K i ≫ Sigma.ι (summand K Δ') (Splitting.IndexSet.mk e) :=
   by
-  simp only [map, colimit.ι_desc, cofan.mk_ι_app]
+  simp only [map, colimit.ι_desc, Cofan.mk_ι_app]
   have h := SimplexCategory.image_eq fac
   subst h
   congr
@@ -230,7 +230,7 @@ def obj (K : ChainComplex C ℕ) : SimplicialObject C
     ext A
     cases A
     have fac : A.e ≫ 𝟙 A.1.unop = (𝟙 Δ).unop ≫ A.e := by rw [unop_id, comp_id, id_comp]
-    erw [obj.map_on_summand₀ K A fac, obj.termwise.map_mono_id, id_comp, comp_id]
+    erw [Obj.map_on_summand₀ K A fac, Obj.Termwise.mapMono_id, id_comp, comp_id]
     rcases A with ⟨Δ', ⟨e, he⟩⟩
     rfl
   map_comp' Δ'' Δ' Δ θ' θ := by
@@ -238,9 +238,9 @@ def obj (K : ChainComplex C ℕ) : SimplicialObject C
     cases A
     have fac : θ.unop ≫ θ'.unop ≫ A.e = (θ' ≫ θ).unop ≫ A.e := by rw [unop_comp, assoc]
     rw [← image.fac (θ'.unop ≫ A.e), ← assoc, ←
-      image.fac (θ.unop ≫ factor_thru_image (θ'.unop ≫ A.e)), assoc] at fac
-    simpa only [obj.map_on_summand₀'_assoc K A θ', obj.map_on_summand₀' K _ θ,
-      obj.termwise.map_mono_comp_assoc, obj.map_on_summand₀ K A fac]
+      image.fac (θ.unop ≫ factorThruImage (θ'.unop ≫ A.e)), assoc] at fac
+    simpa only [Obj.map_on_summand₀'_assoc K A θ', Obj.map_on_summand₀' K _ θ,
+      Obj.Termwise.mapMono_comp_assoc, Obj.map_on_summand₀ K A fac]
 #align algebraic_topology.dold_kan.Γ₀.obj AlgebraicTopology.DoldKan.Γ₀.obj
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
@@ -255,10 +255,10 @@ theorem splitting_map_eq_id (Δ : SimplexCategoryᵒᵖ) :
   induction Δ using Opposite.rec
   induction' Δ with n
   dsimp
-  simp only [colimit.ι_desc, cofan.mk_ι_app, comp_id, Γ₀.obj_map]
-  rw [Γ₀.obj.map_on_summand₀ K (SimplicialObject.Splitting.IndexSet.id A.1)
+  simp only [colimit.ι_desc, Cofan.mk_ι_app, comp_id, Γ₀.obj_map]
+  rw [Γ₀.Obj.map_on_summand₀ K (SimplicialObject.Splitting.IndexSet.id A.1)
       (show A.e ≫ 𝟙 _ = A.e.op.unop ≫ 𝟙 _ by rfl),
-    Γ₀.obj.termwise.map_mono_id, A.ext']
+    Γ₀.Obj.Termwise.mapMono_id, A.ext']
   apply id_comp
 #align algebraic_topology.dold_kan.Γ₀.splitting_map_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_map_eq_id
 
@@ -269,11 +269,11 @@ def splitting (K : ChainComplex C ℕ) : SimplicialObject.Splitting (Γ₀.obj K
   ι n := Sigma.ι (Γ₀.Obj.summand K (op [n])) (Splitting.IndexSet.id (op [n]))
   map_is_iso' Δ := by
     rw [Γ₀.splitting_map_eq_id]
-    apply is_iso.id
+    apply IsIso.id
 #align algebraic_topology.dold_kan.Γ₀.splitting AlgebraicTopology.DoldKan.Γ₀.splitting
 
 @[simp]
-theorem splitting_iso_hom_eq_id (Δ : SimplexCategoryᵒᵖ) : ((splitting K).Iso Δ).Hom = 𝟙 _ :=
+theorem splitting_iso_hom_eq_id (Δ : SimplexCategoryᵒᵖ) : ((splitting K).iso Δ).hom = 𝟙 _ :=
   splitting_map_eq_id K Δ
 #align algebraic_topology.dold_kan.Γ₀.splitting_iso_hom_eq_id AlgebraicTopology.DoldKan.Γ₀.splitting_iso_hom_eq_id
 
@@ -286,7 +286,7 @@ theorem obj.map_on_summand {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.Index
   by
   dsimp only [SimplicialObject.Splitting.ιSummand, SimplicialObject.Splitting.ιCoprod]
   simp only [assoc, Γ₀.splitting_iso_hom_eq_id, id_comp, comp_id]
-  exact Γ₀.obj.map_on_summand₀ K A fac
+  exact Γ₀.Obj.map_on_summand₀ K A fac
 #align algebraic_topology.dold_kan.Γ₀.obj.map_on_summand AlgebraicTopology.DoldKan.Γ₀.obj.map_on_summand
 
 @[reassoc.1]
@@ -310,9 +310,8 @@ theorem obj.map_epi_on_summand_id {Δ Δ' : SimplexCategory} (e : Δ' ⟶ Δ) [E
     (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op Δ)) ≫ (Γ₀.obj K).map e.op =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.mk e) :=
   by
-  simpa only [Γ₀.obj.map_on_summand K (splitting.index_set.id (op Δ)) e.op
-      (rfl : e ≫ 𝟙 Δ = e ≫ 𝟙 Δ),
-    Γ₀.obj.termwise.map_mono_id] using id_comp _
+  simpa only [Γ₀.obj.map_on_summand K (Splitting.IndexSet.id (op Δ)) e.op (rfl : e ≫ 𝟙 Δ = e ≫ 𝟙 Δ),
+    Γ₀.Obj.Termwise.mapMono_id] using id_comp _
 #align algebraic_topology.dold_kan.Γ₀.obj.map_epi_on_summand_id AlgebraicTopology.DoldKan.Γ₀.obj.map_epi_on_summand_id
 
 /-- The functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, on morphisms. -/
@@ -325,7 +324,7 @@ def map {K K' : ChainComplex C ℕ} (f : K ⟶ K') : obj K ⟶ obj K'
     intro A
     simp only [(splitting K).ι_desc_assoc, obj.map_on_summand'_assoc K _ θ, (splitting K).ι_desc,
       assoc, obj.map_on_summand' K' _ θ]
-    apply obj.termwise.map_mono_naturality_assoc
+    apply Obj.Termwise.mapMono_naturality_assoc
 #align algebraic_topology.dold_kan.Γ₀.map AlgebraicTopology.DoldKan.Γ₀.map
 
 end Γ₀
@@ -345,7 +344,7 @@ def Γ₀' : ChainComplex C ℕ ⥤ SimplicialObject.Split C
       f := f.f
       comm' := fun n => by
         dsimp
-        simpa only [← splitting.ι_summand_id, (Γ₀.splitting K).ι_desc] }
+        simpa only [← Splitting.ιSummand_id, (Γ₀.splitting K).ι_desc] }
 #align algebraic_topology.dold_kan.Γ₀' AlgebraicTopology.DoldKan.Γ₀'
 
 /-- The functor `Γ₀ : chain_complex C ℕ ⥤ simplicial_object C`, which is
@@ -368,12 +367,12 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
     HigherFacesVanish (n + 1) ((Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n + 1]))) :=
   by
   intro j hj
-  have eq := Γ₀.obj.map_mono_on_summand_id K (SimplexCategory.δ j.succ)
-  rw [Γ₀.obj.termwise.map_mono_eq_zero K, zero_comp] at eq; rotate_left
+  have eq := Γ₀.obj.mapMono_on_summand_id K (SimplexCategory.δ j.succ)
+  rw [Γ₀.Obj.Termwise.mapMono_eq_zero K, zero_comp] at eq; rotate_left
   · intro h
     exact (Nat.succ_ne_self n) (congr_arg SimplexCategory.len h)
-  · exact fun h => Fin.succ_ne_zero j (by simpa only [is_δ₀.iff] using h)
-  exact Eq
+  · exact fun h => Fin.succ_ne_zero j (by simpa only [Isδ₀.iff] using h)
+  exact eq
 #align algebraic_topology.dold_kan.higher_faces_vanish.on_Γ₀_summand_id AlgebraicTopology.DoldKan.HigherFacesVanish.on_Γ₀_summand_id
 
 @[simp, reassoc.1]
@@ -381,10 +380,10 @@ theorem pInfty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : 
     (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) ≫ (pInfty : K[Γ₀.obj K] ⟶ _).f n =
       (Γ₀.splitting K).ιSummand (Splitting.IndexSet.id (op [n])) :=
   by
-  rw [P_infty_f]
+  rw [pInfty_f]
   cases n
-  · simpa only [P_f_0_eq] using comp_id _
-  · exact (higher_faces_vanish.on_Γ₀_summand_id K n).comp_p_eq_self
+  · simpa only [p_f_0_eq] using comp_id _
+  · exact (HigherFacesVanish.on_Γ₀_summand_id K n).comp_p_eq_self
 #align algebraic_topology.dold_kan.P_infty_on_Γ₀_splitting_summand_eq_self AlgebraicTopology.DoldKan.pInfty_on_Γ₀_splitting_summand_eq_self
 
 end DoldKan

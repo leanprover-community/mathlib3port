@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -318,7 +318,7 @@ theorem xgcdAux_fst (x y : R) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x
       intros
       rw [xgcd_zero_left, gcd_zero_left])
     fun x y h IH s t s' t' => by
-    simp only [xgcd_aux_rec h, if_neg h, IH]
+    simp only [xgcdAux_rec h, if_neg h, IH]
     rw [← gcd_val]
 #align euclidean_domain.xgcd_aux_fst EuclideanDomain.xgcdAux_fst
 -/
@@ -330,7 +330,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : EuclideanDomain.{u1} R] [_inst_2 : DecidableEq.{succ u1} R] (x : R) (y : R), Eq.{succ u1} (Prod.{u1, u1} R (Prod.{u1, u1} R R)) (EuclideanDomain.xgcdAux.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) x (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) y (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (CommMonoidWithZero.toZero.{u1} R (CommSemiring.toCommMonoidWithZero.{u1} R (CommRing.toCommSemiring.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1)))))) (OfNat.ofNat.{u1} R 1 (One.toOfNat1.{u1} R (NonAssocRing.toOne.{u1} R (Ring.toNonAssocRing.{u1} R (CommRing.toRing.{u1} R (EuclideanDomain.toCommRing.{u1} R _inst_1))))))) (Prod.mk.{u1, u1} R (Prod.{u1, u1} R R) (EuclideanDomain.gcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) x y) (EuclideanDomain.xgcd.{u1} R _inst_1 (fun (a : R) (b : R) => _inst_2 a b) x y))
 Case conversion may be inaccurate. Consider using '#align euclidean_domain.xgcd_aux_val EuclideanDomain.xgcdAux_valₓ'. -/
 theorem xgcdAux_val (x y : R) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
-  rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1, Prod.mk.eta]
+  rw [xgcd, ← xgcdAux_fst x y 1 0 0 1, Prod.mk.eta]
 #align euclidean_domain.xgcd_aux_val EuclideanDomain.xgcdAux_val
 
 private def P (a b : R) : R × R × R → Prop
@@ -345,7 +345,7 @@ theorem xgcdAux_P (a b : R) {r r' : R} :
       intros
       simpa only [xgcd_zero_left] )
     fun x y h IH s t s' t' p p' => by
-    rw [xgcd_aux_rec h]; refine' IH _ p; unfold P at p p'⊢
+    rw [xgcdAux_rec h]; refine' IH _ p; unfold P at p p'⊢
     rw [mul_sub, mul_sub, add_sub, sub_add_eq_add_sub, ← p', sub_sub, mul_comm _ s, ← mul_assoc,
       mul_comm _ t, ← mul_assoc, ← add_mul, ← p, mod_eq_sub_mul_div]
 #align euclidean_domain.xgcd_aux_P EuclideanDomain.xgcdAux_P
@@ -363,7 +363,7 @@ theorem gcd_eq_gcd_ab (a b : R) : (gcd a b : R) = a * gcdA a b + b * gcdB a b :=
   have :=
     @xgcd_aux_P _ _ _ a b a b 1 0 0 1 (by rw [P, mul_one, mul_zero, add_zero])
       (by rw [P, mul_one, mul_zero, zero_add])
-  rwa [xgcd_aux_val, xgcd_val] at this
+  rwa [xgcdAux_val, xgcd_val] at this
 #align euclidean_domain.gcd_eq_gcd_ab EuclideanDomain.gcd_eq_gcd_ab
 
 -- see Note [lower instance priority]

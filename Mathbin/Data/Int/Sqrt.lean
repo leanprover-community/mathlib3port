@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module data.int.sqrt
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,13 +35,13 @@ def sqrt (z : ℤ) : ℤ :=
 
 #print Int.sqrt_eq /-
 theorem sqrt_eq (n : ℤ) : sqrt (n * n) = n.natAbs := by
-  rw [sqrt, ← nat_abs_mul_self, to_nat_coe_nat, Nat.sqrt_eq]
+  rw [sqrt, ← natAbs_mul_self, toNat_coe_nat, Nat.sqrt_eq]
 #align int.sqrt_eq Int.sqrt_eq
 -/
 
 #print Int.exists_mul_self /-
 theorem exists_mul_self (x : ℤ) : (∃ n, n * n = x) ↔ sqrt x * sqrt x = x :=
-  ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, ← Int.ofNat_mul, nat_abs_mul_self], fun h => ⟨sqrt x, h⟩⟩
+  ⟨fun ⟨n, hn⟩ => by rw [← hn, sqrt_eq, ← Int.ofNat_mul, natAbs_mul_self], fun h => ⟨sqrt x, h⟩⟩
 #align int.exists_mul_self Int.exists_mul_self
 -/
 

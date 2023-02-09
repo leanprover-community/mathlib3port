@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.free_monoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem ofList_append (xs ys : List α) : ofList (xs ++ ys) = ofList xs * ofList
 
 #print FreeMonoid.toList_prod /-
 @[simp, to_additive]
-theorem toList_prod (xs : List (FreeMonoid α)) : toList xs.Prod = (xs.map toList).join := by
+theorem toList_prod (xs : List (FreeMonoid α)) : toList xs.prod = (xs.map toList).join := by
   induction xs <;> simp [*, List.join]
 #align free_monoid.to_list_prod FreeMonoid.toList_prod
 #align free_add_monoid.to_list_sum FreeAddMonoid.toList_sum
@@ -166,8 +166,8 @@ theorem toList_prod (xs : List (FreeMonoid α)) : toList xs.Prod = (xs.map toLis
 
 #print FreeMonoid.ofList_join /-
 @[simp, to_additive]
-theorem ofList_join (xs : List (List α)) : ofList xs.join = (xs.map ofList).Prod :=
-  toList.Injective <| by simp
+theorem ofList_join (xs : List (List α)) : ofList xs.join = (xs.map ofList).prod :=
+  toList.injective <| by simp
 #align free_monoid.of_list_join FreeMonoid.ofList_join
 #align free_add_monoid.of_list_join FreeAddMonoid.ofList_join
 -/
@@ -340,7 +340,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (l : List.{u1} M), Eq.{succ u1} M (FreeMonoid.prodAux.{u1} M _inst_1 l) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Monoid.toOne.{u1} M _inst_1) l)
 Case conversion may be inaccurate. Consider using '#align free_monoid.prod_aux_eq FreeMonoid.prodAux_eqₓ'. -/
 @[to_additive]
-theorem prodAux_eq : ∀ l : List M, FreeMonoid.prodAux l = l.Prod
+theorem prodAux_eq : ∀ l : List M, FreeMonoid.prodAux l = l.prod
   | [] => rfl
   | x :: xs => congr_arg (fun x => List.foldl (· * ·) x xs) (one_mul _).symm
 #align free_monoid.prod_aux_eq FreeMonoid.prodAux_eq
@@ -359,7 +359,7 @@ def lift : (α → M) ≃ (FreeMonoid α →* M)
     where
   toFun f :=
     ⟨fun l => FreeMonoid.prodAux (l.toList.map f), rfl, fun l₁ l₂ => by
-      simp only [prod_aux_eq, to_list_mul, List.map_append, List.prod_append]⟩
+      simp only [prodAux_eq, toList_mul, List.map_append, List.prod_append]⟩
   invFun f x := f (of x)
   left_inv f := rfl
   right_inv f := hom_eq fun x => rfl
@@ -385,7 +385,7 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (f : α -> M) (l : FreeMonoid.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : FreeMonoid.{u2} α) => M) l) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α -> M) => MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1)) f) (FreeMonoid.{u2} α) (fun (_x : FreeMonoid.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : FreeMonoid.{u2} α) => M) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α -> M) => MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1)) f) (FreeMonoid.{u2} α) M (MulOneClass.toMul.{u2} (FreeMonoid.{u2} α) (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α))))) (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α -> M) => MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1)) f) (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1) (MonoidHom.monoidHomClass.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1)))) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (α -> M) (MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1))) (α -> M) (fun (_x : α -> M) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α -> M) => MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1)) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (α -> M) (MonoidHom.{u2, u1} (FreeMonoid.{u2} α) M (Monoid.toMulOneClass.{u2} (FreeMonoid.{u2} α) (RightCancelMonoid.toMonoid.{u2} (FreeMonoid.{u2} α) (CancelMonoid.toRightCancelMonoid.{u2} (FreeMonoid.{u2} α) (FreeMonoid.instCancelMonoidFreeMonoid.{u2} α)))) (Monoid.toMulOneClass.{u1} M _inst_1))) (FreeMonoid.lift.{u2, u1} α M _inst_1) f) l) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Monoid.toOne.{u1} M _inst_1) (List.map.{u2, u1} α M f (FunLike.coe.{succ u2, succ u2, succ u2} (Equiv.{succ u2, succ u2} (FreeMonoid.{u2} α) (List.{u2} α)) (FreeMonoid.{u2} α) (fun (_x : FreeMonoid.{u2} α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : FreeMonoid.{u2} α) => List.{u2} α) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u2} (FreeMonoid.{u2} α) (List.{u2} α)) (FreeMonoid.toList.{u2} α) l)))
 Case conversion may be inaccurate. Consider using '#align free_monoid.lift_apply FreeMonoid.lift_applyₓ'. -/
 @[to_additive]
-theorem lift_apply (f : α → M) (l : FreeMonoid α) : lift f l = (l.toList.map f).Prod :=
+theorem lift_apply (f : α → M) (l : FreeMonoid α) : lift f l = (l.toList.map f).prod :=
   prodAux_eq _
 #align free_monoid.lift_apply FreeMonoid.lift_apply
 #align free_add_monoid.lift_apply FreeAddMonoid.lift_apply
@@ -476,7 +476,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_monoid.smul_def FreeMonoid.smul_defₓ'. -/
 @[to_additive]
 theorem smul_def (f : α → β → β) (l : FreeMonoid α) (b : β) :
-    haveI := mk_mul_action f
+    haveI := mkMulAction f
     l • b = l.to_list.foldr f b :=
   rfl
 #align free_monoid.smul_def FreeMonoid.smul_def
@@ -490,8 +490,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_monoid.of_list_smul FreeMonoid.ofList_smulₓ'. -/
 @[to_additive]
 theorem ofList_smul (f : α → β → β) (l : List α) (b : β) :
-    haveI := mk_mul_action f
-    of_list l • b = l.foldr f b :=
+    haveI := mkMulAction f
+    ofList l • b = l.foldr f b :=
   rfl
 #align free_monoid.of_list_smul FreeMonoid.ofList_smul
 #align free_add_monoid.of_list_vadd FreeAddMonoid.ofList_vadd
@@ -499,7 +499,7 @@ theorem ofList_smul (f : α → β → β) (l : List α) (b : β) :
 #print FreeMonoid.of_smul /-
 @[simp, to_additive]
 theorem of_smul (f : α → β → β) (x : α) (y : β) :
-    (haveI := mk_mul_action f
+    (haveI := mkMulAction f
       of x • y) =
       f x y :=
   rfl

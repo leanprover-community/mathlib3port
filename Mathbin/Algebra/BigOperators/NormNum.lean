@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.big_operators.norm_num
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,12 +107,12 @@ theorem List.map_cons_congr {α β : Type _} (f : α → β) {x : α} {xs : List
 unsafe def eval_list_map (ef : expr) : List expr → tactic (List expr × expr)
   | [] => do
     let eq ← i_to_expr ``(List.map_nil $(ef))
-    pure ([], Eq)
+    pure ([], eq)
   | x::xs => do
     let (fx, fx_eq) ← or_refl_conv norm_num.derive (expr.app ef x)
     let (fxs, fxs_eq) ← eval_list_map xs
     let eq ← i_to_expr ``(List.map_cons_congr $(ef) $(fx_eq) $(fxs_eq))
-    pure (fx::fxs, Eq)
+    pure (fx::fxs, eq)
 #align tactic.norm_num.eval_list_map tactic.norm_num.eval_list_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -130,26 +130,26 @@ theorem List.map_congr {α β : Type _} (f : α → β) {xs xs' : List α} {ys :
 unsafe def eval_list : expr → tactic (List expr × expr)
   | e@q(List.nil) => do
     let eq ← mk_eq_refl e
-    pure ([], Eq)
+    pure ([], eq)
   | e@q(List.cons $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_list xs
     let eq ← i_to_expr ``(List.cons_congr $(x) $(xs_eq))
-    pure (x::xs, Eq)
+    pure (x::xs, eq)
   | e@q(List.range $(en)) => do
     let n ← expr.to_nat en
     let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
-    pure (eis, Eq)
+    pure (eis, eq)
   | q(@List.map $(α) $(β) $(ef) $(exs)) => do
     let (xs, xs_eq) ← eval_list exs
     let (ys, ys_eq) ← eval_list_map ef xs
     let eq ← i_to_expr ``(List.map_congr $(ef) $(xs_eq) $(ys_eq))
-    pure (ys, Eq)
+    pure (ys, eq)
   | e@q(@List.finRange $(en)) => do
     let n ← expr.to_nat en
     let eis ← (List.finRange n).mapM fun i => expr.of_nat q(Fin $(en)) i
     let eq ← mk_eq_refl e
-    pure (eis, Eq)
+    pure (eis, eq)
   | e => fail (to_fmt "Unknown list expression" ++ format.line ++ to_fmt e)
 #align tactic.norm_num.eval_list tactic.norm_num.eval_list
 
@@ -174,35 +174,35 @@ which is in general not true).
 unsafe def eval_multiset : expr → tactic (List expr × expr)
   | e@q(@Zero.zero (Multiset _) _) => do
     let eq ← mk_eq_refl e
-    pure ([], Eq)
+    pure ([], eq)
   | e@q(EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
-    pure ([], Eq)
+    pure ([], eq)
   | e@q(Singleton.singleton $(x)) => do
     let eq ← mk_eq_refl e
-    pure ([x], Eq)
+    pure ([x], eq)
   | e@q(Multiset.cons $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_multiset xs
     let eq ← i_to_expr ``(Multiset.cons_congr $(x) $(xs_eq))
-    pure (x::xs, Eq)
+    pure (x::xs, eq)
   | e@q(@Insert.insert Multiset.hasInsert $(x) $(xs)) => do
     let (xs, xs_eq) ← eval_multiset xs
     let eq ← i_to_expr ``(Multiset.cons_congr $(x) $(xs_eq))
-    pure (x::xs, Eq)
+    pure (x::xs, eq)
   | e@q(Multiset.range $(en)) => do
     let n ← expr.to_nat en
     let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
-    pure (eis, Eq)
+    pure (eis, eq)
   | q(@coe (@coeToLift (@coeBase Multiset.hasCoe)) $(exs)) => do
     let (xs, xs_eq) ← eval_list exs
     let eq ← i_to_expr ``(congr_arg coe $(xs_eq))
-    pure (xs, Eq)
+    pure (xs, eq)
   | q(@Multiset.map $(α) $(β) $(ef) $(exs)) => do
     let (xs, xs_eq) ← eval_multiset exs
     let (ys, ys_eq) ← eval_list_map ef xs
     let eq ← i_to_expr ``(Multiset.map_congr $(ef) $(xs_eq) $(ys_eq))
-    pure (ys, Eq)
+    pure (ys, eq)
   | e => fail (to_fmt "Unknown multiset expression" ++ format.line ++ to_fmt e)
 #align tactic.norm_num.eval_multiset tactic.norm_num.eval_multiset
 
@@ -239,28 +239,28 @@ unsafe def eval_finset_interval : expr → tactic (Option (List expr × expr × 
     let eis ← (Finset.Icc a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
-    pure (eis, Eq, nd)
+    pure (eis, eq, nd)
   | e@q(@Finset.Ico $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.Ico a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
-    pure (eis, Eq, nd)
+    pure (eis, eq, nd)
   | e@q(@Finset.Ioc $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.Ioc a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
-    pure (eis, Eq, nd)
+    pure (eis, eq, nd)
   | e@q(@Finset.Ioo $(α) $(inst_1) $(inst_2) $(ea) $(eb)) => do
     let a ← expr.to_int ea
     let b ← expr.to_int eb
     let eis ← (Finset.Ioo a b).val.unquot.mapM fun i => expr.of_int α i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(Finset.nodup $(e))
-    pure (eis, Eq, nd)
+    pure (eis, eq, nd)
   | _ => pure none
 #align tactic.norm_num.eval_finset_interval tactic.norm_num.eval_finset_interval
 
@@ -279,17 +279,17 @@ elements of the finset are equal, for example to parse `{2, 1, 2}` into `[2, 1]`
 unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
     expr → tactic (List expr × expr × expr)
   | e@q(Finset.mk $(val) $(nd)) => do
-    let (val', Eq) ← eval_multiset val
-    let eq' ← i_to_expr ``(Finset.mk_congr $(Eq) _ _)
+    let (val', eq) ← eval_multiset val
+    let eq' ← i_to_expr ``(Finset.mk_congr $(eq) _ _)
     pure (val', eq', nd)
   | e@q(EmptyCollection.emptyCollection) => do
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(List.nodup_nil)
-    pure ([], Eq, nd)
+    pure ([], eq, nd)
   | e@q(Singleton.singleton $(x)) => do
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(List.nodup_singleton $(x))
-    pure ([x], Eq, nd)
+    pure ([x], eq, nd)
   | q(@Insert.insert (@Finset.hasInsert $(dec)) $(x) $(xs)) => do
     let (exs, xs_eq, xs_nd) ← eval_finset xs
     let (is_mem, mem_pf) ← list.decide_mem decide_eq x exs
@@ -316,7 +316,7 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
     let eis ← (List.range n).mapM fun i => expr.of_nat q(ℕ) i
     let eq ← mk_eq_refl e
     let nd ← i_to_expr ``(List.nodup_range $(en))
-    pure (eis, Eq, nd)
+    pure (eis, eq, nd)
   | e => do
     let-- try some other parsers
         some
@@ -328,8 +328,8 @@ unsafe def eval_finset (decide_eq : expr → expr → tactic (Bool × expr)) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive]
-theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : α) (his : xs.Prod = y)
-    (hi : x * y = z) : (x::xs).Prod = z := by rw [List.prod_cons, his, hi]
+theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : α) (his : xs.prod = y)
+    (hi : x * y = z) : (x::xs).prod = z := by rw [List.prod_cons, his, hi]
 #align tactic.norm_num.list.prod_cons_congr Tactic.NormNum.List.prod_cons_congr
 #align tactic.norm_num.list.sum_cons_congr Tactic.NormNum.List.sum_cons_congr
 
@@ -417,13 +417,13 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
 
 @[to_additive]
 theorem List.prod_congr {α : Type _} [Monoid α] {xs xs' : List α} {z : α} (h₁ : xs = xs')
-    (h₂ : xs'.Prod = z) : xs.Prod = z := by cc
+    (h₂ : xs'.prod = z) : xs.prod = z := by cc
 #align tactic.norm_num.list.prod_congr Tactic.NormNum.List.prod_congr
 #align tactic.norm_num.list.sum_congr Tactic.NormNum.List.sum_congr
 
 @[to_additive]
 theorem Multiset.prod_congr {α : Type _} [CommMonoid α] {xs : Multiset α} {xs' : List α} {z : α}
-    (h₁ : xs = (xs' : Multiset α)) (h₂ : xs'.Prod = z) : xs.Prod = z := by
+    (h₁ : xs = (xs' : Multiset α)) (h₂ : xs'.prod = z) : xs.prod = z := by
   rw [← h₂, ← Multiset.coe_prod, h₁]
 #align tactic.norm_num.multiset.prod_congr Tactic.NormNum.Multiset.prod_congr
 #align tactic.norm_num.multiset.sum_congr Tactic.NormNum.Multiset.sum_congr
@@ -432,24 +432,24 @@ theorem Multiset.prod_congr {α : Type _} [CommMonoid α] {xs : Multiset α} {xs
 producing the evaluated expression and an equality proof. -/
 unsafe def list.prove_prod_map (β ef : expr) (xs : List expr) : tactic (expr × expr) := do
   let (fxs, fxs_eq) ← eval_list_map ef xs
-  let (Prod, prod_eq) ← list.prove_prod β fxs
+  let (prod, prod_eq) ← list.prove_prod β fxs
   let eq ← i_to_expr ``(List.prod_congr $(fxs_eq) $(prod_eq))
-  pure (Prod, Eq)
+  pure (prod, eq)
 #align tactic.norm_num.list.prove_prod_map tactic.norm_num.list.prove_prod_map
 
 /-- Evaluate `(%%xs.map (%%ef : %%α → %%β)).sum`,
 producing the evaluated expression and an equality proof. -/
 unsafe def list.prove_sum_map (β ef : expr) (xs : List expr) : tactic (expr × expr) := do
   let (fxs, fxs_eq) ← eval_list_map ef xs
-  let (Sum, sum_eq) ← list.prove_sum β fxs
+  let (sum, sum_eq) ← list.prove_sum β fxs
   let eq ← i_to_expr ``(List.sum_congr $(fxs_eq) $(sum_eq))
-  pure (Sum, Eq)
+  pure (sum, eq)
 #align tactic.norm_num.list.prove_sum_map tactic.norm_num.list.prove_sum_map
 
 @[to_additive]
 theorem Finset.eval_prod_of_list {β α : Type _} [CommMonoid β] (s : Finset α) (f : α → β)
     {is : List α} (his : is.Nodup) (hs : Finset.mk (↑is) (Multiset.coe_nodup.mpr his) = s) {x : β}
-    (hx : (is.map f).Prod = x) : s.Prod f = x := by
+    (hx : (is.map f).prod = x) : s.prod f = x := by
   rw [← hs, Finset.prod_mk, Multiset.coe_map, Multiset.coe_prod, hx]
 #align tactic.norm_num.finset.eval_prod_of_list Tactic.NormNum.Finset.eval_prod_of_list
 #align tactic.norm_num.finset.eval_sum_of_list Tactic.NormNum.Finset.eval_sum_of_list

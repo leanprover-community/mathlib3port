@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Sara Rousta
 
 ! This file was ported from Lean 3 source module order.upper_lower.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -494,7 +494,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} [_inst_3 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)], (IsUpperSet.{u1} α (Preorder.toLE.{u1} α _inst_1) s) -> (Iff (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3)) s)) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align is_upper_set.not_top_mem IsUpperSet.not_top_memₓ'. -/
 theorem IsUpperSet.not_top_mem (hs : IsUpperSet s) : ⊤ ∉ s ↔ s = ∅ :=
-  hs.top_mem.Not.trans not_nonempty_iff_eq_empty
+  hs.top_mem.not.trans not_nonempty_iff_eq_empty
 #align is_upper_set.not_top_mem IsUpperSet.not_top_mem
 
 end OrderTop
@@ -530,7 +530,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {s : Set.{u1} α} [_inst_3 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)], (IsLowerSet.{u1} α (Preorder.toLE.{u1} α _inst_1) s) -> (Iff (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_3)) s)) (Eq.{succ u1} (Set.{u1} α) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))))
 Case conversion may be inaccurate. Consider using '#align is_lower_set.not_bot_mem IsLowerSet.not_bot_memₓ'. -/
 theorem IsLowerSet.not_bot_mem (hs : IsLowerSet s) : ⊥ ∉ s ↔ s = ∅ :=
-  hs.bot_mem.Not.trans not_nonempty_iff_eq_empty
+  hs.bot_mem.not.trans not_nonempty_iff_eq_empty
 #align is_lower_set.not_bot_mem IsLowerSet.not_bot_mem
 
 end OrderBot
@@ -752,7 +752,7 @@ instance : InfSet (UpperSet α) :=
   ⟨fun S => ⟨⋃ s ∈ S, ↑s, isUpperSet_unionᵢ₂ fun s _ => s.upper⟩⟩
 
 instance : CompleteDistribLattice (UpperSet α) :=
-  (toDual.Injective.comp <| SetLike.coe_injective).CompleteDistribLattice _ (fun _ _ => rfl)
+  (toDual.injective.comp <| SetLike.coe_injective).completeDistribLattice _ (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) rfl rfl
 
 instance : Inhabited (UpperSet α) :=
@@ -869,7 +869,7 @@ Case conversion may be inaccurate. Consider using '#align upper_set.coe_supr₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
 theorem coe_supᵢ₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
-  by simp_rw [coe_supr]
+  by simp_rw [coe_supᵢ]
 #align upper_set.coe_supr₂ UpperSet.coe_supᵢ₂
 
 /- warning: upper_set.coe_infi₂ -> UpperSet.coe_infᵢ₂ is a dubious translation:
@@ -882,7 +882,7 @@ Case conversion may be inaccurate. Consider using '#align upper_set.coe_infi₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
 theorem coe_infᵢ₂ (f : ∀ i, κ i → UpperSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
-  by simp_rw [coe_infi]
+  by simp_rw [coe_infᵢ]
 #align upper_set.coe_infi₂ UpperSet.coe_infᵢ₂
 
 #print UpperSet.not_mem_top /-
@@ -952,8 +952,8 @@ Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr_iff
 @[simp]
 theorem mem_supᵢ_iff {f : ι → UpperSet α} : (a ∈ ⨆ i, f i) ↔ ∀ i, a ∈ f i :=
   by
-  rw [← SetLike.mem_coe, coe_supr]
-  exact mem_Inter
+  rw [← SetLike.mem_coe, coe_supᵢ]
+  exact mem_interᵢ
 #align upper_set.mem_supr_iff UpperSet.mem_supᵢ_iff
 
 /- warning: upper_set.mem_infi_iff -> UpperSet.mem_infᵢ_iff is a dubious translation:
@@ -965,8 +965,8 @@ Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi_iff
 @[simp]
 theorem mem_infᵢ_iff {f : ι → UpperSet α} : (a ∈ ⨅ i, f i) ↔ ∃ i, a ∈ f i :=
   by
-  rw [← SetLike.mem_coe, coe_infi]
-  exact mem_Union
+  rw [← SetLike.mem_coe, coe_infᵢ]
+  exact mem_unionᵢ
 #align upper_set.mem_infi_iff UpperSet.mem_infᵢ_iff
 
 /- warning: upper_set.mem_supr₂_iff -> UpperSet.mem_supᵢ₂_iff is a dubious translation:
@@ -978,7 +978,7 @@ Case conversion may be inaccurate. Consider using '#align upper_set.mem_supr₂_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem mem_supᵢ₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
-  simp_rw [mem_supr_iff]
+  simp_rw [mem_supᵢ_iff]
 #align upper_set.mem_supr₂_iff UpperSet.mem_supᵢ₂_iff
 
 /- warning: upper_set.mem_infi₂_iff -> UpperSet.mem_infᵢ₂_iff is a dubious translation:
@@ -990,7 +990,7 @@ Case conversion may be inaccurate. Consider using '#align upper_set.mem_infi₂_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem mem_infᵢ₂_iff {f : ∀ i, κ i → UpperSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
-  simp_rw [mem_infi_iff]
+  simp_rw [mem_infᵢ_iff]
 #align upper_set.mem_infi₂_iff UpperSet.mem_infᵢ₂_iff
 
 /- warning: upper_set.codisjoint_coe -> UpperSet.codisjoint_coe is a dubious translation:
@@ -1029,7 +1029,7 @@ instance : InfSet (LowerSet α) :=
   ⟨fun S => ⟨⋂ s ∈ S, ↑s, isLowerSet_interᵢ₂ fun s _ => s.lower⟩⟩
 
 instance : CompleteDistribLattice (LowerSet α) :=
-  SetLike.coe_injective.CompleteDistribLattice _ (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
+  SetLike.coe_injective.completeDistribLattice _ (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ => rfl) rfl rfl
 
 instance : Inhabited (LowerSet α) :=
@@ -1124,7 +1124,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr LowerSet.coe_supᵢₓ'. -/
 @[simp, norm_cast]
 theorem coe_supᵢ (f : ι → LowerSet α) : (↑(⨆ i, f i) : Set α) = ⋃ i, f i := by
-  simp_rw [supᵢ, coe_Sup, mem_range, Union_exists, Union_Union_eq']
+  simp_rw [supᵢ, coe_supₛ, mem_range, unionᵢ_exists, unionᵢ_unionᵢ_eq']
 #align lower_set.coe_supr LowerSet.coe_supᵢ
 
 /- warning: lower_set.coe_infi -> LowerSet.coe_infᵢ is a dubious translation:
@@ -1135,7 +1135,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi LowerSet.coe_infᵢₓ'. -/
 @[simp, norm_cast]
 theorem coe_infᵢ (f : ι → LowerSet α) : (↑(⨅ i, f i) : Set α) = ⋂ i, f i := by
-  simp_rw [infᵢ, coe_Inf, mem_range, Inter_exists, Inter_Inter_eq']
+  simp_rw [infᵢ, coe_infₛ, mem_range, interᵢ_exists, interᵢ_interᵢ_eq']
 #align lower_set.coe_infi LowerSet.coe_infᵢ
 
 /- warning: lower_set.coe_supr₂ -> LowerSet.coe_supᵢ₂ is a dubious translation:
@@ -1148,7 +1148,7 @@ Case conversion may be inaccurate. Consider using '#align lower_set.coe_supr₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
 theorem coe_supᵢ₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨆ (i) (j), f i j) : Set α) = ⋃ (i) (j), f i j :=
-  by simp_rw [coe_supr]
+  by simp_rw [coe_supᵢ]
 #align lower_set.coe_supr₂ LowerSet.coe_supᵢ₂
 
 /- warning: lower_set.coe_infi₂ -> LowerSet.coe_infᵢ₂ is a dubious translation:
@@ -1161,7 +1161,7 @@ Case conversion may be inaccurate. Consider using '#align lower_set.coe_infi₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp, norm_cast]
 theorem coe_infᵢ₂ (f : ∀ i, κ i → LowerSet α) : (↑(⨅ (i) (j), f i j) : Set α) = ⋂ (i) (j), f i j :=
-  by simp_rw [coe_infi]
+  by simp_rw [coe_infᵢ]
 #align lower_set.coe_infi₂ LowerSet.coe_infᵢ₂
 
 #print LowerSet.mem_top /-
@@ -1231,8 +1231,8 @@ Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr_iff
 @[simp]
 theorem mem_supᵢ_iff {f : ι → LowerSet α} : (a ∈ ⨆ i, f i) ↔ ∃ i, a ∈ f i :=
   by
-  rw [← SetLike.mem_coe, coe_supr]
-  exact mem_Union
+  rw [← SetLike.mem_coe, coe_supᵢ]
+  exact mem_unionᵢ
 #align lower_set.mem_supr_iff LowerSet.mem_supᵢ_iff
 
 /- warning: lower_set.mem_infi_iff -> LowerSet.mem_infᵢ_iff is a dubious translation:
@@ -1244,8 +1244,8 @@ Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi_iff
 @[simp]
 theorem mem_infᵢ_iff {f : ι → LowerSet α} : (a ∈ ⨅ i, f i) ↔ ∀ i, a ∈ f i :=
   by
-  rw [← SetLike.mem_coe, coe_infi]
-  exact mem_Inter
+  rw [← SetLike.mem_coe, coe_infᵢ]
+  exact mem_interᵢ
 #align lower_set.mem_infi_iff LowerSet.mem_infᵢ_iff
 
 /- warning: lower_set.mem_supr₂_iff -> LowerSet.mem_supᵢ₂_iff is a dubious translation:
@@ -1257,7 +1257,7 @@ Case conversion may be inaccurate. Consider using '#align lower_set.mem_supr₂_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem mem_supᵢ₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨆ (i) (j), f i j) ↔ ∃ i j, a ∈ f i j := by
-  simp_rw [mem_supr_iff]
+  simp_rw [mem_supᵢ_iff]
 #align lower_set.mem_supr₂_iff LowerSet.mem_supᵢ₂_iff
 
 /- warning: lower_set.mem_infi₂_iff -> LowerSet.mem_infᵢ₂_iff is a dubious translation:
@@ -1269,7 +1269,7 @@ Case conversion may be inaccurate. Consider using '#align lower_set.mem_infi₂_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem mem_infᵢ₂_iff {f : ∀ i, κ i → LowerSet α} : (a ∈ ⨅ (i) (j), f i j) ↔ ∀ i j, a ∈ f i j := by
-  simp_rw [mem_infi_iff]
+  simp_rw [mem_infᵢ_iff]
 #align lower_set.mem_infi₂_iff LowerSet.mem_infᵢ₂_iff
 
 /- warning: lower_set.disjoint_coe -> LowerSet.disjoint_coe is a dubious translation:
@@ -1386,7 +1386,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.compl_Sup UpperSet.compl_supₛₓ'. -/
 @[simp]
 protected theorem compl_supₛ (S : Set (UpperSet α)) : (supₛ S).compl = ⨆ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by simp only [coe_compl, coe_Sup, compl_Inter₂, LowerSet.coe_supᵢ₂]
+  LowerSet.ext <| by simp only [coe_compl, coe_supₛ, compl_interᵢ₂, LowerSet.coe_supᵢ₂]
 #align upper_set.compl_Sup UpperSet.compl_supₛ
 
 /- warning: upper_set.compl_Inf -> UpperSet.compl_infₛ is a dubious translation:
@@ -1397,7 +1397,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.compl_Inf UpperSet.compl_infₛₓ'. -/
 @[simp]
 protected theorem compl_infₛ (S : Set (UpperSet α)) : (infₛ S).compl = ⨅ s ∈ S, UpperSet.compl s :=
-  LowerSet.ext <| by simp only [coe_compl, coe_Inf, compl_Union₂, LowerSet.coe_infᵢ₂]
+  LowerSet.ext <| by simp only [coe_compl, coe_infₛ, compl_unionᵢ₂, LowerSet.coe_infᵢ₂]
 #align upper_set.compl_Inf UpperSet.compl_infₛ
 
 /- warning: upper_set.compl_supr -> UpperSet.compl_supᵢ is a dubious translation:
@@ -1408,7 +1408,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.compl_supr UpperSet.compl_supᵢₓ'. -/
 @[simp]
 protected theorem compl_supᵢ (f : ι → UpperSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  LowerSet.ext <| by simp only [coe_compl, coe_supr, compl_Inter, LowerSet.coe_supᵢ]
+  LowerSet.ext <| by simp only [coe_compl, coe_supᵢ, compl_interᵢ, LowerSet.coe_supᵢ]
 #align upper_set.compl_supr UpperSet.compl_supᵢ
 
 /- warning: upper_set.compl_infi -> UpperSet.compl_infᵢ is a dubious translation:
@@ -1419,7 +1419,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.compl_infi UpperSet.compl_infᵢₓ'. -/
 @[simp]
 protected theorem compl_infᵢ (f : ι → UpperSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  LowerSet.ext <| by simp only [coe_compl, coe_infi, compl_Union, LowerSet.coe_infᵢ]
+  LowerSet.ext <| by simp only [coe_compl, coe_infᵢ, compl_unionᵢ, LowerSet.coe_infᵢ]
 #align upper_set.compl_infi UpperSet.compl_infᵢ
 
 /- warning: upper_set.compl_supr₂ -> UpperSet.compl_supᵢ₂ is a dubious translation:
@@ -1524,13 +1524,13 @@ protected theorem compl_bot : (⊥ : LowerSet α).compl = ⊥ :=
 
 #print LowerSet.compl_supₛ /-
 protected theorem compl_supₛ (S : Set (LowerSet α)) : (supₛ S).compl = ⨆ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by simp only [coe_compl, coe_Sup, compl_Union₂, UpperSet.coe_supᵢ₂]
+  UpperSet.ext <| by simp only [coe_compl, coe_supₛ, compl_unionᵢ₂, UpperSet.coe_supᵢ₂]
 #align lower_set.compl_Sup LowerSet.compl_supₛ
 -/
 
 #print LowerSet.compl_infₛ /-
 protected theorem compl_infₛ (S : Set (LowerSet α)) : (infₛ S).compl = ⨅ s ∈ S, LowerSet.compl s :=
-  UpperSet.ext <| by simp only [coe_compl, coe_Inf, compl_Inter₂, UpperSet.coe_infᵢ₂]
+  UpperSet.ext <| by simp only [coe_compl, coe_infₛ, compl_interᵢ₂, UpperSet.coe_infᵢ₂]
 #align lower_set.compl_Inf LowerSet.compl_infₛ
 -/
 
@@ -1541,7 +1541,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (supᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instSupSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (supᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instSupSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
 Case conversion may be inaccurate. Consider using '#align lower_set.compl_supr LowerSet.compl_supᵢₓ'. -/
 protected theorem compl_supᵢ (f : ι → LowerSet α) : (⨆ i, f i).compl = ⨆ i, (f i).compl :=
-  UpperSet.ext <| by simp only [coe_compl, coe_supr, compl_Union, UpperSet.coe_supᵢ]
+  UpperSet.ext <| by simp only [coe_compl, coe_supᵢ, compl_unionᵢ, UpperSet.coe_supᵢ]
 #align lower_set.compl_supr LowerSet.compl_supᵢ
 
 /- warning: lower_set.compl_infi -> LowerSet.compl_infᵢ is a dubious translation:
@@ -1551,7 +1551,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : LE.{u2} α] (f : ι -> (LowerSet.{u2} α _inst_1)), Eq.{succ u2} (UpperSet.{u2} α _inst_1) (LowerSet.compl.{u2} α _inst_1 (infᵢ.{u2, u1} (LowerSet.{u2} α _inst_1) (LowerSet.instInfSetLowerSet.{u2} α _inst_1) ι (fun (i : ι) => f i))) (infᵢ.{u2, u1} (UpperSet.{u2} α _inst_1) (UpperSet.instInfSetUpperSet.{u2} α _inst_1) ι (fun (i : ι) => LowerSet.compl.{u2} α _inst_1 (f i)))
 Case conversion may be inaccurate. Consider using '#align lower_set.compl_infi LowerSet.compl_infᵢₓ'. -/
 protected theorem compl_infᵢ (f : ι → LowerSet α) : (⨅ i, f i).compl = ⨅ i, (f i).compl :=
-  UpperSet.ext <| by simp only [coe_compl, coe_infi, compl_Inter, UpperSet.coe_infᵢ]
+  UpperSet.ext <| by simp only [coe_compl, coe_infᵢ, compl_interᵢ, UpperSet.coe_infᵢ]
 #align lower_set.compl_infi LowerSet.compl_infᵢ
 
 /- warning: lower_set.compl_supr₂ -> LowerSet.compl_supᵢ₂ is a dubious translation:
@@ -1622,10 +1622,10 @@ Case conversion may be inaccurate. Consider using '#align upper_set.map UpperSet
 def map (f : α ≃o β) : UpperSet α ≃o UpperSet β
     where
   toFun s := ⟨f '' s, s.upper.image f⟩
-  invFun t := ⟨f ⁻¹' t, t.upper.Preimage f.Monotone⟩
+  invFun t := ⟨f ⁻¹' t, t.upper.preimage f.monotone⟩
   left_inv _ := ext <| f.preimage_image _
   right_inv _ := ext <| f.image_preimage _
-  map_rel_iff' s t := image_subset_image_iff f.Injective
+  map_rel_iff' s t := image_subset_image_iff f.injective
 #align upper_set.map UpperSet.map
 
 /- warning: upper_set.symm_map -> UpperSet.symm_map is a dubious translation:
@@ -1707,10 +1707,10 @@ Case conversion may be inaccurate. Consider using '#align lower_set.map LowerSet
 def map (f : α ≃o β) : LowerSet α ≃o LowerSet β
     where
   toFun s := ⟨f '' s, s.lower.image f⟩
-  invFun t := ⟨f ⁻¹' t, t.lower.Preimage f.Monotone⟩
+  invFun t := ⟨f ⁻¹' t, t.lower.preimage f.monotone⟩
   left_inv _ := SetLike.coe_injective <| f.preimage_image _
   right_inv _ := SetLike.coe_injective <| f.image_preimage _
-  map_rel_iff' s t := image_subset_image_iff f.Injective
+  map_rel_iff' s t := image_subset_image_iff f.injective
 #align lower_set.map LowerSet.map
 
 /- warning: lower_set.symm_map -> LowerSet.symm_map is a dubious translation:
@@ -1788,7 +1788,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.compl_map UpperSet.compl_mapₓ'. -/
 @[simp]
 theorem compl_map (f : α ≃o β) (s : UpperSet α) : (map f s).compl = LowerSet.map f s.compl :=
-  SetLike.coe_injective (Set.image_compl_eq f.Bijective).symm
+  SetLike.coe_injective (Set.image_compl_eq f.bijective).symm
 #align upper_set.compl_map UpperSet.compl_map
 
 end UpperSet
@@ -1803,7 +1803,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_set.compl_map LowerSet.compl_mapₓ'. -/
 @[simp]
 theorem compl_map (f : α ≃o β) (s : LowerSet α) : (map f s).compl = UpperSet.map f s.compl :=
-  SetLike.coe_injective (Set.image_compl_eq f.Bijective).symm
+  SetLike.coe_injective (Set.image_compl_eq f.bijective).symm
 #align lower_set.compl_map LowerSet.compl_map
 
 end LowerSet
@@ -1944,7 +1944,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.Ici_Sup UpperSet.Ici_supₛₓ'. -/
 @[simp]
 theorem Ici_supₛ (S : Set α) : Ici (supₛ S) = ⨆ a ∈ S, Ici a :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supₛ_le_iff]
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supᵢ_iff, supₛ_le_iff]
 #align upper_set.Ici_Sup UpperSet.Ici_supₛ
 
 /- warning: upper_set.Ici_supr -> UpperSet.Ici_supᵢ is a dubious translation:
@@ -1955,7 +1955,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr UpperSet.Ici_supᵢₓ'. -/
 @[simp]
 theorem Ici_supᵢ (f : ι → α) : Ici (⨆ i, f i) = ⨆ i, Ici (f i) :=
-  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supr_iff, supᵢ_le_iff]
+  SetLike.ext fun c => by simp only [mem_Ici_iff, mem_supᵢ_iff, supᵢ_le_iff]
 #align upper_set.Ici_supr UpperSet.Ici_supᵢ
 
 /- warning: upper_set.Ici_supr₂ -> UpperSet.Ici_supᵢ₂ is a dubious translation:
@@ -1968,7 +1968,7 @@ Case conversion may be inaccurate. Consider using '#align upper_set.Ici_supr₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Ici_supᵢ₂ (f : ∀ i, κ i → α) : Ici (⨆ (i) (j), f i j) = ⨆ (i) (j), Ici (f i j) := by
-  simp_rw [Ici_supr]
+  simp_rw [Ici_supᵢ]
 #align upper_set.Ici_supr₂ UpperSet.Ici_supᵢ₂
 
 end CompleteLattice
@@ -2103,7 +2103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_set.Iic_Inf LowerSet.Iic_infₛₓ'. -/
 @[simp]
 theorem Iic_infₛ (S : Set α) : Iic (infₛ S) = ⨅ a ∈ S, Iic a :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi₂_iff, le_infₛ_iff]
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infᵢ₂_iff, le_infₛ_iff]
 #align lower_set.Iic_Inf LowerSet.Iic_infₛ
 
 /- warning: lower_set.Iic_infi -> LowerSet.Iic_infᵢ is a dubious translation:
@@ -2114,7 +2114,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi LowerSet.Iic_infᵢₓ'. -/
 @[simp]
 theorem Iic_infᵢ (f : ι → α) : Iic (⨅ i, f i) = ⨅ i, Iic (f i) :=
-  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infi_iff, le_infᵢ_iff]
+  SetLike.ext fun c => by simp only [mem_Iic_iff, mem_infᵢ_iff, le_infᵢ_iff]
 #align lower_set.Iic_infi LowerSet.Iic_infᵢ
 
 /- warning: lower_set.Iic_infi₂ -> LowerSet.Iic_infᵢ₂ is a dubious translation:
@@ -2127,7 +2127,7 @@ Case conversion may be inaccurate. Consider using '#align lower_set.Iic_infi₂ 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
 theorem Iic_infᵢ₂ (f : ∀ i, κ i → α) : Iic (⨅ (i) (j), f i j) = ⨅ (i) (j), Iic (f i j) := by
-  simp_rw [Iic_infi]
+  simp_rw [Iic_infᵢ]
 #align lower_set.Iic_infi₂ LowerSet.Iic_infᵢ₂
 
 end CompleteLattice
@@ -2323,7 +2323,7 @@ def giUpperClosureCoe :
   choice s hs := toDual (⟨s, fun a b hab ha => hs ⟨a, ha, hab⟩⟩ : UpperSet α)
   gc := gc_upperClosure_coe
   le_l_u _ := subset_upperClosure
-  choice_eq s hs := ofDual.Injective <| SetLike.coe_injective <| subset_upperClosure.antisymm hs
+  choice_eq s hs := ofDual.injective <| SetLike.coe_injective <| subset_upperClosure.antisymm hs
 #align gi_upper_closure_coe giUpperClosureCoe
 
 /- warning: gi_lower_closure_coe -> giLowerClosureCoe is a dubious translation:
@@ -2414,7 +2414,7 @@ theorem lowerClosure_univ : lowerClosure (univ : Set α) = ⊤ :=
 #print upperClosure_eq_top_iff /-
 @[simp]
 theorem upperClosure_eq_top_iff : upperClosure s = ⊤ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_upperClosure.trans (congr_arg coe h).Subset,
+  ⟨fun h => subset_empty_iff.1 <| subset_upperClosure.trans (congr_arg coe h).subset,
     by
     rintro rfl
     exact upperClosure_empty⟩
@@ -2424,7 +2424,7 @@ theorem upperClosure_eq_top_iff : upperClosure s = ⊤ ↔ s = ∅ :=
 #print lowerClosure_eq_bot_iff /-
 @[simp]
 theorem lowerClosure_eq_bot_iff : lowerClosure s = ⊥ ↔ s = ∅ :=
-  ⟨fun h => subset_empty_iff.1 <| subset_lowerClosure.trans (congr_arg coe h).Subset,
+  ⟨fun h => subset_empty_iff.1 <| subset_lowerClosure.trans (congr_arg coe h).subset,
     by
     rintro rfl
     exact lowerClosure_empty⟩
@@ -2491,13 +2491,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align upper_closure_sUnion upperClosure_unionₛₓ'. -/
 @[simp]
 theorem upperClosure_unionₛ (S : Set (Set α)) : upperClosure (⋃₀ S) = ⨅ s ∈ S, upperClosure s := by
-  simp_rw [sUnion_eq_bUnion, upperClosure_unionᵢ]
+  simp_rw [unionₛ_eq_bunionᵢ, upperClosure_unionᵢ]
 #align upper_closure_sUnion upperClosure_unionₛ
 
 #print lowerClosure_unionₛ /-
 @[simp]
 theorem lowerClosure_unionₛ (S : Set (Set α)) : lowerClosure (⋃₀ S) = ⨆ s ∈ S, lowerClosure s := by
-  simp_rw [sUnion_eq_bUnion, lowerClosure_unionᵢ]
+  simp_rw [unionₛ_eq_bunionᵢ, lowerClosure_unionᵢ]
 #align lower_closure_sUnion lowerClosure_unionₛ
 -/
 
@@ -2524,7 +2524,7 @@ theorem ordConnected_iff_upperClosure_inter_lowerClosure :
   by
   refine' ⟨Set.OrdConnected.upperClosure_inter_lowerClosure, fun h => _⟩
   rw [← h]
-  exact (UpperSet.upper _).OrdConnected.inter (LowerSet.lower _).OrdConnected
+  exact (UpperSet.upper _).ordConnected.inter (LowerSet.lower _).ordConnected
 #align ord_connected_iff_upper_closure_inter_lower_closure ordConnected_iff_upperClosure_inter_lowerClosure
 
 end closure
@@ -2572,7 +2572,7 @@ variable (s s₁ s₂ : UpperSet α) (t t₁ t₂ : UpperSet β) {x : α × β}
 #print UpperSet.prod /-
 /-- The product of two upper sets as an upper set. -/
 def prod : UpperSet (α × β) :=
-  ⟨s ×ˢ t, s.2.Prod t.2⟩
+  ⟨s ×ˢ t, s.2.prod t.2⟩
 #align upper_set.prod UpperSet.prod
 -/
 
@@ -2845,7 +2845,7 @@ variable (s s₁ s₂ : LowerSet α) (t t₁ t₂ : LowerSet β) {x : α × β}
 #print LowerSet.prod /-
 /-- The product of two lower sets as a lower set. -/
 def prod : LowerSet (α × β) :=
-  ⟨s ×ˢ t, s.2.Prod t.2⟩
+  ⟨s ×ˢ t, s.2.prod t.2⟩
 #align lower_set.prod LowerSet.prod
 -/
 

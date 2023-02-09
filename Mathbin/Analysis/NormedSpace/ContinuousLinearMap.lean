@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.continuous_linear_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ variable {σ : 𝕜 →+* 𝕜₂} (f g : E →SL[σ] F) (x y z : E)
 
 theorem ContinuousLinearMap.uniformEmbedding_of_bound {K : ℝ≥0} (hf : ∀ x, ‖x‖ ≤ K * ‖f x‖) :
     UniformEmbedding f :=
-  (AddMonoidHomClass.antilipschitz_of_bound f hf).UniformEmbedding f.UniformContinuous
+  (AddMonoidHomClass.antilipschitz_of_bound f hf).uniformEmbedding f.uniformContinuous
 #align continuous_linear_map.uniform_embedding_of_bound ContinuousLinearMap.uniformEmbedding_of_bound
 
 end Normed
@@ -252,21 +252,21 @@ def toSpanSingleton (x : E) : 𝕜 →L[𝕜] E :=
 #align continuous_linear_map.to_span_singleton ContinuousLinearMap.toSpanSingleton
 
 theorem toSpanSingleton_apply (x : E) (r : 𝕜) : toSpanSingleton 𝕜 x r = r • x := by
-  simp [to_span_singleton, of_homothety, LinearMap.toSpanSingleton]
+  simp [toSpanSingleton, ofHomothety, LinearMap.toSpanSingleton]
 #align continuous_linear_map.to_span_singleton_apply ContinuousLinearMap.toSpanSingleton_apply
 
 theorem toSpanSingleton_add (x y : E) :
     toSpanSingleton 𝕜 (x + y) = toSpanSingleton 𝕜 x + toSpanSingleton 𝕜 y :=
   by
   ext1
-  simp [to_span_singleton_apply]
+  simp [toSpanSingleton_apply]
 #align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.toSpanSingleton_add
 
 theorem toSpanSingleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
     (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x :=
   by
   ext1
-  rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
+  rw [toSpanSingleton_apply, smul_apply, toSpanSingleton_apply, smul_comm]
 #align continuous_linear_map.to_span_singleton_smul' ContinuousLinearMap.toSpanSingleton_smul'
 
 theorem toSpanSingleton_smul (c : 𝕜) (x : E) :

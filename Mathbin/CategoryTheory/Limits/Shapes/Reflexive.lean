@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.reflexive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem IsCoreflexivePair.mk' (s : B ⟶ A) (fs : f ≫ s = 𝟙 A) (gs : g ≫ 
 
 /-- Get the common section for a reflexive pair. -/
 noncomputable def commonSection (f g : A ⟶ B) [IsReflexivePair f g] : B ⟶ A :=
-  (IsReflexivePair.common_section f g).some
+  (IsReflexivePair.common_section f g).choose
 #align category_theory.common_section CategoryTheory.commonSection
 
 @[simp, reassoc.1]
@@ -84,7 +84,7 @@ theorem section_comp_right (f g : A ⟶ B) [IsReflexivePair f g] : commonSection
 
 /-- Get the common retraction for a coreflexive pair. -/
 noncomputable def commonRetraction (f g : A ⟶ B) [IsCoreflexivePair f g] : B ⟶ A :=
-  (IsCoreflexivePair.common_retraction f g).some
+  (IsCoreflexivePair.common_retraction f g).choose
 #align category_theory.common_retraction CategoryTheory.commonRetraction
 
 @[simp, reassoc.1]
@@ -122,7 +122,7 @@ variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 /-- For an adjunction `F ⊣ G` with counit `ε`, the pair `(FGε_B, ε_FGB)` is reflexive. -/
 instance (B : D) :
     IsReflexivePair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
-  IsReflexivePair.mk' (F.map (adj.Unit.app (G.obj B)))
+  IsReflexivePair.mk' (F.map (adj.unit.app (G.obj B)))
     (by
       rw [← F.map_comp, adj.right_triangle_components]
       apply F.map_id)
@@ -149,14 +149,14 @@ attribute [instance] has_coreflexive_equalizers.has_eq
 theorem hasCoequalizer_of_common_section [HasReflexiveCoequalizers C] {A B : C} {f g : A ⟶ B}
     (r : B ⟶ A) (rf : r ≫ f = 𝟙 _) (rg : r ≫ g = 𝟙 _) : HasCoequalizer f g :=
   by
-  letI := is_reflexive_pair.mk' r rf rg
+  letI := IsReflexivePair.mk' r rf rg
   infer_instance
 #align category_theory.limits.has_coequalizer_of_common_section CategoryTheory.Limits.hasCoequalizer_of_common_section
 
 theorem hasEqualizer_of_common_retraction [HasCoreflexiveEqualizers C] {A B : C} {f g : A ⟶ B}
     (r : B ⟶ A) (fr : f ≫ r = 𝟙 _) (gr : g ≫ r = 𝟙 _) : HasEqualizer f g :=
   by
-  letI := is_coreflexive_pair.mk' r fr gr
+  letI := IsCoreflexivePair.mk' r fr gr
   infer_instance
 #align category_theory.limits.has_equalizer_of_common_retraction CategoryTheory.Limits.hasEqualizer_of_common_retraction
 

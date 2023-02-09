@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.coherence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,11 +95,11 @@ theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
 
 @[simp]
 theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : f ⟶ g) :
-    (preinclusion B).zipWith η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
+    (preinclusion B).map₂ η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
   by
   rcases η with ⟨⟨⟩⟩
-  cases discrete.ext _ _ η
-  exact (inclusion_path a b).map_id _
+  cases Discrete.ext _ _ η
+  exact (inclusionPath a b).map_id _
 #align category_theory.free_bicategory.preinclusion_map₂ CategoryTheory.FreeBicategory.preinclusion_map₂
 
 /- warning: category_theory.free_bicategory.normalize_aux -> CategoryTheory.FreeBicategory.normalizeAux is a dubious translation:
@@ -165,7 +165,7 @@ theorem normalizeAux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
     normalizeAux p f = normalizeAux p g :=
   by
   rcases η with ⟨⟩
-  apply @congr_fun _ _ fun p => normalize_aux p f
+  apply @congr_fun _ _ fun p => normalizeAux p f
   clear p
   induction η
   case vcomp => apply Eq.trans <;> assumption
@@ -177,15 +177,15 @@ theorem normalizeAux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
 
 /-- The 2-isomorphism `normalize_iso p f` is natural in `f`. -/
 theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
-    (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
-      (normalizeIso p f).Hom ≫
-        (preinclusion B).zipWith (eqToHom (Discrete.ext _ _ (normalizeAux_congr p η))) :=
+    (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).hom =
+      (normalizeIso p f).hom ≫
+        (preinclusion B).map₂ (eqToHom (Discrete.ext _ _ (normalizeAux_congr p η))) :=
   by
   rcases η with ⟨⟩; induction η
   case id => simp
   case
     vcomp _ _ _ _ _ _ _ ihf ihg =>
-    rw [mk_vcomp, bicategory.whisker_left_comp]
+    rw [mk_vcomp, Bicategory.whiskerLeft_comp]
     slice_lhs 2 3 => rw [ihg]
     slice_lhs 1 2 => rw [ihf]
     simp
@@ -195,8 +195,8 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
     simp_rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc, ih, assoc]
   case whisker_right _ _ _ _ _ h η ih =>
     dsimp
-    rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right_assoc, ih, comp_whisker_right]
-    have := dcongr_arg (fun x => (normalize_iso x h).Hom) (normalize_aux_congr p (Quot.mk _ η))
+    rw [associator_inv_naturality_middle_assoc, ← comp_whiskerRight_assoc, ih, comp_whiskerRight]
+    have := dcongr_arg (fun x => (normalizeIso x h).hom) (normalizeAux_congr p (Quot.mk _ η))
     dsimp at this; simp [this]
   all_goals dsimp; dsimp [id_def, comp_def]; simp
 #align category_theory.free_bicategory.normalize_naturality CategoryTheory.FreeBicategory.normalize_naturality
@@ -228,7 +228,7 @@ def normalizeUnitIso (a b : FreeBicategory B) :
   NatIso.ofComponents (fun f => (λ_ f).symm ≪≫ normalizeIso nil f)
     (by
       intro f g η
-      erw [left_unitor_inv_naturality_assoc, assoc]
+      erw [leftUnitor_inv_naturality_assoc, assoc]
       congr 1
       exact normalize_naturality nil η)
 #align category_theory.free_bicategory.normalize_unit_iso CategoryTheory.FreeBicategory.normalizeUnitIso
@@ -241,7 +241,7 @@ def normalizeEquiv (a b : B) : Hom a b ≌ Discrete (Path.{v + 1} a b) :=
 
 /-- The coherence theorem for bicategories. -/
 instance locally_thin {a b : FreeBicategory B} : Quiver.IsThin (a ⟶ b) := fun _ _ =>
-  ⟨fun η θ => (normalizeEquiv a b).Functor.map_injective (Subsingleton.elim _ _)⟩
+  ⟨fun η θ => (normalizeEquiv a b).functor.map_injective (Subsingleton.elim _ _)⟩
 #align category_theory.free_bicategory.locally_thin CategoryTheory.FreeBicategory.locally_thin
 
 /- warning: category_theory.free_bicategory.inclusion_map_comp_aux -> CategoryTheory.FreeBicategory.inclusionMapCompAux is a dubious translation:

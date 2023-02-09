@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Joey van Langen, Casper Putz
 
 ! This file was ported from Lean 3 source module field_theory.finite.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
   Finset.card_le_mul_card_image _ _ fun a _ =>
     calc
       _ = (p - c a).roots.toFinset.card :=
-        congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])
+        congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_c hp])
       _ ≤ (p - c a).roots.card := Multiset.toFinset_card_le _
       _ ≤ _ := card_roots_sub_C' hp
       
@@ -95,15 +95,15 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
         Nat.mul_le_mul_left _ (Finset.card_le_univ _)
       _ = Fintype.card R + Fintype.card R := two_mul _
       _ <
-          nat_degree f * (univ.image fun x : R => eval x f).card +
-            nat_degree (-g) * (univ.image fun x : R => eval x (-g)).card :=
+          natDegree f * (univ.image fun x : R => eval x f).card +
+            natDegree (-g) * (univ.image fun x : R => eval x (-g)).card :=
         add_lt_add_of_lt_of_le
           (lt_of_le_of_ne (card_image_polynomial_eval (by rw [hf2] <;> exact by decide))
-            (mt (congr_arg (· % 2)) (by simp [nat_degree_eq_of_degree_eq_some hf2, hR])))
+            (mt (congr_arg (· % 2)) (by simp [natDegree_eq_of_degree_eq_some hf2, hR])))
           (card_image_polynomial_eval (by rw [degree_neg, hg2] <;> exact by decide))
       _ = 2 * ((univ.image fun x : R => eval x f) ∪ univ.image fun x : R => eval x (-g)).card := by
         rw [card_disjoint_union hd] <;>
-          simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0,
+          simp [natDegree_eq_of_degree_eq_some hf2, natDegree_eq_of_degree_eq_some hg2, bit0,
             mul_add]
       
 #align finite_field.exists_root_sum_quadratic FiniteField.exists_root_sum_quadratic
@@ -113,7 +113,7 @@ end Polynomial
 theorem prod_univ_units_id_eq_neg_one [CommRing K] [IsDomain K] [Fintype Kˣ] :
     (∏ x : Kˣ, x) = (-1 : Kˣ) := by
   classical
-    have : (∏ x in (@univ Kˣ _).eraseₓ (-1), x) = 1 :=
+    have : (∏ x in (@univ Kˣ _).erase (-1), x) = 1 :=
       prod_involution (fun x _ => x⁻¹) (by simp)
         (fun a => by simp (config := { contextual := true }) [Units.inv_eq_self_iff])
         (fun a => by simp [@inv_eq_iff_inv_eq _ _ a, eq_comm]) (by simp)
@@ -246,7 +246,7 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
     let φ : Kˣ ↪ K := ⟨coe, Units.ext⟩
     have : univ.map φ = univ \ {0} := by
       ext x
-      simp only [true_and_iff, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ,
+      simp only [true_and_iff, Embedding.coeFn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ,
         mem_map, exists_prop_of_true, mem_singleton]
     calc
       (∑ x : K, x ^ i) = ∑ x in univ \ {(0 : K)}, x ^ i := by
@@ -271,11 +271,11 @@ variable (K' : Type _) [Field K'] {p n : ℕ}
 
 theorem x_pow_card_sub_x_natDegree_eq (hp : 1 < p) : (x ^ p - x : K'[X]).natDegree = p :=
   by
-  have h1 : (X : K'[X]).degree < (X ^ p : K'[X]).degree :=
+  have h1 : (x : K'[X]).degree < (x ^ p : K'[X]).degree :=
     by
-    rw [degree_X_pow, degree_X]
+    rw [degree_x_pow, degree_x]
     exact_mod_cast hp
-  rw [nat_degree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), nat_degree_X_pow]
+  rw [natDegree_eq_of_degree_eq (degree_sub_eq_left_of_degree_lt h1), natDegree_x_pow]
 #align finite_field.X_pow_card_sub_X_nat_degree_eq FiniteField.x_pow_card_sub_x_natDegree_eq
 
 theorem x_pow_card_pow_sub_x_natDegree_eq (hn : n ≠ 0) (hp : 1 < p) :
@@ -301,19 +301,19 @@ variable (p : ℕ) [Fact p.Prime] [Algebra (ZMod p) K]
 
 theorem roots_x_pow_card_sub_x : roots (x ^ q - x : K[X]) = Finset.univ.val := by
   classical
-    have aux : (X ^ q - X : K[X]) ≠ 0 := X_pow_card_sub_X_ne_zero K Fintype.one_lt_card
-    have : (roots (X ^ q - X : K[X])).toFinset = Finset.univ :=
+    have aux : (x ^ q - x : K[X]) ≠ 0 := x_pow_card_sub_x_ne_zero K Fintype.one_lt_card
+    have : (roots (x ^ q - x : K[X])).toFinset = Finset.univ :=
       by
       rw [eq_univ_iff_forall]
       intro x
-      rw [Multiset.mem_toFinset, mem_roots aux, is_root.def, eval_sub, eval_pow, eval_X,
-        sub_eq_zero, pow_card]
+      rw [Multiset.mem_toFinset, mem_roots aux, IsRoot.def, eval_sub, eval_pow, eval_x, sub_eq_zero,
+        pow_card]
     rw [← this, Multiset.toFinset_val, eq_comm, Multiset.dedup_eq_self]
     apply nodup_roots
     rw [separable_def]
     convert is_coprime_one_right.neg_right using 1
     ·
-      rw [derivative_sub, derivative_X, derivative_X_pow, CharP.cast_card_eq_zero K, C_0, zero_mul,
+      rw [derivative_sub, derivative_x, derivative_x_pow, CharP.cast_card_eq_zero K, c_0, zero_mul,
         zero_sub]
 #align finite_field.roots_X_pow_card_sub_X FiniteField.roots_x_pow_card_sub_x
 
@@ -321,15 +321,14 @@ instance (F : Type _) [Field F] [Algebra F K] : IsSplittingField F K (x ^ q - x)
     where
   Splits :=
     by
-    have h : (X ^ q - X : K[X]).natDegree = q :=
-      X_pow_card_sub_X_nat_degree_eq K Fintype.one_lt_card
+    have h : (x ^ q - x : K[X]).natDegree = q := x_pow_card_sub_x_natDegree_eq K Fintype.one_lt_card
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
-      map_X, h, roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
+      map_x, h, roots_x_pow_card_sub_x K, ← Finset.card_def, Finset.card_univ]
   adjoin_roots := by
     classical
-      trans Algebra.adjoin F ((roots (X ^ q - X : K[X])).toFinset : Set K)
-      · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
-      · rw [roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
+      trans Algebra.adjoin F ((roots (x ^ q - x : K[X])).toFinset : Set K)
+      · simp only [Polynomial.map_pow, map_x, Polynomial.map_sub]
+      · rw [roots_x_pow_card_sub_x, val_toFinset, coe_univ, Algebra.adjoin_univ]
 
 end IsSplittingField
 
@@ -370,14 +369,14 @@ theorem sq_add_sq (p : ℕ) [hp : Fact p.Prime] (x : ZMod p) : ∃ a b : ZMod p,
       simp
     · use 0, 1
       simp
-  let f : (ZMod p)[X] := X ^ 2
-  let g : (ZMod p)[X] := X ^ 2 - C x
+  let f : (ZMod p)[X] := x ^ 2
+  let g : (ZMod p)[X] := x ^ 2 - c x
   obtain ⟨a, b, hab⟩ : ∃ a b, f.eval a + g.eval b = 0 :=
-    @exists_root_sum_quadratic _ _ _ _ f g (degree_X_pow 2) (degree_X_pow_sub_C (by decide) _)
+    @exists_root_sum_quadratic _ _ _ _ f g (degree_x_pow 2) (degree_x_pow_sub_c (by decide) _)
       (by rw [ZMod.card, hp_odd])
   refine' ⟨a, b, _⟩
   rw [← sub_eq_zero]
-  simpa only [eval_C, eval_X, eval_pow, eval_sub, ← add_sub_assoc] using hab
+  simpa only [eval_c, eval_x, eval_pow, eval_sub, ← add_sub_assoc] using hab
 #align zmod.sq_add_sq ZMod.sq_add_sq
 
 end ZMod
@@ -418,7 +417,7 @@ theorem Nat.ModEq.pow_totient {x n : ℕ} (h : Nat.coprime x n) : x ^ φ n ≡ 1
   have := ZMod.pow_totient x'
   apply_fun (coe : Units (ZMod n) → ZMod n)  at this
   simpa only [-ZMod.pow_totient, Nat.succ_eq_add_one, Nat.cast_pow, Units.val_one, Nat.cast_one,
-    coe_unit_of_coprime, Units.val_pow_eq_pow_val]
+    coe_unitOfCoprime, Units.val_pow_eq_pow_val]
 #align nat.modeq.pow_totient Nat.ModEq.pow_totient
 
 section
@@ -534,9 +533,9 @@ theorem exists_nonsquare (hF : ringChar F ≠ 2) : ∃ a : F, ¬IsSquare a :=
   by
   -- Idea: the squaring map on `F` is not injective, hence not surjective
   let sq : F → F := fun x => x ^ 2
-  have h : ¬injective sq :=
+  have h : ¬Injective sq :=
     by
-    simp only [injective, not_forall, exists_prop]
+    simp only [Injective, not_forall, exists_prop]
     refine' ⟨-1, 1, _, Ring.neg_one_ne_one_of_char_ne_two hF⟩
     simp only [sq, one_pow, neg_one_sq]
   rw [Finite.injective_iff_surjective] at h

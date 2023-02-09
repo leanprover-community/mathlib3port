@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem AffineIndependent.finrank_vectorSpan_image_finset {p : ι → P} (hi : A
   rw [affineIndependent_set_iff_linearIndependent_vsub k hp₁', ← Finset.coe_singleton, ←
     Finset.coe_image, ← Finset.coe_sdiff, Finset.sdiff_singleton_eq_erase, ← Finset.coe_image] at
     hi'
-  have hc : (Finset.image (fun p : P => p -ᵥ p₁) ((Finset.image p s).eraseₓ p₁)).card = n :=
+  have hc : (Finset.image (fun p : P => p -ᵥ p₁) ((Finset.image p s).erase p₁)).card = n :=
     by
     rw [Finset.card_image_of_injective _ (vsub_left_injective _), Finset.card_erase_of_mem hp₁]
     exact Nat.pred_eq_of_eq_succ hc'
@@ -156,7 +156,7 @@ theorem finrank_vectorSpan_image_finset_le (p : ι → P) (s : Finset ι) {n : �
     apply Nat.succ_pos
   rcases hn with ⟨p₁, hp₁⟩
   rw [vectorSpan_eq_span_vsub_finset_right_ne k hp₁]
-  refine' le_trans (finrank_span_finset_le_card (((s.image p).eraseₓ p₁).image fun p => p -ᵥ p₁)) _
+  refine' le_trans (finrank_span_finset_le_card (((s.image p).erase p₁).image fun p => p -ᵥ p₁)) _
   rw [Finset.card_image_of_injective _ (vsub_left_injective p₁), Finset.card_erase_of_mem hp₁,
     tsub_le_iff_right, ← hc]
   apply Finset.card_image_le
@@ -281,8 +281,8 @@ theorem AffineIndependent.affineSpan_eq_top_iff_card_eq_finrank_add_one [FiniteD
   · intro h_tot
     let n := Fintype.card ι - 1
     have hn : Fintype.card ι = n + 1 :=
-      (Nat.succ_pred_eq_of_pos (card_pos_of_affine_span_eq_top k V P h_tot)).symm
-    rw [hn, ← finrank_top, ← (vector_span_eq_top_of_affine_span_eq_top k V P) h_tot, ←
+      (Nat.succ_pred_eq_of_pos (card_pos_of_affineSpan_eq_top k V P h_tot)).symm
+    rw [hn, ← finrank_top, ← (vectorSpan_eq_top_of_affineSpan_eq_top k V P) h_tot, ←
       hi.finrank_vector_span hn]
   · intro hc
     rw [← finrank_top, ← direction_top k V P] at hc
@@ -305,7 +305,7 @@ instance finiteDimensional_vectorSpan_insert (s : AffineSubspace k P)
   · rw [coe_eq_bot_iff] at hs
     rw [hs, bot_coe, span_empty, bot_coe, direction_affineSpan]
     convert finiteDimensional_bot _ _ <;> simp
-  · rw [affine_span_coe, direction_affine_span_insert hp₀]
+  · rw [affineSpan_coe, direction_affineSpan_insert hp₀]
     infer_instance
 #align finite_dimensional_vector_span_insert finiteDimensional_vectorSpan_insert
 
@@ -506,7 +506,7 @@ theorem affineIndependent_iff_not_collinear_of_ne {p : Fin 3 → P} {i₁ i₂ i
 theorem collinear_iff_not_affineIndependent_of_ne {p : Fin 3 → P} {i₁ i₂ i₃ : Fin 3} (h₁₂ : i₁ ≠ i₂)
     (h₁₃ : i₁ ≠ i₃) (h₂₃ : i₂ ≠ i₃) :
     Collinear k ({p i₁, p i₂, p i₃} : Set P) ↔ ¬AffineIndependent k p :=
-  (affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ h₂₃).not_left.symm
+  (affineIndependent_iff_not_collinear_of_ne h₁₂ h₁₃ Nontrivial).not_left.symm
 #align collinear_iff_not_affine_independent_of_ne collinear_iff_not_affineIndependent_of_ne
 
 /-- If three points are not collinear, the first and second are different. -/
@@ -612,7 +612,7 @@ theorem collinear_insert_insert_insert_left_of_mem_affineSpan_pair {p₁ p₂ p�
     (h₁ : p₁ ∈ line[k, p₄, p₅]) (h₂ : p₂ ∈ line[k, p₄, p₅]) (h₃ : p₃ ∈ line[k, p₄, p₅]) :
     Collinear k ({p₁, p₂, p₃, p₄} : Set P) :=
   by
-  refine' (collinear_insert_insert_insert_of_mem_affineSpan_pair h₁ h₂ h₃).Subset _
+  refine' (collinear_insert_insert_insert_of_mem_affineSpan_pair h₁ h₂ h₃).subset _
   simp [Set.insert_subset_insert]
 #align collinear_insert_insert_insert_left_of_mem_affine_span_pair collinear_insert_insert_insert_left_of_mem_affineSpan_pair
 
@@ -620,7 +620,7 @@ theorem collinear_insert_insert_insert_left_of_mem_affineSpan_pair {p₁ p₂ p�
 theorem collinear_triple_of_mem_affineSpan_pair {p₁ p₂ p₃ p₄ p₅ : P} (h₁ : p₁ ∈ line[k, p₄, p₅])
     (h₂ : p₂ ∈ line[k, p₄, p₅]) (h₃ : p₃ ∈ line[k, p₄, p₅]) : Collinear k ({p₁, p₂, p₃} : Set P) :=
   by
-  refine' (collinear_insert_insert_insert_left_of_mem_affineSpan_pair h₁ h₂ h₃).Subset _
+  refine' (collinear_insert_insert_insert_left_of_mem_affineSpan_pair h₁ h₂ h₃).subset _
   simp [Set.insert_subset_insert]
 #align collinear_triple_of_mem_affine_span_pair collinear_triple_of_mem_affineSpan_pair
 
@@ -674,19 +674,19 @@ variable (k) (P)
 
 /-- The empty set is coplanar. -/
 theorem coplanar_empty : Coplanar k (∅ : Set P) :=
-  (collinear_empty k P).Coplanar
+  (collinear_empty k P).coplanar
 #align coplanar_empty coplanar_empty
 
 variable {P}
 
 /-- A single point is coplanar. -/
 theorem coplanar_singleton (p : P) : Coplanar k ({p} : Set P) :=
-  (collinear_singleton k p).Coplanar
+  (collinear_singleton k p).coplanar
 #align coplanar_singleton coplanar_singleton
 
 /-- Two points are coplanar. -/
 theorem coplanar_pair (p₁ p₂ : P) : Coplanar k ({p₁, p₂} : Set P) :=
-  (collinear_pair k p₁ p₂).Coplanar
+  (collinear_pair k p₁ p₂).coplanar
 #align coplanar_pair coplanar_pair
 
 variable {k}
@@ -719,7 +719,7 @@ theorem finrank_vectorSpan_insert_le (s : AffineSubspace k P) (p : P) :
       intro h
       have h' : s.direction ≤ vectorSpan k (insert p (s : Set P)) :=
         by
-        conv_lhs => rw [← affine_span_coe s, direction_affineSpan]
+        conv_lhs => rw [← affineSpan_coe s, direction_affineSpan]
         exact vectorSpan_mono k (Set.subset_insert _ _)
       exact hf (Submodule.finiteDimensional_of_le h')
     rw [finrank_of_infinite_dimensional hf, finrank_of_infinite_dimensional hf', zero_add]
@@ -733,7 +733,7 @@ theorem finrank_vectorSpan_insert_le (s : AffineSubspace k P) (p : P) :
     convert zero_le_one' ℕ
     rw [← finrank_bot k V]
     convert rfl <;> simp
-  · rw [affine_span_coe, direction_affine_span_insert hp₀, add_comm]
+  · rw [affineSpan_coe, direction_affineSpan_insert hp₀, add_comm]
     refine' (Submodule.dim_add_le_dim_add_dim _ _).trans (add_le_add_right _ _)
     refine' finrank_le_one ⟨p -ᵥ p₀, Submodule.mem_span_singleton_self _⟩ fun v => _
     have h := v.property
@@ -770,7 +770,7 @@ theorem Collinear.coplanar_insert {s : Set P} (h : Collinear k s) (p : P) :
 /-- A set of points in a two-dimensional space is coplanar. -/
 theorem coplanar_of_finrank_eq_two (s : Set P) (h : finrank k V = 2) : Coplanar k s :=
   by
-  haveI := finite_dimensional_of_finrank_eq_succ h
+  haveI := finiteDimensional_of_finrank_eq_succ h
   rw [coplanar_iff_finrank_le_two, ← h]
   exact Submodule.finrank_le _
 #align coplanar_of_finrank_eq_two coplanar_of_finrank_eq_two
@@ -804,7 +804,7 @@ variable [DivisionRing k] [Module k V]
 include V
 
 protected theorem finiteDimensional [Finite ι] (b : AffineBasis ι k P) : FiniteDimensional k V :=
-  let ⟨i⟩ := b.Nonempty
+  let ⟨i⟩ := b.nonempty
   FiniteDimensional.of_fintype_basis (b.basisOf i)
 #align affine_basis.finite_dimensional AffineBasis.finiteDimensional
 

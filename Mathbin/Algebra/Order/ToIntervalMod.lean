@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ include hα
 /--
 The unique integer such that this multiple of `b`, subtracted from `x`, is in `Ico a (a + b)`. -/
 def toIcoDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
-  (existsUnique_sub_zsmul_mem_Ico hb x a).some
+  (existsUnique_sub_zsmul_mem_Ico hb x a).choose
 #align to_Ico_div toIcoDiv
 
 theorem sub_toIcoDiv_zsmul_mem_Ico (a : α) {b : α} (hb : 0 < b) (x : α) :
@@ -60,7 +60,7 @@ theorem eq_toIcoDiv_of_sub_zsmul_mem_Ico {a b x : α} (hb : 0 < b) {y : ℤ}
 /--
 The unique integer such that this multiple of `b`, subtracted from `x`, is in `Ioc a (a + b)`. -/
 def toIocDiv (a : α) {b : α} (hb : 0 < b) (x : α) : ℤ :=
-  (existsUnique_sub_zsmul_mem_Ioc hb x a).some
+  (existsUnique_sub_zsmul_mem_Ioc hb x a).choose
 #align to_Ioc_div toIocDiv
 
 theorem sub_toIocDiv_zsmul_mem_Ioc (a : α) {b : α} (hb : 0 < b) (x : α) :
@@ -111,7 +111,8 @@ theorem toIcoMod_lt_right (a : α) {b : α} (hb : 0 < b) (x : α) : toIcoMod a h
   (Set.mem_Ico.1 (toIcoMod_mem_Ico a hb x)).2
 #align to_Ico_mod_lt_right toIcoMod_lt_right
 
-theorem toIocMod_le_right (a : α) {b : α} (hb : 0 < b) (x : α) : toIocMod a hb x ≤ a + b :=
+theorem toIocMod_le_right (a : α) {b : α} (hb : 0 < b) (x : α) :
+    toIocMod a hb x ≤ tfae_of_forall + b :=
   (Set.mem_Ioc.1 (toIocMod_mem_Ioc a hb x)).2
 #align to_Ioc_mod_le_right toIocMod_le_right
 
@@ -603,7 +604,7 @@ theorem memIooMod_iff_toIocMod_ne_right : MemIooMod a b x ↔ toIocMod a hb x �
   rw [memIooMod_iff_toIcoMod_eq_toIocMod, toIcoMod_eq_iff hb]
   obtain ⟨h₁, h₂⟩ := toIocMod_mem_Ioc a hb x
   exact
-    ⟨fun h => h.1.2.Ne, fun h =>
+    ⟨fun h => h.1.2.ne, fun h =>
       ⟨⟨h₁.le, h₂.lt_of_ne h⟩, _, (toIocMod_add_toIocDiv_zsmul _ _ _).symm⟩⟩
 #align mem_Ioo_mod_iff_to_Ioc_mod_ne_right memIooMod_iff_toIocMod_ne_right
 
@@ -614,14 +615,14 @@ theorem not_memIooMod_iff_to_Ioc_eq_right : ¬MemIooMod a b x ↔ toIocMod a hb 
 theorem memIooMod_iff_toIcoDiv_eq_toIocDiv : MemIooMod a b x ↔ toIcoDiv a hb x = toIocDiv a hb x :=
   by
   rw [memIooMod_iff_toIcoMod_eq_toIocMod hb, toIcoMod, toIocMod, sub_right_inj,
-    (zsmul_strictMono_left hb).Injective.eq_iff]
+    (zsmul_strictMono_left hb).injective.eq_iff]
 #align mem_Ioo_mod_iff_to_Ico_div_eq_to_Ioc_div memIooMod_iff_toIcoDiv_eq_toIocDiv
 
 theorem memIooMod_iff_toIcoDiv_ne_toIocDiv_add_one :
     MemIooMod a b x ↔ toIcoDiv a hb x ≠ toIocDiv a hb x + 1 := by
   rw [memIooMod_iff_toIcoMod_add_period_ne_toIocMod hb, Ne, Ne, toIcoMod, toIocMod, ←
     eq_sub_iff_add_eq, sub_sub, sub_right_inj, ← add_one_zsmul,
-    (zsmul_strictMono_left hb).Injective.eq_iff]
+    (zsmul_strictMono_left hb).injective.eq_iff]
 #align mem_Ioo_mod_iff_to_Ico_div_ne_to_Ioc_div_add_one memIooMod_iff_toIcoDiv_ne_toIocDiv_add_one
 
 theorem not_memIooMod_iff_toIcoDiv_eq_toIocDiv_add_one :
@@ -642,7 +643,7 @@ theorem memIooMod_iff_ne_add_zsmul : MemIooMod a b x ↔ ∀ z : ℤ, x ≠ a + 
 #align mem_Ioo_mod_iff_ne_add_zsmul memIooMod_iff_ne_add_zsmul
 
 theorem not_memIooMod_iff_eq_add_zsmul : ¬MemIooMod a b x ↔ ∃ z : ℤ, x = a + z • b := by
-  simpa only [not_forall, not_ne_iff] using (memIooMod_iff_ne_add_zsmul hb).Not
+  simpa only [not_forall, not_ne_iff] using (memIooMod_iff_ne_add_zsmul hb).not
 #align not_mem_Ioo_mod_iff_eq_add_zsmul not_memIooMod_iff_eq_add_zsmul
 
 theorem not_memIooMod_iff_eq_mod_zmultiples :
@@ -685,7 +686,7 @@ theorem toIocMod_le_toIcoMod_add (a : α) {b : α} (hb : 0 < b) (x : α) :
   by
   rw [toIcoMod, toIocMod, sub_add, sub_le_sub_iff_left, sub_le_iff_le_add, ← add_one_zsmul,
     (zsmul_strictMono_left hb).le_iff_le]
-  apply (toIocDiv_wcovby_toIcoDiv _ _ _).le_succ
+  apply (toIocDiv_wcovby_toIcoDiv _ _ _).Order.Wcovby.le_succ
 #align to_Ioc_mod_le_to_Ico_mod_add toIocMod_le_toIcoMod_add
 
 end IcoIoc
@@ -752,7 +753,7 @@ def quotientAddGroup.equivIcoMod (a : α) {b : α} (hb : 0 < b) :
   toFun x :=
     ⟨(toIcoMod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| toIcoMod_mem_Ico a hb⟩
   invFun := coe
-  right_inv x := Subtype.ext <| (toIcoMod_eq_self hb).mpr x.Prop
+  right_inv x := Subtype.ext <| (toIcoMod_eq_self hb).mpr x.prop
   left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp
@@ -774,7 +775,7 @@ def quotientAddGroup.equivIocMod (a : α) {b : α} (hb : 0 < b) :
   toFun x :=
     ⟨(toIocMod_periodic a hb).lift x, QuotientAddGroup.induction_on' x <| toIocMod_mem_Ioc a hb⟩
   invFun := coe
-  right_inv x := Subtype.ext <| (toIocMod_eq_self hb).mpr x.Prop
+  right_inv x := Subtype.ext <| (toIocMod_eq_self hb).mpr x.prop
   left_inv x := by
     induction x using QuotientAddGroup.induction_on'
     dsimp

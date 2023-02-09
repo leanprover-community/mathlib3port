@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.smul
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1456,7 +1456,7 @@ theorem unionᵢ_inv_smul : (⋃ g : α, g⁻¹ • s) = ⋃ g : α, g • s :=
 #print Set.unionᵢ_smul_eq_setOf_exists /-
 @[to_additive]
 theorem unionᵢ_smul_eq_setOf_exists {s : Set β} : (⋃ g : α, g • s) = { a | ∃ g : α, g • a ∈ s } :=
-  by simp_rw [← Union_set_of, ← Union_inv_smul, ← preimage_smul, preimage]
+  by simp_rw [← unionᵢ_setOf, ← unionᵢ_inv_smul, ← preimage_smul, preimage]
 #align set.Union_smul_eq_set_of_exists Set.unionᵢ_smul_eq_setOf_exists
 #align set.Union_vadd_eq_set_of_exists Set.unionᵢ_vadd_eq_setOf_exists
 -/

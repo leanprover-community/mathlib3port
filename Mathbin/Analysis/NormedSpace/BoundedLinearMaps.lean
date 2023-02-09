@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.bounded_linear_maps
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,7 +161,7 @@ theorem sub (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) :
 
 theorem comp {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) (hf : IsBoundedLinearMap 𝕜 f) :
     IsBoundedLinearMap 𝕜 (g ∘ f) :=
-  (hg.toContinuousLinearMap.comp hf.toContinuousLinearMap).IsBoundedLinearMap
+  (hg.toContinuousLinearMap.comp hf.toContinuousLinearMap).isBoundedLinearMap
 #align is_bounded_linear_map.comp IsBoundedLinearMap.comp
 
 protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 x) (𝓝 (f x)) :=
@@ -178,11 +178,11 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
 #align is_bounded_linear_map.tendsto IsBoundedLinearMap.tendsto
 
 theorem continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
-  continuous_iff_continuousAt.2 fun _ => hf.Tendsto _
+  continuous_iff_continuousAt.2 fun _ => hf.tendsto _
 #align is_bounded_linear_map.continuous IsBoundedLinearMap.continuous
 
 theorem lim_zero_bounded_linear_map (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (𝓝 0) (𝓝 0) :=
-  (hf.1.mk' _).map_zero ▸ continuous_iff_continuousAt.1 hf.Continuous 0
+  (hf.1.mk' _).map_zero ▸ continuous_iff_continuousAt.1 hf.continuous 0
 #align is_bounded_linear_map.lim_zero_bounded_linear_map IsBoundedLinearMap.lim_zero_bounded_linear_map
 
 section
@@ -217,7 +217,7 @@ is a bounded linear operation. -/
 theorem isBoundedLinearMap_prod_multilinear {E : ι → Type _} [∀ i, NormedAddCommGroup (E i)]
     [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedLinearMap 𝕜 fun p : ContinuousMultilinearMap 𝕜 E F × ContinuousMultilinearMap 𝕜 E G =>
-      p.1.Prod p.2 :=
+      p.1.prod p.2 :=
   { map_add := fun p₁ p₂ => by
       ext1 m
       rfl
@@ -374,12 +374,12 @@ protected theorem IsBoundedBilinearMap.isO (h : IsBoundedBilinearMap 𝕜 f) :
 
 theorem IsBoundedBilinearMap.isO_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E}
     {h : α → F} {l : Filter α} : (fun x => f (g x, h x)) =O[l] fun x => ‖g x‖ * ‖h x‖ :=
-  H.IsO.comp_tendsto le_top
+  H.isO.comp_tendsto le_top
 #align is_bounded_bilinear_map.is_O_comp IsBoundedBilinearMap.isO_comp
 
 protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
     f =O[⊤] fun p : E × F => ‖p‖ * ‖p‖ :=
-  h.IsO.trans <|
+  h.isO.trans <|
     (@Asymptotics.isO_fst_prod' _ E F _ _ _ _).norm_norm.mul
       (@Asymptotics.isO_snd_prod' _ E F _ _ _ _).norm_norm
 #align is_bounded_bilinear_map.is_O' IsBoundedBilinearMap.is_O'
@@ -417,19 +417,19 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
     by
     refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H (e.1 - x.1) e.2).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
-    convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).ContinuousAt
+    convert ((continuous_fst.sub continuous_const).norm.mul continuous_snd.norm).continuousAt
     · simp
     infer_instance
   have h₂ : (fun e : E × F => f (x.1, e.2 - x.2)) =o[𝓝 x] fun e => (1 : ℝ) :=
     by
     refine' (Asymptotics.isO_of_le' (𝓝 x) fun e => H x.1 (e.2 - x.2)).trans_isOCat _
     rw [Asymptotics.isOCat_const_iff one_ne]
-    convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).ContinuousAt
+    convert (continuous_const.mul (continuous_snd.sub continuous_const).norm).continuousAt
     · simp
     infer_instance
   have := h₁.add h₂
   rw [Asymptotics.isOCat_const_iff one_ne] at this
-  change tendsto _ _ _
+  change Tendsto _ _ _
   convert this.add_const (f x)
   · ext e
     simp [h.map_sub_left, h.map_sub_right]
@@ -438,18 +438,18 @@ theorem IsBoundedBilinearMap.continuous (h : IsBoundedBilinearMap 𝕜 f) : Cont
 
 theorem IsBoundedBilinearMap.continuous_left (h : IsBoundedBilinearMap 𝕜 f) {e₂ : F} :
     Continuous fun e₁ => f (e₁, e₂) :=
-  h.Continuous.comp (continuous_id.prod_mk continuous_const)
+  h.continuous.comp (continuous_id.prod_mk continuous_const)
 #align is_bounded_bilinear_map.continuous_left IsBoundedBilinearMap.continuous_left
 
 theorem IsBoundedBilinearMap.continuous_right (h : IsBoundedBilinearMap 𝕜 f) {e₁ : E} :
     Continuous fun e₂ => f (e₁, e₂) :=
-  h.Continuous.comp (continuous_const.prod_mk continuous_id)
+  h.continuous.comp (continuous_const.prod_mk continuous_id)
 #align is_bounded_bilinear_map.continuous_right IsBoundedBilinearMap.continuous_right
 
 /-- Useful to use together with `continuous.comp₂`. -/
 theorem ContinuousLinearMap.continuous₂ (f : E →L[𝕜] F →L[𝕜] G) :
     Continuous (Function.uncurry fun x y => f x y) :=
-  f.IsBoundedBilinearMap.Continuous
+  f.isBoundedBilinearMap.continuous
 #align continuous_linear_map.continuous₂ ContinuousLinearMap.continuous₂
 
 theorem IsBoundedBilinearMap.isBoundedLinearMap_left (h : IsBoundedBilinearMap 𝕜 f) (y : F) :
@@ -487,7 +487,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMap_right (h : IsBoundedBilinearMap 
 theorem isBoundedBilinearMapSmul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _}
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] :
     IsBoundedBilinearMap 𝕜 fun p : 𝕜' × E => p.1 • p.2 :=
-  (lsmul 𝕜 𝕜' : 𝕜' →L[𝕜] E →L[𝕜] E).IsBoundedBilinearMap
+  (lsmul 𝕜 𝕜' : 𝕜' →L[𝕜] E →L[𝕜] E).isBoundedBilinearMap
 #align is_bounded_bilinear_map_smul isBoundedBilinearMapSmul
 
 theorem isBoundedBilinearMapMul : IsBoundedBilinearMap 𝕜 fun p : 𝕜 × 𝕜 => p.1 * p.2 := by
@@ -496,7 +496,7 @@ theorem isBoundedBilinearMapMul : IsBoundedBilinearMap 𝕜 fun p : 𝕜 × 𝕜
 
 theorem isBoundedBilinearMapComp :
     IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × (E →L[𝕜] F) => p.1.comp p.2 :=
-  (compL 𝕜 E F G).IsBoundedBilinearMap
+  (compL 𝕜 E F G).isBoundedBilinearMap
 #align is_bounded_bilinear_map_comp isBoundedBilinearMapComp
 
 theorem ContinuousLinearMap.isBoundedLinearMap_comp_left (g : F →L[𝕜] G) :
@@ -510,7 +510,7 @@ theorem ContinuousLinearMap.isBoundedLinearMap_comp_right (f : E →L[𝕜] F) :
 #align continuous_linear_map.is_bounded_linear_map_comp_right ContinuousLinearMap.isBoundedLinearMap_comp_right
 
 theorem isBoundedBilinearMapApply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
-  (ContinuousLinearMap.flip (apply 𝕜 F : E →L[𝕜] (E →L[𝕜] F) →L[𝕜] F)).IsBoundedBilinearMap
+  (ContinuousLinearMap.flip (apply 𝕜 F : E →L[𝕜] (E →L[𝕜] F) →L[𝕜] F)).isBoundedBilinearMap
 #align is_bounded_bilinear_map_apply isBoundedBilinearMapApply
 
 /-- The function `continuous_linear_map.smul_right`, associating to a continuous linear map
@@ -519,7 +519,7 @@ theorem isBoundedBilinearMapApply : IsBoundedBilinearMap 𝕜 fun p : (E →L[�
 theorem isBoundedBilinearMapSmulRight :
     IsBoundedBilinearMap 𝕜 fun p =>
       (ContinuousLinearMap.smulRight : (E →L[𝕜] 𝕜) → F → E →L[𝕜] F) p.1 p.2 :=
-  (smulRightL 𝕜 E F).IsBoundedBilinearMap
+  (smulRightL 𝕜 E F).isBoundedBilinearMap
 #align is_bounded_bilinear_map_smul_right isBoundedBilinearMapSmulRight
 
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
@@ -528,7 +528,7 @@ theorem isBoundedBilinearMapCompMultilinear {ι : Type _} {E : ι → Type _} [D
     [Fintype ι] [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
     IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × ContinuousMultilinearMap 𝕜 E F =>
       p.1.compContinuousMultilinearMap p.2 :=
-  (compContinuousMultilinearMapL 𝕜 E F G).IsBoundedBilinearMap
+  (compContinuousMultilinearMapL 𝕜 E F G).isBoundedBilinearMap
 #align is_bounded_bilinear_map_comp_multilinear isBoundedBilinearMapCompMultilinear
 
 /-- Definition of the derivative of a bilinear map `f`, given at a point `p` by
@@ -586,7 +586,7 @@ bilinear map. -/
 theorem ContinuousLinearMap.mulLeftRightIsBoundedBilinear (𝕜' : Type _) [NormedRing 𝕜']
     [NormedAlgebra 𝕜 𝕜'] :
     IsBoundedBilinearMap 𝕜 fun p : 𝕜' × 𝕜' => ContinuousLinearMap.mulLeftRight 𝕜 𝕜' p.1 p.2 :=
-  (ContinuousLinearMap.mulLeftRight 𝕜 𝕜').IsBoundedBilinearMap
+  (ContinuousLinearMap.mulLeftRight 𝕜 𝕜').isBoundedBilinearMap
 #align continuous_linear_map.mul_left_right_is_bounded_bilinear ContinuousLinearMap.mulLeftRightIsBoundedBilinear
 
 variable {𝕜}
@@ -630,7 +630,7 @@ theorem Continuous.clm_comp {X} [TopologicalSpace X] {g : X → F →L[𝕜] G} 
 theorem ContinuousOn.clm_comp {X} [TopologicalSpace X] {g : X → F →L[𝕜] G} {f : X → E →L[𝕜] F}
     {s : Set X} (hg : ContinuousOn g s) (hf : ContinuousOn f s) :
     ContinuousOn (fun x => (g x).comp (f x)) s :=
-  (compL 𝕜 E F G).continuous₂.comp_continuousOn (hg.Prod hf)
+  (compL 𝕜 E F G).continuous₂.comp_continuousOn (hg.prod hf)
 #align continuous_on.clm_comp ContinuousOn.clm_comp
 
 namespace ContinuousLinearEquiv
@@ -657,7 +657,7 @@ protected theorem isOpen [CompleteSpace E] : IsOpen (range (coe : (E ≃L[𝕜] 
   · rintro ⟨e', rfl⟩
     exact ⟨(e'.trans e.symm).toUnit, rfl⟩
   · rintro ⟨w, hw⟩
-    use (units_equiv 𝕜 E w).trans e
+    use (unitsEquiv 𝕜 E w).trans e
     ext x
     simp [coeFn_coe_base' w, hw]
 #align continuous_linear_equiv.is_open ContinuousLinearEquiv.isOpen

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.well_founded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,11 +38,11 @@ protected theorem isAsymm {α : Sort _} {r : α → α → Prop} (h : WellFounde
 -/
 
 instance {α : Sort _} [WellFoundedRelation α] : IsAsymm α WellFoundedRelation.R :=
-  WellFoundedRelation.wf.IsAsymm
+  WellFoundedRelation.wf.isAsymm
 
 #print WellFounded.isIrrefl /-
 protected theorem isIrrefl {α : Sort _} {r : α → α → Prop} (h : WellFounded r) : IsIrrefl α r :=
-  @IsAsymm.isIrrefl α r h.IsAsymm
+  @IsAsymm.isIrrefl α r h.isAsymm
 #align well_founded.is_irrefl WellFounded.isIrrefl
 -/
 
@@ -132,7 +132,7 @@ Case conversion may be inaccurate. Consider using '#align well_founded.well_foun
 theorem wellFounded_iff_has_max' [PartialOrder α] :
     WellFounded ((· > ·) : α → α → Prop) ↔
       ∀ p : Set α, p.Nonempty → ∃ m ∈ p, ∀ x ∈ p, m ≤ x → x = m :=
-  by simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
+  by simp only [eq_iff_not_lt_of_le, wellFounded_iff_has_min]
 #align well_founded.well_founded_iff_has_max' WellFounded.wellFounded_iff_has_max'
 
 /- warning: well_founded.well_founded_iff_has_min' -> WellFounded.wellFounded_iff_has_min' is a dubious translation:
@@ -247,8 +247,8 @@ theorem eq_strictMono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : S
     funext a
     apply h.induction a
     exact fun b H =>
-      le_antisymm (eq_strict_mono_iff_eq_range_aux hf hg hfg H)
-        (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
+      le_antisymm (eq_strictMono_iff_eq_range_aux hf hg hfg H)
+        (eq_strictMono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
     congr_arg _⟩
 #align well_founded.eq_strict_mono_iff_eq_range WellFounded.eq_strictMono_iff_eq_range
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.fun_like.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,7 +177,7 @@ instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β
     where
   coe := (coe : E → α → β)
   coe_injective' e g h := coe_injective' e g h ((left_inv e).eq_rightInverse (h.symm ▸ right_inv g))
-  injective' e := (left_inv e).Injective
+  injective' e := (left_inv e).injective
 #align equiv_like.to_embedding_like EquivLike.toEmbeddingLike
 -/
 
@@ -198,7 +198,7 @@ but is expected to have type
   forall {E : Sort.{u1}} {α : Sort.{u3}} {β : Sort.{u2}} [iE : EquivLike.{u1, u3, u2} E α β] (e : E), Function.Surjective.{u3, u2} α β (FunLike.coe.{u1, u3, u2} E α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{u1, u3, u2} E α β (EquivLike.toEmbeddingLike.{u1, u3, u2} E α β iE)) e)
 Case conversion may be inaccurate. Consider using '#align equiv_like.surjective EquivLike.surjectiveₓ'. -/
 protected theorem surjective (e : E) : Function.Surjective e :=
-  (right_inv e).Surjective
+  (right_inv e).surjective
 #align equiv_like.surjective EquivLike.surjective
 
 /- warning: equiv_like.bijective -> EquivLike.bijective is a dubious translation:
@@ -327,7 +327,7 @@ theorem comp_bijective (f : α → β) (e : F) : Function.Bijective (e ∘ f) �
 #print EquivLike.subsingleton_dom /-
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_dom [Subsingleton β] : Subsingleton F :=
-  ⟨fun f g => FunLike.ext f g fun x => (right_inv f).Injective <| Subsingleton.elim _ _⟩
+  ⟨fun f g => FunLike.ext f g fun x => (right_inv f).injective <| Subsingleton.elim _ _⟩
 #align equiv_like.subsingleton_dom EquivLike.subsingleton_dom
 -/
 

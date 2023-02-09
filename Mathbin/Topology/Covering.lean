@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module topology.covering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem to_isEvenlyCovered_preimage {x : X} {I : Type _} [TopologicalSpace I]
     (h : IsEvenlyCovered f x I) : IsEvenlyCovered f x (f ⁻¹' {x}) :=
   let ⟨h1, h2⟩ := h
   ⟨((Classical.choose h2).preimageSingletonHomeomorph
-          (Classical.choose_spec h2)).Embedding.DiscreteTopology,
+          (Classical.choose_spec h2)).embedding.discreteTopology,
     _, h.mem_to_trivialization_base_set⟩
 #align is_evenly_covered.to_is_evenly_covered_preimage IsEvenlyCovered.to_isEvenlyCovered_preimage
 
@@ -97,11 +97,11 @@ variable {f} {s}
 
 protected theorem continuousAt (hf : IsCoveringMapOn f s) {x : E} (hx : f x ∈ s) :
     ContinuousAt f x :=
-  (hf (f x) hx).ContinuousAt
+  (hf (f x) hx).continuousAt
 #align is_covering_map_on.continuous_at IsCoveringMapOn.continuousAt
 
 protected theorem continuousOn (hf : IsCoveringMapOn f s) : ContinuousOn f (f ⁻¹' s) :=
-  ContinuousAt.continuousOn fun x => hf.ContinuousAt
+  ContinuousAt.continuousOn fun x => hf.continuousAt
 #align is_covering_map_on.continuous_on IsCoveringMapOn.continuousOn
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -126,7 +126,7 @@ protected theorem isLocallyHomeomorphOn (hf : IsCoveringMapOn f s) :
           left_inv' := fun p hp => Prod.ext rfl hp.2.symm
           right_inv' := fun p hp => rfl
           continuous_toFun := continuous_fst.continuous_on
-          continuous_invFun := (continuous_id'.prod_mk continuous_const).ContinuousOn },
+          continuous_invFun := (continuous_id'.prod_mk continuous_const).continuousOn },
       ⟨he, by rwa [e.to_local_homeomorph.symm_symm, e.proj_to_fun x he],
         (hf (f x) hx).toTrivialization_apply⟩,
       fun p h => (e.proj_to_fun p h.1).symm⟩
@@ -164,20 +164,20 @@ theorem mk (F : X → Type _) [∀ x, TopologicalSpace (F x)] [hF : ∀ x, Discr
 variable {f}
 
 protected theorem continuous (hf : IsCoveringMap f) : Continuous f :=
-  continuous_iff_continuousOn_univ.mpr hf.IsCoveringMapOn.ContinuousOn
+  continuous_iff_continuousOn_univ.mpr hf.isCoveringMapOn.continuousOn
 #align is_covering_map.continuous IsCoveringMap.continuous
 
 protected theorem isLocallyHomeomorph (hf : IsCoveringMap f) : IsLocallyHomeomorph f :=
-  isLocallyHomeomorph_iff_isLocallyHomeomorphOn_univ.mpr hf.IsCoveringMapOn.IsLocallyHomeomorphOn
+  isLocallyHomeomorph_iff_isLocallyHomeomorphOn_univ.mpr hf.isCoveringMapOn.isLocallyHomeomorphOn
 #align is_covering_map.is_locally_homeomorph IsCoveringMap.isLocallyHomeomorph
 
 protected theorem isOpenMap (hf : IsCoveringMap f) : IsOpenMap f :=
-  hf.IsLocallyHomeomorph.IsOpenMap
+  hf.isLocallyHomeomorph.isOpenMap
 #align is_covering_map.is_open_map IsCoveringMap.isOpenMap
 
 protected theorem quotientMap (hf : IsCoveringMap f) (hf' : Function.Surjective f) :
     QuotientMap f :=
-  hf.IsOpenMap.to_quotientMap hf.Continuous hf'
+  hf.isOpenMap.to_quotientMap hf.continuous hf'
 #align is_covering_map.quotient_map IsCoveringMap.quotientMap
 
 end IsCoveringMap

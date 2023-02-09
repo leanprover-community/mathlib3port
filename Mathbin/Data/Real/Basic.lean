@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.real.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,7 +194,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.of_cauchy_sub Real.ofCauchy_subₓ'. -/
 theorem ofCauchy_sub (a b) : (⟨a - b⟩ : ℝ) = ⟨a⟩ - ⟨b⟩ :=
   by
-  rw [sub_eq_add_neg, of_cauchy_add, of_cauchy_neg]
+  rw [sub_eq_add_neg, ofCauchy_add, ofCauchy_neg]
   rfl
 #align real.of_cauchy_sub Real.ofCauchy_sub
 
@@ -364,15 +364,16 @@ instance : CommRing ℝ := by
               one := (1 : ℝ)
               mul := (· * ·)
               add := (· + ·)
-              neg := @Neg.neg ℝ _
-              sub := @Sub.sub ℝ _
-              npow := @npowRec ℝ ⟨1⟩ ⟨(· * ·)⟩
-              nsmul := @nsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩
-              zsmul := @zsmulRec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@Neg.neg ℝ _⟩ } <;>
+              neg := @has_neg.neg ℝ _
+              sub := @has_sub.sub ℝ _
+              npow := @npow_rec ℝ ⟨1⟩ ⟨(· * ·)⟩
+              nsmul := @nsmul_rec ℝ ⟨0⟩ ⟨(· + ·)⟩
+              zsmul := @zsmul_rec ℝ ⟨0⟩ ⟨(· + ·)⟩ ⟨@has_neg.neg ℝ _⟩ } <;>
           repeat' rintro ⟨_⟩ <;>
         try rfl <;>
-      simp [← of_cauchy_zero, ← of_cauchy_one, ← of_cauchy_add, ← of_cauchy_neg, ← of_cauchy_mul,
-        fun n => show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl, NatCast.natCast, IntCast.intCast] <;>
+      simp [← ofCauchy_zero, ← ofCauchy_one, ← ofCauchy_add, ← ofCauchy_neg, ← ofCauchy_mul,
+        fun n => show @coe ℕ ℝ ⟨_⟩ n = ⟨n⟩ from rfl, has_nat_cast.nat_cast,
+        has_int_cast.int_cast] <;>
     first
       |apply
         add_assoc|apply
@@ -463,7 +464,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))} {g : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))}, Iff (Eq.{1} Real (Real.mk f) (Real.mk g)) (HasEquiv.Equiv.{1, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (instHasEquiv.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat))) f g)
 Case conversion may be inaccurate. Consider using '#align real.mk_eq Real.mk_eqₓ'. -/
-theorem mk_eq {f g : CauSeq ℚ abs} : mk f = mk g ↔ f ≈ g :=
+theorem mk_eq {f g : CauSeq ℚ abs} : mk f = mk g ↔ exists_prop ≈ g :=
   ext_cauchy_iff.trans mk_eq
 #align real.mk_eq Real.mk_eq
 
@@ -485,7 +486,7 @@ but is expected to have type
   forall {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))} {g : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))}, Iff (LT.lt.{0} Real Real.instLTReal (Real.ofCauchy (Quotient.mk.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) f)) (Real.ofCauchy (Quotient.mk.{1} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.equiv.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) g))) (LT.lt.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instLTCauSeqToRingToDivisionRingToFieldAbsToHasAbsToNegToHasSupToSemilatticeSupToLatticeInstDistribLatticeToLinearOrderToLinearOrderedRingToLinearOrderedCommRing.{0} Rat Rat.instLinearOrderedFieldRat) f g)
 Case conversion may be inaccurate. Consider using '#align real.lt_cauchy Real.lt_cauchyₓ'. -/
 theorem lt_cauchy {f g} : (⟨⟦f⟧⟩ : ℝ) < ⟨⟦g⟧⟩ ↔ f < g :=
-  show Lt _ _ ↔ _ by rw [lt] <;> rfl
+  show Lt _ _ ↔ _ by rw [Lt] <;> rfl
 #align real.lt_cauchy Real.lt_cauchy
 
 /- warning: real.mk_lt -> Real.mk_lt is a dubious translation:
@@ -505,7 +506,7 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} Real (Real.mk (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) 0 (Zero.toOfNat0.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instZeroCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat))))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
 Case conversion may be inaccurate. Consider using '#align real.mk_zero Real.mk_zeroₓ'. -/
-theorem mk_zero : mk 0 = 0 := by rw [← of_cauchy_zero] <;> rfl
+theorem mk_zero : mk 0 = 0 := by rw [← ofCauchy_zero] <;> rfl
 #align real.mk_zero Real.mk_zero
 
 /- warning: real.mk_one -> Real.mk_one is a dubious translation:
@@ -514,7 +515,7 @@ lean 3 declaration is
 but is expected to have type
   Eq.{1} Real (Real.mk (OfNat.ofNat.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) 1 (One.toOfNat1.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instOneCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat))))) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
 Case conversion may be inaccurate. Consider using '#align real.mk_one Real.mk_oneₓ'. -/
-theorem mk_one : mk 1 = 1 := by rw [← of_cauchy_one] <;> rfl
+theorem mk_one : mk 1 = 1 := by rw [← ofCauchy_one] <;> rfl
 #align real.mk_one Real.mk_one
 
 /- warning: real.mk_add -> Real.mk_add is a dubious translation:
@@ -523,7 +524,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))} {g : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))}, Eq.{1} Real (Real.mk (HAdd.hAdd.{0, 0, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (instHAdd.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instAddCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat))) f g)) (HAdd.hAdd.{0, 0, 0} Real Real Real (instHAdd.{0} Real Real.instAddReal) (Real.mk f) (Real.mk g))
 Case conversion may be inaccurate. Consider using '#align real.mk_add Real.mk_addₓ'. -/
-theorem mk_add {f g : CauSeq ℚ abs} : mk (f + g) = mk f + mk g := by simp [mk, ← of_cauchy_add]
+theorem mk_add {f g : CauSeq ℚ abs} : mk (f + g) = mk f + mk g := by simp [mk, ← ofCauchy_add]
 #align real.mk_add Real.mk_add
 
 /- warning: real.mk_mul -> Real.mk_mul is a dubious translation:
@@ -532,7 +533,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))} {g : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))}, Eq.{1} Real (Real.mk (HMul.hMul.{0, 0, 0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (instHMul.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instMulCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat))) f g)) (HMul.hMul.{0, 0, 0} Real Real Real (instHMul.{0} Real Real.instMulReal) (Real.mk f) (Real.mk g))
 Case conversion may be inaccurate. Consider using '#align real.mk_mul Real.mk_mulₓ'. -/
-theorem mk_mul {f g : CauSeq ℚ abs} : mk (f * g) = mk f * mk g := by simp [mk, ← of_cauchy_mul]
+theorem mk_mul {f g : CauSeq ℚ abs} : mk (f * g) = mk f * mk g := by simp [mk, ← ofCauchy_mul]
 #align real.mk_mul Real.mk_mul
 
 /- warning: real.mk_neg -> Real.mk_neg is a dubious translation:
@@ -541,7 +542,7 @@ lean 3 declaration is
 but is expected to have type
   forall {f : CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))}, Eq.{1} Real (Real.mk (Neg.neg.{0} (CauSeq.{0, 0} Rat Rat.instLinearOrderedFieldRat Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat))) (CauSeq.instNegCauSeq.{0, 0} Rat Rat Rat.instLinearOrderedFieldRat (DivisionRing.toRing.{0} Rat Rat.divisionRing) (Abs.abs.{0} Rat (Neg.toHasAbs.{0} Rat Rat.instNegRat Rat.instHasSupRat)) (IsAbsoluteValue.abs_isAbsoluteValue.{0} Rat Rat.instLinearOrderedRingRat)) f)) (Neg.neg.{0} Real Real.instNegReal (Real.mk f))
 Case conversion may be inaccurate. Consider using '#align real.mk_neg Real.mk_negₓ'. -/
-theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by simp [mk, ← of_cauchy_neg]
+theorem mk_neg {f : CauSeq ℚ abs} : mk (-f) = -mk f := by simp [mk, ← ofCauchy_neg]
 #align real.mk_neg Real.mk_neg
 
 /- warning: real.mk_pos -> Real.mk_pos is a dubious translation:
@@ -552,7 +553,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.mk_pos Real.mk_posₓ'. -/
 @[simp]
 theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f := by
-  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_arg Pos (sub_zero f))
+  rw [← mk_zero, mk_lt] <;> exact iff_of_eq (congr_arg pos (sub_zero f))
 #align real.mk_pos Real.mk_pos
 
 private irreducible_def le (x y : ℝ) : Prop :=
@@ -563,7 +564,7 @@ instance : LE ℝ :=
   ⟨Le⟩
 
 private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
-  show Le _ _ ↔ _ by rw [le]
+  show Le _ _ ↔ _ by rw [Le]
 #align real.le_def real.le_def
 
 /- warning: real.mk_le -> Real.mk_le is a dubious translation:
@@ -602,7 +603,7 @@ theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : c + a < c + b ↔ a < b :=
   induction b using Real.ind_mk
   induction c using Real.ind_mk
   simp only [mk_lt, ← mk_add]
-  show Pos _ ↔ Pos _; rw [add_sub_add_left_eq_sub]
+  show pos _ ↔ pos _; rw [add_sub_add_left_eq_sub]
 #align real.add_lt_add_iff_left Real.add_lt_add_iff_left
 
 instance : PartialOrder ℝ where
@@ -616,7 +617,8 @@ instance : PartialOrder ℝ where
   lt_iff_le_not_le a b :=
     Real.ind_mk a fun a => Real.ind_mk b fun b => by simpa using lt_iff_le_not_le
   le_antisymm a b :=
-    Real.ind_mk a fun a => Real.ind_mk b fun b => by simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b
+    Real.ind_mk a fun a =>
+      Real.ind_mk b fun b => by simpa [mk_eq] using @cau_seq.le_antisymm _ _ a b
 
 instance : Preorder ℝ := by infer_instance
 
@@ -640,7 +642,7 @@ but is expected to have type
   LT.lt.{0} Real Real.instLTReal (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal)) (OfNat.ofNat.{0} Real 1 (One.toOfNat1.{0} Real Real.instOneReal))
 Case conversion may be inaccurate. Consider using '#align real.zero_lt_one Real.zero_lt_oneₓ'. -/
 protected theorem zero_lt_one : (0 : ℝ) < 1 := by
-  convert rat_cast_lt.2 zero_lt_one <;> simp [← of_cauchy_rat_cast, of_cauchy_one, of_cauchy_zero]
+  convert ratCast_lt.2 zero_lt_one <;> simp [← ofCauchy_ratCast, ofCauchy_one, ofCauchy_zero]
 #align real.zero_lt_one Real.zero_lt_one
 
 /- warning: real.fact_zero_lt_one -> Real.fact_zero_lt_one is a dubious translation:
@@ -669,7 +671,7 @@ protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a * b :=
 instance : StrictOrderedCommRing ℝ :=
   { Real.commRing, Real.partialOrder,
     Real.semiring with
-    exists_pair_ne := ⟨0, 1, Real.zero_lt_one.Ne⟩
+    exists_pair_ne := ⟨0, 1, Real.zero_lt_one.ne⟩
     add_le_add_left := by
       simp only [le_iff_eq_or_lt]
       rintro a b ⟨rfl, h⟩
@@ -846,13 +848,13 @@ noncomputable instance : LinearOrderedField ℝ :=
     mul_inv_cancel := by
       rintro ⟨a⟩ h
       rw [mul_comm]
-      simp only [← of_cauchy_inv, ← of_cauchy_mul, ← of_cauchy_one, ← of_cauchy_zero, Ne.def] at *
+      simp only [← ofCauchy_inv, ← ofCauchy_mul, ← ofCauchy_one, ← ofCauchy_zero, Ne.def] at *
       exact CauSeq.Completion.inv_mul_cancel h
-    inv_zero := by simp [← of_cauchy_zero, ← of_cauchy_inv]
+    inv_zero := by simp [← ofCauchy_zero, ← ofCauchy_inv]
     ratCast := coe
     ratCast_mk := fun n d hd h2 => by
-      rw [← of_cauchy_rat_cast, Rat.cast_mk', of_cauchy_mul, of_cauchy_inv, of_cauchy_nat_cast,
-        of_cauchy_int_cast] }
+      rw [← ofCauchy_ratCast, Rat.cast_mk', ofCauchy_mul, ofCauchy_inv, ofCauchy_natCast,
+        ofCauchy_intCast] }
 
 -- Extra instances to short-circuit type class resolution
 noncomputable instance : LinearOrderedAddCommGroup ℝ := by infer_instance
@@ -963,7 +965,7 @@ Case conversion may be inaccurate. Consider using '#align real.is_cau_seq_iff_li
 theorem isCauSeq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs fun i => (f i : ℝ) :=
   ⟨fun H ε ε0 =>
     let ⟨δ, δ0, δε⟩ := exists_pos_rat_lt ε0
-    (H _ δ0).imp fun i hi j ij => lt_trans (by simpa using (@Rat.cast_lt ℝ _ _ _).2 (hi _ ij)) δε,
+    (H _ δ0).imp fun i hi j ij => lt_trans (by simpa using (@rat.cast_lt ℝ _ _ _).2 (hi _ ij)) δε,
     fun H ε ε0 =>
     (H _ (Rat.cast_pos.2 ε0)).imp fun i hi j ij =>
       (@Rat.cast_lt ℝ _ _ _).1 <| by simpa using hi _ ij⟩
@@ -998,7 +1000,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
     ⟨n, le_of_lt hn⟩)
 #align real.exists_floor Real.exists_floor
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j k «expr ≥ » «expr⌈ ⌉₊»(«expr ⁻¹»(ε))) -/
 #print Real.exists_isLUB /-
 theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x :=
   by
@@ -1021,7 +1023,7 @@ theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ 
     intro n n0 y yS
     have := (Int.sub_one_lt_floor _).trans_le (Int.cast_le.2 <| (hf n).2 _ ⟨y, yS, Int.floor_le _⟩)
     simp [-sub_eq_add_neg]
-    rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, _root_.inv_mul_cancel]
+    rwa [lt_div_iff (Nat.cast_pos.2 n0 : (_ : ℝ) < _), sub_mul, inv_mul_cancel]
     exact ne_of_gt (Nat.cast_pos.2 n0)
   have hg : IsCauSeq abs (fun n => f n / n : ℕ → ℚ) :=
     by
@@ -1037,7 +1039,7 @@ theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ 
     have j0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ij)
     have k0 := Nat.cast_pos.1 ((inv_pos.2 ε0).trans_le ik)
     rcases hf₁ _ j0 with ⟨y, yS, hy⟩
-    refine' lt_of_lt_of_le ((@Rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
+    refine' lt_of_lt_of_le ((@rat.cast_lt ℝ _ _ _).1 _) ((inv_le ε0 (Nat.cast_pos.2 k0)).1 ik)
     simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_lt hy <| sub_lt_iff_lt_add.1 <| hf₂ _ k0 _ yS)
   let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
   refine' ⟨mk g, ⟨fun x xS => _, fun y h => _⟩⟩
@@ -1080,7 +1082,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.is_lub_Sup Real.isLUB_supₛₓ'. -/
 protected theorem isLUB_supₛ (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddAbove S) : IsLUB S (supₛ S) :=
   by
-  simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
+  simp only [supₛ_def, dif_pos (And.intro h₁ h₂)]
   apply Classical.choose_spec
 #align real.is_lub_Sup Real.isLUB_supₛ
 
@@ -1105,7 +1107,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align real.is_glb_Inf Real.is_glb_infₛₓ'. -/
 protected theorem is_glb_infₛ (S : Set ℝ) (h₁ : S.Nonempty) (h₂ : BddBelow S) : IsGLB S (infₛ S) :=
   by
-  rw [Inf_def, ← isLUB_neg', neg_neg]
+  rw [infₛ_def, ← isLUB_neg', neg_neg]
   exact Real.isLUB_supₛ _ h₁.neg h₂.neg
 #align real.is_glb_Inf Real.is_glb_infₛ
 
@@ -1249,7 +1251,7 @@ but is expected to have type
   Eq.{1} Real (InfSet.infₛ.{0} Real Real.instInfSetReal (EmptyCollection.emptyCollection.{0} (Set.{0} Real) (Set.instEmptyCollectionSet.{0} Real))) (OfNat.ofNat.{0} Real 0 (Zero.toOfNat0.{0} Real Real.instZeroReal))
 Case conversion may be inaccurate. Consider using '#align real.Inf_empty Real.infₛ_emptyₓ'. -/
 @[simp]
-theorem infₛ_empty : infₛ (∅ : Set ℝ) = 0 := by simp [Inf_def, supₛ_empty]
+theorem infₛ_empty : infₛ (∅ : Set ℝ) = 0 := by simp [infₛ_def, supₛ_empty]
 #align real.Inf_empty Real.infₛ_empty
 
 /- warning: real.cinfi_empty -> Real.cinfᵢ_empty is a dubious translation:
@@ -1311,7 +1313,7 @@ theorem supₛ_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ 
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Sup_empty.ge
-  · apply dite _ (fun h => le_csupₛ_of_le h hy <| hS y hy) fun h => (Sup_of_not_bdd_above h).ge
+  · apply dite _ (fun h => le_csupₛ_of_le h hy <| hS y hy) fun h => (supₛ_of_not_bddAbove h).ge
 #align real.Sup_nonneg Real.supₛ_nonneg
 
 /- warning: real.Sup_nonpos -> Real.supₛ_nonpos is a dubious translation:
@@ -1358,7 +1360,7 @@ theorem infₛ_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : infₛ
   by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
   · exact Inf_empty.le
-  · apply dite _ (fun h => cinfₛ_le_of_le h hy <| hS y hy) fun h => (Inf_of_not_bdd_below h).le
+  · apply dite _ (fun h => cinfₛ_le_of_le h hy <| hS y hy) fun h => (infₛ_of_not_bddBelow h).le
 #align real.Inf_nonpos Real.infₛ_nonpos
 
 /- warning: real.Inf_le_Sup -> Real.infₛ_le_supₛ is a dubious translation:
@@ -1387,7 +1389,7 @@ theorem cauSeq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
   have ub' : ∀ x, f < const abs x → ∀ y ∈ S, y ≤ x := fun x h y yS =>
     le_of_lt <| const_lt.1 <| CauSeq.lt_trans yS h
   have ub : ∃ x, ∀ y ∈ S, y ≤ x := (exists_gt f).imp ub'
-  refine' ⟨Sup S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
+  refine' ⟨supₛ S, ((lt_total _ _).resolve_left fun h => _).resolve_right fun h => _⟩
   · rcases h with ⟨ε, ε0, i, ih⟩
     refine' (csupₛ_le lb (ub' _ _)).not_lt (sub_lt_self _ (half_pos ε0))
     refine' ⟨_, half_pos ε0, i, fun j ij => _⟩

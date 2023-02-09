@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.additive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,13 +55,13 @@ instance : Sub (C ⟶ D) :=
 instance hasNatScalar : SMul ℕ (C ⟶ D) :=
   ⟨fun n f =>
     { f := fun i => n • f.f i
-      comm' := fun i j h => by simp [preadditive.nsmul_comp, preadditive.comp_nsmul] }⟩
+      comm' := fun i j h => by simp [Preadditive.nsmul_comp, Preadditive.comp_nsmul] }⟩
 #align homological_complex.has_nat_scalar HomologicalComplex.hasNatScalar
 
 instance hasIntScalar : SMul ℤ (C ⟶ D) :=
   ⟨fun n f =>
     { f := fun i => n • f.f i
-      comm' := fun i j h => by simp [preadditive.zsmul_comp, preadditive.comp_zsmul] }⟩
+      comm' := fun i j h => by simp [Preadditive.zsmul_comp, Preadditive.comp_zsmul] }⟩
 #align homological_complex.has_int_scalar HomologicalComplex.hasIntScalar
 
 @[simp]
@@ -127,7 +127,7 @@ instance homology_additive : (homologyFunctor V c i).Additive
     where map_add' C D f g := by
     dsimp [homologyFunctor]
     ext
-    simp only [homology.π_map, preadditive.comp_add, ← preadditive.add_comp]
+    simp only [homology.π_map, Preadditive.comp_add, ← Preadditive.add_comp]
     congr
     ext; simp
 #align homological_complex.homology_additive HomologicalComplex.homology_additive
@@ -166,10 +166,10 @@ instance Functor.mapHomologicalComplex_reflects_iso (F : V ⥤ W) [F.Additive]
     ReflectsIsomorphisms (F.mapHomologicalComplex c) :=
   ⟨fun X Y f => by
     intro
-    haveI : ∀ n : ι, is_iso (F.map (f.f n)) := fun n =>
-      is_iso.of_iso
-        ((HomologicalComplex.eval W c n).mapIso (as_iso ((F.map_homological_complex c).map f)))
-    haveI := fun n => is_iso_of_reflects_iso (f.f n) F
+    haveI : ∀ n : ι, IsIso (F.map (f.f n)) := fun n =>
+      IsIso.of_iso
+        ((HomologicalComplex.eval W c n).mapIso (asIso ((F.map_homological_complex c).map f)))
+    haveI := fun n => isIso_of_reflects_iso (f.f n) F
     exact HomologicalComplex.Hom.isIso_of_components f⟩
 #align category_theory.functor.map_homological_complex_reflects_iso CategoryTheory.Functor.mapHomologicalComplex_reflects_iso
 
@@ -215,11 +215,11 @@ theorem map_chain_complex_of (F : V ⥤ W) [F.Additive] (X : α → V) (d : ∀ 
     (sq : ∀ n, d (n + 1) ≫ d n = 0) :
     (F.mapHomologicalComplex _).obj (ChainComplex.of X d sq) =
       ChainComplex.of (fun n => F.obj (X n)) (fun n => F.map (d n)) fun n => by
-        rw [← F.map_comp, sq n, functor.map_zero] :=
+        rw [← F.map_comp, sq n, Functor.map_zero] :=
   by
   refine' HomologicalComplex.ext rfl _
   rintro i j (rfl : j + 1 = i)
-  simp only [CategoryTheory.Functor.mapHomologicalComplex_obj_d, of_d, eq_to_hom_refl, comp_id,
+  simp only [CategoryTheory.Functor.mapHomologicalComplex_obj_d, of_d, eqToHom_refl, comp_id,
     id_comp]
 #align chain_complex.map_chain_complex_of ChainComplex.map_chain_complex_of
 
@@ -264,26 +264,26 @@ variable (F : V ⥤ W) [Functor.Additive F] (c)
 
 @[simp]
 theorem singleMapHomologicalComplex_hom_app_self (j : ι) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f j = eqToHom (by simp) := by
-  simp [single_map_homological_complex]
+    ((singleMapHomologicalComplex F c j).hom.app X).f j = eqToHom (by simp) := by
+  simp [singleMapHomologicalComplex]
 #align homological_complex.single_map_homological_complex_hom_app_self HomologicalComplex.singleMapHomologicalComplex_hom_app_self
 
 @[simp]
 theorem singleMapHomologicalComplex_hom_app_ne {i j : ι} (h : i ≠ j) (X : V) :
-    ((singleMapHomologicalComplex F c j).Hom.app X).f i = 0 := by
-  simp [single_map_homological_complex, h]
+    ((singleMapHomologicalComplex F c j).hom.app X).f i = 0 := by
+  simp [singleMapHomologicalComplex, h]
 #align homological_complex.single_map_homological_complex_hom_app_ne HomologicalComplex.singleMapHomologicalComplex_hom_app_ne
 
 @[simp]
 theorem singleMapHomologicalComplex_inv_app_self (j : ι) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f j = eqToHom (by simp) := by
-  simp [single_map_homological_complex]
+  simp [singleMapHomologicalComplex]
 #align homological_complex.single_map_homological_complex_inv_app_self HomologicalComplex.singleMapHomologicalComplex_inv_app_self
 
 @[simp]
 theorem singleMapHomologicalComplex_inv_app_ne {i j : ι} (h : i ≠ j) (X : V) :
     ((singleMapHomologicalComplex F c j).inv.app X).f i = 0 := by
-  simp [single_map_homological_complex, h]
+  simp [singleMapHomologicalComplex, h]
 #align homological_complex.single_map_homological_complex_inv_app_ne HomologicalComplex.singleMapHomologicalComplex_inv_app_ne
 
 end HomologicalComplex
@@ -302,7 +302,7 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
             f := fun i =>
               match i with
               | 0 => 𝟙 _
-              | i + 1 => F.mapZeroObject.Hom }
+              | i + 1 => F.mapZeroObject.hom }
         inv :=
           {
             f := fun i =>
@@ -331,13 +331,13 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
-    ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
+    ((single₀MapHomologicalComplex F).hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_zero ChainComplex.single₀MapHomologicalComplex_hom_app_zero
 
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
-    ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
+    ((single₀MapHomologicalComplex F).hom.app X).f (n + 1) = 0 :=
   rfl
 #align chain_complex.single₀_map_homological_complex_hom_app_succ ChainComplex.single₀MapHomologicalComplex_hom_app_succ
 
@@ -369,7 +369,7 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
             f := fun i =>
               match i with
               | 0 => 𝟙 _
-              | i + 1 => F.mapZeroObject.Hom }
+              | i + 1 => F.mapZeroObject.hom }
         inv :=
           {
             f := fun i =>
@@ -398,13 +398,13 @@ def single₀MapHomologicalComplex (F : V ⥤ W) [F.Additive] :
 
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_zero (F : V ⥤ W) [F.Additive] (X : V) :
-    ((single₀MapHomologicalComplex F).Hom.app X).f 0 = 𝟙 _ :=
+    ((single₀MapHomologicalComplex F).hom.app X).f 0 = 𝟙 _ :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_zero CochainComplex.single₀MapHomologicalComplex_hom_app_zero
 
 @[simp]
 theorem single₀MapHomologicalComplex_hom_app_succ (F : V ⥤ W) [F.Additive] (X : V) (n : ℕ) :
-    ((single₀MapHomologicalComplex F).Hom.app X).f (n + 1) = 0 :=
+    ((single₀MapHomologicalComplex F).hom.app X).f (n + 1) = 0 :=
   rfl
 #align cochain_complex.single₀_map_homological_complex_hom_app_succ CochainComplex.single₀MapHomologicalComplex_hom_app_succ
 

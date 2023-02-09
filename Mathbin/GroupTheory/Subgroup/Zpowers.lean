@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.zpowers
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,7 +149,7 @@ theorem exists_mem_zpowers {x : G} {p : G → Prop} : (∃ g ∈ zpowers x, p g)
 #align subgroup.exists_mem_zpowers Subgroup.exists_mem_zpowers
 
 instance (a : G) : Countable (zpowers a) :=
-  ((zpowersHom G a).rangeRestrict_surjective.comp Multiplicative.ofAdd.Surjective).Countable
+  ((zpowersHom G a).rangeRestrict_surjective.comp Multiplicative.ofAdd.surjective).countable
 
 end Subgroup
 
@@ -194,7 +194,7 @@ attribute [to_additive AddSubgroup.exists_zmultiples] Subgroup.exists_zpowers
 attribute [to_additive AddSubgroup.exists_mem_zmultiples] Subgroup.exists_mem_zpowers
 
 instance (a : A) : Countable (zmultiples a) :=
-  (zmultiplesHom A a).rangeRestrict_surjective.Countable
+  (zmultiplesHom A a).rangeRestrict_surjective.countable
 
 section Ring
 
@@ -365,7 +365,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.center_eq_infi' Subgroup.center_eq_infi'ₓ'. -/
 @[to_additive]
 theorem center_eq_infi' (S : Set G) (hS : closure S = ⊤) :
-    center G = ⨅ g : S, centralizer (zpowers g) := by rw [center_eq_infi S hS, ← infᵢ_subtype'']
+    center G = ⨅ g : S, centralizer (zpowers g) := by rw [center_eq_infᵢ S hS, ← infᵢ_subtype'']
 #align subgroup.center_eq_infi' Subgroup.center_eq_infi'
 #align add_subgroup.center_eq_infi' AddSubgroup.center_eq_infi'
 

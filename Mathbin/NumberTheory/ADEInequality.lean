@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module number_theory.ADE_inequality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,7 +116,7 @@ def sumInv (pqr : Multiset ℕ+) : ℚ :=
 #align ADE_inequality.sum_inv ADEInequality.sumInv
 
 theorem sumInv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
-  simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons,
+  simp only [sumInv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons,
     map_singleton, sum_singleton]
 #align ADE_inequality.sum_inv_pqr ADEInequality.sumInv_pqr
 
@@ -160,23 +160,23 @@ theorem admissible_e8 : Admissible e8 :=
 
 theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr :=
   by
-  rw [admissible]
+  rw [Admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
-  · rw [← H, A', sum_inv_pqr, add_assoc]
+  · rw [← H, a', sumInv_pqr, add_assoc]
     simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe]
     apply add_pos <;> simp only [PNat.pos, Nat.cast_pos, inv_pos]
-  · rw [← H, D', sum_inv_pqr]
+  · rw [← H, d', sumInv_pqr]
     simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one, coe_coe, PNat.coe_bit0,
       Nat.cast_bit0]
     norm_num
-  all_goals rw [← H, E', sum_inv_pqr]; norm_num
+  all_goals rw [← H, e', sumInv_pqr]; norm_num
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sumInv
 
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 :=
   by
   have h3 : (0 : ℚ) < 3 := by norm_num
   contrapose! H
-  rw [sum_inv_pqr]
+  rw [sumInv_pqr]
   have h3q := H.trans hpq
   have h3r := h3q.trans hqr
   calc
@@ -190,7 +190,7 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   by
   have h4 : (0 : ℚ) < 4 := by norm_num
   contrapose! H
-  rw [sum_inv_pqr]
+  rw [sumInv_pqr]
   have h4r := H.trans hqr
   simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_one, coe_coe]
   calc
@@ -204,7 +204,7 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
   by
   have h6 : (0 : ℚ) < 6 := by norm_num
   contrapose! H
-  rw [sum_inv_pqr]
+  rw [sumInv_pqr]
   simp only [PNat.coe_bit0, Nat.cast_bit0, PNat.one_coe, Nat.cast_bit1, Nat.cast_one, PNat.coe_bit1,
     coe_coe]
   calc
@@ -219,35 +219,35 @@ theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q
   by
   have hp3 : p < 3 := lt_three hpq hqr H
   interval_cases
-  · exact admissible_A' q r
+  · exact admissible_a' q r
   have hq4 : q < 4 := lt_four hqr H
   interval_cases
-  · exact admissible_D' r
+  · exact admissible_d' r
   have hr6 : r < 6 := lt_six H
   interval_cases
-  · exact admissible_E6
-  · exact admissible_E7
-  · exact admissible_E8
+  · exact admissible_e6
+  · exact admissible_e7
+  · exact admissible_e8
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux' ADEInequality.admissible_of_one_lt_sumInv_aux'
 
 theorem admissible_of_one_lt_sumInv_aux :
     ∀ {pqr : List ℕ+} (hs : pqr.Sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sumInv pqr),
       Admissible pqr
-  | [p, q, r], hs, hl, H =>
+  | [mem_setElems, q, r], hs, hl, H =>
     by
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r
     simpa using hs
-    exact admissible_of_one_lt_sum_inv_aux' hpq hqr H
+    exact admissible_of_one_lt_sumInv_aux' hpq hqr H
 #align ADE_inequality.admissible_of_one_lt_sum_inv_aux ADEInequality.admissible_of_one_lt_sumInv_aux
 
 theorem admissible_of_one_lt_sumInv {p q r : ℕ+} (H : 1 < sumInv {p, q, r}) :
     Admissible {p, q, r} := by
-  simp only [admissible]
+  simp only [Admissible]
   let S := sort ((· ≤ ·) : ℕ+ → ℕ+ → Prop) {p, q, r}
   have hS : S.sorted (· ≤ ·) := sort_sorted _ _
   have hpqr : ({p, q, r} : Multiset ℕ+) = S := (sort_eq LE.le {p, q, r}).symm
   simp only [hpqr] at *
-  apply admissible_of_one_lt_sum_inv_aux hS _ H
+  apply admissible_of_one_lt_sumInv_aux hS _ H
   simp only [S, length_sort]
   decide
 #align ADE_inequality.admissible_of_one_lt_sum_inv ADEInequality.admissible_of_one_lt_sumInv

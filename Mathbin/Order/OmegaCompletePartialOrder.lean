@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.omega_complete_partial_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ instance [Inhabited α] : Inhabited (Chain α) :=
 instance : Membership α (Chain α) :=
   ⟨fun a (c : ℕ →o α) => ∃ i, a = c i⟩
 
-variable (c c' : Chain α)
+variable (c c' : Mem α)
 
 variable (f : α →o β)
 
@@ -364,7 +364,7 @@ Case conversion may be inaccurate. Consider using '#align omega_complete_partial
 theorem continuous_comp (hfc : Continuous f) (hgc : Continuous g) : Continuous (g.comp f) :=
   by
   dsimp [Continuous] at *; intro
-  rw [hfc, hgc, chain.map_comp]
+  rw [hfc, hgc, Chain.map_comp]
 #align omega_complete_partial_order.continuous_comp OmegaCompletePartialOrder.continuous_comp
 
 #print OmegaCompletePartialOrder.id_continuous' /-
@@ -492,7 +492,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align part.mem_ωSup Part.mem_ωSupₓ'. -/
 theorem mem_ωSup (x : α) (c : Chain (Part α)) : x ∈ ωSup c ↔ some x ∈ c :=
   by
-  simp [OmegaCompletePartialOrder.ωSup, Part.ωSup]
+  simp [omega_complete_partial_order.ωSup, Part.ωSup]
   constructor
   · split_ifs
     swap
@@ -660,7 +660,7 @@ theorem supₛ_continuous' (s : Set (α → β)) (hc : ∀ f ∈ s, Continuous' 
   simp only [Set.ball_image_iff, continuous'_coe] at hc
   rw [supₛ_image]
   norm_cast
-  exact supr_continuous fun f => supr_continuous fun hf => hc f hf
+  exact supᵢ_continuous fun f => supᵢ_continuous fun hf => hc f hf
 #align complete_lattice.Sup_continuous' CompleteLattice.supₛ_continuous'
 
 /- warning: complete_lattice.sup_continuous -> CompleteLattice.sup_continuous is a dubious translation:
@@ -671,7 +671,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align complete_lattice.sup_continuous CompleteLattice.sup_continuousₓ'. -/
 theorem sup_continuous {f g : α →o β} (hf : Continuous f) (hg : Continuous g) :
     Continuous (f ⊔ g) := by
-  rw [← supₛ_pair]; apply Sup_continuous
+  rw [← supₛ_pair]; apply supₛ_continuous
   rintro f (rfl | rfl | _) <;> assumption
 #align complete_lattice.sup_continuous CompleteLattice.sup_continuous
 
@@ -684,7 +684,7 @@ Case conversion may be inaccurate. Consider using '#align complete_lattice.top_c
 theorem top_continuous : Continuous (⊤ : α →o β) :=
   by
   intro c; apply eq_of_forall_ge_iff; intro z
-  simp only [ωSup_le_iff, forall_const, chain.map_coe, (· ∘ ·), Function.const, OrderHom.hasTop_top,
+  simp only [ωSup_le_iff, forall_const, Chain.map_coe, (· ∘ ·), Function.const, OrderHom.hasTop_top,
     OrderHom.const_coe_coe]
 #align complete_lattice.top_continuous CompleteLattice.top_continuous
 
@@ -697,7 +697,7 @@ Case conversion may be inaccurate. Consider using '#align complete_lattice.bot_c
 theorem bot_continuous : Continuous (⊥ : α →o β) :=
   by
   rw [← supₛ_empty]
-  exact Sup_continuous _ fun f hf => hf.elim
+  exact supₛ_continuous _ fun f hf => hf.elim
 #align complete_lattice.bot_continuous CompleteLattice.bot_continuous
 
 end CompleteLattice
@@ -716,7 +716,7 @@ theorem inf_continuous (f g : α →o β) (hf : Continuous f) (hg : Continuous g
     Continuous (f ⊓ g) := by
   refine' fun c => eq_of_forall_ge_iff fun z => _
   simp only [inf_le_iff, hf c, hg c, ωSup_le_iff, ← forall_or_left, ← forall_or_right,
-    Function.comp_apply, chain.map_coe, OrderHom.hasInf_inf_coe]
+    Function.comp_apply, Chain.map_coe, OrderHom.hasInf_inf_coe]
   exact
     ⟨fun h _ => h _ _, fun h i j =>
       (h (max i j)).imp (le_trans <| f.mono <| c.mono <| le_max_left _ _)
@@ -754,7 +754,7 @@ namespace OrderHom
 protected def ωSup (c : Chain (α →o β)) : α →o β
     where
   toFun a := ωSup (c.map (OrderHom.apply a))
-  monotone' x y h := ωSup_le_ωSup_of_le (Chain.map_le_map _ fun a => a.Monotone h)
+  monotone' x y h := ωSup_le_ωSup_of_le (Chain.map_le_map _ fun a => a.monotone h)
 #align omega_complete_partial_order.order_hom.ωSup OmegaCompletePartialOrder.OrderHom.ωSup
 -/
 
@@ -849,7 +849,7 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     ωSup (c.map (f.bind g)) = ωSup (c.map f) >>= ωSup (c.map g) :=
   by
   apply eq_of_forall_ge_iff; intro x
-  simp only [ωSup_le_iff, Part.bind_le, chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
+  simp only [ωSup_le_iff, Part.bind_le, Chain.mem_map_iff, and_imp, OrderHom.bind_coe, exists_imp]
   constructor <;> intro h'''
   · intro b hb
     apply ωSup_le _ _ _
@@ -857,16 +857,16 @@ theorem ωSup_bind {β γ : Type v} (c : Chain α) (f : α →o Part β) (g : α
     simp only [Part.mem_ωSup] at hb
     rcases hb with ⟨j, hb⟩
     replace hb := hb.symm
-    simp only [Part.eq_some_iff, chain.map_coe, Function.comp_apply, OrderHom.apply_coe] at hy hb
+    simp only [Part.eq_some_iff, Chain.map_coe, Function.comp_apply, OrderHom.apply_coe] at hy hb
     replace hb : b ∈ f (c (max i j)) := f.mono (c.mono (le_max_right i j)) _ hb
     replace hy : y ∈ g (c (max i j)) b := g.mono (c.mono (le_max_left i j)) _ _ hy
     apply h''' (max i j)
-    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
+    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, Chain.map_coe,
       Function.comp_apply, OrderHom.bind_coe]
     exact ⟨_, hb, hy⟩
   · intro i
     intro y hy
-    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, chain.map_coe,
+    simp only [exists_prop, Part.bind_eq_bind, Part.mem_bind_iff, Chain.map_coe,
       Function.comp_apply, OrderHom.bind_coe] at hy
     rcases hy with ⟨b, hb₀, hb₁⟩
     apply h''' b _
@@ -933,7 +933,7 @@ def ofFun (f : α → β) (g : α →𝒄 β) (h : f = g) : α →𝒄 β := by
 def ofMono (f : α →o β) (h : ∀ c : Chain α, f (ωSup c) = ωSup (c.map f)) : α →𝒄 β
     where
   toFun := f
-  monotone' := f.Monotone
+  monotone' := f.monotone
   cont := h
 #align omega_complete_partial_order.continuous_hom.of_mono OmegaCompletePartialOrder.ContinuousHom.ofMono
 -/
@@ -1043,7 +1043,7 @@ theorem forall_forall_merge (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) (z 
   · apply h
   · apply le_trans _ (h (max i j))
     trans c₀ i (c₁ (max i j))
-    · apply (c₀ i).Monotone
+    · apply (c₀ i).monotone
       apply c₁.monotone
       apply le_max_right
     · apply c₀.monotone
@@ -1068,8 +1068,8 @@ protected def ωSup (c : Chain (α →𝒄 β)) : α →𝒄 β :=
     (by
       intro c'
       apply eq_of_forall_ge_iff; intro z
-      simp only [ωSup_le_iff, (c _).Continuous, chain.map_coe, OrderHom.apply_coe, to_mono_coe,
-        coe_apply, order_hom.omega_complete_partial_order_ωSup_coe, forall_forall_merge,
+      simp only [ωSup_le_iff, (c _).continuous, Chain.map_coe, OrderHom.apply_coe, toMono_coe,
+        coe_apply, OrderHom.omegaCompletePartialOrder_ωSup_coe, forall_forall_merge,
         forall_forall_merge', (· ∘ ·), Function.eval])
 #align omega_complete_partial_order.continuous_hom.ωSup OmegaCompletePartialOrder.ContinuousHom.ωSup
 -/
@@ -1093,14 +1093,14 @@ def apply : (α →𝒄 β) × α →𝒄 β where
   toFun f := f.1 f.2
   monotone' x y h := by
     dsimp
-    trans y.fst x.snd <;> [apply h.1, apply y.1.Monotone h.2]
+    trans y.fst x.snd <;> [apply h.1, apply y.1.monotone h.2]
   cont := by
     intro c
     apply le_antisymm
     · apply ωSup_le
       intro i
       dsimp
-      rw [(c _).fst.Continuous]
+      rw [(c _).fst.continuous]
       apply ωSup_le
       intro j
       apply le_ωSup_of_le (max i j)
@@ -1131,7 +1131,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : OmegaCompletePartialOrder.{u1} α] [_inst_2 : OmegaCompletePartialOrder.{u2} β] (c₀ : OmegaCompletePartialOrder.Chain.{max u2 u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) (PartialOrder.toPreorder.{max u1 u2} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) (OmegaCompletePartialOrder.instPartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2))) (c₁ : OmegaCompletePartialOrder.Chain.{u1} α (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α _inst_1))), Eq.{succ u2} β (OrderHom.toFun.{u1, u2} α β (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α _inst_1)) (PartialOrder.toPreorder.{u2} β (OmegaCompletePartialOrder.toPartialOrder.{u2} β _inst_2)) (OmegaCompletePartialOrder.ContinuousHom.toOrderHom.{u1, u2} α β _inst_1 _inst_2 (OmegaCompletePartialOrder.ωSup.{max u1 u2} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) (OmegaCompletePartialOrder.ContinuousHom.instOmegaCompletePartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2) c₀)) (OmegaCompletePartialOrder.ωSup.{u1} α _inst_1 c₁)) (OrderHom.toFun.{max u2 u1, u2} (Prod.{max u2 u1, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α) β (PartialOrder.toPreorder.{max u2 u1} (Prod.{max u2 u1, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α) (OmegaCompletePartialOrder.toPartialOrder.{max u2 u1} (Prod.{max u2 u1, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α) (Prod.instOmegaCompletePartialOrderProd.{max u1 u2, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α (OmegaCompletePartialOrder.ContinuousHom.instOmegaCompletePartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2) _inst_1))) (PartialOrder.toPreorder.{u2} β (OmegaCompletePartialOrder.toPartialOrder.{u2} β _inst_2)) (OmegaCompletePartialOrder.ContinuousHom.toOrderHom.{max u2 u1, u2} (Prod.{max u2 u1, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α) β (Prod.instOmegaCompletePartialOrderProd.{max u1 u2, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α (OmegaCompletePartialOrder.ContinuousHom.instOmegaCompletePartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2) _inst_1) _inst_2 (OmegaCompletePartialOrder.ContinuousHom.Prod.apply.{u1, u2} α β _inst_1 _inst_2)) (OmegaCompletePartialOrder.ωSup.{max u2 u1} (Prod.{max u2 u1, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α) (Prod.instOmegaCompletePartialOrderProd.{max u1 u2, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α (OmegaCompletePartialOrder.ContinuousHom.instOmegaCompletePartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2) _inst_1) (OmegaCompletePartialOrder.Chain.zip.{max u1 u2, u1} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) α (PartialOrder.toPreorder.{max u1 u2} (OmegaCompletePartialOrder.ContinuousHom.{u1, u2} α β _inst_1 _inst_2) (OmegaCompletePartialOrder.instPartialOrderContinuousHom.{u1, u2} α β _inst_1 _inst_2)) (PartialOrder.toPreorder.{u1} α (OmegaCompletePartialOrder.toPartialOrder.{u1} α _inst_1)) c₀ c₁)))
 Case conversion may be inaccurate. Consider using '#align omega_complete_partial_order.continuous_hom.ωSup_apply_ωSup OmegaCompletePartialOrder.ContinuousHom.ωSup_apply_ωSupₓ'. -/
 theorem ωSup_apply_ωSup (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) :
-    ωSup c₀ (ωSup c₁) = Prod.apply (ωSup (c₀.zip c₁)) := by simp [prod.apply_apply, Prod.ωSup_zip]
+    ωSup c₀ (ωSup c₁) = Prod.apply (ωSup (c₀.zip c₁)) := by simp [Prod.apply_apply, Prod.ωSup_zip]
 #align omega_complete_partial_order.continuous_hom.ωSup_apply_ωSup OmegaCompletePartialOrder.ContinuousHom.ωSup_apply_ωSup
 
 #print OmegaCompletePartialOrder.ContinuousHom.flip /-
@@ -1140,8 +1140,8 @@ theorem ωSup_apply_ωSup (c₀ : Chain (α →𝒄 β)) (c₁ : Chain α) :
 def flip {α : Type _} (f : α → β →𝒄 γ) : β →𝒄 α → γ
     where
   toFun x y := f y x
-  monotone' x y h a := (f a).Monotone h
-  cont := by intro <;> ext <;> change f x _ = _ <;> rw [(f x).Continuous] <;> rfl
+  monotone' x y h a := (f a).monotone h
+  cont := by intro <;> ext <;> change f x _ = _ <;> rw [(f x).continuous] <;> rfl
 #align omega_complete_partial_order.continuous_hom.flip OmegaCompletePartialOrder.ContinuousHom.flip
 -/
 

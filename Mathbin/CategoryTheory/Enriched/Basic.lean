@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.enriched.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,17 +134,17 @@ instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment 
   id := fun X : C => F.ε ≫ F.map (eId V X)
   comp := fun X Y Z : C => F.μ _ _ ≫ F.map (eComp V X Y Z)
   id_comp X Y := by
-    rw [comp_tensor_id, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
+    rw [comp_tensor_id, Category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
       F.to_functor.map_id, F.left_unitality_inv_assoc, ← F.to_functor.map_comp, ←
-      F.to_functor.map_comp, e_id_comp, F.to_functor.map_id]
+      F.to_functor.map_comp, eId_comp, F.to_functor.map_id]
   comp_id X Y := by
     rw [id_tensor_comp, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
       F.to_functor.map_id, F.right_unitality_inv_assoc, ← F.to_functor.map_comp, ←
-      F.to_functor.map_comp, e_comp_id, F.to_functor.map_id]
+      F.to_functor.map_comp, eComp_id, F.to_functor.map_id]
   and_assoc P Q R S := by
-    rw [comp_tensor_id, category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
+    rw [comp_tensor_id, Category.assoc, ← F.to_functor.map_id, F.μ_natural_assoc,
       F.to_functor.map_id, ← F.associativity_inv_assoc, ← F.to_functor.map_comp, ←
-      F.to_functor.map_comp, e_assoc, id_tensor_comp, category.assoc, ← F.to_functor.map_id,
+      F.to_functor.map_comp, e_assoc, id_tensor_comp, Category.assoc, ← F.to_functor.map_id,
       F.μ_natural_assoc, F.to_functor.map_comp]
 
 end
@@ -153,7 +153,7 @@ end
 -/
 def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Type v) C] : Category.{v} C
     where
-  Hom := 𝒞.Hom
+  Hom := 𝒞.hom
   id X := eId (Type v) X PUnit.unit
   comp X Y Z f g := eComp (Type v) X Y Z ⟨f, g⟩
   id_comp' X Y f := congr_fun (eId_comp (Type v) X Y) f
@@ -183,11 +183,11 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
 -/
 def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v) C ≃ Category.{v} C
     where
-  toFun 𝒞 := category_of_enriched_category_Type C
-  invFun 𝒞 := enriched_category_Type_of_category C
+  toFun 𝒞 := categoryOfEnrichedCategoryType C
+  invFun 𝒞 := enrichedCategoryTypeOfCategory C
   left_inv 𝒞 := by
     cases 𝒞
-    dsimp [enriched_category_Type_of_category]
+    dsimp [enrichedCategoryTypeOfCategory]
     congr
     · ext (X⟨⟩)
       rfl
@@ -251,9 +251,8 @@ theorem ForgetEnrichment.of_to (X : ForgetEnrichment W C) :
 
 instance categoryForgetEnrichment : Category (ForgetEnrichment W C) :=
   by
-  let I : enriched_category (Type v) (transport_enrichment (coyoneda_tensor_unit W) C) :=
-    inferInstance
-  exact enriched_category_Type_equiv_category C I
+  let I : EnrichedCategory (Type v) (TransportEnrichment (coyonedaTensorUnit W) C) := inferInstance
+  exact enrichedCategoryTypeEquivCategory C I
 #align category_theory.category_forget_enrichment CategoryTheory.categoryForgetEnrichment
 
 /-- We verify that the morphism types in `forget_enrichment W C` are `(𝟙_ W) ⟶ (X ⟶[W] Y)`.
@@ -372,12 +371,12 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
       (ForgetEnrichment.homTo W f ≫ F.map (ForgetEnrichment.to W X) (ForgetEnrichment.to W Y))
   map_comp' X Y Z f g := by
     dsimp
-    apply_fun forget_enrichment.hom_to W
-    · simp only [iso.cancel_iso_inv_left, category.assoc, tensor_comp,
-        forget_enrichment.hom_to_hom_of, enriched_functor.map_comp, forget_enrichment_comp]
+    apply_fun ForgetEnrichment.homTo W
+    · simp only [Iso.cancel_iso_inv_left, Category.assoc, tensor_comp, ForgetEnrichment.homTo_homOf,
+        EnrichedFunctor.map_comp, forgetEnrichment_comp]
       rfl
     · intro f g w
-      apply_fun forget_enrichment.hom_of W  at w
+      apply_fun ForgetEnrichment.homOf W  at w
       simpa using w
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
 
@@ -444,7 +443,7 @@ structure GradedNatTrans (A : Center V) (F G : EnrichedFunctor V C D) where
   app : ∀ X : C, A.1 ⟶ F.obj X ⟶[V] G.obj X
   naturality :
     ∀ X Y : C,
-      (A.2.β (X ⟶[V] Y)).Hom ≫ (F.map X Y ⊗ app Y) ≫ eComp V _ _ _ =
+      (A.2.β (X ⟶[V] Y)).hom ≫ (F.map X Y ⊗ app Y) ≫ eComp V _ _ _ =
         (app X ⊗ G.map X Y) ≫ eComp V _ _ _
 #align category_theory.graded_nat_trans CategoryTheory.GradedNatTrans
 
@@ -464,9 +463,9 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max 
       naturality := fun X Y => by
         have p := σ.naturality X Y
         dsimp at p⊢
-        rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, category.assoc,
-          category.assoc, ← braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←
-          tensor_comp_assoc, category.id_comp] }
+        rw [← id_tensor_comp_tensor_id (f.unop ≫ σ.app Y) _, id_tensor_comp, Category.assoc,
+          Category.assoc, ← braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←
+          tensor_comp_assoc, Category.id_comp] }
 #align category_theory.enriched_nat_trans_yoneda CategoryTheory.enrichedNatTransYoneda
 
 -- TODO assuming `[has_limits C]` construct the actual object of natural transformations

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.invertible
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -251,7 +251,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.nonempty_invertible IsUnit.nonempty_invertibleₓ'. -/
 theorem IsUnit.nonempty_invertible [Monoid α] {a : α} (h : IsUnit a) : Nonempty (Invertible a) :=
   let ⟨x, hx⟩ := h
-  ⟨x.Invertible.copy _ hx.symm⟩
+  ⟨x.invertible.copy _ hx.symm⟩
 #align is_unit.nonempty_invertible IsUnit.nonempty_invertible
 
 /- warning: is_unit.invertible -> IsUnit.invertible is a dubious translation:

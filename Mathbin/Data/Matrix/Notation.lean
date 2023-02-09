@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.notation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ open Matrix
 prevent immediate decay to a function. -/
 unsafe instance matrix.reflect [reflected_univ.{u}] [reflected_univ.{u_1}] [reflected_univ.{u_2}]
     [reflected _ α] [reflected _ m'] [reflected _ n'] [h : has_reflect (m' → n' → α)] :
-    has_reflect (Matrix m' n' α) := fun m =>
+    has_reflect (Matrix m' n' Multiset) := fun m =>
   (by
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :
@@ -100,15 +100,15 @@ unsafe def entry_parser {α : Type} (p : parser α) : parser (Σm n, Fin m → F
     ←-- empty columns
       p
   match which with
-    | Sum.inl l => do
+    | sum.inl l => do
       let h::tl ← pure l
       let n := h
-      let l : List (Vector α n) ←
+      let l : list (vector α n) ←
         l fun row =>
-            if h : row = n then pure (⟨row, h⟩ : Vector α n)
+            if h : row = n then pure (⟨row, h⟩ : vector α n)
             else interaction_monad.fail "Rows must be of equal length"
-      pure ⟨l, n, fun i j => (l _ i).get? j⟩
-    | Sum.inr n => pure ⟨0, n, finZeroElim⟩
+      pure ⟨l, max_def', fun i j => (l _ i).get j⟩
+    | sum.inr n => pure ⟨0, n, fin_zero_elim⟩
 #align matrix.entry_parser matrix.entry_parser
 
 -- Lean can't find this instance without some help. We only need it available in `Type 0`, and it is
@@ -144,7 +144,7 @@ instance [Repr α] : Repr (Matrix (Fin m) (Fin n) α)
     where repr f :=
     "!![" ++
         (String.intercalate "; " <|
-          (List.finRange m).map fun i =>
+          (List.finRange complete).map fun i =>
             String.intercalate ", " <| (List.finRange n).map fun j => repr (f i j)) ++
       "]"
 
@@ -163,7 +163,7 @@ theorem tail_val' (B : Fin m.succ → n' → α) (j : n') :
     (vecTail fun i => B i j) = fun i => vecTail B i j :=
   by
   ext
-  simp [vec_tail]
+  simp [vecTail]
 #align matrix.tail_val' Matrix.tail_val'
 
 section DotProduct
@@ -178,13 +178,13 @@ theorem dotProduct_empty (v w : Fin 0 → α) : dotProduct v w = 0 :=
 @[simp]
 theorem cons_dotProduct (x : α) (v : Fin n → α) (w : Fin n.succ → α) :
     dotProduct (vecCons x v) w = x * vecHead w + dotProduct v (vecTail w) := by
-  simp [dot_product, Fin.sum_univ_succ, vec_head, vec_tail]
+  simp [dotProduct, Fin.sum_univ_succ, vecHead, vecTail]
 #align matrix.cons_dot_product Matrix.cons_dotProduct
 
 @[simp]
 theorem dotProduct_cons (v : Fin n.succ → α) (x : α) (w : Fin n → α) :
     dotProduct v (vecCons x w) = vecHead v * x + dotProduct (vecTail v) w := by
-  simp [dot_product, Fin.sum_univ_succ, vec_head, vec_tail]
+  simp [dotProduct, Fin.sum_univ_succ, vecHead, vecTail]
 #align matrix.dot_product_cons Matrix.dotProduct_cons
 
 @[simp]
@@ -205,7 +205,7 @@ theorem col_empty (v : Fin 0 → α) : col v = vecEmpty :=
 theorem col_cons (x : α) (u : Fin m → α) : col (vecCons x u) = vecCons (fun _ => x) (col u) :=
   by
   ext (i j)
-  refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
+  refine' Fin.cases _ _ i <;> simp [vecHead, vecTail]
 #align matrix.col_cons Matrix.col_cons
 
 @[simp]
@@ -315,7 +315,7 @@ theorem cons_vecMul (x : α) (v : Fin n → α) (B : Fin n.succ → o' → α) :
     vecMul (vecCons x v) (of B) = x • vecHead B + vecMul v (of <| vecTail B) :=
   by
   ext i
-  simp [vec_mul]
+  simp [vecMul]
 #align matrix.cons_vec_mul Matrix.cons_vecMul
 
 @[simp]
@@ -323,7 +323,7 @@ theorem vecMul_cons (v : Fin n.succ → α) (w : o' → α) (B : Fin n → o' �
     vecMul v (of <| vecCons w B) = vecHead v • w + vecMul (vecTail v) (of B) :=
   by
   ext i
-  simp [vec_mul]
+  simp [vecMul]
 #align matrix.vec_mul_cons Matrix.vecMul_cons
 
 @[simp]
@@ -352,7 +352,7 @@ theorem cons_mulVec [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (w : 
     mulVec (of <| vecCons v A) w = vecCons (dotProduct v w) (mulVec (of A) w) :=
   by
   ext i
-  refine' Fin.cases _ _ i <;> simp [mul_vec]
+  refine' Fin.cases _ _ i <;> simp [mulVec]
 #align matrix.cons_mul_vec Matrix.cons_mulVec
 
 @[simp]
@@ -360,7 +360,7 @@ theorem mulVec_cons {α} [CommSemiring α] (A : m' → Fin n.succ → α) (x : �
     mulVec (of A) (vecCons x v) = x • vecHead ∘ A + mulVec (of (vecTail ∘ A)) v :=
   by
   ext i
-  simp [mul_vec, mul_comm]
+  simp [mulVec, mul_comm]
 #align matrix.mul_vec_cons Matrix.mulVec_cons
 
 end MulVec
@@ -384,7 +384,7 @@ theorem cons_vecMulVec (x : α) (v : Fin m → α) (w : n' → α) :
     vecMulVec (vecCons x v) w = vecCons (x • w) (vecMulVec v w) :=
   by
   ext i
-  refine' Fin.cases _ _ i <;> simp [vec_mul_vec]
+  refine' Fin.cases _ _ i <;> simp [vecMulVec]
 #align matrix.cons_vec_mul_vec Matrix.cons_vecMulVec
 
 @[simp]
@@ -392,7 +392,7 @@ theorem vecMulVec_cons (v : m' → α) (x : α) (w : Fin n → α) :
     vecMulVec v (vecCons x w) = fun i => v i • vecCons x w :=
   by
   ext (i j)
-  rw [vec_mul_vec, Pi.smul_apply, smul_eq_mul]
+  rw [vecMulVec, Pi.smul_apply, smul_eq_mul]
 #align matrix.vec_mul_vec_cons Matrix.vecMulVec_cons
 
 end VecMulVec
@@ -441,22 +441,22 @@ section One
 variable [Zero α] [One α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
@@ -465,62 +465,62 @@ theorem one_fin_three :
 end One
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dotProduct, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_three [AddCommMonoid α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
+  fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dotProduct, Fin.sum_univ_succ, ← add_assoc]
 #align matrix.mul_fin_three Matrix.mul_fin_three
 
 theorem vec2_eq {a₀ a₁ b₀ b₁ : α} (h₀ : a₀ = b₀) (h₁ : a₁ = b₁) : ![a₀, a₁] = ![b₀, b₁] := by
@@ -552,7 +552,7 @@ theorem smul_vec3 {R : Type _} [SMul R α] (x : R) (a₀ a₁ a₂ : α) :
 variable [AddCommMonoid α] [Mul α]
 
 theorem vec2_dot_product' {a₀ a₁ b₀ b₁ : α} : ![a₀, a₁] ⬝ᵥ ![b₀, b₁] = a₀ * b₀ + a₁ * b₁ := by
-  rw [cons_dot_product_cons, cons_dot_product_cons, dot_product_empty, add_zero]
+  rw [cons_dotProduct_cons, cons_dotProduct_cons, dotProduct_empty, add_zero]
 #align matrix.vec2_dot_product' Matrix.vec2_dot_product'
 
 @[simp]
@@ -562,8 +562,8 @@ theorem vec2_dotProduct (v w : Fin 2 → α) : v ⬝ᵥ w = v 0 * w 0 + v 1 * w 
 
 theorem vec3_dot_product' {a₀ a₁ a₂ b₀ b₁ b₂ : α} :
     ![a₀, a₁, a₂] ⬝ᵥ ![b₀, b₁, b₂] = a₀ * b₀ + a₁ * b₁ + a₂ * b₂ := by
-  rw [cons_dot_product_cons, cons_dot_product_cons, cons_dot_product_cons, dot_product_empty,
-    add_zero, add_assoc]
+  rw [cons_dotProduct_cons, cons_dotProduct_cons, cons_dotProduct_cons, dotProduct_empty, add_zero,
+    add_assoc]
 #align matrix.vec3_dot_product' Matrix.vec3_dot_product'
 
 @[simp]

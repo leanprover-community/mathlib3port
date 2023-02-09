@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Eric Wieser
 
 ! This file was ported from Lean 3 source module meta.univs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,13 +81,13 @@ end
 unsafe def tactic.interactive.reflect_name : tactic Unit := do
   let tgt ← tactic.target
   let q(reflected _ $(x)) ← pure tgt
-  let expr.const Name levels ← pure x
+  let expr.const name levels ← pure x
   let levels ←
     levels.mapM fun l => do
         let inst ← tactic.mk_instance (expr.const `reflected_univ [l])
         pure <| expr.app (expr.const `reflect_univ [l]) inst
   let levels := List.foldr (fun a l => q(@List.cons level $(a) $(l))) q(@List.nil level) levels
-  let e := q(@expr.const true $(q(Name)) $(levels))
+  let e := q(@expr.const true $(q(name)) $(levels))
   let e2 := ``((reflected.of $(e) : $(tgt)))
   let e2 ← tactic.to_expr e2
   tactic.exact e2
@@ -121,7 +121,7 @@ unsafe def reflected.subst₄ {α : Sort u} {β : α → Sort v} {γ : ∀ a, β
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
 /-- Universe polymorphic version of the builtin `punit.reflect`. -/
 unsafe instance punit.reflect' [reflected_univ.{u}] : has_reflect PUnit.{u}
-  | PUnit.unit => by
+  | punit.star => by
     trace
       "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]"
 #align punit.reflect' punit.reflect'
@@ -148,7 +148,7 @@ unsafe instance list.reflect' [reflected_univ.{u}] {α : Type u} [has_reflect α
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[] -/
 unsafe instance ulift.reflect' [reflected_univ.{u}] [reflected_univ.{v}] {α : Type v}
     [reflected _ α] [has_reflect α] : has_reflect (ULift.{u, v} α)
-  | ULift.up x =>
+  | ulift.up x =>
     (by
           trace
             "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `reflect_name #[]" :

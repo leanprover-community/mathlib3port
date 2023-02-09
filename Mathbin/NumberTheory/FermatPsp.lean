@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Niels Voss
 
 ! This file was ported from Lean 3 source module number_theory.fermat_psp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,7 +126,7 @@ This lemma is a small wrapper based on `coprime_of_probable_prime`
 theorem coprime_of_fermatPsp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : Nat.coprime n b :=
   by
   rcases h with ⟨hp, hn₁, hn₂⟩
-  exact coprime_of_probable_prime hp (by linarith) h₁
+  exact coprime_of_probablePrime hp (by linarith) h₁
 #align fermat_psp.coprime_of_fermat_psp FermatPsp.coprime_of_fermatPsp
 
 /-- All composite numbers are Fermat pseudoprimes to base 1.
@@ -389,10 +389,10 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) : ∃ n :
     have h₇ : b ≤ b * (b ^ 2 - 1) := Nat.le_mul_of_pos_right h₃
     have h₈ : 2 ≤ b * (b ^ 2 - 1) := le_trans b_ge_two h₇
     have h₉ : 2 < p := gt_of_gt_of_ge h₅ h₈
-    have h₁₀ := psp_from_prime_gt_p b_ge_two hp₂ h₉
-    use psp_from_prime b p
+    have h₁₀ := pspFromPrime_gt_p b_ge_two hp₂ h₉
+    use pspFromPrime b p
     constructor
-    · exact psp_from_prime_psp b_ge_two hp₂ h₉ h₆
+    · exact pspFromPrime_psp b_ge_two hp₂ h₉ h₆
     · exact le_trans (show m ≤ p by linarith) (le_of_lt h₁₀)
   -- If `¬2 ≤ b`, then `b = 1`. Since all composite numbers are pseudoprimes to base 1, we can pick
   -- any composite number greater than m. We choose `2 * (m + 2)` because it is greater than `m` and

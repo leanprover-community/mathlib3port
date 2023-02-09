@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module data.real.ereal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem coe_strictMono : StrictMono (coe : ℝ → Ereal) :=
 #align ereal.coe_strict_mono Ereal.coe_strictMono
 
 theorem coe_injective : Injective (coe : ℝ → Ereal) :=
-  coe_strictMono.Injective
+  coe_strictMono.injective
 #align ereal.coe_injective Ereal.coe_injective
 
 @[simp, norm_cast]
@@ -246,7 +246,7 @@ theorem coe_ne_bot (x : ℝ) : (x : Ereal) ≠ ⊥ :=
 
 @[simp]
 theorem bot_ne_coe (x : ℝ) : (⊥ : Ereal) ≠ x :=
-  (bot_lt_coe x).Ne
+  (bot_lt_coe x).ne
 #align ereal.bot_ne_coe Ereal.bot_ne_coe
 
 @[simp]
@@ -258,7 +258,7 @@ theorem coe_lt_top (x : ℝ) : (x : Ereal) < ⊤ :=
 
 @[simp]
 theorem coe_ne_top (x : ℝ) : (x : Ereal) ≠ ⊤ :=
-  (coe_lt_top x).Ne
+  (coe_lt_top x).ne
 #align ereal.coe_ne_top Ereal.coe_ne_top
 
 @[simp]
@@ -362,7 +362,7 @@ protected theorem coe_neg' {x : ℝ} : (x : Ereal) < 0 ↔ x < 0 :=
 theorem toReal_le_toReal {x y : Ereal} (h : x ≤ y) (hx : x ≠ ⊥) (hy : y ≠ ⊤) :
     x.toReal ≤ y.toReal := by
   lift x to ℝ
-  · simp [hx, (h.trans_lt (lt_top_iff_ne_top.2 hy)).Ne]
+  · simp [hx, (h.trans_lt (lt_top_iff_ne_top.2 hy)).ne]
   lift y to ℝ
   · simp [hy, ((bot_lt_iff_ne_bot.2 hx).trans_le h).ne']
   simpa using h
@@ -380,14 +380,14 @@ theorem le_coe_toReal {x : Ereal} (h : x ≠ ⊤) : x ≤ x.toReal :=
   by
   by_cases h' : x = ⊥
   · simp only [h', bot_le]
-  · simp only [le_refl, coe_to_real h h']
+  · simp only [le_refl, coe_toReal h h']
 #align ereal.le_coe_to_real Ereal.le_coe_toReal
 
 theorem coe_toReal_le {x : Ereal} (h : x ≠ ⊥) : ↑x.toReal ≤ x :=
   by
   by_cases h' : x = ⊤
   · simp only [h', le_top]
-  · simp only [le_refl, coe_to_real h' h]
+  · simp only [le_refl, coe_toReal h' h]
 #align ereal.coe_to_real_le Ereal.coe_toReal_le
 
 theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) < x :=
@@ -397,7 +397,7 @@ theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) 
     exact Ereal.coe_lt_top
   · contrapose!
     intro h
-    exact ⟨x.to_real, le_coe_to_real h⟩
+    exact ⟨x.to_real, le_coe_toReal h⟩
 #align ereal.eq_top_iff_forall_lt Ereal.eq_top_iff_forall_lt
 
 theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ereal) :=
@@ -407,7 +407,7 @@ theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ere
     exact bot_lt_coe
   · contrapose!
     intro h
-    exact ⟨x.to_real, coe_to_real_le h⟩
+    exact ⟨x.to_real, coe_toReal_le h⟩
 #align ereal.eq_bot_iff_forall_lt Ereal.eq_bot_iff_forall_lt
 
 /-! ### ennreal coercion -/
@@ -461,7 +461,7 @@ theorem coe_ennreal_strictMono : StrictMono (coe : ℝ≥0∞ → Ereal)
 #align ereal.coe_ennreal_strict_mono Ereal.coe_ennreal_strictMono
 
 theorem coe_ennreal_injective : Injective (coe : ℝ≥0∞ → Ereal) :=
-  coe_ennreal_strictMono.Injective
+  coe_ennreal_strictMono.injective
 #align ereal.coe_ennreal_injective Ereal.coe_ennreal_injective
 
 @[simp, norm_cast]
@@ -495,12 +495,12 @@ theorem coe_ennreal_eq_one {x : ℝ≥0∞} : (x : Ereal) = 1 ↔ x = 1 := by
 
 @[norm_cast]
 theorem coe_ennreal_ne_zero {x : ℝ≥0∞} : (x : Ereal) ≠ 0 ↔ x ≠ 0 :=
-  coe_ennreal_eq_zero.Not
+  coe_ennreal_eq_zero.not
 #align ereal.coe_ennreal_ne_zero Ereal.coe_ennreal_ne_zero
 
 @[norm_cast]
 theorem coe_ennreal_ne_one {x : ℝ≥0∞} : (x : Ereal) ≠ 1 ↔ x ≠ 1 :=
-  coe_ennreal_eq_one.Not
+  coe_ennreal_eq_one.not
 #align ereal.coe_ennreal_ne_one Ereal.coe_ennreal_ne_one
 
 theorem coe_ennreal_nonneg (x : ℝ≥0∞) : (0 : Ereal) ≤ x :=
@@ -906,7 +906,7 @@ theorem coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal (x : ℝ) :
 theorem toReal_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
     toReal (x - y) = toReal x - toReal y :=
   by
-  rw [sub_eq_add_neg, to_real_add hx h'x, to_real_neg]
+  rw [sub_eq_add_neg, toReal_add hx h'x, toReal_neg]
   · rfl
   · simpa using hy
   · simpa using h'y
@@ -946,7 +946,7 @@ theorem mul_top_of_pos {x : Ereal} (h : 0 < x) : x * ⊤ = ⊤ :=
   by
   induction x using Ereal.rec
   · simpa only [not_lt_bot] using h
-  · simp only [Mul.mul, Ereal.mul, Ereal.coe_pos.1 h, if_true]
+  · simp only [has_mul.mul, Ereal.mul, Ereal.coe_pos.1 h, if_true]
   · rfl
 #align ereal.mul_top_of_pos Ereal.mul_top_of_pos
 
@@ -955,7 +955,7 @@ theorem mul_top_of_neg {x : Ereal} (h : x < 0) : x * ⊤ = ⊥ :=
   induction x using Ereal.rec
   · rfl
   · simp only [Ereal.coe_neg'] at h
-    simp only [Mul.mul, Ereal.mul, not_lt.2 h.le, h.ne, if_false]
+    simp only [has_mul.mul, Ereal.mul, not_lt.2 h.le, h.ne, if_false]
   · simpa only [not_top_lt] using h
 #align ereal.mul_top_of_neg Ereal.mul_top_of_neg
 
@@ -991,7 +991,7 @@ theorem mul_bot_of_pos {x : Ereal} (h : 0 < x) : x * ⊥ = ⊥ :=
   by
   induction x using Ereal.rec
   · simpa only [not_lt_bot] using h
-  · simp only [Mul.mul, Ereal.mul, Ereal.coe_pos.1 h, if_true]
+  · simp only [has_mul.mul, Ereal.mul, Ereal.coe_pos.1 h, if_true]
   · rfl
 #align ereal.mul_bot_of_pos Ereal.mul_bot_of_pos
 
@@ -1000,7 +1000,7 @@ theorem mul_bot_of_neg {x : Ereal} (h : x < 0) : x * ⊥ = ⊤ :=
   induction x using Ereal.rec
   · rfl
   · simp only [Ereal.coe_neg'] at h
-    simp only [Mul.mul, Ereal.mul, not_lt.2 h.le, h.ne, if_false]
+    simp only [has_mul.mul, Ereal.mul, not_lt.2 h.le, h.ne, if_false]
   · simpa only [not_top_lt] using h
 #align ereal.mul_bot_of_neg Ereal.mul_bot_of_neg
 
@@ -1035,27 +1035,27 @@ theorem bot_mul_coe_of_neg {x : ℝ} (h : x < 0) : (⊥ : Ereal) * x = ⊤ :=
 theorem toReal_mul {x y : Ereal} : toReal (x * y) = toReal x * toReal y :=
   by
   induction x using Ereal.rec <;> induction y using Ereal.rec
-  · simp only [bot_mul_bot, to_real_top, to_real_bot, mul_zero]
+  · simp only [bot_mul_bot, toReal_top, toReal_bot, mul_zero]
   · rcases lt_trichotomy 0 y with (hy | rfl | hy)
-    · simp only [bot_mul_coe_of_pos hy, to_real_bot, zero_mul]
-    · simp only [coe_zero, mul_zero, to_real_zero]
-    · simp only [bot_mul_coe_of_neg hy, to_real_top, to_real_bot, zero_mul]
-  · simp only [bot_mul_top, to_real_bot, to_real_top, mul_zero]
+    · simp only [bot_mul_coe_of_pos hy, toReal_bot, zero_mul]
+    · simp only [coe_zero, mul_zero, toReal_zero]
+    · simp only [bot_mul_coe_of_neg hy, toReal_top, toReal_bot, zero_mul]
+  · simp only [bot_mul_top, toReal_bot, toReal_top, mul_zero]
   · rcases lt_trichotomy 0 x with (hx | rfl | hx)
-    · simp only [coe_mul_bot_of_pos hx, to_real_bot, mul_zero]
-    · simp only [coe_zero, zero_mul, to_real_zero]
-    · simp only [coe_mul_bot_of_neg hx, to_real_top, to_real_bot, mul_zero]
-  · simp only [← coe_mul, to_real_coe]
+    · simp only [coe_mul_bot_of_pos hx, toReal_bot, mul_zero]
+    · simp only [coe_zero, zero_mul, toReal_zero]
+    · simp only [coe_mul_bot_of_neg hx, toReal_top, toReal_bot, mul_zero]
+  · simp only [← coe_mul, toReal_coe]
   · rcases lt_trichotomy 0 x with (hx | rfl | hx)
-    · simp only [coe_mul_top_of_pos hx, to_real_top, mul_zero]
-    · simp only [coe_zero, zero_mul, to_real_zero]
-    · simp only [coe_mul_top_of_neg hx, to_real_top, to_real_bot, mul_zero]
-  · simp only [top_mul_bot, to_real_bot, mul_zero]
+    · simp only [coe_mul_top_of_pos hx, toReal_top, mul_zero]
+    · simp only [coe_zero, zero_mul, toReal_zero]
+    · simp only [coe_mul_top_of_neg hx, toReal_top, toReal_bot, mul_zero]
+  · simp only [top_mul_bot, toReal_bot, mul_zero]
   · rcases lt_trichotomy 0 y with (hy | rfl | hy)
-    · simp only [top_mul_coe_of_pos hy, to_real_top, zero_mul]
-    · simp only [coe_zero, mul_zero, to_real_zero]
-    · simp only [top_mul_coe_of_neg hy, to_real_top, to_real_bot, zero_mul]
-  · simp only [top_mul_top, to_real_top, mul_zero]
+    · simp only [top_mul_coe_of_pos hy, toReal_top, zero_mul]
+    · simp only [coe_zero, mul_zero, toReal_zero]
+    · simp only [top_mul_coe_of_neg hy, toReal_top, toReal_bot, zero_mul]
+  · simp only [top_mul_top, toReal_top, mul_zero]
 #align ereal.to_real_mul Ereal.toReal_mul
 
 /-! ### Absolute value -/

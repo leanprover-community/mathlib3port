@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.set
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ variable {α : Type u} {β : Type v} {ι : Sort w}
 #print Finite.Set.finite_of_finite_image /-
 theorem Finite.Set.finite_of_finite_image (s : Set α) {f : α → β} (h : s.InjOn f)
     [Finite (f '' s)] : Finite s :=
-  Finite.of_equiv _ (Equiv.ofBijective _ h.bijOn_image.Bijective).symm
+  Finite.of_equiv _ (Equiv.ofBijective _ h.bijOn_image.bijective).symm
 #align finite.set.finite_of_finite_image Finite.Set.finite_of_finite_image
 -/
 

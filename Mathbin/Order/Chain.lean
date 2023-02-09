@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.chain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem isChain_empty : IsChain r ∅ :=
 
 #print Set.Subsingleton.isChain /-
 theorem Set.Subsingleton.isChain (hs : s.Subsingleton) : IsChain r s :=
-  hs.Pairwise _
+  hs.pairwise _
 #align set.subsingleton.is_chain Set.Subsingleton.isChain
 -/
 
@@ -105,7 +105,7 @@ theorem IsChain.symm (h : IsChain r s) : IsChain (flip r) s :=
 
 #print isChain_of_trichotomous /-
 theorem isChain_of_trichotomous [IsTrichotomous α r] (s : Set α) : IsChain r s := fun a _ b _ hab =>
-  (trichotomous_of r a b).imp_right fun h => h.resolve_left hab
+  (trichotomous_of r a b).imp_right fun h => Mem.resolve_left hab
 #align is_chain_of_trichotomous isChain_of_trichotomous
 -/
 
@@ -119,7 +119,7 @@ theorem IsChain.insert (hs : IsChain r s) (ha : ∀ b ∈ s, a ≠ b → a ≺ b
 #print isChain_univ_iff /-
 theorem isChain_univ_iff : IsChain r (univ : Set α) ↔ IsTrichotomous α r :=
   by
-  refine' ⟨fun h => ⟨fun a b => _⟩, fun h => @isChain_of_trichotomous _ _ h univ⟩
+  refine' ⟨fun h => ⟨fun a b => _⟩, fun h => @is_chain_of_trichotomous _ _ h univ⟩
   rw [or_left_comm, or_iff_not_imp_left]
   exact h trivial trivial
 #align is_chain_univ_iff isChain_univ_iff
@@ -149,7 +149,7 @@ theorem IsChain.total (h : IsChain r s) (hx : x ∈ s) (hy : y ∈ s) : x ≺ y 
 
 #print IsChain.directedOn /-
 theorem IsChain.directedOn (H : IsChain r s) : DirectedOn r s := fun x hx y hy =>
-  (H.Total hx hy).elim (fun h => ⟨y, hy, h, refl _⟩) fun h => ⟨x, hx, refl _, h⟩
+  (H.total hx hy).elim (fun h => ⟨y, hy, h, refl _⟩) fun h => ⟨x, hx, refl _, h⟩
 #align is_chain.directed_on IsChain.directedOn
 -/
 
@@ -184,7 +184,7 @@ theorem IsMaxChain.isChain (h : IsMaxChain r s) : IsChain r s :=
 
 #print IsMaxChain.not_superChain /-
 theorem IsMaxChain.not_superChain (h : IsMaxChain r s) : ¬SuperChain r s t := fun ht =>
-  ht.2.Ne <| h.2 ht.1 ht.2.1
+  ht.2.ne <| h.2 ht.1 ht.2.1
 #align is_max_chain.not_super_chain IsMaxChain.not_superChain
 -/
 
@@ -250,15 +250,15 @@ theorem IsChain.superChain_succChain (hs₁ : IsChain r s) (hs₂ : ¬IsMaxChain
 #print subset_succChain /-
 theorem subset_succChain : s ⊆ SuccChain r s :=
   if h : ∃ t, IsChain r s ∧ SuperChain r s t then (succChain_spec h).2.1
-  else by simp [SuccChain, dif_neg, h, subset.rfl]
+  else by simp [SuccChain, dif_neg, h, Subset.rfl]
 #align subset_succ_chain subset_succChain
 -/
 
 #print ChainClosure /-
 /-- Predicate for whether a set is reachable from `∅` using `succ_chain` and `⋃₀`. -/
 inductive ChainClosure (r : α → α → Prop) : Set α → Prop
-  | succ : ∀ {s}, ChainClosure s → ChainClosure (SuccChain r s)
-  | union : ∀ {s}, (∀ a ∈ s, ChainClosure a) → ChainClosure (⋃₀ s)
+  | succ : ∀ {s}, chain_closure s → chain_closure (SuccChain r s)
+  | union : ∀ {s}, (∀ a ∈ s, chain_closure a) → chain_closure (⋃₀ s)
 #align chain_closure ChainClosure
 -/
 
@@ -273,7 +273,7 @@ def maxChain (r : α → α → Prop) :=
 #print chainClosure_empty /-
 theorem chainClosure_empty : ChainClosure r ∅ :=
   by
-  have : ChainClosure r (⋃₀ ∅) := ChainClosure.union fun a h => h.rec _
+  have : ChainClosure r (⋃₀ ∅) := ChainClosure.union fun a h => h.ndrec _
   simpa using this
 #align chain_closure_empty chainClosure_empty
 -/
@@ -291,11 +291,11 @@ private theorem chain_closure_succ_total_aux (hc₁ : ChainClosure r c₁) (hc�
   case succ c₃ hc₃ ih =>
     cases' ih with ih ih
     · exact Or.inl (ih.trans subset_succChain)
-    · exact (h hc₃ ih).imp_left fun h => h ▸ subset.rfl
+    · exact (h hc₃ ih).imp_left fun h => h ▸ Subset.rfl
   case
     union s hs ih =>
-    refine' or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => _
-    exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
+    refine' or_iff_not_imp_left.2 fun hn => unionₛ_subset fun a ha => _
+    exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_unionₛ_of_mem ha
 #align chain_closure_succ_total_aux chain_closure_succ_total_aux
 
 private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂)
@@ -304,20 +304,20 @@ private theorem chain_closure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : 
   induction hc₂ generalizing c₁ hc₁ h
   case
     succ c₂ hc₂ ih =>
-    refine' (chain_closure_succ_total_aux hc₁ hc₂ fun c₁ => ih).imp h.antisymm' fun h₁ => _
+    refine' (chainClosure_succ_total_aux hc₁ hc₂ fun c₁ => ih).imp h.antisymm' fun h₁ => _
     obtain rfl | h₂ := ih hc₁ h₁
-    · exact subset.rfl
+    · exact Subset.rfl
     · exact h₂.trans subset_succChain
   case union s hs ih =>
     apply Or.imp_left h.antisymm'
     apply by_contradiction
-    simp [not_or, sUnion_subset_iff, not_forall]
+    simp [not_or, unionₛ_subset_iff, not_forall]
     intro c₃ hc₃ h₁ h₂
-    obtain h | h := chain_closure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
+    obtain h | h := chainClosure_succ_total_aux hc₁ (hs c₃ hc₃) fun c₄ => ih _ hc₃
     · exact h₁ (subset_succ_chain.trans h)
     obtain h' | h' := ih c₃ hc₃ hc₁ h
     · exact h₁ h'.subset
-    · exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
+    · exact h₂ (h'.trans <| subset_unionₛ_of_mem hc₃)
 #align chain_closure_succ_total chain_closure_succ_total
 
 #print ChainClosure.total /-
@@ -333,8 +333,8 @@ theorem ChainClosure.succ_fixpoint (hc₁ : ChainClosure r c₁) (hc₂ : ChainC
     (hc : SuccChain r c₂ = c₂) : c₁ ⊆ c₂ :=
   by
   induction hc₁
-  case succ s₁ hc₁ h => exact (chain_closure_succ_total hc₁ hc₂ h).elim (fun h => h ▸ hc.subset) id
-  case union s hs ih => exact sUnion_subset ih
+  case succ s₁ hc₁ h => exact (chainClosure_succ_total hc₁ hc₂ h).elim (fun h => h ▸ hc.subset) id
+  case union s hs ih => exact unionₛ_subset ih
 #align chain_closure.succ_fixpoint ChainClosure.succ_fixpoint
 -/
 
@@ -342,7 +342,7 @@ theorem ChainClosure.succ_fixpoint (hc₁ : ChainClosure r c₁) (hc₂ : ChainC
 theorem ChainClosure.succ_fixpoint_iff (hc : ChainClosure r c) :
     SuccChain r c = c ↔ c = maxChain r :=
   ⟨fun h => (subset_unionₛ_of_mem hc).antisymm <| chainClosure_maxChain.succ_fixpoint hc h, fun h =>
-    subset_succChain.antisymm' <| (subset_unionₛ_of_mem hc.succ).trans h.symm.Subset⟩
+    subset_succChain.antisymm' <| (subset_unionₛ_of_mem hc.succ).trans h.symm.subset⟩
 #align chain_closure.succ_fixpoint_iff ChainClosure.succ_fixpoint_iff
 -/
 
@@ -354,7 +354,7 @@ theorem ChainClosure.isChain (hc : ChainClosure r c) : IsChain r c :=
   case union s hs h =>
     change ∀ c ∈ s, IsChain r c at h
     exact fun c₁ ⟨t₁, ht₁, (hc₁ : c₁ ∈ t₁)⟩ c₂ ⟨t₂, ht₂, (hc₂ : c₂ ∈ t₂)⟩ hneq =>
-      ((hs _ ht₁).Total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
+      ((hs _ ht₁).total <| hs _ ht₂).elim (fun ht => h t₂ ht₂ (ht hc₁) hc₂ hneq) fun ht =>
         h t₁ ht₁ hc₁ (ht hc₂) hneq
 #align chain_closure.is_chain ChainClosure.isChain
 -/
@@ -366,8 +366,8 @@ There exists a maximal totally ordered set of `α`.
 Note that we do not require `α` to be partially ordered by `r`. -/
 theorem maxChain_spec : IsMaxChain r (maxChain r) :=
   by_contradiction fun h =>
-    let ⟨h₁, H⟩ := chainClosure_maxChain.IsChain.superChain_succChain h
-    H.Ne (chainClosure_maxChain.succ_fixpoint_iff.mpr rfl).symm
+    let ⟨h₁, H⟩ := chainClosure_maxChain.isChain.superChain_succChain h
+    H.ne (chainClosure_maxChain.succ_fixpoint_iff.mpr rfl).symm
 #align max_chain_spec maxChain_spec
 -/
 
@@ -421,14 +421,14 @@ theorem coe_mk (s : Set α) (h₁ h₂) : (mk s h₁ h₂ : Set α) = s :=
 
 #print Flag.mk_coe /-
 @[simp]
-theorem mk_coe (s : Flag α) : mk (s : Set α) s.Chain' s.max_chain' = s :=
+theorem mk_coe (s : Flag α) : mk (s : Set α) s.chain' s.max_chain' = s :=
   ext rfl
 #align flag.mk_coe Flag.mk_coe
 -/
 
 #print Flag.chain_le /-
 theorem chain_le (s : Flag α) : IsChain (· ≤ ·) (s : Set α) :=
-  s.Chain'
+  s.chain'
 #align flag.chain_le Flag.chain_le
 -/
 
@@ -466,7 +466,7 @@ variable [Preorder α] {a b : α}
 
 #print Flag.le_or_le /-
 protected theorem le_or_le (s : Flag α) (ha : a ∈ s) (hb : b ∈ s) : a ≤ b ∨ b ≤ a :=
-  s.chain_le.Total ha hb
+  s.chain_le.total ha hb
 #align flag.le_or_le Flag.le_or_le
 -/
 

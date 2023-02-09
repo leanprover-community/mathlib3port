@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.double_counting
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,14 +54,14 @@ variable (r : α → β → Prop) (s : Finset α) (t : Finset β) (a a' : α) (b
 #print Finset.bipartiteBelow /-
 /-- Elements of `s` which are "below" `b` according to relation `r`. -/
 def bipartiteBelow : Finset α :=
-  s.filterₓ fun a => r a b
+  s.filter fun a => r a b
 #align finset.bipartite_below Finset.bipartiteBelow
 -/
 
 #print Finset.bipartiteAbove /-
 /-- Elements of `t` which are "above" `a` according to relation `r`. -/
 def bipartiteAbove : Finset β :=
-  t.filterₓ (r a)
+  t.filter (r a)
 #align finset.bipartite_above Finset.bipartiteAbove
 -/
 
@@ -128,7 +128,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sum_card_bipart
 theorem sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow [∀ a b, Decidable (r a b)] :
     (∑ a in s, (t.bipartiteAbove r a).card) = ∑ b in t, (s.bipartiteBelow r b).card :=
   by
-  simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]
+  simp_rw [card_eq_sum_ones, bipartiteAbove, bipartiteBelow, sum_filter]
   exact sum_comm
 #align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow
 
@@ -185,11 +185,11 @@ theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t �
         (fun a h =>
           card_pos.2 <|
             (by
-              rw [← coe_nonempty, coe_bipartite_above]
+              rw [← coe_nonempty, coe_bipartiteAbove]
               exact hs _ h : (t.bipartite_above r a).Nonempty))
         fun b h =>
         card_le_one.2 <| by
-          simp_rw [mem_bipartite_below]
+          simp_rw [mem_bipartiteBelow]
           exact ht _ h
 #align finset.card_le_card_of_forall_subsingleton Finset.card_le_card_of_forall_subsingleton
 

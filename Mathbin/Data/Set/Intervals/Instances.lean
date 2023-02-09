@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell, Eric Wieser, Yaël Dillies, Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.set.intervals.instances
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -269,7 +269,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} α], MonoidWithZero.{u1} (Set.Elem.{u1} α (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.Icc.monoid_with_zero Set.Icc.monoidWithZeroₓ'. -/
 instance monoidWithZero : MonoidWithZero (Icc (0 : α) 1) :=
-  Subtype.coe_injective.MonoidWithZero _ coe_zero coe_one coe_mul coe_pow
+  Subtype.coe_injective.monoidWithZero _ coe_zero coe_one coe_mul coe_pow
 #align set.Icc.monoid_with_zero Set.Icc.monoidWithZero
 
 /- warning: set.Icc.comm_monoid_with_zero -> Set.Icc.commMonoidWithZero is a dubious translation:
@@ -280,7 +280,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Icc.comm_monoid_with_zero Set.Icc.commMonoidWithZeroₓ'. -/
 instance commMonoidWithZero {α : Type _} [OrderedCommSemiring α] :
     CommMonoidWithZero (Icc (0 : α) 1) :=
-  Subtype.coe_injective.CommMonoidWithZero _ coe_zero coe_one coe_mul coe_pow
+  Subtype.coe_injective.commMonoidWithZero _ coe_zero coe_one coe_mul coe_pow
 #align set.Icc.comm_monoid_with_zero Set.Icc.commMonoidWithZero
 
 /- warning: set.Icc.cancel_monoid_with_zero -> Set.Icc.cancelMonoidWithZero is a dubious translation:
@@ -470,7 +470,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} α], Semigroup.{u1} (Set.Elem.{u1} α (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (OrderedSemiring.toSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.Ico.semigroup Set.Ico.semigroupₓ'. -/
 instance semigroup : Semigroup (Ico (0 : α) 1) :=
-  Subtype.coe_injective.Semigroup _ coe_mul
+  Subtype.coe_injective.semigroup _ coe_mul
 #align set.Ico.semigroup Set.Ico.semigroup
 
 /- warning: set.Ico.comm_semigroup -> Set.Ico.commSemigroup is a dubious translation:
@@ -480,7 +480,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : OrderedCommSemiring.{u1} α], CommSemigroup.{u1} (Set.Elem.{u1} α (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α _inst_2))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (OrderedCommSemiring.toCommSemiring.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align set.Ico.comm_semigroup Set.Ico.commSemigroupₓ'. -/
 instance commSemigroup {α : Type _} [OrderedCommSemiring α] : CommSemigroup (Ico (0 : α) 1) :=
-  Subtype.coe_injective.CommSemigroup _ coe_mul
+  Subtype.coe_injective.commSemigroup _ coe_mul
 #align set.Ico.comm_semigroup Set.Ico.commSemigroup
 
 end Set.Ico
@@ -624,7 +624,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α], Semigroup.{u1} (Set.Elem.{u1} α (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.Ioc.semigroup Set.Ioc.semigroupₓ'. -/
 instance semigroup : Semigroup (Ioc (0 : α) 1) :=
-  Subtype.coe_injective.Semigroup _ coe_mul
+  Subtype.coe_injective.semigroup _ coe_mul
 #align set.Ioc.semigroup Set.Ioc.semigroup
 
 /- warning: set.Ioc.monoid -> Set.Ioc.monoid is a dubious translation:
@@ -634,7 +634,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α] [_inst_2 : Nontrivial.{u1} α], Monoid.{u1} (Set.Elem.{u1} α (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.Ioc.monoid Set.Ioc.monoidₓ'. -/
 instance monoid [Nontrivial α] : Monoid (Ioc (0 : α) 1) :=
-  Subtype.coe_injective.Monoid _ coe_one coe_mul coe_pow
+  Subtype.coe_injective.monoid _ coe_one coe_mul coe_pow
 #align set.Ioc.monoid Set.Ioc.monoid
 
 /- warning: set.Ioc.comm_semigroup -> Set.Ioc.commSemigroup is a dubious translation:
@@ -644,7 +644,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : StrictOrderedCommSemiring.{u1} α], CommSemigroup.{u1} (Set.Elem.{u1} α (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (StrictOrderedCommSemiring.toStrictOrderedSemiring.{u1} α _inst_2))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (StrictOrderedCommSemiring.toCommSemiring.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (StrictOrderedCommSemiring.toStrictOrderedSemiring.{u1} α _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align set.Ioc.comm_semigroup Set.Ioc.commSemigroupₓ'. -/
 instance commSemigroup {α : Type _} [StrictOrderedCommSemiring α] : CommSemigroup (Ioc (0 : α) 1) :=
-  Subtype.coe_injective.CommSemigroup _ coe_mul
+  Subtype.coe_injective.commSemigroup _ coe_mul
 #align set.Ioc.comm_semigroup Set.Ioc.commSemigroup
 
 /- warning: set.Ioc.comm_monoid -> Set.Ioc.commMonoid is a dubious translation:
@@ -655,7 +655,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Ioc.comm_monoid Set.Ioc.commMonoidₓ'. -/
 instance commMonoid {α : Type _} [StrictOrderedCommSemiring α] [Nontrivial α] :
     CommMonoid (Ioc (0 : α) 1) :=
-  Subtype.coe_injective.CommMonoid _ coe_one coe_mul coe_pow
+  Subtype.coe_injective.commMonoid _ coe_one coe_mul coe_pow
 #align set.Ioc.comm_monoid Set.Ioc.commMonoid
 
 /- warning: set.Ioc.cancel_monoid -> Set.Ioc.cancelMonoid is a dubious translation:
@@ -669,9 +669,9 @@ instance cancelMonoid {α : Type _} [StrictOrderedRing α] [IsDomain α] :
   {
     Set.Ioc.monoid with
     mul_left_cancel := fun a b c h =>
-      Subtype.ext <| mul_left_cancel₀ a.Prop.1.ne' <| (congr_arg Subtype.val h : _)
+      Subtype.ext <| mul_left_cancel₀ a.prop.1.ne' <| (congr_arg Subtype.val h : _)
     mul_right_cancel := fun a b c h =>
-      Subtype.ext <| mul_right_cancel₀ b.Prop.1.ne' <| (congr_arg Subtype.val h : _) }
+      Subtype.ext <| mul_right_cancel₀ b.prop.1.ne' <| (congr_arg Subtype.val h : _) }
 #align set.Ioc.cancel_monoid Set.Ioc.cancelMonoid
 
 /- warning: set.Ioc.cancel_comm_monoid -> Set.Ioc.cancelCommMonoid is a dubious translation:
@@ -741,7 +741,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} α], Semigroup.{u1} (Set.Elem.{u1} α (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α _inst_1)) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α _inst_1))))))
 Case conversion may be inaccurate. Consider using '#align set.Ioo.semigroup Set.Ioo.semigroupₓ'. -/
 instance semigroup : Semigroup (Ioo (0 : α) 1) :=
-  Subtype.coe_injective.Semigroup _ coe_mul
+  Subtype.coe_injective.semigroup _ coe_mul
 #align set.Ioo.semigroup Set.Ioo.semigroup
 
 /- warning: set.Ioo.comm_semigroup -> Set.Ioo.commSemigroup is a dubious translation:
@@ -751,7 +751,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : StrictOrderedCommSemiring.{u1} α], CommSemigroup.{u1} (Set.Elem.{u1} α (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (StrictOrderedSemiring.toPartialOrder.{u1} α (StrictOrderedCommSemiring.toStrictOrderedSemiring.{u1} α _inst_2))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (StrictOrderedCommSemiring.toCommSemiring.{u1} α _inst_2))))) (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Semiring.toOne.{u1} α (StrictOrderedSemiring.toSemiring.{u1} α (StrictOrderedCommSemiring.toStrictOrderedSemiring.{u1} α _inst_2)))))))
 Case conversion may be inaccurate. Consider using '#align set.Ioo.comm_semigroup Set.Ioo.commSemigroupₓ'. -/
 instance commSemigroup {α : Type _} [StrictOrderedCommSemiring α] : CommSemigroup (Ioo (0 : α) 1) :=
-  Subtype.coe_injective.CommSemigroup _ coe_mul
+  Subtype.coe_injective.commSemigroup _ coe_mul
 #align set.Ioo.comm_semigroup Set.Ioo.commSemigroup
 
 variable {β : Type _} [OrderedRing β]

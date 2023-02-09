@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.instances.real
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ universe u v w
 variable {α : Type u} {β : Type v} {γ : Type w}
 
 instance : NoncompactSpace ℝ :=
-  Int.closedEmbedding_coe_real.NoncompactSpace
+  Int.closedEmbedding_coe_real.noncompactSpace
 
 theorem Real.uniformContinuous_add : UniformContinuous fun p : ℝ × ℝ => p.1 + p.2 :=
   Metric.uniformContinuous_iff.2 fun ε ε0 =>
@@ -64,7 +64,7 @@ instance : ProperSpace ℝ
     where isCompact_closedBall x r :=
     by
     rw [Real.closedBall_eq_Icc]
-    apply is_compact_Icc
+    apply isCompact_Icc
 
 instance : SecondCountableTopology ℝ :=
   second_countable_of_proper
@@ -78,15 +78,14 @@ theorem Real.isTopologicalBasis_Ioo_rat :
     let ⟨q, hlq, hqa⟩ := exists_rat_btwn hl
     let ⟨p, hap, hpu⟩ := exists_rat_btwn hu
     ⟨Ioo q p, by
-      simp only [mem_Union]
+      simp only [mem_unionᵢ]
       exact ⟨q, p, Rat.cast_lt.1 <| hqa.trans hap, rfl⟩, ⟨hqa, hap⟩, fun a' ⟨hqa', ha'p⟩ =>
       h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩
 #align real.is_topological_basis_Ioo_rat Real.isTopologicalBasis_Ioo_rat
 
 @[simp]
 theorem Real.cocompact_eq : cocompact ℝ = atBot ⊔ atTop := by
-  simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero,
-    comap_abs_at_top]
+  simp only [← comap_dist_right_atTop_eq_cocompact (0 : ℝ), Real.dist_eq, sub_zero, comap_abs_atTop]
 #align real.cocompact_eq Real.cocompact_eq
 
 /- TODO(Mario): Prove that these are uniform isomorphisms instead of uniform embeddings
@@ -116,7 +115,7 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (�
     exact
       tendsto_of_uniformContinuous_subtype
         (Real.uniformContinuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
-        (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
+        (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).preimage continuous_abs) (half_lt_self r0))
 #align real.tendsto_inv Real.tendsto_inv
 
 theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
@@ -150,8 +149,8 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
     tendsto_of_uniformContinuous_subtype
       (Real.uniformContinuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
       (IsOpen.mem_nhds
-        (((isOpen_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
-          ((isOpen_gt' (|a₂| + 1)).Preimage continuous_abs))
+        (((isOpen_gt' (|a₁| + 1)).preimage continuous_abs).prod
+          ((isOpen_gt' (|a₂| + 1)).preimage continuous_abs))
         ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
 #align real.continuous_mul Real.continuous_mul
 
@@ -159,13 +158,13 @@ instance : TopologicalRing ℝ :=
   { Real.topologicalAddGroup with continuous_mul := Real.continuous_mul }
 
 instance : CompleteSpace ℝ := by
-  apply complete_of_cauchy_seq_tendsto
+  apply complete_of_cauchySeq_tendsto
   intro u hu
   let c : CauSeq ℝ abs := ⟨u, Metric.cauchySeq_iff'.1 hu⟩
   refine' ⟨c.lim, fun s h => _⟩
   rcases Metric.mem_nhds_iff.1 h with ⟨ε, ε0, hε⟩
   have := c.equiv_lim ε ε0
-  simp only [mem_map, mem_at_top_sets, mem_set_of_eq]
+  simp only [mem_map, mem_atTop_sets, mem_setOf_eq]
   refine' this.imp fun N hN n hn => hε (hN n hn)
 
 theorem Real.totallyBounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
@@ -239,7 +238,7 @@ theorem Periodic.compact_of_continuous [TopologicalSpace α] {f : ℝ → α} {c
 /-- A continuous, periodic function is bounded. -/
 theorem Periodic.bounded_of_continuous [PseudoMetricSpace α] {f : ℝ → α} {c : ℝ} (hp : Periodic f c)
     (hc : c ≠ 0) (hf : Continuous f) : Bounded (range f) :=
-  (hp.compact_of_continuous hc hf).Bounded
+  (hp.compact_of_continuous hc hf).bounded
 #align function.periodic.bounded_of_continuous Function.Periodic.bounded_of_continuous
 
 end Function
@@ -278,7 +277,7 @@ namespace AddSubgroup
 /-- The subgroup "multiples of `a`" (`zmultiples a`) is a discrete subgroup of `ℝ`, i.e. its
 intersection with compact sets is finite. -/
 theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
-    Tendsto (zmultiples a).Subtype cofinite (cocompact ℝ) :=
+    Tendsto (zmultiples a).subtype cofinite (cocompact ℝ) :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
   · rw [AddSubgroup.zmultiples_zero_eq_bot]
@@ -288,9 +287,9 @@ theorem tendsto_zmultiples_subtype_cofinite (a : ℝ) :
   intro K hK
   have H := Int.tendsto_zmultiplesHom_cofinite ha hK
   simp only [Filter.mem_map, mem_cofinite, ← preimage_compl] at H⊢
-  rw [← (zmultiplesHom ℝ a).rangeRestrict_surjective.image_preimage ((zmultiples a).Subtype ⁻¹' Kᶜ),
+  rw [← (zmultiplesHom ℝ a).rangeRestrict_surjective.image_preimage ((zmultiples a).subtype ⁻¹' Kᶜ),
     ← preimage_comp, ← AddMonoidHom.coe_comp_rangeRestrict]
-  exact finite.image _ H
+  exact Finite.image _ H
 #align add_subgroup.tendsto_zmultiples_subtype_cofinite AddSubgroup.tendsto_zmultiples_subtype_cofinite
 
 end AddSubgroup
@@ -310,7 +309,7 @@ theorem Real.subgroup_dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_i
     · exact ⟨-g₀, G.neg_mem g₀_in, neg_pos.mpr Hg₀⟩
     · exact ⟨g₀, g₀_in, Hg₀⟩
   obtain ⟨a, ha⟩ : ∃ a, IsGLB G_pos a :=
-    ⟨Inf G_pos, isGLB_cinfₛ ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
+    ⟨infₛ G_pos, isGLB_cinfₛ ⟨g₁, g₁_in, g₁_pos⟩ ⟨0, fun _ hx => le_of_lt hx.2⟩⟩
   have a_notin : a ∉ G_pos := by
     intro H
     exact H' a ⟨H, ha.1⟩

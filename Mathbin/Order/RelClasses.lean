@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.rel_classes
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -263,14 +263,14 @@ def partialOrderOfSO (r) [IsStrictOrder α r] : PartialOrder α
   le_refl x := Or.inl rfl
   le_trans x y z h₁ h₂ :=
     match y, z, h₁, h₂ with
-    | _, _, Or.inl rfl, h₂ => h₂
-    | _, _, h₁, Or.inl rfl => h₁
-    | _, _, Or.inr h₁, Or.inr h₂ => Or.inr (trans h₁ h₂)
+    | _, _, or.inl rfl, h₂ => h₂
+    | _, _, h₁, or.inl rfl => h₁
+    | _, _, or.inr h₁, or.inr h₂ => Or.inr (trans h₁ h₂)
   le_antisymm x y h₁ h₂ :=
     match y, h₁, h₂ with
-    | _, Or.inl rfl, h₂ => rfl
-    | _, h₁, Or.inl rfl => rfl
-    | _, Or.inr h₁, Or.inr h₂ => (asymm h₁ h₂).elim
+    | _, or.inl rfl, h₂ => rfl
+    | _, h₁, or.inl rfl => rfl
+    | _, or.inr h₁, or.inr h₂ => (asymm h₁ h₂).elim
   lt_iff_le_not_le x y :=
     ⟨fun h => ⟨Or.inr h, not_or_of_not (fun e => by rw [e] at h <;> exact irrefl _ h) (asymm h)⟩,
       fun ⟨h₁, h₂⟩ => h₁.resolve_left fun e => h₂ <| e ▸ Or.inl rfl⟩
@@ -288,9 +288,9 @@ def linearOrderOfSTO (r) [IsStrictTotalOrder α r] [∀ x y, Decidable ¬r x y] 
       r with
     le_total := fun x y =>
       match y, trichotomous_of r x y with
-      | y, Or.inl h => Or.inl (Or.inr h)
-      | _, Or.inr (Or.inl rfl) => Or.inl (Or.inl rfl)
-      | _, Or.inr (Or.inr h) => Or.inr (Or.inr h)
+      | y, or.inl h => Or.inl (Or.inr h)
+      | _, or.inr (or.inl rfl) => Or.inl (Or.inl rfl)
+      | _, or.inr (or.inr h) => Or.inr (Or.inr h)
     decidableLe := fun x y =>
       decidable_of_iff (¬r y x)
         ⟨fun h => ((trichotomous_of r y x).resolve_left h).imp Eq.symm id, fun h =>
@@ -417,7 +417,7 @@ end IsWellFounded
 #print WellFounded.asymmetric /-
 theorem WellFounded.asymmetric {α : Sort _} {r : α → α → Prop} (h : WellFounded r) :
     ∀ ⦃a b⦄, r a b → ¬r b a
-  | a => fun b hab hba => WellFounded.asymmetric hba hab termination_by' ⟨_, h⟩
+  | a => fun b hab hba => well_founded.asymmetric hba hab termination_by' ⟨_, h⟩
 #align well_founded.asymmetric WellFounded.asymmetric
 -/
 
@@ -640,14 +640,14 @@ instance Prod.Lex.isWellOrder [IsWellOrder α r] [IsWellOrder β s] :
     where
   trichotomous := fun ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ =>
     match @trichotomous _ r _ a₁ b₁ with
-    | Or.inl h₁ => Or.inl <| Prod.Lex.left _ _ h₁
-    | Or.inr (Or.inr h₁) => Or.inr <| Or.inr <| Prod.Lex.left _ _ h₁
-    | Or.inr (Or.inl e) =>
+    | or.inl h₁ => Or.inl <| Prod.Lex.left _ _ h₁
+    | or.inr (or.inr h₁) => Or.inr <| Or.inr <| Prod.Lex.left _ _ h₁
+    | or.inr (or.inl e) =>
       e ▸
         match @trichotomous _ s _ a₂ b₂ with
-        | Or.inl h => Or.inl <| Prod.Lex.right _ h
-        | Or.inr (Or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
-        | Or.inr (Or.inl e) => e ▸ Or.inr <| Or.inl rfl
+        | or.inl h => Or.inl <| Prod.Lex.right _ h
+        | or.inr (or.inr h) => Or.inr <| Or.inr <| Prod.Lex.right _ h
+        | or.inr (or.inl e) => e ▸ Or.inr <| Or.inl rfl
   trans a b c h₁ h₂ :=
     by
     cases' h₁ with a₁ a₂ b₁ b₂ ab a₁ b₁ b₂ ab <;> cases' h₂ with _ _ c₁ c₂ bc _ _ c₂ bc
@@ -693,7 +693,7 @@ def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
 #print Set.not_bounded_iff /-
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s := by
-  simp only [bounded, unbounded, not_forall, not_exists, exists_prop, not_and, Classical.not_not]
+  simp only [Bounded, Unbounded, not_forall, not_exists, exists_prop, not_and, Classical.not_not]
 #align set.not_bounded_iff Set.not_bounded_iff
 -/
 
@@ -875,13 +875,13 @@ alias superset_antisymm ← HasSubset.Subset.antisymm'
 
 #print subset_antisymm_iff /-
 theorem subset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ a ⊆ b ∧ b ⊆ a :=
-  ⟨fun h => ⟨h.subset', h.Superset⟩, fun h => h.1.antisymm h.2⟩
+  ⟨fun h => ⟨h.subset', h.superset⟩, fun h => h.1.antisymm h.2⟩
 #align subset_antisymm_iff subset_antisymm_iff
 -/
 
 #print superset_antisymm_iff /-
 theorem superset_antisymm_iff [IsRefl α (· ⊆ ·)] [IsAntisymm α (· ⊆ ·)] : a = b ↔ b ⊆ a ∧ a ⊆ b :=
-  ⟨fun h => ⟨h.Superset, h.subset'⟩, fun h => h.1.antisymm' h.2⟩
+  ⟨fun h => ⟨h.superset, h.subset'⟩, fun h => h.1.antisymm' h.2⟩
 #align superset_antisymm_iff superset_antisymm_iff
 -/
 
@@ -1008,13 +1008,13 @@ alias ssubset_of_subset_not_subset ← HasSubset.Subset.ssubset_of_not_subset
 
 #print ssubset_of_subset_of_ssubset /-
 theorem ssubset_of_subset_of_ssubset [IsTrans α (· ⊆ ·)] (h₁ : a ⊆ b) (h₂ : b ⊂ c) : a ⊂ c :=
-  (h₁.trans h₂.Subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
+  (h₁.trans h₂.subset).ssubset_of_not_subset fun h => h₂.not_subset <| h.trans h₁
 #align ssubset_of_subset_of_ssubset ssubset_of_subset_of_ssubset
 -/
 
 #print ssubset_of_ssubset_of_subset /-
 theorem ssubset_of_ssubset_of_subset [IsTrans α (· ⊆ ·)] (h₁ : a ⊂ b) (h₂ : b ⊆ c) : a ⊂ c :=
-  (h₁.Subset.trans h₂).ssubset_of_not_subset fun h => h₁.not_subset <| h₂.trans h
+  (h₁.subset.trans h₂).ssubset_of_not_subset fun h => h₁.not_subset <| h₂.trans h
 #align ssubset_of_ssubset_of_subset ssubset_of_ssubset_of_subset
 -/
 
@@ -1062,7 +1062,7 @@ alias ssubset_or_eq_of_subset ← HasSubset.Subset.ssubset_or_eq
 
 #print ssubset_iff_subset_ne /-
 theorem ssubset_iff_subset_ne [IsAntisymm α (· ⊆ ·)] : a ⊂ b ↔ a ⊆ b ∧ a ≠ b :=
-  ⟨fun h => ⟨h.Subset, h.Ne⟩, fun h => h.1.ssubset_of_ne h.2⟩
+  ⟨fun h => ⟨h.subset, h.ne⟩, fun h => h.1.ssubset_of_ne h.2⟩
 #align ssubset_iff_subset_ne ssubset_iff_subset_ne
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.algebra.hom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -238,7 +238,7 @@ protected theorem map_sum {ι : Type _} (f : ι → A) (s : Finset ι) :
 #align alg_hom.map_sum AlgHom.map_sum
 
 protected theorem map_finsupp_sum {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
-    φ (f.Sum g) = f.Sum fun i a => φ (g i a) :=
+    φ (f.sum g) = f.sum fun i a => φ (g i a) :=
   map_finsupp_sum _ _ _
 #align alg_hom.map_finsupp_sum AlgHom.map_finsupp_sum
 
@@ -387,7 +387,7 @@ theorem map_smul_of_tower {R'} [SMul R' A] [SMul R' B] [LinearMap.CompatibleSMul
   φ.toLinearMap.map_smul_of_tower r x
 #align alg_hom.map_smul_of_tower AlgHom.map_smul_of_tower
 
-theorem map_list_prod (s : List A) : φ s.Prod = (s.map φ).Prod :=
+theorem map_list_prod (s : List A) : φ s.prod = (s.map φ).prod :=
   φ.toRingHom.map_list_prod s
 #align alg_hom.map_list_prod AlgHom.map_list_prod
 
@@ -423,7 +423,7 @@ variable [CommSemiring R] [CommSemiring A] [CommSemiring B]
 
 variable [Algebra R A] [Algebra R B] (φ : A →ₐ[R] B)
 
-protected theorem map_multiset_prod (s : Multiset A) : φ s.Prod = (s.map φ).Prod :=
+protected theorem map_multiset_prod (s : Multiset A) : φ s.prod = (s.map φ).prod :=
   map_multiset_prod _ _
 #align alg_hom.map_multiset_prod AlgHom.map_multiset_prod
 
@@ -433,7 +433,7 @@ protected theorem map_prod {ι : Type _} (f : ι → A) (s : Finset ι) :
 #align alg_hom.map_prod AlgHom.map_prod
 
 protected theorem map_finsupp_prod {α : Type _} [Zero α] {ι : Type _} (f : ι →₀ α) (g : ι → α → A) :
-    φ (f.Prod g) = f.Prod fun i a => φ (g i a) :=
+    φ (f.prod g) = f.prod fun i a => φ (g i a) :=
   map_finsupp_prod _ _ _
 #align alg_hom.map_finsupp_prod AlgHom.map_finsupp_prod
 

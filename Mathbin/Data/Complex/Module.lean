@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Sébastien Gouëzel, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.complex.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem AlgHom.map_coe_real_complex (f : ℂ →ₐ[ℝ] A) (x : ℝ) : f x = al
 theorem algHom_ext ⦃f g : ℂ →ₐ[ℝ] A⦄ (h : f i = g i) : f = g :=
   by
   ext ⟨x, y⟩
-  simp only [mk_eq_add_mul_I, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
+  simp only [mk_eq_add_mul_i, AlgHom.map_add, AlgHom.map_coe_real_complex, AlgHom.map_mul, h]
 #align complex.alg_hom_ext Complex.algHom_ext
 
 end
@@ -176,9 +176,9 @@ theorem coe_basisOneI : ⇑basisOneI = ![1, i] :=
     Basis.apply_eq_iff.mpr <|
       Finsupp.ext fun j => by
         fin_cases i <;> fin_cases j <;>
-          simp only [coe_basis_one_I_repr, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
-            Matrix.cons_val_one, Matrix.head_cons, Fin.one_eq_zero_iff, Ne.def, not_false_iff, I_re,
-            Nat.succ_succ_ne_one, one_im, I_im, one_re, Finsupp.single_eq_same, Fin.zero_eq_one_iff]
+          simp only [coe_basisOneI_repr, Finsupp.single_eq_of_ne, Matrix.cons_val_zero,
+            Matrix.cons_val_one, Matrix.head_cons, Fin.one_eq_zero_iff, Ne.def, not_false_iff, i_re,
+            Nat.succ_succ_ne_one, one_im, i_im, one_re, Finsupp.single_eq_same, Fin.zero_eq_one_iff]
 #align complex.coe_basis_one_I Complex.coe_basisOneI
 
 instance : FiniteDimensional ℝ ℂ :=
@@ -186,7 +186,7 @@ instance : FiniteDimensional ℝ ℂ :=
 
 @[simp]
 theorem finrank_real_complex : FiniteDimensional.finrank ℝ ℂ = 2 := by
-  rw [finrank_eq_card_basis basis_one_I, Fintype.card_fin]
+  rw [finrank_eq_card_basis basisOneI, Fintype.card_fin]
 #align complex.finrank_real_complex Complex.finrank_real_complex
 
 @[simp]
@@ -205,7 +205,7 @@ theorem finrank_real_complex_fact : Fact (finrank ℝ ℂ = 2) :=
 
 /-- The standard orientation on `ℂ`. -/
 protected noncomputable def orientation : Orientation ℝ ℂ (Fin 2) :=
-  Complex.basisOneI.Orientation
+  Complex.basisOneI.orientation
 #align complex.orientation Complex.orientation
 
 end Complex
@@ -312,13 +312,13 @@ theorem conjAe_coe : ⇑conjAe = conj :=
 #align complex.conj_ae_coe Complex.conjAe_coe
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /-- The matrix representation of `conj_ae`. -/
 @[simp]
 theorem toMatrix_conjAe :
     LinearMap.toMatrix basisOneI basisOneI conjAe.toLinearMap =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   simp [LinearMap.toMatrix_apply]
@@ -329,8 +329,8 @@ theorem toMatrix_conjAe :
 theorem real_algHom_eq_id_or_conj (f : ℂ →ₐ[ℝ] ℂ) : f = AlgHom.id ℝ ℂ ∨ f = conjAe :=
   by
   refine'
-      (eq_or_eq_neg_of_sq_eq_sq (f I) I <| by rw [← map_pow, I_sq, map_neg, map_one]).imp _ _ <;>
-    refine' fun h => alg_hom_ext _
+      (eq_or_eq_neg_of_sq_eq_sq (f i) i <| by rw [← map_pow, i_sq, map_neg, map_one]).imp _ _ <;>
+    refine' fun h => algHom_ext _
   exacts[h, conj_I.symm ▸ h]
 #align complex.real_alg_hom_eq_id_or_conj Complex.real_algHom_eq_id_or_conj
 
@@ -343,7 +343,7 @@ def equivRealProdAddHom : ℂ ≃+ ℝ × ℝ :=
 /-- The natural `linear_equiv` from `ℂ` to `ℝ × ℝ`. -/
 @[simps (config := { simpRhs := true }) apply symm_apply_re symm_apply_im]
 def equivRealProdLm : ℂ ≃ₗ[ℝ] ℝ × ℝ :=
-  { equivRealProdAddHom with map_smul' := by simp [equiv_real_prod_add_hom] }
+  { equivRealProdAddHom with map_smul' := by simp [equivRealProdAddHom] }
 #align complex.equiv_real_prod_lm Complex.equivRealProdLm
 
 section lift
@@ -390,9 +390,9 @@ This isomorphism is named to match the very similar `zsqrtd.lift`. -/
 @[simps (config := { simpRhs := true })]
 def lift : { I' : A // I' * I' = -1 } ≃ (ℂ →ₐ[ℝ] A)
     where
-  toFun I' := liftAux I' I'.Prop
-  invFun F := ⟨F i, by rw [← F.map_mul, I_mul_I, AlgHom.map_neg, AlgHom.map_one]⟩
-  left_inv I' := Subtype.ext <| liftAux_apply_i I' I'.Prop
+  toFun I' := liftAux I' I'.prop
+  invFun F := ⟨F i, by rw [← F.map_mul, i_mul_i, AlgHom.map_neg, AlgHom.map_one]⟩
+  left_inv I' := Subtype.ext <| liftAux_apply_i I' I'.prop
   right_inv F := algHom_ext <| liftAux_apply_i _ _
 #align complex.lift Complex.lift
 
@@ -425,7 +425,7 @@ def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A
     where
   toFun a :=
     ⟨-i • a, by
-      simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_I,
+      simp only [selfAdjoint.mem_iff, neg_smul, star_neg, star_smul, star_def, conj_i,
         skewAdjoint.star_val_eq, neg_smul_neg]⟩
   map_add' a b := by
     ext
@@ -438,7 +438,7 @@ def skewAdjoint.negISmul : skewAdjoint A →ₗ[ℝ] selfAdjoint A
 #align skew_adjoint.neg_I_smul skewAdjoint.negISmul
 
 theorem skewAdjoint.i_smul_neg_i (a : skewAdjoint A) : i • (skewAdjoint.negISmul a : A) = a := by
-  simp only [smul_smul, skewAdjoint.negISmul_apply_coe, neg_smul, smul_neg, I_mul_I, one_smul,
+  simp only [smul_smul, skewAdjoint.negISmul_apply_coe, neg_smul, smul_neg, i_mul_i, one_smul,
     neg_neg]
 #align skew_adjoint.I_smul_neg_I skewAdjoint.i_smul_neg_i
 
@@ -482,7 +482,7 @@ theorem imaginaryPart_apply_coe (a : A) : (ℑ a : A) = -i • (2 : ℝ)⁻¹ �
 /-- The standard decomposition of `ℜ a + complex.I • ℑ a = a` of an element of a star module over
 `ℂ` into a linear combination of self adjoint elements. -/
 theorem realPart_add_i_smul_imaginaryPart (a : A) : (ℜ a + i • ℑ a : A) = a := by
-  simpa only [smul_smul, realPart_apply_coe, imaginaryPart_apply_coe, neg_smul, I_mul_I, one_smul,
+  simpa only [smul_smul, realPart_apply_coe, imaginaryPart_apply_coe, neg_smul, i_mul_i, one_smul,
     neg_sub, add_add_sub_cancel, smul_sub, smul_add, neg_sub_neg, invOf_eq_inv] using
     inv_of_two_smul_add_inv_of_two_smul ℝ a
 #align real_part_add_I_smul_imaginary_part realPart_add_i_smul_imaginaryPart
@@ -491,14 +491,14 @@ theorem realPart_add_i_smul_imaginaryPart (a : A) : (ℜ a + i • ℑ a : A) = 
 theorem realPart_i_smul (a : A) : ℜ (i • a) = -ℑ a :=
   by
   ext
-  simp [smul_comm I, smul_sub, sub_eq_add_neg, add_comm]
+  simp [smul_comm i, smul_sub, sub_eq_add_neg, add_comm]
 #align real_part_I_smul realPart_i_smul
 
 @[simp]
 theorem imaginaryPart_i_smul (a : A) : ℑ (i • a) = ℜ a :=
   by
   ext
-  simp [smul_comm I, smul_smul I]
+  simp [smul_comm i, smul_smul i]
 #align imaginary_part_I_smul imaginaryPart_i_smul
 
 theorem realPart_smul (z : ℂ) (a : A) : ℜ (z • a) = z.re • ℜ a - z.im • ℑ a :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.polynomial.group_ring_action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) :
   by
   suffices
     DistribMulAction.toAddMonoidHom R[X] m =
-      (map_ring_hom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
+      (mapRingHom (MulSemiringAction.toRingHom M R m)).toAddMonoidHom
     by
     ext1 r
     exact AddMonoidHom.congr_fun this r
@@ -67,10 +67,10 @@ theorem smul_x (m : M) : (m • x : R[X]) = x :=
 variable (S : Type _) [CommSemiring S] [MulSemiringAction M S]
 
 theorem smul_eval_smul (m : M) (f : S[X]) (x : S) : (m • f).eval (m • x) = m • f.eval x :=
-  Polynomial.induction_on f (fun r => by rw [smul_C, eval_C, eval_C])
+  Polynomial.induction_on f (fun r => by rw [smul_c, eval_c, eval_c])
     (fun f g ihf ihg => by rw [smul_add, eval_add, ihf, ihg, eval_add, smul_add]) fun n r ih => by
-    rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C,
-      eval_pow, eval_X, smul_mul', smul_pow']
+    rw [smul_mul', smul_pow', smul_c, smul_x, eval_mul, eval_c, eval_pow, eval_x, eval_mul, eval_c,
+      eval_pow, eval_x, smul_mul', smul_pow']
 #align polynomial.smul_eval_smul Polynomial.smul_eval_smul
 
 variable (G : Type _) [Group G]
@@ -97,7 +97,7 @@ open Classical
 
 /-- the product of `(X - g • x)` over distinct `g • x`. -/
 noncomputable def prodXSubSmul (x : R) : R[X] :=
-  (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).Prod fun g =>
+  (Finset.univ : Finset (G ⧸ MulAction.stabilizer G x)).prod fun g =>
     Polynomial.x - Polynomial.c (ofQuotientStabilizer G x g)
 #align prod_X_sub_smul prodXSubSmul
 
@@ -113,7 +113,7 @@ theorem prodXSubSmul.eval (x : R) : (prodXSubSmul G R x).eval x = 0 :=
 theorem prodXSubSmul.smul (x : R) (g : G) : g • prodXSubSmul G R x = prodXSubSmul G R x :=
   Finset.smul_prod.trans <|
     Fintype.prod_bijective _ (MulAction.bijective g) _ _ fun g' => by
-      rw [of_quotient_stabilizer_smul, smul_sub, Polynomial.smul_x, Polynomial.smul_c]
+      rw [ofQuotientStabilizer_smul, smul_sub, Polynomial.smul_x, Polynomial.smul_c]
 #align prod_X_sub_smul.smul prodXSubSmul.smul
 
 theorem prodXSubSmul.coeff (x : R) (g : G) (n : ℕ) :
@@ -139,13 +139,13 @@ protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X]
   toFun := map g
   map_smul' m p :=
     Polynomial.induction_on p
-      (fun b => by rw [smul_C, map_C, coe_fn_coe, g.map_smul, map_C, coe_fn_coe, smul_C])
+      (fun b => by rw [smul_c, map_c, coe_fn_coe, g.map_smul, map_c, coe_fn_coe, smul_c])
       (fun p q ihp ihq => by
         rw [smul_add, Polynomial.map_add, ihp, ihq, Polynomial.map_add, smul_add])
       fun n b ih => by
-      rw [smul_mul', smul_C, smul_pow', smul_X, Polynomial.map_mul, map_C, Polynomial.map_pow,
-        map_X, coe_fn_coe, g.map_smul, Polynomial.map_mul, map_C, Polynomial.map_pow, map_X,
-        smul_mul', smul_C, smul_pow', smul_X, coe_fn_coe]
+      rw [smul_mul', smul_c, smul_pow', smul_x, Polynomial.map_mul, map_c, Polynomial.map_pow,
+        map_x, coe_fn_coe, g.map_smul, Polynomial.map_mul, map_c, Polynomial.map_pow, map_x,
+        smul_mul', smul_c, smul_pow', smul_x, coe_fn_coe]
   map_zero' := Polynomial.map_zero g
   map_add' p q := Polynomial.map_add g
   map_one' := Polynomial.map_one g
@@ -153,7 +153,7 @@ protected noncomputable def polynomial (g : P →+*[M] Q) : P[X] →+*[M] Q[X]
 #align mul_semiring_action_hom.polynomial MulSemiringActionHom.polynomial
 
 @[simp]
-theorem coe_polynomial (g : P →+*[M] Q) : (g.Polynomial : P[X] → Q[X]) = map g :=
+theorem coe_polynomial (g : P →+*[M] Q) : (g.polynomial : P[X] → Q[X]) = map g :=
   rfl
 #align mul_semiring_action_hom.coe_polynomial MulSemiringActionHom.coe_polynomial
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.homotopy_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,14 +97,14 @@ is homotopic to the original chain map.
 def homotopyOutMap {C D : HomologicalComplex V c} (f : C ⟶ D) :
     Homotopy ((quotient V c).map f).out f :=
   by
-  apply homotopy_of_eq
+  apply homotopyOfEq
   simp
 #align homotopy_category.homotopy_out_map HomotopyCategory.homotopyOutMap
 
 @[simp]
 theorem quotient_map_out_comp_out {C D E : HomotopyCategory V c} (f : C ⟶ D) (g : D ⟶ E) :
     (quotient V c).map (Quot.out f ≫ Quot.out g) = f ≫ g := by
-  conv_rhs => erw [← quotient_map_out f, ← quotient_map_out g, ← (Quotient V c).map_comp]
+  conv_rhs => erw [← quotient_map_out f, ← quotient_map_out g, ← (quotient V c).map_comp]
 #align homotopy_category.quotient_map_out_comp_out HomotopyCategory.quotient_map_out_comp_out
 
 /-- Homotopy equivalent complexes become isomorphic in the homotopy category. -/
@@ -112,13 +112,13 @@ theorem quotient_map_out_comp_out {C D E : HomotopyCategory V c} (f : C ⟶ D) (
 def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
     (quotient V c).obj C ≅ (quotient V c).obj D
     where
-  Hom := (quotient V c).map f.Hom
+  Hom := (quotient V c).map f.hom
   inv := (quotient V c).map f.inv
   hom_inv_id' := by
-    rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
+    rw [← (quotient V c).map_comp, ← (quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_hom_inv_id
   inv_hom_id' := by
-    rw [← (Quotient V c).map_comp, ← (Quotient V c).map_id]
+    rw [← (quotient V c).map_comp, ← (quotient V c).map_id]
     exact eq_of_homotopy _ _ f.homotopy_inv_hom_id
 #align homotopy_category.iso_of_homotopy_equiv HomotopyCategory.isoOfHomotopyEquiv
 
@@ -127,7 +127,7 @@ def isoOfHomotopyEquiv {C D : HomologicalComplex V c} (f : HomotopyEquiv C D) :
 def homotopyEquivOfIso {C D : HomologicalComplex V c}
     (i : (quotient V c).obj C ≅ (quotient V c).obj D) : HomotopyEquiv C D
     where
-  Hom := Quot.out i.Hom
+  Hom := Quot.out i.hom
   inv := Quot.out i.inv
   homotopyHomInvId :=
     homotopyOfEq _ _
@@ -156,7 +156,7 @@ def homologyFactors (i : ι) : quotient V c ⋙ homologyFunctor V c i ≅ homolo
 
 @[simp]
 theorem homologyFactors_hom_app (i : ι) (C : HomologicalComplex V c) :
-    (homologyFactors V c i).Hom.app C = 𝟙 _ :=
+    (homologyFactors V c i).hom.app C = 𝟙 _ :=
   rfl
 #align homotopy_category.homology_factors_hom_app HomotopyCategory.homologyFactors_hom_app
 
@@ -211,7 +211,7 @@ def NatTrans.mapHomotopyCategory {F G : V ⥤ W} [F.Additive] [G.Additive] (α :
   app C := (HomotopyCategory.quotient W c).map ((NatTrans.mapHomologicalComplex α c).app C.as)
   naturality' C D f := by
     dsimp
-    simp only [← functor.map_comp]
+    simp only [← Functor.map_comp]
     congr 1
     ext
     dsimp

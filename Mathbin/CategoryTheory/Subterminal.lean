@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.subterminal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ The converse of `is_subterminal_of_is_iso_diag`.
 theorem IsSubterminal.isIso_diag (hA : IsSubterminal A) [HasBinaryProduct A A] : IsIso (diag A) :=
   ⟨⟨Limits.prod.fst,
       ⟨by simp, by
-        rw [is_subterminal.def] at hA
+        rw [IsSubterminal.def] at hA
         tidy⟩⟩⟩
 #align category_theory.is_subterminal.is_iso_diag CategoryTheory.IsSubterminal.isIso_diag
 
@@ -111,7 +111,7 @@ The converse of `is_subterminal.is_iso_diag`.
 theorem isSubterminal_of_isIso_diag [HasBinaryProduct A A] [IsIso (diag A)] : IsSubterminal A :=
   fun Z f g =>
   by
-  have : (limits.prod.fst : A ⨯ A ⟶ _) = limits.prod.snd := by simp [← cancel_epi (diag A)]
+  have : (Limits.prod.fst : A ⨯ A ⟶ _) = Limits.prod.snd := by simp [← cancel_epi (diag A)]
   rw [← prod.lift_fst f g, this, prod.lift_snd]
 #align category_theory.is_subterminal_of_is_iso_diag CategoryTheory.isSubterminal_of_isIso_diag
 
@@ -119,8 +119,8 @@ theorem isSubterminal_of_isIso_diag [HasBinaryProduct A A] [IsIso (diag A)] : Is
 @[simps]
 def IsSubterminal.isoDiag (hA : IsSubterminal A) [HasBinaryProduct A A] : A ⨯ A ≅ A :=
   by
-  letI := is_subterminal.is_iso_diag hA
-  apply (as_iso (diag A)).symm
+  letI := IsSubterminal.isIso_diag hA
+  apply (asIso (diag A)).symm
 #align category_theory.is_subterminal.iso_diag CategoryTheory.IsSubterminal.isoDiag
 
 variable (C)
@@ -173,7 +173,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
 
 @[simp]
 theorem subterminals_to_monoOver_terminal_comp_forget [HasTerminal C] :
-    (subterminalsEquivMonoOverTerminal C).Functor ⋙ MonoOver.forget _ ⋙ Over.forget _ =
+    (subterminalsEquivMonoOverTerminal C).functor ⋙ MonoOver.forget _ ⋙ Over.forget _ =
       subterminalInclusion C :=
   rfl
 #align category_theory.subterminals_to_mono_over_terminal_comp_forget CategoryTheory.subterminals_to_monoOver_terminal_comp_forget

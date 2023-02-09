@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.conjugate_exponents
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,11 +55,11 @@ theorem pos : 0 < p :=
 #align real.is_conjugate_exponent.pos Real.IsConjugateExponent.pos
 
 theorem nonneg : 0 ≤ p :=
-  le_of_lt h.Pos
+  le_of_lt h.pos
 #align real.is_conjugate_exponent.nonneg Real.IsConjugateExponent.nonneg
 
 theorem ne_zero : p ≠ 0 :=
-  ne_of_gt h.Pos
+  ne_of_gt h.pos
 #align real.is_conjugate_exponent.ne_zero Real.IsConjugateExponent.ne_zero
 
 theorem sub_one_pos : 0 < p - 1 :=
@@ -71,7 +71,7 @@ theorem sub_one_ne_zero : p - 1 ≠ 0 :=
 #align real.is_conjugate_exponent.sub_one_ne_zero Real.IsConjugateExponent.sub_one_ne_zero
 
 theorem one_div_pos : 0 < 1 / p :=
-  one_div_pos.2 h.Pos
+  one_div_pos.2 h.pos
 #align real.is_conjugate_exponent.one_div_pos Real.IsConjugateExponent.one_div_pos
 
 theorem one_div_nonneg : 0 ≤ 1 / p :=

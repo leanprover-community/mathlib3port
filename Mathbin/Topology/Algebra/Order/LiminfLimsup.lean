@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.liminf_limsup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.Order.Basic
 
 /-!
 # Lemmas about liminf and limsup in an order topology.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 
@@ -216,8 +219,8 @@ theorem limsupₛ_nhds (a : α) : limsupₛ (𝓝 a) = a :=
     fun b (hba : a < b) =>
     show ∃ (c : _)(h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
       match dense_or_discrete a b with
-      | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
-      | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
+      | or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
+      | or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
 #align Limsup_nhds limsupₛ_nhds
 -/
 
@@ -310,7 +313,7 @@ theorem tendsto_of_le_liminf_of_limsup_le {f : Filter β} {u : β → α} {a : �
     Tendsto u f (𝓝 a) :=
   if hf : f = ⊥ then hf.symm ▸ tendsto_bot
   else
-    haveI : ne_bot f := ⟨hf⟩
+    haveI : NeBot f := ⟨hf⟩
     tendsto_of_liminf_eq_limsup (le_antisymm (le_trans (liminf_le_limsup h h') hsup) hinf)
       (le_antisymm hsup (le_trans hinf (liminf_le_limsup h h'))) h h'
 #align tendsto_of_le_liminf_of_limsup_le tendsto_of_le_liminf_of_limsup_le
@@ -334,8 +337,8 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
     ∃ c : α, Tendsto u f (𝓝 c) := by
   by_cases hbot : f = ⊥;
   · rw [hbot]
-    exact ⟨Inf ∅, tendsto_bot⟩
-  haveI : ne_bot f := ⟨hbot⟩
+    exact ⟨infₛ ∅, tendsto_bot⟩
+  haveI : NeBot f := ⟨hbot⟩
   refine' ⟨limsup u f, _⟩
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
   by_contra' hlt
@@ -344,8 +347,8 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
       (Set.nonempty_Ioo.2 hlt)
   obtain ⟨b, ⟨⟨ab, bu⟩, bs⟩⟩ : ∃ b, (a < b ∧ b < f.limsup u) ∧ b ∈ s :=
     dense_iff_inter_open.1 hs (Set.Ioo a (f.limsup u)) isOpen_Ioo (Set.nonempty_Ioo.2 au)
-  have A : ∃ᶠ n in f, u n < a := frequently_lt_of_liminf_lt (is_bounded.is_cobounded_ge h) la
-  have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (is_bounded.is_cobounded_le h') bu
+  have A : ∃ᶠ n in f, u n < a := frequently_lt_of_liminf_lt (IsBounded.isCobounded_ge h) la
+  have B : ∃ᶠ n in f, b < u n := frequently_lt_of_lt_limsup (IsBounded.isCobounded_le h') bu
   exact H a as b bs ab ⟨A, B⟩
 #align tendsto_of_no_upcrossings tendsto_of_no_upcrossings
 -/
@@ -374,10 +377,10 @@ theorem Antitone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R �
   by
   apply le_antisymm
   · have A : { a : R | ∀ᶠ n : R in F, n ≤ a }.Nonempty := ⟨⊤, by simp⟩
-    rw [Limsup, f_decr.map_Inf_of_continuous_at' f_cont A]
+    rw [limsupₛ, f_decr.map_Inf_of_continuous_at' f_cont A]
     apply le_of_forall_lt
     intro c hc
-    simp only [liminf, Liminf, lt_supₛ_iff, eventually_map, Set.mem_setOf_eq, exists_prop,
+    simp only [liminf, liminfₛ, lt_supₛ_iff, eventually_map, Set.mem_setOf_eq, exists_prop,
       Set.mem_image, exists_exists_and_eq_and] at hc⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
@@ -393,7 +396,7 @@ theorem Antitone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R �
       have B : ∃ᶠ n in F, F.Limsup ≤ n :=
         by
         apply
-          (frequently_lt_of_lt_Limsup
+          (frequently_lt_of_lt_limsupₛ
               (by
                 run_tac
                   is_bounded_default)
@@ -414,7 +417,7 @@ theorem Antitone.map_limsupₛ_of_continuousAt {F : Filter R} [NeBot F] {f : R �
     have B : F.liminf f ≤ f m := by
       apply liminf_le_of_frequently_le
       apply
-        (frequently_lt_of_lt_Limsup
+        (frequently_lt_of_lt_limsupₛ
             (by
               run_tac
                 is_bounded_default)
@@ -592,12 +595,12 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
           atTop } :=
   by
   ext ω
-  simp only [limsup_eq_infi_supr_of_nat, ge_iff_le, Set.supᵢ_eq_unionᵢ, Set.infᵢ_eq_interᵢ,
+  simp only [limsup_eq_infᵢ_supᵢ_of_nat, ge_iff_le, Set.supᵢ_eq_unionᵢ, Set.infᵢ_eq_interᵢ,
     Set.mem_interᵢ, Set.mem_unionᵢ, exists_prop]
   constructor
   · intro hω
     refine'
-      tendsto_at_top_at_top_of_monotone'
+      tendsto_atTop_atTop_of_monotone'
         (fun n m hnm =>
           Finset.sum_mono_set_of_nonneg (fun i => Set.indicator_nonneg (fun _ _ => zero_le_one) _)
             (Finset.range_mono hnm))
@@ -635,7 +638,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
         Set.indicator_of_mem hj₂]
       exact zero_lt_one
   · rintro hω i
-    rw [Set.mem_setOf_eq, tendsto_at_top_at_top] at hω
+    rw [Set.mem_setOf_eq, tendsto_atTop_atTop] at hω
     by_contra hcon
     push_neg  at hcon
     obtain ⟨j, h⟩ := hω (i + 1)

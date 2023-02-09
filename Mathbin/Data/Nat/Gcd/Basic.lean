@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.nat.gcd.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -886,12 +886,12 @@ but is expected to have type
   forall {m : Nat} {k : Nat} (n : Nat), (Nat.coprime m k) -> (Nat.coprime m (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) k n))
 Case conversion may be inaccurate. Consider using '#align nat.coprime.pow_right Nat.coprime.pow_rightₓ'. -/
 theorem coprime.pow_right {m k : ℕ} (n : ℕ) (H1 : coprime k m) : coprime k (m ^ n) :=
-  (H1.symm.pow_leftₓ n).symm
+  (H1.symm.pow_left n).symm
 #align nat.coprime.pow_right Nat.coprime.pow_right
 
 #print Nat.coprime.pow /-
 theorem coprime.pow {k l : ℕ} (m n : ℕ) (H1 : coprime k l) : coprime (k ^ m) (l ^ n) :=
-  (H1.pow_leftₓ _).pow_right _
+  (H1.pow_left _).pow_right _
 #align nat.coprime.pow Nat.coprime.pow
 -/
 
@@ -902,7 +902,7 @@ theorem coprime_pow_left_iff {n : ℕ} (hn : 0 < n) (a b : ℕ) :
   by
   obtain ⟨n, rfl⟩ := exists_eq_succ_of_ne_zero hn.ne'
   rw [pow_succ, Nat.coprime_mul_iff_left]
-  exact ⟨And.left, fun hab => ⟨hab, hab.pow_leftₓ _⟩⟩
+  exact ⟨And.left, fun hab => ⟨hab, hab.pow_left _⟩⟩
 #align nat.coprime_pow_left_iff Nat.coprime_pow_left_iff
 -/
 
@@ -1003,7 +1003,7 @@ theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧
   by
   constructor
   · intro h
-    obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
+    obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prodDvdAndDvdOfDvdProd h
     exact ⟨y, z, hy, hz, rfl⟩
   · rintro ⟨y, z, hy, hz, rfl⟩
     exact mul_dvd_mul hy hz
@@ -1013,7 +1013,7 @@ theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧
 #print Nat.gcd_mul_dvd_mul_gcd /-
 theorem gcd_mul_dvd_mul_gcd (k m n : ℕ) : gcd k (m * n) ∣ gcd k m * gcd k n :=
   by
-  rcases prod_dvd_and_dvd_of_dvd_prod <| gcd_dvd_right k (m * n) with ⟨⟨⟨m', hm'⟩, ⟨n', hn'⟩⟩, h⟩
+  rcases prodDvdAndDvdOfDvdProd <| gcd_dvd_right k (m * n) with ⟨⟨⟨m', hm'⟩, ⟨n', hn'⟩⟩, h⟩
   replace h : gcd k (m * n) = m' * n' := h
   rw [h]
   have hm'n' : m' * n' ∣ k := h ▸ gcd_dvd_left _ _

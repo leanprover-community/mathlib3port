@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.surreal.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,8 +120,8 @@ theorem numeric_rec {C : Pgame → Prop}
 theorem Relabelling.numeric_imp {x y : Pgame} (r : x ≡r y) (ox : Numeric x) : Numeric y :=
   by
   induction' x using Pgame.moveRecOn with x IHl IHr generalizing y
-  apply numeric.mk (fun i j => _) (fun i => _) fun j => _
-  · rw [← lt_congr (r.move_left_symm i).Equiv (r.move_right_symm j).Equiv]
+  apply Numeric.mk (fun i j => _) (fun i => _) fun j => _
+  · rw [← lt_congr (r.move_left_symm i).equiv (r.move_right_symm j).equiv]
     apply ox.left_lt_right
   · exact IHl _ (ox.move_left _) (r.move_left_symm i)
   · exact IHr _ (ox.move_right _) (r.move_right_symm j)
@@ -166,7 +166,7 @@ theorem le_iff_forall_lt {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
   refine' le_iff_forall_lf.trans (and_congr _ _) <;>
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
-    apply_rules [numeric.move_left, numeric.move_right]
+    apply_rules [Numeric.moveLeft, Numeric.moveRight]
 #align pgame.le_iff_forall_lt Pgame.le_iff_forall_lt
 
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
@@ -189,7 +189,7 @@ theorem lt_def {x y : Pgame} (ox : x.Numeric) (oy : y.Numeric) :
   rw [← lf_iff_lt ox oy, lf_def]
   refine' or_congr _ _ <;> refine' exists_congr fun x_1 => _ <;> refine' and_congr _ _ <;>
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
-    apply_rules [numeric.move_left, numeric.move_right]
+    apply_rules [Numeric.moveLeft, Numeric.moveRight]
 #align pgame.lt_def Pgame.lt_def
 
 theorem not_fuzzy {x y : Pgame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>
@@ -287,7 +287,7 @@ theorem numeric_nat : ∀ n : ℕ, Numeric n
 theorem numeric_toPgame (o : Ordinal) : o.toPgame.Numeric :=
   by
   induction' o using Ordinal.induction with o IH
-  apply numeric_of_is_empty_right_moves
+  apply numeric_of_isEmpty_rightMoves
   simpa using fun i => IH _ (Ordinal.toLeftMovesToPgame_symm_lt i)
 #align pgame.numeric_to_pgame Pgame.numeric_toPgame
 

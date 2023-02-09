@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.presheaf
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ def restrictedYonedaYoneda : restrictedYoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Type u
       NatIso.ofComponents (fun X => yonedaSectionsSmall X.unop _) fun X Y f =>
         funext fun x => by
           dsimp
-          rw [← functor_to_types.naturality _ _ x f (𝟙 _)]
+          rw [← FunctorToTypes.naturality _ _ x f (𝟙 _)]
           dsimp
           simp)
     fun _ _ _ => rfl
@@ -153,9 +153,9 @@ theorem extendAlongYoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
       colimit.pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op :=
   by
   ext J
-  erw [colimit.ι_pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op]
-  dsimp only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso',
-    is_colimit.hom_iso, ulift_trivial]
+  erw [colimit.ι_pre ((categoryOfElements.π Y).leftOp ⋙ A) (categoryOfElements.map f).op]
+  dsimp only [extendAlongYoneda, restrictYonedaHomEquiv, IsColimit.homIso', IsColimit.homIso,
+    uliftTrivial]
   simpa
 #align category_theory.colimit_adj.extend_along_yoneda_map CategoryTheory.ColimitAdj.extendAlongYoneda_map
 
@@ -182,7 +182,7 @@ def isInitial (A : C) : IsInitial (Elements.initial A)
   desc s := ⟨s.x.2.op, comp_id _⟩
   uniq' s m w := by
     simp_rw [← m.2]
-    dsimp [elements.initial]
+    dsimp [Elements.initial]
     simp
   fac' := by rintro s ⟨⟨⟩⟩
 #align category_theory.colimit_adj.is_initial CategoryTheory.ColimitAdj.isInitial
@@ -224,27 +224,27 @@ This follows from `category_theory.category_of_elements.costructured_arrow_yoned
 def extendAlongYonedaIsoKanApp (X) :
     (extendAlongYoneda A).obj X ≅ ((lan yoneda : (_ ⥤ ℰ) ⥤ _).obj A).obj X :=
   let eq := categoryOfElements.costructuredArrowYonedaEquivalence X
-  { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) Eq.Functor
-    inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) Eq.inverse
+  { Hom := colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor
+    inv := colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) eq.inverse
     hom_inv_id' :=
       by
-      erw [colimit.pre_pre ((category_of_elements.π X).leftOp ⋙ A) eq.inverse]
-      trans colimit.pre ((category_of_elements.π X).leftOp ⋙ A) (𝟭 _)
+      erw [colimit.pre_pre ((categoryOfElements.π X).leftOp ⋙ A) eq.inverse]
+      trans colimit.pre ((categoryOfElements.π X).leftOp ⋙ A) (𝟭 _)
       congr
-      · exact congr_arg functor.op (category_of_elements.from_to_costructured_arrow_eq X)
+      · exact congr_arg Functor.op (categoryOfElements.from_toCostructuredArrow_eq X)
       · ext
         simp only [colimit.ι_pre]
-        erw [category.comp_id]
+        erw [Category.comp_id]
         congr
     inv_hom_id' :=
       by
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) eq.functor]
       trans colimit.pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A X) (𝟭 _)
       congr
-      · exact category_of_elements.to_from_costructured_arrow_eq X
+      · exact categoryOfElements.to_fromCostructuredArrow_eq X
       · ext
         simp only [colimit.ι_pre]
-        erw [category.comp_id]
+        erw [Category.comp_id]
         congr }
 #align category_theory.colimit_adj.extend_along_yoneda_iso_Kan_app CategoryTheory.ColimitAdj.extendAlongYonedaIsoKanApp
 
@@ -255,12 +255,12 @@ def extendAlongYonedaIsoKan : extendAlongYoneda A ≅ (lan yoneda : (_ ⥤ ℰ) 
   NatIso.ofComponents (extendAlongYonedaIsoKanApp A)
     (by
       intro X Y f; simp
-      rw [extend_along_yoneda_map]
-      erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A Y) (costructured_arrow.map f)]
+      rw [extendAlongYoneda_map]
+      erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A Y) (CostructuredArrow.map f)]
       erw [colimit.pre_pre (Lan.diagram (yoneda : C ⥤ _ ⥤ Type u₁) A Y)
-          (category_of_elements.costructured_arrow_yoneda_equivalence Y).Functor]
+          (categoryOfElements.costructuredArrowYonedaEquivalence Y).functor]
       congr 1
-      apply category_of_elements.costructured_arrow_yoneda_equivalence_naturality)
+      apply categoryOfElements.costructuredArrow_yoneda_equivalence_naturality)
 #align category_theory.colimit_adj.extend_along_yoneda_iso_Kan CategoryTheory.ColimitAdj.extendAlongYonedaIsoKan
 
 /-- extending `F ⋙ yoneda` along the yoneda embedding is isomorphic to `Lan F.op`. -/
@@ -306,7 +306,7 @@ presheaf `P` as a colimit of representables.
 The construction of [MM92], Chapter I, Section 5, Corollary 3.
 -/
 def coconeOfRepresentable (P : Cᵒᵖ ⥤ Type u₁) : Cocone (functorToRepresentables P) :=
-  Cocone.extend (Colimit.cocone _) (extendAlongYonedaYoneda.Hom.app P)
+  Cocone.extend (Colimit.cocone _) (extendAlongYonedaYoneda.hom.app P)
 #align category_theory.cocone_of_representable CategoryTheory.coconeOfRepresentable
 
 @[simp]
@@ -327,7 +327,7 @@ theorem coconeOfRepresentable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α
       (coconeOfRepresentable P₂).ι.app ((categoryOfElements.map α).op.obj j) :=
   by
   ext (T f)
-  simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
+  simpa [coconeOfRepresentable_ι_app] using FunctorToTypes.naturality _ _ α f.op _
 #align category_theory.cocone_of_representable_naturality CategoryTheory.coconeOfRepresentable_naturality
 
 /-- The cocone with point `P` given by `the_cocone` is a colimit: that is, we have exhibited an
@@ -337,8 +337,8 @@ The result of [MM92], Chapter I, Section 5, Corollary 3.
 -/
 def colimitOfRepresentable (P : Cᵒᵖ ⥤ Type u₁) : IsColimit (coconeOfRepresentable P) :=
   by
-  apply is_colimit.of_point_iso (colimit.is_colimit (functor_to_representables P))
-  change is_iso (colimit.desc _ (cocone.extend _ _))
+  apply IsColimit.ofPointIso (colimit.isColimit (functorToRepresentables P))
+  change IsIso (colimit.desc _ (Cocone.extend _ _))
   rw [colimit.desc_extend, colimit.desc_cocone]
   infer_instance
 #align category_theory.colimit_of_representable CategoryTheory.colimitOfRepresentable
@@ -349,28 +349,27 @@ representable presheaves then they agree everywhere.
 def natIsoOfNatIsoOnRepresentables (L₁ L₂ : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ) [PreservesColimits L₁]
     [PreservesColimits L₂] (h : yoneda ⋙ L₁ ≅ yoneda ⋙ L₂) : L₁ ≅ L₂ :=
   by
-  apply nat_iso.of_components _ _
+  apply NatIso.ofComponents _ _
   · intro P
     refine'
-      (is_colimit_of_preserves L₁ (colimit_of_representable P)).coconePointsIsoOfNatIso
-        (is_colimit_of_preserves L₂ (colimit_of_representable P)) _
-    apply functor.associator _ _ _ ≪≫ _
-    exact iso_whisker_left (category_of_elements.π P).leftOp h
+      (isColimitOfPreserves L₁ (colimitOfRepresentable P)).coconePointsIsoOfNatIso
+        (isColimitOfPreserves L₂ (colimitOfRepresentable P)) _
+    apply Functor.associator _ _ _ ≪≫ _
+    exact isoWhiskerLeft (categoryOfElements.π P).leftOp h
   · intro P₁ P₂ f
-    apply (is_colimit_of_preserves L₁ (colimit_of_representable P₁)).hom_ext
+    apply (isColimitOfPreserves L₁ (colimitOfRepresentable P₁)).hom_ext
     intro j
-    dsimp only [id.def, is_colimit.cocone_points_iso_of_nat_iso_hom, iso_whisker_left_hom]
+    dsimp only [id.def, IsColimit.coconePointsIsoOfNatIso_hom, isoWhiskerLeft_hom]
     have :
-      (L₁.map_cocone (cocone_of_representable P₁)).ι.app j ≫ L₁.map f =
-        (L₁.map_cocone (cocone_of_representable P₂)).ι.app
-          ((category_of_elements.map f).op.obj j) :=
+      (L₁.map_cocone (coconeOfRepresentable P₁)).ι.app j ≫ L₁.map f =
+        (L₁.map_cocone (coconeOfRepresentable P₂)).ι.app ((categoryOfElements.map f).op.obj j) :=
       by
       dsimp
-      rw [← L₁.map_comp, cocone_of_representable_naturality]
+      rw [← L₁.map_comp, coconeOfRepresentable_naturality]
       rfl
-    rw [reassoc_of this, is_colimit.ι_map_assoc, is_colimit.ι_map]
+    rw [reassoc_of this, IsColimit.ι_map_assoc, IsColimit.ι_map]
     dsimp
-    rw [← L₂.map_comp, cocone_of_representable_naturality]
+    rw [← L₂.map_comp, coconeOfRepresentable_naturality]
     rfl
 #align category_theory.nat_iso_of_nat_iso_on_representables CategoryTheory.natIsoOfNatIsoOnRepresentables
 
@@ -401,9 +400,9 @@ converse to `left_adjoint_preserves_colimits`.
 -/
 def isLeftAdjointOfPreservesColimits (L : (C ⥤ Type u₁) ⥤ ℰ) [PreservesColimits L] :
     IsLeftAdjoint L :=
-  let e : _ ⥤ Type u₁ ≌ _ ⥤ Type u₁ := (opOpEquivalence C).congr_left
-  let t := isLeftAdjointOfPreservesColimitsAux (e.Functor ⋙ L : _)
-  adjunction.left_adjoint_of_nat_iso (e.inv_fun_id_assoc _)
+  let e : _ ⥤ Type u₁ ≌ _ ⥤ Type u₁ := (opOpEquivalence C).congrLeft
+  let t := isLeftAdjointOfPreservesColimitsAux (e.functor ⋙ L : _)
+  Adjunction.leftAdjointOfNatIso (e.inv_fun_id_assoc _)
 #align category_theory.is_left_adjoint_of_preserves_colimits CategoryTheory.isLeftAdjointOfPreservesColimits
 
 end CategoryTheory

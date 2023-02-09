@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.locally_convex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ theorem locallyConvexSpace_iff_exists_convex_subset_zero :
 instance (priority := 100) LocallyConvexSpace.to_locallyConnectedSpace [Module ℝ E]
     [HasContinuousSmul ℝ E] [LocallyConvexSpace ℝ E] : LocallyConnectedSpace E :=
   locallyConnectedSpace_of_connected_bases _ _
-    (fun x => @LocallyConvexSpace.convex_basis ℝ _ _ _ _ _ _ x) fun x s hs => hs.2.IsPreconnected
+    (fun x => @LocallyConvexSpace.convex_basis ℝ _ _ _ _ _ _ x) fun x s hs => hs.2.isPreconnected
 #align locally_convex_space.to_locally_connected_space LocallyConvexSpace.to_locallyConnectedSpace
 
 end Module
@@ -142,7 +142,7 @@ theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} 
   refine'
     ⟨s + V, t + V, hVopen.add_left, hVopen.add_left, hs₁.add hVconvex, ht₁.add hVconvex,
       subset_add_left _ hV0, subset_add_left _ hV0, _⟩
-  simp_rw [← Union_add_left_image, image_add_left]
+  simp_rw [← unionᵢ_add_left_image, image_add_left]
   simp_rw [UniformSpace.ball, ← preimage_comp, sub_eq_neg_add] at hV
   exact hV
 #align disjoint.exists_open_convexes Disjoint.exists_open_convexes
@@ -157,14 +157,14 @@ variable {ι : Sort _} {𝕜 E F : Type _} [OrderedSemiring 𝕜] [AddCommMonoid
 theorem locallyConvexSpaceInf {ts : Set (TopologicalSpace E)}
     (h : ∀ t ∈ ts, @LocallyConvexSpace 𝕜 E _ _ _ t) : @LocallyConvexSpace 𝕜 E _ _ _ (infₛ ts) :=
   by
-  letI : TopologicalSpace E := Inf ts
+  letI : TopologicalSpace E := infₛ ts
   refine'
     LocallyConvexSpace.ofBases 𝕜 E (fun x => fun If : Set ts × (ts → Set E) => ⋂ i ∈ If.1, If.2 i)
       (fun x => fun If : Set ts × (ts → Set E) =>
         If.1.Finite ∧ ∀ i ∈ If.1, If.2 i ∈ @nhds _ (↑i) x ∧ Convex 𝕜 (If.2 i))
       (fun x => _) fun x If hif => convex_interᵢ fun i => convex_interᵢ fun hi => (hif.2 i hi).2
   rw [nhds_infₛ, ← infᵢ_subtype'']
-  exact has_basis_infi' fun i : ts => (@locallyConvexSpace_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
+  exact hasBasis_infᵢ' fun i : ts => (@locally_convex_space_iff 𝕜 E _ _ _ ↑i).mp (h (↑i) i.2) x
 #align locally_convex_space_Inf locallyConvexSpaceInf
 
 theorem locallyConvexSpaceInfi {ts' : ι → TopologicalSpace E}

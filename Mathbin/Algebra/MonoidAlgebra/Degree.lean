@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.degree
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ variable [AddMonoid A] [AddMonoid B] [CovariantClass B B (· + ·) (· ≤ ·)]
 theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0)
     (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) :
     ∀ l : List (AddMonoidAlgebra R A),
-      l.Prod.support.sup degb ≤ (l.map fun f : AddMonoidAlgebra R A => f.support.sup degb).Sum
+      l.prod.support.sup degb ≤ (l.map fun f : AddMonoidAlgebra R A => f.support.sup degb).sum
   | [] => by
     rw [List.map_nil, Finset.sup_le_iff, List.prod_nil, List.sum_nil]
     exact fun a ha => by rwa [finset.mem_singleton.mp (Finsupp.support_single_subset ha)]
@@ -106,7 +106,7 @@ theorem sup_support_list_prod_le (degb0 : degb 0 ≤ 0)
 
 theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0)
     (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (l : List (AddMonoidAlgebra R A)) :
-    (l.map fun f : AddMonoidAlgebra R A => f.support.inf degt).Sum ≤ l.Prod.support.inf degt :=
+    (l.map fun f : AddMonoidAlgebra R A => f.support.inf degt).sum ≤ l.prod.support.inf degt :=
   OrderDual.ofDual_le_ofDual.mpr <|
     sup_support_list_prod_le (OrderDual.ofDual_le_ofDual.mp degt0)
       (fun a b => OrderDual.ofDual_le_ofDual.mp (degtm _ _)) l
@@ -140,7 +140,7 @@ variable [CommSemiring R] [AddCommMonoid A] [AddCommMonoid B] [CovariantClass B 
 
 theorem sup_support_multiset_prod_le (degb0 : degb 0 ≤ 0)
     (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (m : Multiset (AddMonoidAlgebra R A)) :
-    m.Prod.support.sup degb ≤ (m.map fun f : AddMonoidAlgebra R A => f.support.sup degb).Sum :=
+    m.prod.support.sup degb ≤ (m.map fun f : AddMonoidAlgebra R A => f.support.sup degb).sum :=
   by
   induction m using Quot.inductionOn
   rw [Multiset.quot_mk_to_coe'', Multiset.coe_map, Multiset.coe_sum, Multiset.coe_prod]
@@ -149,7 +149,7 @@ theorem sup_support_multiset_prod_le (degb0 : degb 0 ≤ 0)
 
 theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0)
     (degtm : ∀ a b, degt a + degt b ≤ degt (a + b)) (m : Multiset (AddMonoidAlgebra R A)) :
-    (m.map fun f : AddMonoidAlgebra R A => f.support.inf degt).Sum ≤ m.Prod.support.inf degt :=
+    (m.map fun f : AddMonoidAlgebra R A => f.support.inf degt).sum ≤ m.prod.support.inf degt :=
   OrderDual.ofDual_le_ofDual.mpr <|
     sup_support_multiset_prod_le (OrderDual.ofDual_le_ofDual.mp degt0)
       (fun a b => OrderDual.ofDual_le_ofDual.mp (degtm _ _)) m

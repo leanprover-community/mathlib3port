@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.over
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ by pulling back a morphism along `f`. -/
 @[simps]
 def pullback {X Y : C} (f : X ⟶ Y) : Over Y ⥤ Over X
     where
-  obj g := Over.mk (pullback.snd : pullback g.Hom f ⟶ X)
+  obj g := Over.mk (pullback.snd : pullback g.hom f ⟶ X)
   map g h k :=
     Over.homMk (pullback.lift (pullback.fst ≫ k.left) pullback.snd (by simp [pullback.condition]))
       (by tidy)
@@ -96,12 +96,12 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
     {
       homEquiv := fun g h =>
         { toFun := fun X =>
-            Over.homMk (pullback.lift X.left g.Hom (Over.w X)) (pullback.lift_snd _ _ _)
+            Over.homMk (pullback.lift X.left g.hom (Over.w X)) (pullback.lift_snd _ _ _)
           invFun := fun Y => by
-            refine' over.hom_mk _ _
+            refine' Over.homMk _ _
             refine' Y.left ≫ pullback.fst
             dsimp
-            rw [← over.w Y, category.assoc, pullback.condition, category.assoc]; rfl
+            rw [← Over.w Y, Category.assoc, pullback.condition, Category.assoc]; rfl
           left_inv := fun X => by
             ext
             dsimp
@@ -110,7 +110,7 @@ def mapPullbackAdj {A B : C} (f : A ⟶ B) : Over.map f ⊣ pullback f :=
             ext; dsimp
             simp only [pullback.lift_fst]
             dsimp
-            rw [pullback.lift_snd, ← over.w Y]
+            rw [pullback.lift_snd, ← Over.w Y]
             rfl } }
 #align category_theory.over.map_pullback_adj CategoryTheory.Over.mapPullbackAdj
 
@@ -173,7 +173,7 @@ by pushing a morphism forward along `f`. -/
 @[simps]
 def pushout {X Y : C} (f : X ⟶ Y) : Under X ⥤ Under Y
     where
-  obj g := Under.mk (pushout.inr : Y ⟶ pushout g.Hom f)
+  obj g := Under.mk (pushout.inr : Y ⟶ pushout g.hom f)
   map g h k :=
     Under.homMk (pushout.desc (k.right ≫ pushout.inl) pushout.inr (by simp [← pushout.condition]))
       (by tidy)

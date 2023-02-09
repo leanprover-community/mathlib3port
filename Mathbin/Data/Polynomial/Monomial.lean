@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.monomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,19 +63,19 @@ theorem card_support_le_one_iff_monomial {f : R[X]} :
 theorem ringHom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (c a) = g (c a))
     (h₂ : f x = g x) : f = g :=
   by
-  set f' := f.comp (to_finsupp_iso R).symm.toRingHom with hf'
-  set g' := g.comp (to_finsupp_iso R).symm.toRingHom with hg'
+  set f' := f.comp (toFinsuppIso R).symm.toRingHom with hf'
+  set g' := g.comp (toFinsuppIso R).symm.toRingHom with hg'
   have A : f' = g' := by
     ext
     · simp [h₁, RingEquiv.toRingHom_eq_coe]
     · simpa [RingEquiv.toRingHom_eq_coe] using h₂
-  have B : f = f'.comp (to_finsupp_iso R) :=
+  have B : f = f'.comp (toFinsuppIso R) :=
     by
     rw [hf', RingHom.comp_assoc]
     ext x
     simp only [RingEquiv.toRingHom_eq_coe, RingEquiv.symm_apply_apply, Function.comp_apply,
       RingHom.coe_comp, RingEquiv.coe_toRingHom]
-  have C : g = g'.comp (to_finsupp_iso R) :=
+  have C : g = g'.comp (toFinsuppIso R) :=
     by
     rw [hg', RingHom.comp_assoc]
     ext x

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.list.tfae
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem tfae_nil : TFAE [] :=
 -/
 
 #print List.tfae_singleton /-
-theorem tfae_singleton (p) : TFAE [p] := by simp [tfae, -eq_iff_iff]
+theorem tfae_singleton (p) : TFAE [p] := by simp [TFAE, -eq_iff_iff]
 #align list.tfae_singleton List.tfae_singleton
 -/
 
@@ -75,7 +75,7 @@ theorem tfae_of_cycle {a b} {l : List Prop} :
     List.Chain («->» · ·) a (b :: l) → (ilast' b l → a) → TFAE (a :: b :: l) :=
   by
   induction' l with c l IH generalizing a b <;>
-    simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, chain.nil] at *
+    simp only [tfae_cons_cons, tfae_singleton, and_true_iff, chain_cons, Chain.nil] at *
   · intro a b
     exact Iff.intro a b
   rintro ⟨ab, ⟨bc, ch⟩⟩ la

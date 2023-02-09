@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Keeley Hoek, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.mllist
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,8 +141,8 @@ unsafe def filter {α : Type u} (p : α → Prop) [DecidablePred p] : mllist m �
     cons do
       let (a, r) ← l
       let some a ← return a |
-        return (none, Filter r)
-      return (if p a then some a else none, Filter r)
+        return (none, filter r)
+      return (if p a then some a else none, filter r)
 #align tactic.mllist.filter tactic.mllist.filter
 
 /-- Filter a `mllist` using a function which returns values in the (alternative) monad.
@@ -264,7 +264,7 @@ unsafe def head [Alternative m] {α} (L : mllist m α) : m α := do
 /-- Apply a function returning values inside the monad to a monadic lazy list,
 returning only the first successful result. -/
 unsafe def mfirst [Alternative m] {α β} (L : mllist m α) (f : α → m β) : m β :=
-  (L.mfilter_map f).headI
+  (L.mfilter_map f).head
 #align tactic.mllist.mfirst tactic.mllist.mfirst
 
 end Mllist

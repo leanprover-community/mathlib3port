@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -595,7 +595,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_equiv.apply_eq_iff_eq MulEquiv.apply_eq_iff_eqₓ'. -/
 @[simp, to_additive]
 theorem apply_eq_iff_eq (e : M ≃* N) {x y : M} : e x = e y ↔ x = y :=
-  e.Injective.eq_iff
+  e.injective.eq_iff
 #align mul_equiv.apply_eq_iff_eq MulEquiv.apply_eq_iff_eq
 #align add_equiv.apply_eq_iff_eq AddEquiv.apply_eq_iff_eq
 
@@ -784,7 +784,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_equiv.mk_coe' MulEquiv.mk_coe'ₓ'. -/
 @[simp, to_additive]
 theorem mk_coe' (e : M ≃* N) (f h₁ h₂ h₃) : (MulEquiv.mk f (⇑e) h₁ h₂ h₃ : N ≃* M) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.injective <| ext fun x => rfl
 #align mul_equiv.mk_coe' MulEquiv.mk_coe'
 #align add_equiv.mk_coe' AddEquiv.mk_coe'
 

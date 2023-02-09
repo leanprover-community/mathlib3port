@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.finsupp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ protected def finsupp (s : Finset ι) (t : ι → Finset α) : Finset (ι →₀
 -/
 
 #print Finset.mem_finsupp_iff /-
-theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
+theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.finsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
   by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
@@ -75,7 +75,7 @@ Case conversion may be inaccurate. Consider using '#align finset.mem_finsupp_iff
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
 theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) :
-    f ∈ s.Finsupp t ↔ ∀ i, f i ∈ t i :=
+    f ∈ s.finsupp t ↔ ∀ i, f i ∈ t i :=
   by
   refine'
     mem_finsupp_iff.trans
@@ -98,7 +98,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.card_finsupp Finset.card_finsuppₓ'. -/
 @[simp]
 theorem card_finsupp (s : Finset ι) (t : ι → Finset α) :
-    (s.Finsupp t).card = ∏ i in s, (t i).card :=
+    (s.finsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 #align finset.card_finsupp Finset.card_finsupp
 
@@ -112,7 +112,7 @@ namespace Finsupp
 /-- Given a finitely supported function `f : ι →₀ finset α`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
-  f.support.Finsupp f
+  f.support.finsupp f
 #align finsupp.pi Finsupp.pi
 -/
 
@@ -134,7 +134,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Zero.{u1} α] (f : Finsupp.{u2, u1} ι (Finset.{u1} α) (Finset.zero.{u1} α _inst_1)), Eq.{1} Nat (Finset.card.{max u2 u1} (Finsupp.{u2, u1} ι α _inst_1) (Finsupp.pi.{u2, u1} ι α _inst_1 f)) (Finsupp.prod.{u2, u1, 0} ι (Finset.{u1} α) Nat (Finset.zero.{u1} α _inst_1) Nat.commMonoid f (fun (i : ι) => Nat.cast.{u1} ((Finset.{u1} α) -> Nat) (Pi.natCast.{u1, 0} (Finset.{u1} α) (fun (a._@.Mathlib.Algebra.BigOperators.Finsupp._hyg.437 : Finset.{u1} α) => Nat) (fun (a : Finset.{u1} α) => CanonicallyOrderedCommSemiring.toNatCast.{0} Nat Nat.canonicallyOrderedCommSemiring)) (Finset.card.{u1} α (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} ι (Finset.{u1} α) (Finset.zero.{u1} α _inst_1)) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => Finset.{u1} α) _x) (Finsupp.funLike.{u2, u1} ι (Finset.{u1} α) (Finset.zero.{u1} α _inst_1)) f i))))
 Case conversion may be inaccurate. Consider using '#align finsupp.card_pi Finsupp.card_piₓ'. -/
 @[simp]
-theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.Prod fun i => (f i).card :=
+theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.prod fun i => (f i).card :=
   by
   rw [pi, card_finsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]

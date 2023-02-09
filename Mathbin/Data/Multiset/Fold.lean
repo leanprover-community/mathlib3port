@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.fold
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,13 +39,13 @@ include hc ha
 /-- `fold op b s` folds a commutative associative operation `op` over
   the multiset `s`. -/
 def fold : α → Multiset α → α :=
-  foldr op (left_comm _ hc.comm ha.and_assoc)
+  foldr op (left_comm _ hc.comm ha.assoc)
 #align multiset.fold Multiset.fold
 -/
 
 #print Multiset.fold_eq_foldr /-
 theorem fold_eq_foldr (b : α) (s : Multiset α) :
-    fold op b s = foldr op (left_comm _ hc.comm ha.and_assoc) b s :=
+    fold op b s = foldr op (left_comm _ hc.comm ha.assoc) b s :=
   rfl
 #align multiset.fold_eq_foldr Multiset.fold_eq_foldr
 -/
@@ -65,7 +65,7 @@ theorem coe_fold_l (b : α) (l : List α) : fold op b l = l.foldl op b :=
 
 #print Multiset.fold_eq_foldl /-
 theorem fold_eq_foldl (b : α) (s : Multiset α) :
-    fold op b s = foldl op (right_comm _ hc.comm ha.and_assoc) b s :=
+    fold op b s = foldl op (right_comm _ hc.comm ha.assoc) b s :=
   Quot.inductionOn s fun l => coe_fold_l _ _ _
 #align multiset.fold_eq_foldl Multiset.fold_eq_foldl
 -/

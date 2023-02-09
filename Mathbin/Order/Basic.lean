@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,7 +298,7 @@ protected theorem ge (h : x = y) : y ≤ x :=
 -/
 
 #print Eq.not_lt /-
-theorem not_lt (h : x = y) : ¬x < y := fun h' => h'.Ne h
+theorem not_lt (h : x = y) : ¬x < y := fun h' => h'.ne h
 #align eq.not_lt Eq.not_lt
 -/
 
@@ -326,13 +326,13 @@ variable [PartialOrder α] {a b : α}
 
 #print LE.le.lt_iff_ne /-
 theorem lt_iff_ne (h : a ≤ b) : a < b ↔ a ≠ b :=
-  ⟨fun h => h.Ne, h.lt_of_ne⟩
+  ⟨fun h => h.ne, h.lt_of_ne⟩
 #align has_le.le.lt_iff_ne LE.le.lt_iff_ne
 -/
 
 #print LE.le.gt_iff_ne /-
 theorem gt_iff_ne (h : a ≤ b) : a < b ↔ b ≠ a :=
-  ⟨fun h => h.Ne.symm, h.lt_of_ne'⟩
+  ⟨fun h => h.ne.symm, h.lt_of_ne'⟩
 #align has_le.le.gt_iff_ne LE.le.gt_iff_ne
 -/
 
@@ -400,7 +400,7 @@ protected theorem false [Preorder α] {x : α} : x < x → False :=
 
 #print LT.lt.ne' /-
 theorem ne' [Preorder α] {x y : α} (h : x < y) : y ≠ x :=
-  h.Ne.symm
+  h.ne.symm
 #align has_lt.lt.ne' LT.lt.ne'
 -/
 
@@ -558,8 +558,8 @@ theorem Ne.le_iff_lt [PartialOrder α] {a b : α} (h : a ≠ b) : a ≤ b ↔ a 
 -/
 
 #print Ne.not_le_or_not_le /-
-theorem Ne.not_le_or_not_le [PartialOrder α] {a b : α} (h : a ≠ b) : ¬a ≤ b ∨ ¬b ≤ a :=
-  not_and_or.1 <| le_antisymm_iff.Not.1 h
+theorem Ne.not_le_or_not_le [PartialOrder α] {a b : α} (h : a ≠ not_eq) : ¬a ≤ b ∨ ¬b ≤ a :=
+  not_and_or.1 <| le_antisymm_iff.not.1 h
 #align ne.not_le_or_not_le Ne.not_le_or_not_le
 -/
 
@@ -591,8 +591,8 @@ theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else 
   rw [min_def]
   rcases lt_trichotomy a b with (lt | eq | gt)
   · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
-  · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
-  · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
+  · rw [if_pos eq.le, if_pos eq.ge, eq]
+  · rw [if_neg (not_le.mpr gt), if_pos gt.le]
 #align min_def' min_def'
 
 /- warning: max_def' -> max_def' is a dubious translation:
@@ -608,8 +608,8 @@ theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else 
   rw [max_def]
   rcases lt_trichotomy a b with (lt | eq | gt)
   · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
-  · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
-  · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
+  · rw [if_pos eq.le, if_pos eq.ge, eq]
+  · rw [if_neg (not_le.mpr gt), if_pos gt.le]
 #align max_def' max_def'
 
 #print lt_of_not_le /-
@@ -647,8 +647,8 @@ theorem not_lt_iff_eq_or_lt [LinearOrder α] {a b : α} : ¬a < b ↔ a = b ∨ 
 #print exists_ge_of_linear /-
 theorem exists_ge_of_linear [LinearOrder α] (a b : α) : ∃ c, a ≤ c ∧ b ≤ c :=
   match le_total a b with
-  | Or.inl h => ⟨_, h, le_rfl⟩
-  | Or.inr h => ⟨_, le_rfl, h⟩
+  | or.inl h => ⟨_, h, le_rfl⟩
+  | or.inr h => ⟨_, le_rfl, h⟩
 #align exists_ge_of_linear exists_ge_of_linear
 -/
 
@@ -1175,7 +1175,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u2 u1} (forall (i : ι), π i) (Pi.hasLe.{u2, u1} ι (fun (i : ι) => π i) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) x (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) y i a)) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) (x i) a) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align le_update_iff le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 #align le_update_iff le_update_iff
@@ -1186,7 +1186,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i}, Iff (LE.le.{max u2 u1} (forall (a : ι), π a) (Pi.hasLe.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) y) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) a (y i)) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_iff update_le_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 #align update_le_iff update_le_iff
@@ -1197,7 +1197,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Preorder.{u1} (π i)] {x : forall (i : ι), π i} {y : forall (i : ι), π i} {i : ι} {a : π i} {b : π i}, Iff (LE.le.{max u2 u1} (forall (a : ι), π a) (Pi.hasLe.{u2, u1} ι (fun (a : ι) => π a) (fun (i : ι) => Preorder.toLE.{u1} (π i) (_inst_2 i))) (Function.update.{succ u2, succ u1} ι (fun (i : ι) => π i) (fun (a : ι) (b : ι) => _inst_1 a b) x i a) (Function.update.{succ u2, succ u1} ι (fun (a : ι) => π a) (fun (a : ι) (b : ι) => _inst_1 a b) y i b)) (And (LE.le.{u1} (π i) (Preorder.toLE.{u1} (π i) (_inst_2 i)) a b) (forall (j : ι), (Ne.{succ u2} ι j i) -> (LE.le.{u1} (π j) (Preorder.toLE.{u1} (π j) (_inst_2 j)) (x j) (y j))))
 Case conversion may be inaccurate. Consider using '#align update_le_update_iff update_le_update_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem update_le_update_iff :
     Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true }) [update_le_iff]
@@ -1298,7 +1298,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {p : α -> Prop} {x : α} {y : α}, ((LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) x y) -> (p x)) -> ((LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α _inst_1))) y x) -> (p y)) -> (p (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) x y))
 Case conversion may be inaccurate. Consider using '#align min_rec min_recₓ'. -/
 theorem min_rec (hx : x ≤ y → p x) (hy : y ≤ x → p y) : p (min x y) :=
-  (le_total x y).rec (fun h => (min_eq_left h).symm.subst (hx h)) fun h =>
+  (le_total x y).ndrec (fun h => (min_eq_left h).symm.subst (hx h)) fun h =>
     (min_eq_right h).symm.subst (hy h)
 #align min_rec min_rec
 
@@ -1557,7 +1557,7 @@ theorem mk_le_mk [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁
 
 #print Prod.swap_le_swap /-
 @[simp]
-theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.symm ≤ y.symm ↔ x ≤ y :=
+theorem swap_le_swap [LE α] [LE β] {x y : α × β} : x.swap ≤ y.swap ↔ x ≤ y :=
   and_comm' _ _
 #align prod.swap_le_swap Prod.swap_le_swap
 -/
@@ -1579,7 +1579,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Preorder.{u1} α] [_inst_2 : Preorder.{u2} β] {x : Prod.{u1, u2} α β} {y : Prod.{u1, u2} α β}, Iff (LT.lt.{max u1 u2} (Prod.{u2, u1} β α) (Preorder.toLT.{max u1 u2} (Prod.{u2, u1} β α) (Prod.instPreorderProd.{u2, u1} β α _inst_2 _inst_1)) (Prod.swap.{u1, u2} α β x) (Prod.swap.{u1, u2} α β y)) (LT.lt.{max u1 u2} (Prod.{u1, u2} α β) (Preorder.toLT.{max u1 u2} (Prod.{u1, u2} α β) (Prod.instPreorderProd.{u1, u2} α β _inst_1 _inst_2)) x y)
 Case conversion may be inaccurate. Consider using '#align prod.swap_lt_swap Prod.swap_lt_swapₓ'. -/
 @[simp]
-theorem swap_lt_swap : x.symm < y.symm ↔ x < y :=
+theorem swap_lt_swap : x.swap < y.swap ↔ x < y :=
   and_congr swap_le_swap (not_congr swap_le_swap)
 #align prod.swap_lt_swap Prod.swap_lt_swap
 
@@ -1681,7 +1681,7 @@ instance OrderDual.denselyOrdered (α : Type u) [LT α] [DenselyOrdered α] : De
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
   ⟨by
-    convert @OrderDual.denselyOrdered αᵒᵈ _
+    convert @order_dual.densely_ordered αᵒᵈ _
     cases ‹LT α›
     rfl, @OrderDual.denselyOrdered α _⟩
 #align densely_ordered_order_dual denselyOrdered_orderDual
@@ -1766,13 +1766,13 @@ variable (a b : PUnit.{u + 1})
 
 instance : LinearOrder PUnit := by
   refine_struct
-        { le := fun _ _ => True
-          lt := fun _ _ => False
+        { le := fun _ _ => true
+          lt := fun _ _ => false
           max := fun _ _ => star
           min := fun _ _ => star
-          DecidableEq := PUnit.decidableEq
-          decidableLe := fun _ _ => Decidable.true
-          decidableLt := fun _ _ => Decidable.false } <;>
+          DecidableEq := punit.decidable_eq
+          decidableLe := fun _ _ => decidable.true
+          decidableLt := fun _ _ => decidable.false } <;>
       intros <;>
     first
       |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]|exact Or.inl trivial

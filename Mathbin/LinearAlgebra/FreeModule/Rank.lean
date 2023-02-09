@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.rank
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,8 +57,8 @@ theorem rank_finsupp' {ι : Type u} : Module.rank R (ι →₀ R) = (#ι) := by 
 @[simp]
 theorem rank_prod :
     Module.rank R (M × N) = lift.{w, v} (Module.rank R M) + lift.{v, w} (Module.rank R N) := by
-  simpa [rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N, lift_umax,
-    lift_umax'] using ((choose_basis R M).Prod (choose_basis R N)).mk_eq_dim.symm
+  simpa [rank_eq_card_chooseBasisIndex R M, rank_eq_card_chooseBasisIndex R N, lift_umax,
+    lift_umax'] using ((chooseBasis R M).prod (chooseBasis R N)).mk_eq_dim.symm
 #align module.free.rank_prod Module.Free.rank_prod
 
 /-- If `M` and `N` lie in the same universe, the rank of `M × N` is
@@ -73,7 +73,7 @@ theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGro
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
     Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by
-  let B i := choose_basis R (M i)
+  let B i := chooseBasis R (M i)
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
   simp [← b.mk_eq_dim'', fun i => (B i).mk_eq_dim'']
 #align module.free.rank_direct_sum Module.Free.rank_directSum
@@ -85,7 +85,7 @@ theorem rank_pi_finite {ι : Type v} [Finite ι] {M : ι → Type w} [∀ i : ι
     Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by
   cases nonempty_fintype ι
-  rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]
+  rw [← (DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_directSum]
 #align module.free.rank_pi_finite Module.Free.rank_pi_finite
 
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
@@ -129,12 +129,12 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 theorem rank_tensorProduct :
     Module.rank R (M ⊗[R] N) = lift.{w, v} (Module.rank R M) * lift.{v, w} (Module.rank R N) :=
   by
-  let ιM := choose_basis_index R M
-  let ιN := choose_basis_index R N
+  let ιM := ChooseBasisIndex R M
+  let ιN := ChooseBasisIndex R N
   have h₁ := LinearEquiv.lift_dim_eq (TensorProduct.congr (repr R M) (repr R N))
   let b : Basis (ιM × ιN) R (_ →₀ R) := Finsupp.basisSingleOne
   rw [LinearEquiv.dim_eq (finsuppTensorFinsupp' R ιM ιN), ← b.mk_eq_dim, mk_prod] at h₁
-  rw [lift_inj.1 h₁, rank_eq_card_choose_basis_index R M, rank_eq_card_choose_basis_index R N]
+  rw [lift_inj.1 h₁, rank_eq_card_chooseBasisIndex R M, rank_eq_card_chooseBasisIndex R N]
 #align module.free.rank_tensor_product Module.Free.rank_tensorProduct
 
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is

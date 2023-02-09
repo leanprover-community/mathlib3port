@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.alias
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
       env
         (match d with
         | declaration.defn n ls t _ _ _ =>
-          declaration.defn al ls t (expr.const n (level.param <$> ls)) ReducibilityHints.abbrev tt
+          declaration.defn al ls t (expr.const n (level.param <$> ls)) reducibility_hints.abbrev tt
         | declaration.thm n ls t _ =>
           declaration.thm al ls t <| task.pure <| expr.const n (level.param <$> ls)
         | _ => undefined)
@@ -136,12 +136,12 @@ unsafe def alias_iff (doc : Option String) (d : declaration) (ns al : Name) (is_
 
 /-- Get the default names for left/right to be used by `alias d ↔ ..`. -/
 unsafe def make_left_right : Name → tactic (Name × Name)
-  | Name.mk_string s p => do
+  | name.mk_string s p => do
     let buf : CharBuffer := s.toCharBuffer
     let parts := s.splitOn '_'
-    let (left, _ :: right) ← pure <| parts.spanₓ (· ≠ "iff")
-    let pfx (a b : String) := a.toList.isPrefixOfₓ b.toList
-    let (suffix', right') ← pure <| right.reverse.spanₓ fun s => pfx "left" s ∨ pfx "right" s
+    let (left, _ :: right) ← pure <| parts.span (· ≠ "iff")
+    let pfx (a b : String) := a.toList.isPrefixOf b.toList
+    let (suffix', right') ← pure <| right.reverse.span fun s => pfx "left" s ∨ pfx "right" s
     let right := right'.reverse
     let suffix := suffix'.reverse
     pure
@@ -200,9 +200,9 @@ unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse <| tk "alias") : le
       do
       tk "↔" <|> tk "<->"
       let (left, right) ←
-        condM (tk ".." >> pure tt <|> pure ff)
+        mcond (tk ".." >> pure tt <|> pure ff)
             (make_left_right old <|> fail "invalid name for automatic name generation")
-            (Prod.mk <$> types.ident_ <*> types.ident_)
+            (prod.mk <$> types.ident_ <*> types.ident_)
       alias_iff doc d ns left tt
       alias_iff doc d ns right ff
 #align tactic.alias.alias_cmd tactic.alias.alias_cmd

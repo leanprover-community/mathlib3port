@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_3 : AddCommMonoid.{u2} M] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_3], Unique.{succ u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (SetLike.instMembership.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) M (Submodule.instSetLikeSubmodule.{u1, u2} R M _inst_1 _inst_3 _inst_4)) x (Bot.bot.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (Submodule.instBotSubmodule.{u1, u2} R M _inst_1 _inst_3 _inst_4))))
 Case conversion may be inaccurate. Consider using '#align submodule.unique_bot Submodule.uniqueBotₓ'. -/
 instance uniqueBot : Unique (⊥ : Submodule R M) :=
-  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.Mem⟩
+  ⟨inferInstance, fun x => Subtype.ext <| (mem_bot R).1 x.mem⟩
 #align submodule.unique_bot Submodule.uniqueBot
 
 instance : OrderBot (Submodule R M) where
@@ -437,7 +437,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.infi_coe Submodule.infᵢ_coeₓ'. -/
 @[simp]
 theorem infᵢ_coe {ι} (p : ι → Submodule R M) : (↑(⨅ i, p i) : Set M) = ⋂ i, ↑(p i) := by
-  rw [infᵢ, Inf_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
+  rw [infᵢ, infₛ_coe] <;> ext a <;> simp <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 #align submodule.infi_coe Submodule.infᵢ_coe
 
 /- warning: submodule.mem_Inf -> Submodule.mem_infₛ is a dubious translation:
@@ -459,7 +459,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submodule.mem_infi Submodule.mem_infᵢₓ'. -/
 @[simp]
 theorem mem_infᵢ {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅ i, p i) ↔ ∀ i, x ∈ p i := by
-  rw [← SetLike.mem_coe, infi_coe, Set.mem_interᵢ] <;> rfl
+  rw [← SetLike.mem_coe, infᵢ_coe, Set.mem_interᵢ] <;> rfl
 #align submodule.mem_infi Submodule.mem_infᵢ
 
 /- warning: submodule.mem_finset_inf -> Submodule.mem_finset_inf is a dubious translation:

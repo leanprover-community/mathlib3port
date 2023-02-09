@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.sections
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,13 +33,13 @@ theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ Forall₂ (
   refine' ⟨fun h => _, fun h => _⟩
   · induction L generalizing f
     · cases mem_singleton.1 h
-      exact forall₂.nil
-    simp only [sections, bind_eq_bind, mem_bind, mem_map] at h
+      exact Forall₂.nil
+    simp only [sections, bind_eq_bind, mem_bind, mem_map'] at h
     rcases h with ⟨_, _, _, _, rfl⟩
     simp only [*, forall₂_cons, true_and_iff]
   · induction' h with a l f L al fL fs
     · exact Or.inl rfl
-    simp only [sections, bind_eq_bind, mem_bind, mem_map]
+    simp only [sections, bind_eq_bind, mem_bind, mem_map']
     exact ⟨_, fs, _, al, rfl, rfl⟩
 #align list.mem_sections List.mem_sections
 -/

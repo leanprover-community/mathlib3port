@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.metrizable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,6 +32,6 @@ theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] 
   haveI : NormalSpace M := normal_of_paracompact_t2
   haveI := I.second_countable_topology
   haveI := ChartedSpace.second_countable_of_sigma_compact H M
-  exact metrizable_space_of_t3_second_countable M
+  exact metrizableSpace_of_t3_second_countable M
 #align manifold_with_corners.metrizable_space ManifoldWithCorners.metrizableSpace
 

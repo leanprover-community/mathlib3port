@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module computability.epsilon_NFA
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,8 @@ theorem mem_stepSet_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure
 #align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iff
 
 @[simp]
-theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by
+  simp_rw [stepSet, unionᵢ_false, unionᵢ_empty]
 #align ε_NFA.step_set_empty εNFA.stepSet_empty
 
 variable (M)
@@ -103,15 +104,15 @@ theorem evalFrom_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet 
 @[simp]
 theorem evalFrom_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  simp only [evalFrom, List.foldl_append, List.foldl_cons, List.foldl_nil]
 #align ε_NFA.eval_from_append_singleton εNFA.evalFrom_append_singleton
 
 @[simp]
 theorem evalFrom_empty (x : List α) : M.evalFrom ∅ x = ∅ :=
   by
   induction' x using List.reverseRecOn with x a ih
-  · rw [eval_from_nil, ε_closure_empty]
-  · rw [eval_from_append_singleton, ih, step_set_empty]
+  · rw [evalFrom_nil, εClosure_empty]
+  · rw [evalFrom_append_singleton, ih, stepSet_empty]
 #align ε_NFA.eval_from_empty εNFA.evalFrom_empty
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
@@ -160,7 +161,7 @@ theorem toNFA_evalFrom_match (start : Set σ) :
 theorem toNFA_correct : M.toNFA.accepts = M.accepts :=
   by
   ext x
-  rw [accepts, NFA.accepts, eval, NFA.eval, ← to_NFA_eval_from_match]
+  rw [accepts, NFA.accepts, eval, NFA.eval, ← toNFA_evalFrom_match]
   rfl
 #align ε_NFA.to_NFA_correct εNFA.toNFA_correct
 
@@ -170,7 +171,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
-  rw [← to_NFA_correct] at hx⊢
+  rw [← toNFA_correct] at hx⊢
   exact M.to_NFA.pumping_lemma hx hlen
 #align ε_NFA.pumping_lemma εNFA.pumping_lemma
 
@@ -201,10 +202,10 @@ theorem toεNFA_εClosure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S =
 theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :
     M.toεNFA.evalFrom start = M.evalFrom start :=
   by
-  rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
+  rw [evalFrom, εNFA.evalFrom, toεNFA_εClosure]
   congr
   ext (S s)
-  simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_unionᵢ]
+  simp only [stepSet, εNFA.stepSet, exists_prop, Set.mem_unionᵢ]
   apply exists_congr
   simp only [and_congr_right_iff]
   intro t ht
@@ -215,7 +216,7 @@ theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :
 @[simp]
 theorem toεNFA_correct (M : NFA α σ) : M.toεNFA.accepts = M.accepts :=
   by
-  rw [accepts, εNFA.accepts, eval, εNFA.eval, to_ε_NFA_eval_from_match]
+  rw [accepts, εNFA.accepts, eval, εNFA.eval, toεNFA_evalFrom_match]
   rfl
 #align NFA.to_ε_NFA_correct NFA.toεNFA_correct
 

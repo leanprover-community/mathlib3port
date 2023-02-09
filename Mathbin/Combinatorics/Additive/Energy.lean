@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Ella Yu
 
 ! This file was ported from Lean 3 source module combinatorics.additive.energy
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ variable [Mul α] {s s₁ s₂ t t₁ t₂ : Finset α}
 @[to_additive additive_energy
       "The additive energy of two finsets `s` and `t` in a group is the\nnumber of quadruples `(a₁, a₂, b₁, b₂) ∈ s × s × t × t` such that `a₁ + b₁ = a₂ + b₂`."]
 def multiplicativeEnergy (s t : Finset α) : ℕ :=
-  (((s ×ˢ s) ×ˢ t ×ˢ t).filterₓ fun x : (α × α) × α × α => x.1.1 * x.2.1 = x.1.2 * x.2.2).card
+  (((s ×ˢ s) ×ˢ t ×ˢ t).filter fun x : (α × α) × α × α => x.1.1 * x.2.1 = x.1.2 * x.2.2).card
 #align finset.multiplicative_energy Finset.multiplicativeEnergy
 #align finset.additive_energy Finset.additiveEnergy
 -/
@@ -112,7 +112,7 @@ variable (s t)
 #print Finset.multiplicativeEnergy_empty_left /-
 @[simp, to_additive additive_energy_empty_left]
 theorem multiplicativeEnergy_empty_left : multiplicativeEnergy ∅ t = 0 := by
-  simp [multiplicative_energy]
+  simp [multiplicativeEnergy]
 #align finset.multiplicative_energy_empty_left Finset.multiplicativeEnergy_empty_left
 #align finset.additive_energy_empty_left Finset.additiveEnergy_empty_left
 -/
@@ -120,7 +120,7 @@ theorem multiplicativeEnergy_empty_left : multiplicativeEnergy ∅ t = 0 := by
 #print Finset.multiplicativeEnergy_empty_right /-
 @[simp, to_additive additive_energy_empty_right]
 theorem multiplicativeEnergy_empty_right : multiplicativeEnergy s ∅ = 0 := by
-  simp [multiplicative_energy]
+  simp [multiplicativeEnergy]
 #align finset.multiplicative_energy_empty_right Finset.multiplicativeEnergy_empty_right
 #align finset.additive_energy_empty_right Finset.additiveEnergy_empty_right
 -/
@@ -163,8 +163,8 @@ Case conversion may be inaccurate. Consider using '#align finset.multiplicative_
 theorem multiplicativeEnergy_comm (s t : Finset α) :
     multiplicativeEnergy s t = multiplicativeEnergy t s :=
   by
-  rw [multiplicative_energy, ← Finset.card_map (Equiv.prodComm _ _).toEmbedding, map_filter]
-  simp [-Finset.card_map, eq_comm, multiplicative_energy, mul_comm, map_eq_image, Function.comp]
+  rw [multiplicativeEnergy, ← Finset.card_map (Equiv.prodComm _ _).toEmbedding, map_filter]
+  simp [-Finset.card_map, eq_comm, multiplicativeEnergy, mul_comm, map_eq_image, Function.comp]
 #align finset.multiplicative_energy_comm Finset.multiplicativeEnergy_comm
 #align finset.additive_energy_comm Finset.additiveEnergy_comm
 
@@ -186,7 +186,7 @@ Case conversion may be inaccurate. Consider using '#align finset.multiplicative_
 theorem multiplicativeEnergy_univ_left :
     multiplicativeEnergy univ t = Fintype.card α * t.card ^ 2 :=
   by
-  simp only [multiplicative_energy, univ_product_univ, Fintype.card, sq, ← card_product]
+  simp only [multiplicativeEnergy, univ_product_univ, Fintype.card, sq, ← card_product]
   set f : α × α × α → (α × α) × α × α := fun x => ((x.1 * x.2.2, x.1 * x.2.1), x.2) with hf
   have : (↑((univ : Finset α) ×ˢ t ×ˢ t) : Set (α × α × α)).InjOn f :=
     by
@@ -194,7 +194,7 @@ theorem multiplicativeEnergy_univ_left :
     simp_rw [Prod.ext_iff] at h
     obtain ⟨h, rfl, rfl⟩ := h
     rw [mul_right_cancel h.1]
-  rw [← card_image_of_inj_on this]
+  rw [← card_image_of_injOn this]
   congr with a
   simp only [hf, mem_filter, mem_product, mem_univ, true_and_iff, mem_image, exists_prop,
     Prod.exists]
@@ -213,7 +213,7 @@ Case conversion may be inaccurate. Consider using '#align finset.multiplicative_
 @[simp, to_additive additive_energy_univ_right]
 theorem multiplicativeEnergy_univ_right :
     multiplicativeEnergy s univ = Fintype.card α * s.card ^ 2 := by
-  rw [multiplicative_energy_comm, multiplicative_energy_univ_left]
+  rw [multiplicativeEnergy_comm, multiplicativeEnergy_univ_left]
 #align finset.multiplicative_energy_univ_right Finset.multiplicativeEnergy_univ_right
 #align finset.additive_energy_univ_right Finset.additiveEnergy_univ_right
 

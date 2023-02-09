@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.pretty_cases
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,14 +54,14 @@ unsafe def pretty_cases_advice : tactic String :=
       gs.mapM fun g => do
           let t : List Name ← get_tag g
           let vs := t.tail
-          let ⟨vs, ts⟩ := vs.spanₓ fun n => Name.lastString n = "_arg"
+          let ⟨vs, ts⟩ := vs.span fun n => Name.lastString n = "_arg"
           set_goals [g]
           let ls ← local_context
           let m :=
             native.rb_map.of_list <| (ls.map expr.local_uniq_name).zip (ls.map expr.local_pp_name)
           let vs := vs.map fun v => (m.find v.getPrefix).getD `_
           let var_decls := String.intercalate " " <| vs.map toString
-          let var_decls := if vs.Empty then "" else " : " ++ var_decls
+          let var_decls := if vs.isEmpty then "" else " : " ++ var_decls
           pure
               s! "  case {ts }{var_decls}
                   \{ admit }}"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module order.filter.germ
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem const_eventuallyEq [NeBot l] {a b : β} : ((fun _ => a) =ᶠ[l] fun _ =>
 
 theorem EventuallyEq.comp_tendsto {f' : α → β} (H : f =ᶠ[l] f') {g : γ → α} {lc : Filter γ}
     (hg : Tendsto g lc l) : f ∘ g =ᶠ[lc] f' ∘ g :=
-  hg.Eventually H
+  hg.eventually H
 #align filter.eventually_eq.comp_tendsto Filter.EventuallyEq.comp_tendsto
 
 /-- Setoid used to define the space of germs. -/
@@ -107,11 +107,11 @@ namespace Product
 
 variable {ε : α → Type _}
 
-instance : CoeTC (∀ a, ε a) (l.product ε) :=
+instance : CoeTC (∀ a, ε a) (l.Product ε) :=
   ⟨Quotient.mk''⟩
 
-instance [∀ a, Inhabited (ε a)] : Inhabited (l.product ε) :=
-  ⟨(↑fun a => (default : ε a) : l.product ε)⟩
+instance [∀ a, Inhabited (ε a)] : Inhabited (l.Product ε) :=
+  ⟨(↑fun a => (default : ε a) : l.Product ε)⟩
 
 end Product
 
@@ -231,7 +231,7 @@ alias coe_tendsto ↔ _ _root_.filter.tendsto.germ_tendsto
 then the composition `f ∘ g` is well-defined as a germ at `lc`. -/
 def compTendsto' (f : Germ l β) {lc : Filter γ} (g : Germ lc α) (hg : g.Tendsto l) : Germ lc β :=
   liftOn f (fun f => g.map f) fun f₁ f₂ hF =>
-    (induction_on g fun g hg => coe_eq.2 <| hg.Eventually hF) hg
+    (induction_on g fun g hg => coe_eq.2 <| hg.eventually hF) hg
 #align filter.germ.comp_tendsto' Filter.Germ.compTendsto'
 
 @[simp]
@@ -248,13 +248,13 @@ def compTendsto (f : Germ l β) {lc : Filter γ} (g : γ → α) (hg : Tendsto g
 
 @[simp]
 theorem coe_compTendsto (f : α → β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
-    (f : Germ l β).comp_tendsto g hg = f ∘ g :=
+    (f : Germ l β).compTendsto g hg = f ∘ g :=
   rfl
 #align filter.germ.coe_comp_tendsto Filter.Germ.coe_compTendsto
 
 @[simp]
 theorem compTendsto'_coe (f : Germ l β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
-    f.compTendsto' _ hg.germ_tendsto = f.comp_tendsto g hg :=
+    f.compTendsto' _ hg.germ_tendsto = f.compTendsto g hg :=
   rfl
 #align filter.germ.comp_tendsto'_coe Filter.Germ.compTendsto'_coe
 
@@ -276,7 +276,7 @@ theorem map₂_const (l : Filter α) (b : β) (c : γ) (f : β → γ → δ) :
 
 @[simp]
 theorem const_compTendsto {l : Filter α} (b : β) {lc : Filter γ} {g : γ → α} (hg : Tendsto g lc l) :
-    (↑b : Germ l β).comp_tendsto g hg = ↑b :=
+    (↑b : Germ l β).compTendsto g hg = ↑b :=
   rfl
 #align filter.germ.const_comp_tendsto Filter.Germ.const_compTendsto
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module category_theory.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,12 +75,12 @@ theorem types_comp_apply {X Y Z : Type u} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : 
 #align category_theory.types_comp_apply CategoryTheory.types_comp_apply
 
 @[simp]
-theorem hom_inv_id_apply {X Y : Type u} (f : X ≅ Y) (x : X) : f.inv (f.Hom x) = x :=
+theorem hom_inv_id_apply {X Y : Type u} (f : X ≅ Y) (x : X) : f.inv (f.hom x) = x :=
   congr_fun f.hom_inv_id x
 #align category_theory.hom_inv_id_apply CategoryTheory.hom_inv_id_apply
 
 @[simp]
-theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.Hom (f.inv y) = y :=
+theorem inv_hom_id_apply {X Y : Type u} (f : X ≅ Y) (y : Y) : f.hom (f.inv y) = y :=
   congr_fun f.inv_hom_id y
 #align category_theory.inv_hom_id_apply CategoryTheory.inv_hom_id_apply
 
@@ -157,22 +157,22 @@ theorem hcomp (x : (I ⋙ F).obj W) : (ρ ◫ σ).app W x = (G.map (ρ.app W)) (
 #align category_theory.functor_to_types.hcomp CategoryTheory.FunctorToTypes.hcomp
 
 @[simp]
-theorem map_inv_map_hom_apply (f : X ≅ Y) (x : F.obj X) : F.map f.inv (F.map f.Hom x) = x :=
+theorem map_inv_map_hom_apply (f : X ≅ Y) (x : F.obj X) : F.map f.inv (F.map f.hom x) = x :=
   congr_fun (F.mapIso f).hom_inv_id x
 #align category_theory.functor_to_types.map_inv_map_hom_apply CategoryTheory.FunctorToTypes.map_inv_map_hom_apply
 
 @[simp]
-theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.Hom (F.map f.inv y) = y :=
+theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.hom (F.map f.inv y) = y :=
   congr_fun (F.mapIso f).inv_hom_id y
 #align category_theory.functor_to_types.map_hom_map_inv_apply CategoryTheory.FunctorToTypes.map_hom_map_inv_apply
 
 @[simp]
-theorem hom_inv_id_app_apply (α : F ≅ G) (X) (x) : α.inv.app X (α.Hom.app X x) = x :=
+theorem hom_inv_id_app_apply (α : F ≅ G) (X) (x) : α.inv.app X (α.hom.app X x) = x :=
   congr_fun (α.hom_inv_id_app X) x
 #align category_theory.functor_to_types.hom_inv_id_app_apply CategoryTheory.FunctorToTypes.hom_inv_id_app_apply
 
 @[simp]
-theorem inv_hom_id_app_apply (α : F ≅ G) (X) (x) : α.Hom.app X (α.inv.app X x) = x :=
+theorem inv_hom_id_app_apply (α : F ≅ G) (X) (x) : α.hom.app X (α.inv.app X x) = x :=
   congr_fun (α.inv_hom_id_app X) x
 #align category_theory.functor_to_types.inv_hom_id_app_apply CategoryTheory.FunctorToTypes.inv_hom_id_app_apply
 
@@ -233,9 +233,9 @@ theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.In
   constructor
   · intro H x x' h
     skip
-    rw [← hom_of_element_eq_iff] at h⊢
+    rw [← homOfElement_eq_iff] at h⊢
     exact (cancel_mono f).mp h
-  · exact fun H => ⟨fun Z => H.compLeft⟩
+  · exact fun H => ⟨fun Z => H.comp_left⟩
 #align category_theory.mono_iff_injective CategoryTheory.mono_iff_injective
 
 theorem injective_of_mono {X Y : Type u} (f : X ⟶ Y) [hf : Mono f] : Function.Injective f :=
@@ -309,7 +309,7 @@ def toIso (e : X ≃ Y) : X ≅ Y where
 #align equiv.to_iso Equiv.toIso
 
 @[simp]
-theorem toIso_hom {e : X ≃ Y} : e.toIso.Hom = e :=
+theorem toIso_hom {e : X ≃ Y} : e.toIso.hom = e :=
   rfl
 #align equiv.to_iso_hom Equiv.toIso_hom
 
@@ -331,14 +331,14 @@ variable {X Y : Type u}
 /-- Any isomorphism between types gives an equivalence.
 -/
 def toEquiv (i : X ≅ Y) : X ≃ Y where
-  toFun := i.Hom
+  toFun := i.hom
   invFun := i.inv
   left_inv x := congr_fun i.hom_inv_id x
   right_inv y := congr_fun i.inv_hom_id y
 #align category_theory.iso.to_equiv CategoryTheory.Iso.toEquiv
 
 @[simp]
-theorem toEquiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.Hom :=
+theorem toEquiv_fun (i : X ≅ Y) : (i.toEquiv : X → Y) = i.hom :=
   rfl
 #align category_theory.iso.to_equiv_fun CategoryTheory.Iso.toEquiv_fun
 
@@ -364,7 +364,7 @@ namespace CategoryTheory
 
 /-- A morphism in `Type u` is an isomorphism if and only if it is bijective. -/
 theorem isIso_iff_bijective {X Y : Type u} (f : X ⟶ Y) : IsIso f ↔ Function.Bijective f :=
-  Iff.intro (fun i => (as_iso f : X ≅ Y).toEquiv.Bijective) fun b =>
+  Iff.intro (fun i => (asIso f : X ≅ Y).toEquiv.bijective) fun b =>
     IsIso.of_iso (Equiv.ofBijective f b).toIso
 #align category_theory.is_iso_iff_bijective CategoryTheory.isIso_iff_bijective
 

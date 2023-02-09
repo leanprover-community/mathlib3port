@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.weak_dual
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,11 +128,11 @@ theorem coe_toWeakDual (x' : Dual 𝕜 E) : ⇑x'.toWeakDual = x' :=
 
 @[simp]
 theorem toWeakDual_eq_iff (x' y' : Dual 𝕜 E) : x'.toWeakDual = y'.toWeakDual ↔ x' = y' :=
-  toWeakDual.Injective.eq_iff
+  toWeakDual.injective.eq_iff
 #align normed_space.dual.to_weak_dual_eq_iff NormedSpace.Dual.toWeakDual_eq_iff
 
 theorem toWeakDual_continuous : Continuous fun x' : Dual 𝕜 E => x'.toWeakDual :=
-  WeakBilin.continuous_of_continuous_eval _ fun z => (inclusionInDoubleDual 𝕜 E z).Continuous
+  WeakBilin.continuous_of_continuous_eval _ fun z => (inclusionInDoubleDual 𝕜 E z).continuous
 #align normed_space.dual.to_weak_dual_continuous NormedSpace.Dual.toWeakDual_continuous
 
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
@@ -177,7 +177,7 @@ theorem coe_toNormedDual (x' : WeakDual 𝕜 E) : ⇑x'.toNormedDual = x' :=
 
 @[simp]
 theorem toNormedDual_eq_iff (x' y' : WeakDual 𝕜 E) : x'.toNormedDual = y'.toNormedDual ↔ x' = y' :=
-  WeakDual.toNormedDual.Injective.eq_iff
+  WeakDual.toNormedDual.injective.eq_iff
 #align weak_dual.to_normed_dual_eq_iff WeakDual.toNormedDual_eq_iff
 
 theorem isClosed_closedBall (x' : Dual 𝕜 E) (r : ℝ) : IsClosed (toNormedDual ⁻¹' closedBall x' r) :=
@@ -205,7 +205,7 @@ theorem polar_def (s : Set E) : polar 𝕜 s = { f : WeakDual 𝕜 E | ∀ x ∈
 is used. -/
 theorem isClosed_polar (s : Set E) : IsClosed (polar 𝕜 s) :=
   by
-  simp only [polar_def, set_of_forall]
+  simp only [polar_def, setOf_forall]
   exact isClosed_binterᵢ fun x hx => is_closed_Iic.preimage (WeakBilin.eval_continuous _ _).norm
 #align weak_dual.is_closed_polar WeakDual.isClosed_polar
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module number_theory.bernoulli
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   -- constant coefficient is a special case
   cases n
   · simp
-  rw [bernoulli'PowerSeries, coeff_mul, mul_comm X, sum_antidiagonal_succ']
+  rw [bernoulli'PowerSeries, coeff_mul, mul_comm x, sum_antidiagonal_succ']
   suffices (∑ p in antidiagonal n, bernoulli' p.1 / p.1! * ((p.2 + 1) * p.2!)⁻¹) = n !⁻¹ by
     simpa [RingHom.map_sum] using congr_arg (algebraMap ℚ A) this
   apply eq_inv_of_mul_eq_one_left
@@ -190,7 +190,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   have := factorial_mul_factorial_dvd_factorial_add i j
   field_simp [mul_comm _ (bernoulli' i), mul_assoc, add_choose]
   rw_mod_cast [mul_comm (j + 1), mul_div_assoc, ← mul_assoc]
-  rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_char_zero, cast_mul]
+  rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_charZero, cast_mul]
   assumption
   rwa [Nat.cast_succ]
 #align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_one
@@ -199,19 +199,18 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
 theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoulli' n = 0 :=
   by
   let B := mk fun n => bernoulli' n / n !
-  suffices (B - eval_neg_hom B) * (exp ℚ - 1) = X * (exp ℚ - 1)
+  suffices (B - evalNegHom B) * (exp ℚ - 1) = x * (exp ℚ - 1)
     by
-    cases mul_eq_mul_right_iff.mp this <;>
-      simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h
+    cases mul_eq_mul_right_iff.mp this <;> simp only [PowerSeries.ext_iff, evalNegHom, coeff_x] at h
     · apply eq_zero_of_neg_eq
       specialize h n
       split_ifs  at h <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
     · simpa using h 1
-  have h : B * (exp ℚ - 1) = X * exp ℚ := by
+  have h : B * (exp ℚ - 1) = x * exp ℚ := by
     simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
-  rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_neg_eq]
-  suffices eval_neg_hom (B * (exp ℚ - 1)) * exp ℚ = eval_neg_hom (X * exp ℚ) * exp ℚ by
-    simpa [mul_assoc, sub_mul, mul_comm (eval_neg_hom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
+  rw [sub_mul, h, mul_sub x, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_neg_eq]
+  suffices evalNegHom (B * (exp ℚ - 1)) * exp ℚ = evalNegHom (x * exp ℚ) * exp ℚ by
+    simpa [mul_assoc, sub_mul, mul_comm (evalNegHom (exp ℚ)), exp_mul_exp_neg_eq_one, eq_comm]
   congr
 #align bernoulli'_odd_eq_zero bernoulli'_odd_eq_zero
 
@@ -296,10 +295,10 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
   -- constant coefficient is a special case
   cases n;
   · simp
-  simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
+  simp only [bernoulliPowerSeries, coeff_mul, coeff_x, sum_antidiagonal_succ', one_div, coeff_mk,
     coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
-    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_ne_zero,
-    mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ← RingHom.map_sum]
+    sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, inv_one, zero_add, one_ne_zero, mul_zero,
+    and_false_iff, sub_self, ← RingHom.map_mul, ← RingHom.map_sum]
   cases n; · simp
   rw [if_neg n.succ_succ_ne_one]
   have hfact : ∀ m, (m ! : ℚ) ≠ 0 := fun m => by exact_mod_cast factorial_ne_zero m
@@ -309,7 +308,7 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
   rw [mem_antidiagonal] at h
   have hj : (x.2 + 1 : ℚ) ≠ 0 := by exact_mod_cast succ_ne_zero _
   field_simp [← h, mul_ne_zero hj (hfact x.2), hfact x.1, mul_comm _ (bernoulli x.1), mul_assoc,
-    add_choose, cast_div_char_zero (factorial_mul_factorial_dvd_factorial_add _ _),
+    add_choose, cast_div_charZero (factorial_mul_factorial_dvd_factorial_add _ _),
     Nat.factorial_ne_zero, hj]
   cc
 #align bernoulli_power_series_mul_exp_sub_one bernoulliPowerSeries_mul_exp_sub_one
@@ -366,10 +365,10 @@ theorem sum_range_pow (n p : ℕ) :
       simp only [exp, PowerSeries.ext_iff, Ne, not_forall]
       use 1
       simp
-    have h_r : exp ℚ ^ n - 1 = X * mk fun p => coeff ℚ (p + 1) (exp ℚ ^ n) :=
+    have h_r : exp ℚ ^ n - 1 = x * mk fun p => coeff ℚ (p + 1) (exp ℚ ^ n) :=
       by
-      have h_const : C ℚ (constant_coeff ℚ (exp ℚ ^ n)) = 1 := by simp
-      rw [← h_const, sub_const_eq_X_mul_shift]
+      have h_const : c ℚ (constantCoeff ℚ (exp ℚ ^ n)) = 1 := by simp
+      rw [← h_const, sub_const_eq_x_mul_shift]
     -- key step: a chain of equalities of power series
     rw [← mul_right_inj' hexp, mul_comm, ← exp_pow_sum, geom_sum_mul, h_r, ←
       bernoulliPowerSeries_mul_exp_sub_one, bernoulliPowerSeries, mul_right_comm]

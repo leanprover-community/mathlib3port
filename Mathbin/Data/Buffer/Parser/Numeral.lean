@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.buffer.parser.numeral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,8 +59,9 @@ is within the cardinality of the type `α`.
 -/
 def numeral.ofFintype [Fintype α] : Parser α := do
   let c ← nat
-  decorate_error (s! "<numeral less than {toString (Fintype.card α)}>") (guard (c < Fintype.card α))
-  pure <| Nat.binCast c deriving Mono, Bounded, Prog
+  decorate_error (s! "<numeral less than {to_string (fintype.card α)}>")
+      (guard (c < fintype.card α))
+  pure <| nat.bin_cast c deriving Mono, Bounded, Prog
 #align parser.numeral.of_fintype Parser.numeral.ofFintype
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`. The parsing starts
@@ -69,7 +70,7 @@ at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser cau
 def numeral.fromOne : Parser α := do
   let c ← nat
   decorate_error "<positive numeral>" (guard (0 < c))
-  pure <| Nat.binCast (c - 1)deriving Mono, Bounded, Prog
+  pure <| nat.bin_cast (c - 1)deriving Mono, Bounded, Prog
 #align parser.numeral.from_one Parser.numeral.fromOne
 
 /-- Parse a string of digits as a numeral while casting it to target type `α`,
@@ -79,9 +80,9 @@ at "1", so `"1"` is parsed in as `nat.cast 0`. Providing `"0"` to the parser cau
 -/
 def numeral.fromOne.ofFintype [Fintype α] : Parser α := do
   let c ← nat
-  decorate_error (s! "<positive numeral less than or equal to {toString (Fintype.card α)}>")
-      (guard (0 < c ∧ c ≤ Fintype.card α))
-  pure <| Nat.binCast (c - 1)deriving Mono, Bounded, Prog
+  decorate_error (s! "<positive numeral less than or equal to {to_string (fintype.card α)}>")
+      (guard (0 < c ∧ c ≤ fintype.card α))
+  pure <| nat.bin_cast (c - 1)deriving Mono, Bounded, Prog
 #align parser.numeral.from_one.of_fintype Parser.numeral.fromOne.ofFintype
 
 /-- Parse a character as a numeral while casting it to target type `α`,
@@ -92,7 +93,7 @@ def numeral.char (fromc toc : Char) : Parser α := do
   let c ←
     decorateError (s! "<char between '{fromc.toString }' to '{toc.toString}' inclusively>")
         (sat fun c => fromc ≤ c ∧ c ≤ toc)
-  pure <| Nat.binCast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
+  pure <| nat.bin_cast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
 #align parser.numeral.char Parser.numeral.char
 
 /-- Parse a character as a numeral while casting it to target type `α`,
@@ -107,7 +108,7 @@ def numeral.char.ofFintype [Fintype α] (fromc : Char) : Parser α := do
         (s! "<char from '{fromc.toString}' to '
               {(Char.ofNat (fromc.toNat + Fintype.card α - 1)).toString}' inclusively>")
         (sat fun c => fromc ≤ c ∧ c.toNat - Fintype.card α < fromc.toNat)
-  pure <| Nat.binCast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
+  pure <| nat.bin_cast (c - fromc)deriving Mono, Bounded, ErrStatic, Step
 #align parser.numeral.char.of_fintype Parser.numeral.char.ofFintype
 
 /-! ## Specific numeral types -/

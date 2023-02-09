@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.fraisse
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,14 +176,14 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Cou
     refine'
       (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
         (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
-    simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq']
+    simp only [mem_image, mem_range, mem_setOf_eq, Quotient.eq']
     constructor
     · rintro ⟨s, hs⟩
-      use bundled.of ↥(closure L (s : Set M))
-      exact ⟨⟨(fg_iff_Structure_fg _).1 (fg_closure s.finite_to_set), ⟨Subtype _⟩⟩, hs⟩
+      use Bundled.of ↥(closure L (s : Set M))
+      exact ⟨⟨(fg_iff_structure_fg _).1 (fg_closure s.finite_to_set), ⟨subtype _⟩⟩, hs⟩
     · rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
       refine' ⟨s.image PM, Setoid.trans _ hP2⟩
-      rw [← embedding.coe_to_hom, Finset.coe_image, closure_image PM.to_hom, hs, ← hom.range_eq_map]
+      rw [← Embedding.coe_toHom, Finset.coe_image, closure_image PM.to_hom, hs, ← Hom.range_eq_map]
       exact ⟨PM.equiv_range.symm⟩
 #align first_order.language.age.countable_quotient FirstOrder.Language.age.countable_quotient
 
@@ -194,23 +194,23 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
     [DirectedSystem G fun i j h => f i j h] : L.age (DirectLimit G f) = ⋃ i : ι, L.age (G i) := by
   classical
     ext M
-    simp only [mem_Union]
+    simp only [mem_unionᵢ]
     constructor
     · rintro ⟨Mfg, ⟨e⟩⟩
       obtain ⟨s, hs⟩ := Mfg.range e.to_hom
-      let out := @Quotient.out _ (direct_limit.setoid G f)
+      let out := @quotient.out _ (DirectLimit.setoid G f)
       obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
-      have e' := (direct_limit.of L ι G f i).equivRange.symm.toEmbedding
-      refine' ⟨i, Mfg, ⟨e'.comp ((substructure.inclusion _).comp e.equiv_range.to_embedding)⟩⟩
+      have e' := (DirectLimit.of L ι G f i).equivRange.symm.toEmbedding
+      refine' ⟨i, Mfg, ⟨e'.comp ((Substructure.inclusion _).comp e.equiv_range.to_embedding)⟩⟩
       rw [← hs, closure_le]
       intro x hx
       refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
-      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk_eq_iff_out,
-        direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
+      rw [Embedding.coe_toHom, DirectLimit.of_apply, Quotient.mk_eq_iff_out,
+        DirectLimit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
         DirectedSystem.map_self]
       rfl
     · rintro ⟨i, Mfg, ⟨e⟩⟩
-      exact ⟨Mfg, ⟨Embedding.comp (direct_limit.of L ι G f i) e⟩⟩
+      exact ⟨Mfg, ⟨Embedding.comp (DirectLimit.of L ι G f i) e⟩⟩
 #align first_order.language.age_direct_limit FirstOrder.Language.age_directLimit
 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/
@@ -228,16 +228,16 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
     obtain ⟨P, hP1, hP2⟩ := (hF (F n).out).2 ⟨n, Setoid.refl _⟩
     exact (h _ _ hP2).1 hP1
   choose P hPK hP hFP using fun (N : K) (n : ℕ) => jep N N.2 (F (n + 1)).out (hF' _)
-  let G : ℕ → K := @Nat.rec (fun _ => K) ⟨(F 0).out, hF' 0⟩ fun n N => ⟨P N n, hPK N n⟩
-  let f : ∀ i j, i ≤ j → G i ↪[L] G j := directed_system.nat_le_rec fun n => (hP _ n).some
+  let G : ℕ → K := @nat.rec (fun _ => K) ⟨(F 0).out, hF' 0⟩ fun n N => ⟨P N n, hPK N n⟩
+  let f : ∀ i j, i ≤ j → G i ↪[L] G j := DirectedSystem.natLeRec fun n => (hP _ n).some
   refine'
-    ⟨bundled.of (direct_limit (fun n => G n) f), direct_limit.cg _ fun n => (fg _ (G n).2).Cg,
-      (age_direct_limit _ _).trans
-        (subset_antisymm (Union_subset fun n N hN => hp (G n) (G n).2 hN) fun N KN => _)⟩
+    ⟨Bundled.of (DirectLimit (fun n => G n) f), DirectLimit.cg _ fun n => (fg _ (G n).2).cg,
+      (age_directLimit _ _).trans
+        (subset_antisymm (unionᵢ_subset fun n N hN => hp (G n) (G n).2 hN) fun N KN => _)⟩
   obtain ⟨n, ⟨e⟩⟩ := (hF N).1 ⟨N, KN, Setoid.refl _⟩
-  refine' mem_Union_of_mem n ⟨fg _ KN, ⟨Embedding.comp _ e.symm.to_embedding⟩⟩
+  refine' mem_unionᵢ_of_mem n ⟨fg _ KN, ⟨Embedding.comp _ e.symm.to_embedding⟩⟩
   cases n
-  · exact embedding.refl _ _
+  · exact Embedding.refl _ _
   · exact (hFP _ n).some
 #align first_order.language.exists_cg_is_age_of FirstOrder.Language.exists_cg_is_age_of
 
@@ -254,7 +254,7 @@ theorem exists_countable_is_age_of_iff [Countable (Σl, L.Functions l)] :
     skip
     refine'
       ⟨age.nonempty M, age.is_equiv_invariant L M, age.countable_quotient M, fun N hN => hN.1,
-        age.hereditary M, age.joint_embedding M⟩
+        age.hereditary M, age.jointEmbedding M⟩
   · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
     obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
     exact ⟨M, Structure.cg_iff_countable.1 hM, rfl⟩
@@ -266,7 +266,7 @@ variable {K} (L) (M)
 into `M` extends to an automorphism of `M`. -/
 def IsUltrahomogeneous : Prop :=
   ∀ (S : L.Substructure M) (hs : S.Fg) (f : S ↪[L] M),
-    ∃ g : M ≃[L] M, f = g.toEmbedding.comp S.Subtype
+    ∃ g : M ≃[L] M, f = g.toEmbedding.comp S.subtype
 #align first_order.language.is_ultrahomogeneous FirstOrder.Language.IsUltrahomogeneous
 
 variable {L} (K)
@@ -289,17 +289,17 @@ theorem IsUltrahomogeneous.amalgamation_age (h : L.IsUltrahomogeneous M) : Amalg
       ((QM.comp NQ).comp (PM.comp NP).equivRange.symm.toEmbedding)
   let s := (g.to_hom.comp PM.to_hom).range ⊔ QM.to_hom.range
   refine'
-    ⟨bundled.of s,
-      Embedding.comp (substructure.inclusion le_sup_left)
+    ⟨Bundled.of s,
+      Embedding.comp (Substructure.inclusion le_sup_left)
         (g.to_embedding.comp PM).equivRange.toEmbedding,
-      Embedding.comp (substructure.inclusion le_sup_right) QM.equiv_range.to_embedding,
-      ⟨(fg_iff_Structure_fg _).1 (fg.sup (Pfg.range _) (Qfg.range _)), ⟨substructure.subtype _⟩⟩, _⟩
+      Embedding.comp (Substructure.inclusion le_sup_right) QM.equiv_range.to_embedding,
+      ⟨(fg_iff_structure_fg _).1 (Fg.sup (Pfg.range _) (Qfg.range _)), ⟨Substructure.subtype _⟩⟩, _⟩
   ext n
-  have hgn := (embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
-  simp only [embedding.comp_apply, Equiv.coe_toEmbedding, Equiv.symm_apply_apply,
-    substructure.coe_subtype, embedding.equiv_range_apply] at hgn
-  simp only [embedding.comp_apply, Equiv.coe_toEmbedding, substructure.coe_inclusion,
-    Set.coe_inclusion, embedding.equiv_range_apply, hgn]
+  have hgn := (Embedding.ext_iff.1 hg) ((PM.comp NP).equivRange n)
+  simp only [Embedding.comp_apply, Equiv.coe_toEmbedding, Equiv.symm_apply_apply,
+    Substructure.coeSubtype, Embedding.equivRange_apply] at hgn
+  simp only [Embedding.comp_apply, Equiv.coe_toEmbedding, Substructure.coe_inclusion,
+    Set.coe_inclusion, Embedding.equivRange_apply, hgn]
 #align first_order.language.is_ultrahomogeneous.amalgamation_age FirstOrder.Language.IsUltrahomogeneous.amalgamation_age
 
 theorem IsUltrahomogeneous.age_isFraisse [Countable M] (h : L.IsUltrahomogeneous M) :

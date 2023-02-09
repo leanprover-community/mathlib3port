@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.min_max
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -24,8 +24,8 @@ theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
   all_goals
     cases t_lchild <;> simp [Rbnode.min] <;> intro h
     · subst t_val
-      simp [mem, irrefl_of lt a]
-    all_goals rw [mem]; simp [t_ih_lchild h]
+      simp [Mem, irrefl_of lt a]
+    all_goals rw [Mem]; simp [t_ih_lchild h]
 #align rbnode.mem_of_min_eq Rbnode.mem_of_min_eq
 
 theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} :
@@ -36,8 +36,8 @@ theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
   all_goals
     cases t_rchild <;> simp [Rbnode.max] <;> intro h
     · subst t_val
-      simp [mem, irrefl_of lt a]
-    all_goals rw [mem]; simp [t_ih_rchild h]
+      simp [Mem, irrefl_of lt a]
+    all_goals rw [Mem]; simp [t_ih_rchild h]
 #align rbnode.mem_of_max_eq Rbnode.mem_of_max_eq
 
 variable [IsStrictWeakOrder α lt]
@@ -74,7 +74,7 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
       cases t_lchild <;> intro lo hi hs hmin b hmem
       · simp [Rbnode.min] at hmin
         subst t_val
-        simp [mem] at hmem
+        simp [Mem] at hmem
         cases' hmem with heqv hmem
         · left
           exact heqv.swap
@@ -84,7 +84,7 @@ theorem min_is_minimal {a : α} {t : Rbnode α} :
       all_goals
         have hs' := hs
         cases hs; simp [Rbnode.min] at hmin
-        rw [mem] at hmem; cases_type*or.1
+        rw [Mem] at hmem; cases_type*or.1
         · exact t_ih_lchild hs_hs₁ hmin hmem
         · have hmm := mem_of_min_eq lt hmin
           have a_lt_val := lt_of_mem_left hs' (by constructor) hmm
@@ -109,7 +109,7 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
       cases t_rchild <;> intro lo hi hs hmax b hmem
       · simp [Rbnode.max] at hmax
         subst t_val
-        simp [mem] at hmem
+        simp [Mem] at hmem
         cases' hmem with hmem heqv
         · have := lt_of_mem_left hs (by constructor) hmem
           right
@@ -119,7 +119,7 @@ theorem max_is_maximal {a : α} {t : Rbnode α} :
       all_goals
         have hs' := hs
         cases hs; simp [Rbnode.max] at hmax
-        rw [mem] at hmem; cases_type*or.1
+        rw [Mem] at hmem; cases_type*or.1
         · have hmm := mem_of_max_eq lt hmax
           have a_lt_b := lt_of_mem_left_right hs' (by constructor) hmem hmm
           right

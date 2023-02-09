@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.filter_basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ theorem inv {U : Set G} : U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x⁻¹) ⁻¹
 #align add_group_filter_basis.neg AddGroupFilterBasis.neg
 
 @[to_additive]
-theorem conj : ∀ x₀, ∀ {U}, U ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U :=
+theorem conj : ∀ x₀, ∀ {U}, Mem ∈ B → ∃ V ∈ B, V ⊆ (fun x => x₀ * x * x₀⁻¹) ⁻¹' U :=
   GroupFilterBasis.conj'
 #align group_filter_basis.conj GroupFilterBasis.conj
 #align add_group_filter_basis.conj AddGroupFilterBasis.conj
@@ -161,20 +161,20 @@ theorem prod_subset_self (B : GroupFilterBasis G) {U : Set G} (h : U ∈ B) : U 
 /-- The neighborhood function of a `group_filter_basis` -/
 @[to_additive "The neighborhood function of a `add_group_filter_basis`"]
 def n (B : GroupFilterBasis G) : G → Filter G := fun x =>
-  map (fun y => x * y) B.toFilterBasis.filterₓ
+  map (fun y => x * y) B.toFilterBasis.filter
 #align group_filter_basis.N GroupFilterBasis.n
 #align add_group_filter_basis.N AddGroupFilterBasis.n
 
 @[simp, to_additive]
-theorem n_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filterₓ := by
-  simp only [N, one_mul, map_id']
+theorem n_one (B : GroupFilterBasis G) : B.n 1 = B.toFilterBasis.filter := by
+  simp only [n, one_mul, map_id']
 #align group_filter_basis.N_one GroupFilterBasis.n_one
 #align add_group_filter_basis.N_zero AddGroupFilterBasis.n_zero
 
 @[to_additive]
 protected theorem hasBasis (B : GroupFilterBasis G) (x : G) :
     HasBasis (B.n x) (fun V : Set G => V ∈ B) fun V => (fun y => x * y) '' V :=
-  HasBasis.map (fun y => x * y) toFilterBasis.HasBasis
+  HasBasis.map (fun y => x * y) toFilterBasis.hasBasis
 #align group_filter_basis.has_basis GroupFilterBasis.hasBasis
 #align add_group_filter_basis.has_basis AddGroupFilterBasis.hasBasis
 
@@ -204,7 +204,7 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
     · rintro y ⟨t, tW, rfl⟩
       rw [(B.has_basis _).mem_iff]
       use W, W_in
-      apply subset.trans _ H
+      apply Subset.trans _ H
       clear H
       rintro z ⟨w, wW, rfl⟩
       exact ⟨t * w, hW (mul_mem_mul tW wW), by simp [mul_assoc]⟩
@@ -213,10 +213,10 @@ theorem nhds_eq (B : GroupFilterBasis G) {x₀ : G} : @nhds G B.topology x₀ = 
 
 @[to_additive]
 theorem nhds_one_eq (B : GroupFilterBasis G) :
-    @nhds G B.topology (1 : G) = B.toFilterBasis.filterₓ :=
+    @nhds G B.topology (1 : G) = B.toFilterBasis.filter :=
   by
   rw [B.nhds_eq]
-  simp only [N, one_mul]
+  simp only [n, one_mul]
   exact map_id
 #align group_filter_basis.nhds_one_eq GroupFilterBasis.nhds_one_eq
 #align add_group_filter_basis.nhds_zero_eq AddGroupFilterBasis.nhds_zero_eq

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Blyth
 
 ! This file was ported from Lean 3 source module linear_algebra.projective_space.subspace
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,7 +226,7 @@ theorem span_eq_infₛ {S : Set (ℙ K V)} : span S = infₛ { W | S ⊆ W } :=
   refine' ⟨fun hx => _, fun hx W hW => _⟩
   · rintro W ⟨T, ⟨hT, rfl⟩⟩
     exact hx T hT
-  · exact (@infₛ_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
+  · exact (@Inf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_infₛ
 
 /-- If a set of points in projective space is contained in a subspace, and that subspace is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.complete_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ end DivisionRing
 variable (β) [LinearOrderedField β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
 theorem cutMap_coe (q : ℚ) : cutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by
-  simp_rw [cut_map, Rat.cast_lt]
+  simp_rw [cutMap, Rat.cast_lt]
 #align linear_ordered_field.cut_map_coe LinearOrderedField.cutMap_coe
 
 variable [Archimedean α]
@@ -158,14 +158,14 @@ theorem cutMap_bddAbove (a : α) : BddAbove (cutMap β a) :=
 theorem cutMap_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b :=
   by
   refine' (image_subset_iff.2 fun q hq => _).antisymm _
-  · rw [mem_set_of_eq, ← sub_lt_iff_lt_add] at hq
+  · rw [mem_setOf_eq, ← sub_lt_iff_lt_add] at hq
     obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
     refine' ⟨q₁, q - q₁, _, _, add_sub_cancel'_right _ _⟩ <;> try norm_cast <;>
-      rwa [coe_mem_cut_map_iff]
+      rwa [coe_mem_cutMap_iff]
     exact_mod_cast sub_lt_comm.mp hq₁q
   · rintro _ ⟨_, _, ⟨qa, ha, rfl⟩, ⟨qb, hb, rfl⟩, rfl⟩
     refine' ⟨qa + qb, _, by norm_cast⟩
-    rw [mem_set_of_eq, cast_add]
+    rw [mem_setOf_eq, cast_add]
     exact add_lt_add ha hb
 #align linear_ordered_field.cut_map_add LinearOrderedField.cutMap_add
 
@@ -199,21 +199,21 @@ theorem inducedMap_mono : Monotone (inducedMap α β) := fun a b h =>
 theorem inducedMap_rat (q : ℚ) : inducedMap α β (q : α) = q :=
   by
   refine'
-    csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β q) (fun x h => _) fun w h => _
-  · rw [cut_map_coe] at h
+    csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cutMap_nonempty β q) (fun x h => _) fun w h => _
+  · rw [cutMap_coe] at h
     obtain ⟨r, h, rfl⟩ := h
     exact le_of_lt h
   · obtain ⟨q', hwq, hq⟩ := exists_rat_btwn h
-    rw [cut_map_coe]
+    rw [cutMap_coe]
     exact ⟨q', ⟨_, hq, rfl⟩, hwq⟩
 #align linear_ordered_field.induced_map_rat LinearOrderedField.inducedMap_rat
 
 @[simp]
-theorem inducedMap_zero : inducedMap α β 0 = 0 := by exact_mod_cast induced_map_rat α β 0
+theorem inducedMap_zero : inducedMap α β 0 = 0 := by exact_mod_cast inducedMap_rat α β 0
 #align linear_ordered_field.induced_map_zero LinearOrderedField.inducedMap_zero
 
 @[simp]
-theorem inducedMap_one : inducedMap α β 1 = 1 := by exact_mod_cast induced_map_rat α β 1
+theorem inducedMap_one : inducedMap α β 1 = 1 := by exact_mod_cast inducedMap_rat α β 1
 #align linear_ordered_field.induced_map_one LinearOrderedField.inducedMap_one
 
 variable {α β} {a : α} {b : β} {q : ℚ}
@@ -225,16 +225,16 @@ theorem inducedMap_nonneg (ha : 0 ≤ a) : 0 ≤ inducedMap α β a :=
 theorem coe_lt_inducedMap_iff : (q : β) < inducedMap α β a ↔ (q : α) < a :=
   by
   refine' ⟨fun h => _, fun hq => _⟩
-  · rw [← induced_map_rat α] at h
-    exact (induced_map_mono α β).reflect_lt h
+  · rw [← inducedMap_rat α] at h
+    exact (inducedMap_mono α β).reflect_lt h
   · obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
-    apply lt_csupₛ_of_lt (cut_map_bdd_above β a) (coe_mem_cut_map_iff.mpr hqa)
+    apply lt_csupₛ_of_lt (cutMap_bddAbove β a) (coe_mem_cut_map_iff.mpr hqa)
     exact_mod_cast hq
 #align linear_ordered_field.coe_lt_induced_map_iff LinearOrderedField.coe_lt_inducedMap_iff
 
 theorem lt_inducedMap_iff : b < inducedMap α β a ↔ ∃ q : ℚ, b < q ∧ (q : α) < a :=
   ⟨fun h => (exists_rat_btwn h).imp fun q => And.imp_right coe_lt_inducedMap_iff.1,
-    fun ⟨q, hbq, hqa⟩ => hbq.trans <| by rwa [coe_lt_induced_map_iff]⟩
+    fun ⟨q, hbq, hqa⟩ => hbq.trans <| by rwa [coe_lt_inducedMap_iff]⟩
 #align linear_ordered_field.lt_induced_map_iff LinearOrderedField.lt_inducedMap_iff
 
 @[simp]
@@ -247,20 +247,20 @@ variable (α β)
 @[simp]
 theorem inducedMap_inducedMap (a : α) : inducedMap β γ (inducedMap α β a) = inducedMap α γ a :=
   eq_of_forall_rat_lt_iff_lt fun q => by
-    rw [coe_lt_induced_map_iff, coe_lt_induced_map_iff, Iff.comm, coe_lt_induced_map_iff]
+    rw [coe_lt_inducedMap_iff, coe_lt_inducedMap_iff, Iff.comm, coe_lt_inducedMap_iff]
 #align linear_ordered_field.induced_map_induced_map LinearOrderedField.inducedMap_inducedMap
 
 @[simp]
 theorem inducedMap_inv_self (b : β) : inducedMap γ β (inducedMap β γ b) = b := by
-  rw [induced_map_induced_map, induced_map_self]
+  rw [inducedMap_inducedMap, inducedMap_self]
 #align linear_ordered_field.induced_map_inv_self LinearOrderedField.inducedMap_inv_self
 
 theorem inducedMap_add (x y : α) : inducedMap α β (x + y) = inducedMap α β x + inducedMap α β y :=
   by
-  rw [induced_map, cut_map_add]
+  rw [inducedMap, cutMap_add]
   exact
-    csupₛ_add (cut_map_nonempty β x) (cut_map_bdd_above β x) (cut_map_nonempty β y)
-      (cut_map_bdd_above β y)
+    csupₛ_add (cutMap_nonempty β x) (cutMap_bddAbove β x) (cutMap_nonempty β y)
+      (cutMap_bddAbove β y)
 #align linear_ordered_field.induced_map_add LinearOrderedField.inducedMap_add
 
 variable {α β}
@@ -276,8 +276,8 @@ theorem le_inducedMap_mul_self_of_mem_cutMap (ha : 0 < a) (b : β) (hb : b ∈ c
   rw [pow_two] at hqa⊢
   exact
     mul_self_le_mul_self (by exact_mod_cast hq'.le)
-      (le_csupₛ (cut_map_bdd_above β a) <|
-        coe_mem_cut_map_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
+      (le_csupₛ (cutMap_bddAbove β a) <|
+        coe_mem_cutMap_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
 #align linear_ordered_field.le_induced_map_mul_self_of_mem_cut_map LinearOrderedField.le_inducedMap_mul_self_of_mem_cutMap
 
 /-- Preparatory lemma for `induced_ring_hom`. -/
@@ -286,16 +286,16 @@ theorem exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self (ha : 0 < a) (b : �
   by
   obtain hb | hb := lt_or_le b 0
   · refine' ⟨0, _, hb⟩
-    rw [← Rat.cast_zero, coe_mem_cut_map_iff, Rat.cast_zero]
+    rw [← Rat.cast_zero, coe_mem_cutMap_iff, Rat.cast_zero]
     exact mul_self_pos.2 ha.ne'
   obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
   rw [← cast_pow] at hbq
-  refine' ⟨(q ^ 2 : ℚ), coe_mem_cut_map_iff.2 _, hbq⟩
+  refine' ⟨(q ^ 2 : ℚ), coe_mem_cutMap_iff.2 _, hbq⟩
   rw [pow_two] at hqa⊢
   push_cast
-  obtain ⟨q', hq', hqa'⟩ := lt_induced_map_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
+  obtain ⟨q', hq', hqa'⟩ := lt_inducedMap_iff.1 (lt_of_mul_self_lt_mul_self _ hqa)
   exact mul_self_lt_mul_self (by exact_mod_cast hq.le) (hqa'.trans' <| by assumption_mod_cast)
-  exact induced_map_nonneg ha.le
+  exact inducedMap_nonneg ha.le
 #align linear_ordered_field.exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self LinearOrderedField.exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self
 
 variable (α β)
@@ -313,8 +313,7 @@ def inducedOrderRingHom : α →+*o β :=
       (-- reduce to the case of x = y
       by
         -- reduce to the case of 0 < x
-        suffices
-          ∀ x, 0 < x → induced_add_hom α β (x * x) = induced_add_hom α β x * induced_add_hom α β x
+        suffices ∀ x, 0 < x → inducedAddHom α β (x * x) = inducedAddHom α β x * inducedAddHom α β x
           by
           rintro x
           obtain h | rfl | h := lt_trichotomy x 0
@@ -325,9 +324,9 @@ def inducedOrderRingHom : α →+*o β :=
           · exact this x h
         -- prove that the (Sup of rationals less than x) ^ 2 is the Sup of the set of rationals less
         -- than (x ^ 2) by showing it is an upper bound and any smaller number is not an upper bound
-        refine' fun x hx => csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cut_map_nonempty β _) _ _
-        exact le_induced_map_mul_self_of_mem_cut_map hx
-        exact exists_mem_cut_map_mul_self_of_lt_induced_map_mul_self hx)
+        refine' fun x hx => csupₛ_eq_of_forall_le_of_forall_lt_exists_gt (cutMap_nonempty β _) _ _
+        exact le_inducedMap_mul_self_of_mem_cutMap hx
+        exact exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self hx)
       two_ne_zero (inducedMap_one _ _) with
     monotone' := inducedMap_mono _ _ }
 #align linear_ordered_field.induced_order_ring_hom LinearOrderedField.inducedOrderRingHom
@@ -340,9 +339,9 @@ def inducedOrderRingIso : β ≃+*o γ :=
     right_inv := inducedMap_inv_self _ _
     map_le_map_iff' := fun x y =>
       by
-      refine' ⟨fun h => _, fun h => induced_map_mono _ _ h⟩
-      simpa [induced_order_ring_hom, AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero,
-        induced_add_hom] using induced_map_mono γ β h }
+      refine' ⟨fun h => _, fun h => inducedMap_mono _ _ h⟩
+      simpa [inducedOrderRingHom, AddMonoidHom.mkRingHomOfMulSelfOfTwoNeZero, inducedAddHom] using
+        inducedMap_mono γ β h }
 #align linear_ordered_field.induced_order_ring_iso LinearOrderedField.inducedOrderRingIso
 
 @[simp]

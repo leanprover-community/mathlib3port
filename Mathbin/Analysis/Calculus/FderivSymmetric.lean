@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_symmetric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,15 +81,15 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   by
   -- it suffices to check that the expression is bounded by `ε * ((‖v‖ + ‖w‖) * ‖w‖) * h^2` for
   -- small enough `h`, for any positive `ε`.
-  apply is_o.trans_is_O (is_o_iff.2 fun ε εpos => _) (is_O_const_mul_self ((‖v‖ + ‖w‖) * ‖w‖) _ _)
+  apply IsOCat.trans_isO (isOCat_iff.2 fun ε εpos => _) (isO_const_mul_self ((‖v‖ + ‖w‖) * ‖w‖) _ _)
   -- consider a ball of radius `δ` around `x` in which the Taylor approximation for `f''` is
   -- good up to `δ`.
-  rw [HasFderivWithinAt, HasFderivAtFilter, is_o_iff] at hx
+  rw [HasFderivWithinAt, HasFderivAtFilter, isOCat_iff] at hx
   rcases Metric.mem_nhdsWithin_iff.1 (hx εpos) with ⟨δ, δpos, sδ⟩
   have E1 : ∀ᶠ h in 𝓝[>] (0 : ℝ), h * (‖v‖ + ‖w‖) < δ :=
     by
     have : Filter.Tendsto (fun h => h * (‖v‖ + ‖w‖)) (𝓝[>] (0 : ℝ)) (𝓝 (0 * (‖v‖ + ‖w‖))) :=
-      (continuous_id.mul continuous_const).ContinuousWithinAt
+      (continuous_id.mul continuous_const).continuousWithinAt
     apply (tendsto_order.1 this).2 δ
     simpa only [zero_mul] using δpos
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
@@ -170,7 +170,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
           refine' ⟨_, xt_mem t ⟨ht.1, ht.2.le⟩⟩
           rw [add_assoc, add_mem_ball_iff_norm]
           exact I.trans_lt hδ
-        simpa only [mem_set_of_eq, add_assoc x, add_sub_cancel'] using sδ H
+        simpa only [mem_setOf_eq, add_assoc x, add_sub_cancel'] using sδ H
       _ ≤ ε * (‖h • v‖ + ‖h • w‖) * ‖h • w‖ :=
         by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
@@ -283,7 +283,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
     abel
   have B : (fun h : ℝ => f'' w v - f'' v w) =o[𝓝[>] 0] fun h => (1 : ℝ) :=
     by
-    have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := is_O_refl _ _
+    have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := isO_refl _ _
     have C := this.smul_is_o A
     apply C.congr' _ _
     · filter_upwards [self_mem_nhdsWithin]
@@ -292,8 +292,8 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
       congr 1
       field_simp [LT.lt.ne' hpos]
     · filter_upwards [self_mem_nhdsWithin]with _ hpos
-      field_simp [LT.lt.ne' hpos, SMul.smul]
-  simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
+      field_simp [LT.lt.ne' hpos, has_smul.smul]
+  simpa only [sub_eq_zero] using isOCat_const_const_iff.1 B
 #align convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
 
 omit s_conv xs hx hf
@@ -329,7 +329,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
     exact interior_mem_nhds.2 hy
   -- we choose `t m > 0` such that `x + 4 (z + (t m) m)` belongs to the interior of `s`, for any
   -- vector `m`.
-  choose t ts tpos using fun m => ((B m).And self_mem_nhdsWithin).exists
+  choose t ts tpos using fun m => ((B m).and self_mem_nhdsWithin).exists
   -- applying `second_derivative_within_at_symmetric_of_mem_interior` to the vectors `z`
   -- and `z + (t m) m`, we deduce that `f'' m z = f'' z m` for all `m`.
   have C : ∀ m : E, f'' m z = f'' z m := by

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.char_p.local_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem charP_zero_or_prime_power (R : Type _) [CommRing R] [LocalRing R] (q : �
       by_contra g
       rw [← mem_nonunits_iff] at g
       rw [← LocalRing.mem_maximalIdeal] at g
-      have a_cast_zero := Ideal.Quotient.eq_zero_iff_mem.2 g
+      have a_cast_zero := ideal.quotient.eq_zero_iff_mem.2 g
       rw [map_natCast] at a_cast_zero
       have r_dvd_a := (ringChar.spec K a).1 a_cast_zero
       exact absurd r_dvd_a r_ne_dvd_a

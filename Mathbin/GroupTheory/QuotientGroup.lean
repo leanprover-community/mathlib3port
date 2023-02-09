@@ -6,7 +6,7 @@ Authors: Kevin Buzzard, Patrick Massot
 This file is to a certain extent based on `quotient_module.lean` by Johannes Hölzl.
 
 ! This file was ported from Lean 3 source module group_theory.quotient_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.con Quo
 protected def con : Con G where
   toSetoid := leftRel N
   mul' a b c d hab hcd := by
-    rw [left_rel_eq] at hab hcd⊢
+    rw [leftRel_eq] at hab hcd⊢
     calc
       (a * c)⁻¹ * (b * d) = c⁻¹ * (a⁻¹ * b) * c⁻¹⁻¹ * (c⁻¹ * d) := by
         simp only [mul_inv_rev, mul_assoc, inv_mul_cancel_left]
@@ -81,7 +81,7 @@ protected def con : Con G where
 #print QuotientGroup.Quotient.group /-
 @[to_additive]
 instance Quotient.group : Group (G ⧸ N) :=
-  (QuotientGroup.con N).Group
+  (QuotientGroup.con N).group
 #align quotient_group.quotient.group QuotientGroup.Quotient.group
 #align quotient_add_group.quotient.add_group QuotientAddGroup.Quotient.addGroup
 -/
@@ -139,8 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quotient_group.mk'_eq_mk' QuotientGroup.mk'_eq_mk'ₓ'. -/
 @[to_additive]
 theorem mk'_eq_mk' {x y : G} : mk' N x = mk' N y ↔ ∃ z ∈ N, x * z = y :=
-  QuotientGroup.eq'.trans <| by
-    simp only [← _root_.eq_inv_mul_iff_mul_eq, exists_prop, exists_eq_right]
+  QuotientGroup.eq'.trans <| by simp only [← eq_inv_mul_iff_mul_eq, exists_prop, exists_eq_right]
 #align quotient_group.mk'_eq_mk' QuotientGroup.mk'_eq_mk'
 #align quotient_add_group.mk'_eq_mk' QuotientAddGroup.mk'_eq_mk'
 
@@ -288,7 +287,7 @@ group homomorphism `G/N →* H`. -/
 def lift (φ : G →* H) (HN : ∀ x ∈ N, φ x = 1) : Q →* H :=
   (QuotientGroup.con N).lift φ fun x y h =>
     by
-    simp only [QuotientGroup.con, left_rel_apply, Con.rel_mk] at h
+    simp only [QuotientGroup.con, leftRel_apply, Con.rel_mk] at h
     calc
       φ x = φ (y * (x⁻¹ * y)⁻¹) := by rw [mul_inv_rev, inv_inv, mul_inv_cancel_left]
       _ = φ y := by rw [φ.map_mul, HN _ (N.inv_mem h), mul_one]
@@ -418,7 +417,7 @@ theorem map_map {I : Type _} [Group I] (M : Subgroup H) (O : Subgroup I) [M.Norm
     (x : G ⧸ N) : map M O g hg (map N M f hf x) = map N O (g.comp f) hgf x :=
   by
   refine' induction_on' x fun x => _
-  simp only [map_coe, MonoidHom.comp_apply]
+  simp only [map_mk, MonoidHom.comp_apply]
 #align quotient_group.map_map QuotientGroup.map_map
 #align quotient_add_group.map_map QuotientAddGroup.map_map
 
@@ -582,7 +581,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.ker_lif
 @[to_additive]
 theorem kerLift_injective : Injective (kerLift φ) := fun a b =>
   Quotient.inductionOn₂' a b fun a b (h : φ a = φ b) =>
-    Quotient.sound' <| by rw [left_rel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_self]
+    Quotient.sound' <| by rw [leftRel_apply, mem_ker, φ.map_mul, ← h, φ.map_inv, inv_mul_self]
 #align quotient_group.ker_lift_injective QuotientGroup.kerLift_injective
 #align quotient_add_group.ker_lift_injective QuotientAddGroup.kerLift_injective
 
@@ -597,7 +596,7 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.range_k
 /-- The induced map from the quotient by the kernel to the range. -/
 @[to_additive "The induced map from the quotient by the kernel to the range."]
 def rangeKerLift : G ⧸ ker φ →* φ.range :=
-  lift _ φ.range_restrict fun g hg => (mem_ker _).mp <| by rwa [ker_range_restrict]
+  lift _ φ.rangeRestrict fun g hg => (mem_ker _).mp <| by rwa [ker_rangeRestrict]
 #align quotient_group.range_ker_lift QuotientGroup.rangeKerLift
 #align quotient_add_group.range_ker_lift QuotientAddGroup.rangeKerLift
 
@@ -609,9 +608,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quotient_group.range_ker_lift_injective QuotientGroup.rangeKerLift_injectiveₓ'. -/
 @[to_additive]
 theorem rangeKerLift_injective : Injective (rangeKerLift φ) := fun a b =>
-  Quotient.inductionOn₂' a b fun a b (h : φ.range_restrict a = φ.range_restrict b) =>
+  Quotient.inductionOn₂' a b fun a b (h : φ.rangeRestrict a = φ.rangeRestrict b) =>
     Quotient.sound' <| by
-      rw [left_rel_apply, ← ker_range_restrict, mem_ker, φ.range_restrict.map_mul, ← h,
+      rw [leftRel_apply, ← ker_rangeRestrict, mem_ker, φ.range_restrict.map_mul, ← h,
         φ.range_restrict.map_inv, inv_mul_self]
 #align quotient_group.range_ker_lift_injective QuotientGroup.rangeKerLift_injective
 #align quotient_add_group.range_ker_lift_injective QuotientAddGroup.rangeKerLift_injective
@@ -661,7 +660,7 @@ def quotientKerEquivOfRightInverse (ψ : H → G) (hφ : RightInverse ψ φ) : G
   { kerLift φ with
     toFun := kerLift φ
     invFun := mk ∘ ψ
-    left_inv := fun x => kerLift_injective φ (by rw [comp_app, ker_lift_mk', hφ])
+    left_inv := fun x => kerLift_injective φ (by rw [comp_apply, kerLift_mk', hφ])
     right_inv := hφ }
 #align quotient_group.quotient_ker_equiv_of_right_inverse QuotientGroup.quotientKerEquivOfRightInverse
 #align quotient_add_group.quotient_ker_equiv_of_right_inverse QuotientAddGroup.quotientKerEquivOfRightInverse
@@ -692,7 +691,7 @@ For a `computable` version, see `quotient_group.quotient_ker_equiv_of_right_inve
 @[to_additive
       "The canonical isomorphism `G/(ker φ) ≃+ H` induced by a surjection `φ : G →+ H`.\n\nFor a `computable` version, see `quotient_add_group.quotient_ker_equiv_of_right_inverse`."]
 noncomputable def quotientKerEquivOfSurjective (hφ : Surjective φ) : G ⧸ ker φ ≃* H :=
-  quotientKerEquivOfRightInverse φ _ hφ.HasRightInverse.choose_spec
+  quotientKerEquivOfRightInverse φ _ hφ.hasRightInverse.choose_spec
 #align quotient_group.quotient_ker_equiv_of_surjective QuotientGroup.quotientKerEquivOfSurjective
 #align quotient_add_group.quotient_ker_equiv_of_surjective QuotientAddGroup.quotientKerEquivOfSurjective
 
@@ -924,7 +923,7 @@ noncomputable def quotientInfEquivProdNormalQuotient (H N : Subgroup G) [N.Norma
       rcases hy with ⟨h, n, hh, hn, rfl⟩
       use h, hh; apply quotient.eq.mpr
       change Setoid.r _ _
-      rw [left_rel_apply]
+      rw [leftRel_apply]
       change h⁻¹ * (h * n) ∈ N
       rwa [← mul_assoc, inv_mul_self, one_mul]
   (quotientMulEquivOfEq (by simp [← comap_ker])).trans (quotientKerEquivOfSurjective φ φ_surjective)
@@ -1027,9 +1026,9 @@ Case conversion may be inaccurate. Consider using '#align quotient_group.subsing
 @[to_additive]
 theorem subsingleton_quotient_top : Subsingleton (G ⧸ (⊤ : Subgroup G)) :=
   by
-  dsimp [HasQuotient.Quotient, subgroup.has_quotient, Quotient]
-  rw [left_rel_eq]
-  exact @Trunc.subsingleton G
+  dsimp [HasQuotient.Quotient, Subgroup.hasQuotient, Quotient]
+  rw [leftRel_eq]
+  exact @trunc.subsingleton G
 #align quotient_group.subsingleton_quotient_top QuotientGroup.subsingleton_quotient_top
 #align quotient_add_group.subsingleton_quotient_top QuotientAddGroup.subsingleton_quotient_top
 
@@ -1059,8 +1058,8 @@ theorem comap_comap_center {H₁ : Subgroup G} [H₁.Normal] {H₂ : Subgroup (G
       (Subgroup.center (G ⧸ H₂.comap (mk' H₁))).comap (mk' (H₂.comap (mk' H₁))) :=
   by
   ext x
-  simp only [mk'_apply, Subgroup.mem_comap, Subgroup.mem_center_iff, forall_coe, ← coe_mul,
-    eq_iff_div_mem, coe_div]
+  simp only [mk'_apply, Subgroup.mem_comap, Subgroup.mem_center_iff, forall_mk, ← mk_mul,
+    eq_iff_div_mem, mk_div]
 #align quotient_group.comap_comap_center QuotientGroup.comap_comap_center
 #align quotient_add_group.comap_comap_center QuotientAddGroup.comap_comap_center
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.injective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
           map_smul' := by
             intros
             rw [RingHom.id_apply, f.to_fun_eq_coe, map_zsmul] }
-      have : mono F := by
+      have : Mono F := by
         refine' ⟨fun Z α β eq1 => _⟩
         let α' : AddCommGroupCat.of Z ⟶ X := α.to_add_monoid_hom
         let β' : AddCommGroupCat.of Z ⟶ X := β.to_add_monoid_hom
@@ -61,9 +61,9 @@ theorem injective_of_injective_as_module [Injective (⟨A⟩ : ModuleCat ℤ)] :
         rw [cancel_mono] at eq2
         ext
         simpa only using FunLike.congr_fun eq2 x
-      refine' ⟨(injective.factor_thru G F).toAddMonoidHom, _⟩
+      refine' ⟨(Injective.factorThru G F).toAddMonoidHom, _⟩
       ext
-      convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      convert FunLike.congr_fun (Injective.comp_factorThru G F) x }
 #align AddCommGroup.injective_of_injective_as_module AddCommGroupCat.injective_of_injective_as_module
 
 theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGroupCat)] :
@@ -73,11 +73,11 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
       skip
       let G : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨A⟩ := g.to_add_monoid_hom
       let F : (⟨X⟩ : AddCommGroupCat) ⟶ ⟨Y⟩ := f.to_add_monoid_hom
-      have : mono F := by
+      have : Mono F := by
         rw [mono_iff_injective]
         intro _ _ h
         exact ((ModuleCat.mono_iff_injective f).mp m) h
-      refine' ⟨{ injective.factor_thru G F with map_smul' := _ }, _⟩
+      refine' ⟨{ Injective.factorThru G F with map_smul' := _ }, _⟩
       · intro m x
         rw [AddMonoidHom.toFun_eq_coe, RingHom.id_apply]
         induction' m using Int.induction_on with n hn n hn
@@ -87,7 +87,7 @@ theorem injective_as_module_of_injective_as_Ab [Injective (⟨A⟩ : AddCommGrou
         · simp only [add_smul, map_add, hn, one_smul]
         · simp only [sub_smul, map_sub, hn, one_smul]
       ext
-      convert FunLike.congr_fun (injective.comp_factor_thru G F) x }
+      convert FunLike.congr_fun (Injective.comp_factorThru G F) x }
 #align AddCommGroup.injective_as_module_of_injective_as_Ab AddCommGroupCat.injective_as_module_of_injective_as_Ab
 
 instance injective_of_divisible [DivisibleBy A ℤ] :

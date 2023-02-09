@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mathieu Guay-Paquet
 
 ! This file was ported from Lean 3 source module order.pfilter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ def IsPfilter [Preorder P] (F : Set P) : Prop :=
 theorem IsPfilter.of_def [Preorder P] {F : Set P} (nonempty : F.Nonempty)
     (directed : DirectedOn (· ≥ ·) F) (mem_of_le : ∀ {x y : P}, x ≤ y → x ∈ F → y ∈ F) :
     IsPfilter F :=
-  ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, Nonempty, Directed⟩
+  ⟨fun _ _ _ _ => mem_of_le ‹_› ‹_›, nonempty, directed⟩
 #align order.is_pfilter.of_def Order.IsPfilter.of_def
 
 /-- Create an element of type `order.pfilter` from a set satisfying the predicate
@@ -92,15 +92,15 @@ theorem mem_coe : x ∈ (F : Set P) ↔ x ∈ F :=
 #align order.pfilter.mem_coe Order.Pfilter.mem_coe
 
 theorem isPfilter : IsPfilter (F : Set P) :=
-  F.dual.IsIdeal
+  F.dual.isIdeal
 #align order.pfilter.is_pfilter Order.Pfilter.isPfilter
 
 theorem nonempty : (F : Set P).Nonempty :=
-  F.dual.Nonempty
+  F.dual.nonempty
 #align order.pfilter.nonempty Order.Pfilter.nonempty
 
 theorem directed : DirectedOn (· ≥ ·) (F : Set P) :=
-  F.dual.Directed
+  F.dual.directed
 #align order.pfilter.directed Order.Pfilter.directed
 
 theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => F.dual.lower h
@@ -111,7 +111,7 @@ theorem mem_of_le {F : Pfilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => 
 theorem ext (h : (s : Set P) = t) : s = t := by
   cases s
   cases t
-  exact congr_arg _ (ideal.ext h)
+  exact congr_arg _ (Ideal.ext h)
 #align order.pfilter.ext Order.Pfilter.ext
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,8 +36,8 @@ and the units of the monoid of continuous maps. -/
 def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
     where
   toFun f :=
-    { val := ⟨fun x => f x, Units.continuous_val.comp f.Continuous⟩
-      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_val.comp (continuous_inv.comp f.Continuous)⟩
+    { val := ⟨fun x => f x, Units.continuous_val.comp f.continuous⟩
+      inv := ⟨fun x => ↑(f x)⁻¹, Units.continuous_val.comp (continuous_inv.comp f.continuous)⟩
       val_inv := ext fun x => Units.mul_inv _
       inv_val := ext fun x => Units.inv_mul _ }
   invFun f :=
@@ -45,8 +45,8 @@ def unitsLift : C(X, Mˣ) ≃ C(X, M)ˣ
         ⟨f x, f⁻¹ x, ContinuousMap.congr_fun f.mul_inv x, ContinuousMap.congr_fun f.inv_mul x⟩
       continuous_toFun :=
         continuous_induced_rng.2 <|
-          Continuous.prod_mk (f : C(X, M)).Continuous <|
-            MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).Continuous }
+          Continuous.prod_mk (f : C(X, M)).continuous <|
+            MulOpposite.continuous_op.comp (↑f⁻¹ : C(X, M)).continuous }
   left_inv f := by
     ext
     rfl
@@ -63,13 +63,13 @@ section NormedRing
 variable [NormedRing R] [CompleteSpace R]
 
 theorem NormedRing.isUnit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
-    Continuous fun x => (h x).Unit :=
+    Continuous fun x => (h x).unit :=
   by
   refine'
     continuous_induced_rng.2
       (Continuous.prod_mk f.continuous
         (mul_opposite.continuous_op.comp (continuous_iff_continuous_at.mpr fun x => _)))
-  have := NormedRing.inverse_continuousAt (h x).Unit
+  have := NormedRing.inverse_continuousAt (h x).unit
   simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this⊢
   exact this.comp (f.continuous_at x)
 #align normed_ring.is_unit_unit_continuous NormedRing.isUnit_unit_continuous
@@ -79,12 +79,12 @@ normed ring and a proof that every element of the range is a unit. -/
 @[simps]
 noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ)
     where
-  toFun x := (h x).Unit
+  toFun x := (h x).unit
   continuous_toFun := NormedRing.isUnit_unit_continuous h
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :
-    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_val.comp f.Continuous⟩)
+    CanLift C(X, R) C(X, Rˣ) (fun f => ⟨fun x => f x, Units.continuous_val.comp f.continuous⟩)
       fun f => ∀ x, IsUnit (f x)
     where prf f h :=
     ⟨unitsOfForallIsUnit h, by
@@ -93,7 +93,7 @@ instance canLift :
 #align continuous_map.can_lift ContinuousMap.canLift
 
 theorem isUnit_iff_forall_isUnit (f : C(X, R)) : IsUnit f ↔ ∀ x, IsUnit (f x) :=
-  Iff.intro (fun h => fun x => ⟨unitsLift.symm h.Unit x, rfl⟩) fun h =>
+  Iff.intro (fun h => fun x => ⟨unitsLift.symm h.unit x, rfl⟩) fun h =>
     ⟨(unitsOfForallIsUnit h).unitsLift, by
       ext
       rfl⟩
@@ -112,7 +112,7 @@ theorem isUnit_iff_forall_ne_zero (f : C(X, 𝕜)) : IsUnit f ↔ ∀ x, f x ≠
 theorem spectrum_eq_range (f : C(X, 𝕜)) : spectrum 𝕜 f = Set.range f :=
   by
   ext
-  simp only [spectrum.mem_iff, is_unit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply,
+  simp only [spectrum.mem_iff, isUnit_iff_forall_ne_zero, not_forall, coe_sub, Pi.sub_apply,
     algebraMap_apply, Algebra.id.smul_eq_mul, mul_one, Classical.not_not, Set.mem_range,
     sub_eq_zero, @eq_comm _ x _]
 #align continuous_map.spectrum_eq_range ContinuousMap.spectrum_eq_range

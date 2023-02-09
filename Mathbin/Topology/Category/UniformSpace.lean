@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.UniformSpace
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem extension_comp_coe {X : UniformSpaceCat} {Y : CpltSepUniformSpace}
   by
   apply Subtype.eq
   funext x
-  exact congr_fun (completion.extension_comp_coe f.property) x
+  exact congr_fun (Completion.extension_comp_coe f.property) x
 #align UniformSpace.extension_comp_coe UniformSpaceCat.extension_comp_coe
 
 /-- The completion functor is left adjoint to the forgetful functor. -/
@@ -222,7 +222,7 @@ noncomputable def adj : completionFunctor ⊣ forget₂ CpltSepUniformSpace Unif
       homEquiv_naturality_left_symm' := fun X X' Y f g =>
         by
         apply hom_ext; funext x; dsimp
-        erw [coe_comp, ← completion.extension_map]
+        erw [coe_comp, ← Completion.extension_map]
         rfl; exact g.property; exact f.property }
 #align UniformSpace.adj UniformSpaceCat.adj
 

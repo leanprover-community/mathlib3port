@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.yoneda
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,20 +47,19 @@ def linearYoneda : C ⥤ Cᵒᵖ ⥤ ModuleCat R
     { app := fun Y => Linear.rightComp R _ f
       naturality' := fun X Y f =>
         LinearMap.ext fun x => by
-          simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply,
-            linear.left_comp_apply, linear.right_comp_apply] }
+          simp only [Category.assoc, ModuleCat.coe_comp, Function.comp_apply, Linear.leftComp_apply,
+            Linear.rightComp_apply] }
   map_id' X :=
     NatTrans.ext _ _ <|
       funext fun _ =>
         LinearMap.ext fun _ => by
-          simp only [linear.right_comp_apply, category.comp_id, nat_trans.id_app,
-            ModuleCat.id_apply]
+          simp only [Linear.rightComp_apply, Category.comp_id, NatTrans.id_app, ModuleCat.id_apply]
   map_comp' _ _ _ f g :=
     NatTrans.ext _ _ <|
       funext fun _ =>
         LinearMap.ext fun _ => by
-          simp only [category.assoc, linear.right_comp_apply, nat_trans.comp_app,
-            ModuleCat.coe_comp, Function.comp_apply]
+          simp only [Category.assoc, Linear.rightComp_apply, NatTrans.comp_app, ModuleCat.coe_comp,
+            Function.comp_apply]
 #align category_theory.linear_yoneda CategoryTheory.linearYoneda
 
 /-- The Yoneda embedding for `R`-linear categories `C`,
@@ -78,20 +77,20 @@ def linearCoyoneda : Cᵒᵖ ⥤ C ⥤ ModuleCat R
     { app := fun X => Linear.leftComp _ _ f.unop
       naturality' := fun X Y f =>
         LinearMap.ext fun x => by
-          simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply,
-            linear.right_comp_apply, linear.left_comp_apply] }
+          simp only [Category.assoc, ModuleCat.coe_comp, Function.comp_apply,
+            Linear.rightComp_apply, Linear.leftComp_apply] }
   map_id' X :=
     NatTrans.ext _ _ <|
       funext fun _ =>
         LinearMap.ext fun _ => by
-          simp only [linear.left_comp_apply, unop_id, category.id_comp, nat_trans.id_app,
+          simp only [Linear.leftComp_apply, unop_id, Category.id_comp, NatTrans.id_app,
             ModuleCat.id_apply]
   map_comp' _ _ _ f g :=
     NatTrans.ext _ _ <|
       funext fun _ =>
         LinearMap.ext fun _ => by
-          simp only [category.assoc, ModuleCat.coe_comp, Function.comp_apply,
-            linear.left_comp_apply, unop_comp, nat_trans.comp_app]
+          simp only [Category.assoc, ModuleCat.coe_comp, Function.comp_apply, Linear.leftComp_apply,
+            unop_comp, NatTrans.comp_app]
 #align category_theory.linear_coyoneda CategoryTheory.linearCoyoneda
 
 instance linearYoneda_obj_additive (X : C) : ((linearYoneda R C).obj X).Additive where
@@ -131,16 +130,14 @@ instance linearYonedaFull : Full (linearYoneda R C) :=
   let yoneda_full :
     Full (linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R))) :=
     yoneda.yonedaFull
-  full.of_comp_faithful (linear_yoneda R C)
-    ((whiskering_right _ _ _).obj (forget (ModuleCat.{v} R)))
+  Full.ofCompFaithful (linearYoneda R C) ((whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)))
 #align category_theory.linear_yoneda_full CategoryTheory.linearYonedaFull
 
 instance linearCoyonedaFull : Full (linearCoyoneda R C) :=
   let coyoneda_full :
     Full (linearCoyoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R))) :=
     coyoneda.coyonedaFull
-  full.of_comp_faithful (linear_coyoneda R C)
-    ((whiskering_right _ _ _).obj (forget (ModuleCat.{v} R)))
+  Full.ofCompFaithful (linearCoyoneda R C) ((whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R)))
 #align category_theory.linear_coyoneda_full CategoryTheory.linearCoyonedaFull
 
 instance linearYoneda_faithful : Faithful (linearYoneda R C) :=

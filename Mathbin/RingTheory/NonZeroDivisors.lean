@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.non_zero_divisors
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_right_coe_non_zero_divisors_eq_zero_iff mul_right_coe_nonZeroDivisors_eq_zero_iffₓ'. -/
 @[simp]
 theorem mul_right_coe_nonZeroDivisors_eq_zero_iff {x : M} {c : M⁰} : x * c = 0 ↔ x = 0 :=
-  mul_right_mem_nonZeroDivisors_eq_zero_iff c.Prop
+  mul_right_mem_nonZeroDivisors_eq_zero_iff c.prop
 #align mul_right_coe_non_zero_divisors_eq_zero_iff mul_right_coe_nonZeroDivisors_eq_zero_iff
 
 /- warning: mul_left_mem_non_zero_divisors_eq_zero_iff -> mul_left_mem_nonZeroDivisors_eq_zero_iff is a dubious translation:
@@ -97,7 +97,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_nonZeroDivisors_eq_zero_iffₓ'. -/
 @[simp]
 theorem mul_left_coe_nonZeroDivisors_eq_zero_iff {c : M₁⁰} {x : M₁} : (c : M₁) * x = 0 ↔ x = 0 :=
-  mul_left_mem_nonZeroDivisors_eq_zero_iff c.Prop
+  mul_left_mem_nonZeroDivisors_eq_zero_iff c.prop
 #align mul_left_coe_non_zero_divisors_eq_zero_iff mul_left_coe_nonZeroDivisors_eq_zero_iff
 
 /- warning: mul_cancel_right_mem_non_zero_divisor -> mul_cancel_right_mem_non_zero_divisor is a dubious translation:
@@ -119,7 +119,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_4 : Ring.{u1} R] {x : R} {y : R} {c : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4)))))) x (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))}, Iff (Eq.{succ u1} R (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_4)))) x (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) c)) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_4)))) y (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (MonoidWithZero.toMulZeroOneClass.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_4))))) c))) (Eq.{succ u1} R x y)
 Case conversion may be inaccurate. Consider using '#align mul_cancel_right_coe_non_zero_divisor mul_cancel_right_coe_non_zero_divisorₓ'. -/
 theorem mul_cancel_right_coe_non_zero_divisor {x y : R} {c : R⁰} : x * c = y * c ↔ x = y :=
-  mul_cancel_right_mem_non_zero_divisor c.Prop
+  mul_cancel_right_mem_non_zero_divisor c.prop
 #align mul_cancel_right_coe_non_zero_divisor mul_cancel_right_coe_non_zero_divisor
 
 /- warning: mul_cancel_left_mem_non_zero_divisor -> mul_cancel_left_mem_non_zero_divisor is a dubious translation:
@@ -140,7 +140,7 @@ but is expected to have type
   forall {R' : Type.{u1}} [_inst_5 : CommRing.{u1} R'] {x : R'} {y : R'} {c : Subtype.{succ u1} R' (fun (x : R') => Membership.mem.{u1, u1} R' (Submonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) R' (Submonoid.instSetLikeSubmonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5))))))) x (nonZeroDivisors.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))}, Iff (Eq.{succ u1} R' (HMul.hMul.{u1, u1, u1} R' R' R' (instHMul.{u1} R' (NonUnitalNonAssocRing.toMul.{u1} R' (NonAssocRing.toNonUnitalNonAssocRing.{u1} R' (Ring.toNonAssocRing.{u1} R' (CommRing.toRing.{u1} R' _inst_5))))) (Subtype.val.{succ u1} R' (fun (x : R') => Membership.mem.{u1, u1} R' (Set.{u1} R') (Set.instMembershipSet.{u1} R') x (SetLike.coe.{u1, u1} (Submonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) R' (Submonoid.instSetLikeSubmonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) (nonZeroDivisors.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) c) x) (HMul.hMul.{u1, u1, u1} R' R' R' (instHMul.{u1} R' (NonUnitalNonAssocRing.toMul.{u1} R' (NonAssocRing.toNonUnitalNonAssocRing.{u1} R' (Ring.toNonAssocRing.{u1} R' (CommRing.toRing.{u1} R' _inst_5))))) (Subtype.val.{succ u1} R' (fun (x : R') => Membership.mem.{u1, u1} R' (Set.{u1} R') (Set.instMembershipSet.{u1} R') x (SetLike.coe.{u1, u1} (Submonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) R' (Submonoid.instSetLikeSubmonoid.{u1} R' (MulZeroOneClass.toMulOneClass.{u1} R' (MonoidWithZero.toMulZeroOneClass.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) (nonZeroDivisors.{u1} R' (Semiring.toMonoidWithZero.{u1} R' (Ring.toSemiring.{u1} R' (CommRing.toRing.{u1} R' _inst_5)))))) c) y)) (Eq.{succ u1} R' x y)
 Case conversion may be inaccurate. Consider using '#align mul_cancel_left_coe_non_zero_divisor mul_cancel_left_coe_non_zero_divisorₓ'. -/
 theorem mul_cancel_left_coe_non_zero_divisor {x y : R'} {c : R'⁰} : (c : R') * x = c * y ↔ x = y :=
-  mul_cancel_left_mem_non_zero_divisor c.Prop
+  mul_cancel_left_mem_non_zero_divisor c.prop
 #align mul_cancel_left_coe_non_zero_divisor mul_cancel_left_coe_non_zero_divisor
 
 /- warning: non_zero_divisors.ne_zero -> nonZeroDivisors.ne_zero is a dubious translation:
@@ -280,7 +280,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align powers_le_non_zero_divisors_of_no_zero_divisors powers_le_nonZeroDivisors_of_noZeroDivisorsₓ'. -/
 theorem powers_le_nonZeroDivisors_of_noZeroDivisors [NoZeroDivisors M] {a : M} (ha : a ≠ 0) :
     Submonoid.powers a ≤ M⁰ :=
-  le_nonZeroDivisors_of_noZeroDivisors fun h => absurd (h.recOn fun _ hn => pow_eq_zero hn) ha
+  le_nonZeroDivisors_of_noZeroDivisors fun h => absurd (h.rec_on fun _ hn => pow_eq_zero hn) ha
 #align powers_le_non_zero_divisors_of_no_zero_divisors powers_le_nonZeroDivisors_of_noZeroDivisors
 
 /- warning: map_le_non_zero_divisors_of_injective -> map_le_nonZeroDivisors_of_injective is a dubious translation:
@@ -319,7 +319,7 @@ but is expected to have type
   forall {M₁ : Type.{u1}} [_inst_3 : CommMonoidWithZero.{u1} M₁] [_inst_6 : NoZeroDivisors.{u1} M₁ (MulZeroClass.toMul.{u1} M₁ (MulZeroOneClass.toMulZeroClass.{u1} M₁ (MonoidWithZero.toMulZeroOneClass.{u1} M₁ (CommMonoidWithZero.toMonoidWithZero.{u1} M₁ _inst_3)))) (CommMonoidWithZero.toZero.{u1} M₁ _inst_3)] [_inst_7 : Nontrivial.{u1} M₁] {s : Multiset.{u1} M₁}, Iff (Eq.{succ u1} M₁ (Multiset.prod.{u1} M₁ (CommMonoidWithZero.toCommMonoid.{u1} M₁ _inst_3) s) (OfNat.ofNat.{u1} M₁ 0 (Zero.toOfNat0.{u1} M₁ (CommMonoidWithZero.toZero.{u1} M₁ _inst_3)))) (Exists.{succ u1} M₁ (fun (r : M₁) => Exists.{0} (Membership.mem.{u1, u1} M₁ (Multiset.{u1} M₁) (Multiset.instMembershipMultiset.{u1} M₁) r s) (fun (hr : Membership.mem.{u1, u1} M₁ (Multiset.{u1} M₁) (Multiset.instMembershipMultiset.{u1} M₁) r s) => Eq.{succ u1} M₁ r (OfNat.ofNat.{u1} M₁ 0 (Zero.toOfNat0.{u1} M₁ (CommMonoidWithZero.toZero.{u1} M₁ _inst_3))))))
 Case conversion may be inaccurate. Consider using '#align prod_zero_iff_exists_zero prod_zero_iff_exists_zeroₓ'. -/
 theorem prod_zero_iff_exists_zero [NoZeroDivisors M₁] [Nontrivial M₁] {s : Multiset M₁} :
-    s.Prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=
+    s.prod = 0 ↔ ∃ (r : M₁)(hr : r ∈ s), r = 0 :=
   by
   constructor; swap
   · rintro ⟨r, hrs, rfl⟩

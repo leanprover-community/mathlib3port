@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,16 +34,16 @@ open Real
 
 theorem cos_eq_zero_iff {θ : ℂ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 :=
   by
-  have h : (exp (θ * I) + exp (-θ * I)) / 2 = 0 ↔ exp (2 * θ * I) = -1 :=
+  have h : (exp (θ * i) + exp (-θ * i)) / 2 = 0 ↔ exp (2 * θ * i) = -1 :=
     by
-    rw [@div_eq_iff _ _ (exp (θ * I) + exp (-θ * I)) 2 0 two_ne_zero, zero_mul,
+    rw [@div_eq_iff _ _ (exp (θ * i) + exp (-θ * i)) 2 0 two_ne_zero, zero_mul,
       add_eq_zero_iff_eq_neg, neg_eq_neg_one_mul, ← div_eq_iff (exp_ne_zero _), ← exp_sub]
     field_simp only
     congr 3
     ring
-  rw [cos, h, ← exp_pi_mul_I, exp_eq_exp_iff_exists_int, mul_right_comm]
+  rw [cos, h, ← exp_pi_mul_i, exp_eq_exp_iff_exists_int, mul_right_comm]
   refine' exists_congr fun x => _
-  refine' (iff_of_eq <| congr_arg _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero I_ne_zero)
+  refine' (iff_of_eq <| congr_arg _ _).trans (mul_right_inj' <| mul_ne_zero two_ne_zero i_ne_zero)
   field_simp
   ring
 #align complex.cos_eq_zero_iff Complex.cos_eq_zero_iff
@@ -152,7 +152,7 @@ theorem tan_add_mul_i {x y : ℂ}
       ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * i ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * i = (2 * l + 1) * π / 2) :
     tan (x + y * i) = (tan x + tanh y * i) / (1 - tan x * tanh y * i) := by
-  rw [tan_add h, tan_mul_I, mul_assoc]
+  rw [tan_add h, tan_mul_i, mul_assoc]
 #align complex.tan_add_mul_I Complex.tan_add_mul_i
 
 theorem tan_eq {z : ℂ}
@@ -162,7 +162,7 @@ theorem tan_eq {z : ℂ}
         (∃ k : ℤ, (z.re : ℂ) = (2 * k + 1) * π / 2) ∧
           ∃ l : ℤ, (z.im : ℂ) * i = (2 * l + 1) * π / 2) :
     tan z = (tan z.re + tanh z.im * i) / (1 - tan z.re * tanh z.im * i) := by
-  convert tan_add_mul_I h <;> exact (re_add_im z).symm
+  convert tan_add_mul_i h <;> exact (re_add_im z).symm
 #align complex.tan_eq Complex.tan_eq
 
 open Topology
@@ -185,7 +185,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
   ring
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (w «expr ≠ » 0) -/
 theorem cos_surjective : Function.Surjective cos :=
   by
   intro x
@@ -197,8 +197,8 @@ theorem cos_surjective : Function.Surjective cos :=
     refine' ⟨w, _, hw⟩
     rintro rfl
     simpa only [zero_add, one_ne_zero, mul_zero] using hw
-  refine' ⟨log w / I, cos_eq_iff_quadratic.2 _⟩
-  rw [div_mul_cancel _ I_ne_zero, exp_log w₀]
+  refine' ⟨log w / i, cos_eq_iff_quadratic.2 _⟩
+  rw [div_mul_cancel _ i_ne_zero, exp_log w₀]
   convert hw
   ring
 #align complex.cos_surjective Complex.cos_surjective
@@ -227,7 +227,7 @@ namespace Real
 open Real
 
 theorem cos_eq_zero_iff {θ : ℝ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (2 * k + 1) * π / 2 := by
-  exact_mod_cast @Complex.cos_eq_zero_iff θ
+  exact_mod_cast @complex.cos_eq_zero_iff θ
 #align real.cos_eq_zero_iff Real.cos_eq_zero_iff
 
 theorem cos_ne_zero_iff {θ : ℝ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (2 * k + 1) * π / 2 := by
@@ -235,12 +235,12 @@ theorem cos_ne_zero_iff {θ : ℝ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (2 * k
 #align real.cos_ne_zero_iff Real.cos_ne_zero_iff
 
 theorem cos_eq_cos_iff {x y : ℝ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = 2 * k * π - x :=
-  by exact_mod_cast @Complex.cos_eq_cos_iff x y
+  by exact_mod_cast @complex.cos_eq_cos_iff x y
 #align real.cos_eq_cos_iff Real.cos_eq_cos_iff
 
 theorem sin_eq_sin_iff {x y : ℝ} :
     sin x = sin y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = (2 * k + 1) * π - x := by
-  exact_mod_cast @Complex.sin_eq_sin_iff x y
+  exact_mod_cast @complex.sin_eq_sin_iff x y
 #align real.sin_eq_sin_iff Real.sin_eq_sin_iff
 
 theorem lt_sin_mul {x : ℝ} (hx : 0 < x) (hx' : x < 1) : x < sin (π / 2 * x) := by

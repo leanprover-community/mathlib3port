@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.number_field.class_number
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,8 +57,7 @@ open NumberField
 theorem classNumber_eq : NumberField.classNumber ℚ = 1 :=
   classNumber_eq_one_iff.mpr <| by
     convert
-      IsPrincipalIdealRing.of_surjective
-        (rat.ring_of_integers_equiv.symm : ℤ →+* ring_of_integers ℚ)
+      IsPrincipalIdealRing.of_surjective (rat.ring_of_integers_equiv.symm : ℤ →+* ringOfIntegers ℚ)
         rat.ring_of_integers_equiv.symm.surjective
 #align rat.class_number_eq Rat.classNumber_eq
 

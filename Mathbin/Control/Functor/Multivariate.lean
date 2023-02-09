@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module control.functor.multivariate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem LiftR_def (x y : F α) :
         (TypeVec.prod.fst ⊚ subtypeVal r) <$$> u = x ∧
           (TypeVec.prod.snd ⊚ subtypeVal r) <$$> u = y :=
   exists_iff_exists_of_mono _ _ _ (toSubtype'_of_subtype' r)
-    (by simp only [map_map, comp_assoc, subtype_val_to_subtype'] <;> simp [comp])
+    (by simp only [map_map, comp_assoc, subtypeVal_toSubtype'] <;> simp [comp])
 #align mvfunctor.liftr_def MvFunctor.LiftR_def
 -/
 
@@ -199,9 +199,9 @@ private def f :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 // ofRepeat (PredLast' α pp i p_1) }) ⟹ fun i : Fin2 (n + 1) =>
         { p_1 : (α ::: β) i // PredLast α pp p_1 }
-  | _, α, Fin2.fs i, x =>
-    ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
-  | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+  | _, α, fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [PredLast] <;> erw [const_iff_true]) x.property⟩
+  | _, α, fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.f mvfunctor.f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -209,9 +209,9 @@ private def g :
     ∀ n α,
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i // PredLast α pp p_1 }) ⟹ fun i : Fin2 (n + 1) =>
         { p_1 // ofRepeat (PredLast' α pp i p_1) }
-  | _, α, Fin2.fs i, x =>
-    ⟨x.val, cast (by simp only [pred_last] <;> erw [const_iff_true]) x.property⟩
-  | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+  | _, α, fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [PredLast] <;> erw [const_iff_true]) x.property⟩
+  | _, α, fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.g mvfunctor.g
 
 /- warning: mvfunctor.liftp_last_pred_iff -> MvFunctor.LiftP_PredLast_iff is a dubious translation:
@@ -224,7 +224,7 @@ Case conversion may be inaccurate. Consider using '#align mvfunctor.liftp_last_p
 theorem LiftP_PredLast_iff {β} (p : β → Prop) (x : F (α ::: β)) :
     LiftP' (PredLast' _ p) x ↔ LiftP (PredLast _ p) x :=
   by
-  dsimp only [liftp, liftp']
+  dsimp only [LiftP, LiftP']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
   · ext (i⟨x, _⟩)
     cases i <;> rfl
@@ -243,9 +243,9 @@ private def f :
       (fun i : Fin2 (n + 1) =>
           { p_1 : _ × _ // ofRepeat (RelLast' α rr i (TypeVec.prod.mk _ p_1.fst p_1.snd)) }) ⟹
         fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }
-  | _, α, Fin2.fs i, x =>
-    ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
-  | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+  | _, α, fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [RelLast] <;> erw [repeatEq_iff_eq]) x.property⟩
+  | _, α, fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.f mvfunctor.f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -254,9 +254,9 @@ private def g :
       (fun i : Fin2 (n + 1) => { p_1 : (α ::: β) i × _ // RelLast α rr p_1.fst p_1.snd }) ⟹
         fun i : Fin2 (n + 1) =>
         { p_1 : _ × _ // ofRepeat (RelLast' α rr i (TypeVec.prod.mk _ p_1.1 p_1.2)) }
-  | _, α, Fin2.fs i, x =>
-    ⟨x.val, cast (by simp only [rel_last] <;> erw [repeat_eq_iff_eq]) x.property⟩
-  | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+  | _, α, fin2.fs i, x =>
+    ⟨x.val, cast (by simp only [RelLast] <;> erw [repeatEq_iff_eq]) x.property⟩
+  | _, α, fin2.fz, x => ⟨x.val, x.property⟩
 #align mvfunctor.g mvfunctor.g
 
 /- warning: mvfunctor.liftr_last_rel_iff -> MvFunctor.LiftR_RelLast_iff is a dubious translation:
@@ -269,7 +269,7 @@ Case conversion may be inaccurate. Consider using '#align mvfunctor.liftr_last_r
 theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
     LiftR' (RelLast' _ rr) x y ↔ LiftR (RelLast _ rr) x y :=
   by
-  dsimp only [liftr, liftr']
+  dsimp only [LiftR, LiftR']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
   · ext (i⟨x, _⟩) : 2
     cases i <;> rfl

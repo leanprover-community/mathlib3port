@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,12 +88,12 @@ instance (f : End R M) : Coe f.Eigenvalues R :=
 
 theorem hasEigenvalue_of_hasEigenvector {f : End R M} {μ : R} {x : M} (h : HasEigenvector f μ x) :
     HasEigenvalue f μ := by
-  rw [has_eigenvalue, Submodule.ne_bot_iff]
+  rw [HasEigenvalue, Submodule.ne_bot_iff]
   use x; exact h
 #align module.End.has_eigenvalue_of_has_eigenvector Module.End.hasEigenvalue_of_hasEigenvector
 
 theorem mem_eigenspace_iff {f : End R M} {μ : R} {x : M} : x ∈ eigenspace f μ ↔ f x = μ • x := by
-  rw [eigenspace, LinearMap.mem_ker, LinearMap.sub_apply, algebra_map_End_apply, sub_eq_zero]
+  rw [eigenspace, LinearMap.mem_ker, LinearMap.sub_apply, algebraMap_end_apply, sub_eq_zero]
 #align module.End.mem_eigenspace_iff Module.End.mem_eigenspace_iff
 
 theorem HasEigenvector.apply_eq_smul {f : End R M} {μ : R} {x : M} (hx : f.HasEigenvector μ x) :
@@ -141,13 +141,13 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
       by
       rw [eigenspace_div]
       intro h
-      rw [leading_coeff_eq_zero_iff_deg_eq_bot.1 h] at hq
+      rw [leadingCoeff_eq_zero_iff_deg_eq_bot.1 h] at hq
       cases hq
     _ = (aeval f (c q.leadingCoeff * x + c (q.coeff 0))).ker :=
       by
-      rw [C_mul', aeval_def]
-      simp [algebraMap, Algebra.toRingHom]
-    _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
+      rw [c_mul', aeval_def]
+      simp [algebraMap, algebra.to_ring_hom]
+    _ = (aeval f q).ker := by rwa [← eq_x_add_c_of_degree_eq_one]
     
 #align module.End.eigenspace_aeval_polynomial_degree_1 Module.End.eigenspace_aeval_polynomial_degree_1
 
@@ -155,8 +155,8 @@ theorem ker_aeval_ring_hom'_unit_polynomial (f : End K V) (c : K[X]ˣ) :
     (aeval f (c : K[X])).ker = ⊥ :=
   by
   rw [Polynomial.eq_c_of_degree_eq_zero (degree_coe_units c)]
-  simp only [aeval_def, eval₂_C]
-  apply ker_algebra_map_End
+  simp only [aeval_def, eval₂_c]
+  apply ker_algebraMap_end
   apply coeff_coe_units_zero_ne_zero c
 #align module.End.ker_aeval_ring_hom'_unit_polynomial Module.End.ker_aeval_ring_hom'_unit_polynomial
 
@@ -170,7 +170,7 @@ theorem aeval_apply_of_hasEigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     simp [hp, hq, add_smul]
   · intro n a hna
     rw [mul_comm, pow_succ, mul_assoc, AlgHom.map_mul, LinearMap.mul_apply, mul_comm, hna]
-    simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
+    simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_x, eval_mul, eval_c, eval_pow, eval_x,
       LinearMap.map_smulₛₗ, RingHom.id_apply, mul_comm]
 #align module.End.aeval_apply_of_has_eigenvector Module.End.aeval_apply_of_hasEigenvector
 
@@ -181,7 +181,7 @@ theorem isRoot_of_hasEigenvalue {f : End K V} {μ : K} (h : f.HasEigenvalue μ) 
   by
   rcases(Submodule.ne_bot_iff _).1 h with ⟨w, ⟨H, ne0⟩⟩
   refine' Or.resolve_right (smul_eq_zero.1 _) ne0
-  simp [← aeval_apply_of_has_eigenvector ⟨H, ne0⟩, minpoly.aeval K f]
+  simp [← aeval_apply_of_hasEigenvector ⟨H, ne0⟩, minpoly.aeval K f]
 #align module.End.is_root_of_has_eigenvalue Module.End.isRoot_of_hasEigenvalue
 
 variable [FiniteDimensional K V] (f : End K V)
@@ -190,16 +190,16 @@ variable {f} {μ : K}
 
 theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue μ :=
   by
-  cases' dvd_iff_is_root.2 h with p hp
-  rw [has_eigenvalue, eigenspace]
+  cases' dvd_iff_isRoot.2 h with p hp
+  rw [HasEigenvalue, eigenspace]
   intro con
-  cases' (LinearMap.isUnit_iff_ker_eq_bot _).2 Con with u hu
+  cases' (LinearMap.isUnit_iff_ker_eq_bot _).2 con with u hu
   have p_ne_0 : p ≠ 0 := by
     intro con
     apply minpoly.ne_zero f.is_integral
-    rw [hp, Con, mul_zero]
+    rw [hp, con, mul_zero]
   have h_deg := minpoly.degree_le_of_ne_zero K f p_ne_0 _
-  · rw [hp, degree_mul, degree_X_sub_C, Polynomial.degree_eq_natDegree p_ne_0] at h_deg
+  · rw [hp, degree_mul, degree_x_sub_c, Polynomial.degree_eq_natDegree p_ne_0] at h_deg
     norm_cast  at h_deg
     linarith
   · have h_aeval := minpoly.aeval K f
@@ -220,8 +220,8 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
       ext μ
       have : μ ∈ { μ : K | f.eigenspace μ = ⊥ → False } ↔ ¬f.eigenspace μ = ⊥ := by tauto
       convert rfl.mpr this
-      simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← has_eigenvalue_iff_is_root,
-        has_eigenvalue])
+      simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← hasEigenvalue_iff_isRoot,
+        HasEigenvalue])
 
 end minpoly
 
@@ -231,13 +231,13 @@ end minpoly
 theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     ∃ c : K, f.HasEigenvalue c :=
   by
-  simp_rw [has_eigenvalue_iff_mem_spectrum]
+  simp_rw [hasEigenvalue_iff_mem_spectrum]
   exact spectrum.nonempty_of_isAlgClosed_of_finiteDimensional K f
 #align module.End.exists_eigenvalue Module.End.exists_eigenvalue
 
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     Inhabited f.Eigenvalues :=
-  ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.choose_spec⟩⟩
+  ⟨⟨f.exists_eigenvalue.choose, f.exists_eigenvalue.choose_spec⟩⟩
 
 /-- The eigenspaces of a linear operator form an independent family of subspaces of `V`.  That is,
 any eigenspace has trivial intersection with the span of all the other eigenspaces. -/
@@ -246,10 +246,10 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     -- Define an operation from `Π₀ μ : K, f.eigenspace μ`, the vector space of of finitely-supported
     -- choices of an eigenvector from each eigenspace, to `V`, by sending a collection to its sum.
     let S :
-      @LinearMap K K _ _ (RingHom.id K) (Π₀ μ : K, f.eigenspace μ) V
-        (@Dfinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _
-        (@Dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
-      @Dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype
+      @linear_map K K _ _ (RingHom.id K) (Π₀ μ : K, f.eigenspace μ) V
+        (@dfinsupp.add_comm_monoid K (fun μ => f.eigenspace μ) _) _
+        (@dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
+      @dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).subtype
     -- We need to show that if a finitely-supported collection `l` of representatives of the
     -- eigenspaces has sum `0`, then it itself is zero.
     suffices ∀ l : Π₀ μ, f.eigenspace μ, S l = 0 → l = 0
@@ -257,8 +257,8 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
       rw [CompleteLattice.independent_iff_dfinsupp_lsum_injective]
       change Function.Injective S
       rw [←
-        @LinearMap.ker_eq_bot K K (Π₀ μ, f.eigenspace μ) V _ _
-          (@Dfinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
+        @linear_map.ker_eq_bot K K (Π₀ μ, f.eigenspace μ) V _ _
+          (@dfinsupp.add_comm_group K (fun μ => f.eigenspace μ) _)]
       rw [eq_bot_iff]
       exact this
     intro l hl
@@ -273,7 +273,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     -- of representatives `l'` is derived from `l` by multiplying the coefficient of the eigenvector
     -- with eigenvalue `μ` by `μ - μ₀`.
     · let l' :=
-        Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
+        Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @linear_map.id K (f.eigenspace μ) _ _ _) l
       -- The support of `l'` is the support of `l` without `μ₀`.
       have h_l_support' : l'.support = l_support' :=
         by
@@ -432,8 +432,7 @@ theorem generalizedEigenspace_le_maximal (f : End R M) (μ : R) (k : ℕ) :
 @[simp]
 theorem mem_maximalGeneralizedEigenspace (f : End R M) (μ : R) (m : M) :
     m ∈ f.maximalGeneralizedEigenspace μ ↔ ∃ k : ℕ, ((f - μ • 1) ^ k) m = 0 := by
-  simp only [maximal_generalized_eigenspace, ← mem_generalized_eigenspace,
-    Submodule.mem_supᵢ_of_chain]
+  simp only [maximalGeneralizedEigenspace, ← mem_generalizedEigenspace, Submodule.mem_supᵢ_of_chain]
 #align module.End.mem_maximal_generalized_eigenspace Module.End.mem_maximalGeneralizedEigenspace
 
 /-- If there exists a natural number `k` such that the kernel of `(f - μ • id) ^ k` is the
@@ -461,21 +460,21 @@ theorem hasGeneralizedEigenvalue_of_hasGeneralizedEigenvalue_of_le {f : End R M}
   unfold has_generalized_eigenvalue at *
   contrapose! hk
   rw [← le_bot_iff, ← hk]
-  exact (f.generalized_eigenspace μ).Monotone hm
+  exact (f.generalized_eigenspace μ).monotone hm
 #align module.End.has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le Module.End.hasGeneralizedEigenvalue_of_hasGeneralizedEigenvalue_of_le
 
 /-- The eigenspace is a subspace of the generalized eigenspace. -/
 theorem eigenspace_le_generalizedEigenspace {f : End R M} {μ : R} {k : ℕ} (hk : 0 < k) :
     f.eigenspace μ ≤ f.generalizedEigenspace μ k :=
-  (f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk)
+  (f.generalizedEigenspace μ).monotone (Nat.succ_le_of_lt hk)
 #align module.End.eigenspace_le_generalized_eigenspace Module.End.eigenspace_le_generalizedEigenspace
 
 /-- All eigenvalues are generalized eigenvalues. -/
 theorem hasGeneralizedEigenvalue_of_hasEigenvalue {f : End R M} {μ : R} {k : ℕ} (hk : 0 < k)
     (hμ : f.HasEigenvalue μ) : f.HasGeneralizedEigenvalue μ k :=
   by
-  apply has_generalized_eigenvalue_of_has_generalized_eigenvalue_of_le hk
-  rw [has_generalized_eigenvalue, generalized_eigenspace, OrderHom.coe_fun_mk, pow_one]
+  apply hasGeneralizedEigenvalue_of_hasGeneralizedEigenvalue_of_le hk
+  rw [HasGeneralizedEigenvalue, generalizedEigenspace, OrderHom.coe_fun_mk, pow_one]
   exact hμ
 #align module.End.has_generalized_eigenvalue_of_has_eigenvalue Module.End.hasGeneralizedEigenvalue_of_hasEigenvalue
 
@@ -514,9 +513,9 @@ theorem generalizedEigenspace_eq_generalizedEigenspace_finrank_of_le [FiniteDime
 theorem generalizedEigenspace_restrict (f : End R M) (p : Submodule R M) (k : ℕ) (μ : R)
     (hfp : ∀ x : M, x ∈ p → f x ∈ p) :
     generalizedEigenspace (LinearMap.restrict f hfp) μ k =
-      Submodule.comap p.Subtype (f.generalizedEigenspace μ k) :=
+      Submodule.comap p.subtype (f.generalizedEigenspace μ k) :=
   by
-  simp only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
+  simp only [generalizedEigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
   induction' k with k ih
   · rw [pow_zero, pow_zero, LinearMap.one_eq_id]
     apply (Submodule.ker_subtype _).symm
@@ -528,7 +527,7 @@ theorem generalizedEigenspace_restrict (f : End R M) (p : Submodule R M) (k : �
 /-- If `p` is an invariant submodule of an endomorphism `f`, then the `μ`-eigenspace of the
 restriction of `f` to `p` is a submodule of the `μ`-eigenspace of `f`. -/
 theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp : ∀ x ∈ p, f x ∈ p)
-    (μ : R) : (eigenspace (f.restrict hfp) μ).map p.Subtype ≤ f.eigenspace μ :=
+    (μ : R) : (eigenspace (f.restrict hfp) μ).map p.subtype ≤ f.eigenspace μ :=
   by
   rintro a ⟨x, hx, rfl⟩
   simp only [SetLike.mem_coe, mem_eigenspace_iff, LinearMap.restrict_apply] at hx⊢
@@ -545,17 +544,17 @@ theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End
             (f.generalized_eigenspace μ (finrank K V)) =
           ((f - algebraMap _ _ μ) ^ finrank K V *
               (f - algebraMap K (End K V) μ) ^ finrank K V).ker :=
-        by simpa only [generalized_eigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
+        by simpa only [generalizedEigenspace, OrderHom.coe_fun_mk, ← LinearMap.ker_comp]
       _ = f.generalized_eigenspace μ (finrank K V + finrank K V) :=
         by
         rw [← pow_add]
         rfl
       _ = f.generalized_eigenspace μ (finrank K V) :=
         by
-        rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]
+        rw [generalizedEigenspace_eq_generalizedEigenspace_finrank_of_le]
         linarith
       
-  rw [disjoint_iff_inf_le, generalized_eigenrange, LinearMap.range_eq_map,
+  rw [disjoint_iff_inf_le, generalizedEigenrange, LinearMap.range_eq_map,
     Submodule.map_inf_eq_map_inf_comap, top_inf_eq, h]
   apply Submodule.map_comap_le
 #align module.End.generalized_eigenvec_disjoint_range_ker Module.End.generalized_eigenvec_disjoint_range_ker
@@ -578,7 +577,7 @@ theorem pos_finrank_generalizedEigenspace_of_hasEigenvalue [FiniteDimensional K 
     0 = finrank K (⊥ : Submodule K V) := by rw [finrank_bot]
     _ < finrank K (f.eigenspace μ) := Submodule.finrank_lt_finrank_of_lt (bot_lt_iff_ne_bot.2 hx)
     _ ≤ finrank K (f.generalizedEigenspace μ k) :=
-      Submodule.finrank_mono ((f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk))
+      Submodule.finrank_mono ((f.generalizedEigenspace μ).monotone (Nat.succ_le_of_lt hk))
     
 #align module.End.pos_finrank_generalized_eigenspace_of_has_eigenvalue Module.End.pos_finrank_generalizedEigenspace_of_hasEigenvalue
 
@@ -618,14 +617,14 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
     let ER := f.generalized_eigenrange μ₀ (finrank K V)
     -- `f` maps `ER` into itself.
     have h_f_ER : ∀ x : V, x ∈ ER → f x ∈ ER := fun x hx =>
-      map_generalized_eigenrange_le (Submodule.mem_map_of_mem hx)
+      map_generalizedEigenrange_le (Submodule.mem_map_of_mem hx)
     -- Therefore, we can define the restriction `f'` of `f` to `ER`.
     let f' : End K ER := f.restrict h_f_ER
     -- The dimension of `ES` is positive
     have h_dim_ES_pos : 0 < finrank K ES := by
       dsimp only [ES]
       rw [h_dim]
-      apply pos_finrank_generalized_eigenspace_of_has_eigenvalue hμ₀ (Nat.zero_lt_succ n)
+      apply pos_finrank_generalizedEigenspace_of_hasEigenvalue hμ₀ (Nat.zero_lt_succ n)
     -- and the dimensions of `ES` and `ER` add up to `finrank K V`.
     have h_dim_add : finrank K ER + finrank K ES = finrank K V := by
       apply LinearMap.finrank_range_add_finrank_ker
@@ -644,7 +643,7 @@ theorem supᵢ_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K
       ∀ μ k, (f'.generalized_eigenspace μ k).map ER.subtype ≤ f.generalized_eigenspace μ k :=
       by
       intros
-      rw [generalized_eigenspace_restrict]
+      rw [generalizedEigenspace_restrict]
       apply Submodule.map_comap_le
     -- It follows that `ER` is contained in the span of all generalized eigenvectors.
     have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.generalized_eigenspace μ k :=

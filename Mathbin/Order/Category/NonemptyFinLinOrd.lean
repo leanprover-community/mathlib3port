@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.NonemptyFinLinOrd
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
 theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
     Mono f ↔ Function.Injective f :=
   by
-  refine' ⟨_, concrete_category.mono_of_injective f⟩
+  refine' ⟨_, ConcreteCategory.mono_of_injective f⟩
   intro
   intro a₁ a₂ h
   let X : NonemptyFinLinOrdCat.{u} := ⟨ULift (Fin 1)⟩
@@ -132,7 +132,7 @@ theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
     ext x
     exact h
   rw [cancel_mono] at eq
-  rw [Eq]
+  rw [eq]
 #align NonemptyFinLinOrd.mono_iff_injective NonemptyFinLinOrdCat.mono_iff_injective
 
 theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
@@ -174,7 +174,7 @@ theorem epi_iff_surjective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :
     simpa only [OrderHom.coe_fun_mk, lt_self_iff_false, if_false, le_refl, if_true, ULift.up_inj,
       Fin.one_eq_zero_iff, Nat.succ_succ_ne_one] using h
   · intro h
-    exact concrete_category.epi_of_surjective f h
+    exact ConcreteCategory.epi_of_surjective f h
 #align NonemptyFinLinOrd.epi_iff_surjective NonemptyFinLinOrdCat.epi_iff_surjective
 
 instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
@@ -184,10 +184,10 @@ instance : SplitEpiCategory NonemptyFinLinOrdCat.{u} :=
       by
       rw [epi_iff_surjective] at hf
       intro y
-      exact Nonempty.intro ⟨(hf y).some, (hf y).choose_spec⟩
+      exact Nonempty.intro ⟨(hf y).choose, (hf y).choose_spec⟩
     let φ : Y → X := fun y => (H y).some.1
     have hφ : ∀ y : Y, f (φ y) = y := fun y => (H y).some.2
-    refine' is_split_epi.mk' ⟨⟨φ, _⟩, _⟩
+    refine' IsSplitEpi.mk' ⟨⟨φ, _⟩, _⟩
     swap
     · ext b
       apply hφ
@@ -207,11 +207,11 @@ instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrdCat.{u} :=
     let I : NonemptyFinLinOrdCat.{u} := ⟨Set.image (coeFn f) ⊤, ⟨⟩⟩
     let e : X ⟶ I := ⟨fun x => ⟨f x, ⟨x, by tidy⟩⟩, fun x₁ x₂ h => f.monotone h⟩
     let m : I ⟶ Y := ⟨fun y => y, by tidy⟩
-    haveI : epi e := by
+    haveI : Epi e := by
       rw [epi_iff_surjective]
       tidy
-    haveI : strong_epi e := strong_epi_of_epi e
-    haveI : mono m := concrete_category.mono_of_injective _ (by tidy)
+    haveI : StrongEpi e := strongEpi_of_epi e
+    haveI : Mono m := ConcreteCategory.mono_of_injective _ (by tidy)
     exact
       Nonempty.intro
         { i

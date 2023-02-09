@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.normed_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ namespace ConformalAt
 
 theorem differentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : DifferentiableAt ℝ f x :=
   let ⟨_, h₁, _⟩ := h
-  h₁.DifferentiableAt
+  h₁.differentiableAt
 #align conformal_at.differentiable_at ConformalAt.differentiableAt
 
 theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u) (hf : ConformalAt f x)
@@ -137,7 +137,7 @@ theorem conformalAt {f : X → Y} (h : Conformal f) (x : X) : ConformalAt f x :=
 #align conformal.conformal_at Conformal.conformalAt
 
 theorem differentiable {f : X → Y} (h : Conformal f) : Differentiable ℝ f := fun x =>
-  (h x).DifferentiableAt
+  (h x).differentiableAt
 #align conformal.differentiable Conformal.differentiable
 
 theorem comp {f : X → Y} {g : Y → Z} (hf : Conformal f) (hg : Conformal g) : Conformal (g ∘ f) :=

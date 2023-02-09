@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michail Karatarakis
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.ramification_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ is stable under the action of the decomposition group. -/
 def subMulAction (A : ValuationSubring L) : SubMulAction (A.decompositionSubgroup K) L
     where
   carrier := A
-  smul_mem' g l h := Set.mem_of_mem_of_subset (Set.smul_mem_smul_set h) g.Prop.le
+  smul_mem' g l h := Set.mem_of_mem_of_subset (Set.smul_mem_smul_set h) g.prop.le
 #align valuation_subring.sub_mul_action ValuationSubring.subMulAction
 
 /-- The multiplicative action of the decomposition subgroup on `A`. -/
@@ -46,7 +46,7 @@ instance decompositionSubgroupMulSemiringAction (A : ValuationSubring L) :
     MulSemiringAction (A.decompositionSubgroup K) A :=
   {
     SubMulAction.mulAction
-      (A.SubMulAction
+      (A.subMulAction
         K) with
     smul_add := fun g k l => Subtype.ext <| smul_add g k l
     smul_zero := fun g => Subtype.ext <| smul_zero g

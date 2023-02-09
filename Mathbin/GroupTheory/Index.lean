@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.index
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem index_comap {G' : Type _} [Group G'] (f : G' →* G) :
 @[to_additive]
 theorem relindex_comap {G' : Type _} [Group G'] (f : G' →* G) (K : Subgroup G') :
     relindex (comap f H) K = relindex H (map f K) := by
-  rw [relindex, subgroup_of, comap_comap, index_comap, ← f.map_range, K.subtype_range]
+  rw [relindex, subgroupOf, comap_comap, index_comap, ← f.map_range, K.subtype_range]
 #align subgroup.relindex_comap Subgroup.relindex_comap
 #align add_subgroup.relindex_comap AddSubgroup.relindex_comap
 
@@ -130,14 +130,14 @@ variable (H K L)
 theorem relindex_mul_relindex (hHK : H ≤ K) (hKL : K ≤ L) :
     H.relindex K * K.relindex L = H.relindex L :=
   by
-  rw [← relindex_subgroup_of hKL]
+  rw [← relindex_subgroupOf hKL]
   exact relindex_mul_index fun x hx => hHK hx
 #align subgroup.relindex_mul_relindex Subgroup.relindex_mul_relindex
 #align add_subgroup.relindex_mul_relindex AddSubgroup.relindex_mul_relindex
 
 @[to_additive]
 theorem inf_relindex_right : (H ⊓ K).relindex K = H.relindex K := by
-  rw [relindex, relindex, inf_subgroup_of_right]
+  rw [relindex, relindex, inf_subgroupOf_right]
 #align subgroup.inf_relindex_right Subgroup.inf_relindex_right
 #align add_subgroup.inf_relindex_right AddSubgroup.inf_relindex_right
 
@@ -206,8 +206,8 @@ theorem mul_mem_iff_of_index_two (h : H.index = 2) {a b : G} : a * b ∈ H ↔ (
   by_cases hb : b ∈ H; · simp only [hb, iff_true_iff, mul_mem_cancel_right hb]
   simp only [ha, hb, iff_self_iff, iff_true_iff]
   rcases index_eq_two_iff.1 h with ⟨c, hc⟩
-  refine' (hc _).Or.resolve_left _
-  rwa [mul_assoc, mul_mem_cancel_right ((hc _).Or.resolve_right hb)]
+  refine' (hc _).or.resolve_left _
+  rwa [mul_assoc, mul_mem_cancel_right ((hc _).or.resolve_right hb)]
 #align subgroup.mul_mem_iff_of_index_two Subgroup.mul_mem_iff_of_index_two
 #align add_subgroup.add_mem_iff_of_index_two AddSubgroup.add_mem_iff_of_index_two
 
@@ -257,7 +257,7 @@ theorem relindex_top_right : H.relindex ⊤ = H.index := by
 
 @[simp, to_additive]
 theorem relindex_bot_left : (⊥ : Subgroup G).relindex H = Nat.card H := by
-  rw [relindex, bot_subgroup_of, index_bot]
+  rw [relindex, bot_subgroupOf, index_bot]
 #align subgroup.relindex_bot_left Subgroup.relindex_bot_left
 #align add_subgroup.relindex_bot_left AddSubgroup.relindex_bot_left
 
@@ -268,12 +268,12 @@ theorem relindex_bot_left_eq_card [Fintype H] : (⊥ : Subgroup G).relindex H = 
 #align add_subgroup.relindex_bot_left_eq_card AddSubgroup.relindex_bot_left_eq_card
 
 @[simp, to_additive]
-theorem relindex_bot_right : H.relindex ⊥ = 1 := by rw [relindex, subgroup_of_bot_eq_top, index_top]
+theorem relindex_bot_right : H.relindex ⊥ = 1 := by rw [relindex, subgroupOf_bot_eq_top, index_top]
 #align subgroup.relindex_bot_right Subgroup.relindex_bot_right
 #align add_subgroup.relindex_bot_right AddSubgroup.relindex_bot_right
 
 @[simp, to_additive]
-theorem relindex_self : H.relindex H = 1 := by rw [relindex, subgroup_of_self, index_top]
+theorem relindex_self : H.relindex H = 1 := by rw [relindex, subgroupOf_self, index_top]
 #align subgroup.relindex_self Subgroup.relindex_self
 #align add_subgroup.relindex_self AddSubgroup.relindex_self
 
@@ -467,8 +467,7 @@ theorem relindex_infᵢ_ne_zero {ι : Type _} [hι : Finite ι] {f : ι → Subg
     (hf : ∀ i, (f i).relindex L ≠ 0) : (⨅ i, f i).relindex L ≠ 0 :=
   haveI := Fintype.ofFinite ι
   (finset.prod_ne_zero_iff.mpr fun i hi => hf i) ∘
-    nat.card_pi.symm.trans ∘
-      Finite.card_eq_zero_of_embedding (quotient_infi_subgroup_of_embedding f L)
+    nat.card_pi.symm.trans ∘ Finite.card_eq_zero_of_embedding (quotientInfᵢSubgroupOfEmbedding f L)
 #align subgroup.relindex_infi_ne_zero Subgroup.relindex_infᵢ_ne_zero
 #align add_subgroup.relindex_infi_ne_zero AddSubgroup.relindex_infi_ne_zero
 
@@ -488,13 +487,13 @@ theorem index_infᵢ_ne_zero {ι : Type _} [Finite ι] {f : ι → Subgroup G}
     (hf : ∀ i, (f i).index ≠ 0) : (⨅ i, f i).index ≠ 0 :=
   by
   simp_rw [← relindex_top_right] at hf⊢
-  exact relindex_infi_ne_zero hf
+  exact relindex_infᵢ_ne_zero hf
 #align subgroup.index_infi_ne_zero Subgroup.index_infᵢ_ne_zero
 #align add_subgroup.index_infi_ne_zero AddSubgroup.index_infi_ne_zero
 
 @[to_additive]
 theorem index_infᵢ_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
-    (⨅ i, f i).index ≤ ∏ i, (f i).index := by simp_rw [← relindex_top_right, relindex_infi_le]
+    (⨅ i, f i).index ≤ ∏ i, (f i).index := by simp_rw [← relindex_top_right, relindex_infᵢ_le]
 #align subgroup.index_infi_le Subgroup.index_infᵢ_le
 #align add_subgroup.index_infi_le AddSubgroup.index_infi_le
 
@@ -563,7 +562,7 @@ noncomputable def fintypeQuotientOfFiniteIndex [FiniteIndex H] : Fintype (G ⧸ 
 
 @[to_additive]
 instance finite_quotient_of_finiteIndex [FiniteIndex H] : Finite (G ⧸ H) :=
-  H.fintypeQuotientOfFiniteIndex.Finite
+  H.fintypeQuotientOfFiniteIndex.finite
 #align subgroup.finite_quotient_of_finite_index Subgroup.finite_quotient_of_finiteIndex
 #align add_subgroup.finite_quotient_of_finite_index AddSubgroup.finite_quotient_of_finiteIndex
 
@@ -607,7 +606,7 @@ instance finiteIndex_ker {G' : Type _} [Group G'] (f : G →* G') [Finite f.rang
 
 instance finiteIndex_normalCore [H.FiniteIndex] : H.normalCore.FiniteIndex :=
   by
-  rw [normal_core_eq_ker]
+  rw [normalCore_eq_ker]
   infer_instance
 #align subgroup.finite_index_normal_core Subgroup.finiteIndex_normalCore
 
@@ -616,7 +615,7 @@ variable (G)
 instance finiteIndex_center [Finite (commutatorSet G)] [Group.Fg G] : FiniteIndex (center G) :=
   by
   obtain ⟨S, -, hS⟩ := Group.rank_spec G
-  exact ⟨mt (Finite.card_eq_zero_of_embedding (quotient_center_embedding hS)) finite.card_pos.ne'⟩
+  exact ⟨mt (Finite.card_eq_zero_of_embedding (quotientCenterEmbedding hS)) finite.card_pos.ne'⟩
 #align subgroup.finite_index_center Subgroup.finiteIndex_center
 
 theorem index_center_le_pow [Finite (commutatorSet G)] [Group.Fg G] :
@@ -624,7 +623,7 @@ theorem index_center_le_pow [Finite (commutatorSet G)] [Group.Fg G] :
   by
   obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
   rw [← hS1, ← Fintype.card_coe, ← Nat.card_eq_fintype_card, ← Finset.coe_sort_coe, ← Nat.card_fun]
-  exact Finite.card_le_of_embedding (quotient_center_embedding hS2)
+  exact Finite.card_le_of_embedding (quotientCenterEmbedding hS2)
 #align subgroup.index_center_le_pow Subgroup.index_center_le_pow
 
 end FiniteIndex

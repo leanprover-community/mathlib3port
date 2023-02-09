@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.random
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ def random : RandG g α :=
 /-- generate an infinite series of random values of type `α` -/
 def randomSeries : RandG g (Stream' α) := do
   let gen ← Uliftable.up (split g)
-  pure <| Stream'.corecState (Random.random α g) gen
+  pure <| stream.corec_state (random.random α g) gen
 #align rand.random_series Rand.randomSeries
 
 end Random
@@ -148,7 +148,7 @@ def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g 
 def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) :
     RandG g (Stream' (x .. y)) := do
   let gen ← Uliftable.up (split g)
-  pure <| corec_state (BoundedRandom.randomR g x y h) gen
+  pure <| corec_state (bounded_random.random_r g x y h) gen
 #align rand.random_series_r Rand.randomSeriesR
 
 end Rand
@@ -162,7 +162,7 @@ private def accum_char (w : ℕ) (c : Char) : ℕ :=
 /-- create and seed a random number generator -/
 def mkGenerator : Io StdGen := do
   let seed ← Io.rand 0 shift31Left
-  return <| mkStdGen seed
+  return <| mk_std_gen seed
 #align io.mk_generator Io.mkGenerator
 
 variable {α : Type}
@@ -216,7 +216,7 @@ namespace Tactic
 
 /-- create a seeded random number generator in the `tactic` monad -/
 unsafe def mk_generator : tactic StdGen := do
-  tactic.unsafe_run_io @Io.mkGenerator
+  tactic.unsafe_run_io @io.mk_generator
 #align tactic.mk_generator tactic.mk_generator
 
 /-- run `cmd` using the a randomly seeded random number generator
@@ -285,7 +285,7 @@ instance natBoundedRandom : BoundedRandom ℕ
     where randomR g inst x y hxy := do
     let z ← @Fin.random g inst (succ <| y - x) _
     pure
-        ⟨z + x, Nat.le_add_left _ _, by
+        ⟨z + x, nat.le_add_left _ _, by
           rw [← le_tsub_iff_right hxy] <;> apply le_of_succ_le_succ z.is_lt⟩
 #align nat_bounded_random natBoundedRandom
 
@@ -296,10 +296,10 @@ instance intBoundedRandom : BoundedRandom ℤ
     where randomR g inst x y hxy := do
     let ⟨z, h₀, h₁⟩ ← @BoundedRandom.randomR ℕ _ _ g inst 0 (Int.natAbs <| y - x) (by decide)
     pure
-        ⟨z + x, Int.le_add_of_nonneg_left (Int.coe_nat_nonneg _),
-          Int.add_le_of_le_sub_right <|
-            le_trans (Int.ofNat_le_ofNat_of_le h₁)
-              (le_of_eq <| Int.ofNat_natAbs_eq_of_nonneg (Int.sub_nonneg_of_le hxy))⟩
+        ⟨z + x, int.le_add_of_nonneg_left (int.coe_nat_nonneg _),
+          int.add_le_of_le_sub_right <|
+            le_trans (int.coe_nat_le_coe_nat_of_le h₁)
+              (le_of_eq <| int.of_nat_nat_abs_eq_of_nonneg (int.sub_nonneg_of_le hxy))⟩
 #align int_bounded_random intBoundedRandom
 
 instance finRandom (n : ℕ) [NeZero n] : Random (Fin n) where Random g inst := @Fin.random g inst _ _

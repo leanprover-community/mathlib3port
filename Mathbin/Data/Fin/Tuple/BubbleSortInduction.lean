@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module data.fin.tuple.bubble_sort_induction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,9 +46,9 @@ theorem bubble_sort_induction' {n : ℕ} {α : Type _} [LinearOrder α] {f : Fin
         i < j → (f ∘ σ) j < (f ∘ σ) i → P (f ∘ σ) → P (f ∘ σ ∘ Equiv.swap i j)) :
     P (f ∘ sort f) :=
   by
-  letI := @Preorder.lift _ (Lex (Fin n → α)) _ fun σ : Equiv.Perm (Fin n) => toLex (f ∘ σ)
+  letI := @preorder.lift _ (Lex (Fin n → α)) _ fun σ : Equiv.Perm (Fin n) => toLex (f ∘ σ)
   refine'
-    @WellFounded.induction_bot' _ _ _ (@Finite.Preorder.wellFounded_lt (Equiv.Perm (Fin n)) _ _)
+    @well_founded.induction_bot' _ _ _ (@finite.preorder.well_founded_lt (Equiv.Perm (Fin n)) _ _)
       (Equiv.refl _) (sort f) P (fun σ => f ∘ σ) (fun σ hσ hfσ => _) hf
   obtain ⟨i, j, hij₁, hij₂⟩ := antitone_pair_of_not_sorted' hσ
   exact ⟨σ * Equiv.swap i j, Pi.lex_desc hij₁ hij₂, h σ i j hij₁ hij₂ hfσ⟩

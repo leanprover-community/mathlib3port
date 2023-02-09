@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module data.finsupp.well_founded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,9 +41,9 @@ include hbot hs
   appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
     Acc (Finsupp.Lex r s) x := by
-  rw [lex_eq_inv_image_dfinsupp_lex]
+  rw [lex_eq_invImage_dfinsupp_lex]
   classical
-    refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
+    refine' InvImage.accessible toDfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
     simpa only [toDfinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
 
@@ -51,7 +51,7 @@ theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded
   ⟨fun x => Lex.acc hbot hs x fun a _ => hr.apply a⟩
 #align finsupp.lex.well_founded Finsupp.Lex.wellFounded
 
-theorem Lex.well_founded' [IsTrichotomous α r] (hr : WellFounded r.symm) :
+theorem Lex.well_founded' [IsTrichotomous α r] (hr : WellFounded r.swap) :
     WellFounded (Finsupp.Lex r s) :=
   (lex_eq_invImage_dfinsupp_lex r s).symm ▸
     InvImage.wf _ (Dfinsupp.Lex.well_founded' (fun a => hbot) (fun a => hs) hr)

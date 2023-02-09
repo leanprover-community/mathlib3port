@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.bicones
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,11 +87,11 @@ instance biconeCategoryStruct : CategoryStruct (Bicone J)
     exact g
     exact g
     cases g
-    exact bicone_hom.left g_k
+    exact BiconeHom.left g_k
     cases g
-    exact bicone_hom.right g_k
+    exact BiconeHom.right g_k
     cases g
-    exact bicone_hom.diagram (f_f ≫ g_f)
+    exact BiconeHom.diagram (f_f ≫ g_f)
 #align category_theory.bicone_category_struct CategoryTheory.biconeCategoryStruct
 
 instance biconeCategory : Category (Bicone J)
@@ -123,12 +123,12 @@ def biconeMk {C : Type u₁} [Category.{v₁} C] {F : J ⥤ C} (c₁ c₂ : Cone
   map_id' X := by cases X <;> simp
   map_comp' X Y Z f g := by
     cases f
-    exact (category.id_comp _).symm
-    exact (category.id_comp _).symm
+    exact (Category.id_comp _).symm
+    exact (Category.id_comp _).symm
     cases g
-    exact (category.id_comp _).symm.trans (c₁.π.naturality g_f : _)
+    exact (Category.id_comp _).symm.trans (c₁.π.naturality g_f : _)
     cases g
-    exact (category.id_comp _).symm.trans (c₂.π.naturality g_f : _)
+    exact (Category.id_comp _).symm.trans (c₂.π.naturality g_f : _)
     cases g
     exact F.map_comp _ _
 #align category_theory.bicone_mk CategoryTheory.biconeMk
@@ -137,7 +137,7 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) :=
   by
   cases j <;> cases k
   exact
-    { elems := {bicone_hom.left_id}
+    { elems := {BiconeHom.left_id}
       complete := fun f => by
         cases f
         simp }
@@ -145,7 +145,7 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) :=
     { elems := ∅
       complete := fun f => by cases f }
   exact
-    { elems := {bicone_hom.left k}
+    { elems := {BiconeHom.left k}
       complete := fun f => by
         cases f
         simp }
@@ -153,12 +153,12 @@ instance finBiconeHom [FinCategory J] (j k : Bicone J) : Fintype (j ⟶ k) :=
     { elems := ∅
       complete := fun f => by cases f }
   exact
-    { elems := {bicone_hom.right_id}
+    { elems := {BiconeHom.right_id}
       complete := fun f => by
         cases f
         simp }
   exact
-    { elems := {bicone_hom.right k}
+    { elems := {BiconeHom.right k}
       complete := fun f => by
         cases f
         simp }

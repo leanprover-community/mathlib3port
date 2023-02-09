@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.vertex_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,13 +68,13 @@ def vertexGroupIsomOfMap {c d : C} (f : c ⟶ d) : (c ⟶ c) ≃* (d ⟶ d)
   toFun γ := inv f ≫ γ ≫ f
   invFun δ := f ≫ δ ≫ inv f
   left_inv γ := by
-    simp_rw [category.assoc, comp_inv, category.comp_id, ← category.assoc, comp_inv,
-      category.id_comp]
+    simp_rw [Category.assoc, comp_inv, Category.comp_id, ← Category.assoc, comp_inv,
+      Category.id_comp]
   right_inv δ := by
-    simp_rw [category.assoc, inv_comp, ← category.assoc, inv_comp, category.id_comp,
-      category.comp_id]
+    simp_rw [Category.assoc, inv_comp, ← Category.assoc, inv_comp, Category.id_comp,
+      Category.comp_id]
   map_mul' γ₁ γ₂ := by
-    simp only [vertex_group_mul, inv_eq_inv, category.assoc, is_iso.hom_inv_id_assoc]
+    simp only [vertexGroup_mul, inv_eq_inv, Category.assoc, IsIso.hom_inv_id_assoc]
 #align category_theory.groupoid.vertex_group_isom_of_map CategoryTheory.Groupoid.vertexGroupIsomOfMap
 
 /-- A path in the groupoid defines an isomorphism between its endpoints.

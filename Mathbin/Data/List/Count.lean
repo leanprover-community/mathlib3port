@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.count
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (p : α -> Bool) (_inst_1 : List.{u1} (List.{u1} α)), Eq.{1} Nat (List.countp.{u1} α p (List.join.{u1} α _inst_1)) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u1, 0} (List.{u1} α) Nat (List.countp.{u1} α p) _inst_1))
 Case conversion may be inaccurate. Consider using '#align list.countp_join List.countp_joinₓ'. -/
-theorem countp_join : ∀ l : List (List α), countp p l.join = (l.map (countp p)).Sum
+theorem countp_join : ∀ l : List (List α), countp p l.join = (l.map (countp p)).sum
   | [] => rfl
   | a :: l => by rw [join, countp_append, map_cons, sum_cons, countp_join]
 #align list.countp_join List.countp_join
@@ -348,7 +348,7 @@ theorem count_append (a : α) : ∀ l₁ l₂, count a (l₁ ++ l₂) = count a 
 -/
 
 #print List.count_join /-
-theorem count_join (l : List (List α)) (a : α) : l.join.count a = (l.map (count a)).Sum :=
+theorem count_join (l : List (List α)) (a : α) : l.join.count a = (l.map (count a)).sum :=
   countp_join _ _
 #align list.count_join List.count_join
 -/
@@ -430,7 +430,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a a_1) (_inst_1 a a_1)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
 Case conversion may be inaccurate. Consider using '#align list.filter_eq List.filter_eqₓ'. -/
-theorem filter_eq (l : List α) (a : α) : l.filterₓ (Eq a) = replicate (count a l) a := by
+theorem filter_eq (l : List α) (a : α) : l.filter (Eq a) = replicate (count a l) a := by
   simp [eq_replicate, count, countp_eq_length_filter, @eq_comm _ _ a]
 #align list.filter_eq List.filter_eq
 
@@ -440,7 +440,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (l : List.{u1} α) (a : α), Eq.{succ u1} (List.{u1} α) (List.filter.{u1} α (fun (a_1 : α) => Decidable.decide (Eq.{succ u1} α a_1 a) (_inst_1 a_1 a)) l) (List.replicate.{u1} α (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a l) a)
 Case conversion may be inaccurate. Consider using '#align list.filter_eq' List.filter_eq'ₓ'. -/
-theorem filter_eq' (l : List α) (a : α) : (l.filterₓ fun x => x = a) = replicate (count a l) a := by
+theorem filter_eq' (l : List α) (a : α) : (l.filter fun x => x = a) = replicate (count a l) a := by
   simp only [filter_eq, @eq_comm _ _ a]
 #align list.filter_eq' List.filter_eq'
 
@@ -519,7 +519,7 @@ theorem count_le_count_map [DecidableEq β] (l : List α) (f : α → β) (x : �
 #align list.count_le_count_map List.count_le_count_map
 
 #print List.count_erase /-
-theorem count_erase (a b : α) : ∀ l : List α, count a (l.eraseₓ b) = count a l - ite (a = b) 1 0
+theorem count_erase (a b : α) : ∀ l : List α, count a (l.erase b) = count a l - ite (a = b) 1 0
   | [] => by simp
   | c :: l => by
     rw [erase_cons]
@@ -542,7 +542,7 @@ theorem count_erase_self (a : α) (l : List α) : count a (List.erase l a) = cou
 
 #print List.count_erase_of_ne /-
 @[simp]
-theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.eraseₓ b) = count a l :=
+theorem count_erase_of_ne {a b : α} (ab : a ≠ b) (l : List α) : count a (l.erase b) = count a l :=
   by rw [count_erase, if_neg ab, tsub_zero]
 #align list.count_erase_of_ne List.count_erase_of_ne
 -/
@@ -553,10 +553,10 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : List.{u1} α} [_inst_1 : DecidableEq.{succ u1} α] {_inst_2 : Type.{u2}} [l : Monoid.{u2} _inst_2] (a : α) (f : α -> _inst_2), (forall (a' : α), (Ne.{succ u1} α a' a) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a' β) -> (Eq.{succ u2} _inst_2 (f a') (OfNat.ofNat.{u2} _inst_2 1 (One.toOfNat1.{u2} _inst_2 (Monoid.toOne.{u2} _inst_2 l))))) -> (Eq.{succ u2} _inst_2 (List.prod.{u2} _inst_2 (MulOneClass.toMul.{u2} _inst_2 (Monoid.toMulOneClass.{u2} _inst_2 l)) (Monoid.toOne.{u2} _inst_2 l) (List.map.{u1, u2} α _inst_2 f β)) (HPow.hPow.{u2, 0, u2} _inst_2 Nat _inst_2 (instHPow.{u2, 0} _inst_2 Nat (Monoid.Pow.{u2} _inst_2 l)) (f a) (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a β)))
 Case conversion may be inaccurate. Consider using '#align list.prod_map_eq_pow_single List.prod_map_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_map_eq_pow_single [Monoid β] {l : List α} (a : α) (f : α → β)
-    (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).Prod = f a ^ l.count a :=
+    (hf : ∀ (a') (_ : a' ≠ a), a' ∈ l → f a' = 1) : (l.map f).prod = f a ^ l.count a :=
   by
   induction' l with a' as h generalizing a
   · rw [map_nil, prod_nil, count_nil, pow_zero]
@@ -574,10 +574,10 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {_inst_1 : List.{u1} α} [_inst_2 : DecidableEq.{succ u1} α] [l : Monoid.{u1} α] (a : α), (forall (a' : α), (Ne.{succ u1} α a' a) -> (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) a' _inst_1) -> (Eq.{succ u1} α a' (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α (Monoid.toOne.{u1} α l))))) -> (Eq.{succ u1} α (List.prod.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α l)) (Monoid.toOne.{u1} α l) _inst_1) (HPow.hPow.{u1, 0, u1} α Nat α (instHPow.{u1, 0} α Nat (Monoid.Pow.{u1} α l)) a (List.count.{u1} α (instBEq.{u1} α (fun (a : α) (b : α) => _inst_2 a b)) a _inst_1)))
 Case conversion may be inaccurate. Consider using '#align list.prod_eq_pow_single List.prod_eq_pow_singleₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a' «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a' «expr ≠ » a) -/
 @[to_additive]
 theorem prod_eq_pow_single [Monoid α] {l : List α} (a : α)
-    (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) : l.Prod = a ^ l.count a :=
+    (h : ∀ (a') (_ : a' ≠ a), a' ∈ l → a' = 1) : l.prod = a ^ l.count a :=
   trans (by rw [map_id'']) (prod_map_eq_pow_single a id h)
 #align list.prod_eq_pow_single List.prod_eq_pow_single
 #align list.sum_eq_nsmul_single List.sum_eq_nsmul_single

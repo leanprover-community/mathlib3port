@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Wojciech Nawrocki, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.kleisli
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,10 +54,10 @@ instance Kleisli.category : Category (Kleisli T)
   comp X Y Z f g := f ≫ (T : C ⥤ C).map g ≫ T.μ.app Z
   id_comp' X Y f := by
     rw [← T.η.naturality_assoc f, T.left_unit]
-    apply category.comp_id
+    apply Category.comp_id
   assoc' W X Y Z f g h :=
     by
-    simp only [functor.map_comp, category.assoc, monad.assoc]
+    simp only [Functor.map_comp, Category.assoc, Monad.assoc]
     erw [T.μ.naturality_assoc]
 #align category_theory.kleisli.kleisli.category CategoryTheory.Kleisli.Kleisli.category
 
@@ -81,7 +81,7 @@ def fromKleisli : Kleisli T ⥤ C where
   map_id' X := T.right_unit _
   map_comp' X Y Z f g := by
     unfold_projs
-    simp only [functor.map_comp, category.assoc]
+    simp only [Functor.map_comp, Category.assoc]
     erw [← T.μ.naturality_assoc g, T.assoc]
     rfl
 #align category_theory.kleisli.adjunction.from_kleisli CategoryTheory.Kleisli.Adjunction.fromKleisli
@@ -95,9 +95,9 @@ def adj : toKleisli T ⊣ fromKleisli T :=
         by
         unfold_projs
         dsimp
-        rw [category.assoc, ← T.η.naturality_assoc g, functor.id_map]
+        rw [Category.assoc, ← T.η.naturality_assoc g, Functor.id_map]
         dsimp
-        simp [monad.left_unit] }
+        simp [Monad.left_unit] }
 #align category_theory.kleisli.adjunction.adj CategoryTheory.Kleisli.Adjunction.adj
 
 /-- The composition of the adjunction gives the original functor. -/
@@ -136,7 +136,7 @@ instance Cokleisli.category : Category (Cokleisli U)
   id_comp' X Y f := by rw [U.right_counit_assoc]
   assoc' W X Y Z f g h := by
     unfold_projs
-    simp only [functor.map_comp, ← category.assoc, U.δ.naturality_assoc, functor.comp_map,
+    simp only [Functor.map_comp, ← Category.assoc, U.δ.naturality_assoc, Functor.comp_map,
       U.coassoc]
 #align category_theory.cokleisli.cokleisli.category CategoryTheory.Cokleisli.Cokleisli.category
 
@@ -162,9 +162,9 @@ def fromCokleisli : Cokleisli U ⥤ C where
   map_comp' X Y Z f g := by
     unfold_projs
     dsimp
-    simp only [functor.map_comp, ← category.assoc]
-    rw [comonad.coassoc]
-    simp only [category.assoc, nat_trans.naturality, functor.comp_map]
+    simp only [Functor.map_comp, ← Category.assoc]
+    rw [Comonad.coassoc]
+    simp only [Category.assoc, NatTrans.naturality, Functor.comp_map]
 #align category_theory.cokleisli.adjunction.from_cokleisli CategoryTheory.Cokleisli.Adjunction.fromCokleisli
 
 /-- The co-Kleisli adjunction which gives rise to the monad `(U, ε_ U, δ_ U)`. -/
@@ -173,8 +173,8 @@ def adj : fromCokleisli U ⊣ toCokleisli U :=
     { homEquiv := fun X Y => Equiv.refl (U.obj X ⟶ Y)
       homEquiv_naturality_right' := fun X Y Z f g =>
         by
-        unfold_projs; dsimp; erw [← category.assoc (U.map f), U.ε.naturality]; dsimp
-        simp only [← category.assoc, comonad.left_counit, category.id_comp] }
+        unfold_projs; dsimp; erw [← Category.assoc (U.map f), U.ε.naturality]; dsimp
+        simp only [← Category.assoc, Comonad.left_counit, Category.id_comp] }
 #align category_theory.cokleisli.adjunction.adj CategoryTheory.Cokleisli.Adjunction.adj
 
 /-- The composition of the adjunction gives the original functor. -/

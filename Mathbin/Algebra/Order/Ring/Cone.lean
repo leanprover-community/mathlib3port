@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.cone
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ which contains `1` and such that the positive elements are closed under multipli
 @[nolint has_nonempty_instance]
 structure PositiveCone (α : Type _) [Ring α] extends AddCommGroup.PositiveCone α where
   one_nonneg : nonneg 1
-  mul_pos : ∀ a b, Pos a → Pos b → Pos (a * b)
+  mul_pos : ∀ a b, pos a → pos b → pos (a * b)
 #align ring.positive_cone Ring.PositiveCone
 -/
 
@@ -96,7 +96,7 @@ def StrictOrderedRing.mkOfPositiveCone (C : PositiveCone α) : StrictOrderedRing
 /-- Construct a `linear_ordered_ring` by
 designating a positive cone in an existing `ring`. -/
 def LinearOrderedRing.mkOfPositiveCone (C : TotalPositiveCone α) : LinearOrderedRing α :=
-  { StrictOrderedRing.mkOfPositiveCone C.toPositiveCone,
+  { StrictOrderedRing.mkOfPositiveCone C.toPositiveCone_1,
     LinearOrderedAddCommGroup.mkOfPositiveCone C.toTotalPositiveCone with }
 #align linear_ordered_ring.mk_of_positive_cone LinearOrderedRing.mkOfPositiveCone
 -/

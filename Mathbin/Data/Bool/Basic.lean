@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.bool.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -605,7 +605,7 @@ def ofNat (n : ℕ) : Bool :=
 #print Bool.ofNat_le_ofNat /-
 theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
   by
-  simp [of_nat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [to_bool]
+  simp [ofNat] <;> cases Nat.decidableEq n 0 <;> cases Nat.decidableEq m 0 <;> simp only [decide]
   · subst m
     have h := le_antisymm h (Nat.zero_le _)
     contradiction
@@ -616,13 +616,13 @@ theorem ofNat_le_ofNat {n m : ℕ} (h : n ≤ m) : ofNat n ≤ ofNat m :=
 
 #print Bool.toNat_le_toNat /-
 theorem toNat_le_toNat {b₀ b₁ : Bool} (h : b₀ ≤ b₁) : toNat b₀ ≤ toNat b₁ := by
-  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [to_nat, Nat.zero_le]
+  cases h <;> subst h <;> [cases b₁, cases b₀] <;> simp [toNat, Nat.zero_le]
 #align bool.to_nat_le_to_nat Bool.toNat_le_toNat
 -/
 
 #print Bool.ofNat_toNat /-
 theorem ofNat_toNat (b : Bool) : ofNat (toNat b) = b := by
-  cases b <;> simp only [of_nat, to_nat] <;> exact by decide
+  cases b <;> simp only [ofNat, toNat] <;> exact by decide
 #align bool.of_nat_to_nat Bool.ofNat_toNat
 -/
 
@@ -639,7 +639,7 @@ theorem injective_iff {α : Sort _} {f : Bool → α} : Function.Injective f ↔
 #print Bool.apply_apply_apply /-
 /-- **Kaminski's Equation** -/
 theorem apply_apply_apply (f : Bool → Bool) (x : Bool) : f (f (f x)) = f x := by
-  cases x <;> cases h₁ : f tt <;> cases h₂ : f ff <;> simp only [h₁, h₂]
+  cases x <;> cases h₁ : f true <;> cases h₂ : f false <;> simp only [h₁, h₂]
 #align bool.apply_apply_apply Bool.apply_apply_apply
 -/
 

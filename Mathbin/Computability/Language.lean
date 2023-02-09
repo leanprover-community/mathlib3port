@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.language
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,7 +183,7 @@ theorem kstar_def_nonempty (l : Language α) :
   constructor
   · rintro ⟨S, rfl, h⟩
     refine' ⟨S.filter fun l => ¬List.isEmpty l, by simp, fun y hy => _⟩
-    rw [mem_filter, empty_iff_eq_nil] at hy
+    rw [mem_filter, isEmpty_iff_eq_nil] at hy
     exact ⟨h y hy.1, hy.2⟩
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
@@ -250,7 +250,7 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
 theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
   by
   ext x
-  simp only [mem_kstar, mem_supr, mem_pow]
+  simp only [mem_kstar, mem_supᵢ, mem_pow]
   constructor
   · rintro ⟨S, rfl, hS⟩
     exact ⟨_, S, rfl, rfl, hS⟩
@@ -261,19 +261,19 @@ theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
 @[simp]
 theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ :=
   by
-  rw [kstar_eq_supr_pow, kstar_eq_supr_pow]
+  rw [kstar_eq_supᵢ_pow, kstar_eq_supᵢ_pow]
   simp_rw [← map_pow]
-  exact image_Union
+  exact image_unionᵢ
 #align language.map_kstar Language.map_kstar
 
 theorem mul_self_kstar_comm (l : Language α) : l∗ * l = l * l∗ := by
-  simp only [kstar_eq_supr_pow, mul_supr, supr_mul, ← pow_succ, ← pow_succ']
+  simp only [kstar_eq_supᵢ_pow, mul_supᵢ, supᵢ_mul, ← pow_succ, ← pow_succ']
 #align language.mul_self_kstar_comm Language.mul_self_kstar_comm
 
 @[simp]
 theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ :=
   by
-  simp only [kstar_eq_supr_pow, mul_supr, ← pow_succ, ← pow_zero l]
+  simp only [kstar_eq_supᵢ_pow, mul_supᵢ, ← pow_succ, ← pow_zero l]
   exact sup_supᵢ_nat_succ _
 #align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstar
 
@@ -290,7 +290,7 @@ instance : KleeneAlgebra (Language α) :=
     kstar_mul_le_kstar := fun a => (one_add_kstar_mul_self_eq_kstar a).le.trans' le_sup_right
     kstar_mul_le_self := fun l m h =>
       by
-      rw [kstar_eq_supr_pow, supr_mul]
+      rw [kstar_eq_supᵢ_pow, supᵢ_mul]
       refine' supᵢ_le fun n => _
       induction' n with n ih
       · simp
@@ -298,7 +298,7 @@ instance : KleeneAlgebra (Language α) :=
       exact le_trans (le_mul_congr le_rfl h) ih
     mul_kstar_le_self := fun l m h =>
       by
-      rw [kstar_eq_supr_pow, mul_supr]
+      rw [kstar_eq_supᵢ_pow, mul_supᵢ]
       refine' supᵢ_le fun n => _
       induction' n with n ih
       · simp

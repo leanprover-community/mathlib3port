@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.filter_product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ instance [Field β] : Field β* :=
   { Germ.commRing, Germ.divisionRing with }
 
 theorem coe_lt [Preorder β] {f g : α → β} : (f : β*) < g ↔ ∀* x, f x < g x := by
-  simp only [lt_iff_le_not_le, eventually_and, coe_le, eventually_not, eventually_le]
+  simp only [lt_iff_le_not_le, eventually_and, coe_le, eventually_not, EventuallyLe]
 #align filter.germ.coe_lt Filter.Germ.coe_lt
 
 theorem coe_pos [Preorder β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀* x, 0 < f x :=

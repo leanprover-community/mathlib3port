@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,42 +58,42 @@ protected def map {α β : Type u} (f : α → β) (x : t' α) : t' β :=
 #print Equiv.functor /-
 /-- The function `equiv.map` transfers the functoriality of `t` to
 `t'` using the equivalences `eqv`.  -/
-protected def functor : Functor t' where map := @Equiv.map _
+protected def functor : Functor t' where map := @equiv.map _
 #align equiv.functor Equiv.functor
 -/
 
 variable [LawfulFunctor t]
 
 #print Equiv.id_map /-
-protected theorem id_map {α : Type u} (x : t' α) : Equiv.map id x = x := by simp [Equiv.map, id_map]
+protected theorem id_map {α : Type u} (x : t' α) : equiv.map id x = x := by simp [Equiv.map, id_map]
 #align equiv.id_map Equiv.id_map
 -/
 
 #print Equiv.comp_map /-
 protected theorem comp_map {α β γ : Type u} (g : α → β) (h : β → γ) (x : t' α) :
-    Equiv.map (h ∘ g) x = Equiv.map h (Equiv.map g x) := by simp [Equiv.map] <;> apply comp_map
+    equiv.map (h ∘ g) x = equiv.map h (equiv.map g x) := by simp [Equiv.map] <;> apply comp_map
 #align equiv.comp_map Equiv.comp_map
 -/
 
 #print Equiv.lawfulFunctor /-
-protected theorem lawfulFunctor : @LawfulFunctor _ Equiv.functor :=
-  { id_map := @Equiv.id_map _ _
-    comp_map := @Equiv.comp_map _ _ }
+protected theorem lawfulFunctor : @LawfulFunctor _ equiv.functor :=
+  { id_map := @equiv.id_map _ _
+    comp_map := @equiv.comp_map _ _ }
 #align equiv.is_lawful_functor Equiv.lawfulFunctor
 -/
 
 #print Equiv.lawfulFunctor' /-
 protected theorem lawfulFunctor' [F : Functor t']
-    (h₀ : ∀ {α β} (f : α → β), Functor.map f = Equiv.map f)
-    (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (Equiv.map ∘ Function.const α) f) :
+    (h₀ : ∀ {α β} (f : α → β), Functor.map f = equiv.map f)
+    (h₁ : ∀ {α β} (f : β), Functor.mapConst f = (equiv.map ∘ Function.const α) f) :
     LawfulFunctor t' :=
   by
-  have : F = Equiv.functor := by
+  have : F = equiv.functor := by
     cases F
     dsimp [Equiv.functor]
     congr <;> ext <;> [rw [← h₀], rw [← h₁]]
   subst this
-  exact Equiv.lawfulFunctor
+  exact equiv.is_lawful_functor
 #align equiv.is_lawful_functor' Equiv.lawfulFunctor'
 -/
 
@@ -126,7 +126,7 @@ instance across the equivalences `eqv`. -/
 protected def traversable : Traversable t'
     where
   toFunctor := Equiv.functor eqv
-  traverse := @Equiv.traverse _
+  traverse := @equiv.traverse _
 #align equiv.traversable Equiv.traversable
 -/
 
@@ -157,7 +157,7 @@ but is expected to have type
   forall {t : Type.{u1} -> Type.{u1}} {t' : Type.{u1} -> Type.{u1}} (eqv : forall (α : Type.{u1}), Equiv.{succ u1, succ u1} (t α) (t' α)) [_inst_1 : Traversable.{u1} t] [_inst_2 : IsLawfulTraversable.{u1} t _inst_1] {α : Type.{u1}} (x : t' α), Eq.{succ u1} (Id.{u1} (t' α)) (Equiv.traverse.{u1} (fun (α : Type.{u1}) => t α) (fun (α : Type.{u1}) => t' α) eqv _inst_1 Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1}) α α (Pure.pure.{u1, u1} Id.{u1} (Applicative.toPure.{u1, u1} Id.{u1} (Monad.toApplicative.{u1, u1} Id.{u1} Id.instMonadId.{u1})) α) x) x
 Case conversion may be inaccurate. Consider using '#align equiv.id_traverse Equiv.id_traverseₓ'. -/
 protected theorem id_traverse (x : t' α) : Equiv.traverse eqv id.mk x = x := by
-  simp! [Equiv.traverse, idBind, id_traverse, Functor.map, functor_norm]
+  simp! [Equiv.traverse, idBind, id_traverse, functor.map, functor_norm]
 #align equiv.id_traverse Equiv.id_traverse
 
 /- warning: equiv.traverse_eq_map_id -> Equiv.traverse_eq_map_id is a dubious translation:
@@ -197,10 +197,10 @@ equivalences to `t'`, with the traversable functor structure given by
 protected def isLawfulTraversable : @IsLawfulTraversable t' (Equiv.traversable eqv)
     where
   to_lawfulFunctor := @Equiv.lawfulFunctor _ _ eqv _ _
-  id_traverse := @Equiv.id_traverse _ _
-  comp_traverse := @Equiv.comp_traverse _ _
-  traverse_eq_map_id := @Equiv.traverse_eq_map_id _ _
-  naturality := @Equiv.naturality _ _
+  id_traverse := @equiv.id_traverse _ _
+  comp_traverse := @equiv.comp_traverse _ _
+  traverse_eq_map_id := @equiv.traverse_eq_map_id _ _
+  naturality := @equiv.naturality _ _
 #align equiv.is_lawful_traversable Equiv.isLawfulTraversable
 -/
 
@@ -222,14 +222,14 @@ protected def isLawfulTraversable' [_i : Traversable t']
     -- h₂ needs a `is_lawful_applicative` assumption
     refine' { to_lawfulFunctor := Equiv.lawfulFunctor' eqv @h₀ @h₁.. } <;>
     intros
-  · rw [h₂, Equiv.id_traverse]
+  · rw [h₂, equiv.id_traverse]
     infer_instance
-  · rw [h₂, Equiv.comp_traverse f g x, h₂]
+  · rw [h₂, equiv.comp_traverse f g x, h₂]
     congr
     rw [h₂]
     all_goals infer_instance
-  · rw [h₂, Equiv.traverse_eq_map_id, h₀] <;> infer_instance
-  · rw [h₂, Equiv.naturality, h₂] <;> infer_instance
+  · rw [h₂, equiv.traverse_eq_map_id, h₀] <;> infer_instance
+  · rw [h₂, equiv.naturality, h₂] <;> infer_instance
 #align equiv.is_lawful_traversable' Equiv.isLawfulTraversable'
 -/
 

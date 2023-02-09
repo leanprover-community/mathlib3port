@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.complex_shape
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,8 +68,8 @@ Below we define `c.next` and `c.prev` which provide these related elements.
 @[ext, nolint has_nonempty_instance]
 structure ComplexShape (ι : Type _) where
   Rel : ι → ι → Prop
-  next_eq : ∀ {i j j'}, Rel i j → Rel i j' → j = j'
-  prev_eq : ∀ {i i' j}, Rel i j → Rel i' j → i = i'
+  next_eq : ∀ {i j j'}, rel i j → rel i j' → j = j'
+  prev_eq : ∀ {i i' j}, rel i j → rel i' j → i = i'
 #align complex_shape ComplexShape
 -/
 
@@ -159,7 +159,7 @@ instance subsingleton_prev (c : ComplexShape ι) (j : ι) : Subsingleton { i // 
 Returns `i` otherwise.
 -/
 def next (c : ComplexShape ι) (i : ι) : ι :=
-  if h : ∃ j, c.Rel i j then h.some else i
+  if h : ∃ j, c.Rel i j then h.choose else i
 #align complex_shape.next ComplexShape.next
 -/
 
@@ -168,7 +168,7 @@ def next (c : ComplexShape ι) (i : ι) : ι :=
 Returns `j` otherwise.
 -/
 def prev (c : ComplexShape ι) (j : ι) : ι :=
-  if h : ∃ i, c.Rel i j then h.some else j
+  if h : ∃ i, c.Rel i j then h.choose else j
 #align complex_shape.prev ComplexShape.prev
 -/
 

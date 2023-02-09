@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ namespace Nat.Primes
 
 #print Nat.Primes.coePNat /-
 instance coePNat : Coe Nat.Primes ℕ+ :=
-  ⟨fun p => ⟨(p : ℕ), p.property.Pos⟩⟩
+  ⟨fun p => ⟨(p : ℕ), p.property.pos⟩⟩
 #align nat.primes.coe_pnat Nat.Primes.coePNat
 -/
 
@@ -60,7 +60,7 @@ open _Root_.Nat
 /-- The greatest common divisor (gcd) of two positive natural numbers,
   viewed as positive natural number. -/
 def gcd (n m : ℕ+) : ℕ+ :=
-  ⟨Nat.gcd (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_left (m : ℕ) n.Pos⟩
+  ⟨Nat.gcd (n : ℕ) (m : ℕ), Nat.gcd_pos_of_pos_left (m : ℕ) n.pos⟩
 #align pnat.gcd PNat.gcd
 -/
 
@@ -234,7 +234,7 @@ def Coprime (m n : ℕ+) : Prop :=
 
 #print PNat.coprime_coe /-
 @[simp, norm_cast]
-theorem coprime_coe {m n : ℕ+} : Nat.coprime ↑m ↑n ↔ m.coprime n :=
+theorem coprime_coe {m n : ℕ+} : Nat.coprime ↑m ↑n ↔ m.Coprime n :=
   by
   unfold coprime
   unfold Nat.coprime
@@ -249,7 +249,7 @@ lean 3 declaration is
 but is expected to have type
   forall {k : PNat} {m : PNat} {n : PNat}, (PNat.Coprime m k) -> (PNat.Coprime n k) -> (PNat.Coprime (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) m n) k)
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.mul PNat.Coprime.mulₓ'. -/
-theorem Coprime.mul {k m n : ℕ+} : m.coprime k → n.coprime k → (m * n).coprime k :=
+theorem Coprime.mul {k m n : ℕ+} : m.Coprime k → n.Coprime k → (m * n).Coprime k :=
   by
   repeat' rw [← coprime_coe]
   rw [mul_coe]
@@ -262,7 +262,7 @@ lean 3 declaration is
 but is expected to have type
   forall {k : PNat} {m : PNat} {n : PNat}, (PNat.Coprime k m) -> (PNat.Coprime k n) -> (PNat.Coprime k (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) m n))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.mul_right PNat.Coprime.mul_rightₓ'. -/
-theorem Coprime.mul_right {k m n : ℕ+} : k.coprime m → k.coprime n → k.coprime (m * n) :=
+theorem Coprime.mul_right {k m n : ℕ+} : k.Coprime m → k.Coprime n → k.Coprime (m * n) :=
   by
   repeat' rw [← coprime_coe]
   rw [mul_coe]
@@ -272,7 +272,7 @@ theorem Coprime.mul_right {k m n : ℕ+} : k.coprime m → k.coprime n → k.cop
 #print PNat.gcd_comm /-
 theorem gcd_comm {m n : ℕ+} : m.gcd n = n.gcd m :=
   by
-  apply Eq
+  apply eq
   simp only [gcd_coe]
   apply Nat.gcd_comm
 #align pnat.gcd_comm PNat.gcd_comm
@@ -302,9 +302,9 @@ lean 3 declaration is
 but is expected to have type
   forall (m : PNat) {n : PNat} {k : PNat}, (PNat.Coprime k n) -> (Eq.{1} PNat (PNat.gcd (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) k m) n) (PNat.gcd m n))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.gcd_mul_left_cancel PNat.Coprime.gcd_mul_left_cancelₓ'. -/
-theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (k * m).gcd n = m.gcd n :=
+theorem Coprime.gcd_mul_left_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (k * m).gcd n = m.gcd n :=
   by
-  intro h; apply Eq; simp only [gcd_coe, mul_coe]
+  intro h; apply eq; simp only [gcd_coe, mul_coe]
   apply Nat.coprime.gcd_mul_left_cancel; simpa
 #align pnat.coprime.gcd_mul_left_cancel PNat.Coprime.gcd_mul_left_cancel
 
@@ -314,8 +314,8 @@ lean 3 declaration is
 but is expected to have type
   forall (m : PNat) {n : PNat} {k : PNat}, (PNat.Coprime k n) -> (Eq.{1} PNat (PNat.gcd (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) m k) n) (PNat.gcd m n))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.gcd_mul_right_cancel PNat.Coprime.gcd_mul_right_cancelₓ'. -/
-theorem Coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (m * k).gcd n = m.gcd n :=
-  by rw [mul_comm]; apply coprime.gcd_mul_left_cancel
+theorem Coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.Coprime n → (m * k).gcd n = m.gcd n :=
+  by rw [mul_comm]; apply Coprime.gcd_mul_left_cancel
 #align pnat.coprime.gcd_mul_right_cancel PNat.Coprime.gcd_mul_right_cancel
 
 /- warning: pnat.coprime.gcd_mul_left_cancel_right -> PNat.Coprime.gcd_mul_left_cancel_right is a dubious translation:
@@ -325,8 +325,8 @@ but is expected to have type
   forall (m : PNat) {n : PNat} {k : PNat}, (PNat.Coprime k m) -> (Eq.{1} PNat (PNat.gcd m (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) k n)) (PNat.gcd m n))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.gcd_mul_left_cancel_right PNat.Coprime.gcd_mul_left_cancel_rightₓ'. -/
 theorem Coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} :
-    k.coprime m → m.gcd (k * n) = m.gcd n := by intro h; iterate 2 rw [gcd_comm]; symm;
-  apply coprime.gcd_mul_left_cancel _ h
+    k.Coprime m → m.gcd (k * n) = m.gcd n := by intro h; iterate 2 rw [gcd_comm]; symm;
+  apply Coprime.gcd_mul_left_cancel _ h
 #align pnat.coprime.gcd_mul_left_cancel_right PNat.Coprime.gcd_mul_left_cancel_right
 
 /- warning: pnat.coprime.gcd_mul_right_cancel_right -> PNat.Coprime.gcd_mul_right_cancel_right is a dubious translation:
@@ -336,8 +336,8 @@ but is expected to have type
   forall (m : PNat) {n : PNat} {k : PNat}, (PNat.Coprime k m) -> (Eq.{1} PNat (PNat.gcd m (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) n k)) (PNat.gcd m n))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.gcd_mul_right_cancel_right PNat.Coprime.gcd_mul_right_cancel_rightₓ'. -/
 theorem Coprime.gcd_mul_right_cancel_right (m : ℕ+) {n k : ℕ+} :
-    k.coprime m → m.gcd (n * k) = m.gcd n := by rw [mul_comm];
-  apply coprime.gcd_mul_left_cancel_right
+    k.Coprime m → m.gcd (n * k) = m.gcd n := by rw [mul_comm];
+  apply Coprime.gcd_mul_left_cancel_right
 #align pnat.coprime.gcd_mul_right_cancel_right PNat.Coprime.gcd_mul_right_cancel_right
 
 #print PNat.one_gcd /-
@@ -359,7 +359,7 @@ theorem gcd_one {n : ℕ+} : gcd n 1 = 1 := by
 
 #print PNat.Coprime.symm /-
 @[symm]
-theorem Coprime.symm {m n : ℕ+} : m.coprime n → n.coprime m :=
+theorem Coprime.symm {m n : ℕ+} : m.Coprime n → n.Coprime m :=
   by
   unfold coprime
   rw [gcd_comm]
@@ -369,20 +369,20 @@ theorem Coprime.symm {m n : ℕ+} : m.coprime n → n.coprime m :=
 
 #print PNat.one_coprime /-
 @[simp]
-theorem one_coprime {n : ℕ+} : (1 : ℕ+).coprime n :=
+theorem one_coprime {n : ℕ+} : (1 : ℕ+).Coprime n :=
   one_gcd
 #align pnat.one_coprime PNat.one_coprime
 -/
 
 #print PNat.coprime_one /-
 @[simp]
-theorem coprime_one {n : ℕ+} : n.coprime 1 :=
+theorem coprime_one {n : ℕ+} : n.Coprime 1 :=
   Coprime.symm one_coprime
 #align pnat.coprime_one PNat.coprime_one
 -/
 
 #print PNat.Coprime.coprime_dvd_left /-
-theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.coprime n → m.coprime n :=
+theorem Coprime.coprime_dvd_left {m k n : ℕ+} : m ∣ k → k.Coprime n → m.Coprime n :=
   by
   rw [dvd_iff]
   repeat' rw [← coprime_coe]
@@ -396,12 +396,12 @@ lean 3 declaration is
 but is expected to have type
   forall {a : PNat} {b : PNat} {m : PNat} {n : PNat}, (PNat.Coprime m n) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) a m) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) b n) -> (Eq.{1} PNat a (PNat.gcd (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) a b) m))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.factor_eq_gcd_left PNat.Coprime.factor_eq_gcd_leftₓ'. -/
-theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) :
+theorem Coprime.factor_eq_gcd_left {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
     a = (a * b).gcd m := by
   rw [gcd_eq_left_iff_dvd] at am
   conv_lhs => rw [← am]; symm
-  apply coprime.gcd_mul_right_cancel a
-  apply coprime.coprime_dvd_left bn cop.symm
+  apply Coprime.gcd_mul_right_cancel a
+  apply Coprime.coprime_dvd_left bn cop.symm
 #align pnat.coprime.factor_eq_gcd_left PNat.Coprime.factor_eq_gcd_left
 
 /- warning: pnat.coprime.factor_eq_gcd_right -> PNat.Coprime.factor_eq_gcd_right is a dubious translation:
@@ -410,8 +410,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : PNat} {b : PNat} {m : PNat} {n : PNat}, (PNat.Coprime m n) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) a m) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) b n) -> (Eq.{1} PNat a (PNat.gcd (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) b a) m))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.factor_eq_gcd_right PNat.Coprime.factor_eq_gcd_rightₓ'. -/
-theorem Coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m) (bn : b ∣ n) :
-    a = (b * a).gcd m := by rw [mul_comm]; apply coprime.factor_eq_gcd_left cop am bn
+theorem Coprime.factor_eq_gcd_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m) (bn : b ∣ n) :
+    a = (b * a).gcd m := by rw [mul_comm]; apply Coprime.factor_eq_gcd_left cop am bn
 #align pnat.coprime.factor_eq_gcd_right PNat.Coprime.factor_eq_gcd_right
 
 /- warning: pnat.coprime.factor_eq_gcd_left_right -> PNat.Coprime.factor_eq_gcd_left_right is a dubious translation:
@@ -420,8 +420,8 @@ lean 3 declaration is
 but is expected to have type
   forall {a : PNat} {b : PNat} {m : PNat} {n : PNat}, (PNat.Coprime m n) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) a m) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) b n) -> (Eq.{1} PNat a (PNat.gcd m (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) a b)))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.factor_eq_gcd_left_right PNat.Coprime.factor_eq_gcd_left_rightₓ'. -/
-theorem Coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m)
-    (bn : b ∣ n) : a = m.gcd (a * b) := by rw [gcd_comm]; apply coprime.factor_eq_gcd_left cop am bn
+theorem Coprime.factor_eq_gcd_left_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m)
+    (bn : b ∣ n) : a = m.gcd (a * b) := by rw [gcd_comm]; apply Coprime.factor_eq_gcd_left cop am bn
 #align pnat.coprime.factor_eq_gcd_left_right PNat.Coprime.factor_eq_gcd_left_right
 
 /- warning: pnat.coprime.factor_eq_gcd_right_right -> PNat.Coprime.factor_eq_gcd_right_right is a dubious translation:
@@ -430,9 +430,9 @@ lean 3 declaration is
 but is expected to have type
   forall {a : PNat} {b : PNat} {m : PNat} {n : PNat}, (PNat.Coprime m n) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) a m) -> (Dvd.dvd.{0} PNat (semigroupDvd.{0} PNat (Monoid.toSemigroup.{0} PNat (RightCancelMonoid.toMonoid.{0} PNat (CancelMonoid.toRightCancelMonoid.{0} PNat (CancelCommMonoid.toCancelMonoid.{0} PNat (OrderedCancelCommMonoid.toCancelCommMonoid.{0} PNat (LinearOrderedCancelCommMonoid.toOrderedCancelCommMonoid.{0} PNat instPNatLinearOrderedCancelCommMonoid))))))) b n) -> (Eq.{1} PNat a (PNat.gcd m (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) b a)))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.factor_eq_gcd_right_right PNat.Coprime.factor_eq_gcd_right_rightₓ'. -/
-theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.coprime n) (am : a ∣ m)
+theorem Coprime.factor_eq_gcd_right_right {a b m n : ℕ+} (cop : m.Coprime n) (am : a ∣ m)
     (bn : b ∣ n) : a = m.gcd (b * a) := by rw [gcd_comm];
-  apply coprime.factor_eq_gcd_right cop am bn
+  apply Coprime.factor_eq_gcd_right cop am bn
 #align pnat.coprime.factor_eq_gcd_right_right PNat.Coprime.factor_eq_gcd_right_right
 
 /- warning: pnat.coprime.gcd_mul -> PNat.Coprime.gcd_mul is a dubious translation:
@@ -441,9 +441,9 @@ lean 3 declaration is
 but is expected to have type
   forall (k : PNat) {m : PNat} {n : PNat}, (PNat.Coprime m n) -> (Eq.{1} PNat (PNat.gcd k (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) m n)) (HMul.hMul.{0, 0, 0} PNat PNat PNat (instHMul.{0} PNat instPNatMul) (PNat.gcd k m) (PNat.gcd k n)))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.gcd_mul PNat.Coprime.gcd_mulₓ'. -/
-theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n :=
+theorem Coprime.gcd_mul (k : ℕ+) {m n : ℕ+} (h : m.Coprime n) : k.gcd (m * n) = k.gcd m * k.gcd n :=
   by
-  rw [← coprime_coe] at h; apply Eq
+  rw [← coprime_coe] at h; apply eq
   simp only [gcd_coe, mul_coe]; apply Nat.coprime.gcd_mul k h
 #align pnat.coprime.gcd_mul PNat.Coprime.gcd_mul
 
@@ -452,7 +452,7 @@ theorem gcd_eq_left {m n : ℕ+} : m ∣ n → m.gcd n = m :=
   by
   rw [dvd_iff]
   intro h
-  apply Eq
+  apply eq
   simp only [gcd_coe]
   apply Nat.gcd_eq_left h
 #align pnat.gcd_eq_left PNat.gcd_eq_left
@@ -464,7 +464,7 @@ lean 3 declaration is
 but is expected to have type
   forall {m : PNat} {n : PNat} (k : Nat) (l : Nat), (PNat.Coprime m n) -> (Nat.coprime (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (PNat.val m) k) (HPow.hPow.{0, 0, 0} Nat Nat Nat (instHPow.{0, 0} Nat Nat instPowNat) (PNat.val n) l))
 Case conversion may be inaccurate. Consider using '#align pnat.coprime.pow PNat.Coprime.powₓ'. -/
-theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.coprime n) : (m ^ k).coprime (n ^ l) := by
+theorem Coprime.pow {m n : ℕ+} (k l : ℕ) (h : m.Coprime n) : (m ^ k).Coprime (n ^ l) := by
   rw [← coprime_coe] at *; simp only [pow_coe]; apply Nat.coprime.pow; apply h
 #align pnat.coprime.pow PNat.Coprime.pow
 

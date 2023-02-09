@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey, Patrick Stevens, Thomas Browning
 
 ! This file was ported from Lean 3 source module data.nat.choose.factorization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n :
   have hkn : k ≤ n := by
     refine' le_of_not_lt fun hnk => h _
     simp [choose_eq_zero_of_lt hnk]
-  rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast]
   refine' (Finset.card_filter_le _ _).trans (le_of_eq (Nat.card_Ico _ _))
 #align nat.factorization_choose_le_log Nat.factorization_choose_le_log
@@ -75,7 +75,7 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
   · exact factorization_eq_zero_of_non_prime (choose n k) hp
   cases' lt_or_le n k with hnk hkn
   · simp [choose_eq_zero_of_lt hnk]
-  rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
+  rw [factorization_def _ hp, @padic_val_nat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast, Finset.card_eq_zero,
     Finset.filter_eq_empty_iff, not_le]
   intro i hi

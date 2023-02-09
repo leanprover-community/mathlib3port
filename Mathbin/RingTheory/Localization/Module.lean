@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ theorem SpanEqTop.localization_localization {v : Set A} (hv : span R v = ⊤) :
 A suitable instance for `[algebra A Aₛ]` is `localization_algebra`.
 -/
 noncomputable def Basis.localizationLocalization {ι : Type _} (b : Basis ι R A) : Basis ι Rₛ Aₛ :=
-  Basis.mk (b.LinearIndependent.localization_localization _ S _)
+  Basis.mk (b.linearIndependent.localization_localization _ S _)
     (by
       rw [Set.range_comp, SpanEqTop.localization_localization Rₛ S Aₛ b.span_eq]
       exact le_rfl)
@@ -125,23 +125,23 @@ noncomputable def Basis.localizationLocalization {ι : Type _} (b : Basis ι R A
 
 @[simp]
 theorem Basis.localizationLocalization_apply {ι : Type _} (b : Basis ι R A) (i) :
-    b.localization_localization Rₛ S Aₛ i = algebraMap A Aₛ (b i) :=
+    b.localizationLocalization Rₛ S Aₛ i = algebraMap A Aₛ (b i) :=
   Basis.mk_apply _ _ _
 #align basis.localization_localization_apply Basis.localizationLocalization_apply
 
 @[simp]
 theorem Basis.localizationLocalization_repr_algebraMap {ι : Type _} (b : Basis ι R A) (x i) :
-    (b.localization_localization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
+    (b.localizationLocalization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
       algebraMap R Rₛ (b.repr x i) :=
   calc
-    (b.localization_localization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
-        (b.localization_localization Rₛ S Aₛ).repr
-          ((b.repr x).Sum fun j c => algebraMap R Rₛ c • algebraMap A Aₛ (b j)) i :=
+    (b.localizationLocalization Rₛ S Aₛ).repr (algebraMap A Aₛ x) i =
+        (b.localizationLocalization Rₛ S Aₛ).repr
+          ((b.repr x).sum fun j c => algebraMap R Rₛ c • algebraMap A Aₛ (b j)) i :=
       by
       simp_rw [IsScalarTower.algebraMap_smul, Algebra.smul_def,
-        IsScalarTower.algebraMap_apply R A Aₛ, ← _root_.map_mul, ← map_finsupp_sum, ←
-        Algebra.smul_def, ← Finsupp.total_apply, Basis.total_repr]
-    _ = (b.repr x).Sum fun j c => algebraMap R Rₛ c • Finsupp.single j 1 i := by
+        IsScalarTower.algebraMap_apply R A Aₛ, ← map_mul, ← map_finsupp_sum, ← Algebra.smul_def, ←
+        Finsupp.total_apply, Basis.total_repr]
+    _ = (b.repr x).sum fun j c => algebraMap R Rₛ c • Finsupp.single j 1 i := by
       simp_rw [← b.localization_localization_apply Rₛ S Aₛ, map_finsupp_sum, LinearEquiv.map_smul,
         Basis.repr_self, Finsupp.sum_apply, Finsupp.smul_apply]
     _ = _ :=

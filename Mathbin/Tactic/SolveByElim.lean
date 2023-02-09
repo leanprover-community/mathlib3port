@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.solve_by_elim
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ unsafe def solve_by_elim (opt : opt := { }) : tactic Unit := do
       solve_by_elim_aux opt gs lemmas ctx_lemmas opt <|>
           fail
             ("`solve_by_elim` failed.\n" ++ "Try `solve_by_elim { max_depth := N }` for `N > " ++
-                  toString opt ++
+                  to_string opt ++
                 "`\n" ++
               "or use `set_option trace.solve_by_elim true` to view the search.")
 #align tactic.solve_by_elim tactic.solve_by_elim

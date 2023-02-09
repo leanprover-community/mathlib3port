@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.balanced_core_hull
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem balancedCore_empty : balancedCore 𝕜 (∅ : Set E) = ∅ :=
 #align balanced_core_empty balancedCore_empty
 
 theorem mem_balancedCore_iff : x ∈ balancedCore 𝕜 s ↔ ∃ t, Balanced 𝕜 t ∧ t ⊆ s ∧ x ∈ t := by
-  simp_rw [balancedCore, mem_sUnion, mem_set_of_eq, exists_prop, and_assoc']
+  simp_rw [balancedCore, mem_unionₛ, mem_setOf_eq, exists_prop, and_assoc']
 #align mem_balanced_core_iff mem_balancedCore_iff
 
 theorem smul_balancedCore_subset (s : Set E) {a : 𝕜} (ha : ‖a‖ ≤ 1) :
@@ -135,7 +135,7 @@ theorem balancedCore_zero_mem (hs : (0 : E) ∈ s) : (0 : E) ∈ balancedCore �
 theorem balancedCore_nonempty_iff : (balancedCore 𝕜 s).Nonempty ↔ (0 : E) ∈ s :=
   ⟨fun h =>
     zero_subset.1 <|
-      (zero_smul_set h).Superset.trans <|
+      (zero_smul_set h).superset.trans <|
         (balancedCore_balanced s (0 : 𝕜) <| norm_zero.trans_le zero_le_one).trans <|
           balancedCore_subset _,
     fun h => ⟨0, balancedCore_zero_mem h⟩⟩
@@ -152,7 +152,7 @@ variable {𝕜}
 theorem balancedHull.balanced (s : Set E) : Balanced 𝕜 (balancedHull 𝕜 s) :=
   by
   intro a ha
-  simp_rw [balancedHull, smul_set_Union₂, subset_def, mem_Union₂]
+  simp_rw [balancedHull, smul_set_unionᵢ₂, subset_def, mem_unionᵢ₂]
   rintro x ⟨r, hr, hx⟩
   rw [← smul_assoc] at hx
   exact ⟨a • r, (SemiNormedRing.norm_mul _ _).trans (mul_le_one ha (norm_nonneg r) hr), hx⟩
@@ -169,7 +169,7 @@ variable [NormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 @[simp]
 theorem balancedCoreAux_empty : balancedCoreAux 𝕜 (∅ : Set E) = ∅ :=
   by
-  simp_rw [balancedCoreAux, Inter₂_eq_empty_iff, smul_set_empty]
+  simp_rw [balancedCoreAux, interᵢ₂_eq_empty_iff, smul_set_empty]
   exact fun _ => ⟨1, norm_one.ge, not_mem_empty _⟩
 #align balanced_core_aux_empty balancedCoreAux_empty
 
@@ -216,7 +216,7 @@ theorem balancedCore_eq_interᵢ (hs : (0 : E) ∈ s) :
 theorem subset_balancedCore (ht : (0 : E) ∈ t) (hst : ∀ (a : 𝕜) (ha : ‖a‖ ≤ 1), a • s ⊆ t) :
     s ⊆ balancedCore 𝕜 t := by
   rw [balancedCore_eq_interᵢ ht]
-  refine' subset_Inter₂ fun a ha => _
+  refine' subset_interᵢ₂ fun a ha => _
   rw [← smul_inv_smul₀ (norm_pos_iff.mp <| zero_lt_one.trans_le ha) s]
   refine' smul_set_mono (hst _ _)
   rw [norm_inv]

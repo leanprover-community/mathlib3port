@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module group_theory.divisible
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Group.Pi
 
 /-!
 # Divisible Group and rootable group
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we define a divisible add monoid and a rootable monoid with some basic properties.
 
@@ -135,7 +138,7 @@ implies the textbook approach.
 noncomputable def rootableByOfPowLeftSurj
     (H : ∀ {n : α}, n ≠ 0 → Function.Surjective (fun a => a ^ n : A → A)) : RootableBy A α
     where
-  root a n := @dite _ (n = 0) (Classical.dec _) (fun _ => (1 : A)) fun hn => (H hn a).some
+  root a n := @dite _ (n = 0) (Classical.dec _) (fun _ => (1 : A)) fun hn => (H hn a).choose
   root_zero _ := by classical exact dif_pos rfl
   root_cancel n a hn := by
     classical
@@ -216,7 +219,7 @@ noncomputable def divisibleByIntOfSmulTopEqTop
     (H : ∀ {n : ℤ} (hn : n ≠ 0), n • (⊤ : AddSubgroup A) = ⊤) : DivisibleBy A ℤ
     where
   div a n :=
-    if hn : n = 0 then 0 else show a ∈ n • (⊤ : AddSubgroup A) by rw [H hn] <;> trivial.some
+    if hn : n = 0 then 0 else show a ∈ n • (⊤ : AddSubgroup A) by rw [H hn] <;> trivial.choose
   div_zero a := dif_pos rfl
   div_cancel n a hn := by
     rw [dif_neg hn]
@@ -232,7 +235,7 @@ instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [
   div q n := q / n
   div_zero q := by norm_num
   div_cancel n q hn := by
-    rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
+    rw [zsmul_eq_mul, (Int.cast_commute n _).eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
 #align divisible_by_int_of_char_zero divisibleByIntOfCharZero
 -/
 
@@ -332,7 +335,7 @@ variable (α : Type _) {A : Type _} [CommGroup A] (B : Subgroup A)
 /-- Any quotient group of a rootable group is rootable. -/
 @[to_additive QuotientAddGroup.divisibleBy "Any quotient group of a divisible group is divisible"]
 noncomputable instance QuotientGroup.rootableBy [RootableBy A ℕ] : RootableBy (A ⧸ B) ℕ :=
-  QuotientGroup.mk_surjective.RootableBy _ fun _ _ => rfl
+  QuotientGroup.mk_surjective.rootableBy _ fun _ _ => rfl
 #align quotient_group.rootable_by QuotientGroup.rootableBy
 #align quotient_add_group.divisible_by QuotientAddGroup.divisibleBy
 -/

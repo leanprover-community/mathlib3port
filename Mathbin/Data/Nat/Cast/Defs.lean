@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.nat.cast.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ universe u
 /-- The numeral `((0+1)+⋯)+1`. -/
 protected def Nat.unaryCast {R : Type u} [One R] [Zero R] [Add R] : ℕ → R
   | 0 => 0
-  | n + 1 => Nat.unaryCast n + 1
+  | n + 1 => nat.unary_cast n + 1
 #align nat.unary_cast Nat.unaryCast
 -/
 
@@ -183,7 +183,7 @@ theorem cast_add [AddMonoidWithOne R] (m n : ℕ) : ((m + n : ℕ) : R) = m + n 
 #print Nat.binCast /-
 /-- Computationally friendlier cast than `nat.unary_cast`, using binary representation. -/
 protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
-  @Nat.binaryRec (fun _ => R) 0 (fun odd k a => cond Odd (a + a + 1) (a + a)) n
+  @Nat.binaryRec (fun _ => R) 0 (fun odd k a => cond odd (a + a + 1) (a + a)) n
 #align nat.bin_cast Nat.binCast
 -/
 
@@ -197,10 +197,10 @@ Case conversion may be inaccurate. Consider using '#align nat.bin_cast_eq Nat.bi
 theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) :=
   by
   rw [Nat.binCast]
-  apply binary_rec _ _ n
-  · rw [binary_rec_zero, cast_zero]
+  apply binaryRec _ _ n
+  · rw [binaryRec_zero, cast_zero]
   · intro b k h
-    rw [binary_rec_eq, h]
+    rw [binaryRec_eq, h]
     · cases b <;> simp [bit, bit0, bit1]
     · simp
 #align nat.bin_cast_eq Nat.binCast_eq

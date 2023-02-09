@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.uniform
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,31 +88,31 @@ variable (t : Set α)
 
 @[simp]
 theorem toOuterMeasure_uniformOfFinset_apply :
-    (uniformOfFinset s hs).toOuterMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
+    (uniformOfFinset s hs).toOuterMeasure t = (s.filter (· ∈ t)).card / s.card :=
   calc
     (uniformOfFinset s hs).toOuterMeasure t = ∑' x, if x ∈ t then uniformOfFinset s hs x else 0 :=
       toOuterMeasure_apply (uniformOfFinset s hs) t
     _ = ∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_congr fun x => by
-        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, Ennreal.coe_nat]
-    _ = ∑ x in s.filterₓ (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
+        simp only [uniformOfFinset_apply, and_comm' (x ∈ s), ite_and, Ennreal.coe_nat]
+    _ = ∑ x in s.filter (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h)
-    _ = ∑ x in s.filterₓ (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
+    _ = ∑ x in s.filter (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
       Finset.sum_congr rfl fun x hx =>
         by
         let this : x ∈ s ∧ x ∈ t := by simpa using hx
         simp only [this, and_self_iff, if_true]
-    _ = (s.filterₓ (· ∈ t)).card / s.card :=
+    _ = (s.filter (· ∈ t)).card / s.card :=
       by
       have : (s.card : ℝ≥0∞) ≠ 0 :=
-        Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
+        Nat.cast_ne_zero.2 (hs.rec_on fun _ => Finset.card_ne_zero_of_mem)
       simp only [div_eq_mul_inv, Finset.sum_const, nsmul_eq_mul]
     
 #align pmf.to_outer_measure_uniform_of_finset_apply Pmf.toOuterMeasure_uniformOfFinset_apply
 
 @[simp]
 theorem toMeasure_uniformOfFinset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
-    (uniformOfFinset s hs).toMeasure t = (s.filterₓ (· ∈ t)).card / s.card :=
+    (uniformOfFinset s hs).toMeasure t = (s.filter (· ∈ t)).card / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_uniformOfFinset_apply hs t)
 #align pmf.to_measure_uniform_of_finset_apply Pmf.toMeasure_uniformOfFinset_apply
 
@@ -131,7 +131,7 @@ variable [Fintype α] [Nonempty α]
 
 @[simp]
 theorem uniformOfFintype_apply (a : α) : uniformOfFintype α a = (Fintype.card α)⁻¹ := by
-  simpa only [uniform_of_fintype, Finset.mem_univ, if_true, uniform_of_finset_apply]
+  simpa only [uniformOfFintype, Finset.mem_univ, if_true, uniformOfFinset_apply]
 #align pmf.uniform_of_fintype_apply Pmf.uniformOfFintype_apply
 
 @[simp]
@@ -149,12 +149,12 @@ variable (s : Set α)
 
 theorem toOuterMeasure_uniformOfFintype_apply :
     (uniformOfFintype α).toOuterMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [uniform_of_fintype]
+  simpa [uniformOfFintype]
 #align pmf.to_outer_measure_uniform_of_fintype_apply Pmf.toOuterMeasure_uniformOfFintype_apply
 
 theorem toMeasure_uniformOfFintype_apply [MeasurableSpace α] (hs : MeasurableSet s) :
     (uniformOfFintype α).toMeasure s = Fintype.card s / Fintype.card α := by
-  simpa [uniform_of_fintype, hs]
+  simpa [uniformOfFintype, hs]
 #align pmf.to_measure_uniform_of_fintype_apply Pmf.toMeasure_uniformOfFintype_apply
 
 end Measure
@@ -199,7 +199,7 @@ theorem mem_support_ofMultiset_iff (a : α) : a ∈ (ofMultiset s hs).support �
 #align pmf.mem_support_of_multiset_iff Pmf.mem_support_ofMultiset_iff
 
 theorem ofMultiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 := by
-  simpa only [of_multiset_apply, Ennreal.div_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,
+  simpa only [ofMultiset_apply, Ennreal.div_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,
     Ennreal.nat_ne_top, or_false_iff] using ha
 #align pmf.of_multiset_apply_of_not_mem Pmf.ofMultiset_apply_of_not_mem
 
@@ -209,16 +209,16 @@ variable (t : Set α)
 
 @[simp]
 theorem toOuterMeasure_ofMultiset_apply :
-    (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
+    (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filter (· ∈ t)).count x) / s.card :=
   by
-  rw [div_eq_mul_inv, ← Ennreal.tsum_mul_right, to_outer_measure_apply]
+  rw [div_eq_mul_inv, ← Ennreal.tsum_mul_right, toOuterMeasure_apply]
   refine' tsum_congr fun x => _
   by_cases hx : x ∈ t <;> simp [Set.indicator, hx, div_eq_mul_inv]
 #align pmf.to_outer_measure_of_multiset_apply Pmf.toOuterMeasure_ofMultiset_apply
 
 @[simp]
 theorem toMeasure_ofMultiset_apply [MeasurableSpace α] (ht : MeasurableSet t) :
-    (ofMultiset s hs).toMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
+    (ofMultiset s hs).toMeasure t = (∑' x, (s.filter (· ∈ t)).count x) / s.card :=
   (toMeasure_apply_eq_toOuterMeasure_apply _ t ht).trans (toOuterMeasure_ofMultiset_apply hs t)
 #align pmf.to_measure_of_multiset_apply Pmf.toMeasure_ofMultiset_apply
 

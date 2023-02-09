@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.strong_rank_condition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ open Polynomial Function Fin LinearMap
 /-- Any commutative ring satisfies the `strong_rank_condition`. -/
 instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R :=
   by
-  suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬injective f by
+  suffices ∀ n, ∀ f : (Fin (n + 1) → R) →ₗ[R] Fin n → R, ¬Injective f by
     rwa [strongRankCondition_iff_succ R]
   intro n f
   by_contra hf
@@ -51,16 +51,16 @@ instance (priority := 100) commRing_strongRankCondition : StrongRankCondition R 
   -- instances with unecessarily strong typeclasses on `R` and `M`.
   letI : Module.Finite R (Fin n.succ → R) := Module.Finite.pi
   letI : Module.Free R (Fin n.succ → R) := Module.Free.pi _ _
-  let g : (Fin (n + 1) → R) →ₗ[R] Fin (n + 1) → R := (extend_by_zero.linear_map R cast_succ).comp f
-  have hg : injective g := (extend_injective (RelEmbedding.injective cast_succ) 0).comp hf
-  have hnex : ¬∃ i : Fin n, cast_succ i = last n := fun ⟨i, hi⟩ => ne_of_lt (cast_succ_lt_last i) hi
+  let g : (Fin (n + 1) → R) →ₗ[R] Fin (n + 1) → R := (ExtendByZero.linearMap R castSucc).comp f
+  have hg : Injective g := (extend_injective (RelEmbedding.injective castSucc) 0).comp hf
+  have hnex : ¬∃ i : Fin n, castSucc i = last n := fun ⟨i, hi⟩ => ne_of_lt (castSucc_lt_last i) hi
   let a₀ := (minpoly R g).coeff 0
   have : a₀ ≠ 0 := minpoly_coeff_zero_of_injective hg
   have : a₀ = 0 :=
     by
     -- Evaluate `(minpoly R g) g` at the vector `(0,...,0,1)`
     have heval := LinearMap.congr_fun (minpoly.aeval R g) (Pi.single (Fin.last n) 1)
-    obtain ⟨P, hP⟩ := X_dvd_iff.2 (erase_same (minpoly R g) 0)
+    obtain ⟨P, hP⟩ := x_dvd_iff.2 (erase_same (minpoly R g) 0)
     rw [← monomial_add_erase (minpoly R g) 0, hP] at heval
     replace heval := congr_fun heval (Fin.last n)
     simpa [hnex] using heval

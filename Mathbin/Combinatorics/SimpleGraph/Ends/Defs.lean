@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anand Rao, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.ends.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,10 +49,10 @@ def ComponentCompl.supp (C : G.ComponentCompl K) : Set V :=
 theorem ComponentCompl.supp_injective :
     Function.Injective (ComponentCompl.supp : G.ComponentCompl K → Set V) :=
   by
-  refine' connected_component.ind₂ _
+  refine' ConnectedComponent.ind₂ _
   rintro ⟨v, hv⟩ ⟨w, hw⟩ h
-  simp only [Set.ext_iff, connected_component.eq, Set.mem_setOf_eq, component_compl.supp] at h⊢
-  exact ((h v).mp ⟨hv, reachable.refl _⟩).choose_spec
+  simp only [Set.ext_iff, ConnectedComponent.eq, Set.mem_setOf_eq, ComponentCompl.supp] at h⊢
+  exact ((h v).mp ⟨hv, Reachable.refl _⟩).choose_spec
 #align simple_graph.component_compl.supp_injective SimpleGraph.ComponentCompl.supp_injective
 
 theorem ComponentCompl.supp_inj {C D : G.ComponentCompl K} : C.supp = D.supp ↔ C = D :=
@@ -75,10 +75,10 @@ theorem componentComplMk_mem (G : SimpleGraph V) {v : V} (vK : v ∉ K) : v ∈ 
 #align simple_graph.component_compl_mk_mem SimpleGraph.componentComplMk_mem
 
 theorem componentComplMk_eq_of_adj (G : SimpleGraph V) {v w : V} (vK : v ∉ K) (wK : w ∉ K)
-    (a : G.adj v w) : G.componentComplMk vK = G.componentComplMk wK :=
+    (a : G.Adj v w) : G.componentComplMk vK = G.componentComplMk wK :=
   by
-  rw [connected_component.eq]
-  apply adj.reachable
+  rw [ConnectedComponent.eq]
+  apply Adj.reachable
   exact a
 #align simple_graph.component_compl_mk_eq_of_adj SimpleGraph.componentComplMk_eq_of_adj
 
@@ -88,8 +88,8 @@ namespace ComponentCompl
 for adjacent vertices.
 -/
 protected def lift {β : Sort _} (f : ∀ ⦃v⦄ (hv : v ∉ K), β)
-    (h : ∀ ⦃v w⦄ (hv : v ∉ K) (hw : w ∉ K) (a : G.adj v w), f hv = f hw) : G.ComponentCompl K → β :=
-  ConnectedComponent.lift (fun vv => f vv.Prop) fun v w p =>
+    (h : ∀ ⦃v w⦄ (hv : v ∉ K) (hw : w ∉ K) (a : G.Adj v w), f hv = f hw) : G.ComponentCompl K → β :=
+  ConnectedComponent.lift (fun vv => f vv.prop) fun v w p =>
     by
     induction' p with _ u v w a q ih
     · rintro _
@@ -101,7 +101,7 @@ protected def lift {β : Sort _} (f : ∀ ⦃v⦄ (hv : v ∉ K), β)
 protected theorem ind {β : G.ComponentCompl K → Prop}
     (f : ∀ ⦃v⦄ (hv : v ∉ K), β (G.componentComplMk hv)) : ∀ C : G.ComponentCompl K, β C :=
   by
-  apply connected_component.ind
+  apply ConnectedComponent.ind
   exact fun ⟨v, vnK⟩ => f vnK
 #align simple_graph.component_compl.ind SimpleGraph.ComponentCompl.ind
 
@@ -122,13 +122,13 @@ protected theorem nonempty (C : G.ComponentCompl K) : (C : Set V).Nonempty :=
 
 protected theorem exists_eq_mk (C : G.ComponentCompl K) :
     ∃ (v : _)(h : v ∉ K), G.componentComplMk h = C :=
-  C.Nonempty
+  C.nonempty
 #align simple_graph.component_compl.exists_eq_mk SimpleGraph.ComponentCompl.exists_eq_mk
 
 protected theorem disjoint_right (C : G.ComponentCompl K) : Disjoint K C :=
   by
   rw [Set.disjoint_iff]
-  exact fun v ⟨vK, vC⟩ => vC.some vK
+  exact fun v ⟨vK, vC⟩ => vC.choose vK
 #align simple_graph.component_compl.disjoint_right SimpleGraph.ComponentCompl.disjoint_right
 
 theorem not_mem_of_mem {C : G.ComponentCompl K} {c : V} (cC : c ∈ C) : c ∉ K := fun cK =>
@@ -140,16 +140,16 @@ protected theorem pairwise_disjoint :
   by
   rintro C D ne
   rw [Set.disjoint_iff]
-  exact fun u ⟨uC, uD⟩ => Ne (uC.some_spec.symm.trans uD.choose_spec)
+  exact fun u ⟨uC, uD⟩ => ne (uC.some_spec.symm.trans uD.choose_spec)
 #align simple_graph.component_compl.pairwise_disjoint SimpleGraph.ComponentCompl.pairwise_disjoint
 
 /-- Any vertex adjacent to a vertex of `C` and not lying in `K` must lie in `C`.
 -/
-theorem mem_of_adj : ∀ {C : G.ComponentCompl K} (c d : V), c ∈ C → d ∉ K → G.adj c d → d ∈ C :=
+theorem mem_of_adj : ∀ {C : G.ComponentCompl K} (c d : V), c ∈ C → d ∉ K → G.Adj c d → d ∈ C :=
   fun C c d ⟨cnK, h⟩ dnK cd =>
   ⟨dnK, by
-    rw [← h, connected_component.eq]
-    exact adj.reachable cd.symm⟩
+    rw [← h, ConnectedComponent.eq]
+    exact Adj.reachable cd.symm⟩
 #align simple_graph.component_compl.mem_of_adj SimpleGraph.ComponentCompl.mem_of_adj
 
 /--
@@ -157,9 +157,9 @@ Assuming `G` is preconnected and `K` not empty, given any connected component `C
 there exists a vertex `k ∈ K` adjacent to a vertex `v ∈ C`.
 -/
 theorem exists_adj_boundary_pair (Gc : G.Preconnected) (hK : K.Nonempty) :
-    ∀ C : G.ComponentCompl K, ∃ ck : V × V, ck.1 ∈ C ∧ ck.2 ∈ K ∧ G.adj ck.1 ck.2 :=
+    ∀ C : G.ComponentCompl K, ∃ ck : V × V, ck.1 ∈ C ∧ ck.2 ∈ K ∧ G.Adj ck.1 ck.2 :=
   by
-  refine' component_compl.ind fun v vnK => _
+  refine' ComponentCompl.ind fun v vnK => _
   let C : G.component_compl K := G.component_compl_mk vnK
   let dis := set.disjoint_iff.mp C.disjoint_right
   by_contra' h
@@ -215,14 +215,14 @@ theorem hom_eq_iff_not_disjoint (C : G.ComponentCompl L) (h : K ⊆ L) (D : G.Co
 theorem hom_refl (C : G.ComponentCompl L) : C.hom (subset_refl L) = C :=
   by
   change C.map _ = C
-  erw [induce_hom_id G (Lᶜ), connected_component.map_id]
+  erw [induceHom_id G (Lᶜ), ConnectedComponent.map_id]
 #align simple_graph.component_compl.hom_refl SimpleGraph.ComponentCompl.hom_refl
 
 theorem hom_trans (C : G.ComponentCompl L) (h : K ⊆ L) (h' : M ⊆ K) :
     C.hom (h'.trans h) = (C.hom h).hom h' :=
   by
   change C.map _ = (C.map _).map _
-  erw [connected_component.map_comp, induce_hom_comp]
+  erw [ConnectedComponent.map_comp, induceHom_comp]
   rfl
 #align simple_graph.component_compl.hom_trans SimpleGraph.ComponentCompl.hom_trans
 
@@ -242,14 +242,14 @@ theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
     constructor
     · rintro Cinf L h
       obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_to_set)
-      exact ⟨component_compl_mk _ vL, rfl⟩
+      exact ⟨componentComplMk _ vL, rfl⟩
     · rintro h Cfin
       obtain ⟨D, e⟩ := h (K ∪ Cfin.to_finset) (Finset.subset_union_left K Cfin.to_finset)
       obtain ⟨v, vD⟩ := D.nonempty
       let Ddis := D.disjoint_right
       simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
         Set.disjoint_iff] at Ddis
-      exact Ddis.right ⟨(component_compl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
+      exact Ddis.right ⟨(ComponentCompl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
 #align simple_graph.component_compl.infinite_iff_in_all_ranges SimpleGraph.ComponentCompl.infinite_iff_in_all_ranges
 
 end ComponentCompl
@@ -283,17 +283,16 @@ theorem end_hom_mk_of_mk {s} (sec : s ∈ G.end) {K L : (Finset V)ᵒᵖ} (h : L
     s K = G.componentComplMk (Set.not_mem_subset (le_of_op_hom h) vnL) :=
   by
   rw [← sec h, hs]
-  apply component_compl.hom_mk
+  apply ComponentCompl.hom_mk
 #align simple_graph.end_hom_mk_of_mk SimpleGraph.end_hom_mk_of_mk
 
 theorem infinite_iff_in_eventualRange {K : (Finset V)ᵒᵖ} (C : G.componentComplFunctor.obj K) :
     C.supp.Infinite ↔ C ∈ G.componentComplFunctor.eventualRange K :=
   by
   simp only [C.infinite_iff_in_all_ranges, CategoryTheory.Functor.eventualRange, Set.mem_interᵢ,
-    Set.mem_range, component_compl_functor_map]
+    Set.mem_range, componentComplFunctor_map]
   exact
-    ⟨fun h Lop KL => h Lop.unop (le_of_op_hom KL), fun h L KL =>
-      h (Opposite.op L) (op_hom_of_le KL)⟩
+    ⟨fun h Lop KL => h Lop.unop (le_of_op_hom KL), fun h L KL => h (Opposite.op L) (opHomOfLe KL)⟩
 #align simple_graph.infinite_iff_in_eventual_range SimpleGraph.infinite_iff_in_eventualRange
 
 end Ends

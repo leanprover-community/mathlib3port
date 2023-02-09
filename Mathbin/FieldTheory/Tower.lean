@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Alg
           Nat.not_prime_one ((Subalgebra.bot_eq_top_iff_finrank_eq_one.1 he).subst hp)⟩⟩
     eq_bot_or_eq_top := fun K =>
       by
-      haveI := finite_dimensional_of_finrank hp.pos
+      haveI := finiteDimensional_of_finrank hp.pos
       letI := divisionRingOfFiniteDimensional F K
       refine' (hp.eq_one_or_self_of_dvd _ ⟨_, (finrank_mul_finrank F K A).symm⟩).imp _ fun h => _
       · exact Subalgebra.eq_bot_of_finrank_one
@@ -137,7 +137,7 @@ instance linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGrou
     FiniteDimensional F (V →ₗ[F] W) :=
   let b := Basis.ofVectorSpace F V
   let c := Basis.ofVectorSpace F W
-  (Matrix.toLin b c).FiniteDimensional
+  (Matrix.toLin b c).finiteDimensional
 #align finite_dimensional.linear_map FiniteDimensional.linearMap
 
 theorem finrank_linearMap (F : Type u) (V : Type v) (W : Type w) [Field F] [AddCommGroup V]

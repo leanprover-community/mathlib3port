@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.apply
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,9 +37,9 @@ namespace Tactic
 or leave them in place. The `bool` values in `gs` indicates whether the goal is dependent or not. -/
 def reorderGoals {α} (gs : List (Bool × α)) : NewGoals → List α
   | new_goals.non_dep_first =>
-    let ⟨dep, non_dep⟩ := gs.partitionₓ (coe ∘ Prod.fst)
+    let ⟨dep, non_dep⟩ := gs.partition (coe ∘ Prod.fst)
     non_dep.map Prod.snd ++ dep.map Prod.snd
-  | new_goals.non_dep_only => (gs.filterₓ (coe ∘ not ∘ Prod.fst)).map Prod.snd
+  | new_goals.non_dep_only => (gs.filter (coe ∘ not ∘ Prod.fst)).map Prod.snd
   | new_goals.all => gs.map Prod.snd
 #align tactic.reorder_goals Tactic.reorderGoals
 
@@ -57,7 +57,7 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : ApplyCfg)
   whenM (has_opt_auto_param_inst_for_apply ms) do
     let gs ← get_goals
     ms fun m =>
-        whenM (not <$> is_assigned m.2) <|
+        mwhen (bnot <$> is_assigned m.2) <|
           ((set_goals [m.2] >> try apply_instance) >> when cfg (try apply_opt_param)) >>
             when cfg (try apply_auto_param)
     set_goals gs
@@ -72,8 +72,8 @@ private unsafe def retry_apply_aux :
         unify t tgt
         exact e
         let gs' ← get_goals
-        let r := reorderGoals gs.reverse cfg.NewGoals
-        set_goals (gs' ++ r Prod.snd)
+        let r := reorderGoals gs.reverse cfg.newGoals
+        set_goals (gs' ++ r prod.snd)
         return r) <|>
       do
       let expr.pi n bi d b ← infer_type e >>= whnf |

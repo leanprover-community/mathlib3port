@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Kevin Buzzard, Yaël Dillies, Eric Wieser
 
 ! This file was ported from Lean 3 source module order.sup_indep
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,10 +69,10 @@ variable {s t : Finset ι} {f : ι → α} {i : ι}
 
 instance [DecidableEq ι] [DecidableEq α] : Decidable (SupIndep s f) :=
   by
-  apply @Finset.decidableForallOfDecidableSubsets _ _ _ _
+  apply @finset.decidable_forall_of_decidable_subsets _ _ _ _
   intro t ht
-  apply @Finset.decidableDforallFinset _ _ _ _
-  exact fun i hi => @Implies.decidable _ _ _ (decidable_of_iff' (_ = ⊥) disjoint_iff)
+  apply @finset.decidable_dforall_finset _ _ _ _
+  exact fun i hi => @implies.decidable _ _ _ (decidable_of_iff' (_ = ⊥) disjoint_iff)
 
 /- warning: finset.sup_indep.subset -> Finset.SupIndep.subset is a dubious translation:
 lean 3 declaration is
@@ -119,7 +119,7 @@ theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDis
 #print Finset.supIndep_iff_disjoint_erase /-
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
 theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
-    s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.eraseₓ i).sup f) :=
+    s.SupIndep f ↔ ∀ i ∈ s, Disjoint (f i) ((s.erase i).sup f) :=
   ⟨fun hs i hi => hs (erase_subset _ _) hi (not_mem_erase _ _), fun hs t ht i hi hit =>
     (hs i hi).mono_right (sup_mono fun j hj => mem_erase.2 ⟨ne_of_mem_of_not_mem hj hit, ht hj⟩)⟩
 #align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_erase
@@ -129,9 +129,9 @@ theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
 @[simp]
 theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     ({i, j} : Finset ι).SupIndep f ↔ Disjoint (f i) (f j) :=
-  ⟨fun h => h.PairwiseDisjoint (by simp) (by simp) hij, fun h =>
+  ⟨fun h => h.pairwiseDisjoint (by simp) (by simp) hij, fun h =>
     by
-    rw [sup_indep_iff_disjoint_erase]
+    rw [supIndep_iff_disjoint_erase]
     intro k hk
     rw [Finset.mem_insert, Finset.mem_singleton] at hk
     obtain rfl | rfl := hk
@@ -139,7 +139,7 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
       rw [Finset.erase_insert, Finset.sup_singleton]
       simpa using hij
     · convert h.symm using 1
-      have : ({i, k} : Finset ι).eraseₓ k = {i} := by
+      have : ({i, k} : Finset ι).erase k = {i} := by
         ext
         rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_left, Ne.def,
           not_and_self_iff, or_false_iff, and_iff_right_of_imp]
@@ -152,8 +152,8 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
 #print Finset.supIndep_univ_bool /-
 theorem supIndep_univ_bool (f : Bool → α) :
     (Finset.univ : Finset Bool).SupIndep f ↔ Disjoint (f false) (f true) :=
-  haveI : tt ≠ ff := by simp only [Ne.def, not_false_iff]
-  (sup_indep_pair this).trans disjoint_comm
+  haveI : true ≠ false := by simp only [Ne.def, not_false_iff]
+  (supIndep_pair this).trans disjoint_comm
 #align finset.sup_indep_univ_bool Finset.supIndep_univ_bool
 -/
 
@@ -167,7 +167,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup_indep_univ_
 theorem supIndep_univ_fin_two (f : Fin 2 → α) :
     (Finset.univ : Finset (Fin 2)).SupIndep f ↔ Disjoint (f 0) (f 1) :=
   haveI : (0 : Fin 2) ≠ 1 := by simp
-  sup_indep_pair this
+  supIndep_pair this
 #align finset.sup_indep_univ_fin_two Finset.supIndep_univ_fin_two
 
 /- warning: finset.sup_indep.attach -> Finset.SupIndep.attach is a dubious translation:
@@ -232,8 +232,8 @@ theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
     (s.sup g).SupIndep f :=
   by
-  simp_rw [sup_indep_iff_pairwise_disjoint] at hs hg⊢
-  rw [sup_eq_bUnion, coe_bUnion]
+  simp_rw [supIndep_iff_pairwiseDisjoint] at hs hg⊢
+  rw [sup_eq_bunionᵢ, coe_bunionᵢ]
   exact hs.bUnion_finset hg
 #align finset.sup_indep.sup Finset.SupIndep.sup
 
@@ -247,7 +247,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup_indep.bUnio
 theorem SupIndep.bunionᵢ [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
     (s.bunionᵢ g).SupIndep f := by
-  rw [← sup_eq_bUnion]
+  rw [← sup_eq_bunionᵢ]
   exact hs.sup hg
 #align finset.sup_indep.bUnion Finset.SupIndep.bunionᵢ
 
@@ -329,7 +329,7 @@ theorem SetIndependent.disjoint_supₛ {x : α} {y : Set α} (hx : x ∈ s) (hy 
 
 omit hs
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.Independent /-
 /-- An independent indexed family of elements in a complete lattice is one in which every element
   is disjoint from the `supr` of the rest.
@@ -349,7 +349,7 @@ def Independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α)
 theorem setIndependent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
     SetIndependent s ↔ Independent (coe : s → α) :=
   by
-  simp_rw [independent, set_independent, SetCoe.forall, supₛ_eq_supᵢ]
+  simp_rw [Independent, SetIndependent, SetCoe.forall, supₛ_eq_supᵢ]
   refine' forall₂_congr fun a ha => _
   congr 2
   convert supr_subtype.symm
@@ -365,7 +365,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α _inst_1) ι (fun (j : ι) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α _inst_1) (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => t j))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def CompleteLattice.independent_defₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 #align complete_lattice.independent_def CompleteLattice.independent_def
@@ -388,7 +388,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] {t : ι -> α}, Iff (CompleteLattice.Independent.{succ u2, u1} ι α _inst_1 t) (forall (i : ι), Disjoint.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)) (BoundedOrder.toOrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))) (CompleteLattice.toBoundedOrder.{u1} α _inst_1)) (t i) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α _inst_1) (setOf.{u1} α (fun (a : α) => Exists.{succ u2} ι (fun (j : ι) => Exists.{0} (Ne.{succ u2} ι j i) (fun (H : Ne.{succ u2} ι j i) => Eq.{succ u1} α (t j) a))))))
 Case conversion may be inaccurate. Consider using '#align complete_lattice.independent_def'' CompleteLattice.independent_def''ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def'' :
     Independent t ↔ ∀ i, Disjoint (t i) (supₛ { a | ∃ (j : _)(_ : j ≠ i), t j = a }) :=
   by
@@ -456,8 +456,8 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
 #print CompleteLattice.Independent.setIndependent_range /-
 theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <| range t :=
   by
-  rw [set_independent_iff]
-  rw [← coe_comp_range_factorization t] at ht
+  rw [setIndependent_iff]
+  rw [← coe_comp_rangeFactorization t] at ht
   exact ht.comp' surjective_onto_range
 #align complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
 -/
@@ -486,7 +486,7 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
 theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k = j) :
     Independent t ↔ Disjoint (t i) (t j) := by
   constructor
-  · exact fun h => h.PairwiseDisjoint hij
+  · exact fun h => h.pairwiseDisjoint hij
   · rintro h k
     obtain rfl | rfl := huniv k
     · refine' h.mono_right (supᵢ_le fun i => supᵢ_le fun hi => Eq.le _)
@@ -506,7 +506,7 @@ Case conversion may be inaccurate. Consider using '#align complete_lattice.indep
 another indepedendent indexed family. -/
 theorem Independent.map_orderIso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β]
     (f : α ≃o β) {a : ι → α} (ha : Independent a) : Independent (f ∘ a) := fun i =>
-  ((ha i).map_orderIso f).mono_right (f.Monotone.le_map_supᵢ₂ _)
+  ((ha i).map_orderIso f).mono_right (f.monotone.le_map_supᵢ₂ _)
 #align complete_lattice.independent.map_order_iso CompleteLattice.Independent.map_orderIso
 
 /- warning: complete_lattice.independent_map_order_iso_iff -> CompleteLattice.independent_map_orderIso_iff is a dubious translation:
@@ -554,7 +554,7 @@ theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finse
     congr 2
     refine' supr_subtype.trans _
     congr 1 with x
-    simp [supᵢ_and, @supᵢ_comm _ (x ∈ s)]
+    simp [supᵢ_and, @supr_comm _ (x ∈ s)]
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
 
 /- warning: complete_lattice.independent.sup_indep -> CompleteLattice.Independent.supIndep is a dubious translation:

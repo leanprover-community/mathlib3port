@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.push_neg
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ private unsafe
             e
             with
             |
-                q( ¬ $ ( Ne ) )
+                q( ¬ $ ( ne ) )
                 =>
                 do
-                  let ne ← whnf_reducible Ne
+                  let ne ← whnf_reducible ne
                     match
-                      Ne
+                      ne
                       with
                       |
                           q( ¬ $ ( a ) )
@@ -120,7 +120,7 @@ private unsafe
                           do
                             let distrib ← get_bool_option `trace.push_neg.use_distrib ff
                               if
-                                Distrib
+                                distrib
                                 then
                                 do
                                   let pr ← mk_app ` ` not_and_distrib_eq [ a , b ]
@@ -244,8 +244,8 @@ local postfix:1024 "*" => many
 
 open PushNeg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Push negations in the goal of some assumption.
 
 For instance, a hypothesis `h : ¬ ∀ x, ∃ y, x ≤ y` will be transformed by `push_neg at h` into
@@ -275,7 +275,7 @@ unsafe def tactic.interactive.push_neg : parse location → tactic Unit
         push_neg_at_hyp h
         try <|
             interactive.simp_core { eta := ff } failed tt [simp_arg_type.expr ``(PushNeg.not_eq)] []
-              (Interactive.Loc.ns [some h])
+              (interactive.loc.ns [some h])
       | none => do
         push_neg_at_goal
         try sorry
@@ -390,7 +390,7 @@ unsafe def push_neg_cmd (_ : parse <| tk "#push_neg") : lean.parser Unit := do
               ← normalize_negations e
             /- Run a `simp` to change any `¬ a = b` to `a ≠ b`; report the result, or, if the `simp` fails
                       (because no `¬ a = b` appear in the expression), return what `push_neg` gave. -/
-                  Prod.fst <$>
+                  prod.fst <$>
                   e_neg { eta := ff } failed tt [] [simp_arg_type.expr ``(PushNeg.not_eq)] <|>
                 pure e_neg)
           ts

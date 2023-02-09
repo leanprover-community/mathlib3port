@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.units.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.mul_left_bijective Units.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem mulLeft_bijective (a : Mˣ) : Function.Bijective ((· * ·) a : M → M) :=
-  (mulLeft a).Bijective
+  (mulLeft a).bijective
 #align units.mul_left_bijective Units.mulLeft_bijective
 #align add_units.add_left_bijective AddUnits.addLeft_bijective
 
@@ -154,7 +154,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.mul_right_bijective Units.mulRight_bijectiveₓ'. -/
 @[to_additive]
 theorem mulRight_bijective (a : Mˣ) : Function.Bijective ((· * a) : M → M) :=
-  (mulRight a).Bijective
+  (mulRight a).bijective
 #align units.mul_right_bijective Units.mulRight_bijective
 #align add_units.add_right_bijective AddUnits.addRight_bijective
 
@@ -213,7 +213,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.mul_left_bijective Group.mulLeft_bijectiveₓ'. -/
 @[to_additive]
 theorem Group.mulLeft_bijective (a : G) : Function.Bijective ((· * ·) a) :=
-  (Equiv.mulLeft a).Bijective
+  (Equiv.mulLeft a).bijective
 #align group.mul_left_bijective Group.mulLeft_bijective
 #align add_group.add_left_bijective AddGroup.addLeft_bijective
 
@@ -264,7 +264,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align group.mul_right_bijective Group.mulRight_bijectiveₓ'. -/
 @[to_additive]
 theorem Group.mulRight_bijective (a : G) : Function.Bijective (· * a) :=
-  (Equiv.mulRight a).Bijective
+  (Equiv.mulRight a).bijective
 #align group.mul_right_bijective Group.mulRight_bijective
 #align add_group.add_right_bijective AddGroup.addRight_bijective
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ess_sup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ variable [ConditionallyCompleteLinearOrder β]
 theorem essSup_eq_infₛ {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
     essSup f μ = infₛ { a | μ { x | a < f x } = 0 } :=
   by
-  dsimp [essSup, limsup, Limsup]
+  dsimp [essSup, limsup, limsupₛ]
   congr
   ext a
   simp [eventually_map, ae_iff]
@@ -85,7 +85,7 @@ variable [CompleteLattice β]
 
 @[simp]
 theorem essSup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measure α) = ⊥ :=
-  le_bot_iff.mp (infₛ_le (by simp [Set.mem_setOf_eq, eventually_le, ae_iff]))
+  le_bot_iff.mp (infₛ_le (by simp [Set.mem_setOf_eq, EventuallyLe, ae_iff]))
 #align ess_sup_measure_zero essSup_measure_zero
 
 @[simp]
@@ -102,7 +102,7 @@ theorem essInf_mono_ae {f g : α → β} (hfg : f ≤ᵐ[μ] g) : essInf f μ �
 #align ess_inf_mono_ae essInf_mono_ae
 
 theorem essSup_const (c : β) (hμ : μ ≠ 0) : essSup (fun x : α => c) μ = c :=
-  haveI hμ_ne_bot : μ.ae.ne_bot := by rwa [ne_bot_iff, Ne.def, ae_eq_bot]
+  haveI hμ_ne_bot : μ.ae.ne_bot := by rwa [neBot_iff, Ne.def, ae_eq_bot]
   limsup_const c
 #align ess_sup_const essSup_const
 
@@ -190,7 +190,7 @@ theorem essSup_comp_le_essSup_map_measure (hf : AeMeasurable f μ) :
     essSup (g ∘ f) μ ≤ essSup g (Measure.map f μ) :=
   by
   refine'
-    Limsup_le_Limsup_of_le (fun t => _)
+    limsupₛ_le_limsupₛ_of_le (fun t => _)
       (by
         run_tac
           is_bounded_default)
@@ -212,7 +212,7 @@ theorem MeasurableEmbedding.essSup_map_measure (hf : MeasurableEmbedding f) :
   by
   refine' le_antisymm _ (essSup_comp_le_essSup_map_measure hf.measurable.ae_measurable)
   refine'
-    Limsup_le_Limsup
+    limsupₛ_le_limsupₛ
       (by
         run_tac
           is_bounded_default)
@@ -234,7 +234,7 @@ theorem essSup_map_measure_of_measurable (hg : Measurable g) (hf : AeMeasurable 
   by
   refine' le_antisymm _ (essSup_comp_le_essSup_map_measure hf)
   refine'
-    Limsup_le_Limsup
+    limsupₛ_le_limsupₛ
       (by
         run_tac
           is_bounded_default)
@@ -253,7 +253,7 @@ theorem essSup_map_measure (hg : AeMeasurable g (Measure.map f μ)) (hf : AeMeas
   rw [essSup_congr_ae hg.ae_eq_mk, essSup_map_measure_of_measurable hg.measurable_mk hf]
   refine' essSup_congr_ae _
   have h_eq := ae_of_ae_map hf hg.ae_eq_mk
-  rw [← eventually_eq] at h_eq
+  rw [← EventuallyEq] at h_eq
   exact h_eq.symm
 #align ess_sup_map_measure essSup_map_measure
 
@@ -285,7 +285,7 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
   by
   refine'
     le_antisymm _
-      (Limsup_le_Limsup_of_le (map_restrict_ae_le_map_indicator_ae hs)
+      (limsupₛ_le_limsupₛ_of_le (map_restrict_ae_le_map_indicator_ae hs)
         (by
           run_tac
             is_bounded_default)
@@ -293,7 +293,7 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
           run_tac
             is_bounded_default))
   refine'
-    Limsup_le_Limsup
+    limsupₛ_le_limsupₛ
       (by
         run_tac
           is_bounded_default)
@@ -306,9 +306,9 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
   have hc : 0 ≤ c := by
     rsuffices ⟨x, hx⟩ : ∃ x, 0 ≤ f x ∧ f x ≤ c
     exact hx.1.trans hx.2
-    refine' frequently.exists _
+    refine' Frequently.exists _
     · exact μ.ae
-    rw [eventually_le, ae_restrict_iff' hs] at hf
+    rw [EventuallyLe, ae_restrict_iff' hs] at hf
     have hs' : ∃ᵐ x ∂μ, x ∈ s := by
       contrapose! hs_not_null
       rw [not_frequently, ae_iff] at hs_not_null

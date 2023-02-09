@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Siddhartha Prasad, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.kleene
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -366,7 +366,7 @@ protected def idemSemiring [IdemSemiring α] [Zero β] [One β] [Add β] [Mul β
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (bot : f ⊥ = ⊥) :
     IdemSemiring β :=
-  { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.SemilatticeSup _ sup,
+  { hf.semiring f zero one add mul nsmul npow nat_cast, hf.semilatticeSup _ sup,
     ‹Bot β› with
     add_eq_sup := fun a b => hf <| by erw [sup, add, add_eq_sup]
     bot := ⊥
@@ -382,8 +382,8 @@ protected def idemCommSemiring [IdemCommSemiring α] [Zero β] [One β] [Add β]
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (bot : f ⊥ = ⊥) :
     IdemCommSemiring β :=
-  { hf.CommSemiring f zero one add mul nsmul npow nat_cast,
-    hf.IdemSemiring f zero one add mul nsmul npow nat_cast sup bot with }
+  { hf.commSemiring f zero one add mul nsmul npow nat_cast,
+    hf.idemSemiring f zero one add mul nsmul npow nat_cast sup bot with }
 #align function.injective.idem_comm_semiring Function.Injective.idemCommSemiring
 
 -- See note [reducible non-instances]
@@ -395,7 +395,7 @@ protected def kleeneAlgebra [KleeneAlgebra α] [Zero β] [One β] [Add β] [Mul 
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) (npow : ∀ (x) (n : ℕ), f (x ^ n) = f x ^ n)
     (nat_cast : ∀ n : ℕ, f n = n) (sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (bot : f ⊥ = ⊥)
     (kstar : ∀ a, f a∗ = (f a)∗) : KleeneAlgebra β :=
-  { hf.IdemSemiring f zero one add mul nsmul npow nat_cast sup bot,
+  { hf.idemSemiring f zero one add mul nsmul npow nat_cast sup bot,
     ‹HasKstar
         β› with
     one_le_kstar := fun a =>

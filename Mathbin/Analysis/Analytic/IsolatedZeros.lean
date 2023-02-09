@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.analytic.isolated_zeros
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,14 +57,14 @@ theorem exists_hasSum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m
   obtain rfl | hn := n.eq_zero_or_pos
   · simpa
   by_cases h : z = 0
-  · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using has_sum_at_zero a)
-    exact ⟨a n, by simp [h, hn, this], by simpa [h] using has_sum_at_zero fun m => a (m + n)⟩
+  · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using hasSum_at_zero a)
+    exact ⟨a n, by simp [h, hn, this], by simpa [h] using hasSum_at_zero fun m => a (m + n)⟩
   · refine' ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul] , _⟩
     have h1 : (∑ i in Finset.range n, z ^ i • a i) = 0 :=
       Finset.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
     have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by
       simpa [h1] using (hasSum_nat_add_iff' n).mpr hs
-    convert @HasSum.const_smul E ℕ 𝕜 _ _ _ _ _ _ _ (z⁻¹ ^ n) h2
+    convert h2.const_smul (z⁻¹ ^ n)
     · field_simp [pow_add, smul_smul]
     · simp only [inv_pow]
 #align has_sum.exists_has_sum_smul_of_apply_eq_zero HasSum.exists_hasSum_smul_of_apply_eq_zero
@@ -85,7 +85,7 @@ theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) :
   · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
     suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
       simpa [dslope, slope, h, smul_smul, hxx] using this
-    · simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul
+    · simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul x⁻¹
 #align has_fpower_series_at.has_fpower_series_dslope_fslope HasFpowerSeriesAt.hasFpowerSeriesDslopeFslope
 
 theorem hasFpowerSeriesIterateDslopeFslope (n : ℕ) (hp : HasFpowerSeriesAt f p z₀) :
@@ -93,20 +93,20 @@ theorem hasFpowerSeriesIterateDslopeFslope (n : ℕ) (hp : HasFpowerSeriesAt f p
   by
   induction' n with n ih generalizing f p
   · exact hp
-  · simpa using ih (has_fpower_series_dslope_fslope hp)
+  · simpa using ih (hasFpowerSeriesDslopeFslope hp)
 #align has_fpower_series_at.has_fpower_series_iterate_dslope_fslope HasFpowerSeriesAt.hasFpowerSeriesIterateDslopeFslope
 
 theorem iterate_dslope_fslope_ne_zero (hp : HasFpowerSeriesAt f p z₀) (h : p ≠ 0) :
     (swap dslope z₀^[p.order]) f z₀ ≠ 0 :=
   by
-  rw [← coeff_zero (has_fpower_series_iterate_dslope_fslope p.order hp) 1]
+  rw [← coeff_zero (hasFpowerSeriesIterateDslopeFslope p.order hp) 1]
   simpa [coeff_eq_zero] using apply_order_ne_zero h
 #align has_fpower_series_at.iterate_dslope_fslope_ne_zero HasFpowerSeriesAt.iterate_dslope_fslope_ne_zero
 
 theorem eq_pow_order_mul_iterate_dslope (hp : HasFpowerSeriesAt f p z₀) :
     ∀ᶠ z in 𝓝 z₀, f z = (z - z₀) ^ p.order • (swap dslope z₀^[p.order]) f z :=
   by
-  have hq := has_fpower_series_at_iff'.mp (has_fpower_series_iterate_dslope_fslope p.order hp)
+  have hq := has_fpower_series_at_iff'.mp (hasFpowerSeriesIterateDslopeFslope p.order hp)
   filter_upwards [hq, has_fpower_series_at_iff'.mp hp]with x hx1 hx2
   have : ∀ k < p.order, p.coeff k = 0 := fun k hk => by
     simpa [coeff_eq_zero] using apply_eq_zero_of_lt_order hk
@@ -119,7 +119,7 @@ theorem eq_pow_order_mul_iterate_dslope (hp : HasFpowerSeriesAt f p z₀) :
 theorem locally_ne_zero (hp : HasFpowerSeriesAt f p z₀) (h : p ≠ 0) : ∀ᶠ z in 𝓝[≠] z₀, f z ≠ 0 :=
   by
   rw [eventually_nhdsWithin_iff]
-  have h2 := (has_fpower_series_iterate_dslope_fslope p.order hp).ContinuousAt
+  have h2 := (hasFpowerSeriesIterateDslopeFslope p.order hp).continuousAt
   have h3 := h2.eventually_ne (iterate_dslope_fslope_ne_zero hp h)
   filter_upwards [eq_pow_order_mul_iterate_dslope hp, h3]with z e1 e2 e3
   simpa [e1, e2, e3] using pow_ne_zero p.order (sub_ne_zero.mpr e3)
@@ -153,7 +153,7 @@ theorem eventually_eq_or_eventually_ne (hf : AnalyticAt 𝕜 f z₀) (hg : Analy
 theorem frequently_zero_iff_eventually_zero {f : 𝕜 → E} {w : 𝕜} (hf : AnalyticAt 𝕜 f w) :
     (∃ᶠ z in 𝓝[≠] w, f z = 0) ↔ ∀ᶠ z in 𝓝 w, f z = 0 :=
   ⟨hf.eventually_eq_zero_or_eventually_ne_zero.resolve_right, fun h =>
-    (h.filter_mono nhdsWithin_le_nhds).Frequently⟩
+    (h.filter_mono nhdsWithin_le_nhds).frequently⟩
 #align analytic_at.frequently_zero_iff_eventually_zero AnalyticAt.frequently_zero_iff_eventually_zero
 
 theorem frequently_eq_iff_eventually_eq (hf : AnalyticAt 𝕜 f z₀) (hg : AnalyticAt 𝕜 g z₀) :

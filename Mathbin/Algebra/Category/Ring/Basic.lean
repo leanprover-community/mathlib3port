@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,9 @@ abbrev AssocRingHom (M N : Type _) [Semiring M] [Semiring N] :=
 #align SemiRing.assoc_ring_hom SemiRing.AssocRingHom
 
 instance bundledHom : BundledHom AssocRingHom :=
-  ⟨fun M N [Semiring M] [Semiring N] => @RingHom.toFun M N _ _, fun M [Semiring M] =>
-    @RingHom.id M _, fun M N P [Semiring M] [Semiring N] [Semiring P] => @RingHom.comp M N P _ _ _,
-    fun M N [Semiring M] [Semiring N] => @RingHom.coe_inj M N _ _⟩
+  ⟨fun M N [Semiring M] [Semiring N] => @ring_hom.to_fun M N _ _, fun M [Semiring M] =>
+    @ring_hom.id M _, fun M N P [Semiring M] [Semiring N] [Semiring P] =>
+    @ring_hom.comp M N P _ _ _, fun M N [Semiring M] [Semiring N] => @ring_hom.coe_inj M N _ _⟩
 #align SemiRing.bundled_hom SemiRing.bundledHom
 
 deriving instance LargeCategory, ConcreteCategory for SemiRing
@@ -292,7 +292,7 @@ namespace CategoryTheory.Iso
 /-- Build a `ring_equiv` from an isomorphism in the category `Ring`. -/
 def ringIsoToRingEquiv {X Y : RingCat} (i : X ≅ Y) : X ≃+* Y
     where
-  toFun := i.Hom
+  toFun := i.hom
   invFun := i.inv
   left_inv := by tidy
   right_inv := by tidy
@@ -303,7 +303,7 @@ def ringIsoToRingEquiv {X Y : RingCat} (i : X ≅ Y) : X ≃+* Y
 /-- Build a `ring_equiv` from an isomorphism in the category `CommRing`. -/
 def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) : X ≃+* Y
     where
-  toFun := i.Hom
+  toFun := i.hom
   invFun := i.inv
   left_inv := by tidy
   right_inv := by tidy
@@ -313,7 +313,7 @@ def commRingIsoToRingEquiv {X Y : CommRingCat} (i : X ≅ Y) : X ≃+* Y
 
 @[simp]
 theorem commRingIsoToRingEquiv_toRingHom {X Y : CommRingCat} (i : X ≅ Y) :
-    i.commRingIsoToRingEquiv.toRingHom = i.Hom :=
+    i.commRingIsoToRingEquiv.toRingHom = i.hom :=
   by
   ext
   rfl
@@ -348,17 +348,17 @@ def ringEquivIsoCommRingIso {X Y : Type u} [CommRing X] [CommRing Y] :
 instance RingCat.forget_reflects_isos : ReflectsIsomorphisms (forget RingCat.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget RingCat).map f)
+    let i := asIso ((forget RingCat).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Ring_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Ring_iso).1⟩
 #align Ring.forget_reflects_isos RingCat.forget_reflects_isos
 
 instance CommRingCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommRingCat.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget CommRingCat).map f)
+    let i := asIso ((forget CommRingCat).map f)
     let e : X ≃+* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_CommRing_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_CommRing_iso).1⟩
 #align CommRing.forget_reflects_isos CommRingCat.forget_reflects_isos
 
 theorem CommRingCat.comp_eq_ring_hom_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :

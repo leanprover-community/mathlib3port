@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Louis Carlin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.euclidean_domain.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,9 +81,9 @@ universe u
 @[protect_proj without mul_left_not_lt r_wellFounded]
 class EuclideanDomain (R : Type u) extends CommRing R, Nontrivial R where
   Quotient : R → R → R
-  quotient_zero : ∀ a, Quotient a 0 = 0
+  quotient_zero : ∀ a, quotient a 0 = 0
   remainder : R → R → R
-  quotient_mul_add_remainder_eq : ∀ a b, b * Quotient a b + remainder a b = a
+  quotient_mul_add_remainder_eq : ∀ a b, b * quotient a b + remainder a b = a
   R : R → R → Prop
   r_wellFounded : WellFounded r
   remainder_lt : ∀ (a) {b}, b ≠ 0 → r (remainder a b) b
@@ -253,7 +253,7 @@ theorem GCD.induction {P : R → R → Prop} :
     else
       have h := mod_lt b a0
       H1 _ _ a0 (gcd.induction (b % a) a H0 H1)termination_by'
-  ⟨_, r_well_founded⟩
+  ⟨_, r_wellFounded⟩
 #align euclidean_domain.gcd.induction EuclideanDomain.GCD.induction
 
 end
@@ -271,7 +271,7 @@ def gcd : R → R → R
     else
       have h := mod_lt b a0
       gcd (b % a) a termination_by'
-  ⟨_, r_well_founded⟩
+  ⟨_, r_wellFounded⟩
 #align euclidean_domain.gcd EuclideanDomain.gcd
 -/
 
@@ -305,7 +305,7 @@ def xgcdAux : R → R → R → R → R → R → R × R × R
       have : r' % r ≺ r := mod_lt _ hr
       let q := r' / r
       xgcd_aux (r' % r) (s' - q * s) (t' - q * t) r s t termination_by'
-  ⟨_, r_well_founded⟩
+  ⟨_, r_wellFounded⟩
 #align euclidean_domain.xgcd_aux EuclideanDomain.xgcdAux
 -/
 
@@ -333,7 +333,7 @@ theorem xgcdAux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
   by
   conv =>
     lhs
-    rw [xgcd_aux]
+    rw [xgcdAux]
   exact if_neg h
 #align euclidean_domain.xgcd_aux_rec EuclideanDomain.xgcdAux_rec
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.denumerable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem decode_eq_ofNat (α) [Denumerable α] (n : ℕ) : decode α n = some (of
 
 #print Denumerable.ofNat_of_decode /-
 @[simp]
-theorem ofNat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
+theorem ofNat_of_decode {n b} (h : decode to_iff n = some b) : ofNat α n = b :=
   Option.some.inj <| (decode_eq_ofNat _ _).symm.trans h
 #align denumerable.of_nat_of_decode Denumerable.ofNat_of_decode
 -/
@@ -81,7 +81,7 @@ theorem ofNat_of_decode {n b} (h : decode α n = some b) : ofNat α n = b :=
 theorem encode_ofNat (n) : encode (ofNat α n) = n :=
   by
   let ⟨a, h, e⟩ := decode_inv n
-  rwa [of_nat_of_decode h]
+  rwa [ofNat_of_decode h]
 #align denumerable.encode_of_nat Denumerable.encode_ofNat
 -/
 
@@ -101,7 +101,7 @@ def eqv (α) [Denumerable α] : α ≃ ℕ :=
 
 -- See Note [lower instance priority]
 instance (priority := 100) : Infinite α :=
-  Infinite.of_surjective _ (eqv α).Surjective
+  Infinite.of_surjective _ (eqv α).surjective
 
 #print Denumerable.mk' /-
 /-- A type equivalent to `ℕ` is denumerable. -/
@@ -130,7 +130,7 @@ Case conversion may be inaccurate. Consider using '#align denumerable.of_equiv_o
 @[simp]
 theorem ofEquiv_ofNat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
     @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
-  apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
+  apply ofNat_of_decode <;> show Option.map _ _ = _ <;> simp
 #align denumerable.of_equiv_of_nat Denumerable.ofEquiv_ofNat
 
 #print Denumerable.equiv₂ /-
@@ -160,9 +160,9 @@ instance option : Denumerable (Option α) :=
     cases n
     · refine' ⟨none, _, encode_none⟩
       rw [decode_option_zero, Option.mem_def]
-    refine' ⟨some (of_nat α n), _, _⟩
-    · rw [decode_option_succ, decode_eq_of_nat, Option.map_some', Option.mem_def]
-    rw [encode_some, encode_of_nat]⟩
+    refine' ⟨some (ofNat α n), _, _⟩
+    · rw [decode_option_succ, decode_eq_ofNat, Option.map_some', Option.mem_def]
+    rw [encode_some, encode_ofNat]⟩
 #align denumerable.option Denumerable.option
 -/
 
@@ -171,8 +171,8 @@ instance option : Denumerable (Option α) :=
 instance sum : Denumerable (Sum α β) :=
   ⟨fun n =>
     by
-    suffices ∃ a ∈ @decode_sum α β _ _ n, encode_sum a = bit (bodd n) (div2 n) by simpa [bit_decomp]
-    simp [decode_sum] <;> cases bodd n <;> simp [decode_sum, bit, encode_sum]⟩
+    suffices ∃ a ∈ @decode_sum α β _ _ n, encodeSum a = bit (bodd n) (div2 n) by simpa [bit_decomp]
+    simp [decodeSum] <;> cases bodd n <;> simp [decodeSum, bit, encodeSum]⟩
 #align denumerable.sum Denumerable.sum
 -/
 
@@ -183,7 +183,7 @@ variable {γ : α → Type _} [∀ a, Denumerable (γ a)]
 #print Denumerable.sigma /-
 /-- A denumerable collection of denumerable types is denumerable. -/
 instance sigma : Denumerable (Sigma γ) :=
-  ⟨fun n => by simp [decode_sigma] <;> exact ⟨_, _, ⟨rfl, HEq.rfl⟩, by simp⟩⟩
+  ⟨fun n => by simp [decodeSigma] <;> exact ⟨_, _, ⟨rfl, HEq.rfl⟩, by simp⟩⟩
 #align denumerable.sigma Denumerable.sigma
 -/
 
@@ -196,7 +196,7 @@ Case conversion may be inaccurate. Consider using '#align denumerable.sigma_of_n
 @[simp]
 theorem sigma_ofNat_val (n : ℕ) :
     ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
-  Option.some.inj <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
+  Option.some.inj <| by rw [← decode_eq_ofNat, decode_sigma_val] <;> simp <;> rfl
 #align denumerable.sigma_of_nat_val Denumerable.sigma_ofNat_val
 
 end Sigma
@@ -281,7 +281,7 @@ theorem exists_succ (x : s) : ∃ n, ↑x + n + 1 ∈ s :=
     have : ∀ (a : ℕ) (ha : a ∈ s), a < succ x := fun a ha =>
       lt_of_not_ge fun hax => h ⟨a - (x + 1), by rwa [add_right_comm, add_tsub_cancel_of_le hax]⟩
     Fintype.false
-      ⟨(((Multiset.range (succ x)).filterₓ (· ∈ s)).pmap
+      ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap
             (fun (y : ℕ) (hy : y ∈ s) => Subtype.mk y hy)
             (by simp [-Multiset.range_succ])).toFinset,
         by simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ] ⟩
@@ -352,7 +352,7 @@ theorem ofNat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = 
   | x => fun hx =>
     by
     let t : List s :=
-      ((List.range x).filterₓ fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
+      ((List.range x).filter fun y => y ∈ s).pmap (fun (y : ℕ) (hy : y ∈ s) => ⟨y, hy⟩) (by simp)
     have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ := by
       simp [List.mem_filter, Subtype.ext_iff_val, t] <;> intros <;> rfl
     have wf : ∀ m : s, List.maximum t = m → ↑m < x := fun m hmax => by
@@ -367,8 +367,8 @@ theorem ofNat_surjective_aux : ∀ {x : ℕ} (hx : x ∈ s), ∃ n, ofNat s n = 
     cases' of_nat_surjective_aux m.2 with a ha
     exact
       ⟨a + 1,
-        le_antisymm (by rw [of_nat] <;> exact succ_le_of_lt (by rw [ha] <;> exact wf _ hmax)) <| by
-          rw [of_nat] <;>
+        le_antisymm (by rw [ofNat] <;> exact succ_le_of_lt (by rw [ha] <;> exact wf _ hmax)) <| by
+          rw [ofNat] <;>
             exact
               le_succ_of_forall_lt_le fun z hz => by
                 rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩decreasing_by
@@ -391,7 +391,7 @@ theorem ofNat_range : Set.range (ofNat s) = Set.univ :=
 #print Nat.Subtype.coe_comp_ofNat_range /-
 @[simp]
 theorem coe_comp_ofNat_range : Set.range (coe ∘ ofNat s : ℕ → ℕ) = s := by
-  rw [Set.range_comp coe, of_nat_range, Set.image_univ, Subtype.range_coe]
+  rw [Set.range_comp coe, ofNat_range, Set.image_univ, Subtype.range_coe]
 #align nat.subtype.coe_comp_of_nat_range Nat.Subtype.coe_comp_ofNat_range
 -/
 
@@ -399,24 +399,24 @@ private def to_fun_aux (x : s) : ℕ :=
   (List.range x).countp (· ∈ s)
 #align nat.subtype.to_fun_aux nat.subtype.to_fun_aux
 
-private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filterₓ (· ∈ s)).card := by
-  rw [to_fun_aux, List.countp_eq_length_filter] <;> rfl
+private theorem to_fun_aux_eq (x : s) : toFunAux x = ((Finset.range x).filter (· ∈ s)).card := by
+  rw [toFunAux, List.countp_eq_length_filter] <;> rfl
 #align nat.subtype.to_fun_aux_eq nat.subtype.to_fun_aux_eq
 
 open Finset
 
 private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
   | 0 => by
-    rw [to_fun_aux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
+    rw [toFunAux_eq, card_eq_zero, eq_empty_iff_forall_not_mem]
     rintro n hn
-    rw [mem_filter, of_nat, mem_range] at hn
+    rw [mem_filter, ofNat, mem_range] at hn
     exact bot_le.not_lt (show (⟨n, hn.2⟩ : s) < ⊥ from hn.1)
   | n + 1 => by
     have ih : toFunAux (ofNat s n) = n := right_inverse_aux n
-    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filterₓ (· ∈ s) := by simp
+    have h₁ : (ofNat s n : ℕ) ∉ (range (ofNat s n)).filter (· ∈ s) := by simp
     have h₂ :
-      (range (succ (ofNat s n))).filterₓ (· ∈ s) =
-        insert (ofNat s n) ((range (ofNat s n)).filterₓ (· ∈ s)) :=
+      (range (succ (ofNat s n))).filter (· ∈ s) =
+        insert (ofNat s n) ((range (ofNat s n)).filter (· ∈ s)) :=
       by
       simp only [Finset.ext_iff, mem_insert, mem_range, mem_filter]
       exact fun m =>
@@ -424,9 +424,9 @@ private theorem right_inverse_aux : ∀ n, toFunAux (ofNat s n) = n
           simp only [h.2, and_true_iff] <;>
             exact Or.symm (lt_or_eq_of_le ((@lt_succ_iff_le _ _ _ ⟨m, h.2⟩ _).1 h.1)),
           fun h =>
-          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (of_nat s n).Prop⟩) fun h =>
+          h.elim (fun h => h.symm ▸ ⟨lt_succ_self _, (ofNat s n).prop⟩) fun h =>
             ⟨h.1.trans (lt_succ_self _), h.2⟩⟩
-    simp only [to_fun_aux_eq, of_nat, range_succ] at ih⊢
+    simp only [toFunAux_eq, ofNat, range_succ] at ih⊢
     conv =>
       rhs
       rw [← ih, ← card_insert_of_not_mem h₁, ← h₂]
@@ -455,9 +455,9 @@ def ofEncodableOfInfinite (α : Type _) [Encodable α] [Infinite α] : Denumerab
   by
   letI := @decidable_range_encode α _ <;>
     letI : Infinite (Set.range (@encode α _)) :=
-      Infinite.of_injective _ (Equiv.ofInjective _ encode_injective).Injective
+      Infinite.of_injective _ (Equiv.ofInjective _ encode_injective).injective
   letI := Nat.Subtype.denumerable (Set.range (@encode α _))
-  exact Denumerable.ofEquiv (Set.range (@encode α _)) (equiv_range_encode α)
+  exact Denumerable.ofEquiv (Set.range (@encode α _)) (equivRangeEncode α)
 #align denumerable.of_encodable_of_infinite Denumerable.ofEncodableOfInfinite
 -/
 

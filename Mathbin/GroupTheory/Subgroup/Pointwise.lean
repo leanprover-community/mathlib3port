@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem closure_toSubmonoid (S : Set G) : (closure S).toSubmonoid = Submonoid.cl
         (fun x hx => Submonoid.closure_mono (subset_union_left S S⁻¹) (Submonoid.subset_closure hx))
         (Submonoid.one_mem _) (fun x y hx hy => Submonoid.mul_mem _ hx hy) fun x hx => _
     rwa [← Submonoid.mem_closure_inv, Set.union_inv, inv_inv, Set.union_comm]
-  · simp only [true_and_iff, coe_to_submonoid, union_subset_iff, subset_closure, inv_subset_closure]
+  · simp only [true_and_iff, coe_toSubmonoid, union_subset_iff, subset_closure, inv_subset_closure]
 #align subgroup.closure_to_submonoid Subgroup.closure_toSubmonoid
 #align add_subgroup.closure_to_add_submonoid AddSubgroup.closure_toAddSubmonoid
 
@@ -126,7 +126,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.closure_inv Subgroup.closure_invₓ'. -/
 @[simp, to_additive]
 theorem closure_inv (s : Set G) : closure s⁻¹ = closure s := by
-  simp only [← to_submonoid_eq, closure_to_submonoid, inv_inv, union_comm]
+  simp only [← toSubmonoid_eq, closure_toSubmonoid, inv_inv, union_comm]
 #align subgroup.closure_inv Subgroup.closure_inv
 #align add_subgroup.closure_neg AddSubgroup.closure_neg
 
@@ -163,7 +163,7 @@ then it holds for all elements of the supremum of `S`. -/
 theorem supᵢ_induction {ι : Sort _} (S : ι → Subgroup G) {C : G → Prop} {x : G} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
-  rw [supr_eq_closure] at hx
+  rw [supᵢ_eq_closure] at hx
   refine' closure_induction'' hx (fun x hx => _) (fun x hx => _) h1 hmul
   · obtain ⟨i, hi⟩ := set.mem_Union.mp hx
     exact hp _ _ hi
@@ -186,7 +186,7 @@ theorem supᵢ_induction' {ι : Sort _} (S : ι → Subgroup G) {C : ∀ x, (x �
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
-  refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
+  refine' supᵢ_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
   · exact ⟨_, h1⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
@@ -666,7 +666,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.smul_normal Subgroup.smul_normalₓ'. -/
 @[simp]
 theorem smul_normal (g : G) (H : Subgroup G) [h : Normal H] : MulAut.conj g • H = H :=
-  h.ConjAct g
+  h.conjAct g
 #align subgroup.smul_normal Subgroup.smul_normal
 
 end Group

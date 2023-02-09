@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.biproducts
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,18 +56,18 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
           · ext x
             simp
       uniq' := fun s m w => by
-        ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
+        ext <;> [rw [← w ⟨WalkingPair.left⟩], rw [← w ⟨WalkingPair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
 
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_left (G H : AddCommGroupCat.{u}) :
-    (binaryProductLimitCone G H).Cone.π.app ⟨WalkingPair.left⟩ = AddMonoidHom.fst G H :=
+    (binaryProductLimitCone G H).cone.π.app ⟨WalkingPair.left⟩ = AddMonoidHom.fst G H :=
   rfl
 #align AddCommGroup.binary_product_limit_cone_cone_π_app_left AddCommGroupCat.binaryProductLimitCone_cone_π_app_left
 
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_right (G H : AddCommGroupCat.{u}) :
-    (binaryProductLimitCone G H).Cone.π.app ⟨WalkingPair.right⟩ = AddMonoidHom.snd G H :=
+    (binaryProductLimitCone G H).cone.π.app ⟨WalkingPair.right⟩ = AddMonoidHom.snd G H :=
   rfl
 #align AddCommGroup.binary_product_limit_cone_cone_π_app_right AddCommGroupCat.binaryProductLimitCone_cone_π_app_right
 
@@ -77,7 +77,7 @@ the cartesian product of the underlying types:
 @[simps hom_apply]
 noncomputable def biprodIsoProd (G H : AddCommGroupCat.{u}) :
     (G ⊞ H : AddCommGroupCat) ≅ AddCommGroupCat.of (G × H) :=
-  IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit G H) (binaryProductLimitCone G H).IsLimit
+  IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit G H) (binaryProductLimitCone G H).isLimit
 #align AddCommGroup.biprod_iso_prod AddCommGroupCat.biprodIsoProd
 
 @[simp, elementwise]
@@ -127,7 +127,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
         simp
       uniq' := fun s m w => by
         ext (x j)
-        dsimp only [has_limit.lift]
+        dsimp only [HasLimit.lift]
         simp only [AddMonoidHom.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }
 #align AddCommGroup.has_limit.product_limit_cone AddCommGroupCat.HasLimit.productLimitCone
@@ -144,7 +144,7 @@ on the dependent function type
 @[simps hom_apply]
 noncomputable def biproductIsoPi (f : J → AddCommGroupCat.{u}) :
     (⨁ f : AddCommGroupCat) ≅ AddCommGroupCat.of (∀ j, f j) :=
-  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).IsLimit
+  IsLimit.conePointUniqueUpToIso (Biproduct.isLimit f) (productLimitCone f).isLimit
 #align AddCommGroup.biproduct_iso_pi AddCommGroupCat.biproductIsoPi
 
 @[simp, elementwise]

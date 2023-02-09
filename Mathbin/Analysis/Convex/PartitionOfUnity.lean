@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.partition_of_unity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ variable {ι X E : Type _} [TopologicalSpace X] [AddCommGroup E] [Module ℝ E]
 theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnity ι X s)
     {g : ι → X → E} {t : Set E} {x : X} (hx : x ∈ s) (hg : ∀ i, f i x ≠ 0 → g i x ∈ t)
     (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
-  ht.finsum_mem (fun i => f.NonNeg _ _) (f.sum_eq_one hx) hg
+  ht.finsum_mem (fun i => f.nonneg _ _) (f.sum_eq_one hx) hg
 #align partition_of_unity.finsum_smul_mem_convex PartitionOfUnity.finsum_smul_mem_convex
 
 variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [HasContinuousAdd E]
@@ -58,7 +58,7 @@ theorem exists_continuous_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t 
   choose U hU g hgc hgt using H
   obtain ⟨f, hf⟩ :=
     PartitionOfUnity.exists_isSubordinate isClosed_univ (fun x => interior (U x))
-      (fun x => isOpen_interior) fun x hx => mem_Union.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
+      (fun x => isOpen_interior) fun x hx => mem_unionᵢ.2 ⟨x, mem_interior_iff_mem_nhds.2 (hU x)⟩
   refine'
     ⟨⟨fun x => ∑ᶠ i, f i x • g i x,
         hf.continuous_finsum_smul (fun i => isOpen_interior) fun i => (hgc i).mono interior_subset⟩,

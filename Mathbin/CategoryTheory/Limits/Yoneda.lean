@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.yoneda
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,17 +156,17 @@ variable {D : Type u} [SmallCategory D]
 
 instance yonedaFunctorPreservesLimits : PreservesLimits (@yoneda D _) :=
   by
-  apply preserves_limits_of_evaluation
+  apply preservesLimitsOfEvaluation
   intro K
-  change preserves_limits (coyoneda.obj K)
+  change PreservesLimits (coyoneda.obj K)
   infer_instance
 #align category_theory.yoneda_functor_preserves_limits CategoryTheory.yonedaFunctorPreservesLimits
 
 instance coyonedaFunctorPreservesLimits : PreservesLimits (@coyoneda D _) :=
   by
-  apply preserves_limits_of_evaluation
+  apply preservesLimitsOfEvaluation
   intro K
-  change preserves_limits (yoneda.obj K)
+  change PreservesLimits (yoneda.obj K)
   infer_instance
 #align category_theory.coyoneda_functor_preserves_limits CategoryTheory.coyonedaFunctorPreservesLimits
 

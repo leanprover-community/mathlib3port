@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Finsupp.Order
 
 /-!
 # Finite intervals of finitely supported functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the `locally_finite_order` instance for `ι →₀ α` when `α` itself is locally
 finite and calculates the cardinality of its finite intervals.
@@ -110,13 +113,12 @@ variable [PartialOrder α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α
 instance : LocallyFiniteOrder (ι →₀ α) := by
   haveI := Classical.decEq ι <;> haveI := Classical.decEq α <;>
     exact
-      LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).Finsupp <| f.rangeIcc g)
+      LocallyFiniteOrder.ofIcc (ι →₀ α) (fun f g => (f.support ∪ g.support).finsupp <| f.rangeIcc g)
         fun f g x =>
         by
         refine'
-          (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| range_Icc_support _ _).trans
-            _
-        simp_rw [mem_range_Icc_apply_iff]
+          (mem_finsupp_iff_of_support_subset <| Finset.subset_of_eq <| rangeIcc_support _ _).trans _
+        simp_rw [mem_rangeIcc_apply_iff]
         exact forall_and
 
 /- warning: finsupp.Icc_eq -> Finsupp.icc_eq is a dubious translation:
@@ -125,7 +127,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : PartialOrder.{u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : LocallyFiniteOrder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_1)] (f : Finsupp.{u2, u1} ι α _inst_2) (g : Finsupp.{u2, u1} ι α _inst_2), Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (Finsupp.{u2, u1} ι α _inst_2)) (Finset.Icc.{max u2 u1} (Finsupp.{u2, u1} ι α _inst_2) (Finsupp.preorder.{u2, u1} ι α _inst_2 (PartialOrder.toPreorder.{u1} α _inst_1)) (Finsupp.instLocallyFiniteOrderFinsuppPreorderToPreorder.{u2, u1} ι α _inst_1 _inst_2 _inst_3) f g) (Finset.finsupp.{u2, u1} ι α _inst_2 (Union.union.{u2} (Finset.{u2} ι) (Finset.instUnionFinset.{u2} ι (fun (a : ι) (b : ι) => Classical.propDecidable (Eq.{succ u2} ι a b))) (Finsupp.support.{u2, u1} ι α _inst_2 f) (Finsupp.support.{u2, u1} ι α _inst_2 g)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} ι (Finset.{u1} α) (Finset.zero.{u1} α _inst_2)) ι (fun (a : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => Finset.{u1} α) a) (Finsupp.funLike.{u2, u1} ι (Finset.{u1} α) (Finset.zero.{u1} α _inst_2)) (Finsupp.rangeIcc.{u2, u1} ι α _inst_2 _inst_1 _inst_3 f g)))
 Case conversion may be inaccurate. Consider using '#align finsupp.Icc_eq Finsupp.icc_eqₓ'. -/
-theorem icc_eq [DecidableEq ι] : Icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
+theorem icc_eq [DecidableEq ι] : Icc f g = (f.support ∪ g.support).finsupp (f.rangeIcc g) := by
   convert rfl
 #align finsupp.Icc_eq Finsupp.icc_eq
 
@@ -137,7 +139,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.card_Icc Finsupp.card_Iccₓ'. -/
 theorem card_Icc [DecidableEq ι] :
     (Icc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card := by
-  simp_rw [Icc_eq, card_finsupp, range_Icc_to_fun]
+  simp_rw [icc_eq, card_finsupp, rangeIcc_to_fun]
 #align finsupp.card_Icc Finsupp.card_Icc
 
 /- warning: finsupp.card_Ico -> Finsupp.card_Ico is a dubious translation:

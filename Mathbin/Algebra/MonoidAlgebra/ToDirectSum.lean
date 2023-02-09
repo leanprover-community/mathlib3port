@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.to_direct_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,7 +136,7 @@ theorem toDirectSum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : AddM
     (f * g).toDirectSum = f.toDirectSum * g.toDirectSum :=
   by
   let to_hom : AddMonoidAlgebra M ι →+ ⨁ i : ι, M :=
-    ⟨to_direct_sum, to_direct_sum_zero, to_direct_sum_add⟩
+    ⟨toDirectSum, toDirectSum_zero, toDirectSum_add⟩
   show to_hom (f * g) = to_hom f * to_hom g
   revert f g
   rw [AddMonoidHom.map_mul_iff]

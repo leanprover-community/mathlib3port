@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.iterate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ Case conversion may be inaccurate. Consider using '#align smul_iterate smul_iter
 theorem smul_iterate [MulAction G H] : ((· • ·) a : H → H)^[n] = (· • ·) (a ^ n) :=
   funext fun b =>
     Nat.recOn n (by rw [iterate_zero, id.def, pow_zero, one_smul]) fun n ih => by
-      rw [iterate_succ', comp_app, ih, pow_succ, mul_smul]
+      rw [iterate_succ', comp_apply, ih, pow_succ, mul_smul]
 #align smul_iterate smul_iterate
 #align vadd_iterate vadd_iterate
 

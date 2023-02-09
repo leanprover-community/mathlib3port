@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.abelian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ theorem Function.Surjective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Ty
 theorem lie_abelian_iff_equiv_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]
     [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] (e : L₁ ≃ₗ⁅R⁆ L₂) :
     IsLieAbelian L₁ ↔ IsLieAbelian L₂ :=
-  ⟨e.symm.Injective.IsLieAbelian, e.Injective.IsLieAbelian⟩
+  ⟨e.symm.injective.isLieAbelian, e.injective.isLieAbelian⟩
 #align lie_abelian_iff_equiv_lie_abelian lie_abelian_iff_equiv_lie_abelian
 
 theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ring A] :
@@ -120,7 +120,7 @@ protected def ker : LieIdeal R L :=
 @[simp]
 protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅x, m⁆ = 0 := by
   simp only [LieModule.ker, LieHom.mem_ker, LinearMap.ext_iff, LinearMap.zero_apply,
-    to_endomorphism_apply_apply]
+    toEndomorphism_apply_apply]
 #align lie_module.mem_ker LieModule.mem_ker
 
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
@@ -153,9 +153,9 @@ theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
     N ≤ maxTrivSubmodule R L M ↔ ⁅(⊤ : LieIdeal R L), N⁆ = ⊥ :=
   by
   refine' ⟨fun h => _, fun h m hm => _⟩
-  · rw [← le_bot_iff, ← ideal_oper_max_triv_submodule_eq_bot R L M ⊤]
+  · rw [← le_bot_iff, ← ideal_oper_maxTrivSubmodule_eq_bot R L M ⊤]
     exact LieSubmodule.mono_lie_right _ _ ⊤ h
-  · rw [mem_max_triv_submodule]
+  · rw [mem_maxTrivSubmodule]
     rw [LieSubmodule.lie_eq_bot_iff] at h
     exact fun x => h x (LieSubmodule.mem_top x) m hm
 #align lie_module.le_max_triv_iff_bracket_eq_bot LieModule.le_max_triv_iff_bracket_eq_bot
@@ -171,12 +171,12 @@ theorem isTrivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L M
   constructor
   · rintro ⟨h⟩
     ext
-    simp only [mem_max_triv_submodule, h, forall_const, true_iff_iff, eq_self_iff_true]
+    simp only [mem_maxTrivSubmodule, h, forall_const, true_iff_iff, eq_self_iff_true]
   · intro h
     constructor
     intro x m
     revert x
-    rw [← mem_max_triv_submodule R L M, h]
+    rw [← mem_maxTrivSubmodule R L M, h]
     exact LieSubmodule.mem_top m
 #align lie_module.is_trivial_iff_max_triv_eq_top LieModule.isTrivial_iff_max_triv_eq_top
 
@@ -226,7 +226,7 @@ theorem maxTrivEquiv_of_refl_eq_refl :
     maxTrivEquiv (LieModuleEquiv.refl : M ≃ₗ⁅R,L⁆ M) = LieModuleEquiv.refl :=
   by
   ext
-  simp only [coe_max_triv_equiv_apply, LieModuleEquiv.refl_apply]
+  simp only [coe_maxTrivEquiv_apply, LieModuleEquiv.refl_apply]
 #align lie_module.max_triv_equiv_of_refl_eq_refl LieModule.maxTrivEquiv_of_refl_eq_refl
 
 @[simp]
@@ -343,14 +343,14 @@ variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 theorem LieSubmodule.trivial_lie_oper_zero [LieModule.IsTrivial L M] : ⁅I, N⁆ = ⊥ :=
   by
   suffices : ⁅I, N⁆ ≤ ⊥; exact le_bot_iff.mp this
-  rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le]
+  rw [lieIdeal_oper_eq_span, LieSubmodule.lieSpan_le]
   rintro m ⟨x, n, h⟩; rw [trivial_lie_zero] at h; simp [← h]
 #align lie_submodule.trivial_lie_oper_zero LieSubmodule.trivial_lie_oper_zero
 
 theorem LieSubmodule.lie_abelian_iff_lie_self_eq_bot : IsLieAbelian I ↔ ⁅I, I⁆ = ⊥ :=
   by
-  simp only [_root_.eq_bot_iff, lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le,
-    LieSubmodule.bot_coe, Set.subset_singleton_iff, Set.mem_setOf_eq, exists_imp]
+  simp only [eq_bot_iff, lieIdeal_oper_eq_span, LieSubmodule.lieSpan_le, LieSubmodule.bot_coe,
+    Set.subset_singleton_iff, Set.mem_setOf_eq, exists_imp]
   refine'
     ⟨fun h z x y hz =>
       hz.symm.trans

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.W.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ Given `β : α → Type*`, `W_type β` is the type of finitely branching trees w
 elements of `α` and the children of a node labeled `a` are indexed by elements of `β a`.
 -/
 inductive WType {α : Type _} (β : α → Type _)
-  | mk (a : α) (f : β a → WType) : WType
+  | mk (a : α) (f : β a → W_type) : W_type
 #align W_type WType
 -/
 
@@ -236,9 +236,9 @@ private def encodable_succ (n : Nat) (h : Encodable (WType' β n)) : Encodable (
 encodable. -/
 instance : Encodable (WType β) :=
   by
-  haveI h' : ∀ n, Encodable (W_type' β n) := fun n => Nat.recOn n encodable_zero encodable_succ
-  let f : WType β → Σn, W_type' β n := fun t => ⟨t.depth, ⟨t, le_rfl⟩⟩
-  let finv : (Σn, W_type' β n) → WType β := fun p => p.2.1
+  haveI h' : ∀ n, Encodable (WType' β n) := fun n => Nat.recOn n encodableZero encodableSucc
+  let f : WType β → Σn, WType' β n := fun t => ⟨t.depth, ⟨t, le_rfl⟩⟩
+  let finv : (Σn, WType' β n) → WType β := fun p => p.2.1
   have : ∀ t, finv (f t) = t := fun t => rfl
   exact Encodable.ofLeftInverse f finv this
 

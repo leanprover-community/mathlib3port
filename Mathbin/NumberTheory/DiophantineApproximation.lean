@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.diophantine_approximation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,7 +133,7 @@ theorem exists_nat_abs_mul_sub_round_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     ∃ k : ℕ, 0 < k ∧ k ≤ n ∧ |↑k * ξ - round (↑k * ξ)| ≤ 1 / (n + 1) :=
   by
   obtain ⟨j, k, hk₀, hk₁, h⟩ := exists_int_int_abs_mul_sub_le ξ n_pos
-  have hk := to_nat_of_nonneg hk₀.le
+  have hk := toNat_of_nonneg hk₀.le
   rw [← hk] at hk₀ hk₁ h
   exact ⟨k.to_nat, coe_nat_pos.mp hk₀, nat.cast_le.mp hk₁, (round_le (↑k.to_nat * ξ) j).trans h⟩
 #align real.exists_nat_abs_mul_sub_round_le Real.exists_nat_abs_mul_sub_round_le
@@ -179,7 +179,7 @@ theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational 
   have h := abs_pos.mpr (sub_ne_zero.mpr <| Irrational.ne_rat hξ q)
   obtain ⟨m, hm⟩ := exists_nat_gt (1 / |ξ - q|)
   have m_pos : (0 : ℝ) < m := (one_div_pos.mpr h).trans hm
-  obtain ⟨q', hbd, hden⟩ := exists_rat_abs_sub_le_and_denom_le ξ (nat.cast_pos.mp m_pos)
+  obtain ⟨q', hbd, hden⟩ := exists_rat_abs_sub_le_and_den_le ξ (nat.cast_pos.mp m_pos)
   have den_pos : (0 : ℝ) < q'.denom := nat.cast_pos.mpr q'.pos
   have md_pos := mul_pos (add_pos m_pos zero_lt_one) den_pos
   refine'
@@ -231,7 +231,7 @@ theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q|
   have hq₀ : (0 : ℚ) < q.denom := nat.cast_pos.mpr q.pos
   replace h : |ξ * q.denom - q.num| < 1 / q.denom
   · rw [← mul_lt_mul_right hq₀] at h
-    conv_lhs at h => rw [← abs_of_pos hq₀, ← abs_mul, sub_mul, mul_denom_eq_num]
+    conv_lhs at h => rw [← abs_of_pos hq₀, ← abs_mul, sub_mul, mul_den_eq_num]
     rwa [sq, div_mul, mul_div_cancel_left _ hq₀.ne'] at h
   constructor
   · rcases eq_or_ne ξ q with (rfl | H)
@@ -267,15 +267,16 @@ theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) : { q : ℚ | |ξ - q| <
   have H : f '' s ⊆ ⋃ (y : ℕ) (hy : y ∈ Ioc 0 ξ.denom), Icc (⌈ξ * y⌉ - 1) (⌊ξ * y⌋ + 1) ×ˢ {y} :=
     by
     intro xy hxy
-    simp only [mem_image, mem_set_of_eq] at hxy
+    simp only [mem_image, mem_setOf_eq] at hxy
     obtain ⟨q, hq₁, hq₂⟩ := hxy
-    obtain ⟨hd, hn⟩ := denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq hq₁
-    simp_rw [mem_Union]
+    obtain ⟨hd, hn⟩ := den_le_and_le_num_le_of_sub_lt_one_div_den_sq hq₁
+    simp_rw [mem_unionᵢ]
     refine' ⟨q.denom, set.mem_Ioc.mpr ⟨q.pos, hd⟩, _⟩
     simp only [prod_singleton, mem_image, mem_Icc, (congr_arg Prod.snd (Eq.symm hq₂)).trans rfl]
     exact ⟨q.num, hn, hq₂⟩
-  refine' finite.of_finite_image (finite.subset _ H) (inj_on_of_injective hinj s)
-  exact finite.bUnion (finite_Ioc _ _) fun x hx => finite.prod (finite_Icc _ _) (finite_singleton _)
+  refine' Finite.of_finite_image (Finite.subset _ H) (injOn_of_injective hinj s)
+  exact
+    Finite.bunionᵢ (finite_Ioc _ _) fun x hx => Finite.prod (finite_Icc _ _) (finite_singleton _)
 #align rat.finite_rat_abs_sub_lt_one_div_denom_sq Rat.finite_rat_abs_sub_lt_one_div_den_sq
 
 end Rat

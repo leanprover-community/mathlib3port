@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.tactic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ attribute [measurability]
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -69,7 +69,7 @@ unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -103,15 +103,15 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/
 unsafe def measurability_tactics (md : Transparency := semireducible) : List (tactic String) :=
   [(propositional_goal >> tactic.interactive.apply_assumption none { use_exfalso := false }) >>
       pure "apply_assumption {use_exfalso := ff}",
-    goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.toString),
+    goal_is_not_measurable >> intro1 >>= fun ns => pure ("intro " ++ ns.to_string),
     apply_rules [] [`` measurability] 50 { md } >> pure "apply_rules with measurability",
     apply_measurable.comp >> pure "refine measurable.comp _ _",
     apply_measurable.comp_ae_measurable >> pure "refine measurable.comp_ae_measurable _ _",

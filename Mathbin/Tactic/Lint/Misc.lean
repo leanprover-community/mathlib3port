@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Arthur Paulino
 
 ! This file was ported from Lean 3 source module tactic.lint.misc
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ private unsafe def dup_namespace (d : declaration) : tactic (Option String) :=
       let nm := d.to_name.components
       if nm.Chain' (· ≠ ·) ∨ is_inst then none
       else
-        let s := (nm.find fun n => nm.count n ≥ 2).iget.toString
+        let s := (nm.find? fun n => nm.count n ≥ 2).iget.toString
         some <| "The namespace `" ++ s ++ "` is duplicated in the name"
 #align dup_namespace dup_namespace
 
@@ -187,7 +187,7 @@ unsafe def check_unused_arguments (d : declaration) : Option (List ℕ) :=
   if l = [] then none
   else
     let l2 := check_unused_arguments_aux [] 1 d.type.pi_arity d.type
-    (l.filterₓ fun n => n ∈ l2).reverse
+    (l.filter fun n => n ∈ l2).reverse
 #align check_unused_arguments check_unused_arguments
 
 /-- Check for unused arguments, and print them with their position, variable name, type and whether
@@ -204,8 +204,8 @@ private unsafe def unused_arguments (d : declaration) : tactic (Option String) :
   let ns := ns.iget
   let (ds, _) ← get_pi_binders d.type
   let ns := ns.map fun n => (n, (ds.get? <| n - 1).iget)
-  let ns := ns.filterₓ fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
-  let ff ← return ns.Empty |
+  let ns := ns.filter fun x => x.2.type.get_app_fn ≠ const `interactive.parse []
+  let ff ← return ns.isEmpty |
     return none
   let ds' ← ds.mapM pp
   let ns ←
@@ -353,10 +353,10 @@ open Native
 unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Name) :=
   e.fold mk_rb_set fun e n l =>
     match e with
-    | e@(sort u) => l.insert u.params.toList
+    | e@(sort u) => l.insert u.params.to_list
     | e@(const nm us) =>
-      if nm.getPrefix = nm₀ ∧ nm.getLast.startsWith "_proof_" then l
-      else l.union <| rb_set.of_list <| us.map fun u : level => u.params.toList
+      if nm.getPrefix = nm₀ ∧ nm.last.startsWith "_proof_" then l
+      else l.union <| rb_set.of_list <| us.map fun u : level => u.params.to_list
     | _ => l
 #align expr.univ_params_grouped expr.univ_params_grouped
 
@@ -368,10 +368,10 @@ unsafe def bad_params : rb_set (List Name) → List Name
   | l =>
     let good_levels : name_set :=
       l.fold mk_name_set fun us prev => if us.length = 1 then prev.insert us.headI else prev
-    if good_levels.Empty then l.fold [] List.union
+    if good_levels.empty then l.fold [] List.union
     else
       bad_params <|
-        rb_set.of_list <| l.toList.map fun us => us.filterₓ fun nm => !good_levels.contains nm
+        rb_set.of_list <| l.to_list.map fun us => us.filter fun nm => !good_levels.contains nm
 #align bad_params bad_params
 
 /-- Checks whether all universe levels `u` in the type of `d` are "good".
@@ -386,7 +386,7 @@ unsafe def check_univs (d : declaration) : tactic (Option String) := do
   let l := d.type.univ_params_grouped d.to_name
   let bad := bad_params l
   if bad then return none
-    else return <| some <| "universes " ++ toString bad ++ " only occur together."
+    else return <| some <| "universes " ++ to_string bad ++ " only occur together."
 #align check_univs check_univs
 
 /-- A linter for checking that there are no bad `max u v` universe levels. -/
@@ -502,7 +502,7 @@ term.
 -/
 unsafe def has_unused_haves_suffices (d : declaration) : tactic (Option String) := do
   let ns ← unused_have_of_decl d
-  if ns = 0 then return none else return (", ".intercalate (ns toString))
+  if ns = 0 then return none else return (", ".intercalate (ns to_string))
 #align has_unused_haves_suffices has_unused_haves_suffices
 
 /-- A linter for checking that declarations don't have unused term mode have statements. We do not
@@ -537,10 +537,10 @@ This is used to generate the parser documentation that appears in hovers on inte
 -/
 unsafe def unprintable_interactive (d : declaration) : tactic (Option String) :=
   match d.to_name with
-  | Name.mk_string _ (Name.mk_string "interactive" (Name.mk_string _ Name.anonymous)) => do
+  | name.mk_string _ (name.mk_string "interactive" (name.mk_string _ name.anonymous)) => do
     let (ds, _) ← mk_local_pis d.type
     let ds ← ds.filterM fun d => not <$> succeeds (interactive.param_desc d.local_type)
-    let ff ← return ds.Empty |
+    let ff ← return ds.isEmpty |
       return none
     let ds ← ds.mapM (pp ∘ to_binder)
     return <| some <| ds tt
@@ -596,12 +596,12 @@ unsafe def explicit_vars_of_iff (d : declaration) : tactic (Option String) := do
     | some (el, er) => do
       let li := li fun i => d - i - 1
       let-- fixing for the actual de-Bruijn indexes
-      l := (ln li).filterₓ fun t => el t.2 && er t.2
+      l := (ln li).filter fun t => el t.2 && er t.2
       if l = [] then return none
         else
           return <|
             "The following variables are used on both sides of an iff and ".append <|
-              "should be made implicit: ".append <| ", ".intercalate (l fun t => toString t.1)
+              "should be made implicit: ".append <| ", ".intercalate (l fun t => to_string t.1)
 #align explicit_vars_of_iff explicit_vars_of_iff
 
 /-- A linter for checking if variables appearing on both sides of an iff are explicit. Ideally, such

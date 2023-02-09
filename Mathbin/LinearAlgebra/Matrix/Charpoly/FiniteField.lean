@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.finite_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,12 +40,12 @@ theorem FiniteField.Matrix.charpoly_pow_card {K : Type _} [Field K] [Fintype K] 
     repeat' rw [iterate_frobenius]; rw [← hk]
     rw [← FiniteField.expand_card]
     unfold charpoly
-    rw [AlgHom.map_det, ← coe_det_monoid_hom, ← (det_monoid_hom : Matrix n n K[X] →* K[X]).map_pow]
+    rw [AlgHom.map_det, ← coe_detMonoidHom, ← (detMonoidHom : Matrix n n K[X] →* K[X]).map_pow]
     apply congr_arg det
     refine' mat_poly_equiv.injective _
-    rw [AlgEquiv.map_pow, matPolyEquiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
+    rw [AlgEquiv.map_pow, matPolyEquiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← c_pow]
     · exact (id (matPolyEquiv_eq_x_pow_sub_c (p ^ k) M) : _)
-    · exact (C M).commute_x
+    · exact (c M).commute_x
   · exact congr_arg _ (Subsingleton.elim _ _)
 #align finite_field.matrix.charpoly_pow_card FiniteField.Matrix.charpoly_pow_card
 

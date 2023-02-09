@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.group.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ instance commMonoid [∀ i, CommMonoid <| f i] : CommMonoid (∀ i : I, f i) := 
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.comm_monoid Pi.commMonoid
 #align pi.add_comm_monoid Pi.addCommMonoid
@@ -116,24 +116,24 @@ instance [∀ i, DivInvMonoid <| f i] : DivInvMonoid (∀ i : I, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        inv := Inv.inv
-        div := Div.div
-        npow := Monoid.npow
+        inv := has_inv.inv
+        div := has_div.div
+        npow := monoid.npow
         zpow := fun z x i => x i ^ z } <;>
     pi_instance_derive_field
 
 @[to_additive]
 instance [∀ i, InvolutiveInv <| f i] : InvolutiveInv (∀ i, f i) := by
-  refine_struct { inv := Inv.inv } <;> pi_instance_derive_field
+  refine_struct { inv := has_inv.inv } <;> pi_instance_derive_field
 
 @[to_additive Pi.subtractionMonoid]
 instance [∀ i, DivisionMonoid <| f i] : DivisionMonoid (∀ i, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        inv := Inv.inv
-        div := Div.div
-        npow := Monoid.npow
+        inv := has_inv.inv
+        div := has_div.div
+        npow := monoid.npow
         zpow := fun z x i => x i ^ z } <;>
     pi_instance_derive_field
 
@@ -147,10 +147,10 @@ instance group [∀ i, Group <| f i] : Group (∀ i : I, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        inv := Inv.inv
-        div := Div.div
-        npow := Monoid.npow
-        zpow := DivInvMonoid.zpow } <;>
+        inv := has_inv.inv
+        div := has_div.div
+        npow := monoid.npow
+        zpow := div_inv_monoid.zpow } <;>
     pi_instance_derive_field
 #align pi.group Pi.group
 #align pi.add_group Pi.addGroup
@@ -162,10 +162,10 @@ instance commGroup [∀ i, CommGroup <| f i] : CommGroup (∀ i : I, f i) := by
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        inv := Inv.inv
-        div := Div.div
-        npow := Monoid.npow
-        zpow := DivInvMonoid.zpow } <;>
+        inv := has_inv.inv
+        div := has_div.div
+        npow := monoid.npow
+        zpow := div_inv_monoid.zpow } <;>
     pi_instance_derive_field
 #align pi.comm_group Pi.commGroup
 #align pi.add_comm_group Pi.addCommGroup
@@ -195,7 +195,7 @@ instance leftCancelMonoid [∀ i, LeftCancelMonoid <| f i] : LeftCancelMonoid (�
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.left_cancel_monoid Pi.leftCancelMonoid
 #align pi.add_left_cancel_monoid Pi.addLeftCancelMonoid
@@ -207,7 +207,7 @@ instance rightCancelMonoid [∀ i, RightCancelMonoid <| f i] : RightCancelMonoid
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow.. } <;>
+        npow := monoid.npow.. } <;>
     pi_instance_derive_field
 #align pi.right_cancel_monoid Pi.rightCancelMonoid
 #align pi.add_right_cancel_monoid Pi.addRightCancelMonoid
@@ -219,7 +219,7 @@ instance cancelMonoid [∀ i, CancelMonoid <| f i] : CancelMonoid (∀ i : I, f 
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.cancel_monoid Pi.cancelMonoid
 #align pi.add_cancel_monoid Pi.addCancelMonoid
@@ -231,7 +231,7 @@ instance cancelCommMonoid [∀ i, CancelCommMonoid <| f i] : CancelCommMonoid (�
   refine_struct
       { one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.cancel_comm_monoid Pi.cancelCommMonoid
 #align pi.add_cancel_comm_monoid Pi.addCancelCommMonoid
@@ -262,7 +262,7 @@ instance monoidWithZero [∀ i, MonoidWithZero <| f i] : MonoidWithZero (∀ i :
       { zero := (0 : ∀ i, f i)
         one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.monoid_with_zero Pi.monoidWithZero
 -/
@@ -274,7 +274,7 @@ instance commMonoidWithZero [∀ i, CommMonoidWithZero <| f i] : CommMonoidWithZ
       { zero := (0 : ∀ i, f i)
         one := (1 : ∀ i, f i)
         mul := (· * ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.comm_monoid_with_zero Pi.commMonoidWithZero
 -/
@@ -683,7 +683,7 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
     have hl := congr_fun h l
     have hm := (congr_fun h m).symm
     have hn := (congr_fun h n).symm
-    simp only [mul_apply, mul_single_apply, if_pos rfl] at hk hl hm hn
+    simp only [mul_apply, mulSingle_apply, if_pos rfl] at hk hl hm hn
     rcases eq_or_ne k m with (rfl | hkm)
     · refine' Or.inl ⟨rfl, not_ne_iff.mp fun hln => (hv _).elim⟩
       rcases eq_or_ne k l with (rfl | hkl)
@@ -702,7 +702,7 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl, rfl⟩ | ⟨h, rfl, rfl⟩)
     · rfl
     · apply mul_comm
-    · simp_rw [← Pi.mulSingle_mul, h, mul_single_one]
+    · simp_rw [← Pi.mulSingle_mul, h, mulSingle_one]
 #align pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle
 #align pi.single_add_single_eq_single_add_single Pi.single_add_single_eq_single_add_single
 
@@ -767,7 +767,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.const_ne_one Function.const_ne_oneₓ'. -/
 @[to_additive]
 theorem const_ne_one : const ι a ≠ 1 ↔ a ≠ 1 :=
-  const_eq_one.Not
+  const_eq_one.not
 #align function.const_ne_one Function.const_ne_one
 #align function.const_ne_zero Function.const_ne_zero
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,14 +67,14 @@ theorem continuous_abs : Continuous (abs : G → G) :=
 
 protected theorem Filter.Tendsto.abs {a : G} (h : Tendsto f l (𝓝 a)) :
     Tendsto (fun x => |f x|) l (𝓝 (|a|)) :=
-  (continuous_abs.Tendsto _).comp h
+  (continuous_abs.tendsto _).comp h
 #align filter.tendsto.abs Filter.Tendsto.abs
 
 theorem tendsto_zero_iff_abs_tendsto_zero (f : α → G) :
     Tendsto f l (𝓝 0) ↔ Tendsto (abs ∘ f) l (𝓝 0) :=
   by
   refine' ⟨fun h => (abs_zero : |(0 : G)| = 0) ▸ h.abs, fun h => _⟩
-  have : tendsto (fun a => -|f a|) l (𝓝 0) := (neg_zero : -(0 : G) = 0) ▸ h.neg
+  have : Tendsto (fun a => -|f a|) l (𝓝 0) := (neg_zero : -(0 : G) = 0) ▸ h.neg
   exact
     tendsto_of_tendsto_of_tendsto_of_le_of_le this h (fun x => neg_abs_le_self <| f x) fun x =>
       le_abs_self <| f x

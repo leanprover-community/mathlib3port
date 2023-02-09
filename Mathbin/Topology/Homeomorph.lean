@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.homeomorph
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -273,7 +273,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Function.Bijective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.bijective Homeomorph.bijectiveₓ'. -/
 protected theorem bijective (h : α ≃ₜ β) : Function.Bijective h :=
-  h.toEquiv.Bijective
+  h.toEquiv.bijective
 #align homeomorph.bijective Homeomorph.bijective
 
 /- warning: homeomorph.injective -> Homeomorph.injective is a dubious translation:
@@ -283,7 +283,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.injective Homeomorph.injectiveₓ'. -/
 protected theorem injective (h : α ≃ₜ β) : Function.Injective h :=
-  h.toEquiv.Injective
+  h.toEquiv.injective
 #align homeomorph.injective Homeomorph.injective
 
 /- warning: homeomorph.surjective -> Homeomorph.surjective is a dubious translation:
@@ -293,7 +293,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Function.Surjective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.surjective Homeomorph.surjectiveₓ'. -/
 protected theorem surjective (h : α ≃ₜ β) : Function.Surjective h :=
-  h.toEquiv.Surjective
+  h.toEquiv.surjective
 #align homeomorph.surjective Homeomorph.surjective
 
 /- warning: homeomorph.change_inv -> Homeomorph.changeInv is a dubious translation:
@@ -314,7 +314,7 @@ def changeInv (f : α ≃ₜ β) (g : β → α) (hg : Function.RightInverse g f
     invFun := g
     left_inv := by convert f.left_inv
     right_inv := by convert f.right_inv
-    continuous_toFun := f.Continuous
+    continuous_toFun := f.continuous
     continuous_invFun := by convert f.symm.continuous }
 #align homeomorph.change_inv Homeomorph.changeInv
 
@@ -348,7 +348,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.range_coe Homeomorph.range_coeₓ'. -/
 @[simp]
 theorem range_coe (h : α ≃ₜ β) : range h = univ :=
-  h.Surjective.range_eq
+  h.surjective.range_eq
 #align homeomorph.range_coe Homeomorph.range_coe
 
 /- warning: homeomorph.image_symm -> Homeomorph.image_symm is a dubious translation:
@@ -400,7 +400,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Inducing.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.inducing Homeomorph.inducingₓ'. -/
 protected theorem inducing (h : α ≃ₜ β) : Inducing h :=
-  inducing_of_inducing_compose h.Continuous h.symm.Continuous <| by
+  inducing_of_inducing_compose h.continuous h.symm.continuous <| by
     simp only [symm_comp_self, inducing_id]
 #align homeomorph.inducing Homeomorph.inducing
 
@@ -411,7 +411,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u2} (TopologicalSpace.{u2} α) (TopologicalSpace.induced.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) _inst_2) _inst_1
 Case conversion may be inaccurate. Consider using '#align homeomorph.induced_eq Homeomorph.induced_eqₓ'. -/
 theorem induced_eq (h : α ≃ₜ β) : TopologicalSpace.induced h ‹_› = ‹_› :=
-  h.Inducing.1.symm
+  h.inducing.1.symm
 #align homeomorph.induced_eq Homeomorph.induced_eq
 
 /- warning: homeomorph.quotient_map -> Homeomorph.quotientMap is a dubious translation:
@@ -421,7 +421,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), QuotientMap.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.quotient_map Homeomorph.quotientMapₓ'. -/
 protected theorem quotientMap (h : α ≃ₜ β) : QuotientMap h :=
-  QuotientMap.of_quotientMap_compose h.symm.Continuous h.Continuous <| by
+  QuotientMap.of_quotientMap_compose h.symm.continuous h.continuous <| by
     simp only [self_comp_symm, QuotientMap.id]
 #align homeomorph.quotient_map Homeomorph.quotientMap
 
@@ -432,7 +432,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Eq.{succ u1} (TopologicalSpace.{u1} β) (TopologicalSpace.coinduced.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) _inst_1) _inst_2
 Case conversion may be inaccurate. Consider using '#align homeomorph.coinduced_eq Homeomorph.coinduced_eqₓ'. -/
 theorem coinduced_eq (h : α ≃ₜ β) : TopologicalSpace.coinduced h ‹_› = ‹_› :=
-  h.QuotientMap.2.symm
+  h.quotientMap.2.symm
 #align homeomorph.coinduced_eq Homeomorph.coinduced_eq
 
 /- warning: homeomorph.embedding -> Homeomorph.embedding is a dubious translation:
@@ -442,14 +442,14 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Embedding.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.embedding Homeomorph.embeddingₓ'. -/
 protected theorem embedding (h : α ≃ₜ β) : Embedding h :=
-  ⟨h.Inducing, h.Injective⟩
+  ⟨h.inducing, h.injective⟩
 #align homeomorph.embedding Homeomorph.embedding
 
 #print Homeomorph.ofEmbedding /-
 /-- Homeomorphism given an embedding. -/
 noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set.range f
     where
-  continuous_toFun := hf.Continuous.subtype_mk _
+  continuous_toFun := hf.continuous.subtype_mk _
   continuous_invFun := by simp [hf.continuous_iff, continuous_subtype_val]
   toEquiv := Equiv.ofInjective f hf.inj
 #align homeomorph.of_embedding Homeomorph.ofEmbedding
@@ -458,7 +458,7 @@ noncomputable def ofEmbedding (f : α → β) (hf : Embedding f) : α ≃ₜ Set
 #print Homeomorph.secondCountableTopology /-
 protected theorem secondCountableTopology [TopologicalSpace.SecondCountableTopology β]
     (h : α ≃ₜ β) : TopologicalSpace.SecondCountableTopology α :=
-  h.Inducing.SecondCountableTopology
+  h.inducing.secondCountableTopology
 #align homeomorph.second_countable_topology Homeomorph.secondCountableTopology
 -/
 
@@ -469,7 +469,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] {s : Set.{u2} α} (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), Iff (IsCompact.{u1} β _inst_2 (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) s)) (IsCompact.{u2} α _inst_1 s)
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_compact_image Homeomorph.isCompact_imageₓ'. -/
 theorem isCompact_image {s : Set α} (h : α ≃ₜ β) : IsCompact (h '' s) ↔ IsCompact s :=
-  h.Embedding.isCompact_iff_isCompact_image.symm
+  h.embedding.isCompact_iff_isCompact_image.symm
 #align homeomorph.is_compact_image Homeomorph.isCompact_image
 
 /- warning: homeomorph.is_compact_preimage -> Homeomorph.isCompact_preimage is a dubious translation:
@@ -490,8 +490,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comap_cocompact Homeomorph.comap_cocompactₓ'. -/
 @[simp]
 theorem comap_cocompact (h : α ≃ₜ β) : comap h (cocompact β) = cocompact α :=
-  (comap_cocompact_le h.Continuous).antisymm <|
-    (hasBasis_cocompact.le_basis_iffₓ (hasBasis_cocompact.comap h)).2 fun K hK =>
+  (comap_cocompact_le h.continuous).antisymm <|
+    (hasBasis_cocompact.le_basis_iff (hasBasis_cocompact.comap h)).2 fun K hK =>
       ⟨h ⁻¹' K, h.isCompact_preimage.2 hK, Subset.rfl⟩
 #align homeomorph.comap_cocompact Homeomorph.comap_cocompact
 
@@ -527,7 +527,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : T0Space.{u2} α _inst_1], (Homeomorph.{u2, u1} α β _inst_1 _inst_2) -> (T0Space.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.t0_space Homeomorph.t0Spaceₓ'. -/
 protected theorem t0Space [T0Space α] (h : α ≃ₜ β) : T0Space β :=
-  h.symm.Embedding.T0Space
+  h.symm.embedding.t0Space
 #align homeomorph.t0_space Homeomorph.t0Space
 
 /- warning: homeomorph.t1_space -> Homeomorph.t1Space is a dubious translation:
@@ -537,7 +537,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : T1Space.{u2} α _inst_1], (Homeomorph.{u2, u1} α β _inst_1 _inst_2) -> (T1Space.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.t1_space Homeomorph.t1Spaceₓ'. -/
 protected theorem t1Space [T1Space α] (h : α ≃ₜ β) : T1Space β :=
-  h.symm.Embedding.T1Space
+  h.symm.embedding.t1Space
 #align homeomorph.t1_space Homeomorph.t1Space
 
 /- warning: homeomorph.t2_space -> Homeomorph.t2Space is a dubious translation:
@@ -547,7 +547,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : T2Space.{u2} α _inst_1], (Homeomorph.{u2, u1} α β _inst_1 _inst_2) -> (T2Space.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.t2_space Homeomorph.t2Spaceₓ'. -/
 protected theorem t2Space [T2Space α] (h : α ≃ₜ β) : T2Space β :=
-  h.symm.Embedding.T2Space
+  h.symm.embedding.t2Space
 #align homeomorph.t2_space Homeomorph.t2Space
 
 /- warning: homeomorph.t3_space -> Homeomorph.t3Space is a dubious translation:
@@ -557,7 +557,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : T3Space.{u2} α _inst_1], (Homeomorph.{u2, u1} α β _inst_1 _inst_2) -> (T3Space.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.t3_space Homeomorph.t3Spaceₓ'. -/
 protected theorem t3Space [T3Space α] (h : α ≃ₜ β) : T3Space β :=
-  h.symm.Embedding.T3Space
+  h.symm.embedding.t3Space
 #align homeomorph.t3_space Homeomorph.t3Space
 
 /- warning: homeomorph.dense_embedding -> Homeomorph.denseEmbedding is a dubious translation:
@@ -567,7 +567,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), DenseEmbedding.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.dense_embedding Homeomorph.denseEmbeddingₓ'. -/
 protected theorem denseEmbedding (h : α ≃ₜ β) : DenseEmbedding h :=
-  { h.Embedding with dense := h.Surjective.DenseRange }
+  { h.embedding with dense := h.surjective.denseRange }
 #align homeomorph.dense_embedding Homeomorph.denseEmbedding
 
 /- warning: homeomorph.is_open_preimage -> Homeomorph.isOpen_preimage is a dubious translation:
@@ -578,7 +578,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_open_preimage Homeomorph.isOpen_preimageₓ'. -/
 @[simp]
 theorem isOpen_preimage (h : α ≃ₜ β) {s : Set β} : IsOpen (h ⁻¹' s) ↔ IsOpen s :=
-  h.QuotientMap.isOpen_preimage
+  h.quotientMap.isOpen_preimage
 #align homeomorph.is_open_preimage Homeomorph.isOpen_preimage
 
 /- warning: homeomorph.is_open_image -> Homeomorph.isOpen_image is a dubious translation:
@@ -589,7 +589,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_open_image Homeomorph.isOpen_imageₓ'. -/
 @[simp]
 theorem isOpen_image (h : α ≃ₜ β) {s : Set α} : IsOpen (h '' s) ↔ IsOpen s := by
-  rw [← preimage_symm, is_open_preimage]
+  rw [← preimage_symm, isOpen_preimage]
 #align homeomorph.is_open_image Homeomorph.isOpen_image
 
 /- warning: homeomorph.is_open_map -> Homeomorph.isOpenMap is a dubious translation:
@@ -609,7 +609,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_closed_preimage Homeomorph.isClosed_preimageₓ'. -/
 @[simp]
 theorem isClosed_preimage (h : α ≃ₜ β) {s : Set β} : IsClosed (h ⁻¹' s) ↔ IsClosed s := by
-  simp only [← isOpen_compl_iff, ← preimage_compl, is_open_preimage]
+  simp only [← isOpen_compl_iff, ← preimage_compl, isOpen_preimage]
 #align homeomorph.is_closed_preimage Homeomorph.isClosed_preimage
 
 /- warning: homeomorph.is_closed_image -> Homeomorph.isClosed_image is a dubious translation:
@@ -620,7 +620,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.is_closed_image Homeomorph.isClosed_imageₓ'. -/
 @[simp]
 theorem isClosed_image (h : α ≃ₜ β) {s : Set α} : IsClosed (h '' s) ↔ IsClosed s := by
-  rw [← preimage_symm, is_closed_preimage]
+  rw [← preimage_symm, isClosed_preimage]
 #align homeomorph.is_closed_image Homeomorph.isClosed_image
 
 /- warning: homeomorph.is_closed_map -> Homeomorph.isClosedMap is a dubious translation:
@@ -639,7 +639,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), OpenEmbedding.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.open_embedding Homeomorph.openEmbeddingₓ'. -/
 protected theorem openEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
-  openEmbedding_of_embedding_open h.Embedding h.IsOpenMap
+  openEmbedding_of_embedding_open h.embedding h.isOpenMap
 #align homeomorph.open_embedding Homeomorph.openEmbedding
 
 /- warning: homeomorph.closed_embedding -> Homeomorph.closedEmbedding is a dubious translation:
@@ -649,7 +649,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2), ClosedEmbedding.{u2, u1} α β _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h)
 Case conversion may be inaccurate. Consider using '#align homeomorph.closed_embedding Homeomorph.closedEmbeddingₓ'. -/
 protected theorem closedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
-  closedEmbedding_of_embedding_closed h.Embedding h.IsClosedMap
+  closedEmbedding_of_embedding_closed h.embedding h.isClosedMap
 #align homeomorph.closed_embedding Homeomorph.closedEmbedding
 
 /- warning: homeomorph.normal_space -> Homeomorph.normalSpace is a dubious translation:
@@ -659,7 +659,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] [_inst_5 : NormalSpace.{u2} α _inst_1], (Homeomorph.{u2, u1} α β _inst_1 _inst_2) -> (NormalSpace.{u1} β _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.normal_space Homeomorph.normalSpaceₓ'. -/
 protected theorem normalSpace [NormalSpace α] (h : α ≃ₜ β) : NormalSpace β :=
-  h.symm.ClosedEmbedding.NormalSpace
+  h.symm.closedEmbedding.normalSpace
 #align homeomorph.normal_space Homeomorph.normalSpace
 
 /- warning: homeomorph.preimage_closure -> Homeomorph.preimage_closure is a dubious translation:
@@ -669,7 +669,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) (closure.{u1} β _inst_2 s)) (closure.{u2} α _inst_1 (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) s))
 Case conversion may be inaccurate. Consider using '#align homeomorph.preimage_closure Homeomorph.preimage_closureₓ'. -/
 theorem preimage_closure (h : α ≃ₜ β) (s : Set β) : h ⁻¹' closure s = closure (h ⁻¹' s) :=
-  h.IsOpenMap.preimage_closure_eq_closure_preimage h.Continuous _
+  h.isOpenMap.preimage_closure_eq_closure_preimage h.continuous _
 #align homeomorph.preimage_closure Homeomorph.preimage_closure
 
 /- warning: homeomorph.image_closure -> Homeomorph.image_closure is a dubious translation:
@@ -689,7 +689,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) (interior.{u1} β _inst_2 s)) (interior.{u2} α _inst_1 (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) s))
 Case conversion may be inaccurate. Consider using '#align homeomorph.preimage_interior Homeomorph.preimage_interiorₓ'. -/
 theorem preimage_interior (h : α ≃ₜ β) (s : Set β) : h ⁻¹' interior s = interior (h ⁻¹' s) :=
-  h.IsOpenMap.preimage_interior_eq_interior_preimage h.Continuous _
+  h.isOpenMap.preimage_interior_eq_interior_preimage h.continuous _
 #align homeomorph.preimage_interior Homeomorph.preimage_interior
 
 /- warning: homeomorph.image_interior -> Homeomorph.image_interior is a dubious translation:
@@ -709,7 +709,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) (frontier.{u1} β _inst_2 s)) (frontier.{u2} α _inst_1 (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) s))
 Case conversion may be inaccurate. Consider using '#align homeomorph.preimage_frontier Homeomorph.preimage_frontierₓ'. -/
 theorem preimage_frontier (h : α ≃ₜ β) (s : Set β) : h ⁻¹' frontier s = frontier (h ⁻¹' s) :=
-  h.IsOpenMap.preimage_frontier_eq_frontier_preimage h.Continuous _
+  h.isOpenMap.preimage_frontier_eq_frontier_preimage h.continuous _
 #align homeomorph.preimage_frontier Homeomorph.preimage_frontier
 
 /- warning: homeomorph.image_frontier -> Homeomorph.image_frontier is a dubious translation:
@@ -731,7 +731,7 @@ Case conversion may be inaccurate. Consider using '#align has_compact_mul_suppor
 @[to_additive]
 theorem HasCompactMulSupport.comp_homeomorph {M} [One M] {f : β → M} (hf : HasCompactMulSupport f)
     (φ : α ≃ₜ β) : HasCompactMulSupport (f ∘ φ) :=
-  hf.comp_closedEmbedding φ.ClosedEmbedding
+  hf.comp_closedEmbedding φ.closedEmbedding
 #align has_compact_mul_support.comp_homeomorph HasCompactMulSupport.comp_homeomorph
 #align has_compact_support.comp_homeomorph HasCompactSupport.comp_homeomorph
 
@@ -743,7 +743,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.map_nhds_eq Homeomorph.map_nhds_eqₓ'. -/
 @[simp]
 theorem map_nhds_eq (h : α ≃ₜ β) (x : α) : map h (𝓝 x) = 𝓝 (h x) :=
-  h.Embedding.map_nhds_of_mem _ (by simp)
+  h.embedding.map_nhds_of_mem _ (by simp)
 #align homeomorph.map_nhds_eq Homeomorph.map_nhds_eq
 
 /- warning: homeomorph.symm_map_nhds_eq -> Homeomorph.symm_map_nhds_eq is a dubious translation:
@@ -763,7 +763,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_2 : TopologicalSpace.{u1} β] (h : Homeomorph.{u2, u1} α β _inst_1 _inst_2) (x : α), Eq.{succ u2} (Filter.{u2} α) (nhds.{u2} α _inst_1 x) (Filter.comap.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h) (nhds.{u1} β _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u2) (succ u1), succ u2, succ u1} (Homeomorph.{u2, u1} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u2, u1} α β _inst_1 _inst_2))) h x)))
 Case conversion may be inaccurate. Consider using '#align homeomorph.nhds_eq_comap Homeomorph.nhds_eq_comapₓ'. -/
 theorem nhds_eq_comap (h : α ≃ₜ β) (x : α) : 𝓝 x = comap h (𝓝 (h x)) :=
-  h.Embedding.to_inducing.nhds_eq_comap x
+  h.embedding.to_inducing.nhds_eq_comap x
 #align homeomorph.nhds_eq_comap Homeomorph.nhds_eq_comap
 
 /- warning: homeomorph.comap_nhds_eq -> Homeomorph.comap_nhds_eq is a dubious translation:
@@ -800,7 +800,7 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.comp_contin
 @[simp]
 theorem comp_continuousOn_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) :
     ContinuousOn (h ∘ f) s ↔ ContinuousOn f s :=
-  h.Inducing.continuousOn_iff.symm
+  h.inducing.continuousOn_iff.symm
 #align homeomorph.comp_continuous_on_iff Homeomorph.comp_continuousOn_iff
 
 /- warning: homeomorph.comp_continuous_iff -> Homeomorph.comp_continuous_iff is a dubious translation:
@@ -811,7 +811,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comp_continuous_iff Homeomorph.comp_continuous_iffₓ'. -/
 @[simp]
 theorem comp_continuous_iff (h : α ≃ₜ β) {f : γ → α} : Continuous (h ∘ f) ↔ Continuous f :=
-  h.Inducing.continuous_iff.symm
+  h.inducing.continuous_iff.symm
 #align homeomorph.comp_continuous_iff Homeomorph.comp_continuous_iff
 
 /- warning: homeomorph.comp_continuous_iff' -> Homeomorph.comp_continuous_iff' is a dubious translation:
@@ -822,7 +822,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comp_continuous_iff' Homeomorph.comp_continuous_iff'ₓ'. -/
 @[simp]
 theorem comp_continuous_iff' (h : α ≃ₜ β) {f : β → γ} : Continuous (f ∘ h) ↔ Continuous f :=
-  h.QuotientMap.continuous_iff.symm
+  h.quotientMap.continuous_iff.symm
 #align homeomorph.comp_continuous_iff' Homeomorph.comp_continuous_iff'
 
 /- warning: homeomorph.comp_continuous_at_iff -> Homeomorph.comp_continuousAt_iff is a dubious translation:
@@ -833,7 +833,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comp_continuous_at_iff Homeomorph.comp_continuousAt_iffₓ'. -/
 theorem comp_continuousAt_iff (h : α ≃ₜ β) (f : γ → α) (x : γ) :
     ContinuousAt (h ∘ f) x ↔ ContinuousAt f x :=
-  h.Inducing.continuousAt_iff.symm
+  h.inducing.continuousAt_iff.symm
 #align homeomorph.comp_continuous_at_iff Homeomorph.comp_continuousAt_iff
 
 /- warning: homeomorph.comp_continuous_at_iff' -> Homeomorph.comp_continuousAt_iff' is a dubious translation:
@@ -844,7 +844,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comp_continuous_at_iff' Homeomorph.comp_continuousAt_iff'ₓ'. -/
 theorem comp_continuousAt_iff' (h : α ≃ₜ β) (f : β → γ) (x : α) :
     ContinuousAt (f ∘ h) x ↔ ContinuousAt f (h x) :=
-  h.Inducing.continuousAt_iff' (by simp)
+  h.inducing.continuousAt_iff' (by simp)
 #align homeomorph.comp_continuous_at_iff' Homeomorph.comp_continuousAt_iff'
 
 /- warning: homeomorph.comp_continuous_within_at_iff -> Homeomorph.comp_continuousWithinAt_iff is a dubious translation:
@@ -855,7 +855,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align homeomorph.comp_continuous_within_at_iff Homeomorph.comp_continuousWithinAt_iffₓ'. -/
 theorem comp_continuousWithinAt_iff (h : α ≃ₜ β) (f : γ → α) (s : Set γ) (x : γ) :
     ContinuousWithinAt f s x ↔ ContinuousWithinAt (h ∘ f) s x :=
-  h.Inducing.continuousWithinAt_iff
+  h.inducing.continuousWithinAt_iff
 #align homeomorph.comp_continuous_within_at_iff Homeomorph.comp_continuousWithinAt_iff
 
 /- warning: homeomorph.comp_is_open_map_iff -> Homeomorph.comp_isOpenMap_iff is a dubious translation:
@@ -892,8 +892,8 @@ theorem comp_isOpenMap_iff' (h : α ≃ₜ β) {f : β → γ} : IsOpenMap (f �
 /-- If two sets are equal, then they are homeomorphic. -/
 def setCongr {s t : Set α} (h : s = t) : s ≃ₜ t
     where
-  continuous_toFun := continuous_inclusion h.Subset
-  continuous_invFun := continuous_inclusion h.symm.Subset
+  continuous_toFun := continuous_inclusion h.subset
+  continuous_invFun := continuous_inclusion h.symm.subset
   toEquiv := Equiv.setCongr h
 #align homeomorph.set_congr Homeomorph.setCongr
 -/
@@ -907,8 +907,8 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.sum_congr H
 /-- Sum of two homeomorphisms. -/
 def sumCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : Sum α γ ≃ₜ Sum β δ
     where
-  continuous_toFun := h₁.Continuous.sum_map h₂.Continuous
-  continuous_invFun := h₁.symm.Continuous.sum_map h₂.symm.Continuous
+  continuous_toFun := h₁.continuous.sum_map h₂.continuous
+  continuous_invFun := h₁.symm.continuous.sum_map h₂.symm.continuous
   toEquiv := h₁.toEquiv.sumCongr h₂.toEquiv
 #align homeomorph.sum_congr Homeomorph.sumCongr
 
@@ -922,9 +922,9 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.prod_congr 
 def prodCongr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : α × γ ≃ₜ β × δ
     where
   continuous_toFun :=
-    (h₁.Continuous.comp continuous_fst).prod_mk (h₂.Continuous.comp continuous_snd)
+    (h₁.continuous.comp continuous_fst).prod_mk (h₂.continuous.comp continuous_snd)
   continuous_invFun :=
-    (h₁.symm.Continuous.comp continuous_fst).prod_mk (h₂.symm.Continuous.comp continuous_snd)
+    (h₁.symm.continuous.comp continuous_fst).prod_mk (h₂.symm.continuous.comp continuous_snd)
   toEquiv := h₁.toEquiv.prodCongr h₂.toEquiv
 #align homeomorph.prod_congr Homeomorph.prodCongr
 
@@ -1065,8 +1065,8 @@ end
 def piCongrRight {ι : Type _} {β₁ β₂ : ι → Type _} [∀ i, TopologicalSpace (β₁ i)]
     [∀ i, TopologicalSpace (β₂ i)] (F : ∀ i, β₁ i ≃ₜ β₂ i) : (∀ i, β₁ i) ≃ₜ ∀ i, β₂ i
     where
-  continuous_toFun := continuous_pi fun i => (F i).Continuous.comp <| continuous_apply i
-  continuous_invFun := continuous_pi fun i => (F i).symm.Continuous.comp <| continuous_apply i
+  continuous_toFun := continuous_pi fun i => (F i).continuous.comp <| continuous_apply i
+  continuous_invFun := continuous_pi fun i => (F i).symm.continuous.comp <| continuous_apply i
   toEquiv := Equiv.piCongrRight fun i => (F i).toEquiv
 #align homeomorph.Pi_congr_right Homeomorph.piCongrRight
 -/
@@ -1106,9 +1106,9 @@ Case conversion may be inaccurate. Consider using '#align homeomorph.sum_prod_di
 def sumProdDistrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sumProdDistrib α β γ).symm
-        ((continuous_inl.Prod_map continuous_id).sum_elim
-          (continuous_inr.Prod_map continuous_id)) <|
-      (isOpenMap_inl.Prod IsOpenMap.id).sum_elim (isOpenMap_inr.Prod IsOpenMap.id)
+        ((continuous_inl.prod_map continuous_id).sum_elim
+          (continuous_inr.prod_map continuous_id)) <|
+      (isOpenMap_inl.prod IsOpenMap.id).sum_elim (isOpenMap_inr.prod IsOpenMap.id)
 #align homeomorph.sum_prod_distrib Homeomorph.sumProdDistrib
 
 /- warning: homeomorph.prod_sum_distrib -> Homeomorph.prodSumDistrib is a dubious translation:
@@ -1135,7 +1135,7 @@ def sigmaProdDistrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=
   Homeomorph.symm <|
     homeomorphOfContinuousOpen (Equiv.sigmaProdDistrib σ β).symm
       (continuous_sigma fun i => continuous_sigmaMk.fst'.prod_mk continuous_snd)
-      (isOpenMap_sigma.2 fun i => isOpenMap_sigmaMk.Prod IsOpenMap.id)
+      (isOpenMap_sigma.2 fun i => isOpenMap_sigmaMk.prod IsOpenMap.id)
 #align homeomorph.sigma_prod_distrib Homeomorph.sigmaProdDistrib
 
 end Distrib
@@ -1295,7 +1295,7 @@ end Homeomorph
 def Equiv.toHomeomorphOfInducing [TopologicalSpace α] [TopologicalSpace β] (f : α ≃ β)
     (hf : Inducing f) : α ≃ₜ β :=
   { f with
-    continuous_toFun := hf.Continuous
+    continuous_toFun := hf.continuous
     continuous_invFun := hf.continuous_iff.2 <| by simpa using continuous_id }
 #align equiv.to_homeomorph_of_inducing Equiv.toHomeomorphOfInducing
 -/
@@ -1315,7 +1315,7 @@ theorem continuous_symm_of_equiv_compact_to_t2 [CompactSpace α] [T2Space β] {f
   by
   rw [continuous_iff_isClosed]
   intro C hC
-  have hC' : IsClosed (f '' C) := (hC.is_compact.image hf).IsClosed
+  have hC' : IsClosed (f '' C) := (hC.is_compact.image hf).isClosed
   rwa [Equiv.image_eq_preimage] at hC'
 #align continuous.continuous_symm_of_equiv_compact_to_t2 Continuous.continuous_symm_of_equiv_compact_to_t2
 

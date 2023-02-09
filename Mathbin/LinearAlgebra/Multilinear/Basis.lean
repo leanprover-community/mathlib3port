@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,14 +41,14 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
   induction' n with m hm
   · ext x
     convert h finZeroElim
-  · apply Function.LeftInverse.injective uncurry_curry_left
+  · apply Function.LeftInverse.injective uncurry_curryLeft
     refine' Basis.ext (e 0) _
     intro i
     apply hm (Fin.tail e)
     intro j
     convert h (Fin.cons i j)
     iterate 2 
-      rw [curry_left_apply]
+      rw [curryLeft_apply]
       congr 1 with x
       refine' Fin.cases rfl (fun x => _) x
       dsimp [Fin.tail]
@@ -65,7 +65,7 @@ theorem Basis.ext_multilinear [DecidableEq ι] [Finite ι]
   by
   cases nonempty_fintype ι
   exact
-    (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp
+    (domDomCongr_eq_iff (Fintype.equivFin ι) f g).mp
       (Basis.ext_multilinear_fin (fun i => e) fun i => h (i ∘ _))
 #align basis.ext_multilinear Basis.ext_multilinear
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.projection
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,10 +90,10 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
     let w : ℕ → K := fun n => Classical.choose (h n)
     exact ⟨w, fun n => Classical.choose_spec (h n)⟩
   rcases exists_seq with ⟨w, hw⟩
-  have norm_tendsto : tendsto (fun n => ‖u - w n‖) at_top (nhds δ) :=
+  have norm_tendsto : Tendsto (fun n => ‖u - w n‖) atTop (nhds δ) :=
     by
-    have h : tendsto (fun n : ℕ => δ) at_top (nhds δ) := tendsto_const_nhds
-    have h' : tendsto (fun n : ℕ => δ + 1 / (n + 1)) at_top (nhds δ) :=
+    have h : Tendsto (fun n : ℕ => δ) atTop (nhds δ) := tendsto_const_nhds
+    have h' : Tendsto (fun n : ℕ => δ + 1 / (n + 1)) atTop (nhds δ) :=
       by
       convert h.add tendsto_one_div_add_atTop_nhds_0_nat
       simp only [add_zero]
@@ -129,7 +129,7 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
             absR (2 : ℝ) * ‖u - half • (wq + wp)‖ * (absR (2 : ℝ) * ‖u - half • (wq + wp)‖) +
               ‖wp - wq‖ * ‖wp - wq‖ :=
           by
-          rw [_root_.abs_of_nonneg]
+          rw [abs_of_nonneg]
           exact zero_le_two
         _ =
             ‖(2 : ℝ) • (u - half • (wq + wp))‖ * ‖(2 : ℝ) • (u - half • (wq + wp))‖ +
@@ -137,7 +137,7 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
           by simp [norm_smul]
         _ = ‖a + b‖ * ‖a + b‖ + ‖a - b‖ * ‖a - b‖ :=
           by
-          rw [smul_sub, smul_smul, mul_one_div_cancel (_root_.two_ne_zero : (2 : ℝ) ≠ 0), ←
+          rw [smul_sub, smul_smul, mul_one_div_cancel (two_ne_zero : (2 : ℝ) ≠ 0), ←
             one_add_one_eq_two, add_smul]
           simp only [one_smul]
           have eq₁ : wp - wq = a - b := (sub_sub_sub_cancel_left _ _ _).symm
@@ -157,7 +157,7 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
     have eq₁ : 4 * δ * δ ≤ 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ :=
       by
       simp_rw [mul_assoc]
-      exact mul_le_mul_of_nonneg_left (mul_self_le_mul_self zero_le_δ Eq) zero_le_four
+      exact mul_le_mul_of_nonneg_left (mul_self_le_mul_self zero_le_δ eq) zero_le_four
     have eq₂ : ‖a‖ * ‖a‖ ≤ (δ + div) * (δ + div) :=
       mul_self_le_mul_self (norm_nonneg _)
         (le_trans (le_of_lt <| hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _))
@@ -183,19 +183,19 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
       add_nonneg (mul_nonneg (mul_nonneg (by norm_num) zero_le_δ) (le_of_lt Nat.one_div_pos_of_nat))
         (mul_nonneg (mul_nonneg (by norm_num) nat.one_div_pos_of_nat.le) nat.one_div_pos_of_nat.le)
     -- third goal : `tendsto (λ (n : ℕ), sqrt (b n)) at_top (𝓝 0)`
-    apply tendsto.comp
+    apply Tendsto.comp
     · convert continuous_sqrt.continuous_at
       exact sqrt_zero.symm
-    have eq₁ : tendsto (fun n : ℕ => 8 * δ * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
+    have eq₁ : Tendsto (fun n : ℕ => 8 * δ * (1 / (n + 1))) atTop (nhds (0 : ℝ)) :=
       by
       convert (@tendsto_const_nhds _ _ _ (8 * δ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [mul_zero]
-    have : tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
+    have : Tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1))) atTop (nhds (0 : ℝ)) :=
       by
       convert (@tendsto_const_nhds _ _ _ (4 : ℝ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [mul_zero]
     have eq₂ :
-      tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1)) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
+      Tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1)) * (1 / (n + 1))) atTop (nhds (0 : ℝ)) :=
       by
       convert this.mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [mul_zero]
@@ -208,8 +208,8 @@ theorem exists_norm_eq_infᵢ_of_complete_convex {K : Set F} (ne : K.Nonempty) (
   use hv
   have h_cont : Continuous fun v => ‖u - v‖ :=
     Continuous.comp continuous_norm (Continuous.sub continuous_const continuous_id)
-  have : tendsto (fun n => ‖u - w n‖) at_top (nhds ‖u - v‖)
-  convert tendsto.comp h_cont.continuous_at w_tendsto
+  have : Tendsto (fun n => ‖u - w n‖) atTop (nhds ‖u - v‖)
+  convert Tendsto.comp h_cont.continuous_at w_tendsto
   exact tendsto_nhds_unique this norm_tendsto
   exact Subtype.mem _
 #align exists_norm_eq_infi_of_complete_convex exists_norm_eq_infᵢ_of_complete_convex
@@ -243,7 +243,7 @@ theorem norm_eq_infᵢ_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u 
           ‖u - v‖ ^ 2 ≤ ‖u - (θ • w + (1 - θ) • v)‖ ^ 2 :=
             by
             simp only [sq]; apply mul_self_le_mul_self (norm_nonneg _)
-            rw [Eq]; apply δ_le'
+            rw [eq]; apply δ_le'
             apply h hw hv
             exacts[le_of_lt hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel'_right _ _]
           _ = ‖u - v - θ • (w - v)‖ ^ 2 :=
@@ -378,7 +378,7 @@ theorem norm_eq_infᵢ_iff_real_inner_eq_zero (K : Submodule ℝ F) {u : F} {v :
       simp only [neg_inj, add_neg_cancel_right, sub_eq_add_neg]
       rw [h₂, inner_neg_right] at h₁
       linarith
-      exact le_antisymm le GE.ge)
+      exact le_antisymm le ge)
     (by
       intro h
       have : ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0
@@ -411,8 +411,8 @@ theorem norm_eq_infᵢ_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
     · symm
       calc
         im (0 : 𝕜) = 0 := im.map_zero
-        _ = re ⟪u - v, -I • w⟫ := (A _ (K.smul_mem (-I) hw)).symm
-        _ = re (-I * ⟪u - v, w⟫) := by rw [inner_smul_right]
+        _ = re ⟪u - v, -i • w⟫ := (A _ (K.smul_mem (-i) hw)).symm
+        _ = re (-i * ⟪u - v, w⟫) := by rw [inner_smul_right]
         _ = im ⟪u - v, w⟫ := by simp
         
   · intro H
@@ -432,7 +432,7 @@ unbundled function.  This definition is only intended for use in
 setting up the bundled version `orthogonal_projection` and should not
 be used once that is defined. -/
 def orthogonalProjectionFn (v : E) :=
-  (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›) v).some
+  (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›) v).choose
 #align orthogonal_projection_fn orthogonalProjectionFn
 
 variable {K}
@@ -442,7 +442,7 @@ This lemma is only intended for use in setting up the bundled version
 and should not be used once that is defined. -/
 theorem orthogonalProjectionFn_mem (v : E) : orthogonalProjectionFn K v ∈ K :=
   (exists_norm_eq_infᵢ_of_complete_subspace K (completeSpace_coe_iff_isComplete.mp ‹_›)
-        v).choose_spec.some
+        v).choose_spec.choose
 #align orthogonal_projection_fn_mem orthogonalProjectionFn_mem
 
 /-- The characterization of the unbundled orthogonal projection.  This
@@ -679,7 +679,7 @@ variable {𝕜} (K) [CompleteSpace K]
 /-- Auxiliary definition for `reflection`: the reflection as a linear equivalence. -/
 def reflectionLinearEquiv : E ≃ₗ[𝕜] E :=
   LinearEquiv.ofInvolutive
-    (bit0 (K.Subtype.comp (orthogonalProjection K).toLinearMap) - LinearMap.id) fun x => by
+    (bit0 (K.subtype.comp (orthogonalProjection K).toLinearMap) - LinearMap.id) fun x => by
     simp [bit0]
 #align reflection_linear_equiv reflectionLinearEquiv
 
@@ -919,7 +919,7 @@ theorem orthogonalProjection_tendsto_closure_supᵢ [CompleteSpace E] {ι : Type
       (𝓝 (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)) :=
   by
   cases isEmpty_or_nonempty ι
-  · rw [filter_eq_bot_of_is_empty (at_top : Filter ι)]
+  · rw [filter_eq_bot_of_isEmpty (atTop : Filter ι)]
     exact tendsto_bot
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
@@ -982,7 +982,7 @@ variable {x y : E} [CompleteSpace E]
 /-- If `S` is dense and `x - y ∈ Kᗮ`, then `x = y`. -/
 theorem eq_of_sub_mem_orthogonal (hK : Dense (K : Set E)) (h : x - y ∈ Kᗮ) : x = y :=
   by
-  rw [dense_iff_topological_closure_eq_top, topological_closure_eq_top_iff] at hK
+  rw [dense_iff_topologicalClosure_eq_top, topologicalClosure_eq_top_iff] at hK
   rwa [hK, Submodule.mem_bot, sub_eq_zero] at h
 #align dense.eq_of_sub_mem_orthogonal Dense.eq_of_sub_mem_orthogonal
 
@@ -1129,7 +1129,7 @@ theorem Submodule.finrank_add_inf_finrank_orthogonal {K₁ K₂ : Submodule 𝕜
     finrank 𝕜 K₁ + finrank 𝕜 (K₁ᗮ ⊓ K₂ : Submodule 𝕜 E) = finrank 𝕜 K₂ :=
   by
   haveI := Submodule.finiteDimensional_of_le h
-  haveI := proper_is_R_or_C 𝕜 K₁
+  haveI := proper_isROrC 𝕜 K₁
   have hd := Submodule.dim_sup_add_dim_inf_eq K₁ (K₁ᗮ ⊓ K₂)
   rw [← inf_assoc, (Submodule.orthogonal_disjoint K₁).eq_bot, bot_inf_eq, finrank_bot,
     Submodule.sup_orthogonal_inf_of_completeSpace h] at hd
@@ -1183,7 +1183,7 @@ specifically at most as many reflections as the dimension of the complement of t
 of `φ`. -/
 theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ F] {n : ℕ}
     (φ : F ≃ₗᵢ[ℝ] F) (hn : finrank ℝ (ker (ContinuousLinearMap.id ℝ F - φ))ᗮ ≤ n) :
-    ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).Prod :=
+    ∃ l : List F, l.length ≤ n ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).prod :=
   by
   -- We prove this by strong induction on `n`, the dimension of the orthogonal complement of the
   -- fixed subspace of the endomorphism `φ`
@@ -1261,7 +1261,7 @@ orthogonal group is a product of at most as many reflections as the dimension of
 
 Special case of the **Cartan–Dieudonné theorem**. -/
 theorem LinearIsometryEquiv.reflections_generate_dim [FiniteDimensional ℝ F] (φ : F ≃ₗᵢ[ℝ] F) :
-    ∃ l : List F, l.length ≤ finrank ℝ F ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).Prod :=
+    ∃ l : List F, l.length ≤ finrank ℝ F ∧ φ = (l.map fun v => reflection (ℝ ∙ v)ᗮ).prod :=
   let ⟨l, hl₁, hl₂⟩ := φ.reflections_generate_dim_aux le_rfl
   ⟨l, hl₁.trans (Submodule.finrank_le _), hl₂⟩
 #align linear_isometry_equiv.reflections_generate_dim LinearIsometryEquiv.reflections_generate_dim
@@ -1316,7 +1316,7 @@ variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in an `inner_product_space` is maximal, if and only if the orthogonal
 complement of its span is empty. -/
 theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal 𝕜 (coe : v → E)) :
@@ -1368,7 +1368,7 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
         simpa using hab''
       exact hv.2 this
   · -- ** direction 2: empty orthogonal complement implies maximal
-    simp only [subset.antisymm_iff]
+    simp only [Subset.antisymm_iff]
     rintro h u (huv : v ⊆ u) hu
     refine' ⟨_, huv⟩
     intro x hxu
@@ -1385,13 +1385,13 @@ theorem maximal_orthonormal_iff_orthogonal_complement_eq_bot (hv : Orthonormal �
 
 variable [FiniteDimensional 𝕜 E]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (u «expr ⊇ » v) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (u «expr ⊇ » v) -/
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
 is a basis. -/
 theorem maximal_orthonormal_iff_basis_of_finiteDimensional (hv : Orthonormal 𝕜 (coe : v → E)) :
     (∀ (u) (_ : u ⊇ v), Orthonormal 𝕜 (coe : u → E) → u = v) ↔ ∃ b : Basis v 𝕜 E, ⇑b = coe :=
   by
-  haveI := proper_is_R_or_C 𝕜 (span 𝕜 v)
+  haveI := proper_isROrC 𝕜 (span 𝕜 v)
   rw [maximal_orthonormal_iff_orthogonal_complement_eq_bot hv]
   have hv_compl : IsComplete (span 𝕜 v : Set E) := (span 𝕜 v).complete_of_finiteDimensional
   rw [Submodule.orthogonal_eq_bot_iff]

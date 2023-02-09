@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao, Kevin Buzzard, Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.gram_schmidt_ortho
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 /-- The Gram-Schmidt process takes a set of vectors as input
 and outputs a set of orthogonal vectors which have the same span. -/
 noncomputable def gramSchmidt (f : ι → E) : ι → E
-  | n => f n - ∑ i : Iio n, orthogonalProjection (𝕜 ∙ gramSchmidt i) (f n)decreasing_by
+  | n => f n - ∑ i : Iio n, orthogonalProjection (𝕜 ∙ gram_schmidt i) (f n)decreasing_by
   exact mem_Iio.1 i.2
 #align gram_schmidt gramSchmidt
 
@@ -103,7 +103,7 @@ theorem gramSchmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) :
   clear h₀ a b
   intro a b h₀
   revert a
-  apply WellFounded.induction (@IsWellFounded.wf ι (· < ·) _) b
+  apply WellFounded.induction (@is_well_founded.wf ι (· < ·) _) b
   intro b ih a h₀
   simp only [gramSchmidt_def 𝕜 f b, inner_sub_right, inner_sum, orthogonalProjection_singleton,
     inner_smul_right]
@@ -164,7 +164,7 @@ theorem gramSchmidt_mem_span (f : ι → E) : ∀ {j i}, i ≤ j → gramSchmidt
     let hkj : k < j := (Finset.mem_Iio.1 hk).trans_le hij
     exact
       smul_mem _ _
-        (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gramSchmidt_mem_span le_rfl)
+        (span_mono (image_subset f <| Iic_subset_Iic.2 hkj.le) <| gram_schmidt_mem_span le_rfl)
 #align gram_schmidt_mem_span gramSchmidt_mem_span
 
 theorem span_gramSchmidt_Iic (f : ι → E) (c : ι) :
@@ -210,7 +210,7 @@ theorem gramSchmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f 
     rintro - ⟨k, hk, rfl⟩
     rw [SetLike.mem_coe, mem_orthogonal_singleton_iff_inner_left]
     apply hf
-    refine' (lt_of_le_of_lt hk _).Ne
+    refine' (lt_of_le_of_lt hk _).ne
     simpa using hj
   · simp
 #align gram_schmidt_of_orthogonal gramSchmidt_of_orthogonal
@@ -270,7 +270,7 @@ theorem gramSchmidt_linearIndependent {f : ι → E} (h₀ : LinearIndependent �
 
 /-- When given a basis, `gram_schmidt` produces a basis. -/
 noncomputable def gramSchmidtBasis (b : Basis ι 𝕜 E) : Basis ι 𝕜 E :=
-  Basis.mk (gramSchmidt_linearIndependent b.LinearIndependent)
+  Basis.mk (gramSchmidt_linearIndependent b.linearIndependent)
     ((span_gramSchmidt 𝕜 b).trans b.span_eq).ge
 #align gram_schmidt_basis gramSchmidtBasis
 
@@ -329,7 +329,7 @@ become zero in the process. -/
 theorem gramSchmidtOrthonormal' (f : ι → E) :
     Orthonormal 𝕜 fun i : { i | gramSchmidtNormed 𝕜 f i ≠ 0 } => gramSchmidtNormed 𝕜 f i :=
   by
-  refine' ⟨fun i => gramSchmidtNormed_unit_length' i.Prop, _⟩
+  refine' ⟨fun i => gramSchmidtNormed_unit_length' i.prop, _⟩
   rintro i j (hij : ¬_)
   rw [Subtype.ext_iff] at hij
   simp [gramSchmidtNormed, inner_smul_left, inner_smul_right, gramSchmidt_orthogonal 𝕜 f hij]
@@ -366,7 +366,7 @@ size of the index set is the dimension of `E`, produce an orthonormal basis for 
 with the orthonormal set produced by the Gram-Schmidt orthonormalization process on the elements of
 `ι` for which this process gives a nonzero number. -/
 noncomputable def gramSchmidtOrthonormalBasis : OrthonormalBasis ι 𝕜 E :=
-  ((gramSchmidtOrthonormal' f).exists_orthonormalBasis_extension_of_card_eq h).some
+  ((gramSchmidtOrthonormal' f).exists_orthonormalBasis_extension_of_card_eq h).choose
 #align gram_schmidt_orthonormal_basis gramSchmidtOrthonormalBasis
 
 theorem gramSchmidtOrthonormalBasis_apply {f : ι → E} {i : ι} (hi : gramSchmidtNormed 𝕜 f i ≠ 0) :
@@ -402,7 +402,7 @@ theorem inner_gramSchmidtOrthonormalBasis_eq_zero {f : ι → E} {i : ι}
   have : k ≠ i := by
     rintro rfl
     exact hk hi
-  exact (gramSchmidtOrthonormalBasis h f).Orthonormal.2 this
+  exact (gramSchmidtOrthonormalBasis h f).orthonormal.2 this
 #align inner_gram_schmidt_orthonormal_basis_eq_zero inner_gramSchmidtOrthonormalBasis_eq_zero
 
 theorem gramSchmidtOrthonormalBasis_inv_triangular {i j : ι} (hij : i < j) :

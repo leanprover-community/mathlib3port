@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,7 +103,7 @@ theorem iso_isometry_of_normNoninc {V W : SemiNormedGroup} (i : V ≅ W) (h1 : i
   intro v
   apply le_antisymm (h1 v)
   calc
-    ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
+    ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [Iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := h2 _
     
 #align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroup.iso_isometry_of_normNoninc
@@ -247,7 +247,7 @@ theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom :
   intro v
   apply le_antisymm (i.hom.2 v)
   calc
-    ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
+    ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [Iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := i.inv.2 _
     
 #align SemiNormedGroup₁.iso_isometry SemiNormedGroup₁.iso_isometry

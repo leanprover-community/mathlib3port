@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.irrational
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem isGδ_irrational : IsGδ { x | Irrational x } :=
 theorem dense_irrational : Dense { x : ℝ | Irrational x } :=
   by
   refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _
-  simp only [mem_Union, mem_singleton_iff]
+  simp only [mem_unionᵢ, mem_singleton_iff]
   rintro _ ⟨a, b, hlt, rfl⟩ hne; rw [inter_comm]
   exact exists_irrational_btwn (Rat.cast_lt.2 hlt)
 #align dense_irrational dense_irrational
@@ -64,10 +64,10 @@ instance : OrderTopology { x // Irrational x } :=
     ⟨⟨a, ha⟩, hxa, hay⟩
 
 instance : NoMaxOrder { x // Irrational x } :=
-  ⟨fun ⟨x, hx⟩ => ⟨⟨x + (1 : ℕ), hx.addNat 1⟩, by simp⟩⟩
+  ⟨fun ⟨x, hx⟩ => ⟨⟨x + (1 : ℕ), hx.add_nat 1⟩, by simp⟩⟩
 
 instance : NoMinOrder { x // Irrational x } :=
-  ⟨fun ⟨x, hx⟩ => ⟨⟨x - (1 : ℕ), hx.subNat 1⟩, by simp⟩⟩
+  ⟨fun ⟨x, hx⟩ => ⟨⟨x - (1 : ℕ), hx.sub_nat 1⟩, by simp⟩⟩
 
 instance : DenselyOrdered { x // Irrational x } :=
   ⟨fun x y hlt =>

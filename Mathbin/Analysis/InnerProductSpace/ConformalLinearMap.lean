@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.conformal_linear_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ theorem isConformalMap_iff (f : E →L[ℝ] F) :
   · rintro ⟨c₁, hc₁, li, rfl⟩
     refine' ⟨c₁ * c₁, mul_self_pos.2 hc₁, fun u v => _⟩
     simp only [real_inner_smul_left, real_inner_smul_right, mul_assoc, coe_smul',
-      coe_to_continuous_linear_map, Pi.smul_apply, inner_map_map]
+      coe_toContinuousLinearMap, Pi.smul_apply, inner_map_map]
   · rintro ⟨c₁, hc₁, huv⟩
     obtain ⟨c, hc, rfl⟩ : ∃ c : ℝ, 0 < c ∧ c₁ = c * c
     exact ⟨Real.sqrt c₁, Real.sqrt_pos.2 hc₁, (Real.mul_self_sqrt hc₁.le).symm⟩

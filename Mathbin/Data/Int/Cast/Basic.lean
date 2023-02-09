@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module data.int.cast.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,19 +82,19 @@ theorem cast_one : ((1 : ℤ) : R) = 1 :=
 @[simp, norm_cast]
 theorem cast_neg : ∀ n, ((-n : ℤ) : R) = -n
   | (0 : ℕ) => by erw [cast_zero, neg_zero]
-  | (n + 1 : ℕ) => by erw [cast_of_nat, cast_neg_succ_of_nat] <;> rfl
-  | -[n+1] => by erw [cast_of_nat, cast_neg_succ_of_nat, neg_neg]
+  | (n + 1 : ℕ) => by erw [cast_ofNat, cast_negSucc] <;> rfl
+  | -[n+1] => by erw [cast_ofNat, cast_negSucc, neg_neg]
 #align int.cast_neg Int.cast_negₓ
 
 @[simp]
 theorem cast_subNatNat (m n) : ((Int.subNatNat m n : ℤ) : R) = m - n :=
   by
   unfold sub_nat_nat; cases e : n - m
-  · simp only [sub_nat_nat, cast_of_nat]
+  · simp only [subNatNat, cast_ofNat]
     simp [e, Nat.le_of_sub_eq_zero e]
   ·
-    rw [sub_nat_nat, cast_neg_succ_of_nat, Nat.add_one, ← e,
-      Nat.cast_sub <| _root_.le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]
+    rw [subNatNat, cast_negSucc, Nat.add_one, ← e,
+      Nat.cast_sub <| le_of_lt <| Nat.lt_of_sub_eq_succ e, neg_sub]
 #align int.cast_sub_nat_nat Int.cast_subNatNatₓ
 
 #print Int.negOfNat_eq /-
@@ -109,20 +109,20 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddGroupWithOne.{u1} R] (n : Nat), Eq.{succ u1} R (Int.cast.{u1} R (AddGroupWithOne.toIntCast.{u1} R _inst_1) (Int.negOfNat n)) (Neg.neg.{u1} R (AddGroupWithOne.toNeg.{u1} R _inst_1) (Nat.cast.{u1} R (AddMonoidWithOne.toNatCast.{u1} R (AddGroupWithOne.toAddMonoidWithOne.{u1} R _inst_1)) n))
 Case conversion may be inaccurate. Consider using '#align int.cast_neg_of_nat Int.cast_negOfNatₓ'. -/
 @[simp]
-theorem cast_negOfNat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by simp [neg_of_nat_eq]
+theorem cast_negOfNat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by simp [negOfNat_eq]
 #align int.cast_neg_of_nat Int.cast_negOfNat
 
 @[simp, norm_cast]
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
   | (m : ℕ), (n : ℕ) => by simp [← Int.ofNat_add]
-  | (m : ℕ), -[n+1] => by erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_add_neg]
+  | (m : ℕ), -[n+1] => by erw [cast_subNatNat, cast_ofNat, cast_negSucc, sub_eq_add_neg]
   | -[m+1], (n : ℕ) => by
-    erw [cast_sub_nat_nat, cast_coe_nat, cast_neg_succ_of_nat, sub_eq_iff_eq_add, add_assoc,
+    erw [cast_subNatNat, cast_ofNat, cast_negSucc, sub_eq_iff_eq_add, add_assoc,
       eq_neg_add_iff_add_eq, ← Nat.cast_add, ← Nat.cast_add, Nat.add_comm]
   | -[m+1], -[n+1] =>
     show (-[m + n + 1+1] : R) = _ by
-      rw [cast_neg_succ_of_nat, cast_neg_succ_of_nat, cast_neg_succ_of_nat, ← neg_add_rev, ←
-        Nat.cast_add, Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
+      rw [cast_negSucc, cast_negSucc, cast_negSucc, ← neg_add_rev, ← Nat.cast_add,
+        Nat.add_right_comm m n 1, Nat.add_assoc, Nat.add_comm]
 #align int.cast_add Int.cast_addₓ
 
 @[simp, norm_cast]

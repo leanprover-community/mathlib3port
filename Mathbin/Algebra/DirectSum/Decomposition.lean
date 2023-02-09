@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.decomposition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ instance : Subsingleton (Decomposition ℳ) :=
 variable [Decomposition ℳ]
 
 protected theorem Decomposition.isInternal : DirectSum.IsInternal ℳ :=
-  ⟨Decomposition.right_inv.Injective, Decomposition.left_inv.Surjective⟩
+  ⟨Decomposition.right_inv.injective, Decomposition.left_inv.surjective⟩
 #align direct_sum.decomposition.is_internal DirectSum.Decomposition.isInternal
 
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
@@ -94,7 +94,7 @@ protected theorem Decomposition.inductionOn {p : M → Prop} (h_zero : p 0)
       left_inv := fun _ => (decompose ℳ).left_inv _
       right_inv := fun _ => (decompose ℳ).right_inv _ }
   have mem : ∀ m, m ∈ supᵢ ℳ' := fun m =>
-    (DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top ℳ' (decomposition.is_internal ℳ')).symm ▸ trivial
+    (DirectSum.IsInternal.addSubmonoid_supᵢ_eq_top ℳ' (Decomposition.isInternal ℳ')).symm ▸ trivial
   exact fun m =>
     AddSubmonoid.supᵢ_induction ℳ' (mem m) (fun i m h => h_homogeneous ⟨m, h⟩) h_zero h_add
 #align direct_sum.decomposition.induction_on DirectSum.Decomposition.inductionOn

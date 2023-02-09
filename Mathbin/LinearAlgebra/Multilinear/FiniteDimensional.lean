@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.multilinear.finite_dimensional
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,14 +51,14 @@ private theorem free_and_finite :
     by
     cases nonempty_fintype ι
     cases this _ (M₁ ∘ (Fintype.equivFin ι).symm)
-    have e := dom_dom_congr_linear_equiv' R M₁ M₂ (Fintype.equivFin ι)
+    have e := domDomCongrLinearEquiv' R M₁ M₂ (Fintype.equivFin ι)
     exact ⟨Module.Free.ofEquiv e.symm, Module.Finite.equiv e.symm⟩
   intro n N _ _ _ _
   induction' n with n ih
   ·
     exact
-      ⟨Module.Free.ofEquiv (const_linear_equiv_of_is_empty R N M₂),
-        Module.Finite.equiv (const_linear_equiv_of_is_empty R N M₂)⟩
+      ⟨Module.Free.ofEquiv (constLinearEquivOfIsEmpty R N M₂),
+        Module.Finite.equiv (constLinearEquivOfIsEmpty R N M₂)⟩
   · suffices
       Module.Free R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) ∧
         Module.Finite R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂)

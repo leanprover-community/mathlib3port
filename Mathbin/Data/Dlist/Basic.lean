@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.dlist.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ Case conversion may be inaccurate. Consider using '#align dlist.join Std.DList.j
 `list.join`. -/
 def Std.DList.join {α : Type _} : List (Dlist α) → Dlist α
   | [] => Dlist.empty
-  | x :: xs => x ++ Std.DList.join xs
+  | x :: xs => x ++ dlist.join xs
 #align dlist.join Std.DList.join
 
 /- warning: dlist_singleton -> Std.DList_singleton is a dubious translation:

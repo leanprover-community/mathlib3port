@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.multiset.sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.card_disj_sum Multiset.card_disjSumₓ'. -/
 @[simp]
 theorem card_disjSum : (s.disjSum t).card = s.card + t.card := by
-  rw [disj_sum, card_add, card_map, card_map]
+  rw [disjSum, card_add, card_map, card_map]
 #align multiset.card_disj_sum Multiset.card_disjSum
 
 variable {s t} {s₁ s₂ : Multiset α} {t₁ t₂ : Multiset β} {a : α} {b : β} {x : Sum α β}
@@ -80,14 +80,14 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {s : Multiset.{u2} α} {t : Multiset.{u1} β} {x : Sum.{u2, u1} α β}, Iff (Membership.mem.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Multiset.{max u1 u2} (Sum.{u2, u1} α β)) (Multiset.instMembershipMultiset.{max u2 u1} (Sum.{u2, u1} α β)) x (Multiset.disjSum.{u2, u1} α β s t)) (Or (Exists.{succ u2} α (fun (a : α) => And (Membership.mem.{u2, u2} α (Multiset.{u2} α) (Multiset.instMembershipMultiset.{u2} α) a s) (Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Sum.inl.{u2, u1} α β a) x))) (Exists.{succ u1} β (fun (b : β) => And (Membership.mem.{u1, u1} β (Multiset.{u1} β) (Multiset.instMembershipMultiset.{u1} β) b t) (Eq.{max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Sum.inr.{u2, u1} α β b) x))))
 Case conversion may be inaccurate. Consider using '#align multiset.mem_disj_sum Multiset.mem_disjSumₓ'. -/
 theorem mem_disjSum : x ∈ s.disjSum t ↔ (∃ a, a ∈ s ∧ inl a = x) ∨ ∃ b, b ∈ t ∧ inr b = x := by
-  simp_rw [disj_sum, mem_add, mem_map]
+  simp_rw [disjSum, mem_add, mem_map]
 #align multiset.mem_disj_sum Multiset.mem_disjSum
 
 #print Multiset.inl_mem_disjSum /-
 @[simp]
 theorem inl_mem_disjSum : inl a ∈ s.disjSum t ↔ a ∈ s :=
   by
-  rw [mem_disj_sum, or_iff_left]
+  rw [mem_disjSum, or_iff_left]
   simp only [exists_eq_right]
   rintro ⟨b, _, hb⟩
   exact inr_ne_inl hb
@@ -98,7 +98,7 @@ theorem inl_mem_disjSum : inl a ∈ s.disjSum t ↔ a ∈ s :=
 @[simp]
 theorem inr_mem_disjSum : inr b ∈ s.disjSum t ↔ b ∈ t :=
   by
-  rw [mem_disj_sum, or_iff_right]
+  rw [mem_disjSum, or_iff_right]
   simp only [exists_eq_right]
   rintro ⟨a, _, ha⟩
   exact inl_ne_inr ha

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark, Kyle Miller, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.adj_matrix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ def toGraph [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGra
 
 instance [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : IsAdjMatrix A) :
     DecidableRel h.toGraph.Adj := by
-  simp only [to_graph]
+  simp only [toGraph]
   infer_instance
 
 end IsAdjMatrix
@@ -195,7 +195,7 @@ theorem isAdjMatrix_adjMatrix [Zero α] [One α] : (G.adjMatrix α).IsAdjMatrix 
 theorem toGraph_adjMatrix_eq [MulZeroOneClass α] [Nontrivial α] :
     (G.isAdjMatrix_adjMatrix α).toGraph = G := by
   ext
-  simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
+  simp only [IsAdjMatrix.toGraph_adj, adjMatrix_apply, ite_eq_left_iff, zero_ne_one]
   apply Classical.not_not
 #align simple_graph.to_graph_adj_matrix_eq SimpleGraph.toGraph_adjMatrix_eq
 
@@ -204,40 +204,40 @@ variable {α} [Fintype V]
 @[simp]
 theorem adjMatrix_dotProduct [NonAssocSemiring α] (v : V) (vec : V → α) :
     dotProduct (G.adjMatrix α v) vec = ∑ u in G.neighborFinset v, vec u := by
-  simp [neighbor_finset_eq_filter, dot_product, sum_filter]
+  simp [neighborFinset_eq_filter, dotProduct, sum_filter]
 #align simple_graph.adj_matrix_dot_product SimpleGraph.adjMatrix_dotProduct
 
 @[simp]
 theorem dotProduct_adjMatrix [NonAssocSemiring α] (v : V) (vec : V → α) :
     dotProduct vec (G.adjMatrix α v) = ∑ u in G.neighborFinset v, vec u := by
-  simp [neighbor_finset_eq_filter, dot_product, sum_filter, Finset.sum_apply]
+  simp [neighborFinset_eq_filter, dotProduct, sum_filter, Finset.sum_apply]
 #align simple_graph.dot_product_adj_matrix SimpleGraph.dotProduct_adjMatrix
 
 @[simp]
 theorem adjMatrix_mulVec_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
     ((G.adjMatrix α).mulVec vec) v = ∑ u in G.neighborFinset v, vec u := by
-  rw [mul_vec, adj_matrix_dot_product]
+  rw [mulVec, adjMatrix_dotProduct]
 #align simple_graph.adj_matrix_mul_vec_apply SimpleGraph.adjMatrix_mulVec_apply
 
 @[simp]
 theorem adjMatrix_vecMul_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
     ((G.adjMatrix α).vecMul vec) v = ∑ u in G.neighborFinset v, vec u :=
   by
-  rw [← dot_product_adj_matrix, vec_mul]
+  rw [← dotProduct_adjMatrix, vecMul]
   refine' congr rfl _; ext
-  rw [← transpose_apply (adj_matrix α G) x v, transpose_adj_matrix]
+  rw [← transpose_apply (adjMatrix α G) x v, transpose_adjMatrix]
 #align simple_graph.adj_matrix_vec_mul_apply SimpleGraph.adjMatrix_vecMul_apply
 
 @[simp]
 theorem adjMatrix_mul_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
     (G.adjMatrix α ⬝ M) v w = ∑ u in G.neighborFinset v, M u w := by
-  simp [mul_apply, neighbor_finset_eq_filter, sum_filter]
+  simp [mul_apply, neighborFinset_eq_filter, sum_filter]
 #align simple_graph.adj_matrix_mul_apply SimpleGraph.adjMatrix_mul_apply
 
 @[simp]
 theorem mul_adjMatrix_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
     (M ⬝ G.adjMatrix α) v w = ∑ u in G.neighborFinset w, M v u := by
-  simp [mul_apply, neighbor_finset_eq_filter, sum_filter, adj_comm]
+  simp [mul_apply, neighborFinset_eq_filter, sum_filter, adj_comm]
 #align simple_graph.mul_adj_matrix_apply SimpleGraph.mul_adjMatrix_apply
 
 variable (α)
@@ -270,12 +270,12 @@ theorem adjMatrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ)
   by
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v
-  · obtain rfl | h := eq_or_ne u v <;> simp [finset_walk_length, *]
+  · obtain rfl | h := eq_or_ne u v <;> simp [finsetWalkLength, *]
   · nth_rw 1 [Nat.succ_eq_one_add]
-    simp only [pow_add, pow_one, finset_walk_length, ih, mul_eq_mul, adj_matrix_mul_apply]
+    simp only [pow_add, pow_one, finsetWalkLength, ih, mul_eq_mul, adjMatrix_mul_apply]
     rw [Finset.card_bunionᵢ]
     · norm_cast
-      simp only [Nat.cast_sum, card_map, neighbor_finset_def]
+      simp only [Nat.cast_sum, card_map, neighborFinset_def]
       apply Finset.sum_toFinset_eq_subtype
     -- Disjointness for card_bUnion
     · rintro ⟨x, hx⟩ - ⟨y, hy⟩ - hxy

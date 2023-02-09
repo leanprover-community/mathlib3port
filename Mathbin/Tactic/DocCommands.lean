@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.doc_commands
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,8 +47,8 @@ def String.hash (s : String) : ℕ :=
 
 /-- Get the last component of a name, and convert it to a string. -/
 unsafe def name.last : Name → String
-  | Name.mk_string s _ => s
-  | Name.mk_numeral n _ => repr n
+  | name.mk_string s _ => s
+  | name.mk_numeral n _ => repr n
   | anonymous => "[anonymous]"
 #align name.last name.last
 
@@ -134,8 +134,7 @@ unsafe def library_note (mi : interactive.decl_meta_info) (_ : parse (tk "librar
 /-- Collects all notes in the current environment.
 Returns a list of pairs `(note_id, note_content)` -/
 unsafe def tactic.get_library_notes : tactic (List (String × String)) :=
-  attribute.get_instances `library_note >>=
-    List.mapM fun dcl => Prod.mk dcl.getLast <$> doc_string dcl
+  attribute.get_instances `library_note >>= List.mapM fun dcl => Prod.mk dcl.last <$> doc_string dcl
 #align tactic.get_library_notes tactic.get_library_notes
 
 /-! ### The `add_tactic_doc_entry` command -/
@@ -152,10 +151,10 @@ inductive DocCategory
 
 /-- Format a `doc_category` -/
 unsafe def doc_category.to_string : DocCategory → String
-  | DocCategory.tactic => "tactic"
-  | DocCategory.cmd => "command"
-  | DocCategory.hole_cmd => "hole_command"
-  | DocCategory.attr => "attribute"
+  | doc_category.tactic => "tactic"
+  | doc_category.cmd => "command"
+  | doc_category.hole_cmd => "hole_command"
+  | doc_category.attr => "attribute"
 #align doc_category.to_string doc_category.to_string
 
 unsafe instance : has_to_format DocCategory :=
@@ -174,7 +173,7 @@ structure TacticDocEntry where
 /-- Turns a `tactic_doc_entry` into a JSON representation. -/
 unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) (desc : String) : json :=
   json.object
-    [("name", d.Name), ("category", d.category.toString),
+    [("name", d.name), ("category", d.category.to_string),
       ("decl_names", d.declNames.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", desc)]
 #align tactic_doc_entry.to_json tactic_doc_entry.to_json
@@ -214,8 +213,8 @@ unsafe def tactic.add_tactic_doc (tde : TacticDocEntry) (doc : Option String) : 
             | none, _ =>
               fail
                 "A tactic doc entry must either:\n 1. have a description written as a doc-string for the `add_tactic_doc` invocation, or\n 2. have a single declaration in the `decl_names` field, to inherit a description from, or\n 3. explicitly indicate the declaration to inherit the description from using\n    `inherit_description_from`."
-        doc_string inh_id <|> fail (toString inh_id ++ " has no doc string")
-  let decl_name := .str (.str `tactic_doc tde.category.toString) tde.Name
+        doc_string inh_id <|> fail (to_string inh_id ++ " has no doc string")
+  let decl_name := .str (.str `tactic_doc tde.category.to_string) tde.name
   add_decl <| mk_definition decl_name [] q(TacticDocEntry) (reflect tde)
   add_doc_string decl_name desc
   tactic_doc_entry_attr decl_name () tt none

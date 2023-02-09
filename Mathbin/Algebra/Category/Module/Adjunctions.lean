@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.category.Module.adjunctions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ def μ (α β : Type u) : (free R).obj α ⊗ (free R).obj β ≅ (free R).obj (
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
-    ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) :=
+    ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').hom = (μ R X X').hom ≫ (free R).map (f ⊗ g) :=
   by
   intros
   ext (x x'⟨y, y'⟩)
@@ -106,8 +106,8 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem left_unitality (X : Type u) :
-    (λ_ ((free R).obj X)).Hom =
-      (ε R ⊗ 𝟙 ((free R).obj X)) ≫ (μ R (𝟙_ (Type u)) X).Hom ≫ map (free R).obj (λ_ X).Hom :=
+    (λ_ ((free R).obj X)).hom =
+      (ε R ⊗ 𝟙 ((free R).obj X)) ≫ (μ R (𝟙_ (Type u)) X).hom ≫ map (free R).obj (λ_ X).hom :=
   by
   intros
   ext
@@ -119,8 +119,8 @@ theorem left_unitality (X : Type u) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem right_unitality (X : Type u) :
-    (ρ_ ((free R).obj X)).Hom =
-      (𝟙 ((free R).obj X) ⊗ ε R) ≫ (μ R X (𝟙_ (Type u))).Hom ≫ map (free R).obj (ρ_ X).Hom :=
+    (ρ_ ((free R).obj X)).hom =
+      (𝟙 ((free R).obj X) ⊗ ε R) ≫ (μ R X (𝟙_ (Type u))).hom ≫ map (free R).obj (ρ_ X).hom :=
   by
   intros
   ext
@@ -135,9 +135,10 @@ theorem right_unitality (X : Type u) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem associativity (X Y Z : Type u) :
-    ((μ R X Y).Hom ⊗ 𝟙 ((free R).obj Z)) ≫ (μ R (X ⊗ Y) Z).Hom ≫ map (free R).obj (α_ X Y Z).Hom =
-      (α_ ((free R).obj X) ((free R).obj Y) ((free R).obj Z)).Hom ≫
-        (𝟙 ((free R).obj X) ⊗ (μ R Y Z).Hom) ≫ (μ R X (Y ⊗ Z)).Hom :=
+    ((μ R X Y).hom ⊗ 𝟙 ((free R).obj Z)) ≫
+        (μ R (X ⊗ Y) Z).hom ≫ map (free R).obj (α_ X Y Z).map_smul =
+      (α_ ((free R).obj X) ((free R).obj Y) ((free R).obj Z)).hom ≫
+        (𝟙 ((free R).obj X) ⊗ (μ R Y Z).hom) ≫ (μ R X (Y ⊗ Z)).hom :=
   by
   intros
   ext
@@ -154,7 +155,7 @@ instance : LaxMonoidal.{u} (free R).obj
   -- Send `R` to `punit →₀ R`
   ε := ε R
   -- Send `(α →₀ R) ⊗ (β →₀ R)` to `α × β →₀ R`
-  μ X Y := (μ R X Y).Hom
+  μ X Y := (μ R X Y).hom
   μ_natural' X Y X' Y' f g := μ_natural R f g
   left_unitality' := left_unitality R
   right_unitality' := right_unitality R
@@ -224,12 +225,12 @@ instance categoryFree : Category (Free R C)
     where
   Hom := fun X Y : C => (X ⟶ Y) →₀ R
   id := fun X : C => Finsupp.single (𝟙 X) 1
-  comp (X Y Z : C) f g := f.Sum fun f' s => g.Sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
+  comp (X Y Z : C) f g := f.sum fun f' s => g.sum fun g' t => Finsupp.single (f' ≫ g') (s * t)
   assoc' W X Y Z f g h := by
     dsimp
     -- This imitates the proof of associativity for `monoid_algebra`.
     simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true,
-      forall_true_iff, forall₃_true_iff, add_mul, mul_add, category.assoc, mul_assoc, zero_mul,
+      forall_true_iff, forall₃_true_iff, add_mul, mul_add, Category.assoc, mul_assoc, zero_mul,
       mul_zero, sum_zero, sum_add]
 #align category_theory.category_Free CategoryTheory.categoryFree
 
@@ -293,13 +294,13 @@ open Preadditive Linear
 @[simps]
 def lift (F : C ⥤ D) : Free R C ⥤ D where
   obj X := F.obj X
-  map X Y f := f.Sum fun f' r => r • F.map f'
+  map X Y f := f.sum fun f' r => r • F.map f'
   map_id' := by
     dsimp [CategoryTheory.categoryFree]
     simp
   map_comp' X Y Z f g := by
     apply Finsupp.induction_linear f
-    · simp only [limits.zero_comp, sum_zero_index]
+    · simp only [Limits.zero_comp, sum_zero_index]
     · intro f₁ f₂ w₁ w₂
       rw [add_comp]
       rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
@@ -314,7 +315,7 @@ def lift (F : C ⥤ D) : Free R C ⥤ D where
         simp only [add_smul]
     · intro f' r
       apply Finsupp.induction_linear g
-      · simp only [limits.comp_zero, sum_zero_index]
+      · simp only [Limits.comp_zero, sum_zero_index]
       · intro f₁ f₂ w₁ w₂
         rw [comp_add]
         rw [Finsupp.sum_add_index', Finsupp.sum_add_index']
@@ -370,9 +371,9 @@ def ext {F G : Free R C ⥤ D} [F.Additive] [F.Linear R] [G.Additive] [G.Linear 
       · intro f₁ f₂ w₁ w₂
         simp only [F.map_add, G.map_add, add_comp, comp_add, w₁, w₂]
       · intro f' r
-        rw [iso.app_hom, iso.app_hom, ← smul_single_one, F.map_smul, G.map_smul, smul_comp,
+        rw [Iso.app_hom, Iso.app_hom, ← smul_single_one, F.map_smul, G.map_smul, smul_comp,
           comp_smul]
-        change r • (Embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (Embedding R C ⋙ G).map f'
+        change r • (embedding R C ⋙ F).map f' ≫ _ = r • _ ≫ (embedding R C ⋙ G).map f'
         rw [α.hom.naturality f']
         infer_instance
         -- Why are these not picked up automatically when we rewrite?

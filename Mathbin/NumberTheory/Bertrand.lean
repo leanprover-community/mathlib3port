@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.bertrand
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
     refine'
         ((strict_concave_on_log_Ioi.concave_on.subset (Set.Ioi_subset_Ioi _) (convex_Ioi 0.5)).add
               ((strict_concave_on_sqrt_mul_log_Ioi.concave_on.comp_linear_map
-                    ((2 : ℝ) • LinearMap.id)).Subset
+                    ((2 : ℝ) • LinearMap.id)).subset
                 (fun a ha => lt_of_eq_of_lt _ ((mul_lt_mul_left two_pos).mpr ha))
                 (convex_Ioi 0.5))).sub
           ((convexOn_id (convex_Ioi (0.5 : ℝ))).smul (div_nonneg (log_nonneg _) _)) <;>
@@ -136,7 +136,7 @@ theorem centralBinom_factorization_small (n : ℕ) (n_large : 2 < n)
   rw [← and_assoc', not_and', not_and_or, not_lt] at no_prime
   cases' no_prime hx with h h
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
-  · rw [factorization_central_binom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
+  · rw [factorization_centralBinom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
 #align central_binom_factorization_small centralBinom_factorization_small
 
 /-- An upper bound on the central binomial coefficient used in the proof of Bertrand's postulate.
@@ -153,7 +153,7 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
   by
   have n_pos : 0 < n := (Nat.zero_le _).trans_lt n_big
   have n2_pos : 1 ≤ 2 * n := mul_pos (zero_lt_two' ℕ) n_pos
-  let S := (Finset.range (2 * n / 3 + 1)).filterₓ Nat.Prime
+  let S := (Finset.range (2 * n / 3 + 1)).filter Nat.Prime
   let f x := x ^ n.central_binom.factorization x
   have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x :=
     by
@@ -212,7 +212,7 @@ theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Pri
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_le (not_le.1 h) covering))
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /--
 **Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than
 it, but no more than twice as large.

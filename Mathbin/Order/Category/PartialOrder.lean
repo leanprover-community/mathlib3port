@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.PartialOrder
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem partialOrderCat_dual_comp_forget_to_preorderCat :
 def preorderToPartialOrder : PreorderCat.{u} ⥤ PartialOrderCat
     where
   obj X := PartialOrderCat.of (Antisymmetrization X (· ≤ ·))
-  map X Y f := f.Antisymmetrization
+  map X Y f := f.antisymmetrization
   map_id' X := by
     ext
     exact Quotient.inductionOn' x fun x => Quotient.map'_mk'' _ (fun a b => id) _
@@ -117,7 +117,7 @@ def preorderToPartialOrderForgetAdjunction :
         { toFun := fun f =>
             ⟨f ∘ toAntisymmetrization (· ≤ ·), f.mono.comp toAntisymmetrization_mono⟩
           invFun := fun f =>
-            ⟨fun a => Quotient.liftOn' a f fun a b h => (AntisymmRel.image h f.mono).Eq, fun a b =>
+            ⟨fun a => Quotient.liftOn' a f fun a b h => (AntisymmRel.image h f.mono).eq, fun a b =>
               Quotient.inductionOn₂' a b fun a b h => f.mono h⟩
           left_inv := fun f =>
             OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl

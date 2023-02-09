@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.multiplicity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem Int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) 
   · repeat' rw [← finite_iff_dom, finite_def]
     norm_cast
   · intro h1 h2
-    apply _root_.le_antisymm <;>
+    apply le_antisymm <;>
       · apply Nat.find_mono
         norm_cast
         simp
@@ -111,7 +111,7 @@ theorem pow_dvd_of_le_multiplicity {a b : α} {k : ℕ} :
       fun k ⟨h₁, h₂⟩ => by_contradiction fun hk => Nat.find_min _ (lt_of_succ_le (h₂ ⟨k, hk⟩)) hk
 #align multiplicity.pow_dvd_of_le_multiplicity multiplicity.pow_dvd_of_le_multiplicity
 
-theorem pow_multiplicity_dvd {a b : α} (h : Finite a b) : a ^ get (multiplicity a b) h ∣ b :=
+theorem pow_multiplicity_dvd {a b : α} (h : finite a b) : a ^ get (multiplicity a b) h ∣ b :=
   pow_dvd_of_le_multiplicity (by rw [PartENat.natCast_get])
 #align multiplicity.pow_multiplicity_dvd multiplicity.pow_multiplicity_dvd
 
@@ -141,7 +141,7 @@ theorem unique {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) �
 
 theorem unique' {a b : α} {k : ℕ} (hk : a ^ k ∣ b) (hsucc : ¬a ^ (k + 1) ∣ b) :
     k = get (multiplicity a b) ⟨k, hsucc⟩ := by
-  rw [← PartENat.natCast_inj, PartENat.natCast_get, Unique hk hsucc]
+  rw [← PartENat.natCast_inj, PartENat.natCast_get, unique hk hsucc]
 #align multiplicity.unique' multiplicity.unique'
 
 theorem le_multiplicity_of_pow_dvd {a b : α} {k : ℕ} (hk : a ^ k ∣ b) :
@@ -167,7 +167,7 @@ theorem eq_coe_iff {a b : α} {n : ℕ} :
       let ⟨h₁, h₂⟩ := eq_some_iff.1 h
       h₂ ▸
         ⟨pow_multiplicity_dvd _,
-          IsGreatest
+          is_greatest
             (by
               rw [PartENat.lt_coe_iff]
               exact ⟨h₁, lt_succ_self _⟩)⟩,
@@ -207,7 +207,7 @@ theorem get_one_right {a : α} (ha : Finite a 1) : get (multiplicity a 1) ha = 0
 
 @[simp]
 theorem unit_left (a : α) (u : αˣ) : multiplicity (u : α) a = ⊤ :=
-  isUnit_left a u.IsUnit
+  isUnit_left a u.isUnit
 #align multiplicity.unit_left multiplicity.unit_left
 
 theorem multiplicity_eq_zero {a b : α} : multiplicity a b = 0 ↔ ¬a ∣ b :=
@@ -268,8 +268,8 @@ theorem multiplicity_le_multiplicity_of_dvd_right {a b c : α} (h : b ∣ c) :
 
 theorem eq_of_associated_right {a b c : α} (h : Associated b c) :
     multiplicity a b = multiplicity a c :=
-  le_antisymm (multiplicity_le_multiplicity_of_dvd_right h.Dvd)
-    (multiplicity_le_multiplicity_of_dvd_right h.symm.Dvd)
+  le_antisymm (multiplicity_le_multiplicity_of_dvd_right h.dvd)
+    (multiplicity_le_multiplicity_of_dvd_right h.symm.dvd)
 #align multiplicity.eq_of_associated_right multiplicity.eq_of_associated_right
 
 theorem dvd_of_multiplicity_pos {a b : α} (h : (0 : PartENat) < multiplicity a b) : a ∣ b :=
@@ -284,7 +284,7 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : PartENat) < multiplicity a b 
     lt_of_le_of_ne (zero_le _) fun heq =>
       is_greatest
         (show multiplicity a b < ↑1 by
-          simpa only [HEq, Nat.cast_zero] using part_enat.coe_lt_coe.mpr zero_lt_one)
+          simpa only [heq, Nat.cast_zero] using part_enat.coe_lt_coe.mpr zero_lt_one)
         (by rwa [pow_one a])⟩
 #align multiplicity.dvd_iff_multiplicity_pos multiplicity.dvd_iff_multiplicity_pos
 
@@ -334,7 +334,7 @@ theorem one_right {a : α} (ha : ¬IsUnit a) : multiplicity a 1 = 0 :=
 #align multiplicity.one_right multiplicity.one_right
 
 theorem unit_right {a : α} (ha : ¬IsUnit a) (u : αˣ) : multiplicity a u = 0 :=
-  isUnit_right ha u.IsUnit
+  isUnit_right ha u.isUnit
 #align multiplicity.unit_right multiplicity.unit_right
 
 open Classical
@@ -346,8 +346,8 @@ theorem multiplicity_le_multiplicity_of_dvd_left {a b c : α} (hdvd : a ∣ b) :
 
 theorem eq_of_associated_left {a b c : α} (h : Associated a b) :
     multiplicity b c = multiplicity a c :=
-  le_antisymm (multiplicity_le_multiplicity_of_dvd_left h.Dvd)
-    (multiplicity_le_multiplicity_of_dvd_left h.symm.Dvd)
+  le_antisymm (multiplicity_le_multiplicity_of_dvd_left h.dvd)
+    (multiplicity_le_multiplicity_of_dvd_left h.symm.dvd)
 #align multiplicity.eq_of_associated_left multiplicity.eq_of_associated_left
 
 alias dvd_iff_multiplicity_pos ↔ _ _root_.has_dvd.dvd.multiplicity_pos
@@ -397,7 +397,7 @@ theorem multiplicity_mk_eq_multiplicity
     · exact pow_multiplicity_dvd h
     ·
       exact
-        IsGreatest
+        is_greatest
           ((PartENat.lt_coe_iff _ _).mpr (Exists.intro (finite_iff_dom.mp h) (Nat.lt_succ_self _)))
   · suffices ¬Finite (Associates.mk a) (Associates.mk b)
       by
@@ -441,15 +441,15 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
         rw [PartENat.natCast_get] <;>
           exact
             Eq.symm
-              (Unique ((dvd_neg _ _).2 (pow_multiplicity_dvd _))
+              (unique ((dvd_neg _ _).2 (pow_multiplicity_dvd _))
                 (mt (dvd_neg _ _).1 (is_greatest' _ (lt_succ_self _)))))
 #align multiplicity.neg multiplicity.neg
 
 theorem Int.natAbs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b :=
   by
   cases' Int.natAbs_eq b with h h <;> conv_rhs => rw [h]
-  · rw [int.coe_nat_multiplicity]
-  · rw [multiplicity.neg, int.coe_nat_multiplicity]
+  · rw [Int.coe_nat_multiplicity]
+  · rw [multiplicity.neg, Int.coe_nat_multiplicity]
 #align multiplicity.int.nat_abs multiplicity.Int.natAbs
 
 theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
@@ -607,7 +607,7 @@ protected theorem mul' {p a b : α} (hp : Prime p) (h : (multiplicity p (a * b))
         a * b :=
     fun h =>
     not_or_of_not (is_greatest' _ (lt_succ_self _)) (is_greatest' _ (lt_succ_self _))
-      (_root_.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul hp hdiva hdivb h)
+      (succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul hp hdiva hdivb h)
   rw [← PartENat.natCast_inj, PartENat.natCast_get, eq_coe_iff] <;> exact ⟨hdiv, hsucc⟩
 #align multiplicity.mul' multiplicity.mul'
 
@@ -660,7 +660,7 @@ theorem multiplicity_pow_self {p : α} (h0 : p ≠ 0) (hu : ¬IsUnit p) (n : ℕ
 
 theorem multiplicity_pow_self_of_prime {p : α} (hp : Prime p) (n : ℕ) :
     multiplicity p (p ^ n) = n :=
-  multiplicity_pow_self hp.NeZero hp.not_unit n
+  multiplicity_pow_self hp.ne_zero hp.not_unit n
 #align multiplicity.multiplicity_pow_self_of_prime multiplicity.multiplicity_pow_self_of_prime
 
 end CancelCommMonoidWithZero

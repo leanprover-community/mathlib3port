@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.max_coe Units.max_valₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem max_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(max a b) : α) = max a b :=
-  Monotone.map_max orderEmbeddingVal.Monotone
+  Monotone.map_max orderEmbeddingVal.monotone
 #align units.max_coe Units.max_val
 #align add_units.max_coe AddUnits.max_val
 
@@ -82,7 +82,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.min_coe Units.min_valₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem min_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(min a b) : α) = min a b :=
-  Monotone.map_min orderEmbeddingVal.Monotone
+  Monotone.map_min orderEmbeddingVal.monotone
 #align units.min_coe Units.min_val
 #align add_units.min_coe AddUnits.min_val
 

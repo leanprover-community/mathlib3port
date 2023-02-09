@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -781,13 +781,13 @@ theorem Iff.not (h : a ↔ b) : ¬a ↔ ¬b :=
 
 #print Iff.not_left /-
 theorem Iff.not_left (h : a ↔ ¬b) : ¬a ↔ b :=
-  h.Not.trans Classical.not_not
+  h.not.trans Classical.not_not
 #align iff.not_left Iff.not_left
 -/
 
 #print Iff.not_right /-
 theorem Iff.not_right (h : ¬a ↔ b) : a ↔ ¬b :=
-  Classical.not_not.symm.trans h.Not
+  Classical.not_not.symm.trans h.not
 #align iff.not_right Iff.not_right
 -/
 
@@ -865,12 +865,12 @@ theorem and_congr_left (h : c → (a ↔ b)) : a ∧ c ↔ b ∧ c :=
 
 #print and_congr_left' /-
 theorem and_congr_left' (h : a ↔ b) : a ∧ c ↔ b ∧ c :=
-  h.And Iff.rfl
+  h.and Iff.rfl
 #align and_congr_left' and_congr_left'
 -/
 
 theorem and_congr_right' (h : b ↔ c) : a ∧ b ↔ a ∧ c :=
-  Iff.rfl.And h
+  Iff.rfl.and h
 #align and_congr_right' and_congr_right'ₓ
 
 #print not_and_of_not_left /-
@@ -904,7 +904,7 @@ theorem and_right_comm : (a ∧ b) ∧ c ↔ (a ∧ c) ∧ b := by simp only [an
 
 #print and_and_and_comm /-
 theorem and_and_and_comm (a b c d : Prop) : (a ∧ b) ∧ c ∧ d ↔ (a ∧ c) ∧ b ∧ d := by
-  rw [← and_assoc', @and_right_comm a, and_assoc']
+  rw [← and_assoc', @and.right_comm a, and_assoc']
 #align and_and_and_comm and_and_and_comm
 -/
 
@@ -985,7 +985,7 @@ theorem and_iff_right_iff_imp {a b : Prop} : (a ∧ b ↔ b) ↔ b → a :=
 
 #print iff_self_and /-
 @[simp]
-theorem iff_self_and {p q : Prop} : (p ↔ p ∧ q) ↔ p → q := by rw [@Iff.comm p, and_iff_left_iff_imp]
+theorem iff_self_and {p q : Prop} : (p ↔ p ∧ q) ↔ p → q := by rw [@iff.comm p, and_iff_left_iff_imp]
 #align iff_self_and iff_self_and
 -/
 
@@ -1032,12 +1032,12 @@ theorem Iff.or (h₁ : a ↔ b) (h₂ : c ↔ d) : a ∨ c ↔ b ∨ d :=
 
 #print or_congr_left /-
 theorem or_congr_left (h : a ↔ b) : a ∨ c ↔ b ∨ c :=
-  h.Or Iff.rfl
+  h.or Iff.rfl
 #align or_congr_left' or_congr_left
 -/
 
 theorem or_congr_right (h : b ↔ c) : a ∨ b ↔ a ∨ c :=
-  Iff.rfl.Or h
+  Iff.rfl.or h
 #align or_congr_right' or_congr_rightₓ
 
 #print or_right_comm /-
@@ -1047,7 +1047,7 @@ theorem or_right_comm : (a ∨ b) ∨ c ↔ (a ∨ c) ∨ b := by rw [or_assoc',
 
 #print or_or_or_comm /-
 theorem or_or_or_comm (a b c d : Prop) : (a ∨ b) ∨ c ∨ d ↔ (a ∨ c) ∨ b ∨ d := by
-  rw [← or_assoc', @or_right_comm a, or_assoc']
+  rw [← or_assoc', @or.right_comm a, or_assoc']
 #align or_or_or_comm or_or_or_comm
 -/
 
@@ -1293,7 +1293,7 @@ theorem and_or_left : a ∧ (b ∨ c) ↔ a ∧ b ∨ a ∧ c :=
 #print or_and_right /-
 /-- `∧` distributes over `∨` (on the right). -/
 theorem or_and_right : (a ∨ b) ∧ c ↔ a ∧ c ∨ b ∧ c :=
-  (and_comm.trans and_or_left).trans (and_comm.Or and_comm)
+  (and_comm.trans and_or_left).trans (and_comm.or and_comm)
 #align or_and_distrib_right or_and_right
 -/
 
@@ -1308,7 +1308,7 @@ theorem or_and_left : a ∨ b ∧ c ↔ (a ∨ b) ∧ (a ∨ c) :=
 #print and_or_right /-
 /-- `∨` distributes over `∧` (on the right). -/
 theorem and_or_right : a ∧ b ∨ c ↔ (a ∨ c) ∧ (b ∨ c) :=
-  (or_comm.trans or_and_left).trans (or_comm.And or_comm)
+  (or_comm.trans or_and_left).trans (or_comm.and or_comm)
 #align and_or_distrib_right and_or_right
 -/
 
@@ -1780,7 +1780,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Membership.{u2, u1} α β] {s : β} {p : α -> α -> Prop}, Iff (forall (a : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (forall (b : α), (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))) (forall (a : α) (b : α), (Membership.mem.{u2, u1} α β _inst_1 a s) -> (Membership.mem.{u2, u1} α β _inst_1 b s) -> (p a b))
 Case conversion may be inaccurate. Consider using '#align ball_mem_comm ball_mem_commₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 theorem ball_mem_comm {α β} [Membership α β] {s : β} {p : α → α → Prop} :
     (∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), p a b) ↔ ∀ a b, a ∈ s → b ∈ s → p a b :=
   ball_cond_comm
@@ -1922,7 +1922,7 @@ but is expected to have type
   forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (eq : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β eq) b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
 theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) (h : HEq x y) :
-    HEq (@Eq.ndrec α a C x b Eq) y := by subst Eq <;> exact h
+    HEq (@Eq.ndrec α a C x b eq) y := by subst eq <;> exact h
 #align rec_heq_of_heq rec_heq_of_heq
 
 /- warning: eq.congr -> Eq.congr is a dubious translation:
@@ -2439,13 +2439,13 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Sort.{u1}} [p : DecidableEq.{u1} α] (_inst_1 : α) {a : α -> Prop}, Iff (And (a _inst_1) (forall (b : α), (Ne.{u1} α b _inst_1) -> (a b))) (forall (b : α), a b)
 Case conversion may be inaccurate. Consider using '#align decidable.and_forall_ne Decidable.and_forall_neₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem Decidable.and_forall_ne [DecidableEq α] (a : α) :
     (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b := by
   simp only [← @forall_eq _ p a, ← forall_and, ← or_imp, Decidable.em, forall_const]
 #align decidable.and_forall_ne Decidable.and_forall_ne
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » a) -/
 #print and_forall_ne /-
 theorem and_forall_ne (a : α) : (p a ∧ ∀ (b) (_ : b ≠ a), p b) ↔ ∀ b, p b :=
   Decidable.and_forall_ne a

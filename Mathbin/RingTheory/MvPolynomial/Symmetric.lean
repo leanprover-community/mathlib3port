@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.symmetric
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,12 +57,12 @@ variable {R : Type _} [CommSemiring R]
 
 /-- The `n`th elementary symmetric function evaluated at the elements of `s` -/
 def esymm (s : Multiset R) (n : ℕ) : R :=
-  ((s.powersetLen n).map Multiset.prod).Sum
+  ((s.powersetLen n).map Multiset.prod).sum
 #align multiset.esymm Multiset.esymm
 
 theorem Finset.esymm_map_val {σ} (f : σ → R) (s : Finset σ) (n : ℕ) :
-    (s.val.map f).esymm n = (s.powersetLen n).Sum fun t => t.Prod f := by
-  simpa only [esymm, powerset_len_map, ← Finset.map_val_val_powersetLen, map_map]
+    (s.val.map f).esymm n = (s.powersetLen n).sum fun t => t.prod f := by
+  simpa only [esymm, powersetLen_map, ← Finset.map_val_val_powersetLen, map_map]
 #align finset.esymm_map_val Finset.esymm_map_val
 
 end Multiset
@@ -173,7 +173,7 @@ theorem esymm_eq_multiset_esymm : esymm σ R = (Finset.univ.val.map x).esymm :=
 
 theorem aeval_esymm_eq_multiset_esymm [Algebra R S] (f : σ → S) (n : ℕ) :
     aeval f (esymm σ R n) = (Finset.univ.val.map f).esymm n := by
-  simp_rw [esymm, aeval_sum, aeval_prod, aeval_X, esymm_map_val]
+  simp_rw [esymm, aeval_sum, aeval_prod, aeval_x, esymm_map_val]
 #align mv_polynomial.aeval_esymm_eq_multiset_esymm MvPolynomial.aeval_esymm_eq_multiset_esymm
 
 /-- We can define `esymm σ R n` by summing over a subtype instead of over `powerset_len`. -/
@@ -192,17 +192,17 @@ theorem esymm_eq_sum_monomial (n : ℕ) :
 
 @[simp]
 theorem esymm_zero : esymm σ R 0 = 1 := by
-  simp only [esymm, powerset_len_zero, sum_singleton, prod_empty]
+  simp only [esymm, powersetLen_zero, sum_singleton, prod_empty]
 #align mv_polynomial.esymm_zero MvPolynomial.esymm_zero
 
 theorem map_esymm (n : ℕ) (f : R →+* S) : map f (esymm σ R n) = esymm σ S n := by
-  simp_rw [esymm, map_sum, map_prod, map_X]
+  simp_rw [esymm, map_sum, map_prod, map_x]
 #align mv_polynomial.map_esymm MvPolynomial.map_esymm
 
 theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm τ R n :=
   calc
     rename e (esymm σ R n) = ∑ x in powersetLen n univ, ∏ i in x, x (e i) := by
-      simp_rw [esymm, map_sum, map_prod, rename_X]
+      simp_rw [esymm, map_sum, map_prod, rename_x]
     _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, x i := by
       simp [Finset.powersetLen_map, -Finset.map_univ_equiv]
     _ = ∑ t in powersetLen n univ, ∏ i in t, x i := by rw [Finset.map_univ_equiv]
@@ -222,14 +222,14 @@ theorem support_esymm'' (n : ℕ) [DecidableEq σ] [Nontrivial R] :
   by
   rw [esymm_eq_sum_monomial]
   simp only [← single_eq_monomial]
-  convert Finsupp.support_sum_eq_bunionᵢ (powerset_len n (univ : Finset σ)) _
+  convert Finsupp.support_sum_eq_bunionᵢ (powersetLen n (univ : Finset σ)) _
   intro s t hst
   rw [Finset.disjoint_left]
   simp only [Finsupp.support_single_ne_zero _ one_ne_zero, mem_singleton]
   rintro a h rfl
   have := congr_arg Finsupp.support h
   rw [Finsupp.support_sum_eq_bunionᵢ, Finsupp.support_sum_eq_bunionᵢ] at this
-  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bUnion_singleton_eq_self] at this
+  · simp only [Finsupp.support_single_ne_zero _ one_ne_zero, bunionᵢ_singleton_eq_self] at this
     exact absurd this hst.symm
   all_goals intro x y; simp [Finsupp.support_single_disjoint]
 #align mv_polynomial.support_esymm'' MvPolynomial.support_esymm''
@@ -249,7 +249,7 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
       (powersetLen n (univ : Finset σ)).image fun t => ∑ i : σ in t, Finsupp.single i 1 :=
   by
   rw [support_esymm']
-  exact bUnion_singleton
+  exact bunionᵢ_singleton
 #align mv_polynomial.support_esymm MvPolynomial.support_esymm
 
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :

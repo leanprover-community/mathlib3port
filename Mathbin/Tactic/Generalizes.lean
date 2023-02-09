@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.generalizes
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ unsafe def step2 (md : Transparency) (to_generalize : List (Name × expr × expr
       if homogeneous then ((const `eq [u]) K k j, (const `eq.refl [u]) J j)
       else ((const `heq [u]) K k J j, (const `heq.refl [u]) J j)
     let eq ← mk_local' n BinderInfo.default eq_type
-    pure (Eq, eq_proof)
+    pure (eq, eq_proof)
 #align tactic.generalizes.step2 tactic.generalizes.step2
 
 /-- Input: The `jᵢ`; the local constants `kᵢ` from step 1; the equations and their

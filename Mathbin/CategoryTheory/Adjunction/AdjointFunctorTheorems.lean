@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.adjoint_functor_theorems
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,10 +75,10 @@ theorem solutionSetCondition_of_isRightAdjoint [IsRightAdjoint G] : SolutionSetC
   by
   intro A
   refine'
-    ⟨PUnit, fun _ => (left_adjoint G).obj A, fun _ => (adjunction.of_right_adjoint G).Unit.app A, _⟩
+    ⟨PUnit, fun _ => (leftAdjoint G).obj A, fun _ => (Adjunction.ofRightAdjoint G).unit.app A, _⟩
   intro B h
-  refine' ⟨PUnit.unit, ((adjunction.of_right_adjoint G).homEquiv _ _).symm h, _⟩
-  rw [← adjunction.hom_equiv_unit, Equiv.apply_symm_apply]
+  refine' ⟨PUnit.unit, ((Adjunction.ofRightAdjoint G).homEquiv _ _).symm h, _⟩
+  rw [← Adjunction.homEquiv_unit, Equiv.apply_symm_apply]
 #align category_theory.solution_set_condition_of_is_right_adjoint CategoryTheory.solutionSetCondition_of_isRightAdjoint
 
 /-- The general adjoint functor theorem says that if `G : D ⥤ C` preserves limits and `D` has them,
@@ -87,18 +87,18 @@ if `G` satisfies the solution set condition then `G` is a right adjoint.
 noncomputable def isRightAdjointOfPreservesLimitsOfSolutionSetCondition [HasLimits D]
     [PreservesLimits G] (hG : SolutionSetCondition G) : IsRightAdjoint G :=
   by
-  apply is_right_adjoint_of_structured_arrow_initials _
+  apply isRightAdjointOfStructuredArrowInitials _
   intro A
   specialize hG A
   choose ι B f g using hG
-  let B' : ι → structured_arrow A G := fun i => structured_arrow.mk (f i)
-  have hB' : ∀ A' : structured_arrow A G, ∃ i, Nonempty (B' i ⟶ A') :=
+  let B' : ι → StructuredArrow A G := fun i => StructuredArrow.mk (f i)
+  have hB' : ∀ A' : StructuredArrow A G, ∃ i, Nonempty (B' i ⟶ A') :=
     by
     intro A'
     obtain ⟨i, _, t⟩ := g _ A'.hom
-    exact ⟨i, ⟨structured_arrow.hom_mk _ t⟩⟩
-  obtain ⟨T, hT⟩ := has_weakly_initial_of_weakly_initial_set_and_has_products hB'
-  apply has_initial_of_weakly_initial_and_has_wide_equalizers hT
+    exact ⟨i, ⟨StructuredArrow.homMk _ t⟩⟩
+  obtain ⟨T, hT⟩ := has_weakly_initial_of_weakly_initial_set_and_hasProducts hB'
+  apply hasInitial_of_weakly_initial_and_hasWideEqualizers hT
 #align category_theory.is_right_adjoint_of_preserves_limits_of_solution_set_condition CategoryTheory.isRightAdjointOfPreservesLimitsOfSolutionSetCondition
 
 end GeneralAdjointFunctorTheorem
@@ -115,7 +115,7 @@ noncomputable def isRightAdjointOfPreservesLimitsOfIsCoseparating [HasLimits D] 
     IsRightAdjoint G :=
   have : ∀ A, HasInitial (StructuredArrow A G) := fun A =>
     hasInitial_of_isCoseparating (StructuredArrow.isCoseparating_proj_preimage A G h𝒢)
-  is_right_adjoint_of_structured_arrow_initials _
+  isRightAdjointOfStructuredArrowInitials _
 #align category_theory.is_right_adjoint_of_preserves_limits_of_is_coseparating CategoryTheory.isRightAdjointOfPreservesLimitsOfIsCoseparating
 
 /-- The special adjoint functor theorem: if `F : C ⥤ D` preserves colimits and `C` is cocomplete,
@@ -126,7 +126,7 @@ noncomputable def isLeftAdjointOfPreservesColimitsOfIsSeparatig [HasColimits C] 
     IsLeftAdjoint F :=
   have : ∀ A, HasTerminal (CostructuredArrow F A) := fun A =>
     hasTerminal_of_isSeparating (CostructuredArrow.isSeparating_proj_preimage F A h𝒢)
-  is_left_adjoint_of_costructured_arrow_terminals _
+  isLeftAdjointOfCostructuredArrowTerminals _
 #align category_theory.is_left_adjoint_of_preserves_colimits_of_is_separatig CategoryTheory.isLeftAdjointOfPreservesColimitsOfIsSeparatig
 
 end SpecialAdjointFunctorTheorem
@@ -139,8 +139,8 @@ theorem hasColimits_of_hasLimits_of_isCoseparating [HasLimits C] [WellPowered C]
     [Small.{v} 𝒢] (h𝒢 : IsCoseparating 𝒢) : HasColimits C :=
   {
     HasColimitsOfShape := fun J hJ =>
-      has_colimits_of_shape_iff_is_right_adjoint_const.2
-        ⟨is_right_adjoint_of_preserves_limits_of_is_coseparating h𝒢 _⟩ }
+      hasColimitsOfShape_iff_isRightAdjoint_const.2
+        ⟨isRightAdjointOfPreservesLimitsOfIsCoseparating h𝒢 _⟩ }
 #align category_theory.limits.has_colimits_of_has_limits_of_is_coseparating CategoryTheory.Limits.hasColimits_of_hasLimits_of_isCoseparating
 
 /-- A consequence of the special adjoint functor theorem: if `C` is cocomplete, well-copowered and
@@ -149,8 +149,8 @@ theorem hasLimits_of_hasColimits_of_isSeparating [HasColimits C] [WellPowered C�
     [Small.{v} 𝒢] (h𝒢 : IsSeparating 𝒢) : HasLimits C :=
   {
     HasLimitsOfShape := fun J hJ =>
-      has_limits_of_shape_iff_is_left_adjoint_const.2
-        ⟨is_left_adjoint_of_preserves_colimits_of_is_separatig h𝒢 _⟩ }
+      hasLimitsOfShape_iff_isLeftAdjoint_const.2
+        ⟨isLeftAdjointOfPreservesColimitsOfIsSeparatig h𝒢 _⟩ }
 #align category_theory.limits.has_limits_of_has_colimits_of_is_separating CategoryTheory.Limits.hasLimits_of_hasColimits_of_isSeparating
 
 end Limits

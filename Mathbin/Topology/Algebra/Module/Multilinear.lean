@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem toMultilinearMap_add (f g : ContinuousMultilinearMap R M₁ M₂) :
 #align continuous_multilinear_map.to_multilinear_map_add ContinuousMultilinearMap.toMultilinearMap_add
 
 instance addCommMonoid : AddCommMonoid (ContinuousMultilinearMap R M₁ M₂) :=
-  toMultilinearMap_inj.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  toMultilinearMap_inj.addCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align continuous_multilinear_map.add_comm_monoid ContinuousMultilinearMap.addCommMonoid
 
 /-- Evaluation of a `continuous_multilinear_map` at a vector as an `add_monoid_hom`. -/
@@ -229,12 +229,12 @@ def toContinuousLinearMap (m : ∀ i, M₁ i) (i : ι) : M₁ i →L[R] M₂ :=
 /-- The cartesian product of two continuous multilinear maps, as a continuous multilinear map. -/
 def prod (f : ContinuousMultilinearMap R M₁ M₂) (g : ContinuousMultilinearMap R M₁ M₃) :
     ContinuousMultilinearMap R M₁ (M₂ × M₃) :=
-  { f.toMultilinearMap.Prod g.toMultilinearMap with cont := f.cont.prod_mk g.cont }
+  { f.toMultilinearMap.prod g.toMultilinearMap with cont := f.cont.prod_mk g.cont }
 #align continuous_multilinear_map.prod ContinuousMultilinearMap.prod
 
 @[simp]
 theorem prod_apply (f : ContinuousMultilinearMap R M₁ M₂) (g : ContinuousMultilinearMap R M₁ M₃)
-    (m : ∀ i, M₁ i) : (f.Prod g) m = (f m, g m) :=
+    (m : ∀ i, M₁ i) : (f.prod g) m = (f m, g m) :=
   rfl
 #align continuous_multilinear_map.prod_apply ContinuousMultilinearMap.prod_apply
 
@@ -441,7 +441,7 @@ theorem sub_apply (m : ∀ i, M₁ i) : (f - f') m = f m - f' m :=
 #align continuous_multilinear_map.sub_apply ContinuousMultilinearMap.sub_apply
 
 instance : AddCommGroup (ContinuousMultilinearMap R M₁ M₂) :=
-  toMultilinearMap_inj.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  toMultilinearMap_inj.addCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 end TopologicalAddGroup
@@ -552,7 +552,7 @@ See also: `continuous_multilinear_map.mk_pi_algebra`. -/
 protected def mkPiAlgebraFin : A[×n]→L[R] A
     where
   cont := by
-    change Continuous fun m => (List.ofFn m).Prod
+    change Continuous fun m => (List.ofFn m).prod
     simp_rw [List.ofFn_eq_map]
     exact continuous_list_prod _ fun i hi => continuous_apply _
   toMultilinearMap := MultilinearMap.mkPiAlgebraFin R n A
@@ -562,7 +562,7 @@ variable {R n A}
 
 @[simp]
 theorem mkPiAlgebraFin_apply (m : Fin n → A) :
-    ContinuousMultilinearMap.mkPiAlgebraFin R n A m = (List.ofFn m).Prod :=
+    ContinuousMultilinearMap.mkPiAlgebraFin R n A m = (List.ofFn m).prod :=
   rfl
 #align continuous_multilinear_map.mk_pi_algebra_fin_apply ContinuousMultilinearMap.mkPiAlgebraFin_apply
 
@@ -579,7 +579,7 @@ continuous multilinear map sending `m` to `f m • z`. -/
 @[simps toMultilinearMap apply]
 def smulRight : ContinuousMultilinearMap R M₁ M₂
     where
-  toMultilinearMap := f.toMultilinearMap.smul_right z
+  toMultilinearMap := f.toMultilinearMap.smulRight z
   cont := f.cont.smul continuous_const
 #align continuous_multilinear_map.smul_right ContinuousMultilinearMap.smulRight
 

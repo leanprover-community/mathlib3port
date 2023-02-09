@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lucas Allen, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.suggest
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,7 +404,7 @@ unsafe def suggest_scripts (limit : Option ℕ := none) (opt : suggest_opt := { 
 /-- Returns a string of the form `Try this: exact ...`, which closes the current goal.
 -/
 unsafe def library_search (opt : suggest_opt := { }) : tactic String :=
-  (suggest_core opt).firstM fun a => do
+  (suggest_core opt).mfirst fun a => do
     guard (a = 0)
     write a
     return a
@@ -546,8 +546,8 @@ unsafe def library_search (semireducible : parse <| optional (tk "!")) (hs : par
             lemma_thunks := some lemma_thunks
             ctx_thunk
             md :=
-              if semireducible then Tactic.Transparency.semireducible
-              else Tactic.Transparency.reducible } >>=
+              if semireducible then tactic.transparency.semireducible
+              else tactic.transparency.reducible } >>=
         if !opt || is_trace_enabled_for `silence_library_search then fun _ => skip else trace) <|>
       fail
         "`library_search` failed.\nIf you aren't sure what to do next, you can also\ntry `library_search!`, `suggest`, or `hint`.\n\nPossible reasons why `library_search` failed:\n* `library_search` will only apply a single lemma from the library,\n  and then try to fill in its hypotheses from local hypotheses.\n* If you haven't already, try stating the theorem you want in its own lemma.\n* Sometimes the library has one version of a lemma\n  but not a very similar version obtained by permuting arguments.\n  Try replacing `a + b` with `b + a`, or `a - b < c` with `a < b + c`,\n  to see if maybe the lemma exists but isn't stated quite the way you would like.\n* Make sure that you have all the side conditions for your theorem to be true.\n  For example you won't find `a - b + b = a` for natural numbers in the library because it's false!\n  Search for `b ≤ a → a - b + b = a` instead.\n* If a definition you made is in the goal,\n  you won't find any theorems about it in the library.\n  Try unfolding the definition using `unfold my_definition`.\n* If all else fails, ask on https://leanprover.zulipchat.com/,\n  and maybe we can improve the library and/or `library_search` for next time."

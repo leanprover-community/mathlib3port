@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.mutually_singular
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,9 +51,9 @@ namespace MutuallySingular
 theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) :
     MutuallySingular μ ν :=
   by
-  use to_measurable μ s, measurable_set_to_measurable _ _, (measure_to_measurable _).trans hs
+  use toMeasurable μ s, measurableSet_toMeasurable _ _, (measure_toMeasurable _).trans hs
   refine' measure_mono_null (fun x hx => (hst trivial).resolve_left fun hxs => hx _) ht
-  exact subset_to_measurable _ _ hxs
+  exact subset_toMeasurable _ _ hxs
 #align measure_theory.measure.mutually_singular.mk MeasureTheory.Measure.MutuallySingular.mk
 
 @[simp]
@@ -82,7 +82,7 @@ theorem monoAc (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ ≪
 #align measure_theory.measure.mutually_singular.mono_ac MeasureTheory.Measure.MutuallySingular.monoAc
 
 theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⊥ₘ ν₂ :=
-  h.monoAc hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
+  h.monoAc hμ.absolutelyContinuous hν.absolutelyContinuous
 #align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.mono
 
 @[simp]
@@ -92,8 +92,8 @@ theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ 
   choose s hsm hsμ hsν using H
   refine' ⟨⋂ i, s i, MeasurableSet.interᵢ hsm, _, _⟩
   · rw [sum_apply _ (MeasurableSet.interᵢ hsm), Ennreal.tsum_eq_zero]
-    exact fun i => measure_mono_null (Inter_subset _ _) (hsμ i)
-  · rwa [compl_Inter, measure_Union_null_iff]
+    exact fun i => measure_mono_null (interᵢ_subset _ _) (hsμ i)
+  · rwa [compl_interᵢ, measure_unionᵢ_null_iff]
 #align measure_theory.measure.mutually_singular.sum_left MeasureTheory.Measure.MutuallySingular.sum_left
 
 @[simp]

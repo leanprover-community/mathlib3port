@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.dfinsupp.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Dfinsupp.Order
 
 /-!
 # Finite intervals of finitely supported functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides the `locally_finite_order` instance for `Π₀ i, α i` when `α` itself is locally
 finite and calculates the cardinality of its finite intervals.
@@ -51,7 +54,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.card_dfinsupp Finset.card_dfinsuppₓ'. -/
 @[simp]
 theorem card_dfinsupp (s : Finset ι) (t : ∀ i, Finset (α i)) :
-    (s.Dfinsupp t).card = ∏ i in s, (t i).card :=
+    (s.dfinsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 #align finset.card_dfinsupp Finset.card_dfinsupp
 
@@ -63,7 +66,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), Zero.{u1} (α i)] {s : Finset.{u2} ι} {f : Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_2 i)} {t : forall (i : ι), Finset.{u1} (α i)} [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (α i)], Iff (Membership.mem.{max u2 u1, max u2 u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_2 i)) (Finset.{max u1 u2} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_2 i))) (Finset.instMembershipFinset.{max u2 u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_2 i))) f (Finset.dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_2 i) s t)) (And (HasSubset.Subset.{u2} (Finset.{u2} ι) (Finset.instHasSubsetFinset.{u2} ι) (Dfinsupp.support.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_2 i) (fun (i : ι) (x : α i) => instDecidableNot (Eq.{succ u1} (α i) x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_2 i)))) (_inst_3 i x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_2 i))))) f) s) (forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> (Membership.mem.{u1, u1} ((fun (i : ι) => (fun (i : ι) => α i) i) i) (Finset.{u1} (α i)) (Finset.instMembershipFinset.{u1} (α i)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => α i) i) (fun (i : ι) => (fun (i : ι) => _inst_2 i) i)) ι (fun (_x : ι) => (fun (i : ι) => (fun (i : ι) => α i) i) _x) (Dfinsupp.funLike.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => α i) i) (fun (i : ι) => (fun (i : ι) => _inst_2 i) i)) f i) (t i))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_dfinsupp_iff Finset.mem_dfinsupp_iffₓ'. -/
-theorem mem_dfinsupp_iff : f ∈ s.Dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
+theorem mem_dfinsupp_iff : f ∈ s.dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i :=
   by
   refine' mem_map.trans ⟨_, _⟩
   · rintro ⟨f, hf, rfl⟩
@@ -86,7 +89,7 @@ Case conversion may be inaccurate. Consider using '#align finset.mem_dfinsupp_if
 -/
 @[simp]
 theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.support ⊆ s) :
-    f ∈ s.Dfinsupp t ↔ ∀ i, f i ∈ t i :=
+    f ∈ s.dfinsupp t ↔ ∀ i, f i ∈ t i :=
   by
   refine'
     mem_dfinsupp_iff.trans
@@ -116,7 +119,7 @@ variable [∀ i, Zero (α i)] {f : Π₀ i, α i} {i : ι} {a : α i}
 def singleton (f : Π₀ i, α i) : Π₀ i, Finset (α i)
     where
   toFun i := {f i}
-  support' := f.support'.map fun s => ⟨s, fun i => (s.Prop i).imp id (congr_arg _)⟩
+  support' := f.support'.map fun s => ⟨s, fun i => (s.prop i).imp id (congr_arg _)⟩
 #align dfinsupp.singleton Dfinsupp.singleton
 -/
 
@@ -184,7 +187,7 @@ theorem support_rangeIcc_subset [DecidableEq ι] [∀ i, DecidableEq (α i)] :
   refine' fun x hx => _
   by_contra
   refine' not_mem_support_iff.2 _ hx
-  rw [range_Icc_apply, not_mem_support_iff.1 (not_mem_mono (subset_union_left _ _) h),
+  rw [rangeIcc_apply, not_mem_support_iff.1 (not_mem_mono (subset_union_left _ _) h),
     not_mem_support_iff.1 (not_mem_mono (subset_union_right _ _) h)]
   exact Icc_self _
 #align dfinsupp.support_range_Icc_subset Dfinsupp.support_rangeIcc_subset
@@ -199,7 +202,7 @@ variable [∀ i, Zero (α i)] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 /-- Given a finitely supported function `f : Π₀ i, finset (α i)`, one can define the finset
 `f.pi` of all finitely supported functions whose value at `i` is in `f i` for all `i`. -/
 def pi (f : Π₀ i, Finset (α i)) : Finset (Π₀ i, α i) :=
-  f.support.Dfinsupp f
+  f.support.dfinsupp f
 #align dfinsupp.pi Dfinsupp.pi
 -/
 
@@ -221,7 +224,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : forall (i : ι), Zero.{u1} (α i)] [_inst_2 : DecidableEq.{succ u2} ι] [_inst_3 : forall (i : ι), DecidableEq.{succ u1} (α i)] (f : Dfinsupp.{u2, u1} ι (fun (i : ι) => Finset.{u1} (α i)) (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_1 i))), Eq.{1} Nat (Finset.card.{max u2 u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i)) (Dfinsupp.pi.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) (a : α i) (b : α i) => _inst_3 i a b) f)) (Dfinsupp.prod.{u2, u1, 0} ι Nat (fun (i : ι) => Finset.{u1} (α i)) (fun (a : ι) (b : ι) => _inst_2 a b) (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_1 i)) (fun (i : ι) (x : Finset.{u1} (α i)) => instDecidableNot (Eq.{succ u1} (Finset.{u1} (α i)) x (OfNat.ofNat.{u1} (Finset.{u1} (α i)) 0 (Zero.toOfNat0.{u1} (Finset.{u1} (α i)) (Finset.zero.{u1} (α i) (_inst_1 i))))) (Finset.decidableEq.{u1} (α i) ((fun (i : ι) (a : α i) (b : α i) => _inst_3 i a b) i) x (OfNat.ofNat.{u1} (Finset.{u1} (α i)) 0 (Zero.toOfNat0.{u1} (Finset.{u1} (α i)) (Finset.zero.{u1} (α i) (_inst_1 i)))))) Nat.commMonoid f (fun (i : ι) => Nat.cast.{u1} ((Finset.{u1} (α i)) -> Nat) (Pi.natCast.{u1, 0} (Finset.{u1} (α i)) (fun (a._@.Mathlib.Data.Dfinsupp.Basic._hyg.25291 : Finset.{u1} (α i)) => Nat) (fun (a : Finset.{u1} (α i)) => CanonicallyOrderedCommSemiring.toNatCast.{0} Nat Nat.canonicallyOrderedCommSemiring)) (Finset.card.{u1} (α i) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) (fun (i : ι) => (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_1 i)) i)) ι (fun (_x : ι) => (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) _x) (Dfinsupp.funLike.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) (fun (i : ι) => (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_1 i)) i)) f i))))
 Case conversion may be inaccurate. Consider using '#align dfinsupp.card_pi Dfinsupp.card_piₓ'. -/
 @[simp]
-theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i).card :=
+theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.prod fun i => (f i).card :=
   by
   rw [pi, card_dfinsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
@@ -236,11 +239,11 @@ variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 variable [∀ i, PartialOrder (α i)] [∀ i, Zero (α i)] [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (Π₀ i, α i) :=
-  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).Dfinsupp <| f.rangeIcc g)
+  LocallyFiniteOrder.ofIcc (Π₀ i, α i) (fun f g => (f.support ∪ g.support).dfinsupp <| f.rangeIcc g)
     fun f g x =>
     by
-    refine' (mem_dfinsupp_iff_of_support_subset <| support_range_Icc_subset).trans _
-    simp_rw [mem_range_Icc_apply_iff, forall_and]
+    refine' (mem_dfinsupp_iff_of_support_subset <| support_rangeIcc_subset).trans _
+    simp_rw [mem_rangeIcc_apply_iff, forall_and]
     rfl
 
 variable (f g : Π₀ i, α i)
@@ -251,7 +254,7 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} [_inst_1 : DecidableEq.{succ u2} ι] [_inst_2 : forall (i : ι), DecidableEq.{succ u1} (α i)] [_inst_3 : forall (i : ι), PartialOrder.{u1} (α i)] [_inst_4 : forall (i : ι), Zero.{u1} (α i)] [_inst_5 : forall (i : ι), LocallyFiniteOrder.{u1} (α i) (PartialOrder.toPreorder.{u1} (α i) (_inst_3 i))] (f : Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i)) (g : Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i)), Eq.{max (succ u2) (succ u1)} (Finset.{max u2 u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i))) (Finset.Icc.{max u2 u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i)) (Dfinsupp.instPreorderDfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i) (fun (i : ι) => PartialOrder.toPreorder.{u1} (α i) (_inst_3 i))) (Dfinsupp.instLocallyFiniteOrderDfinsuppInstPreorderDfinsuppToPreorder.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) (a : α i) (b : α i) => _inst_2 i a b) (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_4 i) (fun (i : ι) => _inst_5 i)) f g) (Finset.dfinsupp.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_4 i) (Union.union.{u2} (Finset.{u2} ι) (Finset.instUnionFinset.{u2} ι (fun (a : ι) (b : ι) => _inst_1 a b)) (Dfinsupp.support.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_4 i) (fun (i : ι) (x : α i) => instDecidableNot (Eq.{succ u1} (α i) x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_4 i)))) (_inst_2 i x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_4 i))))) f) (Dfinsupp.support.{u2, u1} ι (fun (i : ι) => α i) (fun (a : ι) (b : ι) => _inst_1 a b) (fun (i : ι) => _inst_4 i) (fun (i : ι) (x : α i) => instDecidableNot (Eq.{succ u1} (α i) x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_4 i)))) (_inst_2 i x (OfNat.ofNat.{u1} (α i) 0 (Zero.toOfNat0.{u1} (α i) (_inst_4 i))))) g)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Dfinsupp.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) (fun (i : ι) => (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_4 i)) i)) ι (fun (_x : ι) => (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) _x) (Dfinsupp.funLike.{u2, u1} ι (fun (i : ι) => (fun (i : ι) => Finset.{u1} (α i)) i) (fun (i : ι) => (fun (i : ι) => Finset.zero.{u1} (α i) (_inst_4 i)) i)) (Dfinsupp.rangeIcc.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_4 i) (fun (i : ι) => _inst_3 i) (fun (i : ι) => _inst_5 i) f g)))
 Case conversion may be inaccurate. Consider using '#align dfinsupp.Icc_eq Dfinsupp.Icc_eqₓ'. -/
-theorem Icc_eq : Icc f g = (f.support ∪ g.support).Dfinsupp (f.rangeIcc g) :=
+theorem Icc_eq : Icc f g = (f.support ∪ g.support).dfinsupp (f.rangeIcc g) :=
   rfl
 #align dfinsupp.Icc_eq Dfinsupp.Icc_eq
 

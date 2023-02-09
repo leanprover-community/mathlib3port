@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ instance spec_pUnit_isEmpty : IsEmpty (Scheme.spec.obj (op <| CommRingCat.of PUn
 instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
     [IsEmpty X.carrier] : IsOpenImmersion f :=
   by
-  apply (config := { instances := false }) is_open_immersion.of_stalk_iso
+  apply (config := { instances := false }) IsOpenImmersion.of_stalk_iso
   · apply openEmbedding_of_continuous_injective_open
     · continuity
     · rintro (i : X.carrier)
@@ -101,7 +101,7 @@ instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ 
       convert isOpen_empty
       ext
       apply (iff_false_iff _).mpr
-      exact fun x => isEmptyElim (show X.carrier from x.some)
+      exact fun x => isEmptyElim (show X.carrier from x.choose)
   · rintro (i : X.carrier)
     exact isEmptyElim i
 #align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersion_of_isEmpty
@@ -110,21 +110,21 @@ instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpt
     IsIso f :=
   by
   haveI : IsEmpty X.carrier := ⟨fun x => isEmptyElim (show Y.carrier from f.1.base x)⟩
-  have : epi f.1.base := by
+  have : Epi f.1.base := by
     rw [TopCat.epi_iff_surjective]
     rintro (x : Y.carrier)
     exact isEmptyElim x
-  apply is_open_immersion.to_iso
+  apply IsOpenImmersion.to_iso
 #align algebraic_geometry.is_iso_of_is_empty AlgebraicGeometry.isIso_of_isEmpty
 
 /-- A scheme is initial if its underlying space is empty . -/
 noncomputable def isInitialOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsInitial X :=
-  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
+  emptyIsInitial.ofIso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.is_initial_of_is_empty AlgebraicGeometry.isInitialOfIsEmpty
 
 /-- `Spec 0` is the initial object in the category of schemes. -/
 noncomputable def specPunitIsInitial : IsInitial (Scheme.spec.obj (op <| CommRingCat.of PUnit)) :=
-  emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
+  emptyIsInitial.ofIso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 
 instance (priority := 100) isAffineOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
@@ -141,9 +141,9 @@ instance initial_isEmpty : IsEmpty (⊥_ Scheme).carrier :=
 
 theorem bot_isAffineOpen (X : Scheme) : IsAffineOpen (⊥ : Opens X.carrier) :=
   by
-  convert range_is_affine_open_of_open_immersion (initial.to X)
+  convert range_isAffineOpen_of_open_immersion (initial.to X)
   ext
-  exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).carrier from x.some)
+  exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).carrier from x.choose)
 #align algebraic_geometry.bot_is_affine_open AlgebraicGeometry.bot_isAffineOpen
 
 instance : HasStrictInitialObjects Scheme :=

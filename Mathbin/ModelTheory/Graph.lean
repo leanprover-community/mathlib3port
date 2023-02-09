@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.graph
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ end Graph
 
 /-- The theory of simple graphs. -/
 protected def Theory.simpleGraph : Language.graph.Theory :=
-  {adj.Irreflexive, adj.Symmetric}
+  {adj.irreflexive, adj.symmetric}
 #align first_order.language.Theory.simple_graph FirstOrder.Language.Theory.simpleGraph
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -77,12 +77,12 @@ theorem Theory.simpleGraph_model_iff [Language.graph.Structure V] :
     V ⊨ Theory.simpleGraph ↔
       (Irreflexive fun x y : V => RelMap adj ![x, y]) ∧
         Symmetric fun x y : V => RelMap adj ![x, y] :=
-  by simp [Theory.simple_graph]
+  by simp [Theory.simpleGraph]
 #align first_order.language.Theory.simple_graph_model_iff FirstOrder.Language.Theory.simpleGraph_model_iff
 
-instance simpleGraph_model (G : SimpleGraph V) : @Theory.Model _ V G.Structure Theory.simpleGraph :=
+instance simpleGraph_model (G : SimpleGraph V) : @Theory.Model _ V G.structure Theory.simpleGraph :=
   by
-  simp only [Theory.simple_graph_model_iff, rel_map_apply₂]
+  simp only [Theory.simpleGraph_model_iff, relMap_apply₂]
   exact ⟨G.loopless, G.symm⟩
 #align first_order.language.simple_graph_model FirstOrder.Language.simpleGraph_model
 
@@ -107,7 +107,7 @@ variable {V}
 
 @[simp]
 theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
-    @simpleGraphOfStructure V G.Structure _ = G :=
+    @simpleGraphOfStructure V G.structure _ = G :=
   by
   ext
   rfl
@@ -116,10 +116,10 @@ theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨ Theory.simpleGraph] :
-    (simpleGraphOfStructure V).Structure = S :=
+    (simpleGraphOfStructure V).structure = S :=
   by
   ext (n f xs)
-  · exact (is_relational.empty_functions n).elim f
+  · exact (IsRelational.empty_functions n).elim f
   · ext (n r xs)
     rw [iff_eq_eq]
     cases n
@@ -128,7 +128,7 @@ theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨
       · exact r.elim
       · cases n
         · cases r
-          change rel_map adj ![xs 0, xs 1] = _
+          change RelMap adj ![xs 0, xs 1] = _
           refine' congr rfl (funext _)
           simp [Fin.forall_fin_two]
         · exact r.elim

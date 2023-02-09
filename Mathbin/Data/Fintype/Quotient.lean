@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ def Quotient.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S
     by
     refine'
       Quotient.liftOn₂ (f i (List.mem_cons_self _ _))
-        (Quotient.finChoiceAux l fun j h => f j (List.mem_cons_of_mem _ h)) _ _
+        (quotient.fin_choice_aux l fun j h => f j (List.mem_cons_of_mem _ h)) _ _
     exact fun a l =>
       ⟦fun j h => if e : j = i then by rw [e] <;> exact a else l _ (h.resolve_left e)⟧
     refine' fun a₁ l₁ a₂ l₂ h₁ h₂ => Quotient.sound fun j h => _
@@ -45,12 +45,12 @@ def Quotient.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S
     · exact h₂ _ _
 #align quotient.fin_choice_aux Quotient.finChoiceAux
 
-theorem Quotient.finChoiceAux_eq {ι : Type _} [DecidableEq ι] {α : ι → Type _}
+theorem Quotient.finChoiceAux_eq {ι : Type _} [DecidableEq ι] {α : Not → Type _}
     [S : ∀ i, Setoid (α i)] :
     ∀ (l : List ι) (f : ∀ i ∈ l, α i), (Quotient.finChoiceAux l fun i h => ⟦f i h⟧) = ⟦f⟧
   | [], f => Quotient.sound fun i h => h.elim
   | i :: l, f => by
-    simp [Quotient.finChoiceAux, Quotient.finChoiceAux_eq l]
+    simp [Quotient.finChoiceAux, quotient.fin_choice_aux_eq l]
     refine' Quotient.sound fun j h => _
     by_cases e : j = i <;> simp [e]
     subst j; rfl
@@ -83,7 +83,7 @@ theorem Quotient.finChoice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {α : 
   change Quotient.liftOn q _ _ = _
   have : q = ⟦fun i h => f i⟧ := by
     dsimp only [q]
-    exact Quotient.inductionOn (@Finset.univ ι _).1 fun l => Quotient.finChoiceAux_eq _ _
+    exact Quotient.inductionOn (@finset.univ ι _).1 fun l => Quotient.finChoiceAux_eq _ _
   simp [this]
   exact Setoid.refl _
 #align quotient.fin_choice_eq Quotient.finChoice_eq

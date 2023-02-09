@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplex_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -210,7 +210,7 @@ def σ {n} (i : Fin (n + 1)) : [n + 1] ⟶ [n] :=
 #align simplex_category.σ SimplexCategory.σ
 
 /-- The generic case of the first simplicial identity -/
-theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.cast_succ :=
+theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = δ j ≫ δ i.castSucc :=
   by
   ext k
   dsimp [δ, Fin.succAbove]
@@ -222,8 +222,8 @@ theorem δ_comp_δ {n} {i j : Fin (n + 2)} (H : i ≤ j) : δ i ≫ δ j.succ = 
   split_ifs <;> · simp at * <;> linarith
 #align simplex_category.δ_comp_δ SimplexCategory.δ_comp_δ
 
-theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j) :
-    δ i ≫ δ j = δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ δ i.cast_succ :=
+theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.castSucc < j) :
+    δ i ≫ δ j = δ (j.pred fun hj => by simpa only [hj, Fin.not_lt_zero] using H) ≫ δ i.castSucc :=
   by
   rw [← δ_comp_δ]
   · rw [Fin.succ_pred]
@@ -232,9 +232,8 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : i.cast_succ < j
       j.succ_pred, Fin.lt_iff_val_lt_val] using H
 #align simplex_category.δ_comp_δ' SimplexCategory.δ_comp_δ'
 
-theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_succ) :
-    δ (i.cast_lt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ δ j.succ =
-      δ j ≫ δ i :=
+theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.castSucc) :
+    δ (i.castLt (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ δ j.succ = δ j ≫ δ i :=
   by
   rw [δ_comp_δ]
   · rfl
@@ -243,12 +242,12 @@ theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ j.cast_s
 
 /-- The special case of the first simplicial identity -/
 @[reassoc.1]
-theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : δ i ≫ δ i.cast_succ = δ i ≫ δ i.succ :=
+theorem δ_comp_δ_self {n} {i : Fin (n + 2)} : δ i ≫ δ i.castSucc = δ i ≫ δ i.succ :=
   (δ_comp_δ (le_refl i)).symm
 #align simplex_category.δ_comp_δ_self SimplexCategory.δ_comp_δ_self
 
 @[reassoc.1]
-theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast_succ) :
+theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.castSucc) :
     δ i ≫ δ j = δ i ≫ δ i.succ := by
   subst H
   rw [δ_comp_δ_self]
@@ -256,8 +255,8 @@ theorem δ_comp_δ_self' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : j = i.cast
 
 /-- The second simplicial identity -/
 @[reassoc.1]
-theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.cast_succ) :
-    δ i.cast_succ ≫ σ j.succ = σ j ≫ δ i := by
+theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.castSucc) :
+    δ i.castSucc ≫ σ j.succ = σ j ≫ δ i := by
   ext k
   suffices
     ite (j.succ.cast_succ < ite (k < i) k.cast_succ k.succ) (ite (k < i) (k : ℕ) (k + 1) - 1)
@@ -274,7 +273,7 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
                   cases j
                   cases k
                   simp only [len_mk]
-                  linarith)).cast_succ <
+                  linarith)).castSucc <
           i)
         (ite (j.cast_succ < k) (k - 1) k) (ite (j.cast_succ < k) (k - 1) k + 1)
     by
@@ -300,7 +299,7 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ j.ca
 
 /-- The first part of the third simplicial identity -/
 @[reassoc.1]
-theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [n] :=
+theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.castSucc ≫ σ i = 𝟙 [n] :=
   by
   ext j
   suffices
@@ -317,7 +316,7 @@ theorem δ_comp_σ_self {n} {i : Fin (n + 1)} : δ i.cast_succ ≫ σ i = 𝟙 [
 #align simplex_category.δ_comp_σ_self SimplexCategory.δ_comp_σ_self
 
 @[reassoc.1]
-theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.cast_succ) :
+theorem δ_comp_σ_self' {n} {j : Fin (n + 2)} {i : Fin (n + 1)} (H : j = i.castSucc) :
     δ j ≫ σ i = 𝟙 [n] := by
   subst H
   rw [δ_comp_σ_self]
@@ -344,8 +343,8 @@ theorem δ_comp_σ_succ' {n} (j : Fin (n + 2)) (i : Fin (n + 1)) (H : j = i.succ
 
 /-- The fourth simplicial identity -/
 @[reassoc.1]
-theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_succ < i) :
-    δ i.succ ≫ σ j.cast_succ = σ j ≫ δ i := by
+theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.castSucc < i) :
+    δ i.succ ≫ σ j.castSucc = σ j ≫ δ i := by
   ext k
   dsimp [δ, σ, Fin.succAbove, Fin.predAbove]
   rcases i with ⟨i, _⟩
@@ -385,7 +384,7 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : j.cast_suc
 theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
     δ i ≫ σ j =
       σ
-          (j.cast_lt
+          (j.castLt
             ((add_lt_add_iff_right 1).mp
               (lt_of_lt_of_le
                 (by simpa only [[anonymous], ← Fin.val_succ] using fin.lt_iff_coe_lt_coe.mp H)
@@ -402,7 +401,7 @@ attribute [local simp] Fin.pred_mk
 
 /-- The fifth simplicial identity -/
 @[reassoc.1]
-theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : σ i.cast_succ ≫ σ j = σ j.succ ≫ σ i :=
+theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) : σ i.castSucc ≫ σ j = σ j.succ ≫ σ i :=
   by
   ext k
   dsimp [σ, Fin.predAbove]
@@ -445,7 +444,7 @@ of `NonemptyFinLinOrd` -/
 def skeletalFunctor : SimplexCategory ⥤ NonemptyFinLinOrdCat.{v}
     where
   obj a := NonemptyFinLinOrdCat.of <| ULift (Fin (a.len + 1))
-  map a b f := ⟨fun i => ULift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.Monotone h⟩
+  map a b f := ⟨fun i => ULift.up (f.toOrderHom i.down), fun i j h => f.toOrderHom.monotone h⟩
   map_id' a := by
     ext
     simp
@@ -466,7 +465,7 @@ theorem skeletal : Skeletal SimplexCategory := fun X Y ⟨I⟩ =>
     ext
     simpa
   · apply Fintype.card_congr
-    refine' equiv.ulift.symm.trans (((skeletal_functor ⋙ forget _).mapIso I).toEquiv.trans _)
+    refine' equiv.ulift.symm.trans (((skeletalFunctor ⋙ forget _).mapIso I).toEquiv.trans _)
     apply Equiv.ulift
 #align simplex_category.skeletal SimplexCategory.skeletal
 
@@ -475,7 +474,7 @@ namespace SkeletalFunctor
 instance : Full skeletalFunctor.{v}
     where
   Preimage a b f :=
-    SimplexCategory.Hom.mk ⟨fun i => (f (ULift.up i)).down, fun i j h => f.Monotone h⟩
+    SimplexCategory.Hom.mk ⟨fun i => (f (ULift.up i)).down, fun i j h => f.monotone h⟩
   witness' := by
     intro m n f
     dsimp at *
@@ -498,7 +497,7 @@ instance : EssSurj skeletalFunctor.{v}
         have aux : Fintype.card X = Fintype.card X - 1 + 1 :=
           (Nat.succ_pred_eq_of_pos <| fintype.card_pos_iff.mpr ⟨⊥⟩).symm
         let f := monoEquivOfFin X aux
-        have hf := (finset.univ.order_emb_of_fin aux).StrictMono
+        have hf := (finset.univ.order_emb_of_fin aux).strictMono
         refine'
           { Hom := ⟨fun i => f i.down, _⟩
             inv := ⟨fun i => ⟨f.symm i⟩, _⟩
@@ -580,9 +579,9 @@ section EpiMono
 theorem mono_iff_injective {n m : SimplexCategory} {f : n ⟶ m} :
     Mono f ↔ Function.Injective f.toOrderHom :=
   by
-  rw [← functor.mono_map_iff_mono skeletal_equivalence.Functor]
-  dsimp only [skeletal_equivalence, functor.as_equivalence_functor]
-  rw [NonemptyFinLinOrdCat.mono_iff_injective, skeletal_functor.coe_map,
+  rw [← Functor.mono_map_iff_mono skeletalEquivalence.functor]
+  dsimp only [skeletalEquivalence, Functor.asEquivalence_functor]
+  rw [NonemptyFinLinOrdCat.mono_iff_injective, skeletalFunctor.coe_map,
     Function.Injective.of_comp_iff ULift.up_injective,
     Function.Injective.of_comp_iff' _ ULift.down_bijective]
 #align simplex_category.mono_iff_injective SimplexCategory.mono_iff_injective
@@ -592,9 +591,9 @@ theorem mono_iff_injective {n m : SimplexCategory} {f : n ⟶ m} :
 theorem epi_iff_surjective {n m : SimplexCategory} {f : n ⟶ m} :
     Epi f ↔ Function.Surjective f.toOrderHom :=
   by
-  rw [← functor.epi_map_iff_epi skeletal_equivalence.Functor]
-  dsimp only [skeletal_equivalence, functor.as_equivalence_functor]
-  rw [NonemptyFinLinOrdCat.epi_iff_surjective, skeletal_functor.coe_map,
+  rw [← Functor.epi_map_iff_epi skeletalEquivalence.functor]
+  dsimp only [skeletalEquivalence, Functor.asEquivalence_functor]
+  rw [NonemptyFinLinOrdCat.epi_iff_surjective, skeletalFunctor.coe_map,
     Function.Surjective.of_comp_iff' ULift.up_bijective,
     Function.Surjective.of_comp_iff _ ULift.down_surjective]
 #align simplex_category.epi_iff_surjective SimplexCategory.epi_iff_surjective
@@ -632,7 +631,7 @@ instance {n : ℕ} {i : Fin (n + 1)} : Epi (σ i) :=
   by
   rw [epi_iff_surjective]
   intro b
-  simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk]
+  simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_fun_mk]
   by_cases b ≤ i
   · use b
     rw [Fin.predAbove_below i b (by simpa only [Fin.coe_eq_castSucc] using h)]
@@ -648,54 +647,54 @@ instance : ReflectsIsomorphisms (forget SimplexCategory) :=
     intro x y f
     intro
     exact
-      is_iso.of_iso
+      IsIso.of_iso
         { Hom := f
           inv :=
-            hom.mk
+            Hom.mk
               { toFun := inv ((forget SimplexCategory).map f)
                 monotone' := fun y₁ y₂ h => by
                   by_cases h' : y₁ < y₂
                   · by_contra h''
-                    have eq := fun i => congr_hom (iso.inv_hom_id (as_iso ((forget _).map f))) i
+                    have eq := fun i => congr_hom (Iso.inv_hom_id (asIso ((forget _).map f))) i
                     have ineq := f.to_order_hom.monotone' (le_of_not_ge h'')
                     dsimp at ineq
-                    erw [Eq, Eq] at ineq
+                    erw [eq, eq] at ineq
                     exact not_le.mpr h' ineq
                   · rw [eq_of_le_of_not_lt h h'] }
           hom_inv_id' := by
             ext1
             ext1
-            exact iso.hom_inv_id (as_iso ((forget _).map f))
+            exact Iso.hom_inv_id (asIso ((forget _).map f))
           inv_hom_id' := by
             ext1
             ext1
-            exact iso.inv_hom_id (as_iso ((forget _).map f)) }⟩
+            exact Iso.inv_hom_id (asIso ((forget _).map f)) }⟩
 
 theorem isIso_of_bijective {x y : SimplexCategory} {f : x ⟶ y}
     (hf : Function.Bijective f.toOrderHom.toFun) : IsIso f :=
-  haveI : is_iso ((forget SimplexCategory).map f) := (is_iso_iff_bijective _).mpr hf
-  is_iso_of_reflects_iso f (forget SimplexCategory)
+  haveI : IsIso ((forget SimplexCategory).map f) := (isIso_iff_bijective _).mpr hf
+  isIso_of_reflects_iso f (forget SimplexCategory)
 #align simplex_category.is_iso_of_bijective SimplexCategory.isIso_of_bijective
 
 /-- An isomorphism in `simplex_category` induces an `order_iso`. -/
 @[simp]
 def orderIsoOfIso {x y : SimplexCategory} (e : x ≅ y) : Fin (x.len + 1) ≃o Fin (y.len + 1) :=
   Equiv.toOrderIso
-    { toFun := e.Hom.toOrderHom
+    { toFun := e.hom.toOrderHom
       invFun := e.inv.toOrderHom
       left_inv := fun i => by
-        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.hom_inv_id'
+        simpa only using congr_arg (fun φ => (Hom.toOrderHom φ) i) e.hom_inv_id'
       right_inv := fun i => by
-        simpa only using congr_arg (fun φ => (hom.to_order_hom φ) i) e.inv_hom_id' }
-    e.Hom.toOrderHom.Monotone e.inv.toOrderHom.Monotone
+        simpa only using congr_arg (fun φ => (Hom.toOrderHom φ) i) e.inv_hom_id' }
+    e.hom.toOrderHom.monotone e.inv.toOrderHom.monotone
 #align simplex_category.order_iso_of_iso SimplexCategory.orderIsoOfIso
 
 theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x :=
   by
   have h : (Finset.univ : Finset (Fin (x.len + 1))).card = x.len + 1 := Finset.card_fin (x.len + 1)
-  have eq₁ := Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso e) i)
+  have eq₁ := Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((orderIsoOfIso e) i)
   have eq₂ :=
-    Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((order_iso_of_iso (iso.refl x)) i)
+    Finset.orderEmbOfFin_unique' h fun i => Finset.mem_univ ((orderIsoOfIso (Iso.refl x)) i)
   ext1; ext1
   convert congr_arg (fun φ => OrderEmbedding.toOrderHom φ) (eq₁.trans eq₂.symm)
   ext1; ext1 i
@@ -703,23 +702,23 @@ theorem iso_eq_iso_refl {x : SimplexCategory} (e : x ≅ x) : e = Iso.refl x :=
 #align simplex_category.iso_eq_iso_refl SimplexCategory.iso_eq_iso_refl
 
 theorem eq_id_of_isIso {x : SimplexCategory} (f : x ⟶ x) [hf : IsIso f] : f = 𝟙 _ :=
-  congr_arg (fun φ : _ ≅ _ => φ.Hom) (iso_eq_iso_refl (asIso f))
+  congr_arg (fun φ : _ ≅ _ => φ.hom) (iso_eq_iso_refl (asIso f))
 #align simplex_category.eq_id_of_is_iso SimplexCategory.eq_id_of_isIso
 
 theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
-    (i : Fin (n + 1)) (hi : θ.toOrderHom i.cast_succ = θ.toOrderHom i.succ) :
+    (i : Fin (n + 1)) (hi : θ.toOrderHom i.castSucc = θ.toOrderHom i.succ) :
     ∃ θ' : mk n ⟶ Δ', θ = σ i ≫ θ' := by
   use δ i.succ ≫ θ
   ext1; ext1; ext1 x
-  simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
-    small_category_comp, σ, mk_hom, OrderHom.coe_fun_mk]
+  simp only [Hom.toOrderHom_mk, Function.comp_apply, OrderHom.comp_coe, Hom.comp,
+    smallCategory_comp, σ, mkHom, OrderHom.coe_fun_mk]
   by_cases h' : x ≤ i.cast_succ
   · rw [Fin.predAbove_below i x h']
     have eq := Fin.castSucc_castPred (gt_of_gt_of_ge (Fin.castSucc_lt_last i) h')
     erw [Fin.succAbove_below i.succ x.cast_pred _]
     swap
-    · rwa [Eq, ← Fin.le_castSucc_iff]
-    rw [Eq]
+    · rwa [eq, ← Fin.le_castSucc_iff]
+    rw [eq]
   · simp only [not_le] at h'
     let y :=
       x.pred
@@ -753,7 +752,7 @@ theorem eq_σ_comp_of_not_injective {n : ℕ} {Δ' : SimplexCategory} (θ : mk (
   simp only [Function.Injective, exists_prop, not_forall] at hθ
   -- as θ is not injective, there exists `x<y` such that `θ x = θ y`
   -- and then, `θ x = θ (x+1)`
-  have hθ₂ : ∃ x y : Fin (n + 2), (hom.to_order_hom θ) x = (hom.to_order_hom θ) y ∧ x < y :=
+  have hθ₂ : ∃ x y : Fin (n + 2), (Hom.toOrderHom θ) x = (Hom.toOrderHom θ) y ∧ x < y :=
     by
     rcases hθ with ⟨x, y, ⟨h₁, h₂⟩⟩
     by_cases x < y
@@ -784,10 +783,10 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
     ext1
     ext1
     ext1 x
-    simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
-      small_category_comp]
+    simp only [Hom.toOrderHom_mk, Function.comp_apply, OrderHom.comp_coe, Hom.comp,
+      smallCategory_comp]
     by_cases h' : θ.to_order_hom x ≤ i
-    · simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk]
+    · simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_fun_mk]
       rw [Fin.predAbove_below (Fin.castPred i) (θ.to_order_hom x)
           (by simpa [Fin.castSucc_castPred h] using h')]
       erw [Fin.succAbove_below i]
@@ -799,7 +798,7 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
       rw [Fin.castSucc_castPred]
       apply lt_of_le_of_lt h' h
     · simp only [not_le] at h'
-      simp only [σ, mk_hom, hom.to_order_hom_mk, OrderHom.coe_fun_mk,
+      simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_fun_mk,
         Fin.predAbove_above (Fin.castPred i) (θ.to_order_hom x)
           (by simpa only [Fin.castSucc_castPred h] using h')]
       erw [Fin.succAbove_above i _, Fin.succ_pred]
@@ -810,8 +809,8 @@ theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ 
     ext1
     ext1
     ext1 x
-    simp only [hom.to_order_hom_mk, Function.comp_apply, OrderHom.comp_coe, hom.comp,
-      small_category_comp, σ, δ, mk_hom, OrderHom.coe_fun_mk, OrderEmbedding.toOrderHom_coe,
+    simp only [Hom.toOrderHom_mk, Function.comp_apply, OrderHom.comp_coe, Hom.comp,
+      smallCategory_comp, σ, δ, mkHom, OrderHom.coe_fun_mk, OrderEmbedding.toOrderHom_coe,
       Fin.predAbove_last, Fin.succAbove_last,
       Fin.castSucc_castPred ((Ne.le_iff_lt (hi x)).mp (Fin.le_last _))]
 #align simplex_category.eq_comp_δ_of_not_surjective' SimplexCategory.eq_comp_δ_of_not_surjective'
@@ -826,10 +825,10 @@ theorem eq_comp_δ_of_not_surjective {n : ℕ} {Δ : SimplexCategory} (θ : Δ �
 
 theorem eq_id_of_mono {x : SimplexCategory} (i : x ⟶ x) [Mono i] : i = 𝟙 _ :=
   by
-  suffices is_iso i by
+  suffices IsIso i by
     haveI := this
-    apply eq_id_of_is_iso
-  apply is_iso_of_bijective
+    apply eq_id_of_isIso
+  apply isIso_of_bijective
   dsimp
   rw [Fintype.bijective_iff_injective_and_card i.to_order_hom, ← mono_iff_injective,
     eq_self_iff_true, and_true_iff]
@@ -838,10 +837,10 @@ theorem eq_id_of_mono {x : SimplexCategory} (i : x ⟶ x) [Mono i] : i = 𝟙 _ 
 
 theorem eq_id_of_epi {x : SimplexCategory} (i : x ⟶ x) [Epi i] : i = 𝟙 _ :=
   by
-  suffices is_iso i by
+  suffices IsIso i by
     haveI := this
-    apply eq_id_of_is_iso
-  apply is_iso_of_bijective
+    apply eq_id_of_isIso
+  apply isIso_of_bijective
   dsimp
   rw [Fintype.bijective_iff_surjective_and_card i.to_order_hom, ← epi_iff_surjective,
     eq_self_iff_true, and_true_iff]
@@ -855,11 +854,11 @@ theorem eq_σ_of_epi {n : ℕ} (θ : mk (n + 1) ⟶ mk n) [Epi θ] : ∃ i : Fin
     simpa only [Nat.one_ne_zero, add_le_iff_nonpos_right, nonpos_iff_eq_zero] using
       le_of_mono (mono_iff_injective.mpr h)
   use i
-  haveI : epi (σ i ≫ θ') := by
+  haveI : Epi (σ i ≫ θ') := by
     rw [← h]
     infer_instance
   haveI := CategoryTheory.epi_of_epi (σ i) θ'
-  rw [h, eq_id_of_epi θ', category.comp_id]
+  rw [h, eq_id_of_epi θ', Category.comp_id]
 #align simplex_category.eq_σ_of_epi SimplexCategory.eq_σ_of_epi
 
 theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : Fin (n + 2), θ = δ i :=
@@ -869,11 +868,11 @@ theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : F
     simpa only [add_le_iff_nonpos_right, nonpos_iff_eq_zero] using
       le_of_epi (epi_iff_surjective.mpr h)
   use i
-  haveI : mono (θ' ≫ δ i) := by
+  haveI : Mono (θ' ≫ δ i) := by
     rw [← h]
     infer_instance
   haveI := CategoryTheory.mono_of_mono θ' (δ i)
-  rw [h, eq_id_of_mono θ', category.id_comp]
+  rw [h, eq_id_of_mono θ', Category.id_comp]
 #align simplex_category.eq_δ_of_mono SimplexCategory.eq_δ_of_mono
 
 theorem len_lt_of_mono {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ) [hi : Mono i] (hi' : Δ ≠ Δ') :
@@ -904,20 +903,20 @@ instance (Δ Δ' : SimplexCategory) (θ : Δ ⟶ Δ') : Epi (factorThruImage θ)
 theorem image_eq {Δ Δ' Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ Δ'} [Epi e] {i : Δ' ⟶ Δ''}
     [Mono i] (fac : e ≫ i = φ) : image φ = Δ' :=
   by
-  haveI := strong_epi_of_epi e
-  let e := image.iso_strong_epi_mono e i fac
+  haveI := strongEpi_of_epi e
+  let e := image.isoStrongEpiMono e i fac
   ext
   exact
-    le_antisymm (len_le_of_epi (inferInstance : epi e.hom))
-      (len_le_of_mono (inferInstance : mono e.hom))
+    le_antisymm (len_le_of_epi (inferInstance : Epi e.hom))
+      (len_le_of_mono (inferInstance : Mono e.hom))
 #align simplex_category.image_eq SimplexCategory.image_eq
 
 theorem image_ι_eq {Δ Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ image φ} [Epi e]
     {i : image φ ⟶ Δ''} [Mono i] (fac : e ≫ i = φ) : image.ι φ = i :=
   by
-  haveI := strong_epi_of_epi e
-  rw [← image.iso_strong_epi_mono_hom_comp_ι e i fac,
-    SimplexCategory.eq_id_of_isIso (image.iso_strong_epi_mono e i fac).Hom, category.id_comp]
+  haveI := strongEpi_of_epi e
+  rw [← image.isoStrongEpiMono_hom_comp_ι e i fac,
+    SimplexCategory.eq_id_of_isIso (image.isoStrongEpiMono e i fac).hom, Category.id_comp]
 #align simplex_category.image_ι_eq SimplexCategory.image_ι_eq
 
 theorem factorThruImage_eq {Δ Δ'' : SimplexCategory} {φ : Δ ⟶ Δ''} {e : Δ ⟶ image φ} [Epi e]

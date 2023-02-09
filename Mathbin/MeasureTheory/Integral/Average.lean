@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.average
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -142,7 +142,7 @@ theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeas
   by
   simp only [div_eq_inv_mul, mul_smul, measure_smul_average, ← smul_add, ←
     integral_add_measure hμ hν, ← Ennreal.toReal_add (measure_ne_top μ _) (measure_ne_top ν _)]
-  rw [average_eq, measure.add_apply]
+  rw [average_eq, Measure.add_apply]
 #align measure_theory.average_add_measure MeasureTheory.average_add_measure
 
 theorem average_pair {f : α → E} {g : α → F} (hfi : Integrable f μ) (hgi : Integrable g μ) :
@@ -186,7 +186,7 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
   by
   by_cases hse : μ s = 0
   · rw [← ae_eq_empty] at hse
-    rw [restrict_congr_set (hse.union eventually_eq.rfl), empty_union]
+    rw [restrict_congr_set (hse.union EventuallyEq.rfl), empty_union]
     exact right_mem_segment _ _ _
   · refine'
       mem_segment_iff_div.mpr
@@ -202,21 +202,21 @@ theorem average_mem_openSegment_compl_self [IsFiniteMeasure μ] {f : α → E} {
     (hs : NullMeasurableSet s μ) (hs₀ : μ s ≠ 0) (hsc₀ : μ (sᶜ) ≠ 0) (hfi : Integrable f μ) :
     (⨍ x, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in sᶜ, f x ∂μ) := by
   simpa only [union_compl_self, restrict_univ] using
-    average_union_mem_open_segment ae_disjoint_compl_right hs.compl hs₀ hsc₀ (measure_ne_top _ _)
+    average_union_mem_openSegment aeDisjointComplRight hs.compl hs₀ hsc₀ (measure_ne_top _ _)
       (measure_ne_top _ _) hfi.integrable_on hfi.integrable_on
 #align measure_theory.average_mem_open_segment_compl_self MeasureTheory.average_mem_openSegment_compl_self
 
 @[simp]
-theorem average_const [IsFiniteMeasure μ] [h : μ.ae.ne_bot] (c : E) : (⨍ x, c ∂μ) = c := by
-  simp only [average_eq, integral_const, measure.restrict_apply, MeasurableSet.univ, one_smul,
+theorem average_const [IsFiniteMeasure μ] [h : μ.ae.NeBot] (c : E) : (⨍ x, c ∂μ) = c := by
+  simp only [average_eq, integral_const, Measure.restrict_apply, MeasurableSet.univ, one_smul,
     univ_inter, smul_smul, ← Ennreal.toReal_inv, ← Ennreal.toReal_mul, Ennreal.inv_mul_cancel,
-    measure_ne_top μ univ, Ne.def, measure_univ_eq_zero, ae_ne_bot.1 h, not_false_iff,
+    measure_ne_top μ univ, Ne.def, measure_univ_eq_zero, ae_neBot.1 h, not_false_iff,
     Ennreal.one_toReal]
 #align measure_theory.average_const MeasureTheory.average_const
 
 theorem set_average_const {s : Set α} (hs₀ : μ s ≠ 0) (hs : μ s ≠ ∞) (c : E) :
     (⨍ x in s, c ∂μ) = c := by
-  simp only [set_average_eq, integral_const, measure.restrict_apply, MeasurableSet.univ, univ_inter,
+  simp only [set_average_eq, integral_const, Measure.restrict_apply, MeasurableSet.univ, univ_inter,
     smul_smul, ← Ennreal.toReal_inv, ← Ennreal.toReal_mul, Ennreal.inv_mul_cancel hs₀ hs,
     Ennreal.one_toReal, one_smul]
 #align measure_theory.set_average_const MeasureTheory.set_average_const

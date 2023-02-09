@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.smodeq
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,13 +88,13 @@ theorem trans (hxy : x ≡ y [SMOD U]) (hyz : y ≡ z [SMOD U]) : x ≡ z [SMOD 
 theorem add (hxy₁ : x₁ ≡ y₁ [SMOD U]) (hxy₂ : x₂ ≡ y₂ [SMOD U]) : x₁ + x₂ ≡ y₁ + y₂ [SMOD U] :=
   by
   rw [Smodeq.def] at hxy₁ hxy₂⊢
-  simp_rw [quotient.mk_add, hxy₁, hxy₂]
+  simp_rw [Quotient.mk_add, hxy₁, hxy₂]
 #align smodeq.add Smodeq.add
 
 theorem smul (hxy : x ≡ y [SMOD U]) (c : R) : c • x ≡ c • y [SMOD U] :=
   by
   rw [Smodeq.def] at hxy⊢
-  simp_rw [quotient.mk_smul, hxy]
+  simp_rw [Quotient.mk_smul, hxy]
 #align smodeq.smul Smodeq.smul
 
 theorem zero : x ≡ 0 [SMOD U] ↔ x ∈ U := by rw [Smodeq.def, Submodule.Quotient.eq, sub_zero]

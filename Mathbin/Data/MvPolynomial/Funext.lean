@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.funext
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,14 +39,13 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     rw [RingEquiv.map_zero]
     convert h finZeroElim
     suffices
-      (eval₂_hom (RingHom.id _) (IsEmpty.elim' Fin.isEmpty)) p =
+      (eval₂Hom (RingHom.id _) (IsEmpty.elim' Fin.isEmpty)) p =
         (eval finZeroElim : MvPolynomial (Fin 0) R →+* R) p
       by
       rw [← this]
-      simp only [coe_eval₂_hom, is_empty_ring_equiv_apply, RingEquiv.trans_apply,
-        aeval_eq_eval₂_hom]
+      simp only [coe_eval₂Hom, isEmptyRingEquiv_apply, RingEquiv.trans_apply, aeval_eq_eval₂Hom]
       congr
-    exact eval₂_hom_congr rfl (Subsingleton.elim _ _) rfl
+    exact eval₂Hom_congr rfl (Subsingleton.elim _ _) rfl
   · let e := (finSuccEquiv R n).toRingEquiv
     apply e.injective
     simp only [RingEquiv.map_zero]
@@ -58,7 +57,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     · infer_instance
     intro x
     dsimp [e]
-    rw [fin_succ_equiv_apply]
+    rw [finSuccEquiv_apply]
     calc
       _ = eval _ p := _
       _ = 0 := h _
@@ -67,17 +66,17 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
       exact Fin.cases (eval x q) x i
     apply induction_on p
     · intro r
-      simp only [eval_C, Polynomial.eval_c, RingHom.coe_comp, eval₂_hom_C]
+      simp only [eval_c, Polynomial.eval_c, RingHom.coe_comp, eval₂Hom_c]
     · intros
       simp only [*, RingHom.map_add, Polynomial.eval_add]
     · intro φ i hφ
-      simp only [*, eval_X, Polynomial.eval_mul, RingHom.map_mul, eval₂_hom_X']
+      simp only [*, eval_x, Polynomial.eval_mul, RingHom.map_mul, eval₂Hom_X']
       congr 1
       by_cases hi : i = 0
       · subst hi
         simp only [Polynomial.eval_x, Fin.cases_zero]
       · rw [← Fin.succ_pred i hi]
-        simp only [eval_X, Polynomial.eval_c, Fin.cases_succ]
+        simp only [eval_x, Polynomial.eval_c, Fin.cases_succ]
     · infer_instance
 #align mv_polynomial.funext_fin mv_polynomial.funext_fin
 
@@ -98,7 +97,7 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   intro x
   classical
     convert h (Function.extend f x 0)
-    simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
+    simp only [eval, eval₂Hom_rename, Function.extend_comp hf]
 #align mv_polynomial.funext MvPolynomial.funext
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} :

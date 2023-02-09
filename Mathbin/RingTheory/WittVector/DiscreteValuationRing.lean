@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.discrete_valuation_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,15 +70,15 @@ def mkUnit {a : Units k} {A : 𝕎 k} (hA : A.coeff 0 = a) : Units (𝕎 k) :=
     (by
       ext n
       induction' n with n ih
-      · simp [WittVector.mul_coeff_zero, inverse_coeff, hA]
+      · simp [WittVector.mul_coeff_zero, inverseCoeff, hA]
       let H_coeff :=
         A.coeff (n + 1) * ↑(a⁻¹ ^ p ^ (n + 1)) +
-          nth_remainder p n (truncate_fun (n + 1) A) fun i : Fin (n + 1) => inverse_coeff a A i
+          nthRemainder p n (truncateFun (n + 1) A) fun i : Fin (n + 1) => inverseCoeff a A i
       have H := Units.mul_inv (a ^ p ^ (n + 1))
       linear_combination (norm := skip) -H_coeff * H
       have ha : (a : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1)) := by norm_cast
       have ha_inv : (↑a⁻¹ : k) ^ p ^ (n + 1) = ↑(a ^ p ^ (n + 1))⁻¹ := by exact_mod_cast inv_pow _ _
-      simp only [nth_remainder_spec, inverse_coeff, succ_nth_val_units, hA, [anonymous],
+      simp only [nthRemainder_spec, inverseCoeff, succNthValUnits, hA, [anonymous],
         one_coeff_eq_of_pos, Nat.succ_pos', H_coeff, ha_inv, ha, inv_pow]
       ring!)
 #align witt_vector.mk_unit WittVector.mkUnit
@@ -98,7 +98,7 @@ theorem isUnit_of_coeff_zero_ne_zero (x : 𝕎 k) (hx : x.coeff 0 ≠ 0) : IsUni
   by
   let y : kˣ := Units.mk0 (x.coeff 0) hx
   have hy : x.coeff 0 = y := rfl
-  exact (mk_unit hy).IsUnit
+  exact (mkUnit hy).isUnit
 #align witt_vector.is_unit_of_coeff_zero_ne_zero WittVector.isUnit_of_coeff_zero_ne_zero
 
 variable (p)
@@ -107,8 +107,8 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
   by
   have hp : ¬IsUnit (p : 𝕎 k) := by
     intro hp
-    simpa only [constant_coeff_apply, coeff_p_zero, not_isUnit_zero] using
-      (constant_coeff : WittVector p k →+* _).isUnit_map hp
+    simpa only [constantCoeff_apply, coeff_p_zero, not_isUnit_zero] using
+      (constantCoeff : WittVector p k →+* _).isUnit_map hp
   refine' ⟨hp, fun a b hab => _⟩
   obtain ⟨ha0, hb0⟩ : a ≠ 0 ∧ b ≠ 0 := by
     rw [← mul_ne_zero_iff]
@@ -118,9 +118,9 @@ theorem irreducible : Irreducible (p : 𝕎 k) :=
   obtain ⟨m, a, ha, rfl⟩ := verschiebung_nonzero ha0
   obtain ⟨n, b, hb, rfl⟩ := verschiebung_nonzero hb0
   cases m
-  · exact Or.inl (is_unit_of_coeff_zero_ne_zero a ha)
+  · exact Or.inl (isUnit_of_coeff_zero_ne_zero a ha)
   cases n
-  · exact Or.inr (is_unit_of_coeff_zero_ne_zero b hb)
+  · exact Or.inr (isUnit_of_coeff_zero_ne_zero b hb)
   rw [iterate_verschiebung_mul] at hab
   apply_fun fun x => coeff x 1  at hab
   simp only [coeff_p_one, Nat.add_succ, add_comm _ n, Function.iterate_succ', Function.comp_apply,
@@ -138,7 +138,7 @@ theorem exists_eq_pow_p_mul (a : 𝕎 k) (ha : a ≠ 0) :
     ∃ (m : ℕ)(b : 𝕎 k), b.coeff 0 ≠ 0 ∧ a = p ^ m * b :=
   by
   obtain ⟨m, c, hc, hcm⟩ := WittVector.verschiebung_nonzero ha
-  obtain ⟨b, rfl⟩ := (frobenius_bijective p k).Surjective.iterate m c
+  obtain ⟨b, rfl⟩ := (frobenius_bijective p k).surjective.iterate m c
   rw [WittVector.iterate_frobenius_coeff] at hc
   have := congr_fun (witt_vector.verschiebung_frobenius_comm.comp_iterate m) b
   simp only [Function.comp_apply] at this
@@ -164,7 +164,7 @@ theorem exists_eq_pow_p_mul' (a : 𝕎 k) (ha : a ≠ 0) : ∃ (m : ℕ)(b : Uni
   obtain ⟨m, b, h₁, h₂⟩ := exists_eq_pow_p_mul a ha
   let b₀ := Units.mk0 (b.coeff 0) h₁
   have hb₀ : b.coeff 0 = b₀ := rfl
-  exact ⟨m, mk_unit hb₀, h₂⟩
+  exact ⟨m, mkUnit hb₀, h₂⟩
 #align witt_vector.exists_eq_pow_p_mul' WittVector.exists_eq_pow_p_mul'
 
 /-
@@ -178,7 +178,7 @@ https://github.com/leanprover/lean4/issues/1102
 theorem discreteValuationRing : DiscreteValuationRing (𝕎 k) :=
   DiscreteValuationRing.of_hasUnitMulPowIrreducibleFactorization
     (by
-      refine' ⟨p, Irreducible p, fun x hx => _⟩
+      refine' ⟨p, irreducible p, fun x hx => _⟩
       obtain ⟨n, b, hb⟩ := exists_eq_pow_p_mul' x hx
       exact ⟨n, b, hb.symm⟩)
 #align witt_vector.discrete_valuation_ring WittVector.discreteValuationRing

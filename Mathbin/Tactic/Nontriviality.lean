@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.nontriviality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,16 +27,16 @@ unsafe def nontriviality_by_elim (α : expr) (lems : interactive.parse simp_arg_
     tactic Unit := do
   let alternative ← to_expr ``(subsingleton_or_nontrivial $(α))
   let n ← get_unused_name "_inst"
-  tactic.cases Alternative [n, n]
+  tactic.cases alternative [n, n]
   (solve1 do
         reset_instance_cache
         apply_instance <|>
-            interactive.simp none none ff lems [`nontriviality] (Interactive.Loc.ns [none])) <|>
+            interactive.simp none none ff lems [`nontriviality] (interactive.loc.ns [none])) <|>
       fail f! "Could not prove goal assuming `subsingleton {α}`"
   reset_instance_cache
 #align tactic.nontriviality_by_elim tactic.nontriviality_by_elim
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tries to generate a `nontrivial α` instance using `nontrivial_of_ne` or `nontrivial_of_lt`
 and local hypotheses.
 -/

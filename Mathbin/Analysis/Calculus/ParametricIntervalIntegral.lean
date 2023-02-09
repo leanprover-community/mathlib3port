@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.parametric_interval_integral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem hasFderivAt_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F' :
     IntervalIntegrable F' μ a b ∧
       HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ :=
   by
-  simp only [intervalIntegrable_iff, interval_integral_eq_integral_uIoc, ←
+  simp only [intervalIntegrable_iff, intervalIntegral_eq_integral_uIoc, ←
     ae_restrict_iff' measurableSet_uIoc] at *
   have :=
     hasFderivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lip
@@ -65,7 +65,7 @@ theorem hasFderivAt_integral_of_dominated_of_fderiv_le {F : H → ℝ → E} {F'
     (h_diff : ∀ᵐ t ∂μ, t ∈ Ι a b → ∀ x ∈ ball x₀ ε, HasFderivAt (fun x => F x t) (F' x t) x) :
     HasFderivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ :=
   by
-  simp only [intervalIntegrable_iff, interval_integral_eq_integral_uIoc, ←
+  simp only [intervalIntegrable_iff, intervalIntegral_eq_integral_uIoc, ←
     ae_restrict_iff' measurableSet_uIoc] at *
   exact
     (hasFderivAt_integral_of_dominated_of_fderiv_le ε_pos hF_meas hF_int hF'_meas h_bound
@@ -88,7 +88,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {F'
     IntervalIntegrable F' μ a b ∧
       HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' t ∂μ) x₀ :=
   by
-  simp only [intervalIntegrable_iff, interval_integral_eq_integral_uIoc, ←
+  simp only [intervalIntegrable_iff, intervalIntegral_eq_integral_uIoc, ←
     ae_restrict_iff' measurableSet_uIoc] at *
   have :=
     hasDerivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas h_lipsch
@@ -110,7 +110,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ → E
     IntervalIntegrable (F' x₀) μ a b ∧
       HasDerivAt (fun x => ∫ t in a..b, F x t ∂μ) (∫ t in a..b, F' x₀ t ∂μ) x₀ :=
   by
-  simp only [intervalIntegrable_iff, interval_integral_eq_integral_uIoc, ←
+  simp only [intervalIntegrable_iff, intervalIntegral_eq_integral_uIoc, ←
     ae_restrict_iff' measurableSet_uIoc] at *
   have :=
     hasDerivAt_integral_of_dominated_loc_of_deriv_le ε_pos hF_meas hF_int hF'_meas h_bound

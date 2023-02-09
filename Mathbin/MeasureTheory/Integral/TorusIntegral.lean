@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Cuma Kökmen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.torus_integral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,7 +160,7 @@ protected theorem sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c R) 
 theorem torusIntegrable_zero_radius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 :=
   by
   rw [TorusIntegrable, torusMap_zero_radius]
-  apply torus_integrable_const (f c) c 0
+  apply torusIntegrable_const (f c) c 0
 #align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torusIntegrable_zero_radius
 
 /-- The function given in the definition of `torus_integral` is integrable. -/
@@ -245,9 +245,9 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
 @[simp]
 theorem torusIntegral_dim0 (f : ℂ⁰ → E) (c : ℂ⁰) (R : ℝ⁰) : (∯ x in T(c, R), f x) = f c := by
   simp only [torusIntegral, Fin.prod_univ_zero, one_smul,
-    Subsingleton.elim (fun i : Fin 0 => 2 * π) 0, Icc_self, measure.restrict_singleton, volume_pi,
-    integral_smul_measure, integral_dirac, measure.pi_of_empty _ 0,
-    measure.dirac_apply_of_mem (mem_singleton _), Subsingleton.elim (torusMap c R 0) c]
+    Subsingleton.elim (fun i : Fin 0 => 2 * π) 0, Icc_self, Measure.restrict_singleton, volume_pi,
+    integral_smul_measure, integral_dirac, Measure.pi_of_empty _ 0,
+    Measure.dirac_apply_of_mem (mem_singleton _), Subsingleton.elim (torusMap c R 0) c]
 #align torus_integral_dim0 torusIntegral_dim0
 
 /-- In dimension one, `torus_integral` is the same as `circle_integral`
@@ -258,8 +258,8 @@ theorem torusIntegral_dim1 (f : ℂ¹ → E) (c : ℂ¹) (R : ℝ¹) :
   have : ((fun (x : ℝ) (b : Fin 1) => x) ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) :=
     (OrderIso.funUnique (Fin 1) ℝ).symm.preimage_Icc _ _
   simp only [torusIntegral, circleIntegral, intervalIntegral.integral_of_le real.two_pi_pos.le,
-    measure.restrict_congr_set Ioc_ae_eq_Icc, deriv_circleMap, Fin.prod_univ_one, ←
-    ((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
+    Measure.restrict_congr_set Ioc_ae_eq_Icc, deriv_circleMap, Fin.prod_univ_one, ←
+    ((volumePreservingFunUnique (Fin 1) ℝ).symm _).set_integral_preimage_emb
       (MeasurableEquiv.measurableEmbedding _),
     this, MeasurableEquiv.funUnique_symm_apply]
   simp only [torusMap, circleMap, zero_add]
@@ -274,11 +274,11 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
       ∮ x in C(c i, R i), ∯ y in T(c ∘ i.succAbove, R ∘ i.succAbove), f (i.insertNth x y) :=
   by
   set e : ℝ × ℝⁿ ≃ᵐ ℝⁿ⁺¹ := (MeasurableEquiv.piFinSuccAboveEquiv (fun _ => ℝ) i).symm
-  have hem : measure_preserving e :=
-    (volume_preserving_pi_fin_succ_above_equiv (fun j : Fin (n + 1) => ℝ) i).symm _
+  have hem : MeasurePreserving e :=
+    (volumePreservingPiFinSuccAboveEquiv (fun j : Fin (n + 1) => ℝ) i).symm _
   have heπ : (e ⁻¹' Icc 0 fun _ => 2 * π) = Icc 0 (2 * π) ×ˢ Icc (0 : ℝⁿ) fun _ => 2 * π :=
     ((OrderIso.piFinSuccAboveIso (fun _ => ℝ) i).symm.preimage_Icc _ _).trans (Icc_prod_eq _ _)
-  rw [torusIntegral, ← hem.map_eq, set_integral_map_equiv, heπ, measure.volume_eq_prod,
+  rw [torusIntegral, ← hem.map_eq, set_integral_map_equiv, heπ, Measure.volume_eq_prod,
     set_integral_prod, circleIntegral_def_Icc]
   · refine' set_integral_congr measurableSet_Icc fun θ hθ => _
     simp only [torusIntegral, ← integral_smul, deriv_circleMap, i.prod_univ_succ_above _, smul_smul,

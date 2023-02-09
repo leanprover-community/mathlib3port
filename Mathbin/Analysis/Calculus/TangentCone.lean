@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.tangent_cone
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,16 +117,16 @@ theorem tangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
     (hc : Tendsto (fun n => ‖c n‖) l atTop) (hd : Tendsto (fun n => c n • d n) l (𝓝 y)) :
     Tendsto d l (𝓝 0) :=
   by
-  have A : tendsto (fun n => ‖c n‖⁻¹) l (𝓝 0) := tendsto_inv_at_top_zero.comp hc
-  have B : tendsto (fun n => ‖c n • d n‖) l (𝓝 ‖y‖) := (continuous_norm.tendsto _).comp hd
-  have C : tendsto (fun n => ‖c n‖⁻¹ * ‖c n • d n‖) l (𝓝 (0 * ‖y‖)) := A.mul B
+  have A : Tendsto (fun n => ‖c n‖⁻¹) l (𝓝 0) := tendsto_inv_at_top_zero.comp hc
+  have B : Tendsto (fun n => ‖c n • d n‖) l (𝓝 ‖y‖) := (continuous_norm.tendsto _).comp hd
+  have C : Tendsto (fun n => ‖c n‖⁻¹ * ‖c n • d n‖) l (𝓝 (0 * ‖y‖)) := A.mul B
   rw [zero_mul] at C
   have : ∀ᶠ n in l, ‖c n‖⁻¹ * ‖c n • d n‖ = ‖d n‖ :=
     by
     apply (eventually_ne_of_tendsto_norm_atTop hc 0).mono fun n hn => _
     rw [norm_smul, ← mul_assoc, inv_mul_cancel, one_mul]
     rwa [Ne.def, norm_eq_zero]
-  have D : tendsto (fun n => ‖d n‖) l (𝓝 0) := tendsto.congr' this C
+  have D : Tendsto (fun n => ‖d n‖) l (𝓝 0) := Tendsto.congr' this C
   rw [tendsto_zero_iff_norm_tendsto_zero]
   exact D
 #align tangent_cone_at.lim_zero tangentConeAt.lim_zero
@@ -135,15 +135,15 @@ theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : tangentConeAt �
   by
   rintro y ⟨c, d, ds, ctop, clim⟩
   refine' ⟨c, d, _, ctop, clim⟩
-  suffices : tendsto (fun n => x + d n) at_top (𝓝[t] x)
+  suffices : Tendsto (fun n => x + d n) atTop (𝓝[t] x)
   exact tendsto_principal.1 (tendsto_inf.1 this).2
   refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).mono_right h
-  simpa only [add_zero] using tendsto_const_nhds.add (tangentConeAt.lim_zero at_top ctop clim)
+  simpa only [add_zero] using tendsto_const_nhds.add (tangentConeAt.lim_zero atTop ctop clim)
 #align tangent_cone_mono_nhds tangent_cone_mono_nhds
 
 /-- Tangent cone of `s` at `x` depends only on `𝓝[s] x`. -/
 theorem tangent_cone_congr (h : 𝓝[s] x = 𝓝[t] x) : tangentConeAt 𝕜 s x = tangentConeAt 𝕜 t x :=
-  Subset.antisymm (tangent_cone_mono_nhds <| le_of_eq h) (tangent_cone_mono_nhds <| le_of_eq h.symm)
+  Subset.antisymm (tangent_cone_mono_nhds <| Ne h) (tangent_cone_mono_nhds <| le_of_eq h.symm)
 #align tangent_cone_congr tangent_cone_congr
 
 /-- Intersecting with a neighborhood of the point does not change the tangent cone. -/
@@ -167,10 +167,10 @@ theorem subset_tangent_cone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t)
     exact ⟨z - y, by simpa using hzt, by simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
-  show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
+  show ∀ᶠ n in atTop, (x, y) + (d n, d' n) ∈ s ×ˢ t
   · filter_upwards [hd]with n hn
     simp [hn, (hd' n).1]
-  · apply tendsto.prod_mk_nhds hy _
+  · apply Tendsto.prod_mk_nhds hy _
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
 #align subset_tangent_cone_prod_left subset_tangent_cone_prod_left
@@ -191,16 +191,16 @@ theorem subset_tangent_cone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s
     exact ⟨z - x, by simpa using hzs, by simpa using hz⟩
   choose d' hd' using this
   refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
-  show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
+  show ∀ᶠ n in atTop, (x, y) + (d' n, d n) ∈ s ×ˢ t
   · filter_upwards [hd]with n hn
     simp [hn, (hd' n).1]
-  · apply tendsto.prod_mk_nhds _ hy
+  · apply Tendsto.prod_mk_nhds _ hy
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
     exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
 #align subset_tangent_cone_prod_right subset_tangent_cone_prod_right
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (j «expr ≠ » i) -/
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem mapsTo_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _}
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] {s : ∀ i, Set (E i)} {x : ∀ i, E i}
@@ -223,7 +223,7 @@ theorem mapsTo_tangent_cone_pi {ι : Type _} [DecidableEq ι] {E : ι → Type _
   · rcases em (j = i) with (rfl | hj) <;> simp [*]
   · rcases em (j = i) with (rfl | hj)
     · simp [hy]
-    · suffices tendsto (fun n => c n • d' n j) at_top (𝓝 0) by simpa [hj]
+    · suffices Tendsto (fun n => c n • d' n j) atTop (𝓝 0) by simpa [hj]
       refine' squeeze_zero_norm (fun n => (hcd' n j hj).le) _
       exact tendsto_pow_atTop_nhds_0_of_lt_1 one_half_pos.le one_half_lt_one
 #align maps_to_tangent_cone_pi mapsTo_tangent_cone_pi
@@ -252,7 +252,7 @@ theorem mem_tangent_cone_of_openSegment_subset {s : Set G} {x y : G} (h : openSe
       ext n
       exact abs_of_nonneg (pow_nonneg (by norm_num) _)
     rw [this]
-    exact (tendsto_pow_atTop_atTop_of_one_lt (by norm_num)).comp (tendsto_add_at_top_nat 1)
+    exact (tendsto_pow_atTop_atTop_of_one_lt (by norm_num)).comp (tendsto_add_atTop_nat 1)
   show Filter.Tendsto (fun n : ℕ => c n • d n) Filter.atTop (𝓝 (y - x))
   · have : (fun n : ℕ => c n • d n) = fun n => y - x :=
       by
@@ -367,7 +367,7 @@ theorem UniqueDiffWithinAt.prod {t : Set F} {y : F} (hs : UniqueDiffWithinAt �
     Submodule.span_mono
       (union_subset (subset_tangent_cone_prod_left ht.2) (subset_tangent_cone_prod_right hs.2))
   rw [LinearMap.span_inl_union_inr, SetLike.le_def] at this
-  exact (hs.1.Prod ht.1).mono this
+  exact (hs.1.prod ht.1).mono this
 #align unique_diff_within_at.prod UniqueDiffWithinAt.prod
 
 theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
@@ -378,9 +378,9 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
     norm_cast
     simp only [← Submodule.supᵢ_map_single, supᵢ_le_iff, LinearMap.map_span, Submodule.span_le, ←
-      maps_to']
+      mapsTo']
     exact fun i =>
-      (mapsTo_tangent_cone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
+      (mapsTo_tangent_cone_pi fun j hj => (h j).2).mono Subset.rfl Submodule.subset_span
 #align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univ_pi
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
@@ -430,7 +430,7 @@ theorem uniqueDiffWithinAt_convex {s : Set G} (conv : Convex ℝ s) (hs : (inter
   replace hy : interior s ∈ 𝓝 y := IsOpen.mem_nhds isOpen_interior hy
   apply mem_of_superset ((isOpenMap_sub_right x).image_mem_nhds hy)
   rintro _ ⟨z, zs, rfl⟩
-  refine' mem_tangent_cone_of_openSegment_subset (subset.trans _ interior_subset)
+  refine' mem_tangent_cone_of_openSegment_subset (Subset.trans _ interior_subset)
   exact conv.open_segment_closure_interior_subset_interior hx zs
 #align unique_diff_within_at_convex uniqueDiffWithinAt_convex
 
@@ -449,11 +449,11 @@ theorem uniqueDiffOn_Iic (a : ℝ) : UniqueDiffOn ℝ (Iic a) :=
 #align unique_diff_on_Iic uniqueDiffOn_Iic
 
 theorem uniqueDiffOn_Ioi (a : ℝ) : UniqueDiffOn ℝ (Ioi a) :=
-  isOpen_Ioi.UniqueDiffOn
+  isOpen_Ioi.uniqueDiffOn
 #align unique_diff_on_Ioi uniqueDiffOn_Ioi
 
 theorem uniqueDiffOn_Iio (a : ℝ) : UniqueDiffOn ℝ (Iio a) :=
-  isOpen_Iio.UniqueDiffOn
+  isOpen_Iio.uniqueDiffOn
 #align unique_diff_on_Iio uniqueDiffOn_Iio
 
 theorem uniqueDiffOn_Icc {a b : ℝ} (hab : a < b) : UniqueDiffOn ℝ (Icc a b) :=
@@ -473,7 +473,7 @@ theorem uniqueDiffOn_Ioc (a b : ℝ) : UniqueDiffOn ℝ (Ioc a b) :=
 #align unique_diff_on_Ioc uniqueDiffOn_Ioc
 
 theorem uniqueDiffOn_Ioo (a b : ℝ) : UniqueDiffOn ℝ (Ioo a b) :=
-  isOpen_Ioo.UniqueDiffOn
+  isOpen_Ioo.uniqueDiffOn
 #align unique_diff_on_Ioo uniqueDiffOn_Ioo
 
 /-- The real interval `[0, 1]` is a set of unique differentiability. -/

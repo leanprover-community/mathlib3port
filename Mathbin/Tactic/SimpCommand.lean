@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.simp_command
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ unsafe def simp_cmd (_ : parse <| tk "#simp") : lean.parser Unit := do
                    -/
             hs := hs.map fun sat => sat.replace_subexprs mappings
             -- Finally, call `expr.simp` with `e` and return the result.
-                Prod.fst <$>
+                prod.fst <$>
                 e { } failed no_dflt attr_names hs)
           ts
   -- Trace the result.

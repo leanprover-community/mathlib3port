@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.order.positive.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,19 +48,19 @@ theorem coe_add (x y : { x : M // 0 < x }) : ↑(x + y) = (x + y : M) :=
 #align positive.coe_add Positive.coe_add
 
 instance : AddSemigroup { x : M // 0 < x } :=
-  Subtype.coe_injective.AddSemigroup _ coe_add
+  Subtype.coe_injective.addSemigroup _ coe_add
 
 instance {M : Type _} [AddCommMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
     AddCommSemigroup { x : M // 0 < x } :=
-  Subtype.coe_injective.AddCommSemigroup _ coe_add
+  Subtype.coe_injective.addCommSemigroup _ coe_add
 
 instance {M : Type _} [AddLeftCancelMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
     AddLeftCancelSemigroup { x : M // 0 < x } :=
-  Subtype.coe_injective.AddLeftCancelSemigroup _ coe_add
+  Subtype.coe_injective.addLeftCancelSemigroup _ coe_add
 
 instance {M : Type _} [AddRightCancelMonoid M] [Preorder M] [CovariantClass M M (· + ·) (· < ·)] :
     AddRightCancelSemigroup { x : M // 0 < x } :=
-  Subtype.coe_injective.AddRightCancelSemigroup _ coe_add
+  Subtype.coe_injective.addRightCancelSemigroup _ coe_add
 
 /- warning: positive.covariant_class_add_lt -> Positive.covariantClass_add_lt is a dubious translation:
 lean 3 declaration is
@@ -174,10 +174,10 @@ theorem val_pow (x : { x : R // 0 < x }) (n : ℕ) : ↑(x ^ n) = (x ^ n : R) :=
 #align positive.coe_pow Positive.val_pow
 
 instance : Semigroup { x : R // 0 < x } :=
-  Subtype.coe_injective.Semigroup coe val_mul
+  Subtype.coe_injective.semigroup coe val_mul
 
 instance : Distrib { x : R // 0 < x } :=
-  Subtype.coe_injective.Distrib _ coe_add val_mul
+  Subtype.coe_injective.distrib _ coe_add val_mul
 
 instance [Nontrivial R] : One { x : R // 0 < x } :=
   ⟨⟨1, one_pos⟩⟩
@@ -190,7 +190,7 @@ theorem val_one [Nontrivial R] : ((1 : { x : R // 0 < x }) : R) = 1 :=
 -/
 
 instance [Nontrivial R] : Monoid { x : R // 0 < x } :=
-  Subtype.coe_injective.Monoid _ val_one val_mul val_pow
+  Subtype.coe_injective.monoid _ val_one val_mul val_pow
 
 end Mul
 
@@ -198,7 +198,7 @@ section mul_comm
 
 instance [StrictOrderedCommSemiring R] [Nontrivial R] : OrderedCommMonoid { x : R // 0 < x } :=
   { Subtype.partialOrder _,
-    Subtype.coe_injective.CommMonoid (coe : { x : R // 0 < x } → R) val_one val_mul val_pow with
+    Subtype.coe_injective.commMonoid (coe : { x : R // 0 < x } → R) val_one val_mul val_pow with
     mul_le_mul_left := fun x y hxy c =>
       Subtype.coe_le_coe.1 <| mul_le_mul_of_nonneg_left hxy c.2.le }
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.circle
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem arg_eq_arg {z w : circle} : arg z = arg w ↔ z = w :=
 end circle
 
 theorem arg_expMapCircle {x : ℝ} (h₁ : -π < x) (h₂ : x ≤ π) : arg (expMapCircle x) = x := by
-  rw [expMapCircle_apply, exp_mul_I, arg_cos_add_sin_mul_I ⟨h₁, h₂⟩]
+  rw [expMapCircle_apply, exp_mul_i, arg_cos_add_sin_mul_i ⟨h₁, h₂⟩]
 #align arg_exp_map_circle arg_expMapCircle
 
 @[simp]
@@ -80,11 +80,11 @@ theorem leftInverse_expMapCircle_arg : LeftInverse expMapCircle (arg ∘ coe) :=
 #align left_inverse_exp_map_circle_arg leftInverse_expMapCircle_arg
 
 theorem invOn_arg_expMapCircle : InvOn (arg ∘ coe) expMapCircle (Ioc (-π) π) univ :=
-  circle.argLocalEquiv.symm.InvOn
+  circle.argLocalEquiv.symm.invOn
 #align inv_on_arg_exp_map_circle invOn_arg_expMapCircle
 
 theorem surjOn_expMapCircle_neg_pi_pi : SurjOn expMapCircle (Ioc (-π) π) univ :=
-  circle.argLocalEquiv.symm.SurjOn
+  circle.argLocalEquiv.symm.surjOn
 #align surj_on_exp_map_circle_neg_pi_pi surjOn_expMapCircle_neg_pi_pi
 
 theorem expMapCircle_eq_expMapCircle {x y : ℝ} :
@@ -92,7 +92,7 @@ theorem expMapCircle_eq_expMapCircle {x y : ℝ} :
   by
   rw [Subtype.ext_iff, expMapCircle_apply, expMapCircle_apply, exp_eq_exp_iff_exists_int]
   refine' exists_congr fun n => _
-  rw [← mul_assoc, ← add_mul, mul_left_inj' I_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul,
+  rw [← mul_assoc, ← add_mul, mul_left_inj' i_ne_zero, ← of_real_one, ← of_real_bit0, ← of_real_mul,
     ← of_real_int_cast, ← of_real_mul, ← of_real_add, of_real_inj]
 #align exp_map_circle_eq_exp_map_circle expMapCircle_eq_expMapCircle
 
@@ -102,7 +102,7 @@ theorem periodic_expMapCircle : Periodic expMapCircle (2 * π) := fun z =>
 
 @[simp]
 theorem expMapCircle_two_pi : expMapCircle (2 * π) = 1 :=
-  periodic_expMapCircle.Eq.trans expMapCircle_zero
+  periodic_expMapCircle.eq.trans expMapCircle_zero
 #align exp_map_circle_two_pi expMapCircle_two_pi
 
 theorem expMapCircle_sub_two_pi (x : ℝ) : expMapCircle (x - 2 * π) = expMapCircle x :=
@@ -156,7 +156,7 @@ theorem Real.Angle.arg_expMapCircle (θ : Real.Angle) :
     (arg (Real.Angle.expMapCircle θ) : Real.Angle) = θ :=
   by
   induction θ using Real.Angle.induction_on
-  rw [Real.Angle.expMapCircle_coe, expMapCircle_apply, exp_mul_I, ← of_real_cos, ← of_real_sin, ←
-    Real.Angle.cos_coe, ← Real.Angle.sin_coe, arg_cos_add_sin_mul_I_coe_angle]
+  rw [Real.Angle.expMapCircle_coe, expMapCircle_apply, exp_mul_i, ← of_real_cos, ← of_real_sin, ←
+    Real.Angle.cos_coe, ← Real.Angle.sin_coe, arg_cos_add_sin_mul_i_coe_angle]
 #align real.angle.arg_exp_map_circle Real.Angle.arg_expMapCircle
 

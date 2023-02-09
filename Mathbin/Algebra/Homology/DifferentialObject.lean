@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.differential_object
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ def dgoToHomologicalComplex :
         subst h
         have : f.f i ≫ Y.d i = X.d i ≫ f.f (i + 1 • b) := (congr_fun f.comm i).symm
         reassoc! this
-        simp only [category.comp_id, eq_to_hom_refl, dif_pos rfl, this, category.assoc,
+        simp only [Category.comp_id, eqToHom_refl, dif_pos rfl, this, Category.assoc,
           eq_to_hom_f'] }
 #align homological_complex.dgo_to_homological_complex HomologicalComplex.dgoToHomologicalComplex
 

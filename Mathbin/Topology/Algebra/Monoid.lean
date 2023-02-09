@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem continuous_mul_right (a : M) : Continuous fun b : M => b * a :=
 @[to_additive]
 theorem ContinuousOn.mul {f g : X → M} {s : Set X} (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
     ContinuousOn (fun x => f x * g x) s :=
-  (continuous_mul.comp_continuousOn (hf.Prod hg) : _)
+  (continuous_mul.comp_continuousOn (hf.prod hg) : _)
 #align continuous_on.mul ContinuousOn.mul
 #align continuous_on.add ContinuousOn.add
 
@@ -203,7 +203,7 @@ end tendsto_nhds
       "Construct an additive unit from limits of additive units\nand their negatives.",
   simps]
 def Filter.Tendsto.units [TopologicalSpace N] [Monoid N] [HasContinuousMul N] [T2Space N]
-    {f : ι → Nˣ} {r₁ r₂ : N} {l : Filter ι} [l.ne_bot] (h₁ : Tendsto (fun x => ↑(f x)) l (𝓝 r₁))
+    {f : ι → Nˣ} {r₁ r₂ : N} {l : Filter ι} [l.NeBot] (h₁ : Tendsto (fun x => ↑(f x)) l (𝓝 r₁))
     (h₂ : Tendsto (fun x => ↑(f x)⁻¹) l (𝓝 r₂)) : Nˣ
     where
   val := r₁
@@ -232,7 +232,7 @@ theorem ContinuousWithinAt.mul {f g : X → M} {s : Set X} {x : X} (hf : Continu
 #align continuous_within_at.add ContinuousWithinAt.add
 
 @[to_additive]
-instance [TopologicalSpace N] [Mul N] [HasContinuousMul N] : HasContinuousMul (M × N) :=
+instance [TopologicalSpace N] [Mul N] [HasContinuousMul mem_setOf_eq] : HasContinuousMul (M × N) :=
   ⟨(continuous_fst.fst'.mul continuous_fst.snd').prod_mk
       (continuous_snd.fst'.mul continuous_snd.snd')⟩
 
@@ -322,7 +322,7 @@ theorem isClosed_setOf_map_one [One M₁] [One M₂] : IsClosed { f : M₁ → M
 theorem isClosed_setOf_map_mul [Mul M₁] [Mul M₂] [HasContinuousMul M₂] :
     IsClosed { f : M₁ → M₂ | ∀ x y, f (x * y) = f x * f y } :=
   by
-  simp only [set_of_forall]
+  simp only [setOf_forall]
   exact
     isClosed_interᵢ fun x =>
       isClosed_interᵢ fun y =>
@@ -352,7 +352,7 @@ def monoidHomOfMemClosureRangeCoe (f : M₁ → M₂)
 @[to_additive
       "Construct a bundled additive monoid homomorphism from a pointwise limit of additive\nmonoid homomorphisms",
   simps (config := { fullyApplied := false })]
-def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.ne_bot]
+def monoidHomOfTendsto (f : M₁ → M₂) (g : α → F) [l.NeBot]
     (h : Tendsto (fun a x => g a x) l (𝓝 f)) : M₁ →* M₂ :=
   monoidHomOfMemClosureRangeCoe f <|
     mem_closure_of_tendsto h <| eventually_of_forall fun a => mem_range_self _
@@ -396,7 +396,7 @@ instance Subsemigroup.hasContinuousMul [TopologicalSpace M] [Semigroup M] [HasCo
 @[to_additive]
 instance Submonoid.hasContinuousMul [TopologicalSpace M] [Monoid M] [HasContinuousMul M]
     (S : Submonoid M) : HasContinuousMul S :=
-  S.toSubsemigroup.HasContinuousMul
+  S.toSubsemigroup.hasContinuousMul
 #align submonoid.has_continuous_mul Submonoid.hasContinuousMul
 #align add_submonoid.has_continuous_add AddSubmonoid.has_continuous_add
 
@@ -523,7 +523,7 @@ theorem IsCompact.mul {s t : Set M} (hs : IsCompact s) (ht : IsCompact t) : IsCo
 theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
     ∀ l : List ι,
       (∀ i ∈ l, Tendsto (f i) x (𝓝 (a i))) →
-        Tendsto (fun b => (l.map fun c => f c b).Prod) x (𝓝 (l.map a).Prod)
+        Tendsto (fun b => (l.map fun c => f c b).prod) x (𝓝 (l.map a).Prod)
   | [], _ => by simp [tendsto_const_nhds]
   | f::l, h => by
     simp only [List.map_cons, List.prod_cons]
@@ -535,7 +535,7 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
 
 @[to_additive]
 theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i ∈ l, Continuous (f i)) :
-    Continuous fun a => (l.map fun i => f i a).Prod :=
+    Continuous fun a => (l.map fun i => f i a).prod :=
   continuous_iff_continuousAt.2 fun x =>
     tendsto_list_prod l fun c hc => continuous_iff_continuousAt.1 (h c hc) x
 #align continuous_list_prod continuous_list_prod
@@ -543,7 +543,7 @@ theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i ∈ l
 
 @[to_additive]
 theorem continuousOn_list_prod {f : ι → X → M} (l : List ι) {t : Set X}
-    (h : ∀ i ∈ l, ContinuousOn (f i) t) : ContinuousOn (fun a => (l.map fun i => f i a).Prod) t :=
+    (h : ∀ i ∈ l, ContinuousOn (f i) t) : ContinuousOn (fun a => (l.map fun i => f i a).prod) t :=
   by
   intro x hx
   rw [continuousWithinAt_iff_continuousAt_restrict _ hx]
@@ -581,20 +581,20 @@ theorem Continuous.pow {f : X → M} (h : Continuous f) (n : ℕ) : Continuous f
 
 @[to_additive]
 theorem continuousOn_pow {s : Set M} (n : ℕ) : ContinuousOn (fun x => x ^ n) s :=
-  (continuous_pow n).ContinuousOn
+  (continuous_pow n).continuousOn
 #align continuous_on_pow continuousOn_pow
 #align continuous_on_nsmul continuousOn_nsmul
 
 @[to_additive]
 theorem continuousAt_pow (x : M) (n : ℕ) : ContinuousAt (fun x => x ^ n) x :=
-  (continuous_pow n).ContinuousAt
+  (continuous_pow n).continuousAt
 #align continuous_at_pow continuousAt_pow
 #align continuous_at_nsmul continuousAt_nsmul
 
 @[to_additive Filter.Tendsto.nsmul]
 theorem Filter.Tendsto.pow {l : Filter α} {f : α → M} {x : M} (hf : Tendsto f l (𝓝 x)) (n : ℕ) :
     Tendsto (fun x => f x ^ n) l (𝓝 (x ^ n)) :=
-  (continuousAt_pow _ _).Tendsto.comp hf
+  (continuousAt_pow _ _).tendsto.comp hf
 #align filter.tendsto.pow Filter.Tendsto.pow
 #align filter.tendsto.nsmul Filter.Tendsto.nsmul
 
@@ -695,7 +695,7 @@ because the predicate `has_continuous_inv` has not yet been defined. -/
 @[to_additive
       "If addition on an additive monoid is continuous, then addition on the additive units\nof the monoid, with respect to the induced topology, is continuous.\n\nNegation is also continuous, but we register this in a later file, `topology.algebra.group`, because\nthe predicate `has_continuous_neg` has not yet been defined."]
 instance : HasContinuousMul αˣ :=
-  inducing_embedProduct.HasContinuousMul (embedProduct α)
+  inducing_embedProduct.hasContinuousMul (embedProduct α)
 
 end Units
 
@@ -722,7 +722,7 @@ variable [HasContinuousMul M]
 @[to_additive]
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :
     (∀ i ∈ s, Tendsto (f i) x (𝓝 (a i))) →
-      Tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
+      Tendsto (fun b => (s.map fun c => f c b).prod) x (𝓝 (s.map a).Prod) :=
   by
   rcases s with ⟨l⟩
   simpa using tendsto_list_prod l
@@ -739,7 +739,7 @@ theorem tendsto_finset_prod {f : ι → α → M} {x : Filter α} {a : ι → M}
 
 @[continuity, to_additive]
 theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
-    (∀ i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod :=
+    (∀ i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).prod :=
   by
   rcases s with ⟨l⟩
   simpa using continuous_list_prod l
@@ -748,7 +748,7 @@ theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
 
 @[to_additive]
 theorem continuousOn_multiset_prod {f : ι → X → M} (s : Multiset ι) {t : Set X} :
-    (∀ i ∈ s, ContinuousOn (f i) t) → ContinuousOn (fun a => (s.map fun i => f i a).Prod) t :=
+    (∀ i ∈ s, ContinuousOn (f i) t) → ContinuousOn (fun a => (s.map fun i => f i a).prod) t :=
   by
   rcases s with ⟨l⟩
   simpa using continuousOn_list_prod l
@@ -809,8 +809,8 @@ theorem continuous_finprod {f : ι → X → M} (hc : ∀ i, Continuous (f i))
   by
   refine' continuous_iff_continuousAt.2 fun x => _
   rcases finprod_eventually_eq_prod hf x with ⟨s, hs⟩
-  refine' ContinuousAt.congr _ (eventually_eq.symm hs)
-  exact tendsto_finset_prod _ fun i hi => (hc i).ContinuousAt
+  refine' ContinuousAt.congr _ (EventuallyEq.symm hs)
+  exact tendsto_finset_prod _ fun i hi => (hc i).continuousAt
 #align continuous_finprod continuous_finprod
 #align continuous_finsum continuous_finsum
 

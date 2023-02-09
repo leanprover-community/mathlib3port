@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.finset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -367,7 +367,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] [_inst_2 : NormalizedGCDMonoid.{u1} α _inst_1] {s : Finset.{u2} β} {f : β -> α} [_inst_3 : DecidablePred.{succ u2} β (fun (x : β) => Eq.{succ u1} α (f x) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1)))))], Eq.{succ u1} α (Finset.gcd.{u1, u2} α β _inst_1 _inst_2 s f) (Finset.gcd.{u1, u2} α β _inst_1 _inst_2 (Finset.filter.{u2} β (fun (x : β) => Ne.{succ u1} α (f x) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (fun (a : β) => instDecidableNot (Eq.{succ u1} α (f a) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) (_inst_3 a)) s) f)
 Case conversion may be inaccurate. Consider using '#align finset.gcd_eq_gcd_filter_ne_zero Finset.gcd_eq_gcd_filter_ne_zeroₓ'. -/
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] :
-    s.gcd f = (s.filterₓ fun x => f x ≠ 0).gcd f := by
+    s.gcd f = (s.filter fun x => f x ≠ 0).gcd f := by
   classical
     trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
     · rw [filter_union_filter_neg_eq]
@@ -394,7 +394,7 @@ theorem gcd_mul_left {a : α} : (s.gcd fun x => a * f x) = normalize a * s.gcd f
     · simp
     intro b t hbt h
     rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
-    apply ((normalize_associated a).mulRight _).gcd_eq_right
+    apply ((normalize_associated a).mul_right _).gcd_eq_right
 #align finset.gcd_mul_left Finset.gcd_mul_left
 
 /- warning: finset.gcd_mul_right -> Finset.gcd_mul_right is a dubious translation:
@@ -409,7 +409,7 @@ theorem gcd_mul_right {a : α} : (s.gcd fun x => f x * a) = s.gcd f * normalize 
     · simp
     intro b t hbt h
     rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
-    apply ((normalize_associated a).mulLeft _).gcd_eq_right
+    apply ((normalize_associated a).mul_left _).gcd_eq_right
 #align finset.gcd_mul_right Finset.gcd_mul_right
 
 /- warning: finset.extract_gcd' -> Finset.extract_gcd' is a dubious translation:

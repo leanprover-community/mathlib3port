@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.extreme
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ protected theorem IsExtreme.rfl : IsExtreme 𝕜 A A :=
 protected theorem IsExtreme.trans (hAB : IsExtreme 𝕜 A B) (hBC : IsExtreme 𝕜 B C) :
     IsExtreme 𝕜 A C :=
   by
-  refine' ⟨subset.trans hBC.1 hAB.1, fun x₁ hx₁A x₂ hx₂A x hxC hx => _⟩
+  refine' ⟨Subset.trans hBC.1 hAB.1, fun x₁ hx₁A x₂ hx₂A x hxC hx => _⟩
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 hx₁A hx₂A (hBC.1 hxC) hx
   exact hBC.2 hx₁B hx₂B hxC hx
 #align is_extreme.trans IsExtreme.trans
@@ -100,7 +100,7 @@ instance : IsPartialOrder (Set E) (IsExtreme 𝕜)
 
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : IsExtreme 𝕜 A (B ∩ C) :=
   by
-  use subset.trans (inter_subset_left _ _) hAB.1
+  use Subset.trans (inter_subset_left _ _) hAB.1
   rintro x₁ hx₁A x₂ hx₂A x ⟨hxB, hxC⟩ hx
   obtain ⟨hx₁B, hx₂B⟩ := hAB.2 hx₁A hx₂A hxB hx
   obtain ⟨hx₁C, hx₂C⟩ := hAC.2 hx₁A hx₂A hxC hx
@@ -116,8 +116,8 @@ theorem isExtreme_interᵢ {ι : Type _} [Nonempty ι] {F : ι → Set E}
     (hAF : ∀ i : ι, IsExtreme 𝕜 A (F i)) : IsExtreme 𝕜 A (⋂ i : ι, F i) :=
   by
   obtain i := Classical.arbitrary ι
-  refine' ⟨Inter_subset_of_subset i (hAF i).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_Inter] at hxF⊢
+  refine' ⟨interᵢ_subset_of_subset i (hAF i).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
+  simp_rw [mem_interᵢ] at hxF⊢
   have h := fun i => (hAF i).2 hx₁A hx₂A (hxF i) hx
   exact ⟨fun i => (h i).1, fun i => (h i).2⟩
 #align is_extreme_Inter isExtreme_interᵢ
@@ -125,8 +125,8 @@ theorem isExtreme_interᵢ {ι : Type _} [Nonempty ι] {F : ι → Set E}
 theorem isExtreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂ B ∈ F, B) := by
   obtain ⟨B, hB⟩ := hF
-  refine' ⟨(bInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_Inter₂] at hxF⊢
+  refine' ⟨(binterᵢ_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
+  simp_rw [mem_interᵢ₂] at hxF⊢
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 #align is_extreme_bInter isExtreme_bInter
@@ -134,13 +134,13 @@ theorem isExtreme_bInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F,
 theorem isExtreme_interₛ {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F, IsExtreme 𝕜 A B) :
     IsExtreme 𝕜 A (⋂₀ F) := by
   obtain ⟨B, hB⟩ := hF
-  refine' ⟨(sInter_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
-  simp_rw [mem_sInter] at hxF⊢
+  refine' ⟨(interₛ_subset_of_mem hB).trans (hAF B hB).1, fun x₁ hx₁A x₂ hx₂A x hxF hx => _⟩
+  simp_rw [mem_interₛ] at hxF⊢
   have h := fun B hB => (hAF B hB).2 hx₁A hx₂A (hxF B hB) hx
   exact ⟨fun B hB => (h B hB).1, fun B hB => (h B hB).2⟩
 #align is_extreme_sInter isExtreme_interₛ
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 theorem extremePoints_def :
     x ∈ A.extremePoints 𝕜 ↔
       x ∈ A ∧ ∀ (x₁) (_ : x₁ ∈ A) (x₂) (_ : x₂ ∈ A), x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
@@ -207,7 +207,7 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] {A B : Set E} {x : E}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extremePoints_iff_forall_segment :

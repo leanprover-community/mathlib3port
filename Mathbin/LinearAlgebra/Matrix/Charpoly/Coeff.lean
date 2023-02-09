@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.coeff
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,11 +49,11 @@ variable {M : Matrix n n R}
 
 theorem charmatrix_apply_natDegree [Nontrivial R] (i j : n) :
     (charmatrix M i j).natDegree = ite (i = j) 1 0 := by
-  by_cases i = j <;> simp [h, ← degree_eq_iff_nat_degree_eq_of_pos (Nat.succ_pos 0)]
+  by_cases i = j <;> simp [h, ← degree_eq_iff_natDegree_eq_of_pos (Nat.succ_pos 0)]
 #align charmatrix_apply_nat_degree charmatrix_apply_natDegree
 
 theorem charmatrix_apply_natDegree_le (i j : n) : (charmatrix M i j).natDegree ≤ ite (i = j) 1 0 :=
-  by split_ifs <;> simp [h, nat_degree_X_sub_C_le]
+  by split_ifs <;> simp [h, natDegree_x_sub_c_le]
 #align charmatrix_apply_nat_degree_le charmatrix_apply_natDegree_le
 
 namespace Matrix
@@ -67,10 +67,10 @@ theorem charpoly_sub_diagonal_degree_lt :
     sum_insert (not_mem_erase (Equiv.refl n) univ), add_comm]
   simp only [charmatrix_apply_eq, one_mul, Equiv.Perm.sign_refl, id.def, Int.cast_one,
     Units.val_one, add_sub_cancel, Equiv.coe_refl]
-  rw [← mem_degree_lt]; apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))
-  intro c hc; rw [← C_eq_int_cast, C_mul']
-  apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) ↑↑(Equiv.Perm.sign c)
-  rw [mem_degree_lt]; apply lt_of_le_of_lt degree_le_nat_degree _; rw [WithBot.coe_lt_coe]
+  rw [← mem_degreeLt]; apply Submodule.sum_mem (degreeLt R (Fintype.card n - 1))
+  intro c hc; rw [← c_eq_int_cast, c_mul']
+  apply Submodule.smul_mem (degreeLt R (Fintype.card n - 1)) ↑↑(Equiv.Perm.sign c)
+  rw [mem_degreeLt]; apply lt_of_le_of_lt degree_le_natDegree _; rw [WithBot.coe_lt_coe]
   apply lt_of_le_of_lt _ (Equiv.Perm.fixed_point_card_lt_of_ne_one (ne_of_mem_erase hc))
   apply le_trans (Polynomial.natDegree_prod_le univ fun i : n => charmatrix M (c i) i) _
   rw [card_eq_sum_ones]; rw [sum_filter]; apply sum_le_sum
@@ -101,17 +101,17 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     rw [det_of_card_zero]
     · simp
     · assumption
-  rw [← sub_add_cancel M.charpoly (∏ i : n, X - C (M i i))]
-  have h1 : (∏ i : n, X - C (M i i)).degree = Fintype.card n :=
+  rw [← sub_add_cancel M.charpoly (∏ i : n, x - c (M i i))]
+  have h1 : (∏ i : n, x - c (M i i)).degree = Fintype.card n :=
     by
-    rw [degree_eq_iff_nat_degree_eq_of_pos]
+    rw [degree_eq_iff_natDegree_eq_of_pos]
     swap
     apply Nat.pos_of_ne_zero h
-    rw [nat_degree_prod']
-    simp_rw [nat_degree_X_sub_C]
+    rw [natDegree_prod']
+    simp_rw [natDegree_x_sub_c]
     unfold Fintype.card
     simp
-    simp_rw [(monic_X_sub_C _).leadingCoeff]
+    simp_rw [(monic_x_sub_c _).leadingCoeff]
     simp
   rw [degree_add_eq_right_of_degree_lt]
   exact h1
@@ -134,13 +134,13 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
   by_cases Fintype.card n = 0
   · rw [charpoly, det_of_card_zero h]
     apply monic_one
-  have mon : (∏ i : n, X - C (M i i)).Monic :=
+  have mon : (∏ i : n, x - c (M i i)).Monic :=
     by
-    apply monic_prod_of_monic univ fun i : n => X - C (M i i)
-    simp [monic_X_sub_C]
-  rw [← sub_add_cancel (∏ i : n, X - C (M i i)) M.charpoly] at mon
-  rw [monic] at *
-  rw [leading_coeff_add_of_degree_lt] at mon
+    apply monic_prod_of_monic univ fun i : n => x - c (M i i)
+    simp [monic_x_sub_c]
+  rw [← sub_add_cancel (∏ i : n, x - c (M i i)) M.charpoly] at mon
+  rw [Monic] at *
+  rw [leadingCoeff_add_of_degree_lt] at mon
   rw [← mon]
   rw [charpoly_degree_eq_dim]
   rw [← neg_sub]
@@ -156,7 +156,7 @@ theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
     trace M = -M.charpoly.coeff (Fintype.card n - 1) :=
   by
   rw [charpoly_coeff_eq_prod_coeff_of_le]; swap; rfl
-  rw [Fintype.card, prod_X_sub_C_coeff_card_pred univ (fun i : n => M i i) Fintype.card_pos,
+  rw [Fintype.card, prod_x_sub_c_coeff_card_pred univ (fun i : n => M i i) Fintype.card_pos,
     neg_neg, trace]
   rfl
 #align matrix.trace_eq_neg_charpoly_coeff Matrix.trace_eq_neg_charpoly_coeff
@@ -171,7 +171,7 @@ theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
     rw [sum_apply]
     dsimp
     rfl
-  · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).Eq]
+  · simp_rw [← RingHom.map_pow, ← (scalar.commute _ _).eq]
     simp only [coe_scalar, Matrix.one_mul, RingHom.id_apply, Pi.smul_apply, smul_eq_mul, mul_eq_mul,
       Algebra.smul_mul_assoc]
     have h : ∀ x : ℕ, (fun (e : ℕ) (a : R) => r ^ e * a) x 0 = 0 := by simp
@@ -185,8 +185,8 @@ theorem matPolyEquiv_eval (M : Matrix n n R[X]) (r : R) (i j : n) :
 theorem eval_det (M : Matrix n n R[X]) (r : R) :
     Polynomial.eval r M.det = (Polynomial.eval (scalar n r) (matPolyEquiv M)).det :=
   by
-  rw [Polynomial.eval, ← coe_eval₂_ring_hom, RingHom.map_det]
-  apply congr_arg det; ext; symm; convert mat_poly_equiv_eval _ _ _ _
+  rw [Polynomial.eval, ← coe_eval₂RingHom, RingHom.map_det]
+  apply congr_arg det; ext; symm; convert matPolyEquiv_eval _ _ _ _
 #align matrix.eval_det Matrix.eval_det
 
 theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) :
@@ -205,13 +205,13 @@ theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix
       x ^ k - c (M ^ k) :=
   by
   ext m
-  rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
-    AlgHom.coe_to_ringHom, DMatrix.sub_apply, coeff_X_pow]
+  rw [coeff_sub, coeff_c, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
+    AlgHom.coe_to_ringHom, DMatrix.sub_apply, coeff_x_pow]
   by_cases hij : i = j
-  · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
-      coeff_C]
+  · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_c, expand_x, coeff_sub, coeff_x_pow,
+      coeff_c]
     split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, DMatrix.zero_apply]
-  · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_C, coeff_neg, coeff_C]
+  · rw [charmatrix_apply_ne _ _ _ hij, AlgHom.map_neg, expand_c, coeff_neg, coeff_c]
     split_ifs with m0 mp <;>
       simp only [hij, zero_sub, DMatrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne.def,
         not_false_iff]
@@ -230,7 +230,7 @@ theorem aeval_eq_aeval_mod_charpoly (M : Matrix n n R) (p : R[X]) :
 
 TODO: add the statement for negative powers phrased with `zpow`. -/
 theorem pow_eq_aeval_mod_charpoly (M : Matrix n n R) (k : ℕ) :
-    M ^ k = aeval M (x ^ k %ₘ M.charpoly) := by rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
+    M ^ k = aeval M (x ^ k %ₘ M.charpoly) := by rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_x]
 #align matrix.pow_eq_aeval_mod_charpoly Matrix.pow_eq_aeval_mod_charpoly
 
 end Matrix
@@ -249,7 +249,7 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   rw [← this]
   apply coeff_prod_mem_ideal_pow_tsub
   rintro i - (_ | k)
-  · rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, coeff_X_mul_zero, coeff_C_zero, zero_sub,
+  · rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, coeff_x_mul_zero, coeff_c_zero, zero_sub,
       neg_mem_iff]
     exact h (c i) i
   · rw [Nat.succ_eq_one_add, tsub_self_add, pow_zero, Ideal.one_eq_top]

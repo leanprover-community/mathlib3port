@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.order.field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem mul_tendsto_nhds_zero_right (x : α) :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 0 ×ᶠ 𝓝 x) <| 𝓝 0 :=
   by
   have hx : 0 < 2 * (1 + |x|) := by positivity
-  rw [((nhds_basis_zero_abs_sub_lt α).Prod <| nhds_basis_abs_sub_lt x).tendsto_iffₓ
+  rw [((nhds_basis_zero_abs_sub_lt α).prod <| nhds_basis_abs_sub_lt x).tendsto_iff
       (nhds_basis_zero_abs_sub_lt α)]
   refine' fun ε ε_pos => ⟨(ε / (2 * (1 + |x|)), 1), ⟨div_pos ε_pos hx, zero_lt_one⟩, _⟩
   suffices ∀ a b : α, |a| < ε / (2 * (1 + |x|)) → |b - x| < 1 → |a| * |b| < ε by
@@ -70,7 +70,7 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
   by
   have hx₀' : 0 < |x₀| := abs_pos.2 hx₀
   refine' Filter.ext fun t => _
-  simp only [exists_prop, set_of_subset_set_of, (nhds_basis_abs_sub_lt x₀).mem_iff,
+  simp only [exists_prop, setOf_subset_setOf, (nhds_basis_abs_sub_lt x₀).mem_iff,
     (nhds_basis_abs_sub_lt (1 : α)).mem_iff, Filter.mem_map']
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨i, hi, hit⟩ := h
@@ -104,7 +104,7 @@ theorem nhds_eq_map_mul_right_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
 theorem mul_tendsto_nhds_one_nhds_one :
     Tendsto (uncurry ((· * ·) : α → α → α)) (𝓝 1 ×ᶠ 𝓝 1) <| 𝓝 1 :=
   by
-  rw [((nhds_basis_Ioo_pos (1 : α)).Prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iffₓ
+  rw [((nhds_basis_Ioo_pos (1 : α)).prod <| nhds_basis_Ioo_pos (1 : α)).tendsto_iff
       (nhds_basis_Ioo_pos_of_pos (zero_lt_one : (0 : α) < 1))]
   intro ε hε
   have hε' : 0 ≤ 1 - ε / 4 := by linarith
@@ -183,9 +183,9 @@ a positive constant `C` then `f * g` tends to `at_top`. -/
 theorem Filter.Tendsto.atTop_mul {C : α} (hC : 0 < C) (hf : Tendsto f l atTop)
     (hg : Tendsto g l (𝓝 C)) : Tendsto (fun x => f x * g x) l atTop :=
   by
-  refine' tendsto_at_top_mono' _ _ (hf.at_top_mul_const (half_pos hC))
+  refine' tendsto_atTop_mono' _ _ (hf.at_top_mul_const (half_pos hC))
   filter_upwards [hg.eventually (lt_mem_nhds (half_lt_self hC)),
-    hf.eventually (eventually_ge_at_top 0)]with x hg hf using mul_le_mul_of_nonneg_left hg.le hf
+    hf.eventually (eventually_ge_atTop 0)]with x hg hf using mul_le_mul_of_nonneg_left hg.le hf
 #align filter.tendsto.at_top_mul Filter.Tendsto.atTop_mul
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a positive constant `C` and
@@ -243,7 +243,7 @@ theorem Filter.Tendsto.neg_mul_atBot {C : α} (hC : C < 0) (hf : Tendsto f l (�
 /-- The function `x ↦ x⁻¹` tends to `+∞` on the right of `0`. -/
 theorem tendsto_inv_zero_atTop : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α)) atTop :=
   by
-  refine' (at_top_basis' 1).tendsto_right_iff.2 fun b hb => _
+  refine' (atTop_basis' 1).tendsto_right_iff.2 fun b hb => _
   have hb' : 0 < b := by positivity
   filter_upwards [Ioc_mem_nhdsWithin_Ioi
       ⟨le_rfl, inv_pos.2 hb'⟩]with x hx using(le_inv hx.1 hb').1 hx.2
@@ -252,8 +252,7 @@ theorem tendsto_inv_zero_atTop : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α
 /-- The function `r ↦ r⁻¹` tends to `0` on the right as `r → +∞`. -/
 theorem tendsto_inv_atTop_zero' : Tendsto (fun r : α => r⁻¹) atTop (𝓝[>] (0 : α)) :=
   by
-  refine'
-    (has_basis.tendsto_iff at_top_basis ⟨fun s => mem_nhdsWithin_Ioi_iff_exists_Ioc_subset⟩).2 _
+  refine' (HasBasis.tendsto_iff atTop_basis ⟨fun s => mem_nhdsWithin_Ioi_iff_exists_Ioc_subset⟩).2 _
   refine' fun b hb => ⟨b⁻¹, trivial, fun x hx => _⟩
   have : 0 < x := lt_of_lt_of_le (inv_pos.2 hb) hx
   exact ⟨inv_pos.2 this, (inv_le this hb).2 hx⟩
@@ -303,10 +302,10 @@ theorem tendsto_const_mul_pow_nhds_iff' {n : ℕ} {c d : α} :
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp [tendsto_const_nhds_iff]
   rcases lt_trichotomy c 0 with (hc | rfl | hc)
-  · have := tendsto_const_mul_pow_at_bot_iff.2 ⟨hn, hc⟩
+  · have := tendsto_const_mul_pow_atBot_iff.2 ⟨hn, hc⟩
     simp [not_tendsto_nhds_of_tendsto_atBot this, hc.ne, hn]
   · simp [tendsto_const_nhds_iff]
-  · have := tendsto_const_mul_pow_at_top_iff.2 ⟨hn, hc⟩
+  · have := tendsto_const_mul_pow_atTop_iff.2 ⟨hn, hc⟩
     simp [not_tendsto_nhds_of_tendsto_atTop this, hc.ne', hn]
 #align tendsto_const_mul_pow_nhds_iff' tendsto_const_mul_pow_nhds_iff'
 
@@ -349,7 +348,7 @@ instance (priority := 100) LinearOrderedField.to_topologicalDivisionRing : Topol
       simp [neg_inv]
     intro t ht
     rw [ContinuousAt,
-      (nhds_basis_Ioo_pos t).tendsto_iffₓ <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
+      (nhds_basis_Ioo_pos t).tendsto_iff <| nhds_basis_Ioo_pos_of_pos <| inv_pos.2 ht]
     rintro ε ⟨hε : ε > 0, hεt : ε ≤ t⁻¹⟩
     refine' ⟨min (t ^ 2 * ε / 2) (t / 2), by positivity, fun x h => _⟩
     have hx : t / 2 < x := by
@@ -384,7 +383,7 @@ theorem nhdsWithin_pos_comap_mul_left {x : α} (hx : 0 < x) :
         (by convert univ_mem <;> exact (mul_left_surjective₀ hx.ne.symm).range_eq)]
     exact this (inv_pos.mpr hx)
   intro x hx
-  convert nhdsWithin_le_comap (continuous_mul_left x).ContinuousWithinAt
+  convert nhdsWithin_le_comap (continuous_mul_left x).continuousWithinAt
   · exact (mul_zero _).symm
   · rw [image_const_mul_Ioi_zero hx]
 #align nhds_within_pos_comap_mul_left nhdsWithin_pos_comap_mul_left

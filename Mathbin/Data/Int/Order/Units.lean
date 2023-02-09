@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ but is expected to have type
   forall {x : Int}, Iff (IsUnit.{0} Int Int.instMonoidInt x) (Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) x) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.is_unit_iff_abs_eq Int.isUnit_iff_abs_eqₓ'. -/
 theorem isUnit_iff_abs_eq {x : ℤ} : IsUnit x ↔ abs x = 1 := by
-  rw [is_unit_iff_nat_abs_eq, abs_eq_nat_abs, ← Int.ofNat_one, coe_nat_inj']
+  rw [isUnit_iff_natAbs_eq, abs_eq_natAbs, ← Int.ofNat_one, coe_nat_inj']
 #align int.is_unit_iff_abs_eq Int.isUnit_iff_abs_eq
 
 /- warning: int.is_unit_sq -> Int.isUnit_sq is a dubious translation:
@@ -38,7 +38,7 @@ lean 3 declaration is
 but is expected to have type
   forall {a : Int}, (IsUnit.{0} Int Int.instMonoidInt a) -> (Eq.{1} Int (HPow.hPow.{0, 0, 0} Int Nat Int (instHPow.{0, 0} Int Nat (Monoid.Pow.{0} Int Int.instMonoidInt)) a (OfNat.ofNat.{0} Nat 2 (instOfNatNat 2))) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.is_unit_sq Int.isUnit_sqₓ'. -/
-theorem isUnit_sq {a : ℤ} (ha : IsUnit a) : a ^ 2 = 1 := by rw [sq, is_unit_mul_self ha]
+theorem isUnit_sq {a : ℤ} (ha : IsUnit a) : a ^ 2 = 1 := by rw [sq, isUnit_mul_self ha]
 #align int.is_unit_sq Int.isUnit_sq
 
 /- warning: int.units_sq -> Int.units_sq is a dubious translation:
@@ -49,7 +49,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.units_sq Int.units_sqₓ'. -/
 @[simp]
 theorem units_sq (u : ℤˣ) : u ^ 2 = 1 := by
-  rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, is_unit_sq u.is_unit]
+  rw [Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one, isUnit_sq u.is_unit]
 #align int.units_sq Int.units_sq
 
 /- warning: int.units_pow_two -> Int.units_pow_two is a dubious translation:

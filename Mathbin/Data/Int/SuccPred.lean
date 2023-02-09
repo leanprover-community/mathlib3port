@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.succ_pred
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,11 +84,11 @@ theorem pred_iterate (a : ℤ) : ∀ n, (pred^[n]) a = a - n
 instance : IsSuccArchimedean ℤ :=
   ⟨fun a b h =>
     ⟨(b - a).toNat, by
-      rw [succ_eq_succ, succ_iterate, to_nat_sub_of_le h, ← add_sub_assoc, add_sub_cancel']⟩⟩
+      rw [succ_eq_succ, succ_iterate, toNat_sub_of_le h, ← add_sub_assoc, add_sub_cancel']⟩⟩
 
 instance : IsPredArchimedean ℤ :=
   ⟨fun a b h =>
-    ⟨(b - a).toNat, by rw [pred_eq_pred, pred_iterate, to_nat_sub_of_le h, sub_sub_cancel]⟩⟩
+    ⟨(b - a).toNat, by rw [pred_eq_pred, pred_iterate, toNat_sub_of_le h, sub_sub_cancel]⟩⟩
 
 /-! ### Covering relation -/
 

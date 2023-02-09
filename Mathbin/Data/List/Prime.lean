@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Anne Baanen
 
 ! This file was ported from Lean 3 source module data.list.prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} M] {p : M} {L : List.{u1} M}, (Prime.{u1} M _inst_1 p) -> (Iff (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p (List.prod.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Monoid.toOne.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))) L)) (Exists.{succ u1} M (fun (a : M) => And (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) a L) (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p a))))
 Case conversion may be inaccurate. Consider using '#align prime.dvd_prod_iff Prime.dvd_prod_iffₓ'. -/
 /-- Prime `p` divides the product of a list `L` iff it divides some `a ∈ L` -/
-theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.Prod ↔ ∃ a ∈ L, p ∣ a :=
+theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.prod ↔ ∃ a ∈ L, p ∣ a :=
   by
   constructor
   · intro h
@@ -57,8 +57,8 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} M] {p : M} {L : List.{u1} M}, (Prime.{u1} M _inst_1 p) -> (forall (a : M), (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) a L) -> (Not (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p a))) -> (Not (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) p (List.prod.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) (Monoid.toOne.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))) L)))
 Case conversion may be inaccurate. Consider using '#align prime.not_dvd_prod Prime.not_dvd_prodₓ'. -/
-theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) :
-    ¬p ∣ L.Prod :=
+theorem Prime.not_dvd_prod {p : M} {L : List Mem} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) :
+    ¬p ∣ L.prod :=
   mt (Prime.dvd_prod_iff pp).mp <| not_bex.mpr hL
 #align prime.not_dvd_prod Prime.not_dvd_prod
 
@@ -75,7 +75,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} M] [_inst_2 : Unique.{succ u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))] {p : M}, (Prime.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1) p) -> (forall {L : List.{u1} M}, (forall (q : M), (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) q L) -> (Prime.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1) q)) -> (Dvd.dvd.{u1} M (semigroupDvd.{u1} M (SemigroupWithZero.toSemigroup.{u1} M (MonoidWithZero.toSemigroupWithZero.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))) p (List.prod.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))) (Monoid.toOne.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1)))) L)) -> (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) p L))
 Case conversion may be inaccurate. Consider using '#align mem_list_primes_of_dvd_prod mem_list_primes_of_dvd_prodₓ'. -/
 theorem mem_list_primes_of_dvd_prod {p : M} (hp : Prime p) {L : List M} (hL : ∀ q ∈ L, Prime q)
-    (hpL : p ∣ L.Prod) : p ∈ L :=
+    (hpL : p ∣ L.prod) : p ∈ L :=
   by
   obtain ⟨x, hx1, hx2⟩ := hp.dvd_prod_iff.mp hpL
   rwa [(prime_dvd_prime_iff_eq hp (hL x hx1)).mp hx2]
@@ -88,7 +88,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} M] [_inst_2 : Unique.{succ u1} (Units.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))] {l₁ : List.{u1} M} {l₂ : List.{u1} M}, (Eq.{succ u1} M (List.prod.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))) (Monoid.toOne.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1)))) l₁) (List.prod.{u1} M (MulZeroClass.toMul.{u1} M (MulZeroOneClass.toMulZeroClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1))))) (Monoid.toOne.{u1} M (MonoidWithZero.toMonoid.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1)))) l₂)) -> (forall (p : M), (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) p l₁) -> (Prime.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1) p)) -> (forall (p : M), (Membership.mem.{u1, u1} M (List.{u1} M) (List.instMembershipList.{u1} M) p l₂) -> (Prime.{u1} M (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} M _inst_1) p)) -> (List.Perm.{u1} M l₁ l₂)
 Case conversion may be inaccurate. Consider using '#align perm_of_prod_eq_prod perm_of_prod_eq_prodₓ'. -/
 theorem perm_of_prod_eq_prod :
-    ∀ {l₁ l₂ : List M}, l₁.Prod = l₂.Prod → (∀ p ∈ l₁, Prime p) → (∀ p ∈ l₂, Prime p) → Perm l₁ l₂
+    ∀ {l₁ l₂ : List M}, l₁.prod = l₂.prod → (∀ p ∈ l₁, Prime p) → (∀ p ∈ l₂, Prime p) → Perm l₁ l₂
   | [], [], _, _, _ => Perm.nil
   | [], a :: l, h₁, h₂, h₃ =>
     have ha : a ∣ 1 := @prod_nil M _ ▸ h₁.symm ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _
@@ -99,15 +99,15 @@ theorem perm_of_prod_eq_prod :
   | a :: l₁, b :: l₂, h, hl₁, hl₂ => by
     classical
       have hl₁' : ∀ p ∈ l₁, Prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
-      have hl₂' : ∀ p ∈ (b :: l₂).eraseₓ a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
+      have hl₂' : ∀ p ∈ (b :: l₂).erase a, Prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
       have ha : a ∈ b :: l₂ :=
         mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂
           (h ▸ by rw [prod_cons] <;> exact dvd_mul_right _ _)
       have hb : b :: l₂ ~ a :: (b :: l₂).eraseₓ a := perm_cons_erase ha
-      have hl : Prod l₁ = Prod ((b :: l₂).eraseₓ a) :=
-        (mul_right_inj' (hl₁ a (mem_cons_self _ _)).NeZero).1 <| by
+      have hl : prod l₁ = prod ((b :: l₂).eraseₓ a) :=
+        (mul_right_inj' (hl₁ a (mem_cons_self _ _)).ne_zero).1 <| by
           rwa [← prod_cons, ← prod_cons, ← hb.prod_eq]
-      exact perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
+      exact Perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
 #align perm_of_prod_eq_prod perm_of_prod_eq_prod
 
 end CancelCommMonoidWithZero

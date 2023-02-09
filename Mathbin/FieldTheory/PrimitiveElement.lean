@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.primitive_element
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   let f := minpoly F α
   let g := minpoly F β
   let ιFE := algebraMap F E
-  let ιEE' := algebraMap E (splitting_field (g.map ιFE))
+  let ιEE' := algebraMap E (SplittingField (g.map ιFE))
   obtain ⟨c, hc⟩ := primitive_element_inf_aux_exists_c (ιEE'.comp ιFE) (ιEE' α) (ιEE' β) f g
   let γ := α + c • β
   suffices β_in_Fγ : β ∈ F⟮⟯
@@ -144,28 +144,28 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
       have β_in_Fαβ : β ∈ F⟮⟯ := subset_adjoin F {α, β} (Set.mem_insert_of_mem α rfl)
       exact F⟮⟯.add_mem α_in_Fαβ (F⟮⟯.smul_mem β_in_Fαβ)
   let p :=
-    EuclideanDomain.gcd ((f.map (algebraMap F F⟮⟯)).comp (C (adjoin_simple.gen F γ) - C ↑c * X))
+    EuclideanDomain.gcd ((f.map (algebraMap F F⟮⟯)).comp (c (AdjoinSimple.gen F γ) - c ↑c * x))
       (g.map (algebraMap F F⟮⟯))
-  let h := EuclideanDomain.gcd ((f.map ιFE).comp (C γ - C (ιFE c) * X)) (g.map ιFE)
+  let h := EuclideanDomain.gcd ((f.map ιFE).comp (c γ - c (ιFE c) * x)) (g.map ιFE)
   have map_g_ne_zero : g.map ιFE ≠ 0 := map_ne_zero (minpoly.ne_zero hβ)
   have h_ne_zero : h ≠ 0 :=
     mt euclidean_domain.gcd_eq_zero_iff.mp (not_and.mpr fun _ => map_g_ne_zero)
-  suffices p_linear : p.map (algebraMap F⟮⟯ E) = C h.leading_coeff * (X - C β)
+  suffices p_linear : p.map (algebraMap F⟮⟯ E) = c h.leading_coeff * (x - c β)
   · have finale : β = algebraMap F⟮⟯ E (-p.coeff 0 / p.coeff 1) :=
       by
       rw [map_div₀, RingHom.map_neg, ← coeff_map, ← coeff_map, p_linear]
-      simp [mul_sub, coeff_C, mul_div_cancel_left β (mt leading_coeff_eq_zero.mp h_ne_zero)]
+      simp [mul_sub, coeff_c, mul_div_cancel_left β (mt leading_coeff_eq_zero.mp h_ne_zero)]
     rw [finale]
     exact Subtype.mem (-p.coeff 0 / p.coeff 1)
   have h_sep : h.separable := separable_gcd_right _ (IsSeparable.separable F β).map
   have h_root : h.eval β = 0 := by
     apply eval_gcd_eq_zero
     ·
-      rw [eval_comp, eval_sub, eval_mul, eval_C, eval_C, eval_X, eval_map, ← aeval_def, ←
+      rw [eval_comp, eval_sub, eval_mul, eval_c, eval_c, eval_x, eval_map, ← aeval_def, ←
         Algebra.smul_def, add_sub_cancel, minpoly.aeval]
     · rw [eval_map, ← aeval_def, minpoly.aeval]
-  have h_splits : splits ιEE' h :=
-    splits_of_splits_gcd_right ιEE' map_g_ne_zero (splitting_field.splits _)
+  have h_splits : Splits ιEE' h :=
+    splits_of_splits_gcd_right ιEE' map_g_ne_zero (SplittingField.splits _)
   have h_roots : ∀ x ∈ (h.map ιEE').roots, x = ιEE' β :=
     by
     intro x hx
@@ -174,7 +174,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
       hc (ιEE' γ - ιEE' (ιFE c) * x)
         (by
           have f_root := root_left_of_root_gcd hx
-          rw [eval₂_comp, eval₂_sub, eval₂_mul, eval₂_C, eval₂_C, eval₂_X, eval₂_map] at f_root
+          rw [eval₂_comp, eval₂_sub, eval₂_mul, eval₂_c, eval₂_c, eval₂_x, eval₂_map] at f_root
           exact (mem_roots_map (minpoly.ne_zero hα)).mpr f_root)
     specialize
       hc x
@@ -186,7 +186,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
     apply (div_eq_iff (sub_ne_zero.mpr a)).mpr
     simp only [Algebra.smul_def, RingHom.map_add, RingHom.map_mul, RingHom.comp_apply]
     ring
-  rw [← eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots]
+  rw [← eq_x_sub_c_of_separable_of_root_eq h_sep h_root h_splits h_roots]
   trans EuclideanDomain.gcd (_ : E[X]) (_ : E[X])
   · dsimp only [p]
     convert (gcd_map (algebraMap F⟮⟯ E)).symm
@@ -231,7 +231,7 @@ a finite separable field extension has a basis `1, α, α^2, ..., α^n`.
 
 See also `exists_primitive_element`. -/
 noncomputable def powerBasisOfFiniteOfSeparable : PowerBasis F E :=
-  let α := (exists_primitive_element F E).some
+  let α := (exists_primitive_element F E).choose
   let pb := adjoin.powerBasis (IsSeparable.isIntegral F α)
   have e : F⟮⟯ = ⊤ := (exists_primitive_element F E).choose_spec
   pb.map ((IntermediateField.equivOfEq e).trans IntermediateField.topEquiv)

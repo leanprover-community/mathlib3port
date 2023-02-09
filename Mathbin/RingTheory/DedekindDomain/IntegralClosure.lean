@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.integral_closure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
     ((Algebra.linearMap C L).restrictScalars A).range ≤
       Submodule.span A (Set.range <| (traceForm K L).dualBasis (traceFormNondegenerate K L) b) :=
   by
-  let db := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
+  let db := (traceForm K L).dualBasis (traceFormNondegenerate K L) b
   rintro _ ⟨x, rfl⟩
   simp only [LinearMap.coe_restrictScalars_eq_coe, Algebra.linearMap_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
@@ -89,7 +89,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
     rw [← IsScalarTower.algebraMap_smul K (Classical.choose (hc' i)) (db i)]
   refine' ⟨fun i => db.repr (algebraMap C L x) i, fun i => _, (db.sum_repr _).symm⟩
   rw [BilinForm.dualBasis_repr_apply]
-  exact is_integral_trace (isIntegral_mul hx (hb_int i))
+  exact isIntegral_trace (isIntegral_mul hx (hb_int i))
 #align is_integral_closure.range_le_span_dual_basis IsIntegralClosure.range_le_span_dualBasis
 
 theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Fintype ι] [DecidableEq ι]
@@ -106,7 +106,7 @@ variable (A) (K)
 
 include K
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
 theorem exists_integral_multiples (s : Finset L) :
@@ -119,7 +119,7 @@ theorem exists_integral_multiples (s : Finset L) :
   · rintro x s hx ⟨y, hy, hs⟩
     obtain ⟨x', y', hy', hx'⟩ :=
       exists_integral_multiple
-        ((IsFractionRing.isAlgebraic_iff A K L).mpr (is_algebraic_of_finite _ _ x))
+        ((IsFractionRing.isAlgebraic_iff A K L).mpr (isAlgebraic_of_finite _ _ x))
         ((injective_iff_map_eq_zero (algebraMap A L)).mp _)
     refine' ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => _⟩
     rcases finset.mem_insert.mp hx'' with (rfl | hx'')
@@ -128,7 +128,7 @@ theorem exists_integral_multiples (s : Finset L) :
     · rw [mul_comm, mul_smul, Algebra.smul_def]
       exact isIntegral_mul isIntegral_algebraMap (hs _ hx'')
     · rw [IsScalarTower.algebraMap_eq A K L]
-      apply (algebraMap K L).Injective.comp
+      apply (algebraMap K L).injective.comp
       exact IsFractionRing.injective _ _
 #align exists_integral_multiples exists_integral_multiples
 
@@ -148,7 +148,7 @@ theorem FiniteDimensional.exists_is_basis_integral :
     by
     refine' mt ((injective_iff_map_eq_zero (algebraMap A L)).mp _ _) hy
     rw [IsScalarTower.algebraMap_eq A K L]
-    exact (algebraMap K L).Injective.comp (IsFractionRing.injective A K)
+    exact (algebraMap K L).injective.comp (IsFractionRing.injective A K)
   refine'
     ⟨s',
       bs'.map
@@ -182,11 +182,11 @@ theorem IsIntegralClosure.isNoetherian [IsIntegrallyClosed A] [IsNoetherianRing 
     IsNoetherian A C := by
   haveI := Classical.decEq L
   obtain ⟨s, b, hb_int⟩ := FiniteDimensional.exists_is_basis_integral A K L
-  let b' := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
+  let b' := (traceForm K L).dualBasis (traceFormNondegenerate K L) b
   letI := isNoetherian_span_of_finite A (Set.finite_range b')
   let f : C →ₗ[A] Submodule.span A (Set.range b') :=
     (Submodule.ofLe (IsIntegralClosure.range_le_span_dualBasis C b hb_int)).comp
-      ((Algebra.linearMap C L).restrictScalars A).range_restrict
+      ((Algebra.linearMap C L).restrictScalars A).rangeRestrict
   refine' isNoetherian_of_ker_bot f _
   rw [LinearMap.ker_comp, Submodule.ker_ofLe, Submodule.comap_bot, LinearMap.ker_codRestrict]
   exact LinearMap.ker_eq_bot_of_injective (IsIntegralClosure.algebraMap_injective C A L)
@@ -223,7 +223,8 @@ theorem IsIntegralClosure.isDedekindDomain [h : IsDedekindDomain A] : IsDedekind
   haveI : IsFractionRing C L := IsIntegralClosure.isFractionRing_of_finite_extension A K L C
   ⟨IsIntegralClosure.isNoetherianRing A K L C, h.dimension_le_one.is_integral_closure _ L _,
     (isIntegrallyClosed_iff L).mpr fun x hx =>
-      ⟨IsIntegralClosure.mk' C x (isIntegral_trans (IsIntegralClosure.isIntegral_algebra A L) _ hx),
+      ⟨IsIntegralClosure.mk' C x
+          (is_integral_trans (IsIntegralClosure.isIntegral_algebra A L) _ hx),
         IsIntegralClosure.algebraMap_mk' _ _ _⟩⟩
 #align is_integral_closure.is_dedekind_domain IsIntegralClosure.isDedekindDomain
 

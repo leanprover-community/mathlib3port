@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group.with_one.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ Case conversion may be inaccurate. Consider using '#align with_zero.units_with_z
 /-- Any group is isomorphic to the units of itself adjoined with `0`. -/
 def unitsWithZeroEquiv {α : Type _} [Group α] : (WithZero α)ˣ ≃* α
     where
-  toFun a := unzero a.NeZero
+  toFun a := unzero a.ne_zero
   invFun a := Units.mk0 a coe_ne_zero
   left_inv _ := Units.ext <| by simpa only [coe_unzero]
   right_inv _ := rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.tactic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : 
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `continuous.comp` when appropriate.
 
 Applying `continuous.comp` is not always a good idea, so we have some
@@ -75,7 +75,7 @@ unsafe def apply_continuous.comp : tactic Unit :=
 
 /-- List of tactics used by `continuity` internally. -/
 unsafe def continuity_tactics (md : Transparency := reducible) : List (tactic String) :=
-  [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.toString)),
+  [intros1 >>= fun ns => pure ("intros " ++ " ".intercalate (ns.map fun e => e.to_string)),
     apply_rules [] [`` continuity] 50 { md } >> pure "apply_rules with continuity",
     apply_continuous.comp >> pure "refine continuous.comp _ _"]
 #align tactic.continuity_tactics tactic.continuity_tactics

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,8 +211,7 @@ theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) :=
 
 #print Finset.sup_ite /-
 theorem sup_ite (p : β → Prop) [DecidablePred p] :
-    (s.sup fun i => ite (p i) (f i) (g i)) =
-      (s.filterₓ p).sup f ⊔ (s.filterₓ fun i => ¬p i).sup g :=
+    (s.sup fun i => ite (p i) (f i) (g i)) = (s.filter p).sup f ⊔ (s.filter fun i => ¬p i).sup g :=
   fold_ite _
 #align finset.sup_ite Finset.sup_ite
 -/
@@ -286,7 +285,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} α (Finset.sup.{u1, u1} α α _inst_1 _inst_2 (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_3 a b) s (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeSup.toPartialOrder.{u1} α _inst_1))) _inst_2))) (id.{succ u1} α)) (Finset.sup.{u1, u1} α α _inst_1 _inst_2 s (id.{succ u1} α))
 Case conversion may be inaccurate. Consider using '#align finset.sup_erase_bot Finset.sup_erase_botₓ'. -/
 @[simp]
-theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.eraseₓ ⊥).sup id = s.sup id :=
+theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = s.sup id :=
   by
   refine' (sup_mono (s.erase_subset _)).antisymm (Finset.sup_le_iff.2 fun a ha => _)
   obtain rfl | ha' := eq_or_ne a ⊥
@@ -353,7 +352,7 @@ Case conversion may be inaccurate. Consider using '#align list.foldr_sup_eq_sup_
 theorem List.foldr_sup_eq_sup_toFinset [DecidableEq α] (l : List α) :
     l.foldr (· ⊔ ·) ⊥ = l.toFinset.sup id :=
   by
-  rw [← coe_fold_r, ← Multiset.fold_dedup_idem, sup_def, ← List.toFinset_coe, to_finset_val,
+  rw [← coe_fold_r, ← Multiset.fold_dedup_idem, sup_def, ← List.toFinset_coe, toFinset_val,
     Multiset.map_id]
   rfl
 #align list.foldr_sup_eq_sup_to_finset List.foldr_sup_eq_sup_toFinset
@@ -422,7 +421,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)))] (s : Set.{u2} α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Bot.bot.{u2} α (OrderBot.toBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))) _inst_2)) s) -> (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y) s))) -> (forall {ι : Type.{u1}} (t : Finset.{u1} ι) (p : ι -> α), (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (p i) s)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Finset.sup.{u2, u1} α ι _inst_1 _inst_2 t p) s))
 Case conversion may be inaccurate. Consider using '#align finset.sup_mem Finset.sup_memₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : subsemilattice_sup_bot`
 theorem sup_mem (s : Set α) (w₁ : ⊥ ∈ s) (w₂ : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊔ y ∈ s)
@@ -493,7 +492,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.sup_eq_Sup_image Finset.sup_eq_supₛ_imageₓ'. -/
 theorem sup_eq_supₛ_image [CompleteLattice β] (s : Finset α) (f : α → β) :
     s.sup f = supₛ (f '' s) := by
-  classical rw [← Finset.coe_image, ← sup_id_eq_Sup, sup_image, Function.comp.left_id]
+  classical rw [← Finset.coe_image, ← sup_id_eq_supₛ, sup_image, Function.comp.left_id]
 #align finset.sup_eq_Sup_image Finset.sup_eq_supₛ_image
 
 /-! ### inf -/
@@ -725,7 +724,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : SemilatticeInf.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1)))] [_inst_3 : DecidableEq.{succ u1} α] (s : Finset.{u1} α), Eq.{succ u1} α (Finset.inf.{u1, u1} α α _inst_1 _inst_2 (Finset.erase.{u1} α (fun (a : α) (b : α) => _inst_3 a b) s (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α _inst_1))) _inst_2))) (id.{succ u1} α)) (Finset.inf.{u1, u1} α α _inst_1 _inst_2 s (id.{succ u1} α))
 Case conversion may be inaccurate. Consider using '#align finset.inf_erase_top Finset.inf_erase_topₓ'. -/
 @[simp]
-theorem inf_erase_top [DecidableEq α] (s : Finset α) : (s.eraseₓ ⊤).inf id = s.inf id :=
+theorem inf_erase_top [DecidableEq α] (s : Finset α) : (s.erase ⊤).inf id = s.inf id :=
   @sup_erase_bot αᵒᵈ _ _ _ _
 #align finset.inf_erase_top Finset.inf_erase_top
 
@@ -804,7 +803,7 @@ Case conversion may be inaccurate. Consider using '#align list.foldr_inf_eq_inf_
 theorem List.foldr_inf_eq_inf_toFinset [DecidableEq α] (l : List α) :
     l.foldr (· ⊓ ·) ⊤ = l.toFinset.inf id :=
   by
-  rw [← coe_fold_r, ← Multiset.fold_dedup_idem, inf_def, ← List.toFinset_coe, to_finset_val,
+  rw [← coe_fold_r, ← Multiset.fold_dedup_idem, inf_def, ← List.toFinset_coe, toFinset_val,
     Multiset.map_id]
   rfl
 #align list.foldr_inf_eq_inf_to_finset List.foldr_inf_eq_inf_toFinset
@@ -826,7 +825,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : SemilatticeInf.{u2} α] [_inst_2 : OrderTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1)))] (s : Set.{u2} α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Top.top.{u2} α (OrderTop.toTop.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α _inst_1))) _inst_2)) s) -> (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (HasInf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α _inst_1) x y) s))) -> (forall {ι : Type.{u1}} (t : Finset.{u1} ι) (p : ι -> α), (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (p i) s)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Finset.inf.{u2, u1} α ι _inst_1 _inst_2 t p) s))
 Case conversion may be inaccurate. Consider using '#align finset.inf_mem Finset.inf_memₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem inf_mem (s : Set α) (w₁ : ⊤ ∈ s) (w₂ : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊓ y ∈ s)
     {ι : Type _} (t : Finset ι) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.inf p ∈ s :=
   @inf_induction _ _ _ _ _ _ (· ∈ s) w₁ w₂ h
@@ -915,8 +914,8 @@ theorem sup_inf_distrib_left (s : Finset ι) (f : ι → α) (a : α) :
 theorem sup_inf_distrib_right (s : Finset ι) (f : ι → α) (a : α) :
     s.sup f ⊓ a = s.sup fun i => f i ⊓ a :=
   by
-  rw [_root_.inf_comm, s.sup_inf_distrib_left]
-  simp_rw [_root_.inf_comm]
+  rw [inf_comm, s.sup_inf_distrib_left]
+  simp_rw [inf_comm]
 #align finset.sup_inf_distrib_right Finset.sup_inf_distrib_right
 -/
 
@@ -993,7 +992,7 @@ Case conversion may be inaccurate. Consider using '#align finset.le_sup_iff Fins
 protected theorem le_sup_iff (ha : ⊥ < a) : a ≤ s.sup f ↔ ∃ b ∈ s, a ≤ f b :=
   ⟨Finset.cons_induction_on s (fun h => absurd h (not_le_of_lt ha)) fun c t hc ih => by
       simpa using
-        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a ≤ f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
+        @or.rec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a ≤ f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
           let ⟨b, hb, hle⟩ := ih h
           ⟨b, Or.inr hb, hle⟩,
     fun ⟨b, hb, hle⟩ => trans hle (le_sup hb)⟩
@@ -1009,7 +1008,7 @@ Case conversion may be inaccurate. Consider using '#align finset.lt_sup_iff Fins
 protected theorem lt_sup_iff : a < s.sup f ↔ ∃ b ∈ s, a < f b :=
   ⟨Finset.cons_induction_on s (fun h => absurd h not_lt_bot) fun c t hc ih => by
       simpa using
-        @Or.ndrec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a < f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
+        @or.rec _ _ (∃ b, (b = c ∨ b ∈ t) ∧ a < f b) (fun h => ⟨c, Or.inl rfl, h⟩) fun h =>
           let ⟨b, hb, hlt⟩ := ih h
           ⟨b, Or.inr hb, hlt⟩,
     fun ⟨b, hb, hlt⟩ => lt_of_lt_of_le hlt (le_sup hb)⟩
@@ -1277,7 +1276,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup'_induction 
 theorem sup'_induction {p : α → Prop} (hp : ∀ a₁, p a₁ → ∀ a₂, p a₂ → p (a₁ ⊔ a₂))
     (hs : ∀ b ∈ s, p (f b)) : p (s.sup' H f) :=
   by
-  show @WithBot.recBotCoe α (fun _ => Prop) True p ↑(s.sup' H f)
+  show @with_bot.rec_bot_coe α (fun _ => Prop) True p ↑(s.sup' H f)
   rw [coe_sup']
   refine' sup_induction trivial _ hs
   rintro (_ | a₁) h₁ a₂ h₂
@@ -1293,7 +1292,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} α] (s : Set.{u2} α), (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y) s))) -> (forall {ι : Type.{u1}} (t : Finset.{u1} ι) (H : Finset.Nonempty.{u1} ι t) (p : ι -> α), (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (p i) s)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Finset.sup'.{u2, u1} α ι _inst_1 t H p) s))
 Case conversion may be inaccurate. Consider using '#align finset.sup'_mem Finset.sup'_memₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem sup'_mem (s : Set α) (w : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊔ y ∈ s) {ι : Type _}
     (t : Finset ι) (H : t.Nonempty) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.sup' H p ∈ s :=
   sup'_induction H p w h
@@ -1445,7 +1444,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} [_inst_1 : SemilatticeInf.{u2} α] (s : Set.{u2} α), (forall (x : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s) -> (forall (y : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) y s) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (HasInf.inf.{u2} α (SemilatticeInf.toHasInf.{u2} α _inst_1) x y) s))) -> (forall {ι : Type.{u1}} (t : Finset.{u1} ι) (H : Finset.Nonempty.{u1} ι t) (p : ι -> α), (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (p i) s)) -> (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (Finset.inf'.{u2, u1} α ι _inst_1 t H p) s))
 Case conversion may be inaccurate. Consider using '#align finset.inf'_mem Finset.inf'_memₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem inf'_mem (s : Set α) (w : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), x ⊓ y ∈ s) {ι : Type _}
     (t : Finset ι) (H : t.Nonempty) (p : ι → α) (h : ∀ i ∈ t, p i ∈ s) : t.inf' H p ∈ s :=
   inf'_induction H p w h
@@ -1479,7 +1478,7 @@ theorem sup'_eq_sup {s : Finset β} (H : s.Nonempty) (f : β → α) : s.sup' H 
 #align finset.sup'_eq_sup Finset.sup'_eq_sup
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Finset.sup_closed_of_sup_closed /-
 theorem sup_closed_of_sup_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊔ b ∈ s) : t.sup id ∈ s :=
@@ -1505,7 +1504,7 @@ theorem inf'_eq_inf {s : Finset β} (H : s.Nonempty) (f : β → α) : s.inf' H 
 #align finset.inf'_eq_inf Finset.inf'_eq_inf
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 #print Finset.inf_closed_of_inf_closed /-
 theorem inf_closed_of_inf_closed {s : Set α} (t : Finset α) (htne : t.Nonempty) (h_subset : ↑t ⊆ s)
     (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), a ⊓ b ∈ s) : t.inf id ∈ s :=
@@ -1811,7 +1810,7 @@ theorem max_insert {a : α} {s : Finset α} : (insert a s).max = max a s.max :=
 @[simp]
 theorem max_singleton {a : α} : Finset.max {a} = (a : WithBot α) :=
   by
-  rw [← insert_emptyc_eq]
+  rw [← insert_emptyCollection_eq]
   exact max_insert
 #align finset.max_singleton Finset.max_singleton
 -/
@@ -1929,7 +1928,7 @@ theorem min_insert {a : α} {s : Finset α} : (insert a s).min = min (↑a) s.mi
 @[simp]
 theorem min_singleton {a : α} : Finset.min {a} = (a : WithTop α) :=
   by
-  rw [← insert_emptyc_eq]
+  rw [← insert_emptyCollection_eq]
   exact min_insert
 #align finset.min_singleton Finset.min_singleton
 -/
@@ -2047,7 +2046,7 @@ theorem isLeast_min' : IsLeast (↑s) (s.min' H) :=
 #print Finset.le_min'_iff /-
 @[simp]
 theorem le_min'_iff {x} : x ≤ s.min' H ↔ ∀ y ∈ s, x ≤ y :=
-  le_isGLB_iff (isLeast_min' s H).IsGLB
+  le_isGLB_iff (isLeast_min' s H).isGLB
 #align finset.le_min'_iff Finset.le_min'_iff
 -/
 
@@ -2085,7 +2084,7 @@ theorem isGreatest_max' : IsGreatest (↑s) (s.max' H) :=
 #print Finset.max'_le_iff /-
 @[simp]
 theorem max'_le_iff {x} : s.max' H ≤ x ↔ ∀ y ∈ s, y ≤ x :=
-  isLUB_le_iff (isGreatest_max' s H).IsLUB
+  isLUB_le_iff (isGreatest_max' s H).isLUB
 #align finset.max'_le_iff Finset.max'_le_iff
 -/
 
@@ -2125,7 +2124,7 @@ theorem max'_singleton (a : α) : ({a} : Finset α).max' (singleton_nonempty _) 
 #print Finset.min'_lt_max' /-
 theorem min'_lt_max' {i j} (H1 : i ∈ s) (H2 : j ∈ s) (H3 : i ≠ j) :
     s.min' ⟨i, H1⟩ < s.max' ⟨i, H1⟩ :=
-  isGLB_lt_isLUB_of_ne (s.isLeast_min' _).IsGLB (s.isGreatest_max' _).IsLUB H1 H2 H3
+  isGLB_lt_isLUB_of_ne (s.isLeast_min' _).isGLB (s.isGreatest_max' _).isLUB H1 H2 H3
 #align finset.min'_lt_max' Finset.min'_lt_max'
 -/
 
@@ -2145,7 +2144,7 @@ theorem min'_lt_max'_of_card (h₂ : 1 < card s) :
 #print Finset.map_ofDual_min /-
 theorem map_ofDual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDual).max :=
   by
-  rw [max_eq_sup_with_bot, sup_image]
+  rw [max_eq_sup_withBot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_min Finset.map_ofDual_min
 -/
@@ -2153,7 +2152,7 @@ theorem map_ofDual_min (s : Finset αᵒᵈ) : s.min.map ofDual = (s.image ofDua
 #print Finset.map_ofDual_max /-
 theorem map_ofDual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDual).min :=
   by
-  rw [min_eq_inf_with_top, inf_image]
+  rw [min_eq_inf_withTop, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_of_dual_max Finset.map_ofDual_max
 -/
@@ -2161,7 +2160,7 @@ theorem map_ofDual_max (s : Finset αᵒᵈ) : s.max.map ofDual = (s.image ofDua
 #print Finset.map_toDual_min /-
 theorem map_toDual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max :=
   by
-  rw [max_eq_sup_with_bot, sup_image]
+  rw [max_eq_sup_withBot, sup_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_min Finset.map_toDual_min
 -/
@@ -2169,7 +2168,7 @@ theorem map_toDual_min (s : Finset α) : s.min.map toDual = (s.image toDual).max
 #print Finset.map_toDual_max /-
 theorem map_toDual_max (s : Finset α) : s.max.map toDual = (s.image toDual).min :=
   by
-  rw [min_eq_inf_with_top, inf_image]
+  rw [min_eq_inf_withTop, inf_image]
   exact congr_fun Option.map_id _
 #align finset.map_to_dual_max Finset.map_toDual_max
 -/
@@ -2234,7 +2233,7 @@ theorem max'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).max' (s.insert_nonempty a) = max (s.max' H) a :=
   (isGreatest_max' _ _).unique <| by
     rw [coe_insert, max_comm]
-    exact (is_greatest_max' _ _).insert _
+    exact (isGreatest_max' _ _).insert _
 #align finset.max'_insert Finset.max'_insert
 
 /- warning: finset.min'_insert -> Finset.min'_insert is a dubious translation:
@@ -2247,18 +2246,18 @@ theorem min'_insert (a : α) (s : Finset α) (H : s.Nonempty) :
     (insert a s).min' (s.insert_nonempty a) = min (s.min' H) a :=
   (isLeast_min' _ _).unique <| by
     rw [coe_insert, min_comm]
-    exact (is_least_min' _ _).insert _
+    exact (isLeast_min' _ _).insert _
 #align finset.min'_insert Finset.min'_insert
 
 #print Finset.lt_max'_of_mem_erase_max' /-
-theorem lt_max'_of_mem_erase_max' [DecidableEq α] {a : α} (ha : a ∈ s.eraseₓ (s.max' H)) :
+theorem lt_max'_of_mem_erase_max' [DecidableEq α] {a : α} (ha : a ∈ s.erase (s.max' H)) :
     a < s.max' H :=
   lt_of_le_of_ne (le_max' _ _ (mem_of_mem_erase ha)) <| ne_of_mem_of_not_mem ha <| not_mem_erase _ _
 #align finset.lt_max'_of_mem_erase_max' Finset.lt_max'_of_mem_erase_max'
 -/
 
 #print Finset.min'_lt_of_mem_erase_min' /-
-theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.eraseₓ (s.min' H)) :
+theorem min'_lt_of_mem_erase_min' [DecidableEq α] {a : α} (ha : a ∈ s.erase (s.min' H)) :
     s.min' H < a :=
   @lt_max'_of_mem_erase_max' αᵒᵈ _ s H _ a ha
 #align finset.min'_lt_of_mem_erase_min' Finset.min'_lt_of_mem_erase_min'
@@ -2290,9 +2289,9 @@ Case conversion may be inaccurate. Consider using '#align finset.min'_image Fins
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
     (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
   by
-  convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
+  convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => toDual (f (ofDual a))) (by simpa) _ _ <;>
     convert h
-  rw [nonempty.image_iff]
+  rw [Nonempty.image_iff]
 #align finset.min'_image Finset.min'_image
 
 #print Finset.coe_max' /-
@@ -2357,7 +2356,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.max'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x) s0) x
 Case conversion may be inaccurate. Consider using '#align finset.max'_erase_ne_self Finset.max'_erase_ne_selfₓ'. -/
-theorem max'_erase_ne_self {s : Finset α} (s0 : (s.eraseₓ x).Nonempty) : (s.eraseₓ x).max' s0 ≠ x :=
+theorem max'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.erase x).max' s0 ≠ x :=
   ne_of_mem_erase (max'_mem _ s0)
 #align finset.max'_erase_ne_self Finset.max'_erase_ne_self
 
@@ -2367,7 +2366,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α} (s0 : Finset.Nonempty.{u1} α (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)), Ne.{succ u1} α (Finset.min'.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x) s0) x
 Case conversion may be inaccurate. Consider using '#align finset.min'_erase_ne_self Finset.min'_erase_ne_selfₓ'. -/
-theorem min'_erase_ne_self {s : Finset α} (s0 : (s.eraseₓ x).Nonempty) : (s.eraseₓ x).min' s0 ≠ x :=
+theorem min'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.erase x).min' s0 ≠ x :=
   ne_of_mem_erase (min'_mem _ s0)
 #align finset.min'_erase_ne_self Finset.min'_erase_ne_self
 
@@ -2377,7 +2376,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithBot.{u1} α) (Finset.max.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)) (WithBot.some.{u1} α x)
 Case conversion may be inaccurate. Consider using '#align finset.max_erase_ne_self Finset.max_erase_ne_selfₓ'. -/
-theorem max_erase_ne_self {s : Finset α} : (s.eraseₓ x).max ≠ x :=
+theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x :=
   by
   by_cases s0 : (s.erase x).Nonempty
   · refine' ne_of_eq_of_ne (coe_max' s0).symm _
@@ -2392,7 +2391,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {x : α} {s : Finset.{u1} α}, Ne.{succ u1} (WithTop.{u1} α) (Finset.min.{u1} α _inst_1 (Finset.erase.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b) s x)) (WithTop.some.{u1} α x)
 Case conversion may be inaccurate. Consider using '#align finset.min_erase_ne_self Finset.min_erase_ne_selfₓ'. -/
-theorem min_erase_ne_self {s : Finset α} : (s.eraseₓ x).min ≠ x := by
+theorem min_erase_ne_self {s : Finset α} : (s.erase x).min ≠ x := by
   convert @max_erase_ne_self αᵒᵈ _ _ _
 #align finset.min_erase_ne_self Finset.min_erase_ne_self
 
@@ -2404,7 +2403,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.exists_next_right Finset.exists_next_rightₓ'. -/
 theorem exists_next_right {x : α} {s : Finset α} (h : ∃ y ∈ s, x < y) :
     ∃ y ∈ s, x < y ∧ ∀ z ∈ s, x < z → y ≤ z :=
-  have Hne : (s.filterₓ ((· < ·) x)).Nonempty := h.imp fun y hy => mem_filter.2 ⟨hy.fst, hy.snd⟩
+  have Hne : (s.filter ((· < ·) x)).Nonempty := h.imp fun y hy => mem_filter.2 ⟨hy.fst, hy.snd⟩
   ⟨min' _ Hne, (mem_filter.1 (min'_mem _ Hne)).1, (mem_filter.1 (min'_mem _ Hne)).2, fun z hzs hz =>
     min'_le _ _ <| mem_filter.2 ⟨hzs, hz⟩⟩
 #align finset.exists_next_right Finset.exists_next_right
@@ -2426,8 +2425,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x y) -> (forall (z : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) z s) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) x y)))) -> (Exists.{succ u1} α (fun (z : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) z t) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x z) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) z y)))))) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α t) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align finset.card_le_of_interleaved Finset.card_le_of_interleavedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card t + 1`. -/
 theorem card_le_of_interleaved {s t : Finset α}
     (h :
@@ -2451,7 +2450,7 @@ theorem card_le_of_interleaved {s t : Finset α}
           WithTop.coe_lt_coe.2 <| hay.trans (mem_filter.1 hb).2
       
   calc
-    s.card = (s.image f).card := (card_image_of_inj_on f_mono.inj_on).symm
+    s.card = (s.image f).card := (card_image_of_injOn f_mono.inj_on).symm
     _ ≤ (insert ⊤ (t.image coe) : Finset (WithTop α)).card :=
       card_mono <|
         image_subset_iff.2 fun x hx =>
@@ -2467,7 +2466,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {s : Finset.{u1} α} {t : Finset.{u1} α}, (forall (x : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x s) -> (forall (y : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) y s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x y) -> (forall (z : α), (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) z s) -> (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) z (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) x y)))) -> (Exists.{succ u1} α (fun (z : α) => And (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) z t) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) x z) (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) z y)))))) -> (LE.le.{0} Nat instLENat (Finset.card.{u1} α s) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (Finset.card.{u1} α (SDiff.sdiff.{u1} (Finset.{u1} α) (Finset.instSDiffFinset.{u1} α (fun (a : α) (b : α) => instDecidableEq.{u1} α _inst_1 a b)) t s)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))
 Case conversion may be inaccurate. Consider using '#align finset.card_le_diff_of_interleaved Finset.card_le_diff_of_interleavedₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- If finsets `s` and `t` are interleaved, then `finset.card s ≤ finset.card (t \ s) + 1`. -/
 theorem card_le_diff_of_interleaved {s t : Finset α}
     (h :
@@ -2598,7 +2597,7 @@ theorem is_glb_iff_is_least [LinearOrder α] (i : α) (s : Finset α) (hs : s.No
   refine' ⟨fun his => _, IsLeast.isGLB⟩
   suffices i = min' s hs by
     rw [this]
-    exact is_least_min' s hs
+    exact isLeast_min' s hs
   rw [IsGLB, IsGreatest, mem_lowerBounds, mem_upperBounds] at his
   exact le_antisymm (his.1 (Finset.min' s hs) (Finset.min'_mem s hs)) (his.2 _ (Finset.min'_le s))
 #align finset.is_glb_iff_is_least Finset.is_glb_iff_is_least
@@ -2700,8 +2699,8 @@ theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Finset β} 
     x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v :=
   by
   change _ ↔ ∃ v ∈ s, x ∈ (f v).val
-  rw [← Multiset.mem_sup, ← Multiset.mem_toFinset, sup_to_finset]
-  simp_rw [val_to_finset]
+  rw [← Multiset.mem_sup, ← Multiset.mem_toFinset, sup_toFinset]
+  simp_rw [val_toFinset]
 #align finset.mem_sup Finset.mem_sup
 
 /- warning: finset.sup_eq_bUnion -> Finset.sup_eq_bunionᵢ is a dubious translation:
@@ -2713,7 +2712,7 @@ Case conversion may be inaccurate. Consider using '#align finset.sup_eq_bUnion F
 theorem sup_eq_bunionᵢ {α β} [DecidableEq β] (s : Finset α) (t : α → Finset β) :
     s.sup t = s.bunionᵢ t := by
   ext
-  rw [mem_sup, mem_bUnion]
+  rw [mem_sup, mem_bunionᵢ]
 #align finset.sup_eq_bUnion Finset.sup_eq_bunionᵢ
 
 /- warning: finset.sup_singleton'' -> Finset.sup_singleton'' is a dubious translation:
@@ -3035,7 +3034,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u2} β] [_inst_2 : DecidableEq.{succ u1} α] {f : γ -> α} {g : α -> β} {s : Finset.{u3} γ}, Eq.{succ u2} β (supᵢ.{u2, succ u1} β (CompleteLattice.toSupSet.{u2} β _inst_1) α (fun (x : α) => supᵢ.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_1) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finset.image.{u3, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s)) (fun (H : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finset.image.{u3, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s)) => g x))) (supᵢ.{u2, succ u3} β (CompleteLattice.toSupSet.{u2} β _inst_1) γ (fun (y : γ) => supᵢ.{u2, 0} β (CompleteLattice.toSupSet.{u2} β _inst_1) (Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) y s) (fun (H : Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) y s) => g (f y))))
 Case conversion may be inaccurate. Consider using '#align finset.supr_finset_image Finset.supᵢ_finset_imageₓ'. -/
 theorem supᵢ_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
-    (⨆ x ∈ s.image f, g x) = ⨆ y ∈ s, g (f y) := by rw [← supr_coe, coe_image, supᵢ_image, supr_coe]
+    (⨆ x ∈ s.image f, g x) = ⨆ y ∈ s, g (f y) := by rw [← supᵢ_coe, coe_image, supᵢ_image, supᵢ_coe]
 #align finset.supr_finset_image Finset.supᵢ_finset_image
 
 /- warning: finset.sup_finset_image -> Finset.sup_finset_image is a dubious translation:
@@ -3056,7 +3055,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u2} β] [_inst_2 : DecidableEq.{succ u1} α] {f : γ -> α} {g : α -> β} {s : Finset.{u3} γ}, Eq.{succ u2} β (infᵢ.{u2, succ u1} β (CompleteLattice.toInfSet.{u2} β _inst_1) α (fun (x : α) => infᵢ.{u2, 0} β (CompleteLattice.toInfSet.{u2} β _inst_1) (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finset.image.{u3, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s)) (fun (H : Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) x (Finset.image.{u3, u1} γ α (fun (a : α) (b : α) => _inst_2 a b) f s)) => g x))) (infᵢ.{u2, succ u3} β (CompleteLattice.toInfSet.{u2} β _inst_1) γ (fun (y : γ) => infᵢ.{u2, 0} β (CompleteLattice.toInfSet.{u2} β _inst_1) (Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) y s) (fun (H : Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) y s) => g (f y))))
 Case conversion may be inaccurate. Consider using '#align finset.infi_finset_image Finset.infᵢ_finset_imageₓ'. -/
 theorem infᵢ_finset_image {f : γ → α} {g : α → β} {s : Finset γ} :
-    (⨅ x ∈ s.image f, g x) = ⨅ y ∈ s, g (f y) := by rw [← infi_coe, coe_image, infᵢ_image, infi_coe]
+    (⨅ x ∈ s.image f, g x) = ⨅ y ∈ s, g (f y) := by rw [← infᵢ_coe, coe_image, infᵢ_image, infᵢ_coe]
 #align finset.infi_finset_image Finset.infᵢ_finset_image
 
 /- warning: finset.supr_insert_update -> Finset.supᵢ_insert_update is a dubious translation:
@@ -3090,7 +3089,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} [_inst_1 : CompleteLattice.{u1} β] [_inst_2 : DecidableEq.{succ u2} α] (s : Finset.{u3} γ) (t : γ -> (Finset.{u2} α)) (f : α -> β), Eq.{succ u1} β (supᵢ.{u1, succ u2} β (CompleteLattice.toSupSet.{u1} β _inst_1) α (fun (y : α) => supᵢ.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) y (Finset.bunionᵢ.{u3, u2} γ α (fun (a : α) (b : α) => _inst_2 a b) s t)) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) y (Finset.bunionᵢ.{u3, u2} γ α (fun (a : α) (b : α) => _inst_2 a b) s t)) => f y))) (supᵢ.{u1, succ u3} β (CompleteLattice.toSupSet.{u1} β _inst_1) γ (fun (x : γ) => supᵢ.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) x s) (fun (H : Membership.mem.{u3, u3} γ (Finset.{u3} γ) (Finset.instMembershipFinset.{u3} γ) x s) => supᵢ.{u1, succ u2} β (CompleteLattice.toSupSet.{u1} β _inst_1) α (fun (y : α) => supᵢ.{u1, 0} β (CompleteLattice.toSupSet.{u1} β _inst_1) (Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) y (t x)) (fun (H : Membership.mem.{u2, u2} α (Finset.{u2} α) (Finset.instMembershipFinset.{u2} α) y (t x)) => f y)))))
 Case conversion may be inaccurate. Consider using '#align finset.supr_bUnion Finset.supᵢ_bunionᵢₓ'. -/
 theorem supᵢ_bunionᵢ (s : Finset γ) (t : γ → Finset α) (f : α → β) :
-    (⨆ y ∈ s.bunionᵢ t, f y) = ⨆ (x ∈ s) (y ∈ t x), f y := by simp [@supᵢ_comm _ α, supᵢ_and]
+    (⨆ y ∈ s.bunionᵢ t, f y) = ⨆ (x ∈ s) (y ∈ t x), f y := by simp [@supr_comm _ α, supᵢ_and]
 #align finset.supr_bUnion Finset.supᵢ_bunionᵢ
 
 /- warning: finset.infi_bUnion -> Finset.infᵢ_bunionᵢ is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
       have : I x = (I ∘ e.symm ∘ I.symm) (I (e x)) := by simp only [hx, mfld_simps]
       rw [this] at h
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I := by simp only [hx, mfld_simps]
-      have := ((mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this).of_le le_top
+      have := ((mem_groupoid_of_pregroupoid.2 he).2.contDiffWithinAt this).of_le le_top
       convert (h.comp' _ this).mono_of_mem _ using 1
       · ext y
         simp only [mfld_simps]
@@ -155,7 +155,7 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
       rw [ContDiffWithinAtProp] at h⊢
       have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I' := by
         simp only [hx, mfld_simps]
-      have := ((mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A).of_le le_top
+      have := ((mem_groupoid_of_pregroupoid.2 he').1.contDiffWithinAt A).of_le le_top
       convert this.comp _ h _
       · ext y
         simp only [mfld_simps]
@@ -354,17 +354,17 @@ theorem contMdiffWithinAt_iff_target :
     ContMdiffWithinAt I I' n f s x ↔
       ContinuousWithinAt f s x ∧ ContMdiffWithinAt I 𝓘(𝕜, E') n (extChartAt I' (f x) ∘ f) s x :=
   by
-  simp_rw [ContMdiffWithinAt, lift_prop_within_at, ← and_assoc']
+  simp_rw [ContMdiffWithinAt, LiftPropWithinAt, ← and_assoc']
   have cont :
     ContinuousWithinAt f s x ∧ ContinuousWithinAt (extChartAt I' (f x) ∘ f) s x ↔
       ContinuousWithinAt f s x :=
     by
     refine' ⟨fun h => h.1, fun h => ⟨h, _⟩⟩
-    have h₂ := (chart_at H' (f x)).continuous_toFun.ContinuousWithinAt (mem_chart_source _ _)
+    have h₂ := (chartAt H' (f x)).continuous_toFun.continuousWithinAt (mem_chart_source _ _)
     refine' ((I'.continuous_at.comp_continuous_within_at h₂).comp' h).mono_of_mem _
     exact
       inter_mem self_mem_nhdsWithin
-        (h.preimage_mem_nhds_within <| (chart_at _ _).open_source.mem_nhds <| mem_chart_source _ _)
+        (h.preimage_mem_nhds_within <| (chartAt _ _).open_source.mem_nhds <| mem_chart_source _ _)
   simp_rw [cont, ContDiffWithinAtProp, extChartAt, LocalHomeomorph.extend, LocalEquiv.coe_trans,
     ModelWithCorners.toLocalEquiv_coe, LocalHomeomorph.coe_coe, modelWithCornersSelf_coe,
     chartAt_self_eq, LocalHomeomorph.refl_apply, comp.left_id]
@@ -470,11 +470,11 @@ theorem contMdiffWithinAt_iff_target_of_mem_source {x : M} {y : M'}
   by
   simp_rw [ContMdiffWithinAt]
   rw [(cont_diff_within_at_localInvariantProp I I' n).liftPropWithinAt_indep_chart_target
-      (chart_mem_maximal_atlas I' y) hy,
+      (chart_mem_maximalAtlas I' y) hy,
     and_congr_right]
   intro hf
   simp_rw [StructureGroupoid.liftPropWithinAt_self_target]
-  simp_rw [((chart_at H' y).ContinuousAt hy).comp_continuousWithinAt hf]
+  simp_rw [((chartAt H' y).continuousAt hy).comp_continuousWithinAt hf]
   rw [← extChartAt_source I'] at hy
   simp_rw [(continuousAt_ext_chart_at' I' _ hy).comp_continuousWithinAt hf]
   rfl
@@ -563,8 +563,8 @@ theorem contMdiffOn_iff :
     let w := (extChartAt I x).symm z
     have : w ∈ s := by simp only [w, hz, mfld_simps]
     specialize h w this
-    have w1 : w ∈ (chart_at H x).source := by simp only [w, hz, mfld_simps]
-    have w2 : f w ∈ (chart_at H' y).source := by simp only [w, hz, mfld_simps]
+    have w1 : w ∈ (chartAt H x).source := by simp only [w, hz, mfld_simps]
+    have w2 : f w ∈ (chartAt H' y).source := by simp only [w, hz, mfld_simps]
     convert ((contMdiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
     · simp only [w, hz, mfld_simps]
     · mfld_set_tac
@@ -591,8 +591,8 @@ theorem contMdiffOn_iff_target :
   intro h
   constructor
   · refine' fun h' y => ⟨_, fun x _ => h' x y⟩
-    have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').ContinuousOn
-    convert (h''.comp' (chart_at H' y).continuous_toFun).comp' h
+    have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').continuousOn
+    convert (h''.comp' (chartAt H' y).continuous_toFun).comp' h
     simp
   · exact fun h' x y => (h' y).2 x default
 #align cont_mdiff_on_iff_target contMdiffOn_iff_target
@@ -708,11 +708,11 @@ theorem ContMdiffAt.continuousAt (hf : ContMdiffAt I I' n f x) : ContinuousAt f 
 #align cont_mdiff_at.continuous_at ContMdiffAt.continuousAt
 
 theorem ContMdiffOn.continuousOn (hf : ContMdiffOn I I' n f s) : ContinuousOn f s := fun x hx =>
-  (hf x hx).ContinuousWithinAt
+  (hf x hx).continuousWithinAt
 #align cont_mdiff_on.continuous_on ContMdiffOn.continuousOn
 
 theorem ContMdiff.continuous (hf : ContMdiff I I' n f) : Continuous f :=
-  continuous_iff_continuousAt.2 fun x => (hf x).ContinuousAt
+  continuous_iff_continuousAt.2 fun x => (hf x).continuousAt
 #align cont_mdiff.continuous ContMdiff.continuous
 
 /-! ### `C^∞` smoothness -/
@@ -779,7 +779,7 @@ theorem ContMdiffOn.mono (hf : ContMdiffOn I I' n f s) (hts : t ⊆ s) : ContMdi
 #align cont_mdiff_on.mono ContMdiffOn.mono
 
 theorem ContMdiff.contMdiffOn (hf : ContMdiff I I' n f) : ContMdiffOn I I' n f s := fun x hx =>
-  (hf x).ContMdiffWithinAt
+  (hf x).contMdiffWithinAt
 #align cont_mdiff.cont_mdiff_on ContMdiff.contMdiffOn
 
 theorem Smooth.smoothOn (hf : Smooth I I' f) : SmoothOn I I' f s :=
@@ -808,11 +808,11 @@ theorem SmoothWithinAt.smoothAt (h : SmoothWithinAt I I' f s x) (ht : s ∈ 𝓝
 
 theorem ContMdiffOn.contMdiffAt (h : ContMdiffOn I I' n f s) (hx : s ∈ 𝓝 x) :
     ContMdiffAt I I' n f x :=
-  (h x (mem_of_mem_nhds hx)).ContMdiffAt hx
+  (h x (mem_of_mem_nhds hx)).contMdiffAt hx
 #align cont_mdiff_on.cont_mdiff_at ContMdiffOn.contMdiffAt
 
 theorem SmoothOn.smoothAt (h : SmoothOn I I' f s) (hx : s ∈ 𝓝 x) : SmoothAt I I' f x :=
-  h.ContMdiffAt hx
+  h.contMdiffAt hx
 #align smooth_on.smooth_at SmoothOn.smoothAt
 
 include Is
@@ -841,26 +841,26 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
     -- manifold. For this, we need to restrict to a small enough set where everything makes sense
     obtain ⟨o, o_open, xo, ho, h'o⟩ :
       ∃ o : Set M,
-        IsOpen o ∧ x ∈ o ∧ o ⊆ (chart_at H x).source ∧ o ∩ s ⊆ f ⁻¹' (chart_at H' (f x)).source :=
+        IsOpen o ∧ x ∈ o ∧ o ⊆ (chartAt H x).source ∧ o ∩ s ⊆ f ⁻¹' (chartAt H' (f x)).source :=
       by
-      have : (chart_at H' (f x)).source ∈ 𝓝 (f x) :=
+      have : (chartAt H' (f x)).source ∈ 𝓝 (f x) :=
         IsOpen.mem_nhds (LocalHomeomorph.open_source _) (mem_chart_source H' (f x))
       rcases mem_nhdsWithin.1 (h.1.preimage_mem_nhdsWithin this) with ⟨u, u_open, xu, hu⟩
-      refine' ⟨u ∩ (chart_at H x).source, _, ⟨xu, mem_chart_source _ _⟩, _, _⟩
+      refine' ⟨u ∩ (chartAt H x).source, _, ⟨xu, mem_chart_source _ _⟩, _, _⟩
       · exact IsOpen.inter u_open (LocalHomeomorph.open_source _)
       · intro y hy
         exact hy.2
       · intro y hy
         exact hu ⟨hy.1.1, hy.2⟩
     have h' : ContMdiffWithinAt I I' n f (s ∩ o) x := h.mono (inter_subset_left _ _)
-    simp only [ContMdiffWithinAt, lift_prop_within_at, ContDiffWithinAtProp] at h'
+    simp only [ContMdiffWithinAt, LiftPropWithinAt, ContDiffWithinAtProp] at h'
     -- let `u` be a good neighborhood in the chart where the function is smooth
-    rcases h.2.ContDiffOn le_rfl with ⟨u, u_nhds, u_subset, hu⟩
+    rcases h.2.contDiffOn le_rfl with ⟨u, u_nhds, u_subset, hu⟩
     -- pull it back to the manifold, and intersect with a suitable neighborhood of `x`, to get the
     -- desired good neighborhood `v`.
     let v := insert x s ∩ o ∩ extChartAt I x ⁻¹' u
-    have v_incl : v ⊆ (chart_at H x).source := fun y hy => ho hy.1.2
-    have v_incl' : ∀ y ∈ v, f y ∈ (chart_at H' (f x)).source :=
+    have v_incl : v ⊆ (chartAt H x).source := fun y hy => ho hy.1.2
+    have v_incl' : ∀ y ∈ v, f y ∈ (chartAt H' (f x)).source :=
       by
       intro y hy
       rcases hy.1.1 with (rfl | h')
@@ -871,7 +871,7 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
     · rw [nhdsWithin_restrict _ xo o_open]
       refine' Filter.inter_mem self_mem_nhdsWithin _
       suffices : u ∈ 𝓝[extChartAt I x '' (insert x s ∩ o)] extChartAt I x x
-      exact (continuousAt_extChartAt I x).ContinuousWithinAt.preimage_mem_nhds_within' this
+      exact (continuousAt_extChartAt I x).continuousWithinAt.preimage_mem_nhds_within' this
       apply nhdsWithin_mono _ _ u_nhds
       rw [image_subset_iff]
       intro y hy
@@ -883,7 +883,7 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
       have : ContinuousWithinAt f v y :=
         by
         apply
-          (((continuousOn_extChartAt_symm I' (f x) _ _).comp' (hu _ hy.2).ContinuousWithinAt).comp'
+          (((continuousOn_extChartAt_symm I' (f x) _ _).comp' (hu _ hy.2).continuousWithinAt).comp'
               (continuousOn_extChartAt I x _ _)).congr_mono
         · intro z hz
           simp only [v_incl hz, v_incl' z hz, mfld_simps]
@@ -897,9 +897,9 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
       · apply hu.mono
         · intro z hz
           simp only [v, mfld_simps] at hz
-          have : I ((chart_at H x) ((chart_at H x).symm (I.symm z))) ∈ u := by simp only [hz]
+          have : I ((chartAt H x) ((chartAt H x).symm (I.symm z))) ∈ u := by simp only [hz]
           simpa only [hz, mfld_simps] using this
-        · have exty : I (chart_at H x y) ∈ u := hy.2
+        · have exty : I (chartAt H x y) ∈ u := hy.2
           simp only [v_incl hy, v_incl' y hy, exty, hy.1.1, hy.1.2, mfld_simps]
   · rintro ⟨u, u_nhds, hu⟩
     have : ContMdiffWithinAt I I' (↑n) f (insert x s ∩ u) x :=
@@ -925,7 +925,7 @@ theorem contMdiffAt_iff_contMdiffAt_nhds {n : ℕ} :
   rw [contMdiffAt_iff_contMdiffOn_nhds]
   rintro ⟨u, hu, h⟩
   refine' (eventually_mem_nhds.mpr hu).mono fun x' hx' => _
-  exact (h x' <| mem_of_mem_nhds hx').ContMdiffAt hx'
+  exact (h x' <| mem_of_mem_nhds hx').contMdiffAt hx'
 #align cont_mdiff_at_iff_cont_mdiff_at_nhds contMdiffAt_iff_contMdiffAt_nhds
 
 omit Is I's
@@ -1009,8 +1009,8 @@ theorem ContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
       y ∈ e.target ∧ f (e.symm y) ∈ t ∧ f (e.symm y) ∈ e'.source ∧ g (f (e.symm y)) ∈ e''.source :=
     by
     simp only [← map_extChartAt_nhdsWithin, eventually_map]
-    filter_upwards [hf.1.Tendsto (extChartAt_source_mem_nhds I' (f x)),
-      (hg.1.comp hf.1 st).Tendsto (extChartAt_source_mem_nhds I'' (g (f x))),
+    filter_upwards [hf.1.tendsto (extChartAt_source_mem_nhds I' (f x)),
+      (hg.1.comp hf.1 st).tendsto (extChartAt_source_mem_nhds I'' (g (f x))),
       inter_mem_nhdsWithin s (extChartAt_source_mem_nhds I x)]
     rintro x' (hfx' : f x' ∈ _) (hgfx' : g (f x') ∈ _) ⟨hx's, hx'⟩
     simp only [e.map_source hx', true_and_iff, e.left_inv hx', st hx's, *]
@@ -1116,17 +1116,17 @@ theorem SmoothAt.comp {g : M' → M''} (x : M) (hg : SmoothAt I' I'' g (f x))
 
 theorem ContMdiff.comp_contMdiffOn {f : M → M'} {g : M' → M''} {s : Set M}
     (hg : ContMdiff I' I'' n g) (hf : ContMdiffOn I I' n f s) : ContMdiffOn I I'' n (g ∘ f) s :=
-  hg.ContMdiffOn.comp hf Set.subset_preimage_univ
+  hg.contMdiffOn.comp hf Set.subset_preimage_univ
 #align cont_mdiff.comp_cont_mdiff_on ContMdiff.comp_contMdiffOn
 
 theorem Smooth.comp_smoothOn {f : M → M'} {g : M' → M''} {s : Set M} (hg : Smooth I' I'' g)
     (hf : SmoothOn I I' f s) : SmoothOn I I'' (g ∘ f) s :=
-  hg.SmoothOn.comp hf Set.subset_preimage_univ
+  hg.smoothOn.comp hf Set.subset_preimage_univ
 #align smooth.comp_smooth_on Smooth.comp_smoothOn
 
 theorem ContMdiffOn.comp_contMdiff {t : Set M'} {g : M' → M''} (hg : ContMdiffOn I' I'' n g t)
     (hf : ContMdiff I I' n f) (ht : ∀ x, f x ∈ t) : ContMdiff I I'' n (g ∘ f) :=
-  contMdiffOn_univ.mp <| hg.comp hf.ContMdiffOn fun x _ => ht x
+  contMdiffOn_univ.mp <| hg.comp hf.contMdiffOn fun x _ => ht x
 #align cont_mdiff_on.comp_cont_mdiff ContMdiffOn.comp_contMdiff
 
 theorem SmoothOn.comp_smooth {t : Set M'} {g : M' → M''} (hg : SmoothOn I' I'' g t)
@@ -1147,7 +1147,7 @@ theorem contMdiff_model : ContMdiff I 𝓘(𝕜, E) n I :=
   refine' (contMdiffAt_iff _ _).mpr ⟨I.continuous_at, _⟩
   simp only [mfld_simps]
   refine' cont_diff_within_at_id.congr_of_eventually_eq _ _
-  · exact eventually_eq_of_mem self_mem_nhdsWithin fun x₂ => I.right_inv
+  · exact eventuallyEq_of_mem self_mem_nhdsWithin fun x₂ => I.right_inv
   simp_rw [Function.comp_apply, I.left_inv, id_def]
 #align cont_mdiff_model contMdiff_model
 
@@ -1172,12 +1172,12 @@ theorem contMdiffOn_symm_of_mem_maximalAtlas (h : e ∈ maximalAtlas I M) :
 
 theorem contMdiffAt_of_mem_maximalAtlas (h : e ∈ maximalAtlas I M) (hx : x ∈ e.source) :
     ContMdiffAt I I n e x :=
-  (contMdiffOn_of_mem_maximalAtlas h).ContMdiffAt <| e.open_source.mem_nhds hx
+  (contMdiffOn_of_mem_maximalAtlas h).contMdiffAt <| e.open_source.mem_nhds hx
 #align cont_mdiff_at_of_mem_maximal_atlas contMdiffAt_of_mem_maximalAtlas
 
 theorem contMdiffAt_symm_of_mem_maximalAtlas {x : H} (h : e ∈ maximalAtlas I M)
     (hx : x ∈ e.target) : ContMdiffAt I I n e.symm x :=
-  (contMdiffOn_symm_of_mem_maximalAtlas h).ContMdiffAt <| e.open_target.mem_nhds hx
+  (contMdiffOn_symm_of_mem_maximalAtlas h).contMdiffAt <| e.open_target.mem_nhds hx
 #align cont_mdiff_at_symm_of_mem_maximal_atlas contMdiffAt_symm_of_mem_maximalAtlas
 
 theorem contMdiffOn_chart : ContMdiffOn I I n (chartAt H x) (chartAt H x).source :=
@@ -1203,7 +1203,7 @@ theorem contMdiffAt_extChartAt : ContMdiffAt I 𝓘(𝕜, E) n (extChartAt I x) 
 #align cont_mdiff_at_ext_chart_at contMdiffAt_extChartAt
 
 theorem contMdiffOn_extChartAt : ContMdiffOn I 𝓘(𝕜, E) n (extChartAt I x) (chartAt H x).source :=
-  fun x' hx' => (contMdiffAt_ext_chart_at' hx').ContMdiffWithinAt
+  fun x' hx' => (contMdiffAt_ext_chart_at' hx').contMdiffWithinAt
 #align cont_mdiff_on_ext_chart_at contMdiffOn_extChartAt
 
 end Atlas
@@ -1223,7 +1223,7 @@ theorem smooth_id : Smooth I I (id : M → M) :=
 #align smooth_id smooth_id
 
 theorem contMdiffOn_id : ContMdiffOn I I n (id : M → M) s :=
-  contMdiff_id.ContMdiffOn
+  contMdiff_id.contMdiffOn
 #align cont_mdiff_on_id contMdiffOn_id
 
 theorem smoothOn_id : SmoothOn I I (id : M → M) s :=
@@ -1231,7 +1231,7 @@ theorem smoothOn_id : SmoothOn I I (id : M → M) s :=
 #align smooth_on_id smoothOn_id
 
 theorem contMdiffAt_id : ContMdiffAt I I n (id : M → M) x :=
-  contMdiff_id.ContMdiffAt
+  contMdiff_id.contMdiffAt
 #align cont_mdiff_at_id contMdiffAt_id
 
 theorem smoothAt_id : SmoothAt I I (id : M → M) x :=
@@ -1239,7 +1239,7 @@ theorem smoothAt_id : SmoothAt I I (id : M → M) x :=
 #align smooth_at_id smoothAt_id
 
 theorem contMdiffWithinAt_id : ContMdiffWithinAt I I n (id : M → M) s x :=
-  contMdiffAt_id.ContMdiffWithinAt
+  contMdiffAt_id.contMdiffWithinAt
 #align cont_mdiff_within_at_id contMdiffWithinAt_id
 
 theorem smoothWithinAt_id : SmoothWithinAt I I (id : M → M) s x :=
@@ -1279,12 +1279,12 @@ theorem smooth_one [One M'] : Smooth I I' (1 : M → M') := by simp only [Pi.one
 #align smooth_zero smooth_zero
 
 theorem contMdiffOn_const : ContMdiffOn I I' n (fun x : M => c) s :=
-  contMdiff_const.ContMdiffOn
+  contMdiff_const.contMdiffOn
 #align cont_mdiff_on_const contMdiffOn_const
 
 @[to_additive]
 theorem contMdiffOn_one [One M'] : ContMdiffOn I I' n (1 : M → M') s :=
-  contMdiff_one.ContMdiffOn
+  contMdiff_one.contMdiffOn
 #align cont_mdiff_on_one contMdiffOn_one
 #align cont_mdiff_on_zero contMdiffOn_zero
 
@@ -1299,12 +1299,12 @@ theorem smoothOn_one [One M'] : SmoothOn I I' (1 : M → M') s :=
 #align smooth_on_zero smoothOn_zero
 
 theorem contMdiffAt_const : ContMdiffAt I I' n (fun x : M => c) x :=
-  contMdiff_const.ContMdiffAt
+  contMdiff_const.contMdiffAt
 #align cont_mdiff_at_const contMdiffAt_const
 
 @[to_additive]
 theorem contMdiffAt_one [One M'] : ContMdiffAt I I' n (1 : M → M') x :=
-  contMdiff_one.ContMdiffAt
+  contMdiff_one.contMdiffAt
 #align cont_mdiff_at_one contMdiffAt_one
 #align cont_mdiff_at_zero contMdiffAt_zero
 
@@ -1319,12 +1319,12 @@ theorem smoothAt_one [One M'] : SmoothAt I I' (1 : M → M') x :=
 #align smooth_at_zero smoothAt_zero
 
 theorem contMdiffWithinAt_const : ContMdiffWithinAt I I' n (fun x : M => c) s x :=
-  contMdiffAt_const.ContMdiffWithinAt
+  contMdiffAt_const.contMdiffWithinAt
 #align cont_mdiff_within_at_const contMdiffWithinAt_const
 
 @[to_additive]
 theorem contMdiffWithinAt_one [One M'] : ContMdiffWithinAt I I' n (1 : M → M') s x :=
-  contMdiffAt_const.ContMdiffWithinAt
+  contMdiffAt_const.contMdiffWithinAt
 #align cont_mdiff_within_at_one contMdiffWithinAt_one
 #align cont_mdiff_within_at_zero contMdiffWithinAt_zero
 
@@ -1357,7 +1357,7 @@ section Module
 theorem contMdiffWithinAt_iff_contDiffWithinAt {f : E → E'} {s : Set E} {x : E} :
     ContMdiffWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') n f s x ↔ ContDiffWithinAt 𝕜 n f s x :=
   by
-  simp (config := { contextual := true }) only [ContMdiffWithinAt, lift_prop_within_at,
+  simp (config := { contextual := true }) only [ContMdiffWithinAt, LiftPropWithinAt,
     ContDiffWithinAtProp, iff_def, mfld_simps]
   exact ContDiffWithinAt.continuousWithinAt
 #align cont_mdiff_within_at_iff_cont_diff_within_at contMdiffWithinAt_iff_contDiffWithinAt
@@ -1411,7 +1411,7 @@ theorem ContDiffAt.comp_contMdiffAt {g : F → F'} {f : M → F} {x : M} (hg : C
 
 theorem ContDiff.comp_contMdiff {g : F → F'} {f : M → F} (hg : ContDiff 𝕜 n g)
     (hf : ContMdiff I 𝓘(𝕜, F) n f) : ContMdiff I 𝓘(𝕜, F') n (g ∘ f) := fun x =>
-  hg.ContDiffAt.comp_contMdiffAt (hf x)
+  hg.contDiffAt.comp_contMdiffAt (hf x)
 #align cont_diff.comp_cont_mdiff ContDiff.comp_contMdiff
 
 end Module
@@ -1423,10 +1423,10 @@ section ProdMk
 
 theorem ContMdiffWithinAt.prod_mk {f : M → M'} {g : M → N'} (hf : ContMdiffWithinAt I I' n f s x)
     (hg : ContMdiffWithinAt I J' n g s x) :
-    ContMdiffWithinAt I (I'.Prod J') n (fun x => (f x, g x)) s x :=
+    ContMdiffWithinAt I (I'.prod J') n (fun x => (f x, g x)) s x :=
   by
   rw [contMdiffWithinAt_iff] at *
-  exact ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+  exact ⟨hf.1.prod hg.1, hf.2.prod hg.2⟩
 #align cont_mdiff_within_at.prod_mk ContMdiffWithinAt.prod_mk
 
 theorem ContMdiffWithinAt.prod_mk_space {f : M → E'} {g : M → F'}
@@ -1434,11 +1434,11 @@ theorem ContMdiffWithinAt.prod_mk_space {f : M → E'} {g : M → F'}
     ContMdiffWithinAt I 𝓘(𝕜, E' × F') n (fun x => (f x, g x)) s x :=
   by
   rw [contMdiffWithinAt_iff] at *
-  exact ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+  exact ⟨hf.1.prod hg.1, hf.2.prod hg.2⟩
 #align cont_mdiff_within_at.prod_mk_space ContMdiffWithinAt.prod_mk_space
 
 theorem ContMdiffAt.prod_mk {f : M → M'} {g : M → N'} (hf : ContMdiffAt I I' n f x)
-    (hg : ContMdiffAt I J' n g x) : ContMdiffAt I (I'.Prod J') n (fun x => (f x, g x)) x :=
+    (hg : ContMdiffAt I J' n g x) : ContMdiffAt I (I'.prod J') n (fun x => (f x, g x)) x :=
   hf.prod_mk hg
 #align cont_mdiff_at.prod_mk ContMdiffAt.prod_mk
 
@@ -1448,7 +1448,7 @@ theorem ContMdiffAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : ContMdiffA
 #align cont_mdiff_at.prod_mk_space ContMdiffAt.prod_mk_space
 
 theorem ContMdiffOn.prod_mk {f : M → M'} {g : M → N'} (hf : ContMdiffOn I I' n f s)
-    (hg : ContMdiffOn I J' n g s) : ContMdiffOn I (I'.Prod J') n (fun x => (f x, g x)) s :=
+    (hg : ContMdiffOn I J' n g s) : ContMdiffOn I (I'.prod J') n (fun x => (f x, g x)) s :=
   fun x hx => (hf x hx).prod_mk (hg x hx)
 #align cont_mdiff_on.prod_mk ContMdiffOn.prod_mk
 
@@ -1458,7 +1458,7 @@ theorem ContMdiffOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : ContMdiffO
 #align cont_mdiff_on.prod_mk_space ContMdiffOn.prod_mk_space
 
 theorem ContMdiff.prod_mk {f : M → M'} {g : M → N'} (hf : ContMdiff I I' n f)
-    (hg : ContMdiff I J' n g) : ContMdiff I (I'.Prod J') n fun x => (f x, g x) := fun x =>
+    (hg : ContMdiff I J' n g) : ContMdiff I (I'.prod J') n fun x => (f x, g x) := fun x =>
   (hf x).prod_mk (hg x)
 #align cont_mdiff.prod_mk ContMdiff.prod_mk
 
@@ -1468,7 +1468,7 @@ theorem ContMdiff.prod_mk_space {f : M → E'} {g : M → F'} (hf : ContMdiff I 
 #align cont_mdiff.prod_mk_space ContMdiff.prod_mk_space
 
 theorem SmoothWithinAt.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothWithinAt I I' f s x)
-    (hg : SmoothWithinAt I J' g s x) : SmoothWithinAt I (I'.Prod J') (fun x => (f x, g x)) s x :=
+    (hg : SmoothWithinAt I J' g s x) : SmoothWithinAt I (I'.prod J') (fun x => (f x, g x)) s x :=
   hf.prod_mk hg
 #align smooth_within_at.prod_mk SmoothWithinAt.prod_mk
 
@@ -1479,7 +1479,7 @@ theorem SmoothWithinAt.prod_mk_space {f : M → E'} {g : M → F'}
 #align smooth_within_at.prod_mk_space SmoothWithinAt.prod_mk_space
 
 theorem SmoothAt.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothAt I I' f x)
-    (hg : SmoothAt I J' g x) : SmoothAt I (I'.Prod J') (fun x => (f x, g x)) x :=
+    (hg : SmoothAt I J' g x) : SmoothAt I (I'.prod J') (fun x => (f x, g x)) x :=
   hf.prod_mk hg
 #align smooth_at.prod_mk SmoothAt.prod_mk
 
@@ -1489,7 +1489,7 @@ theorem SmoothAt.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothAt I �
 #align smooth_at.prod_mk_space SmoothAt.prod_mk_space
 
 theorem SmoothOn.prod_mk {f : M → M'} {g : M → N'} (hf : SmoothOn I I' f s)
-    (hg : SmoothOn I J' g s) : SmoothOn I (I'.Prod J') (fun x => (f x, g x)) s :=
+    (hg : SmoothOn I J' g s) : SmoothOn I (I'.prod J') (fun x => (f x, g x)) s :=
   hf.prod_mk hg
 #align smooth_on.prod_mk SmoothOn.prod_mk
 
@@ -1499,7 +1499,7 @@ theorem SmoothOn.prod_mk_space {f : M → E'} {g : M → F'} (hf : SmoothOn I �
 #align smooth_on.prod_mk_space SmoothOn.prod_mk_space
 
 theorem Smooth.prod_mk {f : M → M'} {g : M → N'} (hf : Smooth I I' f) (hg : Smooth I J' g) :
-    Smooth I (I'.Prod J') fun x => (f x, g x) :=
+    Smooth I (I'.prod J') fun x => (f x, g x) :=
   hf.prod_mk hg
 #align smooth.prod_mk Smooth.prod_mk
 
@@ -1513,7 +1513,7 @@ end ProdMk
 section Projections
 
 theorem contMdiffWithinAt_fst {s : Set (M × N)} {p : M × N} :
-    ContMdiffWithinAt (I.Prod J) I n Prod.fst s p :=
+    ContMdiffWithinAt (I.prod J) I n Prod.fst s p :=
   by
   rw [contMdiffWithinAt_iff']
   refine' ⟨continuousWithinAt_fst, _⟩
@@ -1523,55 +1523,55 @@ theorem contMdiffWithinAt_fst {s : Set (M × N)} {p : M × N} :
   · simp only [mfld_simps]
 #align cont_mdiff_within_at_fst contMdiffWithinAt_fst
 
-theorem contMdiffAt_fst {p : M × N} : ContMdiffAt (I.Prod J) I n Prod.fst p :=
+theorem contMdiffAt_fst {p : M × N} : ContMdiffAt (I.prod J) I n Prod.fst p :=
   contMdiffWithinAt_fst
 #align cont_mdiff_at_fst contMdiffAt_fst
 
-theorem contMdiffOn_fst {s : Set (M × N)} : ContMdiffOn (I.Prod J) I n Prod.fst s := fun x hx =>
+theorem contMdiffOn_fst {s : Set (M × N)} : ContMdiffOn (I.prod J) I n Prod.fst s := fun x hx =>
   contMdiffWithinAt_fst
 #align cont_mdiff_on_fst contMdiffOn_fst
 
-theorem contMdiff_fst : ContMdiff (I.Prod J) I n (@Prod.fst M N) := fun x => contMdiffAt_fst
+theorem contMdiff_fst : ContMdiff (I.prod J) I n (@Prod.fst M N) := fun x => contMdiffAt_fst
 #align cont_mdiff_fst contMdiff_fst
 
 theorem smoothWithinAt_fst {s : Set (M × N)} {p : M × N} :
-    SmoothWithinAt (I.Prod J) I Prod.fst s p :=
+    SmoothWithinAt (I.prod J) I Prod.fst s p :=
   contMdiffWithinAt_fst
 #align smooth_within_at_fst smoothWithinAt_fst
 
-theorem smoothAt_fst {p : M × N} : SmoothAt (I.Prod J) I Prod.fst p :=
+theorem smoothAt_fst {p : M × N} : SmoothAt (I.prod J) I Prod.fst p :=
   contMdiffAt_fst
 #align smooth_at_fst smoothAt_fst
 
-theorem smoothOn_fst {s : Set (M × N)} : SmoothOn (I.Prod J) I Prod.fst s :=
+theorem smoothOn_fst {s : Set (M × N)} : SmoothOn (I.prod J) I Prod.fst s :=
   contMdiffOn_fst
 #align smooth_on_fst smoothOn_fst
 
-theorem smooth_fst : Smooth (I.Prod J) I (@Prod.fst M N) :=
+theorem smooth_fst : Smooth (I.prod J) I (@Prod.fst M N) :=
   contMdiff_fst
 #align smooth_fst smooth_fst
 
-theorem ContMdiffAt.fst {f : N → M × M'} {x : N} (hf : ContMdiffAt J (I.Prod I') n f x) :
+theorem ContMdiffAt.fst {f : N → M × M'} {x : N} (hf : ContMdiffAt J (I.prod I') n f x) :
     ContMdiffAt J I n (fun x => (f x).1) x :=
   contMdiffAt_fst.comp x hf
 #align cont_mdiff_at.fst ContMdiffAt.fst
 
-theorem ContMdiff.fst {f : N → M × M'} (hf : ContMdiff J (I.Prod I') n f) :
+theorem ContMdiff.fst {f : N → M × M'} (hf : ContMdiff J (I.prod I') n f) :
     ContMdiff J I n fun x => (f x).1 :=
   contMdiff_fst.comp hf
 #align cont_mdiff.fst ContMdiff.fst
 
-theorem SmoothAt.fst {f : N → M × M'} {x : N} (hf : SmoothAt J (I.Prod I') f x) :
+theorem SmoothAt.fst {f : N → M × M'} {x : N} (hf : SmoothAt J (I.prod I') f x) :
     SmoothAt J I (fun x => (f x).1) x :=
   smoothAt_fst.comp x hf
 #align smooth_at.fst SmoothAt.fst
 
-theorem Smooth.fst {f : N → M × M'} (hf : Smooth J (I.Prod I') f) : Smooth J I fun x => (f x).1 :=
+theorem Smooth.fst {f : N → M × M'} (hf : Smooth J (I.prod I') f) : Smooth J I fun x => (f x).1 :=
   smooth_fst.comp hf
 #align smooth.fst Smooth.fst
 
 theorem contMdiffWithinAt_snd {s : Set (M × N)} {p : M × N} :
-    ContMdiffWithinAt (I.Prod J) J n Prod.snd s p :=
+    ContMdiffWithinAt (I.prod J) J n Prod.snd s p :=
   by
   rw [contMdiffWithinAt_iff']
   refine' ⟨continuousWithinAt_snd, _⟩
@@ -1581,55 +1581,55 @@ theorem contMdiffWithinAt_snd {s : Set (M × N)} {p : M × N} :
   · simp only [mfld_simps]
 #align cont_mdiff_within_at_snd contMdiffWithinAt_snd
 
-theorem contMdiffAt_snd {p : M × N} : ContMdiffAt (I.Prod J) J n Prod.snd p :=
+theorem contMdiffAt_snd {p : M × N} : ContMdiffAt (I.prod J) J n Prod.snd p :=
   contMdiffWithinAt_snd
 #align cont_mdiff_at_snd contMdiffAt_snd
 
-theorem contMdiffOn_snd {s : Set (M × N)} : ContMdiffOn (I.Prod J) J n Prod.snd s := fun x hx =>
+theorem contMdiffOn_snd {s : Set (M × N)} : ContMdiffOn (I.prod J) J n Prod.snd s := fun x hx =>
   contMdiffWithinAt_snd
 #align cont_mdiff_on_snd contMdiffOn_snd
 
-theorem contMdiff_snd : ContMdiff (I.Prod J) J n (@Prod.snd M N) := fun x => contMdiffAt_snd
+theorem contMdiff_snd : ContMdiff (I.prod J) J n (@Prod.snd M N) := fun x => contMdiffAt_snd
 #align cont_mdiff_snd contMdiff_snd
 
 theorem smoothWithinAt_snd {s : Set (M × N)} {p : M × N} :
-    SmoothWithinAt (I.Prod J) J Prod.snd s p :=
+    SmoothWithinAt (I.prod J) J Prod.snd s p :=
   contMdiffWithinAt_snd
 #align smooth_within_at_snd smoothWithinAt_snd
 
-theorem smoothAt_snd {p : M × N} : SmoothAt (I.Prod J) J Prod.snd p :=
+theorem smoothAt_snd {p : M × N} : SmoothAt (I.prod J) J Prod.snd p :=
   contMdiffAt_snd
 #align smooth_at_snd smoothAt_snd
 
-theorem smoothOn_snd {s : Set (M × N)} : SmoothOn (I.Prod J) J Prod.snd s :=
+theorem smoothOn_snd {s : Set (M × N)} : SmoothOn (I.prod J) J Prod.snd s :=
   contMdiffOn_snd
 #align smooth_on_snd smoothOn_snd
 
-theorem smooth_snd : Smooth (I.Prod J) J (@Prod.snd M N) :=
+theorem smooth_snd : Smooth (I.prod J) J (@Prod.snd M N) :=
   contMdiff_snd
 #align smooth_snd smooth_snd
 
-theorem ContMdiffAt.snd {f : N → M × M'} {x : N} (hf : ContMdiffAt J (I.Prod I') n f x) :
+theorem ContMdiffAt.snd {f : N → M × M'} {x : N} (hf : ContMdiffAt J (I.prod I') n f x) :
     ContMdiffAt J I' n (fun x => (f x).2) x :=
   contMdiffAt_snd.comp x hf
 #align cont_mdiff_at.snd ContMdiffAt.snd
 
-theorem ContMdiff.snd {f : N → M × M'} (hf : ContMdiff J (I.Prod I') n f) :
+theorem ContMdiff.snd {f : N → M × M'} (hf : ContMdiff J (I.prod I') n f) :
     ContMdiff J I' n fun x => (f x).2 :=
   contMdiff_snd.comp hf
 #align cont_mdiff.snd ContMdiff.snd
 
-theorem SmoothAt.snd {f : N → M × M'} {x : N} (hf : SmoothAt J (I.Prod I') f x) :
+theorem SmoothAt.snd {f : N → M × M'} {x : N} (hf : SmoothAt J (I.prod I') f x) :
     SmoothAt J I' (fun x => (f x).2) x :=
   smoothAt_snd.comp x hf
 #align smooth_at.snd SmoothAt.snd
 
-theorem Smooth.snd {f : N → M × M'} (hf : Smooth J (I.Prod I') f) : Smooth J I' fun x => (f x).2 :=
+theorem Smooth.snd {f : N → M × M'} (hf : Smooth J (I.prod I') f) : Smooth J I' fun x => (f x).2 :=
   smooth_snd.comp hf
 #align smooth.snd Smooth.snd
 
 theorem smooth_iff_proj_smooth {f : M → M' × N'} :
-    Smooth I (I'.Prod J') f ↔ Smooth I I' (Prod.fst ∘ f) ∧ Smooth I J' (Prod.snd ∘ f) :=
+    Smooth I (I'.prod J') f ↔ Smooth I I' (Prod.fst ∘ f) ∧ Smooth I J' (Prod.snd ∘ f) :=
   by
   constructor
   · intro h
@@ -1639,7 +1639,7 @@ theorem smooth_iff_proj_smooth {f : M → M' × N'} :
 #align smooth_iff_proj_smooth smooth_iff_proj_smooth
 
 theorem smooth_prod_assoc :
-    Smooth ((I.Prod I').Prod J) (I.Prod (I'.Prod J)) fun x : (M × M') × N => (x.1.1, x.1.2, x.2) :=
+    Smooth ((I.prod I').prod J) (I.prod (I'.prod J)) fun x : (M × M') × N => (x.1.1, x.1.2, x.2) :=
   smooth_fst.fst.prod_mk <| smooth_fst.snd.prod_mk smooth_snd
 #align smooth_prod_assoc smooth_prod_assoc
 
@@ -1654,7 +1654,7 @@ variable {g : N → N'} {r : Set N} {y : N}
 within the product set at the product point. -/
 theorem ContMdiffWithinAt.prod_map' {p : M × N} (hf : ContMdiffWithinAt I I' n f s p.1)
     (hg : ContMdiffWithinAt J J' n g r p.2) :
-    ContMdiffWithinAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) p :=
+    ContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) p :=
   (hf.comp p contMdiffWithinAt_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp p contMdiffWithinAt_snd (prod_subset_preimage_snd _ _)
 #align cont_mdiff_within_at.prod_map' ContMdiffWithinAt.prod_map'
@@ -1662,12 +1662,12 @@ theorem ContMdiffWithinAt.prod_map' {p : M × N} (hf : ContMdiffWithinAt I I' n 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ContMdiffWithinAt.prod_map (hf : ContMdiffWithinAt I I' n f s x)
     (hg : ContMdiffWithinAt J J' n g r y) :
-    ContMdiffWithinAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
+    ContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) (x, y) :=
   ContMdiffWithinAt.prod_map' hf hg
 #align cont_mdiff_within_at.prod_map ContMdiffWithinAt.prod_map
 
 theorem ContMdiffAt.prod_map (hf : ContMdiffAt I I' n f x) (hg : ContMdiffAt J J' n g y) :
-    ContMdiffAt (I.Prod J) (I'.Prod J') n (Prod.map f g) (x, y) :=
+    ContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) (x, y) :=
   by
   rw [← contMdiffWithinAt_univ] at *
   convert hf.prod_map hg
@@ -1675,7 +1675,7 @@ theorem ContMdiffAt.prod_map (hf : ContMdiffAt I I' n f x) (hg : ContMdiffAt J J
 #align cont_mdiff_at.prod_map ContMdiffAt.prod_map
 
 theorem ContMdiffAt.prod_map' {p : M × N} (hf : ContMdiffAt I I' n f p.1)
-    (hg : ContMdiffAt J J' n g p.2) : ContMdiffAt (I.Prod J) (I'.Prod J') n (Prod.map f g) p :=
+    (hg : ContMdiffAt J J' n g p.2) : ContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) p :=
   by
   rcases p with ⟨⟩
   exact hf.prod_map hg
@@ -1683,13 +1683,13 @@ theorem ContMdiffAt.prod_map' {p : M × N} (hf : ContMdiffAt I I' n f p.1)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem ContMdiffOn.prod_map (hf : ContMdiffOn I I' n f s) (hg : ContMdiffOn J J' n g r) :
-    ContMdiffOn (I.Prod J) (I'.Prod J') n (Prod.map f g) (s ×ˢ r) :=
+    ContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s ×ˢ r) :=
   (hf.comp contMdiffOn_fst (prod_subset_preimage_fst _ _)).prod_mk <|
     hg.comp contMdiffOn_snd (prod_subset_preimage_snd _ _)
 #align cont_mdiff_on.prod_map ContMdiffOn.prod_map
 
 theorem ContMdiff.prod_map (hf : ContMdiff I I' n f) (hg : ContMdiff J J' n g) :
-    ContMdiff (I.Prod J) (I'.Prod J') n (Prod.map f g) :=
+    ContMdiff (I.prod J) (I'.prod J') n (Prod.map f g) :=
   by
   intro p
   exact (hf p.1).prod_map' (hg p.2)
@@ -1697,24 +1697,24 @@ theorem ContMdiff.prod_map (hf : ContMdiff I I' n f) (hg : ContMdiff J J' n g) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
-    SmoothWithinAt (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
-  hf.Prod_map hg
+    SmoothWithinAt (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) (x, y) :=
+  hf.prod_map hg
 #align smooth_within_at.prod_map SmoothWithinAt.prod_map
 
 theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
-    SmoothAt (I.Prod J) (I'.Prod J') (Prod.map f g) (x, y) :=
-  hf.Prod_map hg
+    SmoothAt (I.prod J) (I'.prod J') (Prod.map f g) (x, y) :=
+  hf.prod_map hg
 #align smooth_at.prod_map SmoothAt.prod_map
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
-    SmoothOn (I.Prod J) (I'.Prod J') (Prod.map f g) (s ×ˢ r) :=
-  hf.Prod_map hg
+    SmoothOn (I.prod J) (I'.prod J') (Prod.map f g) (s ×ˢ r) :=
+  hf.prod_map hg
 #align smooth_on.prod_map SmoothOn.prod_map
 
 theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) :
-    Smooth (I.Prod J) (I'.Prod J') (Prod.map f g) :=
-  hf.Prod_map hg
+    Smooth (I.prod J) (I'.prod J') (Prod.map f g) :=
+  hf.prod_map hg
 #align smooth.prod_map Smooth.prod_map
 
 end Prod_map
@@ -1782,7 +1782,7 @@ end PiSpace
 
 
 theorem ContinuousLinearMap.contMdiff (L : E →L[𝕜] F) : ContMdiff 𝓘(𝕜, E) 𝓘(𝕜, F) n L :=
-  L.ContDiff.ContMdiff
+  L.contDiff.contMdiff
 #align continuous_linear_map.cont_mdiff ContinuousLinearMap.contMdiff
 
 -- the following proof takes very long to elaborate in pure term mode
@@ -1811,14 +1811,14 @@ theorem ContMdiff.clm_comp {g : M → F →L[𝕜] F''} {f : M → F' →L[𝕜]
 variable {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V]
 
 /-- On any vector space, multiplication by a scalar is a smooth operation. -/
-theorem smooth_smul : Smooth (𝓘(𝕜).Prod 𝓘(𝕜, V)) 𝓘(𝕜, V) fun p : 𝕜 × V => p.1 • p.2 :=
-  smooth_iff.2 ⟨continuous_smul, fun x y => contDiff_smul.ContDiffOn⟩
+theorem smooth_smul : Smooth (𝓘(𝕜).prod 𝓘(𝕜, V)) 𝓘(𝕜, V) fun p : 𝕜 × V => p.1 • p.2 :=
+  smooth_iff.2 ⟨continuous_smul, fun x y => contDiff_smul.contDiffOn⟩
 #align smooth_smul smooth_smul
 
 theorem ContMdiffWithinAt.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiffWithinAt I 𝓘(𝕜) n f s x)
     (hg : ContMdiffWithinAt I 𝓘(𝕜, V) n g s x) :
     ContMdiffWithinAt I 𝓘(𝕜, V) n (fun p => f p • g p) s x :=
-  (smooth_smul.of_le le_top).ContMdiffAt.comp_contMdiffWithinAt x (hf.prod_mk hg)
+  (smooth_smul.of_le le_top).contMdiffAt.comp_contMdiffWithinAt x (hf.prod_mk hg)
 #align cont_mdiff_within_at.smul ContMdiffWithinAt.smul
 
 theorem ContMdiffAt.smul {f : M → 𝕜} {g : M → V} (hf : ContMdiffAt I 𝓘(𝕜) n f x)

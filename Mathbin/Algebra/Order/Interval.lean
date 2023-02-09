@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem one_ne_bot : (1 : Interval α) ≠ ⊥ :=
 #align interval.zero_ne_bot Interval.zero_ne_bot
 
 @[simp, to_additive]
-theorem bot_ne_one : (⊥ : Interval α) ≠ 1 :=
+theorem bot_ne_one : (⊥ : interval α) ≠ 1 :=
   bot_ne_pure
 #align interval.bot_ne_one Interval.bot_ne_one
 #align interval.bot_ne_zero Interval.bot_ne_zero
@@ -279,7 +279,7 @@ namespace NonemptyInterval
 
 @[to_additive]
 instance [OrderedCommMonoid α] : CommMonoid (NonemptyInterval α) :=
-  NonemptyInterval.toProd_injective.CommMonoid _ toProd_one toProd_mul toProd_pow
+  NonemptyInterval.toProd_injective.commMonoid _ toProd_one toProd_mul toProd_pow
 
 end NonemptyInterval
 
@@ -320,7 +320,7 @@ variable [OrderedCommMonoid α] (s : Interval α) {n : ℕ}
 @[to_additive]
 theorem bot_pow : ∀ {n : ℕ} (hn : n ≠ 0), (⊥ : Interval α) ^ n = ⊥
   | 0, h => (h rfl).elim
-  | Nat.succ n, _ => bot_mul (⊥ ^ n)
+  | nat.succ n, _ => bot_mul (⊥ ^ n)
 #align interval.bot_pow Interval.bot_pow
 #align interval.bot_nsmul Interval.bot_nsmul
 
@@ -674,13 +674,13 @@ variable (s t : Interval α) (a : α)
 accuracy of the approximation by an interval. -/
 def length : Interval α → α
   | ⊥ => 0
-  | (s : NonemptyInterval α) => s.length
+  | (s : nonempty_interval α) => s.length
 #align interval.length Interval.length
 
 @[simp]
 theorem length_nonneg : ∀ s : Interval α, 0 ≤ s.length
   | ⊥ => le_rfl
-  | (s : NonemptyInterval α) => s.length_nonneg
+  | (s : nonempty_interval α) => s.length_nonneg
 #align interval.length_nonneg Interval.length_nonneg
 
 @[simp]
@@ -696,13 +696,13 @@ theorem length_zero : (0 : Interval α).length = 0 :=
 @[simp]
 theorem length_neg : ∀ s : Interval α, (-s).length = s.length
   | ⊥ => rfl
-  | (s : NonemptyInterval α) => s.length_neg
+  | (s : nonempty_interval α) => s.length_neg
 #align interval.length_neg Interval.length_neg
 
 theorem length_add_le : ∀ s t : Interval α, (s + t).length ≤ s.length + t.length
   | ⊥, _ => by simp
   | _, ⊥ => by simp
-  | (s : NonemptyInterval α), (t : NonemptyInterval α) => (s.length_add t).le
+  | (s : nonempty_interval α), (t : nonempty_interval α) => (s.length_add t).le
 #align interval.length_add_le Interval.length_add_le
 
 theorem length_sub_le : (s - t).length ≤ s.length + t.length := by

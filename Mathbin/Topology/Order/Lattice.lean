@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module topology.order.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.sup_rig
 theorem Filter.Tendsto.sup_right_nhds' {ι β} [TopologicalSpace β] [HasSup β] [ContinuousSup β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊔ g) l (𝓝 (x ⊔ y)) :=
-  (continuous_sup.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
+  (continuous_sup.tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 #align filter.tendsto.sup_right_nhds' Filter.Tendsto.sup_right_nhds'
 
 /- warning: filter.tendsto.sup_right_nhds -> Filter.Tendsto.sup_right_nhds is a dubious translation:
@@ -180,7 +180,7 @@ Case conversion may be inaccurate. Consider using '#align filter.tendsto.inf_rig
 theorem Filter.Tendsto.inf_right_nhds' {ι β} [TopologicalSpace β] [HasInf β] [ContinuousInf β]
     {l : Filter ι} {f g : ι → β} {x y : β} (hf : Tendsto f l (𝓝 x)) (hg : Tendsto g l (𝓝 y)) :
     Tendsto (f ⊓ g) l (𝓝 (x ⊓ y)) :=
-  (continuous_inf.Tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
+  (continuous_inf.tendsto _).comp (Tendsto.prod_mk_nhds hf hg)
 #align filter.tendsto.inf_right_nhds' Filter.Tendsto.inf_right_nhds'
 
 /- warning: filter.tendsto.inf_right_nhds -> Filter.Tendsto.inf_right_nhds is a dubious translation:

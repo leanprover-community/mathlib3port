@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_fin
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem NormalizeFinLt.of {n a b} (h : NormalizeFinLt n a b) : NormalizeFin n a 
 
 theorem NormalizeFin.zero (n : ℕ) [NeZero n] : NormalizeFin n 0 0 :=
   by
-  rw [normalize_fin]
+  rw [NormalizeFin]
   norm_num
 #align tactic.norm_fin.normalize_fin.zero Tactic.NormFin.NormalizeFin.zero
 
@@ -88,12 +88,12 @@ theorem NormalizeFin.one (n : ℕ) [NeZero n] : NormalizeFin n 1 1 :=
 
 theorem NormalizeFin.add {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFin n b b') (h : a' + b' = c') : NormalizeFin n (a + b) c' := by
-  simp only [normalize_fin, ← h] at * <;> rw [Nat.add_mod, ← ha, ← hb, Fin.add_def]
+  simp only [NormalizeFin, ← h] at * <;> rw [Nat.add_mod, ← ha, ← hb, Fin.add_def]
 #align tactic.norm_fin.normalize_fin.add Tactic.NormFin.NormalizeFin.add
 
 theorem NormalizeFin.mul {n} {a b : Fin n} {a' b' c' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFin n b b') (h : a' * b' = c') : NormalizeFin n (a * b) c' := by
-  simp only [normalize_fin, ← h] at * <;> rw [Nat.mul_mod, ← ha, ← hb, Fin.mul_def]
+  simp only [NormalizeFin, ← h] at * <;> rw [Nat.mul_mod, ← ha, ← hb, Fin.mul_def]
 #align tactic.norm_fin.normalize_fin.mul Tactic.NormFin.NormalizeFin.mul
 
 theorem NormalizeFin.bit0 {n} {a : Fin n} {a' : ℕ} (h : NormalizeFin n a a') :
@@ -108,27 +108,27 @@ theorem NormalizeFin.bit1 {n : ℕ} [NeZero n] {a : Fin n} {a' : ℕ} (h : Norma
 
 theorem NormalizeFinLt.succ {n} {a : Fin n} {a' b : ℕ} (h : NormalizeFinLt n a a')
     (e : a' + 1 = b) : NormalizeFinLt n.succ (Fin.succ a) b := by
-  simpa [normalize_fin_lt, ← e] using h
+  simpa [NormalizeFinLt, ← e] using h
 #align tactic.norm_fin.normalize_fin_lt.succ Tactic.NormFin.NormalizeFinLt.succ
 
 theorem NormalizeFinLt.castLt {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.castLt a ha) a' := by simpa [normalize_fin_lt] using h
+    NormalizeFinLt n (Fin.castLt a ha) a' := by simpa [NormalizeFinLt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_lt Tactic.NormFin.NormalizeFinLt.castLt
 
 theorem NormalizeFinLt.castLe {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.castLe nm a) a' := by simpa [normalize_fin_lt] using h
+    NormalizeFinLt n (Fin.castLe nm a) a' := by simpa [NormalizeFinLt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLe
 
 theorem NormalizeFinLt.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.cast nm a) a' := by simpa [normalize_fin_lt] using h
+    NormalizeFinLt n (Fin.cast nm a) a' := by simpa [NormalizeFinLt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast Tactic.NormFin.NormalizeFinLt.cast
 
 theorem NormalizeFin.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin m a a') :
-    NormalizeFin n (Fin.cast nm a) a' := by convert ← normalize_fin_lt.cast h
+    NormalizeFin n (Fin.cast nm a) a' := by convert ← NormalizeFinLt.cast h
 #align tactic.norm_fin.normalize_fin.cast Tactic.NormFin.NormalizeFin.cast
 
 theorem NormalizeFinLt.castAdd {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
-    NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [normalize_fin_lt] using h
+    NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [NormalizeFinLt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_add Tactic.NormFin.NormalizeFinLt.castAdd
 
 theorem NormalizeFinLt.castSucc {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
@@ -138,17 +138,17 @@ theorem NormalizeFinLt.castSucc {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n
 
 theorem NormalizeFinLt.addNat {n m m'} (hm : m = m') {a : Fin n} {a' b : ℕ}
     (h : NormalizeFinLt n a a') (e : a' + m' = b) : NormalizeFinLt (n + m) (@Fin.addNat n m a) b :=
-  by simpa [normalize_fin_lt, ← e, ← hm] using h
+  by simpa [NormalizeFinLt, ← e, ← hm] using h
 #align tactic.norm_fin.normalize_fin_lt.add_nat Tactic.NormFin.NormalizeFinLt.addNat
 
 theorem NormalizeFinLt.natAdd {n m n'} (hn : n = n') {a : Fin m} {a' b : ℕ}
     (h : NormalizeFinLt m a a') (e : n' + a' = b) : NormalizeFinLt (n + m) (@Fin.natAdd n m a) b :=
-  by simpa [normalize_fin_lt, ← e, ← hn] using h
+  by simpa [NormalizeFinLt, ← e, ← hn] using h
 #align tactic.norm_fin.normalize_fin_lt.nat_add Tactic.NormFin.NormalizeFinLt.natAdd
 
 theorem NormalizeFin.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
     (h : NormalizeFin n a a') (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by
-  rwa [← e2, ← e1, ← hn, normalize_fin, add_comm, Nat.add_mul_mod_self_left] at h
+  rwa [← e2, ← e1, ← hn, NormalizeFin, add_comm, Nat.add_mul_mod_self_left] at h
 #align tactic.norm_fin.normalize_fin.reduce Tactic.NormFin.NormalizeFin.reduce
 
 theorem NormalizeFinLt.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
@@ -164,12 +164,12 @@ theorem NormalizeFin.eq {n} {a b : Fin n} {c : ℕ} (ha : NormalizeFin n a c)
 
 theorem NormalizeFin.lt {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFinLt n b b') (h : a' < b') : a < b := by
-  have ha' := normalize_fin_lt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
+  have ha' := NormalizeFinLt.mk rfl ha (h.trans hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 #align tactic.norm_fin.normalize_fin.lt Tactic.NormFin.NormalizeFin.lt
 
 theorem NormalizeFin.le {n} {a b : Fin n} {a' b' : ℕ} (ha : NormalizeFin n a a')
     (hb : NormalizeFinLt n b b') (h : a' ≤ b') : a ≤ b := by
-  have ha' := normalize_fin_lt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
+  have ha' := NormalizeFinLt.mk rfl ha (h.trans_lt hb.lt) <;> rwa [← hb.coe, ← ha'.coe] at h
 #align tactic.norm_fin.normalize_fin.le Tactic.NormFin.NormalizeFin.le
 
 /-- The monad for the `norm_fin` internal tactics. The state consists of an instance cache for `ℕ`,
@@ -222,7 +222,7 @@ unsafe def eval_fin_m.eval_n (n : expr) : eval_fin_m (ℕ × expr × expr) :=
     match r with
     | none => do
       let (n', p) ← or_refl_conv norm_num.derive n
-      let nn ← n'.toNat
+      let nn ← n'.to_nat
       let np := (nn, n', p)
       pure (np, ic, some np)
     | some np => pure (np, ic, some np)⟩
@@ -597,16 +597,16 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
       |
         q( $ ( a ) = $ ( b ) )
         =>
-        do let ( n , Eq , p ) ← prove_eq_ne_fin a b if Eq then true_intro p else false_intro p
+        do let ( n , eq , p ) ← prove_eq_ne_fin a b if eq then true_intro p else false_intro p
       | q( $ ( a ) > $ ( b ) ) => mk_app ` ` LT.lt [ b , a ] >>= eval_ineq
       | q( $ ( a ) ≥ $ ( b ) ) => mk_app ` ` LE.le [ b , a ] >>= eval_ineq
       |
         q( $ ( a ) ≠ $ ( b ) )
         =>
         do
-          let ( n , Eq , p ) ← prove_eq_ne_fin a b
+          let ( n , eq , p ) ← prove_eq_ne_fin a b
             if
-              Eq
+              eq
               then
               false_intro q( not_not_intro ( $ ( p ) : ( $ ( a ) : Fin $ ( n ) ) = $ ( b ) ) )
               else
@@ -617,11 +617,11 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
 /-- Evaluates `e : fin n` to a natural number less than `n`. Returns `none` if it is not a natural
 number or greater than `n`. -/
 unsafe def as_numeral (n e : expr) : eval_fin_m (Option ℕ) :=
-  match e.toNat with
+  match e.to_nat with
   | none => pure none
-  | some Ne => do
+  | some ne => do
     let (nn, _) ← eval_fin_m.eval_n n
-    pure <| if Ne < nn then some Ne else none
+    pure <| if ne < nn then some ne else none
 #align tactic.norm_fin.as_numeral tactic.norm_fin.as_numeral
 
 /-- Given `a : fin n`, returns `(b, ⊢ a = b)` where `b` is a normalized fin numeral. Fails if `a`

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Andrew Yang, Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.homology.short_exact.abelian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,11 @@ def Splitting.mk' (h : ShortExact f g) (i : B ⟶ A ⊞ C) (h1 : f ≫ i = bipro
   Iso := by
     refine' @as_iso _ _ _ _ i (id _)
     refine'
-      is_iso_of_short_exact_of_is_iso_of_is_iso h _ _ _ _ (h1.trans (category.id_comp _).symm).symm
-        (h2.trans (category.comp_id _).symm)
+      isIso_of_shortExact_of_isIso_of_isIso h _ _ _ _ (h1.trans (Category.id_comp _).symm).symm
+        (h2.trans (Category.comp_id _).symm)
     constructor
     apply exact_inl_snd
-  comp_iso_eq_inl := by rwa [as_iso_hom]
+  comp_iso_eq_inl := by rwa [asIso_hom]
   iso_comp_snd_eq := h2
 #align category_theory.splitting.mk' CategoryTheory.Splitting.mk'
 
@@ -79,31 +79,31 @@ def Splitting.mk'' (h : ShortExact f g) (i : A ⊞ C ⟶ B) (h1 : biprod.inl ≫
   Iso := by
     refine' (@as_iso _ _ _ _ i (id _)).symm
     refine'
-      is_iso_of_short_exact_of_is_iso_of_is_iso _ h _ _ _ (h1.trans (category.id_comp _).symm).symm
-        (h2.trans (category.comp_id _).symm)
+      isIso_of_shortExact_of_isIso_of_isIso _ h _ _ _ (h1.trans (Category.id_comp _).symm).symm
+        (h2.trans (Category.comp_id _).symm)
     constructor
     apply exact_inl_snd
-  comp_iso_eq_inl := by rw [iso.symm_hom, as_iso_inv, is_iso.comp_inv_eq, h1]
-  iso_comp_snd_eq := by rw [iso.symm_hom, as_iso_inv, is_iso.inv_comp_eq, h2]
+  comp_iso_eq_inl := by rw [Iso.symm_hom, asIso_inv, IsIso.comp_inv_eq, h1]
+  iso_comp_snd_eq := by rw [Iso.symm_hom, asIso_inv, IsIso.inv_comp_eq, h2]
 #align category_theory.splitting.mk'' CategoryTheory.Splitting.mk''
 
 /-- A short exact sequence that is left split admits a splitting. -/
 def LeftSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : LeftSplit f g) : Splitting f g :=
-  Splitting.mk' h.ShortExact (biprod.lift h.LeftSplit.some g)
+  Splitting.mk' h.shortExact (biprod.lift h.leftSplit.choose g)
     (by
       ext
-      · simpa only [biprod.inl_fst, biprod.lift_fst, category.assoc] using h.left_split.some_spec
-      · simp only [biprod.inl_snd, biprod.lift_snd, category.assoc, h.exact.w])
+      · simpa only [biprod.inl_fst, biprod.lift_fst, Category.assoc] using h.left_split.some_spec
+      · simp only [biprod.inl_snd, biprod.lift_snd, Category.assoc, h.exact.w])
     (by simp only [biprod.lift_snd])
 #align category_theory.left_split.splitting CategoryTheory.LeftSplit.splitting
 
 /-- A short exact sequence that is right split admits a splitting. -/
 def RightSplit.splitting {f : A ⟶ B} {g : B ⟶ C} (h : RightSplit f g) : Splitting f g :=
-  Splitting.mk'' h.ShortExact (biprod.desc f h.RightSplit.some) (biprod.inl_desc _ _)
+  Splitting.mk'' h.shortExact (biprod.desc f h.rightSplit.choose) (biprod.inl_desc _ _)
     (by
       ext
-      · rw [biprod.inl_snd, ← category.assoc, biprod.inl_desc, h.exact.w]
-      · rw [biprod.inr_snd, ← category.assoc, biprod.inr_desc, h.right_split.some_spec])
+      · rw [biprod.inl_snd, ← Category.assoc, biprod.inl_desc, h.exact.w]
+      · rw [biprod.inr_snd, ← Category.assoc, biprod.inr_desc, h.right_split.some_spec])
 #align category_theory.right_split.splitting CategoryTheory.RightSplit.splitting
 
 end CategoryTheory

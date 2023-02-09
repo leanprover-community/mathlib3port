@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,9 +78,9 @@ theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M)
   by_cases h : i = j
   · subst h
     rw [charmatrix_apply_eq, coeff_sub]
-    simp only [coeff_X, coeff_C]
+    simp only [coeff_x, coeff_c]
     split_ifs <;> simp
-  · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
+  · rw [charmatrix_apply_ne _ _ _ h, coeff_x, coeff_neg, coeff_c, coeff_c]
     split_ifs <;> simp [h]
 #align mat_poly_equiv_charmatrix matPolyEquiv_charmatrix
 
@@ -129,7 +129,7 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   -- is sent to zero, because the evaluation function puts the polynomial variable
   -- to the right of any coefficients, so everything telescopes.
   apply_fun fun p => p.eval M  at h
-  rw [eval_mul_X_sub_C] at h
+  rw [eval_mul_x_sub_c] at h
   -- Now $χ_M (t) I$, when thought of as a polynomial of matrices
   -- and evaluated at some `N` is exactly $χ_M (N)$.
   rw [matPolyEquiv_smul_one, eval_map] at h

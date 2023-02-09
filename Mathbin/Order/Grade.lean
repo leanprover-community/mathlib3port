@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Violeta Hernández Palacios, Grayson Burton, Vladimir Ivanov
 
 ! This file was ported from Lean 3 source module order.grade
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,7 +231,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align grade_mono grade_monoₓ'. -/
 -- graded order
 theorem grade_mono [PartialOrder α] [GradeOrder 𝕆 α] : Monotone (grade 𝕆 : α → 𝕆) :=
-  grade_strictMono.Monotone
+  grade_strictMono.monotone
 #align grade_mono grade_mono
 
 section LinearOrder
@@ -246,7 +246,7 @@ but is expected to have type
   forall {𝕆 : Type.{u1}} {α : Type.{u2}} [_inst_1 : LinearOrder.{u2} α] [_inst_2 : Preorder.{u1} 𝕆] [_inst_3 : GradeOrder.{u1, u2} 𝕆 α _inst_2 (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1)))))], Function.Injective.{succ u2, succ u1} α 𝕆 (grade.{u1, u2} 𝕆 α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α (instDistribLattice.{u2} α _inst_1))))) _inst_2 _inst_3)
 Case conversion may be inaccurate. Consider using '#align grade_injective grade_injectiveₓ'. -/
 theorem grade_injective : Function.Injective (grade 𝕆 : α → 𝕆) :=
-  grade_strictMono.Injective
+  grade_strictMono.injective
 #align grade_injective grade_injective
 
 /- warning: grade_le_grade_iff -> grade_le_grade_iff is a dubious translation:
@@ -521,7 +521,7 @@ def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder 
   GradeMinOrder.liftLeft (_ : Fin n → ℕ) Fin.val_strictMono (fun _ _ => Covby.coe_fin) fun a h =>
     by
     cases n
-    · exact ((@Fin.elim0 fun _ => False) <| grade (Fin 0) a).elim
+    · exact ((@fin.elim0 fun _ => False) <| grade (Fin 0) a).elim
     rw [h.eq_bot, Fin.bot_eq_zero]
     exact isMin_bot
 #align grade_min_order.fin_to_nat GradeMinOrder.finToNat

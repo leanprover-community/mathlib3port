@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ protected theorem coe_neg_one : ((-1 : αˣ) : α) = -1 :=
 #align units.coe_neg_one Units.coe_neg_one
 
 instance : HasDistribNeg αˣ :=
-  Units.ext.HasDistribNeg _ Units.val_neg Units.val_mul
+  Units.ext.hasDistribNeg _ Units.val_neg Units.val_mul
 
 /- warning: units.neg_divp -> Units.neg_divp is a dubious translation:
 lean 3 declaration is
@@ -157,7 +157,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Monoid.{u1} α] [_inst_2 : HasDistribNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1))] {a : α}, (IsUnit.{u1} α _inst_1 a) -> (IsUnit.{u1} α _inst_1 (Neg.neg.{u1} α (InvolutiveNeg.toNeg.{u1} α (HasDistribNeg.toInvolutiveNeg.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_1)) _inst_2)) a))
 Case conversion may be inaccurate. Consider using '#align is_unit.neg IsUnit.negₓ'. -/
 theorem IsUnit.neg [Monoid α] [HasDistribNeg α] {a : α} : IsUnit a → IsUnit (-a)
-  | ⟨x, hx⟩ => hx ▸ (-x).IsUnit
+  | ⟨x, hx⟩ => hx ▸ (-x).isUnit
 #align is_unit.neg IsUnit.neg
 
 /- warning: is_unit.neg_iff -> IsUnit.neg_iff is a dubious translation:
@@ -193,7 +193,7 @@ Case conversion may be inaccurate. Consider using '#align units.divp_add_divp Un
 theorem divp_add_divp [CommRing α] (a b : α) (u₁ u₂ : αˣ) :
     a /ₚ u₁ + b /ₚ u₂ = (a * u₂ + u₁ * b) /ₚ (u₁ * u₂) :=
   by
-  simp only [divp, add_mul, mul_inv_rev, coe_mul]
+  simp only [divp, add_mul, mul_inv_rev, val_mul]
   rw [mul_comm (↑u₁ * b), mul_comm b]
   assoc_rw [mul_inv, mul_inv, mul_one, mul_one]
 #align units.divp_add_divp Units.divp_add_divp

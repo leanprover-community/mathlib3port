@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ theorem continuous_reflTransSymmAux : Continuous reflTransSymmAux :=
 
 theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I :=
   by
-  dsimp only [refl_trans_symm_aux]
+  dsimp only [reflTransSymmAux]
   split_ifs
   · constructor
     · apply mul_nonneg
@@ -89,10 +89,10 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
     where
   toFun x := p ⟨reflTransSymmAux x, reflTransSymmAux_mem_I x⟩
   continuous_toFun := by continuity
-  map_zero_left' := by norm_num [refl_trans_symm_aux]
+  map_zero_left' := by norm_num [reflTransSymmAux]
   map_one_left' x :=
     by
-    dsimp only [refl_trans_symm_aux, Path.coe_toContinuousMap, Path.trans]
+    dsimp only [reflTransSymmAux, Path.coe_toContinuousMap, Path.trans]
     change _ = ite _ _ _
     split_ifs
     · rw [Path.extend, Set.IccExtend_of_mem]
@@ -108,10 +108,10 @@ def reflTransSymm (p : Path x₀ x₁) : Homotopy (Path.refl x₀) (p.trans p.sy
   prop' t x hx := by
     cases hx
     · rw [hx]
-      simp [refl_trans_symm_aux]
+      simp [reflTransSymmAux]
     · rw [Set.mem_singleton_iff] at hx
       rw [hx]
-      norm_num [refl_trans_symm_aux]
+      norm_num [reflTransSymmAux]
 #align path.homotopy.refl_trans_symm Path.Homotopy.reflTransSymm
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₁` to
@@ -144,10 +144,10 @@ theorem transReflReparamAux_mem_I (t : I) : transReflReparamAux t ∈ I :=
   split_ifs <;> constructor <;> linarith [unitInterval.le_one t, unitInterval.nonneg t]
 #align path.homotopy.trans_refl_reparam_aux_mem_I Path.Homotopy.transReflReparamAux_mem_I
 
-theorem transReflReparamAux_zero : transReflReparamAux 0 = 0 := by norm_num [trans_refl_reparam_aux]
+theorem transReflReparamAux_zero : transReflReparamAux 0 = 0 := by norm_num [transReflReparamAux]
 #align path.homotopy.trans_refl_reparam_aux_zero Path.Homotopy.transReflReparamAux_zero
 
-theorem transReflReparamAux_one : transReflReparamAux 1 = 1 := by norm_num [trans_refl_reparam_aux]
+theorem transReflReparamAux_one : transReflReparamAux 1 = 1 := by norm_num [transReflReparamAux]
 #align path.homotopy.trans_refl_reparam_aux_one Path.Homotopy.transReflReparamAux_one
 
 theorem trans_refl_reparam (p : Path x₀ x₁) :
@@ -192,7 +192,7 @@ theorem continuous_transAssocReparamAux : Continuous transAssocReparamAux := by
   refine'
         continuous_if_le _ _ (Continuous.continuousOn _)
           (continuous_if_le _ _ (Continuous.continuousOn _) (Continuous.continuousOn _)
-              _).ContinuousOn
+              _).continuousOn
           _ <;>
       [continuity, continuity, continuity, continuity, continuity, continuity, continuity, skip,
       skip] <;>
@@ -206,12 +206,10 @@ theorem transAssocReparamAux_mem_I (t : I) : transAssocReparamAux t ∈ I :=
   split_ifs <;> constructor <;> linarith [unitInterval.le_one t, unitInterval.nonneg t]
 #align path.homotopy.trans_assoc_reparam_aux_mem_I Path.Homotopy.transAssocReparamAux_mem_I
 
-theorem transAssocReparamAux_zero : transAssocReparamAux 0 = 0 := by
-  norm_num [trans_assoc_reparam_aux]
+theorem transAssocReparamAux_zero : transAssocReparamAux 0 = 0 := by norm_num [transAssocReparamAux]
 #align path.homotopy.trans_assoc_reparam_aux_zero Path.Homotopy.transAssocReparamAux_zero
 
-theorem transAssocReparamAux_one : transAssocReparamAux 1 = 1 := by
-  norm_num [trans_assoc_reparam_aux]
+theorem transAssocReparamAux_one : transAssocReparamAux 1 = 1 := by norm_num [transAssocReparamAux]
 #align path.homotopy.trans_assoc_reparam_aux_one Path.Homotopy.transAssocReparamAux_one
 
 theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
@@ -221,7 +219,7 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
         (Subtype.ext transAssocReparamAux_zero) (Subtype.ext transAssocReparamAux_one) :=
   by
   ext
-  simp only [trans_assoc_reparam_aux, Path.trans_apply, mul_inv_cancel_left₀, not_le,
+  simp only [transAssocReparamAux, Path.trans_apply, mul_inv_cancel_left₀, not_le,
     Function.comp_apply, Ne.def, not_false_iff, bit0_eq_zero, one_ne_zero, mul_ite, Subtype.coe_mk,
     Path.coe_to_fun]
   -- TODO: why does split_ifs not reduce the ifs??????

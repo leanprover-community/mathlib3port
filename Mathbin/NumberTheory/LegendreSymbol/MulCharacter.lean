@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.mul_character
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ theorem coe_toUnitHom (χ : MulChar R R') (a : Rˣ) : ↑(χ.toUnitHom a) = χ a
 /-- Turn a homomorphism between unit groups into a `mul_char`. -/
 noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     where
-  toFun := by classical exact fun x => if hx : IsUnit x then f hx.Unit else 0
+  toFun := by classical exact fun x => if hx : IsUnit x then f hx.unit else 0
   map_one' := by
     have h1 : (is_unit_one.unit : Rˣ) = 1 := units.eq_iff.mp rfl
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
@@ -213,7 +213,7 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
       · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
         by_cases hy : IsUnit y
         · simp only [hy, dif_pos]
-          have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
+          have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).unit = hx.unit * hy.unit := units.eq_iff.mp rfl
           rw [hm, map_mul]
           norm_cast
         · simp only [hy, not_false_iff, dif_neg, mul_zero]
@@ -223,7 +223,7 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
 
-theorem ofUnitHom_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : of_unit_hom f ↑a = f a := by simp [of_unit_hom]
+theorem ofUnitHom_coe (f : Rˣ →* R'ˣ) (a : Rˣ) : of_unit_hom f ↑a = f a := by simp [ofUnitHom]
 #align mul_char.of_unit_hom_coe MulChar.ofUnitHom_coe
 
 /-- The equivalence between multiplicative characters and homomorphisms of unit groups. -/
@@ -234,11 +234,11 @@ noncomputable def equivToUnitHom : MulChar R R' ≃ (Rˣ →* R'ˣ)
   left_inv := by
     intro χ
     ext x
-    rw [of_unit_hom_coe, coe_to_unit_hom]
+    rw [ofUnitHom_coe, coe_toUnitHom]
   right_inv := by
     intro f
     ext x
-    rw [coe_to_unit_hom, of_unit_hom_coe]
+    rw [coe_toUnitHom, ofUnitHom_coe]
 #align mul_char.equiv_to_unit_hom MulChar.equivToUnitHom
 
 @[simp]
@@ -359,12 +359,12 @@ theorem inv_apply {R : Type u} [CommMonoidWithZero R] (χ : MulChar R R') (a : R
   · rw [inv_apply_eq_inv]
     have h := IsUnit.map χ ha
     apply_fun (· * ·) (χ a) using IsUnit.mul_right_injective h
-    rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, MulChar.map_one]
+    rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, mul_char.map_one]
   · revert ha
     nontriviality R
     intro ha
     -- `nontriviality R` by itself doesn't do it
-    rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
+    rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, mul_char.map_zero χ]
 #align mul_char.inv_apply MulChar.inv_apply
 
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
@@ -378,7 +378,7 @@ theorem inv_apply' {R : Type u} [Field R] (χ : MulChar R R') (a : R) : χ⁻¹ 
 theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 :=
   by
   ext x
-  rw [coe_to_fun_mul, Pi.mul_apply, inv_apply_eq_inv,
+  rw [coeToFun_mul, Pi.mul_apply, inv_apply_eq_inv,
     Ring.inverse_mul_cancel _ (IsUnit.map _ x.is_unit), one_apply_coe]
 #align mul_char.inv_mul MulChar.inv_mul
 
@@ -386,7 +386,7 @@ theorem inv_mul (χ : MulChar R R') : χ⁻¹ * χ = 1 :=
 noncomputable instance commGroup : CommGroup (MulChar R R') :=
   { one := 1
     mul := (· * ·)
-    inv := Inv.inv
+    inv := has_inv.inv
     mul_left_inv := inv_mul
     mul_assoc := by
       intro χ₁ χ₂ χ₃
@@ -447,7 +447,7 @@ def IsNontrivial (χ : MulChar R R') : Prop :=
 
 /-- A multiplicative character is nontrivial iff it is not the trivial character. -/
 theorem isNontrivial_iff (χ : MulChar R R') : χ.IsNontrivial ↔ χ ≠ 1 := by
-  simp only [is_nontrivial, Ne.def, ext_iff, not_forall, one_apply_coe]
+  simp only [IsNontrivial, Ne.def, ext_iff, not_forall, one_apply_coe]
 #align mul_char.is_nontrivial_iff MulChar.isNontrivial_iff
 
 /-- A multiplicative character is *quadratic* if it takes only the values `0`, `1`, `-1`. -/
@@ -478,7 +478,7 @@ theorem IsNontrivial.comp {χ : MulChar R R'} (hχ : χ.IsNontrivial) {f : R' �
   by
   obtain ⟨a, ha⟩ := hχ
   use a
-  rw [ring_hom_comp_apply, ← RingHom.map_one f]
+  rw [ringHomComp_apply, ← RingHom.map_one f]
   exact fun h => ha (hf h)
 #align mul_char.is_nontrivial.comp MulChar.IsNontrivial.comp
 
@@ -515,7 +515,7 @@ theorem IsQuadratic.pow_char {χ : MulChar R R'} (hχ : χ.IsQuadratic) (p : ℕ
   ext x
   rw [pow_apply_coe]
   rcases hχ x with (hx | hx | hx) <;> rw [hx]
-  · rw [zero_pow (Fact.out p.prime).Pos]
+  · rw [zero_pow (Fact.out p.prime).pos]
   · rw [one_pow]
   · exact CharP.neg_one_pow_char R' p
 #align mul_char.is_quadratic.pow_char MulChar.IsQuadratic.pow_char
@@ -555,7 +555,7 @@ theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] :
   calc
     (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 :=
       Finset.sum_congr rfl fun a _ => _
-    _ = ((Finset.univ : Finset R).filterₓ IsUnit).card := Finset.sum_boole
+    _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
     _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
     

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alex J. Best
 
 ! This file was ported from Lean 3 source module measure_theory.group.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,6 +45,6 @@ theorem MeasurableSet.const_smul₀ {G₀ α : Type _} [GroupWithZero G₀] [Zer
     [MeasurableSingletonClass α] {s : Set α} (hs : MeasurableSet s) (a : G₀) :
     MeasurableSet (a • s) := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  exacts[(subsingleton_zero_smul_set s).MeasurableSet, hs.const_smul_of_ne_zero ha]
+  exacts[(subsingleton_zero_smul_set s).measurableSet, hs.const_smul_of_ne_zero ha]
 #align measurable_set.const_smul₀ MeasurableSet.const_smul₀
 

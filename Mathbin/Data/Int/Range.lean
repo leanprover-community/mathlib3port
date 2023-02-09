@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kenny Lau
 
 ! This file was ported from Lean 3 source module data.int.range
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,15 +43,15 @@ theorem mem_range_iff {m n r : ℤ} : r ∈ range m n ↔ m ≤ r ∧ r < n :=
       ⟨le_add_of_nonneg_right (ofNat_zero_le s),
         add_lt_of_lt_sub_left <|
           match n - m, h1 with
-          | (k : ℕ), h1 => by rwa [List.mem_range, to_nat_coe_nat, ← coe_nat_lt] at h1⟩,
+          | (k : ℕ), h1 => by rwa [List.mem_range, toNat_coe_nat, ← ofNat_lt] at h1⟩,
     fun ⟨h1, h2⟩ =>
     List.mem_map'.2
       ⟨toNat (r - m),
         List.mem_range.2 <| by
-          rw [← coe_nat_lt, to_nat_of_nonneg (sub_nonneg_of_le h1),
-              to_nat_of_nonneg (sub_nonneg_of_le (le_of_lt (lt_of_le_of_lt h1 h2)))] <;>
+          rw [← ofNat_lt, toNat_of_nonneg (sub_nonneg_of_le h1),
+              toNat_of_nonneg (sub_nonneg_of_le (le_of_lt (lt_of_le_of_lt h1 h2)))] <;>
             exact sub_lt_sub_right h2 _,
-        show m + _ = _ by rw [to_nat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
+        show m + _ = _ by rw [toNat_of_nonneg (sub_nonneg_of_le h1), add_sub_cancel'_right]⟩⟩
 #align int.mem_range_iff Int.mem_range_iff
 -/
 

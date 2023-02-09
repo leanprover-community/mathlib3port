@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module algebra.category.Semigroup.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ namespace CategoryTheory.Iso
       "Build an `add_equiv` from an isomorphism in the category\n`AddMagma`."]
 def magmaIsoToMulEquiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y
     where
-  toFun := i.Hom
+  toFun := i.hom
   invFun := i.inv
   left_inv x := by simp
   right_inv y := by simp
@@ -233,7 +233,7 @@ def magmaIsoToMulEquiv {X Y : Magma} (i : X ≅ Y) : X ≃* Y
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddSemigroup`."]
 def semigroupIsoToMulEquiv {X Y : SemigroupCat} (i : X ≅ Y) : X ≃* Y
     where
-  toFun := i.Hom
+  toFun := i.hom
   invFun := i.inv
   left_inv x := by simp
   right_inv y := by simp
@@ -270,9 +270,9 @@ def mulEquivIsoSemigroupIso {X Y : Type u} [Semigroup X] [Semigroup Y] :
 instance Magma.forget_reflects_isos : ReflectsIsomorphisms (forget Magma.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget Magma).map f)
+    let i := asIso ((forget Magma).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Magma_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Magma_iso).1⟩
 #align Magma.forget_reflects_isos Magma.forget_reflects_isos
 #align AddMagma.forget_reflects_isos AddMagma.forget_reflects_isos
 
@@ -280,9 +280,9 @@ instance Magma.forget_reflects_isos : ReflectsIsomorphisms (forget Magma.{u})
 instance SemigroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget SemigroupCat.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget SemigroupCat).map f)
+    let i := asIso ((forget SemigroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Semigroup_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Semigroup_iso).1⟩
 #align Semigroup.forget_reflects_isos SemigroupCat.forget_reflects_isos
 #align AddSemigroup.forget_reflects_isos AddSemigroupCat.forget_reflects_isos
 

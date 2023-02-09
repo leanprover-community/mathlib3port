@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.lift
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
     ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
   classical
-    refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (Ne i), funext _⟩
+    refine' ⟨fun i => if hi : p i then f ⟨i, hi⟩ else Classical.choice (ne i), funext _⟩
     rintro ⟨i, hi⟩
     exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
@@ -187,14 +187,14 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
                     e
                       =>
                       interactive.rw
-                        ⟨ [ ⟨ ⟨ 0 , 0 ⟩ , tt , pexpr.of_expr e ⟩ ] , none ⟩ Interactive.Loc.wildcard
+                        ⟨ [ ⟨ ⟨ 0 , 0 ⟩ , tt , pexpr.of_expr e ⟩ ] , none ⟩ interactive.loc.wildcard
                 )
           if
             h_prf_nm
             :
             prf_nm ∧ n 2 ≠ prf_nm
             then
-            get_local ( Option.get h_prf_nm . 1 ) >>= clear
+            get_local ( option.get h_prf_nm . 1 ) >>= clear
             else
             skip
           if b then skip else swap

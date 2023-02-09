@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.colimit_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,14 +74,14 @@ noncomputable def colimitLimitToLimitColimit :
                     naturality' := by
                       dsimp
                       intro k k' f
-                      simp only [functor.comp_map, curry_obj_map_app, limits.lim_map_π_assoc,
-                        swap_map, category.comp_id, map_id_left_eq_curry_map, colimit.w] } }
+                      simp only [Functor.comp_map, curry_obj_map_app, Limits.limMap_π_assoc,
+                        swap_map, Category.comp_id, map_id_left_eq_curry_map, colimit.w] } }
           naturality' := by
             dsimp
             intro j j' f
             ext k
-            simp only [limits.colimit.ι_map, curry_obj_map_app, limits.colimit.ι_desc_assoc,
-              limits.colimit.ι_desc, category.id_comp, category.assoc,
+            simp only [Limits.colimit.ι_map, curry_obj_map_app, Limits.colimit.ι_desc_assoc,
+              Limits.colimit.ι_desc, Category.id_comp, Category.assoc,
               map_id_right_eq_curry_swap_map, limit.w_assoc] } }
 #align category_theory.limits.colimit_limit_to_limit_colimit CategoryTheory.Limits.colimitLimitToLimitColimit
 
@@ -93,7 +93,7 @@ theorem ι_colimitLimitToLimitColimit_π (j) (k) :
     colimit.ι _ k ≫ colimitLimitToLimitColimit F ≫ limit.π _ j =
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
   by
-  dsimp [colimit_limit_to_limit_colimit]
+  dsimp [colimitLimitToLimitColimit]
   simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π
 
@@ -103,7 +103,7 @@ theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (
         (colimitLimitToLimitColimit F (colimit.ι (curry.obj (swap K J ⋙ F) ⋙ lim) k f)) =
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by
-  dsimp [colimit_limit_to_limit_colimit]
+  dsimp [colimitLimitToLimitColimit]
   simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply
 
@@ -113,19 +113,19 @@ noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G
     colim.mapCone (Limit.cone G) ⟶ Limit.cone (G ⋙ colim)
     where
   Hom :=
-    colim.map (limitIsoSwapCompLim G).Hom ≫
+    colim.map (limitIsoSwapCompLim G).hom ≫
       colimitLimitToLimitColimit (uncurry.obj G : _) ≫
         lim.map (whiskerRight (currying.unitIso.app G).inv colim)
   w' j := by
     ext1 k
-    simp only [limit_obj_iso_limit_comp_evaluation_hom_π_assoc, iso.app_inv,
-      ι_colimit_limit_to_limit_colimit_π_assoc, whisker_right_app, colimit.ι_map,
-      functor.map_cone_π_app, category.id_comp, eq_to_hom_refl, eq_to_hom_app, colimit.ι_map_assoc,
-      limit.cone_π, lim_map_π_assoc, lim_map_π, category.assoc, currying_unit_iso_inv_app_app_app,
-      limit_iso_swap_comp_lim_hom_app, lim_map_eq_lim_map]
+    simp only [limitObjIsoLimitCompEvaluation_hom_π_assoc, Iso.app_inv,
+      ι_colimitLimitToLimitColimit_π_assoc, whiskerRight_app, colimit.ι_map, Functor.mapCone_π_app,
+      Category.id_comp, eqToHom_refl, eqToHom_app, colimit.ι_map_assoc, limit.cone_π,
+      limMap_π_assoc, limMap_π, Category.assoc, currying_unitIso_inv_app_app_app,
+      limitIsoSwapCompLim_hom_app, limMap_eq_limMap]
     dsimp
-    simp only [category.id_comp]
-    erw [limit_obj_iso_limit_comp_evaluation_hom_π_assoc]
+    simp only [Category.id_comp]
+    erw [limitObjIsoLimitCompEvaluation_hom_π_assoc]
 #align category_theory.limits.colimit_limit_to_limit_colimit_cone CategoryTheory.Limits.colimitLimitToLimitColimitCone
 
 end CategoryTheory.Limits

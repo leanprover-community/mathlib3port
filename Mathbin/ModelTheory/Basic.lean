@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jesse Michael Han, Floris van Doorn
 
 ! This file was ported from Lean 3 source module model_theory.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ instance {n : ℕ} : IsEmpty (Sequence₂ a₀ a₁ a₂ (n + 3)) :=
 theorem lift_mk {i : ℕ} :
     Cardinal.lift (#Sequence₂ a₀ a₁ a₂ i) = (#Sequence₂ (ULift a₀) (ULift a₁) (ULift a₂) i) := by
   rcases i with (_ | _ | _ | i) <;>
-    simp only [sequence₂, mk_ulift, mk_fintype, Fintype.card_of_isEmpty, Nat.cast_zero, lift_zero]
+    simp only [Sequence₂, mk_uLift, mk_fintype, Fintype.card_of_isEmpty, Nat.cast_zero, lift_zero]
 #align first_order.sequence₂.lift_mk FirstOrder.Sequence₂.lift_mk
 
 @[simp]
@@ -176,7 +176,7 @@ theorem card_eq_card_functions_add_card_relations :
     L.card =
       (Cardinal.sum fun l => Cardinal.lift.{v} (#L.Functions l)) +
         Cardinal.sum fun l => Cardinal.lift.{u} (#L.Relations l) :=
-  by simp [card, symbols]
+  by simp [card, Symbols]
 #align first_order.language.card_eq_card_functions_add_card_relations FirstOrder.Language.card_eq_card_functions_add_card_relations
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
@@ -202,11 +202,11 @@ instance isAlgebraic_empty : IsAlgebraic Language.empty :=
   Language.isAlgebraic_of_empty_relations
 #align first_order.language.is_algebraic_empty FirstOrder.Language.isAlgebraic_empty
 
-instance isRelational_sum [L.IsRelational] [L'.IsRelational] : IsRelational (L.Sum L') :=
+instance isRelational_sum [L.IsRelational] [L'.IsRelational] : IsRelational (L.sum L') :=
   ⟨fun n => Sum.isEmpty⟩
 #align first_order.language.is_relational_sum FirstOrder.Language.isRelational_sum
 
-instance isAlgebraic_sum [L.IsAlgebraic] [L'.IsAlgebraic] : IsAlgebraic (L.Sum L') :=
+instance isAlgebraic_sum [L.IsAlgebraic] [L'.IsAlgebraic] : IsAlgebraic (L.sum L') :=
   ⟨fun n => Sum.isEmpty⟩
 #align first_order.language.is_algebraic_sum FirstOrder.Language.isAlgebraic_sum
 
@@ -242,7 +242,7 @@ theorem empty_card : Language.empty.card = 0 := by simp [card_eq_card_functions_
 
 instance isEmpty_empty : IsEmpty Language.empty.Symbols :=
   by
-  simp only [language.symbols, isEmpty_sum, isEmpty_sigma]
+  simp only [Language.Symbols, isEmpty_sum, isEmpty_sigma]
   exact ⟨fun _ => inferInstance, fun _ => inferInstance⟩
 #align first_order.language.is_empty_empty FirstOrder.Language.isEmpty_empty
 
@@ -252,19 +252,19 @@ instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σ
 
 @[simp]
 theorem card_functions_sum (i : ℕ) :
-    (#(L.Sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by
-  simp [language.sum]
+    (#(L.sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by
+  simp [Language.sum]
 #align first_order.language.card_functions_sum FirstOrder.Language.card_functions_sum
 
 @[simp]
 theorem card_relations_sum (i : ℕ) :
-    (#(L.Sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by
-  simp [language.sum]
+    (#(L.sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by
+  simp [Language.sum]
 #align first_order.language.card_relations_sum FirstOrder.Language.card_relations_sum
 
 @[simp]
 theorem card_sum :
-    (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card :=
+    (L.sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card :=
   by
   simp only [card_eq_card_functions_add_card_relations, card_functions_sum, card_relations_sum,
     sum_add_distrib', lift_add, lift_sum, lift_lift]
@@ -561,7 +561,7 @@ namespace Embedding
 instance embeddingLike : EmbeddingLike (M ↪[L] N) M N
     where
   coe f := f.toFun
-  injective' f := f.toEmbedding.Injective
+  injective' f := f.toEmbedding.injective
   coe_injective' f g h := by
     cases f
     cases g
@@ -626,7 +626,7 @@ theorem ext_iff {f g : M ↪[L] N} : f = g ↔ ∀ x, f x = g x :=
 #align first_order.language.embedding.ext_iff FirstOrder.Language.Embedding.ext_iff
 
 theorem injective (f : M ↪[L] N) : Function.Injective f :=
-  f.toEmbedding.Injective
+  f.toEmbedding.injective
 #align first_order.language.embedding.injective FirstOrder.Language.Embedding.injective
 
 /-- In an algebraic language, any injective homomorphism is an embedding. -/
@@ -672,7 +672,7 @@ theorem refl_apply (x : M) : refl L M x = x :=
 def comp (hnp : N ↪[L] P) (hmn : M ↪[L] N) : M ↪[L] P
     where
   toFun := hnp ∘ hmn
-  inj' := hnp.Injective.comp hmn.Injective
+  inj' := hnp.injective.comp hmn.injective
 #align first_order.language.embedding.comp FirstOrder.Language.Embedding.comp
 
 @[simp]
@@ -691,7 +691,7 @@ theorem comp_toHom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
     (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom :=
   by
   ext
-  simp only [coe_to_hom, comp_apply, hom.comp_apply]
+  simp only [coe_toHom, comp_apply, Hom.comp_apply]
 #align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_toHom
 
 end Embedding
@@ -866,7 +866,7 @@ section SumStructure
 
 variable (L₁ L₂ : Language) (S : Type _) [L₁.Structure S] [L₂.Structure S]
 
-instance sumStructure : (L₁.Sum L₂).Structure S
+instance sumStructure : (L₁.sum L₂).Structure S
     where
   funMap n := Sum.elim funMap funMap
   rel_map n := Sum.elim RelMap RelMap
@@ -876,25 +876,25 @@ variable {L₁ L₂ S}
 
 @[simp]
 theorem funMap_sum_inl {n : ℕ} (f : L₁.Functions n) :
-    @funMap (L₁.Sum L₂) S _ n (Sum.inl f) = funMap f :=
+    @funMap (L₁.sum L₂) S _ n (Sum.inl f) = funMap f :=
   rfl
 #align first_order.language.fun_map_sum_inl FirstOrder.Language.funMap_sum_inl
 
 @[simp]
 theorem funMap_sum_inr {n : ℕ} (f : L₂.Functions n) :
-    @funMap (L₁.Sum L₂) S _ n (Sum.inr f) = funMap f :=
+    @funMap (L₁.sum L₂) S _ n (Sum.inr f) = funMap f :=
   rfl
 #align first_order.language.fun_map_sum_inr FirstOrder.Language.funMap_sum_inr
 
 @[simp]
 theorem relMap_sum_inl {n : ℕ} (R : L₁.Relations n) :
-    @RelMap (L₁.Sum L₂) S _ n (Sum.inl R) = RelMap R :=
+    @RelMap (L₁.sum L₂) S _ n (Sum.inl R) = RelMap R :=
   rfl
 #align first_order.language.rel_map_sum_inl FirstOrder.Language.relMap_sum_inl
 
 @[simp]
 theorem relMap_sum_inr {n : ℕ} (R : L₂.Relations n) :
-    @RelMap (L₁.Sum L₂) S _ n (Sum.inr R) = RelMap R :=
+    @RelMap (L₁.sum L₂) S _ n (Sum.inr R) = RelMap R :=
   rfl
 #align first_order.language.rel_map_sum_inr FirstOrder.Language.relMap_sum_inr
 

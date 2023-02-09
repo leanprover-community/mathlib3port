@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.ordinal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,28 +45,28 @@ noncomputable def toPgame : Ordinal.{u} → Pgame.{u}
 
 theorem toPgame_def (o : Ordinal) :
     o.toPgame = ⟨o.out.α, PEmpty, fun x => (typein (· < ·) x).toPgame, PEmpty.elim⟩ := by
-  rw [to_pgame]
+  rw [toPgame]
 #align ordinal.to_pgame_def Ordinal.toPgame_def
 
 @[simp]
 theorem toPgame_leftMoves (o : Ordinal) : o.toPgame.LeftMoves = o.out.α := by
-  rw [to_pgame, left_moves]
+  rw [toPgame, LeftMoves]
 #align ordinal.to_pgame_left_moves Ordinal.toPgame_leftMoves
 
 @[simp]
 theorem toPgame_rightMoves (o : Ordinal) : o.toPgame.RightMoves = PEmpty := by
-  rw [to_pgame, right_moves]
+  rw [toPgame, RightMoves]
 #align ordinal.to_pgame_right_moves Ordinal.toPgame_rightMoves
 
 instance isEmpty_zero_toPgame_leftMoves : IsEmpty (toPgame 0).LeftMoves :=
   by
-  rw [to_pgame_left_moves]
+  rw [toPgame_leftMoves]
   infer_instance
 #align ordinal.is_empty_zero_to_pgame_left_moves Ordinal.isEmpty_zero_toPgame_leftMoves
 
 instance isEmpty_toPgame_rightMoves (o : Ordinal) : IsEmpty o.toPgame.RightMoves :=
   by
-  rw [to_pgame_right_moves]
+  rw [toPgame_rightMoves]
   infer_instance
 #align ordinal.is_empty_to_pgame_right_moves Ordinal.isEmpty_toPgame_rightMoves
 
@@ -79,13 +79,13 @@ noncomputable def toLeftMovesToPgame {o : Ordinal} : Set.Iio o ≃ o.toPgame.Lef
 @[simp]
 theorem toLeftMovesToPgame_symm_lt {o : Ordinal} (i : o.toPgame.LeftMoves) :
     ↑(toLeftMovesToPgame.symm i) < o :=
-  (toLeftMovesToPgame.symm i).Prop
+  (toLeftMovesToPgame.symm i).prop
 #align ordinal.to_left_moves_to_pgame_symm_lt Ordinal.toLeftMovesToPgame_symm_lt
 
 theorem toPgame_moveLeft_hEq {o : Ordinal} :
     HEq o.toPgame.moveLeft fun x : o.out.α => (typein (· < ·) x).toPgame :=
   by
-  rw [to_pgame]
+  rw [toPgame]
   rfl
 #align ordinal.to_pgame_move_left_heq Ordinal.toPgame_moveLeft_hEq
 
@@ -125,20 +125,20 @@ theorem one_toPgame_moveLeft (x) : (toPgame 1).moveLeft x = toPgame 0 := by simp
 /-- `1.to_pgame` has the same moves as `1`. -/
 noncomputable def oneToPgameRelabelling : toPgame 1 ≡r 1 :=
   ⟨Equiv.equivOfUnique _ _, Equiv.equivOfIsEmpty _ _, fun i => by
-    simpa using zero_to_pgame_relabelling, isEmptyElim⟩
+    simpa using zeroToPgameRelabelling, isEmptyElim⟩
 #align ordinal.one_to_pgame_relabelling Ordinal.oneToPgameRelabelling
 
 theorem toPgame_lf {a b : Ordinal} (h : a < b) : a.toPgame ⧏ b.toPgame :=
   by
-  convert move_left_lf (to_left_moves_to_pgame ⟨a, h⟩)
-  rw [to_pgame_move_left]
+  convert moveLeft_lf (toLeftMovesToPgame ⟨a, h⟩)
+  rw [toPgame_moveLeft]
 #align ordinal.to_pgame_lf Ordinal.toPgame_lf
 
 theorem toPgame_le {a b : Ordinal} (h : a ≤ b) : a.toPgame ≤ b.toPgame :=
   by
   refine' le_iff_forall_lf.2 ⟨fun i => _, isEmptyElim⟩
-  rw [to_pgame_move_left']
-  exact to_pgame_lf ((to_left_moves_to_pgame_symm_lt i).trans_le h)
+  rw [toPgame_move_left']
+  exact toPgame_lf ((toLeftMovesToPgame_symm_lt i).trans_le h)
 #align ordinal.to_pgame_le Ordinal.toPgame_le
 
 theorem toPgame_lt {a b : Ordinal} (h : a < b) : a.toPgame < b.toPgame :=
@@ -154,7 +154,7 @@ theorem toPgame_lf_iff {a b : Ordinal} : a.toPgame ⧏ b.toPgame ↔ a < b :=
   ⟨by
     contrapose
     rw [not_lt, not_lf]
-    exact to_pgame_le, toPgame_lf⟩
+    exact toPgame_le, toPgame_lf⟩
 #align ordinal.to_pgame_lf_iff Ordinal.toPgame_lf_iff
 
 @[simp]
@@ -162,7 +162,7 @@ theorem toPgame_le_iff {a b : Ordinal} : a.toPgame ≤ b.toPgame ↔ a ≤ b :=
   ⟨by
     contrapose
     rw [not_le, Pgame.not_le]
-    exact to_pgame_lf, toPgame_le⟩
+    exact toPgame_lf, toPgame_le⟩
 #align ordinal.to_pgame_le_iff Ordinal.toPgame_le_iff
 
 @[simp]
@@ -170,12 +170,12 @@ theorem toPgame_lt_iff {a b : Ordinal} : a.toPgame < b.toPgame ↔ a < b :=
   ⟨by
     contrapose
     rw [not_lt]
-    exact fun h => not_lt_of_le (to_pgame_le h), toPgame_lt⟩
+    exact fun h => not_lt_of_le (toPgame_le h), toPgame_lt⟩
 #align ordinal.to_pgame_lt_iff Ordinal.toPgame_lt_iff
 
 @[simp]
 theorem toPgame_equiv_iff {a b : Ordinal} : (a.toPgame ≈ b.toPgame) ↔ a = b := by
-  rw [Pgame.Equiv, le_antisymm_iff, to_pgame_le_iff, to_pgame_le_iff]
+  rw [Pgame.Equiv, le_antisymm_iff, toPgame_le_iff, toPgame_le_iff]
 #align ordinal.to_pgame_equiv_iff Ordinal.toPgame_equiv_iff
 
 theorem toPgame_injective : Function.Injective Ordinal.toPgame := fun a b h =>
@@ -201,19 +201,19 @@ theorem toPgame_add : ∀ a b : Ordinal.{u}, a.toPgame + b.toPgame ≈ (a ♯ b)
   | a, b =>
     by
     refine' ⟨le_of_forall_lf (fun i => _) isEmptyElim, le_of_forall_lf (fun i => _) isEmptyElim⟩
-    · apply left_moves_add_cases i <;> intro i <;> let wf := to_left_moves_to_pgame_symm_lt i <;>
-            try rw [add_move_left_inl] <;> try rw [add_move_left_inr] <;>
-        rw [to_pgame_move_left', lf_congr_left (to_pgame_add _ _), to_pgame_lf_iff]
+    · apply leftMoves_add_cases i <;> intro i <;> let wf := toLeftMovesToPgame_symm_lt i <;>
+            try rw [add_moveLeft_inl] <;> try rw [add_moveLeft_inr] <;>
+        rw [toPgame_move_left', lf_congr_left (to_pgame_add _ _), toPgame_lf_iff]
       · exact nadd_lt_nadd_right wf _
       · exact nadd_lt_nadd_left wf _
-    · rw [to_pgame_move_left']
-      rcases lt_nadd_iff.1 (to_left_moves_to_pgame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
-          rw [← to_pgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc' <;>
+    · rw [toPgame_move_left']
+      rcases lt_nadd_iff.1 (toLeftMovesToPgame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
+          rw [← toPgame_le_iff, ← le_congr_right (to_pgame_add _ _)] at hc' <;>
         apply lf_of_le_of_lf hc'
       · apply add_lf_add_right
-        rwa [to_pgame_lf_iff]
+        rwa [toPgame_lf_iff]
       · apply add_lf_add_left
-        rwa [to_pgame_lf_iff]decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
+        rwa [toPgame_lf_iff]decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.to_pgame_add Ordinal.toPgame_add
 
 @[simp]

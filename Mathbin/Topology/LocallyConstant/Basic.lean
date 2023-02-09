@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.locally_constant.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ lean 3 declaration is
 but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] (f : X -> Y), List.TFAE (List.cons.{0} Prop (IsLocallyConstant.{u2, u1} X Y _inst_1 f) (List.cons.{0} Prop (forall (x : X), Filter.Eventually.{u2} X (fun (x' : X) => Eq.{succ u1} Y (f x') (f x)) (nhds.{u2} X _inst_1 x)) (List.cons.{0} Prop (forall (x : X), IsOpen.{u2} X _inst_1 (setOf.{u2} X (fun (x' : X) => Eq.{succ u1} Y (f x') (f x)))) (List.cons.{0} Prop (forall (y : Y), IsOpen.{u2} X _inst_1 (Set.preimage.{u2, u1} X Y f (Singleton.singleton.{u1, u1} Y (Set.{u1} Y) (Set.instSingletonSet.{u1} Y) y))) (List.cons.{0} Prop (forall (x : X), Exists.{succ u2} (Set.{u2} X) (fun (U : Set.{u2} X) => And (IsOpen.{u2} X _inst_1 U) (And (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x U) (forall (x' : X), (Membership.mem.{u2, u2} X (Set.{u2} X) (Set.instMembershipSet.{u2} X) x' U) -> (Eq.{succ u1} Y (f x') (f x)))))) (List.nil.{0} Prop))))))
 Case conversion may be inaccurate. Consider using '#align is_locally_constant.tfae IsLocallyConstant.tfaeₓ'. -/
-protected theorem tfae (f : X → Y) :
+protected theorem tfae (f : List → Y) :
     TFAE
       [IsLocallyConstant f, ∀ x, ∀ᶠ x' in 𝓝 x, f x' = f x, ∀ x, IsOpen { x' | f x' = f x },
         ∀ y, IsOpen (f ⁻¹' {y}),
@@ -67,12 +67,12 @@ protected theorem tfae (f : X → Y) :
   tfae_have 2 → 5
   · intro h x
     rcases mem_nhds_iff.1 (h x) with ⟨U, eq, hU, hx⟩
-    exact ⟨U, hU, hx, Eq⟩
+    exact ⟨U, hU, hx, eq⟩
   tfae_have 5 → 1
   · intro h s
-    refine' isOpen_iff_forall_mem_open.2 fun x hx => _
+    refine' min_def.2 fun x hx => _
     rcases h x with ⟨U, hU, hxU, eq⟩
-    exact ⟨U, fun x' hx' => mem_preimage.2 <| (Eq x' hx').symm ▸ hx, hU, hxU⟩
+    exact ⟨U, fun x' hx' => mem_preimage.2 <| (eq x' hx').symm ▸ hx, hU, hxU⟩
   tfae_finish
 #align is_locally_constant.tfae IsLocallyConstant.tfae
 
@@ -211,7 +211,7 @@ Case conversion may be inaccurate. Consider using '#align is_locally_constant.pr
 theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f)
     (hf' : IsLocallyConstant f') : IsLocallyConstant fun x => (f x, f' x) :=
   (iff_eventually_eq _).2 fun x =>
-    (hf.EventuallyEq x).mp <| (hf'.EventuallyEq x).mono fun x' hf' hf => Prod.ext hf hf'
+    (hf.eventually_eq x).mp <| (hf'.eventually_eq x).mono fun x' hf' hf => Prod.ext hf hf'
 #align is_locally_constant.prod_mk IsLocallyConstant.prod_mk
 
 /- warning: is_locally_constant.comp₂ -> IsLocallyConstant.comp₂ is a dubious translation:
@@ -510,13 +510,13 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : TopologicalSpace.{u1} Y] (f : LocallyConstant.{u2, u1} X Y _inst_1), Continuous.{u2, u1} X Y _inst_1 _inst_2 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X Y _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.2185 : X) => Y) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X Y _inst_1) f)
 Case conversion may be inaccurate. Consider using '#align locally_constant.continuous LocallyConstant.continuousₓ'. -/
 protected theorem continuous : Continuous f :=
-  f.IsLocallyConstant.Continuous
+  f.isLocallyConstant.continuous
 #align locally_constant.continuous LocallyConstant.continuous
 
 #print LocallyConstant.toContinuousMap /-
 /-- We can turn a locally-constant function into a bundled `continuous_map`. -/
 def toContinuousMap : C(X, Y) :=
-  ⟨f, f.Continuous⟩
+  ⟨f, f.continuous⟩
 #align locally_constant.to_continuous_map LocallyConstant.toContinuousMap
 -/
 
@@ -612,8 +612,8 @@ theorem ofClopen_fiber_zero {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({0} : Set (Fin 2)) = U :=
   by
   ext
-  simp only [of_clopen, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage,
-    ite_eq_left_iff, Nat.succ_succ_ne_one]
+  simp only [False, mem_singleton_iff, Fin.one_eq_zero_iff, coe_mk, mem_preimage, ite_eq_left_iff,
+    Nat.succ_succ_ne_one]
   tauto
 #align locally_constant.of_clopen_fiber_zero LocallyConstant.ofClopen_fiber_zero
 
@@ -628,7 +628,7 @@ theorem ofClopen_fiber_one {X : Type _} [TopologicalSpace X] {U : Set X} [∀ x,
     (hU : IsClopen U) : ofClopen hU ⁻¹' ({1} : Set (Fin 2)) = Uᶜ :=
   by
   ext
-  simp only [of_clopen, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage,
+  simp only [ofClopen, mem_singleton_iff, coe_mk, Fin.zero_eq_one_iff, mem_preimage,
     ite_eq_right_iff, mem_compl_iff, Nat.succ_succ_ne_one]
   tauto
 #align locally_constant.of_clopen_fiber_one LocallyConstant.ofClopen_fiber_one
@@ -654,7 +654,7 @@ but is expected to have type
   forall {X : Type.{u2}} {Y : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} X] [_inst_2 : CompactSpace.{u2} X _inst_1] (f : LocallyConstant.{u2, u1} X Y _inst_1), Set.Finite.{u1} Y (Set.range.{u1, succ u2} Y X (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LocallyConstant.{u2, u1} X Y _inst_1) X (fun (_x : X) => (fun (x._@.Mathlib.Topology.LocallyConstant.Basic._hyg.2185 : X) => Y) _x) (LocallyConstant.instFunLikeLocallyConstant.{u2, u1} X Y _inst_1) f))
 Case conversion may be inaccurate. Consider using '#align locally_constant.range_finite LocallyConstant.range_finiteₓ'. -/
 theorem range_finite [CompactSpace X] (f : LocallyConstant X Y) : (Set.range f).Finite :=
-  f.IsLocallyConstant.range_finite
+  f.isLocallyConstant.range_finite
 #align locally_constant.range_finite LocallyConstant.range_finite
 
 /- warning: locally_constant.apply_eq_of_is_preconnected -> LocallyConstant.apply_eq_of_isPreconnected is a dubious translation:
@@ -665,7 +665,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.apply_eq_of_is_preconnected LocallyConstant.apply_eq_of_isPreconnectedₓ'. -/
 theorem apply_eq_of_isPreconnected (f : LocallyConstant X Y) {s : Set X} (hs : IsPreconnected s)
     {x y : X} (hx : x ∈ s) (hy : y ∈ s) : f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_isPreconnected hs hx hy
+  f.isLocallyConstant.apply_eq_of_isPreconnected hs hx hy
 #align locally_constant.apply_eq_of_is_preconnected LocallyConstant.apply_eq_of_isPreconnected
 
 /- warning: locally_constant.apply_eq_of_preconnected_space -> LocallyConstant.apply_eq_of_preconnectedSpace is a dubious translation:
@@ -676,7 +676,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnectedSpaceₓ'. -/
 theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] (f : LocallyConstant X Y) (x y : X) :
     f x = f y :=
-  f.IsLocallyConstant.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial
+  f.isLocallyConstant.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial
 #align locally_constant.apply_eq_of_preconnected_space LocallyConstant.apply_eq_of_preconnectedSpace
 
 /- warning: locally_constant.eq_const -> LocallyConstant.eq_const is a dubious translation:
@@ -775,7 +775,7 @@ def unflip {X α β : Type _} [Fintype α] [TopologicalSpace X] (f : α → Loca
     rw [this]
     apply isOpen_interᵢ
     intro a
-    apply (f a).IsLocallyConstant
+    apply (f a).isLocallyConstant
 #align locally_constant.unflip LocallyConstant.unflip
 
 /- warning: locally_constant.unflip_flip -> LocallyConstant.unflip_flip is a dubious translation:
@@ -819,7 +819,7 @@ This definition only makes sense if `f` is continuous,
 in which case it sends locally constant functions to their precomposition with `f`.
 See also `locally_constant.coe_comap`. -/
 noncomputable def comap (f : X → Y) : LocallyConstant Y Z → LocallyConstant X Z :=
-  if hf : Continuous f then fun g => ⟨g ∘ f, g.IsLocallyConstant.comp_continuous hf⟩
+  if hf : Continuous f then fun g => ⟨g ∘ f, g.isLocallyConstant.comp_continuous hf⟩
   else by
     by_cases H : Nonempty X
     · intro g
@@ -982,7 +982,7 @@ Case conversion may be inaccurate. Consider using '#align locally_constant.mul_i
 @[to_additive]
 theorem mulIndicator_of_mem (hU : IsClopen U) (h : a ∈ U) : f.mulIndicator hU a = f a :=
   by
-  rw [mul_indicator_apply]
+  rw [mulIndicator_apply]
   apply Set.mulIndicator_of_mem h
 #align locally_constant.mul_indicator_of_mem LocallyConstant.mulIndicator_of_mem
 #align locally_constant.indicator_of_mem LocallyConstant.indicator_of_mem
@@ -996,7 +996,7 @@ Case conversion may be inaccurate. Consider using '#align locally_constant.mul_i
 @[to_additive]
 theorem mulIndicator_of_not_mem (hU : IsClopen U) (h : a ∉ U) : f.mulIndicator hU a = 1 :=
   by
-  rw [mul_indicator_apply]
+  rw [mulIndicator_apply]
   apply Set.mulIndicator_of_not_mem h
 #align locally_constant.mul_indicator_of_not_mem LocallyConstant.mulIndicator_of_not_mem
 #align locally_constant.indicator_of_not_mem LocallyConstant.indicator_of_not_mem

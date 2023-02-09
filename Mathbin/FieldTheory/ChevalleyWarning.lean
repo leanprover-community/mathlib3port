@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.chevalley_warning
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
   intro x₀
   let e : K ≃ { x // x ∘ coe = x₀ } := (Equiv.subtypeEquivCodomain _).symm
   calc
-    (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) =
+    (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d Mem) =
         ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
       (e.sum_comp _).symm
     _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := Fintype.sum_congr _ _ _
@@ -169,7 +169,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
   -- It remains to verify the crucial assumption of this machine
   show F.total_degree < (q - 1) * Fintype.card σ
   calc
-    F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := total_degree_finset_prod s _
+    F.total_degree ≤ ∑ i in s, (1 - f i ^ (q - 1)).totalDegree := totalDegree_finset_prod s _
     _ ≤ ∑ i in s, (q - 1) * (f i).totalDegree := sum_le_sum fun i hi => _
     -- see ↓
         _ =
@@ -182,9 +182,9 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
   calc
     (1 - f i ^ (q - 1)).totalDegree ≤
         max (1 : MvPolynomial σ K).totalDegree (f i ^ (q - 1)).totalDegree :=
-      total_degree_sub _ _
-    _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, total_degree_one]
-    _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
+      totalDegree_sub _ _
+    _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, totalDegree_one]
+    _ ≤ (q - 1) * (f i).totalDegree := totalDegree_pow _ _
     
 #align char_dvd_card_solutions_of_sum_lt char_dvd_card_solutions_of_sum_lt
 

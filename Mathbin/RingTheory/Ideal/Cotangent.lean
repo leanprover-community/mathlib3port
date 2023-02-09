@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.cotangent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ instance : IsScalarTower S S' I.Cotangent :=
   delta cotangent
   constructor
   intro s s' x
-  rw [← @IsScalarTower.algebraMap_smul S' R, ← @IsScalarTower.algebraMap_smul S' R, ← smul_assoc, ←
-    IsScalarTower.toAlgHom_apply S S' R, map_smul]
+  rw [← @is_scalar_tower.algebra_map_smul S' R, ← @is_scalar_tower.algebra_map_smul S' R, ←
+    smul_assoc, ← IsScalarTower.toAlgHom_apply S S' R, map_smul]
   rfl
 
 instance [IsNoetherian R I] : IsNoetherian R I.Cotangent :=
@@ -66,7 +66,7 @@ def toCotangent : I →ₗ[R] I.Cotangent :=
   Submodule.mkq _
 #align ideal.to_cotangent Ideal.toCotangent
 
-theorem map_toCotangent_ker : I.toCotangent.ker.map I.Subtype = I ^ 2 := by
+theorem map_toCotangent_ker : I.toCotangent.ker.map I.subtype = I ^ 2 := by
   simp [Ideal.toCotangent, Submodule.map_smul'', pow_two]
 #align ideal.map_to_cotangent_ker Ideal.map_toCotangent_ker
 
@@ -104,12 +104,12 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
     exact fun e =>
       ⟨fun x y =>
         Quotient.inductionOn₂' x y fun x y =>
-          I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.Prop y.Prop⟩
+          I.to_cotangent_eq.mpr <| ((pow_two I).trans e).symm ▸ I.sub_mem x.prop y.prop⟩
 #align ideal.cotangent_subsingleton_iff Ideal.cotangent_subsingleton_iff
 
 /-- The inclusion map `I ⧸ I ^ 2` to `R ⧸ I ^ 2`. -/
 def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
-  Submodule.mapq (I • ⊤) (I ^ 2) I.Subtype
+  Submodule.mapq (I • ⊤) (I ^ 2) I.subtype
     (by
       rw [← Submodule.map_le_iff_le_comap, Submodule.map_smul'', Submodule.map_top,
         Submodule.range_subtype, smul_eq_mul, pow_two]
@@ -130,7 +130,7 @@ theorem toCotangent_to_quotient_square (x : I) :
 /-- `I ⧸ I ^ 2` as an ideal of `R ⧸ I ^ 2`. -/
 def cotangentIdeal (I : Ideal R) : Ideal (R ⧸ I ^ 2) :=
   by
-  haveI : @RingHomSurjective R (R ⧸ I ^ 2) _ _ _ := ⟨Ideal.Quotient.mk_surjective⟩
+  haveI : @ring_hom_surjective R (R ⧸ I ^ 2) _ _ _ := ⟨Ideal.Quotient.mk_surjective⟩
   let rq := I ^ 2
   exact Submodule.map rq.to_semilinear_map I
 #align ideal.cotangent_ideal Ideal.cotangentIdeal
@@ -153,7 +153,7 @@ theorem to_quotient_square_range :
   by
   trans (I.cotangent_to_quotient_square.comp I.to_cotangent).range
   · rw [LinearMap.range_comp, I.to_cotangent_range, Submodule.map_top]
-  · rw [to_quotient_square_comp_to_cotangent, LinearMap.range_comp, I.range_subtype]
+  · rw [to_quotient_square_comp_toCotangent, LinearMap.range_comp, I.range_subtype]
     ext
     rfl
 #align ideal.to_quotient_square_range Ideal.to_quotient_square_range
@@ -174,7 +174,7 @@ noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :
     obtain ⟨x, rfl⟩ := I.to_cotangent_surjective x
     obtain ⟨y, rfl⟩ := I.to_cotangent_surjective y
     rw [I.to_cotangent_eq]
-    dsimp only [to_cotangent_to_quotient_square, Submodule.mkq_apply] at e
+    dsimp only [toCotangent_to_quotient_square, Submodule.mkq_apply] at e
     rwa [Submodule.Quotient.eq] at e
   · rintro ⟨_, x, hx, rfl⟩
     refine' ⟨I.to_cotangent ⟨x, hx⟩, Subtype.ext rfl⟩

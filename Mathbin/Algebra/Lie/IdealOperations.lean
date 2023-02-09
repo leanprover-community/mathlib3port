@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.ideal_operations
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,16 +90,16 @@ theorem lieIdeal_oper_eq_linear_span :
         rw [lie_smul]
         exact Submodule.smul_mem _ t hm''
     change _ ≤ ↑({ Submodule.span R s with lie_mem := aux } : LieSubmodule R L M)
-    rw [coe_submodule_le_coe_submodule, lie_ideal_oper_eq_span, lie_span_le]
+    rw [coeSubmodule_le_coeSubmodule, lieIdeal_oper_eq_span, lieSpan_le]
     exact Submodule.subset_span
-  · rw [lie_ideal_oper_eq_span]
-    apply submodule_span_le_lie_span
+  · rw [lieIdeal_oper_eq_span]
+    apply submodule_span_le_lieSpan
 #align lie_submodule.lie_ideal_oper_eq_linear_span LieSubmodule.lieIdeal_oper_eq_linear_span
 
 theorem lieIdeal_oper_eq_linear_span' :
     (↑⁅I, N⁆ : Submodule R M) = Submodule.span R { m | ∃ x ∈ I, ∃ n ∈ N, ⁅x, n⁆ = m } :=
   by
-  rw [lie_ideal_oper_eq_linear_span]
+  rw [lieIdeal_oper_eq_linear_span]
   congr
   ext m
   constructor
@@ -111,7 +111,7 @@ theorem lieIdeal_oper_eq_linear_span' :
 
 theorem lie_le_iff : ⁅I, N⁆ ≤ N' ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅x, m⁆ ∈ N' :=
   by
-  rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le]
+  rw [lieIdeal_oper_eq_span, LieSubmodule.lieSpan_le]
   refine' ⟨fun h x hx m hm => h ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h _ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩
   exact h x hx m hm
@@ -119,8 +119,8 @@ theorem lie_le_iff : ⁅I, N⁆ ≤ N' ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅x, m⁆ 
 
 theorem lie_coe_mem_lie (x : I) (m : N) : ⁅(x : L), (m : M)⁆ ∈ ⁅I, N⁆ :=
   by
-  rw [lie_ideal_oper_eq_span]
-  apply subset_lie_span
+  rw [lieIdeal_oper_eq_span]
+  apply subset_lieSpan
   use x, m
 #align lie_submodule.lie_coe_mem_lie LieSubmodule.lie_coe_mem_lie
 
@@ -133,7 +133,7 @@ theorem lie_comm : ⁅I, J⁆ = ⁅J, I⁆ :=
   suffices ∀ I J : LieIdeal R L, ⁅I, J⁆ ≤ ⁅J, I⁆ by exact le_antisymm (this I J) (this J I)
   clear I J
   intro I J
-  rw [lie_ideal_oper_eq_span, lie_span_le]
+  rw [lieIdeal_oper_eq_span, lieSpan_le]
   rintro x ⟨y, z, h⟩
   rw [← h]
   rw [← lie_skew, ← lie_neg, ← LieSubmodule.coe_neg]
@@ -142,7 +142,7 @@ theorem lie_comm : ⁅I, J⁆ = ⁅J, I⁆ :=
 
 theorem lie_le_right : ⁅I, N⁆ ≤ N :=
   by
-  rw [lie_ideal_oper_eq_span, lie_span_le]; rintro m ⟨x, n, hn⟩; rw [← hn]
+  rw [lieIdeal_oper_eq_span, lieSpan_le]; rintro m ⟨x, n, hn⟩; rw [← hn]
   exact N.lie_mem n.property
 #align lie_submodule.lie_le_right LieSubmodule.lie_le_right
 
@@ -167,7 +167,7 @@ theorem lie_bot : ⁅I, (⊥ : LieSubmodule R L M)⁆ = ⊥ :=
 theorem bot_lie : ⁅(⊥ : LieIdeal R L), N⁆ = ⊥ :=
   by
   suffices ⁅(⊥ : LieIdeal R L), N⁆ ≤ ⊥ by exact le_bot_iff.mp this
-  rw [lie_ideal_oper_eq_span, lie_span_le]
+  rw [lieIdeal_oper_eq_span, lieSpan_le]
   rintro m ⟨⟨x, hx⟩, n, hn⟩
   rw [← hn]
   change x ∈ (⊥ : LieIdeal R L) at hx
@@ -177,7 +177,7 @@ theorem bot_lie : ⁅(⊥ : LieIdeal R L), N⁆ = ⊥ :=
 
 theorem lie_eq_bot_iff : ⁅I, N⁆ = ⊥ ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅(x : L), m⁆ = 0 :=
   by
-  rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_eq_bot_iff]
+  rw [lieIdeal_oper_eq_span, LieSubmodule.lieSpan_eq_bot_iff]
   refine' ⟨fun h x hx m hm => h ⁅x, m⁆ ⟨⟨x, hx⟩, ⟨m, hm⟩, rfl⟩, _⟩
   rintro h - ⟨⟨x, hx⟩, ⟨⟨n, hn⟩, rfl⟩⟩
   exact h x hx n hn
@@ -186,7 +186,7 @@ theorem lie_eq_bot_iff : ⁅I, N⁆ = ⊥ ↔ ∀ x ∈ I, ∀ m ∈ N, ⁅(x : 
 theorem mono_lie (h₁ : I ≤ J) (h₂ : N ≤ N') : ⁅I, N⁆ ≤ ⁅J, N'⁆ :=
   by
   intro m h
-  rw [lie_ideal_oper_eq_span, mem_lie_span] at h; rw [lie_ideal_oper_eq_span, mem_lie_span]
+  rw [lieIdeal_oper_eq_span, mem_lieSpan] at h; rw [lieIdeal_oper_eq_span, mem_lieSpan]
   intro N hN; apply h; rintro m' ⟨⟨x, hx⟩, ⟨n, hn⟩, hm⟩; rw [← hm]; apply hN
   use ⟨x, h₁ hx⟩, ⟨n, h₂ hn⟩; rfl
 #align lie_submodule.mono_lie LieSubmodule.mono_lie
@@ -208,7 +208,7 @@ theorem lie_sup : ⁅I, N ⊔ N'⁆ = ⁅I, N⁆ ⊔ ⁅I, N'⁆ :=
     constructor <;> apply mono_lie_right <;> [exact le_sup_left, exact le_sup_right]
   suffices ⁅I, N ⊔ N'⁆ ≤ ⁅I, N⁆ ⊔ ⁅I, N'⁆ by exact le_antisymm this h
   clear h
-  rw [lie_ideal_oper_eq_span, lie_span_le]
+  rw [lieIdeal_oper_eq_span, lieSpan_le]
   rintro m ⟨x, ⟨n, hn⟩, h⟩
   erw [LieSubmodule.mem_sup]
   erw [LieSubmodule.mem_sup] at hn
@@ -230,7 +230,7 @@ theorem sup_lie : ⁅I ⊔ J, N⁆ = ⁅I, N⁆ ⊔ ⁅J, N⁆ :=
     constructor <;> apply mono_lie_left <;> [exact le_sup_left, exact le_sup_right]
   suffices ⁅I ⊔ J, N⁆ ≤ ⁅I, N⁆ ⊔ ⁅J, N⁆ by exact le_antisymm this h
   clear h
-  rw [lie_ideal_oper_eq_span, lie_span_le]
+  rw [lieIdeal_oper_eq_span, lieSpan_le]
   rintro m ⟨⟨x, hx⟩, n, h⟩
   erw [LieSubmodule.mem_sup]
   erw [LieSubmodule.mem_sup] at hx
@@ -262,8 +262,8 @@ variable (f : M →ₗ⁅R,L⁆ M₂)
 
 theorem map_bracket_eq : map f ⁅I, N⁆ = ⁅I, map f N⁆ :=
   by
-  rw [← coe_to_submodule_eq_iff, coe_submodule_map, lie_ideal_oper_eq_linear_span,
-    lie_ideal_oper_eq_linear_span, Submodule.map_span]
+  rw [← coe_to_submodule_eq_iff, coeSubmodule_map, lieIdeal_oper_eq_linear_span,
+    lieIdeal_oper_eq_linear_span, Submodule.map_span]
   congr
   ext m
   constructor
@@ -369,10 +369,9 @@ theorem map_comap_incl {I₁ I₂ : LieIdeal R L} : map I₁.incl (comap I₁.in
 theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     comap f ⁅f.idealRange ⊓ J₁, f.idealRange ⊓ J₂⁆ = ⁅comap f J₁, comap f J₂⁆ ⊔ f.ker :=
   by
-  rw [← LieSubmodule.coe_to_submodule_eq_iff, comap_coe_submodule,
-    LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, ← Submodule.comap_map_eq,
-    LieSubmodule.lieIdeal_oper_eq_linear_span, LieSubmodule.lieIdeal_oper_eq_linear_span,
-    LinearMap.map_span]
+  rw [← LieSubmodule.coe_to_submodule_eq_iff, comap_coeSubmodule, LieSubmodule.sup_coe_to_submodule,
+    f.ker_coe_submodule, ← Submodule.comap_map_eq, LieSubmodule.lieIdeal_oper_eq_linear_span,
+    LieSubmodule.lieIdeal_oper_eq_linear_span, LinearMap.map_span]
   congr ; simp only [LieHom.coe_to_linearMap, Set.mem_setOf_eq]; ext y
   constructor
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩

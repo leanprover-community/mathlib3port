@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.hull
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem convexHull_eq_interᵢ : convexHull 𝕜 s = ⋂ (t : Set E) (hst : s �
 variable {𝕜 s} {t : Set E} {x y : E}
 
 theorem mem_convexHull_iff : x ∈ convexHull 𝕜 s ↔ ∀ t, s ⊆ t → Convex 𝕜 t → x ∈ t := by
-  simp_rw [convexHull_eq_interᵢ, mem_Inter]
+  simp_rw [convexHull_eq_interᵢ, mem_interᵢ]
 #align mem_convex_hull_iff mem_convexHull_iff
 
 theorem convexHull_min (hst : s ⊆ t) (ht : Convex 𝕜 t) : convexHull 𝕜 s ⊆ t :=
@@ -80,7 +80,7 @@ theorem Convex.convexHull_subset_iff (ht : Convex 𝕜 t) : convexHull 𝕜 s �
 
 @[mono]
 theorem convexHull_mono (hst : s ⊆ t) : convexHull 𝕜 s ⊆ convexHull 𝕜 t :=
-  (convexHull 𝕜).Monotone hst
+  (convexHull 𝕜).monotone hst
 #align convex_hull_mono convexHull_mono
 
 theorem Convex.convexHull_eq (hs : Convex 𝕜 s) : convexHull 𝕜 s = s :=
@@ -159,7 +159,7 @@ theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Con
   rintro hx
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}); · convert convex_convexHull 𝕜 _
   exact
-    subset.antisymm (subset_convexHull 𝕜 _) fun y hy =>
+    Subset.antisymm (subset_convexHull 𝕜 _) fun y hy =>
       ⟨convexHull_min (diff_subset _ _) hs hy,
         by
         rintro (rfl : y = x)
@@ -217,7 +217,7 @@ theorem AffineMap.image_convexHull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜
 #align affine_map.image_convex_hull AffineMap.image_convexHull
 
 theorem convexHull_subset_affineSpan : convexHull 𝕜 s ⊆ (affineSpan 𝕜 s : Set E) :=
-  convexHull_min (subset_affineSpan 𝕜 s) (affineSpan 𝕜 s).Convex
+  convexHull_min (subset_affineSpan 𝕜 s) (affineSpan 𝕜 s).convex
 #align convex_hull_subset_affine_span convexHull_subset_affineSpan
 
 @[simp]

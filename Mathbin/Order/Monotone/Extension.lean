@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.monotone.extension
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ theorem MonotoneOn.exists_monotone_extension (h : MonotoneOn f s) (hl : BddBelow
     rcases hl with ⟨a, ha⟩
     have hu' : ∀ x, BddAbove (f '' (Iic x ∩ s)) := fun x =>
       hu.mono (image_subset _ (inter_subset_right _ _))
-    set g : α → β := fun x => if Disjoint (Iic x) s then a else Sup (f '' (Iic x ∩ s))
-    have hgs : eq_on f g s := by
+    set g : α → β := fun x => if Disjoint (Iic x) s then a else supₛ (f '' (Iic x ∩ s))
+    have hgs : EqOn f g s := by
       intro x hx
       simp only [g]
       have : IsGreatest (Iic x ∩ s) x := ⟨⟨right_mem_Iic, hx⟩, fun y hy => hy.1⟩

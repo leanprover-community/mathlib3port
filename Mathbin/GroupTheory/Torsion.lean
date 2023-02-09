@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Berman
 
 ! This file was ported from Lean 3 source module group_theory.torsion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,8 +63,7 @@ def IsTorsion :=
 /-- A monoid is not a torsion monoid if it has an element of infinite order. -/
 @[simp,
   to_additive "An additive monoid is not a torsion monoid if it has an element of infinite order."]
-theorem not_isTorsion_iff : ¬IsTorsion G ↔ ∃ g : G, ¬IsOfFinOrder g := by
-  rw [is_torsion, not_forall]
+theorem not_isTorsion_iff : ¬IsTorsion G ↔ ∃ g : G, ¬IsOfFinOrder g := by rw [IsTorsion, not_forall]
 #align monoid.not_is_torsion_iff Monoid.not_isTorsion_iff
 #align add_monoid.not_is_torsion_iff AddMonoid.not_isTorsion_iff
 
@@ -210,7 +209,7 @@ variable {G}
 theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
   ⟨n, npos,
     Subtype.ext <| by
-      rw [mul_left_iterate, _root_.mul_one, [anonymous], Subtype.coe_mk, Submonoid.coe_one,
+      rw [mul_left_iterate, mul_one, [anonymous], Subtype.coe_mk, Submonoid.coe_one,
         (isPeriodicPt_mul_iff_pow_eq_one _).mp hn]⟩
 #align comm_monoid.torsion.is_torsion CommMonoid.torsion.isTorsion
 #align add_comm_monoid.add_torsion.is_torsion AddCommMonoid.addTorsion.is_torsion
@@ -244,7 +243,7 @@ variable {G} {p}
 /-- Elements of the `p`-primary component have order `p^n` for some `n`. -/
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_orderOf_eq_prime_pow (g : CommMonoid.primaryComponent G p) :
-    ∃ n : ℕ, orderOf g = p ^ n := by simpa [primary_component] using g.property
+    ∃ n : ℕ, orderOf g = p ^ n := by simpa [primaryComponent] using g.property
 #align comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow
 #align add_comm_monoid.primary_component.exists_order_of_eq_prime_nsmul AddCommMonoid.primaryComponent.exists_order_of_eq_prime_nsmul
 
@@ -357,7 +356,7 @@ def IsTorsionFree :=
 @[simp,
   to_additive "An additive monoid is not torsion free if any nontrivial element has finite order."]
 theorem not_isTorsionFree_iff : ¬IsTorsionFree G ↔ ∃ g : G, g ≠ 1 ∧ IsOfFinOrder g := by
-  simp_rw [is_torsion_free, Ne.def, not_forall, Classical.not_not, exists_prop]
+  simp_rw [IsTorsionFree, Ne.def, not_forall, Classical.not_not, exists_prop]
 #align monoid.not_is_torsion_free_iff Monoid.not_isTorsionFree_iff
 #align add_monoid.not_is_torsion_free_iff AddMonoid.not_isTorsionFree_iff
 
@@ -395,7 +394,7 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 @[to_additive "Subgroups of additive torsion-free groups are additively torsion-free."]
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H :=
   fun h hne =>
-  (isOfFinOrder_iff_coe H.toSubmonoid h).Not.mpr <|
+  (isOfFinOrder_iff_coe H.toSubmonoid h).not.mpr <|
     tG h <| by norm_cast <;> simp [hne, not_false_iff]
 #align is_torsion_free.subgroup IsTorsionFree.subgroup
 #align is_torsion_free.add_subgroup IsTorsionFree.add_subgroup

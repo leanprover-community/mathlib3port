@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.mul
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ norm equal to the norm of `a`. -/
 @[simp]
 theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
   by
-  rw [← Sup_closed_unit_ball_eq_nnnorm]
+  rw [← supₛ_closed_unit_ball_eq_nnnorm]
   refine' csupₛ_eq_of_forall_le_of_forall_lt_exists_gt _ _ fun r hr => _
   · exact (metric.nonempty_closed_ball.mpr zero_le_one).image _
   · rintro - ⟨x, hx, rfl⟩
@@ -54,7 +54,7 @@ norm eqaul to the norm of `a`. -/
 @[simp]
 theorem op_nnnorm_mul_flip : ‖(mul 𝕜 E).flip a‖₊ = ‖a‖₊ :=
   by
-  rw [← Sup_unit_ball_eq_nnnorm, ← nnnorm_star, ← @op_nnnorm_mul 𝕜 E, ← Sup_unit_ball_eq_nnnorm]
+  rw [← supₛ_unit_ball_eq_nnnorm, ← nnnorm_star, ← @op_nnnorm_mul 𝕜 E, ← supₛ_unit_ball_eq_nnnorm]
   congr 1
   simp only [mul_apply', flip_apply]
   refine' Set.Subset.antisymm _ _ <;> rintro - ⟨b, hb, rfl⟩ <;>

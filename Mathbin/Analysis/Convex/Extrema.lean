@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.convex.extrema
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn_Icc {f : ℝ → β} {a b : ℝ} (a_
     (h_local_min : IsLocalMinOn f (Icc a b) a) (h_conv : ConvexOn ℝ (Icc a b) f) :
     IsMinOn f (Icc a b) a := by
   rintro c hc
-  dsimp only [mem_set_of_eq]
+  dsimp only [mem_setOf_eq]
   rw [IsLocalMinOn, nhdsWithin_Icc_eq_nhdsWithin_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
   · exact le_rfl
@@ -62,8 +62,8 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn {f : E → β} {a : E} (a_in_s : a �
   have hg0 : g 0 = a := AffineMap.lineMap_apply_zero a x
   have hg1 : g 1 = x := AffineMap.lineMap_apply_one a x
   have hgc : Continuous g := AffineMap.lineMap_continuous
-  have h_maps : maps_to g (Icc 0 1) s := by
-    simpa only [maps_to', ← segment_eq_image_lineMap] using h_conv.1.segment_subset a_in_s x_in_s
+  have h_maps : MapsTo g (Icc 0 1) s := by
+    simpa only [mapsTo', ← segment_eq_image_lineMap] using h_conv.1.segment_subset a_in_s x_in_s
   have fg_local_min_on : IsLocalMinOn (f ∘ g) (Icc 0 1) 0 :=
     by
     rw [← hg0] at h_localmin
@@ -71,8 +71,8 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn {f : E → β} {a : E} (a_in_s : a �
   have fg_min_on : IsMinOn (f ∘ g) (Icc 0 1 : Set ℝ) 0 :=
     by
     refine' IsMinOn.of_isLocalMinOn_of_convexOn_Icc one_pos fg_local_min_on _
-    exact (h_conv.comp_affine_map g).Subset h_maps (convex_Icc 0 1)
-  simpa only [hg0, hg1, comp_app, mem_set_of_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
+    exact (h_conv.comp_affine_map g).subset h_maps (convex_Icc 0 1)
+  simpa only [hg0, hg1, comp_apply, mem_setOf_eq] using fg_min_on (right_mem_Icc.2 zero_le_one)
 #align is_min_on.of_is_local_min_on_of_convex_on IsMinOn.of_isLocalMinOn_of_convexOn
 
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module logic.equiv.option
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,26 +110,26 @@ private def remove_none_aux (x : α) : β :=
 
 private theorem remove_none_aux_some {x : α} (h : ∃ x', e (some x) = some x') :
     some (removeNoneAux e x) = e (some x) := by
-  simp [remove_none_aux, option.is_some_iff_exists.mpr h]
+  simp [removeNoneAux, option.is_some_iff_exists.mpr h]
 #align equiv.remove_none_aux_some equiv.remove_none_aux_some
 
 private theorem remove_none_aux_none {x : α} (h : e (some x) = none) :
     some (removeNoneAux e x) = e none := by
-  simp [remove_none_aux, option.not_is_some_iff_eq_none.mpr h]
+  simp [removeNoneAux, option.not_is_some_iff_eq_none.mpr h]
 #align equiv.remove_none_aux_none equiv.remove_none_aux_none
 
 private theorem remove_none_aux_inv (x : α) : removeNoneAux e.symm (removeNoneAux e x) = x :=
   Option.some_injective _
     (by
-      cases h1 : e.symm (some (remove_none_aux e x)) <;> cases h2 : e (some x)
-      · rw [remove_none_aux_none _ h1]
+      cases h1 : e.symm (some (removeNoneAux e x)) <;> cases h2 : e (some x)
+      · rw [removeNoneAux_none _ h1]
         exact (e.eq_symm_apply.mpr h2).symm
-      · rw [remove_none_aux_some _ ⟨_, h2⟩] at h1
+      · rw [removeNoneAux_some _ ⟨_, h2⟩] at h1
         simpa using h1
-      · rw [remove_none_aux_none _ h2] at h1
+      · rw [removeNoneAux_none _ h2] at h1
         simpa using h1
-      · rw [remove_none_aux_some _ ⟨_, h1⟩]
-        rw [remove_none_aux_some _ ⟨_, h2⟩]
+      · rw [removeNoneAux_some _ ⟨_, h1⟩]
+        rw [removeNoneAux_some _ ⟨_, h2⟩]
         simp)
 #align equiv.remove_none_aux_inv equiv.remove_none_aux_inv
 
@@ -183,9 +183,9 @@ theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
 theorem some_removeNone_iff {x : α} : some (removeNone e x) = e none ↔ e.symm none = some x :=
   by
   cases' h : e (some x) with a
-  · rw [remove_none_none _ h]
+  · rw [removeNone_none _ h]
     simpa using (congr_arg e.symm h).symm
-  · rw [remove_none_some _ ⟨a, h⟩]
+  · rw [removeNone_some _ ⟨a, h⟩]
     have := congr_arg e.symm h
     rw [symm_apply_apply] at this
     simp only [false_iff_iff, apply_eq_iff_eq]
@@ -201,7 +201,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.remove_none_option_congr Equiv.removeNone_optionCongrₓ'. -/
 @[simp]
 theorem removeNone_optionCongr (e : α ≃ β) : removeNone e.optionCongr = e :=
-  Equiv.ext fun x => Option.some_injective _ <| removeNone_some _ ⟨e x, by simp [EquivFunctor.map]⟩
+  Equiv.ext fun x => Option.some_injective _ <| removeNone_some _ ⟨e x, by simp [equiv_functor.map]⟩
 #align equiv.remove_none_option_congr Equiv.removeNone_optionCongr
 
 end RemoveNone
@@ -241,7 +241,7 @@ def optionSubtype [DecidableEq β] (x : β) :
         invFun := fun b => if h : b = x then none else e.symm ⟨b, h⟩
         left_inv := fun a => by
           cases a; · simp
-          simp only [cases_on'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply,
+          simp only [casesOn'_some, Function.comp_apply, Subtype.coe_eta, symm_apply_apply,
             dite_eq_ite]
           exact if_neg (e a).property
         right_inv := fun b => by by_cases h : b = x <;> simp [h] }, rfl⟩
@@ -279,7 +279,7 @@ theorem optionSubtype_apply_symm_apply [DecidableEq β] (x : β)
     (e : { e : Option α ≃ β // e none = x }) (b : { y : β // y ≠ x }) :
     ↑((optionSubtype x e).symm b) = (e : Option α ≃ β).symm b :=
   by
-  dsimp only [option_subtype]
+  dsimp only [optionSubtype]
   simp
 #align equiv.option_subtype_apply_symm_apply Equiv.optionSubtype_apply_symm_apply
 -/
@@ -313,7 +313,7 @@ theorem optionSubtype_symm_apply_apply_none [DecidableEq β] (x : β) (e : α �
 theorem optionSubtype_symm_apply_symm_apply [DecidableEq β] (x : β) (e : α ≃ { y : β // y ≠ x })
     (b : { y : β // y ≠ x }) : ((optionSubtype x).symm e : Option α ≃ β).symm b = e.symm b :=
   by
-  simp only [option_subtype, coe_fn_symm_mk, Subtype.coe_mk, Subtype.coe_eta, dite_eq_ite,
+  simp only [optionSubtype, coe_fn_symm_mk, Subtype.coe_mk, Subtype.coe_eta, dite_eq_ite,
     ite_eq_right_iff]
   exact fun h => False.elim (b.property h)
 #align equiv.option_subtype_symm_apply_symm_apply Equiv.optionSubtype_symm_apply_symm_apply

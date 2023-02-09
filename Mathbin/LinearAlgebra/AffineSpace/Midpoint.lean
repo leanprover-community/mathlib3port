@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.midpoint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,12 +72,12 @@ omit V'
 @[simp]
 theorem AffineEquiv.pointReflection_midpoint_left (x y : P) :
     pointReflection R (midpoint R x y) x = y := by
-  rw [midpoint, point_reflection_apply, line_map_apply, vadd_vsub, vadd_vadd, ← add_smul, ← two_mul,
+  rw [midpoint, pointReflection_apply, lineMap_apply, vadd_vsub, vadd_vadd, ← add_smul, ← two_mul,
     mul_invOf_self, one_smul, vsub_vadd]
 #align affine_equiv.point_reflection_midpoint_left AffineEquiv.pointReflection_midpoint_left
 
 theorem midpoint_comm (x y : P) : midpoint R x y = midpoint R y x := by
-  rw [midpoint, ← line_map_apply_one_sub, one_sub_invOf_two, midpoint]
+  rw [midpoint, ← lineMap_apply_one_sub, one_sub_invOf_two, midpoint]
 #align midpoint_comm midpoint_comm
 
 @[simp]
@@ -126,7 +126,7 @@ theorem midpoint_vsub (p₁ p₂ p : P) :
     midpoint R p₁ p₂ -ᵥ p = (⅟ 2 : R) • (p₁ -ᵥ p) + (⅟ 2 : R) • (p₂ -ᵥ p) := by
   rw [← vsub_sub_vsub_cancel_right p₁ p p₂, smul_sub, sub_eq_add_neg, ← smul_neg,
     neg_vsub_eq_vsub_rev, add_assoc, inv_of_two_smul_add_inv_of_two_smul, ← vadd_vsub_assoc,
-    midpoint_comm, midpoint, line_map_apply]
+    midpoint_comm, midpoint, lineMap_apply]
 #align midpoint_vsub midpoint_vsub
 
 theorem vsub_midpoint (p₁ p₂ p : P) :
@@ -159,7 +159,7 @@ variable (R)
 
 @[simp]
 theorem midpoint_eq_left_iff {x y : P} : midpoint R x y = x ↔ x = y := by
-  rw [midpoint_eq_iff, point_reflection_self]
+  rw [midpoint_eq_iff, pointReflection_self]
 #align midpoint_eq_left_iff midpoint_eq_left_iff
 
 @[simp]
@@ -179,7 +179,7 @@ theorem right_eq_midpoint_iff {x y : P} : y = midpoint R x y ↔ x = y := by
 
 theorem midpoint_eq_midpoint_iff_vsub_eq_vsub {x x' y y' : P} :
     midpoint R x y = midpoint R x' y' ↔ x -ᵥ x' = y' -ᵥ y := by
-  rw [← @vsub_eq_zero_iff_eq V, midpoint_vsub_midpoint, midpoint_eq_iff, point_reflection_apply,
+  rw [← @vsub_eq_zero_iff_eq V, midpoint_vsub_midpoint, midpoint_eq_iff, pointReflection_apply,
     vsub_eq_sub, zero_sub, vadd_eq_add, add_zero, neg_eq_iff_neg_eq, neg_vsub_eq_vsub_rev, eq_comm]
 #align midpoint_eq_midpoint_iff_vsub_eq_vsub midpoint_eq_midpoint_iff_vsub_eq_vsub
 
@@ -211,7 +211,7 @@ theorem midpoint_zero_add (x y : V) : midpoint R 0 (x + y) = midpoint R x y :=
 #align midpoint_zero_add midpoint_zero_add
 
 theorem midpoint_eq_smul_add (x y : V) : midpoint R x y = (⅟ 2 : R) • (x + y) := by
-  rw [midpoint_eq_iff, point_reflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ←
+  rw [midpoint_eq_iff, pointReflection_apply, vsub_eq_sub, vadd_eq_add, sub_add_eq_add_sub, ←
     two_smul R, smul_smul, mul_invOf_self, one_smul, add_sub_cancel']
 #align midpoint_eq_smul_add midpoint_eq_smul_add
 

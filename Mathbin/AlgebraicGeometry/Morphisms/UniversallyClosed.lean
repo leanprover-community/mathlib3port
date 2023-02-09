@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.universally_closed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ class UniversallyClosed (f : X ⟶ Y) : Prop where
 #align algebraic_geometry.universally_closed AlgebraicGeometry.UniversallyClosed
 
 theorem universallyClosed_eq : @UniversallyClosed = universally (topologically @IsClosedMap) := by
-  ext (X Y f); rw [universally_closed_iff]
+  ext (X Y f); rw [universallyClosed_iff]
 #align algebraic_geometry.universally_closed_eq AlgebraicGeometry.universallyClosed_eq
 
 theorem universallyClosed_respectsIso : RespectsIso @UniversallyClosed :=
@@ -59,8 +59,8 @@ theorem universallyClosed_stableUnderBaseChange : StableUnderBaseChange @Univers
 
 theorem universallyClosed_stableUnderComposition : StableUnderComposition @UniversallyClosed :=
   by
-  rw [universally_closed_eq]
-  exact stable_under_composition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
+  rw [universallyClosed_eq]
+  exact StableUnderComposition.universally fun X Y Z f g hf hg => IsClosedMap.comp hg hf
 #align algebraic_geometry.universally_closed_stable_under_composition AlgebraicGeometry.universallyClosed_stableUnderComposition
 
 instance universallyClosed_type_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z)
@@ -85,14 +85,14 @@ theorem morphismRestrict_base {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier)
 
 theorem universallyClosedIsLocalAtTarget : PropertyIsLocalAtTarget @UniversallyClosed :=
   by
-  rw [universally_closed_eq]
-  apply universally_is_local_at_target_of_morphism_restrict
+  rw [universallyClosed_eq]
+  apply universallyIsLocalAtTargetOfMorphismRestrict
   ·
     exact
-      stable_under_composition.respects_iso (fun X Y Z f g hf hg => IsClosedMap.comp hg hf)
-        fun X Y f => (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso f)).IsClosedMap
+      StableUnderComposition.respectsIso (fun X Y Z f g hf hg => IsClosedMap.comp hg hf)
+        fun X Y f => (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso f)).isClosedMap
   · intro X Y f ι U hU H
-    simp_rw [topologically, morphism_restrict_base] at H
+    simp_rw [topologically, morphismRestrict_base] at H
     exact (isClosedMap_iff_isClosedMap_of_supᵢ_eq_top hU).mpr H
 #align algebraic_geometry.universally_closed_is_local_at_target AlgebraicGeometry.universallyClosedIsLocalAtTarget
 

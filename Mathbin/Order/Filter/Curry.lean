@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module order.filter.curry
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ def curry (f : Filter α) (g : Filter β) : Filter (α × β)
   inter_sets := by
     intro x y hx hy
     simp only [Set.mem_setOf_eq, Set.mem_inter_iff] at hx hy⊢
-    exact (hx.and hy).mono fun a ha => (ha.1.And ha.2).mono fun b hb => hb
+    exact (hx.and hy).mono fun a ha => (ha.1.and ha.2).mono fun b hb => hb
 #align filter.curry Filter.curry
 -/
 
@@ -90,7 +90,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, LE.le.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Preorder.toLE.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (PartialOrder.toPreorder.{max u2 u1} (Filter.{max u1 u2} (Prod.{u2, u1} α β)) (Filter.instPartialOrderFilter.{max u2 u1} (Prod.{u2, u1} α β)))) (Filter.curry.{u2, u1} α β f g) (Filter.prod.{u2, u1} α β f g)
 Case conversion may be inaccurate. Consider using '#align filter.curry_le_prod Filter.curry_le_prodₓ'. -/
-theorem curry_le_prod {f : Filter α} {g : Filter β} : f.curry g ≤ f.Prod g :=
+theorem curry_le_prod {f : Filter α} {g : Filter β} : f.curry g ≤ f.prod g :=
   by
   intro u hu
   rw [← eventually_mem_set] at hu⊢
@@ -112,7 +112,7 @@ theorem Tendsto.curry {f : α → β → γ} {la : Filter α} {lb : Filter β} {
   simp only [curry, Filter.mem_mk, Set.mem_setOf_eq, Set.mem_preimage]
   simp_rw [tendsto_def] at h
   refine' fun s hs => h.mono fun a ha => eventually_iff.mpr _
-  simpa [Function.HasUncurry.uncurry, Set.preimage] using ha s hs
+  simpa [function.has_uncurry.uncurry, Set.preimage] using ha s hs
 #align filter.tendsto.curry Filter.Tendsto.curry
 
 end Filter

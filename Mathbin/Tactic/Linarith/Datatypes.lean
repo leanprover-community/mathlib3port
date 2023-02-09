@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.datatypes
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ unsafe def add : Linexp → Linexp → Linexp
       if n2 < n1 then a :: add t1 (b :: t2)
       else
         let sum := z1 + z2
-        if Sum = 0 then add t1 t2 else (n1, Sum) :: add t1 t2
+        if sum = 0 then add t1 t2 else (n1, sum) :: add t1 t2
 #align linarith.linexp.add linarith.linexp.add
 
 #print Linarith.Linexp.scale /-
@@ -161,15 +161,15 @@ def max : Ineq → Ineq → Ineq
   | a, lt => lt
   | le, a => le
   | a, le => le
-  | Eq, Eq => eq
+  | eq, eq => eq
 #align linarith.ineq.max Linarith.Ineq.max
 -/
 
 #print Linarith.Ineq.cmp /-
 /-- `ineq` is ordered `eq < le < lt`. -/
 def cmp : Ineq → Ineq → Ordering
-  | Eq, Eq => Ordering.eq
-  | Eq, _ => Ordering.lt
+  | eq, eq => Ordering.eq
+  | eq, _ => Ordering.lt
   | le, le => Ordering.eq
   | le, lt => Ordering.lt
   | lt, lt => Ordering.eq
@@ -180,7 +180,7 @@ def cmp : Ineq → Ineq → Ordering
 #print Linarith.Ineq.toString /-
 /-- Prints an `ineq` as the corresponding infix symbol. -/
 def toString : Ineq → String
-  | Eq => "="
+  | eq => "="
   | le => "≤"
   | lt => "<"
 #align linarith.ineq.to_string Linarith.Ineq.toString
@@ -190,7 +190,7 @@ def toString : Ineq → String
 unsafe def to_const_mul_nm : Ineq → Name
   | lt => `` mul_neg
   | le => `` mul_nonpos
-  | Eq => `` mul_eq
+  | eq => `` mul_eq
 #align linarith.ineq.to_const_mul_nm linarith.ineq.to_const_mul_nm
 
 instance : ToString Ineq :=
@@ -251,16 +251,16 @@ unsafe def comp.add (c1 c2 : Comp) : Comp :=
 unsafe def comp.cmp : Comp → Comp → Ordering
   | ⟨str1, coeffs1⟩, ⟨str2, coeffs2⟩ =>
     match str1.cmp str2 with
-    | Ordering.lt => Ordering.lt
-    | Ordering.gt => Ordering.gt
-    | Ordering.eq => coeffs1.cmp coeffs2
+    | ordering.lt => Ordering.lt
+    | ordering.gt => Ordering.gt
+    | ordering.eq => coeffs1.cmp coeffs2
 #align linarith.comp.cmp linarith.comp.cmp
 
 /-- A `comp` represents a contradiction if its expression has no coefficients and its strength is <,
 that is, it represents the fact `0 < 0`.
  -/
 unsafe def comp.is_contr (c : Comp) : Bool :=
-  c.coeffs.Empty ∧ c.str = Ineq.lt
+  c.coeffs.isEmpty ∧ c.str = Ineq.lt
 #align linarith.comp.is_contr linarith.comp.is_contr
 
 unsafe instance comp.to_format : has_to_format Comp :=
@@ -317,7 +317,7 @@ unsafe structure global_branching_preprocessor : Type where
 -/
 unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor
     where
-  Name := pp.Name
+  Name := pp.name
   transform :=
     List.foldlM
       (fun ret e => do
@@ -330,10 +330,10 @@ unsafe def preprocessor.globalize (pp : preprocessor) : global_preprocessor
 -/
 unsafe def global_preprocessor.branching (pp : global_preprocessor) : global_branching_preprocessor
     where
-  Name := pp.Name
+  Name := pp.name
   transform l := do
     let g ← tactic.get_goal
-    singleton <$> Prod.mk g <$> pp l
+    singleton <$> prod.mk g <$> pp l
 #align linarith.global_preprocessor.branching linarith.global_preprocessor.branching
 
 /-- `process pp l` runs `pp.transform` on `l` and returns the result,
@@ -343,7 +343,8 @@ unsafe def global_branching_preprocessor.process (pp : global_branching_preproce
     (l : List expr) : tactic (List branch) := do
   let l ← pp.transform l
   when (l > 1) <| linarith_trace f! "Preprocessing: {pp} has branched, with branches:"
-  l fun l => tactic.set_goals [l.1] >> linarith_trace_proofs (toString f! "Preprocessing: {pp}") l.2
+  l fun l =>
+      tactic.set_goals [l.1] >> linarith_trace_proofs (to_string f! "Preprocessing: {pp}") l.2
   return l
 #align linarith.global_branching_preprocessor.process linarith.global_branching_preprocessor.process
 
@@ -370,7 +371,7 @@ unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 #align linarith.certificate_oracle linarith.certificate_oracle
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -384,7 +385,7 @@ unsafe structure linarith_config : Type where
   oracle : Option certificate_oracle := none
 #align linarith.linarith_config linarith.linarith_config
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -441,7 +442,7 @@ open Tactic
       | _ => none
 #align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.
@@ -468,7 +469,7 @@ open Tactic
               return ( iq , h )
               else
               do
-                let tp ← Prod.snd <$> ( infer_type h >>= get_rel_sides ) >>= infer_type
+                let tp ← prod.snd <$> ( infer_type h >>= get_rel_sides ) >>= infer_type
                   let c ← tp c
                   let cpos ← to_expr ` `( $ ( c ) > 0 )
                   let ( _ , ex ) ← solve_aux cpos sorry

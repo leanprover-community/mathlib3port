@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.multiset.fintype
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ but is expected to have type
   forall {α : Type.{u}} {_inst_1 : Type.{v}}, (Nat -> α -> _inst_1) -> Nat -> (List.{u} α) -> (List.{v} _inst_1)
 Case conversion may be inaccurate. Consider using '#align multiset.coe_sort_eq [anonymous]ₓ'. -/
 @[simp]
-theorem [anonymous] : m.to_type = m :=
+theorem [anonymous] : m.ToType = m :=
   rfl
 #align multiset.coe_sort_eq [anonymous]
 
@@ -275,7 +275,7 @@ theorem Multiset.map_univ_coeEmbedding (m : Multiset α) :
 
 #print Multiset.toEnumFinset_filter_eq /-
 theorem Multiset.toEnumFinset_filter_eq (m : Multiset α) (x : α) :
-    (m.toEnumFinset.filterₓ fun p => x = p.1) =
+    (m.toEnumFinset.filter fun p => x = p.1) =
       (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩ :=
   by
   ext ⟨y, i⟩
@@ -354,7 +354,7 @@ theorem Multiset.card_coe (m : Multiset α) : Fintype.card m = m.card :=
 
 #print Multiset.prod_eq_prod_coe /-
 @[to_additive]
-theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = ∏ x : m, x :=
+theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.prod = ∏ x : m, x :=
   by
   congr
   simp
@@ -365,7 +365,7 @@ theorem Multiset.prod_eq_prod_coe [CommMonoid α] (m : Multiset α) : m.Prod = �
 #print Multiset.prod_eq_prod_toEnumFinset /-
 @[to_additive]
 theorem Multiset.prod_eq_prod_toEnumFinset [CommMonoid α] (m : Multiset α) :
-    m.Prod = ∏ x in m.toEnumFinset, x.1 := by
+    m.prod = ∏ x in m.toEnumFinset, x.1 := by
   congr
   simp
 #align multiset.prod_eq_prod_to_enum_finset Multiset.prod_eq_prod_toEnumFinset

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl, Reid Barton, Sean Leather, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ attribute [local instance] concrete_category.has_coe_to_fun
 /-- In any concrete category, we can test equality of morphisms by pointwise evaluations.-/
 theorem ConcreteCategory.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x = g x) : f = g :=
   by
-  apply faithful.map_injective (forget C)
+  apply Faithful.map_injective (forget C)
   ext
   exact w x
 #align category_theory.concrete_category.hom_ext CategoryTheory.ConcreteCategory.hom_ext
@@ -185,7 +185,7 @@ theorem ConcreteCategory.epi_iff_surjective_of_preserves_pushout {X Y : C} (f : 
 theorem ConcreteCategory.bijective_of_isIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
     Function.Bijective ((forget C).map f) :=
   by
-  rw [← is_iso_iff_bijective]
+  rw [← isIso_iff_bijective]
   infer_instance
 #align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_isIso
 
@@ -223,9 +223,9 @@ instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C
     (forget₂ C D).PreservesMonomorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesMonomorphisms :=
     by
-    simp only [has_forget₂.forget_comp]
+    simp only [HasForget₂.forget_comp]
     infer_instance
-  functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
+  Functor.preservesMonomorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preservesMonomorphisms
 
 instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
@@ -233,9 +233,9 @@ instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C]
     (forget₂ C D).PreservesEpimorphisms :=
   have : (forget₂ C D ⋙ forget D).PreservesEpimorphisms :=
     by
-    simp only [has_forget₂.forget_comp]
+    simp only [HasForget₂.forget_comp]
     infer_instance
-  functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
+  Functor.preservesEpimorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preservesEpimorphisms
 
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D]
@@ -271,7 +271,7 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
     (h_map : ∀ {X Y} {f : X ⟶ Y}, HEq ((forget D).map (map f)) ((forget C).map f)) : HasForget₂ C D
     where
   forget₂ := Faithful.div _ _ _ @h_obj _ @h_map
-  forget_comp := by apply faithful.div_comp
+  forget_comp := by apply Faithful.div_comp
 #align category_theory.has_forget₂.mk' CategoryTheory.HasForget₂.mk'
 
 /-- Every forgetful functor factors through the identity functor. This is not a global instance as

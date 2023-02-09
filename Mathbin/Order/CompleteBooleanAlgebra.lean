@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.complete_boolean_algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,7 +111,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Order.Frame.{u1} α] {s : Set.{u1} α} {b : α}, Eq.{succ u1} α (HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (CompleteLattice.toLattice.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) (SupSet.supₛ.{u1} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) s) b) (supᵢ.{u1, succ u1} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) α (fun (a : α) => supᵢ.{u1, 0} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1)) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) (fun (H : Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s) => HasInf.inf.{u1} α (Lattice.toHasInf.{u1} α (CompleteLattice.toLattice.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_1))) a b)))
 Case conversion may be inaccurate. Consider using '#align Sup_inf_eq supₛ_inf_eqₓ'. -/
 theorem supₛ_inf_eq : supₛ s ⊓ b = ⨆ a ∈ s, a ⊓ b := by
-  simpa only [inf_comm] using @inf_supₛ_eq α _ s b
+  simpa only [inf_comm] using @inf_Sup_eq α _ s b
 #align Sup_inf_eq supₛ_inf_eq
 
 /- warning: supr_inf_eq -> supᵢ_inf_eq is a dubious translation:
@@ -287,7 +287,7 @@ theorem supᵢ_inf_of_antitone {ι : Type _} [Preorder ι] [IsDirected ι (swap 
 instance Pi.frame {ι : Type _} {π : ι → Type _} [∀ i, Frame (π i)] : Frame (∀ i, π i) :=
   { Pi.completeLattice with
     inf_sup_le_supᵢ_inf := fun a s i => by
-      simp only [CompleteLattice.sup, supₛ_apply, supᵢ_apply, Pi.inf_apply, inf_supᵢ_eq, ←
+      simp only [complete_lattice.Sup, supₛ_apply, supᵢ_apply, Pi.inf_apply, inf_supᵢ_eq, ←
         supᵢ_subtype''] }
 #align pi.frame Pi.frame
 -/
@@ -486,9 +486,9 @@ instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
   { Prop.booleanAlgebra,
     Prop.completeLattice with
     infᵢ_sup_le_sup_inf := fun p s =>
-      Iff.mp <| by simp only [forall_or_left, CompleteLattice.inf, infᵢ_Prop_eq, sup_Prop_eq]
+      Iff.mp <| by simp only [forall_or_left, complete_lattice.Inf, infᵢ_Prop_eq, sup_Prop_eq]
     inf_sup_le_supᵢ_inf := fun p s =>
-      Iff.mp <| by simp only [CompleteLattice.sup, exists_and_left, inf_Prop_eq, supᵢ_Prop_eq] }
+      Iff.mp <| by simp only [complete_lattice.Sup, exists_and_left, inf_Prop_eq, supᵢ_Prop_eq] }
 #align Prop.complete_boolean_algebra Prop.completeBooleanAlgebra
 -/
 
@@ -573,9 +573,9 @@ protected def Function.Injective.frame [HasSup α] [HasInf α] [SupSet α] [InfS
     [Frame β] (f : α → β) (hf : Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (supₛ s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : Frame α :=
-  { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
+  { hf.completeLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
     inf_sup_le_supᵢ_inf := fun a s => by
-      change f (a ⊓ Sup s) ≤ f _
+      change f (a ⊓ supₛ s) ≤ f _
       rw [← supₛ_image, map_inf, map_Sup s, inf_supᵢ₂_eq]
       simp_rw [← map_inf]
       exact ((map_Sup _).trans supᵢ_image).ge }
@@ -595,9 +595,9 @@ protected def Function.Injective.coframe [HasSup α] [HasInf α] [SupSet α] [In
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) (map_Sup : ∀ s, f (supₛ s) = ⨆ a ∈ s, f a)
     (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) :
     Coframe α :=
-  { hf.CompleteLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
+  { hf.completeLattice f map_sup map_inf map_Sup map_Inf map_top map_bot with
     infᵢ_sup_le_sup_inf := fun a s => by
-      change f _ ≤ f (a ⊔ Inf s)
+      change f _ ≤ f (a ⊔ infₛ s)
       rw [← infₛ_image, map_sup, map_Inf s, sup_infᵢ₂_eq]
       simp_rw [← map_sup]
       exact ((map_Inf _).trans infᵢ_image).le }
@@ -617,8 +617,8 @@ protected def Function.Injective.completeDistribLattice [HasSup α] [HasInf α] 
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_Sup : ∀ s, f (supₛ s) = ⨆ a ∈ s, f a) (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) : CompleteDistribLattice α :=
-  { hf.Frame f map_sup map_inf map_Sup map_Inf map_top map_bot,
-    hf.Coframe f map_sup map_inf map_Sup map_Inf map_top map_bot with }
+  { hf.frame f map_sup map_inf map_Sup map_Inf map_top map_bot,
+    hf.coframe f map_sup map_inf map_Sup map_Inf map_top map_bot with }
 #align function.injective.complete_distrib_lattice Function.Injective.completeDistribLattice
 
 /- warning: function.injective.complete_boolean_algebra -> Function.Injective.completeBooleanAlgebra is a dubious translation:
@@ -637,8 +637,8 @@ protected def Function.Injective.completeBooleanAlgebra [HasSup α] [HasInf α] 
     (map_Inf : ∀ s, f (infₛ s) = ⨅ a ∈ s, f a) (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥)
     (map_compl : ∀ a, f (aᶜ) = f aᶜ) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     CompleteBooleanAlgebra α :=
-  { hf.CompleteDistribLattice f map_sup map_inf map_Sup map_Inf map_top map_bot,
-    hf.BooleanAlgebra f map_sup map_inf map_top map_bot map_compl map_sdiff with }
+  { hf.completeDistribLattice f map_sup map_inf map_Sup map_Inf map_top map_bot,
+    hf.booleanAlgebra f map_sup map_inf map_top map_bot map_compl map_sdiff with }
 #align function.injective.complete_boolean_algebra Function.Injective.completeBooleanAlgebra
 
 end lift
@@ -653,7 +653,7 @@ instance : CompleteBooleanAlgebra PUnit := by
           supₛ := fun _ => star
           infₛ := fun _ => star } <;>
       intros <;>
-    first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
+    first |trivial|simp only [eq_iff_true_of_subsingleton, not_true, and_false]
 
 #print PUnit.supₛ_eq /-
 @[simp]

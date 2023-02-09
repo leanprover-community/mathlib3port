@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.induced_maps
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,8 +114,8 @@ private theorem end_path : f x₁ = g x₃ := by convert hfg 1 <;> simp only [Pa
 theorem eq_path_of_eq_image :
     (πₘ f).map ⟦p⟧ = hcast (start_path hfg) ≫ (πₘ g).map ⟦q⟧ ≫ hcast (end_path hfg).symm :=
   by
-  rw [functor.conj_eq_to_hom_iff_heq]
-  exact heq_path_of_eq_image hfg
+  rw [Functor.conj_eqToHom_iff_hEq]
+  exact hEq_path_of_eq_image hfg
 #align continuous_map.homotopy.eq_path_of_eq_image ContinuousMap.Homotopy.eq_path_of_eq_image
 
 end Casts
@@ -150,7 +150,7 @@ many of the paths do not have defeq starting/ending points, so we end up needing
 /-- Interpret a homotopy `H : C(I × X, Y) as a map C(ulift I × X, Y) -/
 def uliftMap : C(TopCat.of (ULift.{u} I × X), Y) :=
   ⟨fun x => H (x.1.down, x.2),
-    H.Continuous.comp ((continuous_induced_dom.comp continuous_fst).prod_mk continuous_snd)⟩
+    H.continuous.comp ((continuous_induced_dom.comp continuous_fst).prod_mk continuous_snd)⟩
 #align continuous_map.homotopy.ulift_map ContinuousMap.Homotopy.uliftMap
 
 @[simp]
@@ -184,7 +184,7 @@ theorem apply_zero_path :
   by
   apply Quotient.inductionOn p
   intro p'
-  apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
+  apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).prod p')
   simp
 #align continuous_map.homotopy.apply_zero_path ContinuousMap.Homotopy.apply_zero_path
 
@@ -196,7 +196,7 @@ theorem apply_one_path :
   by
   apply Quotient.inductionOn p
   intro p'
-  apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).Prod p')
+  apply @eq_path_of_eq_image _ _ _ _ H.ulift_map _ _ _ _ _ ((Path.refl (ULift.up _)).prod p')
   simp
 #align continuous_map.homotopy.apply_one_path ContinuousMap.Homotopy.apply_one_path
 
@@ -208,7 +208,7 @@ theorem evalAt_eq (x : X) :
   by
   dsimp only [prod_to_prod_Top_I, uhpath01, hcast]
   refine' (@functor.conj_eq_to_hom_iff_heq (πₓ Y) _ _ _ _ _ _ _ _ _).mpr _
-  simp only [id_eq_path_refl, prod_to_prod_Top_map, Path.Homotopic.prod_lift, map_eq, ←
+  simp only [id_eq_path_refl, prodToProdTop_map, Path.Homotopic.prod_lift, map_eq, ←
     Path.Homotopic.map_lift]
   apply Path.Homotopic.hpath_hext; intro ; rfl
 #align continuous_map.homotopy.eval_at_eq ContinuousMap.Homotopy.evalAt_eq
@@ -245,18 +245,18 @@ def homotopicMapsNatIso : πₘ f ⟶ πₘ g
   naturality' x y p := by rw [(H.eq_diag_path p).1, (H.eq_diag_path p).2]
 #align fundamental_groupoid_functor.homotopic_maps_nat_iso FundamentalGroupoidFunctor.homotopicMapsNatIso
 
-instance : IsIso (homotopicMapsNatIso H) := by apply nat_iso.is_iso_of_is_iso_app
+instance : IsIso (homotopicMapsNatIso H) := by apply NatIso.isIso_of_isIso_app
 
 open ContinuousMap
 
 /-- Homotopy equivalent topological spaces have equivalent fundamental groupoids. -/
 def equivOfHomotopyEquiv (hequiv : X ≃ₕ Y) : πₓ X ≌ πₓ Y :=
   by
-  apply equivalence.mk (πₘ hequiv.to_fun : πₓ X ⥤ πₓ Y) (πₘ hequiv.inv_fun : πₓ Y ⥤ πₓ X) <;>
-    simp only [Groupoid.hom_to_functor, Groupoid.id_to_functor]
-  · convert (as_iso (homotopic_maps_nat_iso hequiv.left_inv.some)).symm
+  apply Equivalence.mk (πₘ hequiv.to_fun : πₓ X ⥤ πₓ Y) (πₘ hequiv.inv_fun : πₓ Y ⥤ πₓ X) <;>
+    simp only [GroupoidCat.hom_to_functor, GroupoidCat.id_to_functor]
+  · convert (asIso (homotopicMapsNatIso hequiv.left_inv.some)).symm
     exacts[(π.map_id X).symm, (π.map_comp _ _).symm]
-  · convert as_iso (homotopic_maps_nat_iso hequiv.right_inv.some)
+  · convert asIso (homotopicMapsNatIso hequiv.right_inv.some)
     exacts[(π.map_comp _ _).symm, (π.map_id Y).symm]
 #align fundamental_groupoid_functor.equiv_of_homotopy_equiv FundamentalGroupoidFunctor.equivOfHomotopyEquiv
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.const_mul_action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ variable [TopologicalSpace α] [SMul M α] [HasContinuousConstSMul M α]
 @[to_additive]
 theorem Filter.Tendsto.const_smul {f : β → α} {l : Filter β} {a : α} (hf : Tendsto f l (𝓝 a))
     (c : M) : Tendsto (fun x => c • f x) l (𝓝 (c • a)) :=
-  ((continuous_const_smul _).Tendsto _).comp hf
+  ((continuous_const_smul _).tendsto _).comp hf
 #align filter.tendsto.const_smul Filter.Tendsto.const_smul
 #align filter.tendsto.const_vadd Filter.Tendsto.const_vadd
 -/
@@ -316,7 +316,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_map_smul isOpenMap_smulₓ'. -/
 @[to_additive]
 theorem isOpenMap_smul (c : G) : IsOpenMap fun x : α => c • x :=
-  (Homeomorph.smul c).IsOpenMap
+  (Homeomorph.smul c).isOpenMap
 #align is_open_map_smul isOpenMap_smul
 #align is_open_map_vadd isOpenMap_vadd
 
@@ -340,7 +340,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_closed_map_smul isClosedMap_smulₓ'. -/
 @[to_additive]
 theorem isClosedMap_smul (c : G) : IsClosedMap fun x : α => c • x :=
-  (Homeomorph.smul c).IsClosedMap
+  (Homeomorph.smul c).isClosedMap
 #align is_closed_map_smul isClosedMap_smul
 #align is_closed_map_vadd isClosedMap_vadd
 
@@ -474,7 +474,7 @@ but is expected to have type
   forall {α : Type.{u1}} {G₀ : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : GroupWithZero.{u2} G₀] [_inst_3 : MulAction.{u2, u1} G₀ α (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_2))] [_inst_4 : HasContinuousConstSMul.{u2, u1} G₀ α _inst_1 (MulAction.toSMul.{u2, u1} G₀ α (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_2)) _inst_3)] {c : G₀}, (Ne.{succ u2} G₀ c (OfNat.ofNat.{u2} G₀ 0 (Zero.toOfNat0.{u2} G₀ (MonoidWithZero.toZero.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_2))))) -> (IsOpenMap.{u1, u1} α α _inst_1 _inst_1 (fun (x : α) => HSMul.hSMul.{u2, u1, u1} G₀ α α (instHSMul.{u2, u1} G₀ α (MulAction.toSMul.{u2, u1} G₀ α (MonoidWithZero.toMonoid.{u2} G₀ (GroupWithZero.toMonoidWithZero.{u2} G₀ _inst_2)) _inst_3)) c x))
 Case conversion may be inaccurate. Consider using '#align is_open_map_smul₀ isOpenMap_smul₀ₓ'. -/
 theorem isOpenMap_smul₀ {c : G₀} (hc : c ≠ 0) : IsOpenMap fun x : α => c • x :=
-  (Homeomorph.smulOfNeZero c hc).IsOpenMap
+  (Homeomorph.smulOfNeZero c hc).isOpenMap
 #align is_open_map_smul₀ isOpenMap_smul₀
 
 /- warning: is_open.smul₀ -> IsOpen.smul₀ is a dubious translation:
@@ -521,7 +521,7 @@ Case conversion may be inaccurate. Consider using '#align is_closed_map_smul_of_
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
 theorem isClosedMap_smul_of_ne_zero {c : G₀} (hc : c ≠ 0) : IsClosedMap fun x : α => c • x :=
-  (Homeomorph.smulOfNeZero c hc).IsClosedMap
+  (Homeomorph.smulOfNeZero c hc).isClosedMap
 #align is_closed_map_smul_of_ne_zero isClosedMap_smul_of_ne_zero
 
 /- warning: is_closed.smul_of_ne_zero -> IsClosed.smul_of_ne_zero is a dubious translation:
@@ -552,7 +552,7 @@ theorem isClosedMap_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoid
   rcases eq_or_ne c 0 with (rfl | hne)
   · simp only [zero_smul]
     exact isClosedMap_const
-  · exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
+  · exact (Homeomorph.smulOfNeZero c hne).isClosedMap
 #align is_closed_map_smul₀ isClosedMap_smul₀
 
 /- warning: is_closed.smul₀ -> IsClosed.smul₀ is a dubious translation:
@@ -738,7 +738,7 @@ theorem isOpenMap_quotient_mk'_mul [HasContinuousConstSMul Γ T] :
   by
   intro U hU
   rw [isOpen_coinduced, MulAction.quotient_preimage_image_eq_union_mul U]
-  exact isOpen_unionᵢ fun γ => (Homeomorph.smul γ).IsOpenMap U hU
+  exact isOpen_unionᵢ fun γ => (Homeomorph.smul γ).isOpenMap U hU
 #align is_open_map_quotient_mk_mul isOpenMap_quotient_mk'_mul
 #align is_open_map_quotient_mk_add isOpenMap_quotient_mk'_add
 
@@ -767,16 +767,16 @@ instance (priority := 100) t2Space_of_properlyDiscontinuousSMul_of_t2Space [T2Sp
   let V₀ := V₀₀ ∩ L₀
   have U_nhds : f '' U₀ ∈ 𝓝 (f x₀) :=
     by
-    apply f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => _) K₀_in)
-    exact (continuous_const_smul _).ContinuousAt (hu γ)
+    apply f_op.image_mem_nhds (inter_mem ((binterᵢ_mem bad_Γ_finite).mpr fun γ hγ => _) K₀_in)
+    exact (continuous_const_smul _).continuousAt (hu γ)
   have V_nhds : f '' V₀ ∈ 𝓝 (f y₀) :=
-    f_op.image_mem_nhds (inter_mem ((bInter_mem bad_Γ_finite).mpr fun γ hγ => hv γ) L₀_in)
+    f_op.image_mem_nhds (inter_mem ((binterᵢ_mem bad_Γ_finite).mpr fun γ hγ => hv γ) L₀_in)
   refine' ⟨f '' U₀, U_nhds, f '' V₀, V_nhds, MulAction.disjoint_image_image_iff.2 _⟩
   rintro x ⟨x_in_U₀₀, x_in_K₀⟩ γ
   by_cases H : γ ∈ bad_Γ_set
   · exact fun h => (u_v_disjoint γ).le_bot ⟨mem_Inter₂.mp x_in_U₀₀ γ H, mem_Inter₂.mp h.1 γ H⟩
   · rintro ⟨-, h'⟩
-    simp only [image_smul, Classical.not_not, mem_set_of_eq, Ne.def] at H
+    simp only [image_smul, Classical.not_not, mem_setOf_eq, Ne.def] at H
     exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
 #align t2_space_of_properly_discontinuous_smul_of_t2_space t2Space_of_properlyDiscontinuousSMul_of_t2Space
 #align t2_space_of_properly_discontinuous_vadd_of_t2_space t2Space_of_properlyDiscontinuousVAdd_of_t2Space

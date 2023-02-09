@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.countable_Inter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem countable_interᵢ_mem [Countable ι] {s : ι → Set α} : (⋂ i, s i)
 theorem countable_bInter_mem {ι : Type _} {S : Set ι} (hS : S.Countable) {s : ∀ i ∈ S, Set α} :
     (⋂ i ∈ S, s i ‹_›) ∈ l ↔ ∀ i ∈ S, s i ‹_› ∈ l :=
   by
-  rw [bInter_eq_Inter]
+  rw [binterᵢ_eq_interᵢ]
   haveI := hS.to_encodable
   exact countable_Inter_mem.trans Subtype.forall
 #align countable_bInter_mem countable_bInter_mem
@@ -84,15 +84,15 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align eventually_countable_forall eventually_countable_forallₓ'. -/
 theorem eventually_countable_forall [Countable ι] {p : α → ι → Prop} :
     (∀ᶠ x in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠ x in l, p x i := by
-  simpa only [Filter.Eventually, set_of_forall] using
-    @countable_interᵢ_mem _ _ l _ _ fun i => { x | p x i }
+  simpa only [Filter.Eventually, setOf_forall] using
+    @countable_Inter_mem _ _ l _ _ fun i => { x | p x i }
 #align eventually_countable_forall eventually_countable_forall
 
 #print eventually_countable_ball /-
 theorem eventually_countable_ball {ι : Type _} {S : Set ι} (hS : S.Countable)
     {p : ∀ (x : α), ∀ i ∈ S, Prop} :
     (∀ᶠ x in l, ∀ i ∈ S, p x i ‹_›) ↔ ∀ i ∈ S, ∀ᶠ x in l, p x i ‹_› := by
-  simpa only [Filter.Eventually, set_of_forall] using
+  simpa only [Filter.Eventually, setOf_forall] using
     @countable_bInter_mem _ l _ _ _ hS fun i hi => { x | p x i hi }
 #align eventually_countable_ball eventually_countable_ball
 -/
@@ -125,7 +125,7 @@ theorem EventuallyLe.countable_bUnion {ι : Type _} {S : Set ι} (hS : S.Countab
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) :
     (⋃ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋃ i ∈ S, t i ‹_› :=
   by
-  simp only [bUnion_eq_Union]
+  simp only [bunionᵢ_eq_unionᵢ]
   haveI := hS.to_encodable
   exact EventuallyLe.countable_unionᵢ fun i => h i i.2
 #align eventually_le.countable_bUnion EventuallyLe.countable_bUnion
@@ -169,7 +169,7 @@ theorem EventuallyLe.countable_bInter {ι : Type _} {S : Set ι} (hS : S.Countab
     {s t : ∀ i ∈ S, Set α} (h : ∀ i ∈ S, s i ‹_› ≤ᶠ[l] t i ‹_›) :
     (⋂ i ∈ S, s i ‹_›) ≤ᶠ[l] ⋂ i ∈ S, t i ‹_› :=
   by
-  simp only [bInter_eq_Inter]
+  simp only [binterᵢ_eq_interᵢ]
   haveI := hS.to_encodable
   exact EventuallyLe.countable_interᵢ fun i => h i i.2
 #align eventually_le.countable_bInter EventuallyLe.countable_bInter
@@ -254,12 +254,12 @@ instance (l : Filter β) [CountableInterFilter l] (f : α → β) : CountableInt
   choose! t htl ht using hS
   have : (⋂ s ∈ S, t s) ∈ l := (countable_bInter_mem hSc).2 htl
   refine' ⟨_, this, _⟩
-  simpa [preimage_Inter] using Inter₂_mono ht
+  simpa [preimage_interᵢ] using interᵢ₂_mono ht
 
 instance (l : Filter α) [CountableInterFilter l] (f : α → β) : CountableInterFilter (map f l) :=
   by
   constructor; intro S hSc hS
-  simp only [mem_map, sInter_eq_bInter, preimage_Inter₂] at hS⊢
+  simp only [mem_map, interₛ_eq_binterᵢ, preimage_interᵢ₂] at hS⊢
   exact (countable_bInter_mem hSc).2 hS
 
 /- warning: countable_Inter_filter_inf -> countableInterFilter_inf is a dubious translation:
@@ -277,9 +277,9 @@ instance countableInterFilter_inf (l₁ l₂ : Filter α) [CountableInterFilter 
   choose s hs t ht hst using hS
   replace hs : (⋂ i ∈ S, s i ‹_›) ∈ l₁ := (countable_bInter_mem hSc).2 hs
   replace ht : (⋂ i ∈ S, t i ‹_›) ∈ l₂ := (countable_bInter_mem hSc).2 ht
-  refine' mem_of_superset (inter_mem_inf hs ht) (subset_sInter fun i hi => _)
+  refine' mem_of_superset (inter_mem_inf hs ht) (subset_interₛ fun i hi => _)
   rw [hst i hi]
-  apply inter_subset_inter <;> exact Inter_subset_of_subset i (Inter_subset _ _)
+  apply inter_subset_inter <;> exact interᵢ_subset_of_subset i (interᵢ_subset _ _)
 #align countable_Inter_filter_inf countableInterFilter_inf
 
 /- warning: countable_Inter_filter_sup -> countableInterFilter_sup is a dubious translation:

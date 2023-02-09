@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.flow
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
 variable (ϕ : τ → α → α) (s : Set α)
 
 theorem isInvariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s := by
-  simp_rw [IsInvariant, maps_to']
+  simp_rw [IsInvariant, mapsTo']
 #align is_invariant_iff_image isInvariant_iff_image
 
 /-- A set `s ⊆ α` is forward-invariant under `ϕ : τ → α → α` if
@@ -153,7 +153,7 @@ def fromIter {g : α → α} (h : Continuous g) : Flow ℕ α
 def restrict {s : Set α} (h : IsInvariant ϕ s) : Flow τ ↥s
     where
   toFun t := (h t).restrict _ _ _
-  cont' := (ϕ.Continuous continuous_fst continuous_subtype_val.snd').subtype_mk _
+  cont' := (ϕ.continuous continuous_fst continuous_subtype_val.snd').subtype_mk _
   map_add' _ _ _ := Subtype.ext (map_add _ _ _ _)
   map_zero' _ := Subtype.ext (map_zero_apply _ _)
 #align flow.restrict Flow.restrict
@@ -176,7 +176,7 @@ theorem isInvariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t
     is defined `ϕ.reverse t x = ϕ (-t) x`. -/
 def reverse : Flow τ α where
   toFun t := ϕ (-t)
-  cont' := ϕ.Continuous continuous_fst.neg continuous_snd
+  cont' := ϕ.continuous continuous_fst.neg continuous_snd
   map_add' _ _ _ := by rw [neg_add, map_add]
   map_zero' _ := by rw [neg_zero, map_zero_apply]
 #align flow.reverse Flow.reverse

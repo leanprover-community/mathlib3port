@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.set.pointwise.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ Case conversion may be inaccurate. Consider using '#align set.list_prod_mem_list
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
-    (t.map g).Prod ∈ (t.map f).Prod :=
+    (t.map g).prod ∈ (t.map f).prod :=
   by
   induction' t with h tl ih
   · simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
@@ -99,7 +99,7 @@ Case conversion may be inaccurate. Consider using '#align set.list_prod_subset_l
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
-    (t.map f₁).Prod ⊆ (t.map f₂).Prod :=
+    (t.map f₁).prod ⊆ (t.map f₂).prod :=
   by
   induction' t with h tl ih
   · rfl
@@ -118,7 +118,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.list_prod_singleton Set.list_prod_singletonₓ'. -/
 @[to_additive]
 theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
-    (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
+    (s.map fun i => ({i} : Set M)).prod = {s.prod} :=
   (map_list_prod (singletonMonoidHom : M →* Set M) _).symm
 #align set.list_prod_singleton Set.list_prod_singleton
 #align set.list_sum_singleton Set.list_sum_singleton
@@ -127,7 +127,7 @@ theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α)
-    (hg : ∀ i ∈ t, g i ∈ f i) : (t.map g).Prod ∈ (t.map f).Prod :=
+    (hg : ∀ i ∈ t, g i ∈ f i) : (t.map g).prod ∈ (t.map f).prod :=
   by
   induction t using Quotient.inductionOn
   simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
@@ -140,7 +140,7 @@ theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α)
-    (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : (t.map f₁).Prod ⊆ (t.map f₂).Prod :=
+    (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : (t.map f₁).prod ⊆ (t.map f₂).prod :=
   by
   induction t using Quotient.inductionOn
   simp_rw [Multiset.quot_mk_to_coe, Multiset.coe_map, Multiset.coe_prod]
@@ -152,7 +152,7 @@ theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι →
 #print Set.multiset_prod_singleton /-
 @[to_additive]
 theorem multiset_prod_singleton {M : Type _} [CommMonoid M] (s : Multiset M) :
-    (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
+    (s.map fun i => ({i} : Set M)).prod = {s.prod} :=
   (map_multiset_prod (singletonMonoidHom : M →* Set M) _).symm
 #align set.multiset_prod_singleton Set.multiset_prod_singleton
 #align set.multiset_sum_singleton Set.multiset_sum_singleton

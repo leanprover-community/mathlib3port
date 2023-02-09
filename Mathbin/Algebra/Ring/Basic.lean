@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Yury Kudryashov, Neil Strickland
 
 ! This file was ported from Lean 3 source module algebra.ring.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,7 +239,7 @@ theorem IsLeftCancelMulZero.to_noZeroDivisors [Ring α] [IsLeftCancelMulZero α]
     exact hx
   · right
     rw [← sub_zero (x * y), ← mul_zero x, ← mul_sub] at h
-    convert IsLeftCancelMulZero.mul_left_cancel_of_ne_zero hx h
+    convert is_left_cancel_mul_zero.mul_left_cancel_of_ne_zero hx h
     rw [sub_zero]
 #align is_left_cancel_mul_zero.to_no_zero_divisors IsLeftCancelMulZero.to_noZeroDivisors
 
@@ -257,7 +257,7 @@ theorem IsRightCancelMulZero.to_noZeroDivisors [Ring α] [IsRightCancelMulZero �
     exact hy
   · left
     rw [← sub_zero (x * y), ← zero_mul y, ← sub_mul] at h
-    convert IsRightCancelMulZero.mul_right_cancel_of_ne_zero hy h
+    convert is_right_cancel_mul_zero.mul_right_cancel_of_ne_zero hy h
     rw [sub_zero]
 #align is_right_cancel_mul_zero.to_no_zero_divisors IsRightCancelMulZero.to_noZeroDivisors
 

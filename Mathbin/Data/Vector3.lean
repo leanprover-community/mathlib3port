@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.vector3
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,8 +193,8 @@ theorem insert_fz (a : α) (v : Vector3 α n) : insert a v fz = a::v := by
 theorem insert_fs (a : α) (b : α) (v : Vector3 α n) (i : Fin2 (succ n)) :
     insert a (b::v) (fs i) = b::insert a v i :=
   funext fun j => by
-    refine' j.cases' _ fun j => _ <;> simp [insert, insert_perm]
-    refine' Fin2.cases' _ _ (insert_perm i j) <;> simp [insert_perm]
+    refine' j.cases' _ fun j => _ <;> simp [insert, insertPerm]
+    refine' Fin2.cases' _ _ (insertPerm i j) <;> simp [insertPerm]
 #align vector3.insert_fs Vector3.insert_fs
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -227,14 +227,14 @@ open Vector3
 /-- "Curried" exists, i.e. `∃ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorEx : ∀ k, (Vector3 α k → Prop) → Prop
   | 0, f => f []
-  | succ k, f => ∃ x : α, VectorEx k fun v => f (x::v)
+  | succ k, f => ∃ x : α, vector_ex k fun v => f (x::v)
 #align vector_ex VectorEx
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- "Curried" forall, i.e. `∀ x₁ ... xₙ, f [x₁, ..., xₙ]`. -/
 def VectorAll : ∀ k, (Vector3 α k → Prop) → Prop
   | 0, f => f []
-  | succ k, f => ∀ x : α, VectorAll k fun v => f (x::v)
+  | succ k, f => ∀ x : α, vector_all k fun v => f (x::v)
 #align vector_all VectorAll
 
 theorem exists_vector_zero (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
@@ -248,7 +248,8 @@ theorem exists_vector_succ (f : Vector3 α (succ n) → Prop) : Exists f ↔ ∃
 
 theorem vectorEx_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
   | 0, f => (exists_vector_zero f).symm
-  | succ n, f => Iff.trans (exists_congr fun x => vectorEx_iff_exists _) (exists_vector_succ f).symm
+  | succ n, f =>
+    Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
 #align vector_ex_iff_exists vectorEx_iff_exists
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -256,7 +257,7 @@ theorem vectorEx_iff_exists : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f 
 theorem vectorAll_iff_forall : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
   | 0, f => ⟨fun f0 v => v.nilElim f0, fun al => al []⟩
   | succ n, f =>
-    (forall_congr' fun x => vectorAll_iff_forall fun v => f (x::v)).trans
+    (forall_congr' fun x => vector_all_iff_forall fun v => f (x::v)).trans
       ⟨fun al v => v.consElim al, fun al x v => al (x::v)⟩
 #align vector_all_iff_forall vectorAll_iff_forall
 

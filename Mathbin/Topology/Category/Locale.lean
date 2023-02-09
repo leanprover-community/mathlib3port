@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.category.Locale
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,6 +60,6 @@ def topToLocale : TopCat ⥤ Locale :=
 instance CompHausToLocale.faithful : Faithful (compHausToTop ⋙ topToLocale.{u}) :=
   ⟨fun X Y f g h => by
     dsimp at h
-    exact opens.comap_injective (Quiver.Hom.op_inj h)⟩
+    exact Opens.comap_injective (Quiver.Hom.op_inj h)⟩
 #align CompHaus_to_Locale.faithful CompHausToLocale.faithful
 

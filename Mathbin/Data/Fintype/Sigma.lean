@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.sigma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ variable {α β γ : Type _}
 open Finset Function
 
 instance {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] : Fintype (Sigma β) :=
-  ⟨univ.Sigma fun _ => univ, fun ⟨a, b⟩ => by simp⟩
+  ⟨univ.sigma fun _ => univ, fun ⟨a, b⟩ => by simp⟩
 
 /- warning: finset.univ_sigma_univ -> Finset.univ_sigma_univ is a dubious translation:
 lean 3 declaration is
@@ -40,7 +40,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.univ_sigma_univ Finset.univ_sigma_univₓ'. -/
 @[simp]
 theorem Finset.univ_sigma_univ {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] :
-    ((univ : Finset α).Sigma fun a => (univ : Finset (β a))) = univ :=
+    ((univ : Finset α).sigma fun a => (univ : Finset (β a))) = univ :=
   rfl
 #align finset.univ_sigma_univ Finset.univ_sigma_univ
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.replacer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,10 +106,10 @@ unsafe def def_replacer (ntac : Name) (ty : expr) : tactic Unit :=
   let v ← mk_replacer ntac ty
   add_meta_definition ntac [] ty v
   add_doc_string ntac <|
-      "The `" ++ toString ntac ++ "` tactic is a \"replaceable\" " ++
+      "The `" ++ to_string ntac ++ "` tactic is a \"replaceable\" " ++
                 "tactic, which means that its meaning is defined by tactics that " ++
               "are defined later with the `@[" ++
-            toString ntac ++
+            to_string ntac ++
           "]` attribute. " ++
         "It is intended for use with `auto_param`s for structure fields."
 #align tactic.def_replacer tactic.def_replacer
@@ -147,7 +147,7 @@ add_tactic_doc
     tags := ["environment", "renaming"] }
 
 unsafe def unprime : Name → tactic Name
-  | nn@(Name.mk_string s n) =>
+  | nn@(name.mk_string s n) =>
     let s' := (s.splitOn ''').headI
     if s'.length < s.length then pure (Name.mk_string s' n)
     else fail f! "expecting primed name: {nn}"
@@ -164,7 +164,7 @@ unsafe def replaceable_attr : user_attribute
       let n ← unprime n'
       let d ← get_decl n'
       def_replacer n d
-      (replacer_attr n).Set n' () tt
+      (replacer_attr n).set n' () tt
 #align tactic.replaceable_attr tactic.replaceable_attr
 
 end Tactic

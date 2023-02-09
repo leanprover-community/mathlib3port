@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.charpoly.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ to the linear map itself, is zero.
 See `matrix.aeval_self_charpoly` for the equivalent statement about matrices. -/
 theorem aeval_self_charpoly : aeval f f.charpoly = 0 :=
   by
-  apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (choose_basis R M)).toLinearEquiv).1
+  apply (LinearEquiv.map_eq_zero_iff (algEquivMatrix (chooseBasis R M)).toLinearEquiv).1
   rw [AlgEquiv.toLinearEquiv_apply, ← AlgEquiv.coe_algHom, ← Polynomial.aeval_algHom_apply _ _ _,
     charpoly_def]
   exact aeval_self_charpoly _
@@ -94,7 +94,7 @@ theorem aeval_eq_aeval_mod_charpoly (p : R[X]) : aeval f p = aeval f (p %ₘ f.c
 /-- Any endomorphism power can be computed as the sum of endomorphism powers less than the
 dimension of the module. -/
 theorem pow_eq_aeval_mod_charpoly (k : ℕ) : f ^ k = aeval f (x ^ k %ₘ f.charpoly) := by
-  rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_X]
+  rw [← aeval_eq_aeval_mod_charpoly, map_pow, aeval_x]
 #align linear_map.pow_eq_aeval_mod_charpoly LinearMap.pow_eq_aeval_mod_charpoly
 
 variable {f}
@@ -102,20 +102,20 @@ variable {f}
 theorem minpoly_coeff_zero_of_injective (hf : Function.Injective f) : (minpoly R f).coeff 0 ≠ 0 :=
   by
   intro h
-  obtain ⟨P, hP⟩ := X_dvd_iff.2 h
+  obtain ⟨P, hP⟩ := x_dvd_iff.2 h
   have hdegP : P.degree < (minpoly R f).degree :=
     by
     rw [hP, mul_comm]
-    refine' degree_lt_degree_mul_X fun h => _
+    refine' degree_lt_degree_mul_x fun h => _
     rw [h, mul_zero] at hP
-    exact minpoly.ne_zero (IsIntegral f) hP
+    exact minpoly.ne_zero (isIntegral f) hP
   have hPmonic : P.monic :=
     by
     suffices (minpoly R f).Monic by
-      rwa [monic.def, hP, mul_comm, leading_coeff_mul_X, ← monic.def] at this
-    exact minpoly.monic (IsIntegral f)
+      rwa [Monic.def, hP, mul_comm, leadingCoeff_mul_x, ← Monic.def] at this
+    exact minpoly.monic (isIntegral f)
   have hzero : aeval f (minpoly R f) = 0 := minpoly.aeval _ _
-  simp only [hP, mul_eq_comp, ext_iff, hf, aeval_X, map_eq_zero_iff, coe_comp, AlgHom.map_mul,
+  simp only [hP, mul_eq_comp, ext_iff, hf, aeval_x, map_eq_zero_iff, coe_comp, AlgHom.map_mul,
     zero_apply] at hzero
   exact not_le.2 hdegP (minpoly.min _ _ hPmonic (ext hzero))
 #align linear_map.minpoly_coeff_zero_of_injective LinearMap.minpoly_coeff_zero_of_injective

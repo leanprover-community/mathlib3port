@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,8 @@ open ZeroObject
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) :=
   by
-  haveI : has_initial C := has_zero_object.has_initial
-  apply unique_homset_of_initial_iso_terminal _ X Y
+  haveI : HasInitial C := HasZeroObject.hasInitial
+  apply uniqueHomsetOfInitialIsoTerminal _ X Y
   refine' ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩ <;> simp
 #align category_theory.unique_homset_of_zero CategoryTheory.uniqueHomsetOfZero
 

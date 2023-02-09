@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.monotone
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -439,12 +439,12 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
       (fun _ _ hm => hm.trans bot_le) _ _
   rintro k ih hφ m hm
   by_cases hk : IsMax k
-  · rw [succ_eq_iff_is_max.2 hk] at hm
+  · rw [succ_eq_iff_isMax.2 hk] at hm
     exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
   obtain rfl | h := le_succ_iff_eq_or_le.1 hm
   · specialize ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) k le_rfl
     refine' le_trans (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl _))
-    rw [lt_succ_iff_eq_or_lt_of_not_is_max hk]
+    rw [lt_succ_iff_eq_or_lt_of_not_isMax hk]
     exact Or.inl rfl
   · exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
 #align strict_mono_on.Iic_id_le StrictMonoOn.Iic_id_le
@@ -479,19 +479,19 @@ theorem strictMonoOn_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n : �
   rw [Set.mem_Iic] at *
   simp only [Function.iterate_succ', Function.comp_apply] at ih hxy hy⊢
   by_cases hmax : IsMax ((succ^[k]) x)
-  · rw [succ_eq_iff_is_max.2 hmax] at hxy⊢
+  · rw [succ_eq_iff_isMax.2 hmax] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
   by_cases hmax' : IsMax (succ ((succ^[k]) x))
-  · rw [succ_eq_iff_is_max.2 hmax'] at hxy⊢
+  · rw [succ_eq_iff_isMax.2 hmax'] at hxy⊢
     exact ih (le_trans (le_succ _) hy) hxy
   refine'
     lt_trans
       (ih (le_trans (le_succ _) hy)
-        (lt_of_le_of_lt (le_succ_iterate k _) (lt_succ_iff_not_is_max.2 hmax)))
+        (lt_of_le_of_lt (le_succ_iterate k _) (lt_succ_iff_not_isMax.2 hmax)))
       _
   rw [← Function.comp_apply succ, ← Function.iterate_succ']
   refine' hψ _ (lt_of_lt_of_le _ hy)
-  rwa [Function.iterate_succ', Function.comp_apply, lt_succ_iff_not_is_max]
+  rwa [Function.iterate_succ', Function.comp_apply, lt_succ_iff_not_isMax]
 #align strict_mono_on_Iic_of_lt_succ strictMonoOn_Iic_of_lt_succ
 
 /- warning: strict_anti_on_Iic_of_succ_lt -> strictAntiOn_Iic_of_succ_lt is a dubious translation:

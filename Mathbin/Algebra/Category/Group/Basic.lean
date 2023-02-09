@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.category.Group.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -272,11 +272,11 @@ theorem int_hom_ext {G : AddCommGroupCat.{0}} (f g : AddCommGroupCat.of ℤ ⟶ 
 theorem injective_of_mono {G H : AddCommGroupCat.{0}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
   fun g₁ g₂ h =>
   by
-  have t0 : as_hom g₁ ≫ f = as_hom g₂ ≫ f := by
+  have t0 : asHom g₁ ≫ f = asHom g₂ ≫ f := by
     ext
-    simpa [as_hom_apply] using h
-  have t1 : as_hom g₁ = as_hom g₂ := (cancel_mono _).1 t0
-  apply as_hom_injective t1
+    simpa [asHom_apply] using h
+  have t1 : asHom g₁ = asHom g₂ := (cancel_mono _).1 t0
+  apply asHom_injective t1
 #align AddCommGroup.injective_of_mono AddCommGroupCat.injective_of_mono
 
 end AddCommGroupCat
@@ -313,7 +313,7 @@ namespace CategoryTheory.Iso
       "Build an `add_equiv` from an isomorphism in the category\n`AddGroup`.",
   simps]
 def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
-  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+  i.hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Group_iso_to_mul_equiv CategoryTheory.Iso.groupIsoToMulEquiv
 #align category_theory.iso.AddGroup_iso_to_add_equiv CategoryTheory.Iso.addGroupIsoToAddEquiv
 
@@ -322,7 +322,7 @@ def groupIsoToMulEquiv {X Y : GroupCat} (i : X ≅ Y) : X ≃* Y :=
       "Build an `add_equiv` from an isomorphism\nin the category `AddCommGroup`.",
   simps]
 def commGroupIsoToMulEquiv {X Y : CommGroupCat} (i : X ≅ Y) : X ≃* Y :=
-  i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
+  i.hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.CommGroup_iso_to_mul_equiv CategoryTheory.Iso.commGroupIsoToMulEquiv
 #align category_theory.iso.AddCommGroup_iso_to_add_equiv CategoryTheory.Iso.addCommGroupIsoToAddEquiv
 
@@ -372,9 +372,9 @@ end CategoryTheory.Aut
 instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget GroupCat).map f)
+    let i := asIso ((forget GroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Group_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Group_iso).1⟩
 #align Group.forget_reflects_isos GroupCat.forget_reflects_isos
 #align AddGroup.forget_reflects_isos AddGroupCat.forget_reflects_isos
 
@@ -382,9 +382,9 @@ instance GroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget GroupCat.{
 instance CommGroupCat.forget_reflects_isos : ReflectsIsomorphisms (forget CommGroupCat.{u})
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget CommGroupCat).map f)
+    let i := asIso ((forget CommGroupCat).map f)
     let e : X ≃* Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_CommGroup_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_CommGroup_iso).1⟩
 #align CommGroup.forget_reflects_isos CommGroupCat.forget_reflects_isos
 #align AddCommGroup.forget_reflects_isos AddCommGroupCat.forget_reflects_isos
 

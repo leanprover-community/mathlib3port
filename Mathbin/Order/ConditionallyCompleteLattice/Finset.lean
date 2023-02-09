@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module order.conditionally_complete_lattice.finset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ Case conversion may be inaccurate. Consider using '#align finset.nonempty.sup'_e
 theorem Finset.Nonempty.sup'_eq_cSup_image {s : Finset β} (hs : s.Nonempty) (f : β → α) :
     s.sup' hs f = supₛ (f '' s) :=
   eq_of_forall_ge_iff fun a => by
-    simp [csupₛ_le_iff (s.finite_to_set.image f).BddAbove (hs.to_set.image f)]
+    simp [csupₛ_le_iff (s.finite_to_set.image f).bddAbove (hs.to_set.image f)]
 #align finset.nonempty.sup'_eq_cSup_image Finset.Nonempty.sup'_eq_cSup_image
 
 /- warning: finset.nonempty.sup'_id_eq_cSup -> Finset.Nonempty.sup'_id_eq_cSup is a dubious translation:
@@ -63,7 +63,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Finset.{u1} α} (h : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) (Finset.toSet.{u1} α s)) (Finset.max'.{u1} α (instLinearOrder.{u1} α _inst_1) s h)
 Case conversion may be inaccurate. Consider using '#align finset.nonempty.cSup_eq_max' Finset.Nonempty.cSup_eq_max'ₓ'. -/
 theorem Finset.Nonempty.cSup_eq_max' {s : Finset α} (h : s.Nonempty) : supₛ ↑s = s.max' h :=
-  eq_of_forall_ge_iff fun a => (csupₛ_le_iff s.BddAbove h.to_set).trans (s.max'_le_iff h).symm
+  eq_of_forall_ge_iff fun a => (csupₛ_le_iff s.bddAbove h.to_set).trans (s.max'_le_iff h).symm
 #align finset.nonempty.cSup_eq_max' Finset.Nonempty.cSup_eq_max'
 
 /- warning: finset.nonempty.cInf_eq_min' -> Finset.Nonempty.cInf_eq_min' is a dubious translation:
@@ -127,7 +127,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLinearOrder.{u1} α] {s : Set.{u1} α} {a : α}, (Set.Finite.{u1} α s) -> (Set.Nonempty.{u1} α s) -> (Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)) s) a) (forall (x : α), (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α (ConditionallyCompleteLinearOrder.toConditionallyCompleteLattice.{u1} α _inst_1)))))) x a)))
 Case conversion may be inaccurate. Consider using '#align set.finite.cSup_lt_iff Set.Finite.cSup_lt_iffₓ'. -/
 theorem Set.Finite.cSup_lt_iff (hs : s.Finite) (h : s.Nonempty) : supₛ s < a ↔ ∀ x ∈ s, x < a :=
-  ⟨fun h x hx => (le_csupₛ hs.BddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
+  ⟨fun h x hx => (le_csupₛ hs.bddAbove hx).trans_lt h, fun H => H _ <| h.cSup_mem hs⟩
 #align set.finite.cSup_lt_iff Set.Finite.cSup_lt_iff
 
 /- warning: set.finite.lt_cInf_iff -> Set.Finite.lt_cInf_iff is a dubious translation:
@@ -188,7 +188,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : ConditionallyCompleteLattice.{u1} α] (s : Finset.{u1} α) (H : Finset.Nonempty.{u1} α s), Eq.{succ u1} α (Finset.sup'.{u1, u1} α α (Lattice.toSemilatticeSup.{u1} α (ConditionallyCompleteLattice.toLattice.{u1} α _inst_1)) s H (id.{succ u1} α)) (SupSet.supₛ.{u1} α (ConditionallyCompleteLattice.toSupSet.{u1} α _inst_1) (Finset.toSet.{u1} α s))
 Case conversion may be inaccurate. Consider using '#align finset.sup'_id_eq_cSup Finset.sup'_id_eq_csupₛₓ'. -/
 theorem sup'_id_eq_csupₛ [ConditionallyCompleteLattice α] (s : Finset α) (H) :
-    s.sup' H id = supₛ s := by rw [sup'_eq_cSup_image s H, Set.image_id]
+    s.sup' H id = supₛ s := by rw [sup'_eq_csupₛ_image s H, Set.image_id]
 #align finset.sup'_id_eq_cSup Finset.sup'_id_eq_csupₛ
 
 /- warning: finset.inf'_id_eq_cInf -> Finset.inf'_id_eq_cinfₛ is a dubious translation:

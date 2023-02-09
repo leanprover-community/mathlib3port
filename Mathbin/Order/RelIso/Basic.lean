@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module order.rel_iso.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -379,7 +379,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rel_embedding.inj RelEmbedding.injₓ'. -/
 @[simp]
 theorem inj (f : r ↪r s) {a b} : f a = f b ↔ a = b :=
-  f.Injective.eq_iff
+  f.injective.eq_iff
 #align rel_embedding.inj RelEmbedding.inj
 
 /- warning: rel_embedding.map_rel_iff -> RelEmbedding.map_rel_iff is a dubious translation:
@@ -652,7 +652,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop}, (RelEmbedding.{u2, u1} α β r s) -> (WellFounded.{succ u1} β s) -> (WellFounded.{succ u2} α r)
 Case conversion may be inaccurate. Consider using '#align rel_embedding.well_founded RelEmbedding.wellFoundedₓ'. -/
 protected theorem wellFounded : ∀ (f : r ↪r s) (h : WellFounded s), WellFounded r
-  | f, ⟨H⟩ => ⟨fun a => f.Acc _ (H _)⟩
+  | f, ⟨H⟩ => ⟨fun a => f.acc _ (H _)⟩
 #align rel_embedding.well_founded RelEmbedding.wellFounded
 
 /- warning: rel_embedding.is_well_order -> RelEmbedding.isWellOrder is a dubious translation:
@@ -687,7 +687,7 @@ theorem wellFounded_lift₂_iff [s : Setoid α] {r : α → α → Prop} {H} :
     suffices ∀ {x : Quotient s} {a : α}, ⟦a⟧ = x → Acc r a by exact ⟨fun a => this rfl⟩
     · refine' fun x => hr.induction x _
       rintro x IH a rfl
-      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩, (Quotient.outRelEmbedding H).WellFounded⟩
+      exact ⟨_, fun b hb => IH ⟦b⟧ hb rfl⟩, (Quotient.outRelEmbedding H).wellFounded⟩
 #align well_founded_lift₂_iff wellFounded_lift₂_iff
 -/
 
@@ -726,7 +726,7 @@ theorem ofMapRelIff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s]
   to show it is a relation embedding. -/
 def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b, r a b → s (f a) (f b)) :
     r ↪r s := by
-  haveI := @IsAsymm.isIrrefl β s _
+  haveI := @is_asymm.is_irrefl β s _
   refine' ⟨⟨f, fun a b e => _⟩, fun a b => ⟨fun h => _, H _ _⟩⟩
   ·
     refine' ((@trichotomous _ r _ a b).resolve_left _).resolve_right _ <;>
@@ -785,7 +785,7 @@ def sumLiftRelInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum
 def sumLiftRelMap (f : r ↪r s) (g : t ↪r u) : Sum.LiftRel r t ↪r Sum.LiftRel s u
     where
   toFun := Sum.map f g
-  inj' := f.Injective.sum_map g.Injective
+  inj' := f.injective.sum_map g.injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
 #align rel_embedding.sum_lift_rel_map RelEmbedding.sumLiftRelMap
 -/
@@ -818,7 +818,7 @@ def sumLexInr (r : α → α → Prop) (s : β → β → Prop) : s ↪r Sum.Lex
 def sumLexMap (f : r ↪r s) (g : t ↪r u) : Sum.Lex r t ↪r Sum.Lex s u
     where
   toFun := Sum.map f g
-  inj' := f.Injective.sum_map g.Injective
+  inj' := f.injective.sum_map g.injective
   map_rel_iff' := by rintro (a | b) (c | d) <;> simp [f.map_rel_iff, g.map_rel_iff]
 #align rel_embedding.sum_lex_map RelEmbedding.sumLexMap
 -/
@@ -851,7 +851,7 @@ def prodLexMkRight (r : α → α → Prop) {b : β} (h : ¬s b b) : r ↪r Prod
 def prodLexMap (f : r ↪r s) (g : t ↪r u) : Prod.Lex r t ↪r Prod.Lex s u
     where
   toFun := Prod.map f g
-  inj' := f.Injective.Prod_map g.Injective
+  inj' := f.injective.Prod_map g.injective
   map_rel_iff' a b := by simp [Prod.lex_def, f.map_rel_iff, g.map_rel_iff]
 #align rel_embedding.prod_lex_map RelEmbedding.prodLexMap
 -/
@@ -1137,7 +1137,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (e : RelIso.{u2, u1} α β r s), Function.Bijective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s (RelIso.toRelEmbedding.{u2, u1} α β r s e)))
 Case conversion may be inaccurate. Consider using '#align rel_iso.bijective RelIso.bijectiveₓ'. -/
 protected theorem bijective (e : r ≃r s) : Bijective e :=
-  e.toEquiv.Bijective
+  e.toEquiv.bijective
 #align rel_iso.bijective RelIso.bijective
 
 /- warning: rel_iso.injective -> RelIso.injective is a dubious translation:
@@ -1147,7 +1147,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (e : RelIso.{u2, u1} α β r s), Function.Injective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s (RelIso.toRelEmbedding.{u2, u1} α β r s e)))
 Case conversion may be inaccurate. Consider using '#align rel_iso.injective RelIso.injectiveₓ'. -/
 protected theorem injective (e : r ≃r s) : Injective e :=
-  e.toEquiv.Injective
+  e.toEquiv.injective
 #align rel_iso.injective RelIso.injective
 
 /- warning: rel_iso.surjective -> RelIso.surjective is a dubious translation:
@@ -1157,7 +1157,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {r : α -> α -> Prop} {s : β -> β -> Prop} (e : RelIso.{u2, u1} α β r s), Function.Surjective.{succ u2, succ u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u2) (succ u1), succ u2, succ u1} (Function.Embedding.{succ u2, succ u1} α β) α β (Function.instEmbeddingLikeEmbedding.{succ u2, succ u1} α β)) (RelEmbedding.toEmbedding.{u2, u1} α β r s (RelIso.toRelEmbedding.{u2, u1} α β r s e)))
 Case conversion may be inaccurate. Consider using '#align rel_iso.surjective RelIso.surjectiveₓ'. -/
 protected theorem surjective (e : r ≃r s) : Surjective e :=
-  e.toEquiv.Surjective
+  e.toEquiv.surjective
 #align rel_iso.surjective RelIso.surjective
 
 /- warning: rel_iso.eq_iff_eq -> RelIso.eq_iff_eq is a dubious translation:
@@ -1168,7 +1168,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rel_iso.eq_iff_eq RelIso.eq_iff_eqₓ'. -/
 @[simp]
 theorem eq_iff_eq (f : r ≃r s) {a b} : f a = f b ↔ a = b :=
-  f.Injective.eq_iff
+  f.injective.eq_iff
 #align rel_iso.eq_iff_eq RelIso.eq_iff_eq
 
 #print RelIso.preimage /-
@@ -1201,7 +1201,7 @@ Case conversion may be inaccurate. Consider using '#align rel_iso.of_surjective 
 /-- A surjective relation embedding is a relation isomorphism. -/
 @[simps apply]
 noncomputable def ofSurjective (f : r ↪r s) (H : Surjective f) : r ≃r s :=
-  ⟨Equiv.ofBijective f ⟨f.Injective, H⟩, fun a b => f.map_rel_iff⟩
+  ⟨Equiv.ofBijective f ⟨f.injective, H⟩, fun a b => f.map_rel_iff⟩
 #align rel_iso.of_surjective RelIso.ofSurjective
 
 #print RelIso.sumLexCongr /-

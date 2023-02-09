@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.regular_mono
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,18 +101,18 @@ def regularOfIsPullbackSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h
   right := k ≫ hr.right
   w := by rw [← reassoc_of comm, ← reassoc_of comm, hr.w]
   IsLimit := by
-    apply fork.is_limit.mk' _ _
+    apply Fork.IsLimit.mk' _ _
     intro s
-    have l₁ : (fork.ι s ≫ k) ≫ regular_mono.left = (fork.ι s ≫ k) ≫ regular_mono.right
-    rw [category.assoc, s.condition, category.assoc]
-    obtain ⟨l, hl⟩ := fork.is_limit.lift' hr.is_limit _ l₁
-    obtain ⟨p, hp₁, hp₂⟩ := pullback_cone.is_limit.lift' t _ _ hl
+    have l₁ : (Fork.ι s ≫ k) ≫ RegularMono.left = (Fork.ι s ≫ k) ≫ RegularMono.right
+    rw [Category.assoc, s.condition, Category.assoc]
+    obtain ⟨l, hl⟩ := Fork.IsLimit.lift' hr.is_limit _ l₁
+    obtain ⟨p, hp₁, hp₂⟩ := PullbackCone.IsLimit.lift' t _ _ hl
     refine' ⟨p, hp₂, _⟩
     intro m w
     have z : m ≫ g = p ≫ g := w.trans hp₂.symm
     apply t.hom_ext
-    apply (pullback_cone.mk f g comm).equalizer_ext
-    · erw [← cancel_mono h, category.assoc, category.assoc, comm, reassoc_of z]
+    apply (PullbackCone.mk f g comm).equalizer_ext
+    · erw [← cancel_mono h, Category.assoc, Category.assoc, comm, reassoc_of z]
     · exact z
 #align category_theory.regular_of_is_pullback_snd_of_regular CategoryTheory.regularOfIsPullbackSndOfRegular
 
@@ -131,13 +131,13 @@ instance (priority := 100) strongMono_of_regularMono (f : X ⟶ Y) [RegularMono 
   StrongMono.mk'
     (by
       intro A B z hz u v sq
-      have : v ≫ (regular_mono.left : Y ⟶ regular_mono.Z f) = v ≫ regular_mono.right :=
+      have : v ≫ (RegularMono.left : Y ⟶ RegularMono.z f) = v ≫ RegularMono.right :=
         by
         apply (cancel_epi z).1
-        simp only [regular_mono.w, ← reassoc_of sq.w]
-      obtain ⟨t, ht⟩ := regular_mono.lift' _ _ this
-      refine' comm_sq.has_lift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
-      simp only [arrow.mk_hom, arrow.hom_mk'_left, category.assoc, ht, sq.w])
+        simp only [RegularMono.w, ← reassoc_of sq.w]
+      obtain ⟨t, ht⟩ := RegularMono.lift' _ _ this
+      refine' CommSq.HasLift.mk' ⟨t, (cancel_mono f).1 _, ht⟩
+      simp only [Arrow.mk_hom, Arrow.homMk'_left, Category.assoc, ht, sq.w])
 #align category_theory.strong_mono_of_regular_mono CategoryTheory.strongMono_of_regularMono
 
 /-- A regular monomorphism is an isomorphism if it is an epimorphism. -/
@@ -166,7 +166,7 @@ instance (priority := 100) regularMonoCategoryOfSplitMonoCategory [SplitMonoCate
     RegularMonoCategory C
     where regularMonoOfMono _ _ f _ :=
     by
-    haveI := is_split_mono_of_mono f
+    haveI := isSplitMono_of_mono f
     infer_instance
 #align category_theory.regular_mono_category_of_split_mono_category CategoryTheory.regularMonoCategoryOfSplitMonoCategory
 
@@ -174,7 +174,7 @@ instance (priority := 100) strongMonoCategory_of_regularMonoCategory [RegularMon
     StrongMonoCategory C
     where strongMono_of_mono _ _ f _ :=
     by
-    haveI := regular_mono_of_mono f
+    haveI := regularMonoOfMono f
     infer_instance
 #align category_theory.strong_mono_category_of_regular_mono_category CategoryTheory.strongMonoCategory_of_regularMonoCategory
 
@@ -235,19 +235,19 @@ def regularOfIsPushoutSndOfRegular {P Q R S : C} {f : P ⟶ Q} {g : P ⟶ R} {h 
   w := gr.w
   left := gr.left ≫ f
   right := gr.right ≫ f
-  w := by rw [category.assoc, category.assoc, comm, reassoc_of gr.w]
+  w := by rw [Category.assoc, Category.assoc, comm, reassoc_of gr.w]
   IsColimit := by
-    apply cofork.is_colimit.mk' _ _
+    apply Cofork.IsColimit.mk' _ _
     intro s
     have l₁ : gr.left ≫ f ≫ s.π = gr.right ≫ f ≫ s.π
-    rw [← category.assoc, ← category.assoc, s.condition]
-    obtain ⟨l, hl⟩ := cofork.is_colimit.desc' gr.is_colimit (f ≫ cofork.π s) l₁
-    obtain ⟨p, hp₁, hp₂⟩ := pushout_cocone.is_colimit.desc' t _ _ hl.symm
+    rw [← Category.assoc, ← Category.assoc, s.condition]
+    obtain ⟨l, hl⟩ := Cofork.IsColimit.desc' gr.is_colimit (f ≫ Cofork.π s) l₁
+    obtain ⟨p, hp₁, hp₂⟩ := PushoutCocone.IsColimit.desc' t _ _ hl.symm
     refine' ⟨p, hp₁, _⟩
     intro m w
     have z := w.trans hp₁.symm
     apply t.hom_ext
-    apply (pushout_cocone.mk _ _ comm).coequalizer_ext
+    apply (PushoutCocone.mk _ _ comm).coequalizer_ext
     · exact z
     · erw [← cancel_epi g, ← reassoc_of comm, ← reassoc_of comm, z]
       rfl
@@ -268,16 +268,16 @@ instance (priority := 100) strongEpi_of_regularEpi (f : X ⟶ Y) [RegularEpi f] 
   StrongEpi.mk'
     (by
       intro A B z hz u v sq
-      have : (regular_epi.left : regular_epi.W f ⟶ X) ≫ u = regular_epi.right ≫ u :=
+      have : (RegularEpi.left : RegularEpi.w f ⟶ X) ≫ u = RegularEpi.right ≫ u :=
         by
         apply (cancel_mono z).1
-        simp only [category.assoc, sq.w, regular_epi.w_assoc]
-      obtain ⟨t, ht⟩ := regular_epi.desc' f u this
+        simp only [Category.assoc, sq.w, RegularEpi.w_assoc]
+      obtain ⟨t, ht⟩ := RegularEpi.desc' f u this
       exact
-        comm_sq.has_lift.mk'
+        CommSq.HasLift.mk'
           ⟨t, ht,
             (cancel_epi f).1
-              (by simp only [← category.assoc, ht, ← sq.w, arrow.mk_hom, arrow.hom_mk'_right])⟩)
+              (by simp only [← Category.assoc, ht, ← sq.w, Arrow.mk_hom, Arrow.homMk'_right])⟩)
 #align category_theory.strong_epi_of_regular_epi CategoryTheory.strongEpi_of_regularEpi
 
 /-- A regular epimorphism is an isomorphism if it is a monomorphism. -/
@@ -306,7 +306,7 @@ instance (priority := 100) regularEpiCategoryOfSplitEpiCategory [SplitEpiCategor
     RegularEpiCategory C
     where regularEpiOfEpi _ _ f _ :=
     by
-    haveI := is_split_epi_of_epi f
+    haveI := isSplitEpi_of_epi f
     infer_instance
 #align category_theory.regular_epi_category_of_split_epi_category CategoryTheory.regularEpiCategoryOfSplitEpiCategory
 
@@ -314,7 +314,7 @@ instance (priority := 100) strongEpiCategory_of_regularEpiCategory [RegularEpiCa
     StrongEpiCategory C
     where strongEpi_of_epi _ _ f _ :=
     by
-    haveI := regular_epi_of_epi f
+    haveI := regularEpiOfEpi f
     infer_instance
 #align category_theory.strong_epi_category_of_regular_epi_category CategoryTheory.strongEpiCategory_of_regularEpiCategory
 

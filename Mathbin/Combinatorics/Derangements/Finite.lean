@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem card_derangements_fin_add_two (n : ℕ) :
 def numDerangements : ℕ → ℕ
   | 0 => 1
   | 1 => 0
-  | n + 2 => (n + 1) * (numDerangements n + numDerangements (n + 1))
+  | n + 2 => (n + 1) * (num_derangements n + num_derangements (n + 1))
 #align num_derangements numDerangements
 
 @[simp]

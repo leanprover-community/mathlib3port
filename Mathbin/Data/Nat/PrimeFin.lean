@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.prime_fin
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem pow_succ_factors_toFinset (n k : ℕ) : (n ^ (k + 1)).factors.toFinset =
   · simp
   induction' k with k ih
   · simp
-  rw [pow_succ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
+  rw [pow_succ, factors_mul_toFinset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
 #align nat.pow_succ_factors_to_finset Nat.pow_succ_factors_toFinset
 
 /- warning: nat.pow_factors_to_finset -> Nat.pow_factors_toFinset is a dubious translation:
@@ -69,7 +69,7 @@ theorem pow_factors_toFinset (n : ℕ) {k : ℕ} (hk : k ≠ 0) :
   by
   cases k
   · simpa using hk
-  rw [pow_succ_factors_to_finset]
+  rw [pow_succ_factors_toFinset]
 #align nat.pow_factors_to_finset Nat.pow_factors_toFinset
 
 /- warning: nat.prime_pow_prime_divisor -> Nat.prime_pow_prime_divisor is a dubious translation:
@@ -80,7 +80,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nat.prime_pow_prime_divisor Nat.prime_pow_prime_divisorₓ'. -/
 /-- The only prime divisor of positive prime power `p^k` is `p` itself -/
 theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) :
-    (p ^ k).factors.toFinset = {p} := by simp [pow_factors_to_finset p hk, factors_prime hp]
+    (p ^ k).factors.toFinset = {p} := by simp [pow_factors_toFinset p hk, factors_prime hp]
 #align nat.prime_pow_prime_divisor Nat.prime_pow_prime_divisor
 
 /- warning: nat.factors_mul_to_finset_of_coprime -> Nat.factors_mul_toFinset_of_coprime is a dubious translation:

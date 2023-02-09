@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.countable_dense_linear_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrder α] [DenselyOrdered α
 
 variable (α β : Type _) [LinearOrder α] [LinearOrder β]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p q «expr ∈ » f) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (p q «expr ∈ » f) -/
 #print Order.PartialIso /-
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
@@ -195,7 +195,7 @@ def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty
     Cofinal (PartialIso α β) where
   carrier f := ∃ a, (a, b) ∈ f.val
   mem_gt f := by
-    rcases(defined_at_left α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
+    rcases(definedAtLeft α b).mem_gt f.comm with ⟨f', ⟨a, ha⟩, hl⟩
     refine' ⟨f'.comm, ⟨a, _⟩, _⟩
     · change (a, b) ∈ f'.val.image _
       rwa [← Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage]
@@ -253,14 +253,13 @@ theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [No
   rcases exists_pair_lt β with ⟨x, y, hxy⟩
   cases' exists_between hxy with a ha
   haveI : Nonempty (Set.Ioo x y) := ⟨⟨a, ha⟩⟩
-  let our_ideal : ideal (partial_iso α _) :=
-    ideal_of_cofinals default (defined_at_left (Set.Ioo x y))
-  let F a := fun_of_ideal a our_ideal (cofinal_meets_ideal_of_cofinals _ _ a)
+  let our_ideal : Ideal (PartialIso α _) := idealOfCofinals default (definedAtLeft (Set.Ioo x y))
+  let F a := funOfIdeal a our_ideal (cofinal_meets_idealOfCofinals _ _ a)
   refine'
     ⟨RelEmbedding.trans (OrderEmbedding.ofStrictMono (fun a => (F a).val) fun a₁ a₂ => _)
         (OrderEmbedding.subtype _)⟩
-  rcases(F a₁).Prop with ⟨f, hf, ha₁⟩
-  rcases(F a₂).Prop with ⟨g, hg, ha₂⟩
+  rcases(F a₁).prop with ⟨f, hf, ha₁⟩
+  rcases(F a₂).prop with ⟨g, hg, ha₂⟩
   rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
   exact (lt_iff_lt_of_cmp_eq_cmp <| m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
 #align order.embedding_from_countable_to_dense Order.embedding_from_countable_to_dense
@@ -282,8 +281,8 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
   let G b := invOfIdeal b our_ideal (cofinal_meets_idealOfCofinals _ to_cofinal (Sum.inr b))
   ⟨OrderIso.ofCmpEqCmp (fun a => (F a).val) (fun b => (G b).val) fun a b =>
       by
-      rcases(F a).Prop with ⟨f, hf, ha⟩
-      rcases(G b).Prop with ⟨g, hg, hb⟩
+      rcases(F a).prop with ⟨f, hf, ha⟩
+      rcases(G b).prop with ⟨g, hg, hb⟩
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
       exact m.prop (a, _) (fm ha) (_, b) (gm hb)⟩
 #align order.iso_of_countable_dense Order.iso_of_countable_dense

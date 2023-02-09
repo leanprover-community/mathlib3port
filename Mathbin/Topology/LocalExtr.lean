@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.local_extr
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,25 +216,25 @@ theorem IsLocalMaxOn.isLocalMax (hf : IsLocalMaxOn f s a) (hs : s ∈ 𝓝 a) : 
 
 #print IsLocalExtrOn.isLocalExtr /-
 theorem IsLocalExtrOn.isLocalExtr (hf : IsLocalExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocalExtr f a :=
-  hf.elim (fun hf => (hf.IsLocalMin hs).isExtr) fun hf => (hf.IsLocalMax hs).isExtr
+  hf.elim (fun hf => (hf.isLocalMin hs).isExtr) fun hf => (hf.isLocalMax hs).isExtr
 #align is_local_extr_on.is_local_extr IsLocalExtrOn.isLocalExtr
 -/
 
 #print IsMinOn.isLocalMin /-
 theorem IsMinOn.isLocalMin (hf : IsMinOn f s a) (hs : s ∈ 𝓝 a) : IsLocalMin f a :=
-  hf.localize.IsLocalMin hs
+  hf.localize.isLocalMin hs
 #align is_min_on.is_local_min IsMinOn.isLocalMin
 -/
 
 #print IsMaxOn.isLocalMax /-
 theorem IsMaxOn.isLocalMax (hf : IsMaxOn f s a) (hs : s ∈ 𝓝 a) : IsLocalMax f a :=
-  hf.localize.IsLocalMax hs
+  hf.localize.isLocalMax hs
 #align is_max_on.is_local_max IsMaxOn.isLocalMax
 -/
 
 #print IsExtrOn.isLocalExtr /-
 theorem IsExtrOn.isLocalExtr (hf : IsExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocalExtr f a :=
-  hf.localize.IsLocalExtr hs
+  hf.localize.isLocalExtr hs
 #align is_extr_on.is_local_extr IsExtrOn.isLocalExtr
 -/
 
@@ -247,7 +247,7 @@ Case conversion may be inaccurate. Consider using '#align is_local_min_on.not_nh
 theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f s a)
     [NeBot (𝓝[<] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) := fun hle =>
   have : ∀ᶠ y in 𝓝[<] f a, f a ≤ y := (eventually_map.2 hf).filter_mono (inf_le_left.trans hle)
-  let ⟨y, hy⟩ := (this.And self_mem_nhdsWithin).exists
+  let ⟨y, hy⟩ := (this.and self_mem_nhdsWithin).exists
   hy.1.not_lt hy.2
 #align is_local_min_on.not_nhds_le_map IsLocalMinOn.not_nhds_le_map
 
@@ -853,112 +853,112 @@ variable [Preorder β] {s : Set α}
 #print Filter.EventuallyLe.isLocalMaxOn /-
 theorem Filter.EventuallyLe.isLocalMaxOn {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f)
     (hfga : f a = g a) (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=
-  hle.IsMaxFilter hfga h
+  hle.isMaxFilter hfga h
 #align filter.eventually_le.is_local_max_on Filter.EventuallyLe.isLocalMaxOn
 -/
 
 #print IsLocalMaxOn.congr /-
 theorem IsLocalMaxOn.congr {f g : α → β} {a : α} (h : IsLocalMaxOn f s a) (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalMaxOn g s a :=
-  h.congr HEq <| HEq.eq_of_nhdsWithin hmem
+  h.congr heq <| heq.eq_of_nhdsWithin hmem
 #align is_local_max_on.congr IsLocalMaxOn.congr
 -/
 
 #print Filter.EventuallyEq.isLocalMaxOn_iff /-
 theorem Filter.EventuallyEq.isLocalMaxOn_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalMaxOn f s a ↔ IsLocalMaxOn g s a :=
-  HEq.isMaxFilter_iff <| HEq.eq_of_nhdsWithin hmem
+  heq.isMaxFilter_iff <| heq.eq_of_nhdsWithin hmem
 #align filter.eventually_eq.is_local_max_on_iff Filter.EventuallyEq.isLocalMaxOn_iff
 -/
 
 #print Filter.EventuallyLe.isLocalMinOn /-
 theorem Filter.EventuallyLe.isLocalMinOn {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝[s] a] g)
     (hfga : f a = g a) (h : IsLocalMinOn f s a) : IsLocalMinOn g s a :=
-  hle.IsMinFilter hfga h
+  hle.isMinFilter hfga h
 #align filter.eventually_le.is_local_min_on Filter.EventuallyLe.isLocalMinOn
 -/
 
 #print IsLocalMinOn.congr /-
 theorem IsLocalMinOn.congr {f g : α → β} {a : α} (h : IsLocalMinOn f s a) (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalMinOn g s a :=
-  h.congr HEq <| HEq.eq_of_nhdsWithin hmem
+  h.congr heq <| heq.eq_of_nhdsWithin hmem
 #align is_local_min_on.congr IsLocalMinOn.congr
 -/
 
 #print Filter.EventuallyEq.isLocalMinOn_iff /-
 theorem Filter.EventuallyEq.isLocalMinOn_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalMinOn f s a ↔ IsLocalMinOn g s a :=
-  HEq.isMinFilter_iff <| HEq.eq_of_nhdsWithin hmem
+  heq.isMinFilter_iff <| heq.eq_of_nhdsWithin hmem
 #align filter.eventually_eq.is_local_min_on_iff Filter.EventuallyEq.isLocalMinOn_iff
 -/
 
 #print IsLocalExtrOn.congr /-
 theorem IsLocalExtrOn.congr {f g : α → β} {a : α} (h : IsLocalExtrOn f s a) (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalExtrOn g s a :=
-  h.congr HEq <| HEq.eq_of_nhdsWithin hmem
+  h.congr heq <| heq.eq_of_nhdsWithin hmem
 #align is_local_extr_on.congr IsLocalExtrOn.congr
 -/
 
 #print Filter.EventuallyEq.isLocalExtrOn_iff /-
 theorem Filter.EventuallyEq.isLocalExtrOn_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝[s] a] g)
     (hmem : a ∈ s) : IsLocalExtrOn f s a ↔ IsLocalExtrOn g s a :=
-  HEq.isExtrFilter_iff <| HEq.eq_of_nhdsWithin hmem
+  heq.isExtrFilter_iff <| heq.eq_of_nhdsWithin hmem
 #align filter.eventually_eq.is_local_extr_on_iff Filter.EventuallyEq.isLocalExtrOn_iff
 -/
 
 #print Filter.EventuallyLe.isLocalMax /-
 theorem Filter.EventuallyLe.isLocalMax {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝 a] f) (hfga : f a = g a)
     (h : IsLocalMax f a) : IsLocalMax g a :=
-  hle.IsMaxFilter hfga h
+  hle.isMaxFilter hfga h
 #align filter.eventually_le.is_local_max Filter.EventuallyLe.isLocalMax
 -/
 
 #print IsLocalMax.congr /-
 theorem IsLocalMax.congr {f g : α → β} {a : α} (h : IsLocalMax f a) (heq : f =ᶠ[𝓝 a] g) :
     IsLocalMax g a :=
-  h.congr HEq HEq.eq_of_nhds
+  h.congr heq heq.eq_of_nhds
 #align is_local_max.congr IsLocalMax.congr
 -/
 
 #print Filter.EventuallyEq.isLocalMax_iff /-
 theorem Filter.EventuallyEq.isLocalMax_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝 a] g) :
     IsLocalMax f a ↔ IsLocalMax g a :=
-  HEq.isMaxFilter_iff HEq.eq_of_nhds
+  heq.isMaxFilter_iff heq.eq_of_nhds
 #align filter.eventually_eq.is_local_max_iff Filter.EventuallyEq.isLocalMax_iff
 -/
 
 #print Filter.EventuallyLe.isLocalMin /-
 theorem Filter.EventuallyLe.isLocalMin {f g : α → β} {a : α} (hle : f ≤ᶠ[𝓝 a] g) (hfga : f a = g a)
     (h : IsLocalMin f a) : IsLocalMin g a :=
-  hle.IsMinFilter hfga h
+  hle.isMinFilter hfga h
 #align filter.eventually_le.is_local_min Filter.EventuallyLe.isLocalMin
 -/
 
 #print IsLocalMin.congr /-
 theorem IsLocalMin.congr {f g : α → β} {a : α} (h : IsLocalMin f a) (heq : f =ᶠ[𝓝 a] g) :
     IsLocalMin g a :=
-  h.congr HEq HEq.eq_of_nhds
+  h.congr heq heq.eq_of_nhds
 #align is_local_min.congr IsLocalMin.congr
 -/
 
 #print Filter.EventuallyEq.isLocalMin_iff /-
 theorem Filter.EventuallyEq.isLocalMin_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝 a] g) :
     IsLocalMin f a ↔ IsLocalMin g a :=
-  HEq.isMinFilter_iff HEq.eq_of_nhds
+  heq.isMinFilter_iff heq.eq_of_nhds
 #align filter.eventually_eq.is_local_min_iff Filter.EventuallyEq.isLocalMin_iff
 -/
 
 #print IsLocalExtr.congr /-
 theorem IsLocalExtr.congr {f g : α → β} {a : α} (h : IsLocalExtr f a) (heq : f =ᶠ[𝓝 a] g) :
     IsLocalExtr g a :=
-  h.congr HEq HEq.eq_of_nhds
+  h.congr heq heq.eq_of_nhds
 #align is_local_extr.congr IsLocalExtr.congr
 -/
 
 #print Filter.EventuallyEq.isLocalExtr_iff /-
 theorem Filter.EventuallyEq.isLocalExtr_iff {f g : α → β} {a : α} (heq : f =ᶠ[𝓝 a] g) :
     IsLocalExtr f a ↔ IsLocalExtr g a :=
-  HEq.isExtrFilter_iff HEq.eq_of_nhds
+  heq.isExtrFilter_iff heq.eq_of_nhds
 #align filter.eventually_eq.is_local_extr_iff Filter.EventuallyEq.isLocalExtr_iff
 -/
 

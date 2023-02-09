@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] (p : Prod.{u2, u1} M N) (q : Prod.{u2, u1} M N), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} N M) (Prod.swap.{u2, u1} M N (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u2, u1} M N) (Prod.{u2, u1} M N) (Prod.{u2, u1} M N) (instHMul.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulProd.{u2, u1} M N _inst_1 _inst_2)) p q)) (HMul.hMul.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u1, u2} N M) (Prod.{u1, u2} N M) (Prod.{u1, u2} N M) (instHMul.{max u2 u1} (Prod.{u1, u2} N M) (Prod.instMulProd.{u1, u2} N M _inst_2 _inst_1)) (Prod.swap.{u2, u1} M N p) (Prod.swap.{u2, u1} M N q))
 Case conversion may be inaccurate. Consider using '#align prod.swap_mul Prod.swap_mulₓ'. -/
 @[simp, to_additive]
-theorem swap_mul [Mul M] [Mul N] (p q : M × N) : (p * q).symm = p.symm * q.symm :=
+theorem swap_mul [Mul M] [Mul N] (p q : M × N) : (p * q).swap = p.swap * q.swap :=
   rfl
 #align prod.swap_mul Prod.swap_mul
 #align prod.swap_add Prod.swap_add
@@ -191,7 +191,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : One.{u2} M] [_inst_2 : One.{u1} N], Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} N M) (Prod.swap.{u2, u1} M N (OfNat.ofNat.{max u2 u1} (Prod.{u2, u1} M N) 1 (One.toOfNat1.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instOneProd.{u2, u1} M N _inst_1 _inst_2)))) (OfNat.ofNat.{max u2 u1} (Prod.{u1, u2} N M) 1 (One.toOfNat1.{max u2 u1} (Prod.{u1, u2} N M) (Prod.instOneProd.{u1, u2} N M _inst_2 _inst_1)))
 Case conversion may be inaccurate. Consider using '#align prod.swap_one Prod.swap_oneₓ'. -/
 @[simp, to_additive]
-theorem swap_one [One M] [One N] : (1 : M × N).symm = 1 :=
+theorem swap_one [One M] [One N] : (1 : M × N).swap = 1 :=
   rfl
 #align prod.swap_one Prod.swap_one
 #align prod.swap_zero Prod.swap_zero
@@ -255,7 +255,7 @@ but is expected to have type
   forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Inv.{u2} G] [_inst_2 : Inv.{u1} H] (p : Prod.{u2, u1} G H), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} H G) (Prod.swap.{u2, u1} G H (Inv.inv.{max u2 u1} (Prod.{u2, u1} G H) (Prod.instInvProd.{u2, u1} G H _inst_1 _inst_2) p)) (Inv.inv.{max u2 u1} (Prod.{u1, u2} H G) (Prod.instInvProd.{u1, u2} H G _inst_2 _inst_1) (Prod.swap.{u2, u1} G H p))
 Case conversion may be inaccurate. Consider using '#align prod.swap_inv Prod.swap_invₓ'. -/
 @[simp, to_additive]
-theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.symm = p.symm⁻¹ :=
+theorem swap_inv [Inv G] [Inv H] (p : G × H) : p⁻¹.swap = p.swap⁻¹ :=
   rfl
 #align prod.swap_inv Prod.swap_inv
 #align prod.swap_neg Prod.swap_neg
@@ -312,7 +312,7 @@ but is expected to have type
   forall {G : Type.{u2}} {H : Type.{u1}} [_inst_1 : Div.{u2} G] [_inst_2 : Div.{u1} H] (a : Prod.{u2, u1} G H) (b : Prod.{u2, u1} G H), Eq.{max (succ u2) (succ u1)} (Prod.{u1, u2} H G) (Prod.swap.{u2, u1} G H (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u2, u1} G H) (Prod.{u2, u1} G H) (Prod.{u2, u1} G H) (instHDiv.{max u2 u1} (Prod.{u2, u1} G H) (Prod.instDivProd.{u2, u1} G H _inst_1 _inst_2)) a b)) (HDiv.hDiv.{max u2 u1, max u2 u1, max u2 u1} (Prod.{u1, u2} H G) (Prod.{u1, u2} H G) (Prod.{u1, u2} H G) (instHDiv.{max u2 u1} (Prod.{u1, u2} H G) (Prod.instDivProd.{u1, u2} H G _inst_2 _inst_1)) (Prod.swap.{u2, u1} G H a) (Prod.swap.{u2, u1} G H b))
 Case conversion may be inaccurate. Consider using '#align prod.swap_div Prod.swap_divₓ'. -/
 @[simp, to_additive]
-theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).symm = a.symm / b.symm :=
+theorem swap_div [Div G] [Div H] (a b : G × H) : (a / b).swap = a.swap / b.swap :=
   rfl
 #align prod.swap_div Prod.swap_div
 #align prod.swap_sub Prod.swap_sub
@@ -496,7 +496,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] [_inst_3 : Mul.{u1} P] (f : MulHom.{u3, u2} M N _inst_1 _inst_2) (g : MulHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) ᾰ) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), succ u3, max (succ u2) (succ u1)} (MulHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3)) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) _x) (MulHomClass.toFunLike.{max (max u3 u2) u1, u3, max u2 u1} (MulHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3) (MulHom.mulHomClass.{u3, max u2 u1} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3))) (MulHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) (Pi.prod.{u3, u2, u1} M (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) ᾰ) (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) ᾰ) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (MulHom.{u3, u1} M P _inst_1 _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) _x) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (MulHom.{u3, u1} M P _inst_1 _inst_3) M P _inst_1 _inst_3 (MulHom.mulHomClass.{u3, u1} M P _inst_1 _inst_3)) g))
 Case conversion may be inaccurate. Consider using '#align mul_hom.coe_prod MulHom.coe_prodₓ'. -/
 @[to_additive coe_prod]
-theorem coe_prod (f : M →ₙ* N) (g : M →ₙ* P) : ⇑(f.Prod g) = Pi.prod f g :=
+theorem coe_prod (f : M →ₙ* N) (g : M →ₙ* P) : ⇑(f.prod g) = Pi.prod f g :=
   rfl
 #align mul_hom.coe_prod MulHom.coe_prod
 #align add_hom.coe_prod AddHom.coe_prod
@@ -508,7 +508,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] [_inst_3 : Mul.{u1} P] (f : MulHom.{u3, u2} M N _inst_1 _inst_2) (g : MulHom.{u3, u1} M P _inst_1 _inst_3) (x : M), Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), succ u3, max (succ u2) (succ u1)} (MulHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3)) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) _x) (MulHomClass.toFunLike.{max (max u3 u2) u1, u3, max u2 u1} (MulHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3) (MulHom.mulHomClass.{u3, max u2 u1} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3))) (MulHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g) x) (Prod.mk.{u2, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) x) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MulHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u3, u2} M N _inst_1 _inst_2)) f x) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (MulHom.{u3, u1} M P _inst_1 _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) _x) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (MulHom.{u3, u1} M P _inst_1 _inst_3) M P _inst_1 _inst_3 (MulHom.mulHomClass.{u3, u1} M P _inst_1 _inst_3)) g x))
 Case conversion may be inaccurate. Consider using '#align mul_hom.prod_apply MulHom.prod_applyₓ'. -/
 @[simp, to_additive prod_apply]
-theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) (x) : f.Prod g x = (f x, g x) :=
+theorem prod_apply (f : M →ₙ* N) (g : M →ₙ* P) (x) : f.prod g x = (f x, g x) :=
   rfl
 #align mul_hom.prod_apply MulHom.prod_apply
 #align add_hom.prod_apply AddHom.prod_apply
@@ -520,7 +520,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] [_inst_3 : Mul.{u1} P] (f : MulHom.{u3, u2} M N _inst_1 _inst_2) (g : MulHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (succ u3) (succ u2)} (MulHom.{u3, u2} M N _inst_1 _inst_2) (MulHom.comp.{u3, max u2 u1, u2} M (Prod.{u2, u1} N P) N _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3) _inst_2 (MulHom.fst.{u2, u1} N P _inst_2 _inst_3) (MulHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) f
 Case conversion may be inaccurate. Consider using '#align mul_hom.fst_comp_prod MulHom.fst_comp_prodₓ'. -/
 @[simp, to_additive fst_comp_prod]
-theorem fst_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (fst N P).comp (f.Prod g) = f :=
+theorem fst_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (fst N P).comp (f.prod g) = f :=
   ext fun x => rfl
 #align mul_hom.fst_comp_prod MulHom.fst_comp_prod
 #align add_hom.fst_comp_prod AddHom.fst_comp_prod
@@ -532,7 +532,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u2} N] [_inst_3 : Mul.{u1} P] (f : MulHom.{u3, u2} M N _inst_1 _inst_2) (g : MulHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (succ u3) (succ u1)} (MulHom.{u3, u1} M P _inst_1 _inst_3) (MulHom.comp.{u3, max u2 u1, u1} M (Prod.{u2, u1} N P) P _inst_1 (Prod.instMulProd.{u2, u1} N P _inst_2 _inst_3) _inst_3 (MulHom.snd.{u2, u1} N P _inst_2 _inst_3) (MulHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) g
 Case conversion may be inaccurate. Consider using '#align mul_hom.snd_comp_prod MulHom.snd_comp_prodₓ'. -/
 @[simp, to_additive snd_comp_prod]
-theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.Prod g) = g :=
+theorem snd_comp_prod (f : M →ₙ* N) (g : M →ₙ* P) : (snd N P).comp (f.prod g) = g :=
   ext fun x => rfl
 #align mul_hom.snd_comp_prod MulHom.snd_comp_prod
 #align add_hom.snd_comp_prod AddHom.snd_comp_prod
@@ -544,7 +544,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u1}} {P : Type.{u2}} [_inst_1 : Mul.{u3} M] [_inst_2 : Mul.{u1} N] [_inst_3 : Mul.{u2} P] (f : MulHom.{u3, max u2 u1} M (Prod.{u1, u2} N P) _inst_1 (Prod.instMulProd.{u1, u2} N P _inst_2 _inst_3)), Eq.{max (max (succ u3) (succ u1)) (succ u2)} (MulHom.{u3, max u2 u1} M (Prod.{u1, u2} N P) _inst_1 (Prod.instMulProd.{u1, u2} N P _inst_2 _inst_3)) (MulHom.prod.{u3, u1, u2} M N P _inst_1 _inst_2 _inst_3 (MulHom.comp.{u3, max u1 u2, u1} M (Prod.{u1, u2} N P) N _inst_1 (Prod.instMulProd.{u1, u2} N P _inst_2 _inst_3) _inst_2 (MulHom.fst.{u1, u2} N P _inst_2 _inst_3) f) (MulHom.comp.{u3, max u1 u2, u2} M (Prod.{u1, u2} N P) P _inst_1 (Prod.instMulProd.{u1, u2} N P _inst_2 _inst_3) _inst_3 (MulHom.snd.{u1, u2} N P _inst_2 _inst_3) f)) f
 Case conversion may be inaccurate. Consider using '#align mul_hom.prod_unique MulHom.prod_uniqueₓ'. -/
 @[simp, to_additive prod_unique]
-theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
+theorem prod_unique (f : M →ₙ* N × P) : ((fst N P).comp f).prod ((snd N P).comp f) = f :=
   ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align mul_hom.prod_unique MulHom.prod_unique
 #align add_hom.prod_unique AddHom.prod_unique
@@ -560,7 +560,7 @@ variable {M' : Type _} {N' : Type _} [Mul M] [Mul N] [Mul M'] [Mul N'] [Mul P] (
 /-- `prod.map` as a `monoid_hom`. -/
 @[to_additive Prod_map "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →ₙ* M' × N' :=
-  (f.comp (fst M N)).Prod (g.comp (snd M N))
+  (f.comp (fst M N)).prod (g.comp (snd M N))
 #align mul_hom.prod_map MulHom.prodMap
 #align add_hom.prod_map AddHom.prodMap
 -/
@@ -572,7 +572,7 @@ but is expected to have type
   forall {M : Type.{u4}} {N : Type.{u3}} {M' : Type.{u2}} {N' : Type.{u1}} [_inst_1 : Mul.{u4} M] [_inst_2 : Mul.{u3} N] [_inst_3 : Mul.{u2} M'] [_inst_4 : Mul.{u1} N'] (f : MulHom.{u4, u2} M M' _inst_1 _inst_3) (g : MulHom.{u3, u1} N N' _inst_2 _inst_4), Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (MulHom.{max u3 u4, max u1 u2} (Prod.{u4, u3} M N) (Prod.{u2, u1} M' N') (Prod.instMulProd.{u4, u3} M N _inst_1 _inst_2) (Prod.instMulProd.{u2, u1} M' N' _inst_3 _inst_4)) (MulHom.prodMap.{u4, u3, u2, u1} M N M' N' _inst_1 _inst_2 _inst_3 _inst_4 f g) (MulHom.prod.{max u4 u3, u2, u1} (Prod.{u4, u3} M N) M' N' (Prod.instMulProd.{u4, u3} M N _inst_1 _inst_2) _inst_3 _inst_4 (MulHom.comp.{max u4 u3, u4, u2} (Prod.{u4, u3} M N) M M' (Prod.instMulProd.{u4, u3} M N _inst_1 _inst_2) _inst_1 _inst_3 f (MulHom.fst.{u4, u3} M N _inst_1 _inst_2)) (MulHom.comp.{max u4 u3, u3, u1} (Prod.{u4, u3} M N) N N' (Prod.instMulProd.{u4, u3} M N _inst_1 _inst_2) _inst_2 _inst_4 g (MulHom.snd.{u4, u3} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align mul_hom.prod_map_def MulHom.prodMap_defₓ'. -/
 @[to_additive prod_map_def]
-theorem prodMap_def : prodMap f g = (f.comp (fst M N)).Prod (g.comp (snd M N)) :=
+theorem prodMap_def : prodMap f g = (f.comp (fst M N)).prod (g.comp (snd M N)) :=
   rfl
 #align mul_hom.prod_map_def MulHom.prodMap_def
 #align add_hom.prod_map_def AddHom.prodMap_def
@@ -597,7 +597,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_hom.prod_comp_prod_map MulHom.prod_comp_prodMapₓ'. -/
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →ₙ* M) (g : P →ₙ* N) (f' : M →ₙ* M') (g' : N →ₙ* N') :
-    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.prodMap g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
   rfl
 #align mul_hom.prod_comp_prod_map MulHom.prod_comp_prodMap
 #align add_hom.prod_comp_prod_map AddHom.prod_comp_prodMap
@@ -835,7 +835,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u2} N] [_inst_3 : MulOneClass.{u1} P] (f : MonoidHom.{u3, u2} M N _inst_1 _inst_2) (g : MonoidHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (max (succ u3) (succ u2)) (succ u1)} (forall (ᾰ : M), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) ᾰ) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), succ u3, max (succ u2) (succ u1)} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) _x) (MulHomClass.toFunLike.{max (max u3 u2) u1, u3, max u2 u1} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{max u2 u1} (Prod.{u2, u1} N P) (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) (MonoidHomClass.toMulHomClass.{max (max u3 u2) u1, u3, max u2 u1} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3) (MonoidHom.monoidHomClass.{u3, max u2 u1} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)))) (MonoidHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) (Pi.prod.{u3, u2, u1} M (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) ᾰ) (fun (ᾰ : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) ᾰ) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u3 u2, u3, u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u3, u2} M N _inst_1 _inst_2))) f) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) _x) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M P (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{u1} P _inst_3) (MonoidHomClass.toMulHomClass.{max u3 u1, u3, u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M P _inst_1 _inst_3 (MonoidHom.monoidHomClass.{u3, u1} M P _inst_1 _inst_3))) g))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.coe_prod MonoidHom.coe_prodₓ'. -/
 @[to_additive coe_prod]
-theorem coe_prod (f : M →* N) (g : M →* P) : ⇑(f.Prod g) = Pi.prod f g :=
+theorem coe_prod (f : M →* N) (g : M →* P) : ⇑(f.prod g) = Pi.prod f g :=
   rfl
 #align monoid_hom.coe_prod MonoidHom.coe_prod
 #align add_monoid_hom.coe_prod AddMonoidHom.coe_prod
@@ -847,7 +847,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u2} N] [_inst_3 : MulOneClass.{u1} P] (f : MonoidHom.{u3, u2} M N _inst_1 _inst_2) (g : MonoidHom.{u3, u1} M P _inst_1 _inst_3) (x : M), Eq.{max (succ u2) (succ u1)} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) x) (FunLike.coe.{max (max (succ u3) (succ u2)) (succ u1), succ u3, max (succ u2) (succ u1)} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => Prod.{u2, u1} N P) _x) (MulHomClass.toFunLike.{max (max u3 u2) u1, u3, max u2 u1} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{max u2 u1} (Prod.{u2, u1} N P) (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) (MonoidHomClass.toMulHomClass.{max (max u3 u2) u1, u3, max u2 u1} (MonoidHom.{u3, max u1 u2} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)) M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3) (MonoidHom.monoidHomClass.{u3, max u2 u1} M (Prod.{u2, u1} N P) _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3)))) (MonoidHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g) x) (Prod.mk.{u2, u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) x) ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) x) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{u2} N _inst_2) (MonoidHomClass.toMulHomClass.{max u3 u2, u3, u2} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u3, u2} M N _inst_1 _inst_2))) f x) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => P) _x) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M P (MulOneClass.toMul.{u3} M _inst_1) (MulOneClass.toMul.{u1} P _inst_3) (MonoidHomClass.toMulHomClass.{max u3 u1, u3, u1} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) M P _inst_1 _inst_3 (MonoidHom.monoidHomClass.{u3, u1} M P _inst_1 _inst_3))) g x))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_apply MonoidHom.prod_applyₓ'. -/
 @[simp, to_additive prod_apply]
-theorem prod_apply (f : M →* N) (g : M →* P) (x) : f.Prod g x = (f x, g x) :=
+theorem prod_apply (f : M →* N) (g : M →* P) (x) : f.prod g x = (f x, g x) :=
   rfl
 #align monoid_hom.prod_apply MonoidHom.prod_apply
 #align add_monoid_hom.prod_apply AddMonoidHom.prod_apply
@@ -859,7 +859,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u2} N] [_inst_3 : MulOneClass.{u1} P] (f : MonoidHom.{u3, u2} M N _inst_1 _inst_2) (g : MonoidHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (succ u3) (succ u2)} (MonoidHom.{u3, u2} M N _inst_1 _inst_2) (MonoidHom.comp.{u3, max u2 u1, u2} M (Prod.{u2, u1} N P) N _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3) _inst_2 (MonoidHom.fst.{u2, u1} N P _inst_2 _inst_3) (MonoidHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) f
 Case conversion may be inaccurate. Consider using '#align monoid_hom.fst_comp_prod MonoidHom.fst_comp_prodₓ'. -/
 @[simp, to_additive fst_comp_prod]
-theorem fst_comp_prod (f : M →* N) (g : M →* P) : (fst N P).comp (f.Prod g) = f :=
+theorem fst_comp_prod (f : M →* N) (g : M →* P) : (fst N P).comp (f.prod g) = f :=
   ext fun x => rfl
 #align monoid_hom.fst_comp_prod MonoidHom.fst_comp_prod
 #align add_monoid_hom.fst_comp_prod AddMonoidHom.fst_comp_prod
@@ -871,7 +871,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u2}} {P : Type.{u1}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u2} N] [_inst_3 : MulOneClass.{u1} P] (f : MonoidHom.{u3, u2} M N _inst_1 _inst_2) (g : MonoidHom.{u3, u1} M P _inst_1 _inst_3), Eq.{max (succ u3) (succ u1)} (MonoidHom.{u3, u1} M P _inst_1 _inst_3) (MonoidHom.comp.{u3, max u2 u1, u1} M (Prod.{u2, u1} N P) P _inst_1 (Prod.instMulOneClassProd.{u2, u1} N P _inst_2 _inst_3) _inst_3 (MonoidHom.snd.{u2, u1} N P _inst_2 _inst_3) (MonoidHom.prod.{u3, u2, u1} M N P _inst_1 _inst_2 _inst_3 f g)) g
 Case conversion may be inaccurate. Consider using '#align monoid_hom.snd_comp_prod MonoidHom.snd_comp_prodₓ'. -/
 @[simp, to_additive snd_comp_prod]
-theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.Prod g) = g :=
+theorem snd_comp_prod (f : M →* N) (g : M →* P) : (snd N P).comp (f.prod g) = g :=
   ext fun x => rfl
 #align monoid_hom.snd_comp_prod MonoidHom.snd_comp_prod
 #align add_monoid_hom.snd_comp_prod AddMonoidHom.snd_comp_prod
@@ -883,7 +883,7 @@ but is expected to have type
   forall {M : Type.{u3}} {N : Type.{u1}} {P : Type.{u2}} [_inst_1 : MulOneClass.{u3} M] [_inst_2 : MulOneClass.{u1} N] [_inst_3 : MulOneClass.{u2} P] (f : MonoidHom.{u3, max u2 u1} M (Prod.{u1, u2} N P) _inst_1 (Prod.instMulOneClassProd.{u1, u2} N P _inst_2 _inst_3)), Eq.{max (max (succ u3) (succ u1)) (succ u2)} (MonoidHom.{u3, max u2 u1} M (Prod.{u1, u2} N P) _inst_1 (Prod.instMulOneClassProd.{u1, u2} N P _inst_2 _inst_3)) (MonoidHom.prod.{u3, u1, u2} M N P _inst_1 _inst_2 _inst_3 (MonoidHom.comp.{u3, max u1 u2, u1} M (Prod.{u1, u2} N P) N _inst_1 (Prod.instMulOneClassProd.{u1, u2} N P _inst_2 _inst_3) _inst_2 (MonoidHom.fst.{u1, u2} N P _inst_2 _inst_3) f) (MonoidHom.comp.{u3, max u1 u2, u2} M (Prod.{u1, u2} N P) P _inst_1 (Prod.instMulOneClassProd.{u1, u2} N P _inst_2 _inst_3) _inst_3 (MonoidHom.snd.{u1, u2} N P _inst_2 _inst_3) f)) f
 Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_unique MonoidHom.prod_uniqueₓ'. -/
 @[simp, to_additive prod_unique]
-theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).Prod ((snd N P).comp f) = f :=
+theorem prod_unique (f : M →* N × P) : ((fst N P).comp f).prod ((snd N P).comp f) = f :=
   ext fun x => by simp only [prod_apply, coe_fst, coe_snd, comp_apply, Prod.mk.eta]
 #align monoid_hom.prod_unique MonoidHom.prod_unique
 #align add_monoid_hom.prod_unique AddMonoidHom.prod_unique
@@ -904,7 +904,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_map Mo
 /-- `prod.map` as a `monoid_hom`. -/
 @[to_additive Prod_map "`prod.map` as an `add_monoid_hom`"]
 def prodMap : M × N →* M' × N' :=
-  (f.comp (fst M N)).Prod (g.comp (snd M N))
+  (f.comp (fst M N)).prod (g.comp (snd M N))
 #align monoid_hom.prod_map MonoidHom.prodMap
 #align add_monoid_hom.prod_map AddMonoidHom.prodMap
 
@@ -915,7 +915,7 @@ but is expected to have type
   forall {M : Type.{u4}} {N : Type.{u3}} [_inst_1 : MulOneClass.{u4} M] [_inst_2 : MulOneClass.{u3} N] {M' : Type.{u2}} {N' : Type.{u1}} [_inst_3 : MulOneClass.{u2} M'] [_inst_4 : MulOneClass.{u1} N'] (f : MonoidHom.{u4, u2} M M' _inst_1 _inst_3) (g : MonoidHom.{u3, u1} N N' _inst_2 _inst_4), Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} (MonoidHom.{max u3 u4, max u1 u2} (Prod.{u4, u3} M N) (Prod.{u2, u1} M' N') (Prod.instMulOneClassProd.{u4, u3} M N _inst_1 _inst_2) (Prod.instMulOneClassProd.{u2, u1} M' N' _inst_3 _inst_4)) (MonoidHom.prodMap.{u4, u3, u2, u1} M N _inst_1 _inst_2 M' N' _inst_3 _inst_4 f g) (MonoidHom.prod.{max u4 u3, u2, u1} (Prod.{u4, u3} M N) M' N' (Prod.instMulOneClassProd.{u4, u3} M N _inst_1 _inst_2) _inst_3 _inst_4 (MonoidHom.comp.{max u4 u3, u4, u2} (Prod.{u4, u3} M N) M M' (Prod.instMulOneClassProd.{u4, u3} M N _inst_1 _inst_2) _inst_1 _inst_3 f (MonoidHom.fst.{u4, u3} M N _inst_1 _inst_2)) (MonoidHom.comp.{max u4 u3, u3, u1} (Prod.{u4, u3} M N) N N' (Prod.instMulOneClassProd.{u4, u3} M N _inst_1 _inst_2) _inst_2 _inst_4 g (MonoidHom.snd.{u4, u3} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_map_def MonoidHom.prodMap_defₓ'. -/
 @[to_additive prod_map_def]
-theorem prodMap_def : prodMap f g = (f.comp (fst M N)).Prod (g.comp (snd M N)) :=
+theorem prodMap_def : prodMap f g = (f.comp (fst M N)).prod (g.comp (snd M N)) :=
   rfl
 #align monoid_hom.prod_map_def MonoidHom.prodMap_def
 #align add_monoid_hom.prod_map_def AddMonoidHom.prodMap_def
@@ -940,7 +940,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_comp_prod_map MonoidHom.prod_comp_prodMapₓ'. -/
 @[to_additive prod_comp_prod_map]
 theorem prod_comp_prodMap (f : P →* M) (g : P →* N) (f' : M →* M') (g' : N →* N') :
-    (f'.Prod_map g').comp (f.Prod g) = (f'.comp f).Prod (g'.comp g) :=
+    (f'.prodMap g').comp (f.prod g) = (f'.comp f).prod (g'.comp g) :=
   rfl
 #align monoid_hom.prod_comp_prod_map MonoidHom.prod_comp_prodMap
 #align add_monoid_hom.prod_comp_prod_map AddMonoidHom.prod_comp_prodMap
@@ -1149,7 +1149,7 @@ Case conversion may be inaccurate. Consider using '#align mul_equiv.prod_units M
       "The additive monoid equivalence between additive units of a product\nof two additive monoids, and the product of the additive units of each additive monoid."]
 def prodUnits : (M × N)ˣ ≃* Mˣ × Nˣ
     where
-  toFun := (Units.map (MonoidHom.fst M N)).Prod (Units.map (MonoidHom.snd M N))
+  toFun := (Units.map (MonoidHom.fst M N)).prod (Units.map (MonoidHom.snd M N))
   invFun u := ⟨(u.1, u.2), (↑u.1⁻¹, ↑u.2⁻¹), by simp, by simp⟩
   left_inv u := by simp
   right_inv := fun ⟨u₁, u₂⟩ => by simp [Units.map]

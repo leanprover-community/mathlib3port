@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.pointwise.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,7 +316,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.nonempty_inv Set.nonempty_invₓ'. -/
 @[simp, to_additive]
 theorem nonempty_inv : s⁻¹.Nonempty ↔ s.Nonempty :=
-  inv_involutive.Surjective.nonempty_preimage
+  inv_involutive.surjective.nonempty_preimage
 #align set.nonempty_inv Set.nonempty_inv
 #align set.nonempty_neg Set.nonempty_neg
 
@@ -340,7 +340,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.image_inv Set.image_invₓ'. -/
 @[simp, to_additive]
 theorem image_inv : Inv.inv '' s = s⁻¹ :=
-  congr_fun (image_eq_preimage_of_inverse inv_involutive.LeftInverse inv_involutive.RightInverse) _
+  congr_fun (image_eq_preimage_of_inverse inv_involutive.leftInverse inv_involutive.rightInverse) _
 #align set.image_inv Set.image_inv
 #align set.image_neg Set.image_neg
 
@@ -357,7 +357,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.inv_subset_inv Set.inv_subset_invₓ'. -/
 @[simp, to_additive]
 theorem inv_subset_inv : s⁻¹ ⊆ t⁻¹ ↔ s ⊆ t :=
-  (Equiv.inv α).Surjective.preimage_subset_preimage_iff
+  (Equiv.inv α).surjective.preimage_subset_preimage_iff
 #align set.inv_subset_inv Set.inv_subset_inv
 #align set.neg_subset_neg Set.neg_subset_neg
 
@@ -1325,7 +1325,7 @@ Case conversion may be inaccurate. Consider using '#align set.pow_subset_pow Set
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
   | 0 => by
     rw [pow_zero]
-    exact subset.rfl
+    exact Subset.rfl
   | n + 1 => by
     rw [pow_succ]
     exact mul_subset_mul hst (pow_subset_pow _)
@@ -1342,7 +1342,7 @@ Case conversion may be inaccurate. Consider using '#align set.pow_subset_pow_of_
 theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n :=
   by
   refine' Nat.le_induction _ (fun n h ih => _) _
-  · exact subset.rfl
+  · exact Subset.rfl
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
 #align set.pow_subset_pow_of_one_mem Set.pow_subset_pow_of_one_mem
@@ -1677,7 +1677,7 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
 #print Set.isUnit_singleton /-
 @[to_additive]
 theorem isUnit_singleton (a : α) : IsUnit ({a} : Set α) :=
-  (Group.isUnit a).Set
+  (Group.isUnit a).set
 #align set.is_unit_singleton Set.isUnit_singleton
 #align set.is_add_unit_singleton Set.isAddUnit_singleton
 -/
@@ -1685,7 +1685,7 @@ theorem isUnit_singleton (a : α) : IsUnit ({a} : Set α) :=
 #print Set.isUnit_iff_singleton /-
 @[simp, to_additive]
 theorem isUnit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [is_unit_iff, Group.isUnit, and_true_iff]
+  simp only [isUnit_iff, Group.isUnit, and_true_iff]
 #align set.is_unit_iff_singleton Set.isUnit_iff_singleton
 #align set.is_add_unit_iff_singleton Set.isAddUnit_iff_singleton
 -/

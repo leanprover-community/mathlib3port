@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ then `y` is a fixed point for `f`. -/
 theorem isFixedPt_of_tendsto_iterate {x y : α} (hy : Tendsto (fun n => (f^[n]) x) atTop (𝓝 y))
     (hf : ContinuousAt f y) : IsFixedPt f y :=
   by
-  refine' tendsto_nhds_unique ((tendsto_add_at_top_iff_nat 1).1 _) hy
+  refine' tendsto_nhds_unique ((tendsto_add_atTop_iff_nat 1).1 _) hy
   simp only [iterate_succ' f]
   exact hf.tendsto.comp hy
 #align is_fixed_pt_of_tendsto_iterate isFixedPt_of_tendsto_iterate

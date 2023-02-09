@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.sum.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,8 +66,8 @@ theorem exists {p : Sum α β → Prop} : (∃ x, p x) ↔ (∃ a, p (inl a)) �
     | ⟨inr b, h⟩ => Or.inr ⟨b, h⟩,
     fun h =>
     match h with
-    | Or.inl ⟨a, h⟩ => ⟨inl a, h⟩
-    | Or.inr ⟨b, h⟩ => ⟨inr b, h⟩⟩
+    | or.inl ⟨a, h⟩ => ⟨inl a, h⟩
+    | or.inr ⟨b, h⟩ => ⟨inr b, h⟩⟩
 #align sum.exists Sum.exists
 -/
 
@@ -125,7 +125,7 @@ variable {x y : Sum α β}
 @[simp]
 theorem getLeft_eq_none_iff : x.getLeft = none ↔ x.isRight := by
   cases x <;>
-    simp only [get_left, is_right, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
+    simp only [getLeft, isRight, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
 #align sum.get_left_eq_none_iff Sum.getLeft_eq_none_iff
 -/
 
@@ -133,21 +133,21 @@ theorem getLeft_eq_none_iff : x.getLeft = none ↔ x.isRight := by
 @[simp]
 theorem getRight_eq_none_iff : x.getRight = none ↔ x.isLeft := by
   cases x <;>
-    simp only [get_right, is_left, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
+    simp only [getRight, isLeft, Bool.coe_sort_true, Bool.coe_sort_false, eq_self_iff_true]
 #align sum.get_right_eq_none_iff Sum.getRight_eq_none_iff
 -/
 
 #print Sum.getLeft_eq_some_iff /-
 @[simp]
 theorem getLeft_eq_some_iff {a} : x.getLeft = some a ↔ x = inl a := by
-  cases x <;> simp only [get_left]
+  cases x <;> simp only [getLeft]
 #align sum.get_left_eq_some_iff Sum.getLeft_eq_some_iff
 -/
 
 #print Sum.getRight_eq_some_iff /-
 @[simp]
 theorem getRight_eq_some_iff {b} : x.getRight = some b ↔ x = inr b := by
-  cases x <;> simp only [get_right]
+  cases x <;> simp only [getRight]
 #align sum.get_right_eq_some_iff Sum.getRight_eq_some_iff
 -/
 
@@ -601,25 +601,25 @@ theorem swap_rightInverse : Function.RightInverse (@swap α β) swap :=
 
 #print Sum.isLeft_swap /-
 @[simp]
-theorem isLeft_swap (x : Sum α β) : x.symm.isLeft = x.isRight := by cases x <;> rfl
+theorem isLeft_swap (x : Sum α β) : x.swap.isLeft = x.isRight := by cases x <;> rfl
 #align sum.is_left_swap Sum.isLeft_swap
 -/
 
 #print Sum.isRight_swap /-
 @[simp]
-theorem isRight_swap (x : Sum α β) : x.symm.isRight = x.isLeft := by cases x <;> rfl
+theorem isRight_swap (x : Sum α β) : x.swap.isRight = x.isLeft := by cases x <;> rfl
 #align sum.is_right_swap Sum.isRight_swap
 -/
 
 #print Sum.getLeft_swap /-
 @[simp]
-theorem getLeft_swap (x : Sum α β) : x.symm.getLeft = x.getRight := by cases x <;> rfl
+theorem getLeft_swap (x : Sum α β) : x.swap.getLeft = x.getRight := by cases x <;> rfl
 #align sum.get_left_swap Sum.getLeft_swap
 -/
 
 #print Sum.getRight_swap /-
 @[simp]
-theorem getRight_swap (x : Sum α β) : x.symm.getRight = x.getLeft := by cases x <;> rfl
+theorem getRight_swap (x : Sum α β) : x.swap.getRight = x.getLeft := by cases x <;> rfl
 #align sum.get_right_swap Sum.getRight_swap
 -/
 
@@ -704,7 +704,7 @@ theorem LiftRel.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a
     (h : LiftRel r₁ s₁ x y) : LiftRel r₂ s₂ x y :=
   by
   cases h
-  exacts[lift_rel.inl (hr _ _ ‹_›), lift_rel.inr (hs _ _ ‹_›)]
+  exacts[LiftRel.inl (hr _ _ ‹_›), LiftRel.inr (hs _ _ ‹_›)]
 #align sum.lift_rel.mono Sum.LiftRel.mono
 
 /- warning: sum.lift_rel.mono_left -> Sum.LiftRel.mono_left is a dubious translation:
@@ -734,10 +734,10 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u2}} {δ : Type.{u1}} {r : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u2, u1} γ δ}, (Sum.LiftRel.{u3, u4, u2, u1} α β γ δ r s x y) -> (Sum.LiftRel.{u4, u3, u1, u2} β α δ γ s r (Sum.swap.{u3, u4} α β x) (Sum.swap.{u2, u1} γ δ y))
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel.swap Sum.LiftRel.swapₓ'. -/
-protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.symm y.symm :=
+protected theorem LiftRel.swap (h : LiftRel r s x y) : LiftRel s r x.swap y.swap :=
   by
   cases h
-  exacts[lift_rel.inr ‹_›, lift_rel.inl ‹_›]
+  exacts[LiftRel.inr ‹_›, LiftRel.inl ‹_›]
 #align sum.lift_rel.swap Sum.LiftRel.swap
 
 /- warning: sum.lift_rel_swap_iff -> Sum.liftRel_swap_iff is a dubious translation:
@@ -747,7 +747,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u4}} {γ : Type.{u1}} {δ : Type.{u2}} {r : α -> γ -> Prop} {s : β -> δ -> Prop} {x : Sum.{u3, u4} α β} {y : Sum.{u1, u2} γ δ}, Iff (Sum.LiftRel.{u4, u3, u2, u1} β α δ γ s r (Sum.swap.{u3, u4} α β x) (Sum.swap.{u1, u2} γ δ y)) (Sum.LiftRel.{u3, u4, u1, u2} α β γ δ r s x y)
 Case conversion may be inaccurate. Consider using '#align sum.lift_rel_swap_iff Sum.liftRel_swap_iffₓ'. -/
 @[simp]
-theorem liftRel_swap_iff : LiftRel s r x.symm y.symm ↔ LiftRel r s x y :=
+theorem liftRel_swap_iff : LiftRel s r x.swap y.swap ↔ LiftRel r s x y :=
   ⟨fun h => by
     rw [← swap_swap x, ← swap_swap y]
     exact h.swap, LiftRel.swap⟩
@@ -761,9 +761,9 @@ section Lex
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`, otherwise use the
 respective order on `α` or `β`. -/
 inductive Lex (r : α → α → Prop) (s : β → β → Prop) : Sum α β → Sum α β → Prop
-  | inl {a₁ a₂} (h : r a₁ a₂) : Lex (inl a₁) (inl a₂)
-  | inr {b₁ b₂} (h : s b₁ b₂) : Lex (inr b₁) (inr b₂)
-  | sep (a b) : Lex (inl a) (inr b)
+  | inl {a₁ a₂} (h : r a₁ a₂) : lex (inl a₁) (inl a₂)
+  | inr {b₁ b₂} (h : s b₁ b₂) : lex (inr b₁) (inr b₂)
+  | sep (a b) : lex (inl a) (inr b)
 #align sum.lex Sum.Lex
 -/
 
@@ -809,7 +809,7 @@ instance [DecidableRel r] [DecidableRel s] : DecidableRel (Lex r s)
 protected theorem LiftRel.lex {a b : Sum α β} (h : LiftRel r s a b) : Lex r s a b :=
   by
   cases h
-  exacts[lex.inl ‹_›, lex.inr ‹_›]
+  exacts[Lex.inl ‹_›, Lex.inr ‹_›]
 #align sum.lift_rel.lex Sum.LiftRel.lex
 -/
 
@@ -822,7 +822,7 @@ theorem liftRel_subrelation_lex : Subrelation (LiftRel r s) (Lex r s) := fun a b
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ a b, s₁ a b → s₂ a b) (h : Lex r₁ s₁ x y) :
     Lex r₂ s₂ x y := by
   cases h
-  exacts[lex.inl (hr _ _ ‹_›), lex.inr (hs _ _ ‹_›), lex.sep _ _]
+  exacts[Lex.inl (hr _ _ ‹_›), Lex.inr (hs _ _ ‹_›), Lex.sep _ _]
 #align sum.lex.mono Sum.Lex.mono
 -/
 

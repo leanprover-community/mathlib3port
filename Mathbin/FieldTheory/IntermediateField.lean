@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.intermediate_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,22 +201,22 @@ protected theorem div_mem {x y : L} : x ∈ S → y ∈ S → x / y ∈ S :=
 #align intermediate_field.div_mem IntermediateField.div_mem
 
 /-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
-protected theorem list_prod_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.Prod ∈ S :=
+protected theorem list_prod_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.prod ∈ S :=
   list_prod_mem
 #align intermediate_field.list_prod_mem IntermediateField.list_prod_mem
 
 /-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
-protected theorem list_sum_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.Sum ∈ S :=
+protected theorem list_sum_mem {l : List L} : (∀ x ∈ l, x ∈ S) → l.sum ∈ S :=
   list_sum_mem
 #align intermediate_field.list_sum_mem IntermediateField.list_sum_mem
 
 /-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
-protected theorem multiset_prod_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.Prod ∈ S :=
+protected theorem multiset_prod_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.prod ∈ S :=
   multiset_prod_mem m
 #align intermediate_field.multiset_prod_mem IntermediateField.multiset_prod_mem
 
 /-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
-protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.Sum ∈ S :=
+protected theorem multiset_sum_mem (m : Multiset L) : (∀ a ∈ m, a ∈ S) → m.sum ∈ S :=
   multiset_sum_mem m
 #align intermediate_field.multiset_sum_mem IntermediateField.multiset_sum_mem
 
@@ -370,12 +370,12 @@ instance module' {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] 
 #align intermediate_field.module' IntermediateField.module'
 
 instance module : Module K S :=
-  S.toSubalgebra.Module
+  S.toSubalgebra.module
 #align intermediate_field.module IntermediateField.module
 
 instance isScalarTower {R} [Semiring R] [SMul R K] [Module R L] [IsScalarTower R K L] :
     IsScalarTower R K S :=
-  S.toSubalgebra.IsScalarTower
+  S.toSubalgebra.isScalarTower
 #align intermediate_field.is_scalar_tower IntermediateField.isScalarTower
 
 @[simp]
@@ -390,7 +390,7 @@ instance algebra' {K'} [CommSemiring K'] [SMul K' K] [Algebra K' L] [IsScalarTow
 #align intermediate_field.algebra' IntermediateField.algebra'
 
 instance algebra : Algebra K S :=
-  S.toSubalgebra.Algebra
+  S.toSubalgebra.algebra
 #align intermediate_field.algebra IntermediateField.algebra
 
 instance toAlgebra {R : Type _} [Semiring R] [Algebra L R] : Algebra S R :=
@@ -522,7 +522,7 @@ theorem coe_isIntegral_iff {R : Type _} [CommRing R] [Algebra R K] [Algebra R L]
   by
   refine' ⟨fun h => _, fun h => _⟩
   · obtain ⟨P, hPmo, hProot⟩ := h
-    refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).Injective _ _⟩
+    refine' ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).injective _ _⟩
     letI : IsScalarTower R S L := IsScalarTower.of_algebraMap_eq (congr_fun rfl)
     rwa [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ←
       IsScalarTower.algebraMap_eq, ← eval₂_eq_eval_map]
@@ -566,7 +566,7 @@ theorem toSubalgebra_injective {S S' : IntermediateField K L}
     (h : S.toSubalgebra = S'.toSubalgebra) : S = S' :=
   by
   ext
-  rw [← mem_to_subalgebra, ← mem_to_subalgebra, h]
+  rw [← mem_toSubalgebra, ← mem_toSubalgebra, h]
 #align intermediate_field.to_subalgebra_injective IntermediateField.toSubalgebra_injective
 
 variable (S)
@@ -641,7 +641,7 @@ theorem mem_restrictScalars {E : IntermediateField L' L} {x : L} :
 
 theorem restrictScalars_injective :
     Function.Injective (restrictScalars K : IntermediateField L' L → IntermediateField K L) :=
-  fun U V H => ext fun x => by rw [← mem_restrict_scalars K, H, mem_restrict_scalars]
+  fun U V H => ext fun x => by rw [← mem_restrictScalars K, H, mem_restrictScalars]
 #align intermediate_field.restrict_scalars_injective IntermediateField.restrictScalars_injective
 
 end RestrictScalars
@@ -685,7 +685,7 @@ theorem toSubalgebra_eq_iff : F.toSubalgebra = E.toSubalgebra ↔ F = E :=
 theorem eq_of_le_of_finrank_le [FiniteDimensional K L] (h_le : F ≤ E)
     (h_finrank : finrank K E ≤ finrank K F) : F = E :=
   toSubalgebra_injective <|
-    Subalgebra.toSubmodule.Injective <| eq_of_le_of_finrank_le h_le h_finrank
+    Subalgebra.toSubmodule.injective <| eq_of_le_of_finrank_le h_le h_finrank
 #align intermediate_field.eq_of_le_of_finrank_le IntermediateField.eq_of_le_of_finrank_le
 
 theorem eq_of_le_of_finrank_eq [FiniteDimensional K L] (h_le : F ≤ E)
@@ -711,17 +711,17 @@ theorem eq_of_le_of_finrank_eq' [FiniteDimensional K L] (h_le : F ≤ E)
 end FiniteDimensional
 
 theorem isAlgebraic_iff {x : S} : IsAlgebraic K x ↔ IsAlgebraic K (x : L) :=
-  (isAlgebraic_algebraMap_iff (algebraMap S L).Injective).symm
+  (isAlgebraic_algebraMap_iff (algebraMap S L).injective).symm
 #align intermediate_field.is_algebraic_iff IntermediateField.isAlgebraic_iff
 
 theorem isIntegral_iff {x : S} : IsIntegral K x ↔ IsIntegral K (x : L) := by
-  rw [← isAlgebraic_iff_isIntegral, is_algebraic_iff, isAlgebraic_iff_isIntegral]
+  rw [← isAlgebraic_iff_isIntegral, isAlgebraic_iff, isAlgebraic_iff_isIntegral]
 #align intermediate_field.is_integral_iff IntermediateField.isIntegral_iff
 
 theorem minpoly_eq (x : S) : minpoly K x = minpoly K (x : L) :=
   by
   by_cases hx : IsIntegral K x
-  · exact minpoly.eq_of_algebraMap_eq (algebraMap S L).Injective hx rfl
+  · exact minpoly.eq_of_algebraMap_eq (algebraMap S L).injective hx rfl
   · exact (minpoly.eq_zero hx).trans (minpoly.eq_zero (mt is_integral_iff.mpr hx)).symm
 #align intermediate_field.minpoly_eq IntermediateField.minpoly_eq
 

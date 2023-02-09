@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.banach
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
     refine' subset.antisymm (subset_univ _) fun y hy => _
     rcases surj y with ⟨x, hx⟩
     rcases exists_nat_gt ‖x‖ with ⟨n, hn⟩
-    refine' mem_Union.2 ⟨n, subset_closure _⟩
+    refine' mem_unionᵢ.2 ⟨n, subset_closure _⟩
     refine' (mem_image _ _ _).2 ⟨x, ⟨_, hx⟩⟩
     rwa [mem_ball, dist_eq_norm, sub_zero]
   have : ∃ (n : ℕ)(x : _), x ∈ interior (closure (f '' ball 0 n)) :=
@@ -238,11 +238,11 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     induction' n with n IH
     · simp [f.map_zero]
     · rw [sum_range_succ, f.map_add, IH, iterate_succ', sub_add]
-  have : tendsto (fun n => ∑ i in Finset.range n, u i) at_top (𝓝 x) := su.has_sum.tendsto_sum_nat
-  have L₁ : tendsto (fun n => f (∑ i in Finset.range n, u i)) at_top (𝓝 (f x)) :=
+  have : Tendsto (fun n => ∑ i in Finset.range n, u i) atTop (𝓝 x) := su.has_sum.tendsto_sum_nat
+  have L₁ : Tendsto (fun n => f (∑ i in Finset.range n, u i)) atTop (𝓝 (f x)) :=
     (f.continuous.tendsto _).comp this
   simp only [fsumeq] at L₁
-  have L₂ : tendsto (fun n => y - (h^[n]) y) at_top (𝓝 (y - 0)) :=
+  have L₂ : Tendsto (fun n => y - (h^[n]) y) atTop (𝓝 (y - 0)) :=
     by
     refine' tendsto_const_nhds.sub _
     rw [tendsto_iff_norm_tendsto_zero]
@@ -261,9 +261,9 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
   by
   intro s hs
   rcases exists_preimage_norm_le f surj with ⟨C, Cpos, hC⟩
-  refine' is_open_iff.2 fun y yfs => _
+  refine' isOpen_iff.2 fun y yfs => _
   rcases mem_image_iff_bex.1 yfs with ⟨x, xs, fxy⟩
-  rcases is_open_iff.1 hs x xs with ⟨ε, εpos, hε⟩
+  rcases isOpen_iff.1 hs x xs with ⟨ε, εpos, hε⟩
   refine' ⟨ε / C, div_pos εpos Cpos, fun z hz => _⟩
   rcases hC (z - y) with ⟨w, wim, wnorm⟩
   have : f (x + w) = z := by rw [f.map_add, wim, fxy, add_sub_cancel'_right]
@@ -283,7 +283,7 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
 #align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMap
 
 protected theorem quotientMap (surj : Surjective f) : QuotientMap f :=
-  (f.IsOpenMap surj).to_quotientMap f.Continuous surj
+  (f.isOpenMap surj).to_quotientMap f.continuous surj
 #align continuous_linear_map.quotient_map ContinuousLinearMap.quotientMap
 
 theorem AffineMap.isOpenMap {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P] [MetricSpace Q]
@@ -298,16 +298,16 @@ theorem AffineMap.isOpenMap {P Q : Type _} [MetricSpace P] [NormedAddTorsor E P]
 
 theorem interior_preimage (hsurj : Surjective f) (s : Set F) :
     interior (f ⁻¹' s) = f ⁻¹' interior s :=
-  ((f.IsOpenMap hsurj).preimage_interior_eq_interior_preimage f.Continuous s).symm
+  ((f.isOpenMap hsurj).preimage_interior_eq_interior_preimage f.continuous s).symm
 #align continuous_linear_map.interior_preimage ContinuousLinearMap.interior_preimage
 
 theorem closure_preimage (hsurj : Surjective f) (s : Set F) : closure (f ⁻¹' s) = f ⁻¹' closure s :=
-  ((f.IsOpenMap hsurj).preimage_closure_eq_closure_preimage f.Continuous s).symm
+  ((f.isOpenMap hsurj).preimage_closure_eq_closure_preimage f.continuous s).symm
 #align continuous_linear_map.closure_preimage ContinuousLinearMap.closure_preimage
 
 theorem frontier_preimage (hsurj : Surjective f) (s : Set F) :
     frontier (f ⁻¹' s) = f ⁻¹' frontier s :=
-  ((f.IsOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.Continuous s).symm
+  ((f.isOpenMap hsurj).preimage_frontier_eq_frontier_preimage f.continuous s).symm
 #align continuous_linear_map.frontier_preimage ContinuousLinearMap.frontier_preimage
 
 theorem exists_nonlinearRightInverse_of_surjective (f : E →L[𝕜] F) (hsurj : LinearMap.range f = ⊤) :
@@ -334,8 +334,8 @@ noncomputable irreducible_def nonlinearRightInverseOfSurjective (f : E →L[𝕜
 theorem nonlinearRightInverseOfSurjective_nnnorm_pos (f : E →L[𝕜] F)
     (hsurj : LinearMap.range f = ⊤) : 0 < (nonlinearRightInverseOfSurjective f hsurj).nnnorm :=
   by
-  rw [nonlinear_right_inverse_of_surjective]
-  exact Classical.choose_spec (exists_nonlinear_right_inverse_of_surjective f hsurj)
+  rw [nonlinearRightInverseOfSurjective]
+  exact Classical.choose_spec (exists_nonlinearRightInverse_of_surjective f hsurj)
 #align continuous_linear_map.nonlinear_right_inverse_of_surjective_nnnorm_pos ContinuousLinearMap.nonlinearRightInverseOfSurjective_nnnorm_pos
 
 end ContinuousLinearMap
@@ -389,7 +389,7 @@ noncomputable def ofBijective (f : E →L[𝕜] F) (hinj : ker f = ⊥) (hsurj :
   (LinearEquiv.ofBijective ↑f
         ⟨LinearMap.ker_eq_bot.mp hinj,
           LinearMap.range_eq_top.mp hsurj⟩).toContinuousLinearEquivOfContinuous
-    f.Continuous
+    f.continuous
 #align continuous_linear_equiv.of_bijective ContinuousLinearEquiv.ofBijective
 
 @[simp]
@@ -440,11 +440,11 @@ noncomputable def coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodu
 theorem range_eq_map_coprodSubtypeLEquivOfIsCompl (f : E →L[𝕜] F) {G : Submodule 𝕜 F}
     (h : IsCompl (LinearMap.range f) G) [CompleteSpace G] (hker : ker f = ⊥) :
     LinearMap.range f =
-      ((⊤ : Submodule 𝕜 E).Prod (⊥ : Submodule 𝕜 G)).map
+      ((⊤ : Submodule 𝕜 E).prod (⊥ : Submodule 𝕜 G)).map
         (f.coprodSubtypeLEquivOfIsCompl h hker : E × G →ₗ[𝕜] F) :=
   by
-  rw [coprod_subtypeL_equiv_of_is_compl, _root_.coe_coe, ContinuousLinearEquiv.coe_ofBijective,
-    coe_coprod, LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top]
+  rw [coprodSubtypeLEquivOfIsCompl, coe_coe, ContinuousLinearEquiv.coe_ofBijective, coe_coprod,
+    LinearMap.coprod_map_prod, Submodule.map_bot, sup_bot_eq, Submodule.map_top]
   rfl
 #align continuous_linear_map.range_eq_map_coprod_subtypeL_equiv_of_is_compl ContinuousLinearMap.range_eq_map_coprodSubtypeLEquivOfIsCompl
 
@@ -455,8 +455,8 @@ theorem closed_complemented_range_of_isCompl_of_ker_eq_bot (f : E →L[𝕜] F) 
     IsClosed (LinearMap.range f : Set F) :=
   by
   haveI : CompleteSpace G := hG.complete_space_coe
-  let g := coprod_subtypeL_equiv_of_is_compl f h hker
-  rw [congr_arg coe (range_eq_map_coprod_subtypeL_equiv_of_is_compl f h hker)]
+  let g := coprodSubtypeLEquivOfIsCompl f h hker
+  rw [congr_arg coe (range_eq_map_coprodSubtypeLEquivOfIsCompl f h hker)]
   apply g.to_homeomorph.is_closed_image.2
   exact is_closed_univ.prod isClosed_singleton
 #align continuous_linear_map.closed_complemented_range_of_is_compl_of_ker_eq_bot ContinuousLinearMap.closed_complemented_range_of_isCompl_of_ker_eq_bot

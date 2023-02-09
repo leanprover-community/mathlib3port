@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.membership
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_supr_
 @[to_additive]
 theorem coe_supᵢ_of_directed {S : ι → Subsemigroup M} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subsemigroup M) : Set M) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supᵢ_of_directed hS]
 #align subsemigroup.coe_supr_of_directed Subsemigroup.coe_supᵢ_of_directed
 #align add_subsemigroup.coe_supr_of_directed AddSubsemigroup.coe_supᵢ_of_directed
 
@@ -90,7 +90,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_Sup_o
 @[to_additive]
 theorem mem_supₛ_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) {x : M} :
     x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s := by
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supᵢ_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subsemigroup.mem_Sup_of_directed_on Subsemigroup.mem_supₛ_of_directed_on
 #align add_subsemigroup.mem_Sup_of_directed_on AddSubsemigroup.mem_supₛ_of_directed_on
 
@@ -103,7 +103,7 @@ Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_Sup_o
 @[to_additive]
 theorem coe_supₛ_of_directed_on {S : Set (Subsemigroup M)} (hS : DirectedOn (· ≤ ·) S) :
     (↑(supₛ S) : Set M) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by simp [mem_Sup_of_directed_on hS]
+  Set.ext fun x => by simp [mem_supₛ_of_directed_on hS]
 #align subsemigroup.coe_Sup_of_directed_on Subsemigroup.coe_supₛ_of_directed_on
 #align add_subsemigroup.coe_Sup_of_directed_on AddSubsemigroup.coe_supₛ_of_directed_on
 
@@ -183,7 +183,7 @@ then it holds for all elements of the supremum of `S`. -/
 theorem supᵢ_induction (S : ι → Subsemigroup M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
-  rw [supr_eq_closure] at hx
+  rw [supᵢ_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
   exact hp _ _ hi
@@ -204,7 +204,7 @@ theorem supᵢ_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, 
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
-  refine' supr_induction S hx (fun i x hx => _) fun x y => _
+  refine' supᵢ_induction S hx (fun i x hx => _) fun x y => _
   · exact ⟨_, hp _ _ hx⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
     exact ⟨_, hmul _ _ _ _ Cx Cy⟩

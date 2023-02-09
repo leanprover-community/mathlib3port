@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ theorem coe_toSubalgebra (S : StarSubalgebra R A) : (S.toSubalgebra : Set A) = S
 
 theorem toSubalgebra_injective :
     Function.Injective (toSubalgebra : StarSubalgebra R A → Subalgebra R A) := fun S T h =>
-  ext fun x => by rw [← mem_to_subalgebra, ← mem_to_subalgebra, h]
+  ext fun x => by rw [← mem_toSubalgebra, ← mem_toSubalgebra, h]
 #align star_subalgebra.to_subalgebra_injective StarSubalgebra.toSubalgebra_injective
 
 theorem toSubalgebra_inj {S U : StarSubalgebra R A} : S.toSubalgebra = U.toSubalgebra ↔ S = U :=
@@ -135,7 +135,7 @@ theorem algebraMap_mem (r : R) : algebraMap R A r ∈ S :=
   S.algebraMap_mem' r
 #align star_subalgebra.algebra_map_mem StarSubalgebra.algebraMap_mem
 
-theorem rangeS_le : (algebraMap R A).srange ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ =>
+theorem rangeS_le : (algebraMap R A).rangeS ≤ S.toSubalgebra.toSubsemiring := fun x ⟨r, hr⟩ =>
   hr ▸ S.algebraMap_mem r
 #align star_subalgebra.srange_le StarSubalgebra.rangeS_le
 
@@ -155,16 +155,16 @@ def subtype : S →⋆ₐ[R] A := by refine_struct { toFun := (coe : S → A) } 
 #align star_subalgebra.subtype StarSubalgebra.subtype
 
 @[simp]
-theorem coeSubtype : (S.Subtype : S → A) = coe :=
+theorem coeSubtype : (S.subtype : S → A) = coe :=
   rfl
 #align star_subalgebra.coe_subtype StarSubalgebra.coeSubtype
 
-theorem subtype_apply (x : S) : S.Subtype x = (x : A) :=
+theorem subtype_apply (x : S) : S.subtype x = (x : A) :=
   rfl
 #align star_subalgebra.subtype_apply StarSubalgebra.subtype_apply
 
 @[simp]
-theorem toSubalgebra_subtype : S.toSubalgebra.val = S.Subtype.toAlgHom :=
+theorem toSubalgebra_subtype : S.toSubalgebra.val = S.subtype.toAlgHom :=
   rfl
 #align star_subalgebra.to_subalgebra_subtype StarSubalgebra.toSubalgebra_subtype
 
@@ -188,7 +188,7 @@ theorem inclusion_injective {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂)
 
 @[simp]
 theorem subtype_comp_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂) :
-    S₂.Subtype.comp (inclusion h) = S₁.Subtype :=
+    S₂.subtype.comp (inclusion h) = S₁.subtype :=
   rfl
 #align star_subalgebra.subtype_comp_inclusion StarSubalgebra.subtype_comp_inclusion
 
@@ -392,7 +392,7 @@ def starClosure (S : Subalgebra R A) : StarSubalgebra R A :=
   { S ⊔ star S with
     star_mem' := fun a ha =>
       by
-      simp only [Subalgebra.mem_carrier, ← (@Algebra.gi R A _ _ _).l_sup_u _ _] at *
+      simp only [Subalgebra.mem_carrier, ← (@algebra.gi R A _ _ _).l_sup_u _ _] at *
       rw [← mem_star_iff _ a, star_adjoin_comm]
       convert ha
       simp [Set.union_comm] }
@@ -466,7 +466,7 @@ variable {R}
 protected theorem gc : GaloisConnection (adjoin R : Set A → StarSubalgebra R A) coe :=
   by
   intro s S
-  rw [← to_subalgebra_le_iff, adjoin_to_subalgebra, Algebra.adjoin_le_iff, coe_to_subalgebra]
+  rw [← toSubalgebra_le_iff, adjoin_toSubalgebra, Algebra.adjoin_le_iff, coe_toSubalgebra]
   exact
     ⟨fun h => (Set.subset_union_left s _).trans h, fun h =>
       Set.union_subset h fun x hx => star_star x ▸ star_mem (show star x ∈ S from h hx)⟩
@@ -561,7 +561,7 @@ def adjoinCommSemiringOfComm {s : Set A} (hcomm : ∀ a : A, a ∈ s → ∀ b :
       rintro ⟨x, hx⟩ ⟨y, hy⟩
       ext
       simp only [[anonymous], MulMemClass.mk_mul_mk]
-      rw [← mem_to_subalgebra, adjoin_to_subalgebra] at hx hy
+      rw [← mem_toSubalgebra, adjoin_toSubalgebra] at hx hy
       letI : CommSemiring (Algebra.adjoin R (s ∪ star s)) :=
         Algebra.adjoinCommSemiringOfComm R
           (by
@@ -676,7 +676,7 @@ theorem coe_infₛ (S : Set (StarSubalgebra R A)) : (↑(infₛ S) : Set A) = �
 #align star_subalgebra.coe_Inf StarSubalgebra.coe_infₛ
 
 theorem mem_infₛ {S : Set (StarSubalgebra R A)} {x : A} : x ∈ infₛ S ↔ ∀ p ∈ S, x ∈ p := by
-  simp only [← SetLike.mem_coe, coe_Inf, Set.mem_interᵢ₂]
+  simp only [← SetLike.mem_coe, coe_infₛ, Set.mem_interᵢ₂]
 #align star_subalgebra.mem_Inf StarSubalgebra.mem_infₛ
 
 @[simp]
@@ -691,7 +691,7 @@ theorem coe_infᵢ {ι : Sort _} {S : ι → StarSubalgebra R A} : (↑(⨅ i, S
 #align star_subalgebra.coe_infi StarSubalgebra.coe_infᵢ
 
 theorem mem_infᵢ {ι : Sort _} {S : ι → StarSubalgebra R A} {x : A} :
-    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [infᵢ, mem_Inf, Set.forall_range_iff]
+    (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by simp only [infᵢ, mem_infₛ, Set.forall_range_iff]
 #align star_subalgebra.mem_infi StarSubalgebra.mem_infᵢ
 
 @[simp]
@@ -707,7 +707,7 @@ theorem bot_toSubalgebra : (⊥ : StarSubalgebra R A).toSubalgebra = ⊥ :=
 #align star_subalgebra.bot_to_subalgebra StarSubalgebra.bot_toSubalgebra
 
 theorem mem_bot {x : A} : x ∈ (⊥ : StarSubalgebra R A) ↔ x ∈ Set.range (algebraMap R A) := by
-  rw [← mem_to_subalgebra, bot_to_subalgebra, Algebra.mem_bot]
+  rw [← mem_toSubalgebra, bot_toSubalgebra, Algebra.mem_bot]
 #align star_subalgebra.mem_bot StarSubalgebra.mem_bot
 
 @[simp]

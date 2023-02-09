@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.isomorphisms
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,10 +69,10 @@ theorem quotKerEquivRange_symm_apply_image (x : M) (h : f x ∈ f.range) :
 to `x + p'`, where `p` and `p'` are submodules of an ambient module.
 -/
 def quotientInfToSupQuotient (p p' : Submodule R M) :
-    p ⧸ comap p.Subtype (p ⊓ p') →ₗ[R] _ ⧸ comap (p ⊔ p').Subtype p' :=
-  (comap p.subtype (p ⊓ p')).liftq ((comap (p ⊔ p').Subtype p').mkq.comp (of_le le_sup_left))
+    p ⧸ comap p.subtype (p ⊓ p') →ₗ[R] _ ⧸ comap (p ⊔ p').subtype p' :=
+  (comap p.subtype (p ⊓ p')).liftq ((comap (p ⊔ p').subtype p').mkq.comp (ofLe le_sup_left))
     (by
-      rw [ker_comp, of_le, comap_cod_restrict, ker_mkq, map_comap_subtype]
+      rw [ker_comp, ofLe, comap_codRestrict, ker_mkq, map_comap_subtype]
       exact comap_mono (inf_le_inf_right _ le_sup_left))
 #align linear_map.quotient_inf_to_sup_quotient LinearMap.quotientInfToSupQuotient
 
@@ -80,14 +80,14 @@ def quotientInfToSupQuotient (p p' : Submodule R M) :
 Second Isomorphism Law : the canonical map from `p/(p ∩ p')` to `(p+p')/p'` as a linear isomorphism.
 -/
 noncomputable def quotientInfEquivSupQuotient (p p' : Submodule R M) :
-    (p ⧸ comap p.Subtype (p ⊓ p')) ≃ₗ[R] _ ⧸ comap (p ⊔ p').Subtype p' :=
-  LinearEquiv.ofBijective (quotient_inf_to_sup_quotient p p')
+    (p ⧸ comap p.subtype (p ⊓ p')) ≃ₗ[R] _ ⧸ comap (p ⊔ p').subtype p' :=
+  LinearEquiv.ofBijective (quotientInfToSupQuotient p p')
     ⟨by
-      rw [← ker_eq_bot, quotient_inf_to_sup_quotient, ker_liftq_eq_bot]
+      rw [← ker_eq_bot, quotientInfToSupQuotient, ker_liftq_eq_bot]
       rw [ker_comp, ker_mkq]
       exact fun ⟨x, hx1⟩ hx2 => ⟨hx1, hx2⟩,
       by
-      rw [← range_eq_top, quotient_inf_to_sup_quotient, range_liftq, eq_top_iff']
+      rw [← range_eq_top, quotientInfToSupQuotient, range_liftq, eq_top_iff']
       rintro ⟨x, hx⟩; rcases mem_sup.1 hx with ⟨y, hy, z, hz, rfl⟩
       use ⟨y, hy⟩; apply (Submodule.Quotient.eq _).2
       change y - (y + z) ∈ p'
@@ -111,13 +111,13 @@ theorem quotientInfEquivSupQuotient_symm_apply_left (p p' : Submodule R M) (x : 
     (hx : (x : M) ∈ p) :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) =
       Submodule.Quotient.mk ⟨x, hx⟩ :=
-  (LinearEquiv.symm_apply_eq _).2 <| by simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).2 <| by simp [ofLe_apply]
 #align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_left LinearMap.quotientInfEquivSupQuotient_symm_apply_left
 
 @[simp]
 theorem quotientInfEquivSupQuotient_symm_apply_eq_zero_iff {p p' : Submodule R M} {x : p ⊔ p'} :
     (quotientInfEquivSupQuotient p p').symm (Submodule.Quotient.mk x) = 0 ↔ (x : M) ∈ p' :=
-  (LinearEquiv.symm_apply_eq _).trans <| by simp [of_le_apply]
+  (LinearEquiv.symm_apply_eq _).trans <| by simp [ofLe_apply]
 #align linear_map.quotient_inf_equiv_sup_quotient_symm_apply_eq_zero_iff LinearMap.quotientInfEquivSupQuotient_symm_apply_eq_zero_iff
 
 theorem quotientInfEquivSupQuotient_symm_apply_right (p p' : Submodule R M) {x : p ⊔ p'}
@@ -142,7 +142,7 @@ def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkq �
     (by
       rintro _ ⟨x, hx, rfl⟩
       rw [LinearMap.mem_ker, mkq_apply, mapq_apply]
-      exact (quotient.mk_eq_zero _).mpr hx)
+      exact (Quotient.mk_eq_zero _).mpr hx)
 #align submodule.quotient_quotient_equiv_quotient_aux Submodule.quotientQuotientEquivQuotientAux
 
 @[simp]
@@ -154,7 +154,7 @@ theorem quotientQuotientEquivQuotientAux_mk (x : M ⧸ S) :
 @[simp]
 theorem quotientQuotientEquivQuotientAux_mk_mk (x : M) :
     quotientQuotientEquivQuotientAux S T h (Quotient.mk (Quotient.mk x)) = Quotient.mk x := by
-  rw [quotient_quotient_equiv_quotient_aux_mk, mapq_apply, LinearMap.id_apply]
+  rw [quotientQuotientEquivQuotientAux_mk, mapq_apply, LinearMap.id_apply]
 #align submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotientQuotientEquivQuotientAux_mk_mk
 
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
@@ -173,7 +173,7 @@ theorem card_quotient_mul_card_quotient (S T : Submodule R M) (hST : T ≤ S)
     [DecidablePred fun x => x ∈ S.map T.mkq] [Fintype (M ⧸ S)] [Fintype (M ⧸ T)] :
     Fintype.card (S.map T.mkq) * Fintype.card (M ⧸ S) = Fintype.card (M ⧸ T) := by
   rw [Submodule.card_eq_card_quotient_mul_card (map T.mkq S),
-    fintype.card_eq.mpr ⟨(quotient_quotient_equiv_quotient T S hST).toEquiv⟩]
+    fintype.card_eq.mpr ⟨(quotientQuotientEquivQuotient T S hST).toEquiv⟩]
 #align submodule.card_quotient_mul_card_quotient Submodule.card_quotient_mul_card_quotient
 
 end Submodule

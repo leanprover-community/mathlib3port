@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem differentiable_within_at_localInvariantProp :
       have : I x = (I ∘ e.symm ∘ I.symm) (I (e x)) := by simp only [hx, mfld_simps]
       rw [this] at h
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ Set.range I := by simp only [hx, mfld_simps]
-      have := (mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this
+      have := (mem_groupoid_of_pregroupoid.2 he).2.contDiffWithinAt this
       convert (h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
       · ext y
         simp only [mfld_simps]
@@ -176,7 +176,7 @@ theorem differentiable_within_at_localInvariantProp :
       rw [DifferentiableWithinAtProp] at h⊢
       have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ Set.range I' := by
         simp only [hx, mfld_simps]
-      have := (mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A
+      have := (mem_groupoid_of_pregroupoid.2 he').1.contDiffWithinAt A
       convert (this.differentiable_within_at le_top).comp _ h _
       · ext y
         simp only [mfld_simps]
@@ -390,7 +390,7 @@ theorem IsOpen.uniqueMdiffOn (hs : IsOpen s) : UniqueMdiffOn I s := fun x hx =>
 #align is_open.unique_mdiff_on IsOpen.uniqueMdiffOn
 
 theorem uniqueMdiffOn_univ : UniqueMdiffOn I (univ : Set M) :=
-  isOpen_univ.UniqueMdiffOn
+  isOpen_univ.uniqueMdiffOn
 #align unique_mdiff_on_univ uniqueMdiffOn_univ
 
 /- We name the typeclass variables related to `smooth_manifold_with_corners` structure as they are
@@ -404,7 +404,7 @@ variable [Is : SmoothManifoldWithCorners I M] [I's : SmoothManifoldWithCorners I
 /-- `unique_mdiff_within_at` achieves its goal: it implies the uniqueness of the derivative. -/
 theorem UniqueMdiffWithinAt.eq (U : UniqueMdiffWithinAt I s x)
     (h : HasMfderivWithinAt I I' f s x f') (h₁ : HasMfderivWithinAt I I' f s x f₁') : f' = f₁' :=
-  U.Eq h.2 h₁.2
+  U.eq h.2 h₁.2
 #align unique_mdiff_within_at.eq UniqueMdiffWithinAt.eq
 
 theorem UniqueMdiffOn.eq (U : UniqueMdiffOn I s) (hx : x ∈ s) (h : HasMfderivWithinAt I I' f s x f')
@@ -483,7 +483,7 @@ theorem hasMfderivWithinAt_univ : HasMfderivWithinAt I I' f univ x f' ↔ HasMfd
 theorem hasMfderivAt_unique (h₀ : HasMfderivAt I I' f x f₀') (h₁ : HasMfderivAt I I' f x f₁') :
     f₀' = f₁' := by
   rw [← hasMfderivWithinAt_univ] at h₀ h₁
-  exact (uniqueMdiffWithinAt_univ I).Eq h₀ h₁
+  exact (uniqueMdiffWithinAt_univ I).eq h₀ h₁
 #align has_mfderiv_at_unique hasMfderivAt_unique
 
 theorem hasMfderivWithinAt_inter' (h : t ∈ 𝓝[s] x) :
@@ -551,7 +551,7 @@ theorem MdifferentiableAt.mfderiv (h : MdifferentiableAt I I' f x) :
 #align mdifferentiable_at.mfderiv MdifferentiableAt.mfderiv
 
 theorem HasMfderivAt.mfderiv (h : HasMfderivAt I I' f x f') : mfderiv I I' f x = f' :=
-  (hasMfderivAt_unique h h.MdifferentiableAt.HasMfderivAt).symm
+  (hasMfderivAt_unique h h.mdifferentiableAt.hasMfderivAt).symm
 #align has_mfderiv_at.mfderiv HasMfderivAt.mfderiv
 
 theorem HasMfderivWithinAt.mfderivWithin (h : HasMfderivWithinAt I I' f s x f')
@@ -689,11 +689,11 @@ theorem MdifferentiableAt.continuousAt (h : MdifferentiableAt I I' f x) : Contin
 #align mdifferentiable_at.continuous_at MdifferentiableAt.continuousAt
 
 theorem MdifferentiableOn.continuousOn (h : MdifferentiableOn I I' f s) : ContinuousOn f s :=
-  fun x hx => (h x hx).ContinuousWithinAt
+  fun x hx => (h x hx).continuousWithinAt
 #align mdifferentiable_on.continuous_on MdifferentiableOn.continuousOn
 
 theorem Mdifferentiable.continuous (h : Mdifferentiable I I' f) : Continuous f :=
-  continuous_iff_continuousAt.2 fun x => (h x).ContinuousAt
+  continuous_iff_continuousAt.2 fun x => (h x).continuousAt
 #align mdifferentiable.continuous Mdifferentiable.continuous
 
 include Is I's
@@ -778,7 +778,7 @@ include Is I's
 
 theorem MdifferentiableWithinAt.congr_of_eventuallyEq (h : MdifferentiableWithinAt I I' f s x)
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : MdifferentiableWithinAt I I' f₁ s x :=
-  (h.HasMfderivWithinAt.congr_of_eventuallyEq h₁ hx).MdifferentiableWithinAt
+  (h.hasMfderivWithinAt.congr_of_eventuallyEq h₁ hx).mdifferentiableWithinAt
 #align mdifferentiable_within_at.congr_of_eventually_eq MdifferentiableWithinAt.congr_of_eventuallyEq
 
 variable (I I')
@@ -801,12 +801,12 @@ variable {I I'}
 theorem MdifferentiableWithinAt.congr_mono (h : MdifferentiableWithinAt I I' f s x)
     (ht : ∀ x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (h₁ : t ⊆ s) :
     MdifferentiableWithinAt I I' f₁ t x :=
-  (HasMfderivWithinAt.congr_mono h.HasMfderivWithinAt ht hx h₁).MdifferentiableWithinAt
+  (HasMfderivWithinAt.congr_mono h.hasMfderivWithinAt ht hx h₁).mdifferentiableWithinAt
 #align mdifferentiable_within_at.congr_mono MdifferentiableWithinAt.congr_mono
 
 theorem MdifferentiableWithinAt.congr (h : MdifferentiableWithinAt I I' f s x)
     (ht : ∀ x ∈ s, f₁ x = f x) (hx : f₁ x = f x) : MdifferentiableWithinAt I I' f₁ s x :=
-  (HasMfderivWithinAt.congr_mono h.HasMfderivWithinAt ht hx (Subset.refl _)).MdifferentiableWithinAt
+  (HasMfderivWithinAt.congr_mono h.hasMfderivWithinAt ht hx (Subset.refl _)).mdifferentiableWithinAt
 #align mdifferentiable_within_at.congr MdifferentiableWithinAt.congr
 
 theorem MdifferentiableOn.congr_mono (h : MdifferentiableOn I I' f s) (h' : ∀ x ∈ t, f₁ x = f x)
@@ -816,13 +816,13 @@ theorem MdifferentiableOn.congr_mono (h : MdifferentiableOn I I' f s) (h' : ∀ 
 
 theorem MdifferentiableAt.congr_of_eventuallyEq (h : MdifferentiableAt I I' f x)
     (hL : f₁ =ᶠ[𝓝 x] f) : MdifferentiableAt I I' f₁ x :=
-  (h.HasMfderivAt.congr_of_eventuallyEq hL).MdifferentiableAt
+  (h.HasMfderivAt.congr_of_eventuallyEq hL).mdifferentiableAt
 #align mdifferentiable_at.congr_of_eventually_eq MdifferentiableAt.congr_of_eventuallyEq
 
 theorem MdifferentiableWithinAt.mfderivWithin_congr_mono (h : MdifferentiableWithinAt I I' f s x)
     (hs : ∀ x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueMdiffWithinAt I t x) (h₁ : t ⊆ s) :
     mfderivWithin I I' f₁ t x = (mfderivWithin I I' f s x : _) :=
-  (HasMfderivWithinAt.congr_mono h.HasMfderivWithinAt hs hx h₁).mfderivWithin hxt
+  (HasMfderivWithinAt.congr_mono h.hasMfderivWithinAt hs hx h₁).mfderivWithin hxt
 #align mdifferentiable_within_at.mfderiv_within_congr_mono MdifferentiableWithinAt.mfderivWithin_congr_mono
 
 theorem Filter.EventuallyEq.mfderivWithin_eq (hs : UniqueMdiffWithinAt I s x) (hL : f₁ =ᶠ[𝓝[s] x] f)
@@ -871,7 +871,7 @@ theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
       𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
   by
   apply
-    @Filter.mem_of_superset _ _ (f ∘ (extChartAt I x).symm ⁻¹' (extChartAt I' (f x)).source) _
+    @filter.mem_of_superset _ _ (f ∘ (extChartAt I x).symm ⁻¹' (extChartAt I' (f x)).source) _
       (extChartAt_preimage_mem_nhdsWithin I x
         (h.preimage_mem_nhds_within (extChartAt_source_mem_nhds _ _)))
   mfld_set_tac
@@ -904,7 +904,7 @@ theorem HasMfderivWithinAt.comp (hg : HasMfderivWithinAt I' I'' g u (f x) g')
     apply HasFderivWithinAt.comp ((extChartAt I x) x) hg.2 hf.2 _
     intro y hy
     simp only [mfld_simps] at hy
-    have : f (((chart_at H x).symm : H → M) (I.symm y)) ∈ u := hst hy.1.1
+    have : f (((chartAt H x).symm : H → M) (I.symm y)) ∈ u := hst hy.1.1
     simp only [hy, this, mfld_simps]
   apply A.congr_of_eventually_eq (written_in_ext_chart_comp hf.1)
   simp only [mfld_simps]
@@ -933,12 +933,12 @@ theorem MdifferentiableWithinAt.comp (hg : MdifferentiableWithinAt I' I'' g u (f
   have F : HasMfderivWithinAt I I' f s x f' := ⟨hf.1, hf'⟩
   rcases hg.2 with ⟨g', hg'⟩
   have G : HasMfderivWithinAt I' I'' g u (f x) g' := ⟨hg.1, hg'⟩
-  exact (HasMfderivWithinAt.comp x G F h).MdifferentiableWithinAt
+  exact (HasMfderivWithinAt.comp x G F h).mdifferentiableWithinAt
 #align mdifferentiable_within_at.comp MdifferentiableWithinAt.comp
 
 theorem MdifferentiableAt.comp (hg : MdifferentiableAt I' I'' g (f x))
     (hf : MdifferentiableAt I I' f x) : MdifferentiableAt I I'' (g ∘ f) x :=
-  (hg.HasMfderivAt.comp x hf.HasMfderivAt).MdifferentiableAt
+  (hg.hasMfderivAt.comp x hf.hasMfderivAt).mdifferentiableAt
 #align mdifferentiable_at.comp MdifferentiableAt.comp
 
 theorem mfderivWithin_comp (hg : MdifferentiableWithinAt I' I'' g u (f x))
@@ -1059,7 +1059,7 @@ theorem mdifferentiableWithinAt_iff_differentiableWithinAt :
     MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x ↔ DifferentiableWithinAt 𝕜 f s x :=
   by
   simp only [MdifferentiableWithinAt, mfld_simps]
-  exact ⟨fun H => H.2, fun H => ⟨H.ContinuousWithinAt, H⟩⟩
+  exact ⟨fun H => H.2, fun H => ⟨H.continuousWithinAt, H⟩⟩
 #align mdifferentiable_within_at_iff_differentiable_within_at mdifferentiableWithinAt_iff_differentiableWithinAt
 
 alias mdifferentiableWithinAt_iff_differentiableWithinAt ↔
@@ -1072,7 +1072,7 @@ theorem mdifferentiableAt_iff_differentiableAt :
     MdifferentiableAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x ↔ DifferentiableAt 𝕜 f x :=
   by
   simp only [MdifferentiableAt, differentiableWithinAt_univ, mfld_simps]
-  exact ⟨fun H => H.2, fun H => ⟨H.ContinuousAt, H⟩⟩
+  exact ⟨fun H => H.2, fun H => ⟨H.continuousAt, H⟩⟩
 #align mdifferentiable_at_iff_differentiable_at mdifferentiableAt_iff_differentiableAt
 
 alias mdifferentiableAt_iff_differentiableAt ↔
@@ -1142,36 +1142,36 @@ namespace ContinuousLinearMap
 variable (f : E →L[𝕜] E') {s : Set E} {x : E}
 
 protected theorem hasMfderivWithinAt : HasMfderivWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x f :=
-  f.HasFderivWithinAt.HasMfderivWithinAt
+  f.hasFderivWithinAt.hasMfderivWithinAt
 #align continuous_linear_map.has_mfderiv_within_at ContinuousLinearMap.hasMfderivWithinAt
 
 protected theorem hasMfderivAt : HasMfderivAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x f :=
-  f.HasFderivAt.HasMfderivAt
+  f.hasFderivAt.hasMfderivAt
 #align continuous_linear_map.has_mfderiv_at ContinuousLinearMap.hasMfderivAt
 
 protected theorem mdifferentiableWithinAt : MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x :=
-  f.DifferentiableWithinAt.MdifferentiableWithinAt
+  f.differentiableWithinAt.mdifferentiableWithinAt
 #align continuous_linear_map.mdifferentiable_within_at ContinuousLinearMap.mdifferentiableWithinAt
 
 protected theorem mdifferentiableOn : MdifferentiableOn 𝓘(𝕜, E) 𝓘(𝕜, E') f s :=
-  f.DifferentiableOn.MdifferentiableOn
+  f.differentiableOn.mdifferentiableOn
 #align continuous_linear_map.mdifferentiable_on ContinuousLinearMap.mdifferentiableOn
 
 protected theorem mdifferentiableAt : MdifferentiableAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x :=
-  f.DifferentiableAt.MdifferentiableAt
+  f.differentiableAt.mdifferentiableAt
 #align continuous_linear_map.mdifferentiable_at ContinuousLinearMap.mdifferentiableAt
 
 protected theorem mdifferentiable : Mdifferentiable 𝓘(𝕜, E) 𝓘(𝕜, E') f :=
-  f.Differentiable.Mdifferentiable
+  f.differentiable.mdifferentiable
 #align continuous_linear_map.mdifferentiable ContinuousLinearMap.mdifferentiable
 
 theorem mfderiv_eq : mfderiv 𝓘(𝕜, E) 𝓘(𝕜, E') f x = f :=
-  f.HasMfderivAt.mfderiv
+  f.hasMfderivAt.mfderiv
 #align continuous_linear_map.mfderiv_eq ContinuousLinearMap.mfderiv_eq
 
 theorem mfderivWithin_eq (hs : UniqueMdiffWithinAt 𝓘(𝕜, E) s x) :
     mfderivWithin 𝓘(𝕜, E) 𝓘(𝕜, E') f s x = f :=
-  f.HasMfderivWithinAt.mfderivWithin hs
+  f.hasMfderivWithinAt.mfderivWithin hs
 #align continuous_linear_map.mfderiv_within_eq ContinuousLinearMap.mfderivWithin_eq
 
 end ContinuousLinearMap
@@ -1181,36 +1181,36 @@ namespace ContinuousLinearEquiv
 variable (f : E ≃L[𝕜] E') {s : Set E} {x : E}
 
 protected theorem hasMfderivWithinAt : HasMfderivWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x (f : E →L[𝕜] E') :=
-  f.HasFderivWithinAt.HasMfderivWithinAt
+  f.hasFderivWithinAt.hasMfderivWithinAt
 #align continuous_linear_equiv.has_mfderiv_within_at ContinuousLinearEquiv.hasMfderivWithinAt
 
 protected theorem hasMfderivAt : HasMfderivAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x (f : E →L[𝕜] E') :=
-  f.HasFderivAt.HasMfderivAt
+  f.hasFderivAt.hasMfderivAt
 #align continuous_linear_equiv.has_mfderiv_at ContinuousLinearEquiv.hasMfderivAt
 
 protected theorem mdifferentiableWithinAt : MdifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x :=
-  f.DifferentiableWithinAt.MdifferentiableWithinAt
+  f.differentiableWithinAt.mdifferentiableWithinAt
 #align continuous_linear_equiv.mdifferentiable_within_at ContinuousLinearEquiv.mdifferentiableWithinAt
 
 protected theorem mdifferentiableOn : MdifferentiableOn 𝓘(𝕜, E) 𝓘(𝕜, E') f s :=
-  f.DifferentiableOn.MdifferentiableOn
+  f.differentiableOn.mdifferentiableOn
 #align continuous_linear_equiv.mdifferentiable_on ContinuousLinearEquiv.mdifferentiableOn
 
 protected theorem mdifferentiableAt : MdifferentiableAt 𝓘(𝕜, E) 𝓘(𝕜, E') f x :=
-  f.DifferentiableAt.MdifferentiableAt
+  f.differentiableAt.mdifferentiableAt
 #align continuous_linear_equiv.mdifferentiable_at ContinuousLinearEquiv.mdifferentiableAt
 
 protected theorem mdifferentiable : Mdifferentiable 𝓘(𝕜, E) 𝓘(𝕜, E') f :=
-  f.Differentiable.Mdifferentiable
+  f.differentiable.mdifferentiable
 #align continuous_linear_equiv.mdifferentiable ContinuousLinearEquiv.mdifferentiable
 
 theorem mfderiv_eq : mfderiv 𝓘(𝕜, E) 𝓘(𝕜, E') f x = (f : E →L[𝕜] E') :=
-  f.HasMfderivAt.mfderiv
+  f.hasMfderivAt.mfderiv
 #align continuous_linear_equiv.mfderiv_eq ContinuousLinearEquiv.mfderiv_eq
 
 theorem mfderivWithin_eq (hs : UniqueMdiffWithinAt 𝓘(𝕜, E) s x) :
     mfderivWithin 𝓘(𝕜, E) 𝓘(𝕜, E') f s x = (f : E →L[𝕜] E') :=
-  f.HasMfderivWithinAt.mfderivWithin hs
+  f.hasMfderivWithinAt.mfderivWithin hs
 #align continuous_linear_equiv.mfderiv_within_eq ContinuousLinearEquiv.mfderivWithin_eq
 
 end ContinuousLinearEquiv
@@ -1236,22 +1236,22 @@ theorem hasMfderivAt_id (x : M) :
 
 theorem hasMfderivWithinAt_id (s : Set M) (x : M) :
     HasMfderivWithinAt I I (@id M) s x (ContinuousLinearMap.id 𝕜 (TangentSpace I x)) :=
-  (hasMfderivAt_id I x).HasMfderivWithinAt
+  (hasMfderivAt_id I x).hasMfderivWithinAt
 #align has_mfderiv_within_at_id hasMfderivWithinAt_id
 
 theorem mdifferentiableAt_id : MdifferentiableAt I I (@id M) x :=
-  (hasMfderivAt_id I x).MdifferentiableAt
+  (hasMfderivAt_id I x).mdifferentiableAt
 #align mdifferentiable_at_id mdifferentiableAt_id
 
 theorem mdifferentiableWithinAt_id : MdifferentiableWithinAt I I (@id M) s x :=
-  (mdifferentiableAt_id I).MdifferentiableWithinAt
+  (mdifferentiableAt_id I).mdifferentiableWithinAt
 #align mdifferentiable_within_at_id mdifferentiableWithinAt_id
 
 theorem mdifferentiable_id : Mdifferentiable I I (@id M) := fun x => mdifferentiableAt_id I
 #align mdifferentiable_id mdifferentiable_id
 
 theorem mdifferentiableOn_id : MdifferentiableOn I I (@id M) s :=
-  (mdifferentiable_id I).MdifferentiableOn
+  (mdifferentiable_id I).mdifferentiableOn
 #align mdifferentiable_on_id mdifferentiableOn_id
 
 @[simp, mfld_simps]
@@ -1302,15 +1302,15 @@ theorem hasMfderivAt_const (c : M') (x : M) :
 
 theorem hasMfderivWithinAt_const (c : M') (s : Set M) (x : M) :
     HasMfderivWithinAt I I' (fun y : M => c) s x (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
-  (hasMfderivAt_const I I' c x).HasMfderivWithinAt
+  (hasMfderivAt_const I I' c x).hasMfderivWithinAt
 #align has_mfderiv_within_at_const hasMfderivWithinAt_const
 
 theorem mdifferentiableAt_const : MdifferentiableAt I I' (fun y : M => c) x :=
-  (hasMfderivAt_const I I' c x).MdifferentiableAt
+  (hasMfderivAt_const I I' c x).mdifferentiableAt
 #align mdifferentiable_at_const mdifferentiableAt_const
 
 theorem mdifferentiableWithinAt_const : MdifferentiableWithinAt I I' (fun y : M => c) s x :=
-  (mdifferentiableAt_const I I').MdifferentiableWithinAt
+  (mdifferentiableAt_const I I').mdifferentiableWithinAt
 #align mdifferentiable_within_at_const mdifferentiableWithinAt_const
 
 theorem mdifferentiable_const : Mdifferentiable I I' fun y : M => c := fun x =>
@@ -1318,7 +1318,7 @@ theorem mdifferentiable_const : Mdifferentiable I I' fun y : M => c := fun x =>
 #align mdifferentiable_const mdifferentiable_const
 
 theorem mdifferentiableOn_const : MdifferentiableOn I I' (fun y : M => c) s :=
-  (mdifferentiable_const I I').MdifferentiableOn
+  (mdifferentiable_const I I').mdifferentiableOn
 #align mdifferentiable_on_const mdifferentiableOn_const
 
 @[simp, mfld_simps]
@@ -1355,7 +1355,7 @@ theorem HasMfderivAt.add (hf : HasMfderivAt I 𝓘(𝕜, E') f z f')
 
 theorem MdifferentiableAt.add (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
     (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) : MdifferentiableAt I 𝓘(𝕜, E') (f + g) z :=
-  (hf.HasMfderivAt.add hg.HasMfderivAt).MdifferentiableAt
+  (hf.hasMfderivAt.add hg.hasMfderivAt).mdifferentiableAt
 #align mdifferentiable_at.add MdifferentiableAt.add
 
 theorem Mdifferentiable.add (hf : Mdifferentiable I 𝓘(𝕜, E') f)
@@ -1367,7 +1367,7 @@ theorem mfderiv_add (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
     (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
     (mfderiv I 𝓘(𝕜, E') (f + g) z : TangentSpace I z →L[𝕜] E') =
       (mfderiv I 𝓘(𝕜, E') f z + mfderiv I 𝓘(𝕜, E') g z : TangentSpace I z →L[𝕜] E') :=
-  (hf.HasMfderivAt.add hg.HasMfderivAt).mfderiv
+  (hf.hasMfderivAt.add hg.hasMfderivAt).mfderiv
 #align mfderiv_add mfderiv_add
 
 theorem HasMfderivAt.const_smul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s : 𝕜) :
@@ -1377,7 +1377,7 @@ theorem HasMfderivAt.const_smul (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') (s :
 
 theorem MdifferentiableAt.const_smul (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (s : 𝕜) :
     MdifferentiableAt I 𝓘(𝕜, E') (s • f) z :=
-  (hf.HasMfderivAt.const_smul s).MdifferentiableAt
+  (hf.hasMfderivAt.const_smul s).mdifferentiableAt
 #align mdifferentiable_at.const_smul MdifferentiableAt.const_smul
 
 theorem Mdifferentiable.const_smul (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜, E') f) :
@@ -1387,7 +1387,7 @@ theorem Mdifferentiable.const_smul (s : 𝕜) (hf : Mdifferentiable I 𝓘(𝕜,
 theorem const_smul_mfderiv (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) (s : 𝕜) :
     (mfderiv I 𝓘(𝕜, E') (s • f) z : TangentSpace I z →L[𝕜] E') =
       (s • mfderiv I 𝓘(𝕜, E') f z : TangentSpace I z →L[𝕜] E') :=
-  (hf.HasMfderivAt.const_smul s).mfderiv
+  (hf.hasMfderivAt.const_smul s).mfderiv
 #align const_smul_mfderiv const_smul_mfderiv
 
 theorem HasMfderivAt.neg (hf : HasMfderivAt I 𝓘(𝕜, E') f z f') :
@@ -1401,7 +1401,7 @@ theorem hasMfderivAt_neg : HasMfderivAt I 𝓘(𝕜, E') (-f) z (-f') ↔ HasMfd
 
 theorem MdifferentiableAt.neg (hf : MdifferentiableAt I 𝓘(𝕜, E') f z) :
     MdifferentiableAt I 𝓘(𝕜, E') (-f) z :=
-  hf.HasMfderivAt.neg.MdifferentiableAt
+  hf.hasMfderivAt.neg.mdifferentiableAt
 #align mdifferentiable_at.neg MdifferentiableAt.neg
 
 theorem mdifferentiableAt_neg :
@@ -1432,7 +1432,7 @@ theorem HasMfderivAt.sub (hf : HasMfderivAt I 𝓘(𝕜, E') f z f')
 
 theorem MdifferentiableAt.sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
     (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) : MdifferentiableAt I 𝓘(𝕜, E') (f - g) z :=
-  (hf.HasMfderivAt.sub hg.HasMfderivAt).MdifferentiableAt
+  (hf.hasMfderivAt.sub hg.hasMfderivAt).mdifferentiableAt
 #align mdifferentiable_at.sub MdifferentiableAt.sub
 
 theorem Mdifferentiable.sub (hf : Mdifferentiable I 𝓘(𝕜, E') f)
@@ -1444,7 +1444,7 @@ theorem mfderiv_sub (hf : MdifferentiableAt I 𝓘(𝕜, E') f z)
     (hg : MdifferentiableAt I 𝓘(𝕜, E') g z) :
     (mfderiv I 𝓘(𝕜, E') (f - g) z : TangentSpace I z →L[𝕜] E') =
       (mfderiv I 𝓘(𝕜, E') f z - mfderiv I 𝓘(𝕜, E') g z : TangentSpace I z →L[𝕜] E') :=
-  (hf.HasMfderivAt.sub hg.HasMfderivAt).mfderiv
+  (hf.hasMfderivAt.sub hg.hasMfderivAt).mfderiv
 #align mfderiv_sub mfderiv_sub
 
 end Group
@@ -1456,25 +1456,25 @@ variable {I} {z : M} {F' : Type _} [NormedRing F'] [NormedAlgebra 𝕜 F'] {p q 
 
 theorem HasMfderivWithinAt.mul' (hp : HasMfderivWithinAt I 𝓘(𝕜, F') p s z p')
     (hq : HasMfderivWithinAt I 𝓘(𝕜, F') q s z q') :
-    HasMfderivWithinAt I 𝓘(𝕜, F') (p * q) s z (p z • q' + p'.smul_right (q z) : E →L[𝕜] F') :=
+    HasMfderivWithinAt I 𝓘(𝕜, F') (p * q) s z (p z • q' + p'.smulRight (q z) : E →L[𝕜] F') :=
   ⟨hp.1.mul hq.1, by simpa only [mfld_simps] using hp.2.mul' hq.2⟩
 #align has_mfderiv_within_at.mul' HasMfderivWithinAt.mul'
 
 theorem HasMfderivAt.mul' (hp : HasMfderivAt I 𝓘(𝕜, F') p z p')
     (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
-    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + p'.smul_right (q z) : E →L[𝕜] F') :=
-  hasMfderivWithinAt_univ.mp <| hp.HasMfderivWithinAt.mul' hq.HasMfderivWithinAt
+    HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + p'.smulRight (q z) : E →L[𝕜] F') :=
+  hasMfderivWithinAt_univ.mp <| hp.hasMfderivWithinAt.mul' hq.hasMfderivWithinAt
 #align has_mfderiv_at.mul' HasMfderivAt.mul'
 
 theorem MdifferentiableWithinAt.mul (hp : MdifferentiableWithinAt I 𝓘(𝕜, F') p s z)
     (hq : MdifferentiableWithinAt I 𝓘(𝕜, F') q s z) :
     MdifferentiableWithinAt I 𝓘(𝕜, F') (p * q) s z :=
-  (hp.HasMfderivWithinAt.mul' hq.HasMfderivWithinAt).MdifferentiableWithinAt
+  (hp.hasMfderivWithinAt.mul' hq.hasMfderivWithinAt).mdifferentiableWithinAt
 #align mdifferentiable_within_at.mul MdifferentiableWithinAt.mul
 
 theorem MdifferentiableAt.mul (hp : MdifferentiableAt I 𝓘(𝕜, F') p z)
     (hq : MdifferentiableAt I 𝓘(𝕜, F') q z) : MdifferentiableAt I 𝓘(𝕜, F') (p * q) z :=
-  (hp.HasMfderivAt.mul' hq.HasMfderivAt).MdifferentiableAt
+  (hp.hasMfderivAt.mul' hq.hasMfderivAt).mdifferentiableAt
 #align mdifferentiable_at.mul MdifferentiableAt.mul
 
 theorem MdifferentiableOn.mul (hp : MdifferentiableOn I 𝓘(𝕜, F') p s)
@@ -1506,7 +1506,7 @@ theorem HasMfderivWithinAt.mul (hp : HasMfderivWithinAt I 𝓘(𝕜, F') p s z p
 theorem HasMfderivAt.mul (hp : HasMfderivAt I 𝓘(𝕜, F') p z p')
     (hq : HasMfderivAt I 𝓘(𝕜, F') q z q') :
     HasMfderivAt I 𝓘(𝕜, F') (p * q) z (p z • q' + q z • p' : E →L[𝕜] F') :=
-  hasMfderivWithinAt_univ.mp <| hp.HasMfderivWithinAt.mul hq.HasMfderivWithinAt
+  hasMfderivWithinAt_univ.mp <| hp.hasMfderivWithinAt.mul hq.hasMfderivWithinAt
 #align has_mfderiv_at.mul HasMfderivAt.mul
 
 end AlgebraOverCommRing
@@ -1519,37 +1519,37 @@ namespace ModelWithCorners
 
 
 protected theorem hasMfderivAt {x} : HasMfderivAt I 𝓘(𝕜, E) I x (ContinuousLinearMap.id _ _) :=
-  ⟨I.ContinuousAt, (hasFderivWithinAt_id _ _).congr' I.RightInvOn (mem_range_self _)⟩
+  ⟨I.continuousAt, (hasFderivWithinAt_id _ _).congr' I.rightInvOn (mem_range_self _)⟩
 #align model_with_corners.has_mfderiv_at ModelWithCorners.hasMfderivAt
 
 protected theorem hasMfderivWithinAt {s x} :
     HasMfderivWithinAt I 𝓘(𝕜, E) I s x (ContinuousLinearMap.id _ _) :=
-  I.HasMfderivAt.HasMfderivWithinAt
+  I.hasMfderivAt.hasMfderivWithinAt
 #align model_with_corners.has_mfderiv_within_at ModelWithCorners.hasMfderivWithinAt
 
 protected theorem mdifferentiableWithinAt {s x} : MdifferentiableWithinAt I 𝓘(𝕜, E) I s x :=
-  I.HasMfderivWithinAt.MdifferentiableWithinAt
+  I.hasMfderivWithinAt.mdifferentiableWithinAt
 #align model_with_corners.mdifferentiable_within_at ModelWithCorners.mdifferentiableWithinAt
 
 protected theorem mdifferentiableAt {x} : MdifferentiableAt I 𝓘(𝕜, E) I x :=
-  I.HasMfderivAt.MdifferentiableAt
+  I.hasMfderivAt.mdifferentiableAt
 #align model_with_corners.mdifferentiable_at ModelWithCorners.mdifferentiableAt
 
 protected theorem mdifferentiableOn {s} : MdifferentiableOn I 𝓘(𝕜, E) I s := fun x hx =>
-  I.MdifferentiableWithinAt
+  I.mdifferentiableWithinAt
 #align model_with_corners.mdifferentiable_on ModelWithCorners.mdifferentiableOn
 
-protected theorem mdifferentiable : Mdifferentiable I 𝓘(𝕜, E) I := fun x => I.MdifferentiableAt
+protected theorem mdifferentiable : Mdifferentiable I 𝓘(𝕜, E) I := fun x => I.mdifferentiableAt
 #align model_with_corners.mdifferentiable ModelWithCorners.mdifferentiable
 
 theorem hasMfderivWithinAt_symm {x} (hx : x ∈ range I) :
     HasMfderivWithinAt 𝓘(𝕜, E) I I.symm (range I) x (ContinuousLinearMap.id _ _) :=
   ⟨I.continuousWithinAt_symm,
-    (hasFderivWithinAt_id _ _).congr' (fun y hy => I.RightInvOn hy.1) ⟨hx, mem_range_self _⟩⟩
+    (hasFderivWithinAt_id _ _).congr' (fun y hy => I.rightInvOn hy.1) ⟨hx, mem_range_self _⟩⟩
 #align model_with_corners.has_mfderiv_within_at_symm ModelWithCorners.hasMfderivWithinAt_symm
 
 theorem mdifferentiableOn_symm : MdifferentiableOn 𝓘(𝕜, E) I I.symm (range I) := fun x hx =>
-  (I.hasMfderivWithinAt_symm hx).MdifferentiableWithinAt
+  (I.hasMfderivWithinAt_symm hx).mdifferentiableWithinAt
 #align model_with_corners.mdifferentiable_on_symm ModelWithCorners.mdifferentiableOn_symm
 
 end ModelWithCorners
@@ -1561,48 +1561,47 @@ variable {e : LocalHomeomorph M H}
 theorem mdifferentiableAt_atlas (h : e ∈ atlas H M) {x : M} (hx : x ∈ e.source) :
     MdifferentiableAt I I e x :=
   by
-  refine' ⟨(e.continuous_on x hx).ContinuousAt (IsOpen.mem_nhds e.open_source hx), _⟩
-  have mem :
-    I ((chart_at H x : M → H) x) ∈ I.symm ⁻¹' ((chart_at H x).symm ≫ₕ e).source ∩ range I := by
-    simp only [hx, mfld_simps]
-  have : (chart_at H x).symm.trans e ∈ contDiffGroupoid ∞ I :=
+  refine' ⟨(e.continuous_on x hx).continuousAt (IsOpen.mem_nhds e.open_source hx), _⟩
+  have mem : I ((chartAt H x : M → H) x) ∈ I.symm ⁻¹' ((chartAt H x).symm ≫ₕ e).source ∩ range I :=
+    by simp only [hx, mfld_simps]
+  have : (chartAt H x).symm.trans e ∈ contDiffGroupoid ∞ I :=
     HasGroupoid.compatible _ (chart_mem_atlas H x) h
   have A :
-    ContDiffOn 𝕜 ∞ (I ∘ (chart_at H x).symm.trans e ∘ I.symm)
-      (I.symm ⁻¹' ((chart_at H x).symm.trans e).source ∩ range I) :=
+    ContDiffOn 𝕜 ∞ (I ∘ (chartAt H x).symm.trans e ∘ I.symm)
+      (I.symm ⁻¹' ((chartAt H x).symm.trans e).source ∩ range I) :=
     this.1
-  have B := A.differentiable_on le_top (I ((chart_at H x : M → H) x)) mem
+  have B := A.differentiable_on le_top (I ((chartAt H x : M → H) x)) mem
   simp only [mfld_simps] at B
   rw [inter_comm, differentiableWithinAt_inter] at B
   · simpa only [mfld_simps]
-  · apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).Preimage I.continuous_symm) mem.1
+  · apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).preimage I.continuous_symm) mem.1
 #align mdifferentiable_at_atlas mdifferentiableAt_atlas
 
 theorem mdifferentiableOn_atlas (h : e ∈ atlas H M) : MdifferentiableOn I I e e.source :=
-  fun x hx => (mdifferentiableAt_atlas I h hx).MdifferentiableWithinAt
+  fun x hx => (mdifferentiableAt_atlas I h hx).mdifferentiableWithinAt
 #align mdifferentiable_on_atlas mdifferentiableOn_atlas
 
 theorem mdifferentiableAt_atlas_symm (h : e ∈ atlas H M) {x : H} (hx : x ∈ e.target) :
     MdifferentiableAt I I e.symm x :=
   by
-  refine' ⟨(e.continuous_on_symm x hx).ContinuousAt (IsOpen.mem_nhds e.open_target hx), _⟩
-  have mem : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chart_at H (e.symm x)).source ∩ range I := by
+  refine' ⟨(e.continuous_on_symm x hx).continuousAt (IsOpen.mem_nhds e.open_target hx), _⟩
+  have mem : I x ∈ I.symm ⁻¹' (e.symm ≫ₕ chartAt H (e.symm x)).source ∩ range I := by
     simp only [hx, mfld_simps]
-  have : e.symm.trans (chart_at H (e.symm x)) ∈ contDiffGroupoid ∞ I :=
+  have : e.symm.trans (chartAt H (e.symm x)) ∈ contDiffGroupoid ∞ I :=
     HasGroupoid.compatible _ h (chart_mem_atlas H _)
   have A :
-    ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans (chart_at H (e.symm x)) ∘ I.symm)
-      (I.symm ⁻¹' (e.symm.trans (chart_at H (e.symm x))).source ∩ range I) :=
+    ContDiffOn 𝕜 ∞ (I ∘ e.symm.trans (chartAt H (e.symm x)) ∘ I.symm)
+      (I.symm ⁻¹' (e.symm.trans (chartAt H (e.symm x))).source ∩ range I) :=
     this.1
   have B := A.differentiable_on le_top (I x) mem
   simp only [mfld_simps] at B
   rw [inter_comm, differentiableWithinAt_inter] at B
   · simpa only [mfld_simps]
-  · apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).Preimage I.continuous_symm) mem.1
+  · apply IsOpen.mem_nhds ((LocalHomeomorph.open_source _).preimage I.continuous_symm) mem.1
 #align mdifferentiable_at_atlas_symm mdifferentiableAt_atlas_symm
 
 theorem mdifferentiableOn_atlas_symm (h : e ∈ atlas H M) : MdifferentiableOn I I e.symm e.target :=
-  fun x hx => (mdifferentiableAt_atlas_symm I h hx).MdifferentiableWithinAt
+  fun x hx => (mdifferentiableAt_atlas_symm I h hx).mdifferentiableWithinAt
 #align mdifferentiable_on_atlas_symm mdifferentiableOn_atlas_symm
 
 theorem mdifferentiable_of_mem_atlas (h : e ∈ atlas H M) : e.Mdifferentiable I I :=
@@ -1669,11 +1668,11 @@ theorem symm : e.symm.Mdifferentiable I' I :=
 #align local_homeomorph.mdifferentiable.symm LocalHomeomorph.Mdifferentiable.symm
 
 protected theorem mdifferentiableAt {x : M} (hx : x ∈ e.source) : MdifferentiableAt I I' e x :=
-  (he.1 x hx).MdifferentiableAt (IsOpen.mem_nhds e.open_source hx)
+  (he.1 x hx).mdifferentiableAt (IsOpen.mem_nhds e.open_source hx)
 #align local_homeomorph.mdifferentiable.mdifferentiable_at LocalHomeomorph.Mdifferentiable.mdifferentiableAt
 
 theorem mdifferentiableAt_symm {x : M'} (hx : x ∈ e.target) : MdifferentiableAt I' I e.symm x :=
-  (he.2 x hx).MdifferentiableAt (IsOpen.mem_nhds e.open_target hx)
+  (he.2 x hx).mdifferentiableAt (IsOpen.mem_nhds e.open_target hx)
 #align local_homeomorph.mdifferentiable.mdifferentiable_at_symm LocalHomeomorph.Mdifferentiable.mdifferentiableAt_symm
 
 variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners I' M']
@@ -1686,7 +1685,7 @@ theorem symm_comp_deriv {x : M} (hx : x ∈ e.source) :
   have : mfderiv I I (e.symm ∘ e) x = (mfderiv I' I e.symm (e x)).comp (mfderiv I I' e x) :=
     mfderiv_comp x (he.mdifferentiable_at_symm (e.map_source hx)) (he.mdifferentiable_at hx)
   rw [← this]
-  have : mfderiv I I (_root_.id : M → M) x = ContinuousLinearMap.id _ _ := mfderiv_id I
+  have : mfderiv I I (id : M → M) x = ContinuousLinearMap.id _ _ := mfderiv_id I
   rw [← this]
   apply Filter.EventuallyEq.mfderiv_eq
   have : e.source ∈ 𝓝 x := IsOpen.mem_nhds e.open_source hx
@@ -1722,15 +1721,15 @@ protected def mfderiv {x : M} (hx : x ∈ e.source) : TangentSpace I x ≃L[𝕜
 #align local_homeomorph.mdifferentiable.mfderiv LocalHomeomorph.Mdifferentiable.mfderiv
 
 theorem mfderiv_bijective {x : M} (hx : x ∈ e.source) : Function.Bijective (mfderiv I I' e x) :=
-  (he.mfderiv hx).Bijective
+  (he.mfderiv hx).bijective
 #align local_homeomorph.mdifferentiable.mfderiv_bijective LocalHomeomorph.Mdifferentiable.mfderiv_bijective
 
 theorem mfderiv_injective {x : M} (hx : x ∈ e.source) : Function.Injective (mfderiv I I' e x) :=
-  (he.mfderiv hx).Injective
+  (he.mfderiv hx).injective
 #align local_homeomorph.mdifferentiable.mfderiv_injective LocalHomeomorph.Mdifferentiable.mfderiv_injective
 
 theorem mfderiv_surjective {x : M} (hx : x ∈ e.source) : Function.Surjective (mfderiv I I' e x) :=
-  (he.mfderiv hx).Surjective
+  (he.mfderiv hx).surjective
 #align local_homeomorph.mdifferentiable.mfderiv_surjective LocalHomeomorph.Mdifferentiable.mfderiv_surjective
 
 theorem ker_mfderiv_eq_bot {x : M} (hx : x ∈ e.source) : LinearMap.ker (mfderiv I I' e x) = ⊥ :=
@@ -1751,12 +1750,12 @@ theorem trans (he' : e'.Mdifferentiable I' I'') : (e.trans e').Mdifferentiable I
   · intro x hx
     simp only [mfld_simps] at hx
     exact
-      ((he'.mdifferentiable_at hx.2).comp _ (he.mdifferentiable_at hx.1)).MdifferentiableWithinAt
+      ((he'.mdifferentiable_at hx.2).comp _ (he.mdifferentiable_at hx.1)).mdifferentiableWithinAt
   · intro x hx
     simp only [mfld_simps] at hx
     exact
       ((he.symm.mdifferentiable_at hx.2).comp _
-          (he'.symm.mdifferentiable_at hx.1)).MdifferentiableWithinAt
+          (he'.symm.mdifferentiable_at hx.1)).mdifferentiableWithinAt
 #align local_homeomorph.mdifferentiable.trans LocalHomeomorph.Mdifferentiable.trans
 
 end LocalHomeomorph.Mdifferentiable
@@ -1772,22 +1771,22 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 theorem hasMfderivAt_extChartAt (h : y ∈ (chartAt H x).source) :
     HasMfderivAt I 𝓘(𝕜, E) (extChartAt I x) y (mfderiv I I (chartAt H x) y : _) :=
-  I.HasMfderivAt.comp y ((mdifferentiable_chart I x).MdifferentiableAt h).HasMfderivAt
+  I.hasMfderivAt.comp y ((mdifferentiable_chart I x).mdifferentiableAt h).hasMfderivAt
 #align has_mfderiv_at_ext_chart_at hasMfderivAt_extChartAt
 
 theorem hasMfderivWithinAt_extChartAt (h : y ∈ (chartAt H x).source) :
     HasMfderivWithinAt I 𝓘(𝕜, E) (extChartAt I x) s y (mfderiv I I (chartAt H x) y : _) :=
-  (hasMfderivAt_extChartAt I h).HasMfderivWithinAt
+  (hasMfderivAt_extChartAt I h).hasMfderivWithinAt
 #align has_mfderiv_within_at_ext_chart_at hasMfderivWithinAt_extChartAt
 
 theorem mdifferentiableAt_extChartAt (h : y ∈ (chartAt H x).source) :
     MdifferentiableAt I 𝓘(𝕜, E) (extChartAt I x) y :=
-  (hasMfderivAt_extChartAt I h).MdifferentiableAt
+  (hasMfderivAt_extChartAt I h).mdifferentiableAt
 #align mdifferentiable_at_ext_chart_at mdifferentiableAt_extChartAt
 
 theorem mdifferentiableOn_extChartAt :
     MdifferentiableOn I 𝓘(𝕜, E) (extChartAt I x) (chartAt H x).source := fun y hy =>
-  (hasMfderivWithinAt_extChartAt I hy).MdifferentiableWithinAt
+  (hasMfderivWithinAt_extChartAt I hy).mdifferentiableWithinAt
 #align mdifferentiable_on_ext_chart_at mdifferentiableOn_extChartAt
 
 end extChartAt
@@ -1841,12 +1840,12 @@ theorem UniqueMdiffOn.uniqueMdiffOn_preimage [SmoothManifoldWithCorners I' M']
   -- of `e`
   let G := F.symm ≫ e.to_local_equiv ≫ extChartAt I' x
   -- `G` is differentiable
-  have Diff : ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x).Mdifferentiable I I' :=
+  have Diff : ((chartAt H z).symm ≫ₕ e ≫ₕ chartAt H' x).Mdifferentiable I I' :=
     by
     have A := mdifferentiable_of_mem_atlas I (chart_mem_atlas H z)
     have B := mdifferentiable_of_mem_atlas I' (chart_mem_atlas H' x)
     exact A.symm.trans (he.trans B)
-  have Mmem : (chart_at H z : M → H) z ∈ ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x).source := by
+  have Mmem : (chartAt H z : M → H) z ∈ ((chartAt H z).symm ≫ₕ e ≫ₕ chartAt H' x).source := by
     simp only [z_source, zx, mfld_simps]
   have A : DifferentiableWithinAt 𝕜 G (range I) (F z) := by
     refine' (Diff.mdifferentiable_at Mmem).2.congr (fun p hp => _) _ <;>
@@ -1862,13 +1861,12 @@ theorem UniqueMdiffOn.uniqueMdiffOn_preimage [SmoothManifoldWithCorners I' M']
   -- of the two charts and of `e`.
   have C : DenseRange (G' : E → E') :=
     by
-    have :
-      G' = mfderiv I I' ((chart_at H z).symm ≫ₕ e ≫ₕ chart_at H' x) ((chart_at H z : M → H) z) :=
+    have : G' = mfderiv I I' ((chartAt H z).symm ≫ₕ e ≫ₕ chartAt H' x) ((chartAt H z : M → H) z) :=
       by
       rw [(Diff.mdifferentiable_at Mmem).mfderiv]
       rfl
     rw [this]
-    exact (Diff.mfderiv_surjective Mmem).DenseRange
+    exact (Diff.mfderiv_surjective Mmem).denseRange
   -- key step: thanks to what we have proved about it, `G` preserves the unique derivative property
   have key :
     UniqueDiffWithinAt 𝕜
@@ -1895,11 +1893,11 @@ theorem UniqueMdiffOn.uniqueDiffOn_target_inter (hs : UniqueMdiffOn I s) (x : M)
   -- the local chart at `x`.
   intro z hz
   simp only [mfld_simps] at hz
-  have : (chart_at H x).Mdifferentiable I I := mdifferentiable_chart _ _
+  have : (chartAt H x).Mdifferentiable I I := mdifferentiable_chart _ _
   have T := (hs.unique_mdiff_on_preimage this) (I.symm z)
   simp only [hz.left.left, hz.left.right, hz.right, UniqueMdiffWithinAt, mfld_simps] at T⊢
   convert T using 1
-  rw [@preimage_comp _ _ _ _ (chart_at H x).symm]
+  rw [@preimage_comp _ _ _ _ (chartAt H x).symm]
   mfld_set_tac
 #align unique_mdiff_on.unique_diff_on_target_inter UniqueMdiffOn.uniqueDiffOn_target_inter
 
@@ -1927,7 +1925,7 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
 theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
-    UniqueMdiffOn (I.Prod 𝓘(𝕜, F)) (Z.toVectorBundleCore.proj ⁻¹' s) :=
+    UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (Z.toVectorBundleCore.proj ⁻¹' s) :=
   by
   /- Using a chart (and the fact that unique differentiability is invariant under charts), we
     reduce the situation to the model space, where we can use the fact that products respect
@@ -1935,8 +1933,8 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
   intro p hp
   replace hp : p.fst ∈ s
   · simpa only [mfld_simps] using hp
-  let e₀ := chart_at H p.1
-  let e := chart_at (ModelProd H F) p
+  let e₀ := chartAt H p.1
+  let e := chartAt (ModelProd H F) p
   -- It suffices to prove unique differentiability in a chart
   suffices h :
     UniqueMdiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (Z.to_vector_bundle_core.proj ⁻¹' s))
@@ -1965,7 +1963,7 @@ theorem UniqueMdiffOn.smooth_bundle_preimage (hs : UniqueMdiffOn I s) :
       (I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ univ :=
     by mfld_set_tac
   intro q hq
-  replace hq : q.1 ∈ (chart_at H p.1).target ∧ ((chart_at H p.1).symm : H → M) q.1 ∈ s
+  replace hq : q.1 ∈ (chartAt H p.1).target ∧ ((chartAt H p.1).symm : H → M) q.1 ∈ s
   · simpa only [mfld_simps] using hq
   simp only [UniqueMdiffWithinAt, ModelWithCorners.prod, preimage_inter, this, mfld_simps]
   -- apply unique differentiability of products to conclude

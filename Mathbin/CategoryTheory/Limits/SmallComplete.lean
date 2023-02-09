@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.small_complete
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ instance (priority := 100) : Quiver.IsThin C := fun X Y =>
         rw [Cardinal.power_def]
         apply le_of_eq
         rw [Cardinal.eq]
-        refine' ⟨⟨pi.lift, fun f k => f ≫ pi.π _ k, _, _⟩⟩
+        refine' ⟨⟨Pi.lift, fun f k => f ≫ Pi.π _ k, _, _⟩⟩
         · intro f
           ext k
           simp

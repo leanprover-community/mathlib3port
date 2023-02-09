@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module order.filter.ennreal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} : f.
   by
   constructor <;> intro h
   · have hu_zero :=
-      eventually_le.trans (eventually_le_limsup u) (eventually_of_forall fun _ => le_of_eq h)
+      EventuallyLe.trans (eventually_le_limsup u) (eventually_of_forall fun _ => le_of_eq h)
     exact hu_zero.mono fun x hx => le_antisymm hx (zero_le _)
   · rw [limsup_congr h]
     simp_rw [Pi.zero_apply, ← Ennreal.bot_eq_zero, limsup_const_bot]
@@ -97,7 +97,7 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
   · simp_rw [ha_top, top_mul]
     have hu_mul : ∃ᶠ x : α in f, ⊤ ≤ ite (u x = 0) (0 : ℝ≥0∞) ⊤ :=
       by
-      rw [eventually_eq, not_eventually] at hu
+      rw [EventuallyEq, not_eventually] at hu
       refine' hu.mono fun x hx => _
       rw [Pi.zero_apply] at hx
       simp [hx]

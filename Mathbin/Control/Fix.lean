@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.fix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ variable (f : (∀ a, Part <| β a) → ∀ a, Part <| β a)
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
 def Fix.approx : Stream' <| ∀ a, Part <| β a
   | 0 => ⊥
-  | Nat.succ i => f (fix.approx i)
+  | nat.succ i => f (fix.approx i)
 #align part.fix.approx Part.Fix.approx
 -/
 
@@ -87,35 +87,35 @@ protected def fix (x : α) : Part <| β x :=
 protected theorem fix_def {x : α} (h' : ∃ i, (Fix.approx f i x).Dom) :
     Part.fix f x = Fix.approx f (Nat.succ <| Nat.find h') x :=
   by
-  let p := fun i : ℕ => (fix.approx f i x).Dom
+  let p := fun i : ℕ => (Fix.approx f i x).Dom
   have : p (Nat.find h') := Nat.find_spec h'
   generalize hk : Nat.find h' = k
   replace hk : Nat.find h' = k + (@upto.zero p).val := hk
   rw [hk] at this
   revert hk
   dsimp [Part.fix]; rw [assert_pos h']; revert this
-  generalize upto.zero = z; intros
-  suffices : ∀ x', WellFounded.fix (fix._proof_1 f x h') (fix_aux f) z x' = fix.approx f (succ k) x'
+  generalize Upto.zero = z; intros
+  suffices : ∀ x', WellFounded.fix (fix._proof_1 f x h') (fixAux f) z x' = Fix.approx f (succ k) x'
   exact this _
   induction k generalizing z <;> intro
-  · rw [fix.approx, WellFounded.fix_eq, fix_aux]
+  · rw [Fix.approx, WellFounded.fix_eq, fixAux]
     congr
     ext : 1
     rw [assert_neg]
     rfl
     rw [Nat.zero_add] at this
     simpa only [Classical.not_not, Subtype.val_eq_coe]
-  · rw [fix.approx, WellFounded.fix_eq, fix_aux]
+  · rw [Fix.approx, WellFounded.fix_eq, fixAux]
     congr
     ext : 1
-    have hh : ¬(fix.approx f z.val x).Dom :=
+    have hh : ¬(Fix.approx f z.val x).Dom :=
       by
       apply Nat.find_min h'
       rw [hk, Nat.succ_add, ← Nat.add_succ]
       apply Nat.lt_of_succ_le
       apply Nat.le_add_left
     rw [succ_add_eq_succ_add] at this hk
-    rw [assert_pos hh, k_ih (upto.succ z hh) this hk]
+    rw [assert_pos hh, k_ih (Upto.succ z hh) this hk]
 #align part.fix_def Part.fix_def
 -/
 

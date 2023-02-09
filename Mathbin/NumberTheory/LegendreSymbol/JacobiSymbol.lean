@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ open Nat ZMod
 -- Since we need the fact that the factors are prime, we use `list.pmap`.
 /-- The Jacobi symbol of `a` and `b` -/
 def jacobiSym (a : ℤ) (b : ℕ) : ℤ :=
-  (b.factors.pmap (fun p pp => @legendreSym p ⟨pp⟩ a) fun p pf => prime_of_mem_factors pf).Prod
+  (b.factors.pmap (fun p pp => @legendreSym p ⟨pp⟩ a) fun p pf => prime_of_mem_factors pf).prod
 #align jacobi_sym jacobiSym
 
 -- mathport name: «exprJ( | )»
@@ -159,8 +159,8 @@ theorem mul_left (a₁ a₂ : ℤ) (b : ℕ) : J(a₁ * a₂ | b) = J(a₁ | b) 
 theorem eq_zero_iff_not_coprime {a : ℤ} {b : ℕ} [NeZero b] : J(a | b) = 0 ↔ a.gcd b ≠ 1 :=
   List.prod_eq_zero_iff.trans
     (by
-      rw [List.mem_pmap, Int.gcd_eq_natAbs, Ne, prime.not_coprime_iff_dvd]
-      simp_rw [legendreSym.eq_zero_iff, int_coe_zmod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ←
+      rw [List.mem_pmap, Int.gcd_eq_natAbs, Ne, Prime.not_coprime_iff_dvd]
+      simp_rw [legendreSym.eq_zero_iff, int_coe_zMod_eq_zero_iff_dvd, mem_factors (NeZero.ne b), ←
         Int.coe_nat_dvd_left, Int.coe_nat_dvd, exists_prop, and_assoc', and_comm'])
 #align jacobi_sym.eq_zero_iff_not_coprime jacobiSym.eq_zero_iff_not_coprime
 
@@ -268,7 +268,7 @@ theorem nonsquare_iff_jacobiSym_eq_neg_one {a : ℤ} {p : ℕ} [Fact p.Prime] :
 theorem isSquare_of_jacobiSym_eq_one {a : ℤ} {p : ℕ} [Fact p.Prime] (h : J(a | p) = 1) :
     IsSquare (a : ZMod p) :=
   Classical.not_not.mp <| by
-    rw [← nonsquare_iff_jacobi_sym_eq_neg_one, h]
+    rw [← nonsquare_iff_jacobiSym_eq_neg_one, h]
     decide
 #align zmod.is_square_of_jacobi_sym_eq_one ZMod.isSquare_of_jacobiSym_eq_one
 
@@ -387,12 +387,12 @@ theorem quadratic_reciprocity' {a b : ℕ} (ha : Odd a) (hb : Odd b) :
   have rhs_apply : ∀ a b : ℕ, rhs a b = qrSign b a * J(b | a) := fun a b => rfl
   refine' value_at a (rhs a) (fun p pp hp => Eq.symm _) hb
   have hpo := pp.eq_two_or_odd'.resolve_left hp
-  rw [@legendreSym.to_jacobiSym p ⟨pp⟩, rhs_apply, Nat.cast_id, qrSign.eq_iff_eq hpo ha,
+  rw [@legendre_sym.to_jacobi_sym p ⟨pp⟩, rhs_apply, Nat.cast_id, qrSign.eq_iff_eq hpo ha,
     qrSign.symm hpo ha]
   refine' value_at p (rhs p) (fun q pq hq => _) ha
   have hqo := pq.eq_two_or_odd'.resolve_left hq
-  rw [rhs_apply, Nat.cast_id, ← @legendreSym.to_jacobiSym p ⟨pp⟩, qrSign.symm hqo hpo,
-    qrSign.neg_one_pow hpo hqo, @legendreSym.quadratic_reciprocity' p q ⟨pp⟩ ⟨pq⟩ hp hq]
+  rw [rhs_apply, Nat.cast_id, ← @legendre_sym.to_jacobi_sym p ⟨pp⟩, qrSign.symm hqo hpo,
+    qrSign.neg_one_pow hpo hqo, @legendre_sym.quadratic_reciprocity' p q ⟨pp⟩ ⟨pq⟩ hp hq]
 #align jacobi_sym.quadratic_reciprocity' jacobiSym.quadratic_reciprocity'
 
 /-- The Law of Quadratic Reciprocity for the Jacobi symbol -/

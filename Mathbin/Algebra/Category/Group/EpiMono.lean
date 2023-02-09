@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.category.Group.epi_mono
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ variable [Group A] [Group B]
 
 @[to_additive AddMonoidHom.ker_eq_bot_of_cancel]
 theorem ker_eq_bot_of_cancel {f : A →* B} (h : ∀ u v : f.ker →* A, f.comp u = f.comp v → u = v) :
-    f.ker = ⊥ := by simpa using _root_.congr_arg range (h f.ker.subtype 1 (by tidy))
+    f.ker = ⊥ := by simpa using congr_arg range (h f.ker.subtype 1 (by tidy))
 #align monoid_hom.ker_eq_bot_of_cancel MonoidHom.ker_eq_bot_of_cancel
 #align add_monoid_hom.ker_eq_bot_of_cancel AddMonoidHom.ker_eq_bot_of_cancel
 
@@ -124,7 +124,7 @@ instance : SMul B X'
       from_coset
         ⟨b *l y, by
           rw [← Subtype.val_eq_coe, ← y.2.choose_spec, leftCoset_assoc]
-          use b * y.2.some⟩
+          use b * y.2.choose⟩
     | ∞ => ∞
 
 theorem mul_smul (b b' : B) (x : X') : (b * b') • x = b • b' • x :=
@@ -259,7 +259,7 @@ theorem g_apply_infinity (x : B) : (g x) ∞ = ∞ :=
 
 theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ :=
   by
-  simp only [H, MonoidHom.coe_mk, Equiv.toFun_as_coe, Equiv.coe_trans, Function.comp_apply]
+  simp only [h, MonoidHom.coe_mk, Equiv.toFun_as_coe, Equiv.coe_trans, Function.comp_apply]
   rw [τ_symm_apply_infinity, g_apply_from_coset]
   simpa only [← Subtype.val_eq_coe] using τ_apply_from_coset' f x hx
 #align Group.surjective_of_epi_auxs.h_apply_infinity GroupCat.SurjectiveOfEpiAuxs.h_apply_infinity
@@ -267,7 +267,7 @@ theorem h_apply_infinity (x : B) (hx : x ∈ f.range) : (h x) ∞ = ∞ :=
 theorem h_apply_from_coset (x : B) :
     (h x) (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) =
       from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩ :=
-  by simp [H, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
+  by simp [h, τ_symm_apply_from_coset, g_apply_infinity, τ_apply_infinity]
 #align Group.surjective_of_epi_auxs.h_apply_from_coset GroupCat.SurjectiveOfEpiAuxs.h_apply_from_coset
 
 theorem h_apply_from_coset' (x : B) (b : B) (hb : b ∈ f.range) :
@@ -280,9 +280,9 @@ theorem h_apply_from_coset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : 
     (h x) (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) =
       from_coset ⟨x * b *l f.range.carrier, ⟨x * b, rfl⟩⟩ :=
   by
-  simp only [H, tau, MonoidHom.coe_mk, Equiv.toFun_as_coe, Equiv.coe_trans, Function.comp_apply]
+  simp only [h, tau, MonoidHom.coe_mk, Equiv.toFun_as_coe, Equiv.coe_trans, Function.comp_apply]
   rw [Equiv.symm_swap,
-    @Equiv.swap_apply_of_ne_of_ne X' _ (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) ∞
+    @equiv.swap_apply_of_ne_of_ne X' _ (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) ∞
       (from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩) (from_coset_ne_of_nin_range _ hb) (by simp)]
   simp only [g_apply_from_coset, ← Subtype.val_eq_coe, leftCoset_assoc]
   refine' Equiv.swap_apply_of_ne_of_ne (from_coset_ne_of_nin_range _ fun r => hb _) (by simp)
@@ -307,7 +307,7 @@ theorem agree : f.range.carrier = { x | h x = g x } :=
   · have eq1 :
       (h b) (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) =
         from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩ :=
-      by simp [H, tau, g_apply_infinity]
+      by simp [h, tau, g_apply_infinity]
     have eq2 :
       (g b) (from_coset ⟨f.range.carrier, ⟨1, one_leftCoset _⟩⟩) =
         from_coset ⟨b *l f.range.carrier, ⟨b, rfl⟩⟩ :=
@@ -325,7 +325,7 @@ theorem g_ne_h (x : B) (hx : x ∉ f.range) : g ≠ h :=
   intro r
   replace r :=
     FunLike.congr_fun (FunLike.congr_fun r x) (from_coset ⟨f.range, ⟨1, one_leftCoset _⟩⟩)
-  rw [H, g_apply_from_coset, MonoidHom.coe_mk, tau] at r
+  rw [h, g_apply_from_coset, MonoidHom.coe_mk, tau] at r
   simp only [MonoidHom.coe_range, Subtype.coe_mk, Equiv.symm_swap, Equiv.toFun_as_coe,
     Equiv.coe_trans, Function.comp_apply] at r
   erw [Equiv.swap_apply_left, g_apply_infinity, Equiv.swap_apply_right] at r
@@ -340,8 +340,8 @@ theorem surjective_of_epi [Epi f] : Function.Surjective f :=
   push_neg  at r
   rcases r with ⟨b, hb⟩
   exact
-    surjective_of_epi_auxs.g_ne_h f b (fun ⟨c, hc⟩ => hb _ hc)
-      ((cancel_epi f).1 (surjective_of_epi_auxs.comp_eq f))
+    SurjectiveOfEpiAuxs.g_ne_h f b (fun ⟨c, hc⟩ => hb _ hc)
+      ((cancel_epi f).1 (SurjectiveOfEpiAuxs.comp_eq f))
 #align Group.surjective_of_epi GroupCat.surjective_of_epi
 
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f :=
@@ -360,7 +360,7 @@ variable {A B : AddGroupCat.{u}} (f : A ⟶ B)
 
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f :=
   by
-  have i1 : epi f ↔ epi (Group_AddGroup_equivalence.inverse.map f) :=
+  have i1 : Epi f ↔ Epi (Group_AddGroup_equivalence.inverse.map f) :=
     by
     refine' ⟨_, Group_AddGroup_equivalence.inverse.epi_of_epi_map⟩
     intro e'

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.Fintype
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ def equivEquivIso {A B : FintypeCat} : A ≃ B ≃ (A ≅ B)
     { Hom := e
       inv := e.symm }
   invFun i :=
-    { toFun := i.Hom
+    { toFun := i.hom
       invFun := i.inv
       left_inv := Iso.hom_inv_id_apply i
       right_inv := Iso.inv_hom_id_apply i }
@@ -135,7 +135,7 @@ theorem is_skeletal : Skeletal Skeleton.{u} := fun X Y ⟨h⟩ =>
   ext _ _ <|
     Fin.equiv_iff_eq.mp <|
       Nonempty.intro <|
-        { toFun := fun x => (h.Hom ⟨x⟩).down
+        { toFun := fun x => (h.hom ⟨x⟩).down
           invFun := fun x => (h.inv ⟨x⟩).down
           left_inv := by
             intro a

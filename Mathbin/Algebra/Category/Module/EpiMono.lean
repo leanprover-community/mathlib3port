@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.epi_mono
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ def uniqueOfEpiZero (X) [h : Epi (0 : X ⟶ of R M)] : Unique M :=
   uniqueOfSurjectiveZero X ((ModuleCat.epi_iff_surjective _).mp h)
 #align Module.unique_of_epi_zero ModuleCat.uniqueOfEpiZero
 
-instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=
+instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.subtype) :=
   (mono_iff_ker_eq_bot _).mpr (Submodule.ker_subtype U)
 #align Module.mono_as_hom'_subtype ModuleCat.mono_as_hom'_subtype
 

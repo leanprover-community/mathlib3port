@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.scc
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ unsafe def with_new_closure {α} : (closure → tactic α) → tactic α :=
 Useful for debugging. -/
 unsafe def to_tactic_format (cl : closure) : tactic format := do
   let m ← read_ref cl
-  let l := m.toList
+  let l := m.to_list
   let fmt ←
     l.mapM fun ⟨x, y⟩ =>
         match y with
-        | Sum.inl y => f!"{(← x)} ⇐ {← y}"
-        | Sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
+        | sum.inl y => f!"{(← x)} ⇐ {← y}"
+        | sum.inr ⟨y, p⟩ => f!"({(← x)}, {(← y)}) : {← infer_type p}"
   pure <| to_fmt fmt
 #align tactic.closure.to_tactic_format tactic.closure.to_tactic_format
 
@@ -124,13 +124,13 @@ unsafe def root (cl : closure) : expr → tactic (ℕ × expr × expr)
       | none => do
         let p ← mk_app `` Iff.refl [e]
         pure (0, e, p)
-      | some (Sum.inl n) => do
+      | some (sum.inl n) => do
         let p ← mk_app `` Iff.refl [e]
         pure (n, e, p)
-      | some (Sum.inr (e₀, p₀)) => do
+      | some (sum.inr (e₀, p₀)) => do
         let (n, e₁, p₁) ← root e₀
         let p ← mk_app `` Iff.trans [p₀, p₁]
-        modify_ref cl fun m => m e (Sum.inr (e₁, p))
+        modify_ref cl fun m => m e (sum.inr (e₁, p))
         pure (n, e₁, p)
 #align tactic.closure.root tactic.closure.root
 
@@ -139,7 +139,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   let p₂ ← mk_app `` Iff.symm [p₀]
   let p ← mk_app `` Iff.trans [p₂, p]
   let p ← mk_app `` Iff.trans [p, p₁]
-  modify_ref cl fun m => m e₀ <| Sum.inr (e₁, p)
+  modify_ref cl fun m => m e₀ <| sum.inr (e₁, p)
 #align tactic.closure.merge_intl tactic.closure.merge_intl
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -284,10 +284,10 @@ unsafe def merge_path (path : List (expr × expr)) (e : expr) : tactic Unit := d
 
 /-- (implementation of `collapse`) -/
 unsafe def collapse' : List (expr × expr) → List (expr × expr) → expr → tactic Unit
-  | Acc, [], v => merge_path Acc v
-  | Acc, (x, pr) :: xs, v => do
+  | acc, [], v => merge_path acc v
+  | acc, (x, pr) :: xs, v => do
     let b ← cl.is_eqv x v
-    let acc' := (x, pr) :: Acc
+    let acc' := (x, pr) :: acc
     if b then merge_path acc' v else collapse' acc' xs v
 #align tactic.impl_graph.collapse' tactic.impl_graph.collapse'
 
@@ -374,7 +374,7 @@ strongly connected components technique. Mostly useful for testing. -/
 unsafe def interactive.scc' : tactic Unit :=
   closure.with_new_closure fun cl => do
     let m ← impl_graph.mk_scc cl
-    let ls := m.toList.map Prod.fst
+    let ls := m.to_list.map Prod.fst
     let ls' := Prod.mk <$> ls <*> ls
     ls' fun x => do
         let h ← get_unused_name `h

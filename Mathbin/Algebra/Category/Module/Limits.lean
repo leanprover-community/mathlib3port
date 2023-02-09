@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,8 +62,8 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
     carrier := (F ⋙ forget (ModuleCat R)).sections
     smul_mem' := fun r s sh j j' f =>
       by
-      simp only [forget_map_eq_coe, functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
-      dsimp [functor.sections] at sh
+      simp only [forget_map_eq_coe, Functor.comp_map, Pi.smul_apply, LinearMap.map_smul]
+      dsimp [Functor.sections] at sh
       rw [sh f] }
 #align Module.sections_submodule ModuleCat.sectionsSubmodule
 
@@ -115,11 +115,11 @@ def limitCone (F : J ⥤ ModuleCat.{max v w} R) : Cone F
 -/
 def limitConeIsLimit (F : J ⥤ ModuleCat.{max v w} R) : IsLimit (limitCone F) := by
   refine'
-            is_limit.of_faithful (forget (ModuleCat R)) (types.limit_cone_is_limit _)
+            IsLimit.ofFaithful (forget (ModuleCat R)) (Types.limitConeIsLimit _)
               (fun s => ⟨_, _, _⟩) fun s => rfl <;>
           intros <;>
         ext j <;>
-      simp only [Subtype.coe_mk, functor.map_cone_π_app, forget_map_eq_coe, LinearMap.map_add,
+      simp only [Subtype.coe_mk, Functor.mapCone_π_app, forget_map_eq_coe, LinearMap.map_add,
         LinearMap.map_smul] <;>
     rfl
 #align Module.has_limits.limit_cone_is_limit ModuleCat.HasLimits.limitConeIsLimit
@@ -135,9 +135,9 @@ irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R)
     HasLimitsOfShape := fun J 𝒥 =>
       {
         HasLimit := fun F =>
-          has_limit.mk
+          HasLimit.mk
             { Cone := limit_cone F
-              IsLimit := limit_cone_is_limit F } } }
+              IsLimit := limitConeIsLimit F } } }
 #align Module.has_limits_of_size ModuleCat.hasLimitsOfSize
 
 instance hasLimits : HasLimits (ModuleCat.{w} R) :=
@@ -158,8 +158,8 @@ instance forget₂AddCommGroupPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_AddCommGroup_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (forget₂AddCommGroupPreservesLimitsAux F) }
 #align Module.forget₂_AddCommGroup_preserves_limits_of_size ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize
 
 instance forget₂AddCommGroupPreservesLimits :
@@ -173,11 +173,11 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget (Mod
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (types.limit_cone_is_limit (F ⋙ forget _)) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (Types.limitConeIsLimit (F ⋙ forget _)) }
 #align Module.forget_preserves_limits_of_size ModuleCat.forgetPreservesLimitsOfSize
 
-instance forgetPreservesLimits : PreservesLimits (forget (ModuleCat.{w} R)) :=
+instance forgetPreservesLimits : preserves_limits (forget (ModuleCat.{w} R)) :=
   ModuleCat.forgetPreservesLimitsOfSize.{w, w}
 #align Module.forget_preserves_limits ModuleCat.forgetPreservesLimits
 
@@ -228,7 +228,7 @@ def directLimitCocone : Cocone (directLimitDiagram G f)
       naturality' := fun i j hij => by
         apply LinearMap.ext
         intro x
-        exact direct_limit.of_f }
+        exact DirectLimit.of_f }
 #align Module.direct_limit_cocone ModuleCat.directLimitCocone
 
 /-- The unbundled `direct_limit` of modules is a colimit
@@ -239,18 +239,18 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
   desc s :=
     DirectLimit.lift R ι G f s.ι.app fun i j h x =>
       by
-      rw [← s.w (hom_of_le h)]
+      rw [← s.w (homOfLe h)]
       rfl
   fac' s i := by
     apply LinearMap.ext
     intro x
     dsimp
-    exact direct_limit.lift_of s.ι.app _ x
+    exact DirectLimit.lift_of s.ι.app _ x
   uniq' s m h :=
     by
     have :
       s.ι.app = fun i =>
-        LinearMap.comp m (direct_limit.of R ι (fun i => G i) (fun i j H => f i j H) i) :=
+        LinearMap.comp m (DirectLimit.of R ι (fun i => G i) (fun i j H => f i j H) i) :=
       by
       funext i
       rw [← h]

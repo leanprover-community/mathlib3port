@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.locally_discrete
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ instance (priority := 900) homSmallCategory (X Y : LocallyDiscrete C) : SmallCat
 /-- Extract the equation from a 2-morphism in a locally discrete 2-category. -/
 theorem eq_of_hom {X Y : LocallyDiscrete C} {f g : X ⟶ Y} (η : f ⟶ g) : f = g :=
   by
-  have : discrete.mk f.as = discrete.mk g.as := congr_arg discrete.mk (eq_of_hom η)
+  have : Discrete.mk f.as = Discrete.mk g.as := congr_arg Discrete.mk (eq_of_hom η)
   simpa using this
 #align category_theory.locally_discrete.eq_of_hom CategoryTheory.LocallyDiscrete.eq_of_hom
 
@@ -79,15 +79,15 @@ instance locallyDiscreteBicategory : Bicategory (LocallyDiscrete C)
   associator W X Y Z f g h :=
     eqToIso <| by
       unfold_projs
-      simp only [category.assoc]
+      simp only [Category.assoc]
   leftUnitor X Y f :=
     eqToIso <| by
       unfold_projs
-      simp only [category.id_comp, mk_as]
+      simp only [Category.id_comp, mk_as]
   rightUnitor X Y f :=
     eqToIso <| by
       unfold_projs
-      simp only [category.comp_id, mk_as]
+      simp only [Category.comp_id, mk_as]
 #align category_theory.locally_discrete_bicategory CategoryTheory.locallyDiscreteBicategory
 
 /-- A locally discrete bicategory is strict. -/
@@ -97,17 +97,17 @@ instance locallyDiscreteBicategory.strict : Strict (LocallyDiscrete C)
     intros
     ext1
     unfold_projs
-    apply category.id_comp
+    apply Category.id_comp
   comp_id' := by
     intros
     ext1
     unfold_projs
-    apply category.comp_id
+    apply Category.comp_id
   assoc' := by
     intros
     ext1
     unfold_projs
-    apply category.assoc
+    apply Category.assoc
 #align category_theory.locally_discrete_bicategory.strict CategoryTheory.locallyDiscreteBicategory.strict
 
 variable {I : Type u₁} [Category.{v₁} I] {B : Type u₂} [Bicategory.{w₂, v₂} B] [Strict B]

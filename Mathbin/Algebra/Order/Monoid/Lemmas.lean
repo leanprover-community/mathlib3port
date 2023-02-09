@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl, Dami
 Yuyang Zhao
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1800,7 +1800,7 @@ theorem Left.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· < ·)]
   · exact ⟨rfl, mul_left_cancel'' h⟩
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
-  exact ((Left.mul_lt_mul hac hbd).Ne h).elim
+  exact ((Left.mul_lt_mul hac hbd).ne h).elim
 #align left.mul_eq_mul_iff_eq_and_eq Left.mul_eq_mul_iff_eq_and_eq
 #align left.add_eq_add_iff_eq_and_eq Left.add_eq_add_iff_eq_and_eq
 
@@ -1821,7 +1821,7 @@ theorem Right.mul_eq_mul_iff_eq_and_eq [CovariantClass α α (· * ·) (· ≤ �
   · exact ⟨rfl, mul_left_cancel'' h⟩
   rcases eq_or_lt_of_le hbd with (rfl | hbd)
   · exact ⟨mul_right_cancel'' h, rfl⟩
-  exact ((Right.mul_lt_mul hac hbd).Ne h).elim
+  exact ((Right.mul_lt_mul hac hbd).ne h).elim
 #align right.mul_eq_mul_iff_eq_and_eq Right.mul_eq_mul_iff_eq_and_eq
 #align right.add_eq_add_iff_eq_and_eq Right.add_eq_add_iff_eq_and_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.finsupp.to_dfinsupp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -397,13 +397,13 @@ def sigmaFinsuppEquivDfinsupp [Zero N] : ((Σi, η i) →₀ N) ≃ Π₀ i, η 
       Trunc.mk
         ⟨(splitSupport f : Finset ι).val, fun i =>
           by
-          rw [← Finset.mem_def, mem_split_support_iff_nonzero]
+          rw [← Finset.mem_def, mem_splitSupport_iff_nonzero]
           exact (em _).symm⟩⟩
   invFun f := by
     haveI := Classical.decEq ι
     haveI := fun i => Classical.decEq (η i →₀ N)
     refine'
-      on_finset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
+      onFinset (Finset.sigma f.support fun j => (f j).support) (fun ji => f ji.1 ji.2) fun g hg =>
         finset.mem_sigma.mpr ⟨_, mem_support_iff.mpr hg⟩
     simp only [Ne.def, Dfinsupp.mem_support_toFun]
     intro h

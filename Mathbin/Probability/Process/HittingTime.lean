@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.hitting_time
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,16 +262,16 @@ theorem hitting_isStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrde
     rw [h_set_eq_Union]
     exact
       MeasurableSet.unionᵢ fun j =>
-        MeasurableSet.unionᵢ fun hj => f.mono hj.2 _ ((hu j).Measurable hs)
+        MeasurableSet.unionᵢ fun hj => f.mono hj.2 _ ((hu j).measurable hs)
 #align measure_theory.hitting_is_stopping_time MeasureTheory.hitting_isStoppingTime
 
 theorem stoppedValue_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
     {u : ι → Ω → β} {s : Set β} {n m : ι} {ω : Ω} (h : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     stoppedValue u (hitting u s n m) ω ∈ s :=
   by
-  simp only [stopped_value, hitting, if_pos h]
+  simp only [stoppedValue, hitting, if_pos h]
   obtain ⟨j, hj₁, hj₂⟩ := h
-  have : Inf (Set.Icc n m ∩ { i | u i ω ∈ s }) ∈ Set.Icc n m ∩ { i | u i ω ∈ s } :=
+  have : infₛ (Set.Icc n m ∩ { i | u i ω ∈ s }) ∈ Set.Icc n m ∩ { i | u i ω ∈ s } :=
     cinfₛ_mem (Set.nonempty_of_mem ⟨hj₁, hj₂⟩)
   exact this.2
 #align measure_theory.stopped_value_hitting_mem MeasureTheory.stoppedValue_hitting_mem
@@ -304,7 +304,7 @@ theorem isStoppingTime_hitting_isStoppingTime [ConditionallyCompleteLinearOrder 
   exact
     MeasurableSet.unionᵢ fun i =>
       MeasurableSet.unionᵢ fun hi =>
-        (f.mono hi _ (hτ.measurable_set_eq i)).inter (hitting_is_stopping_time hf hs n)
+        (f.mono hi _ (hτ.measurable_set_eq i)).inter (hitting_isStoppingTime hf hs n)
 #align measure_theory.is_stopping_time_hitting_is_stopping_time MeasureTheory.isStoppingTime_hitting_isStoppingTime
 
 section CompleteLattice

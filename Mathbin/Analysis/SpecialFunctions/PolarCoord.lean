@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.special_functions.polar_coord
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     rcases eq_or_ne θ 0 with (rfl | h'θ)
     · simpa using hr
     · right
-      simpa only [ne_of_gt hr, Ne.def, mem_set_of_eq, mul_eq_zero, false_or_iff,
+      simpa only [ne_of_gt hr, Ne.def, mem_setOf_eq, mul_eq_zero, false_or_iff,
         sin_eq_zero_iff_of_lt_of_lt hθ.1 hθ.2] using h'θ
   map_source' := by
     rintro ⟨x, y⟩ hxy
@@ -80,41 +80,41 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     simp only [← Complex.of_real_cos, ← Complex.of_real_sin, mul_add, ← Complex.of_real_mul, ←
       mul_assoc] at Z
     simpa [A, -Complex.of_real_cos, -Complex.of_real_sin] using Complex.ext_iff.1 Z
-  open_target := isOpen_Ioi.Prod isOpen_Ioo
+  open_target := isOpen_Ioi.prod isOpen_Ioo
   open_source :=
     (isOpen_lt continuous_const continuous_fst).union
       (isOpen_ne_fun continuous_snd continuous_const)
   continuous_invFun :=
     ((continuous_fst.mul (continuous_cos.comp continuous_snd)).prod_mk
-        (continuous_fst.mul (continuous_sin.comp continuous_snd))).ContinuousOn
+        (continuous_fst.mul (continuous_sin.comp continuous_snd))).continuousOn
   continuous_toFun :=
     by
-    apply ((continuous_fst.pow 2).add (continuous_snd.pow 2)).sqrt.ContinuousOn.Prod
+    apply ((continuous_fst.pow 2).add (continuous_snd.pow 2)).sqrt.continuousOn.prod
     have A :
-      maps_to complex.equiv_real_prod.symm ({ q : ℝ × ℝ | 0 < q.1 } ∪ { q : ℝ × ℝ | q.2 ≠ 0 })
+      MapsTo complex.equiv_real_prod.symm ({ q : ℝ × ℝ | 0 < q.1 } ∪ { q : ℝ × ℝ | q.2 ≠ 0 })
         { z | 0 < z.re ∨ z.im ≠ 0 } :=
       by
       rintro ⟨x, y⟩ hxy
       simpa only using hxy
     apply ContinuousOn.comp (fun z hz => _) _ A
-    · exact (Complex.continuousAt_arg hz).ContinuousWithinAt
+    · exact (Complex.continuousAt_arg hz).continuousWithinAt
     · exact complex.equiv_real_prod_clm.symm.continuous.continuous_on
 #align polar_coord polarCoord
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem hasFderivAt_polarCoord_symm (p : ℝ × ℝ) :
     HasFderivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap
+            "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap
       p :=
   by
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
   convert
       HasFderivAt.prod
-        (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFderivAt p hasFderivAt_snd))
-        (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFderivAt p hasFderivAt_snd)) using
+        (has_fderiv_at_fst.mul ((hasDerivAt_cos p.2).comp_hasFderivAt p hasFderivAt_snd))
+        (has_fderiv_at_fst.mul ((hasDerivAt_sin p.2).comp_hasFderivAt p hasFderivAt_snd)) using
       2 <;>
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFderivAt_polarCoord_symm
@@ -124,12 +124,12 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker :=
     by
     intro x hx
-    simp only [polarCoord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_set_of_eq, not_lt,
+    simp only [polarCoord_source, compl_union, mem_inter_iff, mem_compl_iff, mem_setOf_eq, not_lt,
       Classical.not_not] at hx
     exact hx.2
   have B : volume ((LinearMap.snd ℝ ℝ ℝ).ker : Set (ℝ × ℝ)) = 0 :=
     by
-    apply measure.add_haar_submodule
+    apply Measure.add_haar_submodule
     rw [Ne.def, LinearMap.ker_eq_top]
     intro h
     have : (LinearMap.snd ℝ ℝ ℝ) (0, 1) = (0 : ℝ × ℝ →ₗ[ℝ] ℝ) (0, 1) := by rw [h]
@@ -139,7 +139,7 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
 #align polar_coord_source_ae_eq_univ polarCoord_source_ae_eq_univ
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
     (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=
@@ -147,7 +147,7 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap with
     hB
   have A : ∀ p ∈ polar_coord.symm.source, HasFderivAt polar_coord.symm (B p) p := fun p hp =>
     hasFderivAt_polarCoord_symm p

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,14 +89,14 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
 theorem supᵢ_rayleigh_eq_supᵢ_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨆ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨆ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @supₛ_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @Sup_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
 #align continuous_linear_map.supr_rayleigh_eq_supr_rayleigh_sphere ContinuousLinearMap.supᵢ_rayleigh_eq_supᵢ_rayleigh_sphere
 
 theorem infᵢ_rayleigh_eq_infᵢ_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     (⨅ x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅ x : sphere (0 : E) r, rayleigh_quotient x :=
   show (⨅ x : ({0} : Set E)ᶜ, rayleigh_quotient x) = _ by
-    simp only [← @infₛ_image' _ _ _ _ rayleigh_quotient,
+    simp only [← @Inf_image' _ _ _ _ rayleigh_quotient,
       T.image_rayleigh_eq_image_rayleigh_sphere hr]
 #align continuous_linear_map.infi_rayleigh_eq_infi_rayleigh_sphere ContinuousLinearMap.infᵢ_rayleigh_eq_infᵢ_rayleigh_sphere
 
@@ -114,9 +114,9 @@ theorem LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf {T : F →L[ℝ
   by
   convert T.has_strict_fderiv_at.inner (hasStrictFderivAt_id x₀)
   ext y
-  simp_rw [_root_.bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply,
-    innerSL_apply, fderivInnerClm_apply, id.def, ContinuousLinearMap.prod_apply,
-    ContinuousLinearMap.id_apply, hT.apply_clm x₀ y, real_inner_comm _ x₀]
+  simp_rw [bit0, ContinuousLinearMap.comp_apply, ContinuousLinearMap.add_apply, innerSL_apply,
+    fderivInnerClm_apply, id.def, ContinuousLinearMap.prod_apply, ContinuousLinearMap.id_apply,
+    hT.apply_clm x₀ y, real_inner_comm _ x₀]
 #align linear_map.is_symmetric.has_strict_fderiv_at_re_apply_inner_self LinearMap.IsSymmetric.hasStrictFderivAt_reApplyInnerSelf
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
@@ -139,11 +139,11 @@ theorem linearly_dependent_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : F}
     IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt_1d H (hasStrictFderivAt_norm_sq x₀)
       (hT.is_symmetric.has_strict_fderiv_at_re_apply_inner_self x₀)
   refine' ⟨a, b, h₁, _⟩
-  apply (InnerProductSpace.toDualMap ℝ F).Injective
+  apply (InnerProductSpace.toDualMap ℝ F).injective
   simp only [LinearIsometry.map_add, LinearIsometry.map_smul, LinearIsometry.map_zero]
   change a • innerSL x₀ + b • innerSL (T x₀) = 0
   apply smul_right_injective (F →L[ℝ] ℝ) (two_ne_zero : (2 : ℝ) ≠ 0)
-  simpa only [_root_.bit0, add_smul, smul_add, one_smul, add_zero] using h₂
+  simpa only [bit0, add_smul, smul_add, one_smul, add_zero] using h₂
 #align is_self_adjoint.linearly_dependent_of_is_local_extr_on IsSelfAdjoint.linearly_dependent_of_isLocalExtrOn
 
 theorem eq_smul_self_of_isLocalExtrOn_real (hT : IsSelfAdjoint T) {x₀ : F}
@@ -271,7 +271,7 @@ theorem hasEigenvalue_supᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
     by
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
-  exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
+  exact hasEigenvalue_of_hasEigenvector (T'.prop.has_eigenvector_of_is_max_on hx₀_ne this)
 #align linear_map.is_symmetric.has_eigenvalue_supr_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_supᵢ_of_finiteDimensional
 
 /-- The infimum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
@@ -293,7 +293,7 @@ theorem hasEigenvalue_infᵢ_of_finiteDimensional (hT : T.IsSymmetric) :
     by
     have : ‖x₀‖ ≠ 0 := by simp only [hx₀, norm_eq_zero, hx, Ne.def, not_false_iff]
     simpa [← norm_eq_zero, Ne.def]
-  exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
+  exact hasEigenvalue_of_hasEigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
 #align linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_infᵢ_of_finiteDimensional
 
 omit _i

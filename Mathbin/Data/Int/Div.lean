@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.div
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,8 +50,8 @@ Case conversion may be inaccurate. Consider using '#align int.eq_zero_of_dvd_of_
 zero. -/
 theorem eq_zero_of_dvd_of_natAbs_lt_natAbs {a b : ℤ} (w : a ∣ b) (h : natAbs b < natAbs a) :
     b = 0 := by
-  rw [← nat_abs_dvd, ← dvd_nat_abs, coe_nat_dvd] at w
-  rw [← nat_abs_eq_zero]
+  rw [← natAbs_dvd, ← dvd_natAbs, coe_nat_dvd] at w
+  rw [← natAbs_eq_zero]
   exact eq_zero_of_dvd_of_lt w h
 #align int.eq_zero_of_dvd_of_nat_abs_lt_nat_abs Int.eq_zero_of_dvd_of_natAbs_lt_natAbs
 
@@ -78,10 +78,10 @@ theorem eq_of_mod_eq_of_natAbs_sub_lt_natAbs {a b c : ℤ} (h1 : a % b = c)
 theorem ofNat_add_negSucc_of_ge {m n : ℕ} (h : n.succ ≤ m) :
     ofNat m + -[n+1] = ofNat (m - n.succ) :=
   by
-  change sub_nat_nat _ _ = _
+  change subNatNat _ _ = _
   have h' : n.succ - m = 0
   apply tsub_eq_zero_iff_le.mpr h
-  simp [*, sub_nat_nat]
+  simp [*, subNatNat]
 #align int.of_nat_add_neg_succ_of_nat_of_ge Int.ofNat_add_negSucc_of_ge
 -/
 

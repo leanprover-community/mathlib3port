@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ variable [TopologicalSpace α] [Semiring α] [TopologicalSemiring α]
 namespace Subsemiring
 
 instance (S : Subsemiring α) : TopologicalSemiring S :=
-  { S.toSubmonoid.HasContinuousMul, S.toAddSubmonoid.HasContinuousAdd with }
+  { S.toSubmonoid.hasContinuousMul, S.toAddSubmonoid.has_continuous_add with }
 
 end Subsemiring
 
@@ -184,7 +184,7 @@ instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousAdd 
     HasContinuousAdd αᵐᵒᵖ
     where continuous_add :=
     continuous_induced_rng.2 <|
-      (@continuous_add α _ _ _).comp (continuous_unop.Prod_map continuous_unop)
+      (@continuous_add α _ _ _).comp (continuous_unop.prod_map continuous_unop)
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵐᵒᵖ where
@@ -228,7 +228,7 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
   by
   refine' { ‹TopologicalAddGroup R› with .. }
   have hleft : ∀ x₀ : R, 𝓝 x₀ = map (fun x => x₀ + x) (𝓝 0) := by simp
-  have hadd : tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) :=
+  have hadd : Tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) (𝓝 0) :=
     by
     rw [← nhds_prod_eq]
     convert continuous_add.tendsto ((0 : R), (0 : R))
@@ -238,17 +238,17 @@ theorem TopologicalRing.of_add_group_of_nhds_zero [TopologicalAddGroup R]
   rw [ContinuousAt, nhds_prod_eq, hleft x₀, hleft y₀, hleft (x₀ * y₀), Filter.prod_map_map_eq,
     tendsto_map'_iff]
   suffices
-    tendsto
+    Tendsto
       ((fun x : R => x + x₀ * y₀) ∘
         (fun p : R × R => p.1 + p.2) ∘ fun p : R × R => (p.1 * y₀ + x₀ * p.2, p.1 * p.2))
       (𝓝 0 ×ᶠ 𝓝 0) ((map fun x : R => x + x₀ * y₀) <| 𝓝 0)
     by
     convert this using 1
     · ext
-      simp only [comp_app, mul_add, add_mul]
+      simp only [comp_apply, mul_add, add_mul]
       abel
     · simp only [add_comm]
-  refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
+  refine' tendsto_map.comp (hadd.comp (Tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 #align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_add_group_of_nhds_zero
 
@@ -288,7 +288,7 @@ variable [Ring α] [TopologicalRing α]
 namespace Subring
 
 instance (S : Subring α) : TopologicalRing S :=
-  TopologicalSemiring.to_topologicalRing S.toSubsemiring.TopologicalSemiring
+  TopologicalSemiring.to_topologicalRing S.toSubsemiring.topologicalSemiring
 
 end Subring
 
@@ -367,7 +367,7 @@ theorem QuotientRing.isOpenMap_coe : IsOpenMap (mk N) :=
 #align quotient_ring.is_open_map_coe QuotientRing.isOpenMap_coe
 
 theorem QuotientRing.quotientMap_coe_coe : QuotientMap fun p : α × α => (mk N p.1, mk N p.2) :=
-  IsOpenMap.to_quotientMap ((QuotientRing.isOpenMap_coe N).Prod (QuotientRing.isOpenMap_coe N))
+  IsOpenMap.to_quotientMap ((QuotientRing.isOpenMap_coe N).prod (QuotientRing.isOpenMap_coe N))
     ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd))
     (by rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
 #align quotient_ring.quotient_map_coe_coe QuotientRing.quotientMap_coe_coe
@@ -437,20 +437,20 @@ private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
     continuous_add := by
       apply continuous_infₛ_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
-      have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id
+      have h := continuous_infₛ_dom (Set.mem_image_of_mem toTopologicalSpace haS) continuous_id
+      have h_continuous_id := @continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
+      exact @continuous.comp _ _ _ (id _) (id _) t _ _ continuous_add h_continuous_id
     continuous_mul := by
       apply continuous_infₛ_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
-      have h_continuous_id := @Continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
-      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id
+      have h := continuous_infₛ_dom (Set.mem_image_of_mem toTopologicalSpace haS) continuous_id
+      have h_continuous_id := @continuous.prod_map _ _ _ _ t t Inf_S' Inf_S' _ _ h h
+      exact @continuous.comp _ _ _ (id _) (id _) t _ _ continuous_mul h_continuous_id
     continuous_neg := by
       apply continuous_infₛ_rng.2
       rintro _ ⟨⟨t, tr⟩, haS, rfl⟩; skip
-      have h := continuous_infₛ_dom (Set.mem_image_of_mem to_topological_space haS) continuous_id
-      exact @Continuous.comp _ _ _ (id _) (id _) t _ _ continuous_neg h }
+      have h := continuous_infₛ_dom (Set.mem_image_of_mem toTopologicalSpace haS) continuous_id
+      exact @continuous.comp _ _ _ (id _) (id _) t _ _ continuous_neg h }
 #align ring_topology.def_Inf ring_topology.def_Inf
 
 /-- Ring topologies on `α` form a complete lattice, with `⊥` the discrete topology and `⊤` the

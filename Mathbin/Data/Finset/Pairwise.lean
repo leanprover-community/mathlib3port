@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pairwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ variable {β : Type _} [DecidableEq α] {r : α → α → Prop} {l : List α}
 #print List.pairwise_of_coe_toFinset_pairwise /-
 theorem pairwise_of_coe_toFinset_pairwise (hl : (l.toFinset : Set α).Pairwise r) (hn : l.Nodup) :
     l.Pairwise r := by
-  rw [coe_to_finset] at hl
+  rw [coe_toFinset] at hl
   exact hn.pairwise_of_set_pairwise hl
 #align list.pairwise_of_coe_to_finset_pairwise List.pairwise_of_coe_toFinset_pairwise
 -/
@@ -103,7 +103,7 @@ theorem pairwise_of_coe_toFinset_pairwise (hl : (l.toFinset : Set α).Pairwise r
 theorem pairwise_iff_coe_toFinset_pairwise (hn : l.Nodup) (hs : Symmetric r) :
     (l.toFinset : Set α).Pairwise r ↔ l.Pairwise r :=
   by
-  rw [coe_to_finset, hn.pairwise_coe]
+  rw [coe_toFinset, hn.pairwise_coe]
   exact ⟨hs⟩
 #align list.pairwise_iff_coe_to_finset_pairwise List.pairwise_iff_coe_toFinset_pairwise
 -/

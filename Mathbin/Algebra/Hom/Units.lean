@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Chris Hughes, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module algebra.hom.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ Case conversion may be inaccurate. Consider using '#align eq_on_inv eq_on_invₓ
       "If two homomorphism from an additive group to an additive monoid are equal at `x`,\nthen they are equal at `-x`."]
 theorem eq_on_inv {F G M} [Group G] [Monoid M] [MonoidHomClass F G M] (f g : F) {x : G}
     (h : f x = g x) : f x⁻¹ = g x⁻¹ :=
-  (Group.isUnit x).eq_on_inv f g h
+  (group.is_unit x).eq_on_inv f g h
 #align eq_on_inv eq_on_inv
 #align eq_on_neg eq_on_neg
 
@@ -256,7 +256,7 @@ def liftRight (f : M →* N) (g : M → Nˣ) (h : ∀ x, ↑(g x) = f x) : M →
     where
   toFun := g
   map_one' := Units.ext <| (h 1).symm ▸ f.map_one
-  map_mul' x y := Units.ext <| by simp only [h, coe_mul, f.map_mul]
+  map_mul' x y := Units.ext <| by simp only [h, val_mul, f.map_mul]
 #align units.lift_right Units.liftRight
 #align add_units.lift_right AddUnits.liftRight
 
@@ -281,7 +281,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.mul_lift_right_inv Units.mul_liftRight_invₓ'. -/
 @[simp, to_additive]
 theorem mul_liftRight_inv {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) :
-    f x * ↑(liftRight f g h x)⁻¹ = 1 := by rw [Units.mul_inv_eq_iff_eq_mul, one_mul, coe_lift_right]
+    f x * ↑(liftRight f g h x)⁻¹ = 1 := by rw [Units.mul_inv_eq_iff_eq_mul, one_mul, coe_liftRight]
 #align units.mul_lift_right_inv Units.mul_liftRight_inv
 #align add_units.add_lift_right_neg AddUnits.add_liftRight_neg
 
@@ -293,7 +293,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.lift_right_inv_mul Units.liftRight_inv_mulₓ'. -/
 @[simp, to_additive]
 theorem liftRight_inv_mul {f : M →* N} {g : M → Nˣ} (h : ∀ x, ↑(g x) = f x) (x) :
-    ↑(liftRight f g h x)⁻¹ * f x = 1 := by rw [Units.inv_mul_eq_iff_eq_mul, mul_one, coe_lift_right]
+    ↑(liftRight f g h x)⁻¹ * f x = 1 := by rw [Units.inv_mul_eq_iff_eq_mul, mul_one, coe_liftRight]
 #align units.lift_right_inv_mul Units.liftRight_inv_mul
 #align add_units.lift_right_neg_add AddUnits.liftRight_neg_add
 
@@ -350,7 +350,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.map IsUnit.mapₓ'. -/
 @[to_additive]
 theorem map [MonoidHomClass F M N] (f : F) {x : M} (h : IsUnit x) : IsUnit (f x) := by
-  rcases h with ⟨y, rfl⟩ <;> exact (Units.map (f : M →* N) y).IsUnit
+  rcases h with ⟨y, rfl⟩ <;> exact (Units.map (f : M →* N) y).isUnit
 #align is_unit.map IsUnit.map
 #align is_add_unit.map IsAddUnit.map
 
@@ -391,7 +391,7 @@ to `f : M →* Nˣ`. See also `units.lift_right` for a computable version. -/
 @[to_additive
       "If a homomorphism `f : M →+ N` sends each element to an `is_add_unit`, then it can be\nlifted to `f : M →+ add_units N`. See also `add_units.lift_right` for a computable version."]
 noncomputable def liftRight (f : M →* N) (hf : ∀ x, IsUnit (f x)) : M →* Nˣ :=
-  Units.liftRight f (fun x => (hf x).Unit) fun x => rfl
+  Units.liftRight f (fun x => (hf x).unit) fun x => rfl
 #align is_unit.lift_right IsUnit.liftRight
 #align is_add_unit.lift_right IsAddUnit.liftRight
 

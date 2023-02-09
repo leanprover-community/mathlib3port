@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stuart Presnell
 
 ! This file was ported from Lean 3 source module data.nat.even_odd_rec
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem evenOddRec_even (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ 
     (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
     @evenOddRec _ h0 h_even h_odd (2 * n) = h_even n (evenOddRec h0 h_even h_odd n) :=
   by
-  convert binary_rec_eq _ ff n
+  convert binaryRec_eq _ false n
   · exact (bit0_eq_two_mul _).symm
   · exact (bit0_eq_two_mul _).symm
   · apply heq_of_cast_eq
@@ -63,7 +63,7 @@ theorem evenOddRec_odd (n : ℕ) (P : ℕ → Sort _) (h0 : P 0) (h_even : ∀ i
     (h_odd : ∀ i, P i → P (2 * i + 1)) (H : h_even 0 h0 = h0) :
     @evenOddRec _ h0 h_even h_odd (2 * n + 1) = h_odd n (evenOddRec h0 h_even h_odd n) :=
   by
-  convert binary_rec_eq _ tt n
+  convert binaryRec_eq _ true n
   · exact (bit0_eq_two_mul _).symm
   · exact (bit0_eq_two_mul _).symm
   · apply heq_of_cast_eq

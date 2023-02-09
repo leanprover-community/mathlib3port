@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.special_linear_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,7 +114,7 @@ instance hasOne : One (SpecialLinearGroup n R) :=
 #align matrix.special_linear_group.has_one Matrix.SpecialLinearGroup.hasOne
 
 instance : Pow (SpecialLinearGroup n R) ℕ
-    where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.Prop.symm ▸ one_pow _⟩
+    where pow x n := ⟨x ^ n, (det_pow _ _).trans <| x.prop.symm ▸ one_pow _⟩
 
 instance : Inhabited (SpecialLinearGroup n R) :=
   ⟨1⟩
@@ -179,8 +179,8 @@ def toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R
     where
   toFun A :=
     LinearEquiv.ofLinear (Matrix.toLin' ↑ₘA) (Matrix.toLin' ↑ₘA⁻¹)
-      (by rw [← to_lin'_mul, ← coe_mul, mul_right_inv, coe_one, to_lin'_one])
-      (by rw [← to_lin'_mul, ← coe_mul, mul_left_inv, coe_one, to_lin'_one])
+      (by rw [← toLin'_mul, ← coe_mul, mul_right_inv, coe_one, toLin'_one])
+      (by rw [← toLin'_mul, ← coe_mul, mul_left_inv, coe_one, toLin'_one])
   map_one' := LinearEquiv.toLinearMap_injective Matrix.toLin'_one
   map_mul' A B := LinearEquiv.toLinearMap_injective <| Matrix.toLin'_mul A B
 #align matrix.special_linear_group.to_lin' Matrix.SpecialLinearGroup.toLin'
@@ -207,7 +207,7 @@ theorem toLin'_symm_to_linearMap (A : SpecialLinearGroup n R) :
 
 theorem toLin'_injective :
     Function.Injective ⇑(toLin' : SpecialLinearGroup n R →* (n → R) ≃ₗ[R] n → R) := fun A B h =>
-  Subtype.coe_injective <| Matrix.toLin'.Injective <| LinearEquiv.toLinearMap_injective.eq_iff.mpr h
+  Subtype.coe_injective <| Matrix.toLin'.injective <| LinearEquiv.toLinearMap_injective.eq_iff.mpr h
 #align matrix.special_linear_group.to_lin'_injective Matrix.SpecialLinearGroup.toLin'_injective
 
 /-- `to_GL` is the map from the special linear group to the general linear group -/

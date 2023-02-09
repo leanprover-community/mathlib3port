@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module algebra.algebraic_card
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,14 +48,14 @@ variable (R : Type u) (A : Type v) [CommRing R] [CommRing A] [IsDomain A] [Algeb
 theorem cardinal_mk_lift_le_mul :
     Cardinal.lift.{u} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v} (#R[X]) * ℵ₀ :=
   by
-  rw [← mk_ulift, ← mk_ulift]
+  rw [← mk_uLift, ← mk_uLift]
   choose g hg₁ hg₂ using fun x : { x : A | IsAlgebraic R x } => x.coe_prop
   refine' lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le g fun f => _
-  rw [lift_le_aleph_0, le_aleph_0_iff_set_countable]
-  suffices : maps_to coe (g ⁻¹' {f}) (f.root_set A)
-  exact this.countable_of_inj_on (subtype.coe_injective.inj_on _) (f.root_set_finite A).Countable
+  rw [lift_le_aleph0, le_aleph0_iff_set_countable]
+  suffices : MapsTo coe (g ⁻¹' {f}) (f.root_set A)
+  exact this.countable_of_inj_on (subtype.coe_injective.inj_on _) (f.root_set_finite A).countable
   rintro x (rfl : g x = f)
-  exact mem_root_set.2 ⟨hg₁ x, hg₂ x⟩
+  exact mem_rootSet.2 ⟨hg₁ x, hg₂ x⟩
 #align algebraic.cardinal_mk_lift_le_mul Algebraic.cardinal_mk_lift_le_mul
 
 theorem cardinal_mk_lift_le_max :
@@ -78,7 +78,7 @@ variable [Countable R]
 @[simp]
 protected theorem countable : Set.Countable { x : A | IsAlgebraic R x } :=
   by
-  rw [← le_aleph_0_iff_set_countable, ← lift_le]
+  rw [← le_aleph0_iff_set_countable, ← lift_le]
   apply (cardinal_mk_lift_le_max R A).trans
   simp
 #align algebraic.countable Algebraic.countable

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.comma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
       w' :=
         (isLimitOfPreserves R t₂).hom_ext fun j =>
           by
-          rw [cone_of_preserves_X_hom, assoc, assoc, (is_limit_of_preserves R t₂).fac,
-            limit_auxiliary_cone_π_app, ← L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp,
+          rw [coneOfPreserves_x_hom, assoc, assoc, (isLimitOfPreserves R t₂).fac,
+            limitAuxiliaryCone_π_app, ← L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp,
             t₂.fac]
           exact (s.π.app j).w }
   uniq' s m w :=
@@ -134,8 +134,8 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
       w' :=
         (isColimitOfPreserves L t₁).hom_ext fun j =>
           by
-          rw [cocone_of_preserves_X_hom, (is_colimit_of_preserves L t₁).fac_assoc,
-            colimit_auxiliary_cocone_ι_app, assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ←
+          rw [coconeOfPreserves_x_hom, (isColimitOfPreserves L t₁).fac_assoc,
+            colimitAuxiliaryCocone_ι_app, assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ←
             L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
   uniq' s m w :=

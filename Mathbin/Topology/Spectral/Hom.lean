@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.spectral.hom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,8 +57,8 @@ theorem isSpectralMap_id : IsSpectralMap (@id α) :=
 
 theorem IsSpectralMap.comp {f : β → γ} {g : α → β} (hf : IsSpectralMap f) (hg : IsSpectralMap g) :
     IsSpectralMap (f ∘ g) :=
-  ⟨hf.Continuous.comp hg.Continuous, fun s hs₀ hs₁ =>
-    (hs₁.preimage_of_isOpen hf hs₀).preimage_of_isOpen hg (hs₀.Preimage hf.Continuous)⟩
+  ⟨hf.continuous.comp hg.continuous, fun s hs₀ hs₁ =>
+    (hs₁.preimage_of_isOpen hf hs₀).preimage_of_isOpen hg (hs₀.preimage hf.continuous)⟩
 #align is_spectral_map.comp IsSpectralMap.comp
 
 end Unbundled
@@ -88,7 +88,7 @@ attribute [simp] map_spectral
 -- See note [lower instance priority]
 instance (priority := 100) SpectralMapClass.toContinuousMapClass [TopologicalSpace α]
     [TopologicalSpace β] [SpectralMapClass F α β] : ContinuousMapClass F α β :=
-  { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).Continuous }
+  { ‹SpectralMapClass F α β› with map_continuous := fun f => (map_spectral f).continuous }
 #align spectral_map_class.to_continuous_map_class SpectralMapClass.toContinuousMapClass
 
 instance [TopologicalSpace α] [TopologicalSpace β] [SpectralMapClass F α β] :
@@ -104,7 +104,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [Topo
 
 /-- Reinterpret a `spectral_map` as a `continuous_map`. -/
 def toContinuousMap (f : SpectralMap α β) : ContinuousMap α β :=
-  ⟨_, f.spectral'.Continuous⟩
+  ⟨_, f.spectral'.continuous⟩
 #align spectral_map.to_continuous_map SpectralMap.toContinuousMap
 
 instance : SpectralMapClass (SpectralMap α β) α β

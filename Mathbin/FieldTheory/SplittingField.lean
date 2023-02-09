@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ def factor (f : K[X]) : K[X] :=
 #align polynomial.factor Polynomial.factor
 
 theorem irreducible_factor (f : K[X]) : Irreducible (factor f) := by rw [factor]; split_ifs with H;
-  · exact (Classical.choose_spec H).1; · exact irreducible_X
+  · exact (Classical.choose_spec H).1; · exact irreducible_x
 #align polynomial.irreducible_factor Polynomial.irreducible_factor
 
 /-- See note [fact non-instances]. -/
@@ -94,16 +94,15 @@ theorem x_sub_c_mul_removeFactor (f : K[X]) (hf : f.natDegree ≠ 0) :
     (x - c (AdjoinRoot.root f.factor)) * f.removeFactor = map (AdjoinRoot.of f.factor) f :=
   let ⟨g, hg⟩ := factor_dvd_of_natDegree_ne_zero hf
   mul_divByMonic_eq_iff_isRoot.2 <| by
-    rw [is_root.def, eval_map, hg, eval₂_mul, ← hg, AdjoinRoot.eval₂_root, zero_mul]
+    rw [IsRoot.def, eval_map, hg, eval₂_mul, ← hg, AdjoinRoot.eval₂_root, zero_mul]
 #align polynomial.X_sub_C_mul_remove_factor Polynomial.x_sub_c_mul_removeFactor
 
 theorem natDegree_removeFactor (f : K[X]) : f.removeFactor.natDegree = f.natDegree - 1 := by
-  rw [remove_factor, nat_degree_div_by_monic _ (monic_X_sub_C _), nat_degree_map,
-    nat_degree_X_sub_C]
+  rw [removeFactor, natDegree_divByMonic _ (monic_x_sub_c _), natDegree_map, natDegree_x_sub_c]
 #align polynomial.nat_degree_remove_factor Polynomial.natDegree_removeFactor
 
 theorem natDegree_remove_factor' {f : K[X]} {n : ℕ} (hfn : f.natDegree = n + 1) :
-    f.removeFactor.natDegree = n := by rw [nat_degree_remove_factor, hfn, n.add_sub_cancel]
+    f.removeFactor.natDegree = n := by rw [natDegree_removeFactor, hfn, n.add_sub_cancel]
 #align polynomial.nat_degree_remove_factor' Polynomial.natDegree_remove_factor'
 
 /-- Auxiliary construction to a splitting field of a polynomial, which removes
@@ -125,7 +124,7 @@ theorem succ (n : ℕ) (f : K[X]) :
   rfl
 #align polynomial.splitting_field_aux.succ Polynomial.SplittingFieldAux.succ
 
-instance field (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, Field (splitting_field_aux n f) :=
+instance field (n : ℕ) : ∀ {K : Type u} [Field K], ∀ {f : K[X]}, Field (SplittingFieldAux n f) :=
   Nat.recOn n (fun K _ _ => ‹Field K›) fun n ih K _ f => ih
 #align polynomial.splitting_field_aux.field Polynomial.SplittingFieldAux.field
 
@@ -155,14 +154,14 @@ We don't really care at this point because this is an implementation detail (whi
 not a docstring), but we do in `splitting_field.algebra'` below. -/
 instance algebra (n : ℕ) :
     ∀ (R : Type _) {K : Type u} [CommSemiring R] [Field K],
-      ∀ [Algebra R K] {f : K[X]}, Algebra R (splitting_field_aux n f) :=
+      ∀ [Algebra R K] {f : K[X]}, Algebra R (SplittingFieldAux n f) :=
   Nat.recOn n (fun R K _ _ _ _ => ‹Algebra R K›) fun n ih R K _ _ _ f => ih R
 #align polynomial.splitting_field_aux.algebra Polynomial.SplittingFieldAux.algebra
 
 instance isScalarTower (n : ℕ) :
     ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiring R₁] [CommSemiring R₂] [SMul R₁ R₂] [Field K],
       ∀ [Algebra R₁ K] [Algebra R₂ K],
-        ∀ [IsScalarTower R₁ R₂ K] {f : K[X]}, IsScalarTower R₁ R₂ (splitting_field_aux n f) :=
+        ∀ [IsScalarTower R₁ R₂ K] {f : K[X]}, IsScalarTower R₁ R₂ (SplittingFieldAux n f) :=
   Nat.recOn n (fun R₁ R₂ K _ _ _ _ _ _ _ _ => ‹IsScalarTower R₁ R₂ K›)
     fun n ih R₁ R₂ K _ _ _ _ _ _ _ f => ih R₁ R₂
 #align polynomial.splitting_field_aux.is_scalar_tower Polynomial.SplittingFieldAux.isScalarTower
@@ -184,7 +183,7 @@ instance scalar_tower' {n : ℕ} {f : K[X]} :
     IsScalarTower K (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor) :=
   haveI-- finding this instance ourselves makes things faster
    : IsScalarTower K (AdjoinRoot f.factor) (AdjoinRoot f.factor) := IsScalarTower.right
-  splitting_field_aux.is_scalar_tower n K (AdjoinRoot f.factor)
+  SplittingFieldAux.isScalarTower n K (AdjoinRoot f.factor)
 #align polynomial.splitting_field_aux.scalar_tower' Polynomial.SplittingFieldAux.scalar_tower'
 
 instance scalar_tower {n : ℕ} {f : K[X]} :
@@ -193,33 +192,33 @@ instance scalar_tower {n : ℕ} {f : K[X]} :
 #align polynomial.splitting_field_aux.scalar_tower Polynomial.SplittingFieldAux.scalar_tower
 
 theorem algebraMap_succ (n : ℕ) (f : K[X]) :
-    algebraMap K (splitting_field_aux (n + 1) f) =
-      (algebraMap (AdjoinRoot f.factor) (splitting_field_aux n f.remove_factor)).comp
+    algebraMap K (SplittingFieldAux (n + 1) f) =
+      (algebraMap (AdjoinRoot f.factor) (SplittingFieldAux n f.remove_factor)).comp
         (AdjoinRoot.of f.factor) :=
   IsScalarTower.algebraMap_eq _ _ _
 #align polynomial.splitting_field_aux.algebra_map_succ Polynomial.SplittingFieldAux.algebraMap_succ
 
 protected theorem splits (n : ℕ) :
     ∀ {K : Type u} [Field K],
-      ∀ (f : K[X]) (hfn : f.natDegree = n), splits (algebraMap K <| splitting_field_aux n f) f :=
+      ∀ (f : K[X]) (hfn : f.natDegree = n), Splits (algebraMap K <| SplittingFieldAux n f) f :=
   Nat.recOn n
     (fun K _ _ hf =>
       splits_of_degree_le_one _
-        (le_trans degree_le_nat_degree <| hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))
+        (le_trans degree_le_natDegree <| hf.symm ▸ WithBot.coe_le_coe.2 zero_le_one))
     fun n ih K _ f hf => by
     skip
-    rw [← splits_id_iff_splits, algebra_map_succ, ← map_map, splits_id_iff_splits, ←
-      X_sub_C_mul_remove_factor f fun h => by
+    rw [← splits_id_iff_splits, algebraMap_succ, ← map_map, splits_id_iff_splits, ←
+      x_sub_c_mul_removeFactor f fun h => by
         rw [h] at hf
         cases hf]
-    exact splits_mul _ (splits_X_sub_C _) (ih _ (nat_degree_remove_factor' hf))
+    exact splits_mul _ (splits_x_sub_c _) (ih _ (natDegree_remove_factor' hf))
 #align polynomial.splitting_field_aux.splits Polynomial.SplittingFieldAux.splits
 
 theorem exists_lift (n : ℕ) :
     ∀ {K : Type u} [Field K],
       ∀ (f : K[X]) (hfn : f.natDegree = n) {L : Type _} [Field L],
-        ∀ (j : K →+* L) (hf : splits j f),
-          ∃ k : splitting_field_aux n f →+* L, k.comp (algebraMap _ _) = j :=
+        ∀ (j : K →+* L) (hf : Splits j f),
+          ∃ k : SplittingFieldAux n f →+* L, k.comp (algebraMap _ _) = j :=
   Nat.recOn n (fun K _ _ _ L _ j _ => ⟨j, j.comp_id⟩) fun n ih K _ f hf L _ j hj =>
     have hndf : f.nat_degree ≠ 0 := by
       intro h
@@ -231,25 +230,25 @@ theorem exists_lift (n : ℕ) :
       exact hndf rfl
     let ⟨r, hr⟩ :=
       exists_root_of_splits _
-        (splits_of_splits_of_dvd j hfn0 hj (factor_dvd_of_nat_degree_ne_zero hndf))
-        (mt is_unit_iff_degree_eq_zero.2 f.irreducible_factor.1)
+        (splits_of_splits_of_dvd j hfn0 hj (factor_dvd_of_natDegree_ne_zero hndf))
+        (mt isUnit_iff_degree_eq_zero.2 f.irreducible_factor.1)
     have hmf0 : map (AdjoinRoot.of f.factor) f ≠ 0 := map_ne_zero hfn0
-    have hsf : splits (AdjoinRoot.lift j r hr) f.remove_factor :=
+    have hsf : Splits (AdjoinRoot.lift j r hr) f.remove_factor :=
       by
-      rw [← X_sub_C_mul_remove_factor _ hndf] at hmf0
+      rw [← x_sub_c_mul_removeFactor _ hndf] at hmf0
       refine' (splits_of_splits_mul _ hmf0 _).2
-      rwa [X_sub_C_mul_remove_factor _ hndf, ← splits_id_iff_splits, map_map,
+      rwa [x_sub_c_mul_removeFactor _ hndf, ← splits_id_iff_splits, map_map,
         AdjoinRoot.lift_comp_of, splits_id_iff_splits]
-    let ⟨k, hk⟩ := ih f.remove_factor (nat_degree_remove_factor' hf) (AdjoinRoot.lift j r hr) hsf
-    ⟨k, by rw [algebra_map_succ, ← RingHom.comp_assoc, hk, AdjoinRoot.lift_comp_of]⟩
+    let ⟨k, hk⟩ := ih f.remove_factor (natDegree_remove_factor' hf) (AdjoinRoot.lift j r hr) hsf
+    ⟨k, by rw [algebraMap_succ, ← RingHom.comp_assoc, hk, AdjoinRoot.lift_comp_of]⟩
 #align polynomial.splitting_field_aux.exists_lift Polynomial.SplittingFieldAux.exists_lift
 
 theorem adjoin_roots (n : ℕ) :
     ∀ {K : Type u} [Field K],
       ∀ (f : K[X]) (hfn : f.natDegree = n),
         Algebra.adjoin K
-            (↑(f.map <| algebraMap K <| splitting_field_aux n f).roots.toFinset :
-              Set (splitting_field_aux n f)) =
+            (↑(f.map <| algebraMap K <| SplittingFieldAux n f).roots.toFinset :
+              Set (SplittingFieldAux n f)) =
           ⊤ :=
   Nat.recOn n (fun K _ f hf => Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)
     fun n ih K _ f hfn =>
@@ -262,17 +261,16 @@ theorem adjoin_roots (n : ℕ) :
       intro h
       rw [h] at hndf
       exact hndf rfl
-    have hmf0 : map (algebraMap K (splitting_field_aux n.succ f)) f ≠ 0 := map_ne_zero hfn0
-    rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at
-      hmf0⊢
-    rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.toFinset_add,
+    have hmf0 : map (algebraMap K (SplittingFieldAux n.succ f)) f ≠ 0 := map_ne_zero hfn0
+    rw [algebraMap_succ, ← map_map, ← x_sub_c_mul_removeFactor _ hndf, Polynomial.map_mul] at hmf0⊢
+    rw [roots_mul hmf0, Polynomial.map_sub, map_x, map_c, roots_x_sub_c, Multiset.toFinset_add,
       Finset.coe_union, Multiset.toFinset_singleton, Finset.coe_singleton,
       Algebra.adjoin_union_eq_adjoin_adjoin, ← Set.image_singleton,
-      Algebra.adjoin_algebraMap K (AdjoinRoot f.factor) (splitting_field_aux n f.remove_factor),
+      Algebra.adjoin_algebraMap K (AdjoinRoot f.factor) (SplittingFieldAux n f.remove_factor),
       AdjoinRoot.adjoinRoot_eq_top, Algebra.map_top,
       IsScalarTower.adjoin_range_toAlgHom K (AdjoinRoot f.factor)
-        (splitting_field_aux n f.remove_factor),
-      ih _ (nat_degree_remove_factor' hfn), Subalgebra.restrictScalars_top]
+        (SplittingFieldAux n f.remove_factor),
+      ih _ (natDegree_remove_factor' hfn), Subalgebra.restrictScalars_top]
 #align polynomial.splitting_field_aux.adjoin_roots Polynomial.SplittingFieldAux.adjoin_roots
 
 end SplittingFieldAux
@@ -335,7 +333,7 @@ variable [Algebra K L] (hb : Splits (algebraMap K L) f)
 def lift : SplittingField f →ₐ[K] L :=
   { Classical.choose (SplittingFieldAux.exists_lift _ _ _ _ hb) with
     commutes' := fun r =>
-      haveI := Classical.choose_spec (splitting_field_aux.exists_lift _ _ rfl _ hb)
+      haveI := Classical.choose_spec (SplittingFieldAux.exists_lift _ _ rfl _ hb)
       RingHom.ext_iff.1 this r }
 #align polynomial.splitting_field.lift Polynomial.SplittingField.lift
 
@@ -384,7 +382,7 @@ instance map (f : F[X]) [IsSplittingField F L f] : IsSplittingField K L (f.map <
       by
       rw [map_map, ← IsScalarTower.algebraMap_eq, Subalgebra.restrictScalars_top, eq_top_iff, ←
         adjoin_roots L f, Algebra.adjoin_le_iff]
-      exact fun x hx => @Algebra.subset_adjoin K _ _ _ _ _ _ hx⟩
+      exact fun x hx => @algebra.subset_adjoin K _ _ _ _ _ _ hx⟩
 #align polynomial.is_splitting_field.map Polynomial.IsSplittingField.map
 
 variable {K} (L)
@@ -469,21 +467,21 @@ instance (f : K[X]) : FiniteDimensional K f.SplittingField :=
 def algEquiv (f : K[X]) [IsSplittingField K L f] : L ≃ₐ[K] SplittingField f :=
   by
   refine'
-    AlgEquiv.ofBijective (lift L f <| splits (splitting_field f) f)
-      ⟨RingHom.injective (lift L f <| splits (splitting_field f) f).toRingHom, _⟩
-  haveI := FiniteDimensional (splitting_field f) f
-  haveI := FiniteDimensional L f
-  have : FiniteDimensional.finrank K L = FiniteDimensional.finrank K (splitting_field f) :=
+    AlgEquiv.ofBijective (lift L f <| splits (SplittingField f) f)
+      ⟨RingHom.injective (lift L f <| splits (SplittingField f) f).toRingHom, _⟩
+  haveI := finiteDimensional (SplittingField f) f
+  haveI := finiteDimensional L f
+  have : FiniteDimensional.finrank K L = FiniteDimensional.finrank K (SplittingField f) :=
     le_antisymm
       (LinearMap.finrank_le_finrank_of_injective
-        (show Function.Injective (lift L f <| splits (splitting_field f) f).toLinearMap from
-          RingHom.injective (lift L f <| splits (splitting_field f) f : L →+* f.splitting_field)))
+        (show Function.Injective (lift L f <| splits (SplittingField f) f).toLinearMap from
+          RingHom.injective (lift L f <| splits (SplittingField f) f : L →+* f.splitting_field)))
       (LinearMap.finrank_le_finrank_of_injective
-        (show Function.Injective (lift (splitting_field f) f <| splits L f).toLinearMap from
-          RingHom.injective (lift (splitting_field f) f <| splits L f : f.splitting_field →+* L)))
-  change Function.Surjective (lift L f <| splits (splitting_field f) f).toLinearMap
+        (show Function.Injective (lift (SplittingField f) f <| splits L f).toLinearMap from
+          RingHom.injective (lift (SplittingField f) f <| splits L f : f.splitting_field →+* L)))
+  change Function.Surjective (lift L f <| splits (SplittingField f) f).toLinearMap
   refine' (LinearMap.injective_iff_surjective_of_finrank_eq_finrank this).1 _
-  exact RingHom.injective (lift L f <| splits (splitting_field f) f : L →+* f.splitting_field)
+  exact RingHom.injective (lift L f <| splits (SplittingField f) f : L →+* f.splitting_field)
 #align polynomial.is_splitting_field.alg_equiv Polynomial.IsSplittingField.algEquiv
 
 theorem of_algEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingField K F p] :
@@ -492,8 +490,8 @@ theorem of_algEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingFie
   · rw [← f.to_alg_hom.comp_algebra_map]
     exact splits_comp_of_splits _ _ (splits F p)
   ·
-    rw [← (Algebra.range_top_iff_surjective f.to_alg_hom).mpr f.surjective, ← root_set,
-      adjoin_root_set_eq_range (splits F p), root_set, adjoin_roots F p]
+    rw [← (Algebra.range_top_iff_surjective f.to_alg_hom).mpr f.surjective, ← rootSet,
+      adjoin_rootSet_eq_range (splits F p), rootSet, adjoin_roots F p]
 #align polynomial.is_splitting_field.of_alg_equiv Polynomial.IsSplittingField.of_algEquiv
 
 end IsSplittingField
@@ -511,14 +509,14 @@ variable [Field K] [Field L] [Algebra K L] {p : K[X]}
 theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
     (hF : ∀ x ∈ p.rootSet L, x ∈ F) : p.Splits (algebraMap K F) :=
   by
-  simp_rw [root_set, Finset.mem_coe, Multiset.mem_toFinset] at hF
+  simp_rw [rootSet, Finset.mem_coe, Multiset.mem_toFinset] at hF
   rw [splits_iff_exists_multiset]
-  refine' ⟨Multiset.pmap Subtype.mk _ hF, map_injective _ (algebraMap F L).Injective _⟩
+  refine' ⟨Multiset.pmap Subtype.mk _ hF, map_injective _ (algebraMap F L).injective _⟩
   conv_lhs =>
     rw [Polynomial.map_map, ← IsScalarTower.algebraMap_eq, eq_prod_roots_of_splits h, ←
       Multiset.pmap_eq_map _ _ _ hF]
   simp_rw [Polynomial.map_mul, Polynomial.map_multiset_prod, Multiset.map_pmap, Polynomial.map_sub,
-    map_C, map_X]
+    map_c, map_x]
   rfl
 #align intermediate_field.splits_of_splits IntermediateField.splits_of_splits
 

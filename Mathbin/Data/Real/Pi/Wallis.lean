@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module data.real.pi.wallis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem w_pos (k : ℕ) : 0 < w k := by
   induction' k with k hk
   · unfold W
     simp
-  · rw [W_succ]
+  · rw [w_succ]
     refine' mul_pos hk (mul_pos (div_pos _ _) (div_pos _ _)) <;> positivity
 #align real.wallis.W_pos Real.Wallis.w_pos
 
@@ -65,10 +65,10 @@ theorem w_eq_factorial_ratio (n : ℕ) : w n = 2 ^ (4 * n) * n ! ^ 4 / ((2 * n)!
   by
   induction' n with n IH
   ·
-    simp only [W, prod_range_zero, Nat.factorial_zero, mul_zero, pow_zero, algebraMap.coe_one,
+    simp only [w, prod_range_zero, Nat.factorial_zero, mul_zero, pow_zero, algebraMap.coe_one,
       one_pow, mul_one, algebraMap.coe_zero, zero_add, div_self, Ne.def, one_ne_zero, not_false_iff]
   · unfold W at IH⊢
-    rw [prod_range_succ, IH, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
+    rw [prod_range_succ, IH, div_mul_div_comm, div_mul_div_comm]
     refine' (div_eq_div_iff _ _).mpr _
     any_goals exact ne_of_gt (by positivity)
     simp_rw [Nat.mul_succ, Nat.factorial_succ, pow_succ]
@@ -87,14 +87,14 @@ theorem w_eq_integral_sin_pow_div_integral_sin_pow (k : ℕ) :
 theorem w_le (k : ℕ) : w k ≤ π / 2 :=
   by
   rw [← div_le_one pi_div_two_pos, div_eq_inv_mul]
-  rw [W_eq_integral_sin_pow_div_integral_sin_pow, div_le_one (integral_sin_pow_pos _)]
+  rw [w_eq_integral_sin_pow_div_integral_sin_pow, div_le_one (integral_sin_pow_pos _)]
   apply integral_sin_pow_succ_le
 #align real.wallis.W_le Real.Wallis.w_le
 
 theorem le_w (k : ℕ) : ((2 : ℝ) * k + 1) / (2 * k + 2) * (π / 2) ≤ w k :=
   by
-  rw [← le_div_iff pi_div_two_pos, div_eq_inv_mul (W k) _]
-  rw [W_eq_integral_sin_pow_div_integral_sin_pow, le_div_iff (integral_sin_pow_pos _)]
+  rw [← le_div_iff pi_div_two_pos, div_eq_inv_mul (w k) _]
+  rw [w_eq_integral_sin_pow_div_integral_sin_pow, le_div_iff (integral_sin_pow_pos _)]
   convert integral_sin_pow_succ_le (2 * k + 1)
   rw [integral_sin_pow (2 * k)]
   simp only [sin_zero, zero_pow', Ne.def, Nat.succ_ne_zero, not_false_iff, zero_mul, sin_pi,
@@ -103,10 +103,10 @@ theorem le_w (k : ℕ) : ((2 : ℝ) * k + 1) / (2 * k + 2) * (π / 2) ≤ w k :=
 
 theorem tendsto_w_nhds_pi_div_two : Tendsto w atTop (𝓝 <| π / 2) :=
   by
-  refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ tendsto_const_nhds le_W W_le
+  refine' tendsto_of_tendsto_of_tendsto_of_le_of_le _ tendsto_const_nhds le_w w_le
   have : 𝓝 (π / 2) = 𝓝 ((1 - 0) * (π / 2)) := by rw [sub_zero, one_mul]
   rw [this]
-  refine' tendsto.mul _ tendsto_const_nhds
+  refine' Tendsto.mul _ tendsto_const_nhds
   have h : ∀ n : ℕ, ((2 : ℝ) * n + 1) / (2 * n + 2) = 1 - 1 / (2 * n + 2) :=
     by
     intro n
@@ -119,7 +119,7 @@ theorem tendsto_w_nhds_pi_div_two : Tendsto w atTop (𝓝 <| π / 2) :=
     ring
   simp_rw [h]
   refine' (tendsto_const_nhds.div_at_top _).const_sub _
-  refine' tendsto.at_top_add _ tendsto_const_nhds
+  refine' Tendsto.atTop_add _ tendsto_const_nhds
   exact tendsto_coe_nat_at_top_at_top.const_mul_at_top two_pos
 #align real.wallis.tendsto_W_nhds_pi_div_two Real.Wallis.tendsto_w_nhds_pi_div_two
 

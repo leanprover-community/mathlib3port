@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.opposite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,7 +159,7 @@ variable {X Y : C}
 /-- An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
 @[simps]
 def mop (f : X ≅ Y) : mop X ≅ mop Y where
-  Hom := f.Hom.mop
+  Hom := f.hom.mop
   inv := f.inv.mop
   hom_inv_id' := unmop_inj f.hom_inv_id
   inv_hom_id' := unmop_inj f.inv_hom_id

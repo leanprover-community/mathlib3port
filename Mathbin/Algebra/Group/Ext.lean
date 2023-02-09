@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bryan Gin-ge Chen, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.ext
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,15 +41,15 @@ Case conversion may be inaccurate. Consider using '#align monoid.ext Monoid.ext�
 @[ext, to_additive]
 theorem Monoid.ext {M : Type u} ⦃m₁ m₂ : Monoid M⦄ (h_mul : m₁.mul = m₂.mul) : m₁ = m₂ :=
   by
-  have h₁ : (@Monoid.toMulOneClass _ m₁).one = (@Monoid.toMulOneClass _ m₂).one :=
-    congr_arg (@MulOneClass.one M) (MulOneClass.ext h_mul)
-  set f : @MonoidHom M M (@Monoid.toMulOneClass _ m₁) (@Monoid.toMulOneClass _ m₂) :=
+  have h₁ : (@monoid.to_mul_one_class _ m₁).one = (@monoid.to_mul_one_class _ m₂).one :=
+    congr_arg (@mul_one_class.one M) (MulOneClass.ext h_mul)
+  set f : @monoid_hom M M (@monoid.to_mul_one_class _ m₁) (@monoid.to_mul_one_class _ m₂) :=
     { toFun := id
       map_one' := h₁
       map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
   have hpow : m₁.npow = m₂.npow := by
     ext (n x)
-    exact @MonoidHom.map_pow M M m₁ m₂ f x n
+    exact @monoid_hom.map_pow M M m₁ m₂ f x n
   cases m₁
   cases m₂
   congr <;> assumption
@@ -184,17 +184,17 @@ Case conversion may be inaccurate. Consider using '#align div_inv_monoid.ext Div
 theorem DivInvMonoid.ext {M : Type _} ⦃m₁ m₂ : DivInvMonoid M⦄ (h_mul : m₁.mul = m₂.mul)
     (h_inv : m₁.inv = m₂.inv) : m₁ = m₂ :=
   by
-  have h₁ : (@DivInvMonoid.toMonoid _ m₁).one = (@DivInvMonoid.toMonoid _ m₂).one :=
-    congr_arg (@Monoid.one M) (Monoid.ext h_mul)
-  set f : @MonoidHom M M (by letI := m₁ <;> infer_instance) (by letI := m₂ <;> infer_instance) :=
+  have h₁ : (@div_inv_monoid.to_monoid _ m₁).one = (@div_inv_monoid.to_monoid _ m₂).one :=
+    congr_arg (@monoid.one M) (Monoid.ext h_mul)
+  set f : @monoid_hom M M (by letI := m₁ <;> infer_instance) (by letI := m₂ <;> infer_instance) :=
     { toFun := id
       map_one' := h₁
       map_mul' := fun x y => congr_fun (congr_fun h_mul x) y }
-  have hpow : (@DivInvMonoid.toMonoid _ m₁).npow = (@DivInvMonoid.toMonoid _ m₂).npow :=
-    congr_arg (@Monoid.npow M) (Monoid.ext h_mul)
+  have hpow : (@div_inv_monoid.to_monoid _ m₁).npow = (@div_inv_monoid.to_monoid _ m₂).npow :=
+    congr_arg (@monoid.npow M) (Monoid.ext h_mul)
   have hzpow : m₁.zpow = m₂.zpow := by
     ext (m x)
-    exact @MonoidHom.map_zpow' M M m₁ m₂ f (congr_fun h_inv) x m
+    exact @monoid_hom.map_zpow' M M m₁ m₂ f (congr_fun h_inv) x m
   have hdiv : m₁.div = m₂.div := by
     ext (a b)
     exact @map_div' M M _ m₁ m₂ _ f (congr_fun h_inv) a b
@@ -215,12 +215,12 @@ Case conversion may be inaccurate. Consider using '#align group.ext Group.extₓ
 theorem Group.ext {G : Type _} ⦃g₁ g₂ : Group G⦄ (h_mul : g₁.mul = g₂.mul) : g₁ = g₂ :=
   by
   set f :=
-    @MonoidHom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b =>
+    @monoid_hom.mk' G G (by letI := g₁ <;> infer_instance) g₂ id fun a b =>
       congr_fun (congr_fun h_mul a) b
   exact
     Group.toDivInvMonoid_injective
       (DivInvMonoid.ext h_mul
-        (funext <| @MonoidHom.map_inv G G g₁ (@Group.toDivisionMonoid _ g₂) f))
+        (funext <| @monoid_hom.map_inv G G g₁ (@group.to_division_monoid _ g₂) f))
 #align group.ext Group.ext
 #align add_group.ext AddGroup.ext
 

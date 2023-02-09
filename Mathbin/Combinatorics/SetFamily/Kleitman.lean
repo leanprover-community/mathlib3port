@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.kleitman
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Fin
   · rw [tsub_eq_zero_of_le hs, pow_zero]
     refine'
       (card_le_of_subset <|
-            bUnion_subset.2 fun i hi a ha =>
+            bunionᵢ_subset.2 fun i hi a ha =>
               mem_compl.2 <| not_mem_singleton.2 <| (hf _ hi).ne_bot ha).trans_eq
         _
     rw [card_compl, Fintype.card_finset, card_singleton]
@@ -62,7 +62,7 @@ theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Fin
   · simp
   classical
     set f' : ι → Finset (Finset α) := fun j =>
-      if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.some else ∅ with hf'
+      if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.choose else ∅ with hf'
     have hf₁ :
       ∀ j,
         j ∈ cons i s hi →
@@ -76,9 +76,9 @@ theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Fin
       refine' fun j hj => (hf₁ _ hj).2.2.isUpperSet' ((hf₁ _ hj).2.2.is_max_iff_card_eq.2 _)
       rw [Fintype.card_finset]
       exact (hf₁ _ hj).2.1
-    refine' (card_le_of_subset <| bUnion_mono fun j hj => (hf₁ _ hj).1).trans _
+    refine' (card_le_of_subset <| bunionᵢ_mono fun j hj => (hf₁ _ hj).1).trans _
     nth_rw 1 [cons_eq_insert i]
-    rw [bUnion_insert]
+    rw [bunionᵢ_insert]
     refine' (card_mono <| @le_sup_sdiff _ _ _ <| f' i).trans ((card_union_le _ _).trans _)
     rw [union_sdiff_left, sdiff_eq_inter_compl]
     refine' le_of_mul_le_mul_left _ (pow_pos zero_lt_two <| card α + 1)
@@ -89,7 +89,7 @@ theorem Finset.card_bunionᵢ_le_of_intersecting (s : Finset ι) (f : ι → Fin
                 (hf₁ _ <| mem_cons_self _ _).2.2.card_le) <|
             (mul_le_mul_left <| zero_lt_two' ℕ).2 <| IsUpperSet.card_inter_le_finset _ _).trans
         _
-    · rw [coe_bUnion]
+    · rw [coe_bunionᵢ]
       exact isUpperSet_unionᵢ₂ fun i hi => hf₂ _ <| subset_cons _ hi
     · rw [coe_compl]
       exact (hf₂ _ <| mem_cons_self _ _).compl

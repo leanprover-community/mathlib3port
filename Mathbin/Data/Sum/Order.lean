@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sum.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ variable (r : α → α → Prop) (s : β → β → Prop)
 instance [IsRefl α r] [IsRefl β s] : IsRefl (Sum α β) (Lex r s) :=
   ⟨by
     rintro (a | a)
-    exacts[lex.inl (refl _), lex.inr (refl _)]⟩
+    exacts[Lex.inl (refl _), Lex.inr (refl _)]⟩
 
 instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (Lex r s) :=
   ⟨by rintro _ (⟨h⟩ | ⟨h⟩) <;> exact irrefl _ h⟩
@@ -98,7 +98,7 @@ instance [IsIrrefl α r] [IsIrrefl β s] : IsIrrefl (Sum α β) (Lex r s) :=
 instance [IsTrans α r] [IsTrans β s] : IsTrans (Sum α β) (Lex r s) :=
   ⟨by
     rintro _ _ _ (⟨hab⟩ | ⟨hab⟩) (⟨hbc⟩ | ⟨hbc⟩)
-    exacts[lex.inl (trans hab hbc), lex.sep _ _, lex.inr (trans hab hbc), lex.sep _ _]⟩
+    exacts[Lex.inl (trans hab hbc), Lex.sep _ _, Lex.inr (trans hab hbc), Lex.sep _ _]⟩
 
 instance [IsAntisymm α r] [IsAntisymm β s] : IsAntisymm (Sum α β) (Lex r s) :=
   ⟨by rintro _ _ (⟨hab⟩ | ⟨hab⟩) (⟨hba⟩ | ⟨hba⟩) <;> rw [antisymm hab hba]⟩
@@ -258,8 +258,8 @@ instance : Preorder (Sum α β) :=
         · exact hba.not_lt (inl_lt_inl_iff.1 hab)
         · exact hba.not_lt (inr_lt_inr_iff.1 hab)
       · rintro ⟨⟨hab⟩ | ⟨hab⟩, hba⟩
-        · exact lift_rel.inl (hab.lt_of_not_le fun h => hba <| lift_rel.inl h)
-        · exact lift_rel.inr (hab.lt_of_not_le fun h => hba <| lift_rel.inr h) }
+        · exact LiftRel.inl (hab.lt_of_not_le fun h => hba <| LiftRel.inl h)
+        · exact LiftRel.inr (hab.lt_of_not_le fun h => hba <| LiftRel.inr h) }
 
 /- warning: sum.inl_mono -> Sum.inl_mono is a dubious translation:
 lean 3 declaration is
@@ -412,7 +412,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LE.{u2} α] [_inst_2 : LE.{u1} β] {a : Sum.{u2, u1} α β} {b : Sum.{u2, u1} α β}, Iff (LE.le.{max u2 u1} (Sum.{u1, u2} β α) (Sum.instLESum.{u1, u2} β α _inst_2 _inst_1) (Sum.swap.{u2, u1} α β a) (Sum.swap.{u2, u1} α β b)) (LE.le.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instLESum.{u2, u1} α β _inst_1 _inst_2) a b)
 Case conversion may be inaccurate. Consider using '#align sum.swap_le_swap_iff Sum.swap_le_swap_iffₓ'. -/
 @[simp]
-theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.symm ≤ b.symm ↔ a ≤ b :=
+theorem swap_le_swap_iff [LE α] [LE β] {a b : Sum α β} : a.swap ≤ b.swap ↔ a ≤ b :=
   liftRel_swap_iff
 #align sum.swap_le_swap_iff Sum.swap_le_swap_iff
 
@@ -423,7 +423,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : LT.{u2} α] [_inst_2 : LT.{u1} β] {a : Sum.{u2, u1} α β} {b : Sum.{u2, u1} α β}, Iff (LT.lt.{max u2 u1} (Sum.{u1, u2} β α) (Sum.instLTSum.{u1, u2} β α _inst_2 _inst_1) (Sum.swap.{u2, u1} α β a) (Sum.swap.{u2, u1} α β b)) (LT.lt.{max u2 u1} (Sum.{u2, u1} α β) (Sum.instLTSum.{u2, u1} α β _inst_1 _inst_2) a b)
 Case conversion may be inaccurate. Consider using '#align sum.swap_lt_swap_iff Sum.swap_lt_swap_iffₓ'. -/
 @[simp]
-theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.symm < b.symm ↔ a < b :=
+theorem swap_lt_swap_iff [LT α] [LT β] {a b : Sum α β} : a.swap < b.swap ↔ a < b :=
   liftRel_swap_iff
 #align sum.swap_lt_swap_iff Sum.swap_lt_swap_iff
 
@@ -617,9 +617,9 @@ instance preorder : Preorder (α ⊕ₗ β) :=
         · exact hba.not_lt (inr_lt_inr_iff.1 hab)
         · exact not_inr_lt_inl hab
       · rintro ⟨⟨hab⟩ | ⟨hab⟩ | ⟨a, b⟩, hba⟩
-        · exact lex.inl (hab.lt_of_not_le fun h => hba <| lex.inl h)
-        · exact lex.inr (hab.lt_of_not_le fun h => hba <| lex.inr h)
-        · exact lex.sep _ _ }
+        · exact Lex.inl (hab.lt_of_not_le fun h => hba <| Lex.inl h)
+        · exact Lex.inr (hab.lt_of_not_le fun h => hba <| Lex.inr h)
+        · exact Lex.sep _ _ }
 #align sum.lex.preorder Sum.Lex.preorder
 -/
 
@@ -629,7 +629,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], Monotone.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β)) (Sum.instPreorderSum.{u2, u1} α β _inst_1 _inst_2) (Sum.Lex.preorder.{u2, u1} α β _inst_1 _inst_2) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β))) (Sum.{u2, u1} α β) (fun (_x : Sum.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Sum.{u2, u1} α β) => Lex.{max u1 u2} (Sum.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β))) (toLex.{max u1 u2} (Sum.{u2, u1} α β)))
 Case conversion may be inaccurate. Consider using '#align sum.lex.to_lex_mono Sum.Lex.toLex_monoₓ'. -/
-theorem toLex_mono : Monotone (@toLex (Sum α β)) := fun a b h => h.Lex
+theorem toLex_mono : Monotone (@toLex (Sum α β)) := fun a b h => h.lex
 #align sum.lex.to_lex_mono Sum.Lex.toLex_mono
 
 /- warning: sum.lex.to_lex_strict_mono -> Sum.Lex.toLex_strictMono is a dubious translation:
@@ -638,7 +638,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Preorder.{u2} α] [_inst_2 : Preorder.{u1} β], StrictMono.{max u2 u1, max u2 u1} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β)) (Sum.instPreorderSum.{u2, u1} α β _inst_1 _inst_2) (Sum.Lex.preorder.{u2, u1} α β _inst_1 _inst_2) (FunLike.coe.{max (succ u2) (succ u1), max (succ u2) (succ u1), max (succ u2) (succ u1)} (Equiv.{succ (max u1 u2), succ (max u1 u2)} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β))) (Sum.{u2, u1} α β) (fun (_x : Sum.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Sum.{u2, u1} α β) => Lex.{max u1 u2} (Sum.{u2, u1} α β)) _x) (Equiv.instFunLikeEquiv.{max (succ u2) (succ u1), max (succ u2) (succ u1)} (Sum.{u2, u1} α β) (Lex.{max u1 u2} (Sum.{u2, u1} α β))) (toLex.{max u1 u2} (Sum.{u2, u1} α β)))
 Case conversion may be inaccurate. Consider using '#align sum.lex.to_lex_strict_mono Sum.Lex.toLex_strictMonoₓ'. -/
-theorem toLex_strictMono : StrictMono (@toLex (Sum α β)) := fun a b h => h.Lex
+theorem toLex_strictMono : StrictMono (@toLex (Sum α β)) := fun a b h => h.lex
 #align sum.lex.to_lex_strict_mono Sum.Lex.toLex_strictMono
 
 /- warning: sum.lex.inl_mono -> Sum.Lex.inl_mono is a dubious translation:
@@ -697,8 +697,8 @@ instance orderBot [LE α] [OrderBot α] [LE β] : OrderBot (α ⊕ₗ β)
   bot := inl ⊥
   bot_le := by
     rintro (a | b)
-    · exact lex.inl bot_le
-    · exact lex.sep _ _
+    · exact Lex.inl bot_le
+    · exact Lex.sep _ _
 #align sum.lex.order_bot Sum.Lex.orderBot
 -/
 
@@ -720,8 +720,8 @@ instance orderTop [LE α] [LE β] [OrderTop β] : OrderTop (α ⊕ₗ β)
   top := inr ⊤
   le_top := by
     rintro (a | b)
-    · exact lex.sep _ _
-    · exact lex.inr le_top
+    · exact Lex.sep _ _
+    · exact Lex.inr le_top
 #align sum.lex.order_top Sum.Lex.orderTop
 -/
 
@@ -936,12 +936,12 @@ def sumDualDistrib (α β : Type _) [LE α] [LE β] : (Sum α β)ᵒᵈ ≃o Sum
   { Equiv.refl _ with
     map_rel_iff' := by
       rintro (a | a) (b | b)
-      · change inl (to_dual a) ≤ inl (to_dual b) ↔ to_dual (inl a) ≤ to_dual (inl b)
-        simp only [to_dual_le_to_dual, inl_le_inl_iff]
+      · change inl (toDual a) ≤ inl (toDual b) ↔ toDual (inl a) ≤ toDual (inl b)
+        simp only [toDual_le_toDual, inl_le_inl_iff]
       · exact iff_of_false not_inl_le_inr not_inr_le_inl
       · exact iff_of_false not_inr_le_inl not_inl_le_inr
-      · change inr (to_dual a) ≤ inr (to_dual b) ↔ to_dual (inr a) ≤ to_dual (inr b)
-        simp only [to_dual_le_to_dual, inr_le_inr_iff] }
+      · change inr (toDual a) ≤ inr (toDual b) ↔ toDual (inr a) ≤ toDual (inr b)
+        simp only [toDual_le_toDual, inr_le_inr_iff] }
 #align order_iso.sum_dual_distrib OrderIso.sumDualDistrib
 -/
 
@@ -1089,15 +1089,15 @@ def sumLexDualAntidistrib (α β : Type _) [LE α] [LE β] : (α ⊕ₗ β)ᵒ�
     map_rel_iff' := by
       rintro (a | a) (b | b); simp
       · change
-          toLex (inr <| to_dual a) ≤ toLex (inr <| to_dual b) ↔
-            to_dual (toLex <| inl a) ≤ to_dual (toLex <| inl b)
-        simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff]
-      · exact iff_of_false lex.not_inr_le_inl lex.not_inr_le_inl
-      · exact iff_of_true (lex.inl_le_inr _ _) (lex.inl_le_inr _ _)
+          toLex (inr <| toDual a) ≤ toLex (inr <| toDual b) ↔
+            toDual (toLex <| inl a) ≤ toDual (toLex <| inl b)
+        simp only [toDual_le_toDual, Lex.inl_le_inl_iff, Lex.inr_le_inr_iff]
+      · exact iff_of_false Lex.not_inr_le_inl Lex.not_inr_le_inl
+      · exact iff_of_true (Lex.inl_le_inr _ _) (Lex.inl_le_inr _ _)
       · change
-          toLex (inl <| to_dual a) ≤ toLex (inl <| to_dual b) ↔
-            to_dual (toLex <| inr a) ≤ to_dual (toLex <| inr b)
-        simp only [to_dual_le_to_dual, lex.inl_le_inl_iff, lex.inr_le_inr_iff] }
+          toLex (inl <| toDual a) ≤ toLex (inl <| toDual b) ↔
+            toDual (toLex <| inr a) ≤ toDual (toLex <| inr b)
+        simp only [toDual_le_toDual, Lex.inl_le_inl_iff, Lex.inr_le_inr_iff] }
 #align order_iso.sum_lex_dual_antidistrib OrderIso.sumLexDualAntidistrib
 -/
 

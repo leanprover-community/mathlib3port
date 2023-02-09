@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.colex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ def Finset.toColex {α} (s : Finset α) : Finset.Colex α :=
 
 #print Colex.eq_iff /-
 @[simp]
-theorem Colex.eq_iff (A B : Finset α) : A.toColex = B.toColex ↔ A = B :=
+theorem Colex.eq_iff (A B : Finset α) : A.toColex = B.toColex ↔ to_eq = B :=
   Iff.rfl
 #align colex.eq_iff Colex.eq_iff
 -/
@@ -95,7 +95,7 @@ instance [LT α] : LT (Finset.Colex α) :=
   ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
 
 /-- We can define (≤) in the obvious way. -/
-instance [LT α] : LE (Finset.Colex α) :=
+instance [LT α] : LE (Finset.Colex not_and') :=
   ⟨fun A B => A < B ∨ A = B⟩
 
 #print Colex.lt_def /-
@@ -106,7 +106,7 @@ theorem Colex.lt_def [LT α] (A B : Finset α) :
 -/
 
 #print Colex.le_def /-
-theorem Colex.le_def [LT α] (A B : Finset α) :
+theorem Colex.le_def [LT α] (A B : Finset of_not_not) :
     A.toColex ≤ B.toColex ↔ A.toColex < B.toColex ∨ A = B :=
   Iff.rfl
 #align colex.le_def Colex.le_def
@@ -115,7 +115,7 @@ theorem Colex.le_def [LT α] (A B : Finset α) :
 #print Nat.sum_two_pow_lt /-
 /-- If everything in `A` is less than `k`, we can bound the sum of powers. -/
 theorem Nat.sum_two_pow_lt {k : ℕ} {A : Finset ℕ} (h₁ : ∀ {x}, x ∈ A → x < k) :
-    A.Sum (pow 2) < 2 ^ k :=
+    A.sum (pow 2) < 2 ^ k :=
   by
   apply lt_of_le_of_lt (sum_le_sum_of_subset fun t => mem_range.2 ∘ h₁)
   have z := geom_sum_mul_add 1 k
@@ -219,7 +219,7 @@ theorem lt_trichotomy [LinearOrder α] (A B : Finset.Colex α) : A < B ∨ A = B
   rw [nonempty_iff_ne_empty]
   intro a
   simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a
-  apply h₁ (subset.antisymm a.1 a.2)
+  apply h₁ (Subset.antisymm a.1 a.2)
 #align colex.lt_trichotomy Colex.lt_trichotomy
 -/
 
@@ -413,7 +413,7 @@ theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
 theorem colex_lt_of_sSubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
   by
   rw [← sdiff_lt_sdiff_iff_lt, sdiff_eq_empty_iff_subset.2 h.1]
-  exact empty_to_colex_lt (by simpa [Finset.Nonempty] using exists_of_ssubset h)
+  exact empty_toColex_lt (by simpa [Finset.Nonempty] using exists_of_ssubset h)
 #align colex.colex_lt_of_ssubset Colex.colex_lt_of_sSubset
 -/
 
@@ -423,7 +423,7 @@ theorem empty_toColex_le [LinearOrder α] {A : Finset α} : (∅ : Finset α).to
   by
   rcases A.eq_empty_or_nonempty with (rfl | hA)
   · simp
-  · apply (empty_to_colex_lt hA).le
+  · apply (empty_toColex_lt hA).le
 #align colex.empty_to_colex_le Colex.empty_toColex_le
 -/
 
@@ -433,7 +433,7 @@ linear order. -/
 theorem colex_le_of_subset [LinearOrder α] {A B : Finset α} (h : A ⊆ B) : A.toColex ≤ B.toColex :=
   by
   rw [← sdiff_le_sdiff_iff_le, sdiff_eq_empty_iff_subset.2 h]
-  apply empty_to_colex_le
+  apply empty_toColex_le
 #align colex.colex_le_of_subset Colex.colex_le_of_subset
 -/
 
@@ -480,7 +480,7 @@ theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) :
     conv_rhs => rw [← sdiff_union_inter B A]
     rw [sum_union (disjoint_sdiff_inter _ _), sum_union (disjoint_sdiff_inter _ _), inter_comm,
       add_lt_add_iff_right]
-    apply lt_of_lt_of_le (@Nat.sum_two_pow_lt k (A \ B) _)
+    apply lt_of_lt_of_le (@nat.sum_two_pow_lt k (A \ B) _)
     · apply single_le_sum (fun _ _ => Nat.zero_le _) kB
     intro x hx
     apply lt_of_le_of_ne (le_of_not_lt fun kx => _)

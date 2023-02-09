@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.free
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,8 @@ universe u v l
 #print FreeMagma /-
 /-- Free magma over a given alphabet. -/
 inductive FreeMagma (α : Type u) : Type u
-  | of : α → FreeMagma
-  | mul : FreeMagma → FreeMagma → FreeMagma
+  | of : α → free_magma
+  | mul : free_magma → free_magma → free_magma
   deriving DecidableEq
 #align free_magma FreeMagma
 -/
@@ -49,8 +49,8 @@ inductive FreeMagma (α : Type u) : Type u
 #print FreeAddMagma /-
 /-- Free nonabelian additive magma over a given alphabet. -/
 inductive FreeAddMagma (α : Type u) : Type u
-  | of : α → FreeAddMagma
-  | add : FreeAddMagma → FreeAddMagma → FreeAddMagma
+  | of : α → free_add_magma
+  | add : free_add_magma → free_add_magma → free_add_magma
   deriving DecidableEq
 #align free_add_magma FreeAddMagma
 -/
@@ -92,7 +92,7 @@ def recOnMul {C : FreeMagma α → Sort l} (x) (ih1 : ∀ x, C (of x))
 
 #print FreeMagma.hom_ext /-
 @[ext, to_additive]
-theorem hom_ext {β : Type v} [Mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
+theorem hom_ext {β : Type v} [has_mul β] {f g : FreeMagma α →ₙ* β} (h : f ∘ of = g ∘ of) : f = g :=
   FunLike.ext _ _ fun x =>
     recOnMul x (congr_fun h) <| by
       intros
@@ -106,7 +106,7 @@ end FreeMagma
 #print FreeMagma.liftAux /-
 /-- Lifts a function `α → β` to a magma homomorphism `free_magma α → β` given a magma `β`. -/
 def FreeMagma.liftAux {α : Type u} {β : Type v} [Mul β] (f : α → β) : FreeMagma α → β
-  | FreeMagma.of x => f x
+  | free_magma.of x => f x
   | x * y => x.liftAux * y.liftAux
 #align free_magma.lift_aux FreeMagma.liftAux
 -/
@@ -115,7 +115,7 @@ def FreeMagma.liftAux {α : Type u} {β : Type v} [Mul β] (f : α → β) : Fre
 /-- Lifts a function `α → β` to an additive magma homomorphism `free_add_magma α → β` given
 an additive magma `β`. -/
 def FreeAddMagma.liftAux {α : Type u} {β : Type v} [Add β] (f : α → β) : FreeAddMagma α → β
-  | FreeAddMagma.of x => f x
+  | free_add_magma.of x => f x
   | x + y => x.liftAux + y.liftAux
 #align free_add_magma.lift_aux FreeAddMagma.liftAux
 -/
@@ -320,7 +320,7 @@ end FreeMagma
 /-- `free_magma` is traversable. -/
 protected def FreeMagma.traverse {m : Type u → Type u} [Applicative m] {α β : Type u}
     (F : α → m β) : FreeMagma α → m (FreeMagma β)
-  | FreeMagma.of x => FreeMagma.of <$> F x
+  | free_magma.of x => FreeMagma.of <$> F x
   | x * y => (· * ·) <$> x.traverse <*> y.traverse
 #align free_magma.traverse FreeMagma.traverse
 -/
@@ -329,7 +329,7 @@ protected def FreeMagma.traverse {m : Type u → Type u} [Applicative m] {α β 
 /-- `free_add_magma` is traversable. -/
 protected def FreeAddMagma.traverse {m : Type u → Type u} [Applicative m] {α β : Type u}
     (F : α → m β) : FreeAddMagma α → m (FreeAddMagma β)
-  | FreeAddMagma.of x => FreeAddMagma.of <$> F x
+  | free_add_magma.of x => FreeAddMagma.of <$> F x
   | x + y => (· + ·) <$> x.traverse <*> y.traverse
 #align free_add_magma.traverse FreeAddMagma.traverse
 -/
@@ -454,7 +454,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_magma.repr FreeMagma.reprₓ'. -/
 /-- Representation of an element of a free magma. -/
 protected def FreeMagma.repr {α : Type u} [Repr α] : FreeMagma α → String
-  | FreeMagma.of x => repr x
+  | free_magma.of x => repr x
   | x * y => "( " ++ x.repr ++ " * " ++ y.repr ++ " )"
 #align free_magma.repr FreeMagma.repr
 
@@ -466,7 +466,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align free_add_magma.repr FreeAddMagma.reprₓ'. -/
 /-- Representation of an element of a free additive magma. -/
 protected def FreeAddMagma.repr {α : Type u} [Repr α] : FreeAddMagma α → String
-  | FreeAddMagma.of x => repr x
+  | free_add_magma.of x => repr x
   | x + y => "( " ++ x.repr ++ " + " ++ y.repr ++ " )"
 #align free_add_magma.repr FreeAddMagma.repr
 
@@ -480,7 +480,7 @@ instance {α : Type u} [Repr α] : Repr (FreeMagma α) :=
 /-- Length of an element of a free magma. -/
 @[simp]
 def FreeMagma.length {α : Type u} : FreeMagma α → ℕ
-  | FreeMagma.of x => 1
+  | free_magma.of x => 1
   | x * y => x.length + y.length
 #align free_magma.length FreeMagma.length
 -/
@@ -489,7 +489,7 @@ def FreeMagma.length {α : Type u} : FreeMagma α → ℕ
 /-- Length of an element of a free additive magma. -/
 @[simp]
 def FreeAddMagma.length {α : Type u} : FreeAddMagma α → ℕ
-  | FreeAddMagma.of x => 1
+  | free_add_magma.of x => 1
   | x + y => x.length + y.length
 #align free_add_magma.length FreeAddMagma.length
 -/
@@ -499,8 +499,8 @@ attribute [to_additive FreeAddMagma.length] FreeMagma.length
 #print AddMagma.AssocRel /-
 /-- Associativity relations for an additive magma. -/
 inductive AddMagma.AssocRel (α : Type u) [Add α] : α → α → Prop
-  | intro : ∀ x y z, AddMagma.AssocRel (x + y + z) (x + (y + z))
-  | left : ∀ w x y z, AddMagma.AssocRel (w + (x + y + z)) (w + (x + (y + z)))
+  | intro : ∀ x y z, add_magma.assoc_rel (x + y + z) (x + (y + z))
+  | left : ∀ w x y z, add_magma.assoc_rel (w + (x + y + z)) (w + (x + (y + z)))
 #align add_magma.assoc_rel AddMagma.AssocRel
 -/
 
@@ -508,8 +508,8 @@ inductive AddMagma.AssocRel (α : Type u) [Add α] : α → α → Prop
 /-- Associativity relations for a magma. -/
 @[to_additive AddMagma.AssocRel "Associativity relations for an additive magma."]
 inductive Magma.AssocRel (α : Type u) [Mul α] : α → α → Prop
-  | intro : ∀ x y z, Magma.AssocRel (x * y * z) (x * (y * z))
-  | left : ∀ w x y z, Magma.AssocRel (w * (x * y * z)) (w * (x * (y * z)))
+  | intro : ∀ x y z, magma.assoc_rel (x * y * z) (x * (y * z))
+  | left : ∀ w x y z, magma.assoc_rel (w * (x * y * z)) (w * (x * (y * z)))
 #align magma.assoc_rel Magma.AssocRel
 #align add_magma.assoc_rel AddMagma.AssocRel
 -/

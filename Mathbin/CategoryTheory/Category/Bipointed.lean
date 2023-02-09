@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module category_theory.category.Bipointed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ instance concreteCategory : ConcreteCategory Bipointed
 /-- Swaps the pointed elements of a bipointed type. `prod.swap` as a functor. -/
 @[simps]
 def swap : Bipointed ⥤ Bipointed where
-  obj X := ⟨X, X.toProd.symm⟩
+  obj X := ⟨X, X.toProd.swap⟩
   map X Y f := ⟨f.toFun, f.map_snd, f.map_fst⟩
 #align Bipointed.swap Bipointed.swap
 
@@ -236,7 +236,7 @@ def pointedToBipointedFstBipointedToPointedFstAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_fst⟩
-          invFun := fun f => ⟨fun o => o.elim Y.toProd.2 f.toFun, f.map_point, rfl⟩
+          invFun := fun f => ⟨fun o => o.elim' Y.toProd.2 f.toFun, f.map_point, rfl⟩
           left_inv := fun f => by
             ext
             cases x
@@ -256,7 +256,7 @@ def pointedToBipointedSndBipointedToPointedSndAdjunction :
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Y =>
         { toFun := fun f => ⟨f.toFun ∘ Option.some, f.map_snd⟩
-          invFun := fun f => ⟨fun o => o.elim Y.toProd.1 f.toFun, rfl, f.map_point⟩
+          invFun := fun f => ⟨fun o => o.elim' Y.toProd.1 f.toFun, rfl, f.map_point⟩
           left_inv := fun f => by
             ext
             cases x

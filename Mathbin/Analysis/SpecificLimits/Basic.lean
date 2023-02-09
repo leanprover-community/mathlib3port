@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,7 +213,7 @@ theorem tsum_geometric_inv_two_ge (n : ℕ) : (∑' i, ite (n ≤ i) ((2 : ℝ)�
     apply summable_of_nonneg_of_le _ _ summable_geometric_two <;>
       · intro i
         by_cases hi : n ≤ i <;> simp [hi]
-  have B : ((Finset.range n).Sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
+  have B : ((Finset.range n).sum fun i : ℕ => ite (n ≤ i) ((2⁻¹ : ℝ) ^ i) 0) = 0 :=
     Finset.sum_eq_zero fun i hi =>
       ite_eq_right_iff.2 fun h => (lt_irrefl _ ((Finset.mem_range.1 hi).trans_le h)).elim
   simp only [← sum_add_tsum_nat_add n A, B, if_true, zero_add, zero_le', le_add_iff_nonneg_left,
@@ -462,8 +462,8 @@ def posSumOfEncodable {ε : ℝ} (hε : 0 < ε) (ι) [Encodable ι] :
   have hf : HasSum f ε := hasSum_geometric_two' _
   have f0 : ∀ n, 0 < f n := fun n => div_pos (half_pos hε) (pow_pos zero_lt_two _)
   refine' ⟨f ∘ Encodable.encode, fun i => f0 _, _⟩
-  rcases hf.summable.comp_injective (@Encodable.encode_injective ι _) with ⟨c, hg⟩
-  refine' ⟨c, hg, hasSum_le_inj _ (@Encodable.encode_injective ι _) _ _ hg hf⟩
+  rcases hf.summable.comp_injective (@encodable.encode_injective ι _) with ⟨c, hg⟩
+  refine' ⟨c, hg, hasSum_le_inj _ (@encodable.encode_injective ι _) _ _ hg hf⟩
   · intro i _
     exact le_of_lt (f0 _)
   · intro n
@@ -555,10 +555,10 @@ theorem tendsto_factorial_div_pow_self_atTop : Tendsto (fun n => n ! / n ^ n : �
       div_nonneg (by exact_mod_cast n.factorial_pos.le)
         (pow_nonneg (by exact_mod_cast n.zero_le) _))
     (by
-      refine' (eventually_gt_at_top 0).mono fun n hn => _
+      refine' (eventually_gt_atTop 0).mono fun n hn => _
       rcases Nat.exists_eq_succ_of_ne_zero hn.ne.symm with ⟨k, rfl⟩
       rw [← prod_range_add_one_eq_factorial, pow_eq_prod_const, div_eq_mul_inv, ← inv_eq_one_div,
-        prod_nat_cast, Nat.cast_succ, ← prod_inv_distrib, ← prod_mul_distrib,
+        prod_natCast, Nat.cast_succ, ← prod_inv_distrib, ← prod_mul_distrib,
         Finset.prod_range_succ']
       simp only [prod_range_succ', one_mul, Nat.cast_add, zero_add, Nat.cast_one]
       refine'
@@ -588,16 +588,16 @@ variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology
 theorem tendsto_nat_floor_mul_div_atTop {a : R} (ha : 0 ≤ a) :
     Tendsto (fun x => (⌊a * x⌋₊ : R) / x) atTop (𝓝 a) :=
   by
-  have A : tendsto (fun x : R => a - x⁻¹) at_top (𝓝 (a - 0)) :=
+  have A : Tendsto (fun x : R => a - x⁻¹) atTop (𝓝 (a - 0)) :=
     tendsto_const_nhds.sub tendsto_inv_atTop_zero
   rw [sub_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' A tendsto_const_nhds
-  · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
+  · refine' eventually_atTop.2 ⟨1, fun x hx => _⟩
     simp only [le_div_iff (zero_lt_one.trans_le hx), sub_mul,
       inv_mul_cancel (zero_lt_one.trans_le hx).ne']
     have := Nat.lt_floor_add_one (a * x)
     linarith
-  · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
+  · refine' eventually_atTop.2 ⟨1, fun x hx => _⟩
     rw [div_le_iff (zero_lt_one.trans_le hx)]
     simp [Nat.floor_le (mul_nonneg ha (zero_le_one.trans hx))]
 #align tendsto_nat_floor_mul_div_at_top tendsto_nat_floor_mul_div_atTop
@@ -609,14 +609,14 @@ theorem tendsto_nat_floor_div_atTop : Tendsto (fun x => (⌊x⌋₊ : R) / x) at
 theorem tendsto_nat_ceil_mul_div_atTop {a : R} (ha : 0 ≤ a) :
     Tendsto (fun x => (⌈a * x⌉₊ : R) / x) atTop (𝓝 a) :=
   by
-  have A : tendsto (fun x : R => a + x⁻¹) at_top (𝓝 (a + 0)) :=
+  have A : Tendsto (fun x : R => a + x⁻¹) atTop (𝓝 (a + 0)) :=
     tendsto_const_nhds.add tendsto_inv_atTop_zero
   rw [add_zero] at A
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds A
-  · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
+  · refine' eventually_atTop.2 ⟨1, fun x hx => _⟩
     rw [le_div_iff (zero_lt_one.trans_le hx)]
     exact Nat.le_ceil _
-  · refine' eventually_at_top.2 ⟨1, fun x hx => _⟩
+  · refine' eventually_atTop.2 ⟨1, fun x hx => _⟩
     simp [div_le_iff (zero_lt_one.trans_le hx), inv_mul_cancel (zero_lt_one.trans_le hx).ne',
       (Nat.ceil_lt_add_one (mul_nonneg ha (zero_le_one.trans hx))).le, add_mul]
 #align tendsto_nat_ceil_mul_div_at_top tendsto_nat_ceil_mul_div_atTop

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,8 +53,8 @@ def sectionsSubmonoid (F : J ⥤ Mon.{max v u}) : Submonoid (∀ j, F.obj j)
   one_mem' j j' f := by simp
   mul_mem' a b ah bh j j' f :=
     by
-    simp only [forget_map_eq_coe, functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
-    dsimp [functor.sections] at ah bh
+    simp only [forget_map_eq_coe, Functor.comp_map, MonoidHom.map_mul, Pi.mul_apply]
+    dsimp [Functor.sections] at ah bh
     rw [ah f, bh f]
 #align Mon.sections_submonoid Mon.sectionsSubmonoid
 #align AddMon.sections_add_submonoid AddMon.sectionsAddSubmonoid
@@ -102,7 +102,7 @@ def limitCone (F : J ⥤ Mon.{max v u}) : Cone F
 @[to_additive "(Internal use only; use the limits API.)"]
 def limitConeIsLimit (F : J ⥤ Mon.{max v u}) : IsLimit (limitCone F) := by
   refine'
-      is_limit.of_faithful (forget Mon) (types.limit_cone_is_limit _) (fun s => ⟨_, _, _⟩) fun s =>
+      IsLimit.ofFaithful (forget Mon) (Types.limitConeIsLimit _) (fun s => ⟨_, _, _⟩) fun s =>
         rfl <;>
     tidy
 #align Mon.has_limits.limit_cone_is_limit Mon.HasLimits.limitConeIsLimit
@@ -118,9 +118,9 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v} Mon.{max v u}
     where HasLimitsOfShape J 𝒥 :=
     {
       HasLimit := fun F =>
-        has_limit.mk
+        HasLimit.mk
           { Cone := limit_cone F
-            IsLimit := limit_cone_is_limit F } }
+            IsLimit := limitConeIsLimit F } }
 #align Mon.has_limits_of_size Mon.hasLimitsOfSize
 #align AddMon.has_limits_of_size AddMon.has_limits_of_size
 
@@ -139,8 +139,8 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v} (forget Mon.{ma
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (types.limit_cone_is_limit (F ⋙ forget _)) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (Types.limitConeIsLimit (F ⋙ forget _)) }
 #align Mon.forget_preserves_limits_of_size Mon.forgetPreservesLimitsOfSize
 #align AddMon.forget_preserves_limits_of_size AddMon.forget_preserves_limits_of_size
 
@@ -186,7 +186,7 @@ instance (F : J ⥤ CommMon.{max v u}) : CreatesLimit F (forget₂ CommMon Mon.{
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ CommMon Mon.{max v u})
               naturality' :=
                 (Mon.HasLimits.limitCone (F ⋙ forget₂ CommMon Mon.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (Mon.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ CommMon Mon.{max v u}) (Mon.HasLimits.limitConeIsLimit _)
           (fun s => _) fun s => rfl }
@@ -215,7 +215,7 @@ def limitConeIsLimit (F : J ⥤ CommMon.{max v u}) : IsLimit (limitCone F) :=
 @[to_additive "The category of commutative monoids has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommMon.{max v u}
     where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit_of_created F (forget₂ CommMon Mon.{max v u}) }
+    { HasLimit := fun F => hasLimitOfCreated F (forget₂ CommMon Mon.{max v u}) }
 #align CommMon.has_limits_of_size CommMon.hasLimitsOfSize
 #align AddCommMon.has_limits_of_size AddCommMon.has_limits_of_size
 
@@ -249,7 +249,7 @@ This means the underlying type of a limit can be computed as a limit in the cate
       "The forgetful functor from additive commutative monoids to types preserves all\nlimits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
 instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget CommMon.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ CommMon Mon) (forget Mon) }
+    { PreservesLimit := fun F => Limits.compPreservesLimit (forget₂ CommMon Mon) (forget Mon) }
 #align CommMon.forget_preserves_limits_of_size CommMon.forgetPreservesLimitsOfSize
 #align AddCommMon.forget_preserves_limits_of_size AddCommMon.forget_preserves_limits_of_size
 

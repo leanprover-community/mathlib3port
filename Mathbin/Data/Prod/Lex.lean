@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 
 ! This file was ported from Lean 3 source module data.prod.lex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ instance preorder (α β : Type _) [Preorder α] [Preorder β] : Preorder (α ×
     le_trans := fun _ _ _ => trans_of <| Prod.Lex _ _
     lt_iff_le_not_le := fun x₁ x₂ =>
       match x₁, x₂ with
-      | toLex (a₁, b₁), toLex (a₂, b₂) => by
+      | to_lex (a₁, b₁), to_lex (a₂, b₂) => by
         constructor
         · rintro (⟨_, _, hlt⟩ | ⟨_, hlt⟩)
           · constructor

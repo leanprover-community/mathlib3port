@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.elimination
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ iff `k' ≥ k`. Thus we can compute the intersection of officially and implicitl
 by taking the set of implicitly eliminated variables with indices ≥ `elimed_ge`.
 -/
 unsafe def pcomp.maybe_minimal (c : pcomp) (elimed_ge : ℕ) : Bool :=
-  c.history.size ≤ 1 + ((c.implicit.filterₓ (· ≥ elimed_ge)).union c.effective).size
+  c.history.size ≤ 1 + ((c.implicit.filter (· ≥ elimed_ge)).union c.effective).size
 #align linarith.pcomp.maybe_minimal linarith.pcomp.maybe_minimal
 
 /-- The `comp_source` field is ignored when comparing `pcomp`s. Two `pcomp`s proving the same
@@ -304,10 +304,10 @@ Returns `(pos, neg, not_present)`.
 -/
 unsafe def split_set_by_var_sign (a : ℕ) (comps : rb_set pcomp) :
     rb_set pcomp × rb_set pcomp × rb_set pcomp :=
-  comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩ fun pc ⟨Pos, neg, not_present⟩ =>
+  comps.fold ⟨mk_pcomp_set, mk_pcomp_set, mk_pcomp_set⟩ fun pc ⟨pos, neg, not_present⟩ =>
     let n := pc.c.coeffOf a
-    if n > 0 then ⟨Pos.insert pc, neg, not_present⟩
-    else if n < 0 then ⟨Pos, neg.insert pc, not_present⟩ else ⟨Pos, neg, not_present.insert pc⟩
+    if n > 0 then ⟨pos.insert pc, neg, not_present⟩
+    else if n < 0 then ⟨pos, neg.insert pc, not_present⟩ else ⟨pos, neg, not_present.insert pc⟩
 #align linarith.split_set_by_var_sign linarith.split_set_by_var_sign
 
 /--
@@ -317,8 +317,8 @@ from the `linarith` state.
 unsafe def monad.elim_var (a : ℕ) : linarith_monad Unit := do
   let vs ← get_max_var
   when (a ≤ vs) do
-      let ⟨Pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
-      let cs' := Pos not_present fun p s => s (elim_with_set a p neg)
+      let ⟨pos, neg, not_present⟩ ← split_set_by_var_sign a <$> get_comps
+      let cs' := pos not_present fun p s => s (elim_with_set a p neg)
       update (vs - 1) cs'
 #align linarith.monad.elim_var linarith.monad.elim_var
 
@@ -327,7 +327,7 @@ ground comparisons. If this succeeds without exception, the original `linarith` 
 -/
 unsafe def elim_all_vars : linarith_monad Unit := do
   let mv ← get_max_var
-  (List.range <| mv + 1).reverse.mapM' monad.elim_var
+  (list.range <| mv + 1).reverse.mapM' monad.elim_var
 #align linarith.elim_all_vars linarith.elim_all_vars
 
 /-- `mk_linarith_structure hyps vars` takes a list of hypotheses and the largest variable present in
@@ -346,9 +346,9 @@ This map represents that we can find a contradiction by taking the sum  `∑ (co
 -/
 unsafe def fourier_motzkin.produce_certificate : certificate_oracle := fun hyps max_var =>
   let state := mk_linarith_structure hyps max_var
-  match ExceptT.run (StateT.run (validate >> elim_all_vars) StateM) with
-  | Except.ok (a, _) => tactic.failed
-  | Except.error contr => return contr.src.flatten
+  match ExceptT.run (StateT.run (validate >> elim_all_vars) state) with
+  | except.ok (a, _) => tactic.failed
+  | except.error contr => return contr.src.flatten
 #align linarith.fourier_motzkin.produce_certificate linarith.fourier_motzkin.produce_certificate
 
 end Linarith

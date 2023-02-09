@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.sums.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ def equivalence : Sum C D ≌ Sum D C :=
 #align category_theory.sum.swap.equivalence CategoryTheory.sum.swap.equivalence
 
 instance isEquivalence : IsEquivalence (swap C D) :=
-  (by infer_instance : IsEquivalence (equivalence C D).Functor)
+  (by infer_instance : IsEquivalence (equivalence C D).functor)
 #align category_theory.sum.swap.is_equivalence CategoryTheory.sum.swap.isEquivalence
 
 /-- The double swap on `C ⊕ D` is naturally isomorphic to the identity functor. -/
@@ -176,24 +176,24 @@ def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D
 #align category_theory.functor.sum CategoryTheory.Functor.sum
 
 @[simp]
-theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.Sum G).obj (inl a) = inl (F.obj a) :=
+theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.sum G).obj (inl a) = inl (F.obj a) :=
   rfl
 #align category_theory.functor.sum_obj_inl CategoryTheory.Functor.sum_obj_inl
 
 @[simp]
-theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.Sum G).obj (inr c) = inr (G.obj c) :=
+theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.sum G).obj (inr c) = inr (G.obj c) :=
   rfl
 #align category_theory.functor.sum_obj_inr CategoryTheory.Functor.sum_obj_inr
 
 @[simp]
 theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') :
-    (F.Sum G).map f = F.map f :=
+    (F.sum G).map f = F.map f :=
   rfl
 #align category_theory.functor.sum_map_inl CategoryTheory.Functor.sum_map_inl
 
 @[simp]
 theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') :
-    (F.Sum G).map f = G.map f :=
+    (F.sum G).map f = G.map f :=
   rfl
 #align category_theory.functor.sum_map_inr CategoryTheory.Functor.sum_map_inr
 
@@ -202,7 +202,7 @@ end Functor
 namespace NatTrans
 
 /-- The sum of two natural transformations. -/
-def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H ⟶ G.Sum I
+def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.sum H ⟶ G.sum I
     where
   app X :=
     match X with

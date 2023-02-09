@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.cech_nerve
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,16 +48,16 @@ namespace CategoryTheory.Arrow
 
 variable (f : Arrow C)
 
-variable [∀ n : ℕ, HasWidePullback.{0} f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
+variable [∀ n : ℕ, HasWidePullback.{0} f.right (fun i : Fin (n + 1) => f.left) fun i => f.hom]
 
 /-- The Čech nerve associated to an arrow. -/
 @[simps]
 def cechNerve : SimplicialObject C
     where
-  obj n := widePullback.{0} f.right (fun i : Fin (n.unop.len + 1) => f.left) fun i => f.Hom
+  obj n := widePullback.{0} f.right (fun i : Fin (n.unop.len + 1) => f.left) fun i => f.hom
   map m n g :=
     widePullback.lift (widePullback.base _)
-      (fun i => (widePullback.π fun i => f.Hom) <| g.unop.toOrderHom i) fun j => by simp
+      (fun i => (widePullback.π fun i => f.hom) <| g.unop.toOrderHom i) fun j => by simp
   map_id' x := by
     ext ⟨⟩
     · simpa
@@ -71,8 +71,8 @@ def cechNerve : SimplicialObject C
 /-- The morphism between Čech nerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechNerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePullback g.right (fun i : Fin (n + 1) => g.left) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.hom]
+    [∀ n : ℕ, HasWidePullback g.right (fun i : Fin (n + 1) => g.left) fun i => g.hom] (F : f ⟶ g) :
     f.cechNerve ⟶ g.cechNerve
     where
   app n :=
@@ -100,8 +100,8 @@ def augmentedCechNerve : SimplicialObject.Augmented C
 /-- The morphism between augmented Čech nerve associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechNerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePullback g.right (fun i : Fin (n + 1) => g.left) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.hom]
+    [∀ n : ℕ, HasWidePullback g.right (fun i : Fin (n + 1) => g.left) fun i => g.hom] (F : f ⟶ g) :
     f.augmentedCechNerve ⟶ g.augmentedCechNerve
     where
   left := mapCechNerve F
@@ -118,7 +118,7 @@ namespace CategoryTheory
 namespace SimplicialObject
 
 variable
-  [∀ (n : ℕ) (f : Arrow C), HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.Hom]
+  [∀ (n : ℕ) (f : Arrow C), HasWidePullback f.right (fun i : Fin (n + 1) => f.left) fun i => f.hom]
 
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -159,7 +159,7 @@ def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
 def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
     (G : X ⟶ F.augmentedCechNerve) : Augmented.toArrow.obj X ⟶ F
     where
-  left := G.left.app _ ≫ widePullback.π (fun i => F.Hom) 0
+  left := G.left.app _ ≫ widePullback.π (fun i => F.hom) 0
   right := G.right
   w' := by
     have := G.w
@@ -174,23 +174,23 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
     where
   left :=
     { app := fun x =>
-        Limits.widePullback.lift (X.Hom.app _ ≫ G.right)
+        Limits.widePullback.lift (X.hom.app _ ≫ G.right)
           (fun i => X.left.map (SimplexCategory.const x.unop i).op ≫ G.left) fun i =>
           by
           dsimp
-          erw [category.assoc, arrow.w, augmented.to_arrow_obj_hom, nat_trans.naturality_assoc,
-            functor.const_obj_map, category.id_comp]
+          erw [Category.assoc, Arrow.w, Augmented.toArrow_obj_hom, NatTrans.naturality_assoc,
+            Functor.const_obj_map, Category.id_comp]
       naturality' := by
         intro x y f
         ext
         · dsimp
-          simp only [wide_pullback.lift_π, category.assoc]
-          rw [← category.assoc, ← X.left.map_comp]
+          simp only [widePullback.lift_π, Category.assoc]
+          rw [← Category.assoc, ← X.left.map_comp]
           rfl
         · dsimp
-          simp only [functor.const_obj_map, nat_trans.naturality_assoc, wide_pullback.lift_base,
-            category.assoc]
-          erw [category.id_comp] }
+          simp only [Functor.const_obj_map, NatTrans.naturality_assoc, widePullback.lift_base,
+            Category.assoc]
+          erw [Category.id_comp] }
   right := G.right
   w' := by
     ext
@@ -210,8 +210,8 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     dsimp
     ext
     · dsimp
-      erw [wide_pullback.lift_π]
-      nth_rw 2 [← category.id_comp A.left]
+      erw [widePullback.lift_π]
+      nth_rw 2 [← Category.id_comp A.left]
       congr 1
       convert X.left.map_id _
       rw [← op_id]
@@ -225,13 +225,13 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     intro A
     ext (_⟨j⟩)
     · dsimp
-      simp only [arrow.cech_nerve_map, wide_pullback.lift_π, nat_trans.naturality_assoc]
-      erw [wide_pullback.lift_π]
+      simp only [Arrow.cechNerve_map, widePullback.lift_π, NatTrans.naturality_assoc]
+      erw [widePullback.lift_π]
       rfl
-    · erw [wide_pullback.lift_base]
+    · erw [widePullback.lift_base]
       have := A.w
       apply_fun fun e => e.app x  at this
-      rw [nat_trans.comp_app] at this
+      rw [NatTrans.comp_app] at this
       erw [this]
       rfl
     · rfl
@@ -262,17 +262,17 @@ namespace CategoryTheory.Arrow
 
 variable (f : Arrow C)
 
-variable [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
+variable [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.hom]
 
 /-- The Čech conerve associated to an arrow. -/
 @[simps]
 def cechConerve : CosimplicialObject C
     where
-  obj n := widePushout f.left (fun i : Fin (n.len + 1) => f.right) fun i => f.Hom
+  obj n := widePushout f.left (fun i : Fin (n.len + 1) => f.right) fun i => f.hom
   map m n g :=
     widePushout.desc (widePushout.head _)
-      (fun i => (widePushout.ι fun i => f.Hom) <| g.toOrderHom i) fun i => by
-      rw [wide_pushout.arrow_ι fun i => f.hom]
+      (fun i => (widePushout.ι fun i => f.hom) <| g.toOrderHom i) fun i => by
+      rw [widePushout.arrow_ι fun i => f.hom]
   map_id' x := by
     ext ⟨⟩
     · simpa
@@ -286,13 +286,13 @@ def cechConerve : CosimplicialObject C
 /-- The morphism between Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapCechConerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePushout g.left (fun i : Fin (n + 1) => g.right) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.hom]
+    [∀ n : ℕ, HasWidePushout g.left (fun i : Fin (n + 1) => g.right) fun i => g.hom] (F : f ⟶ g) :
     f.cechConerve ⟶ g.cechConerve
     where
   app n :=
     widePushout.desc (F.left ≫ widePushout.head _) (fun i => F.right ≫ widePushout.ι _ i) fun i =>
-      by rw [← arrow.w_assoc F, wide_pushout.arrow_ι fun i => g.hom]
+      by rw [← Arrow.w_assoc F, widePushout.arrow_ι fun i => g.hom]
   naturality' x y f := by
     ext
     · simp
@@ -315,8 +315,8 @@ def augmentedCechConerve : CosimplicialObject.Augmented C
 /-- The morphism between augmented Čech conerves associated to a morphism of arrows. -/
 @[simps]
 def mapAugmentedCechConerve {f g : Arrow C}
-    [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
-    [∀ n : ℕ, HasWidePushout g.left (fun i : Fin (n + 1) => g.right) fun i => g.Hom] (F : f ⟶ g) :
+    [∀ n : ℕ, HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.hom]
+    [∀ n : ℕ, HasWidePushout g.left (fun i : Fin (n + 1) => g.right) fun i => g.hom] (F : f ⟶ g) :
     f.augmentedCechConerve ⟶ g.augmentedCechConerve
     where
   left := F.left
@@ -333,7 +333,7 @@ namespace CategoryTheory
 namespace CosimplicialObject
 
 variable
-  [∀ (n : ℕ) (f : Arrow C), HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.Hom]
+  [∀ (n : ℕ) (f : Arrow C), HasWidePushout f.left (fun i : Fin (n + 1) => f.right) fun i => f.hom]
 
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -379,12 +379,12 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
     (G : F.augmentedCechConerve ⟶ X) : F ⟶ Augmented.toArrow.obj X
     where
   left := G.left
-  right := (widePushout.ι (fun i => F.Hom) 0 ≫ G.right.app (SimplexCategory.mk 0) : _)
+  right := (widePushout.ι (fun i => F.hom) 0 ≫ G.right.app (SimplexCategory.mk 0) : _)
   w' := by
     have := G.w
     apply_fun fun e => e.app (SimplexCategory.mk 0)  at this
-    simpa only [CategoryTheory.Functor.id_map, augmented.to_arrow_obj_hom,
-      wide_pushout.arrow_ι_assoc fun i => F.hom]
+    simpa only [CategoryTheory.Functor.id_map, Augmented.toArrow_obj_hom,
+      widePushout.arrow_ι_assoc fun i => F.hom]
 #align category_theory.cosimplicial_object.equivalence_left_to_right CategoryTheory.CosimplicialObject.equivalenceLeftToRight
 
 /-- A helper function used in defining the Čech conerve adjunction. -/
@@ -395,26 +395,26 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
   left := G.left
   right :=
     { app := fun x =>
-        Limits.widePushout.desc (G.left ≫ X.Hom.app _)
+        Limits.widePushout.desc (G.left ≫ X.hom.app _)
           (fun i => G.right ≫ X.right.map (SimplexCategory.const x i))
           (by
             rintro j
-            rw [← arrow.w_assoc G]
+            rw [← Arrow.w_assoc G]
             have t := X.hom.naturality (x.const j)
             dsimp at t⊢
-            simp only [category.id_comp] at t
+            simp only [Category.id_comp] at t
             rw [← t])
       naturality' := by
         intro x y f
         ext
         · dsimp
-          simp only [wide_pushout.ι_desc_assoc, wide_pushout.ι_desc]
-          rw [category.assoc, ← X.right.map_comp]
+          simp only [widePushout.ι_desc_assoc, widePushout.ι_desc]
+          rw [Category.assoc, ← X.right.map_comp]
           rfl
         · dsimp
-          simp only [functor.const_obj_map, ← nat_trans.naturality, wide_pushout.head_desc_assoc,
-            wide_pushout.head_desc, category.assoc]
-          erw [category.id_comp] }
+          simp only [Functor.const_obj_map, ← NatTrans.naturality, widePushout.head_desc_assoc,
+            widePushout.head_desc, Category.assoc]
+          erw [Category.id_comp] }
   w' := by
     ext
     simp
@@ -433,13 +433,13 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
     ext _; · rfl; ext (_⟨⟩)
     -- A bug in the `ext` tactic?
     · dsimp
-      simp only [arrow.cech_conerve_map, wide_pushout.ι_desc, category.assoc, ←
-        nat_trans.naturality, wide_pushout.ι_desc_assoc]
+      simp only [Arrow.cechConerve_map, widePushout.ι_desc, Category.assoc, ← NatTrans.naturality,
+        widePushout.ι_desc_assoc]
       rfl
-    · erw [wide_pushout.head_desc]
+    · erw [widePushout.head_desc]
       have := A.w
       apply_fun fun e => e.app x  at this
-      rw [nat_trans.comp_app] at this
+      rw [NatTrans.comp_app] at this
       erw [this]
       rfl
   right_inv := by
@@ -447,8 +447,8 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
     ext
     · rfl
     · dsimp
-      erw [wide_pushout.ι_desc]
-      nth_rw 2 [← category.comp_id A.right]
+      erw [widePushout.ι_desc]
+      nth_rw 2 [← Category.comp_id A.right]
       congr 1
       convert X.right.map_id _
       ext ⟨a, ha⟩
@@ -487,12 +487,12 @@ def cechNerveTerminalFrom {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X
     limit.hom_ext fun j => by
       trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
-        simpa only [limit.lift_π, category.id_comp]
+        simpa only [limit.lift_π, Category.id_comp]
   map_comp' m n o f g :=
     limit.hom_ext fun j => by
       trace
           "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]" <;>
-        simpa only [category.assoc, limit.lift_π, fan.mk_π_app]
+        simpa only [Category.assoc, limit.lift_π, Fan.mk_π_app]
 #align category_theory.cech_nerve_terminal_from CategoryTheory.cechNerveTerminalFrom
 
 namespace CechNerveTerminalFrom
@@ -540,10 +540,10 @@ def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
 
 instance hasWidePullback [Finite ι] (X : C) :
     HasWidePullback (Arrow.mk (terminal.from X)).right
-      (fun i : ι => (Arrow.mk (terminal.from X)).left) fun i => (Arrow.mk (terminal.from X)).Hom :=
+      (fun i : ι => (Arrow.mk (terminal.from X)).left) fun i => (Arrow.mk (terminal.from X)).hom :=
   by
   cases nonempty_fintype ι
-  exact ⟨⟨wide_cospan.limit_cone ι X⟩⟩
+  exact ⟨⟨wideCospan.limitCone ι X⟩⟩
 #align category_theory.cech_nerve_terminal_from.has_wide_pullback CategoryTheory.cechNerveTerminalFrom.hasWidePullback
 
 /-- Given an object `X : C`, the Čech nerve of the hom to the terminal object `X ⟶ ⊤_ C` is
@@ -559,11 +559,11 @@ def iso (X : C) : (Arrow.mk (terminal.from X)).cechNerve ≅ cechNerveTerminalFr
       widePullback.hom_ext _ _ _
         (by
           intro j
-          simp only [category.assoc]
+          simp only [Category.assoc]
           dsimp only [cech_nerve_terminal_from, wide_pullback.π, pi.lift]
-          erw [wide_pullback.lift_π,
-            limit.cone_point_unique_up_to_iso_inv_comp (wide_cospan.limit_cone _ _).2,
-            (limit.is_limit _).conePointUniqueUpToIso_inv_comp (wide_cospan.limit_cone _ _).2,
+          erw [widePullback.lift_π,
+            limit.conePointUniqueUpToIso_inv_comp (wideCospan.limitCone _ _).2,
+            (limit.isLimit _).conePointUniqueUpToIso_inv_comp (wideCospan.limitCone _ _).2,
             limit.lift_π]
           rfl)
         (@Subsingleton.elim _ (@Unique.subsingleton _ (Limits.uniqueToTerminal _)) _ _))

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -406,7 +406,7 @@ Case conversion may be inaccurate. Consider using '#align mul_ne_zero_iff mul_ne
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  mul_eq_zero.Not.trans not_or
+  mul_eq_zero.not.trans not_or
 #align mul_ne_zero_iff mul_ne_zero_iff
 
 /- warning: mul_eq_zero_comm -> mul_eq_zero_comm is a dubious translation:
@@ -430,7 +430,7 @@ Case conversion may be inaccurate. Consider using '#align mul_ne_zero_comm mul_n
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
 theorem mul_ne_zero_comm : a * b ≠ 0 ↔ b * a ≠ 0 :=
-  mul_eq_zero_comm.Not
+  mul_eq_zero_comm.not
 #align mul_ne_zero_comm mul_ne_zero_comm
 
 /- warning: mul_self_eq_zero -> mul_self_eq_zero is a dubious translation:
@@ -458,7 +458,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a) (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1)))) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align mul_self_ne_zero mul_self_ne_zeroₓ'. -/
 theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
-  mul_self_eq_zero.Not
+  mul_self_eq_zero.not
 #align mul_self_ne_zero mul_self_ne_zero
 
 /- warning: zero_ne_mul_self -> zero_ne_mul_self is a dubious translation:
@@ -468,7 +468,7 @@ but is expected to have type
   forall {M₀ : Type.{u1}} [_inst_1 : MulZeroClass.{u1} M₀] [_inst_2 : NoZeroDivisors.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1) (MulZeroClass.toZero.{u1} M₀ _inst_1)] {a : M₀}, Iff (Ne.{succ u1} M₀ (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))) (HMul.hMul.{u1, u1, u1} M₀ M₀ M₀ (instHMul.{u1} M₀ (MulZeroClass.toMul.{u1} M₀ _inst_1)) a a)) (Ne.{succ u1} M₀ a (OfNat.ofNat.{u1} M₀ 0 (Zero.toOfNat0.{u1} M₀ (MulZeroClass.toZero.{u1} M₀ _inst_1))))
 Case conversion may be inaccurate. Consider using '#align zero_ne_mul_self zero_ne_mul_selfₓ'. -/
 theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
-  zero_eq_mul_self.Not
+  zero_eq_mul_self.not
 #align zero_ne_mul_self zero_ne_mul_self
 
 end MulZeroClass

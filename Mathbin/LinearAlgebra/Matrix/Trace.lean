@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.trace
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,12 +98,12 @@ def traceLinearMap [Semiring α] [Module α R] : Matrix n n R →ₗ[α] R
 variable {n α R}
 
 @[simp]
-theorem trace_list_sum (l : List (Matrix n n R)) : trace l.Sum = (l.map trace).Sum :=
+theorem trace_list_sum (l : List (Matrix n n R)) : trace l.sum = (l.map trace).sum :=
   map_list_sum (traceAddMonoidHom n R) l
 #align matrix.trace_list_sum Matrix.trace_list_sum
 
 @[simp]
-theorem trace_multiset_sum (s : Multiset (Matrix n n R)) : trace s.Sum = (s.map trace).Sum :=
+theorem trace_multiset_sum (s : Multiset (Matrix n n R)) : trace s.sum = (s.map trace).sum :=
   map_multiset_sum (traceAddMonoidHom n R) s
 #align matrix.trace_multiset_sum Matrix.trace_multiset_sum
 
@@ -166,7 +166,7 @@ theorem trace_mul_cycle' [NonUnitalCommSemiring R] (A : Matrix m n R) (B : Matri
 
 @[simp]
 theorem trace_col_mul_row [NonUnitalNonAssocSemiring R] (a b : n → R) :
-    trace (col a ⬝ row b) = dotProduct a b := by simp [dot_product, trace]
+    trace (col a ⬝ row b) = dotProduct a b := by simp [dotProduct, trace]
 #align matrix.trace_col_mul_row Matrix.trace_col_mul_row
 
 end Mul

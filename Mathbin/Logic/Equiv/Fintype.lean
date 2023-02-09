@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module logic.equiv.fintype
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ theorem Function.Embedding.toEquivRange_symm_apply_self (a : α) :
 #align function.embedding.to_equiv_range_symm_apply_self Function.Embedding.toEquivRange_symm_apply_self
 
 theorem Function.Embedding.toEquivRange_eq_ofInjective :
-    f.toEquivRange = Equiv.ofInjective f f.Injective :=
+    f.toEquivRange = Equiv.ofInjective f f.injective :=
   by
   ext
   simp
@@ -121,8 +121,8 @@ theorem extendSubtype_apply_of_mem (e : { x // p x } ≃ { x // q x }) (x) (hx :
     e.extendSubtype x = e ⟨x, hx⟩ :=
   by
   dsimp only [extend_subtype]
-  simp only [subtype_congr, Equiv.trans_apply, Equiv.sumCongr_apply]
-  rw [sum_compl_apply_symm_of_pos _ _ hx, Sum.map_inl, sum_compl_apply_inl]
+  simp only [subtypeCongr, Equiv.trans_apply, Equiv.sumCongr_apply]
+  rw [sumCompl_apply_symm_of_pos _ _ hx, Sum.map_inl, sumCompl_apply_inl]
 #align equiv.extend_subtype_apply_of_mem Equiv.extendSubtype_apply_of_mem
 
 theorem extendSubtype_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : p x) :
@@ -135,8 +135,8 @@ theorem extendSubtype_apply_of_not_mem (e : { x // p x } ≃ { x // q x }) (x) (
     e.extendSubtype x = e.toCompl ⟨x, hx⟩ :=
   by
   dsimp only [extend_subtype]
-  simp only [subtype_congr, Equiv.trans_apply, Equiv.sumCongr_apply]
-  rw [sum_compl_apply_symm_of_neg _ _ hx, Sum.map_inr, sum_compl_apply_inr]
+  simp only [subtypeCongr, Equiv.trans_apply, Equiv.sumCongr_apply]
+  rw [sumCompl_apply_symm_of_neg _ _ hx, Sum.map_inr, sumCompl_apply_inr]
 #align equiv.extend_subtype_apply_of_not_mem Equiv.extendSubtype_apply_of_not_mem
 
 theorem extendSubtype_not_mem (e : { x // p x } ≃ { x // q x }) (x) (hx : ¬p x) :

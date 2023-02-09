@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Calle Sönne
 
 ! This file was ported from Lean 3 source module topology.category.Profinite.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.toCompHaus⟩
 
 instance {X : Profinite} : TotallyDisconnectedSpace X :=
-  X.IsTotallyDisconnected
+  X.is_totally_disconnected
 
 -- We check that we automatically infer that Profinite sets are compact and Hausdorff.
 example {X : Profinite} : CompactSpace X :=
@@ -259,7 +259,7 @@ instance hasColimits : Limits.HasColimits Profinite :=
 #align Profinite.has_colimits Profinite.hasColimits
 
 noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Profinite) := by
-  apply limits.comp_preserves_limits Profinite.toTop (forget TopCat)
+  apply Limits.compPreservesLimits Profinite.toTop (forget TopCat)
 #align Profinite.forget_preserves_limits Profinite.forgetPreservesLimits
 
 variable {X Y : Profinite.{u}} (f : X ⟶ Y)
@@ -272,25 +272,25 @@ theorem isClosedMap : IsClosedMap f :=
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 theorem isIso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   haveI := CompHaus.isIso_of_bijective (Profinite_to_CompHaus.map f) bij
-  is_iso_of_fully_faithful profiniteToCompHaus _
+  isIso_of_fully_faithful profiniteToCompHaus _
 #align Profinite.is_iso_of_bijective Profinite.isIso_of_bijective
 
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
   letI := Profinite.isIso_of_bijective f bij
-  as_iso f
+  asIso f
 #align Profinite.iso_of_bijective Profinite.isoOfBijective
 
 instance forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget Profinite) :=
-  ⟨by intro A B f hf <;> exact Profinite.isIso_of_bijective _ ((is_iso_iff_bijective f).mp hf)⟩
+  ⟨by intro A B f hf <;> exact Profinite.isIso_of_bijective _ ((isIso_iff_bijective f).mp hf)⟩
 #align Profinite.forget_reflects_isomorphisms Profinite.forget_reflectsIsomorphisms
 
 /-- Construct an isomorphism from a homeomorphism. -/
 @[simps Hom inv]
 def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
     where
-  Hom := ⟨f, f.Continuous⟩
-  inv := ⟨f.symm, f.symm.Continuous⟩
+  Hom := ⟨f, f.continuous⟩
+  inv := ⟨f.symm, f.symm.continuous⟩
   hom_inv_id' := by
     ext x
     exact f.symm_apply_apply x
@@ -302,16 +302,16 @@ def isoOfHomeo (f : X ≃ₜ Y) : X ≅ Y
 /-- Construct a homeomorphism from an isomorphism. -/
 @[simps]
 def homeoOfIso (f : X ≅ Y) : X ≃ₜ Y where
-  toFun := f.Hom
+  toFun := f.hom
   invFun := f.inv
   left_inv x := by
     change (f.hom ≫ f.inv) x = x
-    rw [iso.hom_inv_id, coe_id, id.def]
+    rw [Iso.hom_inv_id, coe_id, id.def]
   right_inv x := by
     change (f.inv ≫ f.hom) x = x
-    rw [iso.inv_hom_id, coe_id, id.def]
-  continuous_toFun := f.Hom.Continuous
-  continuous_invFun := f.inv.Continuous
+    rw [Iso.inv_hom_id, coe_id, id.def]
+  continuous_toFun := f.hom.continuous
+  continuous_invFun := f.inv.continuous
 #align Profinite.homeo_of_iso Profinite.homeoOfIso
 
 /-- The equivalence between isomorphisms in `Profinite` and homeomorphisms
@@ -336,7 +336,7 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     rintro ⟨y, hy⟩ hf
     skip
     let C := Set.range f
-    have hC : IsClosed C := (isCompact_range f.continuous).IsClosed
+    have hC : IsClosed C := (isCompact_range f.continuous).isClosed
     let U := Cᶜ
     have hyU : y ∈ U := by
       refine' Set.mem_compl _
@@ -368,8 +368,8 @@ theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Func
   by
   constructor
   · intro h
-    haveI : limits.preserves_limits profiniteToCompHaus := inferInstance
-    haveI : mono (Profinite_to_CompHaus.map f) := inferInstance
+    haveI : Limits.PreservesLimits profiniteToCompHaus := inferInstance
+    haveI : Mono (Profinite_to_CompHaus.map f) := inferInstance
     rwa [← CompHaus.mono_iff_injective]
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget Profinite).mono_of_mono_map

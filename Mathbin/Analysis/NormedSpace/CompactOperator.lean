@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.normed_space.compact_operator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ theorem IsCompactOperator.image_subset_compact_of_vonN_bounded {f : M₁ →ₛ�
   let ⟨K, hK, hKf⟩ := hf
   let ⟨r, hr, hrS⟩ := hS hKf
   let ⟨c, hc⟩ := NormedField.exists_lt_norm 𝕜₁ r
-  let this := ne_zero_of_norm_ne_zero (hr.trans hc).Ne.symm
+  let this := ne_zero_of_norm_ne_zero (hr.trans hc).ne.symm
   ⟨σ₁₂ c • K, hK.image <| continuous_id.const_smul (σ₁₂ c), by
     rw [image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit] <;> exact hrS c hc.le⟩
 #align is_compact_operator.image_subset_compact_of_vonN_bounded IsCompactOperator.image_subset_compact_of_vonN_bounded
@@ -278,7 +278,7 @@ theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOpe
 theorem IsCompactOperator.clm_comp [AddCommMonoid M₂] [Module R₂ M₂] [AddCommMonoid M₃]
     [Module R₃ M₃] {f : M₁ → M₂} (hf : IsCompactOperator f) (g : M₂ →SL[σ₂₃] M₃) :
     IsCompactOperator (g ∘ f) :=
-  hf.continuous_comp g.Continuous
+  hf.continuous_comp g.continuous
 #align is_compact_operator.clm_comp IsCompactOperator.clm_comp
 
 end Comp
@@ -330,7 +330,7 @@ of an endomorphism `f : E →ₗ E` to an endomorphism `f' : ↥V →ₗ ↥V`. 
 theorem IsCompactOperator.restrict' [SeparatedSpace M₂] {f : M₂ →ₗ[R₂] M₂}
     (hf : IsCompactOperator f) {V : Submodule R₂ M₂} (hV : ∀ v ∈ V, f v ∈ V)
     [hcomplete : CompleteSpace V] : IsCompactOperator (f.restrict hV) :=
-  hf.restrict hV (completeSpace_coe_iff_isComplete.mp hcomplete).IsClosed
+  hf.restrict hV (completeSpace_coe_iff_isComplete.mp hcomplete).isClosed
 #align is_compact_operator.restrict' IsCompactOperator.restrict'
 
 end Restrict
@@ -360,7 +360,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   rcases hK.totally_bounded.is_vonN_bounded 𝕜₂ hU with ⟨r, hr, hrU⟩
   -- Choose `c : 𝕜₂` with `r < ‖c‖`.
   rcases NormedField.exists_lt_norm 𝕜₁ r with ⟨c, hc⟩
-  have hcnz : c ≠ 0 := ne_zero_of_norm_ne_zero (hr.trans hc).Ne.symm
+  have hcnz : c ≠ 0 := ne_zero_of_norm_ne_zero (hr.trans hc).ne.symm
   -- We have `f ⁻¹' ((σ₁₂ c⁻¹) • K) = c⁻¹ • f ⁻¹' K ∈ 𝓝 0`. Thus, showing that
   -- `(σ₁₂ c⁻¹) • K ⊆ U` is enough to deduce that `f ⁻¹' U ∈ 𝓝 0`.
   suffices (σ₁₂ <| c⁻¹) • K ⊆ U by
@@ -380,7 +380,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
 /-- Upgrade a compact `linear_map` to a `continuous_linear_map`. -/
 def ContinuousLinearMap.mkOfIsCompactOperator {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) :
     M₁ →SL[σ₁₂] M₂ :=
-  ⟨f, hf.Continuous⟩
+  ⟨f, hf.continuous⟩
 #align continuous_linear_map.mk_of_is_compact_operator ContinuousLinearMap.mkOfIsCompactOperator
 
 @[simp]
@@ -423,20 +423,20 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
   rw [totallyBounded_iff_subset_finite_unionᵢ_nhds_zero]
   intro U hU
   rcases exists_nhds_zero_half hU with ⟨V, hV, hVU⟩
-  let SV : Set M₁ × Set M₂ := ⟨closed_ball 0 1, -V⟩
+  let SV : Set M₁ × Set M₂ := ⟨closedBall 0 1, -V⟩
   rcases hu { f | ∀ x ∈ SV.1, f x ∈ SV.2 }
       (continuous_linear_map.has_basis_nhds_zero.mem_of_mem
         ⟨NormedSpace.isVonNBounded_closedBall _ _ _, neg_mem_nhds_zero M₂ hV⟩) with
     ⟨v, hv, huv⟩
   rcases totally_bounded_iff_subset_finite_Union_nhds_zero.mp
-      (hv.is_compact_closure_image_closed_ball 1).TotallyBounded V hV with
+      (hv.is_compact_closure_image_closed_ball 1).totallyBounded V hV with
     ⟨T, hT, hTv⟩
-  have hTv : v '' closed_ball 0 1 ⊆ _ := subset_closure.trans hTv
+  have hTv : v '' closedBall 0 1 ⊆ _ := subset_closure.trans hTv
   refine' ⟨T, hT, _⟩
-  rw [image_subset_iff, preimage_Union₂] at hTv⊢
+  rw [image_subset_iff, preimage_unionᵢ₂] at hTv⊢
   intro x hx
   specialize hTv hx
-  rw [mem_Union₂] at hTv⊢
+  rw [mem_unionᵢ₂] at hTv⊢
   rcases hTv with ⟨t, ht, htx⟩
   refine' ⟨t, ht, _⟩
   rw [mem_preimage, mem_vadd_set_iff_neg_vadd_mem, vadd_eq_add, neg_add_eq_sub] at htx⊢
@@ -457,7 +457,7 @@ theorem compactOperator_topologicalClosure {𝕜₁ 𝕜₂ : Type _} [Nontrivia
 theorem isCompactOperator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
     [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
     [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
-    [HasContinuousConstSMul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] {l : Filter ι} [l.ne_bot]
+    [HasContinuousConstSMul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] {l : Filter ι} [l.NeBot]
     {F : ι → M₁ →SL[σ₁₂] M₂} {f : M₁ →SL[σ₁₂] M₂} (hf : Tendsto F l (𝓝 f))
     (hF : ∀ᶠ i in l, IsCompactOperator (F i)) : IsCompactOperator f :=
   isClosed_setOf_isCompactOperator.mem_of_tendsto hf hF

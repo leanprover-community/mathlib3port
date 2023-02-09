@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer, Kevin Klinge
 
 ! This file was ported from Lean 3 source module ring_theory.ore_localization.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.NoncommRing
 /-!
 
 # Localization over right Ore sets.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the localization of a monoid over a right Ore set and proves its universal
 mapping property. It then extends the definition and its properties first to semirings and then
@@ -47,7 +50,7 @@ open OreLocalization
 
 namespace OreLocalization
 
-variable (R : Type _) [Monoid R] (S : Submonoid R) [OreSet S]
+variable (R : Type _) [Monoid R] (S : Submonoid mul_add) [OreSet mul_assoc]
 
 /- warning: ore_localization.ore_eqv -> OreLocalization.oreEqv is a dubious translation:
 lean 3 declaration is
@@ -56,9 +59,11 @@ but is expected to have type
   forall (R : Type.{u1}) [_inst_1 : Monoid.{u1} R] (S : Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) [_inst_2 : OreLocalization.OreSet.{u1} R _inst_1 S], Setoid.{succ u1} (Prod.{u1, u1} R (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.ore_eqv OreLocalization.oreEqvₓ'. -/
 /-- The setoid on `R × S` used for the Ore localization. -/
-def oreEqv : Setoid (R × S)
+def oreEqv : Setoid (pow_bit1 × S)
     where
-  R rs rs' := ∃ (u : S)(v : R), rs'.1 * u = rs.1 * v ∧ (rs'.2 : R) * u = rs.2 * v
+  R rs rs' :=
+    ∃ (u : mul_one)(v : zero_mul),
+      mul_zero.1 * mul_smul_comm = mul_neg.1 * v ∧ (rs'.2 : R) * u = rs.2 * v
   iseqv := by
     refine' ⟨_, _, _⟩
     · rintro ⟨r, s⟩
@@ -66,8 +71,8 @@ def oreEqv : Setoid (R × S)
       use 1
       simp [Submonoid.one_mem]
     · rintro ⟨r, s⟩ ⟨r', s'⟩ ⟨u, v, hru, hsu⟩
-      rcases ore_condition (s : R) s' with ⟨r₂, s₂, h₁⟩
-      rcases ore_condition r₂ u with ⟨r₃, s₃, h₂⟩
+      rcases oreCondition (s : R) s' with ⟨r₂, s₂, h₁⟩
+      rcases oreCondition r₂ u with ⟨r₃, s₃, h₂⟩
       have : (s : R) * ((v : R) * r₃) = (s : R) * (s₂ * s₃) :=
         by
         assoc_rw [h₁, h₂, hsu]
@@ -82,7 +87,7 @@ def oreEqv : Setoid (R × S)
       · assoc_rw [hsu, ← hw]
         simp [mul_assoc]
     · rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨r₃, s₃⟩ ⟨u, v, hur₁, hs₁u⟩ ⟨u', v', hur₂, hs₂u⟩
-      rcases ore_condition v' u with ⟨r', s', h⟩
+      rcases oreCondition v' u with ⟨r', s', h⟩
       use u' * s'
       use v * r'
       constructor <;> simp only [Submonoid.coe_mul]
@@ -188,7 +193,7 @@ those factors expand to equal elements of `R`. -/
 protected theorem eq_of_num_factor_eq {r r' r₁ r₂ : R} {s t : S} (h : r * t = r' * t) :
     r₁ * r * r₂ /ₒ s = r₁ * r' * r₂ /ₒ s :=
   by
-  rcases ore_condition r₂ t with ⟨r₂', t', hr₂⟩
+  rcases oreCondition r₂ t with ⟨r₂', t', hr₂⟩
   calc
     r₁ * r * r₂ /ₒ s = r₁ * r * r₂ * t' /ₒ (s * t') := OreLocalization.expand _ _ t' _
     _ = r₁ * r * (r₂ * t') /ₒ (s * t') := by simp [← mul_assoc]
@@ -266,7 +271,7 @@ def lift₂Expand {C : Sort _} (P : R → S → R → S → C)
       liftExpand (P r₁ s₁) fun r₂ t₂ s₂ ht₂ => by simp [hP r₁ 1 s₁ (by simp) r₂ t₂ s₂ ht₂])
     fun r₁ t₁ s₁ ht₁ => by
     ext x; induction' x using OreLocalization.ind with r₂ s₂
-    rw [lift_expand_of, lift_expand_of, hP r₁ t₁ s₁ ht₁ r₂ 1 s₂ (by simp)]; simp
+    rw [liftExpand_of, liftExpand_of, hP r₁ t₁ s₁ ht₁ r₂ 1 s₂ (by simp)]; simp
 #align ore_localization.lift₂_expand OreLocalization.lift₂Expand
 
 /- warning: ore_localization.lift₂_expand_of -> OreLocalization.lift₂Expand_of is a dubious translation:
@@ -293,8 +298,8 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
     mul' r₁ s₁ r₂ s₂ = r₁ * v /ₒ (s₂ * u) :=
   by
   simp only [mul']
-  have h₀ := ore_eq r₂ s₁; set v₀ := ore_num r₂ s₁; set u₀ := ore_denom r₂ s₁
-  rcases ore_condition (u₀ : R) u with ⟨r₃, s₃, h₃⟩
+  have h₀ := ore_eq r₂ s₁; set v₀ := oreNum r₂ s₁; set u₀ := oreDenom r₂ s₁
+  rcases oreCondition (u₀ : R) u with ⟨r₃, s₃, h₃⟩
   have :=
     calc
       (s₁ : R) * (v * r₃) = r₂ * u * r₃ := by assoc_rw [← huv] <;> symm <;> apply mul_assoc
@@ -302,7 +307,7 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
       _ = s₁ * (v₀ * s₃) := by assoc_rw [h₀] <;> apply mul_assoc
       
   rcases ore_left_cancel _ _ _ this with ⟨s₄, hs₄⟩
-  symm; rw [ore_div_eq_iff]
+  symm; rw [oreDiv_eq_iff]
   use s₃ * s₄; use r₃ * s₄; simp only [Submonoid.coe_mul]; constructor
   · assoc_rw [← hs₄]
     simp only [mul_assoc]
@@ -316,11 +321,11 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
   lift₂Expand mul' fun r₂ p s₂ hp r₁ r s₁ hr =>
     by
     have h₁ := ore_eq r₁ s₂
-    set r₁' := ore_num r₁ s₂
-    set s₂' := ore_denom r₁ s₂
-    rcases ore_condition (↑s₂ * r₁') ⟨s₂ * p, hp⟩ with ⟨p', s_star, h₂⟩
+    set r₁' := oreNum r₁ s₂
+    set s₂' := oreDenom r₁ s₂
+    rcases oreCondition (↑s₂ * r₁') ⟨s₂ * p, hp⟩ with ⟨p', s_star, h₂⟩
     dsimp at h₂
-    rcases ore_condition r (s₂' * s_star) with ⟨p_flat, s_flat, h₃⟩
+    rcases oreCondition r (s₂' * s_star) with ⟨p_flat, s_flat, h₃⟩
     simp only [S.coe_mul] at h₃
     have : r₁ * r * s_flat = s₂ * p * (p' * p_flat) :=
       by
@@ -412,7 +417,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.div_e
 @[simp]
 protected theorem div_eq_one' {r : R} (hr : r ∈ S) : r /ₒ ⟨r, hr⟩ = 1 :=
   by
-  rw [OreLocalization.one_def, ore_div_eq_iff]
+  rw [OreLocalization.one_def, oreDiv_eq_iff]
   exact ⟨⟨r, hr⟩, 1, by simp, by simp⟩
 #align ore_localization.div_eq_one' OreLocalization.div_eq_one'
 
@@ -436,7 +441,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.one_m
 protected theorem one_mul (x : R[S⁻¹]) : 1 * x = x :=
   by
   induction' x using OreLocalization.ind with r s
-  simp [OreLocalization.one_def, ore_div_mul_char (1 : R) r (1 : S) s r 1 (by simp)]
+  simp [OreLocalization.one_def, oreDiv_mul_char (1 : R) r (1 : S) s r 1 (by simp)]
 #align ore_localization.one_mul OreLocalization.one_mul
 
 /- warning: ore_localization.mul_one -> OreLocalization.mul_one is a dubious translation:
@@ -448,7 +453,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.mul_o
 protected theorem mul_one (x : R[S⁻¹]) : x * 1 = x :=
   by
   induction' x using OreLocalization.ind with r s
-  simp [OreLocalization.one_def, ore_div_mul_char r 1 s 1 1 s (by simp)]
+  simp [OreLocalization.one_def, oreDiv_mul_char r 1 s 1 1 s (by simp)]
 #align ore_localization.mul_one OreLocalization.mul_one
 
 #print OreLocalization.mul_assoc /-
@@ -457,15 +462,15 @@ protected theorem mul_assoc (x y z : R[S⁻¹]) : x * y * z = x * (y * z) :=
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_mul_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
-  rcases ore_div_mul_char' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
-  rcases ore_condition rb sa with ⟨rc, sc, hc⟩
-  rw [ore_div_mul_char (r₁ * ra) r₃ (s₂ * sa) s₃ rc (sb * sc)
+  rcases oreDivMulChar' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
+  rcases oreDivMulChar' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
+  rcases oreCondition rb sa with ⟨rc, sc, hc⟩
+  rw [oreDiv_mul_char (r₁ * ra) r₃ (s₂ * sa) s₃ rc (sb * sc)
       (by
         simp only [Submonoid.coe_mul]
         assoc_rw [hb, hc])]
   rw [mul_assoc, ← mul_assoc s₃]
-  symm; apply ore_div_mul_char
+  symm; apply oreDiv_mul_char
   assoc_rw [hc, ← ha]; apply mul_assoc
 #align ore_localization.mul_assoc OreLocalization.mul_assoc
 -/
@@ -484,7 +489,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] {S : Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)} [_inst_2 : OreLocalization.OreSet.{u1} R _inst_1 S] (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (s' : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)), Eq.{succ u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (HMul.hMul.{u1, u1, u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.{u1} R _inst_1 S _inst_2) (instHMul.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMulOreLocalization.{u1} R _inst_1 S _inst_2)) (OreLocalization.oreDiv.{u1} R _inst_1 S _inst_2 (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) S)) s) s') (OreLocalization.oreDiv.{u1} R _inst_1 S _inst_2 (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) S)) s') s)) (OfNat.ofNat.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) 1 (One.toOfNat1.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instOneOreLocalization.{u1} R _inst_1 S _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.mul_inv OreLocalization.mul_invₓ'. -/
 protected theorem mul_inv (s s' : S) : (s : R) /ₒ s' * (s' /ₒ s) = 1 := by
-  simp [ore_div_mul_char (s : R) s' s' s 1 1 (by simp)]
+  simp [oreDiv_mul_char (s : R) s' s' s 1 1 (by simp)]
 #align ore_localization.mul_inv OreLocalization.mul_inv
 
 /- warning: ore_localization.mul_one_div -> OreLocalization.mul_one_div is a dubious translation:
@@ -495,7 +500,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.mul_one_div OreLocalization.mul_one_divₓ'. -/
 @[simp]
 protected theorem mul_one_div {r : R} {s t : S} : r /ₒ s * (1 /ₒ t) = r /ₒ (t * s) := by
-  simp [ore_div_mul_char r 1 s t 1 s (by simp)]
+  simp [oreDiv_mul_char r 1 s t 1 s (by simp)]
 #align ore_localization.mul_one_div OreLocalization.mul_one_div
 
 /- warning: ore_localization.mul_cancel -> OreLocalization.mul_cancel is a dubious translation:
@@ -506,7 +511,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.mul_cancel OreLocalization.mul_cancelₓ'. -/
 @[simp]
 protected theorem mul_cancel {r : R} {s t : S} : r /ₒ s * (s /ₒ t) = r /ₒ t := by
-  simp [ore_div_mul_char r s s t 1 1 (by simp)]
+  simp [oreDiv_mul_char r s s t 1 1 (by simp)]
 #align ore_localization.mul_cancel OreLocalization.mul_cancel
 
 /- warning: ore_localization.mul_cancel' -> OreLocalization.mul_cancel' is a dubious translation:
@@ -517,7 +522,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.mul_cancel' OreLocalization.mul_cancel'ₓ'. -/
 @[simp]
 protected theorem mul_cancel' {r₁ r₂ : R} {s t : S} : r₁ /ₒ s * (s * r₂ /ₒ t) = r₁ * r₂ /ₒ t := by
-  simp [ore_div_mul_char r₁ (s * r₂) s t r₂ 1 (by simp)]
+  simp [oreDiv_mul_char r₁ (s * r₂) s t r₂ 1 (by simp)]
 #align ore_localization.mul_cancel' OreLocalization.mul_cancel'
 
 /- warning: ore_localization.div_one_mul -> OreLocalization.div_one_mul is a dubious translation:
@@ -529,7 +534,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.div_o
 @[simp]
 theorem div_one_mul {p r : R} {s : S} : r /ₒ 1 * (p /ₒ s) = r * p /ₒ s :=
   by--TODO use coercion r ↦ r /ₒ 1
-  simp [ore_div_mul_char r p 1 s p 1 (by simp)]
+  simp [oreDiv_mul_char r p 1 s p 1 (by simp)]
 #align ore_localization.div_one_mul OreLocalization.div_one_mul
 
 /- warning: ore_localization.numerator_unit -> OreLocalization.numeratorUnit is a dubious translation:
@@ -587,7 +592,7 @@ variable {T : Type _} [Monoid T]
 
 variable (f : R →* T) (fS : S →* Units T)
 
-variable (hf : ∀ s : S, f s = fS s)
+variable (hf : ∀ s : exists_prop, f s = fS s)
 
 include f fS hf
 
@@ -610,12 +615,12 @@ def universalMulHom : R[S⁻¹] →* T
         rw [MonoidHom.map_mul, ← mul_one (f r), ← Units.val_one, ← mul_left_inv (fS s)]
         rw [Units.val_mul, ← mul_assoc, mul_assoc _ ↑(fS s), ← this, mul_assoc]
       simp only [mul_one, Units.mul_inv]
-  map_one' := by rw [OreLocalization.one_def, lift_expand_of] <;> simp
+  map_one' := by rw [OreLocalization.one_def, liftExpand_of] <;> simp
   map_mul' x y := by
     induction' x using OreLocalization.ind with r₁ s₁
     induction' y using OreLocalization.ind with r₂ s₂
-    rcases ore_div_mul_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
-    rw [lift_expand_of, lift_expand_of, lift_expand_of]
+    rcases oreDivMulChar' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
+    rw [liftExpand_of, liftExpand_of, liftExpand_of]
     conv_rhs =>
       congr
       skip
@@ -644,7 +649,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Monoid.{u1} R] {S : Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)} [_inst_2 : OreLocalization.OreSet.{u1} R _inst_1 S] {T : Type.{u2}} [_inst_3 : Monoid.{u2} T] (f : MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) (fS : MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3)) (hf : forall (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) S)) s)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R T (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (MulOneClass.toMul.{u2} T (Monoid.toMulOneClass.{u2} T _inst_3)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3) (MonoidHom.monoidHomClass.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)))) f (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) S)) s)) (Units.val.{u2} T _inst_3 (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3)) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (fun (_x : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) => Units.{u2} T _inst_3) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3)) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (MulOneClass.toMul.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S)) (MulOneClass.toMul.{u2} (Units.{u2} T _inst_3) (Units.instMulOneClassUnits.{u2} T _inst_3)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3)) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3) (MonoidHom.monoidHomClass.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) R (Submonoid.instSetLikeSubmonoid.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1))) x S)) (Units.{u2} T _inst_3) (Submonoid.toMulOneClass.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1) S) (Units.instMulOneClassUnits.{u2} T _inst_3)))) fS s))) {r : R}, Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : OreLocalization.{u1} R _inst_1 S _inst_2) => T) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (fun (a : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => OreLocalization.{u1} R _inst_1 S _inst_2) a) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (OreLocalization.{u1} R _inst_1 S _inst_2) (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (MulOneClass.toMul.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (MonoidHom.monoidHomClass.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))))) (OreLocalization.numeratorHom.{u1} R _inst_1 S _inst_2) r)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} (OreLocalization.{u1} R _inst_1 S _inst_2) T (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (Monoid.toMulOneClass.{u2} T _inst_3)) (OreLocalization.{u1} R _inst_1 S _inst_2) (fun (_x : OreLocalization.{u1} R _inst_1 S _inst_2) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : OreLocalization.{u1} R _inst_1 S _inst_2) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (OreLocalization.{u1} R _inst_1 S _inst_2) T (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (Monoid.toMulOneClass.{u2} T _inst_3)) (OreLocalization.{u1} R _inst_1 S _inst_2) T (MulOneClass.toMul.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) (MulOneClass.toMul.{u2} T (Monoid.toMulOneClass.{u2} T _inst_3)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (OreLocalization.{u1} R _inst_1 S _inst_2) T (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (Monoid.toMulOneClass.{u2} T _inst_3)) (OreLocalization.{u1} R _inst_1 S _inst_2) T (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (Monoid.toMulOneClass.{u2} T _inst_3) (MonoidHom.monoidHomClass.{u1, u2} (OreLocalization.{u1} R _inst_1 S _inst_2) T (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (Monoid.toMulOneClass.{u2} T _inst_3)))) (OreLocalization.universalMulHom.{u1, u2} R _inst_1 S _inst_2 T _inst_3 f fS hf) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => OreLocalization.{u1} R _inst_1 S _inst_2) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (OreLocalization.{u1} R _inst_1 S _inst_2) (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (MulOneClass.toMul.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))) R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2)) (MonoidHom.monoidHomClass.{u1, u1} R (OreLocalization.{u1} R _inst_1 S _inst_2) (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R _inst_1 S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R _inst_1 S _inst_2))))) (OreLocalization.numeratorHom.{u1} R _inst_1 S _inst_2) r)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R T (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R _inst_1)) (MulOneClass.toMul.{u2} T (Monoid.toMulOneClass.{u2} T _inst_3)) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)) R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3) (MonoidHom.monoidHomClass.{u1, u2} R T (Monoid.toMulOneClass.{u1} R _inst_1) (Monoid.toMulOneClass.{u2} T _inst_3)))) f r)
 Case conversion may be inaccurate. Consider using '#align ore_localization.universal_mul_hom_commutes OreLocalization.universalMulHom_commutesₓ'. -/
 theorem universalMulHom_commutes {r : R} : universalMulHom f fS hf (numeratorHom r) = f r := by
-  simp [numerator_hom_apply, universal_mul_hom_apply]
+  simp [numeratorHom_apply, universalMulHom_apply]
 #align ore_localization.universal_mul_hom_commutes OreLocalization.universalMulHom_commutes
 
 /- warning: ore_localization.universal_mul_hom_unique -> OreLocalization.universalMulHom_unique is a dubious translation:
@@ -657,9 +662,9 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.unive
 theorem universalMulHom_unique (φ : R[S⁻¹] →* T) (huniv : ∀ r : R, φ (numeratorHom r) = f r) :
     φ = universalMulHom f fS hf := by
   ext; induction' x using OreLocalization.ind with r s
-  rw [universal_mul_hom_apply, ← huniv r, numerator_hom_apply, ← mul_one (φ (r /ₒ s)), ←
-    Units.val_one, ← mul_right_inv (fS s), Units.val_mul, ← mul_assoc, ← hf, ← huniv, ← φ.map_mul,
-    numerator_hom_apply, OreLocalization.mul_cancel]
+  rw [universalMulHom_apply, ← huniv r, numeratorHom_apply, ← mul_one (φ (r /ₒ s)), ← Units.val_one,
+    ← mul_right_inv (fS s), Units.val_mul, ← mul_assoc, ← hf, ← huniv, ← φ.map_mul,
+    numeratorHom_apply, OreLocalization.mul_cancel]
 #align ore_localization.universal_mul_hom_unique OreLocalization.universalMulHom_unique
 
 end UMP
@@ -678,7 +683,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.ore_div_mul_ore_div_comm OreLocalization.oreDiv_mul_oreDiv_commₓ'. -/
 theorem oreDiv_mul_oreDiv_comm {r₁ r₂ : R} {s₁ s₂ : S} :
     r₁ /ₒ s₁ * (r₂ /ₒ s₂) = r₁ * r₂ /ₒ (s₁ * s₂) := by
-  rw [ore_div_mul_char r₁ r₂ s₁ s₂ r₂ s₁ (by simp [mul_comm]), mul_comm s₂]
+  rw [oreDiv_mul_char r₁ r₂ s₁ s₂ r₂ s₁ (by simp [mul_comm]), mul_comm s₂]
 #align ore_localization.ore_div_mul_ore_div_comm OreLocalization.oreDiv_mul_oreDiv_comm
 
 instance : CommMonoid R[S⁻¹] :=
@@ -686,7 +691,7 @@ instance : CommMonoid R[S⁻¹] :=
     mul_comm := fun x y => by
       induction' x using OreLocalization.ind with r₁ s₁
       induction' y using OreLocalization.ind with r₂ s₂
-      rw [ore_div_mul_ore_div_comm, ore_div_mul_ore_div_comm, mul_comm r₁, mul_comm s₁] }
+      rw [oreDiv_mul_oreDiv_comm, oreDiv_mul_oreDiv_comm, mul_comm r₁, mul_comm s₁] }
 
 variable (R S)
 
@@ -706,11 +711,11 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹]
   surj' z := by
     induction' z using OreLocalization.ind with r s
     use (r, s); dsimp
-    rw [numerator_hom_apply, numerator_hom_apply]; simp
+    rw [numeratorHom_apply, numeratorHom_apply]; simp
   eq_iff_exists' r₁ r₂ := by
     dsimp; constructor
     · intro h
-      rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff] at h
+      rw [numeratorHom_apply, numeratorHom_apply, oreDiv_eq_iff] at h
       rcases h with ⟨u, v, h₁, h₂⟩
       dsimp at h₂
       rw [one_mul, one_mul] at h₂
@@ -718,7 +723,7 @@ protected def localizationMap : S.LocalizationMap R[S⁻¹]
       use u
       simpa only [mul_comm] using h₁.symm
     · rintro ⟨s, h⟩
-      rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff]
+      rw [numeratorHom_apply, numeratorHom_apply, oreDiv_eq_iff]
       refine' ⟨s, s, _, _⟩
       · simpa [mul_comm] using h.symm
       · simp [one_mul]
@@ -746,22 +751,22 @@ private theorem add''_char (r₁ : R) (s₁ : S) (r₂ : R) (s₂ : S) (rb : R) 
   by
   simp only [add'']
   have ha := ore_eq (s₁ : R) s₂
-  set! ra := ore_num (s₁ : R) s₂ with h
+  set! ra := oreNum (s₁ : R) s₂ with h
   rw [← h] at *
   clear h
   -- r tilde
-  set! sa := ore_denom (s₁ : R) s₂ with h
+  set! sa := oreDenom (s₁ : R) s₂ with h
   rw [← h] at *
   clear h
   -- s tilde
-  rcases ore_condition (sa : R) sb with ⟨rc, sc, hc⟩
+  rcases oreCondition (sa : R) sb with ⟨rc, sc, hc⟩
   -- s*, r*
   have : (s₂ : R) * (rb * rc) = s₂ * (ra * sc) := by
     rw [← mul_assoc, ← hb, mul_assoc, ← hc, ← mul_assoc, ← mul_assoc, ha]
   rcases ore_left_cancel _ _ s₂ this with ⟨sd, hd⟩
   -- s#
   symm
-  rw [ore_div_eq_iff]
+  rw [oreDiv_eq_iff]
   use sc * sd
   use rc * sd
   constructor <;> simp only [Submonoid.coe_mul]
@@ -781,9 +786,9 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
     by
     rintro ⟨r₁', s₁'⟩ ⟨r₁, s₁⟩ ⟨sb, rb, hb, hb'⟩
     -- s*, r*
-    rcases ore_condition (s₁' : R) s₂ with ⟨rc, sc, hc⟩
+    rcases oreCondition (s₁' : R) s₂ with ⟨rc, sc, hc⟩
     --s~~, r~~
-    rcases ore_condition rb sc with ⟨rd, sd, hd⟩
+    rcases oreCondition rb sc with ⟨rd, sd, hd⟩
     -- s#, r#
     dsimp at *
     rw [add''_char _ _ _ _ rc sc hc]
@@ -795,7 +800,7 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
     rw [add''_char _ _ _ _ (rc * rd : R) (sb * sd : S) this]
     simp only [Submonoid.coe_mul]
     assoc_rw [hb, hd]
-    rw [← mul_assoc, ← add_mul, ore_div_eq_iff]
+    rw [← mul_assoc, ← add_mul, oreDiv_eq_iff]
     use 1
     use rd
     constructor
@@ -806,26 +811,26 @@ private def add' (r₂ : R) (s₂ : S) : R[S⁻¹] → R[S⁻¹] :=
 
 private theorem add'_comm (r₁ r₂ : R) (s₁ s₂ : S) : add' r₁ s₁ (r₂ /ₒ s₂) = add' r₂ s₂ (r₁ /ₒ s₁) :=
   by
-  simp only [add', ore_div, add'', Quotient.lift_mk, Quotient.eq']
+  simp only [add', oreDiv, add'', Quotient.lift_mk, Quotient.eq']
   have hb := ore_eq (↑s₂) s₁
-  set rb := ore_num (↑s₂) s₁ with h
+  set rb := oreNum (↑s₂) s₁ with h
   -- r~~
   rw [← h]
   clear h
-  set sb := ore_denom (↑s₂) s₁ with h
+  set sb := oreDenom (↑s₂) s₁ with h
   rw [← h]
   clear h
   -- s~~
   have ha := ore_eq (↑s₁) s₂
-  set ra := ore_num (↑s₁) s₂ with h
+  set ra := oreNum (↑s₁) s₂ with h
   -- r~
   rw [← h]
   clear h
-  set sa := ore_denom (↑s₁) s₂ with h
+  set sa := oreDenom (↑s₁) s₂ with h
   rw [← h]
   clear h
   -- s~
-  rcases ore_condition ra sb with ⟨rc, sc, hc⟩
+  rcases oreCondition ra sb with ⟨rc, sc, hc⟩
   -- r#, s#
   have : (s₁ : R) * (rb * rc) = s₁ * (sa * sc) := by
     rw [← mul_assoc, ← hb, mul_assoc, ← hc, ← mul_assoc, ← ha, mul_assoc]
@@ -901,7 +906,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ore_localization.add_ore_div OreLocalization.add_oreDivₓ'. -/
 @[simp]
 theorem add_oreDiv {r r' : R} {s : S} : r /ₒ s + r' /ₒ s = (r + r') /ₒ s := by
-  simp [ore_div_add_char s s 1 1 (by simp)]
+  simp [oreDiv_add_char s s 1 1 (by simp)]
 #align ore_localization.add_ore_div OreLocalization.add_oreDiv
 
 /- warning: ore_localization.add_assoc -> OreLocalization.add_assoc is a dubious translation:
@@ -915,14 +920,14 @@ protected theorem add_assoc (x y z : R[S⁻¹]) : x + y + z = x + (y + z) :=
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
-  rcases ore_div_add_char' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
-  rcases ore_div_add_char' (r₁ * sa + r₂ * ra) r₃ (s₁ * sa) s₃ with ⟨rc, sc, hc, q⟩; rw [q]; clear q
-  rcases ore_div_add_char' r₁ (r₂ * sb + r₃ * rb) s₁ (s₂ * sb) with ⟨rd, sd, hd, q⟩; rw [q]; clear q
+  rcases oreDivAddChar' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'
+  rcases oreDivAddChar' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
+  rcases oreDivAddChar' (r₁ * sa + r₂ * ra) r₃ (s₁ * sa) s₃ with ⟨rc, sc, hc, q⟩; rw [q]; clear q
+  rcases oreDivAddChar' r₁ (r₂ * sb + r₃ * rb) s₁ (s₂ * sb) with ⟨rd, sd, hd, q⟩; rw [q]; clear q
   noncomm_ring; rw [add_comm (r₂ * _)]
-  repeat' rw [← add_ore_div]
+  repeat' rw [← add_oreDiv]
   congr 1
-  · rcases ore_condition (sd : R) (sa * sc) with ⟨re, se, he⟩
+  · rcases oreCondition (sd : R) (sa * sc) with ⟨re, se, he⟩
     · simp_rw [← Submonoid.coe_mul] at hb hc hd
       assoc_rw [Subtype.coe_eq_of_eq_mk hc]
       rw [← OreLocalization.expand, Subtype.coe_eq_of_eq_mk hd, ← mul_assoc, ←
@@ -964,7 +969,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.zero_
 @[simp]
 theorem zero_div_eq_zero (s : S) : 0 /ₒ s = 0 :=
   by
-  rw [OreLocalization.zero_def, ore_div_eq_iff]
+  rw [OreLocalization.zero_def, oreDiv_eq_iff]
   exact ⟨s, 1, by simp⟩
 #align ore_localization.zero_div_eq_zero OreLocalization.zero_div_eq_zero
 
@@ -977,7 +982,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.zero_
 protected theorem zero_add (x : R[S⁻¹]) : 0 + x = x :=
   by
   induction x using OreLocalization.ind
-  rw [← zero_div_eq_zero, add_ore_div]; simp
+  rw [← zero_div_eq_zero, add_oreDiv]; simp
 #align ore_localization.zero_add OreLocalization.zero_add
 
 /- warning: ore_localization.add_comm -> OreLocalization.add_comm is a dubious translation:
@@ -1010,7 +1015,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.zero_
 protected theorem zero_mul (x : R[S⁻¹]) : 0 * x = 0 :=
   by
   induction' x using OreLocalization.ind with r s
-  rw [OreLocalization.zero_def, ore_div_mul_char 0 r 1 s r 1 (by simp)]; simp
+  rw [OreLocalization.zero_def, oreDiv_mul_char 0 r 1 s r 1 (by simp)]; simp
 #align ore_localization.zero_mul OreLocalization.zero_mul
 
 /- warning: ore_localization.mul_zero -> OreLocalization.mul_zero is a dubious translation:
@@ -1022,7 +1027,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.mul_z
 protected theorem mul_zero (x : R[S⁻¹]) : x * 0 = 0 :=
   by
   induction' x using OreLocalization.ind with r s
-  rw [OreLocalization.zero_def, ore_div_mul_char r 0 s 1 0 1 (by simp)]; simp
+  rw [OreLocalization.zero_def, oreDiv_mul_char r 0 s 1 0 1 (by simp)]; simp
 #align ore_localization.mul_zero OreLocalization.mul_zero
 
 /- warning: ore_localization.left_distrib -> OreLocalization.left_distrib is a dubious translation:
@@ -1036,11 +1041,11 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_add_char' r₂ r₃ s₂ s₃ with ⟨ra, sa, ha, q⟩
+  rcases oreDivAddChar' r₂ r₃ s₂ s₃ with ⟨ra, sa, ha, q⟩
   rw [q]
   clear q
   rw [OreLocalization.expand' r₂ s₂ sa]
-  rcases ore_div_mul_char' r₁ (r₂ * sa) s₁ (s₂ * sa) with ⟨rb, sb, hb, q⟩
+  rcases oreDivMulChar' r₁ (r₂ * sa) s₁ (s₂ * sa) with ⟨rb, sb, hb, q⟩
   rw [q]
   clear q
   have hs₃rasb : ↑s₃ * (ra * sb) ∈ S :=
@@ -1051,9 +1056,9 @@ protected theorem left_distrib (x y z : R[S⁻¹]) : x * (y + z) = x * y + x * z
   rw [OreLocalization.expand _ _ _ hs₃rasb]
   have ha' : ↑(s₂ * sa * sb) = ↑s₃ * (ra * sb) := by simp [ha, ← mul_assoc]
   rw [← Subtype.coe_eq_of_eq_mk ha']
-  rcases ore_div_mul_char' r₁ (r₃ * (ra * sb)) s₁ (s₂ * sa * sb) with ⟨rc, sc, hc, hc'⟩
+  rcases oreDivMulChar' r₁ (r₃ * (ra * sb)) s₁ (s₂ * sa * sb) with ⟨rc, sc, hc, hc'⟩
   rw [hc']
-  rw [ore_div_add_char (s₂ * sa * sb) (s₂ * sa * sb * sc) 1 sc (by simp)]
+  rw [oreDiv_add_char (s₂ * sa * sb) (s₂ * sa * sb * sc) 1 sc (by simp)]
   rw [OreLocalization.expand' (r₂ * ↑sa + r₃ * ra) (s₂ * sa) (sb * sc)]
   conv_lhs =>
     congr
@@ -1075,11 +1080,11 @@ theorem right_distrib (x y z : R[S⁻¹]) : (x + y) * z = x * z + y * z :=
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'; norm_cast  at ha
+  rcases oreDivAddChar' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'; norm_cast  at ha
   rw [OreLocalization.expand' r₁ s₁ sa]
   rw [OreLocalization.expand r₂ s₂ ra (by rw [← ha] <;> apply SetLike.coe_mem)]
   rw [← Subtype.coe_eq_of_eq_mk ha]
-  repeat' rw [ore_div_mul_ore_div]; simp only [add_mul, add_ore_div]
+  repeat' rw [oreDiv_mul_oreDiv]; simp only [add_mul, add_oreDiv]
 #align ore_localization.right_distrib OreLocalization.right_distrib
 
 instance : Semiring R[S⁻¹] :=
@@ -1115,15 +1120,15 @@ def universalHom : R[S⁻¹] →+* T :=
       hf with
     map_zero' :=
       by
-      rw [MonoidHom.toFun_eq_coe, OreLocalization.zero_def, universal_mul_hom_apply]
+      rw [MonoidHom.toFun_eq_coe, OreLocalization.zero_def, universalMulHom_apply]
       simp
     map_add' := fun x y => by
       induction' x using OreLocalization.ind with r₁ s₁
       induction' y using OreLocalization.ind with r₂ s₂
-      rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩
+      rcases oreDivAddChar' r₁ r₂ s₁ s₂ with ⟨r₃, s₃, h₃, h₃'⟩
       rw [h₃']
       clear h₃'
-      simp only [universal_mul_hom_apply, [anonymous], RingHom.toMonoidHom_eq_coe,
+      simp only [universalMulHom_apply, [anonymous], RingHom.toMonoidHom_eq_coe,
         MonoidHom.toFun_eq_coe]
       simp only [mul_inv_rev, MonoidHom.map_mul, RingHom.map_add, RingHom.map_mul, Units.val_mul]
       rw [add_mul, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.val_mul]
@@ -1172,7 +1177,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Semiring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))} [_inst_2 : OreLocalization.OreSet.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S] {T : Type.{u2}} [_inst_3 : Semiring.{u2} T] (f : RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (fS : MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))) (hf : forall (s : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) S)) s)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u2} T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3) (RingHom.instRingHomClassRingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3))))) f (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) S)) s)) (Units.val.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (fun (_x : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) => Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (MulOneClass.toMul.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S)) (MulOneClass.toMul.{u2} (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))) (MonoidHomClass.toMulHomClass.{max u1 u2, u1, u2} (MonoidHom.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (MonoidHom.monoidHomClass.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) R (Submonoid.instSetLikeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))))) x S)) (Units.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3))) (Submonoid.toMulOneClass.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) S) (Units.instMulOneClassUnits.{u2} T (MonoidWithZero.toMonoid.{u2} T (Semiring.toMonoidWithZero.{u2} T _inst_3)))))) fS s))) {r : R}, Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) => T) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (fun (a : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) a) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) (MulOneClass.toMul.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2)) (MonoidHom.monoidHomClass.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))))) (OreLocalization.numeratorHom.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) r)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (fun (_x : OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (NonUnitalNonAssocSemiring.toMul.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)))) (NonUnitalNonAssocSemiring.toMul.{u2} T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3) (RingHom.instRingHomClassRingHom.{u1, u2} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) T (Semiring.toNonAssocSemiring.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instSemiringOreLocalizationToMonoidToMonoidWithZero.{u1} R _inst_1 S _inst_2)) (Semiring.toNonAssocSemiring.{u2} T _inst_3))))) (OreLocalization.universalHom.{u1, u2} R _inst_1 S _inst_2 T _inst_3 f fS hf) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))) (MulOneClass.toMul.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2)) (MonoidHom.monoidHomClass.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2))))) (OreLocalization.numeratorHom.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)) S _inst_2) r)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => T) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1))) (NonUnitalNonAssocSemiring.toMul.{u2} T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} T (Semiring.toNonAssocSemiring.{u2} T _inst_3)) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3)) R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3) (RingHom.instRingHomClassRingHom.{u1, u2} R T (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} T _inst_3))))) f r)
 Case conversion may be inaccurate. Consider using '#align ore_localization.universal_hom_commutes OreLocalization.universalHom_commutesₓ'. -/
 theorem universalHom_commutes {r : R} : universalHom f fS hf (numeratorHom r) = f r := by
-  simp [numerator_hom_apply, universal_hom_apply]
+  simp [numeratorHom_apply, universalHom_apply]
 #align ore_localization.universal_hom_commutes OreLocalization.universalHom_commutes
 
 /- warning: ore_localization.universal_hom_unique -> OreLocalization.universalHom_unique is a dubious translation:
@@ -1243,9 +1248,8 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] {S : Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))} [_inst_2 : OreLocalization.OreSet.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S], (LE.le.{u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (Preorder.toLE.{u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))) (Submonoid.instCompleteLatticeSubmonoid.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R (NonAssocRing.toNonAssocSemiring.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1))))))))) S (nonZeroDivisors.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) -> (Function.Injective.{succ u1, succ u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (MulOneClass.toMul.{u1} R (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))))) (MulOneClass.toMul.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2))) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2))) R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2)) (MonoidHom.monoidHomClass.{u1, u1} R (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (Monoid.toMulOneClass.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1)))) (Monoid.toMulOneClass.{u1} (OreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2) (OreLocalization.instMonoidOreLocalization.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2))))) (OreLocalization.numeratorHom.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (Ring.toSemiring.{u1} R _inst_1))) S _inst_2)))
 Case conversion may be inaccurate. Consider using '#align ore_localization.numerator_hom_inj OreLocalization.numeratorHom_injₓ'. -/
 theorem numeratorHom_inj (hS : S ≤ R⁰) : Function.Injective (numeratorHom : R → R[S⁻¹]) :=
-  fun r₁ r₂ h =>
-  by
-  rw [numerator_hom_apply, numerator_hom_apply, ore_div_eq_iff] at h
+  fun r₁ r₂ h => by
+  rw [numeratorHom_apply, numeratorHom_apply, oreDiv_eq_iff] at h
   rcases h with ⟨u, v, h₁, h₂⟩
   simp only [S.coe_one, one_mul] at h₂
   rwa [← h₂, mul_cancel_right_mem_non_zero_divisor (hS (SetLike.coe_mem u)), eq_comm] at h₁
@@ -1260,7 +1264,7 @@ Case conversion may be inaccurate. Consider using '#align ore_localization.nontr
 theorem nontrivial_of_nonZeroDivisors [Nontrivial R] (hS : S ≤ R⁰) : Nontrivial R[S⁻¹] :=
   ⟨⟨0, 1, fun h => by
       rw [OreLocalization.one_def, OreLocalization.zero_def] at h
-      apply nonZeroDivisors.coe_ne_zero 1 (numerator_hom_inj hS h).symm⟩⟩
+      apply nonZeroDivisors.coe_ne_zero 1 (numeratorHom_inj hS h).symm⟩⟩
 #align ore_localization.nontrivial_of_non_zero_divisors OreLocalization.nontrivial_of_nonZeroDivisors
 
 end Ring

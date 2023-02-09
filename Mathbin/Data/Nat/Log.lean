@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.log
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -430,7 +430,7 @@ theorem pow_lt_iff_lt_clog {b : ℕ} (hb : 1 < b) {x y : ℕ} : b ^ y < x ↔ y 
 theorem clog_pow (b x : ℕ) (hb : 1 < b) : clog b (b ^ x) = x :=
   eq_of_forall_ge_iff fun z => by
     rw [← le_pow_iff_clog_le hb]
-    exact (pow_right_strict_mono hb).le_iff_le
+    exact (pow_right_strictMono hb).le_iff_le
 #align nat.clog_pow Nat.clog_pow
 -/
 
@@ -493,7 +493,7 @@ theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n :=
   · rw [log_zero_right]
     exact zero_le _
   exact
-    (pow_right_strict_mono hb).le_iff_le.1
+    (pow_right_strictMono hb).le_iff_le.1
       ((pow_log_le_self b n.succ_ne_zero).trans <| le_pow_clog hb _)
 #align nat.log_le_clog Nat.log_le_clog
 -/

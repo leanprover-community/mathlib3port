@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.pairwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,7 +110,7 @@ but is expected to have type
   forall {α : Type.{u2}} {ι : Type.{u1}} {r : α -> α -> Prop} {f : ι -> α} {s : Set.{u2} α}, (Set.Pairwise.{u2} α s r) -> (Function.Injective.{succ u1, succ u2} ι α f) -> (forall (x : ι), Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) (f x) s) -> (Pairwise.{u1} ι (Function.onFun.{succ u1, succ u2, 1} ι α Prop r f))
 Case conversion may be inaccurate. Consider using '#align set.pairwise.on_injective Set.Pairwise.on_injectiveₓ'. -/
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
-    Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
+    Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.ne hij)
 #align set.pairwise.on_injective Set.Pairwise.on_injective
 
 end Set

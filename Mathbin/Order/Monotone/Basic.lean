@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.monotone.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -466,14 +466,14 @@ protected theorem Antitone.antitoneOn (hf : Antitone f) (s : Set α) : AntitoneO
 #print monotoneOn_univ /-
 @[simp]
 theorem monotoneOn_univ : MonotoneOn f Set.univ ↔ Monotone f :=
-  ⟨fun h a b => h trivial trivial, fun h => h.MonotoneOn _⟩
+  ⟨fun h a b => h trivial trivial, fun h => h.monotoneOn _⟩
 #align monotone_on_univ monotoneOn_univ
 -/
 
 #print antitoneOn_univ /-
 @[simp]
 theorem antitoneOn_univ : AntitoneOn f Set.univ ↔ Antitone f :=
-  ⟨fun h a b => h trivial trivial, fun h => h.AntitoneOn _⟩
+  ⟨fun h a b => h trivial trivial, fun h => h.antitoneOn _⟩
 #align antitone_on_univ antitoneOn_univ
 -/
 
@@ -492,14 +492,14 @@ protected theorem StrictAnti.strictAntiOn (hf : StrictAnti f) (s : Set α) : Str
 #print strictMonoOn_univ /-
 @[simp]
 theorem strictMonoOn_univ : StrictMonoOn f Set.univ ↔ StrictMono f :=
-  ⟨fun h a b => h trivial trivial, fun h => h.StrictMonoOn _⟩
+  ⟨fun h a b => h trivial trivial, fun h => h.strictMonoOn _⟩
 #align strict_mono_on_univ strictMonoOn_univ
 -/
 
 #print strictAntiOn_univ /-
 @[simp]
 theorem strictAntiOn_univ : StrictAntiOn f Set.univ ↔ StrictAnti f :=
-  ⟨fun h a b => h trivial trivial, fun h => h.StrictAntiOn _⟩
+  ⟨fun h a b => h trivial trivial, fun h => h.strictAntiOn _⟩
 #align strict_anti_on_univ strictAntiOn_univ
 -/
 
@@ -511,13 +511,13 @@ variable [PartialOrder β] {f : α → β}
 
 #print Monotone.strictMono_of_injective /-
 theorem Monotone.strictMono_of_injective (h₁ : Monotone f) (h₂ : Injective f) : StrictMono f :=
-  fun a b h => (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H
+  fun a b h => (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H
 #align monotone.strict_mono_of_injective Monotone.strictMono_of_injective
 -/
 
 #print Antitone.strictAnti_of_injective /-
 theorem Antitone.strictAnti_of_injective (h₁ : Antitone f) (h₂ : Injective f) : StrictAnti f :=
-  fun a b h => (h₁ h.le).lt_of_ne fun H => h.Ne <| h₂ H.symm
+  fun a b h => (h₁ h.le).lt_of_ne fun H => h.ne <| h₂ H.symm
 #align antitone.strict_anti_of_injective Antitone.strictAnti_of_injective
 -/
 
@@ -620,13 +620,13 @@ theorem antitone' [Subsingleton β] (f : α → β) : Antitone f := fun a b _ =>
 
 #print Subsingleton.strictMono /-
 protected theorem strictMono [Subsingleton α] (f : α → β) : StrictMono f := fun a b h =>
-  (h.Ne <| Subsingleton.elim _ _).elim
+  (h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.strict_mono Subsingleton.strictMono
 -/
 
 #print Subsingleton.strictAnti /-
 protected theorem strictAnti [Subsingleton α] (f : α → β) : StrictAnti f := fun a b h =>
-  (h.Ne <| Subsingleton.elim _ _).elim
+  (h.ne <| Subsingleton.elim _ _).elim
 #align subsingleton.strict_anti Subsingleton.strictAnti
 -/
 
@@ -1026,69 +1026,69 @@ theorem StrictAntiOn.lt_iff_lt (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s)
 
 #print StrictMono.le_iff_le /-
 theorem StrictMono.le_iff_le (hf : StrictMono f) {a b : α} : f a ≤ f b ↔ a ≤ b :=
-  (hf.StrictMonoOn Set.univ).le_iff_le trivial trivial
+  (hf.strictMonoOn Set.univ).le_iff_le trivial trivial
 #align strict_mono.le_iff_le StrictMono.le_iff_le
 -/
 
 #print StrictAnti.le_iff_le /-
 theorem StrictAnti.le_iff_le (hf : StrictAnti f) {a b : α} : f a ≤ f b ↔ b ≤ a :=
-  (hf.StrictAntiOn Set.univ).le_iff_le trivial trivial
+  (hf.strictAntiOn Set.univ).le_iff_le trivial trivial
 #align strict_anti.le_iff_le StrictAnti.le_iff_le
 -/
 
 #print StrictMono.lt_iff_lt /-
 theorem StrictMono.lt_iff_lt (hf : StrictMono f) {a b : α} : f a < f b ↔ a < b :=
-  (hf.StrictMonoOn Set.univ).lt_iff_lt trivial trivial
+  (hf.strictMonoOn Set.univ).lt_iff_lt trivial trivial
 #align strict_mono.lt_iff_lt StrictMono.lt_iff_lt
 -/
 
 #print StrictAnti.lt_iff_lt /-
 theorem StrictAnti.lt_iff_lt (hf : StrictAnti f) {a b : α} : f a < f b ↔ b < a :=
-  (hf.StrictAntiOn Set.univ).lt_iff_lt trivial trivial
+  (hf.strictAntiOn Set.univ).lt_iff_lt trivial trivial
 #align strict_anti.lt_iff_lt StrictAnti.lt_iff_lt
 -/
 
 #print StrictMonoOn.compares /-
 protected theorem StrictMonoOn.compares (hf : StrictMonoOn f s) {a b : α} (ha : a ∈ s)
     (hb : b ∈ s) : ∀ {o : Ordering}, o.Compares (f a) (f b) ↔ o.Compares a b
-  | Ordering.lt => hf.lt_iff_lt ha hb
-  | Ordering.eq =>
+  | ordering.lt => hf.lt_iff_lt ha hb
+  | ordering.eq =>
     ⟨fun h => ((hf.le_iff_le ha hb).1 h.le).antisymm ((hf.le_iff_le hb ha).1 h.symm.le),
       congr_arg _⟩
-  | Ordering.gt => hf.lt_iff_lt hb ha
+  | ordering.gt => hf.lt_iff_lt hb ha
 #align strict_mono_on.compares StrictMonoOn.compares
 -/
 
 #print StrictAntiOn.compares /-
 protected theorem StrictAntiOn.compares (hf : StrictAntiOn f s) {a b : α} (ha : a ∈ s) (hb : b ∈ s)
     {o : Ordering} : o.Compares (f a) (f b) ↔ o.Compares b a :=
-  toDual_compares_toDual.trans <| hf.dual_right.Compares hb ha
+  toDual_compares_toDual.trans <| hf.dual_right.compares hb ha
 #align strict_anti_on.compares StrictAntiOn.compares
 -/
 
 #print StrictMono.compares /-
 protected theorem StrictMono.compares (hf : StrictMono f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares a b :=
-  (hf.StrictMonoOn Set.univ).Compares trivial trivial
+  (hf.strictMonoOn Set.univ).compares trivial trivial
 #align strict_mono.compares StrictMono.compares
 -/
 
 #print StrictAnti.compares /-
 protected theorem StrictAnti.compares (hf : StrictAnti f) {a b : α} {o : Ordering} :
     o.Compares (f a) (f b) ↔ o.Compares b a :=
-  (hf.StrictAntiOn Set.univ).Compares trivial trivial
+  (hf.strictAntiOn Set.univ).compares trivial trivial
 #align strict_anti.compares StrictAnti.compares
 -/
 
 #print StrictMono.injective /-
 theorem StrictMono.injective (hf : StrictMono f) : Injective f := fun x y h =>
-  show Compares Eq x y from hf.Compares.1 h
+  show Compares Eq x y from hf.compares.1 h
 #align strict_mono.injective StrictMono.injective
 -/
 
 #print StrictAnti.injective /-
 theorem StrictAnti.injective (hf : StrictAnti f) : Injective f := fun x y h =>
-  show Compares Eq x y from hf.Compares.1 h.symm
+  show Compares Eq x y from hf.compares.1 h.symm
 #align strict_anti.injective StrictAnti.injective
 -/
 
@@ -1128,13 +1128,13 @@ variable [PartialOrder β] {f : α → β}
 
 #print Monotone.strictMono_iff_injective /-
 theorem Monotone.strictMono_iff_injective (hf : Monotone f) : StrictMono f ↔ Injective f :=
-  ⟨fun h => h.Injective, hf.strictMono_of_injective⟩
+  ⟨fun h => h.injective, hf.strictMono_of_injective⟩
 #align monotone.strict_mono_iff_injective Monotone.strictMono_iff_injective
 -/
 
 #print Antitone.strictAnti_iff_injective /-
 theorem Antitone.strictAnti_iff_injective (hf : Antitone f) : StrictAnti f ↔ Injective f :=
-  ⟨fun h => h.Injective, hf.strictAnti_of_injective⟩
+  ⟨fun h => h.injective, hf.strictAnti_of_injective⟩
 #align antitone.strict_anti_iff_injective Antitone.strictAnti_iff_injective
 -/
 
@@ -1186,7 +1186,7 @@ theorem not_monotone_not_antitone_iff_exists_lt_lt :
   simp_rw [not_monotone_not_antitone_iff_exists_le_le, ← and_assoc']
   refine'
         exists₃_congr fun a b c =>
-          and_congr_left fun h => (Ne.le_iff_lt _).And <| Ne.le_iff_lt _ <;>
+          and_congr_left fun h => (Ne.le_iff_lt _).and <| Ne.le_iff_lt _ <;>
       rintro rfl <;>
     simpa using h
 #align not_monotone_not_antitone_iff_exists_lt_lt not_monotone_not_antitone_iff_exists_lt_lt
@@ -1200,13 +1200,13 @@ theorem not_monotone_not_antitone_iff_exists_lt_lt :
 #print StrictMonoOn.cmp_map_eq /-
 theorem StrictMonoOn.cmp_map_eq (hf : StrictMonoOn f s) (hx : x ∈ s) (hy : y ∈ s) :
     cmp (f x) (f y) = cmp x y :=
-  ((hf.Compares hx hy).2 (cmp_compares x y)).cmp_eq
+  ((hf.compares hx hy).2 (cmp_compares x y)).cmp_eq
 #align strict_mono_on.cmp_map_eq StrictMonoOn.cmp_map_eq
 -/
 
 #print StrictMono.cmp_map_eq /-
 theorem StrictMono.cmp_map_eq (hf : StrictMono f) (x y : α) : cmp (f x) (f y) = cmp x y :=
-  (hf.StrictMonoOn Set.univ).cmp_map_eq trivial trivial
+  (hf.strictMonoOn Set.univ).cmp_map_eq trivial trivial
 #align strict_mono.cmp_map_eq StrictMono.cmp_map_eq
 -/
 
@@ -1219,7 +1219,7 @@ theorem StrictAntiOn.cmp_map_eq (hf : StrictAntiOn f s) (hx : x ∈ s) (hy : y �
 
 #print StrictAnti.cmp_map_eq /-
 theorem StrictAnti.cmp_map_eq (hf : StrictAnti f) (x y : α) : cmp (f x) (f y) = cmp y x :=
-  (hf.StrictAntiOn Set.univ).cmp_map_eq trivial trivial
+  (hf.strictAntiOn Set.univ).cmp_map_eq trivial trivial
 #align strict_anti.cmp_map_eq StrictAnti.cmp_map_eq
 -/
 

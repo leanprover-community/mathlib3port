@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module dynamics.fixed_points.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ of `fb`. -/
 protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semiconj g fa fb) :
     IsFixedPt fb (g x) :=
   calc
-    fb (g x) = g (fa x) := (h.Eq x).symm
+    fb (g x) = g (fa x) := (h.eq x).symm
     _ = g x := congr_arg g hx
     
 #align function.is_fixed_pt.map Function.IsFixedPt.map
@@ -151,8 +151,8 @@ protected theorem perm_pow (h : IsFixedPt e x) (n : ℕ) : IsFixedPt (⇑(e ^ n)
 
 #print Function.IsFixedPt.perm_zpow /-
 protected theorem perm_zpow (h : IsFixedPt e x) : ∀ n : ℤ, IsFixedPt (⇑(e ^ n)) x
-  | Int.ofNat n => h.perm_pow _
-  | Int.negSucc n => (h.perm_pow <| n + 1).perm_inv
+  | int.of_nat n => h.perm_pow _
+  | int.neg_succ_of_nat n => (h.perm_pow <| n + 1).perm_inv
 #align function.is_fixed_pt.perm_zpow Function.IsFixedPt.perm_zpow
 -/
 
@@ -162,7 +162,7 @@ end IsFixedPt
 @[simp]
 theorem Injective.isFixedPt_apply_iff (hf : Injective f) {x : α} :
     IsFixedPt f (f x) ↔ IsFixedPt f x :=
-  ⟨fun h => hf h.Eq, IsFixedPt.apply⟩
+  ⟨fun h => hf h.eq, IsFixedPt.apply⟩
 #align function.injective.is_fixed_pt_apply_iff Function.Injective.isFixedPt_apply_iff
 -/
 
@@ -195,7 +195,7 @@ theorem mem_fixedPoints_iff {α : Type _} {f : α → α} {x : α} : x ∈ fixed
 #print Function.fixedPoints_id /-
 @[simp]
 theorem fixedPoints_id : fixedPoints (@id α) = Set.univ :=
-  Set.ext fun _ => by simpa using is_fixed_pt_id _
+  Set.ext fun _ => by simpa using isFixedPt_id _
 #align function.fixed_points_id Function.fixedPoints_id
 -/
 
@@ -233,7 +233,7 @@ theorem mapsTo_fixedPoints_comp (f : α → β) (g : β → α) :
 of `f ∘ g` and the fixed points of `g ∘ f`. The inverse map is `f`, see `inv_on_fixed_pts_comp`. -/
 theorem bijOn_fixedPoints_comp (f : α → β) (g : β → α) :
     Set.BijOn g (fixedPoints <| f ∘ g) (fixedPoints <| g ∘ f) :=
-  (invOn_fixedPoints_comp f g).BijOn (mapsTo_fixedPoints_comp g f) (mapsTo_fixedPoints_comp f g)
+  (invOn_fixedPoints_comp f g).bijOn (mapsTo_fixedPoints_comp g f) (mapsTo_fixedPoints_comp f g)
 #align function.bij_on_fixed_pts_comp Function.bijOn_fixedPoints_comp
 -/
 
@@ -242,7 +242,7 @@ theorem bijOn_fixedPoints_comp (f : α → β) (g : β → α) :
 of `f ∘ g`. This is a particular case of `function.inv_on_fixed_pts_comp`. -/
 theorem Commute.invOn_fixedPoints_comp (h : Commute f g) :
     Set.InvOn f g (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
-  simpa only [h.comp_eq] using inv_on_fixed_pts_comp f g
+  simpa only [h.comp_eq] using invOn_fixedPoints_comp f g
 #align function.commute.inv_on_fixed_pts_comp Function.Commute.invOn_fixedPoints_comp
 -/
 
@@ -251,7 +251,7 @@ theorem Commute.invOn_fixedPoints_comp (h : Commute f g) :
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.left_bijOn_fixedPoints_comp (h : Commute f g) :
     Set.BijOn f (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
-  simpa only [h.comp_eq] using bij_on_fixed_pts_comp g f
+  simpa only [h.comp_eq] using bijOn_fixedPoints_comp g f
 #align function.commute.left_bij_on_fixed_pts_comp Function.Commute.left_bijOn_fixedPoints_comp
 -/
 
@@ -260,7 +260,7 @@ theorem Commute.left_bijOn_fixedPoints_comp (h : Commute f g) :
 This is a particular case of `function.bij_on_fixed_pts_comp`. -/
 theorem Commute.right_bijOn_fixedPoints_comp (h : Commute f g) :
     Set.BijOn g (fixedPoints <| f ∘ g) (fixedPoints <| f ∘ g) := by
-  simpa only [h.comp_eq] using bij_on_fixed_pts_comp f g
+  simpa only [h.comp_eq] using bijOn_fixedPoints_comp f g
 #align function.commute.right_bij_on_fixed_pts_comp Function.Commute.right_bijOn_fixedPoints_comp
 -/
 

@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Automation to construct `traversable` instances
 
 ! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ unsafe def with_prefix : Option Name → Name → Name
 unsafe def nested_map (f v : expr) : expr → tactic expr
   | t => do
     let t ← instantiate_mvars t
-    condM (succeeds <| is_def_eq t v) (pure f)
+    mcond (succeeds <| is_def_eq t v) (pure f)
         (if ¬v (t t.app_fn) then do
           let cl ← mk_app `` Functor [t]
           let _inst ← mk_instance cl
@@ -70,9 +70,9 @@ unsafe def mk_map (type : Name) := do
   let [α, β, f, x] ← tactic.intro_lst [`α, `β, `f, `x]
   let et ← infer_type x
   let xs ← tactic.induction x
-  xs fun x : Name × List expr × List (Name × expr) => do
+  xs fun x : name × list expr × list (name × expr) => do
       let (c, args, _) := x
-      let (args, rec_call) ← args fun e => (not ∘ β) <$> infer_type e
+      let (args, rec_call) ← args fun e => (bnot ∘ β) <$> infer_type e
       let args₀ ←
         args fun a => do
             let b ← et <$> infer_type a
@@ -115,11 +115,11 @@ unsafe def derive_map_equations (pre : Option Name) (n : Name) (vs : List expr) 
       let args ←
         vs' fun a => do
             let t ← infer_type a
-            pure ((expr.const_name (expr.get_app_fn t) = n : Bool), a)
+            pure ((expr.const_name (expr.get_app_fn t) = n : bool), a)
       let rec_call := args fun ⟨b, e⟩ => guard b >> pure e
       let rec_call ← rec_call call_map
       let rhs ← map_constructor c n f α β (vs ++ [β]) args rec_call
-      Monad.join <| unify <$> infer_type lhs <*> infer_type rhs
+      monad.join <| unify <$> infer_type lhs <*> infer_type rhs
       let eqn ← mk_app `` Eq [lhs, rhs]
       let ws := eqn
       let eqn ← pis ws eqn
@@ -154,12 +154,12 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
     seq_apply_constructor
     : expr → List ( Sum expr expr ) → tactic ( List ( tactic expr ) × expr )
     |
-        e , Sum.inr x :: xs
+        e , sum.inr x :: xs
         =>
         Prod.map ( cons intro1 ) id
           <$>
           ( to_expr ` `( $ ( e ) <*> $ ( x ) ) >>= flip seq_apply_constructor xs )
-      | e , Sum.inl x :: xs => Prod.map ( cons <| pure x ) id <$> seq_apply_constructor e xs
+      | e , sum.inl x :: xs => Prod.map ( cons <| pure x ) id <$> seq_apply_constructor e xs
       | e , [ ] => return ( [ ] , e )
 #align tactic.interactive.seq_apply_constructor tactic.interactive.seq_apply_constructor
 
@@ -170,7 +170,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
 unsafe def nested_traverse (f v : expr) : expr → tactic expr
   | t => do
     let t ← instantiate_mvars t
-    condM (succeeds <| is_def_eq t v) (pure f)
+    mcond (succeeds <| is_def_eq t v) (pure f)
         (if ¬v (t t.app_fn) then do
           let cl ← mk_app `` Traversable [t]
           let _inst ← mk_instance cl
@@ -188,8 +188,8 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
     else
       if v t then do
         let f' ← nested_traverse f v t
-        pure <| Sum.inr <| f' e
-      else is_def_eq t cl >> Sum.inr <$> mk_app `` comp.mk [e] <|> pure (Sum.inl e)
+        pure <| sum.inr <| f' e
+      else is_def_eq t cl >> sum.inr <$> mk_app `` comp.mk [e] <|> pure (sum.inl e)
 #align tactic.interactive.traverse_field tactic.interactive.traverse_field
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -248,9 +248,9 @@ unsafe def mk_traverse (type : Name) := do
     let et ← infer_type x
     reset_instance_cache
     let xs ← tactic.induction x
-    xs fun x : Name × List expr × List (Name × expr) => do
+    xs fun x : name × list expr × list (name × expr) => do
         let (c, args, _) := x
-        let (args, rec_call) ← args fun e => (not ∘ β) <$> infer_type e
+        let (args, rec_call) ← args fun e => (bnot ∘ β) <$> infer_type e
         let args₀ ←
           args fun a => do
               let b ← et <$> infer_type a
@@ -282,11 +282,11 @@ unsafe def derive_traverse_equations (pre : Option Name) (n : Name) (vs : List e
       let args ←
         vs' fun a => do
             let t ← infer_type a
-            pure ((expr.const_name (expr.get_app_fn t) = n : Bool), a)
+            pure ((expr.const_name (expr.get_app_fn t) = n : bool), a)
       let rec_call := args fun ⟨b, e⟩ => guard b >> pure e
       let rec_call ← rec_call call_traverse
       let rhs ← traverse_constructor c n appl_inst f α β (vs ++ [β]) args rec_call
-      Monad.join <| unify <$> infer_type lhs <*> infer_type rhs
+      monad.join <| unify <$> infer_type lhs <*> infer_type rhs
       let eqn ← mk_app `` Eq [lhs, rhs]
       let ws := eqn
       let eqn ← pis ws eqn
@@ -338,7 +338,7 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
                 do
                   guard <| i < env n
                   let param_cls ← mk_app cls [param]
-                  pure <| expr.pi `a BinderInfo.inst_implicit param_cls tgt) <|>
+                  pure <| expr.pi `a binder_info.inst_implicit param_cls tgt) <|>
                 pure tgt
           pure <| tgt param)
         tgt
@@ -349,7 +349,7 @@ unsafe def mk_one_instance (n : Name) (cls : Name) (tac : tactic Unit) (namesp :
       let val ← instantiate_mvars val
       let trusted := decl ∧ cls_decl
       let inst_n := with_prefix namesp n ++ cls
-      add_decl (declaration.defn inst_n decl tgt val ReducibilityHints.abbrev trusted)
+      add_decl (declaration.defn inst_n decl tgt val reducibility_hints.abbrev trusted)
       set_basic_attribute `instance inst_n namesp
 #align tactic.interactive.mk_one_instance tactic.interactive.mk_one_instance
 
@@ -358,7 +358,7 @@ open Interactive
 unsafe def get_equations_of (n : Name) : tactic (List pexpr) := do
   let e ← get_env
   let pre := .str n "equations"
-  let x := e.fold [] fun d xs => if pre.isPrefixOfₓ d.to_name then d.to_name :: xs else xs
+  let x := e.fold [] fun d xs => if pre.is_prefix_of d.to_name then d.to_name :: xs else xs
   x resolve_name
 #align tactic.interactive.get_equations_of tactic.interactive.get_equations_of
 

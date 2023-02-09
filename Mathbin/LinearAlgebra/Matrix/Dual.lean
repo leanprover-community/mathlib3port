@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.dual
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem LinearMap.toMatrix_transpose (u : V₁ →ₗ[K] V₂) :
 theorem Matrix.toLin_transpose (M : Matrix ι₁ ι₂ K) :
     Matrix.toLin B₁.dualBasis B₂.dualBasis Mᵀ = Module.Dual.transpose (Matrix.toLin B₂ B₁ M) :=
   by
-  apply (LinearMap.toMatrix B₁.dual_basis B₂.dual_basis).Injective
+  apply (LinearMap.toMatrix B₁.dual_basis B₂.dual_basis).injective
   rw [LinearMap.toMatrix_toLin, LinearMap.toMatrix_transpose, LinearMap.toMatrix_toLin]
 #align matrix.to_lin_transpose Matrix.toLin_transpose
 

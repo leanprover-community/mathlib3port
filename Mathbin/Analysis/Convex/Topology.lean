@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,7 +274,7 @@ theorem Set.Finite.compact_convexHull {s : Set E} (hs : s.Finite) : IsCompact (c
 /-- Convex hull of a finite set is closed. -/
 theorem Set.Finite.isClosed_convexHull [T2Space E] {s : Set E} (hs : s.Finite) :
     IsClosed (convexHull ℝ s) :=
-  hs.compact_convexHull.IsClosed
+  hs.compact_convexHull.isClosed
 #align set.finite.is_closed_convex_hull Set.Finite.isClosed_convexHull
 
 open AffineMap
@@ -292,7 +292,7 @@ theorem Convex.closure_subset_image_homothety_interior_of_one_lt {s : Set E} (hs
     ⟨homothety x t⁻¹ y, hs.open_segment_interior_closure_subset_interior hx hy _,
       (AffineEquiv.homothetyUnitsMulHom x (Units.mk0 t hne)).apply_symm_apply y⟩
   rw [openSegment_eq_image_lineMap, ← inv_one, ← inv_Ioi (zero_lt_one' ℝ), ← image_inv, image_image,
-    homothety_eq_line_map]
+    homothety_eq_lineMap]
   exact mem_image_of_mem _ ht
 #align convex.closure_subset_image_homothety_interior_of_one_lt Convex.closure_subset_image_homothety_interior_of_one_lt
 
@@ -324,20 +324,20 @@ protected theorem Convex.isPathConnected {s : Set E} (hconv : Convex ℝ s) (hne
   have H := hconv.segment_subset x_in y_in
   rw [segment_eq_image_lineMap] at H
   exact
-    JoinedIn.of_line affine_map.line_map_continuous.continuous_on (line_map_apply_zero _ _)
-      (line_map_apply_one _ _) H
+    JoinedIn.of_line affine_map.line_map_continuous.continuous_on (lineMap_apply_zero _ _)
+      (lineMap_apply_one _ _) H
 #align convex.is_path_connected Convex.isPathConnected
 
 /-- A nonempty convex set is connected. -/
 protected theorem Convex.isConnected {s : Set E} (h : Convex ℝ s) (hne : s.Nonempty) :
     IsConnected s :=
-  (h.IsPathConnected hne).IsConnected
+  (h.isPathConnected hne).isConnected
 #align convex.is_connected Convex.isConnected
 
 /-- A convex set is preconnected. -/
 protected theorem Convex.isPreconnected {s : Set E} (h : Convex ℝ s) : IsPreconnected s :=
   s.eq_empty_or_nonempty.elim (fun h => h.symm ▸ isPreconnected_empty) fun hne =>
-    (h.IsConnected hne).IsPreconnected
+    (h.isConnected hne).isPreconnected
 #align convex.is_preconnected Convex.isPreconnected
 
 /-- Every topological vector space over ℝ is path connected.
@@ -345,7 +345,7 @@ protected theorem Convex.isPreconnected {s : Set E} (h : Convex ℝ s) : IsPreco
 Not an instance, because it creates enormous TC subproblems (turn on `pp.all`).
 -/
 protected theorem TopologicalAddGroup.path_connected : PathConnectedSpace E :=
-  pathConnectedSpace_iff_univ.mpr <| convex_univ.IsPathConnected ⟨(0 : E), trivial⟩
+  pathConnectedSpace_iff_univ.mpr <| convex_univ.isPathConnected ⟨(0 : E), trivial⟩
 #align topological_add_group.path_connected TopologicalAddGroup.path_connected
 
 end HasContinuousSmul

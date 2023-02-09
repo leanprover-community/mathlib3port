@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.char_zero.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,7 +130,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1))] [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))] {a : R}, Iff (Ne.{succ u1} R (bit0.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) a) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1))))) (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align bit0_ne_zero bit0_ne_zeroₓ'. -/
 theorem bit0_ne_zero : bit0 a ≠ 0 ↔ a ≠ 0 :=
-  bit0_eq_zero.Not
+  bit0_eq_zero.not
 #align bit0_ne_zero bit0_ne_zero
 
 /- warning: zero_ne_bit0 -> zero_ne_bit0 is a dubious translation:
@@ -140,7 +140,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NoZeroDivisors.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1))] [_inst_3 : CharZero.{u1} R (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} R (NonAssocSemiring.toAddCommMonoidWithOne.{u1} R _inst_1))] {a : R}, Iff (Ne.{succ u1} R (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)))) (bit0.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) a)) (Ne.{succ u1} R a (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align zero_ne_bit0 zero_ne_bit0ₓ'. -/
 theorem zero_ne_bit0 : 0 ≠ bit0 a ↔ a ≠ 0 :=
-  zero_eq_bit0.Not
+  zero_eq_bit0.not
 #align zero_ne_bit0 zero_ne_bit0
 
 end
@@ -338,7 +338,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.char_zero_iff RingHom.charZero_iffₓ'. -/
 theorem RingHom.charZero_iff {ϕ : R →+* S} (hϕ : Function.Injective ϕ) : CharZero R ↔ CharZero S :=
   ⟨fun hR =>
-    ⟨by intro a b h <;> rwa [← @Nat.cast_inj R, ← hϕ.eq_iff, map_natCast ϕ, map_natCast ϕ]⟩,
+    ⟨by intro a b h <;> rwa [← @nat.cast_inj R, ← hϕ.eq_iff, map_natCast ϕ, map_natCast ϕ]⟩,
     fun hS => ϕ.char_zero⟩
 #align ring_hom.char_zero_iff RingHom.charZero_iff
 

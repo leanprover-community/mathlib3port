@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ variable [SMul M X]
 @[to_additive]
 instance (priority := 100) HasUniformContinuousConstSmul.to_hasContinuousConstSMul
     [HasUniformContinuousConstSmul M X] : HasContinuousConstSMul M X :=
-  ⟨fun c => (uniformContinuous_const_smul c).Continuous⟩
+  ⟨fun c => (uniformContinuous_const_smul c).continuous⟩
 #align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_hasContinuousConstSMul
 #align has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
 
@@ -113,7 +113,7 @@ instance (priority := 100) HasUniformContinuousConstSmul.op [SMul Mᵐᵒᵖ X] 
       by
       change UniformContinuous fun m => MulOpposite.op c • m
       simp_rw [op_smul_eq_smul]
-      exact uniform_continuous_const_smul c⟩
+      exact uniformContinuous_const_smul c⟩
 #align has_uniform_continuous_const_smul.op HasUniformContinuousConstSmul.op
 #align has_uniform_continuous_const_vadd.op HasUniformContinuousConstVadd.op
 
@@ -161,21 +161,21 @@ instance [SMul N X] [SMul M N] [HasUniformContinuousConstSmul M X]
     [HasUniformContinuousConstSmul N X] [IsScalarTower M N X] : IsScalarTower M N (Completion X) :=
   ⟨fun m n x =>
     by
-    have : _ = (_ : completion X → completion X) :=
-      map_comp (uniform_continuous_const_smul m) (uniform_continuous_const_smul n)
+    have : _ = (_ : Completion X → Completion X) :=
+      map_comp (uniformContinuous_const_smul m) (uniformContinuous_const_smul n)
     refine' Eq.trans _ (congr_fun this.symm x)
-    exact congr_arg (fun f => completion.map f x) (funext (smul_assoc _ _))⟩
+    exact congr_arg (fun f => Completion.map f x) (funext (smul_assoc _ _))⟩
 
 @[to_additive]
 instance [SMul N X] [SMulCommClass M N X] [HasUniformContinuousConstSmul M X]
     [HasUniformContinuousConstSmul N X] : SMulCommClass M N (Completion X) :=
   ⟨fun m n x =>
     by
-    have hmn : m • n • x = (completion.map (SMul.smul m) ∘ completion.map (SMul.smul n)) x := rfl
-    have hnm : n • m • x = (completion.map (SMul.smul n) ∘ completion.map (SMul.smul m)) x := rfl
+    have hmn : m • n • x = (Completion.map (SMul.smul m) ∘ Completion.map (SMul.smul n)) x := rfl
+    have hnm : n • m • x = (Completion.map (SMul.smul n) ∘ Completion.map (SMul.smul m)) x := rfl
     rw [hmn, hnm, map_comp, map_comp]
-    exact congr_arg (fun f => completion.map f x) (funext (smul_comm _ _))
-    repeat' exact uniform_continuous_const_smul _⟩
+    exact congr_arg (fun f => Completion.map f x) (funext (smul_comm _ _))
+    repeat' exact uniformContinuous_const_smul _⟩
 
 @[to_additive]
 instance [SMul Mᵐᵒᵖ X] [IsCentralScalar M X] : IsCentralScalar M (Completion X) :=

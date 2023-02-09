@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.floor_pow
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,20 +49,20 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
   have lnonneg : 0 ≤ l :=
     by
     rcases hlim 2 one_lt_two with ⟨c, cgrowth, ctop, clim⟩
-    have : tendsto (fun n => u 0 / c n) at_top (𝓝 0) :=
+    have : Tendsto (fun n => u 0 / c n) atTop (𝓝 0) :=
       tendsto_const_nhds.div_at_top (tendsto_nat_cast_atTop_iff.2 ctop)
     apply le_of_tendsto_of_tendsto' this clim fun n => _
     simp_rw [div_eq_inv_mul]
     exact mul_le_mul_of_nonneg_left (hmono (zero_le _)) (inv_nonneg.2 (Nat.cast_nonneg _))
-  have A : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in at_top, u n - n * l ≤ ε * (1 + ε + l) * n :=
+  have A : ∀ ε : ℝ, 0 < ε → ∀ᶠ n in atTop, u n - n * l ≤ ε * (1 + ε + l) * n :=
     by
     intro ε εpos
     rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
-    have L : ∀ᶠ n in at_top, u (c n) - c n * l ≤ ε * c n :=
+    have L : ∀ᶠ n in atTop, u (c n) - c n * l ≤ ε * c n :=
       by
       rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
         clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_at_top 0)]with n hn cnpos'
+      filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc
         u (c n) - c n * l = (u (c n) / c n - l) * c n := by
@@ -74,12 +74,12 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         
     obtain ⟨a, ha⟩ :
       ∃ a : ℕ, ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ u (c b) - c b * l ≤ ε * c b :=
-      eventually_at_top.1 (cgrowth.and L)
+      eventually_atTop.1 (cgrowth.and L)
     let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
-    filter_upwards [Ici_mem_at_top M]with n hn
+    filter_upwards [Ici_mem_atTop M]with n hn
     have exN : ∃ N, n < c N :=
       by
-      rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩
+      rcases(tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
       exact ⟨N, by linarith only [hN]⟩
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN
@@ -90,7 +90,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         apply mem_image_of_mem
         exact mem_range.2 h
       exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
-    have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
+    have Npos : 0 < N := lt_of_lt_of_le nat.succ_pos' aN
     have cNn : c (N - 1) ≤ n :=
       by
       have : N - 1 < N := Nat.pred_lt Npos.ne'
@@ -122,15 +122,15 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         apply mul_nonneg εpos.le
         linarith only [εpos, lnonneg]
       
-  have B : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in at_top, (n : ℝ) * l - u n ≤ ε * (1 + l) * n :=
+  have B : ∀ ε : ℝ, 0 < ε → ∀ᶠ n : ℕ in atTop, (n : ℝ) * l - u n ≤ ε * (1 + l) * n :=
     by
     intro ε εpos
     rcases hlim (1 + ε) ((lt_add_iff_pos_right _).2 εpos) with ⟨c, cgrowth, ctop, clim⟩
-    have L : ∀ᶠ n : ℕ in at_top, (c n : ℝ) * l - u (c n) ≤ ε * c n :=
+    have L : ∀ᶠ n : ℕ in atTop, (c n : ℝ) * l - u (c n) ≤ ε * c n :=
       by
       rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
         clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_at_top 0)]with n hn cnpos'
+      filter_upwards [clim εpos, ctop (Ioi_mem_atTop 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc
         (c n : ℝ) * l - u (c n) = -(u (c n) / c n - l) * c n := by
@@ -143,12 +143,12 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     obtain ⟨a, ha⟩ :
       ∃ a : ℕ,
         ∀ b : ℕ, a ≤ b → (c (b + 1) : ℝ) ≤ (1 + ε) * c b ∧ (c b : ℝ) * l - u (c b) ≤ ε * c b :=
-      eventually_at_top.1 (cgrowth.and L)
+      eventually_atTop.1 (cgrowth.and L)
     let M := ((Finset.range (a + 1)).image fun i => c i).max' (by simp)
-    filter_upwards [Ici_mem_at_top M]with n hn
+    filter_upwards [Ici_mem_atTop M]with n hn
     have exN : ∃ N, n < c N :=
       by
-      rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩
+      rcases(tendsto_atTop.1 ctop (n + 1)).exists with ⟨N, hN⟩
       exact ⟨N, by linarith only [hN]⟩
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN
@@ -159,7 +159,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
         apply mem_image_of_mem
         exact mem_range.2 h
       exact lt_irrefl _ ((cNM.trans hn).trans_lt ncN)
-    have Npos : 0 < N := lt_of_lt_of_le Nat.succ_pos' aN
+    have Npos : 0 < N := lt_of_lt_of_le nat.succ_pos' aN
     have aN' : a ≤ N - 1 := by linarith only [aN, Npos]
     have cNn : c (N - 1) ≤ n :=
       by
@@ -187,13 +187,13 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
   refine' tendsto_order.2 ⟨fun d hd => _, fun d hd => _⟩
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, d + ε * (1 + l) < l ∧ 0 < ε :=
       by
-      have L : tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l))) :=
+      have L : Tendsto (fun ε => d + ε * (1 + l)) (𝓝[>] 0) (𝓝 (d + 0 * (1 + l))) :=
         by
-        apply tendsto.mono_left _ nhdsWithin_le_nhds
+        apply Tendsto.mono_left _ nhdsWithin_le_nhds
         exact tendsto_const_nhds.add (tendsto_id.mul tendsto_const_nhds)
       simp only [zero_mul, add_zero] at L
-      exact (((tendsto_order.1 L).2 l hd).And self_mem_nhdsWithin).exists
-    filter_upwards [B ε εpos, Ioi_mem_at_top 0]with n hn npos
+      exact (((tendsto_order.1 L).2 l hd).and self_mem_nhds_within).exists
+    filter_upwards [B ε εpos, Ioi_mem_atTop 0]with n hn npos
     simp_rw [div_eq_inv_mul]
     calc
       d < n⁻¹ * n * (l - ε * (1 + l)) :=
@@ -209,15 +209,15 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       
   · obtain ⟨ε, hε, εpos⟩ : ∃ ε : ℝ, l + ε * (1 + ε + l) < d ∧ 0 < ε :=
       by
-      have L : tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l))) :=
+      have L : Tendsto (fun ε => l + ε * (1 + ε + l)) (𝓝[>] 0) (𝓝 (l + 0 * (1 + 0 + l))) :=
         by
-        apply tendsto.mono_left _ nhdsWithin_le_nhds
+        apply Tendsto.mono_left _ nhdsWithin_le_nhds
         exact
           tendsto_const_nhds.add
             (tendsto_id.mul ((tendsto_const_nhds.add tendsto_id).add tendsto_const_nhds))
       simp only [zero_mul, add_zero] at L
-      exact (((tendsto_order.1 L).2 d hd).And self_mem_nhdsWithin).exists
-    filter_upwards [A ε εpos, Ioi_mem_at_top 0]with n hn npos
+      exact (((tendsto_order.1 L).2 d hd).and self_mem_nhds_within).exists
+    filter_upwards [A ε εpos, Ioi_mem_atTop 0]with n hn npos
     simp_rw [div_eq_inv_mul]
     calc
       (n : ℝ)⁻¹ * u n ≤ (n : ℝ)⁻¹ * (n * l + ε * (1 + ε + l) * n) :=
@@ -251,15 +251,15 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
     refine' zero_lt_one.trans_le _
     simp only [Nat.one_le_cast, Nat.one_le_floor_iff, one_le_pow_of_one_le (cone k).le n]
   have A :
-    tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / c k ^ (n + 1) * c k / (⌊c k ^ n⌋₊ / c k ^ n))
-      at_top (𝓝 (1 * c k / 1)) :=
+    Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / c k ^ (n + 1) * c k / (⌊c k ^ n⌋₊ / c k ^ n))
+      atTop (𝓝 (1 * c k / 1)) :=
     by
-    refine' tendsto.div (tendsto.mul _ tendsto_const_nhds) _ one_ne_zero
+    refine' Tendsto.div (Tendsto.mul _ tendsto_const_nhds) _ one_ne_zero
     · refine' tendsto_nat_floor_div_at_top.comp _
-      exact (tendsto_pow_atTop_atTop_of_one_lt (cone k)).comp (tendsto_add_at_top_nat 1)
+      exact (tendsto_pow_atTop_atTop_of_one_lt (cone k)).comp (tendsto_add_atTop_nat 1)
     · refine' tendsto_nat_floor_div_at_top.comp _
       exact tendsto_pow_atTop_atTop_of_one_lt (cone k)
-  have B : tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) at_top (𝓝 (c k)) :=
+  have B : Tendsto (fun n : ℕ => (⌊c k ^ (n + 1)⌋₊ : ℝ) / ⌊c k ^ n⌋₊) atTop (𝓝 (c k)) :=
     by
     simp only [one_mul, div_one] at A
     convert A
@@ -276,7 +276,7 @@ theorem tendsto_div_of_monotone_of_tendsto_div_floor_pow (u : ℕ → ℝ) (l : 
 /-- The sum of `1/(c^i)^2` above a threshold `j` is comparable to `1/j^2`, up to a multiplicative
 constant. -/
 theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc : 1 < c) :
-    (∑ i in (range N).filterₓ fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=
+    (∑ i in (range N).filter fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤ c ^ 3 * (c - 1)⁻¹ / j ^ 2 :=
   by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : 0 < c⁻¹ ^ 2 := sq_pos_of_pos (inv_pos.2 cpos)
@@ -290,7 +290,7 @@ theorem sum_div_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc 
     rw [mul_assoc, mul_comm c, ← mul_assoc, mul_inv_cancel (sq_pos_of_pos cpos).ne', one_mul]
     simpa using pow_le_pow hc.le one_le_two
   calc
-    (∑ i in (range N).filterₓ fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤
+    (∑ i in (range N).filter fun i => j < c ^ i, 1 / (c ^ i) ^ 2) ≤
         ∑ i in Ico ⌊Real.log j / Real.log c⌋₊ N, 1 / (c ^ i) ^ 2 :=
       by
       refine'
@@ -361,13 +361,13 @@ theorem mul_pow_le_nat_floor_pow {c : ℝ} (hc : 1 < c) (i : ℕ) : (1 - c⁻¹)
 /-- The sum of `1/⌊c^i⌋₊^2` above a threshold `j` is comparable to `1/j^2`, up to a multiplicative
 constant. -/
 theorem sum_div_nat_floor_pow_sq_le_div_sq (N : ℕ) {j : ℝ} (hj : 0 < j) {c : ℝ} (hc : 1 < c) :
-    (∑ i in (range N).filterₓ fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
+    (∑ i in (range N).filter fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
       c ^ 5 * (c - 1)⁻¹ ^ 3 / j ^ 2 :=
   by
   have cpos : 0 < c := zero_lt_one.trans hc
   have A : 0 < 1 - c⁻¹ := sub_pos.2 (inv_lt_one hc)
   calc
-    (∑ i in (range N).filterₓ fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
+    (∑ i in (range N).filter fun i => j < ⌊c ^ i⌋₊, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2) ≤
         ∑ i in (range N).filterₓ fun i => j < c ^ i, (1 : ℝ) / ⌊c ^ i⌋₊ ^ 2 :=
       by
       apply sum_le_sum_of_subset_of_nonneg

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.equiv_rw
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -116,10 +116,10 @@ unsafe structure equiv_rw_cfg where
   max_depth : ℕ := 10
 #align tactic.equiv_rw_cfg tactic.equiv_rw_cfg
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Implementation of `equiv_rw_type`, using `solve_by_elim`.
 Expects a goal of the form `t ≃ _`,
 and tries to solve it using `eq : α ≃ β` and congruence lemmas.
@@ -135,9 +135,9 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
             we use the `pre_apply` subtactic of `solve_by_elim` to preprocess each new goal with `intros`.
         -/
       solve_by_elim
-      { use_symmetry := False
-        use_exfalso := False
-        lemma_thunks := some (pure Eq :: equiv_congr_lemmas)
+      { use_symmetry := false
+        use_exfalso := false
+        lemma_thunks := some (pure eq :: equiv_congr_lemmas)
         ctx_thunk := pure []
         max_depth := cfg
         -- Subgoals may contain function types,
@@ -198,7 +198,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                 let ty_pp ← pp ty
                 fail
                   f! "Could not construct an equivalence from { eqv_pp } of the form: { ty_pp } ≃ _"
-          Prod.fst <$> new_eqv { failIfUnchanged := ff }
+          prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
 
 /- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
@@ -216,7 +216,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
 
 attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Attempt to replace the hypothesis with name `x`
@@ -236,7 +236,7 @@ attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_appl
                 let
                   eq ← to_expr ` `( $ ( x' ) = Equiv.symm $ ( e ) ( Equiv.toFun $ ( e ) $ ( x' ) ) )
                 let prf ← to_expr ` `( ( Equiv.symm_apply_apply $ ( e ) $ ( x' ) ) . symm )
-                let h ← note_anon Eq prf
+                let h ← note_anon eq prf
                 revert h
                 let ex ← to_expr ` `( Equiv.toFun $ ( e ) $ ( x' ) )
                 generalize ex ( by infer_param ) transparency.none

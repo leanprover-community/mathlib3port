@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.normalizer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,7 +129,7 @@ def normalizer : LieSubalgebra R L :=
   { H.toLieSubmodule.normalizer with
     lie_mem' := fun y z hy hz x =>
       by
-      rw [coe_bracket_of_module, mem_to_lie_submodule, leibniz_lie, ← lie_skew y, ← sub_eq_add_neg]
+      rw [coe_bracket_of_module, mem_toLieSubmodule, leibniz_lie, ← lie_skew y, ← sub_eq_add_neg]
       exact H.sub_mem (hz ⟨_, hy x⟩) (hy ⟨_, hz x⟩) }
 #align lie_subalgebra.normalizer LieSubalgebra.normalizer
 
@@ -184,7 +184,7 @@ normalizer of `H`. -/
 theorem exists_nested_lieIdeal_ofLe_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K)
     (h₂ : K ≤ H.normalizer) : ∃ I : LieIdeal R K, (I : LieSubalgebra R K) = ofLe h₁ :=
   by
-  rw [exists_nested_lie_ideal_coe_eq_iff]
+  rw [exists_nested_lieIdeal_coe_eq_iff]
   exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
 #align lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lieIdeal_ofLe_normalizer
 
@@ -206,7 +206,7 @@ theorem normalizer_eq_self_iff :
       by
       rintro ⟨z, hz⟩
       rw [← LieModuleHom.map_lie, LieSubmodule.Quotient.mk_eq_zero, coe_bracket_of_module,
-        Submodule.coe_mk, mem_to_lie_submodule]
+        Submodule.coe_mk, mem_toLieSubmodule]
       exact (H.mem_normalizer_iff' x).mp hx z hz
     simpa using h y hy
 #align lie_subalgebra.normalizer_eq_self_iff LieSubalgebra.normalizer_eq_self_iff

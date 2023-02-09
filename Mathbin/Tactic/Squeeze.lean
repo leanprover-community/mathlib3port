@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.squeeze
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ def squeezeLocAttrCarrier :=
 #align tactic.squeeze_loc_attr_carrier Tactic.squeezeLocAttrCarrier
 
 run_cmd
-  squeeze_loc_attr.Set `` squeeze_loc_attr_carrier none true
+  squeeze_loc_attr.set `` squeeze_loc_attr_carrier none true
 
 /-- Format a list of arguments for use with `simp` and friends. This omits the
 list entirely if it is empty.
@@ -119,7 +119,8 @@ unsafe def mk_suggestion (p : Pos) (pre post : String) (args : List simp_arg_typ
     | none => do
       let args := render_simp_arg_list args
       if at_pos then
-          @scopeTrace _ p p fun _ => _root_.trace (s! "{pre }{args }{post}") (pure () : tactic Unit)
+          @scope_trace _ p p fun _ =>
+            _root_.trace (s! "{pre }{args }{post}") (pure () : tactic unit)
         else trace s! "{pre }{args }{post}"
     | some xs => do
       squeeze_loc_attr `` squeeze_loc_attr_carrier ((p, pre, args, post) :: xs) ff
@@ -131,7 +132,7 @@ unsafe def parse_config : Option pexpr → tactic (simp_config_ext × format)
   | some cfg => do
     let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg
-    Prod.mk <$> eval_expr simp_config_ext e <*> struct.to_tactic_format cfg
+    prod.mk <$> eval_expr simp_config_ext e <*> struct.to_tactic_format cfg
 #align tactic.parse_config tactic.parse_config
 
 /-- translate a `pexpr` into a `dsimp` configuration -/
@@ -140,7 +141,7 @@ unsafe def parse_dsimp_config : Option pexpr → tactic (DsimpConfig × format)
   | some cfg => do
     let e ← to_expr ``(($(cfg) : simp_config_ext))
     let fmt ← has_to_tactic_format.to_tactic_format cfg
-    Prod.mk <$> eval_expr dsimp_config e <*> struct.to_tactic_format cfg
+    prod.mk <$> eval_expr dsimp_config e <*> struct.to_tactic_format cfg
 #align tactic.parse_dsimp_config tactic.parse_dsimp_config
 
 /-- `same_result proof tac` runs tactic `tac` and checks if the proof
@@ -268,8 +269,8 @@ unsafe def squeeze_scope (tac : itactic) : tactic Unit := do
       squeeze_loc_attr `` squeeze_loc_attr_carrier none ff
       m fun ⟨p, suggs⟩ => do
           let ⟨pre, _, post⟩ := suggs
-          let suggs : List (List simp_arg_type) := suggs <| Prod.fst ∘ Prod.snd
-          mk_suggestion p pre post (suggs List.union []) tt
+          let suggs : list (list simp_arg_type) := suggs <| prod.fst ∘ prod.snd
+          mk_suggestion p pre post (suggs list.union []) tt
           pure ()
 #align tactic.interactive.squeeze_scope tactic.interactive.squeeze_scope
 
@@ -341,7 +342,7 @@ unsafe def squeeze_simp (key : parse cur_pos) (slow_and_accurate : parse (parser
       let use_iota_eqn := if use_iota_eqn then "!" else ""
       let attrs :=
         if attr_names then ""
-        else String.join (List.intersperse " " (" with" :: attr_names toString))
+        else string.join (list.intersperse " " (" with" :: attr_names to_string))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: simp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 #align tactic.interactive.squeeze_simp tactic.interactive.squeeze_simp
@@ -370,7 +371,7 @@ unsafe def squeeze_simpa (key : parse cur_pos)
       let use_iota_eqn := if use_iota_eqn then "!" else ""
       let attrs :=
         if attr_names then ""
-        else String.join (List.intersperse " " (" with" :: attr_names toString))
+        else string.join (list.intersperse " " (" with" :: attr_names to_string))
       let tgt' := tgt' ""
       mk_suggestion (key 1) (s! "Try this: simpa{use_iota_eqn} only") (s! "{attrs }{tgt' }{c}") args
 #align tactic.interactive.squeeze_simpa tactic.interactive.squeeze_simpa
@@ -393,7 +394,7 @@ unsafe def squeeze_dsimp (key : parse cur_pos)
       let use_iota_eqn := if use_iota_eqn then "!" else ""
       let attrs :=
         if attr_names then ""
-        else String.join (List.intersperse " " (" with" :: attr_names toString))
+        else string.join (list.intersperse " " (" with" :: attr_names to_string))
       let loc := loc.to_string locat
       mk_suggestion (key 1) (s! "Try this: dsimp{use_iota_eqn} only") (s! "{attrs }{loc }{c}") args
 #align tactic.interactive.squeeze_dsimp tactic.interactive.squeeze_dsimp

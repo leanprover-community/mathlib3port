@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.even
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,9 +126,9 @@ See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem even.algHom_ext ⦃f g : even Q →ₐ[R] A⦄ (h : (even.ι Q).compr₂ f = (even.ι Q).compr₂ g) :
     f = g := by
-  rw [even_hom.ext_iff] at h
+  rw [EvenHom.ext_iff] at h
   ext ⟨x, hx⟩
-  refine' even_induction _ _ _ _ _ hx
+  refine' evenInduction _ _ _ _ _ hx
   · intro r
     exact (f.commutes r).trans (g.commutes r).symm
   · intro x y hx hy ihx ihy
@@ -163,8 +163,8 @@ private def f_fold : M →ₗ[R] A × s f →ₗ[R] A × s f :=
           (linear_map.llcomp R M A A).flip.comp f.flip : M →ₗ[R] A →ₗ[R] M →ₗ[R] A)
         ```
         -/
-      (Acc.2 m,
-        ⟨(LinearMap.mulRight R Acc.1).comp (f.bilin.flip m), Submodule.subset_span <| ⟨_, _, rfl⟩⟩))
+      (acc.2 m,
+        ⟨(LinearMap.mulRight R acc.1).comp (f.bilin.flip m), Submodule.subset_span <| ⟨_, _, rfl⟩⟩))
     (fun m₁ m₂ a =>
       Prod.ext (LinearMap.map_add _ m₁ m₂)
         (Subtype.ext <|
@@ -218,8 +218,8 @@ direction of that equivalence, but not in the fully-bundled form. -/
 @[simps (config := { attrs := [] }) apply]
 def aux (f : EvenHom Q A) : CliffordAlgebra.even Q →ₗ[R] A :=
   by
-  refine' _ ∘ₗ (Even Q).val.toLinearMap
-  exact LinearMap.fst _ _ _ ∘ₗ foldr Q (f_fold f) (f_fold_f_fold f) (1, 0)
+  refine' _ ∘ₗ (even Q).val.toLinearMap
+  exact LinearMap.fst _ _ _ ∘ₗ foldr Q (fFold f) (fFold_fFold f) (1, 0)
 #align clifford_algebra.even.lift.aux CliffordAlgebra.even.Lift.aux
 
 @[simp]
@@ -247,16 +247,16 @@ theorem aux_mul (x y : even Q) : aux f (x * y) = aux f x * aux f y :=
   cases y
   refine' (congr_arg Prod.fst (foldr_mul _ _ _ _ _ _)).trans _
   dsimp only
-  refine' even_induction Q _ _ _ _ x_property
+  refine' evenInduction Q _ _ _ _ x_property
   · intro r
-    rw [foldr_algebra_map, aux_algebra_map]
+    rw [foldr_algebraMap, aux_algebraMap]
     exact Algebra.smul_def r _
   · intro x y hx hy ihx ihy
     rw [LinearMap.map_add, Prod.fst_add, ihx, ihy, ← add_mul, ← LinearMap.map_add]
     rfl
-  · rintro m₁ m₂ x (hx : x ∈ Even Q) ih
-    rw [aux_apply, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_f_fold_f_fold, ih, ← mul_assoc,
-      Subtype.coe_mk, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_f_fold_f_fold]
+  · rintro m₁ m₂ x (hx : x ∈ even Q) ih
+    rw [aux_apply, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_fFold_fFold, ih, ← mul_assoc,
+      Subtype.coe_mk, foldr_mul, foldr_mul, foldr_ι, foldr_ι, fst_fFold_fFold]
     rfl
 #align clifford_algebra.even.lift.aux_mul CliffordAlgebra.even.Lift.aux_mul
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.hom_orthogonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ noncomputable def matrixDecomposition (o : HomOrthogonal s) {α β : Type} [Fint
       if h : f j = g k then z (f j) ⟨k, by simp [h]⟩ ⟨j, by simp⟩ ≫ eqToHom (by simp [h]) else 0
   left_inv z := by
     ext (j k)
-    simp only [category.assoc, biproduct.lift_π, biproduct.ι_matrix]
+    simp only [Category.assoc, biproduct.lift_π, biproduct.ι_matrix]
     split_ifs
     · simp
       rfl
@@ -134,8 +134,8 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f
   by
   ext (⟨b, ⟨⟩⟩⟨a⟩)
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
-  simp only [category.comp_id, category.id_comp, category.assoc, End.one_def, eq_to_hom_refl,
-    Matrix.one_apply, hom_orthogonal.matrix_decomposition_apply, biproduct.components]
+  simp only [Category.comp_id, Category.id_comp, Category.assoc, End.one_def, eqToHom_refl,
+    Matrix.one_apply, HomOrthogonal.matrixDecomposition_apply, biproduct.components]
   split_ifs with h
   · cases h
     simp
@@ -150,18 +150,18 @@ theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintyp
   by
   ext (⟨c, ⟨⟩⟩⟨a⟩)
   simp only [Set.mem_preimage, Set.mem_singleton_iff] at j_property
-  simp only [Matrix.mul_apply, limits.biproduct.components,
-    hom_orthogonal.matrix_decomposition_apply, category.comp_id, category.id_comp, category.assoc,
-    End.mul_def, eq_to_hom_refl, eq_to_hom_trans_assoc, Finset.sum_congr]
-  conv_lhs => rw [← category.id_comp w, ← biproduct.total]
-  simp only [preadditive.sum_comp, preadditive.comp_sum]
+  simp only [Matrix.mul_apply, Limits.biproduct.components, HomOrthogonal.matrixDecomposition_apply,
+    Category.comp_id, Category.id_comp, Category.assoc, End.mul_def, eqToHom_refl,
+    eqToHom_trans_assoc, finset.sum_congr]
+  conv_lhs => rw [← Category.id_comp w, ← biproduct.total]
+  simp only [Preadditive.sum_comp, Preadditive.comp_sum]
   apply Finset.sum_congr_set
   · intros
     simp
     rfl
   · intro b nm
     simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
-    simp only [category.assoc]
+    simp only [Category.assoc]
     convert comp_zero
     convert comp_zero
     convert comp_zero

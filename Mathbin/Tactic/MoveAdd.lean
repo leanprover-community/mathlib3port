@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Damiano Testa
 
 ! This file was ported from Lean 3 source module tactic.move_add
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,7 +104,7 @@ unsafe def move_left_or_right :
   | be :: l, l_un, l_m => do
     let ex :: _ ← l_un.filterM fun e' => succeeds <| unify be.2 e' |
       move_left_or_right l l_un (l_m.append [true])
-    let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.eraseₓ ex) (l_m.append [false])
+    let (l_tt, l_ff, l_un, l_m) ← move_left_or_right l (l_un.erase ex) (l_m.append [false])
     if be.1 then return (ex :: l_tt, l_ff, l_un, l_m) else return (l_tt, ex :: l_ff, l_un, l_m)
 #align tactic.move_op.move_left_or_right tactic.move_op.move_left_or_right
 
@@ -170,48 +170,48 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
         let sort_all ←
           sort_list fun e => do
               let (e, lu) ← reorder_oper e
-              pure (e, [lu, is_unused].transpose.map List.and)
+              pure (e, [lu, is_unused].transpose.map list.band)
         let (recs, list_unused) := sort_all
         let recs_0 :: recs_rest ← pure recs |
           throwError"internal error: cannot have 0 operands"
         let summed := recs_rest (fun e f => op [e, f]) recs_0
-        return (summed, list_unused List.and)
+        return (summed, list_unused list.band)
       | none => do
         let [(Fn, unused_F), (bn, unused_b)] ← [F, b].mapM <| reorder_oper
-        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map List.and)
+        return <| (expr.app Fn bn, [unused_F, unused_b].transpose.map list.band)
   | expr.pi na bi e f => do
     let [en, fn] ← [e, f].mapM <| reorder_oper
-    return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
+    return (expr.pi na bi en.1 fn.1, [en.2, fn.2].transpose.map list.band)
   | expr.lam na bi e f => do
     let [en, fn] ← [e, f].mapM <| reorder_oper
-    return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map List.and)
+    return (expr.lam na bi en.1 fn.1, [en.2, fn.2].transpose.map list.band)
   | expr.mvar na pp e => do
     let en
       ←-- is it really needed to recurse here?
           reorder_oper
           e
-    return (expr.mvar na pp en.1, [en.2].transpose.map List.and)
+    return (expr.mvar na pp en.1, [en.2].transpose.map list.band)
   | expr.local_const na pp bi e => do
     let en
       ←-- is it really needed to recurse here?
           reorder_oper
           e
-    return (expr.local_const na pp bi en.1, [en.2].transpose.map List.and)
+    return (expr.local_const na pp bi en.1, [en.2].transpose.map list.band)
   | expr.elet na e f g => do
     let [en, fn, gn] ← [e, f, g].mapM <| reorder_oper
-    return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map List.and)
+    return (expr.elet na en.1 fn.1 gn.1, [en.2, fn.2, gn.2].transpose.map list.band)
   | expr.macro ma le => do
     let len
       ←-- is it really needed to recurse here?
             le.mapM <|
           reorder_oper
     let (lee, lb) := len.unzip
-    return (expr.macro ma lee, lb List.and)
+    return (expr.macro ma lee, lb list.band)
   | e => pure (e, lp.map fun _ => true)
 #align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Passes the user input `na` to `reorder_oper` at a single location, that could either be
 `none` (referring to the goal) or `some name` (referring to hypothesis `name`).  Replaces the
 given hypothesis/goal with the rearranged one that `reorder_hyp` receives from `reorder_oper`.

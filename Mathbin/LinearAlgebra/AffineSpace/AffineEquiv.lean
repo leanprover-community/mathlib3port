@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ theorem coe_linear (e : P₁ ≃ᵃ[k] P₂) : (e : P₁ →ᵃ[k] P₂).linear 
 theorem toAffineMap_injective : Injective (toAffineMap : (P₁ ≃ᵃ[k] P₂) → P₁ →ᵃ[k] P₂) :=
   by
   rintro ⟨e, el, h⟩ ⟨e', el', h'⟩ H
-  simp only [to_affine_map_mk, Equiv.coe_inj, LinearEquiv.toLinearMap_inj] at H
+  simp only [toAffineMap_mk, Equiv.coe_inj, LinearEquiv.toLinearMap_inj] at H
   congr
   exacts[H.1, H.2]
 #align affine_equiv.to_affine_map_injective AffineEquiv.toAffineMap_injective
@@ -217,15 +217,15 @@ initialize_simps_projections AffineEquiv (to_equiv_to_fun → apply, to_equiv_in
   linear → linear as_prefix, -toEquiv)
 
 protected theorem bijective (e : P₁ ≃ᵃ[k] P₂) : Bijective e :=
-  e.toEquiv.Bijective
+  e.toEquiv.bijective
 #align affine_equiv.bijective AffineEquiv.bijective
 
 protected theorem surjective (e : P₁ ≃ᵃ[k] P₂) : Surjective e :=
-  e.toEquiv.Surjective
+  e.toEquiv.surjective
 #align affine_equiv.surjective AffineEquiv.surjective
 
 protected theorem injective (e : P₁ ≃ᵃ[k] P₂) : Injective e :=
-  e.toEquiv.Injective
+  e.toEquiv.injective
 #align affine_equiv.injective AffineEquiv.injective
 
 /-- Bijective affine maps are affine isomorphisms. -/
@@ -245,7 +245,7 @@ theorem ofBijective.symm_eq {φ : P₁ →ᵃ[k] P₂} (hφ : Function.Bijective
 
 @[simp]
 theorem range_eq (e : P₁ ≃ᵃ[k] P₂) : range e = univ :=
-  e.Surjective.range_eq
+  e.surjective.range_eq
 #align affine_equiv.range_eq AffineEquiv.range_eq
 
 @[simp]
@@ -330,7 +330,7 @@ def trans (e : P₁ ≃ᵃ[k] P₂) (e' : P₂ ≃ᵃ[k] P₃) : P₁ ≃ᵃ[k] 
   toEquiv := e.toEquiv.trans e'.toEquiv
   linear := e.linear.trans e'.linear
   map_vadd' p v := by
-    simp only [LinearEquiv.trans_apply, coe_to_equiv, (· ∘ ·), Equiv.coe_trans, map_vadd]
+    simp only [LinearEquiv.trans_apply, coe_toEquiv, (· ∘ ·), Equiv.coe_trans, map_vadd]
 #align affine_equiv.trans AffineEquiv.trans
 
 @[simp]
@@ -663,7 +663,7 @@ theorem vadd_lineMap (v : V₁) (p₁ p₂ : P₁) (c : k) :
 variable {R' : Type _} [CommRing R'] [Module R' V₁]
 
 theorem homothety_neg_one_apply (c p : P₁) : homothety c (-1 : R') p = pointReflection R' c p := by
-  simp [homothety_apply, point_reflection_apply]
+  simp [homothety_apply, pointReflection_apply]
 #align affine_map.homothety_neg_one_apply AffineMap.homothety_neg_one_apply
 
 end AffineMap

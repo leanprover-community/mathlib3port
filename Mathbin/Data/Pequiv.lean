@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.pequiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,14 +265,14 @@ def ofSet (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α
 
 #print PEquiv.mem_ofSet_self_iff /-
 theorem mem_ofSet_self_iff {s : Set α} [DecidablePred (· ∈ s)] {a : α} : a ∈ ofSet s a ↔ a ∈ s := by
-  dsimp [of_set] <;> split_ifs <;> simp [*]
+  dsimp [ofSet] <;> split_ifs <;> simp [*]
 #align pequiv.mem_of_set_self_iff PEquiv.mem_ofSet_self_iff
 -/
 
 #print PEquiv.mem_ofSet_iff /-
 theorem mem_ofSet_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
     a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
-  dsimp [of_set]
+  dsimp [ofSet]
   split_ifs
   · simp only [iff_self_and, eq_comm]
     rintro rfl
@@ -320,15 +320,15 @@ theorem ofSet_eq_refl {s : Set α} [DecidablePred (· ∈ s)] :
   ⟨fun h => by
     rw [Set.eq_univ_iff_forall]
     intro
-    rw [← mem_of_set_self_iff, h]
-    exact rfl, fun h => by simp only [← of_set_univ, h]⟩
+    rw [← mem_ofSet_self_iff, h]
+    exact rfl, fun h => by simp only [← ofSet_univ, h]⟩
 #align pequiv.of_set_eq_refl PEquiv.ofSet_eq_refl
 -/
 
 end OfSet
 
 #print PEquiv.symm_trans_rev /-
-theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.symm.trans f.symm :=
+theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = not_eq.symm.trans f.symm :=
   rfl
 #align pequiv.symm_trans_rev PEquiv.symm_trans_rev
 -/
@@ -339,7 +339,7 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).is
   ext
   dsimp [PEquiv.trans]
   simp only [eq_some_iff f, Option.isSome_iff_exists, Option.mem_def, bind_eq_some',
-    of_set_eq_some_iff]
+    ofSet_eq_some_iff]
   constructor
   · rintro ⟨b, hb₁, hb₂⟩
     exact ⟨PEquiv.inj _ hb₂ hb₁, b, hb₂⟩
@@ -356,7 +356,7 @@ theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm 
 #print PEquiv.trans_symm_eq_iff_forall_isSome /-
 theorem trans_symm_eq_iff_forall_isSome {f : α ≃. β} :
     f.trans f.symm = PEquiv.refl α ↔ ∀ a, isSome (f a) := by
-  rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
+  rw [self_trans_symm, ofSet_eq_refl, Set.eq_univ_iff_forall] <;> rfl
 #align pequiv.trans_symm_eq_iff_forall_is_some PEquiv.trans_symm_eq_iff_forall_isSome
 -/
 

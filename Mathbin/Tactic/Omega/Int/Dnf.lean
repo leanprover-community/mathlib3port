@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.int.dnf
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,14 +35,14 @@ def pushNeg : Preform → Preform
 #align omega.int.push_neg Omega.Int.pushNeg
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem pushNeg_equiv : ∀ {p : Preform}, Preform.Equiv (pushNeg p) (¬* p) :=
   by
   run_tac
     preform.induce sorry
-  · simp only [Classical.not_not, push_neg, preform.holds]
-  · simp only [preform.holds, push_neg, not_or, ihp v, ihq v]
-  · simp only [preform.holds, push_neg, not_and_or, ihp v, ihq v]
+  · simp only [Classical.not_not, pushNeg, Preform.Holds]
+  · simp only [Preform.Holds, pushNeg, not_or, ihp v, ihq v]
+  · simp only [Preform.Holds, pushNeg, not_and_or, ihp v, ihq v]
 #align omega.int.push_neg_equiv Omega.Int.pushNeg_equiv
 
 /-- NNF transformation -/
@@ -64,7 +64,7 @@ def IsNnf : Preform → Prop
 #align omega.int.is_nnf Omega.Int.IsNnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem isNnf_pushNeg : ∀ p : Preform, IsNnf p → IsNnf (pushNeg p) :=
   by
   run_tac
@@ -86,23 +86,23 @@ def NegFree : Preform → Prop
 #align omega.int.neg_free Omega.Int.NegFree
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem isNnf_nnf : ∀ p : Preform, IsNnf (nnf p) :=
   by
   run_tac
     preform.induce sorry
-  · apply is_nnf_push_neg _ ih
+  · apply isNnf_pushNeg _ ih
   · constructor <;> assumption
   · constructor <;> assumption
 #align omega.int.is_nnf_nnf Omega.Int.isNnf_nnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p :=
   by
   run_tac
     preform.induce sorry
-  · rw [push_neg_equiv]
+  · rw [pushNeg_equiv]
     apply not_congr
     apply ih
   · apply pred_mono_2' (ihp v) (ihq v)
@@ -112,15 +112,15 @@ theorem nnf_equiv : ∀ {p : Preform}, Preform.Equiv (nnf p) p :=
 /-- Eliminate all negations from preform -/
 @[simp]
 def negElim : Preform → Preform
-  | ¬* t =* s => (t.add_one ≤* s) ∨* s.add_one ≤* t
-  | ¬* t ≤* s => s.add_one ≤* t
+  | ¬* t =* s => (t.addOne ≤* s) ∨* s.addOne ≤* t
+  | ¬* t ≤* s => s.addOne ≤* t
   | p ∨* q => neg_elim p ∨* neg_elim q
   | p ∧* q => neg_elim p ∧* neg_elim q
   | p => p
 #align omega.int.neg_elim Omega.Int.negElim
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem negFree_negElim : ∀ p : Preform, IsNnf p → NegFree (negElim p) :=
   by
   run_tac
@@ -142,20 +142,20 @@ theorem le_and_le_iff_eq {α : Type} [PartialOrder α] {a b : α} : a ≤ b ∧ 
 #align omega.int.le_and_le_iff_eq Omega.Int.le_and_le_iff_eq
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem implies_negElim : ∀ {p : Preform}, Preform.Implies p (negElim p) :=
   by
   run_tac
     preform.induce sorry
   · cases' p with t s t s <;> try apply h
-    · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, preterm.val, preform.holds] at h
-      simp only [Int.add_one_le_iff, preterm.add_one, preterm.val, preform.holds, neg_elim]
+    · simp only [le_and_le_iff_eq.symm, not_and_or, not_le, Preterm.val, Preform.Holds] at h
+      simp only [Int.add_one_le_iff, Preterm.addOne, Preterm.val, Preform.Holds, negElim]
       rw [or_comm']
       assumption
-    · simp only [not_le, Int.add_one_le_iff, preterm.add_one, not_le, preterm.val, preform.holds,
-        neg_elim] at *
+    · simp only [not_le, Int.add_one_le_iff, Preterm.addOne, not_le, Preterm.val, Preform.Holds,
+        negElim] at *
       assumption
-  · simp only [neg_elim]
+  · simp only [negElim]
     cases h <;>
         [·
           left
@@ -181,7 +181,7 @@ def dnf (p : Preform) : List Clause :=
 #align omega.int.dnf Omega.Int.dnf
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.int.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem exists_clause_holds {v : Nat → Int} :
     ∀ {p : Preform}, NegFree p → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds v c :=
   by
@@ -189,16 +189,16 @@ theorem exists_clause_holds {v : Nat → Int} :
     preform.induce sorry
   · apply List.exists_mem_cons_of
     constructor
-    · simp only [preterm.val, preform.holds] at h2
+    · simp only [Preterm.val, Preform.Holds] at h2
       rw [List.forall_mem_singleton]
       simp only [h2, Omega.Int.val_canonize, Omega.Term.val_sub, sub_self]
     · apply List.forall_mem_nil
   · apply List.exists_mem_cons_of
     constructor
     · apply List.forall_mem_nil
-    · simp only [preterm.val, preform.holds] at h2
+    · simp only [Preterm.val, Preform.Holds] at h2
       rw [List.forall_mem_singleton]
-      simp only [val_canonize, preterm.val, term.val_sub]
+      simp only [val_canonize, Preterm.val, Term.val_sub]
       rw [le_sub_comm, sub_zero]
       assumption
   · cases h1
@@ -211,8 +211,8 @@ theorem exists_clause_holds {v : Nat → Int} :
       assumption
   · rcases ihp h1.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h2.right with ⟨cq, hq1, hq2⟩
-    refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
-    simp only [dnf_core, List.mem_map']
+    refine' ⟨Clause.append cp cq, ⟨_, Clause.holds_append hp2 hq2⟩⟩
+    simp only [dnfCore, List.mem_map']
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
@@ -228,9 +228,9 @@ theorem clauses_sat_dnfCore {p : Preform} : NegFree p → p.Sat → Clauses.Sat 
 theorem unsat_of_clauses_unsat {p : Preform} : Clauses.Unsat (dnf p) → p.Unsat :=
   by
   intro h1 h2; apply h1
-  apply clauses_sat_dnf_core
-  apply neg_free_neg_elim _ (is_nnf_nnf _)
-  apply preform.sat_of_implies_of_sat implies_neg_elim
+  apply clauses_sat_dnfCore
+  apply negFree_negElim _ (isNnf_nnf _)
+  apply Preform.sat_of_implies_of_sat implies_negElim
   have hrw := exists_congr (@nnf_equiv p)
   apply hrw.elim_right h2
 #align omega.int.unsat_of_clauses_unsat Omega.Int.unsat_of_clauses_unsat

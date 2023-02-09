@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ Note that when `𝔸 = matrix n n 𝕂`, this is the **Matrix Exponential**; see
 [`analysis.normed_space.matrix_exponential`](../matrix_exponential) for lemmas specific to that
 case. -/
 noncomputable def exp (x : 𝔸) : 𝔸 :=
-  (expSeries 𝕂 𝔸).Sum x
+  (expSeries 𝕂 𝔸).sum x
 #align exp exp
 
 variable {𝕂}
@@ -104,7 +104,7 @@ theorem expSeries_apply_eq' (x : 𝔸) :
   funext (expSeries_apply_eq x)
 #align exp_series_apply_eq' expSeries_apply_eq'
 
-theorem expSeries_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
+theorem expSeries_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).sum x = ∑' n : ℕ, (n !⁻¹ : 𝕂) • x ^ n :=
   tsum_congr fun n => expSeries_apply_eq x n
 #align exp_series_sum_eq expSeries_sum_eq
 
@@ -112,7 +112,7 @@ theorem exp_eq_tsum : exp 𝕂 = fun x : 𝔸 => ∑' n : ℕ, (n !⁻¹ : 𝕂)
   funext expSeries_sum_eq
 #align exp_eq_tsum exp_eq_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset exprℕ())) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (n «expr ∉ » ({0} : finset[finset] exprℕ())) -/
 @[simp]
 theorem exp_zero [T2Space 𝔸] : exp 𝕂 (0 : 𝔸) = 1 :=
   by
@@ -153,7 +153,7 @@ theorem Commute.exp_left [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute
   (h.symm.exp_right 𝕂).symm
 #align commute.exp_left Commute.exp_left
 
-theorem Commute.exp [T2Space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute (exp 𝕂 x) (exp 𝕂 y) :=
+theorem Commute.exp [t2_space 𝔸] {x y : 𝔸} (h : Commute x y) : Commute (exp 𝕂 x) (exp 𝕂 y) :=
   (h.exp_left _).exp_right _
 #align commute.exp Commute.exp
 
@@ -165,7 +165,7 @@ variable {𝕂 𝔸 : Type _} [Field 𝕂] [DivisionRing 𝔸] [Algebra 𝕂 �
   [TopologicalRing 𝔸]
 
 theorem expSeries_apply_eq_div (x : 𝔸) (n : ℕ) : (expSeries 𝕂 𝔸 n fun _ => x) = x ^ n / n ! := by
-  rw [div_eq_mul_inv, ← (Nat.cast_commute n ! (x ^ n)).inv_left₀.Eq, ← smul_eq_mul,
+  rw [div_eq_mul_inv, ← (Nat.cast_commute n ! (x ^ n)).inv_left₀.eq, ← smul_eq_mul,
     expSeries_apply_eq, inv_nat_cast_smul_eq _ _ _ _]
 #align exp_series_apply_eq_div expSeries_apply_eq_div
 
@@ -174,7 +174,7 @@ theorem expSeries_apply_eq_div' (x : 𝔸) :
   funext (expSeries_apply_eq_div x)
 #align exp_series_apply_eq_div' expSeries_apply_eq_div'
 
-theorem expSeries_sum_eq_div (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑' n : ℕ, x ^ n / n ! :=
+theorem expSeries_sum_eq_div (x : 𝔸) : (expSeries 𝕂 𝔸).sum x = ∑' n : ℕ, x ^ n / n ! :=
   tsum_congr (expSeries_apply_eq_div x)
 #align exp_series_sum_eq_div expSeries_sum_eq_div
 
@@ -239,12 +239,12 @@ theorem expSeries_hasSum_exp_of_mem_ball' (x : 𝔸)
 
 theorem hasFpowerSeriesOnBallExpOfRadiusPos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasFpowerSeriesOnBall (exp 𝕂) (expSeries 𝕂 𝔸) 0 (expSeries 𝕂 𝔸).radius :=
-  (expSeries 𝕂 𝔸).HasFpowerSeriesOnBall h
+  (expSeries 𝕂 𝔸).hasFpowerSeriesOnBall h
 #align has_fpower_series_on_ball_exp_of_radius_pos hasFpowerSeriesOnBallExpOfRadiusPos
 
 theorem hasFpowerSeriesAtExpZeroOfRadiusPos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasFpowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
-  (hasFpowerSeriesOnBallExpOfRadiusPos h).HasFpowerSeriesAt
+  (hasFpowerSeriesOnBallExpOfRadiusPos h).hasFpowerSeriesAt
 #align has_fpower_series_at_exp_zero_of_radius_pos hasFpowerSeriesAtExpZeroOfRadiusPos
 
 theorem continuousOn_exp : ContinuousOn (exp 𝕂 : 𝔸 → 𝔸) (Emetric.ball 0 (expSeries 𝕂 𝔸).radius) :=
@@ -322,7 +322,7 @@ theorem map_exp_of_mem_ball {F} [RingHomClass F 𝔸 𝔹] (f : F) (hf : Continu
     (hx : x ∈ Emetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) : f (exp 𝕂 x) = exp 𝕂 (f x) :=
   by
   rw [exp_eq_tsum, exp_eq_tsum]
-  refine' ((expSeries_summable_of_mem_ball' _ hx).HasSum.map f hf).tsum_eq.symm.trans _
+  refine' ((expSeries_summable_of_mem_ball' _ hx).hasSum.map f hf).tsum_eq.symm.trans _
   dsimp only [Function.comp]
   simp_rw [one_div, map_inv_nat_cast_smul f 𝕂 𝕂, map_pow]
 #align map_exp_of_mem_ball map_exp_of_mem_ball
@@ -407,7 +407,7 @@ theorem expSeries_radius_eq_top : (expSeries 𝕂 𝔸).radius = ∞ :=
   rw [norm_mul, norm_norm (expSeries 𝕂 𝔸 n), expSeries, norm_smul, norm_inv, norm_pow,
     Nnreal.norm_eq, norm_eq_abs, abs_cast_nat, mul_comm, ← mul_assoc, ← div_eq_mul_inv]
   have : ‖ContinuousMultilinearMap.mkPiAlgebraFin 𝕂 n 𝔸‖ ≤ 1 :=
-    norm_mk_pi_algebra_fin_le_of_pos (Nat.pos_of_ne_zero hn)
+    norm_mkPiAlgebraFin_le_of_pos (Nat.pos_of_ne_zero hn)
   exact mul_le_of_le_one_right (div_nonneg (pow_nonneg r.coe_nonneg n) n !.cast_nonneg) this
 #align exp_series_radius_eq_top expSeries_radius_eq_top
 
@@ -452,7 +452,7 @@ theorem expHasFpowerSeriesOnBall : HasFpowerSeriesOnBall (exp 𝕂) (expSeries �
 #align exp_has_fpower_series_on_ball expHasFpowerSeriesOnBall
 
 theorem expHasFpowerSeriesAtZero : HasFpowerSeriesAt (exp 𝕂) (expSeries 𝕂 𝔸) 0 :=
-  expHasFpowerSeriesOnBall.HasFpowerSeriesAt
+  expHasFpowerSeriesOnBall.hasFpowerSeriesAt
 #align exp_has_fpower_series_at_zero expHasFpowerSeriesAtZero
 
 theorem exp_continuous : Continuous (exp 𝕂 : 𝔸 → 𝔸) :=
@@ -676,6 +676,12 @@ theorem exp_eq_exp : (exp 𝕂 : 𝔸 → 𝔸) = exp 𝕂' :=
 theorem exp_ℝ_ℂ_eq_exp_ℂ_ℂ : (exp ℝ : ℂ → ℂ) = exp ℂ :=
   exp_eq_exp ℝ ℂ ℂ
 #align exp_ℝ_ℂ_eq_exp_ℂ_ℂ exp_ℝ_ℂ_eq_exp_ℂ_ℂ
+
+/-- A version of `complex.of_real_exp` for `exp` instead of `complex.exp` -/
+@[simp, norm_cast]
+theorem of_real_exp_ℝ_ℝ (r : ℝ) : ↑(exp ℝ r) = exp ℂ (r : ℂ) :=
+  (map_exp ℝ (algebraMap ℝ ℂ) (continuous_algebraMap _ _) r).trans (congr_fun exp_ℝ_ℂ_eq_exp_ℂ_ℂ _)
+#align of_real_exp_ℝ_ℝ of_real_exp_ℝ_ℝ
 
 end ScalarTower
 

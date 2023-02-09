@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))] (s : List.{0} Rat), Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (List.sum.{0} Rat Rat.instAddRat (CommMonoidWithZero.toZero.{0} Rat (CommGroupWithZero.toCommMonoidWithZero.{0} Rat Rat.commGroupWithZero)) s)) (List.sum.{u1} α (Distrib.toAdd.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))))) (MonoidWithZero.toZero.{u1} α (Semiring.toMonoidWithZero.{u1} α (DivisionSemiring.toSemiring.{u1} α (DivisionRing.toDivisionSemiring.{u1} α _inst_1)))) (List.map.{0, u1} Rat α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align rat.cast_list_sum Rat.cast_list_sumₓ'. -/
 @[simp, norm_cast]
-theorem cast_list_sum (s : List ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
+theorem cast_list_sum (s : List ℚ) : (↑s.Sum : α) = (s.map coe).sum :=
   map_list_sum (Rat.castHom α) _
 #align rat.cast_list_sum Rat.cast_list_sum
 
@@ -46,7 +46,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))] (s : Multiset.{0} Rat), Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (Multiset.sum.{0} Rat Rat.addCommMonoid s)) (Multiset.sum.{u1} α (NonUnitalNonAssocSemiring.toAddCommMonoid.{u1} α (NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))))) (Multiset.map.{0, u1} Rat α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align rat.cast_multiset_sum Rat.cast_multiset_sumₓ'. -/
 @[simp, norm_cast]
-theorem cast_multiset_sum (s : Multiset ℚ) : (↑s.Sum : α) = (s.map coe).Sum :=
+theorem cast_multiset_sum (s : Multiset ℚ) : (↑s.Sum : α) = (s.map coe).sum :=
   map_multiset_sum (Rat.castHom α) _
 #align rat.cast_multiset_sum Rat.cast_multiset_sum
 
@@ -68,7 +68,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))] (s : List.{0} Rat), Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (List.prod.{0} Rat Rat.instMulRat (NonAssocRing.toOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) s)) (List.prod.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))) (NonAssocRing.toOne.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))) (List.map.{0, u1} Rat α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align rat.cast_list_prod Rat.cast_list_prodₓ'. -/
 @[simp, norm_cast]
-theorem cast_list_prod (s : List ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
+theorem cast_list_prod (s : List ℚ) : (↑s.Prod : α) = (s.map coe).prod :=
   map_list_prod (Rat.castHom α) _
 #align rat.cast_list_prod Rat.cast_list_prod
 
@@ -85,7 +85,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Field.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α (Field.toDivisionRing.{u1} α _inst_1))))] (s : Multiset.{0} Rat), Eq.{succ u1} α (RatCast.ratCast.{u1} α (Field.toRatCast.{u1} α _inst_1) (Multiset.prod.{0} Rat Rat.commMonoid s)) (Multiset.prod.{u1} α (CommRing.toCommMonoid.{u1} α (Field.toCommRing.{u1} α _inst_1)) (Multiset.map.{0, u1} Rat α (RatCast.ratCast.{u1} α (Field.toRatCast.{u1} α _inst_1)) s))
 Case conversion may be inaccurate. Consider using '#align rat.cast_multiset_prod Rat.cast_multiset_prodₓ'. -/
 @[simp, norm_cast]
-theorem cast_multiset_prod (s : Multiset ℚ) : (↑s.Prod : α) = (s.map coe).Prod :=
+theorem cast_multiset_prod (s : Multiset ℚ) : (↑s.Prod : α) = (s.map coe).prod :=
   map_multiset_prod (Rat.castHom α) _
 #align rat.cast_multiset_prod Rat.cast_multiset_prod
 

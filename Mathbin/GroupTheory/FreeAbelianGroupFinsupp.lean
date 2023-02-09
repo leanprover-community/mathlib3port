@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module group_theory.free_abelian_group_finsupp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem Finsupp.toFreeAbelianGroup_comp_singleAddHom (x : X) :
   by
   ext
   simp only [AddMonoidHom.coe_comp, Finsupp.singleAddHom_apply, Function.comp_apply, one_smul,
-    to_free_abelian_group, Finsupp.liftAddHom_apply_single]
+    toFreeAbelianGroup, Finsupp.liftAddHom_apply_single]
 #align finsupp.to_free_abelian_group_comp_single_add_hom Finsupp.toFreeAbelianGroup_comp_singleAddHom
 
 @[simp]
@@ -64,7 +64,7 @@ theorem FreeAbelianGroup.toFinsupp_comp_toFreeAbelianGroup :
   by
   ext (x y); simp only [AddMonoidHom.id_comp]
   rw [AddMonoidHom.comp_assoc, Finsupp.toFreeAbelianGroup_comp_singleAddHom]
-  simp only [to_finsupp, AddMonoidHom.coe_comp, Finsupp.singleAddHom_apply, Function.comp_apply,
+  simp only [toFinsupp, AddMonoidHom.coe_comp, Finsupp.singleAddHom_apply, Function.comp_apply,
     one_smul, lift.of, AddMonoidHom.flip_apply, smulAddHom_apply, AddMonoidHom.id_apply]
 #align free_abelian_group.to_finsupp_comp_to_free_abelian_group FreeAbelianGroup.toFinsupp_comp_toFreeAbelianGroup
 
@@ -73,9 +73,8 @@ theorem Finsupp.toFreeAbelianGroup_comp_toFinsupp :
     toFreeAbelianGroup.comp toFinsupp = AddMonoidHom.id (FreeAbelianGroup X) :=
   by
   ext
-  rw [to_free_abelian_group, to_finsupp, AddMonoidHom.comp_apply, lift.of,
-    lift_add_hom_apply_single, AddMonoidHom.flip_apply, smulAddHom_apply, one_smul,
-    AddMonoidHom.id_apply]
+  rw [toFreeAbelianGroup, toFinsupp, AddMonoidHom.comp_apply, lift.of, liftAddHom_apply_single,
+    AddMonoidHom.flip_apply, smulAddHom_apply, one_smul, AddMonoidHom.id_apply]
 #align finsupp.to_free_abelian_group_comp_to_finsupp Finsupp.toFreeAbelianGroup_comp_toFinsupp
 
 @[simp]
@@ -92,12 +91,12 @@ variable {X}
 
 @[simp]
 theorem toFinsupp_of (x : X) : toFinsupp (of x) = Finsupp.single x 1 := by
-  simp only [to_finsupp, lift.of]
+  simp only [toFinsupp, lift.of]
 #align free_abelian_group.to_finsupp_of FreeAbelianGroup.toFinsupp_of
 
 @[simp]
 theorem toFinsupp_toFreeAbelianGroup (f : X →₀ ℤ) : f.toFreeAbelianGroup.toFinsupp = f := by
-  rw [← AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
+  rw [← AddMonoidHom.comp_apply, toFinsupp_comp_toFreeAbelianGroup, AddMonoidHom.id_apply]
 #align free_abelian_group.to_finsupp_to_free_abelian_group FreeAbelianGroup.toFinsupp_toFreeAbelianGroup
 
 variable (X)
@@ -177,7 +176,7 @@ theorem support_zero : support (0 : FreeAbelianGroup X) = ∅ := by
 
 @[simp]
 theorem support_of (x : X) : support (of x) = {x} := by
-  simp only [support, to_finsupp_of, Finsupp.support_single_ne_zero _ one_ne_zero]
+  simp only [support, toFinsupp_of, Finsupp.support_single_ne_zero _ one_ne_zero]
 #align free_abelian_group.support_of FreeAbelianGroup.support_of
 
 @[simp]

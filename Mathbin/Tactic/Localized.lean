@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.localized
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,9 +73,9 @@ unsafe def localized_cmd (_ : parse <| tk "localized") : parser Unit := do
   let dummy_decl_name :=
     mkNumName `_localized_decl ((String.hash (cmd ++ nm.toString) + env.fingerprint) % unsignedSz)
   add_decl
-      (declaration.defn dummy_decl_name [] q(Name × String) (reflect (⟨nm, cmd⟩ : Name × String))
-        (ReducibilityHints.regular 1 tt) ff)
-  localized_attr dummy_decl_name Unit.unit tt
+      (declaration.defn dummy_decl_name [] q(Name × String) (reflect (⟨nm, cmd⟩ : name × string))
+        (reducibility_hints.regular 1 tt) ff)
+  localized_attr dummy_decl_name unit.star tt
 #align localized_cmd localized_cmd
 
 /--

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.lattice
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ join-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `sup_eq_right`.
 -/
-def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a ⊔ b = b ⊔ a)
+def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a ⊔ b = congr_fun ⊔ a)
     (sup_assoc : ∀ a b c : α, a ⊔ b ⊔ c = a ⊔ (b ⊔ c)) (sup_idem : ∀ a : α, a ⊔ a = a) :
     SemilatticeSup α where
   sup := (· ⊔ ·)
@@ -116,7 +116,7 @@ def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a ⊔
   le_sup_left a b := show a ⊔ (a ⊔ b) = a ⊔ b by rw [← sup_assoc, sup_idem]
   le_sup_right a b := show b ⊔ (a ⊔ b) = a ⊔ b by rw [sup_comm, sup_assoc, sup_idem]
   sup_le a b c hac hbc := by
-    dsimp only [(· ≤ ·), Preorder.Le] at *
+    dsimp only [(· ≤ ·), preorder.le] at *
     rwa [sup_assoc, hbc]
 #align semilattice_sup.mk' SemilatticeSup.mk'
 -/
@@ -969,7 +969,8 @@ theorem Lattice.ext {α} {A B : Lattice α}
           x ≤ y) :
     A = B :=
   by
-  have SS : @Lattice.toSemilatticeSup α A = @Lattice.toSemilatticeSup α B := SemilatticeSup.ext H
+  have SS : @lattice.to_semilattice_sup α A = @lattice.to_semilattice_sup α B :=
+    SemilatticeSup.ext H
   have II := SemilatticeInf.ext H
   cases A; cases B
   injection SS <;> injection II <;> congr
@@ -1255,8 +1256,8 @@ instance (priority := 100) LinearOrder.toDistribLattice {α : Type u} [o : Linea
   { LinearOrder.toLattice with
     le_sup_inf := fun a b c =>
       match le_total b c with
-      | Or.inl h => inf_le_of_left_le <| sup_le_sup_left (le_inf (le_refl b) h) _
-      | Or.inr h => inf_le_of_right_le <| sup_le_sup_left (le_inf h (le_refl c)) _ }
+      | or.inl h => inf_le_of_left_le <| sup_le_sup_left (le_inf (le_refl b) h) _
+      | or.inr h => inf_le_of_right_le <| sup_le_sup_left (le_inf h (le_refl c)) _ }
 #align linear_order.to_distrib_lattice LinearOrder.toDistribLattice
 
 instance Nat.distribLattice : DistribLattice ℕ := by infer_instance
@@ -1695,14 +1696,14 @@ theorem snd_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).snd = p.snd
 
 #print Prod.swap_sup /-
 @[simp]
-theorem swap_sup [HasSup α] [HasSup β] (p q : α × β) : (p ⊔ q).symm = p.symm ⊔ q.symm :=
+theorem swap_sup [HasSup α] [HasSup β] (p q : α × β) : (p ⊔ q).swap = p.swap ⊔ q.swap :=
   rfl
 #align prod.swap_sup Prod.swap_sup
 -/
 
 #print Prod.swap_inf /-
 @[simp]
-theorem swap_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).symm = p.symm ⊓ q.symm :=
+theorem swap_inf [HasInf α] [HasInf β] (p q : α × β) : (p ⊓ q).swap = p.swap ⊓ q.swap :=
   rfl
 #align prod.swap_inf Prod.swap_inf
 -/
@@ -1894,7 +1895,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.lattice [HasSup α] [HasInf α] [Lattice β] (f : α → β)
     (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) : Lattice α :=
-  { hf_inj.SemilatticeSup f map_sup, hf_inj.SemilatticeInf f map_inf with }
+  { hf_inj.semilatticeSup f map_sup, hf_inj.semilatticeInf f map_inf with }
 #align function.injective.lattice Function.Injective.lattice
 -/
 
@@ -1906,7 +1907,7 @@ See note [reducible non-instances]. -/
 protected def Function.Injective.distribLattice [HasSup α] [HasInf α] [DistribLattice β] (f : α → β)
     (hf_inj : Function.Injective f) (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b)
     (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b) : DistribLattice α :=
-  { hf_inj.Lattice f map_sup map_inf with
+  { hf_inj.lattice f map_sup map_inf with
     le_sup_inf := fun a b c =>
       by
       change f ((a ⊔ b) ⊓ (a ⊔ c)) ≤ f (a ⊔ b ⊓ c)

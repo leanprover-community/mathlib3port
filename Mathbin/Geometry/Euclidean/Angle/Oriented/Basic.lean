@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem continuousAt_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
   · exact o.kahler_ne_zero hx1 hx2
   exact
     ((continuous_of_real.comp continuous_inner).add
-        ((continuous_of_real.comp o.area_form'.continuous₂).mul continuous_const)).ContinuousAt
+        ((continuous_of_real.comp o.area_form'.continuous₂).mul continuous_const)).continuousAt
 #align orientation.continuous_at_oangle Orientation.continuousAt_oangle
 
 /-- If the first vector passed to `oangle` is 0, the result is 0. -/
@@ -462,7 +462,7 @@ theorem oangle_eq_pi_iff_sameRay_neg {x y : V} :
 not linearly independent. -/
 theorem oangle_eq_zero_or_eq_pi_iff_not_linearIndependent {x y : V} :
     o.oangle x y = 0 ∨ o.oangle x y = π ↔ ¬LinearIndependent ℝ ![x, y] := by
-  rw [oangle_eq_zero_iff_same_ray, oangle_eq_pi_iff_same_ray_neg,
+  rw [oangle_eq_zero_iff_sameRay, oangle_eq_pi_iff_sameRay_neg,
     sameRay_or_ne_zero_and_sameRay_neg_iff_not_linearIndependent]
 #align orientation.oangle_eq_zero_or_eq_pi_iff_not_linear_independent Orientation.oangle_eq_zero_or_eq_pi_iff_not_linearIndependent
 
@@ -471,7 +471,7 @@ or the second is a multiple of the first. -/
 theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
     o.oangle x y = 0 ∨ o.oangle x y = π ↔ x = 0 ∨ ∃ r : ℝ, y = r • x :=
   by
-  rw [oangle_eq_zero_iff_same_ray, oangle_eq_pi_iff_same_ray_neg]
+  rw [oangle_eq_zero_iff_sameRay, oangle_eq_pi_iff_sameRay_neg]
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with (h | ⟨-, -, h⟩)
     · by_cases hx : x = 0
@@ -498,14 +498,13 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
 are linearly independent. -/
 theorem oangle_ne_zero_and_ne_pi_iff_linearIndependent {x y : V} :
     o.oangle x y ≠ 0 ∧ o.oangle x y ≠ π ↔ LinearIndependent ℝ ![x, y] := by
-  rw [← not_or, ← not_iff_not, Classical.not_not,
-    oangle_eq_zero_or_eq_pi_iff_not_linear_independent]
+  rw [← not_or, ← not_iff_not, Classical.not_not, oangle_eq_zero_or_eq_pi_iff_not_linearIndependent]
 #align orientation.oangle_ne_zero_and_ne_pi_iff_linear_independent Orientation.oangle_ne_zero_and_ne_pi_iff_linearIndependent
 
 /-- Two vectors are equal if and only if they have equal norms and zero angle between them. -/
 theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y‖ ∧ o.oangle x y = 0 :=
   by
-  rw [oangle_eq_zero_iff_same_ray]
+  rw [oangle_eq_zero_iff_sameRay]
   constructor
   · rintro rfl
     simp
@@ -516,7 +515,7 @@ theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y�
     have : ‖y‖ ≠ 0 := by simpa using hy
     obtain rfl : r = 1 := by
       apply mul_right_cancel₀ this
-      simpa [norm_smul, _root_.abs_of_nonneg hr] using h₁
+      simpa [norm_smul, abs_of_nonneg hr] using h₁
     simp
 #align orientation.eq_iff_norm_eq_and_oangle_eq_zero Orientation.eq_iff_norm_eq_and_oangle_eq_zero
 
@@ -661,7 +660,7 @@ theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) :
   have : ‖x‖ ≠ 0 := by simpa using hx
   have : ‖y‖ ≠ 0 := by simpa using hy
   rw [oangle, Real.Angle.cos_coe, Complex.cos_arg, o.abs_kahler]
-  · simp only [kahler_apply_apply, real_smul, add_re, of_real_re, mul_re, I_re, of_real_im]
+  · simp only [kahler_apply_apply, real_smul, add_re, of_real_re, mul_re, i_re, of_real_im]
     field_simp
     ring
   · exact o.kahler_ne_zero hx hy
@@ -921,7 +920,7 @@ outside of that proof. -/
 theorem oangle_smul_add_right_eq_zero_or_eq_pi_iff {x y : V} (r : ℝ) :
     o.oangle x (r • x + y) = 0 ∨ o.oangle x (r • x + y) = π ↔ o.oangle x y = 0 ∨ o.oangle x y = π :=
   by
-  simp_rw [oangle_eq_zero_or_eq_pi_iff_not_linear_independent, Fintype.not_linearIndependent_iff,
+  simp_rw [oangle_eq_zero_or_eq_pi_iff_not_linearIndependent, Fintype.not_linearIndependent_iff,
     Fin.sum_univ_two, Fin.exists_fin_two]
   refine' ⟨fun h => _, fun h => _⟩
   · rcases h with ⟨m, h, hm⟩
@@ -971,7 +970,7 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
     all_goals
       simp_rw [s, Set.mem_image] at hz
       obtain ⟨r', -, rfl⟩ := hz
-      simp only [Prod.fst, Prod.snd]
+      simp only [prod.fst, prod.snd]
       intro hz
     · simpa [hz] using (h' 0).1
     · simpa [hz] using (h' r').1
@@ -1137,7 +1136,7 @@ theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
     rw [o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hn h, Real.Angle.sign_pi_sub]
   rw [Real.Angle.sign_two_zsmul_eq_sign_iff] at hs
   rcases hs with (hs | hs)
-  · rw [oangle_eq_pi_iff_oangle_rev_eq_pi, oangle_eq_pi_iff_same_ray_neg, neg_sub] at hs
+  · rw [oangle_eq_pi_iff_oangle_rev_eq_pi, oangle_eq_pi_iff_sameRay_neg, neg_sub] at hs
     rcases hs with ⟨hy, -, hr⟩
     rw [← exists_nonneg_left_iff_sameRay hy] at hr
     rcases hr with ⟨r, hr0, hr⟩

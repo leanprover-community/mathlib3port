@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.kronecker
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -112,7 +112,7 @@ theorem kroneckerMap_add_right [Add β] [Add γ] (f : α → β → γ)
 
 theorem kroneckerMap_smul_left [SMul R α] [SMul R γ] (f : α → β → γ) (r : R)
     (hf : ∀ a b, f (r • a) b = r • f a b) (A : Matrix l m α) (B : Matrix n p β) :
-    kroneckerMap f (r • A) B = r • kroneckerMap f A B :=
+    kroneckerMap f (r • A) B = r • kronecker_map f A B :=
   ext fun i j => hf _ _
 #align matrix.kronecker_map_smul_left Matrix.kroneckerMap_smul_left
 
@@ -201,8 +201,8 @@ theorem kroneckerMapBilinear_mul_mul [CommSemiring R] [Fintype m] [Fintype m']
       kroneckerMapBilinear f A A' ⬝ kroneckerMapBilinear f B B' :=
   by
   ext (⟨i, i'⟩⟨j, j'⟩)
-  simp only [kronecker_map_bilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
-    Finset.sum_product, kronecker_map]
+  simp only [kroneckerMapBilinear_apply_apply, mul_apply, ← Finset.univ_product_univ,
+    Finset.sum_product, kroneckerMap]
   simp_rw [f.map_sum, LinearMap.sum_apply, LinearMap.map_sum, h_comm]
 #align matrix.kronecker_map_bilinear_mul_mul Matrix.kroneckerMapBilinear_mul_mul
 

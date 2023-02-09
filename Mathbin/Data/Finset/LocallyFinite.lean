@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,21 +417,21 @@ section Filter
 
 #print Finset.Ico_filter_lt_of_le_left /-
 theorem Ico_filter_lt_of_le_left [DecidablePred (· < c)] (hca : c ≤ a) :
-    (Ico a b).filterₓ (· < c) = ∅ :=
+    (Ico a b).filter (· < c) = ∅ :=
   filter_false_of_mem fun x hx => (hca.trans (mem_Ico.1 hx).1).not_lt
 #align finset.Ico_filter_lt_of_le_left Finset.Ico_filter_lt_of_le_left
 -/
 
 #print Finset.Ico_filter_lt_of_right_le /-
 theorem Ico_filter_lt_of_right_le [DecidablePred (· < c)] (hbc : b ≤ c) :
-    (Ico a b).filterₓ (· < c) = Ico a b :=
+    (Ico a b).filter (· < c) = Ico a b :=
   filter_true_of_mem fun x hx => (mem_Ico.1 hx).2.trans_le hbc
 #align finset.Ico_filter_lt_of_right_le Finset.Ico_filter_lt_of_right_le
 -/
 
 #print Finset.Ico_filter_lt_of_le_right /-
 theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
-    (Ico a b).filterₓ (· < c) = Ico a c := by
+    (Ico a b).filter (· < c) = Ico a c := by
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_right_comm]
   exact and_iff_left_of_imp fun h => h.2.trans_le hcb
@@ -440,21 +440,21 @@ theorem Ico_filter_lt_of_le_right [DecidablePred (· < c)] (hcb : c ≤ b) :
 
 #print Finset.Ico_filter_le_of_le_left /-
 theorem Ico_filter_le_of_le_left {a b c : α} [DecidablePred ((· ≤ ·) c)] (hca : c ≤ a) :
-    (Ico a b).filterₓ ((· ≤ ·) c) = Ico a b :=
+    (Ico a b).filter ((· ≤ ·) c) = Ico a b :=
   filter_true_of_mem fun x hx => hca.trans (mem_Ico.1 hx).1
 #align finset.Ico_filter_le_of_le_left Finset.Ico_filter_le_of_le_left
 -/
 
 #print Finset.Ico_filter_le_of_right_le /-
 theorem Ico_filter_le_of_right_le {a b : α} [DecidablePred ((· ≤ ·) b)] :
-    (Ico a b).filterₓ ((· ≤ ·) b) = ∅ :=
+    (Ico a b).filter ((· ≤ ·) b) = ∅ :=
   filter_false_of_mem fun x hx => (mem_Ico.1 hx).2.not_le
 #align finset.Ico_filter_le_of_right_le Finset.Ico_filter_le_of_right_le
 -/
 
 #print Finset.Ico_filter_le_of_left_le /-
 theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (hac : a ≤ c) :
-    (Ico a b).filterₓ ((· ≤ ·) c) = Ico c b := by
+    (Ico a b).filter ((· ≤ ·) c) = Ico c b := by
   ext x
   rw [mem_filter, mem_Ico, mem_Ico, and_comm', and_left_comm]
   exact and_iff_right_of_imp fun h => hac.trans h.1
@@ -463,21 +463,21 @@ theorem Ico_filter_le_of_left_le {a b c : α} [DecidablePred ((· ≤ ·) c)] (h
 
 #print Finset.Icc_filter_lt_of_lt_right /-
 theorem Icc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
-    (Icc a b).filterₓ (· < c) = Icc a b :=
+    (Icc a b).filter (· < c) = Icc a b :=
   (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Icc.1 hx).2 h
 #align finset.Icc_filter_lt_of_lt_right Finset.Icc_filter_lt_of_lt_right
 -/
 
 #print Finset.Ioc_filter_lt_of_lt_right /-
 theorem Ioc_filter_lt_of_lt_right {a b c : α} [DecidablePred (· < c)] (h : b < c) :
-    (Ioc a b).filterₓ (· < c) = Ioc a b :=
+    (Ioc a b).filter (· < c) = Ioc a b :=
   (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Ioc.1 hx).2 h
 #align finset.Ioc_filter_lt_of_lt_right Finset.Ioc_filter_lt_of_lt_right
 -/
 
 #print Finset.Iic_filter_lt_of_lt_right /-
 theorem Iic_filter_lt_of_lt_right {α} [Preorder α] [LocallyFiniteOrderBot α] {a c : α}
-    [DecidablePred (· < c)] (h : a < c) : (Iic a).filterₓ (· < c) = Iic a :=
+    [DecidablePred (· < c)] (h : a < c) : (Iic a).filter (· < c) = Iic a :=
   (Finset.filter_eq_self _).2 fun x hx => lt_of_le_of_lt (mem_Iic.1 hx) h
 #align finset.Iic_filter_lt_of_lt_right Finset.Iic_filter_lt_of_lt_right
 -/
@@ -486,7 +486,7 @@ variable (a b) [Fintype α]
 
 #print Finset.filter_lt_lt_eq_Ioo /-
 theorem filter_lt_lt_eq_Ioo [DecidablePred fun j => a < j ∧ j < b] :
-    (univ.filterₓ fun j => a < j ∧ j < b) = Ioo a b :=
+    (univ.filter fun j => a < j ∧ j < b) = Ioo a b :=
   by
   ext
   simp
@@ -495,7 +495,7 @@ theorem filter_lt_lt_eq_Ioo [DecidablePred fun j => a < j ∧ j < b] :
 
 #print Finset.filter_lt_le_eq_Ioc /-
 theorem filter_lt_le_eq_Ioc [DecidablePred fun j => a < j ∧ j ≤ b] :
-    (univ.filterₓ fun j => a < j ∧ j ≤ b) = Ioc a b :=
+    (univ.filter fun j => a < j ∧ j ≤ b) = Ioc a b :=
   by
   ext
   simp
@@ -504,7 +504,7 @@ theorem filter_lt_le_eq_Ioc [DecidablePred fun j => a < j ∧ j ≤ b] :
 
 #print Finset.filter_le_lt_eq_Ico /-
 theorem filter_le_lt_eq_Ico [DecidablePred fun j => a ≤ j ∧ j < b] :
-    (univ.filterₓ fun j => a ≤ j ∧ j < b) = Ico a b :=
+    (univ.filter fun j => a ≤ j ∧ j < b) = Ico a b :=
   by
   ext
   simp
@@ -513,7 +513,7 @@ theorem filter_le_lt_eq_Ico [DecidablePred fun j => a ≤ j ∧ j < b] :
 
 #print Finset.filter_le_le_eq_Icc /-
 theorem filter_le_le_eq_Icc [DecidablePred fun j => a ≤ j ∧ j ≤ b] :
-    (univ.filterₓ fun j => a ≤ j ∧ j ≤ b) = Icc a b :=
+    (univ.filter fun j => a ≤ j ∧ j ≤ b) = Icc a b :=
   by
   ext
   simp
@@ -620,14 +620,14 @@ theorem Ioi_subset_Ici_self : Ioi a ⊆ Ici a := by simpa [← coe_subset] using
 #print BddBelow.finite /-
 theorem BddBelow.finite {s : Set α} (hs : BddBelow s) : s.Finite :=
   let ⟨a, ha⟩ := hs
-  (Ici a).finite_toSet.Subset fun x hx => mem_Ici.2 <| ha hx
+  (Ici a).finite_toSet.subset fun x hx => mem_Ici.2 <| ha hx
 #align bdd_below.finite BddBelow.finite
 -/
 
 variable [Fintype α]
 
 #print Finset.filter_lt_eq_Ioi /-
-theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filterₓ ((· < ·) a) = Ioi a :=
+theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filter ((· < ·) a) = Ioi a :=
   by
   ext
   simp
@@ -635,7 +635,7 @@ theorem filter_lt_eq_Ioi [DecidablePred ((· < ·) a)] : univ.filterₓ ((· < �
 -/
 
 #print Finset.filter_le_eq_Ici /-
-theorem filter_le_eq_Ici [DecidablePred ((· ≤ ·) a)] : univ.filterₓ ((· ≤ ·) a) = Ici a :=
+theorem filter_le_eq_Ici [DecidablePred ((· ≤ ·) a)] : univ.filter ((· ≤ ·) a) = Ici a :=
   by
   ext
   simp
@@ -655,14 +655,14 @@ theorem Iio_subset_Iic_self : Iio a ⊆ Iic a := by simpa [← coe_subset] using
 
 #print BddAbove.finite /-
 theorem BddAbove.finite {s : Set α} (hs : BddAbove s) : s.Finite :=
-  hs.dual.Finite
+  hs.dual.finite
 #align bdd_above.finite BddAbove.finite
 -/
 
 variable [Fintype α]
 
 #print Finset.filter_gt_eq_Iio /-
-theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filterₓ (· < a) = Iio a :=
+theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filter (· < a) = Iio a :=
   by
   ext
   simp
@@ -670,7 +670,7 @@ theorem filter_gt_eq_Iio [DecidablePred (· < a)] : univ.filterₓ (· < a) = Ii
 -/
 
 #print Finset.filter_ge_eq_Iic /-
-theorem filter_ge_eq_Iic [DecidablePred (· ≤ a)] : univ.filterₓ (· ≤ a) = Iic a :=
+theorem filter_ge_eq_Iic [DecidablePred (· ≤ a)] : univ.filter (· ≤ a) = Iic a :=
   by
   ext
   simp
@@ -726,25 +726,25 @@ variable [DecidableEq α]
 
 #print Finset.Icc_erase_left /-
 @[simp]
-theorem Icc_erase_left (a b : α) : (Icc a b).eraseₓ a = Ioc a b := by simp [← coe_inj]
+theorem Icc_erase_left (a b : α) : (Icc a b).erase a = Ioc a b := by simp [← coe_inj]
 #align finset.Icc_erase_left Finset.Icc_erase_left
 -/
 
 #print Finset.Icc_erase_right /-
 @[simp]
-theorem Icc_erase_right (a b : α) : (Icc a b).eraseₓ b = Ico a b := by simp [← coe_inj]
+theorem Icc_erase_right (a b : α) : (Icc a b).erase b = Ico a b := by simp [← coe_inj]
 #align finset.Icc_erase_right Finset.Icc_erase_right
 -/
 
 #print Finset.Ico_erase_left /-
 @[simp]
-theorem Ico_erase_left (a b : α) : (Ico a b).eraseₓ a = Ioo a b := by simp [← coe_inj]
+theorem Ico_erase_left (a b : α) : (Ico a b).erase a = Ioo a b := by simp [← coe_inj]
 #align finset.Ico_erase_left Finset.Ico_erase_left
 -/
 
 #print Finset.Ioc_erase_right /-
 @[simp]
-theorem Ioc_erase_right (a b : α) : (Ioc a b).eraseₓ b = Ioo a b := by simp [← coe_inj]
+theorem Ioc_erase_right (a b : α) : (Ioc a b).erase b = Ioo a b := by simp [← coe_inj]
 #align finset.Ioc_erase_right Finset.Ioc_erase_right
 -/
 
@@ -836,8 +836,7 @@ theorem Icc_eq_cons_Ioc (h : a ≤ b) : Icc a b = (Ioc a b).cons a left_not_mem_
 
 #print Finset.Ico_filter_le_left /-
 theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
-    ((Ico a b).filterₓ fun x => x ≤ a) = {a} :=
-  by
+    ((Ico a b).filter fun x => x ≤ a) = {a} := by
   ext x
   rw [mem_filter, mem_Ico, mem_singleton, and_right_comm, ← le_antisymm_iff, eq_comm]
   exact and_iff_left_of_imp fun h => h.le.trans_lt hab
@@ -898,7 +897,7 @@ variable [LocallyFiniteOrderTop α]
 
 #print Finset.Ici_erase /-
 @[simp]
-theorem Ici_erase [DecidableEq α] (a : α) : (Ici a).eraseₓ a = Ioi a :=
+theorem Ici_erase [DecidableEq α] (a : α) : (Ici a).erase a = Ioi a :=
   by
   ext
   simp_rw [Finset.mem_erase, mem_Ici, mem_Ioi, lt_iff_le_and_ne, and_comm', ne_comm]
@@ -941,7 +940,7 @@ variable [LocallyFiniteOrderBot α]
 
 #print Finset.Iic_erase /-
 @[simp]
-theorem Iic_erase [DecidableEq α] (b : α) : (Iic b).eraseₓ b = Iio b :=
+theorem Iic_erase [DecidableEq α] (b : α) : (Iic b).erase b = Iio b :=
   by
   ext
   simp_rw [Finset.mem_erase, mem_Iic, mem_Iio, lt_iff_le_and_ne, and_comm']
@@ -1064,7 +1063,7 @@ theorem Ico_inter_Ico {a b c d : α} : Ico a b ∩ Ico c d = Ico (max a c) (min 
 
 #print Finset.Ico_filter_lt /-
 @[simp]
-theorem Ico_filter_lt (a b c : α) : ((Ico a b).filterₓ fun x => x < c) = Ico a (min b c) :=
+theorem Ico_filter_lt (a b c : α) : ((Ico a b).filter fun x => x < c) = Ico a (min b c) :=
   by
   cases le_total b c
   · rw [Ico_filter_lt_of_right_le h, min_eq_left h]
@@ -1074,7 +1073,7 @@ theorem Ico_filter_lt (a b c : α) : ((Ico a b).filterₓ fun x => x < c) = Ico 
 
 #print Finset.Ico_filter_le /-
 @[simp]
-theorem Ico_filter_le (a b c : α) : ((Ico a b).filterₓ fun x => c ≤ x) = Ico (max a c) b :=
+theorem Ico_filter_le (a b c : α) : ((Ico a b).filter fun x => c ≤ x) = Ico (max a c) b :=
   by
   cases le_total a c
   · rw [Ico_filter_le_of_left_le h, max_eq_right h]
@@ -1084,7 +1083,7 @@ theorem Ico_filter_le (a b c : α) : ((Ico a b).filterₓ fun x => c ≤ x) = Ic
 
 #print Finset.Ioo_filter_lt /-
 @[simp]
-theorem Ioo_filter_lt (a b c : α) : (Ioo a b).filterₓ (· < c) = Ioo a (min b c) :=
+theorem Ioo_filter_lt (a b c : α) : (Ioo a b).filter (· < c) = Ioo a (min b c) :=
   by
   ext
   simp [and_assoc']
@@ -1094,7 +1093,7 @@ theorem Ioo_filter_lt (a b c : α) : (Ioo a b).filterₓ (· < c) = Ioo a (min b
 #print Finset.Iio_filter_lt /-
 @[simp]
 theorem Iio_filter_lt {α} [LinearOrder α] [LocallyFiniteOrderBot α] (a b : α) :
-    (Iio a).filterₓ (· < b) = Iio (min a b) := by
+    (Iio a).filter (· < b) = Iio (min a b) := by
   ext
   simp [and_assoc']
 #align finset.Iio_filter_lt Finset.Iio_filter_lt
@@ -1616,7 +1615,7 @@ theorem prod_prod_Ioi_mul_eq_prod_prod_off_diag [Fintype ι] [LinearOrder ι]
     [LocallyFiniteOrderTop ι] [LocallyFiniteOrderBot ι] [CommMonoid α] (f : ι → ι → α) :
     (∏ i, ∏ j in Ioi i, f j i * f i j) = ∏ i, ∏ j in {i}ᶜ, f j i :=
   by
-  simp_rw [← Ioi_disj_union_Iio, prod_disj_union, prod_mul_distrib]
+  simp_rw [← Ioi_disjUnion_Iio, prod_disjUnion, prod_mul_distrib]
   congr 1
   rw [prod_sigma', prod_sigma']
   refine' prod_bij' (fun i hi => ⟨i.2, i.1⟩) _ _ (fun i hi => ⟨i.2, i.1⟩) _ _ _ <;> simp

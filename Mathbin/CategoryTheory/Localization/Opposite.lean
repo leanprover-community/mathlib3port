@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.localization.opposite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,13 +39,13 @@ def StrictUniversalPropertyFixedTarget.op {E : Type _} [Category E]
   inverts := h.inverts.op
   lift F hF := (h.lift F.rightOp hF.rightOp).leftOp
   fac F hF := by
-    convert congr_arg functor.left_op (h.fac F.right_op hF.right_op)
+    convert congr_arg Functor.leftOp (h.fac F.right_op hF.right_op)
     exact F.right_op_left_op_eq.symm
   uniq F₁ F₂ eq :=
     by
     suffices F₁.right_op = F₂.right_op by
       rw [← F₁.right_op_left_op_eq, ← F₂.right_op_left_op_eq, this]
-    have eq' := congr_arg functor.right_op Eq
+    have eq' := congr_arg Functor.rightOp eq
     exact h.uniq _ _ eq'
 #align category_theory.localization.strict_universal_property_fixed_target.op CategoryTheory.Localization.StrictUniversalPropertyFixedTarget.op
 

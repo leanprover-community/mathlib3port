@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Jeremy Avigad, Johan Commelin
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.schur_complement
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,9 +43,8 @@ theorem schur_complement_eq₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : M
       vecMul (star (x + (A⁻¹ ⬝ B).mulVec y)) A ⬝ᵥ (x + (A⁻¹ ⬝ B).mulVec y) +
         vecMul (star y) (D - Bᴴ ⬝ A⁻¹ ⬝ B) ⬝ᵥ y :=
   by
-  simp [Function.star_sum_elim, from_blocks_mul_vec, vec_mul_from_blocks, add_vec_mul,
-    dot_product_mul_vec, vec_mul_sub, Matrix.mul_assoc, vec_mul_mul_vec, hA.eq,
-    conj_transpose_nonsing_inv, star_mul_vec]
+  simp [Function.star_sum_elim, fromBlocks_mulVec, vecMul_fromBlocks, add_vecMul, dotProduct_mulVec,
+    vecMul_sub, Matrix.mul_assoc, vecMul_mulVec, hA.eq, conjTranspose_nonsing_inv, star_mulVec]
   abel
 #align matrix.schur_complement_eq₁₁ Matrix.schur_complement_eq₁₁
 
@@ -56,9 +55,8 @@ theorem schur_complement_eq₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A : M
       vecMul (star ((D⁻¹ ⬝ Bᴴ).mulVec x + y)) D ⬝ᵥ ((D⁻¹ ⬝ Bᴴ).mulVec x + y) +
         vecMul (star x) (A - B ⬝ D⁻¹ ⬝ Bᴴ) ⬝ᵥ x :=
   by
-  simp [Function.star_sum_elim, from_blocks_mul_vec, vec_mul_from_blocks, add_vec_mul,
-    dot_product_mul_vec, vec_mul_sub, Matrix.mul_assoc, vec_mul_mul_vec, hD.eq,
-    conj_transpose_nonsing_inv, star_mul_vec]
+  simp [Function.star_sum_elim, fromBlocks_mulVec, vecMul_fromBlocks, add_vecMul, dotProduct_mulVec,
+    vecMul_sub, Matrix.mul_assoc, vecMul_mulVec, hD.eq, conjTranspose_nonsing_inv, star_mulVec]
   abel
 #align matrix.schur_complement_eq₂₂ Matrix.schur_complement_eq₂₂
 
@@ -76,45 +74,45 @@ theorem IsHermitian.from_blocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m 
   by
   have hBAB : (Bᴴ ⬝ A⁻¹ ⬝ B).IsHermitian :=
     by
-    apply is_hermitian_conj_transpose_mul_mul
+    apply isHermitian_conjTranspose_mul_mul
     apply hA.inv
-  rw [is_hermitian_from_blocks_iff]
+  rw [isHermitian_fromBlocks_iff]
   constructor
   · intro h
-    apply is_hermitian.sub h.2.2.2 hBAB
+    apply IsHermitian.sub h.2.2.2 hBAB
   · intro h
-    refine' ⟨hA, rfl, conj_transpose_conj_transpose B, _⟩
+    refine' ⟨hA, rfl, conjTranspose_conjTranspose B, _⟩
     rw [← sub_add_cancel D]
-    apply is_hermitian.add h hBAB
+    apply IsHermitian.add h hBAB
 #align matrix.is_hermitian.from_blocks₁₁ Matrix.IsHermitian.from_blocks₁₁
 
 theorem IsHermitian.from_blocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
     {D : Matrix n n 𝕜} (hD : D.IsHermitian) :
     (fromBlocks A B Bᴴ D).IsHermitian ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).IsHermitian :=
   by
-  rw [← is_hermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
-    from_blocks_submatrix_sum_swap_sum_swap]
-  convert is_hermitian.from_blocks₁₁ _ _ hD <;> simp
+  rw [← isHermitian_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
+    fromBlocks_submatrix_sum_swap_sum_swap]
+  convert IsHermitian.from_blocks₁₁ _ _ hD <;> simp
 #align matrix.is_hermitian.from_blocks₂₂ Matrix.IsHermitian.from_blocks₂₂
 
 theorem PosSemidef.from_blocks₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : Matrix m m 𝕜}
     (B : Matrix m n 𝕜) (D : Matrix n n 𝕜) (hA : A.PosDef) [Invertible A] :
     (fromBlocks A B Bᴴ D).PosSemidef ↔ (D - Bᴴ ⬝ A⁻¹ ⬝ B).PosSemidef :=
   by
-  rw [pos_semidef, is_hermitian.from_blocks₁₁ _ _ hA.1]
+  rw [PosSemidef, IsHermitian.from_blocks₁₁ _ _ hA.1]
   constructor
   · refine' fun h => ⟨h.1, fun x => _⟩
     have := h.2 (-(A⁻¹ ⬝ B).mulVec x ⊕ᵥ x)
-    rw [dot_product_mul_vec, schur_complement_eq₁₁ B D _ _ hA.1, neg_add_self, dot_product_zero,
+    rw [dotProduct_mulVec, schur_complement_eq₁₁ B D _ _ hA.1, neg_add_self, dotProduct_zero,
       zero_add] at this
-    rw [dot_product_mul_vec]
+    rw [dotProduct_mulVec]
     exact this
   · refine' fun h => ⟨h.1, fun x => _⟩
-    rw [dot_product_mul_vec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]
+    rw [dotProduct_mulVec, ← Sum.elim_comp_inl_inr x, schur_complement_eq₁₁ B D _ _ hA.1, map_add]
     apply le_add_of_nonneg_of_le
-    · rw [← dot_product_mul_vec]
+    · rw [← dotProduct_mulVec]
       apply hA.pos_semidef.2
-    · rw [← dot_product_mul_vec]
+    · rw [← dotProduct_mulVec]
       apply h.2
 #align matrix.pos_semidef.from_blocks₁₁ Matrix.PosSemidef.from_blocks₁₁
 
@@ -122,9 +120,9 @@ theorem PosSemidef.from_blocks₂₂ [Fintype m] [Fintype n] [DecidableEq n] (A 
     (B : Matrix m n 𝕜) {D : Matrix n n 𝕜} (hD : D.PosDef) [Invertible D] :
     (fromBlocks A B Bᴴ D).PosSemidef ↔ (A - B ⬝ D⁻¹ ⬝ Bᴴ).PosSemidef :=
   by
-  rw [← pos_semidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
-    from_blocks_submatrix_sum_swap_sum_swap]
-  convert pos_semidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp
+  rw [← posSemidef_submatrix_equiv (Equiv.sumComm n m), Equiv.sumComm_apply,
+    fromBlocks_submatrix_sum_swap_sum_swap]
+  convert PosSemidef.from_blocks₁₁ _ _ hD <;> first |infer_instance|simp
 #align matrix.pos_semidef.from_blocks₂₂ Matrix.PosSemidef.from_blocks₂₂
 
 end Matrix

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -264,7 +264,7 @@ variable [SemiNormedRing α]
 See note [implicit instance arguments]. -/
 instance Subalgebra.semiNormedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [SemiNormedRing E]
     {_ : Algebra 𝕜 E} (s : Subalgebra 𝕜 E) : SemiNormedRing s :=
-  { s.toSubmodule.SeminormedAddCommGroup with norm_mul := fun a b => norm_mul_le a.1 b.1 }
+  { s.toSubmodule.seminormedAddCommGroup with norm_mul := fun a b => norm_mul_le a.1 b.1 }
 #align subalgebra.semi_normed_ring Subalgebra.semiNormedRing
 
 /-- A subalgebra of a normed ring is also a normed ring, with the restriction of the norm.
@@ -272,38 +272,38 @@ instance Subalgebra.semiNormedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type
 See note [implicit instance arguments]. -/
 instance Subalgebra.normedRing {𝕜 : Type _} {_ : CommRing 𝕜} {E : Type _} [NormedRing E]
     {_ : Algebra 𝕜 E} (s : Subalgebra 𝕜 E) : NormedRing s :=
-  { s.SemiNormedRing with }
+  { s.semiNormedRing with }
 #align subalgebra.normed_ring Subalgebra.normedRing
 
 theorem Nat.norm_cast_le : ∀ n : ℕ, ‖(n : α)‖ ≤ n * ‖(1 : α)‖
   | 0 => by simp
   | n + 1 => by
     rw [n.cast_succ, n.cast_succ, add_mul, one_mul]
-    exact norm_add_le_of_le (Nat.norm_cast_le n) le_rfl
+    exact norm_add_le_of_le (nat.norm_cast_le n) le_rfl
 #align nat.norm_cast_le Nat.norm_cast_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ‖l.Prod‖ ≤ (l.map norm).Prod
+theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ‖l.prod‖ ≤ (l.map norm).prod
   | [], h => (h rfl).elim
   | [a], _ => by simp
   | a::b::l, _ => by
-    rw [List.map_cons, List.prod_cons, @List.prod_cons _ _ _ ‖a‖]
+    rw [List.map_cons, List.prod_cons, @list.prod_cons _ _ _ ‖a‖]
     refine' le_trans (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
-    exact List.norm_prod_le' (List.cons_ne_nil b l)
+    exact list.norm_prod_le' (List.cons_ne_nil b l)
 #align list.norm_prod_le' List.norm_prod_le'
 
-theorem List.nnnorm_prod_le' {l : List α} (hl : l ≠ []) : ‖l.Prod‖₊ ≤ (l.map nnnorm).Prod :=
+theorem List.nnnorm_prod_le' {l : List α} (hl : l ≠ []) : ‖l.prod‖₊ ≤ (l.map nnnorm).prod :=
   (List.norm_prod_le' hl).trans_eq <| by simp [Nnreal.coe_list_prod, List.map_map]
 #align list.nnnorm_prod_le' List.nnnorm_prod_le'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ‖l.Prod‖ ≤ (l.map norm).Prod
+theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ‖l.prod‖ ≤ (l.map norm).prod
   | [] => by simp
   | a::l => List.norm_prod_le' (List.cons_ne_nil a l)
 #align list.norm_prod_le List.norm_prod_le
 
-theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.Prod‖₊ ≤ (l.map nnnorm).Prod :=
+theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.prod‖₊ ≤ (l.map nnnorm).prod :=
   l.norm_prod_le.trans_eq <| by simp [Nnreal.coe_list_prod, List.map_map]
 #align list.nnnorm_prod_le List.nnnorm_prod_le
 
@@ -449,7 +449,7 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSemiNormedRing 
           ((continuous_fst.tendsto x).norm.mul
                 ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
             (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)
-        show tendsto _ _ _
+        show Tendsto _ _ _
         exact tendsto_const_nhds
         simp⟩
 #align semi_normed_ring_top_monoid semi_normed_ring_top_monoid
@@ -508,11 +508,11 @@ theorem nnnorm_pow (a : α) (n : ℕ) : ‖a ^ n‖₊ = ‖a‖₊ ^ n :=
   (nnnormHom.toMonoidHom : α →* ℝ≥0).map_pow a n
 #align nnnorm_pow nnnorm_pow
 
-protected theorem List.norm_prod (l : List α) : ‖l.Prod‖ = (l.map norm).Prod :=
+protected theorem List.norm_prod (l : List α) : ‖l.prod‖ = (l.map norm).prod :=
   (normHom.toMonoidHom : α →* ℝ).map_list_prod _
 #align list.norm_prod List.norm_prod
 
-protected theorem List.nnnorm_prod (l : List α) : ‖l.Prod‖₊ = (l.map nnnorm).Prod :=
+protected theorem List.nnnorm_prod (l : List α) : ‖l.prod‖₊ = (l.map nnnorm).prod :=
   (nnnormHom.toMonoidHom : α →* ℝ≥0).map_list_prod _
 #align list.nnnorm_prod List.nnnorm_prod
 
@@ -692,7 +692,7 @@ theorem punctured_nhds_neBot (x : α) : NeBot (𝓝[≠] x) :=
 
 @[instance]
 theorem nhdsWithin_isUnit_neBot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
-  simpa only [isUnit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
+  simpa only [isUnit_iff_ne_zero] using punctured_nhds_neBot (0 : α)
 #align normed_field.nhds_within_is_unit_ne_bot NormedField.nhdsWithin_isUnit_neBot
 
 end Nontrivially
@@ -787,7 +787,7 @@ theorem nnnorm_norm [SeminormedAddCommGroup α] (a : α) : ‖‖a‖‖₊ = �
 theorem NormedAddCommGroup.tendsto_atTop [Nonempty α] [SemilatticeSup α] {β : Type _}
     [SeminormedAddCommGroup β] {f : α → β} {b : β} :
     Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N ≤ n → ‖f n - b‖ < ε :=
-  (atTop_basis.tendsto_iffₓ Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
+  (atTop_basis.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top NormedAddCommGroup.tendsto_atTop
 
 /-- A variant of `normed_add_comm_group.tendsto_at_top` that
@@ -796,7 +796,7 @@ uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 theorem NormedAddCommGroup.tendsto_at_top' [Nonempty α] [SemilatticeSup α] [NoMaxOrder α]
     {β : Type _} [SeminormedAddCommGroup β] {f : α → β} {b : β} :
     Tendsto f atTop (𝓝 b) ↔ ∀ ε, 0 < ε → ∃ N, ∀ n, N < n → ‖f n - b‖ < ε :=
-  (atTop_basis_Ioi.tendsto_iffₓ Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
+  (atTop_basis_Ioi.tendsto_iff Metric.nhds_basis_ball).trans (by simp [dist_eq_norm])
 #align normed_add_comm_group.tendsto_at_top' NormedAddCommGroup.tendsto_at_top'
 
 instance : NormedCommRing ℤ :=

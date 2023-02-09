@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.nodup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.nodup_iff_le Multiset.nodup_iff_leₓ'. -/
 theorem nodup_iff_le {s : Multiset α} : Nodup s ↔ ∀ a : α, ¬a ::ₘ a ::ₘ 0 ≤ s :=
   Quot.inductionOn s fun l =>
-    nodup_iff_sublist.trans <| forall_congr' fun a => (@replicate_le_coe _ a 2 _).symm.Not
+    nodup_iff_sublist.trans <| forall_congr' fun a => (@replicate_le_coe _ a 2 _).symm.not
 #align multiset.nodup_iff_le Multiset.nodup_iff_le
 
 #print Multiset.nodup_iff_ne_cons_cons /-
@@ -225,7 +225,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_onₓ'. -/
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : Nodup s) :
     Nodup (map f s) ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
-  ⟨inj_on_of_nodup_map, fun h => d.map_onₓ h⟩
+  ⟨inj_on_of_nodup_map, fun h => d.map_on h⟩
 #align multiset.nodup_map_iff_inj_on Multiset.nodup_map_iff_inj_on
 
 #print Multiset.Nodup.filter /-
@@ -260,25 +260,25 @@ instance nodupDecidable [DecidableEq α] (s : Multiset α) : Decidable (Nodup s)
 
 #print Multiset.Nodup.erase_eq_filter /-
 theorem Nodup.erase_eq_filter [DecidableEq α] (a : α) {s} :
-    Nodup s → s.eraseₓ a = filter (· ≠ a) s :=
+    Nodup s → s.erase a = filter (· ≠ a) s :=
   Quot.inductionOn s fun l d => congr_arg coe <| d.erase_eq_filter a
 #align multiset.nodup.erase_eq_filter Multiset.Nodup.erase_eq_filter
 -/
 
 #print Multiset.Nodup.erase /-
-theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.eraseₓ a) :=
+theorem Nodup.erase [DecidableEq α] (a : α) {l} : Nodup l → Nodup (l.erase a) :=
   nodup_of_le (erase_le _ _)
 #align multiset.nodup.erase Multiset.Nodup.erase
 -/
 
 #print Multiset.Nodup.mem_erase_iff /-
 theorem Nodup.mem_erase_iff [DecidableEq α] {a b : α} {l} (d : Nodup l) :
-    a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm']
+    a ∈ l.erase b ↔ a ≠ b ∧ a ∈ l := by rw [d.erase_eq_filter b, mem_filter, and_comm']
 #align multiset.nodup.mem_erase_iff Multiset.Nodup.mem_erase_iff
 -/
 
 #print Multiset.Nodup.not_mem_erase /-
-theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ s.eraseₓ a := fun ha =>
+theorem Nodup.not_mem_erase [DecidableEq α] {a : α} {s} (h : Nodup s) : a ∉ s.erase a := fun ha =>
   (h.mem_erase_iff.1 ha).1 rfl
 #align multiset.nodup.not_mem_erase Multiset.Nodup.not_mem_erase
 -/
@@ -291,12 +291,12 @@ protected theorem Nodup.product {t : Multiset β} : Nodup s → Nodup t → Nodu
 
 #print Multiset.Nodup.sigma /-
 protected theorem Nodup.sigma {σ : α → Type _} {t : ∀ a, Multiset (σ a)} :
-    Nodup s → (∀ a, Nodup (t a)) → Nodup (s.Sigma t) :=
+    Nodup s → (∀ a, Nodup (t a)) → Nodup (s.sigma t) :=
   Quot.inductionOn s fun l₁ =>
     by
     choose f hf using fun a => Quotient.exists_rep (t a)
     rw [show t = fun a => f a from Eq.symm <| funext fun a => hf a]
-    simpa using nodup.sigma
+    simpa using Nodup.sigma
 #align multiset.nodup.sigma Multiset.Nodup.sigma
 -/
 
@@ -364,7 +364,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Multiset.{u1} α} {t : Multiset.{u1} α}, (Multiset.Nodup.{u1} α s) -> (Iff (LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) s t) (HasSubset.Subset.{u1} (Multiset.{u1} α) (Multiset.instHasSubsetMultiset.{u1} α) s t))
 Case conversion may be inaccurate. Consider using '#align multiset.le_iff_subset Multiset.le_iff_subsetₓ'. -/
 theorem le_iff_subset {s t : Multiset α} : Nodup s → (s ≤ t ↔ s ⊆ t) :=
-  Quotient.induction_on₂ s t fun l₁ l₂ d => ⟨subset_of_le, d.Subperm⟩
+  Quotient.induction_on₂ s t fun l₁ l₂ d => ⟨subset_of_le, d.subperm⟩
 #align multiset.le_iff_subset Multiset.le_iff_subset
 
 /- warning: multiset.range_le -> Multiset.range_le is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.int.parity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,7 +31,7 @@ variable {m n : ℤ}
 #print Int.emod_two_ne_one /-
 @[simp]
 theorem emod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+  cases' emod_two_eq_zero_or_one n with h h <;> simp [h]
 #align int.mod_two_ne_one Int.emod_two_ne_one
 -/
 
@@ -39,7 +39,7 @@ theorem emod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 := by
 -- euclidean_domain.mod_eq_zero uses (2 ∣ n) as normal form
 @[local simp]
 theorem emod_two_ne_zero : ¬n % 2 = 0 ↔ n % 2 = 1 := by
-  cases' mod_two_eq_zero_or_one n with h h <;> simp [h]
+  cases' emod_two_eq_zero_or_one n with h h <;> simp [h]
 #align int.mod_two_ne_zero Int.emod_two_ne_zero
 -/
 
@@ -58,7 +58,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.odd_iff Int.odd_iffₓ'. -/
 theorem odd_iff : Odd n ↔ n % 2 = 1 :=
   ⟨fun ⟨m, hm⟩ => by
-    rw [hm, add_mod]
+    rw [hm, add_emod]
     norm_num, fun h =>
     ⟨n / 2,
       (emod_add_ediv n 2).symm.trans
@@ -68,7 +68,7 @@ theorem odd_iff : Odd n ↔ n % 2 = 1 :=
 #align int.odd_iff Int.odd_iff
 
 #print Int.not_even_iff /-
-theorem not_even_iff : ¬Even n ↔ n % 2 = 1 := by rw [even_iff, mod_two_ne_zero]
+theorem not_even_iff : ¬Even n ↔ n % 2 = 1 := by rw [even_iff, emod_two_ne_zero]
 #align int.not_even_iff Int.not_even_iff
 -/
 
@@ -78,7 +78,7 @@ lean 3 declaration is
 but is expected to have type
   forall {n : Int}, Iff (Not (Odd.{0} Int Int.instSemiringInt n)) (Eq.{1} Int (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) n (OfNat.ofNat.{0} Int 2 (instOfNatInt 2))) (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)))
 Case conversion may be inaccurate. Consider using '#align int.not_odd_iff Int.not_odd_iffₓ'. -/
-theorem not_odd_iff : ¬Odd n ↔ n % 2 = 0 := by rw [odd_iff, mod_two_ne_one]
+theorem not_odd_iff : ¬Odd n ↔ n % 2 = 0 := by rw [odd_iff, emod_two_ne_one]
 #align int.not_odd_iff Int.not_odd_iff
 
 /- warning: int.even_iff_not_odd -> Int.even_iff_not_odd is a dubious translation:
@@ -160,7 +160,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.two_dvd_ne_zero Int.two_dvd_ne_zeroₓ'. -/
 @[simp]
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
-  even_iff_two_dvd.symm.Not.trans not_even_iff
+  even_iff_two_dvd.symm.not.trans not_even_iff
 #align int.two_dvd_ne_zero Int.two_dvd_ne_zero
 
 instance : DecidablePred (Even : ℤ → Prop) := fun n => decidable_of_iff _ even_iff.symm
@@ -176,7 +176,7 @@ theorem not_even_one : ¬Even (1 : ℤ) := by rw [even_iff] <;> norm_num
 #print Int.even_add /-
 @[parity_simps]
 theorem even_add : Even (m + n) ↔ (Even m ↔ Even n) := by
-  cases' mod_two_eq_zero_or_one m with h₁ h₁ <;> cases' mod_two_eq_zero_or_one n with h₂ h₂ <;>
+  cases' emod_two_eq_zero_or_one m with h₁ h₁ <;> cases' emod_two_eq_zero_or_one n with h₂ h₂ <;>
       simp [even_iff, h₁, h₂, Int.add_emod] <;>
     norm_num
 #align int.even_add Int.even_add
@@ -206,7 +206,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_oneₓ'. -/
 theorem two_not_dvd_two_mul_add_one (n : ℤ) : ¬2 ∣ 2 * n + 1 :=
   by
-  simp [add_mod]
+  simp [add_emod]
   rfl
 #align int.two_not_dvd_two_mul_add_one Int.two_not_dvd_two_mul_add_one
 
@@ -235,7 +235,7 @@ theorem even_add_one : Even (n + 1) ↔ ¬Even n := by simp [even_add]
 #print Int.even_mul /-
 @[parity_simps]
 theorem even_mul : Even (m * n) ↔ Even m ∨ Even n := by
-  cases' mod_two_eq_zero_or_one m with h₁ h₁ <;> cases' mod_two_eq_zero_or_one n with h₂ h₂ <;>
+  cases' emod_two_eq_zero_or_one m with h₁ h₁ <;> cases' emod_two_eq_zero_or_one n with h₂ h₂ <;>
       simp [even_iff, h₁, h₂, Int.mul_emod] <;>
     norm_num
 #align int.even_mul Int.even_mul
@@ -372,7 +372,7 @@ theorem odd_coe_nat (n : ℕ) : Odd (n : ℤ) ↔ Odd n := by
 #print Int.natAbs_even /-
 @[simp]
 theorem natAbs_even : Even n.natAbs ↔ Even n := by
-  simp [even_iff_two_dvd, dvd_nat_abs, coe_nat_dvd_left.symm]
+  simp [even_iff_two_dvd, dvd_natAbs, coe_nat_dvd_left.symm]
 #align int.nat_abs_even Int.natAbs_even
 -/
 
@@ -384,7 +384,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_odd Int.natAbs_oddₓ'. -/
 @[simp]
 theorem natAbs_odd : Odd n.natAbs ↔ Odd n := by
-  rw [odd_iff_not_even, Nat.odd_iff_not_even, nat_abs_even]
+  rw [odd_iff_not_even, Nat.odd_iff_not_even, natAbs_even]
 #align int.nat_abs_odd Int.natAbs_odd
 
 alias nat_abs_even ↔ _ _root_.even.nat_abs

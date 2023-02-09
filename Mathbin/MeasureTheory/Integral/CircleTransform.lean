@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module measure_theory.integral.circle_transform
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,9 +52,9 @@ theorem circleTransformDeriv_periodic (f : ℂ → E) :
     Periodic (circleTransformDeriv R z w f) (2 * π) :=
   by
   have := periodic_circleMap
-  simp_rw [periodic] at *
+  simp_rw [Periodic] at *
   intro x
-  simp_rw [circle_transform_deriv, this]
+  simp_rw [circleTransformDeriv, this]
   congr 2
   simp [this]
 #align complex.circle_transform_deriv_periodic Complex.circleTransformDeriv_periodic
@@ -63,7 +63,7 @@ theorem circleTransformDeriv_eq (f : ℂ → E) :
     circleTransformDeriv R z w f = fun θ => (circleMap z R θ - w)⁻¹ • circleTransform R z w f θ :=
   by
   ext
-  simp_rw [circle_transform_deriv, circle_transform, ← mul_smul, ← mul_assoc]
+  simp_rw [circleTransformDeriv, circleTransform, ← mul_smul, ← mul_assoc]
   ring_nf
   rw [inv_pow]
   congr
@@ -74,7 +74,7 @@ theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
     (∫ θ : ℝ in 0 ..2 * π, circleTransform R z w f θ) =
       (2 * ↑π * i)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
   by
-  simp_rw [circle_transform, circleIntegral, deriv_circleMap, circleMap]
+  simp_rw [circleTransform, circleIntegral, deriv_circleMap, circleMap]
   simp
 #align complex.integral_circle_transform Complex.integral_circleTransform
 
@@ -94,8 +94,8 @@ theorem continuous_circleTransformDeriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {
     (hf : ContinuousOn f (sphere z R)) (hw : w ∈ ball z R) :
     Continuous (circleTransformDeriv R z w f) :=
   by
-  rw [circle_transform_deriv_eq]
-  exact (continuous_circleMap_inv hw).smul (continuous_circle_transform hR hf hw)
+  rw [circleTransformDeriv_eq]
+  exact (continuous_circleMap_inv hw).smul (continuous_circleTransform hR hf hw)
 #align complex.continuous_circle_transform_deriv Complex.continuous_circleTransformDeriv
 
 /-- A useful bound for circle integrals (with complex codomain)-/
@@ -110,7 +110,7 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
   simp_rw [← one_div]
   apply_rules [ContinuousOn.pow, ContinuousOn.div, continuousOn_const]
   refine'
-    ((continuous_circleMap z R).ContinuousOn.comp continuousOn_snd fun _ => And.right).sub
+    ((continuous_circleMap z R).continuousOn.comp continuousOn_snd fun _ => And.right).sub
       (continuous_on_id.comp continuousOn_fst fun _ => And.left)
   simp only [mem_prod, Ne.def, and_imp, Prod.forall]
   intro a b ha hb
@@ -125,17 +125,17 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
 theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R) (z : ℂ) :
     ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (closedBall z r ×ˢ univ) :=
   by
-  have : ContinuousOn (circle_transform_bounding_function R z) (closed_ball z r ×ˢ (⊤ : Set ℝ)) :=
+  have : ContinuousOn (circleTransformBoundingFunction R z) (closedBall z r ×ˢ (⊤ : Set ℝ)) :=
     by
     apply_rules [ContinuousOn.smul, continuousOn_const]
     simp only [deriv_circleMap]
-    have c := (continuous_circleMap 0 R).ContinuousOn
+    have c := (continuous_circleMap 0 R).continuousOn
     apply_rules [ContinuousOn.mul, c.comp continuousOn_snd fun _ => And.right, continuousOn_const]
     simp_rw [← inv_pow]
-    apply continuous_on_prod_circle_transform_function hr
+    apply continuousOn_prod_circle_transform_function hr
   refine' continuous_abs.continuous_on.comp this _
-  show maps_to _ _ (⊤ : Set ℂ)
-  simp [maps_to]
+  show MapsTo _ _ (⊤ : Set ℂ)
+  simp [MapsTo]
 #align complex.continuous_on_abs_circle_transform_bounding_function Complex.continuousOn_abs_circleTransformBoundingFunction
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -147,17 +147,17 @@ theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0
       ∀ y : closedBall z r ×ˢ [0, 2 * π],
         abs (circleTransformBoundingFunction R z y) ≤ abs (circleTransformBoundingFunction R z x) :=
   by
-  have cts := continuous_on_abs_circle_transform_bounding_function hr z
-  have comp : IsCompact (closed_ball z r ×ˢ [0, 2 * π]) := by
+  have cts := continuousOn_abs_circleTransformBoundingFunction hr z
+  have comp : IsCompact (closedBall z r ×ˢ [0, 2 * π]) := by
     apply_rules [IsCompact.prod, ProperSpace.isCompact_closedBall z r, isCompact_uIcc]
-  have none : (closed_ball z r ×ˢ [0, 2 * π]).Nonempty :=
-    (nonempty_closed_ball.2 hr').Prod nonempty_uIcc
+  have none : (closedBall z r ×ˢ [0, 2 * π]).Nonempty :=
+    (nonempty_closedBall.2 hr').prod nonempty_uIcc
   have :=
     IsCompact.exists_forall_ge comp none
       (cts.mono
         (by
           intro z
-          simp only [mem_prod, mem_closed_ball, mem_univ, and_true_iff, and_imp]
+          simp only [mem_prod, mem_closedBall, mem_univ, and_true_iff, and_imp]
           tauto))
   simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
 #align complex.abs_circle_transform_bounding_function_le Complex.abs_circleTransformBoundingFunction_le
@@ -172,33 +172,33 @@ theorem circleTransformDeriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ �
   obtain ⟨r, hr, hrx⟩ := exists_lt_mem_ball_of_mem_ball hx
   obtain ⟨ε', hε', H⟩ := exists_ball_subset_ball hrx
   obtain ⟨⟨⟨a, b⟩, ⟨ha, hb⟩⟩, hab⟩ :=
-    abs_circle_transform_bounding_function_le hr (pos_of_mem_ball hrx).le z
-  let V : ℝ → ℂ → ℂ := fun θ w => circle_transform_deriv R z w (fun x => 1) θ
+    abs_circleTransformBoundingFunction_le hr (pos_of_mem_ball hrx).le z
+  let V : ℝ → ℂ → ℂ := fun θ w => circleTransformDeriv R z w (fun x => 1) θ
   have funccomp : ContinuousOn (fun r => abs (f r)) (sphere z R) :=
     by
     have cabs : ContinuousOn abs ⊤ := by apply continuous_abs.continuous_on
     apply cabs.comp hf
-    rw [maps_to]
+    rw [MapsTo]
     tauto
   have sbou :=
     IsCompact.exists_forall_ge (isCompact_sphere z R) (NormedSpace.sphere_nonempty.2 hR.le) funccomp
   obtain ⟨X, HX, HX2⟩ := sbou
-  refine' ⟨abs (V b a) * abs (f X), ε', hε', subset.trans H (ball_subset_ball hr.le), _⟩
+  refine' ⟨abs (V b a) * abs (f X), ε', hε', Subset.trans H (ball_subset_ball hr.le), _⟩
   intro y v hv
   obtain ⟨y1, hy1, hfun⟩ :=
-    periodic.exists_mem_Ico₀ (circle_transform_deriv_periodic R z v f) Real.two_pi_pos y
+    Periodic.exists_mem_Ico₀ (circleTransformDeriv_periodic R z v f) Real.two_pi_pos y
   have hy2 : y1 ∈ [0, 2 * π] := by
     convert Ico_subset_Icc_self hy1
     simp [uIcc_of_le real.two_pi_pos.le]
   have :=
-    mul_le_mul (hab ⟨⟨v, y1⟩, ⟨ball_subset_closed_ball (H hv), hy2⟩⟩)
+    mul_le_mul (hab ⟨⟨v, y1⟩, ⟨ball_subset_closedBall (H hv), hy2⟩⟩)
       (HX2 (circleMap z R y1) (circleMap_mem_sphere z hR.le y1)) (complex.abs.nonneg _)
       (complex.abs.nonneg _)
   simp_rw [hfun]
-  simp only [circle_transform_bounding_function, circle_transform_deriv, V, norm_eq_abs,
-    Algebra.id.smul_eq_mul, deriv_circleMap, map_mul, abs_circleMap_zero, abs_I, mul_one, ←
-    mul_assoc, mul_inv_rev, inv_I, abs_neg, abs_inv, abs_of_real, one_mul, abs_two, abs_pow,
-    mem_ball, gt_iff_lt, Subtype.coe_mk, SetCoe.forall, mem_prod, mem_closed_ball, and_imp,
+  simp only [circleTransformBoundingFunction, circleTransformDeriv, V, norm_eq_abs,
+    Algebra.id.smul_eq_mul, deriv_circleMap, map_mul, abs_circleMap_zero, abs_i, mul_one, ←
+    mul_assoc, mul_inv_rev, inv_i, abs_neg, abs_inv, abs_of_real, one_mul, abs_two, abs_pow,
+    mem_ball, gt_iff_lt, Subtype.coe_mk, SetCoe.forall, mem_prod, mem_closedBall, and_imp,
     Prod.forall, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
   exact this
 #align complex.circle_transform_deriv_bound Complex.circleTransformDeriv_bound

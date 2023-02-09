@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.mittag_leffler
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem eventualRange_eq_range_precomp (f : i ⟶ j) (g : j ⟶ k)
     (h : F.eventualRange k = range (F.map g)) : F.eventualRange k = range (F.map <| f ≫ g) :=
   by
   apply subset_antisymm
-  · apply Inter₂_subset
+  · apply interᵢ₂_subset
   · rw [h, F.map_comp]
     apply range_comp_subset_range
 #align category_theory.functor.eventual_range_eq_range_precomp CategoryTheory.Functor.eventualRange_eq_range_precomp
@@ -123,7 +123,7 @@ def toPreimages : J ⥤ Type v where
   map j k g :=
     MapsTo.restrict (F.map g) _ _ fun x h =>
       by
-      rw [mem_Inter] at h⊢; intro f
+      rw [mem_interᵢ] at h⊢; intro f
       rw [← mem_preimage, preimage_preimage]
       convert h (g ≫ f); rw [F.map_comp]; rfl
   map_id' j := by
@@ -140,7 +140,7 @@ variable [IsCofilteredOrEmpty J]
 theorem eventualRange_mapsTo (f : j ⟶ i) :
     (F.eventualRange j).MapsTo (F.map f) (F.eventualRange i) := fun x hx =>
   by
-  rw [mem_eventual_range_iff] at hx⊢
+  rw [mem_eventualRange_iff] at hx⊢
   intro k f'
   obtain ⟨l, g, g', he⟩ := cospan f f'
   obtain ⟨x, rfl⟩ := hx g
@@ -157,7 +157,7 @@ theorem eventualRange_eq_iff {f : i ⟶ j} :
     F.eventualRange j = range (F.map f) ↔
       ∀ ⦃k⦄ (g : k ⟶ i), range (F.map f) ⊆ range (F.map <| g ≫ f) :=
   by
-  rw [subset_antisymm_iff, eventual_range, and_iff_right (Inter₂_subset _ _), subset_Inter₂_iff]
+  rw [subset_antisymm_iff, eventualRange, and_iff_right (interᵢ₂_subset _ _), subset_interᵢ₂_iff]
   refine' ⟨fun h k g => h _ _, fun h j' f' => _⟩
   obtain ⟨k, g, g', he⟩ := cospan f f'
   refine' (h g).trans _
@@ -168,7 +168,7 @@ theorem eventualRange_eq_iff {f : i ⟶ j} :
 theorem isMittagLeffler_iff_subset_range_comp :
     F.IsMittagLeffler ↔
       ∀ j : J, ∃ (i : _)(f : i ⟶ j), ∀ ⦃k⦄ (g : k ⟶ i), range (F.map f) ⊆ range (F.map <| g ≫ f) :=
-  by simp_rw [is_mittag_leffler_iff_eventual_range, eventual_range_eq_iff]
+  by simp_rw [isMittagLeffler_iff_eventualRange, eventualRange_eq_iff]
 #align category_theory.functor.is_mittag_leffler_iff_subset_range_comp CategoryTheory.Functor.isMittagLeffler_iff_subset_range_comp
 
 theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).IsMittagLeffler :=
@@ -182,15 +182,15 @@ theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).
       rw [h₂]
       exact ⟨_, rfl⟩
     obtain ⟨y, hy, h₃⟩ := h.subset_image_eventual_range F (f₃ ≫ f₂) this
-    refine' ⟨⟨y, mem_Inter.2 fun g₂ => _⟩, Subtype.ext _⟩
+    refine' ⟨⟨y, mem_interᵢ.2 fun g₂ => _⟩, Subtype.ext _⟩
     · obtain ⟨j₄, f₄, h₄⟩ := cone_maps g₂ ((f₃ ≫ f₂) ≫ g₁)
       obtain ⟨y, rfl⟩ := F.mem_eventual_range_iff.1 hy f₄
       rw [← map_comp_apply] at h₃
-      rw [mem_preimage, ← map_comp_apply, h₄, ← category.assoc, map_comp_apply, h₃, ←
+      rw [mem_preimage, ← map_comp_apply, h₄, ← Category.assoc, map_comp_apply, h₃, ←
         map_comp_apply]
-      apply mem_Inter.1 hx
-    · simp_rw [to_preimages_map, maps_to.coe_restrict_apply, Subtype.coe_mk]
-      rw [← category.assoc, map_comp_apply, h₃, map_comp_apply]
+      apply mem_interᵢ.1 hx
+    · simp_rw [toPreimages_map, MapsTo.val_restrict_apply, Subtype.coe_mk]
+      rw [← Category.assoc, map_comp_apply, h₃, map_comp_apply]
 #align category_theory.functor.is_mittag_leffler.to_preimages CategoryTheory.Functor.IsMittagLeffler.toPreimages
 
 theorem isMittagLeffler_of_exists_finite_range
@@ -232,9 +232,9 @@ def toEventualRanges : J ⥤ Type v
 -/
 def toEventualRangesSectionsEquiv : F.toEventualRanges.sections ≃ F.sections
     where
-  toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.Prop f⟩
+  toFun s := ⟨_, fun i j f => Subtype.coe_inj.2 <| s.prop f⟩
   invFun s :=
-    ⟨fun j => ⟨_, mem_interᵢ₂.2 fun i f => ⟨_, s.Prop f⟩⟩, fun i j f => Subtype.ext <| s.Prop f⟩
+    ⟨fun j => ⟨_, mem_interᵢ₂.2 fun i f => ⟨_, s.prop f⟩⟩, fun i j f => Subtype.ext <| s.prop f⟩
   left_inv _ := by
     ext
     rfl
@@ -259,7 +259,7 @@ theorem toEventualRanges_nonempty (h : F.IsMittagLeffler) [∀ j : J, Nonempty (
     Nonempty (F.toEventualRanges.obj j) :=
   by
   let ⟨i, f, h⟩ := F.isMittagLeffler_iff_eventualRange.1 h j
-  rw [to_eventual_ranges_obj, h]
+  rw [toEventualRanges_obj, h]
   infer_instance
 #align category_theory.functor.to_eventual_ranges_nonempty CategoryTheory.Functor.toEventualRanges_nonempty
 

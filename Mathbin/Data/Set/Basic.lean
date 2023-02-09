@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -292,7 +292,7 @@ end SetCoe
 #print Subtype.mem /-
 /-- See also `subtype.prop` -/
 theorem Subtype.mem {α : Type _} {s : Set α} (p : s) : (p : α) ∈ s :=
-  p.Prop
+  p.prop
 #align subtype.mem Subtype.mem
 -/
 
@@ -485,14 +485,14 @@ theorem mem_of_eq_of_mem {x y : α} {s : Set α} (hx : x = y) (h : y ∈ s) : x 
 -/
 
 #print Set.Subset.antisymm /-
-theorem Subset.antisymm {a b : Set α} (h₁ : a ⊆ b) (h₂ : b ⊆ a) : a = b :=
+theorem Subset.antisymm {a b : Set α} (h₁ : a ⊆ b) (h₂ : b ⊆ a) : a = not_eq :=
   Set.ext fun x => ⟨@h₁ _, @h₂ _⟩
 #align set.subset.antisymm Set.Subset.antisymm
 -/
 
 #print Set.Subset.antisymm_iff /-
 theorem Subset.antisymm_iff {a b : Set α} : a = b ↔ a ⊆ b ∧ b ⊆ a :=
-  ⟨fun e => ⟨e.Subset, e.symm.Subset⟩, fun ⟨h₁, h₂⟩ => Subset.antisymm h₁ h₂⟩
+  ⟨fun e => ⟨e.subset, e.symm.subset⟩, fun ⟨h₁, h₂⟩ => Subset.antisymm h₁ h₂⟩
 #align set.subset.antisymm_iff Set.Subset.antisymm_iff
 -/
 
@@ -839,7 +839,7 @@ theorem mem_empty_iff_false (x : α) : x ∈ (∅ : Set α) ↔ False :=
 
 #print Set.setOf_false /-
 @[simp]
-theorem setOf_false : { a : α | False } = ∅ :=
+theorem setOf_false : { a : False | False } = ∅ :=
   rfl
 #align set.set_of_false Set.setOf_false
 -/
@@ -2007,7 +2007,7 @@ theorem insert_eq_self : insert a s = s ↔ a ∈ s :=
 
 #print Set.insert_ne_self /-
 theorem insert_ne_self : insert a s ≠ s ↔ a ∉ s :=
-  insert_eq_self.Not
+  insert_eq_self.not
 #align set.insert_ne_self Set.insert_ne_self
 -/
 
@@ -2037,7 +2037,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s t) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) (fun (H : Not (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) a s)) => HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s) t)))
 Case conversion may be inaccurate. Consider using '#align set.ssubset_iff_insert Set.ssubset_iff_insertₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 theorem ssubset_iff_insert {s t : Set α} : s ⊂ t ↔ ∃ (a : _)(_ : a ∉ s), insert a s ⊆ t :=
   by
   simp only [insert_subset, exists_and_right, ssubset_def, not_subset]
@@ -2320,7 +2320,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.singleton_inter_eq_empty Set.singleton_inter_eq_emptyₓ'. -/
 @[simp]
 theorem singleton_inter_eq_empty : {a} ∩ s = ∅ ↔ a ∉ s :=
-  not_nonempty_iff_eq_empty.symm.trans singleton_inter_nonempty.Not
+  not_nonempty_iff_eq_empty.symm.trans singleton_inter_nonempty.not
 #align set.singleton_inter_eq_empty Set.singleton_inter_eq_empty
 
 /- warning: set.inter_singleton_eq_empty -> Set.inter_singleton_eq_empty is a dubious translation:
@@ -2643,7 +2643,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {t : Set.{u1} α}, Iff (Not (Disjoint.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (SemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (Lattice.toSemilatticeInf.{u1} (Set.{u1} α) (GeneralizedCoheytingAlgebra.toLattice.{u1} (Set.{u1} α) (CoheytingAlgebra.toGeneralizedCoheytingAlgebra.{u1} (Set.{u1} α) (BiheytingAlgebra.toCoheytingAlgebra.{u1} (Set.{u1} α) (BooleanAlgebra.toBiheytingAlgebra.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))))))))) (BooleanAlgebra.toBoundedOrder.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α))) s t)) (Exists.{succ u1} α (fun (x : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x t)))
 Case conversion may be inaccurate. Consider using '#align set.not_disjoint_iff Set.not_disjoint_iffₓ'. -/
 theorem not_disjoint_iff : ¬Disjoint s t ↔ ∃ x, x ∈ s ∧ x ∈ t :=
-  Set.disjoint_iff.Not.trans <| not_forall.trans <| exists_congr fun x => Classical.not_not
+  Set.disjoint_iff.not.trans <| not_forall.trans <| exists_congr fun x => Classical.not_not
 #align set.not_disjoint_iff Set.not_disjoint_iff
 
 /- warning: set.not_disjoint_iff_nonempty_inter -> Set.not_disjoint_iff_nonempty_inter is a dubious translation:
@@ -3012,7 +3012,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α}, Iff (Ne.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s) (Set.univ.{u1} α)) (Set.Nonempty.{u1} α s)
 Case conversion may be inaccurate. Consider using '#align set.compl_ne_univ Set.compl_ne_univₓ'. -/
 theorem compl_ne_univ : sᶜ ≠ univ ↔ s.Nonempty :=
-  compl_univ_iff.Not.trans nonempty_iff_ne_empty.symm
+  compl_univ_iff.not.trans nonempty_iff_ne_empty.symm
 #align set.compl_ne_univ Set.compl_ne_univ
 
 /- warning: set.nonempty_compl -> Set.nonempty_compl is a dubious translation:
@@ -3981,7 +3981,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.symm_diff_nonempty Set.symmDiff_nonemptyₓ'. -/
 @[simp]
 theorem symmDiff_nonempty : (s ∆ t).Nonempty ↔ s ≠ t :=
-  nonempty_iff_ne_empty.trans symmDiff_eq_empty.Not
+  nonempty_iff_ne_empty.trans symmDiff_eq_empty.not
 #align set.symm_diff_nonempty Set.symmDiff_nonempty
 
 /- warning: set.inter_symm_diff_distrib_left -> Set.inter_symmDiff_distrib_left is a dubious translation:
@@ -4440,13 +4440,13 @@ theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsin
 
 #print Set.subsingleton_isTop /-
 theorem subsingleton_isTop (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsTop x } :=
-  fun x hx y hy => hx.IsMax.eq_of_le (hy x)
+  fun x hx y hy => hx.isMax.eq_of_le (hy x)
 #align set.subsingleton_is_top Set.subsingleton_isTop
 -/
 
 #print Set.subsingleton_isBot /-
 theorem subsingleton_isBot (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsBot x } :=
-  fun x hx y hy => hx.IsMin.eq_of_ge (hy x)
+  fun x hx y hy => hx.isMin.eq_of_ge (hy x)
 #align set.subsingleton_is_bot Set.subsingleton_isBot
 -/
 
@@ -4468,7 +4468,7 @@ theorem subsingleton_coe (s : Set α) : Subsingleton s ↔ s.Subsingleton :=
   by
   constructor
   · refine' fun h => fun a ha b hb => _
-    exact SetCoe.ext_iff.2 (@Subsingleton.elim s h ⟨a, ha⟩ ⟨b, hb⟩)
+    exact SetCoe.ext_iff.2 (@subsingleton.elim s h ⟨a, ha⟩ ⟨b, hb⟩)
   · exact fun h => Subsingleton.intro fun a b => SetCoe.ext (h a.property b.property)
 #align set.subsingleton_coe Set.subsingleton_coe
 -/
@@ -4492,7 +4492,7 @@ instance subsingleton_coe_of_subsingleton [Subsingleton α] {s : Set α} : Subsi
 /-! ### Nontrivial -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial /-
 /-- A set `s` is `nontrivial` if it has at least two distinct elements. -/
 protected def Nontrivial (s : Set α) : Prop :=
@@ -4510,25 +4510,25 @@ theorem nontrivial_of_mem_mem_ne {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy : x �
 /-- Extract witnesses from s.nontrivial. This function might be used instead of case analysis on the
 argument. Note that it makes a proof depend on the classical.choice axiom. -/
 protected noncomputable def Nontrivial.choose (hs : s.Nontrivial) : α × α :=
-  (hs.some, hs.choose_spec.choose_spec.some)
+  (hs.choose, hs.choose_spec.choose_spec.choose)
 #align set.nontrivial.some Set.Nontrivial.choose
 -/
 
 #print Set.Nontrivial.choose_fst_mem /-
-protected theorem Nontrivial.choose_fst_mem (hs : s.Nontrivial) : hs.some.fst ∈ s :=
-  hs.choose_spec.some
+protected theorem Nontrivial.choose_fst_mem (hs : s.Nontrivial) : hs.choose.fst ∈ s :=
+  hs.choose_spec.choose
 #align set.nontrivial.some_fst_mem Set.Nontrivial.choose_fst_mem
 -/
 
 #print Set.Nontrivial.choose_snd_mem /-
-protected theorem Nontrivial.choose_snd_mem (hs : s.Nontrivial) : hs.some.snd ∈ s :=
-  hs.choose_spec.choose_spec.choose_spec.some
+protected theorem Nontrivial.choose_snd_mem (hs : s.Nontrivial) : hs.choose.snd ∈ s :=
+  hs.choose_spec.choose_spec.choose_spec.choose
 #align set.nontrivial.some_snd_mem Set.Nontrivial.choose_snd_mem
 -/
 
 #print Set.Nontrivial.choose_fst_ne_choose_snd /-
 protected theorem Nontrivial.choose_fst_ne_choose_snd (hs : s.Nontrivial) :
-    hs.some.fst ≠ hs.some.snd :=
+    hs.choose.fst ≠ hs.choose.snd :=
   hs.choose_spec.choose_spec.choose_spec.choose_spec
 #align set.nontrivial.some_fst_ne_some_snd Set.Nontrivial.choose_fst_ne_choose_snd
 -/
@@ -4609,7 +4609,7 @@ theorem nontrivial_of_lt [Preorder α] {x y} (hx : x ∈ s) (hy : y ∈ s) (hxy 
 #align set.nontrivial_of_lt Set.nontrivial_of_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_of_exists_lt /-
 theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y) :
     s.Nontrivial :=
@@ -4618,7 +4618,7 @@ theorem nontrivial_of_exists_lt [Preorder α] (H : ∃ (x : _)(_ : x ∈ s)(y : 
 #align set.nontrivial_of_exists_lt Set.nontrivial_of_exists_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.Nontrivial.exists_lt /-
 theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
     ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
@@ -4627,7 +4627,7 @@ theorem Nontrivial.exists_lt [LinearOrder α] (hs : s.Nontrivial) :
 #align set.nontrivial.exists_lt Set.Nontrivial.exists_lt
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 #print Set.nontrivial_iff_exists_lt /-
 theorem nontrivial_iff_exists_lt [LinearOrder α] :
     s.Nontrivial ↔ ∃ (x : _)(_ : x ∈ s)(y : _)(_ : y ∈ s), x < y :=
@@ -4644,13 +4644,13 @@ protected theorem Nontrivial.nonempty (hs : s.Nontrivial) : s.Nonempty :=
 
 #print Set.Nontrivial.ne_empty /-
 protected theorem Nontrivial.ne_empty (hs : s.Nontrivial) : s ≠ ∅ :=
-  hs.Nonempty.ne_empty
+  hs.nonempty.ne_empty
 #align set.nontrivial.ne_empty Set.Nontrivial.ne_empty
 -/
 
 #print Set.Nontrivial.not_subset_empty /-
 theorem Nontrivial.not_subset_empty (hs : s.Nontrivial) : ¬s ⊆ ∅ :=
-  hs.Nonempty.not_subset_empty
+  hs.nonempty.not_subset_empty
 #align set.nontrivial.not_subset_empty Set.Nontrivial.not_subset_empty
 -/
 
@@ -4839,41 +4839,41 @@ protected theorem Subsingleton.antitoneOn (h : s.Subsingleton) : AntitoneOn f s 
 
 #print Set.Subsingleton.strictMonoOn /-
 protected theorem Subsingleton.strictMonoOn (h : s.Subsingleton) : StrictMonoOn f s :=
-  fun a ha b hb hlt => (hlt.Ne (h ha hb)).elim
+  fun a ha b hb hlt => (hlt.ne (h ha hb)).elim
 #align set.subsingleton.strict_mono_on Set.Subsingleton.strictMonoOn
 -/
 
 #print Set.Subsingleton.strictAntiOn /-
 protected theorem Subsingleton.strictAntiOn (h : s.Subsingleton) : StrictAntiOn f s :=
-  fun a ha b hb hlt => (hlt.Ne (h ha hb)).elim
+  fun a ha b hb hlt => (hlt.ne (h ha hb)).elim
 #align set.subsingleton.strict_anti_on Set.Subsingleton.strictAntiOn
 -/
 
 #print Set.monotoneOn_singleton /-
 @[simp]
 theorem monotoneOn_singleton : MonotoneOn f {a} :=
-  subsingleton_singleton.MonotoneOn f
+  subsingleton_singleton.monotoneOn f
 #align set.monotone_on_singleton Set.monotoneOn_singleton
 -/
 
 #print Set.antitoneOn_singleton /-
 @[simp]
 theorem antitoneOn_singleton : AntitoneOn f {a} :=
-  subsingleton_singleton.AntitoneOn f
+  subsingleton_singleton.antitoneOn f
 #align set.antitone_on_singleton Set.antitoneOn_singleton
 -/
 
 #print Set.strictMonoOn_singleton /-
 @[simp]
 theorem strictMonoOn_singleton : StrictMonoOn f {a} :=
-  subsingleton_singleton.StrictMonoOn f
+  subsingleton_singleton.strictMonoOn f
 #align set.strict_mono_on_singleton Set.strictMonoOn_singleton
 -/
 
 #print Set.strictAntiOn_singleton /-
 @[simp]
 theorem strictAntiOn_singleton : StrictAntiOn f {a} :=
-  subsingleton_singleton.StrictAntiOn f
+  subsingleton_singleton.strictAntiOn f
 #align set.strict_anti_on_singleton Set.strictAntiOn_singleton
 -/
 
@@ -4883,7 +4883,7 @@ section LinearOrder
 
 variable [LinearOrder α] [LinearOrder β] {f : α → β}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
@@ -4892,12 +4892,12 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_le_le :
       ∃ (a : _)(_ : a ∈ s)(b : _)(_ : b ∈ s)(c : _)(_ : c ∈ s),
         a ≤ b ∧ b ≤ c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
-  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
-    not_monotone_not_antitone_iff_exists_le_le, @and_left_comm (_ ∈ s)]
+  simp [monotoneOn_iff_monotone, antitoneOn_iff_antitone, and_assoc', exists_and_left,
+    not_monotone_not_antitone_iff_exists_le_le, @and.left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_le_le Set.not_monotoneOn_not_antitoneOn_iff_exists_le_le
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 #print Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt /-
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
@@ -4906,8 +4906,8 @@ theorem not_monotoneOn_not_antitoneOn_iff_exists_lt_lt :
       ∃ (a : _)(_ : a ∈ s)(b : _)(_ : b ∈ s)(c : _)(_ : c ∈ s),
         a < b ∧ b < c ∧ (f a < f b ∧ f c < f b ∨ f b < f a ∧ f b < f c) :=
   by
-  simp [monotone_on_iff_monotone, antitone_on_iff_antitone, and_assoc', exists_and_left,
-    not_monotone_not_antitone_iff_exists_lt_lt, @and_left_comm (_ ∈ s)]
+  simp [monotoneOn_iff_monotone, antitoneOn_iff_antitone, and_assoc', exists_and_left,
+    not_monotone_not_antitone_iff_exists_lt_lt, @and.left_comm (_ ∈ s)]
 #align set.not_monotone_on_not_antitone_on_iff_exists_lt_lt Set.not_monotoneOn_not_antitoneOn_iff_exists_lt_lt
 -/
 

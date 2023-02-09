@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.cau_seq_filter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,7 +73,7 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
   rcases mem_uniformity_dist.1 hs with ⟨ε, ⟨hε, hεs⟩⟩
   cases' CauSeq.cauchy₂ f hε with N hN
   exists { n | n ≥ N }.image f
-  simp only [exists_prop, mem_at_top_sets, mem_map, mem_image, ge_iff_le, mem_set_of_eq]
+  simp only [exists_prop, mem_atTop_sets, mem_map, mem_image, ge_iff_le, mem_setOf_eq]
   constructor
   · exists N
     intro b hb
@@ -90,7 +90,7 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem cau_seq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
     IsCauSeq norm u ↔ CauchySeq u :=
-  ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
+  ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.isCauSeq⟩
 #align cau_seq_iff_cauchy_seq cau_seq_iff_cauchySeq
 
 -- see Note [lower instance priority]
@@ -98,7 +98,7 @@ theorem cau_seq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
 assumption and this suffices to characterize completeness. -/
 instance (priority := 100) completeSpace_of_cau_seq_complete [CauSeq.IsComplete β norm] :
     CompleteSpace β := by
-  apply complete_of_cauchy_seq_tendsto
+  apply complete_of_cauchySeq_tendsto
   intro u hu
   have C : IsCauSeq norm u := cau_seq_iff_cauchySeq.2 hu
   exists CauSeq.lim ⟨u, C⟩

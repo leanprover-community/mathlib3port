@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.biproducts
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ def mapBicone {f : J → C} (b : Bicone f) : Bicone (F.obj ∘ f)
     rw [← F.map_comp]
     split_ifs
     · subst h
-      simp only [bicone_ι_π_self, CategoryTheory.Functor.map_id, eq_to_hom_refl]
+      simp only [bicone_ι_π_self, CategoryTheory.Functor.map_id, eqToHom_refl]
     · rw [bicone_ι_π_ne _ h, F.map_zero]
 #align category_theory.functor.map_bicone CategoryTheory.Functor.mapBicone
 
@@ -185,14 +185,14 @@ def preservesBinaryBiproductOfPreservesBiproduct (F : C ⥤ D) [PreservesZeroMor
     where preserves b hb :=
     { IsLimit :=
         IsLimit.ofIsoLimit
-            ((IsLimit.postcomposeHomEquiv (diagram_iso_pair _) _).symm
+            ((IsLimit.postcomposeHomEquiv (diagramIsoPair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsLimit) <|
           Cones.ext (Iso.refl _) fun j => by
             rcases j with ⟨⟨⟩⟩
             tidy
       IsColimit :=
         IsColimit.ofIsoColimit
-            ((IsColimit.precomposeInvEquiv (diagram_iso_pair _) _).symm
+            ((IsColimit.precomposeInvEquiv (diagramIsoPair _) _).symm
               (isBilimitOfPreserves F (b.toBiconeIsBilimit.symm hb)).IsColimit) <|
           Cocones.ext (Iso.refl _) fun j => by
             rcases j with ⟨⟨⟩⟩
@@ -254,7 +254,7 @@ theorem biproductComparison'_comp_biproductComparison :
     biproductComparison' F f ≫ biproductComparison F f = 𝟙 (⨁ F.obj ∘ f) := by
   classical
     ext
-    simp [biproduct.ι_π, ← functor.map_comp, eq_to_hom_map]
+    simp [biproduct.ι_π, ← Functor.map_comp, eqToHom_map]
 #align category_theory.functor.biproduct_comparison'_comp_biproduct_comparison CategoryTheory.Functor.biproductComparison'_comp_biproductComparison
 
 /-- `biproduct_comparison F f` is a split epimorphism. -/
@@ -349,7 +349,7 @@ variable [PreservesZeroMorphisms F]
 @[simp, reassoc.1]
 theorem biprodComparison'_comp_biprodComparison :
     biprodComparison' F X Y ≫ biprodComparison F X Y = 𝟙 (F.obj X ⊞ F.obj Y) := by
-  ext <;> simp [← functor.map_comp]
+  ext <;> simp [← Functor.map_comp]
 #align category_theory.functor.biprod_comparison'_comp_biprod_comparison CategoryTheory.Functor.biprodComparison'_comp_biprodComparison
 
 /-- `biprod_comparison F X Y` is a split epi. -/
@@ -421,7 +421,7 @@ theorem biproduct.mapBiproduct_inv_map_desc (g : ∀ j, f j ⟶ W) :
 
 theorem biproduct.mapBiproduct_hom_desc (g : ∀ j, f j ⟶ W) :
     ((F.mapBiproduct f).hom ≫ biproduct.desc fun j => F.map (g j)) = F.map (biproduct.desc g) := by
-  rw [← biproduct.map_biproduct_inv_map_desc, iso.hom_inv_id_assoc]
+  rw [← biproduct.mapBiproduct_inv_map_desc, Iso.hom_inv_id_assoc]
 #align category_theory.limits.biproduct.map_biproduct_hom_desc CategoryTheory.Limits.biproduct.mapBiproduct_hom_desc
 
 end Bicone
@@ -437,7 +437,7 @@ theorem biprod.map_lift_mapBiprod (f : W ⟶ X) (g : W ⟶ Y) :
 
 theorem biprod.lift_mapBiprod (f : W ⟶ X) (g : W ⟶ Y) :
     biprod.lift (F.map f) (F.map g) ≫ (F.mapBiprod X Y).inv = F.map (biprod.lift f g) := by
-  rw [← biprod.map_lift_map_biprod, category.assoc, iso.hom_inv_id, category.comp_id]
+  rw [← biprod.map_lift_mapBiprod, Category.assoc, Iso.hom_inv_id, Category.comp_id]
 #align category_theory.limits.biprod.lift_map_biprod CategoryTheory.Limits.biprod.lift_mapBiprod
 
 theorem biprod.mapBiprod_inv_map_desc (f : X ⟶ W) (g : Y ⟶ W) :
@@ -447,7 +447,7 @@ theorem biprod.mapBiprod_inv_map_desc (f : X ⟶ W) (g : Y ⟶ W) :
 
 theorem biprod.mapBiprod_hom_desc (f : X ⟶ W) (g : Y ⟶ W) :
     (F.mapBiprod X Y).hom ≫ biprod.desc (F.map f) (F.map g) = F.map (biprod.desc f g) := by
-  rw [← biprod.map_biprod_inv_map_desc, iso.hom_inv_id_assoc]
+  rw [← biprod.mapBiprod_inv_map_desc, Iso.hom_inv_id_assoc]
 #align category_theory.limits.biprod.map_biprod_hom_desc CategoryTheory.Limits.biprod.mapBiprod_hom_desc
 
 end BinaryBicone

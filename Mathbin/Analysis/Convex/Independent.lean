@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.independent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ protected theorem ConvexIndependent.range {p : ι → E} (hc : ConvexIndependent
   let fe : Set.range p ↪ ι := ⟨f, fun x₁ x₂ he => Subtype.ext (hf x₁ ▸ hf x₂ ▸ he ▸ rfl)⟩
   convert hc.comp_embedding fe
   ext
-  rw [embedding.coe_fn_mk, comp_app, hf]
+  rw [Embedding.coeFn_mk, comp_apply, hf]
 #align convex_independent.range ConvexIndependent.range
 
 /-- A subset of a convex independent set of points is convex independent as well. -/
@@ -187,7 +187,7 @@ theorem convexIndependent_iff_finset {p : ι → E} :
   by
   refine' ⟨fun hc s x hx => hc s x _, fun h s x hx => _⟩
   · rwa [Finset.coe_image] at hx
-  have hp : injective p := by
+  have hp : Injective p := by
     rintro a b hab
     rw [← mem_singleton]
     refine' h {b} a _

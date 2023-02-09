@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sum.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,12 +63,12 @@ theorem mem_sumLift₂ :
   by
   constructor
   · cases a <;> cases b
-    · rw [sum_lift₂, mem_map]
+    · rw [sumLift₂, mem_map]
       rintro ⟨c, hc, rfl⟩
       exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
     · refine' fun h => (not_mem_empty _ h).elim
     · refine' fun h => (not_mem_empty _ h).elim
-    · rw [sum_lift₂, mem_map]
+    · rw [sumLift₂, mem_map]
       rintro ⟨c, hc, rfl⟩
       exact Or.inr ⟨a, b, c, rfl, rfl, rfl, hc⟩
   · rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
@@ -83,7 +83,7 @@ Case conversion may be inaccurate. Consider using '#align finset.inl_mem_sum_lif
 theorem inl_mem_sumLift₂ {c₁ : γ₁} :
     inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ :=
   by
-  rw [mem_sum_lift₂, or_iff_left]
+  rw [mem_sumLift₂, or_iff_left]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
@@ -98,7 +98,7 @@ Case conversion may be inaccurate. Consider using '#align finset.inr_mem_sum_lif
 theorem inr_mem_sumLift₂ {c₂ : γ₂} :
     inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ :=
   by
-  rw [mem_sum_lift₂, or_iff_right]
+  rw [mem_sumLift₂, or_iff_right]
   simp only [exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
@@ -137,7 +137,7 @@ theorem sumLift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
       (∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ (f a₁ b₁).Nonempty) ∨
         ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ (g a₂ b₂).Nonempty :=
-  by simp [nonempty_iff_ne_empty, sum_lift₂_eq_empty, not_and_or]
+  by simp [nonempty_iff_ne_empty, sumLift₂_eq_empty, not_and_or]
 #align finset.sum_lift₂_nonempty Finset.sumLift₂_nonempty
 
 /- warning: finset.sum_lift₂_mono -> Finset.sumLift₂_mono is a dubious translation:

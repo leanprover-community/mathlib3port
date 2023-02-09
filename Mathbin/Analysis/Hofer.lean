@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.hofer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,13 +104,13 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     refine' cauchySeq_of_le_geometric _ ε one_half_lt_one fun n => _
     simpa only [one_div, inv_pow] using key₁ n
   -- So u converges to some y
-  obtain ⟨y, limy⟩ : ∃ y, tendsto u at_top (𝓝 y)
+  obtain ⟨y, limy⟩ : ∃ y, Tendsto u atTop (𝓝 y)
   exact CompleteSpace.complete cauchy_u
   -- And ϕ ∘ u goes to +∞
-  have lim_top : tendsto (ϕ ∘ u) at_top at_top :=
+  have lim_top : Tendsto (ϕ ∘ u) atTop atTop :=
     by
     let v n := (ϕ ∘ u) (n + 1)
-    suffices tendsto v at_top at_top by rwa [tendsto_add_at_top_iff_nat] at this
+    suffices Tendsto v atTop atTop by rwa [tendsto_add_atTop_iff_nat] at this
     have hv₀ : 0 < v 0 := by
       have : 0 ≤ ϕ (u 0) := nonneg x
       calc
@@ -120,8 +120,8 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
     apply tendsto_atTop_of_geom_le hv₀ one_lt_two
     exact fun n => (key₂ (n + 1)).le
   -- But ϕ ∘ u also needs to go to ϕ(y)
-  have lim : tendsto (ϕ ∘ u) at_top (𝓝 (ϕ y)) := tendsto.comp cont.continuous_at limy
+  have lim : Tendsto (ϕ ∘ u) atTop (𝓝 (ϕ y)) := Tendsto.comp cont.continuous_at limy
   -- So we have our contradiction!
-  exact not_tendsto_atTop_of_tendsto_nhds limUnder lim_top
+  exact not_tendsto_atTop_of_tendsto_nhds lim lim_top
 #align hofer hofer
 

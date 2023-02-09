@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.sum_four_squares
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     have hk0 : 0 ≤ k :=
       nonneg_of_mul_nonneg_right
         (by rw [← hk] <;> exact add_nonneg (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_le_one)
-        (Int.coe_nat_pos.2 hp.1.Pos)
+        (Int.coe_nat_pos.2 hp.1.pos)
     ⟨a.valMinAbs, b.valMinAbs, k.natAbs, by rw [hk, Int.natAbs_of_nonneg hk0, mul_comm],
       lt_of_mul_lt_mul_left
         (calc
@@ -200,7 +200,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
           ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : ZMod m) :=
         by simp [w, x, y, z, sq]
       have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) = 0 := by
-        rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.nat_cast_self, zero_mul]
+        rw [hwxyzabcd, habcd, Int.cast_mul, cast_ofNat, ZMod.nat_cast_self, zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
       have hn0 : 0 < n.natAbs :=
         Int.natAbs_pos_of_ne_zero fun hn0 =>
@@ -292,13 +292,12 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2
     have : n / minFac n < n := factors_lemma
     let ⟨a, b, c, d, h₁⟩ :=
       show ∃ a b c d : ℤ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = minFac n from
-        prime_sum_four_squares (min_fac (k + 2))
+        prime_sum_four_squares (minFac (k + 2))
     let ⟨w, x, y, z, h₂⟩ := sum_four_squares (n / minFac n)
     ⟨(a * w - b * x - c * y - d * z).natAbs, (a * x + b * w + c * z - d * y).natAbs,
       (a * y - b * z + c * w + d * x).natAbs, (a * z + b * y - c * x + d * w).natAbs,
       by
-      rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel' (min_fac_dvd (k + 2)), Int.ofNat_mul, ← h₁, ←
-        h₂]
+      rw [← Int.coe_nat_inj', ← Nat.mul_div_cancel' (minFac_dvd (k + 2)), Int.ofNat_mul, ← h₁, ← h₂]
       simp [sum_four_sq_mul_sum_four_sq]⟩
 #align nat.sum_four_squares Nat.sum_four_squares
 

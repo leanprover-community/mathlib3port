@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Daniel Roca González
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.lax_milgram
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
   · refine' (mul_le_mul_right h).mp _
     calc
       C * ‖v‖ * ‖v‖ ≤ B v v := coercivity v
-      _ = ⟪B♯ v, v⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B v v).symm
+      _ = ⟪B♯ v, v⟫_ℝ := (continuousLinearMapOfBilin_apply ℝ B v v).symm
       _ ≤ ‖B♯ v‖ * ‖v‖ := real_inner_le_norm (B♯ v) v
       
   · have : v = 0 := by simpa using h
@@ -94,7 +94,7 @@ theorem ker_eq_bot (coercive : IsCoercive B) : ker B♯ = ⊥ :=
 theorem closed_range (coercive : IsCoercive B) : IsClosed (range B♯ : Set V) :=
   by
   rcases coercive.antilipschitz with ⟨_, _, antilipschitz⟩
-  exact antilipschitz.is_closed_range B♯.UniformContinuous
+  exact antilipschitz.is_closed_range B♯.uniformContinuous
 #align is_coercive.closed_range IsCoercive.closed_range
 
 theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ :=
@@ -111,7 +111,7 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ :=
     ·
       calc
         C * ‖w‖ * ‖w‖ ≤ B w w := coercivity w
-        _ = ⟪B♯ w, w⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B w w).symm
+        _ = ⟪B♯ w, w⟫_ℝ := (continuousLinearMapOfBilin_apply ℝ B w w).symm
         _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
         
     · exact mul_nonneg (mul_nonneg C_pos.le (norm_nonneg w)) (norm_nonneg w)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,9 +27,9 @@ collection of theorems is to show the equivalence of the different approaches.
 
      13 = 1101(base 2) = bit1 (bit0 (bit1 one)) -/
 inductive PosNum : Type
-  | one : PosNum
-  | bit1 : PosNum → PosNum
-  | bit0 : PosNum → PosNum
+  | one : pos_num
+  | bit1 : pos_num → pos_num
+  | bit0 : pos_num → pos_num
   deriving has_reflect, DecidableEq
 #align pos_num PosNum
 -/
@@ -45,8 +45,8 @@ instance : Inhabited PosNum :=
 
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one))) -/
 inductive Num : Type
-  | zero : Num
-  | Pos : PosNum → Num
+  | zero : num
+  | Pos : PosNum → num
   deriving has_reflect, DecidableEq
 #align num Num
 -/
@@ -66,9 +66,9 @@ instance : Inhabited Num :=
      13 = 1101(base 2) = pos (bit1 (bit0 (bit1 one)))
      -13 = -1101(base 2) = neg (bit1 (bit0 (bit1 one))) -/
 inductive ZNum : Type
-  | zero : ZNum
-  | Pos : PosNum → ZNum
-  | neg : PosNum → ZNum
+  | zero : znum
+  | Pos : PosNum → znum
+  | neg : PosNum → znum
   deriving has_reflect, DecidableEq
 #align znum ZNum
 -/
@@ -183,7 +183,7 @@ instance : Mul PosNum :=
   -/
 def ofNatSucc : ℕ → PosNum
   | 0 => 1
-  | Nat.succ n => succ (of_nat_succ n)
+  | nat.succ n => succ (of_nat_succ n)
 #align pos_num.of_nat_succ PosNum.ofNatSucc
 -/
 
@@ -240,8 +240,8 @@ variable {α : Type _} [One α] [Add α]
   -/
 def castPosNum : PosNum → α
   | 1 => 1
-  | PosNum.bit0 a => bit0 (castPosNum a)
-  | PosNum.bit1 a => bit1 (castPosNum a)
+  | pos_num.bit0 a => bit0 (cast_pos_num a)
+  | pos_num.bit1 a => bit1 (cast_pos_num a)
 #align cast_pos_num castPosNum
 -/
 
@@ -250,7 +250,7 @@ def castPosNum : PosNum → α
   -/
 def castNum [z : Zero α] : Num → α
   | 0 => 0
-  | Num.pos p => castPosNum p
+  | num.pos p => castPosNum p
 #align cast_num castNum
 -/
 
@@ -293,7 +293,7 @@ open PosNum
   -/
 def succ' : Num → PosNum
   | 0 => 1
-  | Pos p => succ p
+  | pos p => succ p
 #align num.succ' Num.succ'
 -/
 
@@ -311,7 +311,7 @@ def succ (n : Num) : Num :=
 protected def add : Num → Num → Num
   | 0, a => a
   | b, 0 => b
-  | Pos a, Pos b => pos (a + b)
+  | pos a, pos b => pos (a + b)
 #align num.add Num.add
 -/
 
@@ -323,7 +323,7 @@ instance : Add Num :=
   -/
 protected def bit0 : Num → Num
   | 0 => 0
-  | Pos n => pos (PosNum.bit0 n)
+  | pos n => pos (PosNum.bit0 n)
 #align num.bit0 Num.bit0
 -/
 
@@ -332,7 +332,7 @@ protected def bit0 : Num → Num
   -/
 protected def bit1 : Num → Num
   | 0 => 1
-  | Pos n => pos (PosNum.bit1 n)
+  | pos n => pos (PosNum.bit1 n)
 #align num.bit1 Num.bit1
 -/
 
@@ -349,7 +349,7 @@ def bit (b : Bool) : Num → Num :=
   -/
 def size : Num → Num
   | 0 => 0
-  | Pos n => pos (PosNum.size n)
+  | pos n => pos (PosNum.size n)
 #align num.size Num.size
 -/
 
@@ -358,7 +358,7 @@ def size : Num → Num
   -/
 def natSize : Num → Nat
   | 0 => 0
-  | Pos n => PosNum.natSize n
+  | pos n => PosNum.natSize n
 #align num.nat_size Num.natSize
 -/
 
@@ -368,7 +368,7 @@ def natSize : Num → Nat
 protected def mul : Num → Num → Num
   | 0, _ => 0
   | _, 0 => 0
-  | Pos a, Pos b => pos (a * b)
+  | pos a, pos b => pos (a * b)
 #align num.mul Num.mul
 -/
 
@@ -384,7 +384,7 @@ def cmp : Num → Num → Ordering
   | 0, 0 => Eq
   | _, 0 => GT.gt
   | 0, _ => lt
-  | Pos a, Pos b => PosNum.cmp a b
+  | pos a, pos b => PosNum.cmp a b
 #align num.cmp Num.cmp
 -/
 
@@ -411,7 +411,7 @@ instance decidableLE : @DecidableRel Num (· ≤ ·)
   -/
 def toZNum : Num → ZNum
   | 0 => 0
-  | Pos a => ZNum.pos a
+  | pos a => ZNum.pos a
 #align num.to_znum Num.toZNum
 -/
 
@@ -420,7 +420,7 @@ def toZNum : Num → ZNum
   -/
 def toZNumNeg : Num → ZNum
   | 0 => 0
-  | Pos a => ZNum.neg a
+  | pos a => ZNum.neg a
 #align num.to_znum_neg Num.toZNumNeg
 -/
 
@@ -443,7 +443,7 @@ open PosNum
   -/
 def zNeg : ZNum → ZNum
   | 0 => 0
-  | Pos a => neg a
+  | pos a => neg a
   | neg a => pos a
 #align znum.zneg ZNum.zNeg
 -/
@@ -456,7 +456,7 @@ instance : Neg ZNum :=
   -/
 def abs : ZNum → Num
   | 0 => 0
-  | Pos a => Num.pos a
+  | pos a => Num.pos a
   | neg a => Num.pos a
 #align znum.abs ZNum.abs
 -/
@@ -466,7 +466,7 @@ def abs : ZNum → Num
   -/
 def succ : ZNum → ZNum
   | 0 => 1
-  | Pos a => pos (PosNum.succ a)
+  | pos a => pos (PosNum.succ a)
   | neg a => (PosNum.pred' a).toZNumNeg
 #align znum.succ ZNum.succ
 -/
@@ -476,7 +476,7 @@ def succ : ZNum → ZNum
   -/
 def pred : ZNum → ZNum
   | 0 => neg 1
-  | Pos a => (PosNum.pred' a).toZNum
+  | pos a => (PosNum.pred' a).toZNum
   | neg a => neg (PosNum.succ a)
 #align znum.pred ZNum.pred
 -/
@@ -486,7 +486,7 @@ def pred : ZNum → ZNum
   -/
 protected def bit0 : ZNum → ZNum
   | 0 => 0
-  | Pos n => pos (PosNum.bit0 n)
+  | pos n => pos (PosNum.bit0 n)
   | neg n => neg (PosNum.bit0 n)
 #align znum.bit0 ZNum.bit0
 -/
@@ -496,7 +496,7 @@ protected def bit0 : ZNum → ZNum
   -/
 protected def bit1 : ZNum → ZNum
   | 0 => 1
-  | Pos n => pos (PosNum.bit1 n)
+  | pos n => pos (PosNum.bit1 n)
   | neg n => neg (Num.casesOn (pred' n) 1 PosNum.bit1)
 #align znum.bit1 ZNum.bit1
 -/
@@ -506,7 +506,7 @@ protected def bit1 : ZNum → ZNum
   -/
 protected def bitm1 : ZNum → ZNum
   | 0 => neg 1
-  | Pos n => pos (Num.casesOn (pred' n) 1 PosNum.bit1)
+  | pos n => pos (Num.casesOn (pred' n) 1 PosNum.bit1)
   | neg n => neg (PosNum.bit1 n)
 #align znum.bitm1 ZNum.bitm1
 -/
@@ -544,7 +544,7 @@ def sub' : PosNum → PosNum → ZNum
   otherwise.
   -/
 def ofZNum' : ZNum → Option PosNum
-  | ZNum.pos p => some p
+  | znum.pos p => some p
   | _ => none
 #align pos_num.of_znum' PosNum.ofZNum'
 -/
@@ -553,7 +553,7 @@ def ofZNum' : ZNum → Option PosNum
 /-- Converts a `znum` to a `pos_num`, mapping all out of range values to `1`.
   -/
 def ofZNum : ZNum → PosNum
-  | ZNum.pos p => p
+  | znum.pos p => p
   | _ => 1
 #align pos_num.of_znum PosNum.ofZNum
 -/
@@ -563,7 +563,7 @@ def ofZNum : ZNum → PosNum
   -/
 protected def sub (a b : PosNum) : PosNum :=
   match sub' a b with
-  | ZNum.pos p => p
+  | znum.pos p => p
   | _ => 1
 #align pos_num.sub PosNum.sub
 -/
@@ -580,7 +580,7 @@ namespace Num
   -/
 def ppred : Num → Option Num
   | 0 => none
-  | Pos p => some p.pred'
+  | pos p => some p.pred'
 #align num.ppred Num.ppred
 -/
 
@@ -589,7 +589,7 @@ def ppred : Num → Option Num
   -/
 def pred : Num → Num
   | 0 => 0
-  | Pos p => p.pred'
+  | pos p => p.pred'
 #align num.pred Num.pred
 -/
 
@@ -599,8 +599,8 @@ def pred : Num → Num
 def div2 : Num → Num
   | 0 => 0
   | 1 => 0
-  | Pos (PosNum.bit0 p) => pos p
-  | Pos (PosNum.bit1 p) => pos p
+  | pos (pos_num.bit0 p) => pos p
+  | pos (pos_num.bit1 p) => pos p
 #align num.div2 Num.div2
 -/
 
@@ -609,8 +609,8 @@ def div2 : Num → Num
   -/
 def ofZNum' : ZNum → Option Num
   | 0 => some 0
-  | ZNum.pos p => some (pos p)
-  | ZNum.neg p => none
+  | znum.pos p => some (pos p)
+  | znum.neg p => none
 #align num.of_znum' Num.ofZNum'
 -/
 
@@ -618,7 +618,7 @@ def ofZNum' : ZNum → Option Num
 /-- Converts a `znum` to an `option num`, where `of_znum p = 0` if `p < 0`.
   -/
 def ofZNum : ZNum → Num
-  | ZNum.pos p => pos p
+  | znum.pos p => pos p
   | _ => 0
 #align num.of_znum Num.ofZNum
 -/
@@ -628,9 +628,9 @@ def ofZNum : ZNum → Num
   -/
 def sub' : Num → Num → ZNum
   | 0, 0 => 0
-  | Pos a, 0 => ZNum.pos a
-  | 0, Pos b => ZNum.neg b
-  | Pos a, Pos b => a.sub' b
+  | pos a, 0 => ZNum.pos a
+  | 0, pos b => ZNum.neg b
+  | pos a, pos b => a.sub' b
 #align num.sub' Num.sub'
 -/
 
@@ -665,9 +665,9 @@ open PosNum
 protected def add : ZNum → ZNum → ZNum
   | 0, a => a
   | b, 0 => b
-  | Pos a, Pos b => pos (a + b)
-  | Pos a, neg b => sub' a b
-  | neg a, Pos b => sub' b a
+  | pos a, pos b => pos (a + b)
+  | pos a, neg b => sub' a b
+  | neg a, pos b => sub' b a
   | neg a, neg b => neg (a + b)
 #align znum.add ZNum.add
 -/
@@ -681,9 +681,9 @@ instance : Add ZNum :=
 protected def mul : ZNum → ZNum → ZNum
   | 0, a => 0
   | b, 0 => 0
-  | Pos a, Pos b => pos (a * b)
-  | Pos a, neg b => neg (a * b)
-  | neg a, Pos b => neg (a * b)
+  | pos a, pos b => pos (a * b)
+  | pos a, neg b => neg (a * b)
+  | neg a, pos b => neg (a * b)
   | neg a, neg b => pos (a * b)
 #align znum.mul ZNum.mul
 -/
@@ -698,11 +698,11 @@ open Ordering
   -/
 def cmp : ZNum → ZNum → Ordering
   | 0, 0 => Eq
-  | Pos a, Pos b => PosNum.cmp a b
+  | pos a, pos b => PosNum.cmp a b
   | neg a, neg b => PosNum.cmp b a
-  | Pos _, _ => GT.gt
+  | pos _, _ => GT.gt
   | neg _, _ => lt
-  | _, Pos _ => lt
+  | _, pos _ => lt
   | _, neg _ => GT.gt
 #align znum.cmp ZNum.cmp
 -/
@@ -809,7 +809,7 @@ namespace Num
 def div : Num → Num → Num
   | 0, _ => 0
   | _, 0 => 0
-  | Pos n, Pos d => PosNum.div' n d
+  | pos n, pos d => PosNum.div' n d
 #align num.div Num.div
 -/
 
@@ -819,7 +819,7 @@ def div : Num → Num → Num
 def mod : Num → Num → Num
   | 0, _ => 0
   | n, 0 => n
-  | Pos n, Pos d => PosNum.mod' n d
+  | pos n, pos d => PosNum.mod' n d
 #align num.mod Num.mod
 -/
 
@@ -833,8 +833,8 @@ instance : Mod Num :=
 /-- Auxiliary definition for `num.gcd`. -/
 def gcdAux : Nat → Num → Num → Num
   | 0, a, b => b
-  | Nat.succ n, 0, b => b
-  | Nat.succ n, a, b => gcd_aux n (b % a) a
+  | nat.succ n, 0, b => b
+  | nat.succ n, a, b => gcd_aux n (b % a) a
 #align num.gcd_aux Num.gcdAux
 -/
 
@@ -856,9 +856,9 @@ namespace ZNum
 def div : ZNum → ZNum → ZNum
   | 0, _ => 0
   | _, 0 => 0
-  | Pos n, Pos d => Num.toZNum (PosNum.div' n d)
-  | Pos n, neg d => Num.toZNumNeg (PosNum.div' n d)
-  | neg n, Pos d => neg (PosNum.pred' n / Num.pos d).succ'
+  | pos n, pos d => Num.toZNum (PosNum.div' n d)
+  | pos n, neg d => Num.toZNumNeg (PosNum.div' n d)
+  | neg n, pos d => neg (PosNum.pred' n / Num.pos d).succ'
   | neg n, neg d => pos (PosNum.pred' n / Num.pos d).succ'
 #align znum.div ZNum.div
 -/
@@ -868,7 +868,7 @@ def div : ZNum → ZNum → ZNum
   -/
 def mod : ZNum → ZNum → ZNum
   | 0, d => 0
-  | Pos n, d => Num.toZNum (Num.pos n % d.abs)
+  | pos n, d => Num.toZNum (Num.pos n % d.abs)
   | neg n, d => d.abs.sub' (PosNum.pred' n % d.abs).succ
 #align znum.mod ZNum.mod
 -/
@@ -898,8 +898,8 @@ variable {α : Type _} [Zero α] [One α] [Add α] [Neg α]
   -/
 def castZNum : ZNum → α
   | 0 => 0
-  | ZNum.pos p => p
-  | ZNum.neg p => -p
+  | znum.pos p => p
+  | znum.neg p => -p
 #align cast_znum castZNum
 -/
 

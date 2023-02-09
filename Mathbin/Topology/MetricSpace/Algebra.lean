@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.metric_space.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem lipschitz_with_lipschitz_const_mul :
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) HasLipschitzMul.hasContinuousMul : HasContinuousMul β :=
-  ⟨lipschitzWith_lipschitz_const_mul_edist.Continuous⟩
+  ⟨lipschitzWith_lipschitz_const_mul_edist.continuous⟩
 #align has_lipschitz_mul.has_continuous_mul HasLipschitzMul.hasContinuousMul
 #align has_lipschitz_add.has_continuous_add HasLipschitzAdd.has_continuous_add
 

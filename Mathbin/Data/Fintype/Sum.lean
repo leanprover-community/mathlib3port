@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem Fintype.card_sum [Fintype α] [Fintype β] :
 /-- If the subtype of all-but-one elements is a `fintype` then the type itself is a `fintype`. -/
 def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
   Fintype.ofBijective (Sum.elim (coe : { b // b = a } → α) (coe : { b // b ≠ a } → α)) <| by
-    classical exact (Equiv.sumCompl (· = a)).Bijective
+    classical exact (Equiv.sumCompl (· = a)).bijective
 #align fintype_of_fintype_ne fintypeOfFintypeNe
 -/
 
@@ -72,7 +72,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] (_inst_2 : β) (k : α -> β), Eq.{succ u1} (Finset.{u1} β) (Finset.image.{u2, u1} (Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) (fun (i : Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) => k (Subtype.val.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2) i)) (Finset.univ.{u2} (Subtype.{succ u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2)) (Subtype.fintype.{u2} α (fun (a : α) => Ne.{succ u1} β (k a) _inst_2) (fun (a : α) => instDecidableNot (Eq.{succ u1} β (k a) _inst_2) (Classical.propDecidable (Eq.{succ u1} β (k a) _inst_2))) _inst_1))) (Finset.erase.{u1} β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) (Finset.image.{u2, u1} α β (fun (a : β) (b : β) => Classical.propDecidable (Eq.{succ u1} β a b)) k (Finset.univ.{u2} α _inst_1)) _inst_2)
 Case conversion may be inaccurate. Consider using '#align image_subtype_ne_univ_eq_image_erase image_subtype_ne_univ_eq_image_eraseₓ'. -/
 theorem image_subtype_ne_univ_eq_image_erase [Fintype α] [DecidableEq β] (k : β) (b : α → β) :
-    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).eraseₓ k :=
+    image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).erase k :=
   by
   apply subset_antisymm
   · rw [image_subset_iff]
@@ -191,7 +191,7 @@ open Classical
 @[simp]
 theorem infinite_sum : Infinite (Sum α β) ↔ Infinite α ∨ Infinite β :=
   by
-  refine' ⟨fun H => _, fun H => H.elim (@Sum.infinite_of_left α β) (@Sum.infinite_of_right α β)⟩
+  refine' ⟨fun H => _, fun H => H.elim (@sum.infinite_of_left α β) (@sum.infinite_of_right α β)⟩
   contrapose! H; haveI := fintypeOfNotInfinite H.1; haveI := fintypeOfNotInfinite H.2
   exact Infinite.false
 #align infinite_sum infinite_sum

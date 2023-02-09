@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pim Spelier, Daan van Gent
 
 ! This file was ported from Lean 3 source module computability.encoding
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,15 +94,15 @@ theorem inclusionBoolΓ'_injective : Function.Injective inclusionBoolΓ' :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An encoding function of the positive binary numbers in bool. -/
 def encodePosNum : PosNum → List Bool
-  | PosNum.one => [true]
-  | PosNum.bit0 n => false::encode_pos_num n
-  | PosNum.bit1 n => true::encode_pos_num n
+  | pos_num.one => [true]
+  | pos_num.bit0 n => false::encode_pos_num n
+  | pos_num.bit1 n => true::encode_pos_num n
 #align computability.encode_pos_num Computability.encodePosNum
 
 /-- An encoding function of the binary numbers in bool. -/
 def encodeNum : Num → List Bool
-  | Num.zero => []
-  | Num.pos n => encodePosNum n
+  | num.zero => []
+  | num.pos n => encodePosNum n
 #align computability.encode_num Computability.encodeNum
 
 /-- An encoding function of ℕ in bool. -/
@@ -138,7 +138,7 @@ theorem decode_encodePosNum : ∀ n, decodePosNum (encodePosNum n) = n :=
   induction' n with m hm m hm <;> unfold encode_pos_num decode_pos_num
   · rfl
   · rw [hm]
-    exact if_neg (encode_pos_num_nonempty m)
+    exact if_neg (encodePosNum_nonempty m)
   · exact congr_arg PosNum.bit0 hm
 #align computability.decode_encode_pos_num Computability.decode_encodePosNum
 
@@ -147,16 +147,16 @@ theorem decode_encodeNum : ∀ n, decodeNum (encodeNum n) = n :=
   intro n
   cases n <;> unfold encode_num decode_num
   · rfl
-  rw [decode_encode_pos_num n]
+  rw [decode_encodePosNum n]
   rw [PosNum.cast_to_num]
-  exact if_neg (encode_pos_num_nonempty n)
+  exact if_neg (encodePosNum_nonempty n)
 #align computability.decode_encode_num Computability.decode_encodeNum
 
 theorem decode_encodeNat : ∀ n, decodeNat (encodeNat n) = n :=
   by
   intro n
   conv_rhs => rw [← Num.to_of_nat n]
-  exact congr_arg coe (decode_encode_num ↑n)
+  exact congr_arg coe (decode_encodeNum ↑n)
 #align computability.decode_encode_nat Computability.decode_encodeNat
 
 /-- A binary encoding of ℕ in bool. -/
@@ -179,7 +179,7 @@ def encodingNatΓ' : Encoding ℕ where
   decode x := some (decodeNat (List.map sectionΓ'Bool x))
   decode_encode x :=
     congr_arg _ <| by
-      rw [List.map_map, List.map_id' left_inverse_section_inclusion, decode_encode_nat]
+      rw [List.map_map, List.map_id' leftInverse_section_inclusion, decode_encodeNat]
 #align computability.encoding_nat_Γ' Computability.encodingNatΓ'
 
 /-- A binary fin_encoding of ℕ in Γ'. -/
@@ -214,7 +214,7 @@ def unaryFinEncodingNat : FinEncoding ℕ where
 
 /-- An encoding function of bool in bool. -/
 def encodeBool : Bool → List Bool :=
-  List.ret
+  PSigma.elim
 #align computability.encode_bool Computability.encodeBool
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

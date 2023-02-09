@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
   { U with
     algebraMap_mem' := fun x => by
-      rw [algebra_map_apply R S A]
+      rw [algebraMap_apply R S A]
       exact U.algebra_map_mem _ }
 #align subalgebra.restrict_scalars Subalgebra.restrictScalars
 
@@ -121,7 +121,7 @@ theorem mem_restrictScalars {U : Subalgebra S A} {x : A} : x ∈ restrictScalars
 
 theorem restrictScalars_injective :
     Function.Injective (restrictScalars R : Subalgebra S A → Subalgebra R A) := fun U V H =>
-  ext fun x => by rw [← mem_restrict_scalars R, H, mem_restrict_scalars]
+  ext fun x => by rw [← mem_restrictScalars R, H, mem_restrictScalars]
 #align subalgebra.restrict_scalars_injective Subalgebra.restrictScalars_injective
 
 /-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.

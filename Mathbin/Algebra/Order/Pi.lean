@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.order.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ instance orderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
 instance {ι : Type _} {α : ι → Type _} [∀ i, LE (α i)] [∀ i, Mul (α i)] [∀ i, ExistsMulOfLE (α i)] :
     ExistsMulOfLE (∀ i, α i) :=
   ⟨fun a b h =>
-    ⟨fun i => (exists_mul_of_le <| h i).some,
+    ⟨fun i => (exists_mul_of_le <| h i).choose,
       funext fun i => (exists_mul_of_le <| h i).choose_spec⟩⟩
 
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
@@ -73,7 +73,7 @@ instance orderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid <| f i] :
         one := (1 : ∀ i, f i)
         le := (· ≤ ·)
         lt := (· < ·)
-        npow := Monoid.npow } <;>
+        npow := monoid.npow } <;>
     pi_instance_derive_field
 #align pi.ordered_cancel_comm_monoid Pi.orderedCancelCommMonoid
 #align pi.ordered_cancel_add_comm_monoid Pi.orderedAddCancelCommMonoid

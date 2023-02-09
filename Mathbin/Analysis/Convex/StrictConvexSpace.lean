@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.strict_convex_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,7 +83,7 @@ theorem strictConvex_closedBall [StrictConvexSpace 𝕜 E] (x : E) (r : ℝ) :
     StrictConvex 𝕜 (closedBall x r) :=
   by
   cases' le_or_lt r 0 with hr hr
-  · exact (subsingleton_closed_ball x hr).StrictConvex
+  · exact (subsingleton_closedBall x hr).strictConvex
   rw [← vadd_closedBall_zero]
   exact (StrictConvexSpace.strictConvex_closedBall r hr).vadd _
 #align strict_convex_closed_ball strictConvex_closedBall
@@ -106,7 +106,7 @@ theorem StrictConvexSpace.ofNormComboLtOne
   refine'
     StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ
       ((convex_closedBall _ _).strict_convex' fun x hx y hy hne => _)
-  rw [interior_closedBall (0 : E) one_ne_zero, closed_ball_diff_ball, mem_sphere_zero_iff_norm] at
+  rw [interior_closedBall (0 : E) one_ne_zero, closedBall_diff_ball, mem_sphere_zero_iff_norm] at
     hx hy
   rcases h x y hx hy hne with ⟨a, b, hab, hlt⟩
   use b
@@ -120,8 +120,8 @@ theorem StrictConvexSpace.ofNormComboNeOne
         ‖x‖ = 1 → ‖y‖ = 1 → x ≠ y → ∃ a b : ℝ, 0 ≤ a ∧ 0 ≤ b ∧ a + b = 1 ∧ ‖a • x + b • y‖ ≠ 1) :
     StrictConvexSpace ℝ E :=
   by
-  refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closedBall _ _).StrictConvex _)
-  simp only [interior_closedBall _ one_ne_zero, closed_ball_diff_ball, Set.Pairwise,
+  refine' StrictConvexSpace.ofStrictConvexClosedUnitBall ℝ ((convex_closedBall _ _).strictConvex _)
+  simp only [interior_closedBall _ one_ne_zero, closedBall_diff_ball, Set.Pairwise,
     frontier_closedBall _ one_ne_zero, mem_sphere_zero_iff_norm]
   intro x hx y hy hne
   rcases h x y hx hy hne with ⟨a, b, ha, hb, hab, hne'⟩
@@ -163,7 +163,7 @@ theorem combo_mem_ball_of_ne (hx : x ∈ closedBall z r) (hy : y ∈ closedBall 
     (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) : a • x + b • y ∈ ball z r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · rw [closed_ball_zero, mem_singleton_iff] at hx hy
+  · rw [closedBall_zero, mem_singleton_iff] at hx hy
     exact (hne (hx.trans hy.symm)).elim
   · simp only [← interior_closedBall _ hr] at hx hy⊢
     exact strictConvex_closedBall ℝ z r hx hy hne ha hb hab
@@ -218,7 +218,7 @@ theorem abs_lt_norm_sub_of_not_sameRay (h : ¬SameRay ℝ x y) : |‖x‖ - ‖y
 /-- In a strictly convex space, two vectors `x`, `y` are in the same ray if and only if the triangle
 inequality for `x` and `y` becomes an equality. -/
 theorem sameRay_iff_norm_add : SameRay ℝ x y ↔ ‖x + y‖ = ‖x‖ + ‖y‖ :=
-  ⟨SameRay.norm_add, fun h => Classical.not_not.1 fun h' => (norm_add_lt_of_not_sameRay h').Ne h⟩
+  ⟨SameRay.norm_add, fun h => Classical.not_not.1 fun h' => (norm_add_lt_of_not_sameRay h').ne h⟩
 #align same_ray_iff_norm_add sameRay_iff_norm_add
 
 /-- If `x` and `y` are two vectors in a strictly convex space have the same norm and the norm of
@@ -230,7 +230,7 @@ theorem eq_of_norm_eq_of_norm_add_eq (h₁ : ‖x‖ = ‖y‖) (h₂ : ‖x + y
 /-- In a strictly convex space, two vectors `x`, `y` are not in the same ray if and only if the
 triangle inequality for `x` and `y` is strict. -/
 theorem not_sameRay_iff_norm_add_lt : ¬SameRay ℝ x y ↔ ‖x + y‖ < ‖x‖ + ‖y‖ :=
-  sameRay_iff_norm_add.Not.trans (norm_add_le _ _).lt_iff_ne.symm
+  sameRay_iff_norm_add.not.trans (norm_add_le _ _).lt_iff_ne.symm
 #align not_same_ray_iff_norm_add_lt not_sameRay_iff_norm_add_lt
 
 theorem sameRay_iff_norm_sub : SameRay ℝ x y ↔ ‖x - y‖ = |‖x‖ - ‖y‖| :=
@@ -239,7 +239,7 @@ theorem sameRay_iff_norm_sub : SameRay ℝ x y ↔ ‖x - y‖ = |‖x‖ - ‖y
 #align same_ray_iff_norm_sub sameRay_iff_norm_sub
 
 theorem not_sameRay_iff_abs_lt_norm_sub : ¬SameRay ℝ x y ↔ |‖x‖ - ‖y‖| < ‖x - y‖ :=
-  sameRay_iff_norm_sub.Not.trans <| ne_comm.trans (abs_norm_sub_norm_le _ _).lt_iff_ne.symm
+  sameRay_iff_norm_sub.not.trans <| ne_comm.trans (abs_norm_sub_norm_le _ _).lt_iff_ne.symm
 #align not_same_ray_iff_abs_lt_norm_sub not_sameRay_iff_abs_lt_norm_sub
 
 /-- In a strictly convex space, the triangle inequality turns into an equality if and only if the
@@ -308,7 +308,7 @@ noncomputable def affineIsometryOfStrictConvexSpace {f : PF → PE} (hi : Isomet
         ·
           rw [hi.dist_eq, hi.dist_eq, dist_midpoint_right, Real.norm_of_nonneg zero_le_two,
             div_eq_inv_mul])
-      hi.Continuous with
+      hi.continuous with
     norm_map := fun x => by simp [AffineMap.ofMapMidpoint, ← dist_eq_norm_vsub E, hi.dist_eq] }
 #align isometry.affine_isometry_of_strict_convex_space Isometry.affineIsometryOfStrictConvexSpace
 

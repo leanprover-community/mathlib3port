@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.nth
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem nth_set_card_aux {n : ℕ} (hp : (setOf p).Finite)
       simpa [hp] using hlt
   apply Finset.card_erase_of_mem
   rw [nth, Set.Finite.mem_toFinset]
-  apply cinfₛ_mem
+  apply infₛ_mem
   rwa [← hp''.to_finset_nonempty, ← Finset.card_pos, hk]
 #align nat.nth_set_card_aux Nat.nth_set_card_aux
 
@@ -132,7 +132,7 @@ theorem nth_mem_of_lt_card_finite_aux (n : ℕ) (hp : (setOf p).Finite) (hlt : n
     nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } :=
   by
   rw [nth]
-  apply cinfₛ_mem
+  apply infₛ_mem
   exact nth_set_nonempty_of_lt_card _ _ hlt
 #align nat.nth_mem_of_lt_card_finite_aux Nat.nth_mem_of_lt_card_finite_aux
 
@@ -150,12 +150,12 @@ theorem nth_mem_of_infinite_aux (hp : (setOf p).Infinite) (n : ℕ) :
     nth p n ∈ { i : ℕ | p i ∧ ∀ k < n, nth p k < i } :=
   by
   rw [nth]
-  apply cinfₛ_mem
+  apply infₛ_mem
   let s : Set ℕ := ⋃ k < n, { i : ℕ | nth p k ≥ i }
   convert_to (setOf p \ s).Nonempty
   · ext i
     simp
-  refine' (hp.diff <| (Set.finite_lt_nat _).bunionᵢ _).Nonempty
+  refine' (hp.diff <| (Set.finite_lt_nat _).bunionᵢ _).nonempty
   exact fun k h => Set.finite_le_nat _
 #align nat.nth_mem_of_infinite_aux Nat.nth_mem_of_infinite_aux
 
@@ -174,12 +174,12 @@ theorem nth_injective_of_infinite (hp : (setOf p).Infinite) : Function.Injective
   · exact (this p hp h.symm (le_of_not_le h')).symm
   rw [le_iff_lt_or_eq] at h'
   obtain h' | rfl := h'
-  · simpa [h] using nth_strict_mono p hp h'
+  · simpa [h] using nth_strictMono p hp h'
   · rfl
 #align nat.nth_injective_of_infinite Nat.nth_injective_of_infinite
 
 theorem nth_monotone (hp : (setOf p).Infinite) : Monotone (nth p) :=
-  (nth_strictMono p hp).Monotone
+  (nth_strictMono p hp).monotone
 #align nat.nth_monotone Nat.nth_monotone
 
 theorem nth_mono_of_finite {a b : ℕ} (hp : (setOf p).Finite) (hb : b < hp.toFinset.card)
@@ -254,8 +254,7 @@ theorem count_nth_of_lt_card_finite {n : ℕ} (hp : (setOf p).Finite) (hlt : n <
 #align nat.count_nth_of_lt_card_finite Nat.count_nth_of_lt_card_finite
 
 theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : ℕ) :
-    (Finset.range (nth p k.succ)).filterₓ p =
-      insert (nth p k) ((Finset.range (nth p k)).filterₓ p) :=
+    (Finset.range (nth p k.succ)).filter p = insert (nth p k) ((Finset.range (nth p k)).filter p) :=
   by
   ext a
   simp_rw [mem_insert, mem_filter, mem_range]
@@ -266,8 +265,8 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : �
     exact
       ha.not_le (Nat.infₛ_le ⟨hpa, fun b hb => (nth_monotone p hp (le_of_lt_succ hb)).trans_lt h⟩)
   · rintro (rfl | ⟨ha, hpa⟩)
-    · exact ⟨nth_strict_mono p hp (lt_succ_self k), nth_mem_of_infinite p hp _⟩
-    · exact ⟨ha.trans (nth_strict_mono p hp (lt_succ_self k)), hpa⟩
+    · exact ⟨nth_strictMono p hp (lt_succ_self k), nth_mem_of_infinite p hp _⟩
+    · exact ⟨ha.trans (nth_strictMono p hp (lt_succ_self k)), hpa⟩
 #align nat.filter_range_nth_eq_insert_of_infinite Nat.filter_range_nth_eq_insert_of_infinite
 
 theorem count_nth_of_infinite (hp : (setOf p).Infinite) (n : ℕ) : count p (nth p n) = n :=
@@ -313,10 +312,10 @@ theorem nth_count_eq_infₛ {n : ℕ} : nth p (count p n) = infₛ { i : ℕ | p
 
 theorem nth_count_le (hp : (setOf p).Infinite) (n : ℕ) : n ≤ nth p (count p n) :=
   by
-  rw [nth_count_eq_Inf]
-  suffices h : Inf { i : ℕ | p i ∧ n ≤ i } ∈ { i : ℕ | p i ∧ n ≤ i }
+  rw [nth_count_eq_infₛ]
+  suffices h : infₛ { i : ℕ | p i ∧ n ≤ i } ∈ { i : ℕ | p i ∧ n ≤ i }
   · exact h.2
-  apply cinfₛ_mem
+  apply infₛ_mem
   obtain ⟨m, hp, hn⟩ := hp.exists_nat_lt n
   exact ⟨m, hp, hn.le⟩
 #align nat.nth_count_le Nat.nth_count_le
@@ -339,7 +338,7 @@ theorem count_nth_gc (hp : (setOf p).Infinite) : GaloisConnection (count p) (nth
   · rw [← count_nth_of_infinite p hp y]
     exact
       count_monotone _
-        (h (nth p y) ⟨nth_mem_of_infinite p hp y, fun k hk => nth_strict_mono p hp hk⟩)
+        (h (nth p y) ⟨nth_mem_of_infinite p hp y, fun k hk => nth_strictMono p hp hk⟩)
 #align nat.count_nth_gc Nat.count_nth_gc
 
 theorem count_le_iff_le_nth (hp : (setOf p).Infinite) {a b : ℕ} : count p a ≤ b ↔ a ≤ nth p b :=
@@ -373,7 +372,7 @@ end Count
 
 theorem nth_zero_of_nth_zero (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nth p a = 0) : nth p b = 0 :=
   by
-  rw [nth, Inf_eq_zero] at ha⊢
+  rw [nth, infₛ_eq_zero] at ha⊢
   cases ha
   · exact (h₀ ha.1).elim
   · refine' Or.inr (Set.eq_empty_of_subset_empty fun x hx => _)
@@ -386,29 +385,28 @@ theorem nth_eq_orderIsoOfNat (i : Infinite (setOf p)) (n : ℕ) :
     nth p n = Nat.Subtype.orderIsoOfNat (setOf p) n := by
   classical
     have hi := set.infinite_coe_iff.mp i
-    induction' n with k hk <;>
-      simp only [subtype.order_iso_of_nat_apply, subtype.of_nat, nat_zero_eq_zero]
+    induction' n with k hk <;> simp only [Subtype.orderIsoOfNat_apply, Subtype.ofNat, zero_eq]
     · rw [Nat.Subtype.coe_bot, nth_zero_of_exists]
     · simp only [Nat.Subtype.succ, Set.mem_setOf_eq, Subtype.coe_mk, Subtype.val_eq_coe]
-      rw [subtype.order_iso_of_nat_apply] at hk
+      rw [Subtype.orderIsoOfNat_apply] at hk
       set b := nth p k.succ - nth p k - 1 with hb
-      replace hb : p (↑(subtype.of_nat (setOf p) k) + b + 1)
+      replace hb : p (↑(Subtype.ofNat (setOf p) k) + b + 1)
       · rw [hb, ← hk, tsub_right_comm]
         have hn11 : nth p k.succ - 1 + 1 = nth p k.succ :=
           by
           rw [tsub_add_cancel_iff_le]
-          exact succ_le_of_lt (pos_of_gt (nth_strict_mono p hi (lt_add_one k)))
+          exact succ_le_of_lt (pos_of_gt (nth_strictMono p hi (lt_add_one k)))
         rw [add_tsub_cancel_of_le]
         · rw [hn11]
           apply nth_mem_of_infinite p hi
         · rw [← lt_succ_iff, ← Nat.add_one, hn11]
-          apply nth_strict_mono p hi
+          apply nth_strictMono p hi
           exact lt_add_one k
-      have H : ∃ n : ℕ, p (↑(subtype.of_nat (setOf p) k) + n + 1) := ⟨b, hb⟩
+      have H : ∃ n : ℕ, p (↑(Subtype.ofNat (setOf p) k) + n + 1) := ⟨b, hb⟩
       set t := Nat.find H with ht
       obtain ⟨hp, hmin⟩ := (Nat.find_eq_iff _).mp ht
       rw [← ht, ← hk] at hp hmin⊢
-      rw [nth, Inf_def ⟨_, nth_mem_of_infinite_aux p hi k.succ⟩, Nat.find_eq_iff]
+      rw [nth, infₛ_def ⟨_, nth_mem_of_infinite_aux p hi k.succ⟩, Nat.find_eq_iff]
       refine' ⟨⟨by convert hp, fun r hr => _⟩, fun n hn => _⟩
       · rw [lt_succ_iff] at hr⊢
         exact (nth_monotone p hi hr).trans (by simp)

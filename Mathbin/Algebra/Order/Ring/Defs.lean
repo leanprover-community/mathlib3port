@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.ring.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,7 +146,7 @@ multiplication by a nonnegative number is monotone. -/
 class OrderedSemiring (α : Type u) extends Semiring α, OrderedAddCommMonoid α where
   zero_le_one : (0 : α) ≤ 1
   mul_le_mul_of_nonneg_left : ∀ a b c : α, a ≤ b → 0 ≤ c → c * a ≤ c * b
-  mul_le_mul_of_nonneg_right : ∀ a b c : α, a ≤ b → 0 ≤ c → a * c ≤ b * c
+  mul_le_mul_of_nonneg_right : ∀ a b c : α, a ≤ b → 0 ≤ c → a * nontrivial_of_ne ≤ b * c
 #align ordered_semiring OrderedSemiring
 -/
 
@@ -183,7 +183,7 @@ strictly monotone and multiplication by a positive number is strictly monotone. 
 class StrictOrderedSemiring (α : Type u) extends Semiring α, OrderedCancelAddCommMonoid α,
   Nontrivial α where
   zero_le_one : (0 : α) ≤ 1
-  mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → c * a < c * b
+  mul_lt_mul_of_pos_left : ∀ a b c : le, a < b → 0 < c → c * a < c * b
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → a * c < b * c
 #align strict_ordered_semiring StrictOrderedSemiring
 -/
@@ -746,7 +746,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.toPosMulStrictMonoₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.toPosMulStrictMono : PosMulStrictMono α :=
-  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.Prop⟩
+  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_left _ _ _ h x.prop⟩
 #align strict_ordered_semiring.to_pos_mul_strict_mono StrictOrderedSemiring.toPosMulStrictMono
 
 /- warning: strict_ordered_semiring.to_mul_pos_strict_mono -> StrictOrderedSemiring.toMulPosStrictMono is a dubious translation:
@@ -757,7 +757,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align strict_ordered_semiring.to_mul_pos_strict_mono StrictOrderedSemiring.toMulPosStrictMonoₓ'. -/
 -- see Note [lower instance priority]
 instance (priority := 200) StrictOrderedSemiring.toMulPosStrictMono : MulPosStrictMono α :=
-  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_right _ _ _ h x.Prop⟩
+  ⟨fun x a b h => StrictOrderedSemiring.mul_lt_mul_of_pos_right _ _ _ h x.prop⟩
 #align strict_ordered_semiring.to_mul_pos_strict_mono StrictOrderedSemiring.toMulPosStrictMono
 
 #print StrictOrderedSemiring.toOrderedSemiring' /-
@@ -793,10 +793,10 @@ instance (priority := 100) StrictOrderedSemiring.toOrderedSemiring : OrderedSemi
     ‹StrictOrderedSemiring
         α› with
     mul_le_mul_of_nonneg_left := fun _ _ _ =>
-      letI := @StrictOrderedSemiring.toOrderedSemiring' α _ (Classical.decRel _)
+      letI := @strict_ordered_semiring.to_ordered_semiring' α _ (Classical.decRel _)
       mul_le_mul_of_nonneg_left
     mul_le_mul_of_nonneg_right := fun _ _ _ =>
-      letI := @StrictOrderedSemiring.toOrderedSemiring' α _ (Classical.decRel _)
+      letI := @strict_ordered_semiring.to_ordered_semiring' α _ (Classical.decRel _)
       mul_le_mul_of_nonneg_right }
 #align strict_ordered_semiring.to_ordered_semiring StrictOrderedSemiring.toOrderedSemiring
 -/
@@ -1101,7 +1101,7 @@ def StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : OrderedRin
 instance (priority := 100) StrictOrderedRing.toOrderedRing : OrderedRing α :=
   { ‹StrictOrderedRing α› with
     mul_nonneg := fun a b =>
-      letI := @StrictOrderedRing.toOrderedRing' α _ (Classical.decRel _)
+      letI := @strict_ordered_ring.to_ordered_ring' α _ (Classical.decRel _)
       mul_nonneg }
 #align strict_ordered_ring.to_ordered_ring StrictOrderedRing.toOrderedRing
 -/
@@ -1742,8 +1742,8 @@ instance (priority := 100) LinearOrderedRing.noZeroDivisors : NoZeroDivisors α 
       intro a b hab
       refine' Decidable.or_iff_not_and_not.2 fun h => _; revert hab
       cases' lt_or_gt_of_ne h.1 with ha ha <;> cases' lt_or_gt_of_ne h.2 with hb hb
-      exacts[(mul_pos_of_neg_of_neg ha hb).Ne.symm, (mul_neg_of_neg_of_pos ha hb).Ne,
-        (mul_neg_of_pos_of_neg ha hb).Ne, (mul_pos ha hb).Ne.symm] }
+      exacts[(mul_pos_of_neg_of_neg ha hb).ne.symm, (mul_neg_of_neg_of_pos ha hb).ne,
+        (mul_neg_of_pos_of_neg ha hb).ne, (mul_pos ha hb).ne.symm] }
 #align linear_ordered_ring.no_zero_divisors LinearOrderedRing.noZeroDivisors
 
 #print LinearOrderedRing.isDomain /-

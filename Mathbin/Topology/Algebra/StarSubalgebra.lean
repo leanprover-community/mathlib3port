@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.algebra.star_subalgebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,10 +42,10 @@ variable [TopologicalSpace A] [Semiring A] [Algebra R A] [StarRing A] [StarModul
 
 instance [TopologicalSpace R] [HasContinuousSmul R A] (s : StarSubalgebra R A) :
     HasContinuousSmul R s :=
-  s.toSubalgebra.HasContinuousSmul
+  s.toSubalgebra.hasContinuousSmul
 
 instance [TopologicalSemiring A] (s : StarSubalgebra R A) : TopologicalSemiring s :=
-  s.toSubalgebra.TopologicalSemiring
+  s.toSubalgebra.topologicalSemiring
 
 /-- The `star_subalgebra.inclusion` of a star subalgebra is an `embedding`. -/
 theorem embedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤ S₂) : Embedding (inclusion h) :=
@@ -133,7 +133,7 @@ theorem StarAlgHom.ext_topologicalClosure [T2Space B] {S : StarSubalgebra R A}
       φ.comp (inclusion (le_topologicalClosure S)) = ψ.comp (inclusion (le_topologicalClosure S))) :
     φ = ψ := by
   rw [FunLike.ext'_iff]
-  have : Dense (Set.range <| inclusion (le_topological_closure S)) :=
+  have : Dense (Set.range <| inclusion (le_topologicalClosure S)) :=
     by
     refine' embedding_subtype_coe.to_inducing.dense_iff.2 fun x => _
     convert show ↑x ∈ closure (S : Set A) from x.prop

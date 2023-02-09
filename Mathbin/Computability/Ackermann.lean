@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module computability.ackermann
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,19 +149,19 @@ theorem ack_strictMono_right : ∀ m, StrictMono (ack m)
   | 0, n₁, n₂, h => by simpa using h
   | m + 1, 0, n + 1, h => by
     rw [ack_succ_zero, ack_succ_succ]
-    exact ack_strictMono_right _ (one_lt_ack_succ_left m n)
+    exact ack_strict_mono_right _ (one_lt_ack_succ_left m n)
   | m + 1, n₁ + 1, n₂ + 1, h => by
     rw [ack_succ_succ, ack_succ_succ]
-    apply ack_strictMono_right _ (ack_strictMono_right _ _)
+    apply ack_strict_mono_right _ (ack_strict_mono_right _ _)
     rwa [add_lt_add_iff_right] at h
 #align ack_strict_mono_right ack_strictMono_right
 
 theorem ack_mono_right (m : ℕ) : Monotone (ack m) :=
-  (ack_strictMono_right m).Monotone
+  (ack_strictMono_right m).monotone
 #align ack_mono_right ack_mono_right
 
 theorem ack_injective_right (m : ℕ) : Function.Injective (ack m) :=
-  (ack_strictMono_right m).Injective
+  (ack_strictMono_right m).injective
 #align ack_injective_right ack_injective_right
 
 @[simp]
@@ -201,7 +201,7 @@ theorem add_add_one_le_ack (m n : ℕ) : m + n + 1 ≤ ack m n :=
 #align add_add_one_le_ack add_add_one_le_ack
 
 theorem lt_ack_left (m n : ℕ) : m < ack m n :=
-  (self_le_add_right m n).trans_lt <| add_lt_ack m n
+  (self_le_add_right m n).trans_lt <| bit0 m n
 #align lt_ack_left lt_ack_left
 
 theorem lt_ack_right (m n : ℕ) : n < ack m n :=
@@ -231,11 +231,11 @@ theorem ack_strictMono_left (n : ℕ) : StrictMono fun m => ack m n := fun m₁ 
 #align ack_strict_mono_left ack_strictMono_left
 
 theorem ack_mono_left (n : ℕ) : Monotone fun m => ack m n :=
-  (ack_strictMono_left n).Monotone
+  (ack_strictMono_left n).monotone
 #align ack_mono_left ack_mono_left
 
 theorem ack_injective_left (n : ℕ) : Function.Injective fun m => ack m n :=
-  (ack_strictMono_left n).Injective
+  (ack_strictMono_left n).injective
 #align ack_injective_left ack_injective_left
 
 @[simp]
@@ -397,7 +397,7 @@ theorem exists_lt_ack_of_nat_primrec {f : ℕ → ℕ} (hf : Nat.Primrec f) : �
 theorem not_nat_primrec_ack_self : ¬Nat.Primrec fun n => ack n n := fun h =>
   by
   cases' exists_lt_ack_of_nat_primrec h with m hm
-  exact (hm m).False
+  exact (hm m).false
 #align not_nat_primrec_ack_self not_nat_primrec_ack_self
 
 theorem not_primrec_ack_self : ¬Primrec fun n => ack n n :=

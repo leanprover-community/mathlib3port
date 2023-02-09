@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.pairing
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,14 +101,14 @@ def mkpairEquiv : ℕ × ℕ ≃ ℕ :=
 
 #print Nat.surjective_unpair /-
 theorem surjective_unpair : Surjective unpair :=
-  mkpairEquiv.symm.Surjective
+  mkpairEquiv.symm.surjective
 #align nat.surjective_unpair Nat.surjective_unpair
 -/
 
 #print Nat.mkpair_eq_mkpair /-
 @[simp]
 theorem mkpair_eq_mkpair {a b c d : ℕ} : mkpair a b = mkpair c d ↔ a = c ∧ b = d :=
-  mkpairEquiv.Injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
+  mkpairEquiv.injective.eq_iff.trans (@Prod.ext_iff ℕ ℕ (a, b) (c, d))
 #align nat.mkpair_eq_mkpair Nat.mkpair_eq_mkpair
 -/
 
@@ -281,7 +281,7 @@ Case conversion may be inaccurate. Consider using '#align set.Union_unpair_prod 
 theorem unionᵢ_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
     (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n :=
   by
-  rw [← Union_prod]
+  rw [← unionᵢ_prod]
   convert surjective_unpair.Union_comp _
   rfl
 #align set.Union_unpair_prod Set.unionᵢ_unpair_prod

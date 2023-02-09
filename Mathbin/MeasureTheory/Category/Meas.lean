@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.category.Meas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,8 @@ def integral : giry.Algebra where
     Subtype.eq <|
       funext fun μ : Measure (Measure ℝ≥0∞) =>
         show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
-          rw [measure.lintegral_join, lintegral_map] <;>
-            apply_rules [measurable_id, measure.measurable_lintegral]
+          rw [Measure.lintegral_join, lintegral_map] <;>
+            apply_rules [measurable_id, Measure.measurable_lintegral]
 #align Meas.Integral Meas.integral
 
 end Meas

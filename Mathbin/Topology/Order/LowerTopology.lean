@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module topology.order.lower_topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,14 +170,14 @@ def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
     WithLowerTopology.ofLower with
     continuous_toFun := by
       convert continuous_id
-      apply topology_eq_lower_topology
+      apply topology_eq_lowerTopology
     continuous_invFun := by
       convert ← continuous_id
-      apply topology_eq_lower_topology }
+      apply topology_eq_lowerTopology }
 #align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorph
 
 theorem isOpen_iff_generate_Ici_compl : IsOpen s ↔ GenerateOpen { t | ∃ a, Ici aᶜ = t } s := by
-  rw [topology_eq_lower_topology α] <;> rfl
+  rw [topology_eq_lowerTopology α] <;> rfl
 #align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_Ici_compl
 
 /-- Left-closed right-infinite intervals [a, ∞) are closed in the lower topology. -/
@@ -195,7 +195,7 @@ theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α
 /-- Every set open in the lower topology is a lower set. -/
 theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
-  rw [is_open_iff_generate_Ici_compl] at h
+  rw [isOpen_iff_generate_Ici_compl] at h
   induction h
   case basic u h => obtain ⟨a, rfl⟩ := h; exact (isUpperSet_Ici a).compl
   case univ => exact isLowerSet_univ
@@ -219,18 +219,18 @@ theorem closure_singleton (a : α) : closure {a} = Ici a :=
 
 protected theorem isTopologicalBasis : IsTopologicalBasis (lowerBasis α) :=
   by
-  convert is_topological_basis_of_subbasis (topology_eq_lower_topology α)
-  simp_rw [lower_basis, coe_upperClosure, compl_Union]
+  convert isTopologicalBasis_of_subbasis (topology_eq_lowerTopology α)
+  simp_rw [lowerBasis, coe_upperClosure, compl_unionᵢ]
   ext s
   constructor
   · rintro ⟨F, hF, rfl⟩
     refine' ⟨(fun a => Ici aᶜ) '' F, ⟨hF.image _, image_subset_iff.2 fun _ _ => ⟨_, rfl⟩⟩, _⟩
-    rw [sInter_image]
+    rw [interₛ_image]
   · rintro ⟨F, ⟨hF, hs⟩, rfl⟩
     haveI := hF.to_subtype
     rw [subset_def, Subtype.forall'] at hs
     choose f hf using hs
-    exact ⟨_, finite_range f, by simp_rw [bInter_range, hf, sInter_eq_Inter]⟩
+    exact ⟨_, finite_range f, by simp_rw [binterᵢ_range, hf, interₛ_eq_interᵢ]⟩
 #align lower_topology.is_topological_basis LowerTopology.isTopologicalBasis
 
 end Preorder
@@ -256,16 +256,16 @@ instance [Preorder α] [TopologicalSpace α] [LowerTopology α] [OrderBot α] [P
     by
     refine' le_antisymm (le_generateFrom _) _
     · rintro _ ⟨x, rfl⟩
-      exact ((LowerTopology.isClosed_Ici _).Prod <| LowerTopology.isClosed_Ici _).isOpen_compl
+      exact ((LowerTopology.isClosed_Ici _).prod <| LowerTopology.isClosed_Ici _).isOpen_compl
     rw [(lower_topology.is_topological_basis.prod LowerTopology.isTopologicalBasis).eq_generateFrom,
-      le_generate_from_iff_subset_is_open, image2_subset_iff]
+      le_generateFrom_iff_subset_isOpen, image2_subset_iff]
     rintro _ ⟨s, hs, rfl⟩ _ ⟨t, ht, rfl⟩
     dsimp
-    simp_rw [coe_upperClosure, compl_Union, prod_eq, preimage_Inter, preimage_compl]
+    simp_rw [coe_upperClosure, compl_unionᵢ, prod_eq, preimage_interᵢ, preimage_compl]
     -- Note: `refine` doesn't work here because it tries using `prod.topological_space`.
     apply (isOpen_binterᵢ hs fun a _ => _).inter (isOpen_binterᵢ ht fun b _ => _)
-    · exact generate_open.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
-    · exact generate_open.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
+    · exact GenerateOpen.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
+    · exact GenerateOpen.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
     all_goals infer_instance
 
 section CompleteLattice
@@ -279,14 +279,14 @@ theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
   · exact LowerTopology.topology_eq_lowerTopology β
   rintro _ ⟨b, rfl⟩
   rw [preimage_compl, isOpen_compl_iff]
-  convert LowerTopology.isClosed_Ici (Inf <| f ⁻¹' Ici b)
+  convert LowerTopology.isClosed_Ici (infₛ <| f ⁻¹' Ici b)
   refine' subset_antisymm (fun a => infₛ_le) fun a ha => le_trans _ <| OrderHomClass.mono f ha
-  simp [map_Inf]
+  simp [map_infₛ]
 #align Inf_hom.continuous InfₛHom.continuous
 
 -- see Note [lower instance priority]
 instance (priority := 90) LowerTopology.to_continuousInf : ContinuousInf α :=
-  ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
+  ⟨(infInfₛHom : InfₛHom (α × α) α).continuous⟩
 #align lower_topology.to_has_continuous_inf LowerTopology.to_continuousInf
 
 end CompleteLattice

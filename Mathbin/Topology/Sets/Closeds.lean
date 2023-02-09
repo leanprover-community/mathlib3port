@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.sets.closeds
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,18 +147,18 @@ theorem infᵢ_def {ι} (s : ι → Closeds α) :
     (⨅ i, s i) = ⟨⋂ i, s i, isClosed_interᵢ fun i => (s i).2⟩ :=
   by
   ext
-  simp only [infᵢ, coe_Inf, bInter_range]
+  simp only [infᵢ, coe_infₛ, binterᵢ_range]
   rfl
 #align topological_space.closeds.infi_def TopologicalSpace.Closeds.infᵢ_def
 
 @[simp]
 theorem infᵢ_mk {ι} (s : ι → Set α) (h : ∀ i, IsClosed (s i)) :
-    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, isClosed_interᵢ h⟩ := by simp [infi_def]
+    (⨅ i, ⟨s i, h i⟩ : Closeds α) = ⟨⋂ i, s i, isClosed_interᵢ h⟩ := by simp [infᵢ_def]
 #align topological_space.closeds.infi_mk TopologicalSpace.Closeds.infᵢ_mk
 
 @[simp, norm_cast]
 theorem coe_infᵢ {ι} (s : ι → Closeds α) : ((⨅ i, s i : Closeds α) : Set α) = ⋂ i, s i := by
-  simp [infi_def]
+  simp [infᵢ_def]
 #align topological_space.closeds.coe_infi TopologicalSpace.Closeds.coe_infᵢ
 
 @[simp]
@@ -168,14 +168,14 @@ theorem mem_infᵢ {ι} {x : α} {s : ι → Closeds α} : x ∈ infᵢ s ↔ �
 
 @[simp]
 theorem mem_infₛ {S : Set (Closeds α)} {x : α} : x ∈ infₛ S ↔ ∀ s ∈ S, x ∈ s := by
-  simp_rw [infₛ_eq_infᵢ, mem_infi]
+  simp_rw [infₛ_eq_infᵢ, mem_infᵢ]
 #align topological_space.closeds.mem_Inf TopologicalSpace.Closeds.mem_infₛ
 
 instance : Coframe (Closeds α) :=
   { Closeds.completeLattice with
     infₛ := infₛ
     infᵢ_sup_le_sup_inf := fun a s =>
-      (SetLike.coe_injective <| by simp only [coe_sup, coe_infi, coe_Inf, Set.union_interᵢ₂]).le }
+      (SetLike.coe_injective <| by simp only [coe_sup, coe_infᵢ, coe_infₛ, Set.union_interᵢ₂]).le }
 
 /-- The term of `closeds α` corresponding to a singleton. -/
 @[simps]
@@ -221,8 +221,8 @@ def Closeds.complOrderIso : Closeds α ≃o (Opens α)ᵒᵈ
     where
   toFun := OrderDual.toDual ∘ Closeds.compl
   invFun := Opens.compl ∘ OrderDual.ofDual
-  left_inv s := by simp [closeds.compl_compl]
-  right_inv s := by simp [opens.compl_compl]
+  left_inv s := by simp [Closeds.compl_compl]
+  right_inv s := by simp [Opens.compl_compl]
   map_rel_iff' s t := by
     simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
       compl_subset_compl
@@ -234,8 +234,8 @@ def Opens.complOrderIso : Opens α ≃o (Closeds α)ᵒᵈ
     where
   toFun := OrderDual.toDual ∘ Opens.compl
   invFun := Closeds.compl ∘ OrderDual.ofDual
-  left_inv s := by simp [opens.compl_compl]
-  right_inv s := by simp [closeds.compl_compl]
+  left_inv s := by simp [Opens.compl_compl]
+  right_inv s := by simp [Closeds.compl_compl]
   map_rel_iff' s t := by
     simpa only [Equiv.coe_fn_mk, Function.comp_apply, OrderDual.toDual_le_toDual] using
       compl_subset_compl
@@ -261,8 +261,8 @@ theorem Opens.isCoatom_iff [T1Space α] {s : Opens α} :
     IsCoatom s ↔ ∃ x, s = (Closeds.singleton x).compl :=
   by
   rw [← s.compl_compl, ← isAtom_dual_iff_isCoatom]
-  change IsAtom (closeds.compl_order_iso α s.compl) ↔ _
-  rw [(closeds.compl_order_iso α).isAtom_iff, closeds.is_atom_iff]
+  change IsAtom (Closeds.complOrderIso α s.compl) ↔ _
+  rw [(Closeds.complOrderIso α).isAtom_iff, Closeds.isAtom_iff]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr∃ , »((x), _)]]"
   exact closeds.compl_bijective.injective.eq_iff.symm
@@ -293,7 +293,7 @@ theorem clopen (s : Clopens α) : IsClopen (s : Set α) :=
 /-- Reinterpret a compact open as an open. -/
 @[simps]
 def toOpens (s : Clopens α) : Opens α :=
-  ⟨s, s.clopen.IsOpen⟩
+  ⟨s, s.clopen.isOpen⟩
 #align topological_space.clopens.to_opens TopologicalSpace.Clopens.toOpens
 
 @[ext]
@@ -319,13 +319,13 @@ instance : Bot (Clopens α) :=
   ⟨⟨⊥, isClopen_empty⟩⟩
 
 instance : SDiff (Clopens α) :=
-  ⟨fun s t => ⟨s \ t, s.clopen.diffₓ t.clopen⟩⟩
+  ⟨fun s t => ⟨s \ t, s.clopen.diff t.clopen⟩⟩
 
 instance : HasCompl (Clopens α) :=
   ⟨fun s => ⟨sᶜ, s.clopen.compl⟩⟩
 
 instance : BooleanAlgebra (Clopens α) :=
-  SetLike.coe_injective.BooleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl)
+  SetLike.coe_injective.booleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl)
     fun _ _ => rfl
 
 @[simp]

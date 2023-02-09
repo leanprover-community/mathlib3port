@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -262,14 +262,14 @@ variable {α β γ : Type v}
 
 #print Functor.Comp.id_map /-
 protected theorem id_map : ∀ x : Comp F G α, Comp.map id x = x
-  | comp.mk x => by simp [comp.map, Functor.map_id]
+  | comp.mk x => by simp [Comp.map, Functor.map_id]
 #align functor.comp.id_map Functor.Comp.id_map
 -/
 
 #print Functor.Comp.comp_map /-
 protected theorem comp_map (g' : α → β) (h : β → γ) :
     ∀ x : Comp F G α, Comp.map (h ∘ g') x = Comp.map h (Comp.map g' x)
-  | comp.mk x => by simp [comp.map, Functor.map_comp_map g' h, functor_norm]
+  | comp.mk x => by simp [Comp.map, Functor.map_comp_map g' h, functor_norm]
 #align functor.comp.comp_map Functor.Comp.comp_map
 -/
 

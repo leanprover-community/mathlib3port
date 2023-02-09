@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module category_theory.action
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ def curry (F : ActionCategory G X ⥤ SingleObj H) : G →* (X → H) ⋊[mulAut
     map_mul' := by
       intro g h
       congr ; funext
-      exact F_map_eq.symm.trans (F.map_comp (hom_of_pair (g⁻¹ • b) h) (hom_of_pair b g)) }
+      exact F_map_eq.symm.trans (F.map_comp (homOfPair (g⁻¹ • b) h) (homOfPair b g)) }
 #align category_theory.action_category.curry CategoryTheory.ActionCategory.curry
 
 /-- Given `G` acting on `X`, a group homomorphism `φ : G →* (X → H) ⋊ G` can be uncurried to
@@ -209,12 +209,12 @@ def uncurry (F : G →* (X → H) ⋊[mulAutArrow] G) (sane : ∀ g, (F g).right
   map a b f := (F f.val).left b.back
   map_id' := by
     intro x
-    rw [action_category.id_val, F.map_one]
+    rw [ActionCategory.id_val, F.map_one]
     rfl
   map_comp' := by
     intro x y z f g; revert y z g
-    refine' action_category.cases _
-    simp [single_obj.comp_as_mul, sane]
+    refine' ActionCategory.cases _
+    simp [SingleObj.comp_as_mul, sane]
 #align category_theory.action_category.uncurry CategoryTheory.ActionCategory.uncurry
 
 end Group

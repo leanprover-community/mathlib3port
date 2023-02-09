@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Junyan Xu
 
 ! This file was ported from Lean 3 source module order.extension.well
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,17 +51,17 @@ arbitrary well-order to serve as a tiebreak between two elements of same rank.
 -/
 noncomputable def wellOrderExtension : LinearOrder α :=
   let l : LinearOrder α := IsWellOrder.linearOrder WellOrderingRel
-  @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u} hwf a, a)) fun _ _ =>
+  @linear_order.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u} hwf a, a)) fun _ _ =>
     congr_arg Prod.snd
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 
-instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
+instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.Lt :=
   ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.wellFoundedLT.wf WellOrderingRel.isWellOrder.wf⟩
 #align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_lt
 
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/
 theorem exists_well_order_ge : ∃ s, r ≤ s ∧ IsWellOrder α s :=
-  ⟨hwf.wellOrderExtension.lt, fun a b h => Prod.Lex.left _ _ (hwf.rank_lt_of_rel h), by constructor⟩
+  ⟨hwf.wellOrderExtension.Lt, fun a b h => Prod.Lex.left _ _ (hwf.rank_lt_of_rel h), by constructor⟩
 #align well_founded.exists_well_order_ge WellFounded.exists_well_order_ge
 
 end WellFounded

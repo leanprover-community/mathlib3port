@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.finset.pi_induction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choiceₓ'. -/
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
-    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.eraseₓ x))
+    (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.erase x))
     {p : (∀ i, Finset (α i)) → Prop} (f : ∀ i, Finset (α i)) (h0 : p fun _ => ∅)
     (step :
       ∀ (g : ∀ i, Finset (α i)) (i : ι) (x : α i),
@@ -60,7 +60,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     simpa [funext_iff] using he
   · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
     rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
-    set g := update f i ((f i).eraseₓ x) with hg
+    set g := update f i ((f i).erase x) with hg
     clear_value g
     have hx' : x ∉ g i := by
       rw [hg, update_same]
@@ -70,7 +70,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     clear hg
     rw [update_same, erase_insert hx'] at hr
     refine' step _ _ _ hr (ihs (univ.sigma g) _ _ rfl)
-    rw [ssubset_iff_of_subset (sigma_mono (subset.refl _) _)]
+    rw [ssubset_iff_of_subset (sigma_mono (Subset.refl _) _)]
     exacts[⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
 #align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choice

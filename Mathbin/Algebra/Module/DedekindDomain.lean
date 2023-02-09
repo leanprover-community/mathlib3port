@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.dedekind_domain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ torsion submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in 
 theorem isInternal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI : I ≠ ⊥)
     (hM : Module.IsTorsionBySet R M I) :
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
-      DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
+      DirectSum.IsInternal fun p : P => torsionBySet R M (p ^ e p : Ideal R) :=
   by
   classical
     let P := factors I
@@ -57,26 +57,26 @@ theorem isInternal_prime_power_torsion_of_is_torsion_by_ideal {I : Ideal R} (hI 
     · intro p hp q hq pq
       dsimp
       rw [irreducible_pow_sup]
-      · suffices (normalized_factors _).count p = 0 by
+      · suffices (normalizedFactors _).count p = 0 by
           rw [this, zero_min, pow_zero, Ideal.one_eq_top]
         · rw [Multiset.count_eq_zero,
-            normalized_factors_of_irreducible_pow (prime_of_mem q hq).Irreducible,
+            normalizedFactors_of_irreducible_pow (prime_of_mem q hq).irreducible,
             Multiset.mem_replicate]
           exact fun H => pq <| H.2.trans <| normalize_eq q
       · rw [← Ideal.zero_eq_bot]
         apply pow_ne_zero
-        exact (prime_of_mem q hq).NeZero
-      · exact (prime_of_mem p hp).Irreducible
+        exact (prime_of_mem q hq).ne_zero
+      · exact (prime_of_mem p hp).irreducible
 #align submodule.is_internal_prime_power_torsion_of_is_torsion_by_ideal Submodule.isInternal_prime_power_torsion_of_is_torsion_by_ideal
 
 /-- A finitely generated torsion module over a Dedekind domain is an internal direct sum of its
 `p i ^ e i`-torsion submodules for some prime ideals `p i` and numbers `e i`.-/
 theorem isInternal_prime_power_torsion [Module.Finite R M] (hM : Module.IsTorsion R M) :
     ∃ (P : Finset <| Ideal R)(_ : DecidableEq P)(_ : ∀ p ∈ P, Prime p)(e : P → ℕ),
-      DirectSum.IsInternal fun p : P => torsion_by_set R M (p ^ e p : Ideal R) :=
+      DirectSum.IsInternal fun p : P => torsionBySet R M (p ^ e p : Ideal R) :=
   by
-  obtain ⟨I, hI, hM'⟩ := is_torsion_by_ideal_of_finite_of_is_torsion hM
-  refine' is_internal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
+  obtain ⟨I, hI, hM'⟩ := isTorsion_by_ideal_of_finite_of_isTorsion hM
+  refine' isInternal_prime_power_torsion_of_is_torsion_by_ideal _ hM'
   rw [← Set.nonempty_iff_ne_empty] at hI; rw [Submodule.ne_bot_iff]
   obtain ⟨x, H, hx⟩ := hI; exact ⟨x, H, nonZeroDivisors.ne_zero hx⟩
 #align submodule.is_internal_prime_power_torsion Submodule.isInternal_prime_power_torsion

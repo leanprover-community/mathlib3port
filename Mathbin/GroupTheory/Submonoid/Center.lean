@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.center
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decida
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoid (center M) :=
-  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
+  { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.prop _ }
 
 /- warning: submonoid.center.smul_comm_class_left -> Submonoid.center.smulCommClass_left is a dubious translation:
 lean 3 declaration is
@@ -119,7 +119,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.center.smul_comm_class_left Submonoid.center.smulCommClass_leftₓ'. -/
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smulCommClass_left : SMulCommClass (center M) M M
-    where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
+    where smul_comm m x y := (Commute.left_comm (m.prop x) y).symm
 #align submonoid.center.smul_comm_class_left Submonoid.center.smulCommClass_left
 
 /- warning: submonoid.center.smul_comm_class_right -> Submonoid.center.smulCommClass_right is a dubious translation:

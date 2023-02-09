@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,21 +54,21 @@ theorem DiffContOnCl.ball_subset_image_closedBall (h : DiffContOnCl ℂ f (ball 
     `v` is in the range of `f`. -/
   rintro v hv
   have h1 : DiffContOnCl ℂ (fun z => f z - v) (ball z₀ r) := h.sub_const v
-  have h2 : ContinuousOn (fun z => ‖f z - v‖) (closed_ball z₀ r) :=
+  have h2 : ContinuousOn (fun z => ‖f z - v‖) (closedBall z₀ r) :=
     continuous_norm.comp_continuous_on (closure_ball z₀ hr.ne.symm ▸ h1.continuous_on)
-  have h3 : AnalyticOn ℂ f (ball z₀ r) := h.differentiable_on.analytic_on is_open_ball
+  have h3 : AnalyticOn ℂ f (ball z₀ r) := h.differentiable_on.analytic_on isOpen_ball
   have h4 : ∀ z ∈ sphere z₀ r, ε / 2 ≤ ‖f z - v‖ := fun z hz => by
     linarith [hf z hz, show ‖v - f z₀‖ < ε / 2 from mem_ball.mp hv,
       norm_sub_sub_norm_sub_le_norm_sub (f z) v (f z₀)]
   have h5 : ‖f z₀ - v‖ < ε / 2 := by simpa [← dist_eq_norm, dist_comm] using mem_ball.mp hv
   obtain ⟨z, hz1, hz2⟩ : ∃ z ∈ ball z₀ r, IsLocalMin (fun z => ‖f z - v‖) z
-  exact exists_local_min_mem_ball h2 (mem_closed_ball_self hr.le) fun z hz => h5.trans_le (h4 z hz)
-  refine' ⟨z, ball_subset_closed_ball hz1, sub_eq_zero.mp _⟩
+  exact exists_local_min_mem_ball h2 (mem_closedBall_self hr.le) fun z hz => h5.trans_le (h4 z hz)
+  refine' ⟨z, ball_subset_closedBall hz1, sub_eq_zero.mp _⟩
   have h6 := h1.differentiable_on.eventually_differentiable_at (is_open_ball.mem_nhds hz1)
-  refine' (eventually_eq_or_eq_zero_of_is_local_min_norm h6 hz2).resolve_left fun key => _
+  refine' (eventually_eq_or_eq_zero_of_isLocalMin_norm h6 hz2).resolve_left fun key => _
   have h7 : ∀ᶠ w in 𝓝 z, f w = f z := by filter_upwards [key]with h <;> field_simp
-  replace h7 : ∃ᶠ w in 𝓝[≠] z, f w = f z := (h7.filter_mono nhdsWithin_le_nhds).Frequently
-  have h8 : IsPreconnected (ball z₀ r) := (convex_ball z₀ r).IsPreconnected
+  replace h7 : ∃ᶠ w in 𝓝[≠] z, f w = f z := (h7.filter_mono nhdsWithin_le_nhds).frequently
+  have h8 : IsPreconnected (ball z₀ r) := (convex_ball z₀ r).isPreconnected
   have h9 := h3.eq_on_of_preconnected_of_frequently_eq analyticOn_const h8 hz1 h7
   have h10 : f z = f z₀ := (h9 (mem_ball_self hr)).symm
   exact not_eventually.mpr hz₀ (mem_of_superset (ball_mem_nhds z₀ hr) (h10 ▸ h9))
@@ -90,28 +90,28 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux (hf : AnalyticAt 
   have h1 := (hf.eventually_eq_or_eventually_ne analyticAt_const).resolve_left h
   have h2 : ∀ᶠ z in 𝓝 z₀, AnalyticAt ℂ f z := (isOpen_analyticAt ℂ f).eventually_mem hf
   obtain ⟨ρ, hρ, h3, h4⟩ :
-    ∃ ρ > 0, AnalyticOn ℂ f (closed_ball z₀ ρ) ∧ ∀ z ∈ closed_ball z₀ ρ, z ≠ z₀ → f z ≠ f z₀ := by
-    simpa only [set_of_and, subset_inter_iff] using
+    ∃ ρ > 0, AnalyticOn ℂ f (closedBall z₀ ρ) ∧ ∀ z ∈ closedBall z₀ ρ, z ≠ z₀ → f z ≠ f z₀ := by
+    simpa only [setOf_and, subset_inter_iff] using
       nhds_basis_closed_ball.mem_iff.mp (h2.and (eventually_nhds_within_iff.mp h1))
   replace h3 : DiffContOnCl ℂ f (ball z₀ ρ)
   exact
-    ⟨h3.differentiable_on.mono ball_subset_closed_ball,
+    ⟨h3.differentiable_on.mono ball_subset_closedBall,
       (closure_ball z₀ hρ.lt.ne.symm).symm ▸ h3.continuous_on⟩
   let r := ρ ⊓ R
   have hr : 0 < r := lt_inf_iff.mpr ⟨hρ, hR⟩
-  have h5 : closed_ball z₀ r ⊆ closed_ball z₀ ρ := closed_ball_subset_closed_ball inf_le_left
+  have h5 : closedBall z₀ r ⊆ closedBall z₀ ρ := closedBall_subset_closedBall inf_le_left
   have h6 : DiffContOnCl ℂ f (ball z₀ r) := h3.mono (ball_subset_ball inf_le_left)
   have h7 : ∀ z ∈ sphere z₀ r, f z ≠ f z₀ := fun z hz =>
-    h4 z (h5 (sphere_subset_closed_ball hz)) (ne_of_mem_sphere hz hr.ne.symm)
+    h4 z (h5 (sphere_subset_closedBall hz)) (ne_of_mem_sphere hz hr.ne.symm)
   have h8 : (sphere z₀ r).Nonempty := normed_space.sphere_nonempty.mpr hr.le
   have h9 : ContinuousOn (fun x => ‖f x - f z₀‖) (sphere z₀ r) :=
     continuous_norm.comp_continuous_on
-      ((h6.sub_const (f z₀)).continuousOn_ball.mono sphere_subset_closed_ball)
+      ((h6.sub_const (f z₀)).continuousOn_ball.mono sphere_subset_closedBall)
   obtain ⟨x, hx, hfx⟩ := (isCompact_sphere z₀ r).exists_forall_le h8 h9
   refine' ⟨‖f x - f z₀‖ / 2, half_pos (norm_sub_pos_iff.mpr (h7 x hx)), _⟩
   exact
     (h6.ball_subset_image_closed_ball hr (fun z hz => hfx z hz) (not_eventually.mp h)).trans
-      (image_subset f (closed_ball_subset_closed_ball inf_le_right))
+      (image_subset f (closedBall_subset_closedBall inf_le_right))
 #align analytic_at.eventually_constant_or_nhds_le_map_nhds_aux AnalyticAt.eventually_constant_or_nhds_le_map_nhds_aux
 
 /-- The *open mapping theorem* for holomorphic functions, local version: is a function `g : E → ℂ`
@@ -137,17 +137,17 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     ·
       exact
         analytic_at_const.add
-          ((ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℂ ℂ) z).AnalyticAt t)
+          ((ContinuousLinearMap.smulRight (ContinuousLinearMap.id ℂ ℂ) z).analyticAt t)
   by_cases ∀ z ∈ sphere (0 : E) 1, ∀ᶠ t in 𝓝 0, gray z t = gray z 0
   · left
     -- If g is eventually constant along every direction, then it is eventually constant
     refine' eventually_of_mem (ball_mem_nhds z₀ hr) fun z hz => _
-    refine' (eq_or_ne z z₀).casesOn (congr_arg g) fun h' => _
+    refine' (eq_or_ne z z₀).cases_on (congr_arg g) fun h' => _
     replace h' : ‖z - z₀‖ ≠ 0 := by simpa only [Ne.def, norm_eq_zero, sub_eq_zero]
     let w : E := ‖z - z₀‖⁻¹ • (z - z₀)
     have h3 : ∀ t ∈ ball (0 : ℂ) r, gray w t = g z₀ :=
       by
-      have e1 : IsPreconnected (ball (0 : ℂ) r) := (convex_ball 0 r).IsPreconnected
+      have e1 : IsPreconnected (ball (0 : ℂ) r) := (convex_ball 0 r).isPreconnected
       have e2 : w ∈ sphere (0 : E) 1 := by simp [w, norm_smul, h']
       specialize h1 w e2
       apply h1.eq_on_of_preconnected_of_eventually_eq analyticOn_const e1 (mem_ball_self hr)
@@ -170,7 +170,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
     simpa using h10.tendsto 0
 #align analytic_at.eventually_constant_or_nhds_le_map_nhds AnalyticAt.eventually_constant_or_nhds_le_map_nhds
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » U) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (s «expr ⊆ » U) -/
 /-- The *open mapping theorem* for holomorphic functions, global version: if a function `g : E → ℂ`
 is analytic on a connected set `U`, then either it is constant on `U`, or it is open on `U` (in the
 sense that it maps any open set contained in `U` to an open set in `ℂ`). -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Dvorak, Kyle Miller, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.cross_product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem cross_self (v : Fin 3 → R) : v ×₃ v = 0 := by simp [cross_apply, mu
 /-- The cross product of two vectors is perpendicular to the first vector. -/
 @[simp]
 theorem dot_self_cross (v w : Fin 3 → R) : v ⬝ᵥ v ×₃ w = 0 := by
-  simp [cross_apply, vec3_dot_product, mul_sub, mul_assoc, mul_left_comm]
+  simp [cross_apply, vec3_dotProduct, mul_sub, mul_assoc, mul_left_comm]
 #align dot_self_cross dot_self_cross
 
 /-- The cross product of two vectors is perpendicular to the second vector. -/
@@ -104,7 +104,7 @@ theorem dot_cross_self (v w : Fin 3 → R) : w ⬝ᵥ v ×₃ w = 0 := by
 /-- Cyclic permutations preserve the triple product. See also `triple_product_eq_det`. -/
 theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = v ⬝ᵥ w ×₃ u :=
   by
-  simp only [cross_apply, vec3_dot_product, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
+  simp only [cross_apply, vec3_dotProduct, Matrix.head_cons, Matrix.cons_vec_bit0_eq_alt0,
     Matrix.empty_vecAppend, Matrix.cons_val_one, Matrix.cons_vecAlt0, Matrix.cons_vecAppend,
     Matrix.cons_val_zero]
   ring
@@ -114,7 +114,7 @@ theorem triple_product_permutation (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = 
     with those vectors as its rows. -/
 theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matrix.det ![u, v, w] :=
   by
-  simp only [vec3_dot_product, cross_apply, Matrix.det_fin_three, Matrix.head_cons,
+  simp only [vec3_dotProduct, cross_apply, Matrix.det_fin_three, Matrix.head_cons,
     Matrix.cons_vec_bit0_eq_alt0, Matrix.empty_vecAlt0, Matrix.cons_vecAlt0, Matrix.vecHead_vecAlt0,
     Matrix.vecAppend_apply_zero, Matrix.empty_vecAppend, Matrix.cons_vecAppend, Matrix.cons_val',
     Matrix.cons_val_one, Matrix.cons_val_zero]
@@ -125,8 +125,8 @@ theorem triple_product_eq_det (u v w : Fin 3 → R) : u ⬝ᵥ v ×₃ w = Matri
 theorem cross_dot_cross (u v w x : Fin 3 → R) :
     u ×₃ v ⬝ᵥ w ×₃ x = u ⬝ᵥ w * v ⬝ᵥ x - u ⬝ᵥ x * v ⬝ᵥ w :=
   by
-  simp only [vec3_dot_product, cross_apply, cons_vec_append, cons_vec_bit0_eq_alt0, cons_val_one,
-    cons_vec_alt0, LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_vec_append]
+  simp only [vec3_dotProduct, cross_apply, cons_vecAppend, cons_vec_bit0_eq_alt0, cons_val_one,
+    cons_vecAlt0, LinearMap.mk₂_apply, cons_val_zero, head_cons, empty_vecAppend]
   ring_nf
 #align cross_dot_cross cross_dot_cross
 
@@ -162,7 +162,7 @@ theorem cross_cross (u v w : Fin 3 → R) : u ×₃ v ×₃ w = u ×₃ (v ×₃
 
 /-- Jacobi identity: For a cross product of three vectors,
     their sum over the three even permutations is equal to the zero vector. -/
-theorem jacobi_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ w) + v ×₃ (w ×₃ u) + w ×₃ (u ×₃ v) = 0 :=
+theorem jacobi_cross (u v w : Fin 3 → R) : u ×₃ (v ×₃ Finset) + v ×₃ (w ×₃ u) + w ×₃ (u ×₃ v) = 0 :=
   lie_jacobi u v w
 #align jacobi_cross jacobi_cross
 

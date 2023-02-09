@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module algebra.associated
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} α], Not (Prime.{u1} α _inst_1 (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α _inst_1))))
 Case conversion may be inaccurate. Consider using '#align not_prime_zero not_prime_zeroₓ'. -/
 @[simp]
-theorem not_prime_zero : ¬Prime (0 : α) := fun h => h.NeZero rfl
+theorem not_prime_zero : ¬Prime (0 : α) := fun h => h.ne_zero rfl
 #align not_prime_zero not_prime_zero
 
 /- warning: not_prime_one -> not_prime_one is a dubious translation:
@@ -549,7 +549,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul (hp : Prime p) {a b : α} {k l 
   fun ⟨x, hx⟩ ⟨y, hy⟩ ⟨z, hz⟩ =>
   have h : p ^ (k + l) * (x * y) = p ^ (k + l) * (p * z) := by
     simpa [mul_comm, pow_add, hx, hy, mul_assoc, mul_left_comm] using hz
-  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.NeZero
+  have hp0 : p ^ (k + l) ≠ 0 := pow_ne_zero _ hp.ne_zero
   have hpd : p ∣ x * y := ⟨z, by rwa [mul_right_inj' hp0] at h⟩
   (hp.dvd_or_dvd hpd).elim
     (fun ⟨d, hd⟩ => Or.inl ⟨d, by simp [*, pow_succ, mul_comm, mul_left_comm, mul_assoc]⟩)
@@ -563,7 +563,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : CancelCommMonoidWithZero.{u1} α] {p : α}, (Prime.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1) p) -> (Not (IsSquare.{u1} α (MulZeroClass.toMul.{u1} α (MulZeroOneClass.toMulZeroClass.{u1} α (MonoidWithZero.toMulZeroOneClass.{u1} α (CommMonoidWithZero.toMonoidWithZero.{u1} α (CancelCommMonoidWithZero.toCommMonoidWithZero.{u1} α _inst_1))))) p))
 Case conversion may be inaccurate. Consider using '#align prime.not_square Prime.not_squareₓ'. -/
 theorem Prime.not_square (hp : Prime p) : ¬IsSquare p :=
-  hp.Irreducible.not_square
+  hp.irreducible.not_square
 #align prime.not_square Prime.not_square
 
 /- warning: is_square.not_prime -> IsSquare.not_prime is a dubious translation:
@@ -577,7 +577,7 @@ theorem IsSquare.not_prime (ha : IsSquare a) : ¬Prime a := fun h => h.not_squar
 
 #print pow_not_prime /-
 theorem pow_not_prime {n : ℕ} (hn : n ≠ 1) : ¬Prime (a ^ n) := fun hp =>
-  hp.not_unit <| IsUnit.pow _ <| of_irreducible_pow hn <| hp.Irreducible
+  hp.not_unit <| IsUnit.pow _ <| of_irreducible_pow hn <| hp.irreducible
 #align pow_not_prime pow_not_prime
 -/
 
@@ -804,7 +804,7 @@ Case conversion may be inaccurate. Consider using '#align associated_mul_unit_le
 @[simp]
 theorem associated_mul_unit_left_iff {β : Type _} [Monoid β] {a b : β} {u : Units β} :
     Associated (a * u) b ↔ Associated a b :=
-  associated_mul_isUnit_left_iff u.IsUnit
+  associated_mul_isUnit_left_iff u.isUnit
 #align associated_mul_unit_left_iff associated_mul_unit_left_iff
 
 /- warning: associated_unit_mul_left_iff -> associated_unit_mul_left_iff is a dubious translation:
@@ -816,7 +816,7 @@ Case conversion may be inaccurate. Consider using '#align associated_unit_mul_le
 @[simp]
 theorem associated_unit_mul_left_iff {β : Type _} [CommMonoid β] {a b : β} {u : Units β} :
     Associated (↑u * a) b ↔ Associated a b :=
-  associated_isUnit_mul_left_iff u.IsUnit
+  associated_isUnit_mul_left_iff u.isUnit
 #align associated_unit_mul_left_iff associated_unit_mul_left_iff
 
 /- warning: associated_mul_unit_right_iff -> associated_mul_unit_right_iff is a dubious translation:
@@ -828,7 +828,7 @@ Case conversion may be inaccurate. Consider using '#align associated_mul_unit_ri
 @[simp]
 theorem associated_mul_unit_right_iff {β : Type _} [Monoid β] {a b : β} {u : Units β} :
     Associated a (b * u) ↔ Associated a b :=
-  associated_mul_isUnit_right_iff u.IsUnit
+  associated_mul_isUnit_right_iff u.isUnit
 #align associated_mul_unit_right_iff associated_mul_unit_right_iff
 
 /- warning: associated_unit_mul_right_iff -> associated_unit_mul_right_iff is a dubious translation:
@@ -840,7 +840,7 @@ Case conversion may be inaccurate. Consider using '#align associated_unit_mul_ri
 @[simp]
 theorem associated_unit_mul_right_iff {β : Type _} [CommMonoid β] {a b : β} {u : Units β} :
     Associated a (↑u * b) ↔ Associated a b :=
-  associated_isUnit_mul_right_iff u.IsUnit
+  associated_isUnit_mul_right_iff u.isUnit
 #align associated_unit_mul_right_iff associated_unit_mul_right_iff
 
 /- warning: associated.mul_mul -> Associated.mul_mul is a dubious translation:
@@ -890,7 +890,7 @@ protected theorem Associated.dvd [Monoid α] {a b : α} : a ~ᵤ b → a ∣ b :
 
 #print Associated.dvd_dvd /-
 protected theorem Associated.dvd_dvd [Monoid α] {a b : α} (h : a ~ᵤ b) : a ∣ b ∧ b ∣ a :=
-  ⟨h.Dvd, h.symm.Dvd⟩
+  ⟨h.dvd, h.symm.dvd⟩
 #align associated.dvd_dvd Associated.dvd_dvd
 -/
 
@@ -903,7 +903,7 @@ theorem associated_of_dvd_dvd [CancelMonoidWithZero α] {a b : α} (hab : a ∣ 
   · simp_all
   have hac0 : a * c ≠ 0 := by
     intro con
-    rw [Con, zero_mul] at a_eq
+    rw [con, zero_mul] at a_eq
     apply ha0 a_eq
   have : a * (c * d) = a * 1 := by rw [← mul_assoc, ← a_eq, mul_one]
   have hcd : c * d = 1 := mul_left_cancel₀ ha0 this
@@ -963,7 +963,7 @@ theorem Associated.ne_zero_iff [MonoidWithZero α] {a b : α} (h : a ~ᵤ b) : a
 #print Associated.prime /-
 protected theorem Associated.prime [CommMonoidWithZero α] {p q : α} (h : p ~ᵤ q) (hp : Prime p) :
     Prime q :=
-  ⟨h.neZero_iff.1 hp.NeZero,
+  ⟨h.ne_zero_iff.1 hp.ne_zero,
     let ⟨u, hu⟩ := h
     ⟨fun ⟨v, hv⟩ => hp.not_unit ⟨v * u⁻¹, by simp [hv, hu.symm]⟩,
       hu ▸ by
@@ -990,20 +990,20 @@ theorem Irreducible.dvd_irreducible_iff_associated [CancelMonoidWithZero α] {p 
 #print Prime.associated_of_dvd /-
 theorem Prime.associated_of_dvd [CancelCommMonoidWithZero α] {p q : α} (p_prime : Prime p)
     (q_prime : Prime q) (dvd : p ∣ q) : Associated p q :=
-  p_prime.Irreducible.associated_of_dvd q_prime.Irreducible dvd
+  p_prime.irreducible.associated_of_dvd q_prime.irreducible dvd
 #align prime.associated_of_dvd Prime.associated_of_dvd
 -/
 
 #print Prime.dvd_prime_iff_associated /-
 theorem Prime.dvd_prime_iff_associated [CancelCommMonoidWithZero α] {p q : α} (pp : Prime p)
     (qp : Prime q) : p ∣ q ↔ Associated p q :=
-  pp.Irreducible.dvd_irreducible_iff_associated qp.Irreducible
+  pp.irreducible.dvd_irreducible_iff_associated qp.irreducible
 #align prime.dvd_prime_iff_associated Prime.dvd_prime_iff_associated
 -/
 
 #print Associated.prime_iff /-
 theorem Associated.prime_iff [CommMonoidWithZero α] {p q : α} (h : p ~ᵤ q) : Prime p ↔ Prime q :=
-  ⟨h.Prime, h.symm.Prime⟩
+  ⟨h.prime, h.symm.prime⟩
 #align associated.prime_iff Associated.prime_iff
 -/
 
@@ -1016,14 +1016,14 @@ protected theorem Associated.isUnit [Monoid α] {a b : α} (h : a ~ᵤ b) : IsUn
 
 #print Associated.isUnit_iff /-
 theorem Associated.isUnit_iff [Monoid α] {a b : α} (h : a ~ᵤ b) : IsUnit a ↔ IsUnit b :=
-  ⟨h.IsUnit, h.symm.IsUnit⟩
+  ⟨h.isUnit, h.symm.isUnit⟩
 #align associated.is_unit_iff Associated.isUnit_iff
 -/
 
 #print Associated.irreducible /-
 protected theorem Associated.irreducible [Monoid α] {p q : α} (h : p ~ᵤ q) (hp : Irreducible p) :
     Irreducible q :=
-  ⟨mt h.symm.IsUnit hp.1,
+  ⟨mt h.symm.isUnit hp.1,
     let ⟨u, hu⟩ := h
     fun a b hab =>
     have hpab : p = a * (b * (u⁻¹ : αˣ)) :=
@@ -1038,7 +1038,7 @@ protected theorem Associated.irreducible [Monoid α] {p q : α} (h : p ~ᵤ q) (
 #print Associated.irreducible_iff /-
 protected theorem Associated.irreducible_iff [Monoid α] {p q : α} (h : p ~ᵤ q) :
     Irreducible p ↔ Irreducible q :=
-  ⟨h.Irreducible, h.symm.Irreducible⟩
+  ⟨h.irreducible, h.symm.irreducible⟩
 #align associated.irreducible_iff Associated.irreducible_iff
 -/
 
@@ -1427,7 +1427,7 @@ Case conversion may be inaccurate. Consider using '#align associates.is_unit_mk 
 theorem isUnit_mk {a : α} : IsUnit (Associates.mk a) ↔ IsUnit a :=
   calc
     IsUnit (Associates.mk a) ↔ a ~ᵤ 1 := by
-      rw [is_unit_iff_eq_one, one_eq_mk_one, mk_eq_mk_iff_associated]
+      rw [isUnit_iff_eq_one, one_eq_mk_one, mk_eq_mk_iff_associated]
     _ ↔ IsUnit a := associated_one_iff_isUnit
     
 #align associates.is_unit_mk Associates.isUnit_mk
@@ -1626,7 +1626,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.prime_mk Associates.prime_mkₓ'. -/
 theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p :=
   by
-  rw [Prime, _root_.prime, forall_associated]
+  rw [Prime, Prime, forall_associated]
   trans
   · apply and_congr
     rfl
@@ -1637,7 +1637,7 @@ theorem prime_mk (p : α) : Prime (Associates.mk p) ↔ Prime p :=
     exact forall_associated
   apply and_congr mk_ne_zero
   apply and_congr
-  · rw [is_unit_mk]
+  · rw [isUnit_mk]
   refine' forall₂_congr fun a b => _
   rw [mk_mul_mk, mk_dvd_mk, mk_dvd_mk, mk_dvd_mk]
 #align associates.prime_mk Associates.prime_mk
@@ -1650,17 +1650,17 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align associates.irreducible_mk Associates.irreducible_mkₓ'. -/
 theorem irreducible_mk (a : α) : Irreducible (Associates.mk a) ↔ Irreducible a :=
   by
-  simp only [irreducible_iff, is_unit_mk]
+  simp only [irreducible_iff, isUnit_mk]
   apply and_congr Iff.rfl
   constructor
   · rintro h x y rfl
-    simpa [is_unit_mk] using h (Associates.mk x) (Associates.mk y) rfl
+    simpa [isUnit_mk] using h (Associates.mk x) (Associates.mk y) rfl
   · intro h x y
     refine' Quotient.induction_on₂ x y fun x y a_eq => _
     rcases Quotient.exact a_eq.symm with ⟨u, a_eq⟩
     rw [mul_assoc] at a_eq
     show IsUnit (Associates.mk x) ∨ IsUnit (Associates.mk y)
-    simpa [is_unit_mk] using h _ _ a_eq.symm
+    simpa [isUnit_mk] using h _ _ a_eq.symm
 #align associates.irreducible_mk Associates.irreducible_mk
 
 /- warning: associates.mk_dvd_not_unit_mk_iff -> Associates.mk_dvdNotUnit_mk_iff is a dubious translation:
@@ -1681,7 +1681,7 @@ theorem mk_dvdNotUnit_mk_iff {a b : α} :
     rw [mk_mul_mk, mk_eq_mk_iff_associated] at hbax
     cases' hbax with u hu
     apply h (x * ↑u⁻¹)
-    · rw [is_unit_mk] at hx
+    · rw [isUnit_mk] at hx
       rw [Associated.isUnit_iff]
       apply hx
       use u
@@ -1689,7 +1689,7 @@ theorem mk_dvdNotUnit_mk_iff {a b : α} :
     simp [← mul_assoc, ← hu]
   · rintro ⟨x, ⟨hx, rfl⟩⟩
     use Associates.mk x
-    simp [is_unit_mk, mk_mul_mk, hx]
+    simp [isUnit_mk, mk_mul_mk, hx]
 #align associates.mk_dvd_not_unit_mk_iff Associates.mk_dvdNotUnit_mk_iff
 
 /- warning: associates.dvd_not_unit_of_lt -> Associates.dvdNotUnit_of_lt is a dubious translation:
@@ -1772,14 +1772,14 @@ Case conversion may be inaccurate. Consider using '#align associates.one_or_eq_o
 theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p → m = 1 ∨ m = p
   | _, m, ⟨hp0, hp1, h⟩, ⟨d, rfl⟩ =>
     match h m d dvd_rfl with
-    | Or.inl h =>
+    | or.inl h =>
       by_cases (fun this : m = 0 => by simp [this]) fun this : m ≠ 0 =>
         by
         have : m * d ≤ m * 1 := by simpa using h
         have : d ≤ 1 := Associates.le_of_mul_le_mul_left m d 1 ‹m ≠ 0› this
         have : d = 1 := bot_unique this
         simp [this]
-    | Or.inr h =>
+    | or.inr h =>
       by_cases (fun this : d = 0 => by simp [this] at hp0 <;> contradiction) fun this : d ≠ 0 =>
         have : d * m ≤ d * 1 := by simpa [mul_comm] using h
         Or.inl <| bot_unique <| Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
@@ -1846,7 +1846,7 @@ theorem dvdNotUnit_of_dvdNotUnit_associated [CommMonoidWithZero α] [Nontrivial 
   by
   obtain ⟨u, rfl⟩ := Associated.symm h'
   obtain ⟨hp, x, hx⟩ := h
-  refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.NeZero, x, hx.left, mul_comm _ _⟩, _⟩
+  refine' ⟨hp, x * ↑u⁻¹, DvdNotUnit.not_unit ⟨u⁻¹.ne_zero, x, hx.left, mul_comm _ _⟩, _⟩
   rw [← mul_assoc, ← hx.right, mul_assoc, Units.mul_inv, mul_one]
 #align dvd_not_unit_of_dvd_not_unit_associated dvdNotUnit_of_dvdNotUnit_associated
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.pid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,10 +55,10 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
   have span_le := (Ideal.span_singleton_le_iff_mem _).mpr x_mem
   refine'
     associated_iff_eq.mp
-      ((associated_iff_normalized_factors_eq_normalized_factors hP0 hspan0).mpr
-        (le_antisymm ((dvd_iff_normalized_factors_le_normalized_factors hP0 hspan0).mp _) _))
+      ((associated_iff_normalizedFactors_eq_normalizedFactors hP0 hspan0).mpr
+        (le_antisymm ((dvd_iff_normalizedFactors_le_normalizedFactors hP0 hspan0).mp _) _))
   · rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
-  simp only [normalized_factors_irreducible (Ideal.prime_of_isPrime hP0 hP).Irreducible,
+  simp only [normalizedFactors_irreducible (Ideal.prime_of_isPrime hP0 hP).Irreducible,
     normalize_eq, Multiset.le_iff_count, Multiset.count_singleton]
   intro Q
   split_ifs with hQ
@@ -66,7 +66,7 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
     refine' (Ideal.count_normalizedFactors_eq _ _).le <;>
         simp only [Ideal.span_singleton_le_iff_mem, pow_one] <;>
       assumption
-  by_cases hQp : is_prime Q
+  by_cases hQp : IsPrime Q
   · skip
     refine' (Ideal.count_normalizedFactors_eq _ _).le <;>
       simp only [Ideal.span_singleton_le_iff_mem, pow_one, pow_zero, one_eq_top, Submodule.mem_top]
@@ -75,7 +75,7 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
     exact
       (multiset.count_eq_zero.mpr fun hQi =>
           hQp
-            (is_prime_of_prime
+            (isPrime_of_prime
               (irreducible_iff_prime.mp (irreducible_of_normalized_factor _ hQi)))).le
 #align ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne
 
@@ -165,16 +165,16 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
   · refine' hm M hM _
     obtain ⟨c, hc : algebraMap R A c = a M * b M⟩ := this _ (ha M hM) _ (hb M hM)
     rw [← hc] at hmem⊢
-    rw [Algebra.smul_def, ← _root_.map_mul] at hmem
+    rw [Algebra.smul_def, ← map_mul] at hmem
     obtain ⟨d, hdM, he⟩ := hmem
     rw [IsLocalization.injective _ hS he] at hdM
     exact
       Submodule.mem_map_of_mem
-        (((hf.mem_to_finset.1 hM).IsPrime.mem_or_mem hdM).resolve_left <| hum M hM)
+        (((hf.mem_to_finset.1 hM).isPrime.mem_or_mem hdM).resolve_left <| hum M hM)
   · refine' Submodule.sum_mem _ fun M' hM' => _
     rw [Finset.mem_erase] at hM'
     obtain ⟨c, hc⟩ := this _ (ha M hM) _ (hb M' hM'.2)
-    rw [← hc, Algebra.smul_def, ← _root_.map_mul]
+    rw [← hc, Algebra.smul_def, ← map_mul]
     specialize hu M' hM'.2
     simp_rw [Ideal.mem_infᵢ, Finset.mem_erase] at hu
     exact Submodule.mem_map_of_mem (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
@@ -187,7 +187,7 @@ theorem Ideal.IsPrincipal.of_finite_maximals_of_isUnit (hf : { I : Ideal R | I.I
     {I : Ideal R} (hI : IsUnit (I : FractionalIdeal R⁰ (FractionRing R))) : I.IsPrincipal :=
   (IsLocalization.coeSubmodule_isPrincipal _ le_rfl).mp
     (FractionalIdeal.isPrincipal.of_finite_maximals_of_inv le_rfl hf I
-      (↑hI.Unit⁻¹ : FractionalIdeal R⁰ (FractionRing R)) hI.Unit.mul_inv)
+      (↑hI.unit⁻¹ : FractionalIdeal R⁰ (FractionRing R)) hI.unit.mul_inv)
 #align ideal.is_principal.of_finite_maximals_of_is_unit Ideal.IsPrincipal.of_finite_maximals_of_isUnit
 
 /-- A Dedekind domain is a PID if its set of primes is finite. -/
@@ -198,7 +198,7 @@ theorem IsPrincipalIdealRing.of_finite_primes [IsDomain R] [IsDedekindDomain R]
     · exact bot_isPrincipal
     apply Ideal.IsPrincipal.of_finite_maximals_of_isUnit
     · apply h.subset
-      exact @Ideal.IsMaximal.isPrime _ _
+      exact @ideal.is_maximal.is_prime _ _
     · exact isUnit_of_mul_eq_one _ _ (FractionalIdeal.coe_ideal_mul_inv I hI)⟩
 #align is_principal_ideal_ring.of_finite_primes IsPrincipalIdealRing.of_finite_primes
 
@@ -247,8 +247,8 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [DecidableEq (
         IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors _ p.prime_compl_le_non_zero_divisors
           (mem_nonZeroDivisors_of_ne_zero x_ne)⟩
   rw [← Multiset.singleton_le, ← normalize_eq P, ←
-    normalized_factors_irreducible (Ideal.prime_of_isPrime hP0 hP).Irreducible, ←
-    dvd_iff_normalized_factors_le_normalized_factors hP0, dvd_iff_le,
+    normalizedFactors_irreducible (Ideal.prime_of_isPrime hP0 hP).irreducible, ←
+    dvd_iff_normalizedFactors_le_normalizedFactors hP0, dvd_iff_le,
     IsScalarTower.algebraMap_eq R (Localization.AtPrime p) Sₚ, ← Ideal.map_map,
     Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_le_iff_le_comap,
     hpu (LocalRing.maximalIdeal _) ⟨this, _⟩, hpu (comap _ _) ⟨_, _⟩]
@@ -257,7 +257,7 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [DecidableEq (
       isIntegral_of_noetherian (isNoetherian_of_fg_of_noetherian' Module.Finite.out)
     exact mt (Ideal.eq_bot_of_comap_eq_bot (isIntegral_localization hRS)) hP0
   · exact Ideal.comap_isPrime (algebraMap (Localization.AtPrime p) Sₚ) P
-  · exact (LocalRing.maximalIdeal.isMaximal _).IsPrime
+  · exact (LocalRing.maximalIdeal.isMaximal _).isPrime
   · rw [Ne.def, zero_eq_bot, Ideal.map_eq_bot_iff_of_injective]
     · assumption
     rw [IsScalarTower.algebraMap_eq R S Sₚ]
@@ -275,7 +275,7 @@ theorem IsDedekindDomain.isPrincipalIdealRing_localization_over_prime : IsPrinci
     IsPrincipalIdealRing.of_finite_primes
       (Set.Finite.ofFinset
         (Finset.filter (fun P => P.IsPrime)
-          ({⊥} ∪ (normalized_factors (Ideal.map (algebraMap R Sₚ) p)).toFinset))
+          ({⊥} ∪ (normalizedFactors (Ideal.map (algebraMap R Sₚ) p)).toFinset))
         fun P => _)
   rw [Finset.mem_filter, Finset.mem_union, Finset.mem_singleton, Set.mem_setOf,
     Multiset.mem_toFinset]

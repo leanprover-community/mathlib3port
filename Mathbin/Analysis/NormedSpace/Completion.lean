@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ variable (𝕜 E : Type _) [NormedField 𝕜] [NormedAddCommGroup E] [NormedSpac
 
 instance (priority := 100) NormedSpace.to_hasUniformContinuousConstSmul :
     HasUniformContinuousConstSmul 𝕜 E :=
-  ⟨fun c => (lipschitzWith_smul c).UniformContinuous⟩
+  ⟨fun c => (lipschitzWith_smul c).uniformContinuous⟩
 #align uniform_space.completion.normed_space.to_has_uniform_continuous_const_smul UniformSpace.Completion.NormedSpace.to_hasUniformContinuousConstSmul
 
 instance : NormedSpace 𝕜 (Completion E) :=
@@ -85,13 +85,13 @@ instance [SemiNormedRing A] : NormedRing (Completion A) :=
   { Completion.ring,
     Completion.metricSpace with
     dist_eq := fun x y => by
-      apply completion.induction_on₂ x y <;> clear x y
-      · refine' isClosed_eq (completion.uniform_continuous_extension₂ _).Continuous _
-        exact Continuous.comp completion.continuous_extension continuous_sub
+      apply Completion.induction_on₂ x y <;> clear x y
+      · refine' isClosed_eq (Completion.uniform_continuous_extension₂ _).continuous _
+        exact Continuous.comp Completion.continuous_extension continuous_sub
       · intro x y
-        rw [← completion.coe_sub, norm_coe, completion.dist_eq, dist_eq_norm]
+        rw [← Completion.coe_sub, norm_coe, Completion.dist_eq, dist_eq_norm]
     norm_mul := fun x y => by
-      apply completion.induction_on₂ x y <;> clear x y
+      apply Completion.induction_on₂ x y <;> clear x y
       ·
         exact
           isClosed_le (Continuous.comp continuous_norm continuous_mul)
@@ -106,7 +106,7 @@ instance [SemiNormedCommRing A] [NormedAlgebra 𝕜 A] [HasUniformContinuousCons
   { Completion.algebra A 𝕜 with
     norm_smul_le := fun r x =>
       by
-      apply completion.induction_on x <;> clear x
+      apply Completion.induction_on x <;> clear x
       ·
         exact
           isClosed_le (Continuous.comp continuous_norm (continuous_const_smul r))

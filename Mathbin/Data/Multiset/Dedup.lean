@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.multiset.dedup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (s : Multiset.{u1} α), LE.le.{u1} (Multiset.{u1} α) (Preorder.toLE.{u1} (Multiset.{u1} α) (PartialOrder.toPreorder.{u1} (Multiset.{u1} α) (Multiset.instPartialOrderMultiset.{u1} α))) (Multiset.dedup.{u1} α (fun (a : α) (b : α) => _inst_1 a b) s) s
 Case conversion may be inaccurate. Consider using '#align multiset.dedup_le Multiset.dedup_leₓ'. -/
 theorem dedup_le (s : Multiset α) : dedup s ≤ s :=
-  Quot.inductionOn s fun l => (dedup_sublist _).Subperm
+  Quot.inductionOn s fun l => (dedup_sublist _).subperm
 #align multiset.dedup_le Multiset.dedup_le
 
 #print Multiset.dedup_subset /-
@@ -178,7 +178,7 @@ theorem le_dedup_self {s : Multiset α} : s ≤ dedup s ↔ Nodup s := by
 #align multiset.le_dedup_self Multiset.le_dedup_self
 
 #print Multiset.dedup_ext /-
-theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by simp [nodup.ext]
+theorem dedup_ext {s t : Multiset α} : dedup s = dedup t ↔ ∀ a, a ∈ s ↔ a ∈ t := by simp [Nodup.ext]
 #align multiset.dedup_ext Multiset.dedup_ext
 -/
 

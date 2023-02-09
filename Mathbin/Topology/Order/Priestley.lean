@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module topology.order.priestley
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem exists_clopen_upper_or_lower_of_ne (h : x ≠ y) :
 instance (priority := 100) PriestleySpace.toT2Space : T2Space α :=
   ⟨fun x y h =>
     let ⟨U, hU, _, hx, hy⟩ := exists_clopen_upper_or_lower_of_ne h
-    ⟨U, Uᶜ, hU.IsOpen, hU.compl.IsOpen, hx, hy, disjoint_compl_right⟩⟩
+    ⟨U, Uᶜ, hU.isOpen, hU.compl.isOpen, hx, hy, disjoint_compl_right⟩⟩
 #align priestley_space.to_t2_space PriestleySpace.toT2Space
 -/
 

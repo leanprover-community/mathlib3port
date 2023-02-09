@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison, Ainsley Pahljina
 
 ! This file was ported from Lean 3 source module number_theory.lucas_lehmer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,18 +107,18 @@ theorem mersenne_int_ne_zero (p : ℕ) (w : 0 < p) : (2 ^ p - 1 : ℤ) ≠ 0 :=
 
 theorem sMod_nonneg (p : ℕ) (w : 0 < p) (i : ℕ) : 0 ≤ sMod p i :=
   by
-  cases i <;> dsimp [s_mod]
+  cases i <;> dsimp [sMod]
   · exact sup_eq_right.mp rfl
   · apply Int.emod_nonneg
     exact mersenne_int_ne_zero p w
 #align lucas_lehmer.s_mod_nonneg LucasLehmer.sMod_nonneg
 
-theorem sMod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [s_mod]
+theorem sMod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [sMod]
 #align lucas_lehmer.s_mod_mod LucasLehmer.sMod_mod
 
 theorem sMod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 :=
   by
-  rw [← s_mod_mod]
+  rw [← sMod_mod]
   convert Int.emod_lt _ _
   · refine' (abs_of_nonneg _).symm
     simp only [sub_nonneg, ge_iff_le]
@@ -129,9 +129,9 @@ theorem sMod_lt (p : ℕ) (w : 0 < p) (i : ℕ) : sMod p i < 2 ^ p - 1 :=
 theorem sZmod_eq_s (p' : ℕ) (i : ℕ) : sZmod (p' + 2) i = (s i : ZMod (2 ^ (p' + 2) - 1)) :=
   by
   induction' i with i ih
-  · dsimp [s, s_zmod]
+  · dsimp [s, sZmod]
     norm_num
-  · push_cast [s, s_zmod, ih]
+  · push_cast [s, sZmod, ih]
 #align lucas_lehmer.s_zmod_eq_s LucasLehmer.sZmod_eq_s
 
 -- These next two don't make good `norm_cast` lemmas.
@@ -146,7 +146,7 @@ theorem Int.coe_nat_two_pow_pred (p : ℕ) : ((2 ^ p - 1 : ℕ) : ℤ) = (2 ^ p 
 #align lucas_lehmer.int.coe_nat_two_pow_pred LucasLehmer.Int.coe_nat_two_pow_pred
 
 theorem sZmod_eq_sMod (p : ℕ) (i : ℕ) : sZmod p i = (sMod p i : ZMod (2 ^ p - 1)) := by
-  induction i <;> push_cast [← int.coe_nat_two_pow_pred p, s_mod, s_zmod, *]
+  induction i <;> push_cast [← Int.coe_nat_two_pow_pred p, sMod, sZmod, *]
 #align lucas_lehmer.s_zmod_eq_s_mod LucasLehmer.sZmod_eq_sMod
 
 /-- The Lucas-Lehmer residue is `s p (p-2)` in `zmod (2^p - 1)`. -/
@@ -157,16 +157,16 @@ def lucasLehmerResidue (p : ℕ) : ZMod (2 ^ p - 1) :=
 theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
     lucasLehmerResidue p = 0 ↔ sMod p (p - 2) = 0 :=
   by
-  dsimp [lucas_lehmer_residue]
-  rw [s_zmod_eq_s_mod p]
+  dsimp [lucasLehmerResidue]
+  rw [sZmod_eq_sMod p]
   constructor
   · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
     -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
     intro h
     simp [ZMod.int_coe_zMod_eq_zero_iff_dvd] at h
     apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
-    apply s_mod_nonneg _ (Nat.lt_of_succ_lt w)
-    exact s_mod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
+    apply sMod_nonneg _ (Nat.lt_of_succ_lt w)
+    exact sMod_lt _ (Nat.lt_of_succ_lt w) (p - 2)
   · intro h
     rw [h]
     simp
@@ -289,7 +289,7 @@ instance : AddGroupWithOne (X q) :=
   { X.monoid, X.addCommGroup _ with
     natCast := fun n => ⟨n, 0⟩
     natCast_zero := by simp
-    natCast_succ := by simp [Nat.cast, Monoid.one]
+    natCast_succ := by simp [Nat.cast, monoid.one]
     intCast := fun n => ⟨n, 0⟩
     intCast_ofNat := fun n => by simp <;> rfl
     intCast_negSucc := fun n => by ext <;> simp <;> rfl }
@@ -365,7 +365,7 @@ theorem units_card (w : 1 < q) : Fintype.card (X q)ˣ < q ^ 2 :=
   by
   haveI : Fact (1 < (q : ℕ)) := ⟨w⟩
   convert card_units_lt (X q)
-  rw [X_card]
+  rw [x_card]
 #align lucas_lehmer.X.units_card LucasLehmer.X.units_card
 
 /-- We define `ω = 2 + √3`. -/
@@ -448,8 +448,8 @@ theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
       (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) =
         k * mersenne (p' + 2) * (ω : X (q (p' + 2))) ^ 2 ^ p' - 1 :=
   by
-  dsimp [lucas_lehmer_residue] at h
-  rw [s_zmod_eq_s p'] at h
+  dsimp [lucasLehmerResidue] at h
+  rw [sZmod_eq_s p'] at h
   simp [ZMod.int_coe_zMod_eq_zero_iff_dvd] at h
   cases' h with k h
   use k
@@ -479,7 +479,7 @@ theorem ω_pow_eq_neg_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 1) = -1 :=
   by
   cases' ω_pow_formula p' h with k w
-  rw [mersenne_coe_X] at w
+  rw [mersenne_coe_x] at w
   simpa using w
 #align lucas_lehmer.ω_pow_eq_neg_one LucasLehmer.ω_pow_eq_neg_one
 
@@ -518,7 +518,7 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
       congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
     simp at ω_pow
     have h : (1 : ZMod (q (p' + 2))) = -1 :=
-      congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
+      congr_arg prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
     haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
     apply ZMod.neg_one_ne_one h.symm
   · apply orderOf_dvd_iff_pow_eq_one.2
@@ -569,13 +569,13 @@ open Tactic
 theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
     (h3 : (b * b - 2) % a = c) : sMod p (i + 1) = c :=
   by
-  dsimp [s_mod, mersenne]
+  dsimp [sMod, mersenne]
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/

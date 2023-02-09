@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.nat.upto
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,12 +64,12 @@ satisfying `p`. -/
 protected theorem wf : (∃ x, p x) → WellFounded (Upto.GT p)
   | ⟨x, h⟩ =>
     by
-    suffices upto.gt p = Measure fun y : Nat.Upto p => x - y.val
+    suffices Upto.GT p = Measure fun y : Nat.Upto p => x - y.val
       by
       rw [this]
       apply measure_wf
     ext (⟨a, ha⟩⟨b, _⟩)
-    dsimp [Measure, InvImage, upto.gt]
+    dsimp [Measure, InvImage, Upto.GT]
     rw [tsub_lt_tsub_iff_left_of_le]
     exact le_of_not_lt fun h' => ha _ h' h
 #align nat.upto.wf Nat.Upto.wf

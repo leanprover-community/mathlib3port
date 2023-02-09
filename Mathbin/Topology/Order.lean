@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,7 +98,7 @@ theorem nhds_generateFrom {g : Set (Set α)} {a : α} :
     @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s :=
   by
   rw [nhds_def]
-  refine' le_antisymm (binfᵢ_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩) _
+  refine' le_antisymm (binfᵢ_mono fun s ⟨as, sg⟩ => ⟨as, GenerateOpen.basic _ sg⟩) _
   refine' le_infᵢ₂ fun s hs => _; cases' hs with ha hs
   induction hs
   case basic s hs => exact infᵢ₂_le _ ⟨ha, hs⟩
@@ -106,7 +106,7 @@ theorem nhds_generateFrom {g : Set (Set α)} {a : α} :
   case inter s t hs' ht' hs ht => exact (le_inf (hs ha.1) (ht ha.2)).trans_eq inf_principal
   case sUnion S hS' hS =>
     rcases ha with ⟨t, htS, hat⟩
-    exact (hS t htS hat).trans (principal_mono.2 <| subset_sUnion_of_mem htS)
+    exact (hS t htS hat).trans (principal_mono.2 <| subset_unionₛ_of_mem htS)
 #align topological_space.nhds_generate_from TopologicalSpace.nhds_generateFrom
 
 /- warning: topological_space.tendsto_nhds_generate_from -> TopologicalSpace.tendsto_nhds_generateFrom is a dubious translation:
@@ -117,9 +117,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_space.tendsto_nhds_generate_from TopologicalSpace.tendsto_nhds_generateFromₓ'. -/
 theorem tendsto_nhds_generateFrom {β : Type _} {m : α → β} {f : Filter α} {g : Set (Set β)} {b : β}
     (h : ∀ s ∈ g, b ∈ s → m ⁻¹' s ∈ f) : Tendsto m f (@nhds β (generateFrom g) b) := by
-  rw [nhds_generate_from] <;>
+  rw [nhds_generateFrom] <;>
     exact
-      tendsto_infi.2 fun s => tendsto_infi.2 fun ⟨hbs, hsg⟩ => tendsto_principal.2 <| h s hsg hbs
+      tendsto_infᵢ.2 fun s => tendsto_infᵢ.2 fun ⟨hbs, hsg⟩ => tendsto_principal.2 <| h s hsg hbs
 #align topological_space.tendsto_nhds_generate_from TopologicalSpace.tendsto_nhds_generateFrom
 
 #print TopologicalSpace.mkOfNhds /-
@@ -167,9 +167,9 @@ theorem nhds_mkOfNhds_single [DecidableEq α] {a₀ : α} {l : Filter α} (h : p
     @nhds α (TopologicalSpace.mkOfNhds <| update pure a₀ l) b =
       (update pure a₀ l : α → Filter α) b :=
   by
-  refine' nhds_mk_of_nhds _ _ (le_update_iff.mpr ⟨h, fun _ _ => le_rfl⟩) fun a s hs => _
+  refine' nhds_mkOfNhds _ _ (le_update_iff.mpr ⟨h, fun _ _ => le_rfl⟩) fun a s hs => _
   rcases eq_or_ne a a₀ with (rfl | ha)
-  · refine' ⟨s, hs, subset.rfl, fun b hb => _⟩
+  · refine' ⟨s, hs, Subset.rfl, fun b hb => _⟩
     rcases eq_or_ne b a with (rfl | hb)
     · exact hs
     · rwa [update_noteq hb]
@@ -186,7 +186,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align topological_space.nhds_mk_of_nhds_filter_basis TopologicalSpace.nhds_mkOfNhds_filterBasisₓ'. -/
 theorem nhds_mkOfNhds_filterBasis (B : α → FilterBasis α) (a : α) (h₀ : ∀ (x), ∀ n ∈ B x, x ∈ n)
     (h₁ : ∀ (x), ∀ n ∈ B x, ∃ n₁ ∈ B x, n₁ ⊆ n ∧ ∀ x' ∈ n₁, ∃ n₂ ∈ B x', n₂ ⊆ n) :
-    @nhds α (TopologicalSpace.mkOfNhds fun x => (B x).filterₓ) a = (B a).filterₓ :=
+    @nhds α (TopologicalSpace.mkOfNhds fun x => (B x).filter) a = (B a).filter :=
   by
   rw [TopologicalSpace.nhds_mkOfNhds] <;> intro x n hn <;>
     obtain ⟨m, hm₁, hm₂⟩ := (B x).mem_filter_iff.mp hn
@@ -225,7 +225,7 @@ Case conversion may be inaccurate. Consider using '#align topological_space.le_g
 theorem le_generateFrom_iff_subset_isOpen {g : Set (Set α)} {t : TopologicalSpace α} :
     t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ { s | is_open[t] s } :=
   ⟨fun ht s hs => ht _ <| GenerateOpen.basic s hs, fun hg s hs =>
-    hs.recOn (fun v hv => hg hv) t.isOpen_univ (fun u v _ _ => t.isOpen_inter u v) fun k _ =>
+    hs.rec_on (fun v hv => hg hv) t.isOpen_univ (fun u v _ _ => t.isOpen_inter u v) fun k _ =>
       t.isOpen_unionₛ k⟩
 #align topological_space.le_generate_from_iff_subset_is_open TopologicalSpace.le_generateFrom_iff_subset_isOpen
 
@@ -376,16 +376,16 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     induction' h with V h _ _ _ _ ih₁ ih₂ _ _ ih
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
-    · rw [sUnion_eq_empty, or_iff_not_imp_left]
+    · rw [unionₛ_eq_empty, or_iff_not_imp_left]
       intro h
       push_neg  at h
       obtain ⟨U, hU, hne⟩ := h
       have := (ih U hU).resolve_left hne
       subst this
-      refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩,
+      refine' unionₛ_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩,
     by
     rintro (rfl | rfl)
-    exacts[@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
+    exacts[@is_open_empty _ ⊤, @is_open_univ _ ⊤]⟩
 #align topological_space.is_open_top_iff TopologicalSpace.isOpen_top_iff
 
 #print DiscreteTopology /-
@@ -451,7 +451,7 @@ Case conversion may be inaccurate. Consider using '#align le_of_nhds_le_nhds le_
 theorem le_of_nhds_le_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds α t₁ x ≤ @nhds α t₂ x) :
     t₁ ≤ t₂ := by
   intro s
-  rw [@isOpen_iff_mem_nhds _ t₁, @isOpen_iff_mem_nhds α t₂]
+  rw [@is_open_iff_mem_nhds _ t₁, @is_open_iff_mem_nhds α t₂]
   exact fun hs a ha => h _ (hs _ ha)
 #align le_of_nhds_le_nhds le_of_nhds_le_nhds
 
@@ -535,10 +535,10 @@ def TopologicalSpace.induced {α : Type u} {β : Type v} (f : α → β) (t : To
     simp only [Classical.skolem] at h
     cases' h with f hf
     apply Exists.intro (⋃ (x : Set α) (h : x ∈ s), f x h)
-    simp only [sUnion_eq_bUnion, preimage_Union, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
+    simp only [unionₛ_eq_bunionᵢ, preimage_unionᵢ, fun x h => (hf x h).right]; refine' ⟨_, rfl⟩
     exact
-      @isOpen_unionᵢ β _ t _ fun i =>
-        show IsOpen (⋃ h, f i h) from @isOpen_unionᵢ β _ t _ fun h => (hf i h).left
+      @is_open_Union β _ t _ fun i =>
+        show IsOpen (⋃ h, f i h) from @is_open_Union β _ t _ fun h => (hf i h).left
 #align topological_space.induced TopologicalSpace.induced
 -/
 
@@ -567,7 +567,7 @@ def TopologicalSpace.coinduced {α : Type u} {β : Type v} (f : α → β) (t : 
   IsOpen s := is_open[t] (f ⁻¹' s)
   isOpen_univ := t.isOpen_univ
   isOpen_inter _ _ h₁ h₂ := h₁.inter h₂
-  isOpen_unionₛ s h := by simpa only [preimage_sUnion] using isOpen_bunionᵢ h
+  isOpen_unionₛ s h := by simpa only [preimage_unionₛ] using isOpen_bunionᵢ h
 #align topological_space.coinduced TopologicalSpace.coinduced
 -/
 
@@ -949,7 +949,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (a : α), GaloisConnection.{u1, u1} (Filter.{u1} α) (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α)) (nhdsAdjoint.{u1} α a) (fun (t : TopologicalSpace.{u1} α) => nhds.{u1} α t a)
 Case conversion may be inaccurate. Consider using '#align gc_nhds gc_nhdsₓ'. -/
-theorem gc_nhds (a : α) : GaloisConnection (nhdsAdjoint a) fun t => @nhds α t a := fun f t =>
+theorem gc_nhds (a : α) : GaloisConnection (nhdsAdjoint a) fun t => @nhds α mpr a := fun f t =>
   by
   rw [le_nhds_iff]
   exact ⟨fun H s hs has => H _ has hs, fun H s has hs => H _ hs has⟩
@@ -992,7 +992,7 @@ theorem nhdsAdjoint_nhds {α : Type _} (a : α) (f : Filter α) :
   · rintro ⟨t, htU, ht, hat⟩
     exact ⟨htU hat, mem_of_superset (ht hat) htU⟩
   · rintro ⟨haU, hU⟩
-    exact ⟨U, subset.rfl, fun h => hU, haU⟩
+    exact ⟨U, Subset.rfl, fun h => hU, haU⟩
 #align nhds_adjoint_nhds nhdsAdjoint_nhds
 
 #print nhdsAdjoint_nhds_of_ne /-
@@ -1024,7 +1024,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} (a : α) (f : Filter.{u1} α) (t : TopologicalSpace.{u1} α), Iff (LE.le.{u1} (TopologicalSpace.{u1} α) (Preorder.toLE.{u1} (TopologicalSpace.{u1} α) (PartialOrder.toPreorder.{u1} (TopologicalSpace.{u1} α) (TopologicalSpace.instPartialOrderTopologicalSpace.{u1} α))) t (nhdsAdjoint.{u1} α a f)) (And (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (nhds.{u1} α t a) (HasSup.sup.{u1} (Filter.{u1} α) (SemilatticeSup.toHasSup.{u1} (Filter.{u1} α) (Lattice.toSemilatticeSup.{u1} (Filter.{u1} α) (ConditionallyCompleteLattice.toLattice.{u1} (Filter.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a) f)) (forall (b : α), (Ne.{succ u1} α b a) -> (Eq.{succ u1} (Filter.{u1} α) (nhds.{u1} α t b) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α b))))
 Case conversion may be inaccurate. Consider using '#align le_nhds_adjoint_iff' le_nhdsAdjoint_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b :=
   by
@@ -1056,7 +1056,7 @@ theorem le_nhdsAdjoint_iff {α : Type _} (a : α) (f : Filter α) (t : Topologic
   change _ ↔ _ ∧ ∀ b : α, b ≠ a → IsOpen {b}
   rw [le_nhdsAdjoint_iff', and_congr_right_iff]
   apply fun h => forall_congr' fun b => _
-  rw [@isOpen_singleton_iff_nhds_eq_pure α t b]
+  rw [@is_open_singleton_iff_nhds_eq_pure α t b]
 #align le_nhds_adjoint_iff le_nhdsAdjoint_iff
 
 /- warning: nhds_infi -> nhds_infᵢ is a dubious translation:
@@ -1538,14 +1538,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nhds_false nhds_falseₓ'. -/
 @[simp]
 theorem nhds_false : 𝓝 False = ⊤ :=
-  TopologicalSpace.nhds_generateFrom.trans <| by simp [@and_comm (_ ∈ _)]
+  TopologicalSpace.nhds_generateFrom.trans <| by simp [@and.comm (_ ∈ _)]
 #align nhds_false nhds_false
 
 #print continuous_Prop /-
 theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } :=
   ⟨fun h : Continuous p =>
     by
-    have : IsOpen (p ⁻¹' {True}) := isOpen_singleton_true.Preimage h
+    have : IsOpen (p ⁻¹' {True}) := isOpen_singleton_true.preimage h
     simpa [preimage, eq_true_iff] using this, fun h : IsOpen { x | p x } =>
     continuous_generateFrom fun s (hs : s = {True}) => by simp [hs, preimage, eq_true_iff, h]⟩
 #align continuous_Prop continuous_Prop

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_char
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,7 +275,7 @@ theorem quadraticChar_card_sqrts (hF : ringChar F ≠ 2) (a : F) :
       have h₁ : s = [b, -b].toFinset := by
         ext x
         simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, List.toFinset_cons,
-          List.toFinset_nil, insert_emptyc_eq, Finset.mem_insert, Finset.mem_singleton]
+          List.toFinset_nil, insert_emptyCollection_eq, Finset.mem_insert, Finset.mem_singleton]
         rw [← pow_two] at h
         simp only [hs, Set.mem_toFinset, Set.mem_setOf_eq, h]
         constructor
@@ -424,14 +424,14 @@ theorem quadraticChar_card_card [DecidableEq F] (hF : ringChar F ≠ 2) {F' : Ty
       contrapose ha
       exact ne_of_eq_of_ne (map_nonunit (quadraticChar F) ha) (mt zero_eq_neg.mp one_ne_zero)
     use hu.unit
-    simp only [IsUnit.unit_spec, ring_hom_comp_apply, eq_intCast, Ne.def, ha]
+    simp only [IsUnit.unit_spec, ringHomComp_apply, eq_intCast, Ne.def, ha]
     rw [Int.cast_neg, Int.cast_one]
     exact Ring.neg_one_ne_one_of_char_ne_two hF'
-  have hχ₂ : χ.is_quadratic := is_quadratic.comp (quadraticChar_isQuadratic F) _
+  have hχ₂ : χ.is_quadratic := IsQuadratic.comp (quadraticChar_isQuadratic F) _
   have h := Char.card_pow_card hχ₁ hχ₂ h hF'
   rw [← quadraticChar_eq_pow_of_char_ne_two' hF'] at h
   exact
-    (is_quadratic.eq_of_eq_coe (quadraticChar_isQuadratic F') (quadraticChar_isQuadratic F) hF'
+    (IsQuadratic.eq_of_eq_coe (quadraticChar_isQuadratic F') (quadraticChar_isQuadratic F) hF'
         h).symm
 #align quadratic_char_card_card quadraticChar_card_card
 
@@ -442,8 +442,8 @@ theorem quadraticChar_odd_prime [DecidableEq F] (hF : ringChar F ≠ 2) {p : ℕ
   by
   rw [← quadraticChar_neg_one hF]
   have h :=
-    quadraticChar_card_card hF (ne_of_eq_of_ne (ring_char_zmod_n p) hp₁)
-      (ne_of_eq_of_ne (ring_char_zmod_n p) hp₂.symm)
+    quadraticChar_card_card hF (ne_of_eq_of_ne (ringChar_zMod_n p) hp₁)
+      (ne_of_eq_of_ne (ringChar_zMod_n p) hp₂.symm)
   rwa [card p] at h
 #align quadratic_char_odd_prime quadraticChar_odd_prime
 
@@ -462,15 +462,15 @@ theorem FiniteField.isSquare_odd_prime_iff (hF : ringChar F ≠ 2) {p : ℕ} [Fa
       have hchar : ringChar F = ringChar (ZMod p) :=
         by
         rw [hFp]
-        exact (ring_char_zmod_n p).symm
+        exact (ringChar_zMod_n p).symm
       conv =>
         congr
         lhs
         congr
         skip
-        rw [hc, Nat.cast_pow, map_pow, hchar, map_ring_char]
+        rw [hc, Nat.cast_pow, map_pow, hchar, map_ringChar]
       simp only [zero_pow n.pos, mul_zero, zero_eq_neg, one_ne_zero, not_false_iff]
-    · rw [← Iff.not_left (@quadraticChar_neg_one_iff_not_isSquare F _ _ _ _),
+    · rw [← Iff.not_left (@quadratic_char_neg_one_iff_not_is_square F _ _ _ _),
         quadraticChar_odd_prime hF hp]
       exact hFp
 #align finite_field.is_square_odd_prime_iff FiniteField.isSquare_odd_prime_iff

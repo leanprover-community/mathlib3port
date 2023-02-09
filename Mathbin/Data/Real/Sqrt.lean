@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.sqrt
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,7 +124,7 @@ theorem sqrt_div (x y : ℝ≥0) : sqrt (x / y) = sqrt x / sqrt y :=
 #align nnreal.sqrt_div Nnreal.sqrt_div
 
 theorem continuous_sqrt : Continuous sqrt :=
-  sqrt.Continuous
+  sqrt.continuous
 #align nnreal.continuous_sqrt Nnreal.continuous_sqrt
 
 end Nnreal
@@ -142,7 +142,7 @@ def sqrtAux (f : CauSeq ℚ abs) : ℕ → ℚ
 
 theorem sqrtAux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrtAux f i
   | 0 => by
-    rw [sqrt_aux, Rat.mkRat_eq, Rat.divInt_eq_div] <;> apply div_nonneg <;>
+    rw [sqrtAux, Rat.mkRat_eq, Rat.divInt_eq_div] <;> apply div_nonneg <;>
       exact Int.cast_nonneg.2 (Int.ofNat_nonneg _)
   | n + 1 => le_max_left _ _
 #align real.sqrt_aux_nonneg Real.sqrtAux_nonneg
@@ -183,7 +183,7 @@ theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
 
 @[continuity]
 theorem continuous_sqrt : Continuous sqrt :=
-  Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_toNnreal
+  Nnreal.continuous_coe.comp <| Nnreal.sqrt.continuous.comp continuous_real_toNnreal
 #align real.continuous_sqrt Real.continuous_sqrt
 
 theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by simp [sqrt, Real.toNnreal_eq_zero.2 h]
@@ -268,13 +268,13 @@ theorem sqrt_lt_sqrt_iff (hx : 0 ≤ x) : sqrt x < sqrt y ↔ x < y :=
 #align real.sqrt_lt_sqrt_iff Real.sqrt_lt_sqrt_iff
 
 theorem sqrt_lt_sqrt_iff_of_pos (hy : 0 < y) : sqrt x < sqrt y ↔ x < y := by
-  rw [sqrt, sqrt, Nnreal.coe_lt_coe, Nnreal.sqrt_lt_sqrt_iff, to_nnreal_lt_to_nnreal_iff hy]
+  rw [sqrt, sqrt, Nnreal.coe_lt_coe, Nnreal.sqrt_lt_sqrt_iff, toNnreal_lt_toNnreal_iff hy]
 #align real.sqrt_lt_sqrt_iff_of_pos Real.sqrt_lt_sqrt_iff_of_pos
 
 theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y :=
   by
   rw [sqrt, sqrt, Nnreal.coe_le_coe, Nnreal.sqrt_le_sqrt_iff]
-  exact to_nnreal_le_to_nnreal h
+  exact toNnreal_le_toNnreal h
 #align real.sqrt_le_sqrt Real.sqrt_le_sqrt
 
 theorem sqrt_lt_sqrt (hx : 0 ≤ x) (h : x < y) : sqrt x < sqrt y :=
@@ -475,7 +475,7 @@ variable {α : Type _}
 
 theorem Filter.Tendsto.sqrt {f : α → ℝ} {l : Filter α} {x : ℝ} (h : Tendsto f l (𝓝 x)) :
     Tendsto (fun x => sqrt (f x)) l (𝓝 (sqrt x)) :=
-  (continuous_sqrt.Tendsto _).comp h
+  (continuous_sqrt.tendsto _).comp h
 #align filter.tendsto.sqrt Filter.Tendsto.sqrt
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jiale Miao
 
 ! This file was ported from Lean 3 source module tactic.qify
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -123,7 +123,7 @@ unsafe def tactic.qify (extra_lems : List simp_arg_type) : expr → tactic (expr
   do
   let (q1, p1) ← qify.lift_to_q q <|> fail "failed to find an applicable qify lemma"
   let (q2, p2) ← norm_cast.derive_push_cast extra_lems q1
-  Prod.mk q2 <$> mk_eq_trans p1 p2
+  prod.mk q2 <$> mk_eq_trans p1 p2
 #align tactic.qify tactic.qify
 
 /-- A variant of `tactic.qify` that takes `h`, a proof of a proposition about natural numbers

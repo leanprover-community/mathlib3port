@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Scott Morrison, Simon Hudon
 
 ! This file was ported from Lean 3 source module category_theory.endomorphism
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ end End
 
 theorem isUnit_iff_isIso {C : Type u} [Category.{v} C] {X : C} (f : End X) :
     IsUnit (f : End X) ↔ IsIso f :=
-  ⟨fun h => { out := ⟨h.Unit.inv, ⟨h.Unit.inv_val, h.Unit.val_inv⟩⟩ }, fun h =>
+  ⟨fun h => { out := ⟨h.unit.inv, ⟨h.unit.inv_val, h.unit.val_inv⟩⟩ }, fun h =>
     ⟨⟨f, inv f, by simp, by simp⟩, rfl⟩⟩
 #align category_theory.is_unit_iff_is_iso CategoryTheory.isUnit_iff_isIso
 
@@ -152,12 +152,13 @@ instance : Group (Aut X) := by
               inv := iso.symm
               mul := flip iso.trans
               div := _
-              npow := @npowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩
-              zpow := @zpowRec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
+              npow := @npow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩
+              zpow := @zpow_rec (Aut X) ⟨iso.refl X⟩ ⟨flip iso.trans⟩ ⟨iso.symm⟩ } <;>
           intros <;>
         try rfl <;>
       ext <;>
-    simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
+    simp [flip, (· * ·), monoid.mul, mul_one_class.mul, mul_one_class.one, has_one.one, monoid.one,
+      has_inv.inv]
 
 theorem aut_mul_def (f g : Aut X) : f * g = g.trans f :=
   rfl
@@ -182,11 +183,11 @@ def unitsEndEquivAut : (End X)ˣ ≃* Aut X
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
 def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y
     where
-  toFun x := ⟨h.inv ≫ x.Hom ≫ h.Hom, h.inv ≫ x.inv ≫ h.Hom⟩
-  invFun y := ⟨h.Hom ≫ y.Hom ≫ h.inv, h.Hom ≫ y.inv ≫ h.inv⟩
+  toFun x := ⟨h.inv ≫ x.hom ≫ h.hom, h.inv ≫ x.inv ≫ h.hom⟩
+  invFun y := ⟨h.hom ≫ y.hom ≫ h.inv, h.hom ≫ y.inv ≫ h.inv⟩
   left_inv := by tidy
   right_inv := by tidy
-  map_mul' := by simp [Aut_mul_def]
+  map_mul' := by simp [aut_mul_def]
 #align category_theory.Aut.Aut_mul_equiv_of_iso CategoryTheory.Aut.autMulEquivOfIso
 
 end Aut

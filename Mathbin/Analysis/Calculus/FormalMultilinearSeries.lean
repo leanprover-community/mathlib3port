@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.formal_multilinear_series
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,7 +278,7 @@ theorem apply_eq_prod_smul_coeff : p n y = (∏ i, y i) • p.coeff n :=
 #align formal_multilinear_series.apply_eq_prod_smul_coeff FormalMultilinearSeries.apply_eq_prod_smul_coeff
 
 theorem coeff_eq_zero : p.coeff n = 0 ↔ p n = 0 := by
-  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.mkPiField_eq_zero_iff]
+  rw [← mkPiField_coeff_eq p, ContinuousMultilinearMap.mkPiField_eq_zero_iff]
 #align formal_multilinear_series.coeff_eq_zero FormalMultilinearSeries.coeff_eq_zero
 
 @[simp]
@@ -287,7 +287,7 @@ theorem apply_eq_pow_smul_coeff : (p n fun _ => z) = z ^ n • p.coeff n := by s
 
 @[simp]
 theorem norm_apply_eq_norm_coef : ‖p n‖ = ‖coeff p n‖ := by
-  rw [← mk_pi_field_coeff_eq p, ContinuousMultilinearMap.norm_mkPiField]
+  rw [← mkPiField_coeff_eq p, ContinuousMultilinearMap.norm_mkPiField]
 #align formal_multilinear_series.norm_apply_eq_norm_coef FormalMultilinearSeries.norm_apply_eq_norm_coef
 
 end Coef
@@ -306,7 +306,7 @@ noncomputable def fslope (p : FormalMultilinearSeries 𝕜 𝕜 E) : FormalMulti
 @[simp]
 theorem coeff_fslope : p.fslope.coeff n = p.coeff (n + 1) :=
   by
-  have : @Fin.cons n (fun _ => 𝕜) 1 (1 : Fin n → 𝕜) = 1 := Fin.cons_self_tail 1
+  have : @fin.cons n (fun _ => 𝕜) 1 (1 : Fin n → 𝕜) = 1 := Fin.cons_self_tail 1
   simp only [fslope, coeff, ContinuousMultilinearMap.curryLeft_apply, this]
 #align formal_multilinear_series.coeff_fslope FormalMultilinearSeries.coeff_fslope
 

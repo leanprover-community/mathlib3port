@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_constant
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,7 +190,7 @@ theorem liouville_number_rat_initial_terms {m : ℕ} (hm : 0 < m) (k : ℕ) :
     ∃ p : ℕ, liouvilleNumberInitialTerms m k = p / m ^ k ! :=
   by
   induction' k with k h
-  · exact ⟨1, by rw [liouville_number_initial_terms, range_one, sum_singleton, Nat.cast_one]⟩
+  · exact ⟨1, by rw [liouvilleNumberInitialTerms, range_one, sum_singleton, Nat.cast_one]⟩
   · rcases h with ⟨p_k, h_k⟩
     use p_k * m ^ ((k + 1)! - k !) + 1
     unfold liouville_number_initial_terms at h_k⊢
@@ -219,10 +219,10 @@ theorem is_liouville {m : ℕ} (hm : 2 ≤ m) : Liouville (liouvilleNumber m) :=
   refine' ⟨p, m ^ n !, one_lt_pow mZ1 n.factorial_ne_zero, _⟩
   push_cast
   -- separate out the sum of the first `n` terms and the rest
-  rw [liouville_number_eq_initial_terms_add_tail m1 n, ← hp, add_sub_cancel',
-    abs_of_nonneg (liouville_number_tail_pos m1 _).le]
+  rw [liouvilleNumber_eq_initial_terms_add_tail m1 n, ← hp, add_sub_cancel',
+    abs_of_nonneg (liouvilleNumberTail_pos m1 _).le]
   exact
-    ⟨((lt_add_iff_pos_right _).mpr (liouville_number_tail_pos m1 n)).Ne.symm,
+    ⟨((lt_add_iff_pos_right _).mpr (liouvilleNumberTail_pos m1 n)).ne.symm,
       (tsum_one_div_pow_factorial_lt n m1).trans_le
         (aux_calc _ (nat.cast_two.symm.le.trans (nat.cast_le.mpr hm)))⟩
 #align liouville.is_liouville Liouville.is_liouville

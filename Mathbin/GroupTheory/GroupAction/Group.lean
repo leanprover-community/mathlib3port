@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -208,7 +208,7 @@ theorem Commute.smul_left_iff [Mul β] [SMulCommClass α β β] [IsScalarTower �
 #print MulAction.bijective /-
 @[to_additive]
 protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β → β) :=
-  (MulAction.toPerm g).Bijective
+  (MulAction.toPerm g).bijective
 #align mul_action.bijective MulAction.bijective
 #align add_action.bijective AddAction.bijective
 -/
@@ -216,7 +216,7 @@ protected theorem MulAction.bijective (g : α) : Bijective ((· • ·) g : β �
 #print MulAction.injective /-
 @[to_additive]
 protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β → β) :=
-  (MulAction.bijective g).Injective
+  (MulAction.bijective g).injective
 #align mul_action.injective MulAction.injective
 #align add_action.injective AddAction.injective
 -/
@@ -224,7 +224,7 @@ protected theorem MulAction.injective (g : α) : Injective ((· • ·) g : β �
 #print MulAction.surjective /-
 @[to_additive]
 protected theorem MulAction.surjective (g : α) : Surjective ((· • ·) g : β → β) :=
-  (MulAction.bijective g).Surjective
+  (MulAction.bijective g).surjective
 #align mul_action.surjective MulAction.surjective
 #align add_action.surjective AddAction.surjective
 -/
@@ -358,7 +358,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Injective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1657 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1659 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1657 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1659) a))
 Case conversion may be inaccurate. Consider using '#align mul_action.injective₀ MulAction.injective₀ₓ'. -/
 protected theorem MulAction.injective₀ (ha : a ≠ 0) : Injective ((· • ·) a : β → β) :=
-  (MulAction.bijective₀ ha).Injective
+  (MulAction.bijective₀ ha).injective
 #align mul_action.injective₀ MulAction.injective₀
 
 /- warning: mul_action.surjective₀ -> MulAction.surjective₀ is a dubious translation:
@@ -368,7 +368,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : GroupWithZero.{u1} α] [_inst_2 : MulAction.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))] {a : α}, (Ne.{succ u1} α a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (MonoidWithZero.toZero.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1))))) -> (Function.Surjective.{succ u2, succ u2} β β ((fun (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1707 : α) (x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1709 : β) => HSMul.hSMul.{u1, u2, u2} α β β (instHSMul.{u1, u2} α β (MulAction.toSMul.{u1, u2} α β (MonoidWithZero.toMonoid.{u1} α (GroupWithZero.toMonoidWithZero.{u1} α _inst_1)) _inst_2)) x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1707 x._@.Mathlib.GroupTheory.GroupAction.Group._hyg.1709) a))
 Case conversion may be inaccurate. Consider using '#align mul_action.surjective₀ MulAction.surjective₀ₓ'. -/
 protected theorem MulAction.surjective₀ (ha : a ≠ 0) : Surjective ((· • ·) a : β → β) :=
-  (MulAction.bijective₀ ha).Surjective
+  (MulAction.bijective₀ ha).surjective
 #align mul_action.surjective₀ MulAction.surjective₀
 
 end Gwz

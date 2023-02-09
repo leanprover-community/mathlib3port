@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module algebra.tropical.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,25 +174,25 @@ theorem untrop_eq_iff_eq_trop {x} {y : R} : untrop x = y ↔ x = trop y :=
 
 #print Tropical.injective_trop /-
 theorem injective_trop : Function.Injective (trop : R → Tropical R) :=
-  tropEquiv.Injective
+  tropEquiv.injective
 #align tropical.injective_trop Tropical.injective_trop
 -/
 
 #print Tropical.injective_untrop /-
 theorem injective_untrop : Function.Injective (untrop : Tropical R → R) :=
-  tropEquiv.symm.Injective
+  tropEquiv.symm.injective
 #align tropical.injective_untrop Tropical.injective_untrop
 -/
 
 #print Tropical.surjective_trop /-
 theorem surjective_trop : Function.Surjective (trop : R → Tropical R) :=
-  tropEquiv.Surjective
+  tropEquiv.surjective
 #align tropical.surjective_trop Tropical.surjective_trop
 -/
 
 #print Tropical.surjective_untrop /-
 theorem surjective_untrop : Function.Surjective (untrop : Tropical R → R) :=
-  tropEquiv.symm.Surjective
+  tropEquiv.symm.surjective
 #align tropical.surjective_untrop Tropical.surjective_untrop
 -/
 
@@ -638,7 +638,7 @@ instance [LinearOrder R] [OrderTop R] [Zero R] : AddMonoidWithOne (Tropical R) :
     natCast_succ := fun n => (untrop_inj_iff _ _).1 (by cases n <;> simp [Nat.cast]) }
 
 instance [Zero R] : Nontrivial (Tropical (WithTop R)) :=
-  ⟨⟨0, 1, trop_injective.Ne WithTop.top_ne_coe⟩⟩
+  ⟨⟨0, 1, trop_injective.ne WithTop.top_ne_coe⟩⟩
 
 instance [Neg R] : Inv (Tropical R) :=
   ⟨fun x => trop (-untrop x)⟩

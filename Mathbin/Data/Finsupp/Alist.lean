@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández
 
 ! This file was ported from Lean 3 source module data.finsupp.alist
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ Case conversion may be inaccurate. Consider using '#align finsupp.to_alist_keys_
 theorem toAList_keys_toFinset [DecidableEq α] (f : α →₀ M) : f.toAList.keys.toFinset = f.support :=
   by
   ext
-  simp [to_alist, AList.mem_keys, AList.keys, List.keys]
+  simp [toAList, AList.mem_keys, AList.keys, List.keys]
 #align finsupp.to_alist_keys_to_finset Finsupp.toAList_keys_toFinset
 
 /- warning: finsupp.mem_to_alist -> Finsupp.mem_toAlist is a dubious translation:
@@ -66,7 +66,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finsupp.mem_to_alist Finsupp.mem_toAlistₓ'. -/
 @[simp]
 theorem mem_toAlist {f : α →₀ M} {x : α} : x ∈ f.toAList ↔ f x ≠ 0 := by
-  classical rw [AList.mem_keys, ← List.mem_toFinset, to_alist_keys_to_finset, mem_support_iff]
+  classical rw [AList.mem_keys, ← List.mem_toFinset, toAList_keys_toFinset, mem_support_iff]
 #align finsupp.mem_to_alist Finsupp.mem_toAlist
 
 end Finsupp
@@ -84,13 +84,13 @@ noncomputable def lookupFinsupp (l : AList fun x : α => M) : α →₀ M
     where
   support := by
     haveI := Classical.decEq α <;> haveI := Classical.decEq M <;>
-      exact (l.1.filterₓ fun x => Sigma.snd x ≠ 0).keys.toFinset
+      exact (l.1.filter fun x => Sigma.snd x ≠ 0).keys.toFinset
   toFun a :=
     haveI := Classical.decEq α
     (l.lookup a).getD 0
   mem_support_toFun a := by
     classical
-      simp_rw [mem_to_finset, List.mem_keys, List.mem_filter, ← mem_lookup_iff]
+      simp_rw [mem_toFinset, List.mem_keys, List.mem_filter, ← mem_lookup_iff]
       cases lookup a l <;> simp
 #align alist.lookup_finsupp AList.lookupFinsupp
 -/
@@ -103,7 +103,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_apply AList.lookupFinsupp_applyₓ'. -/
 @[simp]
 theorem lookupFinsupp_apply [DecidableEq α] (l : AList fun x : α => M) (a : α) :
-    l.lookupFinsupp a = (l.dlookup a).getD 0 := by convert rfl
+    l.lookupFinsupp a = (l.lookup a).getD 0 := by convert rfl
 #align alist.lookup_finsupp_apply AList.lookupFinsupp_apply
 
 /- warning: alist.lookup_finsupp_support -> AList.lookupFinsupp_support is a dubious translation:
@@ -114,7 +114,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_support AList.lookupFinsupp_supportₓ'. -/
 @[simp]
 theorem lookupFinsupp_support [DecidableEq α] [DecidableEq M] (l : AList fun x : α => M) :
-    l.lookupFinsupp.support = (l.1.filterₓ fun x => Sigma.snd x ≠ 0).keys.toFinset := by convert rfl
+    l.lookupFinsupp.support = (l.1.filter fun x => Sigma.snd x ≠ 0).keys.toFinset := by convert rfl
 #align alist.lookup_finsupp_support AList.lookupFinsupp_support
 
 /- warning: alist.lookup_finsupp_eq_iff_of_ne_zero -> AList.lookupFinsupp_eq_iff_of_ne_zero is a dubious translation:
@@ -124,9 +124,9 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] [_inst_2 : DecidableEq.{succ u2} α] {l : AList.{u2, u1} α (fun (x : α) => M)} {a : α} {x : M}, (Ne.{succ u1} M x (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1))) -> (Iff (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (AList.lookupFinsupp.{u2, u1} α M _inst_1 l) a) x) (Membership.mem.{u1, u1} M (Option.{u1} M) (Option.instMembershipOption.{u1} M) x (AList.lookup.{u2, u1} α (fun (x : α) => M) (fun (a : α) (b : α) => _inst_2 a b) a l)))
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_eq_iff_of_ne_zero AList.lookupFinsupp_eq_iff_of_ne_zeroₓ'. -/
 theorem lookupFinsupp_eq_iff_of_ne_zero [DecidableEq α] {l : AList fun x : α => M} {a : α} {x : M}
-    (hx : x ≠ 0) : l.lookupFinsupp a = x ↔ x ∈ l.dlookup a :=
+    (hx : x ≠ 0) : l.lookupFinsupp a = x ↔ x ∈ l.lookup a :=
   by
-  rw [lookup_finsupp_apply]
+  rw [lookupFinsupp_apply]
   cases' lookup a l with m <;> simp [hx.symm]
 #align alist.lookup_finsupp_eq_iff_of_ne_zero AList.lookupFinsupp_eq_iff_of_ne_zero
 
@@ -137,9 +137,9 @@ but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : Zero.{u1} M] [_inst_2 : DecidableEq.{succ u2} α] {l : AList.{u2, u1} α (fun (x : α) => M)} {a : α}, Iff (Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} α M _inst_1) α (fun (_x : α) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) _x) (Finsupp.funLike.{u2, u1} α M _inst_1) (AList.lookupFinsupp.{u2, u1} α M _inst_1 l) a) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : α) => M) a) _inst_1))) (Or (Not (Membership.mem.{u2, max u2 u1} α (AList.{u2, u1} α (fun (x : α) => M)) (AList.instMembershipAList.{u2, u1} α (fun (x : α) => M)) a l)) (Membership.mem.{u1, u1} M (Option.{u1} M) (Option.instMembershipOption.{u1} M) (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M _inst_1)) (AList.lookup.{u2, u1} α (fun (x : α) => M) (fun (a : α) (b : α) => _inst_2 a b) a l)))
 Case conversion may be inaccurate. Consider using '#align alist.lookup_finsupp_eq_zero_iff AList.lookupFinsupp_eq_zero_iffₓ'. -/
 theorem lookupFinsupp_eq_zero_iff [DecidableEq α] {l : AList fun x : α => M} {a : α} :
-    l.lookupFinsupp a = 0 ↔ a ∉ l ∨ (0 : M) ∈ l.dlookup a :=
+    l.lookupFinsupp a = 0 ↔ a ∉ l ∨ (0 : M) ∈ l.lookup a :=
   by
-  rw [lookup_finsupp_apply, ← lookup_eq_none]
+  rw [lookupFinsupp_apply, ← lookup_eq_none]
   cases' lookup a l with m <;> simp
 #align alist.lookup_finsupp_eq_zero_iff AList.lookupFinsupp_eq_zero_iff
 

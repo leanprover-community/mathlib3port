@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justin Thomas
 
 ! This file was ported from Lean 3 source module linear_algebra.annihilating_polynomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ variable {𝕜}
 
 @[simp]
 theorem annIdealGenerator_eq_zero_iff {a : A} : annIdealGenerator 𝕜 a = 0 ↔ annIdeal 𝕜 a = ⊥ := by
-  simp only [ann_ideal_generator, mul_eq_zero, is_principal.eq_bot_iff_generator_eq_zero,
+  simp only [annIdealGenerator, mul_eq_zero, IsPrincipal.eq_bot_iff_generator_eq_zero,
     Polynomial.c_eq_zero, inv_eq_zero, Polynomial.leadingCoeff_eq_zero, or_self_iff]
 #align polynomial.ann_ideal_generator_eq_zero_iff Polynomial.annIdealGenerator_eq_zero_iff
 
@@ -103,9 +103,9 @@ end
 theorem span_singleton_annIdealGenerator (a : A) :
     Ideal.span {annIdealGenerator 𝕜 a} = annIdeal 𝕜 a :=
   by
-  by_cases h : ann_ideal_generator 𝕜 a = 0
+  by_cases h : annIdealGenerator 𝕜 a = 0
   · rw [h, ann_ideal_generator_eq_zero_iff.mp h, Set.singleton_zero, Ideal.span_zero]
-  · rw [ann_ideal_generator, Ideal.span_singleton_mul_right_unit, Ideal.span_singleton_generator]
+  · rw [annIdealGenerator, Ideal.span_singleton_mul_right_unit, Ideal.span_singleton_generator]
     apply polynomial.is_unit_C.mpr
     apply IsUnit.mk0
     apply inv_eq_zero.not.mpr
@@ -120,7 +120,7 @@ theorem annIdealGenerator_mem (a : A) : annIdealGenerator 𝕜 a ∈ annIdeal �
 
 theorem mem_iff_eq_smul_annIdealGenerator {p : 𝕜[X]} (a : A) :
     p ∈ annIdeal 𝕜 a ↔ ∃ s : 𝕜[X], p = s • annIdealGenerator 𝕜 a := by
-  simp_rw [@eq_comm _ p, ← mem_span_singleton, ← span_singleton_ann_ideal_generator 𝕜 a, Ideal.span]
+  simp_rw [@eq_comm _ p, ← mem_span_singleton, ← span_singleton_annIdealGenerator 𝕜 a, Ideal.span]
 #align polynomial.mem_iff_eq_smul_ann_ideal_generator Polynomial.mem_iff_eq_smul_annIdealGenerator
 
 /-- The generator we chose for the annihilating ideal is monic when the ideal is non-zero. -/
@@ -144,7 +144,7 @@ variable {𝕜}
 
 theorem mem_iff_annIdealGenerator_dvd {p : 𝕜[X]} {a : A} :
     p ∈ annIdeal 𝕜 a ↔ annIdealGenerator 𝕜 a ∣ p := by
-  rw [← Ideal.mem_span_singleton, span_singleton_ann_ideal_generator]
+  rw [← Ideal.mem_span_singleton, span_singleton_annIdealGenerator]
 #align polynomial.mem_iff_ann_ideal_generator_dvd Polynomial.mem_iff_annIdealGenerator_dvd
 
 /-- The generator of the annihilating ideal has minimal degree among
@@ -159,17 +159,17 @@ variable (𝕜)
 /-- The generator of the annihilating ideal is the minimal polynomial. -/
 theorem annIdealGenerator_eq_minpoly (a : A) : annIdealGenerator 𝕜 a = minpoly 𝕜 a :=
   by
-  by_cases h : ann_ideal_generator 𝕜 a = 0
+  by_cases h : annIdealGenerator 𝕜 a = 0
   · rw [h, minpoly.eq_zero]
     rintro ⟨p, p_monic, hp : aeval a p = 0⟩
     refine' p_monic.ne_zero (ideal.mem_bot.mp _)
     simpa only [ann_ideal_generator_eq_zero_iff.mp h] using mem_ann_ideal_iff_aeval_eq_zero.mpr hp
   ·
     exact
-      minpoly.unique _ _ (monic_ann_ideal_generator _ _ h) (ann_ideal_generator_aeval_eq_zero _ _)
+      minpoly.unique _ _ (monic_annIdealGenerator _ _ h) (annIdealGenerator_aeval_eq_zero _ _)
         fun q q_monic hq =>
-        degree_ann_ideal_generator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq)
-          q_monic.NeZero
+        degree_annIdealGenerator_le_of_mem a q (mem_ann_ideal_iff_aeval_eq_zero.mpr hq)
+          q_monic.ne_zero
 #align polynomial.ann_ideal_generator_eq_minpoly Polynomial.annIdealGenerator_eq_minpoly
 
 /-- If a monic generates the annihilating ideal, it must match our choice
@@ -178,11 +178,11 @@ theorem monic_generator_eq_minpoly (a : A) (p : 𝕜[X]) (p_monic : p.Monic)
     (p_gen : Ideal.span {p} = annIdeal 𝕜 a) : annIdealGenerator 𝕜 a = p :=
   by
   by_cases h : p = 0
-  · rwa [h, ann_ideal_generator_eq_zero_iff, ← p_gen, ideal.span_singleton_eq_bot.mpr]
-  · rw [← span_singleton_ann_ideal_generator, Ideal.span_singleton_eq_span_singleton] at p_gen
+  · rwa [h, annIdealGenerator_eq_zero_iff, ← p_gen, ideal.span_singleton_eq_bot.mpr]
+  · rw [← span_singleton_annIdealGenerator, Ideal.span_singleton_eq_span_singleton] at p_gen
     rw [eq_comm]
     apply eq_of_monic_of_associated p_monic _ p_gen
-    · apply monic_ann_ideal_generator _ _ ((Associated.ne_zero_iff p_gen).mp h)
+    · apply monic_annIdealGenerator _ _ ((Associated.ne_zero_iff p_gen).mp h)
 #align polynomial.monic_generator_eq_minpoly Polynomial.monic_generator_eq_minpoly
 
 end Field

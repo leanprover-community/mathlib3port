@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.filtered_colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ abbrev r : Mon :=
 #align SemiRing.filtered_colimits.R SemiRing.FilteredColimits.r
 
 instance colimitSemiring : Semiring R :=
-  { R.Monoid,
+  { R.monoid,
     AddCommMon.FilteredColimits.colimitAddCommMonoid
       (F ⋙
         forget₂ SemiRing
@@ -90,9 +90,9 @@ instance colimitSemiring : Semiring R :=
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
       let k := max₃ j₁ j₂ j₃
-      let f := first_to_max₃ j₁ j₂ j₃
-      let g := second_to_max₃ j₁ j₂ j₃
-      let h := third_to_max₃ j₁ j₂ j₃
+      let f := firstToMax₃ j₁ j₂ j₃
+      let g := secondToMax₃ j₁ j₂ j₃
+      let h := thirdToMax₃ j₁ j₂ j₃
       erw [colimit_add_mk_eq _ ⟨j₂, _⟩ ⟨j₃, _⟩ k g h, colimit_mul_mk_eq _ ⟨j₁, _⟩ ⟨k, _⟩ k f (𝟙 k),
         colimit_mul_mk_eq _ ⟨j₁, _⟩ ⟨j₂, _⟩ k f g, colimit_mul_mk_eq _ ⟨j₁, _⟩ ⟨j₃, _⟩ k f h,
         colimit_add_mk_eq _ ⟨k, _⟩ ⟨k, _⟩ k (𝟙 k) (𝟙 k)]
@@ -103,9 +103,9 @@ instance colimitSemiring : Semiring R :=
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
       let k := max₃ j₁ j₂ j₃
-      let f := first_to_max₃ j₁ j₂ j₃
-      let g := second_to_max₃ j₁ j₂ j₃
-      let h := third_to_max₃ j₁ j₂ j₃
+      let f := firstToMax₃ j₁ j₂ j₃
+      let g := secondToMax₃ j₁ j₂ j₃
+      let h := thirdToMax₃ j₁ j₂ j₃
       erw [colimit_add_mk_eq _ ⟨j₁, _⟩ ⟨j₂, _⟩ k f g, colimit_mul_mk_eq _ ⟨k, _⟩ ⟨j₃, _⟩ k (𝟙 k) h,
         colimit_mul_mk_eq _ ⟨j₁, _⟩ ⟨j₃, _⟩ k f h, colimit_mul_mk_eq _ ⟨j₂, _⟩ ⟨j₃, _⟩ k g h,
         colimit_add_mk_eq _ ⟨k, _⟩ ⟨k, _⟩ k (𝟙 k) (𝟙 k)]
@@ -155,7 +155,7 @@ instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forg
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRing Mon.{u})) }
 #align SemiRing.filtered_colimits.forget₂_Mon_preserves_filtered_colimits SemiRing.FilteredColimits.forget₂MonPreservesFilteredColimits
 
@@ -183,7 +183,7 @@ abbrev r : SemiRing :=
 #align CommSemiRing.filtered_colimits.R CommSemiRing.FilteredColimits.r
 
 instance colimitCommSemiring : CommSemiring R :=
-  { R.Semiring,
+  { R.semiring,
     CommMon.FilteredColimits.colimitCommMonoid (F ⋙ forget₂ CommSemiRing CommMon.{max v u}) with }
 #align CommSemiRing.filtered_colimits.colimit_comm_semiring CommSemiRing.FilteredColimits.colimitCommSemiring
 
@@ -223,7 +223,7 @@ instance forget₂SemiRingPreservesFilteredColimits :
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (SemiRing.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ CommSemiRing SemiRing.{u})) }
 #align CommSemiRing.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits CommSemiRing.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
@@ -252,7 +252,7 @@ abbrev r : SemiRing :=
 #align Ring.filtered_colimits.R RingCat.FilteredColimits.r
 
 instance colimitRing : Ring R :=
-  { R.Semiring,
+  { R.semiring,
     AddCommGroupCat.FilteredColimits.colimitAddCommGroup
       (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u}) with }
 #align Ring.filtered_colimits.colimit_ring RingCat.FilteredColimits.colimitRing
@@ -288,7 +288,7 @@ instance forget₂SemiRingPreservesFilteredColimits :
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ RingCat SemiRing.{u})) }
 #align Ring.filtered_colimits.forget₂_SemiRing_preserves_filtered_colimits RingCat.FilteredColimits.forget₂SemiRingPreservesFilteredColimits
 
@@ -316,7 +316,7 @@ abbrev r : RingCat :=
 #align CommRing.filtered_colimits.R CommRingCat.FilteredColimits.r
 
 instance colimitCommRing : CommRing R :=
-  { R.Ring,
+  { R.ring,
     CommSemiRing.FilteredColimits.colimitCommSemiring
       (F ⋙ forget₂ CommRingCat CommSemiRing.{max v u}) with }
 #align CommRing.filtered_colimits.colimit_comm_ring CommRingCat.FilteredColimits.colimitCommRing
@@ -355,7 +355,7 @@ instance forget₂RingPreservesFilteredColimits :
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (RingCat.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommRingCat RingCat.{u})) }
 #align CommRing.filtered_colimits.forget₂_Ring_preserves_filtered_colimits CommRingCat.FilteredColimits.forget₂RingPreservesFilteredColimits
 

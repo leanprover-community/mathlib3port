@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Wojciech Nawrocki
 
 ! This file was ported from Lean 3 source module data.tree
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -31,8 +31,8 @@ additional data. We provide the notation `a △ b` for making a `tree unit` with
 
 /-- A binary tree with values stored in non-leaf nodes. -/
 inductive Tree.{u} (α : Type u) : Type u
-  | nil : Tree
-  | node : α → Tree → Tree → Tree
+  | nil : tree
+  | node : α → tree → tree → tree
   deriving has_reflect, DecidableEq
 #align tree Tree
 
@@ -56,9 +56,9 @@ instance : Inhabited (Tree α) :=
 
 /-- Makes a `tree α` out of a red-black tree. -/
 def ofRbnode : Rbnode α → Tree α
-  | Rbnode.leaf => nil
-  | Rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
-  | Rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
+  | rbnode.leaf => nil
+  | rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
+  | rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
 #align tree.of_rbnode Tree.ofRbnode
 
 /-- Finds the index of an element in the tree assuming the tree has been
@@ -69,9 +69,9 @@ def indexOf (lt : α → α → Prop) [DecidableRel lt] (x : α) : Tree α → O
   | nil => none
   | node a t₁ t₂ =>
     match cmpUsing lt x a with
-    | Ordering.lt => PosNum.bit0 <$> index_of t₁
-    | Ordering.eq => some PosNum.one
-    | Ordering.gt => PosNum.bit1 <$> index_of t₂
+    | ordering.lt => PosNum.bit0 <$> index_of t₁
+    | ordering.eq => some PosNum.one
+    | ordering.gt => PosNum.bit1 <$> index_of t₂
 #align tree.index_of Tree.indexOf
 
 /-- Retrieves an element uniquely determined by a `pos_num` from the tree,
@@ -81,9 +81,9 @@ taking the following path to get to the element:
 - `pos_num.one` - retrieve from here -/
 def get : PosNum → Tree α → Option α
   | _, nil => none
-  | PosNum.one, node a t₁ t₂ => some a
-  | PosNum.bit0 n, node a t₁ t₂ => t₁.get n
-  | PosNum.bit1 n, node a t₁ t₂ => t₂.get n
+  | pos_num.one, node a t₁ t₂ => some a
+  | pos_num.bit0 n, node a t₁ t₂ => t₁.get n
+  | pos_num.bit1 n, node a t₁ t₂ => t₂.get n
 #align tree.get Tree.get
 
 /-- Retrieves an element from the tree, or the provided default value
@@ -132,7 +132,7 @@ theorem numLeaves_eq_numNodes_succ (x : Tree α) : x.numLeaves = x.numNodes + 1 
 
 theorem numLeaves_pos (x : Tree α) : 0 < x.numLeaves :=
   by
-  rw [num_leaves_eq_num_nodes_succ]
+  rw [numLeaves_eq_numNodes_succ]
   exact x.num_nodes.zero_lt_succ
 #align tree.num_leaves_pos Tree.numLeaves_pos
 

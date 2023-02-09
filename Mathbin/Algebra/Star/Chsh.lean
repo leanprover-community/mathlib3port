@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.star.chsh
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,8 +174,8 @@ we prepare some easy lemmas about √2.
 -- defeated me. Thanks for the rescue from Shing Tak Lam!
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) :=
   by
-  ring_nf; field_simp [(@Real.sqrt_pos 2).2 (by norm_num)]
-  convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mul] <;>
+  ring_nf; field_simp [(@real.sqrt_pos 2).2 (by norm_num)]
+  convert congr_arg (· ^ 2) (@real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mul] <;>
     norm_num
 #align tsirelson_inequality.tsirelson_inequality_aux TsirelsonInequality.tsirelson_inequality_aux
 
@@ -256,6 +256,6 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
     -- `norm_num` can't directly show `0 ≤ √2⁻¹`
     simp
   apply le_of_sub_nonneg
-  simpa only [sub_add_eq_sub_sub, ← sub_add, w] using Pos
+  simpa only [sub_add_eq_sub_sub, ← sub_add, w] using pos
 #align tsirelson_inequality tsirelson_inequality
 

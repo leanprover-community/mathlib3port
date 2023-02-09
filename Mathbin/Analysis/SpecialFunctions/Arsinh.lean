@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: James Arthur, Chris Hughes, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module analysis.special_functions.arsinh
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,19 +132,19 @@ def sinhHomeomorph : ℝ ≃ₜ ℝ :=
 #align real.sinh_homeomorph Real.sinhHomeomorph
 
 theorem arsinh_bijective : Bijective arsinh :=
-  sinhEquiv.symm.Bijective
+  sinhEquiv.symm.bijective
 #align real.arsinh_bijective Real.arsinh_bijective
 
 theorem arsinh_injective : Injective arsinh :=
-  sinhEquiv.symm.Injective
+  sinhEquiv.symm.injective
 #align real.arsinh_injective Real.arsinh_injective
 
 theorem arsinh_surjective : Surjective arsinh :=
-  sinhEquiv.symm.Surjective
+  sinhEquiv.symm.surjective
 #align real.arsinh_surjective Real.arsinh_surjective
 
 theorem arsinh_strictMono : StrictMono arsinh :=
-  sinhOrderIso.symm.StrictMono
+  sinhOrderIso.symm.strictMono
 #align real.arsinh_strict_mono Real.arsinh_strictMono
 
 @[simp]
@@ -189,16 +189,16 @@ theorem hasStrictDerivAt_arsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x
   by
   convert
     sinh_homeomorph.to_local_homeomorph.has_strict_deriv_at_symm (mem_univ x) (cosh_pos _).ne'
-      (has_strict_deriv_at_sinh _)
+      (hasStrictDerivAt_sinh _)
   exact (cosh_arsinh _).symm
 #align real.has_strict_deriv_at_arsinh Real.hasStrictDerivAt_arsinh
 
 theorem hasDerivAt_arsinh (x : ℝ) : HasDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x :=
-  (hasStrictDerivAt_arsinh x).HasDerivAt
+  (hasStrictDerivAt_arsinh x).hasDerivAt
 #align real.has_deriv_at_arsinh Real.hasDerivAt_arsinh
 
 theorem differentiable_arsinh : Differentiable ℝ arsinh := fun x =>
-  (hasDerivAt_arsinh x).DifferentiableAt
+  (hasDerivAt_arsinh x).differentiableAt
 #align real.differentiable_arsinh Real.differentiable_arsinh
 
 theorem contDiff_arsinh {n : ℕ∞} : ContDiff ℝ n arsinh :=
@@ -207,7 +207,7 @@ theorem contDiff_arsinh {n : ℕ∞} : ContDiff ℝ n arsinh :=
 
 @[continuity]
 theorem continuous_arsinh : Continuous arsinh :=
-  sinhHomeomorph.symm.Continuous
+  sinhHomeomorph.symm.continuous
 #align real.continuous_arsinh Real.continuous_arsinh
 
 end Real
@@ -216,7 +216,7 @@ open Real
 
 theorem Filter.Tendsto.arsinh {α : Type _} {l : Filter α} {f : α → ℝ} {a : ℝ}
     (h : Tendsto f l (𝓝 a)) : Tendsto (fun x => arsinh (f x)) l (𝓝 (arsinh a)) :=
-  (continuous_arsinh.Tendsto _).comp h
+  (continuous_arsinh.tendsto _).comp h
 #align filter.tendsto.arsinh Filter.Tendsto.arsinh
 
 section Continuous
@@ -281,12 +281,12 @@ theorem Differentiable.arsinh (h : Differentiable ℝ f) : Differentiable ℝ fu
 #align differentiable.arsinh Differentiable.arsinh
 
 theorem ContDiffAt.arsinh (h : ContDiffAt ℝ n f a) : ContDiffAt ℝ n (fun x => arsinh (f x)) a :=
-  contDiff_arsinh.ContDiffAt.comp a h
+  contDiff_arsinh.contDiffAt.comp a h
 #align cont_diff_at.arsinh ContDiffAt.arsinh
 
 theorem ContDiffWithinAt.arsinh (h : ContDiffWithinAt ℝ n f s a) :
     ContDiffWithinAt ℝ n (fun x => arsinh (f x)) s a :=
-  contDiff_arsinh.ContDiffAt.comp_contDiffWithinAt a h
+  contDiff_arsinh.contDiffAt.comp_contDiffWithinAt a h
 #align cont_diff_within_at.arsinh ContDiffWithinAt.arsinh
 
 theorem ContDiff.arsinh (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arsinh (f x) :=

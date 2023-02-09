@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.function.simple_func_dense
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
     nearestPtInd e (N + 1) x =
       if ∀ k ≤ N, edist (e (N + 1)) x < edist (e k) x then N + 1 else nearestPtInd e N x :=
   by
-  simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]
+  simp only [nearestPtInd, coe_piecewise, Set.piecewise]
   congr
   simp
 #align measure_theory.simple_func.nearest_pt_ind_succ MeasureTheory.SimpleFunc.nearestPtInd_succ
@@ -98,7 +98,7 @@ theorem nearestPtInd_succ (e : ℕ → α) (N : ℕ) (x : α) :
 theorem nearestPtInd_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x ≤ N :=
   by
   induction' N with N ihN; · simp
-  simp only [nearest_pt_ind_succ]
+  simp only [nearestPtInd_succ]
   split_ifs
   exacts[le_rfl, ihN.trans N.le_succ]
 #align measure_theory.simple_func.nearest_pt_ind_le MeasureTheory.SimpleFunc.nearestPtInd_le
@@ -108,7 +108,7 @@ theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) 
   by
   induction' N with N ihN generalizing k
   · simp [nonpos_iff_eq_zero.1 hk, le_refl]
-  · simp only [nearest_pt, nearest_pt_ind_succ, map_apply]
+  · simp only [nearestPt, nearestPtInd_succ, map_apply]
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
       exacts[le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
@@ -124,7 +124,7 @@ theorem tendsto_nearestPt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e
   refine' (at_top_basis.tendsto_iff nhds_basis_eball).2 fun ε hε => _
   rcases Emetric.mem_closure_iff.1 hx ε hε with ⟨_, ⟨N, rfl⟩, hN⟩
   rw [edist_comm] at hN
-  exact ⟨N, trivial, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
+  exact ⟨N, trivial, fun n hn => (edist_nearestPt_le e x hn).trans_lt hN⟩
 #align measure_theory.simple_func.tendsto_nearest_pt MeasureTheory.SimpleFunc.tendsto_nearestPt
 
 variable [MeasurableSpace β] {f : β → α}
@@ -134,7 +134,7 @@ variable [MeasurableSpace β] {f : β → α}
 noncomputable def approxOn (f : β → α) (hf : Measurable f) (s : Set α) (y₀ : α) (h₀ : y₀ ∈ s)
     [SeparableSpace s] (n : ℕ) : β →ₛ α :=
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  comp (nearest_pt (fun k => Nat.casesOn k y₀ (coe ∘ dense_seq s) : ℕ → α) n) f hf
+  comp (nearestPt (fun k => Nat.casesOn k y₀ (coe ∘ denseSeq s) : ℕ → α) n) f hf
 #align measure_theory.simple_func.approx_on MeasureTheory.SimpleFunc.approxOn
 
 @[simp]
@@ -147,7 +147,7 @@ theorem approxOn_mem {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α
     [SeparableSpace s] (n : ℕ) (x : β) : approxOn f hf s y₀ h₀ n x ∈ s :=
   by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ dense_seq s) : α) ∈ s by apply this
+  suffices ∀ n, (Nat.casesOn n y₀ (coe ∘ denseSeq s) : α) ∈ s by apply this
   rintro (_ | n)
   exacts[h₀, Subtype.mem _]
 #align measure_theory.simple_func.approx_on_mem MeasureTheory.SimpleFunc.approxOn_mem
@@ -164,9 +164,9 @@ theorem tendsto_approxOn {f : β → α} (hf : Measurable f) {s : Set α} {y₀ 
     Tendsto (fun n => approxOn f hf s y₀ h₀ n x) atTop (𝓝 <| f x) :=
   by
   haveI : Nonempty s := ⟨⟨y₀, h₀⟩⟩
-  rw [← @Subtype.range_coe _ s, ← image_univ, ← (dense_range_dense_seq s).closure_eq] at hx
-  simp only [approx_on, coe_comp]
-  refine' tendsto_nearest_pt (closure_minimal _ isClosed_closure hx)
+  rw [← @subtype.range_coe _ s, ← image_univ, ← (denseRange_denseSeq s).closure_eq] at hx
+  simp only [approxOn, coe_comp]
+  refine' tendsto_nearestPt (closure_minimal _ isClosed_closure hx)
   simp only [Nat.range_casesOn, closure_union, range_comp coe]
   exact
     subset.trans (image_closure_subset_closure_image continuous_subtype_val)
@@ -177,8 +177,8 @@ theorem edist_approxOn_mono {f : β → α} (hf : Measurable f) {s : Set α} {y�
     [SeparableSpace s] (x : β) {m n : ℕ} (h : m ≤ n) :
     edist (approxOn f hf s y₀ h₀ n x) (f x) ≤ edist (approxOn f hf s y₀ h₀ m x) (f x) :=
   by
-  dsimp only [approx_on, coe_comp, (· ∘ ·)]
-  exact edist_nearest_pt_le _ _ ((nearest_pt_ind_le _ _ _).trans h)
+  dsimp only [approxOn, coe_comp, (· ∘ ·)]
+  exact edist_nearestPt_le _ _ ((nearestPtInd_le _ _ _).trans h)
 #align measure_theory.simple_func.edist_approx_on_mono MeasureTheory.SimpleFunc.edist_approxOn_mono
 
 theorem edist_approxOn_le {f : β → α} (hf : Measurable f) {s : Set α} {y₀ : α} (h₀ : y₀ ∈ s)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.add_torsor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -544,7 +544,7 @@ instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, 
   zero_vadd p := funext fun i => zero_vadd (fg i) (p i)
   add_vadd g₁ g₂ p := funext fun i => add_vadd (g₁ i) (g₂ i) (p i)
   vsub p₁ p₂ i := p₁ i -ᵥ p₂ i
-  Nonempty := ⟨fun i => Classical.choice (T i).Nonempty⟩
+  Nonempty := ⟨fun i => Classical.choice (T i).nonempty⟩
   vsub_vadd' p₁ p₂ := funext fun i => vsub_vadd (p₁ i) (p₂ i)
   vadd_vsub' g p := funext fun i => vadd_vsub (g i) (p i)
 
@@ -695,7 +695,7 @@ theorem pointReflection_apply (x y : P) : pointReflection x y = x -ᵥ y +ᵥ x 
 #print Equiv.pointReflection_symm /-
 @[simp]
 theorem pointReflection_symm (x : P) : (pointReflection x).symm = pointReflection x :=
-  ext <| by simp [point_reflection]
+  ext <| by simp [pointReflection]
 #align equiv.point_reflection_symm Equiv.pointReflection_symm
 -/
 
@@ -708,7 +708,7 @@ theorem pointReflection_self (x : P) : pointReflection x x = x :=
 
 #print Equiv.pointReflection_involutive /-
 theorem pointReflection_involutive (x : P) : Involutive (pointReflection x : P → P) := fun y =>
-  (Equiv.apply_eq_iff_eq_symm_apply _).2 <| by rw [point_reflection_symm]
+  (Equiv.apply_eq_iff_eq_symm_apply _).2 <| by rw [pointReflection_symm]
 #align equiv.point_reflection_involutive Equiv.pointReflection_involutive
 -/
 
@@ -722,7 +722,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.point_reflection
 `x + x = y + y ↔ x = y`. There is no typeclass to use here, so we add it as an explicit argument. -/
 theorem pointReflection_fixed_iff_of_injective_bit0 {x y : P} (h : Injective (bit0 : G → G)) :
     pointReflection x y = y ↔ y = x := by
-  rw [point_reflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev,
+  rw [pointReflection_apply, eq_comm, eq_vadd_iff_vsub_eq, ← neg_vsub_eq_vsub_rev,
     neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq, eq_comm]
 #align equiv.point_reflection_fixed_iff_of_injective_bit0 Equiv.pointReflection_fixed_iff_of_injective_bit0
 
@@ -738,7 +738,7 @@ theorem injective_pointReflection_left_of_injective_bit0 {G P : Type _} [AddComm
     [AddTorsor G P] (h : Injective (bit0 : G → G)) (y : P) :
     Injective fun x : P => pointReflection x y :=
   fun x₁ x₂ (hy : pointReflection x₁ y = pointReflection x₂ y) => by
-  rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
+  rwa [pointReflection_apply, pointReflection_apply, vadd_eq_vadd_iff_sub_eq_vsub,
     vsub_sub_vsub_cancel_right, ← neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ← bit0, ← bit0_zero,
     h.eq_iff, vsub_eq_zero_iff_eq] at hy
 #align equiv.injective_point_reflection_left_of_injective_bit0 Equiv.injective_pointReflection_left_of_injective_bit0

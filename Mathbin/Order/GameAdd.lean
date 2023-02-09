@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Junyan Xu
 
 ! This file was ported from Lean 3 source module order.game_add
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem gameAdd_iff {rα rβ} {x y : α × β} :
     exacts[Or.inl ⟨h, rfl⟩, Or.inr ⟨h, rfl⟩]
   · revert x y
     rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨h, rfl : b₁ = b₂⟩ | ⟨h, rfl : a₁ = a₂⟩)
-    exacts[game_add.fst h, game_add.snd h]
+    exacts[GameAdd.fst h, GameAdd.snd h]
 #align prod.game_add_iff Prod.gameAdd_iff
 
 theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
@@ -70,24 +70,24 @@ theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
 #align prod.game_add_mk_iff Prod.gameAdd_mk_iff
 
 @[simp]
-theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.symm b.symm ↔ GameAdd rα rβ a b :=
-  fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
+theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.swap b.swap ↔ GameAdd rα rβ a b :=
+  fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, gameAdd_mk_iff, gameAdd_mk_iff, or_comm']
 #align prod.game_add_swap_swap Prod.gameAdd_swap_swap
 
 #print Prod.gameAdd_le_lex /-
 /-- `prod.game_add` is a `subrelation` of `prod.lex`. -/
 theorem gameAdd_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
-  h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
+  h.ndrec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
 #align prod.game_add_le_lex Prod.gameAdd_le_lex
 -/
 
 #print Prod.rprod_le_transGen_gameAdd /-
 /-- `prod.rprod` is a subrelation of the transitive closure of `prod.game_add`. -/
 theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
-  h.rec
+  h.ndrec
     (by
       intro _ _ _ _ hα hβ
-      exact Relation.TransGen.tail (Relation.TransGen.single <| game_add.fst hα) (game_add.snd hβ))
+      exact Relation.TransGen.tail (Relation.TransGen.single <| GameAdd.fst hα) (GameAdd.snd hβ))
 #align prod.rprod_le_trans_gen_game_add Prod.rprod_le_transGen_gameAdd
 -/
 
@@ -143,7 +143,7 @@ theorem GameAdd.fix_eq {C : α → β → Sort _} (hα : WellFounded rα) (hβ :
     (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
     GameAdd.fix hα hβ IH a b = IH a b fun a' b' h => GameAdd.fix hα hβ IH a' b' :=
   by
-  rw [game_add.fix, WellFounded.fix_eq]
+  rw [GameAdd.fix, WellFounded.fix_eq]
   rfl
 #align prod.game_add.fix_eq Prod.GameAdd.fix_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.slope
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c 
 theorem lineMap_slope_slope_sub_div_sub (f : k → PE) (a b c : k) (h : a ≠ c) :
     lineMap (slope f a b) (slope f b c) ((c - b) / (c - a)) = slope f a c := by
   field_simp [sub_ne_zero.2 h.symm, ← sub_div_sub_smul_slope_add_sub_div_sub_smul_slope f a b c,
-    line_map_apply_module]
+    lineMap_apply_module]
 #align line_map_slope_slope_sub_div_sub lineMap_slope_slope_sub_div_sub
 
 /-- `slope f a b` is an affine combination of `slope f a (line_map a b r)` and
@@ -141,8 +141,8 @@ theorem lineMap_slope_lineMap_slope_lineMap (f : k → PE) (a b r : k) :
   by
   obtain rfl | hab : a = b ∨ a ≠ b := Classical.em _; · simp
   rw [slope_comm _ a, slope_comm _ a, slope_comm _ _ b]
-  convert lineMap_slope_slope_sub_div_sub f b (line_map a b r) a hab.symm using 2
-  rw [line_map_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub,
+  convert lineMap_slope_slope_sub_div_sub f b (lineMap a b r) a hab.symm using 2
+  rw [lineMap_apply_ring, eq_div_iff (sub_ne_zero.2 hab), sub_mul, one_mul, mul_sub, ← sub_sub,
     sub_sub_cancel]
 #align line_map_slope_line_map_slope_line_map lineMap_slope_lineMap_slope_lineMap
 

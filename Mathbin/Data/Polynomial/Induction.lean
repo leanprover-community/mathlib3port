@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.induction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,12 +43,12 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
     (h_add : ∀ p q, M p → M q → M (p + q))
     (h_monomial : ∀ (n : ℕ) (a : R), M (c a * x ^ n) → M (c a * x ^ (n + 1))) : M p :=
   by
-  have A : ∀ {n : ℕ} {a}, M (C a * X ^ n) := by
+  have A : ∀ {n : ℕ} {a}, M (c a * x ^ n) := by
     intro n a
     induction' n with n ih
     · simp only [pow_zero, mul_one, h_C]
     · exact h_monomial _ _ ih
-  have B : ∀ s : Finset ℕ, M (s.Sum fun n : ℕ => C (p.coeff n) * X ^ n) :=
+  have B : ∀ s : Finset ℕ, M (s.sum fun n : ℕ => c (p.coeff n) * x ^ n) :=
     by
     apply Finset.induction
     · convert h_C 0
@@ -56,7 +56,7 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (c
     · intro n s ns ih
       rw [sum_insert ns]
       exact h_add _ _ A ih
-  rw [← sum_C_mul_X_pow_eq p, Polynomial.sum]
+  rw [← sum_c_mul_x_pow_eq p, Polynomial.sum]
   exact B _
 #align polynomial.induction_on Polynomial.induction_on
 
@@ -69,7 +69,7 @@ protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q,
     (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h =>
     by
-    rw [C_mul_X_pow_eq_monomial]
+    rw [c_mul_x_pow_eq_monomial]
     exact h_monomial _ _
 #align polynomial.induction_on' Polynomial.induction_on'
 
@@ -82,23 +82,23 @@ the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_c_coeff_mem (cf : ∀ i : ℕ, c (f.coeff i) ∈ I) :
     Ideal.span { g | ∃ i, g = c (f.coeff i) } ≤ I :=
   by
-  simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
+  simp (config := { singlePass := true }) only [@eq_comm _ _ (c _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 #align polynomial.span_le_of_C_coeff_mem Polynomial.span_le_of_c_coeff_mem
 
 theorem mem_span_c_coeff : f ∈ Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) } :=
   by
-  let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = C (coeff f i) }
-  nth_rw 1 [(sum_C_mul_X_pow_eq f).symm]
+  let p := Ideal.span { g : R[X] | ∃ i : ℕ, g = c (coeff f i) }
+  nth_rw 1 [(sum_c_mul_x_pow_eq f).symm]
   refine' Submodule.sum_mem _ fun n hn => _
   dsimp
-  have : C (coeff f n) ∈ p := by
+  have : c (coeff f n) ∈ p := by
     apply subset_span
     simp
-  have : monomial n (1 : R) • C (coeff f n) ∈ p := p.smul_mem _ this
+  have : monomial n (1 : R) • c (coeff f n) ∈ p := p.smul_mem _ this
   convert this using 1
-  simp only [monomial_mul_C, one_mul, smul_eq_mul]
-  rw [← C_mul_X_pow_eq_monomial]
+  simp only [monomial_mul_c, one_mul, smul_eq_mul]
+  rw [← c_mul_x_pow_eq_monomial]
 #align polynomial.mem_span_C_coeff Polynomial.mem_span_c_coeff
 
 theorem exists_c_coeff_not_mem : f ∉ I → ∃ i : ℕ, c (coeff f i) ∉ I :=

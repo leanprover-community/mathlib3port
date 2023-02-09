@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.grading
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem GradedAlgebra.ι_apply (m : M) :
 
 theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebra.ι R M m = 0 :=
   by
-  rw [graded_algebra.ι_apply, DirectSum.of_mul_of]
+  rw [GradedAlgebra.ι_apply, DirectSum.of_mul_of]
   refine' dfinsupp.single_eq_zero.mpr (Subtype.ext <| ι_sq_zero _)
 #align exterior_algebra.graded_algebra.ι_sq_zero ExteriorAlgebra.GradedAlgebra.ι_sq_zero
 
@@ -53,7 +53,7 @@ theorem GradedAlgebra.ι_sq_zero (m : M) : GradedAlgebra.ι R M m * GradedAlgebr
 primarily an auxiliary construction used to provide `exterior_algebra.graded_algebra`. -/
 def GradedAlgebra.liftι :
     ExteriorAlgebra R M →ₐ[R] ⨁ i : ℕ, ↥((ι R).range ^ i : Submodule R (ExteriorAlgebra R M)) :=
-  lift R ⟨by apply graded_algebra.ι R M, GradedAlgebra.ι_sq_zero R M⟩
+  lift R ⟨by apply GradedAlgebra.ι R M, GradedAlgebra.ι_sq_zero R M⟩
 #align exterior_algebra.graded_algebra.lift_ι ExteriorAlgebra.GradedAlgebra.liftι
 
 variable (R M)
@@ -73,7 +73,7 @@ theorem GradedAlgebra.liftι_eq (i : ℕ)
   · rw [AlgHom.map_add, ihx, ihy, ← map_add]
     rfl
   · obtain ⟨_, rfl⟩ := hm
-    rw [AlgHom.map_mul, ih, graded_algebra.lift_ι, lift_ι_apply, graded_algebra.ι_apply R M,
+    rw [AlgHom.map_mul, ih, GradedAlgebra.liftι, lift_ι_apply, GradedAlgebra.ι_apply R M,
       DirectSum.of_mul_of]
     exact DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
 #align exterior_algebra.graded_algebra.lift_ι_eq ExteriorAlgebra.GradedAlgebra.liftι_eq
@@ -83,14 +83,14 @@ instance gradedAlgebra :
     GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] ExteriorAlgebra R M).range : ℕ → Submodule R _) :=
   GradedAlgebra.ofAlgHom _
     (-- while not necessary, the `by apply` makes this elaborate faster
-    by apply graded_algebra.lift_ι R M)
+    by apply GradedAlgebra.liftι R M)
     (-- the proof from here onward is identical to the `tensor_algebra` case
     by
       ext m
       dsimp only [LinearMap.comp_apply, AlgHom.toLinearMap_apply, AlgHom.comp_apply,
-        AlgHom.id_apply, graded_algebra.lift_ι]
-      rw [lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.coeAlgHom_of, Subtype.coe_mk])
-    (by apply graded_algebra.lift_ι_eq R M)
+        AlgHom.id_apply, GradedAlgebra.liftι]
+      rw [lift_ι_apply, GradedAlgebra.ι_apply R M, DirectSum.coeAlgHom_of, Subtype.coe_mk])
+    (by apply GradedAlgebra.liftι_eq R M)
 #align exterior_algebra.graded_algebra ExteriorAlgebra.gradedAlgebra
 
 end ExteriorAlgebra

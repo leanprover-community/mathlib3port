@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.comm_ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,13 +158,13 @@ theorem eval₂_hom_x {R : Type u} (c : ℤ →+* S) (f : MvPolynomial R ℤ →
     eval₂ c (f ∘ x) x = f x :=
   MvPolynomial.induction_on x
     (fun n => by
-      rw [hom_C f, eval₂_C]
+      rw [hom_c f, eval₂_c]
       exact eq_intCast c n)
     (fun p q hp hq => by
       rw [eval₂_add, hp, hq]
       exact (f.map_add _ _).symm)
     fun p n hp => by
-    rw [eval₂_mul, eval₂_X, hp]
+    rw [eval₂_mul, eval₂_x, hp]
     exact (f.map_mul _ _).symm
 #align mv_polynomial.eval₂_hom_X MvPolynomial.eval₂_hom_x
 
@@ -175,7 +175,7 @@ def homEquiv : (MvPolynomial σ ℤ →+* S) ≃ (σ → S)
   toFun f := ⇑f ∘ x
   invFun f := eval₂Hom (Int.castRingHom S) f
   left_inv f := RingHom.ext <| eval₂_hom_x _ _
-  right_inv f := funext fun x => by simp only [coe_eval₂_hom, Function.comp_apply, eval₂_X]
+  right_inv f := funext fun x => by simp only [coe_eval₂Hom, Function.comp_apply, eval₂_x]
 #align mv_polynomial.hom_equiv MvPolynomial.homEquiv
 
 end Eval₂
@@ -186,13 +186,13 @@ theorem degreeOf_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hf : ∀ m : σ →₀ ℕ, m ∈ f.support → k ≤ m x → coeff m f = coeff m g)
     (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k :=
   by
-  rw [degree_of_lt_iff h]
+  rw [degreeOf_lt_iff h]
   intro m hm
   by_contra hc
   simp only [not_lt] at hc
   have h := support_sub σ f g hm
   simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm
-  cases' Finset.mem_union.1 h with cf cg
+  cases' finset.mem_union.1 h with cf cg
   · exact hm (hf m cf hc)
   · exact hm (hg m cg hc)
 #align mv_polynomial.degree_of_sub_lt MvPolynomial.degreeOf_sub_lt
@@ -203,7 +203,7 @@ section TotalDegree
 
 @[simp]
 theorem totalDegree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.totalDegree := by
-  simp only [total_degree, support_neg]
+  simp only [totalDegree, support_neg]
 #align mv_polynomial.total_degree_neg MvPolynomial.totalDegree_neg
 
 theorem totalDegree_sub (a b : MvPolynomial σ R) :
@@ -211,7 +211,7 @@ theorem totalDegree_sub (a b : MvPolynomial σ R) :
   calc
     (a - b).totalDegree = (a + -b).totalDegree := by rw [sub_eq_add_neg]
     _ ≤ max a.totalDegree (-b).totalDegree := totalDegree_add a (-b)
-    _ = max a.totalDegree b.totalDegree := by rw [total_degree_neg]
+    _ = max a.totalDegree b.totalDegree := by rw [totalDegree_neg]
     
 #align mv_polynomial.total_degree_sub MvPolynomial.totalDegree_sub
 

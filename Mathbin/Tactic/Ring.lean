@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ unsafe def ring_m.run' (red : Transparency) (atoms : ref (Buffer expr)) (e : exp
   let ic ← mk_instance_cache α
   let (ic, c) ← ic.get `` CommSemiring
   let nc ← mk_instance_cache q(ℕ)
-  using_new_ref ic fun r => using_new_ref nc fun nr => ReaderT.run m ⟨α, u, c, red, r, nr, atoms⟩
+  using_new_ref ic fun r => using_new_ref nc fun nr => reader_t.run m ⟨α, u, c, red, r, nr, atoms⟩
 #align tactic.ring.ring_m.run' tactic.ring.ring_m.run'
 
 /-- Run a `ring_m` tactic in the tactic monad. -/
@@ -186,7 +186,7 @@ open HornerExpr
 unsafe def horner_expr.to_string : horner_expr → String
   | const e c => toString (e, c)
   | xadd e a x (_, n) b =>
-    "(" ++ a.toString ++ ") * (" ++ toString x.1 ++ ")^" ++ toString n ++ " + " ++ b.toString
+    "(" ++ a.to_string ++ ") * (" ++ toString x.1 ++ ")^" ++ toString n ++ " + " ++ b.to_string
 #align tactic.ring.horner_expr.to_string tactic.ring.horner_expr.to_string
 
 /-- Pretty printer for `horner_expr`. -/
@@ -196,7 +196,7 @@ unsafe def horner_expr.pp : horner_expr → tactic format
     let pa ← a.pp
     let pb ← b.pp
     let px ← pp x.1
-    return <| "(" ++ pa ++ ") * (" ++ px ++ ")^" ++ toString n ++ " + " ++ pb
+    return <| "(" ++ pa ++ ") * (" ++ px ++ ")^" ++ to_string n ++ " + " ++ pb
 #align tactic.ring.horner_expr.pp tactic.ring.horner_expr.pp
 
 unsafe instance : has_to_tactic_format horner_expr :=
@@ -491,7 +491,7 @@ unsafe def eval_norm_atom (norm_atom : expr → tactic (expr × expr)) (e : expr
     | none => eval_atom e
     | some (e', p) => do
       let (e₂, p₂) ← eval_atom e'
-      Prod.mk e₂ <$> lift (mk_eq_trans p p₂)
+      prod.mk e₂ <$> lift (mk_eq_trans p p₂)
 #align tactic.ring.eval_norm_atom tactic.ring.eval_norm_atom
 
 theorem subst_into_pow {α} [Monoid α] (l r tl tr t) (prl : (l : α) = tl) (prr : (r : ℕ) = tr)
@@ -641,7 +641,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
         e
         =>
         match
-          e . toNat
+          e . to_nat
           with
           | some n => ( const e n ) . refl_conv | none => eval_norm_atom norm_atom e
 #align tactic.ring.eval tactic.ring.eval

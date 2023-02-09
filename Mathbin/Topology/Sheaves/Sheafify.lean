@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheafify
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,24 +90,24 @@ def toSheafify : F ⟶ F.sheafify.1
 /-- The natural morphism from the stalk of the sheafification to the original stalk.
 In `sheafify_stalk_iso` we show this is an isomorphism.
 -/
-def stalkToFiber (x : X) : F.sheafify.Presheaf.stalk x ⟶ F.stalk x :=
+def stalkToFiber (x : X) : F.sheafify.presheaf.stalk x ⟶ F.stalk x :=
   stalkToFiber (Sheafify.isLocallyGerm F) x
 #align Top.presheaf.stalk_to_fiber TopCat.Presheaf.stalkToFiber
 
 theorem stalkToFiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x) :=
   by
-  apply stalk_to_fiber_surjective
+  apply stalkToFiber_surjective
   intro t
   obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
   · use ⟨U, m⟩
     fconstructor
     · exact fun y => F.germ y s
-    · exact ⟨prelocal_predicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
+    · exact ⟨PrelocalPredicate.sheafify_of ⟨s, fun _ => rfl⟩, rfl⟩
 #align Top.presheaf.stalk_to_fiber_surjective TopCat.Presheaf.stalkToFiber_surjective
 
 theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :=
   by
-  apply stalk_to_fiber_injective
+  apply stalkToFiber_injective
   intros
   rcases hU ⟨x, U.2⟩ with ⟨U', mU, iU, gU, wU⟩
   rcases hV ⟨x, V.2⟩ with ⟨V', mV, iV, gV, wV⟩
@@ -120,9 +120,9 @@ theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :
   use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩
   refine' ⟨_, _, _⟩
   · change W ⊓ (U' ⊓ V') ⟶ U.obj
-    exact opens.inf_le_right _ _ ≫ opens.inf_le_left _ _ ≫ iU
+    exact Opens.infLeRight _ _ ≫ Opens.infLeLeft _ _ ≫ iU
   · change W ⊓ (U' ⊓ V') ⟶ V.obj
-    exact opens.inf_le_right _ _ ≫ opens.inf_le_right _ _ ≫ iV
+    exact Opens.infLeRight _ _ ≫ Opens.infLeRight _ _ ≫ iV
   · intro w
     dsimp
     specialize wU ⟨w.1, w.2.2.1⟩
@@ -135,7 +135,7 @@ theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :
 
 /-- The isomorphism betweeen a stalk of the sheafification and the original stalk.
 -/
-def sheafifyStalkIso (x : X) : F.sheafify.Presheaf.stalk x ≅ F.stalk x :=
+def sheafifyStalkIso (x : X) : F.sheafify.presheaf.stalk x ≅ F.stalk x :=
   (Equiv.ofBijective _ ⟨stalkToFiber_injective _ _, stalkToFiber_surjective _ _⟩).toIso
 #align Top.presheaf.sheafify_stalk_iso TopCat.Presheaf.sheafifyStalkIso
 

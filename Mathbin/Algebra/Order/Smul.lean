@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.order.smul
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ but is expected to have type
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedSemiring.{u1} R] [_inst_2 : OrderedAddCommMonoid.{u2} M] [_inst_3 : SMulWithZero.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2)))] [_inst_4 : OrderedSMul.{u1, u2} R M _inst_1 _inst_2 _inst_3] {a : M} {b : M} {c : R}, (Eq.{succ u2} M (HSMul.hSMul.{u1, u2, u2} R M M (instHSMul.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) _inst_3))) c a) (HSMul.hSMul.{u1, u2, u2} R M M (instHSMul.{u1, u2} R M (SMulZeroClass.toSMul.{u1, u2} R M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) (SMulWithZero.toSMulZeroClass.{u1, u2} R M (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))) (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_2))) _inst_3))) c b)) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (OrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (OrderedSemiring.toSemiring.{u1} R _inst_1))))) c) -> (LE.le.{u2} M (Preorder.toLE.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_2))) a b) -> (Eq.{succ u2} M a b)
 Case conversion may be inaccurate. Consider using '#align eq_of_smul_eq_smul_of_pos_of_le eq_of_smul_eq_smul_of_pos_of_leₓ'. -/
 theorem eq_of_smul_eq_smul_of_pos_of_le (h₁ : c • a = c • b) (hc : 0 < c) (hle : a ≤ b) : a = b :=
-  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).Ne h₁
+  hle.lt_or_eq.resolve_left fun hlt => (smul_lt_smul_of_pos hlt hc).ne h₁
 #align eq_of_smul_eq_smul_of_pos_of_le eq_of_smul_eq_smul_of_pos_of_le
 
 /- warning: lt_of_smul_lt_smul_of_nonneg -> lt_of_smul_lt_smul_of_nonneg is a dubious translation:

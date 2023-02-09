@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.bitwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ namespace Num
 def lor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => pos (p.lor q)
+  | pos p, pos q => pos (p.lor q)
 #align num.lor Num.lor
 -/
 
@@ -149,7 +149,7 @@ def lor : Num → Num → Num
 def land : Num → Num → Num
   | 0, q => 0
   | p, 0 => 0
-  | Pos p, Pos q => p.land q
+  | pos p, pos q => p.land q
 #align num.land Num.land
 -/
 
@@ -165,7 +165,7 @@ def land : Num → Num → Num
 def ldiff : Num → Num → Num
   | 0, q => 0
   | p, 0 => p
-  | Pos p, Pos q => p.ldiff' q
+  | pos p, pos q => p.ldiff q
 #align num.ldiff Num.ldiff
 -/
 
@@ -174,7 +174,7 @@ def ldiff : Num → Num → Num
 def lxor : Num → Num → Num
   | 0, q => q
   | p, 0 => p
-  | Pos p, Pos q => p.lxor' q
+  | pos p, pos q => p.lxor q
 #align num.lxor Num.lxor
 -/
 
@@ -182,7 +182,7 @@ def lxor : Num → Num → Num
 /-- Left-shift the binary representation of a `num`. -/
 def shiftl : Num → Nat → Num
   | 0, n => 0
-  | Pos p, n => pos (p.shiftl n)
+  | pos p, n => pos (p.shiftl n)
 #align num.shiftl Num.shiftl
 -/
 
@@ -190,7 +190,7 @@ def shiftl : Num → Nat → Num
 /-- Right-shift the binary representation of a `pos_num`. -/
 def shiftr : Num → Nat → Num
   | 0, n => 0
-  | Pos p, n => p.shiftr n
+  | pos p, n => p.shiftr n
 #align num.shiftr Num.shiftr
 -/
 
@@ -199,7 +199,7 @@ def shiftr : Num → Nat → Num
       of `a` is active. If the size of `a` is less than `n`, this evaluates to `ff`. -/
 def testBit : Num → Nat → Bool
   | 0, n => false
-  | Pos p, n => p.testBit n
+  | pos p, n => p.testBit n
 #align num.test_bit Num.testBit
 -/
 
@@ -207,7 +207,7 @@ def testBit : Num → Nat → Bool
 /-- `n.one_bits` is the list of indices of active bits in the binary representation of `n`. -/
 def oneBits : Num → List Nat
   | 0 => []
-  | Pos p => p.oneBits 0
+  | pos p => p.oneBits 0
 #align num.one_bits Num.oneBits
 -/
 
@@ -217,8 +217,8 @@ end Num
 /-- This is a nonzero (and "non minus one") version of `snum`.
     See the documentation of `snum` for more details. -/
 inductive NzsNum : Type
-  | msb : Bool → NzsNum
-  | bit : Bool → NzsNum → NzsNum
+  | msb : Bool → nzsnum
+  | bit : Bool → nzsnum → nzsnum
   deriving has_reflect, DecidableEq
 #align nzsnum NzsNum
 -/
@@ -239,8 +239,8 @@ inductive NzsNum : Type
      0  = ..0000000(base 2) = zero ff
      -1 = ..1111111(base 2) = zero tt -/
 inductive SNum : Type
-  | zero : Bool → SNum
-  | nz : NzsNum → SNum
+  | zero : Bool → snum
+  | nz : NzsNum → snum
   deriving has_reflect, DecidableEq
 #align snum SNum
 -/
@@ -279,7 +279,7 @@ notation a "::" b => bit a b
 /-- Sign of a `nzsnum`. -/
 def sign : NzsNum → Bool
   | msb b => not b
-  | b::p => SignType.sign p
+  | b::p => sign p
 #align nzsnum.sign NzsNum.sign
 -/
 
@@ -290,7 +290,7 @@ def sign : NzsNum → Bool
 @[match_pattern]
 def not : NzsNum → NzsNum
   | msb b => msb (not b)
-  | b::p => not b::Not p
+  | b::p => not b::not p
 #align nzsnum.not NzsNum.not
 -/
 
@@ -425,7 +425,7 @@ open NzsNum
 /-- The `head` of a `snum` is the boolean value of its LSB. -/
 def head : SNum → Bool
   | zero z => z
-  | nz p => p.headI
+  | nz p => p.head
 #align snum.head SNum.head
 -/
 

@@ -6,7 +6,7 @@ Authors: Gabriel Ebner
 Tactic to split if-then-else-expressions.
 
 ! This file was ported from Lean 3 source module tactic.split_ifs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ namespace Tactic
 unsafe def find_if_cond : expr → Option expr
   | e =>
     e.fold none fun e _ acc =>
-      Acc <|> do
+      acc <|> do
         let c ←
           match e with
             | q(@ite _ $(c) $(_) _ _) => some c
@@ -35,7 +35,7 @@ unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do
   let lctx ← lctx.mapM infer_type
   let tgt ← target
   let es := if at_.include_goal then tgt :: lctx else lctx
-  return <| find_if_cond <| es app default
+  return <| bind <| es app default
 #align tactic.find_if_cond_at tactic.find_if_cond_at
 
 run_cmd

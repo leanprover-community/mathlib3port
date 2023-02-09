@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.character
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem char_dual (V : FdRep k G) (g : G) : (of (dual V.ρ)).character g = V.cha
 @[simp]
 theorem char_linHom (V W : FdRep k G) (g : G) :
     (of (linHom V.ρ W.ρ)).character g = V.character g⁻¹ * W.character g := by
-  rw [← char_iso (dual_tensor_iso_lin_hom _ _), char_tensor, Pi.mul_apply, char_dual]
+  rw [← char_iso (dualTensorIsoLinHom _ _), char_tensor, Pi.mul_apply, char_dual]
 #align fdRep.char_lin_hom FdRep.char_linHom
 
 variable [Fintype G] [Invertible (Fintype.card G : k)]
@@ -100,8 +100,8 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
     (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) :=
   by
-  rw [← (is_proj_average_map V.ρ).trace]
-  simp [character, GroupAlgebra.average, _root_.map_sum]
+  rw [← (isProj_averageMap V.ρ).trace]
+  simp [character, GroupAlgebra.average, map_sum]
 #align fdRep.average_char_eq_finrank_invariants FdRep.average_char_eq_finrank_invariants
 
 end Group
@@ -130,12 +130,12 @@ theorem char_orthonormal (V W : FdRep k G) [Simple V] [Simple W] :
   -- The average over the group of the character of a representation equals the dimension of the
   -- space of invariants.
   rw [average_char_eq_finrank_invariants]
-  rw [show (of (lin_hom W.ρ V.ρ)).ρ = lin_hom W.ρ V.ρ from FdRep.of_ρ (lin_hom W.ρ V.ρ)]
+  rw [show (of (linHom W.ρ V.ρ)).ρ = linHom W.ρ V.ρ from FdRep.of_ρ (linHom W.ρ V.ρ)]
   -- The space of invariants of `Hom(W, V)` is the subspace of `G`-equivariant linear maps,
   -- `Hom_G(W, V)`.
-  rw [(lin_hom.invariants_equiv_fdRep_hom W V).finrank_eq]
+  rw [(linHom.invariantsEquivFdRepHom W V).finrank_eq]
   -- By Schur's Lemma, the dimension of `Hom_G(W, V)` is `1` is `V ≅ W` and `0` otherwise.
-  rw_mod_cast [finrank_hom_simple_simple W V, iso.nonempty_iso_symm]
+  rw_mod_cast [finrank_hom_simple_simple W V, Iso.nonempty_iso_symm]
 #align fdRep.char_orthonormal FdRep.char_orthonormal
 
 end Orthogonality

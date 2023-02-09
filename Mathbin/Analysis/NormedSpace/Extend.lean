@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module analysis.normed_space.extend
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ bounded by `‖fr‖` if `fr` is continuous. -/
 noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →ₗ[ℝ] ℝ) :
     F →ₗ[𝕜] 𝕜 :=
   by
-  let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (I : 𝕜) * fr ((I : 𝕜) • x)
+  let fc : F → 𝕜 := fun x => (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x)
   have add : ∀ x y : F, fc (x + y) = fc x + fc y :=
     by
     intro x y
@@ -67,9 +67,9 @@ noncomputable def LinearMap.extendTo𝕜' [Module ℝ F] [IsScalarTower ℝ 𝕜
     intro c x
     simp only [fc, A]
     rw [A c x]
-    rw [smul_smul, mul_comm I (c : 𝕜), ← smul_smul, A, mul_sub]
+    rw [smul_smul, mul_comm i (c : 𝕜), ← smul_smul, A, mul_sub]
     ring
-  have smul_I : ∀ x : F, fc ((I : 𝕜) • x) = (I : 𝕜) * fc x :=
+  have smul_I : ∀ x : F, fc ((i : 𝕜) • x) = (i : 𝕜) * fc x :=
     by
     intro x
     simp only [fc]
@@ -115,7 +115,7 @@ theorem norm_bound [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F] (fr : F →L[�
       field_simp [abs_of_real, of_real_inv, IsROrC.abs_inv, IsROrC.abs_div, IsROrC.abs_abs, h]
     have h1 : (fr (t • x) : 𝕜) = lm (t • x) := by
       apply ext
-      · simp only [lm, of_real_re, LinearMap.extendTo𝕜'_apply, mul_re, I_re, of_real_im, zero_mul,
+      · simp only [lm, of_real_re, LinearMap.extendTo𝕜'_apply, mul_re, i_re, of_real_im, zero_mul,
           AddMonoidHom.map_sub, sub_zero, mul_zero]
         rfl
       · symm

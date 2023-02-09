@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.with_terminal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -133,8 +133,8 @@ def map {D : Type _} [Category D] (F : C ⥤ D) : WithTerminal C ⥤ WithTermina
   map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
-    | of x, star, PUnit.unit => PUnit.unit
-    | star, star, PUnit.unit => PUnit.unit
+    | of x, star, punit.star => PUnit.unit
+    | star, star, punit.star => PUnit.unit
 #align category_theory.with_terminal.map CategoryTheory.WithTerminal.map
 
 instance {X : WithTerminal C} : Unique (X ⟶ star)
@@ -162,8 +162,8 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x
   map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
-    | of x, star, PUnit.unit => M x
-    | star, star, PUnit.unit => 𝟙 Z
+    | of x, star, punit.star => M x
+    | star, star, punit.star => 𝟙 Z
 #align category_theory.with_terminal.lift CategoryTheory.WithTerminal.lift
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
@@ -184,10 +184,10 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.o
 
 theorem lift_map_liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
-    (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).Hom =
-      (inclLift F M hM).Hom.app x ≫ M x :=
+    (lift F M hM).map (starTerminal.from (incl.obj x)) ≫ (liftStar F M hM).hom =
+      (inclLift F M hM).hom.app x ≫ M x :=
   by
-  erw [category.id_comp, category.comp_id]
+  erw [Category.id_comp, Category.comp_id]
   rfl
 #align category_theory.with_terminal.lift_map_lift_star CategoryTheory.WithTerminal.lift_map_liftStar
 
@@ -196,7 +196,7 @@ theorem lift_map_liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : �
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
     (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (G : WithTerminal C ⥤ D) (h : incl ⋙ G ≅ F)
     (hG : G.obj star ≅ Z)
-    (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.Hom = h.Hom.app x ≫ M x) :
+    (hh : ∀ x : C, G.map (starTerminal.from (incl.obj x)) ≫ hG.hom = h.hom.app x ≫ M x) :
     G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>
@@ -321,8 +321,8 @@ def map {D : Type _} [Category D] (F : C ⥤ D) : WithInitial C ⥤ WithInitial 
   map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
-    | star, of x, PUnit.unit => PUnit.unit
-    | star, star, PUnit.unit => PUnit.unit
+    | star, of x, punit.star => PUnit.unit
+    | star, star, punit.star => PUnit.unit
 #align category_theory.with_initial.map CategoryTheory.WithInitial.map
 
 instance {X : WithInitial C} : Unique (star ⟶ X)
@@ -350,13 +350,13 @@ def lift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F
   map X Y f :=
     match X, Y, f with
     | of x, of y, f => F.map f
-    | star, of x, PUnit.unit => M _
-    | star, star, PUnit.unit => 𝟙 _
+    | star, of x, punit.star => M _
+    | star, star, punit.star => 𝟙 _
 #align category_theory.with_initial.lift CategoryTheory.WithInitial.lift
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
-def inclLift {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
+def inclLift {D : Type _} [coeSort D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F
     where
   Hom := { app := fun X => 𝟙 _ }
@@ -372,10 +372,10 @@ def liftStar {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z �
 
 theorem liftStar_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
-    (liftStar F M hM).Hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) =
-      M x ≫ (inclLift F M hM).Hom.app x :=
+    (liftStar F M hM).hom ≫ (lift F M hM).map (starInitial.to (incl.obj x)) =
+      M x ≫ (inclLift F M hM).hom.app x :=
   by
-  erw [category.id_comp, category.comp_id]
+  erw [Category.id_comp, Category.comp_id]
   rfl
 #align category_theory.with_initial.lift_star_lift_map CategoryTheory.WithInitial.liftStar_lift_map
 
@@ -384,7 +384,7 @@ theorem liftStar_lift_map {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : �
 def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
     (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (G : WithInitial C ⥤ D) (h : incl ⋙ G ≅ F)
     (hG : G.obj star ≅ Z)
-    (hh : ∀ x : C, hG.symm.Hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.Hom.app x) :
+    (hh : ∀ x : C, hG.symm.hom ≫ G.map (starInitial.to (incl.obj x)) = M x ≫ h.symm.hom.app x) :
     G ≅ lift F M hM :=
   NatIso.ofComponents
     (fun X =>
@@ -398,7 +398,7 @@ def liftUnique {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z
       · cases f
         change G.map _ ≫ h.hom.app _ = hG.hom ≫ _
         symm
-        erw [← iso.eq_inv_comp, ← category.assoc, hh]
+        erw [← Iso.eq_inv_comp, ← Category.assoc, hh]
         simpa
       · cases f
         change G.map (𝟙 _) ≫ hG.hom = hG.hom ≫ 𝟙 _

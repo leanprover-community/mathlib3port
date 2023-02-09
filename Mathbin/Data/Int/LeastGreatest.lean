@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.least_greatest
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ,
     (Hinh : ∃ z : ℤ, P z) : ∃ lb : ℤ, P lb ∧ ∀ z : ℤ, P z → lb ≤ z := by
   classical exact
       let ⟨b, Hb⟩ := Hbdd
-      let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
+      let ⟨lb, H⟩ := leastOfBdd b Hb Hinh
       ⟨lb, H⟩
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
 
@@ -83,8 +83,8 @@ theorem coe_leastOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb 
     (Hb' : ∀ z : ℤ, P z → b' ≤ z) (Hinh : ∃ z : ℤ, P z) :
     (leastOfBdd b Hb Hinh : ℤ) = leastOfBdd b' Hb' Hinh :=
   by
-  rcases least_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
-  rcases least_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
+  rcases leastOfBdd b Hb Hinh with ⟨n, hn, h2n⟩
+  rcases leastOfBdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n _ hn') (h2n' _ hn)
 #align int.coe_least_of_bdd_eq Int.coe_leastOfBdd_eq
 -/
@@ -117,7 +117,7 @@ theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : �
     (Hinh : ∃ z : ℤ, P z) : ∃ ub : ℤ, P ub ∧ ∀ z : ℤ, P z → z ≤ ub := by
   classical exact
       let ⟨b, Hb⟩ := Hbdd
-      let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
+      let ⟨lb, H⟩ := greatestOfBdd b Hb Hinh
       ⟨lb, H⟩
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
 
@@ -126,8 +126,8 @@ theorem coe_greatestOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (
     (Hb' : ∀ z : ℤ, P z → z ≤ b') (Hinh : ∃ z : ℤ, P z) :
     (greatestOfBdd b Hb Hinh : ℤ) = greatestOfBdd b' Hb' Hinh :=
   by
-  rcases greatest_of_bdd b Hb Hinh with ⟨n, hn, h2n⟩
-  rcases greatest_of_bdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
+  rcases greatestOfBdd b Hb Hinh with ⟨n, hn, h2n⟩
+  rcases greatestOfBdd b' Hb' Hinh with ⟨n', hn', h2n'⟩
   exact le_antisymm (h2n' _ hn) (h2n _ hn')
 #align int.coe_greatest_of_bdd_eq Int.coe_greatestOfBdd_eq
 -/

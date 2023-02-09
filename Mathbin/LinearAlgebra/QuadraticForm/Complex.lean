@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,12 +38,12 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
   have hw' : ∀ i : ι, (w i : ℂ) ^ (-(1 / 2 : ℂ)) ≠ 0 :=
     by
     intro i hi
-    exact (w i).NeZero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
+    exact (w i).ne_zero ((Complex.cpow_eq_zero_iff _ _).1 hi).1
   convert
-    (weighted_sum_squares ℂ w').isometryBasisRepr
-      ((Pi.basisFun ℂ ι).units_smul fun i => (isUnit_iff_ne_zero.2 <| hw' i).Unit)
+    (weightedSumSquares ℂ w').isometryBasisRepr
+      ((Pi.basisFun ℂ ι).unitsSmul fun i => (isUnit_iff_ne_zero.2 <| hw' i).unit)
   ext1 v
-  erw [basis_repr_apply, weighted_sum_squares_apply, weighted_sum_squares_apply]
+  erw [basisRepr_apply, weightedSumSquares_apply, weightedSumSquares_apply]
   refine' sum_congr rfl fun j hj => _
   have hsum :
     (∑ i : ι, v i • ((isUnit_iff_ne_zero.2 <| hw' i).Unit : ℂ) • (Pi.basisFun ℂ ι) i) j =
@@ -68,7 +68,7 @@ noncomputable def isometrySumSquares [DecidableEq ι] (w' : ι → ℂ) :
     by
     rw [this]
     ring
-  rw [← Complex.cpow_add _ _ (w j).NeZero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul],
+  rw [← Complex.cpow_add _ _ (w j).ne_zero, show -(1 / 2 : ℂ) + -(1 / 2) = -1 by simp [← two_mul],
     Complex.cpow_neg_one, inv_mul_cancel (w j).NeZero, one_mul]
 #align quadratic_form.isometry_sum_squares QuadraticForm.isometrySumSquares
 
@@ -80,8 +80,8 @@ noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ
   have hw1 : (fun i => if (w i : ℂ) = 0 then 0 else 1 : ι → ℂ) = 1 :=
     by
     ext i : 1
-    exact dif_neg (w i).NeZero
-  have := isometry_sum_squares (coe ∘ w)
+    exact dif_neg (w i).ne_zero
+  have := isometrySumSquares (coe ∘ w)
   rw [hw1] at this
   exact this
 #align quadratic_form.isometry_sum_squares_units QuadraticForm.isometrySumSquaresUnits

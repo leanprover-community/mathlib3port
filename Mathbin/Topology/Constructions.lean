@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,7 +298,7 @@ theorem Quotient.preimage_mem_nhds [TopologicalSpace α] [s : Setoid α] {V : Se
 /-- The image of a dense set under `quotient.mk` is a dense set. -/
 theorem Dense.quotient [Setoid α] [TopologicalSpace α] {s : Set α} (H : Dense s) :
     Dense (Quotient.mk' '' s) :=
-  (surjective_quotient_mk α).DenseRange.dense_image continuous_coinduced_rng H
+  (surjective_quotient_mk α).denseRange.dense_image continuous_coinduced_rng H
 #align dense.quotient Dense.quotient
 -/
 
@@ -306,7 +306,7 @@ theorem Dense.quotient [Setoid α] [TopologicalSpace α] {s : Set α} (H : Dense
 /-- The composition of `quotient.mk` and a function with dense range has dense range. -/
 theorem DenseRange.quotient [Setoid α] [TopologicalSpace α] {f : β → α} (hf : DenseRange f) :
     DenseRange (Quotient.mk' ∘ f) :=
-  (surjective_quotient_mk α).DenseRange.comp hf continuous_coinduced_rng
+  (surjective_quotient_mk α).denseRange.comp hf continuous_coinduced_rng
 #align dense_range.quotient DenseRange.quotient
 -/
 
@@ -393,8 +393,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] {S : Set.{u1} α} {x : Set.Elem.{u1} α S}, Iff (Filter.NeBot.{u1} (Set.Elem.{u1} α S) (nhdsWithin.{u1} (Set.Elem.{u1} α S) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x S) _inst_1) x (HasCompl.compl.{u1} (Set.{u1} (Set.Elem.{u1} α S)) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} (Set.Elem.{u1} α S)) (Set.instBooleanAlgebraSet.{u1} (Set.Elem.{u1} α S))) (Singleton.singleton.{u1, u1} (Set.Elem.{u1} α S) (Set.{u1} (Set.Elem.{u1} α S)) (Set.instSingletonSet.{u1} (Set.Elem.{u1} α S)) x)))) (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (nhdsWithin.{u1} α _inst_1 (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x S) x) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) (Subtype.val.{succ u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x S) x)))) (Filter.principal.{u1} α S)))
 Case conversion may be inaccurate. Consider using '#align nhds_ne_subtype_ne_bot_iff nhds_ne_subtype_neBot_iffₓ'. -/
 theorem nhds_ne_subtype_neBot_iff {S : Set α} {x : S} :
-    (𝓝[{x}ᶜ] x).ne_bot ↔ (𝓝[{x}ᶜ] (x : α) ⊓ 𝓟 S).ne_bot := by
-  rw [ne_bot_iff, ne_bot_iff, not_iff_not, nhds_ne_subtype_eq_bot_iff]
+    (𝓝[{x}ᶜ] x).NeBot ↔ (𝓝[{x}ᶜ] (x : α) ⊓ 𝓟 S).NeBot := by
+  rw [neBot_iff, neBot_iff, not_iff_not, nhds_ne_subtype_eq_bot_iff]
 #align nhds_ne_subtype_ne_bot_iff nhds_ne_subtype_neBot_iff
 
 /- warning: discrete_topology_subtype_iff -> discreteTopology_subtype_iff is a dubious translation:
@@ -458,7 +458,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} (CofiniteTopology.{u1} α)}, Iff (IsOpen.{u1} (CofiniteTopology.{u1} α) (CofiniteTopology.instTopologicalSpaceCofiniteTopology.{u1} α) s) (Or (Eq.{succ u1} (Set.{u1} (CofiniteTopology.{u1} α)) s (EmptyCollection.emptyCollection.{u1} (Set.{u1} (CofiniteTopology.{u1} α)) (Set.instEmptyCollectionSet.{u1} (CofiniteTopology.{u1} α)))) (Set.Finite.{u1} (CofiniteTopology.{u1} α) (HasCompl.compl.{u1} (Set.{u1} (CofiniteTopology.{u1} α)) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} (CofiniteTopology.{u1} α)) (Set.instBooleanAlgebraSet.{u1} (CofiniteTopology.{u1} α))) s)))
 Case conversion may be inaccurate. Consider using '#align cofinite_topology.is_open_iff' CofiniteTopology.isOpen_iff'ₓ'. -/
 theorem isOpen_iff' {s : Set (CofiniteTopology α)} : IsOpen s ↔ s = ∅ ∨ sᶜ.Finite := by
-  simp only [is_open_iff, nonempty_iff_ne_empty, or_iff_not_imp_left]
+  simp only [isOpen_iff, nonempty_iff_ne_empty, or_iff_not_imp_left]
 #align cofinite_topology.is_open_iff' CofiniteTopology.isOpen_iff'
 
 /- warning: cofinite_topology.is_closed_iff -> CofiniteTopology.isClosed_iff is a dubious translation:
@@ -468,7 +468,7 @@ but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} (CofiniteTopology.{u1} α)}, Iff (IsClosed.{u1} (CofiniteTopology.{u1} α) (CofiniteTopology.instTopologicalSpaceCofiniteTopology.{u1} α) s) (Or (Eq.{succ u1} (Set.{u1} (CofiniteTopology.{u1} α)) s (Set.univ.{u1} (CofiniteTopology.{u1} α))) (Set.Finite.{u1} (CofiniteTopology.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align cofinite_topology.is_closed_iff CofiniteTopology.isClosed_iffₓ'. -/
 theorem isClosed_iff {s : Set (CofiniteTopology α)} : IsClosed s ↔ s = univ ∨ s.Finite := by
-  simp [← isOpen_compl_iff, is_open_iff']
+  simp [← isOpen_compl_iff, isOpen_iff']
 #align cofinite_topology.is_closed_iff CofiniteTopology.isClosed_iff
 
 /- warning: cofinite_topology.nhds_eq -> CofiniteTopology.nhds_eq is a dubious translation:
@@ -485,7 +485,7 @@ theorem nhds_eq (a : CofiniteTopology α) : 𝓝 a = pure a ⊔ cofinite :=
   · rintro ⟨V, hVU, V_op, haV⟩
     exact mem_sup.mpr ⟨hVU haV, mem_of_superset (V_op ⟨_, haV⟩) hVU⟩
   · rintro ⟨hU : a ∈ U, hU' : Uᶜ.Finite⟩
-    exact ⟨U, subset.rfl, fun h => hU', hU⟩
+    exact ⟨U, Subset.rfl, fun h => hU', hU⟩
 #align cofinite_topology.nhds_eq CofiniteTopology.nhds_eq
 
 /- warning: cofinite_topology.mem_nhds_iff -> CofiniteTopology.mem_nhds_iff is a dubious translation:
@@ -547,7 +547,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {p : Prod.{u1, u2} α β}, ContinuousAt.{max u2 u1, u1} (Prod.{u1, u2} α β) α (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) _inst_1 (Prod.fst.{u1, u2} α β) p
 Case conversion may be inaccurate. Consider using '#align continuous_at_fst continuousAt_fstₓ'. -/
 theorem continuousAt_fst {p : α × β} : ContinuousAt Prod.fst p :=
-  continuous_fst.ContinuousAt
+  continuous_fst.continuousAt
 #align continuous_at_fst continuousAt_fst
 
 /- warning: continuous_at.fst -> ContinuousAt.fst is a dubious translation:
@@ -626,7 +626,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] {p : Prod.{u1, u2} α β}, ContinuousAt.{max u2 u1, u2} (Prod.{u1, u2} α β) β (instTopologicalSpaceProd.{u1, u2} α β _inst_1 _inst_2) _inst_2 (Prod.snd.{u1, u2} α β) p
 Case conversion may be inaccurate. Consider using '#align continuous_at_snd continuousAt_sndₓ'. -/
 theorem continuousAt_snd {p : α × β} : ContinuousAt Prod.snd p :=
-  continuous_snd.ContinuousAt
+  continuous_snd.continuousAt
 #align continuous_at_snd continuousAt_snd
 
 /- warning: continuous_at.snd -> ContinuousAt.snd is a dubious translation:
@@ -771,8 +771,8 @@ theorem continuous_inf_dom_left₂ {α β γ} {f : α → β → γ} {ta1 ta2 : 
   by
   have ha := @continuous_inf_dom_left _ _ id ta1 ta2 ta1 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_left _ _ id tb1 tb2 tb1 (@continuous_id _ (id _))
-  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta1 tb1 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
-  exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
+  have h_continuous_id := @continuous.prod_map _ _ _ _ ta1 tb1 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
+  exact @continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
 #align continuous_inf_dom_left₂ continuous_inf_dom_left₂
 
 /- warning: continuous_inf_dom_right₂ -> continuous_inf_dom_right₂ is a dubious translation:
@@ -789,8 +789,8 @@ theorem continuous_inf_dom_right₂ {α β γ} {f : α → β → γ} {ta1 ta2 :
   by
   have ha := @continuous_inf_dom_right _ _ id ta1 ta2 ta2 (@continuous_id _ (id _))
   have hb := @continuous_inf_dom_right _ _ id tb1 tb2 tb2 (@continuous_id _ (id _))
-  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta2 tb2 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
-  exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
+  have h_continuous_id := @continuous.prod_map _ _ _ _ ta2 tb2 (ta1 ⊓ ta2) (tb1 ⊓ tb2) _ _ ha hb
+  exact @continuous.comp _ _ _ (id _) (id _) _ _ _ h h_continuous_id
 #align continuous_inf_dom_right₂ continuous_inf_dom_right₂
 
 /- warning: continuous_Inf_dom₂ -> continuous_infₛ_dom₂ is a dubious translation:
@@ -804,14 +804,14 @@ theorem continuous_infₛ_dom₂ {α β γ} {f : α → β → γ} {tas : Set (T
     {tbs : Set (TopologicalSpace β)} {ta : TopologicalSpace α} {tb : TopologicalSpace β}
     {tc : TopologicalSpace γ} (ha : ta ∈ tas) (hb : tb ∈ tbs)
     (hf : Continuous fun p : α × β => f p.1 p.2) : by
-    haveI := Inf tas <;> haveI := Inf tbs <;>
-      exact @Continuous _ _ _ tc fun p : α × β => f p.1 p.2 :=
+    haveI := infₛ tas <;> haveI := infₛ tbs <;>
+      exact @continuous _ _ _ tc fun p : α × β => f p.1 p.2 :=
   by
   let t : TopologicalSpace (α × β) := Prod.topologicalSpace
   have ha := continuous_infₛ_dom ha continuous_id
   have hb := continuous_infₛ_dom hb continuous_id
-  have h_continuous_id := @Continuous.prod_map _ _ _ _ ta tb (Inf tas) (Inf tbs) _ _ ha hb
-  exact @Continuous.comp _ _ _ (id _) (id _) _ _ _ hf h_continuous_id
+  have h_continuous_id := @continuous.prod_map _ _ _ _ ta tb (infₛ tas) (infₛ tbs) _ _ ha hb
+  exact @continuous.comp _ _ _ (id _) (id _) _ _ _ hf h_continuous_id
 #align continuous_Inf_dom₂ continuous_infₛ_dom₂
 
 /- warning: filter.eventually.prod_inl_nhds -> Filter.Eventually.prod_inl_nhds is a dubious translation:
@@ -844,7 +844,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually.prod_mk_nhds Filter.Eventually.prod_mk_nhdsₓ'. -/
 theorem Filter.Eventually.prod_mk_nhds {pa : α → Prop} {a} (ha : ∀ᶠ x in 𝓝 a, pa x) {pb : β → Prop}
     {b} (hb : ∀ᶠ y in 𝓝 b, pb y) : ∀ᶠ p in 𝓝 (a, b), pa (p : α × β).1 ∧ pb p.2 :=
-  (ha.prod_inl_nhds b).And (hb.prod_inr_nhds a)
+  (ha.prod_inl_nhds b).and (hb.prod_inr_nhds a)
 #align filter.eventually.prod_mk_nhds Filter.Eventually.prod_mk_nhds
 
 /- warning: continuous_swap -> continuous_swap is a dubious translation:
@@ -897,7 +897,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open.prod IsOpen.prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem IsOpen.prod {s : Set α} {t : Set β} (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ˢ t) :=
-  (hs.Preimage continuous_fst).inter (ht.Preimage continuous_snd)
+  (hs.preimage continuous_fst).inter (ht.preimage continuous_snd)
 #align is_open.prod IsOpen.prod
 
 /- warning: nhds_prod_eq -> nhds_prod_eq is a dubious translation:
@@ -925,7 +925,7 @@ theorem continuous_uncurry_of_discreteTopology [DiscreteTopology α] {f : α →
   rintro ⟨a, x⟩
   change map _ _ ≤ _
   rw [nhds_prod_eq, nhds_discrete, Filter.map_pure_prod]
-  exact (hf a).ContinuousAt
+  exact (hf a).continuousAt
 #align continuous_uncurry_of_discrete_topology continuous_uncurry_of_discreteTopology
 
 /- warning: mem_nhds_prod_iff -> mem_nhds_prod_iff is a dubious translation:
@@ -1097,7 +1097,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_at.prod_map ContinuousAt.prod_mapₓ'. -/
 theorem ContinuousAt.prod_map {f : α → γ} {g : β → δ} {p : α × β} (hf : ContinuousAt f p.fst)
     (hg : ContinuousAt g p.snd) : ContinuousAt (fun p : α × β => (f p.1, g p.2)) p :=
-  hf.fst''.Prod hg.snd''
+  hf.fst''.prod hg.snd''
 #align continuous_at.prod_map ContinuousAt.prod_map
 
 /- warning: continuous_at.prod_map' -> ContinuousAt.prod_map' is a dubious translation:
@@ -1108,7 +1108,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_at.prod_map' ContinuousAt.prod_map'ₓ'. -/
 theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β} (hf : ContinuousAt f x)
     (hg : ContinuousAt g y) : ContinuousAt (fun p : α × β => (f p.1, g p.2)) (x, y) :=
-  hf.fst'.Prod hg.snd'
+  hf.fst'.prod hg.snd'
 #align continuous_at.prod_map' ContinuousAt.prod_map'
 
 /- warning: prod_generate_from_generate_from_eq -> prod_generateFrom_generateFrom_eq is a dubious translation:
@@ -1135,21 +1135,21 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
       (coinduced_le_iff_le_induced.mp <|
         le_generateFrom fun u hu =>
           have : (⋃ v ∈ t, u ×ˢ v) = Prod.fst ⁻¹' u := by
-            simp_rw [← prod_Union, ← sUnion_eq_bUnion, ht, prod_univ]
+            simp_rw [← prod_unionᵢ, ← unionₛ_eq_bunionᵢ, ht, prod_univ]
           show G.IsOpen (Prod.fst ⁻¹' u) by
             rw [← this]
             exact
               isOpen_unionᵢ fun v =>
-                isOpen_unionᵢ fun hv => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩)
+                isOpen_unionᵢ fun hv => GenerateOpen.basic _ ⟨_, hu, _, hv, rfl⟩)
       (coinduced_le_iff_le_induced.mp <|
         le_generateFrom fun v hv =>
           have : (⋃ u ∈ s, u ×ˢ v) = Prod.snd ⁻¹' v := by
-            simp_rw [← Union_prod_const, ← sUnion_eq_bUnion, hs, univ_prod]
+            simp_rw [← unionᵢ_prod_const, ← unionₛ_eq_bunionᵢ, hs, univ_prod]
           show G.IsOpen (Prod.snd ⁻¹' v) by
             rw [← this]
             exact
               isOpen_unionᵢ fun u =>
-                isOpen_unionᵢ fun hu => generate_open.basic _ ⟨_, hu, _, hv, rfl⟩))
+                isOpen_unionᵢ fun hu => GenerateOpen.basic _ ⟨_, hu, _, hv, rfl⟩))
 #align prod_generate_from_generate_from_eq prod_generateFrom_generateFrom_eq
 
 /- warning: prod_eq_generate_from -> prod_eq_generateFrom is a dubious translation:
@@ -1162,7 +1162,7 @@ Case conversion may be inaccurate. Consider using '#align prod_eq_generate_from 
 theorem prod_eq_generateFrom :
     Prod.topologicalSpace =
       generateFrom { g | ∃ (s : Set α)(t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
-  le_antisymm (le_generateFrom fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.Prod ht)
+  le_antisymm (le_generateFrom fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.prod ht)
     (le_inf
       (ball_image_of_ball fun t ht =>
         GenerateOpen.basic _ ⟨t, univ, by simpa [Set.prod_eq] using ht⟩)
@@ -1211,7 +1211,7 @@ theorem continuous_uncurry_of_discreteTopology_left [DiscreteTopology α] {f : �
     (h : ∀ a, Continuous (f a)) : Continuous (uncurry f) :=
   continuous_iff_continuousAt.2 fun ⟨a, b⟩ => by
     simp only [ContinuousAt, nhds_prod_eq, nhds_discrete α, pure_prod, tendsto_map'_iff, (· ∘ ·),
-      uncurry, (h a).Tendsto]
+      uncurry, (h a).tendsto]
 #align continuous_uncurry_of_discrete_topology_left continuous_uncurry_of_discreteTopology_left
 
 /- warning: exists_nhds_square -> exists_nhds_square is a dubious translation:
@@ -1242,7 +1242,7 @@ theorem map_fst_nhdsWithin (x : α × β) : map Prod.fst (𝓝[Prod.snd ⁻¹' {
   rcases x with ⟨x, y⟩
   rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
+  simp only [prod_subset_iff, mem_singleton_iff, mem_setOf_eq, mem_preimage] at H
   exact mem_of_superset hu fun z hz => H _ hz _ (mem_of_mem_nhds hv) rfl
 #align map_fst_nhds_within map_fst_nhdsWithin
 
@@ -1282,7 +1282,7 @@ theorem map_snd_nhdsWithin (x : α × β) : map Prod.snd (𝓝[Prod.fst ⁻¹' {
   rcases x with ⟨x, y⟩
   rw [mem_map, nhdsWithin, mem_inf_principal, mem_nhds_prod_iff] at hs
   rcases hs with ⟨u, hu, v, hv, H⟩
-  simp only [prod_subset_iff, mem_singleton_iff, mem_set_of_eq, mem_preimage] at H
+  simp only [prod_subset_iff, mem_singleton_iff, mem_setOf_eq, mem_preimage] at H
   exact mem_of_superset hv fun z hz => H _ (mem_of_mem_nhds hu) _ hz rfl
 #align map_snd_nhds_within map_snd_nhdsWithin
 
@@ -1336,7 +1336,7 @@ theorem isOpen_prod_iff' {s : Set α} {t : Set β} :
         exact isOpenMap_snd _ H
     · intro H
       simp only [st.1.ne_empty, st.2.ne_empty, not_false_iff, or_false_iff] at H
-      exact H.1.Prod H.2
+      exact H.1.prod H.2
 #align is_open_prod_iff' isOpen_prod_iff'
 
 /- warning: closure_prod_eq -> closure_prod_eq is a dubious translation:
@@ -1353,7 +1353,7 @@ theorem closure_prod_eq {s : Set α} {t : Set β} : closure (s ×ˢ t) = closure
     by
     have : (𝓝 a ×ᶠ 𝓝 b) ⊓ 𝓟 (s ×ˢ t) = 𝓝 a ⊓ 𝓟 s ×ᶠ 𝓝 b ⊓ 𝓟 t := by
       rw [← prod_inf_prod, prod_principal_principal]
-    simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_ne_bot
+    simp [closure_eq_cluster_pts, ClusterPt, nhds_prod_eq, this] <;> exact prod_neBot
 #align closure_prod_eq closure_prod_eq
 
 /- warning: interior_prod_eq -> interior_prod_eq is a dubious translation:
@@ -1483,7 +1483,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align embedding.prod_mk Embedding.prod_mapₓ'. -/
 theorem Embedding.prod_map {f : α → β} {g : γ → δ} (hf : Embedding f) (hg : Embedding g) :
     Embedding fun x : α × γ => (f x.1, g x.2) :=
-  { hf.to_inducing.prod_mk hg.to_inducing with
+  { hf.to_inducing.prod_map hg.to_inducing with
     inj := fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ => by simp <;> exact fun h₁ h₂ => ⟨hf.inj h₁, hg.inj h₂⟩ }
 #align embedding.prod_mk Embedding.prod_map
 
@@ -1510,7 +1510,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align open_embedding.prod OpenEmbedding.prodₓ'. -/
 protected theorem OpenEmbedding.prod {f : α → β} {g : γ → δ} (hf : OpenEmbedding f)
     (hg : OpenEmbedding g) : OpenEmbedding fun x : α × γ => (f x.1, g x.2) :=
-  openEmbedding_of_embedding_open (hf.1.prod_mk hg.1) (hf.IsOpenMap.Prod hg.IsOpenMap)
+  openEmbedding_of_embedding_open (hf.1.prod_map hg.1) (hf.isOpenMap.prod hg.isOpenMap)
 #align open_embedding.prod OpenEmbedding.prod
 
 /- warning: embedding_graph -> embedding_graph is a dubious translation:
@@ -1740,7 +1740,7 @@ Case conversion may be inaccurate. Consider using '#align continuous_sum_map con
 theorem continuous_sum_map {f : α → β} {g : γ → δ} :
     Continuous (Sum.map f g) ↔ Continuous f ∧ Continuous g :=
   continuous_sum_elim.trans <|
-    embedding_inl.continuous_iff.symm.And embedding_inr.continuous_iff.symm
+    embedding_inl.continuous_iff.symm.and embedding_inr.continuous_iff.symm
 #align continuous_sum_map continuous_sum_map
 
 /- warning: continuous.sum_map -> Continuous.sum_map is a dubious translation:
@@ -1854,7 +1854,7 @@ theorem IsOpen.openEmbedding_subtype_val {s : Set α} (hs : IsOpen s) :
 
 #print IsOpen.isOpenMap_subtype_val /-
 theorem IsOpen.isOpenMap_subtype_val {s : Set α} (hs : IsOpen s) : IsOpenMap (coe : s → α) :=
-  hs.openEmbedding_subtype_val.IsOpenMap
+  hs.openEmbedding_subtype_val.isOpenMap
 #align is_open.is_open_map_subtype_coe IsOpen.isOpenMap_subtype_val
 -/
 
@@ -1891,7 +1891,7 @@ theorem Continuous.subtype_map {f : α → β} (h : Continuous f) {q : β → Pr
 
 #print continuous_inclusion /-
 theorem continuous_inclusion {s t : Set α} (h : s ⊆ t) : Continuous (inclusion h) :=
-  continuous_id.subtypeMap h
+  continuous_id.subtype_map h
 #align continuous_inclusion continuous_inclusion
 -/
 
@@ -1968,9 +1968,9 @@ theorem [anonymous] {ι : Sort _} {f : α → β} (c : ι → α → Prop)
   continuous_iff_isClosed.mpr fun s hs =>
     by
     have : ∀ i, IsClosed ((coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) := fun i =>
-      (closedEmbedding_subtype_val (h_is_closed _)).IsClosedMap _ (hs.Preimage (f_cont i))
+      (closedEmbedding_subtype_val (h_is_closed _)).isClosedMap _ (hs.preimage (f_cont i))
     have : IsClosed (⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s)) :=
-      LocallyFinite.isClosed_unionᵢ (h_lf.Subset fun i x ⟨⟨x', hx'⟩, _, HEq⟩ => HEq ▸ hx') this
+      LocallyFinite.isClosed_unionᵢ (h_lf.subset fun i x ⟨⟨x', hx'⟩, _, heq⟩ => heq ▸ hx') this
     have : f ⁻¹' s = ⋃ i, (coe : { x | c i x } → α) '' (f ∘ coe ⁻¹' s) :=
       by
       apply Set.ext
@@ -1979,7 +1979,7 @@ theorem [anonymous] {ι : Sort _} {f : α → β} (c : ι → α → Prop)
           let ⟨i, hi⟩ := h_cover x
           ⟨i, hi, hx⟩,
           fun ⟨i, hi, hx⟩ => hx⟩
-      simpa [and_comm, @and_left_comm (c _ _), ← exists_and_right]
+      simpa [and_comm, @and.left_comm (c _ _), ← exists_and_right]
     rwa [this]
 #align continuous_subtype_is_closed_cover [anonymous]
 
@@ -1993,7 +1993,7 @@ theorem closure_subtype {x : { a // p a }} {s : Set { a // p a }} :
 #print continuousAt_codRestrict_iff /-
 theorem continuousAt_codRestrict_iff {f : α → β} {t : Set β} (h1 : ∀ x, f x ∈ t) {x : α} :
     ContinuousAt (codRestrict f t h1) x ↔ ContinuousAt f x := by
-  simp_rw [inducing_coe.continuous_at_iff, Function.comp, coe_cod_restrict_apply]
+  simp_rw [inducing_coe.continuous_at_iff, Function.comp, val_codRestrict_apply]
 #align continuous_at_cod_restrict_iff continuousAt_codRestrict_iff
 -/
 
@@ -2025,14 +2025,14 @@ theorem Continuous.codRestrict {f : α → β} {s : Set β} (hf : Continuous f) 
 #print Inducing.codRestrict /-
 theorem Inducing.codRestrict {e : α → β} (he : Inducing e) {s : Set β} (hs : ∀ x, e x ∈ s) :
     Inducing (codRestrict e s hs) :=
-  inducing_of_inducing_compose (he.Continuous.codRestrict hs) continuous_subtype_val he
+  inducing_of_inducing_compose (he.continuous.codRestrict hs) continuous_subtype_val he
 #align inducing.cod_restrict Inducing.codRestrict
 -/
 
 #print Embedding.codRestrict /-
 theorem Embedding.codRestrict {e : α → β} (he : Embedding e) (s : Set β) (hs : ∀ x, e x ∈ s) :
     Embedding (codRestrict e s hs) :=
-  embedding_of_embedding_compose (he.Continuous.codRestrict hs) continuous_subtype_val he
+  embedding_of_embedding_compose (he.continuous.codRestrict hs) continuous_subtype_val he
 #align embedding.cod_restrict Embedding.codRestrict
 -/
 
@@ -2047,7 +2047,7 @@ theorem embedding_inclusion {s t : Set α} (h : s ⊆ t) : Embedding (Set.inclus
 by `X`on `s` is discrete, then also the topology induces on `t` is discrete.  -/
 theorem DiscreteTopology.of_subset {X : Type _} [TopologicalSpace X] {s t : Set X}
     (ds : DiscreteTopology s) (ts : t ⊆ s) : DiscreteTopology t :=
-  (embedding_inclusion ts).DiscreteTopology
+  (embedding_inclusion ts).discreteTopology
 #align discrete_topology.of_subset DiscreteTopology.of_subset
 -/
 
@@ -2109,7 +2109,7 @@ theorem Continuous.quotient_liftOn' {f : α → β} (h : Continuous f)
 
 #print Continuous.quotient_map' /-
 theorem Continuous.quotient_map' {t : Setoid β} {f : α → β} (hf : Continuous f)
-    (H : (s.R ⇒ t.R) f f) : Continuous (Quotient.map' f H) :=
+    (H : (s.r ⇒ t.r) f f) : Continuous (Quotient.map' f H) :=
   (continuous_quotient_mk'.comp hf).quotient_lift _
 #align continuous.quotient_map' Continuous.quotient_map'
 -/
@@ -2172,7 +2172,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] (i : ι) (x : forall (i : ι), π i), ContinuousAt.{max u2 u1, u1} (forall (i : ι), π i) (π i) (Pi.topologicalSpace.{u2, u1} ι (fun (i : ι) => π i) (fun (a : ι) => _inst_2 a)) (_inst_2 i) (fun (p : forall (i : ι), π i) => p i) x
 Case conversion may be inaccurate. Consider using '#align continuous_at_apply continuousAt_applyₓ'. -/
 theorem continuousAt_apply (i : ι) (x : ∀ i, π i) : ContinuousAt (fun p : ∀ i, π i => p i) x :=
-  (continuous_apply i).ContinuousAt
+  (continuous_apply i).continuousAt
 #align continuous_at_apply continuousAt_apply
 
 /- warning: filter.tendsto.apply -> Filter.Tendsto.apply is a dubious translation:
@@ -2183,7 +2183,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.apply Filter.Tendsto.applyₓ'. -/
 theorem Filter.Tendsto.apply {l : Filter β} {f : β → ∀ i, π i} {x : ∀ i, π i}
     (h : Tendsto f l (𝓝 x)) (i : ι) : Tendsto (fun a => f a i) l (𝓝 <| x i) :=
-  (continuousAt_apply i _).Tendsto.comp h
+  (continuousAt_apply i _).tendsto.comp h
 #align filter.tendsto.apply Filter.Tendsto.apply
 
 /- warning: nhds_pi -> nhds_pi is a dubious translation:
@@ -2249,7 +2249,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous.update Continuous.updateₓ'. -/
 theorem Continuous.update [DecidableEq ι] (hf : Continuous f) (i : ι) {g : α → π i}
     (hg : Continuous g) : Continuous fun a => update (f a) i (g a) :=
-  continuous_iff_continuousAt.2 fun x => hf.ContinuousAt.update i hg.ContinuousAt
+  continuous_iff_continuousAt.2 fun x => hf.continuousAt.update i hg.continuousAt
 #align continuous.update Continuous.update
 
 /- warning: continuous_update -> continuous_update is a dubious translation:
@@ -2300,7 +2300,7 @@ Case conversion may be inaccurate. Consider using '#align continuous.fin_insert_
 theorem Continuous.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
     (i : Fin (n + 1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ j : Fin n, π (i.succAbove j)}
     (hg : Continuous g) : Continuous fun a => i.insertNth (f a) (g a) :=
-  continuous_iff_continuousAt.2 fun a => hf.ContinuousAt.fin_insertNth i hg.ContinuousAt
+  continuous_iff_continuousAt.2 fun a => hf.continuousAt.fin_insertNth i hg.continuousAt
 #align continuous.fin_insert_nth Continuous.fin_insertNth
 
 /- warning: is_open_set_pi -> isOpen_set_pi is a dubious translation:
@@ -2311,7 +2311,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_set_pi isOpen_set_piₓ'. -/
 theorem isOpen_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hi : i.Finite)
     (hs : ∀ a ∈ i, IsOpen (s a)) : IsOpen (pi i s) := by
-  rw [pi_def] <;> exact isOpen_binterᵢ hi fun a ha => (hs _ ha).Preimage (continuous_apply _)
+  rw [pi_def] <;> exact isOpen_binterᵢ hi fun a ha => (hs _ ha).preimage (continuous_apply _)
 #align is_open_set_pi isOpen_set_pi
 
 /- warning: is_closed_set_pi -> isClosed_set_pi is a dubious translation:
@@ -2323,7 +2323,7 @@ Case conversion may be inaccurate. Consider using '#align is_closed_set_pi isClo
 theorem isClosed_set_pi {i : Set ι} {s : ∀ a, Set (π a)} (hs : ∀ a ∈ i, IsClosed (s a)) :
     IsClosed (pi i s) := by
   rw [pi_def] <;>
-    exact isClosed_interᵢ fun a => isClosed_interᵢ fun ha => (hs _ ha).Preimage (continuous_apply _)
+    exact isClosed_interᵢ fun a => isClosed_interᵢ fun ha => (hs _ ha).preimage (continuous_apply _)
 #align is_closed_set_pi isClosed_set_pi
 
 /- warning: mem_nhds_of_pi_mem_nhds -> mem_nhds_of_pi_mem_nhds is a dubious translation:
@@ -2348,8 +2348,8 @@ Case conversion may be inaccurate. Consider using '#align set_pi_mem_nhds set_pi
 theorem set_pi_mem_nhds {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : i.Finite)
     (hs : ∀ a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
   by
-  rw [pi_def, bInter_mem hi]
-  exact fun a ha => (continuous_apply a).ContinuousAt (hs a ha)
+  rw [pi_def, binterᵢ_mem hi]
+  exact fun a ha => (continuous_apply a).continuousAt (hs a ha)
 #align set_pi_mem_nhds set_pi_mem_nhds
 
 /- warning: set_pi_mem_nhds_iff -> set_pi_mem_nhds_iff is a dubious translation:
@@ -2399,7 +2399,7 @@ theorem pi_eq_generateFrom :
       generateFrom
         { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
   le_antisymm
-    (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
+    (le_generateFrom fun g ⟨s, i, hi, eq⟩ => eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
     (le_infᵢ fun a s ⟨t, ht, s_eq⟩ =>
       GenerateOpen.basic _ <|
         ⟨update (fun a => univ) a t, {a}, by simpa using ht, s_eq ▸ by ext f <;> simp [Set.pi]⟩)
@@ -2414,15 +2414,15 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
   by
   let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
   rw [pi_eq_generateFrom]
-  refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
-  exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
+  refine' le_antisymm (generateFrom_anti _) (le_generateFrom _)
+  exact fun s ⟨t, i, ht, eq⟩ => ⟨t, i, fun a ha => GenerateOpen.basic _ (ht a ha), eq⟩
   · rintro s ⟨t, i, hi, rfl⟩
     rw [pi_def]
     apply isOpen_binterᵢ (Finset.finite_toSet _)
     intro a ha
-    show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
+    show ((generateFrom G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
     refine' le_generateFrom _ _ (hi a ha)
-    exact fun s hs => generate_open.basic _ ⟨update (fun a => univ) a s, {a}, by simp [hs]⟩
+    exact fun s hs => GenerateOpen.basic _ ⟨update (fun a => univ) a s, {a}, by simp [hs]⟩
 #align pi_generate_from_eq pi_generateFrom_eq
 -/
 
@@ -2434,7 +2434,7 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
   by
   cases nonempty_fintype ι
   rw [pi_generateFrom_eq]
-  refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
+  refine' le_antisymm (generateFrom_anti _) (le_generateFrom _)
   · rintro s ⟨t, ht, rfl⟩
     exact ⟨t, Finset.univ, by simp [ht]⟩
   · rintro s ⟨t, i, ht, rfl⟩
@@ -2449,7 +2449,7 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
         simpa
     refine' ⟨pi univ fun a => if a ∈ i then t a else (c : ∀ a, Set (π a)) a, _, _, _⟩
     · simp [pi_if]
-    · refine' generate_open.basic _ ⟨_, fun a => _, rfl⟩
+    · refine' GenerateOpen.basic _ ⟨_, fun a => _, rfl⟩
       by_cases a ∈ i <;> simp_all [Set.pi]
     · have : f ∈ pi { a | a ∉ i } c := by simp_all [Set.pi]
       simpa [pi_if, hf]
@@ -2541,7 +2541,7 @@ theorem isOpenMap_sigmaMk {i : ι} : IsOpenMap (@Sigma.mk ι σ i) :=
   intro j
   rcases eq_or_ne j i with (rfl | hne)
   · rwa [Set.preimage_image_eq _ sigma_mk_injective]
-  · rw [preimage_image_sigma_mk_of_ne hne]
+  · rw [preimage_image_sigmaMk_of_ne hne]
     exact isOpen_empty
 #align is_open_map_sigma_mk isOpenMap_sigmaMk
 
@@ -2568,7 +2568,7 @@ theorem isClosedMap_sigmaMk {i : ι} : IsClosedMap (@Sigma.mk ι σ i) :=
   intro j
   rcases eq_or_ne j i with (rfl | hne)
   · rwa [Set.preimage_image_eq _ sigma_mk_injective]
-  · rw [preimage_image_sigma_mk_of_ne hne]
+  · rw [preimage_image_sigmaMk_of_ne hne]
     exact isClosed_empty
 #align is_closed_map_sigma_mk isClosedMap_sigmaMk
 
@@ -2653,8 +2653,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_open_sigma_fst_preimage isOpen_sigma_fst_preimageₓ'. -/
 theorem isOpen_sigma_fst_preimage (s : Set ι) : IsOpen (Sigma.fst ⁻¹' s : Set (Σa, σ a)) :=
   by
-  rw [← bUnion_of_singleton s, preimage_Union₂]
-  simp only [← range_sigma_mk]
+  rw [← bunionᵢ_of_singleton s, preimage_unionᵢ₂]
+  simp only [← range_sigmaMk]
   exact isOpen_bunionᵢ fun _ _ => isOpen_range_sigmaMk
 #align is_open_sigma_fst_preimage isOpen_sigma_fst_preimage
 
@@ -2749,7 +2749,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align embedding_sigma_map embedding_sigma_mapₓ'. -/
 theorem embedding_sigma_map {f₁ : ι → κ} {f₂ : ∀ i, σ i → τ (f₁ i)} (h : Injective f₁) :
     Embedding (Sigma.map f₁ f₂) ↔ ∀ i, Embedding (f₂ i) := by
-  simp only [embedding_iff, injective.sigma_map, inducing_sigma_map h, forall_and, h.sigma_map_iff]
+  simp only [embedding_iff, Injective.sigma_map, inducing_sigma_map h, forall_and, h.sigma_map_iff]
 #align embedding_sigma_map embedding_sigma_map
 
 /- warning: open_embedding_sigma_map -> openEmbedding_sigma_map is a dubious translation:
@@ -2789,7 +2789,7 @@ theorem embedding_uLift_down [TopologicalSpace α] : Embedding (ULift.down : ULi
 -/
 
 instance [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (ULift α) :=
-  embedding_uLift_down.DiscreteTopology
+  embedding_uLift_down.discreteTopology
 
 end ULift
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.skeletal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ noncomputable def skeletonEquivalence : Skeleton C ≌ C :=
 theorem skeleton_skeletal : Skeletal (Skeleton C) :=
   by
   rintro X Y ⟨h⟩
-  have : X.out ≈ Y.out := ⟨(from_skeleton C).mapIso h⟩
+  have : X.out ≈ Y.out := ⟨(fromSkeleton C).mapIso h⟩
   simpa using Quotient.sound this
 #align category_theory.skeleton_skeletal CategoryTheory.skeleton_skeletal
 
@@ -121,7 +121,7 @@ variable {C D}
 -/
 noncomputable def Equivalence.skeletonEquiv (e : C ≌ D) : Skeleton C ≃ Skeleton D :=
   let f := ((skeletonEquivalence C).trans e).trans (skeletonEquivalence D).symm
-  { toFun := f.Functor.obj
+  { toFun := f.functor.obj
     invFun := f.inverse.obj
     left_inv := fun X => skeleton_skeletal C ⟨(f.unitIso.app X).symm⟩
     right_inv := fun Y => skeleton_skeletal D ⟨f.counitIso.app Y⟩ }
@@ -235,7 +235,7 @@ noncomputable def fromThinSkeleton : ThinSkeleton C ⥤ C
   obj := Quotient.out
   map x y :=
     Quotient.recOnSubsingleton₂ x y fun X Y f =>
-      (Nonempty.some (Quotient.mk_out X)).Hom ≫ f.le.some ≫ (Nonempty.some (Quotient.mk_out Y)).inv
+      (Nonempty.some (Quotient.mk_out X)).hom ≫ f.le.some ≫ (Nonempty.some (Quotient.mk_out Y)).inv
 #align category_theory.thin_skeleton.from_thin_skeleton CategoryTheory.ThinSkeleton.fromThinSkeleton
 
 noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkeleton C)
@@ -286,7 +286,7 @@ theorem map_id_eq : map (𝟭 C) = 𝟭 (ThinSkeleton C) :=
 
 theorem map_iso_eq {F₁ F₂ : D ⥤ C} (h : F₁ ≅ F₂) : map F₁ = map F₂ :=
   Functor.eq_of_iso skeletal
-    { Hom := mapNatTrans h.Hom
+    { Hom := mapNatTrans h.hom
       inv := mapNatTrans h.inv }
 #align category_theory.thin_skeleton.map_iso_eq CategoryTheory.ThinSkeleton.map_iso_eq
 
@@ -312,14 +312,14 @@ def lowerAdjunction (R : D ⥤ C) (L : C ⥤ D) (h : L ⊣ R) : ThinSkeleton.map
     { Unit :=
         {
           app := fun X => by
-            letI := is_isomorphic_setoid C
-            refine' Quotient.recOnSubsingleton X fun x => hom_of_le ⟨h.unit.app x⟩ }
+            letI := isIsomorphicSetoid C
+            refine' Quotient.recOnSubsingleton X fun x => homOfLe ⟨h.unit.app x⟩ }
       -- TODO: make quotient.rec_on_subsingleton' so the letI isn't needed
       counit :=
         {
           app := fun X => by
-            letI := is_isomorphic_setoid D
-            refine' Quotient.recOnSubsingleton X fun x => hom_of_le ⟨h.counit.app x⟩ } }
+            letI := isIsomorphicSetoid D
+            refine' Quotient.recOnSubsingleton X fun x => homOfLe ⟨h.counit.app x⟩ } }
 #align category_theory.thin_skeleton.lower_adjunction CategoryTheory.ThinSkeleton.lowerAdjunction
 
 end ThinSkeleton

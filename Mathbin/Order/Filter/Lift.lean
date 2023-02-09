@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.filter.lift
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Fi
     {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g)
     {s : Set γ} : s ∈ f.lift g ↔ ∃ (i : ι)(hi : p i)(x : β i)(hx : pg i x), sg i x ⊆ s :=
   by
-  refine' (mem_binfi_of_directed _ ⟨univ, univ_sets _⟩).trans _
+  refine' (mem_binfᵢ_of_directed _ ⟨univ, univ_sets _⟩).trans _
   · intro t₁ ht₁ t₂ ht₂
     exact ⟨t₁ ∩ t₂, inter_mem ht₁ ht₂, gm <| inter_subset_left _ _, gm <| inter_subset_right _ _⟩
   · simp only [← (hg _).mem_iff]
@@ -98,7 +98,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : (Set.{u2} α) -> (Filter.{u1} β)}, (Monotone.{u2, u1} (Set.{u2} α) (Filter.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β)) g) -> (forall {s : Set.{u1} β}, Iff (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (Filter.lift.{u2, u1} α β f g)) (Exists.{succ u2} (Set.{u2} α) (fun (t : Set.{u2} α) => And (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) t f) (Membership.mem.{u1, u1} (Set.{u1} β) (Filter.{u1} β) (instMembershipSetFilter.{u1} β) s (g t)))))
 Case conversion may be inaccurate. Consider using '#align filter.mem_lift_sets Filter.mem_lift_setsₓ'. -/
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t ∈ f, s ∈ g t :=
-  (f.basis_sets.mem_lift_iffₓ (fun s => (g s).basis_sets) hg).trans <| by
+  (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans <| by
     simp only [id, exists_mem_subset_iff]
 #align filter.mem_lift_sets Filter.mem_lift_sets
 
@@ -110,7 +110,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.sInter_lift_sets Filter.interₛ_lift_setsₓ'. -/
 theorem interₛ_lift_sets (hg : Monotone g) :
     ⋂₀ { s | s ∈ f.lift g } = ⋂ s ∈ f, ⋂₀ { t | t ∈ g s } := by
-  simp only [sInter_eq_bInter, mem_set_of_eq, Filter.mem_sets, mem_lift_sets hg, Inter_exists,
+  simp only [interₛ_eq_binterᵢ, mem_setOf_eq, Filter.mem_sets, mem_lift_sets hg, interᵢ_exists,
     @Inter_comm _ (Set β)]
 #align filter.sInter_lift_sets Filter.interₛ_lift_sets
 
@@ -165,7 +165,7 @@ theorem lift_mono' (hg : ∀ s ∈ f, g₁ s ≤ g₂ s) : f.lift g₁ ≤ f.lif
 
 #print Filter.tendsto_lift /-
 theorem tendsto_lift {m : γ → β} {l : Filter γ} :
-    Tendsto m l (f.lift g) ↔ ∀ s ∈ f, Tendsto m l (g s) := by simp only [Filter.lift, tendsto_infi]
+    Tendsto m l (f.lift g) ↔ ∀ s ∈ f, Tendsto m l (g s) := by simp only [Filter.lift, tendsto_infᵢ]
 #align filter.tendsto_lift Filter.tendsto_lift
 -/
 
@@ -183,7 +183,7 @@ theorem map_lift_eq {m : β → γ} (hg : Monotone g) : map m (f.lift g) = f.lif
 
 #print Filter.comap_lift_eq /-
 theorem comap_lift_eq {m : γ → β} : comap m (f.lift g) = f.lift (comap m ∘ g) := by
-  simp only [Filter.lift, comap_infi]
+  simp only [Filter.lift, comap_infᵢ]
 #align filter.comap_lift_eq Filter.comap_lift_eq
 -/
 
@@ -314,7 +314,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : (Set.{u2} α) -> (Filter.{u1} β)}, (Monotone.{u2, u1} (Set.{u2} α) (Filter.{u1} β) (PartialOrder.toPreorder.{u2} (Set.{u2} α) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} α) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} α) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} α) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} α) (Set.instCompleteBooleanAlgebraSet.{u2} α))))))) (PartialOrder.toPreorder.{u1} (Filter.{u1} β) (Filter.instPartialOrderFilter.{u1} β)) g) -> (Iff (Filter.NeBot.{u1} β (Filter.lift.{u2, u1} α β f g)) (forall (s : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Filter.{u2} α) (instMembershipSetFilter.{u2} α) s f) -> (Filter.NeBot.{u1} β (g s))))
 Case conversion may be inaccurate. Consider using '#align filter.lift_ne_bot_iff Filter.lift_neBot_iffₓ'. -/
 theorem lift_neBot_iff (hm : Monotone g) : (NeBot <| f.lift g) ↔ ∀ s ∈ f, NeBot (g s) := by
-  simp only [ne_bot_iff, Ne.def, ← empty_mem_iff_bot, mem_lift_sets hm, not_exists]
+  simp only [neBot_iff, Ne.def, ← empty_mem_iff_bot, mem_lift_sets hm, not_exists]
 #align filter.lift_ne_bot_iff Filter.lift_neBot_iff
 
 /- warning: filter.lift_const -> Filter.lift_const is a dubious translation:
@@ -371,7 +371,7 @@ theorem lift_infᵢ [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter 
   have H : ∀ t ∈ infᵢ f, (⨅ i, (f i).lift g) ≤ g t :=
     by
     intro t ht
-    refine' infi_sets_induct ht _ fun i s t hs ht => _
+    refine' infᵢ_sets_induct ht _ fun i s t hs ht => _
     · inhabit ι
       exact infᵢ₂_le_of_le default univ (infᵢ_le _ univ_mem)
     · rw [hg]
@@ -390,8 +390,8 @@ theorem lift_infᵢ_of_directed [Nonempty ι] {f : ι → Filter α} {g : Set α
     (hf : Directed (· ≥ ·) f) (hg : Monotone g) : (infᵢ f).lift g = ⨅ i, (f i).lift g :=
   lift_infᵢ_le.antisymm fun s =>
     by
-    simp only [mem_lift_sets hg, exists_imp, mem_infi_of_directed hf]
-    exact fun t i ht hs => mem_infi_of_mem i <| mem_lift ht hs
+    simp only [mem_lift_sets hg, exists_imp, mem_infᵢ_of_directed hf]
+    exact fun t i ht hs => mem_infᵢ_of_mem i <| mem_lift ht hs
 #align filter.lift_infi_of_directed Filter.lift_infᵢ_of_directed
 
 /- warning: filter.lift_infi_of_map_univ -> Filter.lift_infᵢ_of_map_univ is a dubious translation:
@@ -405,7 +405,7 @@ theorem lift_infᵢ_of_map_univ {f : ι → Filter α} {g : Set α → Filter β
   by
   cases isEmpty_or_nonempty ι
   · simp [infᵢ_of_empty, hg']
-  · exact lift_infi hg
+  · exact lift_infᵢ hg
 #align filter.lift_infi_of_map_univ Filter.lift_infᵢ_of_map_univ
 
 end lift
@@ -461,7 +461,7 @@ theorem HasBasis.lift' {ι} {p : ι → Prop} {s} (hf : f.HasBasis p s) (hh : Mo
   by
   refine' ⟨fun t => (hf.mem_lift_iff _ (monotone_principal.comp hh)).trans _⟩
   show ∀ i, (𝓟 (h (s i))).HasBasis (fun j : Unit => True) fun j : Unit => h (s i)
-  exact fun i => has_basis_principal _
+  exact fun i => hasBasis_principal _
   simp only [exists_const]
 #align filter.has_basis.lift' Filter.HasBasis.lift'
 
@@ -731,7 +731,7 @@ Case conversion may be inaccurate. Consider using '#align filter.lift'_ne_bot_if
 theorem lift'_neBot_iff (hh : Monotone h) : NeBot (f.lift' h) ↔ ∀ s ∈ f, (h s).Nonempty :=
   calc
     NeBot (f.lift' h) ↔ ∀ s ∈ f, NeBot (𝓟 (h s)) := lift_neBot_iff (monotone_principal.comp hh)
-    _ ↔ ∀ s ∈ f, (h s).Nonempty := by simp only [principal_ne_bot_iff]
+    _ ↔ ∀ s ∈ f, (h s).Nonempty := by simp only [principal_neBot_iff]
     
 #align filter.lift'_ne_bot_iff Filter.lift'_neBot_iff
 

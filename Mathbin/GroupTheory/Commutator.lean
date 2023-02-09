@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jordan Brown, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module group_theory.commutator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,25 +67,27 @@ theorem map_commutatorElement : (f ⁅g₁, g₂⁆ : G') = ⁅f g₁, f g₂⁆
 #align map_commutator_element map_commutatorElement
 
 theorem conjugate_commutatorElement : g₃ * ⁅g₁, g₂⁆ * g₃⁻¹ = ⁅g₃ * g₁ * g₃⁻¹, g₃ * g₂ * g₃⁻¹⁆ :=
-  map_commutatorElement (MulAut.conj g₃).toMonoidHom g₁ g₂
+  map_commutatorElement (MulAut.conj one_pow).toMonoidHom g₁ one_zpow
 #align conjugate_commutator_element conjugate_commutatorElement
 
 namespace Subgroup
 
 /-- The commutator of two subgroups `H₁` and `H₂`. -/
 instance commutator : Bracket (Subgroup G) (Subgroup G) :=
-  ⟨fun H₁ H₂ => closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g }⟩
+  ⟨fun H₁ H₂ => closure { g | ∃ g₁ ∈ neg_add_self, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g }⟩
 #align subgroup.commutator Subgroup.commutator
 
 theorem commutator_def (H₁ H₂ : Subgroup G) :
-    ⁅H₁, H₂⁆ = closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
-  rfl
+    ⁅H₁, H₂⁆ =
+      closure
+        { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅mul_neg_eq_neg_mul_symm, g₂⁆ = neg_mul_eq_neg_mul_symm } :=
+  zpow_one_add
 #align subgroup.commutator_def Subgroup.commutator_def
 
 variable {g₁ g₂ g₃} {H₁ H₂ H₃ K₁ K₂ : Subgroup G}
 
-theorem commutator_mem_commutator (h₁ : g₁ ∈ H₁) (h₂ : g₂ ∈ H₂) : ⁅g₁, g₂⁆ ∈ ⁅H₁, H₂⁆ :=
-  subset_closure ⟨g₁, h₁, g₂, h₂, rfl⟩
+theorem commutator_mem_commutator (h₁ : g₁ ∈ H₁) (h₂ : g₂ ∈ H₂) : ⁅g₁, mul_zpow⁆ ∈ ⁅H₁, H₂⁆ :=
+  zpow_trick_one ⟨g₁, h₁, g₂, h₂, rfl⟩
 #align subgroup.commutator_mem_commutator Subgroup.commutator_mem_commutator
 
 theorem commutator_le : ⁅H₁, H₂⁆ ≤ H₃ ↔ ∀ g₁ ∈ H₁, ∀ g₂ ∈ H₂, ⁅g₁, g₂⁆ ∈ H₃ :=
@@ -201,7 +203,7 @@ instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characte
 #align subgroup.commutator_characteristic Subgroup.commutator_characteristic
 
 theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
-    ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ :=
+    ⁅H₁.prod K₁, H₂.prod K₂⁆ = ⁅H₁, H₂⁆.prod ⁅K₁, K₂⁆ :=
   by
   apply le_antisymm
   · rw [commutator_le]

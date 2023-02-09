@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.local_at_target
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,8 +33,8 @@ variable {s : Set β} {ι : Type _} {U : ι → Opens β} (hU : supᵢ U = ⊤)
 theorem Set.restrictPreimage_inducing (s : Set β) (h : Inducing f) :
     Inducing (s.restrictPreimage f) :=
   by
-  simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrict_preimage, maps_to.coe_restrict,
-    restrict_eq, ← @Filter.comap_comap _ _ _ _ coe f] at h⊢
+  simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrictPreimage, MapsTo.coe_restrict,
+    restrict_eq, ← @filter.comap_comap _ _ _ _ coe f] at h⊢
   intro a
   rw [← h, ← inducing_coe.nhds_eq_comap]
 #align set.restrict_preimage_inducing Set.restrictPreimage_inducing
@@ -127,8 +127,8 @@ theorem isClosedMap_iff_isClosedMap_of_supᵢ_eq_top :
 theorem inducing_iff_inducing_of_supᵢ_eq_top (h : Continuous f) :
     Inducing f ↔ ∀ i, Inducing ((U i).1.restrictPreimage f) :=
   by
-  simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrict_preimage, maps_to.coe_restrict,
-    restrict_eq, ← @Filter.comap_comap _ _ _ _ coe f]
+  simp_rw [inducing_coe.inducing_iff, inducing_iff_nhds, restrictPreimage, MapsTo.coe_restrict,
+    restrict_eq, ← @filter.comap_comap _ _ _ _ coe f]
   constructor
   · intro H i x
     rw [← H, ← inducing_coe.nhds_eq_comap]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Arthur Paulino, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.partition
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,23 +67,23 @@ structure Partition where
 
 /-- Whether a partition `P` has at most `n` parts. A graph with a partition
 satisfying this predicate called `n`-partite. (See `simple_graph.partitionable`.) -/
-def Partition.PartsCardLe {G : SimpleGraph V} (P : G.partitionₓ) (n : ℕ) : Prop :=
+def Partition.PartsCardLe {G : SimpleGraph V} (P : G.Partition) (n : ℕ) : Prop :=
   ∃ h : P.parts.Finite, h.toFinset.card ≤ n
 #align simple_graph.partition.parts_card_le SimpleGraph.Partition.PartsCardLe
 
 /-- Whether a graph is `n`-partite, which is whether its vertex set
 can be partitioned in at most `n` independent sets. -/
 def Partitionable (n : ℕ) : Prop :=
-  ∃ P : G.partitionₓ, P.PartsCardLe n
+  ∃ P : G.Partition, P.PartsCardLe n
 #align simple_graph.partitionable SimpleGraph.Partitionable
 
 namespace Partition
 
-variable {G} (P : G.partitionₓ)
+variable {G} (P : G.Partition)
 
 /-- The part in the partition that `v` belongs to -/
 def partOfVertex (v : V) : Set V :=
-  Classical.choose (P.IsPartition.2 v)
+  Classical.choose (P.isPartition.2 v)
 #align simple_graph.partition.part_of_vertex SimpleGraph.Partition.partOfVertex
 
 theorem partOfVertex_mem (v : V) : P.partOfVertex v ∈ P.parts :=
@@ -130,7 +130,7 @@ variable {G}
 
 /-- Creates a partition from a coloring. -/
 @[simps]
-def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.partitionₓ
+def Coloring.toPartition {α : Type v} (C : G.Coloring α) : G.Partition
     where
   parts := C.colorClasses
   IsPartition := C.colorClasses_isPartition

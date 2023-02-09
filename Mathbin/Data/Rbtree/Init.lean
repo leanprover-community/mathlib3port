@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.init
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,9 +13,9 @@ Authors: Leonardo de Moura
 universe u v
 
 inductive Rbnode (α : Type u)
-  | leaf : Rbnode
-  | red_node (lchild : Rbnode) (val : α) (rchild : Rbnode) : Rbnode
-  | black_node (lchild : Rbnode) (val : α) (rchild : Rbnode) : Rbnode
+  | leaf : rbnode
+  | red_node (lchild : rbnode) (val : α) (rchild : rbnode) : rbnode
+  | black_node (lchild : rbnode) (val : α) (rchild : rbnode) : rbnode
 #align rbnode Rbnode
 
 namespace Rbnode
@@ -107,15 +107,15 @@ def ins : Rbnode α → α → Rbnode α
   | leaf, x => red_node leaf x leaf
   | red_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => red_node (ins a x) y b
-    | Ordering.eq => red_node a x b
-    | Ordering.gt => red_node a y (ins b x)
+    | ordering.lt => red_node (ins a x) y b
+    | ordering.eq => red_node a x b
+    | ordering.gt => red_node a y (ins b x)
   | black_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt =>
+    | ordering.lt =>
       if a.getColor = red then balance1Node (ins a x) y b else black_node (ins a x) y b
-    | Ordering.eq => black_node a x b
-    | Ordering.gt =>
+    | ordering.eq => black_node a x b
+    | ordering.gt =>
       if b.getColor = red then balance2Node (ins b x) y a else black_node a y (ins b x)
 #align rbnode.ins Rbnode.ins
 
@@ -152,14 +152,14 @@ def find : Rbnode α → α → Option α
   | leaf, x => none
   | red_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => find a x
-    | Ordering.eq => some y
-    | Ordering.gt => find b x
+    | ordering.lt => find a x
+    | ordering.eq => some y
+    | ordering.gt => find b x
   | black_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => find a x
-    | Ordering.eq => some y
-    | Ordering.gt => find b x
+    | ordering.lt => find a x
+    | ordering.eq => some y
+    | ordering.gt => find b x
 #align rbnode.find Rbnode.find
 
 end Membership

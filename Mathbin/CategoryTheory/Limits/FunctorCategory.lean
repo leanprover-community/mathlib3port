@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,12 +56,12 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
     (t : ∀ k : K, IsLimit (((evaluation K C).obj k).mapCone c)) : IsLimit c
     where
   lift s :=
-    { app := fun k => (t k).lift ⟨s.x.obj k, whiskerRight s.π ((evaluation K C).obj k)⟩
+    { app := fun k => (t k).lift ⟨s.x.obj k, whiskerRight s.π ((evaluation comp C).obj k)⟩
       naturality' := fun X Y f =>
         (t Y).hom_ext fun j => by
           rw [assoc, (t Y).fac _ j]
           simpa using
-            ((t X).fac_assoc ⟨s.X.obj X, whisker_right s.π ((evaluation K C).obj X)⟩ j _).symm }
+            ((t X).fac_assoc ⟨s.X.obj X, whiskerRight s.π ((evaluation K C).obj X)⟩ j _).symm }
   fac' s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
   uniq' s m w :=
     NatTrans.ext _ _ <|
@@ -80,21 +80,21 @@ them together to give a cone for the diagram `F`.
 def combineCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) : Cone F
     where
   x :=
-    { obj := fun k => (c k).Cone.x
-      map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩
+    { obj := fun k => (c k).cone.x
+      map := fun k₁ k₂ f => (c k₂).isLimit.lift ⟨_, (c k₁).cone.π ≫ F.flip.map f⟩
       map_id' := fun k =>
-        (c k).IsLimit.hom_ext fun j => by
+        (c k).isLimit.hom_ext fun j => by
           dsimp
           simp
-      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₃).IsLimit.hom_ext fun j => by simp }
+      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₃).isLimit.hom_ext fun j => by simp }
   π :=
-    { app := fun j => { app := fun k => (c k).Cone.π.app j }
-      naturality' := fun j₁ j₂ g => NatTrans.ext _ _ <| funext fun k => (c k).Cone.π.naturality g }
+    { app := fun j => { app := fun k => (c k).cone.π.app j }
+      naturality' := fun j₁ j₂ g => NatTrans.ext _ _ <| funext fun k => (c k).cone.π.naturality g }
 #align category_theory.limits.combine_cones CategoryTheory.Limits.combineCones
 
 /-- The stitched together cones each project down to the original given cones (up to iso). -/
 def evaluateCombinedCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) (k : K) :
-    ((evaluation K C).obj k).mapCone (combineCones F c) ≅ (c k).Cone :=
+    ((evaluation K C).obj k).mapCone (combineCones F c) ≅ (c k).cone :=
   Cones.ext (Iso.refl _) (by tidy)
 #align category_theory.limits.evaluate_combined_cones CategoryTheory.Limits.evaluateCombinedCones
 
@@ -102,7 +102,7 @@ def evaluateCombinedCones (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.
 def combinedIsLimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, LimitCone (F.flip.obj k)) :
     IsLimit (combineCones F c) :=
   evaluationJointlyReflectsLimits _ fun k =>
-    (c k).IsLimit.ofIsoLimit (evaluateCombinedCones F c k).symm
+    (c k).isLimit.ofIsoLimit (evaluateCombinedCones F c k).symm
 #align category_theory.limits.combined_is_limit CategoryTheory.Limits.combinedIsLimit
 
 /-- The evaluation functors jointly reflect colimits: that is, to show a cocone is a colimit of `F`
@@ -118,7 +118,7 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
         (t X).hom_ext fun j => by
           rw [(t X).fac_assoc _ j]
           erw [← (c.ι.app j).naturality_assoc f]
-          erw [(t Y).fac ⟨s.X.obj _, whisker_right s.ι _⟩ j]
+          erw [(t Y).fac ⟨s.X.obj _, whiskerRight s.ι _⟩ j]
           dsimp
           simp }
   fac' s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
@@ -140,22 +140,22 @@ them together to give a cocone for the diagram `F`.
 def combineCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) : Cocone F
     where
   x :=
-    { obj := fun k => (c k).Cocone.x
-      map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩
+    { obj := fun k => (c k).cocone.x
+      map := fun k₁ k₂ f => (c k₁).isColimit.desc ⟨_, F.flip.map f ≫ (c k₂).cocone.ι⟩
       map_id' := fun k =>
-        (c k).IsColimit.hom_ext fun j => by
+        (c k).isColimit.hom_ext fun j => by
           dsimp
           simp
-      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₁).IsColimit.hom_ext fun j => by simp }
+      map_comp' := fun k₁ k₂ k₃ f₁ f₂ => (c k₁).isColimit.hom_ext fun j => by simp }
   ι :=
-    { app := fun j => { app := fun k => (c k).Cocone.ι.app j }
+    { app := fun j => { app := fun k => (c k).cocone.ι.app j }
       naturality' := fun j₁ j₂ g =>
-        NatTrans.ext _ _ <| funext fun k => (c k).Cocone.ι.naturality g }
+        NatTrans.ext _ _ <| funext fun k => (c k).cocone.ι.naturality g }
 #align category_theory.limits.combine_cocones CategoryTheory.Limits.combineCocones
 
 /-- The stitched together cocones each project down to the original given cocones (up to iso). -/
 def evaluateCombinedCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) (k : K) :
-    ((evaluation K C).obj k).mapCocone (combineCocones F c) ≅ (c k).Cocone :=
+    ((evaluation K C).obj k).mapCocone (combineCocones F c) ≅ (c k).cocone :=
   Cocones.ext (Iso.refl _) (by tidy)
 #align category_theory.limits.evaluate_combined_cocones CategoryTheory.Limits.evaluateCombinedCocones
 
@@ -163,7 +163,7 @@ def evaluateCombinedCocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F
 def combinedIsColimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.obj k)) :
     IsColimit (combineCocones F c) :=
   evaluationJointlyReflectsColimits _ fun k =>
-    (c k).IsColimit.ofIsoColimit (evaluateCombinedCocones F c k).symm
+    (c k).isColimit.ofIsoColimit (evaluateCombinedCocones F c k).symm
 #align category_theory.limits.combined_is_colimit CategoryTheory.Limits.combinedIsColimit
 
 noncomputable section
@@ -210,10 +210,10 @@ def limitObjIsoLimitCompEvaluation [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (k
 @[simp, reassoc.1]
 theorem limitObjIsoLimitCompEvaluation_hom_π [HasLimitsOfShape J C] (F : J ⥤ K ⥤ C) (j : J)
     (k : K) :
-    (limitObjIsoLimitCompEvaluation F k).Hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j =
+    (limitObjIsoLimitCompEvaluation F k).hom ≫ limit.π (F ⋙ (evaluation K C).obj k) j =
       (limit.π F j).app k :=
   by
-  dsimp [limit_obj_iso_limit_comp_evaluation]
+  dsimp [limitObjIsoLimitCompEvaluation]
   simp
 #align category_theory.limits.limit_obj_iso_limit_comp_evaluation_hom_π CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_hom_π
 
@@ -223,16 +223,16 @@ theorem limitObjIsoLimitCompEvaluation_inv_π_app [HasLimitsOfShape J C] (F : J 
     (limitObjIsoLimitCompEvaluation F k).inv ≫ (limit.π F j).app k =
       limit.π (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp [limit_obj_iso_limit_comp_evaluation]
-  rw [iso.inv_comp_eq]
+  dsimp [limitObjIsoLimitCompEvaluation]
+  rw [Iso.inv_comp_eq]
   simp
 #align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_π_app CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_inv_π_app
 
 @[simp, reassoc.1]
 theorem limit_map_limitObjIsoLimitCompEvaluation_hom [HasLimitsOfShape J C] {i j : K}
     (F : J ⥤ K ⥤ C) (f : i ⟶ j) :
-    (limit F).map f ≫ (limitObjIsoLimitCompEvaluation _ _).Hom =
-      (limitObjIsoLimitCompEvaluation _ _).Hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
+    (limit F).map f ≫ (limitObjIsoLimitCompEvaluation _ _).hom =
+      (limitObjIsoLimitCompEvaluation _ _).hom ≫ limMap (whiskerLeft _ ((evaluation _ _).map f)) :=
   by
   ext
   dsimp
@@ -245,8 +245,8 @@ theorem limitObjIsoLimitCompEvaluation_inv_limit_map [HasLimitsOfShape J C] {i j
     (limitObjIsoLimitCompEvaluation _ _).inv ≫ (limit F).map f =
       limMap (whiskerLeft _ ((evaluation _ _).map f)) ≫ (limitObjIsoLimitCompEvaluation _ _).inv :=
   by
-  rw [iso.inv_comp_eq, ← category.assoc, iso.eq_comp_inv,
-    limit_map_limit_obj_iso_limit_comp_evaluation_hom]
+  rw [Iso.inv_comp_eq, ← Category.assoc, Iso.eq_comp_inv,
+    limit_map_limitObjIsoLimitCompEvaluation_hom]
 #align category_theory.limits.limit_obj_iso_limit_comp_evaluation_inv_limit_map CategoryTheory.Limits.limitObjIsoLimitCompEvaluation_inv_limit_map
 
 @[ext]
@@ -254,7 +254,7 @@ theorem limit_obj_ext {H : J ⥤ K ⥤ C} [HasLimitsOfShape J C] {k : K} {W : C}
     {f g : W ⟶ (limit H).obj k}
     (w : ∀ j, f ≫ (Limits.limit.π H j).app k = g ≫ (Limits.limit.π H j).app k) : f = g :=
   by
-  apply (cancel_mono (limit_obj_iso_limit_comp_evaluation H k).Hom).1
+  apply (cancel_mono (limitObjIsoLimitCompEvaluation H k).hom).1
   ext
   simpa using w j
 #align category_theory.limits.limit_obj_ext CategoryTheory.Limits.limit_obj_ext
@@ -280,18 +280,18 @@ theorem colimitObjIsoColimitCompEvaluation_ι_inv [HasColimitsOfShape J C] (F : 
     colimit.ι (F ⋙ (evaluation K C).obj k) j ≫ (colimitObjIsoColimitCompEvaluation F k).inv =
       (colimit.ι F j).app k :=
   by
-  dsimp [colimit_obj_iso_colimit_comp_evaluation]
+  dsimp [colimitObjIsoColimitCompEvaluation]
   simp
 #align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_inv CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_ι_inv
 
 @[simp, reassoc.1]
 theorem colimitObjIsoColimitCompEvaluation_ι_app_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
     (j : J) (k : K) :
-    (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).Hom =
+    (colimit.ι F j).app k ≫ (colimitObjIsoColimitCompEvaluation F k).hom =
       colimit.ι (F ⋙ (evaluation K C).obj k) j :=
   by
-  dsimp [colimit_obj_iso_colimit_comp_evaluation]
-  rw [← iso.eq_comp_inv]
+  dsimp [colimitObjIsoColimitCompEvaluation]
+  rw [← Iso.eq_comp_inv]
   simp
 #align category_theory.limits.colimit_obj_iso_colimit_comp_evaluation_ι_app_hom CategoryTheory.Limits.colimitObjIsoColimitCompEvaluation_ι_app_hom
 
@@ -310,19 +310,19 @@ theorem colimitObjIsoColimitCompEvaluation_inv_colimit_map [HasColimitsOfShape J
 @[simp, reassoc.1]
 theorem colimit_map_colimitObjIsoColimitCompEvaluation_hom [HasColimitsOfShape J C] (F : J ⥤ K ⥤ C)
     {i j : K} (f : i ⟶ j) :
-    (colimit F).map f ≫ (colimitObjIsoColimitCompEvaluation _ _).Hom =
-      (colimitObjIsoColimitCompEvaluation _ _).Hom ≫
+    (colimit F).map f ≫ (colimitObjIsoColimitCompEvaluation _ _).hom =
+      (colimitObjIsoColimitCompEvaluation _ _).hom ≫
         colimMap (whiskerLeft _ ((evaluation _ _).map f)) :=
   by
-  rw [← iso.inv_comp_eq, ← category.assoc, ← iso.eq_comp_inv,
-    colimit_obj_iso_colimit_comp_evaluation_inv_colimit_map]
+  rw [← Iso.inv_comp_eq, ← Category.assoc, ← Iso.eq_comp_inv,
+    colimitObjIsoColimitCompEvaluation_inv_colimit_map]
 #align category_theory.limits.colimit_map_colimit_obj_iso_colimit_comp_evaluation_hom CategoryTheory.Limits.colimit_map_colimitObjIsoColimitCompEvaluation_hom
 
 @[ext]
 theorem colimit_obj_ext {H : J ⥤ K ⥤ C} [HasColimitsOfShape J C] {k : K} {W : C}
     {f g : (colimit H).obj k ⟶ W} (w : ∀ j, (colimit.ι H j).app k ≫ f = (colimit.ι H j).app k ≫ g) :
     f = g := by
-  apply (cancel_epi (colimit_obj_iso_colimit_comp_evaluation H k).inv).1
+  apply (cancel_epi (colimitObjIsoColimitCompEvaluation H k).inv).1
   ext
   simpa using w j
 #align category_theory.limits.colimit_obj_ext CategoryTheory.Limits.colimit_obj_ext
@@ -335,11 +335,11 @@ instance evaluationPreservesLimits [HasLimits C] (k : K) : PreservesLimits ((eva
 def preservesLimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
     (H : ∀ k : K, PreservesLimit G (F ⋙ (evaluation K C).obj k : D ⥤ C)) : PreservesLimit G F :=
   ⟨fun c hc => by
-    apply evaluation_jointly_reflects_limits
+    apply evaluationJointlyReflectsLimits
     intro X
     haveI := H X
-    change is_limit ((F ⋙ (evaluation K C).obj X).mapCone c)
-    exact preserves_limit.preserves hc⟩
+    change IsLimit ((F ⋙ (evaluation K C).obj X).mapCone c)
+    exact PreservesLimit.preserves hc⟩
 #align category_theory.limits.preserves_limit_of_evaluation CategoryTheory.Limits.preservesLimitOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves limits of shape `J` if it does for each `k : K`. -/
@@ -354,8 +354,7 @@ def preservesLimitsOfEvaluation (F : D ⥤ K ⥤ C)
     (H : ∀ k : K, PreservesLimitsOfSize.{w', w} (F ⋙ (evaluation K C).obj k)) :
     PreservesLimitsOfSize.{w', w} F :=
   ⟨fun L hL =>
-    preserves_limits_of_shape_of_evaluation F L fun k =>
-      preserves_limits_of_size.preserves_limits_of_shape⟩
+    preservesLimitsOfShapeOfEvaluation F L fun k => PreservesLimitsOfSize.preservesLimitsOfShape⟩
 #align category_theory.limits.preserves_limits_of_evaluation CategoryTheory.Limits.preservesLimitsOfEvaluation
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves limits. -/
@@ -373,11 +372,11 @@ instance evaluationPreservesColimits [HasColimits C] (k : K) :
 def preservesColimitOfEvaluation (F : D ⥤ K ⥤ C) (G : J ⥤ D)
     (H : ∀ k, PreservesColimit G (F ⋙ (evaluation K C).obj k)) : PreservesColimit G F :=
   ⟨fun c hc => by
-    apply evaluation_jointly_reflects_colimits
+    apply evaluationJointlyReflectsColimits
     intro X
     haveI := H X
-    change is_colimit ((F ⋙ (evaluation K C).obj X).mapCocone c)
-    exact preserves_colimit.preserves hc⟩
+    change IsColimit ((F ⋙ (evaluation K C).obj X).mapCocone c)
+    exact PreservesColimit.preserves hc⟩
 #align category_theory.limits.preserves_colimit_of_evaluation CategoryTheory.Limits.preservesColimitOfEvaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits of shape `J` if it does for each `k : K`. -/
@@ -392,8 +391,8 @@ def preservesColimitsOfEvaluation (F : D ⥤ K ⥤ C)
     (H : ∀ k : K, PreservesColimitsOfSize.{w', w} (F ⋙ (evaluation K C).obj k)) :
     PreservesColimitsOfSize.{w', w} F :=
   ⟨fun L hL =>
-    preserves_colimits_of_shape_of_evaluation F L fun k =>
-      preserves_colimits_of_size.preserves_colimits_of_shape⟩
+    preservesColimitsOfShapeOfEvaluation F L fun k =>
+      PreservesColimitsOfSize.preservesColimitsOfShape⟩
 #align category_theory.limits.preserves_colimits_of_evaluation CategoryTheory.Limits.preservesColimitsOfEvaluation
 
 /-- The constant functor `C ⥤ (D ⥤ C)` preserves colimits. -/

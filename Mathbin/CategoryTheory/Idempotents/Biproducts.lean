@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.biproducts
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,18 +63,18 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
       comm := by
         simp only [assoc, biproduct.bicone_π, biproduct.map_π, biproduct.map_π_assoc, (F j).idem] }
   ι j :=
-    { f := bicone.ι _ j ≫ biproduct.map fun j => (F j).p
+    { f := Bicone.ι _ j ≫ biproduct.map fun j => (F j).p
       comm := by
         rw [biproduct.ι_map, ← assoc, ← assoc, (F j).idem, assoc, biproduct.ι_map, ← assoc,
           (F j).idem] }
   ι_π j j' := by
     split_ifs
     · subst h
-      simp only [assoc, idem, biproduct.map_π, biproduct.map_π_assoc, eq_to_hom_refl, id_eq,
-        hom_ext, comp_f, biproduct.ι_π_self_assoc]
+      simp only [assoc, idem, biproduct.map_π, biproduct.map_π_assoc, eqToHom_refl, id_eq, hom_ext,
+        comp_f, biproduct.ι_π_self_assoc]
     ·
       simp only [biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π, biproduct.map_π_assoc, hom_ext,
-        comp_f, zero_comp, quiver.hom.add_comm_group_zero_f]
+        comp_f, zero_comp, Quiver.Hom.addCommGroup_zero_f]
 #align category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
 
 end Biproducts
@@ -85,14 +85,14 @@ theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts
       {
         HasBiproduct := fun F => by
           classical
-            apply has_biproduct_of_total (biproducts.bicone F)
+            apply hasBiproductOfTotal (Biproducts.bicone F)
             ext1
             ext1
-            simp only [id_eq, comp_id, biproducts.bicone_X_p, biproduct.ι_map]
+            simp only [id_eq, comp_id, Biproducts.bicone_x_p, biproduct.ι_map]
             rw [sum_hom, comp_sum, Finset.sum_eq_single j]
             rotate_left
             · intro j' h1 h2
-              simp only [biproduct.ι_map, biproducts.bicone_ι_f, biproducts.bicone_π_f, assoc,
+              simp only [biproduct.ι_map, Biproducts.bicone_ι_f, Biproducts.bicone_π_f, assoc,
                 comp_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
               split_ifs
@@ -102,14 +102,14 @@ theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts
             · intro h
               exfalso
               simpa only [Finset.mem_univ, not_true] using h
-            · simp only [biproducts.bicone_π_f, comp_f, biproduct.ι_map, assoc,
-                biproducts.bicone_ι_f, biproduct.map_π]
+            · simp only [Biproducts.bicone_π_f, comp_f, biproduct.ι_map, assoc,
+                Biproducts.bicone_ι_f, biproduct.map_π]
               slice_lhs 1 2 => rw [biproduct.ι_π]
               split_ifs
               swap
               · exfalso
                 exact h rfl
-              simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
+              simp only [eqToHom_refl, id_comp, (F j).idem] } }
 #align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
 
 instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D)
@@ -137,18 +137,18 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
       inl_fst' := P.decomp_id.symm
       inl_snd' :=
         by
-        simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f, hom_ext,
-          quiver.hom.add_comm_group_zero_f, P.idem]
+        simp only [decompIdI_f, decompIdP_f, complement_p, comp_sub, comp_f, hom_ext,
+          Quiver.Hom.addCommGroup_zero_f, P.idem]
         erw [comp_id, sub_self]
       inr_fst' :=
         by
-        simp only [decomp_id_i_f, complement_p, decomp_id_p_f, sub_comp, comp_f, hom_ext,
-          quiver.hom.add_comm_group_zero_f, P.idem]
+        simp only [decompIdI_f, complement_p, decompIdP_f, sub_comp, comp_f, hom_ext,
+          Quiver.Hom.addCommGroup_zero_f, P.idem]
         erw [id_comp, sub_self]
       inr_snd' := P.complement.decomp_id.symm }
     (by
-      simp only [hom_ext, ← decomp_p, quiver.hom.add_comm_group_add_f, to_karoubi_map_f, id_eq,
-        coe_p, complement_p, add_sub_cancel'_right])
+      simp only [hom_ext, ← decomp_p, Quiver.Hom.addCommGroup_add_f, toKaroubi_map_f, id_eq, coe_p,
+        complement_p, add_sub_cancel'_right])
 
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
 preadditive category is actually a direct factor of the image `(to_karoubi C).obj P.X`
@@ -163,22 +163,22 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.x
         add_right_eq_self]
       convert zero_comp
       ext
-      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, comp_sub, comp_f,
-        quiver.hom.add_comm_group_zero_f, P.idem]
+      simp only [decompIdI_f, decompIdP_f, complement_p, comp_sub, comp_f,
+        Quiver.Hom.addCommGroup_zero_f, P.idem]
       erw [comp_id, sub_self]
     · simp only [← assoc, biprod.inr_desc, biprod.lift_eq, comp_add, ← decomp_id, comp_id, id_comp,
         add_left_eq_self]
       convert zero_comp
       ext
-      simp only [decomp_id_i_f, decomp_id_p_f, complement_p, sub_comp, comp_f,
-        quiver.hom.add_comm_group_zero_f, P.idem]
+      simp only [decompIdI_f, decompIdP_f, complement_p, sub_comp, comp_f,
+        Quiver.Hom.addCommGroup_zero_f, P.idem]
       erw [id_comp, sub_self]
   inv_hom_id' := by
     rw [biprod.lift_desc]
     simp only [← decomp_p]
     ext
-    dsimp only [complement, to_karoubi]
-    simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
+    dsimp only [complement, toKaroubi]
+    simp only [Quiver.Hom.addCommGroup_add_f, add_sub_cancel'_right, id_eq]
 #align category_theory.idempotents.karoubi.decomposition CategoryTheory.Idempotents.Karoubi.decomposition
 
 end Karoubi

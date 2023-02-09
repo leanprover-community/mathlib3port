@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.rename
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,9 +72,9 @@ theorem rename_x (f : σ → τ) (i : σ) : rename f (x i : MvPolynomial σ R) =
 
 theorem map_rename (f : R →+* S) (g : σ → τ) (p : MvPolynomial σ R) :
     map f (rename g p) = rename g (map f p) :=
-  MvPolynomial.induction_on p (fun a => by simp only [map_C, rename_C])
+  MvPolynomial.induction_on p (fun a => by simp only [map_c, rename_c])
     (fun p q hp hq => by simp only [hp, hq, AlgHom.map_add, RingHom.map_add]) fun p n hp => by
-    simp only [hp, rename_X, map_X, RingHom.map_mul, AlgHom.map_mul]
+    simp only [hp, rename_x, map_x, RingHom.map_mul, AlgHom.map_mul]
 #align mv_polynomial.map_rename MvPolynomial.map_rename
 
 @[simp]
@@ -82,10 +82,10 @@ theorem rename_rename (f : σ → τ) (g : τ → α) (p : MvPolynomial σ R) :
     rename g (rename f p) = rename (g ∘ f) p :=
   show rename g (eval₂ c (x ∘ f) p) = _
     by
-    simp only [rename, aeval_eq_eval₂_hom]
-    simp [eval₂_comp_left _ C (X ∘ f) p, (· ∘ ·), eval₂_C, eval_X]
-    apply eval₂_hom_congr _ rfl rfl
-    ext1; simp only [comp_app, RingHom.coe_comp, eval₂_hom_C]
+    simp only [rename, aeval_eq_eval₂Hom]
+    simp [eval₂_comp_left _ c (x ∘ f) p, (· ∘ ·), eval₂_c, eval_x]
+    apply eval₂Hom_congr _ rfl rfl
+    ext1; simp only [comp_apply, RingHom.coe_comp, eval₂Hom_c]
 #align mv_polynomial.rename_rename MvPolynomial.rename_rename
 
 @[simp]
@@ -105,7 +105,7 @@ theorem rename_monomial (f : σ → τ) (d : σ →₀ ℕ) (r : R) :
 theorem rename_eq (f : σ → τ) (p : MvPolynomial σ R) :
     rename f p = Finsupp.mapDomain (Finsupp.mapDomain f) p :=
   by
-  simp only [rename, aeval_def, eval₂, Finsupp.mapDomain, algebra_map_eq, X_pow_eq_monomial, ←
+  simp only [rename, aeval_def, eval₂, Finsupp.mapDomain, algebraMap_eq, x_pow_eq_monomial, ←
     monomial_finsupp_sum_index]
   rfl
 #align mv_polynomial.rename_eq MvPolynomial.rename_eq
@@ -136,7 +136,7 @@ def killCompl : MvPolynomial τ R →ₐ[R] MvPolynomial σ R :=
 theorem killCompl_comp_rename : (killCompl hf).comp (rename f) = AlgHom.id R _ :=
   algHom_ext fun i => by
     dsimp
-    rw [rename, kill_compl, aeval_X, aeval_X, dif_pos, Equiv.ofInjective_symm_apply]
+    rw [rename, killCompl, aeval_x, aeval_x, dif_pos, Equiv.ofInjective_symm_apply]
 #align mv_polynomial.kill_compl_comp_rename MvPolynomial.killCompl_comp_rename
 
 @[simp]
@@ -230,7 +230,7 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
   by
   apply induction_on p
   · intro r
-    exact ⟨∅, C r, by rw [rename_C]⟩
+    exact ⟨∅, c r, by rw [rename_c]⟩
   · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
     refine' ⟨s ∪ t, ⟨_, _⟩⟩
     ·
@@ -241,10 +241,10 @@ theorem exists_finset_rename (p : MvPolynomial σ R) :
       rfl
   · rintro p n ⟨s, p, rfl⟩
     refine' ⟨insert n s, ⟨_, _⟩⟩
-    · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
+    · refine' rename (Subtype.map id _) p * x ⟨n, s.mem_insert_self n⟩
       simp (config := { contextual := true }) only [id.def, or_true_iff, Finset.mem_insert,
         forall_true_iff]
-    · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]
+    · simp only [rename_rename, rename_x, Subtype.coe_mk, AlgHom.map_mul]
       rfl
 #align mv_polynomial.exists_finset_rename MvPolynomial.exists_finset_rename
 
@@ -280,9 +280,9 @@ end Rename
 
 theorem eval₂_cast_comp (f : σ → τ) (c : ℤ →+* R) (g : τ → R) (p : MvPolynomial σ ℤ) :
     eval₂ c (g ∘ f) p = eval₂ c g (rename f p) :=
-  MvPolynomial.induction_on p (fun n => by simp only [eval₂_C, rename_C])
+  MvPolynomial.induction_on p (fun n => by simp only [eval₂_c, rename_c])
     (fun p q hp hq => by simp only [hp, hq, rename, eval₂_add, AlgHom.map_add]) fun p n hp => by
-    simp only [hp, rename, aeval_def, eval₂_X, eval₂_mul]
+    simp only [hp, rename, aeval_def, eval₂_x, eval₂_mul]
 #align mv_polynomial.eval₂_cast_comp MvPolynomial.eval₂_cast_comp
 
 section Coeff
@@ -304,7 +304,7 @@ theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ �
   by
   rw [rename_eq, ← not_mem_support_iff]
   intro H
-  replace H := map_domain_support H
+  replace H := mapDomain_support H
   rw [Finset.mem_image] at H
   obtain ⟨u, hu, rfl⟩ := H
   specialize h u rfl
@@ -325,11 +325,11 @@ theorem constantCoeff_rename {τ : Type _} (f : σ → τ) (φ : MvPolynomial σ
   by
   apply φ.induction_on
   · intro a
-    simp only [constant_coeff_C, rename_C]
+    simp only [constantCoeff_c, rename_c]
   · intro p q hp hq
     simp only [hp, hq, RingHom.map_add, AlgHom.map_add]
   · intro p n hp
-    simp only [hp, rename_X, constant_coeff_X, RingHom.map_mul, AlgHom.map_mul]
+    simp only [hp, rename_x, constantCoeff_x, RingHom.map_mul, AlgHom.map_mul]
 #align mv_polynomial.constant_coeff_rename MvPolynomial.constantCoeff_rename
 
 end Coeff
@@ -340,7 +340,7 @@ theorem support_rename_of_injective {p : MvPolynomial σ R} {f : σ → τ} (h :
     (rename f p).support = Finset.image (mapDomain f) p.support :=
   by
   rw [rename_eq]
-  exact Finsupp.mapDomain_support_of_injective (map_domain_injective h) _
+  exact Finsupp.mapDomain_support_of_injective (mapDomain_injective h) _
 #align mv_polynomial.support_rename_of_injective MvPolynomial.support_rename_of_injective
 
 end Support

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.lym
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,15 +73,15 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
     𝒜.card * r ≤ ((∂ ) 𝒜).card * (Fintype.card α - r + 1) :=
   by
   refine' card_mul_le_card_mul' (· ⊆ ·) (fun s hs => _) fun s hs => _
-  · rw [← h𝒜 hs, ← card_image_of_inj_on s.erase_inj_on]
+  · rw [← h𝒜 hs, ← card_image_of_injOn s.erase_inj_on]
     refine' card_le_of_subset _
-    simp_rw [image_subset_iff, mem_bipartite_below]
+    simp_rw [image_subset_iff, mem_bipartiteBelow]
     exact fun a ha => ⟨erase_mem_shadow hs ha, erase_subset _ _⟩
   refine' le_trans _ tsub_tsub_le_tsub_add
-  rw [← h𝒜.shadow hs, ← card_compl, ← card_image_of_inj_on (insert_inj_on' _)]
+  rw [← h𝒜.shadow hs, ← card_compl, ← card_image_of_injOn (insert_inj_on' _)]
   refine' card_le_of_subset fun t ht => _
   infer_instance
-  rw [mem_bipartite_above] at ht
+  rw [mem_bipartiteAbove] at ht
   have : ∅ ∉ 𝒜 := by
     rw [← mem_coe, h𝒜.empty_mem_iff, coe_eq_singleton]
     rintro rfl
@@ -149,7 +149,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_2 : DecidableEq.{succ u1} α] {k : Nat} {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.falling.{u1} α (fun (a : α) (b : α) => _inst_2 a b) k 𝒜)) (And (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (HasSubset.Subset.{u1} (Finset.{u1} α) (Finset.instHasSubsetFinset.{u1} α) s t))) (Eq.{1} Nat (Finset.card.{u1} α s) k))
 Case conversion may be inaccurate. Consider using '#align finset.mem_falling Finset.mem_fallingₓ'. -/
 theorem mem_falling : s ∈ falling k 𝒜 ↔ (∃ t ∈ 𝒜, s ⊆ t) ∧ s.card = k := by
-  simp_rw [falling, mem_sup, mem_powerset_len, exists_and_right]
+  simp_rw [falling, mem_sup, mem_powersetLen, exists_and_right]
 #align finset.mem_falling Finset.mem_falling
 
 variable (𝒜 k)
@@ -178,7 +178,7 @@ theorem slice_union_shadow_falling_succ : 𝒜 # k ∪ (∂ ) (falling (k + 1) �
   simp_rw [mem_union, mem_slice, mem_shadow_iff, exists_prop, mem_falling]
   constructor
   · rintro (h | ⟨s, ⟨⟨t, ht, hst⟩, hs⟩, a, ha, rfl⟩)
-    · exact ⟨⟨s, h.1, subset.refl _⟩, h.2⟩
+    · exact ⟨⟨s, h.1, Subset.refl _⟩, h.2⟩
     refine' ⟨⟨t, ht, (erase_subset _ _).trans hst⟩, _⟩
     rw [card_erase_of_mem ha, hs]
     rfl
@@ -224,7 +224,7 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     exact card_le_of_subset (slice_subset_falling _ _)
   rw [succ_eq_add_one] at *
   rw [sum_range_succ, ← slice_union_shadow_falling_succ,
-    card_disjoint_union h𝒜.disjoint_slice_shadow_falling, cast_add, _root_.add_div, add_comm]
+    card_disjoint_union h𝒜.disjoint_slice_shadow_falling, cast_add, add_div, add_comm]
   rw [← tsub_tsub, tsub_add_cancel_of_le (le_tsub_of_add_le_left hk)]
   exact
     add_le_add_left
@@ -255,7 +255,7 @@ theorem sum_card_slice_div_choose_le_one [Fintype α]
     rw [div_le_iff] <;> norm_cast
     ·
       simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using
-        (sized_falling 0 𝒜).card_le
+        (sized_falling 0 𝒜).Finset.Set.Sized.card_le
     · rw [tsub_self, choose_zero_right]
       exact zero_lt_one
 #align finset.sum_card_slice_div_choose_le_one Finset.sum_card_slice_div_choose_le_one

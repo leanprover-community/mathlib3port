@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.noetherian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ variable (R : Type u) [CommRing R] [IsNoetherianRing R]
 
 variable {A : Type u} [CommRing A] [IsDomain A] [IsNoetherianRing A]
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian ring, every ideal contains a product of prime ideals
 ([samuel, § 3.3, Lemma 3])-/
 theorem exists_primeSpectrum_prod_le (I : Ideal R) :
@@ -59,7 +59,7 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
   rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
 #align prime_spectrum.exists_prime_spectrum_prod_le PrimeSpectrum.exists_primeSpectrum_prod_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (z «expr ∉ » M) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (z «expr ∉ » M) -/
 /-- In a noetherian integral domain which is not a field, every non-zero ideal contains a non-zero
   product of prime ideals; in a field, the whole ring is a non-zero ideal containing only 0 as
   product or prime ideals ([samuel, § 3.3, Lemma 3]) -/
@@ -107,10 +107,10 @@ open TopologicalSpace
 
 instance : NoetherianSpace (PrimeSpectrum R) :=
   by
-  rw [(noetherian_space_tfae <| PrimeSpectrum R).out 0 1]
+  rw [(noetherianSpace_tFAE <| PrimeSpectrum R).out 0 1]
   have H := ‹IsNoetherianRing R›
   rw [isNoetherianRing_iff, isNoetherian_iff_wellFounded] at H
-  exact (closeds_embedding R).dual.WellFounded H
+  exact (closedsEmbedding R).dual.wellFounded H
 
 end PrimeSpectrum
 

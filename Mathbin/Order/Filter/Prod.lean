@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johanes Hölzl, Patrick Massot, Yury Kudryashov, Kevin Wilson, Heather Macbeth
 
 ! This file was ported from Lean 3 source module order.filter.prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,8 +104,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.prod_mem_prod_iff Filter.prod_mem_prod_iffₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
-theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} [f.ne_bot]
-    [g.ne_bot] : s ×ˢ t ∈ f ×ᶠ g ↔ s ∈ f ∧ t ∈ g :=
+theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter β} [f.NeBot]
+    [g.NeBot] : s ×ˢ t ∈ f ×ᶠ g ↔ s ∈ f ∧ t ∈ g :=
   ⟨fun h =>
     let ⟨s', hs', t', ht', H⟩ := mem_prod_iff.1 h
     (prod_subset_prod_iff.1 H).elim
@@ -155,7 +155,7 @@ theorem eventually_prod_principal_iff {p : α × β → Prop} {s : Set β} :
     (∀ᶠ x : α × β in f ×ᶠ 𝓟 s, p x) ↔ ∀ᶠ x : α in f, ∀ y : β, y ∈ s → p (x, y) :=
   by
   rw [eventually_iff, eventually_iff, mem_prod_principal]
-  simp only [mem_set_of_eq]
+  simp only [mem_setOf_eq]
 #align filter.eventually_prod_principal_iff Filter.eventually_prod_principal_iff
 
 /- warning: filter.comap_prod -> Filter.comap_prod is a dubious translation:
@@ -262,13 +262,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually.prod_inl Filter.Eventually.prod_inlₓ'. -/
 theorem Eventually.prod_inl {la : Filter α} {p : α → Prop} (h : ∀ᶠ x in la, p x) (lb : Filter β) :
     ∀ᶠ x in la ×ᶠ lb, p (x : α × β).1 :=
-  tendsto_fst.Eventually h
+  tendsto_fst.eventually h
 #align filter.eventually.prod_inl Filter.Eventually.prod_inl
 
 #print Filter.Eventually.prod_inr /-
 theorem Eventually.prod_inr {lb : Filter β} {p : β → Prop} (h : ∀ᶠ x in lb, p x) (la : Filter α) :
     ∀ᶠ x in la ×ᶠ lb, p (x : α × β).2 :=
-  tendsto_snd.Eventually h
+  tendsto_snd.eventually h
 #align filter.eventually.prod_inr Filter.Eventually.prod_inr
 -/
 
@@ -280,7 +280,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually.prod_mk Filter.Eventually.prod_mkₓ'. -/
 theorem Eventually.prod_mk {la : Filter α} {pa : α → Prop} (ha : ∀ᶠ x in la, pa x) {lb : Filter β}
     {pb : β → Prop} (hb : ∀ᶠ y in lb, pb y) : ∀ᶠ p in la ×ᶠ lb, pa (p : α × β).1 ∧ pb p.2 :=
-  (ha.prod_inl lb).And (hb.prod_inr la)
+  (ha.prod_inl lb).and (hb.prod_inr la)
 #align filter.eventually.prod_mk Filter.Eventually.prod_mk
 
 /- warning: filter.eventually_eq.prod_map -> Filter.EventuallyEq.prod_map is a dubious translation:
@@ -374,7 +374,7 @@ Case conversion may be inaccurate. Consider using '#align filter.prod_infi_left 
 theorem prod_infᵢ_left [Nonempty ι] {f : ι → Filter α} {g : Filter β} :
     (⨅ i, f i) ×ᶠ g = ⨅ i, f i ×ᶠ g :=
   by
-  rw [Filter.prod, comap_infi, infᵢ_inf]
+  rw [Filter.prod, comap_infᵢ, infᵢ_inf]
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_left Filter.prod_infᵢ_left
 
@@ -387,7 +387,7 @@ Case conversion may be inaccurate. Consider using '#align filter.prod_infi_right
 theorem prod_infᵢ_right [Nonempty ι] {f : Filter α} {g : ι → Filter β} :
     (f ×ᶠ ⨅ i, g i) = ⨅ i, f ×ᶠ g i :=
   by
-  rw [Filter.prod, comap_infi, inf_infᵢ]
+  rw [Filter.prod, comap_infᵢ, inf_infᵢ]
   simp only [Filter.prod, eq_self_iff_true]
 #align filter.prod_infi_right Filter.prod_infᵢ_right
 
@@ -507,7 +507,7 @@ theorem prod_inj {f₁ f₂ : Filter α} {g₁ g₂ : Filter β} [NeBot f₁] [N
   by
   refine' ⟨fun h => _, fun h => h.1 ▸ h.2 ▸ rfl⟩
   have hle : f₁ ≤ f₂ ∧ g₁ ≤ g₂ := prod_le_prod.1 h.le
-  haveI := ne_bot_of_le hle.1; haveI := ne_bot_of_le hle.2
+  haveI := neBot_of_le hle.1; haveI := neBot_of_le hle.2
   exact ⟨hle.1.antisymm <| (prod_le_prod.1 h.ge).1, hle.2.antisymm <| (prod_le_prod.1 h.ge).2⟩
 #align filter.prod_inj Filter.prod_inj
 
@@ -518,7 +518,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β} {p : (Prod.{u2, u1} α β) -> Prop}, Iff (Filter.Eventually.{max u2 u1} (Prod.{u2, u1} α β) (fun (x : Prod.{u2, u1} α β) => p x) (Filter.prod.{u2, u1} α β f g)) (Filter.Eventually.{max u2 u1} (Prod.{u1, u2} β α) (fun (y : Prod.{u1, u2} β α) => p (Prod.swap.{u1, u2} β α y)) (Filter.prod.{u1, u2} β α g f))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_swap_iff Filter.eventually_swap_iffₓ'. -/
 theorem eventually_swap_iff {p : α × β → Prop} :
-    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.symm :=
+    (∀ᶠ x : α × β in f ×ᶠ g, p x) ↔ ∀ᶠ y : β × α in g ×ᶠ f, p y.swap :=
   by
   rw [prod_comm, eventually_map]
   simpa
@@ -646,7 +646,7 @@ theorem Tendsto.prod_map {δ : Type _} {f : α → γ} {g : β → δ} {a : Filt
     {c : Filter γ} {d : Filter δ} (hf : Tendsto f a c) (hg : Tendsto g b d) :
     Tendsto (Prod.map f g) (a ×ᶠ b) (c ×ᶠ d) :=
   by
-  erw [tendsto, ← prod_map_map_eq]
+  erw [Tendsto, ← prod_map_map_eq]
   exact Filter.prod_mono hf hg
 #align filter.tendsto.prod_map Filter.Tendsto.prod_map
 
@@ -791,7 +791,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, Iff (Filter.NeBot.{max u1 u2} (Prod.{u2, u1} α β) (Filter.prod.{u2, u1} α β f g)) (And (Filter.NeBot.{u2} α f) (Filter.NeBot.{u1} β g))
 Case conversion may be inaccurate. Consider using '#align filter.prod_ne_bot Filter.prod_neBotₓ'. -/
 theorem prod_neBot {f : Filter α} {g : Filter β} : NeBot (f ×ᶠ g) ↔ NeBot f ∧ NeBot g := by
-  simp only [ne_bot_iff, Ne, prod_eq_bot, not_or]
+  simp only [neBot_iff, Ne, prod_eq_bot, not_or]
 #align filter.prod_ne_bot Filter.prod_neBot
 
 /- warning: filter.ne_bot.prod -> Filter.NeBot.prod is a dubious translation:
@@ -806,7 +806,7 @@ theorem NeBot.prod {f : Filter α} {g : Filter β} (hf : NeBot f) (hg : NeBot g)
 
 #print Filter.prod_neBot' /-
 instance prod_neBot' {f : Filter α} {g : Filter β} [hf : NeBot f] [hg : NeBot g] : NeBot (f ×ᶠ g) :=
-  hf.Prod hg
+  hf.prod hg
 #align filter.prod_ne_bot' Filter.prod_neBot'
 -/
 
@@ -921,7 +921,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, Iff (Filter.NeBot.{max u2 u1} (Prod.{u2, u1} α β) (Filter.coprod.{u2, u1} α β f g)) (Or (And (Filter.NeBot.{u2} α f) (Nonempty.{succ u1} β)) (And (Nonempty.{succ u2} α) (Filter.NeBot.{u1} β g)))
 Case conversion may be inaccurate. Consider using '#align filter.coprod_ne_bot_iff Filter.coprod_neBot_iffₓ'. -/
-theorem coprod_neBot_iff : (f.coprod g).ne_bot ↔ f.ne_bot ∧ Nonempty β ∨ Nonempty α ∧ g.ne_bot := by
+theorem coprod_neBot_iff : (f.coprod g).NeBot ↔ f.NeBot ∧ Nonempty β ∨ Nonempty α ∧ g.NeBot := by
   simp [Filter.coprod]
 #align filter.coprod_ne_bot_iff Filter.coprod_neBot_iff
 
@@ -932,13 +932,13 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β} [_inst_1 : Filter.NeBot.{u2} α f] [_inst_2 : Nonempty.{succ u1} β], Filter.NeBot.{max u2 u1} (Prod.{u2, u1} α β) (Filter.coprod.{u2, u1} α β f g)
 Case conversion may be inaccurate. Consider using '#align filter.coprod_ne_bot_left Filter.coprod_neBot_leftₓ'. -/
 @[instance]
-theorem coprod_neBot_left [NeBot f] [Nonempty β] : (f.coprod g).ne_bot :=
+theorem coprod_neBot_left [NeBot f] [Nonempty β] : (f.coprod g).NeBot :=
   coprod_neBot_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
 #align filter.coprod_ne_bot_left Filter.coprod_neBot_left
 
 #print Filter.coprod_neBot_right /-
 @[instance]
-theorem coprod_neBot_right [NeBot g] [Nonempty α] : (f.coprod g).ne_bot :=
+theorem coprod_neBot_right [NeBot g] [Nonempty α] : (f.coprod g).NeBot :=
   coprod_neBot_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
 #align filter.coprod_ne_bot_right Filter.coprod_neBot_right
 -/

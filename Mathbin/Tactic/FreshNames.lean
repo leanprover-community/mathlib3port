@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.fresh_names
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,8 +106,8 @@ unsafe def intro_lst_fresh_reserved (ns : List (Sum Name (List Name))) (reserved
     tactic (List expr) :=
   ns.mapM fun spec =>
     match spec with
-    | Sum.inl n => intro n
-    | Sum.inr ns => intro_fresh_reserved ns reserved
+    | sum.inl n => intro n
+    | sum.inr ns => intro_fresh_reserved ns reserved
 #align tactic.intro_lst_fresh_reserved tactic.intro_lst_fresh_reserved
 
 /-- `rename_fresh renames reserved`, given a map `renames` which associates the

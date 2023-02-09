@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Johan Commelin, Patrick Massot
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,7 +245,7 @@ def comap {S : Type _} [Ring S] (f : S →+* R) (v : Valuation R Γ₀) : Valuat
     v.toMonoidWithZeroHom.comp
       f.toMonoidWithZeroHom with
     toFun := v ∘ f
-    map_add_le_max' := fun x y => by simp only [comp_app, map_add, f.map_add] }
+    map_add_le_max' := fun x y => by simp only [comp_apply, map_add, f.map_add] }
 #align valuation.comap Valuation.comap
 
 @[simp]
@@ -442,7 +442,7 @@ section
 theorem isEquiv_of_map_strictMono [LinearOrderedCommMonoidWithZero Γ₀]
     [LinearOrderedCommMonoidWithZero Γ'₀] [Ring R] {v : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀)
     (H : StrictMono f) : IsEquiv (v.map f H.Monotone) v := fun x y =>
-  ⟨H.le_iff_le.mp, fun h => H.Monotone h⟩
+  ⟨H.le_iff_le.mp, fun h => H.monotone h⟩
 #align valuation.is_equiv_of_map_strict_mono Valuation.isEquiv_of_map_strictMono
 
 theorem isEquiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀]
@@ -480,7 +480,7 @@ theorem isEquiv_iff_val_eq_one [LinearOrderedCommGroupWithZero Γ₀]
   · intro h x
     simpa using @is_equiv.val_eq _ _ _ _ _ _ v v' h x 1
   · intro h
-    apply is_equiv_of_val_le_one
+    apply isEquiv_of_val_le_one
     intro x
     constructor
     · intro hx
@@ -516,8 +516,8 @@ theorem isEquiv_iff_val_lt_one [LinearOrderedCommGroupWithZero Γ₀]
   constructor
   · intro h x
     simp only [lt_iff_le_and_ne,
-      and_congr ((is_equiv_iff_val_le_one _ _).1 h) ((is_equiv_iff_val_eq_one _ _).1 h).Not]
-  · rw [is_equiv_iff_val_eq_one]
+      and_congr ((isEquiv_iff_val_le_one _ _).1 h) ((isEquiv_iff_val_eq_one _ _).1 h).not]
+  · rw [isEquiv_iff_val_eq_one]
     intro h x
     by_cases hx : x = 0
     · simp only [(zero_iff _).2 hx, zero_ne_one]
@@ -540,8 +540,8 @@ theorem isEquiv_iff_val_sub_one_lt_one [LinearOrderedCommGroupWithZero Γ₀]
     [LinearOrderedCommGroupWithZero Γ'₀] (v : Valuation K Γ₀) (v' : Valuation K Γ'₀) :
     v.IsEquiv v' ↔ ∀ {x : K}, v (x - 1) < 1 ↔ v' (x - 1) < 1 :=
   by
-  rw [is_equiv_iff_val_lt_one]
-  exact (Equiv.subRight 1).Surjective.forall
+  rw [isEquiv_iff_val_lt_one]
+  exact (Equiv.subRight 1).surjective.forall
 #align valuation.is_equiv_iff_val_sub_one_lt_one Valuation.isEquiv_iff_val_sub_one_lt_one
 
 theorem isEquiv_tFAE [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGroupWithZero Γ'₀]
@@ -549,10 +549,10 @@ theorem isEquiv_tFAE [LinearOrderedCommGroupWithZero Γ₀] [LinearOrderedCommGr
     [v.IsEquiv v', ∀ {x}, v x ≤ 1 ↔ v' x ≤ 1, ∀ {x}, v x = 1 ↔ v' x = 1, ∀ {x}, v x < 1 ↔ v' x < 1,
         ∀ {x}, v (x - 1) < 1 ↔ v' (x - 1) < 1].TFAE :=
   by
-  tfae_have 1 ↔ 2; · apply is_equiv_iff_val_le_one
-  tfae_have 1 ↔ 3; · apply is_equiv_iff_val_eq_one
-  tfae_have 1 ↔ 4; · apply is_equiv_iff_val_lt_one
-  tfae_have 1 ↔ 5; · apply is_equiv_iff_val_sub_one_lt_one
+  tfae_have 1 ↔ 2; · apply isEquiv_iff_val_le_one
+  tfae_have 1 ↔ 3; · apply isEquiv_iff_val_eq_one
+  tfae_have 1 ↔ 4; · apply isEquiv_iff_val_lt_one
+  tfae_have 1 ↔ 5; · apply isEquiv_iff_val_sub_one_lt_one
   tfae_finish
 #align valuation.is_equiv_tfae Valuation.isEquiv_tFAE
 
@@ -753,7 +753,7 @@ def valuation : Valuation R (Multiplicative Γ₀ᵒᵈ) :=
 #align add_valuation.valuation AddValuation.valuation
 
 @[simp]
-theorem valuation_apply (r : R) : v.Valuation r = Multiplicative.ofAdd (OrderDual.toDual (v r)) :=
+theorem valuation_apply (r : R) : v.valuation r = Multiplicative.ofAdd (OrderDual.toDual (v r)) :=
   rfl
 #align add_valuation.valuation_apply AddValuation.valuation_apply
 
@@ -830,7 +830,7 @@ theorem top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x = �
 #align add_valuation.top_iff AddValuation.top_iff
 
 theorem ne_top_iff [Nontrivial Γ₀] (v : AddValuation K Γ₀) {x : K} : v x ≠ ⊤ ↔ x ≠ 0 :=
-  v.neZero_iff
+  v.ne_zero_iff
 #align add_valuation.ne_top_iff AddValuation.ne_top_iff
 
 /-- A ring homomorphism `S → R` induces a map `add_valuation R Γ₀ → add_valuation S Γ₀`. -/
@@ -874,7 +874,7 @@ variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ring R] (v : AddValuation R �
 
 @[simp]
 theorem map_inv (v : AddValuation K Γ₀) {x : K} : v x⁻¹ = -v x :=
-  map_inv₀ v.Valuation x
+  map_inv₀ v.valuation x
 #align add_valuation.map_inv AddValuation.map_inv
 
 @[simp]
@@ -957,7 +957,7 @@ theorem val_eq (h : v₁.IsEquiv v₂) {r s : R} : v₁ r = v₁ s ↔ v₂ r = 
 #align add_valuation.is_equiv.val_eq AddValuation.IsEquiv.val_eq
 
 theorem ne_top (h : v₁.IsEquiv v₂) {r : R} : v₁ r ≠ ⊤ ↔ v₂ r ≠ ⊤ :=
-  h.NeZero
+  h.ne_zero
 #align add_valuation.is_equiv.ne_top AddValuation.IsEquiv.ne_top
 
 end IsEquiv

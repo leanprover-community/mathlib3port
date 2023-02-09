@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_topology.Moore_complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,24 +75,24 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     by
     -- The differential is `subobject.arrow _ ≫ X.δ (0 : fin (n+3))`,
     -- factored through the intersection of the kernels.
-    refine' factor_thru _ (arrow _ ≫ X.δ (0 : Fin (n + 3))) _
+    refine' factorThru _ (arrow _ ≫ X.δ (0 : Fin (n + 3))) _
     -- We now need to show that it factors!
     -- A morphism factors through an intersection of subobjects if it factors through each.
     refine' (finset_inf_factors _).mpr fun i m => _
     -- A morphism `f` factors through the kernel of `g` exactly if `f ≫ g = 0`.
-    apply kernel_subobject_factors
+    apply kernelSubobject_factors
     -- Use a simplicial identity
-    dsimp [obj_X]
-    erw [category.assoc, ← X.δ_comp_δ (Fin.zero_le i.succ), ← category.assoc]
+    dsimp [objX]
+    erw [Category.assoc, ← X.δ_comp_δ (Fin.zero_le i.succ), ← Category.assoc]
     -- It's the first two factors which are zero.
     convert zero_comp
     -- We can rewrite the arrow out of the intersection of all the kernels as a composition
     -- of a morphism we don't care about with the arrow out of the kernel of `X.δ i.succ.succ`.
-    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i.succ (by simp))]
+    rw [← factorThru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i.succ (by simp))]
     -- It's the second two factors which are zero.
-    rw [category.assoc]
+    rw [Category.assoc]
     convert comp_zero
-    exact kernel_subobject_arrow_comp _
+    exact kernelSubobject_arrow_comp _
 #align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
 
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
@@ -101,16 +101,15 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     -- after the first simp the proofs are almost identical
     cases n <;>
     dsimp
-  · simp only [subobject.factor_thru_arrow_assoc]
+  · simp only [Subobject.factorThru_arrow_assoc]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (0 + 2)))]
-    rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin 2) (by simp))]
-    slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
+    rw [← factorThru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin 2) (by simp))]
+    slice_lhs 2 3 => rw [kernelSubobject_arrow_comp]
     simp
-  · simp [factor_thru_right]
+  · simp [factorThru_right]
     slice_lhs 2 3 => erw [← X.δ_comp_δ (Fin.zero_le (0 : Fin (n.succ + 2)))]
-    rw [←
-      factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
-    slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
+    rw [← factorThru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ (0 : Fin (n + 3)) (by simp))]
+    slice_lhs 2 3 => rw [kernelSubobject_arrow_comp]
     simp
 #align algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
 
@@ -133,14 +132,14 @@ variable {X} {Y : SimplicialObject C} (f : X ⟶ Y)
 def map (f : X ⟶ Y) : obj X ⟶ obj Y :=
   ChainComplex.ofHom _ _ _ _ _ _
     (fun n => by
-      refine' factor_thru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
+      refine' factorThru _ (arrow _ ≫ f.app (op (SimplexCategory.mk n))) _
       cases n <;> dsimp
       · apply top_factors
       · refine' (finset_inf_factors _).mpr fun i m => _
-        apply kernel_subobject_factors
+        apply kernelSubobject_factors
         slice_lhs 2 3 => erw [← f.naturality]
-        rw [← factor_thru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i (by simp))]
-        slice_lhs 2 3 => erw [kernel_subobject_arrow_comp]
+        rw [← factorThru_arrow _ _ (finset_inf_arrow_factors Finset.univ _ i (by simp))]
+        slice_lhs 2 3 => erw [kernelSubobject_arrow_comp]
         simp)
     fun n => by
     cases n <;> dsimp

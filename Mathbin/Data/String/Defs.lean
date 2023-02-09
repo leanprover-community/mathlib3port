@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Keeley Hoek, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.string.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,26 +41,26 @@ def mapTokens (c : Char) (f : String → String) : String → String :=
 #print String.isPrefixOf /-
 /-- Tests whether the first string is a prefix of the second string. -/
 def isPrefixOf (x y : String) : Bool :=
-  x.toList.isPrefixOfₓ y.toList
+  x.toList.isPrefixOf y.toList
 #align string.is_prefix_of String.isPrefixOf
 -/
 
 /-- Tests whether the first string is a suffix of the second string. -/
 def isSuffixOf (x y : String) : Bool :=
-  x.toList.isSuffixOfₓ y.toList
+  x.toList.isSuffixOf y.toList
 #align string.is_suffix_of String.isSuffixOf
 
 #print String.startsWith /-
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/
 abbrev startsWith (x y : String) : Bool :=
-  y.isPrefixOfₓ x
+  y.isPrefixOf x
 #align string.starts_with String.startsWith
 -/
 
 #print String.endsWith /-
 /-- `x.ends_with y` is true if `y` is a suffix of `x`, and is false otherwise. -/
 abbrev endsWith (x y : String) : Bool :=
-  y.isSuffixOfₓ x
+  y.isSuffixOf x
 #align string.ends_with String.endsWith
 -/
 

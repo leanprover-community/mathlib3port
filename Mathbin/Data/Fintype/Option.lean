@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fintype.option
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,13 +89,13 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
   intro n
   induction' n with n ih
   · have : card PEmpty = card (ULift (Fin 0)) := by simp only [card_fin, card_pempty, card_ulift]
-    apply Trunc.bind (trunc_equiv_of_card_eq this)
+    apply Trunc.bind (truncEquivOfCardEq this)
     intro e
     apply Trunc.mk
     refine' of_equiv e h_empty
   · have : card (Option (ULift (Fin n))) = card (ULift (Fin n.succ)) := by
       simp only [card_fin, card_option, card_ulift]
-    apply Trunc.bind (trunc_equiv_of_card_eq this)
+    apply Trunc.bind (truncEquivOfCardEq this)
     intro e
     apply Trunc.map _ ih
     intro ih

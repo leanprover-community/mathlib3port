@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.discovery
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ private unsafe def rewrites_for_rule (exp : expr) (cfg : config) (numbered_rule 
     tactic (List rewrite) := do
   let (rule_index, rule) := numbered_rule
   let tracked ← all_rewrites exp rule cfg.to_cfg
-  return (List.map (from_tracked rule_index) tracked)
+  return (list.map (from_tracked rule_index) tracked)
 #align tactic.rewrite_search.rewrites_for_rule tactic.rewrite_search.rewrites_for_rule
 
 /-- Get all rewrites that start at the given expression and use one of the given rewrite rules.
@@ -99,7 +99,7 @@ private unsafe def rewrites_for_rule (exp : expr) (cfg : config) (numbered_rule 
 unsafe def get_rewrites (rules : List (expr × Bool)) (exp : expr) (cfg : config) :
     tactic (Buffer rewrite) := do
   let lists ← List.mapM (rewrites_for_rule exp cfg) rules.enum
-  return (List.foldl Buffer.appendList Buffer.nil Lists)
+  return (list.foldl buffer.append_list buffer.nil lists)
 #align tactic.rewrite_search.get_rewrites tactic.rewrite_search.get_rewrites
 
 end Tactic.RewriteSearch

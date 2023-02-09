@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.order.absolute_value
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_2 : OrderedSemiring.{u2} S] (abv : AbsoluteValue.{u1, u2} R S _inst_1 _inst_2) {x : R}, Iff (Ne.{succ u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (AbsoluteValue.{u1, u2} R S _inst_1 _inst_2) R (fun (f : R) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) f) (SubadditiveHomClass.toFunLike.{max u1 u2, u1, u2} (AbsoluteValue.{u1, u2} R S _inst_1 _inst_2) R S (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_1)))) (Distrib.toAdd.{u2} S (NonUnitalNonAssocSemiring.toDistrib.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S (Semiring.toNonAssocSemiring.{u2} S (OrderedSemiring.toSemiring.{u2} S _inst_2))))) (Preorder.toLE.{u2} S (PartialOrder.toPreorder.{u2} S (OrderedSemiring.toPartialOrder.{u2} S _inst_2))) (AbsoluteValue.subadditiveHomClass.{u1, u2} R S _inst_1 _inst_2)) abv x) (OfNat.ofNat.{u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) 0 (Zero.toOfNat0.{u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (MonoidWithZero.toZero.{u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (Semiring.toMonoidWithZero.{u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (OrderedSemiring.toSemiring.{u2} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) _inst_2)))))) (Ne.{succ u1} R x (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_1)))))
 Case conversion may be inaccurate. Consider using '#align absolute_value.ne_zero_iff AbsoluteValue.ne_zero_iffₓ'. -/
 protected theorem ne_zero_iff {x : R} : abv x ≠ 0 ↔ x ≠ 0 :=
-  abv.eq_zero.Not
+  abv.eq_zero.not
 #align absolute_value.ne_zero_iff AbsoluteValue.ne_zero_iff
 
 /- warning: absolute_value.pos -> AbsoluteValue.pos is a dubious translation:
@@ -199,7 +199,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : OrderedSemiring.{u1} S] (abv : AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) {x : R}, (Ne.{succ u2} R x (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1))))) -> (LT.lt.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (Preorder.toLT.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (PartialOrder.toPreorder.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (OrderedSemiring.toPartialOrder.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) _inst_2))) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (MonoidWithZero.toZero.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (Semiring.toMonoidWithZero.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (OrderedSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) _inst_2))))) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) R (fun (f : R) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) f) (SubadditiveHomClass.toFunLike.{max u2 u1, u2, u1} (AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) R S (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))) (Distrib.toAdd.{u1} S (NonUnitalNonAssocSemiring.toDistrib.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S (Semiring.toNonAssocSemiring.{u1} S (OrderedSemiring.toSemiring.{u1} S _inst_2))))) (Preorder.toLE.{u1} S (PartialOrder.toPreorder.{u1} S (OrderedSemiring.toPartialOrder.{u1} S _inst_2))) (AbsoluteValue.subadditiveHomClass.{u2, u1} R S _inst_1 _inst_2)) abv x))
 Case conversion may be inaccurate. Consider using '#align absolute_value.pos AbsoluteValue.posₓ'. -/
 protected theorem pos {x : R} (hx : x ≠ 0) : 0 < abv x :=
-  lt_of_le_of_ne (abv.NonNeg x) (Ne.symm <| mt abv.eq_zero.mp hx)
+  lt_of_le_of_ne (abv.nonneg x) (Ne.symm <| mt abv.eq_zero.mp hx)
 #align absolute_value.pos AbsoluteValue.pos
 
 /- warning: absolute_value.pos_iff -> AbsoluteValue.pos_iff is a dubious translation:
@@ -210,7 +210,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align absolute_value.pos_iff AbsoluteValue.pos_iffₓ'. -/
 @[simp]
 protected theorem pos_iff {x : R} : 0 < abv x ↔ x ≠ 0 :=
-  ⟨fun h₁ => mt abv.eq_zero.mpr h₁.ne', abv.Pos⟩
+  ⟨fun h₁ => mt abv.eq_zero.mpr h₁.ne', abv.pos⟩
 #align absolute_value.pos_iff AbsoluteValue.pos_iff
 
 /- warning: absolute_value.ne_zero -> AbsoluteValue.ne_zero is a dubious translation:
@@ -220,7 +220,7 @@ but is expected to have type
   forall {R : Type.{u2}} {S : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_2 : OrderedSemiring.{u1} S] (abv : AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) {x : R}, (Ne.{succ u2} R x (OfNat.ofNat.{u2} R 0 (Zero.toOfNat0.{u2} R (MonoidWithZero.toZero.{u2} R (Semiring.toMonoidWithZero.{u2} R _inst_1))))) -> (Ne.{succ u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) R (fun (f : R) => (fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) f) (SubadditiveHomClass.toFunLike.{max u2 u1, u2, u1} (AbsoluteValue.{u2, u1} R S _inst_1 _inst_2) R S (Distrib.toAdd.{u2} R (NonUnitalNonAssocSemiring.toDistrib.{u2} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} R (Semiring.toNonAssocSemiring.{u2} R _inst_1)))) (Distrib.toAdd.{u1} S (NonUnitalNonAssocSemiring.toDistrib.{u1} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} S (Semiring.toNonAssocSemiring.{u1} S (OrderedSemiring.toSemiring.{u1} S _inst_2))))) (Preorder.toLE.{u1} S (PartialOrder.toPreorder.{u1} S (OrderedSemiring.toPartialOrder.{u1} S _inst_2))) (AbsoluteValue.subadditiveHomClass.{u2, u1} R S _inst_1 _inst_2)) abv x) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (MonoidWithZero.toZero.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (Semiring.toMonoidWithZero.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) (OrderedSemiring.toSemiring.{u1} ((fun (x._@.Mathlib.Algebra.Order.Hom.Basic._hyg.96 : R) => S) x) _inst_2))))))
 Case conversion may be inaccurate. Consider using '#align absolute_value.ne_zero AbsoluteValue.ne_zeroₓ'. -/
 protected theorem ne_zero {x : R} (hx : x ≠ 0) : abv x ≠ 0 :=
-  (abv.Pos hx).ne'
+  (abv.pos hx).ne'
 #align absolute_value.ne_zero AbsoluteValue.ne_zero
 
 /- warning: absolute_value.map_one_of_is_regular -> AbsoluteValue.map_one_of_isLeftRegular is a dubious translation:
@@ -296,7 +296,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align absolute_value.map_one AbsoluteValue.map_oneₓ'. -/
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
-  abv.map_one_of_isLeftRegular (isRegular_of_ne_zero <| abv.NeZero one_ne_zero).left
+  abv.map_one_of_isLeftRegular (isRegular_of_ne_zero <| abv.ne_zero one_ne_zero).left
 #align absolute_value.map_one AbsoluteValue.map_one
 
 instance : MonoidWithZeroHomClass (AbsoluteValue R S) R S :=
@@ -487,7 +487,7 @@ Case conversion may be inaccurate. Consider using '#align absolute_value.is_abso
 /-- A bundled absolute value is an absolute value. -/
 instance AbsoluteValue.isAbsoluteValue (abv : AbsoluteValue R S) : IsAbsoluteValue abv
     where
-  abv_nonneg := abv.NonNeg
+  abv_nonneg := abv.nonneg
   abv_eq_zero _ := abv.eq_zero
   abv_add := abv.add_le
   abv_mul := abv.map_mul
@@ -538,7 +538,7 @@ but is expected to have type
   forall {S : Type.{u1}} [_inst_1 : LinearOrderedRing.{u1} S], IsAbsoluteValue.{u1, u1} S (StrictOrderedSemiring.toOrderedSemiring.{u1} S (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} S (LinearOrderedRing.toLinearOrderedSemiring.{u1} S _inst_1))) S (StrictOrderedSemiring.toSemiring.{u1} S (LinearOrderedSemiring.toStrictOrderedSemiring.{u1} S (LinearOrderedRing.toLinearOrderedSemiring.{u1} S _inst_1))) (Abs.abs.{u1} S (Neg.toHasAbs.{u1} S (Ring.toNeg.{u1} S (StrictOrderedRing.toRing.{u1} S (LinearOrderedRing.toStrictOrderedRing.{u1} S _inst_1))) (SemilatticeSup.toHasSup.{u1} S (Lattice.toSemilatticeSup.{u1} S (DistribLattice.toLattice.{u1} S (instDistribLattice.{u1} S (LinearOrderedRing.toLinearOrder.{u1} S _inst_1)))))))
 Case conversion may be inaccurate. Consider using '#align is_absolute_value.abs_is_absolute_value IsAbsoluteValue.abs_isAbsoluteValueₓ'. -/
 instance abs_isAbsoluteValue : IsAbsoluteValue (abs : S → S) :=
-  AbsoluteValue.abs.IsAbsoluteValue
+  AbsoluteValue.abs.isAbsoluteValue
 #align is_absolute_value.abs_is_absolute_value IsAbsoluteValue.abs_isAbsoluteValue
 
 end LinearOrderedRing
@@ -679,7 +679,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'ₓ'. -/
 theorem abv_one' : abv 1 = 1 :=
   (toAbsoluteValue abv).map_one_of_isLeftRegular <|
-    (isRegular_of_ne_zero <| (toAbsoluteValue abv).NeZero one_ne_zero).left
+    (isRegular_of_ne_zero <| (toAbsoluteValue abv).ne_zero one_ne_zero).left
 #align is_absolute_value.abv_one' IsAbsoluteValue.abv_one'
 
 #print IsAbsoluteValue.abvHom' /-

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.qpf.univariate.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -231,9 +231,9 @@ theorem wrepr_equiv (x : q.p.W) : Wequiv (wrepr x) x :=
   by
   induction' x with a f ih
   apply Wequiv.trans
-  · change Wequiv (Wrepr ⟨a, f⟩) (PFunctor.W.mk (Wrepr <$> ⟨a, f⟩))
+  · change Wequiv (wrepr ⟨a, f⟩) (PFunctor.W.mk (wrepr <$> ⟨a, f⟩))
     apply Wequiv.abs'
-    have : Wrepr ⟨a, f⟩ = PFunctor.W.mk (repr (abs (Wrepr <$> ⟨a, f⟩))) := rfl
+    have : wrepr ⟨a, f⟩ = PFunctor.W.mk (repr (abs (wrepr <$> ⟨a, f⟩))) := rfl
     rw [this, PFunctor.W.dest_mk, abs_repr]
     rfl
   apply Wequiv.ind; exact ih
@@ -280,12 +280,12 @@ theorem Fix.rec_eq {α : Type _} (g : F α → α) (x : F (Fix F)) :
     apply funext
     apply Quotient.ind
     intro x
-    apply recF_eq_of_Wequiv
-    rw [fix_to_W]
-    apply Wrepr_equiv
+    apply recF_eq_of_wequiv
+    rw [fixToW]
+    apply wrepr_equiv
   conv =>
     lhs
-    rw [fix.rec, fix.mk]
+    rw [Fix.rec, Fix.mk]
     dsimp
   cases' h : repr x with a f
   rw [PFunctor.map_eq, recF_eq, ← PFunctor.map_eq, PFunctor.W.dest_mk, ← PFunctor.comp_map, abs_map,
@@ -301,11 +301,11 @@ theorem Fix.ind_aux (a : q.p.A) (f : q.p.B a → q.p.W) :
     rw [PFunctor.W.dest_mk, abs_map, abs_repr, ← abs_map, PFunctor.map_eq]
     conv =>
       rhs
-      simp only [Wrepr, recF_eq, PFunctor.W.dest_mk, abs_repr]
+      simp only [wrepr, recF_eq, PFunctor.W.dest_mk, abs_repr]
     rfl
   rw [this]
   apply Quot.sound
-  apply Wrepr_equiv
+  apply wrepr_equiv
 #align qpf.fix.ind_aux Qpf.Fix.ind_aux
 
 theorem Fix.ind_rec {α : Type u} (g₁ g₂ : Fix F → α)
@@ -315,7 +315,7 @@ theorem Fix.ind_rec {α : Type u} (g₁ g₂ : Fix F → α)
   intro x
   induction' x with a f ih
   change g₁ ⟦⟨a, f⟩⟧ = g₂ ⟦⟨a, f⟩⟧
-  rw [← fix.ind_aux a f]; apply h
+  rw [← Fix.ind_aux a f]; apply h
   rw [← abs_map, ← abs_map, PFunctor.map_eq, PFunctor.map_eq]
   dsimp [Function.comp]
   congr with x; apply ih
@@ -325,27 +325,27 @@ theorem Fix.rec_unique {α : Type u} (g : F α → α) (h : Fix F → α)
     (hyp : ∀ x, h (Fix.mk x) = g (h <$> x)) : Fix.rec g = h :=
   by
   ext x
-  apply fix.ind_rec
+  apply Fix.ind_rec
   intro x hyp'
-  rw [hyp, ← hyp', fix.rec_eq]
+  rw [hyp, ← hyp', Fix.rec_eq]
 #align qpf.fix.rec_unique Qpf.Fix.rec_unique
 
 theorem Fix.mk_dest (x : Fix F) : Fix.mk (Fix.dest x) = x :=
   by
-  change (fix.mk ∘ fix.dest) x = id x
-  apply fix.ind_rec
+  change (Fix.mk ∘ Fix.dest) x = id x
+  apply Fix.ind_rec
   intro x; dsimp
-  rw [fix.dest, fix.rec_eq, id_map, comp_map]
+  rw [Fix.dest, Fix.rec_eq, id_map, comp_map]
   intro h; rw [h]
 #align qpf.fix.mk_dest Qpf.Fix.mk_dest
 
 theorem Fix.dest_mk (x : F (Fix F)) : Fix.dest (Fix.mk x) = x :=
   by
-  unfold fix.dest; rw [fix.rec_eq, ← fix.dest, ← comp_map]
+  unfold fix.dest; rw [Fix.rec_eq, ← Fix.dest, ← comp_map]
   conv =>
     rhs
     rw [← id_map x]
-  congr with x; apply fix.mk_dest
+  congr with x; apply Fix.mk_dest
 #align qpf.fix.dest_mk Qpf.Fix.dest_mk
 
 theorem Fix.ind (p : Fix F → Prop) (h : ∀ x : F (Fix F), Liftp p x → p (Fix.mk x)) : ∀ x, p x :=
@@ -354,7 +354,7 @@ theorem Fix.ind (p : Fix F → Prop) (h : ∀ x : F (Fix F), Liftp p x → p (Fi
   intro x
   induction' x with a f ih
   change p ⟦⟨a, f⟩⟧
-  rw [← fix.ind_aux a f]
+  rw [← Fix.ind_aux a f]
   apply h
   rw [liftp_iff]
   refine' ⟨_, _, rfl, _⟩
@@ -427,7 +427,7 @@ theorem Cofix.dest_corec {α : Type u} (g : α → F α) (x : α) :
   by
   conv =>
     lhs
-    rw [cofix.dest, cofix.corec];
+    rw [Cofix.dest, Cofix.corec];
   dsimp
   rw [corecF_eq, abs_map, abs_repr, ← comp_map]; rfl
 #align qpf.cofix.dest_corec Qpf.Cofix.dest_corec
@@ -444,7 +444,7 @@ private theorem cofix.bisim_aux (r : Cofix F → Cofix F → Prop) (h' : ∀ x, 
   intro y rxy
   apply Quot.sound
   let r' x y := r (Quot.mk _ x) (Quot.mk _ y)
-  have : is_precongr r' := by
+  have : IsPrecongr r' := by
     intro a b r'ab
     have h₀ :
       Quot.mk r <$> Quot.mk Mcongr <$> abs (PFunctor.M.dest a) =
@@ -475,7 +475,7 @@ theorem Cofix.bisim_rel (r : Cofix F → Cofix F → Prop)
     ∀ x y, r x y → x = y := by
   let r' (x y) := x = y ∨ r x y
   intro x y rxy
-  apply cofix.bisim_aux r'
+  apply Cofix.bisim_aux r'
   · intro x
     left
     rfl
@@ -493,7 +493,7 @@ theorem Cofix.bisim_rel (r : Cofix F → Cofix F → Prop)
 theorem Cofix.bisim (r : Cofix F → Cofix F → Prop)
     (h : ∀ x y, r x y → Liftr r (Cofix.dest x) (Cofix.dest y)) : ∀ x y, r x y → x = y :=
   by
-  apply cofix.bisim_rel
+  apply Cofix.bisim_rel
   intro x y rxy
   rcases(liftr_iff r _ _).mp (h x y rxy) with ⟨a, f₀, f₁, dxeq, dyeq, h'⟩
   rw [dxeq, dyeq, ← abs_map, ← abs_map, PFunctor.map_eq, PFunctor.map_eq]
@@ -632,7 +632,7 @@ theorem mem_supp {α : Type u} (x : F α) (u : α) :
   by
   rw [supp]; dsimp; constructor
   · intro h a f haf
-    have : liftp (fun u => u ∈ f '' univ) x :=
+    have : Liftp (fun u => u ∈ f '' univ) x :=
       by
       rw [liftp_iff]
       refine' ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
@@ -653,7 +653,7 @@ theorem has_good_supp_iff {α : Type u} (x : F α) :
   by
   constructor
   · intro h
-    have : liftp (supp x) x := by rw [h] <;> intro u <;> exact id
+    have : Liftp (supp x) x := by rw [h] <;> intro u <;> exact id
     rw [liftp_iff] at this
     rcases this with ⟨a, f, xeq, h'⟩
     refine' ⟨a, f, xeq.symm, _⟩
@@ -710,20 +710,20 @@ theorem liftp_iff_of_isUniform (h : q.IsUniform) {α : Type u} (x : F α) (p : �
   rw [liftp_iff, ← abs_repr x]
   cases' repr x with a f; constructor
   · rintro ⟨a', f', abseq, hf⟩ u
-    rw [supp_eq_of_is_uniform h, h _ _ _ _ abseq]
+    rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
     rintro ⟨i, _, hi⟩
     rw [← hi]
     apply hf
   intro h'
   refine' ⟨a, f, rfl, fun i => h' _ _⟩
-  rw [supp_eq_of_is_uniform h]
+  rw [supp_eq_of_isUniform h]
   exact ⟨i, mem_univ i, rfl⟩
 #align qpf.liftp_iff_of_is_uniform Qpf.liftp_iff_of_isUniform
 
 theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) :
     supp (g <$> x) = g '' supp x := by
   rw [← abs_repr x]; cases' repr x with a f; rw [← abs_map, PFunctor.map_eq]
-  rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, image_comp]
+  rw [supp_eq_of_isUniform h, supp_eq_of_isUniform h, image_comp]
 #align qpf.supp_map Qpf.supp_map
 
 theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
@@ -732,7 +732,7 @@ theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
   · intro h α a a' f f' h'
     rw [← PFunctor.supp_eq, ← PFunctor.supp_eq, ← h, h', h]
   · rintro h α ⟨a, f⟩
-    rwa [supp_eq_of_is_uniform, PFunctor.supp_eq]
+    rwa [supp_eq_of_isUniform, PFunctor.supp_eq]
 #align qpf.supp_preservation_iff_uniform Qpf.suppPreservation_iff_uniform
 
 theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpPreservation :=
@@ -740,18 +740,18 @@ theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpP
   constructor <;> intro h
   · rintro α p ⟨a, f⟩
     have h' := h
-    rw [supp_preservation_iff_uniform] at h'
-    dsimp only [supp_preservation, supp] at h
-    rwa [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, PFunctor.liftp_iff'] <;> try assumption
+    rw [suppPreservation_iff_uniform] at h'
+    dsimp only [SuppPreservation, supp] at h
+    rwa [liftp_iff_of_isUniform, supp_eq_of_isUniform, PFunctor.liftp_iff'] <;> try assumption
     · simp only [image_univ, mem_range, exists_imp]
       constructor <;> intros <;> subst_vars <;> solve_by_elim
   · rintro α ⟨a, f⟩
-    simp only [liftp_preservation] at h
+    simp only [LiftpPreservation] at h
     simp only [supp, h]
 #align qpf.supp_preservation_iff_liftp_preservation Qpf.suppPreservation_iff_liftpPreservation
 
 theorem liftpPreservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by
-  rw [← supp_preservation_iff_liftp_preservation, supp_preservation_iff_uniform]
+  rw [← suppPreservation_iff_liftpPreservation, suppPreservation_iff_uniform]
 #align qpf.liftp_preservation_iff_uniform Qpf.liftpPreservation_iff_uniform
 
 end Qpf

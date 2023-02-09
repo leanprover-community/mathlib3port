@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.chebyshev
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,24 +29,24 @@ variable {R A : Type _} [CommRing R] [CommRing A] [Algebra R A]
 
 @[simp]
 theorem aeval_t (x : A) (n : ℕ) : aeval x (t R n) = (t A n).eval x := by
-  rw [aeval_def, eval₂_eq_eval_map, map_T]
+  rw [aeval_def, eval₂_eq_eval_map, map_t]
 #align polynomial.chebyshev.aeval_T Polynomial.Chebyshev.aeval_t
 
 @[simp]
 theorem aeval_u (x : A) (n : ℕ) : aeval x (u R n) = (u A n).eval x := by
-  rw [aeval_def, eval₂_eq_eval_map, map_U]
+  rw [aeval_def, eval₂_eq_eval_map, map_u]
 #align polynomial.chebyshev.aeval_U Polynomial.Chebyshev.aeval_u
 
 @[simp]
 theorem algebraMap_eval_t (x : R) (n : ℕ) :
     algebraMap R A ((t R n).eval x) = (t A n).eval (algebraMap R A x) := by
-  rw [← aeval_algebra_map_apply_eq_algebra_map_eval, aeval_T]
+  rw [← aeval_algebraMap_apply_eq_algebraMap_eval, aeval_t]
 #align polynomial.chebyshev.algebra_map_eval_T Polynomial.Chebyshev.algebraMap_eval_t
 
 @[simp]
 theorem algebraMap_eval_u (x : R) (n : ℕ) :
     algebraMap R A ((u R n).eval x) = (u A n).eval (algebraMap R A x) := by
-  rw [← aeval_algebra_map_apply_eq_algebra_map_eval, aeval_U]
+  rw [← aeval_algebraMap_apply_eq_algebraMap_eval, aeval_u]
 #align polynomial.chebyshev.algebra_map_eval_U Polynomial.Chebyshev.algebraMap_eval_u
 
 @[simp, norm_cast]
@@ -72,11 +72,11 @@ variable (θ : ℂ)
 value `cos (n * θ)`. -/
 @[simp]
 theorem t_complex_cos : ∀ n, (t ℂ n).eval (cos θ) = cos (n * θ)
-  | 0 => by simp only [T_zero, eval_one, Nat.cast_zero, zero_mul, cos_zero]
-  | 1 => by simp only [eval_X, one_mul, T_one, Nat.cast_one]
+  | 0 => by simp only [t_zero, eval_one, Nat.cast_zero, zero_mul, cos_zero]
+  | 1 => by simp only [eval_x, one_mul, t_one, Nat.cast_one]
   | n + 2 =>
     by
-    simp only [eval_X, eval_one, T_add_two, eval_sub, eval_bit0, Nat.cast_succ, eval_mul]
+    simp only [eval_x, eval_one, t_add_two, eval_sub, eval_bit0, Nat.cast_succ, eval_mul]
     rw [T_complex_cos (n + 1), T_complex_cos n]
     have aux : sin θ * sin θ = 1 - cos θ * cos θ :=
       by
@@ -92,9 +92,9 @@ value `sin ((n + 1) * θ) / sin θ`. -/
 theorem u_complex_cos (n : ℕ) : (u ℂ n).eval (cos θ) * sin θ = sin ((n + 1) * θ) :=
   by
   induction' n with d hd
-  · simp only [U_zero, Nat.cast_zero, eval_one, mul_one, zero_add, one_mul]
-  · rw [U_eq_X_mul_U_add_T]
-    simp only [eval_add, eval_mul, eval_X, T_complex_cos, add_mul, mul_assoc, hd, one_mul]
+  · simp only [u_zero, Nat.cast_zero, eval_one, mul_one, zero_add, one_mul]
+  · rw [u_eq_x_mul_u_add_t]
+    simp only [eval_add, eval_mul, eval_x, t_complex_cos, add_mul, mul_assoc, hd, one_mul]
     conv_rhs => rw [sin_add, mul_comm]
     push_cast
     simp only [add_mul, one_mul]
@@ -112,14 +112,14 @@ variable (θ : ℝ) (n : ℕ)
 /-- The `n`-th Chebyshev polynomial of the first kind evaluates on `cos θ` to the
 value `cos (n * θ)`. -/
 @[simp]
-theorem t_real_cos : (t ℝ n).eval (cos θ) = cos (n * θ) := by exact_mod_cast T_complex_cos θ n
+theorem t_real_cos : (t ℝ n).eval (cos θ) = cos (n * θ) := by exact_mod_cast t_complex_cos θ n
 #align polynomial.chebyshev.T_real_cos Polynomial.Chebyshev.t_real_cos
 
 /-- The `n`-th Chebyshev polynomial of the second kind evaluates on `cos θ` to the
 value `sin ((n + 1) * θ) / sin θ`. -/
 @[simp]
 theorem u_real_cos : (u ℝ n).eval (cos θ) * sin θ = sin ((n + 1) * θ) := by
-  exact_mod_cast U_complex_cos θ n
+  exact_mod_cast u_complex_cos θ n
 #align polynomial.chebyshev.U_real_cos Polynomial.Chebyshev.u_real_cos
 
 end Real

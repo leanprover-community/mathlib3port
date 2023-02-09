@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,7 +78,7 @@ instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R �
   norm_smul_le r x :=
     by
     rw [norm_eq_abs, norm_eq_abs, ← algebraMap_smul ℝ r x, Algebra.smul_def, map_mul, ←
-      norm_algebra_map' ℝ r, coe_algebra_map, abs_of_real]
+      norm_algebra_map' ℝ r, coe_algebraMap, abs_of_real]
     rfl
   toAlgebra := Complex.algebra
 
@@ -132,7 +132,7 @@ theorem edist_of_im_eq {z w : ℂ} (h : z.im = w.im) : edist z w = edist z.re w.
 
 theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * |z.im| := by
   rw [dist_of_re_eq (conj_re z), conj_im, dist_comm, Real.dist_eq, sub_neg_eq_add, ← two_mul,
-    _root_.abs_mul, abs_of_pos (zero_lt_two' ℝ)]
+    abs_mul, abs_of_pos (zero_lt_two' ℝ)]
 #align complex.dist_conj_self Complex.dist_conj_self
 
 theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
@@ -182,7 +182,7 @@ theorem continuous_abs : Continuous abs :=
 
 @[continuity]
 theorem continuous_normSq : Continuous normSq := by
-  simpa [← norm_sq_eq_abs] using continuous_abs.pow 2
+  simpa [← normSq_eq_abs] using continuous_abs.pow 2
 #align complex.continuous_norm_sq Complex.continuous_normSq
 
 @[simp, norm_cast]
@@ -215,19 +215,19 @@ theorem equivRealProd_apply_le (z : ℂ) : ‖equivRealProd z‖ ≤ abs z := by
 #align complex.equiv_real_prod_apply_le Complex.equivRealProd_apply_le
 
 theorem equivRealProd_apply_le' (z : ℂ) : ‖equivRealProd z‖ ≤ 1 * abs z := by
-  simpa using equiv_real_prod_apply_le z
+  simpa using equivRealProd_apply_le z
 #align complex.equiv_real_prod_apply_le' Complex.equivRealProd_apply_le'
 
 theorem lipschitz_equivRealProd : LipschitzWith 1 equivRealProd := by
-  simpa using AddMonoidHomClass.lipschitz_of_bound equiv_real_prod_lm 1 equiv_real_prod_apply_le'
+  simpa using AddMonoidHomClass.lipschitz_of_bound equivRealProdLm 1 equivRealProd_apply_le'
 #align complex.lipschitz_equiv_real_prod Complex.lipschitz_equivRealProd
 
 theorem antilipschitz_equivRealProd : AntilipschitzWith (Nnreal.sqrt 2) equivRealProd := by
-  simpa using AddMonoidHomClass.antilipschitz_of_bound equiv_real_prod_lm abs_le_sqrt_two_mul_max
+  simpa using AddMonoidHomClass.antilipschitz_of_bound equivRealProdLm abs_le_sqrt_two_mul_max
 #align complex.antilipschitz_equiv_real_prod Complex.antilipschitz_equivRealProd
 
 theorem uniformEmbedding_equivRealProd : UniformEmbedding equivRealProd :=
-  antilipschitz_equivRealProd.UniformEmbedding lipschitz_equivRealProd.UniformContinuous
+  antilipschitz_equivRealProd.uniformEmbedding lipschitz_equivRealProd.uniformContinuous
 #align complex.uniform_embedding_equiv_real_prod Complex.uniformEmbedding_equivRealProd
 
 instance : CompleteSpace ℂ :=
@@ -241,7 +241,7 @@ def equivRealProdClm : ℂ ≃L[ℝ] ℝ × ℝ :=
 #align complex.equiv_real_prod_clm Complex.equivRealProdClm
 
 instance : ProperSpace ℂ :=
-  (id lipschitz_equivRealProd : LipschitzWith 1 equivRealProdClm.toHomeomorph).ProperSpace
+  (id lipschitz_equivRealProd : LipschitzWith 1 equivRealProdClm.toHomeomorph).properSpace
 
 /-- The `abs` function on `ℂ` is proper. -/
 theorem tendsto_abs_cocompact_atTop : Filter.Tendsto abs (Filter.cocompact ℂ) Filter.atTop :=
@@ -252,7 +252,7 @@ theorem tendsto_abs_cocompact_atTop : Filter.Tendsto abs (Filter.cocompact ℂ) 
 theorem tendsto_normSq_cocompact_atTop : Filter.Tendsto normSq (Filter.cocompact ℂ) Filter.atTop :=
   by
   simpa [mul_self_abs] using
-    tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_at_top
+    tendsto_abs_cocompact_at_top.at_top_mul_at_top tendsto_abs_cocompact_atTop
 #align complex.tendsto_norm_sq_cocompact_at_top Complex.tendsto_normSq_cocompact_atTop
 
 open ContinuousLinearMap
@@ -264,7 +264,7 @@ def reClm : ℂ →L[ℝ] ℝ :=
 
 @[continuity]
 theorem continuous_re : Continuous re :=
-  reClm.Continuous
+  reClm.continuous
 #align complex.continuous_re Complex.continuous_re
 
 @[simp]
@@ -284,7 +284,7 @@ def imClm : ℂ →L[ℝ] ℝ :=
 
 @[continuity]
 theorem continuous_im : Continuous im :=
-  imClm.Continuous
+  imClm.continuous
 #align complex.continuous_im Complex.continuous_im
 
 @[simp]
@@ -298,15 +298,15 @@ theorem imClm_apply (z : ℂ) : (imClm : ℂ → ℝ) z = z.im :=
 #align complex.im_clm_apply Complex.imClm_apply
 
 theorem restrictScalars_one_smul_right' (x : E) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] E) =
-      reClm.smul_right x + i • imClm.smul_right x :=
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] E) =
+      reClm.smulRight x + i • imClm.smulRight x :=
   by
   ext ⟨a, b⟩
-  simp [mk_eq_add_mul_I, add_smul, mul_smul, smul_comm I]
+  simp [mk_eq_add_mul_i, add_smul, mul_smul, smul_comm i]
 #align complex.restrict_scalars_one_smul_right' Complex.restrictScalars_one_smul_right'
 
 theorem restrictScalars_one_smulRight (x : ℂ) :
-    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smul_right x : ℂ →L[ℂ] ℂ) = x • 1 :=
+    ContinuousLinearMap.restrictScalars ℝ ((1 : ℂ →L[ℂ] ℂ).smulRight x : ℂ →L[ℂ] ℂ) = x • 1 :=
   by
   ext1 z
   dsimp
@@ -329,7 +329,7 @@ theorem conjLie_symm : conjLie.symm = conjLie :=
 #align complex.conj_lie_symm Complex.conjLie_symm
 
 theorem isometry_conj : Isometry (conj : ℂ → ℂ) :=
-  conjLie.Isometry
+  conjLie.isometry
 #align complex.isometry_conj Complex.isometry_conj
 
 @[simp]
@@ -351,7 +351,7 @@ theorem nndist_conj_comm (z w : ℂ) : nndist (conj z) w = nndist z (conj w) :=
 #align complex.nndist_conj_comm Complex.nndist_conj_comm
 
 instance : ContinuousStar ℂ :=
-  ⟨conjLie.Continuous⟩
+  ⟨conjLie.continuous⟩
 
 @[continuity]
 theorem continuous_conj : Continuous (conj : ℂ → ℂ) :=
@@ -364,7 +364,7 @@ theorem ringHom_eq_id_or_conj_of_continuous {f : ℂ →+* ℂ} (hf : Continuous
     f = RingHom.id ℂ ∨ f = conj :=
   by
   refine'
-    (real_alg_hom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
+    (real_algHom_eq_id_or_conj <| AlgHom.mk' f <| map_real_smul f hf).imp (fun h => _) fun h => _
   all_goals convert congr_arg AlgHom.toRingHom h; ext1; rfl
 #align complex.ring_hom_eq_id_or_conj_of_continuous Complex.ringHom_eq_id_or_conj_of_continuous
 
@@ -389,12 +389,12 @@ def ofRealLi : ℝ →ₗᵢ[ℝ] ℂ :=
 #align complex.of_real_li Complex.ofRealLi
 
 theorem isometry_of_real : Isometry (coe : ℝ → ℂ) :=
-  ofRealLi.Isometry
+  ofRealLi.isometry
 #align complex.isometry_of_real Complex.isometry_of_real
 
 @[continuity]
 theorem continuous_of_real : Continuous (coe : ℝ → ℂ) :=
-  ofRealLi.Continuous
+  ofRealLi.continuous
 #align complex.continuous_of_real Complex.continuous_of_real
 
 /-- The only continuous ring homomorphism from `ℝ` to `ℂ` is the identity. -/
@@ -520,7 +520,7 @@ variable {α : Type _} (𝕜 : Type _) [IsROrC 𝕜]
 
 @[simp]
 theorem hasSum_conj {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) x ↔ HasSum f (conj x) :=
-  conjCle.HasSum
+  conjCle.hasSum
 #align is_R_or_C.has_sum_conj IsROrC.hasSum_conj
 
 theorem hasSum_conj' {f : α → 𝕜} {x : 𝕜} : HasSum (fun x => conj (f x)) (conj x) ↔ HasSum f x :=
@@ -543,31 +543,31 @@ variable (𝕜)
 @[simp, norm_cast]
 theorem hasSum_of_real {f : α → ℝ} {x : ℝ} : HasSum (fun x => (f x : 𝕜)) x ↔ HasSum f x :=
   ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.has_sum h,
-    ofRealClm.HasSum⟩
+    ofRealClm.hasSum⟩
 #align is_R_or_C.has_sum_of_real IsROrC.hasSum_of_real
 
 @[simp, norm_cast]
 theorem summable_of_real {f : α → ℝ} : (Summable fun x => (f x : 𝕜)) ↔ Summable f :=
   ⟨fun h => by simpa only [IsROrC.reClm_apply, IsROrC.of_real_re] using re_clm.summable h,
-    ofRealClm.Summable⟩
+    ofRealClm.summable⟩
 #align is_R_or_C.summable_of_real IsROrC.summable_of_real
 
 @[norm_cast]
 theorem of_real_tsum (f : α → ℝ) : (↑(∑' a, f a) : 𝕜) = ∑' a, f a :=
   by
   by_cases h : Summable f
-  · exact ContinuousLinearMap.map_tsum of_real_clm h
+  · exact ContinuousLinearMap.map_tsum ofRealClm h
   ·
     rw [tsum_eq_zero_of_not_summable h,
-      tsum_eq_zero_of_not_summable ((summable_of_real _).Not.mpr h), of_real_zero]
+      tsum_eq_zero_of_not_summable ((summable_of_real _).not.mpr h), of_real_zero]
 #align is_R_or_C.of_real_tsum IsROrC.of_real_tsum
 
 theorem hasSum_re {f : α → 𝕜} {x : 𝕜} (h : HasSum f x) : HasSum (fun x => re (f x)) (re x) :=
-  reClm.HasSum h
+  reClm.hasSum h
 #align is_R_or_C.has_sum_re IsROrC.hasSum_re
 
 theorem hasSum_im {f : α → 𝕜} {x : 𝕜} (h : HasSum f x) : HasSum (fun x => im (f x)) (im x) :=
-  imClm.HasSum h
+  imClm.hasSum h
 #align is_R_or_C.has_sum_im IsROrC.hasSum_im
 
 theorem re_tsum {f : α → 𝕜} (h : Summable f) : re (∑' a, f a) = ∑' a, re (f a) :=
@@ -583,10 +583,10 @@ variable {𝕜}
 theorem hasSum_iff (f : α → 𝕜) (c : 𝕜) :
     HasSum f c ↔ HasSum (fun x => re (f x)) (re c) ∧ HasSum (fun x => im (f x)) (im c) :=
   by
-  refine' ⟨fun h => ⟨has_sum_re _ h, has_sum_im _ h⟩, _⟩
+  refine' ⟨fun h => ⟨hasSum_re _ h, hasSum_im _ h⟩, _⟩
   rintro ⟨h₁, h₂⟩
   rw [← IsROrC.re_add_im c]
-  convert ((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).mul_right I)
+  convert ((hasSum_of_real 𝕜).mpr h₁).add (((hasSum_of_real 𝕜).mpr h₂).mul_right i)
   simp_rw [IsROrC.re_add_im]
 #align is_R_or_C.has_sum_iff IsROrC.hasSum_iff
 

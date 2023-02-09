@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ equal to one.
 -/
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α)
     [One α] : Prop :=
-  ∀ (n : ℕ) (aₙ : α), g.partialNumerators.get? n = some aₙ → aₙ = 1
+  ∀ (n : ℕ) (aₙ : α), g.partialNumerators.nth n = some aₙ → aₙ = 1
 #align generalized_continued_fraction.is_simple_continued_fraction GeneralizedContinuedFraction.IsSimpleContinuedFraction
 
 variable (α)
@@ -264,7 +264,7 @@ A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all p
 def SimpleContinuedFraction.IsContinuedFraction [One α] [Zero α] [LT α]
     (s : SimpleContinuedFraction α) : Prop :=
   ∀ (n : ℕ) (bₙ : α),
-    (↑s : GeneralizedContinuedFraction α).partialDenominators.get? n = some bₙ → 0 < bₙ
+    (↑s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 #align simple_continued_fraction.is_continued_fraction SimpleContinuedFraction.IsContinuedFraction
 
 variable (α)
@@ -371,7 +371,7 @@ def continuantsAux (g : GeneralizedContinuedFraction K) : Stream' (Pair K)
   | 0 => ⟨1, 0⟩
   | 1 => ⟨g.h, 1⟩
   | n + 2 =>
-    match g.s.get? n with
+    match g.s.nth n with
     | none => continuants_aux (n + 1)
     | some gp => nextContinuants gp.a gp.b (continuants_aux n) (continuants_aux <| n + 1)
 #align generalized_continued_fraction.continuants_aux GeneralizedContinuedFraction.continuantsAux
@@ -404,7 +404,7 @@ For example, `convergents'_aux [(1, 2), (3, 4), (5, 6)] 2 = 1 / (2 + 3 / 4)` and
 def convergents'Aux : SeqCat (Pair K) → ℕ → K
   | s, 0 => 0
   | s, n + 1 =>
-    match s.headI with
+    match s.head with
     | none => 0
     | some gp => gp.a / (gp.b + convergents'_aux s.tail n)
 #align generalized_continued_fraction.convergents'_aux GeneralizedContinuedFraction.convergents'Aux
@@ -433,7 +433,7 @@ protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
 @[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) :
     g = g' :=
-  GeneralizedContinuedFraction.ext_iff.right hyp
+  GeneralizedContinuedFraction.ext_iff.mpr hyp
 #align generalized_continued_fraction.ext GeneralizedContinuedFraction.ext
 
 end GeneralizedContinuedFraction

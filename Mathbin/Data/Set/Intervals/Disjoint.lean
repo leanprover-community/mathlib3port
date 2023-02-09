@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.disjoint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,28 +119,28 @@ theorem unionᵢ_Ici : (⋃ a : α, Ici a) = univ :=
 #print Set.unionᵢ_Icc_right /-
 @[simp]
 theorem unionᵢ_Icc_right (a : α) : (⋃ b, Icc a b) = Ici a := by
-  simp only [← Ici_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
+  simp only [← Ici_inter_Iic, ← inter_unionᵢ, unionᵢ_Iic, inter_univ]
 #align set.Union_Icc_right Set.unionᵢ_Icc_right
 -/
 
 #print Set.unionᵢ_Ioc_right /-
 @[simp]
 theorem unionᵢ_Ioc_right (a : α) : (⋃ b, Ioc a b) = Ioi a := by
-  simp only [← Ioi_inter_Iic, ← inter_Union, Union_Iic, inter_univ]
+  simp only [← Ioi_inter_Iic, ← inter_unionᵢ, unionᵢ_Iic, inter_univ]
 #align set.Union_Ioc_right Set.unionᵢ_Ioc_right
 -/
 
 #print Set.unionᵢ_Icc_left /-
 @[simp]
 theorem unionᵢ_Icc_left (b : α) : (⋃ a, Icc a b) = Iic b := by
-  simp only [← Ici_inter_Iic, ← Union_inter, Union_Ici, univ_inter]
+  simp only [← Ici_inter_Iic, ← unionᵢ_inter, unionᵢ_Ici, univ_inter]
 #align set.Union_Icc_left Set.unionᵢ_Icc_left
 -/
 
 #print Set.unionᵢ_Ico_left /-
 @[simp]
 theorem unionᵢ_Ico_left (b : α) : (⋃ a, Ico a b) = Iio b := by
-  simp only [← Ici_inter_Iio, ← Union_inter, Union_Ici, univ_inter]
+  simp only [← Ici_inter_Iio, ← unionᵢ_inter, unionᵢ_Ici, univ_inter]
 #align set.Union_Ico_left Set.unionᵢ_Ico_left
 -/
 
@@ -161,28 +161,28 @@ theorem unionᵢ_Ioi [NoMinOrder α] : (⋃ a : α, Ioi a) = univ :=
 #print Set.unionᵢ_Ico_right /-
 @[simp]
 theorem unionᵢ_Ico_right [NoMaxOrder α] (a : α) : (⋃ b, Ico a b) = Ici a := by
-  simp only [← Ici_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
+  simp only [← Ici_inter_Iio, ← inter_unionᵢ, unionᵢ_Iio, inter_univ]
 #align set.Union_Ico_right Set.unionᵢ_Ico_right
 -/
 
 #print Set.unionᵢ_Ioo_right /-
 @[simp]
 theorem unionᵢ_Ioo_right [NoMaxOrder α] (a : α) : (⋃ b, Ioo a b) = Ioi a := by
-  simp only [← Ioi_inter_Iio, ← inter_Union, Union_Iio, inter_univ]
+  simp only [← Ioi_inter_Iio, ← inter_unionᵢ, unionᵢ_Iio, inter_univ]
 #align set.Union_Ioo_right Set.unionᵢ_Ioo_right
 -/
 
 #print Set.unionᵢ_Ioc_left /-
 @[simp]
 theorem unionᵢ_Ioc_left [NoMinOrder α] (b : α) : (⋃ a, Ioc a b) = Iic b := by
-  simp only [← Ioi_inter_Iic, ← Union_inter, Union_Ioi, univ_inter]
+  simp only [← Ioi_inter_Iic, ← unionᵢ_inter, unionᵢ_Ioi, univ_inter]
 #align set.Union_Ioc_left Set.unionᵢ_Ioc_left
 -/
 
 #print Set.unionᵢ_Ioo_left /-
 @[simp]
 theorem unionᵢ_Ioo_left [NoMinOrder α] (b : α) : (⋃ a, Ioo a b) = Iio b := by
-  simp only [← Ioi_inter_Iio, ← Union_inter, Union_Ioi, univ_inter]
+  simp only [← Ioi_inter_Iio, ← unionᵢ_inter, unionᵢ_Ioi, univ_inter]
 #align set.Union_Ioo_left Set.unionᵢ_Ioo_left
 -/
 
@@ -237,7 +237,7 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
 @[simp]
 theorem unionᵢ_Ico_eq_Iio_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ico (f i) a) = Iio a ↔ ∀ x < a, ∃ i, f i ≤ x := by
-  simp [← Ici_inter_Iio, ← Union_inter, subset_def]
+  simp [← Ici_inter_Iio, ← unionᵢ_inter, subset_def]
 #align set.Union_Ico_eq_Iio_self_iff Set.unionᵢ_Ico_eq_Iio_self_iff
 -/
 
@@ -245,7 +245,7 @@ theorem unionᵢ_Ico_eq_Iio_self_iff {f : ι → α} {a : α} :
 @[simp]
 theorem unionᵢ_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} :
     (⋃ i, Ioc a (f i)) = Ioi a ↔ ∀ x, a < x → ∃ i, x ≤ f i := by
-  simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
+  simp [← Ioi_inter_Iic, ← inter_unionᵢ, subset_def]
 #align set.Union_Ioc_eq_Ioi_self_iff Set.unionᵢ_Ioc_eq_Ioi_self_iff
 -/
 
@@ -253,7 +253,7 @@ theorem unionᵢ_Ioc_eq_Ioi_self_iff {f : ι → α} {a : α} :
 @[simp]
 theorem bunionᵢ_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x < a, ∃ i hi, f i hi ≤ x := by
-  simp [← Ici_inter_Iio, ← Union_inter, subset_def]
+  simp [← Ici_inter_Iio, ← unionᵢ_inter, subset_def]
 #align set.bUnion_Ico_eq_Iio_self_iff Set.bunionᵢ_Ico_eq_Iio_self_iff
 -/
 
@@ -261,7 +261,7 @@ theorem bunionᵢ_Ico_eq_Iio_self_iff {p : ι → Prop} {f : ∀ i, p i → α} 
 @[simp]
 theorem bunionᵢ_Ioc_eq_Ioi_self_iff {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
     (⋃ (i) (hi : p i), Ioc a (f i hi)) = Ioi a ↔ ∀ x, a < x → ∃ i hi, x ≤ f i hi := by
-  simp [← Ioi_inter_Iic, ← inter_Union, subset_def]
+  simp [← Ioi_inter_Iic, ← inter_unionᵢ, subset_def]
 #align set.bUnion_Ioc_eq_Ioi_self_iff Set.bunionᵢ_Ioc_eq_Ioi_self_iff
 -/
 
@@ -276,10 +276,10 @@ variable [LinearOrder α] {s : Set α} {a : α} {f : ι → α}
 #print IsGLB.bunionᵢ_Ioi_eq /-
 theorem IsGLB.bunionᵢ_Ioi_eq (h : IsGLB s a) : (⋃ x ∈ s, Ioi x) = Ioi a :=
   by
-  refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
+  refine' (unionᵢ₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ioi_subset_Ioi (h.1 hx)
   · rcases h.exists_between hx with ⟨y, hys, hay, hyx⟩
-    exact mem_bUnion hys hyx
+    exact mem_bunionᵢ hys hyx
 #align is_glb.bUnion_Ioi_eq IsGLB.bunionᵢ_Ioi_eq
 -/
 
@@ -305,7 +305,7 @@ theorem IsLUB.unionᵢ_Iio_eq (h : IsLUB (range f) a) : (⋃ x, Iio (f x)) = Iio
 theorem IsGLB.bunionᵢ_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
     (⋃ x ∈ s, Ici x) = Ioi a :=
   by
-  refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
+  refine' (unionᵢ₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ioi.mpr (lt_of_le_of_ne (a_glb.1 hx) fun h => (h ▸ a_not_mem) hx)
   · rcases a_glb.exists_between hx with ⟨y, hys, hay, hyx⟩
     apply mem_Union₂.mpr
@@ -316,7 +316,7 @@ theorem IsGLB.bunionᵢ_Ici_eq_Ioi (a_glb : IsGLB s a) (a_not_mem : a ∉ s) :
 #print IsGLB.bunionᵢ_Ici_eq_Ici /-
 theorem IsGLB.bunionᵢ_Ici_eq_Ici (a_glb : IsGLB s a) (a_mem : a ∈ s) : (⋃ x ∈ s, Ici x) = Ici a :=
   by
-  refine' (Union₂_subset fun x hx => _).antisymm fun x hx => _
+  refine' (unionᵢ₂_subset fun x hx => _).antisymm fun x hx => _
   · exact Ici_subset_Ici.mpr (mem_lower_bounds.mp a_glb.1 x hx)
   · apply mem_Union₂.mpr
     refine' ⟨a, a_mem, hx⟩
@@ -344,8 +344,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ioi_infi unionᵢ_Ici_eq_Ioi_infᵢₓ'. -/
 theorem unionᵢ_Ici_eq_Ioi_infᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (no_least_elem : (⨅ i, f i) ∉ range f) : (⋃ i : ι, Ici (f i)) = Ioi (⨅ i, f i) := by
-  simp only [← IsGLB.bunionᵢ_Ici_eq_Ioi (@isGLB_infᵢ _ _ _ f) no_least_elem, mem_range,
-    Union_exists, Union_Union_eq']
+  simp only [← IsGLB.bunionᵢ_Ici_eq_Ioi (@is_glb_infi _ _ _ f) no_least_elem, mem_range,
+    unionᵢ_exists, unionᵢ_unionᵢ_eq']
 #align Union_Ici_eq_Ioi_infi unionᵢ_Ici_eq_Ioi_infᵢ
 
 /- warning: Union_Iic_eq_Iio_supr -> unionᵢ_Iic_eq_Iio_supᵢ is a dubious translation:
@@ -367,8 +367,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align Union_Ici_eq_Ici_infi unionᵢ_Ici_eq_Ici_infᵢₓ'. -/
 theorem unionᵢ_Ici_eq_Ici_infᵢ {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (has_least_elem : (⨅ i, f i) ∈ range f) : (⋃ i : ι, Ici (f i)) = Ici (⨅ i, f i) := by
-  simp only [← IsGLB.bunionᵢ_Ici_eq_Ici (@isGLB_infᵢ _ _ _ f) has_least_elem, mem_range,
-    Union_exists, Union_Union_eq']
+  simp only [← IsGLB.bunionᵢ_Ici_eq_Ici (@is_glb_infi _ _ _ f) has_least_elem, mem_range,
+    unionᵢ_exists, unionᵢ_unionᵢ_eq']
 #align Union_Ici_eq_Ici_infi unionᵢ_Ici_eq_Ici_infᵢ
 
 /- warning: Union_Iic_eq_Iic_supr -> unionᵢ_Iic_eq_Iic_supᵢ is a dubious translation:

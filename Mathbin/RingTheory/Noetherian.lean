@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module ring_theory.noetherian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -221,7 +221,7 @@ instance isNoetherian_pi {R ι : Type _} {M : ι → Type _} [Ring R] [∀ i, Ad
   induction' s using Finset.induction with a s has ih
   · exact ⟨fun s => by convert Submodule.fg_bot⟩
   refine'
-    @isNoetherian_of_linearEquiv _ _ _ _ _ _ _ _ _ (@isNoetherian_prod _ (M a) _ _ _ _ _ _ _ ih)
+    @is_noetherian_of_linear_equiv _ _ _ _ _ _ _ _ _ (@is_noetherian_prod _ (M a) _ _ _ _ _ _ _ ih)
   fconstructor
   ·
     exact fun f i =>
@@ -327,7 +327,7 @@ theorem isNoetherian_iff_fg_wellFounded :
     apply hx₂
     have := h₂ ⟨(R ∙ x) ⊔ N₀, _⟩ _ _
     · injection this with eq
-      rw [← Eq]
+      rw [← eq]
       exact (le_sup_left : (R ∙ x) ≤ (R ∙ x) ⊔ N₀) (Submodule.mem_span_singleton_self _)
     · exact Submodule.Fg.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁
     · exact sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e
@@ -437,7 +437,7 @@ theorem IsNoetherian.injective_of_surjective_endomorphism [IsNoetherian R M] (f 
   obtain ⟨n, ne, w⟩ := IsNoetherian.exists_endomorphism_iterate_ker_inf_range_eq_bot f
   rw [linear_map.range_eq_top.mpr (LinearMap.iterate_surjective s n), inf_top_eq,
     LinearMap.ker_eq_bot] at w
-  exact LinearMap.injective_of_iterate_injective Ne w
+  exact LinearMap.injective_of_iterate_injective ne w
 #align is_noetherian.injective_of_surjective_endomorphism IsNoetherian.injective_of_surjective_endomorphism
 
 /-- Any surjective endomorphism of a Noetherian module is bijective. -/
@@ -537,7 +537,7 @@ theorem isNoetherian_of_tower (R) {S M} [Semiring R] [Semiring S] [AddCommMonoid
     [Module S M] [Module R M] [IsScalarTower R S M] (h : IsNoetherian R M) : IsNoetherian S M :=
   by
   rw [isNoetherian_iff_wellFounded] at h⊢
-  refine' (Submodule.restrictScalarsEmbedding R S M).dual.WellFounded h
+  refine' (Submodule.restrictScalarsEmbedding R S M).dual.wellFounded h
 #align is_noetherian_of_tower isNoetherian_of_tower
 
 instance Ideal.Quotient.isNoetherianRing {R : Type _} [CommRing R] [h : IsNoetherianRing R]
@@ -554,7 +554,7 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
   letI : IsNoetherian R R := by infer_instance
   have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine'
-    @isNoetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isNoetherian_pi
+    @is_noetherian_of_surjective ((↑s : Set M) → R) _ _ _ (Pi.module _ _ _) _ _ _ isNoetherian_pi
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
     · intro f g
@@ -574,7 +574,7 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
   change (∑ i in s.attach, l i • (i : M)) = n
-  rw [@Finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
+  rw [@finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
   refine' Finset.sum_subset hl1 fun x _ hx => _
   rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
 #align is_noetherian_of_fg_of_noetherian isNoetherian_of_fg_of_noetherian
@@ -601,12 +601,12 @@ theorem isNoetherianRing_of_surjective (R) [Ring R] (S) [Ring S] (f : R →+* S)
 
 instance isNoetherianRing_range {R} [Ring R] {S} [Ring S] (f : R →+* S) [IsNoetherianRing R] :
     IsNoetherianRing f.range :=
-  isNoetherianRing_of_surjective R f.range f.range_restrict f.rangeRestrict_surjective
+  isNoetherianRing_of_surjective R f.range f.rangeRestrict f.rangeRestrict_surjective
 #align is_noetherian_ring_range isNoetherianRing_range
 
 theorem isNoetherianRing_of_ringEquiv (R) [Ring R] {S} [Ring S] (f : R ≃+* S) [IsNoetherianRing R] :
     IsNoetherianRing S :=
-  isNoetherianRing_of_surjective R S f.toRingHom f.toEquiv.Surjective
+  isNoetherianRing_of_surjective R S f.toRingHom f.toEquiv.surjective
 #align is_noetherian_ring_of_ring_equiv isNoetherianRing_of_ringEquiv
 
 theorem IsNoetherianRing.isNilpotent_nilradical (R : Type _) [CommRing R] [IsNoetherianRing R] :

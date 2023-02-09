@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.scale_roots
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,12 +35,12 @@ noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
 @[simp]
 theorem coeff_scaleRoots (p : R[X]) (s : R) (i : ℕ) :
     (scaleRoots p s).coeff i = coeff p i * s ^ (p.natDegree - i) := by
-  simp (config := { contextual := true }) [scale_roots, coeff_monomial]
+  simp (config := { contextual := true }) [scaleRoots, coeff_monomial]
 #align polynomial.coeff_scale_roots Polynomial.coeff_scaleRoots
 
 theorem coeff_scaleRoots_natDegree (p : R[X]) (s : R) :
     (scaleRoots p s).coeff p.natDegree = p.leadingCoeff := by
-  rw [leading_coeff, coeff_scale_roots, tsub_self, pow_zero, mul_one]
+  rw [leadingCoeff, coeff_scaleRoots, tsub_self, pow_zero, mul_one]
 #align polynomial.coeff_scale_roots_nat_degree Polynomial.coeff_scaleRoots_natDegree
 
 @[simp]
@@ -54,9 +54,9 @@ theorem scaleRoots_ne_zero {p : R[X]} (hp : p ≠ 0) (s : R) : scaleRoots p s �
   by
   intro h
   have : p.coeff p.nat_degree ≠ 0 := mt leading_coeff_eq_zero.mp hp
-  have : (scale_roots p s).coeff p.nat_degree = 0 :=
+  have : (scaleRoots p s).coeff p.nat_degree = 0 :=
     congr_fun (congr_arg (coeff : R[X] → ℕ → R) h) p.nat_degree
-  rw [coeff_scale_roots_nat_degree] at this
+  rw [coeff_scaleRoots_natDegree] at this
   contradiction
 #align polynomial.scale_roots_ne_zero Polynomial.scaleRoots_ne_zero
 
@@ -71,7 +71,7 @@ theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) 
   le_antisymm (support_scaleRoots_le p s)
     (by
       intro i
-      simp only [coeff_scale_roots, Polynomial.mem_support_iff]
+      simp only [coeff_scaleRoots, Polynomial.mem_support_iff]
       intro p_ne_zero ps_zero
       have := pow_mem hs (p.nat_degree - i) _ ps_zero
       contradiction)
@@ -82,10 +82,10 @@ theorem degree_scaleRoots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree 
   by
   haveI := Classical.propDecidable
   by_cases hp : p = 0
-  · rw [hp, zero_scale_roots]
-  have := scale_roots_ne_zero hp s
-  refine' le_antisymm (Finset.sup_mono (support_scale_roots_le p s)) (degree_le_degree _)
-  rw [coeff_scale_roots_nat_degree]
+  · rw [hp, zero_scaleRoots]
+  have := scaleRoots_ne_zero hp s
+  refine' le_antisymm (Finset.sup_mono (support_scaleRoots_le p s)) (degree_le_degree _)
+  rw [coeff_scaleRoots_natDegree]
   intro h
   have := leading_coeff_eq_zero.mp h
   contradiction
@@ -93,40 +93,40 @@ theorem degree_scaleRoots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree 
 
 @[simp]
 theorem natDegree_scaleRoots (p : R[X]) (s : R) : natDegree (scaleRoots p s) = natDegree p := by
-  simp only [nat_degree, degree_scale_roots]
+  simp only [natDegree, degree_scaleRoots]
 #align polynomial.nat_degree_scale_roots Polynomial.natDegree_scaleRoots
 
 theorem monic_scaleRoots_iff {p : R[X]} (s : R) : Monic (scaleRoots p s) ↔ Monic p := by
-  simp only [monic, leading_coeff, nat_degree_scale_roots, coeff_scale_roots_nat_degree]
+  simp only [Monic, leadingCoeff, natDegree_scaleRoots, coeff_scaleRoots_natDegree]
 #align polynomial.monic_scale_roots_iff Polynomial.monic_scaleRoots_iff
 
 theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     eval₂ f (f s * r) (scaleRoots p s) = f s ^ p.natDegree * eval₂ f r p :=
   calc
     eval₂ f (f s * r) (scaleRoots p s) =
-        (scaleRoots p s).support.Sum fun i =>
+        (scaleRoots p s).support.sum fun i =>
           f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       by simp [eval₂_eq_sum, sum_def]
-    _ = p.support.Sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
+    _ = p.support.sum fun i => f (coeff p i * s ^ (p.natDegree - i)) * (f s * r) ^ i :=
       Finset.sum_subset (support_scaleRoots_le p s) fun i hi hi' =>
         by
         let this : coeff p i * s ^ (p.natDegree - i) = 0 := by simpa using hi'
         simp [this]
-    _ = p.support.Sum fun i : ℕ => f (p.coeff i) * f s ^ (p.natDegree - i + i) * r ^ i :=
+    _ = p.support.sum fun i : ℕ => f (p.coeff i) * f s ^ (p.natDegree - i + i) * r ^ i :=
       Finset.sum_congr rfl fun i hi => by
         simp_rw [f.map_mul, f.map_pow, pow_add, mul_pow, mul_assoc]
-    _ = p.support.Sum fun i : ℕ => f s ^ p.natDegree * (f (p.coeff i) * r ^ i) :=
+    _ = p.support.sum fun i : ℕ => f s ^ p.natDegree * (f (p.coeff i) * r ^ i) :=
       Finset.sum_congr rfl fun i hi =>
         by
         rw [mul_assoc, mul_left_comm, tsub_add_cancel_of_le]
-        exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
-    _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
+        exact le_natDegree_of_ne_zero (polynomial.mem_support_iff.mp hi)
+    _ = f s ^ p.natDegree * p.support.sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by simp [eval₂_eq_sum, sum_def]
     
 #align polynomial.scale_roots_eval₂_mul Polynomial.scaleRoots_eval₂_mul
 
 theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :
-    eval₂ f (f s * r) (scaleRoots p s) = 0 := by rw [scale_roots_eval₂_mul, hr, _root_.mul_zero]
+    eval₂ f (f s * r) (scaleRoots p s) = 0 := by rw [scaleRoots_eval₂_mul, hr, mul_zero]
 #align polynomial.scale_roots_eval₂_eq_zero Polynomial.scaleRoots_eval₂_eq_zero
 
 theorem scaleRoots_aeval_eq_zero [Algebra S R] {p : S[X]} {r : R} {s : S} (hr : aeval r p = 0) :
@@ -138,7 +138,7 @@ theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+
     (hf : Function.Injective f) {r s : A} (hr : eval₂ f (f r / f s) p = 0)
     (hs : s ∈ nonZeroDivisors A) : eval₂ f (f r) (scaleRoots p s) = 0 :=
   by
-  convert scale_roots_eval₂_eq_zero f hr
+  convert scaleRoots_eval₂_eq_zero f hr
   rw [← mul_div_assoc, mul_comm, mul_div_cancel]
   exact map_ne_zero_of_mem_nonZeroDivisors _ hf hs
 #align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero

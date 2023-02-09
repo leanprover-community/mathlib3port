@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.integral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,11 +40,11 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
   let ⟨p, hpm, hpx⟩ := hx
   le_of_not_lt fun hvx : 1 < v x =>
     by
-    rw [hpm.as_sum, eval₂_add, eval₂_pow, eval₂_X, eval₂_finset_sum, add_eq_zero_iff_eq_neg] at hpx
+    rw [hpm.as_sum, eval₂_add, eval₂_pow, eval₂_x, eval₂_finset_sum, add_eq_zero_iff_eq_neg] at hpx
     replace hpx := congr_arg v hpx; refine' ne_of_gt _ hpx
     rw [v.map_neg, v.map_pow]
     refine' v.map_sum_lt' (zero_lt_one.trans_le (one_le_pow_of_one_le' hvx.le _)) fun i hi => _
-    rw [eval₂_mul, eval₂_pow, eval₂_C, eval₂_X, v.map_mul, v.map_pow, ←
+    rw [eval₂_mul, eval₂_pow, eval₂_c, eval₂_x, v.map_mul, v.map_pow, ←
       one_mul (v x ^ p.nat_degree)]
     cases' (hv.2 <| p.coeff i).lt_or_eq with hvpi hvpi
     · exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx <| Finset.mem_range.1 hi)

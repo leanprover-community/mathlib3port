@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.polynomial.cancel_leads
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,19 +59,19 @@ theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
   by
   by_cases hp : p = 0
   · convert hq
-    simp [hp, cancel_leads]
-  rw [cancel_leads, sub_eq_add_neg, tsub_eq_zero_iff_le.mpr h, pow_zero, mul_one]
+    simp [hp, cancelLeads]
+  rw [cancelLeads, sub_eq_add_neg, tsub_eq_zero_iff_le.mpr h, pow_zero, mul_one]
   by_cases h0 :
-    C p.leading_coeff * q + -(C q.leading_coeff * X ^ (q.nat_degree - p.nat_degree) * p) = 0
-  · exact (le_of_eq (by simp only [h0, nat_degree_zero])).trans_lt hq
+    c p.leading_coeff * q + -(c q.leading_coeff * x ^ (q.nat_degree - p.nat_degree) * p) = 0
+  · exact (le_of_eq (by simp only [h0, natDegree_zero])).trans_lt hq
   apply lt_of_le_of_ne
   · compute_degree_le
     repeat' rwa [Nat.sub_add_cancel]
   · contrapose! h0
-    rw [← leading_coeff_eq_zero, leading_coeff, h0, mul_assoc, X_pow_mul, ← tsub_add_cancel_of_le h,
+    rw [← leadingCoeff_eq_zero, leadingCoeff, h0, mul_assoc, x_pow_mul, ← tsub_add_cancel_of_le h,
       add_comm _ p.nat_degree]
-    simp only [coeff_mul_X_pow, coeff_neg, coeff_C_mul, add_tsub_cancel_left, coeff_add]
-    rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm,
+    simp only [coeff_mul_x_pow, coeff_neg, coeff_c_mul, add_tsub_cancel_left, coeff_add]
+    rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leadingCoeff, ← leadingCoeff, comm,
       add_right_neg]
 #align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
 

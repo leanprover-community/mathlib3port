@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem finset_sum_apply (I : Finset ι) (κ : ι → kernel α β) (a : α) :
 #align probability_theory.kernel.finset_sum_apply ProbabilityTheory.kernel.finset_sum_apply
 
 theorem finset_sum_apply' (I : Finset ι) (κ : ι → kernel α β) (a : α) (s : Set β) :
-    (∑ i in I, κ i) a s = ∑ i in I, κ i a s := by rw [finset_sum_apply, measure.finset_sum_apply]
+    (∑ i in I, κ i) a s = ∑ i in I, κ i a s := by rw [finset_sum_apply, Measure.finset_sum_apply]
 #align probability_theory.kernel.finset_sum_apply' ProbabilityTheory.kernel.finset_sum_apply'
 
 end Kernel
@@ -123,7 +123,7 @@ class IsFiniteKernel (κ : kernel α β) : Prop where
 /-- A constant `C : ℝ≥0∞` such that `C < ∞` (`is_finite_kernel.bound_lt_top κ`) and for all
 `a : α` and `s : set β`, `κ a s ≤ C` (`measure_le_bound κ a s`). -/
 noncomputable def IsFiniteKernel.bound (κ : kernel α β) [h : IsFiniteKernel κ] : ℝ≥0∞ :=
-  h.exists_univ_le.some
+  h.exists_univ_le.choose
 #align probability_theory.is_finite_kernel.bound ProbabilityTheory.IsFiniteKernel.bound
 
 theorem IsFiniteKernel.bound_lt_top (κ : kernel α β) [h : IsFiniteKernel κ] :
@@ -133,7 +133,7 @@ theorem IsFiniteKernel.bound_lt_top (κ : kernel α β) [h : IsFiniteKernel κ] 
 
 theorem IsFiniteKernel.bound_ne_top (κ : kernel α β) [h : IsFiniteKernel κ] :
     IsFiniteKernel.bound κ ≠ ∞ :=
-  (IsFiniteKernel.bound_lt_top κ).Ne
+  (IsFiniteKernel.bound_lt_top κ).ne
 #align probability_theory.is_finite_kernel.bound_ne_top ProbabilityTheory.IsFiniteKernel.bound_ne_top
 
 theorem kernel.measure_le_bound (κ : kernel α β) [h : IsFiniteKernel κ] (a : α) (s : Set β) :
@@ -144,17 +144,17 @@ theorem kernel.measure_le_bound (κ : kernel α β) [h : IsFiniteKernel κ] (a :
 instance isFiniteKernelZero (α β : Type _) {mα : MeasurableSpace α} {mβ : MeasurableSpace β} :
     IsFiniteKernel (0 : kernel α β) :=
   ⟨⟨0, Ennreal.coe_lt_top, fun a => by
-      simp only [kernel.zero_apply, measure.coe_zero, Pi.zero_apply, le_zero_iff]⟩⟩
+      simp only [kernel.zero_apply, Measure.coe_zero, Pi.zero_apply, le_zero_iff]⟩⟩
 #align probability_theory.is_finite_kernel_zero ProbabilityTheory.isFiniteKernelZero
 
 instance IsFiniteKernel.add (κ η : kernel α β) [IsFiniteKernel κ] [IsFiniteKernel η] :
     IsFiniteKernel (κ + η) :=
   by
   refine'
-    ⟨⟨is_finite_kernel.bound κ + is_finite_kernel.bound η,
-        ennreal.add_lt_top.mpr ⟨is_finite_kernel.bound_lt_top κ, is_finite_kernel.bound_lt_top η⟩,
+    ⟨⟨IsFiniteKernel.bound κ + IsFiniteKernel.bound η,
+        ennreal.add_lt_top.mpr ⟨IsFiniteKernel.bound_lt_top κ, IsFiniteKernel.bound_lt_top η⟩,
         fun a => _⟩⟩
-  simp_rw [kernel.coe_fn_add, Pi.add_apply, measure.coe_add, Pi.add_apply]
+  simp_rw [kernel.coeFn_add, Pi.add_apply, Measure.coe_add, Pi.add_apply]
   exact add_le_add (kernel.measure_le_bound _ _ _) (kernel.measure_le_bound _ _ _)
 #align probability_theory.is_finite_kernel.add ProbabilityTheory.IsFiniteKernel.add
 
@@ -193,7 +193,7 @@ theorem ext_fun {κ η : kernel α β} (h : ∀ a f, Measurable f → (∫⁻ b,
 #align probability_theory.kernel.ext_fun ProbabilityTheory.kernel.ext_fun
 
 protected theorem measurable (κ : kernel α β) : Measurable κ :=
-  κ.Prop
+  κ.prop
 #align probability_theory.kernel.measurable ProbabilityTheory.kernel.measurable
 
 protected theorem measurable_coe (κ : kernel α β) {s : Set β} (hs : MeasurableSet s) :
@@ -208,8 +208,8 @@ protected noncomputable def sum [Countable ι] (κ : ι → kernel α β) : kern
     where
   val a := Measure.sum fun n => κ n a
   property := by
-    refine' measure.measurable_of_measurable_coe _ fun s hs => _
-    simp_rw [measure.sum_apply _ hs]
+    refine' Measure.measurable_of_measurable_coe _ fun s hs => _
+    simp_rw [Measure.sum_apply _ hs]
     exact Measurable.ennreal_tsum fun n => kernel.measurable_coe (κ n) hs
 #align probability_theory.kernel.sum ProbabilityTheory.kernel.sum
 
@@ -219,7 +219,7 @@ theorem sum_apply [Countable ι] (κ : ι → kernel α β) (a : α) :
 #align probability_theory.kernel.sum_apply ProbabilityTheory.kernel.sum_apply
 
 theorem sum_apply' [Countable ι] (κ : ι → kernel α β) (a : α) {s : Set β} (hs : MeasurableSet s) :
-    kernel.sum κ a s = ∑' n, κ n a s := by rw [sum_apply κ a, measure.sum_apply _ hs]
+    kernel.sum κ a s = ∑' n, κ n a s := by rw [sum_apply κ a, Measure.sum_apply _ hs]
 #align probability_theory.kernel.sum_apply' ProbabilityTheory.kernel.sum_apply'
 
 theorem sum_comm [Countable ι] (κ : ι → ι → kernel α β) :
@@ -227,7 +227,7 @@ theorem sum_comm [Countable ι] (κ : ι → ι → kernel α β) :
   by
   ext (a s hs)
   simp_rw [sum_apply]
-  rw [measure.sum_comm]
+  rw [Measure.sum_comm]
 #align probability_theory.kernel.sum_comm ProbabilityTheory.kernel.sum_comm
 
 @[simp]
@@ -241,8 +241,8 @@ theorem sum_add [Countable ι] (κ η : ι → kernel α β) :
     (kernel.sum fun n => κ n + η n) = kernel.sum κ + kernel.sum η :=
   by
   ext (a s hs)
-  simp only [coe_fn_add, Pi.add_apply, sum_apply, measure.sum_apply _ hs, Pi.add_apply,
-    measure.coe_add, tsum_add Ennreal.summable Ennreal.summable]
+  simp only [coeFn_add, Pi.add_apply, sum_apply, Measure.sum_apply _ hs, Pi.add_apply,
+    Measure.coe_add, tsum_add Ennreal.summable Ennreal.summable]
 #align probability_theory.kernel.sum_add ProbabilityTheory.kernel.sum_add
 
 end Sum
@@ -272,7 +272,7 @@ instance (priority := 100) IsFiniteKernel.isSFiniteKernel [h : IsFiniteKernel κ
 /-- A sequence of finite kernels such that `κ = kernel.sum (seq κ)`. See `is_finite_kernel_seq`
 and `kernel_sum_seq`. -/
 noncomputable def seq (κ : kernel α β) [h : IsSFiniteKernel κ] : ℕ → kernel α β :=
-  h.tsum_finite.some
+  h.tsum_finite.choose
 #align probability_theory.kernel.seq ProbabilityTheory.kernel.seq
 
 theorem kernel_sum_seq (κ : kernel α β) [h : IsSFiniteKernel κ] : kernel.sum (seq κ) = κ :=
@@ -302,10 +302,10 @@ theorem IsSFiniteKernel.finsetSum {κs : ι → kernel α β} (I : Finset ι)
     · rw [Finset.sum_empty]
       infer_instance
     · rw [Finset.sum_insert hi_nmem_I]
-      haveI : is_s_finite_kernel (κs i) := h i (Finset.mem_insert_self _ _)
-      have : is_s_finite_kernel (∑ x : ι in I, κs x) :=
+      haveI : IsSFiniteKernel (κs i) := h i (Finset.mem_insert_self _ _)
+      have : IsSFiniteKernel (∑ x : ι in I, κs x) :=
         h_ind fun i hiI => h i (Finset.mem_insert_of_mem hiI)
-      exact is_s_finite_kernel.add _ _
+      exact IsSFiniteKernel.add _ _
 #align probability_theory.kernel.is_s_finite_kernel.finset_sum ProbabilityTheory.kernel.IsSFiniteKernel.finsetSum
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i m) -/
@@ -330,10 +330,10 @@ theorem isSFiniteKernelSum [Countable ι] {κs : ι → kernel α β} (hκs : �
   by
   cases fintypeOrInfinite ι
   · rw [sum_fintype]
-    exact is_s_finite_kernel.finset_sum Finset.univ fun i _ => hκs i
+    exact IsSFiniteKernel.finsetSum Finset.univ fun i _ => hκs i
   haveI : Encodable ι := Encodable.ofCountable ι
   haveI : Denumerable ι := Denumerable.ofEncodableOfInfinite ι
-  exact is_s_finite_kernel_sum_of_denumerable hκs
+  exact isSFiniteKernelSumOfDenumerable hκs
 #align probability_theory.kernel.is_s_finite_kernel_sum ProbabilityTheory.kernel.isSFiniteKernelSum
 
 end SFinite
@@ -345,8 +345,8 @@ noncomputable def deterministic {f : α → β} (hf : Measurable f) : kernel α 
     where
   val a := Measure.dirac (f a)
   property := by
-    refine' measure.measurable_of_measurable_coe _ fun s hs => _
-    simp_rw [measure.dirac_apply' _ hs]
+    refine' Measure.measurable_of_measurable_coe _ fun s hs => _
+    simp_rw [Measure.dirac_apply' _ hs]
     refine' Measurable.indicator _ (hf hs)
     simp only [Pi.one_apply, measurable_const]
 #align probability_theory.kernel.deterministic ProbabilityTheory.kernel.deterministic
@@ -360,8 +360,8 @@ theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : S
     (hs : MeasurableSet s) : deterministic hf a s = s.indicator (fun _ => 1) (f a) :=
   by
   rw [deterministic]
-  change measure.dirac (f a) s = s.indicator 1 (f a)
-  simp_rw [measure.dirac_apply' _ hs]
+  change Measure.dirac (f a) s = s.indicator 1 (f a)
+  simp_rw [Measure.dirac_apply' _ hs]
 #align probability_theory.kernel.deterministic_apply' ProbabilityTheory.kernel.deterministic_apply'
 
 instance isMarkovKernelDeterministic {f : α → β} (hf : Measurable f) :
@@ -420,8 +420,8 @@ protected noncomputable def restrict (κ : kernel α β) (hs : MeasurableSet s) 
     where
   val a := (κ a).restrict s
   property := by
-    refine' measure.measurable_of_measurable_coe _ fun t ht => _
-    simp_rw [measure.restrict_apply ht]
+    refine' Measure.measurable_of_measurable_coe _ fun t ht => _
+    simp_rw [Measure.restrict_apply ht]
     exact kernel.measurable_coe κ (ht.inter hs)
 #align probability_theory.kernel.restrict ProbabilityTheory.kernel.restrict
 
@@ -432,7 +432,7 @@ theorem restrict_apply (κ : kernel α β) (hs : MeasurableSet s) (a : α) :
 
 theorem restrict_apply' (κ : kernel α β) (hs : MeasurableSet s) (a : α) (ht : MeasurableSet t) :
     kernel.restrict κ hs a t = (κ a) (t ∩ s) := by
-  rw [restrict_apply κ hs a, measure.restrict_apply ht]
+  rw [restrict_apply κ hs a, Measure.restrict_apply ht]
 #align probability_theory.kernel.restrict_apply' ProbabilityTheory.kernel.restrict_apply'
 
 theorem lintegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (f : β → ℝ≥0∞) :
@@ -442,7 +442,7 @@ theorem lintegral_restrict (κ : kernel α β) (hs : MeasurableSet s) (a : α) (
 instance IsFiniteKernel.restrict (κ : kernel α β) [IsFiniteKernel κ] (hs : MeasurableSet s) :
     IsFiniteKernel (kernel.restrict κ hs) :=
   by
-  refine' ⟨⟨is_finite_kernel.bound κ, is_finite_kernel.bound_lt_top κ, fun a => _⟩⟩
+  refine' ⟨⟨IsFiniteKernel.bound κ, IsFiniteKernel.bound_lt_top κ, fun a => _⟩⟩
   rw [restrict_apply' κ hs a MeasurableSet.univ]
   exact measure_le_bound κ a _
 #align probability_theory.kernel.is_finite_kernel.restrict ProbabilityTheory.kernel.IsFiniteKernel.restrict
@@ -452,7 +452,7 @@ instance IsSFiniteKernel.restrict (κ : kernel α β) [IsSFiniteKernel κ] (hs :
   by
   refine' ⟨⟨fun n => kernel.restrict (seq κ n) hs, inferInstance, _⟩⟩
   ext1 a
-  simp_rw [sum_apply, restrict_apply, ← measure.restrict_sum _ hs, ← sum_apply, kernel_sum_seq]
+  simp_rw [sum_apply, restrict_apply, ← Measure.restrict_sum _ hs, ← sum_apply, kernel_sum_seq]
 #align probability_theory.kernel.is_s_finite_kernel.restrict ProbabilityTheory.kernel.IsSFiniteKernel.restrict
 
 end Restrict
@@ -518,7 +518,7 @@ theorem measurable_prod_mk_mem_of_finite (κ : kernel α β) {t : Set (α × β)
         ∑' i, κ a { b : β | (a, b) ∈ f i } :=
       by
       ext1 a
-      rw [measure_Union]
+      rw [measure_unionᵢ]
       · intro i j hij s hsi hsj b hbs
         have habi : {(a, b)} ⊆ f i := by
           rw [Set.singleton_subset_iff]
@@ -559,25 +559,25 @@ map from `α × β` (hypothesis `measurable (function.uncurry f)`), the integral
 theorem measurable_lintegral (κ : kernel α β) [IsSFiniteKernel κ] {f : α → β → ℝ≥0∞}
     (hf : Measurable (Function.uncurry f)) : Measurable fun a => ∫⁻ b, f a b ∂κ a :=
   by
-  let F : ℕ → simple_func (α × β) ℝ≥0∞ := simple_func.eapprox (Function.uncurry f)
+  let F : ℕ → SimpleFunc (α × β) ℝ≥0∞ := SimpleFunc.eapprox (Function.uncurry f)
   have h : ∀ a, (⨆ n, F n a) = Function.uncurry f a :=
-    simple_func.supr_eapprox_apply (Function.uncurry f) hf
+    SimpleFunc.supᵢ_eapprox_apply (Function.uncurry f) hf
   simp only [Prod.forall, Function.uncurry_apply_pair] at h
   simp_rw [← h]
   have : ∀ a, (∫⁻ b, ⨆ n, F n (a, b) ∂κ a) = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a :=
     by
     intro a
-    rw [lintegral_supr]
-    · exact fun n => (F n).Measurable.comp measurable_prod_mk_left
-    · exact fun i j hij b => simple_func.monotone_eapprox (Function.uncurry f) hij _
+    rw [lintegral_supᵢ]
+    · exact fun n => (F n).measurable.comp measurable_prod_mk_left
+    · exact fun i j hij b => SimpleFunc.monotone_eapprox (Function.uncurry f) hij _
   simp_rw [this]
-  refine' measurable_supᵢ fun n => simple_func.induction _ _ (F n)
+  refine' measurable_supᵢ fun n => SimpleFunc.induction _ _ (F n)
   · intro c t ht
-    simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const,
-      simple_func.coe_zero, Set.piecewise_eq_indicator]
+    simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
+      SimpleFunc.coe_zero, Set.piecewise_eq_indicator]
     exact measurable_lintegral_indicator_const κ ht c
   · intro g₁ g₂ h_disj hm₁ hm₂
-    simp only [simple_func.coe_add, Pi.add_apply]
+    simp only [SimpleFunc.coe_add, Pi.add_apply]
     have h_add :
       (fun a => ∫⁻ b, g₁ (a, b) + g₂ (a, b) ∂κ a) =
         (fun a => ∫⁻ b, g₁ (a, b) ∂κ a) + fun a => ∫⁻ b, g₂ (a, b) ∂κ a :=

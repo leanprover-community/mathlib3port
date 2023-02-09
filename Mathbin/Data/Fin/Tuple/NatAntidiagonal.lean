@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.fin.tuple.nat_antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ theorem mem_antidiagonalTuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
     · simp
     · simp [eq_comm]
   · intro k x₀ x ih n
-    simp_rw [Fin.sum_cons, antidiagonal_tuple, List.mem_bind, List.mem_map',
+    simp_rw [Fin.sum_cons, antidiagonalTuple, List.mem_bind, List.mem_map',
       List.Nat.mem_antidiagonal, Fin.cons_eq_cons, exists_eq_right_right, ih,
       @eq_comm _ _ (Prod.snd _), and_comm' (Prod.snd _ = _), ← Prod.mk.inj_iff, Prod.mk.eta,
       exists_prop, exists_eq_right]
@@ -104,7 +104,7 @@ theorem nodup_antidiagonalTuple (k n : ℕ) : List.Nodup (antidiagonalTuple k n)
   · cases n
     · simp
     · simp [eq_comm]
-  simp_rw [antidiagonal_tuple, List.nodup_bind]
+  simp_rw [antidiagonalTuple, List.nodup_bind]
   constructor
   · intro i hi
     exact (ih i.snd).map (Fin.cons_right_injective (i.fst : (fun _ => ℕ) 0))
@@ -129,7 +129,7 @@ theorem antidiagonalTuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
   | 0 => (congr_arg fun x => [x]) <| Subsingleton.elim _ _
   | k + 1 =>
     by
-    rw [antidiagonal_tuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k,
+    rw [antidiagonalTuple, antidiagonal_zero, List.bind_singleton, antidiagonal_tuple_zero_right k,
       List.map_singleton]
     exact congr_arg (fun x => [x]) Matrix.cons_zero_zero
 #align list.nat.antidiagonal_tuple_zero_right List.Nat.antidiagonalTuple_zero_right
@@ -137,22 +137,22 @@ theorem antidiagonalTuple_zero_right : ∀ k, antidiagonalTuple k 0 = [0]
 @[simp]
 theorem antidiagonalTuple_one (n : ℕ) : antidiagonalTuple 1 n = [![n]] :=
   by
-  simp_rw [antidiagonal_tuple, antidiagonal, List.range_succ, List.map_append, List.map_singleton,
-    tsub_self, List.bind_append, List.bind_singleton, antidiagonal_tuple_zero_zero,
+  simp_rw [antidiagonalTuple, antidiagonal, List.range_succ, List.map_append, List.map_singleton,
+    tsub_self, List.bind_append, List.bind_singleton, antidiagonalTuple_zero_zero,
     List.map_singleton, List.map_bind]
   conv_rhs => rw [← List.nil_append [![n]]]
   congr 1
   simp_rw [List.bind_eq_nil, List.mem_range, List.map_eq_nil]
   intro x hx
   obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_lt hx
-  rw [add_assoc, add_tsub_cancel_left, antidiagonal_tuple_zero_succ]
+  rw [add_assoc, add_tsub_cancel_left, antidiagonalTuple_zero_succ]
 #align list.nat.antidiagonal_tuple_one List.Nat.antidiagonalTuple_one
 
 theorem antidiagonalTuple_two (n : ℕ) :
     antidiagonalTuple 2 n = (antidiagonal n).map fun i => ![i.1, i.2] :=
   by
-  rw [antidiagonal_tuple]
-  simp_rw [antidiagonal_tuple_one, List.map_singleton]
+  rw [antidiagonalTuple]
+  simp_rw [antidiagonalTuple_one, List.map_singleton]
   rw [List.map_eq_bind]
   rfl
 #align list.nat.antidiagonal_tuple_two List.Nat.antidiagonalTuple_two
@@ -163,7 +163,7 @@ theorem antidiagonalTuple_pairwise_pi_lex :
   | 0, n + 1 => List.Pairwise.nil
   | k + 1, n =>
     by
-    simp_rw [antidiagonal_tuple, List.pairwise_bind, List.pairwise_map', List.mem_map',
+    simp_rw [antidiagonalTuple, List.pairwise_bind, List.pairwise_map', List.mem_map',
       forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
     simp only [mem_antidiagonal, Prod.forall, and_imp, forall_apply_eq_imp_iff₂]
     simp only [Fin.pi_lex_lt_cons_cons, eq_self_iff_true, true_and_iff, lt_self_iff_false,

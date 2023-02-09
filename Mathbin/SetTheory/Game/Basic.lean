@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton, Mario Carneiro, Isabel Longbottom, Scott Morrison, Apurva Nakade
 
 ! This file was ported from Lean 3 source module set_theory.game.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -404,14 +404,14 @@ def mulCommRelabelling : ∀ x y : Pgame.{u}, x * y ≡r y * x
           rintro (⟨i, j⟩ | ⟨i, j⟩) <;>
         dsimp <;>
       exact
-        ((add_comm_relabelling _ _).trans <|
+        ((addCommRelabelling _ _).trans <|
               (mul_comm_relabelling _ _).addCongr (mul_comm_relabelling _ _)).subCongr
           (mul_comm_relabelling _ _)decreasing_by
   pgame_wf_tac
 #align pgame.mul_comm_relabelling Pgame.mulCommRelabelling
 
 theorem quot_mul_comm (x y : Pgame.{u}) : ⟦x * y⟧ = ⟦y * x⟧ :=
-  Quot.sound (mulCommRelabelling x y).Equiv
+  Quot.sound (mulCommRelabelling x y).equiv
 #align pgame.quot_mul_comm Pgame.quot_mul_comm
 
 /-- `x * y` is equivalent to `y * x`. -/
@@ -450,7 +450,7 @@ def mulZeroRelabelling (x : Pgame) : x * 0 ≡r 0 :=
 
 /-- `x * 0` is equivalent to `0`. -/
 theorem mul_zero_equiv (x : Pgame) : x * 0 ≈ 0 :=
-  (mulZeroRelabelling x).Equiv
+  (mulZeroRelabelling x).equiv
 #align pgame.mul_zero_equiv Pgame.mul_zero_equiv
 
 @[simp]
@@ -465,7 +465,7 @@ def zeroMulRelabelling (x : Pgame) : 0 * x ≡r 0 :=
 
 /-- `0 * x` is equivalent to `0`. -/
 theorem zero_mul_equiv (x : Pgame) : 0 * x ≈ 0 :=
-  (zeroMulRelabelling x).Equiv
+  (zeroMulRelabelling x).equiv
 #align pgame.zero_mul_equiv Pgame.zero_mul_equiv
 
 @[simp]
@@ -477,15 +477,15 @@ theorem quot_zero_mul (x : Pgame) : ⟦0 * x⟧ = ⟦0⟧ :=
 def negMulRelabelling : ∀ x y : Pgame.{u}, -x * y ≡r -(x * y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩ => by
     refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩) <;> dsimp <;>
-          apply ((neg_add_relabelling _ _).trans _).symm <;>
-        apply ((neg_add_relabelling _ _).trans (relabelling.add_congr _ _)).subCongr <;>
+          apply ((negAddRelabelling _ _).trans _).symm <;>
+        apply ((negAddRelabelling _ _).trans (Relabelling.addCongr _ _)).subCongr <;>
       exact (neg_mul_relabelling _ _).symm decreasing_by
   pgame_wf_tac
 #align pgame.neg_mul_relabelling Pgame.negMulRelabelling
 
 @[simp]
 theorem quot_neg_mul (x y : Pgame) : ⟦-x * y⟧ = -⟦x * y⟧ :=
-  Quot.sound (negMulRelabelling x y).Equiv
+  Quot.sound (negMulRelabelling x y).equiv
 #align pgame.quot_neg_mul Pgame.quot_neg_mul
 
 /-- `x * -y` and `-(x * y)` have the same moves. -/
@@ -495,7 +495,7 @@ def mulNegRelabelling (x y : Pgame) : x * -y ≡r -(x * y) :=
 
 @[simp]
 theorem quot_mul_neg (x y : Pgame) : ⟦x * -y⟧ = -⟦x * y⟧ :=
-  Quot.sound (mulNegRelabelling x y).Equiv
+  Quot.sound (mulNegRelabelling x y).equiv
 #align pgame.quot_mul_neg Pgame.quot_mul_neg
 
 @[simp]
@@ -505,7 +505,7 @@ theorem quot_left_distrib : ∀ x y z : Pgame, ⟦x * (y + z)⟧ = ⟦x * y⟧ +
     let x := mk xl xr xL xR
     let y := mk yl yr yL yR
     let z := mk zl zr zL zR
-    refine' quot_eq_of_mk_quot_eq _ _ _ _
+    refine' quot_eq_of_mk'_quot_eq _ _ _ _
     · fconstructor
       ·
         rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
@@ -607,12 +607,11 @@ def mulOneRelabelling : ∀ x : Pgame.{u}, x * 1 ≡r x
                 try rintro (⟨i, ⟨⟩⟩ | ⟨i, ⟨⟩⟩) <;>
               try intro i <;>
             dsimp <;>
-          apply (relabelling.sub_congr (relabelling.refl _) (mul_zero_relabelling _)).trans <;>
+          apply (Relabelling.subCongr (Relabelling.refl _) (mulZeroRelabelling _)).trans <;>
         rw [sub_zero] <;>
       exact
-        (add_zero_relabelling _).trans
-          (((mul_one_relabelling _).addCongr (mul_zero_relabelling _)).trans <|
-            add_zero_relabelling _)
+        (addZeroRelabelling _).trans
+          (((mul_one_relabelling _).addCongr (mulZeroRelabelling _)).trans <| addZeroRelabelling _)
 #align pgame.mul_one_relabelling Pgame.mulOneRelabelling
 
 @[simp]
@@ -646,7 +645,7 @@ theorem quot_mul_assoc : ∀ x y z : Pgame, ⟦x * y * z⟧ = ⟦x * (y * z)⟧
     let x := mk xl xr xL xR
     let y := mk yl yr yL yR
     let z := mk zl zr zL zR
-    refine' quot_eq_of_mk_quot_eq _ _ _ _
+    refine' quot_eq_of_mk'_quot_eq _ _ _ _
     · fconstructor
       ·
         rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
@@ -792,7 +791,7 @@ def inv' : Pgame → Pgame
 
 theorem zero_lf_inv' : ∀ x : Pgame, 0 ⧏ inv' x
   | ⟨xl, xr, xL, xR⟩ => by
-    convert lf_mk _ _ inv_ty.zero
+    convert lf_mk _ _ InvTy.zero
     rfl
 #align pgame.zero_lf_inv' Pgame.zero_lf_inv'
 
@@ -800,9 +799,9 @@ theorem zero_lf_inv' : ∀ x : Pgame, 0 ⧏ inv' x
 def inv'Zero : inv' 0 ≡r 1 := by
   change mk _ _ _ _ ≡r 1
   refine' ⟨_, _, fun i => _, IsEmpty.elim _⟩
-  · apply Equiv.equivPUnit (inv_ty _ _ _)
+  · apply Equiv.equivPUnit (InvTy _ _ _)
     infer_instance
-  · apply Equiv.equivPEmpty (inv_ty _ _ _)
+  · apply Equiv.equivPEmpty (InvTy _ _ _)
     infer_instance
   · simp
   · dsimp
@@ -810,13 +809,13 @@ def inv'Zero : inv' 0 ≡r 1 := by
 #align pgame.inv'_zero Pgame.inv'Zero
 
 theorem inv'_zero_equiv : inv' 0 ≈ 1 :=
-  inv'Zero.Equiv
+  inv'Zero.equiv
 #align pgame.inv'_zero_equiv Pgame.inv'_zero_equiv
 
 /-- `inv' 1` has exactly the same moves as `1`. -/
 def inv'One : inv' 1 ≡r (1 : Pgame.{u}) :=
   by
-  change relabelling (mk _ _ _ _) 1
+  change Relabelling (mk _ _ _ _) 1
   have : IsEmpty { i : PUnit.{u + 1} // (0 : Pgame.{u}) < 0 } :=
     by
     rw [lt_self_iff_false]
@@ -829,7 +828,7 @@ def inv'One : inv' 1 ≡r (1 : Pgame.{u}) :=
 #align pgame.inv'_one Pgame.inv'One
 
 theorem inv'_one_equiv : inv' 1 ≈ 1 :=
-  inv'One.Equiv
+  inv'One.equiv
 #align pgame.inv'_one_equiv Pgame.inv'_one_equiv
 
 /-- The inverse of a pre-game in terms of the inverse on positive pre-games. -/
@@ -858,11 +857,11 @@ theorem inv_eq_of_lf_zero {x : Pgame} (h : x ⧏ 0) : x⁻¹ = -inv' (-x) := by
 /-- `1⁻¹` has exactly the same moves as `1`. -/
 def invOne : 1⁻¹ ≡r 1 := by
   rw [inv_eq_of_pos Pgame.zero_lt_one]
-  exact inv'_one
+  exact inv'One
 #align pgame.inv_one Pgame.invOne
 
 theorem inv_one_equiv : 1⁻¹ ≈ 1 :=
-  invOne.Equiv
+  invOne.equiv
 #align pgame.inv_one_equiv Pgame.inv_one_equiv
 
 end Pgame

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.int.order.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Int), Eq.{1} Nat (Int.natAbs (Abs.abs.{0} ([mdata borrowed:1 Int]) (Neg.toHasAbs.{0} ([mdata borrowed:1 Int]) Int.instNegInt (SemilatticeSup.toHasSup.{0} ([mdata borrowed:1 Int]) (Lattice.toSemilatticeSup.{0} ([mdata borrowed:1 Int]) (DistribLattice.toLattice.{0} ([mdata borrowed:1 Int]) (instDistribLattice.{0} ([mdata borrowed:1 Int]) Int.instLinearOrderInt))))) a)) (Int.natAbs a)
 Case conversion may be inaccurate. Consider using '#align int.nat_abs_abs Int.natAbs_absₓ'. -/
-theorem natAbs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
+theorem natAbs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_natAbs] <;> rfl
 #align int.nat_abs_abs Int.natAbs_abs
 
 /- warning: int.sign_mul_abs -> Int.sign_mul_abs is a dubious translation:
@@ -110,7 +110,7 @@ lean 3 declaration is
 but is expected to have type
   forall (a : Int), Eq.{1} Int (HMul.hMul.{0, 0, 0} Int Int Int (instHMul.{0} Int Int.instMulInt) (Int.sign a) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) a)) a
 Case conversion may be inaccurate. Consider using '#align int.sign_mul_abs Int.sign_mul_absₓ'. -/
-theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by rw [abs_eq_nat_abs, sign_mul_nat_abs]
+theorem sign_mul_abs (a : ℤ) : sign a * |a| = a := by rw [abs_eq_natAbs, sign_mul_natAbs]
 #align int.sign_mul_abs Int.sign_mul_abs
 
 #print Int.coe_nat_eq_zero /-
@@ -227,14 +227,14 @@ protected def inductionOn' {C : ℤ → Sort _} (z : ℤ) (b : ℤ) (H0 : C b)
   induction' z - b with n n
   · induction' n with n ih
     · convert H0 using 1
-      rw [of_nat_zero, zero_add]
-    convert Hs _ (le_add_of_nonneg_left (of_nat_nonneg _)) ih using 1
-    rw [of_nat_succ, add_assoc, add_comm 1 b, ← add_assoc]
+      rw [ofNat_zero, zero_add]
+    convert Hs _ (le_add_of_nonneg_left (ofNat_nonneg _)) ih using 1
+    rw [ofNat_succ, add_assoc, add_comm 1 b, ← add_assoc]
   · induction' n with n ih
     · convert Hp _ le_rfl H0 using 1
-      rw [neg_succ_of_nat_eq, ← of_nat_eq_coe, of_nat_zero, zero_add, neg_add_eq_sub]
-    · convert Hp _ (le_of_lt (add_lt_of_neg_of_le (neg_succ_lt_zero _) le_rfl)) ih using 1
-      rw [neg_succ_of_nat_coe', Nat.succ_eq_add_one, ← neg_succ_of_nat_coe, sub_add_eq_add_sub]
+      rw [negSucc_eq, ← ofNat_eq_coe, ofNat_zero, zero_add, neg_add_eq_sub]
+    · convert Hp _ (le_of_lt (add_lt_of_neg_of_le (negSucc_lt_zero _) le_rfl)) ih using 1
+      rw [negSucc_coe', Nat.succ_eq_add_one, ← negSucc_coe, sub_add_eq_add_sub]
 #align int.induction_on' Int.inductionOn'
 -/
 
@@ -286,9 +286,9 @@ Case conversion may be inaccurate. Consider using '#align int.nat_abs_dvd_iff_dv
 @[simp]
 theorem natAbs_dvd_natAbs {a b : ℤ} : a.natAbs ∣ b.natAbs ↔ a ∣ b :=
   by
-  refine' ⟨_, fun ⟨k, hk⟩ => ⟨k.natAbs, hk.symm ▸ nat_abs_mul a k⟩⟩
+  refine' ⟨_, fun ⟨k, hk⟩ => ⟨k.natAbs, hk.symm ▸ natAbs_mul a k⟩⟩
   rintro ⟨k, hk⟩
-  rw [← nat_abs_of_nat k, ← nat_abs_mul, nat_abs_eq_nat_abs_iff, neg_mul_eq_mul_neg] at hk
+  rw [← natAbs_ofNat k, ← natAbs_mul, natAbs_eq_natAbs_iff, neg_mul_eq_mul_neg] at hk
   cases hk <;> exact ⟨_, hk⟩
 #align int.nat_abs_dvd_iff_dvd Int.natAbs_dvd_natAbs
 
@@ -324,14 +324,13 @@ protected theorem add_mul_ediv_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + 
         by
         cases' lt_or_ge m (n * k.succ) with h h
         · rw [← Int.ofNat_sub h, ← Int.ofNat_sub ((Nat.div_lt_iff_lt_mul k.succ_pos).2 h)]
-          apply congr_arg of_nat
+          apply congr_arg ofNat
           rw [mul_comm, Nat.mul_sub_div]
           rwa [mul_comm]
         · change (↑(n * Nat.succ k) - (m + 1) : ℤ) / ↑(Nat.succ k) = ↑n - ((m / Nat.succ k : ℕ) + 1)
           rw [← sub_sub, ← sub_sub, ← neg_sub (m : ℤ), ← neg_sub _ (n : ℤ), ← Int.ofNat_sub h, ←
-            Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← neg_succ_of_nat_coe', ←
-            neg_succ_of_nat_coe']
-          · apply congr_arg neg_succ_of_nat
+            Int.ofNat_sub ((Nat.le_div_iff_mul_le k.succ_pos).2 h), ← negSucc_coe', ← negSucc_coe']
+          · apply congr_arg negSucc
             rw [mul_comm, Nat.sub_mul_div]
             rwa [mul_comm]
   have : ∀ {a b c : ℤ}, 0 < c → (a + b * c) / c = a / c + b := fun a b c H =>
@@ -341,11 +340,11 @@ protected theorem add_mul_ediv_right (a b : ℤ) {c : ℤ} (H : c ≠ 0) : (a + 
       show (a - n.succ * k.succ) / k.succ = a / k.succ - n.succ from
         eq_sub_of_add_eq <| by rw [← this, sub_add_cancel]
   match lt_trichotomy c 0 with
-  | Or.inl hlt =>
+  | or.inl hlt =>
     neg_inj.1 <| by
       rw [← Int.div_neg, neg_add, ← Int.div_neg, ← neg_mul_neg] <;> apply this (neg_pos_of_neg hlt)
-  | Or.inr (Or.inl HEq) => absurd HEq H
-  | Or.inr (Or.inr hgt) => this hgt
+  | or.inr (or.inl heq) => absurd heq H
+  | or.inr (or.inr hgt) => this hgt
 #align int.add_mul_div_right Int.add_mul_ediv_right
 -/
 
@@ -442,7 +441,7 @@ but is expected to have type
   forall (a : Int) {b : Int}, (Ne.{1} Int b (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (LT.lt.{0} Int Int.instLTInt (HMod.hMod.{0, 0, 0} Int Int Int (instHMod.{0} Int Int.instModInt_1) a b) (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) b))
 Case conversion may be inaccurate. Consider using '#align int.mod_lt Int.emod_ltₓ'. -/
 theorem emod_lt (a : ℤ) {b : ℤ} (H : b ≠ 0) : a % b < |b| := by
-  rw [← mod_abs] <;> exact mod_lt_of_pos _ (abs_pos.2 H)
+  rw [← emod_abs] <;> exact emod_lt_of_pos _ (abs_pos.2 H)
 #align int.mod_lt Int.emod_lt
 
 #print Int.add_mul_emod_self /-
@@ -458,59 +457,60 @@ theorem add_mul_emod_self {a b c : ℤ} : (a + b * c) % c = a % c :=
 #print Int.add_mul_emod_self_left /-
 @[simp]
 theorem add_mul_emod_self_left (a b c : ℤ) : (a + b * c) % b = a % b := by
-  rw [mul_comm, add_mul_mod_self]
+  rw [mul_comm, add_mul_emod_self]
 #align int.add_mul_mod_self_left Int.add_mul_emod_self_left
 -/
 
 #print Int.add_emod_self /-
 @[simp]
 theorem add_emod_self {a b : ℤ} : (a + b) % b = a % b := by
-  have := add_mul_mod_self_left a b 1 <;> rwa [mul_one] at this
+  have := add_mul_emod_self_left a b 1 <;> rwa [mul_one] at this
 #align int.add_mod_self Int.add_emod_self
 -/
 
 #print Int.add_emod_self_left /-
 @[simp]
-theorem add_emod_self_left {a b : ℤ} : (a + b) % a = b % a := by rw [add_comm, add_mod_self]
+theorem add_emod_self_left {a b : ℤ} : (a + b) % a = b % a := by rw [add_comm, add_emod_self]
 #align int.add_mod_self_left Int.add_emod_self_left
 -/
 
 #print Int.emod_add_emod /-
 @[simp]
 theorem emod_add_emod (m n k : ℤ) : (m % n + k) % n = (m + k) % n := by
-  have := (add_mul_mod_self_left (m % n + k) n (m / n)).symm <;>
-    rwa [add_right_comm, mod_add_div] at this
+  have := (add_mul_emod_self_left (m % n + k) n (m / n)).symm <;>
+    rwa [add_right_comm, emod_add_ediv] at this
 #align int.mod_add_mod Int.emod_add_emod
 -/
 
 #print Int.add_emod_emod /-
 @[simp]
 theorem add_emod_emod (m n k : ℤ) : (m + n % k) % k = (m + n) % k := by
-  rw [add_comm, mod_add_mod, add_comm]
+  rw [add_comm, emod_add_emod, add_comm]
 #align int.add_mod_mod Int.add_emod_emod
 -/
 
 #print Int.add_emod /-
-theorem add_emod (a b n : ℤ) : (a + b) % n = (a % n + b % n) % n := by rw [add_mod_mod, mod_add_mod]
+theorem add_emod (a b n : ℤ) : (a + b) % n = (a % n + b % n) % n := by
+  rw [add_emod_emod, emod_add_emod]
 #align int.add_mod Int.add_emod
 -/
 
 #print Int.add_emod_eq_add_emod_right /-
 theorem add_emod_eq_add_emod_right {m n k : ℤ} (i : ℤ) (H : m % n = k % n) :
-    (m + i) % n = (k + i) % n := by rw [← mod_add_mod, ← mod_add_mod k, H]
+    (m + i) % n = (k + i) % n := by rw [← emod_add_emod, ← emod_add_emod k, H]
 #align int.add_mod_eq_add_mod_right Int.add_emod_eq_add_emod_right
 -/
 
 #print Int.add_emod_eq_add_emod_left /-
 theorem add_emod_eq_add_emod_left {m n k : ℤ} (i : ℤ) (H : m % n = k % n) :
-    (i + m) % n = (i + k) % n := by rw [add_comm, add_mod_eq_add_mod_right _ H, add_comm]
+    (i + m) % n = (i + k) % n := by rw [add_comm, add_emod_eq_add_emod_right _ H, add_comm]
 #align int.add_mod_eq_add_mod_left Int.add_emod_eq_add_emod_left
 -/
 
 #print Int.emod_add_cancel_right /-
 theorem emod_add_cancel_right {m n k : ℤ} (i) : (m + i) % n = (k + i) % n ↔ m % n = k % n :=
   ⟨fun H => by
-    have := add_mod_eq_add_mod_right (-i) H <;>
+    have := add_emod_eq_add_emod_right (-i) H <;>
       rwa [add_neg_cancel_right, add_neg_cancel_right] at this,
     add_emod_eq_add_emod_right _⟩
 #align int.mod_add_cancel_right Int.emod_add_cancel_right
@@ -518,7 +518,7 @@ theorem emod_add_cancel_right {m n k : ℤ} (i) : (m + i) % n = (k + i) % n ↔ 
 
 #print Int.emod_add_cancel_left /-
 theorem emod_add_cancel_left {m n k i : ℤ} : (i + m) % n = (i + k) % n ↔ m % n = k % n := by
-  rw [add_comm, add_comm i, mod_add_cancel_right]
+  rw [add_comm, add_comm i, emod_add_cancel_right]
 #align int.mod_add_cancel_left Int.emod_add_cancel_left
 -/
 
@@ -531,28 +531,29 @@ theorem emod_sub_cancel_right {m n k : ℤ} (i) : (m - i) % n = (k - i) % n ↔ 
 #print Int.mul_emod_left /-
 @[simp]
 theorem mul_emod_left (a b : ℤ) : a * b % b = 0 := by
-  rw [← zero_add (a * b), add_mul_mod_self, zero_mod]
+  rw [← zero_add (a * b), add_mul_emod_self, zero_mod]
 #align int.mul_mod_left Int.mul_emod_left
 -/
 
 #print Int.mul_emod_right /-
 @[simp]
-theorem mul_emod_right (a b : ℤ) : a * b % a = 0 := by rw [mul_comm, mul_mod_left]
+theorem mul_emod_right (a b : ℤ) : a * b % a = 0 := by rw [mul_comm, mul_emod_left]
 #align int.mul_mod_right Int.mul_emod_right
 -/
 
 #print Int.mul_emod /-
 theorem mul_emod (a b n : ℤ) : a * b % n = a % n * (b % n) % n := by
   conv_lhs =>
-    rw [← mod_add_div a n, ← mod_add_div' b n, right_distrib, left_distrib, left_distrib, mul_assoc,
-      mul_assoc, ← left_distrib n _ _, add_mul_mod_self_left, ← mul_assoc, add_mul_mod_self]
+    rw [← emod_add_ediv a n, ← mod_add_div' b n, right_distrib, left_distrib, left_distrib,
+      mul_assoc, mul_assoc, ← left_distrib n _ _, add_mul_emod_self_left, ← mul_assoc,
+      add_mul_emod_self]
 #align int.mul_mod Int.mul_emod
 -/
 
 #print Int.emod_self /-
 -- Will be generalized to Euclidean domains.
 @[local simp]
-theorem emod_self {a : ℤ} : a % a = 0 := by have := mul_mod_left 1 a <;> rwa [one_mul] at this
+theorem emod_self {a : ℤ} : a % a = 0 := by have := mul_emod_left 1 a <;> rwa [one_mul] at this
 #align int.mod_self Int.emod_self
 -/
 
@@ -567,8 +568,8 @@ theorem emod_emod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m
   by
   conv =>
     rhs
-    rw [← mod_add_div n k]
-  rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_mod_self_left]
+    rw [← emod_add_ediv n k]
+  rcases h with ⟨t, rfl⟩; rw [mul_assoc, add_mul_emod_self_left]
 #align int.mod_mod_of_dvd Int.emod_emod_of_dvd
 
 #print Int.emod_emod /-
@@ -576,15 +577,15 @@ theorem emod_emod_of_dvd (n : ℤ) {m k : ℤ} (h : m ∣ k) : n % k % m = n % m
 theorem emod_emod (a b : ℤ) : a % b % b = a % b := by
   conv =>
     rhs
-    rw [← mod_add_div a b, add_mul_mod_self_left]
+    rw [← emod_add_ediv a b, add_mul_emod_self_left]
 #align int.mod_mod Int.emod_emod
 -/
 
 #print Int.sub_emod /-
 theorem sub_emod (a b n : ℤ) : (a - b) % n = (a % n - b % n) % n :=
   by
-  apply (mod_add_cancel_right b).mp
-  rw [sub_add_cancel, ← add_mod_mod, sub_add_cancel, mod_mod]
+  apply (emod_add_cancel_right b).mp
+  rw [sub_add_cancel, ← add_emod_emod, sub_add_cancel, emod_emod]
 #align int.sub_mod Int.sub_emod
 -/
 
@@ -595,12 +596,12 @@ protected theorem ediv_emod_unique {a b r q : ℤ} (h : 0 < b) :
   by
   constructor
   · rintro ⟨rfl, rfl⟩
-    exact ⟨mod_add_div a b, mod_nonneg _ h.ne.symm, mod_lt_of_pos _ h⟩
+    exact ⟨emod_add_ediv a b, emod_nonneg _ h.ne.symm, emod_lt_of_pos _ h⟩
   · rintro ⟨rfl, hz, hb⟩
     constructor
     · rw [Int.add_mul_ediv_left r q (ne_of_gt h), div_eq_zero_of_lt hz hb]
       simp
-    · rw [add_mul_mod_self_left, mod_eq_of_lt hz hb]
+    · rw [add_mul_emod_self_left, emod_eq_of_lt hz hb]
 #align int.div_mod_unique Int.ediv_emod_unique
 -/
 
@@ -629,7 +630,7 @@ theorem neg_emod_two (i : ℤ) : -i % 2 = i % 2 :=
 theorem lt_ediv_add_one_mul_self (a : ℤ) {b : ℤ} (H : 0 < b) : a < (a / b + 1) * b :=
   by
   rw [add_mul, one_mul, mul_comm, ← sub_lt_iff_lt_add', ← mod_def]
-  exact mod_lt_of_pos _ H
+  exact emod_lt_of_pos _ H
 #align int.lt_div_add_one_mul_self Int.lt_ediv_add_one_mul_self
 -/
 
@@ -642,12 +643,12 @@ Case conversion may be inaccurate. Consider using '#align int.abs_div_le_abs Int
 theorem abs_ediv_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
   suffices ∀ (a : ℤ) (n : ℕ), |a / n| ≤ |a| from fun a b =>
     match b, eq_nat_or_neg b with
-    | _, ⟨n, Or.inl rfl⟩ => this _ _
-    | _, ⟨n, Or.inr rfl⟩ => by rw [Int.div_neg, abs_neg] <;> apply this
+    | _, ⟨n, or.inl rfl⟩ => this _ _
+    | _, ⟨n, or.inr rfl⟩ => by rw [Int.div_neg, abs_neg] <;> apply this
   fun a n => by
-  rw [abs_eq_nat_abs, abs_eq_nat_abs] <;>
+  rw [abs_eq_natAbs, abs_eq_natAbs] <;>
     exact
-      coe_nat_le_coe_nat_of_le
+      ofNat_le_ofNat_of_le
         (match a, n with
         | (m : ℕ), n => Nat.div_le_self _ _
         | -[m+1], 0 => Nat.zero_le _
@@ -656,7 +657,7 @@ theorem abs_ediv_le_abs : ∀ a b : ℤ, |a / b| ≤ |a| :=
 
 #print Int.ediv_le_self /-
 theorem ediv_le_self {a : ℤ} (b : ℤ) (Ha : 0 ≤ a) : a / b ≤ a := by
-  have := le_trans (le_abs_self _) (abs_div_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this
+  have := le_trans (le_abs_self _) (abs_ediv_le_abs a b) <;> rwa [abs_of_nonneg Ha] at this
 #align int.div_le_self Int.ediv_le_self
 -/
 
@@ -715,8 +716,8 @@ Case conversion may be inaccurate. Consider using '#align int.dvd_sub_of_mod_eq 
 theorem dvd_sub_of_emod_eq {a b c : ℤ} (h : a % b = c) : b ∣ a - c :=
   by
   have hx : a % b % b = c % b := by rw [h]
-  rw [mod_mod, ← mod_sub_cancel_right c, sub_self, zero_mod] at hx
-  exact dvd_of_mod_eq_zero hx
+  rw [emod_emod, ← emod_sub_cancel_right c, sub_self, zero_mod] at hx
+  exact dvd_of_emod_eq_zero hx
 #align int.dvd_sub_of_mod_eq Int.dvd_sub_of_emod_eq
 
 /- warning: int.nat_abs_dvd -> Int.natAbs_dvd is a dubious translation:
@@ -872,7 +873,7 @@ but is expected to have type
   forall {z : Int}, (Ne.{1} Int z (OfNat.ofNat.{0} Int 0 (instOfNatInt 0))) -> (Eq.{1} Int (Abs.abs.{0} Int (Neg.toHasAbs.{0} Int Int.instNegInt (SemilatticeSup.toHasSup.{0} Int (Lattice.toSemilatticeSup.{0} Int (DistribLattice.toLattice.{0} Int (instDistribLattice.{0} Int Int.instLinearOrderInt))))) (Int.sign z)) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))
 Case conversion may be inaccurate. Consider using '#align int.abs_sign_of_nonzero Int.abs_sign_of_nonzeroₓ'. -/
 theorem abs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : |z.sign| = 1 := by
-  rw [abs_eq_nat_abs, nat_abs_sign_of_nonzero hz, Int.ofNat_one]
+  rw [abs_eq_natAbs, natAbs_sign_of_nonzero hz, Int.ofNat_one]
 #align int.abs_sign_of_nonzero Int.abs_sign_of_nonzero
 
 /- warning: int.exists_lt_and_lt_iff_not_dvd -> Int.exists_lt_and_lt_iff_not_dvd is a dubious translation:
@@ -892,12 +893,12 @@ theorem exists_lt_and_lt_iff_not_dvd (m : ℤ) {n : ℤ} (hn : 0 < n) :
     rw [lt_add_one_iff, ← not_lt] at h2k
     exact h2k h1k
   · intro h
-    rw [dvd_iff_mod_eq_zero, ← Ne.def] at h
-    have := (mod_nonneg m hn.ne.symm).lt_of_ne h.symm
-    simp (config := { singlePass := true }) only [← mod_add_div m n]
+    rw [dvd_iff_emod_eq_zero, ← Ne.def] at h
+    have := (emod_nonneg m hn.ne.symm).lt_of_ne h.symm
+    simp (config := { singlePass := true }) only [← emod_add_ediv m n]
     refine' ⟨m / n, lt_add_of_pos_left _ this, _⟩
     rw [add_comm _ (1 : ℤ), left_distrib, mul_one]
-    exact add_lt_add_right (mod_lt_of_pos _ hn) _
+    exact add_lt_add_right (emod_lt_of_pos _ hn) _
 #align int.exists_lt_and_lt_iff_not_dvd Int.exists_lt_and_lt_iff_not_dvd
 
 attribute [local simp] Int.div_zero
@@ -946,7 +947,7 @@ theorem sub_ediv_of_dvd (a : ℤ) {b c : ℤ} (hcb : c ∣ b) : (a - b) / c = a 
   by
   rw [sub_eq_add_neg, sub_eq_add_neg, Int.add_ediv_of_dvd_right ((dvd_neg c b).mpr hcb)]
   congr
-  exact neg_div_of_dvd hcb
+  exact neg_ediv_of_dvd hcb
 #align int.sub_div_of_dvd Int.sub_ediv_of_dvd
 
 /- warning: int.sub_div_of_dvd_sub -> Int.sub_ediv_of_dvd_sub is a dubious translation:
@@ -975,7 +976,7 @@ protected theorem sign_eq_ediv_abs (a : ℤ) : sign a = a / |a| :=
 
 #print Int.ediv_mul_le /-
 protected theorem ediv_mul_le (a : ℤ) {b : ℤ} (H : b ≠ 0) : a / b * b ≤ a :=
-  le_of_sub_nonneg <| by rw [mul_comm, ← mod_def] <;> apply mod_nonneg _ H
+  le_of_sub_nonneg <| by rw [mul_comm, ← mod_def] <;> apply emod_nonneg _ H
 #align int.div_mul_le Int.ediv_mul_le
 -/
 
@@ -1118,8 +1119,7 @@ theorem ediv_dvd_of_dvd {s t : ℤ} (hst : s ∣ t) : t / s ∣ t :=
 #print Int.toNat_le /-
 @[simp]
 theorem toNat_le {a : ℤ} {n : ℕ} : toNat a ≤ n ↔ a ≤ n := by
-  rw [(coe_nat_le_coe_nat_iff _ _).symm, to_nat_eq_max, max_le_iff] <;>
-    exact and_iff_left (coe_zero_le _)
+  rw [(ofNat_le _ _).symm, toNat_eq_max, max_le_iff] <;> exact and_iff_left (ofNat_zero_le _)
 #align int.to_nat_le Int.toNat_le
 -/
 
@@ -1140,14 +1140,14 @@ theorem coe_nat_nonpos_iff {n : ℕ} : (n : ℤ) ≤ 0 ↔ n = 0 :=
 
 #print Int.toNat_le_toNat /-
 theorem toNat_le_toNat {a b : ℤ} (h : a ≤ b) : toNat a ≤ toNat b := by
-  rw [to_nat_le] <;> exact le_trans h (le_to_nat b)
+  rw [toNat_le] <;> exact le_trans h (self_le_toNat b)
 #align int.to_nat_le_to_nat Int.toNat_le_toNat
 -/
 
 #print Int.toNat_lt_toNat /-
 theorem toNat_lt_toNat {a b : ℤ} (hb : 0 < b) : toNat a < toNat b ↔ a < b :=
-  ⟨fun h => by cases a; exact lt_to_nat.1 h; exact lt_trans (neg_succ_of_nat_lt_zero a) hb, fun h =>
-    by rw [lt_to_nat]; cases a; exact h; exact hb⟩
+  ⟨fun h => by cases a; exact lt_toNat.1 h; exact lt_trans (negSucc_lt_zero a) hb, fun h => by
+    rw [lt_toNat]; cases a; exact h; exact hb⟩
 #align int.to_nat_lt_to_nat Int.toNat_lt_toNat
 -/
 

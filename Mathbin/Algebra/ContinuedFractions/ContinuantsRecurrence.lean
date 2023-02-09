@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.continuants_recurrence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,23 +26,23 @@ namespace GeneralizedContinuedFraction
 
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRing K]
 
-theorem continuantsAux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.get? n = some gp)
+theorem continuantsAux_recurrence {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred)
     (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuantsAux (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ :=
-  by simp [*, continuants_aux, next_continuants, next_denominator, next_numerator]
+  by simp [*, continuantsAux, nextContinuants, nextDenominator, nextNumerator]
 #align generalized_continued_fraction.continuants_aux_recurrence GeneralizedContinuedFraction.continuantsAux_recurrence
 
-theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.get? n = some gp)
+theorem continuants_recurrence_aux {gp ppred pred : Pair K} (nth_s_eq : g.s.nth n = some gp)
     (nth_conts_aux_eq : g.continuantsAux n = ppred)
     (succ_nth_conts_aux_eq : g.continuantsAux (n + 1) = pred) :
     g.continuants (n + 1) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ := by
   simp [nth_cont_eq_succ_nth_cont_aux,
-    continuants_aux_recurrence nth_s_eq nth_conts_aux_eq succ_nth_conts_aux_eq]
+    continuantsAux_recurrence nth_s_eq nth_conts_aux_eq succ_nth_conts_aux_eq]
 #align generalized_continued_fraction.continuants_recurrence_aux GeneralizedContinuedFraction.continuants_recurrence_aux
 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂` and `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
-theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.get? (n + 1) = some gp)
+theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.nth (n + 1) = some gp)
     (nth_conts_eq : g.continuants n = ppred) (succ_nth_conts_eq : g.continuants (n + 1) = pred) :
     g.continuants (n + 2) = ⟨gp.b * pred.a + gp.a * ppred.a, gp.b * pred.b + gp.a * ppred.b⟩ :=
   by
@@ -52,7 +52,7 @@ theorem continuants_recurrence {gp ppred pred : Pair K} (succ_nth_s_eq : g.s.get
 
 /-- Shows that `Aₙ = bₙ * Aₙ₋₁ + aₙ * Aₙ₋₂`. -/
 theorem numerators_recurrence {gp : Pair K} {ppredA predA : K}
-    (succ_nth_s_eq : g.s.get? (n + 1) = some gp) (nth_num_eq : g.numerators n = ppredA)
+    (succ_nth_s_eq : g.s.nth (n + 1) = some gp) (nth_num_eq : g.numerators n = ppredA)
     (succ_nth_num_eq : g.numerators (n + 1) = predA) :
     g.numerators (n + 2) = gp.b * predA + gp.a * ppredA :=
   by
@@ -66,7 +66,7 @@ theorem numerators_recurrence {gp : Pair K} {ppredA predA : K}
 
 /-- Shows that `Bₙ = bₙ * Bₙ₋₁ + aₙ * Bₙ₋₂`. -/
 theorem denominators_recurrence {gp : Pair K} {ppredB predB : K}
-    (succ_nth_s_eq : g.s.get? (n + 1) = some gp) (nth_denom_eq : g.denominators n = ppredB)
+    (succ_nth_s_eq : g.s.nth (n + 1) = some gp) (nth_denom_eq : g.denominators n = ppredB)
     (succ_nth_denom_eq : g.denominators (n + 1) = predB) :
     g.denominators (n + 2) = gp.b * predB + gp.a * ppredB :=
   by

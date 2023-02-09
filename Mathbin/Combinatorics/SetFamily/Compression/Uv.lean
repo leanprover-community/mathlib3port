@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.compression.uv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ def compress (u v a : α) : α :=
 /-- To UV-compress a set family, we compress each of its elements, except that we don't want to
 reduce the cardinality, so we keep all elements whose compression is already present. -/
 def compression (u v : α) (s : Finset α) :=
-  (s.filterₓ fun a => compress u v a ∈ s) ∪ (s.image <| compress u v).filterₓ fun a => a ∉ s
+  (s.filter fun a => compress u v a ∈ s) ∪ (s.image <| compress u v).filter fun a => a ∉ s
 #align uv.compression UV.compression
 -/
 
@@ -184,8 +184,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] [_inst_2 : DecidableRel.{succ u1} α (Disjoint.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} α _inst_1))] [_inst_3 : DecidableRel.{succ u1} α (fun (x._@.Mathlib.Combinatorics.SetFamily.Compression.UV._hyg.1449 : α) (x._@.Mathlib.Combinatorics.SetFamily.Compression.UV._hyg.1451 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))))) x._@.Mathlib.Combinatorics.SetFamily.Compression.UV._hyg.1449 x._@.Mathlib.Combinatorics.SetFamily.Compression.UV._hyg.1451)] {s : Finset.{u1} α} (u : α) (v : α), Disjoint.{u1} (Finset.{u1} α) (Finset.partialOrder.{u1} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} α) (Finset.filter.{u1} α (fun (a : α) => Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) (UV.compress.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_3 a b) u v a) s) (fun (a : α) => Finset.decidableMem.{u1} α (fun (a : α) (b : α) => decidableEq_of_decidableLE.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (fun (a : α) (b : α) => _inst_3 a b) a b) (UV.compress.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_3 a b) u v a) s) s) (Finset.filter.{u1} α (fun (a : α) => Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s)) (fun (a : α) => instDecidableNot (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a s) (Finset.decidableMem.{u1} α (fun (a : α) (b : α) => decidableEq_of_decidableLE.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (fun (a : α) (b : α) => _inst_3 a b) a b) a s)) (Finset.image.{u1, u1} α α (fun (a : α) (b : α) => decidableEq_of_decidableLE.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (fun (a : α) (b : α) => _inst_3 a b) a b) (UV.compress.{u1} α _inst_1 (fun (a : α) (b : α) => _inst_2 a b) (fun (a : α) (b : α) => _inst_3 a b) u v) s))
 Case conversion may be inaccurate. Consider using '#align uv.compress_disjoint UV.compress_disjointₓ'. -/
 theorem compress_disjoint (u v : α) :
-    Disjoint (s.filterₓ fun a => compress u v a ∈ s)
-      ((s.image <| compress u v).filterₓ fun a => a ∉ s) :=
+    Disjoint (s.filter fun a => compress u v a ∈ s)
+      ((s.image <| compress u v).filter fun a => a ∉ s) :=
   disjoint_left.2 fun a ha₁ ha₂ => (mem_filter.1 ha₂).2 (mem_filter.1 ha₁).1
 #align uv.compress_disjoint UV.compress_disjoint
 
@@ -230,7 +230,7 @@ theorem compress_mem_compression_of_mem_compression (ha : a ∈ 𝓒 u v s) : co
 @[simp]
 theorem compression_idem (u v : α) (s : Finset α) : 𝓒 u v (𝓒 u v s) = 𝓒 u v s :=
   by
-  have h : Filter (fun a => compress u v a ∉ 𝓒 u v s) (𝓒 u v s) = ∅ :=
+  have h : filter (fun a => compress u v a ∉ 𝓒 u v s) (𝓒 u v s) = ∅ :=
     filter_false_of_mem fun a ha h => h <| compress_mem_compression_of_mem_compression ha
   rw [compression, image_filter, h, image_empty, ← h]
   exact filter_union_filter_neg_eq _ (compression u v s)
@@ -241,8 +241,8 @@ theorem compression_idem (u v : α) (s : Finset α) : 𝓒 u v (𝓒 u v s) = �
 /-- Compressing a family doesn't change its size. -/
 theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card :=
   by
-  rw [compression, card_disjoint_union (compress_disjoint _ _), image_filter, card_image_of_inj_on,
-    ← card_disjoint_union, filter_union_filter_neg_eq]
+  rw [compression, card_disjoint_union (compress_disjoint _ _), image_filter, card_image_of_injOn, ←
+    card_disjoint_union, filter_union_filter_neg_eq]
   · rw [disjoint_iff_inter_eq_empty]
     exact filter_inter_filter_neg_eq _ _ _
   intro a ha b hb hab

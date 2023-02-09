@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finsupp.indicator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α
     if H : i ∈ s then f i H else 0
   support :=
     haveI := Classical.decEq α
-    (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map (embedding.subtype _)
+    (s.attach.filter fun i : s => f i.1 i.2 ≠ 0).map (Embedding.subtype _)
   mem_support_toFun i := by
     letI := Classical.decEq α
     rw [mem_map, dite_ne_right_iff]
@@ -70,7 +70,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : Type.{u1}} [_inst_1 : Zero.{u1} α] {s : Finset.{u2} ι} {i : ι}, (Not (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s)) -> (forall (f : forall (i : ι), (Membership.mem.{u2, u2} ι (Finset.{u2} ι) (Finset.instMembershipFinset.{u2} ι) i s) -> α), Eq.{succ u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Finsupp.{u2, u1} ι α _inst_1) ι (fun (_x : ι) => (fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) _x) (Finsupp.funLike.{u2, u1} ι α _inst_1) (Finsupp.indicator.{u2, u1} ι α _inst_1 s f) i) (OfNat.ofNat.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) 0 (Zero.toOfNat0.{u1} ((fun (x._@.Mathlib.Data.Finsupp.Defs._hyg.779 : ι) => α) i) _inst_1)))
 Case conversion may be inaccurate. Consider using '#align finsupp.indicator_of_not_mem Finsupp.indicator_of_not_memₓ'. -/
 theorem indicator_of_not_mem (hi : i ∉ s) (f : ∀ i ∈ s, α) : indicator s f i = 0 :=
-  @dif_neg _ (id _) hi _ _ _
+  @dif_neg _ (id _) Not _ _ _
 #align finsupp.indicator_of_not_mem Finsupp.indicator_of_not_mem
 
 variable (s i)

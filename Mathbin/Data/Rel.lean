@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad
 
 ! This file was ported from Lean 3 source module data.rel
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -294,7 +294,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (x : α) (s : Set.{u2} β), Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Rel.preimage.{u1, u2} α β r s)) (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) y s) (r x y)))
 Case conversion may be inaccurate. Consider using '#align rel.mem_preimage Rel.mem_preimageₓ'. -/
-theorem mem_preimage (x : α) (s : Set β) : x ∈ r.Preimage s ↔ ∃ y ∈ s, r x y :=
+theorem mem_preimage (x : α) (s : Set β) : x ∈ r.preimage s ↔ ∃ y ∈ s, r x y :=
   Iff.rfl
 #align rel.mem_preimage Rel.mem_preimage
 
@@ -309,7 +309,7 @@ theorem preimage_def (s : Set β) : preimage r s = { x | ∃ y ∈ s, r x y } :=
 #align rel.preimage_def Rel.preimage_def
 
 #print Rel.preimage_mono /-
-theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.Preimage s ⊆ r.Preimage t :=
+theorem preimage_mono {s t : Set β} (h : s ⊆ t) : r.preimage s ⊆ r.preimage t :=
   image_mono _ h
 #align rel.preimage_mono Rel.preimage_mono
 -/
@@ -320,7 +320,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (Rel.preimage.{u1, u2} α β r (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.preimage_inter Rel.preimage_interₓ'. -/
-theorem preimage_inter (s t : Set β) : r.Preimage (s ∩ t) ⊆ r.Preimage s ∩ r.Preimage t :=
+theorem preimage_inter (s t : Set β) : r.preimage (s ∩ t) ⊆ r.preimage s ∩ r.preimage t :=
   image_inter _ s t
 #align rel.preimage_inter Rel.preimage_inter
 
@@ -330,7 +330,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (r : Rel.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (Rel.preimage.{u1, u2} α β r (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (Rel.preimage.{u1, u2} α β r s) (Rel.preimage.{u1, u2} α β r t))
 Case conversion may be inaccurate. Consider using '#align rel.preimage_union Rel.preimage_unionₓ'. -/
-theorem preimage_union (s t : Set β) : r.Preimage (s ∪ t) = r.Preimage s ∪ r.Preimage t :=
+theorem preimage_union (s t : Set β) : r.preimage (s ∪ t) = r.preimage s ∪ r.preimage t :=
   image_union _ s t
 #align rel.preimage_union Rel.preimage_union
 
@@ -356,7 +356,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (r : Rel.{u2, u1} α β), Eq.{succ u2} (Set.{u2} α) (Rel.preimage.{u2, u1} α β r (Set.univ.{u1} β)) (Rel.dom.{u2, u1} α β r)
 Case conversion may be inaccurate. Consider using '#align rel.preimage_univ Rel.preimage_univₓ'. -/
-theorem preimage_univ : r.Preimage Set.univ = r.dom := by rw [preimage, image_univ, codom_inv]
+theorem preimage_univ : r.preimage Set.univ = r.dom := by rw [preimage, image_univ, codom_inv]
 #align rel.preimage_univ Rel.preimage_univ
 
 #print Rel.core /-
@@ -490,7 +490,7 @@ theorem image_eq (f : α → β) (s : Set α) : f '' s = (Function.graph f).imag
 #align set.image_eq Set.image_eq
 
 #print Set.preimage_eq /-
-theorem preimage_eq (f : α → β) (s : Set β) : f ⁻¹' s = (Function.graph f).Preimage s := by
+theorem preimage_eq (f : α → β) (s : Set β) : f ⁻¹' s = (Function.graph f).preimage s := by
   simp [Set.preimage, Function.graph, Rel.preimage, Rel.inv, flip, Rel.image]
 #align set.preimage_eq Set.preimage_eq
 -/

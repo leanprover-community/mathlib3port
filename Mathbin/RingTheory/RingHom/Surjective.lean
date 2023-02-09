@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.surjective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,7 @@ open TensorProduct Algebra.TensorProduct
 
 -- mathport name: exprsurjective
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
-  Function.Surjective f
+  function.surjective f
 
 theorem surjective_stableUnderComposition : StableUnderComposition surjective :=
   by
@@ -42,7 +42,7 @@ theorem surjective_respectsIso : RespectsIso surjective :=
 
 theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
   by
-  refine' stable_under_base_change.mk _ surjective_respects_iso _
+  refine' StableUnderBaseChange.mk _ surjective_respectsIso _
   classical
     introv h x
     skip
@@ -75,7 +75,7 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
     Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem _ l.support (fun x : s => f x) fun x : s =>
       f (l x)
   · dsimp only
-    simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]
+    simp_rw [← map_mul, ← map_sum, ← f.map_one]
     exact f.congr_arg hl
   · exact fun _ => Set.mem_range_self _
   · exact fun _ => Set.mem_range_self _
@@ -86,7 +86,7 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
     obtain ⟨⟨_, m, rfl⟩, hm⟩ := hy
     refine' ⟨m + n, _⟩
     dsimp at hm⊢
-    simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
+    simp_rw [one_mul, ← mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
     exact ⟨_, hm⟩
 #align ring_hom.surjective_of_localization_span RingHom.surjective_ofLocalizationSpan
 

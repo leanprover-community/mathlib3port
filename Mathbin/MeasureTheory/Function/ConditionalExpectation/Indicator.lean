@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.indicator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,23 +43,23 @@ theorem condexp_ae_eq_restrict_zero (hs : measurable_set[m] s) (hf : f =ᵐ[μ.r
   by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm]
-  by_cases hμm : sigma_finite (μ.trim hm)
+  by_cases hμm : SigmaFinite (μ.trim hm)
   swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm]
-  haveI : sigma_finite (μ.trim hm) := hμm
-  have : sigma_finite ((μ.restrict s).trim hm) :=
+  · simp_rw [condexp_of_not_sigmaFinite hm hμm]
+  haveI : SigmaFinite (μ.trim hm) := hμm
+  have : SigmaFinite ((μ.restrict s).trim hm) :=
     by
     rw [← restrict_trim hm _ hs]
-    exact restrict.sigma_finite _ s
-  by_cases hf_int : integrable f μ
+    exact Restrict.sigmaFinite _ s
+  by_cases hf_int : Integrable f μ
   swap
   · rw [condexp_undef hf_int]
   refine' ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm _ _ _ _ _
   · exact fun t ht hμt => integrable_condexp.integrable_on.integrable_on
-  · exact fun t ht hμt => (integrable_zero _ _ _).IntegrableOn
+  · exact fun t ht hμt => (integrableZero _ _ _).integrableOn
   · intro t ht hμt
-    rw [measure.restrict_restrict (hm _ ht), set_integral_condexp hm hf_int (ht.inter hs), ←
-      measure.restrict_restrict (hm _ ht)]
+    rw [Measure.restrict_restrict (hm _ ht), set_integral_condexp hm hf_int (ht.inter hs), ←
+      Measure.restrict_restrict (hm _ ht)]
     refine' set_integral_congr_ae (hm _ ht) _
     filter_upwards [hf]with x hx h using hx
   · exact strongly_measurable_condexp.ae_strongly_measurable'
@@ -87,10 +87,10 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
   by_cases hm : m ≤ m0
   swap
   · simp_rw [condexp_of_not_le hm, Set.indicator_zero']
-  by_cases hμm : sigma_finite (μ.trim hm)
+  by_cases hμm : SigmaFinite (μ.trim hm)
   swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm, Set.indicator_zero']
-  haveI : sigma_finite (μ.trim hm) := hμm
+  · simp_rw [condexp_of_not_sigmaFinite hm hμm, Set.indicator_zero']
+  haveI : SigmaFinite (μ.trim hm) := hμm
   -- use `have` to perform what should be the first calc step because of an error I don't
   -- understand
   have : s.indicator (μ[f|m]) =ᵐ[μ] s.indicator (μ[s.indicator f + sᶜ.indicator f|m]) := by
@@ -131,21 +131,21 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
     (hs_m : measurable_set[m] s) (hf_int : Integrable f μ) :
     μ.restrict s[f|m] =ᵐ[μ.restrict s] μ[f|m] :=
   by
-  have : sigma_finite ((μ.restrict s).trim hm) :=
+  have : SigmaFinite ((μ.restrict s).trim hm) :=
     by
     rw [← restrict_trim hm _ hs_m]
     infer_instance
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   swap
   · infer_instance
-  refine' eventually_eq.trans _ (condexp_indicator hf_int hs_m)
+  refine' EventuallyEq.trans _ (condexp_indicator hf_int hs_m)
   refine' ae_eq_condexp_of_forall_set_integral_eq hm (hf_int.indicator (hm _ hs_m)) _ _ _
   · intro t ht hμt
     rw [← integrable_indicator_iff (hm _ ht), Set.indicator_indicator, Set.inter_comm, ←
       Set.indicator_indicator]
-    suffices h_int_restrict : integrable (t.indicator (μ.restrict s[f|m])) (μ.restrict s)
-    · rw [integrable_indicator_iff (hm _ hs_m), integrable_on]
-      rw [integrable_indicator_iff (hm _ ht), integrable_on] at h_int_restrict⊢
+    suffices h_int_restrict : Integrable (t.indicator (μ.restrict s[f|m])) (μ.restrict s)
+    · rw [integrable_indicator_iff (hm _ hs_m), IntegrableOn]
+      rw [integrable_indicator_iff (hm _ ht), IntegrableOn] at h_int_restrict⊢
       exact h_int_restrict
     exact integrable_condexp.indicator (hm _ ht)
   · intro t ht hμt
@@ -153,12 +153,12 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
       (∫ x in t, s.indicator (μ.restrict s[f|m]) x ∂μ) =
           ∫ x in t, (μ.restrict s[f|m]) x ∂μ.restrict s :=
         by
-        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
-          measure.restrict_restrict (hm _ ht), Set.inter_comm]
+        rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
+          Measure.restrict_restrict (hm _ ht), Set.inter_comm]
       _ = ∫ x in t, f x ∂μ.restrict s := set_integral_condexp hm hf_int.integrable_on ht
       _ = ∫ x in t, s.indicator f x ∂μ := by
-        rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
-          measure.restrict_restrict (hm _ ht), Set.inter_comm]
+        rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
+          Measure.restrict_restrict (hm _ ht), Set.inter_comm]
       
   · exact (strongly_measurable_condexp.indicator hs_m).aeStronglyMeasurable'
 #align measure_theory.condexp_restrict_ae_eq_restrict MeasureTheory.condexp_restrict_ae_eq_restrict
@@ -173,7 +173,7 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
   by
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   have hs_m₂ : measurable_set[m₂] s := by rwa [← Set.inter_univ s, ← hs Set.univ, Set.inter_univ]
-  by_cases hf_int : integrable f μ
+  by_cases hf_int : Integrable f μ
   swap
   · simp_rw [condexp_undef hf_int]
   refine' ((condexp_indicator hf_int hs_m).symm.trans _).trans (condexp_indicator hf_int hs_m₂)
@@ -183,7 +183,7 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
       (fun s hs hμs => integrable_condexp.integrable_on) _ _
       strongly_measurable_condexp.ae_strongly_measurable'
   swap
-  · have : strongly_measurable[m] (μ[s.indicator f|m]) := strongly_measurable_condexp
+  · have : strongly_measurable[m] (μ[s.indicator f|m]) := stronglyMeasurable_condexp
     refine'
       this.ae_strongly_measurable'.ae_strongly_measurable'_of_measurable_space_le_on hm hs_m
         (fun t => (hs t).mp) _
@@ -193,11 +193,11 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
     by
     rw [← integral_add_compl (hm _ hs_m) integrable_condexp.integrable_on]
     suffices (∫ x in sᶜ, (μ[s.indicator f|m]) x ∂μ.restrict t) = 0 by
-      rw [this, add_zero, measure.restrict_restrict (hm _ hs_m)]
-    rw [measure.restrict_restrict (MeasurableSet.compl (hm _ hs_m))]
+      rw [this, add_zero, Measure.restrict_restrict (hm _ hs_m)]
+    rw [Measure.restrict_restrict (MeasurableSet.compl (hm _ hs_m))]
     suffices μ[s.indicator f|m] =ᵐ[μ.restrict (sᶜ)] 0
       by
-      rw [Set.inter_comm, ← measure.restrict_restrict (hm₂ _ ht)]
+      rw [Set.inter_comm, ← Measure.restrict_restrict (hm₂ _ ht)]
       calc
         (∫ x : α in t, (μ[s.indicator f|m]) x ∂μ.restrict (sᶜ)) =
             ∫ x : α in t, 0 ∂μ.restrict (sᶜ) :=
@@ -211,7 +211,7 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
   have hst_m : measurable_set[m] (s ∩ t) := (hs _).mpr (hs_m₂.inter ht)
   simp_rw [this, set_integral_condexp hm₂ (hf_int.indicator (hm _ hs_m)) ht,
     set_integral_condexp hm (hf_int.indicator (hm _ hs_m)) hst_m, integral_indicator (hm _ hs_m),
-    measure.restrict_restrict (hm _ hs_m), ← Set.inter_assoc, Set.inter_self]
+    Measure.restrict_restrict (hm _ hs_m), ← Set.inter_assoc, Set.inter_self]
 #align measure_theory.condexp_ae_eq_restrict_of_measurable_space_eq_on MeasureTheory.condexp_ae_eq_restrict_of_measurableSpace_eq_on
 
 end MeasureTheory

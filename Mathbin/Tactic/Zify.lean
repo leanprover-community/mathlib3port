@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.zify
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ unsafe def tactic.zify (extra_lems : List simp_arg_type) : expr → tactic (expr
   do
   let (z1, p1) ← zify.lift_to_z z <|> fail "failed to find an applicable zify lemma"
   let (z2, p2) ← norm_cast.derive_push_cast extra_lems z1
-  Prod.mk z2 <$> mk_eq_trans p1 p2
+  prod.mk z2 <$> mk_eq_trans p1 p2
 #align tactic.zify tactic.zify
 
 /-- A variant of `tactic.zify` that takes `h`, a proof of a proposition about natural numbers,

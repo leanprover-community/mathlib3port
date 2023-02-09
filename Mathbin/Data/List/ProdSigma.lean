@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.prod_sigma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ Case conversion may be inaccurate. Consider using '#align list.mem_product List.
 @[simp]
 theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} :
     (a, b) ∈ product l₁ l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ := by
-  simp only [product, mem_bind, mem_map, Prod.ext_iff, exists_prop, and_left_comm, exists_and_left,
+  simp only [product, mem_bind, mem_map', Prod.ext_iff, exists_prop, and_left_comm, exists_and_left,
     exists_eq_left, exists_eq_right]
 #align list.mem_product List.mem_product
 
@@ -93,7 +93,7 @@ variable {σ : α → Type _}
 
 #print List.nil_sigma /-
 @[simp]
-theorem nil_sigma (l : ∀ a, List (σ a)) : (@nil α).Sigma l = [] :=
+theorem nil_sigma (l : ∀ a, List (σ a)) : (@nil α).sigma l = [] :=
   rfl
 #align list.nil_sigma List.nil_sigma
 -/
@@ -106,7 +106,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.sigma_cons List.sigma_consₓ'. -/
 @[simp]
 theorem sigma_cons (a : α) (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
-    (a :: l₁).Sigma l₂ = map (Sigma.mk a) (l₂ a) ++ l₁.Sigma l₂ :=
+    (a :: l₁).sigma l₂ = map (Sigma.mk a) (l₂ a) ++ l₁.sigma l₂ :=
   rfl
 #align list.sigma_cons List.sigma_cons
 
@@ -117,7 +117,7 @@ but is expected to have type
   forall {α : Type.{u2}} {σ : α -> Type.{u1}} (l : List.{u2} α), Eq.{max (succ u2) (succ u1)} (List.{max u1 u2} (Sigma.{u2, u1} α (fun (a : α) => σ a))) (List.sigma.{u2, u1} α (fun (a : α) => σ a) l (fun (a : α) => List.nil.{u1} (σ a))) (List.nil.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => σ a)))
 Case conversion may be inaccurate. Consider using '#align list.sigma_nil List.sigma_nilₓ'. -/
 @[simp]
-theorem sigma_nil : ∀ l : List α, (l.Sigma fun a => @nil (σ a)) = []
+theorem sigma_nil : ∀ l : List α, (l.sigma fun a => @nil (σ a)) = []
   | [] => rfl
   | a :: l => by rw [sigma_cons, sigma_nil] <;> rfl
 #align list.sigma_nil List.sigma_nil
@@ -130,8 +130,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.mem_sigma List.mem_sigmaₓ'. -/
 @[simp]
 theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ a} :
-    Sigma.mk a b ∈ l₁.Sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
-  simp only [List.sigma, mem_bind, mem_map, exists_prop, exists_and_left, and_left_comm,
+    Sigma.mk a b ∈ l₁.sigma l₂ ↔ a ∈ l₁ ∧ b ∈ l₂ a := by
+  simp only [List.sigma, mem_bind, mem_map', exists_prop, exists_and_left, and_left_comm,
     exists_eq_left, heq_iff_eq, exists_eq_right]
 #align list.mem_sigma List.mem_sigma
 
@@ -142,7 +142,7 @@ but is expected to have type
   forall {α : Type.{u2}} {σ : α -> Type.{u1}} (l₁ : List.{u2} α) (l₂ : forall (a : α), List.{u1} (σ a)), Eq.{1} Nat (List.length.{max u2 u1} (Sigma.{u2, u1} α (fun (a : α) => σ a)) (List.sigma.{u2, u1} α (fun (a : α) => σ a) l₁ l₂)) (List.sum.{0} Nat instAddNat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) (List.map.{u2, 0} α Nat (fun (a : α) => List.length.{u1} (σ a) (l₂ a)) l₁))
 Case conversion may be inaccurate. Consider using '#align list.length_sigma List.length_sigmaₓ'. -/
 theorem length_sigma (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
-    length (l₁.Sigma l₂) = (l₁.map fun a => length (l₂ a)).Sum := by
+    length (l₁.sigma l₂) = (l₁.map fun a => length (l₂ a)).sum := by
   induction' l₁ with x l₁ IH <;> [rfl,
     simp only [map, sigma_cons, length_append, length_map, IH, sum_cons]]
 #align list.length_sigma List.length_sigma

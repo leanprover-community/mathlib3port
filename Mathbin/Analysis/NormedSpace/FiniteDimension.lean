@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ variable {R₁ : Type _} [Field R₁] [Module R₁ E₁] [Module R₁ F] [Finite
     to a linear isometry equivalence. -/
 def toLinearIsometryEquiv (li : E₁ →ₗᵢ[R₁] F) (h : finrank R₁ E₁ = finrank R₁ F) : E₁ ≃ₗᵢ[R₁] F
     where
-  toLinearEquiv := li.toLinearMap.linearEquivOfInjective li.Injective h
+  toLinearEquiv := li.toLinearMap.linearEquivOfInjective li.injective h
   norm_map' := li.norm_map'
 #align linear_isometry.to_linear_isometry_equiv LinearIsometry.toLinearIsometryEquiv
 
@@ -104,7 +104,7 @@ variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
     to an affine isometry equivalence. -/
 def toAffineIsometryEquiv [Inhabited P₁] (li : P₁ →ᵃⁱ[𝕜] P₂) (h : finrank 𝕜 V₁ = finrank 𝕜 V₂) :
     P₁ ≃ᵃⁱ[𝕜] P₂ :=
-  AffineIsometryEquiv.mk' li (li.LinearIsometry.toLinearIsometryEquiv h) (Inhabited.default P₁)
+  AffineIsometryEquiv.mk' li (li.linearIsometry.toLinearIsometryEquiv h) (Inhabited.default P₁)
     fun p => by simp
 #align affine_isometry.to_affine_isometry_equiv AffineIsometry.toAffineIsometryEquiv
 
@@ -216,7 +216,7 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type _} [PseudoMetricSpace
   have L : LipschitzOnWith (‖A.to_continuous_linear_map‖₊ * K) (A ∘ f) s :=
     LA.comp_lipschitz_on_with hf
   obtain ⟨g, hg, gs⟩ :
-    ∃ g : α → ι → ℝ, LipschitzWith (‖A.to_continuous_linear_map‖₊ * K) g ∧ eq_on (A ∘ f) g s :=
+    ∃ g : α → ι → ℝ, LipschitzWith (‖A.to_continuous_linear_map‖₊ * K) g ∧ EqOn (A ∘ f) g s :=
     L.extend_pi
   refine' ⟨A.symm ∘ g, _, _⟩
   · have LAsymm : LipschitzWith ‖A.symm.to_continuous_linear_map‖₊ A.symm := by
@@ -245,9 +245,9 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
   cases nonempty_fintype ι
   simp only [Fintype.linearIndependent_iff'] at hf⊢
   rcases LinearMap.exists_antilipschitzWith _ hf with ⟨K, K0, hK⟩
-  have : tendsto (fun g : ι → E => ∑ i, ‖g i - f i‖) (𝓝 f) (𝓝 <| ∑ i, ‖f i - f i‖) :=
+  have : Tendsto (fun g : ι → E => ∑ i, ‖g i - f i‖) (𝓝 f) (𝓝 <| ∑ i, ‖f i - f i‖) :=
     tendsto_finset_sum _ fun i hi =>
-      tendsto.norm <| ((continuous_apply i).Tendsto _).sub tendsto_const_nhds
+      Tendsto.norm <| ((continuous_apply i).tendsto _).sub tendsto_const_nhds
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
   replace hg : (∑ i, ‖g i - f i‖₊) < K⁻¹
@@ -255,7 +255,7 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
     push_cast
     exact hg
   rw [LinearMap.ker_eq_bot]
-  refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
+  refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply,
     LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smulRight_apply, LinearMap.id_apply, ←
     Finset.sum_sub_distrib, ← smul_sub, ← sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
@@ -271,10 +271,10 @@ theorem isOpen_setOf_linearIndependent {ι : Type _} [Finite ι] :
 
 theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ rank (f : E →ₗ[𝕜] F) } :=
   by
-  simp only [le_rank_iff_exists_linearIndependent_finset, set_of_exists, ← exists_prop]
+  simp only [le_rank_iff_exists_linearIndependent_finset, setOf_exists, ← exists_prop]
   refine' isOpen_bunionᵢ fun t ht => _
   have : Continuous fun f : E →L[𝕜] F => fun x : (t : Set E) => f x :=
-    continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).Continuous
+    continuous_pi fun x => (ContinuousLinearMap.apply 𝕜 F (x : E)).continuous
   exact is_open_set_of_linear_independent.preimage this
 #align is_open_set_of_nat_le_rank isOpen_setOf_nat_le_rank
 
@@ -456,7 +456,7 @@ theorem Submodule.complete_of_finiteDimensional (s : Submodule 𝕜 E) [FiniteDi
 /-- A finite-dimensional subspace is closed. -/
 theorem Submodule.closed_of_finiteDimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] :
     IsClosed (s : Set E) :=
-  s.complete_of_finiteDimensional.IsClosed
+  s.complete_of_finiteDimensional.isClosed
 #align submodule.closed_of_finite_dimensional Submodule.closed_of_finiteDimensional
 
 theorem AffineSubspace.closed_of_finiteDimensional {P : Type _} [MetricSpace P]
@@ -544,7 +544,7 @@ theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
       
   obtain ⟨x, hx, φ, φmono, φlim⟩ :
     ∃ (x : E)(H : x ∈ Metric.closedBall (0 : E) r)(φ : ℕ → ℕ),
-      StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
+      StrictMono φ ∧ Tendsto (g ∘ φ) atTop (𝓝 x) :=
     h.tendsto_subseq A
   have B : CauchySeq (g ∘ φ) := φlim.cauchy_seq
   obtain ⟨N, hN⟩ : ∃ N : ℕ, ∀ n : ℕ, N ≤ n → dist ((g ∘ φ) n) ((g ∘ φ) N) < ‖c‖ :=
@@ -601,7 +601,7 @@ end Riesz
 theorem LinearEquiv.closedEmbedding_of_injective {f : E →ₗ[𝕜] F} (hf : f.ker = ⊥)
     [FiniteDimensional 𝕜 E] : ClosedEmbedding ⇑f :=
   let g := LinearEquiv.ofInjective f (LinearMap.ker_eq_bot.mp hf)
-  { embedding_subtype_val.comp g.toContinuousLinearEquiv.toHomeomorph.Embedding with
+  { embedding_subtype_val.comp g.toContinuousLinearEquiv.toHomeomorph.embedding with
     closed_range := by
       haveI := f.finite_dimensional_range
       simpa [f.range_coe] using f.range.closed_of_finite_dimensional }
@@ -624,7 +624,7 @@ theorem isClosedMap_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
   by_cases hc : c = 0
   · simp_rw [hc, smul_zero]
     exact isClosedMap_const
-  · exact (closedEmbedding_smul_left hc).IsClosedMap
+  · exact (closedEmbedding_smul_left hc).isClosedMap
 #align is_closed_map_smul_left isClosedMap_smul_left
 
 open ContinuousLinearMap
@@ -640,7 +640,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
         𝕜) with
     continuous_toFun := by
       refine' continuous_pi fun i => _
-      exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).Continuous
+      exact (ContinuousLinearMap.apply 𝕜 E (Pi.single i 1)).continuous
     continuous_invFun :=
       by
       simp_rw [LinearEquiv.invFun_eq_symm, LinearEquiv.trans_symm, LinearEquiv.symm_symm]
@@ -664,7 +664,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
 theorem continuousOn_clm_apply {X : Type _} [TopologicalSpace X] [FiniteDimensional 𝕜 E]
     {f : X → E →L[𝕜] F} {s : Set X} : ContinuousOn f s ↔ ∀ y, ContinuousOn (fun x => f x y) s :=
   by
-  refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 F y).Continuous.comp_continuousOn h, fun h => _⟩
+  refine' ⟨fun h y => (ContinuousLinearMap.apply 𝕜 F y).continuous.comp_continuousOn h, fun h => _⟩
   let d := finrank 𝕜 E
   have hd : d = finrank 𝕜 (Fin d → 𝕜) := (finrank_fin_fun 𝕜).symm
   let e₁ : E ≃L[𝕜] Fin d → 𝕜 := ContinuousLinearEquiv.ofFinrankEq hd
@@ -755,7 +755,7 @@ theorem summable_norm_iff {α E : Type _} [NormedAddCommGroup E] [NormedSpace �
   -- First we use a finite basis to reduce the problem to the case `E = fin N → ℝ`
   suffices ∀ {N : ℕ} {g : α → Fin N → ℝ}, Summable g → Summable fun x => ‖g x‖
     by
-    obtain v := fin_basis ℝ E
+    obtain v := finBasis ℝ E
     set e := v.equiv_funL
     have : Summable fun x => ‖e (f x)‖ := this (e.summable.2 hf)
     refine'
@@ -789,13 +789,13 @@ theorem summable_of_isO_nat' {E F : Type _} [NormedAddCommGroup E] [CompleteSpac
 theorem summable_of_isEquivalent {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ι → E} {g : ι → E} (hg : Summable g) (h : f ~[cofinite] g) :
     Summable f :=
-  hg.trans_sub (summable_of_is_O' hg h.IsOCat.IsO)
+  hg.trans_sub (summable_of_is_O' hg h.isOCat.isO)
 #align summable_of_is_equivalent summable_of_isEquivalent
 
 theorem summable_of_isEquivalent_nat {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [FiniteDimensional ℝ E] {f : ℕ → E} {g : ℕ → E} (hg : Summable g) (h : f ~[atTop] g) :
     Summable f :=
-  hg.trans_sub (summable_of_isO_nat' hg h.IsOCat.IsO)
+  hg.trans_sub (summable_of_isO_nat' hg h.isOCat.isO)
 #align summable_of_is_equivalent_nat summable_of_isEquivalent_nat
 
 theorem IsEquivalent.summable_iff {ι E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]

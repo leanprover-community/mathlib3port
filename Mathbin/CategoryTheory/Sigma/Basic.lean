@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sigma.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -241,7 +241,7 @@ but is expected to have type
   forall {I : Type.{u1}} {C : I -> Type.{u4}} [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u4} (C i)] {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u3, u5} D] (F : forall (i : I), CategoryTheory.Functor.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2) (i : I) (X : C i), Eq.{succ u3} (Quiver.Hom.{succ u3, u5} D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (Prefunctor.obj.{succ u2, succ u3, u4, u5} (C i) (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} (C i) (CategoryTheory.Category.toCategoryStruct.{u2, u4} (C i) (_inst_1 i))) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2 (CategoryTheory.Functor.comp.{u2, max (max u1 u4) u2, u3, u4, max u1 u4, u5} (C i) (_inst_1 i) (Sigma.{u1, u4} I (fun (i : I) => C i)) (CategoryTheory.Sigma.sigma.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i)) D _inst_2 (CategoryTheory.Sigma.incl.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) i) (CategoryTheory.Sigma.desc.{u1, u2, u3, u4, u5} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) D _inst_2 F))) X) (Prefunctor.obj.{succ u2, succ u3, u4, u5} (C i) (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} (C i) (CategoryTheory.Category.toCategoryStruct.{u2, u4} (C i) (_inst_1 i))) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2 (F i)) X)) (CategoryTheory.NatTrans.app.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2 (CategoryTheory.Functor.comp.{u2, max (max u1 u4) u2, u3, u4, max u1 u4, u5} (C i) (_inst_1 i) (Sigma.{u1, u4} I (fun (i : I) => C i)) (CategoryTheory.Sigma.sigma.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i)) D _inst_2 (CategoryTheory.Sigma.incl.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) i) (CategoryTheory.Sigma.desc.{u1, u2, u3, u4, u5} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) D _inst_2 F)) (F i) (CategoryTheory.Iso.hom.{max u4 u3, max (max (max u4 u5) u2) u3} (CategoryTheory.Functor.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2) (CategoryTheory.Functor.category.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2) (CategoryTheory.Functor.comp.{u2, max (max u1 u4) u2, u3, u4, max u1 u4, u5} (C i) (_inst_1 i) (Sigma.{u1, u4} I (fun (i : I) => C i)) (CategoryTheory.Sigma.sigma.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i)) D _inst_2 (CategoryTheory.Sigma.incl.{u1, u2, u4} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) i) (CategoryTheory.Sigma.desc.{u1, u2, u3, u4, u5} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) D _inst_2 F)) (F i) (CategoryTheory.Sigma.inclDesc.{u1, u2, u3, u4, u5} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i) D _inst_2 F i)) X) (CategoryTheory.CategoryStruct.id.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2) (Prefunctor.obj.{succ u2, succ u3, u4, u5} (C i) (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} (C i) (CategoryTheory.Category.toCategoryStruct.{u2, u4} (C i) (_inst_1 i))) D (CategoryTheory.CategoryStruct.toQuiver.{u3, u5} D (CategoryTheory.Category.toCategoryStruct.{u3, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u2, u3, u4, u5} (C i) (_inst_1 i) D _inst_2 (F i)) X))
 Case conversion may be inaccurate. Consider using '#align category_theory.sigma.incl_desc_hom_app CategoryTheory.Sigma.inclDesc_hom_appₓ'. -/
 @[simp]
-theorem inclDesc_hom_app (i : I) (X : C i) : (inclDesc F i).Hom.app X = 𝟙 ((F i).obj X) :=
+theorem inclDesc_hom_app (i : I) (X : C i) : (inclDesc F i).hom.app X = 𝟙 ((F i).obj X) :=
   rfl
 #align category_theory.sigma.incl_desc_hom_app CategoryTheory.Sigma.inclDesc_hom_app
 
@@ -264,7 +264,7 @@ def descUniq (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ de
   (NatIso.ofComponents fun ⟨i, X⟩ => (h i).app X) <|
     by
     rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩
-    apply (h i).Hom.naturality f
+    apply (h i).hom.naturality f
 #align category_theory.sigma.desc_uniq CategoryTheory.Sigma.descUniq
 -/
 
@@ -276,7 +276,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align category_theory.sigma.desc_uniq_hom_app CategoryTheory.Sigma.descUniq_hom_appₓ'. -/
 @[simp]
 theorem descUniq_hom_app (q : (Σi, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
-    (descUniq F q h).Hom.app ⟨i, X⟩ = (h i).Hom.app X :=
+    (descUniq F q h).hom.app ⟨i, X⟩ = (h i).hom.app X :=
   rfl
 #align category_theory.sigma.desc_uniq_hom_app CategoryTheory.Sigma.descUniq_hom_app
 
@@ -299,7 +299,7 @@ If `q₁` and `q₂` when restricted to each subcategory `C i` agree, then `q₁
 @[simps]
 def natIso {q₁ q₂ : (Σi, C i) ⥤ D} (h : ∀ i, incl i ⋙ q₁ ≅ incl i ⋙ q₂) : q₁ ≅ q₂
     where
-  Hom := natTrans fun i => (h i).Hom
+  Hom := natTrans fun i => (h i).hom
   inv := natTrans fun i => (h i).inv
 #align category_theory.sigma.nat_iso CategoryTheory.Sigma.natIso
 -/
@@ -404,7 +404,7 @@ def sigma (α : ∀ i, F i ⟶ G i) : Functor.sigma F ⟶ Functor.sigma G
   app f := SigmaHom.mk ((α f.1).app _)
   naturality' := by
     rintro ⟨i, X⟩ ⟨_, _⟩ ⟨f⟩
-    change sigma_hom.mk _ = sigma_hom.mk _
+    change SigmaHom.mk _ = SigmaHom.mk _
     rw [(α i).naturality]
 #align category_theory.sigma.nat_trans.sigma CategoryTheory.Sigma.natTrans.sigma
 -/

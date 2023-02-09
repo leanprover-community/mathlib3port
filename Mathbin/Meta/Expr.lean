@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
 
 ! This file was ported from Lean 3 source module meta.expr
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,9 +39,9 @@ instance : Inhabited BinderInfo :=
 
 /-- The brackets corresponding to a given binder_info. -/
 def brackets : BinderInfo → String × String
-  | BinderInfo.implicit => ("{", "}")
-  | BinderInfo.strict_implicit => ("{{", "}}")
-  | BinderInfo.inst_implicit => ("[", "]")
+  | binder_info.implicit => ("{", "}")
+  | binder_info.strict_implicit => ("{{", "}}")
+  | binder_info.inst_implicit => ("[", "]")
   | _ => ("(", ")")
 #align binder_info.brackets BinderInfo.brackets
 
@@ -63,7 +63,7 @@ def mapPrefix (f : Name → Option Name) : Name → Name
 /-- If `nm` is a simple name (having only one string component) starting with `_`, then
 `deinternalize_field nm` removes the underscore. Otherwise, it does nothing. -/
 unsafe def deinternalize_field : Name → Name
-  | mk_string s Name.anonymous =>
+  | mk_string s name.anonymous =>
     let i := s.mkIterator
     if i.curr = '_' then i.next.nextToString else s
   | n => n
@@ -109,9 +109,9 @@ def fromComponents : List String → Name :=
   when typed/passed directly to the parser. We turn an arbitrary
   name into a legal identifier name by turning the numbers to strings. -/
 unsafe def sanitize_name : Name → Name
-  | Name.anonymous => Name.anonymous
-  | Name.mk_string s p => Name.mk_string s <| sanitize_name p
-  | Name.mk_numeral s p => (Name.mk_string s! "n{s}") <| sanitize_name p
+  | name.anonymous => Name.anonymous
+  | name.mk_string s p => Name.mk_string s <| sanitize_name p
+  | name.mk_numeral s p => (Name.mk_string s! "n{s}") <| sanitize_name p
 #align name.sanitize_name name.sanitize_name
 
 /-- Append a string to the last component of a name. -/
@@ -143,7 +143,7 @@ unsafe def head : Name → String
 
 /-- Tests whether the first component of a name is `"_private"` -/
 unsafe def is_private (n : Name) : Bool :=
-  n.headI = "_private"
+  n.head = "_private"
 #align name.is_private name.is_private
 
 /-- Returns the number of characters used to print all the string components of a name,
@@ -164,7 +164,7 @@ def hasPrefix (P : Name → Bool) : Name → Bool
 
 /-- Appends `'` to the end of a name. -/
 unsafe def add_prime : Name → Name
-  | Name.mk_string s p => Name.mk_string (s ++ "'") p
+  | name.mk_string s p => Name.mk_string (s ++ "'") p
   | n => Name.mk_string "x'" n
 #align name.add_prime name.add_prime
 
@@ -310,19 +310,19 @@ namespace Binder
 /-- Turn a binder into a string. Uses expr.to_string for the type. -/
 protected unsafe def to_string (b : binder) : String :=
   let (l, r) := b.info.brackets
-  l ++ b.Name.toString ++ " : " ++ b.type.toString ++ r
+  l ++ b.name.toString ++ " : " ++ b.type.to_string ++ r
 #align binder.to_string binder.to_string
 
 unsafe instance : ToString binder :=
   ⟨binder.to_string⟩
 
 unsafe instance : has_to_format binder :=
-  ⟨fun b => b.toString⟩
+  ⟨fun b => b.to_string⟩
 
 unsafe instance : has_to_tactic_format binder :=
   ⟨fun b =>
     let (l, r) := b.info.brackets
-    (fun e => l ++ b.Name.toString ++ " : " ++ e ++ r) <$> pp b.type⟩
+    (fun e => l ++ b.name.toString ++ " : " ++ e ++ r) <$> pp b.type⟩
 
 end Binder
 
@@ -341,11 +341,13 @@ See also the tactics `expr.of_nat`, `expr.of_int`, `expr.of_rat`.
 `has_zero`, `has_one`, `has_add`: expressions of the type `has_zero %%type`, etc.
  -/
 unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr :=
-  let z : expr := q(@Zero.zero.{0} $(type) $(Zero))
-  let o : expr := q(@One.one.{0} $(type) $(One))
+  let z : expr := q(@Zero.zero.{0} $(type) $(has_zero))
+  let o : expr := q(@One.one.{0} $(type) $(has_one))
   Nat.binaryRec z fun b n e =>
     if n = 0 then o
-    else if b then q(@bit1.{0} $(type) $(One) $(Add) $(e)) else q(@bit0.{0} $(type) $(Add) $(e))
+    else
+      if b then q(@bit1.{0} $(type) $(has_one) $(has_add) $(e))
+      else q(@bit0.{0} $(type) $(has_add) $(e))
 #align nat.mk_numeral nat.mk_numeral
 
 /-- `int.mk_numeral z` embeds `z` as a numeral expression inside a type with 0, 1, +, and -.
@@ -353,10 +355,10 @@ unsafe def nat.mk_numeral (type has_zero has_one has_add : expr) : ℕ → expr 
 `has_zero`, `has_one`, `has_add`, `has_neg`: expressions of the type `has_zero %%type`, etc.
  -/
 unsafe def int.mk_numeral (type has_zero has_one has_add has_neg : expr) : ℤ → expr
-  | Int.ofNat n => n.mk_numeral type Zero One Add
+  | int.of_nat n => n.mk_numeral type has_zero has_one has_add
   | -[n+1] =>
-    let ne := (n + 1).mk_numeral type Zero One Add
-    q(@Neg.neg.{0} $(type) $(Neg) $(Ne))
+    let ne := (n + 1).mk_numeral type has_zero has_one has_add
+    q(@Neg.neg.{0} $(type) $(has_neg) $(ne))
 #align int.mk_numeral int.mk_numeral
 
 /-- `nat.to_pexpr n` creates a `pexpr` that will evaluate to `n`.
@@ -374,8 +376,8 @@ The `pexpr` does not hold any typing information:
 `to_expr ``((%%(int.to_pexpr (-5)) : ℚ))` will create a native `ℚ` numeral `(-5 : ℚ)`.
 -/
 unsafe def int.to_pexpr : ℤ → pexpr
-  | Int.ofNat k => k.to_pexpr
-  | Int.negSucc k => ``(-$(k + 1.to_pexpr))
+  | int.of_nat k => k.to_pexpr
+  | int.neg_succ_of_nat k => ``(-$(k + 1.to_pexpr))
 #align int.to_pexpr int.to_pexpr
 
 namespace Expr
@@ -386,9 +388,9 @@ namespace Expr
 protected unsafe def to_nat : expr → Option ℕ
   | q(Zero.zero) => some 0
   | q(One.one) => some 1
-  | q(bit0 $(e)) => bit0 <$> e.toNat
-  | q(bit1 $(e)) => bit1 <$> e.toNat
-  | q(Nat.succ $(e)) => (· + 1) <$> e.toNat
+  | q(bit0 $(e)) => bit0 <$> e.to_nat
+  | q(bit1 $(e)) => bit1 <$> e.to_nat
+  | q(Nat.succ $(e)) => (· + 1) <$> e.to_nat
   | q(Nat.zero) => some 0
   | _ => none
 #align expr.to_nat expr.to_nat
@@ -398,16 +400,16 @@ protected unsafe def to_nat : expr → Option ℕ
 -/
 protected unsafe def to_int : expr → Option ℤ
   | q(Neg.neg $(e)) => do
-    let n ← e.toNat
+    let n ← e.to_nat
     some (-n)
-  | e => coe <$> e.toNat
+  | e => coe <$> e.to_nat
 #align expr.to_int expr.to_int
 
 /-- Turns an expression into a list, assuming it is only built up from `list.nil` and `list.cons`.
 -/
 protected unsafe def to_list {α} (f : expr → Option α) : expr → Option (List α)
   | q(List.nil) => some []
-  | q(List.cons $(x) $(l)) => List.cons <$> f x <*> l.toList
+  | q(List.cons $(x) $(l)) => List.cons <$> f x <*> l.to_list
   | _ => none
 #align expr.to_list expr.to_list
 
@@ -564,13 +566,13 @@ unsafe def match_const {elab} : expr elab → Option (Name × List level)
 
 /-- Match a metavariable. -/
 unsafe def match_mvar {elab} : expr elab → Option (Name × Name × expr elab)
-  | mvar Unique pretty type => some (Unique, pretty, type)
+  | mvar unique pretty type => some (unique, pretty, type)
   | _ => none
 #align expr.match_mvar expr.match_mvar
 
 /-- Match a local constant. -/
 unsafe def match_local_const {elab} : expr elab → Option (Name × Name × BinderInfo × expr elab)
-  | local_const Unique pretty bi type => some (Unique, pretty, bi, type)
+  | local_const unique pretty bi type => some (unique, pretty, bi, type)
   | _ => none
 #align expr.match_local_const expr.match_local_const
 
@@ -705,7 +707,7 @@ possibly after subsequent unification.
 -/
 unsafe def contains_expr_or_mvar (t : expr) (e : expr) : Bool :=
   -- We can't use `t.has_meta_var` here, as that detects universe metavariables, too.
-    ¬t.list_meta_vars.Empty ∨
+    ¬t.list_meta_vars.isEmpty ∨
     e.occurs t
 #align expr.contains_expr_or_mvar expr.contains_expr_or_mvar
 
@@ -747,7 +749,7 @@ unsafe def get_simp_args (e : expr) : tactic (List expr) :=
     let cgr ← mk_specialized_congr_lemma_simp e
     pure do
         let (arg_kind, arg) ← cgr e
-        guard <| arg_kind = CongrArgKind.eq
+        guard <| arg_kind = congr_arg_kind.eq
         pure arg
 #align expr.get_simp_args expr.get_simp_args
 
@@ -886,7 +888,7 @@ unsafe def instantiate_pis : List expr → expr → expr
 /-- `mk_op_lst op empty [x1, x2, ...]` is defined as `op x1 (op x2 ...)`.
   Returns `empty` if the list is empty. -/
 unsafe def mk_op_lst (op : expr) (empty : expr) : List expr → expr
-  | [] => Empty
+  | [] => empty
   | [e] => e
   | e :: es => op e <| mk_op_lst es
 #align expr.mk_op_lst expr.mk_op_lst
@@ -911,7 +913,7 @@ unsafe def local_binding_info : expr → BinderInfo
 /-- `is_default_local e` tests whether `e` is a local constant with binder info
 `binder_info.default` -/
 unsafe def is_default_local : expr → Bool
-  | expr.local_const _ _ BinderInfo.default _ => true
+  | expr.local_const _ _ binder_info.default _ => true
   | _ => false
 #align expr.is_default_local expr.is_default_local
 
@@ -956,7 +958,7 @@ unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr
     expr elab :=
   unsafe_cast <|
     e.unsafe_cast.replace fun e n =>
-      (mappings.filterₓ fun ent : expr × expr => ent.1 = e).head?.map Prod.snd
+      (mappings.filter fun ent : expr × expr => ent.1 = e).head?.map Prod.snd
 #align expr.replace_subexprs expr.replace_subexprs
 
 /-- `is_implicitly_included_variable e vs` accepts `e`, an `expr.local_const`, and a list `vs` of
@@ -1048,12 +1050,12 @@ protected unsafe def eta_expand (env : environment) (dict : name_map <| List ℕ
     e.replace fun e _ => do
       let (e0, es) := e.get_app_fn_args
       let ns := (dict.find e0.const_name).iget
-      guard (not ns)
+      guard (bnot ns)
       let e' := e0.mk_app <| es.map eta_expand
       let needed_n := ns.foldr max 0 + 1
       if needed_n ≤ es then some e'
         else do
-          let e'_type ← (e' env).toOption
+          let e'_type ← (e' env).to_option
           some <| head_eta_expand (needed_n - es) e' e'_type
 #align expr.eta_expand expr.eta_expand
 
@@ -1174,7 +1176,7 @@ unsafe def mfilter (e : environment) (test : declaration → tactic Bool) :
 /-- Checks whether `s` is a prefix of the file where `n` is declared.
   This is used to check whether `n` is declared in mathlib, where `s` is the mathlib directory. -/
 unsafe def is_prefix_of_file (e : environment) (s : String) (n : Name) : Bool :=
-  s.isPrefixOfₓ <| (e.decl_olean n).getD ""
+  s.isPrefixOf <| (e.decl_olean n).getD ""
 #align environment.is_prefix_of_file environment.is_prefix_of_file
 
 end Environment
@@ -1224,7 +1226,7 @@ unsafe def is_eta_expansion_test : List (Name × expr) → Option expr
 unsafe def is_eta_expansion_aux (val : expr) (l : List (Name × expr)) : tactic (Option expr) := do
   let l' ← l.filterM fun ⟨proj, val⟩ => not <$> is_proof val
   match is_eta_expansion_test l' with
-    | some e => (Option.map fun _ => e) <$> try_core (unify e val)
+    | some e => (option.map fun _ => e) <$> try_core (unify e val)
     | none => return none
 #align expr.is_eta_expansion_aux expr.is_eta_expansion_aux
 
@@ -1302,9 +1304,9 @@ unsafe def is_auto_generated (e : environment) (d : declaration) : Bool :=
   e.is_constructor d.to_name ∨
     (e.is_projection d.to_name).isSome ∨
       e.is_constructor d.to_name.getPrefix ∧
-          d.to_name.getLast ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
+          d.to_name.last ∈ ["inj", "inj_eq", "sizeof_spec", "inj_arrow"] ∨
         e.is_inductive d.to_name.getPrefix ∧
-            d.to_name.getLast ∈
+            d.to_name.last ∈
               ["below", "binduction_on", "brec_on", "cases_on", "dcases_on", "drec_on", "drec",
                 "rec", "rec_on", "no_confusion", "no_confusion_type", "sizeof", "ibelow",
                 "has_sizeof_inst"] ∨

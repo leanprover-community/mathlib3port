@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.non_integrable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,9 +70,9 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_filter {f : �
     have h :
       ∀ᶠ x : ℝ × ℝ in l.prod l,
         ∀ y ∈ [x.1, x.2], (DifferentiableAt ℝ f y ∧ ‖deriv f y‖ ≤ C * ‖g y‖) ∧ y ∈ [a, b] :=
-      (tendsto_fst.uIcc tendsto_snd).Eventually ((hd.and hC.bound).And hl).smallSets
+      (tendsto_fst.uIcc tendsto_snd).eventually ((hd.and hC.bound).and hl).smallSets
     rcases mem_prod_self_iff.1 h with ⟨s, hsl, hs⟩
-    simp only [prod_subset_iff, mem_set_of_eq] at hs
+    simp only [prod_subset_iff, mem_setOf_eq] at hs
     exact
       ⟨C, C₀, s, hsl, fun x hx y hy z hz => (hs x hx y hy z hz).2, fun x hx y hy z hz =>
         (hs x hx y hy z hz).1.1, fun x hx y hy z hz => (hs x hx y hy z hz).1.2⟩
@@ -82,7 +82,7 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_filter {f : �
     by
     rcases Filter.nonempty_of_mem hsl with ⟨c, hc⟩
     have : ∀ᶠ x in l, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f x‖ :=
-      hf.eventually (eventually_gt_at_top _)
+      hf.eventually (eventually_gt_atTop _)
     exact ⟨c, hc, (this.and hsl).exists.imp fun d hd => ⟨hd.2, hd.1⟩⟩
   specialize hsub c hc d hd
   specialize hfd c hc d hd
@@ -118,7 +118,7 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_within_diff_si
     (hg : deriv f =O[𝓝[[a, b] \ {c}] c] g) : ¬IntervalIntegrable g volume a b :=
   by
   obtain ⟨l, hl, hl', hle, hmem⟩ :
-    ∃ l : Filter ℝ, tendsto_Ixx_class Icc l l ∧ l.ne_bot ∧ l ≤ 𝓝 c ∧ [a, b] \ {c} ∈ l :=
+    ∃ l : Filter ℝ, TendstoIxxClass Icc l l ∧ l.NeBot ∧ l ≤ 𝓝 c ∧ [a, b] \ {c} ∈ l :=
     by
     cases' (min_lt_max.2 hne).lt_or_lt c with hlt hlt
     · refine' ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, _⟩
@@ -158,15 +158,15 @@ theorem not_intervalIntegrable_of_sub_inv_isO_punctured {f : ℝ → F} {a b c :
     by
     filter_upwards [self_mem_nhdsWithin]with x hx
     simpa using ((hasDerivAt_id x).sub_const c).log (sub_ne_zero.2 hx)
-  have B : tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) at_top :=
+  have B : Tendsto (fun x => ‖Real.log (x - c)‖) (𝓝[≠] c) atTop :=
     by
     refine' tendsto_abs_at_bot_at_top.comp (real.tendsto_log_nhds_within_zero.comp _)
     rw [← sub_self c]
     exact ((hasDerivAt_id c).sub_const c).tendsto_punctured_nhds one_ne_zero
   exact
     not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isO_punctured
-      (A.mono fun x hx => hx.DifferentiableAt) B
-      (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
+      (A.mono fun x hx => hx.differentiableAt) B
+      (hf.congr' (A.mono fun x hx => hx.deriv.symm) EventuallyEq.rfl) hne hc
 #align not_interval_integrable_of_sub_inv_is_O_punctured not_intervalIntegrable_of_sub_inv_isO_punctured
 
 /-- The function `λ x, (x - c)⁻¹` is integrable on `a..b` if and only if `a = b` or `c ∉ [a, b]`. -/
@@ -176,10 +176,10 @@ theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
   by
   constructor
   · refine' fun h => or_iff_not_imp_left.2 fun hne hc => _
-    exact not_intervalIntegrable_of_sub_inv_isO_punctured (is_O_refl _ _) hne hc h
+    exact not_intervalIntegrable_of_sub_inv_isO_punctured (isO_refl _ _) hne hc h
   · rintro (rfl | h₀)
     exacts[IntervalIntegrable.refl,
-      interval_integrable_inv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
+      intervalIntegrableInv (fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀)
         (continuous_on_id.sub continuousOn_const)]
 #align interval_integrable_sub_inv_iff intervalIntegrable_sub_inv_iff
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module data.polynomial.degree.card_pow_degree
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,15 +99,15 @@ theorem cardPowDegree_isEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue F
   {
     map_lt_map_iff' := fun p q =>
       by
-      simp only [EuclideanDomain.r, card_pow_degree_apply]
+      simp only [euclidean_domain.r, cardPowDegree_apply]
       split_ifs with hp hq hq
       · simp only [hp, hq, lt_self_iff_false]
       ·
         simp only [hp, hq, degree_zero, Ne.def, bot_lt_iff_ne_bot, degree_eq_bot, pow_pos,
           not_false_iff]
       · simp only [hp, hq, degree_zero, not_lt_bot, (pow_pos _).not_lt]
-      · rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe, pow_lt_pow_iff]
-        exact_mod_cast @Fintype.one_lt_card Fq _ _ }
+      · rw [degree_eq_natDegree hp, degree_eq_natDegree hq, WithBot.coe_lt_coe, pow_lt_pow_iff]
+        exact_mod_cast @fintype.one_lt_card Fq _ _ }
 #align polynomial.card_pow_degree_is_euclidean Polynomial.cardPowDegree_isEuclidean
 
 end Polynomial

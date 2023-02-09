@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.inverse
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,11 +58,11 @@ theorem neg_pi_div_two_le_arcsin (x : ℝ) : -(π / 2) ≤ arcsin x :=
 #align real.neg_pi_div_two_le_arcsin Real.neg_pi_div_two_le_arcsin
 
 theorem arcsin_projIcc (x : ℝ) : arcsin (projIcc (-1) 1 (neg_le_self zero_le_one) x) = arcsin x :=
-  by rw [arcsin, Function.comp_apply, Icc_extend_coe, Function.comp_apply, Icc_extend]
+  by rw [arcsin, Function.comp_apply, Icc_extend_coe, Function.comp_apply, IccExtend]
 #align real.arcsin_proj_Icc Real.arcsin_projIcc
 
 theorem sin_arcsin' {x : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) : sin (arcsin x) = x := by
-  simpa [arcsin, Icc_extend_of_mem _ _ hx, -OrderIso.apply_symm_apply] using
+  simpa [arcsin, IccExtend_of_mem _ _ hx, -OrderIso.apply_symm_apply] using
     Subtype.ext_iff.1 (sin_order_iso.apply_symm_apply ⟨x, hx⟩)
 #align real.sin_arcsin' Real.sin_arcsin'
 
@@ -80,15 +80,15 @@ theorem arcsin_sin {x : ℝ} (hx₁ : -(π / 2) ≤ x) (hx₂ : x ≤ π / 2) : 
 
 theorem strictMonoOn_arcsin : StrictMonoOn arcsin (Icc (-1) 1) :=
   (Subtype.strictMono_coe _).comp_strictMonoOn <|
-    sinOrderIso.symm.StrictMono.strictMonoOn_IccExtend _
+    sinOrderIso.symm.strictMono.strictMonoOn_IccExtend _
 #align real.strict_mono_on_arcsin Real.strictMonoOn_arcsin
 
 theorem monotone_arcsin : Monotone arcsin :=
-  (Subtype.mono_coe _).comp <| sinOrderIso.symm.Monotone.IccExtend _
+  (Subtype.mono_coe _).comp <| sinOrderIso.symm.monotone.IccExtend _
 #align real.monotone_arcsin Real.monotone_arcsin
 
 theorem injOn_arcsin : InjOn arcsin (Icc (-1) 1) :=
-  strictMonoOn_arcsin.InjOn
+  strictMonoOn_arcsin.injOn
 #align real.inj_on_arcsin Real.injOn_arcsin
 
 theorem arcsin_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 ≤ y) (hy₂ : y ≤ 1) :
@@ -98,17 +98,17 @@ theorem arcsin_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 
 
 @[continuity]
 theorem continuous_arcsin : Continuous arcsin :=
-  continuous_subtype_val.comp sinOrderIso.symm.Continuous.Icc_extend'
+  continuous_subtype_val.comp sinOrderIso.symm.continuous.Icc_extend'
 #align real.continuous_arcsin Real.continuous_arcsin
 
 theorem continuousAt_arcsin {x : ℝ} : ContinuousAt arcsin x :=
-  continuous_arcsin.ContinuousAt
+  continuous_arcsin.continuousAt
 #align real.continuous_at_arcsin Real.continuousAt_arcsin
 
 theorem arcsin_eq_of_sin_eq {x y : ℝ} (h₁ : sin x = y) (h₂ : x ∈ Icc (-(π / 2)) (π / 2)) :
     arcsin y = x := by
   subst y
-  exact inj_on_sin (arcsin_mem_Icc _) h₂ (sin_arcsin' (sin_mem_Icc x))
+  exact injOn_sin (arcsin_mem_Icc _) h₂ (sin_arcsin' (sin_mem_Icc x))
 #align real.arcsin_eq_of_sin_eq Real.arcsin_eq_of_sin_eq
 
 @[simp]
@@ -122,7 +122,7 @@ theorem arcsin_one : arcsin 1 = π / 2 :=
 #align real.arcsin_one Real.arcsin_one
 
 theorem arcsin_of_one_le {x : ℝ} (hx : 1 ≤ x) : arcsin x = π / 2 := by
-  rw [← arcsin_proj_Icc, proj_Icc_of_right_le _ hx, Subtype.coe_mk, arcsin_one]
+  rw [← arcsin_projIcc, projIcc_of_right_le _ hx, Subtype.coe_mk, arcsin_one]
 #align real.arcsin_of_one_le Real.arcsin_of_one_le
 
 theorem arcsin_neg_one : arcsin (-1) = -(π / 2) :=
@@ -131,7 +131,7 @@ theorem arcsin_neg_one : arcsin (-1) = -(π / 2) :=
 #align real.arcsin_neg_one Real.arcsin_neg_one
 
 theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) := by
-  rw [← arcsin_proj_Icc, proj_Icc_of_le_left _ hx, Subtype.coe_mk, arcsin_neg_one]
+  rw [← arcsin_projIcc, projIcc_of_le_left _ hx, Subtype.coe_mk, arcsin_neg_one]
 #align real.arcsin_of_le_neg_one Real.arcsin_of_le_neg_one
 
 @[simp]
@@ -243,7 +243,7 @@ theorem neg_pi_div_two_lt_arcsin {x : ℝ} : -(π / 2) < arcsin x ↔ -1 < x :=
 
 @[simp]
 theorem arcsin_eq_pi_div_two {x : ℝ} : arcsin x = π / 2 ↔ 1 ≤ x :=
-  ⟨fun h => not_lt.1 fun h' => (arcsin_lt_pi_div_two.2 h').Ne h, arcsin_of_one_le⟩
+  ⟨fun h => not_lt.1 fun h' => (arcsin_lt_pi_div_two.2 h').ne h, arcsin_of_one_le⟩
 #align real.arcsin_eq_pi_div_two Real.arcsin_eq_pi_div_two
 
 @[simp]
@@ -297,8 +297,8 @@ def sinLocalHomeomorph : LocalHomeomorph ℝ ℝ
   right_inv' y hy := sin_arcsin hy.1.le hy.2.le
   open_source := isOpen_Ioo
   open_target := isOpen_Ioo
-  continuous_toFun := continuous_sin.ContinuousOn
-  continuous_invFun := continuous_arcsin.ContinuousOn
+  continuous_toFun := continuous_sin.continuousOn
+  continuous_invFun := continuous_arcsin.continuousOn
 #align real.sin_local_homeomorph Real.sinLocalHomeomorph
 
 theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
@@ -376,7 +376,7 @@ theorem strictAntiOn_arccos : StrictAntiOn arccos (Icc (-1) 1) := fun x hx y hy 
 #align real.strict_anti_on_arccos Real.strictAntiOn_arccos
 
 theorem arccos_injOn : InjOn arccos (Icc (-1) 1) :=
-  strictAntiOn_arccos.InjOn
+  strictAntiOn_arccos.injOn
 #align real.arccos_inj_on Real.arccos_injOn
 
 theorem arccos_inj {x y : ℝ} (hx₁ : -1 ≤ x) (hx₂ : x ≤ 1) (hy₁ : -1 ≤ y) (hy₂ : y ≤ 1) :

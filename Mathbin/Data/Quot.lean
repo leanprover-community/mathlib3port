@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.quot
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,9 +33,9 @@ namespace Setoid
 #print Setoid.ext /-
 theorem ext {α : Sort _} :
     ∀ {s t : Setoid α}, (∀ a b, @Setoid.r α s a b ↔ @Setoid.r α t a b) → s = t
-  | ⟨r, _⟩, ⟨p, _⟩, Eq =>
+  | ⟨r, _⟩, ⟨p, _⟩, eq =>
     by
-    have : r = p := funext fun a => funext fun b => propext <| Eq a b
+    have : r = p := funext fun a => funext fun b => propext <| eq a b
     subst this
 #align setoid.ext Setoid.ext
 -/
@@ -978,7 +978,7 @@ theorem hrecOn₂'_mk'' {φ : Quotient s₁ → Quotient s₂ → Sort _}
 #print Quotient.map' /-
 /-- Map a function `f : α → β` that sends equivalent elements to equivalent elements
 to a function `quotient sa → quotient sb`. Useful to define unary operations on quotients. -/
-protected def map' (f : α → β) (h : (s₁.R ⇒ s₂.R) f f) : Quotient s₁ → Quotient s₂ :=
+protected def map' (f : α → β) (h : (s₁.r ⇒ s₂.r) f f) : Quotient s₁ → Quotient s₂ :=
   Quot.map f h
 #align quotient.map' Quotient.map'
 -/
@@ -997,7 +997,7 @@ theorem map'_mk'' (f : α → β) (h) (x : α) :
 
 #print Quotient.map₂' /-
 /-- A version of `quotient.map₂` using curly braces and unification. -/
-protected def map₂' (f : α → β → γ) (h : (s₁.R ⇒ s₂.R ⇒ s₃.R) f f) :
+protected def map₂' (f : α → β → γ) (h : (s₁.r ⇒ s₂.r ⇒ s₃.r) f f) :
     Quotient s₁ → Quotient s₂ → Quotient s₃ :=
   Quotient.map₂ f h
 #align quotient.map₂' Quotient.map₂'

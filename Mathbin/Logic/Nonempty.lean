@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.nonempty
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,12 +110,12 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
-      | Sum.inl a => Or.inl ⟨a⟩
-      | Sum.inr b => Or.inr ⟨b⟩)
+      | sum.inl a => Or.inl ⟨a⟩
+      | sum.inr b => Or.inr ⟨b⟩)
     fun h =>
     match h with
-    | Or.inl ⟨a⟩ => ⟨Sum.inl a⟩
-    | Or.inr ⟨b⟩ => ⟨Sum.inr b⟩
+    | or.inl ⟨a⟩ => ⟨Sum.inl a⟩
+    | or.inr ⟨b⟩ => ⟨Sum.inr b⟩
 #align nonempty_sum nonempty_sum
 -/
 
@@ -130,12 +130,12 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
   Iff.intro
     (fun ⟨h⟩ =>
       match h with
-      | PSum.inl a => Or.inl ⟨a⟩
-      | PSum.inr b => Or.inr ⟨b⟩)
+      | psum.inl a => Or.inl ⟨a⟩
+      | psum.inr b => Or.inr ⟨b⟩)
     fun h =>
     match h with
-    | Or.inl ⟨a⟩ => ⟨PSum.inl a⟩
-    | Or.inr ⟨b⟩ => ⟨PSum.inr b⟩
+    | or.inl ⟨a⟩ => ⟨PSum.inl a⟩
+    | or.inr ⟨b⟩ => ⟨PSum.inr b⟩
 #align nonempty_psum nonempty_psum
 
 @[simp]

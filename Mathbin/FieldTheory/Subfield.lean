@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ variable (S)
 -- Prefer subclasses of `field` over subclasses of `subfield_class`.
 /-- A subfield inherits a field structure -/
 instance (priority := 75) toField (s : S) : Field s :=
-  Subtype.coe_injective.Field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
+  Subtype.coe_injective.field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) fun _ => rfl
 #align subfield_class.to_field SubfieldClass.toField
@@ -133,7 +133,7 @@ omit h
 /-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 instance (priority := 75) toLinearOrderedField {K} [LinearOrderedField K] [SetLike S K]
     [SubfieldClass S K] (s : S) : LinearOrderedField s :=
-  Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
@@ -286,22 +286,22 @@ protected theorem div_mem {x y : K} : x ∈ s → y ∈ s → x / y ∈ s :=
 #align subfield.div_mem Subfield.div_mem
 
 /-- Product of a list of elements in a subfield is in the subfield. -/
-protected theorem list_prod_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.Prod ∈ s :=
+protected theorem list_prod_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.prod ∈ s :=
   list_prod_mem
 #align subfield.list_prod_mem Subfield.list_prod_mem
 
 /-- Sum of a list of elements in a subfield is in the subfield. -/
-protected theorem list_sum_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.Sum ∈ s :=
+protected theorem list_sum_mem {l : List K} : (∀ x ∈ l, x ∈ s) → l.sum ∈ s :=
   list_sum_mem
 #align subfield.list_sum_mem Subfield.list_sum_mem
 
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
-protected theorem multiset_prod_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.Prod ∈ s :=
+protected theorem multiset_prod_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.prod ∈ s :=
   multiset_prod_mem m
 #align subfield.multiset_prod_mem Subfield.multiset_prod_mem
 
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
-protected theorem multiset_sum_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.Sum ∈ s :=
+protected theorem multiset_sum_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) → m.sum ∈ s :=
   multiset_sum_mem m
 #align subfield.multiset_sum_mem Subfield.multiset_sum_mem
 
@@ -350,14 +350,14 @@ instance : Pow s ℤ :=
 
 /-- A subfield inherits a field structure -/
 instance toField : Field s :=
-  Subtype.coe_injective.Field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
+  Subtype.coe_injective.field (coe : s → K) rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ => rfl) fun _ => rfl
 #align subfield.to_field Subfield.toField
 
 /-- A subfield of a `linear_ordered_field` is a `linear_ordered_field`. -/
 instance toLinearOrderedField {K} [LinearOrderedField K] (s : Subfield K) : LinearOrderedField s :=
-  Subtype.coe_injective.LinearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedField coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl)
     (fun _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
@@ -407,20 +407,20 @@ end DerivedFromSubfieldClass
 
 /-- The embedding from a subfield of the field `K` to `K`. -/
 def subtype (s : Subfield K) : s →+* K :=
-  { s.toSubmonoid.Subtype, s.toAddSubgroup.Subtype with toFun := coe }
+  { s.toSubmonoid.subtype, s.toAddSubgroup.subtype with toFun := coe }
 #align subfield.subtype Subfield.subtype
 
 instance toAlgebra : Algebra s K :=
-  RingHom.toAlgebra s.Subtype
+  RingHom.toAlgebra s.subtype
 #align subfield.to_algebra Subfield.toAlgebra
 
 @[simp]
-theorem coeSubtype : ⇑s.Subtype = coe :=
+theorem coeSubtype : ⇑s.subtype = coe :=
   rfl
 #align subfield.coe_subtype Subfield.coeSubtype
 
 theorem toSubring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) :
-    S.toSubring.Subtype = S.Subtype :=
+    S.toSubring.subtype = S.subtype :=
   rfl
 #align subfield.to_subring.subtype_eq_subtype Subfield.toSubring.subtype_eq_subtype
 
@@ -569,7 +569,7 @@ theorem fieldRange_eq_map : f.fieldRange = Subfield.map f ⊤ :=
 #align ring_hom.field_range_eq_map RingHom.fieldRange_eq_map
 
 theorem map_fieldRange : f.fieldRange.map g = (g.comp f).fieldRange := by
-  simpa only [field_range_eq_map] using (⊤ : Subfield K).map_map g f
+  simpa only [fieldRange_eq_map] using (⊤ : Subfield K).map_map g f
 #align ring_hom.map_field_range RingHom.map_fieldRange
 
 /-- The range of a morphism of fields is a fintype, if the domain is a fintype.
@@ -635,7 +635,7 @@ theorem infₛ_toSubring (s : Set (Subfield K)) :
     (infₛ s).toSubring = ⨅ t ∈ s, Subfield.toSubring t :=
   by
   ext x
-  rw [mem_to_subring, mem_Inf]
+  rw [mem_toSubring, mem_infₛ]
   erw [Subring.mem_infₛ]
   exact
     ⟨fun h p ⟨p', hp⟩ => hp ▸ subring.mem_Inf.mpr fun p ⟨hp', hp⟩ => hp ▸ h _ hp', fun h p hp =>
@@ -650,7 +650,7 @@ theorem isGLB_infₛ (S : Set (Subfield K)) : IsGLB S (infₛ S) :=
   by
   refine' IsGLB.of_image (fun s t => show (s : Set K) ≤ t ↔ s ≤ t from SetLike.coe_subset_coe) _
   convert isGLB_binfᵢ
-  exact coe_Inf _
+  exact coe_infₛ _
 #align subfield.is_glb_Inf Subfield.isGLB_infₛ
 
 /-- Subfields of a ring form a complete lattice. -/
@@ -667,12 +667,12 @@ instance : CompleteLattice (Subfield K) :=
 /-! # subfield closure of a subset -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure[subring.closure] s) (y «expr ∈ » subring.closure[subring.closure] s)} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure[subring.closure] s) (y «expr ∈ » subring.closure[subring.closure] s)} -/
 /-- The `subfield` generated by a set. -/
 def closure (s : Set K) : Subfield K
     where
   carrier :=
-    "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure[subring.closure] s) (y «expr ∈ » subring.closure[subring.closure] s)}"
+    "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {(«expr / »(x, y)) | (x «expr ∈ » subring.closure[subring.closure] s) (y «expr ∈ » subring.closure[subring.closure] s)}"
   zero_mem' := ⟨0, Subring.zero_mem _, 1, Subring.one_mem _, div_one _⟩
   one_mem' := ⟨1, Subring.one_mem _, 1, Subring.one_mem _, div_one _⟩
   neg_mem' := fun x ⟨y, hy, z, hz, x_eq⟩ => ⟨-y, Subring.neg_mem _ hy, z, hz, x_eq ▸ neg_div _ _⟩
@@ -844,19 +844,19 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} 
 
 theorem coe_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subfield K} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Subfield K) : Set K) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supᵢ_of_directed hS]
 #align subfield.coe_supr_of_directed Subfield.coe_supᵢ_of_directed
 
 theorem mem_supₛ_of_directedOn {S : Set (Subfield K)} (Sne : S.Nonempty) (hS : DirectedOn (· ≤ ·) S)
     {x : K} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supᵢ_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subfield.mem_Sup_of_directed_on Subfield.mem_supₛ_of_directedOn
 
 theorem coe_supₛ_of_directedOn {S : Set (Subfield K)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set K) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
+  Set.ext fun x => by simp [mem_supₛ_of_directedOn Sne hS]
 #align subfield.coe_Sup_of_directed_on Subfield.coe_supₛ_of_directedOn
 
 end Subfield
@@ -869,7 +869,7 @@ open Subfield
 
 /-- Restriction of a ring homomorphism to its range interpreted as a subfield. -/
 def rangeRestrictField (f : K →+* L) : K →+* f.fieldRange :=
-  f.srangeRestrict
+  f.rangeSRestrict
 #align ring_hom.range_restrict_field RingHom.rangeRestrictField
 
 @[simp]
@@ -924,11 +924,11 @@ open RingHom
 
 /-- The ring homomorphism associated to an inclusion of subfields. -/
 def inclusion {S T : Subfield K} (h : S ≤ T) : S →+* T :=
-  S.Subtype.codRestrict _ fun x => h x.2
+  S.subtype.codRestrict _ fun x => h x.2
 #align subfield.inclusion Subfield.inclusion
 
 @[simp]
-theorem fieldRange_subtype (s : Subfield K) : s.Subtype.fieldRange = s :=
+theorem fieldRange_subtype (s : Subfield K) : s.subtype.fieldRange = s :=
   SetLike.ext' <| (coe_rangeS _).trans Subtype.range_coe
 #align subfield.field_range_subtype Subfield.fieldRange_subtype
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_lemma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -104,10 +104,10 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.left` is the pair `(c.C, u)`. 
 @[simps c]
 def left (c : CU X) : CU X where
   c := c.c
-  U := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
+  U := (normal_exists_closure_subset c.closed_c c.open_u c.subset).choose
   closed_c := c.closed_c
-  open_u := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.1
-  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.2.1
+  open_u := (normal_exists_closure_subset c.closed_c c.open_u c.subset).choose_spec.1
+  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.subset).choose_spec.2.1
 #align urysohns.CU.left Urysohns.CU.left
 
 /-- Due to `normal_exists_closure_subset`, for each `c : CU X` there exists an open set `u`
@@ -115,29 +115,29 @@ such chat `c.C ⊆ u` and `closure u ⊆ c.U`. `c.right` is the pair `(closure u
 @[simps U]
 def right (c : CU X) : CU X
     where
-  c := closure (normal_exists_closure_subset c.closed_c c.open_u c.Subset).some
-  U := c.U
+  c := closure (normal_exists_closure_subset c.closed_c c.open_u c.subset).choose
+  U := c.u
   closed_c := isClosed_closure
   open_u := c.open_u
-  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.Subset).choose_spec.2.2
+  Subset := (normal_exists_closure_subset c.closed_c c.open_u c.subset).choose_spec.2.2
 #align urysohns.CU.right Urysohns.CU.right
 
-theorem left_u_subset_right_c (c : CU X) : c.left.U ⊆ c.right.c :=
+theorem left_u_subset_right_c (c : CU X) : c.left.u ⊆ c.right.c :=
   subset_closure
 #align urysohns.CU.left_U_subset_right_C Urysohns.CU.left_u_subset_right_c
 
-theorem left_u_subset (c : CU X) : c.left.U ⊆ c.U :=
-  Subset.trans c.left_u_subset_right_c c.right.Subset
+theorem left_u_subset (c : CU X) : c.left.u ⊆ c.u :=
+  Subset.trans c.left_u_subset_right_c c.right.subset
 #align urysohns.CU.left_U_subset Urysohns.CU.left_u_subset
 
 theorem subset_right_c (c : CU X) : c.c ⊆ c.right.c :=
-  Subset.trans c.left.Subset c.left_u_subset_right_c
+  Subset.trans c.left.subset c.left_u_subset_right_c
 #align urysohns.CU.subset_right_C Urysohns.CU.subset_right_c
 
 /-- `n`-th approximation to a continuous function `f : X → ℝ` such that `f = 0` on `c.C` and `f = 1`
 outside of `c.U`. -/
 noncomputable def approx : ℕ → CU X → X → ℝ
-  | 0, c, x => indicator (c.Uᶜ) 1 x
+  | 0, c, x => indicator (c.uᶜ) 1 x
   | n + 1, c, x => midpoint ℝ (approx n c.left x) (approx n c.right x)
 #align urysohns.CU.approx Urysohns.CU.approx
 
@@ -150,7 +150,7 @@ theorem approx_of_mem_c (c : CU X) (n : ℕ) {x : X} (hx : x ∈ c.c) : c.approx
     exacts[c.subset_right_C hx, hx]
 #align urysohns.CU.approx_of_mem_C Urysohns.CU.approx_of_mem_c
 
-theorem approx_of_nmem_u (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.U) : c.approx n x = 1 :=
+theorem approx_of_nmem_u (c : CU X) (n : ℕ) {x : X} (hx : x ∉ c.u) : c.approx n x = 1 :=
   by
   induction' n with n ihn generalizing c
   · exact indicator_of_mem hx _
@@ -179,19 +179,19 @@ theorem bddAbove_range_approx (c : CU X) (x : X) : BddAbove (range fun n => c.ap
   ⟨1, fun y ⟨n, hn⟩ => hn ▸ c.approx_le_one n x⟩
 #align urysohns.CU.bdd_above_range_approx Urysohns.CU.bddAbove_range_approx
 
-theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
+theorem approx_le_approx_of_u_sub_c {c₁ c₂ : CU X} (h : c₁.u ⊆ c₂.c) (n₁ n₂ : ℕ) (x : X) :
     c₂.approx n₂ x ≤ c₁.approx n₁ x :=
   by
   by_cases hx : x ∈ c₁.U
   ·
     calc
-      approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
+      approx n₂ c₂ x = 0 := approx_of_mem_c _ _ (h hx)
       _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
       
   ·
     calc
       approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _
-      _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
+      _ = approx n₁ c₁ x := (approx_of_nmem_u _ _ hx).symm
       
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_u_sub_c
 
@@ -206,14 +206,14 @@ theorem approx_mem_Icc_right_left (c : CU X) (n : ℕ) (x : X) :
           (fun _ => zero_le_one) _⟩
   · simp only [approx, mem_Icc]
     refine' ⟨midpoint_le_midpoint _ (ihn _).1, midpoint_le_midpoint (ihn _).2 _⟩ <;>
-      apply approx_le_approx_of_U_sub_C
+      apply approx_le_approx_of_u_sub_c
     exacts[subset_closure, subset_closure]
 #align urysohns.CU.approx_mem_Icc_right_left Urysohns.CU.approx_mem_Icc_right_left
 
 theorem approx_le_succ (c : CU X) (n : ℕ) (x : X) : c.approx n x ≤ c.approx (n + 1) x :=
   by
   induction' n with n ihn generalizing c
-  · simp only [approx, right_U, right_le_midpoint]
+  · simp only [approx, right_u, right_le_midpoint]
     exact (approx_mem_Icc_right_left c 0 x).2
   · rw [approx, approx]
     exact midpoint_le_midpoint (ihn _) (ihn _)
@@ -238,16 +238,16 @@ theorem tendsto_approx_atTop (c : CU X) (x : X) :
 #align urysohns.CU.tendsto_approx_at_top Urysohns.CU.tendsto_approx_atTop
 
 theorem lim_of_mem_c (c : CU X) (x : X) (h : x ∈ c.c) : c.lim x = 0 := by
-  simp only [CU.lim, approx_of_mem_C, h, csupᵢ_const]
+  simp only [CU.lim, approx_of_mem_c, h, csupᵢ_const]
 #align urysohns.CU.lim_of_mem_C Urysohns.CU.lim_of_mem_c
 
-theorem lim_of_nmem_u (c : CU X) (x : X) (h : x ∉ c.U) : c.lim x = 1 := by
-  simp only [CU.lim, approx_of_nmem_U c _ h, csupᵢ_const]
+theorem lim_of_nmem_u (c : CU X) (x : X) (h : x ∉ c.u) : c.lim x = 1 := by
+  simp only [CU.lim, approx_of_nmem_u c _ h, csupᵢ_const]
 #align urysohns.CU.lim_of_nmem_U Urysohns.CU.lim_of_nmem_u
 
 theorem lim_eq_midpoint (c : CU X) (x : X) : c.lim x = midpoint ℝ (c.left.lim x) (c.right.lim x) :=
   by
-  refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_at_top_iff_nat 1).1 _)
+  refine' tendsto_nhds_unique (c.tendsto_approx_at_top x) ((tendsto_add_atTop_iff_nat 1).1 _)
   simp only [approx]
   exact (c.left.tendsto_approx_at_top x).midpoint (c.right.tendsto_approx_at_top x)
 #align urysohns.CU.lim_eq_midpoint Urysohns.CU.lim_eq_midpoint

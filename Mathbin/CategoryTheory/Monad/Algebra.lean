@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,13 +119,13 @@ To construct an isomorphism of algebras, it suffices to give an isomorphism of t
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.Hom ≫ B.a = A.a ≫ h.Hom) : A ≅ B
+def isoMk {A B : Algebra T} (h : A.a ≅ B.a) (w : (T : C ⥤ C).map h.hom ≫ B.a = A.a ≫ h.hom) : A ≅ B
     where
-  Hom := { f := h.Hom }
+  Hom := { f := h.hom }
   inv :=
     { f := h.inv
       h' := by
-        rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]
+        rw [h.eq_comp_inv, Category.assoc, ← w, ← Functor.map_comp_assoc]
         simp }
 #align category_theory.monad.algebra.iso_mk CategoryTheory.Monad.Algebra.isoMk
 
@@ -147,7 +147,7 @@ def free : C ⥤ Algebra T
   obj X :=
     { a := T.obj X
       a := T.μ.app X
-      assoc' := (T.and_assoc _).symm }
+      assoc' := (T.assoc _).symm }
   map X Y f :=
     { f := T.map f
       h' := T.μ.naturality _ }
@@ -177,9 +177,9 @@ def adj : T.free ⊣ T.forget :=
             simp
           right_inv := fun f =>
             by
-            dsimp only [forget_obj, monad_to_functor_eq_coe]
+            dsimp only [forget_obj, monad_toFunctor_eq_coe]
             rw [← T.η.naturality_assoc, Y.unit]
-            apply category.comp_id } }
+            apply Category.comp_id } }
 #align category_theory.monad.adj CategoryTheory.Monad.adj
 
 /-- Given an algebra morphism whose carrier part is an isomorphism, we get an algebra isomorphism.
@@ -187,7 +187,7 @@ def adj : T.free ⊣ T.forget :=
 theorem algebra_iso_of_iso {A B : Algebra T} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{   f := inv f.f
         h' := by
-          rw [is_iso.eq_comp_inv f.f, category.assoc, ← f.h]
+          rw [IsIso.eq_comp_inv f.f, Category.assoc, ← f.h]
           simp },
       by tidy⟩⟩
 #align category_theory.monad.algebra_iso_of_iso CategoryTheory.Monad.algebra_iso_of_iso
@@ -304,7 +304,7 @@ categories over `C`, that is, we have `algebra_equiv_of_iso_monads h ⋙ forget 
 def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra T₁ ≌ Algebra T₂
     where
   Functor := algebraFunctorOfMonadHom h.inv
-  inverse := algebraFunctorOfMonadHom h.Hom
+  inverse := algebraFunctorOfMonadHom h.hom
   unitIso :=
     algebraFunctorOfMonadHomId.symm ≪≫
       algebraFunctorOfMonadHomEq (by simp) ≪≫ algebraFunctorOfMonadHomComp _ _
@@ -401,13 +401,13 @@ To construct an isomorphism of coalgebras, it suffices to give an isomorphism of
 commutes with the structure morphisms.
 -/
 @[simps]
-def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.Hom = h.Hom ≫ B.a) :
+def isoMk {A B : Coalgebra G} (h : A.a ≅ B.a) (w : A.a ≫ (G : C ⥤ C).map h.hom = h.hom ≫ B.a) :
     A ≅ B where
-  Hom := { f := h.Hom }
+  Hom := { f := h.hom }
   inv :=
     { f := h.inv
       h' := by
-        rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]
+        rw [h.eq_inv_comp, ← reassoc_of w, ← Functor.map_comp]
         simp }
 #align category_theory.comonad.coalgebra.iso_mk CategoryTheory.Comonad.Coalgebra.isoMk
 
@@ -451,14 +451,14 @@ def adj : G.forget ⊣ G.cofree :=
             { f := X.a ≫ G.map f
               h' := by
                 dsimp
-                simp [← coalgebra.coassoc_assoc] }
+                simp [← Coalgebra.coassoc_assoc] }
           invFun := fun g => g.f ≫ G.ε.app Y
           left_inv := fun f => by
             dsimp
-            rw [category.assoc, G.ε.naturality, functor.id_map, X.counit_assoc]
+            rw [Category.assoc, G.ε.naturality, Functor.id_map, X.counit_assoc]
           right_inv := fun g => by
             ext1; dsimp
-            rw [functor.map_comp, g.h_assoc, cofree_obj_a, comonad.right_counit]
+            rw [Functor.map_comp, g.h_assoc, cofree_obj_a, Comonad.right_counit]
             apply comp_id } }
 #align category_theory.comonad.adj CategoryTheory.Comonad.adj
 
@@ -467,7 +467,7 @@ def adj : G.forget ⊣ G.cofree :=
 theorem coalgebra_iso_of_iso {A B : Coalgebra G} (f : A ⟶ B) [IsIso f.f] : IsIso f :=
   ⟨⟨{   f := inv f.f
         h' := by
-          rw [is_iso.eq_inv_comp f.f, ← f.h_assoc]
+          rw [IsIso.eq_inv_comp f.f, ← f.h_assoc]
           simp },
       by tidy⟩⟩
 #align category_theory.comonad.coalgebra_iso_of_iso CategoryTheory.Comonad.coalgebra_iso_of_iso

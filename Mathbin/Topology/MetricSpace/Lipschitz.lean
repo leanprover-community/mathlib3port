@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.lipschitz
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,7 +201,7 @@ protected theorem uniformContinuous (hf : LipschitzWith K f) : UniformContinuous
 
 /-- A Lipschitz function is continuous -/
 protected theorem continuous (hf : LipschitzWith K f) : Continuous f :=
-  hf.UniformContinuous.Continuous
+  hf.uniformContinuous.continuous
 #align lipschitz_with.continuous LipschitzWith.continuous
 
 protected theorem const (b : β) : LipschitzWith 0 fun a : α => b := fun x y => by
@@ -230,8 +230,8 @@ protected theorem eval {α : ι → Type u} [∀ i, PseudoEmetricSpace (α i)] [
   LipschitzWith.of_edist_le fun f g => by convert edist_le_pi_edist f g i
 #align lipschitz_with.eval LipschitzWith.eval
 
-protected theorem restrict (hf : LipschitzWith K f) (s : Set α) : LipschitzWith K (s.restrict f) :=
-  fun x y => hf x y
+protected theorem restrict (hf : LipschitzWith K f) (s : Set exists_prop) :
+    LipschitzWith K (s.restrict f) := fun x y => hf x y
 #align lipschitz_with.restrict LipschitzWith.restrict
 
 protected theorem comp {Kf Kg : ℝ≥0} {f : β → γ} {g : α → β} (hf : LipschitzWith Kf f)
@@ -265,7 +265,7 @@ protected theorem prod {f : α → β} {Kf : ℝ≥0} (hf : LipschitzWith Kf f) 
 #align lipschitz_with.prod LipschitzWith.prod
 
 protected theorem prod_mk_left (a : α) : LipschitzWith 1 (Prod.mk a : β → α × β) := by
-  simpa only [max_eq_right zero_le_one] using (LipschitzWith.const a).Prod LipschitzWith.id
+  simpa only [max_eq_right zero_le_one] using (LipschitzWith.const a).prod LipschitzWith.id
 #align lipschitz_with.prod_mk_left LipschitzWith.prod_mk_left
 
 protected theorem prod_mk_right (b : β) : LipschitzWith 1 fun a : α => (a, b) := by
@@ -304,7 +304,7 @@ protected theorem mul {f g : Function.End α} {Kf Kg} (hf : LipschitzWith Kf f)
 /-- The product of a list of Lipschitz continuous endomorphisms is a Lipschitz continuous
 endomorphism. -/
 protected theorem list_prod (f : ι → Function.End α) (K : ι → ℝ≥0)
-    (h : ∀ i, LipschitzWith (K i) (f i)) : ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
+    (h : ∀ i, LipschitzWith (K i) (f i)) : ∀ l : List ι, LipschitzWith (l.map K).prod (l.map f).prod
   | [] => by simpa using LipschitzWith.id
   | i::l => by
     simp only [List.map_cons, List.prod_cons]
@@ -496,18 +496,18 @@ variable [PseudoMetricSpace α] [PseudoMetricSpace β] {s : Set α} {t : Set β}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Bounded.left_of_prod (h : Bounded (s ×ˢ t)) (ht : t.Nonempty) : Bounded s := by
-  simpa only [fst_image_prod s ht] using (@LipschitzWith.prod_fst α β _ _).bounded_image h
+  simpa only [fst_image_prod s ht] using (@lipschitz_with.prod_fst α β _ _).bounded_image h
 #align metric.bounded.left_of_prod Metric.Bounded.left_of_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Bounded.right_of_prod (h : Bounded (s ×ˢ t)) (hs : s.Nonempty) : Bounded t := by
-  simpa only [snd_image_prod hs t] using (@LipschitzWith.prod_snd α β _ _).bounded_image h
+  simpa only [snd_image_prod hs t] using (@lipschitz_with.prod_snd α β _ _).bounded_image h
 #align metric.bounded.right_of_prod Metric.Bounded.right_of_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem bounded_prod_of_nonempty (hs : s.Nonempty) (ht : t.Nonempty) :
     Bounded (s ×ˢ t) ↔ Bounded s ∧ Bounded t :=
-  ⟨fun h => ⟨h.left_of_prod ht, h.right_of_prod hs⟩, fun h => h.1.Prod h.2⟩
+  ⟨fun h => ⟨h.left_of_prod ht, h.right_of_prod hs⟩, fun h => h.1.prod h.2⟩
 #align metric.bounded_prod_of_nonempty Metric.bounded_prod_of_nonempty
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -529,11 +529,11 @@ variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 variable {K : ℝ≥0} {s : Set α} {f : α → β}
 
 protected theorem uniformContinuousOn (hf : LipschitzOnWith K f s) : UniformContinuousOn f s :=
-  uniformContinuousOn_iff_restrict.mpr (lipschitzOnWith_iff_restrict.mp hf).UniformContinuous
+  uniformContinuousOn_iff_restrict.mpr (lipschitzOnWith_iff_restrict.mp hf).uniformContinuous
 #align lipschitz_on_with.uniform_continuous_on LipschitzOnWith.uniformContinuousOn
 
 protected theorem continuousOn (hf : LipschitzOnWith K f s) : ContinuousOn f s :=
-  hf.UniformContinuousOn.ContinuousOn
+  hf.uniformContinuousOn.continuousOn
 #align lipschitz_on_with.continuous_on LipschitzOnWith.continuousOn
 
 theorem edist_lt_of_edist_lt_div (hf : LipschitzOnWith K f s) {x y : α} (hx : x ∈ s) (hy : y ∈ s)
@@ -675,7 +675,7 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
     can not counterbalance the growth of `K * dist y x`. One readily checks from the formula that the
     extended function is also `K`-Lipschitz. -/
   rcases eq_empty_or_nonempty s with (rfl | hs)
-  · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eq_on_empty _ _⟩
+  · exact ⟨fun x => 0, (LipschitzWith.const _).weaken (zero_le _), eqOn_empty _ _⟩
   have : Nonempty s := by simp only [hs, nonempty_coe_sort]
   let g := fun y : α => infᵢ fun x : s => f x + K * dist y x
   have B : ∀ y : α, BddBelow (range fun x : s => f x + K * dist y x) :=
@@ -691,7 +691,7 @@ theorem LipschitzOnWith.extend_real [PseudoMetricSpace α] {f : α → ℝ} {s :
       _ ≤ f t + K * (dist y z + dist y t) :=
         add_le_add_left (mul_le_mul_of_nonneg_left (dist_triangle_left _ _ _) K.2) _
       
-  have E : eq_on f g s := by
+  have E : EqOn f g s := by
     intro x hx
     refine' le_antisymm (le_cinfᵢ fun y => hf.le_add_mul hx y.2) _
     simpa only [add_zero, Subtype.coe_mk, mul_zero, dist_self] using cinfᵢ_le (B x) ⟨x, hx⟩
@@ -715,7 +715,7 @@ infinite type `ι`. -/
 theorem LipschitzOnWith.extend_pi [PseudoMetricSpace α] [Fintype ι] {f : α → ι → ℝ} {s : Set α}
     {K : ℝ≥0} (hf : LipschitzOnWith K f s) : ∃ g : α → ι → ℝ, LipschitzWith K g ∧ EqOn f g s :=
   by
-  have : ∀ i, ∃ g : α → ℝ, LipschitzWith K g ∧ eq_on (fun x => f x i) g s :=
+  have : ∀ i, ∃ g : α → ℝ, LipschitzWith K g ∧ EqOn (fun x => f x i) g s :=
     by
     intro i
     have : LipschitzOnWith K (fun x : α => f x i) s :=

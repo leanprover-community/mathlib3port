@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ theorem infᵢ_ker_proj : (⨅ i, ker (proj i : (∀ i, φ i) →ₗ[R] φ i) : 
   bot_unique <|
     SetLike.le_def.2 fun a h =>
       by
-      simp only [mem_infi, mem_ker, proj_apply] at h
+      simp only [mem_infᵢ, mem_ker, proj_apply] at h
       exact (mem_bot _).2 (funext fun i => h i)
 #align linear_map.infi_ker_proj LinearMap.infᵢ_ker_proj
 
@@ -207,13 +207,13 @@ def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjo
   by
   refine'
     LinearEquiv.ofLinear (pi fun i => (proj (i : ι)).comp (Submodule.subtype _))
-      (cod_restrict _ (pi fun i => if h : i ∈ I then proj (⟨i, h⟩ : I) else 0) _) _ _
+      (codRestrict _ (pi fun i => if h : i ∈ I then proj (⟨i, h⟩ : I) else 0) _) _ _
   · intro b
-    simp only [mem_infi, mem_ker, funext_iff, proj_apply, pi_apply]
+    simp only [mem_infᵢ, mem_ker, funext_iff, proj_apply, pi_apply]
     intro j hjJ
     have : j ∉ I := fun hjI => hd.le_bot ⟨hjI, hjJ⟩
     rw [dif_neg this, zero_apply]
-  · simp only [pi_comp, comp_assoc, subtype_comp_cod_restrict, proj_pi, Subtype.coe_prop]
+  · simp only [pi_comp, comp_assoc, subtype_comp_codRestrict, proj_pi, Subtype.coe_prop]
     ext (b⟨j, hj⟩)
     simp only [dif_pos, Function.comp_apply, Function.eval_apply, LinearMap.codRestrict_apply,
       LinearMap.coe_comp, LinearMap.coe_proj, LinearMap.pi_apply, Submodule.subtype_apply,
@@ -223,8 +223,8 @@ def infiKerProjEquiv {I J : Set ι} [DecidablePred fun i => i ∈ I] (hd : Disjo
     apply Subtype.ext
     ext j
     have hb : ∀ i ∈ J, b i = 0 := by
-      simpa only [mem_infi, mem_ker, proj_apply] using (mem_infi _).1 hb
-    simp only [comp_apply, pi_apply, id_apply, proj_apply, subtype_apply, cod_restrict_apply]
+      simpa only [mem_infᵢ, mem_ker, proj_apply] using (mem_infᵢ _).1 hb
+    simp only [comp_apply, pi_apply, id_apply, proj_apply, subtype_apply, codRestrict_apply]
     split_ifs
     · rfl
     · exact (hb _ <| (hu trivial).resolve_left h).symm
@@ -317,7 +317,7 @@ theorem supᵢ_map_single [DecidableEq ι] [Finite ι] :
     rcases em (j = i) with (rfl | hj) <;> simp [*]
   · intro x hx
     rw [← Finset.univ_sum_single x]
-    exact sum_mem_supr fun i => mem_map_of_mem (hx i trivial)
+    exact sum_mem_supᵢ fun i => mem_map_of_mem (hx i trivial)
 #align submodule.supr_map_single Submodule.supᵢ_map_single
 
 theorem le_comap_single_pi [DecidableEq ι] (p : ∀ i, Submodule R (φ i)) {i} :
@@ -426,7 +426,7 @@ theorem piRing_apply (f : (ι → R) →ₗ[R] M) (i : ι) : piRing R M ι S f i
 
 @[simp]
 theorem piRing_symm_apply (f : ι → M) (g : ι → R) : (piRing R M ι S).symm f g = ∑ i, g i • f i := by
-  simp [pi_ring, LinearMap.lsum]
+  simp [piRing, LinearMap.lsum]
 #align linear_equiv.pi_ring_symm_apply LinearEquiv.piRing_symm_apply
 
 -- TODO additive version?

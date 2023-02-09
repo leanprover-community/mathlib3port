@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Yuyang Zhao
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.tower
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem aeval_algebraMap_apply (x : A) (p : R[X]) :
 @[simp]
 theorem aeval_algebraMap_eq_zero_iff [NoZeroSMulDivisors A B] [Nontrivial B] (x : A) (p : R[X]) :
     aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
-  rw [aeval_algebra_map_apply, Algebra.algebraMap_eq_smul_one, smul_eq_zero,
+  rw [aeval_algebraMap_apply, Algebra.algebraMap_eq_smul_one, smul_eq_zero,
     iff_false_intro (one_ne_zero' B), or_false_iff]
 #align polynomial.aeval_algebra_map_eq_zero_iff Polynomial.aeval_algebraMap_eq_zero_iff
 
@@ -70,7 +70,7 @@ variable {B}
 
 theorem aeval_algebraMap_eq_zero_iff_of_injective {x : A} {p : R[X]}
     (h : Function.Injective (algebraMap A B)) : aeval (algebraMap A B x) p = 0 ↔ aeval x p = 0 := by
-  rw [aeval_algebra_map_apply, ← (algebraMap A B).map_zero, h.eq_iff]
+  rw [aeval_algebraMap_apply, ← (algebraMap A B).map_zero, h.eq_iff]
 #align polynomial.aeval_algebra_map_eq_zero_iff_of_injective Polynomial.aeval_algebraMap_eq_zero_iff_of_injective
 
 end CommSemiring

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ def Units.ofPow (u : Mˣ) (x : M) {n : ℕ} (hn : n ≠ 0) (hu : x ^ n = u) : M�
 #print isUnit_pow_iff /-
 @[simp, to_additive]
 theorem isUnit_pow_iff {a : M} {n : ℕ} (hn : n ≠ 0) : IsUnit (a ^ n) ↔ IsUnit a :=
-  ⟨fun ⟨u, hu⟩ => (u.ofPow a hn hu.symm).IsUnit, fun h => h.pow n⟩
+  ⟨fun ⟨u, hu⟩ => (u.ofPow a hn hu.symm).isUnit, fun h => h.pow n⟩
 #align is_unit_pow_iff isUnit_pow_iff
 #align is_add_unit_nsmul_iff isAddUnit_nsmul_iff
 -/
@@ -147,7 +147,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit_of_pow_eq_one isUnit_ofPowEqOneₓ'. -/
 @[to_additive]
 theorem isUnit_ofPowEqOne {x : M} {n : ℕ} (hx : x ^ n = 1) (hn : n ≠ 0) : IsUnit x :=
-  (Units.ofPowEqOne x n hx hn).IsUnit
+  (Units.ofPowEqOne x n hx hn).isUnit
 #align is_unit_of_pow_eq_one isUnit_ofPowEqOne
 #align is_add_unit_of_nsmul_eq_zero isAddUnit_ofNSMulEqZero
 
@@ -159,7 +159,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align invertible_of_pow_eq_one invertibleOfPowEqOneₓ'. -/
 /-- If `x ^ n = 1` then `x` has an inverse, `x^(n - 1)`. -/
 def invertibleOfPowEqOne (x : M) (n : ℕ) (hx : x ^ n = 1) (hn : n ≠ 0) : Invertible x :=
-  (Units.ofPowEqOne x n hx hn).Invertible
+  (Units.ofPowEqOne x n hx hn).invertible
 #align invertible_of_pow_eq_one invertibleOfPowEqOne
 
 /- warning: smul_pow -> smul_pow is a dubious translation:
@@ -213,17 +213,16 @@ theorem zpow_mul (a : α) : ∀ m n : ℤ, a ^ (m * n) = (a ^ m) ^ n
     rfl
   | (m : ℕ), -[n+1] =>
     by
-    rw [zpow_ofNat, zpow_negSucc, ← pow_mul, coe_nat_mul_neg_succ, zpow_neg, inv_inj, ← zpow_ofNat]
+    rw [zpow_ofNat, zpow_negSucc, ← pow_mul, ofNat_mul_negSucc, zpow_neg, inv_inj, ← zpow_ofNat]
     rfl
   | -[m+1], (n : ℕ) =>
     by
-    rw [zpow_ofNat, zpow_negSucc, ← inv_pow, ← pow_mul, neg_succ_mul_coe_nat, zpow_neg, inv_pow,
+    rw [zpow_ofNat, zpow_negSucc, ← inv_pow, ← pow_mul, negSucc_mul_ofNat, zpow_neg, inv_pow,
       inv_inj, ← zpow_ofNat]
     rfl
   | -[m+1], -[n+1] =>
     by
-    rw [zpow_negSucc, zpow_negSucc, neg_succ_mul_neg_succ, inv_pow, inv_inv, ← pow_mul, ←
-      zpow_ofNat]
+    rw [zpow_negSucc, zpow_negSucc, negSucc_mul_negSucc, inv_pow, inv_inv, ← pow_mul, ← zpow_ofNat]
     rfl
 #align zpow_mul zpow_mul
 #align mul_zsmul' mul_zsmul'
@@ -247,7 +246,7 @@ theorem zpow_bit0 (a : α) : ∀ n : ℤ, a ^ bit0 n = a ^ n * a ^ n
   | (n : ℕ) => by simp only [zpow_ofNat, ← Int.ofNat_bit0, pow_bit0]
   | -[n+1] => by
     simp [← mul_inv_rev, ← pow_bit0]
-    rw [neg_succ_of_nat_eq, bit0_neg, zpow_neg]
+    rw [negSucc_eq, bit0_neg, zpow_neg]
     norm_cast
 #align zpow_bit0 zpow_bit0
 #align bit0_zsmul bit0_zsmul
@@ -591,8 +590,8 @@ theorem zpow_lt_zpow_iff' (hn : 0 < n) {a b : α} : a ^ n < b ^ n ↔ a < b :=
 theorem zpow_left_injective (hn : n ≠ 0) : Function.Injective ((· ^ n) : α → α) :=
   by
   cases hn.symm.lt_or_lt
-  · exact (zpow_strictMono_left α h).Injective
-  · refine' fun a b (hab : a ^ n = b ^ n) => (zpow_strictMono_left α (neg_pos.mpr h)).Injective _
+  · exact (zpow_strictMono_left α h).injective
+  · refine' fun a b (hab : a ^ n = b ^ n) => (zpow_strictMono_left α (neg_pos.mpr h)).injective _
     rw [zpow_neg, zpow_neg, hab]
 #align zpow_left_injective zpow_left_injective
 #align zsmul_right_injective zsmul_right_injective
@@ -687,7 +686,7 @@ theorem abs_add_eq_add_abs_iff (a b : α) : |a + b| = |a| + |b| ↔ 0 ≤ a ∧ 
   by
   obtain ab | ab := le_total a b
   · exact abs_add_eq_add_abs_le ab
-  · rw [add_comm a, add_comm (abs _), abs_add_eq_add_abs_le ab, and_comm, @and_comm (b ≤ 0)]
+  · rw [add_comm a, add_comm (abs _), abs_add_eq_add_abs_le ab, and_comm, @and.comm (b ≤ 0)]
 #align abs_add_eq_add_abs_iff abs_add_eq_add_abs_iff
 
 end LinearOrderedAddCommGroup
@@ -706,7 +705,7 @@ theorem nsmul_eq_mul' [NonAssocSemiring R] (a : R) (n : ℕ) : n • a = a * n :
 
 @[simp]
 theorem nsmul_eq_mul [NonAssocSemiring R] (n : ℕ) (a : R) : n • a = n * a := by
-  rw [nsmul_eq_mul', (n.cast_commute a).Eq]
+  rw [nsmul_eq_mul', (n.cast_commute a).eq]
 #align nsmul_eq_mul nsmul_eq_mulₓ
 
 /- warning: non_unital_non_assoc_semiring.nat_smul_comm_class -> NonUnitalNonAssocSemiring.nat_smulCommClass is a dubious translation:
@@ -840,7 +839,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Ring.{u1} R] (a : R) (n : Int), Eq.{succ u1} R (HSMul.hSMul.{0, u1, u1} Int R R (instHSMul.{0, u1} Int R (SubNegMonoid.SMulInt.{u1} R (AddGroup.toSubNegMonoid.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R _inst_1))))) n a) (HMul.hMul.{u1, u1, u1} R R R (instHMul.{u1} R (NonUnitalNonAssocRing.toMul.{u1} R (NonAssocRing.toNonUnitalNonAssocRing.{u1} R (Ring.toNonAssocRing.{u1} R _inst_1)))) a (Int.cast.{u1} R (Ring.toIntCast.{u1} R _inst_1) n))
 Case conversion may be inaccurate. Consider using '#align zsmul_eq_mul' zsmul_eq_mul'ₓ'. -/
 theorem zsmul_eq_mul' [Ring R] (a : R) (n : ℤ) : n • a = a * n := by
-  rw [zsmul_eq_mul, (n.cast_commute a).Eq]
+  rw [zsmul_eq_mul, (n.cast_commute a).eq]
 #align zsmul_eq_mul' zsmul_eq_mul'
 
 /- warning: non_unital_non_assoc_ring.int_smul_comm_class -> NonUnitalNonAssocRing.int_smulCommClass is a dubious translation:
@@ -931,7 +930,7 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
         (le_add_iff_nonneg_right _).2 this
       _ = (1 + a) * (1 + a) * (1 + n * a) :=
         by
-        simp [add_mul, mul_add, bit0, mul_assoc, (n.cast_commute (_ : R)).and_left_comm]
+        simp [add_mul, mul_add, bit0, mul_assoc, (n.cast_commute (_ : R)).left_comm]
         ac_rfl
       _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n := mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq'
       _ = (1 + a) ^ (n + 2) := by simp only [pow_succ, mul_assoc]
@@ -1168,11 +1167,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align int.pow_right_injective Int.pow_right_injectiveₓ'. -/
 theorem pow_right_injective {x : ℤ} (h : 1 < x.natAbs) : Function.Injective ((· ^ ·) x : ℕ → ℤ) :=
   by
-  suffices Function.Injective (nat_abs ∘ ((· ^ ·) x : ℕ → ℤ)) by
+  suffices Function.Injective (natAbs ∘ ((· ^ ·) x : ℕ → ℤ)) by
     exact Function.Injective.of_comp this
   convert Nat.pow_right_injective h
   ext n
-  rw [Function.comp_apply, nat_abs_pow]
+  rw [Function.comp_apply, natAbs_pow]
 #align int.pow_right_injective Int.pow_right_injective
 
 end Int
@@ -1896,7 +1895,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (u : Units.{u1} M _inst_1) (x : M) (n : Nat), Eq.{succ u1} M (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 u) x) (Units.val.{u1} M _inst_1 (Inv.inv.{u1} (Units.{u1} M _inst_1) (Units.instInvUnits.{u1} M _inst_1) u))) n) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) (Units.val.{u1} M _inst_1 u) (HPow.hPow.{u1, 0, u1} M Nat M (instHPow.{u1, 0} M Nat (Monoid.Pow.{u1} M _inst_1)) x n)) (Units.val.{u1} M _inst_1 (Inv.inv.{u1} (Units.{u1} M _inst_1) (Units.instInvUnits.{u1} M _inst_1) u)))
 Case conversion may be inaccurate. Consider using '#align units.conj_pow Units.conj_powₓ'. -/
 theorem conj_pow (u : Mˣ) (x : M) (n : ℕ) : (↑u * x * ↑u⁻¹) ^ n = u * x ^ n * ↑u⁻¹ :=
-  (divp_eq_iff_mul_eq.2 ((u.mk_semiconjBy x).pow_right n).Eq.symm).symm
+  (divp_eq_iff_mul_eq.2 ((u.mk_semiconjBy x).pow_right n).eq.symm).symm
 #align units.conj_pow Units.conj_pow
 
 /- warning: units.conj_pow' -> Units.conj_pow' is a dubious translation:

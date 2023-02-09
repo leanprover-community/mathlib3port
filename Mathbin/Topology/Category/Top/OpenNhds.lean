@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.Top.open_nhds
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ theorem inclusion_obj (x : X) (U) (p) : (inclusion x).obj ⟨U, p⟩ = U :=
 #align topological_space.open_nhds.inclusion_obj TopologicalSpace.OpenNhds.inclusion_obj
 
 theorem openEmbedding {x : X} (U : OpenNhds x) : OpenEmbedding U.1.inclusion :=
-  U.1.OpenEmbedding
+  U.1.openEmbedding
 #align topological_space.open_nhds.open_embedding TopologicalSpace.OpenNhds.openEmbedding
 
 /-- The preimage functor from neighborhoods of `f x` to neighborhoods of `x`. -/
@@ -149,7 +149,7 @@ def inclusionMapIso (x : X) : inclusion (f x) ⋙ Opens.map f ≅ map f x ⋙ in
 #align topological_space.open_nhds.inclusion_map_iso TopologicalSpace.OpenNhds.inclusionMapIso
 
 @[simp]
-theorem inclusionMapIso_hom (x : X) : (inclusionMapIso f x).Hom = 𝟙 _ :=
+theorem inclusionMapIso_hom (x : X) : (inclusionMapIso f x).hom = 𝟙 _ :=
   rfl
 #align topological_space.open_nhds.inclusion_map_iso_hom TopologicalSpace.OpenNhds.inclusionMapIso_hom
 
@@ -173,8 +173,8 @@ variable {f}
 @[simps]
 def functorNhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x)
     where
-  obj U := ⟨h.Functor.obj U.1, ⟨x, U.2, rfl⟩⟩
-  map U V i := h.Functor.map i
+  obj U := ⟨h.functor.obj U.1, ⟨x, U.2, rfl⟩⟩
+  map U V i := h.functor.map i
 #align is_open_map.functor_nhds IsOpenMap.functorNhds
 
 /-- An open map `f : X ⟶ Y` induces an adjunction between `open_nhds x` and `open_nhds (f x)`.

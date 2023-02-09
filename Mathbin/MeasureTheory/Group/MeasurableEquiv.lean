@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.measurable_equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ def smul (c : G) : α ≃ᵐ α where
 
 @[to_additive]
 theorem measurableEmbedding_const_smul (c : G) : MeasurableEmbedding ((· • ·) c : α → α) :=
-  (smul c).MeasurableEmbedding
+  (smul c).measurableEmbedding
 #align measurable_embedding_const_smul measurableEmbedding_const_smul
 #align measurable_embedding_const_vadd measurableEmbedding_const_vadd
 
@@ -89,7 +89,7 @@ theorem symm_smul₀ {c : G₀} (hc : c ≠ 0) :
 
 theorem measurableEmbedding_const_smul₀ {c : G₀} (hc : c ≠ 0) :
     MeasurableEmbedding ((· • ·) c : α → α) :=
-  (smul₀ c hc).MeasurableEmbedding
+  (smul₀ c hc).measurableEmbedding
 #align measurable_embedding_const_smul₀ measurableEmbedding_const_smul₀
 
 section Mul
@@ -125,7 +125,7 @@ theorem toEquiv_mulLeft (g : G) : (mulLeft g).toEquiv = Equiv.mulLeft g :=
 
 @[to_additive]
 theorem measurableEmbedding_mul_left (g : G) : MeasurableEmbedding ((· * ·) g) :=
-  (mulLeft g).MeasurableEmbedding
+  (mulLeft g).measurableEmbedding
 #align measurable_embedding_mul_left measurableEmbedding_mul_left
 #align measurable_embedding_add_left measurableEmbedding_add_left
 
@@ -142,7 +142,7 @@ def mulRight (g : G) : G ≃ᵐ G where
 
 @[to_additive]
 theorem measurableEmbedding_mul_right (g : G) : MeasurableEmbedding fun x => x * g :=
-  (mulRight g).MeasurableEmbedding
+  (mulRight g).measurableEmbedding
 #align measurable_embedding_mul_right measurableEmbedding_mul_right
 #align measurable_embedding_add_right measurableEmbedding_add_right
 
@@ -171,7 +171,7 @@ def mulLeft₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
 #align measurable_equiv.mul_left₀ MeasurableEquiv.mulLeft₀
 
 theorem measurableEmbedding_mul_left₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding ((· * ·) g) :=
-  (mulLeft₀ g hg).MeasurableEmbedding
+  (mulLeft₀ g hg).measurableEmbedding
 #align measurable_embedding_mul_left₀ measurableEmbedding_mul_left₀
 
 @[simp]
@@ -200,7 +200,7 @@ def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀
 #align measurable_equiv.mul_right₀ MeasurableEquiv.mulRight₀
 
 theorem measurableEmbedding_mul_right₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x * g :=
-  (mulRight₀ g hg).MeasurableEmbedding
+  (mulRight₀ g hg).measurableEmbedding
 #align measurable_embedding_mul_right₀ measurableEmbedding_mul_right₀
 
 @[simp]

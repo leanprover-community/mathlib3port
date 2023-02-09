@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.quaternion_basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,13 +183,13 @@ def lift : Basis A c₁ c₂ ≃ (ℍ[R,c₁,c₂] →ₐ[R] A)
     where
   toFun := Basis.liftHom
   invFun := (Basis.self R).compHom
-  left_inv q := by ext <;> simp [basis.lift]
+  left_inv q := by ext <;> simp [Basis.lift]
   right_inv F := by
     ext
-    dsimp [basis.lift]
+    dsimp [Basis.lift]
     rw [← F.commutes]
     simp only [← F.commutes, ← F.map_smul, ← F.map_add, mk_add_mk, smul_mk, smul_zero,
-      algebra_map_eq]
+      algebraMap_eq]
     congr
     simp
 #align quaternion_algebra.lift QuaternionAlgebra.lift

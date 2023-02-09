@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.isometry
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
 
 /-- A quadratic form is isometric to its bases representations. -/
 noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) :
-    Isometry Q (Q.basis_repr v) :=
+    Isometry Q (Q.basisRepr v) :=
   isometryOfCompLinearEquiv Q v.equivFun.symm
 #align quadratic_form.isometry_basis_repr QuadraticForm.isometryBasisRepr
 
@@ -152,7 +152,7 @@ noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
   let iso := Q.isometry_basis_repr v
   refine' ⟨iso, fun m => _⟩
   convert iso.map_app m
-  rw [basis_repr_eq_of_is_Ortho _ _ hv₁]
+  rw [basisRepr_eq_of_isOrthoCat _ _ hv₁]
 #align quadratic_form.isometry_weighted_sum_squares QuadraticForm.isometryWeightedSumSquares
 
 variable [FiniteDimensional K V]
@@ -169,9 +169,9 @@ theorem equivalent_weightedSumSquares_units_of_nondegenerate' (Q : QuadraticForm
     (hQ : (associated Q).Nondegenerate) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) :=
   by
-  obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_is_symm _ Q)
+  obtain ⟨v, hv₁⟩ := exists_orthogonal_basis (associatedIsSymm _ Q)
   have hv₂ := hv₁.not_is_ortho_basis_self_of_nondegenerate hQ
-  simp_rw [is_ortho, associated_eq_self_apply] at hv₂
+  simp_rw [IsOrtho, associated_eq_self_apply] at hv₂
   exact ⟨fun i => Units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
 #align quadratic_form.equivalent_weighted_sum_squares_units_of_nondegenerate' QuadraticForm.equivalent_weightedSumSquares_units_of_nondegenerate'
 

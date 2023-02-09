@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Chris Hughes, Michael Howes
 
 ! This file was ported from Lean 3 source module algebra.group.conj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,7 +195,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {x : α}, Function.Injective.{succ u1, succ u1} α α (fun (g : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x g) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) x))
 Case conversion may be inaccurate. Consider using '#align conj_injective conj_injectiveₓ'. -/
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
-  (MulAut.conj x).Injective
+  (MulAut.conj x).injective
 #align conj_injective conj_injective
 
 end Group
@@ -387,7 +387,7 @@ theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
 def mkEquiv : α ≃ ConjClasses α :=
   ⟨ConjClasses.mk, Quotient.lift id fun (a : α) b => isConj_iff_eq.1, Quotient.lift_mk _ _,
     by
-    rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
+    rw [Function.RightInverse, Function.LeftInverse, forall_isConj]
     intro x
     rw [← quotient_mk_eq_mk, ← quotient_mk_eq_mk, Quotient.lift_mk, id.def]⟩
 #align conj_classes.mk_equiv ConjClasses.mkEquiv
@@ -454,9 +454,9 @@ theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
 theorem mem_carrier_iff_mk_eq {a : α} {b : ConjClasses α} : a ∈ carrier b ↔ ConjClasses.mk a = b :=
   by
   revert b
-  rw [forall_is_conj]
+  rw [forall_isConj]
   intro b
-  rw [carrier, eq_comm, mk_eq_mk_iff_is_conj, ← quotient_mk_eq_mk, Quotient.lift_mk]
+  rw [carrier, eq_comm, mk_eq_mk_iff_isConj, ← quotient_mk_eq_mk, Quotient.lift_mk]
   rfl
 #align conj_classes.mem_carrier_iff_mk_eq ConjClasses.mem_carrier_iff_mk_eq
 -/

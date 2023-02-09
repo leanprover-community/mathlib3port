@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.p_series
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ variable {f : ℕ → ℝ≥0∞}
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) :=
   by
-  rw [Ennreal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
+  rw [Ennreal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt one_lt_two)]
   refine' supᵢ_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
   apply Ennreal.sum_le_tsum
@@ -115,7 +115,7 @@ theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k :=
   by
-  rw [Ennreal.tsum_eq_supᵢ_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
+  rw [Ennreal.tsum_eq_supᵢ_nat' (tendsto_atTop_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
     supᵢ_le fun n =>
       le_trans _
@@ -196,10 +196,10 @@ theorem Real.summable_nat_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ :
       simpa [this, -one_div]
     · intro h
       obtain ⟨k : ℕ, hk₁ : ((k ^ p)⁻¹ : ℝ) < 1, hk₀ : k ≠ 0⟩ :=
-        ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).And
+        ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).and
             (eventually_cofinite_ne 0)).exists
       apply hk₀
-      rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀
+      rw [← pos_iff_ne_zero, ← @nat.cast_pos ℝ] at hk₀
       simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp,
         hp.not_lt, hk₀] using hk₁
 #align real.summable_nat_rpow_inv Real.summable_nat_rpow_inv

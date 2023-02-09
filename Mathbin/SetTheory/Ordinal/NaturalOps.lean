@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.natural_ops
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -325,7 +325,7 @@ theorem add_le_nadd : a + b ≤ a ♯ b := by
   · intro c h
     rwa [add_succ, nadd_succ, succ_le_succ_iff]
   · intro c hc H
-    rw [← IsNormal.blsub_eq.{u, u} (add_is_normal a) hc, blsub_le_iff]
+    rw [← IsNormal.blsub_eq.{u, u} (add_isNormal a) hc, blsub_le_iff]
     exact fun i hi => (H i hi).trans_lt (nadd_lt_nadd_left hi a)
 #align ordinal.add_le_nadd Ordinal.add_le_nadd
 
@@ -377,7 +377,7 @@ theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n :=
   by
   induction' n with n hn
   · rfl
-  · change nadd (to_ordinal n) 1 = n + 1
+  · change nadd (toOrdinal n) 1 = n + 1
     rw [hn]
     apply nadd_one
 #align nat_ordinal.to_ordinal_cast_nat NatOrdinal.toOrdinal_cast_nat
@@ -393,7 +393,7 @@ namespace Ordinal
 @[simp]
 theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n :=
   by
-  rw [← to_ordinal_cast_nat n]
+  rw [← toOrdinal_cast_nat n]
   rfl
 #align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_nat
 

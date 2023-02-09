@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.commute
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ Case conversion may be inaccurate. Consider using '#align commute.ring_inverse_r
 theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) :
     Commute (Ring.inverse a) (Ring.inverse b) :=
   (Ring.mul_inverse_rev' h.symm).symm.trans <|
-    (congr_arg _ h.symm.Eq).trans <| Ring.mul_inverse_rev' h
+    (congr_arg _ h.symm.eq).trans <| Ring.mul_inverse_rev' h
 #align commute.ring_inverse_ring_inverse Commute.ring_inverse_ring_inverse
 
 namespace Commute

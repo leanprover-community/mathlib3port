@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Vladimir Goryachev, Kyle Miller, Scott Morrison, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.nat.count
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem count_zero : count p 0 = 0 := by rw [count, List.range_zero, List.countp
 /-- A fintype instance for the set relevant to `nat.count`. Locally an instance in locale `count` -/
 def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } :=
   by
-  apply Fintype.ofFinset ((Finset.range n).filterₓ p)
+  apply Fintype.ofFinset ((Finset.range n).filter p)
   intro x
   rw [mem_filter, mem_range]
   rfl
@@ -52,7 +52,7 @@ def CountSet.fintype (n : ℕ) : Fintype { i // i < n ∧ p i } :=
 
 scoped[Count] attribute [instance] Nat.CountSet.fintype
 
-theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filterₓ p).card :=
+theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filter p).card :=
   by
   rw [count, List.countp_eq_length_filter]
   rfl
@@ -61,7 +61,7 @@ theorem count_eq_card_filter_range (n : ℕ) : count p n = ((range n).filterₓ 
 /-- `count p n` can be expressed as the cardinality of `{k // k < n ∧ p k}`. -/
 theorem count_eq_card_fintype (n : ℕ) : count p n = Fintype.card { k : ℕ // k < n ∧ p k } :=
   by
-  rw [count_eq_card_filter_range, ← Fintype.card_ofFinset, ← count_set.fintype]
+  rw [count_eq_card_filter_range, ← Fintype.card_ofFinset, ← CountSet.fintype]
   rfl
 #align nat.count_eq_card_fintype Nat.count_eq_card_fintype
 
@@ -76,7 +76,7 @@ theorem count_monotone : Monotone (count p) :=
 
 theorem count_add (a b : ℕ) : count p (a + b) = count p a + count (fun k => p (a + k)) b :=
   by
-  have : Disjoint ((range a).filterₓ p) (((range b).map <| addLeftEmbedding a).filterₓ p) :=
+  have : Disjoint ((range a).filter p) (((range b).map <| addLeftEmbedding a).filter p) :=
     by
     apply disjoint_filter_filter
     rw [Finset.disjoint_left]
@@ -141,8 +141,8 @@ theorem count_injective {m n : ℕ} (hm : p m) (hn : p n) (heq : count p m = cou
   by
   by_contra' h : m ≠ n
   wlog hmn : m < n
-  · exact this hn hm HEq.symm h.symm (h.lt_or_lt.resolve_left hmn)
-  · simpa [HEq] using count_strict_mono hm hmn
+  · exact this hn hm heq.symm h.symm (h.lt_or_lt.resolve_left hmn)
+  · simpa [heq] using count_strict_mono hm hmn
 #align nat.count_injective Nat.count_injective
 
 theorem count_le_card (hp : (setOf p).Finite) (n : ℕ) : count p n ≤ hp.toFinset.card :=

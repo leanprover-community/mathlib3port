@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.chain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ unsafe def tactic_script.to_string : TacticScript String → String
       " }"
 #align tactic.tactic_script.to_string tactic.tactic_script.to_string
 
-unsafe instance : ToString (TacticScript String) where toString s := s.toString
+unsafe instance : ToString (TacticScript String) where toString s := s.to_string
 
 unsafe instance tactic_script_unit_has_to_string : ToString (TacticScript Unit)
     where toString s := "[chain tactic]"
@@ -118,7 +118,7 @@ unsafe def chain_core {α : Type} [ToString (TacticScript α)] (tactics : List (
     tactic (List String) := do
   let results ← get_goals >>= chain_many (first tactics)
   when results (fail "`chain` tactic made no progress")
-  return (results toString)
+  return (results to_string)
 #align tactic.chain_core tactic.chain_core
 
 variable [ToString (TacticScript α)] [has_to_format α]
@@ -130,7 +130,7 @@ unsafe def trace_output (t : tactic α) : tactic α := do
   let tgt ← target
   let r ← t
   let name ← decl_name
-  trace f! "`chain` successfully applied a tactic during elaboration of {Name}:"
+  trace f! "`chain` successfully applied a tactic during elaboration of {name}:"
   let tgt ← pp tgt
   trace f! "previous target: {tgt}"
   trace f! "tactic result: {r}"

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.mates
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,24 +83,24 @@ Note that if one of the transformations is an iso, it does not imply the other i
 def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R₂)
     where
   toFun h :=
-    { app := fun X => adj₂.Unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _))
+    { app := fun X => adj₂.unit.app _ ≫ R₂.map (h.app _ ≫ H.map (adj₁.counit.app _))
       naturality' := fun X Y f => by
         dsimp
         rw [assoc, ← R₂.map_comp, assoc, ← H.map_comp, ← adj₁.counit_naturality, H.map_comp, ←
-          functor.comp_map L₁, ← h.naturality_assoc]
+          Functor.comp_map L₁, ← h.naturality_assoc]
         simp }
   invFun h :=
-    { app := fun X => L₂.map (G.map (adj₁.Unit.app _) ≫ h.app _) ≫ adj₂.counit.app _
+    { app := fun X => L₂.map (G.map (adj₁.unit.app _) ≫ h.app _) ≫ adj₂.counit.app _
       naturality' := fun X Y f => by
         dsimp
         rw [← L₂.map_comp_assoc, ← G.map_comp_assoc, ← adj₁.unit_naturality, G.map_comp_assoc, ←
-          functor.comp_map, h.naturality]
+          Functor.comp_map, h.naturality]
         simp }
   left_inv h := by
     ext X
     dsimp
     simp only [L₂.map_comp, assoc, adj₂.counit_naturality, adj₂.left_triangle_components_assoc, ←
-      functor.comp_map G L₂, h.naturality_assoc, functor.comp_map L₁, ← H.map_comp,
+      Functor.comp_map G L₂, h.naturality_assoc, Functor.comp_map L₁, ← H.map_comp,
       adj₁.left_triangle_components]
     dsimp
     simp
@@ -108,25 +108,25 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
   right_inv h := by
     ext X
     dsimp
-    simp [-functor.comp_map, ← functor.comp_map H, functor.comp_map R₁, -nat_trans.naturality, ←
-      h.naturality, -functor.map_comp, ← functor.map_comp_assoc G, R₂.map_comp]
+    simp [-functor.comp_map, ← Functor.comp_map H, Functor.comp_map R₁, -nat_trans.naturality, ←
+      h.naturality, -functor.map_comp, ← Functor.map_comp_assoc G, R₂.map_comp]
 #align category_theory.transfer_nat_trans CategoryTheory.transferNatTrans
 
 theorem transferNatTrans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transferNatTrans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ =
       f.app _ ≫ H.map (adj₁.counit.app Y) :=
   by
-  erw [functor.map_comp]
+  erw [Functor.map_comp]
   simp
 #align category_theory.transfer_nat_trans_counit CategoryTheory.transferNatTrans_counit
 
 theorem unit_transferNatTrans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
-    G.map (adj₁.Unit.app X) ≫ (transferNatTrans adj₁ adj₂ f).app _ =
-      adj₂.Unit.app _ ≫ R₂.map (f.app _) :=
+    G.map (adj₁.unit.app X) ≫ (transferNatTrans adj₁ adj₂ f).app _ =
+      adj₂.unit.app _ ≫ R₂.map (f.app _) :=
   by
-  dsimp [transfer_nat_trans]
-  rw [← adj₂.unit_naturality_assoc, ← R₂.map_comp, ← functor.comp_map G L₂, f.naturality_assoc,
-    functor.comp_map, ← H.map_comp]
+  dsimp [transferNatTrans]
+  rw [← adj₂.unit_naturality_assoc, ← R₂.map_comp, ← Functor.comp_map G L₂, f.naturality_assoc,
+    Functor.comp_map, ← H.map_comp]
   dsimp; simp
 #align category_theory.unit_transfer_nat_trans CategoryTheory.unit_transferNatTrans
 
@@ -162,21 +162,21 @@ theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
     L₂.map ((transferNatTransSelf adj₁ adj₂ f).app _) ≫ adj₂.counit.app X =
       f.app _ ≫ adj₁.counit.app X :=
   by
-  dsimp [transfer_nat_trans_self]
+  dsimp [transferNatTransSelf]
   rw [id_comp, comp_id]
-  have := transfer_nat_trans_counit adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
+  have := transferNatTrans_counit adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
   dsimp at this
   rw [this]
   simp
 #align category_theory.transfer_nat_trans_self_counit CategoryTheory.transferNatTransSelf_counit
 
 theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
-    adj₁.Unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ =
-      adj₂.Unit.app X ≫ Functor.map _ (f.app _) :=
+    adj₁.unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ =
+      adj₂.unit.app X ≫ Functor.map _ (f.app _) :=
   by
-  dsimp [transfer_nat_trans_self]
+  dsimp [transferNatTransSelf]
   rw [id_comp, comp_id]
-  have := unit_transfer_nat_trans adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
+  have := unit_transferNatTrans adj₁ adj₂ (L₂.left_unitor.hom ≫ f ≫ L₁.right_unitor.inv) X
   dsimp at this
   rw [this]
   simp
@@ -186,7 +186,7 @@ theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
 theorem transferNatTransSelf_id : transferNatTransSelf adj₁ adj₁ (𝟙 _) = 𝟙 _ :=
   by
   ext
-  dsimp [transfer_nat_trans_self, transfer_nat_trans]
+  dsimp [transferNatTransSelf, transferNatTrans]
   simp
 #align category_theory.transfer_nat_trans_self_id CategoryTheory.transferNatTransSelf_id
 
@@ -203,7 +203,7 @@ theorem transferNatTransSelf_comp (f g) :
       transferNatTransSelf adj₁ adj₃ (g ≫ f) :=
   by
   ext
-  dsimp [transfer_nat_trans_self, transfer_nat_trans]
+  dsimp [transferNatTransSelf, transferNatTrans]
   simp only [id_comp, comp_id]
   rw [← adj₃.unit_naturality_assoc, ← R₃.map_comp, g.naturality_assoc, L₂.map_comp, assoc,
     adj₂.counit_naturality, adj₂.left_triangle_components_assoc, assoc]
@@ -212,14 +212,14 @@ theorem transferNatTransSelf_comp (f g) :
 theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 𝟭 C ⟶ L) (X : C) :
     (transferNatTransSelf adj Adjunction.id f).app X = f.app (R.obj X) ≫ adj.counit.app X :=
   by
-  dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
+  dsimp [transferNatTransSelf, transferNatTrans, Adjunction.id]
   simp only [comp_id, id_comp]
 #align category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transferNatTransSelf_adjunction_id
 
 theorem transferNatTransSelf_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C) (X : C) :
-    ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.Unit.app X ≫ g.app (L.obj X) :=
+    ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.unit.app X ≫ g.app (L.obj X) :=
   by
-  dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
+  dsimp [transferNatTransSelf, transferNatTrans, Adjunction.id]
   simp only [comp_id, id_comp]
 #align category_theory.transfer_nat_trans_self_adjunction_id_symm CategoryTheory.transferNatTransSelf_adjunction_id_symm
 
@@ -227,18 +227,18 @@ theorem transferNatTransSelf_symm_comp (f g) :
     (transferNatTransSelf adj₂ adj₁).symm f ≫ (transferNatTransSelf adj₃ adj₂).symm g =
       (transferNatTransSelf adj₃ adj₁).symm (g ≫ f) :=
   by
-  rw [Equiv.eq_symm_apply, ← transfer_nat_trans_self_comp _ adj₂]
+  rw [Equiv.eq_symm_apply, ← transferNatTransSelf_comp _ adj₂]
   simp
 #align category_theory.transfer_nat_trans_self_symm_comp CategoryTheory.transferNatTransSelf_symm_comp
 
 theorem transferNatTransSelf_comm {f g} (gf : g ≫ f = 𝟙 _) :
     transferNatTransSelf adj₁ adj₂ f ≫ transferNatTransSelf adj₂ adj₁ g = 𝟙 _ := by
-  rw [transfer_nat_trans_self_comp, gf, transfer_nat_trans_self_id]
+  rw [transferNatTransSelf_comp, gf, transferNatTransSelf_id]
 #align category_theory.transfer_nat_trans_self_comm CategoryTheory.transferNatTransSelf_comm
 
 theorem transferNatTransSelf_symm_comm {f g} (gf : g ≫ f = 𝟙 _) :
     (transferNatTransSelf adj₁ adj₂).symm f ≫ (transferNatTransSelf adj₂ adj₁).symm g = 𝟙 _ := by
-  rw [transfer_nat_trans_self_symm_comp, gf, transfer_nat_trans_self_symm_id]
+  rw [transferNatTransSelf_symm_comp, gf, transferNatTransSelf_symm_id]
 #align category_theory.transfer_nat_trans_self_symm_comm CategoryTheory.transferNatTransSelf_symm_comm
 
 /-- If `f` is an isomorphism, then the transferred natural transformation is an isomorphism.
@@ -266,8 +266,8 @@ The converse is given in `transfer_nat_trans_self_iso`.
 theorem transferNatTransSelf_of_iso (f : L₂ ⟶ L₁) [IsIso (transferNatTransSelf adj₁ adj₂ f)] :
     IsIso f :=
   by
-  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂).symm (transfer_nat_trans_self adj₁ adj₂ f))
-    by simpa using this
+  suffices IsIso ((transferNatTransSelf adj₁ adj₂).symm (transferNatTransSelf adj₁ adj₂ f)) by
+    simpa using this
   infer_instance
 #align category_theory.transfer_nat_trans_self_of_iso CategoryTheory.transferNatTransSelf_of_iso
 
@@ -279,8 +279,8 @@ The converse is given in `transfer_nat_trans_self_symm_iso`.
 theorem transferNatTransSelf_symm_of_iso (f : R₁ ⟶ R₂)
     [IsIso ((transferNatTransSelf adj₁ adj₂).symm f)] : IsIso f :=
   by
-  suffices is_iso ((transfer_nat_trans_self adj₁ adj₂) ((transfer_nat_trans_self adj₁ adj₂).symm f))
-    by simpa using this
+  suffices IsIso ((transferNatTransSelf adj₁ adj₂) ((transferNatTransSelf adj₁ adj₂).symm f)) by
+    simpa using this
   infer_instance
 #align category_theory.transfer_nat_trans_self_symm_of_iso CategoryTheory.transferNatTransSelf_symm_of_iso
 

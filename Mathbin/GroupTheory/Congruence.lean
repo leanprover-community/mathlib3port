@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.congruence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,11 +91,11 @@ variable {M}
 /-- The inductively defined smallest additive congruence relation containing a given binary
     relation. -/
 inductive AddConGen.Rel [Add M] (r : M → M → Prop) : M → M → Prop
-  | of : ∀ x y, r x y → AddConGen.Rel x y
-  | refl : ∀ x, AddConGen.Rel x x
-  | symm : ∀ x y, AddConGen.Rel x y → AddConGen.Rel y x
-  | trans : ∀ x y z, AddConGen.Rel x y → AddConGen.Rel y z → AddConGen.Rel x z
-  | add : ∀ w x y z, AddConGen.Rel w x → AddConGen.Rel y z → AddConGen.Rel (w + y) (x + z)
+  | of : ∀ x y, r x y → add_con_gen.rel x y
+  | refl : ∀ x, add_con_gen.rel x x
+  | symm : ∀ x y, add_con_gen.rel x y → add_con_gen.rel y x
+  | trans : ∀ x y z, add_con_gen.rel x y → add_con_gen.rel y z → add_con_gen.rel x z
+  | add : ∀ w x y z, add_con_gen.rel w x → add_con_gen.rel y z → add_con_gen.rel (w + y) (x + z)
 #align add_con_gen.rel AddConGen.Rel
 -/
 
@@ -104,11 +104,11 @@ inductive AddConGen.Rel [Add M] (r : M → M → Prop) : M → M → Prop
     relation. -/
 @[to_additive AddConGen.Rel]
 inductive ConGen.Rel [Mul M] (r : M → M → Prop) : M → M → Prop
-  | of : ∀ x y, r x y → ConGen.Rel x y
-  | refl : ∀ x, ConGen.Rel x x
-  | symm : ∀ x y, ConGen.Rel x y → ConGen.Rel y x
-  | trans : ∀ x y z, ConGen.Rel x y → ConGen.Rel y z → ConGen.Rel x z
-  | mul : ∀ w x y z, ConGen.Rel w x → ConGen.Rel y z → ConGen.Rel (w * y) (x * z)
+  | of : ∀ x y, r x y → con_gen.rel x y
+  | refl : ∀ x, con_gen.rel x x
+  | symm : ∀ x y, con_gen.rel x y → con_gen.rel y x
+  | trans : ∀ x y z, con_gen.rel x y → con_gen.rel y z → con_gen.rel x z
+  | mul : ∀ w x y z, con_gen.rel w x → con_gen.rel y z → con_gen.rel (w * y) (x * z)
 #align con_gen.rel ConGen.Rel
 #align add_con_gen.rel AddConGen.Rel
 -/
@@ -141,7 +141,7 @@ instance : CoeFun (Con M) fun _ => M → M → Prop :=
 
 #print Con.rel_eq_coe /-
 @[simp, to_additive]
-theorem rel_eq_coe (c : Con M) : c.R = c :=
+theorem rel_eq_coe (c : Con M) : c.r = c :=
   rfl
 #align con.rel_eq_coe Con.rel_eq_coe
 #align add_con.rel_eq_coe AddCon.rel_eq_coe
@@ -202,7 +202,7 @@ variable {c}
 /-- The map sending a congruence relation to its underlying binary relation is injective. -/
 @[to_additive
       "The map sending an additive congruence relation to its underlying binary relation\nis injective."]
-theorem ext' {c d : Con M} (H : c.R = d.R) : c = d :=
+theorem ext' {c d : Con M} (H : c.r = d.r) : c = d :=
   by
   rcases c with ⟨⟨⟩⟩
   rcases d with ⟨⟨⟩⟩
@@ -244,7 +244,7 @@ theorem ext_iff {c d : Con M} : (∀ x y, c x y ↔ d x y) ↔ c = d :=
 /-- Two congruence relations are equal iff their underlying binary relations are equal. -/
 @[to_additive
       "Two additive congruence relations are equal iff their underlying binary relations\nare equal."]
-theorem ext'_iff {c d : Con M} : c.R = d.R ↔ c = d :=
+theorem ext'_iff {c d : Con M} : c.r = d.r ↔ c = d :=
   ⟨ext', fun h => h ▸ rfl⟩
 #align con.ext'_iff Con.ext'_iff
 #align add_con.ext'_iff AddCon.ext'_iff
@@ -257,7 +257,7 @@ def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M
     where
   toSetoid := Setoid.ker f
   mul' _ _ _ _ h1 h2 := by
-    dsimp [Setoid.ker, on_fun] at *
+    dsimp [Setoid.ker, onFun] at *
     rw [h, h1, h2, h]
 #align con.mul_ker Con.mulKer
 #align add_con.add_ker AddCon.addKer
@@ -270,7 +270,7 @@ def mulKer (f : M → P) (h : ∀ x y, f (x * y) = f x * f y) : Con M
 @[to_additive Prod
       "Given types with additions `M, N`, the product of two congruence relations\n`c` on `M` and `d` on `N`: `(x₁, x₂), (y₁, y₂) ∈ M × N` are related by `c.prod d` iff `x₁`\nis related to `y₁` by `c` and `x₂` is related to `y₂` by `d`."]
 protected def prod (c : Con M) (d : Con N) : Con (M × N) :=
-  { c.toSetoid.Prod d.toSetoid with
+  { c.toSetoid.prod d.toSetoid with
     mul' := fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩ }
 #align con.prod Con.prod
 #align add_con.prod AddCon.prod
@@ -572,7 +572,7 @@ Case conversion may be inaccurate. Consider using '#align con.inf_def Con.inf_de
     operations. -/
 @[to_additive
       "The infimum of two additive congruence relations equals the infimum of the\nunderlying binary operations."]
-theorem inf_def {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
+theorem inf_def {c d : Con M} : (c ⊓ d).r = c.r ⊓ d.r :=
   rfl
 #align con.inf_def Con.inf_def
 #align add_con.inf_def AddCon.inf_def
@@ -615,7 +615,7 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = infₛ { s : Con M | ∀ x
 @[to_additive add_con_gen_le
       "The smallest additive congruence relation containing a binary\nrelation `r` is contained in any additive congruence relation containing `r`."]
 theorem conGen_le {r : M → M → Prop} {c : Con M} (h : ∀ x y, r x y → @Setoid.r _ c.toSetoid x y) :
-    conGen r ≤ c := by rw [con_gen_eq] <;> exact infₛ_le h
+    conGen r ≤ c := by rw [conGen_eq] <;> exact infₛ_le h
 #align con.con_gen_le Con.conGen_le
 #align add_con.add_con_gen_le AddCon.addConGen_le
 -/
@@ -637,7 +637,7 @@ theorem conGen_mono {r s : M → M → Prop} (h : ∀ x y, r x y → s x y) : co
   to_additive add_con_gen_of_add_con
       "Additive congruence relations equal the smallest\nadditive congruence relation in which they are contained."]
 theorem conGen_of_con (c : Con M) : conGen c = c :=
-  le_antisymm (by rw [con_gen_eq] <;> exact infₛ_le fun _ _ => id) ConGen.Rel.of
+  le_antisymm (by rw [conGen_eq] <;> exact infₛ_le fun _ _ => id) ConGen.Rel.of
 #align con.con_gen_of_con Con.conGen_of_con
 #align add_con.add_con_gen_of_con AddCon.addConGen_of_addCon
 -/
@@ -666,8 +666,8 @@ Case conversion may be inaccurate. Consider using '#align con.sup_eq_con_gen Con
       "The supremum of additive congruence relations `c, d` equals the\nsmallest additive congruence relation containing the binary relation '`x` is related to `y`\nby `c` or `d`'."]
 theorem sup_eq_conGen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x y :=
   by
-  rw [con_gen_eq]
-  apply congr_arg Inf
+  rw [conGen_eq]
+  apply congr_arg infₛ
   simp only [le_def, or_imp, ← forall_and]
 #align con.sup_eq_con_gen Con.sup_eq_conGen
 #align add_con.sup_eq_add_con_gen AddCon.sup_eq_addConGen
@@ -682,7 +682,7 @@ Case conversion may be inaccurate. Consider using '#align con.sup_def Con.sup_de
     the supremum of the underlying binary operations. -/
 @[to_additive
       "The supremum of two additive congruence relations equals the smallest additive\ncongruence relation containing the supremum of the underlying binary operations."]
-theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_con_gen] <;> rfl
+theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.r ⊔ d.r) := by rw [sup_eq_conGen] <;> rfl
 #align con.sup_def Con.sup_def
 #align add_con.sup_def AddCon.sup_def
 
@@ -699,8 +699,8 @@ Case conversion may be inaccurate. Consider using '#align con.Sup_eq_con_gen Con
       "The supremum of a set of additive congruence relations `S` equals\nthe smallest additive congruence relation containing the binary relation 'there exists `c ∈ S`\nsuch that `x` is related to `y` by `c`'."]
 theorem supₛ_eq_conGen (S : Set (Con M)) : supₛ S = conGen fun x y => ∃ c : Con M, c ∈ S ∧ c x y :=
   by
-  rw [con_gen_eq]
-  apply congr_arg Inf
+  rw [conGen_eq]
+  apply congr_arg infₛ
   ext
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
 #align con.Sup_eq_con_gen Con.supₛ_eq_conGen
@@ -719,7 +719,7 @@ Case conversion may be inaccurate. Consider using '#align con.Sup_def Con.supₛ
 theorem supₛ_def {S : Set (Con M)} :
     supₛ S = conGen (supₛ (@Set.image (Con M) (M → M → Prop) coeFn S)) :=
   by
-  rw [Sup_eq_con_gen, supₛ_image]
+  rw [supₛ_eq_conGen, supₛ_image]
   congr with (x y)
   simp only [supₛ_image, supᵢ_apply, supᵢ_Prop_eq, exists_prop, rel_eq_coe]
 #align con.Sup_def Con.supₛ_def
@@ -787,7 +787,7 @@ Case conversion may be inaccurate. Consider using '#align con.map_of_surjective_
       "A specialization of 'the smallest additive congruence relation containing\nan additive congruence relation `c` equals `c`'."]
 theorem mapOfSurjective_eq_mapGen {c : Con M} {f : M → N} (H : ∀ x y, f (x * y) = f x * f y)
     (h : mulKer f H ≤ c) (hf : Surjective f) : c.mapGen f = c.mapOfSurjective f H h hf := by
-  rw [← con_gen_of_con (c.map_of_surjective f H h hf)] <;> rfl
+  rw [← conGen_of_con (c.map_of_surjective f H h hf)] <;> rfl
 #align con.map_of_surjective_eq_map_gen Con.mapOfSurjective_eq_mapGen
 #align add_con.map_of_surjective_eq_map_gen AddCon.mapOfSurjective_eq_mapGen
 
@@ -835,7 +835,7 @@ def correspondence : { d // c ≤ d } ≃o Con c.Quotient
       ext fun _ _ =>
         ⟨fun h =>
           let ⟨a, b, hx, hy, H⟩ := h
-          d.1.trans (d.1.symm <| d.2 <| c.Eq.1 hx) <| d.1.trans H <| d.2 <| c.Eq.1 hy,
+          d.1.trans (d.1.symm <| d.2 <| c.eq.1 hx) <| d.1.trans H <| d.2 <| c.eq.1 hy,
           fun h => ⟨_, _, rfl, rfl, h⟩⟩
   right_inv d :=
     let Hm :
@@ -952,7 +952,7 @@ Case conversion may be inaccurate. Consider using '#align con.to_submonoid Con.t
 @[to_additive
       "Coercion from a congruence relation `c` on an `add_monoid` `M`\nto the `add_submonoid` of `M × M` whose elements are `(x, y)` such that `x`\nis related to `y` by `c`."]
 instance toSubmonoid : Coe (Con M) (Submonoid (M × M)) :=
-  ⟨fun c => c.Submonoid M⟩
+  ⟨fun c => c.submonoid M⟩
 #align con.to_submonoid Con.toSubmonoid
 #align add_con.to_add_submonoid AddCon.toAddSubmonoid
 
@@ -1064,7 +1064,7 @@ Case conversion may be inaccurate. Consider using '#align con.mk'_ker Con.mk'_ke
   to_additive
       "The kernel of the natural homomorphism from an `add_monoid` to its quotient by\nan additive congruence relation `c` equals `c`."]
 theorem mk'_ker : ker c.mk' = c :=
-  ext fun _ _ => c.Eq
+  ext fun _ _ => c.eq
 #align con.mk'_ker Con.mk'_ker
 #align add_con.mk'_ker AddCon.mk'_ker
 
@@ -1359,7 +1359,7 @@ Case conversion may be inaccurate. Consider using '#align con.ker_lift_injective
 @[to_additive
       "An `add_monoid` homomorphism `f` induces an injective homomorphism on the quotient\nby `f`'s kernel."]
 theorem kerLift_injective (f : M →* P) : Injective (kerLift f) := fun x y =>
-  Quotient.inductionOn₂' x y fun _ _ => (ker f).Eq.2
+  Quotient.inductionOn₂' x y fun _ _ => (ker f).eq.2
 #align con.ker_lift_injective Con.kerLift_injective
 #align add_con.ker_lift_injective AddCon.kerLift_injective
 
@@ -1390,7 +1390,7 @@ Case conversion may be inaccurate. Consider using '#align con.map_apply Con.map_
 @[to_additive
       "Given additive congruence relations `c, d` on an `add_monoid` such that `d`\ncontains `c`, the definition of the homomorphism from the quotient by `c` to the quotient by `d`\ninduced by `d`'s quotient map."]
 theorem map_apply {c d : Con M} (h : c ≤ d) (x) :
-    c.map d h x = c.lift d.mk' (fun x y hc => d.Eq.2 <| h hc) x :=
+    c.map d h x = c.lift d.mk' (fun x y hc => d.eq.2 <| h hc) x :=
   rfl
 #align con.map_apply Con.map_apply
 #align add_con.map_apply AddCon.map_apply
@@ -1434,7 +1434,7 @@ def quotientKerEquivOfRightInverse (f : M →* P) (g : P → M) (hf : Function.R
   { kerLift f with
     toFun := kerLift f
     invFun := coe ∘ g
-    left_inv := fun x => kerLift_injective _ (by rw [Function.comp_apply, ker_lift_mk, hf])
+    left_inv := fun x => kerLift_injective _ (by rw [Function.comp_apply, kerLift_mk, hf])
     right_inv := hf }
 #align con.quotient_ker_equiv_of_right_inverse Con.quotientKerEquivOfRightInverse
 #align add_con.quotient_ker_equiv_of_right_inverse AddCon.quotientKerEquivOfRightInverse
@@ -1453,7 +1453,7 @@ For a `computable` version, see `con.quotient_ker_equiv_of_right_inverse`.
       "The first isomorphism theorem for `add_monoid`s in the case of a surjective\nhomomorphism.\n\nFor a `computable` version, see `add_con.quotient_ker_equiv_of_right_inverse`.\n"]
 noncomputable def quotientKerEquivOfSurjective (f : M →* P) (hf : Surjective f) :
     (ker f).Quotient ≃* P :=
-  quotientKerEquivOfRightInverse _ _ hf.HasRightInverse.choose_spec
+  quotientKerEquivOfRightInverse _ _ hf.hasRightInverse.choose_spec
 #align con.quotient_ker_equiv_of_surjective Con.quotientKerEquivOfSurjective
 #align add_con.quotient_ker_equiv_of_surjective AddCon.quotientKerEquivOfSurjective
 
@@ -1504,7 +1504,7 @@ Case conversion may be inaccurate. Consider using '#align con.pow Con.powₓ'. -
 protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
     ∀ (n : ℕ) {w x}, c w x → c (w ^ n) (x ^ n)
   | 0, w, x, h => by simpa using c.refl _
-  | Nat.succ n, w, x, h => by simpa [pow_succ] using c.mul h (pow n h)
+  | nat.succ n, w, x, h => by simpa [pow_succ] using c.mul h (pow n h)
 #align con.pow Con.pow
 #align add_con.nsmul AddCon.nsmul
 
@@ -1637,7 +1637,7 @@ Case conversion may be inaccurate. Consider using '#align con.zpow Con.zpowₓ'.
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
-  | Int.ofNat n, w, x, h => by simpa only [zpow_ofNat] using c.pow _ h
+  | int.of_nat n, w, x, h => by simpa only [zpow_ofNat] using c.pow _ h
   | -[n+1], w, x, h => by simpa only [zpow_negSucc] using c.inv (c.pow _ h)
 #align con.zpow Con.zpow
 #align add_con.zsmul AddCon.zsmul
@@ -1734,7 +1734,7 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') : α :=
   by
   refine'
-    @Con.hrecOn₂ M M _ _ c c (fun x y => x * y = 1 → y * x = 1 → α) (u : c.quotient)
+    @con.hrec_on₂ M M _ _ c c (fun x y => x * y = 1 → y * x = 1 → α) (u : c.quotient)
       (↑u⁻¹ : c.quotient)
       (fun (x y : M) (hxy : (x * y : c.quotient) = 1) (hyx : (y * x : c.quotient) = 1) =>
         f x y (c.eq.1 hxy) (c.eq.1 hyx))
@@ -1763,7 +1763,7 @@ Case conversion may be inaccurate. Consider using '#align con.lift_on_units_mk C
 theorem liftOnUnits_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx')
     (x y : M) (hxy hyx) :
-    liftOnUnits ⟨(x : c.Quotient), y, hxy, hyx⟩ f Hf = f x y (c.Eq.1 hxy) (c.Eq.1 hyx) :=
+    liftOnUnits ⟨(x : c.Quotient), y, hxy, hyx⟩ f Hf = f x y (c.eq.1 hxy) (c.eq.1 hyx) :=
   rfl
 #align con.lift_on_units_mk Con.liftOnUnits_mk
 #align add_con.lift_on_add_units_mk AddCon.liftOnAddUnits_mk
@@ -1776,7 +1776,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align con.induction_on_units Con.induction_on_unitsₓ'. -/
 @[elab_as_elim, to_additive]
 theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient)
-    (H : ∀ (x y : M) (hxy : c (x * y) 1) (hyx : c (y * x) 1), p ⟨x, y, c.Eq.2 hxy, c.Eq.2 hyx⟩) :
+    (H : ∀ (x y : M) (hxy : c (x * y) 1) (hyx : c (y * x) 1), p ⟨x, y, c.eq.2 hxy, c.eq.2 hyx⟩) :
     p u := by
   rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩
   exact H x y (c.eq.1 h₁) (c.eq.1 h₂)
@@ -1836,7 +1836,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align con.mul_distrib_mul_action Con.mulDistribMulActionₓ'. -/
 instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribMulAction α M]
     [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
-  { c.MulAction with
+  { c.mulAction with
     smul := (· • ·)
     smul_one := fun r => congr_arg Quotient.mk'' <| smul_one _
     smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }

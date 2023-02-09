@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.henselian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ class HenselianLocalRing (R : Type _) [CommRing R] extends LocalRing R : Prop wh
 instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K
     where is_henselian f hf a₀ h₁ h₂ :=
     by
-    refine' ⟨a₀, _, _⟩ <;> rwa [(maximal_ideal K).eq_bot_of_prime, Ideal.mem_bot] at *
+    refine' ⟨a₀, _, _⟩ <;> rwa [(maximalIdeal K).eq_bot_of_prime, Ideal.mem_bot] at *
     rw [sub_self]
 #align field.henselian Field.henselian
 
@@ -132,7 +132,7 @@ theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
         ∀ (f : R[X]) (hf : f.Monic) (a₀ : ResidueField R) (h₁ : aeval a₀ f = 0)
           (h₂ : aeval a₀ f.derivative ≠ 0), ∃ a : R, f.IsRoot a ∧ residue R a = a₀,
         ∀ {K : Type u} [Field K],
-          ∀ (φ : R →+* K) (hφ : surjective φ) (f : R[X]) (hf : f.Monic) (a₀ : K)
+          ∀ (φ : R →+* K) (hφ : Surjective φ) (f : R[X]) (hf : f.Monic) (a₀ : K)
             (h₁ : f.eval₂ φ a₀ = 0) (h₂ : f.derivative.eval₂ φ a₀ ≠ 0),
             ∃ a : R, f.IsRoot a ∧ φ a = a₀] :=
   by
@@ -145,7 +145,7 @@ theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
     intro f hf a₀ h₁ h₂
     specialize H f hf (residue R a₀)
     have aux := flip mem_nonunits_iff.mp h₂
-    simp only [aeval_def, residue_field.algebra_map_eq, eval₂_at_apply, ←
+    simp only [aeval_def, ResidueField.algebraMap_eq, eval₂_at_apply, ←
       Ideal.Quotient.eq_zero_iff_mem, ← LocalRing.mem_maximalIdeal] at H h₁ aux
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ aux
     refine' ⟨a, ha₁, _⟩
@@ -155,7 +155,7 @@ theorem HenselianLocalRing.tFAE (R : Type u) [CommRing R] [LocalRing R] :
   · intro hR K _K φ hφ f hf a₀ h₁ h₂
     obtain ⟨a₀, rfl⟩ := hφ a₀
     have H := HenselianLocalRing.is_henselian f hf a₀
-    simp only [← ker_eq_maximal_ideal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂
+    simp only [← ker_eq_maximalIdeal φ hφ, eval₂_at_apply, φ.mem_ker] at H h₁ h₂
     obtain ⟨a, ha₁, ha₂⟩ := H h₁ _
     · refine' ⟨a, ha₁, _⟩
       rwa [φ.map_sub, sub_eq_zero] at ha₂
@@ -170,7 +170,7 @@ instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R
   jac := by
     rw [Ideal.jacobson, le_infₛ_iff]
     rintro I ⟨-, hI⟩
-    exact (eq_maximal_ideal hI).ge
+    exact (eq_maximalIdeal hI).ge
   is_henselian := by
     intro f hf a₀ h₁ h₂
     refine' HenselianLocalRing.is_henselian f hf a₀ h₁ _

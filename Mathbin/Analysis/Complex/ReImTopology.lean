@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.re_im_topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -179,7 +179,7 @@ theorem closure_reProdIm (s t : Set ℝ) : closure (s ×ℂ t) = closure s ×ℂ
 #align complex.closure_re_prod_im Complex.closure_reProdIm
 
 theorem interior_reProdIm (s t : Set ℝ) : interior (s ×ℂ t) = interior s ×ℂ interior t := by
-  rw [re_prod_im, re_prod_im, interior_inter, interior_preimage_re, interior_preimage_im]
+  rw [reProdIm, reProdIm, interior_inter, interior_preimage_re, interior_preimage_im]
 #align complex.interior_re_prod_im Complex.interior_reProdIm
 
 theorem frontier_reProdIm (s t : Set ℝ) :
@@ -190,13 +190,13 @@ theorem frontier_reProdIm (s t : Set ℝ) :
 
 theorem frontier_setOf_le_re_and_le_im (a b : ℝ) :
     frontier { z | a ≤ re z ∧ b ≤ im z } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ b ≤ im z } := by
-  simpa only [closure_Ici, frontier_Ici] using frontier_re_prod_im (Ici a) (Ici b)
+  simpa only [closure_Ici, frontier_Ici] using frontier_reProdIm (Ici a) (Ici b)
 #align complex.frontier_set_of_le_re_and_le_im Complex.frontier_setOf_le_re_and_le_im
 
 theorem frontier_setOf_le_re_and_im_le (a b : ℝ) :
     frontier { z | a ≤ re z ∧ im z ≤ b } = { z | a ≤ re z ∧ im z = b ∨ re z = a ∧ im z ≤ b } := by
   simpa only [closure_Ici, closure_Iic, frontier_Ici, frontier_Iic] using
-    frontier_re_prod_im (Ici a) (Iic b)
+    frontier_reProdIm (Ici a) (Iic b)
 #align complex.frontier_set_of_le_re_and_im_le Complex.frontier_setOf_le_re_and_im_le
 
 end Complex
@@ -206,14 +206,14 @@ open Complex Metric
 variable {s t : Set ℝ}
 
 theorem IsOpen.reProdIm (hs : IsOpen s) (ht : IsOpen t) : IsOpen (s ×ℂ t) :=
-  (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
+  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
 #align is_open.re_prod_im IsOpen.reProdIm
 
 theorem IsClosed.reProdIm (hs : IsClosed s) (ht : IsClosed t) : IsClosed (s ×ℂ t) :=
-  (hs.Preimage continuous_re).inter (ht.Preimage continuous_im)
+  (hs.preimage continuous_re).inter (ht.preimage continuous_im)
 #align is_closed.re_prod_im IsClosed.reProdIm
 
 theorem Metric.Bounded.reProdIm (hs : Bounded s) (ht : Bounded t) : Bounded (s ×ℂ t) :=
-  antilipschitz_equivRealProd.bounded_preimage (hs.Prod ht)
+  antilipschitz_equivRealProd.bounded_preimage (hs.prod ht)
 #align metric.bounded.re_prod_im Metric.Bounded.reProdIm
 

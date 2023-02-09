@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.algebraic_closure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
   MvPolynomial.aeval fun f =>
     if hf : f ∈ s then
       rootOfSplits _
-        ((splits_prod_iff _ fun (j : MonicIrreducible k) _ => j.2.2.NeZero).1
+        ((splits_prod_iff _ fun (j : MonicIrreducible k) _ => j.2.2.ne_zero).1
           (SplittingField.splits _) f hf)
         (mt isUnit_iff_degree_eq_zero.2 f.2.2.not_unit)
     else 37
@@ -79,21 +79,21 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
 theorem toSplittingField_evalXSelf {s : Finset (MonicIrreducible k)} {f} (hf : f ∈ s) :
     toSplittingField k s (evalXSelf k f) = 0 :=
   by
-  rw [to_splitting_field, eval_X_self, ← AlgHom.coe_to_ringHom, hom_eval₂, AlgHom.coe_to_ringHom,
-    MvPolynomial.aeval_x, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebraMap]
-  exact map_root_of_splits _ _ _
+  rw [toSplittingField, evalXSelf, ← AlgHom.coe_to_ringHom, hom_eval₂, AlgHom.coe_to_ringHom,
+    MvPolynomial.aeval_x, dif_pos hf, ← algebraMap_eq, AlgHom.comp_algebraMap]
+  exact map_rootOfSplits _ _ _
 #align algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.toSplittingField_evalXSelf
 
 theorem spanEval_ne_top : spanEval k ≠ ⊤ :=
   by
-  rw [Ideal.ne_top_iff_one, span_eval, Ideal.span, ← Set.image_univ,
+  rw [Ideal.ne_top_iff_one, spanEval, Ideal.span, ← Set.image_univ,
     Finsupp.mem_span_image_iff_total]
   rintro ⟨v, _, hv⟩
-  replace hv := congr_arg (to_splitting_field k v.support) hv
+  replace hv := congr_arg (toSplittingField k v.support) hv
   rw [AlgHom.map_one, Finsupp.total_apply, Finsupp.sum, AlgHom.map_sum, Finset.sum_eq_zero] at hv
   · exact zero_ne_one hv
   intro j hj
-  rw [smul_eq_mul, AlgHom.map_mul, to_splitting_field_eval_X_self k hj, mul_zero]
+  rw [smul_eq_mul, AlgHom.map_mul, toSplittingField_evalXSelf k hj, mul_zero]
 #align algebraic_closure.span_eval_ne_top AlgebraicClosure.spanEval_ne_top
 
 /-- A random maximal ideal that contains `span_eval k` -/
@@ -143,16 +143,16 @@ theorem AdjoinMonic.isIntegral (z : AdjoinMonic k) : IsIntegral k z :=
       @isIntegral_mul _ _ _ _ _ _ (Ideal.Quotient.mk _ _) ih
         ⟨f, f.2.1,
           by
-          erw [adjoin_monic.algebra_map, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
-          exact le_max_ideal k (Ideal.subset_span ⟨f, rfl⟩)⟩
+          erw [AdjoinMonic.algebraMap, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
+          exact le_maxIdeal k (Ideal.subset_span ⟨f, rfl⟩)⟩
 #align algebraic_closure.adjoin_monic.is_integral AlgebraicClosure.AdjoinMonic.isIntegral
 
 theorem AdjoinMonic.exists_root {f : k[X]} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AdjoinMonic k, f.eval₂ (toAdjoinMonic k) x = 0 :=
   ⟨Ideal.Quotient.mk _ <| x (⟨f, hfm, hfi⟩ : MonicIrreducible k),
     by
-    rw [to_adjoin_monic, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
-    exact le_max_ideal k (Ideal.subset_span <| ⟨_, rfl⟩)⟩
+    rw [toAdjoinMonic, ← hom_eval₂, Ideal.Quotient.eq_zero_iff_mem]
+    exact le_maxIdeal k (Ideal.subset_span <| ⟨_, rfl⟩)⟩
 #align algebraic_closure.adjoin_monic.exists_root AlgebraicClosure.AdjoinMonic.exists_root
 
 /-- The `n`th step of constructing `algebraic_closure`, together with its `field` instance. -/
@@ -276,14 +276,14 @@ theorem exists_ofStep (z : AlgebraicClosure k) : ∃ n x, ofStep k n x = z :=
 theorem exists_root {f : Polynomial (AlgebraicClosure k)} (hfm : f.Monic) (hfi : Irreducible f) :
     ∃ x : AlgebraicClosure k, f.eval x = 0 :=
   by
-  have : ∃ n p, Polynomial.map (of_step k n) p = f := by
+  have : ∃ n p, Polynomial.map (ofStep k n) p = f := by
     convert Ring.DirectLimit.Polynomial.exists_of f
   obtain ⟨n, p, rfl⟩ := this
   rw [monic_map_iff] at hfm
-  have := hfm.irreducible_of_irreducible_map (of_step k n) p hfi
-  obtain ⟨x, hx⟩ := to_step_succ.exists_root k hfm this
-  refine' ⟨of_step k (n + 1) x, _⟩
-  rw [← of_step_succ k n, eval_map, ← hom_eval₂, hx, RingHom.map_zero]
+  have := hfm.irreducible_of_irreducible_map (ofStep k n) p hfi
+  obtain ⟨x, hx⟩ := toStepSucc.exists_root k hfm this
+  refine' ⟨ofStep k (n + 1) x, _⟩
+  rw [← ofStep_succ k n, eval_map, ← hom_eval₂, hx, RingHom.map_zero]
 #align algebraic_closure.exists_root AlgebraicClosure.exists_root
 
 instance : IsAlgClosed (AlgebraicClosure k) :=

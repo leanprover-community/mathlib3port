@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.monotone
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ variable {x y : ℝ}
 theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) { x | 1 ≤ x } :=
   by
   -- TODO: can be strengthened to exp (-1) ≤ x
-  simp only [MonotoneOn, mem_set_of_eq]
+  simp only [MonotoneOn, mem_setOf_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := lt_of_lt_of_le zero_lt_one hex
   have y_pos : 0 < y := lt_of_lt_of_le zero_lt_one hey
@@ -46,7 +46,7 @@ theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) { x | 1 
 
 theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) { x | exp 1 ≤ x } :=
   by
-  simp only [AntitoneOn, mem_set_of_eq]
+  simp only [AntitoneOn, mem_setOf_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := (exp_pos 1).trans_le hex
   have y_pos : 0 < y := (exp_pos 1).trans_le hey
@@ -64,7 +64,7 @@ theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) { x | ex
 theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
     AntitoneOn (fun x : ℝ => log x / x ^ a) { x | exp (1 / a) ≤ x } :=
   by
-  simp only [AntitoneOn, mem_set_of_eq]
+  simp only [AntitoneOn, mem_setOf_eq]
   intro x hex y hey hxy
   have x_pos : 0 < x := lt_of_lt_of_le (exp_pos (1 / a)) hex
   have y_pos : 0 < y := by linarith
@@ -75,7 +75,7 @@ theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
   rw [← div_self (ne_of_lt ha).symm, div_eq_mul_one_div a a, rpow_mul y_nonneg, rpow_mul x_nonneg,
     log_rpow (rpow_pos_of_pos y_pos a), log_rpow (rpow_pos_of_pos x_pos a), mul_div_assoc,
     mul_div_assoc, mul_le_mul_left (one_div_pos.mpr ha)]
-  · refine' log_div_self_antitone_on _ _ _
+  · refine' log_div_self_antitoneOn _ _ _
     · simp only [Set.mem_setOf_eq]
       convert rpow_le_rpow _ hex (le_of_lt ha)
       rw [← exp_mul]

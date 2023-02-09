@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.nontrivial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,7 +205,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.non
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
     (hf : Function.Injective f) : Nontrivial β :=
   let ⟨x, y, h⟩ := exists_pair_ne α
-  ⟨⟨f x, f y, hf.Ne h⟩⟩
+  ⟨⟨f x, f y, hf.ne h⟩⟩
 #align function.injective.nontrivial Function.Injective.nontrivial
 
 #print Function.Surjective.nontrivial /-
@@ -242,13 +242,13 @@ protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
 
 #print nontrivial_prod_right /-
 instance nontrivial_prod_right [Nonempty α] [Nontrivial β] : Nontrivial (α × β) :=
-  Prod.snd_surjective.Nontrivial
+  Prod.snd_surjective.nontrivial
 #align nontrivial_prod_right nontrivial_prod_right
 -/
 
 #print nontrivial_prod_left /-
 instance nontrivial_prod_left [Nontrivial α] [Nonempty β] : Nontrivial (α × β) :=
-  Prod.fst_surjective.Nontrivial
+  Prod.fst_surjective.nontrivial
 #align nontrivial_prod_left nontrivial_prod_left
 -/
 
@@ -260,7 +260,7 @@ variable {I : Type _} {f : I → Type _}
 /-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] :
     Nontrivial (∀ i : I, f i) := by
-  classical exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial
+  classical exact (Function.update_injective (fun i => Classical.choice (inst i)) i').nontrivial
 #align pi.nontrivial_at Pi.nontrivial_at
 -/
 

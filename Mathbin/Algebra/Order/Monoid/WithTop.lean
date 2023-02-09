@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : One.{u1} α] [_inst_2 : LT.{u1} α] {a : α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_2) (WithTop.some.{u1} α a) (OfNat.ofNat.{u1} (WithTop.{u1} α) 1 (One.toOfNat1.{u1} (WithTop.{u1} α) (WithTop.one.{u1} α _inst_1)))) (LT.lt.{u1} α _inst_2 a (OfNat.ofNat.{u1} α 1 (One.toOfNat1.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_one WithTop.coe_lt_oneₓ'. -/
 @[simp, norm_cast, to_additive coe_lt_zero]
-theorem coe_lt_one [LT α] {a : α} : (a : WithTop α) < 1 ↔ a < 1 :=
+theorem coe_lt_one [has_lt α] {a : α} : (a : WithTop α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_top.coe_lt_one WithTop.coe_lt_one
 #align with_top.coe_lt_zero WithTop.coe_lt_zero
@@ -190,7 +190,7 @@ theorem add_eq_top : a + b = ⊤ ↔ a = ⊤ ∨ b = ⊤ := by
 
 #print WithTop.add_ne_top /-
 theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
-  add_eq_top.Not.trans not_or
+  add_eq_top.not.trans not_or
 #align with_top.add_ne_top WithTop.add_ne_top
 -/
 
@@ -572,7 +572,7 @@ protected def AddHom.withTopMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) 
 @[simps (config := { fullyApplied := false })]
 protected def AddMonoidHom.withTopMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
     (f : M →+ N) : WithTop M →+ WithTop N :=
-  { f.toZeroHom.withTop_map, f.toAddHom.withTop_map with toFun := WithTop.map f }
+  { f.toZeroHom.withTopMap, f.toAddHom.withTopMap with toFun := WithTop.map f }
 #align add_monoid_hom.with_top_map AddMonoidHom.withTopMap
 -/
 
@@ -825,7 +825,7 @@ protected def AddHom.withBotMap {M N : Type _} [Add M] [Add N] (f : AddHom M N) 
 @[simps (config := { fullyApplied := false })]
 protected def AddMonoidHom.withBotMap {M N : Type _} [AddZeroClass M] [AddZeroClass N]
     (f : M →+ N) : WithBot M →+ WithBot N :=
-  { f.toZeroHom.withBot_map, f.toAddHom.withBot_map with toFun := WithBot.map f }
+  { f.toZeroHom.withBotMap, f.toAddHom.withBotMap with toFun := WithBot.map f }
 #align add_monoid_hom.with_bot_map AddMonoidHom.withBotMap
 -/
 

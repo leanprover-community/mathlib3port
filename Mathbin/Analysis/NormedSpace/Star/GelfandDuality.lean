@@ -4,7 +4,7 @@ Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,8 +78,8 @@ the Gelfand-Mazur isomorphism `normed_ring.alg_equiv_complex_of_complete`. -/
 noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
   characterSpace.equivAlgHom.symm <|
     ((@NormedRing.algEquivComplexOfComplete (A ⧸ I) _ _
-              (letI := quotient.field I
-              @isUnit_iff_ne_zero (A ⧸ I) _)
+              (letI := Quotient.field I
+              @is_unit_iff_ne_zero (A ⧸ I) _)
               _).symm :
           A ⧸ I →ₐ[ℂ] ℂ).comp
       (Quotient.mkₐ ℂ I)
@@ -88,8 +88,8 @@ noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
 theorem Ideal.toCharacterSpace_apply_eq_zero_of_mem {a : A} (ha : a ∈ I) :
     I.toCharacterSpace a = 0 := by
   unfold Ideal.toCharacterSpace
-  simpa only [character_space.equiv_alg_hom_symm_coe, AlgHom.coe_comp, AlgEquiv.coe_algHom,
-    quotient.mkₐ_eq_mk, Function.comp_apply, quotient.eq_zero_iff_mem.mpr ha, spectrum.zero_eq,
+  simpa only [characterSpace.equivAlgHom_symm_coe, AlgHom.coe_comp, AlgEquiv.coe_algHom,
+    Quotient.mkₐ_eq_mk, Function.comp_apply, quotient.eq_zero_iff_mem.mpr ha, spectrum.zero_eq,
     NormedRing.algEquivComplexOfComplete_symm_apply] using
     Set.eq_of_mem_singleton (Set.singleton_nonempty (0 : ℂ)).some_mem
 #align ideal.to_character_space_apply_eq_zero_of_mem Ideal.toCharacterSpace_apply_eq_zero_of_mem
@@ -109,11 +109,11 @@ theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
 /-- The Gelfand transform is spectrum-preserving. -/
 theorem spectrum.gelfandTransform_eq (a : A) : spectrum ℂ (gelfandTransform ℂ A a) = spectrum ℂ a :=
   by
-  refine' Set.Subset.antisymm (AlgHom.spectrum_apply_subset (gelfand_transform ℂ A) a) fun z hz => _
+  refine' Set.Subset.antisymm (AlgHom.spectrum_apply_subset (gelfandTransform ℂ A) a) fun z hz => _
   obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
   simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id, RingHom.id_apply] at
     hf
-  exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
+  exact (ContinuousMap.spectrum_eq_range (gelfandTransform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
 #align spectrum.gelfand_transform_eq spectrum.gelfandTransform_eq
 
 instance [Nontrivial A] : Nonempty (characterSpace ℂ A) :=
@@ -139,12 +139,12 @@ variable (A)
 theorem gelfandTransform_isometry : Isometry (gelfandTransform ℂ A) :=
   by
   nontriviality A
-  refine' AddMonoidHomClass.isometry_of_norm (gelfand_transform ℂ A) fun a => _
+  refine' AddMonoidHomClass.isometry_of_norm (gelfandTransform ℂ A) fun a => _
   /- By `spectrum.gelfand_transform_eq`, the spectra of `star a * a` and its
     `gelfand_transform` coincide. Therefore, so do their spectral radii, and since they are
     self-adjoint, so also do their norms. Applying the C⋆-property of the norm and taking square
     roots shows that the norm is preserved. -/
-  have : spectralRadius ℂ (gelfand_transform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) :=
+  have : spectralRadius ℂ (gelfandTransform ℂ A (star a * a)) = spectralRadius ℂ (star a * a) :=
     by
     unfold spectralRadius
     rw [spectrum.gelfandTransform_eq]
@@ -157,16 +157,16 @@ theorem gelfandTransform_isometry : Isometry (gelfandTransform ℂ A) :=
 /-- The Gelfand transform is bijective when the algebra is a C⋆-algebra over `ℂ`. -/
 theorem gelfandTransform_bijective : Function.Bijective (gelfandTransform ℂ A) :=
   by
-  refine' ⟨(gelfandTransform_isometry A).Injective, _⟩
-  suffices (gelfand_transform ℂ A).range = ⊤ by
-    exact fun x => this.symm ▸ (gelfand_transform ℂ A).mem_range.mp (this.symm ▸ Algebra.mem_top)
+  refine' ⟨(gelfandTransform_isometry A).injective, _⟩
+  suffices (gelfandTransform ℂ A).range = ⊤ by
+    exact fun x => this.symm ▸ (gelfandTransform ℂ A).mem_range.mp (this.symm ▸ Algebra.mem_top)
   /- Because the `gelfand_transform ℂ A` is an isometry, it has closed range, and so by the
     Stone-Weierstrass theorem, it suffices to show that the image of the Gelfand transform separates
     points in `C(character_space ℂ A, ℂ)` and is closed under `star`. -/
-  have h : (gelfand_transform ℂ A).range.topologicalClosure = (gelfand_transform ℂ A).range :=
+  have h : (gelfandTransform ℂ A).range.topologicalClosure = (gelfandTransform ℂ A).range :=
     le_antisymm
       (Subalgebra.topologicalClosure_minimal _ le_rfl
-        (gelfandTransform_isometry A).ClosedEmbedding.closed_range)
+        (gelfandTransform_isometry A).closedEmbedding.closed_range)
       (Subalgebra.le_topologicalClosure _)
   refine'
     h ▸
@@ -178,7 +178,7 @@ theorem gelfandTransform_bijective : Function.Bijective (gelfandTransform ℂ A)
     exact fun h =>
       Subtype.ext
         (ContinuousLinearMap.ext fun a =>
-          h (gelfand_transform ℂ A a) ⟨gelfand_transform ℂ A a, ⟨a, rfl⟩, rfl⟩)
+          h (gelfandTransform ℂ A a) ⟨gelfandTransform ℂ A a, ⟨a, rfl⟩, rfl⟩)
   /- If `f = gelfand_transform ℂ A a`, then `star f` is also in the range of `gelfand_transform ℂ A`
     using the argument `star a`. The key lemma below may be hard to spot; it's `map_star` coming from
     `weak_dual.star_hom_class`, which is a nontrivial result. -/

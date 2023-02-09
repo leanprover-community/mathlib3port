@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.admissible_absolute_value
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
     -- Since the `M` subsets contain more than `M * M^n` elements total,
     -- there must be a subset that contains more than `M^n` elements.
     obtain ⟨s, hs⟩ :=
-      @Fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
+      @fintype.exists_lt_card_fiber_of_mul_lt_card _ _ _ _ _ t (M ^ n)
         (by simpa only [Fintype.card_fin, pow_succ] using Nat.lt_succ_self (M ^ n.succ))
     refine'
       ⟨fun i => (finset.univ.filter fun x => t x = s).toList.nthLe i _, _, fun i₀ i₁ => ht _ _ _⟩
@@ -154,7 +154,7 @@ theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : 
   by
   let e := Fintype.equivFin ι
   obtain ⟨i₀, i₁, ne, h⟩ := h.exists_approx_aux (Fintype.card ι) hε hb fun x y => A x (e.symm y)
-  refine' ⟨i₀, i₁, Ne, fun k => _⟩
+  refine' ⟨i₀, i₁, ne, fun k => _⟩
   convert h (e k) <;> simp only [e.symm_apply_apply]
 #align absolute_value.is_admissible.exists_approx AbsoluteValue.IsAdmissible.exists_approx
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.with_bot_top
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,14 +151,14 @@ theorem image_coe_Iic : (coe : α → WithTop α) '' Iic a = Iic a := by
 theorem image_coe_Icc : (coe : α → WithTop α) '' Icc a b = Icc a b := by
   rw [← preimage_coe_Icc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (subset.trans Icc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
+      (Subset.trans Icc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
 #align with_top.image_coe_Icc WithTop.image_coe_Icc
 -/
 
 #print WithTop.image_coe_Ico /-
 theorem image_coe_Ico : (coe : α → WithTop α) '' Ico a b = Ico a b := by
   rw [← preimage_coe_Ico, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (subset.trans Ico_subset_Iio_self <| Iio_subset_Iio le_top)]
+    inter_eq_self_of_subset_left (Subset.trans Ico_subset_Iio_self <| Iio_subset_Iio le_top)]
 #align with_top.image_coe_Ico WithTop.image_coe_Ico
 -/
 
@@ -166,14 +166,14 @@ theorem image_coe_Ico : (coe : α → WithTop α) '' Ico a b = Ico a b := by
 theorem image_coe_Ioc : (coe : α → WithTop α) '' Ioc a b = Ioc a b := by
   rw [← preimage_coe_Ioc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (subset.trans Ioc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
+      (Subset.trans Ioc_subset_Iic_self <| Iic_subset_Iio.2 <| coe_lt_top b)]
 #align with_top.image_coe_Ioc WithTop.image_coe_Ioc
 -/
 
 #print WithTop.image_coe_Ioo /-
 theorem image_coe_Ioo : (coe : α → WithTop α) '' Ioo a b = Ioo a b := by
   rw [← preimage_coe_Ioo, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (subset.trans Ioo_subset_Iio_self <| Iio_subset_Iio le_top)]
+    inter_eq_self_of_subset_left (Subset.trans Ioo_subset_Iio_self <| Iio_subset_Iio le_top)]
 #align with_top.image_coe_Ioo WithTop.image_coe_Ioo
 -/
 
@@ -302,14 +302,14 @@ theorem image_coe_Ici : (coe : α → WithBot α) '' Ici a = Ici a := by
 theorem image_coe_Icc : (coe : α → WithBot α) '' Icc a b = Icc a b := by
   rw [← preimage_coe_Icc, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (subset.trans Icc_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
+      (Subset.trans Icc_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
 #align with_bot.image_coe_Icc WithBot.image_coe_Icc
 -/
 
 #print WithBot.image_coe_Ioc /-
 theorem image_coe_Ioc : (coe : α → WithBot α) '' Ioc a b = Ioc a b := by
   rw [← preimage_coe_Ioc, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (subset.trans Ioc_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
+    inter_eq_self_of_subset_left (Subset.trans Ioc_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
 #align with_bot.image_coe_Ioc WithBot.image_coe_Ioc
 -/
 
@@ -317,14 +317,14 @@ theorem image_coe_Ioc : (coe : α → WithBot α) '' Ioc a b = Ioc a b := by
 theorem image_coe_Ico : (coe : α → WithBot α) '' Ico a b = Ico a b := by
   rw [← preimage_coe_Ico, image_preimage_eq_inter_range, range_coe,
     inter_eq_self_of_subset_left
-      (subset.trans Ico_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
+      (Subset.trans Ico_subset_Ici_self <| Ici_subset_Ioi.2 <| bot_lt_coe a)]
 #align with_bot.image_coe_Ico WithBot.image_coe_Ico
 -/
 
 #print WithBot.image_coe_Ioo /-
 theorem image_coe_Ioo : (coe : α → WithBot α) '' Ioo a b = Ioo a b := by
   rw [← preimage_coe_Ioo, image_preimage_eq_inter_range, range_coe,
-    inter_eq_self_of_subset_left (subset.trans Ioo_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
+    inter_eq_self_of_subset_left (Subset.trans Ioo_subset_Ioi_self <| Ioi_subset_Ioi bot_le)]
 #align with_bot.image_coe_Ioo WithBot.image_coe_Ioo
 -/
 

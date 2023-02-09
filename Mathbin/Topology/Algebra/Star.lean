@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.algebra.star
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,19 +47,19 @@ variable [TopologicalSpace R] [Star R] [ContinuousStar R]
 
 #print continuousOn_star /-
 theorem continuousOn_star {s : Set R} : ContinuousOn star s :=
-  continuous_star.ContinuousOn
+  continuous_star.continuousOn
 #align continuous_on_star continuousOn_star
 -/
 
 #print continuousWithinAt_star /-
 theorem continuousWithinAt_star {s : Set R} {x : R} : ContinuousWithinAt star s x :=
-  continuous_star.ContinuousWithinAt
+  continuous_star.continuousWithinAt
 #align continuous_within_at_star continuousWithinAt_star
 -/
 
 #print continuousAt_star /-
 theorem continuousAt_star {x : R} : ContinuousAt star x :=
-  continuous_star.ContinuousAt
+  continuous_star.continuousAt
 #align continuous_at_star continuousAt_star
 -/
 
@@ -77,7 +77,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto.star Filter.Tendsto.starₓ'. -/
 theorem Filter.Tendsto.star {f : α → R} {l : Filter α} {y : R} (h : Tendsto f l (𝓝 y)) :
     Tendsto (fun x => star (f x)) l (𝓝 (star y)) :=
-  (continuous_star.Tendsto y).comp h
+  (continuous_star.tendsto y).comp h
 #align filter.tendsto.star Filter.Tendsto.star
 
 variable [TopologicalSpace α] {f : α → R} {s : Set α} {x : α}
@@ -121,7 +121,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align continuous_within_at.star ContinuousWithinAt.starₓ'. -/
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) :
     ContinuousWithinAt (fun x => star (f x)) s x :=
-  hf.unit
+  hf.star
 #align continuous_within_at.star ContinuousWithinAt.star
 
 #print starContinuousMap /-
@@ -145,10 +145,10 @@ instance {C : ι → Type _} [∀ i, TopologicalSpace (C i)] [∀ i, Star (C i)]
     where continuous_star := continuous_pi fun i => Continuous.star (continuous_apply i)
 
 instance [Star R] [TopologicalSpace R] [ContinuousStar R] : ContinuousStar Rᵐᵒᵖ :=
-  ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.unit⟩
+  ⟨MulOpposite.continuous_op.comp <| MulOpposite.continuous_unop.star⟩
 
 instance [Monoid R] [StarSemigroup R] [TopologicalSpace R] [ContinuousStar R] : ContinuousStar Rˣ :=
-  ⟨continuous_induced_rng.2 Units.continuous_embedProduct.unit⟩
+  ⟨continuous_induced_rng.2 Units.continuous_embedProduct.star⟩
 
 end Instances
 

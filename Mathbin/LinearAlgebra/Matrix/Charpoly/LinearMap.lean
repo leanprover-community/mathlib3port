@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.linear_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -177,13 +177,13 @@ def Matrix.isRepresentation : Subalgebra R (Matrix ι ι R)
 /-- The map sending a matrix to the endomorphism it represents. This is an `R`-algebra morphism. -/
 noncomputable def Matrix.isRepresentation.toEnd : Matrix.isRepresentation R b →ₐ[R] Module.End R M
     where
-  toFun A := A.2.some
-  map_one' := (1 : Matrix.isRepresentation R b).2.choose_spec.Eq hb Matrix.Represents.one
-  map_mul' A₁ A₂ := (A₁ * A₂).2.choose_spec.Eq hb (A₁.2.choose_spec.mul A₂.2.choose_spec)
-  map_zero' := (0 : Matrix.isRepresentation R b).2.choose_spec.Eq hb Matrix.Represents.zero
-  map_add' A₁ A₂ := (A₁ + A₂).2.choose_spec.Eq hb (A₁.2.choose_spec.add A₂.2.choose_spec)
+  toFun A := A.2.choose
+  map_one' := (1 : Matrix.isRepresentation R b).2.choose_spec.eq hb Matrix.Represents.one
+  map_mul' A₁ A₂ := (A₁ * A₂).2.choose_spec.eq hb (A₁.2.choose_spec.mul A₂.2.choose_spec)
+  map_zero' := (0 : Matrix.isRepresentation R b).2.choose_spec.eq hb Matrix.Represents.zero
+  map_add' A₁ A₂ := (A₁ + A₂).2.choose_spec.eq hb (A₁.2.choose_spec.add A₂.2.choose_spec)
   commutes' r :=
-    (r • 1 : Matrix.isRepresentation R b).2.choose_spec.Eq hb (Matrix.Represents.one.smul r)
+    (r • 1 : Matrix.isRepresentation R b).2.choose_spec.eq hb (Matrix.Represents.one.smul r)
 #align matrix.is_representation.to_End Matrix.isRepresentation.toEnd
 
 theorem Matrix.isRepresentation.toEnd_represents (A : Matrix.isRepresentation R b) :
@@ -194,7 +194,7 @@ theorem Matrix.isRepresentation.toEnd_represents (A : Matrix.isRepresentation R 
 theorem Matrix.isRepresentation.eq_toEnd_of_represents (A : Matrix.isRepresentation R b)
     {f : Module.End R M} (h : (A : Matrix ι ι R).Represents b f) :
     Matrix.isRepresentation.toEnd R b hb A = f :=
-  A.2.choose_spec.Eq hb h
+  A.2.choose_spec.eq hb h
 #align matrix.is_representation.eq_to_End_of_represents Matrix.isRepresentation.eq_toEnd_of_represents
 
 theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I : Ideal R)
@@ -214,7 +214,7 @@ theorem Matrix.isRepresentation.toEnd_exists_mem_ideal (f : Module.End R M) (I :
     rwa [Ideal.finsuppTotal_apply_eq_of_fintype] at hbM'
   exact
     ⟨⟨A, f, this⟩, Matrix.isRepresentation.eq_toEnd_of_represents R b hb ⟨A, f, this⟩ this,
-      fun i j => (bM' (b j) i).Prop⟩
+      fun i j => (bM' (b j) i).prop⟩
 #align matrix.is_representation.to_End_exists_mem_ideal Matrix.isRepresentation.toEnd_exists_mem_ideal
 
 theorem Matrix.isRepresentation.toEnd_surjective :

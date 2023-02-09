@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.tor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,8 +47,8 @@ def tor (n : ℕ) : C ⥤ C ⥤ C
     where
   obj X := Functor.leftDerived ((tensoringLeft C).obj X) n
   map X Y f := NatTrans.leftDerived ((tensoringLeft C).map f) n
-  map_id' X := by rw [(tensoring_left C).map_id, nat_trans.left_derived_id]
-  map_comp' X Y Z f g := by rw [(tensoring_left C).map_comp, nat_trans.left_derived_comp]
+  map_id' X := by rw [(tensoringLeft C).map_id, NatTrans.leftDerived_id]
+  map_comp' X Y Z f g := by rw [(tensoringLeft C).map_comp, NatTrans.leftDerived_comp]
 #align category_theory.Tor CategoryTheory.tor
 
 /-- An alternative definition of `Tor`, where we left-derive in the first factor instead. -/
@@ -57,9 +57,8 @@ def tor' (n : ℕ) : C ⥤ C ⥤ C :=
   Functor.flip
     { obj := fun X => Functor.leftDerived ((tensoringRight C).obj X) n
       map := fun X Y f => NatTrans.leftDerived ((tensoringRight C).map f) n
-      map_id' := fun X => by rw [(tensoring_right C).map_id, nat_trans.left_derived_id]
-      map_comp' := fun X Y Z f g => by
-        rw [(tensoring_right C).map_comp, nat_trans.left_derived_comp] }
+      map_id' := fun X => by rw [(tensoringRight C).map_id, NatTrans.leftDerived_id]
+      map_comp' := fun X Y Z f g => by rw [(tensoringRight C).map_comp, NatTrans.leftDerived_comp] }
 #align category_theory.Tor' CategoryTheory.tor'
 
 open ZeroObject
@@ -73,8 +72,8 @@ def torSuccOfProjective (X Y : C) [Projective Y] (n : ℕ) : ((tor C (n + 1)).ob
 def tor'SuccOfProjective (X Y : C) [Projective X] (n : ℕ) : ((tor' C (n + 1)).obj X).obj Y ≅ 0 :=
   by
   -- This unfortunately needs a manual `dsimp`, to avoid a slow unification problem.
-  dsimp only [Tor', functor.flip]
-  exact ((tensoring_right C).obj Y).leftDerivedObjProjectiveSucc n X
+  dsimp only [tor', Functor.flip]
+  exact ((tensoringRight C).obj Y).leftDerivedObjProjectiveSucc n X
 #align category_theory.Tor'_succ_of_projective CategoryTheory.tor'SuccOfProjective
 
 end CategoryTheory

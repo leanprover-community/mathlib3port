@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module tactic.field_simp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,7 +20,7 @@ Tactic to clear denominators in algebraic expressions, based on `simp` with a sp
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Try to prove a goal of the form `x ≠ 0` by calling `assumption`, or `norm_num1` if `x` is
@@ -111,7 +111,7 @@ unsafe def field_simp (no_dflt : parse only_flag) (hs : parse simp_arg_list)
   let hs :=
     simp_arg_type.except `one_div ::
       simp_arg_type.except `mul_eq_zero :: simp_arg_type.except `one_divp :: hs
-  propagate_tags (simp_core cfg.toSimpConfig cfg.discharger no_dflt hs attr_names locat >> skip)
+  propagate_tags (simp_core cfg.to_simp_config cfg.discharger no_dflt hs attr_names locat >> skip)
 #align tactic.interactive.field_simp tactic.interactive.field_simp
 
 add_tactic_doc

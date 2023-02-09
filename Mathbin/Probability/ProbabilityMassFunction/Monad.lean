@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.monad
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ variable (s : Set α)
 @[simp]
 theorem toOuterMeasure_pure_apply : (pure a).toOuterMeasure s = if a ∈ s then 1 else 0 :=
   by
-  refine' (to_outer_measure_apply (pure a) s).trans _
+  refine' (toOuterMeasure_apply (pure a) s).trans _
   split_ifs with ha ha
   · refine' (tsum_congr fun b => _).trans (tsum_ite_eq a 1)
     exact ite_eq_left_iff.2 fun hb => symm (ite_eq_right_iff.2 fun h => (hb <| h.symm ▸ ha).elim)
@@ -151,7 +151,7 @@ theorem toOuterMeasure_bind_apply :
     (p.bind f).toOuterMeasure s = ∑' a, p a * (f a).toOuterMeasure s :=
   calc
     (p.bind f).toOuterMeasure s = ∑' b, if b ∈ s then ∑' a, p a * f a b else 0 := by
-      simp [to_outer_measure_apply, Set.indicator_apply]
+      simp [toOuterMeasure_apply, Set.indicator_apply]
     _ = ∑' (b) (a), p a * if b ∈ s then f a b else 0 := tsum_congr fun b => by split_ifs <;> simp
     _ = ∑' (a) (b), p a * if b ∈ s then f a b else 0 :=
       tsum_comm' Ennreal.summable (fun _ => Ennreal.summable) fun _ => Ennreal.summable
@@ -159,7 +159,7 @@ theorem toOuterMeasure_bind_apply :
     _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 :=
       tsum_congr fun a => (congr_arg fun x => p a * x) <| tsum_congr fun b => by split_ifs <;> rfl
     _ = ∑' a, p a * (f a).toOuterMeasure s :=
-      tsum_congr fun a => by simp only [to_outer_measure_apply, Set.indicator_apply]
+      tsum_congr fun a => by simp only [toOuterMeasure_apply, Set.indicator_apply]
     
 #align pmf.to_outer_measure_bind_apply Pmf.toOuterMeasure_bind_apply
 
@@ -210,8 +210,8 @@ theorem support_bindOnSupport :
     (p.bindOnSupport f).support = ⋃ (a : α) (h : a ∈ p.support), (f a h).support :=
   by
   refine' Set.ext fun b => _
-  simp only [Ennreal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
-    not_forall, mul_eq_zero, Set.mem_unionᵢ]
+  simp only [Ennreal.tsum_eq_zero, not_or, mem_support_iff, bindOnSupport_apply, Ne.def, not_forall,
+    mul_eq_zero, Set.mem_unionᵢ]
   exact
     ⟨fun hb =>
       let ⟨a, ⟨ha, ha'⟩⟩ := hb
@@ -223,7 +223,7 @@ theorem support_bindOnSupport :
 
 theorem mem_support_bindOnSupport_iff (b : β) :
     b ∈ (p.bindOnSupport f).support ↔ ∃ (a : α)(h : a ∈ p.support), b ∈ (f a h).support := by
-  simp only [support_bind_on_support, Set.mem_setOf_eq, Set.mem_unionᵢ]
+  simp only [support_bindOnSupport, Set.mem_setOf_eq, Set.mem_unionᵢ]
 #align pmf.mem_support_bind_on_support_iff Pmf.mem_support_bindOnSupport_iff
 
 /-- `bind_on_support` reduces to `bind` if `f` doesn't depend on the additional hypothesis -/
@@ -234,14 +234,14 @@ theorem bindOnSupport_eq_bind (p : Pmf α) (f : α → Pmf β) :
   ext (b x)
   have : ∀ a, ite (p a = 0) 0 (p a * f a b) = p a * f a b := fun a =>
     ite_eq_right_iff.2 fun h => h.symm ▸ symm (zero_mul <| f a b)
-  simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, mul_ite, mul_zero,
+  simp only [bindOnSupport_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, mul_ite, mul_zero,
     this]
 #align pmf.bind_on_support_eq_bind Pmf.bindOnSupport_eq_bind
 
 theorem bindOnSupport_eq_zero_iff (b : β) :
     p.bindOnSupport f b = 0 ↔ ∀ (a) (ha : p a ≠ 0), f a ha b = 0 :=
   by
-  simp only [bind_on_support_apply, Ennreal.tsum_eq_zero, mul_eq_zero, or_iff_not_imp_left]
+  simp only [bindOnSupport_apply, Ennreal.tsum_eq_zero, mul_eq_zero, or_iff_not_imp_left]
   exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
 #align pmf.bind_on_support_eq_zero_iff Pmf.bindOnSupport_eq_zero_iff
 
@@ -250,7 +250,7 @@ theorem pure_bindOnSupport (a : α) (f : ∀ (a' : α) (ha : a' ∈ (pure a).sup
     (pure a).bindOnSupport f = f a ((mem_support_pure_iff a a).mpr rfl) :=
   by
   refine' Pmf.ext fun b => _
-  simp only [bind_on_support_apply, pure_apply]
+  simp only [bindOnSupport_apply, pure_apply]
   refine' trans (tsum_congr fun a' => _) (tsum_ite_eq a _)
   by_cases h : a' = a <;> simp [h]
 #align pmf.pure_bind_on_support Pmf.pure_bindOnSupport
@@ -268,7 +268,7 @@ theorem bindOnSupport_bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf �
           g b ((mem_support_bindOnSupport_iff f b).mpr ⟨a, ha, hb⟩) :=
   by
   refine' Pmf.ext fun a => _
-  simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
+  simp only [ennreal.coe_eq_coe.symm, bindOnSupport_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
   simp only [Ennreal.tsum_eq_zero, Ennreal.coe_eq_coe, Ennreal.coe_eq_zero, Ennreal.coe_zero,
     dite_eq_left_iff, mul_eq_zero]
@@ -286,9 +286,9 @@ theorem bindOnSupport_comm (p : Pmf α) (q : Pmf β) (f : ∀ a ∈ p.support, �
       q.bindOnSupport fun b hb => p.bindOnSupport fun a ha => f a ha b hb :=
   by
   apply Pmf.ext; rintro c
-  simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
+  simp only [ennreal.coe_eq_coe.symm, bindOnSupport_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  refine' trans Ennreal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
+  refine' trans ennreal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
   split_ifs with h1 h2 h2 <;> ring
 #align pmf.bind_on_support_comm Pmf.bindOnSupport_comm
 
@@ -303,7 +303,7 @@ theorem toOuterMeasure_bindOnSupport_apply :
     (p.bindOnSupport f).toOuterMeasure s =
       ∑' a, p a * if h : p a = 0 then 0 else (f a h).toOuterMeasure s :=
   by
-  simp only [to_outer_measure_apply, Set.indicator_apply, bind_on_support_apply]
+  simp only [toOuterMeasure_apply, Set.indicator_apply, bindOnSupport_apply]
   calc
     (∑' b, ite (b ∈ s) (∑' a, p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0) =
         ∑' (b) (a), ite (b ∈ s) (p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
@@ -323,9 +323,7 @@ theorem toOuterMeasure_bindOnSupport_apply :
 @[simp]
 theorem toMeasure_bindOnSupport_apply [MeasurableSpace β] (hs : MeasurableSet s) :
     (p.bindOnSupport f).toMeasure s = ∑' a, p a * if h : p a = 0 then 0 else (f a h).toMeasure s :=
-  by
-  simp only [to_measure_apply_eq_to_outer_measure_apply _ _ hs,
-    to_outer_measure_bind_on_support_apply]
+  by simp only [toMeasure_apply_eq_toOuterMeasure_apply _ _ hs, toOuterMeasure_bindOnSupport_apply]
 #align pmf.to_measure_bind_on_support_apply Pmf.toMeasure_bindOnSupport_apply
 
 end Measure

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.nat.choose.vandermonde
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,12 +33,12 @@ theorem Nat.add_choose_eq (m n k : ℕ) :
     (m + n).choose k = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 :=
   by
   calc
-    (m + n).choose k = ((X + 1) ^ (m + n)).coeff k := _
-    _ = ((X + 1) ^ m * (X + 1) ^ n).coeff k := by rw [pow_add]
+    (m + n).choose k = ((x + 1) ^ (m + n)).coeff k := _
+    _ = ((x + 1) ^ m * (x + 1) ^ n).coeff k := by rw [pow_add]
     _ = ∑ ij : ℕ × ℕ in antidiagonal k, m.choose ij.1 * n.choose ij.2 := _
     
-  · rw [coeff_X_add_one_pow, Nat.cast_id]
+  · rw [coeff_x_add_one_pow, Nat.cast_id]
   · rw [coeff_mul, Finset.sum_congr rfl]
-    simp only [coeff_X_add_one_pow, Nat.cast_id, eq_self_iff_true, imp_true_iff]
+    simp only [coeff_x_add_one_pow, Nat.cast_id, eq_self_iff_true, imp_true_iff]
 #align nat.add_choose_eq Nat.add_choose_eq
 

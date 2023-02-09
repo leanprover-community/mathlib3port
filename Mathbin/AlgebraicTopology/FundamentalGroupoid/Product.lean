@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,12 +80,12 @@ def piIso : CategoryTheory.GroupoidCat.of (∀ i : I, πₓ (X i)) ≅ πₓ (To
   Hom := piToPiTop X
   inv := CategoryTheory.Functor.pi' (proj X)
   hom_inv_id' := by
-    change pi_to_pi_Top X ⋙ CategoryTheory.Functor.pi' (proj X) = 𝟭 _
+    change piToPiTop X ⋙ CategoryTheory.Functor.pi' (proj X) = 𝟭 _
     apply CategoryTheory.Functor.ext <;> intros
     · ext
       simp; · rfl
   inv_hom_id' := by
-    change CategoryTheory.Functor.pi' (proj X) ⋙ pi_to_pi_Top X = 𝟭 _
+    change CategoryTheory.Functor.pi' (proj X) ⋙ piToPiTop X = 𝟭 _
     apply CategoryTheory.Functor.ext <;> intros
     · suffices Path.Homotopic.pi ((CategoryTheory.Functor.pi' (proj X)).map f) = f by simpa
       change (CategoryTheory.Functor.pi' (proj X)).map f with fun i =>
@@ -105,7 +105,7 @@ def coneDiscreteComp :
 #align fundamental_groupoid_functor.cone_discrete_comp FundamentalGroupoidFunctor.coneDiscreteComp
 
 theorem coneDiscreteComp_obj_mapCone :
-    (coneDiscreteComp X).Functor.obj (π.mapCone (TopCat.piFan.{u} X)) =
+    (coneDiscreteComp X).functor.obj (π.mapCone (TopCat.piFan.{u} X)) =
       Limits.Fan.mk (πₓ (TopCat.of (∀ i, X i))) (proj X) :=
   rfl
 #align fundamental_groupoid_functor.cone_discrete_comp_obj_map_cone FundamentalGroupoidFunctor.coneDiscreteComp_obj_mapCone
@@ -118,17 +118,17 @@ def piTopToPiCone :
 #align fundamental_groupoid_functor.pi_Top_to_pi_cone FundamentalGroupoidFunctor.piTopToPiCone
 
 instance : IsIso (piTopToPiCone X) :=
-  haveI : is_iso (pi_Top_to_pi_cone X).Hom := (inferInstance : is_iso (pi_iso X).inv)
-  limits.cones.cone_iso_of_hom_iso (pi_Top_to_pi_cone X)
+  haveI : IsIso (piTopToPiCone X).hom := (inferInstance : IsIso (piIso X).inv)
+  Limits.Cones.cone_iso_of_hom_iso (piTopToPiCone X)
 
 /-- The fundamental groupoid functor preserves products -/
 def preservesProduct : Limits.PreservesLimit (Discrete.functor X) π :=
   by
-  apply limits.preserves_limit_of_preserves_limit_cone (TopCat.piFanIsLimit.{u} X)
-  apply (limits.is_limit.of_cone_equiv (cone_discrete_comp X)).toFun
-  simp only [cone_discrete_comp_obj_map_cone]
-  apply limits.is_limit.of_iso_limit _ (as_iso (pi_Top_to_pi_cone X)).symm
-  exact Groupoid.pi_limit_fan_is_limit _
+  apply Limits.preservesLimitOfPreservesLimitCone (TopCat.piFanIsLimit.{u} X)
+  apply (Limits.IsLimit.ofConeEquiv (coneDiscreteComp X)).toFun
+  simp only [coneDiscreteComp_obj_mapCone]
+  apply Limits.IsLimit.ofIsoLimit _ (asIso (piTopToPiCone X)).symm
+  exact GroupoidCat.piLimitFanIsLimit _
 #align fundamental_groupoid_functor.preserves_product FundamentalGroupoidFunctor.preservesProduct
 
 end Preserves
@@ -198,7 +198,7 @@ def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopC
   inv := (projLeft A B).prod' (projRight A B)
   hom_inv_id' :=
     by
-    change prod_to_prod_Top A B ⋙ (proj_left A B).prod' (proj_right A B) = 𝟭 _
+    change prodToProdTop A B ⋙ (projLeft A B).prod' (projRight A B) = 𝟭 _
     apply CategoryTheory.Functor.hext;
     · intros
       ext <;> simp <;> rfl
@@ -207,7 +207,7 @@ def prodIso : CategoryTheory.GroupoidCat.of (πₓ A × πₓ B) ≅ πₓ (TopC
     simpa
   inv_hom_id' :=
     by
-    change (proj_left A B).prod' (proj_right A B) ⋙ prod_to_prod_Top A B = 𝟭 _
+    change (projLeft A B).prod' (projRight A B) ⋙ prodToProdTop A B = 𝟭 _
     apply CategoryTheory.Functor.hext;
     · intros
       ext <;> simp <;> rfl

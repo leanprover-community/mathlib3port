@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.insert
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,13 +30,13 @@ theorem balance1_eq₁ (l : Rbnode α) (x r₁ y r₂ v t) :
 theorem balance1_eq₂ (l₁ : Rbnode α) (y l₂ x r v t) :
     getColor l₁ ≠ red →
       balance1 l₁ y (red_node l₂ x r) v t = red_node (black_node l₁ y l₂) x (black_node r v t) :=
-  by cases l₁ <;> simp [get_color, balance1, false_imp_iff]
+  by cases l₁ <;> simp [getColor, balance1, false_imp_iff]
 #align rbnode.balance1_eq₂ Rbnode.balance1_eq₂
 
 @[simp]
 theorem balance1_eq₃ (l : Rbnode α) (y r v t) :
     getColor l ≠ red → getColor r ≠ red → balance1 l y r v t = black_node (red_node l y r) v t := by
-  cases l <;> cases r <;> simp [get_color, balance1, false_imp_iff]
+  cases l <;> cases r <;> simp [getColor, balance1, false_imp_iff]
 #align rbnode.balance1_eq₃ Rbnode.balance1_eq₃
 
 @[simp]
@@ -50,13 +50,13 @@ theorem balance2_eq₂ (l₁ : Rbnode α) (y l₂ x₂ r₂ v t) :
     getColor l₁ ≠ red →
       balance2 l₁ y (red_node l₂ x₂ r₂) v t =
         red_node (black_node t v l₁) y (black_node l₂ x₂ r₂) :=
-  by cases l₁ <;> simp [get_color, balance2, false_imp_iff]
+  by cases l₁ <;> simp [getColor, balance2, false_imp_iff]
 #align rbnode.balance2_eq₂ Rbnode.balance2_eq₂
 
 @[simp]
 theorem balance2_eq₃ (l : Rbnode α) (y r v t) :
     getColor l ≠ red → getColor r ≠ red → balance2 l y r v t = black_node t v (red_node l y r) := by
-  cases l <;> cases r <;> simp [get_color, balance2, false_imp_iff]
+  cases l <;> cases r <;> simp [getColor, balance2, false_imp_iff]
 #align rbnode.balance2_eq₃ Rbnode.balance2_eq₃
 
 -- We can use the same induction principle for balance1 and balance2
@@ -67,30 +67,30 @@ theorem Balance.cases {p : Rbnode α → α → Rbnode α → Prop} (l y r)
   by
   cases l <;> cases r
   any_goals apply red_left
-  any_goals apply red_right <;> simp [get_color] <;> contradiction <;> done
-  any_goals apply other <;> simp [get_color] <;> contradiction <;> done
+  any_goals apply red_right <;> simp [getColor] <;> contradiction <;> done
+  any_goals apply other <;> simp [getColor] <;> contradiction <;> done
 #align rbnode.balance.cases Rbnode.Balance.cases
 
 theorem balance1_ne_leaf (l : Rbnode α) (x r v t) : balance1 l x r v t ≠ leaf := by
-  apply balance.cases l x r <;> intros <;> simp [*] <;> contradiction
+  apply Balance.cases l x r <;> intros <;> simp [*] <;> contradiction
 #align rbnode.balance1_ne_leaf Rbnode.balance1_ne_leaf
 
 theorem balance1Node_ne_leaf {s : Rbnode α} (a : α) (t : Rbnode α) :
     s ≠ leaf → balance1Node s a t ≠ leaf := by
   intro h; cases s
   · contradiction
-  all_goals simp [balance1_node]; apply balance1_ne_leaf
+  all_goals simp [balance1Node]; apply balance1_ne_leaf
 #align rbnode.balance1_node_ne_leaf Rbnode.balance1Node_ne_leaf
 
 theorem balance2_ne_leaf (l : Rbnode α) (x r v t) : balance2 l x r v t ≠ leaf := by
-  apply balance.cases l x r <;> intros <;> simp [*] <;> contradiction
+  apply Balance.cases l x r <;> intros <;> simp [*] <;> contradiction
 #align rbnode.balance2_ne_leaf Rbnode.balance2_ne_leaf
 
 theorem balance2Node_ne_leaf {s : Rbnode α} (a : α) (t : Rbnode α) :
     s ≠ leaf → balance2Node s a t ≠ leaf := by
   intro h; cases s
   · contradiction
-  all_goals simp [balance2_node]; apply balance2_ne_leaf
+  all_goals simp [balance2Node]; apply balance2_ne_leaf
 #align rbnode.balance2_node_ne_leaf Rbnode.balance2Node_ne_leaf
 
 variable (lt : α → α → Prop)
@@ -124,12 +124,12 @@ theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} (t x) (is_leaf 
   case black_node a y b =>
     cases h : cmpUsing lt x y
     case lt =>
-      by_cases get_color a = red
+      by_cases getColor a = red
       · apply is_black_lt_red <;> assumption
       · apply is_black_lt_not_red <;> assumption
     case eq => apply is_black_eq <;> assumption
     case gt =>
-      by_cases get_color b = red
+      by_cases getColor b = red
       · apply is_black_gt_red <;> assumption
       · apply is_black_gt_not_red <;> assumption
 #align rbnode.ins.induction Rbnode.ins.induction
@@ -140,7 +140,7 @@ theorem isSearchable_balance1 {l y r v t lo hi} :
       IsSearchable lt r (some y) (some v) →
         IsSearchable lt t (some v) hi → IsSearchable lt (balance1 l y r v t) lo hi :=
   by
-  apply balance.cases l y r <;> intros <;> simp [*] <;>
+  apply Balance.cases l y r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
 #align rbnode.is_searchable_balance1 Rbnode.isSearchable_balance1
@@ -155,11 +155,11 @@ theorem isSearchable_balance1Node {t} [IsTrans α lt] :
     run_tac
       is_searchable_tactic
   · cases lo
-    · apply is_searchable_none_low_of_is_searchable_some_low
+    · apply isSearchable_none_low_of_isSearchable_some_low
       assumption
     · simp at *
-      apply is_searchable_some_low_of_is_searchable_of_lt <;> assumption
-  all_goals apply is_searchable_balance1 <;> assumption
+      apply isSearchable_some_low_of_isSearchable_of_lt <;> assumption
+  all_goals apply isSearchable_balance1 <;> assumption
 #align rbnode.is_searchable_balance1_node Rbnode.isSearchable_balance1Node
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
@@ -168,7 +168,7 @@ theorem isSearchable_balance2 {l y r v t lo hi} :
       IsSearchable lt l (some v) (some y) →
         IsSearchable lt r (some y) hi → IsSearchable lt (balance2 l y r v t) lo hi :=
   by
-  apply balance.cases l y r <;> intros <;> simp [*] <;>
+  apply Balance.cases l y r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
 #align rbnode.is_searchable_balance2 Rbnode.isSearchable_balance2
@@ -183,12 +183,12 @@ theorem isSearchable_balance2Node {t} [IsTrans α lt] :
     run_tac
       is_searchable_tactic
   · cases hi
-    · apply is_searchable_none_high_of_is_searchable_some_high
+    · apply isSearchable_none_high_of_isSearchable_some_high
       assumption
     · simp at *
-      apply is_searchable_some_high_of_is_searchable_of_lt
+      apply isSearchable_some_high_of_isSearchable_of_lt
       assumption'
-  all_goals apply is_searchable_balance2; assumption'
+  all_goals apply isSearchable_balance2; assumption'
 #align rbnode.is_searchable_balance2_node Rbnode.isSearchable_balance2Node
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
@@ -202,14 +202,14 @@ theorem isSearchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
   · apply ih h_hs₁
     assumption
     simp [*]
-  · apply is_searchable_of_is_searchable_of_incomp hc
+  · apply isSearchable_of_isSearchable_of_incomp hc
     assumption
-  · apply is_searchable_of_incomp_of_is_searchable hc
+  · apply isSearchable_of_incomp_of_isSearchable hc
     assumption
   · apply ih h_hs₂
     cases hi <;> simp [*]
     assumption
-  · apply is_searchable_balance1_node
+  · apply isSearchable_balance1Node
     apply ih h_hs₁
     assumption
     simp [*]
@@ -217,11 +217,11 @@ theorem isSearchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
   · apply ih h_hs₁
     assumption
     simp [*]
-  · apply is_searchable_of_is_searchable_of_incomp hc
+  · apply isSearchable_of_isSearchable_of_incomp hc
     assumption
-  · apply is_searchable_of_incomp_of_is_searchable hc
+  · apply isSearchable_of_incomp_of_isSearchable hc
     assumption
-  · apply is_searchable_balance2_node
+  · apply isSearchable_balance2Node
     assumption
     apply ih h_hs₂
     simp [*]
@@ -235,7 +235,7 @@ theorem isSearchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
 theorem isSearchable_mkInsertResult {c t} :
     IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by
   classical
-    cases c <;> cases t <;> simp [mk_insert_result]
+    cases c <;> cases t <;> simp [mkInsertResult]
     · intro h
       run_tac
         is_searchable_tactic
@@ -243,8 +243,8 @@ theorem isSearchable_mkInsertResult {c t} :
 
 theorem isSearchable_insert [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
     IsSearchable lt t none none → IsSearchable lt (insert lt t x) none none := by intro h;
-  simp [insert]; apply is_searchable_mk_insert_result;
-  apply is_searchable_ins <;> · first |assumption|simp
+  simp [insert]; apply isSearchable_mkInsertResult;
+  apply isSearchable_ins <;> · first |assumption|simp
 #align rbnode.is_searchable_insert Rbnode.isSearchable_insert
 
 end Rbnode
@@ -265,7 +265,7 @@ theorem mem_balance1Node_of_mem_left {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.mem_balance1_node_of_mem_left Rbnode.mem_balance1Node_of_mem_left
 
@@ -274,20 +274,20 @@ theorem mem_balance2Node_of_mem_left {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.mem_balance2_node_of_mem_left Rbnode.mem_balance2Node_of_mem_left
 
 theorem mem_balance1Node_of_mem_right {x t} (v) (s : Rbnode α) :
     (x ∈ t) → (x ∈ balance1Node s v t) := by
   intros ; cases s <;> simp [*]
-  all_goals apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
+  all_goals apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 #align rbnode.mem_balance1_node_of_mem_right Rbnode.mem_balance1Node_of_mem_right
 
 theorem mem_balance2Node_of_mem_right {x t} (v) (s : Rbnode α) :
     (x ∈ t) → (x ∈ balance2Node s v t) := by
   intros ; cases s <;> simp [*]
-  all_goals apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
+  all_goals apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 #align rbnode.mem_balance2_node_of_mem_right Rbnode.mem_balance2Node_of_mem_right
 
 theorem mem_balance1Node_of_incomp {x v} (s t) :
@@ -295,7 +295,7 @@ theorem mem_balance1Node_of_incomp {x v} (s t) :
   by
   intros ; cases s <;> simp
   · contradiction
-  all_goals apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
+  all_goals apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 #align rbnode.mem_balance1_node_of_incomp Rbnode.mem_balance1Node_of_incomp
 
 theorem mem_balance2Node_of_incomp {x v} (s t) :
@@ -303,7 +303,7 @@ theorem mem_balance2Node_of_incomp {x v} (s t) :
   by
   intros ; cases s <;> simp
   · contradiction
-  all_goals apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
+  all_goals apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp [*]
 #align rbnode.mem_balance2_node_of_incomp Rbnode.mem_balance2Node_of_incomp
 
 theorem ins_ne_leaf [DecidableRel lt] (t : Rbnode α) (x : α) : t.ins lt x ≠ leaf :=
@@ -311,17 +311,17 @@ theorem ins_ne_leaf [DecidableRel lt] (t : Rbnode α) (x : α) : t.ins lt x ≠ 
   apply ins.induction lt t x
   any_goals intros ; simp [ins, *]
   · intros
-    apply balance1_node_ne_leaf
+    apply balance1Node_ne_leaf
     assumption
   · intros
-    apply balance2_node_ne_leaf
+    apply balance2Node_ne_leaf
     assumption
 #align rbnode.ins_ne_leaf Rbnode.ins_ne_leaf
 
 theorem insert_ne_leaf [DecidableRel lt] (t : Rbnode α) (x : α) : insert lt t x ≠ leaf :=
   by
   simp [insert]
-  cases he : ins lt t x <;> cases get_color t <;> simp [mk_insert_result]
+  cases he : ins lt t x <;> cases getColor t <;> simp [mkInsertResult]
   · have := ins_ne_leaf lt t x
     contradiction
   · exact absurd he (ins_ne_leaf _ _ _)
@@ -332,10 +332,10 @@ theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} :
   by
   apply ins.induction lt t y <;> intros <;> simp [ins, *]
   · have := ih h
-    apply mem_balance1_node_of_mem_left
+    apply mem_balance1Node_of_mem_left
     assumption
   · have := ih h
-    apply mem_balance2_node_of_mem_left
+    apply mem_balance2Node_of_mem_left
     assumption
 #align rbnode.mem_ins_of_incomp Rbnode.mem_ins_of_incomp
 
@@ -347,42 +347,42 @@ theorem mem_ins_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode �
   any_goals intros ; simp [ih h]; done
   · have := incomp_trans_of lt h ⟨hc.2, hc.1⟩
     simp [this]
-  · apply mem_balance1_node_of_mem_left
+  · apply mem_balance1Node_of_mem_left
     apply ih h
-  · apply mem_balance1_node_of_incomp
+  · apply mem_balance1Node_of_incomp
     cases h
     all_goals simp [*, ins_ne_leaf lt a z]
-  · apply mem_balance1_node_of_mem_right
+  · apply mem_balance1Node_of_mem_right
     assumption
   · have := incomp_trans_of lt hc ⟨h.2, h.1⟩
     simp [this]
-  · apply mem_balance2_node_of_mem_right
+  · apply mem_balance2Node_of_mem_right
     assumption
   · have := ins_ne_leaf lt a z
-    apply mem_balance2_node_of_incomp
+    apply mem_balance2Node_of_incomp
     cases h
     simp [*]
     apply ins_ne_leaf
-  · apply mem_balance2_node_of_mem_left
+  · apply mem_balance2Node_of_mem_left
     apply ih h
 #align rbnode.mem_ins_of_mem Rbnode.mem_ins_of_mem
 
 theorem mem_mkInsertResult {a t} (c) : Mem lt a t → Mem lt a (mkInsertResult c t) := by
-  intros <;> cases c <;> cases t <;> simp_all [mk_insert_result, mem]
+  intros <;> cases c <;> cases t <;> simp_all [mkInsertResult, Mem]
 #align rbnode.mem_mk_insert_result Rbnode.mem_mkInsertResult
 
 theorem mem_of_mem_mkInsertResult {a t c} : Mem lt a (mkInsertResult c t) → Mem lt a t := by
-  cases t <;> cases c <;> simp [mk_insert_result, mem] <;> intros <;> assumption
+  cases t <;> cases c <;> simp [mkInsertResult, Mem] <;> intros <;> assumption
 #align rbnode.mem_of_mem_mk_insert_result Rbnode.mem_of_mem_mkInsertResult
 
 theorem mem_insert_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} :
     ∀ h : ¬lt x y ∧ ¬lt y x, x ∈ t.insert lt y := by
-  intros <;> unfold insert <;> apply mem_mk_insert_result <;> apply mem_ins_of_incomp <;> assumption
+  intros <;> unfold insert <;> apply mem_mkInsertResult <;> apply mem_ins_of_incomp <;> assumption
 #align rbnode.mem_insert_of_incomp Rbnode.mem_insert_of_incomp
 
 theorem mem_insert_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t x} (z) :
     (x ∈ t) → (x ∈ t.insert lt z) := by
-  intros <;> apply mem_mk_insert_result <;> apply mem_ins_of_mem <;> assumption
+  intros <;> apply mem_mkInsertResult <;> apply mem_ins_of_mem <;> assumption
 #align rbnode.mem_insert_of_mem Rbnode.mem_insert_of_mem
 
 theorem of_mem_balance1Node {x s v t} :
@@ -392,7 +392,7 @@ theorem of_mem_balance1Node {x s v t} :
   · intros
     simp [*]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.of_mem_balance1_node Rbnode.of_mem_balance1Node
 
@@ -403,7 +403,7 @@ theorem of_mem_balance2Node {x s v t} :
   · intros
     simp [*]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.of_mem_balance2_node Rbnode.of_mem_balance2Node
 
@@ -414,12 +414,12 @@ theorem equiv_or_mem_of_mem_ins [DecidableRel lt] {t : Rbnode α} {x z} :
     cases_type*or.1
   any_goals intros ; simp [h]
   any_goals intros ; have ih := ih h; cases ih <;> simp [*]; done
-  · have h' := of_mem_balance1_node lt h
+  · have h' := of_mem_balance1Node lt h
     cases_type*or.1
     have := ih h'
     cases_type*or.1
     all_goals simp [h, *]
-  · have h' := of_mem_balance2_node lt h
+  · have h' := of_mem_balance2Node lt h
     cases_type*or.1
     have := ih h'
     cases_type*or.1
@@ -428,7 +428,7 @@ theorem equiv_or_mem_of_mem_ins [DecidableRel lt] {t : Rbnode α} {x z} :
 
 theorem equiv_or_mem_of_mem_insert [DecidableRel lt] {t : Rbnode α} {x z} :
     ∀ h : x ∈ t.insert lt z, x ≈[lt]z ∨ (x ∈ t) := by simp [insert]; intros ;
-  apply equiv_or_mem_of_mem_ins; exact mem_of_mem_mk_insert_result lt h
+  apply equiv_or_mem_of_mem_ins; exact mem_of_mem_mkInsertResult lt h
 #align rbnode.equiv_or_mem_of_mem_insert Rbnode.equiv_or_mem_of_mem_insert
 
 attribute [local simp] mem_exact
@@ -438,7 +438,7 @@ theorem memExact_balance1Node_of_memExact {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.mem_exact_balance1_node_of_mem_exact Rbnode.memExact_balance1Node_of_memExact
 
@@ -447,7 +447,7 @@ theorem memExact_balance2Node_of_memExact {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply Balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
       simp [*]
 #align rbnode.mem_exact_balance2_node_of_mem_exact Rbnode.memExact_balance2Node_of_memExact
 
@@ -458,10 +458,10 @@ theorem find_balance1Node [DecidableRel lt] [IsStrictWeakOrder α lt] {x y z t s
           find lt t y = some x → y ≈[lt]x → find lt (balance1Node t z s) y = some x :=
   by
   intro _ _ hs₁ hs₂ heq heqv
-  have hs := is_searchable_balance1_node lt hs₁ hs₂
-  have := Eq.trans (find_eq_find_of_eqv hs₁ heqv.symm) HEq
+  have hs := isSearchable_balance1Node lt hs₁ hs₂
+  have := Eq.trans (find_eq_find_of_eqv hs₁ heqv.symm) heq
   have := Iff.mpr (find_correct_exact hs₁) this
-  have := mem_exact_balance1_node_of_mem_exact z s this
+  have := memExact_balance1Node_of_memExact z s this
   have := Iff.mp (find_correct_exact hs) this
   exact Eq.trans (find_eq_find_of_eqv hs heqv) this
 #align rbnode.find_balance1_node Rbnode.find_balance1Node
@@ -473,10 +473,10 @@ theorem find_balance2Node [DecidableRel lt] [IsStrictWeakOrder α lt] {x y z s t
           find lt t y = some x → y ≈[lt]x → find lt (balance2Node t z s) y = some x :=
   by
   intro _ _ hs₁ hs₂ heq heqv
-  have hs := is_searchable_balance2_node lt hs₁ hs₂
-  have := Eq.trans (find_eq_find_of_eqv hs₂ heqv.symm) HEq
+  have hs := isSearchable_balance2Node lt hs₁ hs₂
+  have := Eq.trans (find_eq_find_of_eqv hs₂ heqv.symm) heq
   have := Iff.mpr (find_correct_exact hs₂) this
-  have := mem_exact_balance2_node_of_mem_exact z s this
+  have := memExact_balance2Node_of_memExact z s this
   have := Iff.mp (find_correct_exact hs) this
   exact Eq.trans (find_eq_find_of_eqv hs heqv) this
 #align rbnode.find_balance2_node Rbnode.find_balance2Node
@@ -488,7 +488,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def simp_fi : tactic Unit :=
   sorry
 #align rbnode.simp_fi rbnode.simp_fi
@@ -526,8 +526,8 @@ theorem find_ins_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α} {
       simp_fi
   · run_tac
       simp_fi
-    have := is_searchable_ins lt hs_hs₁ hlt₁ hc
-    apply find_balance1_node lt this hs_hs₂ (ih hs_hs₁ hlt₁ hc) he.symm
+    have := isSearchable_ins lt hs_hs₁ hlt₁ hc
+    apply find_balance1Node lt this hs_hs₂ (ih hs_hs₁ hlt₁ hc) he.symm
   · have := lt_of_incomp_of_lt he.swap hc
     have := ih hs_hs₁ hlt₁ hc
     run_tac
@@ -537,8 +537,8 @@ theorem find_ins_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α} {
       simp_fi
   · run_tac
       simp_fi
-    have := is_searchable_ins lt hs_hs₂ hc hlt₂
-    apply find_balance2_node lt hs_hs₁ this (ih hs_hs₂ hc hlt₂) he.symm
+    have := isSearchable_ins lt hs_hs₂ hc hlt₂
+    apply find_balance2Node lt hs_hs₁ this (ih hs_hs₂ hc hlt₂) he.symm
   · have := lt_of_lt_of_incomp hc he
     have := ih hs_hs₂ hc hlt₂
     run_tac
@@ -548,7 +548,7 @@ theorem find_ins_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α} {
 theorem find_mkInsertResult [DecidableRel lt] (c : Color) (t : Rbnode α) (x : α) :
     find lt (mkInsertResult c t) x = find lt t x :=
   by
-  cases t <;> cases c <;> simp [mk_insert_result]
+  cases t <;> cases c <;> simp [mkInsertResult]
   · simp [find]
     cases cmpUsing lt x t_val <;> simp [find]
 #align rbnode.find_mk_insert_result Rbnode.find_mkInsertResult
@@ -557,7 +557,7 @@ theorem find_insert_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α
     (he : x ≈[lt]y) : IsSearchable lt t none none → find lt (insert lt t x) y = some x :=
   by
   intro hs
-  simp [insert, find_mk_insert_result]
+  simp [insert, find_mkInsertResult]
   apply find_ins_of_eqv lt he hs <;> simp
 #align rbnode.find_insert_of_eqv Rbnode.find_insert_of_eqv
 
@@ -608,7 +608,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     find lt (balance1 l v r y t) x = find lt (red_node l v r) x :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
@@ -620,7 +620,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
 #align rbnode.find_balance1_lt Rbnode.find_balance1_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac
@@ -634,7 +634,7 @@ theorem find_balance1Node_lt {t s x y lo hi} (hlt : lt y x) (ht : IsSearchable l
         ins_ne_leaf_tac) :
     find lt (balance1Node t x s) y = find lt t y :=
   by
-  cases t <;> simp [balance1_node]
+  cases t <;> simp [balance1Node]
   · contradiction
   all_goals intros ;
     run_tac
@@ -648,7 +648,7 @@ theorem find_balance1_gt {l r t v x y lo hi} (h : lt y x) (hl : IsSearchable lt 
     find lt (balance1 l v r y t) x = find lt t x :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · have := trans_of lt (lo_lt_hi hr) h
@@ -666,7 +666,7 @@ theorem find_balance1Node_gt {t s x y lo hi} (h : lt x y) (ht : IsSearchable lt 
         ins_ne_leaf_tac) :
     find lt (balance1Node t x s) y = find lt s y :=
   by
-  cases t <;> simp [balance1_node]
+  cases t <;> simp [balance1Node]
   all_goals intros ;
     run_tac
       is_searchable_tactic;
@@ -679,7 +679,7 @@ theorem find_balance1_eqv {l r t v x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (ht : IsSearchable lt t (some y) hi) : find lt (balance1 l v r y t) x = some y :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · have : lt y_1 x := lt_of_lt_of_incomp (lo_lt_hi hr) h.swap
@@ -697,7 +697,7 @@ theorem find_balance1Node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
         ins_ne_leaf_tac) :
     find lt (balance1Node t y s) x = some y :=
   by
-  cases t <;> simp [balance1_node]
+  cases t <;> simp [balance1Node]
   · contradiction
   all_goals intros ;
     run_tac
@@ -711,7 +711,7 @@ theorem find_balance2_lt {l v r t x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     find lt (balance2 l v r y t) x = find lt t x :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · have := trans h (lo_lt_hi hl_hs₁)
@@ -729,7 +729,7 @@ theorem find_balance2Node_lt {s t x y lo hi} (h : lt x y) (ht : IsSearchable lt 
         ins_ne_leaf_tac) :
     find lt (balance2Node t y s) x = find lt s x :=
   by
-  cases t <;> simp [balance2_node]
+  cases t <;> simp [balance2Node]
   all_goals intros ;
     run_tac
       is_searchable_tactic;
@@ -742,7 +742,7 @@ theorem find_balance2_gt {l v r t x y lo hi} (h : lt y x) (hl : IsSearchable lt 
     find lt (balance2 l v r y t) x = find lt (red_node l v r) x :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · apply weak_trichotomous lt x_1 x <;> intro h' <;> simp [*]
@@ -763,7 +763,7 @@ theorem find_balance2Node_gt {s t x y lo hi} (h : lt y x) (ht : IsSearchable lt 
         ins_ne_leaf_tac) :
     find lt (balance2Node t y s) x = find lt t x :=
   by
-  cases t <;> simp [balance2_node]
+  cases t <;> simp [balance2Node]
   · contradiction
   all_goals intros ;
     run_tac
@@ -777,7 +777,7 @@ theorem find_balance2_eqv {l v r t x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
     (ht : IsSearchable lt t lo (some y)) : find lt (balance2 l v r y t) x = some y :=
   by
   revert hl hr ht;
-  apply balance.cases l v r <;> intros <;> simp [*] <;>
+  apply Balance.cases l v r <;> intros <;> simp [*] <;>
     run_tac
       is_searchable_tactic
   · have := lt_of_incomp_of_lt h (lo_lt_hi hl_hs₁)
@@ -795,7 +795,7 @@ theorem find_balance2Node_eqv {t s x y lo hi} (h : ¬lt x y ∧ ¬lt y x)
         ins_ne_leaf_tac) :
     find lt (balance2Node t y s) x = some y :=
   by
-  cases t <;> simp [balance2_node]
+  cases t <;> simp [balance2Node]
   · contradiction
   all_goals intros ;
     run_tac
@@ -845,23 +845,23 @@ theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
   · have ih := ih hs_hs₁ hlt₁ hc
     cases hn
     · cases hc' : cmpUsing lt y y_1 <;> simp at hc'
-      · have hsi := is_searchable_ins lt hs_hs₁ hlt₁ (trans_of lt hn hc')
-        have := find_balance1_node_lt lt hc' hsi hs_hs₂
+      · have hsi := isSearchable_ins lt hs_hs₁ hlt₁ (trans_of lt hn hc')
+        have := find_balance1Node_lt lt hc' hsi hs_hs₂
         run_tac
           simp_fi
       · have hlt := lt_of_lt_of_incomp hn hc'
-        have hsi := is_searchable_ins lt hs_hs₁ hlt₁ hlt
-        have := find_balance1_node_eqv lt hc' hsi hs_hs₂
+        have hsi := isSearchable_ins lt hs_hs₁ hlt₁ hlt
+        have := find_balance1Node_eqv lt hc' hsi hs_hs₂
         run_tac
           simp_fi
-      · have hsi := is_searchable_ins lt hs_hs₁ hlt₁ hc
-        have := find_balance1_node_gt lt hc' hsi hs_hs₂
+      · have hsi := isSearchable_ins lt hs_hs₁ hlt₁ hc
+        have := find_balance1Node_gt lt hc' hsi hs_hs₂
         simp [*]
         run_tac
           simp_fi
     · have hlt := trans hn hc
-      have hsi := is_searchable_ins lt hs_hs₁ hlt₁ hc
-      have := find_balance1_node_lt lt hlt hsi hs_hs₂
+      have hsi := isSearchable_ins lt hs_hs₁ hlt₁ hc
+      have := find_balance1Node_lt lt hlt hsi hs_hs₂
       run_tac
         simp_fi
   · have := ih hs_hs₁ hlt₁ hc
@@ -879,24 +879,24 @@ theorem find_ins_of_disj {x y : α} {t : Rbnode α} (hn : lt x y ∨ lt y x) :
     · have hlt := trans hc hn
       run_tac
         simp_fi
-      have hsi := is_searchable_ins lt hs_hs₂ hc hlt₂
-      have := find_balance2_node_gt lt hlt hsi hs_hs₁
+      have hsi := isSearchable_ins lt hs_hs₂ hc hlt₂
+      have := find_balance2Node_gt lt hlt hsi hs_hs₁
       run_tac
         simp_fi
     · run_tac
         simp_fi
       cases hc' : cmpUsing lt y y_1 <;> simp at hc'
-      · have hsi := is_searchable_ins lt hs_hs₂ hc hlt₂
-        have := find_balance2_node_lt lt hc' hsi hs_hs₁
+      · have hsi := isSearchable_ins lt hs_hs₂ hc hlt₂
+        have := find_balance2Node_lt lt hc' hsi hs_hs₁
         run_tac
           simp_fi
       · have hlt := lt_of_incomp_of_lt hc'.swap hn
-        have hsi := is_searchable_ins lt hs_hs₂ hlt hlt₂
-        have := find_balance2_node_eqv lt hc' hsi hs_hs₁
+        have hsi := isSearchable_ins lt hs_hs₂ hlt hlt₂
+        have := find_balance2Node_eqv lt hc' hsi hs_hs₁
         run_tac
           simp_fi
-      · have hsi := is_searchable_ins lt hs_hs₂ hc hlt₂
-        have := find_balance2_node_gt lt hc' hsi hs_hs₁
+      · have hsi := isSearchable_ins lt hs_hs₂ hc hlt₂
+        have := find_balance2Node_gt lt hc' hsi hs_hs₁
         run_tac
           simp_fi
   · have ih := ih hs_hs₂ hc hlt₂
@@ -911,7 +911,7 @@ theorem find_insert_of_disj [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : �
     IsSearchable lt t none none → find lt (insert lt t x) y = find lt t y :=
   by
   intro hs
-  simp [insert, find_mk_insert_result]
+  simp [insert, find_mkInsertResult]
   apply find_ins_of_disj lt hd hs <;> simp
 #align rbnode.find_insert_of_disj Rbnode.find_insert_of_disj
 
@@ -919,7 +919,7 @@ theorem find_insert_of_not_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y 
     (hn : ¬x ≈[lt]y) : IsSearchable lt t none none → find lt (insert lt t x) y = find lt t y :=
   by
   intro hs
-  simp [insert, find_mk_insert_result]
+  simp [insert, find_mkInsertResult]
   have he : lt x y ∨ lt y x :=
     by
     simp [StrictWeakOrder.Equiv, Decidable.not_and_iff_or_not, Decidable.not_not_iff] at hn
@@ -955,12 +955,12 @@ theorem balance2_rb {l r t : Rbnode α} {y v : α} {c_l c_r c_t n} :
 
 theorem balance1Node_rb {t s : Rbnode α} {y : α} {c n} :
     IsBadRedBlack t n → IsRedBlack s c n → ∃ c, IsRedBlack (balance1Node t y s) c (succ n) := by
-  intro h _ <;> cases h <;> simp [balance1_node] <;> apply balance1_rb <;> assumption'
+  intro h _ <;> cases h <;> simp [balance1Node] <;> apply balance1_rb <;> assumption'
 #align rbnode.balance1_node_rb Rbnode.balance1Node_rb
 
 theorem balance2Node_rb {t s : Rbnode α} {y : α} {c n} :
     IsBadRedBlack t n → IsRedBlack s c n → ∃ c, IsRedBlack (balance2Node t y s) c (succ n) := by
-  intro h _ <;> cases h <;> simp [balance2_node] <;> apply balance2_rb <;> assumption'
+  intro h _ <;> cases h <;> simp [balance2Node] <;> apply balance2_rb <;> assumption'
 #align rbnode.balance2_node_rb Rbnode.balance2Node_rb
 
 def InsRbResult : Rbnode α → Color → Nat → Prop
@@ -971,18 +971,18 @@ def InsRbResult : Rbnode α → Color → Nat → Prop
 variable {lt : α → α → Prop} [DecidableRel lt]
 
 theorem of_getColor_eq_red {t : Rbnode α} {c n} : getColor t = red → IsRedBlack t c n → c = red :=
-  by intro h₁ h₂; cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
+  by intro h₁ h₂; cases h₂ <;> simp only [getColor] at h₁ <;> contradiction
 #align rbnode.of_get_color_eq_red Rbnode.of_getColor_eq_red
 
 theorem of_getColor_ne_red {t : Rbnode α} {c n} : getColor t ≠ red → IsRedBlack t c n → c = black :=
-  by intro h₁ h₂; cases h₂ <;> simp only [get_color] at h₁ <;> contradiction
+  by intro h₁ h₂; cases h₂ <;> simp only [getColor] at h₁ <;> contradiction
 #align rbnode.of_get_color_ne_red Rbnode.of_getColor_ne_red
 
 variable (lt)
 
 theorem ins_rb {t : Rbnode α} (x) : ∀ {c n} (h : IsRedBlack t c n), InsRbResult (ins lt t x) c n :=
   by
-  apply ins.induction lt t x <;> intros <;> cases h <;> simp [ins, *, ins_rb_result]
+  apply ins.induction lt t x <;> intros <;> cases h <;> simp [ins, *, InsRbResult]
   · repeat' constructor
   · specialize ih h_rb_l
     cases ih
@@ -992,20 +992,20 @@ theorem ins_rb {t : Rbnode α} (x) : ∀ {c n} (h : IsRedBlack t c n), InsRbResu
     cases ih
     constructor <;> assumption
   · specialize ih h_rb_l
-    cases of_get_color_eq_red hr h_rb_l
-    apply balance1_node_rb <;> assumption
+    cases of_getColor_eq_red hr h_rb_l
+    apply balance1Node_rb <;> assumption
   · specialize ih h_rb_l
-    cases of_get_color_ne_red hnr h_rb_l
+    cases of_getColor_ne_red hnr h_rb_l
     cases ih
     constructor
     constructor <;> assumption
   · constructor
     constructor <;> assumption
   · specialize ih h_rb_r
-    cases of_get_color_eq_red hr h_rb_r
-    apply balance2_node_rb <;> assumption
+    cases of_getColor_eq_red hr h_rb_r
+    apply balance2Node_rb <;> assumption
   · specialize ih h_rb_r
-    cases of_get_color_ne_red hnr h_rb_r
+    cases of_getColor_ne_red hnr h_rb_r
     cases ih
     constructor
     constructor <;> assumption
@@ -1022,10 +1022,10 @@ theorem insert_rb {t : Rbnode α} (x) {c n} (h : IsRedBlack t c n) :
   have hi := ins_rb lt x h
   generalize he : ins lt t x = r
   simp [he] at hi
-  cases h <;> simp [get_color, ins_rb_result, insert_rb_result, mk_insert_result] at *
+  cases h <;> simp [getColor, InsRbResult, InsertRbResult, mkInsertResult] at *
   assumption'
   · cases hi
-    simp [mk_insert_result]
+    simp [mkInsertResult]
     constructor <;> assumption
 #align rbnode.insert_rb Rbnode.insert_rb
 
@@ -1034,7 +1034,7 @@ theorem insert_isRedBlack {t : Rbnode α} {c n} (x) :
   by
   intro h
   have := insert_rb lt x h
-  cases c <;> simp [insert_rb_result] at this
+  cases c <;> simp [InsertRbResult] at this
   · constructor
     constructor
     assumption

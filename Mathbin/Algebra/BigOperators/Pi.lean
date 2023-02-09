@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot
 
 ! This file was ported from Lean 3 source module algebra.big_operators.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.list_prod_apply Pi.list_prod_applyₓ'. -/
 @[to_additive]
 theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoid (β a)] (a : α)
-    (l : List (∀ a, β a)) : l.Prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
+    (l : List (∀ a, β a)) : l.prod a = (l.map fun f : ∀ a, β a => f a).prod :=
   (evalMonoidHom β a).map_list_prod _
 #align pi.list_prod_apply Pi.list_prod_apply
 #align pi.list_sum_apply Pi.list_sum_apply
@@ -49,7 +49,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pi.multiset_prod_apply Pi.multiset_prod_applyₓ'. -/
 @[to_additive]
 theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoid (β a)] (a : α)
-    (s : Multiset (∀ a, β a)) : s.Prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
+    (s : Multiset (∀ a, β a)) : s.prod a = (s.map fun f : ∀ a, β a => f a).prod :=
   (evalMonoidHom β a).map_multiset_prod _
 #align pi.multiset_prod_apply Pi.multiset_prod_apply
 #align pi.multiset_sum_apply Pi.multiset_sum_apply

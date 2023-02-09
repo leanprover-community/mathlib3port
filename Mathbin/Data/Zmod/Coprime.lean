@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module data.zmod.coprime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ theorem eq_zero_iff_gcd_ne_one {a : ℤ} {p : ℕ} [pp : Fact p.Prime] :
     (a : ZMod p) = 0 ↔ a.gcd p ≠ 1 := by
   rw [Ne, Int.gcd_comm, Int.gcd_eq_one_iff_coprime,
     (Nat.prime_iff_prime_int.1 pp.1).coprime_iff_not_dvd, Classical.not_not,
-    int_coe_zmod_eq_zero_iff_dvd]
+    int_coe_zMod_eq_zero_iff_dvd]
 #align zmod.eq_zero_iff_gcd_ne_one ZMod.eq_zero_iff_gcd_ne_one
 
 /-- If an integer `a` and a prime `p` satisfy `gcd a p = 1`, then `a : zmod p` is nonzero. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Stevens, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.primorial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ local notation x "#" => primorial x
 
 #print primorial_pos /-
 theorem primorial_pos (n : ℕ) : 0 < n# :=
-  prod_pos fun p hp => (mem_filter.1 hp).2.Pos
+  prod_pos fun p hp => (mem_filter.1 hp).2.pos
 #align primorial_pos primorial_pos
 -/
 
@@ -78,7 +78,7 @@ theorem primorial_add_dvd {m n : ℕ} (h : n ≤ m) : (m + n)# ∣ m# * choose (
     (m + n)# = m# * ∏ p in filter Nat.Prime (Ico (m + 1) (m + n + 1)), p := primorial_add _ _
     _ ∣ m# * choose (m + n) m :=
       mul_dvd_mul_left _ <|
-        prod_primes_dvd _ (fun k hk => (mem_filter.1 hk).2.Prime) fun p hp =>
+        prod_primes_dvd _ (fun k hk => (mem_filter.1 hk).2.prime) fun p hp =>
           by
           rw [mem_filter, mem_Ico] at hp
           exact

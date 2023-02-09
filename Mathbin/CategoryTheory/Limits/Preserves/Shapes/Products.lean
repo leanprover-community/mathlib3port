@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,10 +46,10 @@ def isLimitMapConeFanMkEquiv {P : C} (g : ∀ j, P ⟶ f j) :
     IsLimit (G.mapCone (Fan.mk P g)) ≃
       IsLimit (Fan.mk _ fun j => G.map (g j) : Fan fun j => G.obj (f j)) :=
   by
-  refine' (is_limit.postcompose_hom_equiv _ _).symm.trans (is_limit.equiv_iso_limit _)
-  refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
+  refine' (IsLimit.postcomposeHomEquiv _ _).symm.trans (IsLimit.equivIsoLimit _)
+  refine' Discrete.natIso fun j => Iso.refl (G.obj (f j.as))
   refine'
-    cones.ext (iso.refl _) fun j =>
+    Cones.ext (Iso.refl _) fun j =>
       by
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -90,9 +90,9 @@ variable [HasProduct fun j : J => G.obj (f j)]
 def PreservesProduct.ofIsoComparison [i : IsIso (piComparison G f)] :
     PreservesLimit (Discrete.functor f) G :=
   by
-  apply preserves_limit_of_preserves_limit_cone (product_is_product f)
-  apply (is_limit_map_cone_fan_mk_equiv _ _ _).symm _
-  apply is_limit.of_point_iso (limit.is_limit (discrete.functor fun j : J => G.obj (f j)))
+  apply preservesLimitOfPreservesLimitCone (productIsProduct f)
+  apply (isLimitMapConeFanMkEquiv _ _ _).symm _
+  apply IsLimit.ofPointIso (limit.isLimit (Discrete.functor fun j : J => G.obj (f j)))
   apply i
 #align category_theory.limits.preserves_product.of_iso_comparison CategoryTheory.Limits.PreservesProduct.ofIsoComparison
 
@@ -107,13 +107,13 @@ def PreservesProduct.iso : G.obj (∏ f) ≅ ∏ fun j => G.obj (f j) :=
 #align category_theory.limits.preserves_product.iso CategoryTheory.Limits.PreservesProduct.iso
 
 @[simp]
-theorem PreservesProduct.iso_hom : (PreservesProduct.iso G f).Hom = piComparison G f :=
+theorem PreservesProduct.iso_hom : (PreservesProduct.iso G f).hom = piComparison G f :=
   rfl
 #align category_theory.limits.preserves_product.iso_hom CategoryTheory.Limits.PreservesProduct.iso_hom
 
 instance : IsIso (piComparison G f) :=
   by
-  rw [← preserves_product.iso_hom]
+  rw [← PreservesProduct.iso_hom]
   infer_instance
 
 end
@@ -126,10 +126,10 @@ def isColimitMapCoconeCofanMkEquiv {P : C} (g : ∀ j, f j ⟶ P) :
     IsColimit (G.mapCocone (Cofan.mk P g)) ≃
       IsColimit (Cofan.mk _ fun j => G.map (g j) : Cofan fun j => G.obj (f j)) :=
   by
-  refine' (is_colimit.precompose_hom_equiv _ _).symm.trans (is_colimit.equiv_iso_colimit _)
-  refine' discrete.nat_iso fun j => iso.refl (G.obj (f j.as))
+  refine' (IsColimit.precomposeHomEquiv _ _).symm.trans (IsColimit.equivIsoColimit _)
+  refine' Discrete.natIso fun j => Iso.refl (G.obj (f j.as))
   refine'
-    cocones.ext (iso.refl _) fun j =>
+    Cocones.ext (Iso.refl _) fun j =>
       by
       trace
         "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[]"
@@ -170,9 +170,9 @@ variable [HasCoproduct fun j : J => G.obj (f j)]
 def PreservesCoproduct.ofIsoComparison [i : IsIso (sigmaComparison G f)] :
     PreservesColimit (Discrete.functor f) G :=
   by
-  apply preserves_colimit_of_preserves_colimit_cocone (coproduct_is_coproduct f)
-  apply (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _
-  apply is_colimit.of_point_iso (colimit.is_colimit (discrete.functor fun j : J => G.obj (f j)))
+  apply preservesColimitOfPreservesColimitCocone (coproductIsCoproduct f)
+  apply (isColimitMapCoconeCofanMkEquiv _ _ _).symm _
+  apply IsColimit.ofPointIso (colimit.isColimit (Discrete.functor fun j : J => G.obj (f j)))
   apply i
 #align category_theory.limits.preserves_coproduct.of_iso_comparison CategoryTheory.Limits.PreservesCoproduct.ofIsoComparison
 
@@ -193,7 +193,7 @@ theorem PreservesCoproduct.inv_hom : (PreservesCoproduct.iso G f).inv = sigmaCom
 
 instance : IsIso (sigmaComparison G f) :=
   by
-  rw [← preserves_coproduct.inv_hom]
+  rw [← PreservesCoproduct.inv_hom]
   infer_instance
 
 end

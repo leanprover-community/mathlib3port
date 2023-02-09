@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.away
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,14 +132,14 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
     obtain ⟨u, hu⟩ := H s
     use x * u.inv
     dsimp only [Algebra.ofId, RingHom.toFun_eq_coe, AlgHom.coe_mk]
-    rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
+    rw [RingHom.map_mul, ← eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
 #align is_localization.at_units IsLocalization.atUnits
 
 /-- The localization away from a unit is isomorphic to the ring -/
 noncomputable def atUnit (x : R) (e : IsUnit x) [IsLocalization.Away x S] : R ≃ₐ[R] S :=
   by
-  apply at_units R (Submonoid.powers x)
+  apply atUnits R (Submonoid.powers x)
   rintro ⟨xn, n, hxn⟩
   obtain ⟨u, hu⟩ := e
   rw [isUnit_iff_exists_inv]
@@ -211,7 +211,7 @@ noncomputable def Localization.awayEquivAdjoin (r : R) : Away r ≃ₐ[R] Adjoin
       commutes' :=
         IsLocalization.Away.AwayMap.lift_eq r (isUnit_of_mul_eq_one _ _ <| root_is_inv r) }
     (liftHom _ (IsLocalization.Away.invSelf r) <| by
-      simp only [map_sub, map_mul, aeval_C, aeval_X, IsLocalization.Away.mul_invSelf, aeval_one,
+      simp only [map_sub, map_mul, aeval_c, aeval_x, IsLocalization.Away.mul_invSelf, aeval_one,
         sub_self])
     (Subsingleton.elim _ _) (Subsingleton.elim _ _)
 #align localization.away_equiv_adjoin Localization.awayEquivAdjoin
@@ -222,7 +222,7 @@ theorem IsLocalization.adjoin_inv (r : R) : IsLocalization.Away r (AdjoinRoot <|
 
 theorem IsLocalization.Away.finitePresentation (r : R) {S} [CommRing S] [Algebra R S]
     [IsLocalization.Away r S] : Algebra.FinitePresentation R S :=
-  (AdjoinRoot.finitePresentation _).Equiv <|
+  (AdjoinRoot.finitePresentation _).equiv <|
     (Localization.awayEquivAdjoin r).symm.trans <| IsLocalization.algEquiv (Submonoid.powers r) _ _
 #align is_localization.away.finite_presentation IsLocalization.Away.finitePresentation
 

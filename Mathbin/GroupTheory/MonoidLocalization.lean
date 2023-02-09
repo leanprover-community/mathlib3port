@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module group_theory.monoid_localization
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,7 +247,7 @@ instance inhabited : Inhabited (Localization S) :=
 @[to_additive
       "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`."]
 protected irreducible_def mul : Localization S → Localization S → Localization S :=
-  (r S).CommMonoid.mul
+  (r S).commMonoid.mul
 #align localization.mul Localization.mul
 #align add_localization.add addLocalization.add
 -/
@@ -261,7 +261,7 @@ instance : Mul (Localization S) :=
 @[to_additive
       "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`."]
 protected irreducible_def one : Localization S :=
-  (r S).CommMonoid.one
+  (r S).commMonoid.one
 #align localization.one Localization.one
 #align add_localization.zero addLocalization.zero
 -/
@@ -279,7 +279,7 @@ trying to unify some huge recursive definition with itself, but unfolded one ste
 @[to_additive
       "Multiplication with a natural in an `add_localization` is defined as `n • ⟨a, b⟩ = ⟨n • a, n • b⟩`.\n\nThis is a separate `irreducible` def to ensure the elaborator doesn't waste its time\ntrying to unify some huge recursive definition with itself, but unfolded one step less."]
 protected irreducible_def npow : ℕ → Localization S → Localization S :=
-  (r S).CommMonoid.npow
+  (r S).commMonoid.npow
 #align localization.npow Localization.npow
 #align add_localization.nsmul addLocalization.nsmul
 -/
@@ -291,10 +291,10 @@ instance : CommMonoid (Localization S) where
   mul := (· * ·)
   one := 1
   mul_assoc :=
-    show ∀ x y z : Localization S, x * y * z = x * (y * z) from (r S).CommMonoid.mul_assoc
-  mul_comm := show ∀ x y : Localization S, x * y = y * x from (r S).CommMonoid.mul_comm
-  mul_one := show ∀ x : Localization S, x * 1 = x from (r S).CommMonoid.mul_one
-  one_mul := show ∀ x : Localization S, 1 * x = x from (r S).CommMonoid.one_mul
+    show ∀ x y z : Localization S, x * y * z = x * (y * z) from (r S).commMonoid.mul_assoc
+  mul_comm := show ∀ x y : Localization S, x * y = y * x from (r S).commMonoid.mul_comm
+  mul_one := show ∀ x : Localization S, x * 1 = x from (r S).commMonoid.mul_one
+  one_mul := show ∀ x : Localization S, 1 * x = x from (r S).commMonoid.one_mul
   npow := Localization.npow S
   npow_zero := show ∀ x : Localization S, Localization.npow S 0 x = 1 from pow_zero
   npow_succ :=
@@ -326,7 +326,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.mk_eq_mk_iff Localization.mk_eq_mk_iffₓ'. -/
 @[to_additive]
 theorem mk_eq_mk_iff {a c : M} {b d : S} : mk a b = mk c d ↔ r S ⟨a, b⟩ ⟨c, d⟩ :=
-  (r S).Eq
+  (r S).eq
 #align localization.mk_eq_mk_iff Localization.mk_eq_mk_iff
 #align add_localization.mk_eq_mk_iff addLocalization.mk_eq_mk_iff
 
@@ -601,7 +601,7 @@ theorem smul_mk [SMul R M] [IsScalarTower R M M] (c : R) (a b) :
     c • (mk a b : Localization S) = mk (c • a) b :=
   by
   unfold SMul.smul Localization.smul
-  apply lift_on_mk
+  apply liftOn_mk
 #align localization.smul_mk Localization.smul_mk
 
 instance [SMul R₁ M] [SMul R₂ M] [IsScalarTower R₁ M M] [IsScalarTower R₂ M M]
@@ -844,7 +844,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 theorem mul_inv_left {f : M →* N} (h : ∀ y : S, IsUnit (f y)) (y : S) (w z) :
     w * ↑(IsUnit.liftRight (f.restrict S) h y)⁻¹ = z ↔ w = f y * z := by
   rw [mul_comm] <;> convert Units.inv_mul_eq_iff_eq_mul _ <;>
-    exact (IsUnit.coe_liftRight (f.restrict S) h _).symm
+    exact (is_unit.coe_lift_right (f.restrict S) h _).symm
 #align submonoid.localization_map.mul_inv_left Submonoid.LocalizationMap.mul_inv_left
 #align add_submonoid.localization_map.add_neg_left AddSubmonoid.LocalizationMap.add_neg_left
 
@@ -1145,7 +1145,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[to_additive]
 theorem mk'_eq_iff_mk'_eq (g : LocalizationMap S P) {x₁ x₂} {y₁ y₂ : S} :
     f.mk' x₁ y₁ = f.mk' x₂ y₂ ↔ g.mk' x₁ y₁ = g.mk' x₂ y₂ :=
-  f.eq''.trans g.eq''.symm
+  f.eq'.trans g.eq'.symm
 #align submonoid.localization_map.mk'_eq_iff_mk'_eq Submonoid.LocalizationMap.mk'_eq_iff_mk'_eq
 #align add_submonoid.localization_map.mk'_eq_iff_mk'_eq AddSubmonoid.LocalizationMap.mk'_eq_iff_mk'_eq
 
@@ -1659,7 +1659,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.localization_map.map_eq Submonoid.LocalizationMap.map_eqₓ'. -/
 @[to_additive]
 theorem map_eq (x) : f.map hy k (f.toMap x) = k.toMap (g x) :=
-  f.liftEq (fun y => k.map_units ⟨g y, hy y⟩) x
+  f.lift_eq (fun y => k.map_units ⟨g y, hy y⟩) x
 #align submonoid.localization_map.map_eq Submonoid.LocalizationMap.map_eq
 #align add_submonoid.localization_map.map_eq AddSubmonoid.LocalizationMap.map_eq
 
@@ -2034,7 +2034,7 @@ of `comm_monoid`s, `k ∘ f` is a localization map for `M` at `S`. -/
 def ofMulEquivOfLocalizations (k : N ≃* P) : LocalizationMap S P :=
   (k.toMonoidHom.comp f.toMap).toLocalizationMap (fun y => isUnit_comp f k.toMonoidHom y)
     (fun v =>
-      let ⟨z, hz⟩ := k.toEquiv.Surjective v
+      let ⟨z, hz⟩ := k.toEquiv.surjective v
       let ⟨x, hx⟩ := f.surj z
       ⟨x, show v * k _ = k _ by rw [← hx, k.map_mul, ← hz] <;> rfl⟩)
     fun x y => k.apply_eq_iff_eq.trans f.eq_iff_exists
@@ -2154,7 +2154,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.localization
 @[simp, to_additive]
 theorem mulEquivOfLocalizations_left_inv_apply {k : N ≃* P} (x) :
     f.mulEquivOfLocalizations (f.ofMulEquivOfLocalizations k) x = k x := by
-  rw [mul_equiv_of_localizations_left_inv]
+  rw [mulEquivOfLocalizations_left_inv]
 #align submonoid.localization_map.mul_equiv_of_localizations_left_inv_apply Submonoid.LocalizationMap.mulEquivOfLocalizations_left_inv_apply
 #align add_submonoid.localization_map.add_equiv_of_localizations_left_neg_apply AddSubmonoid.LocalizationMap.addEquivOfLocalizations_left_neg_apply
 
@@ -2197,15 +2197,15 @@ is a localization map for `T`. -/
       "Given `comm_monoid`s `M, P` and submonoids `S ⊆ M, T ⊆ P`, if `f : M →* N` is\na localization map for `S` and `k : P ≃* M` is an isomorphism of `comm_monoid`s such that\n`k(T) = S`, `f ∘ k` is a localization map for `T`."]
 def ofMulEquivOfDom {k : P ≃* M} (H : T.map k.toMonoidHom = S) : LocalizationMap T N :=
   let H' : S.comap k.toMonoidHom = T :=
-    H ▸ (SetLike.coe_injective <| T.1.preimage_image_eq k.toEquiv.Injective)
+    H ▸ (SetLike.coe_injective <| T.1.preimage_image_eq k.toEquiv.injective)
   (f.toMap.comp k.toMonoidHom).toLocalizationMap
     (fun y =>
       let ⟨z, hz⟩ := f.map_units ⟨k y, H ▸ Set.mem_image_of_mem k y.2⟩
       ⟨z, hz⟩)
     (fun z =>
       let ⟨x, hx⟩ := f.surj z
-      let ⟨v, hv⟩ := k.toEquiv.Surjective x.1
-      let ⟨w, hw⟩ := k.toEquiv.Surjective x.2
+      let ⟨v, hv⟩ := k.toEquiv.surjective x.1
+      let ⟨w, hw⟩ := k.toEquiv.surjective x.2
       ⟨(v, ⟨w, H' ▸ show k w ∈ S from hw.symm ▸ x.2.2⟩),
         show z * f.toMap (k.toEquiv w) = f.toMap (k.toEquiv v) by erw [hv, hw, hx] <;> rfl⟩)
     fun x y =>
@@ -2453,7 +2453,7 @@ theorem mk_eq_monoidOf_mk'_apply (x y) : mk x y = (monoidOf S).mk' x y :=
   show _ = _ * _ from
     (Submonoid.LocalizationMap.mul_inv_right (monoidOf S).map_units _ _ _).2 <|
       by
-      rw [← mk_one_eq_monoid_of_mk, ← mk_one_eq_monoid_of_mk,
+      rw [← mk_one_eq_monoidOf_mk, ← mk_one_eq_monoidOf_mk,
         show mk x y * mk y 1 = mk (x * y) (1 * y) by rw [mul_comm 1 y, mk_mul],
         show mk x 1 = mk (x * 1) ((1 : S) * 1) by rw [mul_one, mul_one]]
       exact mk_eq_mk_iff.2 (Con.symm _ <| (Localization.r S).mul (Con.refl _ (x, 1)) <| one_rel _)
@@ -2482,7 +2482,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.lift_on_mk' Localization.liftOn_mk'ₓ'. -/
 @[simp, to_additive]
 theorem liftOn_mk' {p : Sort u} (f : ∀ (a : M) (b : S), p) (H) (a : M) (b : S) :
-    liftOn ((monoidOf S).mk' a b) f H = f a b := by rw [← mk_eq_monoid_of_mk', lift_on_mk]
+    liftOn ((monoidOf S).mk' a b) f H = f a b := by rw [← mk_eq_monoidOf_mk', liftOn_mk]
 #align localization.lift_on_mk' Localization.liftOn_mk'
 #align add_localization.lift_on_mk' addLocalization.liftOn_mk'
 
@@ -2495,7 +2495,7 @@ Case conversion may be inaccurate. Consider using '#align localization.lift_on�
 @[simp, to_additive]
 theorem liftOn₂_mk' {p : Sort _} (f : M → S → M → S → p) (H) (a c : M) (b d : S) :
     liftOn₂ ((monoidOf S).mk' a b) ((monoidOf S).mk' c d) f H = f a b c d := by
-  rw [← mk_eq_monoid_of_mk', lift_on₂_mk]
+  rw [← mk_eq_monoidOf_mk', liftOn₂_mk]
 #align localization.lift_on₂_mk' Localization.liftOn₂_mk'
 #align add_localization.lift_on₂_mk' addLocalization.liftOn₂_mk'
 
@@ -2550,7 +2550,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.mul_equiv_of_quotient_mk Localization.mulEquivOfQuotient_mkₓ'. -/
 @[to_additive]
 theorem mulEquivOfQuotient_mk (x y) : mulEquivOfQuotient f (mk x y) = f.mk' x y := by
-  rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_mk' _ _
+  rw [mk_eq_monoidOf_mk'_apply] <;> exact mulEquivOfQuotient_mk' _ _
 #align localization.mul_equiv_of_quotient_mk Localization.mulEquivOfQuotient_mk
 #align add_localization.add_equiv_of_quotient_mk addLocalization.addEquivOfQuotient_mk
 
@@ -2562,7 +2562,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.mul_equiv_of_quotient_monoid_of Localization.mulEquivOfQuotient_monoidOfₓ'. -/
 @[simp, to_additive]
 theorem mulEquivOfQuotient_monoidOf (x) : mulEquivOfQuotient f ((monoidOf S).toMap x) = f.toMap x :=
-  (monoidOf S).liftEq _ _
+  (monoidOf S).lift_eq _ _
 #align localization.mul_equiv_of_quotient_monoid_of Localization.mulEquivOfQuotient_monoidOf
 #align add_localization.add_equiv_of_quotient_add_monoid_of addLocalization.addEquivOfQuotient_addMonoidOf
 
@@ -2587,7 +2587,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align localization.mul_equiv_of_quotient_symm_mk Localization.mulEquivOfQuotient_symm_mkₓ'. -/
 @[to_additive]
 theorem mulEquivOfQuotient_symm_mk (x y) : (mulEquivOfQuotient f).symm (f.mk' x y) = mk x y := by
-  rw [mk_eq_monoid_of_mk'_apply] <;> exact mul_equiv_of_quotient_symm_mk' _ _
+  rw [mk_eq_monoidOf_mk'_apply] <;> exact mulEquivOfQuotient_symm_mk' _ _
 #align localization.mul_equiv_of_quotient_symm_mk Localization.mulEquivOfQuotient_symm_mk
 #align add_localization.add_equiv_of_quotient_symm_mk addLocalization.addEquivOfQuotient_symm_mk
 
@@ -2600,7 +2600,7 @@ Case conversion may be inaccurate. Consider using '#align localization.mul_equiv
 @[simp, to_additive]
 theorem mulEquivOfQuotient_symm_monoidOf (x) :
     (mulEquivOfQuotient f).symm (f.toMap x) = (monoidOf S).toMap x :=
-  f.liftEq _ _
+  f.lift_eq _ _
 #align localization.mul_equiv_of_quotient_symm_monoid_of Localization.mulEquivOfQuotient_symm_monoidOf
 #align add_localization.add_equiv_of_quotient_symm_add_monoid_of addLocalization.addEquivOfQuotient_symm_addMonoidOf
 
@@ -2758,7 +2758,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoidWithZero.{u1} M] {S : Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))} {p : Type.{u2}} (f : M -> (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))))) x S)) -> p) (H : forall {a : M} {c : M} {b : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)} {d : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)}, (FunLike.coe.{succ u1, succ u1, succ u1} (Con.{u1} (Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) (Prod.instMulProd.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)) (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (Submonoid.mul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))) S))) (Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) (fun (_x : Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) => (fun (x._@.Mathlib.GroupTheory.Congruence._hyg.479 : Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) => (Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) -> Prop) _x) (Con.instFunLikeConForAllProp.{u1} (Prod.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S))) (Prod.instMulProd.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)) (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (Submonoid.mul.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))) S))) (Localization.r.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1) S) (Prod.mk.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)) a b) (Prod.mk.{u1, u1} M (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1))))) x S)) c d)) -> (Eq.{succ u2} p (f a b) (f c d))), Eq.{succ u2} p (Localization.liftOn.{succ u2, u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1) S p (OfNat.ofNat.{u1} (Localization.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1) S) 0 (Zero.toOfNat0.{u1} (Localization.{u1} M (CommMonoidWithZero.toCommMonoid.{u1} M _inst_1) S) (Localization.instZeroLocalizationToCommMonoid.{u1} M _inst_1 S))) f H) (f (OfNat.ofNat.{u1} M 0 (Zero.toOfNat0.{u1} M (CommMonoidWithZero.toZero.{u1} M _inst_1))) (OfNat.ofNat.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))))) x S)) 1 (One.toOfNat1.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1)))) M (Submonoid.instSetLikeSubmonoid.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))))) x S)) (Submonoid.one.{u1} M (MulZeroOneClass.toMulOneClass.{u1} M (MonoidWithZero.toMulZeroOneClass.{u1} M (CommMonoidWithZero.toMonoidWithZero.{u1} M _inst_1))) S))))
 Case conversion may be inaccurate. Consider using '#align localization.lift_on_zero Localization.liftOn_zeroₓ'. -/
 theorem liftOn_zero {p : Type _} (f : ∀ (x : M) (y : S), p) (H) : liftOn 0 f H = f 0 1 := by
-  rw [← mk_zero 1, lift_on_mk]
+  rw [← mk_zero 1, liftOn_mk]
 #align localization.lift_on_zero Localization.liftOn_zero
 
 end Localization
@@ -2775,7 +2775,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.localization_map.sec_zero_fst Submonoid.LocalizationMap.sec_zero_fstₓ'. -/
 @[simp]
 theorem LocalizationMap.sec_zero_fst {f : LocalizationMap S N} : f.toMap (f.sec 0).fst = 0 := by
-  rw [localization_map.sec_spec', mul_zero]
+  rw [LocalizationMap.sec_spec', mul_zero]
 #align submonoid.localization_map.sec_zero_fst Submonoid.LocalizationMap.sec_zero_fst
 
 namespace LocalizationWithZeroMap
@@ -2795,10 +2795,10 @@ noncomputable def lift (f : LocalizationWithZeroMap S N) (g : M →*₀ P)
   { @LocalizationMap.lift _ _ _ _ _ _ _ f.toLocalizationMap g.toMonoidHom hg with
     map_zero' :=
       by
-      rw [MonoidHom.toFun_eq_coe, localization_map.lift_spec, mul_zero, ← map_zero g, ←
+      rw [MonoidHom.toFun_eq_coe, LocalizationMap.lift_spec, mul_zero, ← map_zero g, ←
         g.to_monoid_hom_coe]
       refine' f.to_localization_map.eq_of_eq hg _
-      rw [localization_map.sec_zero_fst]
+      rw [LocalizationMap.sec_zero_fst]
       exact f.to_monoid_with_zero_hom.map_zero.symm }
 #align submonoid.localization_with_zero_map.lift Submonoid.LocalizationWithZeroMap.lift
 

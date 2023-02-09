@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.pi.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -432,7 +432,7 @@ Case conversion may be inaccurate. Consider using '#align pi.mul_single_comm Pi.
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
 theorem mulSingle_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
-    mulSingle i x i' = mulSingle i' x i := by simp [mul_single_apply, eq_comm]
+    mulSingle i x i' = mulSingle i' x i := by simp [mulSingle_apply, eq_comm]
 #align pi.mul_single_comm Pi.mulSingle_comm
 #align pi.single_comm Pi.single_comm
 
@@ -440,7 +440,7 @@ theorem mulSingle_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
 @[to_additive]
 theorem apply_mulSingle (f' : ∀ i, f i → g i) (hf' : ∀ i, f' i 1 = 1) (i : I) (x : f i) (j : I) :
     f' j (mulSingle i x j) = mulSingle i (f' i x) j := by
-  simpa only [Pi.one_apply, hf', mul_single] using Function.apply_update f' 1 i x j
+  simpa only [Pi.one_apply, hf', mulSingle] using Function.apply_update f' 1 i x j
 #align pi.apply_mul_single Pi.apply_mulSingle
 #align pi.apply_single Pi.apply_single
 -/
@@ -452,8 +452,8 @@ theorem apply_mulSingle₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 
   by
   by_cases h : j = i
   · subst h
-    simp only [mul_single_eq_same]
-  · simp only [mul_single_eq_of_ne h, hf']
+    simp only [mulSingle_eq_same]
+  · simp only [mulSingle_eq_of_ne h, hf']
 #align pi.apply_mul_single₂ Pi.apply_mulSingle₂
 #align pi.apply_single₂ Pi.apply_single₂
 -/
@@ -581,7 +581,7 @@ end Extend
 #print Function.surjective_pi_map /-
 theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Surjective (F i)) :
     Surjective fun x : ∀ i, f i => fun i => F i (x i) := fun y =>
-  ⟨fun i => (hF i (y i)).some, funext fun i => (hF i (y i)).choose_spec⟩
+  ⟨fun i => (hF i (y i)).choose, funext fun i => (hF i (y i)).choose_spec⟩
 #align function.surjective_pi_map Function.surjective_pi_map
 -/
 
@@ -595,7 +595,7 @@ theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Injective (F i)) 
 #print Function.bijective_pi_map /-
 theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, Bijective (F i)) :
     Bijective fun x : ∀ i, f i => fun i => F i (x i) :=
-  ⟨injective_pi_map fun i => (hF i).Injective, surjective_pi_map fun i => (hF i).Surjective⟩
+  ⟨injective_pi_map fun i => (hF i).injective, surjective_pi_map fun i => (hF i).surjective⟩
 #align function.bijective_pi_map Function.bijective_pi_map
 -/
 

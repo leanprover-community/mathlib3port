@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.regular.smul
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,7 +293,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_smul_regular.zero_iff_subsingleton IsSMulRegular.zero_iff_subsingletonₓ'. -/
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 theorem zero_iff_subsingleton : IsSMulRegular M (0 : R) ↔ Subsingleton M :=
-  ⟨fun h => h.Subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
+  ⟨fun h => h.subsingleton, fun H a b h => @Subsingleton.elim _ H a b⟩
 #align is_smul_regular.zero_iff_subsingleton IsSMulRegular.zero_iff_subsingleton
 
 /- warning: is_smul_regular.not_zero_iff -> IsSMulRegular.not_zero_iff is a dubious translation:

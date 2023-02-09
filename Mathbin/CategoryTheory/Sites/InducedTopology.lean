@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.sites.induced_topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ theorem pushforward_cover_iff_cover_pullback {X : C} (S : Sieve X) :
   by
   constructor
   · intro hS
-    exact ⟨⟨_, hS⟩, (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S⟩
+    exact ⟨⟨_, hS⟩, (Sieve.fullyFaithfulFunctorGaloisCoinsertion G X).u_l_eq S⟩
   · rintro ⟨T, rfl⟩
     exact Hld T
 #align category_theory.locally_cover_dense.pushforward_cover_iff_cover_pullback CategoryTheory.LocallyCoverDense.pushforward_cover_iff_cover_pullback
@@ -82,13 +82,13 @@ def inducedTopology : GrothendieckTopology C
   sieves X S := K _ (S.functorPushforward G)
   top_mem' X := by
     change K _ _
-    rw [sieve.functor_pushforward_top]
+    rw [Sieve.functorPushforward_top]
     exact K.top_mem _
   pullback_stable' X Y S f hS :=
     by
     have : S.pullback f = ((S.functor_pushforward G).pullback (G.map f)).functorPullback G :=
       by
-      conv_lhs => rw [← (sieve.fully_faithful_functor_galois_coinsertion G X).u_l_eq S]
+      conv_lhs => rw [← (Sieve.fullyFaithfulFunctorGaloisCoinsertion G X).u_l_eq S]
       ext
       change (S.functor_pushforward G) _ ↔ (S.functor_pushforward G) _
       rw [G.map_comp]
@@ -98,7 +98,7 @@ def inducedTopology : GrothendieckTopology C
   transitive' X S hS S' H' := by
     apply K.transitive hS
     rintro Y _ ⟨Z, g, i, hg, rfl⟩
-    rw [sieve.pullback_comp]
+    rw [Sieve.pullback_comp]
     apply K.pullback_stable i
     refine' K.superset_covering _ (H' hg)
     rintro W _ ⟨Z', g', i', hg, rfl⟩
@@ -132,7 +132,7 @@ theorem CoverDense.locallyCoverDense [Full G] (H : CoverDense K G) : LocallyCove
 -/
 abbrev CoverDense.inducedTopology [Full G] [Faithful G] (H : CoverDense K G) :
     GrothendieckTopology C :=
-  H.LocallyCoverDense.inducedTopology
+  H.locallyCoverDense.inducedTopology
 #align category_theory.cover_dense.induced_topology CategoryTheory.CoverDense.inducedTopology
 
 variable (J)
@@ -146,7 +146,7 @@ theorem over_forget_locallyCoverDense (X : C) : LocallyCoverDense J (Over.forget
   · rintro ⟨_, _, g', hg, rfl⟩
     exact T.val.downward_closed hg g'
   · intro hf
-    exact ⟨over.mk (f ≫ Y.hom), over.hom_mk f, 𝟙 _, hf, (category.id_comp _).symm⟩
+    exact ⟨Over.mk (f ≫ Y.hom), Over.homMk f, 𝟙 _, hf, (Category.id_comp _).symm⟩
 #align category_theory.over_forget_locally_cover_dense CategoryTheory.over_forget_locallyCoverDense
 
 end
@@ -166,8 +166,8 @@ is complete.
 -/
 noncomputable def CoverDense.sheafEquiv [Full G] [Faithful G] (H : CoverDense K G) [HasLimits A] :
     Sheaf H.inducedTopology A ≌ Sheaf K A :=
-  H.sheafEquivOfCoverPreservingCoverLifting H.LocallyCoverDense.inducedTopology_coverPreserving
-    H.LocallyCoverDense.inducedTopology_coverLifting
+  H.sheafEquivOfCoverPreservingCoverLifting H.locallyCoverDense.inducedTopology_coverPreserving
+    H.locallyCoverDense.inducedTopology_coverLifting
 #align category_theory.cover_dense.Sheaf_equiv CategoryTheory.CoverDense.sheafEquiv
 
 end SmallSite

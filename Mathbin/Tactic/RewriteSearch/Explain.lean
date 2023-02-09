@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.explain
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,23 +41,23 @@ variable {α β : Type} (p : DirPair α)
 /-- Get one side of the pair, picking the side according to the direction. -/
 def get : Dir → α
   | dir.F => p.l
-  | dir.A => p.R
+  | dir.A => p.r
 #align tactic.rewrite_search.dir_pair.get Tactic.RewriteSearch.DirPair.get
 
 /-- Set one side of the pair, picking the side according to the direction. -/
 def set : Dir → α → DirPair α
-  | dir.F, v => ⟨v, p.R⟩
+  | dir.F, v => ⟨v, p.r⟩
   | dir.A, v => ⟨p.l, v⟩
 #align tactic.rewrite_search.dir_pair.set Tactic.RewriteSearch.DirPair.set
 
 /-- Convert the pair to a list of its elements. -/
 def toList : List α :=
-  [p.l, p.R]
+  [p.l, p.r]
 #align tactic.rewrite_search.dir_pair.to_list Tactic.RewriteSearch.DirPair.toList
 
 /-- Convert the pair to a readable string format. -/
 def toString [ToString α] (p : DirPair α) : String :=
-  toString p.l ++ "-" ++ toString p.R
+  toString p.l ++ "-" ++ toString p.r
 #align tactic.rewrite_search.dir_pair.to_string Tactic.RewriteSearch.DirPair.toString
 
 instance hasToString [ToString α] : ToString (DirPair α) :=
@@ -74,7 +74,7 @@ private unsafe def nth_rule (rs : List (expr × Bool)) (i : ℕ) : expr × Bool 
 /-- Convert a rule into the string of Lean code used to refer to this rule. -/
 private unsafe def pp_rule (r : expr × Bool) : tactic String := do
   let pp ← pp r.1
-  return <| (if r.2 then "←" else "") ++ toString pp
+  return <| (if r.2 then "←" else "") ++ to_string pp
 #align tactic.rewrite_search.pp_rule tactic.rewrite_search.pp_rule
 
 private unsafe def how.to_rewrite (rs : List (expr × Bool)) : how → Option (expr × Bool)
@@ -86,14 +86,14 @@ private unsafe def explain_using_location (rs : List (expr × Bool)) (s : Side) 
     how → tactic (Option String)
   | h => do
     let rule ← pp_rule <| nth_rule rs h.rule_index
-    return <| some ("nth_rewrite_" ++ s ++ " " ++ toString h ++ " " ++ rule)
+    return <| some ("nth_rewrite_" ++ s ++ " " ++ to_string h ++ " " ++ rule)
 #align tactic.rewrite_search.explain_using_location tactic.rewrite_search.explain_using_location
 
 /-- Explain a list of rewrites using `nth_rewrite`. -/
 private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s : Side)
     (steps : List how) : tactic String := do
   let rules ← steps.mapM fun h : how => Option.toList <$> explain_using_location rs s h
-  return <| String.intercalate ",\n  " rules
+  return <| string.intercalate ",\n  " rules
 #align tactic.rewrite_search.using_location.explain_rewrites tactic.rewrite_search.using_location.explain_rewrites
 
 namespace UsingConv
@@ -127,7 +127,7 @@ open SpliceResult
 
 private unsafe def pack_splice_result (s : ExprLens.Dir) :
     SpliceResult → DirPair (Option AppAddr) → SpliceResult
-  | new addr, c => new <| AppAddr.node <| c.Set s (some addr)
+  | new addr, c => new <| AppAddr.node <| c.set s (some addr)
   | sr, _ => sr
 #align tactic.rewrite_search.using_conv.pack_splice_result tactic.rewrite_search.using_conv.pack_splice_result
 
@@ -164,7 +164,7 @@ private unsafe def splice_in (a : Option AppAddr) (rws : List ℕ) (s : List Exp
 /-- Construct a single `erw` tactic for the given rules. -/
 private unsafe def build_rw_tactic (rs : List (expr × Bool)) (hs : List ℕ) : tactic String := do
   let rws ← (hs.map <| nth_rule rs).mapM pp_rule
-  return <| "erw [" ++ String.intercalate ", " rws ++ "]"
+  return <| "erw [" ++ string.intercalate ", " rws ++ "]"
 #align tactic.rewrite_search.using_conv.build_rw_tactic tactic.rewrite_search.using_conv.build_rw_tactic
 
 private unsafe def explain_tree_aux (rs : List (expr × Bool)) :
@@ -201,13 +201,13 @@ private unsafe def explanation_lines (rs : List (expr × Bool)) (s : Side) :
   | some tree, [] => do
     let tacs ← explain_tree rs tree
     return <|
-        if tacs = 0 then [] else ["conv_" ++ s ++ " { " ++ String.intercalate ", " tacs ++ " }"]
+        if tacs = 0 then [] else ["conv_" ++ s ++ " { " ++ string.intercalate ", " tacs ++ " }"]
   | tree, h :: rest => do
     let (new_tree, rest_if_fail) ←
       match h.addr with
         | some addr => do
           let new_tree ← splice_in tree [h.rule_index] addr
-          return (some new_tree, List.cons h rest)
+          return (some new_tree, list.cons h rest)
         | none => do
           return (none, rest)
     match new_tree with
@@ -255,8 +255,8 @@ unsafe def proof_unit.rewrites (u : proof_unit) (rs : List (expr × Bool)) : Lis
 /-- Construct an explanation string from a proof unit. -/
 unsafe def proof_unit.explain (u : proof_unit) (rs : List (expr × Bool))
     (explain_using_conv : Bool) : tactic String :=
-  if explain_using_conv then using_conv.explain_rewrites rs u.Side u.steps
-  else using_location.explain_rewrites rs u.Side u.steps
+  if explain_using_conv then using_conv.explain_rewrites rs u.side u.steps
+  else using_location.explain_rewrites rs u.side u.steps
 #align tactic.rewrite_search.proof_unit.explain tactic.rewrite_search.proof_unit.explain
 
 private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_conv : Bool) :
@@ -265,14 +265,14 @@ private unsafe def explain_proof_full (rs : List (expr × Bool)) (explain_using_
   | u :: rest => do
     let head
       ←-- Don't use transitivity for the last unit, since it must be redundant.
-          if rest.length = 0 ∨ u.Side = Side.L then pure []
+          if rest.length = 0 ∨ u.side = Side.L then pure []
         else do
           let n ← (infer_type u.proof >>= fun e => Prod.snd <$> (match_eq e <|> match_iff e)) >>= pp
-          pure <| ["transitivity " ++ toString n]
+          pure <| ["transitivity " ++ to_string n]
     let unit_expl ← u.explain rs explain_using_conv
     let rest_expl ← explain_proof_full rest
-    let expls := (head ++ [unit_expl, rest_expl]).filterₓ fun t => ¬t.length = 0
-    return <| String.intercalate ",\n  " expls
+    let expls := (head ++ [unit_expl, rest_expl]).filter fun t => ¬t.length = 0
+    return <| string.intercalate ",\n  " expls
 #align tactic.rewrite_search.explain_proof_full tactic.rewrite_search.explain_proof_full
 
 private unsafe def explain_proof_concisely (rules : List (expr × Bool)) (proof : expr)
@@ -292,11 +292,11 @@ Emit it as `"Try this: <code>"` with each successive line of code indented.
 -/
 unsafe def explain_search_result (cfg : config) (rules : List (expr × Bool)) (proof : expr)
     (units : List proof_unit) : tactic Unit :=
-  if Units.Empty then trace "Try this: exact rfl"
+  if units.isEmpty then trace "Try this: exact rfl"
   else do
     let explanation ←
-      explain_proof_concisely rules proof Units <|>
-          explain_proof_full rules cfg.explain_using_conv Units
+      explain_proof_concisely rules proof units <|>
+          explain_proof_full rules cfg.explain_using_conv units
     trace <| "Try this: " ++ explanation
 #align tactic.rewrite_search.explain_search_result tactic.rewrite_search.explain_search_result
 

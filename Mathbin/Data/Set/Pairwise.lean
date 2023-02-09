@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
 #print Symmetric.pairwise_on /-
 theorem Symmetric.pairwise_on [LinearOrder ι] (hr : Symmetric r) (f : ι → α) :
     Pairwise (r on f) ↔ ∀ ⦃m n⦄, m < n → r (f m) (f n) :=
-  ⟨fun h m n hmn => h hmn.Ne, fun h m n hmn => hmn.lt_or_lt.elim (@h _ _) fun h' => hr (h h')⟩
+  ⟨fun h m n hmn => h hmn.ne, fun h m n hmn => hmn.lt_or_lt.elim (@h _ _) fun h' => hr (h h')⟩
 #align symmetric.pairwise_on Symmetric.pairwise_on
 -/
 
@@ -122,14 +122,14 @@ protected theorem Subsingleton.pairwise (h : s.Subsingleton) (r : α → α → 
 #print Set.pairwise_empty /-
 @[simp]
 theorem pairwise_empty (r : α → α → Prop) : (∅ : Set α).Pairwise r :=
-  subsingleton_empty.Pairwise r
+  subsingleton_empty.pairwise r
 #align set.pairwise_empty Set.pairwise_empty
 -/
 
 #print Set.pairwise_singleton /-
 @[simp]
 theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} r :=
-  subsingleton_singleton.Pairwise r
+  subsingleton_singleton.pairwise r
 #align set.pairwise_singleton Set.pairwise_singleton
 -/
 
@@ -158,7 +158,7 @@ theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.
     · apply IsRefl.refl
     · exact H hx hy hne
   · rintro ⟨z, hz⟩ x hx y hy hne
-    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
+    exact @is_trans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
 #align set.nonempty.pairwise_iff_exists_forall Set.Nonempty.pairwise_iff_exists_forall
 
 /- warning: set.nonempty.pairwise_eq_iff_exists_eq -> Set.Nonempty.pairwise_eq_iff_exists_eq is a dubious translation:
@@ -306,7 +306,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.pairwise_bot_iff Set.pairwise_bot_iffₓ'. -/
 @[simp]
 theorem pairwise_bot_iff : s.Pairwise (⊥ : α → α → Prop) ↔ (s : Set α).Subsingleton :=
-  ⟨fun h a ha b hb => h.Eq ha hb id, fun h => h.Pairwise _⟩
+  ⟨fun h a ha b hb => h.eq ha hb id, fun h => h.pairwise _⟩
 #align set.pairwise_bot_iff Set.pairwise_bot_iff
 
 /- warning: set.pairwise.subsingleton -> Set.Pairwise.subsingleton is a dubious translation:
@@ -336,10 +336,10 @@ theorem pairwise_unionᵢ {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
   by
   constructor
   · intro H n
-    exact Pairwise.mono (subset_Union _ _) H
+    exact Pairwise.mono (subset_unionᵢ _ _) H
   · intro H i hi j hj hij
-    rcases mem_Union.1 hi with ⟨m, hm⟩
-    rcases mem_Union.1 hj with ⟨n, hn⟩
+    rcases mem_unionᵢ.1 hi with ⟨m, hm⟩
+    rcases mem_unionᵢ.1 hj with ⟨n, hn⟩
     rcases h m n with ⟨p, mp, np⟩
     exact H p (mp hm) (np hn) hij
 #align set.pairwise_Union Set.pairwise_unionᵢ
@@ -348,7 +348,7 @@ theorem pairwise_unionᵢ {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
 theorem pairwise_unionₛ {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
     (⋃₀ s).Pairwise r ↔ ∀ a ∈ s, Set.Pairwise a r :=
   by
-  rw [sUnion_eq_Union, pairwise_Union h.directed_coe, SetCoe.forall]
+  rw [unionₛ_eq_unionᵢ, pairwise_unionᵢ h.directed_coe, SetCoe.forall]
   rfl
 #align set.pairwise_sUnion Set.pairwise_unionₛ
 -/
@@ -559,7 +559,7 @@ Case conversion may be inaccurate. Consider using '#align set.pairwise_disjoint.
 -- classical
 theorem PairwiseDisjoint.elim (hs : s.PairwiseDisjoint f) {i j : ι} (hi : i ∈ s) (hj : j ∈ s)
     (h : ¬Disjoint (f i) (f j)) : i = j :=
-  hs.Eq hi hj h
+  hs.eq hi hj h
 #align set.pairwise_disjoint.elim Set.PairwiseDisjoint.elim
 
 end PartialOrderBot
@@ -668,9 +668,9 @@ theorem bunionᵢ_diff_bunionᵢ_eq {s t : Set ι} {f : ι → Set α} (h : (s �
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i :=
   by
   refine'
-    (bUnion_diff_bUnion_subset f s t).antisymm
-      (Union₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bUnion hi.1 ha, _⟩)
-  rw [mem_Union₂]; rintro ⟨j, hj, haj⟩
+    (bunionᵢ_diff_bunionᵢ_subset f s t).antisymm
+      (unionᵢ₂_subset fun i hi a ha => (mem_diff _).2 ⟨mem_bunionᵢ hi.1 ha, _⟩)
+  rw [mem_unionᵢ₂]; rintro ⟨j, hj, haj⟩
   exact (h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm).le_bot ⟨ha, haj⟩
 #align set.bUnion_diff_bUnion_eq Set.bunionᵢ_diff_bunionᵢ_eq
 
@@ -684,7 +684,7 @@ Case conversion may be inaccurate. Consider using '#align set.bUnion_eq_sigma_of
 noncomputable def bunionᵢEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
     (⋃ i ∈ s, f i) ≃ Σi : s, f i :=
   (Equiv.setCongr (bunionᵢ_eq_unionᵢ _ _)).trans <|
-    unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
+    unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => ne <| Subtype.eq eq
 #align set.bUnion_eq_sigma_of_disjoint Set.bunionᵢEqSigmaOfDisjoint
 
 /- warning: set.pairwise_disjoint_image_right_iff -> Set.pairwiseDisjoint_image_right_iff is a dubious translation:
@@ -760,7 +760,7 @@ theorem Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ (h₀ : (s ∪
   by
   rintro i hi
   obtain ⟨a, hai⟩ := h₁ i hi
-  obtain ⟨j, hj, haj⟩ := mem_Union₂.1 (h <| mem_Union₂_of_mem hi hai)
+  obtain ⟨j, hj, haj⟩ := mem_unionᵢ₂.1 (h <| mem_unionᵢ₂_of_mem hi hai)
   rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj)
       (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
 #align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_bunionᵢ_subset_bunionᵢ
@@ -784,8 +784,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pairwise.bUnion_injective Pairwise.bunionᵢ_injectiveₓ'. -/
 theorem Pairwise.bunionᵢ_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
     Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
-  ((h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Subset).antisymm <|
-    (h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.Superset
+  ((h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.subset).antisymm <|
+    (h₀.subset_of_bunionᵢ_subset_bunionᵢ fun _ _ => h₁ _) <| h.superset
 #align pairwise.bUnion_injective Pairwise.bunionᵢ_injective
 
 end

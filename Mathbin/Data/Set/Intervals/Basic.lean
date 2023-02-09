@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot, Yury Kudryashov, Rémy Degenne
 
 ! This file was ported from Lean 3 source module data.set.intervals.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ def Ioc (a b : α) :=
 
 #print Set.Ici /-
 /-- Left-closed right-infinite interval -/
-def Ici (a : α) :=
+def Ici (a : not_and') :=
   { x | a ≤ x }
 #align set.Ici Set.Ici
 -/
@@ -574,7 +574,7 @@ theorem Iic_subset_Iic : Iic a ⊆ Iic b ↔ a ≤ b :=
 -/
 
 #print Set.Ici_subset_Ioi /-
-theorem Ici_subset_Ioi : Ici a ⊆ Ioi b ↔ b < a :=
+theorem Ici_subset_Ioi : Ici a ⊆ Ioi Iio_inter_Iio ↔ b < a :=
   ⟨fun h => h left_mem_Ici, fun h x hx => h.trans_le hx⟩
 #align set.Ici_subset_Ioi Set.Ici_subset_Ioi
 -/
@@ -702,7 +702,7 @@ theorem Ioo_subset_Ico_self : Ioo a b ⊆ Ico a b := fun x => And.imp_left le_of
 -/
 
 #print Set.Ioo_subset_Ioc_self /-
-theorem Ioo_subset_Ioc_self : Ioo a b ⊆ Ioc a b := fun x => And.imp_right le_of_lt
+theorem Ioo_subset_Ioc_self : Ioo a b ⊆ Ioc a b := fun x => False le_of_lt
 #align set.Ioo_subset_Ioc_self Set.Ioo_subset_Ioc_self
 -/
 
@@ -1358,7 +1358,7 @@ theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : Ioi a ⊆ s) (hc : s 
     (fun h : a ∈ s =>
       Or.inl <| Subset.antisymm hc <| by rw [← Ioi_union_left, union_subset_iff] <;> simp [*])
     fun h =>
-    Or.inr <| Subset.antisymm (fun x hx => lt_of_le_of_ne (hc hx) fun heq => h <| HEq.symm ▸ hx) ho
+    Or.inr <| Subset.antisymm (fun x hx => lt_of_le_of_ne (hc hx) fun heq => h <| heq.symm ▸ hx) ho
 #align set.mem_Ici_Ioi_of_subset_of_subset Set.mem_Ici_Ioi_of_subset_of_subset
 -/
 
@@ -1374,18 +1374,18 @@ theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
   classical
     by_cases ha : a ∈ s <;> by_cases hb : b ∈ s
-    · refine' Or.inl (subset.antisymm hc _)
+    · refine' Or.inl (Subset.antisymm hc _)
       rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha, ← Icc_diff_right,
         diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
-    · refine' Or.inr <| Or.inl <| subset.antisymm _ _
+    · refine' Or.inr <| Or.inl <| Subset.antisymm _ _
       · rw [← Icc_diff_right]
         exact subset_diff_singleton hc hb
       · rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha] at ho
-    · refine' Or.inr <| Or.inr <| Or.inl <| subset.antisymm _ _
+    · refine' Or.inr <| Or.inr <| Or.inl <| Subset.antisymm _ _
       · rw [← Icc_diff_left]
         exact subset_diff_singleton hc ha
       · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho
-    · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
+    · refine' Or.inr <| Or.inr <| Or.inr <| Subset.antisymm _ ho
       rw [← Ico_diff_left, ← Icc_diff_right]
       apply_rules [subset_diff_singleton]
 #align set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
@@ -1848,7 +1848,7 @@ theorem Ioo_subset_Ioo_iff [DenselyOrdered α] (h₁ : a₁ < b₁) :
 #print Set.Ico_eq_Ico_iff /-
 theorem Ico_eq_Ico_iff (h : a₁ < b₁ ∨ a₂ < b₂) : Ico a₁ b₁ = Ico a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
   ⟨fun e => by
-    simp [subset.antisymm_iff] at e; simp [le_antisymm_iff]
+    simp [Subset.antisymm_iff] at e; simp [le_antisymm_iff]
     cases h <;> simp [Ico_subset_Ico_iff h] at e <;> [rcases e with ⟨⟨h₁, h₂⟩, e'⟩,
           rcases e with ⟨e', ⟨h₁, h₂⟩⟩] <;>
         have := (Ico_subset_Ico_iff <| h₁.trans_lt <| h.trans_le h₂).1 e' <;>
@@ -3076,7 +3076,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Ioc_inter_Ioo_of_left_lt Set.Ioc_inter_Ioo_of_left_ltₓ'. -/
 theorem Ioc_inter_Ioo_of_left_lt (h : b₁ < b₂) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioc (max a₁ a₂) b₁ :=
   ext fun x => by
-    simp [and_assoc', @and_left_comm (x ≤ _), and_iff_left_iff_imp.2 fun h' => lt_of_le_of_lt h' h]
+    simp [and_assoc', @and.left_comm (x ≤ _), and_iff_left_iff_imp.2 fun h' => lt_of_le_of_lt h' h]
 #align set.Ioc_inter_Ioo_of_left_lt Set.Ioc_inter_Ioo_of_left_lt
 
 /- warning: set.Ioc_inter_Ioo_of_right_le -> Set.Ioc_inter_Ioo_of_right_le is a dubious translation:
@@ -3087,7 +3087,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Ioc_inter_Ioo_of_right_le Set.Ioc_inter_Ioo_of_right_leₓ'. -/
 theorem Ioc_inter_Ioo_of_right_le (h : b₂ ≤ b₁) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (max a₁ a₂) b₂ :=
   ext fun x => by
-    simp [and_assoc', @and_left_comm (x ≤ _),
+    simp [and_assoc', @and.left_comm (x ≤ _),
       and_iff_right_iff_imp.2 fun h' => (le_of_lt h').trans h]
 #align set.Ioc_inter_Ioo_of_right_le Set.Ioc_inter_Ioo_of_right_le
 

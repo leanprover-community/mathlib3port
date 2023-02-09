@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.group.ball_sphere
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ theorem coe_neg_sphere {r : ℝ} (v : sphere (0 : E) r) : ↑(-v) = (-v : E) :=
 #align coe_neg_sphere coe_neg_sphere
 
 instance : HasContinuousNeg (sphere (0 : E) r) :=
-  ⟨continuous_neg.subtypeMap _⟩
+  ⟨continuous_neg.subtype_map _⟩
 
 /-- We equip the ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
@@ -50,7 +50,7 @@ theorem coe_neg_ball {r : ℝ} (v : ball (0 : E) r) : ↑(-v) = (-v : E) :=
 #align coe_neg_ball coe_neg_ball
 
 instance : HasContinuousNeg (ball (0 : E) r) :=
-  ⟨continuous_neg.subtypeMap _⟩
+  ⟨continuous_neg.subtype_map _⟩
 
 /-- We equip the closed ball, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
@@ -65,5 +65,5 @@ theorem coe_neg_closedBall {r : ℝ} (v : closedBall (0 : E) r) : ↑(-v) = (-v 
 #align coe_neg_closed_ball coe_neg_closedBall
 
 instance : HasContinuousNeg (closedBall (0 : E) r) :=
-  ⟨continuous_neg.subtypeMap _⟩
+  ⟨continuous_neg.subtype_map _⟩
 

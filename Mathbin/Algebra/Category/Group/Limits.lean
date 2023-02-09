@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Group.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,8 +55,8 @@ def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
     carrier := (F ⋙ forget GroupCat).sections
     inv_mem' := fun a ah j j' f =>
       by
-      simp only [forget_map_eq_coe, functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
-      dsimp [functor.sections] at ah
+      simp only [forget_map_eq_coe, Functor.comp_map, Pi.inv_apply, MonoidHom.map_inv, inv_inj]
+      dsimp [Functor.sections] at ah
       rw [ah f] }
 #align Group.sections_subgroup GroupCat.sectionsSubgroup
 #align AddGroup.sections_add_subgroup AddGroupCat.sectionsAddSubgroup
@@ -65,7 +65,7 @@ def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
 instance limitGroup (F : J ⥤ GroupCat.{max v u}) :
     Group (Types.limitCone (F ⋙ forget GroupCat)).x :=
   by
-  change Group (sections_subgroup F)
+  change Group (sectionsSubgroup F)
   infer_instance
 #align Group.limit_group GroupCat.limitGroup
 #align AddGroup.limit_add_group AddGroupCat.limitAddGroup
@@ -85,7 +85,7 @@ instance Forget₂.createsLimit (F : J ⥤ GroupCat.{max v u}) :
             { app := Mon.limitπMonoidHom (F ⋙ forget₂ GroupCat Mon.{max v u})
               naturality' :=
                 (Mon.HasLimits.limitCone (F ⋙ forget₂ GroupCat Mon.{max v u})).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (Mon.HasLimits.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (Mon.HasLimits.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ GroupCat Mon.{max v u}) (Mon.HasLimits.limitConeIsLimit _)
           (fun s => _) fun s => rfl }
@@ -116,7 +116,7 @@ def limitConeIsLimit (F : J ⥤ GroupCat.{max v u}) : IsLimit (limitCone F) :=
 @[to_additive "The category of additive groups has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v, v} GroupCat.{max v u}
     where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit_of_created F (forget₂ GroupCat Mon.{max v u}) }
+    { HasLimit := fun F => hasLimitOfCreated F (forget₂ GroupCat Mon.{max v u}) }
 #align Group.has_limits_of_size GroupCat.hasLimitsOfSize
 #align AddGroup.has_limits_of_size AddGroupCat.has_limits_of_size
 
@@ -151,7 +151,7 @@ This means the underlying type of a limit can be computed as a limit in the cate
       "The forgetful functor from additive groups to types preserves all limits.\n\nThis means the underlying type of a limit can be computed as a limit in the category of types."]
 instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget GroupCat.{max v u})
     where PreservesLimitsOfShape J 𝒥 :=
-    { PreservesLimit := fun F => limits.comp_preserves_limit (forget₂ GroupCat Mon) (forget Mon) }
+    { PreservesLimit := fun F => Limits.compPreservesLimit (forget₂ GroupCat Mon) (forget Mon) }
 #align Group.forget_preserves_limits_of_size GroupCat.forgetPreservesLimitsOfSize
 #align AddGroup.forget_preserves_limits_of_size AddGroupCat.forget_preserves_limits_of_size
 
@@ -199,7 +199,7 @@ instance Forget₂.createsLimit (F : J ⥤ CommGroupCat.{max v u}) :
                 Mon.limitπMonoidHom
                   (F ⋙ forget₂ CommGroupCat GroupCat.{max v u} ⋙ forget₂ GroupCat Mon.{max v u})
               naturality' := (Mon.HasLimits.limitCone _).π.naturality } }
-      validLift := by apply is_limit.unique_up_to_iso (GroupCat.limitConeIsLimit _) t
+      validLift := by apply IsLimit.uniqueUpToIso (GroupCat.limitConeIsLimit _) t
       makesLimit :=
         IsLimit.ofFaithful (forget₂ _ GroupCat.{max v u} ⋙ forget₂ _ Mon.{max v u})
           (by apply Mon.HasLimits.limitConeIsLimit _) (fun s => _) fun s => rfl }
@@ -230,7 +230,7 @@ def limitConeIsLimit (F : J ⥤ CommGroupCat.{max v u}) : IsLimit (limitCone F) 
 @[to_additive "The category of additive commutative groups has all limits."]
 instance hasLimitsOfSize : HasLimitsOfSize.{v, v} CommGroupCat.{max v u}
     where HasLimitsOfShape J 𝒥 :=
-    { HasLimit := fun F => has_limit_of_created F (forget₂ CommGroupCat GroupCat.{max v u}) }
+    { HasLimit := fun F => hasLimitOfCreated F (forget₂ CommGroupCat GroupCat.{max v u}) }
 #align CommGroup.has_limits_of_size CommGroupCat.hasLimitsOfSize
 #align AddCommGroup.has_limits_of_size AddCommGroupCat.has_limits_of_size
 
@@ -279,8 +279,8 @@ instance forget₂CommMonPreservesLimitsOfSize :
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-          (forget₂_CommMon_preserves_limits_aux F) }
+        preservesLimitOfPreservesLimitCone (limitConeIsLimit F)
+          (forget₂CommMonPreservesLimitsAux F) }
 #align CommGroup.forget₂_CommMon_preserves_limits_of_size CommGroupCat.forget₂CommMonPreservesLimitsOfSize
 #align AddCommGroup.forget₂_AddCommMon_preserves_limits AddCommGroupCat.forget₂_AddCommMon_preserves_limits
 
@@ -293,7 +293,7 @@ instance forgetPreservesLimitsOfSize : PreservesLimitsOfSize.{v, v} (forget Comm
     where PreservesLimitsOfShape J 𝒥 :=
     {
       PreservesLimit := fun F =>
-        limits.comp_preserves_limit (forget₂ CommGroupCat GroupCat) (forget GroupCat) }
+        Limits.compPreservesLimit (forget₂ CommGroupCat GroupCat) (forget GroupCat) }
 #align CommGroup.forget_preserves_limits_of_size CommGroupCat.forgetPreservesLimitsOfSize
 #align AddCommGroup.forget_preserves_limits AddCommGroupCat.forget_preserves_limits
 
@@ -336,7 +336,7 @@ def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) : kernel f ≅ AddCom
 
 @[simp]
 theorem kernelIsoKer_hom_comp_subtype {G H : AddCommGroupCat} (f : G ⟶ H) :
-    (kernelIsoKer f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by ext <;> rfl
+    (kernelIsoKer f).hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by ext <;> rfl
 #align AddCommGroup.kernel_iso_ker_hom_comp_subtype AddCommGroupCat.kernelIsoKer_hom_comp_subtype
 
 @[simp]
@@ -344,7 +344,7 @@ theorem kernelIsoKer_inv_comp_ι {G H : AddCommGroupCat} (f : G ⟶ H) :
     (kernelIsoKer f).inv ≫ kernel.ι f = AddSubgroup.subtype f.ker :=
   by
   ext
-  simp [kernel_iso_ker]
+  simp [kernelIsoKer]
 #align AddCommGroup.kernel_iso_ker_inv_comp_ι AddCommGroupCat.kernelIsoKer_inv_comp_ι
 
 /-- The categorical kernel inclusion for `f : G ⟶ H`, as an object over `G`,

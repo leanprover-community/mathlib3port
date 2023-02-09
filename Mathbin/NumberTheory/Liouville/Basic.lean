@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
   by_cases dm1 : 1 ≤ dist α (j z a) * max (1 / ε) M
   · exact one_le_mul_of_one_le_of_one_le (d0 a) dm1
   · -- `j z a = z / (a + 1)`: we prove that this ratio is close to `α`
-    have : j z a ∈ closed_ball α ε :=
+    have : j z a ∈ closedBall α ε :=
       by
       refine' mem_closed_ball'.mp (le_trans _ ((one_div_le me0 e0).mpr (le_max_left _ _)))
       exact (le_div_iff me0).mpr (not_le.mp dm1).le
@@ -140,22 +140,22 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
   set fR : ℝ[X] := map (algebraMap ℤ ℝ) f
   -- `fR` is non-zero, since `f` is non-zero.
   obtain fR0 : fR ≠ 0 := fun fR0 =>
-    (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).Ne f0
+    (map_injective (algebraMap ℤ ℝ) fun _ _ A => int.cast_inj.mp A).ne f0
       (fR0.trans (Polynomial.map_zero _).symm)
   -- reformulating assumption `fa`: `α` is a root of `fR`.
   have ar : α ∈ (fR.roots.to_finset : Set ℝ) :=
     finset.mem_coe.mpr (multiset.mem_to_finset.mpr ((mem_roots fR0).mpr (is_root.def.mpr fa)))
   -- Since the polynomial `fR` has finitely many roots, there is a closed interval centered at `α`
   -- such that `α` is the only root of `fR` in the interval.
-  obtain ⟨ζ, z0, U⟩ : ∃ ζ > 0, closed_ball α ζ ∩ fR.roots.to_finset = {α} :=
+  obtain ⟨ζ, z0, U⟩ : ∃ ζ > 0, closedBall α ζ ∩ fR.roots.to_finset = {α} :=
     @exists_closed_ball_inter_eq_singleton_of_discrete _ _ _ discrete_of_t1_of_finite _ ar
   -- Since `fR` is continuous, it is bounded on the interval above.
   obtain ⟨xm, -, hM⟩ :
     ∃ (xm : ℝ)(H : xm ∈ Icc (α - ζ) (α + ζ)),
       ∀ y : ℝ, y ∈ Icc (α - ζ) (α + ζ) → |fR.derivative.eval y| ≤ |fR.derivative.eval xm| :=
-    IsCompact.exists_forall_ge is_compact_Icc
+    IsCompact.exists_forall_ge isCompact_Icc
       ⟨α, (sub_lt_self α z0).le, (lt_add_of_pos_right α z0).le⟩
-      (continuous_abs.comp fR.derivative.continuous_aeval).ContinuousOn
+      (continuous_abs.comp fR.derivative.continuous_aeval).continuousOn
   -- Use the key lemma `exists_one_le_pow_mul_dist`: we are left to show that ...
   refine'
     @exists_one_le_pow_mul_dist ℤ ℕ ℝ _ _ _ (fun y => fR.eval y) α ζ (|fR.derivative.eval xm|) _ z0

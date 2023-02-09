@@ -6,7 +6,7 @@ Authors: Lucas Allen, Keeley Hoek, Leonardo de Moura
 Converter monad for building simplifiers.
 
 ! This file was ported from Lean 3 source module tactic.converter.interactive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,13 +72,13 @@ unsafe def find (p : parse lean.parser.pexpr) (c : itactic) : old_conv Unit := f
           eta := false
           proj := false } s (fun u => return u)
         (fun found s r p e => do
-          guard (Not found)
+          guard (not found)
           let matched ← tactic.match_pattern pat e >> return true <|> return false
           guard matched
           let ⟨u, new_e, pr⟩ ← c r e
           return (tt, new_e, pr, ff))
         (fun a s r p e => tactic.failed) r lhs
-  if Not found then tactic.fail "find converter failed, pattern was not found"
+  if not found then tactic.fail "find converter failed, pattern was not found"
     else return ⟨(), new_lhs, some pr⟩
 #align old_conv.interactive.find old_conv.interactive.find
 

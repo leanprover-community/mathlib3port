@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.diagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,12 +65,12 @@ variable {K : Type u} [Field K]
 theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
     ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
   by
-  rw [← comap_bot, ← infi_ker_proj, comap_infi]
-  have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
-  simp only [comap_infi, ← this, proj_diagonal, ker_smul']
+  rw [← comap_bot, ← infᵢ_ker_proj, comap_infᵢ]
+  have := fun i : m => ker_comp (toLin' (diagonal w)) (proj i)
+  simp only [comap_infᵢ, ← this, proj_diagonal, ker_smul']
   have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by rw [Set.union_compl_self]
   exact
-    (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this
+    (supᵢ_range_stdBasis_eq_infᵢ_ker_proj K (fun i : m => K) disjoint_compl_right this
         (Set.toFinite _)).symm
 #align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_toLin'
 
@@ -78,10 +78,10 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
     (diagonal w).toLin'.range =
       ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range :=
   by
-  dsimp only [mem_set_of_eq]
-  rw [← map_top, ← supr_range_std_basis, map_supᵢ]
+  dsimp only [mem_setOf_eq]
+  rw [← map_top, ← supᵢ_range_stdBasis, map_supᵢ]
   congr ; funext i
-  rw [← LinearMap.range_comp, diagonal_comp_std_basis, ← range_smul']
+  rw [← LinearMap.range_comp, diagonal_comp_stdBasis, ← range_smul']
 #align matrix.range_diagonal Matrix.range_diagonal
 
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
@@ -89,7 +89,7 @@ theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
   by
   have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by rw [Set.compl_union_self]
   have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
-  have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.toFinite _)
+  have B₁ := supᵢ_range_stdBasis_eq_infᵢ_ker_proj K (fun i : m => K) hd hu (Set.toFinite _)
   have B₂ := @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _ (by simp <;> infer_instance) hd hu
   rw [rank, range_diagonal, B₁, ← @dim_fun' K]
   apply LinearEquiv.dim_eq

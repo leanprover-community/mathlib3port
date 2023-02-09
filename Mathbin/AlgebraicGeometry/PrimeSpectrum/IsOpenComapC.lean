@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.is_open_comap_C
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,8 +40,8 @@ def imageOfDf (f) : Set (PrimeSpectrum R) :=
 
 theorem isOpen_imageOfDf : IsOpen (imageOfDf f) :=
   by
-  rw [image_of_Df, set_of_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
-  exact isOpen_unionᵢ fun i => is_open_basic_open
+  rw [imageOfDf, setOf_exists fun i (x : PrimeSpectrum R) => coeff f i ∉ x.asIdeal]
+  exact isOpen_unionᵢ fun i => isOpen_basicOpen
 #align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.isOpen_imageOfDf
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
@@ -59,16 +59,16 @@ theorem imageOfDf_eq_comap_c_compl_zeroLocus :
     imageOfDf f = PrimeSpectrum.comap (c : R →+* R[X]) '' zeroLocus {f}ᶜ :=
   by
   ext x
-  refine' ⟨fun hx => ⟨⟨map C x.as_ideal, is_prime_map_C_of_is_prime x.is_prime⟩, ⟨_, _⟩⟩, _⟩
-  · rw [mem_compl_iff, mem_zero_locus, singleton_subset_iff]
+  refine' ⟨fun hx => ⟨⟨map c x.as_ideal, isPrime_map_c_of_isPrime x.is_prime⟩, ⟨_, _⟩⟩, _⟩
+  · rw [mem_compl_iff, mem_zeroLocus, singleton_subset_iff]
     cases' hx with i hi
     exact fun a => hi (mem_map_C_iff.mp a i)
   · ext x
-    refine' ⟨fun h => _, fun h => subset_span (mem_image_of_mem C.1 h)⟩
+    refine' ⟨fun h => _, fun h => subset_span (mem_image_of_mem c.1 h)⟩
     rw [← @coeff_C_zero R x _]
     exact mem_map_C_iff.mp h 0
   · rintro ⟨xli, complement, rfl⟩
-    exact comap_C_mem_image_of_Df complement
+    exact comap_c_mem_imageOfDf complement
 #align algebraic_geometry.polynomial.image_of_Df_eq_comap_C_compl_zero_locus AlgebraicGeometry.Polynomial.imageOfDf_eq_comap_c_compl_zeroLocus
 
 /-- The morphism `C⁺ : Spec R[x] → Spec R` is open.
@@ -79,9 +79,10 @@ https://stacks.math.columbia.edu/tag/00FB
 theorem isOpenMap_comap_c : IsOpenMap (PrimeSpectrum.comap (c : R →+* R[X])) :=
   by
   rintro U ⟨s, z⟩
-  rw [← compl_compl U, ← z, ← Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]
-  simp_rw [← image_of_Df_eq_comap_C_compl_zero_locus]
-  exact isOpen_unionᵢ fun f => is_open_image_of_Df
+  rw [← compl_compl U, ← z, ← unionᵢ_of_singleton_coe s, zeroLocus_unionᵢ, compl_interᵢ,
+    image_unionᵢ]
+  simp_rw [← imageOfDf_eq_comap_c_compl_zeroLocus]
+  exact isOpen_unionᵢ fun f => isOpen_imageOfDf
 #align algebraic_geometry.polynomial.is_open_map_comap_C AlgebraicGeometry.Polynomial.isOpenMap_comap_c
 
 end Polynomial

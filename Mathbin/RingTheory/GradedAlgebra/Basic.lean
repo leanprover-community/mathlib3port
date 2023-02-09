@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard, Jujian Zhang
 
 ! This file was ported from Lean 3 source module ring_theory.graded_algebra.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem GradedRing.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
 
 theorem GradedRing.mem_support_iff [∀ (i) (x : 𝒜 i), Decidable (x ≠ 0)] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedRing.proj 𝒜 i r ≠ 0 :=
-  Dfinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.Not.symm
+  Dfinsupp.mem_support_iff.trans ZeroMemClass.coe_eq_zero.not.symm
 #align graded_ring.mem_support_iff GradedRing.mem_support_iff
 
 end GradedRing
@@ -174,7 +174,7 @@ end AddCancelMonoid
 
 section GradedAlgebra
 
-variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [Algebra R A]
+variable [DecidableEq ι] [AddMonoid ι] [CommSemiring R] [Semiring A] [algebra R A]
 
 variable (𝒜 : ι → Submodule R A)
 
@@ -225,7 +225,7 @@ open DirectSum
 
 /-- The projection maps of graded algebra-/
 def GradedAlgebra.proj (𝒜 : ι → Submodule R A) [GradedAlgebra 𝒜] (i : ι) : A →ₗ[R] A :=
-  (𝒜 i).Subtype.comp <| (Dfinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
+  (𝒜 i).subtype.comp <| (Dfinsupp.lapply i).comp <| (decomposeAlgEquiv 𝒜).toAlgHom.toLinearMap
 #align graded_algebra.proj GradedAlgebra.proj
 
 @[simp]
@@ -241,7 +241,7 @@ theorem GradedAlgebra.proj_recompose (a : ⨁ i, 𝒜 i) (i : ι) :
 
 theorem GradedAlgebra.mem_support_iff [DecidableEq A] (r : A) (i : ι) :
     i ∈ (decompose 𝒜 r).support ↔ GradedAlgebra.proj 𝒜 i r ≠ 0 :=
-  Dfinsupp.mem_support_iff.trans Submodule.coe_eq_zero.Not.symm
+  Dfinsupp.mem_support_iff.trans Submodule.coe_eq_zero.not.symm
 #align graded_algebra.mem_support_iff GradedAlgebra.mem_support_iff
 
 end GradedAlgebra

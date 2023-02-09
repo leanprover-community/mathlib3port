@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.ext
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -136,9 +136,9 @@ unsafe def get_ext_subject : expr → tactic Name
     let t ← infer_type e >>= instantiate_mvars >>= head_beta
     if t then pure <| t
       else
-        if t then pure <| Name.mk_numeral 0 Name.anonymous
+        if t then pure <| name.mk_numeral 0 name.anonymous
         else
-          if t then pure <| Name.mk_numeral 1 Name.anonymous
+          if t then pure <| name.mk_numeral 1 name.anonymous
           else do
             let t ← pp t
             fail f! "only constants and Pi types are supported: {t}"
@@ -148,17 +148,17 @@ unsafe def get_ext_subject : expr → tactic Name
 open Native
 
 unsafe def saturate_fun : Name → tactic expr
-  | Name.mk_numeral 0 Name.anonymous => do
+  | name.mk_numeral 0 name.anonymous => do
     let v₀ ← mk_mvar
     let v₁ ← mk_mvar
     return <| v₀ v₁
-  | Name.mk_numeral 1 Name.anonymous => do
+  | name.mk_numeral 1 name.anonymous => do
     let u ← mk_meta_univ
     pure <| expr.sort u
   | n => do
     let e ← resolve_constant n >>= mk_const
     let a ← get_arity e
-    e <$> (List.iota a).mapM fun _ => mk_mvar
+    e <$> (list.iota a).mapM fun _ => mk_mvar
 #align saturate_fun saturate_fun
 
 unsafe def equiv_type_constr (n n' : Name) : tactic Unit := do
@@ -248,13 +248,13 @@ unsafe def get_ext_lemmas : tactic (name_map Name) :=
 /-- Returns the extensionality lemmas in the environment, as a list of lemma names.
 -/
 unsafe def get_ext_lemma_names : tactic (List Name) :=
-  attribute.get_instances ext_lemma_attr_core.Name
+  attribute.get_instances ext_lemma_attr_core.name
 #align get_ext_lemma_names get_ext_lemma_names
 
 /-- Marks `lem` as an extensionality lemma corresponding to type constructor `constr`;
 if `persistent` is true then this is a global attribute, else local. -/
 unsafe def add_ext_lemma (constr lem : Name) (persistent : Bool) : tactic Unit :=
-  ext_attr_core.Set constr lem persistent >> ext_lemma_attr_core.Set lem () persistent
+  ext_attr_core.set constr lem persistent >> ext_lemma_attr_core.set lem () persistent
 #align add_ext_lemma add_ext_lemma
 
 /-- Tag lemmas of the form:
@@ -426,16 +426,16 @@ private unsafe def try_intros_core : StateT ext_state tactic Unit := do
   match patts with
     | [] =>
       (do
-          let es ← StateT.lift intros
+          let es ← state_t.lift intros
           when (es > 0) do
               let msg := "intros " ++ " ".intercalate (es fun e => e)
               modify fun ⟨patts, trace_msg, fuel⟩ => ⟨patts, trace_msg ++ [msg], fuel⟩) <|>
         pure ()
     | x :: xs => do
-      let tgt ← StateT.lift (target >>= whnf)
+      let tgt ← state_t.lift (target >>= whnf)
       when tgt do
-          StateT.lift (rintro [x])
-          let msg ← StateT.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
+          state_t.lift (rintro [x])
+          let msg ← state_t.lift ((· ++ ·) "rintro " <$> format.to_string <$> x ff)
           modify fun ⟨_, trace_msg, fuel⟩ => ⟨xs, trace_msg ++ [msg], fuel⟩
           try_intros_core
 #align tactic.try_intros_core tactic.try_intros_core
@@ -494,7 +494,7 @@ unsafe def ext_core (cfg : ApplyCfg := { }) : StateT ext_state tactic Unit := do
     | some 0 => pure ()
     | n => do
       ext1_core cfg
-      modify fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, Nat.pred <$> n⟩
+      modify fun ⟨patts, lemmas, _⟩ => ⟨patts, lemmas, nat.pred <$> n⟩
       ext_core <|> pure ()
 #align tactic.ext_core tactic.ext_core
 

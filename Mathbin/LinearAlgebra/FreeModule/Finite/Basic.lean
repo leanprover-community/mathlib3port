@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ noncomputable instance [Nontrivial R] [Module.Finite R M] :
   by
   obtain ⟨h⟩ := id ‹Module.Finite R M›
   choose s hs using h
-  exact basisFintypeOfFiniteSpans (↑s) hs (choose_basis _ _)
+  exact basisFintypeOfFiniteSpans (↑s) hs (chooseBasis _ _)
 
 end Ring
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module logic.relation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,7 +94,7 @@ protected theorem Symmetric.iff (H : Symmetric r) (x y : α) : r x y ↔ r y x :
 
 #print Symmetric.flip_eq /-
 theorem Symmetric.flip_eq (h : Symmetric r) : flip r = r :=
-  funext₂ fun _ _ => propext <| h.Iff _ _
+  funext₂ fun _ _ => propext <| h.iff _ _
 #align symmetric.flip_eq Symmetric.flip_eq
 -/
 
@@ -173,7 +173,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align relation.comp_eq Relation.comp_eqₓ'. -/
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a =>
-    funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
+    funext fun b => propext <| Iff.intro (fun ⟨c, h, eq⟩ => eq ▸ h) fun h => ⟨b, h, rfl⟩
 #align relation.comp_eq Relation.comp_eq
 
 /- warning: relation.eq_comp -> Relation.eq_comp is a dubious translation:
@@ -184,7 +184,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align relation.eq_comp Relation.eq_compₓ'. -/
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a =>
-    funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
+    funext fun b => propext <| Iff.intro (fun ⟨c, eq, h⟩ => eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
 #align relation.eq_comp Relation.eq_comp
 
 #print Relation.iff_comp /-
@@ -391,14 +391,14 @@ theorem cases_tail : ReflTransGen r a b → b = a ∨ ∃ c, ReflTransGen r a c 
 @[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, ReflTransGen r a b → Prop} {a : α} (h : ReflTransGen r a b)
     (refl : P b refl)
-    (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.headI h')) : P a h :=
+    (head : ∀ {a c} (h' : r a c) (h : ReflTransGen r c b), P c h → P a (h.head h')) : P a h :=
   by
   induction h generalizing P
   case refl => exact refl
   case tail b c hab hbc ih =>
     apply ih
     show P b _; exact head hbc _ refl
-    show ∀ a a', r a a' → refl_trans_gen r a' b → P a' _ → P a _
+    show ∀ a a', r a a' → ReflTransGen r a' b → P a' _ → P a _
     exact fun a a' hab hbc => head hab _
 #align relation.refl_trans_gen.head_induction_on Relation.ReflTransGen.head_induction_on
 -/
@@ -462,8 +462,8 @@ namespace TransGen
 theorem to_reflTransGen {a b} (h : TransGen r a b) : ReflTransGen r a b :=
   by
   induction' h with b h b c _ bc ab
-  exact refl_trans_gen.single h
-  exact refl_trans_gen.tail ab bc
+  exact ReflTransGen.single h
+  exact ReflTransGen.tail ab bc
 #align relation.trans_gen.to_refl Relation.TransGen.to_reflTransGen
 -/
 
@@ -509,14 +509,14 @@ theorem head (hab : r a b) (hbc : TransGen r b c) : TransGen r a c :=
 @[elab_as_elim]
 theorem head_induction_on {P : ∀ a : α, TransGen r a b → Prop} {a : α} (h : TransGen r a b)
     (base : ∀ {a} (h : r a b), P a (single h))
-    (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.headI h')) : P a h :=
+    (ih : ∀ {a c} (h' : r a c) (h : TransGen r c b), P c h → P a (h.head h')) : P a h :=
   by
   induction h generalizing P
   case single a h => exact base h
   case tail b c hab hbc h_ih =>
     apply h_ih
     show ∀ a, r a b → P a _; exact fun a h => ih h (single hbc) (base hbc)
-    show ∀ a a', r a a' → trans_gen r a' b → P a' _ → P a _; exact fun a a' hab hbc => ih hab _
+    show ∀ a a', r a a' → TransGen r a' b → P a' _ → P a _; exact fun a a' hab hbc => ih hab _
 #align relation.trans_gen.head_induction_on Relation.TransGen.head_induction_on
 -/
 
@@ -624,14 +624,14 @@ theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : �
     (hab : TransGen r a b) : TransGen p (f a) (f b) :=
   by
   induction hab
-  case single c hac => exact trans_gen.single (h a c hac)
-  case tail c d hac hcd hac => exact trans_gen.tail hac (h c d hcd)
+  case single c hac => exact TransGen.single (h a c hac)
+  case tail c d hac hcd hac => exact TransGen.tail hac (h c d hcd)
 #align relation.trans_gen.lift Relation.TransGen.lift
 
 #print Relation.TransGen.lift' /-
 theorem TransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β)
     (h : ∀ a b, r a b → TransGen p (f a) (f b)) (hab : TransGen r a b) : TransGen p (f a) (f b) :=
-  by simpa [trans_gen_idem] using hab.lift f h
+  by simpa [transGen_idem] using hab.lift f h
 #align relation.trans_gen.lift' Relation.TransGen.lift'
 -/
 
@@ -653,7 +653,7 @@ theorem TransGen.mono {p : α → α → Prop} :
 theorem TransGen.swap (h : TransGen r b a) : TransGen (swap r) a b :=
   by
   induction' h with b h b c hab hbc ih
-  · exact trans_gen.single h
+  · exact TransGen.single h
   exact ih.head hbc
 #align relation.trans_gen.swap Relation.TransGen.swap
 -/
@@ -682,7 +682,7 @@ theorem reflTransGen_iff_eq_or_transGen : ReflTransGen r a b ↔ b = a ∨ Trans
   refine' ⟨fun h => _, fun h => _⟩
   · cases' h with c _ hac hcb
     · exact Or.inl rfl
-    · exact Or.inr (trans_gen.tail' hac hcb)
+    · exact Or.inr (TransGen.tail' hac hcb)
   · rcases h with (rfl | h)
     · rfl
     · exact h.to_refl
@@ -798,15 +798,15 @@ theorem church_rosser (h : ∀ a b c, r a b → r a c → ∃ d, ReflGen r b d �
   case tail d e had hde ih =>
     clear hac had a
     rcases ih with ⟨b, hdb, hcb⟩
-    have : ∃ a, refl_trans_gen r e a ∧ refl_gen r b a :=
+    have : ∃ a, ReflTransGen r e a ∧ ReflGen r b a :=
       by
       clear hcb
       induction hdb
-      case refl => exact ⟨e, refl, refl_gen.single hde⟩
+      case refl => exact ⟨e, refl, ReflGen.single hde⟩
       case tail f b hdf hfb ih =>
         rcases ih with ⟨a, hea, hfa⟩
         cases' hfa with _ hfa
-        · exact ⟨b, hea.tail hfb, refl_gen.refl⟩
+        · exact ⟨b, hea.tail hfb, ReflGen.refl⟩
         · rcases h _ _ _ hfb hfa with ⟨c, hbc, hac⟩
           exact ⟨c, hea.trans hac, hbc⟩
     rcases this with ⟨a, hea, hba⟩

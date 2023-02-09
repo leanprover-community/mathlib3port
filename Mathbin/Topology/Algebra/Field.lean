@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -132,7 +132,7 @@ theorem units_top_group : TopologicalGroup Kˣ :=
         Function.Semiconj.filter_comap Units.val_inv_eq_inv_val _]
       apply comap_mono
       rw [← tendsto_iff_comap, Units.val_inv_eq_inv_val]
-      exact continuous_at_inv₀ x.ne_zero }
+      exact continuousAt_inv₀ x.ne_zero }
 #align topological_division_ring.units_top_group TopologicalDivisionRing.units_top_group
 
 attribute [local instance] units_top_group
@@ -157,7 +157,7 @@ def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
       intro x hx
       by_cases h : x = 0
       · rwa [h, inv_zero, ← h]
-      · convert mem_closure_image (continuous_at_inv₀ h) hx using 2
+      · convert mem_closure_image (continuousAt_inv₀ h) hx using 2
         ext x
         constructor
         · exact fun hx => ⟨x⁻¹, ⟨K.inv_mem hx, inv_inv x⟩⟩
@@ -237,7 +237,7 @@ theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors
     (hS : IsPreconnected S) (hf : ContinuousOn f S) (hsq : EqOn (f ^ 2) 1 S) :
     EqOn f 1 S ∨ EqOn f (-1) S :=
   by
-  simp_rw [eq_on, Pi.one_apply, Pi.pow_apply, sq_eq_one_iff] at hsq
+  simp_rw [EqOn, Pi.one_apply, Pi.pow_apply, sq_eq_one_iff] at hsq
   -- First deal with crazy case where `S` is empty.
   by_cases hSe : ∀ x : α, x ∉ S
   · left

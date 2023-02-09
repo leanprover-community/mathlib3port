@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.monotonicity.interactive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ unsafe instance has_to_tactic_format_mono_function : has_to_tactic_format mono_f
 #align tactic.interactive.has_to_tactic_format_mono_function tactic.interactive.has_to_tactic_format_mono_function
 
 unsafe structure ac_mono_ctx' (rel : Type) where
-  to_rel : Rel
+  to_rel : rel
   function : mono_function
   (left right rel_def : expr)
   deriving Traversable
@@ -87,7 +87,7 @@ unsafe def ac_mono_ctx.to_tactic_format (ctx : ac_mono_ctx) : tactic format := d
       f! "\{ function := {fn }
         , left  := {l }
         , right := {r }
-        , rel_def := {Rel} }}"
+        , rel_def := {rel} }}"
 #align tactic.interactive.ac_mono_ctx.to_tactic_format tactic.interactive.ac_mono_ctx.to_tactic_format
 
 unsafe instance has_to_tactic_format_mono_ctx : has_to_tactic_format ac_mono_ctx
@@ -168,7 +168,7 @@ unsafe def match_prefix : List expr → List expr → tactic (List expr × List 
   | x :: xs, y :: ys =>
     (do
         compare opt x y
-        Prod.map ((· :: ·) x) id <$> match_prefix xs ys) <|>
+        prod.map ((· :: ·) x) id <$> match_prefix xs ys) <|>
       return ([], x :: xs, y :: ys)
   | xs, ys => return ([], xs, ys)
 #align tactic.interactive.match_prefix tactic.interactive.match_prefix
@@ -246,7 +246,7 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
   let (a, c, i, f) ← check_ac l
   if a then
       if c then do
-        let (s, ls, rs) ← Monad.join (match_ac <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
+        let (s, ls, rs) ← monad.join (match_ac <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
         let (l', l_id) ← fold_assoc f i ls
         let (r', r_id) ← fold_assoc f i rs
         let s' ← fold_assoc1 f s
@@ -254,7 +254,7 @@ unsafe def parse_ac_mono_function (l r : expr) : tactic (expr × expr × List ex
       else do
         let-- a ∧ ¬ c
           (pre, ls, rs, suff)
-          ← Monad.join (match_assoc <$> parse_assoc_chain f l <*> parse_assoc_chain f r)
+          ← monad.join (match_assoc <$> parse_assoc_chain f l <*> toHasPure f r)
         let (l', l_id) ← fold_assoc f i ls
         let (r', r_id) ← fold_assoc f i rs
         let pre' := fold_assoc1 f pre
@@ -298,7 +298,7 @@ unsafe
                       function := f
                         left := l
                         right := r
-                        to_rel := some <| expr.pi `x BinderInfo.default
+                        to_rel := some <| expr.pi `x binder_info.default
                         rel_def
                       }
                 )
@@ -313,7 +313,7 @@ unsafe
             return
               ( e₀ , e₁ , id_rs , { function := f left := l right := r to_rel := none rel_def } )
       |
-        expr.app ( expr.app Rel e₀ ) e₁
+        expr.app ( expr.app rel e₀ ) e₁
         =>
         do
           let ( l , r , id_rs , f ) ← parse_ac_mono_function e₀ e₁
@@ -329,8 +329,8 @@ unsafe
                       function := f
                         left := l
                         right := r
-                        to_rel := expr.app ∘ expr.app Rel
-                        rel_def := Rel
+                        to_rel := expr.app ∘ expr.app rel
+                        rel_def := rel
                       }
                 )
       | _ => fail "invalid monotonicity goal"
@@ -394,7 +394,7 @@ unsafe def mk_rel (ctx : ac_mono_ctx_ne) (f : expr → expr) : expr :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `xs₁ -/
 unsafe def mk_congr_args (fn : expr) (xs₀ xs₁ : List expr) (l r : expr) : tactic expr := do
   let p ← mk_app `eq [fn.mk_app <| xs₀ ++ l :: xs₁, fn.mk_app <| xs₀ ++ r :: xs₁]
-  Prod.snd <$>
+  prod.snd <$>
       solve_aux p do
         iterate_exactly (xs₁ xs₁.length) (applyc `congr_fun)
         applyc `congr_arg
@@ -519,7 +519,7 @@ open Monad
           swap
           let r ← mk_eq_refl v
           solve1 <| tactic.exact ( t v r )
-          Prod.mk <$> tactic.intro x <*> tactic.intro h
+          prod.mk <$> tactic.intro x <*> tactic.intro h
 #align tactic.interactive.monotonicity.generalize' tactic.interactive.monotonicity.generalize'
 
 private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Unit :=
@@ -533,7 +533,7 @@ private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Uni
           (fun v => do
             let h ← get_unused_name `h
             let x ← get_unused_name `x
-            Prod.snd <$> monotonicity.generalize' h v x)
+            prod.snd <$> monotonicity.generalize' h v x)
           vs
     andthen (tac ctx) (vs' (try ∘ tactic.subst))
 #align tactic.interactive.hide_meta_vars tactic.interactive.hide_meta_vars
@@ -579,7 +579,7 @@ unsafe def best_match {β} (xs : List expr) (tac : expr → tactic β) : tactic 
         r fun ⟨l, gs, _⟩ => do
             let ts ← gs infer_type
             let msg ← ts pp
-            pure <| foldl compose "\n\n" <| List.intersperse "\n" <| to_fmt l :: msg
+            pure <| foldl compose "\n\n" <| list.intersperse "\n" <| to_fmt l :: msg
       let msg := foldl compose "" lmms
       fail
           f! "ambiguous match: {msg}
@@ -657,10 +657,10 @@ add_tactic_doc
     declNames := [`tactic.interactive.mono]
     tags := ["monotonicity"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `g -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- transforms a goal of the form `f x ≼ f y` into `x ≤ y` using lemmas
 marked as `monotonic`.
 

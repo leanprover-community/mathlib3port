@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.pos_def
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :
   refine' ⟨hM.1, _⟩
   intro x
   by_cases hx : x = 0
-  · simp only [hx, zero_dot_product, star_zero, IsROrC.zero_re']
+  · simp only [hx, zero_dotProduct, star_zero, IsROrC.zero_re']
   · exact le_of_lt (hM.2 x hx)
 #align matrix.pos_def.pos_semidef Matrix.PosDef.posSemidef
 
@@ -60,7 +60,7 @@ theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m �
   have : (M.submatrix (⇑e) ⇑e).mulVec x = (M.mul_vec fun i : n => x (e.symm i)) ∘ e :=
     by
     ext i
-    dsimp only [(· ∘ ·), mul_vec, dot_product]
+    dsimp only [(· ∘ ·), mulVec, dotProduct]
     rw [Finset.sum_bij' (fun i _ => e i) _ _ fun i _ => e.symm i] <;>
       simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ,
         submatrix_apply, Equiv.apply_symm_apply]
@@ -80,16 +80,16 @@ theorem posSemidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) :
 
 theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
   by
-  refine' ⟨is_hermitian.transpose hM.1, fun x hx => _⟩
+  refine' ⟨IsHermitian.transpose hM.1, fun x hx => _⟩
   convert hM.2 (star x) (star_ne_zero.2 hx) using 2
-  rw [mul_vec_transpose, Matrix.dotProduct_mulVec, star_star, dot_product_comm]
+  rw [mulVec_transpose, Matrix.dotProduct_mulVec, star_star, dotProduct_comm]
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
 
 theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
   refine' ⟨hM, fun x hx => _⟩
-  simp only [to_quadratic_form', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
+  simp only [toQuadraticForm', QuadraticForm.PosDef, BilinForm.toQuadraticForm_apply,
     Matrix.toBilin'_apply'] at hMq
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDefOfToQuadraticForm'
@@ -97,7 +97,7 @@ theorem posDefOfToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.Is
 theorem posDefToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
-  simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
+  simp only [toQuadraticForm', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
 #align matrix.pos_def_to_quadratic_form' Matrix.posDefToQuadraticForm'
 
@@ -117,7 +117,7 @@ theorem det_pos [DecidableEq n] : 0 < det M :=
   have h_det : hM.is_hermitian.eigenvector_matrixᵀ.det = 0 :=
     Matrix.det_eq_zero_of_row_eq_zero i fun j => congr_fun h j
   simpa only [h_det, not_isUnit_zero] using
-    is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
+    isUnit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
 #align matrix.pos_def.det_pos Matrix.PosDef.det_pos
 
 end PosDef
@@ -131,16 +131,16 @@ variable {n : Type _} [Fintype n]
 theorem posDefOfToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.toMatrix'.PosDef) :
     Q.PosDef :=
   by
-  rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
+  rw [← toQuadraticForm_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associatedHom _) Q)]
   apply Matrix.posDefToQuadraticForm' hQ
 #align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDefOfToMatrix'
 
 theorem posDefToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
     Q.toMatrix'.PosDef :=
   by
-  rw [← to_quadratic_form_associated ℝ Q, ←
-    bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ
-  apply Matrix.posDefOfToQuadraticForm' (is_symm_to_matrix' Q) hQ
+  rw [← toQuadraticForm_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associatedHom _) Q)] at
+    hQ
+  apply Matrix.posDefOfToQuadraticForm' (isSymm_toMatrix' Q) hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDefToMatrix'
 
 end QuadraticForm
@@ -155,7 +155,7 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
   InnerProductSpace.ofCore
     { inner := fun x y => dotProduct (star x) (M.mulVec y)
       conj_sym := fun x y => by
-        rw [star_dot_product, starRingEnd_apply, star_star, star_mul_vec, dot_product_mul_vec,
+        rw [star_dotProduct, starRingEnd_apply, star_star, star_mulVec, dotProduct_mulVec,
           hM.is_hermitian.eq]
       nonneg_re := fun x => by
         by_cases h : x = 0
@@ -164,9 +164,9 @@ noncomputable def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDe
       definite := fun x hx => by
         by_contra' h
         simpa [hx, lt_self_iff_false] using hM.2 x h
-      add_left := by simp only [star_add, add_dot_product, eq_self_iff_true, forall_const]
+      add_left := by simp only [star_add, add_dotProduct, eq_self_iff_true, forall_const]
       smul_left := fun x y r => by
-        rw [← smul_eq_mul, ← smul_dot_product, starRingEnd_apply, ← star_smul] }
+        rw [← smul_eq_mul, ← smul_dotProduct, starRingEnd_apply, ← star_smul] }
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix
 
 end Matrix

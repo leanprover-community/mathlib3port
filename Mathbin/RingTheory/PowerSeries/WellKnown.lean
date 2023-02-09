@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.power_series.well_known
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem coeff_invUnitsSub (u : Rˣ) (n : ℕ) : coeff R n (invUnitsSub u) = 1 /�
 
 @[simp]
 theorem constantCoeff_invUnitsSub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 1 /ₚ u := by
-  rw [← coeff_zero_eq_constant_coeff_apply, coeff_inv_units_sub, zero_add, pow_one]
+  rw [← coeff_zero_eq_constantCoeff_apply, coeff_invUnitsSub, zero_add, pow_one]
 #align power_series.constant_coeff_inv_units_sub PowerSeries.constantCoeff_invUnitsSub
 
 @[simp]
@@ -99,7 +99,7 @@ theorem coeff_exp : coeff A n (exp A) = algebraMap ℚ A (1 / n !) :=
 @[simp]
 theorem constantCoeff_exp : constantCoeff A (exp A) = 1 :=
   by
-  rw [← coeff_zero_eq_constant_coeff_apply, coeff_exp]
+  rw [← coeff_zero_eq_constantCoeff_apply, coeff_exp]
   simp
 #align power_series.constant_coeff_exp PowerSeries.constantCoeff_exp
 
@@ -157,7 +157,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   by
   ext
   simp only [coeff_mul, exp, rescale, coeff_mk, coe_mk, factorial,
-    nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow, sum_mul]
+    Nat.sum_antidiagonal_eq_sum_range_succ_mk, add_pow, sum_mul]
   apply sum_congr rfl
   rintro x hx
   suffices
@@ -172,7 +172,7 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   symm
   rw [div_eq_iff, div_mul_eq_mul_div, one_mul, choose_eq_factorial_div_factorial]
   norm_cast
-  rw [cast_div_char_zero]
+  rw [cast_div_charZero]
   · apply factorial_mul_factorial_dvd_factorial (mem_range_succ_iff.1 hx)
   · apply mem_range_succ_iff.1 hx
   · rintro h
@@ -190,7 +190,7 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
   by
   induction' k with k h
   ·
-    simp only [rescale_zero, constant_coeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
+    simp only [rescale_zero, constantCoeff_exp, Function.comp_apply, map_one, cast_zero, pow_zero,
       coe_comp]
   simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one, id_apply,
     rescale_one] using pow_succ' (exp A) k
@@ -199,8 +199,8 @@ theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (
 /-- Shows that
 $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \frac{k^p}{p!}X^p$. -/
 theorem exp_pow_sum [Algebra ℚ A] (n : ℕ) :
-    ((Finset.range n).Sum fun k => exp A ^ k) =
-      PowerSeries.mk fun p => (Finset.range n).Sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
+    ((Finset.range n).sum fun k => exp A ^ k) =
+      PowerSeries.mk fun p => (Finset.range n).sum fun k => k ^ p * algebraMap ℚ A p.factorial⁻¹ :=
   by
   simp only [exp_pow_eq_rescale_exp, rescale]
   ext

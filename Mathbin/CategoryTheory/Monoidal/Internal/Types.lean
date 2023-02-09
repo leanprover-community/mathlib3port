@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.internal.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,9 @@ instance monMonoid (A : Mon_ (Type u)) : Monoid A.x
 def functor : Mon_ (Type u) ⥤ Mon.{u} where
   obj A := ⟨A.x⟩
   map A B f :=
-    { toFun := f.Hom
-      map_one' := congr_fun f.OneHom PUnit.unit
-      map_mul' := fun x y => congr_fun f.MulHom (x, y) }
+    { toFun := f.hom
+      map_one' := congr_fun f.one_hom PUnit.unit
+      map_mul' := fun x y => congr_fun f.mul_hom (x, y) }
 #align Mon_Type_equivalence_Mon.functor MonTypeEquivalenceMon.functor
 
 /-- Converting a bundled monoid to a monoid object in `Type`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem Fintype.isPrimePow_card_of_field {α} [Fintype α] [Field α] : IsPrimeP
   haveI hp := Fact.mk (CharP.char_is_prime α p)
   let b := IsNoetherian.finsetBasis (ZMod p) α
   rw [Module.card_fintype b, ZMod.card, isPrimePow_pow_iff]
-  · exact hp.1.IsPrimePow
+  · exact hp.1.isPrimePow
   rw [← FiniteDimensional.finrank_eq_card_basis b]
   exact finite_dimensional.finrank_pos.ne'
 #align fintype.is_prime_pow_card_of_field Fintype.isPrimePow_card_of_field
@@ -58,7 +58,7 @@ theorem Fintype.nonempty_field_iff {α} [Fintype α] : Nonempty (Field α) ↔ I
   refine' ⟨fun ⟨h⟩ => Fintype.isPrimePow_card_of_field, _⟩
   rintro ⟨p, n, hp, hn, hα⟩
   haveI := Fact.mk hp.nat_prime
-  exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.Field⟩
+  exact ⟨(Fintype.equivOfCardEq ((GaloisField.card p n hn.ne').trans hα)).symm.field⟩
 #align fintype.nonempty_field_iff Fintype.nonempty_field_iff
 
 theorem Fintype.not_isField_of_card_not_prime_pow {α} [Fintype α] [Ring α] :

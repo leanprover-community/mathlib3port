@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Damiano Testa
 
 ! This file was ported from Lean 3 source module tactic.congrm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -94,13 +94,13 @@ It appears to be the list of arguments of a function application.
 -/
 private unsafe def extract_subgoals :
     List expr → List CongrArgKind → List expr → tactic (List (expr × expr))
-  | _ :: _ :: g :: prf_args, CongrArgKind.eq :: kinds, pat :: pat_args =>
+  | _ :: _ :: g :: prf_args, congr_arg_kind.eq :: kinds, pat :: pat_args =>
     (fun rest => (g, pat) :: rest) <$> extract_subgoals prf_args kinds pat_args
-  | _ :: prf_args, CongrArgKind.fixed :: kinds, _ :: pat_args =>
+  | _ :: prf_args, congr_arg_kind.fixed :: kinds, _ :: pat_args =>
     extract_subgoals prf_args kinds pat_args
-  | prf_args, CongrArgKind.fixed_no_param :: kinds, _ :: pat_args =>
+  | prf_args, congr_arg_kind.fixed_no_param :: kinds, _ :: pat_args =>
     extract_subgoals prf_args kinds pat_args
-  | _ :: _ :: prf_args, CongrArgKind.cast :: kinds, _ :: pat_args =>
+  | _ :: _ :: prf_args, congr_arg_kind.cast :: kinds, _ :: pat_args =>
     extract_subgoals prf_args kinds pat_args
   | _, _, [] => pure []
   | _, _, _ => fail "unsupported congr lemma"

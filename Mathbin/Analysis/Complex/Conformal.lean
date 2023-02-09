@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.complex.conformal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ open Complex ContinuousLinearMap
 open ComplexConjugate
 
 theorem isConformalMap_conj : IsConformalMap (conjLie : ℂ →L[ℝ] ℂ) :=
-  conjLie.toLinearIsometry.IsConformalMap
+  conjLie.toLinearIsometry.isConformalMap
 #align is_conformal_map_conj isConformalMap_conj
 
 section ConformalIntoComplexNormed
@@ -60,11 +60,11 @@ theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠
     simp only [LinearMap.smul_apply]
     have : x = x • 1 := by rw [smul_eq_mul, mul_one]
     nth_rw 1 [this]
-    rw [_root_.coe_coe map, LinearMap.coe_coeIsScalarTower]
+    rw [coe_coe map, LinearMap.coe_coeIsScalarTower]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
     field_simp only [one_mul]
   · ext1
-    simp only [minor₁, LinearMap.smul_apply, _root_.coe_coe, LinearMap.coe_coeIsScalarTower,
+    simp only [minor₁, LinearMap.smul_apply, coe_coe, LinearMap.coe_coeIsScalarTower,
       ContinuousLinearMap.coe_coe, coe_restrict_scalars', coe_smul',
       LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.coe_mk, Pi.smul_apply,
       smul_inv_smul₀, Ne.def, not_false_iff]
@@ -103,8 +103,8 @@ theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
     ext1
     simp only [coe_restrict_scalars', smul_apply, LinearIsometry.coe_toContinuousLinearMap,
       LinearIsometryEquiv.coe_toLinearIsometry, rotation_apply, id_apply, smul_eq_mul, comp_apply,
-      LinearIsometryEquiv.trans_apply, ContinuousLinearEquiv.coe_coe, conj_cle_apply,
-      conj_lie_apply, conj_conj]
+      LinearIsometryEquiv.trans_apply, ContinuousLinearEquiv.coe_coe, conjCle_apply, conjLie_apply,
+      conj_conj]
 #align is_conformal_map.is_complex_or_conj_linear IsConformalMap.is_complex_or_conj_linear
 
 /-- A real continuous linear map on the complex plane is conformal if and only if the map or its
@@ -116,20 +116,20 @@ theorem isConformalMap_iff_is_complex_or_conj_linear :
         g ≠ 0 :=
   by
   constructor
-  · exact fun h => ⟨h.is_complex_or_conj_linear, h.NeZero⟩
+  · exact fun h => ⟨h.is_complex_or_conj_linear, h.ne_zero⟩
   · rintro ⟨⟨map, rfl⟩ | ⟨map, hmap⟩, h₂⟩
     · refine' isConformalMap_complex_linear _
       contrapose! h₂ with w
-      simp only [w, restrict_scalars_zero]
-    · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conj_cle :=
+      simp only [w, restrictScalars_zero]
+    · have minor₁ : g = map.restrict_scalars ℝ ∘L ↑conjCle :=
         by
         ext1
         simp only [hmap, coe_comp', ContinuousLinearEquiv.coe_coe, Function.comp_apply,
-          conj_cle_apply, starRingEnd_self_apply]
+          conjCle_apply, starRingEnd_self_apply]
       rw [minor₁] at h₂⊢
       refine' isConformalMap_complex_linear_conj _
       contrapose! h₂ with w
-      simp only [w, restrict_scalars_zero, zero_comp]
+      simp only [w, restrictScalars_zero, zero_comp]
 #align is_conformal_map_iff_is_complex_or_conj_linear isConformalMap_iff_is_complex_or_conj_linear
 
 end ConformalIntoComplexPlane

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g
   by
   rw [@map_eq_traverse_id t _ _ _ _ f]
   refine' (comp_traverse (id.mk ∘ f) g x).symm.trans _
-  congr ; apply comp.applicative_comp_id
+  congr ; apply Comp.applicative_comp_id
 #align traversable.map_traverse Traversable.map_traverse
 -/
 
@@ -105,14 +105,14 @@ theorem traverse_map (f : β → F γ) (g : α → β) (x : t α) :
   by
   rw [@map_eq_traverse_id t _ _ _ _ g]
   refine' (comp_traverse f (id.mk ∘ g) x).symm.trans _
-  congr ; apply comp.applicative_id_comp
+  congr ; apply Comp.applicative_id_comp
 #align traversable.traverse_map Traversable.traverse_map
 -/
 
 #print Traversable.pure_traverse /-
 theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) := by
   have : traverse pure x = pure (traverse id.mk x) :=
-      (naturality (pure_transformation F) id.mk x).symm <;>
+      (naturality (PureTransformation F) id.mk x).symm <;>
     rwa [id_traverse] at this
 #align traversable.pure_traverse Traversable.pure_traverse
 -/
@@ -190,7 +190,7 @@ theorem traverse_map' (g : α → β) (h : β → G γ) :
     traverse (h ∘ g) = (traverse h ∘ map g : t α → G (t γ)) :=
   by
   ext
-  rw [comp_app, traverse_map]
+  rw [comp_apply, traverse_map]
 #align traversable.traverse_map' Traversable.traverse_map'
 -/
 
@@ -199,7 +199,7 @@ theorem map_traverse' (g : α → G β) (h : β → γ) :
     traverse (map h ∘ g) = (map (map h) ∘ traverse g : t α → G (t γ)) :=
   by
   ext
-  rw [comp_app, map_traverse]
+  rw [comp_apply, map_traverse]
 #align traversable.map_traverse' Traversable.map_traverse'
 -/
 
@@ -208,7 +208,7 @@ theorem naturality_pf (η : ApplicativeTransformation F G) (f : α → F β) :
     traverse (@η _ ∘ f) = @η _ ∘ (traverse f : t α → F (t β)) :=
   by
   ext
-  rw [comp_app, naturality]
+  rw [comp_apply, naturality]
 #align traversable.naturality_pf Traversable.naturality_pf
 -/
 

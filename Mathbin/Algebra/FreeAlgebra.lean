@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebra.free_algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -126,30 +126,30 @@ the associated quotient.
 -/
 inductive Rel : Pre R X → Pre R X → Prop-- force `of_scalar` to be a central semiring morphism
 
-  | add_scalar {r s : R} : Rel (↑(r + s)) (↑r + ↑s)
-  | mul_scalar {r s : R} : Rel (↑(r * s)) (↑r * ↑s)
-  | central_scalar {r : R} {a : Pre R X} : Rel (r * a) (a * r)-- commutative additive semigroup
+  | add_scalar {r s : R} : rel (↑(r + s)) (↑r + ↑s)
+  | mul_scalar {r s : R} : rel (↑(r * s)) (↑r * ↑s)
+  | central_scalar {r : R} {a : Pre R X} : rel (r * a) (a * r)-- commutative additive semigroup
 
-  | add_assoc {a b c : Pre R X} : Rel (a + b + c) (a + (b + c))
-  | add_comm {a b : Pre R X} : Rel (a + b) (b + a)
-  | zero_add {a : Pre R X} : Rel (0 + a) a-- multiplicative monoid
+  | add_assoc {a b c : Pre R X} : rel (a + b + c) (a + (b + c))
+  | add_comm {a b : Pre R X} : rel (a + b) (b + a)
+  | zero_add {a : Pre R X} : rel (0 + a) a-- multiplicative monoid
 
-  | mul_assoc {a b c : Pre R X} : Rel (a * b * c) (a * (b * c))
-  | one_mul {a : Pre R X} : Rel (1 * a) a
-  | mul_one {a : Pre R X} : Rel (a * 1) a-- distributivity
+  | mul_assoc {a b c : Pre R X} : rel (a * b * c) (a * (b * c))
+  | one_mul {a : Pre R X} : rel (1 * a) a
+  | mul_one {a : Pre R X} : rel (a * 1) a-- distributivity
 
-  | left_distrib {a b c : Pre R X} : Rel (a * (b + c)) (a * b + a * c)
+  | left_distrib {a b c : Pre R X} : rel (a * (b + c)) (a * b + a * c)
   |
   right_distrib {a b c : Pre R X} :
-    Rel ((a + b) * c) (a * c + b * c)-- other relations needed for semiring
+    rel ((a + b) * c) (a * c + b * c)-- other relations needed for semiring
 
-  | zero_mul {a : Pre R X} : Rel (0 * a) 0
-  | mul_zero {a : Pre R X} : Rel (a * 0) 0-- compatibility
+  | zero_mul {a : Pre R X} : rel (0 * a) 0
+  | mul_zero {a : Pre R X} : rel (a * 0) 0-- compatibility
 
-  | add_compat_left {a b c : Pre R X} : Rel a b → Rel (a + c) (b + c)
-  | add_compat_right {a b c : Pre R X} : Rel a b → Rel (c + a) (c + b)
-  | mul_compat_left {a b c : Pre R X} : Rel a b → Rel (a * c) (b * c)
-  | mul_compat_right {a b c : Pre R X} : Rel a b → Rel (c * a) (c * b)
+  | add_compat_left {a b c : Pre R X} : rel a b → rel (a + c) (b + c)
+  | add_compat_right {a b c : Pre R X} : rel a b → rel (c + a) (c + b)
+  | mul_compat_left {a b c : Pre R X} : rel a b → rel (a * c) (b * c)
+  | mul_compat_right {a b c : Pre R X} : rel a b → rel (c * a) (c * b)
 #align free_algebra.rel FreeAlgebra.Rel
 
 end FreeAlgebra
@@ -170,41 +170,41 @@ instance : Semiring (FreeAlgebra R X)
   add := Quot.map₂ (· + ·) (fun _ _ _ => Rel.add_compat_right) fun _ _ _ => Rel.add_compat_left
   add_assoc := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.add_assoc
+    exact Quot.sound Rel.add_assoc
   zero := Quot.mk _ 0
   zero_add := by
     rintro ⟨⟩
-    exact Quot.sound rel.zero_add
+    exact Quot.sound Rel.zero_add
   add_zero := by
     rintro ⟨⟩
     change Quot.mk _ _ = _
-    rw [Quot.sound rel.add_comm, Quot.sound rel.zero_add]
+    rw [Quot.sound Rel.add_comm, Quot.sound Rel.zero_add]
   add_comm := by
     rintro ⟨⟩ ⟨⟩
-    exact Quot.sound rel.add_comm
+    exact Quot.sound Rel.add_comm
   mul := Quot.map₂ (· * ·) (fun _ _ _ => Rel.mul_compat_right) fun _ _ _ => Rel.mul_compat_left
   mul_assoc := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.mul_assoc
+    exact Quot.sound Rel.mul_assoc
   one := Quot.mk _ 1
   one_mul := by
     rintro ⟨⟩
-    exact Quot.sound rel.one_mul
+    exact Quot.sound Rel.one_mul
   mul_one := by
     rintro ⟨⟩
-    exact Quot.sound rel.mul_one
+    exact Quot.sound Rel.mul_one
   left_distrib := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.left_distrib
+    exact Quot.sound Rel.left_distrib
   right_distrib := by
     rintro ⟨⟩ ⟨⟩ ⟨⟩
-    exact Quot.sound rel.right_distrib
+    exact Quot.sound Rel.right_distrib
   zero_mul := by
     rintro ⟨⟩
-    exact Quot.sound rel.zero_mul
+    exact Quot.sound Rel.zero_mul
   mul_zero := by
     rintro ⟨⟩
-    exact Quot.sound rel.mul_zero
+    exact Quot.sound Rel.mul_zero
 
 instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
@@ -221,7 +221,7 @@ instance : Algebra R (FreeAlgebra R X)
   map_add' _ _ := Quot.sound Rel.add_scalar
   commutes' _ := by
     rintro ⟨⟩
-    exact Quot.sound rel.central_scalar
+    exact Quot.sound Rel.central_scalar
   smul_def' _ _ := rfl
 
 instance {S : Type _} [CommRing S] : Ring (FreeAlgebra S X) :=
@@ -254,13 +254,13 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
         rw [add_assoc]
       · change _ + _ = _ + _
         rw [add_comm]
-      · change algebraMap _ _ _ + lift_fun R X f _ = lift_fun R X f _
+      · change algebraMap _ _ _ + liftFun R X f _ = liftFun R X f _
         simp
       · change _ * _ * _ = _ * (_ * _)
         rw [mul_assoc]
-      · change algebraMap _ _ _ * lift_fun R X f _ = lift_fun R X f _
+      · change algebraMap _ _ _ * liftFun R X f _ = liftFun R X f _
         simp
-      · change lift_fun R X f _ * algebraMap _ _ _ = lift_fun R X f _
+      · change liftFun R X f _ * algebraMap _ _ _ = liftFun R X f _
         simp
       · change _ * (_ + _) = _ * _ + _ * _
         rw [left_distrib]
@@ -271,11 +271,11 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
       · change _ * algebraMap _ _ _ = algebraMap _ _ _
         simp
       repeat'
-        change lift_fun R X f _ + lift_fun R X f _ = _
+        change liftFun R X f _ + liftFun R X f _ = _
         rw [h_ih]
         rfl
       repeat'
-        change lift_fun R X f _ * lift_fun R X f _ = _
+        change liftFun R X f _ * liftFun R X f _ = _
         rw [h_ih]
         rfl
   map_one' := by
@@ -316,11 +316,11 @@ irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
         rw [AlgHom.commutes F x]
       case
         add a b ha hb =>
-        change lift_aux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
+        change liftAux R (F ∘ ι R) (Quot.mk _ _ + Quot.mk _ _) = F (Quot.mk _ _ + Quot.mk _ _)
         rw [AlgHom.map_add, AlgHom.map_add, ha, hb]
       case
         mul a b ha hb =>
-        change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
+        change liftAux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
         rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb] }
 #align free_algebra.lift FreeAlgebra.lift
 
@@ -385,7 +385,7 @@ theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
     (w : (f : FreeAlgebra R X → A) ∘ ι R = (g : FreeAlgebra R X → A) ∘ ι R) : f = g :=
   by
   rw [← lift_symm_apply, ← lift_symm_apply] at w
-  exact (lift R).symm.Injective w
+  exact (lift R).symm.injective w
 #align free_algebra.hom_ext FreeAlgebra.hom_ext
 
 /-- The free algebra on `X` is "just" the monoid algebra on the free monoid on `X`.
@@ -411,7 +411,7 @@ noncomputable def equivMonoidAlgebraFreeMonoid :
 #align free_algebra.equiv_monoid_algebra_free_monoid FreeAlgebra.equivMonoidAlgebraFreeMonoid
 
 instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
-  equivMonoidAlgebraFreeMonoid.Surjective.Nontrivial
+  equivMonoidAlgebraFreeMonoid.surjective.nontrivial
 
 section
 
@@ -422,23 +422,23 @@ def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
 
 theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
-  simp [algebra_map_inv]
+  simp [algebraMapInv]
 #align free_algebra.algebra_map_left_inverse FreeAlgebra.algebraMap_leftInverse
 
 @[simp]
 theorem algebraMap_inj (x y : R) :
     algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
-  algebraMap_leftInverse.Injective.eq_iff
+  algebraMap_leftInverse.injective.eq_iff
 #align free_algebra.algebra_map_inj FreeAlgebra.algebraMap_inj
 
 @[simp]
 theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
-  map_eq_zero_iff (algebraMap _ _) algebraMap_leftInverse.Injective
+  map_eq_zero_iff (algebraMap _ _) algebraMap_leftInverse.injective
 #align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebraMap_eq_zero_iff
 
 @[simp]
 theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
-  map_eq_one_iff (algebraMap _ _) algebraMap_leftInverse.Injective
+  map_eq_one_iff (algebraMap _ _) algebraMap_leftInverse.injective
 #align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebraMap_eq_one_iff
 
 -- this proof is copied from the approach in `free_abelian_group.of_injective`

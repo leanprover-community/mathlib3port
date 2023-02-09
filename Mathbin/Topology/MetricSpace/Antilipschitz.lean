@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.antilipschitz
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem AntilipschitzWith.edist_lt_top [PseudoEmetricSpace α] [PseudoMetricSpac
 
 theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {f : α → β} (h : AntilipschitzWith K f) (x y : α) : edist x y ≠ ⊤ :=
-  (h.edist_lt_top x y).Ne
+  (h.edist_lt_top x y).ne
 #align antilipschitz_with.edist_ne_top AntilipschitzWith.edist_ne_top
 
 section Metric
@@ -169,7 +169,7 @@ theorem to_rightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Funct
 
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by
-  refine' ((uniformity_basis_edist.comap _).le_basis_iffₓ uniformity_basis_edist).2 fun ε h₀ => _
+  refine' ((uniformity_basis_edist.comap _).le_basis_iff uniformity_basis_edist).2 fun ε h₀ => _
   refine' ⟨K⁻¹ * ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
   rw [mul_comm, ← div_eq_mul_inv] at hx
@@ -185,24 +185,24 @@ protected theorem uniformInducing (hf : AntilipschitzWith K f) (hfc : UniformCon
 protected theorem uniformEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [PseudoEmetricSpace β]
     {K : ℝ≥0} {f : α → β} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     UniformEmbedding f :=
-  ⟨hf.UniformInducing hfc, hf.Injective⟩
+  ⟨hf.uniformInducing hfc, hf.injective⟩
 #align antilipschitz_with.uniform_embedding AntilipschitzWith.uniformEmbedding
 
 theorem isComplete_range [CompleteSpace α] (hf : AntilipschitzWith K f)
     (hfc : UniformContinuous f) : IsComplete (range f) :=
-  (hf.UniformInducing hfc).isComplete_range
+  (hf.uniformInducing hfc).isComplete_range
 #align antilipschitz_with.is_complete_range AntilipschitzWith.isComplete_range
 
 theorem isClosed_range {α β : Type _} [PseudoEmetricSpace α] [EmetricSpace β] [CompleteSpace α]
     {f : α → β} {K : ℝ≥0} (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     IsClosed (range f) :=
-  (hf.isComplete_range hfc).IsClosed
+  (hf.isComplete_range hfc).isClosed
 #align antilipschitz_with.is_closed_range AntilipschitzWith.isClosed_range
 
 theorem closedEmbedding {α : Type _} {β : Type _} [EmetricSpace α] [EmetricSpace β] {K : ℝ≥0}
     {f : α → β} [CompleteSpace α] (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :
     ClosedEmbedding f :=
-  { (hf.UniformEmbedding hfc).Embedding with closed_range := hf.isClosed_range hfc }
+  { (hf.uniformEmbedding hfc).embedding with closed_range := hf.isClosed_range hfc }
 #align antilipschitz_with.closed_embedding AntilipschitzWith.closedEmbedding
 
 theorem subtype_coe (s : Set α) : AntilipschitzWith 1 (coe : s → α) :=
@@ -247,10 +247,10 @@ protected theorem properSpace {α : Type _} [MetricSpace α] {K : ℝ≥0} {f : 
     ProperSpace β :=
   by
   apply properSpace_of_compact_closedBall_of_le 0 fun x₀ r hr => _
-  let K := f ⁻¹' closed_ball x₀ r
+  let K := f ⁻¹' closedBall x₀ r
   have A : IsClosed K := is_closed_ball.preimage f_cont
-  have B : bounded K := hK.bounded_preimage bounded_closed_ball
-  have : IsCompact K := is_compact_iff_is_closed_bounded.2 ⟨A, B⟩
+  have B : bounded K := hK.bounded_preimage bounded_closedBall
+  have : IsCompact K := isCompact_iff_isClosed_bounded.2 ⟨A, B⟩
   convert this.image f_cont
   exact (hf.image_preimage _).symm
 #align antilipschitz_with.proper_space AntilipschitzWith.properSpace
@@ -266,6 +266,6 @@ theorem LipschitzWith.to_rightInverse [PseudoEmetricSpace α] [PseudoEmetricSpac
 @[protected]
 theorem LipschitzWith.properSpace [PseudoMetricSpace α] [MetricSpace β] [ProperSpace β] {K : ℝ≥0}
     {f : α ≃ₜ β} (hK : LipschitzWith K f) : ProperSpace α :=
-  (hK.to_rightInverse f.right_inv).ProperSpace f.symm.Continuous f.symm.Surjective
+  (hK.to_rightInverse f.right_inv).properSpace f.symm.continuous f.symm.surjective
 #align lipschitz_with.proper_space LipschitzWith.properSpace
 

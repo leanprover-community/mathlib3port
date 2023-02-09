@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.fin.tuple.sort
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ theorem monotone_proj (f : Fin n → α) : Monotone (graph.proj : graph f → α
 theorem monotone_sort (f : Fin n → α) : Monotone (f ∘ sort f) :=
   by
   rw [self_comp_sort]
-  exact (monotone_proj f).comp (graph_equiv₂ f).Monotone
+  exact (monotone_proj f).comp (graphEquiv₂ f).monotone
 #align tuple.monotone_sort Tuple.monotone_sort
 -/
 
@@ -166,10 +166,10 @@ theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) 
   by
   constructor <;> intro h
   · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
-    exact (graph_equiv₂ f).StrictMono
-  · have := Subsingleton.elim (graph_equiv₂ f) (h.order_iso_of_surjective _ <| Equiv.surjective _)
+    exact (graphEquiv₂ f).strictMono
+  · have := Subsingleton.elim (graphEquiv₂ f) (h.order_iso_of_surjective _ <| Equiv.surjective _)
     ext1
-    exact (graph_equiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
+    exact (graphEquiv₁ f).apply_eq_iff_eq_symm_apply.1 (FunLike.congr_fun this x).symm
 #align tuple.eq_sort_iff' Tuple.eq_sort_iff'
 -/
 
@@ -181,7 +181,7 @@ theorem eq_sort_iff :
     σ = sort f ↔ Monotone (f ∘ σ) ∧ ∀ i j, i < j → f (σ i) = f (σ j) → σ i < σ j :=
   by
   rw [eq_sort_iff']
-  refine' ⟨fun h => ⟨(monotone_proj f).comp h.Monotone, fun i j hij hfij => _⟩, fun h i j hij => _⟩
+  refine' ⟨fun h => ⟨(monotone_proj f).comp h.monotone, fun i j hij hfij => _⟩, fun h i j hij => _⟩
   · exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
   · obtain he | hl := (h.1 hij.le).eq_or_lt <;> apply (Prod.Lex.lt_iff _ _).2
     exacts[Or.inr ⟨he, h.2 i j hij he⟩, Or.inl hl]

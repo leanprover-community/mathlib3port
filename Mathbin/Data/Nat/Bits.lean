@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module data.nat.bits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ variable {n : ℕ}
 #print Nat.boddDiv2_eq /-
 @[simp]
 theorem boddDiv2_eq (n : ℕ) : boddDiv2 n = (bodd n, div2 n) := by
-  unfold bodd div2 <;> cases bodd_div2 n <;> rfl
+  unfold bodd div2 <;> cases boddDiv2 n <;> rfl
 #align nat.bodd_div2_eq Nat.boddDiv2_eq
 -/
 
@@ -181,7 +181,7 @@ theorem bit_cases_on_injective {C : ℕ → Sort u} :
   by
   intro H₁ H₂ h
   ext (b n)
-  simpa only [bit_cases_on_bit] using congr_fun h (bit b n)
+  simpa only [bitCasesOn_bit] using congr_fun h (bit b n)
 #align nat.bit_cases_on_injective Nat.bit_cases_on_injective
 -/
 
@@ -217,10 +217,10 @@ theorem binaryRec_eq' {C : ℕ → Sort _} {z : C 0} {f : ∀ b n, C n → C (bi
     (h : f false 0 z = z ∨ (n = 0 → b = true)) :
     binaryRec z f (bit b n) = f b n (binaryRec z f n) :=
   by
-  rw [binary_rec]
+  rw [binaryRec]
   split_ifs with h'
   · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
-    rw [binary_rec_zero]
+    rw [binaryRec_zero]
     simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
     exact h.symm
   · generalize_proofs e
@@ -269,7 +269,7 @@ theorem zero_bits : bits 0 = [] := by simp [Nat.bits]
 @[simp]
 theorem bits_append_bit (n : ℕ) (b : Bool) (hn : n = 0 → b = true) : (bit b n).bits = b :: n.bits :=
   by
-  rw [Nat.bits, binary_rec_eq']
+  rw [Nat.bits, binaryRec_eq']
   simpa
 #align nat.bits_append_bit Nat.bits_append_bit
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.of_biproducts
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem distrib (f g h k : X ⟶ Y) : (f +ᵣ g) +ₗ h +ᵣ k = (f +ₗ h) +ᵣ
   have h₁ : biprod.lift (f +ᵣ g) (h +ᵣ k) = biprod.lift (𝟙 X) (𝟙 X) ≫ diag := by ext <;> simp
   have h₂ : diag ≫ biprod.desc (𝟙 Y) (𝟙 Y) = biprod.desc (f +ₗ h) (g +ₗ k) := by
     ext <;> simp [reassoc_of hd₁, reassoc_of hd₂]
-  rw [leftAdd, h₁, category.assoc, h₂, rightAdd]
+  rw [leftAdd, h₁, Category.assoc, h₂, rightAdd]
 #align category_theory.semiadditive_of_binary_biproducts.distrib CategoryTheory.SemiadditiveOfBinaryBiproducts.distrib
 
 /-- In a category with binary biproducts, the morphisms form a commutative monoid. -/
@@ -82,7 +82,7 @@ def addCommMonoidHomOfHasBinaryBiproducts : AddCommMonoid (X ⟶ Y)
     where
   add := (· +ᵣ ·)
   add_assoc :=
-    (EckmannHilton.mul_assoc (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).and_assoc
+    (EckmannHilton.mul_assoc (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).assoc
   zero := 0
   zero_add := (isUnital_rightAdd X Y).left_id
   add_zero := (isUnital_rightAdd X Y).right_id
@@ -109,14 +109,14 @@ theorem add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ bipro
 
 theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h :=
   by
-  simp only [add_eq_right_addition, category.assoc]
+  simp only [add_eq_right_addition, Category.assoc]
   congr
   ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.add_comp CategoryTheory.SemiadditiveOfBinaryBiproducts.add_comp
 
 theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h :=
   by
-  simp only [add_eq_left_addition, ← category.assoc]
+  simp only [add_eq_left_addition, ← Category.assoc]
   congr
   ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.comp_add CategoryTheory.SemiadditiveOfBinaryBiproducts.comp_add

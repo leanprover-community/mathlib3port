@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.calculus.taylor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ The Taylor polynomial is given by
 $$∑_{k=0}^n \frac{(x - x₀)^k}{k!} f^{(k)}(x₀),$$
 where $f^{(k)}(x₀)$ denotes the iterated derivative in the set `s`. -/
 noncomputable def taylorWithin (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) : PolynomialModule ℝ E :=
-  (Finset.range (n + 1)).Sum fun k =>
+  (Finset.range (n + 1)).sum fun k =>
     PolynomialModule.comp (Polynomial.x - Polynomial.c x₀)
       (PolynomialModule.single ℝ k (taylorCoeffWithin f k s x₀))
 #align taylor_within taylorWithin
@@ -155,7 +155,7 @@ theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
   by
   simp_rw [sub_eq_neg_add]
   rw [← neg_one_mul, mul_comm (-1 : ℝ), mul_assoc, mul_comm (-1 : ℝ), ← mul_assoc]
-  convert @HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
+  convert @has_deriv_at.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.add_const x)
   simp only [Nat.cast_add, Nat.cast_one]
 #align monomial_has_deriv_aux monomial_has_deriv_aux
 
@@ -172,7 +172,7 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
     HasDerivWithinAt (fun t => iteratedDerivWithin (k + 1) f s t)
       (iteratedDerivWithin (k + 2) f s y) s' y :=
     by
-    convert (hf' y hy).HasDerivWithinAt
+    convert (hf' y hy).hasDerivWithinAt
     rw [iteratedDerivWithin_succ (hs'_unique.mono h)]
     refine' (derivWithin_subset h hs'_unique _).symm
     exact (hf' y hy).antimono h hs'
@@ -186,7 +186,7 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
       field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k]
       ring_nf
     rw [this]
-    exact (monomial_has_deriv_aux y x _).HasDerivWithinAt.const_mul _
+    exact (monomial_has_deriv_aux y x _).hasDerivWithinAt.const_mul _
   convert this.smul hf''
   field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k]
   rw [neg_div, neg_smul, sub_eq_add_neg]
@@ -235,7 +235,7 @@ theorem taylorWithinEval_hasDerivAt_Ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) 
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) t :=
   haveI h_nhds := IsOpen.mem_nhds isOpen_Ioo ht
   (hasDerivWithinAt_taylorWithinEval (uniqueDiffWithinAt_Ioo ht) (uniqueDiffOn_Icc hx)
-        (nhdsWithin_le_nhds h_nhds) ht Ioo_subset_Icc_self hf hf').HasDerivAt
+        (nhdsWithin_le_nhds h_nhds) ht Ioo_subset_Icc_self hf hf').hasDerivAt
     h_nhds
 #align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_Ioo
 
@@ -248,7 +248,7 @@ theorem has_deriv_within_taylorWithinEval_at_Icc {f : ℝ → E} {a b t : ℝ} (
     HasDerivWithinAt (fun y => taylorWithinEval f n (Icc a b) y x)
       (((n ! : ℝ)⁻¹ * (x - t) ^ n) • iteratedDerivWithin (n + 1) f (Icc a b) t) (Icc a b) t :=
   hasDerivWithinAt_taylorWithinEval (uniqueDiffOn_Icc hx t ht) (uniqueDiffOn_Icc hx)
-    self_mem_nhdsWithin ht rfl.Subset hf hf'
+    self_mem_nhdsWithin ht rfl.subset hf hf'
 #align has_deriv_within_taylor_within_eval_at_Icc has_deriv_within_taylorWithinEval_at_Icc
 
 /-! ### Taylor's theorem with mean value type remainder estimate -/
@@ -310,7 +310,7 @@ theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ
     refine' pow_ne_zero _ _
     rw [mem_Ioo] at hy
     rw [sub_ne_zero]
-    exact hy.2.Ne.symm
+    exact hy.2.ne.symm
   have hg' : ∀ y : ℝ, y ∈ Ioo x₀ x → -(↑n + 1) * (x - y) ^ n ≠ 0 := fun y hy =>
     mul_ne_zero (neg_ne_zero.mpr (Nat.cast_add_one_ne_zero n)) (xy_ne y hy)
   -- We apply the general theorem with g(t) = (x - t)^(n+1)

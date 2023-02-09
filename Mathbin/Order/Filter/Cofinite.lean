@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.cofinite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,10 +41,10 @@ namespace Filter
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
 def cofinite : Filter α where
   sets := { s | sᶜ.Finite }
-  univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
-  sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset <| compl_subset_compl.2 st
+  univ_sets := by simp only [compl_univ, finite_empty, mem_setOf_eq]
+  sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.subset <| compl_subset_compl.2 st
   inter_sets s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) := by
-    simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq]
+    simp only [compl_inter, Finite.union, ht, hs, mem_setOf_eq]
 #align filter.cofinite Filter.cofinite
 -/
 
@@ -74,20 +74,20 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.has_basis_cofinite Filter.hasBasis_cofiniteₓ'. -/
 theorem hasBasis_cofinite : HasBasis cofinite (fun s : Set α => s.Finite) compl :=
   ⟨fun s =>
-    ⟨fun h => ⟨sᶜ, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ =>
-      htf.Subset <| compl_subset_comm.2 hts⟩⟩
+    ⟨fun h => ⟨sᶜ, h, (compl_compl s).subset⟩, fun ⟨t, htf, hts⟩ =>
+      htf.subset <| compl_subset_comm.2 hts⟩⟩
 #align filter.has_basis_cofinite Filter.hasBasis_cofinite
 
 #print Filter.cofinite_neBot /-
 instance cofinite_neBot [Infinite α] : NeBot (@cofinite α) :=
-  hasBasis_cofinite.neBot_iff.2 fun s hs => hs.infinite_compl.Nonempty
+  hasBasis_cofinite.neBot_iff.2 fun s hs => hs.infinite_compl.nonempty
 #align filter.cofinite_ne_bot Filter.cofinite_neBot
 -/
 
 #print Filter.frequently_cofinite_iff_infinite /-
 theorem frequently_cofinite_iff_infinite {p : α → Prop} :
-    (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
-  simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, Classical.not_not,
+    (∃ᶠ x in Mem, p x) ↔ Set.Infinite { x | p x } := by
+  simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_setOf, Classical.not_not,
     Set.Infinite]
 #align filter.frequently_cofinite_iff_infinite Filter.frequently_cofinite_iff_infinite
 -/
@@ -136,7 +136,7 @@ Case conversion may be inaccurate. Consider using '#align filter.le_cofinite_iff
 theorem le_cofinite_iff_compl_singleton_mem : l ≤ cofinite ↔ ∀ x, {x}ᶜ ∈ l :=
   by
   refine' ⟨fun h x => h (finite_singleton x).compl_mem_cofinite, fun h s (hs : sᶜ.Finite) => _⟩
-  rw [← compl_compl s, ← bUnion_of_singleton (sᶜ), compl_Union₂, Filter.binterᵢ_mem hs]
+  rw [← compl_compl s, ← bunionᵢ_of_singleton (sᶜ), compl_unionᵢ₂, Filter.binterᵢ_mem hs]
   exact fun x _ => h x
 #align filter.le_cofinite_iff_compl_singleton_mem Filter.le_cofinite_iff_compl_singleton_mem
 
@@ -189,7 +189,7 @@ theorem coprod_cofinite : (cofinite : Filter α).coprod (cofinite : Filter β) =
 theorem coprodᵢ_cofinite {α : ι → Type _} [Finite ι] :
     (Filter.coprodᵢ fun i => (cofinite : Filter (α i))) = cofinite :=
   Filter.coext fun s => by
-    simp only [compl_mem_Coprod, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
+    simp only [compl_mem_coprodᵢ, mem_cofinite, compl_compl, forall_finite_image_eval_iff]
 #align filter.Coprod_cofinite Filter.coprodᵢ_cofinite
 -/
 
@@ -204,8 +204,8 @@ theorem disjoint_cofinite_left : Disjoint cofinite l ↔ ∃ s ∈ l, Set.Finite
   by
   simp only [has_basis_cofinite.disjoint_iff l.basis_sets, id, disjoint_compl_left_iff_subset]
   exact
-    ⟨fun ⟨s, hs, t, ht, hts⟩ => ⟨t, ht, hs.Subset hts⟩, fun ⟨s, hs, hsf⟩ =>
-      ⟨s, hsf, s, hs, subset.rfl⟩⟩
+    ⟨fun ⟨s, hs, t, ht, hts⟩ => ⟨t, ht, hs.subset hts⟩, fun ⟨s, hs, hsf⟩ =>
+      ⟨s, hsf, s, hs, Subset.rfl⟩⟩
 #align filter.disjoint_cofinite_left Filter.disjoint_cofinite_left
 
 /- warning: filter.disjoint_cofinite_right -> Filter.disjoint_cofinite_right is a dubious translation:
@@ -227,7 +227,7 @@ open Filter
 /-- For natural numbers the filters `cofinite` and `at_top` coincide. -/
 theorem Nat.cofinite_eq_atTop : @cofinite ℕ = atTop :=
   by
-  refine' le_antisymm _ at_top_le_cofinite
+  refine' le_antisymm _ atTop_le_cofinite
   refine' at_top_basis.ge_iff.2 fun N hN => _
   simpa only [mem_cofinite, compl_Ici] using finite_lt_nat N
 #align nat.cofinite_eq_at_top Nat.cofinite_eq_atTop
@@ -252,7 +252,7 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrder β]
   by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
   · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
-    have : { y | ¬x ≤ f y }.Finite := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
+    have : { y | ¬x ≤ f y }.Finite := filter.eventually_cofinite.mp (tendsto_atTop.1 hf x)
     simp only [not_le] at this
     obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ :=
       exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
@@ -308,7 +308,7 @@ Case conversion may be inaccurate. Consider using '#align function.injective.ten
 /-- For an injective function `f`, inverse images of finite sets are finite. See also
 `filter.comap_cofinite_le` and `function.injective.comap_cofinite_eq`. -/
 theorem Function.Injective.tendsto_cofinite {f : α → β} (hf : Injective f) :
-    Tendsto f cofinite cofinite := fun s h => h.Preimage (hf.InjOn _)
+    Tendsto f cofinite cofinite := fun s h => h.preimage (hf.injOn _)
 #align function.injective.tendsto_cofinite Function.Injective.tendsto_cofinite
 
 /- warning: function.injective.comap_cofinite_eq -> Function.Injective.comap_cofinite_eq is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar_of_basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ
   let F : ℝ → Fin 1 → ℝ := fun t => fun i => t
   have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1 :=
     by
-    apply subset.antisymm
+    apply Subset.antisymm
     · intro x hx
       refine' ⟨x 0, ⟨hx.1 0, hx.2 0⟩, _⟩
       ext j
@@ -157,13 +157,13 @@ irreducible_def Basis.addHaar (b : Basis ι ℝ E) : Measure E :=
   Measure.add_haar_measure b.parallelepiped
 #align basis.add_haar Basis.addHaar
 
-instance isAddHaarMeasureBasisAddHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.add_haar :=
+instance isAddHaarMeasureBasisAddHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar :=
   by
   rw [Basis.addHaar]
-  exact measure.is_add_haar_measure_add_haar_measure _
+  exact Measure.is_add_haar_measure_add_haar_measure _
 #align is_add_haar_measure_basis_add_haar isAddHaarMeasureBasisAddHaar
 
-theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.add_haar (parallelepiped b) = 1 :=
+theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 :=
   by
   rw [Basis.addHaar]
   exact add_haar_measure_self
@@ -177,7 +177,7 @@ some arbitrary choice of orthonormal basis. The fact that it works with any orth
 is proved in `orthonormal_basis.volume_parallelepiped`. -/
 instance (priority := 100) measureSpaceOfInnerProductSpace [InnerProductSpace ℝ E]
     [FiniteDimensional ℝ E] [MeasurableSpace E] [BorelSpace E] : MeasureSpace E
-    where volume := (stdOrthonormalBasis ℝ E).toBasis.add_haar
+    where volume := (stdOrthonormalBasis ℝ E).toBasis.addHaar
 #align measure_space_of_inner_product_space measureSpaceOfInnerProductSpace
 
 /- This instance should not be necessary, but Lean has difficulties to find it in product

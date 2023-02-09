@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Felix Weilacher
 
 ! This file was ported from Lean 3 source module topology.perfect
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
   have : ∀ y, y ≠ x ∧ y ∈ closure C → ∃ᶠ z in 𝓝 y, z ≠ x ∧ z ∈ C :=
     by
     rintro y ⟨hyx, yC⟩
-    simp only [← mem_compl_singleton_iff, @and_comm' _ (_ ∈ C), ← frequently_nhdsWithin_iff,
+    simp only [← mem_compl_singleton_iff, @and_comm _ (_ ∈ C), ← frequently_nhdsWithin_iff,
       hyx.nhds_within_compl_singleton, ← mem_closure_iff_frequently]
     exact yC
   rw [← frequently_frequently_nhds]
@@ -168,7 +168,7 @@ theorem Perfect.closure_nhds_inter {U : Set α} (hC : Perfect C) (x : α) (xC : 
   constructor
   · apply Preperfect.perfect_closure
     exact hC.acc.open_inter Uop
-  apply nonempty.closure
+  apply Nonempty.closure
   exact ⟨x, ⟨xU, xC⟩⟩
 #align perfect.closure_nhds_inter Perfect.closure_nhds_inter
 
@@ -223,19 +223,19 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
   let D := C \ V
   have Vct : (V ∩ C).Countable :=
     by
-    simp only [Union_inter, mem_sep_iff]
-    apply countable.bUnion
-    · exact countable.mono (inter_subset_left _ _) bct
+    simp only [unionᵢ_inter, mem_sep_iff]
+    apply Countable.bunionᵢ
+    · exact Countable.mono (inter_subset_left _ _) bct
     · exact inter_subset_right _ _
   refine' ⟨V ∩ C, D, Vct, ⟨_, _⟩, _⟩
   · refine' hclosed.sdiff (isOpen_bunionᵢ fun U => _)
-    exact fun ⟨Ub, _⟩ => is_topological_basis.is_open bbasis Ub
+    exact fun ⟨Ub, _⟩ => IsTopologicalBasis.isOpen bbasis Ub
   · rw [preperfect_iff_nhds]
     intro x xD E xE
     have : ¬(E ∩ D).Countable := by
       intro h
       obtain ⟨U, hUb, xU, hU⟩ : ∃ U ∈ b, x ∈ U ∧ U ⊆ E :=
-        (is_topological_basis.mem_nhds_iff bbasis).mp xE
+        (IsTopologicalBasis.mem_nhds_iff bbasis).mp xE
       have hU_cnt : (U ∩ C).Countable :=
         by
         apply @countable.mono _ _ (E ∩ D ∪ V ∩ C)
@@ -243,13 +243,13 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
           by_cases y ∈ V
           · exact mem_union_right _ (mem_inter h yC)
           · exact mem_union_left _ (mem_inter (hU yU) ⟨yC, h⟩)
-        exact countable.union h Vct
+        exact Countable.union h Vct
       have : U ∈ v := ⟨hUb, hU_cnt⟩
       apply xD.2
-      exact mem_bUnion this xU
+      exact mem_bunionᵢ this xU
     by_contra h
     push_neg  at h
-    exact absurd (countable.mono h (Set.countable_singleton _)) this
+    exact absurd (Countable.mono h (Set.countable_singleton _)) this
   · rw [inter_comm, inter_union_diff]
 #align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosed
 

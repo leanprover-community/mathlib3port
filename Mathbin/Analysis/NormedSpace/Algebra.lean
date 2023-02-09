@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.normed_space.algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,12 +48,12 @@ theorem norm_le_norm_one (φ : characterSpace 𝕜 A) : ‖toNormedDual (φ : We
 instance [ProperSpace 𝕜] : CompactSpace (characterSpace 𝕜 A) :=
   by
   rw [← isCompact_iff_compactSpace]
-  have h : character_space 𝕜 A ⊆ to_normed_dual ⁻¹' Metric.closedBall 0 ‖(1 : A)‖ :=
+  have h : characterSpace 𝕜 A ⊆ toNormedDual ⁻¹' Metric.closedBall 0 ‖(1 : A)‖ :=
     by
     intro φ hφ
     rw [Set.mem_preimage, mem_closedBall_zero_iff]
     exact (norm_le_norm_one ⟨φ, ⟨hφ.1, hφ.2⟩⟩ : _)
-  exact isCompact_of_isClosed_subset (is_compact_closed_ball 𝕜 0 _) character_space.is_closed h
+  exact isCompact_of_isClosed_subset (isCompact_closedBall 𝕜 0 _) characterSpace.isClosed h
 
 end CharacterSpace
 

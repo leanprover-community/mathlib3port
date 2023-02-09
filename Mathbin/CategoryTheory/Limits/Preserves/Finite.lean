@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,15 +56,14 @@ attribute [instance] preserves_finite_limits.preserves_finite_limits
 though through a noncomputable instance. -/
 noncomputable instance (priority := 100) preservesLimitsOfShapeOfPreservesFiniteLimits (F : C ⥤ D)
     [PreservesFiniteLimits F] (J : Type w) [SmallCategory J] [FinCategory J] :
-    PreservesLimitsOfShape J F := by
-  apply preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J)
+    PreservesLimitsOfShape J F := by apply preservesLimitsOfShapeOfEquiv (FinCategory.equivAsType J)
 #align category_theory.limits.preserves_limits_of_shape_of_preserves_finite_limits CategoryTheory.Limits.preservesLimitsOfShapeOfPreservesFiniteLimits
 
 noncomputable instance (priority := 100) PreservesLimits.preservesFiniteLimitsOfSize (F : C ⥤ D)
     [PreservesLimitsOfSize.{w, w₂} F] : PreservesFiniteLimits F :=
   ⟨fun J sJ fJ =>
-    haveI := preserves_smallest_limits_of_preserves_limits F
-    preserves_limits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
+    haveI := preservesSmallestLimitsOfPreservesLimits F
+    preservesLimitsOfShapeOfEquiv (FinCategory.equivAsType J) F⟩
 #align category_theory.limits.preserves_limits.preserves_finite_limits_of_size CategoryTheory.Limits.PreservesLimits.preservesFiniteLimitsOfSize
 
 noncomputable instance (priority := 120) PreservesLimits.preservesFiniteLimits (F : C ⥤ D)
@@ -79,7 +78,7 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
       ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
         by
         skip
-        exact preserves_limits_of_shape J F) :
+        exact PreservesLimitsOfShape J F) :
     PreservesFiniteLimits F :=
   ⟨fun J hJ hhJ => by
     skip
@@ -88,7 +87,7 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
-    exact preserves_limits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
+    exact preservesLimitsOfShapeOfEquiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
 #align category_theory.limits.preserves_finite_limits_of_preserves_finite_limits_of_size CategoryTheory.Limits.preservesFiniteLimitsOfPreservesFiniteLimitsOfSize
 
 instance idPreservesFiniteLimits : PreservesFiniteLimits (𝟭 C) where
@@ -118,14 +117,14 @@ though through a noncomputable instance. -/
 noncomputable instance (priority := 100) preservesColimitsOfShapeOfPreservesFiniteColimits
     (F : C ⥤ D) [PreservesFiniteColimits F] (J : Type w) [SmallCategory J] [FinCategory J] :
     PreservesColimitsOfShape J F := by
-  apply preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J)
+  apply preservesColimitsOfShapeOfEquiv (FinCategory.equivAsType J)
 #align category_theory.limits.preserves_colimits_of_shape_of_preserves_finite_colimits CategoryTheory.Limits.preservesColimitsOfShapeOfPreservesFiniteColimits
 
 noncomputable instance (priority := 100) PreservesColimits.preservesFiniteColimits (F : C ⥤ D)
     [PreservesColimitsOfSize.{w, w₂} F] : PreservesFiniteColimits F :=
   ⟨fun J sJ fJ =>
-    haveI := preserves_smallest_colimits_of_preserves_colimits F
-    preserves_colimits_of_shape_of_equiv (fin_category.equiv_as_type J) F⟩
+    haveI := preservesSmallestColimitsOfPreservesColimits F
+    preservesColimitsOfShapeOfEquiv (FinCategory.equivAsType J) F⟩
 #align category_theory.limits.preserves_colimits.preserves_finite_colimits CategoryTheory.Limits.PreservesColimits.preservesFiniteColimits
 
 /-- We can always derive `preserves_finite_limits C` by showing that we are preserving limits at an
@@ -135,7 +134,7 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
       ∀ (J : Type w) {𝒥 : SmallCategory J} (hJ : @FinCategory J 𝒥),
         by
         skip
-        exact preserves_colimits_of_shape J F) :
+        exact PreservesColimitsOfShape J F) :
     PreservesFiniteColimits F :=
   ⟨fun J hJ hhJ => by
     skip
@@ -144,7 +143,7 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
       apply UliftHom.category.{0}
       exact CategoryTheory.uliftCategory J
     haveI := h (UliftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
-    exact preserves_colimits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
+    exact preservesColimitsOfShapeOfEquiv (UliftHomUliftCategory.equiv.{w, w} J).symm F⟩
 #align category_theory.limits.preserves_finite_colimits_of_preserves_finite_colimits_of_size CategoryTheory.Limits.preservesFiniteColimitsOfPreservesFiniteColimitsOfSize
 
 instance idPreservesFiniteColimits : PreservesFiniteColimits (𝟭 C) where

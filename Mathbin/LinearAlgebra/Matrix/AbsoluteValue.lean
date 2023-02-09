@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.absolute_value
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i 
     _ = ∑ σ : Perm n, ∏ i, abv (A (σ i) i) :=
       sum_congr rfl fun σ hσ => by rw [abv.map_units_int_smul, abv.map_prod]
     _ ≤ ∑ σ : Perm n, ∏ i : n, x :=
-      sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.NonNeg _) fun _ _ => hx _ _
+      sum_le_sum fun _ _ => prod_le_prod (fun _ _ => abv.nonneg _) fun _ _ => hx _ _
     _ = ∑ σ : Perm n, x ^ Fintype.card n :=
       sum_congr rfl fun _ _ => by rw [prod_const, Finset.card_univ]
     _ = Nat.factorial (Fintype.card n) • x ^ Fintype.card n := by

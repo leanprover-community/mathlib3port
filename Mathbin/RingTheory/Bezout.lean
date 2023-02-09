@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.bezout
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ namespace IsBezout
 variable {R}
 
 instance span_pair_isPrincipal [IsBezout R] (x y : R) : (Ideal.span {x, y} : Ideal R).IsPrincipal :=
-  by classical exact is_principal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
+  by classical exact isPrincipal_of_fg (Ideal.span {x, y}) ⟨{x, y}, by simp⟩
 #align is_bezout.span_pair_is_principal IsBezout.span_pair_isPrincipal
 
 theorem iff_span_pair_isPrincipal :
@@ -114,7 +114,7 @@ instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R := b
 theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
     (hf : Function.Surjective f) [IsBezout R] : IsBezout S :=
   by
-  rw [iff_span_pair_is_principal]
+  rw [iff_span_pair_isPrincipal]
   intro x y
   obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := hf x, hf y
   use f (gcd x y)
@@ -134,7 +134,7 @@ theorem tFAE [IsBezout R] [IsDomain R] :
   classical
     tfae_have 1 → 2
     · intro H
-      exact ⟨fun I => is_principal_of_fg _ (IsNoetherian.noetherian _)⟩
+      exact ⟨fun I => isPrincipal_of_fg _ (IsNoetherian.noetherian _)⟩
     tfae_have 2 → 3
     · intro
       infer_instance

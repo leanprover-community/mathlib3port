@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.filter.n_ary
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ
   sets_of_superset s t hs hst :=
     Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by
-    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
+    simp only [exists_prop, mem_setOf_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, hs₁, hs₂, hs⟩ ⟨t₁, t₂, ht₁, ht₂, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, inter_sets f hs₁ ht₁, inter_sets g hs₂ ht₂,
@@ -170,7 +170,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_bot_left Filter.map₂_bot_leftₓ'. -/
 @[simp]
 theorem map₂_bot_left : map₂ m ⊥ g = ⊥ :=
-  empty_mem_iff_bot.1 ⟨∅, univ, trivial, univ_mem, image2_empty_left.Subset⟩
+  empty_mem_iff_bot.1 ⟨∅, univ, trivial, univ_mem, image2_empty_left.subset⟩
 #align filter.map₂_bot_left Filter.map₂_bot_left
 
 /- warning: filter.map₂_bot_right -> Filter.map₂_bot_right is a dubious translation:
@@ -181,7 +181,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.map₂_bot_right Filter.map₂_bot_rightₓ'. -/
 @[simp]
 theorem map₂_bot_right : map₂ m f ⊥ = ⊥ :=
-  empty_mem_iff_bot.1 ⟨univ, ∅, univ_mem, trivial, image2_empty_right.Subset⟩
+  empty_mem_iff_bot.1 ⟨univ, ∅, univ_mem, trivial, image2_empty_right.subset⟩
 #align filter.map₂_bot_right Filter.map₂_bot_right
 
 /- warning: filter.map₂_eq_bot_iff -> Filter.map₂_eq_bot_iff is a dubious translation:
@@ -210,9 +210,9 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {m : α -> β -> γ} {f : Filter.{u2} α} {g : Filter.{u1} β}, Iff (Filter.NeBot.{u3} γ (Filter.map₂.{u2, u1, u3} α β γ m f g)) (And (Filter.NeBot.{u2} α f) (Filter.NeBot.{u1} β g))
 Case conversion may be inaccurate. Consider using '#align filter.map₂_ne_bot_iff Filter.map₂_neBot_iffₓ'. -/
 @[simp]
-theorem map₂_neBot_iff : (map₂ m f g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
+theorem map₂_neBot_iff : (map₂ m f g).NeBot ↔ f.NeBot ∧ g.NeBot :=
   by
-  simp_rw [ne_bot_iff]
+  simp_rw [neBot_iff]
   exact map₂_eq_bot_iff.not.trans not_or
 #align filter.map₂_ne_bot_iff Filter.map₂_neBot_iff
 
@@ -222,7 +222,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {m : α -> β -> γ} {f : Filter.{u3} α} {g : Filter.{u2} β}, (Filter.NeBot.{u3} α f) -> (Filter.NeBot.{u2} β g) -> (Filter.NeBot.{u1} γ (Filter.map₂.{u3, u2, u1} α β γ m f g))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.map₂ Filter.NeBot.map₂ₓ'. -/
-theorem NeBot.map₂ (hf : f.ne_bot) (hg : g.ne_bot) : (map₂ m f g).ne_bot :=
+theorem NeBot.map₂ (hf : f.NeBot) (hg : g.NeBot) : (map₂ m f g).NeBot :=
   map₂_neBot_iff.2 ⟨hf, hg⟩
 #align filter.ne_bot.map₂ Filter.NeBot.map₂
 
@@ -232,7 +232,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {m : α -> β -> γ} {f : Filter.{u2} α} {g : Filter.{u1} β}, (Filter.NeBot.{u3} γ (Filter.map₂.{u2, u1, u3} α β γ m f g)) -> (Filter.NeBot.{u2} α f)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_map₂_left Filter.NeBot.of_map₂_leftₓ'. -/
-theorem NeBot.of_map₂_left (h : (map₂ m f g).ne_bot) : f.ne_bot :=
+theorem NeBot.of_map₂_left (h : (map₂ m f g).NeBot) : f.NeBot :=
   (map₂_neBot_iff.1 h).1
 #align filter.ne_bot.of_map₂_left Filter.NeBot.of_map₂_left
 
@@ -242,7 +242,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {γ : Type.{u3}} {m : α -> β -> γ} {f : Filter.{u2} α} {g : Filter.{u1} β}, (Filter.NeBot.{u3} γ (Filter.map₂.{u2, u1, u3} α β γ m f g)) -> (Filter.NeBot.{u1} β g)
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.of_map₂_right Filter.NeBot.of_map₂_rightₓ'. -/
-theorem NeBot.of_map₂_right (h : (map₂ m f g).ne_bot) : g.ne_bot :=
+theorem NeBot.of_map₂_right (h : (map₂ m f g).NeBot) : g.NeBot :=
   (map₂_neBot_iff.1 h).2
 #align filter.ne_bot.of_map₂_right Filter.NeBot.of_map₂_right
 
@@ -358,10 +358,10 @@ theorem map₂_swap (m : α → β → γ) (f : Filter α) (g : Filter β) :
 
 #print Filter.map₂_left /-
 @[simp]
-theorem map₂_left (h : g.ne_bot) : map₂ (fun x y => x) f g = f :=
+theorem map₂_left (h : g.NeBot) : map₂ (fun x y => x) f g = f :=
   by
   ext u
-  refine' ⟨_, fun hu => ⟨_, _, hu, univ_mem, (image2_left <| h.nonempty_of_mem univ_mem).Subset⟩⟩
+  refine' ⟨_, fun hu => ⟨_, _, hu, univ_mem, (image2_left <| h.nonempty_of_mem univ_mem).subset⟩⟩
   rintro ⟨s, t, hs, ht, hu⟩
   rw [image2_left (h.nonempty_of_mem ht)] at hu
   exact mem_of_superset hs hu
@@ -375,7 +375,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : Filter.{u2} α} {g : Filter.{u1} β}, (Filter.NeBot.{u2} α f) -> (Eq.{succ u1} (Filter.{u1} β) (Filter.map₂.{u2, u1, u1} α β β (fun (x : α) (y : β) => y) f g) g)
 Case conversion may be inaccurate. Consider using '#align filter.map₂_right Filter.map₂_rightₓ'. -/
 @[simp]
-theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [map₂_swap, map₂_left h]
+theorem map₂_right (h : f.NeBot) : map₂ (fun x y => y) f g = g := by rw [map₂_swap, map₂_left h]
 #align filter.map₂_right Filter.map₂_right
 
 #print Filter.map₃ /-
@@ -390,7 +390,7 @@ def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Fi
     Exists₃.imp
       (fun u v w => And.imp_right <| And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
   inter_sets s t := by
-    simp only [exists_prop, mem_set_of_eq, subset_inter_iff]
+    simp only [exists_prop, mem_setOf_eq, subset_inter_iff]
     rintro ⟨s₁, s₂, s₃, hs₁, hs₂, hs₃, hs⟩ ⟨t₁, t₂, t₃, ht₁, ht₂, ht₃, ht⟩
     exact
       ⟨s₁ ∩ t₁, s₂ ∩ t₂, s₃ ∩ t₃, inter_mem hs₁ ht₁, inter_mem hs₂ ht₂, inter_mem hs₃ ht₃,

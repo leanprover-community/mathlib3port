@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen, Mantas Bakšys
 
 ! This file was ported from Lean 3 source module number_theory.multiplicity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
   by
   rw [← mem_span_singleton, ← Ideal.Quotient.eq] at h
   simp only [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, h, geom_sum₂_self,
-    _root_.map_mul, map_pow, map_natCast]
+    map_mul, map_pow, map_natCast]
 #align dvd_geom_sum₂_iff_of_dvd_sub dvd_geom_sum₂_iff_of_dvd_sub
 
 theorem dvd_geom_sum₂_iff_of_dvd_sub' {x y p : R} (h : p ∣ x - y) :
@@ -102,7 +102,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
     Ideal.Quotient.mk (span {↑p ^ 2}) (∑ i in range p, (a + ↑p * b) ^ i * a ^ (p - 1 - i)) =
         ∑ i : ℕ in Finset.range p,
           mk (span {↑p ^ 2}) ((a ^ (i - 1) * (↑p * b) * ↑i + a ^ i) * a ^ (p - 1 - i)) :=
-      by simp_rw [RingHom.map_geom_sum₂, ← map_pow, h1, ← _root_.map_mul]
+      by simp_rw [RingHom.map_geom_sum₂, ← map_pow, h1, ← map_mul]
     _ =
         mk (span {↑p ^ 2})
             (∑ x : ℕ in Finset.range p, a ^ (x - 1) * (a ^ (p - 1 - x) * (↑p * (b * ↑x)))) +
@@ -142,7 +142,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
       by
       simp only [add_left_eq_self, ← Finset.mul_sum]
       norm_cast
-      simp only [Finset.sum_range_id, Nat.cast_mul, _root_.map_mul,
+      simp only [Finset.sum_range_id, Nat.cast_mul, map_mul,
         Nat.mul_div_assoc _ (even_iff_two_dvd.mp (Nat.Odd.sub_odd hp odd_one))]
       ring
       simp only [← map_pow, mul_eq_zero_of_left, Ideal.Quotient.eq_zero_iff_mem, mem_span_singleton]
@@ -229,18 +229,18 @@ theorem Int.pow_add_pow {x y : ℤ} (hxy : ↑p ∣ x + y) (hx : ¬↑p ∣ x) {
   by
   rw [← sub_neg_eq_add] at hxy
   rw [← sub_neg_eq_add, ← sub_neg_eq_add, ← Odd.neg_pow hn]
-  exact int.pow_sub_pow hp hp1 hxy hx n
+  exact Int.pow_sub_pow hp hp1 hxy hx n
 #align multiplicity.int.pow_add_pow multiplicity.Int.pow_add_pow
 
 theorem Nat.pow_sub_pow {x y : ℕ} (hxy : p ∣ x - y) (hx : ¬p ∣ x) (n : ℕ) :
     multiplicity p (x ^ n - y ^ n) = multiplicity p (x - y) + multiplicity p n :=
   by
   obtain hyx | hyx := le_total y x
-  · iterate 2 rw [← int.coe_nat_multiplicity]
+  · iterate 2 rw [← Int.coe_nat_multiplicity]
     rw [Int.ofNat_sub (Nat.pow_le_pow_of_le_left hyx n)]
     rw [← Int.coe_nat_dvd] at hxy hx
     push_cast at *
-    exact int.pow_sub_pow hp hp1 hxy hx n
+    exact Int.pow_sub_pow hp hp1 hxy hx n
   ·
     simp only [nat.sub_eq_zero_iff_le.mpr hyx,
       nat.sub_eq_zero_iff_le.mpr (Nat.pow_le_pow_of_le_left hyx n), multiplicity.zero,
@@ -250,10 +250,10 @@ theorem Nat.pow_sub_pow {x y : ℕ} (hxy : p ∣ x - y) (hx : ¬p ∣ x) (n : �
 theorem Nat.pow_add_pow {x y : ℕ} (hxy : p ∣ x + y) (hx : ¬p ∣ x) {n : ℕ} (hn : Odd n) :
     multiplicity p (x ^ n + y ^ n) = multiplicity p (x + y) + multiplicity p n :=
   by
-  iterate 2 rw [← int.coe_nat_multiplicity]
+  iterate 2 rw [← Int.coe_nat_multiplicity]
   rw [← Int.coe_nat_dvd] at hxy hx
   push_cast at *
-  exact int.pow_add_pow hp hp1 hxy hx hn
+  exact Int.pow_add_pow hp hp1 hxy hx hn
 #align multiplicity.nat.pow_add_pow multiplicity.Nat.pow_add_pow
 
 end LiftingTheExponent
@@ -323,7 +323,7 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
 theorem Int.two_pow_two_pow_sub_pow_two_pow {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ 2 ^ n - y ^ 2 ^ n) = multiplicity 2 (x - y) + n := by
   simp only [pow_two_pow_sub_pow_two_pow n, multiplicity.mul Int.prime_two,
-    multiplicity.Finset.prod Int.prime_two, add_comm, Nat.cast_one, Finset.sum_const,
+    multiplicity.Finset.prod int.prime_two, add_comm, Nat.cast_one, Finset.sum_const,
     Finset.card_range, nsmul_one, Int.two_pow_two_pow_add_two_pow_two_pow hx hxy]
 #align int.two_pow_two_pow_sub_pow_two_pow Int.two_pow_two_pow_sub_pow_two_pow
 
@@ -370,8 +370,8 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
       Int.sq_mod_four_eq_one_of_odd hy]
     · norm_num
     · simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
-  rw [Int.two_pow_sub_pow' d hxy4 _, sq_sub_sq, ← Int.ofNat_mul_out, multiplicity.mul Int.prime_two,
-    multiplicity.mul Int.prime_two]
+  rw [Int.two_pow_sub_pow' d hxy4 _, sq_sub_sq, ← Int.ofNat_mul_out, multiplicity.mul int.prime_two,
+    multiplicity.mul int.prime_two]
   suffices multiplicity (2 : ℤ) ↑(2 : ℕ) = 1 by rw [this, add_comm (1 : PartENat), ← add_assoc]
   · norm_cast
     rw [multiplicity.multiplicity_self _ _]

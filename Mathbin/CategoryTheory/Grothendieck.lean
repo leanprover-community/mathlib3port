@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.grothendieck
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem ext {X Y : Grothendieck F} (f g : Hom X Y) (w_base : f.base = g.base)
 @[simps]
 def id (X : Grothendieck F) : Hom X X where
   base := 𝟙 X.base
-  fiber := eqToHom (by erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber])
+  fiber := eqToHom (by erw [CategoryTheory.Functor.map_id, Functor.id_obj X.fiber])
 #align category_theory.grothendieck.id CategoryTheory.Grothendieck.id
 
 instance (X : Grothendieck F) : Inhabited (Hom X X) :=
@@ -105,7 +105,7 @@ def comp {X Y Z : Grothendieck F} (f : Hom X Y) (g : Hom Y Z) : Hom X Z
     where
   base := f.base ≫ g.base
   fiber :=
-    eqToHom (by erw [functor.map_comp, functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
+    eqToHom (by erw [Functor.map_comp, Functor.comp_obj]) ≫ (F.map g.base).map f.fiber ≫ g.fiber
 #align category_theory.grothendieck.comp CategoryTheory.Grothendieck.comp
 
 attribute [local simp] eq_to_hom_map
@@ -120,7 +120,7 @@ instance : Category (Grothendieck F)
     · dsimp
       -- We need to turn `F.map_id` (which is an equation between functors)
       -- into a natural isomorphism.
-      rw [← nat_iso.naturality_2 (eq_to_iso (F.map_id Y.base)) f.fiber]
+      rw [← NatIso.naturality_2 (eqToIso (F.map_id Y.base)) f.fiber]
       simp
     · simp
   id_comp' X Y f := by ext <;> simp
@@ -128,13 +128,13 @@ instance : Category (Grothendieck F)
     ext; swap
     · simp
     · dsimp
-      rw [← nat_iso.naturality_2 (eq_to_iso (F.map_comp _ _)) f.fiber]
+      rw [← NatIso.naturality_2 (eqToIso (F.map_comp _ _)) f.fiber]
       simp
       rfl
 
 @[simp]
 theorem id_fiber' (X : Grothendieck F) :
-    Hom.fiber (𝟙 X) = eqToHom (by erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber]) :=
+    Hom.fiber (𝟙 X) = eqToHom (by erw [CategoryTheory.Functor.map_id, Functor.id_obj X.fiber]) :=
   id_fiber X
 #align category_theory.grothendieck.id_fiber' CategoryTheory.Grothendieck.id_fiber'
 
@@ -192,7 +192,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ typeToCat) ≌ G.Elements
     NatIso.ofComponents
       (fun X => by
         rcases X with ⟨_, ⟨⟩⟩
-        exact iso.refl _)
+        exact Iso.refl _)
       (by
         rintro ⟨_, ⟨⟩⟩ ⟨_, ⟨⟩⟩ ⟨base, ⟨⟨f⟩⟩⟩
         dsimp at *
@@ -203,7 +203,7 @@ def grothendieckTypeToCat : Grothendieck (G ⋙ typeToCat) ≌ G.Elements
     NatIso.ofComponents
       (fun X => by
         cases X
-        exact iso.refl _)
+        exact Iso.refl _)
       (by
         rintro ⟨⟩ ⟨⟩ ⟨f, e⟩
         dsimp at *

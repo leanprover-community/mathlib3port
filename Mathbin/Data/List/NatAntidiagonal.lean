@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.list.nat_antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ def antidiagonal (n : ℕ) : List (ℕ × ℕ) :=
 @[simp]
 theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x.1 + x.2 = n :=
   by
-  rw [antidiagonal, mem_map]; constructor
+  rw [antidiagonal, mem_map']; constructor
   · rintro ⟨i, hi, rfl⟩
     rw [mem_range, lt_succ_iff] at hi
     exact add_tsub_cancel_of_le hi

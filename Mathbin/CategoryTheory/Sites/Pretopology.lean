@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.sites.pretopology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -118,8 +118,8 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C
   pullback_stable' X Y S g := by
     rintro ⟨R, hR, RS⟩
     refine' ⟨_, K.pullbacks g _ hR, _⟩
-    rw [← sieve.sets_iff_generate, sieve.pullback_arrows_comm]
-    apply sieve.pullback_monotone
+    rw [← Sieve.sets_iff_generate, Sieve.pullbackArrows_comm]
+    apply Sieve.pullback_monotone
     rwa [sieve.gi_generate.gc]
   transitive' := by
     rintro X S ⟨R', hR', RS⟩ R t
@@ -143,13 +143,13 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C
   coverings X R := Sieve.generate R ∈ J X
   has_isos X Y f i := J.covering_of_eq_top (by simp)
   pullbacks X Y f R hR := by
-    rw [Set.mem_def, sieve.pullback_arrows_comm]
+    rw [Set.mem_def, Sieve.pullbackArrows_comm]
     apply J.pullback_stable f hR
   Transitive X S Ti hS hTi := by
     apply J.transitive hS
     intro Y f
     rintro ⟨Z, g, f, hf, rfl⟩
-    rw [sieve.pullback_comp]
+    rw [Sieve.pullback_comp]
     apply J.pullback_stable g
     apply J.superset_covering _ (hTi _ hf)
     rintro Y g ⟨W, h, g, hg, rfl⟩
@@ -162,7 +162,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
   gc K J := by
     constructor
     · intro h X R hR
-      exact h _ ⟨_, hR, sieve.le_generate R⟩
+      exact h _ ⟨_, hR, Sieve.le_generate R⟩
     · rintro h X S ⟨R, hR, RS⟩
       apply J.superset_covering _ (h _ hR)
       rwa [sieve.gi_generate.gc]
@@ -204,9 +204,9 @@ def trivial : Pretopology C
       cases hh
       apply singleton.mk
     · rintro ⟨_⟩
-      refine' bind_comp g presieve.singleton.mk _
+      refine' bind_comp g Presieve.singleton.mk _
       rw [hTi]
-      apply presieve.singleton.mk
+      apply Presieve.singleton.mk
 #align category_theory.pretopology.trivial CategoryTheory.Pretopology.trivial
 
 instance : OrderBot (Pretopology C) where

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem card_of_isEmpty [IsEmpty α] : Nat.card α = 0 := by simp
 
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
-  simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
+  simp only [Nat.card, mk_prod, toNat_mul, toNat_lift]
 #align nat.card_prod Nat.card_prod
 
 @[simp]
@@ -116,7 +116,7 @@ theorem card_pLift (α : Type _) : Nat.card (PLift α) = Nat.card α :=
 #align nat.card_plift Nat.card_pLift
 
 theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏ a, Nat.card (β a) := by
-  simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, to_nat_lift, to_nat_finset_prod]
+  simp_rw [Nat.card, mk_pi, prod_eq_of_fintype, toNat_lift, toNat_finset_prod]
 #align nat.card_pi Nat.card_pi
 
 theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α :=

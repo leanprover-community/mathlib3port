@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.intervals
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_Ico_add' F
 theorem prod_Ico_add' [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
     (f : α → β) (a b c : α) : (∏ x in Ico a b, f (x + c)) = ∏ x in Ico (a + c) (b + c), f x :=
   by
-  rw [← map_add_right_Ico, Prod_map]
+  rw [← map_add_right_Ico, prod_map]
   rfl
 #align finset.prod_Ico_add' Finset.prod_Ico_add'
 #align finset.sum_Ico_add' Finset.sum_Ico_add'
@@ -204,7 +204,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.prod_range_sub_prod_range Finset.prod_range_sub_prod_rangeₓ'. -/
 @[to_additive]
 theorem prod_range_sub_prod_range {α : Type _} [CommGroup α] {f : ℕ → α} {n m : ℕ} (hnm : n ≤ m) :
-    ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filterₓ fun k => n ≤ k, f k :=
+    ((∏ k in range m, f k) / ∏ k in range n, f k) = ∏ k in (range m).filter fun k => n ≤ k, f k :=
   by
   rw [← prod_Ico_eq_div f hnm]
   congr
@@ -398,7 +398,7 @@ end Nat
 
 section Module
 
-variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] (f : ℕ → R) (g : ℕ → M) {m n : ℕ}
+variable {R M : Type _} [True R] [AddCommGroup M] [Module R M] (f : ℕ → R) (g : ℕ → M) {m n : ℕ}
 
 open Finset
 

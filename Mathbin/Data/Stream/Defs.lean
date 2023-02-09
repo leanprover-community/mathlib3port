@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.stream.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ def zip (f : α → β → δ) (s₁ : Stream' α) (s₂ : Stream' β) : Stream'
 
 #print Stream'.enum /-
 /-- Enumerate a stream by tagging each element with its index. -/
-def enum (s : Stream' α) : Stream' (ℕ × α) := fun n => (n, s.get? n)
+def enum (s : Stream' α) : Stream' (ℕ × α) := fun n => (n, s.nth n)
 #align stream.enum Stream'.enum
 -/
 
@@ -182,7 +182,7 @@ def odd (s : Stream' α) : Stream' α :=
 /-- Append a stream to a list. -/
 def appendStream' : List α → Stream' α → Stream' α
   | [], s => s
-  | List.cons a l, s => a::append_stream l s
+  | list.cons a l, s => a::append_stream l s
 #align stream.append_stream Stream'.appendStream'
 -/
 
@@ -208,7 +208,7 @@ protected def cycleF : α × List α × α × List α → α
 /-- An auxiliary definition for `stream.cycle` corecursive def -/
 protected def cycleG : α × List α × α × List α → α × List α × α × List α
   | (v₁, [], v₀, l₀) => (v₀, l₀, v₀, l₀)
-  | (v₁, List.cons v₂ l₂, v₀, l₀) => (v₂, l₂, v₀, l₀)
+  | (v₁, list.cons v₂ l₂, v₀, l₀) => (v₂, l₂, v₀, l₀)
 #align stream.cycle_g Stream'.cycleG
 -/
 
@@ -216,7 +216,7 @@ protected def cycleG : α × List α × α × List α → α × List α × α ×
 /-- Interpret a nonempty list as a cyclic stream. -/
 def cycle : ∀ l : List α, l ≠ [] → Stream' α
   | [], h => absurd rfl h
-  | List.cons a l, h => corec Stream'.cycleF Stream'.cycleG (a, l, a, l)
+  | list.cons a l, h => corec Stream'.cycleF Stream'.cycleG (a, l, a, l)
 #align stream.cycle Stream'.cycle
 -/
 

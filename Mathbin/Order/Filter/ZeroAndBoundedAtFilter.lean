@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module order.filter.zero_and_bounded_at_filter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,7 @@ def BoundedAtFilter [HasNorm β] (l : Filter α) (f : α → β) : Prop :=
 theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   by
-  rw [zero_at_filter, ← Asymptotics.isOCat_const_iff (one_ne_zero' ℝ)] at hf
+  rw [ZeroAtFilter, ← Asymptotics.isOCat_const_iff (one_ne_zero' ℝ)] at hf
   exact hf.is_O
 #align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.boundedAtFilter
 
@@ -129,8 +129,8 @@ def boundedFilterSubmodule [NormedField β] (l : Filter α) : Submodule β (α �
 /-- The subalgebra of functions that are bounded along a filter `l`. -/
 def boundedFilterSubalgebra [NormedField β] (l : Filter α) : Subalgebra β (α → β) :=
   by
-  refine' Submodule.toSubalgebra (bounded_filter_submodule l) _ fun f g hf hg => _
-  · exact const_bounded_at_filter l (1 : β)
+  refine' Submodule.toSubalgebra (boundedFilterSubmodule l) _ fun f g hf hg => _
+  · exact const_boundedAtFilter l (1 : β)
   · simpa only [Pi.one_apply, mul_one, norm_mul] using hf.mul hg
 #align filter.bounded_filter_subalgebra Filter.boundedFilterSubalgebra
 

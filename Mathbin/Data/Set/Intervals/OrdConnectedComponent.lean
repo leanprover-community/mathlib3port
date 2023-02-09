@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected_component
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ theorem mem_ordConnectedComponent : y ∈ ordConnectedComponent s x ↔ [x, y] �
 theorem dual_ordConnectedComponent :
     ordConnectedComponent (ofDual ⁻¹' s) (toDual x) = ofDual ⁻¹' ordConnectedComponent s x :=
   ext <|
-    toDual.Surjective.forall.2 fun x =>
+    toDual.surjective.forall.2 fun x =>
       by
-      rw [mem_ord_connected_component, dual_uIcc]
+      rw [mem_ordConnectedComponent, dual_uIcc]
       rfl
 #align set.dual_ord_connected_component Set.dual_ordConnectedComponent
 -/
@@ -72,7 +72,7 @@ theorem subset_ordConnectedComponent {t} [h : OrdConnected s] (hs : x ∈ s) (ht
 #print Set.self_mem_ordConnectedComponent /-
 @[simp]
 theorem self_mem_ordConnectedComponent : x ∈ ordConnectedComponent s x ↔ x ∈ s := by
-  rw [mem_ord_connected_component, uIcc_self, singleton_subset_iff]
+  rw [mem_ordConnectedComponent, uIcc_self, singleton_subset_iff]
 #align set.self_mem_ord_connected_component Set.self_mem_ordConnectedComponent
 -/
 
@@ -86,7 +86,7 @@ theorem nonempty_ordConnectedComponent : (ordConnectedComponent s x).Nonempty �
 #print Set.ordConnectedComponent_eq_empty /-
 @[simp]
 theorem ordConnectedComponent_eq_empty : ordConnectedComponent s x = ∅ ↔ x ∉ s := by
-  rw [← not_nonempty_iff_eq_empty, nonempty_ord_connected_component]
+  rw [← not_nonempty_iff_eq_empty, nonempty_ordConnectedComponent]
 #align set.ord_connected_component_eq_empty Set.ordConnectedComponent_eq_empty
 -/
 
@@ -100,7 +100,7 @@ theorem ordConnectedComponent_empty : ordConnectedComponent ∅ x = ∅ :=
 #print Set.ordConnectedComponent_univ /-
 @[simp]
 theorem ordConnectedComponent_univ : ordConnectedComponent univ x = univ := by
-  simp [ord_connected_component]
+  simp [ordConnectedComponent]
 #align set.ord_connected_component_univ Set.ordConnectedComponent_univ
 -/
 
@@ -112,13 +112,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_component_inter Set.ordConnectedComponent_interₓ'. -/
 theorem ordConnectedComponent_inter (s t : Set α) (x : α) :
     ordConnectedComponent (s ∩ t) x = ordConnectedComponent s x ∩ ordConnectedComponent t x := by
-  simp [ord_connected_component, set_of_and]
+  simp [ordConnectedComponent, setOf_and]
 #align set.ord_connected_component_inter Set.ordConnectedComponent_inter
 
 #print Set.mem_ordConnectedComponent_comm /-
 theorem mem_ordConnectedComponent_comm :
     y ∈ ordConnectedComponent s x ↔ x ∈ ordConnectedComponent s y := by
-  rw [mem_ord_connected_component, mem_ord_connected_component, uIcc_comm]
+  rw [mem_ordConnectedComponent, mem_ordConnectedComponent, uIcc_comm]
 #align set.mem_ord_connected_component_comm Set.mem_ordConnectedComponent_comm
 -/
 
@@ -148,7 +148,7 @@ instance : OrdConnected (ordConnectedComponent s x) :=
 /-- Projection from `s : set α` to `α` sending each order connected component of `s` to a single
 point of this component. -/
 noncomputable def ordConnectedProj (s : Set α) : s → α := fun x : s =>
-  (nonempty_ordConnectedComponent.2 x.Prop).some
+  (nonempty_ordConnectedComponent.2 x.prop).some
 #align set.ord_connected_proj Set.ordConnectedProj
 -/
 
@@ -180,12 +180,12 @@ theorem ordConnectedProj_eq {x y : s} :
     ordConnectedProj s x = ordConnectedProj s y ↔ [(x : α), y] ⊆ s :=
   by
   constructor <;> intro h
-  · rw [← mem_ord_connected_component, ← ord_connected_component_ord_connected_proj, h,
-      ord_connected_component_ord_connected_proj, self_mem_ord_connected_component]
+  · rw [← mem_ordConnectedComponent, ← ordConnectedComponent_ordConnectedProj, h,
+      ordConnectedComponent_ordConnectedProj, self_mem_ordConnectedComponent]
     exact y.2
-  · simp only [ord_connected_proj]
+  · simp only [ordConnectedProj]
     congr 1
-    exact ord_connected_component_eq h
+    exact ordConnectedComponent_eq h
 #align set.ord_connected_proj_eq Set.ordConnectedProj_eq
 -/
 
@@ -201,9 +201,9 @@ def ordConnectedSection (s : Set α) : Set α :=
 theorem dual_ordConnectedSection (s : Set α) :
     ordConnectedSection (ofDual ⁻¹' s) = ofDual ⁻¹' ordConnectedSection s :=
   by
-  simp only [ord_connected_section, ord_connected_proj]
+  simp only [ordConnectedSection, ordConnectedProj]
   congr 1 with x; simp only; congr 1
-  exact dual_ord_connected_component
+  exact dual_ordConnectedComponent
 #align set.dual_ord_connected_section Set.dual_ordConnectedSection
 -/
 
@@ -219,10 +219,10 @@ theorem eq_of_mem_ordConnectedSection_of_uIcc_subset (hx : x ∈ ordConnectedSec
   by
   rcases hx with ⟨x, rfl⟩; rcases hy with ⟨y, rfl⟩
   exact
-    ord_connected_proj_eq.2
-      (mem_ord_connected_component_trans
-        (mem_ord_connected_component_trans (ord_connected_proj_mem_ord_connected_component _ _) h)
-        (mem_ord_connected_component_ord_connected_proj _ _))
+    ordConnectedProj_eq.2
+      (mem_ordConnectedComponent_trans
+        (mem_ordConnectedComponent_trans (ordConnectedProj_mem_ordConnectedComponent _ _) h)
+        (mem_ordConnectedComponent_ordConnectedProj _ _))
 #align set.eq_of_mem_ord_connected_section_of_uIcc_subset Set.eq_of_mem_ordConnectedSection_of_uIcc_subset
 -/
 
@@ -267,8 +267,8 @@ theorem disjoint_right_ordSeparatingSet : Disjoint t (ordSeparatingSet s t) :=
 #print Set.dual_ordSeparatingSet /-
 theorem dual_ordSeparatingSet :
     ordSeparatingSet (ofDual ⁻¹' s) (ofDual ⁻¹' t) = ofDual ⁻¹' ordSeparatingSet s t := by
-  simp only [ord_separating_set, mem_preimage, ← to_dual.surjective.Union_comp, of_dual_to_dual,
-    dual_ord_connected_component, ← preimage_compl, preimage_inter, preimage_Union]
+  simp only [ordSeparatingSet, mem_preimage, ← to_dual.surjective.Union_comp, ofDual_toDual,
+    dual_ordConnectedComponent, ← preimage_compl, preimage_inter, preimage_unionᵢ]
 #align set.dual_ord_separating_set Set.dual_ordSeparatingSet
 -/
 
@@ -289,38 +289,38 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
   by
   rw [disjoint_iff_inf_le]
   rintro x ⟨hx₁, hx₂⟩
-  rcases mem_Union₂.1 hx₁ with ⟨a, has, ha⟩
+  rcases mem_unionᵢ₂.1 hx₁ with ⟨a, has, ha⟩
   clear hx₁
-  rcases mem_Union₂.1 hx₂ with ⟨b, hbt, hb⟩
+  rcases mem_unionᵢ₂.1 hx₂ with ⟨b, hbt, hb⟩
   clear hx₂
-  rw [mem_ord_connected_component, subset_inter_iff] at ha hb
+  rw [mem_ordConnectedComponent, subset_inter_iff] at ha hb
   wlog hab : a ≤ b
   · exact this b hbt a has ha hb (le_of_not_le hab)
   cases' ha with ha ha'
   cases' hb with hb hb'
-  have hsub : [a, b] ⊆ (ord_separating_set s t).ordConnectedSectionᶜ :=
+  have hsub : [a, b] ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ :=
     by
-    rw [ord_separating_set_comm, uIcc_comm] at hb'
+    rw [ordSeparatingSet_comm, uIcc_comm] at hb'
     calc
       [a, b] ⊆ [a, x] ∪ [x, b] := uIcc_subset_uIcc_union_uIcc
-      _ ⊆ (ord_separating_set s t).ordConnectedSectionᶜ := union_subset ha' hb'
+      _ ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ := union_subset ha' hb'
       
   clear ha' hb'
   cases' le_total x a with hxa hax
   · exact hb (Icc_subset_uIcc' ⟨hxa, hab⟩) has
   cases' le_total b x with hbx hxb
   · exact ha (Icc_subset_uIcc ⟨hab, hbx⟩) hbt
-  have : x ∈ ord_separating_set s t := ⟨mem_Union₂.2 ⟨a, has, ha⟩, mem_Union₂.2 ⟨b, hbt, hb⟩⟩
-  lift x to ord_separating_set s t using this
-  suffices : ord_connected_component (ord_separating_set s t) x ⊆ [a, b]
-  exact hsub (this <| ord_connected_proj_mem_ord_connected_component _ _) (mem_range_self _)
-  rintro y (hy : [↑x, y] ⊆ ord_separating_set s t)
+  have : x ∈ ordSeparatingSet s t := ⟨mem_unionᵢ₂.2 ⟨a, has, ha⟩, mem_unionᵢ₂.2 ⟨b, hbt, hb⟩⟩
+  lift x to ordSeparatingSet s t using this
+  suffices : ordConnectedComponent (ordSeparatingSet s t) x ⊆ [a, b]
+  exact hsub (this <| ordConnectedProj_mem_ordConnectedComponent _ _) (mem_range_self _)
+  rintro y (hy : [↑x, y] ⊆ ordSeparatingSet s t)
   rw [uIcc_of_le hab, mem_Icc, ← not_lt, ← not_lt]
   exact
     ⟨fun hya =>
-      disjoint_left.1 disjoint_left_ord_separating_set has (hy <| Icc_subset_uIcc' ⟨hya.le, hax⟩),
+      disjoint_left.1 disjoint_left_ordSeparatingSet has (hy <| Icc_subset_uIcc' ⟨hya.le, hax⟩),
       fun hyb =>
-      disjoint_left.1 disjoint_right_ord_separating_set hbt (hy <| Icc_subset_uIcc ⟨hxb, hyb.le⟩)⟩
+      disjoint_left.1 disjoint_right_ordSeparatingSet hbt (hy <| Icc_subset_uIcc ⟨hxb, hyb.le⟩)⟩
 #align set.disjoint_ord_t5_nhd Set.disjoint_ordT5Nhd
 
 end Set

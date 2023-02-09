@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.is_diag
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ theorem isDiag_conjTranspose_iff [Semiring α] [StarRing α] {A : Matrix n n α}
 #align matrix.is_diag_conj_transpose_iff Matrix.isDiag_conjTranspose_iff
 
 theorem IsDiag.submatrix [Zero α] {A : Matrix n n α} (ha : A.IsDiag) {f : m → n}
-    (hf : Injective f) : (A.submatrix f f).IsDiag := fun i j h => ha (hf.Ne h)
+    (hf : Injective f) : (A.submatrix f f).IsDiag := fun i j h => ha (hf.ne h)
 #align matrix.is_diag.submatrix Matrix.IsDiag.submatrix
 
 /-- `(A ⊗ B).is_diag` if both `A` and `B` are diagonal. -/
@@ -184,7 +184,7 @@ theorem isDiag_fromBlocks_iff [Zero α] {A : Matrix m m α} {B : Matrix m n α} 
     · exact h Sum.inr_ne_inl
     · exact h (sum.inr_injective.ne hij)
   · rintro ⟨ha, hb, hc, hd⟩
-    convert is_diag.from_blocks ha hd
+    convert IsDiag.fromBlocks ha hd
 #align matrix.is_diag_from_blocks_iff Matrix.isDiag_fromBlocks_iff
 
 /-- A symmetric block matrix `A.from_blocks B C D` is diagonal
@@ -193,7 +193,7 @@ theorem IsDiag.fromBlocks_of_isSymm [Zero α] {A : Matrix m m α} {C : Matrix n 
     {D : Matrix n n α} (h : (A.fromBlocks 0 C D).IsSymm) (ha : A.IsDiag) (hd : D.IsDiag) :
     (A.fromBlocks 0 C D).IsDiag :=
   by
-  rw [← (is_symm_from_blocks_iff.1 h).2.1]
+  rw [← (isSymm_fromBlocks_iff.1 h).2.1]
   exact ha.from_blocks hd
 #align matrix.is_diag.from_blocks_of_is_symm Matrix.IsDiag.fromBlocks_of_isSymm
 

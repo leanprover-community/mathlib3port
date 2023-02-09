@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Bhatia, Eric Wieser
 
 ! This file was ported from Lean 3 source module tactic.polyrith
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,7 +191,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
         m , p @ q( @ Pow.pow _ ℕ _ $ ( e ) $ ( n ) )
         =>
         match
-          n . toNat
+          n . to_nat
           with
           | some k => do let ( m' , comp ) ← poly_form_of_expr m e return ( m' , comp ^ k )
             | none => poly_form_of_atom red m p
@@ -283,7 +283,7 @@ to the appropriate `poly` object representing a variable.
 Here, `n` is a natural number
 -/
 unsafe def var_parser : Parser Poly := do
-  str "poly.var " >> poly.var <$> Parser.nat
+  str "poly.var " >> poly.var <$> parser.nat
 #align polyrith.var_parser polyrith.var_parser
 
 /-- A parser object that parses `string`s of the form `"poly.const r"`
@@ -354,12 +354,12 @@ unsafe instance : non_null_json_serializable Poly
   of_json j := do
     let s ← of_json String j
     match poly_parser s with
-      | Sum.inl s =>
+      | sum.inl s =>
         exceptional.fail
           f! "unable to parse polynomial from.
             
             {s}"
-      | Sum.inr p => pure p
+      | sum.inr p => pure p
 
 /-- A schema for success messages from the python script -/
 structure SageJsonSuccess where
@@ -387,8 +387,8 @@ unsafe def convert_sage_output (j : json) : tactic (Option (List Poly)) := do
             of_json SageJsonFailure j <|>
           Sum.inl <$> of_json SageJsonSuccess j)
   match r with
-    | Sum.inr f => throwError "polyrith failed to retrieve a solution from Sage! {(← f)}: {← f}"
-    | Sum.inl s => do
+    | sum.inr f => throwError "polyrith failed to retrieve a solution from Sage! {(← f)}: {← f}"
+    | sum.inl s => do
       s trace
       pure s
 #align polyrith.convert_sage_output polyrith.convert_sage_output
@@ -484,7 +484,7 @@ unsafe def sage_output (arg_list : List String := []) : tactic json := do
   let args := [path ++ "../scripts/polyrith_sage.py"] ++ arg_list
   let s ←
     unsafe_run_io <|
-        Io.cmd
+        io.cmd
           { cmd := "python3"
             args }
   let some j ← pure (json.parse s) |
@@ -516,13 +516,13 @@ unsafe def component_to_lc_format : expr × expr → tactic (Bool × format)
   | (ex, q(@One.one _ _)) => Prod.mk false <$> f!"{← ex}"
   | (ex, q(@One.one _ _ / $(cf))) => do
     let f ← add_parens cf
-    Prod.mk ff <$> f!"{(← ex)} / {← f}"
+    prod.mk ff <$> f!"{(← ex)} / {← f}"
   | (ex, q(-$(cf))) => do
     let (neg, fmt) ← component_to_lc_format (ex, cf)
     return (!neg, fmt)
   | (ex, cf) => do
     let f ← add_parens cf
-    Prod.mk ff <$> f!"{(← f)} * {← ex}"
+    prod.mk ff <$> f!"{(← f)} * {← ex}"
 #align polyrith.component_to_lc_format polyrith.component_to_lc_format
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -567,7 +567,7 @@ unsafe def create_args (only_on : Bool) (hyps : List pexpr) :
   let (m, p, R) ← parse_target_to_poly
   let (eq_names, m, polys) ← parse_ctx_to_polys R m only_on hyps
   let args := [toString R, toString m.length, (polys.map poly.mk_string).toString, p.mk_string]
-  return <| (eq_names, m, R, toString (is_trace_enabled_for `polyrith)::args)
+  return <| (eq_names, m, R, to_string (is_trace_enabled_for `polyrith)::args)
 #align polyrith.create_args polyrith.create_args
 
 /-- The second half of `tactic.polyrith` processes the output from Sage into
@@ -583,7 +583,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     let coeffs_as_expr ← coeffs_as_pexpr.mapM fun e => to_expr ``(($(e) : $(R)))
     linear_combo.linear_combination eq_names_pexpr coeffs_as_pexpr
     let components :=
-      (eq_names.zip coeffs_as_expr).filterₓ fun pr => not <| pr.2.is_app_of `has_zero.zero
+      (eq_names.zip coeffs_as_expr).filter fun pr => not <| pr.2.is_app_of `has_zero.zero
     let expr_string ← components_to_lc_format components
     let lc_fmt : format := "linear_combination " ++ format.nest 2 (format.group expr_string)
     done <|>
@@ -592,7 +592,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 #align polyrith.process_output polyrith.process_output
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when no hypotheses are available. -/
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
@@ -601,7 +601,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 #align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when there are no variables. -/
 unsafe def no_variables_case : tactic (Option format) :=
   (do

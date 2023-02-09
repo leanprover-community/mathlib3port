@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.finite.matrix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ instance linearMap [Module.Finite R M] [Module.Finite R N] : Module.Free R (M �
   cases subsingleton_or_nontrivial R
   · apply Module.Free.ofSubsingleton'
   classical exact
-      of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
+      ofEquiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 #align module.free.linear_map Module.Free.linearMap
 
 variable {R}
@@ -54,7 +54,7 @@ instance Module.Finite.linearMap [Module.Finite R M] [Module.Finite R N] :
   cases subsingleton_or_nontrivial R
   · infer_instance
   classical
-    have f := (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
+    have f := (LinearMap.toMatrix (chooseBasis R M) (chooseBasis R N)).symm
     exact Module.Finite.of_surjective f.to_linear_map (LinearEquiv.surjective f)
 #align module.finite.linear_map Module.Finite.linearMap
 
@@ -92,10 +92,10 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 theorem finrank_linear_hom : finrank R (M →ₗ[R] N) = finrank R M * finrank R N := by
   classical
     letI := nontrivial_of_invariantBasisNumber R
-    have h := LinearMap.toMatrix (choose_basis R M) (choose_basis R N)
+    have h := LinearMap.toMatrix (chooseBasis R M) (chooseBasis R N)
     let b := (Matrix.stdBasis _ _ _).map h.symm
     rw [finrank, dim_eq_card_basis b, ← Cardinal.mk_fintype, Cardinal.mk_toNat_eq_card, finrank,
-      finrank, rank_eq_card_choose_basis_index, rank_eq_card_choose_basis_index,
+      finrank, rank_eq_card_chooseBasisIndex, rank_eq_card_chooseBasisIndex,
       Cardinal.mk_toNat_eq_card, Cardinal.mk_toNat_eq_card, Fintype.card_prod, mul_comm]
 #align module.free.finrank_linear_hom Module.Free.finrank_linear_hom
 

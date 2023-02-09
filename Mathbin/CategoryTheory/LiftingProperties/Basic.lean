@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.lifting_properties.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,14 +55,14 @@ variable {i p}
 
 theorem op (h : HasLiftingProperty i p) : HasLiftingProperty p.op i.op :=
   ⟨fun f g sq => by
-    simp only [comm_sq.has_lift.iff_unop, Quiver.Hom.unop_op]
+    simp only [CommSq.HasLift.iff_unop, Quiver.Hom.unop_op]
     infer_instance⟩
 #align category_theory.has_lifting_property.op CategoryTheory.HasLiftingProperty.op
 
 theorem unop {A B X Y : Cᵒᵖ} {i : A ⟶ B} {p : X ⟶ Y} (h : HasLiftingProperty i p) :
     HasLiftingProperty p.unop i.unop :=
   ⟨fun f g sq => by
-    rw [comm_sq.has_lift.iff_op]
+    rw [CommSq.HasLift.iff_op]
     simp only [Quiver.Hom.op_unop]
     infer_instance⟩
 #align category_theory.has_lifting_property.unop CategoryTheory.HasLiftingProperty.unop
@@ -82,16 +82,16 @@ instance (priority := 100) of_left_iso [IsIso i] : HasLiftingProperty i p :=
   ⟨fun f g sq =>
     CommSq.HasLift.mk'
       { l := inv i ≫ f
-        fac_left' := by simp only [is_iso.hom_inv_id_assoc]
-        fac_right' := by simp only [sq.w, assoc, is_iso.inv_hom_id_assoc] }⟩
+        fac_left' := by simp only [IsIso.hom_inv_id_assoc]
+        fac_right' := by simp only [sq.w, assoc, IsIso.inv_hom_id_assoc] }⟩
 #align category_theory.has_lifting_property.of_left_iso CategoryTheory.HasLiftingProperty.of_left_iso
 
 instance (priority := 100) of_right_iso [IsIso p] : HasLiftingProperty i p :=
   ⟨fun f g sq =>
     CommSq.HasLift.mk'
       { l := g ≫ inv p
-        fac_left' := by simp only [← sq.w_assoc, is_iso.hom_inv_id, comp_id]
-        fac_right' := by simp only [assoc, is_iso.inv_hom_id, comp_id] }⟩
+        fac_left' := by simp only [← sq.w_assoc, IsIso.hom_inv_id, comp_id]
+        fac_right' := by simp only [assoc, IsIso.inv_hom_id, comp_id] }⟩
 #align category_theory.has_lifting_property.of_right_iso CategoryTheory.HasLiftingProperty.of_right_iso
 
 instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
@@ -100,10 +100,10 @@ instance of_comp_left [HasLiftingProperty i p] [HasLiftingProperty i' p] :
     have fac := sq.w
     rw [assoc] at fac
     exact
-      comm_sq.has_lift.mk'
-        { l := (comm_sq.mk (comm_sq.mk fac).fac_right).lift
-          fac_left' := by simp only [assoc, comm_sq.fac_left]
-          fac_right' := by simp only [comm_sq.fac_right] }⟩
+      CommSq.HasLift.mk'
+        { l := (CommSq.mk (CommSq.mk fac).fac_right).lift
+          fac_left' := by simp only [assoc, CommSq.fac_left]
+          fac_right' := by simp only [CommSq.fac_right] }⟩
 #align category_theory.has_lifting_property.of_comp_left CategoryTheory.HasLiftingProperty.of_comp_left
 
 instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
@@ -111,25 +111,25 @@ instance of_comp_right [HasLiftingProperty i p] [HasLiftingProperty i p'] :
   ⟨fun f g sq => by
     have fac := sq.w
     rw [← assoc] at fac
-    let sq₂ := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
+    let sq₂ := (CommSq.mk (CommSq.mk fac).fac_left.symm).lift
     exact
-      comm_sq.has_lift.mk'
-        { l := (comm_sq.mk (comm_sq.mk fac).fac_left.symm).lift
-          fac_left' := by simp only [comm_sq.fac_left]
-          fac_right' := by simp only [comm_sq.fac_right_assoc, comm_sq.fac_right] }⟩
+      CommSq.HasLift.mk'
+        { l := (CommSq.mk (CommSq.mk fac).fac_left.symm).lift
+          fac_left' := by simp only [CommSq.fac_left]
+          fac_right' := by simp only [CommSq.fac_right_assoc, CommSq.fac_right] }⟩
 #align category_theory.has_lifting_property.of_comp_right CategoryTheory.HasLiftingProperty.of_comp_right
 
 theorem of_arrow_iso_left {A B A' B' X Y : C} {i : A ⟶ B} {i' : A' ⟶ B'}
     (e : Arrow.mk i ≅ Arrow.mk i') (p : X ⟶ Y) [hip : HasLiftingProperty i p] :
     HasLiftingProperty i' p := by
-  rw [arrow.iso_w' e]
+  rw [Arrow.iso_w' e]
   infer_instance
 #align category_theory.has_lifting_property.of_arrow_iso_left CategoryTheory.HasLiftingProperty.of_arrow_iso_left
 
 theorem of_arrow_iso_right {A B X Y X' Y' : C} (i : A ⟶ B) {p : X ⟶ Y} {p' : X' ⟶ Y'}
     (e : Arrow.mk p ≅ Arrow.mk p') [hip : HasLiftingProperty i p] : HasLiftingProperty i p' :=
   by
-  rw [arrow.iso_w' e]
+  rw [Arrow.iso_w' e]
   infer_instance
 #align category_theory.has_lifting_property.of_arrow_iso_right CategoryTheory.HasLiftingProperty.of_arrow_iso_right
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.matrix
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,12 +39,12 @@ variable [Ring k] [Module k V] (b : AffineBasis ι k P)
 rows are the barycentric coordinates of `q` with respect to `p`.
 
 It is an affine equivalent of `basis.to_matrix`. -/
-noncomputable def toMatrix {ι' : Type _} (q : ι' → P) : Matrix ι' ι k := fun i j => b.Coord j (q i)
+noncomputable def toMatrix {ι' : Type _} (q : ι' → P) : Matrix ι' ι k := fun i j => b.coord j (q i)
 #align affine_basis.to_matrix AffineBasis.toMatrix
 
 @[simp]
 theorem toMatrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
-    b.toMatrix q i j = b.Coord j (q i) :=
+    b.toMatrix q i j = b.coord j (q i) :=
   rfl
 #align affine_basis.to_matrix_apply AffineBasis.toMatrix_apply
 
@@ -52,7 +52,7 @@ theorem toMatrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
 theorem toMatrix_self [DecidableEq ι] : b.toMatrix b = (1 : Matrix ι ι k) :=
   by
   ext (i j)
-  rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
+  rw [toMatrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
 #align affine_basis.to_matrix_self AffineBasis.toMatrix_self
 
 variable {ι' : Type _} [Fintype ι'] [Fintype ι] (b₂ : AffineBasis ι k P)
@@ -121,7 +121,7 @@ theorem toMatrix_vecMul_coords (x : P) : (b.toMatrix b₂).vecMul (b₂.coords x
   change _ = b.coord j x
   conv_rhs => rw [← b₂.affine_combination_coord_eq_self x]
   rw [Finset.map_affineCombination _ _ _ (b₂.sum_coord_apply_eq_one x)]
-  simp [Matrix.vecMul, Matrix.dotProduct, to_matrix_apply, coords]
+  simp [Matrix.vecMul, Matrix.dotProduct, toMatrix_apply, coords]
 #align affine_basis.to_matrix_vec_mul_coords AffineBasis.toMatrix_vecMul_coords
 
 variable [DecidableEq ι]
@@ -130,7 +130,7 @@ theorem toMatrix_mul_toMatrix : b.toMatrix b₂ ⬝ b₂.toMatrix b = 1 :=
   by
   ext (l m)
   change (b₂.to_matrix b).vecMul (b.coords (b₂ l)) m = _
-  rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
+  rw [toMatrix_vecMul_coords, coords_apply, ← toMatrix_apply, toMatrix_self]
 #align affine_basis.to_matrix_mul_to_matrix AffineBasis.toMatrix_mul_toMatrix
 
 theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂) :=

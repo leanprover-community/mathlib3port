@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -759,8 +759,8 @@ include module_M₁ module_M₂ module_M₃
 /-- Composition of two linear maps is a linear map -/
 def comp : M₁ →ₛₗ[σ₁₃] M₃ where
   toFun := f ∘ g
-  map_add' := by simp only [map_add, forall_const, eq_self_iff_true, comp_app]
-  map_smul' r x := by rw [comp_app, map_smulₛₗ, map_smulₛₗ, RingHomCompTriple.comp_apply]
+  map_add' := by simp only [map_add, forall_const, eq_self_iff_true, comp_apply]
+  map_smul' r x := by rw [comp_apply, map_smulₛₗ, map_smulₛₗ, RingHomCompTriple.comp_apply]
 #align linear_map.comp LinearMap.comp
 -/
 
@@ -862,7 +862,7 @@ Case conversion may be inaccurate. Consider using '#align linear_map.inverse Lin
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ']
     (f : M →ₛₗ[σ] M₂) (g : M₂ → M) (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M :=
   by
-  dsimp [left_inverse, Function.RightInverse] at h₁ h₂ <;>
+  dsimp [LeftInverse, Function.RightInverse] at h₁ h₂ <;>
     exact
       { toFun := g
         map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂]
@@ -929,7 +929,7 @@ namespace Module
 /-- `g : R →+* S` is `R`-linear when the module structure on `S` is `module.comp_hom S g` . -/
 @[simps]
 def compHom.toLinearMap {R S : Type _} [Semiring R] [Semiring S] (g : R →+* S) :
-    haveI := comp_hom S g
+    haveI := compHom S g
     R →ₗ[R] S
     where
   toFun := (g : R → S)
@@ -1385,7 +1385,7 @@ theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃
 
 /-- The type of linear maps is an additive monoid. -/
 instance : AddCommMonoid (M →ₛₗ[σ₁₂] M₂) :=
-  FunLike.coe_injective.AddCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.addCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
 /-- The negation of a linear map is linear. -/
 instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
@@ -1477,7 +1477,7 @@ omit σ₁₃
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroup (M →ₛₗ[σ₁₂] N₂) :=
-  FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  FunLike.coe_injective.addCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 end Arithmetic
@@ -1547,7 +1547,7 @@ instance : Module S (M →ₛₗ[σ₁₂] M₂)
   zero_smul f := ext fun x => zero_smul _ _
 
 instance [NoZeroSMulDivisors S M₂] : NoZeroSMulDivisors S (M →ₛₗ[σ₁₂] M₂) :=
-  coe_injective.NoZeroSMulDivisors _ rfl coe_smul
+  coe_injective.noZeroSMulDivisors _ rfl coe_smul
 
 end Module
 

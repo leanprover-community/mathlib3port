@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.finrank
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,29 +65,29 @@ noncomputable def finrank (R V : Type _) [Semiring R] [AddCommGroup V] [Module R
 
 theorem finrank_eq_of_dim_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
-  apply_fun to_nat  at h
-  rw [to_nat_cast] at h
+  apply_fun toNat  at h
+  rw [toNat_cast] at h
   exact_mod_cast h
 #align finite_dimensional.finrank_eq_of_dim_eq FiniteDimensional.finrank_eq_of_dim_eq
 
 theorem finrank_le_of_dim_le {n : ℕ} (h : Module.rank K V ≤ ↑n) : finrank K V ≤ n :=
   by
-  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, to_nat_cast] at h
-  · exact h.trans_lt (nat_lt_aleph_0 n)
-  · exact nat_lt_aleph_0 n
+  rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, toNat_cast] at h
+  · exact h.trans_lt (nat_lt_aleph0 n)
+  · exact nat_lt_aleph0 n
 #align finite_dimensional.finrank_le_of_dim_le FiniteDimensional.finrank_le_of_dim_le
 
 theorem finrank_lt_of_dim_lt {n : ℕ} (h : Module.rank K V < ↑n) : finrank K V < n :=
   by
-  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast] at h
-  · exact h.trans (nat_lt_aleph_0 n)
-  · exact nat_lt_aleph_0 n
+  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, toNat_cast] at h
+  · exact h.trans (nat_lt_aleph0 n)
+  · exact nat_lt_aleph0 n
 #align finite_dimensional.finrank_lt_of_dim_lt FiniteDimensional.finrank_lt_of_dim_lt
 
 theorem dim_lt_of_finrank_lt {n : ℕ} (h : n < finrank K V) : ↑n < Module.rank K V :=
   by
-  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, to_nat_cast]
-  · exact nat_lt_aleph_0 n
+  rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, toNat_cast]
+  · exact nat_lt_aleph0 n
   · contrapose! h
     rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
     exact n.zero_le
@@ -395,7 +395,7 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
       exact mt set.mem_singleton_iff.mp j_eq
     -- To show `b i ∈ span (b '' (univ \ {i}))`, we use that it's a weighted sum
     -- of the other `b j`s.
-    rw [j_eq, SetLike.mem_coe, show b i = -((g i)⁻¹ • (s.erase i).Sum fun j => g j • b j) from _]
+    rw [j_eq, SetLike.mem_coe, show b i = -((g i)⁻¹ • (s.erase i).sum fun j => g j • b j) from _]
     · refine' neg_mem (smul_mem _ _ (sum_mem fun k hk => _))
       obtain ⟨k_ne_i, k_mem⟩ := finset.mem_erase.mp hk
       refine' smul_mem _ _ (subset_span ⟨k, _, rfl⟩)

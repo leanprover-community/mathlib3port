@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Bryan Gin-ge Chen, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.symm_diff
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1042,7 +1042,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α (fun (_x : α) => symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) _x a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_left_injective symmDiff_left_injectiveₓ'. -/
 theorem symmDiff_left_injective (a : α) : Injective (· ∆ a) :=
-  (symmDiff_left_involutive _).Injective
+  (symmDiff_left_involutive _).injective
 #align symm_diff_left_injective symmDiff_left_injective
 
 /- warning: symm_diff_right_injective -> symmDiff_right_injective is a dubious translation:
@@ -1052,7 +1052,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Injective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6450 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6452 : α) => symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6450 x._@.Mathlib.Order.SymmDiff._hyg.6452) a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_right_injective symmDiff_right_injectiveₓ'. -/
 theorem symmDiff_right_injective (a : α) : Injective ((· ∆ ·) a) :=
-  (symmDiff_right_involutive _).Injective
+  (symmDiff_right_involutive _).injective
 #align symm_diff_right_injective symmDiff_right_injective
 
 /- warning: symm_diff_left_surjective -> symmDiff_left_surjective is a dubious translation:
@@ -1062,7 +1062,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α (fun (_x : α) => symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) _x a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_left_surjective symmDiff_left_surjectiveₓ'. -/
 theorem symmDiff_left_surjective (a : α) : Surjective (· ∆ a) :=
-  (symmDiff_left_involutive _).Surjective
+  (symmDiff_left_involutive _).surjective
 #align symm_diff_left_surjective symmDiff_left_surjective
 
 /- warning: symm_diff_right_surjective -> symmDiff_right_surjective is a dubious translation:
@@ -1072,7 +1072,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : GeneralizedBooleanAlgebra.{u1} α] (a : α), Function.Surjective.{succ u1, succ u1} α α ((fun (x._@.Mathlib.Order.SymmDiff._hyg.6525 : α) (x._@.Mathlib.Order.SymmDiff._hyg.6527 : α) => symmDiff.{u1} α (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (GeneralizedCoheytingAlgebra.toLattice.{u1} α (GeneralizedBooleanAlgebra.toGeneralizedCoheytingAlgebra.{u1} α _inst_1)))) (GeneralizedBooleanAlgebra.toSDiff.{u1} α _inst_1) x._@.Mathlib.Order.SymmDiff._hyg.6525 x._@.Mathlib.Order.SymmDiff._hyg.6527) a)
 Case conversion may be inaccurate. Consider using '#align symm_diff_right_surjective symmDiff_right_surjectiveₓ'. -/
 theorem symmDiff_right_surjective (a : α) : Surjective ((· ∆ ·) a) :=
-  (symmDiff_right_involutive _).Surjective
+  (symmDiff_right_involutive _).surjective
 #align symm_diff_right_surjective symmDiff_right_surjective
 
 variable {a b c}

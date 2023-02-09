@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_analytic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,53 +39,53 @@ variable {f : E → F} {x : E} {s : Set E}
 theorem HasFpowerSeriesAt.hasStrictFderivAt (h : HasFpowerSeriesAt f p x) :
     HasStrictFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x :=
   by
-  refine' h.is_O_image_sub_norm_mul_norm_sub.trans_is_o (is_o.of_norm_right _)
-  refine' is_o_iff_exists_eq_mul.2 ⟨fun y => ‖y - (x, x)‖, _, eventually_eq.rfl⟩
+  refine' h.is_O_image_sub_norm_mul_norm_sub.trans_is_o (IsOCat.of_norm_right _)
+  refine' isOCat_iff_exists_eq_mul.2 ⟨fun y => ‖y - (x, x)‖, _, EventuallyEq.rfl⟩
   refine' (continuous_id.sub continuous_const).norm.tendsto' _ _ _
-  rw [_root_.id, sub_self, norm_zero]
+  rw [id, sub_self, norm_zero]
 #align has_fpower_series_at.has_strict_fderiv_at HasFpowerSeriesAt.hasStrictFderivAt
 
 theorem HasFpowerSeriesAt.hasFderivAt (h : HasFpowerSeriesAt f p x) :
     HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x :=
-  h.HasStrictFderivAt.HasFderivAt
+  h.hasStrictFderivAt.hasFderivAt
 #align has_fpower_series_at.has_fderiv_at HasFpowerSeriesAt.hasFderivAt
 
 theorem HasFpowerSeriesAt.differentiableAt (h : HasFpowerSeriesAt f p x) : DifferentiableAt 𝕜 f x :=
-  h.HasFderivAt.DifferentiableAt
+  h.hasFderivAt.differentiableAt
 #align has_fpower_series_at.differentiable_at HasFpowerSeriesAt.differentiableAt
 
 theorem AnalyticAt.differentiableAt : AnalyticAt 𝕜 f x → DifferentiableAt 𝕜 f x
-  | ⟨p, hp⟩ => hp.DifferentiableAt
+  | ⟨p, hp⟩ => hp.differentiableAt
 #align analytic_at.differentiable_at AnalyticAt.differentiableAt
 
 theorem AnalyticAt.differentiableWithinAt (h : AnalyticAt 𝕜 f x) : DifferentiableWithinAt 𝕜 f s x :=
-  h.DifferentiableAt.DifferentiableWithinAt
+  h.differentiableAt.differentiableWithinAt
 #align analytic_at.differentiable_within_at AnalyticAt.differentiableWithinAt
 
 theorem HasFpowerSeriesAt.fderiv_eq (h : HasFpowerSeriesAt f p x) :
     fderiv 𝕜 f x = continuousMultilinearCurryFin1 𝕜 E F (p 1) :=
-  h.HasFderivAt.fderiv
+  h.hasFderivAt.fderiv
 #align has_fpower_series_at.fderiv_eq HasFpowerSeriesAt.fderiv_eq
 
 theorem HasFpowerSeriesOnBall.differentiableOn [CompleteSpace F]
     (h : HasFpowerSeriesOnBall f p x r) : DifferentiableOn 𝕜 f (Emetric.ball x r) := fun y hy =>
-  (h.analyticAt_of_mem hy).DifferentiableWithinAt
+  (h.analyticAt_of_mem hy).differentiableWithinAt
 #align has_fpower_series_on_ball.differentiable_on HasFpowerSeriesOnBall.differentiableOn
 
 theorem AnalyticOn.differentiableOn (h : AnalyticOn 𝕜 f s) : DifferentiableOn 𝕜 f s := fun y hy =>
-  (h y hy).DifferentiableWithinAt
+  (h y hy).differentiableWithinAt
 #align analytic_on.differentiable_on AnalyticOn.differentiableOn
 
 theorem HasFpowerSeriesOnBall.hasFderivAt [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r)
     {y : E} (hy : (‖y‖₊ : ℝ≥0∞) < r) :
     HasFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1)) (x + y) :=
-  (h.changeOrigin hy).HasFpowerSeriesAt.HasFderivAt
+  (h.changeOrigin hy).hasFpowerSeriesAt.hasFderivAt
 #align has_fpower_series_on_ball.has_fderiv_at HasFpowerSeriesOnBall.hasFderivAt
 
 theorem HasFpowerSeriesOnBall.fderiv_eq [CompleteSpace F] (h : HasFpowerSeriesOnBall f p x r)
     {y : E} (hy : (‖y‖₊ : ℝ≥0∞) < r) :
     fderiv 𝕜 f (x + y) = continuousMultilinearCurryFin1 𝕜 E F (p.changeOrigin y 1) :=
-  (h.HasFderivAt hy).fderiv
+  (h.hasFderivAt hy).fderiv
 #align has_fpower_series_on_ball.fderiv_eq HasFpowerSeriesOnBall.fderiv_eq
 
 /-- If a function has a power series on a ball, then so does its derivative. -/
@@ -116,7 +116,7 @@ theorem HasFpowerSeriesOnBall.fderiv [CompleteSpace F] (h : HasFpowerSeriesOnBal
       B
   simpa using
     ((p.has_fpower_series_on_ball_change_origin 1 (h.r_pos.trans_le h.r_le)).mono h.r_pos
-          h.r_le).comp_sub
+          h.r_le).compSub
       x
 #align has_fpower_series_on_ball.fderiv HasFpowerSeriesOnBall.fderiv
 
@@ -151,11 +151,11 @@ theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : �
   have t_open : IsOpen t := isOpen_analyticAt 𝕜 f
   apply contDiffOn_of_continuousOn_differentiableOn
   · intro m hm
-    apply (H.iterated_fderiv m).ContinuousOn.congr
+    apply (H.iterated_fderiv m).continuousOn.congr
     intro x hx
     exact iteratedFderivWithin_of_isOpen _ t_open hx
   · intro m hm
-    apply (H.iterated_fderiv m).DifferentiableOn.congr
+    apply (H.iterated_fderiv m).differentiableOn.congr
     intro x hx
     exact iteratedFderivWithin_of_isOpen _ t_open hx
 #align analytic_on.cont_diff_on AnalyticOn.contDiffOn
@@ -170,17 +170,17 @@ variable {f : 𝕜 → F} {x : 𝕜} {s : Set 𝕜}
 
 protected theorem HasFpowerSeriesAt.hasStrictDerivAt (h : HasFpowerSeriesAt f p x) :
     HasStrictDerivAt f (p 1 fun _ => 1) x :=
-  h.HasStrictFderivAt.HasStrictDerivAt
+  h.hasStrictFderivAt.hasStrictDerivAt
 #align has_fpower_series_at.has_strict_deriv_at HasFpowerSeriesAt.hasStrictDerivAt
 
 protected theorem HasFpowerSeriesAt.hasDerivAt (h : HasFpowerSeriesAt f p x) :
     HasDerivAt f (p 1 fun _ => 1) x :=
-  h.HasStrictDerivAt.HasDerivAt
+  h.hasStrictDerivAt.hasDerivAt
 #align has_fpower_series_at.has_deriv_at HasFpowerSeriesAt.hasDerivAt
 
 protected theorem HasFpowerSeriesAt.deriv (h : HasFpowerSeriesAt f p x) :
     deriv f x = p 1 fun _ => 1 :=
-  h.HasDerivAt.deriv
+  h.hasDerivAt.deriv
 #align has_fpower_series_at.deriv HasFpowerSeriesAt.deriv
 
 /-- If a function is analytic on a set `s`, so is its derivative. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.quadratic_discriminant
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,11 +122,11 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   rw [discrim, sq]
   obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomy a 0
   -- if a < 0
-  · have : tendsto (fun x => (a * x + b) * x + c) at_top at_bot :=
-      tendsto_at_bot_add_const_right _ c
-        ((tendsto_at_bot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).atBot_mul_atTop
+  · have : Tendsto (fun x => (a * x + b) * x + c) atTop atBot :=
+      tendsto_atBot_add_const_right _ c
+        ((tendsto_atBot_add_const_right _ b (tendsto_id.neg_const_mul_at_top ha)).atBot_mul_atTop
           tendsto_id)
-    rcases(this.eventually (eventually_lt_at_bot 0)).exists with ⟨x, hx⟩
+    rcases(this.eventually (eventually_lt_atBot 0)).exists with ⟨x, hx⟩
     exact False.elim ((h x).not_lt <| by rwa [← add_mul])
   -- if a = 0
   · rcases em (b = 0) with (rfl | hb)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.order.monotone_convergence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ instance (priority := 100) LinearOrder.supConvergenceClass [TopologicalSpace α]
   refine' ⟨fun a s ha => tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩⟩
   · rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩
     lift c to s using hcs
-    refine' (eventually_ge_at_top c).mono fun x hx => bc.trans_le hx
+    refine' (eventually_ge_atTop c).mono fun x hx => bc.trans_le hx
   · exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
 #align linear_order.Sup_convergence_class LinearOrder.supConvergenceClass
 -/
@@ -111,7 +111,7 @@ variable [Preorder α] [SupConvergenceClass α] {f : ι → α} {a : α}
 theorem tendsto_atTop_isLUB (h_mono : Monotone f) (ha : IsLUB (Set.range f) a) :
     Tendsto f atTop (𝓝 a) :=
   by
-  suffices : tendsto (range_factorization f) at_top at_top
+  suffices : Tendsto (rangeFactorization f) atTop atTop
   exact (SupConvergenceClass.tendsto_coe_atTop_isLUB _ _ ha).comp this
   exact h_mono.range_factorization.tendsto_at_top_at_top fun b => b.2.imp fun a ha => ha.ge
 #align tendsto_at_top_is_lub tendsto_atTop_isLUB
@@ -157,7 +157,7 @@ theorem tendsto_atTop_csupr (h_mono : Monotone f) (hbdd : BddAbove <| range f) :
     Tendsto f atTop (𝓝 (⨆ i, f i)) :=
   by
   cases isEmpty_or_nonempty ι
-  exacts[tendsto_of_is_empty, tendsto_atTop_isLUB h_mono (isLUB_csupᵢ hbdd)]
+  exacts[tendsto_of_isEmpty, tendsto_atTop_isLUB h_mono (isLUB_csupᵢ hbdd)]
 #align tendsto_at_top_csupr tendsto_atTop_csupr
 
 /- warning: tendsto_at_bot_csupr -> tendsto_atBot_csupr is a dubious translation:
@@ -258,9 +258,9 @@ instance [Preorder α] [Preorder β] [TopologicalSpace α] [TopologicalSpace β]
   constructor
   rintro ⟨a, b⟩ s h
   rw [isLUB_prod, ← range_restrict, ← range_restrict] at h
-  have A : tendsto (fun x : s => (x : α × β).1) at_top (𝓝 a) :=
+  have A : Tendsto (fun x : s => (x : α × β).1) atTop (𝓝 a) :=
     tendsto_atTop_isLUB (monotone_fst.restrict s) h.1
-  have B : tendsto (fun x : s => (x : α × β).2) at_top (𝓝 b) :=
+  have B : Tendsto (fun x : s => (x : α × β).2) atTop (𝓝 b) :=
     tendsto_atTop_isLUB (monotone_snd.restrict s) h.2
   convert A.prod_mk_nhds B
   ext1 ⟨⟨x, y⟩, h⟩
@@ -345,7 +345,7 @@ theorem Monotone.ge_of_tendsto [TopologicalSpace α] [Preorder α] [OrderClosedT
     [SemilatticeSup β] {f : β → α} {a : α} (hf : Monotone f) (ha : Tendsto f atTop (𝓝 a)) (b : β) :
     f b ≤ a :=
   haveI : Nonempty β := Nonempty.intro b
-  ge_of_tendsto ha ((eventually_ge_at_top b).mono fun _ hxy => hf hxy)
+  ge_of_tendsto ha ((eventually_ge_atTop b).mono fun _ hxy => hf hxy)
 #align monotone.ge_of_tendsto Monotone.ge_of_tendsto
 
 /- warning: monotone.le_of_tendsto -> Monotone.le_of_tendsto is a dubious translation:
@@ -467,11 +467,11 @@ but is expected to have type
   forall {ι₁ : Type.{u3}} {ι₂ : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u2} ι₂] [_inst_2 : CompleteLattice.{u1} α] {l : Filter.{u3} ι₁} [_inst_3 : Filter.NeBot.{u3} ι₁ l] {f : ι₂ -> α} {φ : ι₁ -> ι₂}, (Monotone.{u2, u1} ι₂ α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2))) f) -> (Filter.Tendsto.{u3, u2} ι₁ ι₂ φ l (Filter.atTop.{u2} ι₂ _inst_1)) -> (Eq.{succ u1} α (supᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι₂ (fun (i : ι₂) => f i)) (supᵢ.{u1, succ u3} α (ConditionallyCompleteLattice.toSupSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι₁ (fun (i : ι₁) => f (φ i))))
 Case conversion may be inaccurate. Consider using '#align supr_eq_supr_subseq_of_monotone supᵢ_eq_supᵢ_subseq_of_monotoneₓ'. -/
 theorem supᵢ_eq_supᵢ_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorder ι₂] [CompleteLattice α]
-    {l : Filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f)
+    {l : Filter ι₁} [l.NeBot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f)
     (hφ : Tendsto φ l atTop) : (⨆ i, f i) = ⨆ i, f (φ i) :=
   le_antisymm
     (supᵢ_mono' fun i =>
-      Exists.imp (fun j (hj : i ≤ φ j) => hf hj) (hφ.Eventually <| eventually_ge_atTop i).exists)
+      Exists.imp (fun j (hj : i ≤ φ j) => hf hj) (hφ.eventually <| eventually_ge_atTop i).exists)
     (supᵢ_mono' fun i => ⟨φ i, le_rfl⟩)
 #align supr_eq_supr_subseq_of_monotone supᵢ_eq_supᵢ_subseq_of_monotone
 
@@ -482,7 +482,7 @@ but is expected to have type
   forall {ι₁ : Type.{u3}} {ι₂ : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u2} ι₂] [_inst_2 : CompleteLattice.{u1} α] {l : Filter.{u3} ι₁} [_inst_3 : Filter.NeBot.{u3} ι₁ l] {f : ι₂ -> α} {φ : ι₁ -> ι₂}, (Monotone.{u2, u1} ι₂ α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_2))) f) -> (Filter.Tendsto.{u3, u2} ι₁ ι₂ φ l (Filter.atBot.{u2} ι₂ _inst_1)) -> (Eq.{succ u1} α (infᵢ.{u1, succ u2} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι₂ (fun (i : ι₂) => f i)) (infᵢ.{u1, succ u3} α (ConditionallyCompleteLattice.toInfSet.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_2)) ι₁ (fun (i : ι₁) => f (φ i))))
 Case conversion may be inaccurate. Consider using '#align infi_eq_infi_subseq_of_monotone infᵢ_eq_infᵢ_subseq_of_monotoneₓ'. -/
 theorem infᵢ_eq_infᵢ_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorder ι₂] [CompleteLattice α]
-    {l : Filter ι₁} [l.ne_bot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f)
+    {l : Filter ι₁} [l.NeBot] {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f)
     (hφ : Tendsto φ l atBot) : (⨅ i, f i) = ⨅ i, f (φ i) :=
   supᵢ_eq_supᵢ_subseq_of_monotone hf.dual hφ
 #align infi_eq_infi_subseq_of_monotone infᵢ_eq_infᵢ_subseq_of_monotone

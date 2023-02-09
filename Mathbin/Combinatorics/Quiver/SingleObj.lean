@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.single_obj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,7 +135,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.single_obj.to_p
 @[simp]
 theorem toPrefunctor_symm_comp (f : SingleObj α ⥤q SingleObj β) (g : SingleObj β ⥤q SingleObj γ) :
     toPrefunctor.symm (f ⋙q g) = toPrefunctor.symm g ∘ toPrefunctor.symm f := by
-  simp only [Equiv.symm_apply_eq, to_prefunctor_comp, Equiv.apply_symm_apply]
+  simp only [Equiv.symm_apply_eq, toPrefunctor_comp, Equiv.apply_symm_apply]
 #align quiver.single_obj.to_prefunctor_symm_comp Quiver.SingleObj.toPrefunctor_symm_comp
 
 #print Quiver.SingleObj.pathToList /-

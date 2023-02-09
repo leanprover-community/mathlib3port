@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module data.rat.floor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,11 +51,11 @@ Case conversion may be inaccurate. Consider using '#align rat.le_floor Rat.le_fl
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
   | ⟨n, d, h, c⟩ => by
     simp [Rat.floor]
-    rw [num_denom']
+    rw [num_den']
     have h' := Int.ofNat_lt.2 h
     conv =>
       rhs
-      rw [coe_int_eq_mk, Rat.le_def zero_lt_one h', mul_one]
+      rw [coe_int_eq_divInt, Rat.le_def zero_lt_one h', mul_one]
     exact Int.le_ediv_iff_mul_le h'
 #align rat.le_floor Rat.le_floor
 
@@ -89,7 +89,7 @@ theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d :
   obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.denom :=
     by
     rw [q_eq]
-    exact_mod_cast @Rat.exists_eq_mul_div_num_and_eq_mul_div_den n d (by exact_mod_cast hd.ne')
+    exact_mod_cast @rat.exists_eq_mul_div_num_and_eq_mul_div_denom n d (by exact_mod_cast hd.ne')
   rw [n_eq_c_mul_num, d_eq_c_mul_denom]
   refine' (Int.mul_ediv_mul_of_pos _ _ <| pos_of_mul_pos_left _ <| Int.coe_nat_nonneg q.denom).symm
   rwa [← d_eq_c_mul_denom, Int.coe_nat_pos]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.congruence_subgroups
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,7 +181,7 @@ theorem Gamma1_to_gamma0_mem (N : ℕ) (A : gamma0 N) :
 /-- The congruence subgroup `Gamma1` of `SL(2, ℤ)` consisting of matrices whose bottom
 row is congruent to `(0,1)` modulo `N`. -/
 def gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
-  Subgroup.map ((gamma0 N).Subtype.comp (gamma1' N).Subtype) ⊤
+  Subgroup.map ((gamma0 N).Subtype.comp (gamma1' N).subtype) ⊤
 #align Gamma1 gamma1
 
 @[simp]

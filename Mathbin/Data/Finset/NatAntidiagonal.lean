@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.finset.nat_antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem antidiagonal_succ_succ' {n : ℕ} :
 
 #print Finset.Nat.map_swap_antidiagonal /-
 theorem map_swap_antidiagonal {n : ℕ} :
-    (antidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.Injective⟩ = antidiagonal n :=
+    (antidiagonal n).map ⟨Prod.swap, Prod.swap_rightInverse.injective⟩ = antidiagonal n :=
   eq_of_veq <| by simp [antidiagonal, Multiset.Nat.map_swap_antidiagonal]
 #align finset.nat.map_swap_antidiagonal Finset.Nat.map_swap_antidiagonal
 -/
@@ -152,7 +152,7 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
   by
   ext ⟨x, y⟩
-  simp only [mem_filter, nat.mem_antidiagonal]
+  simp only [mem_filter, Nat.mem_antidiagonal]
   split_ifs with h h
   · simp (config := { contextual := true }) [and_comm', eq_tsub_iff_add_eq_of_le h, add_comm]
   · rw [not_le] at h

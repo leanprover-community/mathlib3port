@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.unit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,12 +30,12 @@ variable {J : Type v} [Category.{v'} J] {F : J ⥤ Discrete PUnit}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
 def punitCone : Cone F :=
-  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).hom⟩
 #align category_theory.limits.punit_cone CategoryTheory.Limits.punitCone
 
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
 def punitCocone : Cocone F :=
-  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).hom⟩
 #align category_theory.limits.punit_cocone CategoryTheory.Limits.punitCocone
 
 /-- Any cone over a functor into `punit` is a limit cone.

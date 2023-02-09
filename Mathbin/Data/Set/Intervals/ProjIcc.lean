@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.intervals.proj_Icc
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable {a b : α} (h : a ≤ b) {x : α}
 
 #print Set.projIcc_of_le_left /-
 theorem projIcc_of_le_left (hx : x ≤ a) : projIcc a b h x = ⟨a, left_mem_Icc.2 h⟩ := by
-  simp [proj_Icc, hx, hx.trans h]
+  simp [projIcc, hx, hx.trans h]
 #align set.proj_Icc_of_le_left Set.projIcc_of_le_left
 -/
 
@@ -58,7 +58,7 @@ theorem projIcc_left : projIcc a b h a = ⟨a, left_mem_Icc.2 h⟩ :=
 
 #print Set.projIcc_of_right_le /-
 theorem projIcc_of_right_le (hx : b ≤ x) : projIcc a b h x = ⟨b, right_mem_Icc.2 h⟩ := by
-  simp [proj_Icc, hx, h]
+  simp [projIcc, hx, h]
 #align set.proj_Icc_of_right_le Set.projIcc_of_right_le
 -/
 
@@ -72,8 +72,8 @@ theorem projIcc_right : projIcc a b h b = ⟨b, right_mem_Icc.2 h⟩ :=
 #print Set.projIcc_eq_left /-
 theorem projIcc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.mpr h.le⟩ ↔ x ≤ a :=
   by
-  refine' ⟨fun h' => _, proj_Icc_of_le_left _⟩
-  simp_rw [Subtype.ext_iff_val, proj_Icc, max_eq_left_iff, min_le_iff, h.not_le, false_or_iff] at h'
+  refine' ⟨fun h' => _, projIcc_of_le_left _⟩
+  simp_rw [Subtype.ext_iff_val, projIcc, max_eq_left_iff, min_le_iff, h.not_le, false_or_iff] at h'
   exact h'
 #align set.proj_Icc_eq_left Set.projIcc_eq_left
 -/
@@ -81,8 +81,8 @@ theorem projIcc_eq_left (h : a < b) : projIcc a b h.le x = ⟨a, left_mem_Icc.mp
 #print Set.projIcc_eq_right /-
 theorem projIcc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc.mpr h.le⟩ ↔ b ≤ x :=
   by
-  refine' ⟨fun h' => _, proj_Icc_of_right_le _⟩
-  simp_rw [Subtype.ext_iff_val, proj_Icc] at h'
+  refine' ⟨fun h' => _, projIcc_of_right_le _⟩
+  simp_rw [Subtype.ext_iff_val, projIcc] at h'
   have := ((max_choice _ _).resolve_left (by simp [h.ne', h'])).symm.trans h'
   exact min_eq_left_iff.mp this
 #align set.proj_Icc_eq_right Set.projIcc_eq_right
@@ -90,7 +90,7 @@ theorem projIcc_eq_right (h : a < b) : projIcc a b h.le x = ⟨b, right_mem_Icc.
 
 #print Set.projIcc_of_mem /-
 theorem projIcc_of_mem (hx : x ∈ Icc a b) : projIcc a b h x = ⟨x, hx⟩ := by
-  simp [proj_Icc, hx.1, hx.2]
+  simp [projIcc, hx.1, hx.2]
 #align set.proj_Icc_of_mem Set.projIcc_of_mem
 -/
 
@@ -99,7 +99,7 @@ theorem projIcc_of_mem (hx : x ∈ Icc a b) : projIcc a b h x = ⟨x, hx⟩ := b
 theorem projIcc_val (x : Icc a b) : projIcc a b h x = x :=
   by
   cases x
-  apply proj_Icc_of_mem
+  apply projIcc_of_mem
 #align set.proj_Icc_coe Set.projIcc_val
 -/
 
@@ -129,7 +129,7 @@ theorem monotone_projIcc : Monotone (projIcc a b h) := fun x y hxy =>
 
 #print Set.strictMonoOn_projIcc /-
 theorem strictMonoOn_projIcc : StrictMonoOn (projIcc a b h) (Icc a b) := fun x hx y hy hxy => by
-  simpa only [proj_Icc_of_mem, hx, hy]
+  simpa only [projIcc_of_mem, hx, hy]
 #align set.strict_mono_on_proj_Icc Set.strictMonoOn_projIcc
 -/
 
@@ -148,7 +148,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.Icc_extend_range Set.IccExtend_rangeₓ'. -/
 @[simp]
 theorem IccExtend_range (f : Icc a b → β) : range (IccExtend h f) = range f := by
-  simp only [Icc_extend, range_comp f, range_proj_Icc, range_id']
+  simp only [IccExtend, range_comp f, range_projIcc, range_id']
 #align set.Icc_extend_range Set.IccExtend_range
 
 /- warning: set.Icc_extend_of_le_left -> Set.IccExtend_of_le_left is a dubious translation:

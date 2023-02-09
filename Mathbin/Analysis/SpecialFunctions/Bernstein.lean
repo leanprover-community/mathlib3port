@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.special_functions.bernstein
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -178,7 +178,7 @@ def δ (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) : ℝ :=
   f.modulus (ε / 2) (half_pos h)
 #align bernstein_approximation.δ bernsteinApproximation.δ
 
-theorem δ_pos {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} : 0 < δ f ε h :=
+theorem δ_pos {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} : 0 < δ nonneg ε h :=
   f.modulus_pos
 #align bernstein_approximation.δ_pos bernsteinApproximation.δ_pos
 
@@ -194,7 +194,7 @@ theorem lt_of_mem_s {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k
     (m : k ∈ s f ε h n x) : |f k/ₙ - f x| < ε / 2 :=
   by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
-  simpa [S] using m
+  simpa [s] using m
 #align bernstein_approximation.lt_of_mem_S bernsteinApproximation.lt_of_mem_s
 
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
@@ -203,7 +203,7 @@ This particular formulation will be helpful later.
 theorem le_of_mem_s_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
     (m : k ∈ s f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 :=
   by
-  simp only [Finset.mem_compl, not_lt, Set.mem_toFinset, Set.mem_setOf_eq, S] at m
+  simp only [Finset.mem_compl, not_lt, Set.mem_toFinset, Set.mem_setOf_eq, s] at m
   rw [zpow_neg, ← div_eq_inv_mul, zpow_two, ← pow_two, one_le_div (pow_pos δ_pos 2), sq_le_sq,
     abs_of_pos δ_pos]
   rwa [dist_comm] at m
@@ -236,7 +236,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_atTop_nhds_0_nat (2 * ‖f‖ * δ ^ (-2 : ℤ))
   filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)),
-    eventually_gt_at_top 0]with n nh npos'
+    eventually_gt_atTop 0]with n nh npos'
   have npos : 0 < (n : ℝ) := by exact_mod_cast npos'
   -- Two easy inequalities we'll need later:
   have w₁ : 0 ≤ 2 * ‖f‖ := mul_nonneg (by norm_num) (norm_nonneg f)
@@ -246,7 +246,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   intro x
   -- The idea is to split up the sum over `k` into two sets,
   -- `S`, where `x - k/n < δ`, and its complement.
-  let S := S f ε h n x
+  let S := s f ε h n x
   calc
     |(bernsteinApproximation n f - f) x| = |bernsteinApproximation n f x - f x| := rfl
     _ = |bernsteinApproximation n f x - f x * 1| := by rw [mul_one]
@@ -270,7 +270,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
     calc
       (∑ k in S, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
-          mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg
+          mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_s m)) bernstein_nonneg
       _ = ε / 2 * ∑ k in S, bernstein n k x := by rw [Finset.mul_sum]
       -- In this step we increase the sum over `S` back to a sum over all of `fin (n+1)`,
           -- so that we can use `bernstein.probability`.
@@ -293,7 +293,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
           (Finset.sum_le_sum fun k m =>
             by
             conv_lhs => rw [← one_mul (bernstein _ _ _)]
-            exact mul_le_mul_of_nonneg_right (le_of_mem_S_compl m) bernstein_nonneg)
+            exact mul_le_mul_of_nonneg_right (le_of_mem_s_compl m) bernstein_nonneg)
           w₁
       -- Again enlarging the sum from `Sᶜ` to all of `fin (n+1)`
           _ ≤

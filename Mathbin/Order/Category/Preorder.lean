@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.category.Preorder
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,16 +95,16 @@ end PreorderCat
 def preorderToCat : PreorderCat.{u} ⥤ Cat
     where
   obj X := Cat.of X.1
-  map X Y f := f.Monotone.Functor
+  map X Y f := f.monotone.functor
   map_id' X := by apply CategoryTheory.Functor.ext; tidy
   map_comp' X Y Z f g := by apply CategoryTheory.Functor.ext; tidy
 #align Preorder_to_Cat preorderToCat
 
 instance : Faithful preorderToCat.{u}
-    where map_injective' X Y f g h := by ext x; exact functor.congr_obj h x
+    where map_injective' X Y f g h := by ext x; exact Functor.congr_obj h x
 
 instance : Full preorderToCat.{u}
     where
-  preimage X Y f := ⟨f.obj, f.Monotone⟩
+  preimage X Y f := ⟨f.obj, f.monotone⟩
   witness' X Y f := by apply CategoryTheory.Functor.ext; tidy
 

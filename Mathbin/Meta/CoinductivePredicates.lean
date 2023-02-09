@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl (CMU)
 
 ! This file was ported from Lean 3 source module meta.coinductive_predicates
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,7 +248,7 @@ unsafe def rec' (pd : coind_pred) : tactic expr := do
   let env ← get_env
   let decl ← env.get c
   let num := decl.univ_params.length
-  return (const c <| if Num = pd then pd else level.zero :: pd)
+  return (const c <| if num = pd then pd else level.zero :: pd)
 #align tactic.add_coinductive_predicate.coind_pred.rec' tactic.add_coinductive_predicate.coind_pred.rec'
 
 -- ^^ `rec`'s universes are not always `u_params`, e.g. eq, wf, false
@@ -277,12 +277,12 @@ This relation is user visible, so we compact it by removing each `b_j` where a `
 hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i = p_j = b_k`. -/
 unsafe def compact_relation : List expr → List (expr × expr) → List expr × List (expr × expr)
   | [], ps => ([], ps)
-  | List.cons b bs, ps =>
-    match ps.spanₓ fun ap : expr × expr => ¬ap.2 == b with
+  | list.cons b bs, ps =>
+    match ps.span fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
-    | (ps₁, List.cons (a, _) ps₂) =>
+    | (ps₁, list.cons (a, _) ps₂) =>
       let i := a.instantiate_local b.local_uniq_name
       compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
 #align tactic.compact_relation tactic.compact_relation
@@ -312,7 +312,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
         let intros ←
           is.mapM fun i => do
               let (args, t') ← open_pis i.local_type
-              let Name.mk_string sub p ← return i.local_uniq_name
+              let name.mk_string sub p ← return i.local_uniq_name
               let loc_args :=
                 args.map fun e =>
                   (fs₁.zip preds).foldl (fun (e : expr) ⟨f, c, _⟩ => e.replace_with (pred_g c) f) e
@@ -374,11 +374,11 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
               solve1 do
                 let bs ← intros
                 let ms ←
-                  apply_core ((const n u_params).app_of_list <| ps ++ fs Prod.fst)
+                  apply_core ((const n u_params).app_of_list <| ps ++ fs prod.fst)
                       { NewGoals := new_goals.all }
-                let params ← (ms bs).enum.filterM fun ⟨n, m, d⟩ => not <$> is_assigned m.2
+                let params ← (ms bs).enum.filterM fun ⟨n, m, d⟩ => bnot <$> is_assigned m.2
                 params fun ⟨n, m, d⟩ =>
-                    mono d (fs Prod.snd) <|>
+                    mono d (fs prod.snd) <|>
                       fail
                         f!"failed to prove montonoicity of {(n +
                             1)}. parameter of intro-rule {pp_n}"
@@ -441,7 +441,7 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
       let h ← mk_local_def `h <| pd pd
       let rules ←
         pd fun r : coind_rule => do
-            mk_local_def (mkSimpleName r) <| (C r).pis r
+            mk_local_def (mk_simple_name r) <| (C r).pis r
       let cases_on ←
         pd (pd ++ "cases_on") ((C pd).pis <| params ++ [C] ++ pd ++ [h] ++ rules) do
             let ps ← intro_lst <| params local_pp_name
@@ -468,14 +468,15 @@ unsafe def add_coinductive_predicate (u_names : List Name) (params : List expr)
                         return <| (const `eq [u] : expr) l i l
                   match bs, eqs with
                     | [], [] => return ((0, 0), mk_true)
-                    | _, [] => Prod.mk (bs, 0) <$> mk_exists_lst bs bs
-                    | _, _ => Prod.mk (bs, eqs) <$> mk_exists_lst bs (mk_and_lst eqs)
-            let shape := intros Prod.fst
-            let intros := intros Prod.snd
-            Prod.mk shape <$>
-                mk_local_def (mkSimpleName <| "h_" ++ pd) (((pd pd).imp (mk_or_lst intros)).pis pd)
-      let shape := rules Prod.fst
-      let rules := rules Prod.snd
+                    | _, [] => prod.mk (bs, 0) <$> mk_exists_lst bs bs
+                    | _, _ => prod.mk (bs, eqs) <$> mk_exists_lst bs (mk_and_lst eqs)
+            let shape := intros prod.fst
+            let intros := intros prod.snd
+            prod.mk shape <$>
+                mk_local_def (mk_simple_name <| "h_" ++ pd)
+                  (((pd pd).imp (mk_or_lst intros)).pis pd)
+      let shape := rules prod.fst
+      let rules := rules prod.snd
       let h ← mk_local_def `h <| pd pd
       pd (pd ++ "corec_on") ((pd <| pd).pis <| params ++ fs₁ ++ pd ++ [h] ++ rules) do
           let ps ← intro_lst <| params local_pp_name
@@ -554,7 +555,7 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
       ←-- analyse relation
           List.headI <$>
           get_goals
-    let List.cons _ m_is ← return <| mvars.dropWhileₓ fun v => v.2 ≠ g
+    let list.cons _ m_is ← return <| mvars.dropWhile fun v => v.2 ≠ g
     let tgt ← target
     let (is, ty) ← open_pis tgt
     let-- construct coinduction predicate
@@ -565,12 +566,12 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
     solve1 do
         let eqs ←
           (mk_and_lst <$> eqs fun ⟨i, m⟩ => mk_app `eq [m, i] >>= instantiate_mvars) <|> do
-              let x ← mk_psigma (eqs Prod.fst)
-              let y ← mk_psigma (eqs Prod.snd)
+              let x ← mk_psigma (eqs prod.fst)
+              let y ← mk_psigma (eqs prod.snd)
               let t ← infer_type x
               mk_mapp `eq [t, x, y]
         let rel ← mk_exists_lst bs eqs
-        exact (Rel is)
+        exact (rel is)
     -- prove predicate
         solve1
         do
@@ -594,8 +595,8 @@ unsafe def coinduction (rule : expr) (ns : List Name) : tactic Unit :=
           | [] => clear h
           | e :: eqs => do
             let (hs, h, ns) ← elim_gen_prod eqs h [] ns
-            (h :: hs hs.reverse : List _).foldlM
-                (fun (hs : List Name) (h : expr) => do
+            (h :: hs hs.reverse : list _).foldlM
+                (fun (hs : list name) (h : expr) => do
                   let [(_, hs', σ)] ← cases_core h hs
                   clear (h σ)
                   pure <| hs hs')

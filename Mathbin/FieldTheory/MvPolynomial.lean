@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module field_theory.mv_polynomial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ variable {σ : Type u} {K : Type u} [Field K]
 open Classical
 
 theorem dim_mvPolynomial : Module.rank K (MvPolynomial σ K) = Cardinal.mk (σ →₀ ℕ) := by
-  rw [← Cardinal.lift_inj, ← (basis_monomials σ K).mk_eq_dim]
+  rw [← Cardinal.lift_inj, ← (basisMonomials σ K).mk_eq_dim]
 #align mv_polynomial.dim_mv_polynomial MvPolynomial.dim_mvPolynomial
 
 end MvPolynomial

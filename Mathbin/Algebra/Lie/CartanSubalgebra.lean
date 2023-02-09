@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.cartan_subalgebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
 theorem normalizer_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] :
     H.toLieSubmodule.normalizer = H.toLieSubmodule := by
   rw [← LieSubmodule.coe_to_submodule_eq_iff, coe_normalizer_eq_normalizer,
-    is_cartan_subalgebra.self_normalizing, coe_to_lie_submodule]
+    IsCartanSubalgebra.self_normalizing, coe_toLieSubmodule]
 #align lie_subalgebra.normalizer_eq_self_of_is_cartan_subalgebra LieSubalgebra.normalizer_eq_self_of_isCartanSubalgebra
 
 @[simp]
@@ -76,7 +76,7 @@ theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubm
   by
   constructor
   · intro h
-    have h₁ : _root_.lie_algebra.is_nilpotent R H := by infer_instance
+    have h₁ : LieAlgebra.IsNilpotent R H := by infer_instance
     obtain ⟨k, hk⟩ := H.to_lie_submodule.is_nilpotent_iff_exists_self_le_ucs.mp h₁
     replace hk : H.to_lie_submodule = LieSubmodule.ucs k ⊥ :=
       le_antisymm hk
@@ -90,7 +90,7 @@ theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubm
           dsimp only [LieAlgebra.IsNilpotent]
           erw [H.to_lie_submodule.is_nilpotent_iff_exists_lcs_eq_bot]
           use k
-          rw [_root_.eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_refl k)]
+          rw [eq_bot_iff, LieSubmodule.lcs_le_iff, hk k (le_refl k)]
           exact le_refl _
         self_normalizing := by
           have hk' := hk (k + 1) k.le_succ
@@ -117,6 +117,6 @@ instance LieAlgebra.top_isCartanSubalgebra_of_nilpotent [LieAlgebra.IsNilpotent 
     LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L)
     where
   nilpotent := inferInstance
-  self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
+  self_normalizing := by rw [← top_coe_lieSubalgebra, normalizer_eq_top, top_coe_lieSubalgebra]
 #align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.top_isCartanSubalgebra_of_nilpotent
 

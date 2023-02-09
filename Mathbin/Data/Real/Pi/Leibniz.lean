@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.real.pi.leibniz
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ theorem tendsto_sum_pi_div_four :
   -- (1) We introduce a useful sequence `u` of values in [0,1], then prove that another sequence
   --     constructed from `u` tends to `0` at `+∞`
   let u := fun k : ℕ => (k : Nnreal) ^ (-1 / (2 * (k : ℝ) + 1))
-  have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) :=
+  have H : Tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) atTop (𝓝 0) :=
     by
     convert
       (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
@@ -75,7 +75,7 @@ theorem tendsto_sum_pi_div_four :
   -- (3) We introduce an auxiliary function `f`
   let b (i : ℕ) x := (-(1 : ℝ)) ^ i * x ^ (2 * i + 1) / (2 * i + 1)
   let f x := arctan x - ∑ i in Finset.range k, b i x
-  suffices f_bound : |f 1 - f 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
+  suffices f_bound : |f 1 - Mem 0| ≤ (1 : ℝ) - U + U ^ (2 * (k : ℝ) + 1)
   · rw [← norm_neg]
     convert f_bound
     simp only [f]
@@ -106,7 +106,7 @@ theorem tendsto_sum_pi_div_four :
       intro i hi
       convert
         HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1))
-          (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAt_id x))
+          (@has_deriv_at.pow _ _ _ _ _ (2 * i + 1) (hasDerivAt_id x))
       · ext y
         simp only [b, id.def]
         ring
@@ -119,14 +119,14 @@ theorem tendsto_sum_pi_div_four :
               linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
         ring_nf
-    convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
+    convert (hasDerivAt_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
     have g_sum :=
-      @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
+      @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).ne k
     simp only [f'] at g_sum⊢
     rw [g_sum, ← neg_add' (x ^ 2) 1, add_comm (x ^ 2) 1, sub_eq_add_neg, neg_div', neg_div_neg_eq]
     ring
   have hderiv1 : ∀ x ∈ Icc (U : ℝ) 1, HasDerivWithinAt f (f' x) (Icc (U : ℝ) 1) x := fun x hx =>
-    (has_deriv_at_f x).HasDerivWithinAt
+    (has_deriv_at_f x).hasDerivWithinAt
   have hderiv2 : ∀ x ∈ Icc 0 (U : ℝ), HasDerivWithinAt f (f' x) (Icc 0 (U : ℝ)) x := fun x hx =>
     (has_deriv_at_f x).HasDerivWithinAt
   -- (5) We prove a general bound for `f'` and then more precise bounds on each of two subintervals

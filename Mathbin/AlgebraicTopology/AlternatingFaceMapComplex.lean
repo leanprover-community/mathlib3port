@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou, Adam Topaz, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_topology.alternating_face_map_complex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,16 +214,15 @@ theorem map_alternatingFaceMapComplex {D : Type _} [Category D] [Preadditive D] 
   apply CategoryTheory.Functor.ext
   · intro X Y f
     ext n
-    simp only [functor.comp_map, HomologicalComplex.comp_f, alternating_face_map_complex_map_f,
-      functor.map_homological_complex_map_f, HomologicalComplex.eqToHom_f, eq_to_hom_refl, comp_id,
-      id_comp, simplicial_object.whiskering_obj_map_app]
+    simp only [Functor.comp_map, HomologicalComplex.comp_f, alternatingFaceMapComplex_map_f,
+      Functor.mapHomologicalComplex_map_f, HomologicalComplex.eqToHom_f, eqToHom_refl, comp_id,
+      id_comp, SimplicialObject.whiskering_obj_map_app]
   · intro X
     apply HomologicalComplex.ext
     · rintro i j (rfl : j + 1 = i)
-      dsimp only [functor.comp_obj]
-      simpa only [functor.map_homological_complex_obj_d, alternating_face_map_complex_obj_d,
-        eq_to_hom_refl, id_comp, comp_id, alternating_face_map_complex.obj_d, functor.map_sum,
-        functor.map_zsmul]
+      dsimp only [Functor.comp_obj]
+      simpa only [Functor.mapHomologicalComplex_obj_d, alternatingFaceMapComplex_objD, eqToHom_refl,
+        id_comp, comp_id, AlternatingFaceMapComplex.objD, Functor.map_sum, Functor.map_zsmul]
     · ext n
       rfl
 #align algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternatingFaceMapComplex
@@ -233,8 +232,8 @@ theorem karoubi_alternating_face_map_complex_d (P : Karoubi (SimplicialObject C)
       P.p.app (op [n + 1]) ≫ (AlternatingFaceMapComplex.obj P.x).d (n + 1) n :=
   by
   dsimp
-  simpa only [alternating_face_map_complex.obj_d_eq, karoubi.sum_hom, preadditive.comp_sum,
-    karoubi.zsmul_hom, preadditive.comp_zsmul]
+  simpa only [AlternatingFaceMapComplex.obj_d_eq, Karoubi.sum_hom, Preadditive.comp_sum,
+    Karoubi.zsmul_hom, Preadditive.comp_zsmul]
 #align algebraic_topology.karoubi_alternating_face_map_complex_d AlgebraicTopology.karoubi_alternating_face_map_complex_d
 
 namespace AlternatingFaceMapComplex
@@ -250,8 +249,8 @@ def ε [Limits.HasZeroObject C] :
     equiv_rw ChainComplex.toSingle₀Equiv _ _
     refine' ⟨X.hom.app (op [0]), _⟩
     dsimp
-    simp only [alternating_face_map_complex_obj_d, obj_d, Fin.sum_univ_two, Fin.val_zero, pow_zero,
-      one_zsmul, Fin.val_one, pow_one, neg_smul, add_comp, simplicial_object.δ_naturality, neg_comp]
+    simp only [alternatingFaceMapComplex_objD, objD, Fin.sum_univ_two, Fin.val_zero, pow_zero,
+      one_zsmul, Fin.val_one, pow_one, neg_smul, add_comp, SimplicialObject.δ_naturality, neg_comp]
     apply add_right_neg
   naturality' X Y f := by
     ext
@@ -276,13 +275,13 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
              face map complex with those defined on the normalized Moore complex:
              we first get rid of the terms of the alternating sum that are obviously
              zero on the normalized_Moore_complex -/
-    simp only [alternating_face_map_complex.obj_d]
+    simp only [AlternatingFaceMapComplex.objD]
     rw [comp_sum]
     let t := fun j : Fin (n + 2) =>
-      (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
+      (NormalizedMooreComplex.objX X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j)
     have def_t :
       ∀ j : Fin (n + 2),
-        t j = (normalized_Moore_complex.obj_X X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) :=
+        t j = (NormalizedMooreComplex.objX X (n + 1)).arrow ≫ ((-1 : ℤ) ^ (j : ℕ) • X.δ j) :=
       by
       intro j
       rfl
@@ -292,11 +291,11 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
       intro j
       rw [def_t, comp_zsmul, ← zsmul_zero ((-1 : ℤ) ^ (j.succ : ℕ))]
       apply congr_arg
-      rw [normalized_Moore_complex.obj_X]
+      rw [NormalizedMooreComplex.objX]
       rw [←
-        factor_thru_arrow _ _
+        factorThru_arrow _ _
           (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ]))]
-      slice_lhs 2 3 => rw [kernel_subobject_arrow_comp (X.δ j.succ)]
+      slice_lhs 2 3 => rw [kernelSubobject_arrow_comp (X.δ j.succ)]
       simp only [comp_zero]
     rw [Fintype.sum_eq_zero _ null]
     simp only [add_zero]
@@ -304,7 +303,7 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     let eq := def_t 0
     rw [show (-1 : ℤ) ^ ((0 : Fin (n + 2)) : ℕ) = 1 by ring] at eq
     rw [one_smul] at eq
-    rw [Eq]
+    rw [eq]
     cases n <;> dsimp <;> simp
 #align algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap
 
@@ -336,13 +335,13 @@ def objD (n : ℕ) : X.obj [n] ⟶ X.obj [n + 1] :=
 
 theorem d_eq_unop_d (n : ℕ) :
     objD X n =
-      (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X))
+      (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).functor.obj (op X))
           n).unop :=
-  by simpa only [obj_d, alternating_face_map_complex.obj_d, unop_sum, unop_zsmul]
+  by simpa only [objD, AlternatingFaceMapComplex.objD, unop_sum, unop_zsmul]
 #align algebraic_topology.alternating_coface_map_complex.d_eq_unop_d AlgebraicTopology.AlternatingCofaceMapComplex.d_eq_unop_d
 
 theorem d_squared (n : ℕ) : objD X n ≫ objD X (n + 1) = 0 := by
-  simp only [d_eq_unop_d, ← unop_comp, alternating_face_map_complex.d_squared, unop_zero]
+  simp only [d_eq_unop_d, ← unop_comp, AlternatingFaceMapComplex.d_squared, unop_zero]
 #align algebraic_topology.alternating_coface_map_complex.d_squared AlgebraicTopology.AlternatingCofaceMapComplex.d_squared
 
 /-- The alternating coface map complex, on objects -/

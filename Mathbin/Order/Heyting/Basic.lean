@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2212,7 +2212,7 @@ protected def Function.Injective.generalizedHeytingAlgebra [HasSup α] [HasInf �
     [GeneralizedHeytingAlgebra β] (f : α → β) (hf : Injective f)
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) : GeneralizedHeytingAlgebra α :=
-  { hf.Lattice f map_sup map_inf, ‹Top α›,
+  { hf.lattice f map_sup map_inf, ‹Top α›,
     ‹HImp
         α› with
     le_top := fun a => by
@@ -2238,7 +2238,7 @@ protected def Function.Injective.generalizedCoheytingAlgebra [HasSup α] [HasInf
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_bot : f ⊥ = ⊥) (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) :
     GeneralizedCoheytingAlgebra α :=
-  { hf.Lattice f map_sup map_inf, ‹Bot α›,
+  { hf.lattice f map_sup map_inf, ‹Bot α›,
     ‹SDiff
         α› with
     bot_le := fun a => by
@@ -2264,7 +2264,7 @@ protected def Function.Injective.heytingAlgebra [HasSup α] [HasInf α] [Top α]
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b) : HeytingAlgebra α :=
-  { hf.GeneralizedHeytingAlgebra f map_sup map_inf map_top map_himp, ‹Bot α›,
+  { hf.generalizedHeytingAlgebra f map_sup map_inf map_top map_himp, ‹Bot α›,
     ‹HasCompl
         α› with
     bot_le := fun a => by
@@ -2288,7 +2288,7 @@ protected def Function.Injective.coheytingAlgebra [HasSup α] [HasInf α] [Top �
     (map_sup : ∀ a b, f (a ⊔ b) = f a ⊔ f b) (map_inf : ∀ a b, f (a ⊓ b) = f a ⊓ f b)
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_hnot : ∀ a, f (￢a) = ￢f a)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : CoheytingAlgebra α :=
-  { hf.GeneralizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff, ‹Top α›,
+  { hf.generalizedCoheytingAlgebra f map_sup map_inf map_bot map_sdiff, ‹Top α›,
     ‹HNot
         α› with
     le_top := fun a => by
@@ -2313,8 +2313,8 @@ protected def Function.Injective.biheytingAlgebra [HasSup α] [HasInf α] [Top �
     (map_top : f ⊤ = ⊤) (map_bot : f ⊥ = ⊥) (map_compl : ∀ a, f (aᶜ) = f aᶜ)
     (map_hnot : ∀ a, f (￢a) = ￢f a) (map_himp : ∀ a b, f (a ⇨ b) = f a ⇨ f b)
     (map_sdiff : ∀ a b, f (a \ b) = f a \ f b) : BiheytingAlgebra α :=
-  { hf.HeytingAlgebra f map_sup map_inf map_top map_bot map_compl map_himp,
-    hf.CoheytingAlgebra f map_sup map_inf map_top map_bot map_hnot map_sdiff with }
+  { hf.heytingAlgebra f map_sup map_inf map_top map_bot map_compl map_himp,
+    hf.coheytingAlgebra f map_sup map_inf map_top map_bot map_hnot map_sdiff with }
 #align function.injective.biheyting_algebra Function.Injective.biheytingAlgebra
 
 end lift
@@ -2335,7 +2335,7 @@ instance : BiheytingAlgebra PUnit := by
           hnot := fun _ => star
           himp := fun _ _ => star } <;>
       intros <;>
-    first |trivial|exact Subsingleton.elim _ _
+    first |trivial|exact subsingleton.elim _ _
 
 #print PUnit.top_eq /-
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,9 +41,9 @@ open Polynomial
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
     Separable (x ^ q - x : K[X]) := by
-  use 1, X ^ q - X - 1
+  use 1, x ^ q - x - 1
   rw [← CharP.cast_eq_zero_iff K[X] p] at h
-  rw [derivative_sub, derivative_X_pow, derivative_X, C_eq_nat_cast, h]
+  rw [derivative_sub, derivative_x_pow, derivative_x, c_eq_nat_cast, h]
   ring
 #align galois_poly_separable galois_poly_separable
 
@@ -77,12 +77,12 @@ instance : Fintype (GaloisField p n) :=
 
 theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisField p n) = n :=
   by
-  set g_poly := (X ^ p ^ n - X : (ZMod p)[X])
+  set g_poly := (x ^ p ^ n - x : (ZMod p)[X])
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
   have aux : g_poly ≠ 0 := FiniteField.x_pow_card_pow_sub_x_ne_zero _ h hp
   have key : Fintype.card (g_poly.rootSet (GaloisField p n)) = g_poly.natDegree :=
-    card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h))
-      (splitting_field.splits g_poly)
+    card_rootSet_eq_natDegree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h))
+      (SplittingField.splits g_poly)
   have nat_degree_eq : g_poly.natDegree = p ^ n :=
     FiniteField.x_pow_card_pow_sub_x_natDegree_eq _ h hp
   rw [nat_degree_eq] at key
@@ -94,36 +94,36 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisFi
   rw [Set.eq_univ_iff_forall]
   suffices
     ∀ (x) (hx : x ∈ (⊤ : Subalgebra (ZMod p) (GaloisField p n))),
-      x ∈ (X ^ p ^ n - X : (ZMod p)[X]).rootSet (GaloisField p n)
+      x ∈ (x ^ p ^ n - x : (ZMod p)[X]).rootSet (GaloisField p n)
     by simpa
-  rw [← splitting_field.adjoin_root_set]
+  rw [← SplittingField.adjoin_rootSet]
   simp_rw [Algebra.mem_adjoin_iff]
   intro x hx
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `zmod p`.
   cases p
   cases hp
-  apply Subring.closure_induction hx <;> clear! x <;> simp_rw [mem_root_set_of_ne aux]
+  apply Subring.closure_induction hx <;> clear! x <;> simp_rw [mem_rootSet_of_ne aux]
   · rintro x (⟨r, rfl⟩ | hx)
-    · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub]
+    · simp only [aeval_x_pow, aeval_x, AlgHom.map_sub]
       rw [← map_pow, ZMod.pow_card_pow, sub_self]
     · dsimp only [GaloisField] at hx
-      rwa [mem_root_set_of_ne aux] at hx
+      rwa [mem_rootSet_of_ne aux] at hx
       infer_instance
   · dsimp only [g_poly]
     rw [← coeff_zero_eq_aeval_zero']
-    simp only [coeff_X_pow, coeff_X_zero, sub_zero, _root_.map_eq_zero, ite_eq_right_iff,
-      one_ne_zero, coeff_sub]
+    simp only [coeff_x_pow, coeff_x_zero, sub_zero, map_eq_zero, ite_eq_right_iff, one_ne_zero,
+      coeff_sub]
     intro hn
     exact Nat.not_lt_zero 1 (pow_eq_zero hn.symm ▸ hp)
   · simp
-  · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
+  · simp only [aeval_x_pow, aeval_x, AlgHom.map_sub, add_pow_char_pow, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
   · intro x hx
-    simp only [sub_eq_zero, aeval_X_pow, aeval_X, AlgHom.map_sub, sub_neg_eq_add] at *
+    simp only [sub_eq_zero, aeval_x_pow, aeval_x, AlgHom.map_sub, sub_neg_eq_add] at *
     rw [neg_pow, hx, CharP.neg_one_pow_char_pow]
     simp
-  · simp only [aeval_X_pow, aeval_X, AlgHom.map_sub, mul_pow, sub_eq_zero]
+  · simp only [aeval_x_pow, aeval_x, AlgHom.map_sub, mul_pow, sub_eq_zero]
     intro x y hx hy
     rw [hx, hy]
 #align galois_field.finrank GaloisField.finrank
@@ -137,7 +137,7 @@ theorem card (h : n ≠ 0) : Fintype.card (GaloisField p n) = p ^ n :=
 theorem splits_zMod_x_pow_sub_x : Splits (RingHom.id (ZMod p)) (x ^ p - x) :=
   by
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
-  have h1 : roots (X ^ p - X : (ZMod p)[X]) = finset.univ.val :=
+  have h1 : roots (x ^ p - x : (ZMod p)[X]) = finset.univ.val :=
     by
     convert FiniteField.roots_x_pow_card_sub_x _
     exact (ZMod.card p).symm
@@ -155,13 +155,13 @@ def equivZmodP : GaloisField p 1 ≃ₐ[ZMod p] ZMod p :=
     by
     rw [h]
     infer_instance
-  (is_splitting_field.alg_equiv (ZMod p) (X ^ p ^ 1 - X : (ZMod p)[X])).symm
+  (IsSplittingField.algEquiv (ZMod p) (x ^ p ^ 1 - x : (ZMod p)[X])).symm
 #align galois_field.equiv_zmod_p GaloisField.equivZmodP
 
 variable {K : Type _} [Field K] [Fintype K] [Algebra (ZMod p) K]
 
 theorem splits_x_pow_card_sub_x : Splits (algebraMap (ZMod p) K) (x ^ Fintype.card K - x) :=
-  (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (ZMod p)).Splits
+  (FiniteField.HasSub.Sub.Polynomial.isSplittingField K (ZMod p)).splits
 #align galois_field.splits_X_pow_card_sub_X GaloisField.splits_x_pow_card_sub_x
 
 theorem isSplittingField_of_card_eq (h : Fintype.card K = p ^ n) :
@@ -179,12 +179,12 @@ instance (priority := 100) {K K' : Type _} [Field K] [Field K'] [Finite K'] [Alg
     IsGalois.of_separable_splitting_field
       (galois_poly_separable p (Fintype.card K')
         (let ⟨n, hp, hn⟩ := FiniteField.card K' p
-        hn.symm ▸ dvd_pow_self p n.NeZero))
+        hn.symm ▸ dvd_pow_self p n.ne_zero))
 
 /-- Any finite field is (possibly non canonically) isomorphic to some Galois field. -/
 def algEquivGaloisField (h : Fintype.card K = p ^ n) : K ≃ₐ[ZMod p] GaloisField p n :=
-  haveI := is_splitting_field_of_card_eq _ _ h
-  is_splitting_field.alg_equiv _ _
+  haveI := isSplittingField_of_card_eq _ _ h
+  IsSplittingField.algEquiv _ _
 #align galois_field.alg_equiv_galois_field GaloisField.algEquivGaloisField
 
 end GaloisField
@@ -232,7 +232,7 @@ def ringEquivOfCardEq (hKK' : Fintype.card K = Fintype.card K') : K ≃+* K' :=
     all_goals infer_instance
   rw [← hpp'] at *
   haveI := fact_iff.2 hp
-  exact alg_equiv_of_card_eq p hKK'
+  exact algEquivOfCardEq p hKK'
 #align finite_field.ring_equiv_of_card_eq FiniteField.ringEquivOfCardEq
 
 end FiniteField

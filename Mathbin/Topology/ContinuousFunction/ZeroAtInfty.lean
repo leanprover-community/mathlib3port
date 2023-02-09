@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ def ContinuousMap.liftZeroAtInfty [CompactSpace α] : C(α, β) ≃ C₀(α, β)
     where
   toFun f :=
     { toFun := f
-      continuous_toFun := f.Continuous
+      continuous_toFun := f.continuous
       zero_at_infty' := by simp }
   invFun f := f
   left_inv f := by
@@ -203,10 +203,10 @@ theorem mul_apply [MulZeroClass β] [HasContinuousMul β] (f g : C₀(α, β)) :
 #align zero_at_infty_continuous_map.mul_apply ZeroAtInftyContinuousMap.mul_apply
 
 instance [MulZeroClass β] [HasContinuousMul β] : MulZeroClass C₀(α, β) :=
-  FunLike.coe_injective.MulZeroClass _ coe_zero coe_mul
+  FunLike.coe_injective.mulZeroClass _ coe_zero coe_mul
 
 instance [SemigroupWithZero β] [HasContinuousMul β] : SemigroupWithZero C₀(α, β) :=
-  FunLike.coe_injective.SemigroupWithZero _ coe_zero coe_mul
+  FunLike.coe_injective.semigroupWithZero _ coe_zero coe_mul
 
 instance [AddZeroClass β] [HasContinuousAdd β] : Add C₀(α, β) :=
   ⟨fun f g => ⟨f + g, by simpa only [add_zero] using (zero_at_infty f).add (zero_at_infty g)⟩⟩
@@ -221,7 +221,7 @@ theorem add_apply [AddZeroClass β] [HasContinuousAdd β] (f g : C₀(α, β)) :
 #align zero_at_infty_continuous_map.add_apply ZeroAtInftyContinuousMap.add_apply
 
 instance [AddZeroClass β] [HasContinuousAdd β] : AddZeroClass C₀(α, β) :=
-  FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
+  FunLike.coe_injective.addZeroClass _ coe_zero coe_add
 
 section AddMonoid
 
@@ -234,16 +234,16 @@ theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
 #align zero_at_infty_continuous_map.coe_nsmul_rec ZeroAtInftyContinuousMap.coe_nsmulRec
 
 instance hasNatScalar : SMul ℕ C₀(α, β) :=
-  ⟨fun n f => ⟨n • f, by simpa [coe_nsmul_rec] using zero_at_infty (nsmulRec n f)⟩⟩
+  ⟨fun n f => ⟨n • f, by simpa [coe_nsmulRec] using zero_at_infty (nsmulRec n f)⟩⟩
 #align zero_at_infty_continuous_map.has_nat_scalar ZeroAtInftyContinuousMap.hasNatScalar
 
 instance : AddMonoid C₀(α, β) :=
-  FunLike.coe_injective.AddMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.addMonoid _ coe_zero coe_add fun _ _ => rfl
 
 end AddMonoid
 
 instance [AddCommMonoid β] [HasContinuousAdd β] : AddCommMonoid C₀(α, β) :=
-  FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
+  FunLike.coe_injective.addCommMonoid _ coe_zero coe_add fun _ _ => rfl
 
 section AddGroup
 
@@ -275,8 +275,8 @@ theorem sub_apply : (f - g) x = f x - g x :=
 
 @[simp]
 theorem coe_zsmulRec : ∀ z, ⇑(zsmulRec z f) = z • f
-  | Int.ofNat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmul_rec, coe_nat_zsmul]
-  | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmul_rec]
+  | int.of_nat n => by rw [zsmulRec, Int.ofNat_eq_coe, coe_nsmulRec, coe_nat_zsmul]
+  | -[n+1] => by rw [zsmulRec, negSucc_zsmul, coe_neg, coe_nsmulRec]
 #align zero_at_infty_continuous_map.coe_zsmul_rec ZeroAtInftyContinuousMap.coe_zsmulRec
 
 instance hasIntScalar : SMul ℤ C₀(α, β) :=
@@ -284,12 +284,12 @@ instance hasIntScalar : SMul ℤ C₀(α, β) :=
 #align zero_at_infty_continuous_map.has_int_scalar ZeroAtInftyContinuousMap.hasIntScalar
 
 instance : AddGroup C₀(α, β) :=
-  FunLike.coe_injective.AddGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
+  FunLike.coe_injective.addGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ => rfl
 
 end AddGroup
 
 instance [AddCommGroup β] [TopologicalAddGroup β] : AddCommGroup C₀(α, β) :=
-  FunLike.coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
+  FunLike.coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => rfl) fun _ _ =>
     rfl
 
 instance [Zero β] {R : Type _} [Zero R] [SMulWithZero R β] [HasContinuousConstSMul R β] :
@@ -325,24 +325,24 @@ instance [AddCommMonoid β] [HasContinuousAdd β] {R : Type _} [Semiring R] [Mod
 
 instance [NonUnitalNonAssocSemiring β] [TopologicalSemiring β] :
     NonUnitalNonAssocSemiring C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  FunLike.coe_injective.nonUnitalNonAssocSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalSemiring β] [TopologicalSemiring β] : NonUnitalSemiring C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  FunLike.coe_injective.nonUnitalSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalCommSemiring β] [TopologicalSemiring β] : NonUnitalCommSemiring C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
+  FunLike.coe_injective.nonUnitalCommSemiring _ coe_zero coe_add coe_mul fun _ _ => rfl
 
 instance [NonUnitalNonAssocRing β] [TopologicalRing β] : NonUnitalNonAssocRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  FunLike.coe_injective.nonUnitalNonAssocRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance [NonUnitalRing β] [TopologicalRing β] : NonUnitalRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
+  FunLike.coe_injective.nonUnitalRing _ coe_zero coe_add coe_mul coe_neg coe_sub (fun _ _ => rfl)
     fun _ _ => rfl
 
 instance [NonUnitalCommRing β] [TopologicalRing β] : NonUnitalCommRing C₀(α, β) :=
-  FunLike.coe_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
+  FunLike.coe_injective.nonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
 instance {R : Type _} [Semiring R] [NonUnitalNonAssocSemiring β] [TopologicalSemiring β]
@@ -392,10 +392,10 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
   by
   obtain ⟨K : Set α, hK₁, hK₂⟩ :=
     mem_cocompact.mp
-      (tendsto_def.mp (zero_at_infty (f : F)) _ (closed_ball_mem_nhds (0 : β) zero_lt_one))
-  obtain ⟨C, hC⟩ := (hK₁.image (map_continuous f)).Bounded.subset_ball (0 : β)
+      (tendsto_def.mp (zero_at_infty (f : F)) _ (closedBall_mem_nhds (0 : β) zero_lt_one))
+  obtain ⟨C, hC⟩ := (hK₁.image (map_continuous f)).bounded.subset_ball (0 : β)
   refine' ⟨max C 1 + max C 1, fun x y => _⟩
-  have : ∀ x, f x ∈ closed_ball (0 : β) (max C 1) :=
+  have : ∀ x, f x ∈ closedBall (0 : β) (max C 1) :=
     by
     intro x
     by_cases hx : x ∈ K
@@ -407,7 +407,7 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
 #align zero_at_infty_continuous_map.bounded ZeroAtInftyContinuousMap.bounded
 
 theorem bounded_range (f : C₀(α, β)) : Bounded (range f) :=
-  bounded_range_iff.2 f.Bounded
+  bounded_range_iff.2 f.bounded
 #align zero_at_infty_continuous_map.bounded_range ZeroAtInftyContinuousMap.bounded_range
 
 theorem bounded_image (f : C₀(α, β)) (s : Set α) : Bounded (f '' s) :=
@@ -454,7 +454,7 @@ open BoundedContinuousFunction
 theorem tendsto_iff_tendstoUniformly {ι : Type _} {F : ι → C₀(α, β)} {f : C₀(α, β)} {l : Filter ι} :
     Tendsto F l (𝓝 f) ↔ TendstoUniformly (fun i => F i) f l := by
   simpa only [Metric.tendsto_nhds] using
-    @BoundedContinuousFunction.tendsto_iff_tendstoUniformly _ _ _ _ _ (fun i => (F i).toBcf)
+    @bounded_continuous_function.tendsto_iff_tendsto_uniformly _ _ _ _ _ (fun i => (F i).toBcf)
       f.to_bcf l
 #align zero_at_infty_continuous_map.tendsto_iff_tendsto_uniformly ZeroAtInftyContinuousMap.tendsto_iff_tendstoUniformly
 
@@ -465,7 +465,7 @@ theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ
   by
   refine' is_closed_iff_cluster_pt.mpr fun f hf => _
   rw [clusterPt_principal_iff] at hf
-  have : tendsto f (cocompact α) (𝓝 0) :=
+  have : Tendsto f (cocompact α) (𝓝 0) :=
     by
     refine' metric.tendsto_nhds.mpr fun ε hε => _
     obtain ⟨_, hg, g, rfl⟩ := hf (ball f (ε / 2)) (ball_mem_nhds f <| half_pos hε)
@@ -486,8 +486,8 @@ theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ
 /-- Continuous functions vanishing at infinity taking values in a complete space form a
 complete space. -/
 instance [CompleteSpace β] : CompleteSpace C₀(α, β) :=
-  (completeSpace_iff_isComplete_range isometry_toBcf.UniformInducing).mpr
-    closed_range_toBcf.IsComplete
+  (completeSpace_iff_isComplete_range isometry_toBcf.uniformInducing).mpr
+    closed_range_toBcf.isComplete
 
 end Metric
 
@@ -548,7 +548,7 @@ variable [TopologicalSpace β] [AddMonoid β] [StarAddMonoid β] [ContinuousStar
 instance : Star C₀(α, β)
     where unit f :=
     { toFun := fun x => star (f x)
-      continuous_toFun := (map_continuous f).unit
+      continuous_toFun := (map_continuous f).star
       zero_at_infty' := by
         simpa only [star_zero] using (continuous_star.tendsto (0 : β)).comp (zero_at_infty f) }
 

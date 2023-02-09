@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,12 +93,12 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
     NatIso.ofComponents (fun X => λ_ (F.obj X)) fun X Y f =>
       by
       dsimp
-      rw [left_unitor_naturality]
+      rw [leftUnitor_naturality]
   rightUnitor F :=
     NatIso.ofComponents (fun X => ρ_ (F.obj X)) fun X Y f =>
       by
       dsimp
-      rw [right_unitor_naturality]
+      rw [rightUnitor_naturality]
   associator F G H :=
     NatIso.ofComponents (fun X => α_ (F.obj X) (G.obj X) (H.obj X)) fun X Y f =>
       by
@@ -107,11 +107,11 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
   leftUnitor_naturality' F G α := by
     ext X
     dsimp
-    rw [left_unitor_naturality]
+    rw [leftUnitor_naturality]
   rightUnitor_naturality' F G α := by
     ext X
     dsimp
-    rw [right_unitor_naturality]
+    rw [rightUnitor_naturality]
   associator_naturality' F G H F' G' H' α β γ :=
     by
     ext X
@@ -156,7 +156,7 @@ theorem tensorHom_app {F G F' G' : C ⥤ D} {α : F ⟶ G} {β : F' ⟶ G'} {X} 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem leftUnitor_hom_app {F : C ⥤ D} {X} :
-    ((λ_ F).Hom : 𝟙_ _ ⊗ F ⟶ F).app X = (λ_ (F.obj X)).Hom :=
+    ((λ_ F).hom : 𝟙_ _ ⊗ F ⟶ F).app X = (λ_ (F.obj X)).hom :=
   rfl
 #align category_theory.monoidal.left_unitor_hom_app CategoryTheory.Monoidal.leftUnitor_hom_app
 
@@ -170,7 +170,7 @@ theorem leftUnitor_inv_app {F : C ⥤ D} {X} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem rightUnitor_hom_app {F : C ⥤ D} {X} :
-    ((ρ_ F).Hom : F ⊗ 𝟙_ _ ⟶ F).app X = (ρ_ (F.obj X)).Hom :=
+    ((ρ_ F).hom : F ⊗ 𝟙_ _ ⟶ F).app X = (ρ_ (F.obj X)).hom :=
   rfl
 #align category_theory.monoidal.right_unitor_hom_app CategoryTheory.Monoidal.rightUnitor_hom_app
 
@@ -187,7 +187,7 @@ theorem rightUnitor_inv_app {F : C ⥤ D} {X} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp]
 theorem associator_hom_app {F G H : C ⥤ D} {X} :
-    ((α_ F G H).Hom : (F ⊗ G) ⊗ H ⟶ F ⊗ G ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).Hom :=
+    ((α_ F G H).hom : (F ⊗ G) ⊗ H ⟶ F ⊗ G ⊗ H).app X = (α_ (F.obj X) (G.obj X) (H.obj X)).hom :=
   rfl
 #align category_theory.monoidal.associator_hom_app CategoryTheory.Monoidal.associator_hom_app
 

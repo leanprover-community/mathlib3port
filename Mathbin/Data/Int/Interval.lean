@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.int.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ instance : LocallyFiniteOrder ℤ
     · rintro ⟨ha, hb⟩
       use (x - a).toNat
       rw [← lt_add_one_iff] at hb
-      rw [to_nat_sub_of_le ha]
+      rw [toNat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ico a b x :=
     by
@@ -56,7 +56,7 @@ instance : LocallyFiniteOrder ℤ
       exact ⟨Int.le.intro rfl, lt_sub_iff_add_lt'.mp h⟩
     · rintro ⟨ha, hb⟩
       use (x - a).toNat
-      rw [to_nat_sub_of_le ha]
+      rw [toNat_sub_of_le ha]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioc a b x :=
     by
@@ -68,7 +68,7 @@ instance : LocallyFiniteOrder ℤ
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use (x - (a + 1)).toNat
-      rw [to_nat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
+      rw [toNat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel]
       exact ⟨sub_le_sub_right hb _, add_sub_cancel'_right _ _⟩
   finset_mem_Ioo a b x :=
     by
@@ -80,7 +80,7 @@ instance : LocallyFiniteOrder ℤ
       exact ⟨Int.le.intro rfl, h⟩
     · rintro ⟨ha, hb⟩
       use (x - (a + 1)).toNat
-      rw [to_nat_sub_of_le ha, sub_sub]
+      rw [toNat_sub_of_le ha, sub_sub]
       exact ⟨sub_lt_sub_right hb _, add_sub_cancel'_right _ _⟩
 
 namespace Int
@@ -193,7 +193,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) b (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Finset.card.{0} Int (Finset.Icc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) b (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) a))
 Case conversion may be inaccurate. Consider using '#align int.card_Icc_of_le Int.card_Icc_of_leₓ'. -/
 theorem card_Icc_of_le (h : a ≤ b + 1) : ((Icc a b).card : ℤ) = b + 1 - a := by
-  rw [card_Icc, to_nat_sub_of_le h]
+  rw [card_Icc, toNat_sub_of_le h]
 #align int.card_Icc_of_le Int.card_Icc_of_le
 
 /- warning: int.card_Ico_of_le -> Int.card_Ico_of_le is a dubious translation:
@@ -203,7 +203,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Finset.card.{0} Int (Finset.Ico.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_Ico_of_le Int.card_Ico_of_leₓ'. -/
 theorem card_Ico_of_le (h : a ≤ b) : ((Ico a b).card : ℤ) = b - a := by
-  rw [card_Ico, to_nat_sub_of_le h]
+  rw [card_Ico, toNat_sub_of_le h]
 #align int.card_Ico_of_le Int.card_Ico_of_le
 
 /- warning: int.card_Ioc_of_le -> Int.card_Ioc_of_le is a dubious translation:
@@ -213,7 +213,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Finset.card.{0} Int (Finset.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_Ioc_of_le Int.card_Ioc_of_leₓ'. -/
 theorem card_Ioc_of_le (h : a ≤ b) : ((Ioc a b).card : ℤ) = b - a := by
-  rw [card_Ioc, to_nat_sub_of_le h]
+  rw [card_Ioc, toNat_sub_of_le h]
 #align int.card_Ioc_of_le Int.card_Ioc_of_le
 
 /- warning: int.card_Ioo_of_lt -> Int.card_Ioo_of_lt is a dubious translation:
@@ -223,7 +223,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LT.lt.{0} Int Int.instLTInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Finset.card.{0} Int (Finset.Ioo.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align int.card_Ioo_of_lt Int.card_Ioo_of_ltₓ'. -/
 theorem card_Ioo_of_lt (h : a < b) : ((Ioo a b).card : ℤ) = b - a - 1 := by
-  rw [card_Ioo, sub_sub, to_nat_sub_of_le h]
+  rw [card_Ioo, sub_sub, toNat_sub_of_le h]
 #align int.card_Ioo_of_lt Int.card_Ioo_of_lt
 
 /- warning: int.card_fintype_Icc -> Int.card_fintype_Icc is a dubious translation:
@@ -277,7 +277,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) b (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Fintype.card.{0} (Set.Elem.{0} Int (Set.Icc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) a b)) (Set.fintypeIcc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) b (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))) a))
 Case conversion may be inaccurate. Consider using '#align int.card_fintype_Icc_of_le Int.card_fintype_Icc_of_leₓ'. -/
 theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.Icc a b) : ℤ) = b + 1 - a := by
-  rw [card_fintype_Icc, to_nat_sub_of_le h]
+  rw [card_fintype_Icc, toNat_sub_of_le h]
 #align int.card_fintype_Icc_of_le Int.card_fintype_Icc_of_le
 
 /- warning: int.card_fintype_Ico_of_le -> Int.card_fintype_Ico_of_le is a dubious translation:
@@ -287,7 +287,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Fintype.card.{0} (Set.Elem.{0} Int (Set.Ico.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) a b)) (Set.fintypeIco.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_fintype_Ico_of_le Int.card_fintype_Ico_of_leₓ'. -/
 theorem card_fintype_Ico_of_le (h : a ≤ b) : (Fintype.card (Set.Ico a b) : ℤ) = b - a := by
-  rw [card_fintype_Ico, to_nat_sub_of_le h]
+  rw [card_fintype_Ico, toNat_sub_of_le h]
 #align int.card_fintype_Ico_of_le Int.card_fintype_Ico_of_le
 
 /- warning: int.card_fintype_Ioc_of_le -> Int.card_fintype_Ioc_of_le is a dubious translation:
@@ -297,7 +297,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LE.le.{0} Int Int.instLEInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Fintype.card.{0} (Set.Elem.{0} Int (Set.Ioc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) a b)) (Set.fintypeIoc.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a))
 Case conversion may be inaccurate. Consider using '#align int.card_fintype_Ioc_of_le Int.card_fintype_Ioc_of_leₓ'. -/
 theorem card_fintype_Ioc_of_le (h : a ≤ b) : (Fintype.card (Set.Ioc a b) : ℤ) = b - a := by
-  rw [card_fintype_Ioc, to_nat_sub_of_le h]
+  rw [card_fintype_Ioc, toNat_sub_of_le h]
 #align int.card_fintype_Ioc_of_le Int.card_fintype_Ioc_of_le
 
 /- warning: int.card_fintype_Ioo_of_lt -> Int.card_fintype_Ioo_of_lt is a dubious translation:
@@ -307,7 +307,7 @@ but is expected to have type
   forall (a : Int) (b : Int), (LT.lt.{0} Int Int.instLTInt a b) -> (Eq.{1} Int (Nat.cast.{0} Int Int.instNatCastInt (Fintype.card.{0} (Set.Elem.{0} Int (Set.Ioo.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) a b)) (Set.fintypeIoo.{0} Int (PartialOrder.toPreorder.{0} Int (StrictOrderedRing.toPartialOrder.{0} Int (LinearOrderedRing.toStrictOrderedRing.{0} Int (LinearOrderedCommRing.toLinearOrderedRing.{0} Int Int.linearOrderedCommRing)))) instLocallyFiniteOrderIntToPreorderToPartialOrderToStrictOrderedRingToLinearOrderedRingLinearOrderedCommRing a b))) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) (HSub.hSub.{0, 0, 0} Int Int Int (instHSub.{0} Int Int.instSubInt) b a) (OfNat.ofNat.{0} Int 1 (instOfNatInt 1))))
 Case conversion may be inaccurate. Consider using '#align int.card_fintype_Ioo_of_lt Int.card_fintype_Ioo_of_ltₓ'. -/
 theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) = b - a - 1 := by
-  rw [card_fintype_Ioo, sub_sub, to_nat_sub_of_le h]
+  rw [card_fintype_Ioo, sub_sub, toNat_sub_of_le h]
 #align int.card_fintype_Ioo_of_lt Int.card_fintype_Ioo_of_lt
 
 /- warning: int.image_Ico_mod -> Int.image_Ico_emod is a dubious translation:
@@ -324,7 +324,7 @@ theorem image_Ico_emod (n a : ℤ) (h : 0 ≤ a) : (Ico n (n + a)).image (· % a
   simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
   · rintro ⟨i, h, rfl⟩
-    exact ⟨mod_nonneg i (ne_of_gt ha), mod_lt_of_pos i ha⟩
+    exact ⟨emod_nonneg i (ne_of_gt ha), emod_lt_of_pos i ha⟩
   intro hia
   have hn := Int.emod_add_ediv n a
   obtain hi | hi := lt_or_le i (n % a)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.sheafed_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ instance coeCarrier : Coe (SheafedSpace C) TopCat where coe X := X.carrier
 
 /-- Extract the `sheaf C (X : Top)` from a `SheafedSpace C`. -/
 def sheaf (X : SheafedSpace C) : Sheaf C (X : TopCat.{v}) :=
-  ⟨X.Presheaf, X.IsSheaf⟩
+  ⟨X.presheaf, X.isSheaf⟩
 #align algebraic_geometry.SheafedSpace.sheaf AlgebraicGeometry.SheafedSpace.sheaf
 
 @[simp]
@@ -109,7 +109,7 @@ theorem id_base (X : SheafedSpace C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : TopCa
 #align algebraic_geometry.SheafedSpace.id_base AlgebraicGeometry.SheafedSpace.id_base
 
 theorem id_c (X : SheafedSpace C) :
-    (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
+    (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.presheaf).symm :=
   rfl
 #align algebraic_geometry.SheafedSpace.id_c AlgebraicGeometry.SheafedSpace.id_c
 
@@ -147,7 +147,7 @@ theorem comp_c_app' {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) (U) :
 #align algebraic_geometry.SheafedSpace.comp_c_app' AlgebraicGeometry.SheafedSpace.comp_c_app'
 
 theorem congr_app {X Y : SheafedSpace C} {α β : X ⟶ Y} (h : α = β) (U) :
-    α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) :=
+    α.c.app U = β.c.app U ≫ X.presheaf.map (eqToHom (by subst h)) :=
   PresheafedSpace.congr_app h U
 #align algebraic_geometry.SheafedSpace.congr_app AlgebraicGeometry.SheafedSpace.congr_app
 
@@ -168,7 +168,7 @@ open TopCat.Presheaf
 -/
 def restrict {U : TopCat} (X : SheafedSpace C) {f : U ⟶ (X : TopCat.{v})} (h : OpenEmbedding f) :
     SheafedSpace C :=
-  { X.toPresheafedSpace.restrict h with IsSheaf := isSheaf_of_openEmbedding h X.IsSheaf }
+  { X.toPresheafedSpace.restrict h with IsSheaf := isSheaf_of_openEmbedding h X.isSheaf }
 #align algebraic_geometry.SheafedSpace.restrict AlgebraicGeometry.SheafedSpace.restrict
 
 /-- The restriction of a sheafed space `X` to the top subspace is isomorphic to `X` itself.
@@ -188,11 +188,11 @@ theorem Γ_def : (Γ : _ ⥤ C) = forgetToPresheafedSpace.op ⋙ PresheafedSpace
 #align algebraic_geometry.SheafedSpace.Γ_def AlgebraicGeometry.SheafedSpace.Γ_def
 
 @[simp]
-theorem Γ_obj (X : (SheafedSpace C)ᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
+theorem Γ_obj (X : (SheafedSpace C)ᵒᵖ) : Γ.obj X = (unop X).presheaf.obj (op ⊤) :=
   rfl
 #align algebraic_geometry.SheafedSpace.Γ_obj AlgebraicGeometry.SheafedSpace.Γ_obj
 
-theorem Γ_obj_op (X : SheafedSpace C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
+theorem Γ_obj_op (X : SheafedSpace C) : Γ.obj (op X) = X.presheaf.obj (op ⊤) :=
   rfl
 #align algebraic_geometry.SheafedSpace.Γ_obj_op AlgebraicGeometry.SheafedSpace.Γ_obj_op
 
@@ -209,10 +209,10 @@ noncomputable instance [HasLimits C] :
     CreatesColimits (forgetToPresheafedSpace : SheafedSpace C ⥤ _) :=
   ⟨fun J hJ =>
     ⟨fun K =>
-      creates_colimit_of_fully_faithful_of_iso
-        ⟨(PresheafedSpace.colimit_cocone (K ⋙ forget_to_PresheafedSpace)).x,
-          limit_is_sheaf _ fun j => sheaf.pushforward_sheaf_of_sheaf _ (K.obj (unop j)).2⟩
-        (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
+      createsColimitOfFullyFaithfulOfIso
+        ⟨(PresheafedSpace.colimitCocone (K ⋙ forgetToPresheafedSpace)).x,
+          limit_isSheaf _ fun j => Sheaf.pushforward_sheaf_of_sheaf _ (K.obj (unop j)).2⟩
+        (colimit.isoColimitCocone ⟨_, PresheafedSpace.colimitCoconeIsColimit _⟩).symm⟩⟩
 
 instance [HasLimits C] : HasColimits (SheafedSpace C) :=
   hasColimitsOfHasColimitsCreatesColimits forgetToPresheafedSpace

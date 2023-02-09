@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.noncomm_pi_coprod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -122,7 +122,7 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M
   map_mul' f g := by
     classical
       convert
-        @Finset.noncommProd_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
+        @finset.noncomm_prod_mul_distrib _ _ _ _ (fun i => ϕ i (f i)) (fun i => ϕ i (g i)) _ _ _
       · ext i
         exact map_mul (ϕ i) (f i) (g i)
       · rintro i - j - h
@@ -185,7 +185,7 @@ theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι,
       simp
     · refine' supᵢ_le _
       rintro i x ⟨y, rfl⟩
-      refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
+      refine' ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_mrange MonoidHom.noncommPiCoprod_mrange
 #align add_monoid_hom.noncomm_pi_coprod_mrange AddMonoidHom.noncommPiCoprod_mrange
 
@@ -227,7 +227,7 @@ theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (
       simp
     · refine' supᵢ_le _
       rintro i x ⟨y, rfl⟩
-      refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
+      refine' ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_range MonoidHom.noncommPiCoprod_range
 #align add_monoid_hom.noncomm_pi_coprod_range AddMonoidHom.noncommPiCoprod_range
 
@@ -264,7 +264,7 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     rw [disjoint_iff_inf_le]
     rintro f ⟨hxi, hxp⟩
     dsimp at hxi hxp
-    rw [supᵢ_subtype', ← noncomm_pi_coprod_range] at hxp
+    rw [supᵢ_subtype', ← noncommPiCoprod_range] at hxp
     rotate_left
     · intro _ _ hj
       apply hcomm
@@ -281,7 +281,7 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
       exact (orderOf_map_dvd _ _).trans orderOf_dvd_card_univ
     change f = 1
     rw [← pow_one f, ← orderOf_dvd_iff_pow_eq_one]
-    convert ← Nat.dvd_gcd hxp hxi
+    convert ← nat.dvd_gcd hxp hxi
     rw [← Nat.coprime_iff_gcd_eq_one]
     apply Nat.coprime_prod_left
     intro j _
@@ -313,7 +313,7 @@ include hcomm
 
 @[to_additive]
 theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
-    ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) :=
+    ∀ (x : H i) (y : H j), Commute ((H i).subtype x) ((H j).subtype y) :=
   by
   rintro ⟨x, hx⟩ ⟨y, hy⟩
   exact hcomm i j hne x y hx hy
@@ -327,7 +327,7 @@ commute -/
 @[to_additive
       "The canonical homomorphism from a family of additive subgroups where elements from\ndifferent subgroups commute"]
 def noncommPiCoprod : (∀ i : ι, H i) →* G :=
-  MonoidHom.noncommPiCoprod (fun i => (H i).Subtype) (commute_subtype_of_commute hcomm)
+  MonoidHom.noncommPiCoprod (fun i => (H i).subtype) (commute_subtype_of_commute hcomm)
 #align subgroup.noncomm_pi_coprod Subgroup.noncommPiCoprod
 #align add_subgroup.noncomm_pi_coprod AddSubgroup.noncommPiCoprod
 
@@ -345,7 +345,7 @@ omit hdec
 
 @[to_additive]
 theorem noncommPiCoprod_range : (noncommPiCoprod hcomm).range = ⨆ i : ι, H i := by
-  simp [noncomm_pi_coprod, MonoidHom.noncommPiCoprod_range]
+  simp [noncommPiCoprod, MonoidHom.noncommPiCoprod_range]
 #align subgroup.noncomm_pi_coprod_range Subgroup.noncommPiCoprod_range
 #align add_subgroup.noncomm_pi_coprod_range AddSubgroup.noncomm_pi_coprod_range
 
@@ -369,7 +369,7 @@ theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
     CompleteLattice.Independent H := by
   simpa using
-    MonoidHom.independent_range_of_coprime_order (fun i => (H i).Subtype)
+    MonoidHom.independent_range_of_coprime_order (fun i => (H i).subtype)
       (commute_subtype_of_commute hcomm) hcoprime
 #align subgroup.independent_of_coprime_order Subgroup.independent_of_coprime_order
 #align add_subgroup.independent_of_coprime_order AddSubgroup.independent_of_coprime_order

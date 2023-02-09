@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.short
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,9 +44,9 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
       cases a; cases b
       congr
       · funext
-        apply @Subsingleton.elim _ (subsingleton_short (xL x))
+        apply @subsingleton.elim _ (subsingleton_short (xL x))
       · funext
-        apply @Subsingleton.elim _ (subsingleton_short (xR x))⟩decreasing_by
+        apply @subsingleton.elim _ (subsingleton_short (xR x))⟩decreasing_by
   pgame_wf_tac
 #align pgame.subsingleton_short Pgame.subsingleton_short
 
@@ -54,7 +54,7 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (Short x)
 def Short.mk' {x : Pgame} [Fintype x.LeftMoves] [Fintype x.RightMoves]
     (sL : ∀ i : x.LeftMoves, Short (x.moveLeft i))
     (sR : ∀ j : x.RightMoves, Short (x.moveRight j)) : Short x := by
-  (cases x; dsimp at *) <;> exact short.mk sL sR
+  (cases x; dsimp at *) <;> exact Short.mk sL sR
 #align pgame.short.mk' Pgame.Short.mk'
 
 attribute [class] short
@@ -144,8 +144,8 @@ theorem short_birthday : ∀ (x : Pgame.{u}) [Short x], x.birthday < Ordinal.ome
           (Cardinal.lt_aleph0_of_finite _) fun i => _
       rw [Cardinal.ord_aleph0]
       apply short_birthday _
-    · exact move_left_short' xL xR i
-    · exact move_right_short' xL xR i
+    · exact moveLeftShort' xL xR i
+    · exact moveRightShort' xL xR i
 #align pgame.short_birthday Pgame.short_birthday
 
 /-- This leads to infinite loops if made into an instance. -/
@@ -165,7 +165,9 @@ instance short1 : Short 1 :=
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive ListShort : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
-  | cons : ∀ (hd : Pgame.{u}) [Short hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd::tl)
+  |
+  cons :
+    ∀ (hd : mk_left.{u}) [mk_right hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd::tl)
 #align pgame.list_short Pgame.ListShort
 
 attribute [class] list_short
@@ -191,7 +193,7 @@ instance listShortNthLe :
 instance shortOfLists : ∀ (L R : List Pgame) [ListShort L] [ListShort R], Short (Pgame.ofLists L R)
   | L, R, _, _ => by
     skip
-    apply short.mk
+    apply Short.mk
     · intros
       infer_instance
     · intros
@@ -206,7 +208,7 @@ def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short 
     haveI := Fintype.ofEquiv _ L
     haveI := Fintype.ofEquiv _ R
     exact
-      short.mk'
+      Short.mk'
         (fun i => by
           rw [← L.right_inv i]
           apply short_of_relabelling (rL (L.symm i)) inferInstance)
@@ -216,17 +218,17 @@ def shortOfRelabelling : ∀ {x y : Pgame.{u}} (R : Relabelling x y) (S : Short 
 instance shortNeg : ∀ (x : Pgame.{u}) [Short x], Short (-x)
   | mk xl xr xL xR, _ => by
     skip
-    exact short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
+    exact Short.mk (fun i => short_neg _) fun i => short_neg _ decreasing_by pgame_wf_tac
 #align pgame.short_neg Pgame.shortNeg
 
 instance shortAdd : ∀ (x y : Pgame.{u}) [Short x] [Short y], Short (x + y)
   | mk xl xr xL xR, mk yl yr yL yR, _, _ => by
     skip
-    apply short.mk;
+    apply Short.mk;
     all_goals
       rintro ⟨i⟩
       · apply short_add
-      · change short (mk xl xr xL xR + _)
+      · change Short (mk xl xr xL xR + _)
         apply short_add decreasing_by
   pgame_wf_tac
 #align pgame.short_add Pgame.shortAdd
@@ -258,19 +260,19 @@ def leLfDecidable : ∀ (x y : Pgame.{u}) [Short x] [Short y], Decidable (x ≤ 
     skip
     constructor
     · refine' @decidable_of_iff' _ _ mk_le_mk (id _)
-      apply @And.decidable _ _ _ _
-      · apply @Fintype.decidableForallFintype xl _ _ (by infer_instance)
+      apply @and.decidable _ _ _ _
+      · apply @fintype.decidable_forall_fintype xl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
-      · apply @Fintype.decidableForallFintype yr _ _ (by infer_instance)
+      · apply @fintype.decidable_forall_fintype yr _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).2 <;> infer_instance
     · refine' @decidable_of_iff' _ _ mk_lf_mk (id _)
-      apply @Or.decidable _ _ _ _
-      · apply @Fintype.decidableExistsFintype yl _ _ (by infer_instance)
+      apply @or.decidable _ _ _ _
+      · apply @fintype.decidable_exists_fintype yl _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance
-      · apply @Fintype.decidableExistsFintype xr _ _ (by infer_instance)
+      · apply @fintype.decidable_exists_fintype xr _ _ (by infer_instance)
         intro i
         apply (@le_lf_decidable _ _ _ _).1 <;> infer_instance decreasing_by pgame_wf_tac
 #align pgame.le_lf_decidable Pgame.leLfDecidable

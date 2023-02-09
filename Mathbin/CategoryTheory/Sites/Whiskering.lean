@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.whiskering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ variable (F : A ⥤ B)
 
 namespace GrothendieckTopology.Cover
 
-variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X)
+variable (P : Cᵒᵖ ⥤ A) {X : C} (S : J.Cover X)
 
 /-- The multicospan associated to a cover `S : J.cover X` and a presheaf of the form `P ⋙ F`
 is isomorphic to the composition of the multicospan associated to `S` and `P`,
@@ -59,8 +59,8 @@ def multicospanComp : (S.index (P ⋙ F)).multicospan ≅ (S.index P).multicospa
       | walking_multicospan.right b => eqToIso rfl)
     (by
       rintro (a | b) (a | b) (f | f | f)
-      any_goals dsimp; erw [Functor.map_id, Functor.map_id, category.id_comp]
-      any_goals dsimp; erw [category.comp_id, category.id_comp]; rfl)
+      any_goals dsimp; erw [Functor.map_id, Functor.map_id, Category.id_comp]
+      any_goals dsimp; erw [Category.comp_id, Category.id_comp]; rfl)
 #align category_theory.grothendieck_topology.cover.multicospan_comp CategoryTheory.GrothendieckTopology.Cover.multicospanComp
 
 @[simp]
@@ -77,24 +77,24 @@ theorem multicospanComp_app_right (b) :
 
 @[simp]
 theorem multicospanComp_hom_app_left (a) :
-    (S.multicospanComp F P).Hom.app (WalkingMulticospan.left a) = eqToHom rfl :=
+    (S.multicospanComp F P).hom.app (WalkingMulticospan.left a) = eqToHom rfl :=
   rfl
 #align category_theory.grothendieck_topology.cover.multicospan_comp_hom_app_left CategoryTheory.GrothendieckTopology.Cover.multicospanComp_hom_app_left
 
 @[simp]
 theorem multicospanComp_hom_app_right (b) :
-    (S.multicospanComp F P).Hom.app (WalkingMulticospan.right b) = eqToHom rfl :=
+    (S.multicospanComp F P).hom.app (WalkingMulticospan.right b) = eqToHom rfl :=
   rfl
 #align category_theory.grothendieck_topology.cover.multicospan_comp_hom_app_right CategoryTheory.GrothendieckTopology.Cover.multicospanComp_hom_app_right
 
 @[simp]
-theorem multicospanComp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) (a) :
+theorem multicospanComp_hom_inv_left (P : Cᵒᵖ ⥤ A) {X : C} (S : J.Cover X) (a) :
     (S.multicospanComp F P).inv.app (WalkingMulticospan.left a) = eqToHom rfl :=
   rfl
 #align category_theory.grothendieck_topology.cover.multicospan_comp_hom_inv_left CategoryTheory.GrothendieckTopology.Cover.multicospanComp_hom_inv_left
 
 @[simp]
-theorem multicospanComp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X) (b) :
+theorem multicospanComp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.Cover X) (b) :
     (S.multicospanComp F P).inv.app (WalkingMulticospan.right b) = eqToHom rfl :=
   rfl
 #align category_theory.grothendieck_topology.cover.multicospan_comp_hom_inv_right CategoryTheory.GrothendieckTopology.Cover.multicospanComp_hom_inv_right
@@ -103,8 +103,8 @@ theorem multicospanComp_hom_inv_right (P : Cᵒᵖ ⥤ A) {X : C} (S : J.cover X
 respect to a functor `F` is isomorphic (upto a natural isomorphism of the underlying functors)
 to the multifork associated to `S` and `P ⋙ F`. -/
 def mapMultifork :
-    F.mapCone (S.Multifork P) ≅
-      (Limits.Cones.postcompose (S.multicospanComp F P).Hom).obj (S.Multifork (P ⋙ F)) :=
+    F.mapCone (S.multifork P) ≅
+      (Limits.Cones.postcompose (S.multicospanComp F P).hom).obj (S.multifork (P ⋙ F)) :=
   Cones.ext (eqToIso rfl)
     (by
       rintro (a | b)
@@ -112,23 +112,23 @@ def mapMultifork :
         simpa
       · dsimp
         simp
-        dsimp [multifork.of_ι]
+        dsimp [Multifork.ofι]
         simpa)
 #align category_theory.grothendieck_topology.cover.map_multifork CategoryTheory.GrothendieckTopology.Cover.mapMultifork
 
 end GrothendieckTopology.Cover
 
-variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ A), PreservesLimit (S.index P).multicospan F]
+variable [∀ (X : C) (S : J.Cover X) (P : Cᵒᵖ ⥤ A), PreservesLimit (S.index P).multicospan F]
 
 theorem Presheaf.IsSheaf.comp {P : Cᵒᵖ ⥤ A} (hP : Presheaf.IsSheaf J P) :
     Presheaf.IsSheaf J (P ⋙ F) :=
   by
-  rw [presheaf.is_sheaf_iff_multifork] at hP⊢
+  rw [Presheaf.isSheaf_iff_multifork] at hP⊢
   intro X S
   obtain ⟨h⟩ := hP X S
-  replace h := is_limit_of_preserves F h
-  replace h := limits.is_limit.of_iso_limit h (S.map_multifork F P)
-  exact ⟨limits.is_limit.postcompose_hom_equiv (S.multicospan_comp F P) _ h⟩
+  replace h := isLimitOfPreserves F h
+  replace h := Limits.IsLimit.ofIsoLimit h (S.map_multifork F P)
+  exact ⟨Limits.IsLimit.postcomposeHomEquiv (S.multicospan_comp F P) _ h⟩
 #align category_theory.presheaf.is_sheaf.comp CategoryTheory.Presheaf.IsSheaf.comp
 
 variable (J)

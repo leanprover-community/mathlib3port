@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module data.list.func
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,8 +64,8 @@ elements
 def set (a : α) : List α → ℕ → List α
   | _ :: as, 0 => a :: as
   | [], 0 => [a]
-  | h :: as, k + 1 => h :: Set as k
-  | [], k + 1 => default :: Set ([] : List α) k
+  | h :: as, k + 1 => h :: set as k
+  | [], k + 1 => default :: set ([] : List α) k
 #align list.func.set List.Func.set
 -/
 
@@ -129,8 +129,8 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
     rw [max_eq_left]
     rfl
     simp [Nat.le_add_right]
-  | m + 1, [] => by simp only [Set, Nat.zero_max, length, @length_set m]
-  | m + 1, a :: as => by simp only [Set, Nat.max_succ_succ, length, @length_set m]
+  | m + 1, [] => by simp only [set, Nat.zero_max, length, @length_set m]
+  | m + 1, a :: as => by simp only [set, Nat.max_succ_succ, length, @length_set m]
 #align list.func.length_set List.Func.length_set
 
 #print List.Func.get_nil /-
@@ -168,7 +168,7 @@ Case conversion may be inaccurate. Consider using '#align list.func.eq_get_of_me
 theorem [anonymous] {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
   | b :: as, h => by
-    rw [mem_cons_iff] at h; cases h
+    rw [mem_cons] at h; cases h
     · exists 0
       intro d
       apply h
@@ -205,10 +205,10 @@ theorem get_set_eq_of_ne {a : α} :
   | as, 0, m, h1 => by
     cases m
     contradiction
-    cases as <;> simp only [Set, get, get_nil]
+    cases as <;> simp only [set, get, get_nil]
   | as, k + 1, m, h1 => by
     cases as <;> cases m
-    simp only [Set, get]
+    simp only [set, get]
     · have h3 : get m (nil {k ↦ a}) = default :=
         by
         rw [get_set_eq_of_ne k m, get_nil]
@@ -216,7 +216,7 @@ theorem get_set_eq_of_ne {a : α} :
         apply h1
         simp [hc]
       apply h3
-    simp only [Set, get]
+    simp only [set, get]
     · apply get_set_eq_of_ne k m
       intro hc
       apply h1

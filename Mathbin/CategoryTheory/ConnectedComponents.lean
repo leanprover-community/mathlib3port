@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.connected_components
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,27 +73,27 @@ instance (j : ConnectedComponents J) : Inhabited (Component j) :=
 instance (j : ConnectedComponents J) : IsConnected (Component j) :=
   by
   -- Show it's connected by constructing a zigzag (in `component j`) between any two objects
-  apply is_connected_of_zigzag
+  apply isConnected_of_zigzag
   rintro ⟨j₁, hj₁⟩ ⟨j₂, rfl⟩
   -- We know that the underlying objects j₁ j₂ have some zigzag between them in `J`
-  have h₁₂ : zigzag j₁ j₂ := Quotient.exact' hj₁
+  have h₁₂ : Zigzag j₁ j₂ := Quotient.exact' hj₁
   -- Get an explicit zigzag as a list
   rcases List.exists_chain_of_relationReflTransGen h₁₂ with ⟨l, hl₁, hl₂⟩
   -- Everything which has a zigzag to j₂ can be lifted to the same component as `j₂`.
-  let f : ∀ x, zigzag x j₂ → component (Quotient.mk'' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
+  let f : ∀ x, Zigzag x j₂ → Component (Quotient.mk'' j₂) := fun x h => ⟨x, Quotient.sound' h⟩
   -- Everything in our chosen zigzag from `j₁` to `j₂` has a zigzag to `j₂`.
-  have hf : ∀ a : J, a ∈ l → zigzag a j₂ := by
+  have hf : ∀ a : J, a ∈ l → Zigzag a j₂ := by
     intro i hi
-    apply List.Chain.induction (fun t => zigzag t j₂) _ hl₁ hl₂ _ _ _ (Or.inr hi)
+    apply List.Chain.induction (fun t => Zigzag t j₂) _ hl₁ hl₂ _ _ _ (Or.inr hi)
     · intro j k
       apply Relation.ReflTransGen.head
     · apply Relation.ReflTransGen.refl
   -- Now lift the zigzag from `j₁` to `j₂` in `J` to the same thing in `component j`.
   refine' ⟨l.pmap f hf, _, _⟩
-  · refine' @List.chain_pmap_of_chain _ _ _ f (fun x y _ _ h => _) hl₁ h₁₂ _
-    exact zag_of_zag_obj (component.ι _) h
+  · refine' @list.chain_pmap_of_chain _ _ _ f (fun x y _ _ h => _) hl₁ h₁₂ _
+    exact zag_of_zag_obj (Component.ι _) h
   · erw [List.getLast_pmap _ f (j₁ :: l) (by simpa [h₁₂] using hf) (List.cons_ne_nil _ _)]
-    exact full_subcategory.ext _ _ hl₂
+    exact FullSubcategory.ext _ _ hl₂
 
 /-- The disjoint union of `J`s connected components, written explicitly as a sigma-type with the
 category structure.
@@ -133,7 +133,7 @@ instance : Full (decomposedTo J)
     rw [← hX, ← hY, Quotient.eq'']
     exact Relation.ReflTransGen.single (Or.inl ⟨f⟩)
     subst this
-    refine' sigma.sigma_hom.mk f
+    refine' Sigma.SigmaHom.mk f
   witness' := by
     rintro ⟨j', X, hX⟩ ⟨_, Y, rfl⟩ f
     have : Quotient.mk'' Y = j' := by

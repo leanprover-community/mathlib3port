@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Aaron Anderson
 
 ! This file was ported from Lean 3 source module data.finsupp.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -345,7 +345,7 @@ theorem support_sup [DecidableEq ι] (f g : ι →₀ α) : (f ⊔ g).support = 
   by
   ext
   simp only [Finset.mem_union, mem_support_iff, sup_apply, Ne.def, ← bot_eq_zero]
-  rw [_root_.sup_eq_bot_iff, not_and_or]
+  rw [sup_eq_bot_iff, not_and_or]
 #align finsupp.support_sup Finsupp.support_sup
 
 /- warning: finsupp.disjoint_iff -> Finsupp.disjoint_iff is a dubious translation:

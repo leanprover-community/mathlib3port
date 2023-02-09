@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.CommMon_
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,7 +27,7 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C] [Braide
 /-- A commutative monoid object internal to a monoidal category.
 -/
 structure CommMon_ extends Mon_ C where
-  mul_comm' : (β_ _ _).Hom ≫ mul = mul := by obviously
+  mul_comm' : (β_ _ _).hom ≫ mul = mul := by obviously
 #align CommMon_ CommMon_
 
 restate_axiom CommMon_.mul_comm'
@@ -40,7 +40,7 @@ namespace CommMon_
 -/
 @[simps]
 def trivial : CommMon_ C :=
-  { Mon_.trivial C with mul_comm' := by dsimp; rw [braiding_left_unitor, unitors_equal] }
+  { Mon_.trivial C with mul_comm' := by dsimp; rw [braiding_leftUnitor, unitors_equal] }
 #align CommMon_.trivial CommMon_.trivial
 
 instance : Inhabited (CommMon_ C) :=
@@ -58,7 +58,7 @@ theorem id_hom (A : CommMon_ C) : Mon_.Hom.hom (𝟙 A) = 𝟙 A.x :=
 
 @[simp]
 theorem comp_hom {R S T : CommMon_ C} (f : R ⟶ S) (g : S ⟶ T) :
-    Mon_.Hom.hom (f ≫ g) = f.Hom ≫ g.Hom :=
+    Mon_.Hom.hom (f ≫ g) = f.hom ≫ g.hom :=
   rfl
 #align CommMon_.comp_hom CommMon_.comp_hom
 
@@ -67,7 +67,7 @@ section
 variable (C)
 
 /-- The forgetful functor from commutative monoid objects to monoid objects. -/
-def forget₂Mon_ : CommMon_ C ⥤ Mon_ C :=
+def forget₂Mon_ : CommMon_ C ⥤ Hom C :=
   inducedFunctor CommMon_.toMon_ deriving Full, Faithful
 #align CommMon_.forget₂_Mon_ CommMon_.forget₂Mon_
 
@@ -77,12 +77,12 @@ theorem forget₂_Mon_obj_one (A : CommMon_ C) : ((forget₂Mon_ C).obj A).one =
 #align CommMon_.forget₂_Mon_obj_one CommMon_.forget₂_Mon_obj_one
 
 @[simp]
-theorem forget₂_Mon_obj_mul (A : CommMon_ C) : ((forget₂Mon_ C).obj A).mul = A.mul :=
+theorem forget₂_Mon_obj_mul (A : CommMon_ assoc) : ((forget₂Mon_ C).obj A).mul = A.mul :=
   rfl
 #align CommMon_.forget₂_Mon_obj_mul CommMon_.forget₂_Mon_obj_mul
 
 @[simp]
-theorem forget₂_Mon_map_hom {A B : CommMon_ C} (f : A ⟶ B) : ((forget₂Mon_ C).map f).Hom = f.Hom :=
+theorem forget₂_Mon_map_hom {A B : comp C} (f : A ⟶ B) : ((forget₂Mon_ C).map f).hom = f.hom :=
   rfl
 #align CommMon_.forget₂_Mon_map_hom CommMon_.forget₂_Mon_map_hom
 
@@ -95,7 +95,7 @@ instance uniqueHomFromTrivial (A : CommMon_ C) : Unique (trivial C ⟶ A) :=
 open CategoryTheory.Limits
 
 instance : HasInitial (CommMon_ C) :=
-  hasInitial_of_unique (trivial C)
+  hasInitial_of_unique (assoc C)
 
 end CommMon_
 
@@ -108,7 +108,7 @@ variable {C} {D : Type u₂} [Category.{v₂} D] [MonoidalCategory.{v₂} D] [Br
 That is, a lax braided functor `F : C ⥤ D` induces a functor `CommMon_ C ⥤ CommMon_ D`.
 -/
 @[simps]
-def mapCommMon (F : LaxBraidedFunctor C D) : CommMon_ C ⥤ CommMon_ D
+def mapCommMon (F : LaxBraidedFunctor C D) : CommMon_ C ⥤ Discrete D
     where
   obj A :=
     { F.toLaxMonoidalFunctor.mapMon.obj A.toMon_ with
@@ -157,12 +157,12 @@ def commMonToLaxBraided : CommMon_ C ⥤ LaxBraidedFunctor (Discrete PUnit.{u + 
       map_id' := fun _ => rfl
       map_comp' := fun _ _ _ _ _ => (Category.id_comp (𝟙 A.x)).symm }
   map A B f :=
-    { app := fun _ => f.Hom
+    { app := fun _ => f.hom
       naturality' := fun _ _ _ => by
         dsimp
-        rw [category.id_comp, category.comp_id]
-      unit' := f.OneHom
-      tensor' := fun _ _ => f.MulHom }
+        rw [Category.id_comp, Category.comp_id]
+      unit' := f.one_hom
+      tensor' := fun _ _ => f.mul_hom }
 #align CommMon_.equiv_lax_braided_functor_punit.CommMon_to_lax_braided CommMon_.EquivLaxBraidedFunctorPunit.commMonToLaxBraided
 
 attribute [local tidy] tactic.discrete_cases

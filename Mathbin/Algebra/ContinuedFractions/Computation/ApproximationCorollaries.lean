@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximation_corollaries
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
   intro n n_ge_N
   let g := of v
   cases' Decidable.em (g.terminated_at n) with terminated_at_n not_terminated_at_n
-  · have : v = g.convergents n := of_correctness_of_terminated_at terminated_at_n
+  · have : v = g.convergents n := of_correctness_of_terminatedAt terminated_at_n
     have : v - g.convergents n = 0 := sub_eq_zero.elim_right this
     rw [this]
     exact_mod_cast ε_pos
@@ -127,14 +127,14 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
         lt_of_lt_of_le this nB_ineq
       solve_by_elim [mul_pos]
     suffices : 1 < ε * (B * nB)
-    exact (div_lt_iff zero_lt_mul_conts).right this
+    exact (div_lt_iff zero_lt_mul_conts).mpr this
     -- use that `N ≥ n` was obtained from the archimedean property to show the following
     have one_lt_ε_mul_N : 1 < ε * n :=
       by
-      have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).left one_div_ε_lt_N'
+      have one_lt_ε_mul_N' : 1 < ε * (N' : K) := (div_lt_iff' ε_pos).mp one_div_ε_lt_N'
       have : (N' : K) ≤ N := by exact_mod_cast le_max_left _ _
       have : ε * N' ≤ ε * n :=
-        (mul_le_mul_left ε_pos).right (le_trans this (by exact_mod_cast n_ge_N))
+        (mul_le_mul_left ε_pos).mpr (le_trans this (by exact_mod_cast n_ge_N))
       exact lt_of_lt_of_le one_lt_ε_mul_N' this
     suffices : ε * n ≤ ε * (B * nB)
     exact lt_of_lt_of_le one_lt_ε_mul_N this

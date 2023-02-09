@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module algebra.indicator_function
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -130,8 +130,8 @@ theorem mulIndicator_eq_one_or_self (s : Set α) (f : α → M) (a : α) :
     mulIndicator s f a = 1 ∨ mulIndicator s f a = f a :=
   by
   by_cases h : a ∈ s
-  · exact Or.inr (mul_indicator_of_mem h f)
-  · exact Or.inl (mul_indicator_of_not_mem h f)
+  · exact Or.inr (mulIndicator_of_mem h f)
+  · exact Or.inl (mulIndicator_of_not_mem h f)
 #align set.mul_indicator_eq_one_or_self Set.mulIndicator_eq_one_or_self
 #align set.indicator_eq_zero_or_self Set.indicator_eq_zero_or_self
 
@@ -152,7 +152,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_eq_self Set.mulIndicator_eq_selfₓ'. -/
 @[simp, to_additive]
 theorem mulIndicator_eq_self : s.mulIndicator f = f ↔ mulSupport f ⊆ s := by
-  simp only [funext_iff, subset_def, mem_mul_support, mul_indicator_apply_eq_self, not_imp_comm]
+  simp only [funext_iff, subset_def, mem_mulSupport, mulIndicator_apply_eq_self, not_imp_comm]
 #align set.mul_indicator_eq_self Set.mulIndicator_eq_self
 #align set.indicator_eq_self Set.indicator_eq_self
 
@@ -165,8 +165,8 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_eq_s
 @[to_additive]
 theorem mulIndicator_eq_self_of_superset (h1 : s.mulIndicator f = f) (h2 : s ⊆ t) :
     t.mulIndicator f = f := by
-  rw [mul_indicator_eq_self] at h1⊢
-  exact subset.trans h1 h2
+  rw [mulIndicator_eq_self] at h1⊢
+  exact Subset.trans h1 h2
 #align set.mul_indicator_eq_self_of_superset Set.mulIndicator_eq_self_of_superset
 #align set.indicator_eq_self_of_superset Set.indicator_eq_self_of_superset
 
@@ -187,8 +187,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_eq_one Set.mulIndicator_eq_oneₓ'. -/
 @[simp, to_additive]
 theorem mulIndicator_eq_one : (mulIndicator s f = fun x => 1) ↔ Disjoint (mulSupport f) s := by
-  simp only [funext_iff, mul_indicator_apply_eq_one, Set.disjoint_left, mem_mul_support,
-    not_imp_not]
+  simp only [funext_iff, mulIndicator_apply_eq_one, Set.disjoint_left, mem_mulSupport, not_imp_not]
 #align set.mul_indicator_eq_one Set.mulIndicator_eq_one
 #align set.indicator_eq_zero Set.indicator_eq_zero
 
@@ -212,7 +211,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_apply_ne_one Set.mulIndicator_apply_ne_oneₓ'. -/
 @[to_additive]
 theorem mulIndicator_apply_ne_one {a : α} : s.mulIndicator f a ≠ 1 ↔ a ∈ s ∩ mulSupport f := by
-  simp only [Ne.def, mul_indicator_apply_eq_one, not_imp, mem_inter_iff, mem_mul_support]
+  simp only [Ne.def, mulIndicator_apply_eq_one, not_imp, mem_inter_iff, mem_mulSupport]
 #align set.mul_indicator_apply_ne_one Set.mulIndicator_apply_ne_one
 #align set.indicator_apply_ne_zero Set.indicator_apply_ne_zero
 
@@ -225,7 +224,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_support_mul_in
 @[simp, to_additive]
 theorem mulSupport_mulIndicator :
     Function.mulSupport (s.mulIndicator f) = s ∩ Function.mulSupport f :=
-  ext fun x => by simp [Function.mem_mulSupport, mul_indicator_apply_eq_one]
+  ext fun x => by simp [Function.mem_mulSupport, mulIndicator_apply_eq_one]
 #align set.mul_support_mul_indicator Set.mulSupport_mulIndicator
 #align set.support_indicator Set.support_indicator
 
@@ -294,7 +293,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_cong
 @[to_additive]
 theorem mulIndicator_congr (h : EqOn f g s) : mulIndicator s f = mulIndicator s g :=
   funext fun x => by
-    simp only [mul_indicator]
+    simp only [mulIndicator]
     split_ifs
     · exact h h_1
     rfl
@@ -347,7 +346,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_one Set.mulIndicator_oneₓ'. -/
 @[simp, to_additive]
 theorem mulIndicator_one (s : Set α) : (mulIndicator s fun x => (1 : M)) = fun x => (1 : M) :=
-  mulIndicator_eq_one.2 <| by simp only [mul_support_one, empty_disjoint]
+  mulIndicator_eq_one.2 <| by simp only [mulSupport_one, empty_disjoint]
 #align set.mul_indicator_one Set.mulIndicator_one
 #align set.indicator_zero Set.indicator_zero
 
@@ -375,7 +374,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_mul_
 theorem mulIndicator_mulIndicator (s t : Set α) (f : α → M) :
     mulIndicator s (mulIndicator t f) = mulIndicator (s ∩ t) f :=
   funext fun x => by
-    simp only [mul_indicator]
+    simp only [mulIndicator]
     split_ifs
     repeat' simp_all (config := { contextual := true })
 #align set.mul_indicator_mul_indicator Set.mulIndicator_mulIndicator
@@ -390,7 +389,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_inte
 @[simp, to_additive]
 theorem mulIndicator_inter_mulSupport (s : Set α) (f : α → M) :
     mulIndicator (s ∩ mulSupport f) f = mulIndicator s f := by
-  rw [← mul_indicator_mul_indicator, mul_indicator_mul_support]
+  rw [← mulIndicator_mulIndicator, mulIndicator_mulSupport]
 #align set.mul_indicator_inter_mul_support Set.mulIndicator_inter_mulSupport
 #align set.indicator_inter_support Set.indicator_inter_support
 
@@ -417,7 +416,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_comp
 theorem mulIndicator_comp_right {s : Set α} (f : β → α) {g : α → M} {x : β} :
     mulIndicator (f ⁻¹' s) (g ∘ f) x = mulIndicator s g (f x) :=
   by
-  simp only [mul_indicator]
+  simp only [mulIndicator]
   split_ifs <;> rfl
 #align set.mul_indicator_comp_right Set.mulIndicator_comp_right
 #align set.indicator_comp_right Set.indicator_comp_right
@@ -431,7 +430,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_imag
 @[to_additive]
 theorem mulIndicator_image {s : Set α} {f : β → M} {g : α → β} (hg : Injective g) {x : α} :
     mulIndicator (g '' s) f (g x) = mulIndicator s (f ∘ g) x := by
-  rw [← mul_indicator_comp_right, preimage_image_eq _ hg]
+  rw [← mulIndicator_comp_right, preimage_image_eq _ hg]
 #align set.mul_indicator_image Set.mulIndicator_image
 #align set.indicator_image Set.indicator_image
 
@@ -441,7 +440,7 @@ theorem mulIndicator_comp_of_one {g : M → N} (hg : g 1 = 1) :
     mulIndicator s (g ∘ f) = g ∘ mulIndicator s f :=
   by
   funext
-  simp only [mul_indicator]
+  simp only [mulIndicator]
   split_ifs <;> simp [*]
 #align set.mul_indicator_comp_of_one Set.mulIndicator_comp_of_one
 #align set.indicator_comp_of_zero Set.indicator_comp_of_zero
@@ -475,7 +474,7 @@ theorem mulIndicator_preimage (s : Set α) (f : α → M) (B : Set M) :
 theorem mulIndicator_one_preimage (s : Set M) :
     t.mulIndicator 1 ⁻¹' s ∈ ({Set.univ, ∅} : Set (Set α)) := by
   classical
-    rw [mul_indicator_one', preimage_one]
+    rw [mulIndicator_one', preimage_one]
     split_ifs <;> simp
 #align set.mul_indicator_one_preimage Set.mulIndicator_one_preimage
 #align set.indicator_zero_preimage Set.indicator_zero_preimage
@@ -492,7 +491,7 @@ theorem mulIndicator_const_preimage_eq_union (U : Set α) (s : Set M) (a : M) [D
     [Decidable ((1 : M) ∈ s)] :
     (U.mulIndicator fun x => a) ⁻¹' s = (if a ∈ s then U else ∅) ∪ if (1 : M) ∈ s then Uᶜ else ∅ :=
   by
-  rw [mul_indicator_preimage, preimage_one, preimage_const]
+  rw [mulIndicator_preimage, preimage_one, preimage_const]
   split_ifs <;> simp [← compl_eq_univ_diff]
 #align set.mul_indicator_const_preimage_eq_union Set.mulIndicator_const_preimage_eq_union
 #align set.indicator_const_preimage_eq_union Set.indicator_const_preimage_eq_union
@@ -507,7 +506,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_cons
 theorem mulIndicator_const_preimage (U : Set α) (s : Set M) (a : M) :
     (U.mulIndicator fun x => a) ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) := by
   classical
-    rw [mul_indicator_const_preimage_eq_union]
+    rw [mulIndicator_const_preimage_eq_union]
     split_ifs <;> simp
 #align set.mul_indicator_const_preimage Set.mulIndicator_const_preimage
 #align set.indicator_const_preimage Set.indicator_const_preimage
@@ -532,7 +531,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_prei
 @[to_additive]
 theorem mulIndicator_preimage_of_not_mem (s : Set α) (f : α → M) {t : Set M} (ht : (1 : M) ∉ t) :
     mulIndicator s f ⁻¹' t = f ⁻¹' t ∩ s := by
-  simp [mul_indicator_preimage, Pi.one_def, Set.preimage_const_of_not_mem ht]
+  simp [mulIndicator_preimage, Pi.one_def, Set.preimage_const_of_not_mem ht]
 #align set.mul_indicator_preimage_of_not_mem Set.mulIndicator_preimage_of_not_mem
 #align set.indicator_preimage_of_not_mem Set.indicator_preimage_of_not_mem
 
@@ -545,7 +544,7 @@ Case conversion may be inaccurate. Consider using '#align set.mem_range_mul_indi
 @[to_additive]
 theorem mem_range_mulIndicator {r : M} {s : Set α} {f : α → M} :
     r ∈ range (mulIndicator s f) ↔ r = 1 ∧ s ≠ univ ∨ r ∈ f '' s := by
-  simp [mul_indicator, ite_eq_iff, exists_or, eq_univ_iff_forall, and_comm', or_comm',
+  simp [mulIndicator, ite_eq_iff, exists_or, eq_univ_iff_forall, and_comm', or_comm',
     @eq_comm _ r 1]
 #align set.mem_range_mul_indicator Set.mem_range_mulIndicator
 #align set.mem_range_indicator Set.mem_range_indicator
@@ -555,7 +554,7 @@ theorem mem_range_mulIndicator {r : M} {s : Set α} {f : α → M} :
 theorem mulIndicator_rel_mulIndicator {r : M → M → Prop} (h1 : r 1 1) (ha : a ∈ s → r (f a) (g a)) :
     r (mulIndicator s f a) (mulIndicator s g a) :=
   by
-  simp only [mul_indicator]
+  simp only [mulIndicator]
   split_ifs with has has
   exacts[ha has, h1]
 #align set.mul_indicator_rel_mul_indicator Set.mulIndicator_rel_mulIndicator
@@ -603,7 +602,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_unio
 @[to_additive]
 theorem mulIndicator_union_of_not_mem_inter (h : a ∉ s ∩ t) (f : α → M) :
     mulIndicator (s ∪ t) f a = mulIndicator s f a * mulIndicator t f a := by
-  rw [← mul_indicator_union_mul_inter_apply f s t, mul_indicator_of_not_mem h, mul_one]
+  rw [← mulIndicator_union_mul_inter_apply f s t, mulIndicator_of_not_mem h, mul_one]
 #align set.mul_indicator_union_of_not_mem_inter Set.mulIndicator_union_of_not_mem_inter
 #align set.indicator_union_of_not_mem_inter Set.indicator_union_of_not_mem_inter
 
@@ -631,7 +630,7 @@ theorem mulIndicator_mul (s : Set α) (f g : α → M) :
     (mulIndicator s fun a => f a * g a) = fun a => mulIndicator s f a * mulIndicator s g a :=
   by
   funext
-  simp only [mul_indicator]
+  simp only [mulIndicator]
   split_ifs
   · rfl
   rw [mul_one]
@@ -713,8 +712,8 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_mul_
 theorem mulIndicator_mul_eq_left {f g : α → M} (h : Disjoint (mulSupport f) (mulSupport g)) :
     (mulSupport f).mulIndicator (f * g) = f :=
   by
-  refine' (mul_indicator_congr fun x hx => _).trans mul_indicator_mul_support
-  have : g x = 1 := nmem_mul_support.1 (disjoint_left.1 h hx)
+  refine' (mulIndicator_congr fun x hx => _).trans mulIndicator_mulSupport
+  have : g x = 1 := nmem_mulSupport.1 (disjoint_left.1 h hx)
   rw [Pi.mul_apply, this, mul_one]
 #align set.mul_indicator_mul_eq_left Set.mulIndicator_mul_eq_left
 #align set.indicator_add_eq_left Set.indicator_add_eq_left
@@ -729,8 +728,8 @@ Case conversion may be inaccurate. Consider using '#align set.mul_indicator_mul_
 theorem mulIndicator_mul_eq_right {f g : α → M} (h : Disjoint (mulSupport f) (mulSupport g)) :
     (mulSupport g).mulIndicator (f * g) = g :=
   by
-  refine' (mul_indicator_congr fun x hx => _).trans mul_indicator_mul_support
-  have : f x = 1 := nmem_mul_support.1 (disjoint_right.1 h hx)
+  refine' (mulIndicator_congr fun x hx => _).trans mulIndicator_mulSupport
+  have : f x = 1 := nmem_mulSupport.1 (disjoint_right.1 h hx)
   rw [Pi.mul_apply, this, one_mul]
 #align set.mul_indicator_mul_eq_right Set.mulIndicator_mul_eq_right
 #align set.indicator_add_eq_right Set.indicator_add_eq_right
@@ -912,7 +911,7 @@ theorem mulIndicator_diff (h : s ⊆ t) (f : α → G) :
     mulIndicator (t \ s) f = mulIndicator t f * (mulIndicator s f)⁻¹ :=
   eq_mul_inv_of_mul_eq <|
     by
-    rw [Pi.mul_def, ← mul_indicator_union_of_disjoint, diff_union_self,
+    rw [Pi.mul_def, ← mulIndicator_union_of_disjoint, diff_union_self,
       union_eq_self_of_subset_right h]
     exact disjoint_sdiff_self_left
 #align set.mul_indicator_diff Set.mulIndicator_diff
@@ -955,10 +954,10 @@ theorem prod_mulIndicator_subset_of_eq_one [One N] (f : α → N) (g : α → N 
     intro i hi
     congr
     symm
-    exact mul_indicator_of_mem hi _
+    exact mulIndicator_of_mem hi _
   · refine' fun i hi hn => _
     convert hg i
-    exact mul_indicator_of_not_mem hn _
+    exact mulIndicator_of_not_mem hn _
 #align set.prod_mul_indicator_subset_of_eq_one Set.prod_mulIndicator_subset_of_eq_one
 #align set.sum_indicator_subset_of_eq_zero Set.sum_indicator_subset_of_eq_zero
 
@@ -996,14 +995,14 @@ Case conversion may be inaccurate. Consider using '#align finset.prod_mul_indica
 @[to_additive]
 theorem Finset.prod_mulIndicator_eq_prod_filter (s : Finset ι) (f : ι → α → M) (t : ι → Set α)
     (g : ι → α) [DecidablePred fun i => g i ∈ t i] :
-    (∏ i in s, mulIndicator (t i) (f i) (g i)) = ∏ i in s.filterₓ fun i => g i ∈ t i, f i (g i) :=
+    (∏ i in s, mulIndicator (t i) (f i) (g i)) = ∏ i in s.filter fun i => g i ∈ t i, f i (g i) :=
   by
   refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _
   refine' Eq.trans _ (mul_one _)
   exact
     congr_arg₂ (· * ·)
-      (Finset.prod_congr rfl fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
-      (Finset.prod_eq_one fun x hx => mul_indicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
+      (Finset.prod_congr rfl fun x hx => mulIndicator_of_mem (Finset.mem_filter.1 hx).2 _)
+      (Finset.prod_eq_one fun x hx => mulIndicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
 #align finset.prod_mul_indicator_eq_prod_filter Finset.prod_mulIndicator_eq_prod_filter
 #align finset.sum_indicator_eq_sum_filter Finset.sum_indicator_eq_sum_filter
 
@@ -1038,11 +1037,11 @@ theorem mulIndicator_finset_bunionᵢ {ι} (I : Finset ι) (s : ι → Set α) {
       simp
     intro a I haI ih hI
     funext
-    rw [Finset.prod_insert haI, Finset.set_bunionᵢ_insert, mul_indicator_union_of_not_mem_inter,
+    rw [Finset.prod_insert haI, Finset.set_bunionᵢ_insert, mulIndicator_union_of_not_mem_inter,
       ih _]
     · intro i hi j hj hij
       exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
-    simp only [not_exists, exists_prop, mem_Union, mem_inter_iff, not_and]
+    simp only [not_exists, exists_prop, mem_unionᵢ, mem_inter_iff, not_and]
     intro hx a' ha'
     refine'
       disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
@@ -1223,7 +1222,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {g : α -> M} [_inst_2 : LE.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M _inst_2 (f a) (g a))) -> (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (LE.le.{u1} M _inst_2 (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (g a))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f) g)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le' Set.mulIndicator_le'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem mulIndicator_le' (hfg : ∀ a ∈ s, f a ≤ g a) (hg : ∀ (a) (_ : a ∉ s), 1 ≤ g a) :
     mulIndicator s f ≤ g := fun a => mulIndicator_apply_le' (hfg _) (hg _)
@@ -1249,7 +1248,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} {g : α -> M} [_inst_2 : LE.{u1} M], (forall (a : α), (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s) -> (LE.le.{u1} M _inst_2 (f a) (g a))) -> (forall (a : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) a s)) -> (LE.le.{u1} M _inst_2 (f a) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_2)) f (Set.mulIndicator.{u2, u1} α M _inst_1 s g))
 Case conversion may be inaccurate. Consider using '#align set.le_mul_indicator Set.le_mulIndicatorₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 @[to_additive]
 theorem le_mulIndicator (hfg : ∀ a ∈ s, f a ≤ g a) (hf : ∀ (a) (_ : a ∉ s), f a ≤ 1) :
     f ≤ mulIndicator s g := fun a => le_mulIndicator_apply (hfg _) (hf _)
@@ -1339,7 +1338,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {s : Set.{u2} α} {f : α -> M} [_inst_2 : Preorder.{u1} M], (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (LE.le.{u1} M (Preorder.toLE.{u1} M _inst_2) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1)) (f x))) -> (LE.le.{max u2 u1} (α -> M) (Pi.hasLe.{u2, u1} α (fun (ᾰ : α) => M) (fun (i : α) => Preorder.toLE.{u1} M _inst_2)) (Set.mulIndicator.{u2, u1} α M _inst_1 s f) f)
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_le_self' Set.mulIndicator_le_self'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mulIndicator_le_self' (hf : ∀ (x) (_ : x ∉ s), 1 ≤ f x) : mulIndicator s f ≤ f :=
   mulIndicator_le' (fun _ _ => le_rfl) hf
@@ -1358,13 +1357,13 @@ theorem mulIndicator_unionᵢ_apply {ι M} [CompleteLattice M] [One M] (h1 : (�
     mulIndicator (⋃ i, s i) f x = ⨆ i, mulIndicator (s i) f x :=
   by
   by_cases hx : x ∈ ⋃ i, s i
-  · rw [mul_indicator_of_mem hx]
-    rw [mem_Union] at hx
-    refine' le_antisymm _ (supᵢ_le fun i => mul_indicator_le_self' (fun x hx => h1 ▸ bot_le) x)
+  · rw [mulIndicator_of_mem hx]
+    rw [mem_unionᵢ] at hx
+    refine' le_antisymm _ (supᵢ_le fun i => mulIndicator_le_self' (fun x hx => h1 ▸ bot_le) x)
     rcases hx with ⟨i, hi⟩
-    exact le_supᵢ_of_le i (ge_of_eq <| mul_indicator_of_mem hi _)
-  · rw [mul_indicator_of_not_mem hx]
-    simp only [mem_Union, not_exists] at hx
+    exact le_supᵢ_of_le i (ge_of_eq <| mulIndicator_of_mem hi _)
+  · rw [mulIndicator_of_not_mem hx]
+    simp only [mem_unionᵢ, not_exists] at hx
     simp [hx, ← h1]
 #align set.mul_indicator_Union_apply Set.mulIndicator_unionᵢ_apply
 #align set.indicator_Union_apply Set.indicator_unionᵢ_apply

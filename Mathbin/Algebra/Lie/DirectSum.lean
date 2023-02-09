@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.direct_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,13 +53,13 @@ instance : LieRingModule L (⨁ i, M i)
   bracket x m := m.mapRange (fun i m' => ⁅x, m'⁆) fun i => lie_zero x
   add_lie x y m := by
     ext
-    simp only [map_range_apply, add_apply, add_lie]
+    simp only [mapRange_apply, add_apply, add_lie]
   lie_add x m n := by
     ext
-    simp only [map_range_apply, add_apply, lie_add]
+    simp only [mapRange_apply, add_apply, lie_add]
   leibniz_lie x y m := by
     ext
-    simp only [map_range_apply, lie_lie, add_apply, sub_add_cancel]
+    simp only [mapRange_apply, lie_lie, add_apply, sub_add_cancel]
 
 @[simp]
 theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x, m⁆ i = ⁅x, m i⁆ :=
@@ -113,16 +113,16 @@ instance lieRing : LieRing (⨁ i, L i) :=
     bracket := zipWith (fun i => fun x y => ⁅x, y⁆) fun i => lie_zero 0
     add_lie := fun x y z => by
       ext
-      simp only [zip_with_apply, add_apply, add_lie]
+      simp only [zipWith_apply, add_apply, add_lie]
     lie_add := fun x y z => by
       ext
-      simp only [zip_with_apply, add_apply, lie_add]
+      simp only [zipWith_apply, add_apply, lie_add]
     lie_self := fun x => by
       ext
-      simp only [zip_with_apply, add_apply, lie_self, zero_apply]
+      simp only [zipWith_apply, add_apply, lie_self, zero_apply]
     leibniz_lie := fun x y z => by
       ext
-      simp only [sub_apply, zip_with_apply, add_apply, zero_apply]
+      simp only [sub_apply, zipWith_apply, add_apply, zero_apply]
       apply leibniz_lie }
 #align direct_sum.lie_ring DirectSum.lieRing
 
@@ -135,7 +135,7 @@ instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
   { (inferInstance : Module R _) with
     lie_smul := fun c x y => by
       ext
-      simp only [zip_with_apply, smul_apply, bracket_apply, lie_smul] }
+      simp only [zipWith_apply, smul_apply, bracket_apply, lie_smul] }
 #align direct_sum.lie_algebra DirectSum.lieAlgebra
 
 variable (R ι L)
@@ -172,9 +172,9 @@ include R
 
 theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = 0 := by
-  apply lie_algebra_ext R ι L; intro k
+  apply lieAlgebra_ext R ι L; intro k
   rw [LieHom.map_lie]
-  simp only [component, of, lapply_apply, single_add_hom_apply, lie_algebra_component_apply,
+  simp only [component, of, lapply_apply, singleAddHom_apply, lieAlgebraComponent_apply,
     single_apply, zero_apply]
   by_cases hik : i = k
   · simp only [dif_neg, not_false_iff, lie_zero, hik.symm, hij]
@@ -185,8 +185,8 @@ theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L 
     ⁅of L i x, of L j y⁆ = of L i ⁅x, hij.recOn y⁆ :=
   by
   have : of L j y = of L i (hij.rec_on y) := Eq.drec (Eq.refl _) hij
-  rw [this, ← lie_algebra_of_apply R ι L i ⁅x, hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply,
-    lie_algebra_of_apply]
+  rw [this, ← lieAlgebraOf_apply R ι L i ⁅x, hij.rec_on y⁆, LieHom.map_lie, lieAlgebraOf_apply,
+    lieAlgebraOf_apply]
 #align direct_sum.lie_of_of_eq DirectSum.lie_of_of_eq
 
 @[simp]
@@ -194,7 +194,7 @@ theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x, hij.recOn y⁆ else 0 :=
   by
   by_cases hij : j = i
-  · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lie_algebra_of_apply]
+  · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lieAlgebraOf_apply]
   · simp only [lie_of_of_ne R ι L hij x y, hij, dif_neg, not_false_iff]
 #align direct_sum.lie_of DirectSum.lie_of
 
@@ -222,8 +222,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
       let f' i := (f i : L i →ₗ[R] L')
       suffices
         ∀ (i : ι) (y : L i),
-          to_module R ι L' f' ⁅x, of L i y⁆ =
-            ⁅to_module R ι L' f' x, to_module R ι L' f' (of L i y)⁆
+          toModule R ι L' f' ⁅x, of L i y⁆ = ⁅toModule R ι L' f' x, toModule R ι L' f' (of L i y)⁆
         by
         simp only [← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
@@ -233,11 +232,11 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         exact this i y
       suffices
         ∀ (i j) (y : L i) (x : L j),
-          to_module R ι L' f' ⁅of L j x, of L i y⁆ =
-            ⁅to_module R ι L' f' (of L j x), to_module R ι L' f' (of L i y)⁆
+          toModule R ι L' f' ⁅of L j x, of L i y⁆ =
+            ⁅toModule R ι L' f' (of L j x), toModule R ι L' f' (of L i y)⁆
         by
         intro i y
-        rw [← lie_skew x, ← lie_skew (to_module R ι L' f' x)]
+        rw [← lie_skew x, ← lie_skew (toModule R ι L' f' x)]
         simp only [LinearMap.map_neg, neg_inj, ← LieAlgebra.ad_apply R]
         rw [← LinearMap.comp_apply, ← LinearMap.comp_apply]
         congr
@@ -245,11 +244,11 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         ext (j x)
         exact this j i x y
       intro i j y x
-      simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linearMap, to_add_monoid_of,
-        coe_to_module_eq_coe_to_add_monoid, LinearMap.toAddMonoidHom_coe]
+      simp only [lie_of R, lieAlgebraOf_apply, LieHom.coe_to_linearMap, toAddMonoid_of,
+        coe_toModule_eq_coe_toAddMonoid, LinearMap.toAddMonoidHom_coe]
       rcases eq_or_ne i j with (h | h)
       · have h' : f j (h.rec_on y) = f i y := Eq.drec (Eq.refl _) h
-        simp only [h, h', LieHom.coe_to_linearMap, dif_pos, LieHom.map_lie, to_add_monoid_of,
+        simp only [h, h', LieHom.coe_to_linearMap, dif_pos, LieHom.map_lie, toAddMonoid_of,
           LinearMap.toAddMonoidHom_coe]
       · simp only [h, hf j i h.symm x y, dif_neg, not_false_iff, AddMonoidHom.map_zero] }
 #align direct_sum.to_lie_algebra DirectSum.toLieAlgebra

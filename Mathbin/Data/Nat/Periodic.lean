@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module data.nat.periodic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,15 +25,15 @@ namespace Nat
 open Nat Function
 
 theorem periodic_gcd (a : ℕ) : Periodic (gcd a) a := by
-  simp only [forall_const, gcd_add_self_right, eq_self_iff_true, periodic]
+  simp only [forall_const, gcd_add_self_right, eq_self_iff_true, Periodic]
 #align nat.periodic_gcd Nat.periodic_gcd
 
 theorem periodic_coprime (a : ℕ) : Periodic (coprime a) a := by
-  simp only [coprime_add_self_right, forall_const, iff_self_iff, eq_iff_iff, periodic]
+  simp only [coprime_add_self_right, forall_const, iff_self_iff, eq_iff_iff, Periodic]
 #align nat.periodic_coprime Nat.periodic_coprime
 
 theorem periodic_mod (a : ℕ) : Periodic (fun n => n % a) a := by
-  simp only [forall_const, eq_self_iff_true, add_mod_right, periodic]
+  simp only [forall_const, eq_self_iff_true, add_mod_right, Periodic]
 #align nat.periodic_mod Nat.periodic_mod
 
 theorem Function.Periodic.map_mod_nat {α : Type _} {f : ℕ → α} {a : ℕ} (hf : Periodic f a) :
@@ -51,7 +51,7 @@ theorem filter_multiset_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [
     (pp : Periodic p a) : (filter p (Ico n (n + a))).card = a.count p :=
   by
   rw [count_eq_card_filter_range, Finset.card, Finset.filter_val, Finset.range_val, ←
-    multiset_Ico_map_mod n, ← map_count_true_eq_filter_card, ← map_count_true_eq_filter_card,
+    multiset_Ico_map_mod n, ← map_count_True_eq_filter_card, ← map_count_True_eq_filter_card,
     map_map, Function.comp]
   simp only [pp.map_mod_nat]
 #align nat.filter_multiset_Ico_card_eq_of_periodic Nat.filter_multiset_Ico_card_eq_of_periodic
@@ -65,7 +65,7 @@ open Finset
 /-- An interval of length `a` filtered over a periodic predicate of period `a` has cardinality
 equal to the number naturals below `a` for which `p a` is true. -/
 theorem filter_Ico_card_eq_of_periodic (n a : ℕ) (p : ℕ → Prop) [DecidablePred p]
-    (pp : Periodic p a) : ((Ico n (n + a)).filterₓ p).card = a.count p :=
+    (pp : Periodic p a) : ((Ico n (n + a)).filter p).card = a.count p :=
   filter_multiset_Ico_card_eq_of_periodic n a p pp
 #align nat.filter_Ico_card_eq_of_periodic Nat.filter_Ico_card_eq_of_periodic
 

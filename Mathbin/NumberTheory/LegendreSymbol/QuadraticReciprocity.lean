@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.quadratic_reciprocity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem euler_criterion_units (x : (ZMod p)ˣ) : (∃ y : (ZMod p)ˣ, y ^ 2 = x)
   by_cases hc : p = 2
   · subst hc
     simp only [eq_iff_true_of_subsingleton, exists_const]
-  · have h₀ := FiniteField.unit_isSquare_iff (by rwa [ring_char_zmod_n]) x
+  · have h₀ := FiniteField.unit_isSquare_iff (by rwa [ringChar_zMod_n]) x
     have hs : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ IsSquare x :=
       by
       rw [isSquare_iff_exists_sq x]
@@ -91,7 +91,7 @@ theorem euler_criterion {a : ZMod p} (ha : a ≠ 0) : IsSquare (a : ZMod p) ↔ 
 theorem pow_div_two_eq_neg_one_or_one {a : ZMod p} (ha : a ≠ 0) :
     a ^ (p / 2) = 1 ∨ a ^ (p / 2) = -1 :=
   by
-  cases' prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
+  cases' Prime.eq_two_or_odd (Fact.out p.prime) with hp2 hp_odd
   · subst p
     revert a ha
     decide
@@ -138,7 +138,7 @@ theorem eq_pow (a : ℤ) : (legendreSym p a : ZMod p) = a ^ (p / 2) :=
     · rw [legendreSym, ha, quadraticChar_zero,
         zero_pow (Nat.div_pos (Fact.out p.prime).two_le (succ_pos 1))]
       norm_cast
-    · have := (ring_char_zmod_n p).symm.trans hc
+    · have := (ringChar_zMod_n p).symm.trans hc
       -- p = 2
       subst p
       rw [legendreSym, quadraticChar_eq_one_of_char_two hc ha]
@@ -252,7 +252,7 @@ open ZMod
 
 /-- `legendre_sym p (-1)` is given by `χ₄ p`. -/
 theorem legendreSym.at_neg_one (hp : p ≠ 2) : legendreSym p (-1) = χ₄ p := by
-  simp only [legendreSym, card p, quadraticChar_neg_one ((ring_char_zmod_n p).substr hp),
+  simp only [legendreSym, card p, quadraticChar_neg_one ((ringChar_zMod_n p).substr hp),
     Int.cast_neg, Int.cast_one]
 #align legendre_sym.at_neg_one legendreSym.at_neg_one
 
@@ -299,13 +299,13 @@ include hp
 
 /-- `legendre_sym p 2` is given by `χ₈ p`. -/
 theorem at_two : legendreSym p 2 = χ₈ p := by
-  simp only [legendreSym, card p, quadraticChar_two ((ring_char_zmod_n p).substr hp), Int.cast_bit0,
+  simp only [legendreSym, card p, quadraticChar_two ((ringChar_zMod_n p).substr hp), Int.cast_bit0,
     Int.cast_one]
 #align legendre_sym.at_two legendreSym.at_two
 
 /-- `legendre_sym p (-2)` is given by `χ₈' p`. -/
 theorem at_neg_two : legendreSym p (-2) = χ₈' p := by
-  simp only [legendreSym, card p, quadraticChar_neg_two ((ring_char_zmod_n p).substr hp),
+  simp only [legendreSym, card p, quadraticChar_neg_two ((ringChar_zMod_n p).substr hp),
     Int.cast_bit0, Int.cast_one, Int.cast_neg]
 #align legendre_sym.at_neg_two legendreSym.at_neg_two
 
@@ -366,11 +366,11 @@ open ZMod
 theorem quadratic_reciprocity (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
     legendreSym q p * legendreSym p q = (-1) ^ (p / 2 * (q / 2)) :=
   by
-  have hp₁ := (prime.eq_two_or_odd <| Fact.out p.prime).resolve_left hp
-  have hq₁ := (prime.eq_two_or_odd <| Fact.out q.prime).resolve_left hq
-  have hq₂ := (ring_char_zmod_n q).substr hq
+  have hp₁ := (Prime.eq_two_or_odd <| Fact.out p.prime).resolve_left hp
+  have hq₁ := (Prime.eq_two_or_odd <| Fact.out q.prime).resolve_left hq
+  have hq₂ := (ringChar_zMod_n q).substr hq
   have h :=
-    quadraticChar_odd_prime ((ring_char_zmod_n p).substr hp) hq ((ring_char_zmod_n p).substr hpq)
+    quadraticChar_odd_prime ((ringChar_zMod_n p).substr hp) hq ((ringChar_zMod_n p).substr hpq)
   rw [card p] at h
   have nc : ∀ n r : ℕ, ((n : ℤ) : ZMod r) = n := fun n r => by norm_cast
   have nc' : (((-1) ^ (p / 2) : ℤ) : ZMod q) = (-1) ^ (p / 2) := by norm_cast
@@ -407,7 +407,7 @@ theorem quadratic_reciprocity_three_mod_four (hp : p % 4 = 3) (hq : q % 4 = 3) :
   by
   let nop := @neg_one_pow_div_two_of_three_mod_four
   rw [quadratic_reciprocity', pow_mul, nop hp, nop hq, neg_one_mul] <;>
-    rwa [← prime.mod_two_eq_one_iff_ne_two, odd_of_mod_four_eq_three]
+    rwa [← Prime.mod_two_eq_one_iff_ne_two, odd_of_mod_four_eq_three]
 #align legendre_sym.quadratic_reciprocity_three_mod_four legendreSym.quadratic_reciprocity_three_mod_four
 
 end legendreSym

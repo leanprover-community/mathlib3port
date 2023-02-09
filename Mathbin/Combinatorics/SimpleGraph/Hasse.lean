@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.hasse
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ variable [PartialOrder α] [PartialOrder β]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β :=
   by
   ext (x y)
-  simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
+  simp_rw [boxProd_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
     or_or_or_comm]
 #align simple_graph.hasse_prod SimpleGraph.hasse_prod
 
@@ -86,18 +86,18 @@ variable [LinearOrder α]
 
 theorem hasse_preconnected_of_succ [SuccOrder α] [IsSuccArchimedean α] : (hasse α).Preconnected :=
   fun a b => by
-  rw [reachable_iff_refl_trans_gen]
+  rw [reachable_iff_reflTransGen]
   exact
-    reflTransGen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_is_max hc.2.not_isMax)
-      fun c hc => Or.inr <| covby_succ_of_not_is_max hc.2.not_isMax
+    reflTransGen_of_succ _ (fun c hc => Or.inl <| covby_succ_of_not_isMax hc.2.not_isMax)
+      fun c hc => Or.inr <| covby_succ_of_not_isMax hc.2.not_isMax
 #align simple_graph.hasse_preconnected_of_succ SimpleGraph.hasse_preconnected_of_succ
 
 theorem hasse_preconnected_of_pred [PredOrder α] [IsPredArchimedean α] : (hasse α).Preconnected :=
   fun a b => by
-  rw [reachable_iff_refl_trans_gen, ← refl_trans_gen_swap]
+  rw [reachable_iff_reflTransGen, ← reflTransGen_swap]
   exact
-    reflTransGen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_is_min hc.1.not_isMin)
-      fun c hc => Or.inr <| pred_covby_of_not_is_min hc.1.not_isMin
+    reflTransGen_of_pred _ (fun c hc => Or.inl <| pred_covby_of_not_isMin hc.1.not_isMin)
+      fun c hc => Or.inr <| pred_covby_of_not_isMin hc.1.not_isMin
 #align simple_graph.hasse_preconnected_of_pred SimpleGraph.hasse_preconnected_of_pred
 
 end LinearOrder

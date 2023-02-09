@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.homotopy.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ theorem curry_apply (F : Homotopy f₀ f₁) (t : I) (x : X) : F.curry t x = F (
 /-- Continuously extending a curried homotopy to a function from `ℝ` to `C(X, Y)`.
 -/
 def extend (F : Homotopy f₀ f₁) : C(ℝ, C(X, Y)) :=
-  F.curry.IccExtend zero_le_one
+  F.curry.iccExtend zero_le_one
 #align continuous_map.homotopy.extend ContinuousMap.Homotopy.extend
 
 theorem extend_apply_of_le_zero (F : Homotopy f₀ f₁) {t : ℝ} (ht : t ≤ 0) (x : X) :
@@ -243,8 +243,8 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homotopy f₁
     by
     refine'
       continuous_if_le (continuous_induced_dom.comp continuous_fst) continuous_const
-        (F.continuous.comp (by continuity)).ContinuousOn
-        (G.continuous.comp (by continuity)).ContinuousOn _
+        (F.continuous.comp (by continuity)).continuousOn
+        (G.continuous.comp (by continuity)).continuousOn _
     rintro x hx
     norm_num [hx]
   map_zero_left' x := by norm_num
@@ -472,7 +472,7 @@ def trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G : Homotop
     HomotopyWith f₀ f₂ P :=
   { F.toHomotopy.trans G.toHomotopy with
     prop' := fun t => by
-      simp only [homotopy.trans]
+      simp only [Homotopy.trans]
       change P ⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩
       split_ifs
       · exact F.extend_prop _
@@ -499,7 +499,7 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (G 
 @[simps]
 def cast {f₀ f₁ g₀ g₁ : C(X, Y)} (F : HomotopyWith f₀ f₁ P) (h₀ : f₀ = g₀) (h₁ : f₁ = g₁) :
     HomotopyWith g₀ g₁ P :=
-  { F.toHomotopy.cast h₀ h₁ with prop' := F.Prop }
+  { F.toHomotopy.cast h₀ h₁ with prop' := F.prop }
 #align continuous_map.homotopy_with.cast ContinuousMap.HomotopyWith.cast
 
 end HomotopyWith
@@ -547,11 +547,11 @@ section
 variable {f₀ f₁ : C(X, Y)} {S : Set X}
 
 theorem eq_fst (F : HomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₀ x :=
-  (F.Prop t x hx).1
+  (F.prop t x hx).1
 #align continuous_map.homotopy_rel.eq_fst ContinuousMap.HomotopyRel.eq_fst
 
 theorem eq_snd (F : HomotopyRel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₁ x :=
-  (F.Prop t x hx).2
+  (F.prop t x hx).2
 #align continuous_map.homotopy_rel.eq_snd ContinuousMap.HomotopyRel.eq_snd
 
 theorem fst_eq_snd (F : HomotopyRel f₀ f₁ S) {x : X} (hx : x ∈ S) : f₀ x = f₁ x :=
@@ -591,11 +591,11 @@ def trans (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) : Homotopy
   { Homotopy.trans F.toHomotopy G.toHomotopy with
     prop' := fun t => by
       intro x hx
-      simp only [homotopy.trans]
+      simp only [Homotopy.trans]
       change (⟨fun _ => ite ((t : ℝ) ≤ _) _ _, _⟩ : C(X, Y)) _ = _ ∧ _ = _
       split_ifs
-      · simp [(homotopy_with.extend_prop F (2 * t) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx]
-      · simp [(homotopy_with.extend_prop G (2 * t - 1) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx] }
+      · simp [(HomotopyWith.extendProp F (2 * t) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx]
+      · simp [(HomotopyWith.extendProp G (2 * t - 1) x hx).1, F.fst_eq_snd hx, G.fst_eq_snd hx] }
 #align continuous_map.homotopy_rel.trans ContinuousMap.HomotopyRel.trans
 
 theorem trans_apply (F : HomotopyRel f₀ f₁ S) (G : HomotopyRel f₁ f₂ S) (x : I × X) :

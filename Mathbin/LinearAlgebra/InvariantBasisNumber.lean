@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.invariant_basis_number
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype �
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
     le_of_fin_injective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
-      (((LinearEquiv.symm Q).Injective.comp i).comp (LinearEquiv.injective P))
+      (((LinearEquiv.symm Q).injective.comp i).comp (LinearEquiv.injective P))
 #align card_le_of_injective card_le_of_injective
 
 theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
@@ -144,7 +144,7 @@ theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [F
   let Q := LinearEquiv.funCongrLeft R R (Fintype.equivFin β)
   exact
     le_of_fin_surjective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
-      (((LinearEquiv.symm Q).Surjective.comp i).comp (LinearEquiv.surjective P))
+      (((LinearEquiv.symm Q).surjective.comp i).comp (LinearEquiv.surjective P))
 #align card_le_of_surjective card_le_of_surjective
 
 theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β]
@@ -177,8 +177,8 @@ class InvariantBasisNumber : Prop where
 instance (priority := 100) invariantBasisNumber_of_rankCondition [RankCondition R] :
     InvariantBasisNumber R
     where eq_of_fin_equiv n m e :=
-    le_antisymm (le_of_fin_surjective R e.symm.toLinearMap e.symm.Surjective)
-      (le_of_fin_surjective R e.toLinearMap e.Surjective)
+    le_antisymm (le_of_fin_surjective R e.symm.toLinearMap e.symm.surjective)
+      (le_of_fin_surjective R e.toLinearMap e.surjective)
 #align invariant_basis_number_of_rank_condition invariantBasisNumber_of_rankCondition
 
 end
@@ -238,9 +238,9 @@ instance (priority := 100) noetherian_ring_strongRankCondition : StrongRankCondi
     f.comp
       ((LinearEquiv.sumArrowLequivProdArrow _ _ R R).symm.trans
           (LinearEquiv.funCongrLeft R R e)).toLinearMap
-  have i' : injective f' := i.comp (LinearEquiv.injective _)
+  have i' : Injective f' := i.comp (LinearEquiv.injective _)
   apply @zero_ne_one (Fin (1 + m) → R) _ _
-  apply (IsNoetherian.equivPunitOfProdInjective f' i').Injective
+  apply (IsNoetherian.equivPunitOfProdInjective f' i').injective
   ext
 #align noetherian_ring_strong_rank_condition noetherian_ring_strongRankCondition
 
@@ -282,8 +282,8 @@ private def induced_equiv [Fintype ι'] (I : Ideal R) (e : (ι → R) ≃ₗ[R] 
     ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] (ι' → R) ⧸ I.pi ι' :=
   by
   refine'
-    { toFun := induced_map I e
-      invFun := induced_map I e.symm.. }
+    { toFun := inducedMap I e
+      invFun := inducedMap I e.symm.. }
   all_goals
     first |rintro ⟨a⟩ ⟨b⟩|rintro ⟨a⟩
     convert_to Ideal.Quotient.mk _ _ = Ideal.Quotient.mk _ _
@@ -308,7 +308,7 @@ instance (priority := 100) invariantBasisNumber_of_nontrivial_of_commRing {R : T
   ⟨fun n m e =>
     let ⟨I, hI⟩ := Ideal.exists_maximal R
     eq_of_fin_equiv (R ⧸ I)
-      ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (induced_equiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
+      ((Ideal.piQuotEquiv _ _).symm ≪≫ₗ (inducedEquiv _ e ≪≫ₗ Ideal.piQuotEquiv _ _))⟩
 #align invariant_basis_number_of_nontrivial_of_comm_ring invariantBasisNumber_of_nontrivial_of_commRing
 
 end

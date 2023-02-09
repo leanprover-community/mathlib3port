@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.fold
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ Case conversion may be inaccurate. Consider using '#align finset.fold_image Fins
 @[simp]
 theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ}
     (H : ∀ x ∈ s, ∀ y ∈ s, g x = g y → x = y) : (s.image g).fold op b f = s.fold op b (f ∘ g) := by
-  simp only [fold, image_val_of_inj_on H, Multiset.map_map]
+  simp only [fold, image_val_of_injOn H, Multiset.map_map]
 #align finset.fold_image Finset.fold_image
 
 /- warning: finset.fold_congr -> Finset.fold_congr is a dubious translation:
@@ -174,7 +174,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {op : β -> β -> β} [hc : IsCommutative.{u1} β op] [ha : IsAssociative.{u1} β op] {f : α -> β} {ι : Type.{u3}} {s : Finset.{u3} ι} {t : ι -> (Finset.{u2} α)} {b : ι -> β} {b₀ : β} (h : Set.PairwiseDisjoint.{u2, u3} (Finset.{u2} α) ι (Finset.partialOrder.{u2} α) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u2} α) (Finset.toSet.{u3} ι s) t), Eq.{succ u1} β (Finset.fold.{u2, u1} α β op hc ha (Finset.fold.{u3, u1} ι β op hc ha b₀ b s) f (Finset.disjUnionᵢ.{u3, u2} ι α s t h)) (Finset.fold.{u3, u1} ι β op hc ha b₀ (fun (i : ι) => Finset.fold.{u2, u1} α β op hc ha (b i) f (t i)) s)
 Case conversion may be inaccurate. Consider using '#align finset.fold_disj_Union Finset.fold_disjUnionᵢₓ'. -/
 theorem fold_disjUnionᵢ {ι : Type _} {s : Finset ι} {t : ι → Finset α} {b : ι → β} {b₀ : β} (h) :
-    (s.disjUnionₓ t h).fold op (s.fold op b₀ b) f = s.fold op b₀ fun i => (t i).fold op (b i) f :=
+    (s.disjUnion t h).fold op (s.fold op b₀ b) f = s.fold op b₀ fun i => (t i).fold op (b i) f :=
   (congr_arg _ <| Multiset.map_bind _ _ _).trans (Multiset.fold_bind _ _ _ _ _)
 #align finset.fold_disj_Union Finset.fold_disjUnionᵢ
 
@@ -228,7 +228,7 @@ an explicit proof of idempotency on the seed element, rather
 than relying on typeclass idempotency over the whole type. -/
 theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [DecidablePred p] :
     Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
-      op (Finset.fold op b f (s.filterₓ p)) (Finset.fold op b g (s.filterₓ fun i => ¬p i)) :=
+      op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   by
   classical
     induction' s using Finset.induction_on with x s hx IH
@@ -249,7 +249,7 @@ instead of solely on the seed element.
 However, this is easier to use because it does not generate side goals. -/
 theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [DecidablePred p] :
     Finset.fold op b (fun i => ite (p i) (f i) (g i)) s =
-      op (Finset.fold op b f (s.filterₓ p)) (Finset.fold op b g (s.filterₓ fun i => ¬p i)) :=
+      op (Finset.fold op b f (s.filter p)) (Finset.fold op b g (s.filter fun i => ¬p i)) :=
   fold_ite' (IsIdempotent.idempotent _) _
 #align finset.fold_ite Finset.fold_ite
 -/

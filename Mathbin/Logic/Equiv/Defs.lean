@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,13 +260,13 @@ protected theorem bijective (e : α ≃ β) : Bijective e :=
 
 #print Equiv.subsingleton /-
 protected theorem subsingleton (e : α ≃ β) [Subsingleton β] : Subsingleton α :=
-  e.Injective.Subsingleton
+  e.injective.subsingleton
 #align equiv.subsingleton Equiv.subsingleton
 -/
 
 #print Equiv.subsingleton.symm /-
 protected theorem subsingleton.symm (e : α ≃ β) [Subsingleton α] : Subsingleton β :=
-  e.symm.Injective.Subsingleton
+  e.symm.injective.subsingleton
 #align equiv.subsingleton.symm Equiv.subsingleton.symm
 -/
 
@@ -311,7 +311,7 @@ theorem Perm.subsingleton_eq_refl [Subsingleton α] (e : Perm α) : e = Equiv.re
 #print Equiv.decidableEq /-
 /-- Transfer `decidable_eq` across an equivalence. -/
 protected def decidableEq (e : α ≃ β) [DecidableEq β] : DecidableEq α :=
-  e.Injective.DecidableEq
+  e.injective.decidableEq
 #align equiv.decidable_eq Equiv.decidableEq
 -/
 
@@ -337,7 +337,7 @@ protected def inhabited [Inhabited β] (e : α ≃ β) : Inhabited α :=
 #print Equiv.unique /-
 /-- If `α ≃ β` and `β` is a singleton type, then so is `α`. -/
 protected def unique [Unique β] (e : α ≃ β) : Unique α :=
-  e.symm.Surjective.unique
+  e.symm.surjective.unique
 #align equiv.unique Equiv.unique
 -/
 
@@ -370,7 +370,7 @@ theorem coe_refl : ⇑(Equiv.refl α) = id :=
 /-- This cannot be a `simp` lemmas as it incorrectly matches against `e : α ≃ synonym α`, when
 `synonym α` is semireducible. This makes a mess of `multiplicative.of_add` etc. -/
 theorem Perm.coe_subsingleton {α : Type _} [Subsingleton α] (e : Perm α) : ⇑e = id := by
-  rw [perm.subsingleton_eq_refl e, coe_refl]
+  rw [Perm.subsingleton_eq_refl e, coe_refl]
 #align equiv.perm.coe_subsingleton Equiv.Perm.coe_subsingleton
 -/
 
@@ -750,7 +750,7 @@ theorem permCongr_def (p : Equiv.Perm α') : e.permCongr p = (e.symm.trans p).tr
 
 #print Equiv.permCongr_refl /-
 @[simp]
-theorem permCongr_refl : e.permCongr (Equiv.refl _) = Equiv.refl _ := by simp [perm_congr_def]
+theorem permCongr_refl : e.permCongr (Equiv.refl _) = Equiv.refl _ := by simp [permCongr_def]
 #align equiv.perm_congr_refl Equiv.permCongr_refl
 -/
 
@@ -920,7 +920,7 @@ theorem arrowCongr_comp {α₁ β₁ γ₁ α₂ β₂ γ₂ : Sort _} (ea : α�
     arrowCongr ea ec (g ∘ f) = arrowCongr eb ec g ∘ arrowCongr ea eb f :=
   by
   ext
-  simp only [comp, arrow_congr_apply, eb.symm_apply_apply]
+  simp only [comp, arrowCongr_apply, eb.symm_apply_apply]
 #align equiv.arrow_congr_comp Equiv.arrowCongr_comp
 
 /- warning: equiv.arrow_congr_refl -> Equiv.arrowCongr_refl is a dubious translation:
@@ -1051,7 +1051,7 @@ theorem conj_trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : (e₁.trans e₂).con
 -- when `(∘)` is reducible, Lean can unify `f₁ ∘ f₂` with any `g` using
 -- `f₁ := g` and `f₂ := λ x, x`.  This causes nontermination.
 theorem conj_comp (e : α ≃ β) (f₁ f₂ : α → α) : e.conj (f₁ ∘ f₂) = e.conj f₁ ∘ e.conj f₂ := by
-  apply arrow_congr_comp
+  apply arrowCongr_comp
 #align equiv.conj_comp Equiv.conj_comp
 -/
 
@@ -1628,10 +1628,10 @@ if `ra a₁ a₂ ↔ rb (e a₁) (e a₂). -/
 protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β)
     (eq : ∀ a₁ a₂, ra a₁ a₂ ↔ rb (e a₁) (e a₂)) : Quot ra ≃ Quot rb
     where
-  toFun := Quot.map e fun a₁ a₂ => (Eq a₁ a₂).1
+  toFun := Quot.map e fun a₁ a₂ => (eq a₁ a₂).1
   invFun :=
     Quot.map e.symm fun b₁ b₂ h =>
-      (Eq (e.symm b₁) (e.symm b₂)).2
+      (eq (e.symm b₁) (e.symm b₂)).2
         ((e.apply_symm_apply b₁).symm ▸ (e.apply_symm_apply b₂).symm ▸ h)
   left_inv := by
     rintro ⟨a⟩
@@ -1648,7 +1648,7 @@ protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α 
 @[simp]
 theorem congr_mk {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β)
     (eq : ∀ a₁ a₂ : α, ra a₁ a₂ ↔ rb (e a₁) (e a₂)) (a : α) :
-    Quot.congr e Eq (Quot.mk ra a) = Quot.mk rb (e a) :=
+    Quot.congr e eq (Quot.mk ra a) = Quot.mk rb (e a) :=
   rfl
 #align quot.congr_mk Quot.congr_mk
 -/
@@ -1658,7 +1658,7 @@ theorem congr_mk {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃
 An alternative is just to use rewriting with `eq`, but then computational proofs get stuck. -/
 protected def congrRight {r r' : α → α → Prop} (eq : ∀ a₁ a₂, r a₁ a₂ ↔ r' a₁ a₂) :
     Quot r ≃ Quot r' :=
-  Quot.congr (Equiv.refl α) Eq
+  Quot.congr (Equiv.refl α) eq
 #align quot.congr_right Quot.congrRight
 -/
 
@@ -1682,7 +1682,7 @@ if `ra a₁ a₂ ↔ rb (e a₁) (e a₂). -/
 protected def congr {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
     (eq : ∀ a₁ a₂, @Setoid.r α ra a₁ a₂ ↔ @Setoid.r β rb (e a₁) (e a₂)) :
     Quotient ra ≃ Quotient rb :=
-  Quot.congr e Eq
+  Quot.congr e eq
 #align quotient.congr Quotient.congr
 -/
 
@@ -1690,7 +1690,7 @@ protected def congr {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
 @[simp]
 theorem congr_mk {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
     (eq : ∀ a₁ a₂ : α, Setoid.r a₁ a₂ ↔ Setoid.r (e a₁) (e a₂)) (a : α) :
-    Quotient.congr e Eq (Quotient.mk' a) = Quotient.mk' (e a) :=
+    Quotient.congr e eq (Quotient.mk' a) = Quotient.mk' (e a) :=
   rfl
 #align quotient.congr_mk Quotient.congr_mk
 -/
@@ -1700,7 +1700,7 @@ theorem congr_mk {ra : Setoid α} {rb : Setoid β} (e : α ≃ β)
 An alternative is just to use rewriting with `eq`, but then computational proofs get stuck. -/
 protected def congrRight {r r' : Setoid α}
     (eq : ∀ a₁ a₂, @Setoid.r α r a₁ a₂ ↔ @Setoid.r α r' a₁ a₂) : Quotient r ≃ Quotient r' :=
-  Quot.congrRight Eq
+  Quot.congrRight eq
 #align quotient.congr_right Quotient.congrRight
 -/
 

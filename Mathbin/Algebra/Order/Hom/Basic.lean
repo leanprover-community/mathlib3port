@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.hom.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -324,7 +324,7 @@ theorem map_eq_zero_iff_eq_one : f x = 0 ↔ x = 1 :=
 
 @[to_additive]
 theorem map_ne_zero_iff_ne_one : f x ≠ 0 ↔ x ≠ 1 :=
-  (map_eq_zero_iff_eq_one _).Not
+  (map_eq_zero_iff_eq_one _).not
 #align map_ne_zero_iff_ne_one map_ne_zero_iff_ne_one
 #align map_ne_zero_iff_ne_zero map_ne_zero_iff_ne_zero
 

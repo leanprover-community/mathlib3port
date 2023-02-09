@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.schreier
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ variable {G : Type _} [Group G] {H : Subgroup G} {R S : Set G}
 theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (1 : G) ∈ R)
     (hS : closure S = ⊤) : (closure ((R * S).image fun g => g * (toFun hR g)⁻¹) : Set G) * R = ⊤ :=
   by
-  let f : G → R := fun g => to_fun hR g
+  let f : G → R := fun g => toFun hR g
   let U : Set G := (R * S).image fun g => g * (f g)⁻¹
   change (closure U : Set G) * R = ⊤
   refine' top_le_iff.mp fun g hg => _
@@ -57,9 +57,9 @@ theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) 
     rw [mul_right_inj, inv_inj, ← Subtype.coe_mk r hr, ← Subtype.ext_iff, Subtype.coe_mk]
     apply
       (mem_right_transversals_iff_exists_unique_mul_inv_mem.mp hR (f (r * s⁻¹) * s)).unique
-        (mul_inv_to_fun_mem hR (f (r * s⁻¹) * s))
+        (mul_inv_toFun_mem hR (f (r * s⁻¹) * s))
     rw [mul_assoc, ← inv_inv s, ← mul_inv_rev, inv_inv]
-    exact to_fun_mul_inv_mem hR (r * s⁻¹)
+    exact toFun_mul_inv_mem hR (r * s⁻¹)
 #align subgroup.closure_mul_image_mul_eq_top Subgroup.closure_mul_image_mul_eq_top
 
 /-- **Schreier's Lemma**: If `R : set G` is a right_transversal of `H : subgroup G`
@@ -68,11 +68,11 @@ theorem closure_mul_image_mul_eq_top (hR : R ∈ rightTransversals (H : Set G)) 
 theorem closure_mul_image_eq (hR : R ∈ rightTransversals (H : Set G)) (hR1 : (1 : G) ∈ R)
     (hS : closure S = ⊤) : closure ((R * S).image fun g => g * (toFun hR g)⁻¹) = H :=
   by
-  have hU : closure ((R * S).image fun g => g * (to_fun hR g)⁻¹) ≤ H :=
+  have hU : closure ((R * S).image fun g => g * (toFun hR g)⁻¹) ≤ H :=
     by
     rw [closure_le]
     rintro - ⟨g, -, rfl⟩
-    exact mul_inv_to_fun_mem hR g
+    exact mul_inv_toFun_mem hR g
   refine' le_antisymm hU fun h hh => _
   obtain ⟨g, r, hg, hr, rfl⟩ :=
     show h ∈ _ from eq_top_iff.mp (closure_mul_image_mul_eq_top hR hR1 hS) (mem_top h)
@@ -115,10 +115,10 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
   by
   letI := H.fintype_quotient_of_finite_index
   haveI : DecidableEq G := Classical.decEq G
-  obtain ⟨R₀, hR : R₀ ∈ right_transversals (H : Set G), hR1⟩ := exists_right_transversal (1 : G)
-  haveI : Fintype R₀ := Fintype.ofEquiv _ (mem_right_transversals.to_equiv hR)
+  obtain ⟨R₀, hR : R₀ ∈ rightTransversals (H : Set G), hR1⟩ := exists_right_transversal (1 : G)
+  haveI : Fintype R₀ := Fintype.ofEquiv _ (MemRightTransversals.toEquiv hR)
   let R : Finset G := Set.toFinset R₀
-  replace hR : (R : Set G) ∈ right_transversals (H : Set G) := by rwa [Set.coe_toFinset]
+  replace hR : (R : Set G) ∈ rightTransversals (H : Set G) := by rwa [Set.coe_toFinset]
   replace hR1 : (1 : G) ∈ R := by rwa [Set.mem_toFinset]
   refine' ⟨_, _, closure_mul_image_eq_top' hR hR1 hS⟩
   calc
@@ -129,7 +129,7 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
     
   calc
     R.card = Fintype.card R := (Fintype.card_coe R).symm
-    _ = _ := (Fintype.card_congr (mem_right_transversals.to_equiv hR)).symm
+    _ = _ := (Fintype.card_congr (MemRightTransversals.toEquiv hR)).symm
     _ = Fintype.card (G ⧸ H) := QuotientGroup.card_quotient_rightRel H
     _ = H.index := H.index_eq_card.symm
     
@@ -168,7 +168,7 @@ theorem card_commutator_dvd_index_center_pow [Finite (commutatorSet G)] :
   -- First handle the case when `Z(G)` has infinite index and `[G : Z(G)]` is defined to be `0`
   by_cases hG : (center G).index = 0
   · simp_rw [hG, zero_mul, zero_add, pow_one, dvd_zero]
-  haveI : finite_index (center G) := ⟨hG⟩
+  haveI : FiniteIndex (center G) := ⟨hG⟩
   -- Rewrite as `|Z(G) ∩ G'| * [G' : Z(G) ∩ G'] ∣ [G : Z(G)] ^ ([G : Z(G)] * n) * [G : Z(G)]`
   rw [← ((center G).subgroupOf (commutator G)).card_mul_index, pow_succ']
   -- We have `h1 : [G' : Z(G) ∩ G'] ∣ [G : Z(G)]`
@@ -176,7 +176,7 @@ theorem card_commutator_dvd_index_center_pow [Finite (commutatorSet G)] :
   -- So we can reduce to proving `|Z(G) ∩ G'| ∣ [G : Z(G)] ^ ([G : Z(G)] * n)`
   refine' mul_dvd_mul _ h1
   -- We know that `[G' : Z(G) ∩ G'] < ∞` by `h1` and `hG`
-  haveI : finite_index ((center G).subgroupOf (commutator G)) := ⟨ne_zero_of_dvd_ne_zero hG h1⟩
+  haveI : FiniteIndex ((center G).subgroupOf (commutator G)) := ⟨ne_zero_of_dvd_ne_zero hG h1⟩
   -- We have `h2 : rank (Z(G) ∩ G') ≤ [G' : Z(G) ∩ G'] * rank G'` by Schreier's lemma
   have h2 := rank_le_index_mul_rank ((center G).subgroupOf (commutator G))
   -- We have `h3 : [G' : Z(G) ∩ G'] * rank G' ≤ [G : Z(G)] * n` by `h1` and `rank G' ≤ n`
@@ -211,7 +211,7 @@ theorem card_commutator_le_of_finite_commutatorSet [Finite (commutatorSet G)] :
   replace h2 := h2.trans (pow_dvd_pow _ (add_le_add_right (mul_le_mul_right' h1 _) 1))
   rw [← pow_succ'] at h2
   refine' (Nat.le_of_dvd _ h2).trans (Nat.pow_le_pow_of_le_left h1 _)
-  exact pow_pos (Nat.pos_of_ne_zero finite_index.finite_index) _
+  exact pow_pos (Nat.pos_of_ne_zero FiniteIndex.finiteIndex) _
 #align subgroup.card_commutator_le_of_finite_commutator_set Subgroup.card_commutator_le_of_finite_commutatorSet
 
 /-- A theorem of Schur: A group with finitely many commutators has finite commutator subgroup. -/
@@ -220,7 +220,7 @@ instance [Finite (commutatorSet G)] : Finite (commutator G) :=
   have h2 := card_commutator_dvd_index_center_pow (closureCommutatorRepresentatives G)
   refine' Nat.finite_of_card_ne_zero fun h => _
   rw [card_commutator_closureCommutatorRepresentatives, h, zero_dvd_iff] at h2
-  exact finite_index.finite_index (pow_eq_zero h2)
+  exact FiniteIndex.finiteIndex (pow_eq_zero h2)
 
 end Subgroup
 

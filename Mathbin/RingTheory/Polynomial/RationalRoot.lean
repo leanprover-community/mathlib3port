@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.rational_root
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ open Finsupp IsFractionRing IsLocalization Polynomial
 theorem scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : A[X]} {r : A} {s : M}
     (hr : aeval (mk' S r s) p = 0) : aeval (algebraMap A S r) (scaleRoots p s) = 0 :=
   by
-  convert scale_roots_eval₂_eq_zero (algebraMap A S) hr
+  convert scaleRoots_eval₂_eq_zero (algebraMap A S) hr
   rw [aeval_def, mk'_spec' _ r s]
 #align scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero
 
@@ -52,7 +52,7 @@ variable [IsDomain A]
 theorem num_isRoot_scaleRoots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : A[X]} {x : K}
     (hr : aeval x p = 0) : IsRoot (scaleRoots p (denom A x)) (Num A x) :=
   by
-  apply is_root_of_eval₂_map_eq_zero (IsFractionRing.injective A K)
+  apply isRoot_of_eval₂_map_eq_zero (IsFractionRing.injective A K)
   refine' scaleRoots_aeval_eq_zero_of_aeval_mk'_eq_zero _
   rw [mk'_num_denom]
   exact hr
@@ -73,23 +73,23 @@ if `r : f.codomain` is a root of a polynomial over the ufd `A`,
 then the numerator of `r` divides the constant coefficient -/
 theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : Num A r ∣ p.coeff 0 :=
   by
-  suffices Num A r ∣ (scale_roots p (denom A r)).coeff 0
+  suffices num A r ∣ (scaleRoots p (denom A r)).coeff 0
     by
-    simp only [coeff_scale_roots, tsub_zero] at this
+    simp only [coeff_scaleRoots, tsub_zero] at this
     haveI := Classical.propDecidable
-    by_cases hr : Num A r = 0
-    · obtain ⟨u, hu⟩ := (is_unit_denom_of_num_eq_zero hr).pow p.nat_degree
+    by_cases hr : num A r = 0
+    · obtain ⟨u, hu⟩ := (isUnit_denom_of_num_eq_zero hr).pow p.nat_degree
       rw [← hu] at this
       exact units.dvd_mul_right.mp this
     · refine' dvd_of_dvd_mul_left_of_no_prime_factors hr _ this
       intro q dvd_num dvd_denom_pow hq
       apply hq.not_unit
       exact num_denom_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
-  convert dvd_term_of_is_root_of_dvd_terms 0 (num_isRoot_scaleRoots_of_aeval_eq_zero hr) _
+  convert dvd_term_of_isRoot_of_dvd_terms 0 (num_isRoot_scaleRoots_of_aeval_eq_zero hr) _
   · rw [pow_zero, mul_one]
   intro j hj
   apply dvd_mul_of_dvd_right
-  convert pow_dvd_pow (Num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
+  convert pow_dvd_pow (num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
   exact (pow_one _).symm
 #align num_dvd_of_is_root num_dvd_of_is_root
 
@@ -99,7 +99,7 @@ then the denominator of `r` divides the leading coefficient -/
 theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
     (denom A r : A) ∣ p.leadingCoeff :=
   by
-  suffices (denom A r : A) ∣ p.leading_coeff * Num A r ^ p.nat_degree
+  suffices (denom A r : A) ∣ p.leading_coeff * num A r ^ p.nat_degree
     by
     refine'
       dvd_of_dvd_mul_left_of_no_prime_factors (mem_non_zero_divisors_iff_ne_zero.mp (denom A r).2) _
@@ -107,17 +107,17 @@ theorem denom_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
     intro q dvd_denom dvd_num_pow hq
     apply hq.not_unit
     exact num_denom_reduced A r (hq.dvd_of_dvd_pow dvd_num_pow) dvd_denom
-  rw [← coeff_scale_roots_nat_degree]
-  apply dvd_term_of_is_root_of_dvd_terms _ (num_isRoot_scaleRoots_of_aeval_eq_zero hr)
+  rw [← coeff_scaleRoots_natDegree]
+  apply dvd_term_of_isRoot_of_dvd_terms _ (num_isRoot_scaleRoots_of_aeval_eq_zero hr)
   intro j hj
   by_cases h : j < p.nat_degree
-  · rw [coeff_scale_roots]
+  · rw [coeff_scaleRoots]
     refine' (dvd_mul_of_dvd_right _ _).mul_right _
     convert pow_dvd_pow _ (nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
     · exact (pow_one _).symm
     simpa using h
-  rw [← nat_degree_scale_roots p (denom A r)] at *
-  rw [coeff_eq_zero_of_nat_degree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm), zero_mul]
+  rw [← natDegree_scaleRoots p (denom A r)] at *
+  rw [coeff_eq_zero_of_natDegree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm), zero_mul]
   exact dvd_zero _
 #align denom_dvd_of_is_root denom_dvd_of_is_root
 

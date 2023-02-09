@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.instances.nnreal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,18 +128,18 @@ theorem tendsto_coe_atTop {f : Filter α} {m : α → ℝ≥0} :
 
 theorem tendsto_real_toNnreal {f : Filter α} {m : α → ℝ} {x : ℝ} (h : Tendsto m f (𝓝 x)) :
     Tendsto (fun a => Real.toNnreal (m a)) f (𝓝 (Real.toNnreal x)) :=
-  (continuous_real_toNnreal.Tendsto _).comp h
+  (continuous_real_toNnreal.tendsto _).comp h
 #align tendsto_real_to_nnreal tendsto_real_toNnreal
 
 theorem tendsto_real_toNnreal_atTop : Tendsto Real.toNnreal atTop atTop :=
   by
-  rw [← tendsto_coe_at_top]
+  rw [← tendsto_coe_atTop]
   apply tendsto_id.congr' _
-  filter_upwards [Ici_mem_at_top (0 : ℝ)]with x hx
+  filter_upwards [Ici_mem_atTop (0 : ℝ)]with x hx
   simp only [max_eq_left (Set.mem_Ici.1 hx), id.def, Real.coe_to_nnreal']
 #align tendsto_real_to_nnreal_at_top tendsto_real_toNnreal_atTop
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ≠ » 0) -/
 theorem nhds_zero : 𝓝 (0 : ℝ≥0) = ⨅ (a) (_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align nnreal.nhds_zero Nnreal.nhds_zero
@@ -153,7 +153,7 @@ instance : HasContinuousSub ℝ≥0 :=
 
 instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx =>
-    tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
+    tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.continuousAt⟩
 
 instance [TopologicalSpace α] [MulAction ℝ α] [HasContinuousSmul ℝ α] : HasContinuousSmul ℝ≥0 α
     where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd
@@ -176,8 +176,8 @@ theorem hasSum_real_toNnreal_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 �
 theorem summable_coe {f : α → ℝ≥0} : (Summable fun a => (f a : ℝ)) ↔ Summable f :=
   by
   constructor
-  exact fun ⟨a, ha⟩ => ⟨⟨a, hasSum_le (fun a => (f a).2) hasSum_zero ha⟩, has_sum_coe.1 ha⟩
-  exact fun ⟨a, ha⟩ => ⟨a.1, has_sum_coe.2 ha⟩
+  exact fun ⟨a, ha⟩ => ⟨⟨a, hasSum_le (fun a => (f a).2) hasSum_zero ha⟩, hasSum_coe.1 ha⟩
+  exact fun ⟨a, ha⟩ => ⟨a.1, hasSum_coe.2 ha⟩
 #align nnreal.summable_coe Nnreal.summable_coe
 
 theorem summable_coe_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
@@ -191,7 +191,7 @@ open Classical
 
 @[norm_cast]
 theorem coe_tsum {f : α → ℝ≥0} : ↑(∑' a, f a) = ∑' a, (f a : ℝ) :=
-  if hf : Summable f then Eq.symm <| (hasSum_coe.2 <| hf.HasSum).tsum_eq
+  if hf : Summable f then Eq.symm <| (hasSum_coe.2 <| hf.hasSum).tsum_eq
   else by simp [tsum, hf, mt summable_coe.1 hf]
 #align nnreal.coe_tsum Nnreal.coe_tsum
 
@@ -228,7 +228,7 @@ theorem summable_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) : (Summable fun i =
 
 theorem hasSum_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) {a : ℝ≥0} :
     HasSum (fun n => f (n + k)) a ↔ HasSum f (a + ∑ i in range k, f i) := by
-  simp [← has_sum_coe, coe_sum, Nnreal.coe_add, ← hasSum_nat_add_iff k]
+  simp [← hasSum_coe, coe_sum, Nnreal.coe_add, ← hasSum_nat_add_iff k]
 #align nnreal.has_sum_nat_add_iff Nnreal.hasSum_nat_add_iff
 
 theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
@@ -248,7 +248,7 @@ theorem tendsto_cofinite_zero_of_summable {α} {f : α → ℝ≥0} (hf : Summab
     Tendsto f cofinite (𝓝 0) :=
   by
   have h_f_coe : f = fun n => Real.toNnreal (f n : ℝ) := funext fun n => real.to_nnreal_coe.symm
-  rw [h_f_coe, ← @Real.toNnreal_coe 0]
+  rw [h_f_coe, ← @real.to_nnreal_coe 0]
   exact tendsto_real_toNnreal (summable_coe.mpr hf).tendsto_cofinite_zero
 #align nnreal.tendsto_cofinite_zero_of_summable Nnreal.tendsto_cofinite_zero_of_summable
 
@@ -271,8 +271,8 @@ theorem tendsto_tsum_compl_atTop_zero {α : Type _} (f : α → ℝ≥0) :
 def powOrderIso (n : ℕ) (hn : n ≠ 0) : ℝ≥0 ≃o ℝ≥0 :=
   (StrictMono.orderIsoOfSurjective (fun x => x ^ n) fun x y h =>
       strictMonoOn_pow hn.bot_lt (zero_le x) (zero_le y) h) <|
-    (continuous_id.pow _).Surjective (tendsto_pow_atTop hn) <| by
-      simpa [order_bot.at_bot_eq, pos_iff_ne_zero]
+    (continuous_id.pow _).surjective (tendsto_pow_atTop hn) <| by
+      simpa [OrderBot.atBot_eq, pos_iff_ne_zero]
 #align nnreal.pow_order_iso Nnreal.powOrderIso
 
 end Nnreal

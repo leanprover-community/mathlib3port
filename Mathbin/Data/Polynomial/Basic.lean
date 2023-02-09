@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -220,7 +220,7 @@ theorem toFinsupp_neg {R : Type u} [Ring R] (a : R[X]) : (-a).toFinsupp = -a.toF
 theorem toFinsupp_sub {R : Type u} [Ring R] (a b : R[X]) :
     (a - b).toFinsupp = a.toFinsupp - b.toFinsupp :=
   by
-  rw [sub_eq_add_neg, ← to_finsupp_neg, ← to_finsupp_add]
+  rw [sub_eq_add_neg, ← toFinsupp_neg, ← toFinsupp_add]
   rfl
 #align polynomial.to_finsupp_sub Polynomial.toFinsupp_sub
 
@@ -247,7 +247,7 @@ theorem toFinsupp_pow (a : R[X]) (n : ℕ) : (a ^ n).toFinsupp = a.toFinsupp ^ n
 
 theorem IsSMulRegular.polynomial {S : Type _} [Monoid S] [DistribMulAction S R] {a : S}
     (ha : IsSMulRegular R a) : IsSMulRegular R[X] a
-  | ⟨x⟩, ⟨y⟩, h => congr_arg _ <| ha.Finsupp (Polynomial.of_finsupp.inj h)
+  | ⟨x⟩, ⟨y⟩, h => congr_arg _ <| ha.finsupp (Polynomial.of_finsupp.inj h)
 #align is_smul_regular.polynomial IsSMulRegular.polynomial
 
 theorem toFinsupp_injective : Function.Injective (toFinsupp : R[X] → AddMonoidAlgebra _ _) :=
@@ -261,12 +261,12 @@ theorem toFinsupp_inj {a b : R[X]} : a.toFinsupp = b.toFinsupp ↔ a = b :=
 
 @[simp]
 theorem toFinsupp_eq_zero {a : R[X]} : a.toFinsupp = 0 ↔ a = 0 := by
-  rw [← to_finsupp_zero, to_finsupp_inj]
+  rw [← toFinsupp_zero, toFinsupp_inj]
 #align polynomial.to_finsupp_eq_zero Polynomial.toFinsupp_eq_zero
 
 @[simp]
 theorem toFinsupp_eq_one {a : R[X]} : a.toFinsupp = 1 ↔ a = 1 := by
-  rw [← to_finsupp_one, to_finsupp_inj]
+  rw [← toFinsupp_one, toFinsupp_inj]
 #align polynomial.to_finsupp_eq_one Polynomial.toFinsupp_eq_one
 
 /-- A more convenient spelling of `polynomial.of_finsupp.inj_eq` in terms of `iff`. -/
@@ -428,7 +428,7 @@ theorem monomial_add (n : ℕ) (r s : R) : monomial n (r + s) = monomial n r + m
 theorem monomial_mul_monomial (n m : ℕ) (r s : R) :
     monomial n r * monomial m s = monomial (n + m) (r * s) :=
   toFinsupp_injective <| by
-    simp only [to_finsupp_monomial, to_finsupp_mul, AddMonoidAlgebra.single_mul_single]
+    simp only [toFinsupp_monomial, toFinsupp_mul, AddMonoidAlgebra.single_mul_single]
 #align polynomial.monomial_mul_monomial Polynomial.monomial_mul_monomial
 
 @[simp]
@@ -445,7 +445,7 @@ theorem smul_monomial {S} [Monoid S] [DistribMulAction S R] (a : S) (n : ℕ) (b
 #align polynomial.smul_monomial Polynomial.smul_monomial
 
 theorem monomial_injective (n : ℕ) : Function.Injective (monomial n : R → R[X]) :=
-  (toFinsuppIso R).symm.Injective.comp (single_injective n)
+  (toFinsuppIso R).symm.injective.comp (single_injective n)
 #align polynomial.monomial_injective Polynomial.monomial_injective
 
 @[simp]
@@ -506,7 +506,7 @@ theorem c_bit0 : c (bit0 a) = bit0 (c a) :=
 #align polynomial.C_bit0 Polynomial.c_bit0
 
 @[simp]
-theorem c_bit1 : c (bit1 a) = bit1 (c a) := by simp [bit1, C_bit0]
+theorem c_bit1 : c (bit1 a) = bit1 (c a) := by simp [bit1, c_bit0]
 #align polynomial.C_bit1 Polynomial.c_bit1
 
 theorem c_pow : c (a ^ n) = c a ^ n :=
@@ -541,7 +541,7 @@ theorem monomial_one_right_eq_x_pow (n : ℕ) : monomial n (1 : R) = x ^ n :=
   by
   induction' n with n ih
   · simp [monomial_zero_one]
-  · rw [pow_succ, ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, add_comm, one_mul]
+  · rw [pow_succ, ← ih, ← monomial_one_one_eq_x, monomial_mul_monomial, add_comm, one_mul]
 #align polynomial.monomial_one_right_eq_X_pow Polynomial.monomial_one_right_eq_x_pow
 
 @[simp]
@@ -552,7 +552,7 @@ theorem toFinsupp_x : x.toFinsupp = Finsupp.single 1 (1 : R) :=
 /-- `X` commutes with everything, even when the coefficients are noncommutative. -/
 theorem x_mul : x * p = p * x := by
   rcases p with ⟨⟩
-  simp only [X, ← of_finsupp_single, ← of_finsupp_mul, LinearMap.coe_mk]
+  simp only [x, ← of_finsupp_single, ← of_finsupp_mul, LinearMap.coe_mk]
   ext
   simp [AddMonoidAlgebra.mul_apply, sum_single_index, add_comm]
 #align polynomial.X_mul Polynomial.x_mul
@@ -562,7 +562,7 @@ theorem x_pow_mul {n : ℕ} : x ^ n * p = p * x ^ n :=
   induction' n with n ih
   · simp
   · conv_lhs => rw [pow_succ']
-    rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ']
+    rw [mul_assoc, x_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ']
 #align polynomial.X_pow_mul Polynomial.x_pow_mul
 
 /-- Prefer putting constants to the left of `X`.
@@ -582,7 +582,7 @@ theorem x_pow_mul_c (r : R) (n : ℕ) : x ^ n * c r = c r * x ^ n :=
 #align polynomial.X_pow_mul_C Polynomial.x_pow_mul_c
 
 theorem x_pow_mul_assoc {n : ℕ} : p * x ^ n * q = p * q * x ^ n := by
-  rw [mul_assoc, X_pow_mul, ← mul_assoc]
+  rw [mul_assoc, x_pow_mul, ← mul_assoc]
 #align polynomial.X_pow_mul_assoc Polynomial.x_pow_mul_assoc
 
 /-- Prefer putting constants to the left of `X ^ n`.
@@ -616,12 +616,12 @@ theorem monomial_mul_x_pow (n : ℕ) (r : R) (k : ℕ) : monomial n r * x ^ k = 
 
 @[simp]
 theorem x_mul_monomial (n : ℕ) (r : R) : x * monomial n r = monomial (n + 1) r := by
-  rw [X_mul, monomial_mul_X]
+  rw [x_mul, monomial_mul_x]
 #align polynomial.X_mul_monomial Polynomial.x_mul_monomial
 
 @[simp]
 theorem x_pow_mul_monomial (k n : ℕ) (r : R) : x ^ k * monomial n r = monomial (n + k) r := by
-  rw [X_pow_mul, monomial_mul_X_pow]
+  rw [x_pow_mul, monomial_mul_x_pow]
 #align polynomial.X_pow_mul_monomial Polynomial.x_pow_mul_monomial
 
 /-- `coeff p n` (often denoted `p.coeff n`) is the coefficient of `X^n` in `p`. -/
@@ -681,7 +681,7 @@ theorem coeff_x : coeff (x : R[X]) n = if 1 = n then 1 else 0 :=
 #align polynomial.coeff_X Polynomial.coeff_x
 
 theorem coeff_x_of_ne_one {n : ℕ} (hn : n ≠ 1) : coeff (x : R[X]) n = 0 := by
-  rw [coeff_X, if_neg hn.symm]
+  rw [coeff_x, if_neg hn.symm]
 #align polynomial.coeff_X_of_ne_one Polynomial.coeff_x_of_ne_one
 
 @[simp]
@@ -705,26 +705,26 @@ theorem coeff_c_zero : coeff (c a) 0 = a :=
   coeff_monomial
 #align polynomial.coeff_C_zero Polynomial.coeff_c_zero
 
-theorem coeff_c_ne_zero (h : n ≠ 0) : (c a).coeff n = 0 := by rw [coeff_C, if_neg h]
+theorem coeff_c_ne_zero (h : n ≠ 0) : (c a).coeff n = 0 := by rw [coeff_c, if_neg h]
 #align polynomial.coeff_C_ne_zero Polynomial.coeff_c_ne_zero
 
 theorem c_mul_x_pow_eq_monomial : ∀ {n : ℕ}, c a * x ^ n = monomial n a
   | 0 => mul_one _
   | n + 1 => by
-    rw [pow_succ', ← mul_assoc, C_mul_X_pow_eq_monomial, X, monomial_mul_monomial, mul_one]
+    rw [pow_succ', ← mul_assoc, C_mul_X_pow_eq_monomial, x, monomial_mul_monomial, mul_one]
 #align polynomial.C_mul_X_pow_eq_monomial Polynomial.c_mul_x_pow_eq_monomial
 
 @[simp]
 theorem toFinsupp_c_mul_x_pow (a : R) (n : ℕ) : (c a * x ^ n).toFinsupp = Finsupp.single n a := by
-  rw [C_mul_X_pow_eq_monomial, to_finsupp_monomial]
+  rw [c_mul_x_pow_eq_monomial, toFinsupp_monomial]
 #align polynomial.to_finsupp_C_mul_X_pow Polynomial.toFinsupp_c_mul_x_pow
 
-theorem c_mul_x_eq_monomial : c a * x = monomial 1 a := by rw [← C_mul_X_pow_eq_monomial, pow_one]
+theorem c_mul_x_eq_monomial : c a * x = monomial 1 a := by rw [← c_mul_x_pow_eq_monomial, pow_one]
 #align polynomial.C_mul_X_eq_monomial Polynomial.c_mul_x_eq_monomial
 
 @[simp]
 theorem toFinsupp_c_mul_x (a : R) : (c a * x).toFinsupp = Finsupp.single 1 a := by
-  rw [C_mul_X_eq_monomial, to_finsupp_monomial]
+  rw [c_mul_x_eq_monomial, toFinsupp_monomial]
 #align polynomial.to_finsupp_C_mul_X Polynomial.toFinsupp_c_mul_x
 
 theorem c_injective : Injective (c : R → R[X]) :=
@@ -742,7 +742,7 @@ theorem c_eq_zero : c a = 0 ↔ a = 0 :=
 #align polynomial.C_eq_zero Polynomial.c_eq_zero
 
 theorem c_ne_zero : c a ≠ 0 ↔ a ≠ 0 :=
-  c_eq_zero.Not
+  c_eq_zero.not
 #align polynomial.C_ne_zero Polynomial.c_ne_zero
 
 theorem subsingleton_iff_subsingleton : Subsingleton R[X] ↔ Subsingleton R :=
@@ -776,7 +776,7 @@ theorem addSubmonoid_closure_setOf_eq_monomial :
     AddSubmonoid.closure { p : R[X] | ∃ n a, p = monomial n a } = ⊤ :=
   by
   apply top_unique
-  rw [← AddSubmonoid.map_equiv_top (to_finsupp_iso R).symm.toAddEquiv, ←
+  rw [← AddSubmonoid.map_equiv_top (toFinsuppIso R).symm.toAddEquiv, ←
     Finsupp.add_closure_setOf_eq_single, AddMonoidHom.map_mclosure]
   refine' AddSubmonoid.closure_mono (Set.image_subset_iff.2 _)
   rintro _ ⟨n, a, rfl⟩
@@ -821,19 +821,19 @@ theorem support_monomial' (n) (a : R) : (monomial n a).support ⊆ singleton n :
 #align polynomial.support_monomial' Polynomial.support_monomial'
 
 theorem support_c_mul_x {c : R} (h : c ≠ 0) : (c c * x).support = singleton 1 := by
-  rw [C_mul_X_eq_monomial, support_monomial 1 h]
+  rw [c_mul_x_eq_monomial, support_monomial 1 h]
 #align polynomial.support_C_mul_X Polynomial.support_c_mul_x
 
 theorem support_c_mul_X' (c : R) : (c c * x).support ⊆ singleton 1 := by
-  simpa only [C_mul_X_eq_monomial] using support_monomial' 1 c
+  simpa only [c_mul_x_eq_monomial] using support_monomial' 1 c
 #align polynomial.support_C_mul_X' Polynomial.support_c_mul_X'
 
 theorem support_c_mul_x_pow (n : ℕ) {c : R} (h : c ≠ 0) : (c c * x ^ n).support = singleton n := by
-  rw [C_mul_X_pow_eq_monomial, support_monomial n h]
+  rw [c_mul_x_pow_eq_monomial, support_monomial n h]
 #align polynomial.support_C_mul_X_pow Polynomial.support_c_mul_x_pow
 
 theorem support_c_mul_x_pow' (n : ℕ) (c : R) : (c c * x ^ n).support ⊆ singleton n := by
-  simpa only [C_mul_X_pow_eq_monomial] using support_monomial' n c
+  simpa only [c_mul_x_pow_eq_monomial] using support_monomial' n c
 #align polynomial.support_C_mul_X_pow' Polynomial.support_c_mul_x_pow'
 
 open Finset
@@ -865,30 +865,30 @@ theorem x_pow_eq_monomial (n) : x ^ n = monomial n (1 : R) :=
   by
   induction' n with n hn
   · rw [pow_zero, monomial_zero_one]
-  · rw [pow_succ', hn, X, monomial_mul_monomial, one_mul]
+  · rw [pow_succ', hn, x, monomial_mul_monomial, one_mul]
 #align polynomial.X_pow_eq_monomial Polynomial.x_pow_eq_monomial
 
 @[simp]
 theorem toFinsupp_x_pow (n : ℕ) : (x ^ n).toFinsupp = Finsupp.single n (1 : R) := by
-  rw [X_pow_eq_monomial, to_finsupp_monomial]
+  rw [x_pow_eq_monomial, toFinsupp_monomial]
 #align polynomial.to_finsupp_X_pow Polynomial.toFinsupp_x_pow
 
 theorem smul_x_eq_monomial {n} : a • x ^ n = monomial n (a : R) := by
-  rw [X_pow_eq_monomial, smul_monomial, smul_eq_mul, mul_one]
+  rw [x_pow_eq_monomial, smul_monomial, smul_eq_mul, mul_one]
 #align polynomial.smul_X_eq_monomial Polynomial.smul_x_eq_monomial
 
 theorem support_x_pow (H : ¬(1 : R) = 0) (n : ℕ) : (x ^ n : R[X]).support = singleton n :=
   by
   convert support_monomial n H
-  exact X_pow_eq_monomial n
+  exact x_pow_eq_monomial n
 #align polynomial.support_X_pow Polynomial.support_x_pow
 
 theorem support_x_empty (H : (1 : R) = 0) : (x : R[X]).support = ∅ := by
-  rw [X, H, monomial_zero_right, support_zero]
+  rw [x, H, monomial_zero_right, support_zero]
 #align polynomial.support_X_empty Polynomial.support_x_empty
 
 theorem support_x (H : ¬(1 : R) = 0) : (x : R[X]).support = singleton 1 := by
-  rw [← pow_one X, support_X_pow H 1]
+  rw [← pow_one x, support_x_pow H 1]
 #align polynomial.support_X Polynomial.support_x
 
 theorem monomial_left_inj {a : R} (ha : a ≠ 0) {i j : ℕ} : monomial i a = monomial j a ↔ i = j := by
@@ -899,7 +899,7 @@ theorem binomial_eq_binomial {k l m n : ℕ} {u v : R} (hu : u ≠ 0) (hv : v �
     c u * x ^ k + c v * x ^ l = c u * x ^ m + c v * x ^ n ↔
       k = m ∧ l = n ∨ u = v ∧ k = n ∧ l = m ∨ u + v = 0 ∧ k = l ∧ m = n :=
   by
-  simp_rw [C_mul_X_pow_eq_monomial, ← to_finsupp_inj, to_finsupp_add, to_finsupp_monomial]
+  simp_rw [c_mul_x_pow_eq_monomial, ← toFinsupp_inj, toFinsupp_add, toFinsupp_monomial]
   exact Finsupp.single_add_single_eq_single_add_single hu hv
 #align polynomial.binomial_eq_binomial Polynomial.binomial_eq_binomial
 
@@ -913,13 +913,13 @@ def sum {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S) : S :=
 #align polynomial.sum Polynomial.sum
 
 theorem sum_def {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S) :
-    p.Sum f = ∑ n in p.support, f n (p.coeff n) :=
+    p.sum f = ∑ n in p.support, f n (p.coeff n) :=
   rfl
 #align polynomial.sum_def Polynomial.sum_def
 
 theorem sum_eq_of_subset {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → R → S)
     (hf : ∀ i, f i 0 = 0) (s : Finset ℕ) (hs : p.support ⊆ s) :
-    p.Sum f = ∑ n in s, f n (p.coeff n) :=
+    p.sum f = ∑ n in s, f n (p.coeff n) :=
   by
   apply Finset.sum_subset hs fun n hn h'n => _
   rw [not_mem_support_iff] at h'n
@@ -928,80 +928,80 @@ theorem sum_eq_of_subset {S : Type _} [AddCommMonoid S] (p : R[X]) (f : ℕ → 
 
 /-- Expressing the product of two polynomials as a double sum. -/
 theorem mul_eq_sum_sum :
-    p * q = ∑ i in p.support, q.Sum fun j a => (monomial (i + j)) (p.coeff i * a) :=
+    p * q = ∑ i in p.support, q.sum fun j a => (monomial (i + j)) (p.coeff i * a) :=
   by
-  apply to_finsupp_injective
+  apply toFinsupp_injective
   rcases p with ⟨⟩; rcases q with ⟨⟩
-  simp [support, Sum, coeff, to_finsupp_sum]
+  simp [support, sum, coeff, toFinsupp_sum]
   rfl
 #align polynomial.mul_eq_sum_sum Polynomial.mul_eq_sum_sum
 
 @[simp]
-theorem sum_zero_index {S : Type _} [AddCommMonoid S] (f : ℕ → R → S) : (0 : R[X]).Sum f = 0 := by
-  simp [Sum]
+theorem sum_zero_index {S : Type _} [AddCommMonoid S] (f : ℕ → R → S) : (0 : R[X]).sum f = 0 := by
+  simp [sum]
 #align polynomial.sum_zero_index Polynomial.sum_zero_index
 
 @[simp]
 theorem sum_monomial_index {S : Type _} [AddCommMonoid S] (n : ℕ) (a : R) (f : ℕ → R → S)
-    (hf : f n 0 = 0) : (monomial n a : R[X]).Sum f = f n a :=
+    (hf : f n 0 = 0) : (monomial n a : R[X]).sum f = f n a :=
   by
   by_cases h : a = 0
   · simp [h, hf]
-  · simp [Sum, support_monomial, h, coeff_monomial]
+  · simp [sum, support_monomial, h, coeff_monomial]
 #align polynomial.sum_monomial_index Polynomial.sum_monomial_index
 
 @[simp]
 theorem sum_c_index {a} {β} [AddCommMonoid β] {f : ℕ → R → β} (h : f 0 0 = 0) :
-    (c a).Sum f = f 0 a :=
+    (c a).sum f = f 0 a :=
   sum_monomial_index 0 a f h
 #align polynomial.sum_C_index Polynomial.sum_c_index
 
 -- the assumption `hf` is only necessary when the ring is trivial
 @[simp]
 theorem sum_x_index {S : Type _} [AddCommMonoid S] {f : ℕ → R → S} (hf : f 1 0 = 0) :
-    (x : R[X]).Sum f = f 1 1 :=
+    (x : R[X]).sum f = f 1 1 :=
   sum_monomial_index 1 1 f hf
 #align polynomial.sum_X_index Polynomial.sum_x_index
 
 theorem sum_add_index {S : Type _} [AddCommMonoid S] (p q : R[X]) (f : ℕ → R → S)
     (hf : ∀ i, f i 0 = 0) (h_add : ∀ a b₁ b₂, f a (b₁ + b₂) = f a b₁ + f a b₂) :
-    (p + q).Sum f = p.Sum f + q.Sum f := by
+    (p + q).sum f = p.sum f + q.sum f := by
   rcases p with ⟨⟩; rcases q with ⟨⟩
-  simp only [← of_finsupp_add, Sum, support, coeff, Pi.add_apply, coe_add]
+  simp only [← of_finsupp_add, sum, support, coeff, Pi.add_apply, coe_add]
   exact Finsupp.sum_add_index' hf h_add
 #align polynomial.sum_add_index Polynomial.sum_add_index
 
 theorem sum_add' {S : Type _} [AddCommMonoid S] (p : R[X]) (f g : ℕ → R → S) :
-    p.Sum (f + g) = p.Sum f + p.Sum g := by simp [sum_def, Finset.sum_add_distrib]
+    p.sum (f + g) = p.sum f + p.sum g := by simp [sum_def, Finset.sum_add_distrib]
 #align polynomial.sum_add' Polynomial.sum_add'
 
 theorem sum_add {S : Type _} [AddCommMonoid S] (p : R[X]) (f g : ℕ → R → S) :
-    (p.Sum fun n x => f n x + g n x) = p.Sum f + p.Sum g :=
+    (p.sum fun n x => f n x + g n x) = p.sum f + p.sum g :=
   sum_add' _ _ _
 #align polynomial.sum_add Polynomial.sum_add
 
 theorem sum_smul_index {S : Type _} [AddCommMonoid S] (p : R[X]) (b : R) (f : ℕ → R → S)
-    (hf : ∀ i, f i 0 = 0) : (b • p).Sum f = p.Sum fun n a => f n (b * a) :=
+    (hf : ∀ i, f i 0 = 0) : (b • p).sum f = p.sum fun n a => f n (b * a) :=
   by
   rcases p with ⟨⟩
-  simpa [Sum, support, coeff] using Finsupp.sum_smul_index hf
+  simpa [sum, support, coeff] using Finsupp.sum_smul_index hf
 #align polynomial.sum_smul_index Polynomial.sum_smul_index
 
-theorem sum_monomial_eq : ∀ p : R[X], (p.Sum fun n a => monomial n a) = p
+theorem sum_monomial_eq : ∀ p : R[X], (p.sum fun n a => monomial n a) = p
   | ⟨p⟩ => (of_finsupp_sum _ _).symm.trans (congr_arg _ <| Finsupp.sum_single _)
 #align polynomial.sum_monomial_eq Polynomial.sum_monomial_eq
 
-theorem sum_c_mul_x_pow_eq (p : R[X]) : (p.Sum fun n a => c a * x ^ n) = p := by
-  simp_rw [C_mul_X_pow_eq_monomial, sum_monomial_eq]
+theorem sum_c_mul_x_pow_eq (p : R[X]) : (p.sum fun n a => c a * x ^ n) = p := by
+  simp_rw [c_mul_x_pow_eq_monomial, sum_monomial_eq]
 #align polynomial.sum_C_mul_X_pow_eq Polynomial.sum_c_mul_x_pow_eq
 
 /-- `erase p n` is the polynomial `p` in which the `X^n` term has been erased. -/
 irreducible_def erase (n : ℕ) : R[X] → R[X]
-  | ⟨p⟩ => ⟨p.eraseₓ n⟩
+  | ⟨p⟩ => ⟨p.erase n⟩
 #align polynomial.erase Polynomial.erase
 
 @[simp]
-theorem toFinsupp_erase (p : R[X]) (n : ℕ) : toFinsupp (p.eraseₓ n) = p.toFinsupp.eraseₓ n :=
+theorem toFinsupp_erase (p : R[X]) (n : ℕ) : toFinsupp (p.erase n) = p.toFinsupp.erase n :=
   by
   rcases p with ⟨⟩
   simp only [erase]
@@ -1009,27 +1009,27 @@ theorem toFinsupp_erase (p : R[X]) (n : ℕ) : toFinsupp (p.eraseₓ n) = p.toFi
 
 @[simp]
 theorem of_finsupp_erase (p : AddMonoidAlgebra R ℕ) (n : ℕ) :
-    (⟨p.eraseₓ n⟩ : R[X]) = (⟨p⟩ : R[X]).eraseₓ n :=
+    (⟨p.erase n⟩ : R[X]) = (⟨p⟩ : R[X]).erase n :=
   by
   rcases p with ⟨⟩
   simp only [erase]
 #align polynomial.of_finsupp_erase Polynomial.of_finsupp_erase
 
 @[simp]
-theorem support_erase (p : R[X]) (n : ℕ) : support (p.eraseₓ n) = (support p).eraseₓ n :=
+theorem support_erase (p : R[X]) (n : ℕ) : support (p.erase n) = (support p).erase n :=
   by
   rcases p with ⟨⟩
   simp only [support, erase, support_erase]
 #align polynomial.support_erase Polynomial.support_erase
 
-theorem monomial_add_erase (p : R[X]) (n : ℕ) : monomial n (coeff p n) + p.eraseₓ n = p :=
+theorem monomial_add_erase (p : R[X]) (n : ℕ) : monomial n (coeff p n) + p.erase n = p :=
   toFinsupp_injective <| by
     rcases p with ⟨⟩
-    rw [to_finsupp_add, to_finsupp_monomial, to_finsupp_erase, coeff]
+    rw [toFinsupp_add, toFinsupp_monomial, toFinsupp_erase, coeff]
     exact Finsupp.single_add_erase _ _
 #align polynomial.monomial_add_erase Polynomial.monomial_add_erase
 
-theorem coeff_erase (p : R[X]) (n i : ℕ) : (p.eraseₓ n).coeff i = if i = n then 0 else p.coeff i :=
+theorem coeff_erase (p : R[X]) (n i : ℕ) : (p.erase n).coeff i = if i = n then 0 else p.coeff i :=
   by
   rcases p with ⟨⟩
   simp only [erase, coeff]
@@ -1037,7 +1037,7 @@ theorem coeff_erase (p : R[X]) (n i : ℕ) : (p.eraseₓ n).coeff i = if i = n t
 #align polynomial.coeff_erase Polynomial.coeff_erase
 
 @[simp]
-theorem erase_zero (n : ℕ) : (0 : R[X]).eraseₓ n = 0 :=
+theorem erase_zero (n : ℕ) : (0 : R[X]).erase n = 0 :=
   toFinsupp_injective <| by simp
 #align polynomial.erase_zero Polynomial.erase_zero
 
@@ -1047,11 +1047,11 @@ theorem erase_monomial {n : ℕ} {a : R} : erase n (monomial n a) = 0 :=
 #align polynomial.erase_monomial Polynomial.erase_monomial
 
 @[simp]
-theorem erase_same (p : R[X]) (n : ℕ) : coeff (p.eraseₓ n) n = 0 := by simp [coeff_erase]
+theorem erase_same (p : R[X]) (n : ℕ) : coeff (p.erase n) n = 0 := by simp [coeff_erase]
 #align polynomial.erase_same Polynomial.erase_same
 
 @[simp]
-theorem erase_ne (p : R[X]) (n i : ℕ) (h : i ≠ n) : coeff (p.eraseₓ n) i = coeff p i := by
+theorem erase_ne (p : R[X]) (n i : ℕ) (h : i ≠ n) : coeff (p.erase n) i = coeff p i := by
   simp [coeff_erase, h]
 #align polynomial.erase_ne Polynomial.erase_ne
 
@@ -1087,21 +1087,21 @@ theorem coeff_update_ne (p : R[X]) {n : ℕ} (a : R) {i : ℕ} (h : i ≠ n) :
 #align polynomial.coeff_update_ne Polynomial.coeff_update_ne
 
 @[simp]
-theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.eraseₓ n :=
+theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.erase n :=
   by
   ext
   rw [coeff_update_apply, coeff_erase]
 #align polynomial.update_zero_eq_erase Polynomial.update_zero_eq_erase
 
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
-    support (p.update n a) = if a = 0 then p.support.eraseₓ n else insert n p.support := by
+    support (p.update n a) = if a = 0 then p.support.erase n else insert n p.support := by
   classical
     cases p
     simp only [support, update, support_update]
     congr
 #align polynomial.support_update Polynomial.support_update
 
-theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.support.eraseₓ n := by
+theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.support.erase n := by
   rw [update_zero_eq_erase, support_erase]
 #align polynomial.support_update_zero Polynomial.support_update_zero
 

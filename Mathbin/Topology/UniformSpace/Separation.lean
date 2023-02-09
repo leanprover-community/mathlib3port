@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.separation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ instance (priority := 100) UniformSpace.to_regularSpace : RegularSpace α :=
     (fun a => by
       rw [nhds_eq_comap_uniformity]
       exact uniformity_has_basis_closed.comap _)
-    fun a V hV => hV.2.Preimage <| continuous_const.prod_mk continuous_id
+    fun a V hV => hV.2.preimage <| continuous_const.prod_mk continuous_id
 #align uniform_space.to_regular_space UniformSpace.to_regularSpace
 -/
 
@@ -121,7 +121,7 @@ theorem separated_equiv : Equivalence fun x y => (x, y) ∈ 𝓢 α :=
     have : preimage Prod.swap s ∈ 𝓤 α := symm_le_uniformity hs
     h _ this,
     fun x y z (hxy : (x, y) ∈ 𝓢 α) (hyz : (y, z) ∈ 𝓢 α) s (hs : s ∈ 𝓤 α) =>
-    let ⟨t, ht, (h_ts : compRel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs
+    let ⟨t, ht, (h_ts : comp_rel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs
     h_ts <| show (x, z) ∈ compRel t t from ⟨y, hxy t ht, hyz t ht⟩⟩
 #align separated_equiv separated_equiv
 -/
@@ -154,7 +154,7 @@ theorem separatedSpace_iff {α : Type u} [UniformSpace α] : SeparatedSpace α �
 #print separated_def /-
 theorem separated_def {α : Type u} [UniformSpace α] :
     SeparatedSpace α ↔ ∀ x y, (∀ r ∈ 𝓤 α, (x, y) ∈ r) → x = y := by
-  simp [separatedSpace_iff, idRel_subset.2 separated_equiv.1, subset.antisymm_iff] <;>
+  simp [separatedSpace_iff, idRel_subset.2 separated_equiv.1, Subset.antisymm_iff] <;>
     simp [subset_def, separationRel]
 #align separated_def separated_def
 -/
@@ -228,7 +228,7 @@ theorem separationRel_comap {f : α → β}
   subst h
   dsimp [separationRel]
   simp_rw [uniformity_comap, (Filter.comap_hasBasis (Prod.map f f) (𝓤 β)).interₛ_sets, ←
-    preimage_Inter, sInter_eq_bInter]
+    preimage_interᵢ, interₛ_eq_binterᵢ]
   rfl
 #align separation_rel_comap separationRel_comap
 -/
@@ -394,7 +394,7 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
         u.uniformity.sets_of_superset ht fun ⟨a₁, a₂⟩ h₁ h₂ => hts (ht' <| Setoid.symm h₂) h₁,
         fun h => u.uniformity.sets_of_superset h <| by simp (config := { contextual := true })⟩
     simp only [isOpen_coinduced, isOpen_uniformity, uniformity, forall_quotient_iff, mem_preimage,
-      mem_map, preimage_set_of_eq, Quotient.eq']
+      mem_map, preimage_setOf_eq, Quotient.eq']
     exact ⟨fun h a ha => (this a ha).mp <| h a ha, fun h a ha => (this a ha).mpr <| h a ha⟩
 #align uniform_space.separation_setoid.uniform_space UniformSpace.separationSetoid.uniformSpace
 -/
@@ -483,7 +483,7 @@ instance separated_separation : SeparatedSpace (Quotient (separationSetoid α)) 
             let ⟨t, ht, hts⟩ := this
             hts (by dsimp [preimage]; exact h t ht)
           show ⟦a⟧ = ⟦b⟧ from Quotient.sound this,
-          fun heq : ⟦a⟧ = ⟦b⟧ => fun h hs => HEq ▸ refl_mem_uniformity hs⟩⟩
+          fun heq : ⟦a⟧ = ⟦b⟧ => fun h hs => heq ▸ refl_mem_uniformity hs⟩⟩
 #align uniform_space.separated_separation UniformSpace.separated_separation
 -/
 
@@ -537,7 +537,7 @@ theorem uniformContinuous_lift [SeparatedSpace β] (f : α → β) : UniformCont
   by
   by_cases hf : UniformContinuous f
   · rw [lift, dif_pos hf]
-    exact uniform_continuous_quotient_lift hf
+    exact uniformContinuous_quotient_lift hf
   · rw [lift, dif_neg hf]
     exact uniformContinuous_of_const fun a b => rfl
 #align uniform_space.separation_quotient.uniform_continuous_lift UniformSpace.SeparationQuotient.uniformContinuous_lift
@@ -600,8 +600,8 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
   constructor
   · intro h
     exact
-      ⟨separated_of_uniform_continuous uniformContinuous_fst h,
-        separated_of_uniform_continuous uniformContinuous_snd h⟩
+      ⟨separated_of_uniformContinuous uniformContinuous_fst h,
+        separated_of_uniformContinuous uniformContinuous_snd h⟩
   · rintro ⟨eqv_α, eqv_β⟩ r r_in
     rw [uniformity_prod] at r_in
     rcases r_in with ⟨t_α, ⟨r_α, r_α_in, h_α⟩, t_β, ⟨r_β, r_β_in, h_β⟩, rfl⟩

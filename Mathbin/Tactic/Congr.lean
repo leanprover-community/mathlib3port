@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.congr
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,8 +60,8 @@ unsafe def congr_core' : tactic Unit := do
     := do let tgt ← target let h ← to_expr ` `( ( _ : $ ( tgt ) = $ ( r ) ) ) rewrite_target h swap
 #align tactic.convert_to_core tactic.convert_to_core
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to prove the goal by proof irrelevance, but avoids unifying universe metavariables
 to do so. -/
 unsafe def by_proof_irrel : tactic Unit := do
@@ -225,7 +225,7 @@ add_tactic_doc
               to_expr
                   (
                       if
-                        Sym . isSome
+                        sym . isSome
                         then
                         ` `( $ ( src ) = $ ( tgt ) )
                         else
@@ -235,7 +235,7 @@ add_tactic_doc
                     false
                 >>=
                 mk_meta_var
-          ( if Sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
+          ( if sym then mk_eq_mp v r else mk_eq_mpr v r ) >>= tactic.exact
           let gs ← get_goals
           set_goals [ v ]
           try ( tactic.congr' n )
@@ -249,7 +249,7 @@ add_tactic_doc
     declNames := [`tactic.interactive.convert]
     tags := ["congruence"] }
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /-- `convert_to g using n` attempts to change the current goal to `g`, but unlike `change`,
 it will generate equality proof obligations using `congr' n` to resolve discrepancies.

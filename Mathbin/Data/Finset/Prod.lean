@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Oliver Nash
 
 ! This file was ported from Lean 3 source module data.finset.prod
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable {s s' : Finset α} {t t' : Finset β} {a : α} {b : β}
 #print Finset.product /-
 /-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
-  ⟨_, s.Nodup.product t.Nodup⟩
+  ⟨_, s.nodup.product t.nodup⟩
 #align finset.product Finset.product
 -/
 
@@ -228,7 +228,7 @@ Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUni
 theorem product_eq_bunionᵢ [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = s.bunionᵢ fun a => t.image fun b => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
+    simp only [mem_product, mem_bunionᵢ, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
 #align finset.product_eq_bUnion Finset.product_eq_bunionᵢ
 
@@ -242,7 +242,7 @@ Case conversion may be inaccurate. Consider using '#align finset.product_eq_bUni
 theorem product_eq_bunionᵢ_right [DecidableEq α] [DecidableEq β] (s : Finset α) (t : Finset β) :
     s ×ˢ t = t.bunionᵢ fun b => s.image fun a => (a, b) :=
   ext fun ⟨x, y⟩ => by
-    simp only [mem_product, mem_bUnion, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
+    simp only [mem_product, mem_bunionᵢ, mem_image, exists_prop, Prod.mk.inj_iff, and_left_comm,
       exists_and_left, exists_eq_right, exists_eq_left]
 #align finset.product_eq_bUnion_right Finset.product_eq_bunionᵢ_right
 
@@ -257,7 +257,7 @@ Case conversion may be inaccurate. Consider using '#align finset.product_bUnion 
 @[simp]
 theorem product_bunionᵢ [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α × β → Finset γ) :
     (s ×ˢ t).bunionᵢ f = s.bunionᵢ fun a => t.bunionᵢ fun b => f (a, b) := by
-  classical simp_rw [product_eq_bUnion, bUnion_bUnion, image_bUnion]
+  classical simp_rw [product_eq_bunionᵢ, bunionᵢ_bunionᵢ, image_bunionᵢ]
 #align finset.product_bUnion Finset.product_bunionᵢ
 
 /- warning: finset.card_product -> Finset.card_product is a dubious translation:
@@ -281,7 +281,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
-    ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ∧ q x.2) = s.filterₓ p ×ˢ t.filterₓ q :=
+    ((s ×ˢ t).filter fun x : α × β => p x.1 ∧ q x.2) = s.filter p ×ˢ t.filter q :=
   by
   ext ⟨a, b⟩
   simp only [mem_filter, mem_product]
@@ -297,7 +297,7 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product_left (p : α → Prop) [DecidablePred p] :
-    ((s ×ˢ t).filterₓ fun x : α × β => p x.1) = s.filterₓ p ×ˢ t := by
+    ((s ×ˢ t).filter fun x : α × β => p x.1) = s.filter p ×ˢ t := by
   simpa using filter_product p fun _ => True
 #align finset.filter_product_left Finset.filter_product_left
 
@@ -305,7 +305,7 @@ theorem filter_product_left (p : α → Prop) [DecidablePred p] :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Finset.filter_product_right /-
 theorem filter_product_right (q : β → Prop) [DecidablePred q] :
-    ((s ×ˢ t).filterₓ fun x : α × β => q x.2) = s ×ˢ t.filterₓ q := by
+    ((s ×ˢ t).filter fun x : α × β => q x.2) = s ×ˢ t.filter q := by
   simpa using filter_product (fun _ : α => True) q
 #align finset.filter_product_right Finset.filter_product_right
 -/
@@ -319,9 +319,9 @@ Case conversion may be inaccurate. Consider using '#align finset.filter_product_
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop)
     [DecidablePred p] [DecidablePred q] :
-    ((s ×ˢ t).filterₓ fun x : α × β => p x.1 ↔ q x.2).card =
-      (s.filterₓ p).card * (t.filterₓ q).card +
-        (s.filterₓ (Not ∘ p)).card * (t.filterₓ (Not ∘ q)).card :=
+    ((s ×ˢ t).filter fun x : α × β => p x.1 ↔ q x.2).card =
+      (s.filter p).card * (t.filter q).card +
+        (s.filter (Not ∘ p)).card * (t.filter (Not ∘ q)).card :=
   by
   classical
     rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
@@ -588,7 +588,7 @@ variable [DecidableEq α] (s t : Finset α)
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
 `a ∈ s`. -/
 def diag :=
-  (s ×ˢ s).filterₓ fun a : α × α => a.fst = a.snd
+  (s ×ˢ s).filter fun a : α × α => a.fst = a.snd
 #align finset.diag Finset.diag
 -/
 
@@ -597,7 +597,7 @@ def diag :=
 /-- Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
 for `a, b ∈ s`. -/
 def offDiag :=
-  (s ×ˢ s).filterₓ fun a : α × α => a.fst ≠ a.snd
+  (s ×ˢ s).filter fun a : α × α => a.fst ≠ a.snd
 #align finset.off_diag Finset.offDiag
 -/
 
@@ -618,7 +618,7 @@ theorem mem_diag : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 :=
 @[simp]
 theorem mem_offDiag : x ∈ s.offDiag ↔ x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 :=
   by
-  simp only [off_diag, mem_filter, mem_product]
+  simp only [offDiag, mem_filter, mem_product]
   constructor <;> intro h <;> simp only [h, Ne.def, not_false_iff, and_self_iff]
 #align finset.mem_off_diag Finset.mem_offDiag
 -/
@@ -638,7 +638,7 @@ theorem diag_card : (diag s).card = s.card :=
   by
   suffices diag s = s.image fun a => (a, a) by
     rw [this]
-    apply card_image_of_inj_on
+    apply card_image_of_injOn
     exact fun x1 h1 x2 h2 h3 => (Prod.mk.inj h3).1
   ext ⟨a₁, a₂⟩
   rw [mem_diag]
@@ -655,7 +655,7 @@ theorem diag_card : (diag s).card = s.card :=
 @[simp]
 theorem offDiag_card : (offDiag s).card = s.card * s.card - s.card :=
   by
-  suffices (diag s).card + (off_diag s).card = s.card * s.card
+  suffices (diag s).card + (offDiag s).card = s.card * s.card
     by
     nth_rw 3 [← s.diag_card]
     simp only [diag_card] at *
@@ -725,8 +725,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.product_sdiff_diag Finset.product_sdiff_diagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_sdiff_diag : s ×ˢ s \ s.diag = s.offDiag := by
-  rw [← diag_union_off_diag, union_comm, union_sdiff_self,
-    sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _).symm]
+  rw [← diag_union_offDiag, union_comm, union_sdiff_self,
+    sdiff_eq_self_of_disjoint (disjoint_diag_offDiag _).symm]
 #align finset.product_sdiff_diag Finset.product_sdiff_diag
 
 /- warning: finset.product_sdiff_off_diag -> Finset.product_sdiff_offDiag is a dubious translation:
@@ -737,7 +737,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.product_sdiff_off_diag Finset.product_sdiff_offDiagₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem product_sdiff_offDiag : s ×ˢ s \ s.offDiag = s.diag := by
-  rw [← diag_union_off_diag, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_off_diag _)]
+  rw [← diag_union_offDiag, union_sdiff_self, sdiff_eq_self_of_disjoint (disjoint_diag_offDiag _)]
 #align finset.product_sdiff_off_diag Finset.product_sdiff_offDiag
 
 /- warning: finset.diag_inter -> Finset.diag_inter is a dubious translation:
@@ -801,7 +801,7 @@ theorem offDiag_singleton : ({a} : Finset α).offDiag = ∅ := by simp [← Fins
 
 #print Finset.diag_singleton /-
 theorem diag_singleton : ({a} : Finset α).diag = {(a, a)} := by
-  rw [← product_sdiff_off_diag, off_diag_singleton, sdiff_empty, singleton_product_singleton]
+  rw [← product_sdiff_offDiag, offDiag_singleton, sdiff_empty, singleton_product_singleton]
 #align finset.diag_singleton Finset.diag_singleton
 -/
 
@@ -824,7 +824,7 @@ Case conversion may be inaccurate. Consider using '#align finset.off_diag_insert
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem offDiag_insert (has : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
-  rw [insert_eq, union_comm, off_diag_union (disjoint_singleton_right.2 has), off_diag_singleton,
+  rw [insert_eq, union_comm, offDiag_union (disjoint_singleton_right.2 has), offDiag_singleton,
     union_empty, union_right_comm]
 #align finset.off_diag_insert Finset.offDiag_insert
 

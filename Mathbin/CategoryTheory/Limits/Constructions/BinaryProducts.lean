@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.binary_products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,13 +48,13 @@ def isBinaryProductOfIsTerminalIsPullback (F : Discrete WalkingPair ⥤ C) (c : 
   uniq' s m J :=
     by
     let c' :=
-      pullback_cone.mk (m ≫ c.π.app ⟨walking_pair.left⟩) (m ≫ c.π.app ⟨walking_pair.right⟩ : _)
+      PullbackCone.mk (m ≫ c.π.app ⟨WalkingPair.left⟩) (m ≫ c.π.app ⟨WalkingPair.right⟩ : _)
         (hX.hom_ext (_ ≫ f) (_ ≫ g))
     rw [← J, ← J]
     apply hc.hom_ext
-    rintro (_ | (_ | _)) <;> simp only [pullback_cone.mk_π_app_one, pullback_cone.mk_π_app]
-    exacts[(category.assoc _ _ _).symm.trans (hc.fac_assoc c' walking_cospan.left f).symm,
-      (hc.fac c' walking_cospan.left).symm, (hc.fac c' walking_cospan.right).symm]
+    rintro (_ | (_ | _)) <;> simp only [PullbackCone.mk_π_app_one, PullbackCone.mk_π_app]
+    exacts[(Category.assoc _ _ _).symm.trans (hc.fac_assoc c' WalkingCospan.left f).symm,
+      (hc.fac c' WalkingCospan.left).symm, (hc.fac c' WalkingCospan.right).symm]
 #align is_binary_product_of_is_terminal_is_pullback isBinaryProductOfIsTerminalIsPullback
 
 /-- The pullback over the terminal object is the product -/
@@ -72,16 +72,16 @@ def isPullbackOfIsTerminalIsProduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
     (H₁ : IsTerminal Z) (H₂ : IsLimit (BinaryFan.mk h k)) :
     IsLimit (PullbackCone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) :=
   by
-  apply pullback_cone.is_limit_aux'
+  apply PullbackCone.isLimitAux'
   intro s
-  use H₂.lift (binary_fan.mk s.fst s.snd)
-  use H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.left⟩
-  use H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.right⟩
+  use H₂.lift (BinaryFan.mk s.fst s.snd)
+  use H₂.fac (BinaryFan.mk s.fst s.snd) ⟨WalkingPair.left⟩
+  use H₂.fac (BinaryFan.mk s.fst s.snd) ⟨WalkingPair.right⟩
   intro m h₁ h₂
   apply H₂.hom_ext
   rintro ⟨⟨⟩⟩
-  · exact h₁.trans (H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.left⟩).symm
-  · exact h₂.trans (H₂.fac (binary_fan.mk s.fst s.snd) ⟨walking_pair.right⟩).symm
+  · exact h₁.trans (H₂.fac (BinaryFan.mk s.fst s.snd) ⟨WalkingPair.left⟩).symm
+  · exact h₂.trans (H₂.fac (BinaryFan.mk s.fst s.snd) ⟨WalkingPair.right⟩).symm
 #align is_pullback_of_is_terminal_is_product isPullbackOfIsTerminalIsProduct
 
 /-- Any category with pullbacks and a terminal object has a limit cone for each walking pair. -/
@@ -117,9 +117,8 @@ noncomputable def preservesBinaryProductsOfPreservesTerminalAndPullbacks [HasTer
   ⟨fun K =>
     preservesLimitOfPreservesLimitCone (limitConeOfTerminalAndPullbacks K).2
       (by
-        apply
-          isBinaryProductOfIsTerminalIsPullback _ _ (is_limit_of_has_terminal_of_preserves_limit F)
-        apply is_limit_of_has_pullback_of_preserves_limit)⟩
+        apply isBinaryProductOfIsTerminalIsPullback _ _ (isLimitOfHasTerminalOfPreservesLimit F)
+        apply isLimitOfHasPullbackOfPreservesLimit)⟩
 #align preserves_binary_products_of_preserves_terminal_and_pullbacks preservesBinaryProductsOfPreservesTerminalAndPullbacks
 
 /-- In a category with a terminal object and pullbacks,
@@ -147,15 +146,15 @@ def isBinaryCoproductOfIsInitialIsPushout (F : Discrete WalkingPair ⥤ C) (c : 
   uniq' s m J :=
     by
     let c' :=
-      pushout_cocone.mk (c.ι.app ⟨walking_pair.left⟩ ≫ m) (c.ι.app ⟨walking_pair.right⟩ ≫ m)
+      PushoutCocone.mk (c.ι.app ⟨WalkingPair.left⟩ ≫ m) (c.ι.app ⟨WalkingPair.right⟩ ≫ m)
         (hX.hom_ext (f ≫ _) (g ≫ _))
     rw [← J, ← J]
     apply hc.hom_ext
     rintro (_ | (_ | _)) <;>
-      simp only [pushout_cocone.mk_ι_app_zero, pushout_cocone.mk_ι_app, category.assoc]
+      simp only [PushoutCocone.mk_ι_app_zero, PushoutCocone.mk_ι_app, Category.assoc]
     congr 1
-    exacts[(hc.fac c' walking_span.left).symm, (hc.fac c' walking_span.left).symm,
-      (hc.fac c' walking_span.right).symm]
+    exacts[(hc.fac c' WalkingSpan.left).symm, (hc.fac c' WalkingSpan.left).symm,
+      (hc.fac c' WalkingSpan.right).symm]
 #align is_binary_coproduct_of_is_initial_is_pushout isBinaryCoproductOfIsInitialIsPushout
 
 /-- The pushout under the initial object is the coproduct -/
@@ -173,16 +172,16 @@ def isPushoutOfIsInitialIsCoproduct {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) (h
     (H₁ : IsInitial W) (H₂ : IsColimit (BinaryCofan.mk f g)) :
     IsColimit (PushoutCocone.mk _ _ (show h ≫ f = k ≫ g from H₁.hom_ext _ _)) :=
   by
-  apply pushout_cocone.is_colimit_aux'
+  apply PushoutCocone.isColimitAux'
   intro s
-  use H₂.desc (binary_cofan.mk s.inl s.inr)
-  use H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.left⟩
-  use H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.right⟩
+  use H₂.desc (BinaryCofan.mk s.inl s.inr)
+  use H₂.fac (BinaryCofan.mk s.inl s.inr) ⟨WalkingPair.left⟩
+  use H₂.fac (BinaryCofan.mk s.inl s.inr) ⟨WalkingPair.right⟩
   intro m h₁ h₂
   apply H₂.hom_ext
   rintro ⟨⟨⟩⟩
-  · exact h₁.trans (H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.left⟩).symm
-  · exact h₂.trans (H₂.fac (binary_cofan.mk s.inl s.inr) ⟨walking_pair.right⟩).symm
+  · exact h₁.trans (H₂.fac (BinaryCofan.mk s.inl s.inr) ⟨WalkingPair.left⟩).symm
+  · exact h₂.trans (H₂.fac (BinaryCofan.mk s.inl s.inr) ⟨WalkingPair.right⟩).symm
 #align is_pushout_of_is_initial_is_coproduct isPushoutOfIsInitialIsCoproduct
 
 /-- Any category with pushouts and an initial object has a colimit cocone for each walking pair. -/
@@ -215,10 +214,8 @@ noncomputable def preservesBinaryCoproductsOfPreservesInitialAndPushouts [HasIni
   ⟨fun K =>
     preservesColimitOfPreservesColimitCocone (colimitCoconeOfInitialAndPushouts K).2
       (by
-        apply
-          isBinaryCoproductOfIsInitialIsPushout _ _
-            (is_colimit_of_has_initial_of_preserves_colimit F)
-        apply is_colimit_of_has_pushout_of_preserves_colimit)⟩
+        apply isBinaryCoproductOfIsInitialIsPushout _ _ (isColimitOfHasInitialOfPreservesColimit F)
+        apply isColimitOfHasPushoutOfPreservesColimit)⟩
 #align preserves_binary_coproducts_of_preserves_initial_and_pushouts preservesBinaryCoproductsOfPreservesInitialAndPushouts
 
 /-- In a category with an initial object and pushouts,

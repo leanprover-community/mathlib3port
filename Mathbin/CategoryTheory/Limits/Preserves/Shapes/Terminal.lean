@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.terminal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,8 +85,8 @@ has limits of shape `J` and `G` preserves them, then `D` does not necessarily ha
 theorem hasTerminal_of_hasTerminal_of_preservesLimit [PreservesLimit (Functor.empty.{0} C) G] :
     HasTerminal D :=
   ⟨fun F => by
-    haveI := has_limit.mk ⟨_, is_limit_of_has_terminal_of_preserves_limit G⟩
-    apply has_limit_of_iso F.unique_from_empty.symm⟩
+    haveI := HasLimit.mk ⟨_, isLimitOfHasTerminalOfPreservesLimit G⟩
+    apply hasLimitOfIso F.unique_from_empty.symm⟩
 #align category_theory.limits.has_terminal_of_has_terminal_of_preserves_limit CategoryTheory.Limits.hasTerminal_of_hasTerminal_of_preservesLimit
 
 variable [HasTerminal D]
@@ -96,9 +96,9 @@ variable [HasTerminal D]
 def PreservesTerminal.ofIsoComparison [i : IsIso (terminalComparison G)] :
     PreservesLimit (Functor.empty C) G :=
   by
-  apply preserves_limit_of_preserves_limit_cone terminal_is_terminal
-  apply (is_limit_map_cone_empty_cone_equiv _ _).symm _
-  apply is_limit.of_point_iso (limit.is_limit (Functor.empty.{0} D))
+  apply preservesLimitOfPreservesLimitCone terminalIsTerminal
+  apply (isLimitMapConeEmptyConeEquiv _ _).symm _
+  apply IsLimit.ofPointIso (limit.isLimit (Functor.empty.{0} D))
   apply i
 #align category_theory.limits.preserves_terminal.of_iso_comparison CategoryTheory.Limits.PreservesTerminal.ofIsoComparison
 
@@ -106,13 +106,13 @@ def PreservesTerminal.ofIsoComparison [i : IsIso (terminalComparison G)] :
 def preservesTerminalOfIsIso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : IsIso f] :
     PreservesLimit (Functor.empty C) G :=
   by
-  rw [Subsingleton.elim f (terminal_comparison G)] at i
-  exact preserves_terminal.of_iso_comparison G
+  rw [Subsingleton.elim f (terminalComparison G)] at i
+  exact PreservesTerminal.ofIsoComparison G
 #align category_theory.limits.preserves_terminal_of_is_iso CategoryTheory.Limits.preservesTerminalOfIsIso
 
 /-- If there is any isomorphism `G.obj ⊤ ≅ ⊤`, then `G` preserves terminal objects. -/
 def preservesTerminalOfIso (f : G.obj (⊤_ C) ≅ ⊤_ D) : PreservesLimit (Functor.empty C) G :=
-  preservesTerminalOfIsIso G f.Hom
+  preservesTerminalOfIsIso G f.hom
 #align category_theory.limits.preserves_terminal_of_iso CategoryTheory.Limits.preservesTerminalOfIso
 
 variable [PreservesLimit (Functor.empty.{0} C) G]
@@ -124,13 +124,13 @@ def PreservesTerminal.iso : G.obj (⊤_ C) ≅ ⊤_ D :=
 #align category_theory.limits.preserves_terminal.iso CategoryTheory.Limits.PreservesTerminal.iso
 
 @[simp]
-theorem PreservesTerminal.iso_hom : (PreservesTerminal.iso G).Hom = terminalComparison G :=
+theorem PreservesTerminal.iso_hom : (PreservesTerminal.iso G).hom = terminalComparison G :=
   rfl
 #align category_theory.limits.preserves_terminal.iso_hom CategoryTheory.Limits.PreservesTerminal.iso_hom
 
 instance : IsIso (terminalComparison G) :=
   by
-  rw [← preserves_terminal.iso_hom]
+  rw [← PreservesTerminal.iso_hom]
   infer_instance
 
 end Terminal
@@ -182,8 +182,8 @@ shape `J`.
 theorem hasInitial_of_hasInitial_of_preservesColimit [PreservesColimit (Functor.empty.{0} C) G] :
     HasInitial D :=
   ⟨fun F => by
-    haveI := has_colimit.mk ⟨_, is_colimit_of_has_initial_of_preserves_colimit G⟩
-    apply has_colimit_of_iso F.unique_from_empty⟩
+    haveI := HasColimit.mk ⟨_, isColimitOfHasInitialOfPreservesColimit G⟩
+    apply hasColimitOfIso F.unique_from_empty⟩
 #align category_theory.limits.has_initial_of_has_initial_of_preserves_colimit CategoryTheory.Limits.hasInitial_of_hasInitial_of_preservesColimit
 
 variable [HasInitial D]
@@ -193,9 +193,9 @@ variable [HasInitial D]
 def PreservesInitial.ofIsoComparison [i : IsIso (initialComparison G)] :
     PreservesColimit (Functor.empty C) G :=
   by
-  apply preserves_colimit_of_preserves_colimit_cocone initial_is_initial
-  apply (is_colimit_map_cocone_empty_cocone_equiv _ _).symm _
-  apply is_colimit.of_point_iso (colimit.is_colimit (Functor.empty.{0} D))
+  apply preservesColimitOfPreservesColimitCocone initialIsInitial
+  apply (isColimitMapCoconeEmptyCoconeEquiv _ _).symm _
+  apply IsColimit.ofPointIso (colimit.isColimit (Functor.empty.{0} D))
   apply i
 #align category_theory.limits.preserves_initial.of_iso_comparison CategoryTheory.Limits.PreservesInitial.ofIsoComparison
 
@@ -203,13 +203,13 @@ def PreservesInitial.ofIsoComparison [i : IsIso (initialComparison G)] :
 def preservesInitialOfIsIso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : IsIso f] :
     PreservesColimit (Functor.empty C) G :=
   by
-  rw [Subsingleton.elim f (initial_comparison G)] at i
-  exact preserves_initial.of_iso_comparison G
+  rw [Subsingleton.elim f (initialComparison G)] at i
+  exact PreservesInitial.ofIsoComparison G
 #align category_theory.limits.preserves_initial_of_is_iso CategoryTheory.Limits.preservesInitialOfIsIso
 
 /-- If there is any isomorphism `⊥ ≅ G.obj ⊥ `, then `G` preserves initial objects. -/
 def preservesInitialOfIso (f : ⊥_ D ≅ G.obj (⊥_ C)) : PreservesColimit (Functor.empty C) G :=
-  preservesInitialOfIsIso G f.Hom
+  preservesInitialOfIsIso G f.hom
 #align category_theory.limits.preserves_initial_of_iso CategoryTheory.Limits.preservesInitialOfIso
 
 variable [PreservesColimit (Functor.empty.{0} C) G]
@@ -226,7 +226,7 @@ theorem PreservesInitial.iso_hom : (PreservesInitial.iso G).inv = initialCompari
 
 instance : IsIso (initialComparison G) :=
   by
-  rw [← preserves_initial.iso_hom]
+  rw [← PreservesInitial.iso_hom]
   infer_instance
 
 end Initial

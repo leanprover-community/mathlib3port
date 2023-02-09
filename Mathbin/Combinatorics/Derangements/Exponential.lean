@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Henry Swanson, Patrick Massot
 
 ! This file was ported from Lean 3 source module combinatorics.derangements.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem numDerangements_tendsto_inv_e :
     simp_rw [this]
     -- shift the function by 1, and then use the fact that the partial sums
     -- converge to the infinite sum
-    rw [tendsto_add_at_top_iff_nat 1]
+    rw [tendsto_add_atTop_iff_nat 1]
     apply HasSum.tendsto_sum_nat
     -- there's no specific lemma for ℝ that ∑ x^k/k! sums to exp(x), but it's
     -- true in more general fields, so use that lemma

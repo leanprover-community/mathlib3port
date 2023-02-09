@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -164,7 +164,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (x : Prod.{u2, u1} α β), Eq.{max (succ u1) (succ u2)} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Prod.{u2, u1} α β) => Prod.{u1, u2} β α) x) (FunLike.coe.{max (succ u1) (succ u2), max (succ u1) (succ u2), max (succ u1) (succ u2)} (Equiv.{max (succ u1) (succ u2), max (succ u2) (succ u1)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)) (Prod.{u2, u1} α β) (fun (_x : Prod.{u2, u1} α β) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : Prod.{u2, u1} α β) => Prod.{u1, u2} β α) _x) (Equiv.instFunLikeEquiv.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Prod.{u2, u1} α β) (Prod.{u1, u2} β α)) (Equiv.prodComm.{u2, u1} α β) x) (Prod.swap.{u2, u1} α β x)
 Case conversion may be inaccurate. Consider using '#align equiv.prod_comm_apply Equiv.prodComm_applyₓ'. -/
 @[simp]
-theorem prodComm_apply {α β : Type _} (x : α × β) : prodComm α β x = x.symm :=
+theorem prodComm_apply {α β : Type _} (x : α × β) : prodComm α β x = x.swap :=
   rfl
 #align equiv.prod_comm_apply Equiv.prodComm_apply
 
@@ -211,7 +211,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.prod_punit Equiv
 /-- `punit` is a right identity for type product up to an equivalence. -/
 @[simps]
 def prodPUnit (α : Type _) : α × PUnit.{u + 1} ≃ α :=
-  ⟨fun p => p.1, fun a => (a, PUnit.unit), fun ⟨_, PUnit.unit⟩ => rfl, fun a => rfl⟩
+  ⟨fun p => p.1, fun a => (a, PUnit.unit), fun ⟨_, punit.star⟩ => rfl, fun a => rfl⟩
 #align equiv.prod_punit Equiv.prodPUnit
 
 /- warning: equiv.punit_prod -> Equiv.punitProd is a dubious translation:
@@ -663,7 +663,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.option_equiv_sum_punit Equiv.optionEquivSumPUnitₓ'. -/
 /-- `option α` is equivalent to `α ⊕ punit` -/
 def optionEquivSumPUnit (α : Type _) : Option α ≃ Sum α PUnit.{u + 1} :=
-  ⟨fun o => o.elim (inr PUnit.unit) inl, fun s => s.elim some fun _ => none, fun o => by
+  ⟨fun o => o.elim' (inr PUnit.unit) inl, fun s => s.elim some fun _ => none, fun o => by
     cases o <;> rfl, fun s => by rcases s with (_ | ⟨⟨⟩⟩) <;> rfl⟩
 #align equiv.option_equiv_sum_punit Equiv.optionEquivSumPUnit
 
@@ -852,14 +852,14 @@ def Perm.subtypeCongr : Equiv.Perm ε :=
 #print Equiv.Perm.subtypeCongr.apply /-
 theorem Perm.subtypeCongr.apply (a : ε) :
     ep.subtypeCongr en a = if h : p a then ep ⟨a, h⟩ else en ⟨a, h⟩ := by
-  by_cases h : p a <;> simp [perm.subtype_congr, h]
+  by_cases h : p a <;> simp [Perm.subtypeCongr, h]
 #align equiv.perm.subtype_congr.apply Equiv.Perm.subtypeCongr.apply
 -/
 
 #print Equiv.Perm.subtypeCongr.left_apply /-
 @[simp]
 theorem Perm.subtypeCongr.left_apply {a : ε} (h : p a) : ep.subtypeCongr en a = ep ⟨a, h⟩ := by
-  simp [perm.subtype_congr.apply, h]
+  simp [Perm.subtypeCongr.apply, h]
 #align equiv.perm.subtype_congr.left_apply Equiv.Perm.subtypeCongr.left_apply
 -/
 
@@ -867,7 +867,7 @@ theorem Perm.subtypeCongr.left_apply {a : ε} (h : p a) : ep.subtypeCongr en a =
 @[simp]
 theorem Perm.subtypeCongr.left_apply_subtype (a : { a // p a }) : ep.subtypeCongr en a = ep a :=
   by
-  convert perm.subtype_congr.left_apply _ _ a.property
+  convert Perm.subtypeCongr.left_apply _ _ a.property
   simp
 #align equiv.perm.subtype_congr.left_apply_subtype Equiv.Perm.subtypeCongr.left_apply_subtype
 -/
@@ -875,7 +875,7 @@ theorem Perm.subtypeCongr.left_apply_subtype (a : { a // p a }) : ep.subtypeCong
 #print Equiv.Perm.subtypeCongr.right_apply /-
 @[simp]
 theorem Perm.subtypeCongr.right_apply {a : ε} (h : ¬p a) : ep.subtypeCongr en a = en ⟨a, h⟩ := by
-  simp [perm.subtype_congr.apply, h]
+  simp [Perm.subtypeCongr.apply, h]
 #align equiv.perm.subtype_congr.right_apply Equiv.Perm.subtypeCongr.right_apply
 -/
 
@@ -883,7 +883,7 @@ theorem Perm.subtypeCongr.right_apply {a : ε} (h : ¬p a) : ep.subtypeCongr en 
 @[simp]
 theorem Perm.subtypeCongr.right_apply_subtype (a : { a // ¬p a }) : ep.subtypeCongr en a = en a :=
   by
-  convert perm.subtype_congr.right_apply _ _ a.property
+  convert Perm.subtypeCongr.right_apply _ _ a.property
   simp
 #align equiv.perm.subtype_congr.right_apply_subtype Equiv.Perm.subtypeCongr.right_apply_subtype
 -/
@@ -905,9 +905,9 @@ theorem Perm.subtypeCongr.symm : (ep.subtypeCongr en).symm = Perm.subtypeCongr e
   ext x
   by_cases h : p x
   · have : p (ep.symm ⟨x, h⟩) := Subtype.property _
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
   · have : ¬p (en.symm ⟨x, h⟩) := Subtype.property (en.symm _)
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
 #align equiv.perm.subtype_congr.symm Equiv.Perm.subtypeCongr.symm
 -/
 
@@ -920,9 +920,9 @@ theorem Perm.subtypeCongr.trans :
   ext x
   by_cases h : p x
   · have : p (ep ⟨x, h⟩) := Subtype.property _
-    simp [perm.subtype_congr.apply, h, this]
+    simp [Perm.subtypeCongr.apply, h, this]
   · have : ¬p (en ⟨x, h⟩) := Subtype.property (en _)
-    simp [perm.subtype_congr.apply, h, symm_apply_eq, this]
+    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
 #align equiv.perm.subtype_congr.trans Equiv.Perm.subtypeCongr.trans
 -/
 
@@ -1175,7 +1175,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.of_fiber_equiv_map Equiv.ofFiberEquiv_mapₓ'. -/
 theorem ofFiberEquiv_map {α β γ} {f : α → γ} {g : β → γ}
     (e : ∀ c, { a // f a = c } ≃ { b // g b = c }) (a : α) : g (ofFiberEquiv e a) = f a :=
-  (_ : { b // g b = _ }).Prop
+  (_ : { b // g b = _ }).prop
 #align equiv.of_fiber_equiv_map Equiv.ofFiberEquiv_map
 
 /- warning: equiv.prod_shear -> Equiv.prodShear is a dubious translation:
@@ -1247,7 +1247,7 @@ theorem eq_of_prodExtendRight_ne {e : Perm β₁} {a a' : α₁} {b : β₁}
     (h : prodExtendRight a e (a', b) ≠ (a', b)) : a' = a :=
   by
   contrapose! h
-  exact prod_extend_right_apply_ne _ h _
+  exact prodExtendRight_apply_ne _ h _
 #align equiv.perm.eq_of_prod_extend_right_ne Equiv.Perm.eq_of_prodExtendRight_ne
 -/
 
@@ -1260,7 +1260,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.fst_prod_ex
 @[simp]
 theorem fst_prodExtendRight (ab : α₁ × β₁) : (prodExtendRight a e ab).fst = ab.fst :=
   by
-  rw [prod_extend_right, [anonymous]]
+  rw [prodExtendRight, coe_fn_mk]
   split_ifs with h
   · rw [h]
   · rfl
@@ -1609,8 +1609,8 @@ For the statement where `α = β`, that is, `e : perm α`, see `perm.subtype_per
 def subtypeEquiv {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ a, p a ↔ q (e a)) :
     { a : α // p a } ≃ { b : β // q b }
     where
-  toFun a := ⟨e a, (h _).mp a.Prop⟩
-  invFun b := ⟨e.symm b, (h _).mpr ((e.apply_symm_apply b).symm ▸ b.Prop)⟩
+  toFun a := ⟨e a, (h _).mp a.prop⟩
+  invFun b := ⟨e.symm b, (h _).mpr ((e.apply_symm_apply b).symm ▸ b.prop)⟩
   left_inv a := Subtype.ext <| by simp
   right_inv b := Subtype.ext <| by simp
 #align equiv.subtype_equiv Equiv.subtypeEquiv
@@ -1809,10 +1809,10 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
     (Σy : Subtype q, { x : α // f x = y }) ≃
         Σy : Subtype q, { x : Subtype p // Subtype.mk (f x) ((h x).1 x.2) = y } :=
       by
-      apply sigma_congr_right
+      apply sigmaCongrRight
       intro y
       symm
-      refine' (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)
+      refine' (subtypeSubtypeEquivSubtypeExists _ _).trans (subtypeEquivRight _)
       intro x
       exact
         ⟨fun ⟨hp, h'⟩ => congr_arg Subtype.val h', fun h' =>
@@ -1840,7 +1840,7 @@ def sigmaOptionEquivOfSome {α : Type u} (p : Option α → Type v) (h : p none 
       exact h n
     · intro s
       exact rfl
-  (sigma_subtype_equiv_of_subset _ _ h').symm.trans (sigma_congr_left' (option_is_some_equiv α))
+  (sigmaSubtypeEquivOfSubset _ _ h').symm.trans (sigmaCongrLeft' (optionIsSomeEquiv α))
 #align equiv.sigma_option_equiv_of_some Equiv.sigmaOptionEquivOfSome
 
 #print Equiv.piEquivSubtypeSigma /-
@@ -1890,8 +1890,8 @@ def subtypeProdEquivProd {α : Type u} {β : Type v} {p : α → Prop} {q : β �
 def subtypeProdEquivSigmaSubtype {α β : Type _} (p : α → β → Prop) :
     { x : α × β // p x.1 x.2 } ≃ Σa, { b : β // p a b }
     where
-  toFun x := ⟨x.1.1, x.1.2, x.Prop⟩
-  invFun x := ⟨⟨x.1, x.2⟩, x.2.Prop⟩
+  toFun x := ⟨x.1.1, x.1.2, x.prop⟩
+  invFun x := ⟨⟨x.1, x.2⟩, x.2.prop⟩
   left_inv x := by ext <;> rfl
   right_inv := fun ⟨a, b, pab⟩ => rfl
 #align equiv.subtype_prod_equiv_sigma_subtype Equiv.subtypeProdEquivSigmaSubtype
@@ -1929,7 +1929,7 @@ def piSplitAt {α : Type _} [DecidableEq α] (i : α) (β : α → Type _) :
     (∀ j, β j) ≃ β i × ∀ j : { j // j ≠ i }, β j
     where
   toFun f := ⟨f i, fun j => f j⟩
-  invFun f j := if h : j = i then h.symm.rec f.1 else f.2 ⟨j, h⟩
+  invFun f j := if h : j = i then h.symm.ndrec f.1 else f.2 ⟨j, h⟩
   right_inv f := by
     ext
     exacts[dif_pos rfl, (dif_neg x.2).trans (by cases x <;> rfl)]
@@ -2060,7 +2060,7 @@ end SubtypeEquivCodomain
 noncomputable def ofBijective (f : α → β) (hf : Bijective f) : α ≃ β
     where
   toFun := f
-  invFun := Function.surjInv hf.Surjective
+  invFun := Function.surjInv hf.surjective
   left_inv := Function.leftInverse_surjInv hf
   right_inv := Function.rightInverse_surjInv _
 #align equiv.of_bijective Equiv.ofBijective
@@ -2111,26 +2111,26 @@ def Perm.extendDomain : Perm β' :=
 #print Equiv.Perm.extendDomain_apply_image /-
 @[simp]
 theorem Perm.extendDomain_apply_image (a : α') : e.extendDomain f (f a) = f (e a) := by
-  simp [perm.extend_domain]
+  simp [Perm.extendDomain]
 #align equiv.perm.extend_domain_apply_image Equiv.Perm.extendDomain_apply_image
 -/
 
 #print Equiv.Perm.extendDomain_apply_subtype /-
 theorem Perm.extendDomain_apply_subtype {b : β'} (h : p b) :
-    e.extendDomain f b = f (e (f.symm ⟨b, h⟩)) := by simp [perm.extend_domain, h]
+    e.extendDomain f b = f (e (f.symm ⟨b, h⟩)) := by simp [Perm.extendDomain, h]
 #align equiv.perm.extend_domain_apply_subtype Equiv.Perm.extendDomain_apply_subtype
 -/
 
 #print Equiv.Perm.extendDomain_apply_not_subtype /-
 theorem Perm.extendDomain_apply_not_subtype {b : β'} (h : ¬p b) : e.extendDomain f b = b := by
-  simp [perm.extend_domain, h]
+  simp [Perm.extendDomain, h]
 #align equiv.perm.extend_domain_apply_not_subtype Equiv.Perm.extendDomain_apply_not_subtype
 -/
 
 #print Equiv.Perm.extendDomain_refl /-
 @[simp]
 theorem Perm.extendDomain_refl : Perm.extendDomain (Equiv.refl _) f = Equiv.refl _ := by
-  simp [perm.extend_domain]
+  simp [Perm.extendDomain]
 #align equiv.perm.extend_domain_refl Equiv.Perm.extendDomain_refl
 -/
 
@@ -2149,7 +2149,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_domain_trans Equiv.Perm.extendDomain_transₓ'. -/
 theorem Perm.extendDomain_trans (e e' : Perm α') :
     (e.extendDomain f).trans (e'.extendDomain f) = Perm.extendDomain (e.trans e') f := by
-  simp [perm.extend_domain, perm_congr_trans]
+  simp [Perm.extendDomain, permCongr_trans]
 #align equiv.perm.extend_domain_trans Equiv.Perm.extendDomain_trans
 
 end
@@ -2192,7 +2192,7 @@ theorem subtypeQuotientEquivQuotientSubtype_mk (p₁ : α → Prop) [s₁ : Seto
 theorem subtypeQuotientEquivQuotientSubtype_symm_mk (p₁ : α → Prop) [s₁ : Setoid α]
     [s₂ : Setoid (Subtype p₁)] (p₂ : Quotient s₁ → Prop) (hp₂ : ∀ a, p₁ a ↔ p₂ ⟦a⟧)
     (h : ∀ x y : Subtype p₁, @Setoid.r _ s₂ x y ↔ (x : α) ≈ y) (x) :
-    (subtypeQuotientEquivQuotientSubtype p₁ p₂ hp₂ h).symm ⟦x⟧ = ⟨⟦x⟧, (hp₂ _).1 x.Prop⟩ :=
+    (subtypeQuotientEquivQuotientSubtype p₁ p₂ hp₂ h).symm ⟦x⟧ = ⟨⟦x⟧, (hp₂ _).1 x.prop⟩ :=
   rfl
 #align equiv.subtype_quotient_equiv_quotient_subtype_symm_mk Equiv.subtypeQuotientEquivQuotientSubtype_symm_mk
 -/
@@ -2297,7 +2297,7 @@ theorem symm_swap (a b : α) : (swap a b).symm = swap a b :=
 @[simp]
 theorem swap_eq_refl_iff {x y : α} : swap x y = Equiv.refl _ ↔ x = y :=
   by
-  refine' ⟨fun h => (Equiv.refl _).Injective _, fun h => h ▸ swap_self _⟩
+  refine' ⟨fun h => (Equiv.refl _).injective _, fun h => h ▸ swap_self _⟩
   rw [← h, swap_apply_left, h, refl_apply]
 #align equiv.swap_eq_refl_iff Equiv.swap_eq_refl_iff
 -/
@@ -2457,7 +2457,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.set_value_eq Equ
 @[simp]
 theorem setValue_eq (f : α ≃ β) (a : α) (b : β) : setValue f a b a = b :=
   by
-  dsimp [set_value]
+  dsimp [setValue]
   simp [swap_apply_left]
 #align equiv.set_value_eq Equiv.setValue_eq
 
@@ -2470,7 +2470,7 @@ namespace Function.Involutive
 #print Function.Involutive.toPerm /-
 /-- Convert an involutive function `f` to a permutation with `to_fun = inv_fun = f`. -/
 def toPerm (f : α → α) (h : Involutive f) : Equiv.Perm α :=
-  ⟨f, f, h.LeftInverse, h.RightInverse⟩
+  ⟨f, f, h.leftInverse, h.rightInverse⟩
 #align function.involutive.to_perm Function.Involutive.toPerm
 -/
 
@@ -2699,16 +2699,16 @@ theorem semiconj₂_conj : Semiconj₂ e f (e.arrowCongr e.conj f) := fun x y =>
 #align equiv.semiconj₂_conj Equiv.semiconj₂_conj
 
 instance [IsAssociative α₁ f] : IsAssociative β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  (e.semiconj₂_conj f).isAssociative_right e.Surjective
+  (e.semiconj₂_conj f).isAssociative_right e.surjective
 
 instance [IsIdempotent α₁ f] : IsIdempotent β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  (e.semiconj₂_conj f).isIdempotent_right e.Surjective
+  (e.semiconj₂_conj f).isIdempotent_right e.surjective
 
 instance [IsLeftCancel α₁ f] : IsLeftCancel β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  ⟨e.Surjective.forall₃.2 fun x y z => by simpa using @IsLeftCancel.left_cancel _ f _ x y z⟩
+  ⟨e.surjective.forall₃.2 fun x y z => by simpa using @is_left_cancel.left_cancel _ f _ x y z⟩
 
 instance [IsRightCancel α₁ f] : IsRightCancel β₁ (e.arrowCongr (e.arrowCongr e) f) :=
-  ⟨e.Surjective.forall₃.2 fun x y z => by simpa using @IsRightCancel.right_cancel _ f _ x y z⟩
+  ⟨e.surjective.forall₃.2 fun x y z => by simpa using @is_right_cancel.right_cancel _ f _ x y z⟩
 
 end BinaryOp
 
@@ -2832,7 +2832,7 @@ Case conversion may be inaccurate. Consider using '#align function.Pi_congr_left
 theorem piCongrLeft'_symm_update [DecidableEq α] [DecidableEq β] (P : α → Sort _) (e : α ≃ β)
     (f : ∀ b, P (e.symm b)) (b : β) (x : P (e.symm b)) :
     (e.piCongrLeft' P).symm (update f b x) = update ((e.piCongrLeft' P).symm f) (e.symm b) x := by
-  simp [(e.Pi_congr_left' P).symm_apply_eq, Pi_congr_left'_update]
+  simp [(e.Pi_congr_left' P).symm_apply_eq, piCongrLeft'_update]
 #align function.Pi_congr_left'_symm_update Function.piCongrLeft'_symm_update
 
 end Function

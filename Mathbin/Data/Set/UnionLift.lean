@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.set.Union_lift
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,8 +61,8 @@ it on each component, and proving that it agrees on the intersections. -/
 noncomputable def unionᵢLift (S : ι → Set α) (f : ∀ (i) (x : S i), β)
     (hf : ∀ (i j) (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩) (T : Set α)
     (hT : T ⊆ unionᵢ S) (x : T) : β :=
-  let i := Classical.indefiniteDescription _ (mem_unionᵢ.1 (hT x.Prop))
-  f i ⟨x, i.Prop⟩
+  let i := Classical.indefiniteDescription _ (mem_unionᵢ.1 (hT x.prop))
+  f i ⟨x, i.prop⟩
 #align set.Union_lift Set.unionᵢLift
 -/
 
@@ -119,9 +119,9 @@ Case conversion may be inaccurate. Consider using '#align set.Union_lift_const S
 theorem unionᵢLift_const (c : T) (ci : ∀ i, S i) (hci : ∀ i, (ci i : α) = c) (cβ : β)
     (h : ∀ i, f i (ci i) = cβ) : unionᵢLift S f hf T hT c = cβ :=
   by
-  let ⟨i, hi⟩ := Set.mem_unionᵢ.1 (hT c.Prop)
+  let ⟨i, hi⟩ := Set.mem_unionᵢ.1 (hT c.prop)
   have : ci i = ⟨c, hi⟩ := Subtype.ext (hci i)
-  rw [Union_lift_of_mem _ hi, ← this, h]
+  rw [unionᵢLift_of_mem _ hi, ← this, h]
 #align set.Union_lift_const Set.unionᵢLift_const
 
 /- warning: set.Union_lift_unary -> Set.unionᵢLift_unary is a dubious translation:
@@ -144,13 +144,13 @@ theorem unionᵢLift_unary (u : T → T) (ui : ∀ i, S i → S i)
   by
   subst hT'
   cases' Set.mem_unionᵢ.1 x.prop with i hi
-  rw [Union_lift_of_mem x hi, ← h i]
+  rw [unionᵢLift_of_mem x hi, ← h i]
   have : x = Set.inclusion (Set.subset_unionᵢ S i) ⟨x, hi⟩ :=
     by
     cases x
     rfl
-  have hx' : (Set.inclusion (Set.subset_unionᵢ S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).Prop
-  conv_lhs => rw [this, hui, Union_lift_inclusion]
+  have hx' : (Set.inclusion (Set.subset_unionᵢ S i) (ui i ⟨x, hi⟩) : α) ∈ S i := (ui i ⟨x, hi⟩).prop
+  conv_lhs => rw [this, hui, unionᵢLift_inclusion]
 #align set.Union_lift_unary Set.unionᵢLift_unary
 
 /- warning: set.Union_lift_binary -> Set.unionᵢLift_binary is a dubious translation:
@@ -177,7 +177,7 @@ theorem unionᵢLift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) 
   cases' Set.mem_unionᵢ.1 x.prop with i hi
   cases' Set.mem_unionᵢ.1 y.prop with j hj
   rcases dir i j with ⟨k, hik, hjk⟩
-  rw [Union_lift_of_mem x (hik hi), Union_lift_of_mem y (hjk hj), ← h k]
+  rw [unionᵢLift_of_mem x (hik hi), unionᵢLift_of_mem y (hjk hj), ← h k]
   have hx : x = Set.inclusion (Set.subset_unionᵢ S k) ⟨x, hik hi⟩ :=
     by
     cases x
@@ -187,8 +187,8 @@ theorem unionᵢLift_binary (dir : Directed (· ≤ ·) S) (op : T → T → T) 
     cases y
     rfl
   have hxy : (Set.inclusion (Set.subset_unionᵢ S k) (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩) : α) ∈ S k :=
-    (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).Prop
-  conv_lhs => rw [hx, hy, ← hopi, Union_lift_of_mem _ hxy]
+    (opi k ⟨x, hik hi⟩ ⟨y, hjk hj⟩).prop
+  conv_lhs => rw [hx, hy, ← hopi, unionᵢLift_of_mem _ hxy]
   simp only [coe_inclusion, Subtype.coe_eta]
 #align set.Union_lift_binary Set.unionᵢLift_binary
 

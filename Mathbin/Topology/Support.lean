@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.support
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_tsupport_eq_empty_iff mulTSupport_eq_empty_iffₓ'. -/
 @[to_additive]
 theorem mulTSupport_eq_empty_iff {f : X → α} : mulTSupport f = ∅ ↔ f = 1 := by
-  rw [mulTSupport, closure_empty_iff, mul_support_eq_empty_iff]
+  rw [mulTSupport, closure_empty_iff, mulSupport_eq_empty_iff]
 #align mul_tsupport_eq_empty_iff mulTSupport_eq_empty_iff
 #align tsupport_eq_empty_iff tsupport_eq_empty_iff
 
@@ -177,7 +177,7 @@ Case conversion may be inaccurate. Consider using '#align not_mem_mul_tsupport_i
 @[to_additive]
 theorem not_mem_mulTSupport_iff_eventuallyEq : x ∉ mulTSupport f ↔ f =ᶠ[𝓝 x] 1 := by
   simp_rw [mulTSupport, mem_closure_iff_nhds, not_forall, not_nonempty_iff_eq_empty, ←
-    disjoint_iff_inter_eq_empty, disjoint_mul_support_iff, eventually_eq_iff_exists_mem]
+    disjoint_iff_inter_eq_empty, disjoint_mulSupport_iff, eventuallyEq_iff_exists_mem]
 #align not_mem_mul_tsupport_iff_eventually_eq not_mem_mulTSupport_iff_eventuallyEq
 #align not_mem_tsupport_iff_eventually_eq not_mem_tsupport_iff_eventuallyEq
 
@@ -222,11 +222,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : One.{u1} β] {f : α -> β} [_inst_6 : T2Space.{u2} α _inst_1], Iff (Exists.{succ u2} (Set.{u2} α) (fun (K : Set.{u2} α) => And (IsCompact.{u2} α _inst_1 K) (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_3)))))) (HasCompactMulSupport.{u2, u1} α β _inst_1 _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align exists_compact_iff_has_compact_mul_support exists_compact_iff_hasCompactMulSupportₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem exists_compact_iff_hasCompactMulSupport [T2Space α] :
     (∃ K : Set α, IsCompact K ∧ ∀ (x) (_ : x ∉ K), f x = 1) ↔ HasCompactMulSupport f := by
-  simp_rw [← nmem_mul_support, ← mem_compl_iff, ← subset_def, compl_subset_compl,
+  simp_rw [← nmem_mulSupport, ← mem_compl_iff, ← subset_def, compl_subset_compl,
     hasCompactMulSupport_def, exists_compact_superset_iff]
 #align exists_compact_iff_has_compact_mul_support exists_compact_iff_hasCompactMulSupport
 #align exists_compact_iff_has_compact_support exists_compact_iff_hasCompactSupport
@@ -237,7 +237,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : TopologicalSpace.{u2} α] [_inst_3 : One.{u1} β] {f : α -> β} [_inst_6 : T2Space.{u2} α _inst_1] {K : Set.{u2} α}, (IsCompact.{u2} α _inst_1 K) -> (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x K)) -> (Eq.{succ u1} β (f x) (OfNat.ofNat.{u1} β 1 (One.toOfNat1.{u1} β _inst_3)))) -> (HasCompactMulSupport.{u2, u1} α β _inst_1 _inst_3 f)
 Case conversion may be inaccurate. Consider using '#align has_compact_mul_support.intro HasCompactMulSupport.introₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » K) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ∉ » K) -/
 @[to_additive]
 theorem HasCompactMulSupport.intro [T2Space α] {K : Set α} (hK : IsCompact K)
     (hfK : ∀ (x) (_ : x ∉ K), f x = 1) : HasCompactMulSupport f :=
@@ -330,7 +330,7 @@ theorem HasCompactMulSupport.comp_left (hf : HasCompactMulSupport f) (hg : g 1 =
 @[to_additive]
 theorem hasCompactMulSupport_comp_left (hg : ∀ {x}, g x = 1 ↔ x = 1) :
     HasCompactMulSupport (g ∘ f) ↔ HasCompactMulSupport f := by
-  simp_rw [hasCompactMulSupport_def, mul_support_comp_eq g (@hg) f]
+  simp_rw [hasCompactMulSupport_def, mulSupport_comp_eq g (@hg) f]
 #align has_compact_mul_support_comp_left hasCompactMulSupport_comp_left
 #align has_compact_support_comp_left hasCompactSupport_comp_left
 -/
@@ -505,23 +505,23 @@ theorem exists_finset_nhd_mulSupport_subset {f : ι → X → R}
         inter_subset_right _ _, fun z hz => _⟩
     ·
       exact
-        (bInter_finset_mem js).mpr fun j hj =>
+        (binterᵢ_finset_mem js).mpr fun j hj =>
           IsClosed.compl_mem_nhds (isClosed_mulTSupport _)
             (Set.not_mem_subset (hso j) (finset.mem_filter.mp hj).2)
-    · exact (bInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
+    · exact (binterᵢ_finset_mem is).mpr fun i hi => (ho i).mem_nhds (finset.mem_filter.mp hi).2
     · have hzn : z ∈ n := by
         rw [inter_assoc] at hz
         exact mem_of_mem_inter_left hz
       replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-      simp only [Finset.mem_filter, finite.mem_to_finset, mem_set_of_eq, mem_Inter, and_imp] at hz
-      suffices (mul_support fun i => f i z) ⊆ hnf.to_finset
+      simp only [Finset.mem_filter, Finite.mem_toFinset, mem_setOf_eq, mem_interᵢ, and_imp] at hz
+      suffices (mulSupport fun i => f i z) ⊆ hnf.to_finset
         by
         refine' hnf.to_finset.subset_coe_filter_of_subset_forall _ this fun i hi => _
         specialize hz i ⟨z, ⟨hi, hzn⟩⟩
         contrapose hz
         simp [hz, subset_mulTSupport (f i) hi]
       intro i hi
-      simp only [finite.coe_to_finset, mem_set_of_eq]
+      simp only [Finite.coe_toFinset, mem_setOf_eq]
       exact ⟨z, ⟨hi, hzn⟩⟩
 #align locally_finite.exists_finset_nhd_mul_support_subset LocallyFinite.exists_finset_nhd_mulSupport_subset
 #align locally_finite.exists_finset_nhd_support_subset LocallyFinite.exists_finset_nhd_support_subset

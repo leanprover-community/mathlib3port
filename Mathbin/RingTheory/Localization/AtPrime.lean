@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.at_prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -158,7 +158,7 @@ theorem to_map_mem_maximal_iff (x : R) (h : LocalRing S := localRing S I) :
     algebraMap R S x ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
     simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, Classical.not_not] using
-      is_unit_to_map_iff S I x
+      isUnit_to_map_iff S I x
 #align is_localization.at_prime.to_map_mem_maximal_iff IsLocalization.AtPrime.to_map_mem_maximal_iff
 
 theorem comap_maximalIdeal (h : LocalRing S := localRing S I) :
@@ -175,7 +175,7 @@ theorem mk'_mem_maximal_iff (x : R) (y : I.primeCompl) (h : LocalRing S := local
     mk' S x y ∈ LocalRing.maximalIdeal S ↔ x ∈ I :=
   not_iff_not.mp <| by
     simpa only [LocalRing.mem_maximalIdeal, mem_nonunits_iff, Classical.not_not] using
-      is_unit_mk'_iff S I x y
+      isUnit_mk'_iff S I x y
 #align is_localization.at_prime.mk'_mem_maximal_iff IsLocalization.AtPrime.mk'_mem_maximal_iff
 
 end AtPrime
@@ -250,8 +250,8 @@ instance isLocalRingHom_localRingHom (J : Ideal P) [hJ : J.IsPrime] (f : R →+*
   IsLocalRingHom.mk fun x hx =>
     by
     rcases IsLocalization.mk'_surjective I.prime_compl x with ⟨r, s, rfl⟩
-    rw [local_ring_hom_mk'] at hx
-    rw [at_prime.is_unit_mk'_iff] at hx⊢
+    rw [localRingHom_mk'] at hx
+    rw [AtPrime.isUnit_mk'_iff] at hx⊢
     exact fun hr => hx ((set_like.ext_iff.mp hIJ r).mp hr)
 #align localization.is_local_ring_hom_local_ring_hom Localization.isLocalRingHom_localRingHom
 
@@ -272,7 +272,7 @@ theorem localRingHom_comp {S : Type _} [CommSemiring S] (J : Ideal S) [hJ : J.Is
     localRingHom I K (g.comp f) (by rw [hIJ, hJK, Ideal.comap_comap f g]) =
       (localRingHom J K g hJK).comp (localRingHom I J f hIJ) :=
   localRingHom_unique _ _ _ _ fun r => by
-    simp only [Function.comp_apply, RingHom.coe_comp, local_ring_hom_to_map]
+    simp only [Function.comp_apply, RingHom.coe_comp, localRingHom_to_map]
 #align localization.local_ring_hom_comp Localization.localRingHom_comp
 
 end Localization

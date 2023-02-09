@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.diff_cont_on_cl
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,15 +38,15 @@ structure DiffContOnCl (f : E → F) (s : Set E) : Prop where
 variable {𝕜}
 
 theorem DifferentiableOn.diffContOnCl (h : DifferentiableOn 𝕜 f (closure s)) : DiffContOnCl 𝕜 f s :=
-  ⟨h.mono subset_closure, h.ContinuousOn⟩
+  ⟨h.mono subset_closure, h.continuousOn⟩
 #align differentiable_on.diff_cont_on_cl DifferentiableOn.diffContOnCl
 
 theorem Differentiable.diffContOnCl (h : Differentiable 𝕜 f) : DiffContOnCl 𝕜 f s :=
-  ⟨h.DifferentiableOn, h.Continuous.ContinuousOn⟩
+  ⟨h.differentiableOn, h.continuous.continuousOn⟩
 #align differentiable.diff_cont_on_cl Differentiable.diffContOnCl
 
 theorem IsClosed.diffContOnCl_iff (hs : IsClosed s) : DiffContOnCl 𝕜 f s ↔ DifferentiableOn 𝕜 f s :=
-  ⟨fun h => h.DifferentiableOn, fun h => ⟨h, hs.closure_eq.symm ▸ h.ContinuousOn⟩⟩
+  ⟨fun h => h.differentiableOn, fun h => ⟨h, hs.closure_eq.symm ▸ h.continuousOn⟩⟩
 #align is_closed.diff_cont_on_cl_iff IsClosed.diffContOnCl_iff
 
 theorem diffContOnCl_univ : DiffContOnCl 𝕜 f univ ↔ Differentiable 𝕜 f :=
@@ -68,7 +68,7 @@ theorem continuousOn_ball [NormedSpace ℝ E] {x : E} {r : ℝ} (h : DiffContOnC
     ContinuousOn f (closedBall x r) :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · rw [closed_ball_zero]
+  · rw [closedBall_zero]
     exact continuousOn_singleton f x
   · rw [← closure_ball x hr]
     exact h.continuous_on
@@ -81,15 +81,15 @@ theorem mk_ball {x : E} {r : ℝ} (hd : DifferentiableOn 𝕜 f (ball x r))
 
 protected theorem differentiableAt (h : DiffContOnCl 𝕜 f s) (hs : IsOpen s) (hx : x ∈ s) :
     DifferentiableAt 𝕜 f x :=
-  h.DifferentiableOn.DifferentiableAt <| hs.mem_nhds hx
+  h.differentiableOn.differentiableAt <| hs.mem_nhds hx
 #align diff_cont_on_cl.differentiable_at DiffContOnCl.differentiableAt
 
 theorem differentiable_at' (h : DiffContOnCl 𝕜 f s) (hx : s ∈ 𝓝 x) : DifferentiableAt 𝕜 f x :=
-  h.DifferentiableOn.DifferentiableAt hx
+  h.differentiableOn.differentiableAt hx
 #align diff_cont_on_cl.differentiable_at' DiffContOnCl.differentiable_at'
 
 protected theorem mono (h : DiffContOnCl 𝕜 f s) (ht : t ⊆ s) : DiffContOnCl 𝕜 f t :=
-  ⟨h.DifferentiableOn.mono ht, h.ContinuousOn.mono (closure_mono ht)⟩
+  ⟨h.differentiableOn.mono ht, h.continuousOn.mono (closure_mono ht)⟩
 #align diff_cont_on_cl.mono DiffContOnCl.mono
 
 theorem add (hf : DiffContOnCl 𝕜 f s) (hg : DiffContOnCl 𝕜 g s) : DiffContOnCl 𝕜 (f + g) s :=
@@ -146,11 +146,11 @@ end DiffContOnCl
 
 theorem Differentiable.comp_diffContOnCl {g : G → E} {t : Set G} (hf : Differentiable 𝕜 f)
     (hg : DiffContOnCl 𝕜 g t) : DiffContOnCl 𝕜 (f ∘ g) t :=
-  hf.DiffContOnCl.comp hg (mapsTo_image _ _)
+  hf.diffContOnCl.comp hg (mapsTo_image _ _)
 #align differentiable.comp_diff_cont_on_cl Differentiable.comp_diffContOnCl
 
 theorem DifferentiableOn.diffContOnCl_ball {U : Set E} {c : E} {R : ℝ} (hf : DifferentiableOn 𝕜 f U)
     (hc : closedBall c R ⊆ U) : DiffContOnCl 𝕜 f (ball c R) :=
-  DiffContOnCl.mk_ball (hf.mono (ball_subset_closedBall.trans hc)) (hf.ContinuousOn.mono hc)
+  DiffContOnCl.mk_ball (hf.mono (ball_subset_closedBall.trans hc)) (hf.continuousOn.mono hc)
 #align differentiable_on.diff_cont_on_cl_ball DifferentiableOn.diffContOnCl_ball
 

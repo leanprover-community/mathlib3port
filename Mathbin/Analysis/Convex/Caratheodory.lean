@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.convex.caratheodory
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,14 +56,14 @@ namespace Caratheodory
 then it is in the convex hull of a strict subset of `t`. -/
 theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E))
     {x : E} (m : x ∈ convexHull 𝕜 (↑t : Set E)) :
-    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.eraseₓ y) : Set E) :=
+    ∃ y : (↑t : Set E), x ∈ convexHull 𝕜 (↑(t.erase y) : Set E) :=
   by
-  simp only [Finset.convexHull_eq, mem_set_of_eq] at m⊢
+  simp only [Finset.convexHull_eq, mem_setOf_eq] at m⊢
   obtain ⟨f, fpos, fsum, rfl⟩ := m
   obtain ⟨g, gcombo, gsum, gpos⟩ := exists_nontrivial_relation_sum_zero_of_not_affine_ind h
   replace gpos := exists_pos_of_sum_zero_of_exists_nonzero g gsum gpos
   clear h
-  let s := @Finset.filter _ (fun z => 0 < g z) (fun _ => LinearOrder.decidableLt _ _) t
+  let s := @finset.filter _ (fun z => 0 < g z) (fun _ => LinearOrder.decidableLt _ _) t
   obtain ⟨i₀, mem, w⟩ : ∃ i₀ ∈ s, ∀ i ∈ s, f i₀ / g i₀ ≤ f i / g i :=
     by
     apply s.exists_min_image fun z => f z / g z
@@ -100,14 +100,14 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
         
       · apply div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_lt hg)
       · simpa only [mem_filter, het, true_and_iff, not_lt] using hes
-  · simp only [Subtype.coe_mk, center_mass_eq_of_sum_1 _ id ksum, id]
+  · simp only [Subtype.coe_mk, centerMass_eq_of_sum_1 _ id ksum, id]
     calc
       (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e := sum_erase _ (by rw [hk, zero_smul])
       _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e := rfl
       _ = t.center_mass f id := _
       
     simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero,
-      center_mass, fsum, inv_one, one_smul, id.def]
+      centerMass, fsum, inv_one, one_smul, id.def]
 #align caratheodory.mem_convex_hull_erase Caratheodory.mem_convexHull_erase
 
 variable {s : Set E} {x : E} (hx : x ∈ convexHull 𝕜 s)
@@ -119,7 +119,8 @@ cardinality, whose convex hull contains `x`. -/
 noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
   Function.argminOn Finset.card Nat.lt_wfRel { t | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E) }
     (by
-      simpa only [convexHull_eq_union_convexHull_finite_subsets s, exists_prop, mem_Union] using hx)
+      simpa only [convexHull_eq_union_convexHull_finite_subsets s, exists_prop, mem_unionᵢ] using
+        hx)
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 
 theorem minCardFinsetOfMemConvexHull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
@@ -133,8 +134,8 @@ theorem mem_minCardFinsetOfMemConvexHull :
 
 theorem minCardFinsetOfMemConvexHull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty :=
   by
-  rw [← Finset.coe_nonempty, ← @convexHull_nonempty_iff 𝕜]
-  exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
+  rw [← Finset.coe_nonempty, ← @convex_hull_nonempty_iff 𝕜]
+  exact ⟨x, mem_minCardFinsetOfMemConvexHull hx⟩
 #align caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.minCardFinsetOfMemConvexHull_nonempty
 
 theorem minCardFinsetOfMemConvexHull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
@@ -145,17 +146,16 @@ theorem minCardFinsetOfMemConvexHull_card_le_card {t : Finset E} (ht₁ : ↑t �
 theorem affineIndependent_minCardFinsetOfMemConvexHull :
     AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) :=
   by
-  let k := (min_card_finset_of_mem_convex_hull hx).card - 1
-  have hk : (min_card_finset_of_mem_convex_hull hx).card = k + 1 :=
-    (Nat.succ_pred_eq_of_pos
-        (finset.card_pos.mpr (min_card_finset_of_mem_convex_hull_nonempty hx))).symm
+  let k := (minCardFinsetOfMemConvexHull hx).card - 1
+  have hk : (minCardFinsetOfMemConvexHull hx).card = k + 1 :=
+    (Nat.succ_pred_eq_of_pos (finset.card_pos.mpr (minCardFinsetOfMemConvexHull_nonempty hx))).symm
   classical
     by_contra
-    obtain ⟨p, hp⟩ := mem_convex_hull_erase h (mem_min_card_finset_of_mem_convex_hull hx)
+    obtain ⟨p, hp⟩ := mem_convexHull_erase h (mem_minCardFinsetOfMemConvexHull hx)
     have contra :=
-      min_card_finset_of_mem_convex_hull_card_le_card hx
-        (Set.Subset.trans (Finset.erase_subset (↑p) (min_card_finset_of_mem_convex_hull hx))
-          (min_card_finset_of_mem_convex_hull_subseteq hx))
+      minCardFinsetOfMemConvexHull_card_le_card hx
+        (Set.Subset.trans (Finset.erase_subset (↑p) (minCardFinsetOfMemConvexHull hx))
+          (minCardFinsetOfMemConvexHull_subseteq hx))
         hp
     rw [← not_lt] at contra
     apply contra

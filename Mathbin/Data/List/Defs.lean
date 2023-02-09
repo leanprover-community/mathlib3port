@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Parikshit Khanna, Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -291,8 +291,8 @@ def partitionMap (f : α → Sum β γ) : List α → List β × List γ
   | [] => ([], [])
   | x :: xs =>
     match f x with
-    | Sum.inr r => Prod.map id (cons r) <| partition_map xs
-    | Sum.inl l => Prod.map (cons l) id <| partition_map xs
+    | sum.inr r => Prod.map id (cons r) <| partition_map xs
+    | sum.inl l => Prod.map (cons l) id <| partition_map xs
 #align list.partition_map List.partitionMap
 -/
 
@@ -792,7 +792,7 @@ def permutationsAux.rec {C : List α → List α → Sort v} (H0 : ∀ is, C [] 
         by rw [Nat.succ_add] <;> exact Prod.Lex.right _ (lt_succ_self _)
     have h2 : ⟨is, []⟩ ≺ ⟨t :: ts, is⟩ := Prod.Lex.left _ _ (Nat.lt_add_of_pos_left (succ_pos _))
     H1 t ts is (permutations_aux.rec ts (t :: is)) (permutations_aux.rec is [])termination_by'
-  ⟨(· ≺ ·), @InvImage.wf _ _ _ meas (Prod.lex_wf lt_wf lt_wf)⟩
+  ⟨(· ≺ ·), @inv_image.wf _ _ _ meas (Prod.lex_wf lt_wfRel lt_wfRel)⟩
 #align list.permutations_aux.rec List.permutationsAux.rec
 -/
 
@@ -949,8 +949,8 @@ variable (R : α → α → Prop)
   For example if `R = (≠)` then it asserts `l` has no duplicates,
   and if `R = (<)` then it asserts that `l` is (strictly) sorted. -/
 inductive Pairwise : List α → Prop
-  | nil : Pairwise []
-  | cons : ∀ {a : α} {l : List α}, (∀ a' ∈ l, R a a') → Pairwise l → Pairwise (a :: l)
+  | nil : pairwise []
+  | cons : ∀ {a : α} {l : List α}, (∀ a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
 #align list.pairwise List.Pairwise
 -/
 
@@ -968,7 +968,7 @@ attribute [simp] pairwise.nil
 
 #print List.instDecidablePairwise /-
 instance instDecidablePairwise [DecidableRel R] (l : List α) : Decidable (Pairwise R l) := by
-  induction' l with hd tl ih <;> [exact is_true pairwise.nil,
+  induction' l with hd tl ih <;> [exact isTrue Pairwise.nil,
     exact decidable_of_iff' _ pairwise_cons]
 #align list.decidable_pairwise List.instDecidablePairwise
 -/
@@ -1026,7 +1026,7 @@ attribute [simp] chain.nil
 
 #print List.decidableChain /-
 instance decidableChain [DecidableRel R] (a : α) (l : List α) : Decidable (Chain R a l) := by
-  induction l generalizing a <;> simp only [chain.nil, chain_cons] <;> skip <;> infer_instance
+  induction l generalizing a <;> simp only [Chain.nil, chain_cons] <;> skip <;> infer_instance
 #align list.decidable_chain List.decidableChain
 -/
 

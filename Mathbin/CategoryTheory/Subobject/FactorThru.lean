@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.factor_thru
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ def Factors {X Y : C} (P : MonoOver Y) (f : X ⟶ Y) : Prop :=
 
 theorem factors_congr {X : C} {f g : MonoOver X} {Y : C} (h : Y ⟶ X) (e : f ≅ g) :
     f.Factors h ↔ g.Factors h :=
-  ⟨fun ⟨u, hu⟩ => ⟨u ≫ ((MonoOver.forget _).map e.Hom).left, by simp [hu]⟩, fun ⟨u, hu⟩ =>
+  ⟨fun ⟨u, hu⟩ => ⟨u ≫ ((MonoOver.forget _).map e.hom).left, by simp [hu]⟩, fun ⟨u, hu⟩ =>
     ⟨u ≫ ((MonoOver.forget _).map e.inv).left, by simp [hu]⟩⟩
 #align category_theory.mono_over.factors_congr CategoryTheory.MonoOver.factors_congr
 
@@ -69,9 +69,9 @@ def Factors {X Y : C} (P : Subobject Y) (f : X ⟶ Y) : Prop :=
       apply propext
       constructor
       · rintro ⟨i, w⟩
-        exact ⟨i ≫ h.hom.left, by erw [category.assoc, over.w h.hom, w]⟩
+        exact ⟨i ≫ h.hom.left, by erw [Category.assoc, Over.w h.hom, w]⟩
       · rintro ⟨i, w⟩
-        exact ⟨i ≫ h.inv.left, by erw [category.assoc, over.w h.inv, w]⟩)
+        exact ⟨i ≫ h.inv.left, by erw [Category.assoc, Over.w h.inv, w]⟩)
 #align category_theory.subobject.factors CategoryTheory.Subobject.Factors
 
 @[simp]
@@ -113,7 +113,7 @@ theorem factors_zero [HasZeroMorphisms C] {X Y : C} {P : Subobject Y} : P.Factor
 theorem factors_of_le {Y Z : C} {P Q : Subobject Y} (f : Z ⟶ Y) (h : P ≤ Q) :
     P.Factors f → Q.Factors f := by
   simp only [factors_iff]
-  exact fun ⟨u, hu⟩ => ⟨u ≫ of_le _ _ h, by simp [← hu]⟩
+  exact fun ⟨u, hu⟩ => ⟨u ≫ ofLe _ _ h, by simp [← hu]⟩
 #align category_theory.subobject.factors_of_le CategoryTheory.Subobject.factors_of_le
 
 /-- `P.factor_thru f h` provides a factorisation of `f : X ⟶ Y` through some `P : subobject Y`,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.algebra.order.monotone_continuity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ theorem Monotone.continuous_of_denseRange [DenselyOrdered β] {f : α → β} (h
 /-- A monotone surjective function with a densely ordered codomain is continuous. -/
 theorem Monotone.continuous_of_surjective [DenselyOrdered β] {f : α → β} (h_mono : Monotone f)
     (h_surj : Function.Surjective f) : Continuous f :=
-  h_mono.continuous_of_denseRange h_surj.DenseRange
+  h_mono.continuous_of_denseRange h_surj.denseRange
 #align monotone.continuous_of_surjective Monotone.continuous_of_surjective
 -/
 
@@ -408,8 +408,8 @@ protected theorem continuous (e : α ≃o β) : Continuous e :=
 /-- An order isomorphism between two linear order `order_topology` spaces is a homeomorphism. -/
 def toHomeomorph (e : α ≃o β) : α ≃ₜ β :=
   { e with
-    continuous_toFun := e.Continuous
-    continuous_invFun := e.symm.Continuous }
+    continuous_toFun := e.continuous
+    continuous_invFun := e.symm.continuous }
 #align order_iso.to_homeomorph OrderIso.toHomeomorph
 -/
 

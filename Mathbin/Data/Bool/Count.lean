@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.bool.count
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ theorem count_not_add_count (l : List Bool) (b : Bool) : count (!b) l + count b 
 #print List.count_add_count_not /-
 @[simp]
 theorem count_add_count_not (l : List Bool) (b : Bool) : count b l + count (!b) l = length l := by
-  rw [add_comm, count_bnot_add_count]
+  rw [add_comm, count_not_add_count]
 #align list.count_add_count_bnot List.count_add_count_not
 -/
 
@@ -119,7 +119,7 @@ theorem count_true_le_count_false_add_one (hl : Chain' (· ≠ ·) l) :
 #print List.Chain'.two_mul_count_bool_of_even /-
 theorem two_mul_count_bool_of_even (hl : Chain' (· ≠ ·) l) (h2 : Even (length l)) (b : Bool) :
     2 * count b l = length l := by
-  rw [← count_bnot_add_count l b, hl.count_bnot_eq_count h2, two_mul]
+  rw [← count_not_add_count l b, hl.count_bnot_eq_count h2, two_mul]
 #align list.chain'.two_mul_count_bool_of_even List.Chain'.two_mul_count_bool_of_even
 -/
 
@@ -132,7 +132,7 @@ theorem two_mul_count_bool_eq_ite (hl : Chain' (· ≠ ·) l) (b : Bool) :
   · rw [if_pos h2, hl.two_mul_count_bool_of_even h2]
   · cases' l with x l
     · exact (h2 even_zero).elim
-    simp only [if_neg h2, count_cons', mul_add, head', Option.mem_some_iff, @eq_comm _ x]
+    simp only [if_neg h2, count_cons', mul_add, head?, Option.mem_some_iff, @eq_comm _ x]
     rw [length_cons, Nat.even_add_one, Classical.not_not] at h2
     replace hl : l.chain' (· ≠ ·) := hl.tail
     rw [hl.two_mul_count_bool_of_even h2]

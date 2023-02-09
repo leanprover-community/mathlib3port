@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.independent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,7 +99,7 @@ theorem affineIndependent_iff_linearIndependent_vsub (p : ι → P) (i1 : ι) :
       rw [linearIndependent_iff']
       intro s g hg i hi
       set f : ι → k := fun x => if hx : x = i1 then -∑ y in s, g y else g ⟨x, hx⟩ with hfdef
-      let s2 : Finset ι := insert i1 (s.map (embedding.subtype _))
+      let s2 : Finset ι := insert i1 (s.map (Embedding.subtype _))
       have hfg : ∀ x : { x // x ≠ i1 }, g x = f x :=
         by
         intro x
@@ -135,7 +135,7 @@ theorem affineIndependent_iff_linearIndependent_vsub (p : ι → P) (i1 : ι) :
       rw [Finset.weightedVsub_eq_weightedVsubOfPoint_of_sum_eq_zero s w p hw (p i1), ←
         s.weighted_vsub_of_point_erase w p i1, Finset.weightedVsubOfPoint_apply] at hs
       let f : ι → V := fun i => w i • (p i -ᵥ p i1)
-      have hs2 : (∑ i in (s.erase i1).Subtype fun i => i ≠ i1, f i) = 0 :=
+      have hs2 : (∑ i in (s.erase i1).subtype fun i => i ≠ i1, f i) = 0 :=
         by
         rw [← hs]
         convert Finset.sum_subtype_of_mem f fun x => Finset.ne_of_mem_erase
@@ -214,7 +214,7 @@ theorem affineIndependent_iff_indicator_eq_of_affineCombination_eq (p : ι → P
         rw [Finset.affineCombination_indicator_subset _ _ (Finset.subset_union_left s1 s2),
           Finset.affineCombination_indicator_subset _ _ (Finset.subset_union_right s1 s2), ←
           @vsub_eq_zero_iff_eq V, Finset.affineCombination_vsub] at heq
-        exact ha (s1 ∪ s2) (Set.indicator (↑s1) w1 - Set.indicator (↑s2) w2) hws HEq i hi
+        exact ha (s1 ∪ s2) (Set.indicator (↑s1) w1 - Set.indicator (↑s2) w2) hws heq i hi
       · rw [← Finset.mem_coe, Finset.coe_union] at hi
         simp [mt (Set.mem_union_left ↑s2) hi, mt (Set.mem_union_right ↑s1) hi]
     · intro ha s w hw hs i0 hi0
@@ -299,7 +299,7 @@ theorem AffineIndependent.comp_embedding {ι2 : Type _} (f : ι2 ↪ ι) {p : ι
   classical
     intro fs w hw hs i0 hi0
     let fs' := fs.map f
-    let w' i := if h : ∃ i2, f i2 = i then w h.some else 0
+    let w' i := if h : ∃ i2, f i2 = i then w h.choose else 0
     have hw' : ∀ i2 : ι2, w' (f i2) = w i2 := by
       intro i2
       have h : ∃ i : ι2, f i = f i2 := ⟨i2, rfl⟩
@@ -411,7 +411,7 @@ theorem AffineMap.affineIndependent_iff {p : ι → P} (f : P →ᵃ[k] P₂) (h
 /-- Affine equivalences preserve affine independence of families of points. -/
 theorem AffineEquiv.affineIndependent_iff {p : ι → P} (e : P ≃ᵃ[k] P₂) :
     AffineIndependent k (e ∘ p) ↔ AffineIndependent k p :=
-  e.toAffineMap.affineIndependent_iff e.toEquiv.Injective
+  e.toAffineMap.affineIndependent_iff e.toEquiv.injective
 #align affine_equiv.affine_independent_iff AffineEquiv.affineIndependent_iff
 
 /-- Affine equivalences preserve affine independence of subsets. -/
@@ -511,7 +511,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V}
 in terms of linear combinations. -/
 theorem affineIndependent_iff {ι} {p : ι → V} :
     AffineIndependent k p ↔
-      ∀ (s : Finset ι) (w : ι → k), s.Sum w = 0 → (∑ e in s, w e • p e) = 0 → ∀ e ∈ s, w e = 0 :=
+      ∀ (s : Finset ι) (w : ι → k), s.sum w = 0 → (∑ e in s, w e • p e) = 0 → ∀ e ∈ s, w e = 0 :=
   forall₃_congr fun s w hw => by simp [s.weighted_vsub_eq_linear_combination hw]
 #align affine_independent_iff affineIndependent_iff
 
@@ -612,7 +612,7 @@ theorem exists_subset_affineIndependent_affineSpan_eq_top {s : Set P}
 
 variable (k V)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem exists_affineIndependent (s : Set P) :
     ∃ (t : _)(_ : t ⊆ s), affineSpan k t = affineSpan k s ∧ AffineIndependent k (coe : t → P) :=
   by
@@ -872,7 +872,7 @@ theorem ext_iff {n : ℕ} (s1 s2 : Simplex k P n) : s1 = s2 ↔ ∀ i, s1.points
 points. -/
 def face {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1))} {m : ℕ} (h : fs.card = m + 1) :
     Simplex k P m :=
-  ⟨s.points ∘ fs.orderEmbOfFin h, s.Independent.comp_embedding (fs.orderEmbOfFin h).toEmbedding⟩
+  ⟨s.points ∘ fs.orderEmbOfFin h, s.independent.comp_embedding (fs.orderEmbOfFin h).toEmbedding⟩
 #align affine.simplex.face Affine.Simplex.face
 
 /-- The points of a face of a simplex are given by `mono_of_fin`. -/
@@ -908,7 +908,7 @@ theorem range_face_points {n : ℕ} (s : Simplex k P n) {fs : Finset (Fin (n + 1
 /-- Remap a simplex along an `equiv` of index types. -/
 @[simps]
 def reindex {m n : ℕ} (s : Simplex k P m) (e : Fin (m + 1) ≃ Fin (n + 1)) : Simplex k P n :=
-  ⟨s.points ∘ e.symm, (affineIndependent_equiv e.symm).2 s.Independent⟩
+  ⟨s.points ∘ e.symm, (affineIndependent_equiv e.symm).2 s.independent⟩
 #align affine.simplex.reindex Affine.Simplex.reindex
 
 /-- Reindexing by `equiv.refl` yields the original simplex. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.single
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ def singleObjXSelf (j : ι) (A : V) : ((single V c j).obj A).x j ≅ A :=
 
 @[simp]
 theorem single_map_f_self (j : ι) {A B : V} (f : A ⟶ B) :
-    ((single V c j).map f).f j = (singleObjXSelf V c j A).Hom ≫ f ≫ (singleObjXSelf V c j B).inv :=
+    ((single V c j).map f).f j = (singleObjXSelf V c j A).hom ≫ f ≫ (singleObjXSelf V c j B).inv :=
   by
   simp
   rfl
@@ -106,9 +106,9 @@ instance (j : ι) : Faithful (single V c j)
     have := congr_hom w j
     dsimp at this
     simp only [dif_pos] at this
-    rw [← is_iso.inv_comp_eq, inv_eq_to_hom, eq_to_hom_trans_assoc, eq_to_hom_refl,
-      category.id_comp, ← is_iso.comp_inv_eq, category.assoc, inv_eq_to_hom, eq_to_hom_trans,
-      eq_to_hom_refl, category.comp_id] at this
+    rw [← IsIso.inv_comp_eq, inv_eqToHom, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp, ←
+      IsIso.comp_inv_eq, Category.assoc, inv_eqToHom, eqToHom_trans, eqToHom_refl,
+      Category.comp_id] at this
     exact this
 
 instance (j : ι) : Full (single V c j)
@@ -186,7 +186,7 @@ theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 
 @[simp]
 theorem single₀_obj_x_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 :=
   by
-  rw [d_to_eq ((single₀ V).obj X) rfl]
+  rw [dTo_eq ((single₀ V).obj X) rfl]
   simp
 #align chain_complex.single₀_obj_X_d_to ChainComplex.single₀_obj_x_dTo
 
@@ -194,9 +194,9 @@ theorem single₀_obj_x_dTo (X : V) (j : ℕ) : ((single₀ V).obj X).dTo j = 0 
 theorem single₀_obj_x_dFrom (X : V) (i : ℕ) : ((single₀ V).obj X).dFrom i = 0 :=
   by
   cases i
-  · rw [d_from_eq_zero]
+  · rw [dFrom_eq_zero]
     simp
-  · rw [d_from_eq ((single₀ V).obj X) rfl]
+  · rw [dFrom_eq ((single₀ V).obj X) rfl]
     simp
 #align chain_complex.single₀_obj_X_d_from ChainComplex.single₀_obj_x_dFrom
 
@@ -234,7 +234,7 @@ noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) :
     (fun X =>
       homology.congr _ _ (by simp) (by simp) ≪≫
         homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
-    fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
+    fun X Y f => (Functor.zero_obj _).eq_of_tgt _ _
 #align chain_complex.homology_functor_succ_single₀ ChainComplex.homologyFunctorSuccSingle₀
 
 end
@@ -261,7 +261,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
       comm' := fun i j h =>
         by
         rcases i with (_ | _ | i) <;> cases j <;> unfold_aux <;>
-          simp only [comp_zero, zero_comp, single₀_obj_X_d]
+          simp only [comp_zero, zero_comp, single₀_obj_x_d]
         · rw [C.shape, zero_comp]
           simp
         · exact f.2.symm
@@ -278,7 +278,7 @@ def toSingle₀Equiv (C : ChainComplex V ℕ) (X : V) :
 @[ext]
 theorem to_single₀_ext {C : ChainComplex V ℕ} {X : V} (f g : C ⟶ (single₀ V).obj X)
     (h : f.f 0 = g.f 0) : f = g :=
-  (toSingle₀Equiv C X).Injective
+  (toSingle₀Equiv C X).injective
     (by
       ext
       exact h)
@@ -299,7 +299,7 @@ def fromSingle₀Equiv (C : ChainComplex V ℕ) (X : V) : ((single₀ V).obj X �
       comm' := fun i j h => by
         cases i <;> cases j <;> unfold_aux <;>
           simp only [shape, ComplexShape.down_Rel, Nat.one_ne_zero, not_false_iff, comp_zero,
-            zero_comp, Nat.succ_ne_zero, single₀_obj_X_d] }
+            zero_comp, Nat.succ_ne_zero, single₀_obj_x_d] }
   left_inv f := by
     ext i
     cases i
@@ -322,8 +322,8 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
               simp
         inv_hom_id' := by
           ext (_ | i)
-          · apply category.id_comp
-          · apply has_zero_object.to_zero_ext })
+          · apply Category.id_comp
+          · apply HasZeroObject.to_zero_ext })
     fun X Y f => by
     ext (_ | i) <;>
       · dsimp
@@ -395,7 +395,7 @@ theorem single₀_obj_x_d (X : V) (i j : ℕ) : ((single₀ V).obj X).d i j = 0 
 @[simp]
 theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j = 0 :=
   by
-  rw [d_from_eq ((single₀ V).obj X) rfl]
+  rw [dFrom_eq ((single₀ V).obj X) rfl]
   simp
 #align cochain_complex.single₀_obj_X_d_from CochainComplex.single₀_obj_x_dFrom
 
@@ -403,9 +403,9 @@ theorem single₀_obj_x_dFrom (X : V) (j : ℕ) : ((single₀ V).obj X).dFrom j 
 theorem single₀_obj_x_dTo (X : V) (i : ℕ) : ((single₀ V).obj X).dTo i = 0 :=
   by
   cases i
-  · rw [d_to_eq_zero]
+  · rw [dTo_eq_zero]
     simp
-  · rw [d_to_eq ((single₀ V).obj X) rfl]
+  · rw [dTo_eq ((single₀ V).obj X) rfl]
     simp
 #align cochain_complex.single₀_obj_X_d_to CochainComplex.single₀_obj_x_dTo
 
@@ -443,7 +443,7 @@ noncomputable def homologyFunctorSuccSingle₀ (n : ℕ) :
     (fun X =>
       homology.congr _ _ (by simp) (by simp) ≪≫
         homologyZeroZero ≪≫ (Functor.zero_obj _).isoZero.symm)
-    fun X Y f => (functor.zero_obj _).eq_of_tgt _ _
+    fun X Y f => (Functor.zero_obj _).eq_of_tgt _ _
 #align cochain_complex.homology_functor_succ_single₀ CochainComplex.homologyFunctorSuccSingle₀
 
 end
@@ -469,7 +469,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
       comm' := fun i j h =>
         by
         rcases j with (_ | _ | j) <;> cases i <;> unfold_aux <;>
-          simp only [comp_zero, zero_comp, single₀_obj_X_d]
+          simp only [comp_zero, zero_comp, single₀_obj_x_d]
         · convert comp_zero
           rw [C.shape]
           simp
@@ -477,7 +477,7 @@ def fromSingle₀Equiv (C : CochainComplex V ℕ) (X : V) :
         · convert comp_zero
           rw [C.shape]
           simp only [ComplexShape.up_Rel, zero_add]
-          exact (Nat.one_lt_succ_succ j).Ne }
+          exact (Nat.one_lt_succ_succ j).ne }
   left_inv f := by
     ext i
     rcases i with ⟨⟩
@@ -500,8 +500,8 @@ def single₀IsoSingle : single₀ V ≅ single V _ 0 :=
               simp
         inv_hom_id' := by
           ext (_ | i)
-          · apply category.id_comp
-          · apply has_zero_object.to_zero_ext })
+          · apply Category.id_comp
+          · apply HasZeroObject.to_zero_ext })
     fun X Y f => by
     ext (_ | i) <;>
       · dsimp

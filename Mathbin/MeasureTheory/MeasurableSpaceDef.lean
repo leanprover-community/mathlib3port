@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measurable_space_def
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem MeasurableSet.compl_iff : MeasurableSet (sᶜ) ↔ MeasurableSet s :=
 #print MeasurableSet.univ /-
 @[simp]
 theorem MeasurableSet.univ : MeasurableSet (univ : Set α) := by
-  simpa using (@MeasurableSet.empty α _).compl
+  simpa using (@measurable_set.empty α _).compl
 #align measurable_set.univ MeasurableSet.univ
 -/
 
@@ -153,7 +153,7 @@ theorem MeasurableSet.bunionᵢ_decode₂ [Encodable β] ⦃f : β → Set α⦄
 theorem MeasurableSet.unionᵢ [Countable ι] ⦃f : ι → Set α⦄ (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋃ b, f b) := by
   cases nonempty_encodable (PLift ι)
-  rw [← Union_plift_down, ← Encodable.unionᵢ_decode₂]
+  rw [← unionᵢ_plift_down, ← Encodable.unionᵢ_decode₂]
   exact ‹MeasurableSpace α›.measurable_set_unionᵢ _ (MeasurableSet.bunionᵢ_decode₂ fun _ => h _)
 #align measurable_set.Union MeasurableSet.unionᵢ
 -/
@@ -167,7 +167,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.bUnion 
 theorem MeasurableSet.bunionᵢ {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
   by
-  rw [bUnion_eq_Union]
+  rw [bunionᵢ_eq_unionᵢ]
   haveI := hs.to_encodable
   exact MeasurableSet.unionᵢ (by simpa using h)
 #align measurable_set.bUnion MeasurableSet.bunionᵢ
@@ -180,7 +180,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bUnion Set.Finite.measurableSet_bunionᵢₓ'. -/
 theorem Set.Finite.measurableSet_bunionᵢ {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) :=
-  MeasurableSet.bunionᵢ hs.Countable h
+  MeasurableSet.bunionᵢ hs.countable h
 #align set.finite.measurable_set_bUnion Set.Finite.measurableSet_bunionᵢ
 
 /- warning: finset.measurable_set_bUnion -> Finset.measurableSet_bunionᵢ is a dubious translation:
@@ -197,7 +197,7 @@ theorem Finset.measurableSet_bunionᵢ {f : β → Set α} (s : Finset β)
 #print MeasurableSet.unionₛ /-
 theorem MeasurableSet.unionₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋃₀ s) := by
-  rw [sUnion_eq_bUnion]
+  rw [unionₛ_eq_bunionᵢ]
   exact MeasurableSet.bunionᵢ hs h
 #align measurable_set.sUnion MeasurableSet.unionₛ
 -/
@@ -205,7 +205,7 @@ theorem MeasurableSet.unionₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t 
 #print Set.Finite.measurableSet_unionₛ /-
 theorem Set.Finite.measurableSet_unionₛ {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋃₀ s) :=
-  MeasurableSet.unionₛ hs.Countable h
+  MeasurableSet.unionₛ hs.countable h
 #align set.finite.measurable_set_sUnion Set.Finite.measurableSet_unionₛ
 -/
 
@@ -213,7 +213,7 @@ theorem Set.Finite.measurableSet_unionₛ {s : Set (Set α)} (hs : s.Finite)
 theorem MeasurableSet.interᵢ [Countable ι] {f : ι → Set α} (h : ∀ b, MeasurableSet (f b)) :
     MeasurableSet (⋂ b, f b) :=
   MeasurableSet.compl_iff.1 <| by
-    rw [compl_Inter]
+    rw [compl_interᵢ]
     exact MeasurableSet.unionᵢ fun b => (h b).compl
 #align measurable_set.Inter MeasurableSet.interᵢ
 -/
@@ -227,7 +227,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.bInter 
 theorem MeasurableSet.binterᵢ {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
   MeasurableSet.compl_iff.1 <| by
-    rw [compl_Inter₂]
+    rw [compl_interᵢ₂]
     exact MeasurableSet.bunionᵢ hs fun b hb => (h b hb).compl
 #align measurable_set.bInter MeasurableSet.binterᵢ
 
@@ -239,7 +239,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.finite.measurable_set_bInter Set.Finite.measurableSet_binterᵢₓ'. -/
 theorem Set.Finite.measurableSet_binterᵢ {f : β → Set α} {s : Set β} (hs : s.Finite)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂ b ∈ s, f b) :=
-  MeasurableSet.binterᵢ hs.Countable h
+  MeasurableSet.binterᵢ hs.countable h
 #align set.finite.measurable_set_bInter Set.Finite.measurableSet_binterᵢ
 
 /- warning: finset.measurable_set_bInter -> Finset.measurableSet_binterᵢ is a dubious translation:
@@ -256,7 +256,7 @@ theorem Finset.measurableSet_binterᵢ {f : β → Set α} (s : Finset β)
 #print MeasurableSet.interₛ /-
 theorem MeasurableSet.interₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t ∈ s, MeasurableSet t) :
     MeasurableSet (⋂₀ s) := by
-  rw [sInter_eq_bInter]
+  rw [interₛ_eq_binterᵢ]
   exact MeasurableSet.binterᵢ hs h
 #align measurable_set.sInter MeasurableSet.interₛ
 -/
@@ -264,7 +264,7 @@ theorem MeasurableSet.interₛ {s : Set (Set α)} (hs : s.Countable) (h : ∀ t 
 #print Set.Finite.measurableSet_interₛ /-
 theorem Set.Finite.measurableSet_interₛ {s : Set (Set α)} (hs : s.Finite)
     (h : ∀ t ∈ s, MeasurableSet t) : MeasurableSet (⋂₀ s) :=
-  MeasurableSet.interₛ hs.Countable h
+  MeasurableSet.interₛ hs.countable h
 #align set.finite.measurable_set_sInter Set.Finite.measurableSet_interₛ
 -/
 
@@ -277,7 +277,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.union M
 @[simp]
 theorem MeasurableSet.union {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
     MeasurableSet (s₁ ∪ s₂) := by
-  rw [union_eq_Union]
+  rw [union_eq_unionᵢ]
   exact MeasurableSet.unionᵢ (Bool.forall_bool.2 ⟨h₂, h₁⟩)
 #align measurable_set.union MeasurableSet.union
 
@@ -315,14 +315,14 @@ Case conversion may be inaccurate. Consider using '#align measurable_set.symm_di
 @[simp]
 theorem MeasurableSet.symmDiff {s₁ s₂ : Set α} (h₁ : MeasurableSet s₁) (h₂ : MeasurableSet s₂) :
     MeasurableSet (s₁ ∆ s₂) :=
-  (h₁.diffₓ h₂).union (h₂.diffₓ h₁)
+  (h₁.diff h₂).union (h₂.diff h₁)
 #align measurable_set.symm_diff MeasurableSet.symmDiff
 
 #print MeasurableSet.ite /-
 @[simp]
 theorem MeasurableSet.ite {t s₁ s₂ : Set α} (ht : MeasurableSet t) (h₁ : MeasurableSet s₁)
     (h₂ : MeasurableSet s₂) : MeasurableSet (t.ite s₁ s₂) :=
-  (h₁.inter ht).union (h₂.diffₓ ht)
+  (h₁.inter ht).union (h₂.diff ht)
 #align measurable_set.ite MeasurableSet.ite
 -/
 
@@ -360,7 +360,7 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
 #print MeasurableSet.const /-
 @[simp]
 theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
-  by_cases p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
+  by_cases p <;> simp [h, MeasurableSet.empty] <;> apply measurable_set.univ
 #align measurable_set.const MeasurableSet.const
 -/
 
@@ -431,14 +431,14 @@ theorem MeasurableSet.insert {s : Set α} (hs : MeasurableSet s) (a : α) :
 theorem measurableSet_insert {a : α} {s : Set α} : MeasurableSet (insert a s) ↔ MeasurableSet s :=
   ⟨fun h =>
     if ha : a ∈ s then by rwa [← insert_eq_of_mem ha]
-    else insert_diff_self_of_not_mem ha ▸ h.diffₓ (measurableSet_singleton _),
+    else insert_diff_self_of_not_mem ha ▸ h.diff (measurableSet_singleton _),
     fun h => h.insert a⟩
 #align measurable_set_insert measurableSet_insert
 -/
 
 #print Set.Subsingleton.measurableSet /-
 theorem Set.Subsingleton.measurableSet {s : Set α} (hs : s.Subsingleton) : MeasurableSet s :=
-  hs.inductionOn MeasurableSet.empty measurableSet_singleton
+  hs.induction_on MeasurableSet.empty measurableSet_singleton
 #align set.subsingleton.measurable_set Set.Subsingleton.measurableSet
 -/
 
@@ -450,15 +450,15 @@ theorem Set.Finite.measurableSet {s : Set α} (hs : s.Finite) : MeasurableSet s 
 
 #print Finset.measurableSet /-
 protected theorem Finset.measurableSet (s : Finset α) : MeasurableSet (↑s : Set α) :=
-  s.finite_toSet.MeasurableSet
+  s.finite_toSet.measurableSet
 #align finset.measurable_set Finset.measurableSet
 -/
 
 #print Set.Countable.measurableSet /-
 theorem Set.Countable.measurableSet {s : Set α} (hs : s.Countable) : MeasurableSet s :=
   by
-  rw [← bUnion_of_singleton s]
-  exact MeasurableSet.bunionᵢ hs fun b hb => measurable_set_singleton b
+  rw [← bunionᵢ_of_singleton s]
+  exact MeasurableSet.bunionᵢ hs fun b hb => measurableSet_singleton b
 #align set.countable.measurable_set Set.Countable.measurableSet
 -/
 
@@ -529,7 +529,7 @@ theorem generateFrom_induction (p : Set α → Prop) (C : Set (Set α)) (hC : �
 theorem generateFrom_le {s : Set (Set α)} {m : MeasurableSpace α}
     (h : ∀ t ∈ s, measurable_set[m] t) : generateFrom s ≤ m :=
   fun t (ht : GenerateMeasurable s t) =>
-  ht.recOn h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
+  ht.rec_on h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs) fun f _ hf =>
     measurable_set_unionᵢ m f hf
 #align measurable_space.generate_from_le MeasurableSpace.generateFrom_le
 -/
@@ -616,13 +616,13 @@ theorem generateFrom_sup_generateFrom {s t : Set (Set α)} :
 theorem generateFrom_insert_univ (S : Set (Set α)) :
     generateFrom (insert Set.univ S) = generateFrom S :=
   by
-  refine' le_antisymm _ (generate_from_mono (Set.subset_insert _ _))
-  rw [generate_from_le_iff]
+  refine' le_antisymm _ (generateFrom_mono (Set.subset_insert _ _))
+  rw [generateFrom_le_iff]
   intro t ht
   cases ht
   · rw [ht]
     exact MeasurableSet.univ
-  · exact measurable_set_generate_from ht
+  · exact measurableSet_generateFrom ht
 #align measurable_space.generate_from_insert_univ MeasurableSpace.generateFrom_insert_univ
 -/
 
@@ -630,13 +630,13 @@ theorem generateFrom_insert_univ (S : Set (Set α)) :
 @[simp]
 theorem generateFrom_insert_empty (S : Set (Set α)) : generateFrom (insert ∅ S) = generateFrom S :=
   by
-  refine' le_antisymm _ (generate_from_mono (Set.subset_insert _ _))
-  rw [generate_from_le_iff]
+  refine' le_antisymm _ (generateFrom_mono (Set.subset_insert _ _))
+  rw [generateFrom_le_iff]
   intro t ht
   cases ht
   · rw [ht]
-    exact @MeasurableSet.empty _ (generate_from S)
-  · exact measurable_set_generate_from ht
+    exact @measurable_set.empty _ (generateFrom S)
+  · exact measurableSet_generateFrom ht
 #align measurable_space.generate_from_insert_empty MeasurableSpace.generateFrom_insert_empty
 -/
 
@@ -649,7 +649,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_space.gener
 @[simp]
 theorem generateFrom_singleton_empty : generateFrom {∅} = (⊥ : MeasurableSpace α) :=
   by
-  rw [eq_bot_iff, generate_from_le_iff]
+  rw [eq_bot_iff, generateFrom_le_iff]
   simp
 #align measurable_space.generate_from_singleton_empty MeasurableSpace.generateFrom_singleton_empty
 
@@ -662,7 +662,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_space.gener
 @[simp]
 theorem generateFrom_singleton_univ : generateFrom {Set.univ} = (⊥ : MeasurableSpace α) :=
   by
-  rw [eq_bot_iff, generate_from_le_iff]
+  rw [eq_bot_iff, generateFrom_le_iff]
   simp
 #align measurable_space.generate_from_singleton_univ MeasurableSpace.generateFrom_singleton_univ
 
@@ -739,7 +739,7 @@ Case conversion may be inaccurate. Consider using '#align measurable_space.measu
 @[simp]
 theorem measurableSet_infᵢ {ι} {m : ι → MeasurableSpace α} {s : Set α} :
     @MeasurableSet _ (infᵢ m) s ↔ ∀ i, @MeasurableSet _ (m i) s := by
-  rw [infᵢ, measurable_set_Inf, forall_range_iff]
+  rw [infᵢ, measurableSet_infₛ, forall_range_iff]
 #align measurable_space.measurable_set_infi MeasurableSpace.measurableSet_infᵢ
 
 /- warning: measurable_space.measurable_set_sup -> MeasurableSpace.measurableSet_sup is a dubious translation:
@@ -763,8 +763,8 @@ theorem measurableSet_supₛ {ms : Set (MeasurableSpace α)} {s : Set α} :
     measurable_set[supₛ ms] s ↔
       GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
   by
-  change @measurable_set' _ (generate_from <| ⋃₀ _) _ ↔ _
-  simp [generate_from, ← set_of_exists]
+  change @measurable_set' _ (generateFrom <| ⋃₀ _) _ ↔ _
+  simp [generateFrom, ← setOf_exists]
 #align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_supₛ
 
 /- warning: measurable_space.measurable_set_supr -> MeasurableSpace.measurableSet_supᵢ is a dubious translation:
@@ -775,7 +775,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_supᵢₓ'. -/
 theorem measurableSet_supᵢ {ι} {m : ι → MeasurableSpace α} {s : Set α} :
     @MeasurableSet _ (supᵢ m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
-  by simp only [supᵢ, measurable_set_Sup, exists_range_iff]
+  by simp only [supᵢ, measurableSet_supₛ, exists_range_iff]
 #align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_supᵢ
 
 /- warning: measurable_space.measurable_space_supr_eq -> MeasurableSpace.measurableSpace_supᵢ_eq is a dubious translation:
@@ -788,7 +788,7 @@ theorem measurableSpace_supᵢ_eq (m : ι → MeasurableSpace α) :
     (⨆ n, m n) = generateFrom { s | ∃ n, measurable_set[m n] s } :=
   by
   ext s
-  rw [measurable_set_supr]
+  rw [measurableSet_supᵢ]
   rfl
 #align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_supᵢ_eq
 

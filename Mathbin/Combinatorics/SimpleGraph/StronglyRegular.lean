@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.simple_graph.strongly_regular
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,10 +66,10 @@ theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 
     of_adj := fun v w h => h.elim
     of_not_adj := fun v w h =>
       by
-      simp only [card_eq_zero, filter_congr_decidable, Fintype.card_ofFinset, forall_true_left,
-        not_false_iff, bot_adj]
+      simp only [card_eq_zero, [anonymous], Fintype.card_ofFinset, forall_true_left, not_false_iff,
+        bot_adj]
       ext
-      simp [mem_common_neighbors] }
+      simp [mem_commonNeighbors] }
 #align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regular
 
 /-- Complete graphs are strongly regular. Note that `μ` can take any value
@@ -79,7 +79,7 @@ theorem IsSRGWith.top :
   { card := rfl
     regular := IsRegularOfDegree.top
     of_adj := fun v w h => by
-      rw [card_common_neighbors_top]
+      rw [card_commonNeighbors_top]
       exact h
     of_not_adj := fun v w h h' => False.elim <| by simpa using h }
 #align simple_graph.is_SRG_with.top SimpleGraph.IsSRGWith.top
@@ -87,12 +87,12 @@ theorem IsSRGWith.top :
 theorem IsSRGWith.card_neighborFinset_union_eq {v w : V} (h : G.IsSRGWith n k ℓ μ) :
     (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.commonNeighbors v w) :=
   by
-  apply @Nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
+  apply @nat.add_right_cancel _ (Fintype.card (G.common_neighbors v w))
   rw [Nat.sub_add_cancel, ← Set.toFinset_card]
   ·
-    simp [neighbor_finset, common_neighbors, Set.toFinset_inter, Finset.card_union_add_card_inter,
+    simp [neighborFinset, commonNeighbors, Set.toFinset_inter, Finset.card_union_add_card_inter,
       h.regular.degree_eq, two_mul]
-  · apply le_trans (card_common_neighbors_le_degree_left _ _ _)
+  · apply le_trans (card_commonNeighbors_le_degree_left _ _ _)
     simp [h.regular.degree_eq, two_mul]
 #align simple_graph.is_SRG_with.card_neighbor_finset_union_eq SimpleGraph.IsSRGWith.card_neighborFinset_union_eq
 
@@ -127,7 +127,7 @@ theorem sdiff_compl_neighborFinset_inter_eq {v w : V} (h : G.Adj v w) :
       G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ :=
   by
   ext
-  simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighbor_finset,
+  simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighborFinset,
     mem_inter, mem_singleton]
   rintro hnv hnw (rfl | rfl)
   · exact hnv h
@@ -144,9 +144,9 @@ theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegular
 theorem IsSRGWith.card_commonNeighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (ha : Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - μ) - 2 :=
   by
-  simp only [← Set.toFinset_card, common_neighbors, Set.toFinset_inter, neighbor_set_compl,
-    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighbor_finset_def]
-  simp_rw [compl_neighbor_finset_sdiff_inter_eq]
+  simp only [← Set.toFinset_card, commonNeighbors, Set.toFinset_inter, neighborSet_compl,
+    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighborFinset_def]
+  simp_rw [compl_neighborFinset_sdiff_inter_eq]
   have hne : v ≠ w := ne_of_adj _ ha
   rw [compl_adj] at ha
   rw [card_sdiff, ← insert_eq, card_insert_of_not_mem, card_singleton, ← Finset.compl_union]
@@ -154,18 +154,18 @@ theorem IsSRGWith.card_commonNeighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ 
     rw [card_compl, h.card_neighbor_finset_union_of_not_adj hne ha.2, ← h.card]
   · simp only [hne.symm, not_false_iff, mem_singleton]
   · intro u
-    simp only [mem_union, mem_compl, mem_neighbor_finset, mem_inter, mem_singleton]
+    simp only [mem_union, mem_compl, mem_neighborFinset, mem_inter, mem_singleton]
     rintro (rfl | rfl) <;> simpa [adj_comm] using ha.2
 #align simple_graph.is_SRG_with.card_common_neighbors_eq_of_adj_compl SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_adj_compl
 
 theorem IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (hn : v ≠ w) (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - ℓ) :=
   by
-  simp only [← Set.toFinset_card, common_neighbors, Set.toFinset_inter, neighbor_set_compl,
-    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighbor_finset_def]
+  simp only [← Set.toFinset_card, commonNeighbors, Set.toFinset_inter, neighborSet_compl,
+    Set.toFinset_diff, Set.toFinset_singleton, Set.toFinset_compl, ← neighborFinset_def]
   simp only [not_and, Classical.not_not, compl_adj] at hna
   have h2' := hna hn
-  simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']
+  simp_rw [compl_neighborFinset_sdiff_inter_eq, sdiff_compl_neighborFinset_inter_eq h2']
   rwa [← Finset.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]
 #align simple_graph.is_SRG_with.card_common_neighbors_eq_of_not_adj_compl SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl
 

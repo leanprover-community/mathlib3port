@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.uniqueness
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,9 +86,9 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
   let F' := UniformSpace.Completion F
   set e : F →L[𝕜] F' := UniformSpace.Completion.toComplL
   have : AnalyticOn 𝕜 (e ∘ f) U := fun x hx => (e.analytic_at _).comp (hf x hx)
-  have A : eq_on (e ∘ f) 0 U :=
+  have A : EqOn (e ∘ f) 0 U :=
     by
-    apply eq_on_zero_of_preconnected_of_eventually_eq_zero_aux this hU h₀
+    apply eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux this hU h₀
     filter_upwards [hfz₀]with x hx
     simp only [hx, Function.comp_apply, Pi.zero_apply, map_zero]
   intro z hz

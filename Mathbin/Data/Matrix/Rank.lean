@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.matrix.rank
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ noncomputable def rank : ℕ :=
 
 @[simp]
 theorem rank_one : rank (1 : Matrix n n K) = Fintype.card n := by
-  rw [rank, to_lin'_one, LinearMap.range_id, finrank_top, Module.Free.finrank_pi]
+  rw [rank, toLin'_one, LinearMap.range_id, finrank_top, Module.Free.finrank_pi]
 #align matrix.rank_one Matrix.rank_one
 
 @[simp]
@@ -69,7 +69,7 @@ theorem rank_le_width {m n : ℕ} (A : Matrix (Fin m) (Fin n) K) : A.rank ≤ n 
 theorem rank_mul_le (B : Matrix n o K) : (A ⬝ B).rank ≤ A.rank :=
   by
   refine' LinearMap.finrank_le_finrank_of_injective (Submodule.ofLe_injective _)
-  rw [to_lin'_mul]
+  rw [toLin'_mul]
   exact LinearMap.range_comp_le_range _ _
 #align matrix.rank_mul_le Matrix.rank_mul_le
 
@@ -92,24 +92,24 @@ theorem rank_eq_finrank_range_toLin {M₁ M₂ : Type _} [AddCommGroup M₁] [Ad
     [Module K M₁] [Module K M₂] (v₁ : Basis m K M₁) (v₂ : Basis n K M₂) :
     A.rank = finrank K (toLin v₂ v₁ A).range :=
   by
-  let e₁ := (Pi.basisFun K m).Equiv v₁ (Equiv.refl _)
-  let e₂ := (Pi.basisFun K n).Equiv v₂ (Equiv.refl _)
+  let e₁ := (Pi.basisFun K m).equiv v₁ (Equiv.refl _)
+  let e₂ := (Pi.basisFun K n).equiv v₂ (Equiv.refl _)
   have range_e₂ : (e₂ : (n → K) →ₗ[K] M₂).range = ⊤ :=
     by
     rw [LinearMap.range_eq_top]
     exact e₂.surjective
   refine' LinearEquiv.finrank_eq (e₁.of_submodules _ _ _)
-  rw [← LinearMap.range_comp, ← LinearMap.range_comp_of_range_eq_top (to_lin v₂ v₁ A) range_e₂]
+  rw [← LinearMap.range_comp, ← LinearMap.range_comp_of_range_eq_top (toLin v₂ v₁ A) range_e₂]
   congr 1
   apply LinearMap.pi_ext'
   rintro i
   apply LinearMap.ext_ring
-  have aux₁ := to_lin_self (Pi.basisFun K n) (Pi.basisFun K m) A i
+  have aux₁ := toLin_self (Pi.basisFun K n) (Pi.basisFun K m) A i
   have aux₂ := Basis.equiv_apply (Pi.basisFun K n) i v₂
-  rw [to_lin_eq_to_lin'] at aux₁
+  rw [toLin_eq_toLin'] at aux₁
   rw [Pi.basisFun_apply, LinearMap.coe_stdBasis] at aux₁ aux₂
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
-    LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
+    LinearMap.coe_single, toLin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
 
 theorem rank_le_card_height : A.rank ≤ Fintype.card m :=

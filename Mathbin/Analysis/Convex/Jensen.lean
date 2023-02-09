@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.jensen
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem ConvexOn.map_centerMass_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t,
   have hmem' : ∀ i ∈ t, (p i, (f ∘ p) i) ∈ { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } := fun i hi =>
     ⟨hmem i hi, le_rfl⟩
   convert (hf.convex_epigraph.center_mass_mem h₀ h₁ hmem').2 <;>
-    simp only [center_mass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
+    simp only [centerMass, Function.comp, Prod.smul_fst, Prod.fst_sum, Prod.smul_snd, Prod.snd_sum]
 #align convex_on.map_center_mass_le ConvexOn.map_centerMass_le
 
 /-- Concave **Jensen's inequality**, `finset.center_mass` version. -/
@@ -66,7 +66,7 @@ theorem ConcaveOn.le_map_centerMass (hf : ConcaveOn 𝕜 s f) (h₀ : ∀ i ∈ 
 /-- Convex **Jensen's inequality**, `finset.sum` version. -/
 theorem ConvexOn.map_sum_le (hf : ConvexOn 𝕜 s f) (h₀ : ∀ i ∈ t, 0 ≤ w i) (h₁ : (∑ i in t, w i) = 1)
     (hmem : ∀ i ∈ t, p i ∈ s) : f (∑ i in t, w i • p i) ≤ ∑ i in t, w i • f (p i) := by
-  simpa only [center_mass, h₁, inv_one, one_smul] using
+  simpa only [centerMass, h₁, inv_one, one_smul] using
     hf.map_center_mass_le h₀ (h₁.symm ▸ zero_lt_one) hmem
 #align convex_on.map_sum_le ConvexOn.map_sum_le
 
@@ -92,10 +92,10 @@ theorem le_sup_of_mem_convexHull {s : Finset E} (hf : ConvexOn 𝕜 (convexHull 
     (hx : x ∈ convexHull 𝕜 (s : Set E)) :
     f x ≤ s.sup' (coe_nonempty.1 <| convexHull_nonempty_iff.1 ⟨x, hx⟩) f :=
   by
-  obtain ⟨w, hw₀, hw₁, rfl⟩ := mem_convex_hull.1 hx
+  obtain ⟨w, hw₀, hw₁, rfl⟩ := mem_convexHull.1 hx
   exact
     (hf.map_center_mass_le hw₀ (by positivity) <| subset_convexHull _ _).trans
-      (center_mass_le_sup hw₀ <| by positivity)
+      (centerMass_le_sup hw₀ <| by positivity)
 #align le_sup_of_mem_convex_hull le_sup_of_mem_convexHull
 
 theorem inf_le_of_mem_convexHull {s : Finset E} (hf : ConcaveOn 𝕜 (convexHull 𝕜 (s : Set E)) f)
@@ -113,7 +113,7 @@ theorem ConvexOn.exists_ge_of_centerMass (h : ConvexOn 𝕜 s f) (hw₀ : ∀ i 
   rsuffices ⟨i, hi, hfi⟩ : ∃ i ∈ t.filter fun i => w i ≠ 0, w i • f y ≤ w i • (f ∘ p) i
   · rw [mem_filter] at hi
     exact ⟨i, hi.1, (smul_le_smul_iff_of_pos <| (hw₀ i hi.1).lt_of_ne hi.2.symm).1 hfi⟩
-  have hw' : (0 : 𝕜) < ∑ i in Filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
+  have hw' : (0 : 𝕜) < ∑ i in filter (fun i => w i ≠ 0) t, w i := by rwa [sum_filter_ne_zero]
   refine' exists_le_of_sum_le (nonempty_of_sum_ne_zero hw'.ne') _
   rw [← sum_smul, ← smul_le_smul_iff_of_pos (inv_pos.2 hw'), inv_smul_smul₀ hw'.ne', ←
     Finset.centerMass, Finset.centerMass_filter_ne_zero]
@@ -133,7 +133,7 @@ then the eventual maximum of `f` on `convex_hull 𝕜 s` lies in `s`. -/
 theorem ConvexOn.exists_ge_of_mem_convexHull (hf : ConvexOn 𝕜 (convexHull 𝕜 s) f) {x}
     (hx : x ∈ convexHull 𝕜 s) : ∃ y ∈ s, f x ≤ f y :=
   by
-  rw [_root_.convex_hull_eq] at hx
+  rw [convexHull_eq] at hx
   obtain ⟨α, t, w, p, hw₀, hw₁, hp, rfl⟩ := hx
   rcases hf.exists_ge_of_center_mass hw₀ (hw₁.symm ▸ zero_lt_one) fun i hi =>
       subset_convexHull 𝕜 s (hp i hi) with

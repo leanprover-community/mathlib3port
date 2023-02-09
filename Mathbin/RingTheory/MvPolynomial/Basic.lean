@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module ring_theory.mv_polynomial.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ namespace MvPolynomial
 section CharP
 
 instance [CharP R p] : CharP (MvPolynomial σ R) p
-    where cast_eq_zero_iff n := by rw [← C_eq_coe_nat, ← C_0, C_inj, CharP.cast_eq_zero_iff R p]
+    where cast_eq_zero_iff n := by rw [← c_eq_coe_nat, ← c_0, c_inj, CharP.cast_eq_zero_iff R p]
 
 end CharP
 
@@ -79,7 +79,7 @@ section Degree
 
 /-- The submodule of polynomials of total degree less than or equal to `m`.-/
 def restrictTotalDegree : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | (n.Sum fun n e => e) ≤ m }
+  Finsupp.supported _ _ { n | (n.sum fun n e => e) ≤ m }
 #align mv_polynomial.restrict_total_degree MvPolynomial.restrictTotalDegree
 
 /-- The submodule of polynomials such that the degree with respect to each individual variable is
@@ -93,21 +93,21 @@ variable {R}
 theorem mem_restrictTotalDegree (p : MvPolynomial σ R) :
     p ∈ restrictTotalDegree σ R m ↔ p.totalDegree ≤ m :=
   by
-  rw [total_degree, Finset.sup_le_iff]
+  rw [totalDegree, Finset.sup_le_iff]
   rfl
 #align mv_polynomial.mem_restrict_total_degree MvPolynomial.mem_restrictTotalDegree
 
 theorem mem_restrictDegree (p : MvPolynomial σ R) (n : ℕ) :
     p ∈ restrictDegree σ R n ↔ ∀ s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n :=
   by
-  rw [restrict_degree, Finsupp.mem_supported]
+  rw [restrictDegree, Finsupp.mem_supported]
   rfl
 #align mv_polynomial.mem_restrict_degree MvPolynomial.mem_restrictDegree
 
 theorem mem_restrictDegree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
     p ∈ restrictDegree σ R n ↔ ∀ i, p.degrees.count i ≤ n :=
   by
-  simp only [mem_restrict_degree, degrees, Multiset.count_finset_sup, Finsupp.count_toMultiset,
+  simp only [mem_restrictDegree, degrees, Multiset.count_finset_sup, Finsupp.count_toMultiset,
     Finset.sup_le_iff]
   exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 #align mv_polynomial.mem_restrict_degree_iff_sup MvPolynomial.mem_restrictDegree_iff_sup
@@ -126,7 +126,7 @@ theorem coe_basisMonomials :
 #align mv_polynomial.coe_basis_monomials MvPolynomial.coe_basisMonomials
 
 theorem linearIndependent_x : LinearIndependent R (x : σ → MvPolynomial σ R) :=
-  (basisMonomials σ R).LinearIndependent.comp (fun s : σ => Finsupp.single s 1)
+  (basisMonomials σ R).linearIndependent.comp (fun s : σ => Finsupp.single s 1)
     (Finsupp.single_left_injective one_ne_zero)
 #align mv_polynomial.linear_independent_X MvPolynomial.linearIndependent_x
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.dfinsupp.multiset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,13 +73,13 @@ theorem toDfinsupp_replicate (a : α) (n : ℕ) :
     toDfinsupp (Multiset.replicate n a) = Dfinsupp.single a n :=
   by
   ext i
-  dsimp [to_dfinsupp]
+  dsimp [toDfinsupp]
   simp [count_replicate, eq_comm]
 #align multiset.to_dfinsupp_replicate Multiset.toDfinsupp_replicate
 
 @[simp]
 theorem toDfinsupp_singleton (a : α) : toDfinsupp {a} = Dfinsupp.single a 1 := by
-  rw [← replicate_one, to_dfinsupp_replicate]
+  rw [← replicate_one, toDfinsupp_replicate]
 #align multiset.to_dfinsupp_singleton Multiset.toDfinsupp_singleton
 
 /-- `multiset.to_dfinsupp` as an `add_equiv`. -/
@@ -90,7 +90,7 @@ def equivDfinsupp : Multiset α ≃+ Π₀ a : α, ℕ :=
       ext x : 1
       simp)
     (by
-      refine' @Dfinsupp.add_hom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
+      refine' @dfinsupp.add_hom_ext α (fun _ => ℕ) _ _ _ _ _ _ fun i hi => _
       simp)
 #align multiset.equiv_dfinsupp Multiset.equivDfinsupp
 

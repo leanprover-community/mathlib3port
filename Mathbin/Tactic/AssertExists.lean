@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.assert_exists
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,12 +78,12 @@ unsafe def assert_not_exists.linter : linter
     where
   test d := do
     let n := d.to_name
-    let tt ← pure (`assert_not_exists._checked.isPrefixOfₓ n) |
+    let tt ← pure (`assert_not_exists._checked.is_prefix_of n) |
       pure none
     let declaration.defn _ _ q(Name) val _ _ ← pure d
     let n ← tactic.eval_expr Name val
     let tt ← succeeds (get_decl n) |
-      pure (some (f! "`{n}` does not ever exist").toString)
+      pure (some (f! "`{n}` does not ever exist").to_string)
     pure none
   auto_decls := true
   no_errors_found := "All `assert_not_exists` declarations eventually exist."
@@ -134,7 +134,7 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
   match i with
     | none => do
       let n ← tactic.mk_fresh_name
-      let e_str ← toString <$> pp e
+      let e_str ← to_string <$> pp e
       let marker := (`assert_no_instance._checked.mk_string e_str).append n
       let et ← infer_type e
       let tt ← succeeds (get_decl marker) |
@@ -142,7 +142,7 @@ unsafe def assert_no_instance (_ : parse <| tk "assert_no_instance") : lean.pars
       pure ()
     | some i =>
       (throwError "Instance `{(← i)} : {← e}` is not allowed to be found in this file." :
-        tactic Unit)
+        tactic unit)
 #align assert_no_instance assert_no_instance
 
 /-- A linter for checking that the declarations marked `assert_no_instance` eventually exist. -/
@@ -150,7 +150,7 @@ unsafe def assert_no_instance.linter : linter
     where
   test d := do
     let n := d.to_name
-    let tt ← pure (`assert_no_instance._checked.isPrefixOfₓ n) |
+    let tt ← pure (`assert_no_instance._checked.is_prefix_of n) |
       pure none
     let declaration.defn _ _ _ val _ _ ← pure d
     let tt ← succeeds (tactic.mk_instance val) |

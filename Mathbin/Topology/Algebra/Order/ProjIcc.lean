@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.order.proj_Icc
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,7 +38,7 @@ theorem Filter.Tendsto.IccExtend' (f : γ → Icc a b → β) {z : γ} {l : Filt
     (hf : Tendsto (↿f) (𝓝 z ×ᶠ l.map (projIcc a b h)) l') :
     Tendsto (↿(IccExtend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
   show Tendsto (↿f ∘ Prod.map id (projIcc a b h)) (𝓝 z ×ᶠ l) l' from
-    hf.comp <| tendsto_id.Prod_map tendsto_map
+    hf.comp <| tendsto_id.prod_map tendsto_map
 #align filter.tendsto.Icc_extend Filter.Tendsto.IccExtend'
 
 variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
@@ -54,7 +54,7 @@ theorem continuous_projIcc : Continuous (projIcc a b h) :=
 theorem quotientMap_projIcc : QuotientMap (projIcc a b h) :=
   quotientMap_iff.2
     ⟨projIcc_surjective h, fun s =>
-      ⟨fun hs => hs.Preimage continuous_projIcc, fun hs =>
+      ⟨fun hs => hs.preimage continuous_projIcc, fun hs =>
         ⟨_, hs, by
           ext
           simp⟩⟩⟩
@@ -106,6 +106,6 @@ theorem ContinuousAt.IccExtend {x : γ} (f : γ → Icc a b → β) {g : γ → 
     (hf : ContinuousAt (↿f) (x, projIcc a b h (g x))) (hg : ContinuousAt g x) :
     ContinuousAt (fun a => IccExtend h (f a) (g a)) x :=
   show ContinuousAt (↿f ∘ fun x => (x, projIcc a b h (g x))) x from
-    ContinuousAt.comp hf <| continuousAt_id.Prod <| continuous_projIcc.ContinuousAt.comp hg
+    ContinuousAt.comp hf <| continuousAt_id.prod <| continuous_projIcc.continuousAt.comp hg
 #align continuous_at.Icc_extend ContinuousAt.IccExtend
 

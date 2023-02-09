@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.uniform_space.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align uniform_continuous_pi uniformContinuous_piₓ'. -/
 theorem uniformContinuous_pi {β : Type _} [UniformSpace β] {f : β → ∀ i, α i} :
     UniformContinuous f ↔ ∀ i, UniformContinuous fun x => f x i := by
-  simp only [UniformContinuous, Pi.uniformity, tendsto_infi, tendsto_comap_iff]
+  simp only [UniformContinuous, Pi.uniformity, tendsto_infᵢ, tendsto_comap_iff]
 #align uniform_continuous_pi uniformContinuous_pi
 
 variable (α)
@@ -73,7 +73,7 @@ but is expected to have type
   forall {ι : Type.{u1}} (α : ι -> Type.{u2}) [U : forall (i : ι), UniformSpace.{u2} (α i)] (i : ι), UniformContinuous.{max u2 u1, u2} (forall (i : ι), α i) (α i) (Pi.uniformSpace.{u2, u1} ι (fun (i : ι) => α i) (fun (i : ι) => U i)) (U i) (fun (a : forall (i : ι), α i) => a i)
 Case conversion may be inaccurate. Consider using '#align Pi.uniform_continuous_proj Pi.uniformContinuous_projₓ'. -/
 theorem Pi.uniformContinuous_proj (i : ι) : UniformContinuous fun a : ∀ i : ι, α i => a i :=
-  uniformContinuous_pi.1 uniformContinuous_id i
+  uniform_continuous_pi.1 uniformContinuous_id i
 #align Pi.uniform_continuous_proj Pi.uniformContinuous_proj
 
 #print Pi.complete /-
@@ -85,7 +85,7 @@ instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i)
       by
       intro i
       have key : Cauchy (map (fun a : ∀ i : ι, α i => a i) f) :=
-        hf.map (Pi.uniformContinuous_proj α i)
+        hf.map (Pi.uniform_continuous_proj α i)
       exact cauchy_iff_exists_le_nhds.1 key
     choose x hx using this
     use x
@@ -97,7 +97,7 @@ instance Pi.complete [∀ i, CompleteSpace (α i)] : CompleteSpace (∀ i, α i)
 instance Pi.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=
   separated_def.2 fun x y H => by
     ext i
-    apply eq_of_separated_of_uniform_continuous (Pi.uniformContinuous_proj α i)
+    apply eq_of_separated_of_uniformContinuous (Pi.uniform_continuous_proj α i)
     apply H
 #align Pi.separated Pi.separated
 -/

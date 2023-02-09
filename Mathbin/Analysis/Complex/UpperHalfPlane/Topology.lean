@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
 #align upper_half_plane.embedding_coe UpperHalfPlane.embedding_coe
 
 theorem continuous_coe : Continuous (coe : ℍ → ℂ) :=
-  embedding_coe.Continuous
+  embedding_coe.continuous
 #align upper_half_plane.continuous_coe UpperHalfPlane.continuous_coe
 
 theorem continuous_re : Continuous re :=
@@ -64,7 +64,7 @@ instance : NormalSpace ℍ :=
   normalSpaceOfT3SecondCountable ℍ
 
 instance : ContractibleSpace ℍ :=
-  (convex_halfspace_im_gt 0).ContractibleSpace ⟨i, one_pos.trans_eq i_im.symm⟩
+  (convex_halfspace_im_gt 0).contractibleSpace ⟨i, one_pos.trans_eq i_im.symm⟩
 
 instance : LocPathConnectedSpace ℍ :=
   loc_path_connected_of_isOpen <| isOpen_lt continuous_const Complex.continuous_im
@@ -77,7 +77,7 @@ instance : NoncompactSpace ℍ := by
   exact absurd ((this 0).1 left_mem_Ici) (lt_irrefl _)
 
 instance : LocallyCompactSpace ℍ :=
-  openEmbedding_coe.LocallyCompactSpace
+  openEmbedding_coe.locallyCompactSpace
 
 end UpperHalfPlane
 

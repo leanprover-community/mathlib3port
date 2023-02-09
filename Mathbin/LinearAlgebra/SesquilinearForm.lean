@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 
 ! This file was ported from Lean 3 source module linear_algebra.sesquilinear_form
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem isOrthoZeroRight (B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R) (x) :
 #align linear_map.is_ortho_zero_right LinearMap.isOrthoZeroRight
 
 theorem isOrtho_flip {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {x y} : B.IsOrtho x y ↔ B.flip.IsOrtho y x := by
-  simp_rw [is_ortho_def, flip_apply]
+  simp_rw [isOrtho_def, flip_apply]
 #align linear_map.is_ortho_flip LinearMap.isOrtho_flip
 
 /-- A set of vectors `v` is orthogonal with respect to some bilinear form `B` if and only
@@ -94,7 +94,7 @@ theorem isOrthoCat_def {B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R} {v : n
 theorem isOrthoCat_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] R) {v : n → M₁} :
     B.IsOrthoCat v ↔ B.flip.IsOrthoCat v :=
   by
-  simp_rw [is_Ortho_def]
+  simp_rw [isOrthoCat_def]
   constructor <;> intro h i j hij
   · rw [flip_apply]
     exact h j i (Ne.symm hij)
@@ -150,7 +150,7 @@ theorem linearIndependent_of_isOrthoCat {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ
       by
       apply Finset.sum_eq_single_of_mem i hi
       intro j hj hij
-      rw [is_Ortho_def.1 hv₁ _ _ hij, mul_zero]
+      rw [isOrthoCat_def.1 hv₁ _ _ hij, mul_zero]
     simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this
     apply (map_eq_zero I₁).mp
     exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
@@ -184,7 +184,7 @@ theorem ortho_comm {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
 
 theorem domRestrictRefl (H : B.IsRefl) (p : Submodule R₁ M₁) : (B.domRestrict₁₂ p p).IsRefl :=
   fun _ _ => by
-  simp_rw [dom_restrict₁₂_apply]
+  simp_rw [domRestrict₁₂_apply]
   exact H _ _
 #align linear_map.is_refl.dom_restrict_refl LinearMap.IsRefl.domRestrictRefl
 
@@ -235,12 +235,12 @@ theorem isRefl (H : B.IsSymm) : B.IsRefl := fun x y H1 =>
 #align linear_map.is_symm.is_refl LinearMap.IsSymm.isRefl
 
 theorem ortho_comm (H : B.IsSymm) {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
-  H.IsRefl.ortho_comm
+  H.isRefl.ortho_comm
 #align linear_map.is_symm.ortho_comm LinearMap.IsSymm.ortho_comm
 
 theorem domRestrictSymm (H : B.IsSymm) (p : Submodule R M) : (B.domRestrict₁₂ p p).IsSymm :=
   fun _ _ => by
-  simp_rw [dom_restrict₁₂_apply]
+  simp_rw [domRestrict₁₂_apply]
   exact H _ _
 #align linear_map.is_symm.dom_restrict_symm LinearMap.IsSymm.domRestrictSymm
 
@@ -295,7 +295,7 @@ theorem isRefl : B.IsRefl := by
 #align linear_map.is_alt.is_refl LinearMap.IsAlt.isRefl
 
 theorem ortho_comm {x y} : IsOrtho B x y ↔ IsOrtho B y x :=
-  H.IsRefl.ortho_comm
+  H.isRefl.ortho_comm
 #align linear_map.is_alt.ortho_comm LinearMap.IsAlt.ortho_comm
 
 end IsAlt
@@ -397,7 +397,7 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] 
   constructor
   · exact fun h => h x ⟨1, one_smul _ _⟩
   · rintro h _ ⟨z, rfl⟩
-    rw [is_ortho, map_smulₛₗ₂, smul_eq_zero]
+    rw [IsOrtho, map_smulₛₗ₂, smul_eq_zero]
     exact Or.intro_right _ h
 #align linear_map.orthogonal_span_singleton_eq_to_lin_ker LinearMap.orthogonal_span_singleton_eq_to_lin_ker
 
@@ -603,7 +603,7 @@ theorem isPairSelfAdjoint_equiv (e : M₁ ≃ₗ[R] M) (f : Module.End R M) :
     simp only [LinearEquiv.symm_conj_apply, compl₂_apply, coe_comp, LinearEquiv.coe_coe,
       compl₁₂_apply, LinearEquiv.apply_symm_apply]
   have he : Function.Surjective (⇑(↑e : M₁ →ₗ[R] M) : M₁ → M) := e.surjective
-  simp_rw [is_pair_self_adjoint, is_adjoint_pair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
+  simp_rw [IsPairSelfAdjoint, isAdjointPair_iff_comp_eq_compl₂, hₗ, hᵣ, compl₁₂_inj he he]
 #align linear_map.is_pair_self_adjoint_equiv LinearMap.isPairSelfAdjoint_equiv
 
 theorem isSkewAdjoint_iff_neg_self_adjoint (f : Module.End R M) :
@@ -621,7 +621,7 @@ theorem mem_selfAdjointSubmodule (f : Module.End R M) :
 theorem mem_skewAdjointSubmodule (f : Module.End R M) :
     f ∈ B.skewAdjointSubmodule ↔ B.IsSkewAdjoint f :=
   by
-  rw [is_skew_adjoint_iff_neg_self_adjoint]
+  rw [isSkewAdjoint_iff_neg_self_adjoint]
   exact Iff.rfl
 #align linear_map.mem_skew_adjoint_submodule LinearMap.mem_skewAdjointSubmodule
 
@@ -711,7 +711,7 @@ theorem flip_separatingRight {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
 
 @[simp]
 theorem flip_separatingLeft {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
-    B.flip.SeparatingLeft ↔ SeparatingRight B := by rw [← flip_separating_right, flip_flip]
+    B.flip.SeparatingLeft ↔ SeparatingRight B := by rw [← flip_separatingRight, flip_flip]
 #align linear_map.flip_separating_left LinearMap.flip_separatingLeft
 
 @[simp]
@@ -735,7 +735,7 @@ theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →�
 
 theorem separatingRight_iff_linear_flip_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ ∀ y : M₂, B.flip y = 0 → y = 0 := by
-  rw [← flip_separating_left, separating_left_iff_linear_nontrivial]
+  rw [← flip_separatingLeft, separatingLeft_iff_linear_nontrivial]
 #align linear_map.separating_right_iff_linear_flip_nontrivial LinearMap.separatingRight_iff_linear_flip_nontrivial
 
 /-- A bilinear form is left-separating if and only if it has a trivial kernel. -/
@@ -747,7 +747,7 @@ theorem separatingLeft_iff_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I
 /-- A bilinear form is right-separating if and only if its flip has a trivial kernel. -/
 theorem separatingRight_iff_flip_ker_eq_bot {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] R} :
     B.SeparatingRight ↔ B.flip.ker = ⊥ := by
-  rw [← flip_separating_left, separating_left_iff_ker_eq_bot]
+  rw [← flip_separatingLeft, separatingLeft_iff_ker_eq_bot]
 #align linear_map.separating_right_iff_flip_ker_eq_bot LinearMap.separatingRight_iff_flip_ker_eq_bot
 
 end CommSemiring
@@ -760,16 +760,16 @@ theorem IsRefl.nondegenerateOfSeparatingLeft {B : M →ₗ[R] M →ₗ[R] R} (hB
     (hB' : B.SeparatingLeft) : B.Nondegenerate :=
   by
   refine' ⟨hB', _⟩
-  rw [separating_right_iff_flip_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mp]
-  rwa [← separating_left_iff_ker_eq_bot]
+  rw [separatingRight_iff_flip_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mp]
+  rwa [← separatingLeft_iff_ker_eq_bot]
 #align linear_map.is_refl.nondegenerate_of_separating_left LinearMap.IsRefl.nondegenerateOfSeparatingLeft
 
 theorem IsRefl.nondegenerateOfSeparatingRight {B : M →ₗ[R] M →ₗ[R] R} (hB : B.IsRefl)
     (hB' : B.SeparatingRight) : B.Nondegenerate :=
   by
   refine' ⟨_, hB'⟩
-  rw [separating_left_iff_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mpr]
-  rwa [← separating_right_iff_flip_ker_eq_bot]
+  rw [separatingLeft_iff_ker_eq_bot, hB.ker_eq_bot_iff_ker_flip_eq_bot.mpr]
+  rwa [← separatingRight_iff_flip_ker_eq_bot]
 #align linear_map.is_refl.nondegenerate_of_separating_right LinearMap.IsRefl.nondegenerateOfSeparatingRight
 
 /-- The restriction of a reflexive bilinear form `B` onto a submodule `W` is
@@ -784,7 +784,7 @@ theorem nondegenerateRestrictOfDisjointOrthogonal {B : M →ₗ[R] M →ₗ[R] R
   rw [Submodule.mk_eq_zero, ← Submodule.mem_bot R]
   refine' hW.le_bot ⟨hx, fun y hy => _⟩
   specialize b₁ ⟨y, hy⟩
-  simp_rw [dom_restrict₁₂_apply, Submodule.coe_mk] at b₁
+  simp_rw [domRestrict₁₂_apply, Submodule.coe_mk] at b₁
   rw [hB.ortho_comm]
   exact b₁
 #align linear_map.nondegenerate_restrict_of_disjoint_orthogonal LinearMap.nondegenerateRestrictOfDisjointOrthogonal
@@ -813,8 +813,8 @@ theorem IsOrthoCat.not_isOrtho_basis_self_of_separatingRight [Nontrivial R]
     {B : M →ₛₗ[I] M →ₛₗ[I'] R} {v : Basis n R M} (h : B.IsOrthoCat v) (hB : B.SeparatingRight)
     (i : n) : ¬B.IsOrtho (v i) (v i) :=
   by
-  rw [is_Ortho_flip] at h
-  rw [is_ortho_flip]
+  rw [isOrthoCat_flip] at h
+  rw [isOrtho_flip]
   exact h.not_is_ortho_basis_self_of_separating_left (flip_separating_left.mpr hB) i
 #align linear_map.is_Ortho.not_is_ortho_basis_self_of_separating_right LinearMap.IsOrthoCat.not_isOrtho_basis_self_of_separatingRight
 
@@ -846,10 +846,10 @@ if the basis has no elements which are self-orthogonal. -/
 theorem IsOrthoCat.separatingRightIffNotIsOrthoBasisSelf [NoZeroDivisors R] {B : M →ₗ[R] M →ₗ[R] R}
     (v : Basis n R M) (hO : B.IsOrthoCat v) (h : ∀ i, ¬B.IsOrtho (v i) (v i)) : B.SeparatingRight :=
   by
-  rw [is_Ortho_flip] at hO
-  rw [← flip_separating_left]
-  refine' is_Ortho.separating_left_of_not_is_ortho_basis_self v hO fun i => _
-  rw [is_ortho_flip]
+  rw [isOrthoCat_flip] at hO
+  rw [← flip_separatingLeft]
+  refine' IsOrthoCat.separatingLeftOfNotIsOrthoBasisSelf v hO fun i => _
+  rw [isOrtho_flip]
   exact h i
 #align linear_map.is_Ortho.separating_right_iff_not_is_ortho_basis_self LinearMap.IsOrthoCat.separatingRightIffNotIsOrthoBasisSelf
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module algebra.char_p.char_and_card
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ theorem isUnit_iff_not_dvd_char_of_ringChar_ne_zero (R : Type _) [CommRing R] (p
     norm_cast  at h₄
     exact h₄ h₃ hq.symm
   · intro h
-    rcases(hp.coprime_iff_not_dvd.mpr h).IsCoprime with ⟨a, b, hab⟩
+    rcases(hp.coprime_iff_not_dvd.mpr h).isCoprime with ⟨a, b, hab⟩
     apply_fun (coe : ℤ → R)  at hab
     push_cast at hab
     rw [hch, mul_zero, add_zero, mul_comm] at hab

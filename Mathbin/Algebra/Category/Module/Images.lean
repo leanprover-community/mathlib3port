@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.images
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ def image : ModuleCat R :=
 
 /-- The inclusion of `image f` into the target -/
 def image.ι : image f ⟶ H :=
-  f.range.Subtype
+  f.range.subtype
 #align Module.image.ι ModuleCat.image.ι
 
 instance : Mono (image.ι f) :=
@@ -51,7 +51,7 @@ instance : Mono (image.ι f) :=
 
 /-- The corestriction map to the image -/
 def factorThruImage : G ⟶ image f :=
-  f.range_restrict
+  f.rangeRestrict
 #align Module.factor_thru_image ModuleCat.factorThruImage
 
 theorem image.fac : factorThruImage f ≫ image.ι f = f :=
@@ -126,14 +126,14 @@ noncomputable def imageIsoRange {G H : ModuleCat.{v} R} (f : G ⟶ H) :
 
 @[simp, reassoc.1, elementwise]
 theorem imageIsoRange_inv_image_ι {G H : ModuleCat.{v} R} (f : G ⟶ H) :
-    (imageIsoRange f).inv ≫ Limits.image.ι f = ModuleCat.ofHom f.range.Subtype :=
+    (imageIsoRange f).inv ≫ Limits.image.ι f = ModuleCat.ofHom f.range.subtype :=
   IsImage.isoExt_inv_m _ _
 #align Module.image_iso_range_inv_image_ι ModuleCat.imageIsoRange_inv_image_ι
 
 @[simp, reassoc.1, elementwise]
 theorem imageIsoRange_hom_subtype {G H : ModuleCat.{v} R} (f : G ⟶ H) :
-    (imageIsoRange f).hom ≫ ModuleCat.ofHom f.range.Subtype = Limits.image.ι f := by
-  erw [← image_iso_range_inv_image_ι f, iso.hom_inv_id_assoc]
+    (imageIsoRange f).hom ≫ ModuleCat.ofHom f.range.subtype = Limits.image.ι f := by
+  erw [← imageIsoRange_inv_image_ι f, Iso.hom_inv_id_assoc]
 #align Module.image_iso_range_hom_subtype ModuleCat.imageIsoRange_hom_subtype
 
 end ModuleCat

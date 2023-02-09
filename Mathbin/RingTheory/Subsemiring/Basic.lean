@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module ring_theory.subsemiring.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,7 +106,7 @@ namespace SubsemiringClass
 -- Prefer subclasses of `non_assoc_semiring` over subclasses of `subsemiring_class`.
 /-- A subsemiring of a `non_assoc_semiring` inherits a `non_assoc_semiring` structure -/
 instance (priority := 75) toNonAssocSemiring : NonAssocSemiring s :=
-  Subtype.coe_injective.NonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.nonAssocSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_non_assoc_semiring SubsemiringClass.toNonAssocSemiring
 -/
@@ -154,7 +154,7 @@ omit hSR
 /-- A subsemiring of a `semiring` is a `semiring`. -/
 instance (priority := 75) toSemiring {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] :
     Semiring s :=
-  Subtype.coe_injective.Semiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.semiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_semiring SubsemiringClass.toSemiring
 -/
@@ -178,7 +178,7 @@ theorem coe_pow {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] (x : s) (n
 /-- A subsemiring of a `comm_semiring` is a `comm_semiring`. -/
 instance toCommSemiring {R} [CommSemiring R] [SetLike S R] [SubsemiringClass S R] :
     CommSemiring s :=
-  Subtype.coe_injective.CommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.commSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_comm_semiring SubsemiringClass.toCommSemiring
 -/
@@ -187,7 +187,7 @@ instance toCommSemiring {R} [CommSemiring R] [SetLike S R] [SubsemiringClass S R
 /-- A subsemiring of an `ordered_semiring` is an `ordered_semiring`. -/
 instance toOrderedSemiring {R} [OrderedSemiring R] [SetLike S R] [SubsemiringClass S R] :
     OrderedSemiring s :=
-  Subtype.coe_injective.OrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_ordered_semiring SubsemiringClass.toOrderedSemiring
 -/
@@ -196,7 +196,7 @@ instance toOrderedSemiring {R} [OrderedSemiring R] [SetLike S R] [SubsemiringCla
 /-- A subsemiring of an `strict_ordered_semiring` is an `strict_ordered_semiring`. -/
 instance toStrictOrderedSemiring {R} [StrictOrderedSemiring R] [SetLike S R]
     [SubsemiringClass S R] : StrictOrderedSemiring s :=
-  Subtype.coe_injective.StrictOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.strictOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_strict_ordered_semiring SubsemiringClass.toStrictOrderedSemiring
 -/
@@ -205,7 +205,7 @@ instance toStrictOrderedSemiring {R} [StrictOrderedSemiring R] [SetLike S R]
 /-- A subsemiring of an `ordered_comm_semiring` is an `ordered_comm_semiring`. -/
 instance toOrderedCommSemiring {R} [OrderedCommSemiring R] [SetLike S R] [SubsemiringClass S R] :
     OrderedCommSemiring s :=
-  Subtype.coe_injective.OrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_ordered_comm_semiring SubsemiringClass.toOrderedCommSemiring
 -/
@@ -214,7 +214,7 @@ instance toOrderedCommSemiring {R} [OrderedCommSemiring R] [SetLike S R] [Subsem
 /-- A subsemiring of an `strict_ordered_comm_semiring` is an `strict_ordered_comm_semiring`. -/
 instance toStrictOrderedCommSemiring {R} [StrictOrderedCommSemiring R] [SetLike S R]
     [SubsemiringClass S R] : StrictOrderedCommSemiring s :=
-  Subtype.coe_injective.StrictOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.strictOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring_class.to_strict_ordered_comm_semiring SubsemiringClass.toStrictOrderedCommSemiring
 -/
@@ -223,7 +223,7 @@ instance toStrictOrderedCommSemiring {R} [StrictOrderedCommSemiring R] [SetLike 
 /-- A subsemiring of a `linear_ordered_semiring` is a `linear_ordered_semiring`. -/
 instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] [SetLike S R]
     [SubsemiringClass S R] : LinearOrderedSemiring s :=
-  Subtype.coe_injective.LinearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align subsemiring_class.to_linear_ordered_semiring SubsemiringClass.toLinearOrderedSemiring
 -/
@@ -232,7 +232,7 @@ instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] [SetLike S R]
 /-- A subsemiring of a `linear_ordered_comm_semiring` is a `linear_ordered_comm_semiring`. -/
 instance toLinearOrderedCommSemiring {R} [LinearOrderedCommSemiring R] [SetLike S R]
     [SubsemiringClass S R] : LinearOrderedCommSemiring s :=
-  Subtype.coe_injective.LinearOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align subsemiring_class.to_linear_ordered_comm_semiring SubsemiringClass.toLinearOrderedCommSemiring
 -/
@@ -351,7 +351,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.to_submonoid_mono Subsemiring.toSubmonoid_monoₓ'. -/
 @[mono]
 theorem toSubmonoid_mono : Monotone (toSubmonoid : Subsemiring R → Submonoid R) :=
-  toSubmonoid_strictMono.Monotone
+  toSubmonoid_strictMono.monotone
 #align subsemiring.to_submonoid_mono Subsemiring.toSubmonoid_mono
 
 #print Subsemiring.toAddSubmonoid_injective /-
@@ -380,7 +380,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.to_add_submonoid_mono Subsemiring.toAddSubmonoid_monoₓ'. -/
 @[mono]
 theorem toAddSubmonoid_mono : Monotone (toAddSubmonoid : Subsemiring R → AddSubmonoid R) :=
-  toAddSubmonoid_strictMono.Monotone
+  toAddSubmonoid_strictMono.monotone
 #align subsemiring.to_add_submonoid_mono Subsemiring.toAddSubmonoid_mono
 
 /- warning: subsemiring.mk' -> Subsemiring.mk' is a dubious translation:
@@ -506,7 +506,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.list_prod_mem Subsemiring.list_prod_memₓ'. -/
 /-- Product of a list of elements in a `subsemiring` is in the `subsemiring`. -/
 theorem list_prod_mem {R : Type _} [Semiring R] (s : Subsemiring R) {l : List R} :
-    (∀ x ∈ l, x ∈ s) → l.Prod ∈ s :=
+    (∀ x ∈ l, x ∈ s) → l.prod ∈ s :=
   list_prod_mem
 #align subsemiring.list_prod_mem Subsemiring.list_prod_mem
 
@@ -517,7 +517,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (s : Subsemiring.{u1} R _inst_1) {l : List.{u1} R}, (forall (x : R), (Membership.mem.{u1, u1} R (List.{u1} R) (List.instMembershipList.{u1} R) x l) -> (Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) -> (Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) (List.sum.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1))) (MulZeroOneClass.toZero.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)) l) s)
 Case conversion may be inaccurate. Consider using '#align subsemiring.list_sum_mem Subsemiring.list_sum_memₓ'. -/
 /-- Sum of a list of elements in a `subsemiring` is in the `subsemiring`. -/
-protected theorem list_sum_mem {l : List R} : (∀ x ∈ l, x ∈ s) → l.Sum ∈ s :=
+protected theorem list_sum_mem {l : List R} : (∀ x ∈ l, x ∈ s) → l.sum ∈ s :=
   list_sum_mem
 #align subsemiring.list_sum_mem Subsemiring.list_sum_mem
 
@@ -530,7 +530,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.multiset_p
 /-- Product of a multiset of elements in a `subsemiring` of a `comm_semiring`
     is in the `subsemiring`. -/
 protected theorem multiset_prod_mem {R} [CommSemiring R] (s : Subsemiring R) (m : Multiset R) :
-    (∀ a ∈ m, a ∈ s) → m.Prod ∈ s :=
+    (∀ a ∈ m, a ∈ s) → m.prod ∈ s :=
   multiset_prod_mem m
 #align subsemiring.multiset_prod_mem Subsemiring.multiset_prod_mem
 
@@ -542,7 +542,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.multiset_sum_mem Subsemiring.multiset_sum_memₓ'. -/
 /-- Sum of a multiset of elements in a `subsemiring` of a `semiring` is
 in the `add_subsemiring`. -/
-protected theorem multiset_sum_mem (m : Multiset R) : (∀ a ∈ m, a ∈ s) → m.Sum ∈ s :=
+protected theorem multiset_sum_mem (m : Multiset R) : (∀ a ∈ m, a ∈ s) → m.sum ∈ s :=
   multiset_sum_mem m
 #align subsemiring.multiset_sum_mem Subsemiring.multiset_sum_mem
 
@@ -709,7 +709,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.subtype Subsemiring.subtypeₓ'. -/
 /-- The natural ring hom from a subsemiring of semiring `R` to `R`. -/
 def subtype : s →+* R :=
-  { s.toSubmonoid.Subtype, s.toAddSubmonoid.Subtype with toFun := coe }
+  { s.toSubmonoid.subtype, s.toAddSubmonoid.subtype with toFun := coe }
 #align subsemiring.subtype Subsemiring.subtype
 
 /- warning: subsemiring.coe_subtype -> Subsemiring.coe_subtype is a dubious translation:
@@ -719,7 +719,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (s : Subsemiring.{u1} R _inst_1), Eq.{succ u1} (forall (ᾰ : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) => R) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (fun (_x : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) => R) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (NonUnitalNonAssocSemiring.toMul.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1) (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1 (RingHom.instRingHomClassRingHom.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1)))) (Subsemiring.subtype.{u1} R _inst_1 s)) (Subtype.val.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) x (SetLike.coe.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1) s)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.coe_subtype Subsemiring.coe_subtypeₓ'. -/
 @[simp]
-theorem coe_subtype : ⇑s.Subtype = coe :=
+theorem coe_subtype : ⇑s.subtype = coe :=
   rfl
 #align subsemiring.coe_subtype Subsemiring.coe_subtype
 
@@ -731,7 +731,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.to_ordered_semiring Subsemiring.toOrderedSemiringₓ'. -/
 /-- A subsemiring of an `ordered_semiring` is an `ordered_semiring`. -/
 instance toOrderedSemiring {R} [OrderedSemiring R] (s : Subsemiring R) : OrderedSemiring s :=
-  Subtype.coe_injective.OrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring.to_ordered_semiring Subsemiring.toOrderedSemiring
 
@@ -744,7 +744,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_strict_
 /-- A subsemiring of a `strict_ordered_semiring` is a `strict_ordered_semiring`. -/
 instance toStrictOrderedSemiring {R} [StrictOrderedSemiring R] (s : Subsemiring R) :
     StrictOrderedSemiring s :=
-  Subtype.coe_injective.StrictOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.strictOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring.to_strict_ordered_semiring Subsemiring.toStrictOrderedSemiring
 
@@ -757,7 +757,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_ordered
 /-- A subsemiring of an `ordered_comm_semiring` is an `ordered_comm_semiring`. -/
 instance toOrderedCommSemiring {R} [OrderedCommSemiring R] (s : Subsemiring R) :
     OrderedCommSemiring s :=
-  Subtype.coe_injective.OrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.orderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring.to_ordered_comm_semiring Subsemiring.toOrderedCommSemiring
 
@@ -770,7 +770,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_strict_
 /-- A subsemiring of a `strict_ordered_comm_semiring` is a `strict_ordered_comm_semiring`. -/
 instance toStrictOrderedCommSemiring {R} [StrictOrderedCommSemiring R] (s : Subsemiring R) :
     StrictOrderedCommSemiring s :=
-  Subtype.coe_injective.StrictOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.strictOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ => rfl
 #align subsemiring.to_strict_ordered_comm_semiring Subsemiring.toStrictOrderedCommSemiring
 
@@ -783,7 +783,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_linear_
 /-- A subsemiring of a `linear_ordered_semiring` is a `linear_ordered_semiring`. -/
 instance toLinearOrderedSemiring {R} [LinearOrderedSemiring R] (s : Subsemiring R) :
     LinearOrderedSemiring s :=
-  Subtype.coe_injective.LinearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align subsemiring.to_linear_ordered_semiring Subsemiring.toLinearOrderedSemiring
 
@@ -796,7 +796,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.to_linear_
 /-- A subsemiring of a `linear_ordered_comm_semiring` is a `linear_ordered_comm_semiring`. -/
 instance toLinearOrderedCommSemiring {R} [LinearOrderedCommSemiring R] (s : Subsemiring R) :
     LinearOrderedCommSemiring s :=
-  Subtype.coe_injective.LinearOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCommSemiring coe rfl rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align subsemiring.to_linear_ordered_comm_semiring Subsemiring.toLinearOrderedCommSemiring
 
@@ -895,7 +895,7 @@ def topEquiv : (⊤ : Subsemiring R) ≃+* R
   left_inv r := SetLike.eta r _
   right_inv r := [anonymous] r _
   map_mul' := (⊤ : Subsemiring R).coe_mul
-  map_add' := (⊤ : Subsemiring R).val_add
+  map_add' := (⊤ : Subsemiring R).coe_add
 #align subsemiring.top_equiv Subsemiring.topEquiv
 
 #print Subsemiring.comap /-
@@ -1044,7 +1044,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), Eq.{succ u2} (Set.{u2} S) (SetLike.coe.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)) (Set.range.{u2, succ u1} S R (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u1, u2} R S _inst_1 _inst_2)))) f))
 Case conversion may be inaccurate. Consider using '#align ring_hom.coe_srange RingHom.coe_rangeSₓ'. -/
 @[simp]
-theorem coe_rangeS : (f.srange : Set S) = Set.range f :=
+theorem coe_rangeS : (f.rangeS : Set S) = Set.range f :=
   rfl
 #align ring_hom.coe_srange RingHom.coe_rangeS
 
@@ -1055,7 +1055,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] {f : RingHom.{u1, u2} R S _inst_1 _inst_2} {y : S}, Iff (Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) y (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)) (Exists.{succ u1} R (fun (x : R) => Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) x) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u1, u2} R S _inst_1 _inst_2)))) f x) y))
 Case conversion may be inaccurate. Consider using '#align ring_hom.mem_srange RingHom.mem_rangeSₓ'. -/
 @[simp]
-theorem mem_rangeS {f : R →+* S} {y : S} : y ∈ f.srange ↔ ∃ x, f x = y :=
+theorem mem_rangeS {f : R →+* S} {y : S} : y ∈ f.rangeS ↔ ∃ x, f x = y :=
   Iff.rfl
 #align ring_hom.mem_srange RingHom.mem_rangeS
 
@@ -1065,7 +1065,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), Eq.{succ u2} (Subsemiring.{u2} S _inst_2) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f) (Subsemiring.map.{u1, u2} R S _inst_1 _inst_2 f (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align ring_hom.srange_eq_map RingHom.rangeS_eq_mapₓ'. -/
-theorem rangeS_eq_map (f : R →+* S) : f.srange = (⊤ : Subsemiring R).map f :=
+theorem rangeS_eq_map (f : R →+* S) : f.rangeS = (⊤ : Subsemiring R).map f :=
   by
   ext
   simp
@@ -1077,13 +1077,13 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2) (x : R), Membership.mem.{u2, u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) x) (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u1, u2} R S _inst_1 _inst_2)))) f x) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)
 Case conversion may be inaccurate. Consider using '#align ring_hom.mem_srange_self RingHom.mem_rangeS_selfₓ'. -/
-theorem mem_rangeS_self (f : R →+* S) (x : R) : f x ∈ f.srange :=
+theorem mem_rangeS_self (f : R →+* S) (x : R) : f x ∈ f.rangeS :=
   mem_rangeS.mpr ⟨x, rfl⟩
 #align ring_hom.mem_srange_self RingHom.mem_rangeS_self
 
 #print RingHom.map_rangeS /-
-theorem map_rangeS : f.srange.map g = (g.comp f).srange := by
-  simpa only [srange_eq_map] using (⊤ : Subsemiring R).map_map g f
+theorem map_rangeS : f.rangeS.map g = (g.comp f).rangeS := by
+  simpa only [rangeS_eq_map] using (⊤ : Subsemiring R).map_map g f
 #align ring_hom.map_srange RingHom.map_rangeS
 -/
 
@@ -1105,7 +1105,7 @@ end RingHom
 namespace Subsemiring
 
 instance : Bot (Subsemiring R) :=
-  ⟨(Nat.castRingHom R).srange⟩
+  ⟨(Nat.castRingHom R).rangeS⟩
 
 instance : Inhabited (Subsemiring R) :=
   ⟨⊥⟩
@@ -1117,7 +1117,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R], Eq.{succ u1} (Set.{u1} R) (SetLike.coe.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1) (Bot.bot.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instBotSubsemiring.{u1} R _inst_1))) (Set.range.{u1, 1} R Nat (Nat.cast.{u1} R (NonAssocSemiring.toNatCast.{u1} R _inst_1)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.coe_bot Subsemiring.coe_botₓ'. -/
 theorem coe_bot : ((⊥ : Subsemiring R) : Set R) = Set.range (coe : ℕ → R) :=
-  (Nat.castRingHom R).coe_srange
+  (Nat.castRingHom R).coe_rangeS
 #align subsemiring.coe_bot Subsemiring.coe_bot
 
 /- warning: subsemiring.mem_bot -> Subsemiring.mem_bot is a dubious translation:
@@ -1620,11 +1620,11 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_4 : Semiring.{u1} R] {s : Set.{u1} R} {x : R}, Iff (Membership.mem.{u1, u1} R (Subsemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4)) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4)) R (Subsemiring.instSetLikeSubsemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4))) x (Subsemiring.closure.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4) s)) (Exists.{succ u1} (List.{u1} (List.{u1} R)) (fun (L : List.{u1} (List.{u1} R)) => And (forall (t : List.{u1} R), (Membership.mem.{u1, u1} (List.{u1} R) (List.{u1} (List.{u1} R)) (List.instMembershipList.{u1} (List.{u1} R)) t L) -> (forall (y : R), (Membership.mem.{u1, u1} R (List.{u1} R) (List.instMembershipList.{u1} R) y t) -> (Membership.mem.{u1, u1} R (Set.{u1} R) (Set.instMembershipSet.{u1} R) y s))) (Eq.{succ u1} R (List.sum.{u1} R (Distrib.toAdd.{u1} R (NonUnitalNonAssocSemiring.toDistrib.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4)))) (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R _inst_4)) (List.map.{u1, u1} (List.{u1} R) R (List.prod.{u1} R (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R (Semiring.toNonAssocSemiring.{u1} R _inst_4))) (Semiring.toOne.{u1} R _inst_4)) L)) x)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.mem_closure_iff_exists_list Subsemiring.mem_closure_iff_exists_listₓ'. -/
 theorem mem_closure_iff_exists_list {R} [Semiring R] {s : Set R} {x} :
-    x ∈ closure s ↔ ∃ L : List (List R), (∀ t ∈ L, ∀ y ∈ t, y ∈ s) ∧ (L.map List.prod).Sum = x :=
+    x ∈ closure s ↔ ∃ L : List (List R), (∀ t ∈ L, ∀ y ∈ t, y ∈ s) ∧ (L.map List.prod).sum = x :=
   ⟨fun hx =>
     AddSubmonoid.closure_induction (mem_closure_iff.1 hx)
       (fun x hx =>
-        suffices ∃ t : List R, (∀ y ∈ t, y ∈ s) ∧ t.Prod = x from
+        suffices ∃ t : List R, (∀ y ∈ t, y ∈ s) ∧ t.prod = x from
           let ⟨t, ht1, ht2⟩ := this
           ⟨[t], List.forall_mem_singleton.2 ht1, by
             rw [List.map_singleton, List.sum_singleton, ht2]⟩
@@ -1790,7 +1790,7 @@ Case conversion may be inaccurate. Consider using '#align subsemiring.prod Subse
 /-- Given `subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is `s × t`
 as a subsemiring of `R × S`. -/
 def prod (s : Subsemiring R) (t : Subsemiring S) : Subsemiring (R × S) :=
-  { s.toSubmonoid.Prod t.toSubmonoid, s.toAddSubmonoid.Prod t.toAddSubmonoid with
+  { s.toSubmonoid.prod t.toSubmonoid, s.toAddSubmonoid.prod t.toAddSubmonoid with
     carrier := s ×ˢ t }
 #align subsemiring.prod Subsemiring.prod
 
@@ -1802,7 +1802,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.coe_prod Subsemiring.coe_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[norm_cast]
-theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.Prod t : Set (R × S)) = s ×ˢ t :=
+theorem coe_prod (s : Subsemiring R) (t : Subsemiring S) : (s.prod t : Set (R × S)) = s ×ˢ t :=
   rfl
 #align subsemiring.coe_prod Subsemiring.coe_prod
 
@@ -1813,7 +1813,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] {s : Subsemiring.{u1} R _inst_1} {t : Subsemiring.{u2} S _inst_2} {p : Prod.{u1, u2} R S}, Iff (Membership.mem.{max u1 u2, max u1 u2} (Prod.{u1, u2} R S) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (SetLike.instMembership.{max u1 u2, max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Prod.{u1, u2} R S) (Subsemiring.instSetLikeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) p (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t)) (And (Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) (Prod.fst.{u1, u2} R S p) s) (Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) (Prod.snd.{u1, u2} R S p) t))
 Case conversion may be inaccurate. Consider using '#align subsemiring.mem_prod Subsemiring.mem_prodₓ'. -/
 theorem mem_prod {s : Subsemiring R} {t : Subsemiring S} {p : R × S} :
-    p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
+    p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align subsemiring.mem_prod Subsemiring.mem_prod
 
@@ -1825,7 +1825,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_mono Subsemiring.prod_monoₓ'. -/
 @[mono]
 theorem prod_mono ⦃s₁ s₂ : Subsemiring R⦄ (hs : s₁ ≤ s₂) ⦃t₁ t₂ : Subsemiring S⦄ (ht : t₁ ≤ t₂) :
-    s₁.Prod t₁ ≤ s₂.Prod t₂ :=
+    s₁.prod t₁ ≤ s₂.prod t₂ :=
   Set.prod_mono hs ht
 #align subsemiring.prod_mono Subsemiring.prod_mono
 
@@ -1835,7 +1835,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (s : Subsemiring.{u1} R _inst_1), Monotone.{u2, max u1 u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (PartialOrder.toPreorder.{u2} (Subsemiring.{u2} S _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u2} (Subsemiring.{u2} S _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.instCompleteLatticeSubsemiring.{u2} S _inst_2)))) (PartialOrder.toPreorder.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.instCompleteLatticeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))))) (fun (t : Subsemiring.{u2} S _inst_2) => Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t)
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_mono_right Subsemiring.prod_mono_rightₓ'. -/
-theorem prod_mono_right (s : Subsemiring R) : Monotone fun t : Subsemiring S => s.Prod t :=
+theorem prod_mono_right (s : Subsemiring R) : Monotone fun t : Subsemiring S => s.prod t :=
   prod_mono (le_refl s)
 #align subsemiring.prod_mono_right Subsemiring.prod_mono_right
 
@@ -1845,7 +1845,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (t : Subsemiring.{u2} S _inst_2), Monotone.{u1, max u1 u2} (Subsemiring.{u1} R _inst_1) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (PartialOrder.toPreorder.{u1} (Subsemiring.{u1} R _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subsemiring.{u1} R _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instCompleteLatticeSubsemiring.{u1} R _inst_1)))) (PartialOrder.toPreorder.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (CompleteSemilatticeInf.toPartialOrder.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (CompleteLattice.toCompleteSemilatticeInf.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.instCompleteLatticeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))))) (fun (s : Subsemiring.{u1} R _inst_1) => Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t)
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_mono_left Subsemiring.prod_mono_leftₓ'. -/
-theorem prod_mono_left (t : Subsemiring S) : Monotone fun s : Subsemiring R => s.Prod t :=
+theorem prod_mono_left (t : Subsemiring S) : Monotone fun s : Subsemiring R => s.prod t :=
   fun s₁ s₂ hs => prod_mono hs (le_refl t)
 #align subsemiring.prod_mono_left Subsemiring.prod_mono_left
 
@@ -1855,7 +1855,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (s : Subsemiring.{u1} R _inst_1), Eq.{max (succ u1) (succ u2)} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s (Top.top.{u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.instTopSubsemiring.{u2} S _inst_2))) (Subsemiring.comap.{max u1 u2, u1} (Prod.{u1, u2} R S) R (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) _inst_1 (RingHom.fst.{u1, u2} R S _inst_1 _inst_2) s)
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_top Subsemiring.prod_topₓ'. -/
-theorem prod_top (s : Subsemiring R) : s.Prod (⊤ : Subsemiring S) = s.comap (RingHom.fst R S) :=
+theorem prod_top (s : Subsemiring R) : s.prod (⊤ : Subsemiring S) = s.comap (RingHom.fst R S) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
 #align subsemiring.prod_top Subsemiring.prod_top
 
@@ -1865,7 +1865,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (s : Subsemiring.{u2} S _inst_2), Eq.{max (succ u1) (succ u2)} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1)) s) (Subsemiring.comap.{max u1 u2, u2} (Prod.{u1, u2} R S) S (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) _inst_2 (RingHom.snd.{u1, u2} R S _inst_1 _inst_2) s)
 Case conversion may be inaccurate. Consider using '#align subsemiring.top_prod Subsemiring.top_prodₓ'. -/
-theorem top_prod (s : Subsemiring S) : (⊤ : Subsemiring R).Prod s = s.comap (RingHom.snd R S) :=
+theorem top_prod (s : Subsemiring S) : (⊤ : Subsemiring R).prod s = s.comap (RingHom.snd R S) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
 #align subsemiring.top_prod Subsemiring.top_prod
 
@@ -1876,7 +1876,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S], Eq.{max (succ u1) (succ u2)} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1)) (Top.top.{u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.instTopSubsemiring.{u2} S _inst_2))) (Top.top.{max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Subsemiring.instTopSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align subsemiring.top_prod_top Subsemiring.top_prod_topₓ'. -/
 @[simp]
-theorem top_prod_top : (⊤ : Subsemiring R).Prod (⊤ : Subsemiring S) = ⊤ :=
+theorem top_prod_top : (⊤ : Subsemiring R).prod (⊤ : Subsemiring S) = ⊤ :=
   (top_prod _).trans <| comap_top _
 #align subsemiring.top_prod_top Subsemiring.top_prod_top
 
@@ -1887,7 +1887,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (s : Subsemiring.{u1} R _inst_1) (t : Subsemiring.{u2} S _inst_2), RingEquiv.{max u1 u2, max u2 u1} (Subtype.{succ (max u1 u2)} (Prod.{u1, u2} R S) (fun (x : Prod.{u1, u2} R S) => Membership.mem.{max u1 u2, max u1 u2} (Prod.{u1, u2} R S) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (SetLike.instMembership.{max u1 u2, max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Prod.{u1, u2} R S) (Subsemiring.instSetLikeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) x (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))) (Prod.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t))) (Submonoid.mul.{max u1 u2} (Prod.{u1, u2} R S) (MulZeroOneClass.toMulOneClass.{max u1 u2} (Prod.{u1, u2} R S) (NonAssocSemiring.toMulZeroOneClass.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) (Subsemiring.toSubmonoid.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))) (Prod.instMulProd.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t)) (Submonoid.mul.{u1} R (MulZeroOneClass.toMulOneClass.{u1} R (NonAssocSemiring.toMulZeroOneClass.{u1} R _inst_1)) (Subsemiring.toSubmonoid.{u1} R _inst_1 s)) (Submonoid.mul.{u2} S (MulZeroOneClass.toMulOneClass.{u2} S (NonAssocSemiring.toMulZeroOneClass.{u2} S _inst_2)) (Subsemiring.toSubmonoid.{u2} S _inst_2 t))) (Distrib.toAdd.{max u1 u2} (Subtype.{succ (max u1 u2)} (Prod.{u1, u2} R S) (fun (x : Prod.{u1, u2} R S) => Membership.mem.{max u1 u2, max u1 u2} (Prod.{u1, u2} R S) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (SetLike.instMembership.{max u1 u2, max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Prod.{u1, u2} R S) (Subsemiring.instSetLikeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) x (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))) (NonUnitalNonAssocSemiring.toDistrib.{max u1 u2} (Subtype.{succ (max u1 u2)} (Prod.{u1, u2} R S) (fun (x : Prod.{u1, u2} R S) => Membership.mem.{max u1 u2, max u1 u2} (Prod.{u1, u2} R S) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (SetLike.instMembership.{max u1 u2, max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Prod.{u1, u2} R S) (Subsemiring.instSetLikeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) x (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{max u1 u2} (Subtype.{succ (max u1 u2)} (Prod.{u1, u2} R S) (fun (x : Prod.{u1, u2} R S) => Membership.mem.{max u1 u2, max u1 u2} (Prod.{u1, u2} R S) (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (SetLike.instMembership.{max u1 u2, max u1 u2} (Subsemiring.{max u2 u1} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2)) (Prod.{u1, u2} R S) (Subsemiring.instSetLikeSubsemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2))) x (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))) (Subsemiring.toNonAssocSemiring.{max u1 u2} (Prod.{u1, u2} R S) (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) (Subsemiring.prod.{u1, u2} R S _inst_1 _inst_2 s t))))) (Prod.instAddSum.{u1, u2} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t)) (Distrib.toAdd.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (NonUnitalNonAssocSemiring.toDistrib.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s)))) (Distrib.toAdd.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t)) (NonUnitalNonAssocSemiring.toDistrib.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t)) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x t)) (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 t)))))
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_equiv Subsemiring.prodEquivₓ'. -/
 /-- Product of subsemirings is isomorphic to their product as monoids. -/
-def prodEquiv (s : Subsemiring R) (t : Subsemiring S) : s.Prod t ≃+* s × t :=
+def prodEquiv (s : Subsemiring R) (t : Subsemiring S) : s.prod t ≃+* s × t :=
   { Equiv.Set.prod ↑s ↑t with
     map_mul' := fun x y => rfl
     map_add' := fun x y => rfl }
@@ -1919,7 +1919,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.coe_supr_of_directed Subsemiring.coe_supᵢ_of_directedₓ'. -/
 theorem coe_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Subsemiring R}
     (hS : Directed (· ≤ ·) S) : ((⨆ i, S i : Subsemiring R) : Set R) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supᵢ_of_directed hS]
 #align subsemiring.coe_supr_of_directed Subsemiring.coe_supᵢ_of_directed
 
 /- warning: subsemiring.mem_Sup_of_directed_on -> Subsemiring.mem_supₛ_of_directedOn is a dubious translation:
@@ -1932,7 +1932,7 @@ theorem mem_supₛ_of_directedOn {S : Set (Subsemiring R)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supᵢ_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align subsemiring.mem_Sup_of_directed_on Subsemiring.mem_supₛ_of_directedOn
 
 /- warning: subsemiring.coe_Sup_of_directed_on -> Subsemiring.coe_supₛ_of_directedOn is a dubious translation:
@@ -1943,7 +1943,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.coe_Sup_of_directed_on Subsemiring.coe_supₛ_of_directedOnₓ'. -/
 theorem coe_supₛ_of_directedOn {S : Set (Subsemiring R)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set R) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
+  Set.ext fun x => by simp [mem_supₛ_of_directedOn Sne hS]
 #align subsemiring.coe_Sup_of_directed_on Subsemiring.coe_supₛ_of_directedOn
 
 end Subsemiring
@@ -2031,8 +2031,8 @@ Case conversion may be inaccurate. Consider using '#align ring_hom.srange_restri
 /-- Restriction of a ring homomorphism to its range interpreted as a subsemiring.
 
 This is the bundled version of `set.range_factorization`. -/
-def rangeSRestrict (f : R →+* S) : R →+* f.srange :=
-  f.codRestrict f.srange f.mem_rangeS_self
+def rangeSRestrict (f : R →+* S) : R →+* f.rangeS :=
+  f.codRestrict f.rangeS f.mem_rangeS_self
 #align ring_hom.srange_restrict RingHom.rangeSRestrict
 
 /- warning: ring_hom.coe_srange_restrict -> RingHom.coe_rangeSRestrict is a dubious translation:
@@ -2042,7 +2042,7 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2) (x : R), Eq.{succ u2} S (Subtype.val.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Set.{u2} S) (Set.instMembershipSet.{u2} S) x (SetLike.coe.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)) (RingHom.instRingHomClassRingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)))))) (RingHom.rangeSRestrict.{u1, u2} R S _inst_1 _inst_2 f) x)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u1, u2} R S _inst_1 _inst_2)))) f x)
 Case conversion may be inaccurate. Consider using '#align ring_hom.coe_srange_restrict RingHom.coe_rangeSRestrictₓ'. -/
 @[simp]
-theorem coe_rangeSRestrict (f : R →+* S) (x : R) : (f.srangeRestrict x : S) = f x :=
+theorem coe_rangeSRestrict (f : R →+* S) (x : R) : (f.rangeSRestrict x : S) = f x :=
   rfl
 #align ring_hom.coe_srange_restrict RingHom.coe_rangeSRestrict
 
@@ -2052,7 +2052,7 @@ lean 3 declaration is
 but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] (f : RingHom.{u1, u2} R S _inst_1 _inst_2), Function.Surjective.{succ u1, succ u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)) (RingHom.instRingHomClassRingHom.{u1, u2} R (Subtype.{succ u2} S (fun (x : S) => Membership.mem.{u2, u2} S (Subsemiring.{u2} S _inst_2) (SetLike.instMembership.{u2, u2} (Subsemiring.{u2} S _inst_2) S (Subsemiring.instSetLikeSubsemiring.{u2} S _inst_2)) x (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f))) _inst_1 (Subsemiring.toNonAssocSemiring.{u2} S _inst_2 (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f)))))) (RingHom.rangeSRestrict.{u1, u2} R S _inst_1 _inst_2 f))
 Case conversion may be inaccurate. Consider using '#align ring_hom.srange_restrict_surjective RingHom.rangeSRestrict_surjectiveₓ'. -/
-theorem rangeSRestrict_surjective (f : R →+* S) : Function.Surjective f.srangeRestrict :=
+theorem rangeSRestrict_surjective (f : R →+* S) : Function.Surjective f.rangeSRestrict :=
   fun ⟨y, hy⟩ =>
   let ⟨x, hx⟩ := mem_rangeS.mp hy
   ⟨x, Subtype.ext hx⟩
@@ -2065,8 +2065,8 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S] {f : RingHom.{u1, u2} R S _inst_1 _inst_2}, Iff (Eq.{succ u2} (Subsemiring.{u2} S _inst_2) (RingHom.rangeS.{u1, u2} R S _inst_1 _inst_2 f) (Top.top.{u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.instTopSubsemiring.{u2} S _inst_2))) (Function.Surjective.{succ u1, succ u2} R S (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R (fun (_x : R) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : R) => S) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonUnitalNonAssocSemiring.toMul.{u1} R (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1)) (NonUnitalNonAssocSemiring.toMul.{u2} S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2)) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} R _inst_1) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} S _inst_2) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} R S _inst_1 _inst_2) R S _inst_1 _inst_2 (RingHom.instRingHomClassRingHom.{u1, u2} R S _inst_1 _inst_2)))) f))
 Case conversion may be inaccurate. Consider using '#align ring_hom.srange_top_iff_surjective RingHom.rangeS_top_iff_surjectiveₓ'. -/
 theorem rangeS_top_iff_surjective {f : R →+* S} :
-    f.srange = (⊤ : Subsemiring S) ↔ Function.Surjective f :=
-  SetLike.ext'_iff.trans <| Iff.trans (by rw [coe_srange, coe_top]) Set.range_iff_surjective
+    f.rangeS = (⊤ : Subsemiring S) ↔ Function.Surjective f :=
+  SetLike.ext'_iff.trans <| Iff.trans (by rw [coe_rangeS, coe_top]) Set.range_iff_surjective
 #align ring_hom.srange_top_iff_surjective RingHom.rangeS_top_iff_surjective
 
 /- warning: ring_hom.srange_top_of_surjective -> RingHom.rangeS_top_of_surjective is a dubious translation:
@@ -2077,14 +2077,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_hom.srange_top_of_surjective RingHom.rangeS_top_of_surjectiveₓ'. -/
 /-- The range of a surjective ring homomorphism is the whole of the codomain. -/
 theorem rangeS_top_of_surjective (f : R →+* S) (hf : Function.Surjective f) :
-    f.srange = (⊤ : Subsemiring S) :=
+    f.rangeS = (⊤ : Subsemiring S) :=
   rangeS_top_iff_surjective.2 hf
 #align ring_hom.srange_top_of_surjective RingHom.rangeS_top_of_surjective
 
 #print RingHom.eqLocusS /-
 /-- The subsemiring of elements `x : R` such that `f x = g x` -/
 def eqLocusS (f g : R →+* S) : Subsemiring R :=
-  { (f : R →* S).eqLocus g, (f : R →+ S).eqLocus g with carrier := { x | f x = g x } }
+  { (f : R →* S).eqLocusM g, (f : R →+ S).eqLocusM g with carrier := { x | f x = g x } }
 #align ring_hom.eq_slocus RingHom.eqLocusS
 -/
 
@@ -2170,7 +2170,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.inclusion Subsemiring.inclusionₓ'. -/
 /-- The ring homomorphism associated to an inclusion of subsemirings. -/
 def inclusion {S T : Subsemiring R} (h : S ≤ T) : S →+* T :=
-  S.Subtype.codRestrict _ fun x => h x.2
+  S.subtype.codRestrict _ fun x => h x.2
 #align subsemiring.inclusion Subsemiring.inclusion
 
 /- warning: subsemiring.srange_subtype -> Subsemiring.rangeS_subtype is a dubious translation:
@@ -2180,7 +2180,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : NonAssocSemiring.{u1} R] (s : Subsemiring.{u1} R _inst_1), Eq.{succ u1} (Subsemiring.{u1} R _inst_1) (RingHom.rangeS.{u1, u1} (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (Subsemiring.{u1} R _inst_1) (SetLike.instMembership.{u1, u1} (Subsemiring.{u1} R _inst_1) R (Subsemiring.instSetLikeSubsemiring.{u1} R _inst_1)) x s)) R (Subsemiring.toNonAssocSemiring.{u1} R _inst_1 s) _inst_1 (Subsemiring.subtype.{u1} R _inst_1 s)) s
 Case conversion may be inaccurate. Consider using '#align subsemiring.srange_subtype Subsemiring.rangeS_subtypeₓ'. -/
 @[simp]
-theorem rangeS_subtype (s : Subsemiring R) : s.Subtype.srange = s :=
+theorem rangeS_subtype (s : Subsemiring R) : s.subtype.rangeS = s :=
   SetLike.coe_injective <| (coe_rangeS _).trans Subtype.range_coe
 #align subsemiring.srange_subtype Subsemiring.rangeS_subtype
 
@@ -2191,8 +2191,8 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S], Eq.{succ u1} (Subsemiring.{u1} R _inst_1) (RingHom.rangeS.{max u1 u2, u1} (Prod.{u1, u2} R S) R (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) _inst_1 (RingHom.fst.{u1, u2} R S _inst_1 _inst_2)) (Top.top.{u1} (Subsemiring.{u1} R _inst_1) (Subsemiring.instTopSubsemiring.{u1} R _inst_1))
 Case conversion may be inaccurate. Consider using '#align subsemiring.range_fst Subsemiring.range_fstₓ'. -/
 @[simp]
-theorem range_fst : (fst R S).srange = ⊤ :=
-  (fst R S).srange_top_of_surjective <| Prod.fst_surjective
+theorem range_fst : (fst R S).rangeS = ⊤ :=
+  (fst R S).rangeS_top_of_surjective <| Prod.fst_surjective
 #align subsemiring.range_fst Subsemiring.range_fst
 
 /- warning: subsemiring.range_snd -> Subsemiring.range_snd is a dubious translation:
@@ -2202,8 +2202,8 @@ but is expected to have type
   forall {R : Type.{u1}} {S : Type.{u2}} [_inst_1 : NonAssocSemiring.{u1} R] [_inst_2 : NonAssocSemiring.{u2} S], Eq.{succ u2} (Subsemiring.{u2} S _inst_2) (RingHom.rangeS.{max u1 u2, u2} (Prod.{u1, u2} R S) S (Prod.instNonAssocSemiringProd.{u1, u2} R S _inst_1 _inst_2) _inst_2 (RingHom.snd.{u1, u2} R S _inst_1 _inst_2)) (Top.top.{u2} (Subsemiring.{u2} S _inst_2) (Subsemiring.instTopSubsemiring.{u2} S _inst_2))
 Case conversion may be inaccurate. Consider using '#align subsemiring.range_snd Subsemiring.range_sndₓ'. -/
 @[simp]
-theorem range_snd : (snd R S).srange = ⊤ :=
-  (snd R S).srange_top_of_surjective <| Prod.snd_surjective
+theorem range_snd : (snd R S).rangeS = ⊤ :=
+  (snd R S).rangeS_top_of_surjective <| Prod.snd_surjective
 #align subsemiring.range_snd Subsemiring.range_snd
 
 /- warning: subsemiring.prod_bot_sup_bot_prod -> Subsemiring.prod_bot_sup_bot_prod is a dubious translation:
@@ -2214,12 +2214,12 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemiring.prod_bot_sup_bot_prod Subsemiring.prod_bot_sup_bot_prodₓ'. -/
 @[simp]
 theorem prod_bot_sup_bot_prod (s : Subsemiring R) (t : Subsemiring S) :
-    s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
+    s.prod ⊥ ⊔ prod ⊥ t = s.prod t :=
   le_antisymm (sup_le (prod_mono_right s bot_le) (prod_mono_left t bot_le)) fun p hp =>
     Prod.fst_mul_snd p ▸
       mul_mem
-        ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
-        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
+        ((le_sup_left : s.prod ⊥ ≤ s.prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, SetLike.mem_coe.2 <| one_mem ⊥⟩)
+        ((le_sup_right : prod ⊥ t ≤ s.prod ⊥ ⊔ prod ⊥ t) ⟨SetLike.mem_coe.2 <| one_mem ⊥, hp.2⟩)
 #align subsemiring.prod_bot_sup_bot_prod Subsemiring.prod_bot_sup_bot_prod
 
 end Subsemiring
@@ -2251,14 +2251,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.sof_left_inverse RingEquiv.ofLeftInverseSₓ'. -/
 /-- Restrict a ring homomorphism with a left inverse to a ring isomorphism to its
 `ring_hom.srange`. -/
-def ofLeftInverseS {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.srange :=
-  { f.srangeRestrict with
-    toFun := fun x => f.srangeRestrict x
-    invFun := fun x => (g ∘ f.srange.Subtype) x
+def ofLeftInverseS {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f) : R ≃+* f.rangeS :=
+  { f.rangeSRestrict with
+    toFun := fun x => f.rangeSRestrict x
+    invFun := fun x => (g ∘ f.rangeS.subtype) x
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := RingHom.mem_rangeS.mp x.Prop
+        let ⟨x', hx'⟩ := RingHom.mem_rangeS.mp x.prop
         show f (g x) = x by rw [← hx', h x'] }
 #align ring_equiv.sof_left_inverse RingEquiv.ofLeftInverseS
 
@@ -2282,7 +2282,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ring_equiv.sof_left_inverse_symm_apply RingEquiv.ofLeftInverseS_symm_applyₓ'. -/
 @[simp]
 theorem ofLeftInverseS_symm_apply {g : S → R} {f : R →+* S} (h : Function.LeftInverse g f)
-    (x : f.srange) : (ofLeftInverseS h).symm x = g x :=
+    (x : f.rangeS) : (ofLeftInverseS h).symm x = g x :=
   rfl
 #align ring_equiv.sof_left_inverse_symm_apply RingEquiv.ofLeftInverseS_symm_apply
 
@@ -2323,7 +2323,7 @@ variable [NonAssocSemiring R']
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [SMul R' α] (S : Subsemiring R') : SMul S α :=
-  S.toSubmonoid.SMul
+  S.toSubmonoid.hasSmul
 
 /- warning: subsemiring.smul_def -> Subsemiring.smul_def is a dubious translation:
 lean 3 declaration is
@@ -2360,14 +2360,14 @@ instance smulCommClass_right [SMul α β] [SMul R' β] [SMulCommClass α R' β] 
 /-- Note that this provides `is_scalar_tower S R R` which is needed by `smul_mul_assoc`. -/
 instance [SMul α β] [SMul R' α] [SMul R' β] [IsScalarTower R' α β] (S : Subsemiring R') :
     IsScalarTower S α β :=
-  S.toSubmonoid.IsScalarTower
+  S.toSubmonoid.isScalarTower
 
 instance [SMul R' α] [FaithfulSMul R' α] (S : Subsemiring R') : FaithfulSMul S α :=
-  S.toSubmonoid.FaithfulSMul
+  S.toSubmonoid.faithfulSMul
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Zero α] [SMulWithZero R' α] (S : Subsemiring R') : SMulWithZero S α :=
-  SMulWithZero.compHom _ S.Subtype.toMonoidWithZeroHom.toZeroHom
+  SMulWithZero.compHom _ S.subtype.toMonoidWithZeroHom.toZeroHom
 
 end NonAssocSemiring
 
@@ -2375,27 +2375,27 @@ variable [Semiring R']
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [MulAction R' α] (S : Subsemiring R') : MulAction S α :=
-  S.toSubmonoid.MulAction
+  S.toSubmonoid.mulAction
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [AddMonoid α] [DistribMulAction R' α] (S : Subsemiring R') : DistribMulAction S α :=
-  S.toSubmonoid.DistribMulAction
+  S.toSubmonoid.distribMulAction
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Monoid α] [MulDistribMulAction R' α] (S : Subsemiring R') : MulDistribMulAction S α :=
-  S.toSubmonoid.MulDistribMulAction
+  S.toSubmonoid.mulDistribMulAction
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Zero α] [MulActionWithZero R' α] (S : Subsemiring R') : MulActionWithZero S α :=
-  MulActionWithZero.compHom _ S.Subtype.toMonoidWithZeroHom
+  MulActionWithZero.compHom _ S.subtype.toMonoidWithZeroHom
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [AddCommMonoid α] [Module R' α] (S : Subsemiring R') : Module S α :=
-  { Module.compHom _ S.Subtype with smul := (· • ·) }
+  { Module.compHom _ S.subtype with smul := (· • ·) }
 
 /-- The action by a subsemiring is the action by the underlying semiring. -/
 instance [Semiring α] [MulSemiringAction R' α] (S : Subsemiring R') : MulSemiringAction S α :=
-  S.toSubmonoid.MulSemiringAction
+  S.toSubmonoid.mulSemiringAction
 
 /- warning: subsemiring.center.smul_comm_class_left -> Subsemiring.center.sMulCommClass_left is a dubious translation:
 lean 3 declaration is

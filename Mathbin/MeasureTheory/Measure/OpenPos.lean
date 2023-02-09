@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.open_pos
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ protected theorem AbsolutelyContinuous.isOpenPosMeasure (h : μ ≪ ν) : IsOpen
 #align measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.isOpenPosMeasure
 
 theorem LE.le.isOpenPosMeasure (h : μ ≤ ν) : IsOpenPosMeasure ν :=
-  h.AbsolutelyContinuous.IsOpenPosMeasure
+  h.absolutelyContinuous.isOpenPosMeasure
 #align has_le.le.is_open_pos_measure LE.le.isOpenPosMeasure
 
 theorem IsOpen.eq_empty_of_measure_zero (hU : IsOpen U) (h₀ : μ U = 0) : U = ∅ :=
@@ -94,7 +94,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
     (hf : ContinuousOn f U) (hg : ContinuousOn g U) : EqOn f g U :=
   by
   replace h := ae_imp_of_ae_restrict h
-  simp only [eventually_eq, ae_iff, not_imp] at h
+  simp only [EventuallyEq, ae_iff, not_imp] at h
   have : IsOpen (U ∩ { a | f a ≠ g a }) :=
     by
     refine' is_open_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) _
@@ -109,7 +109,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
 /-- If two continuous functions are a.e. equal, then they are equal. -/
 theorem eq_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ] g) (hf : Continuous f) (hg : Continuous g) : f = g :=
   suffices EqOn f g univ from funext fun x => this trivial
-  eqOn_open_of_ae_eq (ae_restrict_of_ae h) isOpen_univ hf.ContinuousOn hg.ContinuousOn
+  eqOn_open_of_ae_eq (ae_restrict_of_ae h) isOpen_univ hf.continuousOn hg.continuousOn
 #align measure_theory.measure.eq_of_ae_eq MeasureTheory.Measure.eq_of_ae_eq
 
 theorem eqOn_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict s] g) (hf : ContinuousOn f s)
@@ -170,7 +170,7 @@ theorem eqOn_Ico_of_ae_eq [DenselyOrdered X] {a b : X} {f g : X → Y}
 theorem eqOn_Icc_of_ae_eq [DenselyOrdered X] {a b : X} (hne : a ≠ b) {f g : X → Y}
     (hfg : f =ᵐ[μ.restrict (Icc a b)] g) (hf : ContinuousOn f (Icc a b))
     (hg : ContinuousOn g (Icc a b)) : EqOn f g (Icc a b) :=
-  eqOn_of_ae_eq hfg hf hg (closure_interior_Icc hne).symm.Subset
+  eqOn_of_ae_eq hfg hf hg (closure_interior_Icc hne).symm.subset
 #align measure_theory.measure.eq_on_Icc_of_ae_eq MeasureTheory.Measure.eqOn_Icc_of_ae_eq
 
 end LinearOrder

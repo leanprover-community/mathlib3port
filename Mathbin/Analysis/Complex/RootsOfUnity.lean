@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.complex.roots_of_unity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprim
   constructor
   · use i
     field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
-  · simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne.def, not_false_iff,
+  · simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_i_ne_zero, Ne.def, not_false_iff,
       mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
     norm_cast
     rintro l k hk
@@ -52,8 +52,7 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprim
 #align complex.is_primitive_root_exp_of_coprime Complex.isPrimitiveRoot_exp_of_coprime
 
 theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * i / n)) n := by
-  simpa only [Nat.cast_one, one_div] using
-    is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
+  simpa only [Nat.cast_one, one_div] using isPrimitiveRoot_exp_of_coprime 1 n h0 n.coprime_one_left
 #align complex.is_primitive_root_exp Complex.isPrimitiveRoot_exp
 
 theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
@@ -62,11 +61,11 @@ theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast hn
   constructor; swap
   · rintro ⟨i, -, hi, rfl⟩
-    exact is_primitive_root_exp_of_coprime i n hn hi
+    exact isPrimitiveRoot_exp_of_coprime i n hn hi
   intro h
   obtain ⟨i, hi, rfl⟩ :=
-    (is_primitive_root_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)
-  refine' ⟨i, hi, ((is_primitive_root_exp n hn).pow_iff_coprime (Nat.pos_of_ne_zero hn) i).mp h, _⟩
+    (isPrimitiveRoot_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)
+  refine' ⟨i, hi, ((isPrimitiveRoot_exp n hn).pow_iff_coprime (Nat.pos_of_ne_zero hn) i).mp h, _⟩
   rw [← exp_nat_mul]
   congr 1
   field_simp [hn0, mul_comm (i : ℂ)]
@@ -81,8 +80,8 @@ theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
   have hn0 : (n : ℂ) ≠ 0 := by exact_mod_cast n.ne_zero
   constructor
   · intro h
-    obtain ⟨i, hi, H⟩ : ∃ i < (n : ℕ), exp (2 * π * I / n) ^ i = x := by
-      simpa only using (is_primitive_root_exp n n.ne_zero).eq_pow_of_pow_eq_one h n.pos
+    obtain ⟨i, hi, H⟩ : ∃ i < (n : ℕ), exp (2 * π * i / n) ^ i = x := by
+      simpa only using (isPrimitiveRoot_exp n n.ne_zero).eq_pow_of_pow_eq_one h n.pos
     refine' ⟨i, hi, _⟩
     rw [← H, ← exp_nat_mul]
     congr 1
@@ -94,14 +93,14 @@ theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
 #align complex.mem_roots_of_unity Complex.mem_rootsOfUnity
 
 theorem card_rootsOfUnity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
-  (isPrimitiveRoot_exp n n.NeZero).card_rootsOfUnity
+  (isPrimitiveRoot_exp n n.ne_zero).card_rootsOfUnity
 #align complex.card_roots_of_unity Complex.card_rootsOfUnity
 
 theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
   by
   by_cases h : k = 0
   · simp [h]
-  exact (is_primitive_root_exp k h).card_primitiveRoots
+  exact (isPrimitiveRoot_exp k h).card_primitiveRoots
 #align complex.card_primitive_roots Complex.card_primitiveRoots
 
 end Complex

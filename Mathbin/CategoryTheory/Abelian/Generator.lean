@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.abelian.generator
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,31 +37,30 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 theorem has_injective_coseparator [HasLimits C] [EnoughInjectives C] (G : C) (hG : IsSeparator G) :
     ∃ G : C, Injective G ∧ IsCoseparator G :=
   by
-  haveI : well_powered C := well_powered_of_is_detector G hG.is_detector
-  haveI : has_products_of_shape (subobject (op G)) C := has_products_of_shape_of_small _ _
-  let T : C := injective.under (pi_obj fun P : subobject (op G) => unop P)
-  refine' ⟨T, inferInstance, (preadditive.is_coseparator_iff _).2 fun X Y f hf => _⟩
-  refine' (preadditive.is_separator_iff _).1 hG _ fun h => _
-  suffices hh : factor_thru_image (h ≫ f) = 0
-  · rw [← limits.image.fac (h ≫ f), hh, zero_comp]
-  let R := subobject.mk (factor_thru_image (h ≫ f)).op
-  let q₁ : image (h ≫ f) ⟶ unop R :=
-    (subobject.underlying_iso (factor_thru_image (h ≫ f)).op).unop.Hom
-  let q₂ : unop (R : Cᵒᵖ) ⟶ pi_obj fun P : subobject (op G) => unop P :=
-    section_ (pi.π (fun P : subobject (op G) => unop P) R)
-  let q : image (h ≫ f) ⟶ T := q₁ ≫ q₂ ≫ injective.ι _
+  haveI : WellPowered C := wellPowered_of_isDetector G hG.is_detector
+  haveI : HasProductsOfShape (Subobject (op G)) C := hasProductsOfShape_of_small _ _
+  let T : C := Injective.under (piObj fun P : Subobject (op G) => unop P)
+  refine' ⟨T, inferInstance, (Preadditive.isCoseparator_iff _).2 fun X Y f hf => _⟩
+  refine' (Preadditive.isSeparator_iff _).1 hG _ fun h => _
+  suffices hh : factorThruImage (h ≫ f) = 0
+  · rw [← Limits.image.fac (h ≫ f), hh, zero_comp]
+  let R := Subobject.mk (factorThruImage (h ≫ f)).op
+  let q₁ : image (h ≫ f) ⟶ unop R := (Subobject.underlyingIso (factorThruImage (h ≫ f)).op).unop.hom
+  let q₂ : unop (R : Cᵒᵖ) ⟶ piObj fun P : Subobject (op G) => unop P :=
+    section_ (Pi.π (fun P : Subobject (op G) => unop P) R)
+  let q : image (h ≫ f) ⟶ T := q₁ ≫ q₂ ≫ Injective.ι _
   exact
     zero_of_comp_mono q
       (by
-        rw [← injective.comp_factor_thru q (limits.image.ι (h ≫ f)), limits.image.fac_assoc,
-          category.assoc, hf, comp_zero])
+        rw [← Injective.comp_factorThru q (Limits.image.ι (h ≫ f)), Limits.image.fac_assoc,
+          Category.assoc, hf, comp_zero])
 #align category_theory.abelian.has_injective_coseparator CategoryTheory.Abelian.has_injective_coseparator
 
 theorem has_projective_separator [HasColimits C] [EnoughProjectives C] (G : C)
     (hG : IsCoseparator G) : ∃ G : C, Projective G ∧ IsSeparator G :=
   by
-  obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((is_separator_op_iff _).2 hG)
-  exact ⟨unop T, inferInstance, (is_separator_unop_iff _).2 hT₂⟩
+  obtain ⟨T, hT₁, hT₂⟩ := has_injective_coseparator (op G) ((isSeparator_op_iff _).2 hG)
+  exact ⟨unop T, inferInstance, (isSeparator_unop_iff _).2 hT₂⟩
 #align category_theory.abelian.has_projective_separator CategoryTheory.Abelian.has_projective_separator
 
 end CategoryTheory.Abelian

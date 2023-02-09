@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.with_bot
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -754,7 +754,7 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
 
 instance [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by
-    apply rec_bot_coe
+    apply recBotCoe
     · exact ‹Nonempty α›.elim fun a => ⟨a, not_coe_le_bot a⟩
     · intro a
       obtain ⟨b, h⟩ := exists_not_le a
@@ -1160,7 +1160,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.coe_le_coe WithTop.coe_le_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_le_coe : (a : WithTop α) ≤ b ↔ a ≤ b := by
-  simp only [← to_dual_le_to_dual_iff, to_dual_apply_coe, WithBot.coe_le_coe, to_dual_le_to_dual]
+  simp only [← toDual_le_toDual_iff, toDual_apply_coe, WithBot.coe_le_coe, toDual_le_toDual]
 #align with_top.coe_le_coe WithTop.coe_le_coe
 
 /- warning: with_top.some_le_some -> WithTop.some_le_some is a dubious translation:
@@ -1223,7 +1223,7 @@ but is expected to have type
   forall {α : Type.{u1}} {b : α} [_inst_1 : LE.{u1} α] {x : WithTop.{u1} α}, Iff (LE.le.{u1} (WithTop.{u1} α) (WithTop.le.{u1} α _inst_1) x (WithTop.some.{u1} α b)) (Exists.{succ u1} α (fun (a : α) => And (Eq.{succ u1} (WithTop.{u1} α) x (WithTop.some.{u1} α a)) (LE.le.{u1} α _inst_1 a b)))
 Case conversion may be inaccurate. Consider using '#align with_top.le_coe_iff WithTop.le_coe_iffₓ'. -/
 theorem le_coe_iff {x : WithTop α} : x ≤ b ↔ ∃ a : α, x = a ∧ a ≤ b := by
-  simpa [← to_dual_le_to_dual_iff, WithBot.coe_le_iff]
+  simpa [← toDual_le_toDual_iff, WithBot.coe_le_iff]
 #align with_top.le_coe_iff WithTop.le_coe_iff
 
 /- warning: with_top.coe_le_iff -> WithTop.coe_le_iff is a dubious translation:
@@ -1234,8 +1234,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.coe_le_iff WithTop.coe_le_iffₓ'. -/
 theorem coe_le_iff {x : WithTop α} : ↑a ≤ x ↔ ∀ b, x = ↑b → a ≤ b :=
   by
-  simp only [← to_dual_le_to_dual_iff, to_dual_apply_coe, WithBot.le_coe_iff, OrderDual.forall,
-    to_dual_le_to_dual]
+  simp only [← toDual_le_toDual_iff, toDual_apply_coe, WithBot.le_coe_iff, OrderDual.forall,
+    toDual_le_toDual]
   exact forall₂_congr fun _ _ => Iff.rfl
 #align with_top.coe_le_iff WithTop.coe_le_iff
 
@@ -1249,8 +1249,8 @@ protected theorem IsMin.withTop (h : IsMin a) : IsMin (a : WithTop α) :=
   by
   -- defeq to is_max_to_dual_iff.mp (is_max.with_bot _), but that breaks API boundary
   intro _ hb
-  rw [← to_dual_le_to_dual_iff] at hb
-  simpa [to_dual_le_iff] using (IsMax.withBot h : IsMax (to_dual a : WithBot αᵒᵈ)) hb
+  rw [← toDual_le_toDual_iff] at hb
+  simpa [toDual_le_iff] using (IsMax.withBot h : IsMax (toDual a : WithBot αᵒᵈ)) hb
 #align is_min.with_top IsMin.withTop
 
 end LE
@@ -1568,7 +1568,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_coe WithTop.coe_lt_coeₓ'. -/
 @[simp, norm_cast]
 theorem coe_lt_coe : (a : WithTop α) < b ↔ a < b := by
-  simp only [← to_dual_lt_to_dual_iff, to_dual_apply_coe, WithBot.coe_lt_coe, to_dual_lt_to_dual]
+  simp only [← toDual_lt_toDual_iff, toDual_apply_coe, WithBot.coe_lt_coe, toDual_lt_toDual]
 #align with_top.coe_lt_coe WithTop.coe_lt_coe
 
 /- warning: with_top.some_lt_some -> WithTop.some_lt_some is a dubious translation:
@@ -1589,7 +1589,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : LT.{u1} α] (a : α), LT.lt.{u1} (WithTop.{u1} α) (WithTop.lt.{u1} α _inst_1) (WithTop.some.{u1} α a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_top WithTop.coe_lt_topₓ'. -/
 theorem coe_lt_top (a : α) : (a : WithTop α) < ⊤ := by
-  simpa [← to_dual_lt_to_dual_iff] using WithBot.bot_lt_coe _
+  simpa [← toDual_lt_toDual_iff] using WithBot.bot_lt_coe _
 #align with_top.coe_lt_top WithTop.coe_lt_top
 
 /- warning: with_top.some_lt_none -> WithTop.some_lt_none is a dubious translation:
@@ -1612,7 +1612,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.not_none_lt W
 @[simp]
 theorem not_none_lt (a : WithTop α) : ¬@LT.lt (WithTop α) _ none a :=
   by
-  rw [← to_dual_lt_to_dual_iff]
+  rw [← toDual_lt_toDual_iff]
   exact WithBot.not_lt_none _
 #align with_top.not_none_lt WithTop.not_none_lt
 
@@ -1624,7 +1624,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.lt_iff_exists_coe WithTop.lt_iff_exists_coeₓ'. -/
 theorem lt_iff_exists_coe {a b : WithTop α} : a < b ↔ ∃ p : α, a = p ∧ ↑p < b :=
   by
-  rw [← to_dual_lt_to_dual_iff, WithBot.lt_iff_exists_coe, OrderDual.exists]
+  rw [← toDual_lt_toDual_iff, WithBot.lt_iff_exists_coe, OrderDual.exists]
   exact exists_congr fun _ => and_congr_left' Iff.rfl
 #align with_top.lt_iff_exists_coe WithTop.lt_iff_exists_coe
 
@@ -1636,8 +1636,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.coe_lt_iff WithTop.coe_lt_iffₓ'. -/
 theorem coe_lt_iff {x : WithTop α} : ↑a < x ↔ ∀ b, x = ↑b → a < b :=
   by
-  simp only [← to_dual_lt_to_dual_iff, WithBot.lt_coe_iff, to_dual_apply_coe, OrderDual.forall,
-    to_dual_lt_to_dual]
+  simp only [← toDual_lt_toDual_iff, WithBot.lt_coe_iff, toDual_apply_coe, OrderDual.forall,
+    toDual_lt_toDual]
   exact forall₂_congr fun _ _ => Iff.rfl
 #align with_top.coe_lt_iff WithTop.coe_lt_iff
 
@@ -1647,16 +1647,16 @@ instance [Preorder α] : Preorder (WithTop α)
     where
   le := (· ≤ ·)
   lt := (· < ·)
-  lt_iff_le_not_le := by simp [← to_dual_lt_to_dual_iff, lt_iff_le_not_le]
+  lt_iff_le_not_le := by simp [← toDual_lt_toDual_iff, lt_iff_le_not_le]
   le_refl _ := toDual_le_toDual_iff.mp le_rfl
   le_trans _ _ _ := by
-    simp_rw [← to_dual_le_to_dual_iff]
+    simp_rw [← toDual_le_toDual_iff]
     exact Function.swap le_trans
 
 instance [PartialOrder α] : PartialOrder (WithTop α) :=
   { WithTop.preorder with
     le_antisymm := fun _ _ => by
-      simp_rw [← to_dual_le_to_dual_iff]
+      simp_rw [← toDual_le_toDual_iff]
       exact Function.swap le_antisymm }
 
 #print WithTop.coe_strictMono /-
@@ -1748,8 +1748,7 @@ Case conversion may be inaccurate. Consider using '#align with_top.map_le_iff Wi
 theorem map_le_iff [Preorder α] [Preorder β] (f : α → β) (a b : WithTop α)
     (mono_iff : ∀ {a b}, f a ≤ f b ↔ a ≤ b) : a.map f ≤ b.map f ↔ a ≤ b :=
   by
-  rw [← to_dual_le_to_dual_iff, to_dual_map, to_dual_map, WithBot.map_le_iff,
-    to_dual_le_to_dual_iff]
+  rw [← toDual_le_toDual_iff, toDual_map, toDual_map, WithBot.map_le_iff, toDual_le_toDual_iff]
   simp [mono_iff]
 #align with_top.map_le_iff WithTop.map_le_iff
 
@@ -1837,7 +1836,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align with_top.is_total_le WithTop.isTotal_leₓ'. -/
 instance isTotal_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (WithTop α) (· ≤ ·) :=
   ⟨fun _ _ => by
-    simp_rw [← to_dual_le_to_dual_iff]
+    simp_rw [← toDual_le_toDual_iff]
     exact total_of _ _ _⟩
 #align with_top.is_total_le WithTop.isTotal_le
 

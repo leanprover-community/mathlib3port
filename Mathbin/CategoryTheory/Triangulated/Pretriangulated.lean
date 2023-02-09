@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Kershaw
 
 ! This file was ported from Lean 3 source module category_theory.triangulated.pretriangulated
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ variable (D : Type u₂) [Category.{v₂} D] [HasZeroObject D] [HasShift D ℤ] 
   [∀ n : ℤ, Functor.Additive (shiftFunctor D n)]
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`distinguishedTriangles] [] -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T₂ «expr ≅ » T₁) -/
 /-- A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
 relative to that shift is called pretriangulated if the following hold:
 * Any triangle that is isomorphic to a distinguished triangle is also distinguished.
@@ -98,14 +98,14 @@ include hC
 -- mathport name: «exprdist_triang »
 notation:20 "dist_triang " C => distinguishedTriangles C
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle `T`, then we know `T.rotate` is also distinguished.
 -/
 theorem rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.rotate ∈ (dist_triang C) :=
   (rotate_distinguished_triangle T).mp H
 #align category_theory.pretriangulated.rot_of_dist_triangle CategoryTheory.Pretriangulated.rot_of_dist_triangle
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle `T`, then we know `T.inv_rotate` is also distinguished.
 -/
 theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate ∈ (dist_triang C) :=
@@ -113,7 +113,7 @@ theorem inv_rot_of_dist_triangle (T) (_ : T ∈ (dist_triang C)) : T.invRotate �
     (isomorphic_distinguished T H T.invRotate.rotate (invRotCompRot.app T))
 #align category_theory.pretriangulated.inv_rot_of_dist_triangle CategoryTheory.Pretriangulated.inv_rot_of_dist_triangle
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -127,10 +127,10 @@ theorem comp_dist_triangle_mor_zero₁₂ (T) (_ : T ∈ (dist_triang C)) : T.mo
   obtain ⟨c, hc⟩ :=
     complete_distinguished_triangle_morphism _ _ (contractible_distinguished T.obj₁) H (𝟙 T.obj₁)
       T.mor₁ rfl
-  simpa only [contractible_triangle_mor₂, zero_comp] using hc.left.symm
+  simpa only [contractibleTriangle_mor₂, zero_comp] using hc.left.symm
 #align category_theory.pretriangulated.comp_dist_triangle_mor_zero₁₂ CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₁₂
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -143,7 +143,7 @@ theorem comp_dist_triangle_mor_zero₂₃ (T) (_ : T ∈ (dist_triang C)) : T.mo
   comp_dist_triangle_mor_zero₁₂ C T.rotate (rot_of_dist_triangle C T H)
 #align category_theory.pretriangulated.comp_dist_triangle_mor_zero₂₃ CategoryTheory.Pretriangulated.comp_dist_triangle_mor_zero₂₃
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (T «expr ∈ » «exprdist_triang »(C)) -/
 /-- Given any distinguished triangle
 ```
       f       g       h
@@ -153,7 +153,7 @@ the composition `h ≫ f⟦1⟧ = 0`.
 See <https://stacks.math.columbia.edu/tag/0146>
 -/
 theorem comp_dist_triangle_mor_zero₃₁ (T) (_ : T ∈ (dist_triang C)) :
-    T.mor₃ ≫ (shiftEquiv C 1).Functor.map T.mor₁ = 0 :=
+    T.mor₃ ≫ (shiftEquiv C 1).functor.map T.mor₁ = 0 :=
   by
   have H₂ := rot_of_dist_triangle C T.rotate (rot_of_dist_triangle C T H)
   simpa using comp_dist_triangle_mor_zero₁₂ C T.rotate.rotate H₂
@@ -193,7 +193,7 @@ triangles of `D`.
 @[simps]
 def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D
     where
-  obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.Hom.app T.obj₁)
+  obj T := Triangle.mk (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.commShift.hom.app T.obj₁)
   map S T f :=
     { hom₁ := F.map f.hom₁
       hom₂ := F.map f.hom₂
@@ -206,8 +206,8 @@ def mapTriangle (F : TriangulatedFunctorStruct C D) : Triangle C ⥤ Triangle D
         simp only [← F.to_functor.map_comp, f.comm₂]
       comm₃' := by
         dsimp
-        erw [category.assoc, ← F.comm_shift.hom.naturality]
-        simp only [functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
+        erw [Category.assoc, ← F.comm_shift.hom.naturality]
+        simp only [Functor.comp_map, ← F.to_functor.map_comp_assoc, f.comm₃] }
 #align category_theory.pretriangulated.triangulated_functor_struct.map_triangle CategoryTheory.Pretriangulated.TriangulatedFunctorStruct.mapTriangle
 
 end TriangulatedFunctorStruct
@@ -235,7 +235,7 @@ instance : Inhabited (TriangulatedFunctor C C) :=
       map_distinguished' := by
         rintro ⟨_, _, _, _⟩ Tdt
         dsimp at *
-        rwa [category.comp_id] }⟩
+        rwa [Category.comp_id] }⟩
 
 variable {C D}
 

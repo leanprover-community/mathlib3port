@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,10 +45,10 @@ instance isROrC_to_real : FiniteDimensional ℝ K :=
       rw [eq_top_iff]
       intro a _
       rw [Finset.coe_insert, Finset.coe_singleton, Submodule.mem_span_insert]
-      refine' ⟨re a, im a • I, _, _⟩
+      refine' ⟨re a, im a • i, _, _⟩
       · rw [Submodule.mem_span_singleton]
         use im a
-      simp [re_add_im a, Algebra.smul_def, algebra_map_eq_of_real]⟩⟩
+      simp [re_add_im a, Algebra.smul_def, algebraMap_eq_of_real]⟩⟩
 #align finite_dimensional.is_R_or_C_to_real FiniteDimensional.isROrC_to_real
 
 variable (K E) [NormedAddCommGroup E] [NormedSpace K E]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ theorem quotient_norm_mk_le' (S : AddSubgroup M) (m : M) : ‖(m : M ⧸ S)‖ �
 theorem quotient_norm_mk_eq (S : AddSubgroup M) (m : M) :
     ‖mk' S m‖ = infₛ ((fun x => ‖m + x‖) '' S) :=
   by
-  change Inf _ = _
+  change infₛ _ = _
   congr 1
   ext r
   simp_rw [coe_mk', eq_iff_sub_mem]
@@ -301,7 +301,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
         erw [QuotientAddGroup.preimage_image_mk]
         apply isOpen_unionᵢ
         rintro ⟨s, s_in⟩
-        exact (continuous_add_right s).isOpen_preimage _ is_open_ball
+        exact (continuous_add_right s).isOpen_preimage _ isOpen_ball
       · exact ⟨(0 : M), mem_ball_self ε_pos, (mk' S).map_zero⟩⟩
 #align quotient_nhd_basis quotient_nhd_basis
 
@@ -403,7 +403,7 @@ theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
   have hy : ‖y‖ ≠ 0 := by
     intro h0
     exact Set.not_mem_of_mem_compl hx ((quotient_norm_eq_zero_iff S x).1 h0)
-  refine' le_antisymm (norm_normed_mk_le S) (le_of_forall_pos_le_add fun ε hε => _)
+  refine' le_antisymm (norm_normedMk_le S) (le_of_forall_pos_le_add fun ε hε => _)
   suffices 1 ≤ ‖S.normed_mk‖ + min ε ((1 : ℝ) / 2) by
     exact le_add_of_le_add_left this (min_le_left ε ((1 : ℝ) / 2))
   have hδ := sub_pos.mpr (lt_of_le_of_lt (min_le_right ε ((1 : ℝ) / 2)) one_half_lt_one)
@@ -432,7 +432,7 @@ theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
   suffices ‖S.normed_mk‖ ≥ 1 - min ε (1 / 2) by exact sub_le_iff_le_add.mp this
   calc
     ‖S.normed_mk‖ ≥ ‖S.normed_mk m‖ / ‖m‖ := ratio_le_op_norm S.normed_mk m
-    _ = ‖y‖ / ‖m‖ := by rw [normed_mk.apply, hm]
+    _ = ‖y‖ / ‖m‖ := by rw [normedMk.apply, hm]
     _ ≥ (1 + min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ := le_of_lt hlt
     _ = 1 - min ε (1 / 2) := by field_simp [(ne_of_lt hδ).symm]
     
@@ -447,8 +447,8 @@ theorem norm_trivial_quotient_mk (S : AddSubgroup M)
     by
     rw [S.ker_normed_mk]
     exact Set.mem_of_eq_of_mem h trivial
-  rw [ker_normed_mk] at hker
-  simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normed_mk.apply, zero_mul]
+  rw [ker_normedMk] at hker
+  simp only [(quotient_norm_eq_zero_iff S x).mpr hker, normedMk.apply, zero_mul]
 #align add_subgroup.norm_trivial_quotient_mk AddSubgroup.norm_trivial_quotient_mk
 
 end AddSubgroup
@@ -510,7 +510,7 @@ theorem IsQuotient.norm_lift {f : NormedAddGroupHom M N} (hquot : IsQuotient f) 
     rw [Set.nonempty_image_iff]
     exact ⟨0, f.ker.zero_mem⟩
   rcases Real.lt_infₛ_add_pos nonemp hε with
-    ⟨_, ⟨⟨x, hx, rfl⟩, H : ‖m + x‖ < Inf ((fun m' : M => ‖m + m'‖) '' f.ker) + ε⟩⟩
+    ⟨_, ⟨⟨x, hx, rfl⟩, H : ‖m + x‖ < infₛ ((fun m' : M => ‖m + m'‖) '' f.ker) + ε⟩⟩
   exact
     ⟨m + x, by rw [map_add, (NormedAddGroupHom.mem_ker f x).mp hx, add_zero], by rwa [hquot.norm]⟩
 #align normed_add_group_hom.is_quotient.norm_lift NormedAddGroupHom.IsQuotient.norm_lift
@@ -543,7 +543,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     intro ε hε
     have aux : 0 < ε / c := div_pos hε hc
     obtain ⟨x, rfl, Hx⟩ : ∃ x', S.normed_mk x' = x ∧ ‖x'‖ < ‖x‖ + ε / c :=
-      (is_quotient_quotient _).norm_lift aux _
+      (isQuotientQuotient _).norm_lift aux _
     rw [lift_mk]
     calc
       ‖f x‖ ≤ c * ‖x‖ := f.le_of_op_norm_le fb x
@@ -616,7 +616,7 @@ instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [Norm
         by
         have :=
           (nhds_basis_ball.tendsto_iff nhds_basis_ball).mp
-            ((@Real.uniformContinuous_const_mul ‖k‖).Continuous.Tendsto ‖x‖) ε hε
+            ((@real.uniform_continuous_const_mul ‖k‖).continuous.tendsto ‖x‖) ε hε
         simp only [mem_ball, exists_prop, dist, abs_sub_lt_iff] at this
         rcases this with ⟨δ, hδ, h⟩
         obtain ⟨a, rfl, ha⟩ := Submodule.Quotient.norm_mk_lt x hδ
@@ -651,7 +651,7 @@ instance Ideal.Quotient.semiNormedCommRing : SemiNormedCommRing (R ⧸ I) :=
       le_of_forall_pos_le_add fun ε hε =>
         by
         have :=
-          ((nhds_basis_ball.prod_nhds nhds_basis_ball).tendsto_iffₓ nhds_basis_ball).mp
+          ((nhds_basis_ball.prod_nhds nhds_basis_ball).tendsto_iff nhds_basis_ball).mp
             (real.continuous_mul.tendsto (‖x‖, ‖y‖)) ε hε
         simp only [Set.mem_prod, mem_ball, and_imp, Prod.forall, exists_prop, Prod.exists] at this
         rcases this with ⟨ε₁, ε₂, ⟨h₁, h₂⟩, h⟩

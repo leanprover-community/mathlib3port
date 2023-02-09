@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.hint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ add_tactic_doc
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 private unsafe def add_tactic_hint (n : Name) (t : expr) : tactic Unit := do
-  add_decl <| declaration.defn n [] q(tactic String) t ReducibilityHints.opaque ff
+  add_decl <| declaration.defn n [] q(tactic String) t reducibility_hints.opaque ff
   hint_tactic_attribute n () tt
 #align tactic.hint.add_tactic_hint tactic.hint.add_tactic_hint
 
@@ -110,7 +110,7 @@ unsafe def hint : tactic Unit := do
       let t ← hints 0
       if t.2 = 0 then do
           trace "the following tactics solve the goal:\n----"
-          (hints fun p : String × ℕ => p.2 = 0).mapM' fun p => tactic.trace f! "Try this: {p.1}"
+          (hints fun p : string × ℕ => p.2 = 0).mapM' fun p => tactic.trace f! "Try this: {p.1}"
         else do
           trace "the following tactics make progress:\n----"
           hints fun p => tactic.trace f! "Try this: {p.1}"

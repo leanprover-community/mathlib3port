@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.ring2
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,15 +25,15 @@ namespace Tree
 /-- `(reflect' t u α)` quasiquotes a tree `(t: tree expr)` of quoted
 values of type `α` at level `u` into an `expr` which reifies to a `tree α`
 containing the reifications of the `expr`s from the original `t`. -/
-protected unsafe def reflect' (u : level) (α : expr) : Tree expr → expr
-  | Tree.nil => (expr.const `` Tree.nil [u] : expr) α
-  | Tree.node a t₁ t₂ => (expr.const `` Tree.node [u] : expr) α a t₁.reflect' t₂.reflect'
+protected unsafe def reflect' (u : level) (α : expr) : Tree lt → expr
+  | tree.nil => (expr.const `` Tree.nil [u] : expr) α
+  | tree.node a t₁ t₂ => (expr.const `` Tree.node [u] : expr) α a t₁.reflect' t₂.reflect'
 #align tree.reflect' tree.reflect'
 
 /-- Returns an element indexed by `n`, or zero if `n` isn't a valid index.
 See `tree.get`. -/
 protected def getOrZero {α} [Zero α] (t : Tree α) (n : PosNum) : α :=
-  t.getD n 0
+  t.getOrElse n 0
 #align tree.get_or_zero Tree.getOrZero
 
 end Tree
@@ -115,7 +115,8 @@ def atom (n : PosNum) : HornerExpr :=
 
 def toString : HornerExpr → String
   | const n => repr n
-  | horner a x n b => "(" ++ toString a ++ ") * x" ++ repr x ++ "^" ++ repr n ++ " + " ++ toString b
+  | horner a x n b =>
+    "(" ++ to_string a ++ ") * x" ++ repr x ++ "^" ++ repr n ++ " + " ++ to_string b
 #align tactic.ring2.horner_expr.to_string Tactic.Ring2.HornerExpr.toString
 
 instance : ToString HornerExpr :=
@@ -143,13 +144,13 @@ def addAux (a₁ : HornerExpr) (A₁ : HornerExpr → HornerExpr) (x₁ : PosNum
   | horner a₂ x₂ n₂ b₂, n₁, b₁, B₁ =>
     let e₂ := horner a₂ x₂ n₂ b₂
     match PosNum.cmp x₁ x₂ with
-    | Ordering.lt => horner a₁ x₁ n₁ (B₁ e₂)
-    | Ordering.gt => horner a₂ x₂ n₂ (add_aux b₂ n₁ b₁ B₁)
-    | Ordering.eq =>
+    | ordering.lt => horner a₁ x₁ n₁ (B₁ e₂)
+    | ordering.gt => horner a₂ x₂ n₂ (add_aux b₂ n₁ b₁ B₁)
+    | ordering.eq =>
       match Num.sub' n₁ n₂ with
-      | ZNum.zero => horner' (A₁ a₂) x₁ n₁ (B₁ b₂)
-      | ZNum.pos k => horner (add_aux a₂ k 0 id) x₁ n₂ (B₁ b₂)
-      | ZNum.neg k => horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
+      | znum.zero => horner' (A₁ a₂) x₁ n₁ (B₁ b₂)
+      | znum.pos k => horner (add_aux a₂ k 0 id) x₁ n₂ (B₁ b₂)
+      | znum.neg k => horner (A₁ (horner a₂ x₁ k 0)) x₁ n₁ (B₁ b₂)
 #align tactic.ring2.horner_expr.add_aux Tactic.Ring2.HornerExpr.addAux
 
 def add : HornerExpr → HornerExpr → HornerExpr
@@ -198,9 +199,9 @@ def mulAux (a₁ x₁ n₁ b₁) (A₁ B₁ : HornerExpr → HornerExpr) : Horne
   | const n₂ => mulConst n₂ (horner a₁ x₁ n₁ b₁)
   | e₂@(horner a₂ x₂ n₂ b₂) =>
     match PosNum.cmp x₁ x₂ with
-    | Ordering.lt => horner (A₁ e₂) x₁ n₁ (B₁ e₂)
-    | Ordering.gt => horner (mul_aux a₂) x₂ n₂ (mul_aux b₂)
-    | Ordering.eq =>
+    | ordering.lt => horner (A₁ e₂) x₁ n₁ (B₁ e₂)
+    | ordering.gt => horner (mul_aux a₂) x₂ n₂ (mul_aux b₂)
+    | ordering.eq =>
       let haa := horner' (mul_aux a₂) x₁ n₂ 0
       if b₂ = 0 then haa else haa.add (horner (A₁ b₂) x₁ n₁ (B₁ b₂))
 #align tactic.ring2.horner_expr.mul_aux Tactic.Ring2.HornerExpr.mulAux
@@ -235,7 +236,7 @@ instance : Mul HornerExpr :=
 
 def pow (e : HornerExpr) : Num → HornerExpr
   | 0 => 1
-  | Num.pos p => by
+  | num.pos p => by
     induction' p with p ep p ep
     · exact e
     · exact (ep.mul ep).mul e
@@ -269,7 +270,7 @@ theorem cseval_atom {α} [CommSemiring α] (t : Tree α) (n : PosNum) :
 theorem cseval_addConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (addConst k.toZNum e).IsCs ∧ cseval t (addConst k.toZNum e) = k + cseval t e :=
   by
-  simp [add_const]
+  simp [addConst]
   cases k <;> simp! [*]
   simp [show ZNum.pos k ≠ 0 by decide]
   induction' e with n a x n b A B <;> simp [*]
@@ -301,10 +302,10 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
-    simpa using cseval_add_const t n₁ cs₂
+    simpa using cseval_addConst t n₁ cs₂
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂ generalizing n₁ b₁
   · rcases cs₂ with ⟨n₂, rfl⟩
-    simp! [cseval_add_const t n₂ cs₁, add_comm]
+    simp! [cseval_addConst t n₂ cs₁, add_comm]
   cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
   simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases PosNum.cmp x₁ x₂ <;> simp!
@@ -314,9 +315,9 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
     exact h.symm
   · cases C
     have B0 :
-      is_cs 0 →
-        ∀ {e₂ : horner_expr},
-          is_cs e₂ → is_cs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
+      IsCs 0 →
+        ∀ {e₂ : HornerExpr},
+          IsCs e₂ → IsCs (add 0 e₂) ∧ cseval t (add 0 e₂) = cseval t 0 + cseval t e₂ :=
       fun _ e₂ c => ⟨c, (zero_add _).symm⟩
     cases' e : Num.sub' n₁ n₂ with k k <;> simp!
     · have : n₁ = n₂ := by
@@ -358,7 +359,7 @@ theorem cseval_add {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
 theorem cseval_mulConst {α} [CommSemiring α] (t : Tree α) (k : Num) {e : HornerExpr} (cs : e.IsCs) :
     (mulConst k.toZNum e).IsCs ∧ cseval t (mulConst k.toZNum e) = cseval t e * k :=
   by
-  simp [mul_const]
+  simp [mulConst]
   split_ifs with h h
   · cases (Num.toZNum_inj.1 h : k = 0)
     exact ⟨⟨0, rfl⟩, (mul_zero _).symm⟩
@@ -383,10 +384,10 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
   by
   induction' e₁ with n₁ a₁ x₁ n₁ b₁ A₁ B₁ generalizing e₂ <;> simp!
   · rcases cs₁ with ⟨n₁, rfl⟩
-    simpa [mul_comm] using cseval_mul_const t n₁ cs₂
+    simpa [mul_comm] using cseval_mulConst t n₁ cs₂
   induction' e₂ with n₂ a₂ x₂ n₂ b₂ A₂ B₂
   · rcases cs₂ with ⟨n₂, rfl⟩
-    simpa! using cseval_mul_const t n₂ cs₁
+    simpa! using cseval_mulConst t n₂ cs₁
   cases' cs₁ with csa₁ csb₁; cases' id cs₂ with csa₂ csb₂
   simp! ; have C := PosNum.cmp_to_nat x₁ x₂
   cases' A₂ csa₂ with csA₂ hA₂
@@ -417,7 +418,7 @@ theorem cseval_mul {α} [CommSemiring α] (t : Tree α) {e₁ e₂ : HornerExpr}
 theorem cseval_pow {α} [CommSemiring α] (t : Tree α) {x : HornerExpr} (cs : x.IsCs) :
     ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
   | 0 => ⟨⟨1, rfl⟩, (pow_zero _).symm⟩
-  | Num.pos p => by
+  | num.pos p => by
     simp [pow]; induction' p with p ep p ep
     · simp [*]
     · simp [pow_bit1]
@@ -460,7 +461,7 @@ same Horner normal form, then the original non-reflected expressions are
 equal. `H` follows from kernel reduction and is therefore `rfl`. -/
 theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr)
     (H : HornerExpr.ofCsexpr r₁ = HornerExpr.ofCsexpr r₂) : r₁.eval t = r₂.eval t := by
-  repeat' rw [← (horner_expr.cseval_of_csexpr t _).2] <;> rw [H]
+  repeat' rw [← (HornerExpr.cseval_ofCsexpr t _).2] <;> rw [H]
 #align tactic.ring2.correctness Tactic.Ring2.correctness
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -510,7 +511,7 @@ The initial state is a list of all atom occurrences in the goal, left-to-right. 
 unsafe def csring_expr.replace (t : Tree expr) : CsringExpr → StateT (List expr) Option CsringExpr
   | csring_expr.atom _ => do
     let e ← get
-    let p ← monadLift (t.indexOfₓ (· < ·) e.headI)
+    let p ← monadLift (t.indexOf (· < ·) e.headI)
     put e
     pure (csring_expr.atom p)
   | csring_expr.const n => pure (CsringExpr.const n)
@@ -534,7 +535,7 @@ open Tactic.Ring2
 -- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `ring2` solves equations in the language of rings.

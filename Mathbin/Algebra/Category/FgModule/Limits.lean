@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.limits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimens
     by
     dsimp
     infer_instance
-  FiniteDimensional.of_injective (ModuleCat.piIsoPi _).Hom
+  FiniteDimensional.of_injective (ModuleCat.piIsoPi _).hom
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
 /-- Finite limits of finite dimensional vectors spaces are finite dimensional,
@@ -63,7 +63,7 @@ instance (F : J ⥤ FgModule k) :
     change FiniteDimensional k (F.obj j).obj
     infer_instance
   FiniteDimensional.of_injective
-    (limit_subobject_product (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)))
+    (limitSubobjectProduct (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)))
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
 /-- The forgetful functor from `fgModule k` to `Module k` creates all finite limits. -/
@@ -79,8 +79,7 @@ instance : CreatesLimitsOfShape J (forget₂ (FgModule k) (ModuleCat.{v} k))
 
 instance : HasFiniteLimits (FgModule k)
     where out J _ _ :=
-    has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape
-      (forget₂ (FgModule k) (ModuleCat.{v} k))
+    hasLimitsOfShapeOfHasLimitsOfShapeCreatesLimitsOfShape (forget₂ (FgModule k) (ModuleCat.{v} k))
 
 instance : PreservesFiniteLimits (forget₂ (FgModule k) (ModuleCat.{v} k))
     where PreservesFiniteLimits J _ _ := inferInstance

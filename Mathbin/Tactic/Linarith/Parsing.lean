@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.parsing
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -169,7 +169,7 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
         m , p @ q( @ Pow.pow _ ℕ _ $ ( e ) $ ( n ) )
         =>
         match
-          n . toNat
+          n . to_nat
           with
           | some k => do let ( m' , comp ) ← linear_form_of_expr m e return ( m' , comp k )
             | none => linear_form_of_atom red m p

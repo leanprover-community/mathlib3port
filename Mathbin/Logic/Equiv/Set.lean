@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.set
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.range_eq_univ Equiv.range_eq_univₓ'. -/
 @[simp]
 theorem range_eq_univ {α : Type _} {β : Type _} (e : α ≃ β) : range e = univ :=
-  eq_univ_of_forall e.Surjective
+  eq_univ_of_forall e.surjective
 #align equiv.range_eq_univ Equiv.range_eq_univ
 
 /- warning: equiv.image_eq_preimage -> Equiv.image_eq_preimage is a dubious translation:
@@ -136,7 +136,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.eq_image_iff_symm_image_eq Equiv.eq_image_iff_symm_image_eqₓ'. -/
 theorem eq_image_iff_symm_image_eq {α β} (e : α ≃ β) (s : Set α) (t : Set β) :
     t = e '' s ↔ e.symm '' t = s :=
-  (e.symm.Injective.image_injective.eq_iff' (e.symm_image_image s)).symm
+  (e.symm.injective.image_injective.eq_iff' (e.symm_image_image s)).symm
 #align equiv.eq_image_iff_symm_image_eq Equiv.eq_image_iff_symm_image_eq
 
 /- warning: equiv.image_symm_image -> Equiv.image_symm_image is a dubious translation:
@@ -158,7 +158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.image_preimage Equiv.image_preimageₓ'. -/
 @[simp]
 theorem image_preimage {α β} (e : α ≃ β) (s : Set β) : e '' (e ⁻¹' s) = s :=
-  e.Surjective.image_preimage s
+  e.surjective.image_preimage s
 #align equiv.image_preimage Equiv.image_preimage
 
 /- warning: equiv.preimage_image -> Equiv.preimage_image is a dubious translation:
@@ -169,7 +169,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.preimage_image Equiv.preimage_imageₓ'. -/
 @[simp]
 theorem preimage_image {α β} (e : α ≃ β) (s : Set α) : e ⁻¹' (e '' s) = s :=
-  e.Injective.preimage_image s
+  e.injective.preimage_image s
 #align equiv.preimage_image Equiv.preimage_image
 
 /- warning: equiv.image_compl -> Equiv.image_compl is a dubious translation:
@@ -179,7 +179,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : Equiv.{succ u2, succ u1} α β) (s : Set.{u2} α), Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) f) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) s)) (HasCompl.compl.{u1} (Set.{u1} β) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} β) (Set.instBooleanAlgebraSet.{u1} β)) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) f) s))
 Case conversion may be inaccurate. Consider using '#align equiv.image_compl Equiv.image_complₓ'. -/
 protected theorem image_compl {α β} (f : Equiv α β) (s : Set α) : f '' sᶜ = (f '' s)ᶜ :=
-  image_compl_eq f.Bijective
+  image_compl_eq f.bijective
 #align equiv.image_compl Equiv.image_compl
 
 /- warning: equiv.symm_preimage_preimage -> Equiv.symm_preimage_preimage is a dubious translation:
@@ -212,7 +212,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.preimage_subset Equiv.preimage_subsetₓ'. -/
 @[simp]
 theorem preimage_subset {α β} (e : α ≃ β) (s t : Set β) : e ⁻¹' s ⊆ e ⁻¹' t ↔ s ⊆ t :=
-  e.Surjective.preimage_subset_preimage_iff
+  e.surjective.preimage_subset_preimage_iff
 #align equiv.preimage_subset Equiv.preimage_subset
 
 /- warning: equiv.image_subset -> Equiv.image_subset is a dubious translation:
@@ -223,7 +223,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.image_subset Equiv.image_subsetₓ'. -/
 @[simp]
 theorem image_subset {α β} (e : α ≃ β) (s t : Set α) : e '' s ⊆ e '' t ↔ s ⊆ t :=
-  image_subset_image_iff e.Injective
+  image_subset_image_iff e.injective
 #align equiv.image_subset Equiv.image_subset
 
 /- warning: equiv.image_eq_iff_eq -> Equiv.image_eq_iff_eq is a dubious translation:
@@ -234,7 +234,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.image_eq_iff_eq Equiv.image_eq_iff_eqₓ'. -/
 @[simp]
 theorem image_eq_iff_eq {α β} (e : α ≃ β) (s t : Set α) : e '' s = e '' t ↔ s = t :=
-  image_eq_image e.Injective
+  image_eq_image e.injective
 #align equiv.image_eq_iff_eq Equiv.image_eq_iff_eq
 
 /- warning: equiv.preimage_eq_iff_eq_image -> Equiv.preimage_eq_iff_eq_image is a dubious translation:
@@ -244,7 +244,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β) (s : Set.{u1} β) (t : Set.{u2} α), Iff (Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) e) s) t) (Eq.{succ u1} (Set.{u1} β) s (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) e) t))
 Case conversion may be inaccurate. Consider using '#align equiv.preimage_eq_iff_eq_image Equiv.preimage_eq_iff_eq_imageₓ'. -/
 theorem preimage_eq_iff_eq_image {α β} (e : α ≃ β) (s t) : e ⁻¹' s = t ↔ s = e '' t :=
-  preimage_eq_iff_eq_image e.Bijective
+  preimage_eq_iff_eq_image e.bijective
 #align equiv.preimage_eq_iff_eq_image Equiv.preimage_eq_iff_eq_image
 
 /- warning: equiv.eq_preimage_iff_image_eq -> Equiv.eq_preimage_iff_image_eq is a dubious translation:
@@ -254,7 +254,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : Equiv.{succ u2, succ u1} α β) (s : Set.{u2} α) (t : Set.{u1} β), Iff (Eq.{succ u2} (Set.{u2} α) s (Set.preimage.{u2, u1} α β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) e) t)) (Eq.{succ u1} (Set.{u1} β) (Set.image.{u2, u1} α β (FunLike.coe.{max (succ u1) (succ u2), succ u2, succ u1} (Equiv.{succ u2, succ u1} α β) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => β) _x) (Equiv.instFunLikeEquiv.{succ u2, succ u1} α β) e) s) t)
 Case conversion may be inaccurate. Consider using '#align equiv.eq_preimage_iff_image_eq Equiv.eq_preimage_iff_image_eqₓ'. -/
 theorem eq_preimage_iff_image_eq {α β} (e : α ≃ β) (s t) : s = e ⁻¹' t ↔ e '' s = t :=
-  eq_preimage_iff_image_eq e.Bijective
+  eq_preimage_iff_image_eq e.bijective
 #align equiv.eq_preimage_iff_image_eq Equiv.eq_preimage_iff_image_eq
 
 /- warning: equiv.prod_assoc_preimage -> Equiv.prod_assoc_preimage is a dubious translation:
@@ -402,11 +402,11 @@ protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs
     else Sum.inr ⟨_, x.2.resolve_left fun xs => hp (hs _ xs)⟩
   invFun o :=
     match o with
-    | Sum.inl x => ⟨x, Or.inl x.2⟩
-    | Sum.inr x => ⟨x, Or.inr x.2⟩
-  left_inv := fun ⟨x, h'⟩ => by by_cases p x <;> simp [union'._match_1, h] <;> congr
+    | sum.inl x => ⟨x, Or.inl x.2⟩
+    | sum.inr x => ⟨x, Or.inr x.2⟩
+  left_inv := fun ⟨x, h'⟩ => by by_cases p x <;> simp [union'._match1, h] <;> congr
   right_inv o := by
-    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match_1] <;> [simp [hs _ h], simp [ht _ h]]
+    rcases o with (⟨x, h⟩ | ⟨x, h⟩) <;> dsimp [union'._match1] <;> [simp [hs _ h], simp [ht _ h]]
 #align equiv.set.union' Equiv.Set.union'
 
 /- warning: equiv.set.union -> Equiv.Set.union is a dubious translation:
@@ -577,7 +577,7 @@ theorem sumCompl_symm_apply_of_mem {α : Type u} {s : Set α} [DecidablePred (·
   by
   have : ↑(⟨x, Or.inl hx⟩ : (s ∪ sᶜ : Set α)) ∈ s := hx
   rw [Equiv.Set.sumCompl]
-  simpa using set.union_apply_left _ this
+  simpa using Set.union_apply_left _ this
 #align equiv.set.sum_compl_symm_apply_of_mem Equiv.Set.sumCompl_symm_apply_of_mem
 
 /- warning: equiv.set.sum_compl_symm_apply_of_not_mem -> Equiv.Set.sumCompl_symm_apply_of_not_mem is a dubious translation:
@@ -591,7 +591,7 @@ theorem sumCompl_symm_apply_of_not_mem {α : Type u} {s : Set α} [DecidablePred
   by
   have : ↑(⟨x, Or.inr hx⟩ : (s ∪ sᶜ : Set α)) ∈ sᶜ := hx
   rw [Equiv.Set.sumCompl]
-  simpa using set.union_apply_right _ this
+  simpa using Set.union_apply_right _ this
 #align equiv.set.sum_compl_symm_apply_of_not_mem Equiv.Set.sumCompl_symm_apply_of_not_mem
 
 /- warning: equiv.set.sum_compl_symm_apply -> Equiv.Set.sumCompl_symm_apply is a dubious translation:
@@ -603,7 +603,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.sum_compl_sy
 @[simp]
 theorem sumCompl_symm_apply {α : Type _} {s : Set α} [DecidablePred (· ∈ s)] {x : s} :
     (Equiv.Set.sumCompl s).symm x = Sum.inl x := by
-  cases' x with x hx <;> exact set.sum_compl_symm_apply_of_mem hx
+  cases' x with x hx <;> exact Set.sumCompl_symm_apply_of_mem hx
 #align equiv.set.sum_compl_symm_apply Equiv.Set.sumCompl_symm_apply
 
 /- warning: equiv.set.sum_compl_symm_apply_compl -> Equiv.Set.sumCompl_symm_apply_compl is a dubious translation:
@@ -615,7 +615,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.sum_compl_sy
 @[simp]
 theorem sumCompl_symm_apply_compl {α : Type _} {s : Set α} [DecidablePred (· ∈ s)] {x : sᶜ} :
     (Equiv.Set.sumCompl s).symm x = Sum.inr x := by
-  cases' x with x hx <;> exact set.sum_compl_symm_apply_of_not_mem hx
+  cases' x with x hx <;> exact Set.sumCompl_symm_apply_of_not_mem hx
 #align equiv.set.sum_compl_symm_apply_compl Equiv.Set.sumCompl_symm_apply_compl
 
 /- warning: equiv.set.sum_diff_subset -> Equiv.Set.sumDiffSubset is a dubious translation:
@@ -664,8 +664,8 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.sum_diff_sub
 theorem sumDiffSubset_symm_apply_of_mem {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)]
     {x : t} (hx : x.1 ∈ s) : (Equiv.Set.sumDiffSubset h).symm x = Sum.inl ⟨x, hx⟩ :=
   by
-  apply (Equiv.Set.sumDiffSubset h).Injective
-  simp only [apply_symm_apply, sum_diff_subset_apply_inl]
+  apply (Equiv.Set.sumDiffSubset h).injective
+  simp only [apply_symm_apply, sumDiffSubset_apply_inl]
   exact Subtype.eq rfl
 #align equiv.set.sum_diff_subset_symm_apply_of_mem Equiv.Set.sumDiffSubset_symm_apply_of_mem
 
@@ -678,8 +678,8 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.sum_diff_sub
 theorem sumDiffSubset_symm_apply_of_not_mem {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (· ∈ s)]
     {x : t} (hx : x.1 ∉ s) : (Equiv.Set.sumDiffSubset h).symm x = Sum.inr ⟨x, ⟨x.2, hx⟩⟩ :=
   by
-  apply (Equiv.Set.sumDiffSubset h).Injective
-  simp only [apply_symm_apply, sum_diff_subset_apply_inr]
+  apply (Equiv.Set.sumDiffSubset h).injective
+  simp only [apply_symm_apply, sumDiffSubset_apply_inr]
   exact Subtype.eq rfl
 #align equiv.set.sum_diff_subset_symm_apply_of_not_mem Equiv.Set.sumDiffSubset_symm_apply_of_not_mem
 
@@ -702,7 +702,7 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
     _ ≃ Sum s (t \ s ∪ s ∩ t : Set α) :=
       sumCongr (Equiv.refl _)
         (by
-          refine' (set.union' (· ∉ s) _ _).symm
+          refine' (Set.union' (· ∉ s) _ _).symm
           exacts[fun x hx => hx.2, fun x hx => not_not_intro hx.1])
     _ ≃ Sum s t := by
       rw [(_ : t \ s ∪ s ∩ t = t)]
@@ -724,8 +724,8 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         Iff.symm <|
           MapsTo.mem_iff (mapsTo_iff_exists_map_subtype.2 ⟨e₀, e.2⟩)
             (SurjOn.mapsTo_compl
-              (surjOn_iff_exists_map_subtype.2 ⟨t, e₀, Subset.refl t, e₀.Surjective, e.2⟩)
-              e.1.Injective)
+              (surjOn_iff_exists_map_subtype.2 ⟨t, e₀, Subset.refl t, e₀.surjective, e.2⟩)
+              e.1.injective)
   invFun e₁ :=
     Subtype.mk
       (calc
@@ -734,22 +734,22 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
         _ ≃ β := Set.sumCompl t
         )
       fun x => by
-      simp only [Sum.map_inl, trans_apply, sum_congr_apply, set.sum_compl_apply_inl,
-        set.sum_compl_symm_apply]
+      simp only [Sum.map_inl, trans_apply, sumCongr_apply, Set.sumCompl_apply_inl,
+        Set.sumCompl_symm_apply]
   left_inv e := by
     ext x
     by_cases hx : x ∈ s
     ·
-      simp only [set.sum_compl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sum_congr_apply,
-        trans_apply, Subtype.coe_mk, set.sum_compl_apply_inl]
+      simp only [Set.sumCompl_symm_apply_of_mem hx, ← e.prop ⟨x, hx⟩, Sum.map_inl, sumCongr_apply,
+        trans_apply, Subtype.coe_mk, Set.sumCompl_apply_inl]
     ·
-      simp only [set.sum_compl_symm_apply_of_not_mem hx, Sum.map_inr, subtype_equiv_apply,
-        set.sum_compl_apply_inr, trans_apply, sum_congr_apply, Subtype.coe_mk]
+      simp only [Set.sumCompl_symm_apply_of_not_mem hx, Sum.map_inr, subtypeEquiv_apply,
+        Set.sumCompl_apply_inr, trans_apply, sumCongr_apply, Subtype.coe_mk]
   right_inv e :=
     Equiv.ext fun x => by
-      simp only [Sum.map_inr, subtype_equiv_apply, set.sum_compl_apply_inr, Function.comp_apply,
-        sum_congr_apply, Equiv.coe_trans, Subtype.coe_eta, Subtype.coe_mk,
-        set.sum_compl_symm_apply_compl]
+      simp only [Sum.map_inr, subtypeEquiv_apply, Set.sumCompl_apply_inr, Function.comp_apply,
+        sumCongr_apply, Equiv.coe_trans, Subtype.coe_eta, Subtype.coe_mk,
+        Set.sumCompl_symm_apply_compl]
 #align equiv.set.compl Equiv.Set.compl
 -/
 
@@ -794,7 +794,7 @@ protected noncomputable def imageOfInjOn {α β} (f : α → β) (s : Set α) (H
 /-- If `f` is an injective function, then `s` is equivalent to `f '' s`. -/
 @[simps apply]
 protected noncomputable def image {α β} (f : α → β) (s : Set α) (H : Injective f) : s ≃ f '' s :=
-  Equiv.Set.imageOfInjOn f s (H.InjOn s)
+  Equiv.Set.imageOfInjOn f s (H.injOn s)
 #align equiv.set.image Equiv.Set.image
 -/
 
@@ -808,7 +808,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.set.image_symm_a
 protected theorem image_symm_apply {α β} (f : α → β) (s : Set α) (H : Injective f) (x : α)
     (h : x ∈ s) : (Set.image f s H).symm ⟨f x, ⟨x, ⟨h, rfl⟩⟩⟩ = ⟨x, h⟩ :=
   by
-  apply (Set.image f s H).Injective
+  apply (Set.image f s H).injective
   simp [(Set.image f s H).apply_symm_apply]
 #align equiv.set.image_symm_apply Equiv.Set.image_symm_apply
 
@@ -864,12 +864,12 @@ noncomputable def rangeSplittingImageEquiv {α β : Type _} (f : α → β) (s :
   toFun x :=
     ⟨⟨f x, by simp⟩, by
       rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-      simpa [apply_range_splitting f] using m⟩
+      simpa [apply_rangeSplitting f] using m⟩
   invFun x := ⟨rangeSplitting f x, ⟨x, ⟨x.2, rfl⟩⟩⟩
   left_inv x := by
     rcases x with ⟨x, ⟨y, ⟨m, rfl⟩⟩⟩
-    simp [apply_range_splitting f]
-  right_inv x := by simp [apply_range_splitting f]
+    simp [apply_rangeSplitting f]
+  right_inv x := by simp [apply_rangeSplitting f]
 #align equiv.set.range_splitting_image_equiv Equiv.Set.rangeSplittingImageEquiv
 -/
 
@@ -935,8 +935,8 @@ Case conversion may be inaccurate. Consider using '#align equiv.of_injective_sym
 theorem ofInjective_symm_apply {α β} {f : α → β} (hf : Injective f) (a : α) :
     (ofInjective f hf).symm ⟨f a, ⟨a, rfl⟩⟩ = a :=
   by
-  apply (of_injective f hf).Injective
-  simp [apply_of_injective_symm hf]
+  apply (ofInjective f hf).injective
+  simp [apply_ofInjective_symm hf]
 #align equiv.of_injective_symm_apply Equiv.ofInjective_symm_apply
 
 /- warning: equiv.coe_of_injective_symm -> Equiv.coe_ofInjective_symm is a dubious translation:
@@ -950,7 +950,7 @@ theorem coe_ofInjective_symm {α β} {f : α → β} (hf : Injective f) :
   by
   ext ⟨y, x, rfl⟩
   apply hf
-  simp [apply_range_splitting f]
+  simp [apply_rangeSplitting f]
 #align equiv.coe_of_injective_symm Equiv.coe_ofInjective_symm
 
 /- warning: equiv.self_comp_of_injective_symm -> Equiv.self_comp_ofInjective_symm is a dubious translation:
@@ -975,7 +975,7 @@ theorem ofLeftInverse_eq_ofInjective {α β : Type _} (f : α → β) (f_inv : N
     (hf : ∀ h : Nonempty α, LeftInverse (f_inv h) f) :
     ofLeftInverse f f_inv hf =
       ofInjective f
-        ((em (Nonempty α)).elim (fun h => (hf h).Injective) fun h _ _ _ =>
+        ((em (Nonempty α)).elim (fun h => (hf h).injective) fun h _ _ _ =>
           by
           haveI : Subsingleton α := subsingleton_of_not_nonempty h
           simp) :=
@@ -991,7 +991,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (f_inv : β -> α) (hf : Function.LeftInverse.{succ u2, succ u1} α β f_inv f), Eq.{max (succ u2) (succ u1)} (Equiv.{succ u2, succ u1} α (Set.Elem.{u1} β (Set.range.{u1, succ u2} β α f))) (Equiv.ofLeftInverse'.{succ u2, u1} α β f f_inv hf) (Equiv.ofInjective.{succ u2, u1} α β f (Function.LeftInverse.injective.{succ u2, succ u1} α β f_inv f hf))
 Case conversion may be inaccurate. Consider using '#align equiv.of_left_inverse'_eq_of_injective Equiv.ofLeftInverse'_eq_ofInjectiveₓ'. -/
 theorem ofLeftInverse'_eq_ofInjective {α β : Type _} (f : α → β) (f_inv : β → α)
-    (hf : LeftInverse f_inv f) : ofLeftInverse' f f_inv hf = ofInjective f hf.Injective :=
+    (hf : LeftInverse f_inv f) : ofLeftInverse' f f_inv hf = ofInjective f hf.injective :=
   by
   ext
   simp
@@ -1005,7 +1005,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.set_forall_iff Equiv.set_forall_iffₓ'. -/
 protected theorem set_forall_iff {α β} (e : α ≃ β) {p : Set α → Prop} :
     (∀ a, p a) ↔ ∀ a, p (e ⁻¹' a) :=
-  e.Injective.preimage_surjective.forall
+  e.injective.preimage_surjective.forall
 #align equiv.set_forall_iff Equiv.set_forall_iff
 
 /- warning: equiv.preimage_pi_equiv_pi_subtype_prod_symm_pi -> Equiv.preimage_piEquivPiSubtypeProd_symm_pi is a dubious translation:
@@ -1064,7 +1064,7 @@ end Equiv
 equivalence between the types `↥s` and `↥t`. -/
 noncomputable def Set.BijOn.equiv {α : Type _} {β : Type _} {s : Set α} {t : Set β} (f : α → β)
     (h : BijOn f s t) : s ≃ t :=
-  Equiv.ofBijective _ h.Bijective
+  Equiv.ofBijective _ h.bijective
 #align set.bij_on.equiv Set.BijOn.equiv
 -/
 

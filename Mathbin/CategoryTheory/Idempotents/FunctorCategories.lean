@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.functor_categories
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,21 +65,21 @@ instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
     IsIdempotentComplete (J ⥤ C) := by
   refine' ⟨_⟩
   intro F p hp
-  have hC := (is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent C).mp inferInstance
-  haveI : ∀ j : J, has_equalizer (𝟙 _) (p.app j) := fun j => hC _ _ (congr_app hp j)
+  have hC := (isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent C).mp inferInstance
+  haveI : ∀ j : J, HasEqualizer (𝟙 _) (p.app j) := fun j => hC _ _ (congr_app hp j)
   /- We construct the direct factor `Y` associated to `p : F ⟶ F` by computing
       the equalizer of the identity and `p.app j` on each object `(j : J)`.  -/
   let Y : J ⥤ C :=
-    { obj := fun j => limits.equalizer (𝟙 _) (p.app j)
+    { obj := fun j => Limits.equalizer (𝟙 _) (p.app j)
       map := fun j j' φ =>
-        equalizer.lift (limits.equalizer.ι (𝟙 _) (p.app j) ≫ F.map φ)
-          (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← limits.equalizer.condition, comp_id])
+        equalizer.lift (Limits.equalizer.ι (𝟙 _) (p.app j) ≫ F.map φ)
+          (by rw [comp_id, assoc, p.naturality φ, ← assoc, ← Limits.equalizer.condition, comp_id])
       map_id' := fun j => by
         ext
         simp only [comp_id, Functor.map_id, equalizer.lift_ι, id_comp]
       map_comp' := fun j j' j'' φ φ' => by
         ext
-        simp only [assoc, functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
+        simp only [assoc, Functor.map_comp, equalizer.lift_ι, equalizer.lift_ι_assoc] }
   let i : Y ⟶ F :=
     { app := fun j => equalizer.ι _ _
       naturality' := fun j j' φ => by rw [equalizer.lift_ι] }
@@ -91,13 +91,13 @@ instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
             exact (congr_app hp j).symm)
       naturality' := fun j j' φ => by
         ext
-        simp only [assoc, equalizer.lift_ι, nat_trans.naturality, equalizer.lift_ι_assoc] }
+        simp only [assoc, equalizer.lift_ι, NatTrans.naturality, equalizer.lift_ι_assoc] }
   use Y, i, e
   constructor <;> ext j
   ·
-    simp only [nat_trans.comp_app, assoc, equalizer.lift_ι, nat_trans.id_app, id_comp, ←
+    simp only [NatTrans.comp_app, assoc, equalizer.lift_ι, NatTrans.id_app, id_comp, ←
       equalizer.condition, comp_id]
-  · simp only [nat_trans.comp_app, equalizer.lift_ι]
+  · simp only [NatTrans.comp_app, equalizer.lift_ι]
 #align category_theory.idempotents.functor_category_is_idempotent_complete CategoryTheory.Idempotents.functor_category_isIdempotentComplete
 
 namespace KaroubiFunctorCategoryEmbedding
@@ -114,9 +114,9 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C
   map j j' φ :=
     { f := P.p.app j ≫ P.x.map φ
       comm := by
-        simp only [nat_trans.naturality, assoc]
+        simp only [NatTrans.naturality, assoc]
         have h := congr_app P.idem j
-        rw [nat_trans.comp_app] at h
+        rw [NatTrans.comp_app] at h
         slice_rhs 1 3 => erw [h, h] }
 #align category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
 
@@ -144,10 +144,10 @@ instance : Full (karoubiFunctorCategoryEmbedding J C)
     { f :=
         { app := fun j => (f.app j).f
           naturality' := fun j j' φ => by
-            rw [← karoubi.comp_p_assoc]
+            rw [← Karoubi.comp_p_assoc]
             have h := hom_ext.mp (f.naturality φ)
             simp only [comp_f] at h
-            dsimp [karoubi_functor_category_embedding] at h
+            dsimp [karoubiFunctorCategoryEmbedding] at h
             erw [← h, assoc, ← P.p.naturality_assoc φ, p_comp (f.app j')] }
       comm := by
         ext j
@@ -170,8 +170,8 @@ theorem toKaroubi_comp_karoubiFunctorCategoryEmbedding :
   apply Functor.ext
   · intro X Y f
     ext j
-    dsimp [to_karoubi]
-    simp only [eq_to_hom_app, eq_to_hom_refl, id_comp]
+    dsimp [toKaroubi]
+    simp only [eqToHom_app, eqToHom_refl, id_comp]
     erw [comp_id]
   · intro X
     apply Functor.ext

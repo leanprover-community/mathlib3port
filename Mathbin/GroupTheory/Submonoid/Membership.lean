@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ but is expected to have type
   forall {M : Type.{u2}} {B : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_2 : SetLike.{u1, u2} B M] [_inst_3 : SubmonoidClass.{u1, u2} B M (Monoid.toMulOneClass.{u2} M _inst_1) _inst_2] {S : B} (l : List.{u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u1} M B (SetLike.instMembership.{u1, u2} B M _inst_2) x S))), Eq.{succ u2} M (Subtype.val.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Set.{u2} M) (Set.instMembershipSet.{u2} M) x (SetLike.coe.{u1, u2} B M _inst_2 S)) (List.prod.{u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u1} M B (SetLike.instMembership.{u1, u2} B M _inst_2) x S)) (MulOneClass.toMul.{u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u1} M B (SetLike.instMembership.{u1, u2} B M _inst_2) x S)) (Monoid.toMulOneClass.{u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u1} M B (SetLike.instMembership.{u1, u2} B M _inst_2) x S)) (SubmonoidClass.toMonoid.{u2, u1} M _inst_1 B _inst_2 _inst_3 S))) (OneMemClass.one.{u1, u2} B M _inst_2 (Monoid.toOne.{u2} M _inst_1) (SubmonoidClass.toOneMemClass.{u1, u2} B M (Monoid.toMulOneClass.{u2} M _inst_1) _inst_2 _inst_3) S) l)) (List.prod.{u2} M (MulOneClass.toMul.{u2} M (Monoid.toMulOneClass.{u2} M _inst_1)) (Monoid.toOne.{u2} M _inst_1) (List.map.{u2, u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u1} M B (SetLike.instMembership.{u1, u2} B M _inst_2) x S)) M (Subtype.val.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Set.{u2} M) (Set.instMembershipSet.{u2} M) x (SetLike.coe.{u1, u2} B M _inst_2 S))) l))
 Case conversion may be inaccurate. Consider using '#align submonoid_class.coe_list_prod SubmonoidClass.coe_list_prodₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
+theorem coe_list_prod (l : List S) : (l.prod : M) = (l.map coe).prod :=
   (SubmonoidClass.Subtype S : _ →* M).map_list_prod l
 #align submonoid_class.coe_list_prod SubmonoidClass.coe_list_prod
 #align add_submonoid_class.coe_list_sum AddSubmonoidClass.coe_list_sum
@@ -66,7 +66,7 @@ theorem coe_list_prod (l : List S) : (l.Prod : M) = (l.map coe).Prod :=
 #print SubmonoidClass.coe_multiset_prod /-
 @[simp, norm_cast, to_additive]
 theorem coe_multiset_prod {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (m : Multiset S) :
-    (m.Prod : M) = (m.map coe).Prod :=
+    (m.prod : M) = (m.map coe).prod :=
   (SubmonoidClass.Subtype S : _ →* M).map_multiset_prod m
 #align submonoid_class.coe_multiset_prod SubmonoidClass.coe_multiset_prod
 #align add_submonoid_class.coe_multiset_sum AddSubmonoidClass.coe_multiset_sum
@@ -80,7 +80,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid_class.coe_finset_prod SubmonoidClass.coe_finset_prodₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (f : ι → S)
-    (s : Finset ι) : ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
+    (s : finset ι) : ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
   (SubmonoidClass.Subtype S : _ →* M).map_prod f s
 #align submonoid_class.coe_finset_prod SubmonoidClass.coe_finset_prod
 #align add_submonoid_class.coe_finset_sum AddSubmonoidClass.coe_finset_sum
@@ -97,7 +97,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list_prod_mem list_prod_memₓ'. -/
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[to_additive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.Prod ∈ S :=
+theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.prod ∈ S :=
   by
   lift l to List S using hl
   rw [← coe_list_prod]
@@ -110,7 +110,7 @@ theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ S) : l.Prod ∈ S :=
 @[to_additive
       "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] (m : Multiset M)
-    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S :=
+    (hm : ∀ a ∈ m, a ∈ S) : m.prod ∈ S :=
   by
   lift m to Multiset S using hm
   rw [← coe_multiset_prod]
@@ -148,8 +148,8 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] (s : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (l : List.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x s))), Eq.{succ u1} M (Subtype.val.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) s)) (List.prod.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x s)) (Submonoid.mul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1) s) (Submonoid.one.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1) s) l)) (List.prod.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (Monoid.toOne.{u1} M _inst_1) (List.map.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x s)) M (Subtype.val.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x (SetLike.coe.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) s))) l))
 Case conversion may be inaccurate. Consider using '#align submonoid.coe_list_prod Submonoid.coe_list_prodₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (l : List s) : (l.Prod : M) = (l.map coe).Prod :=
-  s.Subtype.map_list_prod l
+theorem coe_list_prod (l : List s) : (l.prod : M) = (l.map coe).prod :=
+  s.subtype.map_list_prod l
 #align submonoid.coe_list_prod Submonoid.coe_list_prod
 #align add_submonoid.coe_list_sum AddSubmonoid.coe_list_sum
 
@@ -161,8 +161,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.coe_multiset_prod Submonoid.coe_multiset_prodₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_multiset_prod {M} [CommMonoid M] (S : Submonoid M) (m : Multiset S) :
-    (m.Prod : M) = (m.map coe).Prod :=
-  S.Subtype.map_multiset_prod m
+    (m.prod : M) = (m.map coe).prod :=
+  S.subtype.map_multiset_prod m
 #align submonoid.coe_multiset_prod Submonoid.coe_multiset_prod
 #align add_submonoid.coe_multiset_sum AddSubmonoid.coe_multiset_sum
 
@@ -175,7 +175,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_finset_p
 @[simp, norm_cast, to_additive]
 theorem coe_finset_prod {ι M} [CommMonoid M] (S : Submonoid M) (f : ι → S) (s : Finset ι) :
     ↑(∏ i in s, f i) = (∏ i in s, f i : M) :=
-  S.Subtype.map_prod f s
+  S.subtype.map_prod f s
 #align submonoid.coe_finset_prod Submonoid.coe_finset_prod
 #align add_submonoid.coe_finset_sum AddSubmonoid.coe_finset_sum
 
@@ -187,7 +187,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.list_prod_mem Submonoid.list_prod_memₓ'. -/
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[to_additive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ s) : l.Prod ∈ s :=
+theorem list_prod_mem {l : List M} (hl : ∀ x ∈ l, x ∈ s) : l.prod ∈ s :=
   by
   lift l to List s using hl
   rw [← coe_list_prod]
@@ -205,7 +205,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.multiset_pro
 @[to_additive
       "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
 theorem multiset_prod_mem {M} [CommMonoid M] (S : Submonoid M) (m : Multiset M)
-    (hm : ∀ a ∈ m, a ∈ S) : m.Prod ∈ S :=
+    (hm : ∀ a ∈ m, a ∈ S) : m.prod ∈ S :=
   by
   lift m to Multiset S using hm
   rw [← coe_multiset_prod]
@@ -257,7 +257,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.noncomm_prod
 theorem noncommProd_mem (S : Submonoid M) {ι : Type _} (t : Finset ι) (f : ι → M) (comm)
     (h : ∀ c ∈ t, f c ∈ S) : t.noncommProd f comm ∈ S :=
   by
-  apply multiset_noncomm_prod_mem
+  apply multiset_noncommProd_mem
   intro y
   rw [Multiset.mem_map]
   rintro ⟨x, ⟨hx, rfl⟩⟩
@@ -292,7 +292,7 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M}
   refine' ⟨_, fun ⟨i, hi⟩ => (SetLike.le_def.1 <| le_supᵢ S i) hi⟩
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
     simpa only [closure_unionᵢ, closure_eq (S _)] using this
-  refine' fun hx => closure_induction hx (fun _ => mem_Union.1) _ _
+  refine' fun hx => closure_induction hx (fun _ => mem_unionᵢ.1) _ _
   · exact hι.elim fun i => ⟨i, (S i).one_mem⟩
   · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
     rcases hS i j with ⟨k, hki, hkj⟩
@@ -309,7 +309,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_supr_of_
 @[to_additive]
 theorem coe_supᵢ_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
     ((⨆ i, S i : Submonoid M) : Set M) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supᵢ_of_directed hS]
 #align submonoid.coe_supr_of_directed Submonoid.coe_supᵢ_of_directed
 #align add_submonoid.coe_supr_of_directed AddSubmonoid.coe_supᵢ_of_directed
 
@@ -324,7 +324,7 @@ theorem mem_supₛ_of_directedOn {S : Set (Submonoid M)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) {x : M} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supᵢ_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align submonoid.mem_Sup_of_directed_on Submonoid.mem_supₛ_of_directedOn
 #align add_submonoid.mem_Sup_of_directed_on AddSubmonoid.mem_supₛ_of_directedOn
 
@@ -337,7 +337,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.coe_Sup_of_d
 @[to_additive]
 theorem coe_supₛ_of_directedOn {S : Set (Submonoid M)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set M) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
+  Set.ext fun x => by simp [mem_supₛ_of_directedOn Sne hS]
 #align submonoid.coe_Sup_of_directed_on Submonoid.coe_supₛ_of_directedOn
 #align add_submonoid.coe_Sup_of_directed_on AddSubmonoid.coe_supₛ_of_directedOn
 
@@ -418,7 +418,7 @@ then it holds for all elements of the supremum of `S`. -/
 theorem supᵢ_induction {ι : Sort _} (S : ι → Submonoid M) {C : M → Prop} {x : M} (hx : x ∈ ⨆ i, S i)
     (hp : ∀ (i), ∀ x ∈ S i, C x) (h1 : C 1) (hmul : ∀ x y, C x → C y → C (x * y)) : C x :=
   by
-  rw [supr_eq_closure] at hx
+  rw [supᵢ_eq_closure] at hx
   refine' closure_induction hx (fun x hx => _) h1 hmul
   obtain ⟨i, hi⟩ := set.mem_Union.mp hx
   exact hp _ _ hi
@@ -439,7 +439,7 @@ theorem supᵢ_induction' {ι : Sort _} (S : ι → Submonoid M) {C : ∀ x, (x 
     (hx : x ∈ ⨆ i, S i) : C x hx :=
   by
   refine' Exists.elim _ fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
-  refine' supr_induction S hx (fun i x hx => _) _ fun x y => _
+  refine' supᵢ_induction S hx (fun i x hx => _) _ fun x y => _
   · exact ⟨_, hp _ _ hx⟩
   · exact ⟨_, h1⟩
   · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
@@ -559,7 +559,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.exists_list_of_mem_closure Submonoid.exists_list_of_mem_closureₓ'. -/
 @[to_additive]
 theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
-    ∃ (l : List M)(hl : ∀ y ∈ l, y ∈ s), l.Prod = x := by
+    ∃ (l : List M)(hl : ∀ y ∈ l, y ∈ s), l.prod = x := by
   rwa [← SetLike.mem_coe, closure_eq_image_prod, Set.mem_image_iff_bex] at hx
 #align submonoid.exists_list_of_mem_closure Submonoid.exists_list_of_mem_closure
 #align add_submonoid.exists_list_of_mem_closure AddSubmonoid.exists_list_of_mem_closure
@@ -572,7 +572,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.exists_multiset_of_mem_closure Submonoid.exists_multiset_of_mem_closureₓ'. -/
 @[to_additive]
 theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoid M] {s : Set M} {x : M}
-    (hx : x ∈ closure s) : ∃ (l : Multiset M)(hl : ∀ y ∈ l, y ∈ s), l.Prod = x :=
+    (hx : x ∈ closure s) : ∃ (l : Multiset M)(hl : ∀ y ∈ l, y ∈ s), l.prod = x :=
   by
   obtain ⟨l, h1, h2⟩ := exists_list_of_mem_closure hx
   exact ⟨l, h1, (Multiset.coe_prod l).trans h2⟩
@@ -735,7 +735,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.log Submonoid.logₓ'. -/
 /-- Logarithms from powers to natural numbers. -/
 def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
-  Nat.find <| (mem_powers_iff p.val n).mp p.Prop
+  Nat.find <| (mem_powers_iff p.val n).mp p.prop
 #align submonoid.log Submonoid.log
 
 /- warning: submonoid.pow_log_eq_self -> Submonoid.pow_log_eq_self is a dubious translation:
@@ -746,7 +746,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.pow_log_eq_self Submonoid.pow_log_eq_selfₓ'. -/
 @[simp]
 theorem pow_log_eq_self [DecidableEq M] {n : M} (p : powers n) : pow n (log p) = p :=
-  Subtype.ext <| Nat.find_spec p.Prop
+  Subtype.ext <| Nat.find_spec p.prop
 #align submonoid.pow_log_eq_self Submonoid.pow_log_eq_self
 
 /- warning: submonoid.pow_right_injective_iff_pow_injective -> Submonoid.pow_right_injective_iff_pow_injective is a dubious translation:
@@ -825,7 +825,7 @@ lean 3 declaration is
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : Monoid.{u1} M] {s : Set.{u1} M}, (forall (a : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) a s) -> (forall (b : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) b s) -> (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) a b) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (MulOneClass.toMul.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) b a)))) -> (CommMonoid.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1)) M (Submonoid.instSetLikeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1))) x (Submonoid.closure.{u1} M (Monoid.toMulOneClass.{u1} M _inst_1) s))))
 Case conversion may be inaccurate. Consider using '#align submonoid.closure_comm_monoid_of_comm Submonoid.closureCommMonoidOfCommₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a b «expr ∈ » s) -/
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative monoid. -/
 @[to_additive
       "If all the elements of a set `s` commute, then `closure s` forms an additive\ncommutative monoid."]
@@ -896,7 +896,7 @@ but is expected to have type
   forall {N : Type.{u1}} [_inst_1 : CommMonoid.{u1} N] (s : Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (t : Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))), Eq.{succ u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (HasSup.sup.{u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SemilatticeSup.toHasSup.{u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (Lattice.toSemilatticeSup.{u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (CompleteLattice.toLattice.{u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (Submonoid.instCompleteLatticeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))))) s t) (MonoidHom.mrange.{u1, u1, u1} (Prod.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t))) N (Prod.instMulOneClassProd.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t)) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) s) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) t)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) (MonoidHom.{u1, u1} (Prod.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t))) N (Prod.instMulOneClassProd.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t)) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) s) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) t)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (MonoidHom.monoidHomClass.{u1, u1} (Prod.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t))) N (Prod.instMulOneClassProd.{u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t)) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) s) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) t)) (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (MonoidHom.coprod.{u1, u1, u1} (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x s)) (Subtype.{succ u1} N (fun (x : N) => Membership.mem.{u1, u1} N (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1))) N (Submonoid.instSetLikeSubmonoid.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)))) x t)) N (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) s) (Submonoid.toMulOneClass.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) t) _inst_1 (Submonoid.subtype.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) s) (Submonoid.subtype.{u1} N (Monoid.toMulOneClass.{u1} N (CommMonoid.toMonoid.{u1} N _inst_1)) t)))
 Case conversion may be inaccurate. Consider using '#align submonoid.sup_eq_range Submonoid.sup_eq_rangeₓ'. -/
 @[to_additive]
-theorem sup_eq_range (s t : Submonoid N) : s ⊔ t = (s.Subtype.coprod t.Subtype).mrange := by
+theorem sup_eq_range (s t : Submonoid N) : s ⊔ t = (s.subtype.coprod t.subtype).mrange := by
   rw [mrange_eq_map, ← mrange_inl_sup_mrange_inr, map_sup, map_mrange, coprod_comp_inl, map_mrange,
     coprod_comp_inr, range_subtype, range_subtype]
 #align submonoid.sup_eq_range Submonoid.sup_eq_range
@@ -910,7 +910,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.mem_sup Submonoid.mem_supₓ'. -/
 @[to_additive]
 theorem mem_sup {s t : Submonoid N} {x : N} : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x := by
-  simp only [sup_eq_range, mem_mrange, coprod_apply, Prod.exists, SetLike.exists, coeSubtype,
+  simp only [sup_eq_range, mem_mrange, coprod_apply, Prod.exists, SetLike.exists, coe_subtype,
     Subtype.coe_mk]
 #align submonoid.mem_sup Submonoid.mem_sup
 #align add_submonoid.mem_sup AddSubmonoid.mem_sup

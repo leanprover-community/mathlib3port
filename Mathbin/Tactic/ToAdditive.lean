@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Yury Kudryashov, Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.to_additive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ unsafe def aux_attr : user_attribute (name_map Name) Name
         (fun dict n' => do
           let n :=
             match n' with
-            | Name.mk_string s pre => if s = "_to_additive" then pre else n'
+            | name.mk_string s pre => if s = "_to_additive" then pre else n'
             | _ => n'
           let param ← aux_attr.get_param_untyped n'
           pure <| dict n param)
@@ -298,7 +298,7 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
         tgt
     else
       match src with
-      | Name.mk_string s pre => do
+      | name.mk_string s pre => do
         let tgt_auto := guess_name s
         guard (tgt ≠ tgt_auto ∨ tgt = src) <|>
             trace
@@ -306,7 +306,7 @@ unsafe def target_name (src tgt : Name) (dict : name_map Name) (allow_auto_name 
                     "name, you may remove the explicit " ++
                   tgt_auto ++
                 " argument.")
-        pure <| Name.mk_string (if tgt = Name.anonymous then tgt_auto else tgt) (pre dict)
+        pure <| name.mk_string (if tgt = name.anonymous then tgt_auto else tgt) (pre dict)
       | _ => fail ("to_additive: can't transport " ++ src.toString)) >>=
     fun res =>
     if res = src ∧ tgt ≠ src then
@@ -330,7 +330,7 @@ unsafe def parser : lean.parser ValueType := do
     match e with
       | some pe => some <$> (to_expr pe >>= eval_expr String : tactic String)
       | none => pure none
-  return ⟨bang, ques, tgt Name.anonymous, doc, ff⟩
+  return ⟨bang, ques, tgt name.anonymous, doc, ff⟩
 #align to_additive.parser to_additive.parser
 
 private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ)
@@ -347,12 +347,12 @@ so that future uses of `to_additive` will map them to the corresponding `tgt` fi
 unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : Tactic :=
   let aux := proceed_fields_aux src tgt prio
   do
-  ((aux fun n => pure <| List.map Name.toString <| (env n).getD []) >>
-        aux fun n => (List.map fun x : Name => "to_" ++ x) <$> get_tagged_ancestors n) >>
+  ((aux fun n => pure <| list.map name.to_string <| (env n).getD []) >>
+        aux fun n => (list.map fun x : name => "to_" ++ x) <$> get_tagged_ancestors n) >>
       aux fun n =>
         (env n).mapM fun cs =>
           match cs with
-          | Name.mk_string s pre => (guard (pre = n) <|> fail "Bad constructor name") >> pure s
+          | name.mk_string s pre => (guard (pre = n) <|> fail "Bad constructor name") >> pure s
           | _ => fail "Bad constructor name"
 #align to_additive.proceed_fields to_additive.proceed_fields
 
@@ -595,9 +595,9 @@ protected unsafe def attr : user_attribute Unit ValueType
               [`reducible, `_refl_lemma, `simp, `norm_cast, `instance, `refl, `symm, `trans,
                 `elab_as_eliminator, `no_rsimp, `continuity, `ext, `ematch, `measurability, `alias,
                 `_ext_core, `_ext_lemma_core, `nolint, `protected]
-          whenM (has_attribute' `simps src)
+          mwhen (has_attribute' `simps src)
               (trace "Apply the simps attribute after the to_additive attribute")
-          whenM (has_attribute' `mono src)
+          mwhen (has_attribute' `mono src)
               (trace <|
                 "to_additive does not work with mono, apply the mono attribute to both" ++
                   "versions after")

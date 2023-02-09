@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.identities
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,23 +61,23 @@ variable [CommRing R]
 private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
     { k : R // a * (x + y) ^ e = a * (x ^ e + e * x ^ (e - 1) * y + k * y ^ 2) } :=
   by
-  exists (pow_add_expansion x y e).val
+  exists (powAddExpansion x y e).val
   congr
-  apply (pow_add_expansion _ _ _).property
+  apply (powAddExpansion _ _ _).property
 #align polynomial.poly_binom_aux1 polynomial.poly_binom_aux1
 
 private theorem poly_binom_aux2 (f : R[X]) (x y : R) :
     f.eval (x + y) =
-      f.Sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) :=
+      f.sum fun e a => a * (x ^ e + e * x ^ (e - 1) * y + (polyBinomAux1 x y e a).val * y ^ 2) :=
   by
   unfold eval eval₂; congr with (n z)
-  apply (poly_binom_aux1 x y _ _).property
+  apply (polyBinomAux1 x y _ _).property
 #align polynomial.poly_binom_aux2 polynomial.poly_binom_aux2
 
 private theorem poly_binom_aux3 (f : R[X]) (x y : R) :
     f.eval (x + y) =
-      ((f.Sum fun e a => a * x ^ e) + f.Sum fun e a => a * e * x ^ (e - 1) * y) +
-        f.Sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
+      ((f.sum fun e a => a * x ^ e) + f.sum fun e a => a * e * x ^ (e - 1) * y) +
+        f.sum fun e a => a * (polyBinomAux1 x y e a).val * y ^ 2 :=
   by
   rw [poly_binom_aux2]
   simp [left_distrib, sum_add, mul_assoc]
@@ -90,7 +90,7 @@ plus some element `k : R` times `y^2`.
 def binomExpansion (f : R[X]) (x y : R) :
     { k : R // f.eval (x + y) = f.eval x + f.derivative.eval x * y + k * y ^ 2 } :=
   by
-  exists f.sum fun e a => a * (poly_binom_aux1 x y e a).val
+  exists f.sum fun e a => a * (polyBinomAux1 x y e a).val
   rw [poly_binom_aux3]
   congr
   · rw [← eval_eq_sum]
@@ -115,12 +115,12 @@ for some `z` in the ring.
 -/
 def evalSubFactor (f : R[X]) (x y : R) : { z : R // f.eval x - f.eval y = z * (x - y) } :=
   by
-  refine' ⟨f.sum fun i r => r * (pow_sub_pow_factor x y i).val, _⟩
+  refine' ⟨f.sum fun i r => r * (powSubPowFactor x y i).val, _⟩
   delta eval eval₂
-  simp only [Sum, ← Finset.sum_sub_distrib, Finset.sum_mul]
+  simp only [sum, ← Finset.sum_sub_distrib, Finset.sum_mul]
   dsimp
   congr with (i r)
-  rw [mul_assoc, ← (pow_sub_pow_factor x y _).Prop, mul_sub]
+  rw [mul_assoc, ← (powSubPowFactor x y _).prop, mul_sub]
 #align polynomial.eval_sub_factor Polynomial.evalSubFactor
 
 end Identities

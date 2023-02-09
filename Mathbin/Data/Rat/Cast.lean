@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.cast
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,7 +97,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat) (a : α), Commute.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) r) a
 Case conversion may be inaccurate. Consider using '#align rat.cast_commute Rat.cast_commuteₓ'. -/
 theorem cast_commute (r : ℚ) (a : α) : Commute (↑r) a := by
-  simpa only [cast_def] using (r.1.cast_commute a).divLeft (r.2.cast_commute a)
+  simpa only [cast_def] using (r.1.cast_commute a).div_left (r.2.cast_commute a)
 #align rat.cast_commute Rat.cast_commute
 
 /- warning: rat.cast_comm -> Rat.cast_comm is a dubious translation:
@@ -107,7 +107,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] (r : Rat) (a : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))))) (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) r) a) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α (Ring.toNonAssocRing.{u1} α (DivisionRing.toRing.{u1} α _inst_1))))) a (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) r))
 Case conversion may be inaccurate. Consider using '#align rat.cast_comm Rat.cast_commₓ'. -/
 theorem cast_comm (r : ℚ) (a : α) : (r : α) * a = a * r :=
-  (cast_commute r a).Eq
+  (cast_commute r a).eq
 #align rat.cast_comm Rat.cast_comm
 
 /- warning: rat.commute_cast -> Rat.commute_cast is a dubious translation:
@@ -135,16 +135,16 @@ theorem cast_mk_of_ne_zero (a b : ℤ) (b0 : (b : α) ≠ 0) : (a /. b : α) = a
   cases' e : a /. b with n d h c
   have d0 : (d : α) ≠ 0 := by
     intro d0
-    have dd := denom_dvd a b
+    have dd := den_dvd a b
     cases' show (d : ℤ) ∣ b by rwa [e] at dd with k ke
     have : (b : α) = (d : α) * (k : α) := by rw [ke, Int.cast_mul, Int.cast_ofNat]
     rw [d0, zero_mul] at this
     contradiction
-  rw [num_denom'] at e
-  have := congr_arg (coe : ℤ → α) ((mk_eq b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
+  rw [num_den'] at e
+  have := congr_arg (coe : ℤ → α) ((divInt_eq_iff b0' <| ne_of_gt <| Int.coe_nat_pos.2 h).1 e)
   rw [Int.cast_mul, Int.cast_mul, Int.cast_ofNat] at this
   symm
-  rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).Eq, ← mul_assoc,
+  rw [cast_def, div_eq_mul_inv, eq_div_iff_mul_eq d0, mul_assoc, (d.commute_cast _).eq, ← mul_assoc,
     this, mul_assoc, mul_inv_cancel b0, mul_one]
 #align rat.cast_mk_of_ne_zero Rat.cast_mk_of_ne_zero
 
@@ -163,13 +163,13 @@ theorem cast_add_of_ne_zero :
       Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zero
     have d₂0' : (d₂ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zero
-    rw [num_denom', num_denom', add_def d₁0' d₂0']
+    rw [num_den', num_den', add_def'' d₁0' d₂0']
     suffices (n₁ * (d₂ * (d₂⁻¹ * d₁⁻¹)) + n₂ * (d₁ * d₂⁻¹) * d₁⁻¹ : α) = n₁ * d₁⁻¹ + n₂ * d₂⁻¹
       by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
       · simpa [division_def, left_distrib, right_distrib, mul_inv_rev, d₁0, d₂0, mul_assoc]
       all_goals simp [d₁0, d₂0]
-    rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mul, (Nat.cast_commute _ _).Eq]
+    rw [← mul_assoc (d₂ : α), mul_inv_cancel d₂0, one_mul, (Nat.cast_commute _ _).eq]
     simp [d₁0, mul_assoc]
 #align rat.cast_add_of_ne_zero Rat.cast_add_of_ne_zero
 
@@ -216,13 +216,13 @@ theorem cast_mul_of_ne_zero :
       Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₁0 <;> exact d₁0 Nat.cast_zero
     have d₂0' : (d₂ : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by rw [e] at d₂0 <;> exact d₂0 Nat.cast_zero
-    rw [num_denom', num_denom', mul_def d₁0' d₂0']
+    rw [num_den', num_den', mul_def' d₁0' d₂0']
     suffices (n₁ * (n₂ * d₂⁻¹ * d₁⁻¹) : α) = n₁ * (d₁⁻¹ * (n₂ * d₂⁻¹))
       by
       rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, cast_mk_of_ne_zero]
       · simpa [division_def, mul_inv_rev, d₁0, d₂0, mul_assoc]
       all_goals simp [d₁0, d₂0]
-    rw [(d₁.commute_cast (_ : α)).inv_right₀.Eq]
+    rw [(d₁.commute_cast (_ : α)).inv_right₀.eq]
 #align rat.cast_mul_of_ne_zero Rat.cast_mul_of_ne_zero
 
 /- warning: rat.cast_inv_nat -> Rat.cast_inv_nat is a dubious translation:
@@ -235,7 +235,7 @@ Case conversion may be inaccurate. Consider using '#align rat.cast_inv_nat Rat.c
 theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = n⁻¹ :=
   by
   cases n; · simp
-  simp_rw [coe_nat_eq_mk, inv_def, mk, mk_nat, dif_neg n.succ_ne_zero, mk_pnat]
+  simp_rw [coe_nat_eq_divInt, inv_def', mk, mkRat, dif_neg n.succ_ne_zero, [anonymous]]
   simp [cast_def]
 #align rat.cast_inv_nat Rat.cast_inv_nat
 
@@ -266,7 +266,7 @@ theorem cast_inv_of_ne_zero : ∀ {n : ℚ}, (n.num : α) ≠ 0 → (n.den : α)
     have n0' : (n : ℤ) ≠ 0 := fun e => by rw [e] at n0 <;> exact n0 Int.cast_zero
     have d0' : (d : ℤ) ≠ 0 :=
       Int.coe_nat_ne_zero.2 fun e => by rw [e] at d0 <;> exact d0 Nat.cast_zero
-    rw [num_denom', inv_def]
+    rw [num_den', inv_def']
     rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero, inv_div] <;> simp [n0, d0]
 #align rat.cast_inv_of_ne_zero Rat.cast_inv_of_ne_zero
 
@@ -281,7 +281,7 @@ theorem cast_div_of_ne_zero {m n : ℚ} (md : (m.den : α) ≠ 0) (nn : (n.num :
     (nd : (n.den : α) ≠ 0) : ((m / n : ℚ) : α) = m / n :=
   by
   have : (n⁻¹.den : ℤ) ∣ n.num := by
-    conv in n⁻¹.den => rw [← @num_denom n, inv_def] <;> apply denom_dvd
+    conv in n⁻¹.den => rw [← @num_denom n, inv_def'] <;> apply den_dvd
   have : (n⁻¹.den : α) = 0 → (n.num : α) = 0 := fun h =>
     by
     let ⟨k, e⟩ := this
@@ -304,12 +304,12 @@ theorem cast_inj [CharZero α] : ∀ {m n : ℚ}, (m : α) = n ↔ m = n
     have d₂0 : d₂ ≠ 0 := ne_of_gt h₂
     have d₁a : (d₁ : α) ≠ 0 := Nat.cast_ne_zero.2 d₁0
     have d₂a : (d₂ : α) ≠ 0 := Nat.cast_ne_zero.2 d₂0
-    rw [num_denom', num_denom'] at h⊢
+    rw [num_den', num_den'] at h⊢
     rw [cast_mk_of_ne_zero, cast_mk_of_ne_zero] at h <;> simp [d₁0, d₂0] at h⊢
-    rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assoc, (d₁.cast_commute (d₂ : α)).inv_left₀.Eq, ←
+    rwa [eq_div_iff_mul_eq d₂a, division_def, mul_assoc, (d₁.cast_commute (d₂ : α)).inv_left₀.eq, ←
       mul_assoc, ← division_def, eq_comm, eq_div_iff_mul_eq d₁a, eq_comm, ← Int.cast_ofNat d₁, ←
       Int.cast_mul, ← Int.cast_ofNat d₂, ← Int.cast_mul, Int.cast_inj, ←
-      mk_eq (Int.coe_nat_ne_zero.2 d₁0) (Int.coe_nat_ne_zero.2 d₂0)] at h
+      divInt_eq_iff (Int.coe_nat_ne_zero.2 d₁0) (Int.coe_nat_ne_zero.2 d₂0)] at h
 #align rat.cast_inj Rat.cast_inj
 
 /- warning: rat.cast_injective -> Rat.cast_injective is a dubious translation:
@@ -350,7 +350,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_add Rat.cast_addₓ'. -/
 @[simp, norm_cast]
 theorem cast_add [CharZero α] (m n) : ((m + n : ℚ) : α) = m + n :=
-  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_add_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.pos)
 #align rat.cast_add Rat.cast_add
 
 /- warning: rat.cast_sub -> Rat.cast_sub is a dubious translation:
@@ -361,7 +361,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_sub Rat.cast_subₓ'. -/
 @[simp, norm_cast]
 theorem cast_sub [CharZero α] (m n) : ((m - n : ℚ) : α) = m - n :=
-  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_sub_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.pos)
 #align rat.cast_sub Rat.cast_sub
 
 /- warning: rat.cast_mul -> Rat.cast_mul is a dubious translation:
@@ -372,7 +372,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_mul Rat.cast_mulₓ'. -/
 @[simp, norm_cast]
 theorem cast_mul [CharZero α] (m n) : ((m * n : ℚ) : α) = m * n :=
-  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.Pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.Pos)
+  cast_mul_of_ne_zero (Nat.cast_ne_zero.2 <| ne_of_gt m.pos) (Nat.cast_ne_zero.2 <| ne_of_gt n.pos)
 #align rat.cast_mul Rat.cast_mul
 
 /- warning: rat.cast_bit0 -> Rat.cast_bit0 is a dubious translation:
@@ -463,7 +463,8 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DivisionRing.{u1} α] [_inst_2 : CharZero.{u1} α (AddGroupWithOne.toAddMonoidWithOne.{u1} α (Ring.toAddGroupWithOne.{u1} α (DivisionRing.toRing.{u1} α _inst_1)))] (a : Int) (b : Int), Eq.{succ u1} α (RatCast.ratCast.{u1} α (DivisionRing.toRatCast.{u1} α _inst_1) (Rat.divInt a b)) (HDiv.hDiv.{u1, u1, u1} α α α (instHDiv.{u1} α (DivisionRing.toDiv.{u1} α _inst_1)) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) a) (Int.cast.{u1} α (Ring.toIntCast.{u1} α (DivisionRing.toRing.{u1} α _inst_1)) b))
 Case conversion may be inaccurate. Consider using '#align rat.cast_mk Rat.cast_mkₓ'. -/
 @[norm_cast]
-theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by simp only [mk_eq_div, cast_div, cast_coe_int]
+theorem cast_mk (a b : ℤ) : (a /. b : α) = a / b := by
+  simp only [divInt_eq_div, cast_div, cast_coe_int]
 #align rat.cast_mk Rat.cast_mk
 
 /- warning: rat.cast_pow -> Rat.cast_pow is a dubious translation:
@@ -514,7 +515,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align rat.cast_mono Rat.cast_monoₓ'. -/
 @[mono]
 theorem cast_mono : Monotone (coe : ℚ → K) :=
-  cast_strictMono.Monotone
+  cast_strictMono.monotone
 #align rat.cast_mono Rat.cast_mono
 
 /- warning: rat.cast_order_embedding -> Rat.castOrderEmbedding is a dubious translation:
@@ -738,7 +739,7 @@ but is expected to have type
   forall (n : Rat), Eq.{1} Rat (RatCast.ratCast.{0} Rat (LinearOrderedField.toRatCast.{0} Rat Rat.instLinearOrderedFieldRat) n) n
 Case conversion may be inaccurate. Consider using '#align rat.cast_id Rat.cast_idₓ'. -/
 @[norm_cast]
-theorem cast_id (n : ℚ) : (↑n : ℚ) = n := by rw [cast_def, num_div_denom]
+theorem cast_id (n : ℚ) : (↑n : ℚ) = n := by rw [cast_def, num_div_den]
 #align rat.cast_id Rat.cast_id
 
 /- warning: rat.cast_eq_id -> Rat.cast_eq_id is a dubious translation:
@@ -878,8 +879,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_opposite.op_rat_cast MulOpposite.op_ratCastₓ'. -/
 @[simp, norm_cast]
 theorem op_ratCast (r : ℚ) : op (r : α) = (↑r : αᵐᵒᵖ) := by
-  rw [cast_def, div_eq_mul_inv, op_mul, op_inv, op_nat_cast, op_int_cast,
-    (Commute.cast_int_right _ r.num).Eq, cast_def, div_eq_mul_inv]
+  rw [cast_def, div_eq_mul_inv, op_mul, op_inv, op_natCast, op_intCast,
+    (Commute.cast_int_right _ r.num).eq, cast_def, div_eq_mul_inv]
 #align mul_opposite.op_rat_cast MulOpposite.op_ratCast
 
 /- warning: mul_opposite.unop_rat_cast -> MulOpposite.unop_ratCast is a dubious translation:
@@ -890,8 +891,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align mul_opposite.unop_rat_cast MulOpposite.unop_ratCastₓ'. -/
 @[simp, norm_cast]
 theorem unop_ratCast (r : ℚ) : unop (r : αᵐᵒᵖ) = r := by
-  rw [cast_def, div_eq_mul_inv, unop_mul, unop_inv, unop_nat_cast, unop_int_cast,
-    (Commute.cast_int_right _ r.num).Eq, cast_def, div_eq_mul_inv]
+  rw [cast_def, div_eq_mul_inv, unop_mul, unop_inv, unop_natCast, unop_intCast,
+    (Commute.cast_int_right _ r.num).eq, cast_def, div_eq_mul_inv]
 #align mul_opposite.unop_rat_cast MulOpposite.unop_ratCast
 
 end MulOpposite

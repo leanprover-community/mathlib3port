@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.split_coequalizer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,13 +147,13 @@ abbrev Functor.IsSplitPair : Prop :=
 
 /-- Get the coequalizer object from the typeclass `is_split_pair`. -/
 noncomputable def HasSplitCoequalizer.coequalizerOfSplit [HasSplitCoequalizer f g] : C :=
-  (HasSplitCoequalizer.splittable f g).some
+  (HasSplitCoequalizer.splittable f g).choose
 #align category_theory.has_split_coequalizer.coequalizer_of_split CategoryTheory.HasSplitCoequalizer.coequalizerOfSplit
 
 /-- Get the coequalizer morphism from the typeclass `is_split_pair`. -/
 noncomputable def HasSplitCoequalizer.coequalizerπ [HasSplitCoequalizer f g] :
     Y ⟶ HasSplitCoequalizer.coequalizerOfSplit f g :=
-  (HasSplitCoequalizer.splittable f g).choose_spec.some
+  (HasSplitCoequalizer.splittable f g).choose_spec.choose
 #align category_theory.has_split_coequalizer.coequalizer_π CategoryTheory.HasSplitCoequalizer.coequalizerπ
 
 /-- The coequalizer morphism `coequalizer_ι` gives a split coequalizer on `f,g`. -/

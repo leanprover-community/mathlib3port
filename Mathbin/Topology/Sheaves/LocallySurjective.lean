@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sam van Gool, Jake Levinson
 
 ! This file was ported from Lean 3 source module topology.sheaves.locally_surjective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     rcases hT U t x hxU with ⟨V, ι, ⟨s, h_eq⟩, hxV⟩
     -- Then the germ of s maps to g.
     use ℱ.germ ⟨x, hxV⟩ s
-    convert stalk_functor_map_germ_apply V ⟨x, hxV⟩ T s
+    convert stalkFunctor_map_germ_apply V ⟨x, hxV⟩ T s
     simpa [h_eq] using germ_res_apply 𝒢 ι ⟨x, hxV⟩ t
   · /- human proof:
         Let U be an open set, t ∈ Γ ℱ U a section, x ∈ U a point.
@@ -105,7 +105,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
         we have T(s) |_ W = t |_ W. -/
     intro U t x hxU
     set t_x := 𝒢.germ ⟨x, hxU⟩ t with ht_x
-    obtain ⟨s_x, hs_x : ((stalk_functor C x).map T) s_x = t_x⟩ := hT x t_x
+    obtain ⟨s_x, hs_x : ((stalkFunctor C x).map T) s_x = t_x⟩ := hT x t_x
     obtain ⟨V, hxV, s, rfl⟩ := ℱ.germ_exist x s_x
     -- rfl : ℱ.germ x s = s_x
     have key_W :=
@@ -113,7 +113,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
         (by
           convert hs_x
           symm
-          convert stalk_functor_map_germ_apply _ _ _ s)
+          convert stalkFunctor_map_germ_apply _ _ _ s)
     obtain ⟨W, hxW, hWV, hWU, h_eq⟩ := key_W
     refine' ⟨W, hWU, ⟨ℱ.map hWV.op s, _⟩, hxW⟩
     convert h_eq

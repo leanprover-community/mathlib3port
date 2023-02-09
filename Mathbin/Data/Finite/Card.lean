@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.card
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,7 +52,7 @@ def Finite.equivFinOfCardEq [Finite α] {n : ℕ} (h : Nat.card α = n) : α ≃
 #align finite.equiv_fin_of_card_eq Finite.equivFinOfCardEq
 
 theorem Nat.card_eq (α : Type _) :
-    Nat.card α = if h : Finite α then @Fintype.card α (Fintype.ofFinite α) else 0 :=
+    Nat.card α = if h : Finite α then @fintype.card α (Fintype.ofFinite α) else 0 :=
   by
   cases finite_or_infinite α
   · letI := Fintype.ofFinite α
@@ -114,7 +114,7 @@ theorem card_le_of_injective [Finite β] (f : α → β) (hf : Function.Injectiv
 #align finite.card_le_of_injective Finite.card_le_of_injective
 
 theorem card_le_of_embedding [Finite β] (f : α ↪ β) : Nat.card α ≤ Nat.card β :=
-  card_le_of_injective _ f.Injective
+  card_le_of_injective _ f.injective
 #align finite.card_le_of_embedding Finite.card_le_of_embedding
 
 theorem card_le_of_surjective [Finite α] (f : α → β) (hf : Function.Surjective f) :
@@ -134,7 +134,7 @@ theorem card_eq_zero_iff [Finite α] : Nat.card α = 0 ↔ IsEmpty α :=
   `nat.card β = 0 → nat.card α = 0` since `nat.card` is defined to be `0` for infinite types. -/
 theorem card_le_of_injective' {f : α → β} (hf : Function.Injective f)
     (h : Nat.card β = 0 → Nat.card α = 0) : Nat.card α ≤ Nat.card β :=
-  (or_not_of_imp h).casesOn (fun h => le_of_eq_of_le h zero_le') fun h =>
+  (or_not_of_imp h).cases_on (fun h => le_of_eq_of_le h zero_le') fun h =>
     @card_le_of_injective α β (Nat.finite_of_card_ne_zero h) f hf
 #align finite.card_le_of_injective' Finite.card_le_of_injective'
 
@@ -149,7 +149,7 @@ theorem card_le_of_embedding' (f : α ↪ β) (h : Nat.card β = 0 → Nat.card 
   `nat.card α = 0 → nat.card β = 0` since `nat.card` is defined to be `0` for infinite types. -/
 theorem card_le_of_surjective' {f : α → β} (hf : Function.Surjective f)
     (h : Nat.card α = 0 → Nat.card β = 0) : Nat.card β ≤ Nat.card α :=
-  (or_not_of_imp h).casesOn (fun h => le_of_eq_of_le h zero_le') fun h =>
+  (or_not_of_imp h).cases_on (fun h => le_of_eq_of_le h zero_le') fun h =>
     @card_le_of_surjective α β (Nat.finite_of_card_ne_zero h) f hf
 #align finite.card_le_of_surjective' Finite.card_le_of_surjective'
 
@@ -209,7 +209,7 @@ namespace Set
 
 theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Nat.card t :=
   by
-  cases' _root_.finite_or_infinite ↥(s ∪ t) with h h
+  cases' finite_or_infinite ↥(s ∪ t) with h h
   · rw [finite_coe_iff, finite_union, ← finite_coe_iff, ← finite_coe_iff] at h
     cases h
     rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk,

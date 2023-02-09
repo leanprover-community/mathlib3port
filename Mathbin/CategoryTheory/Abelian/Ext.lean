@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.abelian.ext
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,13 +49,13 @@ def ext (n : ℕ) : Cᵒᵖ ⥤ C ⥤ ModuleCat R :=
       map_id' := by
         intro X
         ext Y : 2
-        dsimp only [nat_trans.id_app, nat_trans.left_op_app, nat_trans.right_op_app,
-          functor.left_op_obj, functor.right_op_obj]
-        rw [(linear_yoneda R C).map_id, ← unop_id, nat_trans.right_op_id, nat_trans.left_derived_id]
+        dsimp only [NatTrans.id_app, NatTrans.leftOp_app, NatTrans.rightOp_app, Functor.leftOp_obj,
+          Functor.rightOp_obj]
+        rw [(linearYoneda R C).map_id, ← unop_id, NatTrans.rightOp_id, NatTrans.leftDerived_id]
         rfl
       map_comp' := by
         intro X Y Z f g
-        rw [(linear_yoneda R C).map_comp, nat_trans.right_op_comp, nat_trans.left_derived_comp]
+        rw [(linearYoneda R C).map_comp, NatTrans.rightOp_comp, NatTrans.leftDerived_comp]
         rfl }
 #align Ext ext
 

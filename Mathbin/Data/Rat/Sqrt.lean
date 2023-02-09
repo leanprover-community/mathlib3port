@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.sqrt
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ def sqrt (q : ℚ) : ℚ :=
 
 #print Rat.sqrt_eq /-
 theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
-  rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
+  rw [sqrt, mul_self_num, mul_self_den, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 #align rat.sqrt_eq Rat.sqrt_eq
 -/
 
@@ -57,7 +57,7 @@ theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
     (divInt_nonneg _ <|
           Int.coe_nat_pos.2 <|
-            Nat.pos_of_ne_zero fun H => pos_iff_ne_zero.1 q.Pos <| Nat.sqrt_eq_zero.1 H).2 <|
+            Nat.pos_of_ne_zero fun H => pos_iff_ne_zero.1 q.pos <| Nat.sqrt_eq_zero.1 H).2 <|
       Int.coe_nat_nonneg _
 #align rat.sqrt_nonneg Rat.sqrt_nonneg
 

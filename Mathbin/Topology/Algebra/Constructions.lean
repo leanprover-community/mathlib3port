@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.algebra.constructions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,8 +70,8 @@ def opHomeomorph : M ≃ₜ Mᵐᵒᵖ where
 -/
 
 @[to_additive]
-instance [T2Space M] : T2Space Mᵐᵒᵖ :=
-  opHomeomorph.symm.Embedding.T2Space
+instance [t2_space M] : T2Space Mᵐᵒᵖ :=
+  opHomeomorph.symm.embedding.t2Space
 
 #print MulOpposite.map_op_nhds /-
 @[simp, to_additive]
@@ -176,9 +176,8 @@ Case conversion may be inaccurate. Consider using '#align units.continuous_iff U
 @[to_additive]
 protected theorem continuous_iff {f : X → Mˣ} :
     Continuous f ↔ Continuous (coe ∘ f : X → M) ∧ Continuous (fun x => ↑(f x)⁻¹ : X → M) := by
-  simp only [inducing_embed_product.continuous_iff, embed_product_apply, (· ∘ ·),
-    continuous_prod_mk, op_homeomorph.symm.inducing.continuous_iff, op_homeomorph_symm_apply,
-    unop_op]
+  simp only [inducing_embed_product.continuous_iff, embedProduct_apply, (· ∘ ·), continuous_prod_mk,
+    op_homeomorph.symm.inducing.continuous_iff, opHomeomorph_symm_apply, unop_op]
 #align units.continuous_iff Units.continuous_iff
 #align add_units.continuous_iff AddUnits.continuous_iff
 

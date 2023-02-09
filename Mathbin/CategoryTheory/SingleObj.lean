@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module category_theory.single_obj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -153,10 +153,10 @@ def differenceFunctor {C G} [Category C] [Group G] (f : C → G) : C ⥤ SingleO
   map x y _ := f y * (f x)⁻¹
   map_id' := by
     intro
-    rw [single_obj.id_as_one, mul_right_inv]
+    rw [SingleObj.id_as_one, mul_right_inv]
   map_comp' := by
     intros
-    rw [single_obj.comp_as_mul, ← mul_assoc, mul_left_inj, mul_assoc, inv_mul_self, mul_one]
+    rw [SingleObj.comp_as_mul, ← mul_assoc, mul_left_inj, mul_assoc, inv_mul_self, mul_one]
 #align category_theory.single_obj.difference_functor CategoryTheory.SingleObj.differenceFunctor
 
 end SingleObj
@@ -199,7 +199,7 @@ def toAut : αˣ ≃* Aut (SingleObj.star α) :=
 #align units.to_Aut Units.toAut
 
 @[simp]
-theorem toAut_hom (x : αˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
+theorem toAut_hom (x : αˣ) : (toAut α x).hom = SingleObj.toEnd α x :=
   rfl
 #align units.to_Aut_hom Units.toAut_hom
 

@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.operations
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -341,7 +341,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.apply_coe_mem_map Submonoid.apply_coe_mem_mapₓ'. -/
 @[to_additive]
 theorem apply_coe_mem_map (f : F) (S : Submonoid M) (x : S) : f x ∈ S.map f :=
-  mem_map_of_mem f x.Prop
+  mem_map_of_mem f x.prop
 #align submonoid.apply_coe_mem_map Submonoid.apply_coe_mem_map
 #align add_submonoid.apply_coe_mem_map AddSubmonoid.apply_coe_mem_map
 
@@ -938,7 +938,7 @@ theorem mk_pow {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S
       "An `add_submonoid` of an unital additive magma inherits an unital additive magma\nstructure."]
 instance (priority := 75) toMulOneClass {M : Type _} [MulOneClass M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : MulOneClass S :=
-  Subtype.coe_injective.MulOneClass _ rfl fun _ _ => rfl
+  Subtype.coe_injective.mulOneClass _ rfl fun _ _ => rfl
 #align submonoid_class.to_mul_one_class SubmonoidClass.toMulOneClass
 #align add_submonoid_class.to_add_zero_class AddSubmonoidClass.toAddZeroClass
 -/
@@ -949,7 +949,7 @@ instance (priority := 75) toMulOneClass {M : Type _} [MulOneClass M] {A : Type _
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]
 instance (priority := 75) toMonoid {M : Type _} [Monoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : Monoid S :=
-  Subtype.coe_injective.Monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_monoid SubmonoidClass.toMonoid
 #align add_submonoid_class.to_add_monoid AddSubmonoidClass.toAddMonoid
 -/
@@ -960,7 +960,7 @@ instance (priority := 75) toMonoid {M : Type _} [Monoid M] {A : Type _} [SetLike
 @[to_additive "An `add_submonoid` of an `add_comm_monoid` is\nan `add_comm_monoid`."]
 instance (priority := 75) toCommMonoid {M} [CommMonoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : CommMonoid S :=
-  Subtype.coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.commMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_comm_monoid SubmonoidClass.toCommMonoid
 #align add_submonoid_class.to_add_comm_monoid AddSubmonoidClass.toAddCommMonoid
 -/
@@ -972,7 +972,7 @@ instance (priority := 75) toCommMonoid {M} [CommMonoid M] {A : Type _} [SetLike 
       "An `add_submonoid` of an `ordered_add_comm_monoid` is\nan `ordered_add_comm_monoid`."]
 instance (priority := 75) toOrderedCommMonoid {M} [OrderedCommMonoid M] {A : Type _} [SetLike A M]
     [SubmonoidClass A M] (S : A) : OrderedCommMonoid S :=
-  Subtype.coe_injective.OrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_ordered_comm_monoid SubmonoidClass.toOrderedCommMonoid
 #align add_submonoid_class.to_ordered_add_comm_monoid AddSubmonoidClass.toOrderedAddCommMonoid
 -/
@@ -984,7 +984,7 @@ instance (priority := 75) toOrderedCommMonoid {M} [OrderedCommMonoid M] {A : Typ
       "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] {A : Type _}
     [SetLike A M] [SubmonoidClass A M] (S : A) : LinearOrderedCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_linear_ordered_comm_monoid SubmonoidClass.toLinearOrderedCommMonoid
 #align add_submonoid_class.to_linear_ordered_add_comm_monoid AddSubmonoidClass.toLinearOrderedAddCommMonoid
@@ -997,7 +997,7 @@ instance (priority := 75) toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid
       "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
 instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] {A : Type _}
     [SetLike A M] [SubmonoidClass A M] (S : A) : OrderedCancelCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_ordered_cancel_comm_monoid SubmonoidClass.toOrderedCancelCommMonoid
 #align add_submonoid_class.to_ordered_cancel_add_comm_monoid AddSubmonoidClass.toOrderedCancelAddCommMonoid
 -/
@@ -1010,7 +1010,7 @@ instance (priority := 75) toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance (priority := 75) toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M]
     {A : Type _} [SetLike A M] [SubmonoidClass A M] (S : A) : LinearOrderedCancelCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid_class.to_linear_ordered_cancel_comm_monoid SubmonoidClass.toLinearOrderedCancelCommMonoid
 #align add_submonoid_class.to_linear_ordered_cancel_add_comm_monoid AddSubmonoidClass.toLinearOrderedCancelAddCommMonoid
@@ -1140,7 +1140,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_mul_one_c
 @[to_additive
       "An `add_submonoid` of an unital additive magma inherits an unital additive magma\nstructure."]
 instance toMulOneClass {M : Type _} [MulOneClass M] (S : Submonoid M) : MulOneClass S :=
-  Subtype.coe_injective.MulOneClass coe rfl fun _ _ => rfl
+  Subtype.coe_injective.mulOneClass coe rfl fun _ _ => rfl
 #align submonoid.to_mul_one_class Submonoid.toMulOneClass
 #align add_submonoid.to_add_zero_class AddSubmonoid.toAddZeroClass
 
@@ -1179,7 +1179,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_monoid Su
 /-- A submonoid of a monoid inherits a monoid structure. -/
 @[to_additive "An `add_submonoid` of an `add_monoid` inherits an `add_monoid`\nstructure."]
 instance toMonoid {M : Type _} [Monoid M] (S : Submonoid M) : Monoid S :=
-  Subtype.coe_injective.Monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.monoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_monoid Submonoid.toMonoid
 #align add_submonoid.to_add_monoid AddSubmonoid.toAddMonoid
 
@@ -1192,7 +1192,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_comm_mono
 /-- A submonoid of a `comm_monoid` is a `comm_monoid`. -/
 @[to_additive "An `add_submonoid` of an `add_comm_monoid` is\nan `add_comm_monoid`."]
 instance toCommMonoid {M} [CommMonoid M] (S : Submonoid M) : CommMonoid S :=
-  Subtype.coe_injective.CommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.commMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_comm_monoid Submonoid.toCommMonoid
 #align add_submonoid.to_add_comm_monoid AddSubmonoid.toAddCommMonoid
 
@@ -1206,7 +1206,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_ordered_c
 @[to_additive
       "An `add_submonoid` of an `ordered_add_comm_monoid` is\nan `ordered_add_comm_monoid`."]
 instance toOrderedCommMonoid {M} [OrderedCommMonoid M] (S : Submonoid M) : OrderedCommMonoid S :=
-  Subtype.coe_injective.OrderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_ordered_comm_monoid Submonoid.toOrderedCommMonoid
 #align add_submonoid.to_ordered_add_comm_monoid AddSubmonoid.toOrderedAddCommMonoid
 
@@ -1221,7 +1221,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_linear_or
       "An `add_submonoid` of a `linear_ordered_add_comm_monoid` is\na `linear_ordered_add_comm_monoid`."]
 instance toLinearOrderedCommMonoid {M} [LinearOrderedCommMonoid M] (S : Submonoid M) :
     LinearOrderedCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_linear_ordered_comm_monoid Submonoid.toLinearOrderedCommMonoid
 #align add_submonoid.to_linear_ordered_add_comm_monoid AddSubmonoid.toLinearOrderedAddCommMonoid
@@ -1237,7 +1237,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_ordered_c
       "An `add_submonoid` of an `ordered_cancel_add_comm_monoid` is\nan `ordered_cancel_add_comm_monoid`."]
 instance toOrderedCancelCommMonoid {M} [OrderedCancelCommMonoid M] (S : Submonoid M) :
     OrderedCancelCommMonoid S :=
-  Subtype.coe_injective.OrderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.orderedCancelCommMonoid coe rfl (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_ordered_cancel_comm_monoid Submonoid.toOrderedCancelCommMonoid
 #align add_submonoid.to_ordered_cancel_add_comm_monoid AddSubmonoid.toOrderedCancelAddCommMonoid
 
@@ -1253,7 +1253,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.to_linear_or
       "An `add_submonoid` of a `linear_ordered_cancel_add_comm_monoid` is\na `linear_ordered_cancel_add_comm_monoid`."]
 instance toLinearOrderedCancelCommMonoid {M} [LinearOrderedCancelCommMonoid M] (S : Submonoid M) :
     LinearOrderedCancelCommMonoid S :=
-  Subtype.coe_injective.LinearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
+  Subtype.coe_injective.linearOrderedCancelCommMonoid coe rfl (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align submonoid.to_linear_ordered_cancel_comm_monoid Submonoid.toLinearOrderedCancelCommMonoid
 #align add_submonoid.to_linear_ordered_cancel_add_comm_monoid AddSubmonoid.toLinearOrderedCancelAddCommMonoid
@@ -1278,7 +1278,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (S : Submonoid.{u1} M _inst_1), Eq.{succ u1} (forall (ᾰ : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)), (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) => M) ᾰ) (FunLike.coe.{succ u1, succ u1, succ u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u1} M _inst_1 S) _inst_1) (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) (fun (_x : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) => M) _x) (MulHomClass.toFunLike.{u1, u1, u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u1} M _inst_1 S) _inst_1) (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (MulOneClass.toMul.{u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) (Submonoid.toMulOneClass.{u1} M _inst_1 S)) (MulOneClass.toMul.{u1} M _inst_1) (MonoidHomClass.toMulHomClass.{u1, u1, u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u1} M _inst_1 S) _inst_1) (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u1} M _inst_1 S) _inst_1 (MonoidHom.monoidHomClass.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u1} M _inst_1 S) _inst_1))) (Submonoid.subtype.{u1} M _inst_1 S)) (Subtype.val.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x S))
 Case conversion may be inaccurate. Consider using '#align submonoid.coe_subtype Submonoid.coe_subtypeₓ'. -/
 @[simp, to_additive]
-theorem coe_subtype : ⇑S.Subtype = coe :=
+theorem coe_subtype : ⇑S.subtype = coe :=
   rfl
 #align submonoid.coe_subtype Submonoid.coe_subtype
 #align add_submonoid.coe_subtype AddSubmonoid.coe_subtype
@@ -1307,7 +1307,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M], Eq.{succ u1} (MonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1)))) M (Submonoid.toMulOneClass.{u1} M _inst_1 (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1))) _inst_1) (MulEquiv.toMonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1)))) M (Submonoid.toMulOneClass.{u1} M _inst_1 (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1))) _inst_1 (Submonoid.topEquiv.{u1} M _inst_1)) (Submonoid.subtype.{u1} M _inst_1 (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1)))
 Case conversion may be inaccurate. Consider using '#align submonoid.top_equiv_to_monoid_hom Submonoid.top_equiv_toMonoidHomₓ'. -/
 @[simp, to_additive]
-theorem top_equiv_toMonoidHom : (topEquiv : _ ≃* M).toMonoidHom = (⊤ : Submonoid M).Subtype :=
+theorem top_equiv_toMonoidHom : (topEquiv : _ ≃* M).toMonoidHom = (⊤ : Submonoid M).subtype :=
   rfl
 #align submonoid.top_equiv_to_monoid_hom Submonoid.top_equiv_toMonoidHom
 #align add_submonoid.top_equiv_to_add_monoid_hom AddSubmonoid.top_equiv_toAddMonoidHom
@@ -1385,7 +1385,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.coe_prod Submonoid.coe_prodₓ'. -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[to_additive coe_prod]
-theorem coe_prod (s : Submonoid M) (t : Submonoid N) : (s.Prod t : Set (M × N)) = s ×ˢ t :=
+theorem coe_prod (s : Submonoid M) (t : Submonoid N) : (s.prod t : Set (M × N)) = s ×ˢ t :=
   rfl
 #align submonoid.coe_prod Submonoid.coe_prod
 #align add_submonoid.coe_prod AddSubmonoid.coe_prod
@@ -1398,7 +1398,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.mem_prod Submonoid.mem_prodₓ'. -/
 @[to_additive mem_prod]
 theorem mem_prod {s : Submonoid M} {t : Submonoid N} {p : M × N} :
-    p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
+    p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align submonoid.mem_prod Submonoid.mem_prod
 #align add_submonoid.mem_prod AddSubmonoid.mem_prod
@@ -1411,7 +1411,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_mono Submonoid.prod_monoₓ'. -/
 @[to_additive prod_mono]
 theorem prod_mono {s₁ s₂ : Submonoid M} {t₁ t₂ : Submonoid N} (hs : s₁ ≤ s₂) (ht : t₁ ≤ t₂) :
-    s₁.Prod t₁ ≤ s₂.Prod t₂ :=
+    s₁.prod t₁ ≤ s₂.prod t₂ :=
   Set.prod_mono hs ht
 #align submonoid.prod_mono Submonoid.prod_mono
 #align add_submonoid.prod_mono AddSubmonoid.prod_mono
@@ -1423,7 +1423,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] (s : Submonoid.{u2} M _inst_1), Eq.{max (succ u2) (succ u1)} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 s (Top.top.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instTopSubmonoid.{u1} N _inst_2))) (Submonoid.comap.{max u2 u1, u2, max u2 u1} (Prod.{u2, u1} M N) M (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2) _inst_1 (MonoidHom.{max u1 u2, u2} (Prod.{u2, u1} M N) M (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2) _inst_1) (MonoidHom.monoidHomClass.{max u2 u1, u2} (Prod.{u2, u1} M N) M (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2) _inst_1) (MonoidHom.fst.{u2, u1} M N _inst_1 _inst_2) s)
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_top Submonoid.prod_topₓ'. -/
 @[to_additive prod_top]
-theorem prod_top (s : Submonoid M) : s.Prod (⊤ : Submonoid N) = s.comap (MonoidHom.fst M N) :=
+theorem prod_top (s : Submonoid M) : s.prod (⊤ : Submonoid N) = s.comap (MonoidHom.fst M N) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
 #align submonoid.prod_top Submonoid.prod_top
 #align add_submonoid.prod_top AddSubmonoid.prod_top
@@ -1435,7 +1435,7 @@ but is expected to have type
   forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (s : Submonoid.{u2} N _inst_2), Eq.{max (succ u1) (succ u2)} (Submonoid.{max u2 u1} (Prod.{u1, u2} M N) (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2)) (Submonoid.prod.{u1, u2} M N _inst_1 _inst_2 (Top.top.{u1} (Submonoid.{u1} M _inst_1) (Submonoid.instTopSubmonoid.{u1} M _inst_1)) s) (Submonoid.comap.{max u1 u2, u2, max u1 u2} (Prod.{u1, u2} M N) N (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2) _inst_2 (MonoidHom.{max u2 u1, u2} (Prod.{u1, u2} M N) N (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2) _inst_2) (MonoidHom.monoidHomClass.{max u1 u2, u2} (Prod.{u1, u2} M N) N (Prod.instMulOneClassProd.{u1, u2} M N _inst_1 _inst_2) _inst_2) (MonoidHom.snd.{u1, u2} M N _inst_1 _inst_2) s)
 Case conversion may be inaccurate. Consider using '#align submonoid.top_prod Submonoid.top_prodₓ'. -/
 @[to_additive top_prod]
-theorem top_prod (s : Submonoid N) : (⊤ : Submonoid M).Prod s = s.comap (MonoidHom.snd M N) :=
+theorem top_prod (s : Submonoid N) : (⊤ : Submonoid M).prod s = s.comap (MonoidHom.snd M N) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
 #align submonoid.top_prod Submonoid.top_prod
 #align add_submonoid.top_prod AddSubmonoid.top_prod
@@ -1447,7 +1447,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N], Eq.{max (succ u2) (succ u1)} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 (Top.top.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instTopSubmonoid.{u2} M _inst_1)) (Top.top.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instTopSubmonoid.{u1} N _inst_2))) (Top.top.{max u2 u1} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.instTopSubmonoid.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align submonoid.top_prod_top Submonoid.top_prod_topₓ'. -/
 @[simp, to_additive top_prod_top]
-theorem top_prod_top : (⊤ : Submonoid M).Prod (⊤ : Submonoid N) = ⊤ :=
+theorem top_prod_top : (⊤ : Submonoid M).prod (⊤ : Submonoid N) = ⊤ :=
   (top_prod _).trans <| comap_top _
 #align submonoid.top_prod_top Submonoid.top_prod_top
 #align add_submonoid.top_prod_top AddSubmonoid.top_prod_top
@@ -1459,7 +1459,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N], Eq.{max (succ u2) (succ u1)} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 (Bot.bot.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instBotSubmonoid.{u2} M _inst_1)) (Bot.bot.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instBotSubmonoid.{u1} N _inst_2))) (Bot.bot.{max u2 u1} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.instBotSubmonoid.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)))
 Case conversion may be inaccurate. Consider using '#align submonoid.bot_prod_bot Submonoid.bot_prod_botₓ'. -/
 @[to_additive]
-theorem bot_prod_bot : (⊥ : Submonoid M).Prod (⊥ : Submonoid N) = ⊥ :=
+theorem bot_prod_bot : (⊥ : Submonoid M).prod (⊥ : Submonoid N) = ⊥ :=
   SetLike.coe_injective <| by simp [coe_prod, Prod.one_eq_mk]
 #align submonoid.bot_prod_bot Submonoid.bot_prod_bot
 #align add_submonoid.bot_sum_bot AddSubmonoid.bot_prod_bot
@@ -1473,7 +1473,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.prod_equiv S
 /-- The product of submonoids is isomorphic to their product as monoids. -/
 @[to_additive prod_equiv
       "The product of additive submonoids is isomorphic to their product\nas additive monoids"]
-def prodEquiv (s : Submonoid M) (t : Submonoid N) : s.Prod t ≃* s × t :=
+def prodEquiv (s : Submonoid M) (t : Submonoid N) : s.prod t ≃* s × t :=
   { Equiv.Set.prod ↑s ↑t with map_mul' := fun x y => rfl }
 #align submonoid.prod_equiv Submonoid.prodEquiv
 #align add_submonoid.prod_equiv AddSubmonoid.prodEquiv
@@ -1487,7 +1487,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] (s : Submonoid.{u2} M _inst_1), Eq.{max (succ u2) (succ u1)} (Submonoid.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.map.{u2, max u2 u1, max u2 u1} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2) (MonoidHom.{u2, max u1 u2} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (MonoidHom.monoidHomClass.{u2, max u2 u1} M (Prod.{u2, u1} M N) _inst_1 (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (MonoidHom.inl.{u2, u1} M N _inst_1 _inst_2) s) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 s (Bot.bot.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instBotSubmonoid.{u1} N _inst_2)))
 Case conversion may be inaccurate. Consider using '#align submonoid.map_inl Submonoid.map_inlₓ'. -/
 @[to_additive]
-theorem map_inl (s : Submonoid M) : s.map (inl M N) = s.Prod ⊥ :=
+theorem map_inl (s : Submonoid M) : s.map (inl M N) = s.prod ⊥ :=
   ext fun p =>
     ⟨fun ⟨x, hx, hp⟩ => hp ▸ ⟨hx, Set.mem_singleton 1⟩, fun ⟨hps, hp1⟩ =>
       ⟨p.1, hps, Prod.ext rfl <| (Set.eq_of_mem_singleton hp1).symm⟩⟩
@@ -1516,11 +1516,11 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_bot_sup_bot_prod Submonoid.prod_bot_sup_bot_prodₓ'. -/
 @[simp, to_additive prod_bot_sup_bot_prod]
 theorem prod_bot_sup_bot_prod (s : Submonoid M) (t : Submonoid N) :
-    s.Prod ⊥ ⊔ prod ⊥ t = s.Prod t :=
+    s.prod ⊥ ⊔ prod ⊥ t = s.prod t :=
   le_antisymm (sup_le (prod_mono (le_refl s) bot_le) (prod_mono bot_le (le_refl t))) fun p hp =>
     Prod.fst_mul_snd p ▸
-      mul_mem ((le_sup_left : s.Prod ⊥ ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
-        ((le_sup_right : prod ⊥ t ≤ s.Prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
+      mul_mem ((le_sup_left : s.prod ⊥ ≤ s.prod ⊥ ⊔ prod ⊥ t) ⟨hp.1, Set.mem_singleton 1⟩)
+        ((le_sup_right : prod ⊥ t ≤ s.prod ⊥ ⊔ prod ⊥ t) ⟨Set.mem_singleton 1, hp.2⟩)
 #align submonoid.prod_bot_sup_bot_prod Submonoid.prod_bot_sup_bot_prod
 #align add_submonoid.prod_bot_sup_bot_prod AddSubmonoid.prod_bot_sup_bot_prod
 
@@ -1571,7 +1571,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.map_equiv_top Submonoid.map_equiv_topₓ'. -/
 @[simp, to_additive]
 theorem map_equiv_top (f : M ≃* N) : (⊤ : Submonoid M).map f.toMonoidHom = ⊤ :=
-  SetLike.coe_injective <| Set.image_univ.trans f.Surjective.range_eq
+  SetLike.coe_injective <| Set.image_univ.trans f.surjective.range_eq
 #align submonoid.map_equiv_top Submonoid.map_equiv_top
 #align add_submonoid.map_equiv_top AddSubmonoid.map_equiv_top
 
@@ -1583,7 +1583,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.le_prod_iff Submonoid.le_prod_iffₓ'. -/
 @[to_additive le_prod_iff]
 theorem le_prod_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)} :
-    u ≤ s.Prod t ↔ u.map (fst M N) ≤ s ∧ u.map (snd M N) ≤ t :=
+    u ≤ s.prod t ↔ u.map (fst M N) ≤ s ∧ u.map (snd M N) ≤ t :=
   by
   constructor
   · intro h
@@ -1605,7 +1605,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_le_iff Submonoid.prod_le_iffₓ'. -/
 @[to_additive prod_le_iff]
 theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)} :
-    s.Prod t ≤ u ↔ s.map (inl M N) ≤ u ∧ t.map (inr M N) ≤ u :=
+    s.prod t ≤ u ↔ s.map (inl M N) ≤ u ∧ t.map (inr M N) ≤ u :=
   by
   constructor
   · intro h
@@ -1965,7 +1965,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] (S : Submonoid.{u2} M _inst_1) (f : MonoidHom.{u2, u1} M N _inst_1 _inst_2), Eq.{succ u2} (Submonoid.{u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) (SubmonoidClass.toMulOneClass.{u2, u2} M _inst_1 (Submonoid.{u2} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u2} M _inst_1) S)) (MonoidHom.mker.{u2, u1, max u2 u1} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) N (SubmonoidClass.toMulOneClass.{u2, u2} M _inst_1 (Submonoid.{u2} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u2} M _inst_1) S) _inst_2 (MonoidHom.{u2, u1} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) N (SubmonoidClass.toMulOneClass.{u2, u2} M _inst_1 (Submonoid.{u2} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u2} M _inst_1) S) _inst_2) (MonoidHom.monoidHomClass.{u2, u1} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) N (SubmonoidClass.toMulOneClass.{u2, u2} M _inst_1 (Submonoid.{u2} M _inst_1) (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u2} M _inst_1) S) _inst_2) (MonoidHom.restrict.{u2, u1, u2} M _inst_1 N (Submonoid.{u2} M _inst_1) _inst_2 (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1) (Submonoid.instSubmonoidClassSubmonoidInstSetLikeSubmonoid.{u2} M _inst_1) f S)) (Submonoid.comap.{u2, u2, u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u2} M _inst_1 S) _inst_1 (MonoidHom.{u2, u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u2} M _inst_1 S) _inst_1) (MonoidHom.monoidHomClass.{u2, u2} (Subtype.{succ u2} M (fun (x : M) => Membership.mem.{u2, u2} M (Submonoid.{u2} M _inst_1) (SetLike.instMembership.{u2, u2} (Submonoid.{u2} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u2} M _inst_1)) x S)) M (Submonoid.toMulOneClass.{u2} M _inst_1 S) _inst_1) (Submonoid.subtype.{u2} M _inst_1 S) (MonoidHom.mker.{u2, u1, max u2 u1} M N _inst_1 _inst_2 (MonoidHom.{u2, u1} M N _inst_1 _inst_2) (MonoidHom.monoidHomClass.{u2, u1} M N _inst_1 _inst_2) f))
 Case conversion may be inaccurate. Consider using '#align monoid_hom.restrict_mker MonoidHom.restrict_mkerₓ'. -/
 @[simp, to_additive]
-theorem restrict_mker (f : M →* N) : (f.restrict S).mker = f.mker.comap S.Subtype :=
+theorem restrict_mker (f : M →* N) : (f.restrict S).mker = f.mker.comap S.subtype :=
   rfl
 #align monoid_hom.restrict_mker MonoidHom.restrict_mker
 #align add_monoid_hom.restrict_mker AddMonoidHom.restrict_mker
@@ -2007,7 +2007,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.prod_map_co
 @[to_additive]
 theorem prod_map_comap_prod' {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass N']
     (f : M →* N) (g : M' →* N') (S : Submonoid N) (S' : Submonoid N') :
-    (S.Prod S').comap (prodMap f g) = (S.comap f).Prod (S'.comap g) :=
+    (S.prod S').comap (prodMap f g) = (S.comap f).prod (S'.comap g) :=
   SetLike.coe_injective <| Set.preimage_prod_map_prod f g _ _
 #align monoid_hom.prod_map_comap_prod' MonoidHom.prod_map_comap_prod'
 #align add_monoid_hom.sum_map_comap_sum' AddMonoidHom.prod_map_comap_prod'
@@ -2020,7 +2020,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align monoid_hom.mker_prod_map MonoidHom.mker_prod_mapₓ'. -/
 @[to_additive]
 theorem mker_prod_map {M' : Type _} {N' : Type _} [MulOneClass M'] [MulOneClass N'] (f : M →* N)
-    (g : M' →* N') : (prodMap f g).mker = f.mker.Prod g.mker := by
+    (g : M' →* N') : (prodMap f g).mker = f.mker.prod g.mker := by
   rw [← comap_bot', ← comap_bot', ← comap_bot', ← prod_map_comap_prod', bot_prod_bot]
 #align monoid_hom.mker_prod_map MonoidHom.mker_prod_map
 #align add_monoid_hom.mker_sum_map AddMonoidHom.mker_prod_map
@@ -2061,7 +2061,7 @@ Case conversion may be inaccurate. Consider using '#align monoid_hom.submonoid_c
 @[to_additive "the `add_monoid_hom` from the preimage of an additive submonoid to itself.", simps]
 def submonoidComap (f : M →* N) (N' : Submonoid N) : N'.comap f →* N'
     where
-  toFun x := ⟨f x, x.Prop⟩
+  toFun x := ⟨f x, x.prop⟩
   map_one' := Subtype.eq f.map_one
   map_mul' x y := Subtype.eq (f.map_mul x y)
 #align monoid_hom.submonoid_comap MonoidHom.submonoidComap
@@ -2080,7 +2080,7 @@ See `mul_equiv.submonoid_map` for a variant for `mul_equiv`s. -/
   simps]
 def submonoidMap (f : M →* N) (M' : Submonoid M) : M' →* M'.map f
     where
-  toFun x := ⟨f x, ⟨x, x.Prop, rfl⟩⟩
+  toFun x := ⟨f x, ⟨x, x.prop, rfl⟩⟩
   map_one' := Subtype.eq <| f.map_one
   map_mul' x y := Subtype.eq <| f.map_mul x y
 #align monoid_hom.submonoid_map MonoidHom.submonoidMap
@@ -2184,7 +2184,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] {s : Submonoid.{u2} M _inst_1} {t : Submonoid.{u1} N _inst_2}, Iff (Eq.{max (succ u2) (succ u1)} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 s t) (Bot.bot.{max u2 u1} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.instBotSubmonoid.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)))) (And (Eq.{succ u2} (Submonoid.{u2} M _inst_1) s (Bot.bot.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instBotSubmonoid.{u2} M _inst_1))) (Eq.{succ u1} (Submonoid.{u1} N _inst_2) t (Bot.bot.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instBotSubmonoid.{u1} N _inst_2))))
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_eq_bot_iff Submonoid.prod_eq_bot_iffₓ'. -/
 @[to_additive]
-theorem prod_eq_bot_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊥ ↔ s = ⊥ ∧ t = ⊥ := by
+theorem prod_eq_bot_iff {s : Submonoid M} {t : Submonoid N} : s.prod t = ⊥ ↔ s = ⊥ ∧ t = ⊥ := by
   simp only [eq_bot_iff, prod_le_iff, (gc_map_comap _).le_iff_le, comap_bot', mker_inl, mker_inr]
 #align submonoid.prod_eq_bot_iff Submonoid.prod_eq_bot_iff
 #align add_submonoid.sum_eq_bot_iff AddSubmonoid.prod_eq_bot_iff
@@ -2196,7 +2196,7 @@ but is expected to have type
   forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] {s : Submonoid.{u2} M _inst_1} {t : Submonoid.{u1} N _inst_2}, Iff (Eq.{max (succ u2) (succ u1)} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.prod.{u2, u1} M N _inst_1 _inst_2 s t) (Top.top.{max u2 u1} (Submonoid.{max u1 u2} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)) (Submonoid.instTopSubmonoid.{max u2 u1} (Prod.{u2, u1} M N) (Prod.instMulOneClassProd.{u2, u1} M N _inst_1 _inst_2)))) (And (Eq.{succ u2} (Submonoid.{u2} M _inst_1) s (Top.top.{u2} (Submonoid.{u2} M _inst_1) (Submonoid.instTopSubmonoid.{u2} M _inst_1))) (Eq.{succ u1} (Submonoid.{u1} N _inst_2) t (Top.top.{u1} (Submonoid.{u1} N _inst_2) (Submonoid.instTopSubmonoid.{u1} N _inst_2))))
 Case conversion may be inaccurate. Consider using '#align submonoid.prod_eq_top_iff Submonoid.prod_eq_top_iffₓ'. -/
 @[to_additive]
-theorem prod_eq_top_iff {s : Submonoid M} {t : Submonoid N} : s.Prod t = ⊤ ↔ s = ⊤ ∧ t = ⊤ := by
+theorem prod_eq_top_iff {s : Submonoid M} {t : Submonoid N} : s.prod t = ⊤ ↔ s = ⊤ ∧ t = ⊤ := by
   simp only [eq_top_iff, le_prod_iff, ← (gc_map_comap _).le_iff_le, ← mrange_eq_map, mrange_fst,
     mrange_snd]
 #align submonoid.prod_eq_top_iff Submonoid.prod_eq_top_iff
@@ -2223,7 +2223,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.inclusion Su
 /-- The monoid hom associated to an inclusion of submonoids. -/
 @[to_additive "The `add_monoid` hom associated to an inclusion of submonoids."]
 def inclusion {S T : Submonoid M} (h : S ≤ T) : S →* T :=
-  S.Subtype.codRestrict _ fun x => h x.2
+  S.subtype.codRestrict _ fun x => h x.2
 #align submonoid.inclusion Submonoid.inclusion
 #align add_submonoid.inclusion AddSubmonoid.inclusion
 
@@ -2234,7 +2234,7 @@ but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : MulOneClass.{u1} M] (s : Submonoid.{u1} M _inst_1), Eq.{succ u1} (Submonoid.{u1} M _inst_1) (MonoidHom.mrange.{u1, u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x s)) M (Submonoid.toMulOneClass.{u1} M _inst_1 s) _inst_1 (MonoidHom.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x s)) M (Submonoid.toMulOneClass.{u1} M _inst_1 s) _inst_1) (MonoidHom.monoidHomClass.{u1, u1} (Subtype.{succ u1} M (fun (x : M) => Membership.mem.{u1, u1} M (Submonoid.{u1} M _inst_1) (SetLike.instMembership.{u1, u1} (Submonoid.{u1} M _inst_1) M (Submonoid.instSetLikeSubmonoid.{u1} M _inst_1)) x s)) M (Submonoid.toMulOneClass.{u1} M _inst_1 s) _inst_1) (Submonoid.subtype.{u1} M _inst_1 s)) s
 Case conversion may be inaccurate. Consider using '#align submonoid.range_subtype Submonoid.range_subtypeₓ'. -/
 @[simp, to_additive]
-theorem range_subtype (s : Submonoid M) : s.Subtype.mrange = s :=
+theorem range_subtype (s : Submonoid M) : s.subtype.mrange = s :=
   SetLike.coe_injective <| (coe_mrange _).trans <| Subtype.range_coe
 #align submonoid.range_subtype Submonoid.range_subtype
 #align add_submonoid.range_subtype AddSubmonoid.range_subtype
@@ -2344,11 +2344,11 @@ This is a bidirectional version of `monoid_hom.mrange_restrict`. -/
 def ofLeftInverse' (f : M →* N) {g : N → M} (h : Function.LeftInverse g f) : M ≃* f.mrange :=
   { f.mrangeRestrict with
     toFun := f.mrangeRestrict
-    invFun := g ∘ f.mrange.Subtype
+    invFun := g ∘ f.mrange.subtype
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.Prop
+        let ⟨x', hx'⟩ := MonoidHom.mem_mrange.mp x.prop
         show f (g x) = x by rw [← hx', h x'] }
 #align mul_equiv.of_left_inverse' MulEquiv.ofLeftInverse'
 #align add_equiv.of_left_inverse' AddEquiv.ofLeftInverse'
@@ -2416,7 +2416,7 @@ variable [MulOneClass M']
 
 @[to_additive]
 instance [SMul M' α] (S : Submonoid M') : SMul S α :=
-  SMul.comp _ S.Subtype
+  SMul.comp _ S.subtype
 
 /- warning: submonoid.smul_comm_class_left -> Submonoid.smulCommClass_left is a dubious translation:
 lean 3 declaration is
@@ -2472,15 +2472,15 @@ variable [Monoid M']
 @[to_additive
       "The additive action by an add_submonoid is the action by the underlying\nadd_monoid. "]
 instance [MulAction M' α] (S : Submonoid M') : MulAction S α :=
-  MulAction.compHom _ S.Subtype
+  MulAction.compHom _ S.subtype
 
 /-- The action by a submonoid is the action by the underlying monoid. -/
 instance [AddMonoid α] [DistribMulAction M' α] (S : Submonoid M') : DistribMulAction S α :=
-  DistribMulAction.compHom _ S.Subtype
+  DistribMulAction.compHom _ S.subtype
 
 /-- The action by a submonoid is the action by the underlying monoid. -/
 instance [Monoid α] [MulDistribMulAction M' α] (S : Submonoid M') : MulDistribMulAction S α :=
-  MulDistribMulAction.compHom _ S.Subtype
+  MulDistribMulAction.compHom _ S.subtype
 
 example {S : Submonoid M'} : IsScalarTower S M' M' := by infer_instance
 

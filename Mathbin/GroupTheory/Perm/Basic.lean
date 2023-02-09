@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module group_theory.perm.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -582,7 +582,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.perm.extend_doma
 theorem extendDomainHom_injective : Function.Injective (extendDomainHom f) :=
   (injective_iff_map_eq_one (extendDomainHom f)).mpr fun e he =>
     ext fun x =>
-      f.Injective (Subtype.ext ((extendDomain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
+      f.injective (Subtype.ext ((extendDomain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
 #align equiv.perm.extend_domain_hom_injective Equiv.Perm.extendDomainHom_injective
 
 /- warning: equiv.perm.extend_domain_eq_one_iff -> Equiv.Perm.extendDomain_eq_one_iff is a dubious translation:
@@ -617,8 +617,8 @@ variable {p : α → Prop} {f : Perm α}
   on `{x // p x}` induced by `f`. -/
 def subtypePerm (f : Perm α) (h : ∀ x, p x ↔ p (f x)) : Perm { x // p x } :=
   ⟨fun x => ⟨f x, (h _).1 x.2⟩, fun x => ⟨f⁻¹ x, (h (f⁻¹ x)).2 <| by simpa using x.2⟩, fun _ => by
-    simp only [perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk], fun _ => by
-    simp only [perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
+    simp only [Perm.inv_apply_self, Subtype.coe_eta, Subtype.coe_mk], fun _ => by
+    simp only [Perm.apply_inv_self, Subtype.coe_eta, Subtype.coe_mk]⟩
 #align equiv.perm.subtype_perm Equiv.Perm.subtypePerm
 -/
 
@@ -651,7 +651,7 @@ theorem subtypePerm_mul (f g : Perm α) (hf hg) :
 -/
 
 private theorem inv_aux : (∀ x, p x ↔ p (f x)) ↔ ∀ x, p x ↔ p (f⁻¹ x) :=
-  f⁻¹.Surjective.forall.trans <| by simp_rw [f.apply_inv_self, Iff.comm]
+  f⁻¹.surjective.forall.trans <| by simp_rw [f.apply_inv_self, Iff.comm]
 #align equiv.perm.inv_aux equiv.perm.inv_aux
 
 #print Equiv.Perm.subtypePerm_inv /-
@@ -683,13 +683,13 @@ theorem subtypePerm_pow (f : Perm α) (n : ℕ) (hf) :
   by
   induction' n with n ih
   · simp
-  · simp_rw [pow_succ', ih, subtype_perm_mul]
+  · simp_rw [pow_succ', ih, subtypePerm_mul]
 #align equiv.perm.subtype_perm_pow Equiv.Perm.subtypePerm_pow
 -/
 
 private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x ↔ p ((f ^ n) x)
-  | Int.ofNat n => pow_aux hf
-  | Int.negSucc n => by
+  | int.of_nat n => pow_aux hf
+  | int.neg_succ_of_nat n => by
     rw [zpow_negSucc]
     exact inv_aux.1 (pow_aux hf)
 #align equiv.perm.zpow_aux equiv.perm.zpow_aux
@@ -700,8 +700,8 @@ theorem subtypePerm_zpow (f : Perm α) (n : ℤ) (hf) :
     (f.subtypePerm hf ^ n : Perm { x // p x }) = (f ^ n).subtypePerm (zpow_aux hf) :=
   by
   induction' n with n ih
-  · exact subtype_perm_pow _ _ _
-  · simp only [zpow_negSucc, subtype_perm_pow, subtype_perm_inv]
+  · exact subtypePerm_pow _ _ _
+  · simp only [zpow_negSucc, subtypePerm_pow, subtypePerm_inv]
 #align equiv.perm.subtype_perm_zpow Equiv.Perm.subtypePerm_zpow
 -/
 
@@ -723,8 +723,8 @@ theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h�
     ofSubtype (subtypePerm f h₁) = f :=
   Equiv.ext fun x => by
     by_cases hx : p x
-    · exact (subtype_perm f h₁).extendDomain_apply_subtype _ hx
-    · rw [of_subtype, MonoidHom.coe_mk, Equiv.Perm.extendDomain_apply_not_subtype]
+    · exact (subtypePerm f h₁).extendDomain_apply_subtype _ hx
+    · rw [ofSubtype, MonoidHom.coe_mk, Equiv.Perm.extendDomain_apply_not_subtype]
       · exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
       · exact hx
 #align equiv.perm.of_subtype_subtype_perm Equiv.Perm.ofSubtype_subtypePerm
@@ -753,8 +753,8 @@ theorem ofSubtype_apply_of_not_mem (f : Perm (Subtype p)) (ha : ¬p a) : ofSubty
 theorem mem_iff_ofSubtype_apply_mem (f : Perm (Subtype p)) (x : α) :
     p x ↔ p ((ofSubtype f : α → α) x) :=
   if h : p x then by
-    simpa only [h, true_iff_iff, MonoidHom.coe_mk, of_subtype_apply_of_mem f h] using (f ⟨x, h⟩).2
-  else by simp [h, of_subtype_apply_of_not_mem f h]
+    simpa only [h, true_iff_iff, MonoidHom.coe_mk, ofSubtype_apply_of_mem f h] using (f ⟨x, h⟩).2
+  else by simp [h, ofSubtype_apply_of_not_mem f h]
 #align equiv.perm.mem_iff_of_subtype_apply_mem Equiv.Perm.mem_iff_ofSubtype_apply_mem
 -/
 
@@ -780,11 +780,11 @@ protected def subtypeEquivSubtypePerm (p : α → Prop) [DecidablePred p] :
   toFun f := ⟨f.ofSubtype, fun a => f.ofSubtype_apply_of_not_mem⟩
   invFun f :=
     (f : Perm α).subtypePerm fun a =>
-      ⟨Decidable.not_imp_not.1 fun hfa => f.val.Injective (f.Prop _ hfa) ▸ hfa,
-        Decidable.not_imp_not.1 fun ha hfa => ha <| f.Prop a ha ▸ hfa⟩
+      ⟨Decidable.not_imp_not.1 fun hfa => f.val.injective (f.prop _ hfa) ▸ hfa,
+        Decidable.not_imp_not.1 fun ha hfa => ha <| f.prop a ha ▸ hfa⟩
   left_inv := Equiv.Perm.subtypePerm_ofSubtype
   right_inv f :=
-    Subtype.ext (Equiv.Perm.ofSubtype_subtypePerm _ fun a => Not.decidable_imp_symm <| f.Prop a)
+    Subtype.ext (Equiv.Perm.ofSubtype_subtypePerm _ fun a => Not.decidable_imp_symm <| f.prop a)
 #align equiv.perm.subtype_equiv_subtype_perm Equiv.Perm.subtypeEquivSubtypePerm
 -/
 
@@ -840,9 +840,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_eq_mul_swap Equiv.swap_mul_eq_mul_swapₓ'. -/
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equiv.ext fun z => by
-    simp only [perm.mul_apply, swap_apply_def]
+    simp only [Perm.mul_apply, swap_apply_def]
     split_ifs <;>
-      simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
+      simp_all only [Perm.apply_inv_self, Perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
 #align equiv.swap_mul_eq_mul_swap Equiv.swap_mul_eq_mul_swap
 
 /- warning: equiv.mul_swap_eq_swap_mul -> Equiv.mul_swap_eq_swap_mul is a dubious translation:
@@ -852,7 +852,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] (f : Equiv.Perm.{succ u1} α) (x : α) (y : α), Eq.{succ u1} (Equiv.Perm.{succ u1} α) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} α) (instHMul.{u1} (Equiv.Perm.{succ u1} α) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} α) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} α) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} α) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} α) (Equiv.Perm.permGroup.{u1} α)))))) f (Equiv.swap.{succ u1} α (fun (a : α) (b : α) => _inst_1 a b) x y)) (HMul.hMul.{u1, u1, u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (Equiv.Perm.{succ u1} α) (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (instHMul.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (MulOneClass.toMul.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (Monoid.toMulOneClass.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (DivInvMonoid.toMonoid.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (Group.toDivInvMonoid.{u1} (Equiv.Perm.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x)) (Equiv.Perm.permGroup.{u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x))))))) (Equiv.swap.{succ u1} ((fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) x) (fun (a : α) (b : α) => _inst_1 a b) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f x) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.Perm.{succ u1} α) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α α) f y)) f)
 Case conversion may be inaccurate. Consider using '#align equiv.mul_swap_eq_swap_mul Equiv.mul_swap_eq_swap_mulₓ'. -/
 theorem mul_swap_eq_swap_mul (f : Perm α) (x y : α) : f * swap x y = swap (f x) (f y) * f := by
-  rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
+  rw [swap_mul_eq_mul_swap, Perm.inv_apply_self, Perm.inv_apply_self]
 #align equiv.mul_swap_eq_swap_mul Equiv.mul_swap_eq_swap_mul
 
 #print Equiv.swap_apply_apply /-
@@ -961,7 +961,7 @@ Case conversion may be inaccurate. Consider using '#align equiv.swap_mul_swap_mu
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) :
     swap y z * swap x y * swap y z = swap z x :=
   Equiv.ext fun n => by
-    simp only [swap_apply_def, perm.mul_apply]
+    simp only [swap_apply_def, Perm.mul_apply]
     split_ifs <;> cc
 #align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swap
 
@@ -1042,7 +1042,7 @@ theorem inv_addRight : (Equiv.addRight a)⁻¹ = Equiv.addRight (-a) :=
 theorem pow_addLeft (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
   by
   ext
-  simp [perm.coe_pow]
+  simp [Perm.coe_pow]
 #align equiv.pow_add_left Equiv.pow_addLeft
 -/
 
@@ -1051,7 +1051,7 @@ theorem pow_addLeft (n : ℕ) : Equiv.addLeft a ^ n = Equiv.addLeft (n • a) :=
 theorem pow_addRight (n : ℕ) : Equiv.addRight a ^ n = Equiv.addRight (n • a) :=
   by
   ext
-  simp [perm.coe_pow]
+  simp [Perm.coe_pow]
 #align equiv.pow_add_right Equiv.pow_addRight
 -/
 
@@ -1152,7 +1152,7 @@ theorem inv_mulRight : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
 theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
   by
   ext
-  simp [perm.coe_pow]
+  simp [Perm.coe_pow]
 #align equiv.pow_mul_left Equiv.pow_mulLeft
 #align equiv.pow_add_left Equiv.pow_addLeft
 -/
@@ -1162,7 +1162,7 @@ theorem pow_mulLeft (n : ℕ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
 theorem pow_mulRight (n : ℕ) : Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n) :=
   by
   ext
-  simp [perm.coe_pow]
+  simp [Perm.coe_pow]
 #align equiv.pow_mul_right Equiv.pow_mulRight
 #align equiv.pow_add_right Equiv.pow_addRight
 -/
@@ -1178,8 +1178,8 @@ theorem zpow_mulLeft (n : ℤ) : Equiv.mulLeft a ^ n = Equiv.mulLeft (a ^ n) :=
 #print Equiv.zpow_mulRight /-
 @[simp, to_additive zpow_add_right]
 theorem zpow_mulRight : ∀ n : ℤ, Equiv.mulRight a ^ n = Equiv.mulRight (a ^ n)
-  | Int.ofNat n => by simp
-  | Int.negSucc n => by simp
+  | int.of_nat n => by simp
+  | int.neg_succ_of_nat n => by simp
 #align equiv.zpow_mul_right Equiv.zpow_mulRight
 #align equiv.zpow_add_right Equiv.zpow_addRight
 -/
@@ -1213,7 +1213,7 @@ alias bij_on_perm_inv ↔ bij_on.of_perm_inv bij_on.perm_inv
 theorem MapsTo.perm_pow : MapsTo f s s → ∀ n : ℕ, MapsTo (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
-  exact maps_to.iterate
+  exact MapsTo.iterate
 #align set.maps_to.perm_pow Set.MapsTo.perm_pow
 -/
 
@@ -1221,7 +1221,7 @@ theorem MapsTo.perm_pow : MapsTo f s s → ∀ n : ℕ, MapsTo (⇑(f ^ n)) s s 
 theorem SurjOn.perm_pow : SurjOn f s s → ∀ n : ℕ, SurjOn (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
-  exact surj_on.iterate
+  exact SurjOn.iterate
 #align set.surj_on.perm_pow Set.SurjOn.perm_pow
 -/
 
@@ -1229,14 +1229,14 @@ theorem SurjOn.perm_pow : SurjOn f s s → ∀ n : ℕ, SurjOn (⇑(f ^ n)) s s 
 theorem BijOn.perm_pow : BijOn f s s → ∀ n : ℕ, BijOn (⇑(f ^ n)) s s :=
   by
   simp_rw [Equiv.Perm.coe_pow]
-  exact bij_on.iterate
+  exact BijOn.iterate
 #align set.bij_on.perm_pow Set.BijOn.perm_pow
 -/
 
 #print Set.BijOn.perm_zpow /-
 theorem BijOn.perm_zpow (hf : BijOn f s s) : ∀ n : ℤ, BijOn (⇑(f ^ n)) s s
-  | Int.ofNat n => hf.perm_pow _
-  | Int.negSucc n => by
+  | int.of_nat n => hf.perm_pow _
+  | int.neg_succ_of_nat n => by
     rw [zpow_negSucc]
     exact (hf.perm_pow _).perm_inv
 #align set.bij_on.perm_zpow Set.BijOn.perm_zpow

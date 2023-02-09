@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module logic.function.conjugate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {f : α -> β} {ga : α -> α} {ga' : α -> α} {gb : β -> β} {gb' : β -> β}, (Function.Semiconj.{u2, u1} α β f ga gb) -> (Function.Semiconj.{u2, u1} α β f ga' gb') -> (Function.Semiconj.{u2, u1} α β f (Function.comp.{succ u2, succ u2, succ u2} α α α ga ga') (Function.comp.{succ u1, succ u1, succ u1} β β β gb gb'))
 Case conversion may be inaccurate. Consider using '#align function.semiconj.comp_right Function.Semiconj.comp_rightₓ'. -/
 theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') :
-    Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by rw [comp_app, h.eq, h'.eq]
+    Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by rw [comp_apply, h.eq, h'.eq]
 #align function.semiconj.comp_right Function.Semiconj.comp_right
 
 /- warning: function.semiconj.comp_left -> Function.Semiconj.comp_left is a dubious translation:
@@ -80,7 +80,7 @@ but is expected to have type
   forall {α : Type.{u3}} {β : Type.{u2}} {γ : Type.{u1}} {fab : α -> β} {fbc : β -> γ} {ga : α -> α} {gb : β -> β} {gc : γ -> γ}, (Function.Semiconj.{u3, u2} α β fab ga gb) -> (Function.Semiconj.{u2, u1} β γ fbc gb gc) -> (Function.Semiconj.{u3, u1} α γ (Function.comp.{succ u3, succ u2, succ u1} α β γ fbc fab) ga gc)
 Case conversion may be inaccurate. Consider using '#align function.semiconj.comp_left Function.Semiconj.comp_leftₓ'. -/
 theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) :
-    Semiconj (fbc ∘ fab) ga gc := fun x => by simp only [comp_app, hab.eq, hbc.eq]
+    Semiconj (fbc ∘ fab) ga gc := fun x => by simp only [comp_apply, hab.eq, hbc.eq]
 #align function.semiconj.comp_left Function.Semiconj.comp_left
 
 /- warning: function.semiconj.id_right -> Function.Semiconj.id_right is a dubious translation:
@@ -154,13 +154,13 @@ theorem symm (h : Commute f g) : Commute g f := fun x => (h x).symm
 
 #print Function.Commute.comp_right /-
 theorem comp_right (h : Commute f g) (h' : Commute f g') : Commute f (g ∘ g') :=
-  h.compRight h'
+  h.comp_right h'
 #align function.commute.comp_right Function.Commute.comp_right
 -/
 
 #print Function.Commute.comp_left /-
 theorem comp_left (h : Commute f g) (h' : Commute f' g) : Commute (f ∘ f') g :=
-  (h.symm.compRight h'.symm).symm
+  (h.symm.comp_right h'.symm).symm
 #align function.commute.comp_left Function.Commute.comp_left
 -/
 
@@ -229,7 +229,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} {f : α -> β} {ga : α -> α -> α} {gb : β -> β -> β} {f' : β -> γ} {gc : γ -> γ -> γ}, (Function.Semiconj₂.{u3, u2} β γ f' gb gc) -> (Function.Semiconj₂.{u1, u3} α β f ga gb) -> (Function.Semiconj₂.{u1, u2} α γ (Function.comp.{succ u1, succ u3, succ u2} α β γ f' f) ga gc)
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.comp Function.Semiconj₂.compₓ'. -/
 theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb gc) (hf : Semiconj₂ f ga gb) :
-    Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_app]
+    Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_apply]
 #align function.semiconj₂.comp Function.Semiconj₂.comp
 
 /- warning: function.semiconj₂.is_associative_right -> Function.Semiconj₂.isAssociative_right is a dubious translation:
@@ -240,13 +240,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_rightₓ'. -/
 theorem isAssociative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
-  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
+  ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @is_associative.assoc _ ga]⟩
 #align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_right
 
 #print Function.Semiconj₂.isAssociative_left /-
 theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
     IsAssociative α ga :=
-  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @IsAssociative.assoc _ gb]⟩
+  ⟨fun x₁ x₂ x₃ => h_inj <| by simp only [h.eq, @is_associative.assoc _ gb]⟩
 #align function.semiconj₂.is_associative_left Function.Semiconj₂.isAssociative_left
 -/
 
@@ -258,13 +258,13 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_rightₓ'. -/
 theorem isIdempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsIdempotent β gb :=
-  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
+  ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @is_idempotent.idempotent _ ga]⟩
 #align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_right
 
 #print Function.Semiconj₂.isIdempotent_left /-
 theorem isIdempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
     IsIdempotent α ga :=
-  ⟨fun x => h_inj <| by rw [h.eq, @IsIdempotent.idempotent _ gb]⟩
+  ⟨fun x => h_inj <| by rw [h.eq, @is_idempotent.idempotent _ gb]⟩
 #align function.semiconj₂.is_idempotent_left Function.Semiconj₂.isIdempotent_left
 -/
 

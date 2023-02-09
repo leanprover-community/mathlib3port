@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, George Shakan
 
 ! This file was ported from Lean 3 source module combinatorics.additive.pluennecke_ruzsa
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,10 +50,10 @@ theorem card_div_mul_le_card_div_mul_card_div (A B C : Finset α) :
   refine'
     card_mul_le_card_mul (fun b ac => ac.1 * ac.2 = b) (fun x hx => _) fun x hx =>
       card_le_one_iff.2 fun u v hu hv =>
-        ((mem_bipartite_below _).1 hu).2.symm.trans ((mem_bipartite_below _).1 hv).2
+        ((mem_bipartiteBelow _).1 hu).2.symm.trans ((mem_bipartiteBelow _).1 hv).2
   obtain ⟨a, c, ha, hc, rfl⟩ := mem_div.1 hx
   refine' card_le_card_of_inj_on (fun b => (a / b, b / c)) (fun b hb => _) fun b₁ _ b₂ _ h => _
-  · rw [mem_bipartite_above]
+  · rw [mem_bipartiteAbove]
     exact ⟨mk_mem_product (div_mem_div ha hb) (div_mem_div hb hc), div_mul_div_cancel' _ _ _⟩
   · exact div_right_injective (Prod.ext_iff.1 h).1
 #align finset.card_div_mul_le_card_div_mul_card_div Finset.card_div_mul_le_card_div_mul_card_div
@@ -92,7 +92,7 @@ theorem card_mul_mul_le_card_mul_mul_card_div (A B C : Finset α) :
 #align finset.card_mul_mul_le_card_mul_mul_card_div Finset.card_mul_mul_le_card_mul_mul_card_div
 #align finset.card_add_mul_le_card_add_mul_card_sub Finset.card_add_mul_le_card_add_mul_card_sub
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 @[to_additive]
 theorem mul_pluennecke_petridis (C : Finset α)
     (hA : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card) :
@@ -103,7 +103,7 @@ theorem mul_pluennecke_petridis (C : Finset α)
   set A' := A ∩ (A * C / {x}) with hA'
   set C' := insert x C with hC'
   have h₀ : A' * {x} = A * {x} ∩ (A * C) := by
-    rw [hA', inter_mul_singleton, (is_unit_singleton x).div_mul_cancelₓ]
+    rw [hA', inter_mul_singleton, (isUnit_singleton x).div_mul_cancel]
   have h₁ : A * B * C' = A * B * C ∪ (A * B * {x}) \ (A' * B * {x}) :=
     by
     rw [hC', insert_eq, union_comm, mul_union]
@@ -130,11 +130,11 @@ theorem mul_pluennecke_petridis (C : Finset α)
 /-! ### Sum triangle inequality -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 -- Auxiliary lemma for Ruzsa's triangle sum inequality, and the Plünnecke-Ruzsa inequality.
 @[to_additive]
 private theorem mul_aux (hA : A.Nonempty) (hAB : A ⊆ B)
-    (h : ∀ A' ∈ B.powerset.eraseₓ ∅, ((A * C).card : ℚ≥0) / ↑A.card ≤ (A' * C).card / ↑A'.card) :
+    (h : ∀ A' ∈ B.powerset.erase ∅, ((A * C).card : ℚ≥0) / ↑A.card ≤ (A' * C).card / ↑A'.card) :
     ∀ (A') (_ : A' ⊆ A), (A * C).card * A'.card ≤ (A' * C).card * A.card :=
   by
   rintro A' hAA'
@@ -199,7 +199,7 @@ theorem card_div_mul_le_card_div_mul_card_mul (A B C : Finset α) :
   exact card_mul_mul_le_card_div_mul_card_div _ _ _
 #align finset.card_div_mul_le_card_div_mul_card_mul Finset.card_div_mul_le_card_div_mul_card_mul
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B : Finset α}
     (hAB : ∀ (A') (_ : A' ⊆ A), (A + B).card * A'.card ≤ (A' + B).card * A.card) (n : ℕ) :
     ((A + n • B).card : ℚ≥0) ≤ ((A + B).card / A.card) ^ n * A.card :=
@@ -215,7 +215,7 @@ theorem card_add_nsmul_le {α : Type _} [AddCommGroup α] [DecidableEq α] {A B 
   exact mul_le_mul_of_nonneg_left ih (zero_le _)
 #align finset.card_add_nsmul_le Finset.card_add_nsmul_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (A' «expr ⊆ » A) -/
 @[to_additive]
 theorem card_mul_pow_le (hAB : ∀ (A') (_ : A' ⊆ A), (A * B).card * A'.card ≤ (A' * B).card * A.card)
     (n : ℕ) : ((A * B ^ n).card : ℚ≥0) ≤ ((A * B).card / A.card) ^ n * A.card :=

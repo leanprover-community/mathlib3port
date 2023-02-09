@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alena Gusakov, Bhavik Mehta, Kyle Miller
 
 ! This file was ported from Lean 3 source module combinatorics.hall.finite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,19 +56,19 @@ variable [Fintype ι]
 #print HallMarriageTheorem.hall_cond_of_erase /-
 theorem hall_cond_of_erase {x : ι} (a : α)
     (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.bunionᵢ t).card)
-    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bunionᵢ fun x' => (t x').eraseₓ a).card :=
+    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.bunionᵢ fun x' => (t x').erase a).card :=
   by
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
-  rw [nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
+  rw [Nonempty.image_iff, Finset.card_image_of_injective s' Subtype.coe_injective] at ha
   by_cases he : s'.nonempty
   · have ha' : s'.card < (s'.bUnion fun x => t x).card :=
       by
       convert ha he fun h => by simpa [← h] using mem_univ x using 2
       ext x
-      simp only [mem_image, mem_bUnion, exists_prop, SetCoe.exists, exists_and_right,
+      simp only [mem_image, mem_bunionᵢ, exists_prop, SetCoe.exists, exists_and_right,
         exists_eq_right, Subtype.coe_mk]
-    rw [← erase_bUnion]
+    rw [← erase_bunionᵢ]
     by_cases hb : a ∈ s'.bUnion fun x => t x
     · rw [card_erase_of_mem hb]
       exact Nat.le_pred_of_lt ha'
@@ -110,7 +110,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
   let ι' := { x' : ι | x' ≠ x }
-  let t' : ι' → Finset α := fun x' => (t x').eraseₓ y
+  let t' : ι' → Finset α := fun x' => (t x').erase y
   have card_ι' : Fintype.card ι' = n :=
     calc
       Fintype.card ι' = Fintype.card ι - 1 := Set.card_ne_eq _
@@ -170,12 +170,12 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
   rw [← card_sdiff]
   · refine' (card_le_of_subset _).trans le_rfl
     intro t
-    simp only [mem_bUnion, mem_sdiff, not_exists, mem_image, and_imp, mem_union, exists_and_right,
+    simp only [mem_bunionᵢ, mem_sdiff, not_exists, mem_image, and_imp, mem_union, exists_and_right,
       exists_imp]
     rintro x (hx | ⟨x', hx', rfl⟩) rat hs
-    · exact (hs x hx Rat).elim
-    · exact ⟨⟨x', hx', Rat⟩, hs⟩
-  · apply bUnion_subset_bUnion_of_subset_left
+    · exact (hs x hx rat).elim
+    · exact ⟨⟨x', hx', rat⟩, hs⟩
+  · apply bunionᵢ_subset_bunionᵢ_of_subset_left
     apply subset_union_left
 #align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_compl
 
@@ -220,7 +220,7 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
   have f'_mem_bUnion : ∀ {x'} (hx' : x' ∈ s), f' ⟨x', hx'⟩ ∈ s.bUnion t :=
     by
     intro x' hx'
-    rw [mem_bUnion]
+    rw [mem_bunionᵢ]
     exact ⟨x', hx', hsf' _⟩
   have f''_not_mem_bUnion : ∀ {x''} (hx'' : ¬x'' ∈ s), ¬f'' ⟨x'', hx''⟩ ∈ s.bUnion t :=
     by
@@ -302,7 +302,7 @@ theorem Finset.all_card_le_bunionᵢ_card_iff_existsInjective' {ι α : Type _} 
     rw [← card_image_of_injective s hf₁]
     apply card_le_of_subset
     intro
-    rw [mem_image, mem_bUnion]
+    rw [mem_image, mem_bunionᵢ]
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
 #align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_bunionᵢ_card_iff_existsInjective'

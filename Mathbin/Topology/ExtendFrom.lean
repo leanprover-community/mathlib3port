@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.extend_from
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,13 +88,13 @@ theorem continuousOn_extendFrom [RegularSpace Y] {f : X → Y} {A B : Set X} (hB
   obtain ⟨V, V_in, V_op, hV⟩ : ∃ V ∈ 𝓝 x, IsOpen V ∧ V ∩ A ⊆ f ⁻¹' V' :=
     by
     have := tendsto_extendFrom (hf x x_in)
-    rcases(nhdsWithin_basis_open x A).tendsto_left_iffₓ.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
+    rcases(nhdsWithin_basis_open x A).tendsto_left_iff.mp this V' V'_in with ⟨V, ⟨hxV, V_op⟩, hV⟩
     use V, IsOpen.mem_nhds V_op hxV, V_op, hV
   suffices : ∀ y ∈ V ∩ B, φ y ∈ V'
   exact mem_of_superset (inter_mem_inf V_in <| mem_principal_self B) this
   rintro y ⟨hyV, hyB⟩
   haveI := mem_closure_iff_nhds_within_ne_bot.mp (hB hyB)
-  have limy : tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extendFrom (hf y hyB)
+  have limy : Tendsto f (𝓝[A] y) (𝓝 <| φ y) := tendsto_extendFrom (hf y hyB)
   have hVy : V ∈ 𝓝 y := IsOpen.mem_nhds V_op hyV
   have : V ∩ A ∈ 𝓝[A] y := by simpa [inter_comm] using inter_mem_nhdsWithin _ hVy
   exact V'_closed.mem_of_tendsto limy (mem_of_superset this hV)

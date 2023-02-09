@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.dnf
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ def dnfCore : Preform → List Clause
 #align omega.nat.dnf_core Omega.Nat.dnfCore
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic omega.nat.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : Preform},
       p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c :=
@@ -44,14 +44,14 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
     constructor
     rw [List.forall_mem_singleton]
     cases' h0 with ht hs
-    simp only [val_canonize ht, val_canonize hs, term.val_sub, preform.holds, sub_eq_add_neg] at *
+    simp only [val_canonize ht, val_canonize hs, Term.val_sub, Preform.Holds, sub_eq_add_neg] at *
     rw [h2, add_neg_self]
     apply List.forall_mem_nil
   · apply List.exists_mem_cons_of
     constructor
     apply List.forall_mem_nil
     rw [List.forall_mem_singleton]
-    simp only [val_canonize h0.left, val_canonize h0.right, term.val_sub, preform.holds,
+    simp only [val_canonize h0.left, val_canonize h0.right, Term.val_sub, Preform.Holds,
       sub_eq_add_neg] at *
     rw [← sub_eq_add_neg, le_sub_comm, sub_zero, Int.ofNat_le]
     assumption
@@ -65,8 +65,8 @@ theorem exists_clause_holds_core {v : Nat → Nat} :
       assumption
   · rcases ihp h1.left h0.left h2.left with ⟨cp, hp1, hp2⟩
     rcases ihq h1.right h0.right h2.right with ⟨cq, hq1, hq2⟩
-    refine' ⟨clause.append cp cq, ⟨_, clause.holds_append hp2 hq2⟩⟩
-    simp only [dnf_core, List.mem_map']
+    refine' ⟨Clause.append cp cq, ⟨_, Clause.holds_append hp2 hq2⟩⟩
+    simp only [dnfCore, List.mem_map']
     refine' ⟨(cp, cq), ⟨_, rfl⟩⟩
     rw [List.mem_product]
     constructor <;> assumption
@@ -125,17 +125,17 @@ theorem holds_nonnegConstsCore {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
   | _, [] => fun _ h2 => by cases h2
   | k, ff :: bs => holds_nonneg_consts_core (k + 1) bs
   | k, tt :: bs => by
-    simp only [nonneg_consts_core]
+    simp only [nonnegConstsCore]
     rw [List.forall_mem_cons]
     constructor
-    · simp only [term.val, one_mul, zero_add, coeffs.val_set]
+    · simp only [Term.val, one_mul, zero_add, Coeffs.val_set]
       apply h1
     · apply holds_nonneg_consts_core (k + 1) bs
 #align omega.nat.holds_nonneg_consts_core Omega.Nat.holds_nonnegConstsCore
 
 theorem holds_nonnegConsts {v : Nat → Int} {bs : List Bool} :
     (∀ x, 0 ≤ v x) → ∀ t ∈ nonnegConsts bs, 0 ≤ Term.val v t
-  | h1 => by apply holds_nonneg_consts_core h1
+  | h1 => by apply holds_nonnegConstsCore h1
 #align omega.nat.holds_nonneg_consts Omega.Nat.holds_nonnegConsts
 
 theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
@@ -150,11 +150,11 @@ theorem exists_clause_holds {v : Nat → Nat} {p : Preform} :
     refine' ⟨c, h4, rfl⟩
   refine' ⟨h6, _⟩
   cases' c with eqs les
-  simp only [nonnegate, clause.holds]
+  simp only [nonnegate, Clause.Holds]
   constructor
   apply h5.left
   rw [List.forall_mem_append]
-  apply And.intro (holds_nonneg_consts _) h5.right
+  apply And.intro (holds_nonnegConsts _) h5.right
   intro x
   apply Int.coe_nat_nonneg
 #align omega.nat.exists_clause_holds Omega.Nat.exists_clause_holds

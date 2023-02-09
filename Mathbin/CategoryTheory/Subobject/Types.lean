@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.subobject.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ attribute [local instance] subtype_val_mono
 noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ Set α
     where
   Functor :=
-    { obj := fun f => Set.range f.1.Hom
+    { obj := fun f => Set.range f.1.hom
       map := fun f g t =>
         homOfLe
           (by
@@ -62,7 +62,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
   unitIso :=
     NatIso.ofComponents
       (fun f =>
-        MonoOver.isoMk (Equiv.ofInjective f.1.Hom ((mono_iff_injective _).mp f.2)).toIso (by tidy))
+        MonoOver.isoMk (Equiv.ofInjective f.1.hom ((mono_iff_injective _).mp f.2)).toIso (by tidy))
       (by tidy)
   counitIso := NatIso.ofComponents (fun s => eqToIso Subtype.range_val) (by tidy)
 #align types.mono_over_equivalence_set Types.monoOverEquivalenceSet

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module group_theory.double_coset
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,7 +235,7 @@ Case conversion may be inaccurate. Consider using '#align doset.mk_out'_eq_mul D
 theorem mk_out'_eq_mul (H K : Subgroup G) (g : G) :
     ∃ h k : G, h ∈ H ∧ k ∈ K ∧ (mk H K g : Quotient ↑H ↑K).out' = h * g * k :=
   by
-  have := Eq H K (mk H K g : Quotient ↑H ↑K).out' g
+  have := eq H K (mk H K g : Quotient ↑H ↑K).out' g
   rw [out_eq'] at this
   obtain ⟨h, h_h, k, hk, T⟩ := this.1 rfl
   refine' ⟨h⁻¹, k⁻¹, H.inv_mem h_h, K.inv_mem hk, eq_mul_inv_of_mul_eq (eq_inv_mul_of_mul_eq _)⟩
@@ -250,7 +250,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align doset.mk_eq_of_doset_eq Doset.mk_eq_of_doset_eqₓ'. -/
 theorem mk_eq_of_doset_eq {H K : Subgroup G} {a b : G} (h : Doset.doset a H K = Doset.doset b H K) :
     mk H K a = mk H K b := by
-  rw [Eq]
+  rw [eq]
   exact mem_doset.mp (h.symm ▸ mem_doset_self H K b)
 #align doset.mk_eq_of_doset_eq Doset.mk_eq_of_doset_eq
 
@@ -277,7 +277,7 @@ Case conversion may be inaccurate. Consider using '#align doset.union_quot_to_do
 theorem union_quotToDoset (H K : Subgroup G) : (⋃ q, quotToDoset H K q) = Set.univ :=
   by
   ext x
-  simp only [Set.mem_unionᵢ, quot_to_doset, mem_doset, SetLike.mem_coe, exists_prop, Set.mem_univ,
+  simp only [Set.mem_unionᵢ, quotToDoset, mem_doset, SetLike.mem_coe, exists_prop, Set.mem_univ,
     iff_true_iff]
   use mk H K x
   obtain ⟨h, k, h3, h4, h5⟩ := mk_out'_eq_mul H K x
@@ -337,7 +337,7 @@ theorem left_bot_eq_left_quot (H : Subgroup G) : Quotient (⊥ : Subgroup G).1 H
   unfold Quotient
   congr
   ext
-  simp_rw [← bot_rel_eq_left_rel H]
+  simp_rw [← bot_rel_eq_leftRel H]
   rfl
 #align doset.left_bot_eq_left_quot Doset.left_bot_eq_left_quot
 

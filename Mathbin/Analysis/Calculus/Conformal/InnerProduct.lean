@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yourong Zang
 
 ! This file was ported from Lean 3 source module analysis.calculus.conformal.inner_product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,6 +57,6 @@ theorem conformalFactorAt_inner_eq_mul_inner' {f : E → F} {x : E} (h : Conform
 theorem conformalFactorAt_inner_eq_mul_inner {f : E → F} {x : E} {f' : E →L[ℝ] F}
     (h : HasFderivAt f f' x) (H : ConformalAt f x) (u v : E) :
     ⟪f' u, f' v⟫ = (conformalFactorAt H : ℝ) * ⟪u, v⟫ :=
-  H.DifferentiableAt.HasFderivAt.unique h ▸ conformalFactorAt_inner_eq_mul_inner' H u v
+  H.differentiableAt.hasFderivAt.unique h ▸ conformalFactorAt_inner_eq_mul_inner' H u v
 #align conformal_factor_at_inner_eq_mul_inner conformalFactorAt_inner_eq_mul_inner
 

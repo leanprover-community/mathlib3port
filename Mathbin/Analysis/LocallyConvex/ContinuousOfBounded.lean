@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.continuous_of_bounded
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -135,9 +135,9 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     intro n hn
     -- The converse direction follows from continuity of the scalar multiplication
     have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
-      (continuous_const_smul (n : 𝕜)).ContinuousAt
+      (continuous_const_smul (n : 𝕜)).continuousAt
     simp only [ContinuousAt, map_zero, smul_zero] at hcont
-    rw [bE.1.tendsto_left_iffₓ] at hcont
+    rw [bE.1.tendsto_left_iff] at hcont
     rcases hcont (b n) (bE1 n).1 with ⟨i, _, hi⟩
     refine' ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
     simp [← mul_smul, hn]
@@ -148,7 +148,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
   choose! u hu hu' using h
   -- The sequence `(λ n, n • u n)` converges to `0`
-  have h_tendsto : tendsto (fun n : ℕ => (n : 𝕜) • u n) at_top (𝓝 (0 : E)) :=
+  have h_tendsto : Tendsto (fun n : ℕ => (n : 𝕜) • u n) atTop (𝓝 (0 : E)) :=
     by
     apply bE.tendsto
     intro n
@@ -160,7 +160,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     rw [← hu1, ← mul_smul]
     simp only [h, mul_inv_cancel, Ne.def, Nat.cast_eq_zero, not_false_iff, one_smul]
   -- The image `(λ n, n • u n)` is von Neumann bounded:
-  have h_bounded : is_vonN_bounded 𝕜 (Set.range fun n : ℕ => (n : 𝕜) • u n) :=
+  have h_bounded : IsVonNBounded 𝕜 (Set.range fun n : ℕ => (n : 𝕜) • u n) :=
     h_tendsto.cauchy_seq.totally_bounded_range.is_vonN_bounded 𝕜
   -- Since `range u` is bounded it absorbs `V`
   rcases hf _ h_bounded hV with ⟨r, hr, h'⟩
@@ -187,7 +187,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
 theorem LinearMap.continuous_of_locally_bounded [UniformAddGroup F] (f : E →ₛₗ[σ] F)
     (hf : ∀ (s : Set E) (hs : IsVonNBounded 𝕜 s), IsVonNBounded 𝕜' (f '' s)) : Continuous f :=
   (uniform_continuous_of_continuous_at_zero f <|
-      f.continuousAt_zero_of_locally_bounded hf).Continuous
+      f.continuousAt_zero_of_locally_bounded hf).continuous
 #align linear_map.continuous_of_locally_bounded LinearMap.continuous_of_locally_bounded
 
 end IsROrC

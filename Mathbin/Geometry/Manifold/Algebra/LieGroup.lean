@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "An additive Lie group is an additive topological group. This is not an instance for technical\nreasons, see note [Design choices about smooth algebraic structures]."]
 theorem topologicalGroup_of_lieGroup : TopologicalGroup G :=
-  { hasContinuousMul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
+  { hasContinuousMul_of_smooth I with continuous_inv := (smooth_inv I).continuous }
 #align topological_group_of_lie_group topologicalGroup_of_lieGroup
 #align topological_add_group_of_lie_add_group topological_add_group_of_lie_add_group
 
@@ -137,7 +137,7 @@ instance {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
     [TopologicalSpace G] [ChartedSpace H G] [Group G] [LieGroup I G] {E' : Type _}
     [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
     {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G']
-    [Group G'] [LieGroup I' G'] : LieGroup (I.Prod I') (G × G') :=
+    [Group G'] [LieGroup I' G'] : LieGroup (I.prod I') (G × G') :=
   { HasSmoothMul.prod _ _ _ _ with smooth_inv := smooth_fst.inv.prod_mk smooth_snd.inv }
 
 end ProdLieGroup
@@ -149,7 +149,7 @@ instance normedSpaceLieAddGroup {𝕜 : Type _} [NontriviallyNormedField 𝕜] {
     [NormedAddCommGroup E] [NormedSpace 𝕜 E] : LieAddGroup 𝓘(𝕜, E) E :=
   {
     model_space_smooth with
-    smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => contDiff_add.ContDiffOn⟩
-    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiff_neg.ContDiffOn⟩ }
+    smooth_add := smooth_iff.2 ⟨continuous_add, fun x y => contDiff_add.contDiffOn⟩
+    smooth_neg := smooth_iff.2 ⟨continuous_neg, fun x y => contDiff_neg.contDiffOn⟩ }
 #align normed_space_lie_add_group normedSpaceLieAddGroup
 

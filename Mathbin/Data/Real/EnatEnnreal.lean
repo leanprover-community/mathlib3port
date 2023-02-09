@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.enat_ennreal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,13 +38,13 @@ theorem map_coe_nnreal : WithTop.map (coe : ℕ → ℝ≥0) = (coe : ℕ∞ →
 /-- Coercion `ℕ∞ → ℝ≥0∞` as an `order_embedding`. -/
 @[simps (config := { fullyApplied := false })]
 def toEnnrealOrderEmbedding : ℕ∞ ↪o ℝ≥0∞ :=
-  Nat.castOrderEmbedding.withTop_map
+  Nat.castOrderEmbedding.withTopMap
 #align enat.to_ennreal_order_embedding ENat.toEnnrealOrderEmbedding
 
 /-- Coercion `ℕ∞ → ℝ≥0∞` as a ring homomorphism. -/
 @[simps (config := { fullyApplied := false })]
 def toEnnrealRingHom : ℕ∞ →+* ℝ≥0∞ :=
-  (Nat.castRingHom ℝ≥0).withTop_map Nat.cast_injective
+  (Nat.castRingHom ℝ≥0).WithTop.RingHom.withTopMap Nat.cast_injective
 #align enat.to_ennreal_ring_hom ENat.toEnnrealRingHom
 
 @[simp, norm_cast]
@@ -69,12 +69,12 @@ theorem coe_ennreal_lt : (m : ℝ≥0∞) < n ↔ m < n :=
 
 @[mono]
 theorem coe_ennreal_mono : Monotone (coe : ℕ∞ → ℝ≥0∞) :=
-  toEnnrealOrderEmbedding.Monotone
+  toEnnrealOrderEmbedding.monotone
 #align enat.coe_ennreal_mono ENat.coe_ennreal_mono
 
 @[mono]
 theorem coe_ennreal_strictMono : StrictMono (coe : ℕ∞ → ℝ≥0∞) :=
-  toEnnrealOrderEmbedding.StrictMono
+  toEnnrealOrderEmbedding.strictMono
 #align enat.coe_ennreal_strict_mono ENat.coe_ennreal_strictMono
 
 @[simp, norm_cast]

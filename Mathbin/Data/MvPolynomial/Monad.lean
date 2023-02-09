@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.monad
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,7 +167,7 @@ variable (f : σ → MvPolynomial τ R)
 
 @[simp]
 theorem bind₁_c_right (f : σ → MvPolynomial τ R) (x) : bind₁ f (c x) = c x := by
-  simp [bind₁, algebra_map_eq]
+  simp [bind₁, algebraMap_eq]
 #align mv_polynomial.bind₁_C_right MvPolynomial.bind₁_c_right
 
 @[simp]
@@ -186,7 +186,7 @@ theorem bind₂_comp_c (f : R →+* MvPolynomial σ S) : (bind₂ f).comp c = f 
 
 @[simp]
 theorem join₂_map (f : R →+* MvPolynomial σ S) (φ : MvPolynomial σ R) :
-    join₂ (map f φ) = bind₂ f φ := by simp only [join₂, bind₂, eval₂_hom_map_hom, RingHom.id_comp]
+    join₂ (map f φ) = bind₂ f φ := by simp only [join₂, bind₂, eval₂Hom_map_hom, RingHom.id_comp]
 #align mv_polynomial.join₂_map MvPolynomial.join₂_map
 
 @[simp]
@@ -250,9 +250,9 @@ theorem rename_bind₁ {υ : Type _} (f : σ → MvPolynomial τ R) (g : τ → 
 theorem map_bind₂ (f : R →+* MvPolynomial σ S) (g : S →+* T) (φ : MvPolynomial σ R) :
     map g (bind₂ f φ) = bind₂ ((map g).comp f) φ :=
   by
-  simp only [bind₂, eval₂_comp_right, coe_eval₂_hom, eval₂_map]
+  simp only [bind₂, eval₂_comp_right, coe_eval₂Hom, eval₂_map]
   congr 1 with : 1
-  simp only [Function.comp_apply, map_X]
+  simp only [Function.comp_apply, map_x]
 #align mv_polynomial.map_bind₂ MvPolynomial.map_bind₂
 
 theorem bind₁_comp_rename {υ : Type _} (f : τ → MvPolynomial υ R) (g : σ → τ) :
@@ -275,19 +275,19 @@ theorem bind₂_map (f : S →+* MvPolynomial σ T) (g : R →+* S) (φ : MvPoly
 theorem map_comp_c (f : R →+* S) : (map f).comp (c : R →+* MvPolynomial σ R) = c.comp f :=
   by
   ext1
-  apply map_C
+  apply map_c
 #align mv_polynomial.map_comp_C MvPolynomial.map_comp_c
 
 -- mixing the two monad structures
 theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     f (bind₁ g φ) = eval₂Hom (f.comp c) (fun i => f (g i)) φ := by
-  rw [bind₁, map_aeval, algebra_map_eq]
+  rw [bind₁, map_aeval, algebraMap_eq]
 #align mv_polynomial.hom_bind₁ MvPolynomial.hom_bind₁
 
 theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) :=
   by
-  rw [hom_bind₁, map_comp_C, ← eval₂_hom_map_hom]
+  rw [hom_bind₁, map_comp_c, ← eval₂Hom_map_hom]
   rfl
 #align mv_polynomial.map_bind₁ MvPolynomial.map_bind₁
 
@@ -295,12 +295,12 @@ theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolyn
 theorem eval₂Hom_comp_c (f : R →+* S) (g : σ → S) : (eval₂Hom f g).comp c = f :=
   by
   ext1 r
-  exact eval₂_C f g r
+  exact eval₂_c f g r
 #align mv_polynomial.eval₂_hom_comp_C MvPolynomial.eval₂Hom_comp_c
 
 theorem eval₂Hom_bind₁ (f : R →+* S) (g : τ → S) (h : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
     eval₂Hom f g (bind₁ h φ) = eval₂Hom f (fun i => eval₂Hom f g (h i)) φ := by
-  rw [hom_bind₁, eval₂_hom_comp_C]
+  rw [hom_bind₁, eval₂Hom_comp_c]
 #align mv_polynomial.eval₂_hom_bind₁ MvPolynomial.eval₂Hom_bind₁
 
 theorem aeval_bind₁ [Algebra R S] (f : τ → S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
@@ -335,14 +335,14 @@ theorem eval₂Hom_c_left (f : σ → MvPolynomial τ R) : eval₂Hom c f = bind
 
 theorem bind₁_monomial (f : σ → MvPolynomial τ R) (d : σ →₀ ℕ) (r : R) :
     bind₁ f (monomial d r) = c r * ∏ i in d.support, f i ^ d i := by
-  simp only [monomial_eq, AlgHom.map_mul, bind₁_C_right, Finsupp.prod, AlgHom.map_prod,
-    AlgHom.map_pow, bind₁_X_right]
+  simp only [monomial_eq, AlgHom.map_mul, bind₁_c_right, Finsupp.prod, AlgHom.map_prod,
+    AlgHom.map_pow, bind₁_x_right]
 #align mv_polynomial.bind₁_monomial MvPolynomial.bind₁_monomial
 
 theorem bind₂_monomial (f : R →+* MvPolynomial σ S) (d : σ →₀ ℕ) (r : R) :
     bind₂ f (monomial d r) = f r * monomial d 1 := by
-  simp only [monomial_eq, RingHom.map_mul, bind₂_C_right, Finsupp.prod, RingHom.map_prod,
-    RingHom.map_pow, bind₂_X_right, C_1, one_mul]
+  simp only [monomial_eq, RingHom.map_mul, bind₂_c_right, Finsupp.prod, RingHom.map_prod,
+    RingHom.map_pow, bind₂_x_right, c_1, one_mul]
 #align mv_polynomial.bind₂_monomial MvPolynomial.bind₂_monomial
 
 @[simp]

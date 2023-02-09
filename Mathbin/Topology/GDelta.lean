@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.G_delta
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,28 +70,28 @@ theorem IsOpen.isGδ {s : Set α} (h : IsOpen s) : IsGδ s :=
 #print isGδ_empty /-
 @[simp]
 theorem isGδ_empty : IsGδ (∅ : Set α) :=
-  isOpen_empty.IsGδ
+  isOpen_empty.isGδ
 #align is_Gδ_empty isGδ_empty
 -/
 
 #print isGδ_univ /-
 @[simp]
 theorem isGδ_univ : IsGδ (univ : Set α) :=
-  isOpen_univ.IsGδ
+  isOpen_univ.isGδ
 #align is_Gδ_univ isGδ_univ
 -/
 
 #print isGδ_binterᵢ_of_open /-
 theorem isGδ_binterᵢ_of_open {I : Set ι} (hI : I.Countable) {f : ι → Set α}
     (hf : ∀ i ∈ I, IsOpen (f i)) : IsGδ (⋂ i ∈ I, f i) :=
-  ⟨f '' I, by rwa [ball_image_iff], hI.image _, by rw [sInter_image]⟩
+  ⟨f '' I, by rwa [ball_image_iff], hI.image _, by rw [interₛ_image]⟩
 #align is_Gδ_bInter_of_open isGδ_binterᵢ_of_open
 -/
 
 #print isGδ_interᵢ_of_open /-
 theorem isGδ_interᵢ_of_open [Encodable ι] {f : ι → Set α} (hf : ∀ i, IsOpen (f i)) :
     IsGδ (⋂ i, f i) :=
-  ⟨range f, by rwa [forall_range_iff], countable_range _, by rw [sInter_range]⟩
+  ⟨range f, by rwa [forall_range_iff], countable_range _, by rw [interₛ_range]⟩
 #align is_Gδ_Inter_of_open isGδ_interᵢ_of_open
 -/
 
@@ -101,7 +101,7 @@ theorem isGδ_interᵢ [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s 
   by
   choose T hTo hTc hTs using hs
   obtain rfl : s = fun i => ⋂₀ T i := funext hTs
-  refine' ⟨⋃ i, T i, _, countable_Union hTc, (sInter_Union _).symm⟩
+  refine' ⟨⋃ i, T i, _, countable_unionᵢ hTc, (interₛ_unionᵢ _).symm⟩
   simpa [@forall_swap ι] using hTo
 #align is_Gδ_Inter isGδ_interᵢ
 -/
@@ -110,7 +110,7 @@ theorem isGδ_interᵢ [Encodable ι] {s : ι → Set α} (hs : ∀ i, IsGδ (s 
 theorem isGδ_binterᵢ {s : Set ι} (hs : s.Countable) {t : ∀ i ∈ s, Set α}
     (ht : ∀ i ∈ s, IsGδ (t i ‹_›)) : IsGδ (⋂ i ∈ s, t i ‹_›) :=
   by
-  rw [bInter_eq_Inter]
+  rw [binterᵢ_eq_interᵢ]
   haveI := hs.to_encodable
   exact isGδ_interᵢ fun x => ht x x.2
 #align is_Gδ_bInter isGδ_binterᵢ
@@ -119,7 +119,7 @@ theorem isGδ_binterᵢ {s : Set ι} (hs : s.Countable) {t : ∀ i ∈ s, Set α
 #print isGδ_interₛ /-
 /-- A countable intersection of Gδ sets is a Gδ set. -/
 theorem isGδ_interₛ {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Countable) : IsGδ (⋂₀ S) := by
-  simpa only [sInter_eq_bInter] using isGδ_binterᵢ hS h
+  simpa only [interₛ_eq_binterᵢ] using isGδ_binterᵢ hS h
 #align is_Gδ_sInter isGδ_interₛ
 -/
 
@@ -131,7 +131,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_Gδ.inter IsGδ.interₓ'. -/
 theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) :=
   by
-  rw [inter_eq_Inter]
+  rw [inter_eq_interᵢ]
   exact isGδ_interᵢ (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
 
@@ -146,7 +146,7 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
   by
   rcases hs with ⟨S, Sopen, Scount, rfl⟩
   rcases ht with ⟨T, Topen, Tcount, rfl⟩
-  rw [sInter_union_sInter]
+  rw [interₛ_union_interₛ]
   apply isGδ_binterᵢ_of_open (Scount.prod Tcount)
   rintro ⟨a, b⟩ ⟨ha, hb⟩
   exact (Sopen a ha).union (Topen b hb)
@@ -156,8 +156,8 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
 /-- The union of finitely many Gδ sets is a Gδ set. -/
 theorem isGδ_bunionᵢ {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : ∀ i ∈ s, IsGδ (f i)) :
     IsGδ (⋃ i ∈ s, f i) := by
-  refine' finite.induction_on hs (by simp) _ h
-  simp only [ball_insert_iff, bUnion_insert]
+  refine' Finite.induction_on hs (by simp) _ h
+  simp only [ball_insert_iff, bunionᵢ_insert]
   exact fun a s _ _ ihs H => H.1.union (ihs H.2)
 #align is_Gδ_bUnion isGδ_bunionᵢ
 -/
@@ -166,7 +166,7 @@ theorem isGδ_bunionᵢ {s : Set ι} (hs : s.Finite) {f : ι → Set α} (h : �
 theorem IsClosed.isGδ {α} [UniformSpace α] [IsCountablyGenerated (𝓤 α)] {s : Set α}
     (hs : IsClosed s) : IsGδ s :=
   by
-  rcases(@uniformity_hasBasis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
+  rcases(@uniformity_has_basis_open α _).exists_antitone_subbasis with ⟨U, hUo, hU, -⟩
   rw [← hs.closure_eq, ← hU.bInter_bUnion_ball]
   refine' isGδ_binterᵢ (to_countable _) fun n hn => IsOpen.isGδ _
   exact isOpen_bunionᵢ fun x hx => UniformSpace.isOpen_ball _ (hUo _).2
@@ -184,7 +184,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] (a : α), IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Singleton.singleton.{u1, u1} α (Set.{u1} α) (Set.instSingletonSet.{u1} α) a))
 Case conversion may be inaccurate. Consider using '#align is_Gδ_compl_singleton isGδ_compl_singletonₓ'. -/
 theorem isGδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
-  isOpen_compl_singleton.IsGδ
+  isOpen_compl_singleton.isGδ
 #align is_Gδ_compl_singleton isGδ_compl_singleton
 
 /- warning: set.countable.is_Gδ_compl -> Set.Countable.isGδ_compl is a dubious translation:
@@ -195,7 +195,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.countable.is_Gδ_compl Set.Countable.isGδ_complₓ'. -/
 theorem Set.Countable.isGδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
   by
-  rw [← bUnion_of_singleton s, compl_Union₂]
+  rw [← bunionᵢ_of_singleton s, compl_unionᵢ₂]
   exact isGδ_binterᵢ hs fun x _ => isGδ_compl_singleton x
 #align set.countable.is_Gδ_compl Set.Countable.isGδ_compl
 
@@ -206,7 +206,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Finite.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
 Case conversion may be inaccurate. Consider using '#align set.finite.is_Gδ_compl Set.Finite.isGδ_complₓ'. -/
 theorem Set.Finite.isGδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
-  hs.Countable.isGδ_compl
+  hs.countable.isGδ_compl
 #align set.finite.is_Gδ_compl Set.Finite.isGδ_compl
 
 /- warning: set.subsingleton.is_Gδ_compl -> Set.Subsingleton.isGδ_compl is a dubious translation:
@@ -216,7 +216,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : T1Space.{u1} α _inst_1] {s : Set.{u1} α}, (Set.Subsingleton.{u1} α s) -> (IsGδ.{u1} α _inst_1 (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s))
 Case conversion may be inaccurate. Consider using '#align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_complₓ'. -/
 theorem Set.Subsingleton.isGδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
-  hs.Finite.isGδ_compl
+  hs.finite.isGδ_compl
 #align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_compl
 
 /- warning: finset.is_Gδ_compl -> Finset.isGδ_compl is a dubious translation:
@@ -238,7 +238,7 @@ theorem isGδ_singleton (a : α) : IsGδ ({a} : Set α) :=
   by
   rcases(nhds_basis_opens a).exists_antitone_subbasis with ⟨U, hU, h_basis⟩
   rw [← binterᵢ_basis_nhds h_basis.to_has_basis]
-  exact isGδ_binterᵢ (to_countable _) fun n hn => (hU n).2.IsGδ
+  exact isGδ_binterᵢ (to_countable _) fun n hn => (hU n).2.isGδ
 #align is_Gδ_singleton isGδ_singleton
 -/
 
@@ -265,10 +265,10 @@ variable [TopologicalSpace α]
 theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 β)] (f : α → β) :
     IsGδ { x | ContinuousAt f x } :=
   by
-  obtain ⟨U, hUo, hU⟩ := (@uniformity_hasBasis_open_symmetric β _).exists_antitone_subbasis
+  obtain ⟨U, hUo, hU⟩ := (@uniformity_has_basis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuousAt_iff_prod, nhds_prod_eq]
-  simp only [(nhds_basis_opens _).prod_self.tendsto_iffₓ hU.to_has_basis, forall_prop_of_true,
-    set_of_forall, id]
+  simp only [(nhds_basis_opens _).prod_self.tendsto_iff hU.to_has_basis, forall_prop_of_true,
+    setOf_forall, id]
   refine' isGδ_interᵢ fun k => IsOpen.isGδ <| isOpen_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
   filter_upwards [IsOpen.mem_nhds hso hsx]with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩

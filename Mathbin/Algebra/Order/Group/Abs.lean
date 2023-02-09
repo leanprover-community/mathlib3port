@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.abs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,7 +245,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1263 : α) (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1265 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1263 x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1265) (fun (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1278 : α) (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1280 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1278 x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1280)] {a : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))))) a) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) a))
 Case conversion may be inaccurate. Consider using '#align abs_pos_of_pos abs_pos_of_posₓ'. -/
 theorem abs_pos_of_pos (h : 0 < a) : 0 < |a| :=
-  abs_pos.2 h.Ne.symm
+  abs_pos.2 h.ne.symm
 #align abs_pos_of_pos abs_pos_of_pos
 
 /- warning: abs_pos_of_neg -> abs_pos_of_neg is a dubious translation:
@@ -255,7 +255,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : AddGroup.{u1} α] [_inst_2 : LinearOrder.{u1} α] [_inst_3 : CovariantClass.{u1, u1} α α (fun (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1323 : α) (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1325 : α) => HAdd.hAdd.{u1, u1, u1} α α α (instHAdd.{u1} α (AddZeroClass.toAdd.{u1} α (AddMonoid.toAddZeroClass.{u1} α (SubNegMonoid.toAddMonoid.{u1} α (AddGroup.toSubNegMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1323 x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1325) (fun (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1338 : α) (x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1340 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1338 x._@.Mathlib.Algebra.Order.Group.Abs._hyg.1340)] {a : α}, (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) a (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1))))))) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2)))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (NegZeroClass.toZero.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))))) (Abs.abs.{u1} α (Neg.toHasAbs.{u1} α (NegZeroClass.toNeg.{u1} α (SubNegZeroMonoid.toNegZeroClass.{u1} α (SubtractionMonoid.toSubNegZeroMonoid.{u1} α (AddGroup.toSubtractionMonoid.{u1} α _inst_1)))) (SemilatticeSup.toHasSup.{u1} α (Lattice.toSemilatticeSup.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_2))))) a))
 Case conversion may be inaccurate. Consider using '#align abs_pos_of_neg abs_pos_of_negₓ'. -/
 theorem abs_pos_of_neg (h : a < 0) : 0 < |a| :=
-  abs_pos.2 h.Ne
+  abs_pos.2 h.ne
 #align abs_pos_of_neg abs_pos_of_neg
 
 /- warning: neg_abs_le_self -> neg_abs_le_self is a dubious translation:
@@ -269,13 +269,13 @@ theorem neg_abs_le_self (a : α) : -|a| ≤ a :=
   cases' le_total 0 a with h h
   ·
     calc
-      -|a| = -a := congr_arg Neg.neg (abs_of_nonneg h)
+      -|a| = -a := congr_arg has_neg.neg (abs_of_nonneg h)
       _ ≤ 0 := neg_nonpos.mpr h
       _ ≤ a := h
       
   ·
     calc
-      -|a| = - -a := congr_arg Neg.neg (abs_of_nonpos h)
+      -|a| = - -a := congr_arg has_neg.neg (abs_of_nonpos h)
       _ ≤ a := (neg_neg a).le
       
 #align neg_abs_le_self neg_abs_le_self
@@ -474,7 +474,7 @@ Case conversion may be inaccurate. Consider using '#align apply_abs_le_mul_of_on
 theorem apply_abs_le_mul_of_one_le' {β : Type _} [MulOneClass β] [Preorder β]
     [CovariantClass β β (· * ·) (· ≤ ·)] [CovariantClass β β (swap (· * ·)) (· ≤ ·)] {f : α → β}
     {a : α} (h₁ : 1 ≤ f a) (h₂ : 1 ≤ f (-a)) : f (|a|) ≤ f a * f (-a) :=
-  (le_total a 0).byCases (fun ha => (abs_of_nonpos ha).symm ▸ le_mul_of_one_le_left' h₁) fun ha =>
+  (le_total a 0).by_cases (fun ha => (abs_of_nonpos ha).symm ▸ le_mul_of_one_le_left' h₁) fun ha =>
     (abs_of_nonneg ha).symm ▸ le_mul_of_one_le_right' h₂
 #align apply_abs_le_mul_of_one_le' apply_abs_le_mul_of_one_le'
 #align apply_abs_le_add_of_nonneg' apply_abs_le_add_of_nonneg'

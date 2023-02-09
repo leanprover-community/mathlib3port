@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metric_separated
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,7 +25,7 @@ open Emetric Set
 
 noncomputable section
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (r «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (r «expr ≠ » 0) -/
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
@@ -62,7 +62,7 @@ protected theorem disjoint (h : IsMetricSeparated s t) : Disjoint s t :=
 #align is_metric_separated.disjoint IsMetricSeparated.disjoint
 
 theorem subset_compl_right (h : IsMetricSeparated s t) : s ⊆ tᶜ := fun x hs ht =>
-  h.Disjoint.le_bot ⟨hs, ht⟩
+  h.disjoint.le_bot ⟨hs, ht⟩
 #align is_metric_separated.subset_compl_right IsMetricSeparated.subset_compl_right
 
 @[mono]
@@ -111,8 +111,8 @@ theorem union_right_iff {t'} :
 theorem finite_unionᵢ_left_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : ι → Set X}
     {t : Set X} : IsMetricSeparated (⋃ i ∈ I, s i) t ↔ ∀ i ∈ I, IsMetricSeparated (s i) t :=
   by
-  refine' finite.induction_on hI (by simp) fun i I hi _ hI => _
-  rw [bUnion_insert, ball_insert_iff, union_left_iff, hI]
+  refine' Finite.induction_on hI (by simp) fun i I hi _ hI => _
+  rw [bunionᵢ_insert, ball_insert_iff, union_left_iff, hI]
 #align is_metric_separated.finite_Union_left_iff IsMetricSeparated.finite_unionᵢ_left_iff
 
 alias finite_Union_left_iff ↔ _ finite_Union_left
@@ -120,7 +120,7 @@ alias finite_Union_left_iff ↔ _ finite_Union_left
 
 theorem finite_unionᵢ_right_iff {ι : Type _} {I : Set ι} (hI : I.Finite) {s : Set X}
     {t : ι → Set X} : IsMetricSeparated s (⋃ i ∈ I, t i) ↔ ∀ i ∈ I, IsMetricSeparated s (t i) := by
-  simpa only [@comm _ _ s] using finite_Union_left_iff hI
+  simpa only [@comm _ _ s] using finite_unionᵢ_left_iff hI
 #align is_metric_separated.finite_Union_right_iff IsMetricSeparated.finite_unionᵢ_right_iff
 
 @[simp]

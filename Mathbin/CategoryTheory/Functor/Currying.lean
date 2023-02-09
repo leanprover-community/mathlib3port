@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.functor.currying
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,19 +37,19 @@ def uncurry : (C ⥤ D ⥤ E) ⥤ C × D ⥤ E
       map := fun X Y f => (F.map f.1).app X.2 ≫ (F.obj Y.1).map f.2
       map_comp' := fun X Y Z f g =>
         by
-        simp only [prod_comp_fst, prod_comp_snd, functor.map_comp, nat_trans.comp_app,
-          category.assoc]
-        slice_lhs 2 3 => rw [← nat_trans.naturality]
-        rw [category.assoc] }
+        simp only [prod_comp_fst, prod_comp_snd, Functor.map_comp, NatTrans.comp_app,
+          Category.assoc]
+        slice_lhs 2 3 => rw [← NatTrans.naturality]
+        rw [Category.assoc] }
   map F G T :=
     { app := fun X => (T.app X.1).app X.2
       naturality' := fun X Y f =>
         by
-        simp only [prod_comp_fst, prod_comp_snd, category.comp_id, category.assoc, Functor.map_id,
-          functor.map_comp, nat_trans.id_app, nat_trans.comp_app]
-        slice_lhs 2 3 => rw [nat_trans.naturality]
-        slice_lhs 1 2 => rw [← nat_trans.comp_app, nat_trans.naturality, nat_trans.comp_app]
-        rw [category.assoc] }
+        simp only [prod_comp_fst, prod_comp_snd, Category.comp_id, Category.assoc, Functor.map_id,
+          Functor.map_comp, NatTrans.id_app, NatTrans.comp_app]
+        slice_lhs 2 3 => rw [NatTrans.naturality]
+        slice_lhs 1 2 => rw [← NatTrans.comp_app, NatTrans.naturality, NatTrans.comp_app]
+        rw [Category.assoc] }
 #align category_theory.uncurry CategoryTheory.uncurry
 
 /-- The object level part of the currying functor. (See `curry` for the functorial version.)
@@ -71,11 +71,11 @@ def curry : (C × D ⥤ E) ⥤ C ⥤ D ⥤ E where
     { app := fun X =>
         { app := fun Y => T.app (X, Y)
           naturality' := fun Y Y' g => by
-            dsimp [curry_obj]
-            rw [nat_trans.naturality] }
+            dsimp [curryObj]
+            rw [NatTrans.naturality] }
       naturality' := fun X X' f => by
-        ext; dsimp [curry_obj]
-        rw [nat_trans.naturality] }
+        ext; dsimp [curryObj]
+        rw [NatTrans.naturality] }
 #align category_theory.curry CategoryTheory.curry
 
 -- create projection simp lemmas even though this isn't a `{ .. }`.

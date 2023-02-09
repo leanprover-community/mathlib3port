@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,7 @@ import Mathbin.Tactic.Interactive
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 #align tactic.interactive.blast_disjs tactic.interactive.blast_disjs
@@ -45,7 +45,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
     is_searchable (black_node l v r) lo hi
 #align rbnode.is_searchable Rbnode.IsSearchable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 #align rbnode.is_searchable_tactic rbnode.is_searchable_tactic
@@ -67,7 +67,7 @@ theorem lo_lt_hi {t : Rbnode α} {lt} [IsTrans α lt] :
     cases hs
     have h₁ := t_ih_lchild hs_hs₁
     have h₂ := t_ih_rchild hs_hs₂
-    cases lo <;> cases hi <;> simp [lift] at *
+    cases lo <;> cases hi <;> simp [Lift] at *
     apply trans_of lt h₁ h₂
 #align rbnode.lo_lt_hi Rbnode.lo_lt_hi
 
@@ -80,7 +80,7 @@ theorem isSearchable_of_isSearchable_of_incomp [IsStrictWeakOrder α lt] {t} :
     induction t <;> intros <;>
       run_tac
         is_searchable_tactic
-    · cases lo <;> simp_all [lift]
+    · cases lo <;> simp_all [Lift]
       apply lt_of_lt_of_incomp
       assumption
       exact ⟨hc.2, hc.1⟩
@@ -96,7 +96,7 @@ theorem isSearchable_of_incomp_of_isSearchable [IsStrictWeakOrder α lt] {t} :
     induction t <;> intros <;>
       run_tac
         is_searchable_tactic
-    · cases hi <;> simp_all [lift]
+    · cases hi <;> simp_all [Lift]
       apply lt_of_incomp_of_lt
       assumption
       assumption
@@ -111,7 +111,7 @@ theorem isSearchable_some_low_of_isSearchable_of_lt {t} [IsTrans α lt] :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · cases hi <;> simp_all [lift]
+  · cases hi <;> simp_all [Lift]
     apply trans_of lt hlt
     assumption
   all_goals apply t_ih_lchild hlt hs_hs₁
@@ -124,7 +124,7 @@ theorem isSearchable_none_low_of_isSearchable_some_low {t} :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · simp [lift]
+  · simp [Lift]
   all_goals apply t_ih_lchild hlt_hs₁
 #align rbnode.is_searchable_none_low_of_is_searchable_some_low Rbnode.isSearchable_none_low_of_isSearchable_some_low
 
@@ -136,7 +136,7 @@ theorem isSearchable_some_high_of_isSearchable_of_lt {t} [IsTrans α lt] :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · cases lo <;> simp_all [lift]
+  · cases lo <;> simp_all [Lift]
     apply trans_of lt
     assumption
     assumption
@@ -150,7 +150,7 @@ theorem isSearchable_none_high_of_isSearchable_some_high {t} :
   induction t <;> intros <;>
     run_tac
       is_searchable_tactic
-  · cases lo <;> simp [lift]
+  · cases lo <;> simp [Lift]
   all_goals apply t_ih_rchild hlt_hs₂
 #align rbnode.is_searchable_none_high_of_is_searchable_some_high Rbnode.isSearchable_none_high_of_isSearchable_some_high
 
@@ -159,35 +159,35 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
   by
   classical
     induction t
-    case leaf => simp [mem]
+    case leaf => simp [Mem]
     all_goals
       -- red_node and black_node are identical
       intro lo hi h₁ h₂
       cases h₁
-      simp only [mem] at h₂
-      have val_hi : lift lt (some t_val) hi :=
+      simp only [Mem] at h₂
+      have val_hi : Lift lt (some t_val) hi :=
         by
         apply lo_lt_hi
         assumption
-      have lo_val : lift lt lo (some t_val) :=
+      have lo_val : Lift lt lo (some t_val) :=
         by
         apply lo_lt_hi
         assumption
       cases_type*or.1
-      · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) :=
+      · have h₃ : Lift lt lo (some x) ∧ Lift lt (some x) (some t_val) :=
           by
           apply t_ih_lchild
           assumption
           assumption
         cases' h₃ with lo_x x_val
         constructor
-        show lift lt lo (some x)
+        show Lift lt lo (some x)
         · assumption
-        show lift lt (some x) hi
-        · cases' hi with hi <;> simp [lift] at *
+        show Lift lt (some x) hi
+        · cases' hi with hi <;> simp [Lift] at *
           apply trans_of lt x_val val_hi
       · cases h₂
-        cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+        cases' lo with lo <;> cases' hi with hi <;> simp [Lift] at *
         · apply lt_of_incomp_of_lt _ val_hi
           simp [*]
         · apply lt_of_lt_of_incomp lo_val
@@ -197,13 +197,13 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
           simp [*]
         · apply lt_of_incomp_of_lt _ val_hi
           simp [*]
-      · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi :=
+      · have h₃ : Lift lt (some t_val) (some x) ∧ Lift lt (some x) hi :=
           by
           apply t_ih_rchild
           assumption
           assumption
         cases' h₃ with val_x x_hi
-        cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+        cases' lo with lo <;> cases' hi with hi <;> simp [Lift] at *
         · assumption
         · apply trans_of lt lo_val val_x
         constructor

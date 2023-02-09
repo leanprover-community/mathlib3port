@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.number_field.norm
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,8 @@ theorem isUnit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x
     refine' ⟨fun hx => _, IsUnit.map _⟩
     replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
     refine'
-      @isUnit_of_mul_isUnit_right (𝓞 L) _
-        ⟨(univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x,
+      @is_unit_of_mul_is_unit_right (𝓞 L) _
+        ⟨(univ \ {AlgEquiv.refl}).prod fun σ : L ≃ₐ[K] L => σ x,
           prod_mem fun σ hσ => map_isIntegral (σ : L →+* L).toIntAlgHom x.2⟩
         _ _
     convert hx using 1
@@ -63,7 +63,7 @@ theorem isUnit_norm [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x
           ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L)) =
         _
     · rw [prod_singleton, AlgEquiv.coe_refl, id]
-    · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebra_map_norm]
+    · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebraMap_norm]
 #align ring_of_integers.is_unit_norm RingOfIntegers.isUnit_norm
 
 /-- If `L/K` is a finite Galois extension of fields, then, for all `(x : 𝓞 L)` we have that
@@ -72,9 +72,9 @@ theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L
   classical
     have hint : (∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x) ∈ 𝓞 L :=
       Subalgebra.prod_mem _ fun σ hσ =>
-        (mem_ring_of_integers _ _).2 (map_isIntegral σ (ring_of_integers.is_integral_coe x))
+        (mem_ringOfIntegers _ _).2 (map_isIntegral σ (ringOfIntegers.isIntegral_coe x))
     refine' ⟨⟨_, hint⟩, Subtype.ext _⟩
-    rw [coe_algebra_map_norm K x, norm_eq_prod_automorphisms]
+    rw [coe_algebraMap_norm K x, norm_eq_prod_automorphisms]
     simp [← Finset.mul_prod_erase _ _ (mem_univ AlgEquiv.refl)]
 #align ring_of_integers.dvd_norm RingOfIntegers.dvd_norm
 

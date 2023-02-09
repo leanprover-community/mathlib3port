@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,13 +41,13 @@ section Order
 variable [NormedLatticeAddCommGroup E]
 
 theorem coeFn_le (f g : lp E p μ) : f ≤ᵐ[μ] g ↔ f ≤ g := by
-  rw [← Subtype.coe_le_coe, ← ae_eq_fun.coe_fn_le, ← coeFn_coeBase, ← coeFn_coeBase]
+  rw [← Subtype.coe_le_coe, ← AeEqFun.coeFn_le, ← coeFn_coeBase, ← coeFn_coeBase]
 #align measure_theory.Lp.coe_fn_le MeasureTheory.lp.coeFn_le
 
 theorem coeFn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
   by
-  rw [← coe_fn_le]
-  have h0 := Lp.coe_fn_zero E p μ
+  rw [← coeFn_le]
+  have h0 := lp.coeFn_zero E p μ
   constructor <;> intro h <;> filter_upwards [h, h0]with _ _ h2
   · rwa [h2]
   · rwa [← h2]
@@ -56,8 +56,8 @@ theorem coeFn_nonneg (f : lp E p μ) : 0 ≤ᵐ[μ] f ↔ 0 ≤ f :=
 instance : CovariantClass (lp E p μ) (lp E p μ) (· + ·) (· ≤ ·) :=
   by
   refine' ⟨fun f g₁ g₂ hg₁₂ => _⟩
-  rw [← coe_fn_le] at hg₁₂⊢
-  filter_upwards [coe_fn_add f g₁, coe_fn_add f g₂, hg₁₂]with _ h1 h2 h3
+  rw [← coeFn_le] at hg₁₂⊢
+  filter_upwards [coeFn_add f g₁, coeFn_add f g₂, hg₁₂]with _ h1 h2 h3
   rw [h1, h2, Pi.add_apply, Pi.add_apply]
   exact add_le_add le_rfl h3
 
@@ -84,11 +84,11 @@ theorem MeasureTheory.Memℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp
 instance : Lattice (lp E p μ) :=
   Subtype.lattice
     (fun f g hf hg => by
-      rw [mem_Lp_iff_mem_ℒp] at *
-      exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_sup _ _)).mpr (hf.sup hg))
+      rw [mem_lp_iff_memℒp] at *
+      exact (memℒp_congr_ae (AeEqFun.coeFn_sup _ _)).mpr (hf.sup hg))
     fun f g hf hg => by
-    rw [mem_Lp_iff_mem_ℒp] at *
-    exact (mem_ℒp_congr_ae (ae_eq_fun.coe_fn_inf _ _)).mpr (hf.inf hg)
+    rw [mem_lp_iff_memℒp] at *
+    exact (memℒp_congr_ae (AeEqFun.coeFn_inf _ _)).mpr (hf.inf hg)
 
 theorem coeFn_sup (f g : lp E p μ) : ⇑(f ⊔ g) =ᵐ[μ] ⇑f ⊔ ⇑g :=
   AeEqFun.coeFn_sup _ _
@@ -107,10 +107,10 @@ noncomputable instance [Fact (1 ≤ p)] : NormedLatticeAddCommGroup (lp E p μ) 
     lp.normedAddCommGroup with
     add_le_add_left := fun f g => add_le_add_left
     solid := fun f g hfg => by
-      rw [← coe_fn_le] at hfg
-      simp_rw [Lp.norm_def, Ennreal.toReal_le_toReal (Lp.snorm_ne_top f) (Lp.snorm_ne_top g)]
+      rw [← coeFn_le] at hfg
+      simp_rw [lp.norm_def, Ennreal.toReal_le_toReal (lp.snorm_ne_top f) (lp.snorm_ne_top g)]
       refine' snorm_mono_ae _
-      filter_upwards [hfg, Lp.coe_fn_abs f, Lp.coe_fn_abs g]with x hx hxf hxg
+      filter_upwards [hfg, lp.coeFn_abs f, lp.coeFn_abs g]with x hx hxf hxg
       rw [hxf, hxg] at hx
       exact solid hx }
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.group.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2001,11 +2001,11 @@ Case conversion may be inaccurate. Consider using '#align eq_one_of_inv_eq' eq_o
 @[to_additive eq_zero_of_neg_eq]
 theorem eq_one_of_inv_eq' (h : a⁻¹ = a) : a = 1 :=
   match lt_trichotomy a 1 with
-  | Or.inl h₁ =>
+  | or.inl h₁ =>
     have : 1 < a := h ▸ one_lt_inv_of_inv h₁
     absurd h₁ this.asymm
-  | Or.inr (Or.inl h₁) => h₁
-  | Or.inr (Or.inr h₁) =>
+  | or.inr (or.inl h₁) => h₁
+  | or.inr (or.inr h₁) =>
     have : a < 1 := h ▸ inv_lt_one'.mpr h₁
     absurd h₁ this.asymm
 #align eq_one_of_inv_eq' eq_one_of_inv_eq'
@@ -2072,7 +2072,7 @@ by choosing a positive cone in an exisiting `add_comm_group`. -/
 structure PositiveCone (α : Type _) [AddCommGroup α] where
   NonNeg : α → Prop
   Pos : α → Prop := fun a => nonneg a ∧ ¬nonneg (-a)
-  pos_iff : ∀ a, Pos a ↔ nonneg a ∧ ¬nonneg (-a) := by
+  pos_iff : ∀ a, pos a ↔ nonneg a ∧ ¬nonneg (-a) := by
     run_tac
       order_laws_tac
   zero_nonneg : nonneg 0
@@ -2105,7 +2105,7 @@ open AddCommGroup
 designating a positive cone in an existing `add_comm_group`. -/
 def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : PositiveCone α) : OrderedAddCommGroup α :=
   { ‹AddCommGroup α› with
-    le := fun a b => C.NonNeg (b - a)
+    le := fun a b => C.Nonneg (b - a)
     lt := fun a b => C.Pos (b - a)
     lt_iff_le_not_le := fun a b => by simp <;> rw [C.pos_iff] <;> simp
     le_refl := fun a => by simp [C.zero_nonneg]
@@ -2113,7 +2113,7 @@ def mkOfPositiveCone {α : Type _} [AddCommGroup α] (C : PositiveCone α) : Ord
       simp [-sub_eq_add_neg] <;> rw [← sub_add_sub_cancel] <;> exact C.add_nonneg nbc nab
     le_antisymm := fun a b nab nba =>
       eq_of_sub_eq_zero <| C.nonneg_antisymm nba (by rw [neg_sub] <;> exact nab)
-    add_le_add_left := fun a b nab c => by simpa [(· ≤ ·), Preorder.Le] using nab }
+    add_le_add_left := fun a b nab c => by simpa [(· ≤ ·), preorder.le] using nab }
 #align ordered_add_comm_group.mk_of_positive_cone OrderedAddCommGroup.mkOfPositiveCone
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.add_torsor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -63,7 +63,7 @@ theorem dist_lineMap_lineMap (p₁ p₂ : P) (c₁ c₂ : 𝕜) :
     dist (lineMap p₁ p₂ c₁) (lineMap p₁ p₂ c₂) = dist c₁ c₂ * dist p₁ p₂ :=
   by
   rw [dist_comm p₁ p₂]
-  simp only [line_map_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul,
+  simp only [lineMap_apply, dist_eq_norm_vsub, vadd_vsub_vadd_cancel_right, ← sub_smul, norm_smul,
     vsub_eq_sub]
 #align dist_line_map_line_map dist_lineMap_lineMap
 
@@ -74,7 +74,7 @@ theorem lipschitzWith_lineMap (p₁ p₂ : P) : LipschitzWith (nndist p₁ p₂)
 
 @[simp]
 theorem dist_lineMap_left (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₁ = ‖c‖ * dist p₁ p₂ := by
-  simpa only [line_map_apply_zero, dist_zero_right] using dist_lineMap_lineMap p₁ p₂ c 0
+  simpa only [lineMap_apply_zero, dist_zero_right] using dist_lineMap_lineMap p₁ p₂ c 0
 #align dist_line_map_left dist_lineMap_left
 
 @[simp]
@@ -84,7 +84,7 @@ theorem dist_left_lineMap (p₁ p₂ : P) (c : 𝕜) : dist p₁ (lineMap p₁ p
 
 @[simp]
 theorem dist_lineMap_right (p₁ p₂ : P) (c : 𝕜) : dist (lineMap p₁ p₂ c) p₂ = ‖1 - c‖ * dist p₁ p₂ :=
-  by simpa only [line_map_apply_one, dist_eq_norm'] using dist_lineMap_lineMap p₁ p₂ c 1
+  by simpa only [lineMap_apply_one, dist_eq_norm'] using dist_lineMap_lineMap p₁ p₂ c 1
 #align dist_line_map_right dist_lineMap_right
 
 @[simp]
@@ -95,7 +95,7 @@ theorem dist_right_lineMap (p₁ p₂ : P) (c : 𝕜) : dist p₂ (lineMap p₁ 
 @[simp]
 theorem dist_homothety_self (p₁ p₂ : P) (c : 𝕜) :
     dist (homothety p₁ c p₂) p₂ = ‖1 - c‖ * dist p₁ p₂ := by
-  rw [homothety_eq_line_map, dist_lineMap_right]
+  rw [homothety_eq_lineMap, dist_lineMap_right]
 #align dist_homothety_self dist_homothety_self
 
 @[simp]

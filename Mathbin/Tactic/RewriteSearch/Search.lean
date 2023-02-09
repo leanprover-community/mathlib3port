@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.search
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ sides of the equation. When `find_proof` is called, we will run a search and add
 new vertices and edges.
 -/
 unsafe def mk_graph (conf : config) (rules : List (expr × Bool)) (eq : expr) : tactic graph := do
-  let (lhs, rhs) ← tactic.match_eq Eq <|> tactic.match_iff Eq
+  let (lhs, rhs) ← tactic.match_eq eq <|> tactic.match_iff eq
   let lhs_pp ← toString <$> tactic.pp lhs
   let rhs_pp ← toString <$> tactic.pp rhs
   let lhs_vertex : vertex := ⟨0, lhs, lhs_pp, Side.L, none⟩
@@ -176,7 +176,7 @@ private unsafe def add_rewrite (v : vertex) (rw : rewrite) : tactic graph := do
 -/
 private unsafe def expand_vertex (v : vertex) : tactic graph := do
   let rws ← get_rewrites g.rules v.exp g.conf
-  List.foldlM (fun g rw => add_rewrite g v rw) g rws
+  list.mfoldl (fun g rw => add_rewrite g v rw) g rws
 #align tactic.rewrite_search.graph.expand_vertex tactic.rewrite_search.graph.expand_vertex
 
 /-- Repeatedly expand edges, starting at a given vertex id, until a solution is found.
@@ -210,8 +210,8 @@ private unsafe def proof_for_edges : Side × List edge → tactic (Option proof_
   | (s, edges) => do
     let proofs ←
       match s with
-        | side.L => edges.mapM fun e => e.Proof
-        | side.R => edges.reverse.mapM fun e => e.Proof >>= mk_eq_symm
+        | side.L => edges.mapM fun e => e.proof
+        | side.R => edges.reverse.mapM fun e => e.proof >>= mk_eq_symm
     let proof ← combine_proofs proofs
     let hows := edges.map fun e => e.how
     return <| some ⟨proof, s, hows⟩
@@ -234,8 +234,8 @@ unsafe def find_proof : tactic (graph × expr × List proof_unit) :=
     let g ← find_solving_edge g 0
     let (left_edges, right_edges) ← solution_paths g
     let units ← [(Side.L, left_edges), (Side.R, right_edges)].filterMapM proof_for_edges
-    let proof ← combine_proofs <| Units.map fun u => u.Proof
-    return (g, proof, Units)
+    let proof ← combine_proofs <| units.map fun u => u.proof
+    return (g, proof, units)
 #align tactic.rewrite_search.graph.find_proof tactic.rewrite_search.graph.find_proof
 
 end Graph

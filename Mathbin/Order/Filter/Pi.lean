@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Alex Kontorovich
 
 ! This file was ported from Lean 3 source module order.filter.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.tendsto_pi Filter.tendsto_piₓ'. -/
 theorem tendsto_pi {β : Type _} {m : β → ∀ i, α i} {l : Filter β} :
     Tendsto m l (pi f) ↔ ∀ i, Tendsto (fun x => m x i) l (f i) := by
-  simp only [pi, tendsto_infi, tendsto_comap_iff]
+  simp only [pi, tendsto_infᵢ, tendsto_comap_iff]
 #align filter.tendsto_pi Filter.tendsto_pi
 
 /- warning: filter.le_pi -> Filter.le_pi is a dubious translation:
@@ -104,8 +104,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.pi_mem_pi Filter.pi_mem_piₓ'. -/
 theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀ i ∈ I, s i ∈ f i) : I.pi s ∈ pi f :=
   by
-  rw [pi_def, bInter_eq_Inter]
-  refine' mem_infi_of_Inter hI (fun i => _) subset.rfl
+  rw [pi_def, binterᵢ_eq_interᵢ]
+  refine' mem_infᵢ_of_interᵢ hI (fun i => _) Subset.rfl
   exact preimage_mem_comap (h i i.2)
 #align filter.pi_mem_pi Filter.pi_mem_pi
 
@@ -119,10 +119,10 @@ theorem mem_pi {s : Set (∀ i, α i)} :
     s ∈ pi f ↔ ∃ I : Set ι, I.Finite ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s :=
   by
   constructor
-  · simp only [pi, mem_infi', mem_comap, pi_def]
+  · simp only [pi, mem_infᵢ', mem_comap, pi_def]
     rintro ⟨I, If, V, hVf, hVI, rfl, -⟩
     choose t htf htV using hVf
-    exact ⟨I, If, t, htf, Inter₂_mono fun i _ => htV i⟩
+    exact ⟨I, If, t, htf, interᵢ₂_mono fun i _ => htV i⟩
   · rintro ⟨I, If, t, htf, hts⟩
     exact mem_of_superset (pi_mem_pi If fun i _ => htf i) hts
 #align filter.mem_pi Filter.mem_pi
@@ -166,7 +166,7 @@ theorem hasBasis_pi {ι' : ι → Type} {s : ∀ i, ι' i → Set (α i)} {p : �
     (pi f).HasBasis (fun If : Set ι × ∀ i, ι' i => If.1.Finite ∧ ∀ i ∈ If.1, p i (If.2 i))
       fun If : Set ι × ∀ i, ι' i => If.1.pi fun i => s i <| If.2 i :=
   by
-  have : (pi f).HasBasis _ _ := has_basis_infi' fun i => (h i).comap (eval i : (∀ j, α j) → α i)
+  have : (pi f).HasBasis _ _ := hasBasis_infᵢ' fun i => (h i).comap (eval i : (∀ j, α j) → α i)
   convert this
   ext
   simp
@@ -204,9 +204,9 @@ Case conversion may be inaccurate. Consider using '#align filter.pi_inf_principa
 theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :
     pi f ⊓ 𝓟 (Set.pi I s) = ⊥ ↔ ∃ i ∈ I, f i ⊓ 𝓟 (s i) = ⊥ :=
   by
-  rw [← univ_pi_piecewise I, pi_inf_principal_univ_pi_eq_bot]
+  rw [← univ_pi_piecewise_univ I, pi_inf_principal_univ_pi_eq_bot]
   refine' exists_congr fun i => _
-  by_cases hi : i ∈ I <;> simp [hi, (‹∀ i, ne_bot (f i)› i).Ne]
+  by_cases hi : i ∈ I <;> simp [hi, (‹∀ i, NeBot (f i)› i).ne]
 #align filter.pi_inf_principal_pi_eq_bot Filter.pi_inf_principal_pi_eq_bot
 
 /- warning: filter.pi_inf_principal_univ_pi_ne_bot -> Filter.pi_inf_principal_univ_pi_neBot is a dubious translation:
@@ -217,7 +217,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.pi_inf_principal_univ_pi_ne_bot Filter.pi_inf_principal_univ_pi_neBotₓ'. -/
 @[simp]
 theorem pi_inf_principal_univ_pi_neBot :
-    NeBot (pi f ⊓ 𝓟 (Set.pi univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by simp [ne_bot_iff]
+    NeBot (pi f ⊓ 𝓟 (Set.pi univ s)) ↔ ∀ i, NeBot (f i ⊓ 𝓟 (s i)) := by simp [neBot_iff]
 #align filter.pi_inf_principal_univ_pi_ne_bot Filter.pi_inf_principal_univ_pi_neBot
 
 /- warning: filter.pi_inf_principal_pi_ne_bot -> Filter.pi_inf_principal_pi_neBot is a dubious translation:
@@ -228,7 +228,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.pi_inf_principal_pi_ne_bot Filter.pi_inf_principal_pi_neBotₓ'. -/
 @[simp]
 theorem pi_inf_principal_pi_neBot [∀ i, NeBot (f i)] {I : Set ι} :
-    NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by simp [ne_bot_iff]
+    NeBot (pi f ⊓ 𝓟 (I.pi s)) ↔ ∀ i ∈ I, NeBot (f i ⊓ 𝓟 (s i)) := by simp [neBot_iff]
 #align filter.pi_inf_principal_pi_ne_bot Filter.pi_inf_principal_pi_neBot
 
 /- warning: filter.pi_inf_principal_pi.ne_bot -> Filter.PiInfPrincipalPi.neBot is a dubious translation:
@@ -256,7 +256,7 @@ theorem pi_eq_bot : pi f = ⊥ ↔ ∃ i, f i = ⊥ := by
 
 #print Filter.pi_neBot /-
 @[simp]
-theorem pi_neBot : NeBot (pi f) ↔ ∀ i, NeBot (f i) := by simp [ne_bot_iff]
+theorem pi_neBot : NeBot (pi f) ↔ ∀ i, NeBot (f i) := by simp [neBot_iff]
 #align filter.pi_ne_bot Filter.pi_neBot
 -/
 
@@ -293,7 +293,7 @@ theorem pi_inj [∀ i, NeBot (f₁ i)] : pi f₁ = pi f₂ ↔ f₁ = f₂ :=
   by
   refine' ⟨fun h => _, congr_arg pi⟩
   have hle : f₁ ≤ f₂ := pi_le_pi.1 h.le
-  haveI : ∀ i, ne_bot (f₂ i) := fun i => ne_bot_of_le (hle i)
+  haveI : ∀ i, NeBot (f₂ i) := fun i => neBot_of_le (hle i)
   exact hle.antisymm (pi_le_pi.1 h.ge)
 #align filter.pi_inj Filter.pi_inj
 -/
@@ -330,19 +330,19 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.compl_mem_Coprod Filter.compl_mem_coprodᵢₓ'. -/
 theorem compl_mem_coprodᵢ {s : Set (∀ i, α i)} :
     sᶜ ∈ Filter.coprodᵢ f ↔ ∀ i, (eval i '' s)ᶜ ∈ f i := by
-  simp only [Filter.coprodᵢ, mem_supr, compl_mem_comap]
+  simp only [Filter.coprodᵢ, mem_supᵢ, compl_mem_comap]
 #align filter.compl_mem_Coprod Filter.compl_mem_coprodᵢ
 
 #print Filter.coprodᵢ_neBot_iff' /-
 theorem coprodᵢ_neBot_iff' : NeBot (Filter.coprodᵢ f) ↔ (∀ i, Nonempty (α i)) ∧ ∃ d, NeBot (f d) :=
-  by simp only [Filter.coprodᵢ, supr_ne_bot, ← exists_and_left, ← comap_eval_ne_bot_iff']
+  by simp only [Filter.coprodᵢ, supᵢ_neBot, ← exists_and_left, ← comap_eval_neBot_iff']
 #align filter.Coprod_ne_bot_iff' Filter.coprodᵢ_neBot_iff'
 -/
 
 #print Filter.coprodᵢ_neBot_iff /-
 @[simp]
 theorem coprodᵢ_neBot_iff [∀ i, Nonempty (α i)] : NeBot (Filter.coprodᵢ f) ↔ ∃ d, NeBot (f d) := by
-  simp [Coprod_ne_bot_iff', *]
+  simp [coprodᵢ_neBot_iff', *]
 #align filter.Coprod_ne_bot_iff Filter.coprodᵢ_neBot_iff
 -/
 
@@ -353,7 +353,7 @@ but is expected to have type
   forall {ι : Type.{u2}} {α : ι -> Type.{u1}} {f : forall (i : ι), Filter.{u1} (α i)}, Iff (Eq.{max (succ u2) (succ u1)} (Filter.{max u2 u1} (forall (i : ι), α i)) (Filter.coprodᵢ.{u2, u1} ι (fun (i : ι) => α i) f) (Bot.bot.{max u2 u1} (Filter.{max u2 u1} (forall (i : ι), α i)) (CompleteLattice.toBot.{max u2 u1} (Filter.{max u2 u1} (forall (i : ι), α i)) (Filter.instCompleteLatticeFilter.{max u2 u1} (forall (i : ι), α i))))) (Or (Exists.{succ u2} ι (fun (i : ι) => IsEmpty.{succ u1} (α i))) (Eq.{max (succ u2) (succ u1)} (forall (i : ι), Filter.{u1} (α i)) f (Bot.bot.{max u2 u1} (forall (i : ι), Filter.{u1} (α i)) (Pi.instBotForAll.{u2, u1} ι (fun (i : ι) => Filter.{u1} (α i)) (fun (i : ι) => CompleteLattice.toBot.{u1} (Filter.{u1} (α i)) (Filter.instCompleteLatticeFilter.{u1} (α i)))))))
 Case conversion may be inaccurate. Consider using '#align filter.Coprod_eq_bot_iff' Filter.coprodᵢ_eq_bot_iff'ₓ'. -/
 theorem coprodᵢ_eq_bot_iff' : Filter.coprodᵢ f = ⊥ ↔ (∃ i, IsEmpty (α i)) ∨ f = ⊥ := by
-  simpa [not_and_or, funext_iff] using not_congr Coprod_ne_bot_iff'
+  simpa [not_and_or, funext_iff] using not_congr coprodᵢ_neBot_iff'
 #align filter.Coprod_eq_bot_iff' Filter.coprodᵢ_eq_bot_iff'
 
 /- warning: filter.Coprod_eq_bot_iff -> Filter.coprodᵢ_eq_bot_iff is a dubious translation:
@@ -364,7 +364,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.Coprod_eq_bot_iff Filter.coprodᵢ_eq_bot_iffₓ'. -/
 @[simp]
 theorem coprodᵢ_eq_bot_iff [∀ i, Nonempty (α i)] : Filter.coprodᵢ f = ⊥ ↔ f = ⊥ := by
-  simpa [funext_iff] using not_congr Coprod_ne_bot_iff
+  simpa [funext_iff] using not_congr coprodᵢ_neBot_iff
 #align filter.Coprod_eq_bot_iff Filter.coprodᵢ_eq_bot_iff
 
 /- warning: filter.Coprod_bot' -> Filter.coprodᵢ_bot' is a dubious translation:
@@ -426,7 +426,7 @@ theorem map_pi_map_coprodᵢ_le :
     map (fun k : ∀ i, α i => fun i => m i (k i)) (Filter.coprodᵢ f) ≤
       Filter.coprodᵢ fun i => map (m i) (f i) :=
   by
-  simp only [le_def, mem_map, mem_Coprod_iff]
+  simp only [le_def, mem_map, mem_coprodᵢ_iff]
   intro s h i
   obtain ⟨t, H, hH⟩ := h i
   exact ⟨{ x : α i | m i x ∈ t }, H, fun x hx => hH hx⟩

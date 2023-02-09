@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle, Rémi Bottinelli
 
 ! This file was ported from Lean 3 source module combinatorics.quiver.cast
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.hom.cast_eq_iff_heq Quiver.Hom.cast_eq_iff_heqₓ'. -/
 theorem Hom.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) (e' : u' ⟶ v') :
     e.cast hu hv = e' ↔ HEq e e' := by
-  rw [hom.cast_eq_cast]
+  rw [Hom.cast_eq_cast]
   exact cast_eq_iff_heq
 #align quiver.hom.cast_eq_iff_heq Quiver.Hom.cast_eq_iff_heq
 
@@ -114,7 +114,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.hom.eq_cast_iff
 theorem Hom.eq_cast_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (e : u ⟶ v) (e' : u' ⟶ v') :
     e' = e.cast hu hv ↔ HEq e' e :=
   by
-  rw [eq_comm, hom.cast_eq_iff_heq]
+  rw [eq_comm, Hom.cast_eq_iff_heq]
   exact ⟨HEq.symm, HEq.symm⟩
 #align quiver.hom.eq_cast_iff_heq Quiver.Hom.eq_cast_iff_heq
 
@@ -190,7 +190,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quiver.path.cast_heq Quiver.Path.cast_heqₓ'. -/
 theorem Path.cast_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (p : Path u v) :
     HEq (p.cast hu hv) p := by
-  rw [path.cast_eq_cast]
+  rw [Path.cast_eq_cast]
   exact cast_hEq _ _
 #align quiver.path.cast_heq Quiver.Path.cast_heq
 
@@ -203,7 +203,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.path.cast_eq_if
 theorem Path.cast_eq_iff_heq {u v u' v' : U} (hu : u = u') (hv : v = v') (p : Path u v)
     (p' : Path u' v') : p.cast hu hv = p' ↔ HEq p p' :=
   by
-  rw [path.cast_eq_cast]
+  rw [Path.cast_eq_cast]
   exact cast_eq_iff_heq
 #align quiver.path.cast_eq_iff_heq Quiver.Path.cast_eq_iff_heq
 
@@ -241,7 +241,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.cast_eq_of_cons
 theorem cast_eq_of_cons_eq_cons {u v v' w : U} {p : Path u v} {p' : Path u v'} {e : v ⟶ w}
     {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : p.cast rfl (obj_eq_of_cons_eq_cons h) = p' :=
   by
-  rw [path.cast_eq_iff_heq]
+  rw [Path.cast_eq_iff_heq]
   exact heq_of_cons_eq_cons h
 #align quiver.cast_eq_of_cons_eq_cons Quiver.cast_eq_of_cons_eq_cons
 
@@ -254,7 +254,7 @@ Case conversion may be inaccurate. Consider using '#align quiver.hom_cast_eq_of_
 theorem hom_cast_eq_of_cons_eq_cons {u v v' w : U} {p : Path u v} {p' : Path u v'} {e : v ⟶ w}
     {e' : v' ⟶ w} (h : p.cons e = p'.cons e') : e.cast (obj_eq_of_cons_eq_cons h) rfl = e' :=
   by
-  rw [hom.cast_eq_iff_heq]
+  rw [Hom.cast_eq_iff_heq]
   exact hom_heq_of_cons_eq_cons h
 #align quiver.hom_cast_eq_of_cons_eq_cons Quiver.hom_cast_eq_of_cons_eq_cons
 

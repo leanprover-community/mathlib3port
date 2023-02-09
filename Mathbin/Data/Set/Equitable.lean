@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module data.set.equitable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,14 +70,14 @@ theorem equitableOn_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
 #print Set.equitableOn_iff_exists_image_subset_icc /-
 theorem equitableOn_iff_exists_image_subset_icc {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, f '' s ⊆ Icc b (b + 1) := by
-  simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
+  simpa only [image_subset_iff] using equitableOn_iff_exists_le_le_add_one
 #align set.equitable_on_iff_exists_image_subset_Icc Set.equitableOn_iff_exists_image_subset_icc
 -/
 
 #print Set.equitableOn_iff_exists_eq_eq_add_one /-
 theorem equitableOn_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
     s.EquitableOn f ↔ ∃ b, ∀ a ∈ s, f a = b ∨ f a = b + 1 := by
-  simp_rw [equitable_on_iff_exists_le_le_add_one, Nat.le_and_le_add_one_iff]
+  simp_rw [equitableOn_iff_exists_le_le_add_one, Nat.le_and_le_add_one_iff]
 #align set.equitable_on_iff_exists_eq_eq_add_one Set.equitableOn_iff_exists_eq_eq_add_one
 -/
 
@@ -104,7 +104,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : OrderedSemiring.{u1} β] (a : α) (f : α -> β), Set.EquitableOn.{u2, u1} α β (Preorder.toLE.{u1} β (PartialOrder.toPreorder.{u1} β (OrderedSemiring.toPartialOrder.{u1} β _inst_1))) (Distrib.toAdd.{u1} β (NonUnitalNonAssocSemiring.toDistrib.{u1} β (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} β (Semiring.toNonAssocSemiring.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1))))) (Semiring.toOne.{u1} β (OrderedSemiring.toSemiring.{u1} β _inst_1)) (Singleton.singleton.{u2, u2} α (Set.{u2} α) (Set.instSingletonSet.{u2} α) a) f
 Case conversion may be inaccurate. Consider using '#align set.equitable_on_singleton Set.equitableOn_singletonₓ'. -/
 theorem equitableOn_singleton (a : α) (f : α → β) : Set.EquitableOn {a} f :=
-  Set.subsingleton_singleton.EquitableOn f
+  Set.subsingleton_singleton.equitableOn f
 #align set.equitable_on_singleton Set.equitableOn_singleton
 
 end OrderedSemiring
@@ -161,7 +161,7 @@ theorem EquitableOn.le_add_one (h : EquitableOn (s : Set α) f) (ha : a ∈ s) :
 theorem equitableOn_iff :
     EquitableOn (s : Set α) f ↔
       ∀ a ∈ s, f a = (∑ i in s, f i) / s.card ∨ f a = (∑ i in s, f i) / s.card + 1 :=
-  by simp_rw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
+  by simp_rw [equitableOn_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 #align finset.equitable_on_iff Finset.equitableOn_iff
 -/
 

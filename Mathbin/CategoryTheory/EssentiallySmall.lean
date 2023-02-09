@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.essentially_small
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,10 +72,10 @@ theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cate
   fconstructor
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
-    exact essentially_small.mk' (e.symm.trans f)
+    exact EssentiallySmall.mk' (e.symm.trans f)
   · rintro ⟨S, 𝒮, ⟨f⟩⟩
     skip
-    exact essentially_small.mk' (e.trans f)
+    exact EssentiallySmall.mk' (e.trans f)
 #align category_theory.essentially_small_congr CategoryTheory.essentiallySmall_congr
 
 theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
@@ -107,13 +107,13 @@ theorem locallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category
     intro X Y
     specialize L (e.inverse.obj X) (e.inverse.obj Y)
     refine' (small_congr _).mpr L
-    exact equiv_of_fully_faithful e.inverse
+    exact equivOfFullyFaithful e.inverse
   · rintro ⟨L⟩
     fconstructor
     intro X Y
     specialize L (e.functor.obj X) (e.functor.obj Y)
     refine' (small_congr _).mpr L
-    exact equiv_of_fully_faithful e.functor
+    exact equivOfFullyFaithful e.functor
 #align category_theory.locally_small_congr CategoryTheory.locallySmall_congr
 
 instance (priority := 100) locallySmall_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C
@@ -210,18 +210,18 @@ theorem essentiallySmall_iff (C : Type u) [Category.{v} C] :
     fconstructor
     · rcases h with ⟨S, 𝒮, ⟨e⟩⟩
       skip
-      refine' ⟨⟨skeleton S, ⟨_⟩⟩⟩
+      refine' ⟨⟨Skeleton S, ⟨_⟩⟩⟩
       exact e.skeleton_equiv
     · skip
       infer_instance
   · rintro ⟨⟨S, ⟨e⟩⟩, L⟩
     skip
-    let e' := (shrink_homs.equivalence C).skeletonEquiv.symm
+    let e' := (ShrinkHoms.equivalence C).skeletonEquiv.symm
     refine' ⟨⟨S, _, ⟨_⟩⟩⟩
-    apply induced_category.category (e'.trans e).symm
+    apply InducedCategory.category (e'.trans e).symm
     refine'
-      (shrink_homs.equivalence C).trans
-        ((skeleton_equivalence _).symm.trans (induced_functor (e'.trans e).symm).asEquivalence.symm)
+      (ShrinkHoms.equivalence C).trans
+        ((skeletonEquivalence _).symm.trans (inducedFunctor (e'.trans e).symm).asEquivalence.symm)
 #align category_theory.essentially_small_iff CategoryTheory.essentiallySmall_iff
 
 /-- Any thin category is locally small.
@@ -235,7 +235,7 @@ A thin category is essentially small if and only if the underlying type of its s
 -/
 theorem essentiallySmall_iff_of_thin {C : Type u} [Category.{v} C] [Quiver.IsThin C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) := by
-  simp [essentially_small_iff, CategoryTheory.locallySmall_of_thin]
+  simp [essentiallySmall_iff, CategoryTheory.locallySmall_of_thin]
 #align category_theory.essentially_small_iff_of_thin CategoryTheory.essentiallySmall_iff_of_thin
 
 end CategoryTheory

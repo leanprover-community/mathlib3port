@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.pi.interval
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, Parti
 
 instance : LocallyFiniteOrder (∀ i, α i) :=
   LocallyFiniteOrder.ofIcc _ (fun a b => piFinset fun i => Icc (a i) (b i)) fun a b x => by
-    simp_rw [mem_pi_finset, mem_Icc, le_def, forall_and]
+    simp_rw [mem_piFinset, mem_Icc, le_def, forall_and]
 
 variable (a b : ∀ i, α i)
 
@@ -70,7 +70,7 @@ variable [∀ i, LocallyFiniteOrderBot (α i)] (b : ∀ i, α i)
 
 instance : LocallyFiniteOrderBot (∀ i, α i) :=
   LocallyFiniteOrderTop.ofIic _ (fun b => piFinset fun i => Iic (b i)) fun b x => by
-    simp_rw [mem_pi_finset, mem_Iic, le_def]
+    simp_rw [mem_piFinset, mem_Iic, le_def]
 
 theorem card_Iic : (Iic b).card = ∏ i, (Iic (b i)).card :=
   card_piFinset _
@@ -88,7 +88,7 @@ variable [∀ i, LocallyFiniteOrderTop (α i)] (a : ∀ i, α i)
 
 instance : LocallyFiniteOrderTop (∀ i, α i) :=
   LocallyFiniteOrderTop.ofIci _ (fun a => piFinset fun i => Ici (a i)) fun a x => by
-    simp_rw [mem_pi_finset, mem_Ici, le_def]
+    simp_rw [mem_piFinset, mem_Ici, le_def]
 
 theorem card_Ici : (Ici a).card = ∏ i, (Ici (a i)).card :=
   card_piFinset _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.linear_pmap
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,10 +108,10 @@ open Classical
 /-- If `f` is closable, then `f.closure` is the closure. Otherwise it is defined
 as `f.closure = f`. -/
 noncomputable def closure (f : E →ₗ.[R] F) : E →ₗ.[R] F :=
-  if hf : f.IsClosable then hf.some else f
+  if hf : f.IsClosable then hf.choose else f
 #align linear_pmap.closure LinearPmap.closure
 
-theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.some := by
+theorem closure_def {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure = hf.choose := by
   simp [closure, hf]
 #align linear_pmap.closure_def LinearPmap.closure_def
 
@@ -154,13 +154,13 @@ theorem IsClosable.closure_isClosed {f : E →ₗ.[R] F} (hf : f.IsClosable) : f
 
 /-- If `f` is closable, then the closure is closable. -/
 theorem IsClosable.closureIsClosable {f : E →ₗ.[R] F} (hf : f.IsClosable) : f.closure.IsClosable :=
-  hf.closure_isClosed.IsClosable
+  hf.closure_isClosed.isClosable
 #align linear_pmap.is_closable.closure_is_closable LinearPmap.IsClosable.closureIsClosable
 
 theorem isClosable_iff_exists_closed_extension {f : E →ₗ.[R] F} :
     f.IsClosable ↔ ∃ (g : E →ₗ.[R] F)(hg : g.IsClosed), f ≤ g :=
   ⟨fun h => ⟨f.closure, h.closure_isClosed, f.le_closure⟩, fun ⟨_, hg, h⟩ =>
-    hg.IsClosable.leIsClosable h⟩
+    hg.isClosable.leIsClosable h⟩
 #align linear_pmap.is_closable_iff_exists_closed_extension LinearPmap.isClosable_iff_exists_closed_extension
 
 /-! ### The core of a linear operator -/
@@ -185,14 +185,14 @@ theorem closureHasCore (f : E →ₗ.[R] F) : f.closure.HasCore f.domain :=
   refine' ⟨f.le_closure.1, _⟩
   congr
   ext
-  · simp only [dom_restrict_domain, Submodule.mem_inf, and_iff_left_iff_imp]
+  · simp only [domRestrict_domain, Submodule.mem_inf, and_iff_left_iff_imp]
     intro hx
     exact f.le_closure.1 hx
   intro x y hxy
   let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩
   have hyz : (y : E) = z := by simp
   rw [f.le_closure.2 hyz]
-  exact dom_restrict_apply (hxy.trans hyz)
+  exact domRestrict_apply (hxy.trans hyz)
 #align linear_pmap.closure_has_core LinearPmap.closureHasCore
 
 end LinearPmap

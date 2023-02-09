@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module algebra.linear_recurrence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,13 +87,13 @@ def mkSol (init : Fin E.order → α) : ℕ → α
 
 /-- `E.mk_sol` indeed gives solutions to `E`. -/
 theorem is_sol_mkSol (init : Fin E.order → α) : E.IsSolution (E.mkSol init) := fun n => by
-  rw [mk_sol] <;> simp
+  rw [mkSol] <;> simp
 #align linear_recurrence.is_sol_mk_sol LinearRecurrence.is_sol_mkSol
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
 theorem mkSol_eq_init (init : Fin E.order → α) : ∀ n : Fin E.order, E.mkSol init n = init n :=
   fun n => by
-  rw [mk_sol]
+  rw [mkSol]
   simp only [n.is_lt, dif_pos, Fin.mk_val, Fin.eta]
 #align linear_recurrence.mk_sol_eq_init LinearRecurrence.mkSol_eq_init
 
@@ -103,9 +103,9 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
     (heq : ∀ n : Fin E.order, u n = init n) : ∀ n, u n = E.mkSol init n
   | n =>
     if h' : n < E.order then by
-      rw [mk_sol] <;> simp only [h', dif_pos] <;> exact_mod_cast HEq ⟨n, h'⟩
+      rw [mkSol] <;> simp only [h', dif_pos] <;> exact_mod_cast heq ⟨n, h'⟩
     else by
-      rw [mk_sol, ← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
+      rw [mkSol, ← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
       simp [h']
       congr with k
       exact
@@ -124,7 +124,7 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
   of `E` whose first `E.order` values are given by `init`. -/
 theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Fin E.order → α} (h : E.IsSolution u)
     (heq : ∀ n : Fin E.order, u n = init n) : u = E.mkSol init :=
-  funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
+  funext (E.eq_mk_of_is_sol_of_eq_init h heq)
 #align linear_recurrence.eq_mk_of_is_sol_of_eq_init' LinearRecurrence.eq_mk_of_is_sol_of_eq_init'
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/
@@ -219,7 +219,7 @@ def charPoly : α[X] :=
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
   by
-  rw [char_poly, Polynomial.IsRoot.def, Polynomial.eval]
+  rw [charPoly, Polynomial.IsRoot.def, Polynomial.eval]
   simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
     Polynomial.eval₂_sub]
   constructor

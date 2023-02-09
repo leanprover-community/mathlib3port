@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨ContMdiffMap.toFun⟩
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.contMdiff_toFun.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.contMdiff_toFun.continuous⟩⟩
 
 attribute [to_additive_ignore_args 21]
   ContMdiffMap ContMdiffMap.hasCoeToFun ContMdiffMap.ContinuousMap.hasCoe
@@ -78,15 +78,15 @@ protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
 #align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  f.ContMdiff.Mdifferentiable hn
+  f.contMdiff.mdifferentiable hn
 #align cont_mdiff_map.mdifferentiable' ContMdiffMap.mdifferentiable'
 
 protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
-  f.ContMdiff.Mdifferentiable le_top
+  f.contMdiff.mdifferentiable le_top
 #align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
 
 protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
-  f.Mdifferentiable x
+  f.mdifferentiable x
 #align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
@@ -127,6 +127,6 @@ end ContMdiffMap
 
 instance ContinuousLinearMap.hasCoeToContMdiffMap :
     Coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
-  ⟨fun f => ⟨f.toFun, f.ContMdiff⟩⟩
+  ⟨fun f => ⟨f.toFun, f.contMdiff⟩⟩
 #align continuous_linear_map.has_coe_to_cont_mdiff_map ContinuousLinearMap.hasCoeToContMdiffMap
 

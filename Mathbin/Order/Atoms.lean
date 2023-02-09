@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.atoms
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,14 +74,14 @@ def IsAtom (a : α) : Prop :=
 
 #print IsAtom.Iic /-
 theorem IsAtom.Iic (ha : IsAtom a) (hax : a ≤ x) : IsAtom (⟨a, hax⟩ : Set.Iic x) :=
-  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 Con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
+  ⟨fun con => ha.1 (Subtype.mk_eq_mk.1 con), fun ⟨b, hb⟩ hba => Subtype.mk_eq_mk.2 (ha.2 b hba)⟩
 #align is_atom.Iic IsAtom.Iic
 -/
 
 #print IsAtom.of_isAtom_coe_Iic /-
 theorem IsAtom.of_isAtom_coe_Iic {a : Set.Iic x} (ha : IsAtom a) : IsAtom (a : α) :=
-  ⟨fun con => ha.1 (Subtype.ext Con), fun b hba =>
-    Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.Prop⟩ hba)⟩
+  ⟨fun con => ha.1 (Subtype.ext con), fun b hba =>
+    Subtype.mk_eq_mk.1 (ha.2 ⟨b, hba.le.trans a.prop⟩ hba)⟩
 #align is_atom.of_is_atom_coe_Iic IsAtom.of_isAtom_coe_Iic
 -/
 
@@ -91,7 +91,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderBot.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsAtom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Bot.bot.{u1} α (OrderBot.toBot.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b)))
 Case conversion may be inaccurate. Consider using '#align is_atom_iff isAtom_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » «expr⊥»()) -/
 theorem isAtom_iff {a : α} : IsAtom a ↔ a ≠ ⊥ ∧ ∀ (b) (_ : b ≠ ⊥), b ≤ a → a ≤ b :=
   and_congr Iff.rfl <|
     forall_congr' fun b => by simp only [Ne.def, @not_imp_comm (b = ⊥), not_imp, lt_iff_le_not_le]
@@ -213,7 +213,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : OrderTop.{u1} α (Preorder.toLE.{u1} α _inst_1)] {a : α}, Iff (IsCoatom.{u1} α _inst_1 _inst_2 a) (And (Ne.{succ u1} α a (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) (forall (b : α), (Ne.{succ u1} α b (Top.top.{u1} α (OrderTop.toTop.{u1} α (Preorder.toLE.{u1} α _inst_1) _inst_2))) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) a b) -> (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) b a)))
 Case conversion may be inaccurate. Consider using '#align is_coatom_iff isCoatom_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (b «expr ≠ » «expr⊤»()) -/
 theorem isCoatom_iff {a : α} : IsCoatom a ↔ a ≠ ⊤ ∧ ∀ (b) (_ : b ≠ ⊤), a ≤ b → b ≤ a :=
   @isAtom_iff αᵒᵈ _ _ _
 #align is_coatom_iff isCoatom_iff
@@ -520,7 +520,7 @@ variable [IsAtomistic α]
 
 instance (priority := 100) : IsAtomic α :=
   ⟨fun b => by
-    rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
+    rcases eq_supₛ_atoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
     · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, le_supₛ h.some_spec⟩⟩
@@ -540,7 +540,7 @@ Case conversion may be inaccurate. Consider using '#align Sup_atoms_le_eq supₛ
 @[simp]
 theorem supₛ_atoms_le_eq (b : α) : supₛ { a : α | IsAtom a ∧ a ≤ b } = b :=
   by
-  rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
+  rcases eq_supₛ_atoms b with ⟨s, rfl, hs⟩
   exact le_antisymm (supₛ_le fun _ => And.right) (supₛ_le_supₛ fun a ha => ⟨hs a ha, le_supₛ ha⟩)
 #align Sup_atoms_le_eq supₛ_atoms_le_eq
 
@@ -580,7 +580,7 @@ variable [IsCoatomistic α]
 
 instance (priority := 100) : IsCoatomic α :=
   ⟨fun b => by
-    rcases eq_Inf_coatoms b with ⟨s, rfl, hs⟩
+    rcases eq_infₛ_coatoms b with ⟨s, rfl, hs⟩
     cases' s.eq_empty_or_nonempty with h h
     · simp [h]
     · exact Or.intro_right _ ⟨h.some, hs _ h.some_spec, infₛ_le h.some_spec⟩⟩
@@ -813,7 +813,7 @@ protected def booleanAlgebra {α} [DecidableEq α] [Lattice α] [BoundedOrder α
     compl := fun x => if x = ⊥ then ⊤ else ⊥
     sdiff := fun x y => if x = ⊤ ∧ y = ⊥ then ⊤ else ⊥
     sdiff_eq := fun x y => by
-      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, SDiff.sdiff, compl]
+      rcases eq_bot_or_eq_top x with (rfl | rfl) <;> simp [bot_ne_top, has_sdiff.sdiff, compl]
     inf_compl_le_bot := fun x =>
       by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
@@ -846,7 +846,7 @@ protected noncomputable def completeLattice : CompleteLattice α :=
       rcases eq_bot_or_eq_top x with (rfl | rfl)
       · rw [if_neg]
         intro con
-        exact bot_ne_top (eq_top_iff.2 (h ⊤ Con))
+        exact bot_ne_top (eq_top_iff.2 (h ⊤ con))
       · exact le_top
     inf_le := fun s x h => by
       rcases eq_bot_or_eq_top x with (rfl | rfl)
@@ -857,7 +857,7 @@ protected noncomputable def completeLattice : CompleteLattice α :=
       · exact bot_le
       · rw [if_neg]
         intro con
-        exact top_ne_bot (eq_bot_iff.2 (h ⊥ Con)) }
+        exact top_ne_bot (eq_bot_iff.2 (h ⊥ con)) }
 #align is_simple_order.complete_lattice IsSimpleOrder.completeLattice
 -/
 
@@ -1237,12 +1237,12 @@ variable [ComplementedLattice α]
 #print isCoatomic_of_isAtomic_of_complementedLattice_of_isModular /-
 theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α] : IsCoatomic α :=
   ⟨fun x => by
-    rcases exists_is_compl x with ⟨y, xy⟩
+    rcases exists_isCompl x with ⟨y, xy⟩
     apply (eq_bot_or_exists_atom_le y).imp _ _
     · rintro rfl
       exact eq_top_of_isCompl_bot xy
     · rintro ⟨a, ha, ay⟩
-      rcases exists_is_compl (xy.symm.Iic_order_iso_Ici ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
+      rcases exists_isCompl (xy.symm.Iic_order_iso_Ici ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
       refine' ⟨↑(⟨b, xb⟩ : Set.Ici x), IsCoatom.of_isCoatom_coe_Ici _, xb⟩
       rw [← hb.is_atom_iff_is_coatom, OrderIso.isAtom_iff]
       apply ha.Iic⟩
@@ -1287,7 +1287,7 @@ theorem isAtom_iff (s : Set α) : IsAtom s ↔ ∃ x, s = {x} :=
   refine'
     ⟨_, by
       rintro ⟨x, rfl⟩
-      exact is_atom_singleton x⟩
+      exact isAtom_singleton x⟩
   rw [isAtom_iff, bot_eq_empty, ← nonempty_iff_ne_empty]
   rintro ⟨⟨x, hx⟩, hs⟩
   exact
@@ -1318,18 +1318,18 @@ theorem isCoatom_singleton_compl (x : α) : IsCoatom ({x}ᶜ : Set α) :=
 
 instance : IsAtomistic (Set α)
     where eq_supₛ_atoms s :=
-    ⟨(fun x => {x}) '' s, by rw [Sup_eq_sUnion, sUnion_image, bUnion_of_singleton],
+    ⟨(fun x => {x}) '' s, by rw [supₛ_eq_unionₛ, unionₛ_image, bunionᵢ_of_singleton],
       by
       rintro - ⟨x, hx, rfl⟩
-      exact is_atom_singleton x⟩
+      exact isAtom_singleton x⟩
 
 instance : IsCoatomistic (Set α)
     where eq_infₛ_coatoms s :=
     ⟨(fun x => {x}ᶜ) '' sᶜ, by
-      rw [Inf_eq_sInter, sInter_image, ← compl_Union₂, bUnion_of_singleton, compl_compl],
+      rw [infₛ_eq_interₛ, interₛ_image, ← compl_unionᵢ₂, bunionᵢ_of_singleton, compl_compl],
       by
       rintro - ⟨x, hx, rfl⟩
-      exact is_coatom_singleton_compl x⟩
+      exact isCoatom_singleton_compl x⟩
 
 end Set
 

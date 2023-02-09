@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.omega_limit
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,9 +79,9 @@ theorem omegaLimit_def : ω f ϕ s = ⋂ u ∈ f, closure (image2 ϕ u s) :=
 theorem omegaLimit_subset_of_tendsto {m : τ → τ} {f₁ f₂ : Filter τ} (hf : Tendsto m f₁ f₂) :
     ω f₁ (fun t x => ϕ (m t) x) s ⊆ ω f₂ ϕ s :=
   by
-  refine' Inter₂_mono' fun u hu => ⟨m ⁻¹' u, tendsto_def.mp hf _ hu, _⟩
+  refine' interᵢ₂_mono' fun u hu => ⟨m ⁻¹' u, tendsto_def.mp hf _ hu, _⟩
   rw [← image2_image_left]
-  exact closure_mono (image2_subset (image_preimage_subset _ _) subset.rfl)
+  exact closure_mono (image2_subset (image_preimage_subset _ _) Subset.rfl)
 #align omega_limit_subset_of_tendsto omegaLimit_subset_of_tendsto
 
 theorem omegaLimit_mono_left {f₁ f₂ : Filter τ} (hf : f₁ ≤ f₂) : ω f₁ ϕ s ⊆ ω f₂ ϕ s :=
@@ -101,7 +101,7 @@ theorem mapsTo_omega_limit' {α' β' : Type _} [TopologicalSpace β'] {f : Filte
     (hg : ∀ᶠ t in f, EqOn (gb ∘ ϕ t) (ϕ' t ∘ ga) s) (hgc : Continuous gb) :
     MapsTo gb (ω f ϕ s) (ω f ϕ' s') :=
   by
-  simp only [omegaLimit_def, mem_Inter, maps_to]
+  simp only [omegaLimit_def, mem_interᵢ, MapsTo]
   intro y hy u hu
   refine' map_mem_closure hgc (hy _ (inter_mem hu hg)) (forall_image2_iff.2 fun t ht x hx => _)
   calc
@@ -140,7 +140,7 @@ characterising ω-limits:
 theorem mem_omegaLimit_iff_frequently (y : β) :
     y ∈ ω f ϕ s ↔ ∀ n ∈ 𝓝 y, ∃ᶠ t in f, (s ∩ ϕ t ⁻¹' n).Nonempty :=
   by
-  simp_rw [frequently_iff, omegaLimit_def, mem_Inter, mem_closure_iff_nhds]
+  simp_rw [frequently_iff, omegaLimit_def, mem_interᵢ, mem_closure_iff_nhds]
   constructor
   · intro h _ hn _ hu
     rcases h _ hu _ hn with ⟨_, _, _, _, ht, hx, hϕtx⟩
@@ -189,8 +189,8 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
     simp only [not_frequently, not_nonempty_iff_eq_empty, ← subset_empty_iff]
     rintro ⟨⟨n₁, hn₁, h₁⟩, ⟨n₂, hn₂, h₂⟩⟩
     refine' ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t => _, h₂.mono fun t => _⟩
-    exacts[subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
-      subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
+    exacts[Subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_left _ _,
+      Subset.trans <| inter_subset_inter_right _ <| preimage_mono <| inter_subset_right _ _]
   · rintro (hy | hy)
     exacts[omegaLimit_mono_right _ _ (subset_union_left _ _) hy,
       omegaLimit_mono_right _ _ (subset_union_right _ _) hy]
@@ -198,8 +198,8 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
 
 theorem omegaLimit_unionᵢ (p : ι → Set α) : (⋃ i, ω f ϕ (p i)) ⊆ ω f ϕ (⋃ i, p i) :=
   by
-  rw [Union_subset_iff]
-  exact fun i => omegaLimit_mono_right _ _ (subset_Union _ _)
+  rw [unionᵢ_subset_iff]
+  exact fun i => omegaLimit_mono_right _ _ (subset_unionᵢ _ _)
 #align omega_limit_Union omegaLimit_unionᵢ
 
 /-!
@@ -223,7 +223,7 @@ theorem omegaLimit_eq_interᵢ_inter {v : Set τ} (hv : v ∈ f) :
     ω f ϕ s = ⋂ u : ↥f.sets, closure (image2 ϕ (u ∩ v) s) :=
   by
   rw [omegaLimit_eq_bInter_inter _ _ _ hv]
-  apply bInter_eq_Inter
+  apply binterᵢ_eq_interᵢ
 #align omega_limit_eq_Inter_inter omegaLimit_eq_interᵢ_inter
 
 theorem omegaLimit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) :
@@ -231,7 +231,7 @@ theorem omegaLimit_subset_closure_fw_image {u : Set τ} (hu : u ∈ f) :
   by
   rw [omegaLimit_eq_interᵢ]
   intro _ hx
-  rw [mem_Inter] at hx
+  rw [mem_interᵢ] at hx
   exact hx ⟨u, hu⟩
 #align omega_limit_subset_closure_fw_image omegaLimit_subset_closure_fw_image
 
@@ -256,12 +256,12 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
   have hj₁ : ∀ u ∈ f, IsOpen (j u) := fun _ _ => is_open_compl_iff.mpr isClosed_closure
   have hj₂ : k \ n ⊆ ⋃ u ∈ f, j u :=
     by
-    have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bUnion_eq_Union _ _
-    rw [this, diff_subset_comm, diff_Union]
+    have : (⋃ u ∈ f, j u) = ⋃ u : ↥f.sets, j u := bunionᵢ_eq_unionᵢ _ _
+    rw [this, diff_subset_comm, diff_unionᵢ]
     rw [omegaLimit_eq_interᵢ_inter _ _ _ hv₁] at hn₂
     simp_rw [diff_compl]
-    rw [← inter_Inter]
-    exact subset.trans (inter_subset_right _ _) hn₂
+    rw [← inter_interᵢ]
+    exact Subset.trans (inter_subset_right _ _) hn₂
   rcases hk.elim_finite_subcover_image hj₁ hj₂ with ⟨g, hg₁ : ∀ u ∈ g, u ∈ f, hg₂, hg₃⟩
   let w := (⋂ u ∈ g, u) ∩ v
   have hw₂ : w ∈ f := by simpa [*]
@@ -270,20 +270,20 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
       k \ n ⊆ ⋃ u ∈ g, j u := hg₃
       _ ⊆ closure (image2 ϕ w s)ᶜ :=
         by
-        simp only [Union_subset_iff, compl_subset_compl]
+        simp only [unionᵢ_subset_iff, compl_subset_compl]
         intro u hu
         mono* using w
-        exact Inter_subset_of_subset u (Inter_subset_of_subset hu subset.rfl)
+        exact interᵢ_subset_of_subset u (interᵢ_subset_of_subset hu Subset.rfl)
       
   have hw₄ : kᶜ ⊆ closure (image2 ϕ w s)ᶜ :=
     by
     rw [compl_subset_compl]
     calc
-      closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+      closure (image2 ϕ w s) ⊆ _ := closure_mono (image2_subset (inter_subset_right _ _) Subset.rfl)
       
   have hnc : nᶜ ⊆ k \ n ∪ kᶜ := by rw [union_comm, ← inter_subset, diff_eq, inter_comm]
   have hw : closure (image2 ϕ w s) ⊆ n :=
-    compl_subset_compl.mp (subset.trans hnc (union_subset hw₃ hw₄))
+    compl_subset_compl.mp (Subset.trans hnc (union_subset hw₃ hw₄))
   exact ⟨_, hw₂, hw⟩
 #align eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset' eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit_subset'
 
@@ -295,7 +295,7 @@ theorem eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit
     {c : Set β} (hc₁ : IsCompact c) (hc₂ : ∀ᶠ t in f, MapsTo (ϕ t) s c) {n : Set β} (hn₁ : IsOpen n)
     (hn₂ : ω f ϕ s ⊆ n) : ∃ u ∈ f, closure (image2 ϕ u s) ⊆ n :=
   eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit_subset' f ϕ _ hc₁
-    ⟨_, hc₂, closure_minimal (image2_subset_iff.2 fun t => id) hc₁.IsClosed⟩ hn₁ hn₂
+    ⟨_, hc₂, closure_minimal (image2_subset_iff.2 fun t => id) hc₁.isClosed⟩ hn₁ hn₂
 #align eventually_closure_subset_of_is_compact_absorbing_of_is_open_of_omega_limit_subset eventually_closure_subset_of_isCompact_absorbing_of_isOpen_of_omegaLimit_subset
 
 theorem eventually_mapsTo_of_isCompact_absorbing_of_isOpen_of_omegaLimit_subset [T2Space β]
@@ -333,15 +333,15 @@ theorem nonempty_omegaLimit_of_isCompact_absorbing [NeBot f] {c : Set β} (hc₁
   · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
     use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
     constructor
-    all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) subset.rfl)
+    all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) Subset.rfl)
   · intro u
     have hn : (image2 ϕ (u ∩ v) s).Nonempty :=
-      nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs
+      Nonempty.image2 (nonempty_of_mem (inter_mem u.prop hv₁)) hs
     exact hn.mono subset_closure
   · intro
     apply isCompact_of_isClosed_subset hc₁ isClosed_closure
     calc
-      _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) subset.rfl)
+      _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset (inter_subset_right _ _) Subset.rfl)
       _ ⊆ c := hv₂
       
   · exact fun _ => isClosed_closure
@@ -367,9 +367,9 @@ open omegaLimit
 
 theorem isInvariant_omegaLimit (hf : ∀ t, Tendsto ((· + ·) t) f f) : IsInvariant ϕ (ω f ϕ s) :=
   by
-  refine' fun t => maps_to.mono_right _ (omegaLimit_subset_of_tendsto ϕ s (hf t))
+  refine' fun t => MapsTo.mono_right _ (omegaLimit_subset_of_tendsto ϕ s (hf t))
   exact
-    mapsTo_omegaLimit _ (maps_to_id _) (fun t' x => (ϕ.map_add _ _ _).symm)
+    mapsTo_omegaLimit _ (mapsTo_id _) (fun t' x => (ϕ.map_add _ _ _).symm)
       (continuous_const.flow ϕ continuous_id)
 #align flow.is_invariant_omega_limit Flow.isInvariant_omegaLimit
 
@@ -413,7 +413,7 @@ theorem omegaLimit_omegaLimit (hf : ∀ t, Tendsto ((· + ·) t) f f) : ω f ϕ 
   have l₁ : (ω f ϕ s ∩ o).Nonempty :=
     ht₂.mono
       (inter_subset_inter_left _
-        ((isInvariant_iff_image _ _).mp (is_invariant_omega_limit _ _ _ hf) _))
+        ((isInvariant_iff_image _ _).mp (isInvariant_omegaLimit _ _ _ hf) _))
   have l₂ : (closure (image2 ϕ u s) ∩ o).Nonempty :=
     l₁.mono fun b hb => ⟨omegaLimit_subset_closure_fw_image _ _ _ hu hb.1, hb.2⟩
   have l₃ : (o ∩ image2 ϕ u s).Nonempty :=

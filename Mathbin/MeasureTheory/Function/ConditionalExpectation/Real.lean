@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.real
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,29 +47,28 @@ theorem rnDeriv_ae_eq_condexp {hm : m ≤ m0} [hμm : SigmaFinite (μ.trim hm)] 
   refine' ae_eq_condexp_of_forall_set_integral_eq hm hf _ _ _
   ·
     exact fun _ _ _ =>
-      (integrable_of_integrable_trim hm
-          (signed_measure.integrable_rn_deriv ((μ.with_densityᵥ f).trim hm)
-            (μ.trim hm))).IntegrableOn
+      (integrableOfIntegrableTrim hm
+          (SignedMeasure.integrableRnDeriv ((μ.with_densityᵥ f).trim hm) (μ.trim hm))).integrableOn
   · intro s hs hlt
     conv_rhs =>
       rw [← hf.with_densityᵥ_trim_eq_integral hm hs, ←
-        signed_measure.with_densityᵥ_rn_deriv_eq ((μ.with_densityᵥ f).trim hm) (μ.trim hm)
+        SignedMeasure.withDensityᵥ_rnDeriv_eq ((μ.with_densityᵥ f).trim hm) (μ.trim hm)
           (hf.with_densityᵥ_trim_absolutely_continuous hm)]
-    rw [with_densityᵥ_apply
-        (signed_measure.integrable_rn_deriv ((μ.with_densityᵥ f).trim hm) (μ.trim hm)) hs,
+    rw [withDensityᵥ_apply
+        (SignedMeasure.integrableRnDeriv ((μ.with_densityᵥ f).trim hm) (μ.trim hm)) hs,
       ← set_integral_trim hm _ hs]
-    exact (signed_measure.measurable_rn_deriv _ _).StronglyMeasurable
+    exact (SignedMeasure.measurable_rnDeriv _ _).stronglyMeasurable
   ·
     exact
-      strongly_measurable.ae_strongly_measurable'
-        (signed_measure.measurable_rn_deriv _ _).StronglyMeasurable
+      StronglyMeasurable.aeStronglyMeasurable'
+        (SignedMeasure.measurable_rnDeriv _ _).stronglyMeasurable
 #align measure_theory.rn_deriv_ae_eq_condexp MeasureTheory.rnDeriv_ae_eq_condexp
 
 -- TODO: the following couple of lemmas should be generalized and proved using Jensen's inequality
 -- for the conditional expectation (not in mathlib yet) .
 theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ snorm f 1 μ :=
   by
-  by_cases hf : integrable f μ
+  by_cases hf : Integrable f μ
   swap;
   · rw [condexp_undef hf, snorm_zero]
     exact zero_le _
@@ -77,9 +76,9 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
   swap;
   · rw [condexp_of_not_le hm, snorm_zero]
     exact zero_le _
-  by_cases hsig : sigma_finite (μ.trim hm)
+  by_cases hsig : SigmaFinite (μ.trim hm)
   swap;
-  · rw [condexp_of_not_sigma_finite hm hsig, snorm_zero]
+  · rw [condexp_of_not_sigmaFinite hm hsig, snorm_zero]
     exact zero_le _
   calc
     snorm (μ[f|m]) 1 μ ≤ snorm (μ[|f||m]) 1 μ :=
@@ -87,7 +86,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       refine' snorm_mono_ae _
       filter_upwards [@condexp_mono _ m m0 _ _ _ _ _ _ _ _ hf hf.abs
           (@ae_of_all _ m0 _ μ (fun x => le_abs_self (f x) : ∀ x, f x ≤ |f x|)),
-        eventually_le.trans (condexp_neg f).symm.le
+        EventuallyLe.trans (condexp_neg f).symm.le
           (@condexp_mono _ m m0 _ _ _ _ _ _ _ _ hf.neg hf.abs
             (@ae_of_all _ m0 _ μ
               (fun x => neg_le_abs_self (f x) : ∀ x, -f x ≤ |f x|)))]with x hx₁ hx₂
@@ -95,9 +94,9 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
     _ = snorm f 1 μ :=
       by
       rw [snorm_one_eq_lintegral_nnnorm, snorm_one_eq_lintegral_nnnorm, ←
-        Ennreal.toReal_eq_toReal (ne_of_lt integrable_condexp.2) (ne_of_lt hf.2), ←
+        Ennreal.toReal_eq_toReal (ne_of_lt integrableCondexp.2) (ne_of_lt hf.2), ←
         integral_norm_eq_lintegral_nnnorm
-          (strongly_measurable_condexp.mono hm).AeStronglyMeasurable,
+          (strongly_measurable_condexp.mono hm).aeStronglyMeasurable,
         ← integral_norm_eq_lintegral_nnnorm hf.1]
       simp_rw [Real.norm_eq_abs]
       rw [← @integral_condexp _ _ _ _ _ m m0 μ _ hm hsig hf.abs]
@@ -105,7 +104,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       have : 0 ≤ᵐ[μ] μ[|f||m] := by
         rw [← @condexp_zero α ℝ _ _ _ m m0 μ]
         exact
-          condexp_mono (integrable_zero _ _ _) hf.abs
+          condexp_mono (integrableZero _ _ _) hf.abs
             (@ae_of_all _ m0 _ μ (fun x => abs_nonneg (f x) : ∀ x, 0 ≤ |f x|))
       filter_upwards [this]with x hx
       exact abs_eq_self.2 hx
@@ -118,7 +117,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
   swap
   · simp_rw [condexp_of_not_le hm, Pi.zero_apply, abs_zero, integral_zero]
     exact integral_nonneg fun x => abs_nonneg _
-  by_cases hfint : integrable f μ
+  by_cases hfint : Integrable f μ
   swap
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul,
       mul_zero]
@@ -127,14 +126,14 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
   · rw [Ennreal.toReal_le_toReal] <;> simp_rw [← Real.norm_eq_abs, ofReal_norm_eq_coe_nnnorm]
     · rw [← snorm_one_eq_lintegral_nnnorm, ← snorm_one_eq_lintegral_nnnorm]
       exact snorm_one_condexp_le_snorm _
-    · exact ne_of_lt integrable_condexp.2
+    · exact ne_of_lt integrableCondexp.2
     · exact ne_of_lt hfint.2
   · exact eventually_of_forall fun x => abs_nonneg _
   · simp_rw [← Real.norm_eq_abs]
     exact hfint.1.norm
   · exact eventually_of_forall fun x => abs_nonneg _
   · simp_rw [← Real.norm_eq_abs]
-    exact (strongly_measurable_condexp.mono hm).AeStronglyMeasurable.norm
+    exact (strongly_measurable_condexp.mono hm).aeStronglyMeasurable.norm
 #align measure_theory.integral_abs_condexp_le MeasureTheory.integral_abs_condexp_le
 
 theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
@@ -144,7 +143,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   swap
   · simp_rw [condexp_of_not_le hnm, Pi.zero_apply, abs_zero, integral_zero]
     exact integral_nonneg fun x => abs_nonneg _
-  by_cases hfint : integrable f μ
+  by_cases hfint : Integrable f μ
   swap
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul,
       mul_zero]
@@ -156,8 +155,8 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
     · exact hnm _ hs
     refine' integral_congr_ae _
     have : (fun x => |(μ[s.indicator f|m]) x|) =ᵐ[μ] fun x => |s.indicator (μ[f|m]) x| :=
-      eventually_eq.fun_comp (condexp_indicator hfint hs) _
-    refine' eventually_eq.trans (eventually_of_forall fun x => _) this.symm
+      EventuallyEq.fun_comp (condexp_indicator hfint hs) _
+    refine' EventuallyEq.trans (eventually_of_forall fun x => _) this.symm
     rw [← Real.norm_eq_abs, norm_indicator_eq_indicator_norm]
     rfl
   rw [this, ← integral_indicator]
@@ -178,7 +177,7 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
   swap
   · simp_rw [condexp_of_not_le hnm, Pi.zero_apply, abs_zero]
     refine' eventually_of_forall fun x => R.coe_nonneg
-  by_cases hfint : integrable f μ
+  by_cases hfint : Integrable f μ
   swap
   · simp_rw [condexp_undef hfint]
     filter_upwards [hbdd]with x hx
@@ -191,19 +190,19 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
     exact this.ne rfl
   refine' lt_of_lt_of_le (set_integral_gt_gt R.coe_nonneg _ _ h.ne.symm) _
   · simp_rw [← Real.norm_eq_abs]
-    exact (strongly_measurable_condexp.mono hnm).Measurable.norm
+    exact (strongly_measurable_condexp.mono hnm).measurable.norm
   · exact integrable_condexp.abs.integrable_on
   refine' (set_integral_abs_condexp_le _ _).trans _
   · simp_rw [← Real.norm_eq_abs]
     exact
-      @measurableSet_lt _ _ _ _ _ m _ _ _ _ _ measurable_const
+      @measurable_set_lt _ _ _ _ _ m _ _ _ _ _ measurable_const
         strongly_measurable_condexp.norm.measurable
   simp only [← smul_eq_mul, ← set_integral_const, Nnreal.val_eq_coe, IsROrC.coe_real_eq_id, id.def]
   refine' set_integral_mono_ae hfint.abs.integrable_on _ _
   · refine'
-      ⟨ae_strongly_measurable_const,
+      ⟨aeStronglyMeasurableConst,
         lt_of_le_of_lt _
-          (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
+          (integrable_condexp.integrable_on : IntegrableOn (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
     refine'
       set_lintegral_mono (Measurable.nnnorm _).coe_nnreal_ennreal
         (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nnreal_ennreal fun x hx => _
@@ -220,11 +219,11 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     UniformIntegrable (fun i => μ[g|ℱ i]) 1 μ :=
   by
   have hmeas : ∀ n, ∀ C, MeasurableSet { x | C ≤ ‖(μ[g|ℱ n]) x‖₊ } := fun n C =>
-    measurableSet_le measurable_const (strongly_measurable_condexp.mono (hℱ n)).Measurable.nnnorm
-  have hg : mem_ℒp g 1 μ := mem_ℒp_one_iff_integrable.2 hint
+    measurableSet_le measurable_const (strongly_measurable_condexp.mono (hℱ n)).measurable.nnnorm
+  have hg : Memℒp g 1 μ := memℒp_one_iff_integrable.2 hint
   refine'
-    uniform_integrable_of le_rfl Ennreal.one_ne_top
-      (fun n => (strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable) fun ε hε => _
+    uniformIntegrableOf le_rfl Ennreal.one_ne_top
+      (fun n => (strongly_measurable_condexp.mono (hℱ n)).aeStronglyMeasurable) fun ε hε => _
   by_cases hne : snorm g 1 μ = 0
   · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
     refine'
@@ -246,7 +245,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     intro n
     have :=
       mul_meas_ge_le_pow_snorm' μ one_ne_zero Ennreal.one_ne_top
-        ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).AeStronglyMeasurable C
+        ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).aeStronglyMeasurable C
     rw [Ennreal.one_toReal, Ennreal.rpow_one, Ennreal.rpow_one, mul_comm, ←
       Ennreal.le_div_iff_mul_le (Or.inl (Ennreal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne)] at
@@ -261,8 +260,8 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     exact snorm_one_condexp_le_snorm _
   refine' ⟨C, fun n => le_trans _ (h { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } (hmeas n C) (this n))⟩
   have hmeasℱ : measurable_set[ℱ n] { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } :=
-    @measurableSet_le _ _ _ _ _ (ℱ n) _ _ _ _ _ measurable_const
-      (@Measurable.nnnorm _ _ _ _ _ (ℱ n) _ strongly_measurable_condexp.measurable)
+    @measurable_set_le _ _ _ _ _ (ℱ n) _ _ _ _ _ measurable_const
+      (@measurable.nnnorm _ _ _ _ _ (ℱ n) _ strongly_measurable_condexp.measurable)
   rw [← snorm_congr_ae (condexp_indicator hint hmeasℱ)]
   exact snorm_one_condexp_le_snorm _
 #align measure_theory.integrable.uniform_integrable_condexp MeasureTheory.Integrable.uniformIntegrableCondexp
@@ -282,8 +281,8 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
     · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul]
     · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
   refine' @simple_func.induction _ _ m _ _ (fun c s hs => _) (fun g₁ g₂ h_disj h_eq₁ h_eq₂ => _) f
-  · simp only [simple_func.const_zero, simple_func.coe_piecewise, simple_func.coe_const,
-      simple_func.coe_zero, Set.piecewise_eq_indicator]
+  · simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
+      SimpleFunc.coe_zero, Set.piecewise_eq_indicator]
     rw [this, this]
     refine' (condexp_indicator (hg.smul c) hs).trans _
     filter_upwards [@condexp_smul α ℝ ℝ _ _ _ _ _ m m0 μ c g]with x hx
@@ -292,12 +291,12 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
     calc
       μ[⇑(g₁ + g₂) * g|m] =ᵐ[μ] μ[(⇑g₁ + ⇑g₂) * g|m] :=
         by
-        refine' condexp_congr_ae (eventually_eq.mul _ eventually_eq.rfl)
+        refine' condexp_congr_ae (EventuallyEq.mul _ EventuallyEq.rfl)
         rw [h_add]
       _ =ᵐ[μ] μ[⇑g₁ * g|m] + μ[⇑g₂ * g|m] := by
         rw [add_mul]
         exact condexp_add (hg.simple_func_mul' hm _) (hg.simple_func_mul' hm _)
-      _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := eventually_eq.add h_eq₁ h_eq₂
+      _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := EventuallyEq.add h_eq₁ h_eq₂
       _ =ᵐ[μ] ⇑(g₁ + g₂) * μ[g|m] := by rw [h_add, add_mul]
       
 #align measure_theory.condexp_strongly_measurable_simple_func_mul MeasureTheory.condexp_strongly_measurable_simpleFunc_mul
@@ -306,20 +305,20 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure
     (hf : strongly_measurable[m] f) (hg : Integrable g μ) (c : ℝ) (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
     μ[f * g|m] =ᵐ[μ] f * μ[g|m] := by
   let fs := hf.approx_bounded c
-  have hfs_tendsto : ∀ᵐ x ∂μ, tendsto (fun n => fs n x) at_top (𝓝 (f x)) :=
+  have hfs_tendsto : ∀ᵐ x ∂μ, Tendsto (fun n => fs n x) atTop (𝓝 (f x)) :=
     hf.tendsto_approx_bounded_ae hf_bound
   by_cases hμ : μ = 0
   · simp only [hμ, ae_zero]
-  have : μ.ae.ne_bot := by simp only [hμ, ae_ne_bot, Ne.def, not_false_iff]
+  have : μ.ae.ne_bot := by simp only [hμ, ae_neBot, Ne.def, not_false_iff]
   have hc : 0 ≤ c :=
-    haveI h_exists : ∃ x, ‖f x‖ ≤ c := eventually.exists hf_bound
+    haveI h_exists : ∃ x, ‖f x‖ ≤ c := Eventually.exists hf_bound
     (norm_nonneg _).trans h_exists.some_spec
   have hfs_bound : ∀ n x, ‖fs n x‖ ≤ c := hf.norm_approx_bounded_le hc
   have hn_eq : ∀ n, μ[fs n * g|m] =ᵐ[μ] fs n * μ[g|m] := fun n =>
-    condexp_strongly_measurable_simple_func_mul hm _ hg
+    condexp_strongly_measurable_simpleFunc_mul hm _ hg
   have : μ[f * μ[g|m]|m] = f * μ[g|m] :=
     by
-    refine' condexp_of_strongly_measurable hm (hf.mul strongly_measurable_condexp) _
+    refine' condexp_of_stronglyMeasurable hm (hf.mul stronglyMeasurable_condexp) _
     exact integrable_condexp.bdd_mul' (hf.mono hm).AeStronglyMeasurable hf_bound
   rw [← this]
   refine'
@@ -327,19 +326,19 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure
       (f * μ[g|m]) _ _ _ _ (fun x => c * ‖g x‖) _ (fun x => c * ‖(μ[g|m]) x‖) _ _ _ _
   ·
     exact fun n =>
-      hg.bdd_mul' ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+      hg.bdd_mul' ((SimpleFunc.stronglyMeasurable (fs n)).mono hm).aeStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
   ·
     exact fun n =>
       integrable_condexp.bdd_mul'
-        ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+        ((SimpleFunc.stronglyMeasurable (fs n)).mono hm).AeStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
   · filter_upwards [hfs_tendsto]with x hx
     rw [Pi.mul_apply]
-    exact tendsto.mul hx tendsto_const_nhds
+    exact Tendsto.mul hx tendsto_const_nhds
   · filter_upwards [hfs_tendsto]with x hx
     rw [Pi.mul_apply]
-    exact tendsto.mul hx tendsto_const_nhds
+    exact Tendsto.mul hx tendsto_const_nhds
   · exact hg.norm.const_mul c
   · exact integrable_condexp.norm.const_mul c
   · refine' fun n => eventually_of_forall fun x => _
@@ -348,14 +347,14 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure
     exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right (hfs_bound n x) (norm_nonneg _))
   · intro n
     simp_rw [← Pi.mul_apply]
-    refine' (condexp_strongly_measurable_simple_func_mul hm _ hg).trans _
-    rw [condexp_of_strongly_measurable hm
-        ((simple_func.strongly_measurable _).mul strongly_measurable_condexp) _]
+    refine' (condexp_strongly_measurable_simpleFunc_mul hm _ hg).trans _
+    rw [condexp_of_stronglyMeasurable hm
+        ((SimpleFunc.stronglyMeasurable _).mul stronglyMeasurable_condexp) _]
     · infer_instance
     · infer_instance
     exact
       integrable_condexp.bdd_mul'
-        ((simple_func.strongly_measurable (fs n)).mono hm).AeStronglyMeasurable
+        ((SimpleFunc.stronglyMeasurable (fs n)).mono hm).aeStronglyMeasurable
         (eventually_of_forall (hfs_bound n))
 #align measure_theory.condexp_strongly_measurable_mul_of_bound MeasureTheory.condexp_stronglyMeasurable_mul_of_bound
 
@@ -364,11 +363,11 @@ theorem condexp_strongly_measurable_mul_of_bound₀ (hm : m ≤ m0) [IsFiniteMea
     (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] :=
   by
   have : μ[f * g|m] =ᵐ[μ] μ[hf.mk f * g|m] :=
-    condexp_congr_ae (eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl)
+    condexp_congr_ae (EventuallyEq.mul hf.ae_eq_mk EventuallyEq.rfl)
   refine' this.trans _
-  have : f * μ[g|m] =ᵐ[μ] hf.mk f * μ[g|m] := eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl
-  refine' eventually_eq.trans _ this.symm
-  refine' condexp_strongly_measurable_mul_of_bound hm hf.strongly_measurable_mk hg c _
+  have : f * μ[g|m] =ᵐ[μ] hf.mk f * μ[g|m] := EventuallyEq.mul hf.ae_eq_mk EventuallyEq.rfl
+  refine' EventuallyEq.trans _ this.symm
+  refine' condexp_stronglyMeasurable_mul_of_bound hm hf.strongly_measurable_mk hg c _
   filter_upwards [hf_bound, hf.ae_eq_mk]with x hxc hx_eq
   rw [← hx_eq]
   exact hxc
@@ -382,11 +381,11 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
   swap
   · simp_rw [condexp_of_not_le hm]
     rw [mul_zero]
-  by_cases hμm : sigma_finite (μ.trim hm)
+  by_cases hμm : SigmaFinite (μ.trim hm)
   swap
-  · simp_rw [condexp_of_not_sigma_finite hm hμm]
+  · simp_rw [condexp_of_not_sigmaFinite hm hμm]
     rw [mul_zero]
-  haveI : sigma_finite (μ.trim hm) := hμm
+  haveI : SigmaFinite (μ.trim hm) := hμm
   obtain ⟨sets, sets_prop, h_univ⟩ := hf.exists_spanning_measurable_set_norm_le hm μ
   simp_rw [forall_and] at sets_prop
   obtain ⟨h_meas, h_finite, h_norm⟩ := sets_prop
@@ -412,22 +411,22 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
     μ.restrict (sets n)[(sets n).indicator f * g|m] =ᵐ[μ.restrict (sets n)]
       (sets n).indicator f * μ.restrict (sets n)[g|m]
     by
-    refine' eventually_eq.trans _ (this.trans _)
+    refine' EventuallyEq.trans _ (this.trans _)
     ·
       exact
-        condexp_congr_ae ((indicator_ae_eq_restrict (hm _ (h_meas n))).symm.mul eventually_eq.rfl)
-    · exact (indicator_ae_eq_restrict (hm _ (h_meas n))).mul eventually_eq.rfl
-  have : is_finite_measure (μ.restrict (sets n)) :=
+        condexp_congr_ae ((indicator_ae_eq_restrict (hm _ (h_meas n))).symm.mul EventuallyEq.rfl)
+    · exact (indicator_ae_eq_restrict (hm _ (h_meas n))).mul EventuallyEq.rfl
+  have : IsFiniteMeasure (μ.restrict (sets n)) :=
     by
     constructor
-    rw [measure.restrict_apply_univ]
+    rw [Measure.restrict_apply_univ]
     exact h_finite n
-  refine' condexp_strongly_measurable_mul_of_bound hm (hf.indicator (h_meas n)) hg.integrable_on n _
+  refine' condexp_stronglyMeasurable_mul_of_bound hm (hf.indicator (h_meas n)) hg.integrable_on n _
   refine' eventually_of_forall fun x => _
   by_cases hxs : x ∈ sets n
   · simp only [hxs, Set.indicator_of_mem]
     exact h_norm n x hxs
-  · simp only [hxs, Set.indicator_of_not_mem, not_false_iff, _root_.norm_zero, Nat.cast_nonneg]
+  · simp only [hxs, Set.indicator_of_not_mem, not_false_iff, norm_zero, Nat.cast_nonneg]
 #align measure_theory.condexp_strongly_measurable_mul MeasureTheory.condexp_stronglyMeasurable_mul
 
 /-- Pull-out property of the conditional expectation. -/
@@ -435,13 +434,13 @@ theorem condexp_strongly_measurable_mul₀ {f g : α → ℝ} (hf : AeStronglyMe
     (hfg : Integrable (f * g) μ) (hg : Integrable g μ) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] :=
   by
   have : μ[f * g|m] =ᵐ[μ] μ[hf.mk f * g|m] :=
-    condexp_congr_ae (eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl)
+    condexp_congr_ae (EventuallyEq.mul hf.ae_eq_mk EventuallyEq.rfl)
   refine' this.trans _
-  have : f * μ[g|m] =ᵐ[μ] hf.mk f * μ[g|m] := eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl
-  refine' eventually_eq.trans _ this.symm
-  refine' condexp_strongly_measurable_mul hf.strongly_measurable_mk _ hg
+  have : f * μ[g|m] =ᵐ[μ] hf.mk f * μ[g|m] := EventuallyEq.mul hf.ae_eq_mk EventuallyEq.rfl
+  refine' EventuallyEq.trans _ this.symm
+  refine' condexp_stronglyMeasurable_mul hf.strongly_measurable_mk _ hg
   refine' (integrable_congr _).mp hfg
-  exact eventually_eq.mul hf.ae_eq_mk eventually_eq.rfl
+  exact EventuallyEq.mul hf.ae_eq_mk EventuallyEq.rfl
 #align measure_theory.condexp_strongly_measurable_mul₀ MeasureTheory.condexp_strongly_measurable_mul₀
 
 end PullOut

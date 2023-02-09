@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.sign
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ instance : Neg SignType :=
     match s with
     | neg => pos
     | zero => zero
-    | Pos => neg⟩
+    | pos => neg⟩
 
 #print SignType.zero_eq_zero /-
 @[simp]
@@ -75,7 +75,7 @@ instance : Mul SignType :=
     match x with
     | neg => -y
     | zero => zero
-    | Pos => y⟩
+    | pos => y⟩
 
 #print SignType.Le /-
 /-- The less-than relation on signs. -/
@@ -90,7 +90,7 @@ instance : LE SignType :=
   ⟨Le⟩
 
 instance : DecidableRel Le := fun a b => by
-  cases a <;> cases b <;> first |exact is_false (by rintro ⟨⟩)|exact is_true (by constructor)
+  cases a <;> cases b <;> first |exact isFalse (by rintro ⟨⟩)|exact isTrue (by constructor)
 
 /- We can define a `field` instance on `sign_type`, but it's not mathematically sensible,
 so we only define the `comm_group_with_zero`. -/
@@ -295,7 +295,7 @@ variable {α : Type _} [Zero α] [One α] [Neg α]
 only a `has_coe_t` instance: see note [use has_coe_t]. -/
 def cast : SignType → α
   | zero => 0
-  | Pos => 1
+  | pos => 1
   | neg => -1
 #align sign_type.cast SignType.cast
 -/
@@ -447,7 +447,7 @@ theorem sign_eq_zero_iff : SignType.sign a = 0 ↔ a = 0 :=
 
 #print sign_ne_zero /-
 theorem sign_ne_zero : SignType.sign a ≠ 0 ↔ a ≠ 0 :=
-  sign_eq_zero_iff.Not
+  sign_eq_zero_iff.not
 #align sign_ne_zero sign_ne_zero
 -/
 
@@ -622,7 +622,7 @@ theorem sign_eq_sign (n : ℤ) : n.sign = SignType.sign n :=
   obtain (_ | _) | _ := n
   · exact congr_arg coe sign_zero.symm
   · exact congr_arg coe (sign_pos <| Int.succ_coe_nat_pos _).symm
-  · exact congr_arg coe (_root_.sign_neg <| neg_succ_lt_zero _).symm
+  · exact congr_arg coe (sign_neg <| negSucc_lt_zero _).symm
 #align int.sign_eq_sign Int.sign_eq_sign
 -/
 
@@ -640,7 +640,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
   by
   refine'
     ⟨Σa : { x // x ∈ s }, ℕ, finset.univ.sigma fun a => range (f a).natAbs, fun a =>
-      SignType.sign (f a.1), fun a => a.1, fun a => a.1.Prop, _, _⟩
+      SignType.sign (f a.1), fun a => a.1, fun a => a.1.prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
   · intro x hx
     simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm (|f _|),

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.power_basis
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
     infer_instance
   have minpoly_eq := minpoly.eq_of_algebraMap_eq hST hx' rfl
   apply
-    @Basis.mk (Fin (minpoly K x).natDegree) _ (adjoin K {x}) fun i =>
+    @basis.mk (Fin (minpoly K x).natDegree) _ (adjoin K {x}) fun i =>
       ⟨x, subset_adjoin (Set.mem_singleton x)⟩ ^ (i : ℕ)
   · have := linearIndependent_pow _
     rwa [minpoly_eq] at this
@@ -56,7 +56,7 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       obtain ⟨f, rfl⟩ := (aeval x).mem_range.mp hy
       use f
       ext
-      exact aeval_algebra_map_apply S (⟨x, _⟩ : adjoin K {x}) _
+      exact aeval_algebraMap_apply S (⟨x, _⟩ : adjoin K {x}) _
 #align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAux
 
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
@@ -108,22 +108,22 @@ include hB
 and `S` is its fraction ring. -/
 theorem repr_gen_pow_isIntegral [IsDomain S]
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
-    ∀ i, IsIntegral R (B.Basis.repr (B.gen ^ n) i) :=
+    ∀ i, IsIntegral R (B.basis.repr (B.gen ^ n) i) :=
   by
   intro i
-  let Q := X ^ n %ₘ minpoly R B.gen
+  let Q := x ^ n %ₘ minpoly R B.gen
   have : B.gen ^ n = aeval B.gen Q :=
     by
-    rw [← @aeval_X_pow R _ _ _ _ B.gen, ← mod_by_monic_add_div (X ^ n) (minpoly.monic hB)]
+    rw [← @aeval_X_pow R _ _ _ _ B.gen, ← modByMonic_add_div (x ^ n) (minpoly.monic hB)]
     simp
   by_cases hQ : Q = 0
   · simp [this, hQ, isIntegral_zero]
   have hlt : Q.nat_degree < B.dim :=
     by
     rw [← B.nat_degree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
-      nat_degree_lt_nat_degree_iff hQ]
-    letI : Nontrivial R := nontrivial.of_polynomial_ne hQ
-    exact degree_mod_by_monic_lt _ (minpoly.monic hB)
+      natDegree_lt_natDegree_iff hQ]
+    letI : Nontrivial R := Nontrivial.of_polynomial_ne hQ
+    exact degree_modByMonic_lt _ (minpoly.monic hB)
     infer_instance
   rw [this, aeval_eq_sum_range' hlt]
   simp only [LinearEquiv.map_sum, LinearEquiv.map_smulₛₗ, RingHom.id_apply, Finset.sum_apply']
@@ -145,10 +145,10 @@ variable {B}
 integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x * y) i)` for all
 `i` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD
 domain and `S` is its fraction ring. -/
-theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
-    (hy : ∀ i, IsIntegral R (B.Basis.repr y i))
+theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.basis.repr x i))
+    (hy : ∀ i, IsIntegral R (B.basis.repr y i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) :
-    ∀ i, IsIntegral R (B.Basis.repr (x * y) i) :=
+    ∀ i, IsIntegral R (B.basis.repr (x * y) i) :=
   by
   intro i
   rw [← B.basis.sum_repr x, ← B.basis.sum_repr y, Finset.sum_mul_sum, LinearEquiv.map_sum,
@@ -158,16 +158,16 @@ theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.
     RingHom.id_apply, Finsupp.coe_smul, Pi.smul_apply, id.smul_eq_mul]
   refine' isIntegral_mul (hy _) (isIntegral_mul (hx _) _)
   simp only [coe_basis, ← pow_add]
-  refine' repr_gen_pow_is_integral hB hmin _ _
+  refine' repr_gen_pow_isIntegral hB hmin _ _
 #align power_basis.repr_mul_is_integral PowerBasis.repr_mul_isIntegral
 
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
 with integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x ^ n) i)` for
 all `i` and all `n` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case
 if `R` is a GCD domain and `S` is its fraction ring. -/
-theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Basis.repr x i))
+theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.basis.repr x i))
     (hmin : minpoly S B.gen = (minpoly R B.gen).map (algebraMap R S)) (n : ℕ) :
-    ∀ i, IsIntegral R (B.Basis.repr (x ^ n) i) :=
+    ∀ i, IsIntegral R (B.basis.repr (x ^ n) i) :=
   by
   nontriviality A using Subsingleton.elim (x ^ n) 0, isIntegral_zero
   revert hx
@@ -180,7 +180,7 @@ theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Ba
     · exact isIntegral_zero
   · intro hx
     rw [pow_succ]
-    exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
+    exact repr_mul_isIntegral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
 #align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegral
 
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that
@@ -189,16 +189,16 @@ if `minpoly K B.gen = (minpoly R B.gen).map (algebra_map R L)`. This is the case
 if `R` is a GCD domain and `K` is its fraction ring. -/
 theorem toMatrix_isIntegral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen P = B'.gen)
     (hB : IsIntegral R B.gen) (hmin : minpoly K B.gen = (minpoly R B.gen).map (algebraMap R K)) :
-    ∀ i j, IsIntegral R (B.Basis.toMatrix B'.Basis i j) :=
+    ∀ i j, IsIntegral R (B.basis.toMatrix B'.basis i j) :=
   by
   intro i j
   rw [B.basis.to_matrix_apply, B'.coe_basis]
-  refine' repr_pow_is_integral hB (fun i => _) hmin _ _
+  refine' repr_pow_isIntegral hB (fun i => _) hmin _ _
   rw [← h, aeval_eq_sum_range, LinearEquiv.map_sum, Finset.sum_apply']
   refine' IsIntegral.sum _ fun n hn => _
   rw [Algebra.smul_def, IsScalarTower.algebraMap_apply R K S, ← Algebra.smul_def,
     LinearEquiv.map_smul, algebraMap_smul]
-  exact isIntegral_smul _ (repr_gen_pow_is_integral hB hmin _ _)
+  exact isIntegral_smul _ (repr_gen_pow_isIntegral hB hmin _ _)
 #align power_basis.to_matrix_is_integral PowerBasis.toMatrix_isIntegral
 
 end PowerBasis

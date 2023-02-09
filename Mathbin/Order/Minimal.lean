@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.minimal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ theorem maximals_antichain : IsAntichain r (maximals r s) := fun a ha b hb hab h
 #print minimals_antichain /-
 theorem minimals_antichain : IsAntichain r (minimals r s) :=
   haveI := IsAntisymm.swap r
-  (maximals_antichain _ _).symm
+  (maximals_antichain _ _).swap
 #align minimals_antichain minimals_antichain
 -/
 
@@ -150,7 +150,7 @@ variable {r r₁ r₂ s t a}
 
 #print Set.Subsingleton.maximals_eq /-
 theorem Set.Subsingleton.maximals_eq (h : s.Subsingleton) : maximals r s = s :=
-  h.inductionOn (minimals_empty _) (maximals_singleton _)
+  h.induction_on (minimals_empty _) (maximals_singleton _)
 #align set.subsingleton.maximals_eq Set.Subsingleton.maximals_eq
 -/
 
@@ -350,7 +350,7 @@ theorem IsAntichain.minimals_upperClosure (hs : IsAntichain (· ≤ ·) s) :
 #print IsAntichain.maximals_lowerClosure /-
 theorem IsAntichain.maximals_lowerClosure (hs : IsAntichain (· ≤ ·) s) :
     maximals (· ≤ ·) (lowerClosure s : Set α) = s :=
-  hs.toDual.minimals_upperClosure
+  hs.to_dual.minimals_upperClosure
 #align is_antichain.maximals_lower_closure IsAntichain.maximals_lowerClosure
 -/
 

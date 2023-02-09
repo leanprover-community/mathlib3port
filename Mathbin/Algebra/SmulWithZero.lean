@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.smul_with_zero
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -276,7 +276,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulActionWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
-  { hf.MulAction f smul, hf.SMulWithZero f smul with }
+  { hf.mulAction f smul, hf.smulWithZero f smul with }
 #align function.injective.mul_action_with_zero Function.Injective.mulActionWithZero
 -/
 
@@ -286,7 +286,7 @@ See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
     (smul : ∀ (a : R) (b), f (a • b) = a • f b) : MulActionWithZero R M' :=
-  { hf.MulAction f smul, hf.SMulWithZero f smul with }
+  { hf.mulAction f smul, hf.smulWithZero f smul with }
 #align function.surjective.mul_action_with_zero Function.Surjective.mulActionWithZero
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module data.vector.zip
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.zip_with_nth Vector.zipWith_getₓ'. -/
 @[simp]
 theorem zipWith_get (x : Vector α n) (y : Vector β n) (i) :
-    (Vector.zipWith f x y).get? i = f (x.get? i) (y.get? i) :=
+    (Vector.zipWith f x y).get i = f (x.get i) (y.get i) :=
   by
   dsimp only [Vector.zipWith, Vector.get]
   cases x; cases y
@@ -70,7 +70,7 @@ theorem zipWith_tail (x : Vector α n) (y : Vector β n) :
     (Vector.zipWith f x y).tail = Vector.zipWith f x.tail y.tail :=
   by
   ext
-  simp [nth_tail]
+  simp [get_tail]
 #align vector.zip_with_tail Vector.zipWith_tail
 
 /- warning: vector.prod_mul_prod_eq_prod_zip_with -> Vector.prod_mul_prod_eq_prod_zipWith is a dubious translation:
@@ -81,7 +81,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zipWithₓ'. -/
 @[to_additive]
 theorem prod_mul_prod_eq_prod_zipWith [CommMonoid α] (x y : Vector α n) :
-    x.toList.Prod * y.toList.Prod = (Vector.zipWith (· * ·) x y).toList.Prod :=
+    x.toList.prod * y.toList.prod = (Vector.zipWith (· * ·) x y).toList.prod :=
   List.prod_mul_prod_eq_prod_zipWith_of_length_eq x.toList y.toList
     ((toList_length x).trans (toList_length y).symm)
 #align vector.prod_mul_prod_eq_prod_zip_with Vector.prod_mul_prod_eq_prod_zipWith

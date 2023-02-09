@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -561,7 +561,7 @@ Case conversion may be inaccurate. Consider using '#align commute.mul_zpow Commu
 @[to_additive AddCommute.zsmul_add]
 protected theorem Commute.mul_zpow (h : Commute a b) : ∀ i : ℤ, (a * b) ^ i = a ^ i * b ^ i
   | (n : ℕ) => by simp [h.mul_pow n]
-  | -[n+1] => by simp [h.mul_pow, (h.pow_pow _ _).Eq, mul_inv_rev]
+  | -[n+1] => by simp [h.mul_pow, (h.pow_pow _ _).eq, mul_inv_rev]
 #align commute.mul_zpow Commute.mul_zpow
 #align add_commute.zsmul_add AddCommute.zsmul_add
 
@@ -647,7 +647,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pow_inv_comm pow_inv_commₓ'. -/
 @[to_additive]
 theorem pow_inv_comm (a : G) (m n : ℕ) : a⁻¹ ^ m * a ^ n = a ^ n * a⁻¹ ^ m :=
-  (Commute.refl a).inv_left.pow_powₓ _ _
+  (Commute.refl a).inv_left.pow_pow _ _
 #align pow_inv_comm pow_inv_comm
 #align nsmul_neg_comm nsmul_neg_comm
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.itauto
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,7 +140,7 @@ def Prop.not (a : Prop) : Prop :=
 /-- Constructor for `xor p q`. -/
 @[match_pattern]
 def Prop.xor (a b : Prop) : Prop :=
-  (a.And b.Not).Or (b.And a.Not)
+  (a.and b.not).or (b.and a.not)
 #align tactic.itauto.prop.xor Tactic.Itauto.Prop.xor
 
 instance : Inhabited Prop :=
@@ -154,7 +154,7 @@ def AndKind.sides : AndKind → Prop → Prop → Prop × Prop
 
 /-- Debugging printer for propositions. -/
 unsafe def prop.to_format : Prop → format
-  | prop.var i => f! "v{i}"
+  | prop.var bind => f! "v{i}"
   | prop.true => f!"⊤"
   | prop.false => f!"⊥"
   | prop.and p q => f! "({p.to_format } ∧ {q.to_format})"
@@ -175,7 +175,7 @@ open Ordering
 def AndKind.cmp (p q : AndKind) : Ordering :=
   by
   cases p <;> cases q
-  exacts[Eq, lt, lt, GT.gt, Eq, lt, GT.gt, GT.gt, Eq]
+  exacts[eq, lt, lt, gt, eq, lt, gt, gt, eq]
 #align tactic.itauto.and_kind.cmp Tactic.Itauto.AndKind.cmp
 
 /-- A comparator for propositions. (There should really be a derive handler for this.) -/
@@ -183,13 +183,13 @@ def Prop.cmp (p q : Prop) : Ordering :=
   by
   induction' p with _ ap _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ _ _ p₁ p₂ generalizing q <;> cases q
   case var.var => exact cmp p q
-  case true.true => exact Eq
-  case false.false => exact Eq
+  case true.true => exact eq
+  case false.false => exact eq
   case and'.and' aq q₁ q₂ => exact (ap.cmp aq).orElse ((p₁ q₁).orElse (p₂ q₂))
   case or.or q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
   case imp.imp q₁ q₂ => exact (p₁ q₁).orElse (p₂ q₂)
-  exacts[lt, lt, lt, lt, lt, GT.gt, lt, lt, lt, lt, GT.gt, GT.gt, lt, lt, lt, GT.gt, GT.gt, GT.gt,
-    lt, lt, GT.gt, GT.gt, GT.gt, GT.gt, lt, GT.gt, GT.gt, GT.gt, GT.gt, GT.gt]
+  exacts[lt, lt, lt, lt, lt, gt, lt, lt, lt, lt, gt, gt, lt, lt, lt, gt, gt, gt, lt, lt, gt, gt, gt,
+    gt, lt, gt, gt, gt, gt, gt]
 #align tactic.itauto.prop.cmp Tactic.Itauto.Prop.cmp
 
 instance : LT Prop :=
@@ -419,8 +419,8 @@ and just prove `B` outright. -/
 unsafe def context.with_add (Γ : context) (A : Prop) (p : Proof) (B : Prop)
     (f : context → Prop → ℕ → Bool × Proof × ℕ) (n : ℕ) : Bool × Proof × ℕ :=
   match Γ.add A p with
-  | Except.ok Γ_A => f Γ_A B n
-  | Except.error p => (true, p B, n)
+  | except.ok Γ_A => f Γ_A B n
+  | except.error p => (true, p B, n)
 #align tactic.itauto.context.with_add tactic.itauto.context.with_add
 
 /-- Map a function over the proof (regardless of whether the proof is successful or not). -/
@@ -465,11 +465,11 @@ unsafe def search (prove : context → Prop → ℕ → Bool × Proof × ℕ) :
             match A with
             | prop.imp A' C =>
               match Γ.find A' with
-              | some q => isOk <| context.with_add (Γ.eraseₓ A) C (p.app q) B prove n
+              | some q => isOk <| context.with_add (Γ.erase A) C (p.app q) B prove n
               | none =>
                 match A' with
                 | prop.imp A₁ A₂ => do
-                  let Γ : context := Γ.eraseₓ A
+                  let Γ : context := Γ.erase A
                   let (a, n) := fresh_name n
                   let (p₁, n) ←
                     isOk <|
@@ -520,7 +520,7 @@ unsafe def prove : context → Prop → ℕ → Bool × Proof × ℕ
       (fun A p IH b Γ n =>
         match A with
         | prop.or A₁ A₂ =>
-          let Γ : context := Γ.eraseₓ A
+          let Γ : context := Γ.erase A
           let (a, n) := fresh_name n
           let (b, p₁, n) := Γ.with_add A₁ (Proof.hyp a) B (fun Γ _ => IH true Γ) n
           mapProof (proof.or_elim p a p₁) <|
@@ -744,7 +744,7 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
         hyps.foldlM
             (fun (Γ : Except (Prop → Proof) context × native.rb_map Prop (Bool × expr)) h => do
               let e ← infer_type h
-              condM (is_prop e)
+              mcond (is_prop e)
                   (do
                     let A ← reify atoms e
                     let n := h
@@ -768,19 +768,19 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
               let m ← mk_meta_var dec_e
               (set_goals [m] >> apply_instance) >> failure
             else pure decs
-          else pure (native.rb_map.insert decs A (res (tt, e) (Prod.mk ff)))
+          else pure (native.rb_map.insert decs A (res (tt, e) (prod.mk ff)))
       let decs ← extra_dec.foldlM (add_dec true) decs
       let decs ←
         if use_dec then do
             let decided :=
               match Γ with
-              | Except.ok Γ =>
+              | except.ok Γ =>
                 Γ.fold native.mk_rb_set fun p _ m =>
                   match p with
                   | prop.var i => m.insert i
                   | prop.not (prop.var i) => m.insert i
                   | _ => m
-              | Except.error _ => native.mk_rb_set
+              | except.error _ => native.mk_rb_set
             read_ref atoms >>= fun ats =>
                 ats.2.iterate (pure decs) fun i e r =>
                   if decided i.1 then r else r >>= fun decs => add_dec ff decs e
@@ -793,8 +793,8 @@ unsafe def itauto (use_dec use_classical : Bool) (extra_dec : List expr) : tacti
               pure (Γ >>= fun Γ' => Γ' (A A) (proof.em cl n))
       let p :=
         match Γ with
-        | Except.ok Γ => (prove Γ t 0).2.1
-        | Except.error p => p t
+        | except.ok Γ => (prove Γ t 0).2.1
+        | except.error p => p t
       let hs ← read_ref hs
       apply_proof hs p
 #align tactic.itauto tactic.itauto

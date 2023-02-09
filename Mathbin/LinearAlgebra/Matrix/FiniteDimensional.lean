@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.finite_dimensional
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ is the product of the number of rows and columns.
 @[simp]
 theorem finrank_matrix [Fintype m] [Fintype n] :
     FiniteDimensional.finrank R (Matrix m n R) = Fintype.card m * Fintype.card n := by
-  rw [@LinearEquiv.finrank_eq R (Matrix m n R) _ _ _ _ _ _ (LinearEquiv.curry R m n).symm,
+  rw [@linear_equiv.finrank_eq R (Matrix m n R) _ _ _ _ _ _ (LinearEquiv.curry R m n).symm,
     FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_prod]
 #align matrix.finrank_matrix Matrix.finrank_matrix
 

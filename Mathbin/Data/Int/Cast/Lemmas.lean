@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.int.cast.lemmas
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ theorem coe_nat_succ_pos (n : ℕ) : 0 < (n.succ : ℤ) :=
 #print Int.toNat_lt' /-
 theorem toNat_lt' {a : ℤ} {b : ℕ} (hb : b ≠ 0) : a.toNat < b ↔ a < b :=
   by
-  rw [← to_nat_lt_to_nat, to_nat_coe_nat]
+  rw [← toNat_lt_toNat, toNat_coe_nat]
   exact coe_nat_pos.2 hb.bot_lt
 #align int.to_nat_lt Int.toNat_lt'
 -/
@@ -146,7 +146,7 @@ Case conversion may be inaccurate. Consider using '#align int.cast_commute Int.c
 theorem cast_commute [NonAssocRing α] : ∀ (m : ℤ) (x : α), Commute (↑m) x
   | (n : ℕ), x => by simpa using n.cast_commute x
   | -[n+1], x => by
-    simpa only [cast_neg_succ_of_nat, Commute.neg_left_iff, Commute.neg_right_iff] using
+    simpa only [cast_negSucc, Commute.neg_left_iff, Commute.neg_right_iff] using
       (n + 1).cast_commute (-x)
 #align int.cast_commute Int.cast_commute
 
@@ -157,7 +157,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : NonAssocRing.{u1} α] (m : Int) (x : α), Eq.{succ u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))) (Int.cast.{u1} α (NonAssocRing.toIntCast.{u1} α _inst_1) m) x) (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (NonUnitalNonAssocRing.toMul.{u1} α (NonAssocRing.toNonUnitalNonAssocRing.{u1} α _inst_1))) x (Int.cast.{u1} α (NonAssocRing.toIntCast.{u1} α _inst_1) m))
 Case conversion may be inaccurate. Consider using '#align int.cast_comm Int.cast_commₓ'. -/
 theorem cast_comm [NonAssocRing α] (m : ℤ) (x : α) : (m : α) * x = x * m :=
-  (cast_commute m x).Eq
+  (cast_commute m x).eq
 #align int.cast_comm Int.cast_comm
 
 /- warning: int.commute_cast -> Int.commute_cast is a dubious translation:
@@ -181,7 +181,7 @@ theorem cast_mono [OrderedRing α] : Monotone (coe : ℤ → α) :=
   intro m n h
   rw [← sub_nonneg] at h
   lift n - m to ℕ using h with k
-  rw [← sub_nonneg, ← cast_sub, ← h_1, cast_coe_nat]
+  rw [← sub_nonneg, ← cast_sub, ← h_1, cast_ofNat]
   exact k.cast_nonneg
 #align int.cast_mono Int.cast_mono
 
@@ -196,7 +196,7 @@ theorem cast_nonneg [OrderedRing α] [Nontrivial α] : ∀ {n : ℤ}, (0 : α) �
   | (n : ℕ) => by simp
   | -[n+1] => by
     have : -(n : α) < 1 := lt_of_le_of_lt (by simp) zero_lt_one
-    simpa [(neg_succ_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
+    simpa [(negSucc_lt_zero n).not_le, ← sub_eq_add_neg, le_neg] using this.not_le
 #align int.cast_nonneg Int.cast_nonneg
 
 /- warning: int.cast_le -> Int.cast_le is a dubious translation:
@@ -512,7 +512,7 @@ theorem ext_int' [MonoidWithZero α] [MonoidWithZeroHomClass F ℤ α] {f g : F}
   FunLike.ext _ _ fun n =>
     haveI :=
       FunLike.congr_fun
-        (@MonoidWithZeroHom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <|
+        (@monoid_with_zero_hom.ext_int _ _ (f : ℤ →*₀ α) (g : ℤ →*₀ α) h_neg_one <|
           MonoidWithZeroHom.ext_nat h_pos)
         n
     this

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Kenny Lau, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.fixed_points
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -139,10 +139,10 @@ theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p
   by
   set s := { a | a ≤ lfp f ∧ p a }
   specialize hSup s fun a => And.right
-  suffices : Sup s = lfp f
+  suffices : supₛ s = lfp f
   exact this ▸ hSup
-  have h : Sup s ≤ lfp f := supₛ_le fun b => And.left
-  have hmem : f (Sup s) ∈ s := ⟨f.map_le_lfp h, step _ hSup h⟩
+  have h : supₛ s ≤ lfp f := supₛ_le fun b => And.left
+  have hmem : f (supₛ s) ∈ s := ⟨f.map_le_lfp h, step _ hSup h⟩
   exact h.antisymm (f.lfp_le <| le_supₛ hmem)
 #align order_hom.lfp_induction OrderHom.lfp_induction
 

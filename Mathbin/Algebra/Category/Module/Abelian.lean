@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Module.abelian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ def normalMono (hf : Mono f) : NormalMono f
 def normalEpi (hf : Epi f) : NormalEpi f
     where
   w := of R f.ker
-  g := f.ker.Subtype
+  g := f.ker.subtype
   w := LinearMap.comp_ker_subtype _
   IsColimit :=/- The following invalid Lean code might help you understand what's going on here:
                 ```
@@ -123,7 +123,7 @@ attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
 theorem exact_iff : Exact f g ↔ f.range = g.ker :=
   by
-  rw [abelian.exact_iff' f g (kernel_is_limit _) (cokernel_is_colimit _)]
+  rw [Abelian.exact_iff' f g (kernelIsLimit _) (cokernelIsColimit _)]
   exact
     ⟨fun h => le_antisymm (range_le_ker_iff.2 h.1) (ker_le_range_iff.2 h.2), fun h =>
       ⟨range_le_ker_iff.1 <| le_of_eq h, ker_le_range_iff.1 <| le_of_eq h.symm⟩⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.extr
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -593,7 +593,7 @@ theorem IsExtrOn.on_preimage (g : δ → α) {b : δ} (hf : IsExtrOn f s (g b)) 
 #print IsMinOn.comp_mapsTo /-
 theorem IsMinOn.comp_mapsTo {t : Set δ} {g : δ → α} {b : δ} (hf : IsMinOn f s a) (hg : MapsTo g t s)
     (ha : g b = a) : IsMinOn (f ∘ g) t b := fun y hy => by
-  simpa only [mem_set_of_eq, ha, (· ∘ ·)] using hf (hg hy)
+  simpa only [mem_setOf_eq, ha, (· ∘ ·)] using hf (hg hy)
 #align is_min_on.comp_maps_to IsMinOn.comp_mapsTo
 -/
 
@@ -974,7 +974,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_max_filter.congr IsMaxFilter.congrₓ'. -/
 theorem IsMaxFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
     (h : IsMaxFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter g l a :=
-  HEq.symm.le.IsMaxFilter hfga h
+  heq.symm.le.isMaxFilter hfga h
 #align is_max_filter.congr IsMaxFilter.congr
 
 /- warning: filter.eventually_eq.is_max_filter_iff -> Filter.EventuallyEq.isMaxFilter_iff is a dubious translation:
@@ -985,7 +985,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.is_max_filter_iff Filter.EventuallyEq.isMaxFilter_iffₓ'. -/
 theorem Filter.EventuallyEq.isMaxFilter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMaxFilter f l a ↔ IsMaxFilter g l a :=
-  ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
+  ⟨fun h => h.congr heq hfga, fun h => h.congr heq.symm hfga.symm⟩
 #align filter.eventually_eq.is_max_filter_iff Filter.EventuallyEq.isMaxFilter_iff
 
 /- warning: filter.eventually_le.is_min_filter -> Filter.EventuallyLe.isMinFilter is a dubious translation:
@@ -1008,7 +1008,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_min_filter.congr IsMinFilter.congrₓ'. -/
 theorem IsMinFilter.congr {α β : Type _} [Preorder β] {f g : α → β} {a : α} {l : Filter α}
     (h : IsMinFilter f l a) (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter g l a :=
-  HEq.le.IsMinFilter hfga h
+  heq.le.isMinFilter hfga h
 #align is_min_filter.congr IsMinFilter.congr
 
 /- warning: filter.eventually_eq.is_min_filter_iff -> Filter.EventuallyEq.isMinFilter_iff is a dubious translation:
@@ -1019,7 +1019,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.is_min_filter_iff Filter.EventuallyEq.isMinFilter_iffₓ'. -/
 theorem Filter.EventuallyEq.isMinFilter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsMinFilter f l a ↔ IsMinFilter g l a :=
-  ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
+  ⟨fun h => h.congr heq hfga, fun h => h.congr heq.symm hfga.symm⟩
 #align filter.eventually_eq.is_min_filter_iff Filter.EventuallyEq.isMinFilter_iff
 
 /- warning: is_extr_filter.congr -> IsExtrFilter.congr is a dubious translation:
@@ -1043,7 +1043,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.eventually_eq.is_extr_filter_iff Filter.EventuallyEq.isExtrFilter_iffₓ'. -/
 theorem Filter.EventuallyEq.isExtrFilter_iff {α β : Type _} [Preorder β] {f g : α → β} {a : α}
     {l : Filter α} (heq : f =ᶠ[l] g) (hfga : f a = g a) : IsExtrFilter f l a ↔ IsExtrFilter g l a :=
-  ⟨fun h => h.congr HEq hfga, fun h => h.congr HEq.symm hfga.symm⟩
+  ⟨fun h => h.congr heq hfga, fun h => h.congr heq.symm hfga.symm⟩
 #align filter.eventually_eq.is_extr_filter_iff Filter.EventuallyEq.isExtrFilter_iff
 
 end Eventually
@@ -1063,7 +1063,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_max_on.supr_eq IsMaxOn.supᵢ_eqₓ'. -/
 theorem IsMaxOn.supᵢ_eq (hx₀ : x₀ ∈ s) (h : IsMaxOn f s x₀) : (⨆ x : s, f x) = f x₀ :=
   haveI : Nonempty s := ⟨⟨x₀, hx₀⟩⟩
-  csupᵢ_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.Prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
+  csupᵢ_eq_of_forall_le_of_forall_lt_exists_gt (fun x => h x.prop) fun w hw => ⟨⟨x₀, hx₀⟩, hw⟩
 #align is_max_on.supr_eq IsMaxOn.supᵢ_eq
 
 /- warning: is_min_on.infi_eq -> IsMinOn.infᵢ_eq is a dubious translation:

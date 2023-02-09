@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.embedding.set
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ Case conversion may be inaccurate. Consider using '#align function.embedding.opt
 @[simps]
 def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(Set.range fᶜ)
     where
-  toFun f := ⟨some.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.Injective hx⟩
+  toFun f := ⟨some.trans f, f none, fun ⟨x, hx⟩ => Option.some_ne_none x <| f.injective hx⟩
   invFun f := f.1.optionElim f.2 f.2.2
   left_inv f := ext <| by rintro (_ | _) <;> simp [Option.coe_def]
   right_inv := fun ⟨f, y, hy⟩ => by ext <;> simp [Option.coe_def]
@@ -80,7 +80,7 @@ def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σf : α ↪ β, ↥(S
 #print Function.Embedding.codRestrict /-
 /-- Restrict the codomain of an embedding. -/
 def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α ↪ p :=
-  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.Injective (@congr_arg _ _ _ _ Subtype.val h)⟩
+  ⟨fun a => ⟨f a, H a⟩, fun a b h => f.injective (@congr_arg _ _ _ _ Subtype.val h)⟩
 #align function.embedding.cod_restrict Function.Embedding.codRestrict
 -/
 
@@ -166,7 +166,7 @@ def subtypeOrEquiv (p q : α → Prop) [DecidablePred p] (h : Disjoint p q) :
 #print subtypeOrEquiv_symm_inl /-
 @[simp]
 theorem subtypeOrEquiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
-    (x : { x // p x }) : (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.Prop⟩ :=
+    (x : { x // p x }) : (subtypeOrEquiv p q h).symm (Sum.inl x) = ⟨x, Or.inl x.prop⟩ :=
   rfl
 #align subtype_or_equiv_symm_inl subtypeOrEquiv_symm_inl
 -/
@@ -174,7 +174,7 @@ theorem subtypeOrEquiv_symm_inl (p q : α → Prop) [DecidablePred p] (h : Disjo
 #print subtypeOrEquiv_symm_inr /-
 @[simp]
 theorem subtypeOrEquiv_symm_inr (p q : α → Prop) [DecidablePred p] (h : Disjoint p q)
-    (x : { x // q x }) : (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.Prop⟩ :=
+    (x : { x // q x }) : (subtypeOrEquiv p q h).symm (Sum.inr x) = ⟨x, Or.inr x.prop⟩ :=
   rfl
 #align subtype_or_equiv_symm_inr subtypeOrEquiv_symm_inr
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.projective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,9 +39,9 @@ theorem IsProjective.iff_projective {R : Type u} [Ring R] {P : Type max u v} [Ad
         Module.projective_lifting_property _ _ ((ModuleCat.epi_iff_surjective _).mp epi)⟩
   · refine' Module.projectiveOfLiftingProperty _
     intro E X mE mX sE sX f g s
-    haveI : epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
-    letI : projective (ModuleCat.of R P) := h
-    exact ⟨projective.factor_thru (↟g) (↟f), projective.factor_thru_comp (↟g) (↟f)⟩
+    haveI : Epi (↟f) := (ModuleCat.epi_iff_surjective (↟f)).mpr s
+    letI : Projective (ModuleCat.of R P) := h
+    exact ⟨Projective.factorThru (↟g) (↟f), Projective.factorThru_comp (↟g) (↟f)⟩
 #align is_projective.iff_projective IsProjective.iff_projective
 
 namespace ModuleCat

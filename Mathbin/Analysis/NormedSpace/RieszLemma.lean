@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed_space.riesz_lemma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,7 +50,7 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     have hFn : (F : Set E).Nonempty := ⟨_, F.zero_mem⟩
     have hdp : 0 < d :=
       lt_of_le_of_ne Metric.infDist_nonneg fun heq =>
-        hx ((hFc.mem_iff_inf_dist_zero hFn).2 HEq.symm)
+        hx ((hFc.mem_iff_inf_dist_zero hFn).2 heq.symm)
     let r' := max r 2⁻¹
     have hr' : r' < 1 := by
       simp [r', hr]
@@ -117,10 +117,10 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
 theorem Metric.closedBall_infDist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :
     closedBall x (infDist x (sᶜ)) ⊆ closure s :=
   by
-  cases' eq_or_ne (inf_dist x (sᶜ)) 0 with h₀ h₀
-  · rw [h₀, closed_ball_zero']
+  cases' eq_or_ne (infDist x (sᶜ)) 0 with h₀ h₀
+  · rw [h₀, closedBall_zero']
     exact closure_mono (singleton_subset_iff.2 hx)
   · rw [← closure_ball x h₀]
-    exact closure_mono ball_inf_dist_compl_subset
+    exact closure_mono ball_infDist_compl_subset
 #align metric.closed_ball_inf_dist_compl_subset_closure Metric.closedBall_infDist_compl_subset_closure
 

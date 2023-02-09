@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston, Bryan Gin-ge Chen
 
 ! This file was ported from Lean 3 source module data.setoid.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,7 +51,7 @@ def Setoid.Rel (r : Setoid α) : α → α → Prop :=
 -/
 
 #print Setoid.decidableRel /-
-instance Setoid.decidableRel (r : Setoid α) [h : DecidableRel r.R] : DecidableRel r.Rel :=
+instance Setoid.decidableRel (r : Setoid α) [h : DecidableRel r.r] : DecidableRel r.Rel :=
   h
 #align setoid.decidable_rel Setoid.decidableRel
 -/
@@ -301,8 +301,8 @@ theorem eqvGen_eq (r : α → α → Prop) :
     relation `x is related to y by r or s`. -/
 theorem sup_eq_eqvGen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.Rel x y ∨ s.Rel x y :=
   by
-  rw [eqv_gen_eq]
-  apply congr_arg Inf
+  rw [eqvGen_eq]
+  apply congr_arg infₛ
   simp only [le_def, or_imp, ← forall_and]
 #align setoid.sup_eq_eqv_gen Setoid.sup_eq_eqvGen
 -/
@@ -311,7 +311,7 @@ theorem sup_eq_eqvGen (r s : Setoid α) : r ⊔ s = EqvGen.Setoid fun x y => r.R
 /-- The supremum of 2 equivalence relations r and s is the equivalence closure of the
     supremum of the underlying binary operations. -/
 theorem sup_def {r s : Setoid α} : r ⊔ s = EqvGen.Setoid (r.Rel ⊔ s.Rel) := by
-  rw [sup_eq_eqv_gen] <;> rfl
+  rw [sup_eq_eqvGen] <;> rfl
 #align setoid.sup_def Setoid.sup_def
 -/
 
@@ -326,8 +326,8 @@ Case conversion may be inaccurate. Consider using '#align setoid.Sup_eq_eqv_gen 
 theorem supₛ_eq_eqvGen (S : Set (Setoid α)) :
     supₛ S = EqvGen.Setoid fun x y => ∃ r : Setoid α, r ∈ S ∧ r.Rel x y :=
   by
-  rw [eqv_gen_eq]
-  apply congr_arg Inf
+  rw [eqvGen_eq]
+  apply congr_arg infₛ
   simp only [upperBounds, le_def, and_imp, exists_imp]
   ext
   exact ⟨fun H x y r hr => H hr, fun H r hr x y => H r hr⟩
@@ -343,7 +343,7 @@ Case conversion may be inaccurate. Consider using '#align setoid.Sup_def Setoid.
     supremum of the set's image under the map to the underlying binary operation. -/
 theorem supₛ_def {s : Set (Setoid α)} : supₛ s = EqvGen.Setoid (supₛ (Rel '' s)) :=
   by
-  rw [Sup_eq_eqv_gen, supₛ_image]
+  rw [supₛ_eq_eqvGen, supₛ_image]
   congr with (x y)
   simp only [supᵢ_apply, supᵢ_Prop_eq, exists_prop]
 #align setoid.Sup_def Setoid.supₛ_def
@@ -351,8 +351,8 @@ theorem supₛ_def {s : Set (Setoid α)} : supₛ s = EqvGen.Setoid (supₛ (Rel
 #print Setoid.eqvGen_of_setoid /-
 /-- The equivalence closure of an equivalence relation r is r. -/
 @[simp]
-theorem eqvGen_of_setoid (r : Setoid α) : EqvGen.Setoid r.R = r :=
-  le_antisymm (by rw [eqv_gen_eq] <;> exact infₛ_le fun _ _ => id) EqvGen.rel
+theorem eqvGen_of_setoid (r : Setoid α) : EqvGen.Setoid r.r = r :=
+  le_antisymm (by rw [eqvGen_eq] <;> exact infₛ_le fun _ _ => id) EqvGen.rel
 #align setoid.eqv_gen_of_setoid Setoid.eqvGen_of_setoid
 -/
 
@@ -368,7 +368,7 @@ theorem eqvGen_idem (r : α → α → Prop) : EqvGen.Setoid (EqvGen.Setoid r).R
 /-- The equivalence closure of a binary relation r is contained in any equivalence
     relation containing r. -/
 theorem eqvGen_le {r : α → α → Prop} {s : Setoid α} (h : ∀ x y, r x y → s.Rel x y) :
-    EqvGen.Setoid r ≤ s := by rw [eqv_gen_eq] <;> exact infₛ_le h
+    EqvGen.Setoid r ≤ s := by rw [eqvGen_eq] <;> exact infₛ_le h
 #align setoid.eqv_gen_le Setoid.eqvGen_le
 -/
 
@@ -550,7 +550,7 @@ Case conversion may be inaccurate. Consider using '#align setoid.map_of_surjecti
 /-- A special case of the equivalence closure of an equivalence relation r equalling r. -/
 theorem mapOfSurjective_eq_map (h : ker f ≤ r) (hf : Surjective f) :
     map r f = mapOfSurjective r f h hf := by
-  rw [← eqv_gen_of_setoid (map_of_surjective r f h hf)] <;> rfl
+  rw [← eqvGen_of_setoid (mapOfSurjective r f h hf)] <;> rfl
 #align setoid.map_of_surjective_eq_map Setoid.mapOfSurjective_eq_map
 
 #print Setoid.comap /-
@@ -668,7 +668,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align quot.subsingleton_iff Quot.subsingleton_iffₓ'. -/
 theorem Quot.subsingleton_iff (r : α → α → Prop) : Subsingleton (Quot r) ↔ EqvGen r = ⊤ :=
   by
-  simp only [subsingleton_iff, _root_.eq_top_iff, Pi.le_def, Pi.top_apply, forall_const]
+  simp only [subsingleton_iff, eq_top_iff, Pi.le_def, Pi.top_apply, forall_const]
   refine' (surjective_quot_mk _).forall.trans (forall_congr' fun a => _)
   refine' (surjective_quot_mk _).forall.trans (forall_congr' fun b => _)
   rw [Quot.eq]

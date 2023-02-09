@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz, Junyan Xu
 
 ! This file was ported from Lean 3 source module ring_theory.localization.as_subring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ instance isLocalization_range_mapToFractionRing (B : Type _) [CommRing B] [Algeb
     [IsLocalization S B] (hS : S ≤ A⁰) : IsLocalization S (mapToFractionRing K S B hS).range :=
   IsLocalization.isLocalization_of_algEquiv S <|
     show B ≃ₐ[A] _ from
-      AlgEquiv.ofBijective (mapToFractionRing K S B hS).range_restrict
+      AlgEquiv.ofBijective (mapToFractionRing K S B hS).rangeRestrict
         (by
           refine' ⟨fun a b h => _, Set.surjective_onto_range⟩
           refine' (IsLocalization.lift_injective_iff _).2 (fun a b => _) (Subtype.ext_iff.1 h)
@@ -94,7 +94,7 @@ noncomputable def subalgebra (hS : S ≤ A⁰) : Subalgebra A K :=
     by
     ext
     symm
-    apply mem_range_map_to_fraction_ring_iff
+    apply mem_range_mapToFractionRing_iff
 #align localization.subalgebra Localization.subalgebra
 
 namespace Subalgebra
@@ -125,7 +125,7 @@ theorem mem_range_mapToFractionRing_iff_of_field (B : Type _) [CommRing B] [Alge
     x ∈ (mapToFractionRing K S B hS).range ↔
       ∃ (a s : A)(hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ :=
   by
-  rw [mem_range_map_to_fraction_ring_iff]
+  rw [mem_range_mapToFractionRing_iff]
   iterate 3 congr with ; convert Iff.rfl; rw [Units.val_inv_eq_inv_val]; rfl
 #align localization.subalgebra.mem_range_map_to_fraction_ring_iff_of_field Localization.subalgebra.mem_range_mapToFractionRing_iff_of_field
 
@@ -142,7 +142,7 @@ noncomputable def ofField : Subalgebra A K :=
     by
     ext
     symm
-    apply mem_range_map_to_fraction_ring_iff_of_field
+    apply mem_range_mapToFractionRing_iff_of_field
 #align localization.subalgebra.of_field Localization.subalgebra.ofField
 
 instance isLocalization_ofField : IsLocalization S (subalgebra.ofField K S hS) :=

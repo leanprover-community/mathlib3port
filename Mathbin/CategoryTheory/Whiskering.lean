@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.whiskering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 def whiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) : F ⋙ G ⟶ F ⋙ H
     where
   app X := α.app (F.obj X)
-  naturality' X Y f := by rw [functor.comp_map, functor.comp_map, α.naturality]
+  naturality' X Y f := by rw [Functor.comp_map, Functor.comp_map, α.naturality]
 #align category_theory.whisker_left CategoryTheory.whiskerLeft
 -/
 
@@ -67,7 +67,7 @@ def whiskerRight {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H �
     where
   app X := F.map (α.app X)
   naturality' X Y f := by
-    rw [functor.comp_map, functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
+    rw [Functor.comp_map, Functor.comp_map, ← F.map_comp, ← F.map_comp, α.naturality]
 #align category_theory.whisker_right CategoryTheory.whiskerRight
 -/
 
@@ -109,7 +109,7 @@ def whiskeringRight : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E
     { app := fun F =>
         { app := fun c => τ.app (F.obj c)
           naturality' := fun X Y f => by dsimp; rw [τ.naturality] }
-      naturality' := fun X Y f => by ext; dsimp; rw [← nat_trans.naturality] }
+      naturality' := fun X Y f => by ext; dsimp; rw [← NatTrans.naturality] }
 #align category_theory.whiskering_right CategoryTheory.whiskeringRight
 -/
 
@@ -186,7 +186,7 @@ def isoWhiskerLeft (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) : F ⋙ G ≅ F 
 #print CategoryTheory.isoWhiskerLeft_hom /-
 @[simp]
 theorem isoWhiskerLeft_hom (F : C ⥤ D) {G H : D ⥤ E} (α : G ≅ H) :
-    (isoWhiskerLeft F α).Hom = whiskerLeft F α.Hom :=
+    (isoWhiskerLeft F α).hom = whiskerLeft F α.hom :=
   rfl
 #align category_theory.iso_whisker_left_hom CategoryTheory.isoWhiskerLeft_hom
 -/
@@ -211,7 +211,7 @@ def isoWhiskerRight {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) : G ⋙ F ≅ H
 #print CategoryTheory.isoWhiskerRight_hom /-
 @[simp]
 theorem isoWhiskerRight_hom {G H : C ⥤ D} (α : G ≅ H) (F : D ⥤ E) :
-    (isoWhiskerRight α F).Hom = whiskerRight α.Hom F :=
+    (isoWhiskerRight α F).hom = whiskerRight α.hom F :=
   rfl
 #align category_theory.iso_whisker_right_hom CategoryTheory.isoWhiskerRight_hom
 -/
@@ -324,8 +324,8 @@ theorem assoc (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) : (F ⋙ G) ⋙ H = F �
 
 #print CategoryTheory.Functor.triangle /-
 theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
-    (associator F (𝟭 B) G).Hom ≫ whiskerLeft F (leftUnitor G).Hom =
-      whiskerRight (rightUnitor F).Hom G :=
+    (associator F (𝟭 B) G).hom ≫ whiskerLeft F (leftUnitor G).hom =
+      whiskerRight (rightUnitor F).hom G :=
   by
   ext
   dsimp
@@ -340,9 +340,9 @@ variable (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) (K : D ⥤ E)
 
 #print CategoryTheory.Functor.pentagon /-
 theorem pentagon :
-    whiskerRight (associator F G H).Hom K ≫
-        (associator F (G ⋙ H) K).Hom ≫ whiskerLeft F (associator G H K).Hom =
-      (associator (F ⋙ G) H K).Hom ≫ (associator F G (H ⋙ K)).Hom :=
+    whiskerRight (associator F G H).hom K ≫
+        (associator F (G ⋙ H) K).hom ≫ whiskerLeft F (associator G H K).hom =
+      (associator (F ⋙ G) H K).hom ≫ (associator F G (H ⋙ K)).hom :=
   by
   ext
   dsimp

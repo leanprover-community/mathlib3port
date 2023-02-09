@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,15 +114,15 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
       ⟨mem_lowerBounds.1 h _ ⟨fract x, _, abs_fract⟩,
         mem_lowerBounds.1 h _ ⟨fract x - 1, _, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
     ·
-      simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+      simp only [mem_setOf_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
         QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one]
     ·
-      simp only [mem_set_of_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+      simp only [mem_setOf_eq, fract, sub_eq_self, QuotientAddGroup.mk_sub,
         QuotientAddGroup.eq_zero_iff, int_cast_mem_zmultiples_one, sub_sub,
         (by norm_cast : (⌊x⌋ : ℝ) + 1 = (↑(⌊x⌋ + 1) : ℝ))]
   · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_cinfₛ_iff h₁ h₂]
     rintro b' ⟨b, hb, rfl⟩
-    simp only [mem_set_of_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
+    simp only [mem_setOf_eq, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
       smul_one_eq_coe] at hb
     obtain ⟨z, hz⟩ := hb
     rw [(by
@@ -192,7 +192,7 @@ open Metric
 theorem closedBall_eq_univ_of_half_period_le (hp : p ≠ 0) (x : AddCircle p) {ε : ℝ}
     (hε : |p| / 2 ≤ ε) : closedBall x ε = univ :=
   eq_univ_iff_forall.mpr fun x => by
-    simpa only [mem_closed_ball, dist_eq_norm] using (norm_le_half_period p hp).trans hε
+    simpa only [mem_closedBall, dist_eq_norm] using (norm_le_half_period p hp).trans hε
 #align add_circle.closed_ball_eq_univ_of_half_period_le AddCircle.closedBall_eq_univ_of_half_period_le
 
 @[simp]
@@ -204,9 +204,9 @@ theorem coe_real_preimage_closedBall_period_zero (x ε : ℝ) :
 theorem coe_real_preimage_closedBall_eq_unionᵢ (x ε : ℝ) :
     coe ⁻¹' closedBall (x : AddCircle p) ε = ⋃ z : ℤ, closedBall (x + z • p) ε :=
   by
-  rcases eq_or_ne p 0 with (rfl | hp); · simp [Union_const]
+  rcases eq_or_ne p 0 with (rfl | hp); · simp [unionᵢ_const]
   ext y
-  simp only [dist_eq_norm, mem_preimage, mem_closed_ball, zsmul_eq_mul, mem_Union, Real.norm_eq_abs,
+  simp only [dist_eq_norm, mem_preimage, mem_closedBall, zsmul_eq_mul, mem_unionᵢ, Real.norm_eq_abs,
     ← QuotientAddGroup.mk_sub, norm_eq, ← sub_sub]
   refine' ⟨fun h => ⟨round (p⁻¹ * (y - x)), h⟩, _⟩
   rintro ⟨n, hn⟩
@@ -222,13 +222,13 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
   cases' le_or_lt (|p| / 2) ε with hε hε
   · rcases eq_or_ne p 0 with (rfl | hp)
     · simp only [abs_zero, zero_div] at hε
-      simp only [not_lt.mpr hε, coe_real_preimage_closed_ball_period_zero, abs_zero, zero_div,
+      simp only [not_lt.mpr hε, coe_real_preimage_closedBall_period_zero, abs_zero, zero_div,
         if_false, inter_eq_right_iff_subset]
-      exact hs.trans (closed_ball_subset_closed_ball <| by simp [hε])
-    simp [closed_ball_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
-  · suffices ∀ z : ℤ, closed_ball (x + z • p) ε ∩ s = if z = 0 then closed_ball x ε ∩ s else ∅ by
-      simp [-zsmul_eq_mul, ← QuotientAddGroup.mk_zero, coe_real_preimage_closed_ball_eq_Union,
-        Union_inter, Union_ite, this, hε]
+      exact hs.trans (closedBall_subset_closedBall <| by simp [hε])
+    simp [closedBall_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
+  · suffices ∀ z : ℤ, closedBall (x + z • p) ε ∩ s = if z = 0 then closedBall x ε ∩ s else ∅ by
+      simp [-zsmul_eq_mul, ← QuotientAddGroup.mk_zero, coe_real_preimage_closedBall_eq_unionᵢ,
+        unionᵢ_inter, unionᵢ_ite, this, hε]
     intro z
     simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs⊢
     rcases eq_or_ne z 0 with (rfl | hz)
@@ -273,7 +273,7 @@ theorem exists_norm_eq_of_fin_add_order {u : AddCircle p} (hu : IsOfFinAddOrder 
   by
   let n := addOrderOf u
   change ∃ k : ℕ, ‖u‖ = p * (k / n)
-  obtain ⟨m, -, -, hm⟩ := exists_gcd_eq_one_of_is_of_fin_add_order hu
+  obtain ⟨m, -, -, hm⟩ := exists_gcd_eq_one_of_isOfFinAddOrder hu
   refine' ⟨min (m % n) (n - m % n), _⟩
   rw [← hm, norm_div_nat_cast]
 #align add_circle.exists_norm_eq_of_fin_add_order AddCircle.exists_norm_eq_of_fin_add_order
@@ -284,7 +284,7 @@ theorem le_add_order_smul_norm_of_isOfFinAddOrder {u : AddCircle p} (hu : IsOfFi
   obtain ⟨n, hn⟩ := exists_norm_eq_of_fin_add_order hu
   replace hu : (addOrderOf u : ℝ) ≠ 0;
   · norm_cast
-    exact (add_order_of_pos_iff.mpr hu).Ne.symm
+    exact (add_order_of_pos_iff.mpr hu).ne.symm
   conv_lhs => rw [← mul_one p]
   rw [hn, nsmul_eq_mul, ← mul_assoc, mul_comm _ p, mul_assoc, mul_div_cancel' _ hu,
     mul_le_mul_left hp.out, Nat.one_le_cast, Nat.one_le_iff_ne_zero]

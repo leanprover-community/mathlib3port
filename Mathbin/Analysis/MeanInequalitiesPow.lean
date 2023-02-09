@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities_pow
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) : a ^ p +
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0) (hp1 : 1 ≤ p) :
     (a ^ p + b ^ p) ^ (1 / p) ≤ a + b :=
   by
-  rw [← @Nnreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
+  rw [← @nnreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 #align nnreal.rpow_add_rpow_le_add Nnreal.rpow_add_rpow_le_add
@@ -177,8 +177,7 @@ theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0) (hp_pos : 0 < p) (hpq : p �
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) :=
   by
   have h_rpow : ∀ a : ℝ≥0, a ^ q = (a ^ p) ^ (q / p) := fun a => by
-    rw [← Nnreal.rpow_mul, div_eq_inv_mul, ← mul_assoc, _root_.mul_inv_cancel hp_pos.ne.symm,
-      one_mul]
+    rw [← Nnreal.rpow_mul, div_eq_inv_mul, ← mul_assoc, mul_inv_cancel hp_pos.ne.symm, one_mul]
   have h_rpow_add_rpow_le_add :
     ((a ^ p) ^ (q / p) + (b ^ p) ^ (q / p)) ^ (1 / (q / p)) ≤ a ^ p + b ^ p :=
     by
@@ -217,7 +216,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
   have hp_not_neg : ¬p < 0 := by simp [hp_nonneg]
   have h_top_iff_rpow_top : ∀ (i : ι) (hi : i ∈ s), w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
     simp [hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
-  refine' le_of_top_imp_top_of_to_nnreal_le _ _
+  refine' le_of_top_imp_top_of_toNnreal_le _ _
   · -- first, prove `(∑ i in s, w i * z i) ^ p = ⊤ → ∑ i in s, (w i * z i ^ p) = ⊤`
     rw [rpow_eq_top_iff, sum_eq_top_iff, sum_eq_top_iff]
     intro h
@@ -236,15 +235,15 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
         intro h
         rw [h, top_rpow_of_pos hp_pos] at h_top_rpow_sum
         exact h_top_rpow_sum rfl
-      fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).Ne
+      fun a ha => (lt_top_of_sum_ne_top h_top_sum ha).ne
     have h_top_rpow : ∀ a : ι, a ∈ s → w a * z a ^ p ≠ ⊤ :=
       by
       intro i hi
       specialize h_top i hi
       rwa [Ne.def, ← h_top_iff_rpow_top i hi]
     -- put the `.to_nnreal` inside the sums.
-    simp_rw [to_nnreal_sum h_top_rpow, ← to_nnreal_rpow, to_nnreal_sum h_top, to_nnreal_mul, ←
-      to_nnreal_rpow]
+    simp_rw [toNnreal_sum h_top_rpow, ← toNnreal_rpow, toNnreal_sum h_top, toNnreal_mul, ←
+      toNnreal_rpow]
     -- use corresponding nnreal result
     refine'
       Nnreal.rpow_arith_mean_le_arith_mean_rpow s (fun i => (w i).toNnreal)
@@ -253,8 +252,8 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
     have h_sum_nnreal : (∑ i in s, w i) = ↑(∑ i in s, (w i).toNnreal) :=
       by
       rw [coe_finset_sum]
-      refine' sum_congr rfl fun i hi => (coe_to_nnreal _).symm
-      refine' (lt_top_of_sum_ne_top _ hi).Ne
+      refine' sum_congr rfl fun i hi => (coe_toNnreal _).symm
+      refine' (lt_top_of_sum_ne_top _ hi).ne
       exact hw'.symm ▸ Ennreal.one_ne_top
     rwa [← coe_eq_coe, ← h_sum_nnreal]
 #align ennreal.rpow_arith_mean_le_arith_mean_rpow Ennreal.rpow_arith_mean_le_arith_mean_rpow
@@ -277,7 +276,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
   by
   have hp_pos : 0 < p := by positivity
   by_cases h_top : a + b = ⊤
-  · rw [← @Ennreal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top
+  · rw [← @ennreal.rpow_eq_top_iff_of_pos (a + b) p hp_pos] at h_top
     rw [h_top]
     exact le_top
   obtain ⟨ha_top, hb_top⟩ := add_ne_top.mp h_top
@@ -290,7 +289,7 @@ theorem add_rpow_le_rpow_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) : a ^ 
 theorem rpow_add_rpow_le_add {p : ℝ} (a b : ℝ≥0∞) (hp1 : 1 ≤ p) :
     (a ^ p + b ^ p) ^ (1 / p) ≤ a + b :=
   by
-  rw [← @Ennreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
+  rw [← @ennreal.le_rpow_one_div_iff _ _ (1 / p) (by simp [lt_of_lt_of_le zero_lt_one hp1])]
   rw [one_div_one_div]
   exact add_rpow_le_rpow_add _ _ hp1
 #align ennreal.rpow_add_rpow_le_add Ennreal.rpow_add_rpow_le_add
@@ -299,7 +298,7 @@ theorem rpow_add_rpow_le {p q : ℝ} (a b : ℝ≥0∞) (hp_pos : 0 < p) (hpq : 
     (a ^ q + b ^ q) ^ (1 / q) ≤ (a ^ p + b ^ p) ^ (1 / p) :=
   by
   have h_rpow : ∀ a : ℝ≥0∞, a ^ q = (a ^ p) ^ (q / p) := fun a => by
-    rw [← Ennreal.rpow_mul, _root_.mul_div_cancel' _ hp_pos.ne']
+    rw [← Ennreal.rpow_mul, mul_div_cancel' _ hp_pos.ne']
   have h_rpow_add_rpow_le_add :
     ((a ^ p) ^ (q / p) + (b ^ p) ^ (q / p)) ^ (1 / (q / p)) ≤ a ^ p + b ^ p :=
     by

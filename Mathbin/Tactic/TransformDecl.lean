@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.transform_decl
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,20 +20,20 @@ unsafe def copy_attribute' (attr_name : Name) (src : Name) (tgt : Name) (p : Opt
     tactic Unit := do
   get_decl tgt <|> throwError "unknown declaration {← tgt}"
   -- if the source doesn't have the attribute we do not error and simply return
-      whenM
+      mwhen
       (succeeds (has_attribute attr_name src)) do
       let (p', prio) ← has_attribute attr_name src
       let p := p p'
       let s ← try_or_report_error (set_basic_attribute attr_name tgt p prio)
-      let Sum.inr msg ← return s |
+      let sum.inr msg ← return s |
         skip
       if
             msg =
-              (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").toString then
+              (f! "set_basic_attribute tactic failed, '{attr_name}' is not a basic attribute").to_string then
           do
           let user_attr_const ← get_user_attribute_name attr_name >>= mk_const
           let tac ←
-            eval_pexpr (tactic Unit)
+            eval_pexpr (tactic unit)
                 ``(user_attribute.get_param_untyped $(user_attr_const) $(q(src)) >>= fun x =>
                     user_attribute.set_untyped $(user_attr_const) $(q(tgt)) x $(q(p)) $(q(prio)))
           tac
@@ -129,7 +129,7 @@ unsafe def transform_decl_with_prefix_fun_aux (f : Name → Option Name) (replac
           {pp_decl}
           
           Nested error message:
-          ").toString
+          ").to_string
       do
       if env src then add_protected_decl decl else add_decl decl
       -- we test that the declaration value type-checks, so that we get the decorated error message

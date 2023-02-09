@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.simps
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -173,8 +173,8 @@ unsafe def projections_info (l : List projection_data) (pref : String) (str : Na
   let to_print ←
     defaults.mapM fun s =>
         toString <$>
-          let prefix_str := if s.isPrefix then "(prefix) " else ""
-          f!"Projection {(← prefix_str)}{(← s.Name)}: {← s.expr}"
+          let prefix_str := if s.is_prefix then "(prefix) " else ""
+          f!"Projection {(← prefix_str)}{(← s.name)}: {← s.expr}"
   let print2 :=
     String.join <| (nondefaults.map fun nm : projection_data => toString nm.1).intersperse ", "
   let to_print :=
@@ -191,11 +191,10 @@ unsafe def projections_info (l : List projection_data) (pref : String) (str : Na
 unsafe def get_composite_of_projections_aux :
     ∀ (str : Name) (proj : String) (x : expr) (pos : List ℕ) (args : List expr),
       tactic (expr × List ℕ)
-  | str, proj, x, Pos, args => do
+  | str, proj, x, pos, args => do
     let e ← get_env
     let projs ← e.structure_fields str
-    let proj_info :=
-      projs.mapIdx fun n p => (fun x => (x, n, p)) <$> proj.getRest ("_" ++ p.getLast)
+    let proj_info := projs.mapIdx fun n p => (fun x => (x, n, p)) <$> proj.getRest ("_" ++ p.last)
     when (proj_info id = []) <|
         throwError "Failed to find constructor {(← proj 1)} in structure {← str}."
     let (proj_rest, index, proj_nm) ← return (proj_info.filterMap id).getLastI
@@ -206,7 +205,7 @@ unsafe def get_composite_of_projections_aux :
     let params := get_app_args type
     let univs := proj_d.univ_params.zip type.get_app_fn.univ_levels
     let new_x := (proj_e.instantiate_univ_params univs).mk_app <| params ++ [x]
-    let new_pos := Pos ++ [index]
+    let new_pos := pos ++ [index]
     if proj_rest then return (new_x args, new_pos)
       else do
         let type ← infer_type new_x
@@ -311,8 +310,8 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                 specify custom projections that are compositions of multiple projections. -/
             e
             str
-      let projs : List parsed_projection_data := projs fun nm => ⟨nm, nm, tt, ff⟩
-      let projs : List parsed_projection_data :=
+      let projs : list parsed_projection_data := projs fun nm => ⟨nm, nm, tt, ff⟩
+      let projs : list parsed_projection_data :=
         rules
           (fun projs rule =>
             match rule with
@@ -338,7 +337,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
       when_tracing `simps.debug
           (← do
             dbg_trace "[simps] > Projection info after applying the rules: {← projs}.")
-      when ¬(projs fun x => x : List Name).Nodup <|
+      when ¬(projs fun x => x : list name).Nodup <|
           fail <|
             "Invalid projection names. Two projections have the same name.\nThis is likely because a custom composition of projections was given the same name as an " ++
                 "existing projection. Solution: rename the existing projection (before renaming the custom " ++
@@ -379,7 +378,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                       Expected type:
                         {← raw_expr_type}"
             return (custom_proj, nrs)
-      let raw_exprs := raw_exprs_and_nrs Prod.fst
+      let raw_exprs := raw_exprs_and_nrs prod.fst
       let-- Check for other coercions and type-class arguments to use as projections instead.
         (args, _)
         ← open_pis d_str
@@ -387,7 +386,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
       let automatic_projs ← attribute.get_instances `notation_class
       let raw_exprs ←
         automatic_projs
-            (fun (raw_exprs : List expr) class_nm =>
+            (fun (raw_exprs : list expr) class_nm =>
               (/- For this class, find the projection. `raw_expr` is the projection found applied to `args`,
                         and `lambda_raw_expr` has the arguments `args` abstracted. -/
                 -- Note: `expr.bind_lambda` doesn't give the correct type
@@ -395,7 +394,7 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                         not been overrriden by the user. -/
                 do
                   let (is_class, proj_nm) ← notation_class_attr class_nm
-                  let proj_nm ← proj_nm <|> (e class_nm).map List.headI
+                  let proj_nm ← proj_nm <|> (e class_nm).map list.head
                   let (raw_expr, lambda_raw_expr) ←
                     if is_class then do
                         guard <| args = 1
@@ -424,10 +423,10 @@ unsafe def simps_get_raw_projections (e : environment) (str : Name)
                       (← do
                         dbg_trace "[simps] > The raw projection is:
                             {← lambda_raw_expr}")
-                  return <| raw_exprs Pos lambda_raw_expr) <|>
+                  return <| raw_exprs pos lambda_raw_expr) <|>
                 return raw_exprs)
             raw_exprs
-      let positions := raw_exprs_and_nrs Prod.snd
+      let positions := raw_exprs_and_nrs prod.snd
       let proj_names := projs fun x => x
       let defaults := projs fun x => x
       let prefixes := projs fun x => x
@@ -706,7 +705,7 @@ unsafe def simps_add_projection (nm : Name) (type lhs rhs : expr) (args : List e
                 (← do
                   dbg_trace "[simps] > `simp` simplified rhs to
                             > {← rhsprf1}")
-          return (Prod.mk rhsprf1 rhsprf2)) <|>
+          return (prod.mk rhsprf1 rhsprf2)) <|>
         return (rhs, const `eq.refl [lvl] type lhs)
   let eq_ap := const `eq [lvl] type lhs rhs
   let decl_name ← get_unused_decl_name nm
@@ -753,7 +752,7 @@ unsafe def simps_add_projections :
     let rhs_ap := rhs.instantiate_lambdas_or_apps type_args
     let str := tgt.get_app_fn.const_name
     let-- We want to generate the current projection if it is in `todo`
-    todo_next := todo.filterₓ (· ≠ "")
+    todo_next := todo.filter (· ≠ "")
     /- Don't recursively continue if `str` is not a structure or if the structure is in
             `not_recursive`. -/
         if e str ∧ ¬(todo = [] ∧ str ∈ cfg ∧ ¬must_be_str) then do
@@ -819,12 +818,12 @@ unsafe def simps_add_projections :
                 cond
                 (¬(to_apply ≠ [] ∨ todo = [""] ∨ eta ∧ todo = []))
                 (do
-                  let projs : List Name := proj_info fun x => x
+                  let projs : list name := proj_info fun x => x
                   let todo := if to_apply = [] then todo_next else todo
                   -- check whether all elements in `todo` have a projection as prefix
                         guard
-                        (todo fun x => projs fun proj => ("_" ++ proj).isPrefixOfₓ x) <|>
-                      let x := (todo fun x => projs fun proj => ¬("_" ++ proj).isPrefixOfₓ x).iget
+                        (todo fun x => projs fun proj => ("_" ++ proj).isPrefixOf x) <|>
+                      let x := (todo fun x => projs fun proj => ¬("_" ++ proj).isPrefixOf x).iget
                       let simp_lemma := nm x
                       let needed_proj := (x '_').tail.headI
                       throwError
@@ -935,7 +934,7 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := { }) (todo : List String := 
         return { cfg with addAdditive := dict nm }
       else return cfg
   let added_names ← simps_add_projections e nm d.type lhs d.value [] d.univ_params true cfg todo []
-  simps_aux nm added_names True
+  simps_aux nm added_names true
 #align simps_tac simps_tac
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
@@ -943,12 +942,12 @@ unsafe def simps_tac (nm : Name) (cfg : SimpsCfg := { }) (todo : List String := 
 /-- The parser for the `@[simps]` attribute. -/
 unsafe def simps_parser : parser (Bool × List String × SimpsCfg) := do
   -- note: we don't check whether the user has written a nonsense namespace in an argument.
-        Prod.mk <$>
+        prod.mk <$>
         is_some <$> parser.optional (tk "?") <*>
-      (Prod.mk <$> many (name.last <$> ident) <*> do
+      (prod.mk <$> many (name.last <$> ident) <*> do
         let some e ← parser.optional parser.pexpr |
           return { }
-        eval_pexpr SimpsCfg e)
+        eval_pexpr simps_cfg e)
 #align simps_parser simps_parser
 
 /- If one of the fields is a partially applied constructor, we will eta-expand it

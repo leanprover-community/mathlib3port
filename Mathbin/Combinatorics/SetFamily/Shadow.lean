@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module combinatorics.set_family.shadow
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ theorem erase_mem_shadow (hs : s ∈ 𝒜) (ha : a ∈ s) : erase s a ∈ (∂ )
 #align finset.erase_mem_shadow Finset.erase_mem_shadow
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Finset.mem_shadow_iff_insert_mem /-
 /-- `t` is in the shadow of `𝒜` iff we can add an element to it so that the resulting finset is in
 `𝒜`. -/
@@ -191,7 +191,7 @@ theorem mem_shadow_iff_exists_mem_card_add :
     s ∈ (∂ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, s ⊆ t ∧ t.card = s.card + k :=
   by
   induction' k with k ih generalizing 𝒜 s
-  · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
+  · refine' ⟨fun hs => ⟨s, hs, Subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
     rwa [eq_of_subset_of_card_le hst hcard.le]
   simp only [exists_prop, Function.comp_apply, Function.iterate_succ]
@@ -258,11 +258,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Fintype.{u1} α] {𝒜 : Finset.{u1} (Finset.{u1} α)} {s : Finset.{u1} α}, Iff (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) s (Finset.upShadow.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 𝒜)) (Exists.{succ u1} (Finset.{u1} α) (fun (t : Finset.{u1} α) => And (Membership.mem.{u1, u1} (Finset.{u1} α) (Finset.{u1} (Finset.{u1} α)) (Finset.instMembershipFinset.{u1} (Finset.{u1} α)) t 𝒜) (Exists.{succ u1} α (fun (a : α) => Exists.{0} (Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) (fun (x._@.Mathlib.Combinatorics.SetFamily.Shadow._hyg.2641 : Not (Membership.mem.{u1, u1} α (Finset.{u1} α) (Finset.instMembershipFinset.{u1} α) a t)) => Eq.{succ u1} (Finset.{u1} α) (Insert.insert.{u1, u1} α (Finset.{u1} α) (Finset.instInsertFinset.{u1} α (fun (a : α) (b : α) => _inst_1 a b)) a t) s)))))
 Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff Finset.mem_upShadow_iffₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (a «expr ∉ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (a «expr ∉ » t) -/
 /-- `s` is in the upper shadow of `𝒜` iff there is an `t ∈ 𝒜` from which we can remove one element
 to get `s`. -/
 theorem mem_upShadow_iff : s ∈ (∂⁺ ) 𝒜 ↔ ∃ t ∈ 𝒜, ∃ (a : _)(_ : a ∉ t), insert a t = s := by
-  simp_rw [up_shadow, mem_sup, mem_image, exists_prop, mem_compl]
+  simp_rw [upShadow, mem_sup, mem_image, exists_prop, mem_compl]
 #align finset.mem_up_shadow_iff Finset.mem_upShadow_iff
 
 #print Finset.insert_mem_upShadow /-
@@ -276,7 +276,7 @@ protected theorem Set.Sized.upShadow (h𝒜 : (𝒜 : Set (Finset α)).Sized r) 
     ((∂⁺ ) 𝒜 : Set (Finset α)).Sized (r + 1) :=
   by
   intro A h
-  obtain ⟨A, hA, i, hi, rfl⟩ := mem_up_shadow_iff.1 h
+  obtain ⟨A, hA, i, hi, rfl⟩ := mem_upShadow_iff.1 h
   rw [card_insert_of_not_mem hi, h𝒜 hA]
 #align set.sized.up_shadow Set.Sized.upShadow
 
@@ -288,7 +288,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_up_shadow_iff_erase_mem Finset.mem_upShadow_iff_erase_memₓ'. -/
 /-- `t` is in the upper shadow of `𝒜` iff we can remove an element from it so that the resulting
 finset is in `𝒜`. -/
-theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.eraseₓ a ∈ 𝒜 :=
+theorem mem_upShadow_iff_erase_mem : s ∈ (∂⁺ ) 𝒜 ↔ ∃ a ∈ s, s.erase a ∈ 𝒜 :=
   by
   refine' mem_up_shadow_iff.trans ⟨_, _⟩
   · rintro ⟨s, hs, a, ha, rfl⟩
@@ -341,7 +341,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
     s ∈ (∂⁺ ^[k]) 𝒜 ↔ ∃ t ∈ 𝒜, t ⊆ s ∧ t.card + k = s.card :=
   by
   induction' k with k ih generalizing 𝒜 s
-  · refine' ⟨fun hs => ⟨s, hs, subset.refl _, rfl⟩, _⟩
+  · refine' ⟨fun hs => ⟨s, hs, Subset.refl _, rfl⟩, _⟩
     rintro ⟨t, ht, hst, hcard⟩
     rwa [← eq_of_subset_of_card_le hst hcard.ge]
   simp only [exists_prop, Function.comp_apply, Function.iterate_succ]
@@ -349,7 +349,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
   clear ih
   constructor
   · rintro ⟨t, ht, hts, hcardst⟩
-    obtain ⟨u, hu, hut, hcardtu⟩ := mem_up_shadow_iff_exists_mem_card_add_one.1 ht
+    obtain ⟨u, hu, hut, hcardtu⟩ := mem_upShadow_iff_exists_mem_card_add_one.1 ht
     refine' ⟨u, hu, hut.trans hts, _⟩
     rw [← hcardst, ← hcardtu, add_right_comm]
     rfl
@@ -361,7 +361,7 @@ theorem mem_upShadow_iff_exists_mem_card_add :
           exact add_le_add_left (zero_lt_succ _) _)
         hts
     rw [add_comm] at hu
-    refine' ⟨u, mem_up_shadow_iff_exists_mem_card_add_one.2 ⟨t, ht, htu, hu.symm⟩, hus, _⟩
+    refine' ⟨u, mem_upShadow_iff_exists_mem_card_add_one.2 ⟨t, ht, htu, hu.symm⟩, hus, _⟩
     rw [hu, ← hcard, add_right_comm]
     rfl
 #align finset.mem_up_shadow_iff_exists_mem_card_add Finset.mem_upShadow_iff_exists_mem_card_add
@@ -376,7 +376,7 @@ Case conversion may be inaccurate. Consider using '#align finset.shadow_image_co
 theorem shadow_image_compl : ((∂ ) 𝒜).image compl = (∂⁺ ) (𝒜.image compl) :=
   by
   ext s
-  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
+  simp only [mem_image, exists_prop, mem_shadow_iff, mem_upShadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, not_mem_compl.2 ha, compl_erase.symm⟩
@@ -394,7 +394,7 @@ Case conversion may be inaccurate. Consider using '#align finset.up_shadow_image
 theorem upShadow_image_compl : ((∂⁺ ) 𝒜).image compl = (∂ ) (𝒜.image compl) :=
   by
   ext s
-  simp only [mem_image, exists_prop, mem_shadow_iff, mem_up_shadow_iff]
+  simp only [mem_image, exists_prop, mem_shadow_iff, mem_upShadow_iff]
   constructor
   · rintro ⟨_, ⟨s, hs, a, ha, rfl⟩, rfl⟩
     exact ⟨sᶜ, ⟨s, hs, rfl⟩, a, mem_compl.2 ha, compl_insert.symm⟩

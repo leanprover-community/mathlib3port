@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.complex.circle
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem mem_circle_iff_normSq {z : ℂ} : z ∈ circle ↔ normSq z = 1 := by si
 #align mem_circle_iff_norm_sq mem_circle_iff_normSq
 
 @[simp]
-theorem normSq_eq_of_mem_circle (z : circle) : normSq z = 1 := by simp [norm_sq_eq_abs]
+theorem normSq_eq_of_mem_circle (z : circle) : normSq z = 1 := by simp [normSq_eq_abs]
 #align norm_sq_eq_of_mem_circle normSq_eq_of_mem_circle
 
 theorem ne_zero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
@@ -87,7 +87,7 @@ theorem coe_inv_circle_eq_conj (z : circle) : ↑z⁻¹ = conj (z : ℂ) := by
 
 @[simp]
 theorem coe_div_circle (z w : circle) : ↑(z / w) = (z : ℂ) / w :=
-  circle.Subtype.map_div z w
+  circle.subtype.map_div z w
 #align coe_div_circle coe_div_circle
 
 /-- The elements of the circle embed into the units. -/
@@ -117,7 +117,7 @@ def circle.ofConjDivSelf (z : ℂ) (hz : z ≠ 0) : circle :=
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
 def expMapCircle : C(ℝ, circle)
-    where toFun t := ⟨exp (t * i), by simp [exp_mul_I, abs_cos_add_sin_mul_I]⟩
+    where toFun t := ⟨exp (t * i), by simp [exp_mul_i, abs_cos_add_sin_mul_i]⟩
 #align exp_map_circle expMapCircle
 
 @[simp]

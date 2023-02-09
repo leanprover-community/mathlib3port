@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.maximal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ instance [Nontrivial R] : Nonempty <| MaximalSpectrum R :=
 
 /-- The natural inclusion from the maximal spectrum to the prime spectrum. -/
 def toPrimeSpectrum (x : MaximalSpectrum R) : PrimeSpectrum R :=
-  ⟨x.asIdeal, x.IsMaximal.IsPrime⟩
+  ⟨x.asIdeal, x.isMaximal.isPrime⟩
 #align maximal_spectrum.to_prime_spectrum MaximalSpectrum.toPrimeSpectrum
 
 theorem toPrimeSpectrum_injective : (@toPrimeSpectrum R _).Injective := fun ⟨_, _⟩ ⟨_, _⟩ h => by
@@ -68,9 +68,9 @@ open PrimeSpectrum Set
 theorem toPrimeSpectrum_range :
     Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
   by
-  simp only [is_closed_singleton_iff_is_maximal]
+  simp only [isClosed_singleton_iff_isMaximal]
   ext ⟨x, _⟩
-  exact ⟨fun ⟨y, hy⟩ => hy ▸ y.IsMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
+  exact ⟨fun ⟨y, hy⟩ => hy ▸ y.isMaximal, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
 #align maximal_spectrum.to_prime_spectrum_range MaximalSpectrum.toPrimeSpectrum_range
 
 /-- The Zariski topology on the maximal spectrum of a commutative ring is defined as the subspace
@@ -82,8 +82,8 @@ instance zariskiTopology : TopologicalSpace <| MaximalSpectrum R :=
 instance : T1Space <| MaximalSpectrum R :=
   ⟨fun x =>
     isClosed_induced_iff.mpr
-      ⟨{toPrimeSpectrum x}, (isClosed_singleton_iff_isMaximal _).mpr x.IsMaximal, by
-        simpa only [← image_singleton] using preimage_image_eq {x} to_prime_spectrum_injective⟩⟩
+      ⟨{toPrimeSpectrum x}, (isClosed_singleton_iff_isMaximal _).mpr x.isMaximal, by
+        simpa only [← image_singleton] using preimage_image_eq {x} toPrimeSpectrum_injective⟩⟩
 
 theorem toPrimeSpectrum_continuous : Continuous <| @toPrimeSpectrum R _ :=
   continuous_induced_dom
@@ -143,7 +143,7 @@ theorem infᵢ_localization_eq_bot :
   rw [Algebra.mem_infᵢ]
   constructor
   · rw [← MaximalSpectrum.infᵢ_localization_eq_bot, Algebra.mem_infᵢ]
-    exact fun hx ⟨v, hv⟩ => hx ⟨v, hv.IsPrime⟩
+    exact fun hx ⟨v, hv⟩ => hx ⟨v, hv.isPrime⟩
   · rw [Algebra.mem_bot]
     rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩

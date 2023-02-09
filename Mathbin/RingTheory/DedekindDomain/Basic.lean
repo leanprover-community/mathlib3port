@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
 open nonZeroDivisors Polynomial
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ring.DimensionLeOne : Prop :=
   ∀ (p) (_ : p ≠ (⊥ : Ideal R)), p.IsPrime → p.IsMaximal
@@ -59,27 +59,27 @@ namespace Ring
 
 theorem DimensionLeOne.principal_ideal_ring [IsDomain A] [IsPrincipalIdealRing A] :
     DimensionLeOne A := fun p nonzero prime =>
-  haveI := Prime
+  haveI := prime
   IsPrime.to_maximal_ideal nonzero
 #align ring.dimension_le_one.principal_ideal_ring Ring.DimensionLeOne.principal_ideal_ring
 
 theorem DimensionLeOne.isIntegralClosure (B : Type _) [CommRing B] [IsDomain B] [Nontrivial R]
     [Algebra R A] [Algebra R B] [Algebra B A] [IsScalarTower R B A] [IsIntegralClosure B R A]
     (h : DimensionLeOne R) : DimensionLeOne B := fun p ne_bot prime =>
-  is_integral_closure.is_maximal_of_is_maximal_comap A p
-    (h _ (is_integral_closure.comap_ne_bot A ne_bot) inferInstance)
+  IsIntegralClosure.isMaximal_of_isMaximal_comap A p
+    (h _ (IsIntegralClosure.comap_ne_bot A ne_bot) inferInstance)
 #align ring.dimension_le_one.is_integral_closure Ring.DimensionLeOne.isIntegralClosure
 
 theorem DimensionLeOne.integralClosure [Nontrivial R] [IsDomain A] [Algebra R A]
     (h : DimensionLeOne R) : DimensionLeOne (integralClosure R A) :=
-  h.IsIntegralClosure R A (integralClosure R A)
+  h.isIntegralClosure R A (integralClosure R A)
 #align ring.dimension_le_one.integral_closure Ring.DimensionLeOne.integralClosure
 
 variable {R}
 
 theorem DimensionLeOne.not_lt_lt (h : Ring.DimensionLeOne R) (p₀ p₁ p₂ : Ideal R) [hp₁ : p₁.IsPrime]
     [hp₂ : p₂.IsPrime] : ¬(p₀ < p₁ ∧ p₁ < p₂)
-  | ⟨h01, h12⟩ => h12.Ne ((h p₁ (bot_le.trans_lt h01).ne' hp₁).eq_of_le hp₂.ne_top h12.le)
+  | ⟨h01, h12⟩ => h12.ne ((h p₁ (bot_le.trans_lt h01).ne' hp₁).eq_of_le hp₂.ne_top h12.le)
 #align ring.dimension_le_one.not_lt_lt Ring.DimensionLeOne.not_lt_lt
 
 theorem DimensionLeOne.eq_bot_of_lt (h : Ring.DimensionLeOne R) (p P : Ideal R) [hp : p.IsPrime]

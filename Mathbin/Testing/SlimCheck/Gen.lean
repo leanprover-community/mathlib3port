@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.gen
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -144,7 +144,7 @@ by the size parameter of `gen`. -/
 def listOf (cmd : Gen α) : Gen (List α) :=
   sized fun sz => do
     do
-      let ⟨n⟩ ← Uliftable.up <| choose_nat 0 (sz + 1) (by decide)
+      let ⟨n⟩ ← uliftable.up <| choose_nat 0 (sz + 1) (by decide)
       let v ← vector_of n cmd
       return v
 #align slim_check.gen.list_of SlimCheck.Gen.listOf
@@ -159,8 +159,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.one_of SlimCheck.Gen.oneOfₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
-  List.nthLe xs n h'
+  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length pos
+  list.nth_le xs n h'
 #align slim_check.gen.one_of SlimCheck.Gen.oneOf
 
 /- warning: slim_check.gen.elements -> SlimCheck.Gen.elements is a dubious translation:
@@ -171,8 +171,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align slim_check.gen.elements SlimCheck.Gen.elementsₓ'. -/
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
-  pure <| List.nthLe xs n h₁
+  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length pos
+  pure <| list.nth_le xs n h₁
 #align slim_check.gen.elements SlimCheck.Gen.elements
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -183,7 +183,7 @@ If we consider `freq_aux [(1, gena), (3, genb), (5, genc)] 4 _`, we choose a gen
 the interval 1-9 into 1-1, 2-4, 5-9 so that the width of each interval corresponds to one of the
 number in the list of generators. Then, we check which interval 4 falls into: it selects `genb`.
 -/
-def freqAux : ∀ (xs : List (ℕ+ × Gen α)) (i), i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → Gen α
+def freqAux : ∀ (xs : List (ℕ+ × Gen α)) (i), i < (xs.map (Subtype.val ∘ Prod.fst)).sum → Gen α
   | [], i, h => False.elim (Nat.not_lt_zero _ h)
   | (i, x)::xs, j, h =>
     if h' : j < i then x
@@ -200,9 +200,9 @@ those numbers is 9, `gena` will be chosen with probability ~1/9, `genb` with ~3/
 and `genc` with probability 5/9.
 -/
 def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
-  let s := (xs.map (Subtype.val ∘ Prod.fst)).Sum
+  let s := (xs.map (Subtype.val ∘ Prod.fst)).sum
   have ha : 1 ≤ s :=
-    le_trans Pos <|
+    le_trans pos <|
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
         List.length_le_sum_of_one_le _ fun i => by
           simp
@@ -227,8 +227,8 @@ def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs
     let ⟨xs', h⟩ ← permutation_of xs
     let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up <| chooseNat 0 xs'.length (by decide)
     pure
-        ⟨List.insertNth n x xs',
-          List.Perm.trans (List.Perm.cons _ h) (List.perm_insertNth _ _ h').symm⟩
+        ⟨list.insert_nth n x xs',
+          list.perm.trans (list.perm.cons _ h) (list.perm_insert_nth _ _ h').symm⟩
 #align slim_check.gen.permutation_of SlimCheck.Gen.permutationOf
 
 end Gen

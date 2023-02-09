@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.closure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,7 +191,7 @@ theorem idempotent (x : α) : c (c x) = c x :=
 
 #print ClosureOperator.le_closure_iff /-
 theorem le_closure_iff (x y : α) : x ≤ c y ↔ c x ≤ c y :=
-  ⟨fun h => c.idempotent y ▸ c.Monotone h, fun h => (c.le_closure x).trans h⟩
+  ⟨fun h => c.idempotent y ▸ c.monotone h, fun h => (c.le_closure x).trans h⟩
 #align closure_operator.le_closure_iff ClosureOperator.le_closure_iff
 -/
 
@@ -305,7 +305,7 @@ end OrderTop
 #print ClosureOperator.closure_inf_le /-
 theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) :
     c (x ⊓ y) ≤ c x ⊓ c y :=
-  c.Monotone.map_inf_le _ _
+  c.monotone.map_inf_le _ _
 #align closure_operator.closure_inf_le ClosureOperator.closure_inf_le
 -/
 
@@ -315,15 +315,15 @@ variable [SemilatticeSup α] (c : ClosureOperator α)
 
 #print ClosureOperator.closure_sup_closure_le /-
 theorem closure_sup_closure_le (x y : α) : c x ⊔ c y ≤ c (x ⊔ y) :=
-  c.Monotone.le_map_sup _ _
+  c.monotone.le_map_sup _ _
 #align closure_operator.closure_sup_closure_le ClosureOperator.closure_sup_closure_le
 -/
 
 #print ClosureOperator.closure_sup_closure_left /-
 theorem closure_sup_closure_left (x y : α) : c (c x ⊔ y) = c (x ⊔ y) :=
   ((c.le_closure_iff _ _).1
-        (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
-    (c.Monotone (sup_le_sup_right (c.le_closure _) _))
+        (sup_le (c.monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
+    (c.monotone (sup_le_sup_right (c.le_closure _) _))
 #align closure_operator.closure_sup_closure_left ClosureOperator.closure_sup_closure_left
 -/
 
@@ -353,8 +353,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align closure_operator.closure_supr_closure ClosureOperator.closure_supᵢ_closureₓ'. -/
 @[simp]
 theorem closure_supᵢ_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
-  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ_le fun i => c.Monotone <| le_supᵢ f i) <|
-    c.Monotone <| supᵢ_mono fun i => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ_le fun i => c.monotone <| le_supᵢ f i) <|
+    c.monotone <| supᵢ_mono fun i => c.le_closure _
 #align closure_operator.closure_supr_closure ClosureOperator.closure_supᵢ_closure
 
 /- warning: closure_operator.closure_supr₂_closure -> ClosureOperator.closure_supᵢ₂_closure is a dubious translation:
@@ -368,8 +368,8 @@ Case conversion may be inaccurate. Consider using '#align closure_operator.closu
 @[simp]
 theorem closure_supᵢ₂_closure (f : ∀ i, κ i → α) :
     c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
-  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ₂_le fun i j => c.Monotone <| le_supᵢ₂ i j) <|
-    c.Monotone <| supᵢ₂_mono fun i j => c.le_closure _
+  le_antisymm ((c.le_closure_iff _ _).1 <| supᵢ₂_le fun i j => c.monotone <| le_supᵢ₂ i j) <|
+    c.monotone <| supᵢ₂_mono fun i j => c.le_closure _
 #align closure_operator.closure_supr₂_closure ClosureOperator.closure_supᵢ₂_closure
 
 end CompleteLattice
@@ -482,7 +482,7 @@ order version of the statement that every adjunction induces a monad. -/
 def closureOperator : ClosureOperator α
     where
   toFun x := u (l x)
-  monotone' := l.Monotone
+  monotone' := l.monotone
   le_closure' := l.le_closure
   idempotent' x := l.gc.u_l_u_eq_u (l x)
 #align lower_adjoint.closure_operator LowerAdjoint.closureOperator
@@ -495,7 +495,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u) (x : α), Eq.{succ u2} α (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l x)))) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l x))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.idempotent LowerAdjoint.idempotentₓ'. -/
 theorem idempotent (x : α) : u (l (u (l x))) = u (l x) :=
-  l.ClosureOperator.idempotent _
+  l.closureOperator.idempotent _
 #align lower_adjoint.idempotent LowerAdjoint.idempotent
 
 /- warning: lower_adjoint.le_closure_iff -> LowerAdjoint.le_closure_iff is a dubious translation:
@@ -505,7 +505,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u) (x : α) (y : α), Iff (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) x (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l y))) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l x)) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) _inst_2 u l y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.le_closure_iff LowerAdjoint.le_closure_iffₓ'. -/
 theorem le_closure_iff (x y : α) : x ≤ u (l y) ↔ u (l x) ≤ u (l y) :=
-  l.ClosureOperator.le_closure_iff _ _
+  l.closureOperator.le_closure_iff _ _
 #align lower_adjoint.le_closure_iff LowerAdjoint.le_closure_iff
 
 end PartialOrder
@@ -553,7 +553,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : PartialOrder.{u2} α] [_inst_2 : PartialOrder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) u) (x : α), Iff (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (LowerAdjoint.closed.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) u l)) (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α _inst_1)) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α _inst_1) (PartialOrder.toPreorder.{u1} β _inst_2) u l x)) x)
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.mem_closed_iff_closure_le LowerAdjoint.mem_closed_iff_closure_leₓ'. -/
 theorem mem_closed_iff_closure_le (x : α) : x ∈ l.closed ↔ u (l x) ≤ x :=
-  l.ClosureOperator.mem_closed_iff_closure_le _
+  l.closureOperator.mem_closed_iff_closure_le _
 #align lower_adjoint.mem_closed_iff_closure_le LowerAdjoint.mem_closed_iff_closure_le
 
 /- warning: lower_adjoint.closure_is_closed -> LowerAdjoint.closure_is_closed is a dubious translation:
@@ -575,7 +575,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closed_eq_range_close LowerAdjoint.closed_eq_range_closeₓ'. -/
 /-- The set of closed elements for `l` is the range of `u ∘ l`. -/
 theorem closed_eq_range_close : l.closed = Set.range (u ∘ l) :=
-  l.ClosureOperator.closed_eq_range_close
+  l.closureOperator.closed_eq_range_close
 #align lower_adjoint.closed_eq_range_close LowerAdjoint.closed_eq_range_close
 
 #print LowerAdjoint.toClosed /-
@@ -593,7 +593,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_le_closed_iff_le LowerAdjoint.closure_le_closed_iff_leₓ'. -/
 @[simp]
 theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) ≤ y ↔ x ≤ y :=
-  l.ClosureOperator.closure_le_closed_iff_le x hy
+  l.closureOperator.closure_le_closed_iff_le x hy
 #align lower_adjoint.closure_le_closed_iff_le LowerAdjoint.closure_le_closed_iff_le
 
 end PartialOrder
@@ -606,7 +606,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_top LowerAdjoint.closure_topₓ'. -/
 theorem closure_top [PartialOrder α] [OrderTop α] [Preorder β] {u : β → α} (l : LowerAdjoint u) :
     u (l ⊤) = ⊤ :=
-  l.ClosureOperator.closure_top
+  l.closureOperator.closure_top
 #align lower_adjoint.closure_top LowerAdjoint.closure_top
 
 /- warning: lower_adjoint.closure_inf_le -> LowerAdjoint.closure_inf_le is a dubious translation:
@@ -617,7 +617,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_inf_le LowerAdjoint.closure_inf_leₓ'. -/
 theorem closure_inf_le [SemilatticeInf α] [Preorder β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
     u (l (x ⊓ y)) ≤ u (l x) ⊓ u (l y) :=
-  l.ClosureOperator.closure_inf_le x y
+  l.closureOperator.closure_inf_le x y
 #align lower_adjoint.closure_inf_le LowerAdjoint.closure_inf_le
 
 section SemilatticeSup
@@ -631,7 +631,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u) (x : α) (y : α), LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1))) (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l x)) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l y))) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_sup_closure_le LowerAdjoint.closure_sup_closure_leₓ'. -/
 theorem closure_sup_closure_le (x y : α) : u (l x) ⊔ u (l y) ≤ u (l (x ⊔ y)) :=
-  l.ClosureOperator.closure_sup_closure_le x y
+  l.closureOperator.closure_sup_closure_le x y
 #align lower_adjoint.closure_sup_closure_le LowerAdjoint.closure_sup_closure_le
 
 /- warning: lower_adjoint.closure_sup_closure_left -> LowerAdjoint.closure_sup_closure_left is a dubious translation:
@@ -641,7 +641,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u) (x : α) (y : α), Eq.{succ u2} α (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l x)) y))) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_sup_closure_left LowerAdjoint.closure_sup_closure_leftₓ'. -/
 theorem closure_sup_closure_left (x y : α) : u (l (u (l x) ⊔ y)) = u (l (x ⊔ y)) :=
-  l.ClosureOperator.closure_sup_closure_left x y
+  l.closureOperator.closure_sup_closure_left x y
 #align lower_adjoint.closure_sup_closure_left LowerAdjoint.closure_sup_closure_left
 
 /- warning: lower_adjoint.closure_sup_closure_right -> LowerAdjoint.closure_sup_closure_right is a dubious translation:
@@ -651,7 +651,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u) (x : α) (y : α), Eq.{succ u2} α (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l y))))) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_sup_closure_right LowerAdjoint.closure_sup_closure_rightₓ'. -/
 theorem closure_sup_closure_right (x y : α) : u (l (x ⊔ u (l y))) = u (l (x ⊔ y)) :=
-  l.ClosureOperator.closure_sup_closure_right x y
+  l.closureOperator.closure_sup_closure_right x y
 #align lower_adjoint.closure_sup_closure_right LowerAdjoint.closure_sup_closure_right
 
 /- warning: lower_adjoint.closure_sup_closure -> LowerAdjoint.closure_sup_closure is a dubious translation:
@@ -661,7 +661,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SemilatticeSup.{u2} α] [_inst_2 : Preorder.{u1} β] {u : β -> α} (l : LowerAdjoint.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u) (x : α) (y : α), Eq.{succ u2} α (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l x)) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l y))))) (u (LowerAdjoint.toFun.{u2, u1} α β (PartialOrder.toPreorder.{u2} α (SemilatticeSup.toPartialOrder.{u2} α _inst_1)) _inst_2 u l (HasSup.sup.{u2} α (SemilatticeSup.toHasSup.{u2} α _inst_1) x y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_sup_closure LowerAdjoint.closure_sup_closureₓ'. -/
 theorem closure_sup_closure (x y : α) : u (l (u (l x) ⊔ u (l y))) = u (l (x ⊔ y)) :=
-  l.ClosureOperator.closure_sup_closure x y
+  l.closureOperator.closure_sup_closure x y
 #align lower_adjoint.closure_sup_closure LowerAdjoint.closure_sup_closure
 
 end SemilatticeSup
@@ -677,7 +677,7 @@ but is expected to have type
   forall {α : Type.{u3}} {ι : Sort.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u3} α] [_inst_2 : Preorder.{u2} β] {u : β -> α} (l : LowerAdjoint.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u) (f : ι -> α), Eq.{succ u3} α (u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (supᵢ.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (f i)))))) (u (LowerAdjoint.toFun.{u3, u2} α β (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α _inst_1))) _inst_2 u l (supᵢ.{u3, u1} α (CompleteLattice.toSupSet.{u3} α _inst_1) ι (fun (i : ι) => f i))))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_supr_closure LowerAdjoint.closure_supᵢ_closureₓ'. -/
 theorem closure_supᵢ_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
-  l.ClosureOperator.closure_supᵢ_closure _
+  l.closureOperator.closure_supᵢ_closure _
 #align lower_adjoint.closure_supr_closure LowerAdjoint.closure_supᵢ_closure
 
 /- warning: lower_adjoint.closure_supr₂_closure -> LowerAdjoint.closure_supᵢ₂_closure is a dubious translation:
@@ -690,7 +690,7 @@ Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem closure_supᵢ₂_closure (f : ∀ i, κ i → α) :
     u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
-  l.ClosureOperator.closure_supᵢ₂_closure _
+  l.closureOperator.closure_supᵢ₂_closure _
 #align lower_adjoint.closure_supr₂_closure LowerAdjoint.closure_supᵢ₂_closure
 
 end CompleteLattice
@@ -791,7 +791,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : SetLike.{u2, u1} α β] (l : LowerAdjoint.{u1, u2} (Set.{u1} β) α (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (PartialOrder.toPreorder.{u2} α (SetLike.instPartialOrder.{u2, u1} α β _inst_1)) (SetLike.coe.{u2, u1} α β _inst_1)) (x : α) (y : α), Eq.{succ u2} α (LowerAdjoint.toFun.{u1, u2} (Set.{u1} β) α (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (PartialOrder.toPreorder.{u2} α (SetLike.instPartialOrder.{u2, u1} α β _inst_1)) (SetLike.coe.{u2, u1} α β _inst_1) l (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (SetLike.coe.{u2, u1} α β _inst_1 (LowerAdjoint.toFun.{u1, u2} (Set.{u1} β) α (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (PartialOrder.toPreorder.{u2} α (SetLike.instPartialOrder.{u2, u1} α β _inst_1)) (SetLike.coe.{u2, u1} α β _inst_1) l (SetLike.coe.{u2, u1} α β _inst_1 x))) (SetLike.coe.{u2, u1} α β _inst_1 (LowerAdjoint.toFun.{u1, u2} (Set.{u1} β) α (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (PartialOrder.toPreorder.{u2} α (SetLike.instPartialOrder.{u2, u1} α β _inst_1)) (SetLike.coe.{u2, u1} α β _inst_1) l (SetLike.coe.{u2, u1} α β _inst_1 y))))) (LowerAdjoint.toFun.{u1, u2} (Set.{u1} β) α (PartialOrder.toPreorder.{u1} (Set.{u1} β) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} β) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} β) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} β) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} β) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} β) (Set.instCompleteBooleanAlgebraSet.{u1} β))))))) (PartialOrder.toPreorder.{u2} α (SetLike.instPartialOrder.{u2, u1} α β _inst_1)) (SetLike.coe.{u2, u1} α β _inst_1) l (Union.union.{u1} (Set.{u1} β) (Set.instUnionSet.{u1} β) (SetLike.coe.{u2, u1} α β _inst_1 x) (SetLike.coe.{u2, u1} α β _inst_1 y)))
 Case conversion may be inaccurate. Consider using '#align lower_adjoint.closure_union_closure LowerAdjoint.closure_union_closureₓ'. -/
 theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
-  SetLike.coe_injective (l.ClosureOperator.closure_sup_closure x y)
+  SetLike.coe_injective (l.closureOperator.closure_sup_closure x y)
 #align lower_adjoint.closure_union_closure LowerAdjoint.closure_union_closure
 
 /- warning: lower_adjoint.closure_Union_closure -> LowerAdjoint.closure_unionᵢ_closure is a dubious translation:
@@ -845,7 +845,7 @@ order version of the statement that every adjunction induces a monad. -/
 @[simps]
 def GaloisConnection.closureOperator [PartialOrder α] [Preorder β] {l : α → β} {u : β → α}
     (gc : GaloisConnection l u) : ClosureOperator α :=
-  gc.LowerAdjoint.ClosureOperator
+  gc.lowerAdjoint.closureOperator
 #align galois_connection.closure_operator GaloisConnection.closureOperator
 -/
 
@@ -866,7 +866,7 @@ operator.
 Note that the inverse in the opposite direction does not hold in general. -/
 @[simp]
 theorem closureOperator_gi_self [PartialOrder α] (c : ClosureOperator α) :
-    c.gi.gc.ClosureOperator = c := by
+    c.gi.gc.closureOperator = c := by
   ext x
   rfl
 #align closure_operator_gi_self closureOperator_gi_self

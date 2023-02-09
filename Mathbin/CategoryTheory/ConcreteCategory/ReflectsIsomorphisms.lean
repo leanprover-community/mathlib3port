@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.concrete_category.reflects_isomorphisms
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,14 +37,14 @@ theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms 
   {
     reflects := fun X Y f i => by
       skip
-      haveI i' : is_iso ((forget D).map ((forget₂ C D).map f)) := functor.map_is_iso (forget D) _
-      haveI : is_iso ((forget C).map f) :=
+      haveI i' : IsIso ((forget D).map ((forget₂ C D).map f)) := Functor.map_isIso (forget D) _
+      haveI : IsIso ((forget C).map f) :=
         by
-        have := has_forget₂.forget_comp
+        have := HasForget₂.forget_comp
         dsimp at this
         rw [← this]
         exact i'
-      apply is_iso_of_reflects_iso f (forget C) }
+      apply isIso_of_reflects_iso f (forget C) }
 #align category_theory.reflects_isomorphisms_forget₂ CategoryTheory.reflectsIsomorphisms_forget₂
 
 end CategoryTheory

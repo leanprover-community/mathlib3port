@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.finset.pi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ variable {δ : α → Type _} [DecidableEq α]
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
 def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀ a ∈ s, δ a) :=
-  ⟨s.1.pi fun a => (t a).1, s.Nodup.pi fun a _ => (t a).Nodup⟩
+  ⟨s.1.pi fun a => (t a).1, s.nodup.pi fun a _ => (t a).nodup⟩
 #align finset.pi Finset.pi
 -/
 
@@ -120,7 +120,7 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) :
         have :
           pi.cons s a b e₁ e (by simpa only [Multiset.mem_cons, mem_insert] using h) =
             pi.cons s a b e₂ e (by simpa only [Multiset.mem_cons, mem_insert] using h) :=
-          by rw [Eq]
+          by rw [eq]
         this
 #align finset.pi_cons_injective Finset.pi_cons_injective
 
@@ -150,7 +150,7 @@ theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, F
       _ (insert_val_of_not_mem ha)
   subst s'; rw [pi_cons]
   congr ; funext b
-  exact ((pi s t).Nodup.map <| Multiset.pi_cons_injective ha).dedup.symm
+  exact ((pi s t).nodup.map <| Multiset.pi_cons_injective ha).dedup.symm
 #align finset.pi_insert Finset.pi_insert
 -/
 

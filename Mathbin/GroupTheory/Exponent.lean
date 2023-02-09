@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.exponent
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ theorem exponentExists_iff_ne_zero : ExponentExists G ↔ exponent G ≠ 0 :=
 
 @[to_additive]
 theorem exponent_eq_zero_iff : exponent G = 0 ↔ ¬ExponentExists G := by
-  simp only [exponent_exists_iff_ne_zero, Classical.not_not]
+  simp only [exponentExists_iff_ne_zero, Classical.not_not]
 #align monoid.exponent_eq_zero_iff Monoid.exponent_eq_zero_iff
 #align add_monoid.exponent_eq_zero_iff AddMonoid.exponent_eq_zero_iff
 
@@ -101,7 +101,7 @@ theorem exponent_eq_zero_of_order_zero {g : G} (hg : orderOf g = 0) : exponent G
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 :=
   by
-  by_cases exponent_exists G
+  by_cases ExponentExists G
   · simp_rw [exponent, dif_pos h]
     exact (Nat.find_spec h).2 g
   · simp_rw [exponent, dif_neg h, pow_zero]
@@ -152,7 +152,7 @@ theorem exp_eq_one_of_subsingleton [Subsingleton G] : exponent G = 1 :=
   · apply exponent_min' _ Nat.one_pos
     simp
   · apply Nat.succ_le_of_lt
-    apply exponent_pos_of_exists 1 Nat.one_pos
+    apply exponent_pos_of_exists 1 nat.one_pos
     simp
 #align monoid.exp_eq_one_of_subsingleton Monoid.exp_eq_one_of_subsingleton
 #align add_monoid.exp_eq_zero_of_subsingleton AddMonoid.exp_eq_zero_of_subsingleton
@@ -265,7 +265,7 @@ theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf 
 @[to_additive lcm_add_order_eq_exponent]
 theorem lcm_order_eq_exponent [Fintype G] : (Finset.univ : Finset G).lcm orderOf = exponent G :=
   by
-  apply Nat.dvd_antisymm (lcm_order_of_dvd_exponent G)
+  apply Nat.dvd_antisymm (lcm_orderOf_dvd_exponent G)
   refine' exponent_dvd_of_forall_pow_eq_one G _ fun g => _
   obtain ⟨m, hm⟩ : orderOf g ∣ finset.univ.lcm orderOf := Finset.dvd_lcm (Finset.mem_univ g)
   rw [hm, pow_mul, pow_orderOf_eq_one, one_pow]
@@ -299,10 +299,10 @@ theorem exponent_eq_supᵢ_orderOf (h : ∀ g : G, 0 < orderOf g) : exponent G =
   rcases eq_or_ne (exponent G) 0 with (he | he)
   ·
     rw [he,
-      Nat.Set.Infinite.Nat.supₛ_eq_zero <| (exponent_eq_zero_iff_range_order_of_infinite h).1 he]
+      Nat.Set.Infinite.Nat.supₛ_eq_zero <| (exponent_eq_zero_iff_range_orderOf_infinite h).1 he]
   have hne : (Set.range (orderOf : G → ℕ)).Nonempty := ⟨1, 1, orderOf_one⟩
   have hfin : (Set.range (orderOf : G → ℕ)).Finite := by
-    rwa [← exponent_ne_zero_iff_range_order_of_finite h]
+    rwa [← exponent_ne_zero_iff_range_orderOf_finite h]
   obtain ⟨t, ht⟩ := hne.cSup_mem hfin
   apply Nat.dvd_antisymm _
   · rw [← ht]
@@ -347,7 +347,7 @@ theorem exponent_eq_supᵢ_order_of' :
   · obtain ⟨g, hg⟩ := h
     exact exponent_eq_zero_of_order_zero hg
   · have := not_exists.mp h
-    exact exponent_eq_supr_order_of fun g => Ne.bot_lt <| this g
+    exact exponent_eq_supᵢ_orderOf fun g => Ne.bot_lt <| this g
 #align monoid.exponent_eq_supr_order_of' Monoid.exponent_eq_supᵢ_order_of'
 #align add_monoid.exponent_eq_supr_order_of' AddMonoid.exponent_eq_supᵢ_order_of'
 
@@ -362,7 +362,7 @@ theorem exponent_eq_max'_orderOf [Fintype G] :
     exponent G = ((@Finset.univ G _).image orderOf).max' ⟨1, by simp⟩ :=
   by
   rw [← Finset.Nonempty.cSup_eq_max', Finset.coe_image, Finset.coe_univ, Set.image_univ, ← supᵢ]
-  exact exponent_eq_supr_order_of orderOf_pos
+  exact exponent_eq_supᵢ_orderOf orderOf_pos
 #align monoid.exponent_eq_max'_order_of Monoid.exponent_eq_max'_orderOf
 #align add_monoid.exponent_eq_max'_order_of AddMonoid.exponent_eq_max'_order_of
 
@@ -383,11 +383,11 @@ theorem card_dvd_exponent_pow_rank : Nat.card G ∣ Monoid.exponent G ^ Group.ra
   by
   obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
   rw [← hS1, ← Fintype.card_coe, ← Finset.card_univ, ← Finset.prod_const]
-  let f : (∀ g : S, zpowers (g : G)) →* G := noncomm_pi_coprod fun s t h x y hx hy => mul_comm x y
+  let f : (∀ g : S, zpowers (g : G)) →* G := noncommPiCoprod fun s t h x y hx hy => mul_comm x y
   have hf : Function.Surjective f :=
     by
     rw [← MonoidHom.range_top_iff_surjective, eq_top_iff, ← hS2, closure_le]
-    exact fun g hg => ⟨Pi.mulSingle ⟨g, hg⟩ ⟨g, mem_zpowers g⟩, noncomm_pi_coprod_mul_single _ _⟩
+    exact fun g hg => ⟨Pi.mulSingle ⟨g, hg⟩ ⟨g, mem_zpowers g⟩, noncommPiCoprod_mulSingle _ _⟩
   replace hf := nat_card_dvd_of_surjective f hf
   rw [Nat.card_pi] at hf
   refine' hf.trans (Finset.prod_dvd_prod_of_dvd _ _ fun g hg => _)

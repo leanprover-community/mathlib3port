@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.log.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem log_of_pos (hx : 0 < x) : log x = expOrderIso.symm ⟨x, hx⟩ :=
 #align real.log_of_pos Real.log_of_pos
 
 theorem exp_log_eq_abs (hx : x ≠ 0) : exp (log x) = |x| := by
-  rw [log_of_ne_zero hx, ← coe_exp_order_iso_apply, OrderIso.apply_symm_apply, Subtype.coe_mk]
+  rw [log_of_ne_zero hx, ← coe_expOrderIso_apply, OrderIso.apply_symm_apply, Subtype.coe_mk]
 #align real.exp_log_eq_abs Real.exp_log_eq_abs
 
 theorem exp_log (hx : 0 < x) : exp (log x) = x :=
@@ -227,7 +227,7 @@ theorem strictAntiOn_log : StrictAntiOn log (Set.Iio 0) :=
 #align real.strict_anti_on_log Real.strictAntiOn_log
 
 theorem log_injOn_pos : Set.InjOn log (Set.Ioi 0) :=
-  strictMonoOn_log.InjOn
+  strictMonoOn_log.injOn
 #align real.log_inj_on_pos Real.log_injOn_pos
 
 theorem eq_one_of_pos_of_log_eq_zero {x : ℝ} (h₁ : 0 < x) (h₂ : log x = 0) : x = 1 :=
@@ -308,8 +308,8 @@ theorem tendsto_log_atTop : Tendsto log atTop atTop :=
 theorem tendsto_log_nhdsWithin_zero : Tendsto log (𝓝[≠] 0) atBot :=
   by
   rw [← show _ = log from funext log_abs]
-  refine' tendsto.comp _ tendsto_abs_nhdsWithin_zero
-  simpa [← tendsto_comp_exp_at_bot] using tendsto_id
+  refine' Tendsto.comp _ tendsto_abs_nhdsWithin_zero
+  simpa [← tendsto_comp_exp_atBot] using tendsto_id
 #align real.tendsto_log_nhds_within_zero Real.tendsto_log_nhdsWithin_zero
 
 theorem continuousOn_log : ContinuousOn log ({0}ᶜ) :=
@@ -330,16 +330,16 @@ theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
 #align real.continuous_log' Real.continuous_log'
 
 theorem continuousAt_log (hx : x ≠ 0) : ContinuousAt log x :=
-  (continuousOn_log x hx).ContinuousAt <| IsOpen.mem_nhds isOpen_compl_singleton hx
+  (continuousOn_log x hx).continuousAt <| IsOpen.mem_nhds isOpen_compl_singleton hx
 #align real.continuous_at_log Real.continuousAt_log
 
 @[simp]
 theorem continuousAt_log_iff : ContinuousAt log x ↔ x ≠ 0 :=
   by
-  refine' ⟨_, continuous_at_log⟩
+  refine' ⟨_, continuousAt_log⟩
   rintro h rfl
   exact
-    not_tendsto_nhds_of_tendsto_atBot tendsto_log_nhds_within_zero _
+    not_tendsto_nhds_of_tendsto_atBot tendsto_log_nhdsWithin_zero _
       (h.tendsto.mono_left inf_le_left)
 #align real.continuous_at_log_iff Real.continuousAt_log_iff
 
@@ -354,7 +354,7 @@ theorem log_prod {α : Type _} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ 
     simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 #align real.log_prod Real.log_prod
 
-theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun p t => t * log p :=
+theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.sum fun p t => t * log p :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
   · simp
@@ -362,20 +362,20 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
   rw [Finsupp.prod, Nat.cast_prod, log_prod _ _ fun p hp => _, Finsupp.sum]
   · simp_rw [Nat.cast_pow, log_pow]
   · norm_cast
-    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).NeZero
+    exact pow_ne_zero _ (Nat.prime_of_mem_factorization hp).ne_zero
 #align real.log_nat_eq_sum_factorization Real.log_nat_eq_sum_factorization
 
 theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
     Tendsto (fun x => log x ^ n / (a * x + b)) atTop (𝓝 0) :=
   ((tendsto_div_pow_mul_exp_add_atTop a b n ha.symm).comp tendsto_log_atTop).congr'
-    (by filter_upwards [eventually_gt_at_top (0 : ℝ)]with x hx using by simp [exp_log hx])
+    (by filter_upwards [eventually_gt_atTop (0 : ℝ)]with x hx using by simp [exp_log hx])
 #align real.tendsto_pow_log_div_mul_add_at_top Real.tendsto_pow_log_div_mul_add_atTop
 
 theorem isOCat_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[atTop] id :=
   by
   rw [Asymptotics.isOCat_iff_tendsto']
-  · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
-  filter_upwards [eventually_ne_at_top (0 : ℝ)]with x h₁ h₂ using(h₁ h₂).elim
+  · simpa using tendsto_pow_log_div_mul_add_atTop 1 0 n one_ne_zero
+  filter_upwards [eventually_ne_atTop (0 : ℝ)]with x h₁ h₂ using(h₁ h₂).elim
 #align real.is_o_pow_log_id_at_top Real.isOCat_pow_log_id_atTop
 
 theorem isOCat_log_id_atTop : log =o[atTop] id :=
@@ -392,7 +392,7 @@ variable {α : Type _}
 
 theorem Filter.Tendsto.log {f : α → ℝ} {l : Filter α} {x : ℝ} (h : Tendsto f l (𝓝 x)) (hx : x ≠ 0) :
     Tendsto (fun x => log (f x)) l (𝓝 (log x)) :=
-  (continuousAt_log hx).Tendsto.comp h
+  (continuousAt_log hx).tendsto.comp h
 #align filter.tendsto.log Filter.Tendsto.log
 
 variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {a : α}
@@ -426,16 +426,16 @@ namespace Real
 theorem tendsto_log_comp_add_sub_log (y : ℝ) :
     Tendsto (fun x : ℝ => log (x + y) - log x) atTop (𝓝 0) :=
   by
-  refine' tendsto.congr' (_ : ∀ᶠ x : ℝ in at_top, log (1 + y / x) = _) _
+  refine' Tendsto.congr' (_ : ∀ᶠ x : ℝ in atTop, log (1 + y / x) = _) _
   · refine'
-      eventually.mp ((eventually_ne_at_top 0).And (eventually_gt_at_top (-y)))
+      Eventually.mp ((eventually_ne_atTop 0).and (eventually_gt_atTop (-y)))
         (eventually_of_forall fun x hx => _)
     rw [← log_div _ hx.1]
     · congr 1
       field_simp [hx.1]
     · linarith [hx.2]
-  · suffices tendsto (fun x : ℝ => log (1 + y / x)) at_top (𝓝 (log (1 + 0))) by simpa
-    refine' tendsto.log _ (by simp)
+  · suffices Tendsto (fun x : ℝ => log (1 + y / x)) atTop (𝓝 (log (1 + 0))) by simpa
+    refine' Tendsto.log _ (by simp)
     exact tendsto_const_nhds.add (tendsto_const_nhds.div_at_top tendsto_id)
 #align real.tendsto_log_comp_add_sub_log Real.tendsto_log_comp_add_sub_log
 

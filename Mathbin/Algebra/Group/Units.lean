@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker, Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.group.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1012,7 +1012,7 @@ theorem Units.isUnit_mul_units [Monoid M] (a : M) (u : Mˣ) : IsUnit (a * u) ↔
       by
       have : IsUnit (a * ↑u * ↑u⁻¹) := by exists v * u⁻¹ <;> rw [← hv, Units.val_mul]
       rwa [mul_assoc, Units.mul_inv, mul_one] at this)
-    fun v => v.mul u.IsUnit
+    fun v => v.mul u.isUnit
 #align units.is_unit_mul_units Units.isUnit_mul_units
 #align add_units.is_add_unit_add_add_units AddUnits.isAddUnit_add_addUnits
 
@@ -1031,7 +1031,7 @@ theorem Units.isUnit_units_mul {M : Type _} [Monoid M] (u : Mˣ) (a : M) :
       by
       have : IsUnit (↑u⁻¹ * (↑u * a)) := by exists u⁻¹ * v <;> rw [← hv, Units.val_mul]
       rwa [← mul_assoc, Units.inv_mul, one_mul] at this)
-    u.IsUnit.mul
+    u.isUnit.mul
 #align units.is_unit_units_mul Units.isUnit_units_mul
 #align add_units.is_add_unit_add_units_add AddUnits.isAddUnit_addUnits_add
 
@@ -1092,7 +1092,7 @@ protected noncomputable def unit (h : IsUnit a) : Mˣ :=
 
 #print IsUnit.unit_of_val_units /-
 @[simp, to_additive]
-theorem unit_of_val_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
+theorem unit_of_val_units {a : Mˣ} (h : IsUnit (a : M)) : h.unit = a :=
   Units.ext <| rfl
 #align is_unit.unit_of_coe_units IsUnit.unit_of_val_units
 #align is_add_unit.add_unit_of_coe_add_units IsAddUnit.addUnit_of_val_addUnits
@@ -1100,7 +1100,7 @@ theorem unit_of_val_units {a : Mˣ} (h : IsUnit (a : M)) : h.Unit = a :=
 
 #print IsUnit.unit_spec /-
 @[simp, to_additive]
-theorem unit_spec (h : IsUnit a) : ↑h.Unit = a :=
+theorem unit_spec (h : IsUnit a) : ↑h.unit = a :=
   rfl
 #align is_unit.unit_spec IsUnit.unit_spec
 #align is_add_unit.add_unit_spec IsAddUnit.addUnit_spec

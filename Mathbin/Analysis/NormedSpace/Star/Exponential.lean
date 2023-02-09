@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,9 +34,9 @@ open Complex
 theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) :
     exp ℂ (i • a) ∈ unitary A := by
   rw [unitary.mem_iff, star_exp]
-  simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_I, neg_smul]
-  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_left]
-  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (I • a)).neg_right]
+  simp only [star_smul, IsROrC.star_def, self_adjoint.mem_iff.mp ha, conj_i, neg_smul]
+  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (i • a)).neg_left]
+  rw [← @exp_add_of_commute ℂ A _ _ _ _ _ _ (Commute.refl (i • a)).neg_right]
   simpa only [add_right_neg, add_left_neg, and_self_iff] using (exp_zero : exp ℂ (0 : A) = 1)
 #align is_self_adjoint.exp_i_smul_unitary IsSelfAdjoint.exp_i_smul_unitary
 
@@ -44,7 +44,7 @@ theorem IsSelfAdjoint.exp_i_smul_unitary {a : A} (ha : IsSelfAdjoint a) :
 over ℂ. -/
 @[simps]
 noncomputable def selfAdjoint.expUnitary (a : selfAdjoint A) : unitary A :=
-  ⟨exp ℂ (i • a), a.Prop.exp_i_smul_unitary⟩
+  ⟨exp ℂ (i • a), a.prop.exp_i_smul_unitary⟩
 #align self_adjoint.exp_unitary selfAdjoint.expUnitary
 
 open selfAdjoint
@@ -53,11 +53,11 @@ theorem Commute.expUnitary_add {a b : selfAdjoint A} (h : Commute (a : A) (b : A
     expUnitary (a + b) = expUnitary a * expUnitary b :=
   by
   ext
-  have hcomm : Commute (I • (a : A)) (I • (b : A))
+  have hcomm : Commute (i • (a : A)) (i • (b : A))
   calc
     _ = _ := by simp only [h.eq, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
     
-  simpa only [exp_unitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
+  simpa only [expUnitary_coe, AddSubgroup.coe_add, smul_add] using exp_add_of_commute hcomm
 #align commute.exp_unitary_add Commute.expUnitary_add
 
 theorem Commute.expUnitary {a b : selfAdjoint A} (h : Commute (a : A) (b : A)) :

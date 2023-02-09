@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.finiteness
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,13 +33,13 @@ its dimension (as a cardinal) is strictly less than the first infinite cardinal 
 theorem iff_dim_lt_aleph0 : IsNoetherian K V ↔ Module.rank K V < ℵ₀ :=
   by
   let b := Basis.ofVectorSpace K V
-  rw [← b.mk_eq_dim'', lt_aleph_0_iff_set_finite]
+  rw [← b.mk_eq_dim'', lt_aleph0_iff_set_finite]
   constructor
   · intro
     exact finite_of_linearIndependent (Basis.ofVectorSpaceIndex.linearIndependent K V)
   · intro hbfinite
     refine'
-      @isNoetherian_of_linearEquiv K (⊤ : Submodule K V) V _ _ _ _ _ (LinearEquiv.ofTop _ rfl)
+      @is_noetherian_of_linear_equiv K (⊤ : Submodule K V) V _ _ _ _ _ (LinearEquiv.ofTop _ rfl)
         (id _)
     refine' isNoetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
     rw [Set.Finite.coe_toFinset, ← b.span_eq, Basis.coe_ofVectorSpace, Subtype.range_coe]
@@ -104,7 +104,7 @@ noncomputable def finsetBasis [IsNoetherian K V] : Basis (finsetBasisIndex K V) 
 @[simp]
 theorem range_finsetBasis [IsNoetherian K V] :
     Set.range (finsetBasis K V) = Basis.ofVectorSpaceIndex K V := by
-  rw [finset_basis, Basis.range_reindex, Basis.range_ofVectorSpace]
+  rw [finsetBasis, Basis.range_reindex, Basis.range_ofVectorSpace]
 #align is_noetherian.range_finset_basis IsNoetherian.range_finsetBasis
 
 variable {K V}
@@ -115,8 +115,8 @@ theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=
   constructor
   · intro h
     exact
-      ⟨⟨finset_basis_index K V, by
-          convert (finset_basis K V).span_eq
+      ⟨⟨finsetBasisIndex K V, by
+          convert (finsetBasis K V).span_eq
           simp⟩⟩
   · rintro ⟨s, hs⟩
     rw [IsNoetherian.iff_dim_lt_aleph0, ← dim_top, ← hs]

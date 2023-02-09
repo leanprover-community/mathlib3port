@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.pi_nat
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,13 +78,13 @@ irreducible_def firstDiff (x y : ∀ n, E n) : ℕ :=
 
 theorem apply_firstDiff_ne {x y : ∀ n, E n} (h : x ≠ y) : x (firstDiff x y) ≠ y (firstDiff x y) :=
   by
-  rw [first_diff, dif_pos h]
+  rw [firstDiff, dif_pos h]
   exact Nat.find_spec (ne_iff.1 h)
 #align pi_nat.apply_first_diff_ne PiNat.apply_firstDiff_ne
 
 theorem apply_eq_of_lt_firstDiff {x y : ∀ n, E n} {n : ℕ} (hn : n < firstDiff x y) : x n = y n :=
   by
-  rw [first_diff] at hn
+  rw [firstDiff] at hn
   split_ifs  at hn
   · convert Nat.find_min (ne_iff.1 h) hn
     simp
@@ -94,23 +94,23 @@ theorem apply_eq_of_lt_firstDiff {x y : ∀ n, E n} {n : ℕ} (hn : n < firstDif
 theorem firstDiff_comm (x y : ∀ n, E n) : firstDiff x y = firstDiff y x :=
   by
   rcases eq_or_ne x y with (rfl | hxy); · rfl
-  rcases lt_trichotomy (first_diff x y) (first_diff y x) with (h | h | h)
-  · exact (apply_first_diff_ne hxy (apply_eq_of_lt_first_diff h).symm).elim
+  rcases lt_trichotomy (firstDiff x y) (firstDiff y x) with (h | h | h)
+  · exact (apply_firstDiff_ne hxy (apply_eq_of_lt_firstDiff h).symm).elim
   · exact h
-  · exact (apply_first_diff_ne hxy.symm (apply_eq_of_lt_first_diff h).symm).elim
+  · exact (apply_firstDiff_ne hxy.symm (apply_eq_of_lt_firstDiff h).symm).elim
 #align pi_nat.first_diff_comm PiNat.firstDiff_comm
 
 theorem min_firstDiff_le (x y z : ∀ n, E n) (h : x ≠ z) :
     min (firstDiff x y) (firstDiff y z) ≤ firstDiff x z :=
   by
   by_contra' H
-  have : x (first_diff x z) = z (first_diff x z) :=
+  have : x (firstDiff x z) = z (firstDiff x z) :=
     calc
-      x (first_diff x z) = y (first_diff x z) :=
-        apply_eq_of_lt_first_diff (H.trans_le (min_le_left _ _))
-      _ = z (first_diff x z) := apply_eq_of_lt_first_diff (H.trans_le (min_le_right _ _))
+      x (firstDiff x z) = y (firstDiff x z) :=
+        apply_eq_of_lt_firstDiff (H.trans_le (min_le_left _ _))
+      _ = z (firstDiff x z) := apply_eq_of_lt_firstDiff (H.trans_le (min_le_right _ _))
       
-  exact (apply_first_diff_ne h this).elim
+  exact (apply_firstDiff_ne h this).elim
 #align pi_nat.min_first_diff_le PiNat.min_firstDiff_le
 
 /-! ### Cylinders -/
@@ -125,7 +125,7 @@ def cylinder (x : ∀ n, E n) (n : ℕ) : Set (∀ n, E n) :=
 #align pi_nat.cylinder PiNat.cylinder
 
 theorem cylinder_eq_pi (x : ∀ n, E n) (n : ℕ) :
-    cylinder x n = Set.pi (Finset.range n : Set ℕ) fun i : ℕ => {x i} :=
+    cylinder x n = Set.pi (Finset.range n : Set ℕ) fun i : ℕ => {x Mem} :=
   by
   ext y
   simp [cylinder]
@@ -152,7 +152,7 @@ theorem mem_cylinder_iff_eq {x y : ∀ n, E n} {n : ℕ} :
   by
   constructor
   · intro hy
-    apply subset.antisymm
+    apply Subset.antisymm
     · intro z hz i hi
       rw [← hy i hi]
       exact hz i hi
@@ -173,9 +173,9 @@ theorem mem_cylinder_iff_le_firstDiff {x y : ∀ n, E n} (hne : x ≠ y) (i : �
   constructor
   · intro h
     by_contra'
-    exact apply_first_diff_ne hne (h _ this)
+    exact apply_firstDiff_ne hne (h _ this)
   · intro hi j hj
-    exact apply_eq_of_lt_first_diff (hj.trans_le hi)
+    exact apply_eq_of_lt_firstDiff (hj.trans_le hi)
 #align pi_nat.mem_cylinder_iff_le_first_diff PiNat.mem_cylinder_iff_le_firstDiff
 
 theorem mem_cylinder_firstDiff (x y : ∀ n, E n) : x ∈ cylinder y (firstDiff x y) := fun i hi =>
@@ -186,14 +186,14 @@ theorem cylinder_eq_cylinder_of_le_firstDiff (x y : ∀ n, E n) {n : ℕ} (hn : 
     cylinder x n = cylinder y n := by
   rw [← mem_cylinder_iff_eq]
   intro i hi
-  exact apply_eq_of_lt_first_diff (hi.trans_le hn)
+  exact apply_eq_of_lt_firstDiff (hi.trans_le hn)
 #align pi_nat.cylinder_eq_cylinder_of_le_first_diff PiNat.cylinder_eq_cylinder_of_le_firstDiff
 
 theorem unionᵢ_cylinder_update (x : ∀ n, E n) (n : ℕ) :
     (⋃ k, cylinder (update x n k) (n + 1)) = cylinder x n :=
   by
   ext y
-  simp only [mem_cylinder_iff, mem_Union]
+  simp only [mem_cylinder_iff, mem_unionᵢ]
   constructor
   · rintro ⟨k, hk⟩ i hi
     simpa [hi.ne] using hk i (Nat.lt_succ_of_lt hi)
@@ -235,7 +235,7 @@ protected theorem dist_self (x : ∀ n, E n) : dist x x = 0 := by simp [dist]
 #align pi_nat.dist_self PiNat.dist_self
 
 protected theorem dist_comm (x y : ∀ n, E n) : dist x y = dist y x := by
-  simp [dist, @eq_comm _ x y, first_diff_comm]
+  simp [dist, @eq_comm _ x y, firstDiff_comm]
 #align pi_nat.dist_comm PiNat.dist_comm
 
 protected theorem dist_nonneg (x y : ∀ n, E n) : 0 ≤ dist x y :=
@@ -255,7 +255,7 @@ theorem dist_triangle_nonarch (x y z : ∀ n, E n) : dist x z ≤ max (dist x y)
   · simp
   simp only [dist_eq_of_ne, hxz, hxy, hyz, inv_le_inv, one_div, inv_pow, zero_lt_bit0, Ne.def,
     not_false_iff, le_max_iff, zero_lt_one, pow_le_pow_iff, one_lt_two, pow_pos,
-    min_le_iff.1 (min_first_diff_le x y z hxz)]
+    min_le_iff.1 (min_firstDiff_le x y z hxz)]
 #align pi_nat.dist_triangle_nonarch PiNat.dist_triangle_nonarch
 
 protected theorem dist_triangle (x y z : ∀ n, E n) : dist x z ≤ dist x y + dist y z :=
@@ -277,13 +277,13 @@ theorem mem_cylinder_iff_dist_le {x y : ∀ n, E n} {n : ℕ} :
   by
   rcases eq_or_ne y x with (rfl | hne)
   · simp [PiNat.dist_self]
-  suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ first_diff y x by simpa [dist_eq_of_ne hne]
+  suffices (∀ i : ℕ, i < n → y i = x i) ↔ n ≤ firstDiff y x by simpa [dist_eq_of_ne hne]
   constructor
   · intro hy
     by_contra' H
-    exact apply_first_diff_ne hne (hy _ H)
+    exact apply_firstDiff_ne hne (hy _ H)
   · intro h i hi
-    exact apply_eq_of_lt_first_diff (hi.trans_le h)
+    exact apply_eq_of_lt_firstDiff (hi.trans_le h)
 #align pi_nat.mem_cylinder_iff_dist_le PiNat.mem_cylinder_iff_dist_le
 
 theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2) ^ n) {i : ℕ}
@@ -291,9 +291,9 @@ theorem apply_eq_of_dist_lt {x y : ∀ n, E n} {n : ℕ} (h : dist x y < (1 / 2)
   by
   rcases eq_or_ne x y with (rfl | hne)
   · rfl
-  have : n < first_diff x y := by
+  have : n < firstDiff x y := by
     simpa [dist_eq_of_ne hne, inv_lt_inv, pow_lt_pow_iff, one_lt_two] using h
-  exact apply_eq_of_lt_first_diff (hi.trans_lt this)
+  exact apply_eq_of_lt_firstDiff (hi.trans_lt this)
 #align pi_nat.apply_eq_of_dist_lt PiNat.apply_eq_of_dist_lt
 
 /-- A function to a pseudo-metric-space is `1`-Lipschitz if and only if points in the same cylinder
@@ -313,9 +313,9 @@ theorem lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder {α : Type _
     rcases eq_or_ne x y with (rfl | hne)
     · simp [PiNat.dist_nonneg]
     rw [dist_eq_of_ne hne]
-    apply H x y (first_diff x y)
-    rw [first_diff_comm]
-    exact mem_cylinder_first_diff _ _
+    apply H x y (firstDiff x y)
+    rw [firstDiff_comm]
+    exact mem_cylinder_firstDiff _ _
 #align pi_nat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder PiNat.lipschitz_with_one_iff_forall_dist_image_le_of_mem_cylinder
 
 variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
@@ -323,7 +323,7 @@ variable (E) [∀ n, TopologicalSpace (E n)] [∀ n, DiscreteTopology (E n)]
 theorem isTopologicalBasis_cylinders :
     IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n)(n : ℕ), s = cylinder x n } :=
   by
-  apply is_topological_basis_of_open_of_nhds
+  apply isTopologicalBasis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
     rw [cylinder_eq_pi]
     exact isOpen_set_pi (Finset.range n).finite_toSet fun a ha => isOpen_discrete _
@@ -335,10 +335,10 @@ theorem isTopologicalBasis_cylinders :
             ∃ (U : ∀ i : ℕ, Set (E i))(F : Finset ℕ),
               (∀ i : ℕ, i ∈ F → U i ∈ { s : Set (E i) | IsOpen s }) ∧ S = (F : Set ℕ).pi U }),
         x ∈ v ∧ v ⊆ u :=
-      (isTopologicalBasis_pi fun n : ℕ => is_topological_basis_opens).exists_subset_of_mem_open hx
+      (isTopologicalBasis_pi fun n : ℕ => isTopologicalBasis_opens).exists_subset_of_mem_open hx
         u_open
     rcases Finset.bddAbove F with ⟨n, hn⟩
-    refine' ⟨cylinder x (n + 1), ⟨x, n + 1, rfl⟩, self_mem_cylinder _ _, subset.trans _ Uu⟩
+    refine' ⟨cylinder x (n + 1), ⟨x, n + 1, rfl⟩, self_mem_cylinder _ _, Subset.trans _ Uu⟩
     intro y hy
     suffices ∀ i : ℕ, i ∈ F → y i ∈ U i by simpa
     intro i hi
@@ -358,12 +358,12 @@ theorem isOpen_iff_dist (s : Set (∀ n, E n)) :
     obtain ⟨v, ⟨y, n, rfl⟩, h'x, h's⟩ :
       ∃ (v : Set (∀ n : ℕ, E n))(H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n)(n : ℕ), s = cylinder x n }),
         x ∈ v ∧ v ⊆ s :=
-      (is_topological_basis_cylinders E).exists_subset_of_mem_open hx hs
+      (isTopologicalBasis_cylinders E).exists_subset_of_mem_open hx hs
     rw [← mem_cylinder_iff_eq.1 h'x] at h's
     exact
       ⟨(1 / 2 : ℝ) ^ n, by simp, fun y hy => h's fun i hi => (apply_eq_of_dist_lt hy hi.le).symm⟩
   · intro h
-    apply (is_topological_basis_cylinders E).isOpen_iff.2 fun x hx => _
+    apply (isTopologicalBasis_cylinders E).isOpen_iff.2 fun x hx => _
     rcases h x hx with ⟨ε, εpos, hε⟩
     obtain ⟨n, hn⟩ : ∃ n : ℕ, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos one_half_lt_one
     refine' ⟨cylinder x n, ⟨x, n, rfl⟩, self_mem_cylinder x n, fun y hy => hε y _⟩
@@ -396,7 +396,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
     toUniformSpace := Pi.uniformSpace _
     uniformity_dist :=
       by
-      simp [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
+      simp [Pi.uniformity, comap_infᵢ, gt_iff_lt, preimage_setOf_eq, comap_principal,
         PseudoMetricSpace.uniformity_dist, h, idRel]
       apply le_antisymm
       · simp only [le_infᵢ_iff, le_principal_iff]
@@ -405,18 +405,18 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
         apply
           @mem_infi_of_Inter _ _ _ _ _ (Finset.range n).finite_toSet fun i =>
             { p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i }
-        · simp only [mem_principal, set_of_subset_set_of, imp_self, imp_true_iff]
+        · simp only [mem_principal, setOf_subset_setOf, imp_self, imp_true_iff]
         · rintro ⟨x, y⟩ hxy
-          simp only [Finset.mem_coe, Finset.mem_range, Inter_coe_set, mem_Inter, mem_set_of_eq] at
+          simp only [Finset.mem_coe, Finset.mem_range, interᵢ_coe_set, mem_interᵢ, mem_setOf_eq] at
             hxy
           apply lt_of_le_of_lt _ hn
           rw [← mem_cylinder_iff_dist_le, mem_cylinder_iff]
           exact hxy
       · simp only [le_infᵢ_iff, le_principal_iff]
         intro n
-        refine' mem_infi_of_mem ((1 / 2) ^ n) _
-        refine' mem_infi_of_mem (by positivity) _
-        simp only [mem_principal, set_of_subset_set_of, Prod.forall]
+        refine' mem_infᵢ_of_mem ((1 / 2) ^ n) _
+        refine' mem_infᵢ_of_mem (by positivity) _
+        simp only [mem_principal, setOf_subset_setOf, Prod.forall]
         intro x y hxy
         exact apply_eq_of_dist_lt hxy le_rfl }
 #align pi_nat.metric_space_of_discrete_uniformity PiNat.metricSpaceOfDiscreteUniformity
@@ -456,17 +456,17 @@ theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : �
   by
   rcases eq_empty_or_nonempty s with (rfl | hne)
   · exact ⟨0, by simp⟩
-  have A : 0 < inf_dist x s := (hs.not_mem_iff_inf_dist_pos hne).1 hx
-  obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < inf_dist x s := exists_pow_lt_of_lt_one A one_half_lt_one
+  have A : 0 < infDist x s := (hs.not_mem_iff_inf_dist_pos hne).1 hx
+  obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < infDist x s := exists_pow_lt_of_lt_one A one_half_lt_one
   refine' ⟨n, _⟩
   apply disjoint_left.2 fun y ys hy => _
-  apply lt_irrefl (inf_dist x s)
+  apply lt_irrefl (infDist x s)
   calc
-    inf_dist x s ≤ dist x y := inf_dist_le_dist_of_mem ys
+    infDist x s ≤ dist x y := infDist_le_dist_of_mem ys
     _ ≤ (1 / 2) ^ n := by
       rw [mem_cylinder_comm] at hy
       exact mem_cylinder_iff_dist_le.1 hy
-    _ < inf_dist x s := hn
+    _ < infDist x s := hn
     
 #align pi_nat.exists_disjoint_cylinder PiNat.exists_disjoint_cylinder
 
@@ -481,20 +481,20 @@ theorem firstDiff_lt_shortestPrefixDiff {s : Set (∀ n, E n)} (hs : IsClosed s)
     (hx : x ∉ s) (hy : y ∈ s) : firstDiff x y < shortestPrefixDiff x s :=
   by
   have A := exists_disjoint_cylinder hs hx
-  rw [shortest_prefix_diff, dif_pos A]
+  rw [shortestPrefixDiff, dif_pos A]
   have B := Nat.find_spec A
   contrapose! B
   rw [not_disjoint_iff_nonempty_inter]
   refine' ⟨y, hy, _⟩
   rw [mem_cylinder_comm]
-  exact cylinder_anti y B (mem_cylinder_first_diff x y)
+  exact cylinder_anti y B (mem_cylinder_firstDiff x y)
 #align pi_nat.first_diff_lt_shortest_prefix_diff PiNat.firstDiff_lt_shortestPrefixDiff
 
 theorem shortestPrefixDiff_pos {s : Set (∀ n, E n)} (hs : IsClosed s) (hne : s.Nonempty)
     {x : ∀ n, E n} (hx : x ∉ s) : 0 < shortestPrefixDiff x s :=
   by
   rcases hne with ⟨y, hy⟩
-  exact (zero_le _).trans_lt (first_diff_lt_shortest_prefix_diff hs hx hy)
+  exact (zero_le _).trans_lt (firstDiff_lt_shortestPrefixDiff hs hx hy)
 #align pi_nat.shortest_prefix_diff_pos PiNat.shortestPrefixDiff_pos
 
 /-- Given a point `x` in a product space `Π (n : ℕ), E n`, and `s` a subset of this space, then
@@ -507,9 +507,9 @@ def longestPrefix {E : ℕ → Type _} (x : ∀ n, E n) (s : Set (∀ n, E n)) :
 theorem firstDiff_le_longestPrefix {s : Set (∀ n, E n)} (hs : IsClosed s) {x y : ∀ n, E n}
     (hx : x ∉ s) (hy : y ∈ s) : firstDiff x y ≤ longestPrefix x s :=
   by
-  rw [longest_prefix, le_tsub_iff_right]
-  · exact first_diff_lt_shortest_prefix_diff hs hx hy
-  · exact shortest_prefix_diff_pos hs ⟨y, hy⟩ hx
+  rw [longestPrefix, le_tsub_iff_right]
+  · exact firstDiff_lt_shortestPrefixDiff hs hx hy
+  · exact shortestPrefixDiff_pos hs ⟨y, hy⟩ hx
 #align pi_nat.first_diff_le_longest_prefix PiNat.firstDiff_le_longestPrefix
 
 theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClosed s)
@@ -518,9 +518,9 @@ theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClo
   by_cases hx : x ∈ s
   · exact ⟨x, hx, self_mem_cylinder _ _⟩
   have A := exists_disjoint_cylinder hs hx
-  have B : longest_prefix x s < shortest_prefix_diff x s :=
-    Nat.pred_lt (shortest_prefix_diff_pos hs hne hx).ne'
-  rw [longest_prefix, shortest_prefix_diff, dif_pos A] at B⊢
+  have B : longestPrefix x s < shortestPrefixDiff x s :=
+    Nat.pred_lt (shortestPrefixDiff_pos hs hne hx).ne'
+  rw [longestPrefix, shortestPrefixDiff, dif_pos A] at B⊢
   obtain ⟨y, ys, hy⟩ : ∃ y : ∀ n : ℕ, E n, y ∈ s ∧ x ∈ cylinder y (Nat.find A - 1) :=
     by
     have := Nat.find_min A B
@@ -538,8 +538,8 @@ theorem disjoint_cylinder_of_longestPrefix_lt {s : Set (∀ n, E n)} (hs : IsClo
   rcases eq_empty_or_nonempty s with (h's | hne); · simp [h's]
   contrapose! hn
   rcases not_disjoint_iff_nonempty_inter.1 hn with ⟨y, ys, hy⟩
-  apply le_trans _ (first_diff_le_longest_prefix hs hx ys)
-  apply (mem_cylinder_iff_le_first_diff (ne_of_mem_of_not_mem ys hx).symm _).1
+  apply le_trans _ (firstDiff_le_longestPrefix hs hx ys)
+  apply (mem_cylinder_iff_le_firstDiff (ne_of_mem_of_not_mem ys hx).symm _).1
   rwa [mem_cylinder_comm]
 #align pi_nat.disjoint_cylinder_of_longest_prefix_lt PiNat.disjoint_cylinder_of_longestPrefix_lt
 
@@ -551,25 +551,25 @@ theorem cylinder_longestPrefix_eq_of_longestPrefix_lt_firstDiff {x y : ∀ n, E 
     (H : longestPrefix x s < firstDiff x y) (xs : x ∉ s) (ys : y ∉ s) :
     cylinder x (longestPrefix x s) = cylinder y (longestPrefix y s) :=
   by
-  have l_eq : longest_prefix y s = longest_prefix x s :=
+  have l_eq : longestPrefix y s = longestPrefix x s :=
     by
-    rcases lt_trichotomy (longest_prefix y s) (longest_prefix x s) with (L | L | L)
-    · have Ax : (s ∩ cylinder x (longest_prefix x s)).Nonempty :=
-        inter_cylinder_longest_prefix_nonempty hs hne x
-      have Z := disjoint_cylinder_of_longest_prefix_lt hs ys L
-      rw [first_diff_comm] at H
-      rw [cylinder_eq_cylinder_of_le_first_diff _ _ H.le] at Z
+    rcases lt_trichotomy (longestPrefix y s) (longestPrefix x s) with (L | L | L)
+    · have Ax : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
+        inter_cylinder_longestPrefix_nonempty hs hne x
+      have Z := disjoint_cylinder_of_longestPrefix_lt hs ys L
+      rw [firstDiff_comm] at H
+      rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H.le] at Z
       exact (Ax.not_disjoint Z).elim
     · exact L
-    · have Ay : (s ∩ cylinder y (longest_prefix y s)).Nonempty :=
-        inter_cylinder_longest_prefix_nonempty hs hne y
-      have A'y : (s ∩ cylinder y (longest_prefix x s).succ).Nonempty :=
+    · have Ay : (s ∩ cylinder y (longestPrefix y s)).Nonempty :=
+        inter_cylinder_longestPrefix_nonempty hs hne y
+      have A'y : (s ∩ cylinder y (longestPrefix x s).succ).Nonempty :=
         Ay.mono (inter_subset_inter_right s (cylinder_anti _ L))
-      have Z := disjoint_cylinder_of_longest_prefix_lt hs xs (Nat.lt_succ_self _)
-      rw [cylinder_eq_cylinder_of_le_first_diff _ _ H] at Z
+      have Z := disjoint_cylinder_of_longestPrefix_lt hs xs (Nat.lt_succ_self _)
+      rw [cylinder_eq_cylinder_of_le_firstDiff _ _ H] at Z
       exact (A'y.not_disjoint Z).elim
   rw [l_eq, ← mem_cylinder_iff_eq]
-  exact cylinder_anti y H.le (mem_cylinder_first_diff x y)
+  exact cylinder_anti y H.le (mem_cylinder_firstDiff x y)
 #align pi_nat.cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff PiNat.cylinder_longestPrefix_eq_of_longestPrefix_lt_firstDiff
 
 /-- Given a closed nonempty subset `s` of `Π (n : ℕ), E n`, there exists a Lipschitz retraction
@@ -591,16 +591,16 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
     length is `< n`, then it is also the longest prefix of `y`, and we get `f x = f y = z_w`.
     Otherwise, `f x` remains in the same `n`-cylinder as `x`. Similarly for `y`. Finally, `f x` and
     `f y` are again in the same `n`-cylinder, as desired. -/
-  set f := fun x => if x ∈ s then x else (inter_cylinder_longest_prefix_nonempty hs hne x).some with
+  set f := fun x => if x ∈ s then x else (inter_cylinder_longestPrefix_nonempty hs hne x).some with
     hf
   have fs : ∀ x ∈ s, f x = x := fun x xs => by simp [xs]
   refine' ⟨f, fs, _, _⟩
   -- check that the range of `f` is `s`.
-  · apply subset.antisymm
+  · apply Subset.antisymm
     · rintro x ⟨y, rfl⟩
       by_cases hy : y ∈ s
       · rwa [fs y hy]
-      simpa [hf, if_neg hy] using (inter_cylinder_longest_prefix_nonempty hs hne y).choose_spec.1
+      simpa [hf, if_neg hy] using (inter_cylinder_longestPrefix_nonempty hs hne y).choose_spec.1
     · intro x hx
       rw [← fs x hx]
       exact mem_range_self _
@@ -611,12 +611,11 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
     · simp
     rcases eq_or_ne (f x) (f y) with (h' | hfxfy)
     · simp [h', dist_nonneg]
-    have I2 : cylinder x (first_diff x y) = cylinder y (first_diff x y) :=
+    have I2 : cylinder x (firstDiff x y) = cylinder y (firstDiff x y) :=
       by
       rw [← mem_cylinder_iff_eq]
-      apply mem_cylinder_first_diff
-    suffices first_diff x y ≤ first_diff (f x) (f y) by
-      simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
+      apply mem_cylinder_firstDiff
+    suffices firstDiff x y ≤ firstDiff (f x) (f y) by simpa [dist_eq_of_ne hxy, dist_eq_of_ne hfxfy]
     -- case where `x ∈ s`
     by_cases xs : x ∈ s
     · rw [fs x xs] at hfxfy⊢
@@ -624,63 +623,63 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
       by_cases ys : y ∈ s
       · rw [fs y ys]
       -- case where `y ∉ s`
-      have A : (s ∩ cylinder y (longest_prefix y s)).Nonempty :=
-        inter_cylinder_longest_prefix_nonempty hs hne y
+      have A : (s ∩ cylinder y (longestPrefix y s)).Nonempty :=
+        inter_cylinder_longestPrefix_nonempty hs hne y
       have fy : f y = A.some := by simp_rw [hf, if_neg ys]
-      have I : cylinder A.some (first_diff x y) = cylinder y (first_diff x y) :=
+      have I : cylinder A.some (firstDiff x y) = cylinder y (firstDiff x y) :=
         by
-        rw [← mem_cylinder_iff_eq, first_diff_comm]
+        rw [← mem_cylinder_iff_eq, firstDiff_comm]
         apply cylinder_anti y _ A.some_spec.2
-        exact first_diff_le_longest_prefix hs ys xs
-      rwa [← fy, ← I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy.symm,
-        first_diff_comm _ x] at I
+        exact firstDiff_le_longestPrefix hs ys xs
+      rwa [← fy, ← I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_firstDiff hfxfy.symm,
+        firstDiff_comm _ x] at I
     -- case where `x ∉ s`
     · by_cases ys : y ∈ s
       -- case where `y ∈ s` (similar to the above)
-      · have A : (s ∩ cylinder x (longest_prefix x s)).Nonempty :=
-          inter_cylinder_longest_prefix_nonempty hs hne x
+      · have A : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
+          inter_cylinder_longestPrefix_nonempty hs hne x
         have fx : f x = A.some := by simp_rw [hf, if_neg xs]
-        have I : cylinder A.some (first_diff x y) = cylinder x (first_diff x y) :=
+        have I : cylinder A.some (firstDiff x y) = cylinder x (firstDiff x y) :=
           by
           rw [← mem_cylinder_iff_eq]
           apply cylinder_anti x _ A.some_spec.2
-          apply first_diff_le_longest_prefix hs xs ys
+          apply firstDiff_le_longestPrefix hs xs ys
         rw [fs y ys] at hfxfy⊢
-        rwa [← fx, I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy] at I
+        rwa [← fx, I2, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_firstDiff hfxfy] at I
       -- case where `y ∉ s`
-      · have Ax : (s ∩ cylinder x (longest_prefix x s)).Nonempty :=
-          inter_cylinder_longest_prefix_nonempty hs hne x
+      · have Ax : (s ∩ cylinder x (longestPrefix x s)).Nonempty :=
+          inter_cylinder_longestPrefix_nonempty hs hne x
         have fx : f x = Ax.some := by simp_rw [hf, if_neg xs]
-        have Ay : (s ∩ cylinder y (longest_prefix y s)).Nonempty :=
-          inter_cylinder_longest_prefix_nonempty hs hne y
+        have Ay : (s ∩ cylinder y (longestPrefix y s)).Nonempty :=
+          inter_cylinder_longestPrefix_nonempty hs hne y
         have fy : f y = Ay.some := by simp_rw [hf, if_neg ys]
         -- case where the common prefix to `x` and `s`, or `y` and `s`, is shorter than the
         -- common part to `x` and `y` -- then `f x = f y`.
-        by_cases H : longest_prefix x s < first_diff x y ∨ longest_prefix y s < first_diff x y
-        · have : cylinder x (longest_prefix x s) = cylinder y (longest_prefix y s) :=
+        by_cases H : longestPrefix x s < firstDiff x y ∨ longestPrefix y s < firstDiff x y
+        · have : cylinder x (longestPrefix x s) = cylinder y (longestPrefix y s) :=
             by
             cases H
-            · exact cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff hs hne H xs ys
+            · exact cylinder_longestPrefix_eq_of_longestPrefix_lt_firstDiff hs hne H xs ys
             · symm
-              rw [first_diff_comm] at H
-              exact cylinder_longest_prefix_eq_of_longest_prefix_lt_first_diff hs hne H ys xs
+              rw [firstDiff_comm] at H
+              exact cylinder_longestPrefix_eq_of_longestPrefix_lt_firstDiff hs hne H ys xs
           rw [fx, fy] at hfxfy
           apply (hfxfy _).elim
           congr
         -- case where the common prefix to `x` and `s` is long, as well as the common prefix to
         -- `y` and `s`. Then all points remain in the same cylinders.
         · push_neg  at H
-          have I1 : cylinder Ax.some (first_diff x y) = cylinder x (first_diff x y) :=
+          have I1 : cylinder Ax.some (firstDiff x y) = cylinder x (firstDiff x y) :=
             by
             rw [← mem_cylinder_iff_eq]
             exact cylinder_anti x H.1 Ax.some_spec.2
-          have I3 : cylinder y (first_diff x y) = cylinder Ay.some (first_diff x y) :=
+          have I3 : cylinder y (firstDiff x y) = cylinder Ay.some (firstDiff x y) :=
             by
             rw [eq_comm, ← mem_cylinder_iff_eq]
             exact cylinder_anti y H.2 Ay.some_spec.2
-          have : cylinder Ax.some (first_diff x y) = cylinder Ay.some (first_diff x y) := by
+          have : cylinder Ax.some (firstDiff x y) = cylinder Ay.some (firstDiff x y) := by
             rw [I1, I2, I3]
-          rw [← fx, ← fy, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_first_diff hfxfy] at this
+          rw [← fx, ← fy, ← mem_cylinder_iff_eq, mem_cylinder_iff_le_firstDiff hfxfy] at this
           exact this
 #align pi_nat.exists_lipschitz_retraction_of_is_closed PiNat.exists_lipschitz_retraction_of_isClosed
 
@@ -689,7 +688,7 @@ set, i.e., a continuous map with range equal to `s`, equal to the identity on `s
 theorem exists_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsClosed s) (hne : s.Nonempty) :
     ∃ f : (∀ n, E n) → ∀ n, E n, (∀ x ∈ s, f x = x) ∧ range f = s ∧ Continuous f :=
   by
-  rcases exists_lipschitz_retraction_of_is_closed hs hne with ⟨f, fs, frange, hf⟩
+  rcases exists_lipschitz_retraction_of_isClosed hs hne with ⟨f, fs, frange, hf⟩
   exact ⟨f, fs, frange, hf.continuous⟩
 #align pi_nat.exists_retraction_of_is_closed PiNat.exists_retraction_of_isClosed
 
@@ -698,14 +697,13 @@ theorem exists_retraction_subtype_of_isClosed {s : Set (∀ n, E n)} (hs : IsClo
   by
   obtain ⟨f, fs, f_range, f_cont⟩ :
     ∃ f : (∀ n, E n) → ∀ n, E n, (∀ x ∈ s, f x = x) ∧ range f = s ∧ Continuous f :=
-    exists_retraction_of_is_closed hs hne
+    exists_retraction_of_isClosed hs hne
   have A : ∀ x, f x ∈ s := by simp [← f_range]
-  have B : ∀ x : s, cod_restrict f s A x = x :=
-    by
+  have B : ∀ x : s, codRestrict f s A x = x := by
     intro x
     apply subtype.coe_injective.eq_iff.1
     simpa only using fs x.val x.property
-  exact ⟨cod_restrict f s A, B, fun x => ⟨x, B x⟩, f_cont.subtype_mk _⟩
+  exact ⟨codRestrict f s A, B, fun x => ⟨x, B x⟩, f_cont.subtype_mk _⟩
 #align pi_nat.exists_retraction_subtype_of_is_closed PiNat.exists_retraction_subtype_of_isClosed
 
 end PiNat
@@ -729,10 +727,10 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
   have I0 : (0 : ℝ) < 1 / 2 := by norm_num
   have I1 : (1 / 2 : ℝ) < 1 := by norm_num
   rcases exists_dense_seq α with ⟨u, hu⟩
-  let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty }
+  let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closedBall (u (x n)) ((1 / 2) ^ n)).Nonempty }
   let g : s → α := fun x => x.2.some
   have A : ∀ (x : s) (n : ℕ), dist (g x) (u ((x : ℕ → ℕ) n)) ≤ (1 / 2) ^ n := fun x n =>
-    (mem_Inter.1 x.2.some_mem n : _)
+    (mem_interᵢ.1 x.2.some_mem n : _)
   have g_cont : Continuous g :=
     by
     apply continuous_iff_continuousAt.2 fun y => _
@@ -741,18 +739,17 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
     · simp
     have hne' : x.1 ≠ y.1 := subtype.coe_injective.ne hne
     have dist' : dist x y = dist x.1 y.1 := rfl
-    let n := first_diff x.1 y.1 - 1
-    have diff_pos : 0 < first_diff x.1 y.1 :=
-      by
+    let n := firstDiff x.1 y.1 - 1
+    have diff_pos : 0 < firstDiff x.1 y.1 := by
       by_contra' h
-      apply apply_first_diff_ne hne'
+      apply apply_firstDiff_ne hne'
       rw [le_zero_iff.1 h]
       apply apply_eq_of_dist_lt _ le_rfl
       rw [pow_zero]
       exact hxy
-    have hn : first_diff x.1 y.1 = n + 1 := (Nat.succ_pred_eq_of_pos diff_pos).symm
+    have hn : firstDiff x.1 y.1 = n + 1 := (Nat.succ_pred_eq_of_pos diff_pos).symm
     rw [dist', dist_eq_of_ne hne', hn]
-    have B : x.1 n = y.1 n := mem_cylinder_first_diff x.1 y.1 n (Nat.pred_lt diff_pos.ne')
+    have B : x.1 n = y.1 n := mem_cylinder_firstDiff x.1 y.1 n (Nat.pred_lt diff_pos.ne')
     calc
       dist (g x) (g y) ≤ dist (g x) (u (x.1 n)) + dist (g y) (u (x.1 n)) :=
         dist_triangle_right _ _ _
@@ -760,15 +757,15 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
       _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A x n) (A y n)
       _ = 4 * (1 / 2) ^ (n + 1) := by ring
       
-  have g_surj : surjective g := by
+  have g_surj : Surjective g := by
     intro y
-    have : ∀ n : ℕ, ∃ j, y ∈ closed_ball (u j) ((1 / 2) ^ n) :=
+    have : ∀ n : ℕ, ∃ j, y ∈ closedBall (u j) ((1 / 2) ^ n) :=
       by
       intro n
       rcases hu.exists_dist_lt y (by simp : (0 : ℝ) < (1 / 2) ^ n) with ⟨j, hj⟩
       exact ⟨j, hj.le⟩
     choose x hx using this
-    have I : (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty := ⟨y, mem_Inter.2 hx⟩
+    have I : (⋂ n : ℕ, closedBall (u (x n)) ((1 / 2) ^ n)).Nonempty := ⟨y, mem_interᵢ.2 hx⟩
     refine' ⟨⟨x, I⟩, _⟩
     refine' dist_le_zero.1 _
     have J : ∀ n : ℕ, dist (g ⟨x, I⟩) y ≤ (1 / 2) ^ n + (1 / 2) ^ n := fun n =>
@@ -777,7 +774,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
           dist_triangle_right _ _ _
         _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A ⟨x, I⟩ n) (hx n)
         
-    have L : tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n + (1 / 2) ^ n) at_top (𝓝 (0 + 0)) :=
+    have L : Tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n + (1 / 2) ^ n) atTop (𝓝 (0 + 0)) :=
       (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1).add (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1)
     rw [add_zero] at L
     exact ge_of_tendsto' L J
@@ -785,21 +782,20 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
     by
     refine' is_closed_iff_cluster_pt.mpr _
     intro x hx
-    have L : tendsto (fun n : ℕ => diam (closed_ball (u (x n)) ((1 / 2) ^ n))) at_top (𝓝 0) :=
+    have L : Tendsto (fun n : ℕ => diam (closedBall (u (x n)) ((1 / 2) ^ n))) atTop (𝓝 0) :=
       by
-      have : tendsto (fun n : ℕ => (2 : ℝ) * (1 / 2) ^ n) at_top (𝓝 (2 * 0)) :=
+      have : Tendsto (fun n : ℕ => (2 : ℝ) * (1 / 2) ^ n) atTop (𝓝 (2 * 0)) :=
         (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1).const_mul _
       rw [mul_zero] at this
-      exact
-        squeeze_zero (fun n => diam_nonneg) (fun n => diam_closed_ball (pow_nonneg I0.le _)) this
+      exact squeeze_zero (fun n => diam_nonneg) (fun n => diam_closedBall (pow_nonneg I0.le _)) this
     refine'
-      nonempty_Inter_of_nonempty_bInter (fun n => is_closed_ball) (fun n => bounded_closed_ball) _ L
+      nonempty_interᵢ_of_nonempty_bInter (fun n => isClosed_ball) (fun n => bounded_closedBall) _ L
     intro N
     obtain ⟨y, hxy, ys⟩ : ∃ y, y ∈ ball x ((1 / 2) ^ N) ∩ s :=
       clusterPt_principal_iff.1 hx _ (ball_mem_nhds x (pow_pos I0 N))
     have E :
-      (⋂ (n : ℕ) (H : n ≤ N), closed_ball (u (x n)) ((1 / 2) ^ n)) =
-        ⋂ (n : ℕ) (H : n ≤ N), closed_ball (u (y n)) ((1 / 2) ^ n) :=
+      (⋂ (n : ℕ) (H : n ≤ N), closedBall (u (x n)) ((1 / 2) ^ n)) =
+        ⋂ (n : ℕ) (H : n ≤ N), closedBall (u (y n)) ((1 / 2) ^ n) :=
       by
       congr
       ext1 n
@@ -808,12 +804,12 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
       have : x n = y n := apply_eq_of_dist_lt (mem_ball'.1 hxy) hn
       rw [this]
     rw [E]
-    apply nonempty.mono _ ys
-    apply Inter_subset_Inter₂
+    apply Nonempty.mono _ ys
+    apply interᵢ_subset_interᵢ₂
   obtain ⟨f, -, f_surj, f_cont⟩ :
-    ∃ f : (ℕ → ℕ) → s, (∀ x : s, f x = x) ∧ surjective f ∧ Continuous f :=
+    ∃ f : (ℕ → ℕ) → s, (∀ x : s, f x = x) ∧ Surjective f ∧ Continuous f :=
     by
-    apply exists_retraction_subtype_of_is_closed s_closed
+    apply exists_retraction_subtype_of_isClosed s_closed
     simpa only [nonempty_coe_sort] using g_surj.nonempty
   exact ⟨g ∘ f, g_cont.comp f_cont, g_surj.comp f_surj⟩
 #align exists_nat_nat_continuous_surjective_of_complete_space exists_nat_nat_continuous_surjective_of_completeSpace
@@ -923,7 +919,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
   uniformity_dist := by
     have I0 : (0 : ℝ) ≤ 1 / 2 := by norm_num
     have I1 : (1 / 2 : ℝ) < 1 := by norm_num
-    simp only [Pi.uniformity, comap_infi, gt_iff_lt, preimage_set_of_eq, comap_principal,
+    simp only [Pi.uniformity, comap_infᵢ, gt_iff_lt, preimage_setOf_eq, comap_principal,
       PseudoMetricSpace.uniformity_dist]
     apply le_antisymm
     · simp only [le_infᵢ_iff, le_principal_iff]
@@ -946,10 +942,10 @@ protected def metricSpace : MetricSpace (∀ i, F i)
         @mem_infi_of_Inter _ _ _ _ _ K.finite_to_set fun i =>
           { p : (∀ i : ι, F i) × ∀ i : ι, F i | dist (p.fst i) (p.snd i) < δ }
       · rintro ⟨i, hi⟩
-        refine' mem_infi_of_mem δ (mem_infi_of_mem δpos _)
+        refine' mem_infᵢ_of_mem δ (mem_infᵢ_of_mem δpos _)
         simp only [Prod.forall, imp_self, mem_principal]
       · rintro ⟨x, y⟩ hxy
-        simp only [mem_Inter, mem_set_of_eq, SetCoe.forall, Finset.mem_range, Finset.mem_coe] at hxy
+        simp only [mem_interᵢ, mem_setOf_eq, SetCoe.forall, Finset.mem_range, Finset.mem_coe] at hxy
         calc
           dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) := rfl
           _ =
@@ -974,10 +970,10 @@ protected def metricSpace : MetricSpace (∀ i, F i)
           
     · simp only [le_infᵢ_iff, le_principal_iff]
       intro i ε εpos
-      refine' mem_infi_of_mem (min ((1 / 2) ^ encode i) ε) _
+      refine' mem_infᵢ_of_mem (min ((1 / 2) ^ encode i) ε) _
       have : 0 < min ((1 / 2) ^ encode i) ε := lt_min (by simp) εpos
-      refine' mem_infi_of_mem this _
-      simp only [and_imp, Prod.forall, set_of_subset_set_of, lt_min_iff, mem_principal]
+      refine' mem_infᵢ_of_mem this _
+      simp only [and_imp, Prod.forall, setOf_subset_setOf, lt_min_iff, mem_principal]
       intro x y hn hε
       calc
         dist (x i) (y i) ≤ dist x y := dist_le_dist_pi_of_dist_lt hn

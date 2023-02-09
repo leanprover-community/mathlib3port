@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Noam Atar
 
 ! This file was ported from Lean 3 source module order.prime_ideal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,12 +67,12 @@ theorem compl_f_eq_i : (IF.f : Set P)ᶜ = IF.i :=
 
 theorem i_isProper : IsProper IF.i := by
   cases IF.F.nonempty
-  apply is_proper_of_not_mem (_ : w ∉ IF.I)
+  apply isProper_of_not_mem (_ : w ∉ IF.I)
   rwa [← IF.compl_I_eq_F] at h
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.i_isProper
 
 theorem disjoint : Disjoint (IF.i : Set P) IF.f :=
-  IF.isCompl_i_f.Disjoint
+  IF.isCompl_i_f.disjoint
 #align order.ideal.prime_pair.disjoint Order.Ideal.PrimePair.disjoint
 
 theorem i_union_f : (IF.i : Set P) ∪ IF.f = Set.univ :=
@@ -105,7 +105,7 @@ def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
 
 theorem PrimePair.i_isPrime (IF : PrimePair P) : IsPrime IF.i :=
-  { IF.i_isProper with
+  { of_not_not.i_isProper with
     compl_filter := by
       rw [IF.compl_I_eq_F]
       exact IF.F.is_pfilter }
@@ -127,9 +127,9 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
 
 theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) :
     IsPrime I := by
-  rw [is_prime_iff]
+  rw [isPrime_iff]
   use ‹_›
-  apply is_pfilter.of_def
+  apply IsPfilter.of_def
   · exact Set.nonempty_compl.2 (I.is_proper_iff.1 ‹_›)
   · intro x _ y _
     refine' ⟨x ⊓ y, _, inf_le_left, inf_le_right⟩
@@ -150,14 +150,13 @@ variable [DistribLattice P] {I : Ideal P}
 
 instance (priority := 100) IsMaximal.isPrime [IsMaximal I] : IsPrime I :=
   by
-  rw [is_prime_iff_mem_or_mem]
+  rw [isPrime_iff_mem_or_mem]
   intro x y
   contrapose!
   rintro ⟨hx, hynI⟩ hxy
   apply hynI
   let J := I ⊔ principal x
-  have hJuniv : (J : Set P) = Set.univ :=
-    is_maximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
+  have hJuniv : (J : Set P) = Set.univ := IsMaximal.maximal_proper (lt_sup_principal_of_not_mem ‹_›)
   have hyJ : y ∈ ↑J := set.eq_univ_iff_forall.mp hJuniv y
   rw [coe_sup_eq] at hyJ
   rcases hyJ with ⟨a, ha, b, hb, hy⟩
@@ -186,7 +185,7 @@ theorem IsPrime.mem_compl_of_not_mem (hI : IsPrime I) (hxnI : x ∉ I) : xᶜ �
 
 theorem isPrime_of_mem_or_compl_mem [IsProper I] (h : ∀ {x : P}, x ∈ I ∨ xᶜ ∈ I) : IsPrime I :=
   by
-  simp only [is_prime_iff_mem_or_mem, or_iff_not_imp_left]
+  simp only [isPrime_iff_mem_or_mem, or_iff_not_imp_left]
   intro x y hxy hxI
   have hxcI : xᶜ ∈ I := h.resolve_left hxI
   have ass : x ⊓ y ⊔ y ⊓ xᶜ ∈ I := sup_mem hxy (I.lower inf_le_right hxcI)
@@ -199,14 +198,14 @@ theorem isPrime_iff_mem_or_compl_mem [IsProper I] : IsPrime I ↔ ∀ {x : P}, x
 
 instance (priority := 100) IsPrime.isMaximal [IsPrime I] : IsMaximal I :=
   by
-  simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_and_iff]
+  simp only [isMaximal_iff, Set.eq_univ_iff_forall, IsPrime.to_isProper, true_and_iff]
   intro J hIJ x
   rcases Set.exists_of_ssubset hIJ with ⟨y, hyJ, hyI⟩
   suffices ass : x ⊓ y ⊔ x ⊓ yᶜ ∈ J
   · rwa [sup_inf_inf_compl] at ass
   exact
     sup_mem (J.lower inf_le_right hyJ)
-      (hIJ.le <| I.lower inf_le_right <| is_prime.mem_compl_of_not_mem ‹_› hyI)
+      (hIJ.le <| I.lower inf_le_right <| IsPrime.mem_compl_of_not_mem ‹_› hyI)
 #align order.ideal.is_prime.is_maximal Order.Ideal.IsPrime.isMaximal
 
 end BooleanAlgebra

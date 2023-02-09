@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.univariate.M
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -150,7 +150,7 @@ open List Nat
 instance : Subsingleton (CofixA F 0) :=
   ⟨by
     intros
-    casesm*cofix_a F 0
+    casesm*CofixA F 0
     rfl⟩
 
 theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x) :
@@ -174,7 +174,7 @@ theorem head_succ' (n m : ℕ) (x : ∀ n, CofixA F n) (Hconsistent : AllAgree x
     cases' H with _ _ _ _ _ _ hagree
     congr
     funext j
-    dsimp only [comp_app]
+    dsimp only [comp_apply]
     rw [truncate_eq_of_agree]
     apply hagree
 #align pfunctor.approx.head_succ' PFunctor.Approx.head_succ'
@@ -323,8 +323,8 @@ theorem dest_mk (x : F.Obj <| M F) : dest (M.mk x) = x :=
   dsimp only [M.mk, dest]
   cases' x with x ch; congr with i
   cases h : ch i
-  simp only [children, M.approx.s_mk, children', cast_eq]
-  dsimp only [M.approx.s_mk, children']
+  simp only [children, M.Approx.sMk, children', cast_eq]
+  dsimp only [M.Approx.sMk, children']
   congr ; rw [h]
 #align pfunctor.M.dest_mk PFunctor.M.dest_mk
 
@@ -336,7 +336,7 @@ theorem mk_dest (x : M F) : M.mk (dest x) = x :=
   dsimp only [M.mk]
   induction' n with n
   · apply Subsingleton.elim
-  dsimp only [approx.s_mk, dest, head]
+  dsimp only [Approx.sMk, dest, head]
   cases' h : x.approx (succ n) with _ hd ch
   have h' : hd = head' (x.approx 1) :=
     by
@@ -428,11 +428,11 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) :
 theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     PFunctor.M.cases f (M.mk x) = f x :=
   by
-  dsimp only [M.mk, PFunctor.M.cases, dest, head, approx.s_mk, head']
-  cases x; dsimp only [approx.s_mk]
+  dsimp only [M.mk, PFunctor.M.cases, dest, head, Approx.sMk, head']
+  cases x; dsimp only [Approx.sMk]
   apply eq_of_hEq
   apply rec_heq_of_heq; congr with x
-  dsimp only [children, approx.s_mk, children']
+  dsimp only [children, Approx.sMk, children']
   cases h : x_snd x; dsimp only [head]
   congr with n; change (x_snd x).approx n = _; rw [h]
 #align pfunctor.M.cases_mk PFunctor.M.cases_mk
@@ -533,7 +533,7 @@ theorem ichildren_mk [DecidableEq F.A] [Inhabited (M F)] (x : F.Obj (M F)) (i : 
   dsimp only [ichildren, PFunctor.Obj.iget]
   congr with h
   apply ext'
-  dsimp only [children', M.mk, approx.s_mk]
+  dsimp only [children', M.mk, Approx.sMk]
   intros
   rfl
 #align pfunctor.M.ichildren_mk PFunctor.M.ichildren_mk
@@ -559,9 +559,9 @@ theorem corec_def {X} (f : X → F.Obj X) (x₀ : X) : M.corec f x₀ = M.mk (M.
   dsimp only [M.corec, M.mk]
   congr with n
   cases' n with n
-  · dsimp only [s_corec, approx.s_mk]
+  · dsimp only [sCorec, Approx.sMk]
     rfl
-  · dsimp only [s_corec, approx.s_mk]
+  · dsimp only [sCorec, Approx.sMk]
     cases h : f x₀
     dsimp only [(· <$> ·), PFunctor.map]
     congr
@@ -650,7 +650,7 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
   · exists rfl, a, f, f', rfl, rfl
     apply bisim.tail h₀
   cases' i with a' i
-  obtain rfl : a = a' := by cases hh <;> cases is_path_cons hh <;> rfl
+  obtain rfl : a = a' := by cases hh <;> cases isPath_cons hh <;> rfl
   dsimp only [iselect] at ps_ih⊢
   have h₁ := bisim.tail h₀ i
   induction' h : f i using PFunctor.M.casesOn' with a₀ f₀
@@ -660,7 +660,7 @@ theorem nth_of_bisim [Inhabited (M F)] (bisim : IsBisimulation R) (s₁ s₂) (p
   obtain rfl : a₀ = a₁ := bisim.head h₁
   apply ps_ih _ _ _ h₁
   rw [← h, ← h']
-  apply or_of_or_of_imp_of_imp hh is_path_cons' is_path_cons'
+  apply or_of_or_of_imp_of_imp hh isPath_cons' isPath_cons'
 #align pfunctor.M.nth_of_bisim PFunctor.M.nth_of_bisim
 
 theorem eq_of_bisim [Nonempty (M F)] (bisim : IsBisimulation R) : ∀ s₁ s₂, s₁ ~ s₂ → s₁ = s₂ :=
@@ -668,7 +668,7 @@ theorem eq_of_bisim [Nonempty (M F)] (bisim : IsBisimulation R) : ∀ s₁ s₂,
   inhabit M F
   introv Hr; apply ext
   introv
-  by_cases h : is_path ps s₁ ∨ is_path ps s₂
+  by_cases h : IsPath ps s₁ ∨ IsPath ps s₂
   · have H := nth_of_bisim R bisim _ _ ps Hr h
     exact H.left
   · rw [not_or] at h
@@ -763,8 +763,8 @@ def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → Sum (M P) 
     (fun X rec (a : Sum (M P) α) =>
       let y := a >>= F (rec ∘ Sum.inr)
       match y with
-      | Sum.inr y => y
-      | Sum.inl y => (rec ∘ Sum.inl) <$> M.dest y)
+      | sum.inr y => y
+      | sum.inl y => (rec ∘ Sum.inl) <$> M.dest y)
     (@Sum.inr (M P) _ x)
 #align pfunctor.M.corec' PFunctor.M.corec'
 

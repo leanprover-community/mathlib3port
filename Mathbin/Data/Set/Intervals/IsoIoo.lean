@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.iso_Ioo
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ We consider the actual implementation to be a "black box", so it is irreducible.
 irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃o Ioo (-1 : k) 1 :=
   by
   refine' StrictMono.orderIsoOfRightInverse _ _ (fun x => x / (1 - |x|)) _
-  · refine' cod_restrict (fun x => x / (1 + |x|)) _ fun x => abs_lt.1 _
+  · refine' codRestrict (fun x => x / (1 + |x|)) _ fun x => abs_lt.1 _
     have H : 0 < 1 + |x| := (abs_nonneg x).trans_lt (lt_one_add _)
     calc
       |x / (1 + |x|)| = |x| / (1 + |x|) := by rw [abs_div, abs_of_pos H]

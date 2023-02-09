@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module data.polynomial.denoms_clearable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,8 +52,8 @@ theorem denomsClearable_c_mul_x_pow {N : ℕ} (a : R) (bu : bi * i b = 1) {n : �
     (nN : n ≤ N) : DenomsClearable a b N (c r * x ^ n) i :=
   by
   refine' ⟨r * a ^ n * b ^ (N - n), bi, bu, _⟩
-  rw [C_mul_X_pow_eq_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, eval_mul, eval_pow, eval_C]
-  rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, eval_X, mul_comm]
+  rw [c_mul_x_pow_eq_monomial, map_monomial, ← c_mul_x_pow_eq_monomial, eval_mul, eval_pow, eval_c]
+  rw [RingHom.map_mul, RingHom.map_mul, RingHom.map_pow, RingHom.map_pow, eval_x, mul_comm]
   rw [← tsub_add_cancel_of_le nN]
   rw [pow_add, mul_assoc, mul_comm (i b ^ n), mul_pow, mul_assoc, mul_assoc (i a ^ n), ← mul_pow]
   rw [bu, one_pow, mul_one]
@@ -97,7 +97,7 @@ theorem one_le_pow_mul_abs_eval_div {K : Type _} [LinearOrderedField K] {f : ℤ
     (1 : K) ≤ b ^ f.natDegree * |eval ((a : K) / b) (f.map (algebraMap ℤ K))| :=
   by
   obtain ⟨ev, bi, bu, hF⟩ :=
-    @denomsClearable_natDegree _ _ _ _ b _ (algebraMap ℤ K) f a
+    @denoms_clearable_nat_degree _ _ _ _ b _ (algebraMap ℤ K) f a
       (by
         rw [eq_intCast, one_div_mul_cancel]
         rw [Int.cast_ne_zero]

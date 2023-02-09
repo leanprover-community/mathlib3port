@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ instance : NormOneClass ℍ :=
 
 @[simp, norm_cast]
 theorem norm_coe (a : ℝ) : ‖(a : ℍ)‖ = ‖a‖ := by
-  rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
+  rw [norm_eq_sqrt_real_inner, inner_self, normSq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
 #align quaternion.norm_coe Quaternion.norm_coe
 
 @[simp, norm_cast]
@@ -84,7 +84,7 @@ noncomputable instance : NormedDivisionRing ℍ
   norm_mul' a b :=
     by
     simp only [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_mul]
-    exact Real.sqrt_mul norm_sq_nonneg _
+    exact Real.sqrt_mul normSq_nonneg _
 
 noncomputable instance : NormedAlgebra ℝ ℍ
     where

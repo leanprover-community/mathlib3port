@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module order.lattice_intervals
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ instance [SemilatticeInf α] {a b : α} : SemilatticeInf (Ico a b) :=
 /-- `Ico a b` has a bottom element whenever `a < b`. -/
 @[reducible]
 protected def orderBot [PartialOrder α] {a b : α} (h : a < b) : OrderBot (Ico a b) :=
-  (isLeast_Ico h).OrderBot
+  (isLeast_Ico h).orderBot
 #align set.Ico.order_bot Set.Ico.orderBot
 -/
 
@@ -69,7 +69,7 @@ instance [SemilatticeSup α] {a b : α} : SemilatticeSup (Ioc a b) :=
 /-- `Ioc a b` has a top element whenever `a < b`. -/
 @[reducible]
 protected def orderTop [PartialOrder α] {a b : α} (h : a < b) : OrderTop (Ioc a b) :=
-  (isGreatest_Ioc h).OrderTop
+  (isGreatest_Ioc h).orderTop
 #align set.Ioc.order_top Set.Ioc.orderTop
 -/
 
@@ -96,7 +96,7 @@ instance [Lattice α] {a : α} : Lattice (Iic a) :=
 instance [Preorder α] {a : α} : OrderTop (Iic a)
     where
   top := ⟨a, le_refl a⟩
-  le_top x := x.Prop
+  le_top x := x.prop
 
 /- warning: set.Iic.coe_top -> Set.Iic.coe_top is a dubious translation:
 lean 3 declaration is
@@ -147,7 +147,7 @@ instance [DistribLattice α] {a : α} : DistribLattice (Ici a) :=
 instance [Preorder α] {a : α} : OrderBot (Ici a)
     where
   bot := ⟨a, le_refl a⟩
-  bot_le x := x.Prop
+  bot_le x := x.prop
 
 /- warning: set.Ici.coe_bot -> Set.Ici.coe_bot is a dubious translation:
 lean 3 declaration is
@@ -196,7 +196,7 @@ instance [Lattice α] {a b : α} : Lattice (Icc a b) :=
 /-- `Icc a b` has a bottom element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderBot [Preorder α] {a b : α} (h : a ≤ b) : OrderBot (Icc a b) :=
-  (isLeast_Icc h).OrderBot
+  (isLeast_Icc h).orderBot
 #align set.Icc.order_bot Set.Icc.orderBot
 -/
 
@@ -204,7 +204,7 @@ protected def orderBot [Preorder α] {a b : α} (h : a ≤ b) : OrderBot (Icc a 
 /-- `Icc a b` has a top element whenever `a ≤ b`. -/
 @[reducible]
 protected def orderTop [Preorder α] {a b : α} (h : a ≤ b) : OrderTop (Icc a b) :=
-  (isGreatest_Icc h).OrderTop
+  (isGreatest_Icc h).orderTop
 #align set.Icc.order_top Set.Icc.orderTop
 -/
 

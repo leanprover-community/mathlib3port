@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.enat.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,8 +186,8 @@ theorem toNat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = t
   by
   lift n to ℕ using hn
   induction m using WithTop.recTopCoe
-  · rw [WithTop.top_sub_coe, to_nat_top, zero_tsub]
-  · rw [← coe_sub, to_nat_coe, to_nat_coe, to_nat_coe]
+  · rw [WithTop.top_sub_coe, toNat_top, zero_tsub]
+  · rw [← coe_sub, toNat_coe, toNat_coe, toNat_coe]
 #align enat.to_nat_sub ENat.toNat_sub
 
 /- warning: enat.to_nat_eq_iff -> ENat.toNat_eq_iff is a dubious translation:

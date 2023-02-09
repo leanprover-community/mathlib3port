@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.order.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,8 +307,8 @@ theorem add_eq_three_iff :
 theorem le_add_one_iff : m ≤ n + 1 ↔ m ≤ n ∨ m = n + 1 :=
   ⟨fun h =>
     match Nat.eq_or_lt_of_le h with
-    | Or.inl h => Or.inr h
-    | Or.inr h => Or.inl <| Nat.le_of_succ_le_succ h,
+    | or.inl h => Or.inr h
+    | or.inr h => Or.inl <| Nat.le_of_succ_le_succ h,
     Or.ndrec (fun h => le_trans h <| Nat.le_add_right _ _) le_of_eq⟩
 #align nat.le_add_one_iff Nat.le_add_one_iff
 -/
@@ -823,18 +823,18 @@ theorem findGreatest_eq_iff :
   by
   induction' k with k ihk generalizing m
   · rw [eq_comm, Iff.comm]
-    simp only [nonpos_iff_eq_zero, Ne.def, and_iff_left_iff_imp, find_greatest_zero]
+    simp only [nonpos_iff_eq_zero, Ne.def, and_iff_left_iff_imp, findGreatest_zero]
     rintro rfl
-    exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.Ne HEq.symm).elim⟩
+    exact ⟨fun h => (h rfl).elim, fun n hlt heq => (hlt.ne heq.symm).elim⟩
   · by_cases hk : P (k + 1)
-    · rw [find_greatest_eq hk]
+    · rw [findGreatest_eq hk]
       constructor
       · rintro rfl
         exact ⟨le_rfl, fun _ => hk, fun n hlt hle => (hlt.not_le hle).elim⟩
       · rintro ⟨hle, h0, hm⟩
         rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt)
         exacts[rfl, (hm hlt le_rfl hk).elim]
-    · rw [find_greatest_of_not hk, ihk]
+    · rw [findGreatest_of_not hk, ihk]
       constructor
       · rintro ⟨hle, hP, hm⟩
         refine' ⟨hle.trans k.le_succ, hP, fun n hlt hle => _⟩
@@ -849,7 +849,7 @@ theorem findGreatest_eq_iff :
 
 #print Nat.findGreatest_eq_zero_iff /-
 theorem findGreatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ k → ¬P n := by
-  simp [find_greatest_eq_iff]
+  simp [findGreatest_eq_iff]
 #align nat.find_greatest_eq_zero_iff Nat.findGreatest_eq_zero_iff
 -/
 
@@ -859,8 +859,8 @@ theorem findGreatest_spec (hmb : m ≤ n) (hm : P m) : P (Nat.findGreatest P n) 
   by_cases h : Nat.findGreatest P n = 0
   · cases m
     · rwa [h]
-    exact ((find_greatest_eq_zero_iff.1 h) m.zero_lt_succ hmb hm).elim
-  · exact (find_greatest_eq_iff.1 rfl).2.1 h
+    exact ((findGreatest_eq_zero_iff.1 h) m.zero_lt_succ hmb hm).elim
+  · exact (findGreatest_eq_iff.1 rfl).2.1 h
 #align nat.find_greatest_spec Nat.findGreatest_spec
 -/
 
@@ -880,9 +880,9 @@ theorem le_findGreatest (hmb : m ≤ n) (hm : P m) : m ≤ Nat.findGreatest P n 
 theorem findGreatest_mono_right (P : ℕ → Prop) [DecidablePred P] : Monotone (Nat.findGreatest P) :=
   by
   refine' monotone_nat_of_le_succ fun n => _
-  rw [find_greatest_succ]
+  rw [findGreatest_succ]
   split_ifs
-  · exact (find_greatest_le n).trans (le_succ _)
+  · exact (findGreatest_le n).trans (le_succ _)
   · rfl
 #align nat.find_greatest_mono_right Nat.findGreatest_mono_right
 -/
@@ -895,8 +895,8 @@ theorem findGreatest_mono_left [DecidablePred Q] (hPQ : P ≤ Q) :
   induction' n with n hn
   · rfl
   by_cases P (n + 1)
-  · rw [find_greatest_eq h, find_greatest_eq (hPQ _ h)]
-  · rw [find_greatest_of_not h]
+  · rw [findGreatest_eq h, findGreatest_eq (hPQ _ h)]
+  · rw [findGreatest_of_not h]
     exact hn.trans (Nat.findGreatest_mono_right _ <| le_succ _)
 #align nat.find_greatest_mono_left Nat.findGreatest_mono_left
 -/

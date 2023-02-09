@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -203,11 +203,11 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
 instance : AddCommGroup ℍ[R,c₁,c₂] := by
   refine_struct {
                 add := (· + ·)
-                neg := Neg.neg
-                sub := Sub.sub
+                neg := has_neg.neg
+                sub := has_sub.sub
                 zero := (0 : ℍ[R,c₁,c₂])
-                zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
-                nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ } <;>
+                zsmul := @zsmul_rec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨has_neg.neg⟩
+                nsmul := @nsmul_rec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ } <;>
             intros <;>
           try rfl <;>
         ext <;>
@@ -232,7 +232,7 @@ instance : Ring ℍ[R,c₁,c₂] := by
                 add := (· + ·)
                 mul := (· * ·)
                 one := 1
-                npow := @npowRec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨(· * ·)⟩ } <;>
+                npow := @npow_rec _ ⟨(1 : ℍ[R,c₁,c₂])⟩ ⟨(· * ·)⟩ } <;>
             intros <;>
           try rfl <;>
         ext <;>
@@ -952,19 +952,18 @@ theorem normSq_def : normSq a = (a * a.conj).re :=
 #align quaternion.norm_sq_def Quaternion.normSq_def
 
 theorem normSq_def' : normSq a = a.1 ^ 2 + a.2 ^ 2 + a.3 ^ 2 + a.4 ^ 2 := by
-  simp only [norm_sq_def, sq, mul_neg, sub_neg_eq_add, mul_re, conj_re, conj_im_i, conj_im_j,
-    conj_im_k]
+  simp only [normSq_def, sq, mul_neg, sub_neg_eq_add, mul_re, conj_re, conj_imI, conj_imJ, conj_imK]
 #align quaternion.norm_sq_def' Quaternion.normSq_def'
 
 theorem normSq_coe : normSq (x : ℍ[R]) = x ^ 2 := by
-  rw [norm_sq_def, conj_coe, ← coe_mul, coe_re, sq]
+  rw [normSq_def, conj_coe, ← coe_mul, coe_re, sq]
 #align quaternion.norm_sq_coe Quaternion.normSq_coe
 
 @[simp]
-theorem normSq_neg : normSq (-a) = normSq a := by simp only [norm_sq_def, conj_neg, neg_mul_neg]
+theorem normSq_neg : normSq (-a) = normSq a := by simp only [normSq_def, conj_neg, neg_mul_neg]
 #align quaternion.norm_sq_neg Quaternion.normSq_neg
 
-theorem self_mul_conj : a * a.conj = normSq a := by rw [mul_conj_eq_coe, norm_sq_def]
+theorem self_mul_conj : a * a.conj = normSq a := by rw [mul_conj_eq_coe, normSq_def]
 #align quaternion.self_mul_conj Quaternion.self_mul_conj
 
 theorem conj_mul_self : a.conj * a = normSq a := by rw [← a.commute_self_conj.eq, self_mul_conj]
@@ -988,7 +987,7 @@ variable [LinearOrderedCommRing R] {a : ℍ[R]}
 theorem normSq_eq_zero : normSq a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ norm_sq.map_zero⟩
-  rw [norm_sq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
+  rw [normSq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
   exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
   all_goals apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_eq_zero Quaternion.normSq_eq_zero
@@ -999,13 +998,13 @@ theorem normSq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 :=
 
 @[simp]
 theorem normSq_nonneg : 0 ≤ normSq a := by
-  rw [norm_sq_def']
+  rw [normSq_def']
   apply_rules [sq_nonneg, add_nonneg]
 #align quaternion.norm_sq_nonneg Quaternion.normSq_nonneg
 
 @[simp]
 theorem normSq_le_zero : normSq a ≤ 0 ↔ a = 0 := by
-  simpa only [le_antisymm_iff, norm_sq_nonneg, and_true_iff] using @norm_sq_eq_zero _ _ a
+  simpa only [le_antisymm_iff, normSq_nonneg, and_true_iff] using @norm_sq_eq_zero _ _ a
 #align quaternion.norm_sq_le_zero Quaternion.normSq_le_zero
 
 instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_arg re) zero_ne_one⟩
@@ -1013,7 +1012,7 @@ instance : Nontrivial ℍ[R] where exists_pair_ne := ⟨0, 1, mt (congr_arg re) 
 instance : NoZeroDivisors ℍ[R] :=
   { Quaternion.nontrivial with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b hab =>
-      have : normSq a * normSq b = 0 := by rwa [← norm_sq.map_mul, norm_sq_eq_zero]
+      have : normSq a * normSq b = 0 := by rwa [← norm_sq.map_mul, normSq_eq_zero]
       (eq_zero_or_eq_zero_of_mul_eq_zero this).imp normSq_eq_zero.1 normSq_eq_zero.1 }
 
 instance : IsDomain ℍ[R] :=
@@ -1033,10 +1032,10 @@ instance : DivisionRing ℍ[R] :=
   { Quaternion.nontrivial,
     Quaternion.ring with
     inv := Inv.inv
-    inv_zero := by rw [has_inv_inv, conj_zero, smul_zero]
+    inv_zero := by rw [hasInv_inv, conj_zero, smul_zero]
     mul_inv_cancel := fun a ha => by
-      rw [has_inv_inv, Algebra.mul_smul_comm, self_mul_conj, smul_coe,
-        inv_mul_cancel (norm_sq_ne_zero.2 ha), coe_one] }
+      rw [hasInv_inv, Algebra.mul_smul_comm, self_mul_conj, smul_coe,
+        inv_mul_cancel (normSq_ne_zero.2 ha), coe_one] }
 
 @[simp]
 theorem normSq_inv : normSq a⁻¹ = (normSq a)⁻¹ :=
@@ -1074,17 +1073,17 @@ theorem mk_quaternionAlgebra : (#ℍ[R,c₁,c₂]) = (#R) ^ 4 :=
 
 @[simp]
 theorem mk_quaternionAlgebra_of_infinite [Infinite R] : (#ℍ[R,c₁,c₂]) = (#R) := by
-  rw [mk_quaternion_algebra, pow_four]
+  rw [mk_quaternionAlgebra, pow_four]
 #align cardinal.mk_quaternion_algebra_of_infinite Cardinal.mk_quaternionAlgebra_of_infinite
 
 /-- The cardinality of a quaternion algebra, as a set. -/
 theorem mk_univ_quaternionAlgebra : (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) ^ 4 := by
-  rw [mk_univ, mk_quaternion_algebra]
+  rw [mk_univ, mk_quaternionAlgebra]
 #align cardinal.mk_univ_quaternion_algebra Cardinal.mk_univ_quaternionAlgebra
 
 @[simp]
 theorem mk_univ_quaternionAlgebra_of_infinite [Infinite R] :
-    (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) := by rw [mk_univ_quaternion_algebra, pow_four]
+    (#(Set.univ : Set ℍ[R,c₁,c₂])) = (#R) := by rw [mk_univ_quaternionAlgebra, pow_four]
 #align cardinal.mk_univ_quaternion_algebra_of_infinite Cardinal.mk_univ_quaternionAlgebra_of_infinite
 
 end QuaternionAlgebra

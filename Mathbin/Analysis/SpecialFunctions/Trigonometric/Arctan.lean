@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.arctan
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ theorem tan_add {x y : ℝ}
     tan (x + y) = (tan x + tan y) / (1 - tan x * tan y) := by
   simpa only [← Complex.of_real_inj, Complex.of_real_sub, Complex.of_real_add, Complex.of_real_div,
     Complex.of_real_mul, Complex.of_real_tan] using
-    @Complex.tan_add (x : ℂ) (y : ℂ) (by convert h <;> norm_cast)
+    @complex.tan_add (x : ℂ) (y : ℂ) (by convert h <;> norm_cast)
 #align real.tan_add Real.tan_add
 
 theorem tan_add' {x y : ℝ}
@@ -69,7 +69,7 @@ theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
       ext1 x
       rw [tan_eq_sin_div_cos]
     rwa [h_eq] at this
-  exact continuous_on_sin.div continuous_on_cos fun x => id
+  exact continuous_on_sin.div continuousOn_cos fun x => id
 #align real.continuous_on_tan Real.continuousOn_tan
 
 @[continuity]
@@ -79,8 +79,8 @@ theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
 
 theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) :=
   by
-  refine' ContinuousOn.mono continuous_on_tan fun x => _
-  simp only [and_imp, mem_Ioo, mem_set_of_eq, Ne.def]
+  refine' ContinuousOn.mono continuousOn_tan fun x => _
+  simp only [and_imp, mem_Ioo, mem_setOf_eq, Ne.def]
   rw [cos_eq_zero_iff]
   rintro hx_gt hx_lt ⟨r, hxr_eq⟩
   cases le_or_lt 0 r
@@ -116,7 +116,7 @@ theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
 
 /-- `real.tan` as an `order_iso` between `(-(π / 2), π / 2)` and `ℝ`. -/
 def tanOrderIso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
-  (strictMonoOn_tan.OrderIso _ _).trans <|
+  (strictMonoOn_tan.orderIso _ _).trans <|
     (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 #align real.tan_order_iso Real.tanOrderIso
 
@@ -222,7 +222,7 @@ theorem continuous_arctan : Continuous arctan :=
 #align real.continuous_arctan Real.continuous_arctan
 
 theorem continuousAt_arctan {x : ℝ} : ContinuousAt arctan x :=
-  continuous_arctan.ContinuousAt
+  continuous_arctan.continuousAt
 #align real.continuous_at_arctan Real.continuousAt_arctan
 
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
@@ -239,7 +239,7 @@ def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
   open_source := isOpen_Ioo
   open_target := isOpen_univ
   continuous_toFun := continuousOn_tan_Ioo
-  continuous_invFun := continuous_arctan.ContinuousOn
+  continuous_invFun := continuous_arctan.continuousOn
 #align real.tan_local_homeomorph Real.tanLocalHomeomorph
 
 @[simp]

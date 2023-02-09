@@ -6,7 +6,7 @@ Authors: Simon Hudon
 The writer monad transformer for passing immutable state.
 
 ! This file was ported from Lean 3 source module control.monad.writer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,7 +88,7 @@ instance [Monoid ω] [LawfulMonad m] : LawfulMonad (WriterT ω m)
     simp [(· <$> ·), WriterT.bind, WriterT.pure]
   pure_bind := by
     intros
-    simp [Pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]
+    simp [has_pure.pure, WriterT.pure, (· >>= ·), WriterT.bind]
     ext <;> rfl
   bind_assoc := by
     intros
@@ -172,8 +172,8 @@ instance {ω σ : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :
 open Function
 
 def ExceptT.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε α × (ω → ω)
-  | Except.error a => (Except.error a, id)
-  | Except.ok (x, y) => (Except.ok x, y)
+  | except.error a => (Except.error a, id)
+  | except.ok (x, y) => (Except.ok x, y)
 #align except_t.pass_aux ExceptTₓ.passAux
 
 instance {ω ε : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] :

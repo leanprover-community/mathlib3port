@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module logic.function.iterate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,7 +81,7 @@ theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
 #print Function.iterate_add /-
 theorem iterate_add : ∀ m n : ℕ, f^[m + n] = f^[m] ∘ f^[n]
   | m, 0 => rfl
-  | m, Nat.succ n => by rw [Nat.add_succ, iterate_succ, iterate_succ, iterate_add]
+  | m, nat.succ n => by rw [Nat.add_succ, iterate_succ, iterate_succ, iterate_add]
 #align function.iterate_add Function.iterate_add
 -/
 
@@ -136,7 +136,7 @@ namespace Semiconj
 #print Function.Semiconj.iterate_right /-
 theorem iterate_right {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) (n : ℕ) :
     Semiconj f (ga^[n]) (gb^[n]) :=
-  Nat.recOn n id_right fun n ihn => ihn.compRight h
+  Nat.recOn n id_right fun n ihn => ihn.comp_right h
 #align function.semiconj.iterate_right Function.Semiconj.iterate_right
 -/
 
@@ -148,7 +148,7 @@ theorem iterate_left {g : ℕ → α → α} (H : ∀ n, Semiconj f (g n) (g <| 
   · rw [Nat.zero_add]
     exact id_left
   · rw [Nat.succ_eq_add_one, Nat.add_right_comm, Nat.add_assoc]
-    exact (H k).compLeft (ihn (k + 1))
+    exact (H k).comp_left (ihn (k + 1))
 #align function.semiconj.iterate_left Function.Semiconj.iterate_left
 -/
 
@@ -180,7 +180,7 @@ theorem iterate_iterate (h : Commute f g) (m n : ℕ) : Commute (f^[m]) (g^[n]) 
 theorem iterate_eq_of_map_eq (h : Commute f g) (n : ℕ) {x} (hx : f x = g x) :
     (f^[n]) x = (g^[n]) x :=
   Nat.recOn n rfl fun n ihn => by
-    simp only [iterate_succ_apply, hx, (h.iterate_left n).Eq, ihn, ((refl g).iterate_right n).Eq]
+    simp only [iterate_succ_apply, hx, (h.iterate_left n).eq, ihn, ((refl g).iterate_right n).eq]
 #align function.commute.iterate_eq_of_map_eq Function.Commute.iterate_eq_of_map_eq
 -/
 
@@ -189,7 +189,7 @@ theorem comp_iterate (h : Commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[
   by
   induction' n with n ihn; · rfl
   funext x
-  simp only [ihn, (h.iterate_right n).Eq, iterate_succ, comp_app]
+  simp only [ihn, (h.iterate_right n).eq, iterate_succ, comp_apply]
 #align function.commute.comp_iterate Function.Commute.comp_iterate
 -/
 
@@ -226,7 +226,7 @@ variable (f)
 
 #print Function.iterate_succ' /-
 theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ f^[n] := by
-  rw [iterate_succ, (commute.self_iterate f n).comp_eq]
+  rw [iterate_succ, (Commute.self_iterate f n).comp_eq]
 #align function.iterate_succ' Function.iterate_succ'
 -/
 

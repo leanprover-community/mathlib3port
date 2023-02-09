@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jeremy Avigad, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.ultrafilter
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ open Classical Filter
 equal to this filter. -/
 instance : IsAtomic (Filter α) :=
   IsAtomic.of_isChain_bounded fun c hc hne hb =>
-    ⟨infₛ c, (infₛ_neBot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).DirectedOn hb).Ne,
+    ⟨infₛ c, (infₛ_neBot_of_directed' hne (show IsChain (· ≥ ·) c from hc.symm).directedOn hb).ne,
       fun x hx => infₛ_le hx⟩
 
 #print Ultrafilter /-
@@ -86,7 +86,7 @@ but is expected to have type
   forall {α : Type.{u1}} (f : Ultrafilter.{u1} α), IsAtom.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f)
 Case conversion may be inaccurate. Consider using '#align ultrafilter.is_atom Ultrafilter.isAtomₓ'. -/
 protected theorem isAtom (f : Ultrafilter α) : IsAtom (f : Filter α) :=
-  ⟨f.ne_bot.Ne, fun g hgf => by_contra fun hg => hgf.Ne <| f.unique hgf.le ⟨hg⟩⟩
+  ⟨f.neBot.ne, fun g hgf => by_contra fun hg => hgf.ne <| f.unique hgf.le ⟨hg⟩⟩
 #align ultrafilter.is_atom Ultrafilter.isAtom
 
 #print Ultrafilter.mem_coe /-
@@ -164,7 +164,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {g : Filter.{u1} α}, Iff (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (Ultrafilter.toFilter.{u1} α f) g)) (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g)
 Case conversion may be inaccurate. Consider using '#align ultrafilter.inf_ne_bot_iff Ultrafilter.inf_neBot_iffₓ'. -/
 theorem inf_neBot_iff {f : Ultrafilter α} {g : Filter α} : NeBot (↑f ⊓ g) ↔ ↑f ≤ g :=
-  ⟨le_of_inf_neBot f, fun h => (inf_of_le_left h).symm ▸ f.ne_bot⟩
+  ⟨le_of_inf_neBot f, fun h => (inf_of_le_left h).symm ▸ f.neBot⟩
 #align ultrafilter.inf_ne_bot_iff Ultrafilter.inf_neBot_iff
 
 /- warning: ultrafilter.disjoint_iff_not_le -> Ultrafilter.disjoint_iff_not_le is a dubious translation:
@@ -174,7 +174,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Ultrafilter.{u1} α} {g : Filter.{u1} α}, Iff (Disjoint.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g) (Not (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (Ultrafilter.toFilter.{u1} α f) g))
 Case conversion may be inaccurate. Consider using '#align ultrafilter.disjoint_iff_not_le Ultrafilter.disjoint_iff_not_leₓ'. -/
 theorem disjoint_iff_not_le {f : Ultrafilter α} {g : Filter α} : Disjoint (↑f) g ↔ ¬↑f ≤ g := by
-  rw [← inf_ne_bot_iff, ne_bot_iff, Ne.def, Classical.not_not, disjoint_iff]
+  rw [← inf_neBot_iff, neBot_iff, Ne.def, Classical.not_not, disjoint_iff]
 #align ultrafilter.disjoint_iff_not_le Ultrafilter.disjoint_iff_not_le
 
 /- warning: ultrafilter.compl_not_mem_iff -> Ultrafilter.compl_not_mem_iff is a dubious translation:
@@ -245,7 +245,7 @@ def ofAtom (f : Filter α) (hf : IsAtom f) : Ultrafilter α
     where
   toFilter := f
   ne_bot' := ⟨hf.1⟩
-  le_of_le g hg := (isAtom_iff.1 hf).2 g hg.Ne
+  le_of_le g hg := (isAtom_iff.1 hf).2 g hg.ne
 #align ultrafilter.of_atom Ultrafilter.ofAtom
 
 #print Ultrafilter.nonempty_of_mem /-
@@ -342,7 +342,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_bunionᵢ_mem_iffₓ'. -/
 theorem finite_bunionᵢ_mem_iff {is : Set β} {s : β → Set α} (his : is.Finite) :
     (⋃ i ∈ is, s i) ∈ f ↔ ∃ i ∈ is, s i ∈ f := by
-  simp only [← sUnion_image, finite_sUnion_mem_iff (his.image s), bex_image_iff]
+  simp only [← unionₛ_image, finite_unionₛ_mem_iff (his.image s), bex_image_iff]
 #align ultrafilter.finite_bUnion_mem_iff Ultrafilter.finite_bunionᵢ_mem_iff
 
 #print Ultrafilter.map /-
@@ -525,7 +525,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ultrafilter.eq_pure_of_finite_mem Ultrafilter.eq_pure_of_finite_memₓ'. -/
 theorem eq_pure_of_finite_mem (h : s.Finite) (h' : s ∈ f) : ∃ x ∈ s, f = pure x :=
   by
-  rw [← bUnion_of_singleton s] at h'
+  rw [← bunionᵢ_of_singleton s] at h'
   rcases(Ultrafilter.finite_bunionᵢ_mem_iff h).mp h' with ⟨a, has, haf⟩
   exact ⟨a, has, eq_of_le (Filter.le_pure_iff.2 haf)⟩
 #align ultrafilter.eq_pure_of_finite_mem Ultrafilter.eq_pure_of_finite_mem
@@ -558,7 +558,7 @@ theorem le_cofinite_or_eq_pure (f : Ultrafilter α) : (f : Filter α) ≤ cofini
 defined in terms of map and join.-/
 def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
   ofComplNotMemIff (bind ↑f fun x => ↑(m x)) fun s => by
-    simp only [mem_bind', mem_coe, ← compl_mem_iff_not_mem, compl_set_of, compl_compl]
+    simp only [mem_bind', mem_coe, ← compl_mem_iff_not_mem, compl_setOf, compl_compl]
 #align ultrafilter.bind Ultrafilter.bind
 -/
 
@@ -602,7 +602,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align ultrafilter.exists_le Ultrafilter.exists_leₓ'. -/
 /-- The ultrafilter lemma: Any proper filter is contained in an ultrafilter. -/
 theorem exists_le (f : Filter α) [h : NeBot f] : ∃ u : Ultrafilter α, ↑u ≤ f :=
-  let ⟨u, hu, huf⟩ := (eq_bot_or_exists_atom_le f).resolve_left h.Ne
+  let ⟨u, hu, huf⟩ := (eq_bot_or_exists_atom_le f).resolve_left h.ne
   ⟨ofAtom u hu, huf⟩
 #align ultrafilter.exists_le Ultrafilter.exists_le
 
@@ -644,10 +644,10 @@ theorem of_coe (f : Ultrafilter α) : of ↑f = f :=
 theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
     (cond : ∀ T : Finset (Set α), (↑T : Set (Set α)) ⊆ S → (⋂₀ (↑T : Set (Set α))).Nonempty) :
     ∃ F : Ultrafilter α, S ⊆ F.sets :=
-  haveI : ne_bot (generate S) :=
-    generate_ne_bot_iff.2 fun t hts ht =>
+  haveI : NeBot (generate S) :=
+    generate_neBot_iff.2 fun t hts ht =>
       ht.coe_toFinset ▸ cond ht.toFinset (ht.coe_to_finset.symm ▸ hts)
-  ⟨of (generate S), fun t ht => (of_le <| generate S) <| generate_sets.basic ht⟩
+  ⟨of (generate S), fun t ht => (of_le <| generate S) <| GenerateSets.basic ht⟩
 #align ultrafilter.exists_ultrafilter_of_finite_inter_nonempty Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty
 -/
 
@@ -666,7 +666,7 @@ but is expected to have type
   forall {α : Type.{u1}} {a : α}, IsAtom.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α)) (BoundedOrder.toOrderBot.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) (CompleteLattice.toBoundedOrder.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α))) (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)
 Case conversion may be inaccurate. Consider using '#align filter.is_atom_pure Filter.isAtom_pureₓ'. -/
 theorem isAtom_pure : IsAtom (pure a : Filter α) :=
-  (pure a : Ultrafilter α).IsAtom
+  (pure a : Ultrafilter α).isAtom
 #align filter.is_atom_pure Filter.isAtom_pure
 
 /- warning: filter.ne_bot.le_pure_iff -> Filter.NeBot.le_pure_iff is a dubious translation:
@@ -675,7 +675,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {a : α}, (Filter.NeBot.{u1} α f) -> (Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (Eq.{succ u1} (Filter.{u1} α) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)))
 Case conversion may be inaccurate. Consider using '#align filter.ne_bot.le_pure_iff Filter.NeBot.le_pure_iffₓ'. -/
-protected theorem NeBot.le_pure_iff (hf : f.ne_bot) : f ≤ pure a ↔ f = pure a :=
+protected theorem NeBot.le_pure_iff (hf : f.NeBot) : f ≤ pure a ↔ f = pure a :=
   ⟨Ultrafilter.unique (pure a), le_of_eq⟩
 #align filter.ne_bot.le_pure_iff Filter.NeBot.le_pure_iff
 
@@ -697,7 +697,7 @@ but is expected to have type
   forall {α : Type.{u1}} {f : Filter.{u1} α} {a : α}, Iff (LE.le.{u1} (Filter.{u1} α) (Preorder.toLE.{u1} (Filter.{u1} α) (PartialOrder.toPreorder.{u1} (Filter.{u1} α) (Filter.instPartialOrderFilter.{u1} α))) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)) (Or (Eq.{succ u1} (Filter.{u1} α) f (Bot.bot.{u1} (Filter.{u1} α) (CompleteLattice.toBot.{u1} (Filter.{u1} α) (Filter.instCompleteLatticeFilter.{u1} α)))) (Eq.{succ u1} (Filter.{u1} α) f (Pure.pure.{u1, u1} Filter.{u1} Filter.instPureFilter.{u1} α a)))
 Case conversion may be inaccurate. Consider using '#align filter.le_pure_iff' Filter.le_pure_iff'ₓ'. -/
 theorem le_pure_iff' : f ≤ pure a ↔ f = ⊥ ∨ f = pure a :=
-  isAtom_pure.le_iffₓ
+  isAtom_pure.le_iff
 #align filter.le_pure_iff' Filter.le_pure_iff'
 
 /- warning: filter.Iic_pure -> Filter.Iic_pure is a dubious translation:
@@ -721,7 +721,7 @@ theorem mem_iff_ultrafilter : s ∈ f ↔ ∀ g : Ultrafilter α, ↑g ≤ f →
   by
   refine' ⟨fun hf g hg => hg hf, fun H => by_contra fun hf => _⟩
   set g : Filter ↥(sᶜ) := comap coe f
-  haveI : ne_bot g := comap_ne_bot_iff_compl_range.2 (by simpa [compl_set_of] )
+  haveI : NeBot g := comap_neBot_iff_compl_range.2 (by simpa [compl_setOf] )
   simpa using H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))
 #align filter.mem_iff_ultrafilter Filter.mem_iff_ultrafilter
 
@@ -778,7 +778,7 @@ Case conversion may be inaccurate. Consider using '#align filter.forall_ne_bot_l
 theorem forall_neBot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
     (∀ f : Filter α, NeBot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, ↑f ≤ g → p f :=
   by
-  refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
+  refine' ⟨fun H f hf => H f f.neBot hf, _⟩
   intro H f hf hfg
   exact hp (of_le f) (H _ ((of_le f).trans hfg))
 #align filter.forall_ne_bot_le_iff Filter.forall_neBot_le_iff
@@ -871,8 +871,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} {m : α -> β} {s : Set.{u1} α} {g : Ultrafilter.{u2} β}, (Membership.mem.{u2, u2} (Set.{u2} β) (Ultrafilter.{u2} β) (Ultrafilter.instMembershipSetUltrafilter.{u2} β) (Set.image.{u1, u2} α β m s) g) -> (Filter.NeBot.{u1} α (HasInf.inf.{u1} (Filter.{u1} α) (Filter.instHasInfFilter.{u1} α) (Filter.comap.{u1, u2} α β m (Ultrafilter.toFilter.{u2} β g)) (Filter.principal.{u1} α s)))
 Case conversion may be inaccurate. Consider using '#align ultrafilter.comap_inf_principal_ne_bot_of_image_mem Ultrafilter.comap_inf_principal_neBot_of_image_memₓ'. -/
-theorem comap_inf_principal_neBot_of_image_mem (h : m '' s ∈ g) : (Filter.comap m g ⊓ 𝓟 s).ne_bot :=
-  Filter.comap_inf_principal_neBot_of_image_mem g.ne_bot h
+theorem comap_inf_principal_neBot_of_image_mem (h : m '' s ∈ g) : (Filter.comap m g ⊓ 𝓟 s).NeBot :=
+  Filter.comap_inf_principal_neBot_of_image_mem g.neBot h
 #align ultrafilter.comap_inf_principal_ne_bot_of_image_mem Ultrafilter.comap_inf_principal_neBot_of_image_mem
 
 #print Ultrafilter.ofComapInfPrincipal /-
@@ -886,7 +886,7 @@ noncomputable def ofComapInfPrincipal (h : m '' s ∈ g) : Ultrafilter α :=
 theorem ofComapInfPrincipal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h :=
   by
   let f := Filter.comap m g ⊓ 𝓟 s
-  haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
+  haveI : f.ne_bot := comap_inf_principal_neBot_of_image_mem h
   have : s ∈ f := mem_inf_of_right (mem_principal_self s)
   exact le_def.mp (of_le _) s this
 #align ultrafilter.of_comap_inf_principal_mem Ultrafilter.ofComapInfPrincipal_mem
@@ -896,7 +896,7 @@ theorem ofComapInfPrincipal_mem (h : m '' s ∈ g) : s ∈ ofComapInfPrincipal h
 theorem ofComapInfPrincipal_eq_of_map (h : m '' s ∈ g) : (ofComapInfPrincipal h).map m = g :=
   by
   let f := Filter.comap m g ⊓ 𝓟 s
-  haveI : f.ne_bot := comap_inf_principal_ne_bot_of_image_mem h
+  haveI : f.ne_bot := comap_inf_principal_neBot_of_image_mem h
   apply eq_of_le
   calc
     Filter.map m (of f) ≤ Filter.map m f := map_mono (of_le _)

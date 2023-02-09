@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.normed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickenin
 theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthickening δ s) :=
   by
   obtain hδ | hδ := le_total 0 δ
-  · rw [cthickening_eq_Inter_thickening hδ]
+  · rw [cthickening_eq_interᵢ_thickening hδ]
     exact convex_Inter₂ fun _ _ => hs.thickening _
   · rw [cthickening_of_nonpos hδ]
     exact hs.closure
@@ -136,7 +136,7 @@ instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
 
 instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
   loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball) fun x r r_pos =>
-    (convex_ball x r).IsPathConnected <| by simp [r_pos]
+    (convex_ball x r).isPathConnected <| by simp [r_pos]
 #align normed_space.loc_path_connected NormedSpace.loc_path_connected
 
 theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) :

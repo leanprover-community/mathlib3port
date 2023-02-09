@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.sqrt_norm_num
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,11 +29,11 @@ theorem is_sqrt {n a a2 b : ℕ} (ha2 : a * a = a2) (hb : a2 + b = n) (hle : b �
 
 /-- Given `n` provides `(a, ⊢ nat.sqrt n = a)`. -/
 unsafe def prove_sqrt (ic : instance_cache) (n : expr) : tactic (instance_cache × expr × expr) := do
-  let nn ← n.toNat
+  let nn ← n.to_nat
   let na := nn.sqrt
-  let (ic, a) ← ic.ofNat na
+  let (ic, a) ← ic.of_nat na
   let (ic, a2, ha2) ← prove_mul_nat ic a a
-  let (ic, b) ← ic.ofNat (nn - na * na)
+  let (ic, b) ← ic.of_nat (nn - na * na)
   let (ic, hb) ← prove_add_nat ic a2 b n
   let (ic, hle) ← prove_le_nat ic b (q((bit0 : ℕ → ℕ)).mk_app [a])
   pure (ic, a, q(@is_sqrt).mk_app [n, a, a2, b, ha2, hb, hle])
@@ -43,12 +43,12 @@ unsafe def prove_sqrt (ic : instance_cache) (n : expr) : tactic (instance_cache 
 @[norm_num]
 unsafe def eval_sqrt : expr → tactic (expr × expr)
   | q(sqrt $(en)) => do
-    let n ← en.toNat
+    let n ← en.to_nat
     match n with
       | 0 => pure (q((0 : ℕ)), q(sqrt_zero))
       | _ => do
         let c ← mk_instance_cache q(ℕ)
-        Prod.snd <$> prove_sqrt c en
+        prod.snd <$> prove_sqrt c en
   | _ => failed
 #align norm_num.eval_sqrt norm_num.eval_sqrt
 

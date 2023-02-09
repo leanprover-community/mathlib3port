@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.countable.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ protected theorem Function.Injective.countable [Countable β] {f : α → β} (h
 #print Function.Surjective.countable /-
 protected theorem Function.Surjective.countable [Countable α] {f : α → β} (hf : Surjective f) :
     Countable β :=
-  (injective_surjInv hf).Countable
+  (injective_surjInv hf).countable
 #align function.surjective.countable Function.Surjective.countable
 -/
 
@@ -73,7 +73,7 @@ theorem exists_surjective_nat (α : Sort u) [Nonempty α] [Countable α] : ∃ f
 
 #print countable_iff_exists_surjective /-
 theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f : ℕ → α, Surjective f :=
-  ⟨@exists_surjective_nat _ _, fun ⟨f, hf⟩ => hf.Countable⟩
+  ⟨@exists_surjective_nat _ _, fun ⟨f, hf⟩ => hf.countable⟩
 #align countable_iff_exists_surjective countable_iff_exists_surjective
 -/
 
@@ -84,7 +84,7 @@ but is expected to have type
   forall {β : Sort.{u2}} (α : Sort.{u1}) [_inst_1 : Countable.{u1} α], (Equiv.{u1, u2} α β) -> (Countable.{u2} β)
 Case conversion may be inaccurate. Consider using '#align countable.of_equiv Countable.of_equivₓ'. -/
 theorem Countable.of_equiv (α : Sort _) [Countable α] (e : α ≃ β) : Countable β :=
-  e.symm.Injective.Countable
+  e.symm.injective.countable
 #align countable.of_equiv Countable.of_equiv
 
 #print Equiv.countable_iff /-
@@ -102,7 +102,7 @@ instance {β : Type v} [Countable β] : Countable (ULift.{u} β) :=
 
 
 instance [Countable α] : Countable (PLift α) :=
-  Equiv.plift.Injective.Countable
+  Equiv.plift.injective.countable
 
 #print Subsingleton.to_countable /-
 instance (priority := 100) Subsingleton.to_countable [Subsingleton α] : Countable α :=
@@ -111,7 +111,7 @@ instance (priority := 100) Subsingleton.to_countable [Subsingleton α] : Countab
 -/
 
 instance (priority := 500) [Countable α] {p : α → Prop} : Countable { x // p x } :=
-  Subtype.val_injective.Countable
+  Subtype.val_injective.countable
 
 instance {n : ℕ} : Countable (Fin n) :=
   Function.Injective.countable (@Fin.eq_of_veq n)
@@ -148,7 +148,7 @@ instance Prop.countable' : Countable Prop :=
 -/
 
 instance (priority := 500) [Countable α] {r : α → α → Prop} : Countable (Quot r) :=
-  (surjective_quot_mk r).Countable
+  (surjective_quot_mk r).countable
 
 instance (priority := 500) [Countable α] {s : Setoid α} : Countable (Quotient s) :=
   Quot.countable

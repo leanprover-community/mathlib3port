@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.norm_cast
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ unsafe def count_coes : expr → tactic ℕ
     count_coes <| e l
   | e => do
     let as ← e.get_simp_args
-    List.sum <$> as count_coes
+    list.sum <$> as count_coes
 #align norm_cast.count_coes norm_cast.count_coes
 
 /-- Count how many coercions are inside the expression, excluding the top ones. -/
@@ -302,7 +302,7 @@ unsafe def mk_cache (attr : Thunk norm_cast_attr_ty) (names : List Name) : tacti
   let cache
     ←-- names has the declarations in reverse order
           names.foldrM
-        (fun name cache => add_lemma (attr ()) cache Name) empty_cache
+        (fun name cache => add_lemma (attr ()) cache name) empty_cache
   let--some special lemmas to handle binary relations
   up := cache.up
   let up ← up.add_simp `` ge_from_le
@@ -525,7 +525,7 @@ Returns a pair of the new expression and proof that they are equal.
 unsafe def numeral_to_coe (e : expr) : tactic (expr × expr) := do
   let α ← infer_type e
   success_if_fail <| is_def_eq α q(ℕ)
-  let n ← e.toNat
+  let n ← e.to_nat
   let h1 ← mk_app `has_lift_t [q(ℕ), α] >>= mk_instance_fast
   let new_e : expr := reflect n
   let new_e ← to_expr ``(@coe ℕ $(α) $(h1) $(new_e))
@@ -538,7 +538,7 @@ Returns a pair of the new expression and proof that they are equal.
 -/
 unsafe def coe_to_numeral (e : expr) : tactic (expr × expr) := do
   let q(@coe ℕ $(α) $(h1) $(e')) ← return e
-  let n ← e'.toNat
+  let n ← e'.to_nat
   -- replace e' by normalized numeral
       is_def_eq
       (reflect n) e' reducible
@@ -605,7 +605,7 @@ unsafe def derive_push_cast (extra_lems : List simp_arg_type) (e : expr) : tacti
   do
   let (s, _) ← mk_simp_set true [`push_cast] extra_lems
   let (e, prf, _) ←
-    simplify (s.eraseₓ [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
+    simplify (s.erase [`nat.cast_succ]) [] e { failIfUnchanged := false } `eq tactic.assumption
   return (e, prf)
 #align norm_cast.derive_push_cast norm_cast.derive_push_cast
 
@@ -684,7 +684,7 @@ unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Uni
     let cfg_norm : SimpConfig := { }
     let cfg_rw : RewriteCfg := { }
     let ns ← loc.get_locals
-    Monad.mapM'
+    monad.mapm'
         (fun r : rw_rule => do
           save_info r
           replace_at derive ns loc

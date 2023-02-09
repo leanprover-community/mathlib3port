@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed_space.continuous_affine_map
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -124,9 +124,9 @@ theorem contLinear_eq_zero_iff_exists_const (f : P →A[R] Q) :
   have h₁ : f.cont_linear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0 :=
     by
     refine' ⟨fun h => _, fun h => _⟩ <;> ext
-    · rw [← coe_cont_linear_eq_linear, h]
+    · rw [← coe_contLinear_eq_linear, h]
       rfl
-    · rw [← coe_linear_eq_coe_cont_linear, h]
+    · rw [← coe_linear_eq_coe_contLinear, h]
       rfl
   have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q :=
     by
@@ -134,7 +134,7 @@ theorem contLinear_eq_zero_iff_exists_const (f : P →A[R] Q) :
     refine' ⟨fun h => _, fun h => _⟩ <;> ext
     · rw [h]
       rfl
-    · rw [← coe_to_affine_map, h]
+    · rw [← coe_to_affineMap, h]
       rfl
   simp_rw [h₁, h₂]
   exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
@@ -216,19 +216,19 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
       neg' := fun f => by simp
       add_le' := fun f g =>
         by
-        simp only [Pi.add_apply, add_cont_linear, coe_add, max_le_iff]
+        simp only [Pi.add_apply, add_contLinear, coe_add, max_le_iff]
         exact
           ⟨(norm_add_le _ _).trans (add_le_add (le_max_left _ _) (le_max_left _ _)),
             (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩
       eq_zero_of_map_eq_zero' := fun f h₀ =>
         by
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
-        · rw [norm_le_zero_iff, cont_linear_eq_zero_iff_exists_const] at h₂
+        · rw [norm_le_zero_iff, contLinear_eq_zero_iff_exists_const] at h₂
           obtain ⟨q, rfl⟩ := h₂
           simp only [Function.const_apply, coe_const, norm_eq_zero] at h₁
           rw [h₁]
           rfl
-        · rw [norm_eq_zero', cont_linear_eq_zero_iff_exists_const] at h₁
+        · rw [norm_eq_zero', contLinear_eq_zero_iff_exists_const] at h₁
           obtain ⟨q, rfl⟩ := h₁
           simp only [Function.const_apply, coe_const, norm_le_zero_iff] at h₂
           rw [h₂]
@@ -236,7 +236,7 @@ noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
 
 instance : NormedSpace 𝕜 (V →A[𝕜] W)
     where norm_smul_le t f := by
-    simp only [norm_def, smul_cont_linear, coe_smul, Pi.smul_apply, norm_smul, ←
+    simp only [norm_def, smul_contLinear, coe_smul, Pi.smul_apply, norm_smul, ←
       mul_max_of_nonneg _ _ (norm_nonneg t)]
 
 theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=

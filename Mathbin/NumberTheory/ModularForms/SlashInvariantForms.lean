@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem sub_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f - g) z = f z - 
 #align slash_invariant_form.sub_apply SlashInvariantForm.sub_apply
 
 instance : AddCommGroup (SlashInvariantForm Γ k) :=
-  FunLike.coe_injective.AddCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
+  FunLike.coe_injective.addCommGroup _ rfl coe_add coe_neg coe_sub coe_smul coe_smul
 
 /-- Additive coercion from `slash_invariant_form` to `ℍ → ℂ`.-/
 def coeHom : SlashInvariantForm Γ k →+ ℍ → ℂ
@@ -222,7 +222,7 @@ theorem coeHom_injective : Function.Injective (@coeHom Γ k) :=
 #align slash_invariant_form.coe_hom_injective SlashInvariantForm.coeHom_injective
 
 instance : Module ℂ (SlashInvariantForm Γ k) :=
-  coeHom_injective.Module ℂ coeHom fun _ _ => rfl
+  coeHom_injective.module ℂ coeHom fun _ _ => rfl
 
 instance : One (SlashInvariantForm Γ 0) :=
   ⟨{  toFun := 1

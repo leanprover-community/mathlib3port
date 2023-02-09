@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.lp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,30 +45,29 @@ theorem Memℒp.finStronglyMeasurableOfStronglyMeasurable (hf : Memℒp f p μ)
     (hf_meas : StronglyMeasurable f) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ := by
   borelize G
-  haveI : separable_space (Set.range f ∪ {0} : Set G) :=
+  haveI : SeparableSpace (Set.range f ∪ {0} : Set G) :=
     hf_meas.separable_space_range_union_singleton
-  let fs := simple_func.approx_on f hf_meas.measurable (Set.range f ∪ {0}) 0 (by simp)
+  let fs := SimpleFunc.approxOn f hf_meas.measurable (Set.range f ∪ {0}) 0 (by simp)
   refine' ⟨fs, _, _⟩
-  · have h_fs_Lp : ∀ n, mem_ℒp (fs n) p μ :=
-      simple_func.mem_ℒp_approx_on_range hf_meas.measurable hf
+  · have h_fs_Lp : ∀ n, Memℒp (fs n) p μ := SimpleFunc.memℒpApproxOnRange hf_meas.measurable hf
     exact fun n => (fs n).measure_support_lt_top_of_memℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
   · intro x
-    apply simple_func.tendsto_approx_on
+    apply SimpleFunc.tendsto_approxOn
     apply subset_closure
     simp
 #align measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurableOfStronglyMeasurable
 
 theorem Memℒp.aeFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AeFinStronglyMeasurable f μ :=
-  ⟨hf.AeStronglyMeasurable.mk f,
-    ((memℒp_congr_ae hf.AeStronglyMeasurable.ae_eq_mk).mp
+  ⟨hf.aeStronglyMeasurable.mk f,
+    ((memℒp_congr_ae hf.aeStronglyMeasurable.ae_eq_mk).mp
           hf).finStronglyMeasurableOfStronglyMeasurable
-      hf.AeStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
-    hf.AeStronglyMeasurable.ae_eq_mk⟩
+      hf.aeStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
+    hf.aeStronglyMeasurable.ae_eq_mk⟩
 #align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aeFinStronglyMeasurable
 
 theorem Integrable.aeFinStronglyMeasurable (hf : Integrable f μ) : AeFinStronglyMeasurable f μ :=
-  (memℒp_one_iff_integrable.mpr hf).AeFinStronglyMeasurable one_ne_zero Ennreal.coe_ne_top
+  (memℒp_one_iff_integrable.mpr hf).aeFinStronglyMeasurable one_ne_zero Ennreal.coe_ne_top
 #align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aeFinStronglyMeasurable
 
 theorem lp.finStronglyMeasurable (f : lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.special_functions.japanese_bracket
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
     rw [Right.neg_nonpos_iff, inv_nonneg]
     exact hr.le
   refine' lt_of_le_of_lt (set_lintegral_mono (by measurability) (by measurability) h_int) _
-  refine' integrable_on.set_lintegral_lt_top _
+  refine' IntegrableOn.set_lintegral_lt_top _
   rw [← intervalIntegrable_iff_integrable_Ioc_of_le zero_le_one]
   apply intervalIntegral.intervalIntegrableRpow'
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
@@ -136,7 +136,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     intro t ht
     congr 1
     ext x
-    simp only [mem_set_of_eq, mem_closedBall_zero_iff]
+    simp only [mem_setOf_eq, mem_closedBall_zero_iff]
     exact le_rpow_one_add_norm_iff_norm_le hr (mem_Ioi.mp ht) x
   rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int)]
   have hIoi_eq : Ioi (0 : ℝ) = Ioc (0 : ℝ) 1 ∪ Ioi 1 := (Set.Ioc_union_Ioi_eq_Ioi zero_le_one).symm
@@ -179,7 +179,7 @@ theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAd
   -- Lower Lebesgue integral
   have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊) = ∫⁻ a : E, Ennreal.ofReal ((1 + ‖a‖) ^ (-r)) :=
     lintegral_nnnorm_eq_of_nonneg fun _ => rpow_nonneg_of_nonneg (by positivity) _
-  rw [has_finite_integral, this]
+  rw [HasFiniteIntegral, this]
   exact finite_integral_one_add_norm hnr
 #align integrable_one_add_norm integrableOneAddNorm
 
@@ -189,7 +189,7 @@ theorem integrableRpowNegOneAddNormSq [MeasureSpace E] [BorelSpace E]
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   refine'
-    ((integrableOneAddNorm hnr).const_mul <| 2 ^ (r / 2)).mono (by measurability)
+    ((integrableOneAddNorm hnr).constMul <| 2 ^ (r / 2)).mono (by measurability)
       (eventually_of_forall fun x => _)
   have h1 : 0 ≤ (1 + ‖x‖ ^ 2) ^ (-r / 2) := by positivity
   have h2 : 0 ≤ (1 + ‖x‖) ^ (-r) := by positivity

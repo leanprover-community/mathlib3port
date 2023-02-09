@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.rat.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,12 +54,12 @@ but is expected to have type
   forall (a : Int) {b : Int}, (LT.lt.{0} Int Int.instLTInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) b) -> (Iff (Rat.Nonneg (Rat.divInt a b)) (LE.le.{0} Int Int.instLEInt (OfNat.ofNat.{0} Int 0 (instOfNatInt 0)) a))
 Case conversion may be inaccurate. Consider using '#align rat.mk_nonneg Rat.divInt_nonnegₓ'. -/
 @[simp]
-theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 ≤ a :=
+theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).Nonneg ↔ 0 ≤ a :=
   by
-  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_denom'] at ha
+  generalize ha : a /. b = x; cases' x with n₁ d₁ h₁ c₁; rw [num_den'] at ha
   simp [Rat.Nonneg]
   have d0 := Int.ofNat_lt.2 h₁
-  have := (mk_eq (ne_of_gt h) (ne_of_gt d0)).1 ha
+  have := (divInt_eq_iff (ne_of_gt h) (ne_of_gt d0)).1 ha
   constructor <;> intro h₂
   · apply nonneg_of_mul_nonneg_left _ d0
     rw [this]
@@ -224,7 +224,7 @@ Case conversion may be inaccurate. Consider using '#align rat.le_def' Rat.le_def
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.den :=
   by
   rw [← @num_denom q, ← @num_denom p]
-  conv_rhs => simp only [num_denom]
+  conv_rhs => simp only [num_den]
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
 
@@ -323,9 +323,9 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
   by
   simp only [lt_iff_le_not_le]
   apply and_congr
-  · simp [div_num_denom, Rat.le_def b_pos d_pos]
+  · simp [div_num_den, Rat.le_def b_pos d_pos]
   · apply not_congr
-    simp [div_num_denom, Rat.le_def d_pos b_pos]
+    simp [div_num_den, Rat.le_def d_pos b_pos]
 #align rat.div_lt_div_iff_mul_lt_mul Rat.div_lt_div_iff_mul_lt_mul
 -/
 
@@ -344,13 +344,13 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
   cases' le_total q 0 with hq hq
   · rw [abs_of_nonpos hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one, mul_one,
-      zero_mul] at hq
-    rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_denom]
+    rw [← @num_denom q, ← divInt_zero_one, Rat.le_def (Int.coe_nat_pos.2 q.pos) zero_lt_one,
+      mul_one, zero_mul] at hq
+    rw [Int.ofNat_natAbs_of_nonpos hq, ← neg_def, num_den]
   · rw [abs_of_nonneg hq]
-    rw [← @num_denom q, ← mk_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos), mul_one,
-      zero_mul] at hq
-    rw [Int.natAbs_of_nonneg hq, num_denom]
+    rw [← @num_denom q, ← divInt_zero_one, Rat.le_def zero_lt_one (Int.coe_nat_pos.2 q.pos),
+      mul_one, zero_mul] at hq
+    rw [Int.natAbs_of_nonneg hq, num_den]
 #align rat.abs_def Rat.abs_def
 
 end Rat

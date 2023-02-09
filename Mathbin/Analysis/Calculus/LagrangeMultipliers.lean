@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.lagrange_multipliers
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, an
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
 theorem IsLocalExtrOn.range_ne_top_of_hasStrictFderivAt
     (hextr : IsLocalExtrOn φ { x | f x = f x₀ } x₀) (hf' : HasStrictFderivAt f f' x₀)
-    (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.Prod φ') ≠ ⊤ :=
+    (hφ' : HasStrictFderivAt φ φ' x₀) : LinearMap.range (f'.prod φ') ≠ ⊤ :=
   by
   intro htop
   set fφ := fun x => (f x, φ x)
@@ -70,7 +70,7 @@ theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFderivAt
       (lt_top_iff_ne_top.2 <| hextr.range_ne_top_of_has_strict_fderiv_at hf' hφ') with
     ⟨Λ', h0, hΛ'⟩
   set e : ((F →ₗ[ℝ] ℝ) × ℝ) ≃ₗ[ℝ] F × ℝ →ₗ[ℝ] ℝ :=
-    ((LinearEquiv.refl ℝ (F →ₗ[ℝ] ℝ)).Prod (LinearMap.ringLmapEquivSelf ℝ ℝ ℝ).symm).trans
+    ((LinearEquiv.refl ℝ (F →ₗ[ℝ] ℝ)).prod (LinearMap.ringLmapEquivSelf ℝ ℝ ℝ).symm).trans
       (LinearMap.coprodEquiv ℝ)
   rcases e.surjective Λ' with ⟨⟨Λ, Λ₀⟩, rfl⟩
   refine' ⟨Λ, Λ₀, e.map_ne_zero_iff.1 h0, fun x => _⟩
@@ -122,7 +122,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFderivAt {ι : Type _} [Fin
   rcases hextr.exists_linear_map_of_has_strict_fderiv_at (hasStrictFderivAt_pi.2 fun i => hf' i)
       hφ' with
     ⟨Λ, Λ₀, h0, hsum⟩
-  rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.Surjective Λ with ⟨Λ, rfl⟩
+  rcases(LinearEquiv.piRing ℝ ℝ ι ℝ).symm.surjective Λ with ⟨Λ, rfl⟩
   refine' ⟨Λ, Λ₀, _, _⟩
   · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
   · ext x

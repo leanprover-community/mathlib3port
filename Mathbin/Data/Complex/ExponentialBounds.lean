@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Joseph Myers
 
 ! This file was ported from Lean 3 source module data.complex.exponential_bounds
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / 10 ^ 10 :=
   iterate 13 refine' exp_1_approx_succ_eq (by norm_num1 <;> rfl) (by norm_cast <;> rfl) _
   norm_num1
   refine' exp_approx_end' _ (by norm_num1 <;> rfl) _ (by norm_cast <;> rfl) (by simp) _
-  rw [_root_.abs_one, abs_of_pos] <;> norm_num1
+  rw [abs_one, abs_of_pos] <;> norm_num1
 #align real.exp_one_near_10 Real.exp_one_near_10
 
 theorem exp_one_near_20 : |exp 1 - 363916618873 / 133877442384| ≤ 1 / 10 ^ 20 :=
@@ -35,7 +35,7 @@ theorem exp_one_near_20 : |exp 1 - 363916618873 / 133877442384| ≤ 1 / 10 ^ 20 
   iterate 21 refine' exp_1_approx_succ_eq (by norm_num1 <;> rfl) (by norm_cast <;> rfl) _
   norm_num1
   refine' exp_approx_end' _ (by norm_num1 <;> rfl) _ (by norm_cast <;> rfl) (by simp) _
-  rw [_root_.abs_one, abs_of_pos] <;> norm_num1
+  rw [abs_one, abs_of_pos] <;> norm_num1
 #align real.exp_one_near_20 Real.exp_one_near_20
 
 theorem exp_one_gt_d9 : 2.7182818283 < exp 1 :=
@@ -77,8 +77,8 @@ theorem log_two_near_10 : |log 2 - 287209 / 414355| ≤ 1 / 10 ^ 10 :=
       34
   rw [t] at z
   norm_num1 at z
-  rw [one_div (2 : ℝ), log_inv, ← sub_eq_add_neg, _root_.abs_sub_comm] at z
-  apply le_trans (_root_.abs_sub_le _ _ _) (add_le_add z _)
+  rw [one_div (2 : ℝ), log_inv, ← sub_eq_add_neg, abs_sub_comm] at z
+  apply le_trans (abs_sub_le _ _ _) (add_le_add z _)
   simp_rw [sum_range_succ]
   norm_num
   rw [abs_of_pos] <;> norm_num

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: François Sunatori
 
 ! This file was ported from Lean 3 source module analysis.complex.isometry
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,9 +72,9 @@ theorem rotation_ne_conjLie (a : circle) : rotation a ≠ conjLie :=
   by
   intro h
   have h1 : rotation a 1 = conj 1 := LinearIsometryEquiv.congr_fun h 1
-  have hI : rotation a I = conj I := LinearIsometryEquiv.congr_fun h I
+  have hI : rotation a i = conj i := LinearIsometryEquiv.congr_fun h i
   rw [rotation_apply, RingHom.map_one, mul_one] at h1
-  rw [rotation_apply, conj_I, ← neg_one_mul, mul_left_inj' I_ne_zero, h1, eq_neg_self_iff] at hI
+  rw [rotation_apply, conj_i, ← neg_one_mul, mul_left_inj' i_ne_zero, h1, eq_neg_self_iff] at hI
   exact one_ne_zero hI
 #align rotation_ne_conj_lie rotation_ne_conjLie
 
@@ -105,8 +105,8 @@ theorem LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re {f : ℂ →ₗ�
   by
   have h₁ := f.norm_map z
   simp only [Complex.abs_def, norm_eq_abs] at h₁
-  rwa [Real.sqrt_inj (norm_sq_nonneg _) (norm_sq_nonneg _), norm_sq_apply (f z), norm_sq_apply z,
-    h₂, add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁
+  rwa [Real.sqrt_inj (normSq_nonneg _) (normSq_nonneg _), normSq_apply (f z), normSq_apply z, h₂,
+    add_left_cancel_iff, mul_self_eq_mul_self_iff] at h₁
 #align linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re
 
 theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1) (z : ℂ) :
@@ -114,12 +114,12 @@ theorem LinearIsometry.im_apply_eq_im {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
   by
   have : ‖f z - 1‖ = ‖z - 1‖ := by rw [← f.norm_map (z - 1), f.map_sub, h]
   apply_fun fun x => x ^ 2  at this
-  simp only [norm_eq_abs, ← norm_sq_eq_abs] at this
+  simp only [norm_eq_abs, ← normSq_eq_abs] at this
   rw [← of_real_inj, ← mul_conj, ← mul_conj] at this
   rw [RingHom.map_sub, RingHom.map_sub] at this
   simp only [sub_mul, mul_sub, one_mul, mul_one] at this
-  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this
-  rw [mul_conj, norm_sq_eq_abs, ← norm_eq_abs] at this
+  rw [mul_conj, normSq_eq_abs, ← norm_eq_abs, LinearIsometry.norm_map] at this
+  rw [mul_conj, normSq_eq_abs, ← norm_eq_abs] at this
   simp only [sub_sub, sub_right_inj, mul_one, of_real_pow, RingHom.map_one, norm_eq_abs] at this
   simp only [add_sub, sub_left_inj] at this
   rw [add_comm, ← this, add_comm]
@@ -135,17 +135,17 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
 theorem linear_isometry_complex_aux {f : ℂ ≃ₗᵢ[ℝ] ℂ} (h : f 1 = 1) :
     f = LinearIsometryEquiv.refl ℝ ℂ ∨ f = conjLie :=
   by
-  have h0 : f I = I ∨ f I = -I :=
+  have h0 : f i = i ∨ f i = -i :=
     by
-    have : |f I| = 1 := by simpa using f.norm_map Complex.i
-    simp only [ext_iff, ← and_or_left, neg_re, I_re, neg_im, neg_zero]
+    have : |f i| = 1 := by simpa using f.norm_map Complex.i
+    simp only [ext_iff, ← and_or_left, neg_re, i_re, neg_im, neg_zero]
     constructor
-    · rw [← I_re]
-      exact @LinearIsometry.re_apply_eq_re f.to_linear_isometry h I
-    · apply @LinearIsometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry
+    · rw [← i_re]
+      exact @linear_isometry.re_apply_eq_re f.to_linear_isometry h i
+    · apply @linear_isometry.im_apply_eq_im_or_neg_of_re_apply_eq_re f.to_linear_isometry
       intro z
-      rw [@LinearIsometry.re_apply_eq_re f.to_linear_isometry h]
-  refine' h0.imp (fun h' : f I = I => _) fun h' : f I = -I => _ <;>
+      rw [@linear_isometry.re_apply_eq_re f.to_linear_isometry h]
+  refine' h0.imp (fun h' : f i = i => _) fun h' : f i = -i => _ <;>
     · apply LinearIsometryEquiv.toLinearEquiv_injective
       apply complex.basis_one_I.ext'
       intro i
@@ -167,7 +167,7 @@ theorem linear_isometry_complex (f : ℂ ≃ₗᵢ[ℝ] ℂ) :
 `!![re a, -im a; im a, re a]`. -/
 theorem toMatrix_rotation (a : circle) :
     LinearMap.toMatrix basisOneI basisOneI (rotation a).toLinearEquiv =
-      Matrix.planeConformalMatrix (re a) (im a) (by simp [pow_two, ← norm_sq_apply]) :=
+      Matrix.planeConformalMatrix (re a) (im a) (by simp [pow_two, ← normSq_apply]) :=
   by
   ext (i j)
   simp [LinearMap.toMatrix_apply]
@@ -178,8 +178,8 @@ theorem toMatrix_rotation (a : circle) :
 @[simp]
 theorem det_rotation (a : circle) : ((rotation a).toLinearEquiv : ℂ →ₗ[ℝ] ℂ).det = 1 :=
   by
-  rw [← LinearMap.det_toMatrix basis_one_I, toMatrix_rotation, Matrix.det_fin_two]
-  simp [← norm_sq_apply]
+  rw [← LinearMap.det_toMatrix basisOneI, toMatrix_rotation, Matrix.det_fin_two]
+  simp [← normSq_apply]
 #align det_rotation det_rotation
 
 /-- The determinant of `rotation` (as a linear equiv) is equal to `1`. -/

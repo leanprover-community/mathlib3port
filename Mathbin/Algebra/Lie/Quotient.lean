@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.quotient
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,7 +235,7 @@ noncomputable def quotKerEquivRange : (L ⧸ f.ker) ≃ₗ⁅R⁆ f.range :=
       rintro ⟨x⟩ ⟨y⟩
       rw [← SetLike.coe_eq_coe, LieSubalgebra.coe_bracket]
       simp only [Submodule.Quotient.quot_mk_eq_mk, LinearMap.quotKerEquivRange_apply_mk, ←
-        LieSubmodule.Quotient.mk_bracket, coe_to_linear_map, map_lie] }
+        LieSubmodule.Quotient.mk_bracket, coe_to_linearMap, map_lie] }
 #align lie_hom.quot_ker_equiv_range LieHom.quotKerEquivRange
 
 end LieHom

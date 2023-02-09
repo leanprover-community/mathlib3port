@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,24 +228,24 @@ theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg : ℝ
 #align lipschitz_with.vsub LipschitzWith.vsub
 
 theorem uniformContinuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).UniformContinuous
+  (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).uniformContinuous
 #align uniform_continuous_vadd uniformContinuous_vadd
 
 theorem uniformContinuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
+  (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).uniformContinuous
 #align uniform_continuous_vsub uniformContinuous_vsub
 
 instance (priority := 100) NormedAddTorsor.to_hasContinuousVadd : HasContinuousVadd V P
-    where continuous_vadd := uniformContinuous_vadd.Continuous
+    where continuous_vadd := uniformContinuous_vadd.continuous
 #align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_hasContinuousVadd
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
-  uniformContinuous_vsub.Continuous
+  uniformContinuous_vsub.continuous
 #align continuous_vsub continuous_vsub
 
 theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : Tendsto f l (𝓝 x))
     (hg : Tendsto g l (𝓝 y)) : Tendsto (f -ᵥ g) l (𝓝 (x -ᵥ y)) :=
-  (continuous_vsub.Tendsto (x, y)).comp (hf.prod_mk_nhds hg)
+  (continuous_vsub.tendsto (x, y)).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.vsub Filter.Tendsto.vsub
 
 section

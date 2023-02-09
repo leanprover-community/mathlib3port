@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yury Kudryashov, Sébastien Gouëzel, Chris Hughes
 
 ! This file was ported from Lean 3 source module data.fin.tuple.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -244,7 +244,7 @@ Case conversion may be inaccurate. Consider using '#align fin.cons_cases_cons Fi
 theorem consCases_cons {P : (∀ i : Fin n.succ, α i) → Sort v} (h : ∀ x₀ x, P (Fin.cons x₀ x))
     (x₀ : α 0) (x : ∀ i : Fin n, α i.succ) : @consCases _ _ _ h (cons x₀ x) = h x₀ x :=
   by
-  rw [cons_cases, cast_eq]
+  rw [consCases, cast_eq]
   congr
   exact tail_cons _ _
 #align fin.cons_cases_cons Fin.consCases_cons
@@ -361,7 +361,7 @@ theorem tail_update_succ : tail (update q i.succ y) = update (tail q) i y :=
   by_cases h : j = i
   · rw [h]
     simp [tail]
-  · simp [tail, (Fin.succ_injective n).Ne h, h]
+  · simp [tail, (Fin.succ_injective n).ne h, h]
 #align fin.tail_update_succ Fin.tail_update_succ
 
 /- warning: fin.comp_cons -> Fin.comp_cons is a dubious translation:
@@ -378,7 +378,7 @@ theorem comp_cons {α : Type _} {β : Type _} (g : α → β) (y : α) (q : Fin 
     rfl
   · let j' := pred j h
     have : j'.succ = j := succ_pred j h
-    rw [← this, cons_succ, comp_app, cons_succ]
+    rw [← this, cons_succ, comp_apply, cons_succ]
 #align fin.comp_cons Fin.comp_cons
 
 /- warning: fin.comp_tail -> Fin.comp_tail is a dubious translation:
@@ -449,7 +449,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.range_fin_succ Fin.range_fin_succₓ'. -/
 theorem range_fin_succ {α} (f : Fin (n + 1) → α) :
     Set.range f = insert (f 0) (Set.range (Fin.tail f)) :=
-  Set.ext fun y => exists_fin_succ.trans <| eq_comm.Or Iff.rfl
+  Set.ext fun y => exists_fin_succ.trans <| eq_comm.or Iff.rfl
 #align fin.range_fin_succ Fin.range_fin_succ
 
 #print Fin.range_cons /-
@@ -565,11 +565,11 @@ theorem append_assoc {p : ℕ} {α : Type _} (a : Fin m → α) (b : Fin n → �
   · rw [append_left]
     refine' Fin.addCases (fun ll => _) (fun lr => _) l
     · rw [append_left]
-      simp [cast_add_cast_add]
+      simp [castAdd_castAdd]
     · rw [append_right]
-      simp [cast_add_nat_add]
+      simp [castAdd_natAdd]
   · rw [append_right]
-    simp [← nat_add_nat_add]
+    simp [← natAdd_natAdd]
 #align fin.append_assoc Fin.append_assoc
 
 end Append
@@ -602,9 +602,9 @@ theorem repeat_one {α : Type _} (a : Fin n → α) : repeat 1 a = a ∘ cast (o
   by
   generalize_proofs h
   apply funext
-  rw [(Fin.cast h.symm).Surjective.forall]
+  rw [(Fin.cast h.symm).surjective.forall]
   intro i
-  simp [mod_nat, Nat.mod_eq_of_lt i.is_lt]
+  simp [modNat, Nat.mod_eq_of_lt i.is_lt]
 #align fin.repeat_one Fin.repeat_one
 
 /- warning: fin.repeat_succ -> Fin.repeat_succ is a dubious translation:
@@ -618,10 +618,10 @@ theorem repeat_succ {α : Type _} (a : Fin n → α) (m : ℕ) :
   by
   generalize_proofs h
   apply funext
-  rw [(Fin.cast h.symm).Surjective.forall]
+  rw [(Fin.cast h.symm).surjective.forall]
   refine' Fin.addCases (fun l => _) fun r => _
-  · simp [mod_nat, Nat.mod_eq_of_lt l.is_lt]
-  · simp [mod_nat]
+  · simp [modNat, Nat.mod_eq_of_lt l.is_lt]
+  · simp [modNat]
 #align fin.repeat_succ Fin.repeat_succ
 
 /- warning: fin.repeat_add -> Fin.repeat_add is a dubious translation:
@@ -636,10 +636,10 @@ theorem repeat_add {α : Type _} (a : Fin n → α) (m₁ m₂ : ℕ) :
   by
   generalize_proofs h
   apply funext
-  rw [(Fin.cast h.symm).Surjective.forall]
+  rw [(Fin.cast h.symm).surjective.forall]
   refine' Fin.addCases (fun l => _) fun r => _
-  · simp [mod_nat, Nat.mod_eq_of_lt l.is_lt]
-  · simp [mod_nat, Nat.add_mod]
+  · simp [modNat, Nat.mod_eq_of_lt l.is_lt]
+  · simp [modNat, Nat.add_mod]
 #align fin.repeat_add Fin.repeat_add
 
 end Repeat
@@ -655,8 +655,8 @@ more help to realize that elements belong to the right types, i.e., we need to i
 several places. -/
 
 
-variable {α : Fin (n + 1) → Type u} (x : α (last n)) (q : ∀ i, α i) (p : ∀ i : Fin n, α i.cast_succ)
-  (i : Fin n) (y : α i.cast_succ) (z : α (last n))
+variable {α : Fin (n + 1) → Type u} (x : α (last n)) (q : ∀ i, α i) (p : ∀ i : Fin n, α i.castSucc)
+  (i : Fin n) (y : α i.castSucc) (z : α (last n))
 
 /- warning: fin.init -> Fin.init is a dubious translation:
 lean 3 declaration is
@@ -665,8 +665,8 @@ but is expected to have type
   forall {n : Nat} {α : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Type.{u1}}, (forall (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))), α i) -> (forall (i : Fin n), α (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i))
 Case conversion may be inaccurate. Consider using '#align fin.init Fin.initₓ'. -/
 /-- The beginning of an `n+1` tuple, i.e., its first `n` entries -/
-def init (q : ∀ i, α i) (i : Fin n) : α i.cast_succ :=
-  q i.cast_succ
+def init (q : ∀ i, α i) (i : Fin n) : α i.castSucc :=
+  q i.castSucc
 #align fin.init Fin.init
 
 /- warning: fin.init_def -> Fin.init_def is a dubious translation:
@@ -676,7 +676,7 @@ but is expected to have type
   forall {n : Nat} {α : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Type.{u1}} {q : forall (i : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))), α i}, Eq.{succ u1} (forall (i : Fin n), α (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i)) (Fin.init.{u1} n (fun (k : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => α k) (fun (k : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => q k)) (fun (k : Fin n) => q (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) k))
 Case conversion may be inaccurate. Consider using '#align fin.init_def Fin.init_defₓ'. -/
 theorem init_def {n : ℕ} {α : Fin (n + 1) → Type _} {q : ∀ i, α i} :
-    (init fun k : Fin (n + 1) => q k) = fun k : Fin n => q k.cast_succ :=
+    (init fun k : Fin (n + 1) => q k) = fun k : Fin n => q k.castSucc :=
   rfl
 #align fin.init_def Fin.init_def
 
@@ -688,7 +688,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.snoc Fin.snocₓ'. -/
 /-- Adding an element at the end of an `n`-tuple, to get an `n+1`-tuple. The name `snoc` comes from
 `cons` (i.e., adding an element to the left of a tuple) read in reverse order. -/
-def snoc (p : ∀ i : Fin n, α i.cast_succ) (x : α (last n)) (i : Fin (n + 1)) : α i :=
+def snoc (p : ∀ i : Fin n, α i.castSucc) (x : α (last n)) (i : Fin (n + 1)) : α i :=
   if h : i.val < n then cast (by rw [Fin.castSucc_cast_lt i h]) (p (castLt i h))
   else cast (by rw [eq_last_of_not_lt h]) x
 #align fin.snoc Fin.snoc
@@ -714,7 +714,7 @@ but is expected to have type
   forall {n : Nat} {α : (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) -> Type.{u1}} (x : α (Fin.last n)) (p : forall (i : Fin n), α (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i)) (i : Fin n), Eq.{succ u1} (α (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i)) (Fin.snoc.{u1} n α p x (FunLike.coe.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (fun (_x : Fin n) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : Fin n) => Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) _x) (EmbeddingLike.toFunLike.{1, 1, 1} (Function.Embedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))))) (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Function.instEmbeddingLikeEmbedding.{1, 1} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))))) (RelEmbedding.toEmbedding.{0, 0} (Fin n) (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.680 : Fin n) (x._@.Mathlib.Order.Hom.Basic._hyg.682 : Fin n) => LE.le.{0} (Fin n) (instLEFin n) x._@.Mathlib.Order.Hom.Basic._hyg.680 x._@.Mathlib.Order.Hom.Basic._hyg.682) (fun (x._@.Mathlib.Order.Hom.Basic._hyg.695 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (x._@.Mathlib.Order.Hom.Basic._hyg.697 : Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) => LE.le.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (instLEFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) n (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) x._@.Mathlib.Order.Hom.Basic._hyg.695 x._@.Mathlib.Order.Hom.Basic._hyg.697) (Fin.castSucc n)) i)) (p i)
 Case conversion may be inaccurate. Consider using '#align fin.snoc_cast_succ Fin.snoc_cast_succₓ'. -/
 @[simp]
-theorem snoc_cast_succ : snoc p x i.cast_succ = p i :=
+theorem snoc_cast_succ : snoc p x i.castSucc = p i :=
   by
   have : i.cast_succ.val < n := i.is_lt
   have h' := Fin.cast_lt_castSucc i i.is_lt
@@ -757,9 +757,9 @@ theorem snoc_comp_nat_add {n m : ℕ} {α : Sort _} (f : Fin (m + n) → α) (a 
   ext i
   refine' Fin.lastCases _ (fun i => _) i
   · simp only [Function.comp_apply]
-    rw [snoc_last, nat_add_last, snoc_last]
+    rw [snoc_last, natAdd_last, snoc_last]
   · simp only [Function.comp_apply]
-    rw [snoc_cast_succ, nat_add_cast_succ, snoc_cast_succ]
+    rw [snoc_cast_succ, natAdd_castSucc, snoc_cast_succ]
 #align fin.snoc_comp_nat_add Fin.snoc_comp_nat_add
 
 /- warning: fin.snoc_cast_add -> Fin.snoc_cast_add is a dubious translation:
@@ -794,35 +794,35 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.snoc_update Fin.snoc_updateₓ'. -/
 /-- Updating a tuple and adding an element at the end commute. -/
 @[simp]
-theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.cast_succ y :=
+theorem snoc_update : snoc (update p i y) x = update (snoc p x) i.castSucc y :=
   by
   ext j
   by_cases h : j.val < n
   · simp only [snoc, h, dif_pos]
-    by_cases h' : j = cast_succ i
+    by_cases h' : j = castSucc i
     · have C1 : α i.cast_succ = α j := by rw [h']
-      have E1 : update (snoc p x) i.cast_succ y j = _root_.cast C1 y :=
+      have E1 : update (snoc p x) i.cast_succ y j = cast C1 y :=
         by
-        have : update (snoc p x) j (_root_.cast C1 y) j = _root_.cast C1 y := by simp
+        have : update (snoc p x) j (cast C1 y) j = cast C1 y := by simp
         convert this
         · exact h'.symm
         · exact heq_of_cast_eq (congr_arg α (Eq.symm h')) rfl
-      have C2 : α i.cast_succ = α (cast_succ (cast_lt j h)) := by rw [cast_succ_cast_lt, h']
-      have E2 : update p i y (cast_lt j h) = _root_.cast C2 y :=
+      have C2 : α i.cast_succ = α (castSucc (castLt j h)) := by rw [castSucc_cast_lt, h']
+      have E2 : update p i y (castLt j h) = cast C2 y :=
         by
-        have : update p (cast_lt j h) (_root_.cast C2 y) (cast_lt j h) = _root_.cast C2 y := by simp
+        have : update p (castLt j h) (cast C2 y) (castLt j h) = cast C2 y := by simp
         convert this
         · simp [h, h']
         · exact heq_of_cast_eq C2 rfl
       rw [E1, E2]
       exact eq_rec_compose _ _ _
-    · have : ¬cast_lt j h = i := by
+    · have : ¬castLt j h = i := by
         intro E
         apply h'
-        rw [← E, cast_succ_cast_lt]
+        rw [← E, castSucc_cast_lt]
       simp [h', this, snoc, h]
   · rw [eq_last_of_not_lt h]
-    simp [Ne.symm (ne_of_lt (cast_succ_lt_last i))]
+    simp [Ne.symm (ne_of_lt (castSucc_lt_last i))]
 #align fin.snoc_update Fin.snoc_update
 
 /- warning: fin.update_snoc_last -> Fin.update_snoc_last is a dubious translation:
@@ -851,8 +851,8 @@ theorem snoc_init_self : snoc (init q) (q (last n)) = q :=
   ext j
   by_cases h : j.val < n
   · have : j ≠ last n := ne_of_lt h
-    simp [h, update_noteq, this, snoc, init, cast_succ_cast_lt]
-    have A : cast_succ (cast_lt j h) = j := cast_succ_cast_lt _ _
+    simp [h, update_noteq, this, snoc, init, castSucc_cast_lt]
+    have A : castSucc (castLt j h) = j := castSucc_cast_lt _ _
     rw [← cast_eq rfl (q j)]
     congr 1 <;> rw [A]
   · rw [eq_last_of_not_lt h]
@@ -871,7 +871,7 @@ Case conversion may be inaccurate. Consider using '#align fin.init_update_last F
 theorem init_update_last : init (update q (last n) z) = init q :=
   by
   ext j
-  simp [init, ne_of_lt, cast_succ_lt_last]
+  simp [init, ne_of_lt, castSucc_lt_last]
 #align fin.init_update_last Fin.init_update_last
 
 /- warning: fin.init_update_cast_succ -> Fin.init_update_castSucc is a dubious translation:
@@ -882,7 +882,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.init_update_cast_succ Fin.init_update_castSuccₓ'. -/
 /-- Updating an element and taking the beginning commute. -/
 @[simp]
-theorem init_update_castSucc : init (update q i.cast_succ y) = update (init q) i y :=
+theorem init_update_castSucc : init (update q i.castSucc y) = update (init q) i y :=
   by
   ext j
   by_cases h : j = i
@@ -897,7 +897,7 @@ would involve a cast to convince Lean that the two types are equal, making it ha
 theorem tail_init_eq_init_tail {β : Type _} (q : Fin (n + 2) → β) : tail (init q) = init (tail q) :=
   by
   ext i
-  simp [tail, init, cast_succ_fin_succ]
+  simp [tail, init, castSucc_fin_succ]
 #align fin.tail_init_eq_init_tail Fin.tail_init_eq_init_tail
 -/
 
@@ -915,9 +915,9 @@ theorem cons_snoc_eq_snoc_cons {β : Type _} (a : β) (q : Fin n → β) (b : β
   have : i = j.succ := by rw [ji, succ_pred]
   rw [this, cons_succ]
   by_cases h' : j.val < n
-  · set k := cast_lt j h' with jk
-    have : j = k.cast_succ := by rw [jk, cast_succ_cast_lt]
-    rw [this, ← cast_succ_fin_succ]
+  · set k := castLt j h' with jk
+    have : j = k.cast_succ := by rw [jk, castSucc_cast_lt]
+    rw [this, ← castSucc_fin_succ]
     simp
   rw [eq_last_of_not_lt h', succ_last]
   simp
@@ -935,7 +935,7 @@ theorem comp_snoc {α : Type _} {β : Type _} (g : α → β) (q : Fin n → α)
   ext j
   by_cases h : j.val < n
   · have : j ≠ last n := ne_of_lt h
-    simp [h, this, snoc, cast_succ_cast_lt]
+    simp [h, this, snoc, castSucc_cast_lt]
   · rw [eq_last_of_not_lt h]
     simp
 #align fin.comp_snoc Fin.comp_snoc
@@ -1010,7 +1010,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.insert_nth_apply_same Fin.insertNth_apply_sameₓ'. -/
 @[simp]
 theorem insertNth_apply_same (i : Fin (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j)) :
-    insertNth i x p i = x := by simp [insert_nth, succ_above_cases]
+    insertNth i x p i = x := by simp [insertNth, succAboveCases]
 #align fin.insert_nth_apply_same Fin.insertNth_apply_same
 
 /- warning: fin.insert_nth_apply_succ_above -> Fin.insertNth_apply_succAbove is a dubious translation:
@@ -1023,14 +1023,14 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_apply_s
 theorem insertNth_apply_succAbove (i : Fin (n + 1)) (x : α i) (p : ∀ j, α (i.succAbove j))
     (j : Fin n) : insertNth i x p (i.succAbove j) = p j :=
   by
-  simp only [insert_nth, succ_above_cases, dif_neg (succ_above_ne _ _)]
+  simp only [insertNth, succAboveCases, dif_neg (succAbove_ne _ _)]
   by_cases hlt : j.cast_succ < i
-  · rw [dif_pos ((succ_above_lt_iff _ _).2 hlt)]
+  · rw [dif_pos ((succAbove_lt_iff _ _).2 hlt)]
     apply eq_of_hEq ((eq_rec_hEq _ _).trans _)
-    rw [cast_lt_succ_above hlt]
-  · rw [dif_neg (mt (succ_above_lt_iff _ _).1 hlt)]
+    rw [castLt_succAbove hlt]
+  · rw [dif_neg (mt (succAbove_lt_iff _ _).1 hlt)]
     apply eq_of_hEq ((eq_rec_hEq _ _).trans _)
-    rw [pred_succ_above (le_of_not_lt hlt)]
+    rw [pred_succAbove (le_of_not_lt hlt)]
 #align fin.insert_nth_apply_succ_above Fin.insertNth_apply_succAbove
 
 /- warning: fin.succ_above_cases_eq_insert_nth -> Fin.succAbove_cases_eq_insertNth is a dubious translation:
@@ -1064,7 +1064,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.insert_nth_eq_iff Fin.insertNth_eq_iffₓ'. -/
 theorem insertNth_eq_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     i.insertNth x p = q ↔ q i = x ∧ p = fun j => q (i.succAbove j) := by
-  simp [funext_iff, forall_iff_succ_above i, eq_comm]
+  simp [funext_iff, forall_iff_succAbove i, eq_comm]
 #align fin.insert_nth_eq_iff Fin.insertNth_eq_iff
 
 /- warning: fin.eq_insert_nth_iff -> Fin.eq_insertNth_iff is a dubious translation:
@@ -1087,7 +1087,7 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_apply_b
 theorem insertNth_apply_below {i j : Fin (n + 1)} (h : j < i) (x : α i)
     (p : ∀ k, α (i.succAbove k)) :
     i.insertNth x p j = Eq.recOn (succAbove_castLt h) (p <| j.castLt _) := by
-  rw [insert_nth, succ_above_cases, dif_neg h.ne, dif_pos h]
+  rw [insertNth, succAboveCases, dif_neg h.ne, dif_pos h]
 #align fin.insert_nth_apply_below Fin.insertNth_apply_below
 
 /- warning: fin.insert_nth_apply_above -> Fin.insertNth_apply_above is a dubious translation:
@@ -1099,7 +1099,7 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_apply_a
 theorem insertNth_apply_above {i j : Fin (n + 1)} (h : i < j) (x : α i)
     (p : ∀ k, α (i.succAbove k)) :
     i.insertNth x p j = Eq.recOn (succAbove_pred h) (p <| j.pred _) := by
-  rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
+  rw [insertNth, succAboveCases, dif_neg h.ne', dif_neg h.not_lt]
 #align fin.insert_nth_apply_above Fin.insertNth_apply_above
 
 /- warning: fin.insert_nth_zero -> Fin.insertNth_zero is a dubious translation:
@@ -1111,7 +1111,7 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_zero Fi
 theorem insertNth_zero (x : α 0) (p : ∀ j : Fin n, α (succAbove 0 j)) :
     insertNth 0 x p = cons x fun j => cast (congr_arg α (congr_fun succAbove_zero j)) (p j) :=
   by
-  refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
+  refine' insertNth_eq_iff.2 ⟨by simp, _⟩
   ext j
   convert (cons_succ _ _ _).symm
 #align fin.insert_nth_zero Fin.insertNth_zero
@@ -1124,7 +1124,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.insert_nth_zero' Fin.insertNth_zero'ₓ'. -/
 @[simp]
 theorem insertNth_zero' (x : β) (p : Fin n → β) : @insertNth _ (fun _ => β) 0 x p = cons x p := by
-  simp [insert_nth_zero]
+  simp [insertNth_zero]
 #align fin.insert_nth_zero' Fin.insertNth_zero'
 
 /- warning: fin.insert_nth_last -> Fin.insertNth_last is a dubious translation:
@@ -1136,20 +1136,20 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_last Fi
 theorem insertNth_last (x : α (last n)) (p : ∀ j : Fin n, α ((last n).succAbove j)) :
     insertNth (last n) x p = snoc (fun j => cast (congr_arg α (succAbove_last_apply j)) (p j)) x :=
   by
-  refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
+  refine' insertNth_eq_iff.2 ⟨by simp, _⟩
   ext j
   apply eq_of_hEq
-  trans snoc (fun j => _root_.cast (congr_arg α (succ_above_last_apply j)) (p j)) x j.cast_succ
+  trans snoc (fun j => cast (congr_arg α (succAbove_last_apply j)) (p j)) x j.cast_succ
   · rw [snoc_cast_succ]
     exact (cast_hEq _ _).symm
   · apply congr_arg_heq
-    rw [succ_above_last]
+    rw [succAbove_last]
 #align fin.insert_nth_last Fin.insertNth_last
 
 #print Fin.insertNth_last' /-
 @[simp]
 theorem insertNth_last' (x : β) (p : Fin n → β) :
-    @insertNth _ (fun _ => β) (last n) x p = snoc p x := by simp [insert_nth_last]
+    @insertNth _ (fun _ => β) (last n) x p = snoc p x := by simp [insertNth_last]
 #align fin.insert_nth_last' Fin.insertNth_last'
 -/
 
@@ -1162,7 +1162,7 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_zero_ri
 @[simp]
 theorem insertNth_zero_right [∀ j, Zero (α j)] (i : Fin (n + 1)) (x : α i) :
     i.insertNth x 0 = Pi.single i x :=
-  insertNth_eq_iff.2 <| by simp [succ_above_ne, Pi.zero_def]
+  insertNth_eq_iff.2 <| by simp [succAbove_ne, Pi.zero_def]
 #align fin.insert_nth_zero_right Fin.insertNth_zero_right
 
 /- warning: fin.insert_nth_binop -> Fin.insertNth_binop is a dubious translation:
@@ -1239,7 +1239,7 @@ Case conversion may be inaccurate. Consider using '#align fin.insert_nth_sub_sam
 @[simp]
 theorem insertNth_sub_same [∀ j, AddGroup (α j)] (i : Fin (n + 1)) (x y : α i)
     (p : ∀ j, α (i.succAbove j)) : i.insertNth x p - i.insertNth y p = Pi.single i (x - y) := by
-  simp_rw [← insert_nth_sub, ← insert_nth_zero_right, Pi.sub_def, sub_self, Pi.zero_def]
+  simp_rw [← insertNth_sub, ← insertNth_zero_right, Pi.sub_def, sub_self, Pi.zero_def]
 #align fin.insert_nth_sub_same Fin.insertNth_sub_same
 
 variable [∀ i, Preorder (α i)]
@@ -1252,7 +1252,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.insert_nth_le_iff Fin.insertNth_le_iffₓ'. -/
 theorem insertNth_le_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     i.insertNth x p ≤ q ↔ x ≤ q i ∧ p ≤ fun j => q (i.succAbove j) := by
-  simp [Pi.le_def, forall_iff_succ_above i]
+  simp [Pi.le_def, forall_iff_succAbove i]
 #align fin.insert_nth_le_iff Fin.insertNth_le_iff
 
 /- warning: fin.le_insert_nth_iff -> Fin.le_insertNth_iff is a dubious translation:
@@ -1263,7 +1263,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align fin.le_insert_nth_iff Fin.le_insertNth_iffₓ'. -/
 theorem le_insertNth_iff {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbove j)} {q : ∀ j, α j} :
     q ≤ i.insertNth x p ↔ q i ≤ x ∧ (fun j => q (i.succAbove j)) ≤ p := by
-  simp [Pi.le_def, forall_iff_succ_above i]
+  simp [Pi.le_def, forall_iff_succAbove i]
 #align fin.le_insert_nth_iff Fin.le_insertNth_iff
 
 open Set
@@ -1278,7 +1278,7 @@ theorem insertNth_mem_Icc {i : Fin (n + 1)} {x : α i} {p : ∀ j, α (i.succAbo
     {q₁ q₂ : ∀ j, α j} :
     i.insertNth x p ∈ Icc q₁ q₂ ↔
       x ∈ Icc (q₁ i) (q₂ i) ∧ p ∈ Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
-  by simp only [mem_Icc, insert_nth_le_iff, le_insert_nth_iff, and_assoc, and_left_comm]
+  by simp only [mem_Icc, insertNth_le_iff, le_insertNth_iff, and_assoc, and_left_comm]
 #align fin.insert_nth_mem_Icc Fin.insertNth_mem_Icc
 
 /- warning: fin.preimage_insert_nth_Icc_of_mem -> Fin.preimage_insertNth_Icc_of_mem is a dubious translation:
@@ -1290,7 +1290,7 @@ Case conversion may be inaccurate. Consider using '#align fin.preimage_insert_nt
 theorem preimage_insertNth_Icc_of_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
     (hx : x ∈ Icc (q₁ i) (q₂ i)) :
     i.insertNth x ⁻¹' Icc q₁ q₂ = Icc (fun j => q₁ (i.succAbove j)) fun j => q₂ (i.succAbove j) :=
-  Set.ext fun p => by simp only [mem_preimage, insert_nth_mem_Icc, hx, true_and_iff]
+  Set.ext fun p => by simp only [mem_preimage, insertNth_mem_Icc, hx, true_and_iff]
 #align fin.preimage_insert_nth_Icc_of_mem Fin.preimage_insertNth_Icc_of_mem
 
 /- warning: fin.preimage_insert_nth_Icc_of_not_mem -> Fin.preimage_insertNth_Icc_of_not_mem is a dubious translation:
@@ -1302,7 +1302,7 @@ Case conversion may be inaccurate. Consider using '#align fin.preimage_insert_nt
 theorem preimage_insertNth_Icc_of_not_mem {i : Fin (n + 1)} {x : α i} {q₁ q₂ : ∀ j, α j}
     (hx : x ∉ Icc (q₁ i) (q₂ i)) : i.insertNth x ⁻¹' Icc q₁ q₂ = ∅ :=
   Set.ext fun p => by
-    simp only [mem_preimage, insert_nth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
+    simp only [mem_preimage, insertNth_mem_Icc, hx, false_and_iff, mem_empty_iff_false]
 #align fin.preimage_insert_nth_Icc_of_not_mem Fin.preimage_insertNth_Icc_of_not_mem
 
 end InsertNth
@@ -1373,7 +1373,7 @@ theorem isSome_find_iff : ∀ {n : ℕ} {p : Fin n → Prop} [DecidablePred p], 
 #print Fin.find_eq_none_iff /-
 /-- `find p` returns `none` if and only if `p i` never holds. -/
 theorem find_eq_none_iff {n : ℕ} {p : Fin n → Prop} [DecidablePred p] : find p = none ↔ ∀ i, ¬p i :=
-  by rw [← not_exists, ← is_some_find_iff] <;> cases find p <;> simp
+  by rw [← not_exists, ← isSome_find_iff] <;> cases find p <;> simp
 #align fin.find_eq_none_iff Fin.find_eq_none_iff
 -/
 

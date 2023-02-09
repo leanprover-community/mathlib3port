@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module computability.reduce
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,7 +107,7 @@ theorem OneOneReducible.to_many_one {α β} [Primcodable α] [Primcodable β] {p
 
 theorem OneOneReducible.of_equiv {α β} [Primcodable α] [Primcodable β] {e : α ≃ β} (q : β → Prop)
     (h : Computable e) : (q ∘ e) ≤₁ q :=
-  OneOneReducible.mk _ h e.Injective
+  OneOneReducible.mk _ h e.injective
 #align one_one_reducible.of_equiv OneOneReducible.of_equiv
 
 theorem OneOneReducible.of_equiv_symm {α β} [Primcodable α] [Primcodable β] {e : α ≃ β}

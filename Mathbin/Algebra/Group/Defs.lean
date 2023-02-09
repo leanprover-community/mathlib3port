@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.defs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -583,7 +583,7 @@ variable {M : Type u}
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def npowRec [One M] [Mul M] : ℕ → M → M
   | 0, a => 1
-  | n + 1, a => a * npowRec n a
+  | n + 1, a => a * npow_rec n a
 #align npow_rec npowRec
 -/
 
@@ -592,7 +592,7 @@ def npowRec [One M] [Mul M] : ℕ → M → M
 times. Use instead `n • a`, which has better definitional behavior. -/
 def nsmulRec [Zero M] [Add M] : ℕ → M → M
   | 0, a => 0
-  | n + 1, a => a + nsmulRec n a
+  | n + 1, a => a + nsmul_rec n a
 #align nsmul_rec nsmulRec
 -/
 
@@ -652,7 +652,7 @@ analysis](https://hal.inria.fr/hal-02463336).
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- `try_refl_tac` solves goals of the form `∀ a b, f a b = g a b`,
 if they hold by definition. -/
 unsafe def try_refl_tac : tactic Unit :=
@@ -919,7 +919,7 @@ end CancelMonoid
 /-- The fundamental power operation in a group. `zpow_rec n a = a*a*...*a` n times, for integer `n`.
 Use instead `a ^ n`,  which has better definitional behavior. -/
 def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
-  | Int.ofNat n, a => npowRec n a
+  | int.of_nat n, a => npowRec n a
   | -[n+1], a => (npowRec n.succ a)⁻¹
 #align zpow_rec zpowRec
 -/
@@ -928,7 +928,7 @@ def zpowRec {M : Type _} [One M] [Mul M] [Inv M] : ℤ → M → M
 /-- The fundamental scalar multiplication in an additive group. `zsmul_rec n a = a+a+...+a` n
 times, for integer `n`. Use instead `n • a`, which has better definitional behavior. -/
 def zsmulRec {M : Type _} [Zero M] [Add M] [Neg M] : ℤ → M → M
-  | Int.ofNat n, a => nsmulRec n a
+  | int.of_nat n, a => nsmulRec n a
   | -[n+1], a => -nsmulRec n.succ a
 #align zsmul_rec zsmulRec
 -/
@@ -1140,7 +1140,7 @@ theorem zpow_ofNat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
   | n + 1 =>
     calc
       a ^ (↑(n + 1) : ℤ) = a * a ^ (n : ℤ) := DivInvMonoid.zpow_succ' _ _
-      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_ofNat n)
+      _ = a * a ^ n := congr_arg ((· * ·) a) (zpow_coe_nat n)
       _ = a ^ (n + 1) := (pow_succ _ _).symm
       
 #align zpow_coe_nat zpow_ofNat

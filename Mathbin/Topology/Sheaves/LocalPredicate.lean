@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.sheaves.local_predicate
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ variable (X)
 def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T
     where
   pred U f := Continuous f
-  res U V i f h := Continuous.comp h (Opens.openEmbedding_of_le i.le).Continuous
+  res U V i f h := Continuous.comp h (Opens.openEmbedding_of_le i.le).continuous
 #align Top.continuous_prelocal TopCat.continuousPrelocal
 
 /-- Satisfying the inhabited linter. -/
@@ -121,7 +121,7 @@ def continuousLocal (T : TopCat.{v}) : LocalPredicate fun x : X => T :=
       dsimp at w
       rw [continuous_iff_continuousAt] at w
       specialize w ⟨x, m⟩
-      simpa using (opens.open_embedding_of_le i.le).continuousAt_iff.1 w }
+      simpa using (Opens.openEmbedding_of_le i.le).continuousAt_iff.1 w }
 #align Top.continuous_local TopCat.continuousLocal
 
 /-- Satisfying the inhabited linter. -/
@@ -136,12 +136,12 @@ by asking that the condition from `P` holds locally near every point.
 -/
 def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : LocalPredicate T
     where
-  pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U)
+  pred U f := ∀ x : U, ∃ (V : Opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.Pred fun x : V => f (i x : U)
   res V U i f w x := by
     specialize w (i x)
     rcases w with ⟨V', m', i', p⟩
-    refine' ⟨V ⊓ V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
-    convert P.res (opens.inf_le_right V V') _ p
+    refine' ⟨V ⊓ V', ⟨x.2, m'⟩, Opens.infLeLeft _ _, _⟩
+    convert P.res (Opens.infLeRight V V') _ p
   locality U f w x := by
     specialize w x
     rcases w with ⟨V, m, i, p⟩
@@ -151,7 +151,7 @@ def PrelocalPredicate.sheafify {T : X → Type v} (P : PrelocalPredicate T) : Lo
 #align Top.prelocal_predicate.sheafify TopCat.PrelocalPredicate.sheafify
 
 theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate T} {U : Opens X}
-    {f : ∀ x : U, T x} (h : P.pred f) : P.sheafify.pred f := fun x =>
+    {f : ∀ x : U, T x} (h : P.Pred f) : P.sheafify.Pred f := fun x =>
   ⟨U, x.2, 𝟙 _, by
     convert h
     ext ⟨y, w⟩
@@ -163,7 +163,7 @@ theorem PrelocalPredicate.sheafify_of {T : X → Type v} {P : PrelocalPredicate 
 @[simps]
 def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type v) X
     where
-  obj U := { f : ∀ x : unop U, T x // P.pred f }
+  obj U := { f : ∀ x : unop U, T x // P.Pred f }
   map U V i f := ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
 #align Top.subpresheaf_to_Types TopCat.subpresheafToTypes
 
@@ -187,12 +187,12 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
     -- We show the sheaf condition in terms of unique gluing.
     -- First we obtain a family of sections for the underlying sheaf of functions,
     -- by forgetting that the prediacte holds
-    let sf' : ∀ i : ι, (presheaf_to_Types X T).obj (op (U i)) := fun i => (sf i).val
+    let sf' : ∀ i : ι, (presheafToTypes X T).obj (op (U i)) := fun i => (sf i).val
     -- Since our original family is compatible, this one is as well
-    have sf'_comp : (presheaf_to_Types X T).IsCompatible U sf' := fun i j =>
+    have sf'_comp : (presheafToTypes X T).IsCompatible U sf' := fun i j =>
       congr_arg Subtype.val (sf_comp i j)
     -- So, we can obtain a unique gluing
-    obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheaf_to_Types X T).existsUnique_gluing U sf' sf'_comp
+    obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheafToTypes X T).existsUnique_gluing U sf' sf'_comp
     refine' ⟨⟨gl, _⟩, _, _⟩
     · -- Our first goal is to show that this chosen gluing satisfies the
       -- predicate. Of course, we use locality of the predicate.
@@ -201,7 +201,7 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
       -- Once we're at a particular point `x`, we can select some open set `x ∈ U i`.
       choose i hi using opens.mem_supr.mp mem
       -- We claim that the predicate holds in `U i`
-      use U i, hi, opens.le_supr U i
+      use U i, hi, Opens.leSupr U i
       -- This follows, since our original family `sf` satisfies the predicate
       convert (sf i).property
       exact gl_spec i
@@ -227,7 +227,7 @@ def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
 
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
 -/
-def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x :=
+def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).presheaf.stalk x ⟶ T x :=
   by
   refine'
     colimit.desc _
@@ -241,9 +241,9 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
 
 @[simp]
 theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
-    stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x :=
+    stalkToFiber P x ((subsheafToTypes P).presheaf.germ x f) = f.1 x :=
   by
-  dsimp [presheaf.germ, stalk_to_fiber]
+  dsimp [Presheaf.germ, stalkToFiber]
   cases x
   simp
   rfl
@@ -253,13 +253,13 @@ theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
 every point in the fiber `T x` has an allowed section passing through it.
 -/
 theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
-    (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
+    (w : ∀ t : T x, ∃ (U : OpenNhds x)(f : ∀ y : U.1, T y)(h : P.Pred f), f ⟨x, U.2⟩ = t) :
     Function.Surjective (stalkToFiber P x) := fun t =>
   by
   rcases w t with ⟨U, f, h, rfl⟩
   fconstructor
-  · exact (subsheaf_to_Types P).Presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
-  · exact stalk_to_fiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
+  · exact (subsheafToTypes P).presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
+  · exact stalkToFiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
 #align Top.stalk_to_fiber_surjective TopCat.stalkToFiber_surjective
 
 /-- The `stalk_to_fiber` map is injective at `x` if any two allowed sections which agree at `x`
@@ -267,16 +267,16 @@ agree on some neighborhood of `x`.
 -/
 theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
     (w :
-      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y)
-        (hV : P.pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
+      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.Pred fU) (fV : ∀ y : V.1, T y)
+        (hV : P.Pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
         ∃ (W : OpenNhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
     Function.Injective (stalkToFiber P x) := fun tU tV h =>
   by
   -- We promise to provide all the ingredients of the proof later:
   let Q :
-    ∃ (W : (open_nhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
-      tU = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
-        tV = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
+    ∃ (W : (OpenNhds x)ᵒᵖ)(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
+      tU = (subsheafToTypes P).presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
+        tV = (subsheafToTypes P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _
   · choose W s hW e using Q
     exact e.1.trans e.2.symm
@@ -285,7 +285,7 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
   · -- Decompose everything into its constituent parts:
     dsimp
-    simp only [stalk_to_fiber, types.colimit.ι_desc_apply'] at h
+    simp only [stalkToFiber, Types.Colimit.ι_desc_apply'] at h
     specialize w (unop U) (unop V) fU hU fV hV h
     rcases w with ⟨W, iU, iV, w⟩
     -- and put it back together again in the correct order.

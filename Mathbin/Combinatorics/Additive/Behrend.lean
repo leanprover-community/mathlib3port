@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.behrend
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,7 +86,7 @@ theorem box_zero : box (n + 1) 0 = ∅ := by simp [box]
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
 def sphere (n d k : ℕ) : Finset (Fin n → ℕ) :=
-  (box n d).filterₓ fun x => (∑ i, x i ^ 2) = k
+  (box n d).filter fun x => (∑ i, x i ^ 2) = k
 #align behrend.sphere Behrend.sphere
 
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by
@@ -193,7 +193,7 @@ theorem addSalemSpencer_image_sphere :
   by
   rw [coe_image]
   refine'
-    @AddSalemSpencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1))
+    @add_salem_spencer.image _ (Fin n → ℕ) ℕ _ _ (sphere n d k) _ (map (2 * d - 1))
       (map_inj_on.mono _) addSalemSpencer_sphere
   rw [Set.add_subset_iff]
   rintro a ha b hb i
@@ -231,7 +231,7 @@ theorem card_sphere_le_rothNumberNat (n d k : ℕ) :
     exact Fintype.card_unique
   cases d
   · simp
-  refine' add_salem_spencer_image_sphere.le_roth_number_nat _ _ (card_image_of_inj_on _)
+  refine' add_salem_spencer_image_sphere.le_roth_number_nat _ _ (card_image_of_injOn _)
   · simp only [subset_iff, mem_image, and_imp, forall_exists_index, mem_range,
       forall_apply_eq_imp_iff₂, sphere, mem_filter]
     rintro _ x hx _ rfl
@@ -258,8 +258,7 @@ theorem exists_large_sphere_aux (n d : ℕ) :
   refine' exists_le_card_fiber_of_nsmul_le_card_of_maps_to (fun x hx => _) nonempty_range_succ _
   · rw [mem_range, lt_succ_iff]
     exact sum_sq_le_of_mem_box hx
-  · rw [card_range, _root_.nsmul_eq_mul, mul_div_assoc', cast_add_one, mul_div_cancel_left,
-      card_box]
+  · rw [card_range, nsmul_eq_mul, mul_div_assoc', cast_add_one, mul_div_cancel_left, card_box]
     exact (cast_add_one_pos _).ne'
 #align behrend.exists_large_sphere_aux Behrend.exists_large_sphere_aux
 
@@ -423,7 +422,7 @@ theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
 
 theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
   by
-  rw [n_value, ← lt_iff_add_one_le, lt_ceil, cast_two]
+  rw [nValue, ← lt_iff_add_one_le, lt_ceil, cast_two]
   apply lt_sqrt_of_sq_lt
   have : (2 : ℝ) ^ ((6 : ℕ) : ℝ) ≤ N := by
     rw [rpow_nat_cast]
@@ -439,9 +438,9 @@ theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
 theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   by
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (succ_pos'.trans_le hN₃)
-  rw [d_value, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_ne_zero, log_rpow hN₀,
+  rw [dValue, floor_pos, ← log_le_log zero_lt_one, log_one, log_div _ two_ne_zero, log_rpow hN₀,
     div_mul_eq_mul_div, one_mul, sub_nonneg, le_div_iff]
-  · have : (n_value N : ℝ) ≤ 2 * sqrt (log N) :=
+  · have : (nValue N : ℝ) ≤ 2 * sqrt (log N) :=
       by
       apply (ceil_lt_add_one <| sqrt_nonneg _).le.trans
       rw [two_mul, add_le_add_iff_left]
@@ -456,23 +455,23 @@ theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
       · exact_mod_cast hN₃
       · norm_num
     exact hN₃.trans_lt' (by norm_num)
-  · exact cast_pos.2 (n_value_pos <| hN₃.trans' <| by norm_num)
+  · exact cast_pos.2 (nValue_pos <| hN₃.trans' <| by norm_num)
   · exact (rpow_pos_of_pos hN₀ _).ne'
   · exact div_pos (rpow_pos_of_pos hN₀ _) zero_lt_two
 #align behrend.d_value_pos Behrend.dValue_pos
 
 theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N :=
   by
-  have : (2 * d_value N - 1) ^ n_value N ≤ (2 * d_value N) ^ n_value N :=
+  have : (2 * dValue N - 1) ^ nValue N ≤ (2 * dValue N) ^ nValue N :=
     Nat.pow_le_pow_of_le_left (Nat.sub_le _ _) _
   apply this.trans
-  suffices ((2 * d_value N) ^ n_value N : ℝ) ≤ N by exact_mod_cast this
+  suffices ((2 * dValue N) ^ nValue N : ℝ) ≤ N by exact_mod_cast this
   rw [← rpow_nat_cast]
-  suffices i : (2 * d_value N : ℝ) ≤ (N : ℝ) ^ (1 / n_value N : ℝ)
+  suffices i : (2 * dValue N : ℝ) ≤ (N : ℝ) ^ (1 / nValue N : ℝ)
   · apply (rpow_le_rpow (mul_nonneg zero_le_two (cast_nonneg _)) i (cast_nonneg _)).trans
     rw [← rpow_mul (cast_nonneg _), one_div_mul_cancel, rpow_one]
     rw [cast_ne_zero]
-    apply (n_value_pos hN).ne'
+    apply (nValue_pos hN).ne'
   rw [← le_div_iff']
   · exact floor_le (div_nonneg (rpow_nonneg_of_nonneg (cast_nonneg _) _) zero_le_two)
   apply zero_lt_two
@@ -520,16 +519,16 @@ theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dVa
 theorem roth_lower_bound_explicit (hN : 4096 ≤ N) :
     (N : ℝ) * exp (-4 * sqrt (log N)) < rothNumberNat N :=
   by
-  let n := n_value N
-  have hn : 0 < (n : ℝ) := cast_pos.2 (n_value_pos <| hN.trans' <| by norm_num1)
-  have hd : 0 < d_value N := d_value_pos (hN.trans' <| by norm_num1)
+  let n := nValue N
+  have hn : 0 < (n : ℝ) := cast_pos.2 (nValue_pos <| hN.trans' <| by norm_num1)
+  have hd : 0 < dValue N := dValue_pos (hN.trans' <| by norm_num1)
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (hN.trans' <| by norm_num1)
-  have hn₂ : 2 ≤ n := two_le_n_value (hN.trans' <| by norm_num1)
-  have : (2 * d_value N - 1) ^ n ≤ N := le_N (hN.trans' <| by norm_num1)
+  have hn₂ : 2 ≤ n := two_le_nValue (hN.trans' <| by norm_num1)
+  have : (2 * dValue N - 1) ^ n ≤ N := le_N (hN.trans' <| by norm_num1)
   refine' ((bound_aux hd.ne' hn₂).trans <| cast_le.2 <| roth_number_nat.mono this).trans_lt' _
   refine' (div_lt_div_of_lt hn <| pow_lt_pow_of_lt_left (bound hN) _ _).trans_le' _
   · exact div_nonneg (rpow_nonneg_of_nonneg (cast_nonneg _) _) (exp_pos _).le
-  · exact tsub_pos_of_lt (three_le_n_value <| hN.trans' <| by norm_num1)
+  · exact tsub_pos_of_lt (three_le_nValue <| hN.trans' <| by norm_num1)
   rw [← rpow_nat_cast, div_rpow (rpow_nonneg_of_nonneg hN₀.le _) (exp_pos _).le, ← rpow_mul hN₀.le,
     mul_comm (_ / _), mul_one_div, cast_sub hn₂, cast_two, same_sub_div hn.ne', exp_one_rpow,
     div_div, rpow_sub hN₀, rpow_one, div_div, div_eq_mul_inv]

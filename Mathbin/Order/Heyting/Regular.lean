@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.heyting.regular
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ protected theorem IsRegular.disjoint_compl_right_iff (hb : IsRegular b) : Disjoi
 def BooleanAlgebra.ofRegular (h : ∀ a : α, IsRegular (a ⊔ aᶜ)) : BooleanAlgebra α :=
   have : ∀ a : α, IsCompl a (aᶜ) := fun a =>
     ⟨disjoint_compl_right,
-      codisjoint_iff.2 <| by erw [← (h a).Eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
+      codisjoint_iff.2 <| by erw [← (h a).eq, compl_sup, inf_compl_eq_bot, compl_bot]⟩
   { ‹HeytingAlgebra α›,
     GeneralizedHeytingAlgebra.toDistribLattice with
     himp_eq := fun a b =>
@@ -233,7 +233,7 @@ instance : Inhabited (Regular α) :=
   ⟨⊥⟩
 
 instance : SemilatticeInf (Regular α) :=
-  coe_injective.SemilatticeInf _ coe_inf
+  coe_injective.semilatticeInf _ coe_inf
 
 instance : BoundedOrder (Regular α) :=
   BoundedOrder.lift coe (fun _ _ => id) coe_top coe_bot

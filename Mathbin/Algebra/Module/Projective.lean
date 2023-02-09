@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Antoine Labelle
 
 ! This file was ported from Lean 3 source module algebra.module.projective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,11 +125,10 @@ instance [hP : Projective R P] [hQ : Projective R Q] : Projective R (P × Q) :=
   rw [Module.projective_def']
   cases' hP.out with sP hsP
   cases' hQ.out with sQ hsQ
-  use coprod (lmap_domain R R (inl R P Q)) (lmap_domain R R (inr R P Q)) ∘ₗ sP.prod_map sQ
+  use coprod (lmapDomain R R (inl R P Q)) (lmapDomain R R (inr R P Q)) ∘ₗ sP.prod_map sQ
   ext <;>
-    simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prod_map_apply, map_zero,
-      coprod_apply, lmap_domain_apply, map_domain_zero, add_zero, zero_add, id_comp,
-      total_map_domain]
+    simp only [coe_inl, coe_inr, coe_comp, Function.comp_apply, prodMap_apply, map_zero,
+      coprod_apply, lmapDomain_apply, mapDomain_zero, add_zero, zero_add, id_comp, total_mapDomain]
   · rw [← fst_apply _, apply_total R]
     exact hsP x
   · rw [← snd_apply _, apply_total R]
@@ -148,15 +147,15 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
     choose s hs using h
     letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
     letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
-    letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @Dfinsupp.addCommMonoid ι (fun i => A i →₀ R) _
-    letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
-    let f i := lmap_domain R R (Dfinsupp.single i : A i → Π₀ i, A i)
+    letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @dfinsupp.add_comm_monoid ι (fun i => A i →₀ R) _
+    letI : Module R (Π₀ i : ι, A i →₀ R) := @dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
+    let f i := lmapDomain R R (Dfinsupp.single i : A i → Π₀ i, A i)
     use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
     ext (i x j)
-    simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
+    simp only [Dfinsupp.coprodMap, DirectSum.lof, total_mapDomain, coe_comp, coe_lsum, id_coe,
       LinearEquiv.coe_toLinearMap, finsuppLequivDfinsupp_symm_apply, Function.comp_apply,
       Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linearMap_apply, Dfinsupp.mapRange_single,
-      lmap_domain_apply, Dfinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
+      lmapDomain_apply, Dfinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
       Function.comp.left_id, Dfinsupp.single_apply]
     rw [← Dfinsupp.lapply_apply j, apply_total R]
     obtain rfl | hij := eq_or_ne i j

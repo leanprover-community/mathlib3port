@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.group_ring_action.subobjects
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ Case conversion may be inaccurate. Consider using '#align submonoid.mul_semiring
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) :
     MulSemiringAction H R :=
-  { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
+  { H.mulDistribMulAction, H.distribMulAction with smul := (· • ·) }
 #align submonoid.mul_semiring_action Submonoid.mulSemiringAction
 
 /- warning: subgroup.mul_semiring_action -> Subgroup.mulSemiringAction is a dubious translation:
@@ -51,6 +51,6 @@ Case conversion may be inaccurate. Consider using '#align subgroup.mul_semiring_
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) :
     MulSemiringAction H R :=
-  H.toSubmonoid.MulSemiringAction
+  H.toSubmonoid.mulSemiringAction
 #align subgroup.mul_semiring_action Subgroup.mulSemiringAction
 

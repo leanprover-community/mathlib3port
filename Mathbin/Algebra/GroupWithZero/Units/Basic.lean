@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.units.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align is_unit.ne_zero IsUnit.ne_zeroₓ'. -/
 theorem ne_zero [Nontrivial M₀] {a : M₀} (ha : IsUnit a) : a ≠ 0 :=
   let ⟨u, hu⟩ := ha
-  hu ▸ u.NeZero
+  hu ▸ u.ne_zero
 #align is_unit.ne_zero IsUnit.ne_zero
 
 /- warning: is_unit.mul_right_eq_zero -> IsUnit.mul_right_eq_zero is a dubious translation:
@@ -140,7 +140,7 @@ than partially) defined inverse function for some purposes, including for calcul
 
 Note that while this is in the `ring` namespace for brevity, it requires the weaker assumption
 `monoid_with_zero M₀` instead of `ring M₀`. -/
-noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.Unit⁻¹ : M₀ˣ) : M₀) else 0
+noncomputable def inverse : M₀ → M₀ := fun x => if h : IsUnit x then ((h.unit⁻¹ : M₀ˣ) : M₀) else 0
 #align ring.inverse Ring.inverse
 -/
 
@@ -363,7 +363,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.mul_inv' Units.mul_inv'ₓ'. -/
 @[simp]
 theorem mul_inv' (u : G₀ˣ) : (u : G₀) * u⁻¹ = 1 :=
-  mul_inv_cancel u.NeZero
+  mul_inv_cancel u.ne_zero
 #align units.mul_inv' Units.mul_inv'
 
 /- warning: units.inv_mul' -> Units.inv_mul' is a dubious translation:
@@ -374,7 +374,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.inv_mul' Units.inv_mul'ₓ'. -/
 @[simp]
 theorem inv_mul' (u : G₀ˣ) : (u⁻¹ : G₀) * u = 1 :=
-  inv_mul_cancel u.NeZero
+  inv_mul_cancel u.ne_zero
 #align units.inv_mul' Units.inv_mul'
 
 /- warning: units.mk0_inj -> Units.mk0_inj is a dubious translation:
@@ -396,7 +396,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align units.exists0 Units.exists0ₓ'. -/
 /-- In a group with zero, an existential over a unit can be rewritten in terms of `units.mk0`. -/
 theorem exists0 {p : G₀ˣ → Prop} : (∃ g : G₀ˣ, p g) ↔ ∃ (g : G₀)(hg : g ≠ 0), p (Units.mk0 g hg) :=
-  ⟨fun ⟨g, pg⟩ => ⟨g, g.NeZero, (g.mk0_val g.NeZero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
+  ⟨fun ⟨g, pg⟩ => ⟨g, g.ne_zero, (g.mk0_val g.ne_zero).symm ▸ pg⟩, fun ⟨g, hg, pg⟩ =>
     ⟨Units.mk0 g hg, pg⟩⟩
 #align units.exists0 Units.exists0
 
@@ -409,8 +409,8 @@ Case conversion may be inaccurate. Consider using '#align units.exists0' Units.e
 /-- An alternative version of `units.exists0`. This one is useful if Lean cannot
 figure out `p` when using `units.exists0` from right to left. -/
 theorem exists0' {p : ∀ g : G₀, g ≠ 0 → Prop} :
-    (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.NeZero :=
-  Iff.trans (by simp_rw [coe_mk0]) exists0.symm
+    (∃ (g : G₀)(hg : g ≠ 0), p g hg) ↔ ∃ g : G₀ˣ, p g g.ne_zero :=
+  Iff.trans (by simp_rw [val_mk0]) exists0.symm
 #align units.exists0' Units.exists0'
 
 /- warning: units.exists_iff_ne_zero -> Units.exists_iff_ne_zero is a dubious translation:
@@ -451,7 +451,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] (x : G₀), (Ne.{succ u1} G₀ x (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) -> (IsUnit.{u1} G₀ (MonoidWithZero.toMonoid.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2)) x)
 Case conversion may be inaccurate. Consider using '#align is_unit.mk0 IsUnit.mk0ₓ'. -/
 theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
-  (Units.mk0 x hx).IsUnit
+  (Units.mk0 x hx).isUnit
 #align is_unit.mk0 IsUnit.mk0
 
 /- warning: is_unit_iff_ne_zero -> isUnit_iff_ne_zero is a dubious translation:
@@ -487,7 +487,7 @@ instance (priority := 10) GroupWithZero.noZeroDivisors : NoZeroDivisors G₀ :=
     eq_zero_or_eq_zero_of_mul_eq_zero := fun a b h =>
       by
       contrapose! h
-      exact (Units.mk0 a h.1 * Units.mk0 b h.2).NeZero }
+      exact (Units.mk0 a h.1 * Units.mk0 b h.2).ne_zero }
 #align group_with_zero.no_zero_divisors GroupWithZero.noZeroDivisors
 
 #print GroupWithZero.cancelMonoidWithZero /-
@@ -550,7 +550,7 @@ but is expected to have type
   forall {G₀ : Type.{u1}} [_inst_2 : GroupWithZero.{u1} G₀] {a : G₀} {b : G₀}, Iff (Ne.{succ u1} G₀ (HDiv.hDiv.{u1, u1, u1} G₀ G₀ G₀ (instHDiv.{u1} G₀ (GroupWithZero.toDiv.{u1} G₀ _inst_2)) a b) (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (And (Ne.{succ u1} G₀ a (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))) (Ne.{succ u1} G₀ b (OfNat.ofNat.{u1} G₀ 0 (Zero.toOfNat0.{u1} G₀ (MonoidWithZero.toZero.{u1} G₀ (GroupWithZero.toMonoidWithZero.{u1} G₀ _inst_2))))))
 Case conversion may be inaccurate. Consider using '#align div_ne_zero_iff div_ne_zero_iffₓ'. -/
 theorem div_ne_zero_iff : a / b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
-  div_eq_zero_iff.Not.trans not_or
+  div_eq_zero_iff.not.trans not_or
 #align div_ne_zero_iff div_ne_zero_iff
 
 /- warning: ring.inverse_eq_inv -> Ring.inverse_eq_inv is a dubious translation:
@@ -618,11 +618,11 @@ Case conversion may be inaccurate. Consider using '#align group_with_zero_of_is_
 noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZero M]
     (h : ∀ a : M, IsUnit a ∨ a = 0) : GroupWithZero M :=
   { hM with
-    inv := fun a => if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹
+    inv := fun a => if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).unit⁻¹
     inv_zero := dif_pos rfl
     mul_inv_cancel := fun a h0 =>
       by
-      change (a * if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).Unit⁻¹) = 1
+      change (a * if h0 : a = 0 then 0 else ↑((h a).resolve_right h0).unit⁻¹) = 1
       rw [dif_neg h0, Units.mul_inv_eq_iff_eq_mul, one_mul, IsUnit.unit_spec]
     exists_pair_ne := Nontrivial.exists_pair_ne }
 #align group_with_zero_of_is_unit_or_eq_zero groupWithZeroOfIsUnitOrEqZero

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,8 +125,8 @@ end
 
 /-- Given `a` natural numeral, returns `(b, ⊢ a + 1 = b)`. -/
 unsafe def prove_succ' (c : instance_cache) (a : expr) : tactic (instance_cache × expr × expr) := do
-  let na ← a.toNat
-  let (c, b) ← c.ofNat (na + 1)
+  let na ← a.to_nat
+  let (c, b) ← c.of_nat (na + 1)
   let (c, p) ← prove_succ c a b
   return (c, b, p)
 #align norm_num.prove_succ' norm_num.prove_succ'
@@ -282,9 +282,9 @@ add_decl_doc prove_adc_nat
 /-- Given `a`,`b` natural numerals, returns `(r, ⊢ a + b = r)`. -/
 unsafe def prove_add_nat' (c : instance_cache) (a b : expr) :
     tactic (instance_cache × expr × expr) := do
-  let na ← a.toNat
-  let nb ← b.toNat
-  let (c, r) ← c.ofNat (na + nb)
+  let na ← a.to_nat
+  let nb ← b.to_nat
+  let (c, r) ← c.of_nat (na + nb)
   let (c, p) ← prove_add_nat c a b r
   return (c, r, p)
 #align norm_num.prove_add_nat' norm_num.prove_add_nat'
@@ -444,7 +444,7 @@ unsafe def prove_clear_denom'
   if na.den = 1 then prove_mul_nat c a d
   else do
     let [_, _, a, b] ← return a.get_app_args
-    let (c, b') ← c.ofNat (nd / na.den)
+    let (c, b') ← c.of_nat (nd / na.den)
     let (c, p₀) ← prove_ne_zero c b na.den
     let (c, _, p₁) ← prove_mul_nat c b b'
     let (c, r, p₂) ← prove_mul_nat c a b'
@@ -657,7 +657,7 @@ unsafe def prove_lt_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) 
   if na.den = 1 ∧ nb.den = 1 then prove_lt_nat ic a b
   else do
     let nd := na.den.lcm nb.den
-    let (ic, d) ← ic.ofNat nd
+    let (ic, d) ← ic.of_nat nd
     let (ic, p₀) ← prove_pos ic d
     let (ic, a', pa) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic a d na nd
     let (ic, b', pb) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic b d nb nd
@@ -673,20 +673,20 @@ theorem lt_neg_pos {α} [OrderedAddCommGroup α] (a b : α) (ha : 0 < a) (hb : 0
 unsafe def prove_lt_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr) :=
   match match_sign a, match_sign b with
-  | Sum.inl a, Sum.inl b => do
+  | sum.inl a, sum.inl b => do
     let-- we have to switch the order of `a` and `b` because `a < b ↔ -b < -a`
       (ic, p)
       ← prove_lt_nonneg_rat ic b a (-nb) (-na)
     ic `` neg_lt_neg [b, a, p]
-  | Sum.inl a, Sum.inr ff => do
+  | sum.inl a, sum.inr ff => do
     let (ic, p) ← prove_pos ic a
     ic `` neg_neg_of_pos [a, p]
-  | Sum.inl a, Sum.inr tt => do
+  | sum.inl a, sum.inr tt => do
     let (ic, pa) ← prove_pos ic a
     let (ic, pb) ← prove_pos ic b
     ic `` lt_neg_pos [a, b, pa, pb]
-  | Sum.inr ff, _ => prove_pos ic b
-  | Sum.inr tt, _ => prove_lt_nonneg_rat ic a b na nb
+  | sum.inr ff, _ => prove_pos ic b
+  | sum.inr tt, _ => prove_lt_nonneg_rat ic a b na nb
 #align norm_num.prove_lt_rat norm_num.prove_lt_rat
 
 theorem clear_denom_le {α} [LinearOrderedSemiring α] (a a' b b' d : α) (h₀ : 0 < d)
@@ -700,7 +700,7 @@ unsafe def prove_le_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) 
   if na.den = 1 ∧ nb.den = 1 then prove_le_nat ic a b
   else do
     let nd := na.den.lcm nb.den
-    let (ic, d) ← ic.ofNat nd
+    let (ic, d) ← ic.of_nat nd
     let (ic, p₀) ← prove_pos ic d
     let (ic, a', pa) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic a d na nd
     let (ic, b', pb) ← prove_clear_denom' (fun ic e _ => prove_ne_zero' ic e) ic b d nb nd
@@ -716,18 +716,18 @@ theorem le_neg_pos {α} [OrderedAddCommGroup α] (a b : α) (ha : 0 ≤ a) (hb :
 unsafe def prove_le_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr) :=
   match match_sign a, match_sign b with
-  | Sum.inl a, Sum.inl b => do
+  | sum.inl a, sum.inl b => do
     let (ic, p) ← prove_le_nonneg_rat ic a b (-na) (-nb)
     ic `` neg_le_neg [a, b, p]
-  | Sum.inl a, Sum.inr ff => do
+  | sum.inl a, sum.inr ff => do
     let (ic, p) ← prove_nonneg ic a
     ic `` neg_nonpos_of_nonneg [a, p]
-  | Sum.inl a, Sum.inr tt => do
+  | sum.inl a, sum.inr tt => do
     let (ic, pa) ← prove_nonneg ic a
     let (ic, pb) ← prove_nonneg ic b
     ic `` le_neg_pos [a, b, pa, pb]
-  | Sum.inr ff, _ => prove_nonneg ic b
-  | Sum.inr tt, _ => prove_le_nonneg_rat ic a b na nb
+  | sum.inr ff, _ => prove_nonneg ic b
+  | sum.inr tt, _ => prove_le_nonneg_rat ic a b na nb
 #align norm_num.prove_le_rat norm_num.prove_le_rat
 
 /-- Given `a`,`b` rational numerals, proves `⊢ a ≠ b`. This version tries to prove
@@ -995,7 +995,7 @@ unsafe def prove_add_nonneg_rat (ic : instance_cache) (a b c : expr) (na nb nc :
   if na.den = 1 ∧ nb.den = 1 then prove_add_nat ic a b c
   else do
     let nd := na.den.lcm nb.den
-    let (ic, d) ← ic.ofNat nd
+    let (ic, d) ← ic.of_nat nd
     let (ic, p₀) ← prove_ne_zero ic d nd
     let (ic, a', pa) ← prove_clear_denom ic a d na nd
     let (ic, b', pb) ← prove_clear_denom ic b d nb nd
@@ -1098,7 +1098,7 @@ unsafe def prove_mul_nonneg_rat (ic : instance_cache) (a b : expr) (na nb : ℚ)
     let (ic, d₁, a', pa) ← prove_clear_denom_simple ic a na
     let (ic, d₂, b', pb) ← prove_clear_denom_simple ic b nb
     let (ic, d, pd) ← prove_mul_nat ic d₁ d₂
-    let nd ← d.toNat
+    let nd ← d.to_nat
     let (ic, c', pc) ← prove_clear_denom ic c d nc nd
     let (ic, _, p) ← prove_mul_nat ic a' b'
     let (ic, p) ← ic.mk_app `` clear_denom_mul [a, a', b, b', c, c', d₁, d₂, d, pa, pb, pc, pd, p]
@@ -1121,29 +1121,29 @@ theorem mul_neg_neg {α} [Ring α] (a b c : α) (h : a * b = c) : -a * -b = c :=
 unsafe def prove_mul_rat (ic : instance_cache) (a b : expr) (na nb : ℚ) :
     tactic (instance_cache × expr × expr) :=
   match match_sign a, match_sign b with
-  | Sum.inl a, Sum.inl b => do
+  | sum.inl a, sum.inl b => do
     let (ic, c, p) ← prove_mul_nonneg_rat ic a b (-na) (-nb)
     let (ic, p) ← ic.mk_app `` mul_neg_neg [a, b, c, p]
     return (ic, c, p)
-  | Sum.inr ff, _ => do
+  | sum.inr ff, _ => do
     let (ic, z) ← ic.mk_app `` Zero.zero []
     let (ic, p) ← ic.mk_app `` zero_mul [b]
     return (ic, z, p)
-  | _, Sum.inr ff => do
+  | _, sum.inr ff => do
     let (ic, z) ← ic.mk_app `` Zero.zero []
     let (ic, p) ← ic.mk_app `` mul_zero [a]
     return (ic, z, p)
-  | Sum.inl a, Sum.inr tt => do
+  | sum.inl a, sum.inr tt => do
     let (ic, c, p) ← prove_mul_nonneg_rat ic a b (-na) nb
     let (ic, p) ← ic.mk_app `` mul_neg_pos [a, b, c, p]
     let (ic, c') ← ic.mk_app `` Neg.neg [c]
     return (ic, c', p)
-  | Sum.inr tt, Sum.inl b => do
+  | sum.inr tt, sum.inl b => do
     let (ic, c, p) ← prove_mul_nonneg_rat ic a b na (-nb)
     let (ic, p) ← ic.mk_app `` mul_pos_neg [a, b, c, p]
     let (ic, c') ← ic.mk_app `` Neg.neg [c]
     return (ic, c', p)
-  | Sum.inr tt, Sum.inr tt => prove_mul_nonneg_rat ic a b na nb
+  | sum.inr tt, sum.inr tt => prove_mul_nonneg_rat ic a b na nb
 #align norm_num.prove_mul_rat norm_num.prove_mul_rat
 
 theorem inv_neg {α} [DivisionRing α] (a b : α) (h : a⁻¹ = b) : (-a)⁻¹ = -b :=
@@ -1169,15 +1169,15 @@ theorem inv_div {α} [DivisionRing α] (a b : α) : (a / b)⁻¹ = b / a := by
 unsafe def prove_inv : instance_cache → expr → ℚ → tactic (instance_cache × expr × expr)
   | ic, e, n =>
     match match_sign e with
-    | Sum.inl e => do
+    | sum.inl e => do
       let (ic, e', p) ← prove_inv ic e (-n)
       let (ic, r) ← ic.mk_app `` Neg.neg [e']
       let (ic, p) ← ic.mk_app `` inv_neg [e, e', p]
       return (ic, r, p)
-    | Sum.inr ff => do
+    | sum.inr ff => do
       let (ic, p) ← ic.mk_app `` inv_zero []
       return (ic, e, p)
-    | Sum.inr tt =>
+    | sum.inr tt =>
       if n.num = 1 then
         if n.den = 1 then do
           let (ic, p) ← ic.mk_app `` inv_one []
@@ -1214,13 +1214,13 @@ unsafe def prove_div (ic : instance_cache) (a b : expr) (na nb : ℚ) :
 /-- Given `a` a rational numeral, returns `(b, ⊢ -a = b)`. -/
 unsafe def prove_neg (ic : instance_cache) (a : expr) : tactic (instance_cache × expr × expr) :=
   match match_sign a with
-  | Sum.inl a => do
+  | sum.inl a => do
     let (ic, p) ← ic.mk_app `` neg_neg [a]
     return (ic, a, p)
-  | Sum.inr ff => do
+  | sum.inr ff => do
     let (ic, p) ← ic.mk_app `` neg_zero []
     return (ic, a, p)
-  | Sum.inr tt => do
+  | sum.inr tt => do
     let (ic, a') ← ic.mk_app `` Neg.neg [a]
     let p ← mk_eq_refl a'
     return (ic, a', p)
@@ -1236,14 +1236,14 @@ theorem sub_neg {α} [AddGroup α] (a b c : α) (h : a + b = c) : a - -b = c := 
 /-- Given `a`,`b` rational numerals, returns `(c, ⊢ a - b = c)`. -/
 unsafe def prove_sub (ic : instance_cache) (a b : expr) : tactic (instance_cache × expr × expr) :=
   match match_sign b with
-  | Sum.inl b => do
+  | sum.inl b => do
     let (ic, c, p) ← prove_add_rat' ic a b
     let (ic, p) ← ic.mk_app `` sub_neg [a, b, c, p]
     return (ic, c, p)
-  | Sum.inr ff => do
+  | sum.inr ff => do
     let (ic, p) ← ic.mk_app `` sub_zero [a]
     return (ic, a, p)
-  | Sum.inr tt => do
+  | sum.inr tt => do
     let (ic, b', pb) ← prove_neg ic b
     let (ic, c, p) ← prove_add_rat' ic a b'
     let (ic, p) ← ic.mk_app `` sub_pos [a, b, b', c, pb, p]
@@ -1260,8 +1260,8 @@ theorem sub_nat_neg (a b c : ℕ) (h : a + c = b) : a - b = 0 :=
 
 /-- Given `a : nat`,`b : nat` natural numerals, returns `(c, ⊢ a - b = c)`. -/
 unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × expr) := do
-  let na ← a.toNat
-  let nb ← b.toNat
+  let na ← a.to_nat
+  let nb ← b.to_nat
   if nb ≤ na then do
       let (ic, c) ← ic (na - nb)
       let (ic, p) ← prove_add_nat ic b c a
@@ -1300,19 +1300,19 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
           let n₁ ← e₁ . to_rat
             let n₂ ← e₂ . to_rat
             let c ← infer_type e₁ >>= mk_instance_cache
-            Prod.snd <$> prove_mul_rat c e₁ e₂ n₁ n₂
-      | q( - $ ( e ) ) => do let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_neg c e
+            prod.snd <$> prove_mul_rat c e₁ e₂ n₁ n₂
+      | q( - $ ( e ) ) => do let c ← infer_type e >>= mk_instance_cache prod.snd <$> prove_neg c e
       |
         q( @ Sub.sub $ ( α ) $ ( inst ) $ ( a ) $ ( b ) )
         =>
         do
           let c ← mk_instance_cache α
-            if α = q( Nat ) then prove_sub_nat c a b else Prod.snd <$> prove_sub c a b
+            if α = q( Nat ) then prove_sub_nat c a b else prod.snd <$> prove_sub c a b
       |
         q( Inv.inv $ ( e ) )
         =>
         do
-          let n ← e . to_rat let c ← infer_type e >>= mk_instance_cache Prod.snd <$> prove_inv c e n
+          let n ← e . to_rat let c ← infer_type e >>= mk_instance_cache prod.snd <$> prove_inv c e n
       |
         q( $ ( e₁ ) / $ ( e₂ ) )
         =>
@@ -1320,7 +1320,7 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
           let n₁ ← e₁ . to_rat
             let n₂ ← e₂ . to_rat
             let c ← infer_type e₁ >>= mk_instance_cache
-            Prod.snd <$> prove_div c e₁ e₂ n₁ n₂
+            prod.snd <$> prove_div c e₁ e₂ n₁ n₂
       | _ => failed
 #align norm_num.eval_field norm_num.eval_field
 
@@ -1380,18 +1380,18 @@ theorem zpow_neg {α} [DivInvMonoid α] (a : α) (b : ℤ) (b' : ℕ) (c c' : α
 unsafe def prove_zpow (ic zc nc : instance_cache) (a : expr) (na : ℚ) (b : expr) :
     tactic (instance_cache × instance_cache × instance_cache × expr × expr) :=
   match match_sign b with
-  | Sum.inl b => do
+  | sum.inl b => do
     let (zc, nc, b', hb) ← prove_nat_uncast zc nc b
     let (nc, b0) ← prove_pos nc b'
     let (ic, c, h) ← prove_pow a na ic b'
     let (ic, c', hc) ← c.to_rat >>= prove_inv ic c
     let (ic, p) ← ic.mk_app `` zpow_neg [a, b, b', c, c', b0, hb, h, hc]
     pure (ic, zc, nc, c', p)
-  | Sum.inr ff => do
+  | sum.inr ff => do
     let (ic, o) ← ic.mk_app `` One.one []
     let (ic, p) ← ic.mk_app `` zpow_zero [a]
     pure (ic, zc, nc, o, p)
-  | Sum.inr tt => do
+  | sum.inr tt => do
     let (zc, nc, b', hb) ← prove_nat_uncast zc nc b
     let (ic, c, h) ← prove_pow a na ic b'
     let (ic, p) ← ic.mk_app `` zpow_pos [a, b, b', c, hb, h]
@@ -1407,24 +1407,24 @@ unsafe def eval_pow : expr → tactic (expr × expr)
       | q(ℕ) => do
         let (c, m') ← c `` Monoid.Pow []
         is_def_eq m m'
-        Prod.snd <$> prove_pow e₁ n₁ c e₂
+        prod.snd <$> prove_pow e₁ n₁ c e₂
       | q(ℤ) => do
         let (c, m') ← c `` DivInvMonoid.Pow []
         is_def_eq m m'
         let zc ← mk_instance_cache q(ℤ)
         let nc ← mk_instance_cache q(ℕ)
-        (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
+        (prod.snd ∘ prod.snd ∘ prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
       | _ => failed
   | q(Monoid.npow $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← infer_type e₁ >>= mk_instance_cache
-    Prod.snd <$> prove_pow e₁ n₁ c e₂
+    prod.snd <$> prove_pow e₁ n₁ c e₂
   | q(DivInvMonoid.zpow $(e₁) $(e₂)) => do
     let n₁ ← e₁.to_rat
     let c ← infer_type e₁ >>= mk_instance_cache
     let zc ← mk_instance_cache q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    (Prod.snd ∘ Prod.snd ∘ Prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
+    (prod.snd ∘ prod.snd ∘ prod.snd) <$> prove_zpow c zc nc e₁ n₁ e₂
   | _ => failed
 #align norm_num.eval_pow norm_num.eval_pow
 
@@ -1516,13 +1516,13 @@ theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c
         =>
         do
           let ( e , p ) ← mk_app ` ` LT.lt [ e₂ , e₁ ] >>= eval_ineq
-            Prod.mk e <$> mk_app ` ` gt_intro [ e₂ , e₁ , e , p ]
+            prod.mk e <$> mk_app ` ` gt_intro [ e₂ , e₁ , e , p ]
       |
         q( $ ( e₁ ) ≥ $ ( e₂ ) )
         =>
         do
           let ( e , p ) ← mk_app ` ` LE.le [ e₂ , e₁ ] >>= eval_ineq
-            Prod.mk e <$> mk_app ` ` ge_intro [ e₂ , e₁ , e , p ]
+            prod.mk e <$> mk_app ` ` ge_intro [ e₂ , e₁ , e , p ]
       |
         q( $ ( e₁ ) ≠ $ ( e₂ ) )
         =>
@@ -1533,7 +1533,7 @@ theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c
             if
               n₁ = n₂
               then
-              Prod.mk q( False ) <$> mk_app ` ` not_refl_false_intro [ e₁ ]
+              prod.mk q( False ) <$> mk_app ` ` not_refl_false_intro [ e₁ ]
               else
               do let ( _ , p ) ← prove_ne c e₁ e₂ n₁ n₂ true_intro p
       | _ => failed
@@ -1549,18 +1549,18 @@ unsafe def prove_nat_succ (ic : instance_cache) : expr → tactic (instance_cach
   | q(Nat.succ $(a)) => do
     let (ic, n, b, p₁) ← prove_nat_succ a
     let n' := n + 1
-    let (ic, c) ← ic.ofNat n'
+    let (ic, c) ← ic.of_nat n'
     let (ic, p₂) ← prove_add_nat ic b q(1) c
     return (ic, n', c, q(nat_succ_eq).mk_app [a, b, c, p₁, p₂])
   | e => do
-    let n ← e.toNat
+    let n ← e.to_nat
     let p ← mk_eq_refl e
     return (ic, n, e, p)
 #align norm_num.prove_nat_succ norm_num.prove_nat_succ
 
 theorem int_toNat_pos (a : ℤ) (b : ℕ)
     (h :
-      (haveI := @Nat.castCoe ℤ
+      (haveI := @nat.cast_coe ℤ
           b :
           ℤ) =
         a) :
@@ -1573,7 +1573,7 @@ theorem int_toNat_neg (a : ℤ) (h : 0 < a) : (-a).toNat = 0 := by
 
 theorem natAbs_pos (a : ℤ) (b : ℕ)
     (h :
-      (haveI := @Nat.castCoe ℤ
+      (haveI := @nat.cast_coe ℤ
           b :
           ℤ) =
         a) :
@@ -1582,7 +1582,7 @@ theorem natAbs_pos (a : ℤ) (b : ℕ)
 
 theorem natAbs_neg (a : ℤ) (b : ℕ)
     (h :
-      (haveI := @Nat.castCoe ℤ
+      (haveI := @nat.cast_coe ℤ
           b :
           ℤ) =
         a) :
@@ -1591,7 +1591,7 @@ theorem natAbs_neg (a : ℤ) (b : ℕ)
 
 theorem negSucc (a b : ℕ) (c : ℤ) (h₁ : a + 1 = b)
     (h₂ :
-      (haveI := @Nat.castCoe ℤ
+      (haveI := @nat.cast_coe ℤ
           b :
           ℤ) =
         c) :
@@ -1627,13 +1627,13 @@ unsafe def eval_nat_int : expr → tactic (expr × expr)
         let (_, _, b, p) ← prove_nat_uncast ic nc a
         pure (b, q(natAbs_neg).mk_app [a, b, p])
   | q(Int.negSucc $(a)) => do
-    let na ← a.toNat
+    let na ← a.to_nat
     let ic ← mk_instance_cache q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
     let nb := na + 1
-    let (nc, b) ← nc.ofNat nb
+    let (nc, b) ← nc.of_nat nb
     let (nc, p₁) ← prove_add_nat nc a q(1) b
-    let (ic, c) ← ic.ofNat nb
+    let (ic, c) ← ic.of_nat nb
     let (_, _, _, p₂) ← prove_nat_uncast ic nc c
     pure (q((-$(c) : ℤ)), q(negSucc).mk_app [a, b, c, p₁, p₂])
   | _ => failed
@@ -1641,7 +1641,7 @@ unsafe def eval_nat_int : expr → tactic (expr × expr)
 
 theorem int_to_nat_cast (a : ℕ) (b : ℤ)
     (h :
-      (haveI := @Nat.castCoe ℤ
+      (haveI := @nat.cast_coe ℤ
           a :
           ℤ) =
         b) :
@@ -1773,7 +1773,7 @@ unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Inter
   let success ← tactic.replace_at (norm_num.derive' step) ns loc.include_goal
   when loc <| try tactic.triv
   when ¬ns <| try tactic.contradiction
-  Monad.unlessb success <| done <|> fail "norm_num failed to simplify"
+  monad.unlessb success <| done <|> fail "norm_num failed to simplify"
 #align tactic.norm_num1 tactic.norm_num1
 
 /-- Normalize numerical expressions. It uses the provided `step` tactic to simplify the expression;
@@ -1980,7 +1980,7 @@ unsafe def norm_num_cmd (_ : parse <| tk "#norm_num") : lean.parser Unit := do
             let step
               ←-- Try simplifying the expression.
                 norm_num.get_step
-            Prod.fst <$> e step no_dflt hs attr_names)
+            prod.fst <$> e step no_dflt hs attr_names)
           ts
   -- Trace the result.
       when
@@ -2044,13 +2044,13 @@ unsafe def prove_div_mod (ic : instance_cache) :
           let (ic, c, p₂) ← prove_neg ic c'
           return (ic, c, q(int_div_neg).mk_app [a, b, c', c, p, p₂])
     | none => do
-      let nb ← b.toNat
+      let nb ← b.to_nat
       let na ← a.to_int
       let nq := na / nb
       let nr := na % nb
       let nm := nq * nr
-      let (ic, q) ← ic.ofInt nq
-      let (ic, r) ← ic.ofInt nr
+      let (ic, q) ← ic.of_int nq
+      let (ic, r) ← ic.of_int nr
       let (ic, m, pm) ← prove_mul_rat ic q b nq nb
       let (ic, a') ← ic.of_rat na
       let-- ensure `a` is in normal form
@@ -2088,11 +2088,11 @@ theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
     |
         q( $ ( a ) / $ ( b ) )
         =>
-        do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b ff
+        do let c ← infer_type a >>= mk_instance_cache prod.snd <$> prove_div_mod c a b ff
       |
         q( $ ( a ) % $ ( b ) )
         =>
-        do let c ← infer_type a >>= mk_instance_cache Prod.snd <$> prove_div_mod c a b tt
+        do let c ← infer_type a >>= mk_instance_cache prod.snd <$> prove_div_mod c a b tt
       |
         q( $ ( a ) ∣ $ ( b ) )
         =>

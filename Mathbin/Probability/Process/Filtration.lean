@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.filtration
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ instance : SupSet (Filtration ι m) :=
         obtain ⟨f, hf_mem, hfm'⟩ := hm'
         rw [← hfm']
         refine' (f.mono hij).trans _
-        have hfj_mem : f j ∈ (fun g : filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
+        have hfj_mem : f j ∈ (fun g : Filtration ι m => g j) '' s := ⟨f, hf_mem, rfl⟩
         exact le_supₛ hfj_mem
       le' := fun i => by
         refine' supₛ_le fun m' hm' => _
@@ -158,7 +158,7 @@ noncomputable instance : InfSet (Filtration ι m) :=
         simp only [h_nonempty, if_true, le_infₛ_iff, Set.mem_image, forall_exists_index, and_imp,
           forall_apply_eq_imp_iff₂]
         refine' fun f hf_mem => le_trans _ (f.mono hij)
-        have hfi_mem : f i ∈ (fun g : filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
+        have hfi_mem : f i ∈ (fun g : Filtration ι m => g i) '' s := ⟨f, hf_mem, rfl⟩
         exact infₛ_le hfi_mem
       le' := fun i => by
         by_cases h_nonempty : Set.Nonempty s
@@ -196,14 +196,14 @@ noncomputable instance : CompleteLattice (Filtration ι m)
   infₛ := infₛ
   inf_le s f hf_mem i := by
     have hs : s.nonempty := ⟨f, hf_mem⟩
-    simp only [Inf_def, hs, if_true]
+    simp only [infₛ_def, hs, if_true]
     exact infₛ_le ⟨f, hf_mem, rfl⟩
   le_inf s f h_forall i := by
     by_cases hs : s.nonempty
     swap;
-    · simp only [Inf_def, hs, if_false]
+    · simp only [infₛ_def, hs, if_false]
       exact f.le i
-    simp only [Inf_def, hs, if_true, le_infₛ_iff, Set.mem_image, forall_exists_index, and_imp,
+    simp only [infₛ_def, hs, if_true, le_infₛ_iff, Set.mem_image, forall_exists_index, and_imp,
       forall_apply_eq_imp_iff₂]
     exact fun g hg_mem => h_forall g hg_mem i
   top := ⊤
@@ -285,7 +285,7 @@ def natural (u : ι → Ω → β) (hum : ∀ i, StronglyMeasurable (u i)) : Fil
   le' i := by
     refine' supᵢ₂_le _
     rintro j hj s ⟨t, ht, rfl⟩
-    exact (hum j).Measurable ht
+    exact (hum j).measurable ht
 #align measure_theory.filtration.natural MeasureTheory.Filtration.natural
 
 section
@@ -298,13 +298,13 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
       natural (fun i => (s i).indicator (fun ω => 1 : Ω → β)) fun i =>
         stronglyMeasurable_one.indicator (hsm i) :=
   by
-  simp only [natural, filtration_of_set, measurable_space_supr_eq]
+  simp only [natural, filtrationOfSet, measurableSpace_supᵢ_eq]
   ext1 i
-  refine' le_antisymm (generate_from_le _) (generate_from_le _)
+  refine' le_antisymm (generateFrom_le _) (generateFrom_le _)
   · rintro _ ⟨j, hij, rfl⟩
-    refine' measurable_set_generate_from ⟨j, measurable_set_generate_from ⟨hij, _⟩⟩
-    rw [comap_eq_generate_from]
-    refine' measurable_set_generate_from ⟨{1}, measurable_set_singleton 1, _⟩
+    refine' measurableSet_generateFrom ⟨j, measurableSet_generateFrom ⟨hij, _⟩⟩
+    rw [comap_eq_generateFrom]
+    refine' measurableSet_generateFrom ⟨{1}, measurableSet_singleton 1, _⟩
     ext x
     simp [Set.indicator_const_preimage_eq_union]
   · rintro t ⟨n, ht⟩
@@ -315,14 +315,14 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
               measurable_set[MeasurableSpace.comap ((s n).indicator (fun ω => 1 : Ω → β)) mβ] t } ≤
         generate_from { t | ∃ (j : ι)(H : j ≤ i), s j = t }
       by exact this _ ht
-    refine' generate_from_le _
+    refine' generateFrom_le _
     rintro t ⟨hn, u, hu, hu'⟩
     obtain heq | heq | heq | heq := Set.indicator_const_preimage (s n) u (1 : β)
     pick_goal 4
     rw [Set.mem_singleton_iff] at heq
-    all_goals rw [HEq] at hu'; rw [← hu']
-    exacts[measurable_set_empty _, MeasurableSet.univ, measurable_set_generate_from ⟨n, hn, rfl⟩,
-      MeasurableSet.compl (measurable_set_generate_from ⟨n, hn, rfl⟩)]
+    all_goals rw [heq] at hu'; rw [← hu']
+    exacts[measurable_set_empty _, MeasurableSet.univ, measurableSet_generateFrom ⟨n, hn, rfl⟩,
+      MeasurableSet.compl (measurableSet_generateFrom ⟨n, hn, rfl⟩)]
 #align measure_theory.filtration.filtration_of_set_eq_natural MeasureTheory.Filtration.filtrationOfSet_eq_natural
 
 end
@@ -351,9 +351,9 @@ noncomputable def limitProcess (f : ι → Ω → E) (ℱ : Filtration ι m)
 
 theorem stronglyMeasurable_limitProcess : strongly_measurable[⨆ n, ℱ n] (limitProcess f ℱ μ) :=
   by
-  rw [limit_process]
+  rw [limitProcess]
   split_ifs with h h
-  exacts[(Classical.choose_spec h).1, strongly_measurable_zero]
+  exacts[(Classical.choose_spec h).1, stronglyMeasurable_zero]
 #align measure_theory.filtration.strongly_measurable_limit_process MeasureTheory.Filtration.stronglyMeasurable_limitProcess
 
 theorem stronglyMeasurable_limit_process' : strongly_measurable[m] (limitProcess f ℱ μ) :=
@@ -364,16 +364,16 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
     {ℱ : Filtration ℕ m} {f : ℕ → Ω → F} (hfm : ∀ n, AeStronglyMeasurable (f n) μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (limitProcess f ℱ μ) p μ :=
   by
-  rw [limit_process]
+  rw [limitProcess]
   split_ifs with h
   · refine'
-      ⟨strongly_measurable.ae_strongly_measurable
+      ⟨StronglyMeasurable.aeStronglyMeasurable
           ((Classical.choose_spec h).1.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)),
-        lt_of_le_of_lt (Lp.snorm_lim_le_liminf_snorm hfm _ (Classical.choose_spec h).2)
+        lt_of_le_of_lt (lp.snorm_lim_le_liminf_snorm hfm _ (Classical.choose_spec h).2)
           (lt_of_le_of_lt _ (Ennreal.coe_lt_top : ↑R < ∞))⟩
-    simp_rw [liminf_eq, eventually_at_top]
+    simp_rw [liminf_eq, eventually_atTop]
     exact supₛ_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
-  · exact zero_mem_ℒp
+  · exact zeroMemℒp
 #align measure_theory.filtration.mem_ℒp_limit_process_of_snorm_bdd MeasureTheory.Filtration.memℒpLimitProcessOfSnormBdd
 
 end Limit

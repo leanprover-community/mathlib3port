@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module order.copy
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop)
   by
   refine'
     {
-      Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf
+      Lattice.copy (@complete_lattice.to_lattice α c) le eq_le sup eq_sup inf
         eq_inf with
       le
       top

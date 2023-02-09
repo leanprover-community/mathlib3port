@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.punit_instances
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,12 +87,12 @@ instance : CancelCommMonoidWithZero PUnit := by
 
 instance : NormalizedGCDMonoid PUnit := by
   refine' {
-          gcd := fun _ _ => star
-          lcm := fun _ _ => star
+          gcd := fun _ _ => unit
+          lcm := fun _ _ => unit
           normUnit := fun x => 1
-          gcd_dvd_left := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
-          gcd_dvd_right := fun _ _ => ⟨star, Subsingleton.elim _ _⟩
-          dvd_gcd := fun _ _ _ _ _ => ⟨star, Subsingleton.elim _ _⟩
+          gcd_dvd_left := fun _ _ => ⟨unit, Subsingleton.elim _ _⟩
+          gcd_dvd_right := fun _ _ => ⟨unit, Subsingleton.elim _ _⟩
+          dvd_gcd := fun _ _ _ _ _ => ⟨unit, Subsingleton.elim _ _⟩
           gcd_mul_lcm := fun _ _ => ⟨1, Subsingleton.elim _ _⟩.. } <;>
       intros <;>
     exact Subsingleton.elim _ _
@@ -121,7 +121,7 @@ theorem norm_unit_eq : normUnit x = 1 :=
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'
         { PUnit.commRing, PUnit.completeBooleanAlgebra with
-          exists_add_of_le := fun _ _ _ => ⟨star, Subsingleton.elim _ _⟩.. } <;>
+          exists_add_of_le := fun _ _ _ => ⟨unit, Subsingleton.elim _ _⟩.. } <;>
       intros <;>
     trivial
 

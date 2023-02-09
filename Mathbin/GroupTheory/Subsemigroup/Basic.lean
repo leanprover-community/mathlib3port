@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -331,7 +331,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.mem_infi Subsemigroup.mem_infᵢₓ'. -/
 @[to_additive]
 theorem mem_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
-  simp only [infᵢ, mem_Inf, Set.forall_range_iff]
+  simp only [infᵢ, mem_infₛ, Set.forall_range_iff]
 #align subsemigroup.mem_infi Subsemigroup.mem_infᵢ
 #align add_subsemigroup.mem_infi AddSubsemigroup.mem_infᵢ
 
@@ -343,7 +343,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subsemigroup.coe_infi Subsemigroup.coe_infᵢₓ'. -/
 @[simp, norm_cast, to_additive]
 theorem coe_infᵢ {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
-  simp only [infᵢ, coe_Inf, Set.binterᵢ_range]
+  simp only [infᵢ, coe_infₛ, Set.binterᵢ_range]
 #align subsemigroup.coe_infi Subsemigroup.coe_infᵢ
 #align add_subsemigroup.coe_infi AddSubsemigroup.coe_infᵢ
 

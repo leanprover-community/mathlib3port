@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.rees_algebra
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,7 @@ def reesAlgebra : Subalgebra R R[X]
     exact Ideal.add_mem _ (hf i) (hg i)
   zero_mem' i := Ideal.zero_mem _
   algebraMap_mem' r i := by
-    rw [algebra_map_apply, coeff_C]
+    rw [algebraMap_apply, coeff_c]
     split_ifs
     · subst h
       simp

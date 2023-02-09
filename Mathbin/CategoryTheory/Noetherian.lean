@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.noetherian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,22 +78,22 @@ variable [HasZeroMorphisms C] [HasZeroObject C]
 theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
     ∃ Y : Subobject X, Simple (Y : C) :=
   by
-  haveI : Nontrivial (subobject X) := nontrivial_of_not_is_zero h
-  haveI := isAtomic_of_orderBot_wellFounded_lt (artinian_object.subobject_lt_well_founded X)
-  have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)
-  obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot
-  exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩
+  haveI : Nontrivial (Subobject X) := nontrivial_of_not_isZero h
+  haveI := isAtomic_of_orderBot_wellFounded_lt (ArtinianObject.subobject_lt_wellFounded X)
+  have := IsAtomic.eq_bot_or_exists_atom_le (⊤ : Subobject X)
+  obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : Subobject X)).resolve_left top_ne_bot
+  exact ⟨Y, (subobject_simple_iff_isAtom _).mpr s.1⟩
 #align category_theory.exists_simple_subobject CategoryTheory.exists_simple_subobject
 
 /-- Choose an arbitrary simple subobject of a non-zero artinian object. -/
 noncomputable def simpleSubobject {X : C} [ArtinianObject X] (h : ¬IsZero X) : C :=
-  (exists_simple_subobject h).some
+  (exists_simple_subobject h).choose
 #align category_theory.simple_subobject CategoryTheory.simpleSubobject
 
 /-- The monomorphism from the arbitrary simple subobject of a non-zero artinian object. -/
 noncomputable def simpleSubobjectArrow {X : C} [ArtinianObject X] (h : ¬IsZero X) :
     simpleSubobject h ⟶ X :=
-  (exists_simple_subobject h).some.arrow deriving Mono
+  (exists_simple_subobject h).choose.arrow deriving Mono
 #align category_theory.simple_subobject_arrow CategoryTheory.simpleSubobjectArrow
 
 instance {X : C} [ArtinianObject X] (h : ¬IsZero X) : Simple (simpleSubobject h) :=

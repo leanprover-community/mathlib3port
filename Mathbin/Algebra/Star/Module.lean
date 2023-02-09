@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -146,8 +146,8 @@ variable (A)
 as a linear equivalence. -/
 @[simps]
 def StarModule.decomposeProdAdjoint : A ≃ₗ[R] selfAdjoint A × skewAdjoint A :=
-  LinearEquiv.ofLinear ((selfAdjointPart R).Prod (skewAdjointPart R))
-    ((selfAdjoint.submodule R A).Subtype.coprod (skewAdjoint.submodule R A).Subtype)
+  LinearEquiv.ofLinear ((selfAdjointPart R).prod (skewAdjointPart R))
+    ((selfAdjoint.submodule R A).subtype.coprod (skewAdjoint.submodule R A).subtype)
     (by ext <;> simp) (LinearMap.ext <| StarModule.selfAdjointPart_add_skewAdjointPart R)
 #align star_module.decompose_prod_adjoint StarModule.decomposeProdAdjoint
 

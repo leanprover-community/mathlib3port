@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.karoubi
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,8 +69,7 @@ theorem ext {P Q : Karoubi C} (h_X : P.x = Q.x) (h_p : P.p ≫ eqToHom h_X = eqT
   cases Q
   dsimp at h_X h_p
   subst h_X
-  simpa only [true_and_iff, eq_self_iff_true, id_comp, eq_to_hom_refl, heq_iff_eq, comp_id] using
-    h_p
+  simpa only [true_and_iff, eq_self_iff_true, id_comp, eqToHom_refl, heq_iff_eq, comp_id] using h_p
 #align category_theory.idempotents.karoubi.ext CategoryTheory.Idempotents.Karoubi.ext
 
 /-- A morphism `P ⟶ Q` in the category `karoubi C` is a morphism in the underlying category
@@ -144,7 +143,7 @@ theorem eqToHom_f {P Q : Karoubi C} (h : P = Q) :
     Karoubi.Hom.f (eqToHom h) = P.p ≫ eqToHom (congr_arg Karoubi.x h) :=
   by
   subst h
-  simp only [eq_to_hom_refl, karoubi.id_eq, comp_id]
+  simp only [eqToHom_refl, Karoubi.id_eq, comp_id]
 #align category_theory.idempotents.karoubi.eq_to_hom_f CategoryTheory.Idempotents.Karoubi.eqToHom_f
 
 end Karoubi
@@ -233,8 +232,8 @@ instance : IsIdempotentComplete (Karoubi C) :=
 
 instance [IsIdempotentComplete C] : EssSurj (toKaroubi C) :=
   ⟨fun P => by
-    have h : is_idempotent_complete C := inferInstance
-    rcases is_idempotent_complete.idempotents_split P.X P.p P.idem with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
+    have h : IsIdempotentComplete C := inferInstance
+    rcases IsIdempotentComplete.idempotents_split P.X P.p P.idem with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
     use Y
     exact
       Nonempty.intro
@@ -267,13 +266,13 @@ is actually a direct factor in the category `karoubi C`. -/
 theorem decomp_id (P : Karoubi C) : 𝟙 P = decompIdI P ≫ decompIdP P :=
   by
   ext
-  simp only [comp_f, id_eq, P.idem, decomp_id_i, decomp_id_p]
+  simp only [comp_f, id_eq, P.idem, decompIdI, decompIdP]
 #align category_theory.idempotents.karoubi.decomp_id CategoryTheory.Idempotents.Karoubi.decomp_id
 
 theorem decomp_p (P : Karoubi C) : (toKaroubi C).map P.p = decompIdP P ≫ decompIdI P :=
   by
   ext
-  simp only [comp_f, decomp_id_p_f, decomp_id_i_f, P.idem, to_karoubi_map_f]
+  simp only [comp_f, decompIdP_f, decompIdI_f, P.idem, toKaroubi_map_f]
 #align category_theory.idempotents.karoubi.decomp_p CategoryTheory.Idempotents.Karoubi.decomp_p
 
 theorem decompIdI_toKaroubi (X : C) : decompIdI ((toKaroubi C).obj X) = 𝟙 _ :=
@@ -292,14 +291,14 @@ theorem decompIdI_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     f ≫ decompIdI _ = decompIdI _ ≫ ⟨f.f, by erw [comp_id, id_comp]⟩ :=
   by
   ext
-  simp only [comp_f, decomp_id_i_f, karoubi.comp_p, karoubi.p_comp]
+  simp only [comp_f, decompIdI_f, Karoubi.comp_p, Karoubi.p_comp]
 #align category_theory.idempotents.karoubi.decomp_id_i_naturality CategoryTheory.Idempotents.Karoubi.decompIdI_naturality
 
 theorem decompIdP_naturality {P Q : Karoubi C} (f : P ⟶ Q) :
     decompIdP P ≫ f = (⟨f.f, by erw [comp_id, id_comp]⟩ : (P.x : Karoubi C) ⟶ Q.x) ≫ decompIdP Q :=
   by
   ext
-  simp only [comp_f, decomp_id_p_f, karoubi.comp_p, karoubi.p_comp]
+  simp only [comp_f, decompIdP_f, Karoubi.comp_p, Karoubi.p_comp]
 #align category_theory.idempotents.karoubi.decomp_id_p_naturality CategoryTheory.Idempotents.Karoubi.decompIdP_naturality
 
 @[simp]

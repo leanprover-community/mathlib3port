@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.filtered_colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -77,7 +77,7 @@ theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σj, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) :
     colimit_smul_aux r x = colimit_smul_aux r y :=
   by
-  apply M.mk_eq
+  apply m.mk_eq
   obtain ⟨k, f, g, hfg⟩ := h
   use k, f, g
   simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg
@@ -87,10 +87,10 @@ theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σj, F.obj j)
 /-- Scalar multiplication in the colimit. See also `colimit_smul_aux`. -/
 instance colimitHasSmul : SMul R M
     where smul r x := by
-    refine' Quot.lift (colimit_smul_aux F r) _ x
+    refine' Quot.lift (colimitSmulAux F r) _ x
     intro x y h
-    apply colimit_smul_aux_eq_of_rel
-    apply types.filtered_colimit.rel_of_quot_rel
+    apply colimitSmulAux_eq_of_rel
+    apply Types.FilteredColimit.rel_of_quot_rel
     exact h
 #align Module.filtered_colimits.colimit_has_smul ModuleCat.FilteredColimits.colimitHasSmul
 
@@ -111,9 +111,9 @@ instance colimitModule : Module R M
       colimit_smul_mk_eq F r ⟨j, _⟩, mul_smul]
   smul_add r x y := by
     apply Quot.induction_on₂ x y; clear x y; intro x y; cases' x with i x; cases' y with j y
-    erw [colimit_add_mk_eq _ ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j),
+    erw [colimit_add_mk_eq _ ⟨i, x⟩ ⟨j, y⟩ (max i j) (leftToMax i j) (rightToMax i j),
       colimit_smul_mk_eq, smul_add, colimit_smul_mk_eq, colimit_smul_mk_eq,
-      colimit_add_mk_eq _ ⟨i, _⟩ ⟨j, _⟩ (max' i j) (left_to_max i j) (right_to_max i j),
+      colimit_add_mk_eq _ ⟨i, _⟩ ⟨j, _⟩ (max i j) (leftToMax i j) (rightToMax i j),
       LinearMap.map_smul, LinearMap.map_smul]
     rfl
   smul_zero r :=
@@ -189,7 +189,7 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit F)
           (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
             (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) }
 #align Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits

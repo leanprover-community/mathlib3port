@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.analysis.topology
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ def ofEquiv (E : σ ≃ τ) : Ctop α σ → Ctop α τ
 #align ctop.of_equiv Ctop.ofEquiv
 
 @[simp]
-theorem ofEquiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
+theorem ofEquiv_val (E : σ ≃ τ) (F : Ctop α σ) (a : τ) : F.ofEquiv E a = F (E.symm a) := by
   cases F <;> rfl
 #align ctop.of_equiv_val Ctop.ofEquiv_val
 
@@ -130,11 +130,11 @@ namespace Ctop.Realizer
 
 protected theorem is_basis [T : TopologicalSpace α] (F : Realizer α) :
     TopologicalSpace.IsTopologicalBasis (Set.range F.f.f) := by
-  have := to_topsp_is_topological_basis F.F <;> rwa [F.eq] at this
+  have := toTopsp_isTopologicalBasis F.F <;> rwa [F.eq] at this
 #align ctop.realizer.is_basis Ctop.Realizer.is_basis
 
 protected theorem mem_nhds [T : TopologicalSpace α] (F : Realizer α) {s : Set α} {a : α} :
-    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by have := mem_nhds_to_topsp F.F <;> rwa [F.eq] at this
+    s ∈ 𝓝 a ↔ ∃ b, a ∈ F.f b ∧ F.f b ⊆ s := by have := mem_nhds_toTopsp F.F <;> rwa [F.eq] at this
 #align ctop.realizer.mem_nhds Ctop.Realizer.mem_nhds
 
 theorem isOpen_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} :
@@ -158,7 +158,7 @@ theorem mem_interior_iff [TopologicalSpace α] (F : Realizer α) {s : Set α} {a
 #align ctop.realizer.mem_interior_iff Ctop.Realizer.mem_interior_iff
 
 protected theorem isOpen [TopologicalSpace α] (F : Realizer α) (s : F.σ) : IsOpen (F.f s) :=
-  isOpen_iff_nhds.2 fun a m => by simpa using F.mem_nhds.2 ⟨s, m, subset.refl _⟩
+  isOpen_iff_nhds.2 fun a m => by simpa using F.mem_nhds.2 ⟨s, m, Subset.refl _⟩
 #align ctop.realizer.is_open Ctop.Realizer.isOpen
 
 theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ}
@@ -166,7 +166,7 @@ theorem ext' [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ}
   by
   refine' eq_of_nhds_eq_nhds fun x => _
   ext s
-  rw [mem_nhds_to_topsp, H]
+  rw [mem_nhds_toTopsp, H]
 #align ctop.realizer.ext' Ctop.Realizer.ext'
 
 theorem ext [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H₁ : ∀ a, IsOpen (F a))
@@ -192,19 +192,19 @@ protected def id : Realizer α :=
 
 /-- Replace the representation type of a `ctop` realizer. -/
 def ofEquiv (F : Realizer α) (E : F.σ ≃ τ) : Realizer α :=
-  ⟨τ, F.f.of_equiv E,
+  ⟨τ, F.f.ofEquiv E,
     ext' fun a s =>
       F.mem_nhds.trans <|
         ⟨fun ⟨s, h⟩ => ⟨E s, by simpa using h⟩, fun ⟨t, h⟩ => ⟨E.symm t, by simpa using h⟩⟩⟩
 #align ctop.realizer.of_equiv Ctop.Realizer.ofEquiv
 
 @[simp]
-theorem ofEquiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
+theorem ofEquiv_σ (F : Realizer α) (E : F.σ ≃ τ) : (F.ofEquiv E).σ = τ :=
   rfl
 #align ctop.realizer.of_equiv_σ Ctop.Realizer.ofEquiv_σ
 
 @[simp]
-theorem ofEquiv_f (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.of_equiv E).f s = F.f (E.symm s) := by
+theorem ofEquiv_f (F : Realizer α) (E : F.σ ≃ τ) (s : τ) : (F.ofEquiv E).f s = F.f (E.symm s) := by
   delta of_equiv <;> simp
 #align ctop.realizer.of_equiv_F Ctop.Realizer.ofEquiv_f
 
@@ -218,7 +218,7 @@ protected def nhds (F : Realizer α) (a : α) : (𝓝 a).Realizer :=
       inf_le_right := fun ⟨x, h₁⟩ ⟨y, h₂⟩ z h => (F.f.inter_sub x y a ⟨h₁, h₂⟩ h).2 },
     filter_eq <|
       Set.ext fun x =>
-        ⟨fun ⟨⟨s, as⟩, h⟩ => mem_nhds_iff.2 ⟨_, h, F.IsOpen _, as⟩, fun h =>
+        ⟨fun ⟨⟨s, as⟩, h⟩ => mem_nhds_iff.2 ⟨_, h, F.isOpen _, as⟩, fun h =>
           let ⟨s, h, as⟩ := F.mem_nhds.1 h
           ⟨⟨s, h⟩, as⟩⟩⟩
 #align ctop.realizer.nhds Ctop.Realizer.nhds
@@ -235,7 +235,7 @@ theorem nhds_f (F : Realizer α) (a : α) (s) : (F.nhds a).f s = F.f s.1 :=
 
 theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.Realizer) (R : Realizer α) {a : α} :
     Tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.f t → ∃ s, ∀ x ∈ F.f s, m x ∈ R.f t :=
-  (F.tendsto_iffₓ _ (R.nhds a)).trans Subtype.forall
+  (F.tendsto_iff _ (R.nhds a)).trans Subtype.forall
 #align ctop.realizer.tendsto_nhds_iff Ctop.Realizer.tendsto_nhds_iff
 
 end Ctop.Realizer
@@ -265,7 +265,7 @@ theorem locallyFinite_iff_exists_realizer [TopologicalSpace α] (F : Realizer α
     ⟨⟨fun x => ⟨g₂ x, (h₂ x).1⟩, fun x =>
         Finite.fintype <|
           let ⟨h, h'⟩ := h₁ x
-          h'.Subset fun i hi => hi.mono (inter_subset_inter_right _ (h₂ x).2)⟩⟩,
+          h'.subset fun i hi => hi.mono (inter_subset_inter_right _ (h₂ x).2)⟩⟩,
     fun ⟨R⟩ => R.to_locallyFinite⟩
 #align locally_finite_iff_exists_realizer locallyFinite_iff_exists_realizer
 

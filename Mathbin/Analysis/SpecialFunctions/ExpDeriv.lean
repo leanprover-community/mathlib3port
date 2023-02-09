@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exp_deriv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,14 +38,14 @@ theorem hasDerivAt_exp (x : ℂ) : HasDerivAt exp (exp x) x :=
   by
   rw [hasDerivAt_iff_isOCat_nhds_zero]
   have : (1 : ℕ) < 2 := by norm_num
-  refine' (is_O.of_bound ‖exp x‖ _).trans_isOCat (is_o_pow_id this)
+  refine' (IsO.of_bound ‖exp x‖ _).trans_isOCat (isOCat_pow_id this)
   filter_upwards [Metric.ball_mem_nhds (0 : ℂ) zero_lt_one]
   simp only [Metric.mem_ball, dist_zero_right, norm_pow]
   exact fun z hz => exp_bound_sq x z hz.le
 #align complex.has_deriv_at_exp Complex.hasDerivAt_exp
 
 theorem differentiable_exp : Differentiable 𝕜 exp := fun x =>
-  (hasDerivAt_exp x).DifferentiableAt.restrictScalars 𝕜
+  (hasDerivAt_exp x).differentiableAt.restrict_scalars 𝕜
 #align complex.differentiable_exp Complex.differentiable_exp
 
 theorem differentiableAt_exp {x : ℂ} : DifferentiableAt 𝕜 exp x :=
@@ -76,7 +76,7 @@ theorem contDiff_exp : ∀ {n}, ContDiff 𝕜 n exp :=
 #align complex.cont_diff_exp Complex.contDiff_exp
 
 theorem hasStrictDerivAt_exp (x : ℂ) : HasStrictDerivAt exp (exp x) x :=
-  contDiff_exp.ContDiffAt.has_strict_deriv_at' (hasDerivAt_exp x) le_rfl
+  contDiff_exp.contDiffAt.has_strict_deriv_at' (hasDerivAt_exp x) le_rfl
 #align complex.has_strict_deriv_at_exp Complex.hasStrictDerivAt_exp
 
 theorem hasStrictFderivAt_exp_real (x : ℂ) : HasStrictFderivAt exp (exp x • (1 : ℂ →L[ℝ] ℂ)) x :=
@@ -111,13 +111,13 @@ theorem HasDerivWithinAt.cexp (hf : HasDerivWithinAt f f' s x) :
 
 theorem derivWithin_cexp (hf : DifferentiableWithinAt 𝕜 f s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun x => Complex.exp (f x)) s x = Complex.exp (f x) * derivWithin f s x :=
-  hf.HasDerivWithinAt.cexp.derivWithin hxs
+  hf.hasDerivWithinAt.cexp.derivWithin hxs
 #align deriv_within_cexp derivWithin_cexp
 
 @[simp]
 theorem deriv_cexp (hc : DifferentiableAt 𝕜 f x) :
     deriv (fun x => Complex.exp (f x)) x = Complex.exp (f x) * deriv f x :=
-  hc.HasDerivAt.cexp.deriv
+  hc.hasDerivAt.cexp.deriv
 #align deriv_cexp deriv_cexp
 
 end
@@ -139,18 +139,18 @@ theorem HasFderivWithinAt.cexp (hf : HasFderivWithinAt f f' s x) :
 
 theorem HasFderivAt.cexp (hf : HasFderivAt f f' x) :
     HasFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
-  hasFderivWithinAt_univ.1 <| hf.HasFderivWithinAt.cexp
+  hasFderivWithinAt_univ.1 <| hf.hasFderivWithinAt.cexp
 #align has_fderiv_at.cexp HasFderivAt.cexp
 
 theorem DifferentiableWithinAt.cexp (hf : DifferentiableWithinAt 𝕜 f s x) :
     DifferentiableWithinAt 𝕜 (fun x => Complex.exp (f x)) s x :=
-  hf.HasFderivWithinAt.cexp.DifferentiableWithinAt
+  hf.hasFderivWithinAt.cexp.differentiableWithinAt
 #align differentiable_within_at.cexp DifferentiableWithinAt.cexp
 
 @[simp]
 theorem DifferentiableAt.cexp (hc : DifferentiableAt 𝕜 f x) :
     DifferentiableAt 𝕜 (fun x => Complex.exp (f x)) x :=
-  hc.HasFderivAt.cexp.DifferentiableAt
+  hc.hasFderivAt.cexp.differentiableAt
 #align differentiable_at.cexp DifferentiableAt.cexp
 
 theorem DifferentiableOn.cexp (hc : DifferentiableOn 𝕜 f s) :
@@ -168,7 +168,7 @@ theorem ContDiff.cexp {n} (h : ContDiff 𝕜 n f) : ContDiff 𝕜 n fun x => Com
 
 theorem ContDiffAt.cexp {n} (hf : ContDiffAt 𝕜 n f x) :
     ContDiffAt 𝕜 n (fun x => Complex.exp (f x)) x :=
-  Complex.contDiff_exp.ContDiffAt.comp x hf
+  Complex.contDiff_exp.contDiffAt.comp x hf
 #align cont_diff_at.cexp ContDiffAt.cexp
 
 theorem ContDiffOn.cexp {n} (hf : ContDiffOn 𝕜 n f s) :
@@ -178,7 +178,7 @@ theorem ContDiffOn.cexp {n} (hf : ContDiffOn 𝕜 n f s) :
 
 theorem ContDiffWithinAt.cexp {n} (hf : ContDiffWithinAt 𝕜 n f s x) :
     ContDiffWithinAt 𝕜 n (fun x => Complex.exp (f x)) s x :=
-  Complex.contDiff_exp.ContDiffAt.comp_contDiffWithinAt x hf
+  Complex.contDiff_exp.contDiffAt.comp_contDiffWithinAt x hf
 #align cont_diff_within_at.cexp ContDiffWithinAt.cexp
 
 end
@@ -199,7 +199,7 @@ theorem contDiff_exp {n} : ContDiff ℝ n exp :=
   Complex.contDiff_exp.real_of_complex
 #align real.cont_diff_exp Real.contDiff_exp
 
-theorem differentiable_exp : Differentiable ℝ exp := fun x => (hasDerivAt_exp x).DifferentiableAt
+theorem differentiable_exp : Differentiable ℝ exp := fun x => (hasDerivAt_exp x).differentiableAt
 #align real.differentiable_exp Real.differentiable_exp
 
 theorem differentiableAt_exp : DifferentiableAt ℝ exp x :=
@@ -244,13 +244,13 @@ theorem HasDerivWithinAt.exp (hf : HasDerivWithinAt f f' s x) :
 
 theorem derivWithin_exp (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => Real.exp (f x)) s x = Real.exp (f x) * derivWithin f s x :=
-  hf.HasDerivWithinAt.exp.derivWithin hxs
+  hf.hasDerivWithinAt.exp.derivWithin hxs
 #align deriv_within_exp derivWithin_exp
 
 @[simp]
 theorem deriv_exp (hc : DifferentiableAt ℝ f x) :
     deriv (fun x => Real.exp (f x)) x = Real.exp (f x) * deriv f x :=
-  hc.HasDerivAt.exp.deriv
+  hc.hasDerivAt.exp.deriv
 #align deriv_exp deriv_exp
 
 end
@@ -269,7 +269,7 @@ theorem ContDiff.exp {n} (hf : ContDiff ℝ n f) : ContDiff ℝ n fun x => Real.
 #align cont_diff.exp ContDiff.exp
 
 theorem ContDiffAt.exp {n} (hf : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun x => Real.exp (f x)) x :=
-  Real.contDiff_exp.ContDiffAt.comp x hf
+  Real.contDiff_exp.contDiffAt.comp x hf
 #align cont_diff_at.exp ContDiffAt.exp
 
 theorem ContDiffOn.exp {n} (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => Real.exp (f x)) s :=
@@ -278,7 +278,7 @@ theorem ContDiffOn.exp {n} (hf : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x
 
 theorem ContDiffWithinAt.exp {n} (hf : ContDiffWithinAt ℝ n f s x) :
     ContDiffWithinAt ℝ n (fun x => Real.exp (f x)) s x :=
-  Real.contDiff_exp.ContDiffAt.comp_contDiffWithinAt x hf
+  Real.contDiff_exp.contDiffAt.comp_contDiffWithinAt x hf
 #align cont_diff_within_at.exp ContDiffWithinAt.exp
 
 theorem HasFderivWithinAt.exp (hf : HasFderivWithinAt f f' s x) :
@@ -298,13 +298,13 @@ theorem HasStrictFderivAt.exp (hf : HasStrictFderivAt f f' x) :
 
 theorem DifferentiableWithinAt.exp (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.exp (f x)) s x :=
-  hf.HasFderivWithinAt.exp.DifferentiableWithinAt
+  hf.hasFderivWithinAt.exp.differentiableWithinAt
 #align differentiable_within_at.exp DifferentiableWithinAt.exp
 
 @[simp]
 theorem DifferentiableAt.exp (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => Real.exp (f x)) x :=
-  hc.HasFderivAt.exp.DifferentiableAt
+  hc.hasFderivAt.exp.differentiableAt
 #align differentiable_at.exp DifferentiableAt.exp
 
 theorem DifferentiableOn.exp (hc : DifferentiableOn ℝ f s) :
@@ -318,13 +318,13 @@ theorem Differentiable.exp (hc : Differentiable ℝ f) : Differentiable ℝ fun 
 
 theorem fderivWithin_exp (hf : DifferentiableWithinAt ℝ f s x) (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => Real.exp (f x)) s x = Real.exp (f x) • fderivWithin ℝ f s x :=
-  hf.HasFderivWithinAt.exp.fderivWithin hxs
+  hf.hasFderivWithinAt.exp.fderivWithin hxs
 #align fderiv_within_exp fderivWithin_exp
 
 @[simp]
 theorem fderiv_exp (hc : DifferentiableAt ℝ f x) :
     fderiv ℝ (fun x => Real.exp (f x)) x = Real.exp (f x) • fderiv ℝ f x :=
-  hc.HasFderivAt.exp.fderiv
+  hc.hasFderivAt.exp.fderiv
 #align fderiv_exp fderiv_exp
 
 end

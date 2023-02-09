@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.lex
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,13 +53,13 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι 
   by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
   classical
-    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_toSet.WellFoundedOn
-    obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
+    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_toSet.wellFoundedOn
+    obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_neLocus.2 hlt.ne⟩, hlt⟩
     exact
       ⟨i, fun k hk =>
         ⟨hle k,
           of_not_not fun h =>
-            hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
+            hl ⟨k, mem_neLocus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
         hi⟩
 #align dfinsupp.lex_lt_of_lt_of_preorder Dfinsupp.lex_lt_of_lt_of_preorder
 
@@ -73,8 +73,8 @@ theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y 
 instance Lex.isStrictOrder [LinearOrder ι] [∀ i, PartialOrder (α i)] :
     IsStrictOrder (Lex (Π₀ i, α i)) (· < ·) :=
   let i : IsStrictOrder (Lex (∀ i, α i)) (· < ·) := Pi.Lex.isStrictOrder
-  { irrefl := toLex.Surjective.forall.2 fun a => @irrefl _ _ i.to_isIrrefl a
-    trans := toLex.Surjective.forall₃.2 fun a b c => @trans _ _ i.to_isTrans a b c }
+  { irrefl := toLex.surjective.forall.2 fun a => @irrefl _ _ i.to_isIrrefl a
+    trans := toLex.surjective.forall₃.2 fun a b c => @trans _ _ i.to_isTrans a b c }
 #align dfinsupp.lex.is_strict_order Dfinsupp.Lex.isStrictOrder
 
 variable [LinearOrder ι]
@@ -100,13 +100,13 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
       match (motive := ∀ y, (f.neLocus g).min = y → _) _, rfl with
       | ⊤, h => h_eq (neLocus_eq_empty.mp <| Finset.min_eq_top.mp h)
       | (wit : ι), h =>
-        (mem_neLocus.mp <| Finset.mem_of_min h).lt_or_lt.byCases
+        (mem_neLocus.mp <| Finset.mem_of_min h).lt_or_lt.by_cases
           (fun hwit =>
             h_lt ⟨wit, fun j hj => not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj h), hwit⟩)
           fun hwit =>
           h_gt
             ⟨wit, fun j hj =>
-              not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
+              not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj <| by rwa [neLocus_comm]), hwit⟩
 #align dfinsupp.lt_trichotomy_rec dfinsupp.lt_trichotomy_rec
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
@@ -140,9 +140,9 @@ theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
   le_of_lt_or_eq <|
     or_iff_not_imp_right.2 fun hne => by
       classical exact
-          ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
-            not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
-            (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
+          ⟨Finset.min' _ (nonempty_neLocus_iff.2 hne), fun j hj =>
+            not_mem_neLocus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
+            (h _).lt_of_ne (mem_neLocus.1 <| Finset.min'_mem _ _)⟩
 #align dfinsupp.to_lex_monotone Dfinsupp.toLex_monotone
 
 theorem lt_of_forall_lt_of_lt (a b : Lex (Π₀ i, α i)) (i : ι) :

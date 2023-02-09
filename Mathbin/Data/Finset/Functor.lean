@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Scott Morrison
 
 ! This file was ported from Lean 3 source module data.finset.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,7 @@ instance : LawfulApplicative Finset :=
   {
     Finset.lawfulFunctor with
     seqLeft_eq := fun α β s t => by
-      rw [seq_def, fmap_def, seq_left_def]
+      rw [seq_def, fmap_def, seqLeft_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
       · simp_rw [if_pos rfl, image_empty]
         exact (sup_bot _).symm
@@ -134,7 +134,7 @@ instance : LawfulApplicative Finset :=
         exact hb
     seqRight_eq := fun α β s t =>
       by
-      rw [seq_def, fmap_def, seq_right_def]
+      rw [seq_def, fmap_def, seqRight_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
       · rw [if_pos rfl, image_empty, sup_empty, bot_eq_empty]
       · ext a
@@ -163,9 +163,10 @@ instance : CommApplicative Finset :=
   { Finset.lawfulApplicative with
     commutative_prod := fun α β s t =>
       by
-      simp_rw [seq_def, fmap_def, sup_image, sup_eq_bUnion]
+      simp_rw [seq_def, fmap_def, sup_image, sup_eq_bunionᵢ]
       change (s.bUnion fun a => t.image fun b => (a, b)) = t.bUnion fun b => s.image fun a => (a, b)
-      trans s ×ˢ t <;> [rw [product_eq_bUnion], rw [product_eq_bUnion_right]] <;> congr <;> ext <;>
+      trans s ×ˢ t <;> [rw [product_eq_bunionᵢ], rw [product_eq_bunionᵢ_right]] <;> congr <;>
+          ext <;>
         simp_rw [mem_image] }
 
 end Applicative
@@ -198,8 +199,8 @@ instance : LawfulMonad Finset :=
     bind_map_eq_seq := fun α β t s => rfl
     pure_bind := fun α β t s => sup_singleton
     bind_assoc := fun α β γ s f g => by
-      convert sup_bUnion _ _
-      exact sup_eq_bUnion _ _ }
+      convert sup_bunionᵢ _ _
+      exact sup_eq_bunionᵢ _ _ }
 
 end Monad
 

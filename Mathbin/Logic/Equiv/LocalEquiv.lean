@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.equiv.local_equiv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,8 +115,8 @@ def mfld_cfg : SimpsCfg where
 
 namespace Tactic.Interactive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       A very basic tactic to show that sets showing up in manifolds coincide or are included in
@@ -299,7 +299,7 @@ protected theorem mapsTo : MapsTo e e.source e.target := fun x => e.map_source
 
 #print LocalEquiv.symm_mapsTo /-
 theorem symm_mapsTo : MapsTo e.symm e.target e.source :=
-  e.symm.MapsTo
+  e.symm.mapsTo
 #align local_equiv.symm_maps_to LocalEquiv.symm_mapsTo
 -/
 
@@ -328,7 +328,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.InvOn.{u2, u1} α β (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e)
 Case conversion may be inaccurate. Consider using '#align local_equiv.inv_on LocalEquiv.invOnₓ'. -/
 protected theorem invOn : InvOn e.symm e e.source e.target :=
-  ⟨e.LeftInvOn, e.RightInvOn⟩
+  ⟨e.leftInvOn, e.rightInvOn⟩
 #align local_equiv.inv_on LocalEquiv.invOn
 
 /- warning: local_equiv.inj_on -> LocalEquiv.injOn is a dubious translation:
@@ -338,7 +338,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.InjOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e)
 Case conversion may be inaccurate. Consider using '#align local_equiv.inj_on LocalEquiv.injOnₓ'. -/
 protected theorem injOn : InjOn e e.source :=
-  e.LeftInvOn.InjOn
+  e.leftInvOn.injOn
 #align local_equiv.inj_on LocalEquiv.injOn
 
 /- warning: local_equiv.bij_on -> LocalEquiv.bijOn is a dubious translation:
@@ -348,7 +348,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.BijOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e)
 Case conversion may be inaccurate. Consider using '#align local_equiv.bij_on LocalEquiv.bijOnₓ'. -/
 protected theorem bijOn : BijOn e e.source e.target :=
-  e.InvOn.BijOn e.MapsTo e.symm_mapsTo
+  e.invOn.bijOn e.mapsTo e.symm_mapsTo
 #align local_equiv.bij_on LocalEquiv.bijOn
 
 /- warning: local_equiv.surj_on -> LocalEquiv.surjOn is a dubious translation:
@@ -358,7 +358,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), Set.SurjOn.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.source.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e)
 Case conversion may be inaccurate. Consider using '#align local_equiv.surj_on LocalEquiv.surjOnₓ'. -/
 protected theorem surjOn : SurjOn e e.source e.target :=
-  e.BijOn.SurjOn
+  e.bijOn.surjOn
 #align local_equiv.surj_on LocalEquiv.surjOn
 
 #print Equiv.toLocalEquiv /-
@@ -418,8 +418,8 @@ theorem copy_eq (e : LocalEquiv α β) (f : α → β) (hf : ⇑e = f) (g : β �
 /-- Associating to a local_equiv an equiv between the source and the target -/
 protected def toEquiv : Equiv e.source e.target
     where
-  toFun x := ⟨e x, e.map_source x.Mem⟩
-  invFun y := ⟨e.symm y, e.map_target y.Mem⟩
+  toFun x := ⟨e x, e.map_source x.mem⟩
+  invFun y := ⟨e.symm y, e.map_target y.mem⟩
   left_inv := fun ⟨x, hx⟩ => Subtype.eq <| e.left_inv hx
   right_inv := fun ⟨y, hy⟩ => Subtype.eq <| e.right_inv hy
 #align local_equiv.to_equiv LocalEquiv.toEquiv
@@ -457,7 +457,7 @@ theorem symm_symm : e.symm.symm = e := by
 
 #print LocalEquiv.image_source_eq_target /-
 theorem image_source_eq_target : e '' e.source = e.target :=
-  e.BijOn.image_eq
+  e.bijOn.image_eq
 #align local_equiv.image_source_eq_target LocalEquiv.image_source_eq_target
 -/
 
@@ -538,7 +538,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (Set.MapsTo.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t))
 Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.maps_to LocalEquiv.IsImage.mapsToₓ'. -/
 protected theorem mapsTo (h : e.IsImage s t) : MapsTo e (e.source ∩ s) (e.target ∩ t) := fun x hx =>
-  ⟨e.MapsTo hx.1, (h hx.1).2 hx.2⟩
+  ⟨e.mapsTo hx.1, (h hx.1).2 hx.2⟩
 #align local_equiv.is_image.maps_to LocalEquiv.IsImage.mapsTo
 
 /- warning: local_equiv.is_image.symm_maps_to -> LocalEquiv.IsImage.symm_mapsTo is a dubious translation:
@@ -548,7 +548,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, (LocalEquiv.IsImage.{u2, u1} α β e s t) -> (Set.MapsTo.{u1, u2} β α (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) (Inter.inter.{u1} (Set.{u1} β) (Set.instInterSet.{u1} β) (LocalEquiv.target.{u2, u1} α β e) t) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s))
 Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.symm_maps_to LocalEquiv.IsImage.symm_mapsToₓ'. -/
 theorem symm_mapsTo (h : e.IsImage s t) : MapsTo e.symm (e.target ∩ t) (e.source ∩ s) :=
-  h.symm.MapsTo
+  h.symm.mapsTo
 #align local_equiv.is_image.symm_maps_to LocalEquiv.IsImage.symm_mapsTo
 
 #print LocalEquiv.IsImage.restr /-
@@ -560,10 +560,10 @@ def restr (h : e.IsImage s t) : LocalEquiv α β
   invFun := e.symm
   source := e.source ∩ s
   target := e.target ∩ t
-  map_source' := h.MapsTo
+  map_source' := h.mapsTo
   map_target' := h.symm_mapsTo
-  left_inv' := e.LeftInvOn.mono (inter_subset_left _ _)
-  right_inv' := e.RightInvOn.mono (inter_subset_left _ _)
+  left_inv' := e.leftInvOn.mono (inter_subset_left _ _)
+  right_inv' := e.rightInvOn.mono (inter_subset_left _ _)
 #align local_equiv.is_image.restr LocalEquiv.IsImage.restr
 -/
 
@@ -594,7 +594,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} {e : LocalEquiv.{u2, u1} α β} {s : Set.{u2} α} {t : Set.{u1} β}, Iff (LocalEquiv.IsImage.{u2, u1} α β e s t) (Eq.{succ u2} (Set.{u2} α) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (LocalEquiv.source.{u2, u1} α β e) (Set.preimage.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) t)) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (LocalEquiv.source.{u2, u1} α β e) s))
 Case conversion may be inaccurate. Consider using '#align local_equiv.is_image.iff_preimage_eq LocalEquiv.IsImage.iff_preimage_eqₓ'. -/
 theorem iff_preimage_eq : e.IsImage s t ↔ e.source ∩ e ⁻¹' t = e.source ∩ s := by
-  simp only [is_image, Set.ext_iff, mem_inter_iff, and_congr_right_iff, mem_preimage]
+  simp only [IsImage, Set.ext_iff, mem_inter_iff, and_congr_right_iff, mem_preimage]
 #align local_equiv.is_image.iff_preimage_eq LocalEquiv.IsImage.iff_preimage_eq
 
 /- warning: local_equiv.is_image.preimage_eq -> LocalEquiv.IsImage.preimage_eq is a dubious translation:
@@ -869,7 +869,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β) {s : Set.{u2} α}, (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) s (LocalEquiv.source.{u2, u1} α β e)) -> (Eq.{succ u2} (Set.{u2} α) (Set.image.{u1, u2} β α (LocalEquiv.toFun.{u1, u2} β α (LocalEquiv.symm.{u2, u1} α β e)) (Set.image.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) s)) s)
 Case conversion may be inaccurate. Consider using '#align local_equiv.symm_image_image_of_subset_source LocalEquiv.symm_image_image_of_subset_sourceₓ'. -/
 theorem symm_image_image_of_subset_source {s : Set α} (h : s ⊆ e.source) : e.symm '' (e '' s) = s :=
-  (e.LeftInvOn.mono h).image_image
+  (e.leftInvOn.mono h).image_image
 #align local_equiv.symm_image_image_of_subset_source LocalEquiv.symm_image_image_of_subset_source
 
 #print LocalEquiv.image_symm_image_of_subset_target /-
@@ -885,7 +885,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (e : LocalEquiv.{u2, u1} α β), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (LocalEquiv.source.{u2, u1} α β e) (Set.preimage.{u2, u1} α β (LocalEquiv.toFun.{u2, u1} α β e) (LocalEquiv.target.{u2, u1} α β e))
 Case conversion may be inaccurate. Consider using '#align local_equiv.source_subset_preimage_target LocalEquiv.source_subset_preimage_targetₓ'. -/
 theorem source_subset_preimage_target : e.source ⊆ e ⁻¹' e.target :=
-  e.MapsTo
+  e.mapsTo
 #align local_equiv.source_subset_preimage_target LocalEquiv.source_subset_preimage_target
 
 /- warning: local_equiv.symm_image_target_eq_source -> LocalEquiv.symm_image_target_eq_source is a dubious translation:
@@ -1316,7 +1316,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.mem_symm_t
 /-- A lemma commonly useful when `e` and `e'` are charts of a manifold. -/
 theorem mem_symm_trans_source {e' : LocalEquiv α γ} {x : α} (he : x ∈ e.source)
     (he' : x ∈ e'.source) : e x ∈ (e.symm.trans e').source :=
-  ⟨e.MapsTo he, by rwa [mem_preimage, LocalEquiv.symm_symm, e.left_inv he]⟩
+  ⟨e.mapsTo he, by rwa [mem_preimage, LocalEquiv.symm_symm, e.left_inv he]⟩
 #align local_equiv.mem_symm_trans_source LocalEquiv.mem_symm_trans_source
 
 #print LocalEquiv.transEquiv /-
@@ -1374,9 +1374,9 @@ instance eqOnSourceSetoid : Setoid (LocalEquiv α β)
     where
   R := EqOnSource
   iseqv :=
-    ⟨fun e => by simp [eq_on_source], fun e e' h =>
+    ⟨fun e => by simp [EqOnSource], fun e e' h =>
       by
-      simp [eq_on_source, h.1.symm]
+      simp [EqOnSource, h.1.symm]
       exact fun x hx => (h.2 hx).symm, fun e e' e'' h h' =>
       ⟨by rwa [← h'.1, ← h.1], fun x hx => by
         rw [← h'.2, h.2 hx]
@@ -1436,7 +1436,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.eq_on_sour
 /-- If two local equivs are equivalent, so are their inverses. -/
 theorem EqOnSource.symm' {e e' : LocalEquiv α β} (h : e ≈ e') : e.symm ≈ e'.symm :=
   by
-  refine' ⟨h.target_eq, eq_on_of_left_inv_on_of_right_inv_on e.left_inv_on _ _⟩ <;>
+  refine' ⟨h.target_eq, eqOn_of_leftInvOn_of_rightInvOn e.left_inv_on _ _⟩ <;>
     simp only [symm_source, h.target_eq, h.source_eq, e'.symm_maps_to]
   exact e'.right_inv_on.congr_right e'.symm_maps_to (h.source_eq ▸ h.eq_on.symm)
 #align local_equiv.eq_on_source.symm' LocalEquiv.EqOnSource.symm'
@@ -1449,7 +1449,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.eq_on_source.symm_eq_on LocalEquiv.EqOnSource.symm_eqOnₓ'. -/
 /-- Two equivalent local equivs have coinciding inverses on the target -/
 theorem EqOnSource.symm_eqOn {e e' : LocalEquiv α β} (h : e ≈ e') : EqOn e.symm e'.symm e.target :=
-  h.symm'.EqOn
+  h.symm'.eqOn
 #align local_equiv.eq_on_source.symm_eq_on LocalEquiv.EqOnSource.symm_eqOn
 
 /- warning: local_equiv.eq_on_source.trans' -> LocalEquiv.EqOnSource.trans' is a dubious translation:
@@ -1576,7 +1576,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.prod_sourc
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
 theorem prod_source (e : LocalEquiv α β) (e' : LocalEquiv γ δ) :
-    (e.Prod e').source = e.source ×ˢ e'.source :=
+    (e.prod e').source = e.source ×ˢ e'.source :=
   rfl
 #align local_equiv.prod_source LocalEquiv.prod_source
 
@@ -1589,7 +1589,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.prod_targe
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[simp, mfld_simps]
 theorem prod_target (e : LocalEquiv α β) (e' : LocalEquiv γ δ) :
-    (e.Prod e').target = e.target ×ˢ e'.target :=
+    (e.prod e').target = e.target ×ˢ e'.target :=
   rfl
 #align local_equiv.prod_target LocalEquiv.prod_target
 
@@ -1601,7 +1601,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.prod_coe LocalEquiv.prod_coeₓ'. -/
 @[simp, mfld_simps]
 theorem prod_coe (e : LocalEquiv α β) (e' : LocalEquiv γ δ) :
-    (e.Prod e' : α × γ → β × δ) = fun p => (e p.1, e' p.2) :=
+    (e.prod e' : α × γ → β × δ) = fun p => (e p.1, e' p.2) :=
   rfl
 #align local_equiv.prod_coe LocalEquiv.prod_coe
 
@@ -1612,7 +1612,7 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u3}} {γ : Type.{u2}} {δ : Type.{u1}} (e : LocalEquiv.{u4, u3} α β) (e' : LocalEquiv.{u2, u1} γ δ), Eq.{max (max (max (succ u4) (succ u3)) (succ u2)) (succ u1)} ((Prod.{u3, u1} β δ) -> (Prod.{u4, u2} α γ)) (LocalEquiv.toFun.{max u3 u1, max u4 u2} (Prod.{u3, u1} β δ) (Prod.{u4, u2} α γ) (LocalEquiv.symm.{max u4 u2, max u3 u1} (Prod.{u4, u2} α γ) (Prod.{u3, u1} β δ) (LocalEquiv.prod.{u4, u3, u2, u1} α β γ δ e e'))) (fun (p : Prod.{u3, u1} β δ) => Prod.mk.{u4, u2} α γ (LocalEquiv.toFun.{u3, u4} β α (LocalEquiv.symm.{u4, u3} α β e) (Prod.fst.{u3, u1} β δ p)) (LocalEquiv.toFun.{u1, u2} δ γ (LocalEquiv.symm.{u2, u1} γ δ e') (Prod.snd.{u3, u1} β δ p)))
 Case conversion may be inaccurate. Consider using '#align local_equiv.prod_coe_symm LocalEquiv.prod_coe_symmₓ'. -/
 theorem prod_coe_symm (e : LocalEquiv α β) (e' : LocalEquiv γ δ) :
-    ((e.Prod e').symm : β × δ → α × γ) = fun p => (e.symm p.1, e'.symm p.2) :=
+    ((e.prod e').symm : β × δ → α × γ) = fun p => (e.symm p.1, e'.symm p.2) :=
   rfl
 #align local_equiv.prod_coe_symm LocalEquiv.prod_coe_symm
 
@@ -1624,7 +1624,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align local_equiv.prod_symm LocalEquiv.prod_symmₓ'. -/
 @[simp, mfld_simps]
 theorem prod_symm (e : LocalEquiv α β) (e' : LocalEquiv γ δ) :
-    (e.Prod e').symm = e.symm.Prod e'.symm := by ext x <;> simp [prod_coe_symm]
+    (e.prod e').symm = e.symm.prod e'.symm := by ext x <;> simp [prod_coe_symm]
 #align local_equiv.prod_symm LocalEquiv.prod_symm
 
 /- warning: local_equiv.refl_prod_refl -> LocalEquiv.refl_prod_refl is a dubious translation:
@@ -1634,7 +1634,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (LocalEquiv.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β)) (LocalEquiv.prod.{u2, u2, u1, u1} α α β β (LocalEquiv.refl.{u2} α) (LocalEquiv.refl.{u1} β)) (LocalEquiv.refl.{max u1 u2} (Prod.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align local_equiv.refl_prod_refl LocalEquiv.refl_prod_reflₓ'. -/
 @[simp, mfld_simps]
-theorem refl_prod_refl : (LocalEquiv.refl α).Prod (LocalEquiv.refl β) = LocalEquiv.refl (α × β) :=
+theorem refl_prod_refl : (LocalEquiv.refl α).prod (LocalEquiv.refl β) = LocalEquiv.refl (α × β) :=
   by
   ext1 ⟨x, y⟩
   · rfl
@@ -1652,7 +1652,7 @@ Case conversion may be inaccurate. Consider using '#align local_equiv.prod_trans
 @[simp, mfld_simps]
 theorem prod_trans {η : Type _} {ε : Type _} (e : LocalEquiv α β) (f : LocalEquiv β γ)
     (e' : LocalEquiv δ η) (f' : LocalEquiv η ε) :
-    (e.Prod e').trans (f.Prod f') = (e.trans f).Prod (e'.trans f') := by
+    (e.prod e').trans (f.prod f') = (e.trans f).prod (e'.trans f') := by
   ext x <;> simp [ext_iff] <;> tauto
 #align local_equiv.prod_trans LocalEquiv.prod_trans
 
@@ -1672,8 +1672,8 @@ def piecewise (e e' : LocalEquiv α β) (s : Set α) (t : Set β) [∀ x, Decida
   invFun := t.piecewise e.symm e'.symm
   source := s.ite e.source e'.source
   target := t.ite e.target e'.target
-  map_source' := H.MapsTo.piecewise_ite H'.compl.MapsTo
-  map_target' := H.symm.MapsTo.piecewise_ite H'.symm.compl.MapsTo
+  map_source' := H.mapsTo.piecewise_ite H'.compl.mapsTo
+  map_target' := H.symm.mapsTo.piecewise_ite H'.symm.compl.mapsTo
   left_inv' := H.leftInvOn_piecewise H'
   right_inv' := H.symm.leftInvOn_piecewise H'.symm
 #align local_equiv.piecewise LocalEquiv.piecewise
@@ -1761,8 +1761,8 @@ noncomputable def BijOn.toLocalEquiv [Nonempty α] (f : α → β) (s : Set α) 
   invFun := invFunOn f s
   source := s
   target := t
-  map_source' := hf.MapsTo
-  map_target' := hf.SurjOn.mapsTo_invFunOn
+  map_source' := hf.mapsTo
+  map_target' := hf.surjOn.mapsTo_invFunOn
   left_inv' := hf.invOn_invFunOn.1
   right_inv' := hf.invOn_invFunOn.2
 #align set.bij_on.to_local_equiv Set.BijOn.toLocalEquiv

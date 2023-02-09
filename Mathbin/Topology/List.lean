@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.list
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ instance : TopologicalSpace (List α) :=
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
   by
-  refine' nhds_mk_of_nhds _ _ _ _
+  refine' nhds_mkOfNhds _ _ _ _
   · intro l
     induction l
     case nil => exact le_rfl
@@ -48,10 +48,10 @@ theorem nhds_list (as : List α) : 𝓝 as = traverse 𝓝 as :=
       case
         cons a s as ss ht h ih t hts =>
         rcases mem_nhds_iff.1 ht with ⟨u, hut, hu⟩
-        rcases ih _ subset.rfl with ⟨v, hv, hvss⟩
+        rcases ih _ Subset.rfl with ⟨v, hv, hvss⟩
         exact
           ⟨u::v, List.Forall₂.cons hu hv,
-            subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩
+            Subset.trans (Set.seq_mono (Set.image_subset _ hut) hvss) hts⟩
     rcases this with ⟨v, hv, hvs⟩
     refine' ⟨sequence v, mem_traverse _ _ _, hvs, _⟩
     · exact hv.imp fun a s ⟨hs, ha⟩ => IsOpen.mem_nhds hs ha
@@ -80,7 +80,7 @@ theorem nhds_cons (a : α) (l : List α) : 𝓝 (a::l) = List.cons <$> 𝓝 a <*
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem List.tendsto_cons {a : α} {l : List α} :
     Tendsto (fun p : α × List α => List.cons p.1 p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a::l)) := by
-  rw [nhds_cons, tendsto, Filter.map_prod] <;> exact le_rfl
+  rw [nhds_cons, Tendsto, Filter.map_prod] <;> exact le_rfl
 #align list.tendsto_cons List.tendsto_cons
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -133,8 +133,8 @@ theorem continuousAt_length : ∀ l : List α, ContinuousAt List.length l :=
   · exact tendsto_pure_pure _ _
   · intro l a ih
     dsimp only [List.length]
-    refine' tendsto.comp (tendsto_pure_pure (fun x => x + 1) _) _
-    refine' tendsto.comp ih tendsto_snd
+    refine' Tendsto.comp (tendsto_pure_pure (fun x => x + 1) _) _
+    refine' Tendsto.comp ih tendsto_snd
 #align list.continuous_at_length List.continuousAt_length
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -177,7 +177,7 @@ theorem tendsto_removeNth :
   | 0, a::l => by rw [tendsto_cons_iff] <;> exact tendsto_snd
   | n + 1, a::l => by
     rw [tendsto_cons_iff]
-    dsimp [remove_nth]
+    dsimp [removeNth]
     exact tendsto_fst.cons ((@tendsto_remove_nth n l).comp tendsto_snd)
 #align list.tendsto_remove_nth List.tendsto_removeNth
 
@@ -187,7 +187,7 @@ theorem continuous_removeNth {n : ℕ} : Continuous fun l : List α => removeNth
 
 @[to_additive]
 theorem tendsto_prod [Monoid α] [HasContinuousMul α] {l : List α} :
-    Tendsto List.prod (𝓝 l) (𝓝 l.Prod) :=
+    Tendsto List.prod (𝓝 l) (𝓝 l.prod) :=
   by
   induction' l with x l ih
   · simp (config := { contextual := true }) [nhds_nil, mem_of_mem_nhds, tendsto_pure_left]
@@ -216,22 +216,22 @@ theorem tendsto_cons {n : ℕ} {a : α} {l : Vector α n} :
     Tendsto (fun p : α × Vector α n => p.1 ::ᵥ p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (a ::ᵥ l)) :=
   by
   simp [tendsto_subtype_rng, ← Subtype.val_eq_coe, cons_val]
-  exact tendsto_fst.cons (tendsto.comp continuousAt_subtype_val tendsto_snd)
+  exact tendsto_fst.cons (Tendsto.comp continuousAt_subtype_val tendsto_snd)
 #align vector.tendsto_cons Vector.tendsto_cons
 
 theorem tendsto_insertNth {n : ℕ} {i : Fin (n + 1)} {a : α} :
     ∀ {l : Vector α n},
       Tendsto (fun p : α × Vector α n => insertNth p.1 i p.2) (𝓝 a ×ᶠ 𝓝 l) (𝓝 (insertNth a i l))
   | ⟨l, hl⟩ => by
-    rw [insert_nth, tendsto_subtype_rng]
-    simp [insert_nth_val]
-    exact List.tendsto_insertNth tendsto_fst (tendsto.comp continuousAt_subtype_val tendsto_snd : _)
+    rw [insertNth, tendsto_subtype_rng]
+    simp [insertNth_val]
+    exact List.tendsto_insertNth tendsto_fst (Tendsto.comp continuousAt_subtype_val tendsto_snd : _)
 #align vector.tendsto_insert_nth Vector.tendsto_insertNth
 
 theorem continuous_insert_nth' {n : ℕ} {i : Fin (n + 1)} :
     Continuous fun p : α × Vector α n => insertNth p.1 i p.2 :=
   continuous_iff_continuousAt.mpr fun ⟨a, l⟩ => by
-    rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insert_nth
+    rw [ContinuousAt, nhds_prod_eq] <;> exact tendsto_insertNth
 #align vector.continuous_insert_nth' Vector.continuous_insert_nth'
 
 theorem continuous_insertNth {n : ℕ} {i : Fin (n + 1)} {f : β → α} {g : β → Vector α n}
@@ -244,9 +244,9 @@ theorem continuousAt_removeNth {n : ℕ} {i : Fin (n + 1)} :
   | ⟨l, hl⟩ =>--  ∀{l:vector α (n+1)}, tendsto (remove_nth i) (𝓝 l) (𝓝 (remove_nth i l))
   --| ⟨l, hl⟩ :=
   by
-    rw [ContinuousAt, remove_nth, tendsto_subtype_rng]
+    rw [ContinuousAt, removeNth, tendsto_subtype_rng]
     simp only [← Subtype.val_eq_coe, Vector.removeNth_val]
-    exact tendsto.comp List.tendsto_removeNth continuousAt_subtype_val
+    exact Tendsto.comp List.tendsto_removeNth continuousAt_subtype_val
 #align vector.continuous_at_remove_nth Vector.continuousAt_removeNth
 
 theorem continuous_removeNth {n : ℕ} {i : Fin (n + 1)} :

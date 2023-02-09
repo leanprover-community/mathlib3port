@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.uniform_space.equicontinuity
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -131,7 +131,7 @@ protected abbrev Set.UniformEquicontinuous (H : Set <| β → α) : Prop :=
   UniformEquicontinuous (coe : H → β → α)
 #align set.uniform_equicontinuous Set.UniformEquicontinuous
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » V) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x y «expr ∈ » V) -/
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/
 theorem equicontinuousAt_iff_pair {F : ι → X → α} {x₀ : X} :
@@ -163,18 +163,18 @@ theorem EquicontinuousAt.continuousAt {F : ι → X → α} {x₀ : X} (h : Equi
 
 protected theorem Set.EquicontinuousAt.continuousAt_of_mem {H : Set <| X → α} {x₀ : X}
     (h : H.EquicontinuousAt x₀) {f : X → α} (hf : f ∈ H) : ContinuousAt f x₀ :=
-  h.ContinuousAt ⟨f, hf⟩
+  h.continuousAt ⟨f, hf⟩
 #align set.equicontinuous_at.continuous_at_of_mem Set.EquicontinuousAt.continuousAt_of_mem
 
 /-- Each function of an equicontinuous family is continuous. -/
 theorem Equicontinuous.continuous {F : ι → X → α} (h : Equicontinuous F) (i : ι) :
     Continuous (F i) :=
-  continuous_iff_continuousAt.mpr fun x => (h x).ContinuousAt i
+  continuous_iff_continuousAt.mpr fun x => (h x).continuousAt i
 #align equicontinuous.continuous Equicontinuous.continuous
 
 protected theorem Set.Equicontinuous.continuous_of_mem {H : Set <| X → α} (h : H.Equicontinuous)
     {f : X → α} (hf : f ∈ H) : Continuous f :=
-  h.Continuous ⟨f, hf⟩
+  h.continuous ⟨f, hf⟩
 #align set.equicontinuous.continuous_of_mem Set.Equicontinuous.continuous_of_mem
 
 /-- Each function of a uniformly equicontinuous family is uniformly continuous. -/
@@ -185,7 +185,7 @@ theorem UniformEquicontinuous.uniformContinuous {F : ι → β → α} (h : Unif
 
 protected theorem Set.UniformEquicontinuous.uniformContinuous_of_mem {H : Set <| β → α}
     (h : H.UniformEquicontinuous) {f : β → α} (hf : f ∈ H) : UniformContinuous f :=
-  h.UniformContinuous ⟨f, hf⟩
+  h.uniformContinuous ⟨f, hf⟩
 #align set.uniform_equicontinuous.uniform_continuous_of_mem Set.UniformEquicontinuous.uniformContinuous_of_mem
 
 /-- Taking sub-families preserves equicontinuity at a point. -/
@@ -222,7 +222,7 @@ protected theorem Set.UniformEquicontinuous.mono {H H' : Set <| β → α} (h : 
 i.e the family `coe : range F → X → α` is equicontinuous at `x₀`. -/
 theorem equicontinuousAt_iff_range {F : ι → X → α} {x₀ : X} :
     EquicontinuousAt F x₀ ↔ EquicontinuousAt (coe : range F → X → α) x₀ :=
-  ⟨fun h => by rw [← comp_range_splitting F] <;> exact h.comp _, fun h =>
+  ⟨fun h => by rw [← comp_rangeSplitting F] <;> exact h.comp _, fun h =>
     h.comp (rangeFactorization F)⟩
 #align equicontinuous_at_iff_range equicontinuousAt_iff_range
 
@@ -237,7 +237,7 @@ theorem equicontinuous_iff_range {F : ι → X → α} :
 i.e the family `coe : range F → β → α` is uniformly equicontinuous. -/
 theorem uniformEquicontinuous_at_iff_range {F : ι → β → α} :
     UniformEquicontinuous F ↔ UniformEquicontinuous (coe : range F → β → α) :=
-  ⟨fun h => by rw [← comp_range_splitting F] <;> exact h.comp _, fun h =>
+  ⟨fun h => by rw [← comp_rangeSplitting F] <;> exact h.comp _, fun h =>
     h.comp (rangeFactorization F)⟩
 #align uniform_equicontinuous_at_iff_range uniformEquicontinuous_at_iff_range
 
@@ -339,7 +339,7 @@ equicontinuous at `x₀`. -/
 theorem UniformInducing.equicontinuousAt_iff {F : ι → X → α} {x₀ : X} {u : α → β}
     (hu : UniformInducing u) : EquicontinuousAt F x₀ ↔ EquicontinuousAt ((· ∘ ·) u ∘ F) x₀ :=
   by
-  have := (UniformFun.postcomp_uniformInducing hu).Inducing
+  have := (UniformFun.postcomp_uniformInducing hu).inducing
   rw [equicontinuousAt_iff_continuousAt, equicontinuousAt_iff_continuousAt, this.continuous_at_iff]
   rfl
 #align uniform_inducing.equicontinuous_at_iff UniformInducing.equicontinuousAt_iff
@@ -393,10 +393,10 @@ theorem EquicontinuousAt.closure {A : Set <| X → α} {x₀ : X} (hA : A.Equico
 
 /-- If `𝓕 : ι → X → α` tends to `f : X → α` *pointwise* along some nontrivial filter, and if the
 family `𝓕` is equicontinuous at some `x₀ : X`, then the limit is continuous at `x₀`. -/
-theorem Filter.Tendsto.continuousAt_of_equicontinuousAt {l : Filter ι} [l.ne_bot] {F : ι → X → α}
+theorem Filter.Tendsto.continuousAt_of_equicontinuousAt {l : Filter ι} [l.NeBot] {F : ι → X → α}
     {f : X → α} {x₀ : X} (h₁ : Tendsto F l (𝓝 f)) (h₂ : EquicontinuousAt F x₀) :
     ContinuousAt f x₀ :=
-  (equicontinuousAt_iff_range.mp h₂).closure.ContinuousAt
+  (equicontinuousAt_iff_range.mp h₂).closure.continuousAt
     ⟨f, mem_closure_of_tendsto h₁ <| eventually_of_forall mem_range_self⟩
 #align filter.tendsto.continuous_at_of_equicontinuous_at Filter.Tendsto.continuousAt_of_equicontinuousAt
 
@@ -417,7 +417,7 @@ theorem Equicontinuous.closure {A : Set <| X → α} (hA : A.Equicontinuous) :
 
 /-- If `𝓕 : ι → X → α` tends to `f : X → α` *pointwise* along some nontrivial filter, and if the
 family `𝓕` is equicontinuous, then the limit is continuous. -/
-theorem Filter.Tendsto.continuous_of_equicontinuous_at {l : Filter ι} [l.ne_bot] {F : ι → X → α}
+theorem Filter.Tendsto.continuous_of_equicontinuous_at {l : Filter ι} [l.NeBot] {F : ι → X → α}
     {f : X → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : Equicontinuous F) : Continuous f :=
   continuous_iff_continuousAt.mpr fun x => h₁.continuousAt_of_equicontinuousAt (h₂ x)
 #align filter.tendsto.continuous_of_equicontinuous_at Filter.Tendsto.continuous_of_equicontinuous_at
@@ -449,10 +449,10 @@ theorem UniformEquicontinuous.closure {A : Set <| β → α} (hA : A.UniformEqui
 
 /-- If `𝓕 : ι → β → α` tends to `f : β → α` *pointwise* along some nontrivial filter, and if the
 family `𝓕` is uniformly equicontinuous, then the limit is uniformly continuous. -/
-theorem Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous {l : Filter ι} [l.ne_bot]
+theorem Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous {l : Filter ι} [l.NeBot]
     {F : ι → β → α} {f : β → α} (h₁ : Tendsto F l (𝓝 f)) (h₂ : UniformEquicontinuous F) :
     UniformContinuous f :=
-  (uniformEquicontinuous_at_iff_range.mp h₂).closure.UniformContinuous
+  (uniformEquicontinuous_at_iff_range.mp h₂).closure.uniformContinuous
     ⟨f, mem_closure_of_tendsto h₁ <| eventually_of_forall mem_range_self⟩
 #align filter.tendsto.uniform_continuous_of_uniform_equicontinuous Filter.Tendsto.uniformContinuous_of_uniformEquicontinuous
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.rat.denumerable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,8 +38,8 @@ instance : Denumerable ℚ :=
   let T := { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.coprime x.2 }
   letI : Infinite T := Infinite.of_injective _ denumerable_aux.injective
   letI : Encodable T := Encodable.Subtype.encodable
-  letI : Denumerable T := of_encodable_of_infinite T
-  exact Denumerable.ofEquiv T denumerable_aux
+  letI : Denumerable T := ofEncodableOfInfinite T
+  exact Denumerable.ofEquiv T denumerableAux
 
 end Rat
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.equivalence
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,7 +32,7 @@ theorem hasInitial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C]
 #align category_theory.has_initial_of_equivalence CategoryTheory.hasInitial_of_equivalence
 
 theorem Equivalence.hasInitial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
-  ⟨fun h => has_initial_of_equivalence e.inverse, fun h => has_initial_of_equivalence e.functor⟩
+  ⟨fun h => hasInitial_of_equivalence e.inverse, fun h => hasInitial_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.hasInitial_iff
 
 theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
@@ -40,7 +40,7 @@ theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal 
 #align category_theory.has_terminal_of_equivalence CategoryTheory.hasTerminal_of_equivalence
 
 theorem Equivalence.hasTerminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
-  ⟨fun h => has_terminal_of_equivalence e.inverse, fun h => has_terminal_of_equivalence e.functor⟩
+  ⟨fun h => hasTerminal_of_equivalence e.inverse, fun h => hasTerminal_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.hasTerminal_iff
 
 end CategoryTheory

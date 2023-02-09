@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.selmer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,16 +54,16 @@ theorem x_pow_sub_x_sub_one_irreducible (hn1 : n ≠ 1) : Irreducible (x ^ n - x
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
-    exact Associated.irreducible ⟨-1, mul_neg_one X⟩ irreducible_X
+    exact Associated.irreducible ⟨-1, mul_neg_one x⟩ irreducible_x
   have hn : 1 < n := nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn0, hn1⟩
-  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
-    simp only [trinomial, C_neg, C_1] <;> ring
+  have hp : (x ^ n - x - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
+    simp only [trinomial, c_neg, c_1] <;> ring
   rw [hp]
-  apply is_unit_trinomial.irreducible_of_coprime' ⟨0, 1, n, zero_lt_one, hn, -1, -1, 1, rfl⟩
+  apply IsUnitTrinomial.irreducible_of_coprime' ⟨0, 1, n, zero_lt_one, hn, -1, -1, 1, rfl⟩
   rintro z ⟨h1, h2⟩
   apply X_pow_sub_X_sub_one_irreducible_aux z
-  rw [trinomial_mirror zero_lt_one hn (-1 : ℤˣ).NeZero (1 : ℤˣ).NeZero] at h2
-  simp_rw [trinomial, aeval_add, aeval_mul, aeval_X_pow, aeval_C] at h1 h2
+  rw [trinomial_mirror zero_lt_one hn (-1 : ℤˣ).ne_zero (1 : ℤˣ).ne_zero] at h2
+  simp_rw [trinomial, aeval_add, aeval_mul, aeval_x_pow, aeval_c] at h1 h2
   simp_rw [Units.val_neg, Units.val_one, map_neg, map_one] at h1 h2
   replace h1 : z ^ n = z + 1 := by linear_combination h1
   replace h2 := mul_eq_zero_of_left h2 z
@@ -76,17 +76,17 @@ theorem x_pow_sub_x_sub_one_irreducible_rat (hn1 : n ≠ 1) : Irreducible (x ^ n
   by
   by_cases hn0 : n = 0
   · rw [hn0, pow_zero, sub_sub, add_comm, ← sub_sub, sub_self, zero_sub]
-    exact Associated.irreducible ⟨-1, mul_neg_one X⟩ irreducible_X
-  have hp : (X ^ n - X - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
-    simp only [trinomial, C_neg, C_1] <;> ring
+    exact Associated.irreducible ⟨-1, mul_neg_one x⟩ irreducible_x
+  have hp : (x ^ n - x - 1 : ℤ[X]) = trinomial 0 1 n (-1) (-1) 1 := by
+    simp only [trinomial, c_neg, c_1] <;> ring
   have hn : 1 < n := nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hn0, hn1⟩
   have h :=
-    (is_primitive.int.irreducible_iff_irreducible_map_cast _).mp
-      (X_pow_sub_X_sub_one_irreducible hn1)
+    (IsPrimitive.Int.irreducible_iff_irreducible_map_cast _).mp
+      (x_pow_sub_x_sub_one_irreducible hn1)
   ·
     rwa [Polynomial.map_sub, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_one,
       Polynomial.map_x] at h
-  · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).IsPrimitive
+  · exact hp.symm ▸ (trinomial_monic zero_lt_one hn).isPrimitive
 #align polynomial.X_pow_sub_X_sub_one_irreducible_rat Polynomial.x_pow_sub_x_sub_one_irreducible_rat
 
 end Polynomial

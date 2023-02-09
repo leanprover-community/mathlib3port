@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.fin.fin2
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,9 +42,9 @@ universe u
 /-- An alternate definition of `fin n` defined as an inductive type instead of a subtype of `ℕ`. -/
 inductive Fin2 : ℕ → Type/-- `0` as a member of `fin (succ n)` (`fin 0` is empty) -/
 
-  | fz {n} : Fin2 (succ n)/-- `n` as a member of `fin (succ n)` -/
+  | fz {n} : fin2 (succ n)/-- `n` as a member of `fin (succ n)` -/
 
-  | fs {n} : Fin2 n → Fin2 (succ n)
+  | fs {n} : fin2 n → fin2 (succ n)
 #align fin2 Fin2
 -/
 

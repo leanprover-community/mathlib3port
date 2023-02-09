@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.simple_module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ theorem IsSimpleModule.nontrivial [IsSimpleModule R M] : Nontrivial M :=
 variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroup N] [Module R N]
 
 theorem IsSimpleModule.congr (l : M ≃ₗ[R] N) [IsSimpleModule R N] : IsSimpleModule R M :=
-  (Submodule.orderIsoMapComap l).IsSimpleOrder
+  (Submodule.orderIsoMapComap l).isSimpleOrder
 #align is_simple_module.congr IsSimpleModule.congr
 
 theorem isSimpleModule_iff_isAtom : IsSimpleModule R m ↔ IsAtom m :=
@@ -75,7 +75,7 @@ theorem isSimpleModule_iff_isCoatom : IsSimpleModule R (M ⧸ m) ↔ IsCoatom m 
 #align is_simple_module_iff_is_coatom isSimpleModule_iff_isCoatom
 
 theorem covby_iff_quot_is_simple {A B : Submodule R M} (hAB : A ≤ B) :
-    A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.Subtype A) :=
+    A ⋖ B ↔ IsSimpleModule R (B ⧸ Submodule.comap B.subtype A) :=
   by
   set f : Submodule R B ≃o Set.Iic B := Submodule.MapSubtype.relIso B with hf
   rw [covby_iff_coatom_Iic hAB, isSimpleModule_iff_isCoatom, ← OrderIso.isCoatom_iff f, hf]
@@ -206,9 +206,9 @@ instance jordanHolderModule : JordanHolderLattice (Submodule R M)
     where
   IsMaximal := (· ⋖ ·)
   lt_of_isMaximal x y := Covby.lt
-  sup_eq_of_isMaximal x y z hxz hyz := Wcovby.sup_eq hxz.Wcovby hyz.Wcovby
+  sup_eq_of_isMaximal x y z hxz hyz := Wcovby.sup_eq hxz.wcovby hyz.wcovby
   isMaximal_inf_left_of_isMaximal_sup A B := inf_covby_of_covby_sup_of_covby_sup_left
-  Iso X Y := Nonempty <| (X.2 ⧸ X.1.comap X.2.Subtype) ≃ₗ[R] Y.2 ⧸ Y.1.comap Y.2.Subtype
+  Iso X Y := Nonempty <| (X.2 ⧸ X.1.comap X.2.subtype) ≃ₗ[R] Y.2 ⧸ Y.1.comap Y.2.subtype
   iso_symm := fun A B ⟨f⟩ => ⟨f.symm⟩
   iso_trans := fun A B C ⟨f⟩ ⟨g⟩ => ⟨f.trans g⟩
   second_iso A B h :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module category_theory.sites.adjunction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,20 +40,20 @@ variable {E : Type w₂} [Category.{max v u} E]
 
 variable {F : D ⥤ E} {G : E ⥤ D}
 
-variable [∀ (X : C) (S : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (S.index P).multicospan F]
+variable [∀ (X : C) (S : J.Cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (S.index P).multicospan F]
 
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
 
 /-- The forgetful functor from `Sheaf J D` to sheaves of types, for a concrete category `D`
 whose forgetful functor preserves the correct limits. -/
 abbrev sheafForget : Sheaf J D ⥤ SheafOfTypes J :=
-  sheafCompose J (forget D) ⋙ (sheafEquivSheafOfTypes J).Functor
+  sheafCompose J (forget D) ⋙ (sheafEquivSheafOfTypes J).functor
 #align category_theory.Sheaf_forget CategoryTheory.sheafForget
 
 -- We need to sheafify...
-variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.index P)]
-  [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
-  [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
+variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.Cover X), HasMultiequalizer (S.index P)]
+  [∀ X : C, HasColimitsOfShape (J.Cover X)ᵒᵖ D]
+  [∀ X : C, PreservesColimitsOfShape (J.Cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
 namespace Sheaf
 
@@ -125,11 +125,11 @@ def adjunctionToTypes {G : Type max v u ⥤ D} (adj : G ⊣ forget D) :
 @[simp]
 theorem adjunctionToTypes_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D)
     (Y : SheafOfTypes J) :
-    ((adjunctionToTypes J adj).Unit.app Y).val =
-      (adj.whiskerRight _).Unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫
+    ((adjunctionToTypes J adj).unit.app Y).val =
+      (adj.whiskerRight _).unit.app ((sheafOfTypesToPresheaf J).obj Y) ≫
         whiskerRight (J.toSheafify _) (forget D) :=
   by
-  dsimp [adjunction_to_types, adjunction.comp]
+  dsimp [adjunctionToTypes, Adjunction.comp]
   simpa
 #align category_theory.Sheaf.adjunction_to_types_unit_app_val CategoryTheory.Sheaf.adjunctionToTypes_unit_app_val
 
@@ -137,15 +137,14 @@ theorem adjunctionToTypes_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ for
 theorem adjunctionToTypes_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D)
     (X : Sheaf J D) :
     ((adjunctionToTypes J adj).counit.app X).val =
-      J.sheafifyLift ((Functor.associator _ _ _).Hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
+      J.sheafifyLift ((functor.associator _ _ _).hom ≫ (adj.whiskerRight _).counit.app _) X.2 :=
   by
-  dsimp [adjunction_to_types, adjunction.comp, adjunction.whisker_right]
-  rw [category.id_comp]
+  dsimp [adjunctionToTypes, Adjunction.comp, Adjunction.whiskerRight]
+  rw [Category.id_comp]
   apply J.sheafify_lift_unique
   rw [adjunction_counit_app_val, J.sheafify_map_sheafify_lift, J.to_sheafify_sheafify_lift]
   ext
-  dsimp [Sheaf_equiv_SheafOfTypes, equivalence.symm, equivalence.to_adjunction,
-    nat_iso.of_components]
+  dsimp [sheafEquivSheafOfTypes, Equivalence.symm, Equivalence.toAdjunction, NatIso.ofComponents]
   simp
 #align category_theory.Sheaf.adjunction_to_types_counit_app_val CategoryTheory.Sheaf.adjunctionToTypes_counit_app_val
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfun
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (x : α), Iff (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (PFun.Dom.{u2, u1} α β f)) (Exists.{succ u1} β (fun (y : β) => Membership.mem.{u1, u1} β (Part.{u1} β) (Part.instMembershipPart.{u1} β) y (f x)))
 Case conversion may be inaccurate. Consider using '#align pfun.mem_dom PFun.mem_domₓ'. -/
 @[simp]
-theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by simp [dom, Part.dom_iff_mem]
+theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := by simp [Dom, Part.dom_iff_mem]
 #align pfun.mem_dom PFun.mem_dom
 
 /- warning: pfun.dom_mk -> PFun.dom_mk is a dubious translation:
@@ -270,7 +270,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.mem_restrict PFun.mem_restrictₓ'. -/
 @[simp]
 theorem mem_restrict {f : α →. β} {s : Set α} (h : s ⊆ f.Dom) (a : α) (b : β) :
-    b ∈ f.restrict h a ↔ a ∈ s ∧ b ∈ f a := by simp [restrict]
+    b ∈ rfl.restrict h a ↔ a ∈ s ∧ b ∈ f a := by simp [restrict]
 #align pfun.mem_restrict PFun.mem_restrict
 
 #print PFun.res /-
@@ -353,7 +353,7 @@ instance : Monad (PFun α) where
 instance : LawfulMonad (PFun α)
     where
   bind_pure_comp_eq_map β γ f x := funext fun a => Part.bind_some_eq_map _ _
-  id_map β f := by funext a <;> dsimp [Functor.map, PFun.map] <;> cases f a <;> rfl
+  id_map β f := by funext a <;> dsimp [functor.map, PFun.map] <;> cases f a <;> rfl
   pure_bind β γ x f := funext fun a => Part.bind_some.{u_1, u_2} _ (f x)
   bind_assoc β γ δ f g k := funext fun a => (f a).bind_assoc (fun b => g b a) fun b => k b a
 
@@ -522,7 +522,7 @@ def fixInduction' {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} 
     (hbase : ∀ a_final : α, Sum.inl b ∈ f a_final → C a_final)
     (hind : ∀ a₀ a₁ : α, b ∈ f.fix a₁ → Sum.inr a₁ ∈ f a₀ → C a₁ → C a₀) : C a :=
   by
-  refine' fix_induction h fun a' h ih => _
+  refine' fixInduction h fun a' h ih => _
   cases' e : (f a').get (dom_of_mem_fix h) with b' a'' <;> replace e : _ ∈ f a' := ⟨_, e⟩
   · apply hbase
     convert e
@@ -543,7 +543,7 @@ theorem fixInduction'_stop {C : α → Sort _} {f : α →. Sum β α} {b : β} 
     @fixInduction' _ _ C _ _ _ h hbase hind = hbase a fa :=
   by
   unfold fix_induction'
-  rw [fix_induction_spec]
+  rw [fixInduction_spec]
   simp [Part.get_eq_of_mem fa]
 #align pfun.fix_induction'_stop PFun.fixInduction'_stop
 
@@ -560,7 +560,7 @@ theorem fixInduction'_fwd {C : α → Sort _} {f : α →. Sum β α} {b : β} {
     @fixInduction' _ _ C _ _ _ h hbase hind = hind a a' h' fa (fixInduction' h' hbase hind) :=
   by
   unfold fix_induction'
-  rw [fix_induction_spec]
+  rw [fixInduction_spec]
   simpa [Part.get_eq_of_mem fa]
 #align pfun.fix_induction'_fwd PFun.fixInduction'_fwd
 
@@ -636,7 +636,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : PFun.{u1, u2} α β) (s : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (PFun.preimage.{u1, u2} α β f s) (setOf.{u1} α (fun (x : α) => Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) y s) (Membership.mem.{u2, u2} β (Part.{u2} β) (Part.instMembershipPart.{u2} β) y (f x)))))
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_def PFun.Preimage_defₓ'. -/
-theorem Preimage_def (s : Set β) : f.Preimage s = { x | ∃ y ∈ s, y ∈ f x } :=
+theorem Preimage_def (s : Set β) : f.preimage s = { x | ∃ y ∈ s, y ∈ f x } :=
   rfl
 #align pfun.preimage_def PFun.Preimage_def
 
@@ -647,18 +647,18 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : PFun.{u1, u2} α β) (s : Set.{u2} β) (x : α), Iff (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (PFun.preimage.{u1, u2} α β f s)) (Exists.{succ u2} β (fun (y : β) => And (Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) y s) (Membership.mem.{u2, u2} β (Part.{u2} β) (Part.instMembershipPart.{u2} β) y (f x))))
 Case conversion may be inaccurate. Consider using '#align pfun.mem_preimage PFun.mem_preimageₓ'. -/
 @[simp]
-theorem mem_preimage (s : Set β) (x : α) : x ∈ f.Preimage s ↔ ∃ y ∈ s, y ∈ f x :=
+theorem mem_preimage (s : Set β) (x : α) : x ∈ f.preimage s ↔ ∃ y ∈ s, y ∈ f x :=
   Iff.rfl
 #align pfun.mem_preimage PFun.mem_preimage
 
 #print PFun.preimage_subset_dom /-
-theorem preimage_subset_dom (s : Set β) : f.Preimage s ⊆ f.Dom := fun x ⟨y, ys, fxy⟩ =>
+theorem preimage_subset_dom (s : Set β) : f.preimage s ⊆ f.Dom := fun x ⟨y, ys, fxy⟩ =>
   Part.dom_iff_mem.mpr ⟨y, fxy⟩
 #align pfun.preimage_subset_dom PFun.preimage_subset_dom
 -/
 
 #print PFun.preimage_mono /-
-theorem preimage_mono {s t : Set β} (h : s ⊆ t) : f.Preimage s ⊆ f.Preimage t :=
+theorem preimage_mono {s t : Set β} (h : s ⊆ t) : f.preimage s ⊆ f.preimage t :=
   Rel.preimage_mono _ h
 #align pfun.preimage_mono PFun.preimage_mono
 -/
@@ -669,7 +669,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : PFun.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) (PFun.preimage.{u1, u2} α β f (Inter.inter.{u2} (Set.{u2} β) (Set.instInterSet.{u2} β) s t)) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (PFun.preimage.{u1, u2} α β f s) (PFun.preimage.{u1, u2} α β f t))
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_inter PFun.preimage_interₓ'. -/
-theorem preimage_inter (s t : Set β) : f.Preimage (s ∩ t) ⊆ f.Preimage s ∩ f.Preimage t :=
+theorem preimage_inter (s t : Set β) : f.preimage (s ∩ t) ⊆ f.preimage s ∩ f.preimage t :=
   Rel.preimage_inter _ s t
 #align pfun.preimage_inter PFun.preimage_inter
 
@@ -679,7 +679,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} (f : PFun.{u1, u2} α β) (s : Set.{u2} β) (t : Set.{u2} β), Eq.{succ u1} (Set.{u1} α) (PFun.preimage.{u1, u2} α β f (Union.union.{u2} (Set.{u2} β) (Set.instUnionSet.{u2} β) s t)) (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) (PFun.preimage.{u1, u2} α β f s) (PFun.preimage.{u1, u2} α β f t))
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_union PFun.preimage_unionₓ'. -/
-theorem preimage_union (s t : Set β) : f.Preimage (s ∪ t) = f.Preimage s ∪ f.Preimage t :=
+theorem preimage_union (s t : Set β) : f.preimage (s ∪ t) = f.preimage s ∪ f.preimage t :=
   Rel.preimage_union _ s t
 #align pfun.preimage_union PFun.preimage_union
 
@@ -689,11 +689,11 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β), Eq.{succ u2} (Set.{u2} α) (PFun.preimage.{u2, u1} α β f (Set.univ.{u1} β)) (PFun.Dom.{u2, u1} α β f)
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_univ PFun.preimage_univₓ'. -/
-theorem preimage_univ : f.Preimage Set.univ = f.Dom := by ext <;> simp [mem_preimage, mem_dom]
+theorem preimage_univ : f.preimage Set.univ = f.Dom := by ext <;> simp [mem_preimage, mem_dom]
 #align pfun.preimage_univ PFun.preimage_univ
 
 #print PFun.coe_preimage /-
-theorem coe_preimage (f : α → β) (s : Set β) : (f : α →. β).Preimage s = f ⁻¹' s := by ext <;> simp
+theorem coe_preimage (f : α → β) (s : Set β) : (f : α →. β).preimage s = f ⁻¹' s := by ext <;> simp
 #align pfun.coe_preimage PFun.coe_preimage
 -/
 
@@ -774,7 +774,7 @@ theorem core_res (f : α → β) (s : Set α) (t : Set β) : (res f s).core t = 
 end
 
 #print PFun.core_restrict /-
-theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).core s = s.Preimage f := by
+theorem core_restrict (f : α → β) (s : Set β) : (f : α →. β).core s = s.preimage f := by
   ext x <;> simp [core_def]
 #align pfun.core_restrict PFun.core_restrict
 -/
@@ -785,7 +785,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (s : Set.{u1} β), HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (PFun.preimage.{u2, u1} α β f s) (PFun.core.{u2, u1} α β f s)
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_subset_core PFun.preimage_subset_coreₓ'. -/
-theorem preimage_subset_core (f : α →. β) (s : Set β) : f.Preimage s ⊆ f.core s :=
+theorem preimage_subset_core (f : α →. β) (s : Set β) : f.preimage s ⊆ f.core s :=
   fun x ⟨y, ys, fxy⟩ y' fxy' =>
   have : y = y' := Part.mem_unique fxy fxy'
   this ▸ ys
@@ -797,12 +797,12 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (PFun.preimage.{u2, u1} α β f s) (Inter.inter.{u2} (Set.{u2} α) (Set.instInterSet.{u2} α) (PFun.core.{u2, u1} α β f s) (PFun.Dom.{u2, u1} α β f))
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_eq PFun.preimage_eqₓ'. -/
-theorem preimage_eq (f : α →. β) (s : Set β) : f.Preimage s = f.core s ∩ f.Dom :=
+theorem preimage_eq (f : α →. β) (s : Set β) : f.preimage s = f.core s ∩ f.Dom :=
   Set.eq_of_subset_of_subset (Set.subset_inter (f.preimage_subset_core s) (f.preimage_subset_dom s))
     fun x ⟨xcore, xdom⟩ =>
     let y := (f x).get xdom
     have ys : y ∈ s := xcore _ (Part.get_mem _)
-    show x ∈ f.Preimage s from ⟨(f x).get xdom, ys, Part.get_mem _⟩
+    show x ∈ f.preimage s from ⟨(f x).get xdom, ys, Part.get_mem _⟩
 #align pfun.preimage_eq PFun.preimage_eq
 
 /- warning: pfun.core_eq -> PFun.core_eq is a dubious translation:
@@ -811,8 +811,8 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} α) (PFun.core.{u2, u1} α β f s) (Union.union.{u2} (Set.{u2} α) (Set.instUnionSet.{u2} α) (PFun.preimage.{u2, u1} α β f s) (HasCompl.compl.{u2} (Set.{u2} α) (BooleanAlgebra.toHasCompl.{u2} (Set.{u2} α) (Set.instBooleanAlgebraSet.{u2} α)) (PFun.Dom.{u2, u1} α β f)))
 Case conversion may be inaccurate. Consider using '#align pfun.core_eq PFun.core_eqₓ'. -/
-theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.Preimage s ∪ f.Domᶜ := by
-  rw [preimage_eq, Set.union_distrib_right, Set.union_comm (dom f), Set.compl_union_self,
+theorem core_eq (f : α →. β) (s : Set β) : f.core s = f.preimage s ∪ f.Domᶜ := by
+  rw [preimage_eq, Set.union_distrib_right, Set.union_comm (Dom f), Set.compl_union_self,
     Set.inter_univ, Set.union_eq_self_of_subset_right (f.compl_dom_subset_core s)]
 #align pfun.core_eq PFun.core_eq
 
@@ -823,7 +823,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} (f : PFun.{u2, u1} α β) (s : Set.{u1} β), Eq.{succ u2} (Set.{u2} (Set.Elem.{u2} α (PFun.Dom.{u2, u1} α β f))) (Set.preimage.{u2, u1} (Set.Elem.{u2} α (PFun.Dom.{u2, u1} α β f)) β (PFun.asSubtype.{u2, u1} α β f) s) (Set.preimage.{u2, u2} (Subtype.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (PFun.Dom.{u2, u1} α β f))) α (Subtype.val.{succ u2} α (fun (x : α) => Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x (PFun.Dom.{u2, u1} α β f))) (PFun.preimage.{u2, u1} α β f s))
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_as_subtype PFun.preimage_as_subtypeₓ'. -/
 theorem preimage_as_subtype (f : α →. β) (s : Set β) :
-    f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.Preimage s :=
+    f.asSubtype ⁻¹' s = Subtype.val ⁻¹' f.preimage s :=
   by
   ext x
   simp only [Set.mem_preimage, Set.mem_setOf_eq, PFun.asSubtype, PFun.mem_preimage]
@@ -940,7 +940,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u3}} {γ : Type.{u2}} (f : PFun.{u3, u2} β γ) (g : PFun.{u1, u3} α β), Eq.{succ u1} (Set.{u1} α) (PFun.Dom.{u1, u2} α γ (PFun.comp.{u1, u3, u2} α β γ f g)) (PFun.preimage.{u1, u3} α β g (PFun.Dom.{u3, u2} β γ f))
 Case conversion may be inaccurate. Consider using '#align pfun.dom_comp PFun.dom_compₓ'. -/
 @[simp]
-theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.Preimage f.Dom :=
+theorem dom_comp (f : β →. γ) (g : α →. β) : (f.comp g).Dom = g.preimage f.Dom :=
   by
   ext
   simp_rw [mem_preimage, mem_dom, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right]
@@ -956,7 +956,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.preimage_comp PFun.preimage_compₓ'. -/
 @[simp]
 theorem preimage_comp (f : β →. γ) (g : α →. β) (s : Set γ) :
-    (f.comp g).Preimage s = g.Preimage (f.Preimage s) :=
+    (f.comp g).preimage s = g.preimage (f.preimage s) :=
   by
   ext
   simp_rw [mem_preimage, comp_apply, Part.mem_bind_iff, exists_prop, ← exists_and_right, ←
@@ -1055,7 +1055,7 @@ theorem mem_prodLift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} :
     y ∈ f.prodLift g x ↔ y.1 ∈ f x ∧ y.2 ∈ g x :=
   by
   trans ∃ hp hq, (f x).get hp = y.1 ∧ (g x).get hq = y.2
-  · simp only [prod_lift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
+  · simp only [prodLift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
   · simpa only [exists_and_left, exists_and_right]
 #align pfun.mem_prod_lift PFun.mem_prodLift
 
@@ -1074,7 +1074,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.dom_prod_map PFun.dom_prodMapₓ'. -/
 @[simp]
 theorem dom_prodMap (f : α →. γ) (g : β →. δ) :
-    (f.Prod_map g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
+    (f.prodMap g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
   rfl
 #align pfun.dom_prod_map PFun.dom_prodMap
 
@@ -1085,7 +1085,7 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u1}} (f : PFun.{u4, u3} α γ) (g : PFun.{u2, u1} β δ) (x : Prod.{u4, u2} α β) (h : Part.Dom.{max u3 u1} (Prod.{u3, u1} γ δ) (PFun.prodMap.{u4, u2, u3, u1} α β γ δ f g x)), Eq.{max (succ u3) (succ u1)} (Prod.{u3, u1} γ δ) (Part.get.{max u3 u1} (Prod.{u3, u1} γ δ) (PFun.prodMap.{u4, u2, u3, u1} α β γ δ f g x) h) (Prod.mk.{u3, u1} γ δ (Part.get.{u3} γ (f (Prod.fst.{u4, u2} α β x)) (And.left (Part.Dom.{u3} γ (f (Prod.fst.{u4, u2} α β x))) (Part.Dom.{u1} δ (g (Prod.snd.{u4, u2} α β x))) h)) (Part.get.{u1} δ (g (Prod.snd.{u4, u2} α β x)) (And.right (Part.Dom.{u3} γ (f (Prod.fst.{u4, u2} α β x))) (Part.Dom.{u1} δ (g (Prod.snd.{u4, u2} α β x))) h)))
 Case conversion may be inaccurate. Consider using '#align pfun.get_prod_map PFun.get_prodMapₓ'. -/
 theorem get_prodMap (f : α →. γ) (g : β →. δ) (x : α × β) (h) :
-    (f.Prod_map g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
+    (f.prodMap g x).get h = ((f x.1).get h.1, (g x.2).get h.2) :=
   rfl
 #align pfun.get_prod_map PFun.get_prodMap
 
@@ -1097,7 +1097,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.prod_map_apply PFun.prodMap_applyₓ'. -/
 @[simp]
 theorem prodMap_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
-    f.Prod_map g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
+    f.prodMap g x = ⟨(f x.1).Dom ∧ (g x.2).Dom, fun h => ((f x.1).get h.1, (g x.2).get h.2)⟩ :=
   rfl
 #align pfun.prod_map_apply PFun.prodMap_apply
 
@@ -1108,10 +1108,10 @@ but is expected to have type
   forall {α : Type.{u4}} {β : Type.{u2}} {γ : Type.{u3}} {δ : Type.{u1}} {f : PFun.{u4, u3} α γ} {g : PFun.{u2, u1} β δ} {x : Prod.{u4, u2} α β} {y : Prod.{u3, u1} γ δ}, Iff (Membership.mem.{max u3 u1, max u3 u1} (Prod.{u3, u1} γ δ) (Part.{max u1 u3} (Prod.{u3, u1} γ δ)) (Part.instMembershipPart.{max u3 u1} (Prod.{u3, u1} γ δ)) y (PFun.prodMap.{u4, u2, u3, u1} α β γ δ f g x)) (And (Membership.mem.{u3, u3} γ (Part.{u3} γ) (Part.instMembershipPart.{u3} γ) (Prod.fst.{u3, u1} γ δ y) (f (Prod.fst.{u4, u2} α β x))) (Membership.mem.{u1, u1} δ (Part.{u1} δ) (Part.instMembershipPart.{u1} δ) (Prod.snd.{u3, u1} γ δ y) (g (Prod.snd.{u4, u2} α β x))))
 Case conversion may be inaccurate. Consider using '#align pfun.mem_prod_map PFun.mem_prodMapₓ'. -/
 theorem mem_prodMap {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
-    y ∈ f.Prod_map g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
+    y ∈ f.prodMap g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 :=
   by
   trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
-  · simp only [Prod_map, Part.mem_mk_iff, And.exists, Prod.ext_iff]
+  · simp only [prodMap, Part.mem_mk_iff, And.exists, Prod.ext_iff]
   · simpa only [exists_and_left, exists_and_right]
 #align pfun.mem_prod_map PFun.mem_prodMap
 
@@ -1136,7 +1136,7 @@ but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}}, Eq.{max (succ u2) (succ u1)} (PFun.{max u1 u2, max u1 u2} (Prod.{u2, u1} α β) (Prod.{u2, u1} α β)) (PFun.prodMap.{u2, u1, u2, u1} α β α β (PFun.id.{u2} α) (PFun.id.{u1} β)) (PFun.id.{max u2 u1} (Prod.{u2, u1} α β))
 Case conversion may be inaccurate. Consider using '#align pfun.prod_map_id_id PFun.prodMap_id_idₓ'. -/
 @[simp]
-theorem prodMap_id_id : (PFun.id α).Prod_map (PFun.id β) = PFun.id _ :=
+theorem prodMap_id_id : (PFun.id α).prodMap (PFun.id β) = PFun.id _ :=
   ext fun _ _ => by simp [eq_comm]
 #align pfun.prod_map_id_id PFun.prodMap_id_id
 
@@ -1148,7 +1148,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pfun.prod_map_comp_comp PFun.prodMap_comp_compₓ'. -/
 @[simp]
 theorem prodMap_comp_comp (f₁ : α →. β) (f₂ : β →. γ) (g₁ : δ →. ε) (g₂ : ε →. ι) :
-    (f₂.comp f₁).Prod_map (g₂.comp g₁) = (f₂.Prod_map g₂).comp (f₁.Prod_map g₁) :=
+    (f₂.comp f₁).prodMap (g₂.comp g₁) = (f₂.prodMap g₂).comp (f₁.prodMap g₁) :=
   ext fun _ _ => by tidy
 #align pfun.prod_map_comp_comp PFun.prodMap_comp_comp
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -653,16 +653,16 @@ theorem symm_trans (e₁ : L₁ ≃ₗ⁅R⁆ L₂) (e₂ : L₂ ≃ₗ⁅R⁆ L
 #align lie_equiv.symm_trans LieEquiv.symm_trans
 
 protected theorem bijective (e : L₁ ≃ₗ⁅R⁆ L₂) : Function.Bijective ((e : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) :=
-  e.toLinearEquiv.Bijective
+  e.toLinearEquiv.bijective
 #align lie_equiv.bijective LieEquiv.bijective
 
 protected theorem injective (e : L₁ ≃ₗ⁅R⁆ L₂) : Function.Injective ((e : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) :=
-  e.toLinearEquiv.Injective
+  e.toLinearEquiv.injective
 #align lie_equiv.injective LieEquiv.injective
 
 protected theorem surjective (e : L₁ ≃ₗ⁅R⁆ L₂) :
     Function.Surjective ((e : L₁ →ₗ⁅R⁆ L₂) : L₁ → L₂) :=
-  e.toLinearEquiv.Surjective
+  e.toLinearEquiv.surjective
 #align lie_equiv.surjective LieEquiv.surjective
 
 /-- A bijective morphism of Lie algebras yields an equivalence of Lie algebras. -/
@@ -925,7 +925,7 @@ theorem zsmul_apply (z : ℤ) (f : M →ₗ⁅R,L⁆ N) (m : M) : (z • f) m = 
 #align lie_module_hom.zsmul_apply LieModuleHom.zsmul_apply
 
 instance : AddCommGroup (M →ₗ⁅R,L⁆ N) :=
-  coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
+  coe_injective.addCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_nsmul _ _)
     fun _ _ => coe_zsmul _ _
 
 instance : SMul R (M →ₗ⁅R,L⁆ N) where smul t f := { t • (f : M →ₗ[R] N) with map_lie' := by simp }
@@ -988,7 +988,7 @@ instance : CoeFun (M ≃ₗ⁅R,L⁆ N) fun _ => M → N :=
   ⟨fun e => e.toLieModuleHom.toFun⟩
 
 theorem injective (e : M ≃ₗ⁅R,L⁆ N) : Function.Injective e :=
-  e.toEquiv.Injective
+  e.toEquiv.injective
 #align lie_module_equiv.injective LieModuleEquiv.injective
 
 @[simp]

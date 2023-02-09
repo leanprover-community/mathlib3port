@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Minchao Wu
 
 ! This file was ported from Lean 3 source module data.psigma.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,8 +91,8 @@ instance preorder [Preorder ι] [∀ i, Preorder (α i)] : Preorder (Σₗ' i, �
         · exact lt_irrefl _ hij
         · exact hab.not_le hba
       · rintro ⟨⟨j, b, hij⟩ | ⟨i, hab⟩, hba⟩
-        · exact lex.left _ _ hij
-        · exact lex.right _ (hab.lt_of_not_le fun h => hba <| lex.right _ h) }
+        · exact Lex.left _ _ hij
+        · exact Lex.right _ (hab.lt_of_not_le fun h => hba <| Lex.right _ h) }
 #align psigma.lex.preorder PSigma.Lex.preorder
 -/
 
@@ -118,11 +118,11 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
     le_total := by
       rintro ⟨i, a⟩ ⟨j, b⟩
       obtain hij | rfl | hji := lt_trichotomy i j
-      · exact Or.inl (lex.left _ _ hij)
+      · exact Or.inl (Lex.left _ _ hij)
       · obtain hab | hba := le_total a b
-        · exact Or.inl (lex.right _ hab)
-        · exact Or.inr (lex.right _ hba)
-      · exact Or.inr (lex.left _ _ hji)
+        · exact Or.inl (Lex.right _ hab)
+        · exact Or.inr (Lex.right _ hba)
+      · exact Or.inr (Lex.left _ _ hji)
     DecidableEq := PSigma.decidableEq
     decidableLe := Lex.decidable _ _
     decidableLt := Lex.decidable _ _ }
@@ -141,8 +141,8 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
   bot := ⟨⊥, ⊥⟩
   bot_le := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_bot_or_bot_lt a
-    · exact lex.right _ bot_le
-    · exact lex.left _ _ ha
+    · exact Lex.right _ bot_le
+    · exact Lex.left _ _ ha
 #align psigma.lex.order_bot PSigma.Lex.orderBot
 
 /- warning: psigma.lex.order_top -> PSigma.Lex.orderTop is a dubious translation:
@@ -157,8 +157,8 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
   top := ⟨⊤, ⊤⟩
   le_top := fun ⟨a, b⟩ => by
     obtain rfl | ha := eq_top_or_lt_top a
-    · exact lex.right _ le_top
-    · exact lex.left _ _ ha
+    · exact Lex.right _ le_top
+    · exact Lex.left _ _ ha
 #align psigma.lex.order_top PSigma.Lex.orderTop
 
 /- warning: psigma.lex.bounded_order -> PSigma.Lex.boundedOrder is a dubious translation:

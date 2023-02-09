@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module tactic.mk_iff_of_inductive_prop
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ unsafe def compact_relation :
     List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
   | [], ps => ([], ps)
   | b :: bs, ps =>
-    match ps.spanₓ fun ap : expr × expr => ¬ap.2 == b with
+    match ps.span fun ap : expr × expr => ¬ap.2 == b with
     | (_, []) =>
       let (bs, ps) := compact_relation bs ps
       (b :: bs, ps)
@@ -91,13 +91,13 @@ unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr
         let sort l ← infer_type t
         if l = level.zero then do
             let r ← mk_exists_lst bs' t
-            return (Sum.inl bs', r)
+            return (sum.inl bs', r)
           else do
             let r ← mk_exists_lst bs' mk_true
-            return (Sum.inr 0, r)
+            return (sum.inr 0, r)
       | _, _ => do
         let r ← mk_exists_lst bs' (mk_and_lst eqs)
-        return (Sum.inr eqs, r)
+        return (sum.inr eqs, r)
   return ((bs, n), r)
 #align mk_iff.constr_to_prop mk_iff.constr_to_prop
 
@@ -111,11 +111,11 @@ unsafe def to_cases (s : List <| List (Option expr) × Sum expr ℕ) : tactic Un
         let si := (shape vars).filterMap fun ⟨c, v⟩ => c >>= fun _ => some v
         select p (s - 1)
         match t with
-          | Sum.inl e => do
+          | sum.inl e => do
             si existsi
             let some v ← return <| vars (shape - 1)
             exact v
-          | Sum.inr n => do
+          | sum.inr n => do
             si existsi
             (iterate_exactly (n - 1) ((split >> constructor) >> skip) >> constructor) >> skip
         done)
@@ -150,14 +150,14 @@ unsafe def to_inductive (cs : List Name) (gs : List expr)
         ((cs (r s)).map fun ⟨constr_name, h, bs, e⟩ => do
           let n := (bs id).length
           match e with
-            | Sum.inl e => elim_gen_prod (n - 1) h [] [] >> skip
-            | Sum.inr 0 => do
+            | sum.inl e => elim_gen_prod (n - 1) h [] [] >> skip
+            | sum.inr 0 => do
               let (hs, h, _) ← elim_gen_prod n h [] []
               clear h
-            | Sum.inr (e + 1) => do
+            | sum.inr (e + 1) => do
               let (hs, h, _) ← elim_gen_prod n h [] []
-              let (es, Eq, _) ← elim_gen_prod e h [] []
-              let es := es ++ [Eq]
+              let (es, eq, _) ← elim_gen_prod e h [] []
+              let es := es ++ [eq]
               /- `es.mmap' subst`: fails when we have dependent equalities (`heq`). `subst` will change the
                           dependent hypotheses, so that the `uniq` local names in `es` are wrong afterwards. Instead
                           we revert them and pull them out one-by-one. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.salem_spencer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -95,7 +95,7 @@ theorem Set.Subsingleton.mulSalemSpencer (hs : s.Subsingleton) : MulSalemSpencer
 
 @[simp, to_additive]
 theorem mulSalemSpencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
-  subsingleton_singleton.MulSalemSpencer
+  subsingleton_singleton.mulSalemSpencer
 #align mul_salem_spencer_singleton mulSalemSpencer_singleton
 #align add_salem_spencer_singleton add_salem_spencer_singleton
 
@@ -236,7 +236,7 @@ theorem mulSalemSpencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
   by
   refine' mul_salem_spencer_insert.trans _
   rw [← and_assoc']
-  exact and_iff_left fun b c hb hc h => ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).Ne h).elim
+  exact and_iff_left fun b c hb hc h => ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).ne h).elim
 #align mul_salem_spencer_insert_of_lt mulSalemSpencer_insert_of_lt
 #align add_salem_spencer_insert_of_lt add_salem_spencer_insert_of_lt
 
@@ -268,7 +268,7 @@ theorem mulSalemSpencer_mul_left_iff₀ (ha : a ≠ 0) :
     mul_left_cancel₀ ha
       (hs (Set.mem_image_of_mem _ hb) (Set.mem_image_of_mem _ hc) (Set.mem_image_of_mem _ hd) <| by
         rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-    fun hs => hs.mulLeft₀ ha⟩
+    fun hs => hs.mul_left₀ ha⟩
 #align mul_salem_spencer_mul_left_iff₀ mulSalemSpencer_mul_left_iff₀
 
 theorem mulSalemSpencer_mul_right_iff₀ (ha : a ≠ 0) :
@@ -277,7 +277,7 @@ theorem mulSalemSpencer_mul_right_iff₀ (ha : a ≠ 0) :
     mul_right_cancel₀ ha
       (hs (Set.mem_image_of_mem _ hb) (Set.mem_image_of_mem _ hc) (Set.mem_image_of_mem _ hd) <| by
         rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
-    fun hs => hs.mulRight₀ ha⟩
+    fun hs => hs.mul_right₀ ha⟩
 #align mul_salem_spencer_mul_right_iff₀ mulSalemSpencer_mul_right_iff₀
 
 end CancelCommMonoidWithZero
@@ -317,7 +317,7 @@ theorem addSalemSpencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [Stric
   obtain rfl | hr := eq_or_ne r 0
   · rw [sphere_zero]
     exact add_salem_spencer_singleton _
-  · convert addSalemSpencer_frontier is_closed_ball (strictConvex_closedBall ℝ x r)
+  · convert addSalemSpencer_frontier isClosed_ball (strictConvex_closedBall ℝ x r)
     exact (frontier_closedBall _ hr).symm
 #align add_salem_spencer_sphere addSalemSpencer_sphere
 
@@ -333,7 +333,7 @@ section Monoid
 
 variable [Monoid α] [DecidableEq β] [Monoid β] (s t : Finset α)
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /-- The multiplicative Roth number of a finset is the cardinality of its biggest multiplicative
 Salem-Spencer subset. -/
 @[to_additive
@@ -355,8 +355,8 @@ theorem mulRothNumber_le : mulRothNumber s ≤ s.card := by convert Nat.findGrea
 #align mul_roth_number_le mulRothNumber_le
 #align add_roth_number_le add_roth_number_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 @[to_additive]
 theorem mulRothNumber_spec :
     ∃ (t : _)(_ : t ⊆ s), t.card = mulRothNumber s ∧ MulSalemSpencer (t : Set α) :=
@@ -434,7 +434,7 @@ theorem mulRothNumber_lt_of_forall_not_mulSalemSpencer
   rw [← hcard, ← not_le]
   intro hn
   obtain ⟨u, hut, rfl⟩ := exists_smaller_set t n hn
-  exact h _ (mem_powerset_len.2 ⟨hut.trans hts, rfl⟩) (ht.mono hut)
+  exact h _ (mem_powersetLen.2 ⟨hut.trans hts, rfl⟩) (ht.mono hut)
 #align mul_roth_number_lt_of_forall_not_mul_salem_spencer mulRothNumber_lt_of_forall_not_mulSalemSpencer
 #align add_roth_number_lt_of_forall_not_add_salem_spencer add_roth_number_lt_of_forall_not_add_salem_spencer
 
@@ -499,7 +499,7 @@ theorem rothNumberNat_le (N : ℕ) : rothNumberNat N ≤ N :=
   (add_roth_number_le _).trans (card_range _).le
 #align roth_number_nat_le rothNumberNat_le
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » range[finset.range] n) -/
 theorem rothNumberNat_spec (n : ℕ) :
     ∃ (t : _)(_ : t ⊆ range n), t.card = rothNumberNat n ∧ AddSalemSpencer (t : Set ℕ) :=
   add_roth_number_spec _
@@ -547,7 +547,7 @@ theorem rothNumberNat_isOWith_id :
 
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
 theorem rothNumberNat_isO_id : (fun N => (rothNumberNat N : ℝ)) =O[atTop] fun N => (N : ℝ) :=
-  rothNumberNat_isOWith_id.IsO
+  rothNumberNat_isOWith_id.isO
 #align roth_number_nat_is_O_id rothNumberNat_isO_id
 
 end rothNumberNat

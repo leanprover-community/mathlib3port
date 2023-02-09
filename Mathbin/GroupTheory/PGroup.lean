@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.p_group
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem of_injective {H : Type _} [Group H] (ϕ : H →* G) (hϕ : Function.Inje
 #align is_p_group.of_injective IsPGroup.of_injective
 
 theorem to_subgroup (H : Subgroup G) : IsPGroup p H :=
-  hG.of_injective H.Subtype Subtype.coe_injective
+  hG.of_injective H.subtype Subtype.coe_injective
 #align is_p_group.to_subgroup IsPGroup.to_subgroup
 
 theorem of_surjective {H : Type _} [Group H] (ϕ : G →* H) (hϕ : Function.Surjective ϕ) :
@@ -96,16 +96,16 @@ theorem of_surjective {H : Type _} [Group H] (ϕ : G →* H) (hϕ : Function.Sur
 #align is_p_group.of_surjective IsPGroup.of_surjective
 
 theorem to_quotient (H : Subgroup G) [H.Normal] : IsPGroup p (G ⧸ H) :=
-  hG.ofSurjective (QuotientGroup.mk' H) Quotient.surjective_Quotient_mk''
+  hG.of_surjective (QuotientGroup.mk' H) Quotient.surjective_Quotient_mk''
 #align is_p_group.to_quotient IsPGroup.to_quotient
 
 theorem of_equiv {H : Type _} [Group H] (ϕ : G ≃* H) : IsPGroup p H :=
-  hG.ofSurjective ϕ.toMonoidHom ϕ.Surjective
+  hG.of_surjective ϕ.toMonoidHom ϕ.surjective
 #align is_p_group.of_equiv IsPGroup.of_equiv
 
 theorem orderOf_coprime {n : ℕ} (hn : p.coprime n) (g : G) : (orderOf g).coprime n :=
   let ⟨k, hk⟩ := hG g
-  (hn.pow_leftₓ k).coprime_dvd_left (orderOf_dvd_of_pow_eq_one hk)
+  (hn.pow_left k).coprime_dvd_left (orderOf_dvd_of_pow_eq_one hk)
 #align is_p_group.order_of_coprime IsPGroup.orderOf_coprime
 
 /-- If `gcd(p,n) = 1`, then the `n`th power map is a bijection. -/
@@ -180,7 +180,7 @@ variable {α : Type _} [MulAction G α]
 
 theorem card_orbit (a : α) [Fintype (orbit G a)] : ∃ n : ℕ, card (orbit G a) = p ^ n :=
   by
-  let ϕ := orbit_equiv_quotient_stabilizer G a
+  let ϕ := orbitEquivQuotientStabilizer G a
   haveI := Fintype.ofEquiv (orbit G a) ϕ
   haveI := (stabilizer G a).finiteIndex_of_finite_quotient
   rw [card_congr ϕ, ← Subgroup.index_eq_card]
@@ -195,23 +195,23 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
     card α ≡ card (fixedPoints G α) [MOD p] := by
   classical
     calc
-      card α = card (Σy : Quotient (orbit_rel G α), { x // Quotient.mk'' x = y }) :=
-        card_congr (Equiv.sigmaFiberEquiv (@Quotient.mk'' _ (orbit_rel G α))).symm
-      _ = ∑ a : Quotient (orbit_rel G α), card { x // Quotient.mk'' x = a } := card_sigma _
-      _ ≡ ∑ a : fixed_points G α, 1 [MOD p] := _
+      card α = card (Σy : Quotient (orbitRel G α), { x // Quotient.mk'' x = y }) :=
+        card_congr (Equiv.sigmaFiberEquiv (@quotient.mk' _ (orbitRel G α))).symm
+      _ = ∑ a : Quotient (orbitRel G α), card { x // Quotient.mk'' x = a } := card_sigma _
+      _ ≡ ∑ a : fixedPoints G α, 1 [MOD p] := _
       _ = _ := by simp <;> rfl
       
     rw [← ZMod.eq_iff_modEq_nat p, Nat.cast_sum, Nat.cast_sum]
     have key :
       ∀ x,
-        card { y // (Quotient.mk'' y : Quotient (orbit_rel G α)) = Quotient.mk'' x } =
+        card { y // (Quotient.mk'' y : Quotient (orbitRel G α)) = Quotient.mk'' x } =
           card (orbit G x) :=
       fun x => by simp only [Quotient.eq''] <;> congr
     refine'
       Eq.symm
         (Finset.sum_bij_ne_zero (fun a _ _ => Quotient.mk'' a.1) (fun _ _ _ => Finset.mem_univ _)
           (fun a₁ a₂ _ _ _ _ h =>
-            Subtype.eq ((mem_fixed_points' α).mp a₂.2 a₁.1 (Quotient.exact' h)))
+            Subtype.eq ((mem_fixedPoints' α).mp a₂.2 a₁.1 (Quotient.exact' h)))
           (fun b => Quotient.inductionOn' b fun b _ hb => _) fun a ha _ => by
           rw [key, mem_fixed_points_iff_card_orbit_eq_one.mp a.2])
     obtain ⟨k, hk⟩ := hG.card_orbit b
@@ -224,7 +224,7 @@ theorem card_modEq_card_fixedPoints [Fintype (fixedPoints G α)] :
                 rwa [pow_one, ← hk, ← Nat.modEq_zero_iff_dvd, ← ZMod.eq_iff_modEq_nat, ← key,
                   Nat.cast_zero]))))
     exact
-      ⟨⟨b, mem_fixed_points_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
+      ⟨⟨b, mem_fixedPoints_iff_card_orbit_eq_one.2 <| by rw [hk, this, pow_zero]⟩,
         Finset.mem_univ _, ne_of_eq_of_ne Nat.cast_one one_ne_zero, rfl⟩
 #align is_p_group.card_modeq_card_fixed_points IsPGroup.card_modEq_card_fixedPoints
 
@@ -234,7 +234,7 @@ theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Fin
     (fixedPoints G α).Nonempty :=
   @Set.nonempty_of_nonempty_subtype _ _
     (by
-      cases nonempty_fintype (fixed_points G α)
+      cases nonempty_fintype (fixedPoints G α)
       rw [← card_pos_iff, pos_iff_ne_zero]
       contrapose! hpα
       rw [← Nat.modEq_zero_iff_dvd, ← hpα]
@@ -246,10 +246,10 @@ theorem nonempty_fixed_point_of_prime_not_dvd_card (hpα : ¬p ∣ card α) [Fin
 theorem exists_fixed_point_of_prime_dvd_card_of_fixed_point (hpα : p ∣ card α) {a : α}
     (ha : a ∈ fixedPoints G α) : ∃ b, b ∈ fixedPoints G α ∧ a ≠ b :=
   by
-  cases nonempty_fintype (fixed_points G α)
-  have hpf : p ∣ card (fixed_points G α) :=
+  cases nonempty_fintype (fixedPoints G α)
+  have hpf : p ∣ card (fixedPoints G α) :=
     nat.modeq_zero_iff_dvd.mp ((hG.card_modeq_card_fixed_points α).symm.trans hpα.modeq_zero_nat)
-  have hα : 1 < card (fixed_points G α) :=
+  have hα : 1 < card (fixedPoints G α) :=
     (Fact.out p.prime).one_lt.trans_le (Nat.le_of_dvd (card_pos_iff.2 ⟨⟨a, ha⟩⟩) hpf)
   exact
     let ⟨⟨b, hb⟩, hba⟩ := exists_ne_of_one_lt_card hα ⟨a, ha⟩
@@ -293,7 +293,7 @@ theorem to_inf_right {H K : Subgroup G} (hK : IsPGroup p K) : IsPGroup p (H ⊓ 
 theorem map {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Group K] (ϕ : G →* K) :
     IsPGroup p (H.map ϕ) := by
   rw [← H.subtype_range, MonoidHom.map_range]
-  exact hH.of_surjective (ϕ.restrict H).range_restrict (ϕ.restrict H).rangeRestrict_surjective
+  exact hH.of_surjective (ϕ.restrict H).rangeRestrict (ϕ.restrict H).rangeRestrict_surjective
 #align is_p_group.map IsPGroup.map
 
 theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Group K]
@@ -304,7 +304,7 @@ theorem comap_of_ker_isPGroup {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} 
   rw [Subtype.ext_iff, H.coe_pow, Subtype.coe_mk, ← ϕ.map_pow] at hj
   obtain ⟨k, hk⟩ := hϕ ⟨g.1 ^ p ^ j, hj⟩
   rwa [Subtype.ext_iff, ϕ.ker.coe_pow, Subtype.coe_mk, ← pow_mul, ← pow_add] at hk
-  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).val_pow_eq_pow_val]⟩
+  exact ⟨j + k, by rwa [Subtype.ext_iff, (H.comap ϕ).coe_pow]⟩
 #align is_p_group.comap_of_ker_is_p_group IsPGroup.comap_of_ker_isPGroup
 
 theorem ker_isPGroup_of_injective {K : Type _} [Group K] {ϕ : K →* G} (hϕ : Function.Injective ϕ) :
@@ -318,8 +318,8 @@ theorem comap_of_injective {H : Subgroup G} (hH : IsPGroup p H) {K : Type _} [Gr
 #align is_p_group.comap_of_injective IsPGroup.comap_of_injective
 
 theorem comap_subtype {H : Subgroup G} (hH : IsPGroup p H) {K : Subgroup G} :
-    IsPGroup p (H.comap K.Subtype) :=
-  hH.comap_of_injective K.Subtype Subtype.coe_injective
+    IsPGroup p (H.comap K.subtype) :=
+  hH.comap_of_injective K.subtype Subtype.coe_injective
 #align is_p_group.comap_subtype IsPGroup.comap_subtype
 
 theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K)
@@ -405,11 +405,11 @@ theorem cyclic_center_quotient_of_card_eq_prime_sq (hG : card G = p ^ 2) :
     rw [card_eq_card_quotient_mul_card_subgroup (center G), mul_comm, hk] at hG
     have hk2 := (Nat.pow_dvd_pow_iff_le_right (Fact.out p.prime).one_lt).1 ⟨_, hG.symm⟩
     interval_cases
-    · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).NeZero] at hG
+    · rw [sq, pow_one, mul_right_inj' (Fact.out p.prime).ne_zero] at hG
       exact isCyclic_of_prime_card hG
     ·
       exact
-        @isCyclic_of_subsingleton _ _
+        @is_cyclic_of_subsingleton _ _
           ⟨Fintype.card_le_one_iff.1
               (mul_right_injective₀ (pow_ne_zero 2 (NeZero.ne p))
                   (hG.trans (mul_one (p ^ 2)).symm)).le⟩

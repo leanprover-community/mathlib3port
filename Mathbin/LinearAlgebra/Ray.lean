@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.ray
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem zero_right (x : M) : SameRay R x 0 :=
 #align same_ray.zero_right SameRay.zero_right
 
 @[nontriviality]
-theorem of_subsingleton [Subsingleton M] (x y : M) : SameRay R x y :=
+theorem of_subsingleton [Subsingleton M] (x y : Nontrivial) : SameRay R x y :=
   by
   rw [Subsingleton.elim x 0]
   exact zero_left _
@@ -428,7 +428,7 @@ namespace RayVector
 
 /-- Negating a nonzero vector. -/
 instance {R : Type _} : Neg (RayVector R M) :=
-  ⟨fun v => ⟨-v, neg_ne_zero.2 v.Prop⟩⟩
+  ⟨fun v => ⟨-v, neg_ne_zero.2 v.prop⟩⟩
 
 /-- Negating a nonzero vector commutes with coercion to the underlying module. -/
 @[simp, norm_cast]
@@ -526,7 +526,7 @@ theorem sameRay_of_mem_orbit {v₁ v₂ : M} (h : v₁ ∈ MulAction.orbit (Unit
 theorem units_inv_smul (u : Rˣ) (v : Module.Ray R M) : u⁻¹ • v = u • v :=
   calc
     u⁻¹ • v = (u * u) • u⁻¹ • v :=
-      Eq.symm <| (u⁻¹ • v).units_smul_of_pos _ <| mul_self_pos.2 u.NeZero
+      Eq.symm <| (u⁻¹ • v).units_smul_of_pos _ <| mul_self_pos.2 u.ne_zero
     _ = u • v := by rw [mul_smul, smul_inv_smul]
     
 #align units_inv_smul units_inv_smul
@@ -598,7 +598,7 @@ second, if and only if they are not linearly independent. -/
 theorem sameRay_or_sameRay_neg_iff_not_linearIndependent {x y : M} :
     SameRay R x y ∨ SameRay R x (-y) ↔ ¬LinearIndependent R ![x, y] :=
   by
-  by_cases hx : x = 0; · simp [hx, fun h : LinearIndependent R ![0, y] => h.NeZero 0 rfl]
+  by_cases hx : x = 0; · simp [hx, fun h : LinearIndependent R ![0, y] => h.ne_zero 0 rfl]
   by_cases hy : y = 0; · simp [hy, fun h : LinearIndependent R ![x, 0] => h.NeZero 1 rfl]
   simp_rw [Fintype.not_linearIndependent_iff, Fin.sum_univ_two, Fin.exists_fin_two]
   refine' ⟨fun h => _, fun h => _⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.content
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,16 +96,16 @@ theorem apply_eq_coe_toFun (K : Compacts G) : μ K = μ.toFun K :=
 #align measure_theory.content.apply_eq_coe_to_fun MeasureTheory.Content.apply_eq_coe_toFun
 
 theorem mono (K₁ K₂ : Compacts G) (h : (K₁ : Set G) ⊆ K₂) : μ K₁ ≤ μ K₂ := by
-  simp [apply_eq_coe_to_fun, μ.mono' _ _ h]
+  simp [apply_eq_coe_toFun, μ.mono' _ _ h]
 #align measure_theory.content.mono MeasureTheory.Content.mono
 
 theorem sup_disjoint (K₁ K₂ : Compacts G) (h : Disjoint (K₁ : Set G) K₂) :
-    μ (K₁ ⊔ K₂) = μ K₁ + μ K₂ := by simp [apply_eq_coe_to_fun, μ.sup_disjoint' _ _ h]
+    μ (K₁ ⊔ K₂) = μ K₁ + μ K₂ := by simp [apply_eq_coe_toFun, μ.sup_disjoint' _ _ h]
 #align measure_theory.content.sup_disjoint MeasureTheory.Content.sup_disjoint
 
 theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁ ⊔ K₂) ≤ μ K₁ + μ K₂ :=
   by
-  simp only [apply_eq_coe_to_fun]
+  simp only [apply_eq_coe_toFun]
   norm_cast
   exact μ.sup_le' _ _
 #align measure_theory.content.sup_le MeasureTheory.Content.sup_le
@@ -116,7 +116,7 @@ theorem lt_top (K : Compacts G) : μ K < ∞ :=
 
 theorem empty : μ ⊥ = 0 := by
   have := μ.sup_disjoint' ⊥ ⊥
-  simpa [apply_eq_coe_to_fun] using this
+  simpa [apply_eq_coe_toFun] using this
 #align measure_theory.content.empty MeasureTheory.Content.empty
 
 /-- Constructing the inner content of a content. From a content defined on the compact sets, we
@@ -148,7 +148,7 @@ theorem innerContent_empty : μ.innerContent ∅ = 0 :=
   refine' supᵢ₂_le fun K hK => _
   have : K = ⊥ := by
     ext1
-    rw [subset_empty_iff.mp hK, compacts.coe_bot]
+    rw [subset_empty_iff.mp hK, Compacts.coe_bot]
   rw [this]
   rfl
 #align measure_theory.content.inner_content_empty MeasureTheory.Content.innerContent_empty
@@ -168,7 +168,7 @@ theorem innerContent_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
   have := Ennreal.sub_lt_self hU h.ne_bot h'ε
   conv at this =>
     rhs
-    rw [inner_content];
+    rw [innerContent];
   simp only [lt_supᵢ_iff] at this
   rcases this with ⟨U, h1U, h2U⟩; refine' ⟨U, h1U, _⟩
   rw [← tsub_le_iff_right]; exact le_of_lt h2U
@@ -179,7 +179,7 @@ contents. -/
 theorem innerContent_Sup_nat [T2Space G] (U : ℕ → Opens G) :
     μ.innerContent (⨆ i : ℕ, U i) ≤ ∑' i : ℕ, μ.innerContent (U i) :=
   by
-  have h3 : ∀ (t : Finset ℕ) (K : ℕ → compacts G), μ (t.sup K) ≤ t.Sum fun i => μ (K i) :=
+  have h3 : ∀ (t : Finset ℕ) (K : ℕ → Compacts G), μ (t.sup K) ≤ t.sum fun i => μ (K i) :=
     by
     intro t K
     refine' Finset.induction_on t _ _
@@ -188,17 +188,17 @@ theorem innerContent_Sup_nat [T2Space G] (U : ℕ → Opens G) :
       rw [Finset.sup_insert, Finset.sum_insert hn]
       exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
   refine' supᵢ₂_le fun K hK => _
-  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).Prop) _
+  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).prop) _
   swap
   · convert hK
-    rw [opens.supr_def, Subtype.coe_mk]
-  rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop)
+    rw [Opens.supᵢ_def, Subtype.coe_mk]
+  rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).prop)
       (by simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩
-  let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
+  let L : ℕ → Compacts G := fun n => ⟨K' n, h1K' n⟩
   convert le_trans (h3 t L) _
   · ext1
-    rw [compacts.coe_finset_sup, Finset.sup_eq_supᵢ]
+    rw [Compacts.coe_finset_sup, Finset.sup_eq_supᵢ]
     exact h3K'
   refine' le_trans (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
   intro i hi
@@ -214,14 +214,14 @@ theorem innerContent_unionᵢ_nat [T2Space G] ⦃U : ℕ → Set G⦄ (hU : ∀ 
     μ.innerContent ⟨⋃ i : ℕ, U i, isOpen_unionᵢ hU⟩ ≤ ∑' i : ℕ, μ.innerContent ⟨U i, hU i⟩ :=
   by
   have := μ.inner_content_Sup_nat fun i => ⟨U i, hU i⟩
-  rwa [opens.supr_def] at this
+  rwa [Opens.supᵢ_def] at this
 #align measure_theory.content.inner_content_Union_nat MeasureTheory.Content.innerContent_unionᵢ_nat
 
-theorem innerContent_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K.map f f.Continuous) = μ K)
+theorem innerContent_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K.map f f.continuous) = μ K)
     (U : Opens G) : μ.innerContent (Opens.comap f.toContinuousMap U) = μ.innerContent U :=
   by
-  refine' (compacts.equiv f).Surjective.supᵢ_congr _ fun K => supᵢ_congr_Prop image_subset_iff _
-  intro hK; simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
+  refine' (Compacts.equiv f).surjective.supᵢ_congr _ fun K => supᵢ_congr_Prop image_subset_iff _
+  intro hK; simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, Compacts.equiv]
   apply h
 #align measure_theory.content.inner_content_comap MeasureTheory.Content.innerContent_comap
 
@@ -244,8 +244,8 @@ theorem innerContent_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolog
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
   suffices μ K ≤ s.card * μ.inner_content U by
     exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
-  have : (K : Set G) ⊆ ↑(⨆ g ∈ s, opens.comap (Homeomorph.mulLeft g).toContinuousMap U) := by
-    simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
+  have : (K : Set G) ⊆ ↑(⨆ g ∈ s, Opens.comap (Homeomorph.mulLeft g).toContinuousMap U) := by
+    simpa only [Opens.supᵢ_def, Opens.coe_comap, Subtype.coe_mk]
   refine' (μ.le_inner_content _ _ this).trans _
   refine'
     (rel_supᵢ_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
@@ -267,69 +267,68 @@ protected def outerMeasure : OuterMeasure G :=
 
 variable [T2Space G]
 
-theorem outerMeasure_opens (U : Opens G) : μ.OuterMeasure U = μ.innerContent U :=
+theorem outerMeasure_opens (U : Opens G) : μ.outerMeasure U = μ.innerContent U :=
   inducedOuterMeasure_eq' (fun _ => isOpen_unionᵢ) μ.innerContent_unionᵢ_nat μ.innerContent_mono U.2
 #align measure_theory.content.outer_measure_opens MeasureTheory.Content.outerMeasure_opens
 
 theorem outerMeasure_of_isOpen (U : Set G) (hU : IsOpen U) :
-    μ.OuterMeasure U = μ.innerContent ⟨U, hU⟩ :=
+    μ.outerMeasure U = μ.innerContent ⟨U, hU⟩ :=
   μ.outerMeasure_opens ⟨U, hU⟩
 #align measure_theory.content.outer_measure_of_is_open MeasureTheory.Content.outerMeasure_of_isOpen
 
 theorem outerMeasure_le (U : Opens G) (K : Compacts G) (hUK : (U : Set G) ⊆ K) :
-    μ.OuterMeasure U ≤ μ K :=
+    μ.outerMeasure U ≤ μ K :=
   (μ.outerMeasure_opens U).le.trans <| μ.innerContent_le U K hUK
 #align measure_theory.content.outer_measure_le MeasureTheory.Content.outerMeasure_le
 
-theorem le_outerMeasure_compacts (K : Compacts G) : μ K ≤ μ.OuterMeasure K :=
+theorem le_outerMeasure_compacts (K : Compacts G) : μ K ≤ μ.outerMeasure K :=
   by
-  rw [content.outer_measure, induced_outer_measure_eq_infi]
+  rw [Content.outerMeasure, inducedOuterMeasure_eq_infᵢ]
   · exact le_infᵢ fun U => le_infᵢ fun hU => le_infᵢ <| μ.le_inner_content K ⟨U, hU⟩
   · exact μ.inner_content_Union_nat
   · exact μ.inner_content_mono
 #align measure_theory.content.le_outer_measure_compacts MeasureTheory.Content.le_outerMeasure_compacts
 
 theorem outerMeasure_eq_infᵢ (A : Set G) :
-    μ.OuterMeasure A = ⨅ (U : Set G) (hU : IsOpen U) (h : A ⊆ U), μ.innerContent ⟨U, hU⟩ :=
+    μ.outerMeasure A = ⨅ (U : Set G) (hU : IsOpen U) (h : A ⊆ U), μ.innerContent ⟨U, hU⟩ :=
   inducedOuterMeasure_eq_infᵢ _ μ.innerContent_unionᵢ_nat μ.innerContent_mono A
 #align measure_theory.content.outer_measure_eq_infi MeasureTheory.Content.outerMeasure_eq_infᵢ
 
-theorem outerMeasure_interior_compacts (K : Compacts G) : μ.OuterMeasure (interior K) ≤ μ K :=
+theorem outerMeasure_interior_compacts (K : Compacts G) : μ.outerMeasure (interior K) ≤ μ K :=
   (μ.outerMeasure_opens <| Opens.interior K).le.trans <| μ.innerContent_le _ _ interior_subset
 #align measure_theory.content.outer_measure_interior_compacts MeasureTheory.Content.outerMeasure_interior_compacts
 
-theorem outerMeasure_exists_compact {U : Opens G} (hU : μ.OuterMeasure U ≠ ∞) {ε : ℝ≥0}
-    (hε : ε ≠ 0) : ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure K + ε :=
+theorem outerMeasure_exists_compact {U : Opens G} (hU : μ.outerMeasure U ≠ ∞) {ε : ℝ≥0}
+    (hε : ε ≠ 0) : ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.outerMeasure U ≤ μ.outerMeasure K + ε :=
   by
   rw [μ.outer_measure_opens] at hU⊢
   rcases μ.inner_content_exists_compact hU hε with ⟨K, h1K, h2K⟩
   exact ⟨K, h1K, le_trans h2K <| add_le_add_right (μ.le_outer_measure_compacts K) _⟩
 #align measure_theory.content.outer_measure_exists_compact MeasureTheory.Content.outerMeasure_exists_compact
 
-theorem outerMeasure_exists_open {A : Set G} (hA : μ.OuterMeasure A ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
-    ∃ U : Opens G, A ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure A + ε :=
+theorem outerMeasure_exists_open {A : Set G} (hA : μ.outerMeasure A ≠ ∞) {ε : ℝ≥0} (hε : ε ≠ 0) :
+    ∃ U : Opens G, A ⊆ U ∧ μ.outerMeasure U ≤ μ.outerMeasure A + ε :=
   by
-  rcases induced_outer_measure_exists_set _ _ μ.inner_content_mono hA
-      (Ennreal.coe_ne_zero.2 hε) with
+  rcases inducedOuterMeasure_exists_set _ _ μ.inner_content_mono hA (Ennreal.coe_ne_zero.2 hε) with
     ⟨U, hU, h2U, h3U⟩
   exact ⟨⟨U, hU⟩, h2U, h3U⟩; swap; exact μ.inner_content_Union_nat
 #align measure_theory.content.outer_measure_exists_open MeasureTheory.Content.outerMeasure_exists_open
 
-theorem outerMeasure_preimage (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K.map f f.Continuous) = μ K)
-    (A : Set G) : μ.OuterMeasure (f ⁻¹' A) = μ.OuterMeasure A :=
+theorem outerMeasure_preimage (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K.map f f.continuous) = μ K)
+    (A : Set G) : μ.outerMeasure (f ⁻¹' A) = μ.outerMeasure A :=
   by
   refine'
-    induced_outer_measure_preimage _ μ.inner_content_Union_nat μ.inner_content_mono _
+    inducedOuterMeasure_preimage _ μ.inner_content_Union_nat μ.inner_content_mono _
       (fun s => f.is_open_preimage) _
   intro s hs; convert μ.inner_content_comap f h ⟨s, hs⟩
 #align measure_theory.content.outer_measure_preimage MeasureTheory.Content.outerMeasure_preimage
 
 theorem outerMeasure_lt_top_of_isCompact [LocallyCompactSpace G] {K : Set G} (hK : IsCompact K) :
-    μ.OuterMeasure K < ∞ :=
+    μ.outerMeasure K < ∞ :=
   by
   rcases exists_compact_superset hK with ⟨F, h1F, h2F⟩
   calc
-    μ.outer_measure K ≤ μ.outer_measure (interior F) := outer_measure.mono' _ h2F
+    μ.outer_measure K ≤ μ.outer_measure (interior F) := OuterMeasure.mono' _ h2F
     _ ≤ μ ⟨F, h1F⟩ := by
       apply μ.outer_measure_le ⟨interior F, isOpen_interior⟩ ⟨F, h1F⟩ interior_subset
     _ < ⊤ := μ.lt_top _
@@ -339,25 +338,25 @@ theorem outerMeasure_lt_top_of_isCompact [LocallyCompactSpace G] {K : Set G} (hK
 @[to_additive]
 theorem is_mul_left_invariant_outerMeasure [Group G] [TopologicalGroup G]
     (h : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (g : G)
-    (A : Set G) : μ.OuterMeasure ((fun h => g * h) ⁻¹' A) = μ.OuterMeasure A := by
+    (A : Set G) : μ.outerMeasure ((fun h => g * h) ⁻¹' A) = μ.outerMeasure A := by
   convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
 #align measure_theory.content.is_mul_left_invariant_outer_measure MeasureTheory.Content.is_mul_left_invariant_outerMeasure
 #align measure_theory.content.is_add_left_invariant_outer_measure MeasureTheory.Content.is_add_left_invariant_outer_measure
 
 theorem outerMeasure_caratheodory (A : Set G) :
-    measurable_set[μ.OuterMeasure.caratheodory] A ↔
-      ∀ U : Opens G, μ.OuterMeasure (U ∩ A) + μ.OuterMeasure (U \ A) ≤ μ.OuterMeasure U :=
+    measurable_set[μ.outerMeasure.caratheodory] A ↔
+      ∀ U : Opens G, μ.outerMeasure (U ∩ A) + μ.outerMeasure (U \ A) ≤ μ.outerMeasure U :=
   by
-  dsimp [opens]; rw [Subtype.forall]
-  apply induced_outer_measure_caratheodory
-  apply inner_content_Union_nat
-  apply inner_content_mono'
+  dsimp [Opens]; rw [Subtype.forall]
+  apply inducedOuterMeasure_caratheodory
+  apply innerContent_unionᵢ_nat
+  apply innerContent_mono'
 #align measure_theory.content.outer_measure_caratheodory MeasureTheory.Content.outerMeasure_caratheodory
 
 @[to_additive]
 theorem outerMeasure_pos_of_is_mul_left_invariant [Group G] [TopologicalGroup G]
     (h3 : ∀ (g : G) {K : Compacts G}, μ (K.map _ <| continuous_mul_left g) = μ K) (K : Compacts G)
-    (hK : μ K ≠ 0) {U : Set G} (h1U : IsOpen U) (h2U : U.Nonempty) : 0 < μ.OuterMeasure U :=
+    (hK : μ K ≠ 0) {U : Set G} (h1U : IsOpen U) (h2U : U.Nonempty) : 0 < μ.outerMeasure U :=
   by
   convert μ.inner_content_pos_of_is_mul_left_invariant h3 K hK ⟨U, h1U⟩ h2U
   exact μ.outer_measure_opens ⟨U, h1U⟩
@@ -369,33 +368,33 @@ variable [S : MeasurableSpace G] [BorelSpace G]
 include S
 
 /-- For the outer measure coming from a content, all Borel sets are measurable. -/
-theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
+theorem borel_le_caratheodory : S ≤ μ.outerMeasure.caratheodory :=
   by
-  rw [@BorelSpace.measurable_eq G _ _]
+  rw [@borel_space.measurable_eq G _ _]
   refine' MeasurableSpace.generateFrom_le _
   intro U hU
   rw [μ.outer_measure_caratheodory]
   intro U'
   rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (IsOpen.inter U'.prop hU)]
-  simp only [inner_content, supᵢ_subtype']
-  rw [opens.coe_mk]
-  haveI : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
+  simp only [innerContent, supᵢ_subtype']
+  rw [Opens.coe_mk]
+  haveI : Nonempty { L : Compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
   rw [Ennreal.supᵢ_add]
   refine' supᵢ_le _
   rintro ⟨L, hL⟩
   simp only [subset_inter_iff] at hL
   have : ↑U' \ U ⊆ U' \ L := diff_subset_diff_right hL.2
   refine' le_trans (add_le_add_left (μ.outer_measure.mono' this) _) _
-  rw [μ.outer_measure_of_is_open (↑U' \ L) (IsOpen.sdiff U'.2 L.2.IsClosed)]
-  simp only [inner_content, supᵢ_subtype']
-  rw [opens.coe_mk]
-  haveI : Nonempty { M : compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
+  rw [μ.outer_measure_of_is_open (↑U' \ L) (IsOpen.sdiff U'.2 L.2.isClosed)]
+  simp only [innerContent, supᵢ_subtype']
+  rw [Opens.coe_mk]
+  haveI : Nonempty { M : Compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
   rw [Ennreal.add_supᵢ]
   refine' supᵢ_le _
   rintro ⟨M, hM⟩
   simp only [subset_diff] at hM
   have : (↑(L ⊔ M) : Set G) ⊆ U' := by
-    simp only [union_subset_iff, compacts.coe_sup, hM, hL, and_self_iff]
+    simp only [union_subset_iff, Compacts.coe_sup, hM, hL, and_self_iff]
   rw [μ.outer_measure_of_is_open (↑U') U'.2]
   refine' le_trans (ge_of_eq _) (μ.le_inner_content _ _ this)
   exact μ.sup_disjoint _ _ hM.2.symm
@@ -403,35 +402,35 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
 
 /-- The measure induced by the outer measure coming from a content, on the Borel sigma-algebra. -/
 protected def measure : Measure G :=
-  μ.OuterMeasure.toMeasure μ.borel_le_caratheodory
+  μ.outerMeasure.toMeasure μ.borel_le_caratheodory
 #align measure_theory.content.measure MeasureTheory.Content.measure
 
-theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.Measure s = μ.OuterMeasure s :=
+theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.measure s = μ.outerMeasure s :=
   toMeasure_apply _ _ hs
 #align measure_theory.content.measure_apply MeasureTheory.Content.measure_apply
 
 /-- In a locally compact space, any measure constructed from a content is regular. -/
-instance regular [LocallyCompactSpace G] : μ.Measure.regular :=
+instance regular [LocallyCompactSpace G] : μ.measure.Regular :=
   by
   have : μ.measure.outer_regular :=
     by
     refine' ⟨fun A hA r (hr : _ < _) => _⟩
-    rw [μ.measure_apply hA, outer_measure_eq_infi] at hr
+    rw [μ.measure_apply hA, outerMeasure_eq_infᵢ] at hr
     simp only [infᵢ_lt_iff] at hr
     rcases hr with ⟨U, hUo, hAU, hr⟩
     rw [← μ.outer_measure_of_is_open U hUo, ← μ.measure_apply hUo.measurable_set] at hr
     exact ⟨U, hAU, hUo, hr⟩
-  have : is_finite_measure_on_compacts μ.measure :=
+  have : IsFiniteMeasureOnCompacts μ.measure :=
     by
     refine' ⟨fun K hK => _⟩
     rw [measure_apply _ hK.measurable_set]
     exact μ.outer_measure_lt_top_of_is_compact hK
   refine' ⟨fun U hU r hr => _⟩
   rw [measure_apply _ hU.measurable_set, μ.outer_measure_of_is_open U hU] at hr
-  simp only [inner_content, lt_supᵢ_iff] at hr
+  simp only [innerContent, lt_supᵢ_iff] at hr
   rcases hr with ⟨K, hKU, hr⟩
   refine' ⟨K, hKU, K.2, hr.trans_le _⟩
-  exact (μ.le_outer_measure_compacts K).trans (le_to_measure_apply _ _ _)
+  exact (μ.le_outer_measure_compacts K).trans (le_toMeasure_apply _ _ _)
 #align measure_theory.content.regular MeasureTheory.Content.regular
 
 end OuterMeasure
@@ -467,18 +466,18 @@ variable [MeasurableSpace G] [T2Space G] [BorelSpace G]
 /-- If `μ` is a regular content, then the measure induced by `μ` will agree with `μ`
   on compact sets.-/
 theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular μ)
-    (K : TopologicalSpace.Compacts G) : μ.Measure ↑K = μ K :=
+    (K : TopologicalSpace.Compacts G) : μ.measure ↑K = μ K :=
   by
   refine' le_antisymm _ _
   · apply Ennreal.le_of_forall_pos_le_add
     intro ε εpos content_K_finite
-    obtain ⟨K', K'_hyp⟩ := content_regular_exists_compact μ H K (ne_bot_of_gt εpos)
+    obtain ⟨K', K'_hyp⟩ := contentRegular_exists_compact μ H K (ne_bot_of_gt εpos)
     calc
       μ.measure ↑K ≤ μ.measure (interior ↑K') := _
       _ ≤ μ K' := _
       _ ≤ μ K + ε := K'_hyp.right
       
-    · rw [μ.measure_apply isOpen_interior.MeasurableSet,
+    · rw [μ.measure_apply is_open_interior.MeasurableSet,
         μ.measure_apply K.is_compact.measurable_set]
       exact μ.outer_measure.mono K'_hyp.left
     · rw [μ.measure_apply (IsOpen.measurableSet isOpen_interior)]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.over
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem comp_left (a b c : Over X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).left 
 #align category_theory.over.comp_left CategoryTheory.Over.comp_left
 
 @[simp, reassoc.1]
-theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by have := f.w <;> tidy
+theorem w {A B : Over X} (f : Hom ⟶ B) : f.left ≫ B.hom = A.hom := by have := f.w <;> tidy
 #align category_theory.over.w CategoryTheory.Over.w
 
 /-- To give an object in the over category, it suffices to give a morphism with codomain `X`. -/
@@ -94,7 +94,7 @@ section
 attribute [local instance] coe_from_hom
 
 @[simp]
-theorem coe_hom {X Y : T} (f : Y ⟶ X) : (f : Over X).Hom = f :=
+theorem coe_hom {X Y : T} (f : Y ⟶ X) : (f : Over X).hom = f :=
   rfl
 #align category_theory.over.coe_hom CategoryTheory.Over.coe_hom
 
@@ -103,7 +103,7 @@ end
 /-- To give a morphism in the over category, it suffices to give an arrow fitting in a commutative
     triangle. -/
 @[simps]
-def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.Hom = U.Hom := by obviously) : U ⟶ V :=
+def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.hom = U.hom := by obviously) : U ⟶ V :=
   CostructuredArrow.homMk f w
 #align category_theory.over.hom_mk CategoryTheory.Over.homMk
 
@@ -111,7 +111,7 @@ def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.Hom = U.Hom := by 
 direction gives a commutative triangle.
 -/
 @[simps]
-def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.Hom ≫ g.Hom = f.Hom := by obviously) :
+def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.hom ≫ g.hom = f.hom := by obviously) :
     f ≅ g :=
   CostructuredArrow.isoMk hl hw
 #align category_theory.over.iso_mk CategoryTheory.Over.isoMk
@@ -165,7 +165,7 @@ theorem map_obj_left : ((map f).obj U).left = U.left :=
 #align category_theory.over.map_obj_left CategoryTheory.Over.map_obj_left
 
 @[simp]
-theorem map_obj_hom : ((map f).obj U).Hom = U.Hom ≫ f :=
+theorem map_obj_hom : ((map f).obj U).hom = U.hom ≫ f :=
   rfl
 #align category_theory.over.map_obj_hom CategoryTheory.Over.map_obj_hom
 
@@ -188,8 +188,8 @@ end
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
     where reflects Y Z f t :=
-    ⟨⟨over.hom_mk (inv ((forget X).map f))
-          ((as_iso ((forget X).map f)).inv_comp_eq.2 (over.w f).symm),
+    ⟨⟨Over.homMk (inv ((forget X).map f))
+          ((asIso ((forget X).map f)).inv_comp_eq.2 (Over.w f).symm),
         by tidy⟩⟩
 #align category_theory.over.forget_reflects_iso CategoryTheory.Over.forget_reflects_iso
 
@@ -227,11 +227,11 @@ instance mono_left_of_mono {f g : Over X} (k : f ⟶ g) [Mono k] : Mono k.left :
   by
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : mk (m ≫ f.hom) ⟶ f :=
-    hom_mk l
+    homMk l
       (by
         dsimp
-        rw [← over.w k, reassoc_of a])
-  suffices l' = hom_mk m by apply congr_arg comma_morphism.left this
+        rw [← Over.w k, reassoc_of a])
+  suffices l' = homMk m by apply congr_arg CommaMorphism.left this
   rw [← cancel_mono k]
   ext
   apply a
@@ -245,12 +245,12 @@ variable (f : Over X)
 @[simps]
 def iteratedSliceForward : Over f ⥤ Over f.left
     where
-  obj α := Over.mk α.Hom.left
+  obj α := Over.mk α.hom.left
   map α β κ :=
     Over.homMk κ.left.left
       (by
         rw [autoParam_eq]
-        rw [← over.w κ]
+        rw [← Over.w κ]
         rfl)
 #align category_theory.over.iterated_slice_forward CategoryTheory.Over.iteratedSliceForward
 
@@ -258,8 +258,8 @@ def iteratedSliceForward : Over f ⥤ Over f.left
 @[simps]
 def iteratedSliceBackward : Over f.left ⥤ Over f
     where
-  obj g := mk (homMk g.Hom : mk (g.Hom ≫ f.Hom) ⟶ f)
-  map g h α := homMk (homMk α.left (w_assoc α f.Hom)) (OverMorphism.ext (w α))
+  obj g := mk (homMk g.hom : mk (g.hom ≫ f.hom) ⟶ f)
+  map g h α := homMk (homMk α.left (w_assoc α f.hom)) (OverMorphism.ext (w α))
 #align category_theory.over.iterated_slice_backward CategoryTheory.Over.iteratedSliceBackward
 
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
@@ -302,7 +302,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X)
     where
-  obj Y := mk <| F.map Y.Hom
+  obj Y := mk <| F.map Y.hom
   map Y₁ Y₂ f :=
     { left := F.map f.left
       w' := by tidy <;> erw [← F.map_comp, w] }
@@ -349,7 +349,7 @@ theorem comp_right (a b c : Under X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).rig
 #align category_theory.under.comp_right CategoryTheory.Under.comp_right
 
 @[simp, reassoc.1]
-theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by have := f.w <;> tidy
+theorem w {A B : Under X} (f : A ⟶ B) : A.hom ≫ f.right = B.hom := by have := f.w <;> tidy
 #align category_theory.under.w CategoryTheory.Under.w
 
 /-- To give an object in the under category, it suffices to give an arrow with domain `X`. -/
@@ -361,25 +361,25 @@ def mk {X Y : T} (f : X ⟶ Y) : Under X :=
 /-- To give a morphism in the under category, it suffices to give a morphism fitting in a
     commutative triangle. -/
 @[simps]
-def homMk {U V : Under X} (f : U.right ⟶ V.right) (w : U.Hom ≫ f = V.Hom := by obviously) : U ⟶ V :=
+def homMk {U V : Under X} (f : U.right ⟶ V.right) (w : U.hom ≫ f = V.hom := by obviously) : U ⟶ V :=
   StructuredArrow.homMk f w
 #align category_theory.under.hom_mk CategoryTheory.Under.homMk
 
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
 direction gives a commutative triangle.
 -/
-def isoMk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) : f ≅ g :=
+def isoMk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.hom ≫ hr.hom = g.hom) : f ≅ g :=
   StructuredArrow.isoMk hr hw
 #align category_theory.under.iso_mk CategoryTheory.Under.isoMk
 
 @[simp]
-theorem isoMk_hom_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
-    (isoMk hr hw).Hom.right = hr.Hom :=
+theorem isoMk_hom_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.hom ≫ hr.hom = g.hom) :
+    (isoMk hr hw).hom.right = hr.hom :=
   rfl
 #align category_theory.under.iso_mk_hom_right CategoryTheory.Under.isoMk_hom_right
 
 @[simp]
-theorem isoMk_inv_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
+theorem isoMk_inv_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.hom ≫ hr.hom = g.hom) :
     (isoMk hr hw).inv.right = hr.inv :=
   rfl
 #align category_theory.under.iso_mk_inv_right CategoryTheory.Under.isoMk_inv_right
@@ -427,7 +427,7 @@ theorem map_obj_right : ((map f).obj U).right = U.right :=
 #align category_theory.under.map_obj_right CategoryTheory.Under.map_obj_right
 
 @[simp]
-theorem map_obj_hom : ((map f).obj U).Hom = f ≫ U.Hom :=
+theorem map_obj_hom : ((map f).obj U).hom = f ≫ U.hom :=
   rfl
 #align category_theory.under.map_obj_hom CategoryTheory.Under.map_obj_hom
 
@@ -450,7 +450,7 @@ end
 
 instance forget_reflects_iso : ReflectsIsomorphisms (forget X)
     where reflects Y Z f t :=
-    ⟨⟨under.hom_mk (inv ((under.forget X).map f)) ((is_iso.comp_inv_eq _).2 (under.w f).symm), by
+    ⟨⟨Under.homMk (inv ((Under.forget X).map f)) ((IsIso.comp_inv_eq _).2 (Under.w f).symm), by
         tidy⟩⟩
 #align category_theory.under.forget_reflects_iso CategoryTheory.Under.forget_reflects_iso
 
@@ -487,11 +487,11 @@ instance epi_right_of_epi {f g : Under X} (k : f ⟶ g) [Epi k] : Epi k.right :=
   by
   refine' ⟨fun (Y : T) l m a => _⟩
   let l' : g ⟶ mk (g.hom ≫ m) :=
-    hom_mk l
+    homMk l
       (by
         dsimp
-        rw [← under.w k, category.assoc, a, category.assoc])
-  suffices l' = hom_mk m by apply congr_arg comma_morphism.right this
+        rw [← Under.w k, Category.assoc, a, Category.assoc])
+  suffices l' = homMk m by apply congr_arg CommaMorphism.right this
   rw [← cancel_epi k]
   ext
   apply a
@@ -505,7 +505,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 @[simps]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X)
     where
-  obj Y := mk <| F.map Y.Hom
+  obj Y := mk <| F.map Y.hom
   map Y₁ Y₂ f :=
     { right := F.map f.right
       w' := by tidy <;> erw [← F.map_comp, w] }

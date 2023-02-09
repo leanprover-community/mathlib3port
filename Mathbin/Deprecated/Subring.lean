@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module deprecated.subring
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -86,14 +86,14 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
 theorem IsSubring.interᵢ {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
     IsSubring (Set.interᵢ S) :=
   { IsAddSubgroup.interᵢ fun i => (h i).to_isAddSubgroup,
-    IsSubmonoid.Inter fun i => (h i).to_isSubmonoid with }
+    IsSubmonoid.Inter fun i => (Mem i).to_isSubmonoid with }
 #align is_subring.Inter IsSubring.interᵢ
 
 theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
-  { to_isAddSubgroup := isAddSubgroup_unionᵢ_of_directed (fun i => (h i).to_isAddSubgroup) Directed
-    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (h i).to_isSubmonoid) Directed }
+  { to_isAddSubgroup := isAddSubgroup_unionᵢ_of_directed (fun i => (h i).to_isAddSubgroup) directed
+    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (h i).to_isSubmonoid) directed }
 #align is_subring_Union_of_directed isSubring_unionᵢ_of_directed
 
 namespace Ring
@@ -109,7 +109,7 @@ variable {s : Set R}
 attribute [local reducible] closure
 
 theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
-    ∃ L : List (List R), (∀ l ∈ L, ∀ x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
+    ∃ L : List (List R), (∀ l ∈ L, ∀ x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).sum = a :=
   AddGroup.InClosure.rec_on h
     (fun x hx =>
       match x, Monoid.exists_list_of_mem_closure hx with
@@ -228,7 +228,7 @@ theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
   le_antisymm
     (by
       rintro _ ⟨x, hx, rfl⟩
-      apply in_closure.rec_on hx <;> intros
+      apply InClosure.rec_on hx <;> intros
       · rw [f.map_one]
         apply closure.is_subring.to_is_submonoid.one_mem
       · rw [f.map_neg, f.map_one]

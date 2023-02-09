@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module data.set.intervals.surj_on
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem surjOn_Ico_of_monotone_surjective (h_mono : Monotone f) (h_surj : Functi
     · have := surjOn_Ioo_of_monotone_surjective h_mono h_surj a b hp'
       exact image_subset f Ioo_subset_Ico_self this
   · rw [Ico_eq_empty (h_mono hab).not_lt]
-    exact surj_on_empty f _
+    exact surjOn_empty f _
 #align surj_on_Ico_of_monotone_surjective surjOn_Ico_of_monotone_surjective
 
 /- warning: surj_on_Ioc_of_monotone_surjective -> surjOn_Ioc_of_monotone_surjective is a dubious translation:
@@ -72,7 +72,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align surj_on_Ioc_of_monotone_surjective surjOn_Ioc_of_monotone_surjectiveₓ'. -/
 theorem surjOn_Ioc_of_monotone_surjective (h_mono : Monotone f) (h_surj : Function.Surjective f)
     (a b : α) : SurjOn f (Ioc a b) (Ioc (f a) (f b)) := by
-  simpa using surjOn_Ico_of_monotone_surjective h_mono.dual h_surj (to_dual b) (to_dual a)
+  simpa using surjOn_Ico_of_monotone_surjective h_mono.dual h_surj (toDual b) (toDual a)
 #align surj_on_Ioc_of_monotone_surjective surjOn_Ioc_of_monotone_surjective
 
 /- warning: surj_on_Icc_of_monotone_surjective -> surjOn_Icc_of_monotone_surjective is a dubious translation:
@@ -103,7 +103,7 @@ theorem surjOn_Ioi_of_monotone_surjective (h_mono : Monotone f) (h_surj : Functi
     (a : α) : SurjOn f (Ioi a) (Ioi (f a)) :=
   by
   rw [← compl_Iic, ← compl_compl (Ioi (f a))]
-  refine' maps_to.surj_on_compl _ h_surj
+  refine' MapsTo.surjOn_compl _ h_surj
   exact fun x hx => (h_mono hx).not_lt
 #align surj_on_Ioi_of_monotone_surjective surjOn_Ioi_of_monotone_surjective
 
@@ -130,7 +130,7 @@ theorem surjOn_Ici_of_monotone_surjective (h_mono : Monotone f) (h_surj : Functi
   rw [← Ioi_union_left, ← Ioi_union_left]
   exact
     (surjOn_Ioi_of_monotone_surjective h_mono h_surj a).union_union
-      (@image_singleton _ _ f a ▸ surj_on_image _ _)
+      (@image_singleton _ _ f a ▸ surjOn_image _ _)
 #align surj_on_Ici_of_monotone_surjective surjOn_Ici_of_monotone_surjective
 
 /- warning: surj_on_Iic_of_monotone_surjective -> surjOn_Iic_of_monotone_surjective is a dubious translation:

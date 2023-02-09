@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.finite_type
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem finiteType_holdsForLocalizationAway : HoldsForLocalizationAway @FiniteTy
 theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteType :=
   by
   -- Setup algebra intances.
-  rw [of_localization_span_target_iff_finite]
+  rw [ofLocalizationSpanTarget_iff_finite]
   introv R hs H
   skip
   classical
@@ -111,7 +111,7 @@ theorem finiteType_is_local : PropertyIsLocal @FiniteType :=
 #align ring_hom.finite_type_is_local RingHom.finiteType_is_local
 
 theorem finiteType_respectsIso : RingHom.RespectsIso @RingHom.FiniteType :=
-  RingHom.finiteType_is_local.RespectsIso
+  RingHom.finiteType_is_local.respectsIso
 #align ring_hom.finite_type_respects_iso RingHom.finiteType_respectsIso
 
 end RingHom

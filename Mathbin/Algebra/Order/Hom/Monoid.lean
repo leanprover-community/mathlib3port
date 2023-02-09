@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.hom.monoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ section
 You should also extend this typeclass when you extend `order_monoid_hom`. -/
 @[to_additive]
 class OrderMonoidHomClass (F : Type _) (α β : outParam <| Type _) [Preorder α] [Preorder β]
-  [MulOneClass α] [MulOneClass β] extends MonoidHomClass F α β where
+  [mul_one_class α] [MulOneClass β] extends MonoidHomClass F α β where
   Monotone (f : F) : Monotone f
 #align order_monoid_hom_class OrderMonoidHomClass
 #align order_add_monoid_hom_class OrderAddMonoidHomClass

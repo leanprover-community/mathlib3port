@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.complex.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -330,7 +330,7 @@ theorem i_mul_im (z : ℂ) : (i * z).im = z.re := by simp
 
 @[simp]
 theorem equivRealProd_symm_apply (p : ℝ × ℝ) : equivRealProd.symm p = p.1 + p.2 * i := by
-  ext <;> simp [equiv_real_prod]
+  ext <;> simp [equivRealProd]
 #align complex.equiv_real_prod_symm_apply Complex.equivRealProd_symm_apply
 
 /-! ### Commutative ring instance and lemmas -/
@@ -345,8 +345,8 @@ instance : Nontrivial ℂ :=
 instance : AddCommGroup ℂ := by
   refine_struct { zero := (0 : ℂ)
                   add := (· + ·)
-                  neg := Neg.neg
-                  sub := Sub.sub
+                  neg := has_neg.neg
+                  sub := has_sub.sub
                   nsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩
                   zsmul := fun n z => ⟨n • z.re - 0 * z.im, n • z.im + 0 * z.re⟩ } <;> intros <;>
             try rfl <;> apply ext_iff.2 <;> constructor <;> simp <;> · first |ring1|ring_nf
@@ -368,7 +368,7 @@ instance : CommRing ℂ := by
                   add := (· + ·)
                   one := 1
                   mul := (· * ·)
-                  npow := @npowRec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩ } <;>
+                  npow := @npow_rec _ ⟨(1 : ℂ)⟩ ⟨(· * ·)⟩ } <;>
               intros <;>
             try rfl <;>
           apply ext_iff.2 <;>
@@ -410,11 +410,11 @@ theorem coe_imAddGroupHom : (imAddGroupHom : ℂ → ℝ) = im :=
 #align complex.coe_im_add_group_hom Complex.coe_imAddGroupHom
 
 @[simp]
-theorem i_pow_bit0 (n : ℕ) : i ^ bit0 n = (-1) ^ n := by rw [pow_bit0', I_mul_I]
+theorem i_pow_bit0 (n : ℕ) : i ^ bit0 n = (-1) ^ n := by rw [pow_bit0', i_mul_i]
 #align complex.I_pow_bit0 Complex.i_pow_bit0
 
 @[simp]
-theorem i_pow_bit1 (n : ℕ) : i ^ bit1 n = (-1) ^ n * i := by rw [pow_bit1', I_mul_I]
+theorem i_pow_bit1 (n : ℕ) : i ^ bit1 n = (-1) ^ n * i := by rw [pow_bit1', i_mul_i]
 #align complex.I_pow_bit1 Complex.i_pow_bit1
 
 /-! ### Complex conjugation -/
@@ -501,7 +501,7 @@ theorem normSq_apply (z : ℂ) : normSq z = z.re * z.re + z.im * z.im :=
 #align complex.norm_sq_apply Complex.normSq_apply
 
 @[simp]
-theorem normSq_of_real (r : ℝ) : normSq r = r * r := by simp [norm_sq]
+theorem normSq_of_real (r : ℝ) : normSq r = r * r := by simp [normSq]
 #align complex.norm_sq_of_real Complex.normSq_of_real
 
 @[simp]
@@ -510,11 +510,11 @@ theorem normSq_mk (x y : ℝ) : normSq ⟨x, y⟩ = x * x + y * y :=
 #align complex.norm_sq_mk Complex.normSq_mk
 
 theorem normSq_add_mul_i (x y : ℝ) : normSq (x + y * i) = x ^ 2 + y ^ 2 := by
-  rw [← mk_eq_add_mul_I, norm_sq_mk, sq, sq]
+  rw [← mk_eq_add_mul_i, normSq_mk, sq, sq]
 #align complex.norm_sq_add_mul_I Complex.normSq_add_mul_i
 
 theorem normSq_eq_conj_mul_self {z : ℂ} : (normSq z : ℂ) = conj z * z := by
-  ext <;> simp [norm_sq, mul_comm]
+  ext <;> simp [normSq, mul_comm]
 #align complex.norm_sq_eq_conj_mul_self Complex.normSq_eq_conj_mul_self
 
 @[simp]
@@ -528,7 +528,7 @@ theorem normSq_one : normSq 1 = 1 :=
 #align complex.norm_sq_one Complex.normSq_one
 
 @[simp]
-theorem normSq_i : normSq i = 1 := by simp [norm_sq]
+theorem normSq_i : normSq i = 1 := by simp [normSq]
 #align complex.norm_sq_I Complex.normSq_i
 
 theorem normSq_nonneg (z : ℂ) : 0 ≤ normSq z :=
@@ -538,7 +538,7 @@ theorem normSq_nonneg (z : ℂ) : 0 ≤ normSq z :=
 @[simp]
 theorem range_normSq : range normSq = Ici 0 :=
   Subset.antisymm (range_subset_iff.2 normSq_nonneg) fun x hx =>
-    ⟨Real.sqrt x, by rw [norm_sq_of_real, Real.mul_self_sqrt hx]⟩
+    ⟨Real.sqrt x, by rw [normSq_of_real, Real.mul_self_sqrt hx]⟩
 #align complex.range_norm_sq Complex.range_normSq
 
 theorem normSq_eq_zero {z : ℂ} : normSq z = 0 ↔ z = 0 :=
@@ -554,11 +554,11 @@ theorem normSq_pos {z : ℂ} : 0 < normSq z ↔ z ≠ 0 :=
 #align complex.norm_sq_pos Complex.normSq_pos
 
 @[simp]
-theorem normSq_neg (z : ℂ) : normSq (-z) = normSq z := by simp [norm_sq]
+theorem normSq_neg (z : ℂ) : normSq (-z) = normSq z := by simp [normSq]
 #align complex.norm_sq_neg Complex.normSq_neg
 
 @[simp]
-theorem normSq_conj (z : ℂ) : normSq (conj z) = normSq z := by simp [norm_sq]
+theorem normSq_conj (z : ℂ) : normSq (conj z) = normSq z := by simp [normSq]
 #align complex.norm_sq_conj Complex.normSq_conj
 
 theorem normSq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
@@ -566,7 +566,7 @@ theorem normSq_mul (z w : ℂ) : normSq (z * w) = normSq z * normSq w :=
 #align complex.norm_sq_mul Complex.normSq_mul
 
 theorem normSq_add (z w : ℂ) : normSq (z + w) = normSq z + normSq w + 2 * (z * conj w).re := by
-  dsimp [norm_sq] <;> ring
+  dsimp [normSq] <;> ring
 #align complex.norm_sq_add Complex.normSq_add
 
 theorem re_sq_le_normSq (z : ℂ) : z.re * z.re ≤ normSq z :=
@@ -578,7 +578,7 @@ theorem im_sq_le_normSq (z : ℂ) : z.im * z.im ≤ normSq z :=
 #align complex.im_sq_le_norm_sq Complex.im_sq_le_normSq
 
 theorem mul_conj (z : ℂ) : z * conj z = normSq z :=
-  ext_iff.2 <| by simp [norm_sq, mul_comm, sub_eq_neg_add, add_comm]
+  ext_iff.2 <| by simp [normSq, mul_comm, sub_eq_neg_add, add_comm]
 #align complex.mul_conj Complex.mul_conj
 
 theorem add_conj (z : ℂ) : z + conj z = (2 * z.re : ℝ) :=
@@ -596,7 +596,7 @@ theorem ofReal_eq_coe (r : ℝ) : ofReal r = r :=
 #align complex.of_real_eq_coe Complex.ofReal_eq_coe
 
 @[simp]
-theorem i_sq : i ^ 2 = -1 := by rw [sq, I_mul_I]
+theorem i_sq : i ^ 2 = -1 := by rw [sq, i_mul_i]
 #align complex.I_sq Complex.i_sq
 
 @[simp]
@@ -625,8 +625,8 @@ theorem sub_conj (z : ℂ) : z - conj z = (2 * z.im : ℝ) * i :=
 
 theorem normSq_sub (z w : ℂ) : normSq (z - w) = normSq z + normSq w - 2 * (z * conj w).re :=
   by
-  rw [sub_eq_add_neg, norm_sq_add]
-  simp only [RingHom.map_neg, mul_neg, neg_re, Tactic.Ring.add_neg_eq_sub, norm_sq_neg]
+  rw [sub_eq_add_neg, normSq_add]
+  simp only [RingHom.map_neg, mul_neg, neg_re, Tactic.Ring.add_neg_eq_sub, normSq_neg]
 #align complex.norm_sq_sub Complex.normSq_sub
 
 /-! ### Inversion -/
@@ -656,7 +656,7 @@ protected theorem inv_zero : (0⁻¹ : ℂ) = 0 := by rw [← of_real_zero, ← 
 #align complex.inv_zero Complex.inv_zero
 
 protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : z * z⁻¹ = 1 := by
-  rw [inv_def, ← mul_assoc, mul_conj, ← of_real_mul, mul_inv_cancel (mt norm_sq_eq_zero.1 h),
+  rw [inv_def, ← mul_assoc, mul_conj, ← of_real_mul, mul_inv_cancel (mt normSq_eq_zero.1 h),
     of_real_one]
 #align complex.mul_inv_cancel Complex.mul_inv_cancel
 
@@ -670,11 +670,11 @@ noncomputable instance : Field ℂ :=
     inv_zero := Complex.inv_zero }
 
 @[simp]
-theorem i_zpow_bit0 (n : ℤ) : i ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', I_mul_I]
+theorem i_zpow_bit0 (n : ℤ) : i ^ bit0 n = (-1) ^ n := by rw [zpow_bit0', i_mul_i]
 #align complex.I_zpow_bit0 Complex.i_zpow_bit0
 
 @[simp]
-theorem i_zpow_bit1 (n : ℤ) : i ^ bit1 n = (-1) ^ n * i := by rw [zpow_bit1', I_mul_I]
+theorem i_zpow_bit1 (n : ℤ) : i ^ bit1 n = (-1) ^ n * i := by rw [zpow_bit1', i_mul_i]
 #align complex.I_zpow_bit1 Complex.i_zpow_bit1
 
 theorem div_re (z w : ℂ) : (z / w).re = z.re * w.re / normSq w + z.im * w.im / normSq w := by
@@ -777,7 +777,7 @@ theorem re_eq_add_conj (z : ℂ) : (z.re : ℂ) = (z + conj z) / 2 := by
 /-- A complex number `z` minus its conjugate `conj z` is `2i` times its imaginary part. -/
 theorem im_eq_sub_conj (z : ℂ) : (z.im : ℂ) = (z - conj z) / (2 * i) := by
   simp only [sub_conj, of_real_mul, of_real_one, of_real_bit0, mul_right_comm,
-    mul_div_cancel_left _ (mul_ne_zero two_ne_zero I_ne_zero : 2 * I ≠ 0)]
+    mul_div_cancel_left _ (mul_ne_zero two_ne_zero i_ne_zero : 2 * i ≠ 0)]
 #align complex.im_eq_sub_conj Complex.im_eq_sub_conj
 
 /-! ### Absolute value -/
@@ -804,7 +804,7 @@ theorem abs_conj (z : ℂ) : (abs conj z) = abs z := by simp
 private theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
   by
   rw [mul_self_le_mul_self_iff (abs_nonneg z.re) (abs_nonneg' _), abs_mul_abs_self, mul_self_abs]
-  apply re_sq_le_norm_sq
+  apply re_sq_le_normSq
 #align complex.abs_theory.abs_re_le_abs complex.abs_theory.abs_re_le_abs
 
 private theorem re_le_abs (z : ℂ) : z.re ≤ abs z :=
@@ -812,15 +812,15 @@ private theorem re_le_abs (z : ℂ) : z.re ≤ abs z :=
 #align complex.abs_theory.re_le_abs complex.abs_theory.re_le_abs
 
 private theorem abs_mul (z w : ℂ) : (abs z * w) = (abs z) * abs w := by
-  rw [norm_sq_mul, Real.sqrt_mul (norm_sq_nonneg _)]
+  rw [normSq_mul, Real.sqrt_mul (normSq_nonneg _)]
 #align complex.abs_theory.abs_mul complex.abs_theory.abs_mul
 
 private theorem abs_add (z w : ℂ) : (abs z + w) ≤ (abs z) + abs w :=
   (mul_self_le_mul_self_iff (abs_nonneg' (z + w)) (add_nonneg (abs_nonneg' z) (abs_nonneg' w))).2 <|
     by
-    rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_comm, norm_sq_add,
+    rw [mul_self_abs, add_mul_self_eq, mul_self_abs, mul_self_abs, add_right_comm, normSq_add,
       add_le_add_iff_left, mul_assoc, mul_le_mul_left (zero_lt_two' ℝ), ←
-      Real.sqrt_mul <| norm_sq_nonneg z, ← norm_sq_conj w, ← map_mul]
+      Real.sqrt_mul <| normSq_nonneg z, ← normSq_conj w, ← map_mul]
     exact re_le_abs (z * conj w)
 #align complex.abs_theory.abs_add complex.abs_theory.abs_add
 
@@ -846,7 +846,7 @@ theorem abs_apply {z : ℂ} : abs z = (normSq z).sqrt :=
 
 @[simp, norm_cast]
 theorem abs_of_real (r : ℝ) : abs r = |r| := by
-  simp [abs, norm_sq_of_real, Real.sqrt_mul_self_eq_abs]
+  simp [abs, normSq_of_real, Real.sqrt_mul_self_eq_abs]
 #align complex.abs_of_real Complex.abs_of_real
 
 theorem abs_of_nonneg {r : ℝ} (h : 0 ≤ r) : abs r = r :=
@@ -870,7 +870,7 @@ theorem sq_abs (z : ℂ) : abs z ^ 2 = normSq z :=
 
 @[simp]
 theorem sq_abs_sub_sq_re (z : ℂ) : abs z ^ 2 - z.re ^ 2 = z.im ^ 2 := by
-  rw [sq_abs, norm_sq_apply, ← sq, ← sq, add_sub_cancel']
+  rw [sq_abs, normSq_apply, ← sq, ← sq, add_sub_cancel']
 #align complex.sq_abs_sub_sq_re Complex.sq_abs_sub_sq_re
 
 @[simp]
@@ -892,7 +892,7 @@ theorem abs_two : abs 2 = 2 :=
 
 @[simp]
 theorem range_abs : range abs = Ici 0 :=
-  Subset.antisymm (range_subset_iff.2 abs.NonNeg) fun x hx => ⟨x, abs_of_nonneg hx⟩
+  Subset.antisymm (range_subset_iff.2 abs.nonneg) fun x hx => ⟨x, abs_of_nonneg hx⟩
 #align complex.range_abs Complex.range_abs
 
 @[simp]
@@ -902,7 +902,7 @@ theorem abs_conj (z : ℂ) : abs (conj z) = abs z :=
 
 @[simp]
 theorem abs_prod {ι : Type _} (s : Finset ι) (f : ι → ℂ) :
-    abs (s.Prod f) = s.Prod fun i => abs (f i) :=
+    abs (s.prod f) = s.prod fun i => abs (f i) :=
   map_prod abs _ _
 #align complex.abs_prod Complex.abs_prod
 
@@ -918,13 +918,13 @@ theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
 
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
   Real.abs_le_sqrt <| by
-    rw [norm_sq_apply, ← sq]
+    rw [normSq_apply, ← sq]
     exact le_add_of_nonneg_right (mul_self_nonneg _)
 #align complex.abs_re_le_abs Complex.abs_re_le_abs
 
 theorem abs_im_le_abs (z : ℂ) : |z.im| ≤ abs z :=
   Real.abs_le_sqrt <| by
-    rw [norm_sq_apply, ← sq, ← sq]
+    rw [normSq_apply, ← sq, ← sq]
     exact le_add_of_nonneg_left (sq_nonneg _)
 #align complex.abs_im_le_abs Complex.abs_im_le_abs
 
@@ -938,27 +938,27 @@ theorem im_le_abs (z : ℂ) : z.im ≤ abs z :=
 
 @[simp]
 theorem abs_re_lt_abs {z : ℂ} : |z.re| < abs z ↔ z.im ≠ 0 := by
-  rw [abs, AbsoluteValue.coe_mk, MulHom.coe_mk, Real.lt_sqrt (abs_nonneg _), norm_sq_apply,
-    _root_.sq_abs, ← sq, lt_add_iff_pos_right, mul_self_pos]
+  rw [abs, AbsoluteValue.coe_mk, MulHom.coe_mk, Real.lt_sqrt (abs_nonneg _), normSq_apply, sq_abs, ←
+    sq, lt_add_iff_pos_right, mul_self_pos]
 #align complex.abs_re_lt_abs Complex.abs_re_lt_abs
 
 @[simp]
-theorem abs_im_lt_abs {z : ℂ} : |z.im| < abs z ↔ z.re ≠ 0 := by simpa using @abs_re_lt_abs (z * I)
+theorem abs_im_lt_abs {z : ℂ} : |z.im| < abs z ↔ z.re ≠ 0 := by simpa using @abs_re_lt_abs (z * i)
 #align complex.abs_im_lt_abs Complex.abs_im_lt_abs
 
 @[simp]
 theorem abs_abs (z : ℂ) : |abs z| = abs z :=
-  abs_of_nonneg (abs.NonNeg _)
+  abs_of_nonneg (abs.nonneg _)
 #align complex.abs_abs Complex.abs_abs
 
 theorem abs_le_abs_re_add_abs_im (z : ℂ) : abs z ≤ |z.re| + |z.im| := by
-  simpa [re_add_im] using abs.add_le z.re (z.im * I)
+  simpa [re_add_im] using abs.add_le z.re (z.im * i)
 #align complex.abs_le_abs_re_add_abs_im Complex.abs_le_abs_re_add_abs_im
 
 theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|) (|z.im|) :=
   by
   cases' z with x y
-  simp only [abs_apply, norm_sq_mk, ← sq]
+  simp only [abs_apply, normSq_mk, ← sq]
   wlog hle : |x| ≤ |y|
   · rw [add_comm, max_comm]
     exact this _ _ (le_of_not_le hle)
@@ -972,12 +972,12 @@ theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|)
 
 theorem abs_re_div_abs_le_one (z : ℂ) : |z.re / z.abs| ≤ 1 :=
   if hz : z = 0 then by simp [hz, zero_le_one]
-  else by simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_re_le_abs]
+  else by simp_rw [abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_re_le_abs]
 #align complex.abs_re_div_abs_le_one Complex.abs_re_div_abs_le_one
 
 theorem abs_im_div_abs_le_one (z : ℂ) : |z.im / z.abs| ≤ 1 :=
   if hz : z = 0 then by simp [hz, zero_le_one]
-  else by simp_rw [_root_.abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_im_le_abs]
+  else by simp_rw [abs_div, abs_abs, div_le_iff (abs.pos hz), one_mul, abs_im_le_abs]
 #align complex.abs_im_div_abs_le_one Complex.abs_im_div_abs_le_one
 
 @[simp, norm_cast]
@@ -991,7 +991,7 @@ theorem int_cast_abs (n : ℤ) : ↑(|n|) = abs n := by
 #align complex.int_cast_abs Complex.int_cast_abs
 
 theorem normSq_eq_abs (x : ℂ) : normSq x = abs x ^ 2 := by
-  simp [abs, sq, Real.mul_self_sqrt (norm_sq_nonneg _)]
+  simp [abs, sq, Real.mul_self_sqrt (normSq_nonneg _)]
 #align complex.norm_sq_eq_abs Complex.normSq_eq_abs
 
 /-- We put a partial order on ℂ so that `z ≤ w` exactly if `w - z` is real and nonnegative.
@@ -1098,7 +1098,7 @@ protected def starOrderedRing : StarOrderedRing ℂ :=
           simp only [h₂, add_zero, of_real_im, star_def, zero_mul, conj_im, mul_im, mul_zero,
             neg_zero]
       · obtain ⟨s, rfl⟩ := h
-        simp only [← norm_sq_eq_conj_mul_self, norm_sq_nonneg, zero_le_real, star_def] }
+        simp only [← normSq_eq_conj_mul_self, normSq_nonneg, zero_le_real, star_def] }
 #align complex.star_ordered_ring Complex.starOrderedRing
 
 scoped[ComplexOrder] attribute [instance] Complex.starOrderedRing
@@ -1147,7 +1147,7 @@ theorem equiv_limAux (f : CauSeq ℂ abs) : f ≈ CauSeq.const abs (limAux f) :=
     fun i H j ij => by
     cases' H _ ij with H₁ H₂
     apply lt_of_le_of_lt (abs_le_abs_re_add_abs_im _)
-    dsimp [lim_aux] at *
+    dsimp [limAux] at *
     have := add_lt_add H₁ H₂
     rwa [add_halves] at this
 #align complex.equiv_lim_aux Complex.equiv_limAux
@@ -1163,8 +1163,7 @@ theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) :
     calc
       f ≈ _ := equiv_limAux f
       _ = CauSeq.const abs (↑(limUnder (cauSeqRe f)) + ↑(limUnder (cauSeqIm f)) * i) :=
-        CauSeq.ext fun _ =>
-          Complex.ext (by simp [lim_aux, cau_seq_re]) (by simp [lim_aux, cau_seq_im])
+        CauSeq.ext fun _ => Complex.ext (by simp [limAux, cauSeqRe]) (by simp [limAux, cauSeqIm])
       
 #align complex.lim_eq_lim_im_add_lim_re Complex.lim_eq_lim_im_add_lim_re
 
@@ -1187,8 +1186,8 @@ noncomputable def cauSeqConj (f : CauSeq ℂ abs) : CauSeq ℂ abs :=
 #align complex.cau_seq_conj Complex.cauSeqConj
 
 theorem lim_conj (f : CauSeq ℂ abs) : limUnder (cauSeqConj f) = conj (limUnder f) :=
-  Complex.ext (by simp [cau_seq_conj, (lim_re _).symm, cau_seq_re])
-    (by simp [cau_seq_conj, (lim_im _).symm, cau_seq_im, (lim_neg _).symm] <;> rfl)
+  Complex.ext (by simp [cauSeqConj, (lim_re _).symm, cauSeqRe])
+    (by simp [cauSeqConj, (lim_im _).symm, cauSeqIm, (lim_neg _).symm] <;> rfl)
 #align complex.lim_conj Complex.lim_conj
 
 /-- The absolute value of a complex Cauchy sequence, as a real Cauchy sequence. -/

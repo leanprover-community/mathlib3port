@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Jesse Michael Han
 
 ! This file was ported from Lean 3 source module tactic.finish
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -175,12 +175,12 @@ def classicalNormalizeLemmaNames : List Name :=
             e
             with
             |
-                q( ¬ $ ( Ne ) )
+                q( ¬ $ ( ne ) )
                 =>
                 do
-                  let ne ← whnf_reducible Ne
+                  let ne ← whnf_reducible ne
                     match
-                      Ne
+                      ne
                       with
                       |
                           q( ¬ $ ( a ) )
@@ -268,7 +268,7 @@ unsafe def normalize_hyp (cfg : AutoConfig) (simps : simp_lemmas) (h : expr) : t
 
 unsafe def normalize_hyps (cfg : AutoConfig) : tactic Unit := do
   let simps ← add_simps simp_lemmas.mk classicalNormalizeLemmaNames
-  local_context >>= Monad.mapM' (normalize_hyp cfg simps)
+  local_context >>= monad.mapm' (normalize_hyp cfg simps)
 #align auto.normalize_hyps auto.normalize_hyps
 
 /-!
@@ -362,7 +362,7 @@ unsafe def do_substs : tactic Unit :=
 /-- return `tt` if any progress is made -/
 unsafe def split_hyp (h : expr) : tactic Bool := do
   let t ← infer_type h
-  condM (add_conjuncts h t) (clear h >> return tt) (return ff)
+  mcond (add_conjuncts h t) (clear h >> return tt) (return ff)
 #align auto.split_hyp auto.split_hyp
 
 /-- return `tt` if any progress is made -/
@@ -504,7 +504,7 @@ private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit
     | case_option.force => cont case_option.force >> cont case_option.force
     |
     case_option.at_most_one =>-- if the first one succeeds, commit to it, and try the second
-          condM
+          mcond
           (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
         (-- otherwise, try the second
             swap >>
@@ -572,7 +572,7 @@ unsafe def safe_core (s : simp_lemmas × List Name) (ps : List pexpr) (cfg : Aut
         preprocess_hyps cfg
         trace_state_if_enabled `auto.finish "result:"
         done ps cfg <|>
-            condM (case_some_hyp co safe_core) skip
+            mcond (case_some_hyp co safe_core) skip
               (match co with
               | case_option.force => done ps cfg
               | case_option.at_most_one => try (done ps cfg)

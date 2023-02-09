@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module data.set.intervals.ord_connected
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,7 +72,7 @@ theorem ordConnected_iff : OrdConnected s ↔ ∀ x ∈ s, ∀ y ∈ s, x ≤ y 
 theorem ordConnected_of_Ioo {α : Type _} [PartialOrder α] {s : Set α}
     (hs : ∀ x ∈ s, ∀ y ∈ s, x < y → Ioo x y ⊆ s) : OrdConnected s :=
   by
-  rw [ord_connected_iff]
+  rw [ordConnected_iff]
   intro x hx y hy hxy
   rcases eq_or_lt_of_le hxy with (rfl | hxy'); · simpa
   rw [← Ioc_insert_left hxy, ← Ioo_insert_right hxy']
@@ -140,7 +140,7 @@ theorem OrdConnected.dual {s : Set α} (hs : OrdConnected s) :
 
 #print Set.ordConnected_dual /-
 theorem ordConnected_dual {s : Set α} : OrdConnected (OrderDual.ofDual ⁻¹' s) ↔ OrdConnected s :=
-  ⟨fun h => by simpa only [ord_connected_def] using h.dual, fun h => h.dual⟩
+  ⟨fun h => by simpa only [ordConnected_def] using h.dual, fun h => h.dual⟩
 #align set.ord_connected_dual Set.ordConnected_dual
 -/
 
@@ -252,7 +252,7 @@ theorem ordConnected_Ioo {a b : α} : OrdConnected (Ioo a b) :=
 theorem ordConnected_singleton {α : Type _} [PartialOrder α] {a : α} : OrdConnected ({a} : Set α) :=
   by
   rw [← Icc_self]
-  exact ord_connected_Icc
+  exact ordConnected_Icc
 #align set.ord_connected_singleton Set.ordConnected_singleton
 -/
 
@@ -299,7 +299,7 @@ theorem ordConnected_image {E : Type _} [OrderIsoClass E α β] (e : E) {s : Set
     [hs : OrdConnected s] : OrdConnected (e '' s) :=
   by
   erw [(e : α ≃o β).image_eq_preimage]
-  apply ord_connected_preimage
+  apply ordConnected_preimage
 #align set.ord_connected_image Set.ordConnected_image
 
 /- warning: set.ord_connected_range -> Set.ordConnected_range is a dubious translation:
@@ -310,14 +310,14 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.ord_connected_range Set.ordConnected_rangeₓ'. -/
 @[instance]
 theorem ordConnected_range {E : Type _} [OrderIsoClass E α β] (e : E) : OrdConnected (range e) := by
-  simp_rw [← image_univ, ord_connected_image e]
+  simp_rw [← image_univ, ordConnected_image e]
 #align set.ord_connected_range Set.ordConnected_range
 
 #print Set.dual_ordConnected_iff /-
 @[simp]
 theorem dual_ordConnected_iff {s : Set α} : OrdConnected (ofDual ⁻¹' s) ↔ OrdConnected s :=
   by
-  simp_rw [ord_connected_def, to_dual.surjective.forall, dual_Icc, Subtype.forall']
+  simp_rw [ordConnected_def, to_dual.surjective.forall, dual_Icc, Subtype.forall']
   exact forall_swap
 #align set.dual_ord_connected_iff Set.dual_ordConnected_iff
 -/
@@ -391,7 +391,7 @@ theorem ordConnected_iff_uIcc_subset_left (hx : x ∈ s) :
 #print Set.ordConnected_iff_uIcc_subset_right /-
 theorem ordConnected_iff_uIcc_subset_right (hx : x ∈ s) :
     OrdConnected s ↔ ∀ ⦃y⦄, y ∈ s → [y, x] ⊆ s := by
-  simp_rw [ord_connected_iff_uIcc_subset_left hx, uIcc_comm]
+  simp_rw [ordConnected_iff_uIcc_subset_left hx, uIcc_comm]
 #align set.ord_connected_iff_uIcc_subset_right Set.ordConnected_iff_uIcc_subset_right
 -/
 

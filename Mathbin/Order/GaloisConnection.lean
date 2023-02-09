@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.galois_connection
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,13 +195,13 @@ theorem isGreatest_u {b : β} : IsGreatest { a | l a ≤ b } (u b) :=
 
 #print GaloisConnection.isGLB_l /-
 theorem isGLB_l {a : α} : IsGLB { b | a ≤ u b } (l a) :=
-  gc.isLeast_l.IsGLB
+  gc.isLeast_l.isGLB
 #align galois_connection.is_glb_l GaloisConnection.isGLB_l
 -/
 
 #print GaloisConnection.isLUB_u /-
 theorem isLUB_u {b : β} : IsLUB { a | l a ≤ b } (u b) :=
-  gc.isGreatest_u.IsLUB
+  gc.isGreatest_u.isLUB
 #align galois_connection.is_lub_u GaloisConnection.isLUB_u
 -/
 
@@ -768,13 +768,13 @@ theorem leftInverse_l_u [Preorder α] [PartialOrder β] (gi : GaloisInsertion l 
 
 #print GaloisInsertion.l_surjective /-
 theorem l_surjective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) : Surjective l :=
-  gi.leftInverse_l_u.Surjective
+  gi.leftInverse_l_u.surjective
 #align galois_insertion.l_surjective GaloisInsertion.l_surjective
 -/
 
 #print GaloisInsertion.u_injective /-
 theorem u_injective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) : Injective u :=
-  gi.leftInverse_l_u.Injective
+  gi.leftInverse_l_u.injective
 #align galois_insertion.u_injective GaloisInsertion.u_injective
 -/
 

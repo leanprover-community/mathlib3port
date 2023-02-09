@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.traversable.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -214,7 +214,7 @@ theorem preserves_seq {α β : Type u} : ∀ (x : F (α → β)) (y : F α), η 
 #print ApplicativeTransformation.preserves_map /-
 @[functor_norm]
 theorem preserves_map {α β} (x : α → β) (y : F α) : η (x <$> y) = x <$> η y := by
-  rw [← pure_seq_eq_map, η.preserves_seq] <;> simp [functor_norm]
+  rw [← pure_seq, η.preserves_seq] <;> simp [functor_norm]
 #align applicative_transformation.preserves_map ApplicativeTransformation.preserves_map
 -/
 
@@ -394,8 +394,8 @@ variable [Applicative F]
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/
 protected def traverse {α β} (f : α → F β) : Sum σ α → F (Sum σ β)
-  | Sum.inl x => pure (Sum.inl x)
-  | Sum.inr x => Sum.inr <$> f x
+  | sum.inl x => pure (Sum.inl x)
+  | sum.inr x => Sum.inr <$> f x
 #align sum.traverse Sum.traverse
 -/
 

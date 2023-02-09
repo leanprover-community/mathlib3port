@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.NFA
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem mem_stepSet (s : σ) (S : Set σ) (a : α) : s ∈ M.stepSet S a ↔ ∃
 #align NFA.mem_step_set NFA.mem_stepSet
 
 @[simp]
-theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by simp_rw [step_set, Union_false, Union_empty]
+theorem stepSet_empty (a : α) : M.stepSet ∅ a = ∅ := by
+  simp_rw [stepSet, unionᵢ_false, unionᵢ_empty]
 #align NFA.step_set_empty NFA.stepSet_empty
 
 /-- `M.eval_from S x` computes all possible paths though `M` with input `x` starting at an element
@@ -78,7 +79,7 @@ theorem evalFrom_singleton (S : Set σ) (a : α) : M.evalFrom S [a] = M.stepSet 
 @[simp]
 theorem evalFrom_append_singleton (S : Set σ) (x : List α) (a : α) :
     M.evalFrom S (x ++ [a]) = M.stepSet (M.evalFrom S x) a := by
-  simp only [eval_from, List.foldl_append, List.foldl_cons, List.foldl_nil]
+  simp only [evalFrom, List.foldl_append, List.foldl_cons, List.foldl_nil]
 #align NFA.eval_from_append_singleton NFA.evalFrom_append_singleton
 
 /-- `M.eval x` computes all possible paths though `M` with input `x` starting at an element of
@@ -129,7 +130,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
       x = a ++ b ++ c ∧
         a.length + b.length ≤ Fintype.card (Set σ) ∧ b ≠ [] ∧ {a} * {b}∗ * {c} ≤ M.accepts :=
   by
-  rw [← to_DFA_correct] at hx⊢
+  rw [← toDFA_correct] at hx⊢
   exact M.to_DFA.pumping_lemma hx hlen
 #align NFA.pumping_lemma NFA.pumping_lemma
 
@@ -163,7 +164,7 @@ theorem toNFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts :=
   by
   ext x
   change (∃ S H, S ∈ M.to_NFA.eval_from {M.start} x) ↔ _
-  rw [to_NFA_eval_from_match]
+  rw [toNFA_evalFrom_match]
   constructor
   · rintro ⟨S, hS₁, hS₂⟩
     rwa [set.mem_singleton_iff.mp hS₂] at hS₁

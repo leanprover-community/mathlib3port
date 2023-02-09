@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rohan Mitta, Kevin Buzzard, Alistair Tucker, Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.contracting
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -115,7 +115,7 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
     cauchySeq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
       (hf.to_lipschitzWith.edist_iterate_succ_le_geometric x)
   let ⟨y, hy⟩ := cauchySeq_tendsto_of_complete this
-  ⟨y, isFixedPt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
+  ⟨y, isFixedPt_of_tendsto_iterate hy hf.2.continuous.continuousAt, hy,
     edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x))
       (hf.to_lipschitzWith.edist_iterate_succ_le_geometric x) hy⟩
 #align contracting_with.exists_fixed_point ContractingWith.exists_fixed_point
@@ -167,7 +167,7 @@ theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx :
   by
   refine'
       (hf.eq_or_edist_eq_top_of_fixed_points _ _).elim id fun h' => False.elim (ne_of_lt _ h') <;>
-    try apply efixed_point_is_fixed_pt
+    try apply efixedPoint_isFixedPt
   change edist_lt_top_setoid.rel _ _
   trans x;
   · symm
@@ -191,9 +191,9 @@ theorem exists_fixed_point' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s 
   refine' ⟨y, y.2, Subtype.ext_iff_val.1 hfy, _, fun n => _⟩
   · convert (continuous_subtype_coe.tendsto _).comp h_tendsto
     ext n
-    simp only [(· ∘ ·), maps_to.iterate_restrict, maps_to.coe_restrict_apply, Subtype.coe_mk]
+    simp only [(· ∘ ·), MapsTo.iterate_restrict, MapsTo.val_restrict_apply, Subtype.coe_mk]
   · convert hle n
-    rw [maps_to.iterate_restrict, eq_comm, maps_to.coe_restrict_apply, Subtype.coe_mk]
+    rw [MapsTo.iterate_restrict, eq_comm, MapsTo.val_restrict_apply, Subtype.coe_mk]
 #align contracting_with.exists_fixed_point' ContractingWith.exists_fixed_point'
 
 variable (f)
@@ -363,9 +363,9 @@ theorem apriori_dist_iterate_fixedPoint_le (x n) :
 theorem tendsto_iterate_fixedPoint (x) :
     Tendsto (fun n => (f^[n]) x) atTop (𝓝 <| fixedPoint f hf) :=
   by
-  convert tendsto_iterate_efixed_point hf (edist_ne_top x _)
-  refine' (fixed_point_unique _ _).symm
-  apply efixed_point_is_fixed_pt
+  convert tendsto_iterate_efixedPoint hf (edist_ne_top x _)
+  refine' (fixedPoint_unique _ _).symm
+  apply efixedPoint_isFixedPt
 #align contracting_with.tendsto_iterate_fixed_point ContractingWith.tendsto_iterate_fixedPoint
 
 theorem fixedPoint_lipschitz_in_map {g : α → α} (hg : ContractingWith K g) {C}

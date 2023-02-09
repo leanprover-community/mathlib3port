@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,7 +235,7 @@ theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) :
 
 theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [HasLimit (parallelPair f 0)]
     (w : kernel.ι f = 0) : Mono f :=
-  mono_of_cancel_zero f fun P g h => by rw [← kernel.lift_ι f g h, w, limits.comp_zero]
+  mono_of_cancel_zero f fun P g h => by rw [← kernel.lift_ι f g h, w, Limits.comp_zero]
 #align category_theory.preadditive.mono_of_kernel_zero CategoryTheory.Preadditive.mono_of_kernel_zero
 
 theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} (g : Q ⟶ R), f ≫ g = 0 → g = 0) :
@@ -250,19 +250,19 @@ theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) :
 
 theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [HasColimit (parallelPair f 0)]
     (w : cokernel.π f = 0) : Epi f :=
-  epi_of_cancel_zero f fun P g h => by rw [← cokernel.π_desc f g h, w, limits.zero_comp]
+  epi_of_cancel_zero f fun P g h => by rw [← cokernel.π_desc f g h, w, Limits.zero_comp]
 #align category_theory.preadditive.epi_of_cokernel_zero CategoryTheory.Preadditive.epi_of_cokernel_zero
 
 namespace IsIso
 
 @[simp]
 theorem comp_left_eq_zero [IsIso f] : f ≫ g = 0 ↔ g = 0 := by
-  rw [← is_iso.eq_inv_comp, limits.comp_zero]
+  rw [← IsIso.eq_inv_comp, Limits.comp_zero]
 #align category_theory.preadditive.is_iso.comp_left_eq_zero CategoryTheory.Preadditive.IsIso.comp_left_eq_zero
 
 @[simp]
 theorem comp_right_eq_zero [IsIso g] : f ≫ g = 0 ↔ f = 0 := by
-  rw [← is_iso.eq_comp_inv, limits.zero_comp]
+  rw [← IsIso.eq_comp_inv, Limits.zero_comp]
 #align category_theory.preadditive.is_iso.comp_right_eq_zero CategoryTheory.Preadditive.IsIso.comp_right_eq_zero
 
 end IsIso
@@ -322,7 +322,7 @@ theorem kernelForkOfFork_ofι {P : C} (ι : P ⟶ X) (w : ι ≫ f = ι ≫ g) :
 def isLimitForkOfKernelFork {c : KernelFork (f - g)} (i : IsLimit c) :
     IsLimit (forkOfKernelFork c) :=
   Fork.IsLimit.mk' _ fun s =>
-    ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
+    ⟨i.lift (kernelForkOfFork s), i.fac _ _, fun m h => by apply Fork.IsLimit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_limit_fork_of_kernel_fork CategoryTheory.Preadditive.isLimitForkOfKernelFork
 
 @[simp]
@@ -334,7 +334,7 @@ theorem isLimitForkOfKernelFork_lift {c : KernelFork (f - g)} (i : IsLimit c) (s
 /-- An equalizer of `f` and `g` is a kernel of `f - g`. -/
 def isLimitKernelForkOfFork {c : Fork f g} (i : IsLimit c) : IsLimit (kernelForkOfFork c) :=
   Fork.IsLimit.mk' _ fun s =>
-    ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by apply fork.is_limit.hom_ext i <;> tidy⟩
+    ⟨i.lift (forkOfKernelFork s), i.fac _ _, fun m h => by apply Fork.IsLimit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_limit_kernel_fork_of_fork CategoryTheory.Preadditive.isLimitKernelForkOfFork
 
 variable (f g)
@@ -388,7 +388,7 @@ def isColimitCoforkOfCokernelCofork {c : CokernelCofork (f - g)} (i : IsColimit 
     IsColimit (coforkOfCokernelCofork c) :=
   Cofork.IsColimit.mk' _ fun s =>
     ⟨i.desc (cokernelCoforkOfCofork s), i.fac _ _, fun m h => by
-      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+      apply Cofork.IsColimit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_colimit_cofork_of_cokernel_cofork CategoryTheory.Preadditive.isColimitCoforkOfCokernelCofork
 
 @[simp]
@@ -403,7 +403,7 @@ def isColimitCokernelCoforkOfCofork {c : Cofork f g} (i : IsColimit c) :
     IsColimit (cokernelCoforkOfCofork c) :=
   Cofork.IsColimit.mk' _ fun s =>
     ⟨i.desc (coforkOfCokernelCofork s), i.fac _ _, fun m h => by
-      apply cofork.is_colimit.hom_ext i <;> tidy⟩
+      apply Cofork.IsColimit.hom_ext i <;> tidy⟩
 #align category_theory.preadditive.is_colimit_cokernel_cofork_of_cofork CategoryTheory.Preadditive.isColimitCokernelCoforkOfCofork
 
 variable (f g)

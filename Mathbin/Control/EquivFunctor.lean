@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module control.equiv_functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ or `map_comp_map` when not applied.
 @[simp]
 theorem mapEquiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
     (mapEquiv f ab).trans (mapEquiv f bc) = mapEquiv f (ab.trans bc) :=
-  Equiv.ext fun x => by simp [map_equiv, map_trans']
+  Equiv.ext fun x => by simp [mapEquiv, map_trans']
 #align equiv_functor.map_equiv_trans EquivFunctor.mapEquiv_trans
 -/
 
@@ -125,7 +125,7 @@ instance (priority := 100) ofLawfulFunctor (f : Type u₀ → Type u₁) [Functo
 theorem mapEquiv.injective (f : Type u₀ → Type u₁) [Applicative f] [LawfulApplicative f]
     {α β : Type u₀} (h : ∀ γ, Function.Injective (pure : γ → f γ)) :
     Function.Injective (@EquivFunctor.mapEquiv f _ α β) := fun e₁ e₂ H =>
-  Equiv.ext fun x => h β (by simpa [EquivFunctor.map] using Equiv.congr_fun H (pure x))
+  Equiv.ext fun x => h β (by simpa [equiv_functor.map] using Equiv.congr_fun H (pure x))
 #align equiv_functor.map_equiv.injective EquivFunctor.mapEquiv.injective
 -/
 

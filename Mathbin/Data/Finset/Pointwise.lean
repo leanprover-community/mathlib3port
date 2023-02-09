@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ theorem one_mem_one : (1 : α) ∈ (1 : Finset α) :=
 
 #print Finset.one_nonempty /-
 @[to_additive]
-theorem one_nonempty : (1 : Finset α).Nonempty :=
+theorem one_nonempty : (1 : finset α).Nonempty :=
   ⟨1, one_mem_one⟩
 #align finset.one_nonempty Finset.one_nonempty
 #align finset.zero_nonempty Finset.zero_nonempty
@@ -355,7 +355,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : InvolutiveInv.{u1} α] (s : Finset.{u1} α), Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u1} α α s (Inv.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_2)) (Function.Injective.injOn.{u1, u1} α α (Inv.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_2)) (inv_injective.{u1} α _inst_2) (Set.preimage.{u1, u1} α α (Inv.inv.{u1} α (InvolutiveInv.toInv.{u1} α _inst_2)) (Finset.toSet.{u1} α s)))) (Inv.inv.{u1} (Finset.{u1} α) (Finset.inv.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (InvolutiveInv.toInv.{u1} α _inst_2)) s)
 Case conversion may be inaccurate. Consider using '#align finset.preimage_inv Finset.preimage_invₓ'. -/
 @[simp, to_additive]
-theorem preimage_inv : s.Preimage Inv.inv (inv_injective.InjOn _) = s⁻¹ :=
+theorem preimage_inv : s.preimage Inv.inv (inv_injective.injOn _) = s⁻¹ :=
   coe_injective <| by rw [coe_preimage, Set.inv_preimage, coe_inv]
 #align finset.preimage_inv Finset.preimage_inv
 #align finset.preimage_neg Finset.preimage_neg
@@ -928,7 +928,7 @@ scoped[Pointwise] attribute [instance] Finset.nsmul Finset.npow Finset.zsmul Fin
 /-- `finset α` is a `semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_semigroup` under pointwise operations if `α` is. "]
 protected def semigroup [Semigroup α] : Semigroup (Finset α) :=
-  coe_injective.Semigroup _ coe_mul
+  coe_injective.semigroup _ coe_mul
 #align finset.semigroup Finset.semigroup
 #align finset.add_semigroup Finset.addSemigroup
 -/
@@ -937,7 +937,7 @@ protected def semigroup [Semigroup α] : Semigroup (Finset α) :=
 /-- `finset α` is a `comm_semigroup` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_comm_semigroup` under pointwise operations if `α` is. "]
 protected def commSemigroup [CommSemigroup α] : CommSemigroup (Finset α) :=
-  coe_injective.CommSemigroup _ coe_mul
+  coe_injective.commSemigroup _ coe_mul
 #align finset.comm_semigroup Finset.commSemigroup
 #align finset.add_comm_semigroup Finset.addCommSemigroup
 -/
@@ -950,7 +950,7 @@ variable [MulOneClass α]
 /-- `finset α` is a `mul_one_class` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_zero_class` under pointwise operations if `α` is."]
 protected def mulOneClass : MulOneClass (Finset α) :=
-  coe_injective.MulOneClass _ (coe_singleton 1) coe_mul
+  coe_injective.mulOneClass _ (coe_singleton 1) coe_mul
 #align finset.mul_one_class Finset.mulOneClass
 #align finset.add_zero_class Finset.addZeroClass
 -/
@@ -1086,7 +1086,7 @@ theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s ^ n : Set α) :=
 /-- `finset α` is a `monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_monoid` under pointwise operations if `α` is. "]
 protected def monoid : Monoid (Finset α) :=
-  coe_injective.Monoid _ coe_one coe_mul coe_pow
+  coe_injective.monoid _ coe_one coe_mul coe_pow
 #align finset.monoid Finset.monoid
 #align finset.add_monoid Finset.addMonoid
 -/
@@ -1120,7 +1120,7 @@ Case conversion may be inaccurate. Consider using '#align finset.pow_subset_pow 
 theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
   | 0 => by
     rw [pow_zero]
-    exact subset.rfl
+    exact Subset.rfl
   | n + 1 => by
     rw [pow_succ]
     exact mul_subset_mul hst (pow_subset_pow _)
@@ -1137,7 +1137,7 @@ Case conversion may be inaccurate. Consider using '#align finset.pow_subset_pow_
 theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n :=
   by
   refine' Nat.le_induction _ (fun n h ih => _) _
-  · exact subset.rfl
+  · exact Subset.rfl
   · rw [pow_succ]
     exact ih.trans (subset_mul_right _ hs)
 #align finset.pow_subset_pow_of_one_mem Finset.pow_subset_pow_of_one_mem
@@ -1150,7 +1150,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Monoid.{u1} α] (s : List.{u1} (Finset.{u1} α)), Eq.{succ u1} (Set.{u1} α) (Finset.toSet.{u1} α (List.prod.{u1} (Finset.{u1} α) (Finset.mul.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_3))) (Finset.one.{u1} α (Monoid.toOne.{u1} α _inst_3)) s)) (List.prod.{u1} (Set.{u1} α) (Set.mul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α _inst_3))) (Set.one.{u1} α (Monoid.toOne.{u1} α _inst_3)) (List.map.{u1, u1} (Finset.{u1} α) (Set.{u1} α) (Finset.toSet.{u1} α) s))
 Case conversion may be inaccurate. Consider using '#align finset.coe_list_prod Finset.coe_list_prodₓ'. -/
 @[simp, norm_cast, to_additive]
-theorem coe_list_prod (s : List (Finset α)) : (↑s.Prod : Set α) = (s.map coe).Prod :=
+theorem coe_list_prod (s : List (Finset α)) : (↑s.prod : Set α) = (s.map coe).prod :=
   map_list_prod (coeMonoidHom : Finset α →* Set α) _
 #align finset.coe_list_prod Finset.coe_list_prod
 #align finset.coe_list_sum Finset.coe_list_sum
@@ -1163,7 +1163,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_prod_list_of_fn Finset.mem_prod_list_ofFnₓ'. -/
 @[to_additive]
 theorem mem_prod_list_ofFn {a : α} {s : Fin n → Finset α} :
-    a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a :=
+    a ∈ (List.ofFn s).prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).prod = a :=
   by
   rw [← mem_coe, coe_list_prod, List.map_ofFn, Set.mem_prod_list_ofFn]
   rfl
@@ -1178,7 +1178,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.mem_pow Finset.mem_powₓ'. -/
 @[to_additive]
 theorem mem_pow {a : α} {n : ℕ} :
-    a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => ↑(f i)).Prod = a :=
+    a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => ↑(f i)).prod = a :=
   by
   simp_rw [← mem_coe, coe_pow, Set.mem_pow]
   rfl
@@ -1263,7 +1263,7 @@ variable [CommMonoid α]
 /-- `finset α` is a `comm_monoid` under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is an `add_comm_monoid` under pointwise operations if `α` is. "]
 protected def commMonoid : CommMonoid (Finset α) :=
-  coe_injective.CommMonoid _ coe_one coe_mul coe_pow
+  coe_injective.commMonoid _ coe_one coe_mul coe_pow
 #align finset.comm_monoid Finset.commMonoid
 #align finset.add_comm_monoid Finset.addCommMonoid
 -/
@@ -1295,8 +1295,8 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.coe_zpow Finset.coe_zpowₓ'. -/
 @[simp, to_additive]
 theorem coe_zpow (s : Finset α) : ∀ n : ℤ, ↑(s ^ n) = (s ^ n : Set α)
-  | Int.ofNat n => coe_pow _ _
-  | Int.negSucc n => by
+  | int.of_nat n => coe_pow _ _
+  | int.neg_succ_of_nat n => by
     refine' (coe_inv _).trans _
     convert congr_arg Inv.inv (coe_pow _ _)
 #align finset.coe_zpow Finset.coe_zpow
@@ -1318,7 +1318,7 @@ protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} �
 /-- `finset α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive "`finset α` is a subtraction monoid under pointwise operations if\n`α` is."]
 protected def divisionMonoid : DivisionMonoid (Finset α) :=
-  coe_injective.DivisionMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+  coe_injective.divisionMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
 #align finset.division_monoid Finset.divisionMonoid
 #align finset.subtraction_monoid Finset.subtractionMonoid
 -/
@@ -1342,7 +1342,7 @@ theorem isUnit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a :=
 #print Finset.isUnit_coe /-
 @[simp, to_additive]
 theorem isUnit_coe : IsUnit (s : Set α) ↔ IsUnit s := by
-  simp_rw [is_unit_iff, Set.isUnit_iff, coe_eq_singleton]
+  simp_rw [isUnit_iff, Set.isUnit_iff, coe_eq_singleton]
 #align finset.is_unit_coe Finset.isUnit_coe
 #align finset.is_add_unit_coe Finset.isAddUnit_coe
 -/
@@ -1354,7 +1354,7 @@ end DivisionMonoid
 @[to_additive SubtractionCommMonoid
       "`finset α` is a commutative subtraction monoid under\npointwise operations if `α` is."]
 protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (Finset α) :=
-  coe_injective.DivisionCommMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
+  coe_injective.divisionCommMonoid _ coe_one coe_mul coe_inv coe_div coe_pow coe_zpow
 #align finset.division_comm_monoid Finset.divisionCommMonoid
 #align finset.subtraction_comm_monoid Finset.subtractionCommMonoid
 -/
@@ -1362,7 +1362,7 @@ protected def divisionCommMonoid [DivisionCommMonoid α] : DivisionCommMonoid (F
 #print Finset.distribNeg /-
 /-- `finset α` has distributive negation if `α` has. -/
 protected def distribNeg [Mul α] [HasDistribNeg α] : HasDistribNeg (Finset α) :=
-  coe_injective.HasDistribNeg _ coe_neg coe_mul
+  coe_injective.hasDistribNeg _ coe_neg coe_mul
 #align finset.has_distrib_neg Finset.distribNeg
 -/
 
@@ -1504,7 +1504,7 @@ theorem Nonempty.one_mem_div (h : s.Nonempty) : (1 : α) ∈ s / s :=
 #print Finset.isUnit_singleton /-
 @[to_additive]
 theorem isUnit_singleton (a : α) : IsUnit ({a} : Finset α) :=
-  (Group.isUnit a).Finset
+  (Group.isUnit a).finset
 #align finset.is_unit_singleton Finset.isUnit_singleton
 #align finset.is_add_unit_singleton Finset.isAddUnit_singleton
 -/
@@ -1512,7 +1512,7 @@ theorem isUnit_singleton (a : α) : IsUnit ({a} : Finset α) :=
 #print Finset.isUnit_iff_singleton /-
 @[simp]
 theorem isUnit_iff_singleton : IsUnit s ↔ ∃ a, s = {a} := by
-  simp only [is_unit_iff, Group.isUnit, and_true_iff]
+  simp only [isUnit_iff, Group.isUnit, and_true_iff]
 #align finset.is_unit_iff_singleton Finset.isUnit_iff_singleton
 -/
 
@@ -1524,7 +1524,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_mul_left Finset.image_mul_leftₓ'. -/
 @[simp, to_additive]
 theorem image_mul_left :
-    image (fun b => a * b) t = preimage t (fun b => a⁻¹ * b) ((mul_right_injective _).InjOn _) :=
+    image (fun b => a * b) t = preimage t (fun b => a⁻¹ * b) ((mul_right_injective _).injOn _) :=
   coe_injective <| by simp
 #align finset.image_mul_left Finset.image_mul_left
 #align finset.image_add_left Finset.image_add_left
@@ -1536,7 +1536,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_3 : Group.{u1} α] {t : Finset.{u1} α} {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.image.{u1, u1} α α (fun (a : α) (b : α) => _inst_1 a b) (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3))))) _x b) t) (Finset.preimage.{u1, u1} α α t (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3))))) _x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_3)))) b)) (Function.Injective.injOn.{u1, u1} α α (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3))))) x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_3)))) b)) (mul_left_injective.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)))) (IsCancelMul.toIsRightCancelMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3)))) (CancelMonoid.toIsCancelMul.{u1} α (Group.toCancelMonoid.{u1} α _inst_3))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_3)))) b)) (Set.preimage.{u1, u1} α α (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_3))))) _x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_3)))) b)) (Finset.toSet.{u1} α t))))
 Case conversion may be inaccurate. Consider using '#align finset.image_mul_right Finset.image_mul_rightₓ'. -/
 @[simp, to_additive]
-theorem image_mul_right : image (· * b) t = preimage t (· * b⁻¹) ((mul_left_injective _).InjOn _) :=
+theorem image_mul_right : image (· * b) t = preimage t (· * b⁻¹) ((mul_left_injective _).injOn _) :=
   coe_injective <| by simp
 #align finset.image_mul_right Finset.image_mul_right
 #align finset.image_add_right Finset.image_add_right
@@ -1549,7 +1549,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_mul_left' Finset.image_mul_left'ₓ'. -/
 @[to_additive]
 theorem image_mul_left' :
-    image (fun b => a⁻¹ * b) t = preimage t (fun b => a * b) ((mul_right_injective _).InjOn _) := by
+    image (fun b => a⁻¹ * b) t = preimage t (fun b => a * b) ((mul_right_injective _).injOn _) := by
   simp
 #align finset.image_mul_left' Finset.image_mul_left'
 #align finset.image_add_left' Finset.image_add_left'
@@ -1562,7 +1562,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.image_mul_right' Finset.image_mul_right'ₓ'. -/
 @[to_additive]
 theorem image_mul_right' :
-    image (· * b⁻¹) t = preimage t (· * b) ((mul_left_injective _).InjOn _) := by simp
+    image (· * b⁻¹) t = preimage t (· * b) ((mul_left_injective _).injOn _) := by simp
 #align finset.image_mul_right' Finset.image_mul_right'
 #align finset.image_add_right' Finset.image_add_right'
 
@@ -1636,7 +1636,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_left_singleton Finset.preimage_mul_left_singletonₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_left_singleton :
-    preimage {b} ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹ * b} := by
+    preimage {b} ((· * ·) a) ((mul_right_injective _).injOn _) = {a⁻¹ * b} := by
   classical rw [← image_mul_left', image_singleton]
 #align finset.preimage_mul_left_singleton Finset.preimage_mul_left_singleton
 #align finset.preimage_add_left_singleton Finset.preimage_add_left_singleton
@@ -1649,7 +1649,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_right_singleton Finset.preimage_mul_right_singletonₓ'. -/
 @[simp, to_additive]
 theorem preimage_mul_right_singleton :
-    preimage {b} (· * a) ((mul_left_injective _).InjOn _) = {b * a⁻¹} := by
+    preimage {b} (· * a) ((mul_left_injective _).injOn _) = {b * a⁻¹} := by
   classical rw [← image_mul_right', image_singleton]
 #align finset.preimage_mul_right_singleton Finset.preimage_mul_right_singleton
 #align finset.preimage_add_right_singleton Finset.preimage_add_right_singleton
@@ -1661,7 +1661,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u1} α α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) ((fun (x._@.Mathlib.Data.Finset.Pointwise._hyg.9476 : α) (x._@.Mathlib.Data.Finset.Pointwise._hyg.9478 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Finset.Pointwise._hyg.9476 x._@.Mathlib.Data.Finset.Pointwise._hyg.9478) a) (Function.Injective.injOn.{u1, u1} α α ((fun (x._@.Mathlib.Algebra.Group.Defs._hyg.2619 : α) (x._@.Mathlib.Algebra.Group.Defs._hyg.2621 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Group.Defs._hyg.2619 x._@.Mathlib.Algebra.Group.Defs._hyg.2621) a) (mul_right_injective.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (IsCancelMul.toIsLeftCancelMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (CancelMonoid.toIsCancelMul.{u1} α (Group.toCancelMonoid.{u1} α _inst_1))) a) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Finset.Pointwise._hyg.9476 : α) (x._@.Mathlib.Data.Finset.Pointwise._hyg.9478 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Finset.Pointwise._hyg.9476 x._@.Mathlib.Data.Finset.Pointwise._hyg.9478) a) (Finset.toSet.{u1} α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))))))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a))
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_left_one Finset.preimage_mul_left_oneₓ'. -/
 @[simp, to_additive]
-theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).InjOn _) = {a⁻¹} :=
+theorem preimage_mul_left_one : preimage 1 ((· * ·) a) ((mul_right_injective _).injOn _) = {a⁻¹} :=
   by classical rw [← image_mul_left', image_one, mul_one]
 #align finset.preimage_mul_left_one Finset.preimage_mul_left_one
 #align finset.preimage_add_left_zero Finset.preimage_add_left_zero
@@ -1673,7 +1673,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u1} α α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) _x b) (Function.Injective.injOn.{u1, u1} α α (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x b) (mul_left_injective.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (IsCancelMul.toIsRightCancelMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (CancelMonoid.toIsCancelMul.{u1} α (Group.toCancelMonoid.{u1} α _inst_1))) b) (Set.preimage.{u1, u1} α α (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) _x b) (Finset.toSet.{u1} α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))))))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b))
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_right_one Finset.preimage_mul_right_oneₓ'. -/
 @[simp, to_additive]
-theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).InjOn _) = {b⁻¹} := by
+theorem preimage_mul_right_one : preimage 1 (· * b) ((mul_left_injective _).injOn _) = {b⁻¹} := by
   classical rw [← image_mul_right', image_one, one_mul]
 #align finset.preimage_mul_right_one Finset.preimage_mul_right_one
 #align finset.preimage_add_right_zero Finset.preimage_add_right_zero
@@ -1685,7 +1685,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {a : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u1} α α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) ((fun (x._@.Mathlib.Data.Finset.Pointwise._hyg.9645 : α) (x._@.Mathlib.Data.Finset.Pointwise._hyg.9647 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Finset.Pointwise._hyg.9645 x._@.Mathlib.Data.Finset.Pointwise._hyg.9647) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) (Function.Injective.injOn.{u1, u1} α α ((fun (x._@.Mathlib.Algebra.Group.Defs._hyg.2619 : α) (x._@.Mathlib.Algebra.Group.Defs._hyg.2621 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Algebra.Group.Defs._hyg.2619 x._@.Mathlib.Algebra.Group.Defs._hyg.2621) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) (mul_right_injective.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (IsCancelMul.toIsLeftCancelMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (CancelMonoid.toIsCancelMul.{u1} α (Group.toCancelMonoid.{u1} α _inst_1))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) (Set.preimage.{u1, u1} α α ((fun (x._@.Mathlib.Data.Finset.Pointwise._hyg.9645 : α) (x._@.Mathlib.Data.Finset.Pointwise._hyg.9647 : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x._@.Mathlib.Data.Finset.Pointwise._hyg.9645 x._@.Mathlib.Data.Finset.Pointwise._hyg.9647) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) a)) (Finset.toSet.{u1} α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))))))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) a)
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_left_one' Finset.preimage_mul_left_one'ₓ'. -/
 @[to_additive]
-theorem preimage_mul_left_one' : preimage 1 ((· * ·) a⁻¹) ((mul_right_injective _).InjOn _) = {a} :=
+theorem preimage_mul_left_one' : preimage 1 ((· * ·) a⁻¹) ((mul_right_injective _).injOn _) = {a} :=
   by rw [preimage_mul_left_one, inv_inv]
 #align finset.preimage_mul_left_one' Finset.preimage_mul_left_one'
 #align finset.preimage_add_left_zero' Finset.preimage_add_left_zero'
@@ -1697,7 +1697,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Group.{u1} α] {b : α}, Eq.{succ u1} (Finset.{u1} α) (Finset.preimage.{u1, u1} α α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))) (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) _x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (Function.Injective.injOn.{u1, u1} α α (fun (x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (mul_left_injective.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (IsCancelMul.toIsRightCancelMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1)))) (CancelMonoid.toIsCancelMul.{u1} α (Group.toCancelMonoid.{u1} α _inst_1))) (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (Set.preimage.{u1, u1} α α (fun (_x : α) => HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulOneClass.toMul.{u1} α (Monoid.toMulOneClass.{u1} α (DivInvMonoid.toMonoid.{u1} α (Group.toDivInvMonoid.{u1} α _inst_1))))) _x (Inv.inv.{u1} α (InvOneClass.toInv.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1)))) b)) (Finset.toSet.{u1} α (OfNat.ofNat.{u1} (Finset.{u1} α) 1 (One.toOfNat1.{u1} (Finset.{u1} α) (Finset.one.{u1} α (InvOneClass.toOne.{u1} α (DivInvOneMonoid.toInvOneClass.{u1} α (DivisionMonoid.toDivInvOneMonoid.{u1} α (Group.toDivisionMonoid.{u1} α _inst_1))))))))))) (Singleton.singleton.{u1, u1} α (Finset.{u1} α) (Finset.instSingletonFinset.{u1} α) b)
 Case conversion may be inaccurate. Consider using '#align finset.preimage_mul_right_one' Finset.preimage_mul_right_one'ₓ'. -/
 @[to_additive]
-theorem preimage_mul_right_one' : preimage 1 (· * b⁻¹) ((mul_left_injective _).InjOn _) = {b} := by
+theorem preimage_mul_right_one' : preimage 1 (· * b⁻¹) ((mul_left_injective _).injOn _) = {b} := by
   rw [preimage_mul_right_one, inv_inv]
 #align finset.preimage_mul_right_one' Finset.preimage_mul_right_one'
 #align finset.preimage_add_right_zero' Finset.preimage_add_right_zero'
@@ -2505,7 +2505,7 @@ protected def mulAction [DecidableEq α] [Monoid α] [MulAction α β] : MulActi
 @[to_additive
       "An additive action of an additive monoid on a type `β` gives an additive action\non `finset β`."]
 protected def mulActionFinset [Monoid α] [MulAction α β] : MulAction α (Finset β) :=
-  coe_injective.MulAction _ coe_smul_finset
+  coe_injective.mulAction _ coe_smul_finset
 #align finset.mul_action_finset Finset.mulActionFinset
 #align finset.add_action_finset Finset.addActionFinset
 -/
@@ -2535,7 +2535,7 @@ scoped[Pointwise]
   attribute [instance] Finset.distribMulActionFinset Finset.mulDistribMulActionFinset
 
 instance [DecidableEq α] [Zero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors (Finset α) :=
-  coe_injective.NoZeroDivisors _ coe_zero coe_mul
+  coe_injective.noZeroDivisors _ coe_zero coe_mul
 
 instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors (Finset α) (Finset β) :=
@@ -2552,7 +2552,7 @@ instance [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
 #print Finset.noZeroSMulDivisors_finset /-
 instance noZeroSMulDivisors_finset [Zero α] [Zero β] [SMul α β] [NoZeroSMulDivisors α β] :
     NoZeroSMulDivisors α (Finset β) :=
-  coe_injective.NoZeroSMulDivisors _ coe_zero coe_smul_finset
+  coe_injective.noZeroSMulDivisors _ coe_zero coe_smul_finset
 #align finset.no_zero_smul_divisors_finset Finset.noZeroSMulDivisors_finset
 -/
 
@@ -2572,7 +2572,7 @@ Case conversion may be inaccurate. Consider using '#align finset.pairwise_disjoi
 @[to_additive]
 theorem pairwiseDisjoint_smul_iff {s : Set α} {t : Finset α} :
     s.PairwiseDisjoint (· • t) ↔ (s ×ˢ t : Set (α × α)).InjOn fun p => p.1 * p.2 := by
-  simp_rw [← pairwise_disjoint_coe, coe_smul_finset, Set.pairwiseDisjoint_smul_iff]
+  simp_rw [← pairwiseDisjoint_coe, coe_smul_finset, Set.pairwiseDisjoint_smul_iff]
 #align finset.pairwise_disjoint_smul_iff Finset.pairwiseDisjoint_smul_iff
 #align finset.pairwise_disjoint_vadd_iff Finset.pairwiseDisjoint_vadd_iff
 
@@ -2870,7 +2870,7 @@ theorem Nonempty.zero_smul (ht : t.Nonempty) : (0 : Finset α) • t = 0 :=
 #print Finset.zero_smul_finset /-
 /-- A nonempty set is scaled by zero to the singleton set containing 0. -/
 theorem zero_smul_finset {s : Finset β} (h : s.Nonempty) : (0 : α) • s = (0 : Finset β) :=
-  coe_injective <| by simpa using @Set.zero_smul_set α _ _ _ _ _ h
+  coe_injective <| by simpa using @set.zero_smul_set α _ _ _ _ _ h
 #align finset.zero_smul_finset Finset.zero_smul_finset
 -/
 

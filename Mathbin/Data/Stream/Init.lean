@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.stream.init
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -108,7 +108,7 @@ theorem drop_succ (n : Nat) (s : Stream' α) : drop (succ n) s = drop n (tail s)
 
 #print Stream'.head_drop /-
 @[simp]
-theorem head_drop {α} (a : Stream' α) (n : ℕ) : (a.drop n).headI = a.get? n := by
+theorem head_drop {α} (a : Stream' α) (n : ℕ) : (a.drop n).head = a.nth n := by
   simp only [drop, head, Nat.zero_add, Stream'.nth]
 #align stream.head_drop Stream'.head_drop
 -/
@@ -300,7 +300,7 @@ theorem zip_eq (s₁ : Stream' α) (s₂ : Stream' β) :
 
 #print Stream'.nth_enum /-
 @[simp]
-theorem nth_enum (s : Stream' α) (n : ℕ) : nth (enum s) n = (n, s.get? n) :=
+theorem nth_enum (s : Stream' α) (n : ℕ) : nth (enum s) n = (n, s.nth n) :=
   rfl
 #align stream.nth_enum Stream'.nth_enum
 -/
@@ -662,7 +662,7 @@ theorem interleave_even_odd (s₁ : Stream' α) : even s₁ ⋈ odd s₁ = s₁ 
 theorem nth_even : ∀ (n : Nat) (s : Stream' α), nth (even s) n = nth s (2 * n)
   | 0, s => rfl
   | succ n, s => by
-    change nth (Even s) (succ n) = nth s (succ (succ (2 * n)))
+    change nth (even s) (succ n) = nth s (succ (succ (2 * n)))
     rw [nth_succ, nth_succ, tail_even, nth_even]; rfl
 #align stream.nth_even Stream'.nth_even
 -/
@@ -704,7 +704,7 @@ theorem cons_append_stream (a : α) (l : List α) (s : Stream' α) :
 theorem append_append_stream :
     ∀ (l₁ l₂ : List α) (s : Stream' α), l₁ ++ l₂ ++ₛ s = l₁ ++ₛ (l₂ ++ₛ s)
   | [], l₂, s => rfl
-  | List.cons a l₁, l₂, s => by
+  | list.cons a l₁, l₂, s => by
     rw [List.cons_append, cons_append_stream, cons_append_stream, append_append_stream]
 #align stream.append_append_stream Stream'.append_append_stream
 -/
@@ -713,7 +713,7 @@ theorem append_append_stream :
 theorem map_append_stream (f : α → β) :
     ∀ (l : List α) (s : Stream' α), map f (l ++ₛ s) = List.map f l ++ₛ map f s
   | [], s => rfl
-  | List.cons a l, s => by
+  | list.cons a l, s => by
     rw [cons_append_stream, List.map_cons, map_cons, cons_append_stream, map_append_stream]
 #align stream.map_append_stream Stream'.map_append_stream
 -/
@@ -721,7 +721,7 @@ theorem map_append_stream (f : α → β) :
 #print Stream'.drop_append_stream /-
 theorem drop_append_stream : ∀ (l : List α) (s : Stream' α), drop l.length (l ++ₛ s) = s
   | [], s => by rfl
-  | List.cons a l, s => by
+  | list.cons a l, s => by
     rw [List.length_cons, add_one, drop_succ, cons_append_stream, tail_cons, drop_append_stream]
 #align stream.drop_append_stream Stream'.drop_append_stream
 -/
@@ -735,7 +735,7 @@ theorem append_stream_head_tail (s : Stream' α) : [head s] ++ₛ tail s = s := 
 #print Stream'.mem_append_stream_right /-
 theorem mem_append_stream_right : ∀ {a : α} (l : List α) {s : Stream' α}, a ∈ s → a ∈ l ++ₛ s
   | a, [], s, h => h
-  | a, List.cons b l, s, h =>
+  | a, list.cons b l, s, h =>
     have ih : a ∈ l ++ₛ s := mem_append_stream_right l h
     mem_cons_of_mem _ ih
 #align stream.mem_append_stream_right Stream'.mem_append_stream_right
@@ -744,7 +744,7 @@ theorem mem_append_stream_right : ∀ {a : α} (l : List α) {s : Stream' α}, a
 #print Stream'.mem_append_stream_left /-
 theorem mem_append_stream_left : ∀ {a : α} {l : List α} (s : Stream' α), a ∈ l → a ∈ l ++ₛ s
   | a, [], s, h => absurd h (List.not_mem_nil _)
-  | a, List.cons b l, s, h =>
+  | a, list.cons b l, s, h =>
     Or.elim (List.eq_or_mem_of_mem_cons h) (fun aeqb : a = b => Exists.intro 0 aeqb)
       fun ainl : a ∈ l => mem_cons_of_mem b (mem_append_stream_left s ainl)
 #align stream.mem_append_stream_left Stream'.mem_append_stream_left
@@ -802,7 +802,7 @@ theorem take_theorem (s₁ s₂ : Stream' α) : (∀ n : Nat, take n s₁ = take
     simp [take] at aux
     exact aux
   · have h₁ : some (nth s₁ (succ n)) = some (nth s₂ (succ n)) := by
-      rw [← nth_take_succ, ← nth_take_succ, h (succ (succ n))]
+      rw [← get?_take_succ, ← get?_take_succ, h (succ (succ n))]
     injection h₁
 #align stream.take_theorem Stream'.take_theorem
 -/
@@ -819,7 +819,7 @@ protected theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α)
 #print Stream'.cycle_eq /-
 theorem cycle_eq : ∀ (l : List α) (h : l ≠ []), cycle l h = l ++ₛ cycle l h
   | [], h => absurd rfl h
-  | List.cons a l, h =>
+  | list.cons a l, h =>
     have gen :
       ∀ l' a',
         corec Stream'.cycleF Stream'.cycleG (a', l', a, l) =

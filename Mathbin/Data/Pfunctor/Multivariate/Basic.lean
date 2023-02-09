@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
 def Obj (α : TypeVec.{u} n) : Type u :=
-  Σa : P.A, P.B a ⟹ α
+  Σa : P.A, P.b a ⟹ α
 #align mvpfunctor.obj Mvpfunctor.Obj
 
 /-- Applying `P` to a morphism of `Type` -/
@@ -58,7 +58,7 @@ instance Obj.inhabited {α : TypeVec n} [Inhabited P.A] [∀ i, Inhabited (α i)
 instance : MvFunctor P.Obj :=
   ⟨@Mvpfunctor.map n P⟩
 
-theorem map_eq {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
+theorem map_eq {α β : TypeVec n} (g : α ⟹ β) (a : P.A) (f : P.b a ⟹ α) :
     @MvFunctor.map _ P.Obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
   rfl
 #align mvpfunctor.map_eq Mvpfunctor.map_eq
@@ -135,7 +135,7 @@ def comp.mk (x : P.Obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
 
 /-- Destructor for functor composition -/
 def comp.get (x : (comp P Q).Obj α) : P.Obj fun i => (Q i).Obj α :=
-  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun (j : Fin2 m) (b : (Q i).B _ j) => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
+  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun (j : Fin2 m) (b : (Q i).b _ j) => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
 #align mvpfunctor.comp.get Mvpfunctor.comp.get
 
 theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
@@ -179,10 +179,10 @@ theorem liftP_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : P.Obj �
   rw [xeq]; rfl
 #align mvpfunctor.liftp_iff Mvpfunctor.liftP_iff
 
-theorem liftP_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.B a ⟹ α) :
+theorem liftP_iff' {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (a : P.A) (f : P.b a ⟹ α) :
     @LiftP.{u} _ P.Obj _ α p ⟨a, f⟩ ↔ ∀ i x, p (f i x) :=
   by
-  simp only [liftp_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
+  simp only [liftP_iff, Sigma.mk.inj_iff] <;> constructor <;> intro
   · casesm*Exists _, _ ∧ _
     subst_vars
     assumption
@@ -214,16 +214,16 @@ theorem liftR_iff {α : TypeVec n} (r : ∀ ⦃i⦄, α i → α i → Prop) (x 
 
 open Set MvFunctor
 
-theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.B a ⟹ α) (i) :
-    @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj α) i = f i '' univ :=
+theorem supp_eq {α : TypeVec n} (a : P.A) (f : P.b a ⟹ α) (i) :
+    @supp.{u} _ P.Obj _ α (⟨a, f⟩ : P.Obj rfl) i = f i '' univ :=
   by
-  ext; simp only [supp, image_univ, mem_range, mem_set_of_eq]
+  ext; simp only [supp, image_univ, mem_range, mem_setOf_eq]
   constructor <;> intro h
   · apply @h fun i x => ∃ y : P.B a i, f i y = x
-    rw [liftp_iff']
+    rw [liftP_iff']
     intros
     refine' ⟨_, rfl⟩
-  · simp only [liftp_iff']
+  · simp only [liftP_iff']
     cases h
     subst x
     tauto
@@ -244,21 +244,21 @@ variable {n : ℕ} (P : Mvpfunctor.{u} (n + 1))
 from a `n+1`-ary functor -/
 def drop : Mvpfunctor n where
   A := P.A
-  B a := (P.B a).drop
+  B a := (P.b a).drop
 #align mvpfunctor.drop Mvpfunctor.drop
 
 /-- Split polynomial functor, get a univariate functor
 from a `n+1`-ary functor -/
 def last : PFunctor where
   A := P.A
-  B a := (P.B a).getLast
+  B a := (P.b a).last
 #align mvpfunctor.last Mvpfunctor.last
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- append arrows of a polynomial functor application -/
 @[reducible]
-def appendContents {α : TypeVec n} {β : Type _} {a : P.A} (f' : P.drop.B a ⟹ α)
-    (f : P.getLast.B a → β) : P.B a ⟹ (α ::: β) :=
+def appendContents {α : TypeVec n} {β : Type _} {a : P.A} (f' : P.drop.b a ⟹ α)
+    (f : P.last.B a → β) : P.b a ⟹ (α ::: β) :=
   splitFun f' f
 #align mvpfunctor.append_contents Mvpfunctor.appendContents
 

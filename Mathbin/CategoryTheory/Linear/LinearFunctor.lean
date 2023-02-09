@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.linear.linear_functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -109,7 +109,7 @@ namespace Equivalence
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Linear R C] [Preadditive D]
   [Linear R D]
 
-instance inverseLinear (e : C ≌ D) [e.Functor.Additive] [e.Functor.Linear R] : e.inverse.Linear R
+instance inverseLinear (e : C ≌ D) [e.functor.Additive] [e.functor.Linear R] : e.inverse.Linear R
     where map_smul' X Y r f := by
     apply e.functor.map_injective
     simp

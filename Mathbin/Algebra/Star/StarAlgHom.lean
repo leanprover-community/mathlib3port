@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.star_alg_hom
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -197,7 +197,7 @@ def comp (f : B →⋆ₙₐ[R] C) (g : A →⋆ₙₐ[R] B) : A →⋆ₙₐ[R]
   { f.toNonUnitalAlgHom.comp g.toNonUnitalAlgHom with
     map_star' := by
       simp only [map_star, NonUnitalAlgHom.toFun_eq_coe, eq_self_iff_true, NonUnitalAlgHom.coe_comp,
-        coe_to_non_unital_alg_hom, Function.comp_apply, forall_const] }
+        coe_toNonUnitalAlgHom, Function.comp_apply, forall_const] }
 #align non_unital_star_alg_hom.comp NonUnitalStarAlgHom.comp
 
 @[simp]
@@ -431,8 +431,8 @@ instance : Inhabited (A →⋆ₐ[R] A) :=
 def comp (f : B →⋆ₐ[R] C) (g : A →⋆ₐ[R] B) : A →⋆ₐ[R] C :=
   { f.toAlgHom.comp g.toAlgHom with
     map_star' := by
-      simp only [map_star, AlgHom.toFun_eq_coe, AlgHom.coe_comp, coe_to_alg_hom,
-        Function.comp_apply, eq_self_iff_true, forall_const] }
+      simp only [map_star, AlgHom.toFun_eq_coe, AlgHom.coe_comp, coe_toAlgHom, Function.comp_apply,
+        eq_self_iff_true, forall_const] }
 #align star_alg_hom.comp StarAlgHom.comp
 
 @[simp]
@@ -512,11 +512,11 @@ variable {R A B C}
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : A →⋆ₙₐ[R] B × C :=
-  { f.toNonUnitalAlgHom.Prod g.toNonUnitalAlgHom with
+  { f.toNonUnitalAlgHom.prod g.toNonUnitalAlgHom with
     map_star' := fun x => by simp [map_star, Prod.star_def] }
 #align non_unital_star_alg_hom.prod NonUnitalStarAlgHom.prod
 
-theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
+theorem coe_prod (f : A →⋆ₙₐ[R] B) (g : A →⋆ₙₐ[R] C) : ⇑(f.prod g) = Pi.prod f g :=
   rfl
 #align non_unital_star_alg_hom.coe_prod NonUnitalStarAlgHom.coe_prod
 
@@ -540,7 +540,7 @@ their codomains. -/
 @[simps]
 def prodEquiv : (A →⋆ₙₐ[R] B) × (A →⋆ₙₐ[R] C) ≃ (A →⋆ₙₐ[R] B × C)
     where
-  toFun f := f.1.Prod f.2
+  toFun f := f.1.prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl
   right_inv f := by ext <;> rfl
@@ -610,10 +610,10 @@ variable {R A B C}
 /-- The `pi.prod` of two morphisms is a morphism. -/
 @[simps]
 def prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : A →⋆ₐ[R] B × C :=
-  { f.toAlgHom.Prod g.toAlgHom with map_star' := fun x => by simp [Prod.star_def, map_star] }
+  { f.toAlgHom.prod g.toAlgHom with map_star' := fun x => by simp [Prod.star_def, map_star] }
 #align star_alg_hom.prod StarAlgHom.prod
 
-theorem coe_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : ⇑(f.Prod g) = Pi.prod f g :=
+theorem coe_prod (f : A →⋆ₐ[R] B) (g : A →⋆ₐ[R] C) : ⇑(f.prod g) = Pi.prod f g :=
   rfl
 #align star_alg_hom.coe_prod StarAlgHom.coe_prod
 
@@ -637,7 +637,7 @@ their codomains. -/
 @[simps]
 def prodEquiv : (A →⋆ₐ[R] B) × (A →⋆ₐ[R] C) ≃ (A →⋆ₐ[R] B × C)
     where
-  toFun f := f.1.Prod f.2
+  toFun f := f.1.prod f.2
   invFun f := ((fst _ _ _).comp f, (snd _ _ _).comp f)
   left_inv f := by ext <;> rfl
   right_inv f := by ext <;> rfl
@@ -817,7 +817,7 @@ theorem symm_bijective : Function.Bijective (symm : (A ≃⋆ₐ[R] B) → B ≃
 @[simp]
 theorem mk_coe' (e : A ≃⋆ₐ[R] B) (f h₁ h₂ h₃ h₄ h₅ h₆) :
     (⟨f, e, h₁, h₂, h₃, h₄, h₅, h₆⟩ : B ≃⋆ₐ[R] A) = e.symm :=
-  symm_bijective.Injective <| ext fun x => rfl
+  symm_bijective.injective <| ext fun x => rfl
 #align star_alg_equiv.mk_coe' StarAlgEquiv.mk_coe'
 
 @[simp]

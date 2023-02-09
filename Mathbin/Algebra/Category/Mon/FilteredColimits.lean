@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Mon.filtered_colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ object `j`.
 theorem colimit_one_eq (j : J) : (1 : M) = M.mk ⟨j, 1⟩ :=
   by
   apply M.mk_eq
-  refine' ⟨max' _ j, left_to_max _ j, right_to_max _ j, _⟩
+  refine' ⟨max _ j, leftToMax _ j, rightToMax _ j, _⟩
   simp
 #align Mon.filtered_colimits.colimit_one_eq Mon.FilteredColimits.colimit_one_eq
 #align AddMon.filtered_colimits.colimit_zero_eq AddMon.FilteredColimits.colimit_zero_eq
@@ -118,7 +118,7 @@ theorem colimitMulAux_eq_of_rel_left {x x' y : Σj, F.obj j}
   obtain ⟨l, f, g, hfg⟩ := hxx'
   simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
-    tulip (left_to_max j₁ j₂) (right_to_max j₁ j₂) (right_to_max j₃ j₂) (left_to_max j₃ j₂) f g
+    tulip (leftToMax j₁ j₂) (rightToMax j₁ j₂) (rightToMax j₃ j₂) (leftToMax j₃ j₂) f g
   apply M.mk_eq
   use s, α, γ
   dsimp
@@ -136,7 +136,7 @@ theorem colimitMulAux_eq_of_rel_right {x y y' : Σj, F.obj j}
   obtain ⟨l, f, g, hfg⟩ := hyy'
   simp at hfg
   obtain ⟨s, α, β, γ, h₁, h₂, h₃⟩ :=
-    tulip (right_to_max j₂ j₁) (left_to_max j₂ j₁) (left_to_max j₂ j₃) (right_to_max j₂ j₃) f g
+    tulip (rightToMax j₂ j₁) (leftToMax j₂ j₁) (leftToMax j₂ j₃) (rightToMax j₂ j₃) f g
   apply M.mk_eq
   use s, α, γ
   dsimp
@@ -148,14 +148,14 @@ theorem colimitMulAux_eq_of_rel_right {x y y' : Σj, F.obj j}
 @[to_additive "Addition in the colimit. See also `colimit_add_aux`."]
 instance colimitHasMul : Mul M
     where mul x y := by
-    refine' Quot.lift₂ (colimit_mul_aux F) _ _ x y
+    refine' Quot.lift₂ (colimitMulAux F) _ _ x y
     · intro x y y' h
-      apply colimit_mul_aux_eq_of_rel_right
-      apply types.filtered_colimit.rel_of_quot_rel
+      apply colimitMulAux_eq_of_rel_right
+      apply Types.FilteredColimit.rel_of_quot_rel
       exact h
     · intro x x' y h
-      apply colimit_mul_aux_eq_of_rel_left
-      apply types.filtered_colimit.rel_of_quot_rel
+      apply colimitMulAux_eq_of_rel_left
+      apply Types.FilteredColimit.rel_of_quot_rel
       exact h
 #align Mon.filtered_colimits.colimit_has_mul Mon.FilteredColimits.colimitHasMul
 #align AddMon.filtered_colimits.colimit_has_add AddMon.FilteredColimits.colimitHasAdd
@@ -170,7 +170,7 @@ theorem colimit_mul_mk_eq (x y : Σj, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1 
     M.mk x * M.mk y = M.mk ⟨k, F.map f x.2 * F.map g y.2⟩ :=
   by
   cases' x with j₁ x; cases' y with j₂ y
-  obtain ⟨s, α, β, h₁, h₂⟩ := bowtie (left_to_max j₁ j₂) f (right_to_max j₁ j₂) g
+  obtain ⟨s, α, β, h₁, h₂⟩ := bowtie (leftToMax j₁ j₂) f (rightToMax j₁ j₂) g
   apply M.mk_eq
   use s, α, β
   dsimp
@@ -193,10 +193,10 @@ instance colimitMonoid : Monoid M :=
     mul_assoc := fun x y z => by
       apply Quot.induction_on₃ x y z; clear x y z; intro x y z
       cases' x with j₁ x; cases' y with j₂ y; cases' z with j₃ z
-      rw [colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨j₂, y⟩ _ (first_to_max₃ j₁ j₂ j₃) (second_to_max₃ j₁ j₂ j₃),
-        colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (third_to_max₃ j₁ j₂ j₃),
-        colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (second_to_max₃ j₁ j₂ j₃) (third_to_max₃ j₁ j₂ j₃),
-        colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨max₃ j₁ j₂ j₃, _⟩ _ (first_to_max₃ j₁ j₂ j₃) (𝟙 _)]
+      rw [colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨j₂, y⟩ _ (firstToMax₃ j₁ j₂ j₃) (secondToMax₃ j₁ j₂ j₃),
+        colimit_mul_mk_eq F ⟨max₃ j₁ j₂ j₃, _⟩ ⟨j₃, z⟩ _ (𝟙 _) (thirdToMax₃ j₁ j₂ j₃),
+        colimit_mul_mk_eq F ⟨j₂, y⟩ ⟨j₃, z⟩ _ (secondToMax₃ j₁ j₂ j₃) (thirdToMax₃ j₁ j₂ j₃),
+        colimit_mul_mk_eq F ⟨j₁, x⟩ ⟨max₃ j₁ j₂ j₃, _⟩ _ (firstToMax₃ j₁ j₂ j₃) (𝟙 _)]
       simp only [F.map_id, id_apply, mul_assoc] }
 #align Mon.filtered_colimits.colimit_monoid Mon.FilteredColimits.colimitMonoid
 #align AddMon.filtered_colimits.colimit_add_monoid AddMon.FilteredColimits.colimitAddMonoid
@@ -251,8 +251,8 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x
   map_mul' x y := by
     apply Quot.induction_on₂ x y; clear x y; intro x y
     cases' x with i x; cases' y with j y
-    rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max' i j) (left_to_max i j) (right_to_max i j)]
-    dsimp [types.colimit_cocone_is_colimit]
+    rw [colimit_mul_mk_eq F ⟨i, x⟩ ⟨j, y⟩ (max i j) (leftToMax i j) (rightToMax i j)]
+    dsimp [Types.colimitCoconeIsColimit]
     rw [MonoidHom.map_mul, t.w_apply, t.w_apply]
 #align Mon.filtered_colimits.colimit_desc Mon.FilteredColimits.colimitDesc
 #align AddMon.filtered_colimits.colimit_desc AddMon.FilteredColimits.colimitDesc
@@ -277,8 +277,8 @@ instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
-          (types.colimit_cocone_is_colimit (F ⋙ forget Mon.{u})) }
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
+          (Types.colimitCoconeIsColimit (F ⋙ forget Mon.{u})) }
 #align Mon.filtered_colimits.forget_preserves_filtered_colimits Mon.FilteredColimits.forgetPreservesFilteredColimits
 #align AddMon.filtered_colimits.forget_preserves_filtered_colimits AddMon.FilteredColimits.forget_preserves_filtered_colimits
 
@@ -308,12 +308,12 @@ abbrev m : Mon :=
 
 @[to_additive]
 instance colimitCommMonoid : CommMonoid M :=
-  { M.Monoid with
+  { M.monoid with
     mul_comm := fun x y => by
       apply Quot.induction_on₂ x y; clear x y; intro x y
-      let k := max' x.1 y.1
-      let f := left_to_max x.1 y.1
-      let g := right_to_max x.1 y.1
+      let k := max x.1 y.1
+      let f := leftToMax x.1 y.1
+      let g := rightToMax x.1 y.1
       rw [colimit_mul_mk_eq _ x y k f g, colimit_mul_mk_eq _ y x k g f]
       dsimp
       rw [mul_comm] }
@@ -357,7 +357,7 @@ instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forg
     where PreservesFilteredColimits J _ _ :=
     {
       PreservesColimit := fun F =>
-        preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
+        preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommMon Mon.{u})) }
 #align CommMon.filtered_colimits.forget₂_Mon_preserves_filtered_colimits CommMon.FilteredColimits.forget₂MonPreservesFilteredColimits
 #align AddCommMon.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddCommMon.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits

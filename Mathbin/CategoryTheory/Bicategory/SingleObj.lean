@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.single_obj
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,19 +62,19 @@ instance : Bicategory (MonoidalSingleObj C)
   rightUnitor _ _ X := ρ_ X
   comp_whisker_left' := by
     intros
-    rw [associator_inv_naturality, iso.hom_inv_id_assoc, tensor_id]
+    rw [associator_inv_naturality, Iso.hom_inv_id_assoc, tensor_id]
   whisker_assoc' := by
     intros
-    rw [associator_inv_naturality, iso.hom_inv_id_assoc]
+    rw [associator_inv_naturality, Iso.hom_inv_id_assoc]
   whiskerRight_comp' := by
     intros
-    rw [← tensor_id, associator_naturality, iso.inv_hom_id_assoc]
+    rw [← tensor_id, associator_naturality, Iso.inv_hom_id_assoc]
   id_whisker_left' := by
     intros
-    rw [left_unitor_inv_naturality, iso.hom_inv_id_assoc]
+    rw [leftUnitor_inv_naturality, Iso.hom_inv_id_assoc]
   whiskerRight_id' := by
     intros
-    rw [right_unitor_inv_naturality, iso.hom_inv_id_assoc]
+    rw [rightUnitor_inv_naturality, Iso.hom_inv_id_assoc]
   pentagon' := by
     intros
     rw [pentagon]
@@ -102,7 +102,7 @@ def endMonoidalStarFunctor : MonoidalFunctor (EndMonoidal (MonoidalSingleObj.sta
   μ X Y := 𝟙 _
   μ_natural' X Y X' Y' f g := by
     dsimp
-    simp only [category.id_comp, category.comp_id]
+    simp only [Category.id_comp, Category.comp_id]
     -- Should we provide further simp lemmas so this goal becomes visible?
     exact (tensor_id_comp_id_tensor _ _).symm
 #align category_theory.monoidal_single_obj.End_monoidal_star_functor CategoryTheory.MonoidalSingleObj.endMonoidalStarFunctor

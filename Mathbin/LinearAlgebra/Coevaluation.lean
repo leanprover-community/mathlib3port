@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob von Raumer
 
 ! This file was ported from Lean 3 source module linear_algebra.coevaluation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,13 +47,13 @@ variable (V : Type v) [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 def coevaluation : K →ₗ[K] V ⊗[K] Module.Dual K V :=
   let bV := Basis.ofVectorSpace K V
   (Basis.singleton Unit K).constr K fun _ =>
-    ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.Coord i
+    ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.coord i
 #align coevaluation coevaluation
 
 theorem coevaluation_apply_one :
     (coevaluation K V) (1 : K) =
       let bV := Basis.ofVectorSpace K V
-      ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.Coord i :=
+      ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.coord i :=
   by
   simp only [coevaluation, id]
   rw [(Basis.singleton Unit K).constr_apply_fintype K]

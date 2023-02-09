@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -297,7 +297,7 @@ instance bot : IsAdicComplete (⊥ : Ideal R) M where
 #align is_adic_complete.bot IsAdicComplete.bot
 
 protected theorem subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingleton M :=
-  h.1.Subsingleton
+  h.1.subsingleton
 #align is_adic_complete.subsingleton IsAdicComplete.subsingleton
 
 instance (priority := 100) ofSubsingleton [Subsingleton M] : IsAdicComplete I M where
@@ -323,11 +323,11 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     intro n hn
     rw [mul_pow, pow_add, mul_assoc]
     exact Ideal.mul_mem_right _ (I ^ m) (Ideal.pow_mem_pow hx m)
-  obtain ⟨L, hL⟩ := IsPrecomplete.prec to_is_precomplete hf
+  obtain ⟨L, hL⟩ := IsPrecomplete.prec toIsPrecomplete hf
   · rw [isUnit_iff_exists_inv]
     use L
     rw [← sub_eq_zero, neg_mul]
-    apply IsHausdorff.haus (to_is_Hausdorff : IsHausdorff I R)
+    apply IsHausdorff.haus (toIsHausdorff : IsHausdorff I R)
     intro n
     specialize hL n
     rw [Smodeq.sub_mem, Algebra.id.smul_eq_mul, Ideal.mul_top] at hL⊢

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module ring_theory.non_unital_subsemiring.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,11 +57,11 @@ open AddSubmonoidClass
 /-- A non-unital subsemiring of a `non_unital_non_assoc_semiring` inherits a
 `non_unital_non_assoc_semiring` structure -/
 instance (priority := 75) toNonUnitalNonAssocSemiring : NonUnitalNonAssocSemiring s :=
-  Subtype.coe_injective.NonUnitalNonAssocSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.nonUnitalNonAssocSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
 #align non_unital_subsemiring_class.to_non_unital_non_assoc_semiring NonUnitalSubsemiringClass.toNonUnitalNonAssocSemiring
 
 instance noZeroDivisors [NoZeroDivisors R] : NoZeroDivisors s :=
-  Subtype.coe_injective.NoZeroDivisors coe rfl fun x y => rfl
+  Subtype.coe_injective.noZeroDivisors coe rfl fun x y => rfl
 #align non_unital_subsemiring_class.no_zero_divisors NonUnitalSubsemiringClass.noZeroDivisors
 
 /-- The natural non-unital ring hom from a non-unital subsemiring of a non-unital semiring `R` to
@@ -80,13 +80,13 @@ omit R S
 /-- A non-unital subsemiring of a `non_unital_semiring` is a `non_unital_semiring`. -/
 instance toNonUnitalSemiring {R} [NonUnitalSemiring R] [SetLike S R]
     [NonUnitalSubsemiringClass S R] : NonUnitalSemiring s :=
-  Subtype.coe_injective.NonUnitalSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.nonUnitalSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
 #align non_unital_subsemiring_class.to_non_unital_semiring NonUnitalSubsemiringClass.toNonUnitalSemiring
 
 /-- A non-unital subsemiring of a `non_unital_comm_semiring` is a `non_unital_comm_semiring`. -/
 instance toNonUnitalCommSemiring {R} [NonUnitalCommSemiring R] [SetLike S R]
     [NonUnitalSubsemiringClass S R] : NonUnitalCommSemiring s :=
-  Subtype.coe_injective.NonUnitalCommSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
+  Subtype.coe_injective.nonUnitalCommSemiring coe rfl (by simp) (fun _ _ => rfl) fun _ _ => rfl
 #align non_unital_subsemiring_class.to_non_unital_comm_semiring NonUnitalSubsemiringClass.toNonUnitalCommSemiring
 
 /-! Note: currently, there are no ordered versions of non-unital rings. -/
@@ -161,7 +161,7 @@ theorem toSubsemigroup_strictMono :
 
 @[mono]
 theorem toSubsemigroup_mono : Monotone (toSubsemigroup : NonUnitalSubsemiring R → Subsemigroup R) :=
-  toSubsemigroup_strictMono.Monotone
+  toSubsemigroup_strictMono.monotone
 #align non_unital_subsemiring.to_subsemigroup_mono NonUnitalSubsemiring.toSubsemigroup_mono
 
 theorem toAddSubmonoid_injective :
@@ -176,7 +176,7 @@ theorem toAddSubmonoid_strictMono :
 
 @[mono]
 theorem toAddSubmonoid_mono : Monotone (toAddSubmonoid : NonUnitalSubsemiring R → AddSubmonoid R) :=
-  toAddSubmonoid_strictMono.Monotone
+  toAddSubmonoid_strictMono.monotone
 #align non_unital_subsemiring.to_add_submonoid_mono NonUnitalSubsemiring.toAddSubmonoid_mono
 
 /-- Construct a `non_unital_subsemiring R` from a set `s`, a subsemigroup `sg`, and an additive
@@ -774,54 +774,54 @@ theorem comap_top (f : F) : comap f (⊤ : NonUnitalSubsemiring S) = (⊤ : NonU
 /-- Given `non_unital_subsemiring`s `s`, `t` of semirings `R`, `S` respectively, `s.prod t` is
 `s × t` as a non-unital subsemiring of `R × S`. -/
 def prod (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : NonUnitalSubsemiring (R × S) :=
-  { s.toSubsemigroup.Prod t.toSubsemigroup, s.toAddSubmonoid.Prod t.toAddSubmonoid with
+  { s.toSubsemigroup.prod t.toSubsemigroup, s.toAddSubmonoid.prod t.toAddSubmonoid with
     carrier := (s : Set R) ×ˢ (t : Set S) }
 #align non_unital_subsemiring.prod NonUnitalSubsemiring.prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 @[norm_cast]
 theorem coe_prod (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) :
-    (s.Prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
+    (s.prod t : Set (R × S)) = (s : Set R) ×ˢ (t : Set S) :=
   rfl
 #align non_unital_subsemiring.coe_prod NonUnitalSubsemiring.coe_prod
 
 theorem mem_prod {s : NonUnitalSubsemiring R} {t : NonUnitalSubsemiring S} {p : R × S} :
-    p ∈ s.Prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
+    p ∈ s.prod t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align non_unital_subsemiring.mem_prod NonUnitalSubsemiring.mem_prod
 
 @[mono]
 theorem prod_mono ⦃s₁ s₂ : NonUnitalSubsemiring R⦄ (hs : s₁ ≤ s₂) ⦃t₁ t₂ : NonUnitalSubsemiring S⦄
-    (ht : t₁ ≤ t₂) : s₁.Prod t₁ ≤ s₂.Prod t₂ :=
+    (ht : t₁ ≤ t₂) : s₁.prod t₁ ≤ s₂.prod t₂ :=
   Set.prod_mono hs ht
 #align non_unital_subsemiring.prod_mono NonUnitalSubsemiring.prod_mono
 
 theorem prod_mono_right (s : NonUnitalSubsemiring R) :
-    Monotone fun t : NonUnitalSubsemiring S => s.Prod t :=
+    Monotone fun t : NonUnitalSubsemiring S => s.prod t :=
   prod_mono (le_refl s)
 #align non_unital_subsemiring.prod_mono_right NonUnitalSubsemiring.prod_mono_right
 
 theorem prod_mono_left (t : NonUnitalSubsemiring S) :
-    Monotone fun s : NonUnitalSubsemiring R => s.Prod t := fun s₁ s₂ hs => prod_mono hs (le_refl t)
+    Monotone fun s : NonUnitalSubsemiring R => s.prod t := fun s₁ s₂ hs => prod_mono hs (le_refl t)
 #align non_unital_subsemiring.prod_mono_left NonUnitalSubsemiring.prod_mono_left
 
 theorem prod_top (s : NonUnitalSubsemiring R) :
-    s.Prod (⊤ : NonUnitalSubsemiring S) = s.comap (NonUnitalRingHom.fst R S) :=
+    s.prod (⊤ : NonUnitalSubsemiring S) = s.comap (NonUnitalRingHom.fst R S) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_fst]
 #align non_unital_subsemiring.prod_top NonUnitalSubsemiring.prod_top
 
 theorem top_prod (s : NonUnitalSubsemiring S) :
-    (⊤ : NonUnitalSubsemiring R).Prod s = s.comap (NonUnitalRingHom.snd R S) :=
+    (⊤ : NonUnitalSubsemiring R).prod s = s.comap (NonUnitalRingHom.snd R S) :=
   ext fun x => by simp [mem_prod, MonoidHom.coe_snd]
 #align non_unital_subsemiring.top_prod NonUnitalSubsemiring.top_prod
 
 @[simp]
-theorem top_prod_top : (⊤ : NonUnitalSubsemiring R).Prod (⊤ : NonUnitalSubsemiring S) = ⊤ :=
+theorem top_prod_top : (⊤ : NonUnitalSubsemiring R).prod (⊤ : NonUnitalSubsemiring S) = ⊤ :=
   (top_prod _).trans <| comap_top _
 #align non_unital_subsemiring.top_prod_top NonUnitalSubsemiring.top_prod_top
 
 /-- Product of non-unital subsemirings is isomorphic to their product as semigroups. -/
-def prodEquiv (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : s.Prod t ≃+* s × t :=
+def prodEquiv (s : NonUnitalSubsemiring R) (t : NonUnitalSubsemiring S) : s.prod t ≃+* s × t :=
   { Equiv.Set.prod ↑s ↑t with
     map_mul' := fun x y => rfl
     map_add' := fun x y => rfl }
@@ -842,19 +842,19 @@ theorem mem_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → NonUnitalSub
 
 theorem coe_supᵢ_of_directed {ι} [hι : Nonempty ι] {S : ι → NonUnitalSubsemiring R}
     (hS : Directed (· ≤ ·) S) : ((⨆ i, S i : NonUnitalSubsemiring R) : Set R) = ⋃ i, ↑(S i) :=
-  Set.ext fun x => by simp [mem_supr_of_directed hS]
+  Set.ext fun x => by simp [mem_supᵢ_of_directed hS]
 #align non_unital_subsemiring.coe_supr_of_directed NonUnitalSubsemiring.coe_supᵢ_of_directed
 
 theorem mem_supₛ_of_directedOn {S : Set (NonUnitalSubsemiring R)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) {x : R} : x ∈ supₛ S ↔ ∃ s ∈ S, x ∈ s :=
   by
   haveI : Nonempty S := Sne.to_subtype
-  simp only [supₛ_eq_supᵢ', mem_supr_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
+  simp only [supₛ_eq_supᵢ', mem_supᵢ_of_directed hS.directed_coe, SetCoe.exists, Subtype.coe_mk]
 #align non_unital_subsemiring.mem_Sup_of_directed_on NonUnitalSubsemiring.mem_supₛ_of_directedOn
 
 theorem coe_supₛ_of_directedOn {S : Set (NonUnitalSubsemiring R)} (Sne : S.Nonempty)
     (hS : DirectedOn (· ≤ ·) S) : (↑(supₛ S) : Set R) = ⋃ s ∈ S, ↑s :=
-  Set.ext fun x => by simp [mem_Sup_of_directed_on Sne hS]
+  Set.ext fun x => by simp [mem_supₛ_of_directedOn Sne hS]
 #align non_unital_subsemiring.coe_Sup_of_directed_on NonUnitalSubsemiring.coe_supₛ_of_directedOn
 
 end NonUnitalSubsemiring
@@ -905,7 +905,7 @@ theorem srange_top_of_surjective (f : F) (hf : Function.Surjective (f : R → S)
 
 /-- The non-unital subsemiring of elements `x : R` such that `f x = g x` -/
 def eqSlocus (f g : F) : NonUnitalSubsemiring R :=
-  { (f : R →ₙ* S).eqLocus (g : R →ₙ* S), (f : R →+ S).eqLocus g with carrier := { x | f x = g x } }
+  { (f : R →ₙ* S).eqLocus (g : R →ₙ* S), (f : R →+ S).eqLocusM g with carrier := { x | f x = g x } }
 #align non_unital_ring_hom.eq_slocus NonUnitalRingHom.eqSlocus
 
 /-- If two non-unital ring homomorphisms are equal on a set, then they are equal on its
@@ -994,7 +994,7 @@ def sofLeftInverse' {g : S → R} {f : F} (h : Function.LeftInverse g f) : R ≃
     left_inv := h
     right_inv := fun x =>
       Subtype.ext <|
-        let ⟨x', hx'⟩ := NonUnitalRingHom.mem_srange.mp x.Prop
+        let ⟨x', hx'⟩ := NonUnitalRingHom.mem_srange.mp x.prop
         show f (g x) = x by rw [← hx', h x'] }
 #align ring_equiv.sof_left_inverse' RingEquiv.sofLeftInverse'
 

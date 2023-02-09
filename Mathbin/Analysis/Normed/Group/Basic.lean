@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -602,13 +602,13 @@ theorem mem_ball_one_iff : a ∈ ball (1 : E) r ↔ ‖a‖ < r := by rw [mem_ba
 
 @[to_additive mem_closedBall_iff_norm]
 theorem mem_closedBall_iff_norm'' : b ∈ closedBall a r ↔ ‖b / a‖ ≤ r := by
-  rw [mem_closed_ball, dist_eq_norm_div]
+  rw [mem_closedBall, dist_eq_norm_div]
 #align mem_closed_ball_iff_norm'' mem_closedBall_iff_norm''
 #align mem_closed_ball_iff_norm mem_closedBall_iff_norm
 
 @[simp, to_additive]
 theorem mem_closedBall_one_iff : a ∈ closedBall (1 : E) r ↔ ‖a‖ ≤ r := by
-  rw [mem_closed_ball, dist_one_right]
+  rw [mem_closedBall, dist_one_right]
 #align mem_closed_ball_one_iff mem_closedBall_one_iff
 #align mem_closed_ball_zero_iff mem_closedBall_zero_iff
 
@@ -813,21 +813,21 @@ for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. -/
       "A homomorphism `f` of seminormed groups is continuous, if there exists a constant `C`\nsuch that for all `x`, one has `‖f x‖ ≤ C * ‖x‖`"]
 theorem MonoidHomClass.continuous_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : Continuous f :=
-  (MonoidHomClass.lipschitz_of_bound f C h).Continuous
+  (MonoidHomClass.lipschitz_of_bound f C h).continuous
 #align monoid_hom_class.continuous_of_bound MonoidHomClass.continuous_of_bound
 #align add_monoid_hom_class.continuous_of_bound AddMonoidHomClass.continuous_of_bound
 
 @[to_additive]
 theorem MonoidHomClass.uniformContinuous_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
     (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : UniformContinuous f :=
-  (MonoidHomClass.lipschitz_of_bound f C h).UniformContinuous
+  (MonoidHomClass.lipschitz_of_bound f C h).uniformContinuous
 #align monoid_hom_class.uniform_continuous_of_bound MonoidHomClass.uniformContinuous_of_bound
 #align add_monoid_hom_class.uniform_continuous_of_bound AddMonoidHomClass.uniform_continuous_of_bound
 
 @[to_additive IsCompact.exists_bound_of_continuousOn]
 theorem IsCompact.exists_bound_of_continuous_on' [TopologicalSpace α] {s : Set α} (hs : IsCompact s)
     {f : α → E} (hf : ContinuousOn f s) : ∃ C, ∀ x ∈ s, ‖f x‖ ≤ C :=
-  (bounded_iff_forall_norm_le'.1 (hs.image_of_continuousOn hf).Bounded).imp fun C hC x hx =>
+  (bounded_iff_forall_norm_le'.1 (hs.image_of_continuousOn hf).bounded).imp fun C hC x hx =>
     hC _ <| Set.mem_image_of_mem _ hx
 #align is_compact.exists_bound_of_continuous_on' IsCompact.exists_bound_of_continuous_on'
 #align is_compact.exists_bound_of_continuous_on IsCompact.exists_bound_of_continuousOn
@@ -1044,13 +1044,13 @@ theorem squeeze_one_norm {f : α → E} {a : α → ℝ} {t₀ : Filter α} (h :
 @[to_additive]
 theorem tendsto_norm_div_self (x : E) : Tendsto (fun a => ‖a / x‖) (𝓝 x) (𝓝 0) := by
   simpa [dist_eq_norm_div] using
-    tendsto_id.dist (tendsto_const_nhds : tendsto (fun a => (x : E)) (𝓝 x) _)
+    tendsto_id.dist (tendsto_const_nhds : Tendsto (fun a => (x : E)) (𝓝 x) _)
 #align tendsto_norm_div_self tendsto_norm_div_self
 #align tendsto_norm_sub_self tendsto_norm_sub_self
 
 @[to_additive tendsto_norm]
 theorem tendsto_norm' {x : E} : Tendsto (fun a => ‖a‖) (𝓝 x) (𝓝 ‖x‖) := by
-  simpa using tendsto_id.dist (tendsto_const_nhds : tendsto (fun a => (1 : E)) _ _)
+  simpa using tendsto_id.dist (tendsto_const_nhds : Tendsto (fun a => (1 : E)) _ _)
 #align tendsto_norm' tendsto_norm'
 #align tendsto_norm tendsto_norm
 
@@ -1086,7 +1086,7 @@ theorem lipschitzWith_one_nnnorm' : LipschitzWith 1 (HasNnnorm.nnnorm : E → �
 
 @[to_additive uniformContinuous_norm]
 theorem uniformContinuous_norm' : UniformContinuous (norm : E → ℝ) :=
-  lipschitzWith_one_norm'.UniformContinuous
+  lipschitzWith_one_norm'.uniformContinuous
 #align uniform_continuous_norm' uniformContinuous_norm'
 #align uniform_continuous_norm uniformContinuous_norm
 
@@ -1098,7 +1098,7 @@ theorem uniformContinuous_nnnorm' : UniformContinuous fun a : E => ‖a‖₊ :=
 
 @[to_additive]
 theorem mem_closure_one_iff_norm {x : E} : x ∈ closure ({1} : Set E) ↔ ‖x‖ = 0 := by
-  rw [← closed_ball_zero', mem_closedBall_one_iff, (norm_nonneg' x).le_iff_eq]
+  rw [← closedBall_zero', mem_closedBall_one_iff, (norm_nonneg' x).le_iff_eq]
 #align mem_closure_one_iff_norm mem_closure_one_iff_norm
 #align mem_closure_zero_iff_norm mem_closure_zero_iff_norm
 
@@ -1165,7 +1165,7 @@ theorem Filter.Tendsto.norm' (h : Tendsto f l (𝓝 a)) : Tendsto (fun x => ‖f
 
 @[to_additive Filter.Tendsto.nnnorm]
 theorem Filter.Tendsto.nnnorm' (h : Tendsto f l (𝓝 a)) : Tendsto (fun x => ‖f x‖₊) l (𝓝 ‖a‖₊) :=
-  Tendsto.comp continuous_nnnorm'.ContinuousAt h
+  Tendsto.comp continuous_nnnorm'.continuousAt h
 #align filter.tendsto.nnnorm' Filter.Tendsto.nnnorm'
 #align filter.tendsto.nnnorm Filter.Tendsto.nnnorm
 
@@ -1266,7 +1266,7 @@ theorem norm_pos_iff''' [T0Space E] {a : E} : 0 < ‖a‖ ↔ a ≠ 1 := by
 @[to_additive]
 theorem SeminormedGroup.tendstoUniformlyOn_one {f : ι → κ → G} {s : Set κ} {l : Filter ι} :
     TendstoUniformlyOn f 1 l s ↔ ∀ ε > 0, ∀ᶠ i in l, ∀ x ∈ s, ‖f i x‖ < ε := by
-  simp_rw [tendsto_uniformly_on_iff, Pi.one_apply, dist_one_left]
+  simp_rw [tendstoUniformlyOn_iff, Pi.one_apply, dist_one_left]
 #align seminormed_group.tendsto_uniformly_on_one SeminormedGroup.tendstoUniformlyOn_one
 #align seminormed_add_group.tendsto_uniformly_on_zero SeminormedAddGroup.tendstoUniformlyOn_zero
 
@@ -1435,16 +1435,16 @@ theorem abs_dist_sub_le_dist_mul_mul (a₁ a₂ b₁ b₂ : E) :
 #align abs_dist_sub_le_dist_add_add abs_dist_sub_le_dist_add_add
 
 theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) :
-    ‖m.Sum‖ ≤ (m.map fun x => ‖x‖).Sum :=
+    ‖m.sum‖ ≤ (m.map fun x => ‖x‖).sum :=
   m.le_sum_of_subadditive norm norm_zero norm_add_le
 #align norm_multiset_sum_le norm_multiset_sum_le
 
 @[to_additive]
-theorem norm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖ ≤ (m.map fun x => ‖x‖).Sum :=
+theorem norm_multiset_prod_le (m : Multiset E) : ‖m.prod‖ ≤ (m.map fun x => ‖x‖).sum :=
   by
   rw [← Multiplicative.ofAdd_le, ofAdd_multiset_prod, Multiset.map_map]
   refine' Multiset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _
-  · simp only [comp_app, norm_one', ofAdd_zero]
+  · simp only [comp_apply, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _
 #align norm_multiset_prod_le norm_multiset_prod_le
 #align norm_multiset_sum_le norm_multiset_sum_le
@@ -1459,7 +1459,7 @@ theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i in s, f i‖ ≤ 
   by
   rw [← Multiplicative.ofAdd_le, ofAdd_sum]
   refine' Finset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) _ (fun x y => _) _ _
-  · simp only [comp_app, norm_one', ofAdd_zero]
+  · simp only [comp_apply, norm_one', ofAdd_zero]
   · exact norm_mul_le' _ _
 #align norm_prod_le norm_prod_le
 #align norm_sum_le norm_sum_le
@@ -1512,7 +1512,7 @@ theorem preimage_mul_closedBall (a b : E) (r : ℝ) :
     (· * ·) b ⁻¹' closedBall a r = closedBall (a / b) r :=
   by
   ext c
-  simp only [dist_eq_norm_div, Set.mem_preimage, mem_closed_ball, div_div_eq_mul_div, mul_comm]
+  simp only [dist_eq_norm_div, Set.mem_preimage, mem_closedBall, div_div_eq_mul_div, mul_comm]
 #align preimage_mul_closed_ball preimage_mul_closedBall
 #align preimage_add_closed_ball preimage_add_closedBall
 
@@ -1542,7 +1542,7 @@ theorem nnnorm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖₊ ≤ n * ‖a�
 @[to_additive]
 theorem pow_mem_closedBall {n : ℕ} (h : a ∈ closedBall b r) : a ^ n ∈ closedBall (b ^ n) (n • r) :=
   by
-  simp only [mem_closed_ball, dist_eq_norm_div, ← div_pow] at h⊢
+  simp only [mem_closedBall, dist_eq_norm_div, ← div_pow] at h⊢
   refine' (norm_pow_le_mul_norm n (a / b)).trans _
   simpa only [nsmul_eq_mul] using mul_le_mul_of_nonneg_left h n.cast_nonneg
 #align pow_mem_closed_ball pow_mem_closedBall
@@ -1563,7 +1563,7 @@ theorem pow_mem_ball {n : ℕ} (hn : 0 < n) (h : a ∈ ball b r) : a ^ n ∈ bal
 
 @[simp, to_additive]
 theorem mul_mem_closedBall_mul_iff {c : E} : a * c ∈ closedBall (b * c) r ↔ a ∈ closedBall b r := by
-  simp only [mem_closed_ball, dist_eq_norm_div, mul_div_mul_right_eq_div]
+  simp only [mem_closedBall, dist_eq_norm_div, mul_div_mul_right_eq_div]
 #align mul_mem_closed_ball_mul_iff mul_mem_closedBall_mul_iff
 #align add_mem_closed_ball_add_iff add_mem_closedBall_add_iff
 
@@ -1577,8 +1577,8 @@ theorem mul_mem_ball_mul_iff {c : E} : a * c ∈ ball (b * c) r ↔ a ∈ ball b
 theorem smul_closed_ball'' : a • closedBall b r = closedBall (a • b) r :=
   by
   ext
-  simp [mem_closed_ball, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ←
-    eq_inv_mul_iff_mul_eq, mul_assoc]
+  simp [mem_closedBall, Set.mem_smul_set, dist_eq_norm_div, div_eq_inv_mul, ← eq_inv_mul_iff_mul_eq,
+    mul_assoc]
 #align smul_closed_ball'' smul_closed_ball''
 #align vadd_closed_ball'' vadd_closed_ball''
 
@@ -1600,7 +1600,7 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
       Tendsto (fun n => ∏ i in range (n + 1), v i) atTop (𝓝 a) ∧
         (∀ n, v n ∈ s) ∧ ‖v 0 / a‖ < b 0 ∧ ∀ n, 0 < n → ‖v n‖ < b n :=
   by
-  obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : tendsto u at_top (𝓝 a)⟩ :=
+  obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : Tendsto u atTop (𝓝 a)⟩ :=
     mem_closure_iff_seq_limit.mp hg
   obtain ⟨n₀, hn₀⟩ : ∃ n₀, ∀ n ≥ n₀, ‖u n / a‖ < b 0 :=
     haveI : { x | ‖x / a‖ < b 0 } ∈ 𝓝 a :=
@@ -1609,15 +1609,15 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
       exact Metric.ball_mem_nhds _ (b_pos _)
     filter.tendsto_at_top'.mp lim_u _ this
   set z : ℕ → E := fun n => u (n + n₀)
-  have lim_z : tendsto z at_top (𝓝 a) := lim_u.comp (tendsto_add_at_top_nat n₀)
+  have lim_z : Tendsto z atTop (𝓝 a) := lim_u.comp (tendsto_add_atTop_nat n₀)
   have mem_𝓤 : ∀ n, { p : E × E | ‖p.1 / p.2‖ < b (n + 1) } ∈ 𝓤 E := fun n => by
     simpa [← dist_eq_norm_div] using Metric.dist_mem_uniformity (b_pos <| n + 1)
   obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ‖z (φ <| n + 1) / z (φ n)‖ < b (n + 1)⟩ :=
     lim_z.cauchy_seq.subseq_mem mem_𝓤
   set w : ℕ → E := z ∘ φ
-  have hw : tendsto w at_top (𝓝 a) := lim_z.comp φ_extr.tendsto_at_top
+  have hw : Tendsto w atTop (𝓝 a) := lim_z.comp φ_extr.tendsto_at_top
   set v : ℕ → E := fun i => if i = 0 then w 0 else w i / w (i - 1)
-  refine' ⟨v, tendsto.congr (Finset.eq_prod_range_div' w) hw, _, hn₀ _ (n₀.le_add_left _), _⟩
+  refine' ⟨v, Tendsto.congr (Finset.eq_prod_range_div' w) hw, _, hn₀ _ (n₀.le_add_left _), _⟩
   · rintro ⟨⟩
     · change w 0 ∈ s
       apply u_in
@@ -1662,7 +1662,7 @@ theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
 #align edist_add_add_le edist_add_add_le
 
 @[to_additive]
-theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
+theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.prod‖₊ ≤ (m.map fun x => ‖x‖₊).sum :=
   Nnreal.coe_le_coe.1 <| by
     push_cast
     rw [Multiset.map_map]
@@ -1917,7 +1917,7 @@ continuous. -/
 @[to_additive
       "A seminormed group is a uniform additive group, i.e., addition and\nsubtraction are uniformly continuous."]
 instance (priority := 100) SeminormedCommGroup.to_uniformGroup : UniformGroup E :=
-  ⟨(LipschitzWith.prod_fst.div LipschitzWith.prod_snd).UniformContinuous⟩
+  ⟨(LipschitzWith.prod_fst.div LipschitzWith.prod_snd).uniformContinuous⟩
 #align seminormed_comm_group.to_uniform_group SeminormedCommGroup.to_uniformGroup
 #align seminormed_add_comm_group.to_uniform_add_group SeminormedAddCommGroup.to_uniform_add_group
 
@@ -1939,7 +1939,7 @@ theorem cauchySeq_prod_of_eventually_eq {u v : ℕ → E} {N : ℕ} (huv : ∀ n
       by
       ext n
       simp [d]]
-  suffices ∀ n ≥ N, d n = d N by exact (tendsto_atTop_of_eventually_const this).CauchySeq.mul hv
+  suffices ∀ n ≥ N, d n = d N by exact (tendsto_atTop_of_eventually_const this).cauchySeq.mul hv
   intro n hn
   dsimp [d]
   rw [eventually_constant_prod _ hn]
@@ -1962,7 +1962,7 @@ theorem norm_eq_zero'' : ‖a‖ = 0 ↔ a = 1 :=
 
 @[to_additive norm_ne_zero_iff]
 theorem norm_ne_zero_iff' : ‖a‖ ≠ 0 ↔ a ≠ 1 :=
-  norm_eq_zero''.Not
+  norm_eq_zero''.not
 #align norm_ne_zero_iff' norm_ne_zero_iff'
 #align norm_ne_zero_iff norm_ne_zero_iff
 
@@ -2010,7 +2010,7 @@ theorem nnnorm_eq_zero' : ‖a‖₊ = 0 ↔ a = 1 := by
 
 @[to_additive nnnorm_ne_zero_iff]
 theorem nnnorm_ne_zero_iff' : ‖a‖₊ ≠ 0 ↔ a ≠ 1 :=
-  nnnorm_eq_zero'.Not
+  nnnorm_eq_zero'.not
 #align nnnorm_ne_zero_iff' nnnorm_ne_zero_iff'
 #align nnnorm_ne_zero_iff nnnorm_ne_zero_iff
 
@@ -2532,7 +2532,7 @@ with the restriction of the norm. -/
 @[to_additive
       "A subgroup of a seminormed group is also a seminormed group,\nwith the restriction of the norm."]
 instance seminormedGroup : SeminormedGroup s :=
-  SeminormedGroup.induced _ _ s.Subtype
+  SeminormedGroup.induced _ _ s.subtype
 #align subgroup.seminormed_group Subgroup.seminormedGroup
 #align add_subgroup.seminormed_add_group AddSubgroup.seminormedAddGroup
 
@@ -2562,19 +2562,19 @@ end SeminormedGroup
 
 @[to_additive]
 instance seminormedCommGroup [SeminormedCommGroup E] {s : Subgroup E} : SeminormedCommGroup s :=
-  SeminormedCommGroup.induced _ _ s.Subtype
+  SeminormedCommGroup.induced _ _ s.subtype
 #align subgroup.seminormed_comm_group Subgroup.seminormedCommGroup
 #align add_subgroup.seminormed_add_comm_group AddSubgroup.seminormedAddCommGroup
 
 @[to_additive]
 instance normedGroup [NormedGroup E] {s : Subgroup E} : NormedGroup s :=
-  NormedGroup.induced _ _ s.Subtype Subtype.coe_injective
+  NormedGroup.induced _ _ s.subtype Subtype.coe_injective
 #align subgroup.normed_group Subgroup.normedGroup
 #align add_subgroup.normed_add_group AddSubgroup.normedAddGroup
 
 @[to_additive]
 instance normedCommGroup [NormedCommGroup E] {s : Subgroup E} : NormedCommGroup s :=
-  NormedCommGroup.induced _ _ s.Subtype Subtype.coe_injective
+  NormedCommGroup.induced _ _ s.subtype Subtype.coe_injective
 #align subgroup.normed_comm_group Subgroup.normedCommGroup
 #align add_subgroup.normed_add_comm_group AddSubgroup.normedAddCommGroup
 
@@ -2590,7 +2590,7 @@ namespace Submodule
 -/
 instance seminormedAddCommGroup {_ : Ring 𝕜} [SeminormedAddCommGroup E] {_ : Module 𝕜 E}
     (s : Submodule 𝕜 E) : SeminormedAddCommGroup s :=
-  SeminormedAddCommGroup.induced _ _ s.Subtype.toAddMonoidHom
+  SeminormedAddCommGroup.induced _ _ s.subtype.toAddMonoidHom
 #align submodule.seminormed_add_comm_group Submodule.seminormedAddCommGroup
 
 -- See note [implicit instance arguments].

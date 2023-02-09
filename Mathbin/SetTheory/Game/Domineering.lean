@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.domineering
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,23 +70,23 @@ theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (
 
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
 def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=
-  (b.eraseₓ m).eraseₓ (m.1, m.2 - 1)
+  (b.erase m).erase (m.1, m.2 - 1)
 #align pgame.domineering.move_left Pgame.Domineering.moveLeft
 
 /-- After Left moves, two horizontally adjacent squares are removed from the board. -/
 def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
-  (b.eraseₓ m).eraseₓ (m.1 - 1, m.2)
+  (b.erase m).erase (m.1 - 1, m.2)
 #align pgame.domineering.move_right Pgame.Domineering.moveRight
 
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    (m.1 - 1, m.2) ∈ b.eraseₓ m := by
+    (m.1 - 1, m.2) ∈ b.erase m := by
   rw [mem_right] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
 #align pgame.domineering.fst_pred_mem_erase_of_mem_right Pgame.Domineering.fst_pred_mem_erase_of_mem_right
 
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    (m.1, m.2 - 1) ∈ b.eraseₓ m := by
+    (m.1, m.2 - 1) ∈ b.erase m := by
   rw [mem_left] at h
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
@@ -113,7 +113,7 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
 theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     Finset.card (moveLeft b m) + 2 = Finset.card b :=
   by
-  dsimp [move_left]
+  dsimp [moveLeft]
   rw [Finset.card_erase_of_mem (snd_pred_mem_erase_of_mem_left h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
@@ -122,18 +122,18 @@ theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
 theorem moveRight_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     Finset.card (moveRight b m) + 2 = Finset.card b :=
   by
-  dsimp [move_right]
+  dsimp [moveRight]
   rw [Finset.card_erase_of_mem (fst_pred_mem_erase_of_mem_right h)]
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
 #align pgame.domineering.move_right_card Pgame.Domineering.moveRight_card
 
 theorem moveLeft_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
-    Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← move_left_card h, lt_add_one]
+    Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← moveLeft_card h, lt_add_one]
 #align pgame.domineering.move_left_smaller Pgame.Domineering.moveLeft_smaller
 
 theorem moveRight_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
-    Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← move_right_card h, lt_add_one]
+    Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← moveRight_card h, lt_add_one]
 #align pgame.domineering.move_right_smaller Pgame.Domineering.moveRight_smaller
 
 /-- The instance describing allowed moves on a Domineering board. -/
@@ -144,11 +144,11 @@ instance state : State Board where
   left_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
-    exact move_left_smaller h
+    exact moveLeft_smaller h
   right_bound s t m := by
     simp only [Finset.mem_image, Prod.exists] at m
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
-    exact move_right_smaller h
+    exact moveRight_smaller h
 #align pgame.domineering.state Pgame.Domineering.state
 
 end Domineering
@@ -183,7 +183,7 @@ instance shortOne : Short domineering.one :=
 
 instance shortL : Short domineering.l :=
   by
-  dsimp [domineering.L]
+  dsimp [domineering.l]
   infer_instance
 #align pgame.short_L Pgame.shortL
 

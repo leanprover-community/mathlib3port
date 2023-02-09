@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -110,13 +110,13 @@ theorem smooth (f : 𝓢(E, F)) (n : ℕ∞) : ContDiff ℝ n f :=
 /-- Every Schwartz function is continuous. -/
 @[continuity, protected]
 theorem continuous (f : 𝓢(E, F)) : Continuous f :=
-  (f.smooth 0).Continuous
+  (f.smooth 0).continuous
 #align schwartz_map.continuous SchwartzMap.continuous
 
 /-- Every Schwartz function is differentiable. -/
 @[protected]
 theorem differentiable (f : 𝓢(E, F)) : Differentiable ℝ f :=
-  (f.smooth 1).Differentiable rfl.le
+  (f.smooth 1).differentiable rfl.le
 #align schwartz_map.differentiable SchwartzMap.differentiable
 
 @[ext]
@@ -227,7 +227,7 @@ theorem seminormAux_smul_le (k n : ℕ) (c : 𝕜) (f : 𝓢(E, F)) :
     (c • f).seminormAux k n ≤ ‖c‖ * f.seminormAux k n :=
   by
   refine'
-    (c • f).seminormAux_le_bound k n (mul_nonneg (norm_nonneg _) (seminorm_aux_nonneg _ _ _))
+    (c • f).seminormAux_le_bound k n (mul_nonneg (norm_nonneg _) (seminormAux_nonneg _ _ _))
       fun x => (decay_smul_aux k n f c x).le.trans _
   rw [mul_assoc]
   exact mul_le_mul_of_nonneg_left (f.le_seminorm_aux k n x) (norm_nonneg _)
@@ -348,7 +348,7 @@ end Sub
 section AddCommGroup
 
 instance : AddCommGroup 𝓢(E, F) :=
-  FunLike.coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  FunLike.coe_injective.addCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 
 variable (E F)
@@ -368,7 +368,7 @@ theorem coe_coeHom : (coeHom E F : 𝓢(E, F) → E → F) = coeFn :=
 
 theorem coeHom_injective : Function.Injective (coeHom E F) :=
   by
-  rw [coe_coe_hom]
+  rw [coe_coeHom]
   exact FunLike.coe_injective
 #align schwartz_map.coe_hom_injective SchwartzMap.coeHom_injective
 
@@ -379,7 +379,7 @@ section Module
 variable [NormedField 𝕜] [NormedSpace 𝕜 F] [SMulCommClass ℝ 𝕜 F]
 
 instance : Module 𝕜 𝓢(E, F) :=
-  coeHom_injective.Module 𝕜 (coeHom E F) fun _ _ => rfl
+  coeHom_injective.module 𝕜 (coeHom E F) fun _ _ => rfl
 
 end Module
 
@@ -460,7 +460,7 @@ theorem schwartzSeminormFamily_apply_zero :
 #align schwartz_map.schwartz_seminorm_family_apply_zero SchwartzMap.schwartzSeminormFamily_apply_zero
 
 instance : TopologicalSpace 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).ModuleFilterBasis.topology'
+  (schwartzSeminormFamily ℝ E F).moduleFilterBasis.topology'
 
 theorem schwartzWithSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) :=
   by
@@ -475,16 +475,16 @@ variable {𝕜 E F}
 instance : HasContinuousSmul 𝕜 𝓢(E, F) :=
   by
   rw [(schwartzWithSeminorms 𝕜 E F).withSeminorms_eq]
-  exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.HasContinuousSmul
+  exact (schwartzSeminormFamily 𝕜 E F).moduleFilterBasis.hasContinuousSmul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.is_topological_add_group
+  (schwartzSeminormFamily ℝ E F).addGroupFilterBasis.is_topological_add_group
 
 instance : UniformSpace 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformSpace
+  (schwartzSeminormFamily ℝ E F).addGroupFilterBasis.uniformSpace
 
 instance : UniformAddGroup 𝓢(E, F) :=
-  (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.UniformAddGroup
+  (schwartzSeminormFamily ℝ E F).addGroupFilterBasis.uniformAddGroup
 
 instance : LocallyConvexSpace ℝ 𝓢(E, F) :=
   (schwartzWithSeminorms ℝ E F).toLocallyConvexSpace
@@ -536,8 +536,8 @@ def fderivLm : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F)
     where
   toFun := SchwartzMap.fderiv
   map_add' f g :=
-    ext fun _ => fderiv_add f.Differentiable.DifferentiableAt g.Differentiable.DifferentiableAt
-  map_smul' a f := ext fun _ => fderiv_const_smul f.Differentiable.DifferentiableAt a
+    ext fun _ => fderiv_add f.differentiable.differentiableAt g.differentiable.differentiableAt
+  map_smul' a f := ext fun _ => fderiv_const_smul f.differentiable.differentiableAt a
 #align schwartz_map.fderiv_lm SchwartzMap.fderivLm
 
 @[simp, norm_cast]
@@ -549,17 +549,17 @@ theorem fderivLm_apply (f : 𝓢(E, F)) : fderivLm 𝕜 f = SchwartzMap.fderiv f
 def fderivClm : 𝓢(E, F) →L[𝕜] 𝓢(E, E →L[ℝ] F)
     where
   cont := by
-    change Continuous (fderiv_lm 𝕜 : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F))
+    change continuous (fderivLm 𝕜 : 𝓢(E, F) →ₗ[𝕜] 𝓢(E, E →L[ℝ] F))
     refine'
       Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
         (schwartzWithSeminorms 𝕜 E (E →L[ℝ] F)) _ _
     rintro ⟨k, n⟩
     use {⟨k, n + 1⟩}, 1, one_ne_zero
     intro f
-    simp only [schwartz_seminorm_family_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
-    refine' (fderiv_lm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
+    simp only [schwartzSeminormFamily_apply, Seminorm.comp_apply, Finset.sup_singleton, one_smul]
+    refine' (fderivLm 𝕜 f).seminorm_le_bound 𝕜 k n (by positivity) _
     intro x
-    rw [fderiv_lm_apply, coe_fderiv, norm_iteratedFderiv_fderiv]
+    rw [fderivLm_apply, coe_fderiv, norm_iteratedFderiv_fderiv]
     exact f.le_seminorm 𝕜 k (n + 1) x
   toLinearMap := fderivLm 𝕜
 #align schwartz_map.fderiv_clm SchwartzMap.fderivClm
@@ -617,12 +617,12 @@ map. -/
 def toBoundedContinuousFunctionClm : 𝓢(E, F) →L[𝕜] E →ᵇ F :=
   { toBoundedContinuousFunctionLm 𝕜 E F with
     cont := by
-      change Continuous (to_bounded_continuous_function_lm 𝕜 E F)
+      change continuous (toBoundedContinuousFunctionLm 𝕜 E F)
       refine'
         Seminorm.continuous_from_bounded (schwartzWithSeminorms 𝕜 E F)
           (normWithSeminorms 𝕜 (E →ᵇ F)) _ fun i => ⟨{0}, 1, one_ne_zero, fun f => _⟩
       rw [Finset.sup_singleton, one_smul, Seminorm.comp_apply, coe_normSeminorm,
-        schwartz_seminorm_family_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
+        schwartzSeminormFamily_apply_zero, BoundedContinuousFunction.norm_le (map_nonneg _ _)]
       intro x
       exact norm_le_seminorm 𝕜 _ _ }
 #align schwartz_map.to_bounded_continuous_function_clm SchwartzMap.toBoundedContinuousFunctionClm

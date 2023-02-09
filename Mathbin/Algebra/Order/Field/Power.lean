@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Lewis, Leonardo de Moura, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.field.power
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -147,8 +147,8 @@ Case conversion may be inaccurate. Consider using '#align zpow_injective zpow_in
 theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective ((· ^ ·) a : ℤ → α) :=
   by
   rcases h₁.lt_or_lt with (H | H)
-  · exact (zpow_strictAnti h₀ H).Injective
-  · exact (zpow_strictMono H).Injective
+  · exact (zpow_strictAnti h₀ H).injective
+  · exact (zpow_strictMono H).injective
 #align zpow_injective zpow_injective
 
 /- warning: zpow_inj -> zpow_inj is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.associated_prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ theorem IsAssociatedPrime.map_of_injective (h : IsAssociatedPrime I M) (hf : Fun
 
 theorem LinearEquiv.isAssociatedPrime_iff (l : M ≃ₗ[R] M') :
     IsAssociatedPrime I M ↔ IsAssociatedPrime I M' :=
-  ⟨fun h => h.map_of_injective l l.Injective, fun h => h.map_of_injective l.symm l.symm.Injective⟩
+  ⟨fun h => h.map_of_injective l l.injective, fun h => h.map_of_injective l.symm l.symm.injective⟩
 #align linear_equiv.is_associated_prime_iff LinearEquiv.isAssociatedPrime_iff
 
 theorem not_isAssociatedPrime_of_subsingleton [Subsingleton M] : ¬IsAssociatedPrime I M :=
@@ -121,8 +121,8 @@ theorem associatedPrimes.subset_of_injective (hf : Function.Injective f) :
 
 theorem LinearEquiv.AssociatedPrimes.eq (l : M ≃ₗ[R] M') :
     associatedPrimes R M = associatedPrimes R M' :=
-  le_antisymm (associatedPrimes.subset_of_injective l l.Injective)
-    (associatedPrimes.subset_of_injective l.symm l.symm.Injective)
+  le_antisymm (associatedPrimes.subset_of_injective l l.injective)
+    (associatedPrimes.subset_of_injective l.symm l.symm.injective)
 #align linear_equiv.associated_primes.eq LinearEquiv.AssociatedPrimes.eq
 
 theorem associatedPrimes.eq_empty_of_subsingleton [Subsingleton M] : associatedPrimes R M = ∅ := by
@@ -163,7 +163,7 @@ theorem IsAssociatedPrime.eq_radical (hI : I.IsPrimary) (h : IsAssociatedPrime J
       Ideal.Quotient.mkₐ_eq_mk, ← Ideal.Quotient.mk_eq_mk, Submodule.Quotient.mk_eq_zero]
   apply le_antisymm
   · intro y hy
-    exact (hI.2 <| e.mp hy).resolve_left ((Submodule.Quotient.mk_eq_zero I).Not.mp this)
+    exact (hI.2 <| e.mp hy).resolve_left ((Submodule.Quotient.mk_eq_zero I).not.mp this)
   · rw [hJ.radical_le_iff]
     intro y hy
     exact e.mpr (I.mul_mem_left x hy)

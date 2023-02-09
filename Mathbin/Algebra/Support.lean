@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.support
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] {f : α -> M} {s : Set.{u2} α}, Iff (HasSubset.Subset.{u2} (Set.{u2} α) (Set.instHasSubsetSet.{u2} α) (Function.mulSupport.{u2, u1} α M _inst_1 f) s) (forall (x : α), (Not (Membership.mem.{u2, u2} α (Set.{u2} α) (Set.instMembershipSet.{u2} α) x s)) -> (Eq.{succ u1} M (f x) (OfNat.ofNat.{u1} M 1 (One.toOfNat1.{u1} M _inst_1))))
 Case conversion may be inaccurate. Consider using '#align function.mul_support_subset_iff' Function.mulSupport_subset_iff'ₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (x «expr ∉ » s) -/
 @[to_additive]
 theorem mulSupport_subset_iff' {f : α → M} {s : Set α} :
     mulSupport f ⊆ s ↔ ∀ (x) (_ : x ∉ s), f x = 1 :=
@@ -138,7 +138,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_e
 @[to_additive]
 theorem mulSupport_eq_iff {f : α → M} {s : Set α} :
     mulSupport f = s ↔ (∀ x, x ∈ s → f x ≠ 1) ∧ ∀ x, x ∉ s → f x = 1 := by
-  simp only [Set.ext_iff, mem_mul_support, Ne.def, imp_not_comm, ← forall_and, ← iff_def, ←
+  simp only [Set.ext_iff, mem_mulSupport, Ne.def, imp_not_comm, ← forall_and, ← iff_def, ←
     xor_iff_not_iff', ← xor_iff_iff_not]
 #align function.mul_support_eq_iff Function.mulSupport_eq_iff
 #align function.support_eq_iff Function.support_eq_iff
@@ -152,7 +152,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_d
 @[to_additive]
 theorem mulSupport_disjoint_iff {f : α → M} {s : Set α} : Disjoint (mulSupport f) s ↔ EqOn f 1 s :=
   by
-  simp_rw [← subset_compl_iff_disjoint_right, mul_support_subset_iff', not_mem_compl_iff, eq_on,
+  simp_rw [← subset_compl_iff_disjoint_right, mulSupport_subset_iff', not_mem_compl_iff, EqOn,
     Pi.one_apply]
 #align function.mul_support_disjoint_iff Function.mulSupport_disjoint_iff
 #align function.support_disjoint_iff Function.support_disjoint_iff
@@ -165,7 +165,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.disjoint_mul_support_iff Function.disjoint_mulSupport_iffₓ'. -/
 @[to_additive]
 theorem disjoint_mulSupport_iff {f : α → M} {s : Set α} : Disjoint s (mulSupport f) ↔ EqOn f 1 s :=
-  by rw [disjoint_comm, mul_support_disjoint_iff]
+  by rw [disjoint_comm, mulSupport_disjoint_iff]
 #align function.disjoint_mul_support_iff Function.disjoint_mulSupport_iff
 #align function.disjoint_support_iff Function.disjoint_support_iff
 
@@ -178,7 +178,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_e
 @[simp, to_additive]
 theorem mulSupport_eq_empty_iff {f : α → M} : mulSupport f = ∅ ↔ f = 1 :=
   by
-  simp_rw [← subset_empty_iff, mul_support_subset_iff', funext_iff]
+  simp_rw [← subset_empty_iff, mulSupport_subset_iff', funext_iff]
   simp
 #align function.mul_support_eq_empty_iff Function.mulSupport_eq_empty_iff
 #align function.support_eq_empty_iff Function.support_eq_empty_iff
@@ -191,7 +191,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align function.mul_support_nonempty_iff Function.mulSupport_nonempty_iffₓ'. -/
 @[simp, to_additive]
 theorem mulSupport_nonempty_iff {f : α → M} : (mulSupport f).Nonempty ↔ f ≠ 1 := by
-  rw [nonempty_iff_ne_empty, Ne.def, mul_support_eq_empty_iff]
+  rw [nonempty_iff_ne_empty, Ne.def, mulSupport_eq_empty_iff]
 #align function.mul_support_nonempty_iff Function.mulSupport_nonempty_iff
 #align function.support_nonempty_iff Function.support_nonempty_iff
 
@@ -200,7 +200,7 @@ theorem mulSupport_nonempty_iff {f : α → M} : (mulSupport f).Nonempty ↔ f �
 theorem range_subset_insert_image_mulSupport (f : α → M) : range f ⊆ insert 1 (f '' mulSupport f) :=
   by
   simpa only [range_subset_iff, mem_insert_iff, or_iff_not_imp_left] using
-    fun x (hx : x ∈ mul_support f) => mem_image_of_mem f hx
+    fun x (hx : x ∈ mulSupport f) => mem_image_of_mem f hx
 #align function.range_subset_insert_image_mul_support Function.range_subset_insert_image_mulSupport
 #align function.range_subset_insert_image_support Function.range_subset_insert_image_support
 -/
@@ -314,8 +314,8 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_s
 theorem mulSupport_supᵢ [ConditionallyCompleteLattice M] [Nonempty ι] (f : ι → α → M) :
     (mulSupport fun x => ⨆ i, f i x) ⊆ ⋃ i, mulSupport (f i) :=
   by
-  rw [mul_support_subset_iff']
-  simp only [mem_Union, not_exists, nmem_mul_support]
+  rw [mulSupport_subset_iff']
+  simp only [mem_unionᵢ, not_exists, nmem_mulSupport]
   intro x hx
   simp only [hx, csupᵢ_const]
 #align function.mul_support_supr Function.mulSupport_supᵢ
@@ -382,7 +382,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_p
 theorem mulSupport_prod_mk (f : α → M) (g : α → N) :
     (mulSupport fun x => (f x, g x)) = mulSupport f ∪ mulSupport g :=
   Set.ext fun x => by
-    simp only [mul_support, not_and_or, mem_union, mem_set_of_eq, Prod.mk_eq_one, Ne.def]
+    simp only [mulSupport, not_and_or, mem_union, mem_setOf_eq, Prod.mk_eq_one, Ne.def]
 #align function.mul_support_prod_mk Function.mulSupport_prod_mk
 #align function.support_prod_mk Function.support_prod_mk
 
@@ -395,7 +395,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_p
 @[to_additive support_prod_mk']
 theorem mulSupport_prod_mk' (f : α → M × N) :
     mulSupport f = (mulSupport fun x => (f x).1) ∪ mulSupport fun x => (f x).2 := by
-  simp only [← mul_support_prod_mk, Prod.mk.eta]
+  simp only [← mulSupport_prod_mk, Prod.mk.eta]
 #align function.mul_support_prod_mk' Function.mulSupport_prod_mk'
 #align function.support_prod_mk' Function.support_prod_mk'
 
@@ -420,7 +420,7 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_a
 @[simp, to_additive]
 theorem mulSupport_along_fiber_finite_of_finite (f : α × β → M) (a : α)
     (h : (mulSupport f).Finite) : (mulSupport fun b => f (a, b)).Finite :=
-  (h.image Prod.snd).Subset (mulSupport_along_fiber_subset f a)
+  (h.image Prod.snd).subset (mulSupport_along_fiber_subset f a)
 #align function.mul_support_along_fiber_finite_of_finite Function.mulSupport_along_fiber_finite_of_finite
 #align function.support_along_fiber_finite_of_finite Function.support_along_fiber_finite_of_finite
 
@@ -450,8 +450,8 @@ theorem mulSupport_pow [Monoid M] (f : α → M) (n : ℕ) :
     (mulSupport fun x => f x ^ n) ⊆ mulSupport f :=
   by
   induction' n with n hfn
-  · simpa only [pow_zero, mul_support_one] using empty_subset _
-  · simpa only [pow_succ] using (mul_support_mul f _).trans (union_subset subset.rfl hfn)
+  · simpa only [pow_zero, mulSupport_one] using empty_subset _
+  · simpa only [pow_succ] using (mulSupport_mul f _).trans (union_subset Subset.rfl hfn)
 #align function.mul_support_pow Function.mulSupport_pow
 #align function.support_nsmul Function.support_nsmul
 
@@ -614,8 +614,8 @@ Case conversion may be inaccurate. Consider using '#align function.mul_support_p
 theorem mulSupport_prod [CommMonoid M] (s : Finset α) (f : α → β → M) :
     (mulSupport fun x => ∏ i in s, f i x) ⊆ ⋃ i ∈ s, mulSupport (f i) :=
   by
-  rw [mul_support_subset_iff']
-  simp only [mem_Union, not_exists, nmem_mul_support]
+  rw [mulSupport_subset_iff']
+  simp only [mem_unionᵢ, not_exists, nmem_mulSupport]
   exact fun x => Finset.prod_eq_one
 #align function.mul_support_prod Function.mulSupport_prod
 #align function.support_sum Function.support_sum
@@ -640,7 +640,7 @@ Case conversion may be inaccurate. Consider using '#align function.support_prod 
 theorem support_prod [CommMonoidWithZero A] [NoZeroDivisors A] [Nontrivial A] (s : Finset α)
     (f : α → β → A) : (support fun x => ∏ i in s, f i x) = ⋂ i ∈ s, support (f i) :=
   Set.ext fun x => by
-    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_set_of_eq, Set.mem_interᵢ, not_exists]
+    simp only [support, Ne.def, Finset.prod_eq_zero_iff, mem_setOf_eq, Set.mem_interᵢ, not_exists]
 #align function.support_prod Function.support_prod
 
 /- warning: function.mul_support_one_add -> Function.mulSupport_one_add is a dubious translation:
@@ -694,7 +694,7 @@ but is expected to have type
   forall {α : Type.{u1}} {R : Type.{u2}} [_inst_1 : One.{u2} R] [_inst_2 : AddGroup.{u2} R] (f : α -> R), Eq.{succ u1} (Set.{u1} α) (Function.mulSupport.{u1, u2} α R _inst_1 (HSub.hSub.{max u1 u2, max u1 u2, max u2 u1} (α -> R) (α -> R) (α -> R) (instHSub.{max u1 u2} (α -> R) (Pi.instSub.{u1, u2} α (fun (ᾰ : α) => R) (fun (i : α) => SubNegMonoid.toSub.{u2} R (AddGroup.toSubNegMonoid.{u2} R _inst_2)))) (OfNat.ofNat.{max u1 u2} (α -> R) 1 (One.toOfNat1.{max u1 u2} (α -> R) (Pi.instOne.{u1, u2} α (fun (a._@.Mathlib.Algebra.Support._hyg.3509 : α) => R) (fun (i : α) => _inst_1)))) f)) (Function.support.{u1, u2} α R (NegZeroClass.toZero.{u2} R (SubNegZeroMonoid.toNegZeroClass.{u2} R (SubtractionMonoid.toSubNegZeroMonoid.{u2} R (AddGroup.toSubtractionMonoid.{u2} R _inst_2)))) f)
 Case conversion may be inaccurate. Consider using '#align function.mul_support_one_sub' Function.mulSupport_one_sub'ₓ'. -/
 theorem mulSupport_one_sub' [One R] [AddGroup R] (f : α → R) : mulSupport (1 - f) = support f := by
-  rw [sub_eq_add_neg, mul_support_one_add', support_neg']
+  rw [sub_eq_add_neg, mulSupport_one_add', support_neg']
 #align function.mul_support_one_sub' Function.mulSupport_one_sub'
 
 /- warning: function.mul_support_one_sub -> Function.mulSupport_one_sub is a dubious translation:
@@ -725,7 +725,7 @@ Case conversion may be inaccurate. Consider using '#align set.image_inter_mul_su
 @[to_additive]
 theorem image_inter_mulSupport_eq {s : Set β} {g : β → α} :
     g '' s ∩ mulSupport f = g '' (s ∩ mulSupport (f ∘ g)) := by
-  rw [mul_support_comp_eq_preimage f g, image_inter_preimage]
+  rw [mulSupport_comp_eq_preimage f g, image_inter_preimage]
 #align set.image_inter_mul_support_eq Set.image_inter_mulSupport_eq
 #align set.image_inter_support_eq Set.image_inter_support_eq
 
@@ -764,7 +764,7 @@ theorem mulSupport_mulSingle_one : mulSupport (mulSingle a (1 : B)) = ∅ := by 
 @[simp, to_additive]
 theorem mulSupport_mulSingle_of_ne (h : b ≠ 1) : mulSupport (mulSingle a b) = {a} :=
   mulSupport_mulSingle_subset.antisymm fun x (hx : x = a) => by
-    rwa [mem_mul_support, hx, mul_single_eq_same]
+    rwa [mem_mulSupport, hx, mulSingle_eq_same]
 #align pi.mul_support_mul_single_of_ne Pi.mulSupport_mulSingle_of_ne
 #align pi.support_single_of_ne Pi.support_single_of_ne
 -/
@@ -786,7 +786,7 @@ Case conversion may be inaccurate. Consider using '#align pi.mul_support_mul_sin
 @[to_additive]
 theorem mulSupport_mulSingle_disjoint {b' : B} (hb : b ≠ 1) (hb' : b' ≠ 1) {i j : A} :
     Disjoint (mulSupport (mulSingle i b)) (mulSupport (mulSingle j b')) ↔ i ≠ j := by
-  rw [mul_support_mul_single_of_ne hb, mul_support_mul_single_of_ne hb', disjoint_singleton]
+  rw [mulSupport_mulSingle_of_ne hb, mulSupport_mulSingle_of_ne hb', disjoint_singleton]
 #align pi.mul_support_mul_single_disjoint Pi.mulSupport_mulSingle_disjoint
 #align pi.support_single_disjoint Pi.support_single_disjoint
 

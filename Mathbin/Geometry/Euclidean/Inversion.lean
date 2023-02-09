@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.euclidean.inversion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,15 +99,15 @@ theorem inversion_involutive (c : P) {R : ℝ} (hR : R ≠ 0) : Involutive (inve
 #align euclidean_geometry.inversion_involutive EuclideanGeometry.inversion_involutive
 
 theorem inversion_surjective (c : P) {R : ℝ} (hR : R ≠ 0) : Surjective (inversion c R) :=
-  (inversion_involutive c hR).Surjective
+  (inversion_involutive c hR).surjective
 #align euclidean_geometry.inversion_surjective EuclideanGeometry.inversion_surjective
 
 theorem inversion_injective (c : P) {R : ℝ} (hR : R ≠ 0) : Injective (inversion c R) :=
-  (inversion_involutive c hR).Injective
+  (inversion_involutive c hR).injective
 #align euclidean_geometry.inversion_injective EuclideanGeometry.inversion_injective
 
 theorem inversion_bijective (c : P) {R : ℝ} (hR : R ≠ 0) : Bijective (inversion c R) :=
-  (inversion_involutive c hR).Bijective
+  (inversion_involutive c hR).bijective
 #align euclidean_geometry.inversion_bijective EuclideanGeometry.inversion_bijective
 
 /-- Distance between the images of two points under an inversion. -/

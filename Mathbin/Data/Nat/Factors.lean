@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.factors
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,13 +84,13 @@ theorem prod_factors : ∀ {n}, n ≠ 0 → List.prod (factors n) = n
   | n@(k + 2) => fun h =>
     let m := minFac n
     have : n / m < n := factors_lemma
-    show (factors n).Prod = n
+    show (factors n).prod = n
       by
       have h₁ : n / m ≠ 0 := fun h =>
         by
         have : n = 0 * m := (Nat.div_eq_iff_eq_mul_left (minFac_pos _) (minFac_dvd _)).1 h
         rw [zero_mul] at this <;> exact (show k + 2 ≠ 0 by decide) this
-      rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (min_fac_dvd _)]
+      rw [factors, List.prod_cons, prod_factors h₁, Nat.mul_div_cancel' (minFac_dvd _)]
 #align nat.prod_factors Nat.prod_factors
 -/
 
@@ -115,8 +115,8 @@ theorem factors_chain : ∀ {n a}, (∀ p, Prime p → p ∣ n → a ≤ p) → 
     let m := minFac n
     have : n / m < n := factors_lemma
     rw [factors]
-    refine' List.Chain.cons ((le_min_fac.2 h).resolve_left (by decide)) (factors_chain _)
-    exact fun p pp d => min_fac_le_of_dvd pp.two_le (d.trans <| div_dvd_of_dvd <| min_fac_dvd _)
+    refine' List.Chain.cons ((le_minFac.2 h).resolve_left (by decide)) (factors_chain _)
+    exact fun p pp d => minFac_le_of_dvd pp.two_le (d.trans <| div_dvd_of_dvd <| minFac_dvd _)
 #align nat.factors_chain Nat.factors_chain
 -/
 
@@ -276,7 +276,7 @@ theorem factors_sublist_right {n k : ℕ} (h : k ≠ 0) : n.factors <+ (n * k).f
   · rw [zero_mul]
   apply sublist_of_subperm_of_sorted _ (factors_sorted _) (factors_sorted _)
   rw [(perm_factors_mul n.succ_ne_zero h).subperm_left]
-  exact (sublist_append_left _ _).Subperm
+  exact (sublist_append_left _ _).subperm
 #align nat.factors_sublist_right Nat.factors_sublist_right
 -/
 
@@ -290,13 +290,13 @@ theorem factors_sublist_of_dvd {n k : ℕ} (h : n ∣ k) (h' : k ≠ 0) : n.fact
 
 #print Nat.factors_subset_right /-
 theorem factors_subset_right {n k : ℕ} (h : k ≠ 0) : n.factors ⊆ (n * k).factors :=
-  (factors_sublist_right h).Subset
+  (factors_sublist_right h).subset
 #align nat.factors_subset_right Nat.factors_subset_right
 -/
 
 #print Nat.factors_subset_of_dvd /-
 theorem factors_subset_of_dvd {n k : ℕ} (h : n ∣ k) (h' : k ≠ 0) : n.factors ⊆ k.factors :=
-  (factors_sublist_of_dvd h h').Subset
+  (factors_sublist_of_dvd h h').subset
 #align nat.factors_subset_of_dvd Nat.factors_subset_of_dvd
 -/
 
@@ -308,7 +308,7 @@ theorem dvd_of_factors_subperm {a b : ℕ} (ha : a ≠ 0) (h : a.factors <+~ b.f
   rcases a with (_ | _ | a)
   · exact (ha rfl).elim
   · exact one_dvd _
-  use (b.factors.diff a.succ.succ.factors).Prod
+  use (b.factors.diff a.succ.succ.factors).prod
   nth_rw 1 [← Nat.prod_factors ha]
   rw [← List.prod_append,
     List.Perm.prod_eq <| List.subperm_append_diff_self_of_count_le <| list.subperm_ext_iff.mp h,
@@ -323,7 +323,7 @@ theorem mem_factors_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) {p : ℕ} :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∨ p ∈ b.factors :=
   by
   rw [mem_factors (mul_ne_zero ha hb), mem_factors ha, mem_factors hb, ← and_or_left]
-  simpa only [and_congr_right_iff] using prime.dvd_mul
+  simpa only [and_congr_right_iff] using Prime.dvd_mul
 #align nat.mem_factors_mul Nat.mem_factors_mul
 -/
 

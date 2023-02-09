@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.zeta_values
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem bernoulliFun_eval_one (k : ℕ) : bernoulliFun k 1 = bernoulliFun k 0 + 
 theorem hasDerivAt_bernoulliFun (k : ℕ) (x : ℝ) :
     HasDerivAt (bernoulliFun k) (k * bernoulliFun (k - 1) x) x :=
   by
-  convert ((Polynomial.bernoulli k).map <| algebraMap ℚ ℝ).HasDerivAt x using 1
+  convert ((Polynomial.bernoulli k).map <| algebraMap ℚ ℝ).hasDerivAt x using 1
   simp only [bernoulliFun, Polynomial.derivative_map, Polynomial.derivative_bernoulli k,
     Polynomial.map_mul, Polynomial.map_nat_cast, Polynomial.eval_mul, Polynomial.eval_nat_cast]
 #align has_deriv_at_bernoulli_fun hasDerivAt_bernoulliFun
@@ -92,8 +92,8 @@ theorem antideriv_bernoulliFun (k : ℕ) (x : ℝ) :
 theorem integral_bernoulliFun_eq_zero {k : ℕ} (hk : k ≠ 0) :
     (∫ x : ℝ in 0 ..1, bernoulliFun k x) = 0 :=
   by
-  rw [integral_eq_sub_of_has_deriv_at (fun x hx => antideriv_bernoulliFun k x)
-      ((Polynomial.continuous _).IntervalIntegrable _ _)]
+  rw [integral_eq_sub_of_hasDerivAt (fun x hx => antideriv_bernoulliFun k x)
+      ((Polynomial.continuous _).intervalIntegrable _ _)]
   dsimp only
   rw [bernoulliFun_eval_one]
   split_ifs
@@ -122,7 +122,7 @@ theorem bernoulliFourierCoeff_recurrence (k : ℕ) {n : ℤ} (hn : n ≠ 0) :
   rw [fourierCoeffOn_of_hasDerivAt zero_lt_one hn
       (fun x hx => (hasDerivAt_bernoulliFun k x).of_real_comp)
       ((continuous_of_real.comp <|
-            continuous_const.mul <| Polynomial.continuous _).IntervalIntegrable
+            continuous_const.mul <| Polynomial.continuous _).intervalIntegrable
         _ _)]
   dsimp only
   simp_rw [of_real_one, of_real_zero, sub_zero, one_mul]
@@ -154,7 +154,7 @@ theorem bernoulliFourierCoeff_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
   refine' Nat.le_induction _ (fun k hk h'k => _) k (nat.one_le_iff_ne_zero.mpr hk)
   · rw [bernoulliFourierCoeff_recurrence 1 hn]
     simp only [Nat.cast_one, tsub_self, neg_mul, one_mul, eq_self_iff_true, if_true,
-      Nat.factorial_one, pow_one, inv_I, mul_neg]
+      Nat.factorial_one, pow_one, inv_i, mul_neg]
     rw [bernoulli_zero_fourier_coeff hn, sub_zero, mul_one, div_neg, neg_div]
   · rw [bernoulliFourierCoeff_recurrence (k + 1) hn, Nat.add_sub_cancel k 1]
     split_ifs
@@ -162,7 +162,7 @@ theorem bernoulliFourierCoeff_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
       exact (ne_of_gt (nat.lt_succ_iff.mpr hk)) h
     · rw [h'k, Nat.factorial_succ, zero_sub, Nat.cast_mul, pow_add, pow_one, neg_div, mul_neg,
         mul_neg, mul_neg, neg_neg, neg_mul, neg_mul, neg_mul, div_neg]
-      field_simp [int.cast_ne_zero.mpr hn, I_ne_zero]
+      field_simp [int.cast_ne_zero.mpr hn, i_ne_zero]
       ring_nf
 #align bernoulli_fourier_coeff_eq bernoulliFourierCoeff_eq
 
@@ -183,7 +183,7 @@ def periodizedBernoulli (k : ℕ) : 𝕌 → ℝ :=
 theorem periodizedBernoulli.continuous {k : ℕ} (hk : k ≠ 1) : Continuous (periodizedBernoulli k) :=
   AddCircle.liftIco_zero_continuous
     (by exact_mod_cast (bernoulliFun_endpoints_eq_of_ne_one hk).symm)
-    (Polynomial.continuous _).ContinuousOn
+    (Polynomial.continuous _).continuousOn
 #align periodized_bernoulli.continuous periodizedBernoulli.continuous
 
 theorem fourierCoeff_bernoulli_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
@@ -200,7 +200,7 @@ theorem fourierCoeff_bernoulli_eq {k : ℕ} (hk : k ≠ 0) (n : ℤ) :
 theorem summable_bernoulli_fourier {k : ℕ} (hk : 2 ≤ k) :
     Summable (fun n => -k ! / (2 * π * i * n) ^ k : ℤ → ℂ) :=
   by
-  have : ∀ n : ℤ, -(k ! : ℂ) / (2 * π * I * n) ^ k = -k ! / (2 * π * I) ^ k * (1 / n ^ k) :=
+  have : ∀ n : ℤ, -(k ! : ℂ) / (2 * π * i * n) ^ k = -k ! / (2 * π * i) ^ k * (1 / n ^ k) :=
     by
     intro n
     rw [mul_one_div, div_div, ← mul_pow]
@@ -236,7 +236,7 @@ theorem hasSum_one_div_pow_mul_fourier_mul_bernoulliFun {k : ℕ} (hk : 2 ≤ k)
   let B : C(𝕌, ℂ) :=
     ContinuousMap.mk (coe ∘ periodizedBernoulli k)
       (continuous_of_real.comp (periodizedBernoulli.continuous (by linarith)))
-  have step1 : ∀ n : ℤ, fourierCoeff B n = -k ! / (2 * π * I * n) ^ k :=
+  have step1 : ∀ n : ℤ, fourierCoeff B n = -k ! / (2 * π * i * n) ^ k :=
     by
     rw [ContinuousMap.coe_mk]
     exact fourierCoeff_bernoulli_eq (by linarith : k ≠ 0)
@@ -244,12 +244,12 @@ theorem hasSum_one_div_pow_mul_fourier_mul_bernoulliFun {k : ℕ} (hk : 2 ≤ k)
     has_pointwise_sum_fourier_series_of_summable
       ((summable_bernoulli_fourier hk).congr fun n => (step1 n).symm) y
   simp_rw [step1] at step2
-  convert step2.mul_left (-(2 * ↑π * I) ^ k / (k ! : ℂ)) using 2
+  convert step2.mul_left (-(2 * ↑π * i) ^ k / (k ! : ℂ)) using 2
   ext1 n
   rw [smul_eq_mul, ← mul_assoc, mul_div, mul_neg, div_mul_cancel, neg_neg, mul_pow _ ↑n, ← div_div,
     div_self]
   · rw [Ne.def, pow_eq_zero_iff', not_and_or]
-    exact Or.inl two_pi_I_ne_zero
+    exact Or.inl two_pi_i_ne_zero
   · exact nat.cast_ne_zero.mpr (Nat.factorial_ne_zero _)
   ·
     rw [ContinuousMap.coe_mk, Function.comp_apply, of_real_inj, periodizedBernoulli,
@@ -299,9 +299,9 @@ theorem hasSum_one_div_nat_pow_mul_cos {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         congr
         congr
         skip
-        rw [pow_mul, I_sq]
+        rw [pow_mul, i_sq]
       ring
-  convert ((has_sum_iff _ _).mp (this.div_const 2)).1
+  convert ((hasSum_iff _ _).mp (this.div_const 2)).1
   · ext1 n
     convert (of_real_re _).symm
     rw [of_real_mul]
@@ -328,7 +328,7 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
   by
   have :
     HasSum (fun n : ℕ => 1 / (n : ℂ) ^ (2 * k + 1) * (fourier n (x : 𝕌) - fourier (-n) (x : 𝕌)))
-      ((-1) ^ (k + 1) * I * (2 * π) ^ (2 * k + 1) / (2 * k + 1)! * bernoulliFun (2 * k + 1) x) :=
+      ((-1) ^ (k + 1) * i * (2 * π) ^ (2 * k + 1) / (2 * k + 1)! * bernoulliFun (2 * k + 1) x) :=
     by
     convert
       hasSum_one_div_nat_pow_mul_fourier
@@ -342,9 +342,9 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         congr
         congr
         skip
-        rw [pow_add, pow_one, pow_mul, I_sq]
+        rw [pow_add, pow_one, pow_mul, i_sq]
       ring
-  convert ((has_sum_iff _ _).mp (this.div_const (2 * I))).1
+  convert ((hasSum_iff _ _).mp (this.div_const (2 * i))).1
   · ext1 n
     convert (of_real_re _).symm
     rw [of_real_mul]
@@ -354,19 +354,19 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
       rfl
     · rw [of_real_sin, of_real_mul, fourier_coe_apply, fourier_coe_apply, sin, of_real_one, div_one,
         div_one, of_real_mul, of_real_mul, of_real_bit0, of_real_one, Int.cast_neg, Int.cast_ofNat,
-        of_real_nat_cast, ← div_div, div_I, div_mul_eq_mul_div₀, ← neg_div, ← neg_mul, neg_sub]
+        of_real_nat_cast, ← div_div, div_i, div_mul_eq_mul_div₀, ← neg_div, ← neg_mul, neg_sub]
       congr 4
       · ring
       · ring
   · convert (of_real_re _).symm
     rw [of_real_mul, of_real_div, of_real_div, of_real_mul, of_real_pow, of_real_pow, of_real_neg,
-      of_real_nat_cast, of_real_mul, of_real_bit0, of_real_one, ← div_div, div_I,
+      of_real_nat_cast, of_real_mul, of_real_bit0, of_real_one, ← div_div, div_i,
       div_mul_eq_mul_div₀]
-    have : ∀ α β γ δ : ℂ, α * I * β / γ * δ * I = I ^ 2 * α * β / γ * δ :=
+    have : ∀ α β γ δ : ℂ, α * i * β / γ * δ * i = i ^ 2 * α * β / γ * δ :=
       by
       intros
       ring
-    rw [this, I_sq]
+    rw [this, i_sq]
     ring
 #align has_sum_one_div_nat_pow_mul_sin hasSum_one_div_nat_pow_mul_sin
 

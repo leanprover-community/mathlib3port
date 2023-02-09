@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.universal_enveloping
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ Note that we have avoided using the more natural expression:
 | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆) ⁅ιₜ x, ιₜ y⁆
 so that our construction needs only the semiring structure of the tensor algebra. -/
 inductive Rel : TensorAlgebra R L → TensorAlgebra R L → Prop
-  | lie_compat (x y : L) : Rel (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) (ιₜ x * ιₜ y)
+  | lie_compat (x y : L) : rel (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) (ιₜ x * ιₜ y)
 #align universal_enveloping_algebra.rel UniversalEnvelopingAlgebra.Rel
 
 end UniversalEnvelopingAlgebra
@@ -83,11 +83,11 @@ def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
   { (mkAlgHom R L).toLinearMap.comp ιₜ with
     map_lie' := fun x y =>
       by
-      suffices mk_alg_hom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mk_alg_hom R L (ιₜ x * ιₜ y)
+      suffices mkAlgHom R L (ιₜ ⁅x, y⁆ + ιₜ y * ιₜ x) = mkAlgHom R L (ιₜ x * ιₜ y)
         by
         rw [AlgHom.map_mul] at this
         simp [LieRing.of_associative_ring_bracket, ← this]
-      exact RingQuot.mkAlgHom_rel _ (rel.lie_compat x y) }
+      exact RingQuot.mkAlgHom_rel _ (Rel.lie_compat x y) }
 #align universal_enveloping_algebra.ι UniversalEnvelopingAlgebra.ι
 
 variable {A : Type u₃} [Ring A] [Algebra R A] (f : L →ₗ⁅R⁆ A)
@@ -105,13 +105,13 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A)
   invFun F := (F : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)
   left_inv f := by
     ext
-    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
+    simp only [ι, mkAlgHom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
       LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lieHom,
       LieHom.coe_mk, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply]
   right_inv F := by
     ext
-    simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
+    simp only [ι, mkAlgHom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
       LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_linearMap_comp,
       AlgHom.comp_toLinearMap, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.coe_to_lieHom, LieHom.coe_mk]
@@ -150,7 +150,7 @@ theorem hom_ext {g₁ g₂ : UniversalEnvelopingAlgebra R L →ₐ[R] A}
         (g₂ : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)) :
     g₁ = g₂ :=
   have h' : (lift R).symm g₁ = (lift R).symm g₂ := by ext; simp [h]
-  (lift R).symm.Injective h'
+  (lift R).symm.injective h'
 #align universal_enveloping_algebra.hom_ext UniversalEnvelopingAlgebra.hom_ext
 
 end UniversalEnvelopingAlgebra

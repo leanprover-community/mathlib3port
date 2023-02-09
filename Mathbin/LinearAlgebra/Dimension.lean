@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,7 +166,7 @@ theorem lift_dim_range_le (f : M →ₗ[R] M') :
   apply le_trans
   swap
   apply cardinal.lift_le.mpr
-  refine' le_csupᵢ (Cardinal.bddAbove_range.{v, v} _) ⟨range_splitting f '' s, _⟩
+  refine' le_csupᵢ (Cardinal.bddAbove_range.{v, v} _) ⟨rangeSplitting f '' s, _⟩
   · apply LinearIndependent.of_comp f.range_restrict
     convert li.comp (Equiv.Set.rangeSplittingImageEquiv f s) (Equiv.injective _) using 1
   · exact (cardinal.lift_mk_eq'.mpr ⟨Equiv.Set.rangeSplittingImageEquiv f s⟩).ge
@@ -189,7 +189,7 @@ theorem dim_map_le (f : M →ₗ[R] M₁) (p : Submodule R M) :
 
 theorem dim_le_of_submodule (s t : Submodule R M) (h : s ≤ t) : Module.rank R s ≤ Module.rank R t :=
   (ofLe h).dim_le_of_injective fun ⟨x, hx⟩ ⟨y, hy⟩ eq =>
-    Subtype.eq <| show x = y from Subtype.ext_iff_val.1 Eq
+    Subtype.eq <| show x = y from Subtype.ext_iff_val.1 eq
 #align dim_le_of_submodule dim_le_of_submodule
 
 /-- Two linearly equivalent vector spaces have the same dimension, a version with different
@@ -299,7 +299,7 @@ theorem dim_pUnit : Module.rank R PUnit = 0 :=
 @[simp]
 theorem dim_bot : Module.rank R (⊥ : Submodule R M) = 0 :=
   by
-  have : (⊥ : Submodule R M) ≃ₗ[R] PUnit := bot_equiv_punit
+  have : (⊥ : Submodule R M) ≃ₗ[R] PUnit := botEquivPUnit
   rw [this.dim_eq, dim_pUnit]
 #align dim_bot dim_bot
 
@@ -373,13 +373,13 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   by
   -- If that's not the case,
   by_contra h
-  simp only [← Ne.def, ne_univ_iff_exists_not_mem, mem_Union, not_exists_not,
+  simp only [← Ne.def, ne_univ_iff_exists_not_mem, mem_unionᵢ, not_exists_not,
     Finsupp.mem_support_iff, Finset.mem_coe] at h
   -- We have some basis element `b b'` which is not in the support of any of the `v i`.
   obtain ⟨b', w⟩ := h
   -- Using this, we'll construct a linearly independent family strictly larger than `v`,
   -- by also using this `b b'`.
-  let v' : Option κ → M := fun o => o.elim (b b') v
+  let v' : Option κ → M := fun o => o.elim' (b b') v
   have r : range v ⊆ range v' := by
     rintro - ⟨k, rfl⟩
     use some k
@@ -394,7 +394,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
       rfl
     rw [← e] at p
     exact r' p
-  have inj' : injective v' := by
+  have inj' : Injective v' := by
     rintro (_ | k) (_ | k) z
     · rfl
     · exfalso
@@ -474,7 +474,7 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_rank [NoZeroSMulDivisors R
     rw [← Submodule.ne_bot_iff]
     exact i.prop
   choose v hvV hv using hI
-  have : LinearIndependent R v := (hV.comp Subtype.coe_injective).LinearIndependent _ hvV hv
+  have : LinearIndependent R v := (hV.comp Subtype.coe_injective).linearIndependent _ hvV hv
   exact cardinal_lift_le_dim_of_linear_independent' this
 #align complete_lattice.independent.subtype_ne_bot_le_rank CompleteLattice.Independent.subtype_ne_bot_le_rank
 
@@ -590,7 +590,7 @@ theorem Basis.le_span'' {ι : Type _} [Fintype ι] (b : Basis ι R M) {w : Set M
   -- by expressing a linear combination in `w` as a linear combination in `ι`.
   fapply card_le_of_surjective' R
   · exact b.repr.to_linear_map.comp (Finsupp.total w M R coe)
-  · apply surjective.comp
+  · apply Surjective.comp
     apply LinearEquiv.surjective
     rw [← LinearMap.range_eq_top, Finsupp.range_total]
     simpa using s
@@ -634,8 +634,8 @@ theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : (#r
       replace : v.repr (v i) ∈ Finsupp.supported R R (⋃ j, S j) := this trivial
       rw [v.repr_self, Finsupp.mem_supported, Finsupp.support_single_ne_zero _ one_ne_zero] at this
       · subst b
-        rcases mem_Union.1 (this (Finset.mem_singleton_self _)) with ⟨j, hj⟩
-        exact mem_Union.2 ⟨j, (mem_image _ _ _).2 ⟨i, hj, rfl⟩⟩
+        rcases mem_unionᵢ.1 (this (Finset.mem_singleton_self _)) with ⟨j, hj⟩
+        exact mem_unionᵢ.2 ⟨j, (mem_image _ _ _).2 ⟨i, hj, rfl⟩⟩
       · infer_instance
     refine' le_of_not_lt fun IJ => _
     suffices (#⋃ j, S' j) < (#range v) by exact not_le_of_lt this ⟨Set.embeddingOfSubset _ _ hs⟩
@@ -825,13 +825,13 @@ theorem Basis.card_le_card_of_linearIndependent {ι : Type _} [Fintype ι] (b : 
 
 theorem Basis.card_le_card_of_submodule (N : Submodule R M) [Fintype ι] (b : Basis ι R M)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
-  b.card_le_card_of_linearIndependent (b'.LinearIndependent.map' N.Subtype N.ker_subtype)
+  b.card_le_card_of_linearIndependent (b'.linearIndependent.map' N.subtype N.ker_subtype)
 #align basis.card_le_card_of_submodule Basis.card_le_card_of_submodule
 
 theorem Basis.card_le_card_of_le {N O : Submodule R M} (hNO : N ≤ O) [Fintype ι] (b : Basis ι R O)
     [Fintype ι'] (b' : Basis ι' R N) : Fintype.card ι' ≤ Fintype.card ι :=
   b.card_le_card_of_linearIndependent
-    (b'.LinearIndependent.map' (Submodule.ofLe hNO) (N.ker_ofLe O _))
+    (b'.linearIndependent.map' (Submodule.ofLe hNO) (N.ker_ofLe O _))
 #align basis.card_le_card_of_le Basis.card_le_card_of_le
 
 theorem Basis.mk_eq_dim (v : Basis ι R M) :
@@ -872,7 +872,7 @@ theorem dim_span {v : ι → M} (hv : LinearIndependent R v) :
   by
   haveI := nontrivial_of_invariantBasisNumber R
   rw [← Cardinal.lift_inj, ← (Basis.span hv).mk_eq_dim,
-    Cardinal.mk_range_eq_of_injective (@LinearIndependent.injective ι R M v _ _ _ _ hv)]
+    Cardinal.mk_range_eq_of_injective (@linear_independent.injective ι R M v _ _ _ _ hv)]
 #align dim_span dim_span
 
 theorem dim_span_set {s : Set M} (hs : LinearIndependent R (fun x => x : s → M)) :
@@ -1097,13 +1097,13 @@ theorem dim_add_dim_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd : 
   congr 1
   apply LinearEquiv.dim_eq
   refine' LinearEquiv.ofBijective _ ⟨_, _⟩
-  · refine' cod_restrict _ (Prod cd (-ce)) _
+  · refine' cod_restrict _ (prod cd (-ce)) _
     · intro c
       simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, Pi.prod, coprod_apply,
         neg_neg, map_neg, neg_apply]
-      exact LinearMap.ext_iff.1 Eq c
-  · rw [← ker_eq_bot, ker_cod_restrict, ker_prod, hgd, bot_inf_eq]
-  · rw [← range_eq_top, eq_top_iff, range_cod_restrict, ← map_le_iff_le_comap, map_top,
+      exact LinearMap.ext_iff.1 eq c
+  · rw [← ker_eq_bot, ker_codRestrict, ker_prod, hgd, bot_inf_eq]
+  · rw [← range_eq_top, eq_top_iff, range_codRestrict, ← map_le_iff_le_comap, map_top,
       range_subtype]
     rintro ⟨d, e⟩
     have h := eq₂ d (-e)
@@ -1112,7 +1112,7 @@ theorem dim_add_dim_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd : 
     intro hde
     rcases h hde with ⟨c, h₁, h₂⟩
     refine' ⟨c, h₁, _⟩
-    rw [h₂, _root_.neg_neg]
+    rw [h₂, neg_neg]
 #align dim_add_dim_split dim_add_dim_split
 
 theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
@@ -1121,13 +1121,13 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
   dim_add_dim_split (ofLe le_sup_left) (ofLe le_sup_right) (ofLe inf_le_left) (ofLe inf_le_right)
     (by
       rw [← map_le_map_iff' (ker_subtype <| s ⊔ t), map_sup, map_top, ← LinearMap.range_comp, ←
-        LinearMap.range_comp, subtype_comp_of_le, subtype_comp_of_le, range_subtype, range_subtype,
+        LinearMap.range_comp, subtype_comp_ofLe, subtype_comp_ofLe, range_subtype, range_subtype,
         range_subtype]
       exact le_rfl)
     (ker_ofLe _ _ _) (by ext ⟨x, hx⟩; rfl)
     (by
       rintro ⟨b₁, hb₁⟩ ⟨b₂, hb₂⟩ eq
-      obtain rfl : b₁ = b₂ := congr_arg Subtype.val Eq
+      obtain rfl : b₁ = b₂ := congr_arg Subtype.val eq
       exact ⟨⟨b₁, hb₁, hb₂⟩, rfl, rfl⟩)
 #align dim_sup_add_dim_inf_eq dim_sup_add_dim_inf_eq
 
@@ -1142,7 +1142,7 @@ end
 
 theorem exists_mem_ne_zero_of_dim_pos {s : Submodule K V} (h : 0 < Module.rank K s) :
     ∃ b : V, b ∈ s ∧ b ≠ 0 :=
-  exists_mem_ne_zero_of_ne_bot fun eq => by rw [Eq, dim_bot] at h <;> exact lt_irrefl _ h
+  exists_mem_ne_zero_of_ne_bot fun eq => by rw [eq, dim_bot] at h <;> exact lt_irrefl _ h
 #align exists_mem_ne_zero_of_dim_pos exists_mem_ne_zero_of_dim_pos
 
 end DivisionRing
@@ -1243,7 +1243,7 @@ theorem le_dim_iff_exists_linearIndependent {c : Cardinal} :
     let t := Basis.ofVectorSpace K V
     rw [← t.mk_eq_dim'', Cardinal.le_mk_iff_exists_subset] at h
     rcases h with ⟨s, hst, hsc⟩
-    exact ⟨s, hsc, (of_vector_space_index.linear_independent K V).mono hst⟩
+    exact ⟨s, hsc, (ofVectorSpaceIndex.linearIndependent K V).mono hst⟩
   · rintro ⟨s, rfl, si⟩
     exact cardinal_le_dim_of_linearIndependent si
 #align le_dim_iff_exists_linear_independent le_dim_iff_exists_linearIndependent
@@ -1268,7 +1268,7 @@ theorem dim_le_one_iff : Module.rank K V ≤ 1 ↔ ∃ v₀ : V, ∀ v, ∃ r : 
   constructor
   · intro hd
     rw [← b.mk_eq_dim'', Cardinal.le_one_iff_subsingleton, subsingleton_coe] at hd
-    rcases eq_empty_or_nonempty (of_vector_space_index K V) with (hb | ⟨⟨v₀, hv₀⟩⟩)
+    rcases eq_empty_or_nonempty (ofVectorSpaceIndex K V) with (hb | ⟨⟨v₀, hv₀⟩⟩)
     · use 0
       have h' : ∀ v : V, v = 0 := by simpa [hb, Submodule.eq_bot_iff] using b.span_eq.symm
       intro v
@@ -1358,7 +1358,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
         Cardinal.lift.{v'} (#s) = Cardinal.lift.{v} c ∧ LinearIndependent K fun x : s => f x :=
   by
   rcases f.range_restrict.exists_right_inverse_of_surjective f.range_range_restrict with ⟨g, hg⟩
-  have fg : left_inverse f.range_restrict g := LinearMap.congr_fun hg
+  have fg : LeftInverse f.range_restrict g := LinearMap.congr_fun hg
   refine' ⟨fun h => _, _⟩
   · rcases le_dim_iff_exists_linearIndependent.1 h with ⟨s, rfl, si⟩
     refine' ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, _⟩
@@ -1373,7 +1373,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
       LinearIndependent.of_comp f.range.subtype (by convert si)
     convert cardinal_le_dim_of_linearIndependent this.image
     rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
-    exact inj_on_iff_injective.2 this.injective
+    exact injOn_iff_injective.2 this.injective
 #align le_rank_iff_exists_linear_independent le_rank_iff_exists_linearIndependent
 
 theorem le_rank_iff_exists_linearIndependent_finset {n : ℕ} {f : V →ₗ[K] V'} :

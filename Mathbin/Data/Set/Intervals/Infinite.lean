@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module data.set.intervals.infinite
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,7 +29,7 @@ variable {α : Type _} [Preorder α]
 a cycle with `infinite α → nontrivial α → nonempty α`. -/
 theorem NoMaxOrder.infinite [Nonempty α] [NoMaxOrder α] : Infinite α :=
   let ⟨f, hf⟩ := Nat.exists_strictMono α
-  Infinite.of_injective f hf.Injective
+  Infinite.of_injective f hf.injective
 #align no_max_order.infinite NoMaxOrder.infinite
 -/
 

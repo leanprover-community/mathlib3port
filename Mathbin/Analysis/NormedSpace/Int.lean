@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.normed_space.int
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,13 +42,13 @@ theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℤ)‖₊ = n :=
 
 @[simp]
 theorem toNat_add_toNat_neg_eq_nnnorm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖₊ := by
-  rw [← Nat.cast_add, to_nat_add_to_nat_neg_eq_nat_abs, Nnreal.coe_natAbs]
+  rw [← Nat.cast_add, toNat_add_toNat_neg_eq_natAbs, Nnreal.coe_natAbs]
 #align int.to_nat_add_to_nat_neg_eq_nnnorm Int.toNat_add_toNat_neg_eq_nnnorm
 
 @[simp]
 theorem toNat_add_toNat_neg_eq_norm (n : ℤ) : ↑n.toNat + ↑(-n).toNat = ‖n‖ := by
   simpa only [Nnreal.coe_nat_cast, Nnreal.coe_add] using
-    congr_arg (coe : _ → ℝ) (to_nat_add_to_nat_neg_eq_nnnorm n)
+    congr_arg (coe : _ → ℝ) (toNat_add_toNat_neg_eq_nnnorm n)
 #align int.to_nat_add_to_nat_neg_eq_norm Int.toNat_add_toNat_neg_eq_norm
 
 end Int

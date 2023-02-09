@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.generalize_proofs
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,7 +28,7 @@ private unsafe def collect_proofs_in :
     let go (tac : List Name × List expr → tactic (List Name × List expr)) :
       tactic (List Name × List expr) := do
       let t ← infer_type e
-      condM (is_prop t)
+      mcond (is_prop t)
           (do
             first
                   (hs fun h => do
@@ -41,7 +41,7 @@ private unsafe def collect_proofs_in :
                     (match ns with
                       | [] => (`_x, [])
                       | n :: ns => (n, ns) :
-                      Name × List Name)
+                      name × list name)
                   do
                   generalize e n
                   let h ← intro n

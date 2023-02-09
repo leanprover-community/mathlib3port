@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.actions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -33,7 +33,7 @@ variable {α β : Type _}
 /-- The action by a subgroup is the action by the underlying group. -/
 @[to_additive "The additive action by an add_subgroup is the action by the underlying\nadd_group. "]
 instance [MulAction G α] (S : Subgroup G) : MulAction S α :=
-  S.toSubmonoid.MulAction
+  S.toSubmonoid.mulAction
 
 /- warning: subgroup.smul_def -> Subgroup.smul_def is a dubious translation:
 lean 3 declaration is
@@ -76,18 +76,18 @@ instance smulCommClass_right [SMul α β] [MulAction G β] [SMulCommClass α G �
 /-- Note that this provides `is_scalar_tower S G G` which is needed by `smul_mul_assoc`. -/
 instance [SMul α β] [MulAction G α] [MulAction G β] [IsScalarTower G α β] (S : Subgroup G) :
     IsScalarTower S α β :=
-  S.toSubmonoid.IsScalarTower
+  S.toSubmonoid.isScalarTower
 
 instance [MulAction G α] [FaithfulSMul G α] (S : Subgroup G) : FaithfulSMul S α :=
-  S.toSubmonoid.FaithfulSMul
+  S.toSubmonoid.faithfulSMul
 
 /-- The action by a subgroup is the action by the underlying group. -/
 instance [AddMonoid α] [DistribMulAction G α] (S : Subgroup G) : DistribMulAction S α :=
-  S.toSubmonoid.DistribMulAction
+  S.toSubmonoid.distribMulAction
 
 /-- The action by a subgroup is the action by the underlying group. -/
 instance [Monoid α] [MulDistribMulAction G α] (S : Subgroup G) : MulDistribMulAction S α :=
-  S.toSubmonoid.MulDistribMulAction
+  S.toSubmonoid.mulDistribMulAction
 
 /- warning: subgroup.center.smul_comm_class_left -> Subgroup.center.smulCommClass_left is a dubious translation:
 lean 3 declaration is

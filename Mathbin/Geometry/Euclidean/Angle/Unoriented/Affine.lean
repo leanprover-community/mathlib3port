@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Manuel Candales
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.unoriented.affine
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ theorem continuousAt_angle {x : P × P × P} (hx12 : x.1 ≠ x.2.1) (hx32 : x.2.
   exact
     (InnerProductGeometry.continuousAt_angle hf1 hf2).comp
       ((continuous_fst.vsub continuous_snd.fst).prod_mk
-          (continuous_snd.snd.vsub continuous_snd.fst)).ContinuousAt
+          (continuous_snd.snd.vsub continuous_snd.fst)).continuousAt
 #align euclidean_geometry.continuous_at_angle EuclideanGeometry.continuousAt_angle
 
 @[simp]
@@ -219,7 +219,7 @@ theorem left_dist_ne_zero_of_angle_eq_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = π) 
   by
   by_contra heq
   rw [dist_eq_zero] at heq
-  rw [HEq, angle_eq_left] at h
+  rw [heq, angle_eq_left] at h
   exact Real.pi_ne_zero (by linarith)
 #align euclidean_geometry.left_dist_ne_zero_of_angle_eq_pi EuclideanGeometry.left_dist_ne_zero_of_angle_eq_pi
 
@@ -340,7 +340,7 @@ theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ 
     rw [AffineMap.lineMap_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
       neg_smul, smul_add, smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
     convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
-    field_simp [(sub_pos.2 (hr.trans zero_lt_one)).Ne.symm]
+    field_simp [(sub_pos.2 (hr.trans zero_lt_one)).ne.symm]
     abel
   · rw [ne_comm, ← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
     exact ⟨hr.ne, hp₁p₂⟩
@@ -364,7 +364,7 @@ theorem Wbtw.angle₂₁₃_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
 /-- If the second of three points is strictly between the other two, the angle at the first point
 is zero. -/
 theorem Sbtw.angle₂₁₃_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₂ p₁ p₃ = 0 :=
-  h.Wbtw.angle₂₁₃_eq_zero_of_ne h.ne_left
+  h.wbtw.angle₂₁₃_eq_zero_of_ne h.ne_left
 #align sbtw.angle₂₁₃_eq_zero Sbtw.angle₂₁₃_eq_zero
 
 /-- If the second of three points is weakly between the other two, and not equal to the first,
@@ -376,7 +376,7 @@ theorem Wbtw.angle₃₁₂_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
 /-- If the second of three points is strictly between the other two, the angle at the first point
 (reversed) is zero. -/
 theorem Sbtw.angle₃₁₂_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₃ p₁ p₂ = 0 :=
-  h.Wbtw.angle₃₁₂_eq_zero_of_ne h.ne_left
+  h.wbtw.angle₃₁₂_eq_zero_of_ne h.ne_left
 #align sbtw.angle₃₁₂_eq_zero Sbtw.angle₃₁₂_eq_zero
 
 /-- If the second of three points is weakly between the other two, and not equal to the third,
@@ -389,7 +389,7 @@ theorem Wbtw.angle₂₃₁_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
 /-- If the second of three points is strictly between the other two, the angle at the third point
 is zero. -/
 theorem Sbtw.angle₂₃₁_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₂ p₃ p₁ = 0 :=
-  h.Wbtw.angle₂₃₁_eq_zero_of_ne h.ne_right
+  h.wbtw.angle₂₃₁_eq_zero_of_ne h.ne_right
 #align sbtw.angle₂₃₁_eq_zero Sbtw.angle₂₃₁_eq_zero
 
 /-- If the second of three points is weakly between the other two, and not equal to the third,
@@ -402,7 +402,7 @@ theorem Wbtw.angle₁₃₂_eq_zero_of_ne {p₁ p₂ p₃ : P} (h : Wbtw ℝ p�
 /-- If the second of three points is strictly between the other two, the angle at the third point
 (reversed) is zero. -/
 theorem Sbtw.angle₁₃₂_eq_zero {p₁ p₂ p₃ : P} (h : Sbtw ℝ p₁ p₂ p₃) : ∠ p₁ p₃ p₂ = 0 :=
-  h.Wbtw.angle₁₃₂_eq_zero_of_ne h.ne_right
+  h.wbtw.angle₁₃₂_eq_zero_of_ne h.ne_right
 #align sbtw.angle₁₃₂_eq_zero Sbtw.angle₁₃₂_eq_zero
 
 /-- The angle between three points is zero if and only if one of the first and third points is

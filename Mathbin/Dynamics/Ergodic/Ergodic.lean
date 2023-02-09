@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module dynamics.ergodic.ergodic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,8 +100,8 @@ theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ 
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ :=
   by
   refine'
-    ⟨fun hf => pre_ergodic_of_pre_ergodic_conjugate (h.symm e) hf _, fun hf =>
-      pre_ergodic_of_pre_ergodic_conjugate h hf _⟩
+    ⟨fun hf => preErgodicOfPreErgodicConjugate (h.symm e) hf _, fun hf =>
+      preErgodicOfPreErgodicConjugate h hf _⟩
   · change (e.symm ∘ e) ∘ f ∘ e.symm = f ∘ e.symm
     rw [MeasurableEquiv.symm_comp_self, comp.left_id]
   · change e ∘ f = e ∘ f ∘ e.symm ∘ e
@@ -111,8 +111,8 @@ theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ 
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ :=
   by
-  have : measure_preserving (e ∘ f ∘ e.symm) μ' μ' ↔ measure_preserving f μ μ := by
-    rw [h.comp_left_iff, (measure_preserving.symm e h).comp_right_iff]
+  have : MeasurePreserving (e ∘ f ∘ e.symm) μ' μ' ↔ MeasurePreserving f μ μ := by
+    rw [h.comp_left_iff, (MeasurePreserving.symm e h).comp_right_iff]
   replace h : PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := h.pre_ergodic_conjugate_iff
   exact
     ⟨fun hf => { this.mp hf.toMeasurePreserving, h.mp hf.toPreErgodic with }, fun hf =>
@@ -138,7 +138,7 @@ namespace Ergodic
 
 /-- An ergodic map is quasi ergodic. -/
 theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
-  { hf.toPreErgodic, hf.toMeasurePreserving.QuasiMeasurePreserving with }
+  { hf.toPreErgodic, hf.toMeasurePreserving.quasiMeasurePreserving with }
 #align ergodic.quasi_ergodic Ergodic.quasiErgodic
 
 /-- See also `ergodic.ae_empty_or_univ_of_preimage_ae_le`. -/

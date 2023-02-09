@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.faces
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ theorem comp_δ_eq_zero {Y : C} {n : ℕ} {q : ℕ} {φ : Y ⟶ X _[n + 1]} (v :
   obtain ⟨i, hi⟩ := Fin.eq_succ_of_ne_zero hj₁
   subst hi
   apply v i
-  rw [← @Nat.add_le_add_iff_right 1, add_assoc]
+  rw [← @nat.add_le_add_iff_right 1, add_assoc]
   simpa only [Fin.val_succ, add_assoc, add_comm 1] using hj₂
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_δ_eq_zero AlgebraicTopology.DoldKan.HigherFacesVanish.comp_δ_eq_zero
 
@@ -94,9 +94,9 @@ theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     by
     intro d
     rw [add_assoc, add_comm d, ← add_assoc, hnaq]
-  rw [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
+  rw [hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl),
     hσ'_eq hnaq (c_mk (n + 1) n rfl), hσ'_eq (hnaq_shift 1) (c_mk (n + 2) (n + 1) rfl)]
-  simp only [alternating_face_map_complex.obj_d_eq, eq_to_hom_refl, comp_id, comp_sum, sum_comp,
+  simp only [AlternatingFaceMapComplex.obj_d_eq, eqToHom_refl, comp_id, comp_sum, sum_comp,
     comp_add]
   simp only [comp_zsmul, zsmul_comp, ← assoc, ← mul_zsmul]
   -- cleaning up the first sum
@@ -113,7 +113,7 @@ theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     rw [Nat.succ_eq_add_one]
     linarith
   -- cleaning up the second sum
-  rw [← Fin.sum_congr' _ (hnaq_shift 3).symm, @Fin.sum_trunc _ _ (a + 3)]
+  rw [← Fin.sum_congr' _ (hnaq_shift 3).symm, @fin.sum_trunc _ _ (a + 3)]
   swap
   · rintro ⟨k, hk⟩
     rw [assoc, X.δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
@@ -165,13 +165,12 @@ theorem comp_hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
 theorem comp_hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
     (hqn : n < q) : φ ≫ (hσ q).f (n + 1) = 0 :=
   by
-  simp only [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
+  simp only [hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
   rw [hσ'_eq_zero hqn (c_mk (n + 1) n rfl), comp_zero, zero_add]
   by_cases hqn' : n + 1 < q
   · rw [hσ'_eq_zero hqn' (c_mk (n + 2) (n + 1) rfl), zero_comp, comp_zero]
   · simp only [hσ'_eq (show n + 1 = 0 + q by linarith) (c_mk (n + 2) (n + 1) rfl), pow_zero,
-      Fin.mk_zero, one_zsmul, eq_to_hom_refl, comp_id, comp_sum,
-      alternating_face_map_complex.obj_d_eq]
+      Fin.mk_zero, one_zsmul, eqToHom_refl, comp_id, comp_sum, AlternatingFaceMapComplex.obj_d_eq]
     rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by linarith), Fin.sum_trunc]
     · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLe_mk,
         Fin.cast_mk, Fin.castSucc_mk]

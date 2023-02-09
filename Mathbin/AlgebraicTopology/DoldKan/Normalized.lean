@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module algebraic_topology.dold_kan.normalized
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,11 +49,11 @@ variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj =>
   by
-  dsimp [inclusion_of_Moore_complex_map]
+  dsimp [inclusionOfMooreComplexMap]
   rw [←
-    factor_thru_arrow _ _
+    factorThru_arrow _ _
       (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])),
-    assoc, kernel_subobject_arrow_comp, comp_zero]
+    assoc, kernelSubobject_arrow_comp, comp_zero]
 #align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap
 
 theorem factors_normalized_Moore_complex_pInfty (n : ℕ) :
@@ -61,10 +61,10 @@ theorem factors_normalized_Moore_complex_pInfty (n : ℕ) :
   by
   cases n
   · apply top_factors
-  · rw [P_infty_f, normalized_Moore_complex.obj_X, finset_inf_factors]
+  · rw [pInfty_f, NormalizedMooreComplex.objX, finset_inf_factors]
     intro i hi
-    apply kernel_subobject_factors
-    exact (higher_faces_vanish.of_P (n + 1) n) i le_add_self
+    apply kernelSubobject_factors
+    exact (HigherFacesVanish.of_p (n + 1) n) i le_add_self
 #align algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty AlgebraicTopology.DoldKan.factors_normalized_Moore_complex_pInfty
 
 /-- P_infty factors through the normalized Moore complex -/
@@ -73,10 +73,10 @@ def pInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
   ChainComplex.ofHom _ _ _ _ _ _
     (fun n => factorThru _ _ (factors_normalized_Moore_complex_pInfty n)) fun n =>
     by
-    rw [← cancel_mono (normalized_Moore_complex.obj_X X n).arrow, assoc, assoc, factor_thru_arrow, ←
-      inclusion_of_Moore_complex_map_f, ← normalized_Moore_complex_obj_d, ←
-      (inclusion_of_Moore_complex_map X).comm' (n + 1) n rfl, inclusion_of_Moore_complex_map_f,
-      factor_thru_arrow_assoc, ← alternating_face_map_complex_obj_d]
+    rw [← cancel_mono (NormalizedMooreComplex.objX X n).arrow, assoc, assoc, factorThru_arrow, ←
+      inclusionOfMooreComplexMap_f, ← normalizedMooreComplex_objD, ←
+      (inclusionOfMooreComplexMap X).comm' (n + 1) n rfl, inclusionOfMooreComplexMap_f,
+      factorThru_arrow_assoc, ← alternatingFaceMapComplex_objD]
     exact P_infty.comm' (n + 1) n rfl
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.pInftyToNormalizedMooreComplex
 
@@ -105,7 +105,7 @@ theorem inclusionOfMooreComplexMap_comp_pInfty (X : SimplicialObject A) :
   cases n
   · dsimp
     simp only [comp_id]
-  · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_p_eq_self
+  · exact (HigherFacesVanish.inclusionOfMooreComplexMap n).comp_p_eq_self
 #align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_pInfty
 
 instance : Mono (inclusionOfMooreComplexMap X) :=
@@ -119,9 +119,9 @@ def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
     where
   retraction := pInftyToNormalizedMooreComplex X
   id' := by
-    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), assoc, id_comp,
-      P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
-      inclusion_of_Moore_complex_map_comp_P_infty]
+    simp only [← cancel_mono (inclusionOfMooreComplexMap X), assoc, id_comp,
+      pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap,
+      inclusionOfMooreComplexMap_comp_pInfty]
 #align algebraic_topology.dold_kan.split_mono_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMap
 
 variable (A)
@@ -135,32 +135,32 @@ def n₁IsoNormalizedMooreComplexCompToKaroubi : n₁ ≅ normalizedMooreComplex
   Hom :=
     { app := fun X =>
         { f := pInftyToNormalizedMooreComplex X
-          comm := by erw [comp_id, P_infty_comp_P_infty_to_normalized_Moore_complex] }
+          comm := by erw [comp_id, pInfty_comp_pInftyToNormalizedMooreComplex] }
       naturality' := fun X Y f => by
-        simp only [functor.comp_map, normalized_Moore_complex_map,
-          P_infty_to_normalized_Moore_complex_naturality, karoubi.hom_ext, karoubi.comp_f, N₁_map_f,
-          P_infty_comp_P_infty_to_normalized_Moore_complex_assoc, to_karoubi_map_f, assoc] }
+        simp only [Functor.comp_map, normalizedMooreComplex_map,
+          pInftyToNormalizedMooreComplex_naturality, Karoubi.hom_ext, Karoubi.comp_f, n₁_map_f,
+          pInfty_comp_pInftyToNormalizedMooreComplex_assoc, toKaroubi_map_f, assoc] }
   inv :=
     { app := fun X =>
         { f := inclusionOfMooreComplexMap X
-          comm := by erw [inclusion_of_Moore_complex_map_comp_P_infty, id_comp] }
+          comm := by erw [inclusionOfMooreComplexMap_comp_pInfty, id_comp] }
       naturality' := fun X Y f => by
         ext
-        simp only [functor.comp_map, normalized_Moore_complex_map, karoubi.comp_f, to_karoubi_map_f,
-          HomologicalComplex.comp_f, normalized_Moore_complex.map_f,
-          inclusion_of_Moore_complex_map_f, factor_thru_arrow, N₁_map_f,
-          inclusion_of_Moore_complex_map_comp_P_infty_assoc, alternating_face_map_complex.map_f] }
+        simp only [Functor.comp_map, normalizedMooreComplex_map, Karoubi.comp_f, toKaroubi_map_f,
+          HomologicalComplex.comp_f, NormalizedMooreComplex.map_f, inclusionOfMooreComplexMap_f,
+          factorThru_arrow, n₁_map_f, inclusionOfMooreComplexMap_comp_pInfty_assoc,
+          AlternatingFaceMapComplex.map_f] }
   hom_inv_id' := by
     ext X : 3
-    simp only [P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
-      nat_trans.comp_app, karoubi.comp_f, N₁_obj_p, nat_trans.id_app, karoubi.id_eq]
+    simp only [pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap, NatTrans.comp_app,
+      Karoubi.comp_f, n₁_obj_p, NatTrans.id_app, Karoubi.id_eq]
   inv_hom_id' := by
     ext X : 3
-    simp only [← cancel_mono (inclusion_of_Moore_complex_map X), nat_trans.comp_app, karoubi.comp_f,
-      assoc, nat_trans.id_app, karoubi.id_eq,
-      P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
-      inclusion_of_Moore_complex_map_comp_P_infty]
-    dsimp only [functor.comp_obj, to_karoubi]
+    simp only [← cancel_mono (inclusionOfMooreComplexMap X), NatTrans.comp_app, Karoubi.comp_f,
+      assoc, NatTrans.id_app, Karoubi.id_eq,
+      pInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap,
+      inclusionOfMooreComplexMap_comp_pInfty]
+    dsimp only [Functor.comp_obj, toKaroubi]
     rw [id_comp]
 #align algebraic_topology.dold_kan.N₁_iso_normalized_Moore_complex_comp_to_karoubi AlgebraicTopology.DoldKan.n₁IsoNormalizedMooreComplexCompToKaroubi
 

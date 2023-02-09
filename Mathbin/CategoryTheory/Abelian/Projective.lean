@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.abelian.projective
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,22 +41,22 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 -/
 theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f :=
   (Abelian.exact_iff _ _).2 <|
-    ⟨by simp, zero_of_epi_comp (π _) <| by rw [← category.assoc, cokernel.condition]⟩
+    ⟨by simp, zero_of_epi_comp (π _) <| by rw [← Category.assoc, cokernel.condition]⟩
 #align category_theory.exact_d_f CategoryTheory.exact_d_f
 
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
     PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) :=
   by
-  letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
-  apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
+  letI := (projective_iff_preservesEpimorphisms_preadditive_coyoneda_obj' P).mp hP
+  apply Functor.preservesFiniteColimitsOfPreservesEpisAndKernels
 #align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
 
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
     [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P :=
   by
-  rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
+  rw [projective_iff_preservesEpimorphisms_preadditive_coyoneda_obj']
   infer_instance
 #align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj
 
@@ -91,10 +91,10 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
       ChainComplex.mkHom _ _ (Projective.π Z) 0
         (by
           simp
-          exact (exact_d_f (projective.π Z)).w.symm)
+          exact (exact_d_f (Projective.π Z)).w.symm)
         fun n _ => ⟨0, by ext⟩
-    Projective := by rintro (_ | _ | _ | n) <;> apply projective.projective_over
-    exact₀ := by simpa using exact_d_f (projective.π Z)
+    Projective := by rintro (_ | _ | _ | n) <;> apply Projective.projective_over
+    exact₀ := by simpa using exact_d_f (Projective.π Z)
     exact := by
       rintro (_ | n) <;>
         · simp

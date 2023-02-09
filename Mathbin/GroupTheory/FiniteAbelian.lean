@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module group_theory.finite_abelian
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,10 +36,10 @@ theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ 
   by
   rcases Module.equiv_directSum_of_isTorsion hM with ⟨ι, _, p, h, e, ⟨l⟩⟩
   haveI : ∀ i : ι, NeZero (p i ^ e i).natAbs := fun i =>
-    ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).NeZero⟩
-  haveI : ∀ i : ι, _root_.finite <| ℤ ⧸ Submodule.span ℤ {p i ^ e i} := fun i =>
+    ⟨Int.natAbs_ne_zero_of_ne_zero <| pow_ne_zero (e i) (h i).ne_zero⟩
+  haveI : ∀ i : ι, Finite <| ℤ ⧸ Submodule.span ℤ {p i ^ e i} := fun i =>
     Finite.of_equiv _ (p i ^ e i).quotientSpanEquivZmod.symm.toEquiv
-  haveI : _root_.finite (⨁ i, ℤ ⧸ (Submodule.span ℤ {p i ^ e i} : Submodule ℤ ℤ)) :=
+  haveI : Finite (⨁ i, ℤ ⧸ (Submodule.span ℤ {p i ^ e i} : Submodule ℤ ℤ)) :=
     Finite.of_equiv _ dfinsupp.equiv_fun_on_fintype.symm
   exact Finite.of_equiv _ l.symm.to_equiv
 #align module.finite_of_fg_torsion Module.finite_of_fg_torsion
@@ -60,7 +60,7 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.Fg G] :
       Nonempty <| G ≃+ (Fin n →₀ ℤ) × ⨁ i : ι, ZMod (p i ^ e i) :=
   by
   obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ :=
-    @Module.equiv_free_prod_directSum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
+    @module.equiv_free_prod_direct_sum _ _ _ _ _ _ _ (module.finite.iff_add_group_fg.mpr hG)
   refine' ⟨n, ι, fι, fun i => (p i).natAbs, fun i => _, e, ⟨_⟩⟩
   · rw [← Int.prime_iff_natAbs_prime, ← GCDMonoid.irreducible_iff_prime]
     exact hp i
@@ -79,13 +79,13 @@ theorem equiv_directSum_zMod_of_fintype [Finite G] :
       Nonempty <| G ≃+ ⨁ i : ι, ZMod (p i ^ e i) :=
   by
   cases nonempty_fintype G
-  obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ := equiv_free_prod_direct_sum_zmod G
+  obtain ⟨n, ι, fι, p, hp, e, ⟨f⟩⟩ := equiv_free_prod_directSum_zMod G
   cases n
   · exact ⟨ι, fι, p, hp, e, ⟨f.trans AddEquiv.uniqueProd⟩⟩
-  · haveI := @Fintype.prodLeft _ _ _ (Fintype.ofEquiv G f.to_equiv) _
+  · haveI := @fintype.prod_left _ _ _ (Fintype.ofEquiv G f.to_equiv) _
     exact
       (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
-            ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
+            ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).false.elim
 #align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zMod_of_fintype
 
 theorem finite_of_fg_torsion [hG' : AddGroup.Fg G] (hG : AddMonoid.IsTorsion G) : Finite G :=

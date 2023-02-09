@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.units
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,7 @@ but is expected to have type
   forall {M : Type.{u2}} {α : Type.{u1}} [_inst_1 : Monoid.{u2} M] [_inst_2 : SMul.{u2, u1} M α] {m : M} (hm : IsUnit.{u2} M _inst_1 m) (a : α), Eq.{succ u1} α (HSMul.hSMul.{u2, u1, u1} (Units.{u2} M _inst_1) α α (instHSMul.{u2, u1} (Units.{u2} M _inst_1) α (Units.instSMulUnits.{u2, u1} M α _inst_1 _inst_2)) (IsUnit.unit.{u2} M _inst_1 m hm) a) (HSMul.hSMul.{u2, u1, u1} M α α (instHSMul.{u2, u1} M α _inst_2) m a)
 Case conversion may be inaccurate. Consider using '#align units.smul_is_unit Units.smul_isUnitₓ'. -/
 @[simp]
-theorem smul_isUnit [Monoid M] [SMul M α] {m : M} (hm : IsUnit m) (a : α) : hm.Unit • a = m • a :=
+theorem smul_isUnit [Monoid M] [SMul M α] {m : M} (hm : IsUnit m) (a : α) : hm.unit • a = m • a :=
   rfl
 #align units.smul_is_unit Units.smul_isUnit
 

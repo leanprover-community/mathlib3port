@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.weak_dual
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ theorem embedding {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} (hB : Function.Inject
 theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B} {x : WeakBilin B}
     (hB : Function.Injective B) :
     Tendsto f l (𝓝 x) ↔ ∀ y, Tendsto (fun i => B (f i) y) l (𝓝 (B x y)) := by
-  rw [← tendsto_pi_nhds, Embedding.tendsto_nhds_iff (Embedding hB)]
+  rw [← tendsto_pi_nhds, Embedding.tendsto_nhds_iff (embedding hB)]
 #align weak_bilin.tendsto_iff_forall_eval_tendsto WeakBilin.tendsto_iff_forall_eval_tendsto
 
 /-- Addition in `weak_space B` is continuous. -/
@@ -146,7 +146,7 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) :=
   refine' ⟨continuous_induced_rng.2 _⟩
   refine'
     cast (congr_arg _ _)
-      (((coe_fn_continuous B).comp continuous_fst).add ((coe_fn_continuous B).comp continuous_snd))
+      (((coeFn_continuous B).comp continuous_fst).add ((coeFn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_apply, Pi.add_apply, map_add, LinearMap.add_apply]
 
@@ -154,7 +154,7 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) :=
 instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) :=
   by
   refine' ⟨continuous_induced_rng.2 _⟩
-  refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
+  refine' cast (congr_arg _ _) (continuous_fst.smul ((coeFn_continuous B).comp continuous_snd))
   ext
   simp only [Function.comp_apply, Pi.smul_apply, LinearMap.map_smulₛₗ, RingHom.id_apply,
     LinearMap.smul_apply]

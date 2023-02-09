@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,13 +101,13 @@ noncomputable def linearization : MonoidalFunctor (Action (Type u) (Mon.of G)) (
 variable {k G}
 
 @[simp]
-theorem linearization_obj_ρ (X : Action (Type u) (Mon.of G)) (g : G) (x : X.V →₀ k) :
+theorem linearization_obj_ρ (X : Action (Type u) (Mon.of G)) (g : G) (x : X.v →₀ k) :
     ((linearization k G).1.1.obj X).ρ g x = Finsupp.lmapDomain k k (X.ρ g) x :=
   rfl
 #align Rep.linearization_obj_ρ Rep.linearization_obj_ρ
 
 @[simp]
-theorem linearization_of (X : Action (Type u) (Mon.of G)) (g : G) (x : X.V) :
+theorem linearization_of (X : Action (Type u) (Mon.of G)) (g : G) (x : X.v) :
     ((linearization k G).1.1.obj X).ρ g (Finsupp.single x (1 : k)) =
       Finsupp.single (X.ρ g x) (1 : k) :=
   by rw [linearization_obj_ρ, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
@@ -121,7 +121,7 @@ theorem linearization_map_hom :
   rfl
 #align Rep.linearization_map_hom Rep.linearization_map_hom
 
-theorem linearization_map_hom_of (x : X.V) :
+theorem linearization_map_hom_of (x : X.v) :
     ((linearization k G).1.1.map f).hom (Finsupp.single x (1 : k)) =
       Finsupp.single (f.hom x) (1 : k) :=
   by rw [linearization_map_hom, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single]
@@ -186,7 +186,7 @@ theorem to_Module_monoidAlgebra_map_aux {k G : Type _} [CommRing k] [Monoid G] (
 def toModuleMonoidAlgebraMap {V W : Rep k G} (f : V ⟶ W) :
     ModuleCat.of (MonoidAlgebra k G) V.ρ.AsModule ⟶ ModuleCat.of (MonoidAlgebra k G) W.ρ.AsModule :=
   { f.hom with
-    map_smul' := fun r x => to_Module_monoidAlgebra_map_aux V.V W.V V.ρ W.ρ f.hom f.comm r x }
+    map_smul' := fun r x => to_Module_monoidAlgebra_map_aux V.v W.v V.ρ W.ρ f.hom f.comm r x }
 #align Rep.to_Module_monoid_algebra_map Rep.toModuleMonoidAlgebraMap
 
 /-- Functorially convert a representation of `G` into a module over `monoid_algebra k G`. -/
@@ -221,14 +221,14 @@ theorem ofModuleMonoidAlgebra_obj_ρ (M : ModuleCat.{u} (MonoidAlgebra k G)) :
 def counitIsoAddEquiv {M : ModuleCat.{u} (MonoidAlgebra k G)} :
     (ofModuleMonoidAlgebra ⋙ toModuleMonoidAlgebra).obj M ≃+ M :=
   by
-  dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [ofModuleMonoidAlgebra, toModuleMonoidAlgebra]
   refine' (Representation.ofModule k G ↥M).asModuleEquiv.trans (RestrictScalars.addEquiv _ _ _)
 #align Rep.counit_iso_add_equiv Rep.counitIsoAddEquiv
 
 /-- Auxilliary definition for `equivalence_Module_monoid_algebra`. -/
 def unitIsoAddEquiv {V : Rep k G} : V ≃+ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgebra).obj V :=
   by
-  dsimp [of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [ofModuleMonoidAlgebra, toModuleMonoidAlgebra]
   refine' V.ρ.as_module_equiv.symm.trans _
   exact (RestrictScalars.addEquiv _ _ _).symm
 #align Rep.unit_iso_add_equiv Rep.unitIsoAddEquiv
@@ -239,7 +239,7 @@ def counitIso (M : ModuleCat.{u} (MonoidAlgebra k G)) :
   LinearEquiv.toModuleIso'
     { counitIsoAddEquiv with
       map_smul' := fun r x => by
-        dsimp [counit_iso_add_equiv]
+        dsimp [counitIsoAddEquiv]
         simp }
 #align Rep.counit_iso Rep.counitIso
 
@@ -247,7 +247,7 @@ theorem unit_iso_comm (V : Rep k G) (g : G) (x : V) :
     unitIsoAddEquiv ((V.ρ g).toFun x) =
       ((ofModuleMonoidAlgebra.obj (toModuleMonoidAlgebra.obj V)).ρ g).toFun (unitIsoAddEquiv x) :=
   by
-  dsimp [unit_iso_add_equiv, of_Module_monoid_algebra, to_Module_monoid_algebra]
+  dsimp [unitIsoAddEquiv, ofModuleMonoidAlgebra, toModuleMonoidAlgebra]
   simp only [AddEquiv.apply_eq_iff_eq, AddEquiv.apply_symm_apply,
     Representation.asModuleEquiv_symm_map_rho, Representation.ofModule_asModule_act]
 #align Rep.unit_iso_comm Rep.unit_iso_comm
@@ -258,7 +258,7 @@ def unitIso (V : Rep k G) : V ≅ (toModuleMonoidAlgebra ⋙ ofModuleMonoidAlgeb
     (LinearEquiv.toModuleIso'
       { unitIsoAddEquiv with
         map_smul' := fun r x => by
-          dsimp [unit_iso_add_equiv]
+          dsimp [unitIsoAddEquiv]
           simp only [Representation.asModuleEquiv_symm_map_smul,
             RestrictScalars.addEquiv_symm_map_algebraMap_smul] })
     fun g => by

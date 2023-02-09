@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.is_tensor_product
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,13 +88,13 @@ noncomputable def IsTensorProduct.equiv (h : IsTensorProduct f) : M₁ ⊗[R] M�
 
 @[simp]
 theorem IsTensorProduct.equiv_toLinearMap (h : IsTensorProduct f) :
-    h.Equiv.toLinearMap = TensorProduct.lift f :=
+    h.equiv.toLinearMap = TensorProduct.lift f :=
   rfl
 #align is_tensor_product.equiv_to_linear_map IsTensorProduct.equiv_toLinearMap
 
 @[simp]
 theorem IsTensorProduct.equiv_symm_apply (h : IsTensorProduct f) (x₁ : M₁) (x₂ : M₂) :
-    h.Equiv.symm (f x₁ x₂) = x₁ ⊗ₜ x₂ :=
+    h.equiv.symm (f x₁ x₂) = x₁ ⊗ₜ x₂ :=
   by
   apply h.equiv.injective
   refine' (h.equiv.apply_symm_apply _).trans _
@@ -105,7 +105,7 @@ theorem IsTensorProduct.equiv_symm_apply (h : IsTensorProduct f) (x₁ : M₁) (
 to a `M →ₗ[R] M'`. -/
 noncomputable def IsTensorProduct.lift (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') :
     M →ₗ[R] M' :=
-  (TensorProduct.lift f').comp h.Equiv.symm.toLinearMap
+  (TensorProduct.lift f').comp h.equiv.symm.toLinearMap
 #align is_tensor_product.lift IsTensorProduct.lift
 
 theorem IsTensorProduct.lift_eq (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M₂ →ₗ[R] M') (x₁ : M₁)
@@ -118,7 +118,7 @@ theorem IsTensorProduct.lift_eq (h : IsTensorProduct f) (f' : M₁ →ₗ[R] M�
 /-- The tensor product of a pair of linear maps between modules. -/
 noncomputable def IsTensorProduct.map (hf : IsTensorProduct f) (hg : IsTensorProduct g)
     (i₁ : M₁ →ₗ[R] N₁) (i₂ : M₂ →ₗ[R] N₂) : M →ₗ[R] N :=
-  hg.Equiv.toLinearMap.comp ((TensorProduct.map i₁ i₂).comp hf.Equiv.symm.toLinearMap)
+  hg.equiv.toLinearMap.comp ((TensorProduct.map i₁ i₂).comp hf.equiv.symm.toLinearMap)
 #align is_tensor_product.map IsTensorProduct.map
 
 theorem IsTensorProduct.map_eq (hf : IsTensorProduct f) (hg : IsTensorProduct g) (i₁ : M₁ →ₗ[R] N₁)
@@ -201,7 +201,7 @@ theorem IsBaseChange.lift_eq (g : M →ₗ[R] Q) (x : M) : h.lift g (f x) = g x 
 #align is_base_change.lift_eq IsBaseChange.lift_eq
 
 theorem IsBaseChange.lift_comp (g : M →ₗ[R] Q) : ((h.lift g).restrictScalars R).comp f = g :=
-  LinearMap.ext (h.liftEq g)
+  LinearMap.ext (h.lift_eq g)
 #align is_base_change.lift_comp IsBaseChange.lift_comp
 
 end
@@ -228,7 +228,7 @@ theorem IsBaseChange.alg_hom_ext (g₁ g₂ : N →ₗ[S] Q) (e : ∀ x, g₁ (f
 
 theorem IsBaseChange.alg_hom_ext' [Module R Q] [IsScalarTower R S Q] (g₁ g₂ : N →ₗ[S] Q)
     (e : (g₁.restrictScalars R).comp f = (g₂.restrictScalars R).comp f) : g₁ = g₂ :=
-  h.algHom_ext g₁ g₂ (LinearMap.congr_fun e)
+  h.alg_hom_ext g₁ g₂ (LinearMap.congr_fun e)
 #align is_base_change.alg_hom_ext' IsBaseChange.alg_hom_ext'
 
 variable (R M N S)
@@ -250,7 +250,7 @@ variable {R M N S}
 
 /-- The base change of `M` along `R → S` is linearly equivalent to `S ⊗[R] M`. -/
 noncomputable def IsBaseChange.equiv : S ⊗[R] M ≃ₗ[S] N :=
-  { h.Equiv with
+  { h.equiv with
     map_smul' := fun r x => by
       change h.equiv (r • x) = r • h.equiv x
       apply TensorProduct.induction_on x
@@ -261,11 +261,11 @@ noncomputable def IsBaseChange.equiv : S ⊗[R] M ≃ₗ[S] N :=
         rw [map_add, smul_add, map_add, smul_add, hx, hy] }
 #align is_base_change.equiv IsBaseChange.equiv
 
-theorem IsBaseChange.equiv_tmul (s : S) (m : M) : h.Equiv (s ⊗ₜ m) = s • f m :=
+theorem IsBaseChange.equiv_tmul (s : S) (m : M) : h.equiv (s ⊗ₜ m) = s • f m :=
   TensorProduct.lift.tmul s m
 #align is_base_change.equiv_tmul IsBaseChange.equiv_tmul
 
-theorem IsBaseChange.equiv_symm_apply (m : M) : h.Equiv.symm (f m) = 1 ⊗ₜ m := by
+theorem IsBaseChange.equiv_symm_apply (m : M) : h.equiv.symm (f m) = 1 ⊗ₜ m := by
   rw [h.equiv.symm_apply_eq, h.equiv_tmul, one_smul]
 #align is_base_change.equiv_symm_apply IsBaseChange.equiv_symm_apply
 
@@ -297,7 +297,7 @@ theorem IsBaseChange.ofLiftUnique
   let fe : S ⊗[R] M ≃ₗ[S] N :=
     LinearEquiv.ofLinear f'' (ulift.module_equiv.to_linear_map.comp g) _ _
   · exact fe.bijective
-  · rw [← LinearMap.cancel_left (ULift.moduleEquiv : ULift.{max v₁ v₃} N ≃ₗ[S] N).symm.Injective]
+  · rw [← LinearMap.cancel_left (ULift.moduleEquiv : ULift.{max v₁ v₃} N ≃ₗ[S] N).symm.injective]
     refine' (h (ULift.{max v₁ v₃} N) <| ulift.module_equiv.symm.to_linear_map.comp f).unique _ rfl
     · infer_instance
     ext x
@@ -400,7 +400,7 @@ theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPus
   letI := (Algebra.TensorProduct.includeRight : R' →ₐ[R] S ⊗ R').toRingHom.toAlgebra
   let e : R' ⊗[R] S ≃ₗ[R'] S' :=
     by
-    refine' { (TensorProduct.comm R R' S).trans <| h.1.Equiv.restrictScalars R with map_smul' := _ }
+    refine' { (TensorProduct.comm R R' S).trans <| h.1.equiv.restrictScalars R with map_smul' := _ }
     intro r x
     change
       h.1.Equiv (TensorProduct.comm R R' S (r • x)) = r • h.1.Equiv (TensorProduct.comm R R' S x)
@@ -412,7 +412,7 @@ theorem Algebra.IsPushout.symm (h : Algebra.IsPushout R S R' S') : Algebra.IsPus
     · intro x y hx hy
       simp only [map_add, smul_add, hx, hy]
   have :
-    (to_alg_hom R S S').toLinearMap =
+    (toAlgHom R S S').toLinearMap =
       (e.to_linear_map.restrict_scalars R).comp (TensorProduct.mk R R' S 1) :=
     by
     ext
@@ -476,7 +476,7 @@ noncomputable def Algebra.pushoutDesc [H : Algebra.IsPushout R S R' S'] {A : Typ
     · rw [mul_zero, map_zero, mul_zero]
     · intro y
       dsimp
-      rw [← _root_.map_mul, this, this, _root_.map_mul]
+      rw [← map_mul, this, this, map_mul]
     · intro s s' e
       rw [mul_comm, smul_mul_assoc, LinearMap.map_smul, LinearMap.map_smul, mul_comm, e]
       change f s * (g x * _) = g x * (f s * _)
@@ -491,7 +491,7 @@ theorem Algebra.pushoutDesc_left [H : Algebra.IsPushout R S R' S'] {A : Type _} 
     Algebra.pushoutDesc S' f g H (algebraMap S S' x) = f x :=
   by
   rw [Algebra.pushoutDesc_apply, Algebra.algebraMap_eq_smul_one, LinearMap.map_smul, ←
-    Algebra.pushoutDesc_apply S' f g H, _root_.map_one]
+    Algebra.pushoutDesc_apply S' f g H, map_one]
   exact mul_one (f x)
 #align algebra.pushout_desc_left Algebra.pushoutDesc_left
 
@@ -505,7 +505,7 @@ theorem Algebra.lift_algHom_comp_left [H : Algebra.IsPushout R S R' S'] {A : Typ
 theorem Algebra.pushoutDesc_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]
     [Algebra R A] (f : S →ₐ[R] A) (g : R' →ₐ[R] A) (H) (x : R') :
     Algebra.pushoutDesc S' f g H (algebraMap R' S' x) = g x := by
-  apply (config := { instances := false }) @IsBaseChange.lift_eq
+  apply (config := { instances := false }) @is_base_change.lift_eq
 #align algebra.pushout_desc_right Algebra.pushoutDesc_right
 
 theorem Algebra.lift_algHom_comp_right [H : Algebra.IsPushout R S R' S'] {A : Type _} [Semiring A]

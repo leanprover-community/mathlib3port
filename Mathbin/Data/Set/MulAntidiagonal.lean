@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Floris van Doorn
 
 ! This file was ported from Lean 3 source module data.set.mul_antidiagonal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Order.WellFoundedSet
 
-/-! # Multiplication antidiagonal -/
+/-! # Multiplication antidiagonal 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 namespace Set
@@ -66,7 +69,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align set.swap_mem_mul_antidiagonal Set.swap_mem_mulAntidiagonalₓ'. -/
 @[simp, to_additive]
 theorem swap_mem_mulAntidiagonal [CommSemigroup α] {s t : Set α} {a : α} {x : α × α} :
-    x.symm ∈ Set.mulAntidiagonal s t a ↔ x ∈ Set.mulAntidiagonal t s a := by
+    x.swap ∈ Set.mulAntidiagonal s t a ↔ x ∈ Set.mulAntidiagonal t s a := by
   simp [mul_comm, and_left_comm]
 #align set.swap_mem_mul_antidiagonal Set.swap_mem_mulAntidiagonal
 #align set.swap_mem_add_antidiagonal Set.swap_mem_addAntidiagonal
@@ -87,12 +90,12 @@ Case conversion may be inaccurate. Consider using '#align set.mul_antidiagonal.f
 theorem fst_eq_fst_iff_snd_eq_snd : (x : α × α).1 = (y : α × α).1 ↔ (x : α × α).2 = (y : α × α).2 :=
   ⟨fun h =>
     mul_left_cancel
-      (y.Prop.2.2.trans <| by
+      (y.prop.2.2.trans <| by
           rw [← h]
           exact x.2.2.2.symm).symm,
     fun h =>
     mul_right_cancel
-      (y.Prop.2.2.trans <| by
+      (y.prop.2.2.trans <| by
           rw [← h]
           exact x.2.2.2.symm).symm⟩
 #align set.mul_antidiagonal.fst_eq_fst_iff_snd_eq_snd Set.MulAntidiagonal.fst_eq_fst_iff_snd_eq_snd
@@ -139,7 +142,7 @@ theorem eq_of_fst_le_fst_of_snd_le_snd (h₁ : (x : α × α).1 ≤ (y : α × �
     (h₂ : (x : α × α).2 ≤ (y : α × α).2) : x = y :=
   eq_of_fst_eq_fst <|
     h₁.eq_of_not_lt fun hlt =>
-      (mul_lt_mul_of_lt_of_le hlt h₂).Ne <|
+      (mul_lt_mul_of_lt_of_le hlt h₂).ne <|
         (mem_mulAntidiagonal.1 x.2).2.2.trans (mem_mulAntidiagonal.1 y.2).2.2.symm
 #align set.mul_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.MulAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
 #align set.add_antidiagonal.eq_of_fst_le_fst_of_snd_le_snd Set.AddAntidiagonal.eq_of_fst_le_fst_of_snd_le_snd
@@ -156,14 +159,14 @@ Case conversion may be inaccurate. Consider using '#align set.mul_antidiagonal.f
 theorem finite_of_isPwo (hs : s.IsPwo) (ht : t.IsPwo) (a) : (mulAntidiagonal s t a).Finite :=
   by
   refine' not_infinite.1 fun h => _
-  have h1 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := fun f hf =>
-    hs (Prod.fst ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).1
-  have h2 : (mul_antidiagonal s t a).PartiallyWellOrderedOn (Prod.snd ⁻¹'o (· ≤ ·)) := fun f hf =>
-    ht (Prod.snd ∘ f) fun n => (mem_mul_antidiagonal.1 (hf n)).2.1
+  have h1 : (mulAntidiagonal s t a).PartiallyWellOrderedOn (Prod.fst ⁻¹'o (· ≤ ·)) := fun f hf =>
+    hs (Prod.fst ∘ f) fun n => (mem_mulAntidiagonal.1 (hf n)).1
+  have h2 : (mulAntidiagonal s t a).PartiallyWellOrderedOn (Prod.snd ⁻¹'o (· ≤ ·)) := fun f hf =>
+    ht (Prod.snd ∘ f) fun n => (mem_mulAntidiagonal.1 (hf n)).2.1
   obtain ⟨g, hg⟩ :=
     h1.exists_monotone_subseq (fun n => h.nat_embedding _ n) fun n => (h.nat_embedding _ n).2
   obtain ⟨m, n, mn, h2'⟩ := h2 (fun x => (h.nat_embedding _) (g x)) fun n => (h.nat_embedding _ _).2
-  refine' mn.ne (g.injective <| (h.nat_embedding _).Injective _)
+  refine' mn.ne (g.injective <| (h.nat_embedding _).injective _)
   exact eq_of_fst_le_fst_of_snd_le_snd _ _ _ (hg _ _ mn.le) h2'
 #align set.mul_antidiagonal.finite_of_is_pwo Set.MulAntidiagonal.finite_of_isPwo
 #align set.add_antidiagonal.finite_of_is_pwo Set.AddAntidiagonal.finite_of_isPwo
@@ -179,7 +182,7 @@ Case conversion may be inaccurate. Consider using '#align set.mul_antidiagonal.f
 @[to_additive]
 theorem finite_of_isWf [LinearOrderedCancelCommMonoid α] {s t : Set α} (hs : s.IsWf) (ht : t.IsWf)
     (a) : (mulAntidiagonal s t a).Finite :=
-  finite_of_isPwo hs.IsPwo ht.IsPwo a
+  finite_of_isPwo hs.isPwo ht.isPwo a
 #align set.mul_antidiagonal.finite_of_is_wf Set.MulAntidiagonal.finite_of_isWf
 #align set.add_antidiagonal.finite_of_is_wf Set.AddAntidiagonal.finite_of_isWf
 

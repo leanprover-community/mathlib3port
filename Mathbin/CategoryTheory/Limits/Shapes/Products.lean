@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.products
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ abbrev HasCoproduct (f : β → C) :=
 /-- Make a fan `f` into a limit fan by providing `lift`, `fac`, and `uniq` --
   just a convenience lemma to avoid having to go through `discrete` -/
 @[simps]
-def mkFanLimit {f : β → C} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
+def mkFanLimit {f : β → comp} (t : Fan f) (lift : ∀ s : Fan f, s.x ⟶ t.x)
     (fac : ∀ (s : Fan f) (j : β), lift s ≫ t.proj j = s.proj j)
     (uniq : ∀ (s : Fan f) (m : s.x ⟶ t.x) (w : ∀ j : β, m ≫ t.proj j = s.proj j), m = lift s) :
-    IsLimit t :=
+    IsLimit Discrete :=
   { lift
-    fac' := fun s j => by convert fac s j.as <;> simp
+    fac' := fun s j => by convert fac PLift j.as <;> simp
     uniq' := fun s m w => uniq s m fun j => w (Discrete.mk j) }
 #align category_theory.limits.mk_fan_limit CategoryTheory.Limits.mkFanLimit
 
@@ -339,9 +339,9 @@ def limitConeOfUnique : LimitCone (Discrete.functor f)
     { lift := fun s => s.π.app default
       fac' := fun s j =>
         by
-        have w := (s.π.naturality (eq_to_hom (Unique.default_eq _))).symm
+        have w := (s.π.naturality (eqToHom (Unique.default_eq _))).symm
         dsimp at w
-        simpa [eq_to_hom_map] using w
+        simpa [eqToHom_map] using w
       uniq' := fun s m w => by
         specialize w default
         dsimp at w
@@ -355,7 +355,7 @@ instance (priority := 100) hasProduct_unique : HasProduct f :=
 /-- A product over a index type with exactly one term is just the object over that term. -/
 @[simps]
 def productUniqueIso : ∏ f ≅ f default :=
-  IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).IsLimit
+  IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitConeOfUnique f).isLimit
 #align category_theory.limits.product_unique_iso CategoryTheory.Limits.productUniqueIso
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
@@ -378,9 +378,9 @@ def colimitCoconeOfUnique : ColimitCocone (Discrete.functor f)
     { desc := fun s => s.ι.app default
       fac' := fun s j =>
         by
-        have w := s.ι.naturality (eq_to_hom (Unique.eq_default _))
+        have w := s.ι.naturality (eqToHom (Unique.eq_default _))
         dsimp at w
-        simpa [eq_to_hom_map] using w
+        simpa [eqToHom_map] using w
       uniq' := fun s m w => by
         specialize w default
         dsimp at w
@@ -394,7 +394,7 @@ instance (priority := 100) hasCoproduct_unique : HasCoproduct f :=
 /-- A coproduct over a index type with exactly one term is just the object over that term. -/
 @[simps]
 def coproductUniqueIso : ∐ f ≅ f default :=
-  IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (colimitCoconeOfUnique f).IsColimit
+  IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (colimitCoconeOfUnique f).isColimit
 #align category_theory.limits.coproduct_unique_iso CategoryTheory.Limits.coproductUniqueIso
 
 end Unique
@@ -413,20 +413,20 @@ def Pi.reindex : piObj (f ∘ ε) ≅ piObj f :=
 #align category_theory.limits.pi.reindex CategoryTheory.Limits.Pi.reindex
 
 @[simp, reassoc.1]
-theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).Hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b :=
+theorem Pi.reindex_hom_π (b : β) : (Pi.reindex ε f).hom ≫ Pi.π f (ε b) = Pi.π (f ∘ ε) b :=
   by
-  dsimp [pi.reindex]
-  simp only [has_limit.iso_of_equivalence_hom_π, discrete.nat_iso_inv_app,
-    equivalence.equivalence_mk'_counit, discrete.equivalence_counit_iso, discrete.nat_iso_hom_app,
-    eq_to_iso.hom, eq_to_hom_map]
+  dsimp [Pi.reindex]
+  simp only [HasLimit.isoOfEquivalence_hom_π, Discrete.natIso_inv_app,
+    Equivalence.equivalence_mk'_counit, Discrete.equivalence_counitIso, Discrete.natIso_hom_app,
+    eqToIso.hom, eqToHom_map]
   dsimp
-  simpa [eq_to_hom_map] using
-    limit.w (discrete.functor (f ∘ ε)) (discrete.eq_to_hom' (ε.symm_apply_apply b))
+  simpa [eqToHom_map] using
+    limit.w (Discrete.functor (f ∘ ε)) (Discrete.eqToHom' (ε.symm_apply_apply b))
 #align category_theory.limits.pi.reindex_hom_π CategoryTheory.Limits.Pi.reindex_hom_π
 
 @[simp, reassoc.1]
 theorem Pi.reindex_inv_π (b : β) : (Pi.reindex ε f).inv ≫ Pi.π (f ∘ ε) b = Pi.π f (ε b) := by
-  simp [iso.inv_comp_eq]
+  simp [Iso.inv_comp_eq]
 #align category_theory.limits.pi.reindex_inv_π CategoryTheory.Limits.Pi.reindex_inv_π
 
 end
@@ -442,20 +442,20 @@ def Sigma.reindex : sigmaObj (f ∘ ε) ≅ sigmaObj f :=
 
 @[simp, reassoc.1]
 theorem Sigma.ι_reindex_hom (b : β) :
-    Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).Hom = Sigma.ι f (ε b) :=
+    Sigma.ι (f ∘ ε) b ≫ (Sigma.reindex ε f).hom = Sigma.ι f (ε b) :=
   by
-  dsimp [sigma.reindex]
-  simp only [has_colimit.iso_of_equivalence_hom_π, equivalence.equivalence_mk'_unit,
-    discrete.equivalence_unit_iso, discrete.nat_iso_hom_app, eq_to_iso.hom, eq_to_hom_map,
-    discrete.nat_iso_inv_app]
+  dsimp [Sigma.reindex]
+  simp only [HasColimit.isoOfEquivalence_hom_π, Equivalence.equivalence_mk'_unit,
+    Discrete.equivalence_unitIso, Discrete.natIso_hom_app, eqToIso.hom, eqToHom_map,
+    Discrete.natIso_inv_app]
   dsimp
-  simp [eq_to_hom_map, ←
-    colimit.w (discrete.functor f) (discrete.eq_to_hom' (ε.apply_symm_apply (ε b)))]
+  simp [eqToHom_map, ←
+    colimit.w (Discrete.functor f) (Discrete.eqToHom' (ε.apply_symm_apply (ε b)))]
 #align category_theory.limits.sigma.ι_reindex_hom CategoryTheory.Limits.Sigma.ι_reindex_hom
 
 @[simp, reassoc.1]
 theorem Sigma.ι_reindex_inv (b : β) :
-    Sigma.ι f (ε b) ≫ (Sigma.reindex ε f).inv = Sigma.ι (f ∘ ε) b := by simp [iso.comp_inv_eq]
+    Sigma.ι f (ε b) ≫ (Sigma.reindex ε f).inv = Sigma.ι (f ∘ ε) b := by simp [Iso.comp_inv_eq]
 #align category_theory.limits.sigma.ι_reindex_inv CategoryTheory.Limits.Sigma.ι_reindex_inv
 
 end

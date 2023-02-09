@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rishikesh Vaishnav
 
 ! This file was ported from Lean 3 source module probability.conditional_probability
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ is a probability measure. -/
 theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
     IsProbabilityMeasure <| μ[|s] :=
   ⟨by
-    rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
+    rw [cond, Measure.smul_apply, Measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
     exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
 #align probability_theory.cond_is_probability_measure ProbabilityTheory.condIsProbabilityMeasure
 
@@ -103,13 +103,13 @@ theorem cond_empty : μ[|∅] = 0 := by simp [cond]
 
 @[simp]
 theorem cond_univ [IsProbabilityMeasure μ] : μ[|Set.univ] = μ := by
-  simp [cond, measure_univ, measure.restrict_univ]
+  simp [cond, measure_univ, Measure.restrict_univ]
 #align probability_theory.cond_univ ProbabilityTheory.cond_univ
 
 /-- The axiomatic definition of conditional probability derived from a measure-theoretic one. -/
 theorem cond_apply (hms : MeasurableSet s) (t : Set Ω) : μ[t|s] = (μ s)⁻¹ * μ (s ∩ t) :=
   by
-  rw [cond, measure.smul_apply, measure.restrict_apply' hms, Set.inter_comm]
+  rw [cond, Measure.smul_apply, Measure.restrict_apply' hms, Set.inter_comm]
   rfl
 #align probability_theory.cond_apply ProbabilityTheory.cond_apply
 
@@ -174,7 +174,7 @@ theorem cond_eq_inv_mul_cond_mul [IsFiniteMeasure μ] (hms : MeasurableSet s)
     (hmt : MeasurableSet t) : μ[t|s] = (μ s)⁻¹ * μ[s|t] * μ t :=
   by
   by_cases ht : μ t = 0
-  · simp [cond, ht, measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
+  · simp [cond, ht, Measure.restrict_apply hmt, Or.inr (measure_inter_null_of_null_left s ht)]
   · rw [mul_assoc, cond_mul_eq_inter μ hmt ht s, Set.inter_comm, cond_apply _ hms]
 #align probability_theory.cond_eq_inv_mul_cond_mul ProbabilityTheory.cond_eq_inv_mul_cond_mul
 

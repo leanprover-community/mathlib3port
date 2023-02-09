@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module set_theory.game.impartial
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ def ImpartialAux : Pgame → Prop
 theorem impartialAux_def {G : Pgame} :
     G.ImpartialAux ↔
       (G ≈ -G) ∧ (∀ i, ImpartialAux (G.moveLeft i)) ∧ ∀ j, ImpartialAux (G.moveRight j) :=
-  by rw [impartial_aux]
+  by rw [ImpartialAux]
 #align pgame.impartial_aux_def Pgame.impartialAux_def
 
 /-- A typeclass on impartial games. -/
@@ -51,7 +51,7 @@ theorem impartial_iff_aux {G : Pgame} : G.Impartial ↔ G.ImpartialAux :=
 
 theorem impartial_def {G : Pgame} :
     G.Impartial ↔ (G ≈ -G) ∧ (∀ i, Impartial (G.moveLeft i)) ∧ ∀ j, Impartial (G.moveRight j) := by
-  simpa only [impartial_iff_aux] using impartial_aux_def
+  simpa only [impartial_iff_aux] using impartialAux_def
 #align pgame.impartial_def Pgame.impartial_def
 
 namespace Impartial
@@ -66,7 +66,7 @@ instance impartial_zero : Impartial 0 :=
 instance impartial_star : Impartial star :=
   by
   rw [impartial_def]
-  simpa using impartial.impartial_zero
+  simpa using Impartial.impartial_zero
 #align pgame.impartial.impartial_star Pgame.Impartial.impartial_star
 
 theorem neg_equiv_self (G : Pgame) [h : G.Impartial] : G ≈ -G :=
@@ -104,15 +104,15 @@ instance impartial_add : ∀ (G H : Pgame) [G.Impartial] [H.Impartial], (G + H).
     intro hG hH
     rw [impartial_def]
     refine'
-      ⟨(add_congr (neg_equiv_self _) (neg_equiv_self _)).trans (neg_add_relabelling _ _).Equiv.symm,
+      ⟨(add_congr (neg_equiv_self _) (neg_equiv_self _)).trans (negAddRelabelling _ _).equiv.symm,
         fun k => _, fun k => _⟩
-    · apply left_moves_add_cases k
+    · apply leftMoves_add_cases k
       all_goals
-        intro i; simp only [add_move_left_inl, add_move_left_inr]
+        intro i; simp only [add_moveLeft_inl, add_moveLeft_inr]
         apply impartial_add
-    · apply right_moves_add_cases k
+    · apply rightMoves_add_cases k
       all_goals
-        intro i; simp only [add_move_right_inl, add_move_right_inr]
+        intro i; simp only [add_moveRight_inl, add_moveRight_inr]
         apply impartial_add decreasing_by
   pgame_wf_tac
 #align pgame.impartial.impartial_add Pgame.Impartial.impartial_add
@@ -124,9 +124,9 @@ instance impartial_neg : ∀ (G : Pgame) [G.Impartial], (-G).Impartial
     refine' ⟨_, fun i => _, fun i => _⟩
     · rw [neg_neg]
       exact (neg_equiv_self G).symm
-    · rw [move_left_neg']
+    · rw [moveLeft_neg']
       apply impartial_neg
-    · rw [move_right_neg']
+    · rw [moveRight_neg']
       apply impartial_neg decreasing_by pgame_wf_tac
 #align pgame.impartial.impartial_neg Pgame.Impartial.impartial_neg
 
@@ -136,18 +136,18 @@ theorem nonpos : ¬0 < G := fun h =>
   by
   have h' := neg_lt_neg_iff.2 h
   rw [neg_zero, lt_congr_left (neg_equiv_self G).symm] at h'
-  exact (h.trans h').False
+  exact (h.trans h').false
 #align pgame.impartial.nonpos Pgame.Impartial.nonpos
 
 theorem nonneg : ¬G < 0 := fun h =>
   by
   have h' := neg_lt_neg_iff.2 h
   rw [neg_zero, lt_congr_right (neg_equiv_self G).symm] at h'
-  exact (h.trans h').False
+  exact (h.trans h').false
 #align pgame.impartial.nonneg Pgame.Impartial.nonneg
 
 /-- In an impartial game, either the first player always wins, or the second player always wins. -/
-theorem equiv_or_fuzzy_zero : (G ≈ 0) ∨ G ‖ 0 :=
+theorem equiv_or_fuzzy_zero : (mk_left ≈ 0) ∨ G ‖ 0 :=
   by
   rcases lt_or_equiv_or_gt_or_fuzzy G 0 with (h | h | h | h)
   · exact ((nonneg G) h).elim
@@ -233,7 +233,7 @@ theorem forall_rightMoves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) �
 
 theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ G ‖ 0 :=
   by
-  refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_gf G).2 (lf_of_le_move_left hi.2), fun hn => _⟩
+  refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_gf G).2 (lf_of_le_moveLeft hi.2), fun hn => _⟩
   rw [fuzzy_zero_iff_gf G, zero_lf_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_ge _).2 hi⟩
@@ -241,7 +241,7 @@ theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ 
 
 theorem exists_right_move_equiv_iff_fuzzy_zero : (∃ j, G.moveRight j ≈ 0) ↔ G ‖ 0 :=
   by
-  refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_lf G).2 (lf_of_move_right_le hi.1), fun hn => _⟩
+  refine' ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_lf G).2 (lf_of_moveRight_le hi.1), fun hn => _⟩
   rw [fuzzy_zero_iff_lf G, lf_zero_le] at hn
   cases' hn with i hi
   exact ⟨i, (equiv_zero_iff_le _).2 hi⟩

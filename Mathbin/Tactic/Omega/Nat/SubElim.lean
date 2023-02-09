@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.sub_elim
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,19 +45,19 @@ theorem val_subSubst {k : Nat} {x y : Preterm} {v : Nat → Nat} :
   | &m, h1 => rfl
   | m ** n, h1 => by
     have h2 : n ≠ k := ne_of_lt h1
-    simp only [sub_subst, preterm.val]
+    simp only [subSubst, Preterm.val]
     rw [update_eq_of_ne _ h2]
   | t +* s, h1 => by
-    simp only [sub_subst, val_add]; apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
+    simp only [subSubst, val_add]; apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
     apply le_max_left; apply le_max_right
   | t -* s, h1 => by
-    simp only [sub_subst, val_sub]
+    simp only [subSubst, val_sub]
     by_cases h2 : t = x ∧ s = y
     · rw [if_pos h2]
       simp only [val_var, one_mul]
       rw [update_eq, h2.left, h2.right]
     · rw [if_neg h2]
-      simp only [val_sub, sub_subst]
+      simp only [val_sub, subSubst]
       apply fun_mono_2 <;> apply val_sub_subst (le_trans _ h1)
       apply le_max_left
       apply le_max_right
@@ -98,8 +98,8 @@ theorem holds_isDiff {t s : Preterm} {k : Nat} {v : Nat → Nat} :
     v k = t.val v - s.val v → (isDiff t s k).Holds v :=
   by
   intro h1
-  simp only [preform.holds, is_diff, if_pos (Eq.refl 1), preterm.val_add, preterm.val_var,
-    preterm.val_const]
+  simp only [Preform.Holds, isDiff, if_pos (Eq.refl 1), Preterm.val_add, Preterm.val_var,
+    Preterm.val_const]
   cases' le_total (t.val v) (s.val v) with h2 h2
   · right
     refine' ⟨h2, _⟩
@@ -130,37 +130,37 @@ theorem subSubst_equiv {k : Nat} {x y : Preterm} {v : Nat → Nat} :
       p.freshIndex ≤ k →
         ((Preform.subSubst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.Holds v)
   | t =* s, h1 => by
-    simp only [preform.holds, preform.sub_subst]
-    apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
+    simp only [Preform.Holds, Preform.subSubst]
+    apply pred_mono_2 <;> apply Preterm.val_subSubst (le_trans _ h1)
     apply le_max_left; apply le_max_right
   | t ≤* s, h1 => by
-    simp only [preform.holds, preform.sub_subst]
-    apply pred_mono_2 <;> apply preterm.val_sub_subst (le_trans _ h1)
+    simp only [Preform.Holds, Preform.subSubst]
+    apply pred_mono_2 <;> apply Preterm.val_subSubst (le_trans _ h1)
     apply le_max_left; apply le_max_right
   | ¬* p, h1 => by
     apply not_congr
     apply sub_subst_equiv p h1
   | p ∨* q, h1 => by
-    simp only [preform.holds, preform.sub_subst]
+    simp only [Preform.Holds, Preform.subSubst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left; apply le_max_right
   | p ∧* q, h1 => by
-    simp only [preform.holds, preform.sub_subst]
+    simp only [Preform.Holds, Preform.subSubst]
     apply pred_mono_2 <;> apply propext <;> apply sub_subst_equiv _ (le_trans _ h1)
     apply le_max_left; apply le_max_right
 #align omega.nat.sub_subst_equiv Omega.Nat.subSubst_equiv
 
 theorem sat_subElim {t s : Preterm} {p : Preform} : p.Sat → (subElim t s p).Sat :=
   by
-  intro h1; simp only [sub_elim, sub_elim_core]
+  intro h1; simp only [subElim, subElimCore]
   cases' h1 with v h1
-  refine' ⟨update (sub_fresh_index t s p) (t.val v - s.val v) v, _⟩
+  refine' ⟨update (subFreshIndex t s p) (t.val v - s.val v) v, _⟩
   constructor
-  · apply (sub_subst_equiv p _).right h1
+  · apply (subSubst_equiv p _).mpr h1
     apply le_max_left
-  · apply holds_is_diff
+  · apply holds_isDiff
     rw [update_eq]
-    apply fun_mono_2 <;> apply preterm.val_constant <;> intro x h2 <;>
+    apply fun_mono_2 <;> apply Preterm.val_constant <;> intro x h2 <;>
           rw [update_eq_of_ne _ (Ne.symm (ne_of_gt _))] <;>
         apply lt_of_lt_of_le h2 <;>
       apply le_trans _ (le_max_right _ _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module algebra.monoid_algebra.no_zero_divisors
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -93,7 +93,7 @@ theorem NoZeroDivisors.of_left_ordered [NoZeroDivisors R] [AddRightCancelSemigro
     let gmin : A := g.support.min' (support_nonempty_iff.mpr fg.2)
     refine' support_nonempty_iff.mp _
     obtain ⟨a, ha, H⟩ :=
-      right.exists_add_of_mem_support_single_mul gmin
+      Right.exists_add_of_mem_support_single_mul gmin
         ((f * single gmin 1 : AddMonoidAlgebra R A).support.min'
           (by rw [support_mul_single] <;> simp [support_nonempty_iff.mpr fg.1]))
         (Finset.min'_mem _ _)
@@ -132,7 +132,7 @@ theorem NoZeroDivisors.of_right_ordered [NoZeroDivisors R] [AddLeftCancelSemigro
     let fmin : A := f.support.min' (support_nonempty_iff.mpr fg.1)
     refine' support_nonempty_iff.mp _
     obtain ⟨a, ha, H⟩ :=
-      left.exists_add_of_mem_support_single_mul fmin
+      Left.exists_add_of_mem_support_single_mul fmin
         ((single fmin 1 * g : AddMonoidAlgebra R A).support.min'
           (by rw [support_single_mul] <;> simp [support_nonempty_iff.mpr fg.2]))
         (Finset.min'_mem _ _)

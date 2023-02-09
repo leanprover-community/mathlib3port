@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,9 +46,9 @@ def closedUnit (F : D ⥤ C) : 𝟭 (D ⥤ C) ⟶ tensorLeft F ⋙ closedIhom F
       naturality' := by
         intro X Y f
         dsimp
-        simp only [ihom.coev_naturality, closed_ihom_obj_map, monoidal.tensor_obj_map]
+        simp only [ihom.coev_naturality, closedIhom_obj_map, Monoidal.tensorObj_map]
         dsimp
-        rw [coev_app_comp_pre_app_assoc, ← functor.map_comp]
+        rw [coev_app_comp_pre_app_assoc, ← Functor.map_comp]
         simp }
 #align category_theory.functor.closed_unit CategoryTheory.Functor.closedUnit
 
@@ -61,7 +61,7 @@ def closedCounit (F : D ⥤ C) : closedIhom F ⋙ tensorLeft F ⟶ 𝟭 (D ⥤ C
       naturality' := by
         intro X Y f
         dsimp
-        simp only [closed_ihom_obj_map, pre_comm_ihom_map]
+        simp only [closedIhom_obj_map, pre_comm_ihom_map]
         rw [← tensor_id_comp_id_tensor, id_tensor_comp]
         simp }
 #align category_theory.functor.closed_counit CategoryTheory.Functor.closedCounit

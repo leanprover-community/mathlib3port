@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Kontorovich, Heather Macbeth, Marc Masdeu
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -167,12 +167,12 @@ theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : �
 theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 :=
   by
   intro H
-  have DET := (mem_GL_pos _).1 g.prop
+  have DET := (mem_gLPos _).1 g.prop
   have hz := z.prop
-  simp only [general_linear_group.coe_det_apply] at DET
+  simp only [GeneralLinearGroup.coe_det_apply] at DET
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0 := by simpa using congr_arg Complex.im H
   cases H1
-  · simp only [H1, Complex.of_real_zero, denom, coe_fn_eq_coe, zero_mul, zero_add,
+  · simp only [H1, Complex.of_real_zero, denom, coeFn_eq_coe, zero_mul, zero_add,
       Complex.of_real_eq_zero] at H
     rw [← coe_coe, Matrix.det_fin_two (↑g : Matrix (Fin 2) (Fin 2) ℝ)] at DET
     simp only [coe_coe, H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
@@ -197,10 +197,10 @@ def smulAux' (g : GL(2, ℝ)⁺) (z : ℍ) : ℂ :=
 theorem smulAux'_im (g : GL(2, ℝ)⁺) (z : ℍ) :
     (smulAux' g z).im = det ↑ₘg * z.im / (denom g z).normSq :=
   by
-  rw [smul_aux', Complex.div_im]
+  rw [smulAux', Complex.div_im]
   set NsqBot := (denom g z).normSq
   have : NsqBot ≠ 0 := by simp only [denom_ne_zero g z, map_eq_zero, Ne.def, not_false_iff]
-  field_simp [smul_aux', -coe_coe]
+  field_simp [smulAux', -coe_coe]
   rw [Matrix.det_fin_two ↑ₘg]
   ring
 #align upper_half_plane.smul_aux'_im UpperHalfPlane.smulAux'_im
@@ -208,11 +208,11 @@ theorem smulAux'_im (g : GL(2, ℝ)⁺) (z : ℍ) :
 /-- Fractional linear transformation, also known as the Moebius transformation -/
 def smulAux (g : GL(2, ℝ)⁺) (z : ℍ) : ℍ :=
   ⟨smulAux' g z, by
-    rw [smul_aux'_im]
+    rw [smulAux'_im]
     convert
-      mul_pos ((mem_GL_pos _).1 g.prop)
+      mul_pos ((mem_gLPos _).1 g.prop)
         (div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z)))
-    simp only [general_linear_group.coe_det_apply, coe_coe]
+    simp only [GeneralLinearGroup.coe_det_apply, coe_coe]
     ring⟩
 #align upper_half_plane.smul_aux UpperHalfPlane.smulAux
 
@@ -221,8 +221,8 @@ theorem denom_cocycle (x y : GL(2, ℝ)⁺) (z : ℍ) :
   by
   change _ = (_ * (_ / _) + _) * _
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, denom, Num, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
+  simp only [Matrix.mul, dotProduct, Fin.sum_univ_succ, denom, num, coe_coe, Subgroup.coe_mul,
+    GeneralLinearGroup.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 #align upper_half_plane.denom_cocycle UpperHalfPlane.denom_cocycle
@@ -233,8 +233,8 @@ theorem mul_smul' (x y : GL(2, ℝ)⁺) (z : ℍ) : smulAux (x * y) z = smulAux 
   change _ / _ = (_ * (_ / _) + _) * _
   rw [denom_cocycle]
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Matrix.mul, dot_product, Fin.sum_univ_succ, Num, denom, coe_coe, Subgroup.coe_mul,
-    general_linear_group.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
+  simp only [Matrix.mul, dotProduct, Fin.sum_univ_succ, num, denom, coe_coe, Subgroup.coe_mul,
+    GeneralLinearGroup.coe_mul, Fintype.univ_ofSubsingleton, Fin.mk_zero, Finset.sum_singleton,
     Fin.succ_zero_eq_one, Complex.of_real_add, Complex.of_real_mul]
   ring
 #align upper_half_plane.mul_smul' UpperHalfPlane.mul_smul'
@@ -271,7 +271,7 @@ theorem sLOnGLPos_smul_apply (s : SL(2, ℤ)) (g : GL(2, ℝ)⁺) (z : ℍ) :
 instance SL_to_GL_tower : IsScalarTower SL(2, ℤ) GL(2, ℝ)⁺ ℍ
     where smul_assoc := by
     intro s g z
-    simp only [SL_on_GL_pos_smul_apply, coe_coe]
+    simp only [sLOnGLPos_smul_apply, coe_coe]
     apply mul_smul'
 #align upper_half_plane.SL_to_GL_tower UpperHalfPlane.SL_to_GL_tower
 
@@ -287,7 +287,7 @@ theorem subgroup_on_gLPos_smul_apply (s : Γ) (g : GL(2, ℝ)⁺) (z : ℍ) :
 instance subgroup_on_gLPos : IsScalarTower Γ GL(2, ℝ)⁺ ℍ
     where smul_assoc := by
     intro s g z
-    simp only [subgroup_on_GL_pos_smul_apply, coe_coe]
+    simp only [subgroup_on_gLPos_smul_apply, coe_coe]
     apply mul_smul'
 #align upper_half_plane.subgroup_on_GL_pos UpperHalfPlane.subgroup_on_gLPos
 
@@ -333,7 +333,7 @@ theorem neg_smul (g : GL(2, ℝ)⁺) (z : ℍ) : -g • z = g • z :=
   ext1
   change _ / _ = _ / _
   field_simp [denom_ne_zero, -denom, -Num]
-  simp only [Num, denom, coe_coe, Complex.of_real_neg, neg_mul, GL_pos.coe_neg_GL, Units.val_neg,
+  simp only [num, denom, coe_coe, Complex.of_real_neg, neg_mul, gLPos.coe_neg_GL, Units.val_neg,
     Pi.neg_apply]
   ring_nf
 #align upper_half_plane.neg_smul UpperHalfPlane.neg_smul
@@ -358,7 +358,7 @@ theorem subgroup_to_sl_moeb (A : Γ) (z : ℍ) : A • z = (A : SL(2, ℤ)) • 
 
 @[simp]
 theorem SL_neg_smul (g : SL(2, ℤ)) (z : ℍ) : -g • z = g • z := by
-  simp only [coe_GL_pos_neg, sl_moeb, coe_coe, coe_int_neg, neg_smul]
+  simp only [coe_gLPos_neg, sl_moeb, coe_coe, coe_int_neg, neg_smul]
 #align upper_half_plane.SL_neg_smul UpperHalfPlane.SL_neg_smul
 
 theorem c_mul_im_sq_le_normSq_denom (z : ℍ) (g : SL(2, ℝ)) :
@@ -374,9 +374,9 @@ theorem c_mul_im_sq_le_normSq_denom (z : ℍ) (g : SL(2, ℝ)) :
 
 theorem SpecialLinearGroup.im_smul_eq_div_normSq : (g • z).im = z.im / Complex.normSq (denom g z) :=
   by
-  convert im_smul_eq_div_norm_sq g z
-  simp only [coe_coe, general_linear_group.coe_det_apply, coe_GL_pos_coe_GL_coe_matrix,
-    Int.coe_castRingHom, (g : SL(2, ℝ)).Prop, one_mul]
+  convert im_smul_eq_div_normSq g z
+  simp only [coe_coe, GeneralLinearGroup.coe_det_apply, coe_gLPos_coe_GL_coe_matrix,
+    Int.coe_castRingHom, (g : SL(2, ℝ)).prop, one_mul]
 #align upper_half_plane.special_linear_group.im_smul_eq_div_norm_sq UpperHalfPlane.SpecialLinearGroup.im_smul_eq_div_normSq
 
 theorem denom_apply (g : SL(2, ℤ)) (z : ℍ) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.transfer
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ variable (R S T : leftTransversals (H : Set G)) [FiniteIndex H]
 noncomputable def diff : A :=
   let α := MemLeftTransversals.toEquiv S.2
   let β := MemLeftTransversals.toEquiv T.2
-  (@Finset.univ (G ⧸ H) H.fintypeQuotientOfFiniteIndex).Prod fun q =>
+  (@Finset.univ (G ⧸ H) H.fintypeQuotientOfFiniteIndex).prod fun q =>
     ϕ
       ⟨(α q)⁻¹ * β q,
         QuotientGroup.leftRel_apply.mp <|
@@ -133,13 +133,13 @@ theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
   classical
     letI := H.fintype_quotient_of_finite_index
     calc
-      transfer ϕ g = ∏ q : G ⧸ H, _ := transfer_def ϕ (transfer_transversal H g) g
-      _ = _ := ((quotient_equiv_sigma_zmod H g).symm.prod_comp _).symm
+      transfer ϕ g = ∏ q : G ⧸ H, _ := transfer_def ϕ (transferTransversal H g) g
+      _ = _ := ((quotientEquivSigmaZmod H g).symm.prod_comp _).symm
       _ = _ := Finset.prod_sigma _ _ _
       _ = _ := Fintype.prod_congr _ _ fun q => _
       
-    simp only [quotient_equiv_sigma_zmod_symm_apply, transfer_transversal_apply',
-      transfer_transversal_apply'']
+    simp only [quotientEquivSigmaZmod_symm_apply, transferTransversal_apply',
+      transferTransversal_apply'']
     rw [Fintype.prod_eq_single (0 : ZMod (Function.minimalPeriod ((· • ·) g) q.out')) fun k hk => _]
     · simp only [if_pos, ZMod.cast_zero, zpow_zero, one_mul, mul_assoc]
     · simp only [if_neg hk, inv_mul_self]
@@ -153,20 +153,20 @@ theorem transfer_eq_pow_aux (g : G)
   by_cases hH : H.index = 0
   · rw [hH, pow_zero]
     exact H.one_mem
-  letI := fintype_of_index_ne_zero hH
+  letI := fintypeOfIndexNeZero hH
   classical
     replace key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g ^ k ∈ H := fun k g₀ hk =>
-      (_root_.congr_arg (· ∈ H) (key k g₀ hk)).mp hk
+      (congr_arg (· ∈ H) (key k g₀ hk)).mp hk
     replace key : ∀ q : G ⧸ H, g ^ Function.minimalPeriod ((· • ·) g) q ∈ H := fun q =>
       key (Function.minimalPeriod ((· • ·) g) q) q.out'
         (QuotientGroup.out'_conj_pow_minimalPeriod_mem H g q)
-    let f : Quotient (orbit_rel (zpowers g) (G ⧸ H)) → zpowers g := fun q =>
+    let f : Quotient (orbitRel (zpowers g) (G ⧸ H)) → zpowers g := fun q =>
       (⟨g, mem_zpowers g⟩ : zpowers g) ^ Function.minimalPeriod ((· • ·) g) q.out'
     have hf : ∀ q, f q ∈ H.subgroup_of (zpowers g) := fun q => key q.out'
     replace key :=
       Subgroup.prod_mem (H.subgroup_of (zpowers g)) fun q (hq : q ∈ Finset.univ) => hf q
-    simpa only [minimal_period_eq_card, Finset.prod_pow_eq_pow_sum, Fintype.card_sigma,
-      Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), index_eq_card] using key
+    simpa only [minimalPeriod_eq_card, Finset.prod_pow_eq_pow_sum, Fintype.card_sigma,
+      Fintype.card_congr (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)), index_eq_card] using key
 #align monoid_hom.transfer_eq_pow_aux MonoidHom.transfer_eq_pow_aux
 
 theorem transfer_eq_pow [FiniteIndex H] (g : G)
@@ -175,13 +175,12 @@ theorem transfer_eq_pow [FiniteIndex H] (g : G)
   classical
     letI := H.fintype_quotient_of_finite_index
     change ∀ (k g₀) (hk : g₀⁻¹ * g ^ k * g₀ ∈ H), ↑(⟨g₀⁻¹ * g ^ k * g₀, hk⟩ : H) = g ^ k at key
-    rw [transfer_eq_prod_quotient_orbit_rel_zpowers_quot, ← Finset.prod_to_list, List.prod_map_hom]
+    rw [transfer_eq_prod_quotient_orbitRel_zpowers_quot, ← Finset.prod_to_list, List.prod_map_hom]
     refine' congr_arg ϕ (Subtype.coe_injective _)
-    rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).val_pow_eq_pow_val,
-      (zpowers g).coe_mk, index_eq_card,
-      Fintype.card_congr (self_equiv_sigma_orbits (zpowers g) (G ⧸ H)), Fintype.card_sigma, ←
-      Finset.prod_pow_eq_pow_sum, ← Finset.prod_to_list]
-    simp only [coe_list_prod, List.map_map, ← minimal_period_eq_card]
+    rw [H.coe_mk, ← (zpowers g).coe_mk g (mem_zpowers g), ← (zpowers g).coe_pow, (zpowers g).coe_mk,
+      index_eq_card, Fintype.card_congr (selfEquivSigmaOrbits (zpowers g) (G ⧸ H)),
+      Fintype.card_sigma, ← Finset.prod_pow_eq_pow_sum, ← Finset.prod_to_list]
+    simp only [val_list_prod, List.map_map, ← minimalPeriod_eq_card]
     congr 2
     funext
     apply key
@@ -253,17 +252,17 @@ theorem transferSylow_restrict_eq_pow :
 /-- Burnside's normal p-complement theorem: If `N(P) ≤ C(P)`, then `P` has a normal complement. -/
 theorem ker_transferSylow_isComplement' : IsComplement' (transferSylow P hP).ker P :=
   by
-  have hf : Function.Bijective ((transfer_sylow P hP).restrict (P : Subgroup G)) :=
-    (transfer_sylow_restrict_eq_pow P hP).symm ▸
+  have hf : Function.Bijective ((transferSylow P hP).restrict (P : Subgroup G)) :=
+    (transferSylow_restrict_eq_pow P hP).symm ▸
       (P.2.powEquiv'
           (not_dvd_index_sylow P
-            (mt index_eq_zero_of_relindex_eq_zero index_ne_zero_of_finite))).Bijective
+            (mt index_eq_zero_of_relindex_eq_zero index_ne_zero_of_finite))).bijective
   rw [Function.Bijective, ← range_top_iff_surjective, restrict_range] at hf
   have := range_top_iff_surjective.mp (top_le_iff.mp (hf.2.ge.trans (map_le_range _ P)))
   rw [← (comap_injective this).eq_iff, comap_top, comap_map_eq, sup_comm, SetLike.ext'_iff,
     normal_mul, ← ker_eq_bot_iff, ← (map_injective (P : Subgroup G).subtype_injective).eq_iff,
-    ker_restrict, subgroup_of_map_subtype, Subgroup.map_bot, coe_top] at hf
-  exact is_complement'_of_disjoint_and_mul_eq_univ (disjoint_iff.2 hf.1) hf.2
+    ker_restrict, subgroupOf_map_subtype, Subgroup.map_bot, coe_top] at hf
+  exact isComplement'_of_disjoint_and_mul_eq_univ (disjoint_iff.2 hf.1) hf.2
 #align monoid_hom.ker_transfer_sylow_is_complement' MonoidHom.ker_transferSylow_isComplement'
 
 theorem not_dvd_card_ker_transferSylow : ¬p ∣ Nat.card (transferSylow P hP).ker :=

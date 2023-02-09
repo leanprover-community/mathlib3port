@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.induction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ option `trace.eliminate_hyp` is `true`.
 -/
 unsafe def trace_state_eliminate_hyp {α} [has_to_format α] (msg : Thunk α) : tactic Unit := do
   let state ← read
-  trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt StateM, "\n-----"]
+  trace_eliminate_hyp <| format.join [to_fmt (msg ()), "\n-----\n", to_fmt state, "\n-----"]
 #align tactic.eliminate.trace_state_eliminate_hyp tactic.eliminate.trace_state_eliminate_hyp
 
 /-!
@@ -226,7 +226,7 @@ unsafe def get_index_occurrences (num_params : ℕ) (ret_type : expr) : tactic (
             ret_arg_consts occ_map fun c occ_map => do
                 let ret_arg_type ← infer_type ret_arg
                 let eq ← index_occurrence_type_match c ret_arg_type
-                pure <| if Eq then occ_map c i else occ_map)
+                pure <| if eq then occ_map c i else occ_map)
       mk_rb_map
 #align tactic.eliminate.get_index_occurrences tactic.eliminate.get_index_occurrences
 
@@ -287,7 +287,7 @@ unsafe def get_constructor_info (iname : Name) (num_params : ℕ) (c : Name) :
   let decl ← env.get c
   let args ← get_constructor_argument_info iname num_params decl.type
   let non_param_args := args.drop num_params
-  let rec_args := non_param_args.filterₓ fun ainfo => ainfo.is_recursive
+  let rec_args := non_param_args.filter fun ainfo => ainfo.is_recursive
   pure {
         cname := decl
         non_param_args
@@ -483,7 +483,7 @@ unsafe def constructor_intros (generate_induction_hyps : Bool) (cinfo : construc
   let args := (arg_hyps.map expr.local_pp_name).zip args
   let tt ← pure generate_induction_hyps |
     pure (args, [])
-  let rec_args := args.filterₓ fun x => x.2.is_recursive
+  let rec_args := args.filter fun x => x.2.is_recursive
   let ih_hyps ← intron_fresh cinfo.num_rec_args
   let ihs := (ih_hyps.map expr.local_pp_name).zip rec_args
   pure (args, ihs)
@@ -1038,7 +1038,7 @@ unsafe def set_cases_tags (in_tag : Tag) (rs : List (Name × List expr)) : tacti
       [g] =>
       set_tag g in_tag
     | _ =>
-      let tgs : List (Name × List expr × expr) := rs (fun ⟨n, new_hyps⟩ g => ⟨n, new_hyps, g⟩) gs
+      let tgs : list (name × list expr × expr) := rs (fun ⟨n, new_hyps⟩ g => ⟨n, new_hyps, g⟩) gs
       tgs fun ⟨n, new_hyps, g⟩ =>
         with_enable_tags <|
           set_tag g <| (case_tag.from_tag_hyps (n :: in_tag) (new_hyps expr.local_uniq_name)).render

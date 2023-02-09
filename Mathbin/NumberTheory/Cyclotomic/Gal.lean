@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -90,7 +90,7 @@ variable [CommRing L] [IsDomain L] (hμ : IsPrimitiveRoot μ n) [Algebra K L]
 
 /-- Cyclotomic extensions are abelian. -/
 noncomputable def Aut.commGroup : CommGroup (L ≃ₐ[K] L) :=
-  ((zeta_spec n K L).autToPow_injective K).CommGroup _ (map_one _) (map_mul _) (map_inv _)
+  ((zeta_spec n K L).autToPow_injective K).commGroup _ (map_one _) (map_mul _) (map_inv _)
     (map_div _) (map_pow _) (map_zpow _)
 #align is_cyclotomic_extension.aut.comm_group IsCyclotomicExtension.Aut.commGroup
 
@@ -109,7 +109,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
     (zeta_spec n K L).autToPow
       K with
     invFun := fun t =>
-      (hζ.PowerBasis K).equivOfMinpoly ((hμ t).PowerBasis K)
+      (hζ.powerBasis K).equivOfMinpoly ((hμ t).powerBasis K)
         (by
           haveI := IsCyclotomicExtension.ne_zero' n K L
           simp only [IsPrimitiveRoot.powerBasis_gen]
@@ -127,7 +127,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
     right_inv := fun x => by
       simp only [MonoidHom.toFun_eq_coe]
       generalize_proofs _ h
-      have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).PowerBasis K) h)
+      have key := hζ.aut_to_pow_spec K ((hζ.power_basis K).equivOfMinpoly ((hμ x).powerBasis K) h)
       have := (hζ.power_basis K).equivOfMinpoly_gen ((hμ x).PowerBasis K) h
       rw [hζ.power_basis_gen K] at this
       rw [this, IsPrimitiveRoot.powerBasis_gen] at key
@@ -146,16 +146,16 @@ variable {L}
 
 /-- Maps `μ` to the `alg_equiv` that sends `is_cyclotomic_extension.zeta` to `μ`. -/
 noncomputable def fromZetaAut : L ≃ₐ[K] L :=
-  let hζ := (zeta_spec n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.Pos
+  let hζ := (zeta_spec n K L).eq_pow_of_pow_eq_one hμ.pow_eq_one n.pos
   (autEquivPow L h).symm <|
-    ZMod.unitOfCoprime hζ.some <|
-      ((zeta_spec n K L).pow_iff_coprime n.Pos hζ.some).mp <| hζ.choose_spec.choose_spec.symm ▸ hμ
+    ZMod.unitOfCoprime hζ.choose <|
+      ((zeta_spec n K L).pow_iff_coprime n.pos hζ.choose).mp <| hζ.choose_spec.choose_spec.symm ▸ hμ
 #align is_cyclotomic_extension.from_zeta_aut IsCyclotomicExtension.fromZetaAut
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([4]) } -/
 theorem fromZetaAut_spec : fromZetaAut hμ h (zeta n K L) = μ :=
   by
-  simp_rw [from_zeta_aut, aut_equiv_pow_symm_apply]
+  simp_rw [fromZetaAut, autEquivPow_symm_apply]
   generalize_proofs hζ h _ hμ _
   rw [← hζ.power_basis_gen K]
   rw [PowerBasis.equivOfMinpoly_gen, hμ.power_basis_gen K]

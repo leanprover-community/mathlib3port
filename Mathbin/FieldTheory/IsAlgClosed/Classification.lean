@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.is_alg_closed.classification
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -119,8 +119,8 @@ isomorphic. -/
 def equivOfTranscendenceBasis [IsAlgClosed K] [IsAlgClosed L] (e : ι ≃ κ)
     (hv : IsTranscendenceBasis R v) (hw : IsTranscendenceBasis R w) : K ≃+* L :=
   by
-  letI := is_alg_closure_of_transcendence_basis v hv <;>
-      letI := is_alg_closure_of_transcendence_basis w hw <;>
+  letI := isAlgClosureOfTranscendenceBasis v hv <;>
+      letI := isAlgClosureOfTranscendenceBasis w hw <;>
     have e : Algebra.adjoin R (Set.range v) ≃+* Algebra.adjoin R (Set.range w)
   · refine' hv.1.aevalEquiv.symm.toRingEquiv.trans _
     refine'
@@ -150,7 +150,7 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) :
     (#K) ≤ max (max (#R) (#ι)) ℵ₀ :=
   calc
     (#K) ≤ max (#Algebra.adjoin R (Set.range v)) ℵ₀ :=
-      letI := is_alg_closure_of_transcendence_basis v hv
+      letI := isAlgClosureOfTranscendenceBasis v hv
       Algebra.IsAlgebraic.cardinal_mk_le_max _ _ IsAlgClosure.algebraic
     _ = max (#MvPolynomial ι R) ℵ₀ := by rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
     _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := max_le_max MvPolynomial.cardinal_mk_le_max le_rfl
@@ -177,7 +177,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
         · exact le_trans hR this
         · exact le_max_of_le_right this
       )
-    (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
+    (mk_le_of_injective (show Function.Injective v from hv.1.injective))
 #align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt
 
 end Cardinal
@@ -200,11 +200,11 @@ theorem ringEquivOfCardinalEqOfCharZero [CharZero K] [CharZero L] (hK : ℵ₀ <
     t ht
   have : (#s) = (#t) :=
     by
-    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (le_of_eq mk_int) hK, ←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht (le_of_eq mk_int), hKL]
+    rw [← cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ hs (le_of_eq mk_int) hK, ←
+      cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ ht (le_of_eq mk_int), hKL]
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
-  exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
+  exact ⟨equivOfTranscendenceBasis _ _ e hs ht⟩
 #align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_zero IsAlgClosed.ringEquivOfCardinalEqOfCharZero
 
 private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [CharP K p] [CharP L p]
@@ -222,15 +222,14 @@ private theorem ring_equiv_of_cardinal_eq_of_char_p (p : ℕ) [Fact p.Prime] [Ch
   have : (#s) = (#t) :=
     by
     rw [←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ hs (lt_aleph_0_of_finite (ZMod p)).le
+      cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ hs (lt_aleph0_of_finite (ZMod p)).le
         hK,
       ←
-      cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt _ ht
-        (lt_aleph_0_of_finite (ZMod p)).le,
+      cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt _ ht (lt_aleph0_of_finite (ZMod p)).le,
       hKL]
     rwa [← hKL]
   cases' Cardinal.eq.1 this with e
-  exact ⟨equiv_of_transcendence_basis _ _ e hs ht⟩
+  exact ⟨equivOfTranscendenceBasis _ _ e hs ht⟩
 #align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p is_alg_closed.ring_equiv_of_cardinal_eq_of_char_p
 
 /-- Two uncountable algebraically closed fields are isomorphic
@@ -241,12 +240,12 @@ theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : �
   apply Classical.choice
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
   · haveI : Fact p.prime := ⟨hp⟩
-    exact ⟨ring_equiv_of_cardinal_eq_of_char_p p hK hKL⟩
+    exact ⟨ringEquivOfCardinalEqOfCharP p hK hKL⟩
   · rw [hp] at *
     skip
     letI : CharZero K := CharP.charP_to_charZero K
     letI : CharZero L := CharP.charP_to_charZero L
-    exact ⟨ring_equiv_of_cardinal_eq_of_char_zero hK hKL⟩
+    exact ⟨ringEquivOfCardinalEqOfCharZero hK hKL⟩
 #align is_alg_closed.ring_equiv_of_cardinal_eq_of_char_eq IsAlgClosed.ringEquivOfCardinalEqOfCharEq
 
 end IsAlgClosed

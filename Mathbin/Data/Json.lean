@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.json
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ unsafe instance {α} [json_serializable α] : non_null_json_serializable (Rbmap 
           let none ← pure (m x.1) |
             exception fun _ => f! "duplicate key {x.1}"
           pure (m x.1 x.2))
-        (mkRbmap _ _)
+        (mk_rbmap _ _)
 
 /-! ### Basic coercions -/
 
@@ -147,7 +147,7 @@ unsafe instance : non_null_json_serializable ℕ
     where
   to_json n := to_json (n : ℤ)
   of_json j := do
-    let Int.ofNat n ← of_json ℤ j |
+    let int.of_nat n ← of_json ℤ j |
       exception fun _ => f!"must be non-negative"
     pure n
 
@@ -164,7 +164,7 @@ unsafe instance {α : Type} [json_serializable α] (p : α → Prop) [DecidableP
   to_json x := to_json (x : α)
   of_json j := do
     let i ← of_json α j
-    if h : p i then pure (Subtype.mk i h) else exception fun _ => f!"condition does not hold"
+    if h : p i then pure (subtype.mk i h) else exception fun _ => f!"condition does not hold"
 
 unsafe instance {α : Type} [non_null_json_serializable α] (p : α → Prop) [DecidablePred p] :
     non_null_json_serializable (Subtype p) where
@@ -174,7 +174,7 @@ unsafe instance {α} [non_null_json_serializable α] : json_serializable (Option
     where
   to_json := Option.elim' json.null to_json
   of_json j := do
-    of_json PUnit j >> pure none <|> some <$> of_json α j
+    of_json punit j >> pure none <|> some <$> of_json α j
 
 open Tactic Expr
 
@@ -194,7 +194,7 @@ unsafe def json_serializable.field_starter (j : json) : exceptional (List (Strin
 /-- Check a field exists and is unique -/
 unsafe def json_serializable.field_get (l : List (String × json)) (s : String) :
     exceptional (Option json × List (String × json)) :=
-  let (p, n) := l.partitionₓ fun x => Prod.fst x = s
+  let (p, n) := l.partition fun x => Prod.fst x = s
   match p with
   | [] => pure (none, n)
   | [x] => pure (some x.2, n)
@@ -315,7 +315,7 @@ unsafe def non_null_json_serializable_handler : derive_handler :=
       ←-- the forward direction
           get_local
           `x
-    let (projs : List (Option expr)) ←
+    let (projs : list (option expr)) ←
       fields.mapM fun ⟨f, a⟩ => do
           let x_e := a.app x
           let t ← infer_type x_e

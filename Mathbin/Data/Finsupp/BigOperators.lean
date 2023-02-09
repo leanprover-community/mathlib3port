@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.finsupp.big_operators
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddMonoid.{u2} M] (l : List.{max u2 u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2))), HasSubset.Subset.{u1} (Finset.{u1} ι) (Finset.instHasSubsetFinset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2) (List.sum.{max u1 u2} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2)) (Finsupp.add.{u1, u2} ι M (AddMonoid.toAddZeroClass.{u2} M _inst_2)) (Finsupp.zero.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2)) l)) (List.foldr.{max u2 u1, u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2)) (Finset.{u1} ι) (Function.comp.{succ (max u2 u1), succ u1, succ u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2)) (Finset.{u1} ι) ((Finset.{u1} ι) -> (Finset.{u1} ι)) (fun (x._@.Mathlib.Data.Finsupp.BigOperators._hyg.45 : Finset.{u1} ι) (x._@.Mathlib.Data.Finsupp.BigOperators._hyg.47 : Finset.{u1} ι) => HasSup.sup.{u1} (Finset.{u1} ι) (SemilatticeSup.toHasSup.{u1} (Finset.{u1} ι) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} ι) (Finset.instLatticeFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_1 a b)))) x._@.Mathlib.Data.Finsupp.BigOperators._hyg.45 x._@.Mathlib.Data.Finsupp.BigOperators._hyg.47) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M _inst_2))) (EmptyCollection.emptyCollection.{u1} (Finset.{u1} ι) (Finset.instEmptyCollectionFinset.{u1} ι)) l)
 Case conversion may be inaccurate. Consider using '#align list.support_sum_subset List.support_sum_subsetₓ'. -/
 theorem List.support_sum_subset [AddMonoid M] (l : List (ι →₀ M)) :
-    l.Sum.support ⊆ l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ :=
+    l.sum.support ⊆ l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ :=
   by
   induction' l with hd tl IH
   · simp
@@ -64,7 +64,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddCommMonoid.{u2} M] (s : Multiset.{max u2 u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))), HasSubset.Subset.{u1} (Finset.{u1} ι) (Finset.instHasSubsetFinset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Multiset.sum.{max u1 u2} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finsupp.addCommMonoid.{u1, u2} ι M _inst_2) s)) (Multiset.sup.{u1} (Finset.{u1} ι) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} ι) (Finset.instLatticeFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_1 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} ι) (Multiset.map.{max u2 u1, u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) s))
 Case conversion may be inaccurate. Consider using '#align multiset.support_sum_subset Multiset.support_sum_subsetₓ'. -/
 theorem Multiset.support_sum_subset [AddCommMonoid M] (s : Multiset (ι →₀ M)) :
-    s.Sum.support ⊆ (s.map Finsupp.support).sup :=
+    s.sum.support ⊆ (s.map Finsupp.support).sup :=
   by
   induction s using Quot.inductionOn
   simpa using List.support_sum_subset _
@@ -77,7 +77,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddCommMonoid.{u2} M] (s : Finset.{max u2 u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))), HasSubset.Subset.{u1} (Finset.{u1} ι) (Finset.instHasSubsetFinset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Finset.sum.{max u1 u2, max u1 u2} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finsupp.addCommMonoid.{u1, u2} ι M _inst_2) s (id.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))))) (Finset.sup.{u1, max u1 u2} (Finset.{u1} ι) (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} ι) (Finset.instLatticeFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_1 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} ι) s (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))))
 Case conversion may be inaccurate. Consider using '#align finset.support_sum_subset Finset.support_sum_subsetₓ'. -/
 theorem Finset.support_sum_subset [AddCommMonoid M] (s : Finset (ι →₀ M)) :
-    (s.Sum id).support ⊆ Finset.sup s Finsupp.support := by
+    (s.sum id).support ⊆ Finset.sup s Finsupp.support := by
   classical convert Multiset.support_sum_subset s.1 <;> simp
 #align finset.support_sum_subset Finset.support_sum_subset
 
@@ -133,7 +133,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.support_sum_eq List.support_sum_eqₓ'. -/
 theorem List.support_sum_eq [AddMonoid M] (l : List (ι →₀ M))
     (hl : l.Pairwise (Disjoint on Finsupp.support)) :
-    l.Sum.support = l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ :=
+    l.sum.support = l.foldr ((· ⊔ ·) ∘ Finsupp.support) ∅ :=
   by
   induction' l with hd tl IH
   · simp
@@ -157,7 +157,7 @@ but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : DecidableEq.{succ u1} ι] [_inst_2 : AddCommMonoid.{u2} M] (s : Multiset.{max u2 u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))), (Multiset.Pairwise.{max u2 u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Function.onFun.{succ (max u2 u1), succ u1, 1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finset.{u1} ι) Prop (Disjoint.{u1} (Finset.{u1} ι) (Finset.partialOrder.{u1} ι) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} ι)) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)))) s) -> (Eq.{succ u1} (Finset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2)) (Multiset.sum.{max u1 u2} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finsupp.addCommMonoid.{u1, u2} ι M _inst_2) s)) (Multiset.sup.{u1} (Finset.{u1} ι) (Lattice.toSemilatticeSup.{u1} (Finset.{u1} ι) (Finset.instLatticeFinset.{u1} ι (fun (a : ι) (b : ι) => _inst_1 a b))) (Finset.instOrderBotFinsetToLEToPreorderPartialOrder.{u1} ι) (Multiset.map.{max u2 u1, u1} (Finsupp.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) (Finset.{u1} ι) (Finsupp.support.{u1, u2} ι M (AddMonoid.toZero.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_2))) s)))
 Case conversion may be inaccurate. Consider using '#align multiset.support_sum_eq Multiset.support_sum_eqₓ'. -/
 theorem Multiset.support_sum_eq [AddCommMonoid M] (s : Multiset (ι →₀ M))
-    (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.Sum.support = (s.map Finsupp.support).sup :=
+    (hs : s.Pairwise (Disjoint on Finsupp.support)) : s.sum.support = (s.map Finsupp.support).sup :=
   by
   induction s using Quot.inductionOn
   obtain ⟨l, hl, hd⟩ := hs
@@ -176,7 +176,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align finset.support_sum_eq Finset.support_sum_eqₓ'. -/
 theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
     (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) :
-    (s.Sum id).support = Finset.sup s Finsupp.support := by
+    (s.sum id).support = Finset.sup s Finsupp.support := by
   classical
     convert Multiset.support_sum_eq s.1 _
     · exact (Finset.sum_val _).symm

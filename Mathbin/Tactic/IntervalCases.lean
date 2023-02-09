@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interval_cases
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ unsafe def combine_upper_bounds : Option expr → Option expr → tactic (Option
   | some prf, none => return <| some prf
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
-    Option.some <$> to_expr ``(lt_min $(prf₁) $(prf₂))
+    option.some <$> to_expr ``(lt_min $(prf₁) $(prf₂))
 #align tactic.interval_cases.combine_upper_bounds tactic.interval_cases.combine_upper_bounds
 
 /-- Combine two lower bounds. -/
@@ -164,7 +164,7 @@ unsafe def combine_lower_bounds : Option expr → Option expr → tactic (Option
   | some prf, none => return <| some prf
   | none, some prf => return <| some prf
   | some prf₁, some prf₂ => do
-    Option.some <$> to_expr ``(max_le $(prf₂) $(prf₁))
+    option.some <$> to_expr ``(max_le $(prf₂) $(prf₁))
 #align tactic.interval_cases.combine_lower_bounds tactic.interval_cases.combine_lower_bounds
 
 /-- Inspect a given expression, using it to update a set of upper and lower bounds on `n`. -/
@@ -300,12 +300,12 @@ unsafe def interval_cases (n : parse texpr ?)
     (lname : parse (tk "with" *> ident)?) : tactic Unit := do
   if h : n then do
       guard bounds <|> fail "Do not use the `using` keyword if specifying the variable explicitly."
-      let n ← to_expr (Option.get h)
+      let n ← to_expr (option.get h)
       let (hl, hu) ← get_bounds n
       tactic.interval_cases_using hl hu lname
     else
       if h' : bounds then do
-        let [hl, hu] ← [(Option.get h').1, (Option.get h').2].mapM get_local
+        let [hl, hu] ← [(option.get h').1, (option.get h').2].mapM get_local
         tactic.interval_cases_using hl hu lname
       else
         fail

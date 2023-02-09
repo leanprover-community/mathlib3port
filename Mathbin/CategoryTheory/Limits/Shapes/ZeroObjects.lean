@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.zero_objects
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -107,12 +107,12 @@ protected def isTerminal (hX : IsZero X) : IsTerminal X :=
 
 /-- The (unique) isomorphism between any initial object and the zero object. -/
 def isoIsInitial (hX : IsZero X) (hY : IsInitial Y) : X ≅ Y :=
-  hX.IsInitial.uniqueUpToIso hY
+  hX.isInitial.uniqueUpToIso hY
 #align category_theory.limits.is_zero.iso_is_initial CategoryTheory.Limits.IsZero.isoIsInitial
 
 /-- The (unique) isomorphism between any terminal object and the zero object. -/
 def isoIsTerminal (hX : IsZero X) (hY : IsTerminal Y) : X ≅ Y :=
-  hX.IsTerminal.uniqueUpToIso hY
+  hX.isTerminal.uniqueUpToIso hY
 #align category_theory.limits.is_zero.iso_is_terminal CategoryTheory.Limits.IsZero.isoIsTerminal
 
 theorem of_iso (hY : IsZero Y) (e : X ≅ Y) : IsZero X :=
@@ -184,7 +184,7 @@ variable [HasZeroObject C]
 /-- Construct a `has_zero C` for a category with a zero object.
 This can not be a global instance as it will trigger for every `has_zero C` typeclass search.
 -/
-protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.some
+protected def HasZeroObject.hasZero : Zero C where zero := HasZeroObject.zero.choose
 #align category_theory.limits.has_zero_object.has_zero CategoryTheory.Limits.HasZeroObject.hasZero
 
 scoped[ZeroObject] attribute [instance] CategoryTheory.Limits.HasZeroObject.hasZero
@@ -213,15 +213,15 @@ theorem IsZero.hasZeroObject {X : C} (hX : IsZero X) : HasZeroObject C :=
 
 /-- Every zero object is isomorphic to *the* zero object. -/
 def IsZero.isoZero [HasZeroObject C] {X : C} (hX : IsZero X) : X ≅ 0 :=
-  hX.Iso (isZero_zero C)
+  hX.iso (isZero_zero C)
 #align category_theory.limits.is_zero.iso_zero CategoryTheory.Limits.IsZero.isoZero
 
 theorem IsZero.obj [HasZeroObject D] {F : C ⥤ D} (hF : IsZero F) (X : C) : IsZero (F.obj X) :=
   by
   let G : C ⥤ D := (CategoryTheory.Functor.const C).obj 0
-  have hG : is_zero G := functor.is_zero _ fun X => is_zero_zero _
+  have hG : IsZero G := Functor.isZero _ fun X => isZero_zero _
   let e : F ≅ G := hF.iso hG
-  exact (is_zero_zero _).of_iso (e.app X)
+  exact (isZero_zero _).of_iso (e.app X)
 #align category_theory.limits.is_zero.obj CategoryTheory.Limits.IsZero.obj
 
 namespace HasZeroObject
@@ -259,17 +259,17 @@ instance {X : C} (f : 0 ⟶ X) : Mono f where right_cancellation Z g h w := by e
 instance {X : C} (f : X ⟶ 0) : Epi f where left_cancellation Z g h w := by ext
 
 instance zero_to_zero_isIso (f : (0 : C) ⟶ 0) : IsIso f := by
-  convert show is_iso (𝟙 (0 : C)) by infer_instance
+  convert show IsIso (𝟙 (0 : C)) by infer_instance
 #align category_theory.limits.has_zero_object.zero_to_zero_is_iso CategoryTheory.Limits.HasZeroObject.zero_to_zero_isIso
 
 /-- A zero object is in particular initial. -/
 def zeroIsInitial : IsInitial (0 : C) :=
-  (isZero_zero C).IsInitial
+  (isZero_zero C).isInitial
 #align category_theory.limits.has_zero_object.zero_is_initial CategoryTheory.Limits.HasZeroObject.zeroIsInitial
 
 /-- A zero object is in particular terminal. -/
 def zeroIsTerminal : IsTerminal (0 : C) :=
-  (isZero_zero C).IsTerminal
+  (isZero_zero C).isTerminal
 #align category_theory.limits.has_zero_object.zero_is_terminal CategoryTheory.Limits.HasZeroObject.zeroIsTerminal
 
 /-- A zero object is in particular initial. -/

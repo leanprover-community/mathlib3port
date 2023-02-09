@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.group.ulift
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ def ULift.MulEquiv.ulift [Mul α] : ULift α ≃* α :=
 #print ULift.semigroup /-
 @[to_additive]
 instance semigroup [Semigroup α] : Semigroup (ULift α) :=
-  ULift.MulEquiv.ulift.Injective.Semigroup _ fun x y => rfl
+  ULift.MulEquiv.ulift.injective.semigroup _ fun x y => rfl
 #align ulift.semigroup ULift.semigroup
 #align ulift.add_semigroup ULift.addSemigroup
 -/
@@ -164,7 +164,7 @@ instance semigroup [Semigroup α] : Semigroup (ULift α) :=
 #print ULift.commSemigroup /-
 @[to_additive]
 instance commSemigroup [CommSemigroup α] : CommSemigroup (ULift α) :=
-  Equiv.ulift.Injective.CommSemigroup _ fun x y => rfl
+  Equiv.ulift.injective.commSemigroup _ fun x y => rfl
 #align ulift.comm_semigroup ULift.commSemigroup
 #align ulift.add_comm_semigroup ULift.addCommSemigroup
 -/
@@ -172,21 +172,21 @@ instance commSemigroup [CommSemigroup α] : CommSemigroup (ULift α) :=
 #print ULift.mulOneClass /-
 @[to_additive]
 instance mulOneClass [MulOneClass α] : MulOneClass (ULift α) :=
-  Equiv.ulift.Injective.MulOneClass _ rfl fun x y => rfl
+  Equiv.ulift.injective.mulOneClass _ rfl fun x y => rfl
 #align ulift.mul_one_class ULift.mulOneClass
 #align ulift.add_zero_class ULift.addZeroClass
 -/
 
 #print ULift.mulZeroOneClass /-
 instance mulZeroOneClass [MulZeroOneClass α] : MulZeroOneClass (ULift α) :=
-  Equiv.ulift.Injective.MulZeroOneClass _ rfl rfl fun x y => rfl
+  Equiv.ulift.injective.mulZeroOneClass _ rfl rfl fun x y => rfl
 #align ulift.mul_zero_one_class ULift.mulZeroOneClass
 -/
 
 #print ULift.monoid /-
 @[to_additive]
 instance monoid [Monoid α] : Monoid (ULift α) :=
-  Equiv.ulift.Injective.Monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.monoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.monoid ULift.monoid
 #align ulift.add_monoid ULift.addMonoid
 -/
@@ -214,27 +214,27 @@ theorem nat_cast_down [AddMonoidWithOne α] (n : ℕ) : (n : ULift α).down = n 
 #print ULift.commMonoid /-
 @[to_additive]
 instance commMonoid [CommMonoid α] : CommMonoid (ULift α) :=
-  Equiv.ulift.Injective.CommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.commMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_monoid ULift.commMonoid
 #align ulift.add_comm_monoid ULift.addCommMonoid
 -/
 
 #print ULift.monoidWithZero /-
 instance monoidWithZero [MonoidWithZero α] : MonoidWithZero (ULift α) :=
-  Equiv.ulift.Injective.MonoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.monoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.monoid_with_zero ULift.monoidWithZero
 -/
 
 #print ULift.commMonoidWithZero /-
 instance commMonoidWithZero [CommMonoidWithZero α] : CommMonoidWithZero (ULift α) :=
-  Equiv.ulift.Injective.CommMonoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.commMonoidWithZero _ rfl rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_monoid_with_zero ULift.commMonoidWithZero
 -/
 
 #print ULift.divInvMonoid /-
 @[to_additive]
 instance divInvMonoid [DivInvMonoid α] : DivInvMonoid (ULift α) :=
-  Equiv.ulift.Injective.DivInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Equiv.ulift.injective.divInvMonoid _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.div_inv_monoid ULift.divInvMonoid
 #align ulift.sub_neg_add_monoid ULift.subNegAddMonoid
@@ -243,7 +243,7 @@ instance divInvMonoid [DivInvMonoid α] : DivInvMonoid (ULift α) :=
 #print ULift.group /-
 @[to_additive]
 instance group [Group α] : Group (ULift α) :=
-  Equiv.ulift.Injective.Group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Equiv.ulift.injective.group _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.group ULift.group
 #align ulift.add_group ULift.addGroup
@@ -273,7 +273,7 @@ theorem int_cast_down [AddGroupWithOne α] (n : ℤ) : (n : ULift α).down = n :
 #print ULift.commGroup /-
 @[to_additive]
 instance commGroup [CommGroup α] : CommGroup (ULift α) :=
-  Equiv.ulift.Injective.CommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Equiv.ulift.injective.commGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_group ULift.commGroup
 #align ulift.add_comm_group ULift.addCommGroup
@@ -281,14 +281,14 @@ instance commGroup [CommGroup α] : CommGroup (ULift α) :=
 
 #print ULift.groupWithZero /-
 instance groupWithZero [GroupWithZero α] : GroupWithZero (ULift α) :=
-  Equiv.ulift.Injective.GroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Equiv.ulift.injective.groupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.group_with_zero ULift.groupWithZero
 -/
 
 #print ULift.commGroupWithZero /-
 instance commGroupWithZero [CommGroupWithZero α] : CommGroupWithZero (ULift α) :=
-  Equiv.ulift.Injective.CommGroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
+  Equiv.ulift.injective.commGroupWithZero _ rfl rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.comm_group_with_zero ULift.commGroupWithZero
 -/
@@ -296,7 +296,7 @@ instance commGroupWithZero [CommGroupWithZero α] : CommGroupWithZero (ULift α)
 #print ULift.leftCancelSemigroup /-
 @[to_additive AddLeftCancelSemigroup]
 instance leftCancelSemigroup [LeftCancelSemigroup α] : LeftCancelSemigroup (ULift α) :=
-  Equiv.ulift.Injective.LeftCancelSemigroup _ fun _ _ => rfl
+  Equiv.ulift.injective.leftCancelSemigroup _ fun _ _ => rfl
 #align ulift.left_cancel_semigroup ULift.leftCancelSemigroup
 #align ulift.add_left_cancel_semigroup ULift.addLeftCancelSemigroup
 -/
@@ -304,7 +304,7 @@ instance leftCancelSemigroup [LeftCancelSemigroup α] : LeftCancelSemigroup (ULi
 #print ULift.rightCancelSemigroup /-
 @[to_additive AddRightCancelSemigroup]
 instance rightCancelSemigroup [RightCancelSemigroup α] : RightCancelSemigroup (ULift α) :=
-  Equiv.ulift.Injective.RightCancelSemigroup _ fun _ _ => rfl
+  Equiv.ulift.injective.rightCancelSemigroup _ fun _ _ => rfl
 #align ulift.right_cancel_semigroup ULift.rightCancelSemigroup
 #align ulift.add_right_cancel_semigroup ULift.addRightCancelSemigroup
 -/
@@ -312,7 +312,7 @@ instance rightCancelSemigroup [RightCancelSemigroup α] : RightCancelSemigroup (
 #print ULift.leftCancelMonoid /-
 @[to_additive AddLeftCancelMonoid]
 instance leftCancelMonoid [LeftCancelMonoid α] : LeftCancelMonoid (ULift α) :=
-  Equiv.ulift.Injective.LeftCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.leftCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.left_cancel_monoid ULift.leftCancelMonoid
 #align ulift.add_left_cancel_monoid ULift.addLeftCancelMonoid
 -/
@@ -320,7 +320,7 @@ instance leftCancelMonoid [LeftCancelMonoid α] : LeftCancelMonoid (ULift α) :=
 #print ULift.rightCancelMonoid /-
 @[to_additive AddRightCancelMonoid]
 instance rightCancelMonoid [RightCancelMonoid α] : RightCancelMonoid (ULift α) :=
-  Equiv.ulift.Injective.RightCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.rightCancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.right_cancel_monoid ULift.rightCancelMonoid
 #align ulift.add_right_cancel_monoid ULift.addRightCancelMonoid
 -/
@@ -328,7 +328,7 @@ instance rightCancelMonoid [RightCancelMonoid α] : RightCancelMonoid (ULift α)
 #print ULift.cancelMonoid /-
 @[to_additive AddCancelMonoid]
 instance cancelMonoid [CancelMonoid α] : CancelMonoid (ULift α) :=
-  Equiv.ulift.Injective.CancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.cancelMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.cancel_monoid ULift.cancelMonoid
 #align ulift.add_cancel_monoid ULift.addCancelMonoid
 -/
@@ -336,14 +336,14 @@ instance cancelMonoid [CancelMonoid α] : CancelMonoid (ULift α) :=
 #print ULift.cancelCommMonoid /-
 @[to_additive AddCancelMonoid]
 instance cancelCommMonoid [CancelCommMonoid α] : CancelCommMonoid (ULift α) :=
-  Equiv.ulift.Injective.CancelCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
+  Equiv.ulift.injective.cancelCommMonoid _ rfl (fun _ _ => rfl) fun _ _ => rfl
 #align ulift.cancel_comm_monoid ULift.cancelCommMonoid
 #align ulift.add_cancel_comm_monoid ULift.addCancelCommMonoid
 -/
 
 #print ULift.nontrivial /-
 instance nontrivial [Nontrivial α] : Nontrivial (ULift α) :=
-  Equiv.ulift.symm.Injective.Nontrivial
+  Equiv.ulift.symm.injective.nontrivial
 #align ulift.nontrivial ULift.nontrivial
 -/
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module algebra.star.self_adjoint
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -375,7 +375,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align self_adjoint.star_coe_eq selfAdjoint.star_val_eqₓ'. -/
 @[simp, norm_cast]
 theorem star_val_eq {x : selfAdjoint R} : star (x : R) = x :=
-  x.Prop
+  x.prop
 #align self_adjoint.star_coe_eq selfAdjoint.star_val_eq
 
 instance : Inhabited (selfAdjoint R) :=
@@ -417,7 +417,7 @@ instance : IntCast (selfAdjoint R) :=
       refine' add_mem (isSelfAdjoint_one R).neg (n : selfAdjoint R).2.neg⟩⟩
 
 instance : Pow (selfAdjoint R) ℕ :=
-  ⟨fun x n => ⟨(x : R) ^ n, x.Prop.pow n⟩⟩
+  ⟨fun x n => ⟨(x : R) ^ n, x.prop.pow n⟩⟩
 
 /- warning: self_adjoint.coe_pow -> selfAdjoint.val_pow is a dubious translation:
 lean 3 declaration is
@@ -437,7 +437,7 @@ section NonUnitalCommRing
 variable [NonUnitalCommRing R] [StarRing R]
 
 instance : Mul (selfAdjoint R) :=
-  ⟨fun x y => ⟨(x : R) * y, x.Prop.mul y.Prop⟩⟩
+  ⟨fun x y => ⟨(x : R) * y, x.prop.mul y.prop⟩⟩
 
 /- warning: self_adjoint.coe_mul -> selfAdjoint.val_mul is a dubious translation:
 lean 3 declaration is
@@ -457,10 +457,9 @@ section CommRing
 variable [CommRing R] [StarRing R]
 
 instance : CommRing (selfAdjoint R) :=
-  Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).val_zero val_one
-    (selfAdjoint R).val_add val_mul (selfAdjoint R).«» (selfAdjoint R).val_neg_eq_neg_val
-    (selfAdjoint R).val_nsmul_eq_nsmul_val (selfAdjoint R).val_zsmul_eq_zsmul_val val_pow
-    (fun _ => rfl) fun _ => rfl
+  Function.Injective.commRing _ Subtype.coe_injective (selfAdjoint R).coe_zero val_one
+    (selfAdjoint R).coe_add val_mul (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub
+    (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul val_pow (fun _ => rfl) fun _ => rfl
 
 end CommRing
 
@@ -468,7 +467,7 @@ section Field
 
 variable [Field R] [StarRing R]
 
-instance : Inv (selfAdjoint R) where inv x := ⟨x.val⁻¹, x.Prop.inv⟩
+instance : Inv (selfAdjoint R) where inv x := ⟨x.val⁻¹, x.prop.inv⟩
 
 /- warning: self_adjoint.coe_inv -> selfAdjoint.val_inv is a dubious translation:
 lean 3 declaration is
@@ -481,7 +480,7 @@ theorem val_inv (x : selfAdjoint R) : ↑x⁻¹ = (x : R)⁻¹ :=
   rfl
 #align self_adjoint.coe_inv selfAdjoint.val_inv
 
-instance : Div (selfAdjoint R) where div x y := ⟨x / y, x.Prop.div y.Prop⟩
+instance : Div (selfAdjoint R) where div x y := ⟨x / y, x.prop.div y.prop⟩
 
 /- warning: self_adjoint.coe_div -> selfAdjoint.val_div is a dubious translation:
 lean 3 declaration is
@@ -494,7 +493,7 @@ theorem val_div (x y : selfAdjoint R) : ↑(x / y) = (x / y : R) :=
   rfl
 #align self_adjoint.coe_div selfAdjoint.val_div
 
-instance : Pow (selfAdjoint R) ℤ where pow x z := ⟨x ^ z, x.Prop.zpow z⟩
+instance : Pow (selfAdjoint R) ℤ where pow x z := ⟨x ^ z, x.prop.zpow z⟩
 
 /- warning: self_adjoint.coe_zpow -> selfAdjoint.val_zpow is a dubious translation:
 lean 3 declaration is
@@ -539,7 +538,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : Field.{u1} R] [_inst_2 : StarRing.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1))))], SMul.{0, u1} Rat (Subtype.{succ u1} R (fun (x : R) => Membership.mem.{u1, u1} R (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) (SetLike.instMembership.{u1, u1} (AddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1))))) R (AddSubgroup.instSetLikeAddSubgroup.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1)))))) x (selfAdjoint.{u1} R (AddGroupWithOne.toAddGroup.{u1} R (Ring.toAddGroupWithOne.{u1} R (DivisionRing.toRing.{u1} R (Field.toDivisionRing.{u1} R _inst_1)))) (StarRing.toStarAddMonoid.{u1} R (NonUnitalRing.toNonUnitalSemiring.{u1} R (NonUnitalCommRing.toNonUnitalRing.{u1} R (CommRing.toNonUnitalCommRing.{u1} R (Field.toCommRing.{u1} R _inst_1)))) _inst_2))))
 Case conversion may be inaccurate. Consider using '#align self_adjoint.has_qsmul selfAdjoint.instQSMulₓ'. -/
 instance instQSMul : SMul ℚ (selfAdjoint R) :=
-  ⟨fun a x => ⟨a • x, by rw [Rat.smul_def] <;> exact (rat_cast_mem a).mul x.prop⟩⟩
+  ⟨fun a x => ⟨a • x, by rw [Rat.smul_def] <;> exact (ratCast_mem a).mul x.prop⟩⟩
 #align self_adjoint.has_qsmul selfAdjoint.instQSMul
 
 /- warning: self_adjoint.coe_rat_smul -> selfAdjoint.val_rat_smul is a dubious translation:
@@ -554,10 +553,10 @@ theorem val_rat_smul (x : selfAdjoint R) (a : ℚ) : ↑(a • x) = a • (x : R
 #align self_adjoint.coe_rat_smul selfAdjoint.val_rat_smul
 
 instance : Field (selfAdjoint R) :=
-  Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).val_zero val_one
-    (selfAdjoint R).val_add val_mul (selfAdjoint R).«» (selfAdjoint R).val_neg_eq_neg_val val_inv
-    val_div (selfAdjoint R).val_nsmul_eq_nsmul_val (selfAdjoint R).val_zsmul_eq_zsmul_val
-    val_rat_smul val_pow val_zpow (fun _ => rfl) (fun _ => rfl) val_ratCast
+  Function.Injective.field _ Subtype.coe_injective (selfAdjoint R).coe_zero val_one
+    (selfAdjoint R).coe_add val_mul (selfAdjoint R).coe_neg (selfAdjoint R).coe_sub val_inv val_div
+    (selfAdjoint R).coe_nsmul (selfAdjoint R).coe_zsmul val_rat_smul val_pow val_zpow (fun _ => rfl)
+    (fun _ => rfl) val_ratCast
 
 end Field
 
@@ -566,7 +565,7 @@ section SMul
 variable [Star R] [TrivialStar R] [AddGroup A] [StarAddMonoid A]
 
 instance [SMul R A] [StarModule R A] : SMul R (selfAdjoint A) :=
-  ⟨fun r x => ⟨r • x, x.Prop.smul r⟩⟩
+  ⟨fun r x => ⟨r • x, x.prop.smul r⟩⟩
 
 /- warning: self_adjoint.coe_smul -> selfAdjoint.val_smul is a dubious translation:
 lean 3 declaration is
@@ -583,7 +582,7 @@ instance [Monoid R] [MulAction R A] [StarModule R A] : MulAction R (selfAdjoint 
   Function.Injective.mulAction coe Subtype.coe_injective val_smul
 
 instance [Monoid R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R (selfAdjoint A) :=
-  Function.Injective.distribMulAction (selfAdjoint A).Subtype Subtype.coe_injective val_smul
+  Function.Injective.distribMulAction (selfAdjoint A).subtype Subtype.coe_injective val_smul
 
 end SMul
 
@@ -592,7 +591,7 @@ section Module
 variable [Star R] [TrivialStar R] [AddCommGroup A] [StarAddMonoid A]
 
 instance [Semiring R] [Module R A] [StarModule R A] : Module R (selfAdjoint A) :=
-  Function.Injective.module R (selfAdjoint A).Subtype Subtype.coe_injective val_smul
+  Function.Injective.module R (selfAdjoint A).subtype Subtype.coe_injective val_smul
 
 end Module
 
@@ -624,7 +623,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align skew_adjoint.star_coe_eq skewAdjoint.star_val_eqₓ'. -/
 @[simp, norm_cast]
 theorem star_val_eq {x : skewAdjoint R} : star (x : R) = -x :=
-  x.Prop
+  x.prop
 #align skew_adjoint.star_coe_eq skewAdjoint.star_val_eq
 
 instance : Inhabited (skewAdjoint R) :=
@@ -699,7 +698,7 @@ theorem smul_mem [Monoid R] [DistribMulAction R A] [StarModule R A] (r : R) {x :
 #align skew_adjoint.smul_mem skewAdjoint.smul_mem
 
 instance [Monoid R] [DistribMulAction R A] [StarModule R A] : SMul R (skewAdjoint A) :=
-  ⟨fun r x => ⟨r • x, smul_mem r x.Prop⟩⟩
+  ⟨fun r x => ⟨r • x, smul_mem r x.prop⟩⟩
 
 /- warning: skew_adjoint.coe_smul -> skewAdjoint.val_smul is a dubious translation:
 lean 3 declaration is
@@ -714,10 +713,10 @@ theorem val_smul [Monoid R] [DistribMulAction R A] [StarModule R A] (r : R) (x :
 #align skew_adjoint.coe_smul skewAdjoint.val_smul
 
 instance [Monoid R] [DistribMulAction R A] [StarModule R A] : DistribMulAction R (skewAdjoint A) :=
-  Function.Injective.distribMulAction (skewAdjoint A).Subtype Subtype.coe_injective val_smul
+  Function.Injective.distribMulAction (skewAdjoint A).subtype Subtype.coe_injective val_smul
 
 instance [Semiring R] [Module R A] [StarModule R A] : Module R (skewAdjoint A) :=
-  Function.Injective.module R (skewAdjoint A).Subtype Subtype.coe_injective val_smul
+  Function.Injective.module R (skewAdjoint A).subtype Subtype.coe_injective val_smul
 
 end SMul
 

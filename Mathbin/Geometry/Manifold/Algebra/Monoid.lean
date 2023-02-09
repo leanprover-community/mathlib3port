@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ instances `add_monoid α` and `has_smooth_add α`. -/
 class HasSmoothAdd {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [Add G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smooth_add : Smooth (I.Prod I) I fun p : G × G => p.1 + p.2
+  smooth_add : Smooth (I.prod I) I fun p : G × G => p.1 + p.2
 #align has_smooth_add HasSmoothAdd
 
 -- See note [Design choices about smooth algebraic structures]
@@ -60,7 +60,7 @@ and `has_smooth_mul I G`. -/
 class HasSmoothMul {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [TopologicalSpace H]
   {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _)
   [Mul G] [TopologicalSpace G] [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where
-  smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2
+  smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1 * p.2
 #align has_smooth_mul HasSmoothMul
 #align has_smooth_add HasSmoothAdd
 
@@ -77,7 +77,7 @@ section
 variable (I)
 
 @[to_additive]
-theorem smooth_mul : Smooth (I.Prod I) I fun p : G × G => p.1 * p.2 :=
+theorem smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1 * p.2 :=
   HasSmoothMul.smooth_mul
 #align smooth_mul smooth_mul
 #align smooth_add smooth_add
@@ -87,7 +87,7 @@ reasons, see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "If the addition is smooth, then it is continuous. This is not an instance for technical reasons,\nsee note [Design choices about smooth algebraic structures]."]
 theorem hasContinuousMul_of_smooth : HasContinuousMul G :=
-  ⟨(smooth_mul I).Continuous⟩
+  ⟨(smooth_mul I).continuous⟩
 #align has_continuous_mul_of_smooth hasContinuousMul_of_smooth
 #align has_continuous_add_of_smooth has_continuous_add_of_smooth
 
@@ -100,7 +100,7 @@ variable {f g : M → G} {s : Set M} {x : M} {n : ℕ∞}
 @[to_additive]
 theorem ContMdiffWithinAt.mul (hf : ContMdiffWithinAt I' I n f s x)
     (hg : ContMdiffWithinAt I' I n g s x) : ContMdiffWithinAt I' I n (f * g) s x :=
-  ((smooth_mul I).SmoothAt.of_le le_top).comp_contMdiffWithinAt x (hf.prod_mk hg)
+  ((smooth_mul I).smoothAt.of_le le_top).comp_contMdiffWithinAt x (hf.prod_mk hg)
 #align cont_mdiff_within_at.mul ContMdiffWithinAt.mul
 #align cont_mdiff_within_at.add ContMdiffWithinAt.add
 
@@ -236,11 +236,11 @@ instance HasSmoothMul.prod {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : T
     (I : ModelWithCorners 𝕜 E H) (G : Type _) [TopologicalSpace G] [ChartedSpace H G] [Mul G]
     [HasSmoothMul I G] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
     [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') (G' : Type _) [TopologicalSpace G']
-    [ChartedSpace H' G'] [Mul G'] [HasSmoothMul I' G'] : HasSmoothMul (I.Prod I') (G × G') :=
+    [ChartedSpace H' G'] [Mul G'] [HasSmoothMul I' G'] : HasSmoothMul (I.prod I') (G × G') :=
   { SmoothManifoldWithCorners.prod G G' with
     smooth_mul :=
-      ((smooth_fst.comp smooth_fst).Smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
-        ((smooth_snd.comp smooth_fst).Smooth.mul (smooth_snd.comp smooth_snd)) }
+      ((smooth_fst.comp smooth_fst).smooth.mul (smooth_fst.comp smooth_snd)).prod_mk
+        ((smooth_snd.comp smooth_fst).smooth.mul (smooth_snd.comp smooth_snd)) }
 #align has_smooth_mul.prod HasSmoothMul.prod
 #align has_smooth_add.sum HasSmoothAdd.sum
 

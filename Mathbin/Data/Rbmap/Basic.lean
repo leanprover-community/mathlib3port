@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbmap.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ namespace Rbmap
 variable {α : Type u} {β : Type v} {δ : Type w} {lt : α → α → Prop}
 
 def empty (m : Rbmap α β lt) : Bool :=
-  m.Empty
+  m.empty
 #align rbmap.empty Rbmap.empty
 
 def toList (m : Rbmap α β lt) : List (α × β) :=
@@ -73,9 +73,9 @@ definition: (k, default) ∈ m
 -/
 protected def Mem (k : α) (m : Rbmap α β lt) : Prop :=
   match m.val with
-  | Rbnode.leaf => False
-  | Rbnode.red_node _ e _ => Rbtree.Mem (k, e.2) m
-  | Rbnode.black_node _ e _ => Rbtree.Mem (k, e.2) m
+  | rbnode.leaf => False
+  | rbnode.red_node _ e _ => Rbtree.Mem (k, e.2) m
+  | rbnode.black_node _ e _ => Rbtree.Mem (k, e.2) m
 #align rbmap.mem Rbmap.Mem
 
 instance : Membership α (Rbmap α β lt) :=
@@ -95,9 +95,9 @@ def insert (m : Rbmap α β lt) (k : α) (v : β) : Rbmap α β lt :=
 
 def findEntry (m : Rbmap α β lt) (k : α) : Option (α × β) :=
   match m.val with
-  | Rbnode.leaf => none
-  | Rbnode.red_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
-  | Rbnode.black_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
+  | rbnode.leaf => none
+  | rbnode.red_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
+  | rbnode.black_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
 #align rbmap.find_entry Rbmap.findEntry
 
 def toValue : Option (α × β) → Option β

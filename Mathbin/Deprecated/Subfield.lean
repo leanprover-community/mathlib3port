@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 
 ! This file was ported from Lean 3 source module deprecated.subfield
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -162,7 +162,7 @@ theorem isSubfield_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : �
   { inv_mem := fun x hx =>
       let ⟨i, hi⟩ := Set.mem_unionᵢ.1 hx
       Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
-    to_isSubring := isSubring_unionᵢ_of_directed (fun i => (hs i).to_isSubring) Directed }
+    to_isSubring := isSubring_unionᵢ_of_directed (fun i => (hs i).to_isSubring) directed }
 #align is_subfield_Union_of_directed isSubfield_unionᵢ_of_directed
 
 theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : IsSubfield S₂) :

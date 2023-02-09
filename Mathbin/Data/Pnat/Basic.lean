@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Neil Strickland
 
 ! This file was ported from Lean 3 source module data.pnat.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,7 +35,7 @@ namespace PNat
 #print PNat.one_add_natPred /-
 @[simp]
 theorem one_add_natPred (n : ℕ+) : 1 + n.natPred = n := by
-  rw [nat_pred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
+  rw [natPred, add_tsub_cancel_iff_le.mpr <| show 1 ≤ (n : ℕ) from n.2]
 #align pnat.one_add_nat_pred PNat.one_add_natPred
 -/
 
@@ -55,13 +55,13 @@ theorem natPred_strictMono : StrictMono natPred := fun m n h => Nat.pred_lt_pred
 #print PNat.natPred_monotone /-
 @[mono]
 theorem natPred_monotone : Monotone natPred :=
-  natPred_strictMono.Monotone
+  natPred_strictMono.monotone
 #align pnat.nat_pred_monotone PNat.natPred_monotone
 -/
 
 #print PNat.natPred_injective /-
 theorem natPred_injective : Function.Injective natPred :=
-  natPred_strictMono.Injective
+  natPred_strictMono.injective
 #align pnat.nat_pred_injective PNat.natPred_injective
 -/
 
@@ -99,7 +99,7 @@ theorem succPNat_strictMono : StrictMono succPNat := fun m n => Nat.succ_lt_succ
 #print Nat.succPNat_mono /-
 @[mono]
 theorem succPNat_mono : Monotone succPNat :=
-  succPNat_strictMono.Monotone
+  succPNat_strictMono.monotone
 #align nat.succ_pnat_mono Nat.succPNat_mono
 -/
 
@@ -119,7 +119,7 @@ theorem succPNat_le_succPNat {m n : ℕ} : m.succPNat ≤ n.succPNat ↔ m ≤ n
 
 #print Nat.succPNat_injective /-
 theorem succPNat_injective : Function.Injective succPNat :=
-  succPNat_strictMono.Injective
+  succPNat_strictMono.injective
 #align nat.succ_pnat_injective Nat.succPNat_injective
 -/
 
@@ -423,9 +423,9 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pnat.sub_coe PNat.sub_coeₓ'. -/
 theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ) 1 :=
   by
-  change (to_pnat' _ : ℕ) = ite _ _ _
+  change (toPNat' _ : ℕ) = ite _ _ _
   split_ifs with h
-  · exact to_pnat'_coe (tsub_pos_of_lt h)
+  · exact toPNat'_coe (tsub_pos_of_lt h)
   · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]
     rfl
 #align pnat.sub_coe PNat.sub_coe
@@ -464,7 +464,7 @@ Case conversion may be inaccurate. Consider using '#align pnat.case_strong_induc
 def caseStrongInductionOn {p : ℕ+ → Sort _} (a : ℕ+) (hz : p 1)
     (hi : ∀ n, (∀ m, m ≤ n → p m) → p (n + 1)) : p a :=
   by
-  apply strong_induction_on a
+  apply strongInductionOn a
   rintro ⟨k, kprop⟩ hk
   cases' k with k
   · exact (lt_irrefl 0 kprop).elim
@@ -539,7 +539,7 @@ theorem mod_add_div (m k : ℕ+) : (mod m k + k * div m k : ℕ) = m :=
     rintro ⟨hr, hq⟩
     rw [hr, hq, mul_zero, zero_add] at h₀
     exact (m.ne_zero h₀.symm).elim
-  have := mod_div_aux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this
+  have := modDivAux_spec k ((m : ℕ) % (k : ℕ)) ((m : ℕ) / (k : ℕ)) this
   exact this.trans h₀
 #align pnat.mod_add_div PNat.mod_add_div
 -/
@@ -589,7 +589,7 @@ theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) :=
   constructor <;> intro h; rcases h with ⟨_, rfl⟩; apply dvd_mul_right
   rcases h with ⟨a, h⟩; cases a;
   · contrapose h
-    apply NeZero
+    apply ne_zero
   use a.succ; apply Nat.succ_pos; rw [← coe_inj, h, mul_coe, mk_coe]
 #align pnat.dvd_iff PNat.dvd_iff
 -/
@@ -600,14 +600,14 @@ theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k :=
   rw [dvd_iff]
   rw [Nat.dvd_iff_mod_eq_zero]; constructor
   · intro h
-    apply Eq
+    apply eq
     rw [mod_coe, if_pos h]
   · intro h
     by_cases h' : (m : ℕ) % (k : ℕ) = 0
     · exact h'
     · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
       rw [mod_coe, if_neg h'] at h
-      exact ((Nat.mod_lt (m : ℕ) k.pos).Ne h).elim
+      exact ((Nat.mod_lt (m : ℕ) k.pos).ne h).elim
 #align pnat.dvd_iff' PNat.dvd_iff'
 -/
 
@@ -629,7 +629,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align pnat.mul_div_exact PNat.mul_div_exactₓ'. -/
 theorem mul_div_exact {m k : ℕ+} (h : k ∣ m) : k * divExact m k = m :=
   by
-  apply Eq; rw [mul_coe]
+  apply eq; rw [mul_coe]
   change (k : ℕ) * (div m k).succ = m
   rw [← div_add_mod m k, dvd_iff'.mp h, Nat.mul_succ]
 #align pnat.mul_div_exact PNat.mul_div_exact

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.tauto
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -113,7 +113,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
       do
         let env ← get_env
           let rel := e . get_app_fn . const_name
-          let some symm ← pure <| environment.symm_for env Rel | add_refl r e
+          let some symm ← pure <| environment.symm_for env rel | add_refl r e
           (
               do
                 let e' ← mk_meta_var q( Prop )
@@ -163,7 +163,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
         let p'' ← mk_app `eq.trans [p', p'']
         add_edge r e e'' p''
         pure (e'', p'')
-      | none => Prod.mk e <$> mk_mapp `rfl [none, some e]
+      | none => prod.mk e <$> mk_mapp `rfl [none, some e]
 #align tactic.root tactic.root
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -276,7 +276,7 @@ unsafe def find_eq_type (r : tauto_state) : expr → List expr → tactic (expr 
   | e, [] => failed
   | e, H :: Hs => do
     let t ← infer_type H
-    Prod.mk H <$> symm_eq r e t <|> find_eq_type e Hs
+    prod.mk H <$> symm_eq r e t <|> find_eq_type e Hs
 #align tactic.find_eq_type tactic.find_eq_type
 
 -- failed to format: unknown constant 'term.pseudo.antiquot'

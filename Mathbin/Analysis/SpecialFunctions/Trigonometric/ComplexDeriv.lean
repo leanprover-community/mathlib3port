@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.complex_deriv
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -28,13 +28,13 @@ open Real
 
 theorem hasStrictDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
   by
-  convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
+  convert (hasStrictDerivAt_sin x).div (hasStrictDerivAt_cos x) h
   rw [← sin_sq_add_cos_sq x]
   ring
 #align complex.has_strict_deriv_at_tan Complex.hasStrictDerivAt_tan
 
 theorem hasDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasDerivAt tan (1 / cos x ^ 2) x :=
-  (hasStrictDerivAt_tan h).HasDerivAt
+  (hasStrictDerivAt_tan h).hasDerivAt
 #align complex.has_deriv_at_tan Complex.hasDerivAt_tan
 
 open Topology
@@ -44,8 +44,8 @@ theorem tendsto_abs_tan_of_cos_eq_zero {x : ℂ} (hx : cos x = 0) :
   by
   simp only [tan_eq_sin_div_cos, ← norm_eq_abs, norm_div]
   have A : sin x ≠ 0 := fun h => by simpa [*, sq] using sin_sq_add_cos_sq x
-  have B : tendsto cos (𝓝[≠] x) (𝓝[≠] 0) :=
-    hx ▸ (has_deriv_at_cos x).tendsto_punctured_nhds (neg_ne_zero.2 A)
+  have B : Tendsto cos (𝓝[≠] x) (𝓝[≠] 0) :=
+    hx ▸ (hasDerivAt_cos x).tendsto_punctured_nhds (neg_ne_zero.2 A)
   exact
     continuous_sin.continuous_within_at.norm.mul_at_top (norm_pos_iff.2 A)
       (tendsto_norm_nhds_within_zero.comp B).inv_tendsto_zero
@@ -59,7 +59,7 @@ theorem tendsto_abs_tan_atTop (k : ℤ) :
 @[simp]
 theorem continuousAt_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 :=
   by
-  refine' ⟨fun hc h₀ => _, fun h => (has_deriv_at_tan h).ContinuousAt⟩
+  refine' ⟨fun hc h₀ => _, fun h => (hasDerivAt_tan h).continuousAt⟩
   exact
     not_tendsto_nhds_of_tendsto_atTop (tendsto_abs_tan_of_cos_eq_zero h₀) _
       (hc.norm.tendsto.mono_left inf_le_left)
@@ -67,7 +67,7 @@ theorem continuousAt_tan {x : ℂ} : ContinuousAt tan x ↔ cos x ≠ 0 :=
 
 @[simp]
 theorem differentiableAt_tan {x : ℂ} : DifferentiableAt ℂ tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuousAt_tan.1 h.ContinuousAt, fun h => (hasDerivAt_tan h).DifferentiableAt⟩
+  ⟨fun h => continuousAt_tan.1 h.continuousAt, fun h => (hasDerivAt_tan h).differentiableAt⟩
 #align complex.differentiable_at_tan Complex.differentiableAt_tan
 
 @[simp]
@@ -81,7 +81,7 @@ theorem deriv_tan (x : ℂ) : deriv tan x = 1 / cos x ^ 2 :=
 
 @[simp]
 theorem contDiffAt_tan {x : ℂ} {n : ℕ∞} : ContDiffAt ℂ n tan x ↔ cos x ≠ 0 :=
-  ⟨fun h => continuousAt_tan.1 h.ContinuousAt, contDiff_sin.ContDiffAt.div contDiff_cos.ContDiffAt⟩
+  ⟨fun h => continuousAt_tan.1 h.continuousAt, contDiff_sin.contDiffAt.div contDiff_cos.contDiffAt⟩
 #align complex.cont_diff_at_tan Complex.contDiffAt_tan
 
 end Complex

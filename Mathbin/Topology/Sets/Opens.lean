@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.sets.opens
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -206,7 +206,7 @@ theorem empty_eq : (∅ : Opens α) = ⊥ :=
 theorem supᵢ_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, isOpen_unionᵢ fun i => (s i).2⟩ :=
   by
   ext
-  simp only [supᵢ, coe_Sup, bUnion_range]
+  simp only [supᵢ, coe_supₛ, bunionᵢ_range]
   rfl
 #align topological_space.opens.supr_def TopologicalSpace.Opens.supᵢ_def
 
@@ -214,13 +214,13 @@ theorem supᵢ_def {ι} (s : ι → Opens α) : (⨆ i, s i) = ⟨⋃ i, s i, is
 theorem supᵢ_mk {ι} (s : ι → Set α) (h : ∀ i, IsOpen (s i)) :
     (⨆ i, ⟨s i, h i⟩ : Opens α) = ⟨⋃ i, s i, isOpen_unionᵢ h⟩ :=
   by
-  rw [supr_def]
+  rw [supᵢ_def]
   simp
 #align topological_space.opens.supr_mk TopologicalSpace.Opens.supᵢ_mk
 
 @[simp, norm_cast]
 theorem coe_supᵢ {ι} (s : ι → Opens α) : ((⨆ i, s i : Opens α) : Set α) = ⋃ i, s i := by
-  simp [supr_def]
+  simp [supᵢ_def]
 #align topological_space.opens.coe_supr TopologicalSpace.Opens.coe_supᵢ
 
 @[simp]
@@ -232,14 +232,14 @@ theorem mem_supᵢ {ι} {x : α} {s : ι → Opens α} : x ∈ supᵢ s ↔ ∃ 
 
 @[simp]
 theorem mem_supₛ {Us : Set (Opens α)} {x : α} : x ∈ supₛ Us ↔ ∃ u ∈ Us, x ∈ u := by
-  simp_rw [supₛ_eq_supᵢ, mem_supr]
+  simp_rw [supₛ_eq_supᵢ, mem_supᵢ]
 #align topological_space.opens.mem_Sup TopologicalSpace.Opens.mem_supₛ
 
 instance : Frame (Opens α) :=
   { Opens.completeLattice with
     supₛ := supₛ
     inf_sup_le_supᵢ_inf := fun a s =>
-      (ext <| by simp only [coe_inf, coe_supr, coe_Sup, Set.inter_unionᵢ₂]).le }
+      (ext <| by simp only [coe_inf, coe_supᵢ, coe_supₛ, Set.inter_unionᵢ₂]).le }
 
 theorem openEmbedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.inclusion i) :=
   { inj := Set.inclusion_injective i
@@ -250,11 +250,11 @@ theorem openEmbedding_of_le {U V : Opens α} (i : U ≤ V) : OpenEmbedding (Set.
 #align topological_space.opens.open_embedding_of_le TopologicalSpace.Opens.openEmbedding_of_le
 
 theorem not_nonempty_iff_eq_bot (U : Opens α) : ¬Set.Nonempty (U : Set α) ↔ U = ⊥ := by
-  rw [← subtype.coe_injective.eq_iff, opens.coe_bot, ← Set.not_nonempty_iff_eq_empty]
+  rw [← subtype.coe_injective.eq_iff, Opens.coe_bot, ← Set.not_nonempty_iff_eq_empty]
 #align topological_space.opens.not_nonempty_iff_eq_bot TopologicalSpace.Opens.not_nonempty_iff_eq_bot
 
 theorem ne_bot_iff_nonempty (U : Opens α) : U ≠ ⊥ ↔ Set.Nonempty (U : Set α) := by
-  rw [Ne.def, ← opens.not_nonempty_iff_eq_bot, Classical.not_not]
+  rw [Ne.def, ← Opens.not_nonempty_iff_eq_bot, Classical.not_not]
 #align topological_space.opens.ne_bot_iff_nonempty TopologicalSpace.Opens.ne_bot_iff_nonempty
 
 /-- An open set in the indiscrete topology is either empty or the whole space. -/
@@ -262,7 +262,7 @@ theorem eq_bot_or_top {α} [t : TopologicalSpace α] (h : t = ⊤) (U : Opens α
   by
   simp_rw [← ext_iff]
   subst h
-  exact (is_open_top_iff U.1).1 U.2
+  exact (isOpen_top_iff U.1).1 U.2
 #align topological_space.opens.eq_bot_or_top TopologicalSpace.Opens.eq_bot_or_top
 
 /-- A set of `opens α` is a basis if the set of corresponding sets is a topological basis. -/
@@ -281,30 +281,30 @@ theorem isBasis_iff_nbhd {B : Set (Opens α)} :
     dsimp at H₂
     subst H₂
     exact hsV
-  · refine' is_topological_basis_of_open_of_nhds _ _
+  · refine' isTopologicalBasis_of_open_of_nhds _ _
     · rintro sU ⟨U, ⟨H₁, rfl⟩⟩
       exact U.property
     · intro x sU hx hsU
-      rcases@h (⟨sU, hsU⟩ : opens α) x hx with ⟨V, hV, H⟩
+      rcases@h (⟨sU, hsU⟩ : Opens α) x hx with ⟨V, hV, H⟩
       exact ⟨V, ⟨V, hV, rfl⟩, H⟩
 #align topological_space.opens.is_basis_iff_nbhd TopologicalSpace.Opens.isBasis_iff_nbhd
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (Us «expr ⊆ » B) -/
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ (Us : _)(_ : Us ⊆ B), U = supₛ Us :=
   by
   constructor
   · intro hB U
-    refine' ⟨{ V : opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
+    refine' ⟨{ V : Opens α | V ∈ B ∧ V ⊆ U }, fun U hU => hU.left, _⟩
     apply ext
-    rw [coe_Sup, hB.open_eq_sUnion' U.prop]
-    simp_rw [sUnion_eq_bUnion, Union, supᵢ_and, supᵢ_image]
+    rw [coe_supₛ, hB.open_eq_sUnion' U.prop]
+    simp_rw [unionₛ_eq_bunionᵢ, unionᵢ, supᵢ_and, supᵢ_image]
     rfl
   · intro h
-    rw [is_basis_iff_nbhd]
+    rw [isBasis_iff_nbhd]
     intro U x hx
     rcases h U with ⟨Us, hUs, rfl⟩
-    rcases mem_Sup.1 hx with ⟨U, Us, xU⟩
+    rcases mem_supₛ.1 hx with ⟨U, Us, xU⟩
     exact ⟨U, hUs Us, xU, le_supₛ Us⟩
 #align topological_space.opens.is_basis_iff_cover TopologicalSpace.Opens.isBasis_iff_cover
 
@@ -333,7 +333,7 @@ theorem isCompactElement_iff (s : Opens α) :
     rw [coe_finset_sup, Finset.sup_eq_supᵢ]
     rfl
   · obtain ⟨t, ht⟩ :=
-      H (fun i => U i) (fun i => (U i).Prop) (by simpa using show (s : Set α) ⊆ ↑(supᵢ U) from hU)
+      H (fun i => U i) (fun i => (U i).prop) (by simpa using show (s : Set α) ⊆ ↑(supᵢ U) from hU)
     refine' ⟨t, Set.Subset.trans ht _⟩
     simp only [Set.unionᵢ_subset_iff]
     show ∀ i ∈ t, U i ≤ t.sup U
@@ -343,11 +343,11 @@ theorem isCompactElement_iff (s : Opens α) :
 /-- The preimage of an open set, as an open set. -/
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α)
     where
-  toFun s := ⟨f ⁻¹' s, s.2.Preimage f.Continuous⟩
+  toFun s := ⟨f ⁻¹' s, s.2.preimage f.continuous⟩
   map_Sup' s :=
     ext <| by
-      simp only [coe_Sup, preimage_Union, coe_mk, mem_image, Union_exists, bUnion_and',
-        Union_Union_eq_right]
+      simp only [coe_supₛ, preimage_unionᵢ, coe_mk, mem_image, unionᵢ_exists, bunionᵢ_and',
+        unionᵢ_unionᵢ_eq_right]
   map_inf' a b := rfl
   map_top' := rfl
 #align topological_space.opens.comap TopologicalSpace.Opens.comap
@@ -411,7 +411,7 @@ protected def equiv (f : α ≃ₜ β) : Opens α ≃ Opens β
 protected def orderIso (f : α ≃ₜ β) : Opens α ≃o Opens β
     where
   toEquiv := Opens.equiv f
-  map_rel_iff' U V := f.symm.Surjective.preimage_subset_preimage_iff
+  map_rel_iff' U V := f.symm.surjective.preimage_subset_preimage_iff
 #align topological_space.opens.order_iso TopologicalSpace.Opens.orderIso
 
 end Opens

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.algebra.subalgebra.pointwise
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,7 +41,7 @@ theorem mul_toSubmodule_le (S T : Subalgebra R A) :
 theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubmodule :=
   by
   apply le_antisymm
-  · refine' (mul_to_submodule_le _ _).trans_eq _
+  · refine' (mul_toSubmodule_le _ _).trans_eq _
     rw [sup_idem]
   · intro x hx1
     rw [← mul_one x]
@@ -52,7 +52,7 @@ theorem mul_self (S : Subalgebra R A) : S.toSubmodule * S.toSubmodule = S.toSubm
 theorem mul_toSubmodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemiring A] [Algebra R A]
     (S T : Subalgebra R A) : S.toSubmodule * T.toSubmodule = (S ⊔ T).toSubmodule :=
   by
-  refine' le_antisymm (mul_to_submodule_le _ _) _
+  refine' le_antisymm (mul_toSubmodule_le _ _) _
   rintro x (hx : x ∈ Algebra.adjoin R (S ∪ T : Set A))
   refine'
     Algebra.adjoin_induction hx (fun x hx => _) (fun r => _) (fun _ _ => Submodule.add_mem _)
@@ -63,7 +63,7 @@ theorem mul_toSubmodule {R : Type _} {A : Type _} [CommSemiring R] [CommSemiring
     · rw [← one_mul x]
       exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) hxT
   · rw [← one_mul (algebraMap _ _ _)]
-    exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebra_map_mem _ _)
+    exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebraMap_mem _ _)
   have := Submodule.mul_mem_mul hx hy
   rwa [mul_assoc, mul_comm _ T.to_submodule, ← mul_assoc _ _ S.to_submodule, mul_self,
     mul_comm T.to_submodule, ← mul_assoc, mul_self] at this

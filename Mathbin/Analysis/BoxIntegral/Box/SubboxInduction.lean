@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.box_integral.box.subbox_induction
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
 theorem mem_splitCenterBox {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s :=
   by
-  simp only [split_center_box, mem_def, ← forall_and]
+  simp only [splitCenterBox, mem_def, ← forall_and]
   refine' forall_congr' fun i => _
   dsimp only [Set.piecewise]
   split_ifs with hs <;> simp only [hs, iff_true_iff, iff_false_iff, not_lt]
@@ -79,12 +79,12 @@ theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
   rw [disjoint_iff_inf_le]
   rintro y ⟨hs, ht⟩; apply h
   ext i
-  rw [mem_coe, mem_split_center_box] at hs ht
+  rw [mem_coe, mem_splitCenterBox] at hs ht
   rw [← hs.2, ← ht.2]
 #align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBox
 
 theorem injective_splitCenterBox (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
-  by_contra fun Hne => (I.disjoint_splitCenterBox Hne).Ne (nonempty_coe _).ne_empty (H ▸ rfl)
+  by_contra fun Hne => (I.disjoint_splitCenterBox Hne).ne (nonempty_coe _).ne_empty (H ▸ rfl)
 #align box_integral.box.injective_split_center_box BoxIntegral.Box.injective_splitCenterBox
 
 @[simp]
@@ -109,7 +109,7 @@ theorem unionᵢ_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s :
 @[simp]
 theorem upper_sub_lower_splitCenterBox (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
-  by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
+  by_cases hs : i ∈ s <;> field_simp [splitCenterBox, hs, mul_two, two_mul]
 #align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_splitCenterBox
 
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
@@ -131,24 +131,24 @@ a coefficient of the form `2⁻ᵐ` but we do not need this generalization yet. 
 theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     (H_ind : ∀ J ≤ I, (∀ s, p (splitCenterBox J s)) → p J)
     (H_nhds :
-      ∀ z ∈ I.Icc,
-        ∃ U ∈ 𝓝[I.Icc] z,
+      ∀ z ∈ I.icc,
+        ∃ U ∈ 𝓝[I.icc] z,
           ∀ J ≤ I,
             ∀ (m : ℕ),
-              z ∈ J.Icc →
-                J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
+              z ∈ J.icc →
+                J.icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
     p I := by
   by_contra hpI
   -- First we use `H_ind` to construct a decreasing sequence of boxes such that `∀ m, ¬p (J m)`.
   replace H_ind := fun J hJ => not_imp_not.2 (H_ind J hJ)
   simp only [exists_imp, not_forall] at H_ind
   choose! s hs using H_ind
-  set J : ℕ → box ι := fun m => ((fun J => split_center_box J (s J))^[m]) I
-  have J_succ : ∀ m, J (m + 1) = split_center_box (J m) (s <| J m) := fun m =>
+  set J : ℕ → Box ι := fun m => ((fun J => splitCenterBox J (s J))^[m]) I
+  have J_succ : ∀ m, J (m + 1) = splitCenterBox (J m) (s <| J m) := fun m =>
     iterate_succ_apply' _ _ _
   -- Now we prove some properties of `J`
   have hJmono : Antitone J :=
-    antitone_nat_of_succ_le fun n => by simpa [J_succ] using split_center_box_le _ _
+    antitone_nat_of_succ_le fun n => by simpa [J_succ] using splitCenterBox_le _ _
   have hJle : ∀ m, J m ≤ I := fun m => hJmono (zero_le m)
   have hJp : ∀ m, ¬p (J m) := fun m =>
     Nat.recOn m hpI fun m => by simpa only [J_succ] using hs (J m) (hJle m)
@@ -157,7 +157,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
     intro m i
     induction' m with m ihm
     · simp [J]
-    simp only [pow_succ', J_succ, upper_sub_lower_split_center_box, ihm, div_div]
+    simp only [pow_succ', J_succ, upper_sub_lower_splitCenterBox, ihm, div_div]
   have h0 : J 0 = I := rfl
   -- Now we clear unneeded assumptions
   clear_value J
@@ -165,23 +165,23 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   -- Let `z` be the unique common point of all `(J m).Icc`. Then `H_nhds` proves `p (J m)` for
   -- sufficiently large `m`. This contradicts `hJp`.
   set z : ι → ℝ := ⨆ m, (J m).lower
-  have hzJ : ∀ m, z ∈ (J m).Icc :=
-    mem_Inter.1
-      (csupᵢ_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).Monotone.comp_antitone hJmono) fun m =>
+  have hzJ : ∀ m, z ∈ (J m).icc :=
+    mem_interᵢ.1
+      (csupᵢ_mem_Inter_Icc_of_antitone_Icc ((@box.Icc ι).monotone.comp_antitone hJmono) fun m =>
         (J m).lower_le_upper)
-  have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).lower_mem_icc
-  have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_Icc.1 (hJle m) (J m).upper_mem_icc
-  have hJlz : tendsto (fun m => (J m).lower) at_top (𝓝 z) :=
+  have hJl_mem : ∀ m, (J m).lower ∈ I.Icc := fun m => le_iff_icc.1 (hJle m) (J m).lower_mem_icc
+  have hJu_mem : ∀ m, (J m).upper ∈ I.Icc := fun m => le_iff_icc.1 (hJle m) (J m).upper_mem_icc
+  have hJlz : Tendsto (fun m => (J m).lower) atTop (𝓝 z) :=
     tendsto_atTop_csupr (antitone_lower.comp hJmono) ⟨I.upper, fun x ⟨m, hm⟩ => hm ▸ (hJl_mem m).2⟩
-  have hJuz : tendsto (fun m => (J m).upper) at_top (𝓝 z) :=
+  have hJuz : Tendsto (fun m => (J m).upper) atTop (𝓝 z) :=
     by
-    suffices tendsto (fun m => (J m).upper - (J m).lower) at_top (𝓝 0) by simpa using hJlz.add this
+    suffices Tendsto (fun m => (J m).upper - (J m).lower) atTop (𝓝 0) by simpa using hJlz.add this
     refine' tendsto_pi_nhds.2 fun i => _
     simpa [hJsub] using tendsto_const_nhds.div_at_top (tendsto_pow_atTop_atTop_of_one_lt one_lt_two)
-  replace hJlz : tendsto (fun m => (J m).lower) at_top (𝓝[Icc I.lower I.upper] z)
+  replace hJlz : Tendsto (fun m => (J m).lower) atTop (𝓝[Icc I.lower I.upper] z)
   exact
     tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)
-  replace hJuz : tendsto (fun m => (J m).upper) at_top (𝓝[Icc I.lower I.upper] z)
+  replace hJuz : Tendsto (fun m => (J m).upper) atTop (𝓝[Icc I.lower I.upper] z)
   exact
     tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ hJuz (eventually_of_forall hJu_mem)
   rcases H_nhds z (h0 ▸ hzJ 0) with ⟨U, hUz, hU⟩

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module ring_theory.prime
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -74,7 +74,7 @@ theorem mul_eq_mul_prime_pow {x y a p : R} {n : ℕ} (hp : Prime p) (hx : x * y 
     ∃ (i j : ℕ)(b c : R), i + j = n ∧ a = b * c ∧ x = b * p ^ i ∧ y = c * p ^ j :=
   by
   rcases mul_eq_mul_prime_prod (fun _ _ => hp)
-      (show x * y = a * (range n).Prod fun _ => p by simpa) with
+      (show x * y = a * (range n).prod fun _ => p by simpa) with
     ⟨t, u, b, c, htus, htu, rfl, rfl, rfl⟩
   exact ⟨t.card, u.card, b, c, by rw [← card_disjoint_union htu, htus, card_range], by simp⟩
 #align mul_eq_mul_prime_pow mul_eq_mul_prime_pow

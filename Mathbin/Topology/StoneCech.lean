@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Reid Barton
 
 ! This file was ported from Lean 3 source module topology.stone_cech
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem ultrafilterBasis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafi
 #print ultrafilter_isOpen_basic /-
 /-- The basic open sets for the topology on ultrafilters are open. -/
 theorem ultrafilter_isOpen_basic (s : Set α) : IsOpen { u : Ultrafilter α | s ∈ u } :=
-  ultrafilterBasis_is_basis.IsOpen ⟨s, rfl⟩
+  ultrafilterBasis_is_basis.isOpen ⟨s, rfl⟩
 #align ultrafilter_is_open_basic ultrafilter_isOpen_basic
 -/
 
@@ -89,7 +89,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
   change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
   simp only [TopologicalSpace.nhds_generateFrom, le_infᵢ_iff, ultrafilterBasis, le_principal_iff,
-    mem_set_of_eq]
+    mem_setOf_eq]
   constructor
   · intro h a ha
     exact h _ ⟨ha, a, rfl⟩
@@ -135,7 +135,7 @@ Case conversion may be inaccurate. Consider using '#align ultrafilter_comap_pure
 theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b :=
   by
   rw [TopologicalSpace.nhds_generateFrom]
-  simp only [comap_infi, comap_principal]
+  simp only [comap_infᵢ, comap_principal]
   intro s hs
   rw [← le_principal_iff]
   refine' infᵢ_le_of_le { u | s ∈ u } _
@@ -286,7 +286,7 @@ theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} 
     let b' : Ultrafilter (Ultrafilter α) := b.map pure
     have t : ↑b' ≤ 𝓝 b := ultrafilter_converges_iff.mpr (bind_pure _).symm
     rw [← h]
-    have := (continuous_ultrafilter_extend f).Tendsto b
+    have := (continuous_ultrafilter_extend f).tendsto b
     refine' le_trans _ (le_trans (map_mono t) this)
     change _ ≤ map (Ultrafilter.extend f ∘ pure) ↑b
     rw [ultrafilter_extend_extends]
@@ -347,7 +347,7 @@ def stoneCechUnit (x : α) : StoneCech α :=
 /-- The image of stone_cech_unit is dense. (But stone_cech_unit need
   not be an embedding, for example if α is not Hausdorff.) -/
 theorem denseRange_stoneCechUnit : DenseRange (stoneCechUnit : α → StoneCech α) :=
-  denseRange_pure.Quotient
+  denseRange_pure.quotient
 #align dense_range_stone_cech_unit denseRange_stoneCechUnit
 -/
 
@@ -413,7 +413,7 @@ theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech 
     by
     have : ↑(g.map pure) ≤ 𝓝 g := by rw [ultrafilter_converges_iff] <;> exact (bind_pure _).symm
     have : (g.map stoneCechUnit : Filter (StoneCech α)) ≤ 𝓝 ⟦g⟧ :=
-      continuousAt_iff_ultrafilter.mp (continuous_quotient_mk'.Tendsto g) _ this
+      continuousAt_iff_ultrafilter.mp (continuous_quotient_mk'.tendsto g) _ this
     rwa [show ⟦g⟧ = ⟦pure x⟧ from Quotient.sound <| convergent_eqv_pure gx] at this
 #align continuous_stone_cech_unit continuous_stoneCechUnit
 -/
@@ -429,8 +429,8 @@ instance StoneCech.t2Space : T2Space (StoneCech α) :=
   let ff := stoneCechExtend hf
   change ff ⟦x⟧ = ff ⟦y⟧
   have lim := fun (z : Ultrafilter α) (gz : (g : Filter (StoneCech α)) ≤ 𝓝 ⟦z⟧) =>
-    ((continuous_stoneCechExtend hf).Tendsto _).mono_left gz
-  exact tendsto_nhds_unique (limUnder x gx) (limUnder y gy)
+    ((continuous_stoneCechExtend hf).tendsto _).mono_left gz
+  exact tendsto_nhds_unique (lim x gx) (lim y gy)
 #align stone_cech.t2_space StoneCech.t2Space
 -/
 

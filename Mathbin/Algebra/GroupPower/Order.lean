@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module algebra.group_power.order
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,7 +182,7 @@ theorem Left.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
   | 0 => (pow_zero x).ge
   | n + 1 => by
     rw [pow_succ]
-    exact Left.one_le_mul hx Left.one_le_pow_of_le
+    exact Left.one_le_mul hx left.one_le_pow_of_le
 #align left.one_le_pow_of_le Left.one_le_pow_of_le
 #align left.pow_nonneg Left.pow_nonneg
 
@@ -197,7 +197,7 @@ theorem Left.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
   | 0 => (pow_zero _).le
   | n + 1 => by
     rw [pow_succ]
-    exact Left.mul_le_one hx Left.pow_le_one_of_le
+    exact Left.mul_le_one hx left.pow_le_one_of_le
 #align left.pow_le_one_of_le Left.pow_le_one_of_le
 #align left.pow_nonpos Left.pow_nonpos
 
@@ -218,7 +218,7 @@ theorem Right.one_le_pow_of_le (hx : 1 ≤ x) : ∀ {n : ℕ}, 1 ≤ x ^ n
   | 0 => (pow_zero _).ge
   | n + 1 => by
     rw [pow_succ]
-    exact Right.one_le_mul hx Right.one_le_pow_of_le
+    exact Right.one_le_mul hx right.one_le_pow_of_le
 #align right.one_le_pow_of_le Right.one_le_pow_of_le
 #align right.pow_nonneg Right.pow_nonneg
 
@@ -233,7 +233,7 @@ theorem Right.pow_le_one_of_le (hx : x ≤ 1) : ∀ {n : ℕ}, x ^ n ≤ 1
   | 0 => (pow_zero _).le
   | n + 1 => by
     rw [pow_succ]
-    exact Right.mul_le_one hx Right.pow_le_one_of_le
+    exact Right.mul_le_one hx right.pow_le_one_of_le
 #align right.pow_le_one_of_le Right.pow_le_one_of_le
 #align right.pow_nonpos Right.pow_nonpos
 
@@ -248,9 +248,9 @@ variable [Preorder β] [CovariantClass M M (· * ·) (· < ·)]
 theorem StrictMono.pow_right' (hf : StrictMono f) : ∀ {n : ℕ}, n ≠ 0 → StrictMono fun a => f a ^ n
   | 0, hn => (hn rfl).elim
   | 1, hn => by simpa
-  | Nat.succ <| Nat.succ n, hn => by
+  | nat.succ <| nat.succ n, hn => by
     simp_rw [pow_succ _ (n + 1)]
-    exact hf.mul' (StrictMono.pow_right' n.succ_ne_zero)
+    exact hf.mul' (strict_mono.pow_right' n.succ_ne_zero)
 #align strict_mono.pow_right' StrictMono.pow_right'
 #align strict_mono.nsmul_left StrictMono.nsmul_left
 
@@ -273,7 +273,7 @@ theorem Monotone.pow_right {f : β → M} (hf : Monotone f) : ∀ n : ℕ, Monot
   | 0 => by simpa using monotone_const
   | n + 1 => by
     simp_rw [pow_succ]
-    exact hf.mul' (Monotone.pow_right _)
+    exact hf.mul' (monotone.pow_right _)
 #align monotone.pow_right Monotone.pow_right
 #align monotone.nsmul_left Monotone.nsmul_left
 
@@ -682,7 +682,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : StrictOrderedSemiring.{u1} R] {x : R} {y : R}, (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) x y) -> (LE.le.{u1} R (Preorder.toLE.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (OfNat.ofNat.{u1} R 0 (Zero.toOfNat0.{u1} R (MonoidWithZero.toZero.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) x) -> (forall {n : Nat}, (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) n) -> (LT.lt.{u1} R (Preorder.toLT.{u1} R (PartialOrder.toPreorder.{u1} R (StrictOrderedSemiring.toPartialOrder.{u1} R _inst_1))) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) x n) (HPow.hPow.{u1, 0, u1} R Nat R (instHPow.{u1, 0} R Nat (Monoid.Pow.{u1} R (MonoidWithZero.toMonoid.{u1} R (Semiring.toMonoidWithZero.{u1} R (StrictOrderedSemiring.toSemiring.{u1} R _inst_1))))) y n)))
 Case conversion may be inaccurate. Consider using '#align pow_lt_pow_of_lt_left pow_lt_pow_of_lt_leftₓ'. -/
 theorem pow_lt_pow_of_lt_left (h : x < y) (hx : 0 ≤ x) : ∀ {n : ℕ}, 0 < n → x ^ n < y ^ n
-  | 0, hn => hn.False.elim
+  | 0, hn => hn.false.elim
   | n + 1, _ => by
     simpa only [pow_succ'] using
       mul_lt_mul_of_le_of_le' (pow_le_pow_of_le_left hx h.le _) h (pow_pos (hx.trans_lt h) _) hx
@@ -1102,7 +1102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sq_lt_sq sq_lt_sqₓ'. -/
 theorem sq_lt_sq : x ^ 2 < y ^ 2 ↔ |x| < |y| := by
   simpa only [sq_abs] using
-    (@strictMonoOn_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
+    (@strict_mono_on_pow R _ _ two_pos).lt_iff_lt (abs_nonneg x) (abs_nonneg y)
 #align sq_lt_sq sq_lt_sq
 
 /- warning: sq_lt_sq' -> sq_lt_sq' is a dubious translation:
@@ -1123,7 +1123,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align sq_le_sq sq_le_sqₓ'. -/
 theorem sq_le_sq : x ^ 2 ≤ y ^ 2 ↔ |x| ≤ |y| := by
   simpa only [sq_abs] using
-    (@strictMonoOn_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
+    (@strict_mono_on_pow R _ _ two_pos).le_iff_le (abs_nonneg x) (abs_nonneg y)
 #align sq_le_sq sq_le_sq
 
 /- warning: sq_le_sq' -> sq_le_sq' is a dubious translation:

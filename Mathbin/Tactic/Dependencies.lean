@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module tactic.dependencies
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -256,7 +256,7 @@ dependencies of multiple hypotheses, use `tactic.hyps_depend_on_local_name_set`.
 -/
 unsafe def hyp_depends_on_local_name_set (h : expr) (ns : name_set) : tactic Bool := do
   let ctx_has_local_def ← context_upto_hyp_has_local_def h
-  if ctx_has_local_def then Prod.fst <$> hyp_depends_on_local_name_set' mk_expr_set h ns
+  if ctx_has_local_def then prod.fst <$> hyp_depends_on_local_name_set' mk_expr_set h ns
     else hyp_directly_depends_on_local_name_set h ns
 #align tactic.hyp_depends_on_local_name_set tactic.hyp_depends_on_local_name_set
 
@@ -284,11 +284,11 @@ every `h ∈ hs`.
 unsafe def hyps_depend_on_local_name_set (hs : List expr) (ns : name_set) : tactic (List Bool) := do
   let ctx_has_local ← context_has_local_def
   if ctx_has_local then
-      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ =>
+      let go : expr → list bool × expr_set → tactic (list bool × expr_set) := fun h ⟨deps, cache⟩ =>
         do
         let (h_dep, cache) ← hyp_depends_on_local_name_set' cache h ns
         pure (h_dep :: deps, cache)
-      Prod.fst <$> hs go ([], mk_expr_map)
+      prod.fst <$> hs go ([], mk_expr_map)
     else hs fun h => hyp_directly_depends_on_local_name_set h ns
 #align tactic.hyps_depend_on_local_name_set tactic.hyps_depend_on_local_name_set
 
@@ -361,11 +361,11 @@ unsafe def hyps_depend_on_local_name_set_inclusive (hs : List expr) (ns : name_s
     tactic (List Bool) := do
   let ctx_has_local ← context_has_local_def
   if ctx_has_local then
-      let go : expr → List Bool × expr_set → tactic (List Bool × expr_set) := fun h ⟨deps, cache⟩ =>
+      let go : expr → list bool × expr_set → tactic (list bool × expr_set) := fun h ⟨deps, cache⟩ =>
         do
         let (h_dep, cache) ← hyp_depends_on_local_name_set_inclusive' cache h ns
         pure (h_dep :: deps, cache)
-      Prod.fst <$> hs go ([], mk_expr_map)
+      prod.fst <$> hs go ([], mk_expr_map)
     else hs fun h => hyp_directly_depends_on_local_name_set_inclusive h ns
 #align tactic.hyps_depend_on_local_name_set_inclusive tactic.hyps_depend_on_local_name_set_inclusive
 
@@ -419,7 +419,7 @@ you need the dependencies of multiple hypotheses, use
 -/
 unsafe def dependency_set_of_hyp (h : expr) : tactic expr_set := do
   let ctx_has_local ← context_upto_hyp_has_local_def h
-  if ctx_has_local then Prod.fst <$> dependency_set_of_hyp' mk_expr_map h
+  if ctx_has_local then prod.fst <$> dependency_set_of_hyp' mk_expr_map h
     else direct_dependency_set_of_hyp h
 #align tactic.dependency_set_of_hyp tactic.dependency_set_of_hyp
 
@@ -447,11 +447,11 @@ unsafe def dependency_sets_of_hyps (hs : List expr) : tactic (List expr_set) := 
   let ctx_has_def ← context_has_local_def
   if ctx_has_def then
       let go :
-        expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) := do
+        expr → list expr_set × expr_map expr_set → tactic (list expr_set × expr_map expr_set) := do
         fun h ⟨deps, cache⟩ => do
           let (h_deps, cache) ← dependency_set_of_hyp' cache h
           pure (h_deps :: deps, cache)
-      Prod.fst <$> hs go ([], mk_expr_map)
+      prod.fst <$> hs go ([], mk_expr_map)
     else hs direct_dependency_set_of_hyp
 #align tactic.dependency_sets_of_hyps tactic.dependency_sets_of_hyps
 
@@ -523,11 +523,11 @@ unsafe def dependency_sets_of_hyps_inclusive (hs : List expr) : tactic (List exp
   let ctx_has_def ← context_has_local_def
   if ctx_has_def then
       let go :
-        expr → List expr_set × expr_map expr_set → tactic (List expr_set × expr_map expr_set) :=
+        expr → list expr_set × expr_map expr_set → tactic (list expr_set × expr_map expr_set) :=
         fun h ⟨deps, cache⟩ => do
         let (h_deps, cache) ← dependency_set_of_hyp_inclusive' cache h
         pure (h_deps :: deps, cache)
-      Prod.fst <$> hs go ([], mk_expr_map)
+      prod.fst <$> hs go ([], mk_expr_map)
     else hs direct_dependency_set_of_hyp_inclusive
 #align tactic.dependency_sets_of_hyps_inclusive tactic.dependency_sets_of_hyps_inclusive
 
@@ -570,7 +570,7 @@ context.
 -/
 unsafe def reverse_dependencies_of_hyp_name_set (hs : name_set) : tactic (List expr) := do
   let ctx ← local_context
-  let ctx := ctx.afterₓ fun h => hs.contains h.local_uniq_name
+  let ctx := ctx.after fun h => hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_aux hs ctx [] hs
 #align tactic.reverse_dependencies_of_hyp_name_set tactic.reverse_dependencies_of_hyp_name_set
 
@@ -609,7 +609,7 @@ they appear in the context.
 -/
 unsafe def reverse_dependencies_of_hyp_name_set_inclusive (hs : name_set) : tactic (List expr) := do
   let ctx ← local_context
-  let ctx := ctx.dropWhileₓ fun h => ¬hs.contains h.local_uniq_name
+  let ctx := ctx.dropWhile fun h => ¬hs.contains h.local_uniq_name
   reverse_dependencies_of_hyp_name_set_inclusive_aux ctx [] hs
 #align tactic.reverse_dependencies_of_hyp_name_set_inclusive tactic.reverse_dependencies_of_hyp_name_set_inclusive
 

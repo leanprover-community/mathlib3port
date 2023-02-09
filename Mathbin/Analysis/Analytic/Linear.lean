@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.linear
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,11 @@ protected theorem hasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) :
 
 protected theorem hasFpowerSeriesAt (f : E →L[𝕜] F) (x : E) :
     HasFpowerSeriesAt f (f.fpowerSeries x) x :=
-  ⟨∞, f.HasFpowerSeriesOnBall x⟩
+  ⟨∞, f.hasFpowerSeriesOnBall x⟩
 #align continuous_linear_map.has_fpower_series_at ContinuousLinearMap.hasFpowerSeriesAt
 
 protected theorem analyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x :=
-  (f.HasFpowerSeriesAt x).AnalyticAt
+  (f.hasFpowerSeriesAt x).analyticAt
 #align continuous_linear_map.analytic_at ContinuousLinearMap.analyticAt
 
 /-- Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
@@ -104,7 +104,7 @@ protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G
     HasSum := fun y _ =>
       (hasSum_nat_add_iff' 3).1 <|
         by
-        simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add,
+        simp only [Finset.sum_range_succ, Finset.sum_range_one, prod.fst_add, Prod.snd_add,
           f.map_add_add]
         dsimp; simp only [add_comm, sub_self, hasSum_zero] }
 #align continuous_linear_map.has_fpower_series_on_ball_bilinear ContinuousLinearMap.hasFpowerSeriesOnBallBilinear
@@ -116,7 +116,7 @@ protected theorem hasFpowerSeriesAtBilinear (f : E →L[𝕜] F →L[𝕜] G) (x
 
 protected theorem analyticAt_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     AnalyticAt 𝕜 (fun x : E × F => f x.1 x.2) x :=
-  (f.hasFpowerSeriesAtBilinear x).AnalyticAt
+  (f.hasFpowerSeriesAtBilinear x).analyticAt
 #align continuous_linear_map.analytic_at_bilinear ContinuousLinearMap.analyticAt_bilinear
 
 end ContinuousLinearMap

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.cone_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -45,7 +45,7 @@ def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const
     where
   obj c := CostructuredArrow.mk c.π
   map c d f :=
-    CostructuredArrow.homMk f.Hom <| by
+    CostructuredArrow.homMk f.hom <| by
       ext
       simp
 #align category_theory.limits.cone.to_costructured_arrow CategoryTheory.Limits.Cone.toCostructuredArrow
@@ -55,11 +55,11 @@ def Cone.toCostructuredArrow (F : J ⥤ C) : Cone F ⥤ CostructuredArrow (const
 @[simps]
 def Cone.fromCostructuredArrow (F : J ⥤ C) : CostructuredArrow (const J) F ⥤ Cone F
     where
-  obj c := ⟨c.left, c.Hom⟩
+  obj c := ⟨c.left, c.hom⟩
   map c d f :=
     { Hom := f.left
       w' := fun j => by
-        convert congr_fun (congr_arg nat_trans.app f.w) j
+        convert congr_fun (congr_arg NatTrans.app f.w) j
         dsimp
         simp }
 #align category_theory.limits.cone.from_costructured_arrow CategoryTheory.Limits.Cone.fromCostructuredArrow
@@ -76,22 +76,22 @@ def Cone.equivCostructuredArrow (F : J ⥤ C) : Cone F ≌ CostructuredArrow (co
 /-- A cone is a limit cone iff it is terminal. -/
 def Cone.isLimitEquivIsTerminal {F : J ⥤ C} (c : Cone F) : IsLimit c ≃ IsTerminal c :=
   IsLimit.isoUniqueConeMorphism.toEquiv.trans
-    { toFun := fun h => is_terminal.of_unique _
+    { toFun := fun h => IsTerminal.ofUnique _
       invFun := fun h s => ⟨⟨IsTerminal.from h s⟩, fun a => IsTerminal.hom_ext h a _⟩
       left_inv := by tidy
       right_inv := by tidy }
 #align category_theory.limits.cone.is_limit_equiv_is_terminal CategoryTheory.Limits.Cone.isLimitEquivIsTerminal
 
 theorem hasLimit_iff_hasTerminal_cone (F : J ⥤ C) : HasLimit F ↔ HasTerminal (Cone F) :=
-  ⟨fun h => (cone.is_limit_equiv_is_terminal _ (limit.is_limit F)).HasTerminal, fun h =>
-    ⟨⟨⟨⊤_ _, (cone.is_limit_equiv_is_terminal _).symm terminal_is_terminal⟩⟩⟩⟩
+  ⟨fun h => (Cone.isLimitEquivIsTerminal _ (limit.isLimit F)).hasTerminal, fun h =>
+    ⟨⟨⟨⊤_ _, (Cone.isLimitEquivIsTerminal _).symm terminalIsTerminal⟩⟩⟩⟩
 #align category_theory.limits.has_limit_iff_has_terminal_cone CategoryTheory.Limits.hasLimit_iff_hasTerminal_cone
 
 theorem hasLimitsOfShape_iff_isLeftAdjoint_const :
     HasLimitsOfShape J C ↔ Nonempty (IsLeftAdjoint (const J : C ⥤ _)) :=
   calc
     HasLimitsOfShape J C ↔ ∀ F : J ⥤ C, HasLimit F :=
-      ⟨fun h => h.HasLimit, fun h => has_limits_of_shape.mk⟩
+      ⟨fun h => h.hasLimit, fun h => HasLimitsOfShape.mk⟩
     _ ↔ ∀ F : J ⥤ C, HasTerminal (Cone F) := forall_congr' hasLimit_iff_hasTerminal_cone
     _ ↔ ∀ F : J ⥤ C, HasTerminal (CostructuredArrow (const J) F) :=
       forall_congr' fun F => (Cone.equivCostructuredArrow F).hasTerminal_iff
@@ -108,7 +108,7 @@ theorem IsLimit.liftConeMorphism_eq_isTerminal_from {F : J ⥤ C} {c : Cone F} (
 theorem IsTerminal.from_eq_liftConeMorphism {F : J ⥤ C} {c : Cone F} (hc : IsTerminal c)
     (s : Cone F) :
     IsTerminal.from hc s = ((Cone.isLimitEquivIsTerminal _).symm hc).liftConeMorphism s := by
-  convert (is_limit.lift_cone_morphism_eq_is_terminal_from _ s).symm
+  convert (IsLimit.liftConeMorphism_eq_isTerminal_from _ s).symm
 #align category_theory.limits.is_terminal.from_eq_lift_cone_morphism CategoryTheory.Limits.IsTerminal.from_eq_liftConeMorphism
 
 /-- If `G : cone F ⥤ cone F'` preserves terminal objects, it preserves limit cones. -/
@@ -130,7 +130,7 @@ def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (con
     where
   obj c := StructuredArrow.mk c.ι
   map c d f :=
-    StructuredArrow.homMk f.Hom <| by
+    StructuredArrow.homMk f.hom <| by
       ext
       simp
 #align category_theory.limits.cocone.to_structured_arrow CategoryTheory.Limits.Cocone.toStructuredArrow
@@ -140,11 +140,11 @@ def Cocone.toStructuredArrow (F : J ⥤ C) : Cocone F ⥤ StructuredArrow F (con
 @[simps]
 def Cocone.fromStructuredArrow (F : J ⥤ C) : StructuredArrow F (const J) ⥤ Cocone F
     where
-  obj c := ⟨c.right, c.Hom⟩
+  obj c := ⟨c.right, c.hom⟩
   map c d f :=
     { Hom := f.right
       w' := fun j => by
-        convert (congr_fun (congr_arg nat_trans.app f.w) j).symm
+        convert (congr_fun (congr_arg NatTrans.app f.w) j).symm
         dsimp
         simp }
 #align category_theory.limits.cocone.from_structured_arrow CategoryTheory.Limits.Cocone.fromStructuredArrow
@@ -161,22 +161,22 @@ def Cocone.equivStructuredArrow (F : J ⥤ C) : Cocone F ≌ StructuredArrow F (
 /-- A cocone is a colimit cocone iff it is initial. -/
 def Cocone.isColimitEquivIsInitial {F : J ⥤ C} (c : Cocone F) : IsColimit c ≃ IsInitial c :=
   IsColimit.isoUniqueCoconeMorphism.toEquiv.trans
-    { toFun := fun h => is_initial.of_unique _
+    { toFun := fun h => IsInitial.ofUnique _
       invFun := fun h s => ⟨⟨IsInitial.to h s⟩, fun a => IsInitial.hom_ext h a _⟩
       left_inv := by tidy
       right_inv := by tidy }
 #align category_theory.limits.cocone.is_colimit_equiv_is_initial CategoryTheory.Limits.Cocone.isColimitEquivIsInitial
 
 theorem hasColimit_iff_hasInitial_cocone (F : J ⥤ C) : HasColimit F ↔ HasInitial (Cocone F) :=
-  ⟨fun h => (cocone.is_colimit_equiv_is_initial _ (colimit.is_colimit F)).HasInitial, fun h =>
-    ⟨⟨⟨⊥_ _, (cocone.is_colimit_equiv_is_initial _).symm initial_is_initial⟩⟩⟩⟩
+  ⟨fun h => (Cocone.isColimitEquivIsInitial _ (colimit.isColimit F)).hasInitial, fun h =>
+    ⟨⟨⟨⊥_ _, (Cocone.isColimitEquivIsInitial _).symm initialIsInitial⟩⟩⟩⟩
 #align category_theory.limits.has_colimit_iff_has_initial_cocone CategoryTheory.Limits.hasColimit_iff_hasInitial_cocone
 
 theorem hasColimitsOfShape_iff_isRightAdjoint_const :
     HasColimitsOfShape J C ↔ Nonempty (IsRightAdjoint (const J : C ⥤ _)) :=
   calc
     HasColimitsOfShape J C ↔ ∀ F : J ⥤ C, HasColimit F :=
-      ⟨fun h => h.HasColimit, fun h => has_colimits_of_shape.mk⟩
+      ⟨fun h => h.hasColimit, fun h => HasColimitsOfShape.mk⟩
     _ ↔ ∀ F : J ⥤ C, HasInitial (Cocone F) := forall_congr' hasColimit_iff_hasInitial_cocone
     _ ↔ ∀ F : J ⥤ C, HasInitial (StructuredArrow F (const J)) :=
       forall_congr' fun F => (Cocone.equivStructuredArrow F).hasInitial_iff
@@ -194,7 +194,7 @@ theorem IsColimit.descCoconeMorphism_eq_isInitial_to {F : J ⥤ C} {c : Cocone F
 theorem IsInitial.to_eq_descCoconeMorphism {F : J ⥤ C} {c : Cocone F} (hc : IsInitial c)
     (s : Cocone F) :
     IsInitial.to hc s = ((Cocone.isColimitEquivIsInitial _).symm hc).descCoconeMorphism s := by
-  convert (is_colimit.desc_cocone_morphism_eq_is_initial_to _ s).symm
+  convert (IsColimit.descCoconeMorphism_eq_isInitial_to _ s).symm
 #align category_theory.limits.is_initial.to_eq_desc_cocone_morphism CategoryTheory.Limits.IsInitial.to_eq_descCoconeMorphism
 
 /-- If `G : cocone F ⥤ cocone F'` preserves initial objects, it preserves colimit cocones. -/

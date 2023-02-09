@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_with
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -57,7 +57,7 @@ def LiouvilleWith (p x : ℝ) : Prop :=
 theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x :=
   by
   use 2
-  refine' ((eventually_gt_at_top 0).mono fun n hn => _).Frequently
+  refine' ((eventually_gt_atTop 0).mono fun n hn => _).frequently
   have hn' : (0 : ℝ) < n := by simpa
   have : x < ↑(⌊x * ↑n⌋ + 1) / ↑n :=
     by
@@ -82,7 +82,7 @@ theorem exists_pos (h : LiouvilleWith p x) :
   by
   rcases h with ⟨C, hC⟩
   refine' ⟨max C 1, zero_lt_one.trans_le <| le_max_right _ _, _⟩
-  refine' ((eventually_ge_at_top 1).and_frequently hC).mono _
+  refine' ((eventually_ge_atTop 1).and_frequently hC).mono _
   rintro n ⟨hle, m, hne, hlt⟩
   refine' ⟨hle, m, hne, hlt.trans_le _⟩
   exact div_le_div_of_le (rpow_nonneg_of_nonneg n.cast_nonneg _) (le_max_left _ _)
@@ -104,10 +104,10 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
     ∃ᶠ n : ℕ in atTop, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < n ^ (-q) :=
   by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
-  have : ∀ᶠ n : ℕ in at_top, C < n ^ (p - q) := by
+  have : ∀ᶠ n : ℕ in atTop, C < n ^ (p - q) := by
     simpa only [(· ∘ ·), neg_sub, one_div] using
-      ((tendsto_rpow_atTop (sub_pos.2 hlt)).comp tendsto_nat_cast_atTop_atTop).Eventually
-        (eventually_gt_at_top C)
+      ((tendsto_rpow_atTop (sub_pos.2 hlt)).comp tendsto_nat_cast_atTop_atTop).eventually
+        (eventually_gt_atTop C)
   refine' (this.and_frequently hC).mono _
   rintro n ⟨hnC, hn, m, hne, hlt⟩
   replace hn : (0 : ℝ) < n := Nat.cast_pos.2 hn
@@ -119,7 +119,7 @@ theorem frequently_lt_rpow_neg (h : LiouvilleWith p x) (hlt : q < p) :
 theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r) :=
   by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
-  refine' ⟨r.denom ^ p * (|r| * C), (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
+  refine' ⟨r.denom ^ p * (|r| * C), (tendsto_id.nsmul_at_top r.pos).frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have A : (↑(r.num * m) : ℝ) / ↑(r.denom • id n) = m / n * r := by
     simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
@@ -189,7 +189,7 @@ theorem nat_mul (h : LiouvilleWith p x) (hn : n ≠ 0) : LiouvilleWith p (n * x)
 theorem add_rat (h : LiouvilleWith p x) (r : ℚ) : LiouvilleWith p (x + r) :=
   by
   rcases h.exists_pos with ⟨C, hC₀, hC⟩
-  refine' ⟨r.denom ^ p * C, (tendsto_id.nsmul_at_top r.pos).Frequently (hC.mono _)⟩
+  refine' ⟨r.denom ^ p * C, (tendsto_id.nsmul_at_top r.pos).frequently (hC.mono _)⟩
   rintro n ⟨hn, m, hne, hlt⟩
   have hr : (0 : ℝ) < r.denom := Nat.cast_pos.2 r.pos
   have hn' : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (zero_lt_one.trans_le hn).ne'
@@ -317,7 +317,7 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m :=
   by
   rintro rfl
   rename' m => M
-  rcases((eventually_gt_at_top 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
+  rcases((eventually_gt_atTop 0).and_frequently (h.frequently_lt_rpow_neg hp)).exists with
     ⟨n : ℕ, hn : 0 < n, m : ℤ, hne : (M : ℝ) ≠ m / n, hlt : |(M - m / n : ℝ)| < n ^ (-1 : ℝ)⟩
   refine' hlt.not_le _
   have hn' : (0 : ℝ) < n := by simpa
@@ -352,21 +352,21 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   by
   refine' Classical.not_not.1 fun H => _
   simp only [Liouville, not_forall, not_exists, not_frequently, not_and, not_lt,
-    eventually_at_top] at H
+    eventually_atTop] at H
   rcases H with ⟨N, hN⟩
-  have : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in at_top, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
+  have : ∀ b > (1 : ℕ), ∀ᶠ m : ℕ in atTop, ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
     by
     intro b hb
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
-    have H : tendsto (fun m => 1 / b ^ m : ℕ → ℝ) at_top (𝓝 0) :=
+    have H : Tendsto (fun m => 1 / b ^ m : ℕ → ℝ) atTop (𝓝 0) :=
       by
       simp only [one_div]
       exact tendsto_inv_at_top_zero.comp (tendsto_pow_atTop_atTop_of_one_lt hb)
     refine' (H.eventually (hx.irrational.eventually_forall_le_dist_cast_div b)).mono _
     exact fun m hm a => hm a
-  have : ∀ᶠ m : ℕ in at_top, ∀ b < N, 1 < b → ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
+  have : ∀ᶠ m : ℕ in atTop, ∀ b < N, 1 < b → ∀ a : ℤ, (1 / b ^ m : ℝ) ≤ |x - a / b| :=
     (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
-  rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
+  rcases(this.and (eventually_ge_atTop n)).exists with ⟨m, hm, hnm⟩
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
   lift b to ℕ using zero_le_one.trans hb.le
   norm_cast  at hb
@@ -383,7 +383,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
 protected theorem liouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x :=
   by
   suffices : LiouvilleWith ⌈p⌉₊ x; exact this.mono (Nat.le_ceil p)
-  refine' ⟨1, ((eventually_gt_at_top 1).and_frequently (hx.frequently_exists_num ⌈p⌉₊)).mono _⟩
+  refine' ⟨1, ((eventually_gt_atTop 1).and_frequently (hx.frequently_exists_num ⌈p⌉₊)).mono _⟩
   rintro b ⟨hb, a, hne, hlt⟩
   refine' ⟨a, hne, _⟩
   rwa [rpow_nat_cast]
@@ -396,7 +396,7 @@ number. -/
 theorem forall_liouvilleWith_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Liouville x :=
   by
   refine' ⟨fun H n => _, Liouville.liouvilleWith⟩
-  rcases((eventually_gt_at_top 1).and_frequently
+  rcases((eventually_gt_atTop 1).and_frequently
         ((H (n + 1)).frequently_lt_rpow_neg (lt_add_one n))).exists with
     ⟨b, hb, a, hne, hlt⟩
   exact ⟨a, b, by exact_mod_cast hb, hne, by simpa [rpow_neg] using hlt⟩

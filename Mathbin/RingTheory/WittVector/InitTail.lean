@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.init_tail
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -50,9 +50,9 @@ namespace Tactic
 namespace Interactive
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
@@ -103,16 +103,16 @@ def selectPoly (n : ℕ) : MvPolynomial ℕ ℤ :=
 
 theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coeff (selectPoly P n) :=
   by
-  dsimp [select, select_poly]
+  dsimp [select, selectPoly]
   split_ifs with hi
-  · rw [aeval_X]
+  · rw [aeval_x]
   · rw [AlgHom.map_zero]
 #align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
 theorem select_isPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
   by
-  use select_poly P
+  use selectPoly P
   rintro R _Rcr x
   funext i
   apply coeff_select
@@ -126,14 +126,14 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
   intro n
   simp only [RingHom.map_add]
   suffices
-    (bind₁ (select_poly P)) (wittPolynomial p ℤ n) +
-        (bind₁ (select_poly fun i => ¬P i)) (wittPolynomial p ℤ n) =
+    (bind₁ (selectPoly P)) (wittPolynomial p ℤ n) +
+        (bind₁ (selectPoly fun i => ¬P i)) (wittPolynomial p ℤ n) =
       wittPolynomial p ℤ n
     by
     apply_fun aeval x.coeff  at this
     simpa only [AlgHom.map_add, aeval_bind₁, ← coeff_select]
-  simp only [wittPolynomial_eq_sum_c_mul_x_pow, select_poly, AlgHom.map_sum, AlgHom.map_pow,
-    AlgHom.map_mul, bind₁_X_right, bind₁_C_right, ← Finset.sum_add_distrib, ← mul_add]
+  simp only [wittPolynomial_eq_sum_c_mul_x_pow, selectPoly, AlgHom.map_sum, AlgHom.map_pow,
+    AlgHom.map_mul, bind₁_x_right, bind₁_c_right, ← Finset.sum_add_distrib, ← mul_add]
   apply Finset.sum_congr rfl
   refine' fun m hm => mul_eq_mul_left_iff.mpr (Or.inl _)
   rw [ite_pow, ite_pow, zero_pow (pow_pos hp.out.pos _)]
@@ -205,31 +205,31 @@ theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by in
 include hp
 
 theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by
-  init_ring using witt_add_vars
+  init_ring using wittAdd_vars
 #align witt_vector.init_add WittVector.init_add
 
 theorem init_mul (x y : 𝕎 R) (n : ℕ) : init n (x * y) = init n (init n x * init n y) := by
-  init_ring using witt_mul_vars
+  init_ring using wittMul_vars
 #align witt_vector.init_mul WittVector.init_mul
 
 theorem init_neg (x : 𝕎 R) (n : ℕ) : init n (-x) = init n (-init n x) := by
-  init_ring using witt_neg_vars
+  init_ring using wittNeg_vars
 #align witt_vector.init_neg WittVector.init_neg
 
 theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - init n y) := by
-  init_ring using witt_sub_vars
+  init_ring using wittSub_vars
 #align witt_vector.init_sub WittVector.init_sub
 
 theorem init_nsmul (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
-  init_ring using fun p [Fact (Nat.Prime p)] n => witt_nsmul_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => wittNsmul_vars p m n
 #align witt_vector.init_nsmul WittVector.init_nsmul
 
 theorem init_zsmul (m : ℤ) (x : 𝕎 R) (n : ℕ) : init n (m • x) = init n (m • init n x) := by
-  init_ring using fun p [Fact (Nat.Prime p)] n => witt_zsmul_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => wittZsmul_vars p m n
 #align witt_vector.init_zsmul WittVector.init_zsmul
 
 theorem init_pow (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (x ^ m) = init n (init n x ^ m) := by
-  init_ring using fun p [Fact (Nat.Prime p)] n => witt_pow_vars p m n
+  init_ring using fun p [Fact (Nat.Prime p)] n => wittPow_vars p m n
 #align witt_vector.init_pow WittVector.init_pow
 
 section

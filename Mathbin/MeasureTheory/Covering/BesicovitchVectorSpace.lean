@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.besicovitch_vector_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,8 +65,8 @@ variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 radius at `1`. -/
 def centerAndRescale : SatelliteConfig E N τ
     where
-  c i := (a.R (last N))⁻¹ • (a.c i - a.c (last N))
-  R i := (a.R (last N))⁻¹ * a.R i
+  c i := (a.r (last N))⁻¹ • (a.c i - a.c (last N))
+  R i := (a.r (last N))⁻¹ * a.r i
   rpos i := mul_pos (inv_pos.2 (a.rpos _)) (a.rpos _)
   h i j hij := by
     rcases a.h i j hij with (H | H)
@@ -102,7 +102,7 @@ def centerAndRescale : SatelliteConfig E N τ
       convert H.1 using 2
       abel
     · rw [← mul_assoc, mul_comm τ, mul_assoc]
-      refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (a.rpos _).le)
+      refine' mul_le_mul_of_nonneg_left _ (inv_nonneg.2 (Membership.Mem _).le)
       exact H.2
   inter i hi := by
     have H := a.inter i hi
@@ -115,12 +115,12 @@ def centerAndRescale : SatelliteConfig E N τ
 #align besicovitch.satellite_config.center_and_rescale Besicovitch.SatelliteConfig.centerAndRescale
 
 theorem centerAndRescale_center : a.centerAndRescale.c (last N) = 0 := by
-  simp [satellite_config.center_and_rescale]
+  simp [SatelliteConfig.centerAndRescale]
 #align besicovitch.satellite_config.center_and_rescale_center Besicovitch.SatelliteConfig.centerAndRescale_center
 
 theorem centerAndRescale_radius {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) :
-    a.centerAndRescale.R (last N) = 1 := by
-  simp [satellite_config.center_and_rescale, inv_mul_cancel (a.rpos _).ne']
+    a.centerAndRescale.r (last N) = 1 := by
+  simp [SatelliteConfig.centerAndRescale, inv_mul_cancel (a.rpos _).ne']
 #align besicovitch.satellite_config.center_and_rescale_radius Besicovitch.SatelliteConfig.centerAndRescale_radius
 
 end SatelliteConfig
@@ -149,7 +149,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     contained in the ball of radius `5/2`. A volume argument gives `s.card * (1/2)^dim ≤ (5/2)^dim`,
     i.e., `s.card ≤ 5^dim`. -/
   borelize E
-  let μ : Measure E := measure.add_haar
+  let μ : measure E := Measure.add_haar
   let δ : ℝ := (1 : ℝ) / 2
   let ρ : ℝ := (5 : ℝ) / 2
   have ρpos : 0 < ρ := by norm_num [ρ]
@@ -163,7 +163,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     norm_num
   have A_subset : A ⊆ ball (0 : E) ρ :=
     by
-    refine' Union₂_subset fun x hx => _
+    refine' unionᵢ₂_subset fun x hx => _
     apply ball_subset_ball'
     calc
       δ + dist x 0 ≤ δ + 2 := by
@@ -208,7 +208,7 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
   · refine' ⟨5 ^ finrank ℝ E, _⟩
     rintro _ ⟨s, ⟨rfl, h⟩⟩
     exact Besicovitch.card_le_of_separated s h.1 h.2
-  · simp only [mem_set_of_eq, Ne.def]
+  · simp only [mem_setOf_eq, Ne.def]
     exact ⟨s, rfl, hs, h's⟩
 #align besicovitch.card_le_multiplicity Besicovitch.card_le_multiplicity
 
@@ -263,21 +263,21 @@ theorem exists_good_δ :
           (∀ m n : ℕ, m < n → u n < u m) ∧
             (∀ n : ℕ, 0 < u n) ∧ Filter.Tendsto u Filter.atTop (𝓝 0) :=
         exists_seq_strictAnti_tendsto (0 : ℝ)
-      have A : ∀ n, F (u n) ∈ closed_ball (0 : Fin N → E) 2 :=
+      have A : ∀ n, F (u n) ∈ closedBall (0 : Fin N → E) 2 :=
         by
         intro n
-        simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right,
+        simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closedBall, dist_zero_right,
           (hF (u n) (zero_lt_u n)).left, forall_const]
       obtain ⟨f, fmem, φ, φ_mono, hf⟩ :
-        ∃ f ∈ closed_ball (0 : Fin N → E) 2,
-          ∃ φ : ℕ → ℕ, StrictMono φ ∧ tendsto ((F ∘ u) ∘ φ) at_top (𝓝 f) :=
-        IsCompact.tendsto_subseq (is_compact_closed_ball _ _) A
+        ∃ f ∈ closedBall (0 : Fin N → E) 2,
+          ∃ φ : ℕ → ℕ, StrictMono φ ∧ Tendsto ((F ∘ u) ∘ φ) atTop (𝓝 f) :=
+        IsCompact.tendsto_subseq (isCompact_closedBall _ _) A
       refine' ⟨f, fun i => _, fun i j hij => _⟩
-      · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closed_ball, dist_zero_right] at fmem
+      · simp only [pi_norm_le_iff_of_nonneg zero_le_two, mem_closedBall, dist_zero_right] at fmem
         exact fmem i
-      · have A : tendsto (fun n => ‖F (u (φ n)) i - F (u (φ n)) j‖) at_top (𝓝 ‖f i - f j‖) :=
+      · have A : Tendsto (fun n => ‖F (u (φ n)) i - F (u (φ n)) j‖) atTop (𝓝 ‖f i - f j‖) :=
           ((hf.apply i).sub (hf.apply j)).norm
-        have B : tendsto (fun n => 1 - u (φ n)) at_top (𝓝 (1 - 0)) :=
+        have B : Tendsto (fun n => 1 - u (φ n)) atTop (𝓝 (1 - 0)) :=
           tendsto_const_nhds.sub (hu.comp φ_mono.tendsto_at_top)
         rw [sub_zero] at B
         exact le_of_tendsto_of_tendsto' B A fun n => (hF (u (φ n)) (zero_lt_u _)).2 i j hij
@@ -314,7 +314,7 @@ theorem exists_good_δ :
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
 def goodδ : ℝ :=
-  (exists_good_δ E).some
+  (exists_good_δ E).choose
 #align besicovitch.good_δ Besicovitch.goodδ
 
 theorem goodδ_lt_one : goodδ E < 1 :=
@@ -329,7 +329,7 @@ def goodτ : ℝ :=
 #align besicovitch.good_τ Besicovitch.goodτ
 
 theorem one_lt_goodτ : 1 < goodτ E := by
-  dsimp [good_τ, good_δ]
+  dsimp [goodτ, goodδ]
   linarith [(exists_good_δ E).choose_spec.1]
 #align besicovitch.one_lt_good_τ Besicovitch.one_lt_goodτ
 
@@ -346,9 +346,9 @@ theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖
     have finj : Function.Injective f := by
       intro i j hij
       by_contra
-      have : 1 - good_δ E ≤ ‖f i - f j‖ := h' i j h
+      have : 1 - goodδ E ≤ ‖f i - f j‖ := h' i j h
       simp only [hij, norm_zero, sub_self] at this
-      linarith [good_δ_lt_one E]
+      linarith [goodδ_lt_one E]
     let s := Finset.image f Finset.univ
     have s_card : s.card = n :=
       by
@@ -357,7 +357,7 @@ theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖
     have hs : ∀ c ∈ s, ‖c‖ ≤ 2 := by
       simp only [h, forall_apply_eq_imp_iff', forall_const, forall_exists_index, Finset.mem_univ,
         Finset.mem_image, imp_true_iff]
-    have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - good_δ E ≤ ‖c - d‖ :=
+    have h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ‖c - d‖ :=
       by
       simp only [s, forall_apply_eq_imp_iff', forall_exists_index, Finset.mem_univ,
         Finset.mem_image, Ne.def, exists_true_left, forall_apply_eq_imp_iff', forall_true_left]
@@ -392,7 +392,7 @@ where both of them are `> 2`.
 
 
 theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
-    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1)
+    (lastr : a.r (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1)
     (i j : Fin N.succ) (inej : i ≠ j) : 1 - δ ≤ ‖a.c i - a.c j‖ :=
   by
   have ah :
@@ -430,7 +430,7 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 variable [NormedSpace ℝ E]
 
 theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
-    (lastc : a.c (last N) = 0) (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4)
+    (lastc : a.c (last N) = 0) (lastr : a.r (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4)
     (hδ2 : δ ≤ 1) (i j : Fin N.succ) (inej : i ≠ j) (hi : ‖a.c i‖ ≤ 2) (hj : 2 < ‖a.c j‖) :
     1 - δ ≤ ‖a.c i - (2 / ‖a.c j‖) • a.c j‖ :=
   by
@@ -500,7 +500,7 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 #align besicovitch.satellite_config.exists_normalized_aux2 Besicovitch.SatelliteConfig.exists_normalized_aux2
 
 theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
-    (lastc : a.c (last N) = 0) (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4)
+    (lastc : a.c (last N) = 0) (lastr : a.r (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4)
     (i j : Fin N.succ) (inej : i ≠ j) (hi : 2 < ‖a.c i‖) (hij : ‖a.c i‖ ≤ ‖a.c j‖) :
     1 - δ ≤ ‖(2 / ‖a.c i‖) • a.c i - (2 / ‖a.c j‖) • a.c j‖ :=
   by
@@ -573,7 +573,7 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 #align besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)
-    (lastr : a.R (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
+    (lastr : a.r (last N) = 1) (hτ : 1 ≤ τ) (δ : ℝ) (hδ1 : τ ≤ 1 + δ / 4) (hδ2 : δ ≤ 1) :
     ∃ c' : Fin N.succ → E, (∀ n, ‖c' n‖ ≤ 2) ∧ ∀ i j, i ≠ j → 1 - δ ≤ ‖c' i - c' j‖ :=
   by
   let c' : Fin N.succ → E := fun i => if ‖a.c i‖ ≤ 2 then a.c i else (2 / ‖a.c i‖) • a.c i
@@ -618,7 +618,7 @@ theorem isEmpty_satelliteConfig_multiplicity :
     intro a
     let b := a.center_and_rescale
     rcases b.exists_normalized a.center_and_rescale_center a.center_and_rescale_radius
-        (one_lt_good_τ E).le (good_δ E) le_rfl (good_δ_lt_one E).le with
+        (one_lt_goodτ E).le (goodδ E) le_rfl (goodδ_lt_one E).le with
       ⟨c', c'_le_two, hc'⟩
     exact
       lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩

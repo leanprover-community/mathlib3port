@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module ring_theory.localization.cardinality
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem card_le : (#L) ≤ (#R) := by
     · exact Cardinal.mk_le_of_surjective (IsArtinianRing.localization_surjective S _)
     erw [← Cardinal.mul_eq_self <| Cardinal.aleph0_le_mk R]
     set f : R × R → L := fun aa => IsLocalization.mk' _ aa.1 (if h : aa.2 ∈ S then ⟨aa.2, h⟩ else 1)
-    refine' @Cardinal.mk_le_of_surjective _ _ f fun a => _
+    refine' @cardinal.mk_le_of_surjective _ _ f fun a => _
     obtain ⟨x, y, h⟩ := IsLocalization.mk'_surjective S a
     use (x, y)
     dsimp [f]

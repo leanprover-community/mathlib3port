@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.small_sets
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ def smallSets (l : Filter α) : Filter (Set α) :=
 #print Filter.smallSets_eq_generate /-
 theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset '' f.sets) :=
   by
-  simp_rw [generate_eq_binfi, small_sets, infᵢ_image]
+  simp_rw [generate_eq_binfᵢ, smallSets, infᵢ_image]
   rfl
 #align filter.small_sets_eq_generate Filter.smallSets_eq_generate
 -/
@@ -85,7 +85,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Eventually.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) s l) (forall (t : Set.{u1} α), (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) t s) -> (p t))))
 Case conversion may be inaccurate. Consider using '#align filter.eventually_small_sets Filter.eventually_smallSetsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem eventually_smallSets {p : Set α → Prop} :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
@@ -109,7 +109,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {l : Filter.{u1} α} {p : (Set.{u1} α) -> Prop}, Iff (Filter.Frequently.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => p s) (Filter.smallSets.{u1} α l)) (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Filter.{u1} α) (instMembershipSetFilter.{u1} α) t l) -> (Exists.{succ u1} (Set.{u1} α) (fun (s : Set.{u1} α) => And (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s t) (p s))))
 Case conversion may be inaccurate. Consider using '#align filter.frequently_small_sets Filter.frequently_smallSetsₓ'. -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:629:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _)(_ : s ⊆ t), p s :=
   l.hasBasis_smallSets.frequently_iff
@@ -147,7 +147,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.small_sets_bot Filter.smallSets_botₓ'. -/
 @[simp]
 theorem smallSets_bot : (⊥ : Filter α).smallSets = pure ∅ := by
-  rw [small_sets, lift'_bot monotone_powerset, powerset_empty, principal_singleton]
+  rw [smallSets, lift'_bot monotone_powerset, powerset_empty, principal_singleton]
 #align filter.small_sets_bot Filter.smallSets_bot
 
 /- warning: filter.small_sets_top -> Filter.smallSets_top is a dubious translation:
@@ -158,7 +158,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align filter.small_sets_top Filter.smallSets_topₓ'. -/
 @[simp]
 theorem smallSets_top : (⊤ : Filter α).smallSets = ⊤ := by
-  rw [small_sets, lift'_top, powerset_univ, principal_univ]
+  rw [smallSets, lift'_top, powerset_univ, principal_univ]
 #align filter.small_sets_top Filter.smallSets_top
 
 #print Filter.smallSets_principal /-
@@ -212,8 +212,8 @@ instance smallSets_neBot (l : Filter α) : NeBot l.smallSets :=
 theorem Tendsto.smallSets_mono {s t : α → Set β} (ht : Tendsto t la lb.smallSets)
     (hst : ∀ᶠ x in la, s x ⊆ t x) : Tendsto s la lb.smallSets :=
   by
-  rw [tendsto_small_sets_iff] at ht⊢
-  exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => subset.trans hst ht)
+  rw [tendsto_smallSets_iff] at ht⊢
+  exact fun u hu => (ht u hu).mp (hst.mono fun a hst ht => Subset.trans hst ht)
 #align filter.tendsto.small_sets_mono Filter.Tendsto.smallSets_mono
 -/
 

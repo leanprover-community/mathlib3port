@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Algebra.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -213,8 +213,8 @@ instance (X : Type u) [Ring X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat 
 instance AlgebraCat.forget_reflects_isos : ReflectsIsomorphisms (forget (AlgebraCat.{u} R))
     where reflects X Y f _ := by
     skip
-    let i := as_iso ((forget (AlgebraCat.{u} R)).map f)
+    let i := asIso ((forget (AlgebraCat.{u} R)).map f)
     let e : X ≃ₐ[R] Y := { f, i.to_equiv with }
-    exact ⟨(is_iso.of_iso e.to_Algebra_iso).1⟩
+    exact ⟨(IsIso.of_iso e.to_Algebra_iso).1⟩
 #align Algebra.forget_reflects_isos AlgebraCat.forget_reflects_isos
 

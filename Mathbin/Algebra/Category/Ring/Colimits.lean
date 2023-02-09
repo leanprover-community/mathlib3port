@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Ring.colimits
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,45 +154,45 @@ instance : AddGroup (ColimitType F)
     where
   zero := Quot.mk _ zero
   neg := by
-    fapply @Quot.lift
+    fapply @quot.lift
     · intro x
       exact Quot.mk _ (neg x)
     · intro x x' r
       apply Quot.sound
-      exact relation.neg_1 _ _ r
+      exact Relation.neg_1 _ _ r
   add := by
-    fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
+    fapply @quot.lift _ _ (ColimitType F → ColimitType F)
     · intro x
-      fapply @Quot.lift
+      fapply @quot.lift
       · intro y
         exact Quot.mk _ (add x y)
       · intro y y' r
         apply Quot.sound
-        exact relation.add_2 _ _ _ r
+        exact Relation.add_2 _ _ _ r
     · intro x x' r
       funext y
       induction y
       dsimp
       apply Quot.sound
-      · exact relation.add_1 _ _ _ r
+      · exact Relation.add_1 _ _ _ r
       · rfl
   zero_add x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.zero_add
+    apply Relation.zero_add
     rfl
   add_zero x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.add_zero
+    apply Relation.add_zero
     rfl
   add_left_neg x := by
     induction x
     dsimp
     apply Quot.sound
-    apply relation.add_left_neg
+    apply Relation.add_left_neg
     rfl
   add_assoc x y z := by
     induction x
@@ -200,7 +200,7 @@ instance : AddGroup (ColimitType F)
     induction z
     dsimp
     apply Quot.sound
-    apply relation.add_assoc
+    apply Relation.add_assoc
     rfl
     rfl
     rfl
@@ -212,39 +212,39 @@ instance : CommRing (ColimitType F) :=
   { ColimitType.addGroupWithOne F with
     one := Quot.mk _ one
     mul := by
-      fapply @Quot.lift _ _ (colimit_type F → colimit_type F)
+      fapply @quot.lift _ _ (ColimitType F → ColimitType F)
       · intro x
-        fapply @Quot.lift
+        fapply @quot.lift
         · intro y
           exact Quot.mk _ (mul x y)
         · intro y y' r
           apply Quot.sound
-          exact relation.mul_2 _ _ _ r
+          exact Relation.mul_2 _ _ _ r
       · intro x x' r
         funext y
         induction y
         dsimp
         apply Quot.sound
-        · exact relation.mul_1 _ _ _ r
+        · exact Relation.mul_1 _ _ _ r
         · rfl
     one_mul := fun x => by
       induction x
       dsimp
       apply Quot.sound
-      apply relation.one_mul
+      apply Relation.one_mul
       rfl
     mul_one := fun x => by
       induction x
       dsimp
       apply Quot.sound
-      apply relation.mul_one
+      apply Relation.mul_one
       rfl
     add_comm := fun x y => by
       induction x
       induction y
       dsimp
       apply Quot.sound
-      apply relation.add_comm
+      apply Relation.add_comm
       rfl
       rfl
     mul_comm := fun x y => by
@@ -252,7 +252,7 @@ instance : CommRing (ColimitType F) :=
       induction y
       dsimp
       apply Quot.sound
-      apply relation.mul_comm
+      apply Relation.mul_comm
       rfl
       rfl
     add_assoc := fun x y z => by
@@ -261,7 +261,7 @@ instance : CommRing (ColimitType F) :=
       induction z
       dsimp
       apply Quot.sound
-      apply relation.add_assoc
+      apply Relation.add_assoc
       rfl
       rfl
       rfl
@@ -271,7 +271,7 @@ instance : CommRing (ColimitType F) :=
       induction z
       dsimp
       apply Quot.sound
-      apply relation.mul_assoc
+      apply Relation.mul_assoc
       rfl
       rfl
       rfl
@@ -281,7 +281,7 @@ instance : CommRing (ColimitType F) :=
       induction z
       dsimp
       apply Quot.sound
-      apply relation.left_distrib
+      apply Relation.left_distrib
       rfl
       rfl
       rfl
@@ -291,7 +291,7 @@ instance : CommRing (ColimitType F) :=
       induction z
       dsimp
       apply Quot.sound
-      apply relation.right_distrib
+      apply Relation.right_distrib
       rfl
       rfl
       rfl }
@@ -338,10 +338,10 @@ ring. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
   toFun := coconeFun F j
-  map_one' := by apply Quot.sound <;> apply relation.one
-  map_mul' := by intros <;> apply Quot.sound <;> apply relation.mul
-  map_zero' := by apply Quot.sound <;> apply relation.zero
-  map_add' := by intros <;> apply Quot.sound <;> apply relation.add
+  map_one' := by apply Quot.sound <;> apply Relation.one
+  map_mul' := by intros <;> apply Quot.sound <;> apply Relation.mul
+  map_zero' := by apply Quot.sound <;> apply Relation.zero
+  map_add' := by intros <;> apply Quot.sound <;> apply Relation.add
 #align CommRing.colimits.cocone_morphism CommRingCat.Colimits.coconeMorphism
 
 @[simp]
@@ -350,7 +350,7 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   by
   ext
   apply Quot.sound
-  apply Relation.Map
+  apply Relation.map
 #align CommRing.colimits.cocone_naturality CommRingCat.Colimits.cocone_naturality
 
 @[simp]
@@ -383,7 +383,7 @@ def descFunLift (s : Cocone F) : Prequotient F → s.x
 def descFun (s : Cocone F) : ColimitType F → s.x :=
   by
   fapply Quot.lift
-  · exact desc_fun_lift F s
+  · exact descFunLift F s
   · intro x y r
     induction r <;> try dsimp
     -- refl
@@ -473,9 +473,9 @@ instance hasColimits_commRingCat : HasColimits CommRingCat
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
-        has_colimit.mk
-          { Cocone := colimit_cocone F
-            IsColimit := colimit_is_colimit F } }
+        HasColimit.mk
+          { Cocone := colimitCocone F
+            IsColimit := colimitIsColimit F } }
 #align CommRing.colimits.has_colimits_CommRing CommRingCat.Colimits.hasColimits_commRingCat
 
 end CommRingCat.Colimits

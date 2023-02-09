@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.factorial.cast
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,16 +41,16 @@ theorem cast_descFactorial : (a.descFactorial b : S) = (pochhammer S b).eval (a 
   by
   rw [← pochhammer_eval_cast, pochhammer_nat_eq_descFactorial]
   cases b
-  · simp_rw [desc_factorial_zero]
+  · simp_rw [descFactorial_zero]
   simp_rw [add_succ, succ_sub_one]
   obtain h | h := le_total a b
-  · rw [desc_factorial_of_lt (lt_succ_of_le h), desc_factorial_of_lt (lt_succ_of_le _)]
+  · rw [descFactorial_of_lt (lt_succ_of_le h), descFactorial_of_lt (lt_succ_of_le _)]
     rw [tsub_eq_zero_iff_le.mpr h, zero_add]
   · rw [tsub_add_cancel_of_le h]
 #align nat.cast_desc_factorial Nat.cast_descFactorial
 
 theorem cast_factorial : (a ! : S) = (pochhammer S a).eval 1 := by
-  rw [← zero_asc_factorial, cast_asc_factorial, cast_zero, zero_add]
+  rw [← zero_ascFactorial, cast_ascFactorial, cast_zero, zero_add]
 #align nat.cast_factorial Nat.cast_factorial
 
 end Semiring
@@ -63,7 +63,7 @@ variable [Ring S] (a b : ℕ)
 of `nat.desc_factorial` as a natural. -/
 theorem cast_descFactorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
   by
-  rw [cast_desc_factorial]
+  rw [cast_descFactorial]
   cases a
   · rw [zero_tsub, cast_zero, pochhammer_ne_zero_eval_zero _ two_ne_zero, zero_mul]
   ·

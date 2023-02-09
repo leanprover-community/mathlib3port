@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ theorem IsPositive.add {T S : E →L[𝕜] E} (hT : T.IsPositive) (hS : S.IsPosi
     (T + S).IsPositive :=
   by
   refine' ⟨hT.is_self_adjoint.add hS.is_self_adjoint, fun x => _⟩
-  rw [re_apply_inner_self, add_apply, inner_add_left, map_add]
+  rw [reApplyInnerSelf, add_apply, inner_add_left, map_add]
   exact add_nonneg (hT.inner_nonneg_left x) (hS.inner_nonneg_left x)
 #align continuous_linear_map.is_positive.add ContinuousLinearMap.IsPositive.add
 
@@ -93,7 +93,7 @@ theorem IsPositive.conjAdjoint {T : E →L[𝕜] E} (hT : T.IsPositive) (S : E �
     (S ∘L T ∘L S†).IsPositive :=
   by
   refine' ⟨hT.is_self_adjoint.conj_adjoint S, fun x => _⟩
-  rw [re_apply_inner_self, comp_apply, ← adjoint_inner_right]
+  rw [reApplyInnerSelf, comp_apply, ← adjoint_inner_right]
   exact hT.inner_nonneg_left _
 #align continuous_linear_map.is_positive.conj_adjoint ContinuousLinearMap.IsPositive.conjAdjoint
 
@@ -126,7 +126,7 @@ variable {E' : Type _} [InnerProductSpace ℂ E'] [CompleteSpace E']
 theorem isPositive_iff_complex (T : E' →L[ℂ] E') :
     IsPositive T ↔ ∀ x, (re ⟪T x, x⟫_ℂ : ℂ) = ⟪T x, x⟫_ℂ ∧ 0 ≤ re ⟪T x, x⟫_ℂ :=
   by
-  simp_rw [is_positive, forall_and, is_self_adjoint_iff_is_symmetric,
+  simp_rw [IsPositive, forall_and, isSelfAdjoint_iff_isSymmetric,
     LinearMap.isSymmetric_iff_inner_map_self_real, eq_conj_iff_re]
   rfl
 #align continuous_linear_map.is_positive_iff_complex ContinuousLinearMap.isPositive_iff_complex

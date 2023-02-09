@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.adjoin.fg
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,7 +66,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     change r ∈ (adjoin (adjoin R s) t).toSubmodule at hr
     rw [← hq', ← Set.image_id q, Finsupp.mem_span_image_iff_total (adjoin R s)] at hr
     rcases hr with ⟨l, hlq, rfl⟩
-    have := @Finsupp.total_apply A A (adjoin R s)
+    have := @finsupp.total_apply A A (adjoin R s)
     rw [this, Finsupp.sum]
     refine' sum_mem _
     intro z hz
@@ -74,7 +74,7 @@ theorem fg_trans (h1 : (adjoin R s).toSubmodule.Fg) (h2 : (adjoin (adjoin R s) t
     have : (l z).1 ∈ (adjoin R s).toSubmodule := (l z).2
     rw [← hp', ← Set.image_id p, Finsupp.mem_span_image_iff_total R] at this
     rcases this with ⟨l2, hlp, hl⟩
-    have := @Finsupp.total_apply A A R
+    have := @finsupp.total_apply A A R
     rw [this] at hl
     rw [← hl, Finsupp.sum_mul]
     refine' sum_mem _
@@ -128,13 +128,13 @@ theorem fg_of_noetherian [IsNoetherian R A] (S : Subalgebra R A) : S.Fg :=
 theorem fg_of_submodule_fg (h : (⊤ : Submodule R A).Fg) : (⊤ : Subalgebra R A).Fg :=
   let ⟨s, hs⟩ := h
   ⟨s,
-    toSubmodule.Injective <|
+    toSubmodule.injective <|
       by
       rw [Algebra.top_toSubmodule, eq_top_iff, ← hs, span_le]
       exact Algebra.subset_adjoin⟩
 #align subalgebra.fg_of_submodule_fg Subalgebra.fg_of_submodule_fg
 
-theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.Prod T).Fg :=
+theorem Fg.prod {S : Subalgebra R A} {T : Subalgebra R B} (hS : S.Fg) (hT : T.Fg) : (S.prod T).Fg :=
   by
   obtain ⟨s, hs⟩ := fg_def.1 hS
   obtain ⟨t, ht⟩ := fg_def.1 hT
@@ -161,7 +161,7 @@ end
 theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Injective f)
     (hs : (S.map f).Fg) : S.Fg :=
   let ⟨s, hs⟩ := hs
-  ⟨s.Preimage f fun _ _ _ _ h => hf h,
+  ⟨s.preimage f fun _ _ _ _ h => hf h,
     map_injective hf <|
       by
       rw [← Algebra.adjoin_image, Finset.coe_preimage, Set.image_preimage_eq_of_subset, hs]
@@ -172,7 +172,7 @@ theorem fg_of_fg_map (S : Subalgebra R A) (f : A →ₐ[R] B) (hf : Function.Inj
 theorem fg_top (S : Subalgebra R A) : (⊤ : Subalgebra R S).Fg ↔ S.Fg :=
   ⟨fun h => by
     rw [← S.range_val, ← Algebra.map_top]
-    exact fg.map _ h, fun h =>
+    exact Fg.map _ h, fun h =>
     fg_of_fg_map _ S.val Subtype.val_injective <|
       by
       rw [Algebra.map_top, range_val]

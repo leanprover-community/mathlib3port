@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.functor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ instance : LawfulMonad Set where
   id_map α := image_id
   comp_map α β γ f g s := image_comp _ _ _
   pure_bind α β := bunionᵢ_singleton
-  bind_assoc α β γ s f g := by simp only [bind_def, bUnion_Union]
+  bind_assoc α β γ s f g := by simp only [bind_def, bunionᵢ_unionᵢ]
   bind_pure_comp_eq_map α β f s := (image_eq_unionᵢ _ _).symm
   bind_map_eq_seq α β s t := seq_def.symm
 

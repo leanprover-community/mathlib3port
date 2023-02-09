@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ian Wood
 
 ! This file was ported from Lean 3 source module tactic.expand_exists
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,7 +82,7 @@ then this function converts `#0` in `#0 = #0` from `∃ n : ℕ, n = n` to `n_va
 unsafe def instantiate_exists_decls (ctx : parse_ctx_exists) (p : expr) : expr :=
   p.instantiate_vars <|
     ctx.exists_decls.reverse.map fun name =>
-      ctx.with_args (const Name ctx.original_decl.univ_levels)
+      ctx.with_args (const name ctx.original_decl.univ_levels)
 #align tactic.expand_exists.instantiate_exists_decls tactic.expand_exists.instantiate_exists_decls
 
 /-- Parses a proposition and creates the associated specification proof. Does not break down the
@@ -96,7 +96,7 @@ unsafe def parse_one_prop (ctx : parse_ctx_props) (p : expr) : tactic Unit := do
       | [n] => return n
       | [] => fail "missing name for proposition"
       | _ => fail "too many names for propositions (are you missing an and?)"
-  ctx True n p val
+  ctx true n p val
 #align tactic.expand_exists.parse_one_prop tactic.expand_exists.parse_one_prop
 
 /--
@@ -138,7 +138,7 @@ unsafe def parse_exists : parse_ctx_exists → expr → tactic Unit
     let-- Type may be dependant on earlier arguments.
     type := instantiate_exists_decls ctx type
     let value : pexpr := (const `classical.some [lvl]) ctx.spec_chain
-    ctx False n type value
+    ctx false n type value
     let exists_decls := ctx.exists_decls.concat n
     let some_spec : pexpr := (const `classical.some_spec [lvl]) ctx.spec_chain
     let ctx : parse_ctx_exists :=
@@ -156,7 +156,7 @@ unsafe def parse_pis : parse_ctx → expr → tactic Unit
   | ctx,
     pi n bi ty body =>-- When making a declaration, wrap in an equivalent pi expression.
     let decl is_theorem name type val :=
-      ctx.decl is_theorem Name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
+      ctx.decl is_theorem name (pi n bi ty type) (lam n bi (to_pexpr ty) val)
     parse_pis
       { ctx with
         decl

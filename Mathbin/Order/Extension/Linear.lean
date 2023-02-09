@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module order.extension.linear
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrd
     by
     rintro c hc₁ hc₂ s hs
     haveI := (hc₁ hs).1
-    refine' ⟨Sup c, _, fun z hz => le_supₛ hz⟩
+    refine' ⟨supₛ c, _, fun z hz => le_supₛ hz⟩
     refine'
         { refl := _
           trans := _
@@ -93,11 +93,11 @@ def LinearExtension (α : Type u) : Type u :=
 
 noncomputable instance {α : Type u} [PartialOrder α] : LinearOrder (LinearExtension α)
     where
-  le := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).some
-  le_refl := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.1.1.1
-  le_trans := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.1.2.1
-  le_antisymm := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.1.2.1
-  le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.some.2.1
+  le := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose
+  le_refl := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.choose.1.1.1.1
+  le_trans := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.choose.1.1.2.1
+  le_antisymm := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.choose.1.2.1
+  le_total := (extend_partialOrder ((· ≤ ·) : α → α → Prop)).choose_spec.choose.2.1
   decidableLe := Classical.decRel _
 
 /- warning: to_linear_extension -> toLinearExtension is a dubious translation:

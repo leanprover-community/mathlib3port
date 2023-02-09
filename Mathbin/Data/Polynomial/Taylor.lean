@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.polynomial.taylor
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ def taylor (r : R) : R[X] →ₗ[R] R[X]
     where
   toFun f := f.comp (x + c r)
   map_add' f g := add_comp
-  map_smul' c f := by simp only [smul_eq_C_mul, C_mul_comp, RingHom.id_apply]
+  map_smul' c f := by simp only [smul_eq_c_mul, c_mul_comp, RingHom.id_apply]
 #align polynomial.taylor Polynomial.taylor
 
 theorem taylor_apply : taylor r f = f.comp (x + c r) :=
@@ -47,26 +47,26 @@ theorem taylor_apply : taylor r f = f.comp (x + c r) :=
 #align polynomial.taylor_apply Polynomial.taylor_apply
 
 @[simp]
-theorem taylor_x : taylor r x = x + c r := by simp only [taylor_apply, X_comp]
+theorem taylor_x : taylor r x = x + c r := by simp only [taylor_apply, x_comp]
 #align polynomial.taylor_X Polynomial.taylor_x
 
 @[simp]
-theorem taylor_c (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, C_comp]
+theorem taylor_c (x : R) : taylor r (c x) = c x := by simp only [taylor_apply, c_comp]
 #align polynomial.taylor_C Polynomial.taylor_c
 
 @[simp]
 theorem taylor_zero' : taylor (0 : R) = LinearMap.id :=
   by
   ext
-  simp only [taylor_apply, add_zero, comp_X, _root_.map_zero, LinearMap.id_comp,
-    Function.comp_apply, LinearMap.coe_comp]
+  simp only [taylor_apply, add_zero, comp_x, map_zero, LinearMap.id_comp, Function.comp_apply,
+    LinearMap.coe_comp]
 #align polynomial.taylor_zero' Polynomial.taylor_zero'
 
 theorem taylor_zero (f : R[X]) : taylor 0 f = f := by rw [taylor_zero', LinearMap.id_apply]
 #align polynomial.taylor_zero Polynomial.taylor_zero
 
 @[simp]
-theorem taylor_one : taylor r (1 : R[X]) = c 1 := by rw [← C_1, taylor_C]
+theorem taylor_one : taylor r (1 : R[X]) = c 1 := by rw [← c_1, taylor_c]
 #align polynomial.taylor_one Polynomial.taylor_one
 
 @[simp]
@@ -79,32 +79,32 @@ theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r 
   show (lcoeff R n).comp (taylor r) f = (leval r).comp (hasseDeriv n) f
     by
     congr 1; clear f; ext i
-    simp only [leval_apply, mul_one, one_mul, eval_monomial, LinearMap.comp_apply, coeff_C_mul,
-      hasse_deriv_monomial, taylor_apply, monomial_comp, C_1, (commute_X (C r)).add_pow i,
+    simp only [leval_apply, mul_one, one_mul, eval_monomial, LinearMap.comp_apply, coeff_c_mul,
+      hasseDeriv_monomial, taylor_apply, monomial_comp, c_1, (commute_x (c r)).add_pow i,
       LinearMap.map_sum]
-    simp only [lcoeff_apply, ← C_eq_nat_cast, mul_assoc, ← C_pow, ← C_mul, coeff_mul_C,
-      (Nat.cast_commute _ _).Eq, coeff_X_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
+    simp only [lcoeff_apply, ← c_eq_nat_cast, mul_assoc, ← c_pow, ← c_mul, coeff_mul_c,
+      (Nat.cast_commute _ _).eq, coeff_x_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
     split_ifs with h; · rfl
     push_neg  at h; rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
 #align polynomial.taylor_coeff Polynomial.taylor_coeff
 
 @[simp]
 theorem taylor_coeff_zero : (taylor r f).coeff 0 = f.eval r := by
-  rw [taylor_coeff, hasse_deriv_zero, LinearMap.id_apply]
+  rw [taylor_coeff, hasseDeriv_zero, LinearMap.id_apply]
 #align polynomial.taylor_coeff_zero Polynomial.taylor_coeff_zero
 
 @[simp]
 theorem taylor_coeff_one : (taylor r f).coeff 1 = f.derivative.eval r := by
-  rw [taylor_coeff, hasse_deriv_one]
+  rw [taylor_coeff, hasseDeriv_one]
 #align polynomial.taylor_coeff_one Polynomial.taylor_coeff_one
 
 @[simp]
 theorem natDegree_taylor (p : R[X]) (r : R) : natDegree (taylor r p) = natDegree p :=
   by
-  refine' map_nat_degree_eq_nat_degree _ _
+  refine' map_natDegree_eq_natDegree _ _
   nontriviality R
   intro n c c0
-  simp [taylor_monomial, nat_degree_C_mul_eq_of_mul_ne_zero, nat_degree_pow_X_add_C, c0]
+  simp [taylor_monomial, natDegree_c_mul_eq_of_mul_ne_zero, natDegree_pow_x_add_c, c0]
 #align polynomial.nat_degree_taylor Polynomial.natDegree_taylor
 
 @[simp]
@@ -120,12 +120,12 @@ def taylorAlgHom {R} [CommSemiring R] (r : R) : R[X] →ₐ[R] R[X] :=
 
 theorem taylor_taylor {R} [CommSemiring R] (f : R[X]) (r s : R) :
     taylor r (taylor s f) = taylor (r + s) f := by
-  simp only [taylor_apply, comp_assoc, map_add, add_comp, X_comp, C_comp, C_add, add_assoc]
+  simp only [taylor_apply, comp_assoc, map_add, add_comp, x_comp, c_comp, c_add, add_assoc]
 #align polynomial.taylor_taylor Polynomial.taylor_taylor
 
 theorem taylor_eval {R} [CommSemiring R] (r : R) (f : R[X]) (s : R) :
     (taylor r f).eval s = f.eval (s + r) := by
-  simp only [taylor_apply, eval_comp, eval_C, eval_X, eval_add]
+  simp only [taylor_apply, eval_comp, eval_c, eval_x, eval_add]
 #align polynomial.taylor_eval Polynomial.taylor_eval
 
 theorem taylor_eval_sub {R} [CommRing R] (r : R) (f : R[X]) (s : R) :
@@ -136,8 +136,8 @@ theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r
   by
   intro f g h
   apply_fun taylor (-r)  at h
-  simpa only [taylor_apply, comp_assoc, add_comp, X_comp, C_comp, C_neg, neg_add_cancel_right,
-    comp_X] using h
+  simpa only [taylor_apply, comp_assoc, add_comp, x_comp, c_comp, c_neg, neg_add_cancel_right,
+    comp_x] using h
 #align polynomial.taylor_injective Polynomial.taylor_injective
 
 theorem eq_zero_of_hasseDeriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
@@ -151,8 +151,8 @@ theorem eq_zero_of_hasseDeriv_eq_zero {R} [CommRing R] (f : R[X]) (r : R)
 
 /-- Taylor's formula. -/
 theorem sum_taylor_eq {R} [CommRing R] (f : R[X]) (r : R) :
-    ((taylor r f).Sum fun i a => c a * (x - c r) ^ i) = f := by
-  rw [← comp_eq_sum_left, sub_eq_add_neg, ← C_neg, ← taylor_apply, taylor_taylor, neg_add_self,
+    ((taylor r f).sum fun i a => c a * (x - c r) ^ i) = f := by
+  rw [← comp_eq_sum_left, sub_eq_add_neg, ← c_neg, ← taylor_apply, taylor_taylor, neg_add_self,
     taylor_zero]
 #align polynomial.sum_taylor_eq Polynomial.sum_taylor_eq
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.types
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,7 +68,7 @@ def eq : KleisliCat m ≌ Kleisli (of_type_monad m)
         dsimp
         simp [joinM, seq_bind_eq] }
   unitIso := by
-    refine' nat_iso.of_components (fun X => iso.refl X) fun X Y f => _
+    refine' NatIso.ofComponents (fun X => Iso.refl X) fun X Y f => _
     change f >=> pure = pure >=> f
     simp [functor_norm]
   counitIso := NatIso.ofComponents (fun X => Iso.refl X) fun X Y f => by tidy

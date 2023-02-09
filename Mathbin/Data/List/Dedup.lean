@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.list.dedup
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,7 +152,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align list.sum_map_count_dedup_filter_eq_countp List.sum_map_count_dedup_filter_eq_countpₓ'. -/
 /-- Summing the count of `x` over a list filtered by some `p` is just `countp` applied to `p` -/
 theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p] (l : List α) :
-    ((l.dedup.filterₓ p).map fun x => l.count x).Sum = l.countp p :=
+    ((l.dedup.filter p).map fun x => l.count x).sum = l.countp p :=
   by
   induction' l with a as h
   · simp
@@ -174,7 +174,7 @@ theorem sum_map_count_dedup_filter_eq_countp (p : α → Prop) [DecidablePred p]
 
 #print List.sum_map_count_dedup_eq_length /-
 theorem sum_map_count_dedup_eq_length (l : List α) :
-    (l.dedup.map fun x => l.count x).Sum = l.length := by
+    (l.dedup.map fun x => l.count x).sum = l.length := by
   simpa using sum_map_count_dedup_filter_eq_countp (fun _ => True) l
 #align list.sum_map_count_dedup_eq_length List.sum_map_count_dedup_eq_length
 -/

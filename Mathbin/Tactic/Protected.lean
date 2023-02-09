@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module tactic.protected
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ unsafe def protect_proj_tac (n : Name) (l : List Name) : tactic Unit := do
   let env ← get_env
   match env n with
     | none => fail "protect_proj failed: declaration is not a structure"
-    | some fields => fields fun field => when (l fun m => not <| m Field) <| mk_protected Field
+    | some fields => fields fun field => when (l fun m => bnot <| m field) <| mk_protected field
 #align tactic.protect_proj_tac tactic.protect_proj_tac
 
 /-- Attribute to protect the projections of a structure.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.homology.Module
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
     h = k := by
   refine' cokernel_funext fun n => _
   -- Gosh it would be nice if `equiv_rw` could directly use an isomorphism, or an enriched `≃`.
-  equiv_rw(kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
+  equiv_rw(kernelSubobjectIso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv  at n
   convert w n <;> simp [to_kernel_subobject]
 #align Module.homology_ext ModuleCat.homology_ext
 

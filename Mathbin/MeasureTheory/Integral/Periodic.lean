@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.integral.periodic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -38,9 +38,9 @@ theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
     IsAddFundamentalDomain (AddSubgroup.zmultiples T) (Ioc t (t + T)) μ :=
   by
-  refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
-  have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
-    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).Injective).Bijective
+  refine' IsAddFundamentalDomain.mk' measurable_set_Ioc.null_measurable_set fun x => _
+  have : Bijective (codRestrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
+    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).injective).bijective
   refine' this.exists_unique_iff.2 _
   simpa only [add_comm x] using existsUnique_add_zsmul_mem_Ioc hT x t
 #align is_add_fundamental_domain_Ioc isAddFundamentalDomainIoc
@@ -49,9 +49,9 @@ theorem isAddFundamentalDomainIoc' {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
     IsAddFundamentalDomain (AddSubgroup.zmultiples T).opposite (Ioc t (t + T)) μ :=
   by
-  refine' is_add_fundamental_domain.mk' measurable_set_Ioc.null_measurable_set fun x => _
-  have : bijective (cod_restrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
-    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).Injective).Bijective
+  refine' IsAddFundamentalDomain.mk' measurable_set_Ioc.null_measurable_set fun x => _
+  have : Bijective (codRestrict (fun n : ℤ => n • T) (AddSubgroup.zmultiples T) _) :=
+    (Equiv.ofInjective (fun n : ℤ => n • T) (zsmul_strictMono_left hT).injective).bijective
   refine' this.exists_unique_iff.2 _
   simpa using existsUnique_add_zsmul_mem_Ioc hT x t
 #align is_add_fundamental_domain_Ioc' isAddFundamentalDomainIoc'
@@ -72,7 +72,7 @@ noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
 protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = Ennreal.ofReal T :=
   by
   dsimp [volume]
-  rw [← positive_compacts.coe_top]
+  rw [← PositiveCompacts.coe_top]
   simp [add_haar_measure_self, -positive_compacts.coe_top]
 #align add_circle.measure_univ AddCircle.measure_univ
 
@@ -110,9 +110,9 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
       if ε < T / 2 then Metric.closedBall (0 : ℝ) ε else I :=
     by
     conv_rhs => rw [← if_ctx_congr (Iff.rfl : ε < T / 2 ↔ ε < T / 2) h₁ fun _ => rfl, ← hT']
-    apply coe_real_preimage_closed_ball_inter_eq
+    apply coe_real_preimage_closedBall_inter_eq
     simpa only [hT', Real.closedBall_eq_Icc, zero_add, zero_sub] using Ioc_subset_Icc_self
-  rw [add_haar_closed_ball_center]
+  rw [add_haar_closedBall_center]
   simp only [restrict_apply' measurableSet_Ioc, (by linarith : -(T / 2) + T = T / 2), h₂, ←
     (AddCircle.measurePreservingMk T (-(T / 2))).measure_preimage measurableSet_closedBall]
   by_cases hε : ε < T / 2
@@ -123,7 +123,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
 instance : IsDoublingMeasure (volume : Measure (AddCircle T)) :=
   by
   refine' ⟨⟨Real.toNnreal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
-  simp only [volume_closed_ball]
+  simp only [volume_closedBall]
   erw [← Ennreal.ofReal_mul zero_le_two]
   apply Ennreal.ofReal_le_ofReal
   rw [mul_min_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
@@ -138,7 +138,7 @@ noncomputable def measurableEquivIoc (a : ℝ) : AddCircle T ≃ᵐ Ioc a (a + T
     measurable_to_fun :=
       measurable_of_measurable_on_compl_singleton _
         (continuousOn_iff_continuous_restrict.mp <|
-            ContinuousAt.continuousOn fun x hx => continuousAt_equivIoc T a hx).Measurable
+            ContinuousAt.continuousOn fun x hx => continuousAt_equivIoc T a hx).measurable
     measurable_inv_fun := AddCircle.measurable_mk'.comp measurable_subtype_coe }
 #align add_circle.measurable_equiv_Ioc AddCircle.measurableEquivIoc
 
@@ -151,7 +151,7 @@ noncomputable def measurableEquivIco (a : ℝ) : AddCircle T ≃ᵐ Ico a (a + T
     measurable_to_fun :=
       measurable_of_measurable_on_compl_singleton _
         (continuousOn_iff_continuous_restrict.mp <|
-            ContinuousAt.continuousOn fun x hx => continuousAt_equivIco T a hx).Measurable
+            ContinuousAt.continuousOn fun x hx => continuousAt_equivIco T a hx).measurable
     measurable_inv_fun := AddCircle.measurable_mk'.comp measurable_subtype_coe }
 #align add_circle.measurable_equiv_Ico AddCircle.measurableEquivIco
 
@@ -161,9 +161,9 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
     (∫⁻ a in Ioc t (t + T), f a) = ∫⁻ b : AddCircle T, f b :=
   by
   have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
-  have := lintegral_map_equiv f (measurable_equiv_Ioc T t).symm
+  have := lintegral_map_equiv f (measurableEquivIoc T t).symm
   swap; exact volume
-  simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
+  simp only [measurableEquivIoc, equivIoc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq]
   convert this.symm using 1
@@ -188,8 +188,8 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
     (∫ a in Ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
   by
   have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
-  have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
-  simp only [measurable_equiv_Ioc, equiv_Ioc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
+  have := integral_map_equiv (measurableEquivIoc T t).symm f
+  simp only [measurableEquivIoc, equivIoc, quotientAddGroup.equivIocMod, MeasurableEquiv.symm_mk,
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk, coe_coe] at this
   rw [← (AddCircle.measurePreservingMk T t).map_eq, set_integral_eq_subtype m, ← this]
   have : (coe : Ioc t (t + T) → AddCircle T) = (coe : ℝ → AddCircle T) ∘ (coe : _ → ℝ) :=
@@ -275,7 +275,7 @@ theorem intervalIntegral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : �
     (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x :=
   by
   simp only [integral_of_le, hT.le, le_add_iff_nonneg_right]
-  haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume :=
+  haveI : VaddInvariantMeasure (AddSubgroup.zmultiples T) ℝ volume :=
     ⟨fun c s hs => measure_preimage_add _ _ _⟩
   exact
     (isAddFundamentalDomainIoc hT t).set_integral_eq (isAddFundamentalDomainIoc hT s)
@@ -357,7 +357,7 @@ theorem infₛ_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.infₛ_image_Icc_le
+    (continuous_primitive h_int 0).continuousOn.infₛ_image_Icc_le
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
 #align function.periodic.Inf_add_zsmul_le_integral_of_pos Function.Periodic.infₛ_add_zsmul_le_integral_of_pos
 
@@ -375,7 +375,7 @@ theorem integral_le_supₛ_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
   rw [hg.interval_integral_add_zsmul_eq ⌊t / T⌋ ε h_int, hg.interval_integral_add_eq ε 0, zero_add,
     add_le_add_iff_right]
   exact
-    (continuous_primitive h_int 0).ContinuousOn.le_supₛ_image_Icc
+    (continuous_primitive h_int 0).continuousOn.le_supₛ_image_Icc
       (mem_Icc_of_Ico (Int.fract_div_mul_self_mem_Ico T t hT))
 #align function.periodic.integral_le_Sup_add_zsmul_of_pos Function.Periodic.integral_le_supₛ_add_zsmul_of_pos
 
@@ -384,9 +384,9 @@ theorem integral_le_supₛ_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
 theorem tendsto_atTop_intervalIntegral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atTop atTop :=
   by
-  apply tendsto_at_top_mono (hg.Inf_add_zsmul_le_integral_of_pos h_int hT)
-  apply at_top.tendsto_at_top_add_const_left (Inf <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
-  apply tendsto.at_top_zsmul_const h₀
+  apply tendsto_atTop_mono (hg.Inf_add_zsmul_le_integral_of_pos h_int hT)
+  apply at_top.tendsto_at_top_add_const_left (infₛ <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
+  apply Tendsto.atTop_zsmul_const h₀
   exact tendsto_floor_at_top.comp (tendsto_id.at_top_mul_const (inv_pos.mpr hT))
 #align function.periodic.tendsto_at_top_interval_integral_of_pos Function.Periodic.tendsto_atTop_intervalIntegral_of_pos
 
@@ -395,9 +395,9 @@ theorem tendsto_atTop_intervalIntegral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (
 theorem tendsto_atBot_intervalIntegral_of_pos (h₀ : 0 < ∫ x in 0 ..T, g x) (hT : 0 < T) :
     Tendsto (fun t => ∫ x in 0 ..t, g x) atBot atBot :=
   by
-  apply tendsto_at_bot_mono (hg.integral_le_Sup_add_zsmul_of_pos h_int hT)
-  apply at_bot.tendsto_at_bot_add_const_left (Sup <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
-  apply tendsto.at_bot_zsmul_const h₀
+  apply tendsto_atBot_mono (hg.integral_le_Sup_add_zsmul_of_pos h_int hT)
+  apply at_bot.tendsto_at_bot_add_const_left (supₛ <| (fun t => ∫ x in 0 ..t, g x) '' Icc 0 T)
+  apply Tendsto.atBot_zsmul_const h₀
   exact tendsto_floor_at_bot.comp (tendsto_id.at_bot_mul_const (inv_pos.mpr hT))
 #align function.periodic.tendsto_at_bot_interval_integral_of_pos Function.Periodic.tendsto_atBot_intervalIntegral_of_pos
 

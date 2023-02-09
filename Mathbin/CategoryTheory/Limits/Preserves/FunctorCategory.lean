@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.functor_category
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,16 +66,15 @@ def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
         {
           preserves := fun c t =>
             by
-            apply evaluation_jointly_reflects_colimits _ fun k => _
-            change is_colimit ((prod.functor.obj F ⋙ (evaluation _ _).obj k).mapCocone c)
-            let this :=
-              is_colimit_of_preserves ((evaluation C D).obj k ⋙ prod.functor.obj (F.obj k)) t
-            apply is_colimit.map_cocone_equiv _ this
-            apply (nat_iso.of_components _ _).symm
+            apply evaluationJointlyReflectsColimits _ fun k => _
+            change IsColimit ((prod.functor.obj F ⋙ (evaluation _ _).obj k).mapCocone c)
+            let this := isColimitOfPreserves ((evaluation C D).obj k ⋙ prod.functor.obj (F.obj k)) t
+            apply IsColimit.mapCoconeEquiv _ this
+            apply (NatIso.ofComponents _ _).symm
             · intro G
-              apply as_iso (prod_comparison ((evaluation C D).obj k) F G)
+              apply asIso (prodComparison ((evaluation C D).obj k) F G)
             · intro G G'
-              apply prod_comparison_natural ((evaluation C D).obj k) (𝟙 F) } }
+              apply prodComparison_natural ((evaluation C D).obj k) (𝟙 F) } }
 #align category_theory.functor_category.prod_preserves_colimits CategoryTheory.FunctorCategory.prodPreservesColimits
 
 instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
@@ -83,10 +82,10 @@ instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
   ⟨fun J hJ =>
     ⟨fun K =>
       ⟨fun c hc => by
-        apply evaluation_jointly_reflects_limits
+        apply evaluationJointlyReflectsLimits
         intro Y
-        change is_limit (((evaluation E D).obj (F.obj Y)).mapCone c)
-        exact preserves_limit.preserves hc⟩⟩⟩
+        change IsLimit (((evaluation E D).obj (F.obj Y)).mapCone c)
+        exact PreservesLimit.preserves hc⟩⟩⟩
 #align category_theory.whiskering_left_preserves_limits CategoryTheory.whiskeringLeftPreservesLimits
 
 instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Type _}
@@ -95,10 +94,10 @@ instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Ty
     PreservesLimitsOfShape J ((whiskeringRight C D E).obj F) :=
   ⟨fun K =>
     ⟨fun c hc => by
-      apply evaluation_jointly_reflects_limits
+      apply evaluationJointlyReflectsLimits
       intro k
-      change is_limit (((evaluation _ _).obj k ⋙ F).mapCone c)
-      exact preserves_limit.preserves hc⟩⟩
+      change IsLimit (((evaluation _ _).obj k ⋙ F).mapCone c)
+      exact PreservesLimit.preserves hc⟩⟩
 #align category_theory.whiskering_right_preserves_limits_of_shape CategoryTheory.whiskeringRightPreservesLimitsOfShape
 
 instance whiskeringRightPreservesLimits {C : Type u} [Category C] {D : Type _} [Category.{u} D]
@@ -112,8 +111,8 @@ noncomputable def preservesLimitOfLanPresesrvesLimit {C D : Type u} [SmallCatego
     [SmallCategory D] (F : C ⥤ D) (J : Type u) [SmallCategory J]
     [PreservesLimitsOfShape J (lan F.op : _ ⥤ Dᵒᵖ ⥤ Type u)] : PreservesLimitsOfShape J F :=
   by
-  apply preserves_limits_of_shape_of_reflects_of_preserves F yoneda
-  exact preserves_limits_of_shape_of_nat_iso (comp_yoneda_iso_yoneda_comp_Lan F).symm
+  apply preservesLimitsOfShapeOfReflectsOfPreserves F yoneda
+  exact preservesLimitsOfShapeOfNatIso (compYonedaIsoYonedaCompLan F).symm
   infer_instance
 #align category_theory.preserves_limit_of_Lan_presesrves_limit CategoryTheory.preservesLimitOfLanPresesrvesLimit
 

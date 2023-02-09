@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,18 +67,18 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
   constructor
   · intro
     intro X p hp
-    rcases is_idempotent_complete.idempotents_split X p hp with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
+    rcases IsIdempotentComplete.idempotents_split X p hp with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
     exact
       ⟨Nonempty.intro
-          { Cone := fork.of_ι i (show i ≫ 𝟙 X = i ≫ p by rw [comp_id, ← h₂, ← assoc, h₁, id_comp])
+          { Cone := Fork.ofι i (show i ≫ 𝟙 X = i ≫ p by rw [comp_id, ← h₂, ← assoc, h₁, id_comp])
             IsLimit := by
-              apply fork.is_limit.mk'
+              apply Fork.IsLimit.mk'
               intro s
               refine' ⟨s.ι ≫ e, _⟩
               constructor
-              · erw [assoc, h₂, ← limits.fork.condition s, comp_id]
+              · erw [assoc, h₂, ← Limits.Fork.condition s, comp_id]
               · intro m hm
-                rw [fork.ι_of_ι] at hm
+                rw [Fork.ι_ofι] at hm
                 rw [← hm]
                 simp only [← hm, assoc, h₁]
                 exact (comp_id m).symm }⟩
@@ -95,7 +95,7 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
       conv =>
         rhs
         erw [← comp_id (equalizer.ι (𝟙 X) p)]
-      exact (limits.fork.condition (equalizer.fork (𝟙 X) p)).symm
+      exact (Limits.Fork.condition (equalizer.fork (𝟙 X) p)).symm
     · rw [equalizer.lift_ι]
 #align category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent
 
@@ -114,22 +114,22 @@ variable (C)
 theorem isIdempotentComplete_iff_idempotents_have_kernels [Preadditive C] :
     IsIdempotentComplete C ↔ ∀ (X : C) (p : X ⟶ X), p ≫ p = p → HasKernel p :=
   by
-  rw [is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent]
+  rw [isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent]
   constructor
   · intro h X p hp
     haveI := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
-    convert has_kernel_of_has_equalizer (𝟙 X) (𝟙 X - p)
+    convert hasKernel_of_hasEqualizer (𝟙 X) (𝟙 X - p)
     rw [sub_sub_cancel]
   · intro h X p hp
-    haveI : has_kernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
-    apply preadditive.has_equalizer_of_has_kernel
+    haveI : HasKernel (𝟙 _ - p) := h X (𝟙 _ - p) (idem_of_id_sub_idem p hp)
+    apply Preadditive.hasEqualizer_of_hasKernel
 #align category_theory.idempotents.is_idempotent_complete_iff_idempotents_have_kernels CategoryTheory.Idempotents.isIdempotentComplete_iff_idempotents_have_kernels
 
 /-- An abelian category is idempotent complete. -/
 instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Category D] [Abelian D] :
     IsIdempotentComplete D :=
   by
-  rw [is_idempotent_complete_iff_idempotents_have_kernels]
+  rw [isIdempotentComplete_iff_idempotents_have_kernels]
   intros
   infer_instance
 #align category_theory.idempotents.is_idempotent_complete_of_abelian CategoryTheory.Idempotents.isIdempotentComplete_of_abelian
@@ -137,7 +137,7 @@ instance (priority := 100) isIdempotentComplete_of_abelian (D : Type _) [Categor
 variable {C}
 
 theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
-    (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') (h : ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) :
+    (hpp' : p ≫ φ.hom = φ.hom ≫ p') (h : ∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) :
     ∃ (Y' : C)(i' : Y' ⟶ X')(e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
   by
   rcases h with ⟨Y, i, e, ⟨h₁, h₂⟩⟩
@@ -150,7 +150,7 @@ theorem split_imp_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
 #align category_theory.idempotents.split_imp_of_iso CategoryTheory.Idempotents.split_imp_of_iso
 
 theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X')
-    (hpp' : p ≫ φ.Hom = φ.Hom ≫ p') :
+    (hpp' : p ≫ φ.hom = φ.hom ≫ p') :
     (∃ (Y : C)(i : Y ⟶ X)(e : X ⟶ Y), i ≫ e = 𝟙 Y ∧ e ≫ i = p) ↔
       ∃ (Y' : C)(i' : Y' ⟶ X')(e' : X' ⟶ Y'), i' ≫ e' = 𝟙 Y' ∧ e' ≫ i' = p' :=
   by
@@ -173,13 +173,13 @@ theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D
       (by
         slice_rhs 1 2 => rw [φ.hom_inv_id]
         rw [id_comp])]
-  rcases is_idempotent_complete.idempotents_split (ε.inverse.obj X') (ε.inverse.map p)
+  rcases IsIdempotentComplete.idempotents_split (ε.inverse.obj X') (ε.inverse.map p)
       (by rw [← ε.inverse.map_comp, hp]) with
     ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use ε.functor.obj Y, ε.functor.map i, ε.functor.map e
   constructor
   · rw [← ε.functor.map_comp, h₁, ε.functor.map_id]
-  · simpa only [← ε.functor.map_comp, h₂, equivalence.fun_inv_map]
+  · simpa only [← ε.functor.map_comp, h₂, Equivalence.fun_inv_map]
 #align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.isIdempotentComplete
 
 /-- If `C` and `D` are equivalent categories, that `C` is idempotent complete iff `D` is. -/
@@ -187,15 +187,15 @@ theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : 
     IsIdempotentComplete C ↔ IsIdempotentComplete D :=
   by
   constructor
-  · exact equivalence.is_idempotent_complete ε
-  · exact equivalence.is_idempotent_complete ε.symm
+  · exact Equivalence.isIdempotentComplete ε
+  · exact Equivalence.isIdempotentComplete ε.symm
 #align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence
 
 theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
     IsIdempotentComplete C := by
   refine' ⟨_⟩
   intro X p hp
-  rcases is_idempotent_complete.idempotents_split (op X) p.op (by rw [← op_comp, hp]) with
+  rcases IsIdempotentComplete.idempotents_split (op X) p.op (by rw [← op_comp, hp]) with
     ⟨Y, i, e, ⟨h₁, h₂⟩⟩
   use Y.unop, e.unop, i.unop
   constructor
@@ -206,15 +206,15 @@ theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentC
 theorem isIdempotentComplete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C :=
   by
   constructor
-  · exact is_idempotent_complete_of_is_idempotent_complete_opposite
+  · exact isIdempotentComplete_of_isIdempotentComplete_opposite
   · intro h
-    apply is_idempotent_complete_of_is_idempotent_complete_opposite
-    rw [is_idempotent_complete_iff_of_equivalence (op_op_equivalence C)]
+    apply isIdempotentComplete_of_isIdempotentComplete_opposite
+    rw [isIdempotentComplete_iff_of_equivalence (opOpEquivalence C)]
     exact h
 #align category_theory.idempotents.is_idempotent_complete_iff_opposite CategoryTheory.Idempotents.isIdempotentComplete_iff_opposite
 
 instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by
-  rwa [is_idempotent_complete_iff_opposite]
+  rwa [isIdempotentComplete_iff_opposite]
 
 end Idempotents
 

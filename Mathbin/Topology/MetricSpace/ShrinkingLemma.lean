@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.shrinking_lemma
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -47,7 +47,7 @@ theorem exists_subset_unionᵢ_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
     ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_lt_subset_ball (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans <| Union_mono <| hsub, hlt⟩
+  exact ⟨r', hsv.trans <| unionᵢ_mono <| hsub, hlt⟩
 #align exists_subset_Union_ball_radius_lt exists_subset_unionᵢ_ball_radius_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
@@ -71,7 +71,7 @@ theorem exists_subset_unionᵢ_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 
     ⟨v, hsv, hvc, hcv⟩
   have := fun i => exists_pos_lt_subset_ball (hr i) (hvc i) (hcv i)
   choose r' hlt hsub
-  exact ⟨r', hsv.trans <| Union_mono hsub, hlt⟩
+  exact ⟨r', hsv.trans <| unionᵢ_mono hsub, hlt⟩
 #align exists_subset_Union_ball_radius_pos_lt exists_subset_unionᵢ_ball_radius_pos_lt
 
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.integrally_closed
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -152,10 +152,10 @@ variable (K : Type _) [Field K] [Algebra R K]
 theorem mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) {g : K[X]} (hg : g.Monic)
     (hd : g ∣ f.map (algebraMap R K)) : g ∈ lifts (algebraMap (integralClosure R K) K) :=
   by
-  haveI : IsScalarTower R K g.splitting_field := splitting_field_aux.is_scalar_tower _ _ _
+  haveI : IsScalarTower R K g.splitting_field := SplittingFieldAux.isScalarTower _ _ _
   have :=
     mem_lift_of_splits_of_roots_mem_range (integralClosure R g.splitting_field)
-      ((splits_id_iff_splits _).2 <| splitting_field.splits g) (hg.map _) fun a ha =>
+      ((splits_id_iff_splits _).2 <| SplittingField.splits g) (hg.map _) fun a ha =>
       (set_like.ext_iff.mp (integralClosure R g.splitting_field).range_algebraMap _).mpr <|
         roots_mem_integralClosure hf _
   · rw [lifts_iff_coeff_lifts, ← RingHom.coe_range, Subalgebra.range_algebraMap] at this
@@ -168,10 +168,10 @@ theorem mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) {g : K[X]} (hg :
     apply (injective_iff_map_eq_zero _).1 _ _ he
     · apply RingHom.injective
   rw [IsScalarTower.algebraMap_eq R K _, ← map_map]
-  refine' Multiset.mem_of_le (roots.le_of_dvd ((hf.map _).map _).NeZero _) ha
+  refine' Multiset.mem_of_le (roots.le_of_dvd ((hf.map _).map _).ne_zero _) ha
   · infer_instance
   · exact map_dvd (algebraMap K g.splitting_field) hd
-  · apply splitting_field_aux.is_scalar_tower
+  · apply SplittingFieldAux.isScalarTower
 #align integral_closure.mem_lifts_of_monic_of_dvd_map integralClosure.mem_lifts_of_monic_of_dvd_map
 
 variable [IsDomain R] [IsFractionRing R K]
@@ -181,8 +181,8 @@ variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L
 -- Can't be an instance because you need to supply `K`.
 theorem isIntegrallyClosedOfFiniteExtension [FiniteDimensional K L] :
     IsIntegrallyClosed (integralClosure R L) :=
-  letI : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
-  (integral_closure_eq_bot_iff L).mp integralClosure_idem
+  letI : IsFractionRing (integralClosure R L) L := isFractionRing_of_finite_extension K L
+  (integralClosure_eq_bot_iff L).mp integralClosure_idem
 #align integral_closure.is_integrally_closed_of_finite_extension integralClosure.isIntegrallyClosedOfFiniteExtension
 
 end integralClosure
@@ -201,28 +201,28 @@ theorem eq_map_mul_c_of_dvd [IsIntegrallyClosed R] {f : R[X]} (hf : f.Monic) {g 
     (hg : g ∣ f.map (algebraMap R K)) :
     ∃ g' : R[X], g'.map (algebraMap R K) * (c <| leadingCoeff g) = g :=
   by
-  have g_ne_0 : g ≠ 0 := ne_zero_of_dvd_ne_zero (monic.ne_zero <| hf.map (algebraMap R K)) hg
-  suffices lem : ∃ g' : R[X], g'.map (algebraMap R K) = g * C g.leading_coeff⁻¹
+  have g_ne_0 : g ≠ 0 := ne_zero_of_dvd_ne_zero (Monic.ne_zero <| hf.map (algebraMap R K)) hg
+  suffices lem : ∃ g' : R[X], g'.map (algebraMap R K) = g * c g.leading_coeff⁻¹
   · obtain ⟨g', hg'⟩ := lem
     use g'
-    rw [hg', mul_assoc, ← C_mul, inv_mul_cancel (leading_coeff_ne_zero.mpr g_ne_0), C_1, mul_one]
-  have g_mul_dvd : g * C g.leading_coeff⁻¹ ∣ f.map (algebraMap R K) :=
+    rw [hg', mul_assoc, ← c_mul, inv_mul_cancel (leading_coeff_ne_zero.mpr g_ne_0), c_1, mul_one]
+  have g_mul_dvd : g * c g.leading_coeff⁻¹ ∣ f.map (algebraMap R K) :=
     by
-    rwa [Associated.dvd_iff_dvd_left (show Associated (g * C g.leading_coeff⁻¹) g from _)]
+    rwa [Associated.dvd_iff_dvd_left (show Associated (g * c g.leading_coeff⁻¹) g from _)]
     rw [associated_mul_isUnit_left_iff]
-    exact is_unit_C.mpr (inv_ne_zero <| leading_coeff_ne_zero.mpr g_ne_0).IsUnit
+    exact is_unit_C.mpr (inv_ne_zero <| leading_coeff_ne_zero.mpr g_ne_0).isUnit
   let algeq :=
-    (Subalgebra.equivOfEq _ _ <| integral_closure_eq_bot R _).trans
+    (Subalgebra.equivOfEq _ _ <| integralClosure_eq_bot R _).trans
       (Algebra.botEquivOfInjective <| IsFractionRing.injective R <| K)
   have :
-    (algebraMap R _).comp algeq.to_alg_hom.to_ring_hom = (integralClosure R _).toSubring.Subtype :=
+    (algebraMap R _).comp algeq.to_alg_hom.to_ring_hom = (integralClosure R _).toSubring.subtype :=
     by
     ext
     conv_rhs => rw [← algeq.symm_apply_apply x]
     rfl
   have H :=
     (mem_lifts _).1
-      (mem_lifts_of_monic_of_dvd_map K hf (monic_mul_leading_coeff_inv g_ne_0) g_mul_dvd)
+      (mem_lifts_of_monic_of_dvd_map K hf (monic_mul_leadingCoeff_inv g_ne_0) g_mul_dvd)
   refine' ⟨map algeq.to_alg_hom.to_ring_hom _, _⟩
   use Classical.choose H
   rw [map_map, this]

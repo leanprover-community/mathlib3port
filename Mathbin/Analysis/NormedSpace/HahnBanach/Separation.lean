@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed_space.hahn_banach.separation
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,7 +61,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
     (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_open hs₁ hs₀ hs₂ hx)
   · refine' ⟨⟨φ, _⟩, hφ₃, hφ₄⟩
     refine'
-      φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (nonempty.vadd_set ⟨0, hs₀⟩)
+      φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (Nonempty.vadd_set ⟨0, hs₀⟩)
         (vadd_set_subset_iff.mpr fun x hx => _)
     change φ (-x₀ + x) ≠ 0
     rw [map_add, map_neg]
@@ -76,7 +76,7 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   · rw [gauge_smul_of_nonneg h.le, smul_eq_mul, le_mul_iff_one_le_right h]
     exact
       one_le_gauge_of_not_mem (hs₁.star_convex hs₀)
-        (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).Absorbs hx₀
+        (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).absorbs hx₀
     infer_instance
 #align separate_convex_open_set separate_convex_open_set
 
@@ -109,10 +109,10 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     have := hf₂ (x₀ + (a - b)) (vadd_mem_vadd_set <| sub_mem_sub ha hb)
     simp only [f.map_add, f.map_sub, hf₁] at this
     linarith
-  refine' ⟨f, Inf (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (Inf (f '' t))), fun b hb => _⟩
+  refine' ⟨f, infₛ (f '' t), image_subset_iff.1 (_ : f '' s ⊆ Iio (infₛ (f '' t))), fun b hb => _⟩
   · rw [← interior_Iic]
     refine' interior_maximal (image_subset_iff.2 fun a ha => _) (f.is_open_map_of_ne_zero _ _ hs₂)
-    · exact le_cinfₛ (nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
+    · exact le_cinfₛ (Nonempty.image _ ⟨_, hb₀⟩) (ball_image_of_ball <| forall_le _ ha)
     · rintro rfl
       simpa using hf₁
   · exact cinfₛ_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)

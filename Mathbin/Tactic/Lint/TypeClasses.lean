@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Robert Y. Lewis, Gabriel Ebner
 
 ! This file was ported from Lean 3 source module tactic.lint.type_classes
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit 0ebfdb71919ac6ca5d7fbc61a082fa2519556818
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,7 +71,7 @@ private unsafe def instance_priority (d : declaration) : tactic (Option String) 
               out-params. -/
           relevant_args :=
             (args pi_args).filterMap fun ⟨e, ⟨_, info, tp⟩⟩ =>
-              if info = BinderInfo.inst_implicit ∨ tp `out_param then none else some e
+              if info = binder_info.inst_implicit ∨ tp `out_param then none else some e
           let always_applies := relevant_args expr.is_local_constant ∧ relevant_args
           if always_applies then return <| some "set priority below 1000" else return none
 #align instance_priority instance_priority
@@ -160,7 +160,7 @@ private unsafe def impossible_instance (d : declaration) : tactic (Option String
   let tt ← is_instance d.to_name |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let bad_arguments := binders.filterₓ fun nb => nb.2.info ≠ BinderInfo.inst_implicit
+  let bad_arguments := binders.filter fun nb => nb.2.info ≠ BinderInfo.inst_implicit
   let _ :: _ ← return bad_arguments |
     return none
   (fun s => some <| "Impossible to infer " ++ s) <$> print_arguments bad_arguments
@@ -193,7 +193,7 @@ private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Opt
         let (_, head) ← open_pis b.type
         if head then return ff
           else do
-            not <$> is_class head
+            bnot <$> is_class head
   let _ :: _ ← return bad_arguments |
     return none
   (fun s => some <| "These are not classes. " ++ s) <$> print_arguments bad_arguments
@@ -284,15 +284,15 @@ unsafe def fails_quickly (max_steps : ℕ) (d : declaration) : tactic (Option St
         l
     reset_instance_cache
     let state ← read
-    let state_msg := "\nState:\n" ++ toString StateM
+    let state_msg := "\nState:\n" ++ toString state
     let tgt ← target >>= instantiate_mvars
-    let Sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt |
+    let sum.inr msg ← retrieve_or_report_error <| tactic.try_for max_steps <| mk_instance tgt |
       return none
     /- it's ok if type-class inference can find an instance with fewer hypotheses.
             This happens a lot for `has_sizeof` and `has_well_founded`, but can also happen if there is a
             noncomputable instance with fewer assumptions. -/
         return <|
-        if "tactic.mk_instance failed to generate instance for".isPrefixOfₓ msg then none
+        if "tactic.mk_instance failed to generate instance for".isPrefixOf msg then none
         else
           some <|
             (· ++ state_msg) <|
@@ -370,7 +370,7 @@ private unsafe def inhabited_nonempty (d : declaration) : tactic (Option String)
   let tt ← is_prop d.type |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let inhd_binders := binders.filterₓ fun pr => pr.2.type.is_app_of `inhabited
+  let inhd_binders := binders.filter fun pr => pr.2.type.is_app_of `inhabited
   if inhd_binders = 0 then return none
     else
       (fun s => some <| "The following `inhabited` instances should be `nonempty`. " ++ s) <$>
@@ -394,11 +394,11 @@ Theorems in the `decidable` namespace are exempt from the check. -/
 private unsafe def decidable_classical (d : declaration) : tactic (Option String) := do
   let tt ← is_prop d.type |
     return none
-  let ff ← pure <| `decidable.isPrefixOfₓ d.to_name |
+  let ff ← pure <| `decidable.is_prefix_of d.to_name |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
   let deceq_binders :=
-    binders.filterₓ fun pr =>
+    binders.filter fun pr =>
       pr.2.type.is_app_of `decidable_eq ∨
         pr.2.type.is_app_of `decidable_pred ∨
           pr.2.type.is_app_of `decidable_rel ∨ pr.2.type.is_app_of `decidable
@@ -433,7 +433,7 @@ unsafe def linter.fintype_finite_fun (d : declaration) : tactic (Option String) 
   let tt ← is_prop d.type |
     return none
   let (binders, _) ← get_pi_binders_nondep d.type
-  let fintype_binders := binders.filterₓ fun pr => pr.2.type.is_app_of `fintype
+  let fintype_binders := binders.filter fun pr => pr.2.type.is_app_of `fintype
   if fintype_binders = 0 then return none
     else
       (fun s =>
@@ -466,13 +466,13 @@ private unsafe def has_coe_to_fun_linter (d : declaration) : tactic (Option Stri
     let ty : expr := (expr.const d.to_name d.univ_levels).mk_app args
     let some coe_fn_inst ← try_core <| to_expr ``(CoeFun $(ty) _) >>= mk_instance |
       pure none
-    set_bool_option `pp.all True
+    set_bool_option `pp.all true
     let some trans_inst@(expr.app (expr.app _ trans_inst_1) trans_inst_2) ←
       try_core <| to_expr ``(@coeFnTrans $(ty) _ _ _ _) |
       pure none
     let tt ← succeeds <| unify trans_inst coe_fn_inst Transparency.reducible |
       pure none
-    set_bool_option `pp.all True
+    set_bool_option `pp.all true
     let trans_inst_1 ← pp trans_inst_1
     let trans_inst_2 ← pp trans_inst_2
     pure <|
@@ -517,7 +517,7 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
   let tt ← return <| constrs.Mem `add || constrs.Mem `mul |
     return none
   let l ←
-    d.value.list_constant.filterM fun nm => do
+    d.value.list_constant.mfilter fun nm => do
         let d ← env.get nm
         let ff ← is_instance nm |
           return false
@@ -540,7 +540,7 @@ unsafe def check_reducible_non_instances (d : declaration) : tactic (Option Stri
       else
         return <|
           some <|
-            "This instance contains the declarations " ++ toString l ++
+            "This instance contains the declarations " ++ to_string l ++
               ", which are semireducible non-instances."
 #align check_reducible_non_instances check_reducible_non_instances
 
