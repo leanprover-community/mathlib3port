@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.basic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,8 +127,9 @@ open MeasureTheory
 /-! ## Strongly measurable functions -/
 
 
-theorem StronglyMeasurable.aeStronglyMeasurable {α β} {m0 : MeasurableSpace α} [TopologicalSpace β]
-    {f : α → β} {μ : Measure α} (hf : StronglyMeasurable f) : AeStronglyMeasurable f μ :=
+protected theorem StronglyMeasurable.aeStronglyMeasurable {α β} {m0 : MeasurableSpace α}
+    [TopologicalSpace β] {f : α → β} {μ : Measure α} (hf : StronglyMeasurable f) :
+    AeStronglyMeasurable f μ :=
   ⟨f, hf, EventuallyEq.refl _ _⟩
 #align measure_theory.strongly_measurable.ae_strongly_measurable MeasureTheory.StronglyMeasurable.aeStronglyMeasurable
 
@@ -1553,6 +1554,40 @@ protected theorem indicator [Zero β] (hfm : AeStronglyMeasurable f μ) {s : Set
     (hs : MeasurableSet s) : AeStronglyMeasurable (s.indicator f) μ :=
   (aeStronglyMeasurable_indicator_iff hs).mpr hfm.restrict
 #align measure_theory.ae_strongly_measurable.indicator MeasureTheory.AeStronglyMeasurable.indicator
+
+theorem nullMeasurableSetEqFun {E} [TopologicalSpace E] [MetrizableSpace E] {f g : α → E}
+    (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+    NullMeasurableSet { x | f x = g x } μ :=
+  by
+  apply
+    (hf.strongly_measurable_mk.measurable_set_eq_fun
+          hg.strongly_measurable_mk).NullMeasurableSet.congr
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  change (hf.mk f x = hg.mk g x) = (f x = g x)
+  simp only [hfx, hgx]
+#align measure_theory.ae_strongly_measurable.null_measurable_set_eq_fun MeasureTheory.AeStronglyMeasurable.nullMeasurableSetEqFun
+
+theorem nullMeasurableSetLt [LinearOrder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
+    {f g : α → β} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+    NullMeasurableSet { a | f a < g a } μ :=
+  by
+  apply
+    (hf.strongly_measurable_mk.measurable_set_lt hg.strongly_measurable_mk).NullMeasurableSet.congr
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  change (hf.mk f x < hg.mk g x) = (f x < g x)
+  simp only [hfx, hgx]
+#align measure_theory.ae_strongly_measurable.null_measurable_set_lt MeasureTheory.AeStronglyMeasurable.nullMeasurableSetLt
+
+theorem nullMeasurableSetLe [Preorder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
+    {f g : α → β} (hf : AeStronglyMeasurable f μ) (hg : AeStronglyMeasurable g μ) :
+    NullMeasurableSet { a | f a ≤ g a } μ :=
+  by
+  apply
+    (hf.strongly_measurable_mk.measurable_set_le hg.strongly_measurable_mk).NullMeasurableSet.congr
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  change (hf.mk f x ≤ hg.mk g x) = (f x ≤ g x)
+  simp only [hfx, hgx]
+#align measure_theory.ae_strongly_measurable.null_measurable_set_le MeasureTheory.AeStronglyMeasurable.nullMeasurableSetLe
 
 theorem aeStronglyMeasurableOfAeStronglyMeasurableTrim {α} {m m0 : MeasurableSpace α}
     {μ : Measure α} (hm : m ≤ m0) {f : α → β} (hf : AeStronglyMeasurable f (μ.trim hm)) :

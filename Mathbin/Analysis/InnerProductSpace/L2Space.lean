@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -215,7 +215,7 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E
       LinearIsometry.map_add]
   map_smul' c f := by
     simpa only [LinearIsometry.map_smul, Pi.smul_apply, lp.coeFn_smul] using
-      tsum_const_smul (hV.summable_of_lp f)
+      tsum_const_smul c (hV.summable_of_lp f)
   norm_map' f := by
     classical
       -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`

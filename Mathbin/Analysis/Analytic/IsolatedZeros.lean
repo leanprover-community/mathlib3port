@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.analytic.isolated_zeros
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ theorem exists_hasSum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m
       Finset.sum_eq_zero fun k hk => by simp [ha k (finset.mem_range.mp hk)]
     have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by
       simpa [h1] using (hasSum_nat_add_iff' n).mpr hs
-    convert @HasSum.const_smul E ℕ 𝕜 _ _ _ _ _ _ _ (z⁻¹ ^ n) h2
+    convert h2.const_smul (z⁻¹ ^ n)
     · field_simp [pow_add, smul_smul]
     · simp only [inv_pow]
 #align has_sum.exists_has_sum_smul_of_apply_eq_zero HasSum.exists_hasSum_smul_of_apply_eq_zero
@@ -85,7 +85,7 @@ theorem hasFpowerSeriesDslopeFslope (hp : HasFpowerSeriesAt f p z₀) :
   · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, pow_succ']
     suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
       simpa [dslope, slope, h, smul_smul, hxx] using this
-    · simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul
+    · simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul x⁻¹
 #align has_fpower_series_at.has_fpower_series_dslope_fslope HasFpowerSeriesAt.hasFpowerSeriesDslopeFslope
 
 theorem hasFpowerSeriesIterateDslopeFslope (n : ℕ) (hp : HasFpowerSeriesAt f p z₀) :

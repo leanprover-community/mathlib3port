@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.integrable_on
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -285,11 +285,88 @@ theorem integrableIndicatorConstLp {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {
   simpa only [Set.univ_inter, MeasurableSet.univ, measure.restrict_apply] using hμs
 #align measure_theory.integrable_indicator_const_Lp MeasureTheory.integrableIndicatorConstLp
 
-theorem integrableOn_iff_integrable_of_support_subset {f : α → E} {s : Set α} (h1s : support f ⊆ s)
-    (h2s : MeasurableSet s) : IntegrableOn f s μ ↔ Integrable f μ :=
+/-- If a function is integrable on a set `s` and nonzero there, then the measurable hull of `s` is
+well behaved: the restriction of the measure to `to_measurable μ s` coincides with its restriction
+to `s`. -/
+theorem IntegrableOn.restrict_toMeasurable (hf : IntegrableOn f s μ) (h's : ∀ x ∈ s, f x ≠ 0) :
+    μ.restrict (toMeasurable μ s) = μ.restrict s :=
+  by
+  rcases exists_seq_strictAnti_tendsto (0 : ℝ) with ⟨u, u_anti, u_pos, u_lim⟩
+  let v n := to_measurable (μ.restrict s) { x | u n ≤ ‖f x‖ }
+  have A : ∀ n, μ (s ∩ v n) ≠ ∞ := by
+    intro n
+    rw [inter_comm, ← measure.restrict_apply (measurable_set_to_measurable _ _),
+      measure_to_measurable]
+    exact (hf.measure_ge_lt_top (u_pos n)).Ne
+  apply measure.restrict_to_measurable_of_cover _ A
+  intro x hx
+  have : 0 < ‖f x‖ := by simp only [h's x hx, norm_pos_iff, Ne.def, not_false_iff]
+  obtain ⟨n, hn⟩ : ∃ n, u n < ‖f x‖
+  exact ((tendsto_order.1 u_lim).2 _ this).exists
+  refine' mem_Union.2 ⟨n, _⟩
+  exact subset_to_measurable _ _ hn.le
+#align measure_theory.integrable_on.restrict_to_measurable MeasureTheory.IntegrableOn.restrict_toMeasurable
+
+/-- If a function is integrable on a set `s`, and vanishes on `t \ s`, then it is integrable on `t`
+if `t` is null-measurable. -/
+theorem IntegrableOn.ofAeDiffEqZero (hf : IntegrableOn f s μ) (ht : NullMeasurableSet t μ)
+    (h't : ∀ᵐ x ∂μ, x ∈ t \ s → f x = 0) : IntegrableOn f t μ :=
+  by
+  let u := { x ∈ s | f x ≠ 0 }
+  have hu : integrable_on f u μ := hf.mono_set fun x hx => hx.1
+  let v := to_measurable μ u
+  have A : integrable_on f v μ :=
+    by
+    rw [integrable_on, hu.restrict_to_measurable]
+    · exact hu
+    · intro x hx
+      exact hx.2
+  have B : integrable_on f (t \ v) μ :=
+    by
+    apply integrable_on_zero.congr
+    filter_upwards [ae_restrict_of_ae h't,
+      ae_restrict_mem₀ (ht.diff (measurable_set_to_measurable μ u).NullMeasurableSet)]with x hxt hx
+    by_cases h'x : x ∈ s
+    · by_contra H
+      exact hx.2 (subset_to_measurable μ u ⟨h'x, Ne.symm H⟩)
+    · exact (hxt ⟨hx.1, h'x⟩).symm
+  apply (A.union B).monoSet _
+  rw [union_diff_self]
+  exact subset_union_right _ _
+#align measure_theory.integrable_on.of_ae_diff_eq_zero MeasureTheory.IntegrableOn.ofAeDiffEqZero
+
+/-- If a function is integrable on a set `s`, and vanishes on `t \ s`, then it is integrable on `t`
+if `t` is measurable. -/
+theorem IntegrableOn.ofForallDiffEqZero (hf : IntegrableOn f s μ) (ht : MeasurableSet t)
+    (h't : ∀ x ∈ t \ s, f x = 0) : IntegrableOn f t μ :=
+  hf.ofAeDiffEqZero ht.NullMeasurableSet (eventually_of_forall h't)
+#align measure_theory.integrable_on.of_forall_diff_eq_zero MeasureTheory.IntegrableOn.ofForallDiffEqZero
+
+/-- If a function is integrable on a set `s` and vanishes almost everywhere on its complement,
+then it is integrable. -/
+theorem IntegrableOn.integrableOfAeNotMemEqZero (hf : IntegrableOn f s μ)
+    (h't : ∀ᵐ x ∂μ, x ∉ s → f x = 0) : Integrable f μ :=
+  by
+  rw [← integrable_on_univ]
+  apply hf.of_ae_diff_eq_zero null_measurable_set_univ
+  filter_upwards [h't]with x hx h'x using hx h'x.2
+#align measure_theory.integrable_on.integrable_of_ae_not_mem_eq_zero MeasureTheory.IntegrableOn.integrableOfAeNotMemEqZero
+
+/- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/-- If a function is integrable on a set `s` and vanishes everywhere on its complement,
+then it is integrable. -/
+theorem IntegrableOn.integrableOfForallNotMemEqZero (hf : IntegrableOn f s μ)
+    (h't : ∀ (x) (_ : x ∉ s), f x = 0) : Integrable f μ :=
+  hf.integrableOfAeNotMemEqZero (eventually_of_forall fun x hx => h't x hx)
+#align measure_theory.integrable_on.integrable_of_forall_not_mem_eq_zero MeasureTheory.IntegrableOn.integrableOfForallNotMemEqZero
+
+theorem integrableOn_iff_integrable_of_support_subset (h1s : support f ⊆ s) :
+    IntegrableOn f s μ ↔ Integrable f μ :=
   by
   refine' ⟨fun h => _, fun h => h.IntegrableOn⟩
-  rwa [← indicator_eq_self.2 h1s, integrable_indicator_iff h2s]
+  apply h.integrable_of_forall_not_mem_eq_zero fun x hx => _
+  contrapose! hx
+  exact h1s (mem_support.2 hx)
 #align measure_theory.integrable_on_iff_integrable_of_support_subset MeasureTheory.integrableOn_iff_integrable_of_support_subset
 
 theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞} {s : Set α}

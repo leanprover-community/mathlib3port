@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.constructions
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2258,12 +2258,20 @@ lean 3 declaration is
 but is expected to have type
   forall {ι : Type.{u2}} {π : ι -> Type.{u1}} [_inst_2 : forall (i : ι), TopologicalSpace.{u1} (π i)] [_inst_3 : DecidableEq.{succ u2} ι] (i : ι), Continuous.{max u2 u1, max u2 u1} (Prod.{max u2 u1, u1} (forall (j : ι), π j) (π i)) (forall (a : ι), π a) (instTopologicalSpaceProd.{max u2 u1, u1} (forall (j : ι), π j) (π i) (Pi.topologicalSpace.{u2, u1} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_2 a)) (_inst_2 i)) (Pi.topologicalSpace.{u2, u1} ι (fun (a : ι) => π a) (fun (a : ι) => _inst_2 a)) (fun (f : Prod.{max u2 u1, u1} (forall (j : ι), π j) (π i)) => Function.update.{succ u2, succ u1} ι (fun (j : ι) => π j) (fun (a : ι) (b : ι) => _inst_3 a b) (Prod.fst.{max u2 u1, u1} (forall (j : ι), π j) (π i) f) i (Prod.snd.{max u2 u1, u1} (forall (j : ι), π j) (π i) f))
 Case conversion may be inaccurate. Consider using '#align continuous_update continuous_updateₓ'. -/
-/-- `update f i x` is continuous in `(f, x)`. -/
+/-- `function.update f i x` is continuous in `(f, x)`. -/
 @[continuity]
 theorem continuous_update [DecidableEq ι] (i : ι) :
     Continuous fun f : (∀ j, π j) × π i => update f.1 i f.2 :=
   continuous_fst.update i continuous_snd
 #align continuous_update continuous_update
+
+/-- `pi.mul_single i x` is continuous in `x`. -/
+@[continuity, to_additive "`pi.single i x` is continuous in `x`."]
+theorem continuous_mulSingle [∀ i, One (π i)] [DecidableEq ι] (i : ι) :
+    Continuous fun x => (Pi.mulSingle i x : ∀ i, π i) :=
+  continuous_const.update _ continuous_id
+#align continuous_mul_single continuous_mulSingle
+#align continuous_single continuous_single
 
 /- warning: filter.tendsto.fin_insert_nth -> Filter.Tendsto.fin_insertNth is a dubious translation:
 lean 3 declaration is

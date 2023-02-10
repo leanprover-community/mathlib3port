@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,6 +450,25 @@ end Aux
 instance uniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
   Pi.uniformSpace _
 #align pi_Lp.uniform_space PiLp.uniformSpace
+
+theorem uniformContinuous_equiv [∀ i, UniformSpace (β i)] : UniformContinuous (PiLp.equiv p β) :=
+  uniformContinuous_id
+#align pi_Lp.uniform_continuous_equiv PiLp.uniformContinuous_equiv
+
+theorem uniformContinuous_equiv_symm [∀ i, UniformSpace (β i)] :
+    UniformContinuous (PiLp.equiv p β).symm :=
+  uniformContinuous_id
+#align pi_Lp.uniform_continuous_equiv_symm PiLp.uniformContinuous_equiv_symm
+
+@[continuity]
+theorem continuous_equiv [∀ i, UniformSpace (β i)] : Continuous (PiLp.equiv p β) :=
+  continuous_id
+#align pi_Lp.continuous_equiv PiLp.continuous_equiv
+
+@[continuity]
+theorem continuous_equiv_symm [∀ i, UniformSpace (β i)] : Continuous (PiLp.equiv p β).symm :=
+  continuous_id
+#align pi_Lp.continuous_equiv_symm PiLp.continuous_equiv_symm
 
 variable [Fintype ι]
 

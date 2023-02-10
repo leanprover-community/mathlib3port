@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,8 +216,6 @@ theorem hasDerivAt_exp_zero : HasDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
 
 end DerivROrC
 
-section Complex
-
 theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
   by
   refine' funext fun x => _
@@ -226,19 +224,9 @@ theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
     tendsto_nhds_unique x.exp'.tendsto_limit (exp_series_div_summable ℝ x).HasSum.tendsto_sum_nat
 #align complex.exp_eq_exp_ℂ Complex.exp_eq_exp_ℂ
 
-end Complex
-
-section Real
-
 theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ :=
   by
-  refine' funext fun x => _
-  rw [Real.exp, Complex.exp_eq_exp_ℂ, ← exp_ℝ_ℂ_eq_exp_ℂ_ℂ, exp_eq_tsum, exp_eq_tsum_div, ←
-    re_to_complex, ← re_clm_apply, re_clm.map_tsum (exp_series_summable' (x : ℂ))]
-  refine' tsum_congr fun n => _
-  rw [re_clm.map_smul, ← Complex.of_real_pow, re_clm_apply, re_to_complex, Complex.of_real_re,
-    smul_eq_mul, div_eq_inv_mul]
+  ext x
+  exact_mod_cast congr_fun Complex.exp_eq_exp_ℂ x
 #align real.exp_eq_exp_ℝ Real.exp_eq_exp_ℝ
-
-end Real
 

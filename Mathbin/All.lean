@@ -18,7 +18,6 @@ import Mathbin.Algebra.AlgebraicCard
 import Mathbin.Algebra.Associated
 import Mathbin.Algebra.BigOperators.Associated
 import Mathbin.Algebra.BigOperators.Basic
-import Mathbin.Algebra.BigOperators.Default
 import Mathbin.Algebra.BigOperators.Fin
 import Mathbin.Algebra.BigOperators.Finprod
 import Mathbin.Algebra.BigOperators.Finsupp
@@ -42,7 +41,6 @@ import Mathbin.Algebra.Category.Group.Adjunctions
 import Mathbin.Algebra.Category.Group.Basic
 import Mathbin.Algebra.Category.Group.Biproducts
 import Mathbin.Algebra.Category.Group.Colimits
-import Mathbin.Algebra.Category.Group.Default
 import Mathbin.Algebra.Category.Group.EpiMono
 import Mathbin.Algebra.Category.Group.EquivalenceGroupAddGroup
 import Mathbin.Algebra.Category.Group.FilteredColimits
@@ -74,14 +72,12 @@ import Mathbin.Algebra.Category.Module.Tannaka
 import Mathbin.Algebra.Category.Mon.Adjunctions
 import Mathbin.Algebra.Category.Mon.Basic
 import Mathbin.Algebra.Category.Mon.Colimits
-import Mathbin.Algebra.Category.Mon.Default
 import Mathbin.Algebra.Category.Mon.FilteredColimits
 import Mathbin.Algebra.Category.Mon.Limits
 import Mathbin.Algebra.Category.Ring.Adjunctions
 import Mathbin.Algebra.Category.Ring.Basic
 import Mathbin.Algebra.Category.Ring.Colimits
 import Mathbin.Algebra.Category.Ring.Constructions
-import Mathbin.Algebra.Category.Ring.Default
 import Mathbin.Algebra.Category.Ring.FilteredColimits
 import Mathbin.Algebra.Category.Ring.Instances
 import Mathbin.Algebra.Category.Ring.Limits
@@ -91,7 +87,6 @@ import Mathbin.Algebra.Category.FgModule.Limits
 import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Algebra.CharP.Basic
 import Mathbin.Algebra.CharP.CharAndCard
-import Mathbin.Algebra.CharP.Default
 import Mathbin.Algebra.CharP.ExpChar
 import Mathbin.Algebra.CharP.Invertible
 import Mathbin.Algebra.CharP.LocalRing
@@ -109,17 +104,14 @@ import Mathbin.Algebra.ContinuedFractions.Computation.ApproximationCorollaries
 import Mathbin.Algebra.ContinuedFractions.Computation.Approximations
 import Mathbin.Algebra.ContinuedFractions.Computation.Basic
 import Mathbin.Algebra.ContinuedFractions.Computation.CorrectnessTerminating
-import Mathbin.Algebra.ContinuedFractions.Computation.Default
 import Mathbin.Algebra.ContinuedFractions.Computation.TerminatesIffRat
 import Mathbin.Algebra.ContinuedFractions.Computation.Translations
 import Mathbin.Algebra.ContinuedFractions.ContinuantsRecurrence
 import Mathbin.Algebra.ContinuedFractions.ConvergentsEquiv
-import Mathbin.Algebra.ContinuedFractions.Default
 import Mathbin.Algebra.ContinuedFractions.TerminatedStable
 import Mathbin.Algebra.ContinuedFractions.Translations
 import Mathbin.Algebra.CovariantAndContravariant
 import Mathbin.Algebra.CubicDiscriminant
-import Mathbin.Algebra.Default
 import Mathbin.Algebra.DirectLimit
 import Mathbin.Algebra.DirectSum.Algebra
 import Mathbin.Algebra.DirectSum.Basic
@@ -156,7 +148,6 @@ import Mathbin.Algebra.Group.Commutator
 import Mathbin.Algebra.Group.Commute
 import Mathbin.Algebra.Group.Conj
 import Mathbin.Algebra.Group.ConjFinite
-import Mathbin.Algebra.Group.Default
 import Mathbin.Algebra.Group.Defs
 import Mathbin.Algebra.Group.Ext
 import Mathbin.Algebra.Group.InjSurj
@@ -173,7 +164,6 @@ import Mathbin.Algebra.Group.WithOne.Basic
 import Mathbin.Algebra.Group.WithOne.Defs
 import Mathbin.Algebra.Group.WithOne.Units
 import Mathbin.Algebra.GroupPower.Basic
-import Mathbin.Algebra.GroupPower.Default
 import Mathbin.Algebra.GroupPower.Identities
 import Mathbin.Algebra.GroupPower.Lemmas
 import Mathbin.Algebra.GroupPower.Order
@@ -183,7 +173,6 @@ import Mathbin.Algebra.GroupRingAction.Invariant
 import Mathbin.Algebra.GroupRingAction.Subobjects
 import Mathbin.Algebra.GroupWithZero.Basic
 import Mathbin.Algebra.GroupWithZero.Commute
-import Mathbin.Algebra.GroupWithZero.Default
 import Mathbin.Algebra.GroupWithZero.Defs
 import Mathbin.Algebra.GroupWithZero.Divisibility
 import Mathbin.Algebra.GroupWithZero.InjSurj
@@ -261,7 +250,6 @@ import Mathbin.Algebra.Module.Basic
 import Mathbin.Algebra.Module.BigOperators
 import Mathbin.Algebra.Module.Bimodule
 import Mathbin.Algebra.Module.DedekindDomain
-import Mathbin.Algebra.Module.Default
 import Mathbin.Algebra.Module.Equiv
 import Mathbin.Algebra.Module.GradedModule
 import Mathbin.Algebra.Module.Hom
@@ -382,7 +370,6 @@ import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.BooleanRing
 import Mathbin.Algebra.Ring.Commute
 import Mathbin.Algebra.Ring.CompTypeclasses
-import Mathbin.Algebra.Ring.Default
 import Mathbin.Algebra.Ring.Defs
 import Mathbin.Algebra.Ring.Divisibility
 import Mathbin.Algebra.Ring.Equiv
@@ -741,6 +728,7 @@ import Mathbin.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.EulerSineProd
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathbin.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
+import Mathbin.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathbin.Analysis.SpecificLimits.Basic
 import Mathbin.Analysis.SpecificLimits.FloorPow
 import Mathbin.Analysis.SpecificLimits.Normed
@@ -772,7 +760,6 @@ import Mathbin.CategoryTheory.Adhesive
 import Mathbin.CategoryTheory.Adjunction.AdjointFunctorTheorems
 import Mathbin.CategoryTheory.Adjunction.Basic
 import Mathbin.CategoryTheory.Adjunction.Comma
-import Mathbin.CategoryTheory.Adjunction.Default
 import Mathbin.CategoryTheory.Adjunction.Evaluation
 import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 import Mathbin.CategoryTheory.Adjunction.Lifting
@@ -822,7 +809,6 @@ import Mathbin.CategoryTheory.Comma
 import Mathbin.CategoryTheory.ConcreteCategory.Basic
 import Mathbin.CategoryTheory.ConcreteCategory.Bundled
 import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
-import Mathbin.CategoryTheory.ConcreteCategory.Default
 import Mathbin.CategoryTheory.ConcreteCategory.Elementwise
 import Mathbin.CategoryTheory.ConcreteCategory.ReflectsIsomorphisms
 import Mathbin.CategoryTheory.ConcreteCategory.UnbundledHom
@@ -849,7 +835,6 @@ import Mathbin.CategoryTheory.Functor.Basic
 import Mathbin.CategoryTheory.Functor.Category
 import Mathbin.CategoryTheory.Functor.Const
 import Mathbin.CategoryTheory.Functor.Currying
-import Mathbin.CategoryTheory.Functor.Default
 import Mathbin.CategoryTheory.Functor.EpiMono
 import Mathbin.CategoryTheory.Functor.Flat
 import Mathbin.CategoryTheory.Functor.FullyFaithful
@@ -936,7 +921,6 @@ import Mathbin.CategoryTheory.Limits.Shapes.BinaryProducts
 import Mathbin.CategoryTheory.Limits.Shapes.Biproducts
 import Mathbin.CategoryTheory.Limits.Shapes.CommSq
 import Mathbin.CategoryTheory.Limits.Shapes.ConcreteCategory
-import Mathbin.CategoryTheory.Limits.Shapes.Default
 import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 import Mathbin.CategoryTheory.Limits.Shapes.DisjointCoproduct
 import Mathbin.CategoryTheory.Limits.Shapes.Equalizers
@@ -979,7 +963,6 @@ import Mathbin.CategoryTheory.Monad.Adjunction
 import Mathbin.CategoryTheory.Monad.Algebra
 import Mathbin.CategoryTheory.Monad.Basic
 import Mathbin.CategoryTheory.Monad.Coequalizer
-import Mathbin.CategoryTheory.Monad.Default
 import Mathbin.CategoryTheory.Monad.EquivMon
 import Mathbin.CategoryTheory.Monad.Kleisli
 import Mathbin.CategoryTheory.Monad.Limits
@@ -1052,7 +1035,6 @@ import Mathbin.CategoryTheory.Preadditive.Yoneda
 import Mathbin.CategoryTheory.Products.Associator
 import Mathbin.CategoryTheory.Products.Basic
 import Mathbin.CategoryTheory.Products.Bifunctor
-import Mathbin.CategoryTheory.Products.Default
 import Mathbin.CategoryTheory.Punit
 import Mathbin.CategoryTheory.Quotient
 import Mathbin.CategoryTheory.Shift
@@ -1086,7 +1068,6 @@ import Mathbin.CategoryTheory.Skeletal
 import Mathbin.CategoryTheory.StructuredArrow
 import Mathbin.CategoryTheory.Subobject.Basic
 import Mathbin.CategoryTheory.Subobject.Comma
-import Mathbin.CategoryTheory.Subobject.Default
 import Mathbin.CategoryTheory.Subobject.FactorThru
 import Mathbin.CategoryTheory.Subobject.Lattice
 import Mathbin.CategoryTheory.Subobject.Limits
@@ -1096,7 +1077,6 @@ import Mathbin.CategoryTheory.Subobject.WellPowered
 import Mathbin.CategoryTheory.Subterminal
 import Mathbin.CategoryTheory.Sums.Associator
 import Mathbin.CategoryTheory.Sums.Basic
-import Mathbin.CategoryTheory.Sums.Default
 import Mathbin.CategoryTheory.Thin
 import Mathbin.CategoryTheory.Triangulated.Basic
 import Mathbin.CategoryTheory.Triangulated.Pretriangulated
@@ -1200,7 +1180,6 @@ import Mathbin.Control.Monad.Cont
 import Mathbin.Control.Monad.Writer
 import Mathbin.Control.Random
 import Mathbin.Control.Traversable.Basic
-import Mathbin.Control.Traversable.Default
 import Mathbin.Control.Traversable.Derive
 import Mathbin.Control.Traversable.Equiv
 import Mathbin.Control.Traversable.Instances
@@ -1252,7 +1231,6 @@ import Mathbin.Data.Fin.Interval
 import Mathbin.Data.Fin.SuccPred
 import Mathbin.Data.Fin.Tuple.Basic
 import Mathbin.Data.Fin.Tuple.BubbleSortInduction
-import Mathbin.Data.Fin.Tuple.Default
 import Mathbin.Data.Fin.Tuple.Monotone
 import Mathbin.Data.Fin.Tuple.NatAntidiagonal
 import Mathbin.Data.Fin.Tuple.Sort
@@ -1260,13 +1238,11 @@ import Mathbin.Data.Fin.VecNotation
 import Mathbin.Data.FinEnum
 import Mathbin.Data.Finite.Basic
 import Mathbin.Data.Finite.Card
-import Mathbin.Data.Finite.Default
 import Mathbin.Data.Finite.Defs
 import Mathbin.Data.Finite.Set
 import Mathbin.Data.Finmap
 import Mathbin.Data.Finset.Basic
 import Mathbin.Data.Finset.Card
-import Mathbin.Data.Finset.Default
 import Mathbin.Data.Finset.Fin
 import Mathbin.Data.Finset.Finsupp
 import Mathbin.Data.Finset.Fold
@@ -1299,7 +1275,6 @@ import Mathbin.Data.Finsupp.Alist
 import Mathbin.Data.Finsupp.Antidiagonal
 import Mathbin.Data.Finsupp.Basic
 import Mathbin.Data.Finsupp.BigOperators
-import Mathbin.Data.Finsupp.Default
 import Mathbin.Data.Finsupp.Defs
 import Mathbin.Data.Finsupp.Fin
 import Mathbin.Data.Finsupp.Fintype
@@ -1384,7 +1359,6 @@ import Mathbin.Data.List.Chain
 import Mathbin.Data.List.Count
 import Mathbin.Data.List.Cycle
 import Mathbin.Data.List.Dedup
-import Mathbin.Data.List.Default
 import Mathbin.Data.List.Defs
 import Mathbin.Data.List.Destutter
 import Mathbin.Data.List.Duplicate
@@ -1433,7 +1407,6 @@ import Mathbin.Data.Multiset.Antidiagonal
 import Mathbin.Data.Multiset.Basic
 import Mathbin.Data.Multiset.Bind
 import Mathbin.Data.Multiset.Dedup
-import Mathbin.Data.Multiset.Default
 import Mathbin.Data.Multiset.FinsetOps
 import Mathbin.Data.Multiset.Fintype
 import Mathbin.Data.Multiset.Fold
@@ -1454,7 +1427,6 @@ import Mathbin.Data.MvPolynomial.Cardinal
 import Mathbin.Data.MvPolynomial.Comap
 import Mathbin.Data.MvPolynomial.CommRing
 import Mathbin.Data.MvPolynomial.Counit
-import Mathbin.Data.MvPolynomial.Default
 import Mathbin.Data.MvPolynomial.Derivation
 import Mathbin.Data.MvPolynomial.Equiv
 import Mathbin.Data.MvPolynomial.Expand
@@ -1477,7 +1449,6 @@ import Mathbin.Data.Nat.Choose.Basic
 import Mathbin.Data.Nat.Choose.Bounds
 import Mathbin.Data.Nat.Choose.Cast
 import Mathbin.Data.Nat.Choose.Central
-import Mathbin.Data.Nat.Choose.Default
 import Mathbin.Data.Nat.Choose.Dvd
 import Mathbin.Data.Nat.Choose.Factorization
 import Mathbin.Data.Nat.Choose.Multinomial
@@ -1542,7 +1513,6 @@ import Mathbin.Data.Pfunctor.Multivariate.W
 import Mathbin.Data.Pfunctor.Multivariate.Basic
 import Mathbin.Data.Pfunctor.Univariate.M
 import Mathbin.Data.Pfunctor.Univariate.Basic
-import Mathbin.Data.Pfunctor.Univariate.Default
 import Mathbin.Data.Pi.Algebra
 import Mathbin.Data.Pi.Interval
 import Mathbin.Data.Pi.Lex
@@ -1558,9 +1528,7 @@ import Mathbin.Data.Polynomial.Basic
 import Mathbin.Data.Polynomial.CancelLeads
 import Mathbin.Data.Polynomial.Cardinal
 import Mathbin.Data.Polynomial.Coeff
-import Mathbin.Data.Polynomial.Default
 import Mathbin.Data.Polynomial.Degree.CardPowDegree
-import Mathbin.Data.Polynomial.Degree.Default
 import Mathbin.Data.Polynomial.Degree.Definitions
 import Mathbin.Data.Polynomial.Degree.Lemmas
 import Mathbin.Data.Polynomial.Degree.TrailingDegree
@@ -1601,13 +1569,11 @@ import Mathbin.Data.Qpf.Multivariate.Constructions.Fix
 import Mathbin.Data.Qpf.Multivariate.Constructions.Prj
 import Mathbin.Data.Qpf.Multivariate.Constructions.Quot
 import Mathbin.Data.Qpf.Multivariate.Constructions.Sigma
-import Mathbin.Data.Qpf.Multivariate.Default
 import Mathbin.Data.Qpf.Univariate.Basic
 import Mathbin.Data.Quot
 import Mathbin.Data.Rat.Basic
 import Mathbin.Data.Rat.BigOperators
 import Mathbin.Data.Rat.Cast
-import Mathbin.Data.Rat.Default
 import Mathbin.Data.Rat.Defs
 import Mathbin.Data.Rat.Denumerable
 import Mathbin.Data.Rat.Encodable
@@ -1621,7 +1587,6 @@ import Mathbin.Data.Rat.Sqrt
 import Mathbin.Data.Rbmap.Basic
 import Mathbin.Data.Rbmap.Default
 import Mathbin.Data.Rbtree.Basic
-import Mathbin.Data.Rbtree.Default
 import Mathbin.Data.Rbtree.DefaultLt
 import Mathbin.Data.Rbtree.Find
 import Mathbin.Data.Rbtree.Init
@@ -1658,7 +1623,6 @@ import Mathbin.Data.Set.Basic
 import Mathbin.Data.Set.BoolIndicator
 import Mathbin.Data.Set.Constructions
 import Mathbin.Data.Set.Countable
-import Mathbin.Data.Set.Default
 import Mathbin.Data.Set.Enumerate
 import Mathbin.Data.Set.Equitable
 import Mathbin.Data.Set.Finite
@@ -1666,7 +1630,6 @@ import Mathbin.Data.Set.Function
 import Mathbin.Data.Set.Functor
 import Mathbin.Data.Set.Image
 import Mathbin.Data.Set.Intervals.Basic
-import Mathbin.Data.Set.Intervals.Default
 import Mathbin.Data.Set.Intervals.Disjoint
 import Mathbin.Data.Set.Intervals.Group
 import Mathbin.Data.Set.Intervals.Infinite
@@ -1703,7 +1666,6 @@ import Mathbin.Data.SetLike.Fintype
 import Mathbin.Data.Setoid.Basic
 import Mathbin.Data.Setoid.Partition
 import Mathbin.Data.Sigma.Basic
-import Mathbin.Data.Sigma.Default
 import Mathbin.Data.Sigma.Interval
 import Mathbin.Data.Sigma.Lex
 import Mathbin.Data.Sigma.Order
@@ -1768,7 +1730,6 @@ import Mathbin.FieldTheory.IsAlgClosed.Classification
 import Mathbin.FieldTheory.KrullTopology
 import Mathbin.FieldTheory.Laurent
 import Mathbin.FieldTheory.Minpoly.Basic
-import Mathbin.FieldTheory.Minpoly.Default
 import Mathbin.FieldTheory.Minpoly.Field
 import Mathbin.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathbin.FieldTheory.MvPolynomial
@@ -1793,7 +1754,6 @@ import Mathbin.Geometry.Euclidean.Angle.Unoriented.Conformal
 import Mathbin.Geometry.Euclidean.Angle.Unoriented.RightAngle
 import Mathbin.Geometry.Euclidean.Basic
 import Mathbin.Geometry.Euclidean.Circumcenter
-import Mathbin.Geometry.Euclidean.Default
 import Mathbin.Geometry.Euclidean.Inversion
 import Mathbin.Geometry.Euclidean.MongePoint
 import Mathbin.Geometry.Euclidean.Sphere
@@ -1843,7 +1803,6 @@ import Mathbin.GroupTheory.FreeProduct
 import Mathbin.GroupTheory.GroupAction.Basic
 import Mathbin.GroupTheory.GroupAction.BigOperators
 import Mathbin.GroupTheory.GroupAction.ConjAct
-import Mathbin.GroupTheory.GroupAction.Default
 import Mathbin.GroupTheory.GroupAction.Defs
 import Mathbin.GroupTheory.GroupAction.Embedding
 import Mathbin.GroupTheory.GroupAction.FixingSubgroup
@@ -1899,7 +1858,6 @@ import Mathbin.GroupTheory.Subgroup.Zpowers
 import Mathbin.GroupTheory.Submonoid.Basic
 import Mathbin.GroupTheory.Submonoid.Center
 import Mathbin.GroupTheory.Submonoid.Centralizer
-import Mathbin.GroupTheory.Submonoid.Default
 import Mathbin.GroupTheory.Submonoid.Inverses
 import Mathbin.GroupTheory.Submonoid.Membership
 import Mathbin.GroupTheory.Submonoid.Operations
@@ -1939,7 +1897,6 @@ import Mathbin.LinearAlgebra.Charpoly.ToMatrix
 import Mathbin.LinearAlgebra.CliffordAlgebra.Basic
 import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
 import Mathbin.LinearAlgebra.CliffordAlgebra.Contraction
-import Mathbin.LinearAlgebra.CliffordAlgebra.Default
 import Mathbin.LinearAlgebra.CliffordAlgebra.Equivs
 import Mathbin.LinearAlgebra.CliffordAlgebra.Even
 import Mathbin.LinearAlgebra.CliffordAlgebra.EvenEquiv
@@ -1949,7 +1906,6 @@ import Mathbin.LinearAlgebra.CliffordAlgebra.Star
 import Mathbin.LinearAlgebra.Coevaluation
 import Mathbin.LinearAlgebra.Contraction
 import Mathbin.LinearAlgebra.CrossProduct
-import Mathbin.LinearAlgebra.Default
 import Mathbin.LinearAlgebra.Determinant
 import Mathbin.LinearAlgebra.Dfinsupp
 import Mathbin.LinearAlgebra.Dimension
@@ -1991,7 +1947,6 @@ import Mathbin.LinearAlgebra.Matrix.Charpoly.FiniteField
 import Mathbin.LinearAlgebra.Matrix.Charpoly.LinearMap
 import Mathbin.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathbin.LinearAlgebra.Matrix.Circulant
-import Mathbin.LinearAlgebra.Matrix.Default
 import Mathbin.LinearAlgebra.Matrix.Determinant
 import Mathbin.LinearAlgebra.Matrix.Diagonal
 import Mathbin.LinearAlgebra.Matrix.DotProduct
@@ -2269,7 +2224,6 @@ import Mathbin.NumberTheory.NumberField.Basic
 import Mathbin.NumberTheory.NumberField.ClassNumber
 import Mathbin.NumberTheory.NumberField.Embeddings
 import Mathbin.NumberTheory.NumberField.Norm
-import Mathbin.NumberTheory.Padics.Default
 import Mathbin.NumberTheory.Padics.Hensel
 import Mathbin.NumberTheory.Padics.PadicIntegers
 import Mathbin.NumberTheory.Padics.PadicNorm
@@ -2333,7 +2287,6 @@ import Mathbin.Order.ConditionallyCompleteLattice.Group
 import Mathbin.Order.Copy
 import Mathbin.Order.CountableDenseLinearOrder
 import Mathbin.Order.Cover
-import Mathbin.Order.Default
 import Mathbin.Order.Directed
 import Mathbin.Order.Disjoint
 import Mathbin.Order.Disjointed
@@ -2346,7 +2299,6 @@ import Mathbin.Order.Filter.Basic
 import Mathbin.Order.Filter.Cofinite
 import Mathbin.Order.Filter.CountableInter
 import Mathbin.Order.Filter.Curry
-import Mathbin.Order.Filter.Default
 import Mathbin.Order.Filter.Ennreal
 import Mathbin.Order.Filter.Extr
 import Mathbin.Order.Filter.FilterProduct
@@ -2461,7 +2413,6 @@ import Mathbin.RepresentationTheory.GroupCohomologyResolution
 import Mathbin.RepresentationTheory.Invariants
 import Mathbin.RepresentationTheory.Maschke
 import Mathbin.RingTheory.Adjoin.Basic
-import Mathbin.RingTheory.Adjoin.Default
 import Mathbin.RingTheory.Adjoin.Fg
 import Mathbin.RingTheory.Adjoin.Field
 import Mathbin.RingTheory.Adjoin.PowerBasis
@@ -2566,7 +2517,6 @@ import Mathbin.RingTheory.Polynomial.Chebyshev
 import Mathbin.RingTheory.Polynomial.Content
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Eval
-import Mathbin.RingTheory.Polynomial.Default
 import Mathbin.RingTheory.Polynomial.Dickson
 import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
@@ -2903,7 +2853,6 @@ import Mathbin.Topology.Category.Profinite.CofilteredLimit
 import Mathbin.Topology.Category.Profinite.Projective
 import Mathbin.Topology.Category.Top.Adjunctions
 import Mathbin.Topology.Category.Top.Basic
-import Mathbin.Topology.Category.Top.Default
 import Mathbin.Topology.Category.Top.EpiMono
 import Mathbin.Topology.Category.Top.Limits
 import Mathbin.Topology.Category.Top.OpenNhds

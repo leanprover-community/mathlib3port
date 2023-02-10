@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1229,7 +1229,8 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
     ae_restrict_iff' measurableSet_uIoc] at *
   exact
     (has_sum_integral_of_dominated_convergence bound hF_meas h_bound bound_summable bound_integrable
-        h_lim).const_smul
+          h_lim).const_smul
+      _
 #align interval_integral.has_sum_integral_of_dominated_convergence intervalIntegral.hasSum_integral_of_dominated_convergence
 
 open TopologicalSpace

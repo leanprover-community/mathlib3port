@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -785,6 +785,23 @@ theorem Memℒp.integrable {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [IsF
     (hfq : Memℒp f q μ) : Integrable f μ :=
   memℒp_one_iff_integrable.mp (hfq.memℒpOfExponentLe hq1)
 #align measure_theory.mem_ℒp.integrable MeasureTheory.Memℒp.integrable
+
+/-- A non-quantitative version of Markov inequality for integrable functions: the measure of points
+where `‖f x‖ ≥ ε` is finite for all positive `ε`. -/
+theorem Integrable.measure_ge_lt_top {f : α → β} (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
+    μ { x | ε ≤ ‖f x‖ } < ∞ :=
+  by
+  rw [show { x | ε ≤ ‖f x‖ } = { x | Ennreal.ofReal ε ≤ ‖f x‖₊ } by
+      simp only [Ennreal.ofReal, Real.toNnreal_le_iff_le_coe, Ennreal.coe_le_coe, coe_nnnorm]]
+  refine' (meas_ge_le_mul_pow_snorm μ one_ne_zero Ennreal.one_ne_top hf.1 _).trans_lt _
+  · simpa only [Ne.def, Ennreal.ofReal_eq_zero, not_le] using hε
+  apply Ennreal.mul_lt_top
+  ·
+    simpa only [Ennreal.one_toReal, Ennreal.rpow_one, Ne.def, Ennreal.inv_eq_top,
+      Ennreal.ofReal_eq_zero, not_le] using hε
+  simpa only [Ennreal.one_toReal, Ennreal.rpow_one] using
+    (mem_ℒp_one_iff_integrable.2 hf).snorm_ne_top
+#align measure_theory.integrable.measure_ge_lt_top MeasureTheory.Integrable.measure_ge_lt_top
 
 theorem LipschitzWith.integrable_comp_iff_of_antilipschitz {K K'} {f : α → β} {g : β → γ}
     (hg : LipschitzWith K g) (hg' : AntilipschitzWith K' g) (g0 : g 0 = 0) :

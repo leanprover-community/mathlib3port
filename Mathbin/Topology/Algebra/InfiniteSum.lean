@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -408,6 +408,15 @@ theorem HasSum.add_disjoint {s t : Set β} (hs : Disjoint s t) (ha : HasSum (f �
   rw [Set.indicator_union_of_disjoint hs]
   exact ha.add hb
 #align has_sum.add_disjoint HasSum.add_disjoint
+
+theorem hasSum_sum_disjoint {ι} (s : Finset ι) {t : ι → Set β} {a : ι → α}
+    (hs : (s : Set ι).Pairwise (Disjoint on t)) (hf : ∀ i ∈ s, HasSum (f ∘ coe : t i → α) (a i)) :
+    HasSum (f ∘ coe : (⋃ i ∈ s, t i) → α) (∑ i in s, a i) :=
+  by
+  simp_rw [hasSum_subtype_iff_indicator] at *
+  rw [Set.indicator_finset_bunionᵢ _ _ hs]
+  exact hasSum_sum hf
+#align has_sum_sum_disjoint hasSum_sum_disjoint
 
 theorem HasSum.add_isCompl {s t : Set β} (hs : IsCompl s t) (ha : HasSum (f ∘ coe : s → α) a)
     (hb : HasSum (f ∘ coe : t → α) b) : HasSum f (a + b) := by
@@ -892,6 +901,12 @@ theorem tsum_union_disjoint {s t : Set β} (hd : Disjoint s t) (hs : Summable (f
   (hs.HasSum.add_disjoint hd ht.HasSum).tsum_eq
 #align tsum_union_disjoint tsum_union_disjoint
 
+theorem tsum_finset_bUnion_disjoint {ι} {s : Finset ι} {t : ι → Set β}
+    (hd : (s : Set ι).Pairwise (Disjoint on t)) (hf : ∀ i ∈ s, Summable (f ∘ coe : t i → α)) :
+    (∑' x : ⋃ i ∈ s, t i, f x) = ∑ i in s, ∑' x : t i, f x :=
+  (hasSum_sum_disjoint _ hd fun i hi => (hf i hi).HasSum).tsum_eq
+#align tsum_finset_bUnion_disjoint tsum_finset_bUnion_disjoint
+
 theorem tsum_even_add_odd {f : ℕ → α} (he : Summable fun k => f (2 * k))
     (ho : Summable fun k => f (2 * k + 1)) :
     ((∑' k, f (2 * k)) + ∑' k, f (2 * k + 1)) = ∑' k, f k :=
@@ -1278,16 +1293,16 @@ section ConstSmul
 variable {R : Type _} [Monoid R] [TopologicalSpace α] [AddCommMonoid α] [DistribMulAction R α]
   [HasContinuousConstSMul R α] {f : β → α}
 
-theorem HasSum.const_smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
+theorem HasSum.const_smul {a : α} (r : R) (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const_smul r)
 #align has_sum.const_smul HasSum.const_smul
 
-theorem Summable.const_smul {r : R} (hf : Summable f) : Summable fun z => r • f z :=
-  hf.HasSum.const_smul.Summable
+theorem Summable.const_smul (r : R) (hf : Summable f) : Summable fun z => r • f z :=
+  (hf.HasSum.const_smul r).Summable
 #align summable.const_smul Summable.const_smul
 
-theorem tsum_const_smul [T2Space α] {r : R} (hf : Summable f) : (∑' z, r • f z) = r • ∑' z, f z :=
-  hf.HasSum.const_smul.tsum_eq
+theorem tsum_const_smul [T2Space α] (r : R) (hf : Summable f) : (∑' z, r • f z) = r • ∑' z, f z :=
+  (hf.HasSum.const_smul r).tsum_eq
 #align tsum_const_smul tsum_const_smul
 
 end ConstSmul
@@ -1297,16 +1312,16 @@ section SmulConst
 variable {R : Type _} [Semiring R] [TopologicalSpace R] [TopologicalSpace α] [AddCommMonoid α]
   [Module R α] [HasContinuousSmul R α] {f : β → R}
 
-theorem HasSum.smul_const {a : α} {r : R} (hf : HasSum f r) : HasSum (fun z => f z • a) (r • a) :=
+theorem HasSum.smul_const {r : R} (hf : HasSum f r) (a : α) : HasSum (fun z => f z • a) (r • a) :=
   hf.map ((smulAddHom R α).flip a) (continuous_id.smul continuous_const)
 #align has_sum.smul_const HasSum.smul_const
 
-theorem Summable.smul_const {a : α} (hf : Summable f) : Summable fun z => f z • a :=
-  hf.HasSum.smul_const.Summable
+theorem Summable.smul_const (hf : Summable f) (a : α) : Summable fun z => f z • a :=
+  (hf.HasSum.smul_const a).Summable
 #align summable.smul_const Summable.smul_const
 
-theorem tsum_smul_const [T2Space α] {a : α} (hf : Summable f) : (∑' z, f z • a) = (∑' z, f z) • a :=
-  hf.HasSum.smul_const.tsum_eq
+theorem tsum_smul_const [T2Space α] (hf : Summable f) (a : α) : (∑' z, f z • a) = (∑' z, f z) • a :=
+  (hf.HasSum.smul_const a).tsum_eq
 #align tsum_smul_const tsum_smul_const
 
 end SmulConst

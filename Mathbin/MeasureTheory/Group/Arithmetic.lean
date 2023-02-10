@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.group.arithmetic
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -399,6 +399,16 @@ theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [A
   ext
   simp_rw [Set.mem_setOf_eq, Pi.sub_apply, sub_eq_zero]
 #align measurable_set_eq_fun measurableSet_eq_fun
+
+theorem nullMeasurableSetEqFun {E} [MeasurableSpace E] [AddGroup E] [MeasurableSingletonClass E]
+    [HasMeasurableSub₂ E] {f g : α → E} (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
+    NullMeasurableSet { x | f x = g x } μ :=
+  by
+  apply (measurableSet_eq_fun hf.measurable_mk hg.measurable_mk).NullMeasurableSet.congr
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  change (hf.mk f x = hg.mk g x) = (f x = g x)
+  simp only [hfx, hgx]
+#align null_measurable_set_eq_fun nullMeasurableSetEqFun
 
 theorem measurableSet_eq_fun_of_countable {m : MeasurableSpace α} {E} [MeasurableSpace E]
     [MeasurableSingletonClass E] [Countable E] {f g : α → E} (hf : Measurable f)

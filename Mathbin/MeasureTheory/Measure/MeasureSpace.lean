@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2843,6 +2843,13 @@ theorem ae_restrict_of_ae {s : Set α} {p : α → Prop} (h : ∀ᵐ x ∂μ, p 
   Eventually.filter_mono (ae_mono Measure.restrict_le_self) h
 #align measure_theory.ae_restrict_of_ae MeasureTheory.ae_restrict_of_ae
 
+theorem ae_restrict_iff'₀ {p : α → Prop} (hs : NullMeasurableSet s μ) :
+    (∀ᵐ x ∂μ.restrict s, p x) ↔ ∀ᵐ x ∂μ, x ∈ s → p x :=
+  by
+  refine' ⟨fun h => ae_imp_of_ae_restrict h, fun h => _⟩
+  filter_upwards [ae_restrict_mem₀ hs, ae_restrict_of_ae h]with x hx h'x using h'x hx
+#align measure_theory.ae_restrict_iff'₀ MeasureTheory.ae_restrict_iff'₀
+
 theorem ae_restrict_of_ae_restrict_of_subset {s t : Set α} {p : α → Prop} (hst : s ⊆ t)
     (h : ∀ᵐ x ∂μ.restrict t, p x) : ∀ᵐ x ∂μ.restrict s, p x :=
   h.filter_mono (ae_mono <| Measure.restrict_mono hst (le_refl μ))
@@ -3659,12 +3666,12 @@ theorem countable_meas_level_set_pos {α β : Type _} [MeasurableSpace α] {μ :
 #align measure_theory.measure.countable_meas_level_set_pos MeasureTheory.Measure.countable_meas_level_set_pos
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (t' «expr ⊇ » t) -/
-/-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
-satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
-This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
-that `t` has finite measure), see `measure_to_measurable_inter`. -/
-theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s)
-    (t : Set α) : μ (toMeasurable μ t ∩ s) = μ (t ∩ s) :=
+/-- If a set `t` is covered by a countable family of finite measure sets, then its measurable
+superset `to_measurable μ t` (which has the same measure as `t`) satisfies,
+for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`. -/
+theorem measure_toMeasurable_inter_of_cover {s : Set α} (hs : MeasurableSet s) {t : Set α}
+    {v : ℕ → Set α} (hv : t ⊆ ⋃ n, v n) (h'v : ∀ n, μ (t ∩ v n) ≠ ∞) :
+    μ (toMeasurable μ t ∩ s) = μ (t ∩ s) :=
   by
   -- we show that there is a measurable superset of `t` satisfying the conclusion for any
   -- measurable set `s`. It is built on each member of a spanning family using `to_measurable`
@@ -3673,47 +3680,59 @@ theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} 
   have A :
     ∃ (t' : _)(_ : t' ⊇ t), MeasurableSet t' ∧ ∀ u, MeasurableSet u → μ (t' ∩ u) = μ (t ∩ u) :=
     by
-    set t' := ⋃ n, to_measurable μ (t ∩ disjointed (spanning_sets μ) n) with ht'
+    let w n := to_measurable μ (t ∩ v n)
+    have hw : ∀ n, μ (w n) < ∞ := by
+      intro n
+      simp_rw [w, measure_to_measurable]
+      exact (h'v n).lt_top
+    set t' := ⋃ n, to_measurable μ (t ∩ disjointed w n) with ht'
     have tt' : t ⊆ t' :=
       calc
-        t ⊆ ⋃ n, t ∩ disjointed (spanning_sets μ) n := by
-          rw [← inter_Union, unionᵢ_disjointed, Union_spanning_sets, inter_univ]
-        _ ⊆ ⋃ n, to_measurable μ (t ∩ disjointed (spanning_sets μ) n) :=
+        t ⊆ ⋃ n, t ∩ disjointed w n :=
+          by
+          rw [← inter_Union, unionᵢ_disjointed, inter_Union]
+          intro x hx
+          rcases mem_Union.1 (hv hx) with ⟨n, hn⟩
+          refine' mem_Union.2 ⟨n, _⟩
+          have : x ∈ t ∩ v n := ⟨hx, hn⟩
+          exact ⟨hx, subset_to_measurable μ _ this⟩
+        _ ⊆ ⋃ n, to_measurable μ (t ∩ disjointed w n) :=
           Union_mono fun n => subset_to_measurable _ _
         
     refine' ⟨t', tt', MeasurableSet.unionᵢ fun n => measurable_set_to_measurable μ _, fun u hu => _⟩
     apply le_antisymm _ (measure_mono (inter_subset_inter tt' subset.rfl))
     calc
-      μ (t' ∩ u) ≤ ∑' n, μ (to_measurable μ (t ∩ disjointed (spanning_sets μ) n) ∩ u) :=
+      μ (t' ∩ u) ≤ ∑' n, μ (to_measurable μ (t ∩ disjointed w n) ∩ u) :=
         by
         rw [ht', Union_inter]
         exact measure_Union_le _
-      _ = ∑' n, μ (t ∩ disjointed (spanning_sets μ) n ∩ u) :=
-        by
+      _ = ∑' n, μ (t ∩ disjointed w n ∩ u) := by
         congr 1
         ext1 n
         apply measure_to_measurable_inter hu
         apply ne_of_lt
         calc
-          μ (t ∩ disjointed (spanning_sets μ) n) ≤ μ (disjointed (spanning_sets μ) n) :=
-            measure_mono (inter_subset_right _ _)
-          _ ≤ μ (spanning_sets μ n) := measure_mono (disjointed_le (spanning_sets μ) n)
-          _ < ∞ := measure_spanning_sets_lt_top _ _
+          μ (t ∩ disjointed w n) ≤ μ (t ∩ w n) :=
+            measure_mono (inter_subset_inter_right _ (disjointed_le w n))
+          _ ≤ μ (w n) := measure_mono (inter_subset_right _ _)
+          _ < ∞ := hw n
           
-      _ = ∑' n, μ.restrict (t ∩ u) (disjointed (spanning_sets μ) n) :=
+      _ = ∑' n, μ.restrict (t ∩ u) (disjointed w n) :=
         by
         congr 1
         ext1 n
         rw [restrict_apply, inter_comm t _, inter_assoc]
-        exact MeasurableSet.disjointed (measurable_spanning_sets _) _
-      _ = μ.restrict (t ∩ u) (⋃ n, disjointed (spanning_sets μ) n) :=
+        apply MeasurableSet.disjointed fun n => _
+        exact measurable_set_to_measurable _ _
+      _ = μ.restrict (t ∩ u) (⋃ n, disjointed w n) :=
         by
         rw [measure_Union]
         · exact disjoint_disjointed _
         · intro i
-          exact MeasurableSet.disjointed (measurable_spanning_sets _) _
-      _ = μ (t ∩ u) := by
-        rw [unionᵢ_disjointed, Union_spanning_sets, restrict_apply MeasurableSet.univ, univ_inter]
+          apply MeasurableSet.disjointed fun n => _
+          exact measurable_set_to_measurable _ _
+      _ ≤ μ.restrict (t ∩ u) univ := measure_mono (subset_univ _)
+      _ = μ (t ∩ u) := by rw [restrict_apply MeasurableSet.univ, univ_inter]
       
   -- thanks to the definition of `to_measurable`, the previous property will also be shared
   -- by `to_measurable μ t`, which is enough to conclude the proof.
@@ -3722,6 +3741,30 @@ theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} 
   · apply measure_congr
     exact ae_eq_set_inter ht.some_spec.snd.2 (ae_eq_refl _)
   · exact A.some_spec.snd.2 s hs
+#align measure_theory.measure.measure_to_measurable_inter_of_cover MeasureTheory.Measure.measure_toMeasurable_inter_of_cover
+
+theorem restrict_toMeasurable_of_cover {s : Set α} {v : ℕ → Set α} (hv : s ⊆ ⋃ n, v n)
+    (h'v : ∀ n, μ (s ∩ v n) ≠ ∞) : μ.restrict (toMeasurable μ s) = μ.restrict s :=
+  ext fun t ht => by
+    simp only [restrict_apply ht, inter_comm t, measure_to_measurable_inter_of_cover ht hv h'v]
+#align measure_theory.measure.restrict_to_measurable_of_cover MeasureTheory.Measure.restrict_toMeasurable_of_cover
+
+/-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
+satisfies, for any measurable set `s`, the equality `μ (to_measurable μ t ∩ s) = μ (t ∩ s)`.
+This only holds when `μ` is σ-finite. For a version without this assumption (but requiring
+that `t` has finite measure), see `measure_to_measurable_inter`. -/
+theorem measure_toMeasurable_inter_of_sigmaFinite [SigmaFinite μ] {s : Set α} (hs : MeasurableSet s)
+    (t : Set α) : μ (toMeasurable μ t ∩ s) = μ (t ∩ s) :=
+  by
+  have : t ⊆ ⋃ n, spanning_sets μ n :=
+    by
+    rw [Union_spanning_sets]
+    exact subset_univ _
+  apply measure_to_measurable_inter_of_cover hs this fun n => ne_of_lt _
+  calc
+    μ (t ∩ spanning_sets μ n) ≤ μ (spanning_sets μ n) := measure_mono (inter_subset_right _ _)
+    _ < ∞ := measure_spanning_sets_lt_top μ n
+    
 #align measure_theory.measure.measure_to_measurable_inter_of_sigma_finite MeasureTheory.Measure.measure_toMeasurable_inter_of_sigmaFinite
 
 @[simp]

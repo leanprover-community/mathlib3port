@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.vector_measure
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,7 +279,7 @@ def smul (r : R) (v : VectorMeasure α M) : VectorMeasure α M
   measureOf' := r • v
   empty' := by rw [Pi.smul_apply, Empty, smul_zero]
   not_measurable' _ hi := by rw [Pi.smul_apply, v.not_measurable hi, smul_zero]
-  m_Union' _ hf₁ hf₂ := HasSum.const_smul (v.m_unionᵢ hf₁ hf₂)
+  m_Union' _ hf₁ hf₂ := HasSum.const_smul _ (v.m_unionᵢ hf₁ hf₂)
 #align measure_theory.vector_measure.smul MeasureTheory.VectorMeasure.smul
 
 instance : SMul R (VectorMeasure α M) :=

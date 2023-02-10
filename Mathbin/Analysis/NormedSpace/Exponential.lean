@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.exponential
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -676,6 +676,12 @@ theorem exp_eq_exp : (exp 𝕂 : 𝔸 → 𝔸) = exp 𝕂' :=
 theorem exp_ℝ_ℂ_eq_exp_ℂ_ℂ : (exp ℝ : ℂ → ℂ) = exp ℂ :=
   exp_eq_exp ℝ ℂ ℂ
 #align exp_ℝ_ℂ_eq_exp_ℂ_ℂ exp_ℝ_ℂ_eq_exp_ℂ_ℂ
+
+/-- A version of `complex.of_real_exp` for `exp` instead of `complex.exp` -/
+@[simp, norm_cast]
+theorem of_real_exp_ℝ_ℝ (r : ℝ) : ↑(exp ℝ r) = exp ℂ (r : ℂ) :=
+  (map_exp ℝ (algebraMap ℝ ℂ) (continuous_algebraMap _ _) r).trans (congr_fun exp_ℝ_ℂ_eq_exp_ℂ_ℂ _)
+#align of_real_exp_ℝ_ℝ of_real_exp_ℝ_ℝ
 
 end ScalarTower
 

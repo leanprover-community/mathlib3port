@@ -4,11 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Equiv
+import Mathbin.LinearAlgebra.Finrank
+import Mathbin.LinearAlgebra.FreeModule.Basic
+import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 import Mathbin.SetTheory.Cardinal.Ordinal
 import Mathbin.Tactic.RingExp
 
@@ -77,6 +80,22 @@ def equivProd {R : Type _} (c₁ c₂ : R) : ℍ[R,c₁,c₂] ≃ R × R × R ×
   left_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
   right_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
 #align quaternion_algebra.equiv_prod QuaternionAlgebra.equivProd
+
+/-- The equivalence between a quaternion algebra over `R` and `fin 4 → R`. -/
+@[simps symm_apply]
+def equivTuple {R : Type _} (c₁ c₂ : R) : ℍ[R,c₁,c₂] ≃ (Fin 4 → R)
+    where
+  toFun a := ![a.1, a.2, a.3, a.4]
+  invFun a := ⟨a 0, a 1, a 2, a 3⟩
+  left_inv := fun ⟨a₁, a₂, a₃, a₄⟩ => rfl
+  right_inv f := by ext ⟨_, _ | _ | _ | _ | _ | ⟨⟩⟩ <;> rfl
+#align quaternion_algebra.equiv_tuple QuaternionAlgebra.equivTuple
+
+@[simp]
+theorem equivTuple_apply {R : Type _} (c₁ c₂ : R) (x : ℍ[R,c₁,c₂]) :
+    equivTuple c₁ c₂ x = ![x.re, x.imI, x.imJ, x.imK] :=
+  rfl
+#align quaternion_algebra.equiv_tuple_apply QuaternionAlgebra.equivTuple_apply
 
 @[simp]
 theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a.3 a.4 = a
@@ -282,7 +301,7 @@ theorem algebraMap_eq (r : R) : algebraMap R ℍ[R,c₁,c₂] r = ⟨r, 0, 0, 0�
 
 section
 
-variable (R c₁ c₂)
+variable (c₁ c₂)
 
 /-- `quaternion_algebra.re` as a `linear_map`-/
 @[simps]
@@ -315,6 +334,56 @@ def imKLm : ℍ[R,c₁,c₂] →ₗ[R] R where
   map_add' x y := rfl
   map_smul' r x := rfl
 #align quaternion_algebra.im_k_lm QuaternionAlgebra.imKLm
+
+/-- `quaternion_algebra.equiv_tuple` as a linear equivalence. -/
+def linearEquivTuple : ℍ[R,c₁,c₂] ≃ₗ[R] Fin 4 → R :=
+  LinearEquiv.symm-- proofs are not `rfl` in the forward direction
+    { (equivTuple c₁ c₂).symm with
+      toFun := (equivTuple c₁ c₂).symm
+      invFun := equivTuple c₁ c₂
+      map_add' := fun v₁ v₂ => rfl
+      map_smul' := fun v₁ v₂ => rfl }
+#align quaternion_algebra.linear_equiv_tuple QuaternionAlgebra.linearEquivTuple
+
+@[simp]
+theorem coe_linearEquivTuple : ⇑(linearEquivTuple c₁ c₂) = equivTuple c₁ c₂ :=
+  rfl
+#align quaternion_algebra.coe_linear_equiv_tuple QuaternionAlgebra.coe_linearEquivTuple
+
+@[simp]
+theorem coe_linearEquivTuple_symm : ⇑(linearEquivTuple c₁ c₂).symm = (equivTuple c₁ c₂).symm :=
+  rfl
+#align quaternion_algebra.coe_linear_equiv_tuple_symm QuaternionAlgebra.coe_linearEquivTuple_symm
+
+/-- `ℍ[R, c₁, c₂]` has a basis over `R` given by `1`, `i`, `j`, and `k`. -/
+noncomputable def basisOneIJK : Basis (Fin 4) R ℍ[R,c₁,c₂] :=
+  Basis.ofEquivFun <| linearEquivTuple c₁ c₂
+#align quaternion_algebra.basis_one_i_j_k QuaternionAlgebra.basisOneIJK
+
+@[simp]
+theorem coe_basisOneIJK_repr (q : ℍ[R,c₁,c₂]) :
+    ⇑((basisOneIJK c₁ c₂).repr q) = ![q.re, q.imI, q.imJ, q.imK] :=
+  rfl
+#align quaternion_algebra.coe_basis_one_i_j_k_repr QuaternionAlgebra.coe_basisOneIJK_repr
+
+instance : Module.Finite R ℍ[R,c₁,c₂] :=
+  Module.Finite.of_basis (basisOneIJK c₁ c₂)
+
+instance : Module.Free R ℍ[R,c₁,c₂] :=
+  Module.Free.ofBasis (basisOneIJK c₁ c₂)
+
+theorem dim_eq_four [StrongRankCondition R] : Module.rank R ℍ[R,c₁,c₂] = 4 :=
+  by
+  rw [dim_eq_card_basis (basis_one_i_j_k c₁ c₂), Fintype.card_fin]
+  norm_num
+#align quaternion_algebra.dim_eq_four QuaternionAlgebra.dim_eq_four
+
+theorem finrank_eq_four [StrongRankCondition R] : FiniteDimensional.finrank R ℍ[R,c₁,c₂] = 4 :=
+  by
+  have : Cardinal.toNat 4 = 4 := by
+    rw [← Cardinal.toNat_cast 4, Nat.cast_bit0, Nat.cast_bit0, Nat.cast_one]
+  rw [FiniteDimensional.finrank, dim_eq_four, this]
+#align quaternion_algebra.finrank_eq_four QuaternionAlgebra.finrank_eq_four
 
 end
 
@@ -524,10 +593,23 @@ def Quaternion (R : Type _) [One R] [Neg R] :=
 -- mathport name: quaternion
 scoped[Quaternion] notation "ℍ[" R "]" => Quaternion R
 
-/-- The equivalence between the quaternions over R and R × R × R × R. -/
+/-- The equivalence between the quaternions over `R` and `R × R × R × R`. -/
+@[simps]
 def Quaternion.equivProd (R : Type _) [One R] [Neg R] : ℍ[R] ≃ R × R × R × R :=
   QuaternionAlgebra.equivProd _ _
 #align quaternion.equiv_prod Quaternion.equivProd
+
+/-- The equivalence between the quaternions over `R` and `fin 4 → R`. -/
+@[simps symm_apply]
+def Quaternion.equivTuple (R : Type _) [One R] [Neg R] : ℍ[R] ≃ (Fin 4 → R) :=
+  QuaternionAlgebra.equivTuple _ _
+#align quaternion.equiv_tuple Quaternion.equivTuple
+
+@[simp]
+theorem Quaternion.equivTuple_apply (R : Type _) [One R] [Neg R] (x : ℍ[R]) :
+    Quaternion.equivTuple R x = ![x.re, x.imI, x.imJ, x.imK] :=
+  rfl
+#align quaternion.equiv_tuple_apply Quaternion.equivTuple_apply
 
 namespace Quaternion
 
@@ -787,6 +869,20 @@ theorem algebraMap_def : ⇑(algebraMap R ℍ[R]) = coe :=
 theorem smul_coe : x • (y : ℍ[R]) = ↑(x * y) :=
   QuaternionAlgebra.smul_coe x y
 #align quaternion.smul_coe Quaternion.smul_coe
+
+instance : Module.Finite R ℍ[R] :=
+  QuaternionAlgebra.Module.finite _ _
+
+instance : Module.Free R ℍ[R] :=
+  QuaternionAlgebra.Module.free _ _
+
+theorem dim_eq_four [StrongRankCondition R] : Module.rank R ℍ[R] = 4 :=
+  QuaternionAlgebra.dim_eq_four _ _
+#align quaternion.dim_eq_four Quaternion.dim_eq_four
+
+theorem finrank_eq_four [StrongRankCondition R] : FiniteDimensional.finrank R ℍ[R] = 4 :=
+  QuaternionAlgebra.finrank_eq_four _ _
+#align quaternion.finrank_eq_four Quaternion.finrank_eq_four
 
 /-- Quaternion conjugate. -/
 def conj : ℍ[R] ≃ₗ[R] ℍ[R] :=

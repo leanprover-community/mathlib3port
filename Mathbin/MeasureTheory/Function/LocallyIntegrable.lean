@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -254,7 +254,7 @@ theorem Continuous.integrableOnUIoc [LinearOrder X] [CompactIccSpace X] (hf : Co
 /-- A continuous function with compact support is integrable on the whole space. -/
 theorem Continuous.integrableOfHasCompactSupport (hf : Continuous f) (hcf : HasCompactSupport f) :
     Integrable f μ :=
-  (integrableOn_iff_integrable_of_support_subset (subset_tsupport f) measurableSet_closure).mp <|
+  (integrableOn_iff_integrable_of_support_subset (subset_tsupport f)).mp <|
     hf.ContinuousOn.integrableOnCompact hcf
 #align continuous.integrable_of_has_compact_support Continuous.integrableOfHasCompactSupport
 

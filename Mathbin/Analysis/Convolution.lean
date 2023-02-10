@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.convolution
-! leanprover-community/mathlib commit d101e93197bb5f6ea89bd7ba386b7f7dff1f3903
+! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,7 +228,7 @@ theorem BddAbove.convolutionExistsAt' {x₀ : G} {s : Set G}
     (hmg : AeStronglyMeasurable g <| map (fun t => x₀ - t) (μ.restrict s)) :
     ConvolutionExistsAt f g x₀ L μ :=
   by
-  rw [ConvolutionExistsAt, ← integrable_on_iff_integrable_of_support_subset h2s hs]
+  rw [ConvolutionExistsAt, ← integrable_on_iff_integrable_of_support_subset h2s]
   set s' := (fun t => -t + x₀) ⁻¹' s
   have :
     ∀ᵐ t : G ∂μ.restrict s,
