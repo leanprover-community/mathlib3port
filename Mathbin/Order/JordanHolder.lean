@@ -400,7 +400,7 @@ theorem top_eraseTop (s : CompositionSeries X) :
     congr_arg s
       (by
         ext
-        simp only [erase_top_length, Fin.val_last, Fin.coe_castSucc, Fin.coe_of_nat_eq_mod,
+        simp only [erase_top_length, Fin.val_last, Fin.coe_castSucc, Fin.coe_ofNat_eq_mod,
           Fin.val_mk, coe_coe])
 #align composition_series.top_erase_top CompositionSeries.top_eraseTop
 

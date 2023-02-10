@@ -4083,16 +4083,16 @@ theorem coe_clamp (n m : ℕ) : (clamp n m : ℕ) = min n m :=
   Nat.mod_eq_of_lt <| Nat.lt_succ_iff.mpr <| min_le_right _ _
 #align fin.coe_clamp Fin.coe_clamp
 
-/- warning: fin.coe_of_nat_eq_mod -> Fin.coe_of_nat_eq_mod is a dubious translation:
+/- warning: fin.coe_of_nat_eq_mod -> Fin.coe_ofNat_eq_mod is a dubious translation:
 lean 3 declaration is
   forall (m : Nat) (n : Nat) [_inst_1 : NeZero.{0} Nat Nat.hasZero m], Eq.{1} Nat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) (Fin m) Nat (HasLiftT.mk.{1, 1} (Fin m) Nat (CoeTCₓ.coe.{1, 1} (Fin m) Nat (coeBase.{1, 1} (Fin m) Nat (Fin.coeToNat m)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat (Fin m) (HasLiftT.mk.{1, 1} Nat (Fin m) (CoeTCₓ.coe.{1, 1} Nat (Fin m) (Nat.castCoe.{0} (Fin m) (AddMonoidWithOne.toNatCast.{0} (Fin m) (Fin.addMonoidWithOne m _inst_1))))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.hasMod) n m)
 but is expected to have type
-  forall (m : Nat) (n : Nat), Eq.{1} Nat (Fin.val (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Nat.cast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (AddMonoidWithOne.toNatCast.{0} (Fin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))) (Fin.instAddMonoidWithOneFin (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) m (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (NeZero.succ m))) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n (Nat.succ m))
-Case conversion may be inaccurate. Consider using '#align fin.coe_of_nat_eq_mod Fin.coe_of_nat_eq_modₓ'. -/
+  forall (m : Nat) (n : Nat) [_inst_1 : NeZero.{0} Nat (LinearOrderedCommMonoidWithZero.toZero.{0} Nat Nat.linearOrderedCommMonoidWithZero) m], Eq.{1} Nat (Fin.val m (Nat.cast.{0} (Fin m) (AddMonoidWithOne.toNatCast.{0} (Fin m) (Fin.instAddMonoidWithOneFin m _inst_1)) n)) (HMod.hMod.{0, 0, 0} Nat Nat Nat (instHMod.{0} Nat Nat.instModNat) n m)
+Case conversion may be inaccurate. Consider using '#align fin.coe_of_nat_eq_mod Fin.coe_ofNat_eq_modₓ'. -/
 @[simp]
-theorem coe_of_nat_eq_mod (m n : ℕ) [NeZero m] : ((n : Fin m) : ℕ) = n % m :=
+theorem coe_ofNat_eq_mod (m n : ℕ) [NeZero m] : ((n : Fin m) : ℕ) = n % m :=
   rfl
-#align fin.coe_of_nat_eq_mod Fin.coe_of_nat_eq_mod
+#align fin.coe_of_nat_eq_mod Fin.coe_ofNat_eq_mod
 
 section Mul
 

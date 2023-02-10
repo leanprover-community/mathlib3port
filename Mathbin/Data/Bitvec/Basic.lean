@@ -101,7 +101,7 @@ theorem ofNat_toNat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=
 #align bitvec.of_nat_to_nat Bitvec.ofNat_toNat
 
 theorem toFin_val {n : ℕ} (v : Bitvec n) : (toFin v : ℕ) = v.toNat := by
-  rw [to_fin, Fin.coe_of_nat_eq_mod, Nat.mod_eq_of_lt] <;> apply to_nat_lt
+  rw [to_fin, Fin.coe_ofNat_eq_mod, Nat.mod_eq_of_lt] <;> apply to_nat_lt
 #align bitvec.to_fin_val Bitvec.toFin_val
 
 theorem toFin_le_toFin_of_le {n} {v₀ v₁ : Bitvec n} (h : v₀ ≤ v₁) : v₀.toFin ≤ v₁.toFin :=
