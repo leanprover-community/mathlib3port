@@ -28,25 +28,43 @@ group_theory
 -/
 
 
+/- warning: tactic.group.zpow_trick -> Mathlib.Tactic.Group.zpow_trick is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (n : Int) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b n)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n m)))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (n : Int) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b n)) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n m)))
+Case conversion may be inaccurate. Consider using '#align tactic.group.zpow_trick Mathlib.Tactic.Group.zpow_trickₓ'. -/
 -- The next four lemmas are not general purpose lemmas, they are intended for use only by
 -- the `group` tactic.
 @[to_additive]
-theorem Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) :
+theorem Mathlib.Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : ℤ) :
     a * b ^ n * b ^ m = a * b ^ (n + m) := by rw [mul_assoc, ← zpow_add]
-#align tactic.group.zpow_trick Tactic.Group.zpow_trick
-#align tactic.group.zsmul_trick Tactic.Group.zsmul_trick
+#align tactic.group.zpow_trick Mathlib.Tactic.Group.zpow_trick
+#align tactic.group.zsmul_trick Mathlib.Tactic.Group.zsmul_trick
 
+/- warning: tactic.group.zpow_trick_one -> Mathlib.Tactic.Group.zpow_trick_one is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) m (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (m : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a b) (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b m)) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) m (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
+Case conversion may be inaccurate. Consider using '#align tactic.group.zpow_trick_one Mathlib.Tactic.Group.zpow_trick_oneₓ'. -/
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) :
+theorem Mathlib.Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) :
     a * b * b ^ m = a * b ^ (m + 1) := by rw [mul_assoc, mul_self_zpow]
-#align tactic.group.zpow_trick_one Tactic.Group.zpow_trick_one
-#align tactic.group.zsmul_trick_zero Tactic.Group.zsmul_trick_zero
+#align tactic.group.zpow_trick_one Mathlib.Tactic.Group.zpow_trick_one
+#align tactic.group.zsmul_trick_zero Mathlib.Tactic.Group.zsmul_trick_zero
 
+/- warning: tactic.group.zpow_trick_one' -> Mathlib.Tactic.Group.zpow_trick_one' is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (n : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b n)) b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toHasMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.hasAdd) n (OfNat.ofNat.{0} Int 1 (OfNat.mk.{0} Int 1 (One.one.{0} Int Int.hasOne))))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (a : G) (b : G) (n : Int), Eq.{succ u1} G (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b n)) b) (HMul.hMul.{u1, u1, u1} G G G (instHMul.{u1} G (MulOneClass.toMul.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))) a (HPow.hPow.{u1, 0, u1} G Int G (instHPow.{u1, 0} G Int (DivInvMonoid.Pow.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) b (HAdd.hAdd.{0, 0, 0} Int Int Int (instHAdd.{0} Int Int.instAddInt) n (OfNat.ofNat.{0} Int 1 (instOfNatInt 1)))))
+Case conversion may be inaccurate. Consider using '#align tactic.group.zpow_trick_one' Mathlib.Tactic.Group.zpow_trick_one'ₓ'. -/
 @[to_additive]
-theorem Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) :
+theorem Mathlib.Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) :
     a * b ^ n * b = a * b ^ (n + 1) := by rw [mul_assoc, mul_zpow_self]
-#align tactic.group.zpow_trick_one' Tactic.Group.zpow_trick_one'
-#align tactic.group.zsmul_trick_zero' Tactic.Group.zsmul_trick_zero'
+#align tactic.group.zpow_trick_one' Mathlib.Tactic.Group.zpow_trick_one'
+#align tactic.group.zsmul_trick_zero' Mathlib.Tactic.Group.zsmul_trick_zero'
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ) :
@@ -70,8 +88,9 @@ unsafe def aux_group₁ (locat : Loc) : tactic Unit :=
         expr ``(Int.neg_mul_eq_neg_mul_symm), symm_expr ``(zpow_ofNat), symm_expr ``(zpow_neg_one),
         symm_expr ``(zpow_mul), symm_expr ``(zpow_add_one), symm_expr ``(zpow_one_add),
         symm_expr ``(zpow_add), expr ``(mul_zpow_neg_one), expr ``(zpow_zero), expr ``(mul_zpow),
-        symm_expr ``(mul_assoc), expr ``(zpow_trick), expr ``(zpow_trick_one),
-        expr ``(zpow_trick_one'), expr ``(zpow_trick_sub), expr ``(Tactic.Ring.horner)]
+        symm_expr ``(mul_assoc), expr ``(Mathlib.Tactic.Group.zpow_trick),
+        expr ``(Mathlib.Tactic.Group.zpow_trick_one), expr ``(Mathlib.Tactic.Group.zpow_trick_one'),
+        expr ``(zpow_trick_sub), expr ``(Tactic.Ring.horner)]
       [] locat >>
     skip
 #align tactic.aux_group₁ tactic.aux_group₁
