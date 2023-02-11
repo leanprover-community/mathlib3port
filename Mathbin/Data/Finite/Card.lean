@@ -212,7 +212,7 @@ theorem card_union_le (s t : Set α) : Nat.card ↥(s ∪ t) ≤ Nat.card s + Na
   cases' _root_.finite_or_infinite ↥(s ∪ t) with h h
   · rw [finite_coe_iff, finite_union, ← finite_coe_iff, ← finite_coe_iff] at h
     cases h
-    rw [← Cardinal.nat_cast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk,
+    rw [← Cardinal.natCast_le, Nat.cast_add, Finite.cast_card_eq_mk, Finite.cast_card_eq_mk,
       Finite.cast_card_eq_mk]
     exact Cardinal.mk_union_le s t
   · exact nat.card_eq_zero_of_infinite.trans_le (zero_le _)

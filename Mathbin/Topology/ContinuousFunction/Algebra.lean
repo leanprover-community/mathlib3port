@@ -503,7 +503,7 @@ variable (R : Type _) [Semiring R]
 
 variable (M : Type _) [TopologicalSpace M] [AddCommGroup M]
 
-variable [Module R M] [HasContinuousConstSMul R M] [TopologicalAddGroup M]
+variable [Module R M] [ContinuousConstSMul R M] [TopologicalAddGroup M]
 
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
@@ -522,12 +522,12 @@ variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {R R₁ : 
   [TopologicalSpace M] {M₂ : Type _} [TopologicalSpace M₂]
 
 @[to_additive ContinuousMap.hasVadd]
-instance [SMul R M] [HasContinuousConstSMul R M] : SMul R C(α, M) :=
+instance [SMul R M] [ContinuousConstSMul R M] : SMul R C(α, M) :=
   ⟨fun r f => ⟨r • f, f.Continuous.const_smul r⟩⟩
 
 @[to_additive]
-instance [LocallyCompactSpace α] [SMul R M] [HasContinuousConstSMul R M] :
-    HasContinuousConstSMul R C(α, M) :=
+instance [LocallyCompactSpace α] [SMul R M] [ContinuousConstSMul R M] :
+    ContinuousConstSMul R C(α, M) :=
   ⟨fun γ => continuous_of_continuous_uncurry _ (continuous_eval'.const_smul γ)⟩
 
 @[to_additive]
@@ -540,49 +540,49 @@ instance [LocallyCompactSpace α] [TopologicalSpace R] [SMul R M] [HasContinuous
     exact (continuous_fst.comp continuous_fst).smul h⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_smul [SMul R M] [HasContinuousConstSMul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
+theorem coe_smul [SMul R M] [ContinuousConstSMul R M] (c : R) (f : C(α, M)) : ⇑(c • f) = c • f :=
   rfl
 #align continuous_map.coe_smul ContinuousMap.coe_smul
 #align continuous_map.coe_vadd ContinuousMap.coe_vadd
 
 @[to_additive]
-theorem smul_apply [SMul R M] [HasContinuousConstSMul R M] (c : R) (f : C(α, M)) (a : α) :
+theorem smul_apply [SMul R M] [ContinuousConstSMul R M] (c : R) (f : C(α, M)) (a : α) :
     (c • f) a = c • f a :=
   rfl
 #align continuous_map.smul_apply ContinuousMap.smul_apply
 #align continuous_map.vadd_apply ContinuousMap.vadd_apply
 
 @[simp, to_additive]
-theorem smul_comp [SMul R M] [HasContinuousConstSMul R M] (r : R) (f : C(β, M)) (g : C(α, β)) :
+theorem smul_comp [SMul R M] [ContinuousConstSMul R M] (r : R) (f : C(β, M)) (g : C(α, β)) :
     (r • f).comp g = r • f.comp g :=
   rfl
 #align continuous_map.smul_comp ContinuousMap.smul_comp
 #align continuous_map.vadd_comp ContinuousMap.vadd_comp
 
 @[to_additive]
-instance [SMul R M] [HasContinuousConstSMul R M] [SMul R₁ M] [HasContinuousConstSMul R₁ M]
+instance [SMul R M] [ContinuousConstSMul R M] [SMul R₁ M] [ContinuousConstSMul R₁ M]
     [SMulCommClass R R₁ M] : SMulCommClass R R₁ C(α, M)
     where smul_comm _ _ _ := ext fun _ => smul_comm _ _ _
 
-instance [SMul R M] [HasContinuousConstSMul R M] [SMul R₁ M] [HasContinuousConstSMul R₁ M]
-    [SMul R R₁] [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M)
+instance [SMul R M] [ContinuousConstSMul R M] [SMul R₁ M] [ContinuousConstSMul R₁ M] [SMul R R₁]
+    [IsScalarTower R R₁ M] : IsScalarTower R R₁ C(α, M)
     where smul_assoc _ _ _ := ext fun _ => smul_assoc _ _ _
 
-instance [SMul R M] [SMul Rᵐᵒᵖ M] [HasContinuousConstSMul R M] [IsCentralScalar R M] :
+instance [SMul R M] [SMul Rᵐᵒᵖ M] [ContinuousConstSMul R M] [IsCentralScalar R M] :
     IsCentralScalar R C(α, M) where op_smul_eq_smul _ _ := ext fun _ => op_smul_eq_smul _ _
 
-instance [Monoid R] [MulAction R M] [HasContinuousConstSMul R M] : MulAction R C(α, M) :=
+instance [Monoid R] [MulAction R M] [ContinuousConstSMul R M] : MulAction R C(α, M) :=
   Function.Injective.mulAction _ coe_injective coe_smul
 
 instance [Monoid R] [AddMonoid M] [DistribMulAction R M] [HasContinuousAdd M]
-    [HasContinuousConstSMul R M] : DistribMulAction R C(α, M) :=
+    [ContinuousConstSMul R M] : DistribMulAction R C(α, M) :=
   Function.Injective.distribMulAction coeFnAddMonoidHom coe_injective coe_smul
 
 variable [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂]
 
-variable [HasContinuousAdd M] [Module R M] [HasContinuousConstSMul R M]
+variable [HasContinuousAdd M] [Module R M] [ContinuousConstSMul R M]
 
-variable [HasContinuousAdd M₂] [Module R M₂] [HasContinuousConstSMul R M₂]
+variable [HasContinuousAdd M₂] [Module R M₂] [ContinuousConstSMul R M₂]
 
 instance module : Module R C(α, M) :=
   Function.Injective.module R coeFnAddMonoidHom coe_injective coe_smul
@@ -946,7 +946,7 @@ instance [NonUnitalSemiring β] [TopologicalSemiring β] [StarRing β] [Continuo
   { ContinuousMap.starAddMonoid with }
 
 instance [Star R] [Star β] [SMul R β] [StarModule R β] [ContinuousStar β]
-    [HasContinuousConstSMul R β] : StarModule R C(α, β)
+    [ContinuousConstSMul R β] : StarModule R C(α, β)
     where star_smul k f := ext fun x => star_smul _ _
 
 end StarStructure

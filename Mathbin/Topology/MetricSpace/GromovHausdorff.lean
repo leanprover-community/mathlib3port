@@ -907,7 +907,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       use ∅, 0, bot_le, choice this
     · rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
       rcases Cardinal.lt_aleph0.1 (lt_of_le_of_lt scard (Cardinal.nat_lt_aleph0 _)) with ⟨N, hN⟩
-      rw [hN, Cardinal.nat_cast_le] at scard
+      rw [hN, Cardinal.natCast_le] at scard
       have : Cardinal.mk s = Cardinal.mk (Fin N) := by rw [hN, Cardinal.mk_fin]
       cases' Quotient.exact this with E
       use s, N, scard, E

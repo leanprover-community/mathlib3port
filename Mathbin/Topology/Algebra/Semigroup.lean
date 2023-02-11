@@ -21,6 +21,12 @@ We also state a corresponding lemma guaranteeing that a subset of `M` contains a
 -/
 
 
+/- warning: exists_idempotent_of_compact_t2_of_continuous_mul_left -> exists_idempotent_of_compact_t2_of_continuous_mul_left is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : Nonempty.{succ u1} M] [_inst_2 : Semigroup.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : CompactSpace.{u1} M _inst_3] [_inst_5 : T2Space.{u1} M _inst_3], (forall (r : M), Continuous.{u1, u1} M M _inst_3 _inst_3 (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_2)) _x r)) -> (Exists.{succ u1} M (fun (m : M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_2)) m m) m))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : Nonempty.{succ u1} M] [_inst_2 : Semigroup.{u1} M] [_inst_3 : TopologicalSpace.{u1} M] [_inst_4 : CompactSpace.{u1} M _inst_3] [_inst_5 : T2Space.{u1} M _inst_3], (forall (r : M), Continuous.{u1, u1} M M _inst_3 _inst_3 (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_2)) _x r)) -> (Exists.{succ u1} M (fun (m : M) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_2)) m m) m))
+Case conversion may be inaccurate. Consider using '#align exists_idempotent_of_compact_t2_of_continuous_mul_left exists_idempotent_of_compact_t2_of_continuous_mul_leftₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (m m' «expr ∈ » N) -/
 /-- Any nonempty compact Hausdorff semigroup where right-multiplication is continuous contains
 an idempotent, i.e. an `m` such that `m * m = m`. -/
@@ -78,6 +84,12 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
 #align exists_idempotent_of_compact_t2_of_continuous_mul_left exists_idempotent_of_compact_t2_of_continuous_mul_left
 #align exists_idempotent_of_compact_t2_of_continuous_add_left exists_idempotent_of_compact_t2_of_continuous_add_left
 
+/- warning: exists_idempotent_in_compact_subsemigroup -> exists_idempotent_in_compact_subsemigroup is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : T2Space.{u1} M _inst_2], (forall (r : M), Continuous.{u1, u1} M M _inst_2 _inst_2 (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) _x r)) -> (forall (s : Set.{u1} M), (Set.Nonempty.{u1} M s) -> (IsCompact.{u1} M _inst_2 s) -> (forall (x : M), (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) x s) -> (forall (y : M), (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) y s) -> (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) x y) s))) -> (Exists.{succ u1} M (fun (m : M) => Exists.{0} (Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m s) (fun (H : Membership.Mem.{u1, u1} M (Set.{u1} M) (Set.hasMem.{u1} M) m s) => Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toHasMul.{u1} M _inst_1)) m m) m))))
+but is expected to have type
+  forall {M : Type.{u1}} [_inst_1 : Semigroup.{u1} M] [_inst_2 : TopologicalSpace.{u1} M] [_inst_3 : T2Space.{u1} M _inst_2], (forall (r : M), Continuous.{u1, u1} M M _inst_2 _inst_2 (fun (_x : M) => HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_1)) _x r)) -> (forall (s : Set.{u1} M), (Set.Nonempty.{u1} M s) -> (IsCompact.{u1} M _inst_2 s) -> (forall (x : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) x s) -> (forall (y : M), (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) y s) -> (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_1)) x y) s))) -> (Exists.{succ u1} M (fun (m : M) => And (Membership.mem.{u1, u1} M (Set.{u1} M) (Set.instMembershipSet.{u1} M) m s) (Eq.{succ u1} M (HMul.hMul.{u1, u1, u1} M M M (instHMul.{u1} M (Semigroup.toMul.{u1} M _inst_1)) m m) m))))
+Case conversion may be inaccurate. Consider using '#align exists_idempotent_in_compact_subsemigroup exists_idempotent_in_compact_subsemigroupₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 /-- A version of `exists_idempotent_of_compact_t2_of_continuous_mul_left` where the idempotent lies
 in some specified nonempty compact subsemigroup. -/

@@ -64,28 +64,35 @@ open MeasurableSpace Set
 open Classical MeasureTheory
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (s t «expr ∈ » C) -/
+#print IsPiSystem /-
 /-- A π-system is a collection of subsets of `α` that is closed under binary intersection of
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
 def IsPiSystem {α} (C : Set (Set α)) : Prop :=
   ∀ (s) (_ : s ∈ C) (t) (_ : t ∈ C), (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
 #align is_pi_system IsPiSystem
+-/
 
 namespace MeasurableSpace
 
+#print MeasurableSpace.isPiSystem_measurableSet /-
 theorem isPiSystem_measurableSet {α : Type _} [MeasurableSpace α] :
     IsPiSystem { s : Set α | MeasurableSet s } := fun s hs t ht _ => hs.inter ht
 #align measurable_space.is_pi_system_measurable_set MeasurableSpace.isPiSystem_measurableSet
+-/
 
 end MeasurableSpace
 
+#print IsPiSystem.singleton /-
 theorem IsPiSystem.singleton {α} (S : Set α) : IsPiSystem ({S} : Set (Set α)) :=
   by
   intro s h_s t h_t h_ne
   rw [Set.mem_singleton_iff.1 h_s, Set.mem_singleton_iff.1 h_t, Set.inter_self,
     Set.mem_singleton_iff]
 #align is_pi_system.singleton IsPiSystem.singleton
+-/
 
+#print IsPiSystem.insert_empty /-
 theorem IsPiSystem.insert_empty {α} {S : Set (Set α)} (h_pi : IsPiSystem S) :
     IsPiSystem (insert ∅ S) := by
   intro s hs t ht hst
@@ -95,7 +102,9 @@ theorem IsPiSystem.insert_empty {α} {S : Set (Set α)} (h_pi : IsPiSystem S) :
     · simp [ht]
     · exact Set.mem_insert_of_mem _ (h_pi s hs t ht hst)
 #align is_pi_system.insert_empty IsPiSystem.insert_empty
+-/
 
+#print IsPiSystem.insert_univ /-
 theorem IsPiSystem.insert_univ {α} {S : Set (Set α)} (h_pi : IsPiSystem S) :
     IsPiSystem (insert Set.univ S) := by
   intro s hs t ht hst
@@ -105,7 +114,14 @@ theorem IsPiSystem.insert_univ {α} {S : Set (Set α)} (h_pi : IsPiSystem S) :
     · simp [hs, ht]
     · exact Set.mem_insert_of_mem _ (h_pi s hs t ht hst)
 #align is_pi_system.insert_univ IsPiSystem.insert_univ
+-/
 
+/- warning: is_pi_system.comap -> IsPiSystem.comap is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {S : Set.{u2} (Set.{u2} β)}, (IsPiSystem.{u2} β S) -> (forall (f : α -> β), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u2} (Set.{u2} β) (fun (t : Set.{u2} β) => Exists.{0} (Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) t S) (fun (H : Membership.Mem.{u2, u2} (Set.{u2} β) (Set.{u2} (Set.{u2} β)) (Set.hasMem.{u2} (Set.{u2} β)) t S) => Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u2} α β f t) s)))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {S : Set.{u1} (Set.{u1} β)}, (IsPiSystem.{u1} β S) -> (forall (f : α -> β), IsPiSystem.{u2} α (setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => Exists.{succ u1} (Set.{u1} β) (fun (t : Set.{u1} β) => And (Membership.mem.{u1, u1} (Set.{u1} β) (Set.{u1} (Set.{u1} β)) (Set.instMembershipSet.{u1} (Set.{u1} β)) t S) (Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α β f t) s)))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system.comap IsPiSystem.comapₓ'. -/
 theorem IsPiSystem.comap {α β} {S : Set (Set β)} (h_pi : IsPiSystem S) (f : α → β) :
     IsPiSystem { s : Set α | ∃ t ∈ S, f ⁻¹' t = s } :=
   by
@@ -118,6 +134,12 @@ theorem IsPiSystem.comap {α β} {S : Set (Set β)} (h_pi : IsPiSystem S) (f : �
   simpa using hst
 #align is_pi_system.comap IsPiSystem.comap
 
+/- warning: is_pi_system_Union_of_directed_le -> isPiSystem_unionᵢ_of_directed_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (p : ι -> (Set.{u1} (Set.{u1} α))), (forall (n : ι), IsPiSystem.{u1} α (p n)) -> (Directed.{u1, u2} (Set.{u1} (Set.{u1} α)) ι (LE.le.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasLe.{u1} (Set.{u1} α))) p) -> (IsPiSystem.{u1} α (Set.unionᵢ.{u1, u2} (Set.{u1} α) ι (fun (n : ι) => p n)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (p : ι -> (Set.{u2} (Set.{u2} α))), (forall (n : ι), IsPiSystem.{u2} α (p n)) -> (Directed.{u2, u1} (Set.{u2} (Set.{u2} α)) ι (fun (x._@.Mathlib.MeasureTheory.PiSystem._hyg.544 : Set.{u2} (Set.{u2} α)) (x._@.Mathlib.MeasureTheory.PiSystem._hyg.546 : Set.{u2} (Set.{u2} α)) => LE.le.{u2} (Set.{u2} (Set.{u2} α)) (Set.instLESet.{u2} (Set.{u2} α)) x._@.Mathlib.MeasureTheory.PiSystem._hyg.544 x._@.Mathlib.MeasureTheory.PiSystem._hyg.546) p) -> (IsPiSystem.{u2} α (Set.unionᵢ.{u2, u1} (Set.{u2} α) ι (fun (n : ι) => p n)))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Union_of_directed_le isPiSystem_unionᵢ_of_directed_leₓ'. -/
 theorem isPiSystem_unionᵢ_of_directed_le {α ι} (p : ι → Set (Set α)) (hp_pi : ∀ n, IsPiSystem (p n))
     (hp_directed : Directed (· ≤ ·) p) : IsPiSystem (⋃ n, p n) :=
   by
@@ -129,6 +151,12 @@ theorem isPiSystem_unionᵢ_of_directed_le {α ι} (p : ι → Set (Set α)) (hp
   exact ⟨k, hp_pi k t1 (hpnk ht1) t2 (hpmk ht2) h⟩
 #align is_pi_system_Union_of_directed_le isPiSystem_unionᵢ_of_directed_le
 
+/- warning: is_pi_system_Union_of_monotone -> isPiSystem_unionᵢ_of_monotone is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} [_inst_1 : SemilatticeSup.{u2} ι] (p : ι -> (Set.{u1} (Set.{u1} α))), (forall (n : ι), IsPiSystem.{u1} α (p n)) -> (Monotone.{u2, u1} ι (Set.{u1} (Set.{u1} α)) (PartialOrder.toPreorder.{u2} ι (SemilatticeSup.toPartialOrder.{u2} ι _inst_1)) (PartialOrder.toPreorder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} (Set.{u1} α)) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} (Set.{u1} α)) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} (Set.{u1} α)) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} (Set.{u1} α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} (Set.{u1} α)) (Set.completeBooleanAlgebra.{u1} (Set.{u1} α)))))))) p) -> (IsPiSystem.{u1} α (Set.unionᵢ.{u1, succ u2} (Set.{u1} α) ι (fun (n : ι) => p n)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} [_inst_1 : SemilatticeSup.{u1} ι] (p : ι -> (Set.{u2} (Set.{u2} α))), (forall (n : ι), IsPiSystem.{u2} α (p n)) -> (Monotone.{u1, u2} ι (Set.{u2} (Set.{u2} α)) (PartialOrder.toPreorder.{u1} ι (SemilatticeSup.toPartialOrder.{u1} ι _inst_1)) (PartialOrder.toPreorder.{u2} (Set.{u2} (Set.{u2} α)) (CompleteSemilatticeInf.toPartialOrder.{u2} (Set.{u2} (Set.{u2} α)) (CompleteLattice.toCompleteSemilatticeInf.{u2} (Set.{u2} (Set.{u2} α)) (Order.Coframe.toCompleteLattice.{u2} (Set.{u2} (Set.{u2} α)) (CompleteDistribLattice.toCoframe.{u2} (Set.{u2} (Set.{u2} α)) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u2} (Set.{u2} (Set.{u2} α)) (Set.instCompleteBooleanAlgebraSet.{u2} (Set.{u2} α)))))))) p) -> (IsPiSystem.{u2} α (Set.unionᵢ.{u2, succ u1} (Set.{u2} α) ι (fun (n : ι) => p n)))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Union_of_monotone isPiSystem_unionᵢ_of_monotoneₓ'. -/
 theorem isPiSystem_unionᵢ_of_monotone {α ι} [SemilatticeSup ι] (p : ι → Set (Set α))
     (hp_pi : ∀ n, IsPiSystem (p n)) (hp_mono : Monotone p) : IsPiSystem (⋃ n, p n) :=
   isPiSystem_unionᵢ_of_directed_le p hp_pi (Monotone.directed_le hp_mono)
@@ -138,24 +166,38 @@ section Order
 
 variable {α : Type _} {ι ι' : Sort _} [LinearOrder α]
 
+#print isPiSystem_image_Iio /-
 theorem isPiSystem_image_Iio (s : Set α) : IsPiSystem (Iio '' s) :=
   by
   rintro _ ⟨a, ha, rfl⟩ _ ⟨b, hb, rfl⟩ -
   exact ⟨a ⊓ b, inf_ind a b ha hb, Iio_inter_Iio.symm⟩
 #align is_pi_system_image_Iio isPiSystem_image_Iio
+-/
 
+#print isPiSystem_Iio /-
 theorem isPiSystem_Iio : IsPiSystem (range Iio : Set (Set α)) :=
   @image_univ α _ Iio ▸ isPiSystem_image_Iio univ
 #align is_pi_system_Iio isPiSystem_Iio
+-/
 
+#print isPiSystem_image_Ioi /-
 theorem isPiSystem_image_Ioi (s : Set α) : IsPiSystem (Ioi '' s) :=
   @isPiSystem_image_Iio αᵒᵈ _ s
 #align is_pi_system_image_Ioi isPiSystem_image_Ioi
+-/
 
+#print isPiSystem_Ioi /-
 theorem isPiSystem_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
   @image_univ α _ Ioi ▸ isPiSystem_image_Ioi univ
 #align is_pi_system_Ioi isPiSystem_Ioi
+-/
 
+/- warning: is_pi_system_Ixx_mem -> isPiSystem_Ixx_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {Ixx : α -> α -> (Set.{u1} α)} {p : α -> α -> Prop}, (forall {a : α} {b : α}, (Set.Nonempty.{u1} α (Ixx a b)) -> (p a b)) -> (forall {a₁ : α} {b₁ : α} {a₂ : α} {b₂ : α}, Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Ixx a₁ b₁) (Ixx a₂ b₂)) (Ixx (LinearOrder.max.{u1} α _inst_1 a₁ a₂) (LinearOrder.min.{u1} α _inst_1 b₁ b₂))) -> (forall (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) => Exists.{0} (p l u) (fun (hlu : p l u) => Eq.{succ u1} (Set.{u1} α) (Ixx l u) S))))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] {Ixx : α -> α -> (Set.{u1} α)} {p : α -> α -> Prop}, (forall {a : α} {b : α}, (Set.Nonempty.{u1} α (Ixx a b)) -> (p a b)) -> (forall {a₁ : α} {b₁ : α} {a₂ : α} {b₂ : α}, Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) (Ixx a₁ b₁) (Ixx a₂ b₂)) (Ixx (Max.max.{u1} α (LinearOrder.toMax.{u1} α _inst_1) a₁ a₂) (Min.min.{u1} α (LinearOrder.toMin.{u1} α _inst_1) b₁ b₂))) -> (forall (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) l s) (Exists.{succ u1} α (fun (u : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) u t) (And (p l u) (Eq.{succ u1} (Set.{u1} α) (Ixx l u) S))))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ixx_mem isPiSystem_Ixx_memₓ'. -/
 theorem isPiSystem_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
     (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (s t : Set α) :
@@ -166,6 +208,12 @@ theorem isPiSystem_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
   exact fun H => ⟨l₁ ⊔ l₂, sup_ind l₁ l₂ hls₁ hls₂, u₁ ⊓ u₂, inf_ind u₁ u₂ hut₁ hut₂, Hne H, rfl⟩
 #align is_pi_system_Ixx_mem isPiSystem_Ixx_mem
 
+/- warning: is_pi_system_Ixx -> isPiSystem_Ixx is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} [_inst_1 : LinearOrder.{u1} α] {Ixx : α -> α -> (Set.{u1} α)} {p : α -> α -> Prop}, (forall {a : α} {b : α}, (Set.Nonempty.{u1} α (Ixx a b)) -> (p a b)) -> (forall {a₁ : α} {b₁ : α} {a₂ : α} {b₂ : α}, Eq.{succ u1} (Set.{u1} α) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) (Ixx a₁ b₁) (Ixx a₂ b₂)) (Ixx (LinearOrder.max.{u1} α _inst_1 a₁ a₂) (LinearOrder.min.{u1} α _inst_1 b₁ b₂))) -> (forall (f : ι -> α) (g : ι' -> α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u3} ι' (fun (j : ι') => Exists.{0} (p (f i) (g j)) (fun (h : p (f i) (g j)) => Eq.{succ u1} (Set.{u1} α) (Ixx (f i) (g j)) S))))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} [_inst_1 : LinearOrder.{u3} α] {Ixx : α -> α -> (Set.{u3} α)} {p : α -> α -> Prop}, (forall {a : α} {b : α}, (Set.Nonempty.{u3} α (Ixx a b)) -> (p a b)) -> (forall {a₁ : α} {b₁ : α} {a₂ : α} {b₂ : α}, Eq.{succ u3} (Set.{u3} α) (Inter.inter.{u3} (Set.{u3} α) (Set.instInterSet.{u3} α) (Ixx a₁ b₁) (Ixx a₂ b₂)) (Ixx (Max.max.{u3} α (LinearOrder.toMax.{u3} α _inst_1) a₁ a₂) (Min.min.{u3} α (LinearOrder.toMin.{u3} α _inst_1) b₁ b₂))) -> (forall (f : ι -> α) (g : ι' -> α), IsPiSystem.{u3} α (setOf.{u3} (Set.{u3} α) (fun (S : Set.{u3} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u1} ι' (fun (j : ι') => And (p (f i) (g j)) (Eq.{succ u3} (Set.{u3} α) (Ixx (f i) (g j)) S))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ixx isPiSystem_Ixxₓ'. -/
 theorem isPiSystem_Ixx {Ixx : α → α → Set α} {p : α → α → Prop}
     (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (f : ι → α)
@@ -173,41 +221,89 @@ theorem isPiSystem_Ixx {Ixx : α → α → Set α} {p : α → α → Prop}
   simpa only [exists_range_iff] using isPiSystem_Ixx_mem (@Hne) (@Hi) (range f) (range g)
 #align is_pi_system_Ixx isPiSystem_Ixx
 
+/- warning: is_pi_system_Ioo_mem -> isPiSystem_Ioo_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) l u) S)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) l s) (Exists.{succ u1} α (fun (u : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) u t) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) l u) S)))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ioo_mem isPiSystem_Ioo_memₓ'. -/
 theorem isPiSystem_Ioo_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioo l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) s t
 #align is_pi_system_Ioo_mem isPiSystem_Ioo_mem
 
+/- warning: is_pi_system_Ioo -> isPiSystem_Ioo is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} [_inst_1 : LinearOrder.{u1} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{u2} ι (fun (l : ι) => Exists.{u3} ι' (fun (u : ι') => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f l) (g u)) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f l) (g u)) => Eq.{succ u1} (Set.{u1} α) (Set.Ioo.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (f l) (g u)) S)))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} [_inst_1 : LinearOrder.{u3} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u3} α (setOf.{u3} (Set.{u3} α) (fun (S : Set.{u3} α) => Exists.{u2} ι (fun (l : ι) => Exists.{u1} ι' (fun (u : ι') => And (LT.lt.{u3} α (Preorder.toLT.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1)))))) (f l) (g u)) (Eq.{succ u3} (Set.{u3} α) (Set.Ioo.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1))))) (f l) (g u)) S)))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ioo isPiSystem_Iooₓ'. -/
 theorem isPiSystem_Ioo (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (l u : _)(h : f l < g u), Ioo (f l) (g u) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) f g
 #align is_pi_system_Ioo isPiSystem_Ioo
 
+/- warning: is_pi_system_Ioc_mem -> isPiSystem_Ioc_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) l u) S)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) l s) (Exists.{succ u1} α (fun (u : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) u t) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) l u) S)))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ioc_mem isPiSystem_Ioc_memₓ'. -/
 theorem isPiSystem_Ioc_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioc l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) s t
 #align is_pi_system_Ioc_mem isPiSystem_Ioc_mem
 
+/- warning: is_pi_system_Ioc -> isPiSystem_Ioc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} [_inst_1 : LinearOrder.{u1} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u3} ι' (fun (j : ι') => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) => Eq.{succ u1} (Set.{u1} α) (Set.Ioc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (f i) (g j)) S)))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} [_inst_1 : LinearOrder.{u3} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u3} α (setOf.{u3} (Set.{u3} α) (fun (S : Set.{u3} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u1} ι' (fun (j : ι') => And (LT.lt.{u3} α (Preorder.toLT.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1)))))) (f i) (g j)) (Eq.{succ u3} (Set.{u3} α) (Set.Ioc.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1))))) (f i) (g j)) S)))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ioc isPiSystem_Iocₓ'. -/
 theorem isPiSystem_Ioc (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ioc (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) f g
 #align is_pi_system_Ioc isPiSystem_Ioc
 
+/- warning: is_pi_system_Ico_mem -> isPiSystem_Ico_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) l u) S)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) l s) (Exists.{succ u1} α (fun (u : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) u t) (And (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) l u) S)))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ico_mem isPiSystem_Ico_memₓ'. -/
 theorem isPiSystem_Ico_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) s t
 #align is_pi_system_Ico_mem isPiSystem_Ico_mem
 
+/- warning: is_pi_system_Ico -> isPiSystem_Ico is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} [_inst_1 : LinearOrder.{u1} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u3} ι' (fun (j : ι') => Exists.{0} (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) (fun (h : LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) => Eq.{succ u1} (Set.{u1} α) (Set.Ico.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (f i) (g j)) S)))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} [_inst_1 : LinearOrder.{u3} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u3} α (setOf.{u3} (Set.{u3} α) (fun (S : Set.{u3} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u1} ι' (fun (j : ι') => And (LT.lt.{u3} α (Preorder.toLT.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1)))))) (f i) (g j)) (Eq.{succ u3} (Set.{u3} α) (Set.Ico.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1))))) (f i) (g j)) S)))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Ico isPiSystem_Icoₓ'. -/
 theorem isPiSystem_Ico (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i < g j), Ico (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) f g
 #align is_pi_system_Ico isPiSystem_Ico
 
+/- warning: is_pi_system_Icc_mem -> isPiSystem_Icc_mem is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) l s) => Exists.{succ u1} α (fun (u : α) => Exists.{0} (Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) (fun (H : Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) u t) => Exists.{0} (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) (fun (h : LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) l u) => Eq.{succ u1} (Set.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) l u) S)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : LinearOrder.{u1} α] (s : Set.{u1} α) (t : Set.{u1} α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{succ u1} α (fun (l : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) l s) (Exists.{succ u1} α (fun (u : α) => And (Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) u t) (And (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1)))))) l u) (Eq.{succ u1} (Set.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (DistribLattice.toLattice.{u1} α (instDistribLattice.{u1} α _inst_1))))) l u) S)))))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Icc_mem isPiSystem_Icc_memₓ'. -/
 theorem isPiSystem_Icc_mem (s t : Set α) :
     IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, Icc l u = S } :=
   isPiSystem_Ixx_mem (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) s t
 #align is_pi_system_Icc_mem isPiSystem_Icc_mem
 
+/- warning: is_pi_system_Icc -> isPiSystem_Icc is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} [_inst_1 : LinearOrder.{u1} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u1} α (setOf.{u1} (Set.{u1} α) (fun (S : Set.{u1} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u3} ι' (fun (j : ι') => Exists.{0} (LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) (fun (h : LE.le.{u1} α (Preorder.toLE.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1))))) (f i) (g j)) => Eq.{succ u1} (Set.{u1} α) (Set.Icc.{u1} α (PartialOrder.toPreorder.{u1} α (SemilatticeInf.toPartialOrder.{u1} α (Lattice.toSemilatticeInf.{u1} α (LinearOrder.toLattice.{u1} α _inst_1)))) (f i) (g j)) S)))))
+but is expected to have type
+  forall {α : Type.{u3}} {ι : Sort.{u2}} {ι' : Sort.{u1}} [_inst_1 : LinearOrder.{u3} α] (f : ι -> α) (g : ι' -> α), IsPiSystem.{u3} α (setOf.{u3} (Set.{u3} α) (fun (S : Set.{u3} α) => Exists.{u2} ι (fun (i : ι) => Exists.{u1} ι' (fun (j : ι') => And (LE.le.{u3} α (Preorder.toLE.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1)))))) (f i) (g j)) (Eq.{succ u3} (Set.{u3} α) (Set.Icc.{u3} α (PartialOrder.toPreorder.{u3} α (SemilatticeInf.toPartialOrder.{u3} α (Lattice.toSemilatticeInf.{u3} α (DistribLattice.toLattice.{u3} α (instDistribLattice.{u3} α _inst_1))))) (f i) (g j)) S)))))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_Icc isPiSystem_Iccₓ'. -/
 theorem isPiSystem_Icc (f : ι → α) (g : ι' → α) :
     @IsPiSystem α { S | ∃ (i j : _)(h : f i ≤ g j), Icc (f i) (g j) = S } :=
   isPiSystem_Ixx (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) f g
@@ -215,6 +311,7 @@ theorem isPiSystem_Icc (f : ι → α) (g : ι' → α) :
 
 end Order
 
+#print generatePiSystem /-
 /-- Given a collection `S` of subsets of `α`, then `generate_pi_system S` is the smallest
 π-system containing `S`. -/
 inductive generatePiSystem {α} (S : Set (Set α)) : Set (Set α)
@@ -223,15 +320,21 @@ inductive generatePiSystem {α} (S : Set (Set α)) : Set (Set α)
   inter {s t : Set α} (h_s : generatePiSystem s) (h_t : generatePiSystem t)
     (h_nonempty : (s ∩ t).Nonempty) : generatePiSystem (s ∩ t)
 #align generate_pi_system generatePiSystem
+-/
 
+#print isPiSystem_generatePiSystem /-
 theorem isPiSystem_generatePiSystem {α} (S : Set (Set α)) : IsPiSystem (generatePiSystem S) :=
   fun s h_s t h_t h_nonempty => generatePiSystem.inter h_s h_t h_nonempty
 #align is_pi_system_generate_pi_system isPiSystem_generatePiSystem
+-/
 
+#print subset_generatePiSystem_self /-
 theorem subset_generatePiSystem_self {α} (S : Set (Set α)) : S ⊆ generatePiSystem S := fun s =>
   generatePiSystem.base
 #align subset_generate_pi_system_self subset_generatePiSystem_self
+-/
 
+#print generatePiSystem_subset_self /-
 theorem generatePiSystem_subset_self {α} {S : Set (Set α)} (h_S : IsPiSystem S) :
     generatePiSystem S ⊆ S := by
   intro x h
@@ -239,11 +342,15 @@ theorem generatePiSystem_subset_self {α} {S : Set (Set α)} (h_S : IsPiSystem S
   · exact h_s
   · exact h_S _ h_s _ h_u h_nonempty
 #align generate_pi_system_subset_self generatePiSystem_subset_self
+-/
 
+#print generatePiSystem_eq /-
 theorem generatePiSystem_eq {α} {S : Set (Set α)} (h_pi : IsPiSystem S) : generatePiSystem S = S :=
   Set.Subset.antisymm (generatePiSystem_subset_self h_pi) (subset_generatePiSystem_self S)
 #align generate_pi_system_eq generatePiSystem_eq
+-/
 
+#print generatePiSystem_mono /-
 theorem generatePiSystem_mono {α} {S T : Set (Set α)} (hST : S ⊆ T) :
     generatePiSystem S ⊆ generatePiSystem T :=
   by
@@ -252,7 +359,9 @@ theorem generatePiSystem_mono {α} {S T : Set (Set α)} (hST : S ⊆ T) :
   · exact generatePiSystem.base (Set.mem_of_subset_of_mem hST h_s)
   · exact isPiSystem_generatePiSystem T _ h_s _ h_u h_nonempty
 #align generate_pi_system_mono generatePiSystem_mono
+-/
 
+#print generatePiSystem_measurableSet /-
 theorem generatePiSystem_measurableSet {α} [M : MeasurableSpace α] {S : Set (Set α)}
     (h_meas_S : ∀ s ∈ S, MeasurableSet s) (t : Set α) (h_in_pi : t ∈ generatePiSystem S) :
     MeasurableSet t :=
@@ -261,13 +370,17 @@ theorem generatePiSystem_measurableSet {α} [M : MeasurableSpace α] {S : Set (S
   · apply h_meas_S _ h_s
   · apply MeasurableSet.inter h_s h_u
 #align generate_pi_system_measurable_set generatePiSystem_measurableSet
+-/
 
+#print generateFrom_measurableSet_of_generatePiSystem /-
 theorem generateFrom_measurableSet_of_generatePiSystem {α} {g : Set (Set α)} (t : Set α)
     (ht : t ∈ generatePiSystem g) : measurable_set[generateFrom g] t :=
   @generatePiSystem_measurableSet α (generateFrom g) g
     (fun s h_s_in_g => measurableSet_generateFrom h_s_in_g) t ht
 #align generate_from_measurable_set_of_generate_pi_system generateFrom_measurableSet_of_generatePiSystem
+-/
 
+#print generateFrom_generatePiSystem_eq /-
 theorem generateFrom_generatePiSystem_eq {α} {g : Set (Set α)} :
     generateFrom (generatePiSystem g) = generateFrom g :=
   by
@@ -275,7 +388,14 @@ theorem generateFrom_generatePiSystem_eq {α} {g : Set (Set α)} :
   · exact fun t h_t => generateFrom_measurableSet_of_generatePiSystem t h_t
   · exact fun t h_t => measurable_set_generate_from (generatePiSystem.base h_t)
 #align generate_from_generate_pi_system_eq generateFrom_generatePiSystem_eq
+-/
 
+/- warning: mem_generate_pi_system_Union_elim -> mem_generatePiSystem_unionᵢ_elim is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {g : β -> (Set.{u1} (Set.{u1} α))}, (forall (b : β), IsPiSystem.{u1} α (g b)) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t (generatePiSystem.{u1} α (Set.unionᵢ.{u1, succ u2} (Set.{u1} α) β (fun (b : β) => g b)))) -> (Exists.{succ u2} (Finset.{u2} β) (fun (T : Finset.{u2} β) => Exists.{max (succ u2) (succ u1)} (β -> (Set.{u1} α)) (fun (f : β -> (Set.{u1} α)) => And (Eq.{succ u1} (Set.{u1} α) t (Set.interᵢ.{u1, succ u2} α β (fun (b : β) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) => f b)))) (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (f b) (g b)))))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {g : β -> (Set.{u2} (Set.{u2} α))}, (forall (b : β), IsPiSystem.{u2} α (g b)) -> (forall (t : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) t (generatePiSystem.{u2} α (Set.unionᵢ.{u2, succ u1} (Set.{u2} α) β (fun (b : β) => g b)))) -> (Exists.{succ u1} (Finset.{u1} β) (fun (T : Finset.{u1} β) => Exists.{max (succ u2) (succ u1)} (β -> (Set.{u2} α)) (fun (f : β -> (Set.{u2} α)) => And (Eq.{succ u2} (Set.{u2} α) t (Set.interᵢ.{u2, succ u1} α β (fun (b : β) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) => f b)))) (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) (f b) (g b)))))))
+Case conversion may be inaccurate. Consider using '#align mem_generate_pi_system_Union_elim mem_generatePiSystem_unionᵢ_elimₓ'. -/
 /- Every element of the π-system generated by the union of a family of π-systems
 is a finite intersection of elements from the π-systems.
 For an indexed union version, see `mem_generate_pi_system_Union_elim'`. -/
@@ -311,6 +431,12 @@ theorem mem_generatePiSystem_unionᵢ_elim {α β} {g : β → Set (Set α)} (h_
       apply False.elim (h_b.elim hbs hbt)
 #align mem_generate_pi_system_Union_elim mem_generatePiSystem_unionᵢ_elim
 
+/- warning: mem_generate_pi_system_Union_elim' -> mem_generatePiSystem_unionᵢ_elim' is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {g : β -> (Set.{u1} (Set.{u1} α))} {s : Set.{u2} β}, (forall (b : β), (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) -> (IsPiSystem.{u1} α (g b))) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t (generatePiSystem.{u1} α (Set.unionᵢ.{u1, succ u2} (Set.{u1} α) β (fun (b : β) => Set.unionᵢ.{u1, 0} (Set.{u1} α) (Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) (fun (H : Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) b s) => g b))))) -> (Exists.{succ u2} (Finset.{u2} β) (fun (T : Finset.{u2} β) => Exists.{max (succ u2) (succ u1)} (β -> (Set.{u1} α)) (fun (f : β -> (Set.{u1} α)) => And (HasSubset.Subset.{u2} (Set.{u2} β) (Set.hasSubset.{u2} β) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} β) (Set.{u2} β) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} β) (Set.{u2} β) (Finset.Set.hasCoeT.{u2} β))) T) s) (And (Eq.{succ u1} (Set.{u1} α) t (Set.interᵢ.{u1, succ u2} α β (fun (b : β) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) (fun (H : Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) => f b)))) (forall (b : β), (Membership.Mem.{u2, u2} β (Finset.{u2} β) (Finset.hasMem.{u2} β) b T) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) (f b) (g b))))))))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} {g : β -> (Set.{u2} (Set.{u2} α))} {s : Set.{u1} β}, (forall (b : β), (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) -> (IsPiSystem.{u2} α (g b))) -> (forall (t : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) t (generatePiSystem.{u2} α (Set.unionᵢ.{u2, succ u1} (Set.{u2} α) β (fun (b : β) => Set.unionᵢ.{u2, 0} (Set.{u2} α) (Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) (fun (H : Membership.mem.{u1, u1} β (Set.{u1} β) (Set.instMembershipSet.{u1} β) b s) => g b))))) -> (Exists.{succ u1} (Finset.{u1} β) (fun (T : Finset.{u1} β) => Exists.{max (succ u2) (succ u1)} (β -> (Set.{u2} α)) (fun (f : β -> (Set.{u2} α)) => And (HasSubset.Subset.{u1} (Set.{u1} β) (Set.instHasSubsetSet.{u1} β) (Finset.toSet.{u1} β T) s) (And (Eq.{succ u2} (Set.{u2} α) t (Set.interᵢ.{u2, succ u1} α β (fun (b : β) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) (fun (H : Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) => f b)))) (forall (b : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) b T) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) (f b) (g b))))))))
+Case conversion may be inaccurate. Consider using '#align mem_generate_pi_system_Union_elim' mem_generatePiSystem_unionᵢ_elim'ₓ'. -/
 /- Every element of the π-system generated by an indexed union of a family of π-systems
 is a finite intersection of elements from the π-systems.
 For a total union version, see `mem_generate_pi_system_Union_elim`. -/
@@ -355,18 +481,26 @@ variable {α ι : Type _}
 /-! ### π-system generated by finite intersections of sets of a π-system family -/
 
 
+#print piUnionᵢInter /-
 /-- From a set of indices `S : set ι` and a family of sets of sets `π : ι → set (set α)`,
 define the set of sets that can be written as `⋂ x ∈ t, f x` for some finset `t ⊆ S` and sets
 `f x ∈ π x`. If `π` is a family of π-systems, then it is a π-system. -/
-def piUnionInter (π : ι → Set (Set α)) (S : Set ι) : Set (Set α) :=
+def piUnionᵢInter (π : ι → Set (Set α)) (S : Set ι) : Set (Set α) :=
   { s : Set α |
     ∃ (t : Finset ι)(htS : ↑t ⊆ S)(f : ι → Set α)(hf : ∀ x, x ∈ t → f x ∈ π x), s = ⋂ x ∈ t, f x }
-#align pi_Union_Inter piUnionInter
+#align pi_Union_Inter piUnionᵢInter
+-/
 
-theorem piUnionInter_singleton (π : ι → Set (Set α)) (i : ι) : piUnionInter π {i} = π i ∪ {univ} :=
-  by
+/- warning: pi_Union_Inter_singleton -> piUnionᵢInter_singleton is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (π : ι -> (Set.{u1} (Set.{u1} α))) (i : ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (piUnionᵢInter.{u1, u2} α ι π (Singleton.singleton.{u2, u2} ι (Set.{u2} ι) (Set.hasSingleton.{u2} ι) i)) (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasUnion.{u1} (Set.{u1} α)) (π i) (Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasSingleton.{u1} (Set.{u1} α)) (Set.univ.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (π : ι -> (Set.{u2} (Set.{u2} α))) (i : ι), Eq.{succ u2} (Set.{u2} (Set.{u2} α)) (piUnionᵢInter.{u2, u1} α ι π (Singleton.singleton.{u1, u1} ι (Set.{u1} ι) (Set.instSingletonSet.{u1} ι) i)) (Union.union.{u2} (Set.{u2} (Set.{u2} α)) (Set.instUnionSet.{u2} (Set.{u2} α)) (π i) (Singleton.singleton.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instSingletonSet.{u2} (Set.{u2} α)) (Set.univ.{u2} α)))
+Case conversion may be inaccurate. Consider using '#align pi_Union_Inter_singleton piUnionᵢInter_singletonₓ'. -/
+theorem piUnionᵢInter_singleton (π : ι → Set (Set α)) (i : ι) :
+    piUnionᵢInter π {i} = π i ∪ {univ} := by
   ext1 s
-  simp only [piUnionInter, exists_prop, mem_union]
+  simp only [piUnionᵢInter, exists_prop, mem_union]
   refine' ⟨_, fun h => _⟩
   · rintro ⟨t, hti, f, hfπ, rfl⟩
     simp only [subset_singleton_iff, Finset.mem_coe] at hti
@@ -392,14 +526,20 @@ theorem piUnionInter_singleton (π : ι → Set (Set α)) (i : ι) : piUnionInte
       simpa only [Finset.coe_empty, subset_singleton_iff, mem_empty_iff_false, IsEmpty.forall_iff,
         imp_true_iff, Finset.not_mem_empty, Inter_false, Inter_univ, true_and_iff,
         exists_const] using hs
-#align pi_Union_Inter_singleton piUnionInter_singleton
+#align pi_Union_Inter_singleton piUnionᵢInter_singleton
 
-theorem piUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
-    piUnionInter (fun i => ({s i} : Set (Set α))) S =
+/- warning: pi_Union_Inter_singleton_left -> piUnionᵢInter_singleton_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (s : ι -> (Set.{u1} α)) (S : Set.{u2} ι), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (piUnionᵢInter.{u1, u2} α ι (fun (i : ι) => Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasSingleton.{u1} (Set.{u1} α)) (s i)) S) (setOf.{u1} (Set.{u1} α) (fun (s' : Set.{u1} α) => Exists.{succ u2} (Finset.{u2} ι) (fun (t : Finset.{u2} ι) => Exists.{0} (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) t) S) (fun (htS : HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) ((fun (a : Type.{u2}) (b : Type.{u2}) [self : HasLiftT.{succ u2, succ u2} a b] => self.0) (Finset.{u2} ι) (Set.{u2} ι) (HasLiftT.mk.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (CoeTCₓ.coe.{succ u2, succ u2} (Finset.{u2} ι) (Set.{u2} ι) (Finset.Set.hasCoeT.{u2} ι))) t) S) => Eq.{succ u1} (Set.{u1} α) s' (Set.interᵢ.{u1, succ u2} α ι (fun (i : ι) => Set.interᵢ.{u1, 0} α (Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) (fun (H : Membership.Mem.{u2, u2} ι (Finset.{u2} ι) (Finset.hasMem.{u2} ι) i t) => s i)))))))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (s : ι -> (Set.{u2} α)) (S : Set.{u1} ι), Eq.{succ u2} (Set.{u2} (Set.{u2} α)) (piUnionᵢInter.{u2, u1} α ι (fun (i : ι) => Singleton.singleton.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instSingletonSet.{u2} (Set.{u2} α)) (s i)) S) (setOf.{u2} (Set.{u2} α) (fun (s' : Set.{u2} α) => Exists.{succ u1} (Finset.{u1} ι) (fun (t : Finset.{u1} ι) => Exists.{0} (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (Finset.toSet.{u1} ι t) S) (fun (htS : HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) (Finset.toSet.{u1} ι t) S) => Eq.{succ u2} (Set.{u2} α) s' (Set.interᵢ.{u2, succ u1} α ι (fun (i : ι) => Set.interᵢ.{u2, 0} α (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) (fun (H : Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i t) => s i)))))))
+Case conversion may be inaccurate. Consider using '#align pi_Union_Inter_singleton_left piUnionᵢInter_singleton_leftₓ'. -/
+theorem piUnionᵢInter_singleton_left (s : ι → Set α) (S : Set ι) :
+    piUnionᵢInter (fun i => ({s i} : Set (Set α))) S =
       { s' : Set α | ∃ (t : Finset ι)(htS : ↑t ⊆ S), s' = ⋂ i ∈ t, s i } :=
   by
   ext1 s'
-  simp_rw [piUnionInter, Set.mem_singleton_iff, exists_prop, Set.mem_setOf_eq]
+  simp_rw [piUnionᵢInter, Set.mem_singleton_iff, exists_prop, Set.mem_setOf_eq]
   refine' ⟨fun h => _, fun ⟨t, htS, h_eq⟩ => ⟨t, htS, s, fun _ _ => rfl, h_eq⟩⟩
   obtain ⟨t, htS, f, hft_eq, rfl⟩ := h
   refine' ⟨t, htS, _⟩
@@ -411,10 +551,16 @@ theorem piUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
       exact h hit, fun h hit => by
       rw [hft_eq i hit]
       exact h hit⟩
-#align pi_Union_Inter_singleton_left piUnionInter_singleton_left
+#align pi_Union_Inter_singleton_left piUnionᵢInter_singleton_left
 
-theorem generateFrom_piUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
-    generateFrom (piUnionInter (fun k => {s k}) S) = generateFrom { t | ∃ k ∈ S, s k = t } :=
+/- warning: generate_from_pi_Union_Inter_singleton_left -> generateFrom_piUnionᵢInter_singleton_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (s : ι -> (Set.{u1} α)) (S : Set.{u2} ι), Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (piUnionᵢInter.{u1, u2} α ι (fun (k : ι) => Singleton.singleton.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasSingleton.{u1} (Set.{u1} α)) (s k)) S)) (MeasurableSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{succ u2} ι (fun (k : ι) => Exists.{0} (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) k S) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) k S) => Eq.{succ u1} (Set.{u1} α) (s k) t)))))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (s : ι -> (Set.{u2} α)) (S : Set.{u1} ι), Eq.{succ u2} (MeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (piUnionᵢInter.{u2, u1} α ι (fun (k : ι) => Singleton.singleton.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instSingletonSet.{u2} (Set.{u2} α)) (s k)) S)) (MeasurableSpace.generateFrom.{u2} α (setOf.{u2} (Set.{u2} α) (fun (t : Set.{u2} α) => Exists.{succ u1} ι (fun (k : ι) => And (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) k S) (Eq.{succ u2} (Set.{u2} α) (s k) t)))))
+Case conversion may be inaccurate. Consider using '#align generate_from_pi_Union_Inter_singleton_left generateFrom_piUnionᵢInter_singleton_leftₓ'. -/
+theorem generateFrom_piUnionᵢInter_singleton_left (s : ι → Set α) (S : Set ι) :
+    generateFrom (piUnionᵢInter (fun k => {s k}) S) = generateFrom { t | ∃ k ∈ S, s k = t } :=
   by
   refine' le_antisymm (generate_from_le _) (generate_from_mono _)
   · rintro _ ⟨I, hI, f, hf, rfl⟩
@@ -426,14 +572,20 @@ theorem generateFrom_piUnionInter_singleton_left (s : ι → Set α) (S : Set ι
       rwa [hm]
     · exact Set.mem_singleton _
     · simp only [Finset.mem_singleton, Set.interᵢ_interᵢ_eq_left]
-#align generate_from_pi_Union_Inter_singleton_left generateFrom_piUnionInter_singleton_left
+#align generate_from_pi_Union_Inter_singleton_left generateFrom_piUnionᵢInter_singleton_left
 
+/- warning: is_pi_system_pi_Union_Inter -> isPiSystem_piUnionᵢInter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (π : ι -> (Set.{u1} (Set.{u1} α))), (forall (x : ι), IsPiSystem.{u1} α (π x)) -> (forall (S : Set.{u2} ι), IsPiSystem.{u1} α (piUnionᵢInter.{u1, u2} α ι π S))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (π : ι -> (Set.{u2} (Set.{u2} α))), (forall (x : ι), IsPiSystem.{u2} α (π x)) -> (forall (S : Set.{u1} ι), IsPiSystem.{u2} α (piUnionᵢInter.{u2, u1} α ι π S))
+Case conversion may be inaccurate. Consider using '#align is_pi_system_pi_Union_Inter isPiSystem_piUnionᵢInterₓ'. -/
 /-- If `π` is a family of π-systems, then `pi_Union_Inter π S` is a π-system. -/
-theorem isPiSystem_piUnionInter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSystem (π x)) (S : Set ι) :
-    IsPiSystem (piUnionInter π S) :=
+theorem isPiSystem_piUnionᵢInter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSystem (π x)) (S : Set ι) :
+    IsPiSystem (piUnionᵢInter π S) :=
   by
   rintro t1 ⟨p1, hp1S, f1, hf1m, ht1_eq⟩ t2 ⟨p2, hp2S, f2, hf2m, ht2_eq⟩ h_nonempty
-  simp_rw [piUnionInter, Set.mem_setOf_eq]
+  simp_rw [piUnionᵢInter, Set.mem_setOf_eq]
   let g n := ite (n ∈ p1) (f1 n) Set.univ ∩ ite (n ∈ p2) (f2 n) Set.univ
   have hp_union_ss : ↑(p1 ∪ p2) ⊆ S := by
     simp only [hp1S, hp2S, Finset.coe_union, union_subset_iff, and_self_iff]
@@ -468,52 +620,94 @@ theorem isPiSystem_piUnionInter (π : ι → Set (Set α)) (hpi : ∀ x, IsPiSys
   · simp [hf1m n hn1]
   · simp [hf2m n h]
   · exact absurd hn (by simp [hn1, h])
-#align is_pi_system_pi_Union_Inter isPiSystem_piUnionInter
+#align is_pi_system_pi_Union_Inter isPiSystem_piUnionᵢInter
 
-theorem piUnionInter_mono_left {π π' : ι → Set (Set α)} (h_le : ∀ i, π i ⊆ π' i) (S : Set ι) :
-    piUnionInter π S ⊆ piUnionInter π' S := fun s ⟨t, ht_mem, ft, hft_mem_pi, h_eq⟩ =>
+/- warning: pi_Union_Inter_mono_left -> piUnionᵢInter_mono_left is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {π : ι -> (Set.{u1} (Set.{u1} α))} {π' : ι -> (Set.{u1} (Set.{u1} α))}, (forall (i : ι), HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) (π i) (π' i)) -> (forall (S : Set.{u2} ι), HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) (piUnionᵢInter.{u1, u2} α ι π S) (piUnionᵢInter.{u1, u2} α ι π' S))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} {π : ι -> (Set.{u2} (Set.{u2} α))} {π' : ι -> (Set.{u2} (Set.{u2} α))}, (forall (i : ι), HasSubset.Subset.{u2} (Set.{u2} (Set.{u2} α)) (Set.instHasSubsetSet.{u2} (Set.{u2} α)) (π i) (π' i)) -> (forall (S : Set.{u1} ι), HasSubset.Subset.{u2} (Set.{u2} (Set.{u2} α)) (Set.instHasSubsetSet.{u2} (Set.{u2} α)) (piUnionᵢInter.{u2, u1} α ι π S) (piUnionᵢInter.{u2, u1} α ι π' S))
+Case conversion may be inaccurate. Consider using '#align pi_Union_Inter_mono_left piUnionᵢInter_mono_leftₓ'. -/
+theorem piUnionᵢInter_mono_left {π π' : ι → Set (Set α)} (h_le : ∀ i, π i ⊆ π' i) (S : Set ι) :
+    piUnionᵢInter π S ⊆ piUnionᵢInter π' S := fun s ⟨t, ht_mem, ft, hft_mem_pi, h_eq⟩ =>
   ⟨t, ht_mem, ft, fun x hxt => h_le x (hft_mem_pi x hxt), h_eq⟩
-#align pi_Union_Inter_mono_left piUnionInter_mono_left
+#align pi_Union_Inter_mono_left piUnionᵢInter_mono_left
 
-theorem piUnionInter_mono_right {π : ι → Set (Set α)} {S T : Set ι} (hST : S ⊆ T) :
-    piUnionInter π S ⊆ piUnionInter π T := fun s ⟨t, ht_mem, ft, hft_mem_pi, h_eq⟩ =>
+/- warning: pi_Union_Inter_mono_right -> piUnionᵢInter_mono_right is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {π : ι -> (Set.{u1} (Set.{u1} α))} {S : Set.{u2} ι} {T : Set.{u2} ι}, (HasSubset.Subset.{u2} (Set.{u2} ι) (Set.hasSubset.{u2} ι) S T) -> (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) (piUnionᵢInter.{u1, u2} α ι π S) (piUnionᵢInter.{u1, u2} α ι π T))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} {π : ι -> (Set.{u2} (Set.{u2} α))} {S : Set.{u1} ι} {T : Set.{u1} ι}, (HasSubset.Subset.{u1} (Set.{u1} ι) (Set.instHasSubsetSet.{u1} ι) S T) -> (HasSubset.Subset.{u2} (Set.{u2} (Set.{u2} α)) (Set.instHasSubsetSet.{u2} (Set.{u2} α)) (piUnionᵢInter.{u2, u1} α ι π S) (piUnionᵢInter.{u2, u1} α ι π T))
+Case conversion may be inaccurate. Consider using '#align pi_Union_Inter_mono_right piUnionᵢInter_mono_rightₓ'. -/
+theorem piUnionᵢInter_mono_right {π : ι → Set (Set α)} {S T : Set ι} (hST : S ⊆ T) :
+    piUnionᵢInter π S ⊆ piUnionᵢInter π T := fun s ⟨t, ht_mem, ft, hft_mem_pi, h_eq⟩ =>
   ⟨t, ht_mem.trans hST, ft, hft_mem_pi, h_eq⟩
-#align pi_Union_Inter_mono_right piUnionInter_mono_right
+#align pi_Union_Inter_mono_right piUnionᵢInter_mono_right
 
-theorem generateFrom_piUnionInter_le {m : MeasurableSpace α} (π : ι → Set (Set α))
-    (h : ∀ n, generateFrom (π n) ≤ m) (S : Set ι) : generateFrom (piUnionInter π S) ≤ m :=
+/- warning: generate_from_pi_Union_Inter_le -> generateFrom_piUnionᵢInter_le is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {m : MeasurableSpace.{u1} α} (π : ι -> (Set.{u1} (Set.{u1} α))), (forall (n : ι), LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.hasLe.{u1} α) (MeasurableSpace.generateFrom.{u1} α (π n)) m) -> (forall (S : Set.{u2} ι), LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.hasLe.{u1} α) (MeasurableSpace.generateFrom.{u1} α (piUnionᵢInter.{u1, u2} α ι π S)) m)
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} {m : MeasurableSpace.{u2} α} (π : ι -> (Set.{u2} (Set.{u2} α))), (forall (n : ι), LE.le.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instLEMeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (π n)) m) -> (forall (S : Set.{u1} ι), LE.le.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instLEMeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (piUnionᵢInter.{u2, u1} α ι π S)) m)
+Case conversion may be inaccurate. Consider using '#align generate_from_pi_Union_Inter_le generateFrom_piUnionᵢInter_leₓ'. -/
+theorem generateFrom_piUnionᵢInter_le {m : MeasurableSpace α} (π : ι → Set (Set α))
+    (h : ∀ n, generateFrom (π n) ≤ m) (S : Set ι) : generateFrom (piUnionᵢInter π S) ≤ m :=
   by
   refine' generate_from_le _
   rintro t ⟨ht_p, ht_p_mem, ft, hft_mem_pi, rfl⟩
   refine' Finset.measurableSet_binterᵢ _ fun x hx_mem => (h x) _ _
   exact measurable_set_generate_from (hft_mem_pi x hx_mem)
-#align generate_from_pi_Union_Inter_le generateFrom_piUnionInter_le
+#align generate_from_pi_Union_Inter_le generateFrom_piUnionᵢInter_le
 
-theorem subset_piUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (his : i ∈ S) :
-    π i ⊆ piUnionInter π S :=
+/- warning: subset_pi_Union_Inter -> subset_piUnionᵢInter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {π : ι -> (Set.{u1} (Set.{u1} α))} {S : Set.{u2} ι} {i : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) -> (HasSubset.Subset.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasSubset.{u1} (Set.{u1} α)) (π i) (piUnionᵢInter.{u1, u2} α ι π S))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} {π : ι -> (Set.{u2} (Set.{u2} α))} {S : Set.{u1} ι} {i : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) -> (HasSubset.Subset.{u2} (Set.{u2} (Set.{u2} α)) (Set.instHasSubsetSet.{u2} (Set.{u2} α)) (π i) (piUnionᵢInter.{u2, u1} α ι π S))
+Case conversion may be inaccurate. Consider using '#align subset_pi_Union_Inter subset_piUnionᵢInterₓ'. -/
+theorem subset_piUnionᵢInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (his : i ∈ S) :
+    π i ⊆ piUnionᵢInter π S :=
   by
   have h_ss : {i} ⊆ S := by
     intro j hj
     rw [mem_singleton_iff] at hj
     rwa [hj]
-  refine' subset.trans _ (piUnionInter_mono_right h_ss)
-  rw [piUnionInter_singleton]
+  refine' subset.trans _ (piUnionᵢInter_mono_right h_ss)
+  rw [piUnionᵢInter_singleton]
   exact subset_union_left _ _
-#align subset_pi_Union_Inter subset_piUnionInter
+#align subset_pi_Union_Inter subset_piUnionᵢInter
 
-theorem mem_piUnionInter_of_measurableSet (m : ι → MeasurableSpace α) {S : Set ι} {i : ι}
+/- warning: mem_pi_Union_Inter_of_measurable_set -> mem_piUnionᵢInter_of_measurableSet is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (m : ι -> (MeasurableSpace.{u1} α)) {S : Set.{u2} ι} {i : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) -> (forall (s : Set.{u1} α), (MeasurableSet.{u1} α (m i) s) -> (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) s (piUnionᵢInter.{u1, u2} α ι (fun (n : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => MeasurableSet.{u1} α (m n) s)) S)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (m : ι -> (MeasurableSpace.{u2} α)) {S : Set.{u1} ι} {i : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) -> (forall (s : Set.{u2} α), (MeasurableSet.{u2} α (m i) s) -> (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) s (piUnionᵢInter.{u2, u1} α ι (fun (n : ι) => setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => MeasurableSet.{u2} α (m n) s)) S)))
+Case conversion may be inaccurate. Consider using '#align mem_pi_Union_Inter_of_measurable_set mem_piUnionᵢInter_of_measurableSetₓ'. -/
+theorem mem_piUnionᵢInter_of_measurableSet (m : ι → MeasurableSpace α) {S : Set ι} {i : ι}
     (hiS : i ∈ S) (s : Set α) (hs : measurable_set[m i] s) :
-    s ∈ piUnionInter (fun n => { s | measurable_set[m n] s }) S :=
-  subset_piUnionInter hiS hs
-#align mem_pi_Union_Inter_of_measurable_set mem_piUnionInter_of_measurableSet
+    s ∈ piUnionᵢInter (fun n => { s | measurable_set[m n] s }) S :=
+  subset_piUnionᵢInter hiS hs
+#align mem_pi_Union_Inter_of_measurable_set mem_piUnionᵢInter_of_measurableSet
 
-theorem le_generateFrom_piUnionInter {π : ι → Set (Set α)} (S : Set ι) {x : ι} (hxS : x ∈ S) :
-    generateFrom (π x) ≤ generateFrom (piUnionInter π S) :=
-  generateFrom_mono (subset_piUnionInter hxS)
-#align le_generate_from_pi_Union_Inter le_generateFrom_piUnionInter
+/- warning: le_generate_from_pi_Union_Inter -> le_generateFrom_piUnionᵢInter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} {π : ι -> (Set.{u1} (Set.{u1} α))} (S : Set.{u2} ι) {x : ι}, (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) x S) -> (LE.le.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.hasLe.{u1} α) (MeasurableSpace.generateFrom.{u1} α (π x)) (MeasurableSpace.generateFrom.{u1} α (piUnionᵢInter.{u1, u2} α ι π S)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} {π : ι -> (Set.{u2} (Set.{u2} α))} (S : Set.{u1} ι) {x : ι}, (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) x S) -> (LE.le.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instLEMeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (π x)) (MeasurableSpace.generateFrom.{u2} α (piUnionᵢInter.{u2, u1} α ι π S)))
+Case conversion may be inaccurate. Consider using '#align le_generate_from_pi_Union_Inter le_generateFrom_piUnionᵢInterₓ'. -/
+theorem le_generateFrom_piUnionᵢInter {π : ι → Set (Set α)} (S : Set ι) {x : ι} (hxS : x ∈ S) :
+    generateFrom (π x) ≤ generateFrom (piUnionᵢInter π S) :=
+  generateFrom_mono (subset_piUnionᵢInter hxS)
+#align le_generate_from_pi_Union_Inter le_generateFrom_piUnionᵢInter
 
-theorem measurableSet_supᵢ_of_mem_piUnionInter (m : ι → MeasurableSpace α) (S : Set ι) (t : Set α)
-    (ht : t ∈ piUnionInter (fun n => { s | measurable_set[m n] s }) S) :
+/- warning: measurable_set_supr_of_mem_pi_Union_Inter -> measurableSet_supᵢ_of_mem_piUnionᵢInter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (m : ι -> (MeasurableSpace.{u1} α)) (S : Set.{u2} ι) (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t (piUnionᵢInter.{u1, u2} α ι (fun (n : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => MeasurableSet.{u1} α (m n) s)) S)) -> (MeasurableSet.{u1} α (supᵢ.{u1, succ u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => supᵢ.{u1, 0} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) => m i))) t)
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (m : ι -> (MeasurableSpace.{u2} α)) (S : Set.{u1} ι) (t : Set.{u2} α), (Membership.mem.{u2, u2} (Set.{u2} α) (Set.{u2} (Set.{u2} α)) (Set.instMembershipSet.{u2} (Set.{u2} α)) t (piUnionᵢInter.{u2, u1} α ι (fun (n : ι) => setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => MeasurableSet.{u2} α (m n) s)) S)) -> (MeasurableSet.{u2} α (supᵢ.{u2, succ u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (i : ι) => supᵢ.{u2, 0} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) => m i))) t)
+Case conversion may be inaccurate. Consider using '#align measurable_set_supr_of_mem_pi_Union_Inter measurableSet_supᵢ_of_mem_piUnionᵢInterₓ'. -/
+theorem measurableSet_supᵢ_of_mem_piUnionᵢInter (m : ι → MeasurableSpace α) (S : Set ι) (t : Set α)
+    (ht : t ∈ piUnionᵢInter (fun n => { s | measurable_set[m n] s }) S) :
     measurable_set[⨆ i ∈ S, m i] t :=
   by
   rcases ht with ⟨pt, hpt, ft, ht_m, rfl⟩
@@ -521,18 +715,24 @@ theorem measurableSet_supᵢ_of_mem_piUnionInter (m : ι → MeasurableSpace α)
   suffices h_le : m i ≤ ⨆ i ∈ S, m i; exact h_le (ft i) (ht_m i hi)
   have hi' : i ∈ S := hpt hi
   exact le_supᵢ₂ i hi'
-#align measurable_set_supr_of_mem_pi_Union_Inter measurableSet_supᵢ_of_mem_piUnionInter
+#align measurable_set_supr_of_mem_pi_Union_Inter measurableSet_supᵢ_of_mem_piUnionᵢInter
 
-theorem generateFrom_piUnionInter_measurableSet (m : ι → MeasurableSpace α) (S : Set ι) :
-    generateFrom (piUnionInter (fun n => { s | measurable_set[m n] s }) S) = ⨆ i ∈ S, m i :=
+/- warning: generate_from_pi_Union_Inter_measurable_set -> generateFrom_piUnionᵢInter_measurableSet is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Type.{u2}} (m : ι -> (MeasurableSpace.{u1} α)) (S : Set.{u2} ι), Eq.{succ u1} (MeasurableSpace.{u1} α) (MeasurableSpace.generateFrom.{u1} α (piUnionᵢInter.{u1, u2} α ι (fun (n : ι) => setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => MeasurableSet.{u1} α (m n) s)) S)) (supᵢ.{u1, succ u2} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) ι (fun (i : ι) => supᵢ.{u1, 0} (MeasurableSpace.{u1} α) (ConditionallyCompleteLattice.toHasSup.{u1} (MeasurableSpace.{u1} α) (CompleteLattice.toConditionallyCompleteLattice.{u1} (MeasurableSpace.{u1} α) (MeasurableSpace.completeLattice.{u1} α))) (Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) (fun (H : Membership.Mem.{u2, u2} ι (Set.{u2} ι) (Set.hasMem.{u2} ι) i S) => m i)))
+but is expected to have type
+  forall {α : Type.{u2}} {ι : Type.{u1}} (m : ι -> (MeasurableSpace.{u2} α)) (S : Set.{u1} ι), Eq.{succ u2} (MeasurableSpace.{u2} α) (MeasurableSpace.generateFrom.{u2} α (piUnionᵢInter.{u2, u1} α ι (fun (n : ι) => setOf.{u2} (Set.{u2} α) (fun (s : Set.{u2} α) => MeasurableSet.{u2} α (m n) s)) S)) (supᵢ.{u2, succ u1} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) ι (fun (i : ι) => supᵢ.{u2, 0} (MeasurableSpace.{u2} α) (ConditionallyCompleteLattice.toSupSet.{u2} (MeasurableSpace.{u2} α) (CompleteLattice.toConditionallyCompleteLattice.{u2} (MeasurableSpace.{u2} α) (MeasurableSpace.instCompleteLatticeMeasurableSpace.{u2} α))) (Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) (fun (H : Membership.mem.{u1, u1} ι (Set.{u1} ι) (Set.instMembershipSet.{u1} ι) i S) => m i)))
+Case conversion may be inaccurate. Consider using '#align generate_from_pi_Union_Inter_measurable_set generateFrom_piUnionᵢInter_measurableSetₓ'. -/
+theorem generateFrom_piUnionᵢInter_measurableSet (m : ι → MeasurableSpace α) (S : Set ι) :
+    generateFrom (piUnionᵢInter (fun n => { s | measurable_set[m n] s }) S) = ⨆ i ∈ S, m i :=
   by
   refine' le_antisymm _ _
   · rw [← @generate_from_measurable_set α (⨆ i ∈ S, m i)]
-    exact generate_from_mono (measurableSet_supᵢ_of_mem_piUnionInter m S)
+    exact generate_from_mono (measurableSet_supᵢ_of_mem_piUnionᵢInter m S)
   · refine' supᵢ₂_le fun i hi => _
     rw [← @generate_from_measurable_set α (m i)]
-    exact generate_from_mono (mem_piUnionInter_of_measurableSet m hi)
-#align generate_from_pi_Union_Inter_measurable_set generateFrom_piUnionInter_measurableSet
+    exact generate_from_mono (mem_piUnionᵢInter_of_measurableSet m hi)
+#align generate_from_pi_Union_Inter_measurable_set generateFrom_piUnionᵢInter_measurableSet
 
 end UnionInter
 
@@ -543,6 +743,7 @@ variable {α : Type _}
 /-! ## Dynkin systems and Π-λ theorem -/
 
 
+#print MeasurableSpace.DynkinSystem /-
 /-- A Dynkin system is a collection of subsets of a type `α` that contains the empty set,
   is closed under complementation and under countable union of pairwise disjoint sets.
   The disjointness condition is the only difference with `σ`-algebras.
@@ -554,13 +755,15 @@ variable {α : Type _}
 -/
 structure DynkinSystem (α : Type _) where
   Has : Set α → Prop
-  hasEmpty : has ∅
+  has_empty : has ∅
   HasCompl : ∀ {a}, has a → has (aᶜ)
-  hasUnionNat : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, has (f i)) → has (⋃ i, f i)
+  has_unionᵢ_nat : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, has (f i)) → has (⋃ i, f i)
 #align measurable_space.dynkin_system MeasurableSpace.DynkinSystem
+-/
 
 namespace DynkinSystem
 
+#print MeasurableSpace.DynkinSystem.ext /-
 @[ext]
 theorem ext : ∀ {d₁ d₂ : DynkinSystem α}, (∀ s : Set α, d₁.Has s ↔ d₂.Has s) → d₁ = d₂
   | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h =>
@@ -568,17 +771,32 @@ theorem ext : ∀ {d₁ d₂ : DynkinSystem α}, (∀ s : Set α, d₁.Has s ↔
     have : s₁ = s₂ := funext fun x => propext <| h x
     subst this
 #align measurable_space.dynkin_system.ext MeasurableSpace.DynkinSystem.ext
+-/
 
 variable (d : DynkinSystem α)
 
+/- warning: measurable_space.dynkin_system.has_compl_iff -> MeasurableSpace.DynkinSystem.has_compl_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {a : Set.{u1} α}, Iff (MeasurableSpace.DynkinSystem.Has.{u1} α d (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) a)) (MeasurableSpace.DynkinSystem.Has.{u1} α d a)
+but is expected to have type
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {a : Set.{u1} α}, Iff (MeasurableSpace.DynkinSystem.Has.{u1} α d (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) a)) (MeasurableSpace.DynkinSystem.Has.{u1} α d a)
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_compl_iff MeasurableSpace.DynkinSystem.has_compl_iffₓ'. -/
 theorem has_compl_iff {a} : d.Has (aᶜ) ↔ d.Has a :=
   ⟨fun h => by simpa using d.has_compl h, fun h => d.HasCompl h⟩
 #align measurable_space.dynkin_system.has_compl_iff MeasurableSpace.DynkinSystem.has_compl_iff
 
-theorem hasUniv : d.Has univ := by simpa using d.has_compl d.has_empty
-#align measurable_space.dynkin_system.has_univ MeasurableSpace.DynkinSystem.hasUniv
+#print MeasurableSpace.DynkinSystem.has_univ /-
+theorem has_univ : d.Has univ := by simpa using d.has_compl d.has_empty
+#align measurable_space.dynkin_system.has_univ MeasurableSpace.DynkinSystem.has_univ
+-/
 
-theorem hasUnion {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoint on f))
+/- warning: measurable_space.dynkin_system.has_Union -> MeasurableSpace.DynkinSystem.has_unionᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {β : Type.{u2}} [_inst_1 : Countable.{succ u2} β] {f : β -> (Set.{u1} α)}, (Pairwise.{u2} β (Function.onFun.{succ u2, succ u1, 1} β (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) f)) -> (forall (i : β), MeasurableSpace.DynkinSystem.Has.{u1} α d (f i)) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Set.unionᵢ.{u1, succ u2} α β (fun (i : β) => f i)))
+but is expected to have type
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {β : Type.{u2}} [_inst_1 : Countable.{succ u2} β] {f : β -> (Set.{u1} α)}, (Pairwise.{u2} β (Function.onFun.{succ u2, succ u1, 1} β (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : β), MeasurableSpace.DynkinSystem.Has.{u1} α d (f i)) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Set.unionᵢ.{u1, succ u2} α β (fun (i : β) => f i)))
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_Union MeasurableSpace.DynkinSystem.has_unionᵢₓ'. -/
+theorem has_unionᵢ {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoint on f))
     (h : ∀ i, d.Has (f i)) : d.Has (⋃ i, f i) :=
   by
   cases nonempty_encodable β
@@ -586,33 +804,40 @@ theorem hasUnion {β} [Countable β] {f : β → Set α} (hd : Pairwise (Disjoin
   exact
     d.has_Union_nat (Encodable.unionᵢ_decode₂_disjoint_on hd) fun n =>
       Encodable.unionᵢ_decode₂_cases d.has_empty h
-#align measurable_space.dynkin_system.has_Union MeasurableSpace.DynkinSystem.hasUnion
+#align measurable_space.dynkin_system.has_Union MeasurableSpace.DynkinSystem.has_unionᵢ
 
-/- warning: measurable_space.dynkin_system.has_union clashes with measurable_space.dynkin_system.has_Union -> MeasurableSpace.DynkinSystem.hasUnion
-warning: measurable_space.dynkin_system.has_union -> MeasurableSpace.DynkinSystem.hasUnion is a dubious translation:
+/- warning: measurable_space.dynkin_system.has_union -> MeasurableSpace.DynkinSystem.has_union is a dubious translation:
 lean 3 declaration is
-  forall {α : Type.{u_1}} (d : MeasurableSpace.DynkinSystem.{u_1} α) {s₁ : Set.{u_1} α} {s₂ : Set.{u_1} α}, (MeasurableSpace.DynkinSystem.Has.{u_1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u_1} α d s₂) -> (Disjoint.{u_1} (Set.{u_1} α) (CompleteSemilatticeInf.toPartialOrder.{u_1} (Set.{u_1} α) (CompleteLattice.toCompleteSemilatticeInf.{u_1} (Set.{u_1} α) (Order.Coframe.toCompleteLattice.{u_1} (Set.{u_1} α) (CompleteDistribLattice.toCoframe.{u_1} (Set.{u_1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u_1} (Set.{u_1} α) (Set.completeBooleanAlgebra.{u_1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u_1} (Set.{u_1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u_1} (Set.{u_1} α) (Set.booleanAlgebra.{u_1} α))) s₁ s₂) -> (MeasurableSpace.DynkinSystem.Has.{u_1} α d (Union.union.{u_1} (Set.{u_1} α) (Set.hasUnion.{u_1} α) s₁ s₂))
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α))) s₁ s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Union.union.{u1} (Set.{u1} α) (Set.hasUnion.{u1} α) s₁ s₂))
 but is expected to have type
-  PUnit.{0}
-Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.hasUnionₓ'. -/
-theorem hasUnion {s₁ s₂ : Set α} (h₁ : d.Has s₁) (h₂ : d.Has s₂) (h : Disjoint s₁ s₂) :
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) s₁ s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Union.union.{u1} (Set.{u1} α) (Set.instUnionSet.{u1} α) s₁ s₂))
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.has_unionₓ'. -/
+theorem has_union {s₁ s₂ : Set α} (h₁ : d.Has s₁) (h₂ : d.Has s₂) (h : Disjoint s₁ s₂) :
     d.Has (s₁ ∪ s₂) := by
   rw [union_eq_Union]
   exact d.has_Union (pairwise_disjoint_on_bool.2 h) (Bool.forall_bool.2 ⟨h₂, h₁⟩)
-#align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.hasUnion
+#align measurable_space.dynkin_system.has_union MeasurableSpace.DynkinSystem.has_union
 
-theorem hasDiff {s₁ s₂ : Set α} (h₁ : d.Has s₁) (h₂ : d.Has s₂) (h : s₂ ⊆ s₁) : d.Has (s₁ \ s₂) :=
+/- warning: measurable_space.dynkin_system.has_diff -> MeasurableSpace.DynkinSystem.has_diff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.hasSubset.{u1} α) s₂ s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (SDiff.sdiff.{u1} (Set.{u1} α) (BooleanAlgebra.toHasSdiff.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s₁ s₂))
+but is expected to have type
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) {s₁ : Set.{u1} α} {s₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (HasSubset.Subset.{u1} (Set.{u1} α) (Set.instHasSubsetSet.{u1} α) s₂ s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (SDiff.sdiff.{u1} (Set.{u1} α) (Set.instSDiffSet.{u1} α) s₁ s₂))
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.has_diff MeasurableSpace.DynkinSystem.has_diffₓ'. -/
+theorem has_diff {s₁ s₂ : Set α} (h₁ : d.Has s₁) (h₂ : d.Has s₂) (h : s₂ ⊆ s₁) : d.Has (s₁ \ s₂) :=
   by
   apply d.has_compl_iff.1
   simp [diff_eq, compl_inter]
   exact d.has_union (d.has_compl h₁) h₂ (disjoint_compl_left.mono_right h)
-#align measurable_space.dynkin_system.has_diff MeasurableSpace.DynkinSystem.hasDiff
+#align measurable_space.dynkin_system.has_diff MeasurableSpace.DynkinSystem.has_diff
 
 instance : LE (DynkinSystem α) where le m₁ m₂ := m₁.Has ≤ m₂.Has
 
+#print MeasurableSpace.DynkinSystem.le_def /-
 theorem le_def {α} {a b : DynkinSystem α} : a ≤ b ↔ a.Has ≤ b.Has :=
   Iff.rfl
 #align measurable_space.dynkin_system.le_def MeasurableSpace.DynkinSystem.le_def
+-/
 
 instance : PartialOrder (DynkinSystem α) :=
   { DynkinSystem.hasLe with
@@ -620,20 +845,25 @@ instance : PartialOrder (DynkinSystem α) :=
     le_trans := fun a b c hab hbc => le_def.mpr (le_trans hab hbc)
     le_antisymm := fun a b h₁ h₂ => ext fun s => ⟨h₁ s, h₂ s⟩ }
 
+#print MeasurableSpace.DynkinSystem.ofMeasurableSpace /-
 /-- Every measurable space (σ-algebra) forms a Dynkin system -/
 def ofMeasurableSpace (m : MeasurableSpace α) : DynkinSystem α
     where
   Has := m.MeasurableSet'
-  hasEmpty := m.measurable_set_empty
+  has_empty := m.measurable_set_empty
   HasCompl := m.measurable_set_compl
-  hasUnionNat f _ hf := m.measurable_set_unionᵢ f hf
+  has_unionᵢ_nat f _ hf := m.measurable_set_unionᵢ f hf
 #align measurable_space.dynkin_system.of_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace
+-/
 
+#print MeasurableSpace.DynkinSystem.ofMeasurableSpace_le_ofMeasurableSpace_iff /-
 theorem ofMeasurableSpace_le_ofMeasurableSpace_iff {m₁ m₂ : MeasurableSpace α} :
     ofMeasurableSpace m₁ ≤ ofMeasurableSpace m₂ ↔ m₁ ≤ m₂ :=
   Iff.rfl
 #align measurable_space.dynkin_system.of_measurable_space_le_of_measurable_space_iff MeasurableSpace.DynkinSystem.ofMeasurableSpace_le_ofMeasurableSpace_iff
+-/
 
+#print MeasurableSpace.DynkinSystem.GenerateHas /-
 /-- The least Dynkin system containing a collection of basic sets.
   This inductive type gives the underlying collection of sets. -/
 inductive GenerateHas (s : Set (Set α)) : Set α → Prop
@@ -645,7 +875,14 @@ inductive GenerateHas (s : Set (Set α)) : Set α → Prop
     ∀ {f : ℕ → Set α},
       Pairwise (Disjoint on f) → (∀ i, generate_has (f i)) → generate_has (⋃ i, f i)
 #align measurable_space.dynkin_system.generate_has MeasurableSpace.DynkinSystem.GenerateHas
+-/
 
+/- warning: measurable_space.dynkin_system.generate_has_compl -> MeasurableSpace.DynkinSystem.generateHas_compl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {C : Set.{u1} (Set.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) s)) (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C s)
+but is expected to have type
+  forall {α : Type.{u1}} {C : Set.{u1} (Set.{u1} α)} {s : Set.{u1} α}, Iff (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) s)) (MeasurableSpace.DynkinSystem.GenerateHas.{u1} α C s)
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generateHas_complₓ'. -/
 theorem generateHas_compl {C : Set (Set α)} {s : Set α} : GenerateHas C (sᶜ) ↔ GenerateHas C s :=
   by
   refine' ⟨_, generate_has.compl⟩
@@ -654,27 +891,37 @@ theorem generateHas_compl {C : Set (Set α)} {s : Set α} : GenerateHas C (sᶜ)
   simp
 #align measurable_space.dynkin_system.generate_has_compl MeasurableSpace.DynkinSystem.generateHas_compl
 
+#print MeasurableSpace.DynkinSystem.generate /-
 /-- The least Dynkin system containing a collection of basic sets. -/
 def generate (s : Set (Set α)) : DynkinSystem α
     where
   Has := GenerateHas s
-  hasEmpty := GenerateHas.empty
+  has_empty := GenerateHas.empty
   HasCompl a := GenerateHas.compl
-  hasUnionNat f := GenerateHas.Union
+  has_unionᵢ_nat f := GenerateHas.unionᵢ
 #align measurable_space.dynkin_system.generate MeasurableSpace.DynkinSystem.generate
+-/
 
+#print MeasurableSpace.DynkinSystem.generateHas_def /-
 theorem generateHas_def {C : Set (Set α)} : (generate C).Has = GenerateHas C :=
   rfl
 #align measurable_space.dynkin_system.generate_has_def MeasurableSpace.DynkinSystem.generateHas_def
+-/
 
 instance : Inhabited (DynkinSystem α) :=
   ⟨generate univ⟩
 
+/- warning: measurable_space.dynkin_system.to_measurable_space -> MeasurableSpace.DynkinSystem.toMeasurableSpace is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α), (forall (s₁ : Set.{u1} α) (s₂ : Set.{u1} α), (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂))) -> (MeasurableSpace.{u1} α)
+but is expected to have type
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α), (forall (s₁ : Set.{u1} α) (s₂ : Set.{u1} α), (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂))) -> (MeasurableSpace.{u1} α)
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.to_measurable_space MeasurableSpace.DynkinSystem.toMeasurableSpaceₓ'. -/
 /-- If a Dynkin system is closed under binary intersection, then it forms a `σ`-algebra. -/
 def toMeasurableSpace (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.Has (s₁ ∩ s₂))
     where
   MeasurableSet' := d.Has
-  measurable_set_empty := d.hasEmpty
+  measurable_set_empty := d.has_empty
   measurable_set_compl s h := d.HasCompl h
   measurable_set_unionᵢ f hf := by
     rw [← unionᵢ_disjointed]
@@ -683,17 +930,24 @@ def toMeasurableSpace (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.
         disjointedRec (fun t i h => h_inter _ _ h <| d.has_compl <| hf i) (hf n)
 #align measurable_space.dynkin_system.to_measurable_space MeasurableSpace.DynkinSystem.toMeasurableSpace
 
+/- warning: measurable_space.dynkin_system.of_measurable_space_to_measurable_space -> MeasurableSpace.DynkinSystem.ofMeasurableSpace_toMeasurableSpace is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) (h_inter : forall (s₁ : Set.{u1} α) (s₂ : Set.{u1} α), (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) s₁ s₂))), Eq.{succ u1} (MeasurableSpace.DynkinSystem.{u1} α) (MeasurableSpace.DynkinSystem.ofMeasurableSpace.{u1} α (MeasurableSpace.DynkinSystem.toMeasurableSpace.{u1} α d h_inter)) d
+but is expected to have type
+  forall {α : Type.{u1}} (d : MeasurableSpace.DynkinSystem.{u1} α) (h_inter : forall (s₁ : Set.{u1} α) (s₂ : Set.{u1} α), (MeasurableSpace.DynkinSystem.Has.{u1} α d s₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d s₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α d (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) s₁ s₂))), Eq.{succ u1} (MeasurableSpace.DynkinSystem.{u1} α) (MeasurableSpace.DynkinSystem.ofMeasurableSpace.{u1} α (MeasurableSpace.DynkinSystem.toMeasurableSpace.{u1} α d h_inter)) d
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.of_measurable_space_to_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace_toMeasurableSpaceₓ'. -/
 theorem ofMeasurableSpace_toMeasurableSpace
     (h_inter : ∀ s₁ s₂, d.Has s₁ → d.Has s₂ → d.Has (s₁ ∩ s₂)) :
     ofMeasurableSpace (d.toMeasurableSpace h_inter) = d :=
   ext fun s => Iff.rfl
 #align measurable_space.dynkin_system.of_measurable_space_to_measurable_space MeasurableSpace.DynkinSystem.ofMeasurableSpace_toMeasurableSpace
 
+#print MeasurableSpace.DynkinSystem.restrictOn /-
 /-- If `s` is in a Dynkin system `d`, we can form the new Dynkin system `{s ∩ t | t ∈ d}`. -/
 def restrictOn {s : Set α} (h : d.Has s) : DynkinSystem α
     where
   Has t := d.Has (t ∩ s)
-  hasEmpty := by simp [d.has_empty]
+  has_empty := by simp [d.has_empty]
   HasCompl t hts :=
     by
     have : tᶜ ∩ s = (t ∩ s)ᶜ \ sᶜ := Set.ext fun x => by by_cases x ∈ s <;> simp [h]
@@ -701,22 +955,33 @@ def restrictOn {s : Set α} (h : d.Has s) : DynkinSystem α
     exact
       d.has_diff (d.has_compl hts) (d.has_compl h)
         (compl_subset_compl.mpr <| inter_subset_right _ _)
-  hasUnionNat f hd hf := by
+  has_unionᵢ_nat f hd hf := by
     rw [Union_inter]
     refine' d.has_Union_nat _ hf
     exact hd.mono fun i j => Disjoint.mono (inter_subset_left _ _) (inter_subset_left _ _)
 #align measurable_space.dynkin_system.restrict_on MeasurableSpace.DynkinSystem.restrictOn
+-/
 
+#print MeasurableSpace.DynkinSystem.generate_le /-
 theorem generate_le {s : Set (Set α)} (h : ∀ t ∈ s, d.Has t) : generate s ≤ d := fun t ht =>
-  ht.recOn h d.hasEmpty (fun a _ h => d.HasCompl h) fun f hd _ hf => d.hasUnion hd hf
+  ht.recOn h d.has_empty (fun a _ h => d.HasCompl h) fun f hd _ hf => d.has_unionᵢ hd hf
 #align measurable_space.dynkin_system.generate_le MeasurableSpace.DynkinSystem.generate_le
+-/
 
+#print MeasurableSpace.DynkinSystem.generate_has_subset_generate_measurable /-
 theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α}
     (hs : (generate C).Has s) : measurable_set[generateFrom C] s :=
   generate_le (ofMeasurableSpace (generateFrom C)) (fun t => measurableSet_generateFrom) s hs
 #align measurable_space.dynkin_system.generate_has_subset_generate_measurable MeasurableSpace.DynkinSystem.generate_has_subset_generate_measurable
+-/
 
-theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α}
+/- warning: measurable_space.dynkin_system.generate_inter -> MeasurableSpace.DynkinSystem.generate_inter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)}, (IsPiSystem.{u1} α s) -> (forall {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) t₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) t₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) (Inter.inter.{u1} (Set.{u1} α) (Set.hasInter.{u1} α) t₁ t₂)))
+but is expected to have type
+  forall {α : Type.{u1}} {s : Set.{u1} (Set.{u1} α)}, (IsPiSystem.{u1} α s) -> (forall {t₁ : Set.{u1} α} {t₂ : Set.{u1} α}, (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) t₁) -> (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) t₂) -> (MeasurableSpace.DynkinSystem.Has.{u1} α (MeasurableSpace.DynkinSystem.generate.{u1} α s) (Inter.inter.{u1} (Set.{u1} α) (Set.instInterSet.{u1} α) t₁ t₂)))
+Case conversion may be inaccurate. Consider using '#align measurable_space.dynkin_system.generate_inter MeasurableSpace.DynkinSystem.generate_interₓ'. -/
+theorem generate_inter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α}
     (ht₁ : (generate s).Has t₁) (ht₂ : (generate s).Has t₂) : (generate s).Has (t₁ ∩ t₂) :=
   have : generate s ≤ (generate s).restrictOn ht₂ :=
     generate_le _ fun s₁ hs₁ =>
@@ -729,8 +994,9 @@ theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α
       have : (generate s).Has (t₂ ∩ s₁) := this _ ht₂
       show (generate s).Has (s₁ ∩ t₂) by rwa [inter_comm]
   this _ ht₁
-#align measurable_space.dynkin_system.generate_inter MeasurableSpace.DynkinSystem.generateInter
+#align measurable_space.dynkin_system.generate_inter MeasurableSpace.DynkinSystem.generate_inter
 
+#print MeasurableSpace.DynkinSystem.generateFrom_eq /-
 /-- **Dynkin's π-λ theorem**:
   Given a collection of sets closed under binary intersections, then the Dynkin system it
   generates is equal to the σ-algebra it generates.
@@ -739,16 +1005,23 @@ theorem generateInter {s : Set (Set α)} (hs : IsPiSystem s) {t₁ t₂ : Set α
   additionnally that is is non-empty, but we drop this condition in the formalization).
 -/
 theorem generateFrom_eq {s : Set (Set α)} (hs : IsPiSystem s) :
-    generateFrom s = (generate s).toMeasurableSpace fun t₁ t₂ => generateInter hs :=
+    generateFrom s = (generate s).toMeasurableSpace fun t₁ t₂ => generate_inter hs :=
   le_antisymm (generateFrom_le fun t ht => GenerateHas.basic t ht)
     (ofMeasurableSpace_le_ofMeasurableSpace_iff.mp <|
       by
       rw [of_measurable_space_to_measurable_space]
       exact generate_le _ fun t ht => measurable_set_generate_from ht)
 #align measurable_space.dynkin_system.generate_from_eq MeasurableSpace.DynkinSystem.generateFrom_eq
+-/
 
 end DynkinSystem
 
+/- warning: measurable_space.induction_on_inter -> MeasurableSpace.induction_on_inter is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {C : (Set.{u1} α) -> Prop} {s : Set.{u1} (Set.{u1} α)} [m : MeasurableSpace.{u1} α], (Eq.{succ u1} (MeasurableSpace.{u1} α) m (MeasurableSpace.generateFrom.{u1} α s)) -> (IsPiSystem.{u1} α s) -> (C (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.hasEmptyc.{u1} α))) -> (forall (t : Set.{u1} α), (Membership.Mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.hasMem.{u1} (Set.{u1} α)) t s) -> (C t)) -> (forall (t : Set.{u1} α), (MeasurableSet.{u1} α m t) -> (C t) -> (C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (Pairwise.{0} Nat (Function.onFun.{1, succ u1, 1} Nat (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.completeBooleanAlgebra.{u1} α)))))) (GeneralizedBooleanAlgebra.toOrderBot.{u1} (Set.{u1} α) (BooleanAlgebra.toGeneralizedBooleanAlgebra.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)))) f)) -> (forall (i : Nat), MeasurableSet.{u1} α m (f i)) -> (forall (i : Nat), C (f i)) -> (C (Set.unionᵢ.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {{t : Set.{u1} α}}, (MeasurableSet.{u1} α m t) -> (C t))
+but is expected to have type
+  forall {α : Type.{u1}} {C : (Set.{u1} α) -> Prop} {s : Set.{u1} (Set.{u1} α)} [m : MeasurableSpace.{u1} α], (Eq.{succ u1} (MeasurableSpace.{u1} α) m (MeasurableSpace.generateFrom.{u1} α s)) -> (IsPiSystem.{u1} α s) -> (C (EmptyCollection.emptyCollection.{u1} (Set.{u1} α) (Set.instEmptyCollectionSet.{u1} α))) -> (forall (t : Set.{u1} α), (Membership.mem.{u1, u1} (Set.{u1} α) (Set.{u1} (Set.{u1} α)) (Set.instMembershipSet.{u1} (Set.{u1} α)) t s) -> (C t)) -> (forall (t : Set.{u1} α), (MeasurableSet.{u1} α m t) -> (C t) -> (C (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) t))) -> (forall (f : Nat -> (Set.{u1} α)), (Pairwise.{0} Nat (Function.onFun.{1, succ u1, 1} Nat (Set.{u1} α) Prop (Disjoint.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))) (BoundedOrder.toOrderBot.{u1} (Set.{u1} α) (Preorder.toLE.{u1} (Set.{u1} α) (PartialOrder.toPreorder.{u1} (Set.{u1} α) (CompleteSemilatticeInf.toPartialOrder.{u1} (Set.{u1} α) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α)))))))) (CompleteLattice.toBoundedOrder.{u1} (Set.{u1} α) (Order.Coframe.toCompleteLattice.{u1} (Set.{u1} α) (CompleteDistribLattice.toCoframe.{u1} (Set.{u1} α) (CompleteBooleanAlgebra.toCompleteDistribLattice.{u1} (Set.{u1} α) (Set.instCompleteBooleanAlgebraSet.{u1} α))))))) f)) -> (forall (i : Nat), MeasurableSet.{u1} α m (f i)) -> (forall (i : Nat), C (f i)) -> (C (Set.unionᵢ.{u1, 1} α Nat (fun (i : Nat) => f i)))) -> (forall {{t : Set.{u1} α}}, (MeasurableSet.{u1} α m t) -> (C t))
+Case conversion may be inaccurate. Consider using '#align measurable_space.induction_on_inter MeasurableSpace.induction_on_interₓ'. -/
 theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : MeasurableSpace α]
     (h_eq : m = generateFrom s) (h_inter : IsPiSystem s) (h_empty : C ∅) (h_basic : ∀ t ∈ s, C t)
     (h_compl : ∀ t, MeasurableSet t → C t → C (tᶜ))

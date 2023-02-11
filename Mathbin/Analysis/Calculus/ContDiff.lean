@@ -3142,7 +3142,7 @@ section ConstSmul
 
 variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
 
-variable [HasContinuousConstSMul R F]
+variable [ContinuousConstSMul R F]
 
 -- The scalar multiplication with a constant is smooth.
 theorem contDiff_const_smul (c : R) : ContDiff 𝕜 n fun p : F => c • p :=

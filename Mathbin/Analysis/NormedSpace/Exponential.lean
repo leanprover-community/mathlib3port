@@ -528,8 +528,8 @@ theorem map_exp {F} [RingHomClass F 𝔸 𝔹] (f : F) (hf : Continuous f) (x : 
   map_exp_of_mem_ball f hf x <| (expSeries_radius_eq_top 𝕂 𝔸).symm ▸ edist_lt_top _ _
 #align map_exp map_exp
 
-theorem exp_smul {G} [Monoid G] [MulSemiringAction G 𝔸] [HasContinuousConstSMul G 𝔸] (g : G)
-    (x : 𝔸) : exp 𝕂 (g • x) = g • exp 𝕂 x :=
+theorem exp_smul {G} [Monoid G] [MulSemiringAction G 𝔸] [ContinuousConstSMul G 𝔸] (g : G) (x : 𝔸) :
+    exp 𝕂 (g • x) = g • exp 𝕂 x :=
   (map_exp 𝕂 (MulSemiringAction.toRingHom G 𝔸 g) (continuous_const_smul _) x).symm
 #align exp_smul exp_smul
 

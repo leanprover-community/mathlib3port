@@ -725,7 +725,7 @@ theorem finrank_prime_pow_ramificationIdx [IsDomain S] [IsDedekindDomain S] (hP0
   by_cases hP : FiniteDimensional (R ⧸ p) (S ⧸ P)
   · haveI := hP
     haveI := (finite_dimensional_iff_of_rank_eq_nsmul he hdim).mpr hP
-    refine' Cardinal.nat_cast_injective _
+    refine' Cardinal.natCast_injective _
     rw [finrank_eq_dim, Nat.cast_mul, finrank_eq_dim, hdim, nsmul_eq_mul]
   have hPe := mt (finite_dimensional_iff_of_rank_eq_nsmul he hdim).mp hP
   simp only [finrank_of_infinite_dimensional hP, finrank_of_infinite_dimensional hPe, mul_zero]

@@ -82,10 +82,10 @@ end stdSimplex
 /-! ### Topological vector space -/
 
 
-section HasContinuousConstSMul
+section ContinuousConstSMul
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+  [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
 /-- If `s` is a convex set, then `a • interior s + b • closure s ⊆ interior s` for all `0 < a`,
 `0 ≤ b`, `a + b = 1`. See also `convex.combo_interior_self_subset_interior` for a weaker version. -/
@@ -255,7 +255,7 @@ protected theorem Convex.strictConvex {s : Set E} (hs : Convex 𝕜 s)
   exact (segment_eq_image_lineMap 𝕜 x y).symm ▸ mem_image_of_mem _ hc
 #align convex.strict_convex Convex.strictConvex
 
-end HasContinuousConstSMul
+end ContinuousConstSMul
 
 section HasContinuousSmul
 

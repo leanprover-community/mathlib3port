@@ -58,10 +58,10 @@ export HasIsometricVadd (isometry_vadd)
 export HasIsometricSmul (isometry_smul)
 
 @[to_additive]
-instance (priority := 100) HasIsometricSmul.to_hasContinuousConstSMul [PseudoEmetricSpace X]
-    [SMul M X] [HasIsometricSmul M X] : HasContinuousConstSMul M X :=
+instance (priority := 100) HasIsometricSmul.to_continuousConstSMul [PseudoEmetricSpace X] [SMul M X]
+    [HasIsometricSmul M X] : ContinuousConstSMul M X :=
   ⟨fun c => (isometry_smul X c).Continuous⟩
-#align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_hasContinuousConstSMul
+#align has_isometric_smul.to_has_continuous_const_smul HasIsometricSmul.to_continuousConstSMul
 #align has_isometric_vadd.to_has_continuous_const_vadd HasIsometricVadd.to_has_continuous_const_vadd
 
 @[to_additive]

@@ -198,8 +198,7 @@ theorem measure_smul_null {s} (h : μ s = 0) (c : G) : μ (c • s) = 0 := by rw
 
 section IsMinimal
 
-variable (G) [TopologicalSpace α] [HasContinuousConstSMul G α] [MulAction.IsMinimal G α]
-  {K U : Set α}
+variable (G) [TopologicalSpace α] [ContinuousConstSMul G α] [MulAction.IsMinimal G α] {K U : Set α}
 
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of

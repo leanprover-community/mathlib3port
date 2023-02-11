@@ -176,7 +176,7 @@ theorem strongTopology.hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGr
 #align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.hasBasis_nhds_zero
 
 theorem strongTopology.locallyConvexSpace [TopologicalSpace F'] [TopologicalAddGroup F']
-    [HasContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] (𝔖 : Set (Set E')) (h𝔖₁ : 𝔖.Nonempty)
+    [ContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] (𝔖 : Set (Set E')) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     @LocallyConvexSpace ℝ (E' →L[ℝ] F') _ _ _ (strongTopology (RingHom.id ℝ) F' 𝔖) :=
   by
@@ -242,7 +242,7 @@ protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F
 #align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zero
 
 instance [TopologicalSpace E'] [TopologicalSpace F'] [TopologicalAddGroup F']
-    [HasContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
+    [ContinuousConstSMul ℝ F'] [LocallyConvexSpace ℝ F'] : LocallyConvexSpace ℝ (E' →L[ℝ] F') :=
   strongTopology.locallyConvexSpace _ ⟨∅, Bornology.isVonNBounded_empty ℝ E'⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union)
 

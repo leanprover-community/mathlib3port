@@ -64,7 +64,7 @@ instance AddGroup.hasUniformContinuousConstSmul_int [AddGroup X] [UniformAddGrou
 This can't be an instance due to it forming a loop with
 `has_uniform_continuous_const_smul.to_has_continuous_const_smul` -/
 theorem hasUniformContinuousConstSmul_of_continuous_const_smul [Monoid R] [AddCommGroup M]
-    [DistribMulAction R M] [UniformSpace M] [UniformAddGroup M] [HasContinuousConstSMul R M] :
+    [DistribMulAction R M] [UniformSpace M] [UniformAddGroup M] [ContinuousConstSMul R M] :
     HasUniformContinuousConstSmul R M :=
   ⟨fun r =>
     uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
@@ -88,10 +88,10 @@ section SMul
 variable [SMul M X]
 
 @[to_additive]
-instance (priority := 100) HasUniformContinuousConstSmul.to_hasContinuousConstSMul
-    [HasUniformContinuousConstSmul M X] : HasContinuousConstSMul M X :=
+instance (priority := 100) HasUniformContinuousConstSmul.to_continuousConstSMul
+    [HasUniformContinuousConstSmul M X] : ContinuousConstSMul M X :=
   ⟨fun c => (uniformContinuous_const_smul c).Continuous⟩
-#align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_hasContinuousConstSMul
+#align has_uniform_continuous_const_smul.to_has_continuous_const_smul HasUniformContinuousConstSmul.to_continuousConstSMul
 #align has_uniform_continuous_const_vadd.to_has_continuous_const_vadd HasUniformContinuousConstVadd.to_has_continuous_const_vadd
 
 variable {M X Y}

@@ -1118,8 +1118,8 @@ variable [NontriviallyNormedField 𝕜] [SemiNormedRing 𝕝] [AddCommGroup E] [
 
 variable [Module 𝕝 E]
 
-theorem continuousAt_zero' [TopologicalSpace E] [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E}
-    {r : ℝ} (hr : 0 < r) (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) : ContinuousAt p 0 :=
+theorem continuousAt_zero' [TopologicalSpace E] [ContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ}
+    (hr : 0 < r) (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) : ContinuousAt p 0 :=
   by
   refine' metric.nhds_basis_closed_ball.tendsto_right_iff.mpr _
   intro ε hε
@@ -1134,8 +1134,8 @@ theorem continuousAt_zero' [TopologicalSpace E] [HasContinuousConstSMul 𝕜 E] 
   exact mul_le_mul hkε.le (p.mem_closed_ball_zero.mp hx) (map_nonneg _ _) (div_nonneg hε.le hr.le)
 #align seminorm.continuous_at_zero' Seminorm.continuousAt_zero'
 
-theorem continuousAt_zero [TopologicalSpace E] [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E}
-    {r : ℝ} (hr : 0 < r) (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : ContinuousAt p 0 :=
+theorem continuousAt_zero [TopologicalSpace E] [ContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ}
+    (hr : 0 < r) (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : ContinuousAt p 0 :=
   continuousAt_zero' hr (Filter.mem_of_superset hp <| p.ball_subset_closedBall _ _)
 #align seminorm.continuous_at_zero Seminorm.continuousAt_zero
 
@@ -1158,31 +1158,30 @@ protected theorem continuous_of_continuousAt_zero [TopologicalSpace E] [Topologi
   exact (Seminorm.uniformContinuous_of_continuousAt_zero hp).Continuous
 #align seminorm.continuous_of_continuous_at_zero Seminorm.continuous_of_continuousAt_zero
 
-protected theorem uniformContinuous [UniformSpace E] [UniformAddGroup E]
-    [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r)
-    (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : UniformContinuous p :=
+protected theorem uniformContinuous [UniformSpace E] [UniformAddGroup E] [ContinuousConstSMul 𝕜 E]
+    {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r) (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) :
+    UniformContinuous p :=
   Seminorm.uniformContinuous_of_continuousAt_zero (continuousAt_zero hr hp)
 #align seminorm.uniform_continuous Seminorm.uniformContinuous
 
-protected theorem uniform_continuous' [UniformSpace E] [UniformAddGroup E]
-    [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r)
-    (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) : UniformContinuous p :=
+protected theorem uniform_continuous' [UniformSpace E] [UniformAddGroup E] [ContinuousConstSMul 𝕜 E]
+    {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r) (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) :
+    UniformContinuous p :=
   Seminorm.uniformContinuous_of_continuousAt_zero (continuousAt_zero' hr hp)
 #align seminorm.uniform_continuous' Seminorm.uniform_continuous'
 
-protected theorem continuous [TopologicalSpace E] [TopologicalAddGroup E]
-    [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r)
-    (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : Continuous p :=
+protected theorem continuous [TopologicalSpace E] [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
+    {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r) (hp : p.ball 0 r ∈ (𝓝 0 : Filter E)) : Continuous p :=
   Seminorm.continuous_of_continuousAt_zero (continuousAt_zero hr hp)
 #align seminorm.continuous Seminorm.continuous
 
-protected theorem continuous' [TopologicalSpace E] [TopologicalAddGroup E]
-    [HasContinuousConstSMul 𝕜 E] {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r)
-    (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) : Continuous p :=
+protected theorem continuous' [TopologicalSpace E] [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
+    {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r) (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) :
+    Continuous p :=
   Seminorm.continuous_of_continuousAt_zero (continuousAt_zero' hr hp)
 #align seminorm.continuous' Seminorm.continuous'
 
-theorem continuous_of_le [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+theorem continuous_of_le [TopologicalSpace E] [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
     {p q : Seminorm 𝕜 E} (hq : Continuous q) (hpq : p ≤ q) : Continuous p :=
   by
   refine'

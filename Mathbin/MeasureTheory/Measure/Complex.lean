@@ -107,7 +107,7 @@ section
 
 variable {R : Type _} [Semiring R] [Module R ℝ]
 
-variable [HasContinuousConstSMul R ℝ] [HasContinuousConstSMul R ℂ]
+variable [ContinuousConstSMul R ℝ] [ContinuousConstSMul R ℂ]
 
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]

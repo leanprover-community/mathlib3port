@@ -90,11 +90,11 @@ variable [TopologicalSpace E] [TopologicalSpace F] [TopologicalSpace G]
 
 namespace FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+variable [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
+variable [TopologicalAddGroup F] [ContinuousConstSMul 𝕜 F]
 
-variable [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
+variable [TopologicalAddGroup G] [ContinuousConstSMul 𝕜 G]
 
 /-!
 In this paragraph, we define the composition of formal multilinear series, by summing over all
@@ -189,9 +189,9 @@ namespace ContinuousMultilinearMap
 
 open FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+variable [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
+variable [TopologicalAddGroup F] [ContinuousConstSMul 𝕜 F]
 
 /-- Given a formal multilinear series `p`, a composition `c` of `n` and a continuous multilinear
 map `f` in `c.length` variables, one may form a continuous multilinear map in `n` variables by
@@ -220,11 +220,11 @@ end ContinuousMultilinearMap
 
 namespace FormalMultilinearSeries
 
-variable [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+variable [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
-variable [TopologicalAddGroup F] [HasContinuousConstSMul 𝕜 F]
+variable [TopologicalAddGroup F] [ContinuousConstSMul 𝕜 F]
 
-variable [TopologicalAddGroup G] [HasContinuousConstSMul 𝕜 G]
+variable [TopologicalAddGroup G] [ContinuousConstSMul 𝕜 G]
 
 /-- Given two formal multilinear series `q` and `p` and a composition `c` of `n`, one may
 form a continuous multilinear map in `n` variables by applying the right coefficient of `p` to each

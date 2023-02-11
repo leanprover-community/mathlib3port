@@ -423,7 +423,7 @@ variable {m0 : MeasurableSpace Ω} {μ : Measure Ω}
 
 theorem indepSetsPiUnionInterOfDisjoint [IsProbabilityMeasure μ] {s : ι → Set (Set Ω)} {S T : Set ι}
     (h_indep : IndepSets s μ) (hST : Disjoint S T) :
-    IndepSetsCat (piUnionInter s S) (piUnionInter s T) μ :=
+    IndepSetsCat (piUnionᵢInter s S) (piUnionᵢInter s T) μ :=
   by
   rintro t1 t2 ⟨p1, hp1, f1, ht1_m, ht1_eq⟩ ⟨p2, hp2, f2, ht2_m, ht2_eq⟩
   classical
@@ -468,15 +468,15 @@ theorem IndepSet.indepGenerateFromOfDisjoint [IsProbabilityMeasure μ] {s : ι �
     (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ) (S T : Set ι) (hST : Disjoint S T) :
     IndepCat (generateFrom { t | ∃ n ∈ S, s n = t }) (generateFrom { t | ∃ k ∈ T, s k = t }) μ :=
   by
-  rw [← generateFrom_piUnionInter_singleton_left, ← generateFrom_piUnionInter_singleton_left]
+  rw [← generateFrom_piUnionᵢInter_singleton_left, ← generateFrom_piUnionᵢInter_singleton_left]
   refine'
     indep_sets.indep'
-      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurable_set_generate_from ht))
-      (fun t ht => generateFrom_piUnionInter_le _ _ _ _ (measurable_set_generate_from ht)) _ _ _
+      (fun t ht => generateFrom_piUnionᵢInter_le _ _ _ _ (measurable_set_generate_from ht))
+      (fun t ht => generateFrom_piUnionᵢInter_le _ _ _ _ (measurable_set_generate_from ht)) _ _ _
   · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
   · exact fun k => generate_from_le fun t ht => (Set.mem_singleton_iff.1 ht).symm ▸ hsm k
-  · exact isPiSystem_piUnionInter _ (fun k => IsPiSystem.singleton _) _
-  · exact isPiSystem_piUnionInter _ (fun k => IsPiSystem.singleton _) _
+  · exact isPiSystem_piUnionᵢInter _ (fun k => IsPiSystem.singleton _) _
+  · exact isPiSystem_piUnionᵢInter _ (fun k => IsPiSystem.singleton _) _
   · classical exact indep_sets_pi_Union_Inter_of_disjoint (Indep.Indep_sets (fun n => rfl) hs) hST
 #align probability_theory.Indep_set.indep_generate_from_of_disjoint ProbabilityTheory.IndepSet.indepGenerateFromOfDisjoint
 
@@ -486,10 +486,10 @@ theorem indepSuprOfDisjoint [IsProbabilityMeasure μ] {m : ι → MeasurableSpac
   by
   refine'
     indep_sets.indep (supᵢ₂_le fun i _ => h_le i) (supᵢ₂_le fun i _ => h_le i) _ _
-      (generateFrom_piUnionInter_measurableSet m S).symm
-      (generateFrom_piUnionInter_measurableSet m T).symm _
-  · exact isPiSystem_piUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
-  · exact isPiSystem_piUnionInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
+      (generateFrom_piUnionᵢInter_measurableSet m S).symm
+      (generateFrom_piUnionᵢInter_measurableSet m T).symm _
+  · exact isPiSystem_piUnionᵢInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
+  · exact isPiSystem_piUnionᵢInter _ (fun n => @is_pi_system_measurable_set Ω (m n)) _
   · classical exact indep_sets_pi_Union_Inter_of_disjoint h_indep hST
 #align probability_theory.indep_supr_of_disjoint ProbabilityTheory.indepSuprOfDisjoint
 
@@ -557,7 +557,7 @@ theorem indepSuprOfAntitone [SemilatticeInf ι] {Ω} {m : ι → MeasurableSpace
 #align probability_theory.indep_supr_of_antitone ProbabilityTheory.indepSuprOfAntitone
 
 theorem IndepSets.piUnionInterOfNotMem {π : ι → Set (Set Ω)} {a : ι} {S : Finset ι}
-    (hp_ind : IndepSets π μ) (haS : a ∉ S) : IndepSetsCat (piUnionInter π S) (π a) μ :=
+    (hp_ind : IndepSets π μ) (haS : a ∉ S) : IndepSetsCat (piUnionᵢInter π S) (π a) μ :=
   by
   rintro t1 t2 ⟨s, hs_mem, ft1, hft1_mem, ht1_eq⟩ ht2_mem_pia
   rw [Finset.coe_subset] at hs_mem
@@ -611,13 +611,13 @@ theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω
     intro a S ha_notin_S h_rec f hf_m
     have hf_m_S : ∀ x ∈ S, measurable_set[m x] (f x) := fun x hx => hf_m x (by simp [hx])
     rw [Finset.set_binterᵢ_insert, Finset.prod_insert ha_notin_S, ← h_rec hf_m_S]
-    let p := piUnionInter π S
+    let p := piUnionᵢInter π S
     set m_p := generate_from p with hS_eq_generate
     have h_indep : indep m_p (m a) μ :=
       by
-      have hp : IsPiSystem p := isPiSystem_piUnionInter π h_pi S
+      have hp : IsPiSystem p := isPiSystem_piUnionᵢInter π h_pi S
       have h_le' : ∀ i, generate_from (π i) ≤ m0 := fun i => (h_generate i).symm.trans_le (h_le i)
-      have hm_p : m_p ≤ m0 := generateFrom_piUnionInter_le π h_le' S
+      have hm_p : m_p ≤ m0 := generateFrom_piUnionᵢInter_le π h_le' S
       exact
         indep_sets.indep hm_p (h_le a) hp (h_pi a) hS_eq_generate (h_generate a)
           (h_ind.pi_Union_Inter_of_not_mem ha_notin_S)
@@ -625,7 +625,7 @@ theorem IndepSets.indep [IsProbabilityMeasure μ] (m : ι → MeasurableSpace Ω
     have h_le_p : ∀ i ∈ S, m i ≤ m_p := by
       intro n hn
       rw [hS_eq_generate, h_generate n]
-      exact le_generateFrom_piUnionInter S hn
+      exact le_generateFrom_piUnionᵢInter S hn
     have h_S_f : ∀ i ∈ S, measurable_set[m_p] (f i) := fun i hi => (h_le_p i hi) (f i) (hf_m_S i hi)
     exact S.measurable_set_bInter h_S_f
 #align probability_theory.Indep_sets.Indep ProbabilityTheory.IndepSets.indep

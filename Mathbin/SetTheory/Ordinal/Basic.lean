@@ -781,7 +781,7 @@ theorem lift_card (a) : (card a).lift = card (lift a) :=
 theorem lift_down' {a : Cardinal.{u}} {b : Ordinal.{max u v}} (h : card b ≤ a.lift) :
     ∃ a', lift a' = b :=
   let ⟨c, e⟩ := Cardinal.lift_down h
-  Cardinal.induction_on c
+  Cardinal.inductionOn c
     (fun α =>
       induction_on b fun β s _ e' => by
         skip
@@ -1340,7 +1340,7 @@ theorem ord_le_type (r : α → α → Prop) [h : IsWellOrder α r] : ord (#α) 
 #align cardinal.ord_le_type Cardinal.ord_le_type
 
 theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
-  induction_on c fun α =>
+  inductionOn c fun α =>
     Ordinal.induction_on o fun β s _ =>
       by
       let ⟨r, _, e⟩ := ord_eq α

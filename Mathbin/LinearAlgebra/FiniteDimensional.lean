@@ -306,7 +306,7 @@ theorem lt_aleph0_of_linearIndependent {ι : Type w} [FiniteDimensional K V] {v 
   apply Cardinal.lift_lt.1
   apply lt_of_le_of_lt
   apply cardinal_lift_le_dim_of_linearIndependent h
-  rw [← finrank_eq_dim, Cardinal.lift_aleph0, Cardinal.lift_nat_cast]
+  rw [← finrank_eq_dim, Cardinal.lift_aleph0, Cardinal.lift_natCast]
   apply Cardinal.nat_lt_aleph0
 #align finite_dimensional.lt_aleph_0_of_linear_independent FiniteDimensional.lt_aleph0_of_linearIndependent
 
@@ -710,7 +710,7 @@ theorem dim_eq_zero {S : Submodule K V} : Module.rank K S = 0 ↔ S = ⊥ :=
 
 @[simp]
 theorem finrank_eq_zero {S : Submodule K V} [FiniteDimensional K S] : finrank K S = 0 ↔ S = ⊥ := by
-  rw [← dim_eq_zero, ← finrank_eq_dim, ← @Nat.cast_zero Cardinal, Cardinal.nat_cast_inj]
+  rw [← dim_eq_zero, ← finrank_eq_dim, ← @Nat.cast_zero Cardinal, Cardinal.natCast_inj]
 #align finrank_eq_zero finrank_eq_zero
 
 end ZeroDim
@@ -801,14 +801,14 @@ instance finiteDimensional_supᵢ_prop {P : Prop} (S : P → Submodule K V)
 
 /-- The dimension of a submodule is bounded by the dimension of the ambient space. -/
 theorem finrank_le [FiniteDimensional K V] (s : Submodule K V) : finrank K s ≤ finrank K V := by
-  simpa only [Cardinal.nat_cast_le, ← finrank_eq_dim] using
+  simpa only [Cardinal.natCast_le, ← finrank_eq_dim] using
     s.subtype.dim_le_of_injective (injective_subtype s)
 #align submodule.finrank_le Submodule.finrank_le
 
 /-- The dimension of a quotient is bounded by the dimension of the ambient space. -/
 theorem finrank_quotient_le [FiniteDimensional K V] (s : Submodule K V) :
     finrank K (V ⧸ s) ≤ finrank K V := by
-  simpa only [Cardinal.nat_cast_le, ← finrank_eq_dim] using
+  simpa only [Cardinal.natCast_le, ← finrank_eq_dim] using
     (mkq s).dim_le_of_surjective (surjective_quot_mk _)
 #align submodule.finrank_quotient_le Submodule.finrank_quotient_le
 
@@ -1436,12 +1436,12 @@ theorem finrank_le_one_iff [FiniteDimensional K V] :
 
 theorem Submodule.finrank_le_one_iff_isPrincipal (W : Submodule K V) [FiniteDimensional K W] :
     finrank K W ≤ 1 ↔ W.IsPrincipal := by
-  rw [← W.rank_le_one_iff_is_principal, ← finrank_eq_dim, ← Cardinal.nat_cast_le, Nat.cast_one]
+  rw [← W.rank_le_one_iff_is_principal, ← finrank_eq_dim, ← Cardinal.natCast_le, Nat.cast_one]
 #align submodule.finrank_le_one_iff_is_principal Submodule.finrank_le_one_iff_isPrincipal
 
 theorem Module.finrank_le_one_iff_top_isPrincipal [FiniteDimensional K V] :
     finrank K V ≤ 1 ↔ (⊤ : Submodule K V).IsPrincipal := by
-  rw [← Module.rank_le_one_iff_top_isPrincipal, ← finrank_eq_dim, ← Cardinal.nat_cast_le,
+  rw [← Module.rank_le_one_iff_top_isPrincipal, ← finrank_eq_dim, ← Cardinal.natCast_le,
     Nat.cast_one]
 #align module.finrank_le_one_iff_top_is_principal Module.finrank_le_one_iff_top_isPrincipal
 

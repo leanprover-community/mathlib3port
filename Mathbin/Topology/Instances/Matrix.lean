@@ -55,8 +55,8 @@ section Continuity
 
 variable [TopologicalSpace X] [TopologicalSpace R]
 
-instance [SMul α R] [HasContinuousConstSMul α R] : HasContinuousConstSMul α (Matrix m n R) :=
-  Pi.hasContinuousConstSMul
+instance [SMul α R] [ContinuousConstSMul α R] : ContinuousConstSMul α (Matrix m n R) :=
+  Pi.continuousConstSMul
 
 instance [TopologicalSpace α] [SMul α R] [HasContinuousSmul α R] :
     HasContinuousSmul α (Matrix m n R) :=

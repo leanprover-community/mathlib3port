@@ -49,7 +49,7 @@ theorem cardinal_mk_eq_sum : (#WType β) = Sum fun a : α => (#WType β) ^ (#β 
 /-- `#(W_type β)` is the least cardinal `κ` such that `sum (λ a : α, κ ^ #(β a)) ≤ κ` -/
 theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ (#β a)) ≤ κ) :
     (#WType β) ≤ κ := by
-  induction' κ using Cardinal.induction_on with γ
+  induction' κ using Cardinal.inductionOn with γ
   simp only [Cardinal.power_def, ← Cardinal.mk_sigma, Cardinal.le_def] at hκ
   cases hκ
   exact Cardinal.mk_le_of_injective (elim_injective _ hκ.1 hκ.2)

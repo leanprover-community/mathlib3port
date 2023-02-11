@@ -90,9 +90,9 @@ theorem continuum_toNat : continuum.toNat = 0 :=
 #align cardinal.continuum_to_nat Cardinal.continuum_toNat
 
 @[simp]
-theorem continuum_toPartEnat : continuum.toPartEnat = ⊤ :=
-  toPartEnat_apply_of_aleph0_le aleph0_le_continuum
-#align cardinal.continuum_to_part_enat Cardinal.continuum_toPartEnat
+theorem continuum_toPartENat : continuum.toPartENat = ⊤ :=
+  toPartENat_apply_of_aleph0_le aleph0_le_continuum
+#align cardinal.continuum_to_part_enat Cardinal.continuum_toPartENat
 
 /-!
 ### Addition

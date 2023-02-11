@@ -121,7 +121,7 @@ theorem const_sub (hf : DiffContOnCl 𝕜 f s) (c : F) : DiffContOnCl 𝕜 (fun 
 #align diff_cont_on_cl.const_sub DiffContOnCl.const_sub
 
 theorem const_smul {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F]
-    [HasContinuousConstSMul R F] (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
+    [ContinuousConstSMul R F] (hf : DiffContOnCl 𝕜 f s) (c : R) : DiffContOnCl 𝕜 (c • f) s :=
   ⟨hf.1.const_smul c, hf.2.const_smul c⟩
 #align diff_cont_on_cl.const_smul DiffContOnCl.const_smul
 

@@ -1028,9 +1028,9 @@ theorem f_unionᵢ {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd :
 def caratheodoryDynkin : MeasurableSpace.DynkinSystem α
     where
   Has := is_caratheodory
-  hasEmpty := is_caratheodory_empty
+  has_empty := is_caratheodory_empty
   HasCompl s := is_caratheodory_compl
-  hasUnionNat f hf hn := is_caratheodory_Union_nat hn hf
+  has_unionᵢ_nat f hf hn := is_caratheodory_Union_nat hn hf
 #align measure_theory.outer_measure.caratheodory_dynkin MeasureTheory.OuterMeasure.caratheodoryDynkin
 
 /-- Given an outer measure `μ`, the Carathéodory-measurable space is

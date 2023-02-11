@@ -1173,9 +1173,9 @@ end ContinuousMultilinearMap
 
 section Smul
 
-variable {R : Type _} [Semiring R] [Module R G] [SMulCommClass 𝕜 R G] [HasContinuousConstSMul R G]
+variable {R : Type _} [Semiring R] [Module R G] [SMulCommClass 𝕜 R G] [ContinuousConstSMul R G]
 
-instance : HasContinuousConstSMul R (ContinuousMultilinearMap 𝕜 E G) :=
+instance : ContinuousConstSMul R (ContinuousMultilinearMap 𝕜 E G) :=
   ⟨fun c =>
     (ContinuousLinearMap.compContinuousMultilinearMapL 𝕜 _ G G (c • ContinuousLinearMap.id 𝕜 G)).2⟩
 

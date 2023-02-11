@@ -1049,7 +1049,7 @@ end Smul
 
 section ConstSmul
 
-variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F] [HasContinuousConstSMul R F]
+variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F] [ContinuousConstSMul R F]
 
 theorem HasStrictDerivAt.const_smul (c : R) (hf : HasStrictDerivAt f f' x) :
     HasStrictDerivAt (fun y => c • f y) (c • f') x := by

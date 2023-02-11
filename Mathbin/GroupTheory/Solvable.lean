@@ -235,7 +235,7 @@ theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) :
     ¬IsSolvable (Equiv.Perm X) := by
   intro h
   have key : Nonempty (Fin 5 ↪ X) := by
-    rwa [← Cardinal.lift_mk_le, Cardinal.mk_fin, Cardinal.lift_nat_cast, Nat.cast_bit1,
+    rwa [← Cardinal.lift_mk_le, Cardinal.mk_fin, Cardinal.lift_natCast, Nat.cast_bit1,
       Nat.cast_bit0, Nat.cast_one, Cardinal.lift_id]
   exact
     Equiv.Perm.fin_5_not_solvable

@@ -63,7 +63,7 @@ end Ring
 
 section CommRing
 
-variable [CommRing R] [Module R F] [HasContinuousConstSMul R F]
+variable [CommRing R] [Module R F] [ContinuousConstSMul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous <| homothety x t :=
@@ -80,7 +80,7 @@ end CommRing
 
 section Field
 
-variable [Field R] [Module R F] [HasContinuousConstSMul R F]
+variable [Field R] [Module R F] [ContinuousConstSMul R F]
 
 theorem homothety_isOpenMap (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
   apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;> intro e <;>

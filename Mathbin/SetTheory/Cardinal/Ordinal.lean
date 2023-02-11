@@ -317,9 +317,9 @@ theorem aleph_toNat (o : Ordinal) : (aleph o).toNat = 0 :=
 #align cardinal.aleph_to_nat Cardinal.aleph_toNat
 
 @[simp]
-theorem aleph_toPartEnat (o : Ordinal) : (aleph o).toPartEnat = ⊤ :=
-  toPartEnat_apply_of_aleph0_le <| aleph0_le_aleph o
-#align cardinal.aleph_to_part_enat Cardinal.aleph_toPartEnat
+theorem aleph_toPartENat (o : Ordinal) : (aleph o).toPartENat = ⊤ :=
+  toPartENat_apply_of_aleph0_le <| aleph0_le_aleph o
+#align cardinal.aleph_to_part_enat Cardinal.aleph_toPartENat
 
 instance nonempty_out_aleph (o : Ordinal) : Nonempty (aleph o).ord.out.α :=
   by
@@ -1121,7 +1121,7 @@ theorem mk_bounded_set_le_of_infinite (α : Type u) [Infinite α] (c : Cardinal)
     (#{ t : Set α // (#t) ≤ c }) ≤ (#α) ^ c :=
   by
   refine' le_trans _ (by rw [← add_one_eq (aleph_0_le_mk α)])
-  induction' c using Cardinal.induction_on with β
+  induction' c using Cardinal.inductionOn with β
   fapply mk_le_of_surjective
   · intro f
     use Sum.inl ⁻¹' range f

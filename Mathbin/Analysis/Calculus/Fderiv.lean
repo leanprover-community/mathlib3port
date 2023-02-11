@@ -1749,7 +1749,7 @@ end CartesianProduct
 
 section ConstSmul
 
-variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F] [HasContinuousConstSMul R F]
+variable {R : Type _} [Semiring R] [Module R F] [SMulCommClass 𝕜 R F] [ContinuousConstSMul R F]
 
 /-! ### Derivative of a function multiplied by a constant -/
 

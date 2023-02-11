@@ -42,7 +42,7 @@ def toContinuousMapMonoidHom [Monoid Y] [HasContinuousMul Y] : LocallyConstant X
 /-- The inclusion of locally-constant functions into continuous functions as a linear map. -/
 @[simps]
 def toContinuousMapLinearMap (R : Type _) [Semiring R] [AddCommMonoid Y] [Module R Y]
-    [HasContinuousAdd Y] [HasContinuousConstSMul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
+    [HasContinuousAdd Y] [ContinuousConstSMul R Y] : LocallyConstant X Y →ₗ[R] C(X, Y)
     where
   toFun := coe
   map_add' x y := by

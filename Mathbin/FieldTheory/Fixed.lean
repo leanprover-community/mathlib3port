@@ -282,8 +282,8 @@ theorem minpoly_eq_minpoly : minpoly G F x = minpoly (FixedPoints.subfield G F) 
 
 theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card G :=
   dim_le fun s hs => by
-    simpa only [dim_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_nat_cast,
-      Cardinal.nat_cast_le] using
+    simpa only [dim_fun', Cardinal.mk_coe_finset, Finset.coe_sort_coe, Cardinal.lift_natCast,
+      Cardinal.natCast_le] using
       cardinal_lift_le_dim_of_linear_independent'
         (linear_independent_smul_of_linear_independent G F hs)
 #align fixed_points.dim_le_card FixedPoints.dim_le_card
@@ -324,7 +324,7 @@ end Finite
 
 theorem finrank_le_card [Fintype G] : finrank (subfield G F) F ≤ Fintype.card G :=
   by
-  rw [← Cardinal.nat_cast_le, finrank_eq_dim]
+  rw [← Cardinal.natCast_le, finrank_eq_dim]
   apply dim_le_card
 #align fixed_points.finrank_le_card FixedPoints.finrank_le_card
 

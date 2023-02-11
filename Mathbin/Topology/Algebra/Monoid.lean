@@ -563,10 +563,10 @@ theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
 #align continuous_pow continuous_pow
 #align continuous_nsmul continuous_nsmul
 
-instance AddMonoid.hasContinuousConstSMul_nat {A} [AddMonoid A] [TopologicalSpace A]
-    [HasContinuousAdd A] : HasContinuousConstSMul ℕ A :=
+instance AddMonoid.continuousConstSMul_nat {A} [AddMonoid A] [TopologicalSpace A]
+    [HasContinuousAdd A] : ContinuousConstSMul ℕ A :=
   ⟨continuous_nsmul⟩
-#align add_monoid.has_continuous_const_smul_nat AddMonoid.hasContinuousConstSMul_nat
+#align add_monoid.has_continuous_const_smul_nat AddMonoid.continuousConstSMul_nat
 
 instance AddMonoid.hasContinuousSmul_nat {A} [AddMonoid A] [TopologicalSpace A]
     [HasContinuousAdd A] : HasContinuousSmul ℕ A :=
@@ -646,13 +646,13 @@ multiplication by constants.
 Notably, this instances applies when `R = A`, or when `[algebra R A]` is available. -/
 @[to_additive
       "If `R` acts on `A` via `A`, then continuous addition implies\ncontinuous affine addition by constants."]
-instance (priority := 100) IsScalarTower.hasContinuousConstSMul {R A : Type _} [Monoid A] [SMul R A]
-    [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] : HasContinuousConstSMul R A
+instance (priority := 100) IsScalarTower.continuousConstSMul {R A : Type _} [Monoid A] [SMul R A]
+    [IsScalarTower R A A] [TopologicalSpace A] [HasContinuousMul A] : ContinuousConstSMul R A
     where continuous_const_smul q :=
     by
     simp (config := { singlePass := true }) only [← smul_one_mul q (_ : A)]
     exact continuous_const.mul continuous_id
-#align is_scalar_tower.has_continuous_const_smul IsScalarTower.hasContinuousConstSMul
+#align is_scalar_tower.has_continuous_const_smul IsScalarTower.continuousConstSMul
 #align vadd_assoc_class.has_continuous_const_vadd VAddAssocClass.has_continuous_const_vadd
 
 /-- If the action of `R` on `A` commutes with left-multiplication, then continuous multiplication
@@ -661,13 +661,13 @@ implies continuous scalar multiplication by constants.
 Notably, this instances applies when `R = Aᵐᵒᵖ` -/
 @[to_additive
       "If the action of `R` on `A` commutes with left-addition, then\ncontinuous addition implies continuous affine addition by constants.\n\nNotably, this instances applies when `R = Aᵃᵒᵖ`. "]
-instance (priority := 100) SMulCommClass.hasContinuousConstSMul {R A : Type _} [Monoid A] [SMul R A]
-    [SMulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] : HasContinuousConstSMul R A
+instance (priority := 100) SMulCommClass.continuousConstSMul {R A : Type _} [Monoid A] [SMul R A]
+    [SMulCommClass R A A] [TopologicalSpace A] [HasContinuousMul A] : ContinuousConstSMul R A
     where continuous_const_smul q :=
     by
     simp (config := { singlePass := true }) only [← mul_smul_one q (_ : A)]
     exact continuous_id.mul continuous_const
-#align smul_comm_class.has_continuous_const_smul SMulCommClass.hasContinuousConstSMul
+#align smul_comm_class.has_continuous_const_smul SMulCommClass.continuousConstSMul
 #align vadd_comm_class.has_continuous_const_vadd VAddCommClass.has_continuous_const_vadd
 
 end HasContinuousMul

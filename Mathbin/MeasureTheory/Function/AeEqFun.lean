@@ -586,9 +586,9 @@ section SMul
 
 variable {𝕜 𝕜' : Type _}
 
-variable [SMul 𝕜 γ] [HasContinuousConstSMul 𝕜 γ]
+variable [SMul 𝕜 γ] [ContinuousConstSMul 𝕜 γ]
 
-variable [SMul 𝕜' γ] [HasContinuousConstSMul 𝕜' γ]
+variable [SMul 𝕜' γ] [ContinuousConstSMul 𝕜' γ]
 
 instance : SMul 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun c f => comp ((· • ·) c) (continuous_id.const_smul c) f⟩
@@ -797,16 +797,16 @@ section Module
 
 variable {𝕜 : Type _}
 
-instance [Monoid 𝕜] [MulAction 𝕜 γ] [HasContinuousConstSMul 𝕜 γ] : MulAction 𝕜 (α →ₘ[μ] γ) :=
+instance [Monoid 𝕜] [MulAction 𝕜 γ] [ContinuousConstSMul 𝕜 γ] : MulAction 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.MulAction toGerm smul_toGerm
 
 instance [Monoid 𝕜] [AddMonoid γ] [HasContinuousAdd γ] [DistribMulAction 𝕜 γ]
-    [HasContinuousConstSMul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
+    [ContinuousConstSMul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.DistribMulAction (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
     smul_toGerm c
 
 instance [Semiring 𝕜] [AddCommMonoid γ] [HasContinuousAdd γ] [Module 𝕜 γ]
-    [HasContinuousConstSMul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
+    [ContinuousConstSMul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.Module 𝕜 (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) smul_toGerm
 
 end Module
@@ -920,7 +920,7 @@ def toAeEqFunMulHom : C(α, β) →* α →ₘ[μ] β
 variable {𝕜 : Type _} [Semiring 𝕜]
 
 variable [TopologicalSpace γ] [PseudoMetrizableSpace γ] [AddCommGroup γ] [Module 𝕜 γ]
-  [TopologicalAddGroup γ] [HasContinuousConstSMul 𝕜 γ] [SecondCountableTopologyEither α γ]
+  [TopologicalAddGroup γ] [ContinuousConstSMul 𝕜 γ] [SecondCountableTopologyEither α γ]
 
 /-- The linear map from the group of continuous maps from `α` to `β` to the group of equivalence
 classes of `μ`-almost-everywhere measurable functions. -/

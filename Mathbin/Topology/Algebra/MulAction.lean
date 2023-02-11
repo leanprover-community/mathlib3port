@@ -74,9 +74,9 @@ section SMul
 variable [SMul M X] [HasContinuousSmul M X]
 
 @[to_additive]
-instance (priority := 100) HasContinuousSmul.hasContinuousConstSMul : HasContinuousConstSMul M X
+instance (priority := 100) HasContinuousSmul.continuousConstSMul : ContinuousConstSMul M X
     where continuous_const_smul _ := continuous_smul.comp (continuous_const.prod_mk continuous_id)
-#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.hasContinuousConstSMul
+#align has_continuous_smul.has_continuous_const_smul HasContinuousSmul.continuousConstSMul
 #align has_continuous_vadd.has_continuous_const_vadd HasContinuousVadd.has_continuous_const_vadd
 
 @[to_additive]

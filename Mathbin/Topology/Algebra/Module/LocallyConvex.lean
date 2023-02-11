@@ -115,7 +115,7 @@ end Module
 section LinearOrderedField
 
 variable (𝕜 E : Type _) [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace E]
-  [TopologicalAddGroup E] [HasContinuousConstSMul 𝕜 E]
+  [TopologicalAddGroup E] [ContinuousConstSMul 𝕜 E]
 
 theorem LocallyConvexSpace.convex_open_basis_zero [LocallyConvexSpace 𝕜 E] :
     (𝓝 0 : Filter E).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Convex 𝕜 s) id :=

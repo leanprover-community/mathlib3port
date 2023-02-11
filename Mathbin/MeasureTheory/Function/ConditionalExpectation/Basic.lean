@@ -134,8 +134,8 @@ theorem sub [AddGroup β] [TopologicalAddGroup β] {f g : α → β} (hfm : AeSt
   rw [hx1, hx2]
 #align measure_theory.ae_strongly_measurable'.sub MeasureTheory.AeStronglyMeasurable'.sub
 
-theorem constSmul [SMul 𝕜 β] [HasContinuousConstSMul 𝕜 β] (c : 𝕜)
-    (hf : AeStronglyMeasurable' m f μ) : AeStronglyMeasurable' m (c • f) μ :=
+theorem constSmul [SMul 𝕜 β] [ContinuousConstSMul 𝕜 β] (c : 𝕜) (hf : AeStronglyMeasurable' m f μ) :
+    AeStronglyMeasurable' m (c • f) μ :=
   by
   rcases hf with ⟨f', h_f'_meas, hff'⟩
   refine' ⟨c • f', h_f'_meas.const_smul c, _⟩

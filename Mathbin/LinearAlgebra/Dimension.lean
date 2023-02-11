@@ -541,7 +541,7 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
     haveI := basisFintypeOfFiniteSpans _ v.span_eq v'
     -- We clean up a little:
     rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
-    simp only [Cardinal.lift_nat_cast, Cardinal.nat_cast_inj]
+    simp only [Cardinal.lift_natCast, Cardinal.natCast_inj]
     -- Now we can use invariant basis number to show they have the same cardinality.
     apply card_eq_of_lequiv R
     exact
@@ -606,7 +606,7 @@ theorem basis_le_span' {ι : Type _} (b : Basis ι R M) {w : Set M} [Fintype w] 
   haveI := nontrivial_of_invariantBasisNumber R
   haveI := basisFintypeOfFiniteSpans w s b
   rw [Cardinal.mk_fintype ι]
-  simp only [Cardinal.nat_cast_le]
+  simp only [Cardinal.natCast_le]
   exact Basis.le_span'' b s
 #align basis_le_span' basis_le_span'
 
@@ -701,7 +701,7 @@ theorem linearIndependent_le_span' {ι : Type _} (v : ι → M) (i : LinearIndep
   by
   haveI : Fintype ι := linearIndependentFintypeOfLeSpanFintype v i w s
   rw [Cardinal.mk_fintype]
-  simp only [Cardinal.nat_cast_le]
+  simp only [Cardinal.natCast_le]
   exact linearIndependent_le_span_aux' v i w s
 #align linear_independent_le_span' linearIndependent_le_span'
 
@@ -1044,11 +1044,11 @@ theorem dim_fun {V η : Type u} [Fintype η] [AddCommGroup V] [Module K V] :
 theorem dim_fun_eq_lift_mul :
     Module.rank K (η → V) =
       (Fintype.card η : Cardinal.{max u₁' v}) * Cardinal.lift.{u₁'} (Module.rank K V) :=
-  by rw [dim_pi, Cardinal.sum_const, Cardinal.mk_fintype, Cardinal.lift_nat_cast]
+  by rw [dim_pi, Cardinal.sum_const, Cardinal.mk_fintype, Cardinal.lift_natCast]
 #align dim_fun_eq_lift_mul dim_fun_eq_lift_mul
 
 theorem dim_fun' : Module.rank K (η → K) = Fintype.card η := by
-  rw [dim_fun_eq_lift_mul, dim_self, Cardinal.lift_one, mul_one, Cardinal.nat_cast_inj]
+  rw [dim_fun_eq_lift_mul, dim_self, Cardinal.lift_one, mul_one, Cardinal.natCast_inj]
 #align dim_fun' dim_fun'
 
 theorem dim_fin_fun (n : ℕ) : Module.rank K (Fin n → K) = n := by simp [dim_fun']
@@ -1379,7 +1379,7 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
 theorem le_rank_iff_exists_linearIndependent_finset {n : ℕ} {f : V →ₗ[K] V'} :
     ↑n ≤ rank f ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K fun x : (s : Set V) => f x :=
   by
-  simp only [le_rank_iff_exists_linearIndependent, Cardinal.lift_nat_cast, Cardinal.lift_eq_nat_iff,
+  simp only [le_rank_iff_exists_linearIndependent, Cardinal.lift_natCast, Cardinal.lift_eq_nat_iff,
     Cardinal.mk_set_eq_nat_iff_finset]
   constructor
   · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩

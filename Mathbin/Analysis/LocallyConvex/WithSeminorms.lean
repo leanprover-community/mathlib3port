@@ -426,7 +426,7 @@ theorem SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ (p : SeminormFamily 𝕜
 #align seminorm_family.with_seminorms_iff_nhds_eq_infi SeminormFamily.withSeminorms_iff_nhds_eq_infᵢ
 
 theorem WithSeminorms.continuous_seminorm [NontriviallyNormedField 𝕝] [Module 𝕝 E]
-    [HasContinuousConstSMul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
+    [ContinuousConstSMul 𝕝 E] {p : SeminormFamily 𝕝 E ι} (hp : WithSeminorms p) (i : ι) :
     Continuous (p i) := by
   refine' Seminorm.continuous one_pos _
   rw [p.with_seminorms_iff_nhds_eq_infi.mp hp, ball_zero_eq_preimage_ball]
@@ -600,9 +600,8 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
 #align seminorm.continuous_of_continuous_comp Seminorm.continuous_of_continuous_comp
 
 theorem continuous_iff_continuous_comp {q : SeminormFamily 𝕜₂ F ι'} [TopologicalSpace E]
-    [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F]
-    [HasContinuousConstSMul 𝕜₂ F] (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) :
-    Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
+    [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousConstSMul 𝕜₂ F]
+    (hq : WithSeminorms q) (f : E →ₛₗ[σ₁₂] F) : Continuous f ↔ ∀ i, Continuous ((q i).comp f) :=
   ⟨fun h i => Continuous.comp (hq.continuous_seminorm i) h, continuous_of_continuous_comp hq f⟩
 #align seminorm.continuous_iff_continuous_comp Seminorm.continuous_iff_continuous_comp
 

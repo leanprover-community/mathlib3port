@@ -90,7 +90,7 @@ variable [TopologicalSpace E] [TopologicalSpace F]
 
 variable [TopologicalAddGroup E] [TopologicalAddGroup F]
 
-variable [HasContinuousConstSMul 𝕜 E] [HasContinuousConstSMul 𝕜 F]
+variable [ContinuousConstSMul 𝕜 E] [ContinuousConstSMul 𝕜 F]
 
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.sum x` is the sum `Σ pₙ xⁿ`. A
 priori, it only behaves well when `‖x‖ < p.radius`. -/

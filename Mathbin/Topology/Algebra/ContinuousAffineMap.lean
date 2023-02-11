@@ -217,7 +217,7 @@ section MulAction
 
 variable [Monoid S] [DistribMulAction S W] [SMulCommClass R S W]
 
-variable [HasContinuousConstSMul S W]
+variable [ContinuousConstSMul S W]
 
 instance : SMul S (P →A[R] W)
     where smul t f := { t • (f : P →ᵃ[R] W) with cont := f.Continuous.const_smul t }
@@ -282,12 +282,12 @@ instance : AddCommGroup (P →A[R] W) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub (fun _ _ => coe_smul _ _) fun _ _ =>
     coe_smul _ _
 
-instance [Monoid S] [DistribMulAction S W] [SMulCommClass R S W] [HasContinuousConstSMul S W] :
+instance [Monoid S] [DistribMulAction S W] [SMulCommClass R S W] [ContinuousConstSMul S W] :
     DistribMulAction S (P →A[R] W) :=
   Function.Injective.distribMulAction ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective
     coe_smul
 
-instance [Semiring S] [Module S W] [SMulCommClass R S W] [HasContinuousConstSMul S W] :
+instance [Semiring S] [Module S W] [SMulCommClass R S W] [ContinuousConstSMul S W] :
     Module S (P →A[R] W) :=
   Function.Injective.module S ⟨fun f => f.toAffineMap.toFun, rfl, coe_add⟩ coe_injective coe_smul
 

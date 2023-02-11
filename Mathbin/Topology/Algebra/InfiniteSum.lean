@@ -1291,7 +1291,7 @@ end TopologicalSemiring
 section ConstSmul
 
 variable {R : Type _} [Monoid R] [TopologicalSpace α] [AddCommMonoid α] [DistribMulAction R α]
-  [HasContinuousConstSMul R α] {f : β → α}
+  [ContinuousConstSMul R α] {f : β → α}
 
 theorem HasSum.const_smul {a : α} (r : R) (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const_smul r)

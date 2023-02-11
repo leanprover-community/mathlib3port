@@ -55,62 +55,82 @@ variable (α β : Type _)
 
 open Set TopologicalSpace
 
+#print WithLowerTopology /-
 /-- Type synonym for a preorder equipped with the lower topology
 -/
 def WithLowerTopology :=
   α
 #align with_lower_topology WithLowerTopology
+-/
 
 variable {α β}
 
 namespace WithLowerTopology
 
+#print WithLowerTopology.toLower /-
 /-- `to_lower` is the identity function to the `with_lower_topology` of a type.  -/
 @[match_pattern]
 def toLower : α ≃ WithLowerTopology α :=
   Equiv.refl _
 #align with_lower_topology.to_lower WithLowerTopology.toLower
+-/
 
+#print WithLowerTopology.ofLower /-
 /-- `of_lower` is the identity function from the `with_lower_topology` of a type.  -/
 @[match_pattern]
 def ofLower : WithLowerTopology α ≃ α :=
   Equiv.refl _
 #align with_lower_topology.of_lower WithLowerTopology.ofLower
+-/
 
+#print WithLowerTopology.to_withLowerTopology_symm_eq /-
 @[simp]
 theorem to_withLowerTopology_symm_eq : (@toLower α).symm = ofLower :=
   rfl
 #align with_lower_topology.to_with_lower_topology_symm_eq WithLowerTopology.to_withLowerTopology_symm_eq
+-/
 
+#print WithLowerTopology.of_withLowerTopology_symm_eq /-
 @[simp]
 theorem of_withLowerTopology_symm_eq : (@ofLower α).symm = toLower :=
   rfl
 #align with_lower_topology.of_with_lower_topology_symm_eq WithLowerTopology.of_withLowerTopology_symm_eq
+-/
 
+#print WithLowerTopology.toLower_ofLower /-
 @[simp]
 theorem toLower_ofLower (a : WithLowerTopology α) : toLower (ofLower a) = a :=
   rfl
 #align with_lower_topology.to_lower_of_lower WithLowerTopology.toLower_ofLower
+-/
 
+#print WithLowerTopology.ofLower_toLower /-
 @[simp]
 theorem ofLower_toLower (a : α) : ofLower (toLower a) = a :=
   rfl
 #align with_lower_topology.of_lower_to_lower WithLowerTopology.ofLower_toLower
+-/
 
+#print WithLowerTopology.toLower_inj /-
 @[simp]
 theorem toLower_inj {a b : α} : toLower a = toLower b ↔ a = b :=
   Iff.rfl
 #align with_lower_topology.to_lower_inj WithLowerTopology.toLower_inj
+-/
 
+#print WithLowerTopology.ofLower_inj /-
 @[simp]
 theorem ofLower_inj {a b : WithLowerTopology α} : ofLower a = ofLower b ↔ a = b :=
   Iff.rfl
 #align with_lower_topology.of_lower_inj WithLowerTopology.ofLower_inj
+-/
 
+#print WithLowerTopology.rec /-
 /-- A recursor for `with_lower_topology`. Use as `induction x using with_lower_topology.rec`. -/
 protected def rec {β : WithLowerTopology α → Sort _} (h : ∀ a, β (toLower a)) : ∀ a, β a := fun a =>
   h (ofLower a)
 #align with_lower_topology.rec WithLowerTopology.rec
+-/
 
 instance [Nonempty α] : Nonempty (WithLowerTopology α) :=
   ‹Nonempty α›
@@ -126,12 +146,20 @@ instance : Preorder (WithLowerTopology α) :=
 instance : TopologicalSpace (WithLowerTopology α) :=
   generateFrom { s | ∃ a, Ici aᶜ = s }
 
+#print WithLowerTopology.isOpen_preimage_ofLower /-
 theorem isOpen_preimage_ofLower (S : Set α) :
     IsOpen (WithLowerTopology.ofLower ⁻¹' S) ↔
       (generateFrom { s : Set α | ∃ a : α, Ici aᶜ = s }).IsOpen S :=
   Iff.rfl
 #align with_lower_topology.is_open_preimage_of_lower WithLowerTopology.isOpen_preimage_ofLower
+-/
 
+/- warning: with_lower_topology.is_open_def -> WithLowerTopology.isOpen_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (T : Set.{u1} (WithLowerTopology.{u1} α)), Iff (IsOpen.{u1} (WithLowerTopology.{u1} α) (WithLowerTopology.topologicalSpace.{u1} α _inst_1) T) (TopologicalSpace.IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} α (fun (a : α) => Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Set.Ici.{u1} α _inst_1 a)) s)))) (Set.preimage.{u1, u1} α (WithLowerTopology.{u1} α) (coeFn.{succ u1, succ u1} (Equiv.{succ u1, succ u1} α (WithLowerTopology.{u1} α)) (fun (_x : Equiv.{succ u1, succ u1} α (WithLowerTopology.{u1} α)) => α -> (WithLowerTopology.{u1} α)) (Equiv.hasCoeToFun.{succ u1, succ u1} α (WithLowerTopology.{u1} α)) (WithLowerTopology.toLower.{u1} α)) T))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] (T : Set.{u1} (WithLowerTopology.{u1} α)), Iff (IsOpen.{u1} (WithLowerTopology.{u1} α) (WithLowerTopology.instTopologicalSpaceWithLowerTopology.{u1} α _inst_1) T) (TopologicalSpace.IsOpen.{u1} α (TopologicalSpace.generateFrom.{u1} α (setOf.{u1} (Set.{u1} α) (fun (s : Set.{u1} α) => Exists.{succ u1} α (fun (a : α) => Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.Ici.{u1} α _inst_1 a)) s)))) (Set.preimage.{u1, u1} α (WithLowerTopology.{u1} α) (FunLike.coe.{succ u1, succ u1, succ u1} (Equiv.{succ u1, succ u1} α (WithLowerTopology.{u1} α)) α (fun (_x : α) => (fun (x._@.Mathlib.Logic.Equiv.Defs._hyg.805 : α) => WithLowerTopology.{u1} α) _x) (Equiv.instFunLikeEquiv.{succ u1, succ u1} α (WithLowerTopology.{u1} α)) (WithLowerTopology.toLower.{u1} α)) T))
+Case conversion may be inaccurate. Consider using '#align with_lower_topology.is_open_def WithLowerTopology.isOpen_defₓ'. -/
 theorem isOpen_def (T : Set (WithLowerTopology α)) :
     IsOpen T ↔
       (generateFrom { s : Set α | ∃ a : α, Ici aᶜ = s }).IsOpen (WithLowerTopology.toLower ⁻¹' T) :=
@@ -140,6 +168,7 @@ theorem isOpen_def (T : Set (WithLowerTopology α)) :
 
 end WithLowerTopology
 
+#print LowerTopology /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`topology_eq_lowerTopology] [] -/
 /--
 The lower topology is the topology generated by the complements of the closed intervals to infinity.
@@ -147,22 +176,31 @@ The lower topology is the topology generated by the complements of the closed in
 class LowerTopology (α : Type _) [t : TopologicalSpace α] [Preorder α] : Prop where
   topology_eq_lowerTopology : t = generateFrom { s | ∃ a, Ici aᶜ = s }
 #align lower_topology LowerTopology
+-/
 
 instance [Preorder α] : LowerTopology (WithLowerTopology α) :=
   ⟨rfl⟩
 
 namespace LowerTopology
 
+#print LowerTopology.lowerBasis /-
 /-- The complements of the upper closures of finite sets are a collection of lower sets
 which form a basis for the lower topology. -/
 def lowerBasis (α : Type _) [Preorder α] :=
   { s : Set α | ∃ t : Set α, t.Finite ∧ (upperClosure t : Set α)ᶜ = s }
 #align lower_topology.lower_basis LowerTopology.lowerBasis
+-/
 
 section Preorder
 
 variable [Preorder α] [TopologicalSpace α] [LowerTopology α] {s : Set α}
 
+/- warning: lower_topology.with_lower_topology_homeomorph -> LowerTopology.withLowerTopologyHomeomorph is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1], Homeomorph.{u1, u1} (WithLowerTopology.{u1} α) α (WithLowerTopology.topologicalSpace.{u1} α _inst_1) _inst_2
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1], Homeomorph.{u1, u1} (WithLowerTopology.{u1} α) α (WithLowerTopology.instTopologicalSpaceWithLowerTopology.{u1} α _inst_1) _inst_2
+Case conversion may be inaccurate. Consider using '#align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorphₓ'. -/
 /-- If `α` is equipped with the lower topology, then it is homeomorphic to `with_lower_topology α`.
 -/
 def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
@@ -176,22 +214,33 @@ def withLowerTopologyHomeomorph : WithLowerTopology α ≃ₜ α :=
       apply topology_eq_lower_topology }
 #align lower_topology.with_lower_topology_homeomorph LowerTopology.withLowerTopologyHomeomorph
 
+/- warning: lower_topology.is_open_iff_generate_Ici_compl -> LowerTopology.isOpen_iff_generate_Ici_compl is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, Iff (IsOpen.{u1} α _inst_2 s) (TopologicalSpace.GenerateOpen.{u1} α (setOf.{u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{succ u1} α (fun (a : α) => Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.booleanAlgebra.{u1} α)) (Set.Ici.{u1} α _inst_1 a)) t))) s)
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] [_inst_2 : TopologicalSpace.{u1} α] [_inst_3 : LowerTopology.{u1} α _inst_2 _inst_1] {s : Set.{u1} α}, Iff (IsOpen.{u1} α _inst_2 s) (TopologicalSpace.GenerateOpen.{u1} α (setOf.{u1} (Set.{u1} α) (fun (t : Set.{u1} α) => Exists.{succ u1} α (fun (a : α) => Eq.{succ u1} (Set.{u1} α) (HasCompl.compl.{u1} (Set.{u1} α) (BooleanAlgebra.toHasCompl.{u1} (Set.{u1} α) (Set.instBooleanAlgebraSet.{u1} α)) (Set.Ici.{u1} α _inst_1 a)) t))) s)
+Case conversion may be inaccurate. Consider using '#align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_Ici_complₓ'. -/
 theorem isOpen_iff_generate_Ici_compl : IsOpen s ↔ GenerateOpen { t | ∃ a, Ici aᶜ = t } s := by
   rw [topology_eq_lower_topology α] <;> rfl
 #align lower_topology.is_open_iff_generate_Ici_compl LowerTopology.isOpen_iff_generate_Ici_compl
 
+#print LowerTopology.isClosed_Ici /-
 /-- Left-closed right-infinite intervals [a, ∞) are closed in the lower topology. -/
 theorem isClosed_Ici (a : α) : IsClosed (Ici a) :=
   isOpen_compl_iff.1 <| isOpen_iff_generate_Ici_compl.2 <| GenerateOpen.basic _ ⟨a, rfl⟩
 #align lower_topology.is_closed_Ici LowerTopology.isClosed_Ici
+-/
 
+#print LowerTopology.isClosed_upperClosure /-
 /-- The upper closure of a finite set is closed in the lower topology. -/
 theorem isClosed_upperClosure (h : s.Finite) : IsClosed (upperClosure s : Set α) :=
   by
   simp only [← UpperSet.infᵢ_Ici, UpperSet.coe_infᵢ]
   exact isClosed_bunionᵢ h fun a h₁ => isClosed_Ici a
 #align lower_topology.is_closed_upper_closure LowerTopology.isClosed_upperClosure
+-/
 
+#print LowerTopology.isLowerSet_of_isOpen /-
 /-- Every set open in the lower topology is a lower set. -/
 theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   by
@@ -202,11 +251,15 @@ theorem isLowerSet_of_isOpen (h : IsOpen s) : IsLowerSet s :=
   case inter u v hu1 hv1 hu2 hv2 => exact hu2.inter hv2
   case sUnion _ _ ih => exact isLowerSet_unionₛ ih
 #align lower_topology.is_lower_set_of_is_open LowerTopology.isLowerSet_of_isOpen
+-/
 
+#print LowerTopology.isUpperSet_of_isClosed /-
 theorem isUpperSet_of_isClosed (h : IsClosed s) : IsUpperSet s :=
   isLowerSet_compl.1 <| isLowerSet_of_isOpen h.isOpen_compl
 #align lower_topology.is_upper_set_of_is_closed LowerTopology.isUpperSet_of_isClosed
+-/
 
+#print LowerTopology.closure_singleton /-
 /--
 The closure of a singleton `{a}` in the lower topology is the left-closed right-infinite interval
 [a, ∞).
@@ -216,7 +269,9 @@ theorem closure_singleton (a : α) : closure {a} = Ici a :=
   subset_antisymm ((closure_minimal fun b h => h.ge) <| isClosed_Ici a) <|
     (isUpperSet_of_isClosed isClosed_closure).Ici_subset <| subset_closure rfl
 #align lower_topology.closure_singleton LowerTopology.closure_singleton
+-/
 
+#print LowerTopology.isTopologicalBasis /-
 protected theorem isTopologicalBasis : IsTopologicalBasis (lowerBasis α) :=
   by
   convert is_topological_basis_of_subbasis (topology_eq_lower_topology α)
@@ -232,6 +287,7 @@ protected theorem isTopologicalBasis : IsTopologicalBasis (lowerBasis α) :=
     choose f hf using hs
     exact ⟨_, finite_range f, by simp_rw [bInter_range, hf, sInter_eq_Inter]⟩
 #align lower_topology.is_topological_basis LowerTopology.isTopologicalBasis
+-/
 
 end Preorder
 
@@ -273,6 +329,12 @@ section CompleteLattice
 variable [CompleteLattice α] [CompleteLattice β] [TopologicalSpace α] [LowerTopology α]
   [TopologicalSpace β] [LowerTopology β]
 
+/- warning: Inf_hom.continuous -> InfₛHom.continuous is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : CompleteLattice.{u1} α] [_inst_2 : CompleteLattice.{u2} β] [_inst_3 : TopologicalSpace.{u1} α] [_inst_4 : LowerTopology.{u1} α _inst_3 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α _inst_1)))] [_inst_5 : TopologicalSpace.{u2} β] [_inst_6 : LowerTopology.{u2} β _inst_5 (PartialOrder.toPreorder.{u2} β (CompleteSemilatticeInf.toPartialOrder.{u2} β (CompleteLattice.toCompleteSemilatticeInf.{u2} β _inst_2)))] (f : InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))), Continuous.{u1, u2} α β _inst_3 _inst_5 (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) (fun (_x : InfₛHom.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) => α -> β) (InfₛHom.hasCoeToFun.{u1, u2} α β (ConditionallyCompleteLattice.toHasInf.{u1} α (CompleteLattice.toConditionallyCompleteLattice.{u1} α _inst_1)) (ConditionallyCompleteLattice.toHasInf.{u2} β (CompleteLattice.toConditionallyCompleteLattice.{u2} β _inst_2))) f)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : CompleteLattice.{u2} α] [_inst_2 : CompleteLattice.{u1} β] [_inst_3 : TopologicalSpace.{u2} α] [_inst_4 : LowerTopology.{u2} α _inst_3 (PartialOrder.toPreorder.{u2} α (CompleteSemilatticeInf.toPartialOrder.{u2} α (CompleteLattice.toCompleteSemilatticeInf.{u2} α _inst_1)))] [_inst_5 : TopologicalSpace.{u1} β] [_inst_6 : LowerTopology.{u1} β _inst_5 (PartialOrder.toPreorder.{u1} β (CompleteSemilatticeInf.toPartialOrder.{u1} β (CompleteLattice.toCompleteSemilatticeInf.{u1} β _inst_2)))] (f : InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))), Continuous.{u2, u1} α β _inst_3 _inst_5 (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α (fun (_x : α) => (fun (x._@.Mathlib.Order.Hom.CompleteLattice._hyg.372 : α) => β) _x) (InfₛHomClass.toFunLike.{max u2 u1, u2, u1} (InfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2))) α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)) (InfₛHom.instInfₛHomClassInfₛHom.{u2, u1} α β (ConditionallyCompleteLattice.toInfSet.{u2} α (CompleteLattice.toConditionallyCompleteLattice.{u2} α _inst_1)) (ConditionallyCompleteLattice.toInfSet.{u1} β (CompleteLattice.toConditionallyCompleteLattice.{u1} β _inst_2)))) f)
+Case conversion may be inaccurate. Consider using '#align Inf_hom.continuous InfₛHom.continuousₓ'. -/
 theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
   by
   convert continuous_generateFrom _
@@ -284,10 +346,12 @@ theorem InfₛHom.continuous (f : InfₛHom α β) : Continuous f :=
   simp [map_Inf]
 #align Inf_hom.continuous InfₛHom.continuous
 
+#print LowerTopology.continuousInf /-
 -- see Note [lower instance priority]
-instance (priority := 90) LowerTopology.to_continuousInf : ContinuousInf α :=
+instance (priority := 90) LowerTopology.continuousInf : ContinuousInf α :=
   ⟨(infInfₛHom : InfₛHom (α × α) α).Continuous⟩
-#align lower_topology.to_has_continuous_inf LowerTopology.to_continuousInf
+#align lower_topology.to_has_continuous_inf LowerTopology.continuousInf
+-/
 
 end CompleteLattice
 

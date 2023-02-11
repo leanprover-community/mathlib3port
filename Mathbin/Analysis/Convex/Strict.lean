@@ -282,7 +282,7 @@ end continuous_add
 
 section ContinuousSmul
 
-variable [LinearOrderedField 𝕝] [Module 𝕝 E] [HasContinuousConstSMul 𝕝 E]
+variable [LinearOrderedField 𝕝] [Module 𝕝 E] [ContinuousConstSMul 𝕝 E]
   [LinearMap.CompatibleSMul E E 𝕜 𝕝] {s : Set E} {x : E}
 
 theorem StrictConvex.smul (hs : StrictConvex 𝕜 s) (c : 𝕝) : StrictConvex 𝕜 (c • s) :=
@@ -309,7 +309,7 @@ variable [OrderedCommSemiring 𝕜] [TopologicalSpace E]
 
 section AddCommGroup
 
-variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSMulDivisors 𝕜 E] [HasContinuousConstSMul 𝕜 E]
+variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSMulDivisors 𝕜 E] [ContinuousConstSMul 𝕜 E]
   {s : Set E}
 
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) :
