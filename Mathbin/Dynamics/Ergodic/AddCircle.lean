@@ -140,7 +140,7 @@ theorem ergodicNsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n �
 theorem ergodicZsmulAdd (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x :=
   by
   set f : AddCircle T → AddCircle T := fun y => n • y + x
-  let e : AddCircle T ≃ᵐ AddCircle T := MeasurableEquiv.add_left (DivisibleBy.div x <| n - 1)
+  let e : AddCircle T ≃ᵐ AddCircle T := MeasurableEquiv.addLeft (DivisibleBy.div x <| n - 1)
   have he : measure_preserving e volume volume := measure_preserving_add_left volume _
   suffices e ∘ f ∘ e.symm = fun y => n • y
     by

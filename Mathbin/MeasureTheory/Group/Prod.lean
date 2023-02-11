@@ -63,7 +63,7 @@ protected def MeasurableEquiv.shearMulRight [HasMeasurableInv G] : G × G ≃ᵐ
     measurable_to_fun := measurable_fst.prod_mk measurable_mul
     measurable_inv_fun := measurable_fst.prod_mk <| measurable_fst.inv.mul measurable_snd }
 #align measurable_equiv.shear_mul_right MeasurableEquiv.shearMulRight
-#align measurable_equiv.shear_add_right MeasurableEquiv.shear_add_right
+#align measurable_equiv.shear_add_right MeasurableEquiv.shearAddRight
 
 /-- The map `(x, y) ↦ (x, y / x)` as a `measurable_equiv` with as inverse `(x, y) ↦ (x, yx)` -/
 @[to_additive
@@ -75,7 +75,7 @@ protected def MeasurableEquiv.shearDivRight [HasMeasurableInv G] : G × G ≃ᵐ
     measurable_to_fun := measurable_fst.prod_mk <| measurable_snd.div measurable_fst
     measurable_inv_fun := measurable_fst.prod_mk <| measurable_snd.mul measurable_fst }
 #align measurable_equiv.shear_div_right MeasurableEquiv.shearDivRight
-#align measurable_equiv.shear_sub_right MeasurableEquiv.shear_sub_right
+#align measurable_equiv.shear_sub_right MeasurableEquiv.shearSubRight
 
 variable {G}
 

@@ -986,10 +986,12 @@ theorem connectedComponent_eq {x y : α} (h : y ∈ connectedComponent x) :
 #align connected_component_eq connectedComponent_eq
 -/
 
+#print connectedComponent_eq_iff_mem /-
 theorem connectedComponent_eq_iff_mem {x y : α} :
     connectedComponent x = connectedComponent y ↔ x ∈ connectedComponent y :=
   ⟨fun h => h ▸ mem_connectedComponent, fun h => (connectedComponent_eq h).symm⟩
 #align connected_component_eq_iff_mem connectedComponent_eq_iff_mem
+-/
 
 #print connectedComponentIn_eq /-
 theorem connectedComponentIn_eq {x y : α} {F : Set α} (h : y ∈ connectedComponentIn F x) :
@@ -1662,13 +1664,15 @@ theorem locallyConnectedSpace_iff_open_connected_subsets :
           fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
 #align locally_connected_space_iff_open_connected_subsets locallyConnectedSpace_iff_open_connected_subsets
 
+#print DiscreteTopology.toLocallyConnectedSpace /-
 /-- A space with discrete topology is a locally connected space. -/
-instance (priority := 100) DiscreteTopology.to_locallyConnectedSpace (α) [TopologicalSpace α]
+instance (priority := 100) DiscreteTopology.toLocallyConnectedSpace (α) [TopologicalSpace α]
     [DiscreteTopology α] : LocallyConnectedSpace α :=
   locallyConnectedSpace_iff_open_connected_subsets.2 fun x _U hU =>
     ⟨{x}, singleton_subset_iff.2 <| mem_of_mem_nhds hU, isOpen_discrete _, mem_singleton _,
       isConnected_singleton⟩
-#align discrete_topology.to_locally_connected_space DiscreteTopology.to_locallyConnectedSpace
+#align discrete_topology.to_locally_connected_space DiscreteTopology.toLocallyConnectedSpace
+-/
 
 #print connectedComponentIn_mem_nhds /-
 theorem connectedComponentIn_mem_nhds [LocallyConnectedSpace α] {F : Set α} {x : α} (h : F ∈ 𝓝 x) :
@@ -1912,11 +1916,13 @@ theorem totallyDisconnectedSpace_iff_connectedComponent_singleton :
 #align totally_disconnected_space_iff_connected_component_singleton totallyDisconnectedSpace_iff_connectedComponent_singleton
 -/
 
+#print connectedComponent_eq_singleton /-
 @[simp]
 theorem connectedComponent_eq_singleton [TotallyDisconnectedSpace α] (x : α) :
     connectedComponent x = {x} :=
   totallyDisconnectedSpace_iff_connectedComponent_singleton.1 ‹_› x
 #align connected_component_eq_singleton connectedComponent_eq_singleton
+-/
 
 /- warning: continuous.image_connected_component_eq_singleton -> Continuous.image_connectedComponent_eq_singleton is a dubious translation:
 lean 3 declaration is

@@ -792,7 +792,7 @@ theorem mul_coeff_order_add_order {Γ} [LinearOrderedCancelAddCommMonoid Γ]
   by
   by_cases hx : x = 0; · simp [hx]
   by_cases hy : y = 0; · simp [hy]
-  rw [order_of_ne hx, order_of_ne hy, mul_coeff, Finset.add_antidiagonal_min_add_min,
+  rw [order_of_ne hx, order_of_ne hy, mul_coeff, Finset.addAntidiagonal_min_add_min,
     Finset.sum_singleton]
 #align hahn_series.mul_coeff_order_add_order HahnSeries.mul_coeff_order_add_order
 

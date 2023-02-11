@@ -103,7 +103,7 @@ measurable automorphism of `G`. -/
 def mulLeft (g : G) : G ≃ᵐ G :=
   smul g
 #align measurable_equiv.mul_left MeasurableEquiv.mulLeft
-#align measurable_equiv.add_left MeasurableEquiv.add_left
+#align measurable_equiv.add_left MeasurableEquiv.addLeft
 
 @[simp, to_additive]
 theorem coe_mulLeft (g : G) : ⇑(mulLeft g) = (· * ·) g :=
@@ -121,7 +121,7 @@ theorem symm_mulLeft (g : G) : (mulLeft g).symm = mulLeft g⁻¹ :=
 theorem toEquiv_mulLeft (g : G) : (mulLeft g).toEquiv = Equiv.mulLeft g :=
   rfl
 #align measurable_equiv.to_equiv_mul_left MeasurableEquiv.toEquiv_mulLeft
-#align measurable_equiv.to_equiv_add_left MeasurableEquiv.to_equiv_add_left
+#align measurable_equiv.to_equiv_add_left MeasurableEquiv.toEquiv_add_left
 
 @[to_additive]
 theorem measurableEmbedding_mul_left (g : G) : MeasurableEmbedding ((· * ·) g) :=
@@ -138,7 +138,7 @@ def mulRight (g : G) : G ≃ᵐ G where
   measurable_to_fun := measurable_mul_const g
   measurable_inv_fun := measurable_mul_const g⁻¹
 #align measurable_equiv.mul_right MeasurableEquiv.mulRight
-#align measurable_equiv.add_right MeasurableEquiv.add_right
+#align measurable_equiv.add_right MeasurableEquiv.addRight
 
 @[to_additive]
 theorem measurableEmbedding_mul_right (g : G) : MeasurableEmbedding fun x => x * g :=
@@ -162,7 +162,7 @@ theorem symm_mulRight (g : G) : (mulRight g).symm = mulRight g⁻¹ :=
 theorem toEquiv_mulRight (g : G) : (mulRight g).toEquiv = Equiv.mulRight g :=
   rfl
 #align measurable_equiv.to_equiv_mul_right MeasurableEquiv.toEquiv_mulRight
-#align measurable_equiv.to_equiv_add_right MeasurableEquiv.to_equiv_add_right
+#align measurable_equiv.to_equiv_add_right MeasurableEquiv.toEquiv_add_right
 
 /-- If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
@@ -247,7 +247,7 @@ def divRight [HasMeasurableMul G] (g : G) : G ≃ᵐ G
   measurable_to_fun := measurable_div_const' g
   measurable_inv_fun := measurable_mul_const g
 #align measurable_equiv.div_right MeasurableEquiv.divRight
-#align measurable_equiv.sub_right MeasurableEquiv.sub_right
+#align measurable_equiv.sub_right MeasurableEquiv.subRight
 
 /-- `equiv.div_left` as a `measurable_equiv` -/
 @[to_additive " `equiv.sub_left` as a `measurable_equiv` "]
@@ -257,7 +257,7 @@ def divLeft [HasMeasurableMul G] [HasMeasurableInv G] (g : G) : G ≃ᵐ G
   measurable_to_fun := measurable_id.const_div g
   measurable_inv_fun := measurable_inv.mul_const g
 #align measurable_equiv.div_left MeasurableEquiv.divLeft
-#align measurable_equiv.sub_left MeasurableEquiv.sub_left
+#align measurable_equiv.sub_left MeasurableEquiv.subLeft
 
 end MeasurableEquiv
 

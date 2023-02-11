@@ -32,7 +32,7 @@ open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgro
 
 open MeasureTheory Nnreal Ennreal
 
-attribute [-instance] quotientAddGroup.measurableSpace Quotient.measurableSpace
+attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
 
 theorem isAddFundamentalDomainIoc {T : ℝ} (hT : 0 < T) (t : ℝ)
     (μ : Measure ℝ := by exact MeasureTheory.MeasureSpace.volume) :
