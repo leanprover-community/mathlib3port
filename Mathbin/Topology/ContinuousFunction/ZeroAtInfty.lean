@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -368,7 +368,7 @@ section Uniform
 variable [UniformSpace β] [UniformSpace γ] [Zero γ] [ZeroAtInftyContinuousMapClass F β γ]
 
 theorem uniformContinuous (f : F) : UniformContinuous (f : β → γ) :=
-  (map_continuous f).uniformContinuous_of_zero_at_infty (zero_at_infty f)
+  (map_continuous f).uniformContinuous_of_tendsto_cocompact (zero_at_infty f)
 #align zero_at_infty_continuous_map.uniform_continuous ZeroAtInftyContinuousMap.uniformContinuous
 
 end Uniform

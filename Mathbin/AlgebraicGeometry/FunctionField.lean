@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.function_field
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,7 +42,7 @@ noncomputable abbrev Scheme.germToFunctionField [IrreducibleSpace X.carrier] (U 
     [h : Nonempty U] : X.Presheaf.obj (op U) ⟶ X.functionField :=
   X.Presheaf.germ
     ⟨genericPoint X.carrier,
-      ((genericPoint_spec X.carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩
+      ((genericPoint_spec X.carrier).mem_open_set_iff U.IsOpen).mpr (by simpa using h)⟩
 #align algebraic_geometry.Scheme.germ_to_function_field AlgebraicGeometry.Scheme.germToFunctionField
 
 noncomputable instance [IrreducibleSpace X.carrier] (U : Opens X.carrier) [Nonempty U] :
@@ -59,11 +59,10 @@ noncomputable instance [IsIntegral X] : Field X.functionField :=
   replace ha := ne_of_apply_ne _ ha
   have hs : genericPoint X.carrier ∈ RingedSpace.basic_open _ s :=
     by
-    rw [← opens.mem_coe, (genericPoint_spec X.carrier).mem_open_set_iff, Set.top_eq_univ,
-      Set.univ_inter, Set.nonempty_iff_ne_empty, Ne.def, ← opens.coe_bot,
-      subtype.coe_injective.eq_iff, ← opens.empty_eq]
+    rw [← SetLike.mem_coe, (genericPoint_spec X.carrier).mem_open_set_iff, Set.top_eq_univ,
+      Set.univ_inter, Set.nonempty_iff_ne_empty, Ne.def, ← opens.coe_bot, ← SetLike.ext'_iff]
     erw [basic_open_eq_bot_iff]
-    exacts[ha, (RingedSpace.basic_open _ _).Prop]
+    exacts[ha, (RingedSpace.basic_open _ _).IsOpen]
   have := (X.presheaf.germ ⟨_, hs⟩).isUnit_map (RingedSpace.is_unit_res_basic_open _ s)
   rwa [TopCat.Presheaf.germ_res_apply] at this
 
@@ -151,7 +150,7 @@ theorem IsAffineOpen.primeIdealOf_genericPoint {X : Scheme} [IsIntegral X] {U : 
     (hU : IsAffineOpen U) [h : Nonempty U] :
     hU.primeIdealOf
         ⟨genericPoint X.carrier,
-          ((genericPoint_spec X.carrier).mem_open_set_iff U.Prop).mpr (by simpa using h)⟩ =
+          ((genericPoint_spec X.carrier).mem_open_set_iff U.IsOpen).mpr (by simpa using h)⟩ =
       genericPoint (Scheme.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
   by
   haveI : is_affine _ := hU

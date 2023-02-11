@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.prime_spectrum.basic
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -790,8 +790,8 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basicOpen (r : R) : TopologicalSpace.Opens (PrimeSpectrum R)
     where
-  val := { x | r ∉ x.asIdeal }
-  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
+  carrier := { x | r ∉ x.asIdeal }
+  is_open' := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align prime_spectrum.basic_open PrimeSpectrum.basicOpen
 
 @[simp]
@@ -800,7 +800,7 @@ theorem mem_basicOpen (f : R) (x : PrimeSpectrum R) : x ∈ basicOpen f ↔ f �
 #align prime_spectrum.mem_basic_open PrimeSpectrum.mem_basicOpen
 
 theorem isOpen_basicOpen {a : R} : IsOpen (basicOpen a : Set (PrimeSpectrum R)) :=
-  (basicOpen a).property
+  (basicOpen a).IsOpen
 #align prime_spectrum.is_open_basic_open PrimeSpectrum.isOpen_basicOpen
 
 @[simp]
@@ -821,8 +821,8 @@ theorem basicOpen_zero : basicOpen (0 : R) = ⊥ :=
 
 theorem basicOpen_le_basicOpen_iff (f g : R) :
     basicOpen f ≤ basicOpen g ↔ f ∈ (Ideal.span ({g} : Set R)).radical := by
-  rw [TopologicalSpace.Opens.le_def, basic_open_eq_zero_locus_compl, basic_open_eq_zero_locus_compl,
-    Set.le_eq_subset, Set.compl_subset_compl, zero_locus_subset_zero_locus_singleton_iff]
+  rw [← SetLike.coe_subset_coe, basic_open_eq_zero_locus_compl, basic_open_eq_zero_locus_compl,
+    Set.compl_subset_compl, zero_locus_subset_zero_locus_singleton_iff]
 #align prime_spectrum.basic_open_le_basic_open_iff PrimeSpectrum.basicOpen_le_basicOpen_iff
 
 theorem basicOpen_mul (f g : R) : basicOpen (f * g) = basicOpen f ⊓ basicOpen g :=
@@ -896,7 +896,7 @@ theorem isCompact_basicOpen (f : R) : IsCompact (basicOpen f : Set (PrimeSpectru
 @[simp]
 theorem basicOpen_eq_bot_iff (f : R) : basicOpen f = ⊥ ↔ IsNilpotent f :=
   by
-  rw [← subtype.coe_injective.eq_iff, basic_open_eq_zero_locus_compl]
+  rw [← TopologicalSpace.Opens.coe_inj, basic_open_eq_zero_locus_compl]
   simp only [Set.eq_univ_iff_forall, Set.singleton_subset_iff, TopologicalSpace.Opens.coe_bot,
     nilpotent_iff_mem_prime, Set.compl_empty_iff, mem_zero_locus, SetLike.mem_coe]
   exact ⟨fun h I hI => h ⟨I, hI⟩, fun h ⟨I, hI⟩ => h I hI⟩

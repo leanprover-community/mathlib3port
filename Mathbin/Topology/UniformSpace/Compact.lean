@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.uniform_space.compact
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.UniformSpace.UniformConvergence
 import Mathbin.Topology.UniformSpace.Equicontinuity
 import Mathbin.Topology.Separation
+import Mathbin.Topology.Support
 
 /-!
 # Compact separated uniform spaces
@@ -221,12 +222,12 @@ theorem IsCompact.uniform_continuousAt_of_continuousAt {r : Set (β × β)} {s :
   exacts[mem_ball_self _ (hT a a.2), mem_Inter₂.1 h a ha]
 #align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniform_continuousAt_of_continuousAt
 
-theorem Continuous.uniformContinuous_of_zero_at_infty {f : α → β} [Zero β] (h_cont : Continuous f)
-    (h_zero : Tendsto f (cocompact α) (𝓝 0)) : UniformContinuous f :=
+theorem Continuous.uniformContinuous_of_tendsto_cocompact {f : α → β} {x : β}
+    (h_cont : Continuous f) (hx : Tendsto f (cocompact α) (𝓝 x)) : UniformContinuous f :=
   uniformContinuous_def.2 fun r hr =>
     by
     obtain ⟨t, ht, htsymm, htr⟩ := comp_symm_mem_uniformity_sets hr
-    obtain ⟨s, hs, hst⟩ := mem_cocompact.1 (h_zero <| mem_nhds_left 0 ht)
+    obtain ⟨s, hs, hst⟩ := mem_cocompact.1 (hx <| mem_nhds_left _ ht)
     apply
       mem_of_superset
         (symmetrize_mem_uniformity <|
@@ -236,8 +237,31 @@ theorem Continuous.uniformContinuous_of_zero_at_infty {f : α → β} [Zero β] 
     by_cases h₁ : b₁ ∈ s; · exact (h.1 h₁).1
     by_cases h₂ : b₂ ∈ s; · exact (h.2 h₂).2
     apply htr
-    exact ⟨0, htsymm.mk_mem_comm.1 (hst h₁), hst h₂⟩
-#align continuous.uniform_continuous_of_zero_at_infty Continuous.uniformContinuous_of_zero_at_infty
+    exact ⟨x, htsymm.mk_mem_comm.1 (hst h₁), hst h₂⟩
+#align continuous.uniform_continuous_of_tendsto_cocompact Continuous.uniformContinuous_of_tendsto_cocompact
+
+/-- If `f` has compact multiplicative support, then `f` tends to 1 at infinity. -/
+@[to_additive "If `f` has compact support, then `f` tends to zero at infinity."]
+theorem HasCompactMulSupport.is_one_at_infty {f : α → γ} [TopologicalSpace γ] [One γ]
+    (h : HasCompactMulSupport f) : Tendsto f (cocompact α) (𝓝 1) :=
+  by
+  -- porting note: move to src/topology/support.lean once the port is over
+  intro N hN
+  rw [mem_map, mem_cocompact']
+  refine' ⟨mulTSupport f, h.is_compact, _⟩
+  rw [compl_subset_comm]
+  intro v hv
+  rw [mem_preimage, image_eq_one_of_nmem_mulTSupport hv]
+  exact mem_of_mem_nhds hN
+#align has_compact_mul_support.is_one_at_infty HasCompactMulSupport.is_one_at_infty
+#align has_compact_support.is_zero_at_infty HasCompactSupport.is_zero_at_infty
+
+@[to_additive]
+theorem HasCompactMulSupport.uniformContinuous_of_continuous {f : α → β} [One β]
+    (h1 : HasCompactMulSupport f) (h2 : Continuous f) : UniformContinuous f :=
+  h2.uniformContinuous_of_tendsto_cocompact h1.is_one_at_infty
+#align has_compact_mul_support.uniform_continuous_of_continuous HasCompactMulSupport.uniformContinuous_of_continuous
+#align has_compact_support.uniform_continuous_of_continuous HasCompactSupport.uniformContinuous_of_continuous
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

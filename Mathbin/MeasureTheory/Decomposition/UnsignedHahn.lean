@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.unsigned_hahn
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -35,11 +35,6 @@ namespace MeasureTheory
 
 variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
--- suddenly this is necessary?!
-private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) :
-    γ - 2 * (1 / 2) ^ m + (1 / 2) ^ m ≤ d := by linarith
-#align measure_theory.aux measure_theory.aux
-
 /-- **Hahn decomposition theorem** -/
 theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     ∃ s,
@@ -64,7 +59,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       Ennreal.toNnreal_add (hμ _) (hμ _), Ennreal.toNnreal_add (hν _) (hν _), Nnreal.coe_add,
       Nnreal.coe_add]
     simp only [sub_eq_add_neg, neg_add]
-    ac_rfl
+    abel
   have d_Union :
     ∀ s : ℕ → Set α, Monotone s → tendsto (fun n => d (s n)) at_top (𝓝 (d (⋃ n, s n))) :=
     by
@@ -127,7 +122,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     · have := he₂ m
       simp only [f]
       rw [Nat.Ico_succ_singleton, Finset.inf_singleton]
-      exact aux this
+      linarith
     · intro n(hmn : m ≤ n)ih
       have : γ + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ (n + 1)) ≤ γ + d (f m (n + 1)) := by
         calc
@@ -138,14 +133,14 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
             simp only [pow_add, pow_one, le_sub_iff_add_le]
             linarith
           _ = γ - (1 / 2) ^ (n + 1) + (γ - 2 * (1 / 2) ^ m + (1 / 2) ^ n) := by
-            simp only [sub_eq_add_neg] <;> ac_rfl
+            simp only [sub_eq_add_neg] <;> abel
           _ ≤ d (e (n + 1)) + d (f m n) := add_le_add (le_of_lt <| he₂ _) ih
           _ ≤ d (e (n + 1)) + d (f m n \ e (n + 1)) + d (f m (n + 1)) := by
             rw [f_succ _ _ hmn, d_split (f m n) (e (n + 1)) (hf _ _) (he₁ _), add_assoc]
           _ = d (e (n + 1) ∪ f m n) + d (f m (n + 1)) :=
             by
             rw [d_split (e (n + 1) ∪ f m n) (e (n + 1)), union_diff_left, union_inter_cancel_left]
-            ac_rfl
+            abel
             exact (he₁ _).union (hf _ _)
             exact he₁ _
           _ ≤ γ + d (f m (n + 1)) := add_le_add_right (d_le_γ _ <| (he₁ _).union (hf _ _)) _
@@ -156,7 +151,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     by
     have hγ : tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 γ) :=
       by
-      suffices tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 (γ - 2 * 0)) by simpa
+      suffices tendsto (fun m : ℕ => γ - 2 * (1 / 2) ^ m) at_top (𝓝 (γ - 2 * 0)) by
+        simpa only [mul_zero, tsub_zero]
       exact
         tendsto_const_nhds.sub <|
           tendsto_const_nhds.mul <|

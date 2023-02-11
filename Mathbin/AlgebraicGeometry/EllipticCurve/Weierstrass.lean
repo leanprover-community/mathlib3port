@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -43,7 +43,7 @@ splitting field of `R` are precisely the $X$-coordinates of the non-zero 2-torsi
  * `weierstrass_curve.nonsingular`: the nonsingular condition at a point on a Weierstrass curve.
  * `weierstrass_curve.coordinate_ring`: the coordinate ring of a Weierstrass curve.
  * `weierstrass_curve.function_field`: the function field of a Weierstrass curve.
- * `weierstrass_curve.basis`: the power basis of the coordinate ring as an `R[X]`-algebra.
+ * `weierstrass_curve.coordinate_ring.basis`: the power basis of the coordinate ring over `R[X]`.
  * `elliptic_curve`: an elliptic curve over a commutative ring.
  * `elliptic_curve.j`: the j-invariant of an elliptic curve.
 
@@ -55,8 +55,8 @@ splitting field of `R` are precisely the $X$-coordinates of the non-zero 2-torsi
     if its discriminant is non-zero.
  * `weierstrass_curve.coordinate_ring.is_domain`: the coordinate ring of a Weierstrass curve is
     an integral domain.
- * `weierstrass_curve.degree_norm_smul_basis`: the degree of the norm of an element in the
-    coordinate ring as an `R[X]`-algebra in terms of the power basis.
+ * `weierstrass_curve.coordinate_ring.degree_norm_smul_basis`: the degree of the norm of an element
+    in the coordinate ring in terms of the power basis.
  * `elliptic_curve.nonsingular`: an elliptic curve is nonsingular at every point.
  * `elliptic_curve.variable_change_j`: the j-invariant of an elliptic curve is invariant under an
     admissible linear change of variables.
@@ -367,9 +367,15 @@ theorem twoTorsionPolynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] (h
 
 end TorsionPolynomial
 
+-- mathport name: outer_variable
+scoped[PolynomialPolynomial] notation "Y" => Polynomial.x
+
+-- mathport name: polynomial_polynomial
+scoped[PolynomialPolynomial] notation R "[X][Y]" => Polynomial (Polynomial R)
+
 section Polynomial
 
-/-! ### Weierstrass polynomials and equations -/
+/-! ### Weierstrass equations -/
 
 
 open Polynomial
@@ -378,9 +384,11 @@ open Polynomial
 
 /-- The polynomial $W(X, Y) := Y^2 + a_1XY + a_3Y - (X^3 + a_2X^2 + a_4X + a_6)$ associated to a
 Weierstrass curve `W` over `R`. For ease of polynomial manipulation, this is represented as a term
-of type `R[X][X]`, where the inner variable represents $X$ and the outer variable represents $Y$. -/
-protected noncomputable def polynomial : R[X][X] :=
-  x ^ 2 + c (c W.a₁ * x + c W.a₃) * x - c (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)
+of type `R[X][X]`, where the inner variable represents $X$ and the outer variable represents $Y$.
+For clarity, the alternative notations `Y` and `R[X][Y]` are provided in the `polynomial_polynomial`
+locale to represent the outer variable and the bivariate polynomial ring `R[X][X]` respectively. -/
+protected noncomputable def polynomial : R[X][Y] :=
+  Y ^ 2 + c (c W.a₁ * x + c W.a₃) * Y - c (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)
 #align weierstrass_curve.polynomial WeierstrassCurve.polynomial
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.372359189.C_simp -/
@@ -439,7 +447,7 @@ theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
 @[simp]
 theorem eval_polynomial (x y : R) :
-    eval x (eval (c y) W.Polynomial) =
+    (W.Polynomial.eval <| c y).eval x =
       y ^ 2 + W.a₁ * x * y + W.a₃ * y - (x ^ 3 + W.a₂ * x ^ 2 + W.a₄ * x + W.a₆) :=
   by
   simp only [WeierstrassCurve.polynomial]
@@ -449,13 +457,13 @@ theorem eval_polynomial (x y : R) :
 #align weierstrass_curve.eval_polynomial WeierstrassCurve.eval_polynomial
 
 @[simp]
-theorem eval_polynomial_zero : eval 0 (eval 0 W.Polynomial) = -W.a₆ := by
+theorem eval_polynomial_zero : (W.Polynomial.eval 0).eval 0 = -W.a₆ := by
   simp only [← C_0, eval_polynomial, zero_add, zero_sub, mul_zero, zero_pow (Nat.zero_lt_succ _)]
 #align weierstrass_curve.eval_polynomial_zero WeierstrassCurve.eval_polynomial_zero
 
 /-- The proposition that an affine point $(x, y)$ lies in `W`. In other words, $W(x, y) = 0$. -/
 def Equation (x y : R) : Prop :=
-  eval x (eval (c y) W.Polynomial) = 0
+  (W.Polynomial.eval <| c y).eval x = 0
 #align weierstrass_curve.equation WeierstrassCurve.Equation
 
 theorem equation_iff' (x y : R) :
@@ -486,15 +494,17 @@ theorem equation_iff_variableChange (x y : R) :
 /-! ### Nonsingularity of Weierstrass curves -/
 
 
-/-- The partial derivative $W_X(X, Y)$ of $W(X, Y)$ with respect to $X$. -/
-noncomputable def polynomialX : R[X][X] :=
-  c (c W.a₁) * x - c (c 3 * x ^ 2 + c (2 * W.a₂) * x + c W.a₄)
+/-- The partial derivative $W_X(X, Y)$ of $W(X, Y)$ with respect to $X$.
+
+TODO: define this in terms of `polynomial.derivative`. -/
+noncomputable def polynomialX : R[X][Y] :=
+  c (c W.a₁) * Y - c (c 3 * x ^ 2 + c (2 * W.a₂) * x + c W.a₄)
 #align weierstrass_curve.polynomial_X WeierstrassCurve.polynomialX
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
 @[simp]
 theorem eval_polynomialX (x y : R) :
-    eval x (eval (c y) W.polynomialX) = W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) :=
+    (W.polynomialX.eval <| c y).eval x = W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) :=
   by
   simp only [polynomial_X]
   run_tac
@@ -502,18 +512,20 @@ theorem eval_polynomialX (x y : R) :
 #align weierstrass_curve.eval_polynomial_X WeierstrassCurve.eval_polynomialX
 
 @[simp]
-theorem eval_polynomialX_zero : eval 0 (eval 0 W.polynomialX) = -W.a₄ := by
+theorem eval_polynomialX_zero : (W.polynomialX.eval 0).eval 0 = -W.a₄ := by
   simp only [← C_0, eval_polynomial_X, zero_add, zero_sub, mul_zero, zero_pow zero_lt_two]
 #align weierstrass_curve.eval_polynomial_X_zero WeierstrassCurve.eval_polynomialX_zero
 
-/-- The partial derivative $W_Y(X, Y)$ of $W(X, Y)$ with respect to $Y$. -/
-noncomputable def polynomialY : R[X][X] :=
-  c (c 2) * x + c (c W.a₁ * x + c W.a₃)
+/-- The partial derivative $W_Y(X, Y)$ of $W(X, Y)$ with respect to $Y$.
+
+TODO: define this in terms of `polynomial.derivative`. -/
+noncomputable def polynomialY : R[X][Y] :=
+  c (c 2) * Y + c (c W.a₁ * x + c W.a₃)
 #align weierstrass_curve.polynomial_Y WeierstrassCurve.polynomialY
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
 @[simp]
-theorem eval_polynomialY (x y : R) : eval x (eval (c y) W.polynomialY) = 2 * y + W.a₁ * x + W.a₃ :=
+theorem eval_polynomialY (x y : R) : (W.polynomialY.eval <| c y).eval x = 2 * y + W.a₁ * x + W.a₃ :=
   by
   simp only [polynomial_Y]
   run_tac
@@ -522,42 +534,44 @@ theorem eval_polynomialY (x y : R) : eval x (eval (c y) W.polynomialY) = 2 * y +
 #align weierstrass_curve.eval_polynomial_Y WeierstrassCurve.eval_polynomialY
 
 @[simp]
-theorem eval_polynomialY_zero : eval 0 (eval 0 W.polynomialY) = W.a₃ := by
+theorem eval_polynomialY_zero : (W.polynomialY.eval 0).eval 0 = W.a₃ := by
   simp only [← C_0, eval_polynomial_Y, zero_add, mul_zero]
 #align weierstrass_curve.eval_polynomial_Y_zero WeierstrassCurve.eval_polynomialY_zero
 
 /-- The proposition that an affine point $(x, y)$ on `W` is nonsingular.
 In other words, either $W_X(x, y) \ne 0$ or $W_Y(x, y) \ne 0$. -/
 def Nonsingular (x y : R) : Prop :=
-  eval x (eval (c y) W.polynomialX) ≠ 0 ∨ eval x (eval (c y) W.polynomialY) ≠ 0
+  W.Equation x y ∧ ((W.polynomialX.eval <| c y).eval x ≠ 0 ∨ (W.polynomialY.eval <| c y).eval x ≠ 0)
 #align weierstrass_curve.nonsingular WeierstrassCurve.Nonsingular
 
 theorem nonsingular_iff' (x y : R) :
     W.Nonsingular x y ↔
-      W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) ≠ 0 ∨ 2 * y + W.a₁ * x + W.a₃ ≠ 0 :=
-  by rw [nonsingular, eval_polynomial_X, eval_polynomial_Y]
+      W.Equation x y ∧
+        (W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) ≠ 0 ∨ 2 * y + W.a₁ * x + W.a₃ ≠ 0) :=
+  by rw [nonsingular, equation_iff', eval_polynomial_X, eval_polynomial_Y]
 #align weierstrass_curve.nonsingular_iff' WeierstrassCurve.nonsingular_iff'
 
 @[simp]
 theorem nonsingular_iff (x y : R) :
-    W.Nonsingular x y ↔ W.a₁ * y ≠ 3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ ∨ y ≠ -y - W.a₁ * x - W.a₃ :=
+    W.Nonsingular x y ↔
+      W.Equation x y ∧ (W.a₁ * y ≠ 3 * x ^ 2 + 2 * W.a₂ * x + W.a₄ ∨ y ≠ -y - W.a₁ * x - W.a₃) :=
   by
   rw [nonsingular_iff', sub_ne_zero, ← @sub_ne_zero _ _ y]
-  congr 3 <;> ring1
+  congr 4 <;> ring1
 #align weierstrass_curve.nonsingular_iff WeierstrassCurve.nonsingular_iff
 
 @[simp]
-theorem nonsingular_zero : W.Nonsingular 0 0 ↔ W.a₃ ≠ 0 ∨ W.a₄ ≠ 0 := by
-  rw [nonsingular, C_0, eval_polynomial_X_zero, neg_ne_zero, eval_polynomial_Y_zero, or_comm']
+theorem nonsingular_zero : W.Nonsingular 0 0 ↔ W.a₆ = 0 ∧ (W.a₃ ≠ 0 ∨ W.a₄ ≠ 0) := by
+  rw [nonsingular, equation_zero, C_0, eval_polynomial_X_zero, neg_ne_zero, eval_polynomial_Y_zero,
+    or_comm']
 #align weierstrass_curve.nonsingular_zero WeierstrassCurve.nonsingular_zero
 
 theorem nonsingular_iff_variableChange (x y : R) :
     W.Nonsingular x y ↔ (W.variableChange 1 x 0 y).Nonsingular 0 0 :=
   by
-  rw [nonsingular_iff', ← neg_ne_zero, or_comm', nonsingular_zero, variable_change_a₃,
-    variable_change_a₄, inv_one, Units.val_one]
-  congr 3
-  all_goals ring1
+  rw [nonsingular_iff', equation_iff_variable_change, equation_zero, ← neg_ne_zero, or_comm',
+    nonsingular_zero, variable_change_a₃, variable_change_a₄, inv_one, Units.val_one]
+  congr 4 <;> ring1
 #align weierstrass_curve.nonsingular_iff_variable_change WeierstrassCurve.nonsingular_iff_variableChange
 
 theorem nonsingular_zero_of_Δ_ne_zero (h : W.Equation 0 0) (hΔ : W.Δ ≠ 0) : W.Nonsingular 0 0 :=
@@ -594,8 +608,7 @@ def CoordinateRing : Type u :=
 #align weierstrass_curve.coordinate_ring WeierstrassCurve.CoordinateRing
 
 /-- The function field $R(W) := \mathrm{Frac}(R[W])$ of `W`. -/
-@[reducible]
-def FunctionField : Type u :=
+abbrev FunctionField : Type u :=
   FractionRing W.CoordinateRing
 #align weierstrass_curve.function_field WeierstrassCurve.FunctionField
 
@@ -628,7 +641,7 @@ theorem xClass_ne_zero [Nontrivial R] : xClass W x ≠ 0 :=
 /-- The class of the element $Y - y(X)$ in $R[W]$ for some $y(X) \in R[X]$. -/
 @[simp]
 noncomputable def yClass : W.CoordinateRing :=
-  AdjoinRoot.mk W.Polynomial <| x - c y
+  AdjoinRoot.mk W.Polynomial <| Y - c y
 #align weierstrass_curve.coordinate_ring.Y_class WeierstrassCurve.CoordinateRing.yClass
 
 theorem yClass_ne_zero [Nontrivial R] : yClass W y ≠ 0 :=
@@ -666,20 +679,13 @@ instance : IsScalarTower R R[X] W.CoordinateRing :=
 instance [Subsingleton R] : Subsingleton W.CoordinateRing :=
   Module.subsingleton R[X] _
 
-section
-
-open Classical
-
 /-- The basis $\{1, Y\}$ for the coordinate ring $R[W]$ over the polynomial ring $R[X]$.
 
 Given a Weierstrass curve `W`, write `W^.coordinate_ring.basis` for this basis. -/
 protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing :=
   (subsingleton_or_nontrivial R).byCases (fun _ => default) fun _ =>
-    Basis.reindex (AdjoinRoot.powerBasis' W.monic_polynomial).Basis <|
-      finCongr <| W.nat_degree_polynomial
+    (AdjoinRoot.powerBasis' W.monic_polynomial).Basis.reindex <| finCongr W.nat_degree_polynomial
 #align weierstrass_curve.coordinate_ring.basis WeierstrassCurve.CoordinateRing.basis
-
-end
 
 theorem basis_apply (n : Fin 2) : W n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) :=
   by
@@ -692,12 +698,12 @@ theorem basis_apply (n : Fin 2) : W n = (AdjoinRoot.powerBasis' W.monic_polynomi
 theorem basis_zero : W 0 = 1 := by simpa only [basis_apply] using pow_zero _
 #align weierstrass_curve.coordinate_ring.basis_zero WeierstrassCurve.CoordinateRing.basis_zero
 
-theorem basis_one : W 1 = AdjoinRoot.mk W.Polynomial x := by
+theorem basis_one : W 1 = AdjoinRoot.mk W.Polynomial Y := by
   simpa only [basis_apply] using pow_one _
 #align weierstrass_curve.coordinate_ring.basis_one WeierstrassCurve.CoordinateRing.basis_one
 
 @[simp]
-theorem coe_basis : (W : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial x] :=
+theorem coe_basis : (W : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial Y] :=
   by
   ext n
   fin_cases n
@@ -710,7 +716,7 @@ theorem smul (x : R[X]) (y : W.CoordinateRing) : x • y = AdjoinRoot.mk W.Polyn
   (algebraMap_smul W.CoordinateRing x y).symm
 #align weierstrass_curve.coordinate_ring.smul WeierstrassCurve.CoordinateRing.smul
 
-theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.Polynomial x = 0) :
+theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.Polynomial Y = 0) :
     p = 0 ∧ q = 0 :=
   by
   have h := fintype.linear_independent_iff.mp (coordinate_ring.basis W).LinearIndependent ![p, q]
@@ -719,7 +725,7 @@ theorem smul_basis_eq_zero {p q : R[X]} (hpq : p • 1 + q • AdjoinRoot.mk W.P
 #align weierstrass_curve.coordinate_ring.smul_basis_eq_zero WeierstrassCurve.CoordinateRing.smul_basis_eq_zero
 
 theorem exists_smul_basis_eq (x : W.CoordinateRing) :
-    ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial x = x :=
+    ∃ p q : R[X], p • 1 + q • AdjoinRoot.mk W.Polynomial Y = x :=
   by
   have h := (coordinate_ring.basis W).sum_equivFun x
   erw [Fin.sum_univ_succ, Fin.sum_univ_one, basis_zero, basis_one] at h
@@ -729,22 +735,22 @@ theorem exists_smul_basis_eq (x : W.CoordinateRing) :
 variable (W)
 
 theorem smul_basis_mul_c (p q : R[X]) :
-    (p • 1 + q • AdjoinRoot.mk W.Polynomial x) * AdjoinRoot.mk W.Polynomial (c y) =
-      (p * y) • 1 + (q * y) • AdjoinRoot.mk W.Polynomial x :=
+    (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) * AdjoinRoot.mk W.Polynomial (c y) =
+      (p * y) • 1 + (q * y) • AdjoinRoot.mk W.Polynomial Y :=
   by
   simp only [smul, map_mul]
   ring1
 #align weierstrass_curve.coordinate_ring.smul_basis_mul_C WeierstrassCurve.CoordinateRing.smul_basis_mul_c
 
 theorem smul_basis_mul_Y (p q : R[X]) :
-    (p • 1 + q • AdjoinRoot.mk W.Polynomial x) * AdjoinRoot.mk W.Polynomial x =
+    (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) * AdjoinRoot.mk W.Polynomial Y =
       (q * (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)) • 1 +
-        (p - q * (c W.a₁ * x + c W.a₃)) • AdjoinRoot.mk W.Polynomial x :=
+        (p - q * (c W.a₁ * x + c W.a₃)) • AdjoinRoot.mk W.Polynomial Y :=
   by
   have Y_sq :
-    AdjoinRoot.mk W.polynomial X ^ 2 =
+    AdjoinRoot.mk W.polynomial Y ^ 2 =
       AdjoinRoot.mk W.polynomial
-        (C (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆) - C (C W.a₁ * X + C W.a₃) * X) :=
+        (C (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆) - C (C W.a₁ * X + C W.a₃) * Y) :=
     adjoin_root.mk_eq_mk.mpr
       ⟨1, by
         simp only [WeierstrassCurve.polynomial]
@@ -757,7 +763,7 @@ theorem smul_basis_mul_Y (p q : R[X]) :
 
 
 theorem norm_smul_basis (p q : R[X]) :
-    Algebra.norm R[X] (p • 1 + q • AdjoinRoot.mk W.Polynomial x) =
+    Algebra.norm R[X] (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
       p ^ 2 - p * q * (c W.a₁ * x + c W.a₃) -
         q ^ 2 * (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆) :=
   by
@@ -770,7 +776,7 @@ theorem norm_smul_basis (p q : R[X]) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.372359189.C_simp -/
 theorem coe_norm_smul_basis (p q : R[X]) :
-    ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial x) =
+    ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
       AdjoinRoot.mk W.Polynomial ((c p + c q * x) * (c p + c q * (-x - c (c W.a₁ * x + c W.a₃)))) :=
   AdjoinRoot.mk_eq_mk.mpr
     ⟨c q ^ 2, by
@@ -781,7 +787,7 @@ theorem coe_norm_smul_basis (p q : R[X]) :
 #align weierstrass_curve.coordinate_ring.coe_norm_smul_basis WeierstrassCurve.CoordinateRing.coe_norm_smul_basis
 
 theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
-    (Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial x).degree =
+    (Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y).degree =
       max (2 • p.degree) (2 • q.degree + 3) :=
   by
   have hdp : (p ^ 2).degree = 2 • p.degree := degree_pow p 2

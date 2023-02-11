@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,6 +417,24 @@ theorem set_integral_eq_of_subset_of_forall_diff_eq_zero (ht : MeasurableSet t) 
   set_integral_eq_of_subset_of_ae_diff_eq_zero ht.NullMeasurableSet hts
     (eventually_of_forall fun x hx => h't x hx)
 #align measure_theory.set_integral_eq_of_subset_of_forall_diff_eq_zero MeasureTheory.set_integral_eq_of_subset_of_forall_diff_eq_zero
+
+/-- If a function vanishes almost everywhere on `sᶜ`, then its integral on `s`
+coincides with its integral on the whole space. -/
+theorem set_integral_eq_integral_of_ae_compl_eq_zero (h : ∀ᵐ x ∂μ, x ∉ s → f x = 0) :
+    (∫ x in s, f x ∂μ) = ∫ x, f x ∂μ :=
+  by
+  conv_rhs => rw [← integral_univ]
+  symm
+  apply set_integral_eq_of_subset_of_ae_diff_eq_zero null_measurable_set_univ (subset_univ _)
+  filter_upwards [h]with x hx h'x using hx h'x.2
+#align measure_theory.set_integral_eq_integral_of_ae_compl_eq_zero MeasureTheory.set_integral_eq_integral_of_ae_compl_eq_zero
+
+/-- If a function vanishes on `sᶜ`, then its integral on `s` coincides with its integral on the
+whole space. -/
+theorem set_integral_eq_integral_of_forall_compl_eq_zero (h : ∀ x, x ∉ s → f x = 0) :
+    (∫ x in s, f x ∂μ) = ∫ x, f x ∂μ :=
+  set_integral_eq_integral_of_ae_compl_eq_zero (eventually_of_forall h)
+#align measure_theory.set_integral_eq_integral_of_forall_compl_eq_zero MeasureTheory.set_integral_eq_integral_of_forall_compl_eq_zero
 
 theorem set_integral_neg_eq_set_integral_nonpos [LinearOrder E] {f : α → E}
     (hf : AeStronglyMeasurable f μ) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.category.Top.opens
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,7 +117,7 @@ realising each open set as a topological space itself.
 -/
 def toTop (X : TopCat.{u}) : Opens X ⥤ TopCat
     where
-  obj U := ⟨U.val, inferInstance⟩
+  obj U := ⟨U, inferInstance⟩
   map U V i :=
     ⟨fun x => ⟨x.1, i.le x.2⟩,
       (Embedding.continuous_iff embedding_subtype_val).2 continuous_induced_dom⟩
@@ -131,7 +131,7 @@ theorem toTop_map (X : TopCat.{u}) {U V : Opens X} {f : U ⟶ V} {x} {h} :
 
 /-- The inclusion map from an open subset to the whole space, as a morphism in `Top`.
 -/
-@[simps]
+@[simps (config := { fullyApplied := false })]
 def inclusion {X : TopCat.{u}} (U : Opens X) : (toTop X).obj U ⟶ X
     where
   toFun := _
@@ -154,7 +154,7 @@ def inclusionTopIso (X : TopCat.{u}) : (toTop X).obj ⊤ ≅ X
     given by taking preimages under f. -/
 def map (f : X ⟶ Y) : Opens Y ⥤ Opens X
     where
-  obj U := ⟨f ⁻¹' U.val, U.property.preimage f.Continuous⟩
+  obj U := ⟨f ⁻¹' U, U.IsOpen.preimage f.Continuous⟩
   map U V i := ⟨⟨fun x h => i.le h⟩⟩
 #align topological_space.opens.map TopologicalSpace.Opens.map
 
@@ -227,7 +227,7 @@ theorem op_map_comp_obj (f : X ⟶ Y) (g : Y ⟶ Z) (U) :
 theorem map_supᵢ (f : X ⟶ Y) {ι : Type _} (U : ι → Opens Y) :
     (map f).obj (supᵢ U) = supᵢ ((map f).obj ∘ U) :=
   by
-  apply Subtype.eq; rw [supr_def, supr_def, map_obj]
+  ext1; rw [supr_def, supr_def, map_obj]
   dsimp; rw [Set.preimage_unionᵢ]; rfl
 #align topological_space.opens.map_supr TopologicalSpace.Opens.map_supᵢ
 
@@ -308,7 +308,10 @@ theorem mapIso_inv_app (f g : X ⟶ Y) (h : f = g) (U : Opens Y) :
   rfl
 #align topological_space.opens.map_iso_inv_app TopologicalSpace.Opens.mapIso_inv_app
 
-/-- A homeomorphism of spaces gives an equivalence of categories of open sets. -/
+/-- A homeomorphism of spaces gives an equivalence of categories of open sets.
+
+TODO: define `order_iso.equivalence`, use it.
+-/
 @[simps]
 def mapMapIso {X Y : TopCat.{u}} (H : X ≅ Y) : Opens Y ≌ Opens X
     where

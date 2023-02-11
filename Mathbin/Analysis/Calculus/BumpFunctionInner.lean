@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_inner
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -574,11 +574,11 @@ theorem nonneg_normed (x : E) : 0 ≤ f.normed μ x :=
 #align cont_diff_bump.nonneg_normed ContDiffBump.nonneg_normed
 
 theorem contDiff_normed {n : ℕ∞} : ContDiff ℝ n (f.normed μ) :=
-  f.ContDiff.div_const
+  f.ContDiff.div_const _
 #align cont_diff_bump.cont_diff_normed ContDiffBump.contDiff_normed
 
 theorem continuous_normed : Continuous (f.normed μ) :=
-  f.Continuous.div_const
+  f.Continuous.div_const _
 #align cont_diff_bump.continuous_normed ContDiffBump.continuous_normed
 
 theorem normed_sub (x : E) : f.normed μ (c - x) = f.normed μ (c + x) := by

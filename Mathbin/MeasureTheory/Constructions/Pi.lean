@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.pi
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Constructions.Prod
 import Mathbin.MeasureTheory.Group.Measure
+import Mathbin.Topology.Constructions
 
 /-!
 # Product measures
@@ -646,6 +647,38 @@ instance pi.isInvInvariant [∀ i, Group (α i)] [∀ i, HasMeasurableInv (α i)
     measure_preimage_inv]
 #align measure_theory.measure.pi.is_inv_invariant MeasureTheory.Measure.pi.isInvInvariant
 #align measure_theory.measure.pi.is_neg_invariant MeasureTheory.Measure.pi.is_neg_invariant
+
+instance pi.isOpenPosMeasure [∀ i, TopologicalSpace (α i)] [∀ i, IsOpenPosMeasure (μ i)] :
+    IsOpenPosMeasure (MeasureTheory.Measure.pi μ) :=
+  by
+  constructor
+  rintro U U_open ⟨a, ha⟩
+  obtain ⟨s, ⟨hs, hsU⟩⟩ := isOpen_pi_iff'.1 U_open a ha
+  refine' ne_of_gt (lt_of_lt_of_le _ (measure_mono hsU))
+  simp only [pi_pi]
+  rw [CanonicallyOrderedCommSemiring.prod_pos]
+  intro i _
+  apply (hs i).1.measure_pos (μ i) ⟨a i, (hs i).2⟩
+#align measure_theory.measure.pi.is_open_pos_measure MeasureTheory.Measure.pi.isOpenPosMeasure
+
+instance pi.isFiniteMeasureOnCompacts [∀ i, TopologicalSpace (α i)]
+    [∀ i, IsFiniteMeasureOnCompacts (μ i)] :
+    IsFiniteMeasureOnCompacts (MeasureTheory.Measure.pi μ) :=
+  by
+  constructor
+  intro K hK
+  suffices measure.pi μ (set.univ.pi fun j => Function.eval j '' K) < ⊤ by
+    exact lt_of_le_of_lt (measure_mono (univ.subset_pi_eval_image K)) this
+  rw [measure.pi_pi]
+  refine' WithTop.prod_lt_top _
+  exact fun i _ => ne_of_lt (IsCompact.measure_lt_top (IsCompact.image hK (continuous_apply i)))
+#align measure_theory.measure.pi.is_finite_measure_on_compacts MeasureTheory.Measure.pi.isFiniteMeasureOnCompacts
+
+@[to_additive]
+instance pi.isHaarMeasure [∀ i, Group (α i)] [∀ i, TopologicalSpace (α i)]
+    [∀ i, IsHaarMeasure (μ i)] [∀ i, HasMeasurableMul (α i)] : IsHaarMeasure (Measure.pi μ) where
+#align measure_theory.measure.pi.is_haar_measure MeasureTheory.Measure.pi.isHaarMeasure
+#align measure_theory.measure.pi.is_add_haar_measure MeasureTheory.Measure.pi.is_add_haar_measure
 
 end Measure
 

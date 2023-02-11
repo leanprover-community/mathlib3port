@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2064,6 +2064,24 @@ theorem Continuous.bounded_above_of_compact_support (hf : Continuous f) (h : Has
 #align continuous.bounded_above_of_compact_support Continuous.bounded_above_of_compact_support
 
 end NormedAddGroup
+
+section NormedAddGroupSource
+
+variable [NormedAddGroup α] {f : α → E}
+
+@[to_additive]
+theorem HasCompactMulSupport.exists_pos_le_norm [One E] (hf : HasCompactMulSupport f) :
+    ∃ R : ℝ, 0 < R ∧ ∀ x : α, R ≤ ‖x‖ → f x = 1 :=
+  by
+  obtain ⟨K, ⟨hK1, hK2⟩⟩ := exists_compact_iff_has_compact_mul_support.mpr hf
+  obtain ⟨S, hS, hS'⟩ := hK1.bounded.exists_pos_norm_le
+  refine' ⟨S + 1, by positivity, fun x hx => hK2 x ((mt <| hS' x) _)⟩
+  contrapose! hx
+  exact lt_add_of_le_of_pos hx zero_lt_one
+#align has_compact_mul_support.exists_pos_le_norm HasCompactMulSupport.exists_pos_le_norm
+#align has_compact_support.exists_pos_le_norm HasCompactSupport.exists_pos_le_norm
+
+end NormedAddGroupSource
 
 /-! ### `ulift` -/
 

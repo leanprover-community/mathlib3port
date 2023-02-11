@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -416,16 +416,16 @@ theorem nonempty_interᵢ_clPrehaar (K₀ : PositiveCompacts G) :
     intro K
     apply is_compact_Icc
   refine' this.inter_Inter_nonempty (cl_prehaar K₀) (fun s => isClosed_closure) fun t => _
-  let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).1
+  let V₀ := ⋂ V ∈ t, (V : open_nhds_of 1).carrier
   have h1V₀ : IsOpen V₀ := by
     apply isOpen_binterᵢ
     apply Finset.finite_toSet
-    rintro ⟨V, hV⟩ h2V
-    exact hV.1
+    rintro ⟨⟨V, hV₁⟩, hV₂⟩ h2V
+    exact hV₁
   have h2V₀ : (1 : G) ∈ V₀ := by
     simp only [mem_Inter]
-    rintro ⟨V, hV⟩ h2V
-    exact hV.2
+    rintro ⟨⟨V, hV₁⟩, hV₂⟩ h2V
+    exact hV₂
   refine' ⟨prehaar K₀ V₀, _⟩
   constructor
   · apply prehaar_mem_haar_product K₀
@@ -488,7 +488,7 @@ theorem chaar_empty (K₀ : PositiveCompacts G) : chaar K₀ ⊥ = 0 :=
   let eval : (compacts G → ℝ) → ℝ := fun f => f ⊥
   have : Continuous eval := continuous_apply ⊥
   show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
-  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.univ, isOpen_univ, mem_univ _⟩)
+  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⊤)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     apply prehaar_empty
@@ -503,7 +503,7 @@ theorem chaar_self (K₀ : PositiveCompacts G) : chaar K₀ K₀.toCompacts = 1 
   let eval : (compacts G → ℝ) → ℝ := fun f => f K₀.to_compacts
   have : Continuous eval := continuous_apply _
   show chaar K₀ ∈ eval ⁻¹' {(1 : ℝ)}
-  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.univ, isOpen_univ, mem_univ _⟩)
+  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⊤)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     apply prehaar_self
@@ -521,7 +521,7 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
   let eval : (compacts G → ℝ) → ℝ := fun f => f K₂ - f K₁
   have : Continuous eval := (continuous_apply K₂).sub (continuous_apply K₁)
   rw [← sub_nonneg]; show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
-  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.univ, isOpen_univ, mem_univ _⟩)
+  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⊤)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     simp only [mem_preimage, mem_Ici, eval, sub_nonneg]
@@ -542,7 +542,7 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
     ((@continuous_add ℝ _ _ _).comp ((continuous_apply K₁).prod_mk (continuous_apply K₂))).sub
       (continuous_apply (K₁ ⊔ K₂))
   rw [← sub_nonneg]; show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
-  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.univ, isOpen_univ, mem_univ _⟩)
+  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⊤)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     simp only [mem_preimage, mem_Ici, eval, sub_nonneg]
@@ -574,7 +574,7 @@ theorem chaar_sup_eq [T2Space G] {K₀ : PositiveCompacts G} {K₁ K₂ : Compac
   apply
     mem_of_subset_of_mem _
       (chaar_mem_cl_prehaar K₀
-        ⟨V⁻¹, (IsOpen.inter h2V₁ h2V₂).Preimage continuous_inv, by
+        ⟨⟨V⁻¹, (h2V₁.inter h2V₂).Preimage continuous_inv⟩, by
           simp only [mem_inv, inv_one, h3V₁, h3V₂, V, mem_inter_iff, true_and_iff]⟩)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
@@ -600,7 +600,7 @@ theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compact
   let eval : (compacts G → ℝ) → ℝ := fun f => f (K.map _ <| continuous_mul_left g) - f K
   have : Continuous eval := (continuous_apply (K.map _ _)).sub (continuous_apply K)
   rw [← sub_eq_zero]; show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
-  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⟨Set.univ, isOpen_univ, mem_univ _⟩)
+  apply mem_of_subset_of_mem _ (chaar_mem_cl_prehaar K₀ ⊤)
   unfold cl_prehaar; rw [IsClosed.closure_subset_iff]
   · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
     simp only [mem_singleton_iff, mem_preimage, eval, sub_eq_zero]

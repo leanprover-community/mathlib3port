@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Quaternion
 import Mathbin.Analysis.InnerProductSpace.Basic
 import Mathbin.Analysis.InnerProductSpace.PiL2
+import Mathbin.Topology.Algebra.Algebra
 
 /-!
 # Quaternions as a normed algebra
@@ -79,6 +80,16 @@ theorem nnnorm_coe (a : ℝ) : ‖(a : ℍ)‖₊ = ‖a‖₊ :=
   Subtype.ext <| norm_coe a
 #align quaternion.nnnorm_coe Quaternion.nnnorm_coe
 
+@[simp]
+theorem norm_conj (a : ℍ) : ‖conj a‖ = ‖a‖ := by
+  simp_rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_conj]
+#align quaternion.norm_conj Quaternion.norm_conj
+
+@[simp]
+theorem nnnorm_conj (a : ℍ) : ‖conj a‖₊ = ‖a‖₊ :=
+  Subtype.ext <| norm_conj a
+#align quaternion.nnnorm_conj Quaternion.nnnorm_conj
+
 noncomputable instance : NormedDivisionRing ℍ
     where
   dist_eq _ _ := rfl
@@ -91,6 +102,9 @@ instance : NormedAlgebra ℝ ℍ
     where
   norm_smul_le a x := (norm_smul a x).le
   toAlgebra := Quaternion.algebra
+
+instance : CstarRing ℍ
+    where norm_star_mul_self x := (norm_mul _ _).trans <| congr_arg (· * ‖x‖) (norm_conj x)
 
 instance : Coe ℂ ℍ :=
   ⟨fun z => ⟨z.re, z.im, 0, 0⟩⟩
@@ -178,6 +192,22 @@ noncomputable def linearIsometryEquivTuple : ℍ ≃ₗᵢ[ℝ] EuclideanSpace �
     invFun := fun a => ⟨a 0, a 1, a 2, a 3⟩
     norm_map' := norm_piLp_equiv_symm_equivTuple }
 #align quaternion.linear_isometry_equiv_tuple Quaternion.linearIsometryEquivTuple
+
+@[continuity]
+theorem continuous_conj : Continuous (conj : ℍ → ℍ) :=
+  continuous_star
+#align quaternion.continuous_conj Quaternion.continuous_conj
+
+@[continuity]
+theorem continuous_coe : Continuous (coe : ℝ → ℍ) :=
+  continuous_algebraMap ℝ ℍ
+#align quaternion.continuous_coe Quaternion.continuous_coe
+
+@[continuity]
+theorem continuous_normSq : Continuous (normSq : ℍ → ℝ) := by
+  simpa [← norm_sq_eq_norm_sq] using
+    (continuous_norm.mul continuous_norm : Continuous fun q : ℍ => ‖q‖ * ‖q‖)
+#align quaternion.continuous_norm_sq Quaternion.continuous_normSq
 
 @[continuity]
 theorem continuous_re : Continuous fun q : ℍ => q.re :=

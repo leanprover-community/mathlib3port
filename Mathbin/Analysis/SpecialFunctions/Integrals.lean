@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.integrals
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -89,7 +89,7 @@ theorem intervalIntegrableRpow' {r : ℝ} (h : -1 < r) :
     apply integrable_on_deriv_of_nonneg hc _ hderiv
     · intro x hx
       apply rpow_nonneg_of_nonneg hx.1.le
-    · refine' (continuous_on_id.rpow_const _).div_const
+    · refine' (continuous_on_id.rpow_const _).div_const _
       intro x hx
       right
       linarith
@@ -361,7 +361,7 @@ theorem integral_cpow {r : ℂ} (h : -1 < r.re ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a
     ring
   intro c
   apply integral_eq_sub_of_has_deriv_right
-  · refine' (Complex.continuous_of_real_cpow_const _).div_const.ContinuousOn
+  · refine' ((Complex.continuous_of_real_cpow_const _).div_const _).ContinuousOn
     rwa [Complex.add_re, Complex.one_re, ← neg_lt_iff_pos_add]
   · refine' fun x hx => (hasDerivAt_of_real_cpow _ _).HasDerivWithinAt
     · rcases le_total c 0 with (hc | hc)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ivan Sadofschi Costa
 
 ! This file was ported from Lean 3 source module topology.continuous_function.t0_sierpinski
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,7 +49,7 @@ open subset `u` of `X`). The `u` coordinate of `product_of_mem_opens x` is given
 def productOfMemOpens : C(X, Opens X → Prop)
     where
   toFun x u := x ∈ u
-  continuous_toFun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.property
+  continuous_toFun := continuous_pi_iff.2 fun u => continuous_Prop.2 u.IsOpen
 #align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens
 
 theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=

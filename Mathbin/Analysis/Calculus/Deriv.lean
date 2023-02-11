@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.deriv
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1928,27 +1928,27 @@ theorem HasStrictDerivAt.div_const (hc : HasStrictDerivAt c c' x) (d : 𝕜') :
   simpa only [div_eq_mul_inv] using hc.mul_const d⁻¹
 #align has_strict_deriv_at.div_const HasStrictDerivAt.div_const
 
-theorem DifferentiableWithinAt.div_const (hc : DifferentiableWithinAt 𝕜 c s x) {d : 𝕜'} :
+theorem DifferentiableWithinAt.div_const (hc : DifferentiableWithinAt 𝕜 c s x) (d : 𝕜') :
     DifferentiableWithinAt 𝕜 (fun x => c x / d) s x :=
   (hc.HasDerivWithinAt.div_const _).DifferentiableWithinAt
 #align differentiable_within_at.div_const DifferentiableWithinAt.div_const
 
 @[simp]
-theorem DifferentiableAt.div_const (hc : DifferentiableAt 𝕜 c x) {d : 𝕜'} :
+theorem DifferentiableAt.div_const (hc : DifferentiableAt 𝕜 c x) (d : 𝕜') :
     DifferentiableAt 𝕜 (fun x => c x / d) x :=
   (hc.HasDerivAt.div_const _).DifferentiableAt
 #align differentiable_at.div_const DifferentiableAt.div_const
 
-theorem DifferentiableOn.div_const (hc : DifferentiableOn 𝕜 c s) {d : 𝕜'} :
-    DifferentiableOn 𝕜 (fun x => c x / d) s := fun x hx => (hc x hx).div_const
+theorem DifferentiableOn.div_const (hc : DifferentiableOn 𝕜 c s) (d : 𝕜') :
+    DifferentiableOn 𝕜 (fun x => c x / d) s := fun x hx => (hc x hx).div_const d
 #align differentiable_on.div_const DifferentiableOn.div_const
 
 @[simp]
-theorem Differentiable.div_const (hc : Differentiable 𝕜 c) {d : 𝕜'} :
-    Differentiable 𝕜 fun x => c x / d := fun x => (hc x).div_const
+theorem Differentiable.div_const (hc : Differentiable 𝕜 c) (d : 𝕜') :
+    Differentiable 𝕜 fun x => c x / d := fun x => (hc x).div_const d
 #align differentiable.div_const Differentiable.div_const
 
-theorem derivWithin_div_const (hc : DifferentiableWithinAt 𝕜 c s x) {d : 𝕜'}
+theorem derivWithin_div_const (hc : DifferentiableWithinAt 𝕜 c s x) (d : 𝕜')
     (hxs : UniqueDiffWithinAt 𝕜 s x) : derivWithin (fun x => c x / d) s x = derivWithin c s x / d :=
   by simp [div_eq_inv_mul, derivWithin_const_mul, hc, hxs]
 #align deriv_within_div_const derivWithin_div_const

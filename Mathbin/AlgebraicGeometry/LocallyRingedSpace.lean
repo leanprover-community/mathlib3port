@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -298,11 +298,9 @@ theorem preimage_basicOpen {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens Y
 theorem basicOpen_zero (X : LocallyRingedSpace) (U : Opens X.carrier) :
     X.toRingedSpace.basicOpen (0 : X.Presheaf.obj <| op U) = ⊥ :=
   by
-  ext
-  simp only [Set.mem_empty_iff_false, TopologicalSpace.Opens.mem_coe, opens.coe_bot, iff_false_iff,
-    RingedSpace.basic_open, isUnit_zero_iff, Set.mem_setOf_eq, map_zero]
-  rintro ⟨⟨y, _⟩, h, e⟩
-  exact zero_ne_one' (X.presheaf.stalk y) h
+  simp only [RingedSpace.basic_open, isUnit_zero_iff, map_zero, zero_ne_one' (X.presheaf.stalk _),
+    Set.setOf_false, Set.image_empty]
+  rfl
 #align algebraic_geometry.LocallyRingedSpace.basic_open_zero AlgebraicGeometry.LocallyRingedSpace.basicOpen_zero
 
 instance component_nontrivial (X : LocallyRingedSpace) (U : Opens X.carrier) [hU : Nonempty U] :

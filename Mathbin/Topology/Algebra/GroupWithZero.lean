@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.group_with_zero
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,30 +56,30 @@ section DivConst
 variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousMul G₀] {f : α → G₀} {s : Set α}
   {l : Filter α}
 
-theorem Filter.Tendsto.div_const {x y : G₀} (hf : Tendsto f l (𝓝 x)) :
+theorem Filter.Tendsto.div_const {x : G₀} (hf : Tendsto f l (𝓝 x)) (y : G₀) :
     Tendsto (fun a => f a / y) l (𝓝 (x / y)) := by
   simpa only [div_eq_mul_inv] using hf.mul tendsto_const_nhds
 #align filter.tendsto.div_const Filter.Tendsto.div_const
 
 variable [TopologicalSpace α]
 
-theorem ContinuousAt.div_const {a : α} (hf : ContinuousAt f a) {y : G₀} :
+theorem ContinuousAt.div_const {a : α} (hf : ContinuousAt f a) (y : G₀) :
     ContinuousAt (fun x => f x / y) a := by
   simpa only [div_eq_mul_inv] using hf.mul continuousAt_const
 #align continuous_at.div_const ContinuousAt.div_const
 
-theorem ContinuousWithinAt.div_const {a} (hf : ContinuousWithinAt f s a) {y : G₀} :
+theorem ContinuousWithinAt.div_const {a} (hf : ContinuousWithinAt f s a) (y : G₀) :
     ContinuousWithinAt (fun x => f x / y) s a :=
-  hf.div_const
+  hf.div_const _
 #align continuous_within_at.div_const ContinuousWithinAt.div_const
 
-theorem ContinuousOn.div_const (hf : ContinuousOn f s) {y : G₀} :
+theorem ContinuousOn.div_const (hf : ContinuousOn f s) (y : G₀) :
     ContinuousOn (fun x => f x / y) s := by
   simpa only [div_eq_mul_inv] using hf.mul continuousOn_const
 #align continuous_on.div_const ContinuousOn.div_const
 
 @[continuity]
-theorem Continuous.div_const (hf : Continuous f) {y : G₀} : Continuous fun x => f x / y := by
+theorem Continuous.div_const (hf : Continuous f) (y : G₀) : Continuous fun x => f x / y := by
   simpa only [div_eq_mul_inv] using hf.mul continuous_const
 #align continuous.div_const Continuous.div_const
 

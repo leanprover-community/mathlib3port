@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.measure.content
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ theorem innerContent_of_isCompact {K : Set G} (h1K : IsCompact K) (h2K : IsOpen 
   le_antisymm (supᵢ₂_le fun K' hK' => μ.mono _ ⟨K, h1K⟩ hK') (μ.le_innerContent _ _ Subset.rfl)
 #align measure_theory.content.inner_content_of_is_compact MeasureTheory.Content.innerContent_of_isCompact
 
-theorem innerContent_empty : μ.innerContent ∅ = 0 :=
+theorem innerContent_bot : μ.innerContent ⊥ = 0 :=
   by
   refine' le_antisymm _ (zero_le _)
   rw [← μ.empty]
@@ -151,7 +151,7 @@ theorem innerContent_empty : μ.innerContent ∅ = 0 :=
     rw [subset_empty_iff.mp hK, compacts.coe_bot]
   rw [this]
   rfl
-#align measure_theory.content.inner_content_empty MeasureTheory.Content.innerContent_empty
+#align measure_theory.content.inner_content_bot MeasureTheory.Content.innerContent_bot
 
 /-- This is "unbundled", because that it required for the API of `induced_outer_measure`. -/
 theorem innerContent_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 : U ⊆ V) :
@@ -188,11 +188,10 @@ theorem innerContent_Sup_nat [T2Space G] (U : ℕ → Opens G) :
       rw [Finset.sup_insert, Finset.sum_insert hn]
       exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
   refine' supᵢ₂_le fun K hK => _
-  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).Prop) _
+  obtain ⟨t, ht⟩ := K.is_compact.elim_finite_subcover _ (fun i => (U i).IsOpen) _
   swap
-  · convert hK
-    rw [opens.supr_def, Subtype.coe_mk]
-  rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).Prop)
+  · rwa [← opens.coe_supr]
+  rcases K.is_compact.finite_compact_cover t (coe ∘ U) (fun i _ => (U _).IsOpen)
       (by simp only [ht]) with
     ⟨K', h1K', h2K', h3K'⟩
   let L : ℕ → compacts G := fun n => ⟨K' n, h1K' n⟩
@@ -240,7 +239,7 @@ theorem innerContent_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolog
     (hK : μ K ≠ 0) (U : Opens G) (hU : (U : Set G).Nonempty) : 0 < μ.innerContent U :=
   by
   have : (interior (U : Set G)).Nonempty
-  rwa [U.prop.interior_eq]
+  rwa [U.is_open.interior_eq]
   rcases compact_covered_by_mul_left_translates K.2 this with ⟨s, hs⟩
   suffices μ K ≤ s.card * μ.inner_content U by
     exact (ennreal.mul_pos_iff.mp <| hK.bot_lt.trans_le this).2
@@ -248,7 +247,7 @@ theorem innerContent_pos_of_is_mul_left_invariant [T2Space G] [Group G] [Topolog
     simpa only [opens.supr_def, opens.coe_comap, Subtype.coe_mk]
   refine' (μ.le_inner_content _ _ this).trans _
   refine'
-    (rel_supᵢ_sum μ.inner_content μ.inner_content_empty (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
+    (rel_supᵢ_sum μ.inner_content μ.inner_content_bot (· ≤ ·) μ.inner_content_Sup_nat _ _).trans _
   simp only [μ.is_mul_left_invariant_inner_content h3, Finset.sum_const, nsmul_eq_mul, le_refl]
 #align measure_theory.content.inner_content_pos_of_is_mul_left_invariant MeasureTheory.Content.innerContent_pos_of_is_mul_left_invariant
 #align measure_theory.content.inner_content_pos_of_is_add_left_invariant MeasureTheory.Content.inner_content_pos_of_is_add_left_invariant
@@ -262,7 +261,7 @@ section OuterMeasure
 
 /-- Extending a content on compact sets to an outer measure on all sets. -/
 protected def outerMeasure : OuterMeasure G :=
-  inducedOuterMeasure (fun U hU => μ.innerContent ⟨U, hU⟩) isOpen_empty μ.innerContent_empty
+  inducedOuterMeasure (fun U hU => μ.innerContent ⟨U, hU⟩) isOpen_empty μ.innerContent_bot
 #align measure_theory.content.outer_measure MeasureTheory.Content.outerMeasure
 
 variable [T2Space G]
@@ -348,7 +347,7 @@ theorem outerMeasure_caratheodory (A : Set G) :
     measurable_set[μ.OuterMeasure.caratheodory] A ↔
       ∀ U : Opens G, μ.OuterMeasure (U ∩ A) + μ.OuterMeasure (U \ A) ≤ μ.OuterMeasure U :=
   by
-  dsimp [opens]; rw [Subtype.forall]
+  rw [opens.forall]
   apply induced_outer_measure_caratheodory
   apply inner_content_Union_nat
   apply inner_content_mono'
@@ -376,7 +375,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
   intro U hU
   rw [μ.outer_measure_caratheodory]
   intro U'
-  rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (IsOpen.inter U'.prop hU)]
+  rw [μ.outer_measure_of_is_open ((U' : Set G) ∩ U) (U'.is_open.inter hU)]
   simp only [inner_content, supᵢ_subtype']
   rw [opens.coe_mk]
   haveI : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩

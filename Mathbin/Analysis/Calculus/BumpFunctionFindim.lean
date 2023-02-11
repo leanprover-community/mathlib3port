@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.bump_function_findim
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,7 +242,7 @@ theorem u_exists :
   exact A.exists_smooth_support_eq
   have B : ∀ x, f x ∈ Icc (0 : ℝ) 1 := fun x => f_range (mem_range_self x)
   refine' ⟨fun x => (f x + f (-x)) / 2, _, _, _, _⟩
-  · exact (f_smooth.add (f_smooth.comp contDiff_neg)).div_const
+  · exact (f_smooth.add (f_smooth.comp contDiff_neg)).div_const _
   · intro x
     constructor
     · linarith [(B x).1, (B (-x)).1]
@@ -587,7 +587,7 @@ instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
             dsimp only
             linarith
           · apply ContDiffOn.smul _ contDiffOn_snd
-            refine' (cont_diff_on_fst.add contDiffOn_const).div_const.inv _
+            refine' ((cont_diff_on_fst.add contDiffOn_const).div_const _).inv _
             rintro ⟨R, x⟩ ⟨hR : 1 < R, hx⟩
             apply ne_of_gt
             dsimp only

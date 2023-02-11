@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.locally_ringed_space.has_colimits
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,11 +226,10 @@ instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
     image_basic_open_image_preimage f g U s
   have hV' :
     V = ⟨(coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' V.1), hV.symm ▸ V.2⟩ :=
-    Subtype.eq hV.symm
-  have V_open : IsOpen ((coequalizer.π f.val g.val).base '' V.val) :=
+    SetLike.ext' hV.symm
+  have V_open : IsOpen ((coequalizer.π f.val g.val).base '' V.1) :=
     image_basic_open_image_open f g U s
-  have VleU :
-    (⟨(coequalizer.π f.val g.val).base '' V.val, V_open⟩ : TopologicalSpace.Opens _) ≤ U :=
+  have VleU : (⟨(coequalizer.π f.val g.val).base '' V.1, V_open⟩ : TopologicalSpace.Opens _) ≤ U :=
     set.image_subset_iff.mpr (Y.to_RingedSpace.basic_open_le _)
   have hxV : x ∈ V := ⟨⟨_, hU⟩, ha, rfl⟩
   erw [←

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.sites
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ theorem supᵢ_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendi
     intro f
     exact f.2.1.le
   intro x hxU
-  rw [opens.mem_coe, opens.mem_supr]
+  rw [opens.mem_supr]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU
   exact ⟨⟨W, ⟨iWU, hiWU⟩⟩, iVW.le hxV⟩
 #align Top.presheaf.covering_of_presieve.supr_eq_of_mem_grothendieck TopCat.Presheaf.coveringOfPresieve.supᵢ_eq_of_mem_grothendieck
@@ -202,12 +202,12 @@ variable {X : TopCat.{w}} {ι : Type _} {B : ι → Opens X}
 variable (F : X.Presheaf C) (F' : Sheaf C X) (h : Opens.IsBasis (Set.range B))
 
 /-- The empty component of a sheaf is terminal -/
-def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ∅)) :=
-  F.isTerminalOfBotCover ∅ (by tidy)
+def isTerminalOfEmpty (F : Sheaf C X) : Limits.IsTerminal (F.val.obj (op ⊥)) :=
+  F.isTerminalOfBotCover ⊥ (by tidy)
 #align Top.sheaf.is_terminal_of_empty TopCat.Sheaf.isTerminalOfEmpty
 
 /-- A variant of `is_terminal_of_empty` that is easier to `apply`. -/
-def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ∅) :
+def isTerminalOfEqEmpty (F : X.Sheaf C) {U : Opens X} (h : U = ⊥) :
     Limits.IsTerminal (F.val.obj (op U)) := by convert F.is_terminal_of_empty
 #align Top.sheaf.is_terminal_of_eq_empty TopCat.Sheaf.isTerminalOfEqEmpty
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -226,8 +226,8 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
       (D.f_open j i).openFunctor.obj
         ((Opens.map (𝖣.t j i).base).obj ((Opens.map (𝖣.f i j).base).obj U)) :=
   by
-  dsimp only [opens.map, IsOpenMap.functor]
-  congr 1
+  ext1
+  dsimp only [opens.map_coe, IsOpenMap.functor_obj_coe]
   rw [← show _ = (𝖣.ι i).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) i, ←
     show _ = (𝖣.ι j).base from 𝖣.ι_gluedIso_inv (PresheafedSpace.forget _) j, coe_comp, coe_comp,
     Set.image_comp, Set.preimage_comp, Set.preimage_image_eq]
@@ -315,8 +315,10 @@ def ιInvAppπApp {i : D.J} (U : Opens (D.U i).carrier) (j) :
   rcases j with (⟨j, k⟩ | j)
   · refine'
       D.opens_image_preimage_map i j U ≫ (D.f j k).c.app _ ≫ (D.V (j, k)).Presheaf.map (eq_to_hom _)
-    dsimp only [functor.op, opens.map, unop_op]
-    congr 2
+    rw [functor.op_obj]
+    congr 1
+    ext1
+    dsimp only [functor.op_obj, opens.map_coe, unop_op, IsOpenMap.functor_obj_coe]
     rw [Set.preimage_preimage]
     change (D.f j k ≫ 𝖣.ι j).base ⁻¹' _ = _
     congr 3

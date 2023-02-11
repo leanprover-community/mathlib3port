@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.open_immersion
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -181,17 +181,16 @@ instance comp {Z : PresheafedSpace C} (f : X ⟶ Y) [hf : is_open_immersion f] (
     swap
     · have : (opens.map g.base).obj (h.functor.obj U) = hf.open_functor.obj U :=
         by
-        dsimp only [opens.map, IsOpenMap.functor, PresheafedSpace.comp_base]
-        congr 1
+        ext1
+        dsimp only [opens.map_coe, IsOpenMap.functor_obj_coe, comp_base]
         rw [coe_comp, ← Set.image_image, Set.preimage_image_eq _ hg.base_open.inj]
       rw [this]
       infer_instance
     · have : h.functor.obj U = hg.open_functor.obj (hf.open_functor.obj U) :=
         by
-        dsimp only [IsOpenMap.functor]
-        congr 1
+        ext1
+        dsimp only [IsOpenMap.functor_obj_coe]
         rw [comp_base, coe_comp, ← Set.image_image]
-        congr
       rw [this]
       infer_instance
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.comp AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.comp
@@ -257,9 +256,9 @@ theorem app_inv_app' (U : Opens Y) (hU : (U : Set Y) ⊆ Set.range f.base) :
       Y.Presheaf.map
         (eqToHom
             (by
-              apply LE.le.antisymm
+              apply le_antisymm
               · exact Set.image_preimage_subset f.base U.1
-              · change U ⊆ _
+              · rw [← SetLike.coe_subset_coe]
                 refine' LE.le.trans_eq _ (@Set.image_preimage_eq_inter_range _ _ f.base U.1).symm
                 exact set.subset_inter_iff.mpr ⟨fun _ h => h, hU⟩)).op :=
   by
@@ -288,11 +287,8 @@ instance ofRestrict {X : TopCat} (Y : PresheafedSpace C) {f : X ⟶ Y.carrier}
     dsimp
     have : (opens.map f).obj (hf.is_open_map.functor.obj U) = U :=
       by
-      cases U
-      dsimp only [opens.map, IsOpenMap.functor]
-      congr 1
-      rw [Set.preimage_image_eq _ hf.inj]
-      rfl
+      ext1
+      exact Set.preimage_image_eq _ hf.inj
     convert show is_iso (Y.presheaf.map (𝟙 _)) from inferInstance
     · apply Subsingleton.helim
       rw [this]
@@ -432,8 +428,7 @@ def pullbackConeOfLeftLift : s.x ⟶ (pullbackConeOfLeft f g).x
                   rw [coe_comp]
                   erw [← Set.preimage_preimage]
                 erw [Set.preimage_image_eq _
-                    (TopCat.snd_openEmbedding_of_left_openEmbedding hf.base_open g.base).inj]
-                simp))
+                    (TopCat.snd_openEmbedding_of_left_openEmbedding hf.base_open g.base).inj]))
       naturality' := fun U V i => by
         erw [s.snd.c.naturality_assoc]
         rw [category.assoc]
@@ -911,7 +906,7 @@ theorem image_preimage_is_empty (j : Discrete ι) (h : i ≠ j) (U : Opens (F.ob
     (Opens.map (colimit.ι (F ⋙ SheafedSpace.forgetToPresheafedSpace) j).base).obj
         ((Opens.map (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv.base).obj
           ((sigma_ι_openEmbedding F i).IsOpenMap.Functor.obj U)) =
-      ∅ :=
+      ⊥ :=
   by
   ext
   apply iff_false_intro
@@ -1807,7 +1802,7 @@ theorem range_pullback_to_base_of_left :
       Set.range f.1.base ∩ Set.range g.1.base :=
   by
   rw [pullback.condition, Scheme.comp_val_base, coe_comp, Set.range_comp,
-    range_pullback_snd_of_left, opens.map_obj, Subtype.coe_mk, Set.image_preimage_eq_inter_range,
+    range_pullback_snd_of_left, opens.map_obj, opens.coe_mk, Set.image_preimage_eq_inter_range,
     Set.inter_comm]
 #align algebraic_geometry.is_open_immersion.range_pullback_to_base_of_left AlgebraicGeometry.IsOpenImmersion.range_pullback_to_base_of_left
 
@@ -1816,7 +1811,7 @@ theorem range_pullback_to_base_of_right :
       Set.range g.1.base ∩ Set.range f.1.base :=
   by
   rw [Scheme.comp_val_base, coe_comp, Set.range_comp, range_pullback_fst_of_right, opens.map_obj,
-    Subtype.coe_mk, Set.image_preimage_eq_inter_range, Set.inter_comm]
+    opens.coe_mk, Set.image_preimage_eq_inter_range, Set.inter_comm]
 #align algebraic_geometry.is_open_immersion.range_pullback_to_base_of_right AlgebraicGeometry.IsOpenImmersion.range_pullback_to_base_of_right
 
 /-- The universal property of open immersions:
@@ -1981,9 +1976,8 @@ theorem Scheme.restrictFunctor_map_app_aux {U V : Opens X.carrier} (i : U ⟶ V)
     U.OpenEmbedding.IsOpenMap.Functor.obj ((Opens.map (X.restrictFunctor.map i).1.val.base).obj W) ≤
       V.OpenEmbedding.IsOpenMap.Functor.obj W :=
   by
-  simp only [Set.image_congr, Subtype.mk_le_mk, IsOpenMap.functor, Set.image_subset_iff,
-    Scheme.restrict_functor_map_base, opens.map, Subtype.coe_mk, opens.inclusion_apply,
-    Set.le_eq_subset]
+  simp only [← SetLike.coe_subset_coe, IsOpenMap.functor_obj_coe, Set.image_subset_iff,
+    Scheme.restrict_functor_map_base, opens.map_coe, opens.inclusion_apply]
   rintro _ h
   exact ⟨_, h, rfl⟩
 #align algebraic_geometry.Scheme.restrict_functor_map_app_aux AlgebraicGeometry.Scheme.restrictFunctor_map_app_aux

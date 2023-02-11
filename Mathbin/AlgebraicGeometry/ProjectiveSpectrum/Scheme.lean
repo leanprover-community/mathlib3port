@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.scheme
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -293,7 +293,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     ext1 y
     constructor <;> intro hy
     · refine' ⟨y.2, _⟩
-      rw [Set.mem_preimage, opens.mem_coe, PrimeSpectrum.mem_basicOpen] at hy
+      rw [Set.mem_preimage, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen] at hy
       rw [ProjectiveSpectrum.mem_coe_basicOpen]
       intro a_mem_y
       apply hy
@@ -309,7 +309,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
     · change y.1 ∈ _ at hy
       rcases hy with ⟨hy1, hy2⟩
       rw [ProjectiveSpectrum.mem_coe_basicOpen] at hy1 hy2
-      rw [Set.mem_preimage, to_fun, opens.mem_coe, PrimeSpectrum.mem_basicOpen]
+      rw [Set.mem_preimage, to_fun, SetLike.mem_coe, PrimeSpectrum.mem_basicOpen]
       intro rid
       dsimp at rid
       rcases mem_carrier.clear_denominator 𝒜 _ rid with ⟨c, N, acd, eq1⟩

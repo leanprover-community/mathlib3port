@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_compact
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,23 +80,18 @@ theorem isCompact_open_iff_eq_finset_affine_union {X : Scheme} (U : Set X.carrie
     IsCompact U ∧ IsOpen U ↔
       ∃ s : Set X.affineOpens, s.Finite ∧ U = ⋃ (i : X.affineOpens) (h : i ∈ s), i :=
   by
-  apply
-    opens.is_compact_open_iff_eq_finite_Union_of_is_basis (coe : X.affine_opens → opens X.carrier)
+  apply opens.is_basis.is_compact_open_iff_eq_finite_Union (coe : X.affine_opens → opens X.carrier)
   · rw [Subtype.range_coe]
     exact is_basis_affine_open X
-  · intro i
-    exact i.2.IsCompact
+  · exact fun i => i.2.IsCompact
 #align algebraic_geometry.is_compact_open_iff_eq_finset_affine_union AlgebraicGeometry.isCompact_open_iff_eq_finset_affine_union
 
 theorem isCompact_open_iff_eq_basicOpen_union {X : Scheme} [IsAffine X] (U : Set X.carrier) :
     IsCompact U ∧ IsOpen U ↔
       ∃ s : Set (X.Presheaf.obj (op ⊤)),
         s.Finite ∧ U = ⋃ (i : X.Presheaf.obj (op ⊤)) (h : i ∈ s), X.basicOpen i :=
-  by
-  apply opens.is_compact_open_iff_eq_finite_Union_of_is_basis
-  · exact is_basis_basic_open X
-  · intro i
-    exact ((top_is_affine_open _).basicOpen_is_affine _).IsCompact
+  (isBasis_basicOpen X).isCompact_open_iff_eq_finite_unionᵢ _
+    (fun i => ((top_isAffineOpen _).basicOpen_is_affine _).IsCompact) _
 #align algebraic_geometry.is_compact_open_iff_eq_basic_open_union AlgebraicGeometry.isCompact_open_iff_eq_basicOpen_union
 
 theorem quasiCompact_iff_forall_affine :
@@ -104,7 +99,7 @@ theorem quasiCompact_iff_forall_affine :
       ∀ U : Opens Y.carrier, IsAffineOpen U → IsCompact (f.1.base ⁻¹' (U : Set Y.carrier)) :=
   by
   rw [quasi_compact_iff]
-  refine' ⟨fun H U hU => H U U.Prop hU.IsCompact, _⟩
+  refine' ⟨fun H U hU => H U U.IsOpen hU.IsCompact, _⟩
   intro H U hU hU'
   obtain ⟨S, hS, rfl⟩ := (is_compact_open_iff_eq_finset_affine_union U).mp ⟨hU', hU⟩
   simp only [Set.preimage_unionᵢ, Subtype.val_eq_coe]
@@ -140,7 +135,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
     (f : X.Presheaf.obj (op U)) : IsCompact (X.basicOpen f : Set X.carrier) := by
   classical
     refine' ((is_compact_open_iff_eq_finset_affine_union _).mpr _).1
-    obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union _).mp ⟨hU, U.prop⟩
+    obtain ⟨s, hs, e⟩ := (is_compact_open_iff_eq_finset_affine_union _).mp ⟨hU, U.is_open⟩
     let g : s → X.affine_opens := by
       intro V
       use V.1 ⊓ X.basic_open f
@@ -155,7 +150,10 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
       exact is_affine_open.basic_open_is_affine V.1.Prop _
     haveI : Finite s := hs.to_subtype
     refine' ⟨Set.range g, Set.finite_range g, _⟩
-    refine' (set.inter_eq_right_iff_subset.mpr (RingedSpace.basic_open_le _ _)).symm.trans _
+    refine'
+      (set.inter_eq_right_iff_subset.mpr
+              (SetLike.coe_subset_coe.2 <| RingedSpace.basic_open_le _ _)).symm.trans
+        _
     rw [e, Set.unionᵢ₂_inter]
     apply le_antisymm <;> apply Set.unionᵢ₂_subset
     · intro i hi

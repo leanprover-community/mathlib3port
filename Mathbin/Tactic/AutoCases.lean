@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.auto_cases
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,9 +66,10 @@ unsafe def find_tac : expr → Option auto_cases_tac
 end AutoCases
 
 /-- Applies `cases` or `induction` on the local_hypothesis `hyp : expr`. -/
-unsafe def auto_cases_at (hyp : expr) : tactic String := do
+unsafe def auto_cases_at (find : expr → Option auto_cases.auto_cases_tac) (hyp : expr) :
+    tactic String := do
   let t ← infer_type hyp >>= whnf
-  match auto_cases.find_tac t with
+  match find t with
     | some atac => do
       atac hyp
       let pp ← pp hyp
@@ -79,9 +80,9 @@ unsafe def auto_cases_at (hyp : expr) : tactic String := do
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `results -/
 /-- Applies `cases` or `induction` on certain hypotheses. -/
 @[hint_tactic]
-unsafe def auto_cases : tactic String := do
+unsafe def auto_cases (find := tactic.auto_cases.find_tac) : tactic String := do
   let l ← local_context
-  let results ← successes <| l.reverse.map auto_cases_at
+  let results ← successes <| l.reverse.map (auto_cases_at find)
   when (results results.empty) <|
       fail "`auto_cases` did not find any hypotheses to apply `cases` or `induction` to"
   return (String.intercalate ", " results)

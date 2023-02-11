@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -3078,21 +3078,21 @@ theorem ContDiffOn.pow {f : E → 𝔸} (hf : ContDiffOn 𝕜 n f s) (m : ℕ) :
     ContDiffOn 𝕜 n (fun y => f y ^ m) s := fun y hy => (hf y hy).pow m
 #align cont_diff_on.pow ContDiffOn.pow
 
-theorem ContDiffWithinAt.div_const {f : E → 𝕜'} {n} {c : 𝕜'} (hf : ContDiffWithinAt 𝕜 n f s x) :
+theorem ContDiffWithinAt.div_const {f : E → 𝕜'} {n} (hf : ContDiffWithinAt 𝕜 n f s x) (c : 𝕜') :
     ContDiffWithinAt 𝕜 n (fun x => f x / c) s x := by
   simpa only [div_eq_mul_inv] using hf.mul contDiffWithinAt_const
 #align cont_diff_within_at.div_const ContDiffWithinAt.div_const
 
-theorem ContDiffAt.div_const {f : E → 𝕜'} {n} {c : 𝕜'} (hf : ContDiffAt 𝕜 n f x) :
+theorem ContDiffAt.div_const {f : E → 𝕜'} {n} (hf : ContDiffAt 𝕜 n f x) (c : 𝕜') :
     ContDiffAt 𝕜 n (fun x => f x / c) x :=
-  hf.div_const
+  hf.div_const c
 #align cont_diff_at.div_const ContDiffAt.div_const
 
-theorem ContDiffOn.div_const {f : E → 𝕜'} {n} {c : 𝕜'} (hf : ContDiffOn 𝕜 n f s) :
-    ContDiffOn 𝕜 n (fun x => f x / c) s := fun x hx => (hf x hx).div_const
+theorem ContDiffOn.div_const {f : E → 𝕜'} {n} (hf : ContDiffOn 𝕜 n f s) (c : 𝕜') :
+    ContDiffOn 𝕜 n (fun x => f x / c) s := fun x hx => (hf x hx).div_const c
 #align cont_diff_on.div_const ContDiffOn.div_const
 
-theorem ContDiff.div_const {f : E → 𝕜'} {n} {c : 𝕜'} (hf : ContDiff 𝕜 n f) :
+theorem ContDiff.div_const {f : E → 𝕜'} {n} (hf : ContDiff 𝕜 n f) (c : 𝕜') :
     ContDiff 𝕜 n fun x => f x / c := by simpa only [div_eq_mul_inv] using hf.mul contDiff_const
 #align cont_diff.div_const ContDiff.div_const
 

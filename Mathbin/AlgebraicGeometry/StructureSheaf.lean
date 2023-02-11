@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -707,9 +707,9 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.top R))
   by
   -- First, any section `s` can be represented as a fraction `f/g` on some open neighborhood of `x`
   -- and we may pass to a `basic_open h`, since these form a basis
-  obtain ⟨V, hxV : x.1 ∈ V.1, iVU, f, g, hVDg : V ⊆ basic_open g, s_eq⟩ :=
+  obtain ⟨V, hxV : x.1 ∈ V.1, iVU, f, g, hVDg : V ≤ basic_open g, s_eq⟩ :=
     exists_const R U s x.1 x.2
-  obtain ⟨_, ⟨h, rfl⟩, hxDh, hDhV : basic_open h ⊆ V⟩ :=
+  obtain ⟨_, ⟨h, rfl⟩, hxDh, hDhV : basic_open h ≤ V⟩ :=
     is_topological_basis_basic_opens.exists_subset_of_mem_open hxV V.2
   -- The problem is of course, that `g` and `h` don't need to coincide.
   -- But, since `basic_open h ≤ basic_open g`, some power of `h` must be a multiple of `g`
@@ -745,13 +745,13 @@ A local representation of a section `s` as fractions `a i / h i` on finitely man
 -/
 theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.top R))
     (s : (structureSheaf R).1.obj (op U)) {ι : Type _} (t : Finset ι) (a h : ι → R)
-    (iDh : ∀ i : ι, basicOpen (h i) ⟶ U) (h_cover : U.1 ⊆ ⋃ i ∈ t, (basicOpen (h i)).1)
+    (iDh : ∀ i : ι, basicOpen (h i) ⟶ U) (h_cover : U ≤ ⨆ i ∈ t, basicOpen (h i))
     (hs :
       ∀ i : ι,
         (const R (a i) (h i) (basicOpen (h i)) fun y hy => hy) =
           (structureSheaf R).1.map (iDh i).op s) :
     ∃ (a' h' : ι → R)(iDh' : ∀ i : ι, basicOpen (h' i) ⟶ U),
-      (U.1 ⊆ ⋃ i ∈ t, (basicOpen (h' i)).1) ∧
+      (U ≤ ⨆ i ∈ t, basicOpen (h' i)) ∧
         (∀ (i) (_ : i ∈ t) (j) (_ : j ∈ t), a' i * h' j = h' i * a' j) ∧
           ∀ i ∈ t,
             (structureSheaf R).1.map (iDh' i).op s =
@@ -844,21 +844,23 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
   choose a' h' iDh' hxDh' s_eq' using locally_const_basic_open R (basic_open f) s
   -- Since basic opens are compact, we can pass to a finite subcover
   obtain ⟨t, ht_cover'⟩ :=
-    (is_compact_basic_open f).elim_finite_subcover (fun i : ι => (basic_open (h' i)).1)
+    (is_compact_basic_open f).elim_finite_subcover (fun i : ι => basic_open (h' i))
       (fun i => is_open_basic_open) fun x hx => _
   swap
   · -- Here, we need to show that our basic opens actually form a cover of `basic_open f`
     rw [Set.mem_unionᵢ]
     exact ⟨⟨x, hx⟩, hxDh' ⟨x, hx⟩⟩
+  simp only [← opens.coe_supr, SetLike.coe_subset_coe] at ht_cover'
   -- We use the normalization lemma from above to obtain the relation `a i * h j = h i * a j`
   obtain ⟨a, h, iDh, ht_cover, ah_ha, s_eq⟩ :=
     normalize_finite_fraction_representation R (basic_open f) s t a' h' iDh' ht_cover' s_eq'
   clear s_eq' iDh' hxDh' ht_cover' a' h'
+  simp only [← SetLike.coe_subset_coe, opens.coe_supr] at ht_cover
   -- Next we show that some power of `f` is a linear combination of the `h i`
   obtain ⟨n, hn⟩ : f ∈ (Ideal.span (h '' ↑t)).radical :=
     by
     rw [← vanishing_ideal_zero_locus_eq_radical, zero_locus_span]
-    simp_rw [Subtype.val_eq_coe, basic_open_eq_zero_locus_compl] at ht_cover
+    simp only [basic_open_eq_zero_locus_compl] at ht_cover
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
     simp_rw [Set.compl_unionᵢ, compl_compl, ← zero_locus_Union, ← Finset.set_bunionᵢ_coe, ←

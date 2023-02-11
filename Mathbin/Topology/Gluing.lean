@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.gluing
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -296,7 +296,7 @@ theorem open_image_open (i : D.J) (U : Opens (𝖣.U i)) : IsOpen (𝖣.ι i '' 
   rw [preimage_image_eq_image]
   apply (D.f_open _ _).IsOpenMap
   apply (D.t j i ≫ D.f i j).continuous_toFun.isOpen_preimage
-  exact U.property
+  exact U.is_open
 #align Top.glue_data.open_image_open TopCat.GlueData.open_image_open
 
 theorem ι_openEmbedding (i : D.J) : OpenEmbedding (𝖣.ι i) :=

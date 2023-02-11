@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.ring_hom_properties
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -97,11 +97,10 @@ theorem RespectsIso.ofRestrict_morphismRestrict_iff (hP : RingHom.RespectsIso @P
     refine'
       X.presheaf.map
         (@hom_of_le _ _ ((IsOpenMap.functor _).obj _) ((IsOpenMap.functor _).obj _) _).op
-    rw [opens.le_def]
+    rw [← SetLike.coe_subset_coe]
     dsimp
-    change coe '' (coe '' Set.univ) ⊆ coe '' Set.univ
-    rw [Subtype.coe_image_univ, Subtype.coe_image_univ]
-    exact Set.image_preimage_subset _ _
+    simp only [Set.image_univ, Subtype.range_coe, Set.image_subset_iff]
+    rfl
   · exact AlgebraicGeometry.Γ_restrict_is_localization Y r
   · rw [← U.open_embedding_obj_top] at hU
     dsimp [Scheme.Γ_obj_op, Scheme.Γ_map_op, Scheme.restrict]

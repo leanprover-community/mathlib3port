@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,7 +216,7 @@ theorem stalkPushforward_iso_of_openEmbedding {f : X ⟶ Y} (hf : OpenEmbedding 
     · intro U
       refine' F.map_iso (eq_to_iso _)
       dsimp only [functor.op]
-      exact congr_arg op (Subtype.eq <| Set.preimage_image_eq (unop U).1.1 hf.inj)
+      exact congr_arg op (opens.ext <| Set.preimage_image_eq (unop U).1.1 hf.inj)
     · intro U V i
       erw [← F.map_comp, ← F.map_comp]
       congr
@@ -333,14 +333,13 @@ noncomputable def stalkSpecializes (F : X.Presheaf C) {x y : X} (h : x ⤳ y) :
 
 @[simp, reassoc.1, elementwise]
 theorem germ_stalkSpecializes (F : X.Presheaf C) {U : Opens X} {y : U} {x : X} (h : x ⤳ y) :
-    F.germ y ≫ F.stalkSpecializes h = F.germ ⟨x, specializes_iff_forall_open.mp h _ U.2 y.Prop⟩ :=
+    F.germ y ≫ F.stalkSpecializes h = F.germ (⟨x, h.mem_open U.IsOpen y.Prop⟩ : U) :=
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes TopCat.Presheaf.germ_stalkSpecializes
 
 @[simp, reassoc.1, elementwise]
 theorem germ_stalk_specializes' (F : X.Presheaf C) {U : Opens X} {x y : X} (h : x ⤳ y)
-    (hy : y ∈ U) :
-    F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, specializes_iff_forall_open.mp h _ U.2 hy⟩ :=
+    (hy : y ∈ U) : F.germ ⟨y, hy⟩ ≫ F.stalkSpecializes h = F.germ ⟨x, h.mem_open U.IsOpen hy⟩ :=
   colimit.ι_desc _ _
 #align Top.presheaf.germ_stalk_specializes' TopCat.Presheaf.germ_stalk_specializes'
 
@@ -462,7 +461,7 @@ theorem section_ext (F : Sheaf C X) (U : Opens X) (s t : F.1.obj (op U))
   -- neighborhoods form a cover of `U`.
   apply F.eq_of_locally_eq' V U i₁
   · intro x hxU
-    rw [opens.mem_coe, opens.mem_supr]
+    rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
   · intro x
     rw [HEq, Subsingleton.elim (i₁ x) (i₂ x)]
@@ -542,7 +541,7 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
   -- These neighborhoods clearly cover all of `U`.
   have V_cover : U ≤ supᵢ V := by
     intro x hxU
-    rw [opens.mem_coe, opens.mem_supr]
+    rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩
   -- Since `F` is a sheaf, we can glue all the local preimages together to get a global preimage.
   obtain ⟨s, s_spec, -⟩ := F.exists_unique_gluing' V U iVU V_cover sf _

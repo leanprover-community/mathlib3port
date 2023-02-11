@@ -409,6 +409,7 @@ import Mathbin.AlgebraicGeometry.AffineScheme
 import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
 import Mathbin.AlgebraicGeometry.Scheme
 import Mathbin.AlgebraicGeometry.Spec
+import Mathbin.AlgebraicGeometry.EllipticCurve.Point
 import Mathbin.AlgebraicGeometry.EllipticCurve.Weierstrass
 import Mathbin.AlgebraicGeometry.FunctionField
 import Mathbin.AlgebraicGeometry.Gluing
@@ -590,6 +591,7 @@ import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.Fourier.AddCircle
+import Mathbin.Analysis.Fourier.RiemannLebesgueLemma
 import Mathbin.Analysis.Hofer
 import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.InnerProductSpace.Basic

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ open CategoryTheory.Category CategoryTheory.Functor
 
 variable (C : Type u) [Category.{v} C]
 
-attribute [local tidy] tactic.op_induction'
+attribute [local tidy] tactic.op_induction' tactic.auto_cases_opens
 
 namespace AlgebraicGeometry
 
@@ -363,8 +363,8 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
   · induction V using Opposite.rec
     have hV : (opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V) = V :=
       by
-      cases V
-      simp [opens.map, Set.preimage_image_eq _ hf.inj]
+      ext1
+      exact Set.preimage_image_eq _ hf.inj
     haveI :
       is_iso (hf.is_open_map.adjunction.counit.app (unop (op (hf.is_open_map.functor.obj V)))) :=
       (nat_iso.is_iso_app_of_is_iso

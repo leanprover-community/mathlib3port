@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.deriv
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,7 +56,8 @@ theorem hasDerivAt_sin (x : ℂ) : HasDerivAt sin (cos x) x :=
 
 theorem contDiff_sin {n} : ContDiff ℂ n sin :=
   (((contDiff_neg.mul contDiff_const).cexp.sub (contDiff_id.mul contDiff_const).cexp).mul
-      contDiff_const).div_const
+        contDiff_const).div_const
+    _
 #align complex.cont_diff_sin Complex.contDiff_sin
 
 theorem differentiable_sin : Differentiable ℂ sin := fun x => (hasDerivAt_sin x).DifferentiableAt
@@ -90,7 +91,7 @@ theorem hasDerivAt_cos (x : ℂ) : HasDerivAt cos (-sin x) x :=
 #align complex.has_deriv_at_cos Complex.hasDerivAt_cos
 
 theorem contDiff_cos {n} : ContDiff ℂ n cos :=
-  ((contDiff_id.mul contDiff_const).cexp.add (contDiff_neg.mul contDiff_const).cexp).div_const
+  ((contDiff_id.mul contDiff_const).cexp.add (contDiff_neg.mul contDiff_const).cexp).div_const _
 #align complex.cont_diff_cos Complex.contDiff_cos
 
 theorem differentiable_cos : Differentiable ℂ cos := fun x => (hasDerivAt_cos x).DifferentiableAt
@@ -125,7 +126,7 @@ theorem hasDerivAt_sinh (x : ℂ) : HasDerivAt sinh (cosh x) x :=
 #align complex.has_deriv_at_sinh Complex.hasDerivAt_sinh
 
 theorem contDiff_sinh {n} : ContDiff ℂ n sinh :=
-  (contDiff_exp.sub contDiff_neg.cexp).div_const
+  (contDiff_exp.sub contDiff_neg.cexp).div_const _
 #align complex.cont_diff_sinh Complex.contDiff_sinh
 
 theorem differentiable_sinh : Differentiable ℂ sinh := fun x => (hasDerivAt_sinh x).DifferentiableAt
@@ -156,7 +157,7 @@ theorem hasDerivAt_cosh (x : ℂ) : HasDerivAt cosh (sinh x) x :=
 #align complex.has_deriv_at_cosh Complex.hasDerivAt_cosh
 
 theorem contDiff_cosh {n} : ContDiff ℂ n cosh :=
-  (contDiff_exp.add contDiff_neg.cexp).div_const
+  (contDiff_exp.add contDiff_neg.cexp).div_const _
 #align complex.cont_diff_cosh Complex.contDiff_cosh
 
 theorem differentiable_cosh : Differentiable ℂ cosh := fun x => (hasDerivAt_cosh x).DifferentiableAt

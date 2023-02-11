@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.has_colimits
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,6 +65,8 @@ namespace AlgebraicGeometry
 namespace PresheafedSpace
 
 attribute [local simp] eq_to_hom_map
+
+attribute [local tidy] tactic.auto_cases_opens
 
 @[simp]
 theorem map_id_c_app (F : J ⥤ PresheafedSpace.{v} C) (j) (U) :
@@ -414,9 +416,8 @@ def colimitPresheafObjIsoComponentwiseLimit (F : J ⥤ PresheafedSpace.{v} C) [H
   fapply nat_iso.of_components
   · intro X
     refine' (F.obj (unop X)).Presheaf.mapIso (eq_to_iso _)
-    dsimp only [functor.op, unop_op, opens.map]
-    congr 2
-    rw [Set.preimage_preimage]
+    simp only [functor.op_obj, unop_op, op_inj_iff, opens.map_coe, SetLike.ext'_iff,
+      Set.preimage_preimage]
     simp_rw [← comp_app]
     congr 2
     exact ι_preserves_colimits_iso_inv (forget C) F (unop X)

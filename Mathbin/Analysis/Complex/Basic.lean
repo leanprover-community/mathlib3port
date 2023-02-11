@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.complex.basic
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Complex.Module
+import Mathbin.Data.Complex.Exponential
 import Mathbin.Data.IsROrC.Basic
 import Mathbin.Topology.Algebra.Module.InfiniteSum
 import Mathbin.Topology.Instances.RealVectorSpace
@@ -52,6 +53,10 @@ instance : HasNorm ℂ :=
 theorem norm_eq_abs (z : ℂ) : ‖z‖ = abs z :=
   rfl
 #align complex.norm_eq_abs Complex.norm_eq_abs
+
+theorem norm_exp_of_real_mul_i (t : ℝ) : ‖exp (t * i)‖ = 1 := by
+  simp only [norm_eq_abs, abs_exp_of_real_mul_I]
+#align complex.norm_exp_of_real_mul_I Complex.norm_exp_of_real_mul_i
 
 instance : NormedAddCommGroup ℂ :=
   AddGroupNorm.toNormedAddCommGroup

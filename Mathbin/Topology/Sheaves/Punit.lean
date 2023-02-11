@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module topology.sheaves.punit
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ theorem isSheaf_of_isTerminal_of_indiscrete {X : TopCat.{w}} (hind : X.str = ⊤
     have := (U.eq_bot_or_top hind).resolve_left hne
     subst this
     obtain he | ⟨⟨x⟩⟩ := isEmpty_or_nonempty X
-    · exact (hne <| TopologicalSpace.Opens.ext_iff.1 <| Set.univ_eq_empty_iff.2 he).elim
+    · exact (hne <| SetLike.ext'_iff.2 <| Set.univ_eq_empty_iff.2 he).elim
     obtain ⟨U, f, hf, hm⟩ := hs x trivial
     obtain rfl | rfl := U.eq_bot_or_top hind
     · cases hm

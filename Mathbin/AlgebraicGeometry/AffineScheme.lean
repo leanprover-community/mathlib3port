@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -191,7 +191,7 @@ theorem isBasis_affine_open (X : Scheme) : Opens.IsBasis X.affineOpens :=
   by
   rw [opens.is_basis_iff_nbhd]
   rintro U x (hU : x ∈ (U : Set X.carrier))
-  obtain ⟨S, hS, hxS, hSU⟩ := X.affine_basis_cover_is_basis.exists_subset_of_mem_open hU U.prop
+  obtain ⟨S, hS, hxS, hSU⟩ := X.affine_basis_cover_is_basis.exists_subset_of_mem_open hU U.is_open
   refine' ⟨⟨S, X.affine_basis_cover_is_basis.is_open hS⟩, _, hxS, hSU⟩
   rcases hS with ⟨i, rfl⟩
   exact range_is_affine_open_of_open_immersion _
@@ -253,8 +253,7 @@ theorem IsAffineOpen.image_isOpenImmersion {X Y : Scheme} {U : Opens X.carrier}
   haveI : is_affine _ := hU
   convert range_is_affine_open_of_open_immersion (X.of_restrict U.open_embedding ≫ f)
   ext1
-  change f.1.base '' U.1 = Set.range (f.1.base ∘ coe)
-  rw [Set.range_comp, Subtype.range_coe]
+  exact Set.image_eq_range _ _
 #align algebraic_geometry.is_affine_open.image_is_open_immersion AlgebraicGeometry.IsAffineOpen.image_isOpenImmersion
 
 theorem isAffineOpen_iff_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f]
@@ -287,11 +286,10 @@ theorem Scheme.specMap_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier}
       eqToHom
         (by
           cases h
-          dsimp
           induction W using Opposite.rec
-          congr
-          ext1
-          simpa) :=
+          dsimp
+          simp
+          rfl) :=
   by
   have : Scheme.Spec.map (X.presheaf.map (𝟙 (op U))).op = 𝟙 _ := by
     rw [X.presheaf.map_id, op_id, Scheme.Spec.map_id]
@@ -385,7 +383,7 @@ theorem IsAffineOpen.map_restrict_basicOpen {X : Scheme} (r : X.Presheaf.obj (op
     (is_affine_open_iff_of_is_open_immersion (X.of_restrict (X.basic_open r).OpenEmbedding) _).mp
   delta PresheafedSpace.is_open_immersion.open_functor
   dsimp
-  rw [opens.functor_obj_map_obj, opens.open_embedding_obj_top, inf_comm, ←
+  erw [opens.functor_obj_map_obj, opens.open_embedding_obj_top, inf_comm, ←
     Scheme.basic_open_res _ _ (hom_of_le le_top).op]
   exact hU.basic_open_is_affine _
 #align algebraic_geometry.is_affine_open.map_restrict_basic_open AlgebraicGeometry.IsAffineOpen.map_restrict_basicOpen
@@ -425,10 +423,10 @@ theorem isBasis_basicOpen (X : Scheme) [IsAffine X] :
   constructor
   · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
     refine' ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, _⟩
-    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x)
+    exact congr_arg opens.carrier (X.map_prime_spectrum_basic_open_of_affine x)
   · rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
     refine' ⟨_, ⟨x, rfl⟩, _⟩
-    exact congr_arg Subtype.val (X.map_prime_spectrum_basic_open_of_affine x).symm
+    exact congr_arg opens.carrier (X.map_prime_spectrum_basic_open_of_affine x).symm
 #align algebraic_geometry.is_basis_basic_open AlgebraicGeometry.isBasis_basicOpen
 
 theorem IsAffineOpen.exists_basicOpen_le {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U)
@@ -438,7 +436,7 @@ theorem IsAffineOpen.exists_basicOpen_le {X : Scheme} {U : Opens X.carrier} (hU 
   haveI : is_affine _ := hU
   obtain ⟨_, ⟨_, ⟨r, rfl⟩, rfl⟩, h₁, h₂⟩ :=
     (is_basis_basic_open (X.restrict U.open_embedding)).exists_subset_of_mem_open _
-      ((opens.map U.inclusion).obj V).Prop
+      ((opens.map U.inclusion).obj V).IsOpen
   swap
   exact ⟨x, h⟩
   have :
@@ -563,7 +561,7 @@ theorem basicOpen_basicOpen_is_basicOpen {X : Scheme} {U : Opens X.carrier} (hU 
 #align algebraic_geometry.basic_open_basic_open_is_basic_open AlgebraicGeometry.basicOpen_basicOpen_is_basicOpen
 
 theorem exists_basicOpen_le_affine_inter {X : Scheme} {U V : Opens X.carrier} (hU : IsAffineOpen U)
-    (hV : IsAffineOpen V) (x : X.carrier) (hx : x ∈ U ∩ V) :
+    (hV : IsAffineOpen V) (x : X.carrier) (hx : x ∈ U ⊓ V) :
     ∃ (f : X.Presheaf.obj <| op U)(g : X.Presheaf.obj <| op V),
       X.basicOpen f = X.basicOpen g ∧ x ∈ X.basicOpen f :=
   by
@@ -714,22 +712,21 @@ theorem IsAffineOpen.basicOpen_union_eq_self_iff {X : Scheme} {U : Opens X.carri
     apply_fun Set.image hU.from_Spec.1.base  at h
     rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.from_Spec_range] at
       h
-    simp only [Set.inter_self, Subtype.val_eq_coe, Set.inter_eq_right_iff_subset] at h
+    simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right_iff_subset] at h
     ext1
-    refine' le_antisymm _ h
-    simp only [Set.unionᵢ_subset_iff, SetCoe.forall, opens.supr_def, Set.le_eq_subset,
-      Subtype.coe_mk]
+    refine' Set.Subset.antisymm _ h
+    simp only [Set.unionᵢ_subset_iff, SetCoe.forall, opens.coe_supr]
     intro x hx
     exact X.basic_open_le x
   · simp only [opens.supr_def, Subtype.coe_mk, Set.preimage_unionᵢ, Subtype.val_eq_coe]
     congr 3
     · ext1 x
-      exact congr_arg Subtype.val (hU.from_Spec_map_basic_open _)
-    · exact congr_arg Subtype.val hU.from_Spec_base_preimage
-  · simp only [Subtype.val_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
+      exact congr_arg opens.carrier (hU.from_Spec_map_basic_open _)
+    · exact congr_arg opens.carrier hU.from_Spec_base_preimage
+  · simp only [opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
     rw [← Set.compl_interᵢ, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_unionᵢ, ←
       PrimeSpectrum.zeroLocus_empty_iff_eq_top, PrimeSpectrum.zeroLocus_span]
-    simp only [Set.unionᵢ_singleton_eq_range, Subtype.range_coe_subtype, Set.setOf_mem_eq]
+    simp only [Set.unionᵢ_singleton_eq_range, Subtype.range_val_subtype, Set.setOf_mem_eq]
 #align algebraic_geometry.is_affine_open.basic_open_union_eq_self_iff AlgebraicGeometry.IsAffineOpen.basicOpen_union_eq_self_iff
 
 theorem IsAffineOpen.self_le_basicOpen_union_iff {X : Scheme} {U : Opens X.carrier}
@@ -783,9 +780,8 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
       exact hf₂ x
     rw [← V.prop.self_le_basic_open_union_iff]
     intro x hx
-    simp only [exists_prop, Set.mem_unionᵢ, Set.mem_range, SetCoe.exists, opens.supr_def,
-      exists_exists_eq_and, opens.mem_coe, Subtype.coe_mk]
-    refine' ⟨_, hf₁ ⟨x, hx⟩⟩
+    rw [supᵢ_range', opens.mem_supr]
+    exact ⟨_, hf₁ ⟨x, hx⟩⟩
 #align algebraic_geometry.of_affine_open_cover AlgebraicGeometry.of_affine_open_cover
 
 end AlgebraicGeometry

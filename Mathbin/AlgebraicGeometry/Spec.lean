@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Spec
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -380,9 +380,8 @@ theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
     ∃ x : S × p.asIdeal.primeCompl, x.2 • y = toPushforwardStalkAlgHom R S p x.1 :=
   by
   obtain ⟨U, hp, s, e⟩ := TopCat.Presheaf.germ_exist _ _ y
-  obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
-    PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hp)
-      U.2
+  obtain ⟨_, ⟨r, rfl⟩, hpr : p ∈ PrimeSpectrum.basicOpen r, hrU : PrimeSpectrum.basicOpen r ≤ U⟩ :=
+    PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ ↑U from hp) U.2
   change PrimeSpectrum.basicOpen r ≤ U at hrU
   replace e :=
     ((Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).germ_res_apply (hom_of_le hrU)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang, Johan Commelin
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.topology
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -390,8 +390,8 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basicOpen (r : A) : TopologicalSpace.Opens (ProjectiveSpectrum 𝒜)
     where
-  val := { x | r ∉ x.asHomogeneousIdeal }
-  property := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
+  carrier := { x | r ∉ x.asHomogeneousIdeal }
+  is_open' := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align projective_spectrum.basic_open ProjectiveSpectrum.basicOpen
 
 @[simp]
@@ -406,7 +406,7 @@ theorem mem_coe_basicOpen (f : A) (x : ProjectiveSpectrum 𝒜) :
 #align projective_spectrum.mem_coe_basic_open ProjectiveSpectrum.mem_coe_basicOpen
 
 theorem isOpen_basicOpen {a : A} : IsOpen (basicOpen 𝒜 a : Set (ProjectiveSpectrum 𝒜)) :=
-  (basicOpen 𝒜 a).property
+  (basicOpen 𝒜 a).IsOpen
 #align projective_spectrum.is_open_basic_open ProjectiveSpectrum.isOpen_basicOpen
 
 @[simp]

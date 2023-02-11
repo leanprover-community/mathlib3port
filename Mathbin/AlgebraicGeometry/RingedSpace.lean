@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit dde670c9a3f503647fd5bfdf1037bad526d3397a
+! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -79,7 +79,7 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   choose V iVU m h_unit using fun x : U => X.is_unit_res_of_is_unit_germ U f x (h x)
   have hcover : U ≤ supᵢ V := by
     intro x hxU
-    rw [opens.mem_coe, opens.mem_supr]
+    rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
   -- Let `g x` denote the inverse of `f` in `U x`.
   choose g hg using fun x : U => IsUnit.exists_right_inv (h_unit x)
@@ -107,8 +107,8 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
 -/
 def basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) : Opens X
     where
-  val := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
-  property := by
+  carrier := coe '' { x : U | IsUnit (X.Presheaf.germ x f) }
+  is_open' := by
     rw [isOpen_iff_forall_mem_open]
     rintro _ ⟨x, hx, rfl⟩
     obtain ⟨V, i, hxV, hf⟩ := X.is_unit_res_of_is_unit_germ U f x hx
