@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.schreier
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -207,7 +207,7 @@ theorem card_commutator_le_of_finite_commutatorSet [Finite (commutatorSet G)] :
   rw [card_commutator_closureCommutatorRepresentatives] at h2
   replace h1 :=
     h1.trans
-      (Nat.pow_le_pow_of_le_right Finite.card_pos (rank_closure_commutator_representations_le G))
+      (Nat.pow_le_pow_of_le_right Finite.card_pos (rank_closureCommutatorRepresentatives_le G))
   replace h2 := h2.trans (pow_dvd_pow _ (add_le_add_right (mul_le_mul_right' h1 _) 1))
   rw [← pow_succ'] at h2
   refine' (Nat.le_of_dvd _ h2).trans (Nat.pow_le_pow_of_le_left h1 _)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.module.submodule.lattice
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -542,16 +542,16 @@ theorem sum_mem_supᵢ {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Sub
   sum_mem fun i hi => mem_supᵢ_of_mem i (h i)
 #align submodule.sum_mem_supr Submodule.sum_mem_supᵢ
 
-/- warning: submodule.sum_mem_bsupr -> Submodule.sum_mem_bsupr is a dubious translation:
+/- warning: submodule.sum_mem_bsupr -> Submodule.sum_mem_bsupᵢ is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {M : Type.{u2}} [_inst_1 : Semiring.{u1} R] [_inst_3 : AddCommMonoid.{u2} M] [_inst_4 : Module.{u1, u2} R M _inst_1 _inst_3] {ι : Type.{u3}} {s : Finset.{u3} ι} {f : ι -> M} {p : ι -> (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4)}, (forall (i : ι), (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) -> (Membership.Mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (SetLike.hasMem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_3 _inst_4)) (f i) (p i))) -> (Membership.Mem.{u2, u2} M (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (SetLike.hasMem.{u2, u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) M (Submodule.setLike.{u1, u2} R M _inst_1 _inst_3 _inst_4)) (Finset.sum.{u2, u3} M ι _inst_3 s (fun (i : ι) => f i)) (supᵢ.{u2, succ u3} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_3 _inst_4))) ι (fun (i : ι) => supᵢ.{u2, 0} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (CompleteSemilatticeSup.toHasSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (CompleteLattice.toCompleteSemilatticeSup.{u2} (Submodule.{u1, u2} R M _inst_1 _inst_3 _inst_4) (Submodule.completeLattice.{u1, u2} R M _inst_1 _inst_3 _inst_4))) (Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) (fun (H : Membership.Mem.{u3, u3} ι (Finset.{u3} ι) (Finset.hasMem.{u3} ι) i s) => p i))))
 but is expected to have type
   forall {R : Type.{u2}} {M : Type.{u1}} [_inst_1 : Semiring.{u2} R] [_inst_3 : AddCommMonoid.{u1} M] [_inst_4 : Module.{u2, u1} R M _inst_1 _inst_3] {ι : Type.{u3}} {s : Finset.{u3} ι} {f : ι -> M} {p : ι -> (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4)}, (forall (i : ι), (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) -> (Membership.mem.{u1, u1} M (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (SetLike.instMembership.{u1, u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) M (Submodule.instSetLikeSubmodule.{u2, u1} R M _inst_1 _inst_3 _inst_4)) (f i) (p i))) -> (Membership.mem.{u1, u1} M (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (SetLike.instMembership.{u1, u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) M (Submodule.instSetLikeSubmodule.{u2, u1} R M _inst_1 _inst_3 _inst_4)) (Finset.sum.{u1, u3} M ι _inst_3 s (fun (i : ι) => f i)) (supᵢ.{u1, succ u3} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (CompleteLattice.toSupSet.{u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (Submodule.instCompleteLatticeSubmodule.{u2, u1} R M _inst_1 _inst_3 _inst_4)) ι (fun (i : ι) => supᵢ.{u1, 0} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (CompleteLattice.toSupSet.{u1} (Submodule.{u2, u1} R M _inst_1 _inst_3 _inst_4) (Submodule.instCompleteLatticeSubmodule.{u2, u1} R M _inst_1 _inst_3 _inst_4)) (Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Finset.{u3} ι) (Finset.instMembershipFinset.{u3} ι) i s) => p i))))
-Case conversion may be inaccurate. Consider using '#align submodule.sum_mem_bsupr Submodule.sum_mem_bsuprₓ'. -/
-theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M}
+Case conversion may be inaccurate. Consider using '#align submodule.sum_mem_bsupr Submodule.sum_mem_bsupᵢₓ'. -/
+theorem sum_mem_bsupᵢ {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M}
     (h : ∀ i ∈ s, f i ∈ p i) : (∑ i in s, f i) ∈ ⨆ i ∈ s, p i :=
   sum_mem fun i hi => mem_supᵢ_of_mem i <| mem_supᵢ_of_mem hi (h i hi)
-#align submodule.sum_mem_bsupr Submodule.sum_mem_bsupr
+#align submodule.sum_mem_bsupr Submodule.sum_mem_bsupᵢ
 
 /-! Note that `submodule.mem_supr` is provided in `linear_algebra/basic.lean`. -/
 

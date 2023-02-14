@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.hom
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -83,12 +83,12 @@ instance Bundle.ContinuousLinearMap.addMonoidHomClass (x : B) :
   delta_instance bundle.continuous_linear_map
 #align bundle.continuous_linear_map.add_monoid_hom_class Bundle.ContinuousLinearMap.addMonoidHomClass
 
-variable [∀ x, HasContinuousAdd (E₂ x)]
+variable [∀ x, ContinuousAdd (E₂ x)]
 
 instance (x : B) : AddCommMonoid (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂ x) := by
   delta_instance bundle.continuous_linear_map
 
-variable [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)]
+variable [∀ x, ContinuousSMul 𝕜₂ (E₂ x)]
 
 instance (x : B) : Module 𝕜₂ (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂ x) := by
   delta_instance bundle.continuous_linear_map
@@ -186,8 +186,8 @@ def continuousLinearMap :
   proj_toFun := fun ⟨x, f⟩ h => rfl
 #align pretrivialization.continuous_linear_map Pretrivialization.continuousLinearMap
 
-instance continuousLinearMap.isLinear [∀ x, HasContinuousAdd (E₂ x)]
-    [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)] : (Pretrivialization.continuousLinearMap σ e₁ e₂).isLinear 𝕜₂
+instance continuousLinearMap.isLinear [∀ x, ContinuousAdd (E₂ x)] [∀ x, ContinuousSMul 𝕜₂ (E₂ x)] :
+    (Pretrivialization.continuousLinearMap σ e₁ e₂).isLinear 𝕜₂
     where linear x h :=
     { map_add := fun L L' =>
         show (e₂.continuousLinearMapAt 𝕜₂ x).comp ((L + L').comp (e₁.symmL 𝕜₁ x)) = _
@@ -213,7 +213,7 @@ theorem continuousLinearMap_symm_apply (p : B × (F₁ →SL[σ] F₂)) :
   rfl
 #align pretrivialization.continuous_linear_map_symm_apply Pretrivialization.continuousLinearMap_symm_apply
 
-variable [∀ x, HasContinuousAdd (E₂ x)]
+variable [∀ x, ContinuousAdd (E₂ x)]
 
 theorem continuousLinearMap_symm_apply' {b : B} (hb : b ∈ e₁.baseSet ∩ e₂.baseSet)
     (L : F₁ →SL[σ] F₂) :
@@ -249,7 +249,7 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [FiberBundle F₁ E₁] [VectorB
 
 variable [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₂ E₂] [VectorBundle 𝕜₂ F₂ E₂]
 
-variable [∀ x, HasContinuousAdd (E₂ x)] [∀ x, HasContinuousSmul 𝕜₂ (E₂ x)]
+variable [∀ x, ContinuousAdd (E₂ x)] [∀ x, ContinuousSMul 𝕜₂ (E₂ x)]
 
 /-- The continuous `σ`-semilinear maps between two topological vector bundles form a
 `vector_prebundle` (this is an auxiliary construction for the

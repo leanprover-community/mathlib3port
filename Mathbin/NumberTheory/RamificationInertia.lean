@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -465,9 +465,8 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
         Submodule.span (R ⧸ p) (Set.range b) :=
       b.mem_span _
     rw [← @Submodule.restrictScalars_mem R,
-      Algebra.span_restrictScalars_eq_span_of_surjective
-        (show Function.Surjective (algebraMap R (R ⧸ p)) from Ideal.Quotient.mk_surjective) _,
-      b_eq_b', Set.range_comp, ← Submodule.map_span] at mem_span_b
+      Submodule.restrictScalars_span R (R ⧸ p) Ideal.Quotient.mk_surjective, b_eq_b',
+      Set.range_comp, ← Submodule.map_span] at mem_span_b
     obtain ⟨y, y_mem, y_eq⟩ := submodule.mem_map.mp mem_span_b
     suffices y + -(y - x) ∈ _ by simpa
     rw [LinearMap.restrictScalars_apply, Submodule.mkq_apply, Submodule.mkq_apply,

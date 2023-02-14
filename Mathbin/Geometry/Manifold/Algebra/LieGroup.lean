@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,7 +91,7 @@ see note [Design choices about smooth algebraic structures]. -/
 @[to_additive
       "An additive Lie group is an additive topological group. This is not an instance for technical\nreasons, see note [Design choices about smooth algebraic structures]."]
 theorem topologicalGroup_of_lieGroup : TopologicalGroup G :=
-  { hasContinuousMul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
+  { continuousMul_of_smooth I with continuous_inv := (smooth_inv I).Continuous }
 #align topological_group_of_lie_group topologicalGroup_of_lieGroup
 #align topological_add_group_of_lie_add_group topological_add_group_of_lie_add_group
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,8 +37,8 @@ open Pointwise
 
 open Nnreal
 
-variable (V : Type _) [TopologicalSpace V] [AddCommGroup V] [HasContinuousAdd V] [Module ℝ V]
-  [HasContinuousSmul ℝ V]
+variable (V : Type _) [TopologicalSpace V] [AddCommGroup V] [ContinuousAdd V] [Module ℝ V]
+  [ContinuousSMul ℝ V]
 
 /-- Let `V` be a real topological vector space. A subset of `V` is a convex body if and only if
 it is convex, compact, and nonempty.

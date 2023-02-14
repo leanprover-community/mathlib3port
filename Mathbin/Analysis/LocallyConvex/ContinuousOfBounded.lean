@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.continuous_of_bounded
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ section NontriviallyNormedField
 
 variable [UniformAddGroup F]
 
-variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [HasContinuousSmul 𝕜 E]
+variable [NontriviallyNormedField 𝕜] [Module 𝕜 E] [Module 𝕜 F] [ContinuousSMul 𝕜 E]
 
 /-- Construct a continuous linear map from a linear map `f : E →ₗ[𝕜] F` and the existence of a
 neighborhood of zero that gets mapped into a bounded set in `F`. -/
@@ -99,9 +99,9 @@ open TopologicalSpace Bornology
 
 variable [FirstCountableTopology E]
 
-variable [IsROrC 𝕜] [Module 𝕜 E] [HasContinuousSmul 𝕜 E]
+variable [IsROrC 𝕜] [Module 𝕜 E] [ContinuousSMul 𝕜 E]
 
-variable [IsROrC 𝕜'] [Module 𝕜' F] [HasContinuousSmul 𝕜' F]
+variable [IsROrC 𝕜'] [Module 𝕜' F] [ContinuousSMul 𝕜' F]
 
 variable {σ : 𝕜 →+* 𝕜'}
 

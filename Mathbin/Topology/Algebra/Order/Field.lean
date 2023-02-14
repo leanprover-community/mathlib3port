@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Davidson, Devon Tuma, Eric Rodriguez, Oliver Nash
 
 ! This file was ported from Lean 3 source module topology.algebra.order.field
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ theorem mul_tendsto_nhds_one_nhds_one :
 #align mul_tendsto_nhds_one_nhds_one mul_tendsto_nhds_one_nhds_one
 
 -- see Note [lower instance priority]
-instance (priority := 100) LinearOrderedField.hasContinuousMul : HasContinuousMul α :=
+instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :=
   ⟨by
     rw [continuous_iff_continuousAt]
     rintro ⟨x₀, y₀⟩
@@ -174,7 +174,7 @@ instance (priority := 100) LinearOrderedField.hasContinuousMul : HasContinuousMu
           nhds_eq_map_mul_left_nhds_one hy₀, Filter.map_map, key₂, ←
           nhds_eq_map_mul_left_nhds_one hxy]
       ⟩
-#align linear_ordered_field.has_continuous_mul LinearOrderedField.hasContinuousMul
+#align linear_ordered_field.has_continuous_mul LinearOrderedField.continuousMul
 
 end continuous_mul
 
@@ -263,7 +263,7 @@ theorem tendsto_inv_atTop_zero : Tendsto (fun r : α => r⁻¹) atTop (𝓝 0) :
   tendsto_inv_atTop_zero'.mono_right inf_le_left
 #align tendsto_inv_at_top_zero tendsto_inv_atTop_zero
 
-theorem Filter.Tendsto.div_atTop [HasContinuousMul α] {f g : β → α} {l : Filter β} {a : α}
+theorem Filter.Tendsto.div_atTop [ContinuousMul α] {f g : β → α} {l : Filter β} {a : α}
     (h : Tendsto f l (𝓝 a)) (hg : Tendsto g l atTop) : Tendsto (fun x => f x / g x) l (𝓝 0) :=
   by
   simp only [div_eq_mul_inv]

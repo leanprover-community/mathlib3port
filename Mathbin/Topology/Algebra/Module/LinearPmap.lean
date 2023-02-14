@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.linear_pmap
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,9 +66,9 @@ def IsClosed (f : E →ₗ.[R] F) : Prop :=
   IsClosed (f.graph : Set (E × F))
 #align linear_pmap.is_closed LinearPmap.IsClosed
 
-variable [HasContinuousAdd E] [HasContinuousAdd F]
+variable [ContinuousAdd E] [ContinuousAdd F]
 
-variable [TopologicalSpace R] [HasContinuousSmul R E] [HasContinuousSmul R F]
+variable [TopologicalSpace R] [ContinuousSMul R E] [ContinuousSMul R F]
 
 /-- An unbounded operator is closable iff the closure of its graph is a graph. -/
 def IsClosable (f : E →ₗ.[R] F) : Prop :=

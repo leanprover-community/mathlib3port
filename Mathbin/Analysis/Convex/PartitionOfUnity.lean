@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.convex.partition_of_unity
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,8 @@ theorem PartitionOfUnity.finsum_smul_mem_convex {s : Set X} (f : PartitionOfUnit
   ht.finsum_mem (fun i => f.NonNeg _ _) (f.sum_eq_one hx) hg
 #align partition_of_unity.finsum_smul_mem_convex PartitionOfUnity.finsum_smul_mem_convex
 
-variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [HasContinuousAdd E]
-  [HasContinuousSmul ℝ E] {t : X → Set E}
+variable [NormalSpace X] [ParacompactSpace X] [TopologicalSpace E] [ContinuousAdd E]
+  [ContinuousSMul ℝ E] {t : X → Set E}
 
 /-- Let `X` be a normal paracompact topological space (e.g., any extended metric space). Let `E` be
 a topological real vector space. Let `t : X → set E` be a family of convex sets. Suppose that for

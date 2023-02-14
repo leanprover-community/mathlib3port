@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.algebra.algebra
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,15 +53,15 @@ theorem continuous_algebraMap_iff_smul :
 #align continuous_algebra_map_iff_smul continuous_algebraMap_iff_smul
 
 @[continuity]
-theorem continuous_algebraMap [HasContinuousSmul R A] : Continuous (algebraMap R A) :=
+theorem continuous_algebraMap [ContinuousSMul R A] : Continuous (algebraMap R A) :=
   (continuous_algebraMap_iff_smul R A).2 continuous_smul
 #align continuous_algebra_map continuous_algebraMap
 
-theorem hasContinuousSmul_of_algebraMap (h : Continuous (algebraMap R A)) : HasContinuousSmul R A :=
+theorem continuousSMul_of_algebraMap (h : Continuous (algebraMap R A)) : ContinuousSMul R A :=
   ⟨(continuous_algebraMap_iff_smul R A).1 h⟩
-#align has_continuous_smul_of_algebra_map hasContinuousSmul_of_algebraMap
+#align has_continuous_smul_of_algebra_map continuousSMul_of_algebraMap
 
-variable [HasContinuousSmul R A]
+variable [ContinuousSMul R A]
 
 /-- The inclusion of the base ring in a topological algebra as a continuous linear map. -/
 @[simps]
@@ -89,10 +89,10 @@ variable {A : Type u} [TopologicalSpace A]
 
 variable [Semiring A] [Algebra R A]
 
-instance Subalgebra.hasContinuousSmul [TopologicalSpace R] [HasContinuousSmul R A]
-    (s : Subalgebra R A) : HasContinuousSmul R s :=
-  s.toSubmodule.HasContinuousSmul
-#align subalgebra.has_continuous_smul Subalgebra.hasContinuousSmul
+instance Subalgebra.continuousSMul [TopologicalSpace R] [ContinuousSMul R A] (s : Subalgebra R A) :
+    ContinuousSMul R s :=
+  s.toSubmodule.ContinuousSMul
+#align subalgebra.has_continuous_smul Subalgebra.continuousSMul
 
 variable [TopologicalSemiring A]
 
@@ -198,7 +198,7 @@ section DivisionRing
 
 /-- The action induced by `algebra_rat` is continuous. -/
 instance DivisionRing.continuousConstSMul_rat {A} [DivisionRing A] [TopologicalSpace A]
-    [HasContinuousMul A] [CharZero A] : ContinuousConstSMul ℚ A :=
+    [ContinuousMul A] [CharZero A] : ContinuousConstSMul ℚ A :=
   ⟨fun r => by simpa only [Algebra.smul_def] using continuous_const.mul continuous_id⟩
 #align division_ring.has_continuous_const_smul_rat DivisionRing.continuousConstSMul_rat
 

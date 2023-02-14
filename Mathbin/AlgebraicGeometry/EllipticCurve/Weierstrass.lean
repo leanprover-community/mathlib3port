@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -270,7 +270,7 @@ def baseChange : WeierstrassCurve A :=
     algebraMap R A W.a₆⟩
 #align weierstrass_curve.base_change WeierstrassCurve.baseChange
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_b₂ : (W.base_change A).b₂ = algebraMap R A W.b₂ :=
   by
@@ -279,7 +279,7 @@ theorem baseChange_b₂ : (W.base_change A).b₂ = algebraMap R A W.b₂ :=
     map_simp
 #align weierstrass_curve.base_change_b₂ WeierstrassCurve.baseChange_b₂
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_b₄ : (W.base_change A).b₄ = algebraMap R A W.b₄ :=
   by
@@ -288,7 +288,7 @@ theorem baseChange_b₄ : (W.base_change A).b₄ = algebraMap R A W.b₄ :=
     map_simp
 #align weierstrass_curve.base_change_b₄ WeierstrassCurve.baseChange_b₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_b₆ : (W.base_change A).b₆ = algebraMap R A W.b₆ :=
   by
@@ -297,7 +297,7 @@ theorem baseChange_b₆ : (W.base_change A).b₆ = algebraMap R A W.b₆ :=
     map_simp
 #align weierstrass_curve.base_change_b₆ WeierstrassCurve.baseChange_b₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_b₈ : (W.base_change A).b₈ = algebraMap R A W.b₈ :=
   by
@@ -306,7 +306,7 @@ theorem baseChange_b₈ : (W.base_change A).b₈ = algebraMap R A W.b₈ :=
     map_simp
 #align weierstrass_curve.base_change_b₈ WeierstrassCurve.baseChange_b₈
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_c₄ : (W.base_change A).c₄ = algebraMap R A W.c₄ :=
   by
@@ -315,7 +315,7 @@ theorem baseChange_c₄ : (W.base_change A).c₄ = algebraMap R A W.c₄ :=
     map_simp
 #align weierstrass_curve.base_change_c₄ WeierstrassCurve.baseChange_c₄
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_c₆ : (W.base_change A).c₆ = algebraMap R A W.c₆ :=
   by
@@ -324,7 +324,7 @@ theorem baseChange_c₆ : (W.base_change A).c₆ = algebraMap R A W.c₆ :=
     map_simp
 #align weierstrass_curve.base_change_c₆ WeierstrassCurve.baseChange_c₆
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp, nolint simp_nf]
 theorem baseChange_Δ : (W.base_change A).Δ = algebraMap R A W.Δ :=
   by
@@ -391,7 +391,7 @@ protected noncomputable def polynomial : R[X][Y] :=
   Y ^ 2 + c (c W.a₁ * x + c W.a₃) * Y - c (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆)
 #align weierstrass_curve.polynomial WeierstrassCurve.polynomial
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.372359189.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3981729905.C_simp -/
 theorem polynomial_eq :
     W.Polynomial =
       Cubic.toPoly
@@ -444,7 +444,7 @@ theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
   any_goals rw [degree_add_eq_right_of_degree_lt] <;> simp only [h] <;> decide
 #align weierstrass_curve.irreducible_polynomial WeierstrassCurve.irreducible_polynomial
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.122593465.eval_simp -/
 @[simp]
 theorem eval_polynomial (x y : R) :
     (W.Polynomial.eval <| c y).eval x =
@@ -501,7 +501,7 @@ noncomputable def polynomialX : R[X][Y] :=
   c (c W.a₁) * Y - c (c 3 * x ^ 2 + c (2 * W.a₂) * x + c W.a₄)
 #align weierstrass_curve.polynomial_X WeierstrassCurve.polynomialX
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.122593465.eval_simp -/
 @[simp]
 theorem eval_polynomialX (x y : R) :
     (W.polynomialX.eval <| c y).eval x = W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄) :=
@@ -523,7 +523,7 @@ noncomputable def polynomialY : R[X][Y] :=
   c (c 2) * Y + c (c W.a₁ * x + c W.a₃)
 #align weierstrass_curve.polynomial_Y WeierstrassCurve.polynomialY
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.201621597.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.122593465.eval_simp -/
 @[simp]
 theorem eval_polynomialY (x y : R) : (W.polynomialY.eval <| c y).eval x = 2 * y + W.a₁ * x + W.a₃ :=
   by
@@ -774,7 +774,7 @@ theorem norm_smul_basis (p q : R[X]) :
   ring1
 #align weierstrass_curve.coordinate_ring.norm_smul_basis WeierstrassCurve.CoordinateRing.norm_smul_basis
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.372359189.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3981729905.C_simp -/
 theorem coe_norm_smul_basis (p q : R[X]) :
     ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
       AdjoinRoot.mk W.Polynomial ((c p + c q * x) * (c p + c q * (-x - c (c W.a₁ * x + c W.a₃)))) :=
@@ -942,7 +942,7 @@ theorem coe_inv_baseChange_Δ' : ↑(E.base_change A).Δ'⁻¹ = algebraMap R A 
   rfl
 #align elliptic_curve.coe_inv_base_change_Δ' EllipticCurve.coe_inv_baseChange_Δ'
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.3913249957.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic _private.2208694529.map_simp -/
 @[simp]
 theorem baseChange_j : (E.base_change A).j = algebraMap R A E.j :=
   by

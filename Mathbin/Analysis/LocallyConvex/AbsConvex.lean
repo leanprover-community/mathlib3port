@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.locally_convex.abs_convex
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
-variable [TopologicalSpace E] [LocallyConvexSpace ℝ E] [HasContinuousSmul 𝕜 E]
+variable [TopologicalSpace E] [LocallyConvexSpace ℝ E] [ContinuousSMul 𝕜 E]
 
 theorem nhds_basis_abs_convex :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
@@ -67,7 +67,7 @@ theorem nhds_basis_abs_convex :
   exact convex_convexHull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
 
-variable [HasContinuousSmul ℝ E] [TopologicalAddGroup E]
+variable [ContinuousSMul ℝ E] [TopologicalAddGroup E]
 
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
@@ -142,7 +142,7 @@ variable [AddCommGroup E] [TopologicalSpace E]
 
 variable [Module 𝕜 E] [Module ℝ E] [IsScalarTower ℝ 𝕜 E]
 
-variable [HasContinuousSmul ℝ E]
+variable [ContinuousSMul ℝ E]
 
 variable (𝕜 E)
 
@@ -162,7 +162,7 @@ theorem gaugeSeminormFamily_ball (s : AbsConvexOpenSets 𝕜 E) :
   exact gauge_lt_one_eq_self_of_open s.coe_convex s.coe_zero_mem s.coe_is_open
 #align gauge_seminorm_family_ball gaugeSeminormFamily_ball
 
-variable [TopologicalAddGroup E] [HasContinuousSmul 𝕜 E]
+variable [TopologicalAddGroup E] [ContinuousSMul 𝕜 E]
 
 variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 

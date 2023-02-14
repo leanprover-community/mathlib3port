@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.basic
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Int.Order.Basic
 import Mathbin.Data.List.Forall2
 
 /-!
@@ -1043,6 +1044,22 @@ theorem alternatingProd_cons (a : α) (l : List α) :
 #align list.alternating_sum_cons List.alternatingSum_cons
 
 end Alternating
+
+theorem sum_nat_mod (l : List ℕ) (n : ℕ) : l.Sum % n = (l.map (· % n)).Sum % n := by
+  induction l <;> simp [Nat.add_mod, *]
+#align list.sum_nat_mod List.sum_nat_mod
+
+theorem prod_nat_mod (l : List ℕ) (n : ℕ) : l.Prod % n = (l.map (· % n)).Prod % n := by
+  induction l <;> simp [Nat.mul_mod, *]
+#align list.prod_nat_mod List.prod_nat_mod
+
+theorem sum_int_mod (l : List ℤ) (n : ℤ) : l.Sum % n = (l.map (· % n)).Sum % n := by
+  induction l <;> simp [Int.add_emod, *]
+#align list.sum_int_mod List.sum_int_mod
+
+theorem prod_int_mod (l : List ℤ) (n : ℤ) : l.Prod % n = (l.map (· % n)).Prod % n := by
+  induction l <;> simp [Int.mul_emod, *]
+#align list.prod_int_mod List.prod_int_mod
 
 end List
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.instances.real_vector_space
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,9 +19,8 @@ over `ℝ` is `ℝ`-linear
 -/
 
 
-variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [HasContinuousSmul ℝ E]
-  {F : Type _} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [HasContinuousSmul ℝ F]
-  [T2Space F]
+variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousSMul ℝ E]
+  {F : Type _} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [ContinuousSMul ℝ F] [T2Space F]
 
 /-- A continuous additive map between two vector spaces over `ℝ` is `ℝ`-linear. -/
 theorem map_real_smul {G} [AddMonoidHomClass G E F] (f : G) (hf : Continuous f) (c : ℝ) (x : E) :
@@ -59,8 +58,7 @@ def AddEquiv.toRealLinearEquiv (e : E ≃+ F) (h₁ : Continuous e) (h₂ : Cont
 topological `ℝ`-algebra `A` (e.g. `A = ℂ`) and any topological group that is both a topological
 `ℝ`-module and a topological `A`-module, these structures agree. -/
 instance (priority := 900) Real.isScalarTower [T2Space E] {A : Type _} [TopologicalSpace A] [Ring A]
-    [Algebra ℝ A] [Module A E] [HasContinuousSmul ℝ A] [HasContinuousSmul A E] :
-    IsScalarTower ℝ A E :=
+    [Algebra ℝ A] [Module A E] [ContinuousSMul ℝ A] [ContinuousSMul A E] : IsScalarTower ℝ A E :=
   ⟨fun r x y => map_real_smul ((smulAddHom A E).flip y) (continuous_id.smul continuous_const) r x⟩
 #align real.is_scalar_tower Real.isScalarTower
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module deprecated.subring
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -70,7 +70,7 @@ theorem isSubring_image {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+*
 
 theorem isSubring_set_range {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) :
     IsSubring (Set.range f) :=
-  { IsAddGroupHom.range_addSubgroup f.to_isAddGroupHom, Range.is_submonoid f.to_isMonoidHom with }
+  { IsAddGroupHom.range_addSubgroup f.to_isAddGroupHom, Range.isSubmonoid f.to_isMonoidHom with }
 #align ring_hom.is_subring_set_range RingHom.isSubring_set_range
 
 end RingHom
@@ -86,14 +86,14 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
 theorem IsSubring.interᵢ {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
     IsSubring (Set.interᵢ S) :=
   { IsAddSubgroup.interᵢ fun i => (h i).to_isAddSubgroup,
-    IsSubmonoid.Inter fun i => (h i).to_isSubmonoid with }
+    IsSubmonoid.interᵢ fun i => (h i).to_isSubmonoid with }
 #align is_subring.Inter IsSubring.interᵢ
 
 theorem isSubring_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
   { to_isAddSubgroup := isAddSubgroup_unionᵢ_of_directed (fun i => (h i).to_isAddSubgroup) Directed
-    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (h i).to_isSubmonoid) Directed }
+    to_isSubmonoid := isSubmonoid_unionᵢ_of_directed (fun i => (h i).to_isSubmonoid) Directed }
 #align is_subring_Union_of_directed isSubring_unionᵢ_of_directed
 
 namespace Ring
@@ -186,12 +186,12 @@ theorem closure.isSubring : IsSubring (closure s) :=
   {
     AddGroup.closure.isAddSubgroup
       _ with
-    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.IsSubmonoid _
+    one_mem := AddGroup.mem_closure <| IsSubmonoid.one_mem <| Monoid.closure.isSubmonoid _
     mul_mem := fun a b ha hb =>
       AddGroup.InClosure.rec_on hb
         (fun c hc =>
           AddGroup.InClosure.rec_on ha
-            (fun d hd => AddGroup.subset_closure ((Monoid.closure.IsSubmonoid _).mul_mem hd hc))
+            (fun d hd => AddGroup.subset_closure ((Monoid.closure.isSubmonoid _).mul_mem hd hc))
             ((zero_mul c).symm ▸ (AddGroup.closure.isAddSubgroup _).zero_mem)
             (fun d hd hdc =>
               neg_mul_eq_neg_mul d c ▸ (AddGroup.closure.isAddSubgroup _).neg_mem hdc)

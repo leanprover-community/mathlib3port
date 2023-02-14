@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.locally_convex
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem locallyConvexSpace_iff_exists_convex_subset_zero :
 
 -- see Note [lower instance priority]
 instance (priority := 100) LocallyConvexSpace.to_locallyConnectedSpace [Module ℝ E]
-    [HasContinuousSmul ℝ E] [LocallyConvexSpace ℝ E] : LocallyConnectedSpace E :=
+    [ContinuousSMul ℝ E] [LocallyConvexSpace ℝ E] : LocallyConnectedSpace E :=
   locallyConnectedSpace_of_connected_bases _ _
     (fun x => @LocallyConvexSpace.convex_basis ℝ _ _ _ _ _ _ x) fun x s hs => hs.2.IsPreconnected
 #align locally_convex_space.to_locally_connected_space LocallyConvexSpace.to_locallyConnectedSpace

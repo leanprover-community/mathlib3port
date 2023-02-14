@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.compact
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ section Quotient
 variable [Group G] [TopologicalSpace G] [TopologicalGroup G] {Γ : Subgroup G}
 
 @[to_additive]
-instance QuotientGroup.hasContinuousSmul [LocallyCompactSpace G] : HasContinuousSmul G (G ⧸ Γ)
+instance QuotientGroup.continuousSMul [LocallyCompactSpace G] : ContinuousSMul G (G ⧸ Γ)
     where continuous_smul :=
     by
     let F : G × G ⧸ Γ → G ⧸ Γ := fun p => p.1 • p.2
@@ -74,7 +74,7 @@ instance QuotientGroup.hasContinuousSmul [LocallyCompactSpace G] : HasContinuous
       change Continuous fun p : G × G => QuotientGroup.mk (p.1 * p.2)
       refine' continuous_coinduced_rng.comp continuous_mul
     exact QuotientMap.continuous_lift_prod_right quotientMap_quotient_mk' H
-#align quotient_group.has_continuous_smul QuotientGroup.hasContinuousSmul
+#align quotient_group.has_continuous_smul QuotientGroup.continuousSMul
 #align quotient_add_group.has_continuous_vadd quotientAddGroup.has_continuous_vadd
 
 end Quotient

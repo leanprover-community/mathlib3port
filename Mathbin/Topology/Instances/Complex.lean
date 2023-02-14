@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 
 ! This file was ported from Lean 3 source module topology.instances.complex
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,6 +49,8 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
   simp only [image_univ]
 #align complex.subfield_eq_of_closed Complex.subfield_eq_of_closed
 
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
 /-- Let `K` a subfield of `ℂ` and let `ψ : K →+* ℂ` a ring homomorphism. Assume that `ψ` is uniform
 continuous, then `ψ` is either the inclusion map or the composition of the inclusion map with the
 complex conjugation. -/
@@ -76,7 +78,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       ext1 x
       rsuffices ⟨r, hr⟩ : ∃ r : ℝ, of_real.range_restrict r = j (ι x)
       · have :=
-          RingHom.congr_fun (ring_hom_eq_of_real_of_continuous (by continuity! : Continuous ψ₁)) r
+          RingHom.congr_fun (ring_hom_eq_of_real_of_continuous (by continuity : Continuous ψ₁)) r
         rw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this
         convert this using 1
         · exact (DenseInducing.extend_eq di hc.continuous _).symm
@@ -90,7 +92,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
         RingHom.comp extψ
           (RingHom.comp (RingEquiv.subfieldCongr h).symm.toRingHom
             (@Subfield.topEquiv ℂ _).symm.toRingHom)
-      cases' ring_hom_eq_id_or_conj_of_continuous (by continuity! : Continuous ψ₁) with h h
+      cases' ring_hom_eq_id_or_conj_of_continuous (by continuity : Continuous ψ₁) with h h
       · left
         ext1 z
         convert RingHom.congr_fun h z using 1

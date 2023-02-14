@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.flow
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,7 +87,7 @@ end Invariant
 
 /-- A flow on a topological space `α` by an a additive topological
     monoid `τ` is a continuous monoid action of `τ` on `α`.-/
-structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [HasContinuousAdd τ] (α : Type _)
+structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [ContinuousAdd τ] (α : Type _)
   [TopologicalSpace α] where
   toFun : τ → α → α
   cont' : Continuous (uncurry to_fun)
@@ -97,7 +97,7 @@ structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoid τ] [HasContinuous
 
 namespace Flow
 
-variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _}
+variable {τ : Type _} [AddMonoid τ] [TopologicalSpace τ] [ContinuousAdd τ] {α : Type _}
   [TopologicalSpace α] (ϕ : Flow τ α)
 
 instance : Inhabited (Flow τ α) :=

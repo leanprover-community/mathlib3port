@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.infinite_sum
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -378,7 +378,7 @@ theorem summable_star_iff' : Summable (star f) ↔ Summable f :=
 
 end ContinuousStar
 
-variable [HasContinuousAdd α]
+variable [ContinuousAdd α]
 
 theorem HasSum.add (hf : HasSum f a) (hg : HasSum g b) : HasSum (fun b => f b + g b) (a + b) := by
   simp only [HasSum, sum_add_distrib] <;> exact hf.add hg
@@ -502,7 +502,7 @@ theorem HasSum.sigma_of_hasSum [T3Space α] {γ : β → Type _} {f : (Σb : β,
 Rather than showing that `f.update` has a specific sum in terms of `has_sum`,
 it gives a relationship between the sums of `f` and `f.update` given that both exist. -/
 theorem HasSum.update' {α β : Type _} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]
-    [HasContinuousAdd α] {f : β → α} {a a' : α} (hf : HasSum f a) (b : β) (x : α)
+    [ContinuousAdd α] {f : β → α} {a a' : α} (hf : HasSum f a) (b : β) (x : α)
     (hf' : HasSum (f.update b x) a') : a + x = a' + f b :=
   by
   have : ∀ b', f b' + ite (b' = b) x 0 = f.update b x b' + ite (b' = b) (f b) 0 :=
@@ -520,7 +520,7 @@ theorem HasSum.update' {α β : Type _} [TopologicalSpace α] [AddCommMonoid α]
 Rather than showing that the `ite` expression has a specific sum in terms of `has_sum`,
 it gives a relationship between the sums of `f` and `ite (n = b) 0 (f n)` given that both exist. -/
 theorem eq_add_of_hasSum_ite {α β : Type _} [TopologicalSpace α] [AddCommMonoid α] [T2Space α]
-    [HasContinuousAdd α] {f : β → α} {a : α} (hf : HasSum f a) (b : β) (a' : α)
+    [ContinuousAdd α] {f : β → α} {a : α} (hf : HasSum f a) (b : β) (a' : α)
     (hf' : HasSum (fun n => ite (n = b) 0 (f n)) a') : a = a' + f b :=
   by
   refine' (add_zero a).symm.trans (hf.update' b 0 _)
@@ -730,9 +730,9 @@ theorem tsum_range {g : γ → β} (f : β → α) (hg : Injective g) :
   rw [← Set.image_univ, tsum_image f (hg.inj_on _), tsum_univ (f ∘ g)]
 #align tsum_range tsum_range
 
-section HasContinuousAdd
+section ContinuousAdd
 
-variable [HasContinuousAdd α]
+variable [ContinuousAdd α]
 
 theorem tsum_add (hf : Summable f) (hg : Summable g) :
     (∑' b, f b + g b) = (∑' b, f b) + ∑' b, g b :=
@@ -762,7 +762,7 @@ theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update 
     
 #align tsum_eq_add_tsum_ite' tsum_eq_add_tsum_ite'
 
-variable [AddCommMonoid δ] [TopologicalSpace δ] [T3Space δ] [HasContinuousAdd δ]
+variable [AddCommMonoid δ] [TopologicalSpace δ] [T3Space δ] [ContinuousAdd δ]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (b c) -/
 theorem tsum_sigma' {γ : β → Type _} {f : (Σb : β, γ b) → δ} (h₁ : ∀ b, Summable fun c => f ⟨b, c⟩)
@@ -785,7 +785,7 @@ theorem tsum_comm' {f : β → γ → δ} (h : Summable (Function.uncurry f)) (h
   rfl
 #align tsum_comm' tsum_comm'
 
-end HasContinuousAdd
+end ContinuousAdd
 
 section ContinuousStar
 
@@ -889,7 +889,7 @@ theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : �
 
 end Countable
 
-variable [HasContinuousAdd α]
+variable [ContinuousAdd α]
 
 theorem tsum_add_tsum_compl {s : Set β} (hs : Summable (f ∘ coe : s → α))
     (hsc : Summable (f ∘ coe : sᶜ → α)) : ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
@@ -1187,7 +1187,7 @@ theorem summable_int_of_summable_nat {f : ℤ → α} (hp : Summable fun n : ℕ
 #align summable_int_of_summable_nat summable_int_of_summable_nat
 
 theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalSpace α]
-    [HasContinuousAdd α] {a : α} {f : ℤ → α} (hf : HasSum f a) :
+    [ContinuousAdd α] {a : α} {f : ℤ → α} (hf : HasSum f a) :
     HasSum (fun n : ℕ => f n + f (-n)) (a + f 0) :=
   by
   apply (hf.add (hasSum_ite_eq (0 : ℤ) (f 0))).hasSum_of_sum_eq fun u => _
@@ -1310,7 +1310,7 @@ end ConstSmul
 section SmulConst
 
 variable {R : Type _} [Semiring R] [TopologicalSpace R] [TopologicalSpace α] [AddCommMonoid α]
-  [Module R α] [HasContinuousSmul R α] {f : β → R}
+  [Module R α] [ContinuousSMul R α] {f : β → R}
 
 theorem HasSum.smul_const {r : R} (hf : HasSum f r) (a : α) : HasSum (fun z => f z • a) (r • a) :=
   hf.map ((smulAddHom R α).flip a) (continuous_id.smul continuous_const)

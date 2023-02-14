@@ -659,6 +659,7 @@ import Mathbin.Analysis.NormedSpace.ConformalLinearMap
 import Mathbin.Analysis.NormedSpace.ContinuousAffineMap
 import Mathbin.Analysis.NormedSpace.ContinuousLinearMap
 import Mathbin.Analysis.NormedSpace.Dual
+import Mathbin.Analysis.NormedSpace.DualNumber
 import Mathbin.Analysis.NormedSpace.Enorm
 import Mathbin.Analysis.NormedSpace.Exponential
 import Mathbin.Analysis.NormedSpace.Extend
@@ -687,6 +688,7 @@ import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Analysis.NormedSpace.Star.Matrix
 import Mathbin.Analysis.NormedSpace.Star.Mul
 import Mathbin.Analysis.NormedSpace.Star.Spectrum
+import Mathbin.Analysis.NormedSpace.TrivSqZeroExt
 import Mathbin.Analysis.NormedSpace.Units
 import Mathbin.Analysis.NormedSpace.WeakDual
 import Mathbin.Analysis.PSeries
@@ -2913,6 +2915,7 @@ import Mathbin.Topology.Instances.RatLemmas
 import Mathbin.Topology.Instances.Real
 import Mathbin.Topology.Instances.RealVectorSpace
 import Mathbin.Topology.Instances.Sign
+import Mathbin.Topology.Instances.TrivSqZeroExt
 import Mathbin.Topology.IsLocallyHomeomorph
 import Mathbin.Topology.List
 import Mathbin.Topology.LocalAtTarget

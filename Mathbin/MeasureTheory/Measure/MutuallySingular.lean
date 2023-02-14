@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.mutually_singular
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,9 +13,9 @@ import Mathbin.MeasureTheory.Measure.MeasureSpace
 /-! # Mutually singular measures
 
 Two measures `μ`, `ν` are said to be mutually singular (`measure_theory.measure.mutually_singular`,
-localized notation `μ ⊥ₘ ν`) if there exists a measurable set `s` such that `μ s = 0` and
+localized notation `μ ⟂ₘ ν`) if there exists a measurable set `s` such that `μ s = 0` and
 `ν sᶜ = 0`. The measurability of `s` is an unnecessary assumption (see
-`measure_theory.measure.mutually_singular.mk`) but we keep it because this way `rcases (h : μ ⊥ₘ ν)`
+`measure_theory.measure.mutually_singular.mk`) but we keep it because this way `rcases (h : μ ⟂ₘ ν)`
 gives us a measurable set and usually it is easy to prove measurability.
 
 In this file we define the predicate `measure_theory.measure.mutually_singular` and prove basic
@@ -44,7 +44,7 @@ def MutuallySingular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
 #align measure_theory.measure.mutually_singular MeasureTheory.Measure.MutuallySingular
 
 -- mathport name: measure.mutually_singular
-scoped[MeasureTheory] infixl:60 " ⊥ₘ " => MeasureTheory.Measure.MutuallySingular
+scoped[MeasureTheory] infixl:60 " ⟂ₘ " => MeasureTheory.Measure.MutuallySingular
 
 namespace MutuallySingular
 
@@ -57,36 +57,36 @@ theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ 
 #align measure_theory.measure.mutually_singular.mk MeasureTheory.Measure.MutuallySingular.mk
 
 @[simp]
-theorem zeroRight : μ ⊥ₘ 0 :=
+theorem zeroRight : μ ⟂ₘ 0 :=
   ⟨∅, MeasurableSet.empty, measure_empty, rfl⟩
 #align measure_theory.measure.mutually_singular.zero_right MeasureTheory.Measure.MutuallySingular.zeroRight
 
 @[symm]
-theorem symm (h : ν ⊥ₘ μ) : μ ⊥ₘ ν :=
+theorem symm (h : ν ⟂ₘ μ) : μ ⟂ₘ ν :=
   let ⟨i, hi, his, hit⟩ := h
   ⟨iᶜ, hi.compl, hit, (compl_compl i).symm ▸ his⟩
 #align measure_theory.measure.mutually_singular.symm MeasureTheory.Measure.MutuallySingular.symm
 
-theorem comm : μ ⊥ₘ ν ↔ ν ⊥ₘ μ :=
+theorem comm : μ ⟂ₘ ν ↔ ν ⟂ₘ μ :=
   ⟨fun h => h.symm, fun h => h.symm⟩
 #align measure_theory.measure.mutually_singular.comm MeasureTheory.Measure.MutuallySingular.comm
 
 @[simp]
-theorem zeroLeft : 0 ⊥ₘ μ :=
+theorem zeroLeft : 0 ⟂ₘ μ :=
   zeroRight.symm
 #align measure_theory.measure.mutually_singular.zero_left MeasureTheory.Measure.MutuallySingular.zeroLeft
 
-theorem monoAc (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ ≪ ν₁) : μ₂ ⊥ₘ ν₂ :=
+theorem monoAc (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≪ μ₁) (hν : ν₂ ≪ ν₁) : μ₂ ⟂ₘ ν₂ :=
   let ⟨s, hs, h₁, h₂⟩ := h
   ⟨s, hs, hμ h₁, hν h₂⟩
 #align measure_theory.measure.mutually_singular.mono_ac MeasureTheory.Measure.MutuallySingular.monoAc
 
-theorem mono (h : μ₁ ⊥ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⊥ₘ ν₂ :=
+theorem mono (h : μ₁ ⟂ₘ ν₁) (hμ : μ₂ ≤ μ₁) (hν : ν₂ ≤ ν₁) : μ₂ ⟂ₘ ν₂ :=
   h.monoAc hμ.AbsolutelyContinuous hν.AbsolutelyContinuous
 #align measure_theory.measure.mutually_singular.mono MeasureTheory.Measure.MutuallySingular.mono
 
 @[simp]
-theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ ⊥ₘ ν ↔ ∀ i, μ i ⊥ₘ ν :=
+theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ ⟂ₘ ν ↔ ∀ i, μ i ⟂ₘ ν :=
   by
   refine' ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => _⟩
   choose s hsm hsμ hsν using H
@@ -97,33 +97,33 @@ theorem sum_left {ι : Type _} [Countable ι] {μ : ι → Measure α} : sum μ 
 #align measure_theory.measure.mutually_singular.sum_left MeasureTheory.Measure.MutuallySingular.sum_left
 
 @[simp]
-theorem sum_right {ι : Type _} [Countable ι] {ν : ι → Measure α} : μ ⊥ₘ sum ν ↔ ∀ i, μ ⊥ₘ ν i :=
+theorem sum_right {ι : Type _} [Countable ι] {ν : ι → Measure α} : μ ⟂ₘ sum ν ↔ ∀ i, μ ⟂ₘ ν i :=
   comm.trans <| sum_left.trans <| forall_congr' fun i => comm
 #align measure_theory.measure.mutually_singular.sum_right MeasureTheory.Measure.MutuallySingular.sum_right
 
 @[simp]
-theorem add_left_iff : μ₁ + μ₂ ⊥ₘ ν ↔ μ₁ ⊥ₘ ν ∧ μ₂ ⊥ₘ ν := by
+theorem add_left_iff : μ₁ + μ₂ ⟂ₘ ν ↔ μ₁ ⟂ₘ ν ∧ μ₂ ⟂ₘ ν := by
   rw [← sum_cond, sum_left, Bool.forall_bool, cond, cond, and_comm]
 #align measure_theory.measure.mutually_singular.add_left_iff MeasureTheory.Measure.MutuallySingular.add_left_iff
 
 @[simp]
-theorem add_right_iff : μ ⊥ₘ ν₁ + ν₂ ↔ μ ⊥ₘ ν₁ ∧ μ ⊥ₘ ν₂ :=
+theorem add_right_iff : μ ⟂ₘ ν₁ + ν₂ ↔ μ ⟂ₘ ν₁ ∧ μ ⟂ₘ ν₂ :=
   comm.trans <| add_left_iff.trans <| and_congr comm comm
 #align measure_theory.measure.mutually_singular.add_right_iff MeasureTheory.Measure.MutuallySingular.add_right_iff
 
-theorem addLeft (h₁ : ν₁ ⊥ₘ μ) (h₂ : ν₂ ⊥ₘ μ) : ν₁ + ν₂ ⊥ₘ μ :=
+theorem addLeft (h₁ : ν₁ ⟂ₘ μ) (h₂ : ν₂ ⟂ₘ μ) : ν₁ + ν₂ ⟂ₘ μ :=
   add_left_iff.2 ⟨h₁, h₂⟩
 #align measure_theory.measure.mutually_singular.add_left MeasureTheory.Measure.MutuallySingular.addLeft
 
-theorem addRight (h₁ : μ ⊥ₘ ν₁) (h₂ : μ ⊥ₘ ν₂) : μ ⊥ₘ ν₁ + ν₂ :=
+theorem addRight (h₁ : μ ⟂ₘ ν₁) (h₂ : μ ⟂ₘ ν₂) : μ ⟂ₘ ν₁ + ν₂ :=
   add_right_iff.2 ⟨h₁, h₂⟩
 #align measure_theory.measure.mutually_singular.add_right MeasureTheory.Measure.MutuallySingular.addRight
 
-theorem smul (r : ℝ≥0∞) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
+theorem smul (r : ℝ≥0∞) (h : ν ⟂ₘ μ) : r • ν ⟂ₘ μ :=
   h.monoAc (AbsolutelyContinuous.rfl.smul r) AbsolutelyContinuous.rfl
 #align measure_theory.measure.mutually_singular.smul MeasureTheory.Measure.MutuallySingular.smul
 
-theorem smulNnreal (r : ℝ≥0) (h : ν ⊥ₘ μ) : r • ν ⊥ₘ μ :=
+theorem smulNnreal (r : ℝ≥0) (h : ν ⟂ₘ μ) : r • ν ⟂ₘ μ :=
   h.smul r
 #align measure_theory.measure.mutually_singular.smul_nnreal MeasureTheory.Measure.MutuallySingular.smulNnreal
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.partition
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -52,6 +52,7 @@ open BigOperators
 
 namespace Nat
 
+#print Nat.Partition /-
 /-- A partition of `n` is a multiset of positive integers summing to `n`. -/
 @[ext]
 structure Partition (n : ℕ) where
@@ -60,9 +61,11 @@ structure Partition (n : ℕ) where
   parts_sum : parts.Sum = n
   deriving DecidableEq
 #align nat.partition Nat.Partition
+-/
 
 namespace Partition
 
+#print Nat.Partition.ofComposition /-
 /-- A composition induces a partition (just convert the list to a multiset). -/
 def ofComposition (n : ℕ) (c : Composition n) : Partition n
     where
@@ -70,7 +73,9 @@ def ofComposition (n : ℕ) (c : Composition n) : Partition n
   parts_pos i hi := c.blocks_pos hi
   parts_sum := by rw [Multiset.coe_sum, c.blocks_sum]
 #align nat.partition.of_composition Nat.Partition.ofComposition
+-/
 
+#print Nat.Partition.ofComposition_surj /-
 theorem ofComposition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
   by
   rintro ⟨b, hb₁, hb₂⟩
@@ -78,7 +83,9 @@ theorem ofComposition_surj {n : ℕ} : Function.Surjective (ofComposition n) :=
   refine' ⟨⟨b, fun i hi => hb₁ hi, _⟩, partition.ext _ _ rfl⟩
   simpa using hb₂
 #align nat.partition.of_composition_surj Nat.Partition.ofComposition_surj
+-/
 
+#print Nat.Partition.ofSums /-
 -- The argument `n` is kept explicit here since it is useful in tactic mode proofs to generate the
 -- proof obligation `l.sum = n`.
 /-- Given a multiset which sums to `n`, construct a partition of `n` with the same multiset, but
@@ -97,20 +104,31 @@ def ofSums (n : ℕ) (l : Multiset ℕ) (hl : l.Sum = n) : Partition n
       simp
     simpa [lz, hl] using lt
 #align nat.partition.of_sums Nat.Partition.ofSums
+-/
 
+#print Nat.Partition.ofMultiset /-
 /-- A `multiset ℕ` induces a partition on its sum. -/
 def ofMultiset (l : Multiset ℕ) : Partition l.Sum :=
   ofSums _ l rfl
 #align nat.partition.of_multiset Nat.Partition.ofMultiset
+-/
 
+#print Nat.Partition.indiscretePartition /-
 /-- The partition of exactly one part. -/
 def indiscretePartition (n : ℕ) : Partition n :=
   ofSums n {n} rfl
 #align nat.partition.indiscrete_partition Nat.Partition.indiscretePartition
+-/
 
 instance {n : ℕ} : Inhabited (Partition n) :=
   ⟨indiscretePartition n⟩
 
+/- warning: nat.partition.count_of_sums_of_ne_zero -> Nat.Partition.count_ofSums_of_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n) {i : Nat}, (Ne.{1} Nat i (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) i (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) i l))
+but is expected to have type
+  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n) {i : Nat}, (Ne.{1} Nat i (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) i (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) i l))
+Case conversion may be inaccurate. Consider using '#align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zeroₓ'. -/
 /-- The number of times a positive integer `i` appears in the partition `of_sums n l hl` is the same
 as the number of times it appears in the multiset `l`.
 (For `i = 0`, `partition.non_zero` combined with `multiset.count_eq_zero_of_not_mem` gives that
@@ -121,6 +139,12 @@ theorem count_ofSums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i
   count_filter_of_pos hi
 #align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zero
 
+/- warning: nat.partition.count_of_sums_zero -> Nat.Partition.count_ofSums_zero is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n), Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => Nat.decidableEq a b) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+but is expected to have type
+  forall {n : Nat} {l : Multiset.{0} Nat} (hl : Eq.{1} Nat (Multiset.sum.{0} Nat Nat.addCommMonoid l) n), Eq.{1} Nat (Multiset.count.{0} Nat (fun (a : Nat) (b : Nat) => instDecidableEqNat a b) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) (Nat.Partition.parts n (Nat.Partition.ofSums n l hl))) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
+Case conversion may be inaccurate. Consider using '#align nat.partition.count_of_sums_zero Nat.Partition.count_ofSums_zeroₓ'. -/
 theorem count_ofSums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
     (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl
@@ -132,20 +156,26 @@ partitions.
 instance (n : ℕ) : Fintype (Partition n) :=
   Fintype.ofSurjective (ofComposition n) ofComposition_surj
 
+#print Nat.Partition.odds /-
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (Partition n) :=
   Finset.univ.filterₓ fun c => ∀ i ∈ c.parts, ¬Even i
 #align nat.partition.odds Nat.Partition.odds
+-/
 
+#print Nat.Partition.distincts /-
 /-- The finset of those partitions in which each part is used at most once. -/
 def distincts (n : ℕ) : Finset (Partition n) :=
   Finset.univ.filterₓ fun c => c.parts.Nodup
 #align nat.partition.distincts Nat.Partition.distincts
+-/
 
+#print Nat.Partition.oddDistincts /-
 /-- The finset of those partitions in which every part is odd and used at most once. -/
 def oddDistincts (n : ℕ) : Finset (Partition n) :=
   odds n ∩ distincts n
 #align nat.partition.odd_distincts Nat.Partition.oddDistincts
+-/
 
 end Partition
 

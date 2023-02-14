@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.algebra.open_subgroup
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,7 +168,7 @@ instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[to_additive]
-theorem isClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :=
+theorem isClosed [ContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) :=
   by
   apply isOpen_compl_iff.1
   refine' isOpen_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, _, _, _⟩
@@ -274,7 +274,7 @@ end OpenSubgroup
 
 namespace Subgroup
 
-variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
+variable {G : Type _} [Group G] [TopologicalSpace G] [ContinuousMul G] (H : Subgroup G)
 
 @[to_additive]
 theorem isOpen_of_mem_nhds {g : G} (hg : (H : Set G) ∈ 𝓝 g) : IsOpen (H : Set G) :=
@@ -327,7 +327,7 @@ end Subgroup
 
 namespace OpenSubgroup
 
-variable {G : Type _} [Group G] [TopologicalSpace G] [HasContinuousMul G]
+variable {G : Type _} [Group G] [TopologicalSpace G] [ContinuousMul G]
 
 @[to_additive]
 instance : SemilatticeSup (OpenSubgroup G) :=

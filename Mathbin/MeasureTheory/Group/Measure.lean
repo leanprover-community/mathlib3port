@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.measure
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -847,8 +847,8 @@ instance MapContinuousLinearEquiv.isAddHaarMeasure (e : G ≃L[𝕜] H) : IsAddH
   e.toAddEquiv.is_add_haar_measure_map _ e.Continuous e.symm.Continuous
 #align measure_theory.measure.map_continuous_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapContinuousLinearEquiv.isAddHaarMeasure
 
-variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [HasContinuousSmul 𝕜 G]
-  [HasContinuousSmul 𝕜 H]
+variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [ContinuousSMul 𝕜 G]
+  [ContinuousSMul 𝕜 H]
 
 instance MapLinearEquiv.isAddHaarMeasure (e : G ≃ₗ[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
   MapContinuousLinearEquiv.isAddHaarMeasure _ e.toContinuousLinearEquiv

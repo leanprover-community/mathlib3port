@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andreas Swerdlow
 
 ! This file was ported from Lean 3 source module deprecated.subfield
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h 
 #align is_subfield.pow_mem IsSubfield.pow_mem
 
 theorem Univ.isSubfield : IsSubfield (@Set.univ F) :=
-  { Univ.IsSubmonoid, IsAddSubgroup.univ_addSubgroup with inv_mem := by intros <;> trivial }
+  { Univ.isSubmonoid, IsAddSubgroup.univ_addSubgroup with inv_mem := by intros <;> trivial }
 #align univ.is_subfield Univ.isSubfield
 
 theorem Preimage.isSubfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :

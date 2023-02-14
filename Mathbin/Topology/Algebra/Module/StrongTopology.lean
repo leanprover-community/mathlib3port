@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -140,10 +140,10 @@ theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2S
   exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
 #align continuous_linear_map.strong_topology.t2_space ContinuousLinearMap.strongTopology.t2Space
 
-theorem strongTopology.hasContinuousSmul [RingHomSurjective σ] [RingHomIsometric σ]
-    [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousSmul 𝕜₂ F] (𝔖 : Set (Set E))
+theorem strongTopology.continuousSMul [RingHomSurjective σ] [RingHomIsometric σ]
+    [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousSMul 𝕜₂ F] (𝔖 : Set (Set E))
     (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (h𝔖₃ : ∀ S ∈ 𝔖, Bornology.IsVonNBounded 𝕜₁ S) :
-    @HasContinuousSmul 𝕜₂ (E →SL[σ] F) _ _ (strongTopology σ F 𝔖) :=
+    @ContinuousSMul 𝕜₂ (E →SL[σ] F) _ _ (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
@@ -151,9 +151,9 @@ theorem strongTopology.hasContinuousSmul [RingHomSurjective σ] [RingHomIsometri
   let φ : (E →SL[σ] F) →ₗ[𝕜₂] E →ᵤ[𝔖] F :=
     ⟨(coeFn : (E →SL[σ] F) → E → F), fun _ _ => rfl, fun _ _ => rfl⟩
   exact
-    UniformOnFun.hasContinuousSmul_induced_of_image_bounded 𝕜₂ E F (E →SL[σ] F) h𝔖₁ h𝔖₂ φ ⟨rfl⟩
+    UniformOnFun.continuousSMul_induced_of_image_bounded 𝕜₂ E F (E →SL[σ] F) h𝔖₁ h𝔖₂ φ ⟨rfl⟩
       fun u s hs => (h𝔖₃ s hs).image u
-#align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.hasContinuousSmul
+#align continuous_linear_map.strong_topology.has_continuous_smul ContinuousLinearMap.strongTopology.continuousSMul
 
 theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
@@ -208,8 +208,8 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalAddGroup (E �
   strongTopology.topologicalAddGroup σ F _
 
 instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [TopologicalAddGroup F]
-    [HasContinuousSmul 𝕜₂ F] : HasContinuousSmul 𝕜₂ (E →SL[σ] F) :=
-  strongTopology.hasContinuousSmul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+    [ContinuousSMul 𝕜₂ F] : ContinuousSMul 𝕜₂ (E →SL[σ] F) :=
+  strongTopology.continuousSMul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
     ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
@@ -219,7 +219,7 @@ instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
 instance [UniformSpace F] [UniformAddGroup F] : UniformAddGroup (E →SL[σ] F) :=
   strongUniformity.uniformAddGroup σ F _
 
-instance [TopologicalSpace F] [TopologicalAddGroup F] [HasContinuousSmul 𝕜₁ E] [T2Space F] :
+instance [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousSMul 𝕜₁ E] [T2Space F] :
     T2Space (E →SL[σ] F) :=
   strongTopology.t2Space σ F _
     (Set.eq_univ_of_forall fun x =>

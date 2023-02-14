@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_fun
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -620,7 +620,7 @@ end SMul
 
 section Mul
 
-variable [Mul γ] [HasContinuousMul γ]
+variable [Mul γ] [ContinuousMul γ]
 
 @[to_additive]
 instance : Mul (α →ₘ[μ] γ) :=
@@ -647,15 +647,15 @@ theorem mul_toGerm (f g : α →ₘ[μ] γ) : (f * g).toGerm = f.toGerm * g.toGe
 
 end Mul
 
-instance [AddMonoid γ] [HasContinuousAdd γ] : AddMonoid (α →ₘ[μ] γ) :=
+instance [AddMonoid γ] [ContinuousAdd γ] : AddMonoid (α →ₘ[μ] γ) :=
   toGerm_injective.AddMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_toGerm _ _
 
-instance [AddCommMonoid γ] [HasContinuousAdd γ] : AddCommMonoid (α →ₘ[μ] γ) :=
+instance [AddCommMonoid γ] [ContinuousAdd γ] : AddCommMonoid (α →ₘ[μ] γ) :=
   toGerm_injective.AddCommMonoid toGerm zero_to_germ add_to_germ fun _ _ => smul_toGerm _ _
 
 section Monoid
 
-variable [Monoid γ] [HasContinuousMul γ]
+variable [Monoid γ] [ContinuousMul γ]
 
 instance : Pow (α →ₘ[μ] γ) ℕ :=
   ⟨fun f n => comp _ (continuous_pow n) f⟩
@@ -692,7 +692,7 @@ def toGermMonoidHom : (α →ₘ[μ] γ) →* μ.ae.Germ γ
 end Monoid
 
 @[to_additive]
-instance [CommMonoid γ] [HasContinuousMul γ] : CommMonoid (α →ₘ[μ] γ) :=
+instance [CommMonoid γ] [ContinuousMul γ] : CommMonoid (α →ₘ[μ] γ) :=
   toGerm_injective.CommMonoid toGerm one_toGerm mul_toGerm pow_toGerm
 
 section Group
@@ -800,13 +800,13 @@ variable {𝕜 : Type _}
 instance [Monoid 𝕜] [MulAction 𝕜 γ] [ContinuousConstSMul 𝕜 γ] : MulAction 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.MulAction toGerm smul_toGerm
 
-instance [Monoid 𝕜] [AddMonoid γ] [HasContinuousAdd γ] [DistribMulAction 𝕜 γ]
+instance [Monoid 𝕜] [AddMonoid γ] [ContinuousAdd γ] [DistribMulAction 𝕜 γ]
     [ContinuousConstSMul 𝕜 γ] : DistribMulAction 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.DistribMulAction (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) fun c : 𝕜 =>
     smul_toGerm c
 
-instance [Semiring 𝕜] [AddCommMonoid γ] [HasContinuousAdd γ] [Module 𝕜 γ]
-    [ContinuousConstSMul 𝕜 γ] : Module 𝕜 (α →ₘ[μ] γ) :=
+instance [Semiring 𝕜] [AddCommMonoid γ] [ContinuousAdd γ] [Module 𝕜 γ] [ContinuousConstSMul 𝕜 γ] :
+    Module 𝕜 (α →ₘ[μ] γ) :=
   toGerm_injective.Module 𝕜 (to_germ_add_monoid_hom : (α →ₘ[μ] γ) →+ _) smul_toGerm
 
 end Module

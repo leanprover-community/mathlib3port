@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,7 +128,7 @@ def alephIdx.relIso : @RelIso Cardinal.{u} Ordinal.{u} (· < ·) (· < ·) :=
     (InitialSeg.eq_or_principal AlephIdx.initialSeg.{u}).resolve_right fun ⟨o, e⟩ =>
       by
       have : ∀ c, aleph_idx c < o := fun c => (e _).2 ⟨_, rfl⟩
-      refine' Ordinal.induction_on o _ this; intro α r _ h
+      refine' Ordinal.inductionOn o _ this; intro α r _ h
       let s := ⨆ a, inv_fun aleph_idx (Ordinal.typein r a)
       apply (lt_succ s).not_le
       have I : injective aleph_idx := aleph_idx.initial_seg.to_embedding.injective

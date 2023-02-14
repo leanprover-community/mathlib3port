@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.cofinality
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -498,7 +498,7 @@ theorem cof_zero : cof 0 = 0 :=
 
 @[simp]
 theorem cof_eq_zero {o} : cof o = 0 ↔ o = 0 :=
-  ⟨induction_on o fun α r _ z =>
+  ⟨inductionOn o fun α r _ z =>
       let ⟨S, hl, e⟩ := cof_eq r
       type_eq_zero_iff_is_empty.2 <|
         ⟨fun a =>
@@ -530,7 +530,7 @@ theorem cof_succ (o) : cof (succ o) = 1 :=
 
 @[simp]
 theorem cof_eq_one_iff_is_succ {o} : cof.{u} o = 1 ↔ ∃ a, o = succ a :=
-  ⟨induction_on o fun α r _ z => by
+  ⟨inductionOn o fun α r _ z => by
       skip
       rcases cof_eq r with ⟨S, hl, e⟩; rw [z] at e
       cases' mk_ne_zero_iff.1 (by rw [e] <;> exact one_ne_zero) with a

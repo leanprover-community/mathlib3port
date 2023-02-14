@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.list
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -186,7 +186,7 @@ theorem continuous_removeNth {n : ℕ} : Continuous fun l : List α => removeNth
 #align list.continuous_remove_nth List.continuous_removeNth
 
 @[to_additive]
-theorem tendsto_prod [Monoid α] [HasContinuousMul α] {l : List α} :
+theorem tendsto_prod [Monoid α] [ContinuousMul α] {l : List α} :
     Tendsto List.prod (𝓝 l) (𝓝 l.Prod) :=
   by
   induction' l with x l ih
@@ -199,7 +199,7 @@ theorem tendsto_prod [Monoid α] [HasContinuousMul α] {l : List α} :
 #align list.tendsto_sum List.tendsto_sum
 
 @[to_additive]
-theorem continuous_prod [Monoid α] [HasContinuousMul α] : Continuous (prod : List α → α) :=
+theorem continuous_prod [Monoid α] [ContinuousMul α] : Continuous (prod : List α → α) :=
   continuous_iff_continuousAt.mpr fun l => tendsto_prod
 #align list.continuous_prod List.continuous_prod
 #align list.continuous_sum List.continuous_sum

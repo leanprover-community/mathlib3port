@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.strict
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Bicategory.Basic
 
 /-!
 # Strict bicategories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A bicategory is called `strict` if the left unitors, the right unitors, and the associators are
 isomorphisms given by equalities.
@@ -35,6 +38,7 @@ universe w v u
 
 variable (B : Type u) [Bicategory.{w, v} B]
 
+#print CategoryTheory.Bicategory.Strict /-
 /-- A bicategory is called `strict` if the left unitors, the right unitors, and the associators are
 isomorphisms given by equalities.
 -/
@@ -49,6 +53,7 @@ class Bicategory.Strict : Prop where
     ∀ {a b c d : B} (f : a ⟶ b) (g : b ⟶ c) (h : c ⟶ d), α_ f g h = eqToIso (assoc' f g h) := by
     obviously
 #align category_theory.bicategory.strict CategoryTheory.Bicategory.Strict
+-/
 
 restate_axiom bicategory.strict.id_comp'
 
@@ -65,6 +70,7 @@ restate_axiom bicategory.strict.associator_eq_to_iso'
 attribute [simp]
   bicategory.strict.id_comp bicategory.strict.left_unitor_eq_to_iso bicategory.strict.comp_id bicategory.strict.right_unitor_eq_to_iso bicategory.strict.assoc bicategory.strict.associator_eq_to_iso
 
+#print CategoryTheory.StrictBicategory.category /-
 -- see Note [lower instance priority]
 /-- Category structure on a strict bicategory -/
 instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Category B
@@ -73,11 +79,13 @@ instance (priority := 100) StrictBicategory.category [Bicategory.Strict B] : Cat
   comp_id' a b := Bicategory.Strict.comp_id
   assoc' a b c d := Bicategory.Strict.assoc
 #align category_theory.strict_bicategory.category CategoryTheory.StrictBicategory.category
+-/
 
 namespace Bicategory
 
 variable {B}
 
+#print CategoryTheory.Bicategory.whiskerLeft_eqToHom /-
 @[simp]
 theorem whiskerLeft_eqToHom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = h) :
     f ◁ eqToHom η = eqToHom (congr_arg₂ (· ≫ ·) rfl η) :=
@@ -85,7 +93,9 @@ theorem whiskerLeft_eqToHom {a b c : B} (f : a ⟶ b) {g h : b ⟶ c} (η : g = 
   cases η
   simp only [whisker_left_id, eq_to_hom_refl]
 #align category_theory.bicategory.whisker_left_eq_to_hom CategoryTheory.Bicategory.whiskerLeft_eqToHom
+-/
 
+#print CategoryTheory.Bicategory.eqToHom_whiskerRight /-
 @[simp]
 theorem eqToHom_whiskerRight {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶ c) :
     eqToHom η ▷ h = eqToHom (congr_arg₂ (· ≫ ·) η rfl) :=
@@ -93,6 +103,7 @@ theorem eqToHom_whiskerRight {a b c : B} {f g : a ⟶ b} (η : f = g) (h : b ⟶
   cases η
   simp only [id_whisker_right, eq_to_hom_refl]
 #align category_theory.bicategory.eq_to_hom_whisker_right CategoryTheory.Bicategory.eqToHom_whiskerRight
+-/
 
 end Bicategory
 

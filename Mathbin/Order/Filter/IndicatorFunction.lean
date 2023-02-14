@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.indicator_function
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -128,15 +128,15 @@ theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
     simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]
 #align antitone.tendsto_indicator Antitone.tendsto_indicator
 
-#print tendsto_indicator_bUnion_finset /-
-theorem tendsto_indicator_bUnion_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
+#print tendsto_indicator_bunionᵢ_finset /-
+theorem tendsto_indicator_bunionᵢ_finset {ι} [Zero β] (s : ι → Set α) (f : α → β) (a : α) :
     Tendsto (fun n : Finset ι => indicator (⋃ i ∈ n, s i) f a) atTop
       (pure <| indicator (unionᵢ s) f a) :=
   by
   rw [Union_eq_Union_finset s]
   refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃ i ∈ n, s i) _ f a
   exact fun t₁ t₂ => bUnion_subset_bUnion_left
-#align tendsto_indicator_bUnion_finset tendsto_indicator_bUnion_finset
+#align tendsto_indicator_bUnion_finset tendsto_indicator_bunionᵢ_finset
 -/
 
 #print Filter.EventuallyEq.support /-

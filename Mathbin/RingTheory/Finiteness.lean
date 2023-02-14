@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.finiteness
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -353,7 +353,7 @@ theorem fg_restrictScalars {R S M : Type _} [CommSemiring R] [Semiring S] [Algeb
   by
   obtain ⟨X, rfl⟩ := hfin
   use X
-  exact Submodule.span_eq_restrictScalars R S M X h
+  exact (Submodule.restrictScalars_span R S h ↑X).symm
 #align submodule.fg_restrict_scalars Submodule.fg_restrictScalars
 
 theorem Fg.stablizes_of_supᵢ_eq {M' : Submodule R M} (hM' : M'.Fg) (N : ℕ →o Submodule R M)

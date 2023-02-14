@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module order.ideal
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,16 +183,16 @@ theorem coe_subset_coe : (s : Set P) ⊆ t ↔ s ≤ t :=
   Iff.rfl
 #align order.ideal.coe_subset_coe Order.Ideal.coe_subset_coe
 
-/- warning: order.ideal.coe_ssubset_coe -> Order.Ideal.coe_sSubset_coe is a dubious translation:
+/- warning: order.ideal.coe_ssubset_coe -> Order.Ideal.coe_ssubset_coe is a dubious translation:
 lean 3 declaration is
   forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} P) (Set.hasSsubset.{u1} P) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) s) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (HasLiftT.mk.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (CoeTCₓ.coe.{succ u1, succ u1} (Order.Ideal.{u1} P _inst_1) (Set.{u1} P) (SetLike.Set.hasCoeT.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.setLike.{u1} P _inst_1)))) t)) (LT.lt.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLT.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.partialOrder.{u1} P _inst_1))) s t)
 but is expected to have type
   forall {P : Type.{u1}} [_inst_1 : LE.{u1} P] {s : Order.Ideal.{u1} P _inst_1} {t : Order.Ideal.{u1} P _inst_1}, Iff (HasSSubset.SSubset.{u1} (Set.{u1} P) (Set.instHasSSubsetSet.{u1} P) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) s) (SetLike.coe.{u1, u1} (Order.Ideal.{u1} P _inst_1) P (Order.Ideal.instSetLikeIdeal.{u1} P _inst_1) t)) (LT.lt.{u1} (Order.Ideal.{u1} P _inst_1) (Preorder.toLT.{u1} (Order.Ideal.{u1} P _inst_1) (PartialOrder.toPreorder.{u1} (Order.Ideal.{u1} P _inst_1) (Order.Ideal.instPartialOrderIdeal.{u1} P _inst_1))) s t)
-Case conversion may be inaccurate. Consider using '#align order.ideal.coe_ssubset_coe Order.Ideal.coe_sSubset_coeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align order.ideal.coe_ssubset_coe Order.Ideal.coe_ssubset_coeₓ'. -/
 @[simp]
-theorem coe_sSubset_coe : (s : Set P) ⊂ t ↔ s < t :=
+theorem coe_ssubset_coe : (s : Set P) ⊂ t ↔ s < t :=
   Iff.rfl
-#align order.ideal.coe_ssubset_coe Order.Ideal.coe_sSubset_coe
+#align order.ideal.coe_ssubset_coe Order.Ideal.coe_ssubset_coe
 
 /- warning: order.ideal.mem_of_mem_of_le -> Order.Ideal.mem_of_mem_of_le is a dubious translation:
 lean 3 declaration is

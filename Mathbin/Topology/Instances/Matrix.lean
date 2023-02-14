@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash, Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.matrix
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,12 +58,11 @@ variable [TopologicalSpace X] [TopologicalSpace R]
 instance [SMul α R] [ContinuousConstSMul α R] : ContinuousConstSMul α (Matrix m n R) :=
   Pi.continuousConstSMul
 
-instance [TopologicalSpace α] [SMul α R] [HasContinuousSmul α R] :
-    HasContinuousSmul α (Matrix m n R) :=
-  Pi.hasContinuousSmul
+instance [TopologicalSpace α] [SMul α R] [ContinuousSMul α R] : ContinuousSMul α (Matrix m n R) :=
+  Pi.continuousSMul
 
-instance [Add R] [HasContinuousAdd R] : HasContinuousAdd (Matrix m n R) :=
-  Pi.has_continuous_add
+instance [Add R] [ContinuousAdd R] : ContinuousAdd (Matrix m n R) :=
+  Pi.continuousAdd
 
 instance [Neg R] [HasContinuousNeg R] : HasContinuousNeg (Matrix m n R) :=
   Pi.has_continuous_neg
@@ -121,8 +120,8 @@ theorem Continuous.matrix_diagonal [Zero R] [DecidableEq n] {A : X → n → R} 
 #align continuous.matrix_diagonal Continuous.matrix_diagonal
 
 @[continuity]
-theorem Continuous.matrix_dotProduct [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R]
-    [HasContinuousMul R] {A : X → n → R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
+theorem Continuous.matrix_dotProduct [Fintype n] [Mul R] [AddCommMonoid R] [ContinuousAdd R]
+    [ContinuousMul R] {A : X → n → R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
     Continuous fun x => dotProduct (A x) (B x) :=
   continuous_finset_sum _ fun i _ =>
     ((continuous_apply i).comp hA).mul ((continuous_apply i).comp hB)
@@ -130,15 +129,15 @@ theorem Continuous.matrix_dotProduct [Fintype n] [Mul R] [AddCommMonoid R] [HasC
 
 /-- For square matrices the usual `continuous_mul` can be used. -/
 @[continuity]
-theorem Continuous.matrix_mul [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R]
-    [HasContinuousMul R] {A : X → Matrix m n R} {B : X → Matrix n p R} (hA : Continuous A)
+theorem Continuous.matrix_mul [Fintype n] [Mul R] [AddCommMonoid R] [ContinuousAdd R]
+    [ContinuousMul R] {A : X → Matrix m n R} {B : X → Matrix n p R} (hA : Continuous A)
     (hB : Continuous B) : Continuous fun x => (A x).mul (B x) :=
   continuous_matrix fun i j =>
     continuous_finset_sum _ fun k _ => (hA.matrix_elem _ _).mul (hB.matrix_elem _ _)
 #align continuous.matrix_mul Continuous.matrix_mul
 
-instance [Fintype n] [Mul R] [AddCommMonoid R] [HasContinuousAdd R] [HasContinuousMul R] :
-    HasContinuousMul (Matrix n n R) :=
+instance [Fintype n] [Mul R] [AddCommMonoid R] [ContinuousAdd R] [ContinuousMul R] :
+    ContinuousMul (Matrix n n R) :=
   ⟨continuous_fst.matrix_mul continuous_snd⟩
 
 instance [Fintype n] [NonUnitalNonAssocSemiring R] [TopologicalSemiring R] :
@@ -148,22 +147,22 @@ instance [Fintype n] [NonUnitalNonAssocRing R] [TopologicalRing R] : Topological
     where
 
 @[continuity]
-theorem Continuous.matrix_vecMulVec [Mul R] [HasContinuousMul R] {A : X → m → R} {B : X → n → R}
+theorem Continuous.matrix_vecMulVec [Mul R] [ContinuousMul R] {A : X → m → R} {B : X → n → R}
     (hA : Continuous A) (hB : Continuous B) : Continuous fun x => vecMulVec (A x) (B x) :=
   continuous_matrix fun i j => ((continuous_apply _).comp hA).mul ((continuous_apply _).comp hB)
 #align continuous.matrix_vec_mul_vec Continuous.matrix_vecMulVec
 
 @[continuity]
-theorem Continuous.matrix_mulVec [NonUnitalNonAssocSemiring R] [HasContinuousAdd R]
-    [HasContinuousMul R] [Fintype n] {A : X → Matrix m n R} {B : X → n → R} (hA : Continuous A)
-    (hB : Continuous B) : Continuous fun x => (A x).mulVec (B x) :=
+theorem Continuous.matrix_mulVec [NonUnitalNonAssocSemiring R] [ContinuousAdd R] [ContinuousMul R]
+    [Fintype n] {A : X → Matrix m n R} {B : X → n → R} (hA : Continuous A) (hB : Continuous B) :
+    Continuous fun x => (A x).mulVec (B x) :=
   continuous_pi fun i => ((continuous_apply i).comp hA).matrix_dotProduct hB
 #align continuous.matrix_mul_vec Continuous.matrix_mulVec
 
 @[continuity]
-theorem Continuous.matrix_vecMul [NonUnitalNonAssocSemiring R] [HasContinuousAdd R]
-    [HasContinuousMul R] [Fintype m] {A : X → m → R} {B : X → Matrix m n R} (hA : Continuous A)
-    (hB : Continuous B) : Continuous fun x => vecMul (A x) (B x) :=
+theorem Continuous.matrix_vecMul [NonUnitalNonAssocSemiring R] [ContinuousAdd R] [ContinuousMul R]
+    [Fintype m] {A : X → m → R} {B : X → Matrix m n R} (hA : Continuous A) (hB : Continuous B) :
+    Continuous fun x => vecMul (A x) (B x) :=
   continuous_pi fun i => hA.matrix_dotProduct <| continuous_pi fun j => hB.matrix_elem _ _
 #align continuous.matrix_vec_mul Continuous.matrix_vecMul
 
@@ -191,7 +190,7 @@ theorem continuous_matrix_diag : Continuous (Matrix.diag : Matrix n n R → n �
 #align continuous_matrix_diag continuous_matrix_diag
 
 @[continuity]
-theorem Continuous.matrix_trace [Fintype n] [AddCommMonoid R] [HasContinuousAdd R]
+theorem Continuous.matrix_trace [Fintype n] [AddCommMonoid R] [ContinuousAdd R]
     {A : X → Matrix n n R} (hA : Continuous A) : Continuous fun x => trace (A x) :=
   continuous_finset_sum _ fun i hi => hA.matrix_elem _ _
 #align continuous.matrix_trace Continuous.matrix_trace

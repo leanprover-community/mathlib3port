@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -183,9 +183,9 @@ instance : MulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
 
 end SMul
 
-section HasContinuousAdd
+section ContinuousAdd
 
-variable [HasContinuousAdd M₂]
+variable [ContinuousAdd M₂]
 
 instance : Add (ContinuousMultilinearMap R M₁ M₂) :=
   ⟨fun f f' => ⟨f.toMultilinearMap + f'.toMultilinearMap, f.cont.add f'.cont⟩⟩
@@ -216,7 +216,7 @@ theorem sum_apply {α : Type _} (f : α → ContinuousMultilinearMap R M₁ M₂
   (applyAddHom m).map_sum f s
 #align continuous_multilinear_map.sum_apply ContinuousMultilinearMap.sum_apply
 
-end HasContinuousAdd
+end ContinuousAdd
 
 /-- If `f` is a continuous multilinear map, then `f.to_continuous_linear_map m i` is the continuous
 linear map obtained by fixing all coordinates but `i` equal to those of `m`, and varying the
@@ -475,7 +475,7 @@ variable {R' R'' A : Type _} [Monoid R'] [Monoid R''] [Semiring A] [∀ i, AddCo
   [Module A M₂] [DistribMulAction R' M₂] [ContinuousConstSMul R' M₂] [SMulCommClass A R' M₂]
   [DistribMulAction R'' M₂] [ContinuousConstSMul R'' M₂] [SMulCommClass A R'' M₂]
 
-instance [HasContinuousAdd M₂] : DistribMulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
+instance [ContinuousAdd M₂] : DistribMulAction R' (ContinuousMultilinearMap A M₁ M₂) :=
   Function.Injective.distribMulAction
     ⟨toMultilinearMap, toMultilinearMap_zero, toMultilinearMap_add⟩ toMultilinearMap_inj fun _ _ =>
     rfl
@@ -485,7 +485,7 @@ end DistribMulAction
 section Module
 
 variable {R' A : Type _} [Semiring R'] [Semiring A] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂]
-  [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [HasContinuousAdd M₂] [∀ i, Module A (M₁ i)]
+  [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂] [ContinuousAdd M₂] [∀ i, Module A (M₁ i)]
   [Module A M₂] [Module R' M₂] [ContinuousConstSMul R' M₂] [SMulCommClass A R' M₂]
 
 /-- The space of continuous multilinear maps over an algebra over `R` is a module over `R`, for the
@@ -507,7 +507,7 @@ def toMultilinearMapLinear : ContinuousMultilinearMap A M₁ M₂ →ₗ[R'] Mul
 /-- `continuous_multilinear_map.pi` as a `linear_equiv`. -/
 @[simps (config := { simpRhs := true })]
 def piLinearEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' i)]
-    [∀ i, TopologicalSpace (M' i)] [∀ i, HasContinuousAdd (M' i)] [∀ i, Module R' (M' i)]
+    [∀ i, TopologicalSpace (M' i)] [∀ i, ContinuousAdd (M' i)] [∀ i, Module R' (M' i)]
     [∀ i, Module A (M' i)] [∀ i, SMulCommClass A R' (M' i)] [∀ i, ContinuousConstSMul R' (M' i)] :
     (∀ i, ContinuousMultilinearMap A M₁ (M' i)) ≃ₗ[R'] ContinuousMultilinearMap A M₁ (∀ i, M' i) :=
   { piEquiv with
@@ -520,7 +520,7 @@ end Module
 section CommAlgebra
 
 variable (R ι) (A : Type _) [Fintype ι] [CommSemiring R] [CommSemiring A] [Algebra R A]
-  [TopologicalSpace A] [HasContinuousMul A]
+  [TopologicalSpace A] [ContinuousMul A]
 
 /-- The continuous multilinear map on `A^ι`, where `A` is a normed commutative algebra
 over `𝕜`, associating to `m` the product of all the `m i`.
@@ -542,7 +542,7 @@ end CommAlgebra
 section Algebra
 
 variable (R n) (A : Type _) [CommSemiring R] [Semiring A] [Algebra R A] [TopologicalSpace A]
-  [HasContinuousMul A]
+  [ContinuousMul A]
 
 /-- The continuous multilinear map on `A^n`, where `A` is a normed algebra over `𝕜`, associating to
 `m` the product of all the `m i`.
@@ -571,7 +571,7 @@ section SmulRight
 
 variable [CommSemiring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M₂] [∀ i, Module R (M₁ i)]
   [Module R M₂] [TopologicalSpace R] [∀ i, TopologicalSpace (M₁ i)] [TopologicalSpace M₂]
-  [HasContinuousSmul R M₂] (f : ContinuousMultilinearMap R M₁ R) (z : M₂)
+  [ContinuousSMul R M₂] (f : ContinuousMultilinearMap R M₁ R) (z : M₂)
 
 /-- Given a continuous `R`-multilinear map `f` taking values in `R`, `f.smul_right z` is the
 continuous multilinear map sending `m` to `f m • z`. -/

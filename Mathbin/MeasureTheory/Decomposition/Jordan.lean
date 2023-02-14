@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.jordan
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -60,7 +60,7 @@ structure JordanDecomposition (α : Type _) [MeasurableSpace α] where
   (posPart negPart : Measure α)
   [posPartFinite : IsFiniteMeasure pos_part]
   [negPartFinite : IsFiniteMeasure neg_part]
-  MutuallySingular : pos_part ⊥ₘ neg_part
+  MutuallySingular : pos_part ⟂ₘ neg_part
 #align measure_theory.jordan_decomposition MeasureTheory.JordanDecomposition
 
 attribute [instance] jordan_decomposition.pos_part_finite
@@ -564,7 +564,7 @@ theorem totalVariation_absolutelyContinuous_iff (s : SignedMeasure α) (μ : Mea
 
 -- TODO: Generalize to vector measures once total variation on vector measures is defined
 theorem mutuallySingular_iff (s t : SignedMeasure α) :
-    s ⊥ᵥ t ↔ s.totalVariation ⊥ₘ t.totalVariation :=
+    s ⟂ᵥ t ↔ s.totalVariation ⟂ₘ t.totalVariation :=
   by
   constructor
   · rintro ⟨u, hmeas, hu₁, hu₂⟩
@@ -585,7 +585,7 @@ theorem mutuallySingular_iff (s t : SignedMeasure α) :
 #align measure_theory.signed_measure.mutually_singular_iff MeasureTheory.SignedMeasure.mutuallySingular_iff
 
 theorem mutuallySingular_ennreal_iff (s : SignedMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
-    s ⊥ᵥ μ ↔ s.totalVariation ⊥ₘ μ.ennrealToMeasure :=
+    s ⟂ᵥ μ ↔ s.totalVariation ⟂ₘ μ.ennrealToMeasure :=
   by
   constructor
   · rintro ⟨u, hmeas, hu₁, hu₂⟩
@@ -606,8 +606,8 @@ theorem mutuallySingular_ennreal_iff (s : SignedMeasure α) (μ : VectorMeasure 
 #align measure_theory.signed_measure.mutually_singular_ennreal_iff MeasureTheory.SignedMeasure.mutuallySingular_ennreal_iff
 
 theorem totalVariation_mutuallySingular_iff (s : SignedMeasure α) (μ : Measure α) :
-    s.totalVariation ⊥ₘ μ ↔
-      s.toJordanDecomposition.posPart ⊥ₘ μ ∧ s.toJordanDecomposition.negPart ⊥ₘ μ :=
+    s.totalVariation ⟂ₘ μ ↔
+      s.toJordanDecomposition.posPart ⟂ₘ μ ∧ s.toJordanDecomposition.negPart ⟂ₘ μ :=
   Measure.MutuallySingular.add_left_iff
 #align measure_theory.signed_measure.total_variation_mutually_singular_iff MeasureTheory.SignedMeasure.totalVariation_mutuallySingular_iff
 

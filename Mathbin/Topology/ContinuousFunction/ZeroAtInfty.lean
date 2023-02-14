@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.zero_at_infty
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,42 +190,42 @@ theorem zero_apply [Zero β] : (0 : C₀(α, β)) x = 0 :=
   rfl
 #align zero_at_infty_continuous_map.zero_apply ZeroAtInftyContinuousMap.zero_apply
 
-instance [MulZeroClass β] [HasContinuousMul β] : Mul C₀(α, β) :=
+instance [MulZeroClass β] [ContinuousMul β] : Mul C₀(α, β) :=
   ⟨fun f g => ⟨f * g, by simpa only [mul_zero] using (zero_at_infty f).mul (zero_at_infty g)⟩⟩
 
 @[simp]
-theorem coe_mul [MulZeroClass β] [HasContinuousMul β] (f g : C₀(α, β)) : ⇑(f * g) = f * g :=
+theorem coe_mul [MulZeroClass β] [ContinuousMul β] (f g : C₀(α, β)) : ⇑(f * g) = f * g :=
   rfl
 #align zero_at_infty_continuous_map.coe_mul ZeroAtInftyContinuousMap.coe_mul
 
-theorem mul_apply [MulZeroClass β] [HasContinuousMul β] (f g : C₀(α, β)) : (f * g) x = f x * g x :=
+theorem mul_apply [MulZeroClass β] [ContinuousMul β] (f g : C₀(α, β)) : (f * g) x = f x * g x :=
   rfl
 #align zero_at_infty_continuous_map.mul_apply ZeroAtInftyContinuousMap.mul_apply
 
-instance [MulZeroClass β] [HasContinuousMul β] : MulZeroClass C₀(α, β) :=
+instance [MulZeroClass β] [ContinuousMul β] : MulZeroClass C₀(α, β) :=
   FunLike.coe_injective.MulZeroClass _ coe_zero coe_mul
 
-instance [SemigroupWithZero β] [HasContinuousMul β] : SemigroupWithZero C₀(α, β) :=
+instance [SemigroupWithZero β] [ContinuousMul β] : SemigroupWithZero C₀(α, β) :=
   FunLike.coe_injective.SemigroupWithZero _ coe_zero coe_mul
 
-instance [AddZeroClass β] [HasContinuousAdd β] : Add C₀(α, β) :=
+instance [AddZeroClass β] [ContinuousAdd β] : Add C₀(α, β) :=
   ⟨fun f g => ⟨f + g, by simpa only [add_zero] using (zero_at_infty f).add (zero_at_infty g)⟩⟩
 
 @[simp]
-theorem coe_add [AddZeroClass β] [HasContinuousAdd β] (f g : C₀(α, β)) : ⇑(f + g) = f + g :=
+theorem coe_add [AddZeroClass β] [ContinuousAdd β] (f g : C₀(α, β)) : ⇑(f + g) = f + g :=
   rfl
 #align zero_at_infty_continuous_map.coe_add ZeroAtInftyContinuousMap.coe_add
 
-theorem add_apply [AddZeroClass β] [HasContinuousAdd β] (f g : C₀(α, β)) : (f + g) x = f x + g x :=
+theorem add_apply [AddZeroClass β] [ContinuousAdd β] (f g : C₀(α, β)) : (f + g) x = f x + g x :=
   rfl
 #align zero_at_infty_continuous_map.add_apply ZeroAtInftyContinuousMap.add_apply
 
-instance [AddZeroClass β] [HasContinuousAdd β] : AddZeroClass C₀(α, β) :=
+instance [AddZeroClass β] [ContinuousAdd β] : AddZeroClass C₀(α, β) :=
   FunLike.coe_injective.AddZeroClass _ coe_zero coe_add
 
 section AddMonoid
 
-variable [AddMonoid β] [HasContinuousAdd β] (f g : C₀(α, β))
+variable [AddMonoid β] [ContinuousAdd β] (f g : C₀(α, β))
 
 @[simp]
 theorem coe_nsmulRec : ∀ n, ⇑(nsmulRec n f) = n • f
@@ -242,7 +242,7 @@ instance : AddMonoid C₀(α, β) :=
 
 end AddMonoid
 
-instance [AddCommMonoid β] [HasContinuousAdd β] : AddCommMonoid C₀(α, β) :=
+instance [AddCommMonoid β] [ContinuousAdd β] : AddCommMonoid C₀(α, β) :=
   FunLike.coe_injective.AddCommMonoid _ coe_zero coe_add fun _ _ => rfl
 
 section AddGroup
@@ -319,7 +319,7 @@ instance [Zero β] {R : Type _} [MonoidWithZero R] [MulActionWithZero R β]
     [ContinuousConstSMul R β] : MulActionWithZero R C₀(α, β) :=
   Function.Injective.mulActionWithZero ⟨_, coe_zero⟩ FunLike.coe_injective coe_smul
 
-instance [AddCommMonoid β] [HasContinuousAdd β] {R : Type _} [Semiring R] [Module R β]
+instance [AddCommMonoid β] [ContinuousAdd β] {R : Type _} [Semiring R] [Module R β]
     [ContinuousConstSMul R β] : Module R C₀(α, β) :=
   Function.Injective.module R ⟨_, coe_zero, coe_add⟩ FunLike.coe_injective coe_smul
 
@@ -559,7 +559,7 @@ theorem star_apply (f : C₀(α, β)) (x : α) : (star f) x = star (f x) :=
   rfl
 #align zero_at_infty_continuous_map.star_apply ZeroAtInftyContinuousMap.star_apply
 
-instance [HasContinuousAdd β] : StarAddMonoid C₀(α, β)
+instance [ContinuousAdd β] : StarAddMonoid C₀(α, β)
     where
   star_involutive f := ext fun x => star_star (f x)
   star_add f g := ext fun x => star_add (f x) (g x)
@@ -650,7 +650,7 @@ theorem zero_comp (g : β →co γ) : (0 : C₀(γ, δ)).comp g = 0 :=
 end
 
 /-- Composition as an additive monoid homomorphism. -/
-def compAddMonoidHom [AddMonoid δ] [HasContinuousAdd δ] (g : β →co γ) : C₀(γ, δ) →+ C₀(β, δ)
+def compAddMonoidHom [AddMonoid δ] [ContinuousAdd δ] (g : β →co γ) : C₀(γ, δ) →+ C₀(β, δ)
     where
   toFun f := f.comp g
   map_zero' := zero_comp g
@@ -658,14 +658,14 @@ def compAddMonoidHom [AddMonoid δ] [HasContinuousAdd δ] (g : β →co γ) : C�
 #align zero_at_infty_continuous_map.comp_add_monoid_hom ZeroAtInftyContinuousMap.compAddMonoidHom
 
 /-- Composition as a semigroup homomorphism. -/
-def compMulHom [MulZeroClass δ] [HasContinuousMul δ] (g : β →co γ) : C₀(γ, δ) →ₙ* C₀(β, δ)
+def compMulHom [MulZeroClass δ] [ContinuousMul δ] (g : β →co γ) : C₀(γ, δ) →ₙ* C₀(β, δ)
     where
   toFun f := f.comp g
   map_mul' f₁ f₂ := rfl
 #align zero_at_infty_continuous_map.comp_mul_hom ZeroAtInftyContinuousMap.compMulHom
 
 /-- Composition as a linear map. -/
-def compLinearMap [AddCommMonoid δ] [HasContinuousAdd δ] {R : Type _} [Semiring R] [Module R δ]
+def compLinearMap [AddCommMonoid δ] [ContinuousAdd δ] {R : Type _} [Semiring R] [Module R δ]
     [ContinuousConstSMul R δ] (g : β →co γ) : C₀(γ, δ) →ₗ[R] C₀(β, δ)
     where
   toFun f := f.comp g

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_torsor
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -235,9 +235,9 @@ theorem uniformContinuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.
   (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
 #align uniform_continuous_vsub uniformContinuous_vsub
 
-instance (priority := 100) NormedAddTorsor.to_hasContinuousVadd : HasContinuousVadd V P
+instance (priority := 100) NormedAddTorsor.to_continuousVAdd : ContinuousVAdd V P
     where continuous_vadd := uniformContinuous_vadd.Continuous
-#align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_hasContinuousVadd
+#align normed_add_torsor.to_has_continuous_vadd NormedAddTorsor.to_continuousVAdd
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
   uniformContinuous_vsub.Continuous
@@ -271,7 +271,7 @@ end
 
 section
 
-variable {R : Type _} [Ring R] [TopologicalSpace R] [Module R V] [HasContinuousSmul R V]
+variable {R : Type _} [Ring R] [TopologicalSpace R] [Module R V] [ContinuousSMul R V]
 
 theorem Filter.Tendsto.lineMap {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
     (h₁ : Tendsto f₁ l (𝓝 p₁)) (h₂ : Tendsto f₂ l (𝓝 p₂)) (hg : Tendsto g l (𝓝 c)) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.affine
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -53,7 +53,7 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
 
 /-- The line map is continuous. -/
 @[continuity]
-theorem lineMap_continuous [TopologicalSpace R] [HasContinuousSmul R F] {p v : F} :
+theorem lineMap_continuous [TopologicalSpace R] [ContinuousSMul R F] {p v : F} :
     Continuous ⇑(lineMap p v : R →ᵃ[R] F) :=
   continuous_iff.mpr <|
     (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)

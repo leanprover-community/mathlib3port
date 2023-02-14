@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed.field.unit_ball
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,8 +37,8 @@ def Subsemigroup.unitBall (𝕜 : Type _) [NonUnitalSemiNormedRing 𝕜] : Subse
 instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toSemigroup (Subsemigroup.unitBall 𝕜)
 
-instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (ball (0 : 𝕜) 1) :=
-  (Subsemigroup.unitBall 𝕜).HasContinuousMul
+instance [NonUnitalSemiNormedRing 𝕜] : ContinuousMul (ball (0 : 𝕜) 1) :=
+  (Subsemigroup.unitBall 𝕜).ContinuousMul
 
 instance [SemiNormedCommRing 𝕜] : CommSemigroup (ball (0 : 𝕜) 1) :=
   MulMemClass.toCommSemigroup (Subsemigroup.unitBall 𝕜)
@@ -67,8 +67,8 @@ instance [NonUnitalSemiNormedRing 𝕜] : Semigroup (closedBall (0 : 𝕜) 1) :=
 instance [NonUnitalSemiNormedRing 𝕜] : HasDistribNeg (closedBall (0 : 𝕜) 1) :=
   Subtype.coe_injective.HasDistribNeg (coe : closedBall (0 : 𝕜) 1 → 𝕜) (fun _ => rfl) fun _ _ => rfl
 
-instance [NonUnitalSemiNormedRing 𝕜] : HasContinuousMul (closedBall (0 : 𝕜) 1) :=
-  (Subsemigroup.unitClosedBall 𝕜).HasContinuousMul
+instance [NonUnitalSemiNormedRing 𝕜] : ContinuousMul (closedBall (0 : 𝕜) 1) :=
+  (Subsemigroup.unitClosedBall 𝕜).ContinuousMul
 
 @[simp, norm_cast]
 theorem coe_mul_unit_closedBall [NonUnitalSemiNormedRing 𝕜] (x y : closedBall (0 : 𝕜) 1) :
@@ -194,7 +194,7 @@ instance [NormedDivisionRing 𝕜] : HasDistribNeg (sphere (0 : 𝕜) 1) :=
 
 instance [NormedDivisionRing 𝕜] : TopologicalGroup (sphere (0 : 𝕜) 1)
     where
-  to_hasContinuousMul := (Submonoid.unitSphere 𝕜).HasContinuousMul
+  to_continuousMul := (Submonoid.unitSphere 𝕜).ContinuousMul
   continuous_inv := (continuous_subtype_val.inv₀ ne_zero_of_mem_unit_sphere).subtype_mk _
 
 instance [NormedField 𝕜] : CommGroup (sphere (0 : 𝕜) 1) :=

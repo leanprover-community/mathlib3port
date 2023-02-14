@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.ratfunc
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -154,7 +154,7 @@ protected irreducible_def liftOn {P : Sort v} (x : Ratfunc K) (f : ∀ p q : K[X
     fun p p' q q' h =>
     H q.2 q'.2
       (let ⟨⟨c, hc⟩, mul_eq⟩ := Localization.r_iff_exists.mp h
-      mul_cancel_left_coe_non_zero_divisor.mp mul_eq)
+      mul_cancel_left_coe_nonZeroDivisors.mp mul_eq)
 #align ratfunc.lift_on Ratfunc.liftOn
 
 theorem liftOn_of_fraction_ring_mk {P : Sort v} (n : K[X]) (d : K[X]⁰) (f : ∀ p q : K[X], P)
@@ -639,7 +639,7 @@ theorem map_injective [MonoidHomClass F R[X] S[X]] (φ : F) (hφ : R[X]⁰ ≤ S
   rintro ⟨x⟩ ⟨y⟩ h; induction x; induction y
   ·
     simpa only [map_apply_of_fraction_ring_mk, of_fraction_ring_injective.eq_iff,
-      Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_left_coe_non_zero_divisor,
+      Localization.mk_eq_mk_iff, Localization.r_iff_exists, mul_cancel_left_coe_nonZeroDivisors,
       exists_const, [anonymous], ← map_mul, hf.eq_iff] using h
   · rfl
   · rfl

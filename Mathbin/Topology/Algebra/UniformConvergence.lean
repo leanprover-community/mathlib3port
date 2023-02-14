@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_convergence
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -185,7 +185,7 @@ section Module
 
 variable (𝕜 α E H : Type _) {hom : Type _} [NormedField 𝕜] [AddCommGroup H] [Module 𝕜 H]
   [AddCommGroup E] [Module 𝕜 E] [TopologicalSpace H] [UniformSpace E] [UniformAddGroup E]
-  [HasContinuousSmul 𝕜 E] {𝔖 : Set <| Set α} [LinearMapClass hom 𝕜 H (α →ᵤ[𝔖] E)]
+  [ContinuousSMul 𝕜 E] {𝔖 : Set <| Set α} [LinearMapClass hom 𝕜 H (α →ᵤ[𝔖] E)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
@@ -196,10 +196,9 @@ For convenience, we don't literally ask for `H : submodule (α →ᵤ[𝔖] E)`.
 result for any vector space `H` equipped with a linear inducing to `α →ᵤ[𝔖] E`, which is often
 easier to use. We also state the `submodule` version as
 `uniform_on_fun.has_continuous_smul_submodule_of_image_bounded`. -/
-theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (φ : hom) (hφ : Inducing φ)
-    (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) :
-    HasContinuousSmul 𝕜 H :=
+    (h : ∀ u : H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 ((φ u : α → E) '' s)) : ContinuousSMul 𝕜 H :=
   by
   have : TopologicalAddGroup H := by
     rw [hφ.induced]
@@ -208,7 +207,7 @@ theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖
     by
     rw [hφ.induced, nhds_induced, map_zero]
     exact (UniformOnFun.hasBasis_nhds_zero 𝔖 h𝔖₁ h𝔖₂).comap φ
-  refine' HasContinuousSmul.of_basis_zero this _ _ _
+  refine' ContinuousSMul.of_basis_zero this _ _ _
   · rintro ⟨S, V⟩ ⟨hS, hV⟩
     have : tendsto (fun kx : 𝕜 × E => kx.1 • kx.2) (𝓝 (0, 0)) (𝓝 <| (0 : 𝕜) • 0) :=
       continuous_smul.tendsto (0 : 𝕜 × E)
@@ -243,23 +242,22 @@ theorem UniformOnFun.hasContinuousSmul_induced_of_image_bounded (h𝔖₁ : 𝔖
         rw [norm_inv, le_inv hrpos ha0]
         exact ha.le
       rwa [Set.mem_inv_smul_set_iff₀ ha0] at this
-#align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.hasContinuousSmul_induced_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_induced_of_image_bounded UniformOnFun.continuousSMul_induced_of_image_bounded
 
 /-- Let `E` be a TVS, `𝔖 : set (set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
 `S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `bornology.is_vonN_bounded`), then `H`,
 equipped with the topology of `𝔖`-convergence, is a TVS.
 
 If you have a hard time using this lemma, try the one above instead. -/
-theorem UniformOnFun.hasContinuousSmul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
+theorem UniformOnFun.continuousSMul_submodule_of_image_bounded (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) (H : Submodule 𝕜 (α →ᵤ[𝔖] E))
     (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
-    @HasContinuousSmul 𝕜 H _ _
-      ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
+    @ContinuousSMul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
   haveI : TopologicalAddGroup H :=
     topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
-  UniformOnFun.hasContinuousSmul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
+  UniformOnFun.continuousSMul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
     (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_subtype_val fun ⟨u, hu⟩ => h u hu
-#align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.hasContinuousSmul_submodule_of_image_bounded
+#align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.continuousSMul_submodule_of_image_bounded
 
 end Module
 

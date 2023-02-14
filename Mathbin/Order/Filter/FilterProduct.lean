@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.filter_product
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,10 +69,11 @@ theorem coe_pos [Preorder β] [Zero β] {f : α → β} : 0 < (f : β*) ↔ ∀*
   coe_lt
 #align filter.germ.coe_pos Filter.Germ.coe_pos
 
-theorem const_lt [Preorder β] {x y : β} : x ≤ y → (↑x : β*) ≤ ↑y :=
-  liftRel_const
+theorem const_lt [Preorder β] {x y : β} : x < y → (↑x : β*) < ↑y :=
+  coe_lt.mpr ∘ liftRel_const
 #align filter.germ.const_lt Filter.Germ.const_lt
 
+@[simp, norm_cast]
 theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
   coe_lt.trans liftRel_const_iff
 #align filter.germ.const_lt_iff Filter.Germ.const_lt_iff

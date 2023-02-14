@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.adapted
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,8 +56,8 @@ def Adapted (f : Filtration ι m) (u : ι → Ω → β) : Prop :=
 namespace Adapted
 
 @[protected, to_additive]
-theorem mul [Mul β] [HasContinuousMul β] (hu : Adapted f u) (hv : Adapted f v) :
-    Adapted f (u * v) := fun i => (hu i).mul (hv i)
+theorem mul [Mul β] [ContinuousMul β] (hu : Adapted f u) (hv : Adapted f v) : Adapted f (u * v) :=
+  fun i => (hu i).mul (hv i)
 #align measure_theory.adapted.mul MeasureTheory.Adapted.mul
 #align measure_theory.adapted.add MeasureTheory.Adapted.add
 
@@ -73,7 +73,7 @@ theorem inv [Group β] [TopologicalGroup β] (hu : Adapted f u) : Adapted f u⁻
 #align measure_theory.adapted.neg MeasureTheory.Adapted.neg
 
 @[protected]
-theorem smul [SMul ℝ β] [HasContinuousSmul ℝ β] (c : ℝ) (hu : Adapted f u) : Adapted f (c • u) :=
+theorem smul [SMul ℝ β] [ContinuousSMul ℝ β] (c : ℝ) (hu : Adapted f u) : Adapted f (c • u) :=
   fun i => (hu i).const_smul c
 #align measure_theory.adapted.smul MeasureTheory.Adapted.smul
 
@@ -155,14 +155,14 @@ protected theorem comp {t : ι → Ω → ι} [TopologicalSpace ι] [BorelSpace 
 section Arithmetic
 
 @[to_additive]
-protected theorem mul [Mul β] [HasContinuousMul β] (hu : ProgMeasurable f u)
+protected theorem mul [Mul β] [ContinuousMul β] (hu : ProgMeasurable f u)
     (hv : ProgMeasurable f v) : ProgMeasurable f fun i ω => u i ω * v i ω := fun i =>
   (hu i).mul (hv i)
 #align measure_theory.prog_measurable.mul MeasureTheory.ProgMeasurable.mul
 #align measure_theory.prog_measurable.add MeasureTheory.ProgMeasurable.add
 
 @[to_additive]
-protected theorem finset_prod' {γ} [CommMonoid β] [HasContinuousMul β] {U : γ → ι → Ω → β}
+protected theorem finset_prod' {γ} [CommMonoid β] [ContinuousMul β] {U : γ → ι → Ω → β}
     {s : Finset γ} (h : ∀ c ∈ s, ProgMeasurable f (U c)) : ProgMeasurable f (∏ c in s, U c) :=
   Finset.prod_induction U (ProgMeasurable f) (fun _ _ => ProgMeasurable.mul)
     (progMeasurable_const _ 1) h
@@ -170,7 +170,7 @@ protected theorem finset_prod' {γ} [CommMonoid β] [HasContinuousMul β] {U : �
 #align measure_theory.prog_measurable.finset_sum' MeasureTheory.ProgMeasurable.finset_sum'
 
 @[to_additive]
-protected theorem finset_prod {γ} [CommMonoid β] [HasContinuousMul β] {U : γ → ι → Ω → β}
+protected theorem finset_prod {γ} [CommMonoid β] [ContinuousMul β] {U : γ → ι → Ω → β}
     {s : Finset γ} (h : ∀ c ∈ s, ProgMeasurable f (U c)) :
     ProgMeasurable f fun i a => ∏ c in s, U c i a :=
   by

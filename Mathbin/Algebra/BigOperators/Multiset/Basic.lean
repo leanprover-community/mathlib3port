@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.big_operators.multiset.basic
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -862,6 +862,22 @@ theorem abs_sum_le_sum_abs [LinearOrderedAddCommGroup α] {s : Multiset α} :
     abs s.Sum ≤ (s.map abs).Sum :=
   le_sum_of_subadditive _ abs_zero abs_add s
 #align multiset.abs_sum_le_sum_abs Multiset.abs_sum_le_sum_abs
+
+theorem sum_nat_mod (s : Multiset ℕ) (n : ℕ) : s.Sum % n = (s.map (· % n)).Sum % n := by
+  induction s using Multiset.induction <;> simp [Nat.add_mod, *]
+#align multiset.sum_nat_mod Multiset.sum_nat_mod
+
+theorem prod_nat_mod (s : Multiset ℕ) (n : ℕ) : s.Prod % n = (s.map (· % n)).Prod % n := by
+  induction s using Multiset.induction <;> simp [Nat.mul_mod, *]
+#align multiset.prod_nat_mod Multiset.prod_nat_mod
+
+theorem sum_int_mod (s : Multiset ℤ) (n : ℤ) : s.Sum % n = (s.map (· % n)).Sum % n := by
+  induction s using Multiset.induction <;> simp [Int.add_emod, *]
+#align multiset.sum_int_mod Multiset.sum_int_mod
+
+theorem prod_int_mod (s : Multiset ℤ) (n : ℤ) : s.Prod % n = (s.map (· % n)).Prod % n := by
+  induction s using Multiset.induction <;> simp [Int.mul_emod, *]
+#align multiset.prod_int_mod Multiset.prod_int_mod
 
 end Multiset
 

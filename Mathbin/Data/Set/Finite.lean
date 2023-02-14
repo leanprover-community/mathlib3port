@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kyle Miller
 
 ! This file was ported from Lean 3 source module data.set.finite
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,16 +224,16 @@ theorem toFinset_subset {t : Finset α} : hs.toFinset ⊆ t ↔ s ⊆ t := by
 #align set.finite.to_finset_subset Set.Finite.toFinset_subset
 -/
 
-/- warning: set.finite.to_finset_ssubset -> Set.Finite.toFinset_sSubset is a dubious translation:
+/- warning: set.finite.to_finset_ssubset -> Set.Finite.toFinset_ssubset is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {s : Set.{u1} α} {hs : Set.Finite.{u1} α s} {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) (Set.Finite.toFinset.{u1} α s hs) t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) s ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) t))
 but is expected to have type
   forall {α : Type.{u1}} {s : Set.{u1} α} {hs : Set.Finite.{u1} α s} {t : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) (Set.Finite.toFinset.{u1} α s hs) t) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) s (Finset.toSet.{u1} α t))
-Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_ssubset Set.Finite.toFinset_sSubsetₓ'. -/
+Case conversion may be inaccurate. Consider using '#align set.finite.to_finset_ssubset Set.Finite.toFinset_ssubsetₓ'. -/
 @[simp]
-theorem toFinset_sSubset {t : Finset α} : hs.toFinset ⊂ t ↔ s ⊂ t := by
+theorem toFinset_ssubset {t : Finset α} : hs.toFinset ⊂ t ↔ s ⊂ t := by
   rw [← Finset.coe_ssubset, finite.coe_to_finset]
-#align set.finite.to_finset_ssubset Set.Finite.toFinset_sSubset
+#align set.finite.to_finset_ssubset Set.Finite.toFinset_ssubset
 
 #print Set.Finite.subset_toFinset /-
 @[simp]
@@ -242,16 +242,16 @@ theorem subset_toFinset {s : Finset α} : s ⊆ ht.toFinset ↔ ↑s ⊆ t := by
 #align set.finite.subset_to_finset Set.Finite.subset_toFinset
 -/
 
-/- warning: set.finite.ssubset_to_finset -> Set.Finite.sSubset_toFinset is a dubious translation:
+/- warning: set.finite.ssubset_to_finset -> Set.Finite.ssubset_toFinset is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {t : Set.{u1} α} {ht : Set.Finite.{u1} α t} {s : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.hasSsubset.{u1} α) s (Set.Finite.toFinset.{u1} α t ht)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.hasSsubset.{u1} α) ((fun (a : Type.{u1}) (b : Type.{u1}) [self : HasLiftT.{succ u1, succ u1} a b] => self.0) (Finset.{u1} α) (Set.{u1} α) (HasLiftT.mk.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (CoeTCₓ.coe.{succ u1, succ u1} (Finset.{u1} α) (Set.{u1} α) (Finset.Set.hasCoeT.{u1} α))) s) t)
 but is expected to have type
   forall {α : Type.{u1}} {t : Set.{u1} α} {ht : Set.Finite.{u1} α t} {s : Finset.{u1} α}, Iff (HasSSubset.SSubset.{u1} (Finset.{u1} α) (Finset.instHasSSubsetFinset.{u1} α) s (Set.Finite.toFinset.{u1} α t ht)) (HasSSubset.SSubset.{u1} (Set.{u1} α) (Set.instHasSSubsetSet.{u1} α) (Finset.toSet.{u1} α s) t)
-Case conversion may be inaccurate. Consider using '#align set.finite.ssubset_to_finset Set.Finite.sSubset_toFinsetₓ'. -/
+Case conversion may be inaccurate. Consider using '#align set.finite.ssubset_to_finset Set.Finite.ssubset_toFinsetₓ'. -/
 @[simp]
-theorem sSubset_toFinset {s : Finset α} : s ⊂ ht.toFinset ↔ ↑s ⊂ t := by
+theorem ssubset_toFinset {s : Finset α} : s ⊂ ht.toFinset ↔ ↑s ⊂ t := by
   rw [← Finset.coe_ssubset, finite.coe_to_finset]
-#align set.finite.ssubset_to_finset Set.Finite.sSubset_toFinset
+#align set.finite.ssubset_to_finset Set.Finite.ssubset_toFinset
 
 #print Set.Finite.toFinset_subset_toFinset /-
 @[mono]
@@ -674,23 +674,23 @@ instance fintypeMap {α β} [DecidableEq β] :
 #align set.fintype_map Set.fintypeMap
 -/
 
-#print Set.fintypeLtNat /-
-instance fintypeLtNat (n : ℕ) : Fintype { i | i < n } :=
+#print Set.fintypeLTNat /-
+instance fintypeLTNat (n : ℕ) : Fintype { i | i < n } :=
   Fintype.ofFinset (Finset.range n) <| by simp
-#align set.fintype_lt_nat Set.fintypeLtNat
+#align set.fintype_lt_nat Set.fintypeLTNat
 -/
 
-#print Set.fintypeLeNat /-
-instance fintypeLeNat (n : ℕ) : Fintype { i | i ≤ n } := by
-  simpa [Nat.lt_succ_iff] using Set.fintypeLtNat (n + 1)
-#align set.fintype_le_nat Set.fintypeLeNat
+#print Set.fintypeLENat /-
+instance fintypeLENat (n : ℕ) : Fintype { i | i ≤ n } := by
+  simpa [Nat.lt_succ_iff] using Set.fintypeLTNat (n + 1)
+#align set.fintype_le_nat Set.fintypeLENat
 -/
 
 #print Set.Nat.fintypeIio /-
 /-- This is not an instance so that it does not conflict with the one
 in src/order/locally_finite. -/
 def Nat.fintypeIio (n : ℕ) : Fintype (Iio n) :=
-  Set.fintypeLtNat n
+  Set.fintypeLTNat n
 #align set.nat.fintype_Iio Set.Nat.fintypeIio
 -/
 
@@ -2043,13 +2043,13 @@ theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrder β] (s : Set �
 #align set.exists_upper_bound_image Set.exists_upper_bound_image
 -/
 
-/- warning: set.finite.supr_binfi_of_monotone -> Set.Finite.supᵢ_binfi_of_monotone is a dubious translation:
+/- warning: set.finite.supr_binfi_of_monotone -> Set.Finite.supᵢ_binfᵢ_of_monotone is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {ι' : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u2} ι'] [_inst_2 : Nonempty.{succ u2} ι'] [_inst_3 : IsDirected.{u2} ι' (LE.le.{u2} ι' (Preorder.toLE.{u2} ι' _inst_1))] [_inst_4 : Order.Frame.{u3} α] {s : Set.{u1} ι}, (Set.Finite.{u1} ι s) -> (forall {f : ι -> ι' -> α}, (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Monotone.{u2, u3} ι' α _inst_1 (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4)))) (f i))) -> (Eq.{succ u3} α (supᵢ.{u3, succ u2} α (CompleteSemilatticeSup.toHasSup.{u3} α (CompleteLattice.toCompleteSemilatticeSup.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι' (fun (j : ι') => infᵢ.{u3, succ u1} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι (fun (i : ι) => infᵢ.{u3, 0} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i j)))) (infᵢ.{u3, succ u1} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι (fun (i : ι) => infᵢ.{u3, 0} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => supᵢ.{u3, succ u2} α (CompleteSemilatticeSup.toHasSup.{u3} α (CompleteLattice.toCompleteSemilatticeSup.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι' (fun (j : ι') => f i j))))))
 but is expected to have type
   forall {ι : Type.{u3}} {ι' : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u2} ι'] [_inst_2 : Nonempty.{succ u2} ι'] [_inst_3 : IsDirected.{u2} ι' (fun (x._@.Mathlib.Data.Set.Finite._hyg.11732 : ι') (x._@.Mathlib.Data.Set.Finite._hyg.11734 : ι') => LE.le.{u2} ι' (Preorder.toLE.{u2} ι' _inst_1) x._@.Mathlib.Data.Set.Finite._hyg.11732 x._@.Mathlib.Data.Set.Finite._hyg.11734)] [_inst_4 : Order.Frame.{u1} α] {s : Set.{u3} ι}, (Set.Finite.{u3} ι s) -> (forall {f : ι -> ι' -> α}, (forall (i : ι), (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) -> (Monotone.{u2, u1} ι' α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)))) (f i))) -> (Eq.{succ u1} α (supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι' (fun (j : ι') => infᵢ.{u1, succ u3} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι (fun (i : ι) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i j)))) (infᵢ.{u1, succ u3} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι (fun (i : ι) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι' (fun (j : ι') => f i j))))))
-Case conversion may be inaccurate. Consider using '#align set.finite.supr_binfi_of_monotone Set.Finite.supᵢ_binfi_of_monotoneₓ'. -/
-theorem Finite.supᵢ_binfi_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
+Case conversion may be inaccurate. Consider using '#align set.finite.supr_binfi_of_monotone Set.Finite.supᵢ_binfᵢ_of_monotoneₓ'. -/
+theorem Finite.supᵢ_binfᵢ_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (· ≤ ·)] [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
     (hf : ∀ i ∈ s, Monotone (f i)) : (⨆ j, ⨅ i ∈ s, f i j) = ⨅ i ∈ s, ⨆ j, f i j :=
   by
@@ -2061,19 +2061,19 @@ theorem Finite.supᵢ_binfi_of_monotone {ι ι' α : Type _} [Preorder ι'] [Non
     rw [ball_insert_iff] at hf
     simp only [infᵢ_insert, ← ihs hf.2]
     exact supᵢ_inf_of_monotone hf.1 fun j₁ j₂ hj => infᵢ₂_mono fun i hi => hf.2 i hi hj
-#align set.finite.supr_binfi_of_monotone Set.Finite.supᵢ_binfi_of_monotone
+#align set.finite.supr_binfi_of_monotone Set.Finite.supᵢ_binfᵢ_of_monotone
 
-/- warning: set.finite.supr_binfi_of_antitone -> Set.Finite.supᵢ_binfi_of_antitone is a dubious translation:
+/- warning: set.finite.supr_binfi_of_antitone -> Set.Finite.supᵢ_binfᵢ_of_antitone is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {ι' : Type.{u2}} {α : Type.{u3}} [_inst_1 : Preorder.{u2} ι'] [_inst_2 : Nonempty.{succ u2} ι'] [_inst_3 : IsDirected.{u2} ι' (Function.swap.{succ u2, succ u2, 1} ι' ι' (fun (ᾰ : ι') (ᾰ : ι') => Prop) (LE.le.{u2} ι' (Preorder.toLE.{u2} ι' _inst_1)))] [_inst_4 : Order.Frame.{u3} α] {s : Set.{u1} ι}, (Set.Finite.{u1} ι s) -> (forall {f : ι -> ι' -> α}, (forall (i : ι), (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) -> (Antitone.{u2, u3} ι' α _inst_1 (PartialOrder.toPreorder.{u3} α (CompleteSemilatticeInf.toPartialOrder.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4)))) (f i))) -> (Eq.{succ u3} α (supᵢ.{u3, succ u2} α (CompleteSemilatticeSup.toHasSup.{u3} α (CompleteLattice.toCompleteSemilatticeSup.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι' (fun (j : ι') => infᵢ.{u3, succ u1} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι (fun (i : ι) => infᵢ.{u3, 0} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => f i j)))) (infᵢ.{u3, succ u1} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι (fun (i : ι) => infᵢ.{u3, 0} α (CompleteSemilatticeInf.toHasInf.{u3} α (CompleteLattice.toCompleteSemilatticeInf.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) (Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Set.{u1} ι) (Set.hasMem.{u1} ι) i s) => supᵢ.{u3, succ u2} α (CompleteSemilatticeSup.toHasSup.{u3} α (CompleteLattice.toCompleteSemilatticeSup.{u3} α (Order.Frame.toCompleteLattice.{u3} α _inst_4))) ι' (fun (j : ι') => f i j))))))
 but is expected to have type
   forall {ι : Type.{u3}} {ι' : Type.{u2}} {α : Type.{u1}} [_inst_1 : Preorder.{u2} ι'] [_inst_2 : Nonempty.{succ u2} ι'] [_inst_3 : IsDirected.{u2} ι' (Function.swap.{succ u2, succ u2, 1} ι' ι' (fun (ᾰ : ι') (ᾰ : ι') => Prop) (fun (x._@.Mathlib.Data.Set.Finite._hyg.11954 : ι') (x._@.Mathlib.Data.Set.Finite._hyg.11956 : ι') => LE.le.{u2} ι' (Preorder.toLE.{u2} ι' _inst_1) x._@.Mathlib.Data.Set.Finite._hyg.11954 x._@.Mathlib.Data.Set.Finite._hyg.11956))] [_inst_4 : Order.Frame.{u1} α] {s : Set.{u3} ι}, (Set.Finite.{u3} ι s) -> (forall {f : ι -> ι' -> α}, (forall (i : ι), (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) -> (Antitone.{u2, u1} ι' α _inst_1 (PartialOrder.toPreorder.{u1} α (CompleteSemilatticeInf.toPartialOrder.{u1} α (CompleteLattice.toCompleteSemilatticeInf.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)))) (f i))) -> (Eq.{succ u1} α (supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι' (fun (j : ι') => infᵢ.{u1, succ u3} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι (fun (i : ι) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => f i j)))) (infᵢ.{u1, succ u3} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι (fun (i : ι) => infᵢ.{u1, 0} α (CompleteLattice.toInfSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) (Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) (fun (H : Membership.mem.{u3, u3} ι (Set.{u3} ι) (Set.instMembershipSet.{u3} ι) i s) => supᵢ.{u1, succ u2} α (CompleteLattice.toSupSet.{u1} α (Order.Frame.toCompleteLattice.{u1} α _inst_4)) ι' (fun (j : ι') => f i j))))))
-Case conversion may be inaccurate. Consider using '#align set.finite.supr_binfi_of_antitone Set.Finite.supᵢ_binfi_of_antitoneₓ'. -/
-theorem Finite.supᵢ_binfi_of_antitone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
+Case conversion may be inaccurate. Consider using '#align set.finite.supr_binfi_of_antitone Set.Finite.supᵢ_binfᵢ_of_antitoneₓ'. -/
+theorem Finite.supᵢ_binfᵢ_of_antitone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (swap (· ≤ ·))] [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
     (hf : ∀ i ∈ s, Antitone (f i)) : (⨆ j, ⨅ i ∈ s, f i j) = ⨅ i ∈ s, ⨆ j, f i j :=
-  @Finite.supᵢ_binfi_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ hs _ fun i hi => (hf i hi).dual_left
-#align set.finite.supr_binfi_of_antitone Set.Finite.supᵢ_binfi_of_antitone
+  @Finite.supᵢ_binfᵢ_of_monotone ι ι'ᵒᵈ α _ _ _ _ _ hs _ fun i hi => (hf i hi).dual_left
+#align set.finite.supr_binfi_of_antitone Set.Finite.supᵢ_binfᵢ_of_antitone
 
 /- warning: set.finite.infi_bsupr_of_monotone -> Set.Finite.infᵢ_bsupᵢ_of_monotone is a dubious translation:
 lean 3 declaration is
@@ -2084,7 +2084,7 @@ Case conversion may be inaccurate. Consider using '#align set.finite.infi_bsupr_
 theorem Finite.infᵢ_bsupᵢ_of_monotone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (swap (· ≤ ·))] [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
     (hf : ∀ i ∈ s, Monotone (f i)) : (⨅ j, ⨆ i ∈ s, f i j) = ⨆ i ∈ s, ⨅ j, f i j :=
-  hs.supᵢ_binfi_of_antitone fun i hi => (hf i hi).dual_right
+  hs.supᵢ_binfᵢ_of_antitone fun i hi => (hf i hi).dual_right
 #align set.finite.infi_bsupr_of_monotone Set.Finite.infᵢ_bsupᵢ_of_monotone
 
 /- warning: set.finite.infi_bsupr_of_antitone -> Set.Finite.infᵢ_bsupᵢ_of_antitone is a dubious translation:
@@ -2096,7 +2096,7 @@ Case conversion may be inaccurate. Consider using '#align set.finite.infi_bsupr_
 theorem Finite.infᵢ_bsupᵢ_of_antitone {ι ι' α : Type _} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (· ≤ ·)] [Order.Coframe α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
     (hf : ∀ i ∈ s, Antitone (f i)) : (⨅ j, ⨆ i ∈ s, f i j) = ⨆ i ∈ s, ⨅ j, f i j :=
-  hs.supᵢ_binfi_of_monotone fun i hi => (hf i hi).dual_right
+  hs.supᵢ_binfᵢ_of_monotone fun i hi => (hf i hi).dual_right
 #align set.finite.infi_bsupr_of_antitone Set.Finite.infᵢ_bsupᵢ_of_antitone
 
 /- warning: supr_infi_of_monotone -> Set.supᵢ_infᵢ_of_monotone is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module topology.instances.nnreal
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ instance : HasContinuousInv₀ ℝ≥0 :=
   ⟨fun x hx =>
     tendsto_coe.1 <| (Real.tendsto_inv <| Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
-instance [TopologicalSpace α] [MulAction ℝ α] [HasContinuousSmul ℝ α] : HasContinuousSmul ℝ≥0 α
+instance [TopologicalSpace α] [MulAction ℝ α] [ContinuousSMul ℝ α] : ContinuousSMul ℝ≥0 α
     where continuous_smul := (continuous_induced_dom.comp continuous_fst).smul continuous_snd
 
 @[norm_cast]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.semicontinuous
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -493,7 +493,7 @@ theorem LowerSemicontinuous.add' {f g : α → γ} (hf : LowerSemicontinuous f)
     LowerSemicontinuous fun z => f z + g z := fun x => (hf x).add' (hg x) (hcont x)
 #align lower_semicontinuous.add' LowerSemicontinuous.add'
 
-variable [HasContinuousAdd γ]
+variable [ContinuousAdd γ]
 
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with
 `[has_continuous_add]`. The primed version of the lemma uses an explicit continuity assumption on
@@ -959,7 +959,7 @@ theorem UpperSemicontinuous.add' {f g : α → γ} (hf : UpperSemicontinuous f)
     UpperSemicontinuous fun z => f z + g z := fun x => (hf x).add' (hg x) (hcont x)
 #align upper_semicontinuous.add' UpperSemicontinuous.add'
 
-variable [HasContinuousAdd γ]
+variable [ContinuousAdd γ]
 
 /-- The sum of two upper semicontinuous functions is upper semicontinuous. Formulated with
 `[has_continuous_add]`. The primed version of the lemma uses an explicit continuity assumption on

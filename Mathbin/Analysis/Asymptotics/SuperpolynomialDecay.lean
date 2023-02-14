@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module analysis.asymptotics.superpolynomial_decay
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,23 +84,23 @@ theorem superpolynomialDecay_zero (l : Filter α) (k : α → β) : Superpolynom
   fun z => by simpa only [Pi.zero_apply, mul_zero] using tendsto_const_nhds
 #align asymptotics.superpolynomial_decay_zero Asymptotics.superpolynomialDecay_zero
 
-theorem SuperpolynomialDecay.add [HasContinuousAdd β] (hf : SuperpolynomialDecay l k f)
+theorem SuperpolynomialDecay.add [ContinuousAdd β] (hf : SuperpolynomialDecay l k f)
     (hg : SuperpolynomialDecay l k g) : SuperpolynomialDecay l k (f + g) := fun z => by
   simpa only [mul_add, add_zero, Pi.add_apply] using (hf z).add (hg z)
 #align asymptotics.superpolynomial_decay.add Asymptotics.SuperpolynomialDecay.add
 
-theorem SuperpolynomialDecay.mul [HasContinuousMul β] (hf : SuperpolynomialDecay l k f)
+theorem SuperpolynomialDecay.mul [ContinuousMul β] (hf : SuperpolynomialDecay l k f)
     (hg : SuperpolynomialDecay l k g) : SuperpolynomialDecay l k (f * g) := fun z => by
   simpa only [mul_assoc, one_mul, mul_zero, pow_zero] using (hf z).mul (hg 0)
 #align asymptotics.superpolynomial_decay.mul Asymptotics.SuperpolynomialDecay.mul
 
-theorem SuperpolynomialDecay.mul_const [HasContinuousMul β] (hf : SuperpolynomialDecay l k f)
-    (c : β) : SuperpolynomialDecay l k fun n => f n * c := fun z => by
+theorem SuperpolynomialDecay.mul_const [ContinuousMul β] (hf : SuperpolynomialDecay l k f) (c : β) :
+    SuperpolynomialDecay l k fun n => f n * c := fun z => by
   simpa only [← mul_assoc, zero_mul] using tendsto.mul_const c (hf z)
 #align asymptotics.superpolynomial_decay.mul_const Asymptotics.SuperpolynomialDecay.mul_const
 
-theorem SuperpolynomialDecay.const_mul [HasContinuousMul β] (hf : SuperpolynomialDecay l k f)
-    (c : β) : SuperpolynomialDecay l k fun n => c * f n :=
+theorem SuperpolynomialDecay.const_mul [ContinuousMul β] (hf : SuperpolynomialDecay l k f) (c : β) :
+    SuperpolynomialDecay l k fun n => c * f n :=
   (hf.mul_const c).congr fun _ => mul_comm _ _
 #align asymptotics.superpolynomial_decay.const_mul Asymptotics.SuperpolynomialDecay.const_mul
 
@@ -129,14 +129,14 @@ theorem SuperpolynomialDecay.mul_param_pow (hf : SuperpolynomialDecay l k f) (n 
   (hf.param_pow_mul n).congr fun _ => mul_comm _ _
 #align asymptotics.superpolynomial_decay.mul_param_pow Asymptotics.SuperpolynomialDecay.mul_param_pow
 
-theorem SuperpolynomialDecay.polynomial_mul [HasContinuousAdd β] [HasContinuousMul β]
+theorem SuperpolynomialDecay.polynomial_mul [ContinuousAdd β] [ContinuousMul β]
     (hf : SuperpolynomialDecay l k f) (p : β[X]) :
     SuperpolynomialDecay l k fun x => (p.eval <| k x) * f x :=
   Polynomial.induction_on' p (fun p q hp hq => by simpa [add_mul] using hp.add hq) fun n c => by
     simpa [mul_assoc] using (hf.param_pow_mul n).const_mul c
 #align asymptotics.superpolynomial_decay.polynomial_mul Asymptotics.SuperpolynomialDecay.polynomial_mul
 
-theorem SuperpolynomialDecay.mul_polynomial [HasContinuousAdd β] [HasContinuousMul β]
+theorem SuperpolynomialDecay.mul_polynomial [ContinuousAdd β] [ContinuousMul β]
     (hf : SuperpolynomialDecay l k f) (p : β[X]) :
     SuperpolynomialDecay l k fun x => f x * (p.eval <| k x) :=
   (hf.polynomial_mul p).congr fun _ => mul_comm _ _
@@ -203,13 +203,13 @@ section Field
 
 variable [TopologicalSpace β] [Field β] (l k f)
 
-theorem superpolynomialDecay_mul_const_iff [HasContinuousMul β] {c : β} (hc0 : c ≠ 0) :
+theorem superpolynomialDecay_mul_const_iff [ContinuousMul β] {c : β} (hc0 : c ≠ 0) :
     (SuperpolynomialDecay l k fun n => f n * c) ↔ SuperpolynomialDecay l k f :=
   ⟨fun h => (h.mul_const c⁻¹).congr fun x => by simp [mul_assoc, mul_inv_cancel hc0], fun h =>
     h.mul_const c⟩
 #align asymptotics.superpolynomial_decay_mul_const_iff Asymptotics.superpolynomialDecay_mul_const_iff
 
-theorem superpolynomialDecay_const_mul_iff [HasContinuousMul β] {c : β} (hc0 : c ≠ 0) :
+theorem superpolynomialDecay_const_mul_iff [ContinuousMul β] {c : β} (hc0 : c ≠ 0) :
     (SuperpolynomialDecay l k fun n => c * f n) ↔ SuperpolynomialDecay l k f :=
   ⟨fun h => (h.const_mul c⁻¹).congr fun x => by simp [← mul_assoc, inv_mul_cancel hc0], fun h =>
     h.const_mul c⟩

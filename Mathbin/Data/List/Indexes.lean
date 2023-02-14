@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jannis Limperg
 
 ! This file was ported from Lean 3 source module data.list.indexes
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.List.Range
 
 /-!
 # Lemmas about list.*_with_index functions.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Some specification lemmas for `list.map_with_index`, `list.mmap_with_index`, `list.foldl_with_index`
 and `list.foldr_with_index`.
@@ -48,7 +51,7 @@ but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}}, (Nat -> α -> β) -> Nat -> (List.{u1} α) -> (List.{u2} β)
 Case conversion may be inaccurate. Consider using '#align list.map_with_index_core_eq [anonymous]ₓ'. -/
 theorem [anonymous] (l : List α) (f : ℕ → α → β) (n : ℕ) :
-    l.«» f n = l.mapIdx fun i a => f (i + n) a :=
+    l.map_with_index_core f n = l.mapIdx fun i a => f (i + n) a :=
   by
   induction' l with hd tl hl generalizing f n
   · simpa

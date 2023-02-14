@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.finset.locally_finite
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -354,21 +354,21 @@ theorem Icc_subset_Ioc_iff (h₁ : a₁ ≤ b₁) : Icc a₁ b₁ ⊆ Ioc a₂ b
 #align finset.Icc_subset_Ioc_iff Finset.Icc_subset_Ioc_iff
 -/
 
-#print Finset.Icc_sSubset_Icc_left /-
+#print Finset.Icc_ssubset_Icc_left /-
 --TODO: `Ico_subset_Ioo_iff`, `Ioc_subset_Ioo_iff`
-theorem Icc_sSubset_Icc_left (hI : a₂ ≤ b₂) (ha : a₂ < a₁) (hb : b₁ ≤ b₂) : Icc a₁ b₁ ⊂ Icc a₂ b₂ :=
+theorem Icc_ssubset_Icc_left (hI : a₂ ≤ b₂) (ha : a₂ < a₁) (hb : b₁ ≤ b₂) : Icc a₁ b₁ ⊂ Icc a₂ b₂ :=
   by
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_left hI ha hb
-#align finset.Icc_ssubset_Icc_left Finset.Icc_sSubset_Icc_left
+#align finset.Icc_ssubset_Icc_left Finset.Icc_ssubset_Icc_left
 -/
 
-#print Finset.Icc_sSubset_Icc_right /-
-theorem Icc_sSubset_Icc_right (hI : a₂ ≤ b₂) (ha : a₂ ≤ a₁) (hb : b₁ < b₂) :
+#print Finset.Icc_ssubset_Icc_right /-
+theorem Icc_ssubset_Icc_right (hI : a₂ ≤ b₂) (ha : a₂ ≤ a₁) (hb : b₁ < b₂) :
     Icc a₁ b₁ ⊂ Icc a₂ b₂ := by
   rw [← coe_ssubset, coe_Icc, coe_Icc]
   exact Set.Icc_ssubset_Icc_right hI ha hb
-#align finset.Icc_ssubset_Icc_right Finset.Icc_sSubset_Icc_right
+#align finset.Icc_ssubset_Icc_right Finset.Icc_ssubset_Icc_right
 -/
 
 variable (a)

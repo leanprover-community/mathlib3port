@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.filter_basis
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -422,13 +422,13 @@ by their neighborhoods of 0 to obtain the `has_continuous_smul` on the pre-exist
 
 But it turns out it's just easier to get it as a biproduct of the proof, so this is just a free
 quality-of-life improvement. -/
-theorem HasContinuousSmul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
+theorem ContinuousSMul.of_basis_zero {ι : Type _} [TopologicalRing R] [TopologicalSpace M]
     [TopologicalAddGroup M] {p : ι → Prop} {b : ι → Set M} (h : HasBasis (𝓝 0) p b)
     (hsmul : ∀ {i}, p i → ∃ V ∈ 𝓝 (0 : R), ∃ (j : _)(hj : p j), V • b j ⊆ b i)
     (hsmul_left : ∀ (x₀ : R) {i}, p i → ∃ (j : _)(hj : p j), b j ⊆ (fun x => x₀ • x) ⁻¹' b i)
-    (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : HasContinuousSmul R M :=
+    (hsmul_right : ∀ (m₀ : M) {i}, p i → ∀ᶠ x in 𝓝 (0 : R), x • m₀ ∈ b i) : ContinuousSMul R M :=
   by
-  apply HasContinuousSmul.of_nhds_zero
+  apply ContinuousSMul.of_nhds_zero
   · rw [h.tendsto_right_iff]
     intro i hi
     rcases hsmul hi with ⟨V, V_in, j, hj, hVj⟩
@@ -444,20 +444,19 @@ theorem HasContinuousSmul.of_basis_zero {ι : Type _} [TopologicalRing R] [Topol
     intro i hi
     rcases hsmul_left x₀ hi with ⟨j, hj, hji⟩
     exact mem_of_superset (h.mem_of_mem hj) hji
-#align has_continuous_smul.of_basis_zero HasContinuousSmul.of_basis_zero
+#align has_continuous_smul.of_basis_zero ContinuousSMul.of_basis_zero
 
 /-- If a module is endowed with a topological structure coming from
 a module filter basis then it's a topological module. -/
-instance (priority := 100) hasContinuousSmul [TopologicalRing R] :
-    @HasContinuousSmul R M _ _ B.topology :=
+instance (priority := 100) continuousSMul [TopologicalRing R] :
+    @ContinuousSMul R M _ _ B.topology :=
   by
   let B' := B.to_add_group_filter_basis
   letI := B'.topology
   haveI := B'.is_topological_add_group
   exact
-    HasContinuousSmul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left
-      B.smul_right
-#align module_filter_basis.has_continuous_smul ModuleFilterBasis.hasContinuousSmul
+    ContinuousSMul.of_basis_zero B'.nhds_zero_has_basis (fun _ => B.smul) B.smul_left B.smul_right
+#align module_filter_basis.has_continuous_smul ModuleFilterBasis.continuousSMul
 
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def ofBases {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M] (BR : RingFilterBasis R)

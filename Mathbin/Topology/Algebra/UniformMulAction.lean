@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module topology.algebra.uniform_mul_action
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -73,13 +73,13 @@ theorem hasUniformContinuousConstSmul_of_continuous_const_smul [Monoid R] [AddCo
 
 /-- The action of `semiring.to_module` is uniformly continuous. -/
 instance Ring.hasUniformContinuousConstSmul [Ring R] [UniformSpace R] [UniformAddGroup R]
-    [HasContinuousMul R] : HasUniformContinuousConstSmul R R :=
+    [ContinuousMul R] : HasUniformContinuousConstSmul R R :=
   hasUniformContinuousConstSmul_of_continuous_const_smul _ _
 #align ring.has_uniform_continuous_const_smul Ring.hasUniformContinuousConstSmul
 
 /-- The action of `semiring.to_opposite_module` is uniformly continuous. -/
 instance Ring.has_uniform_continuous_const_op_smul [Ring R] [UniformSpace R] [UniformAddGroup R]
-    [HasContinuousMul R] : HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
+    [ContinuousMul R] : HasUniformContinuousConstSmul Rᵐᵒᵖ R :=
   hasUniformContinuousConstSmul_of_continuous_const_smul _ _
 #align ring.has_uniform_continuous_const_op_smul Ring.has_uniform_continuous_const_op_smul
 

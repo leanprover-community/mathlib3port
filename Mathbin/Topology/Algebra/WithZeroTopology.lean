@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.with_zero_topology
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,7 +202,7 @@ instance (priority := 100) t3Space : T3Space Γ₀
 
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
-instance (priority := 100) : HasContinuousMul Γ₀ :=
+instance (priority := 100) : ContinuousMul Γ₀ :=
   ⟨by
     rw [continuous_iff_continuousAt]
     rintro ⟨x, y⟩

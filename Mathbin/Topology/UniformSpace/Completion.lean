@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.uniform_space.completion
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -680,7 +680,7 @@ end SeparatedSpace
 variable [CompleteSpace γ] (f)
 
 theorem uniform_continuous_extension₂ : UniformContinuous₂ (Completion.extension₂ f) :=
-  cpkg.uniform_continuous_extension₂ cpkg f
+  cpkg.uniformContinuous_extension₂ cpkg f
 #align uniform_space.completion.uniform_continuous_extension₂ UniformSpace.Completion.uniform_continuous_extension₂
 
 end Extension₂
@@ -695,7 +695,7 @@ protected def map₂ (f : α → β → γ) : Completion α → Completion β �
 #align uniform_space.completion.map₂ UniformSpace.Completion.map₂
 
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (Completion.map₂ f) :=
-  cpkg.uniform_continuous_map₂ cpkg cpkg f
+  cpkg.uniformContinuous_map₂ cpkg cpkg f
 #align uniform_space.completion.uniform_continuous_map₂ UniformSpace.Completion.uniform_continuous_map₂
 
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → Completion α}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Sébastien Gouëzel, Zhouhang Zhou, Reid Barton
 
 ! This file was ported from Lean 3 source module topology.homeomorph
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1184,13 +1184,15 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (e : Homeomorph.{u1, u2} α β _inst_1 _inst_2) (s : Set.{u1} α), Homeomorph.{u1, u2} (Set.Elem.{u1} α s) (Set.Elem.{u2} β (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u1, u2} α β _inst_1 _inst_2))) e) s)) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x s) _inst_1) (instTopologicalSpaceSubtype.{u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x (Set.image.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => β) _x) (EmbeddingLike.toFunLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (EquivLike.toEmbeddingLike.{max (succ u1) (succ u2), succ u1, succ u2} (Homeomorph.{u1, u2} α β _inst_1 _inst_2) α β (Homeomorph.instEquivLikeHomeomorph.{u1, u2} α β _inst_1 _inst_2))) e) s)) _inst_2)
 Case conversion may be inaccurate. Consider using '#align homeomorph.image Homeomorph.imageₓ'. -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
 /-- A subset of a topological space is homeomorphic to its image under a homeomorphism.
 -/
 @[simps]
 def image (e : α ≃ₜ β) (s : Set α) : s ≃ₜ e '' s
     where
-  continuous_toFun := by continuity!
-  continuous_invFun := by continuity!
+  continuous_toFun := by continuity
+  continuous_invFun := by continuity
   toEquiv := e.toEquiv.image s
 #align homeomorph.image Homeomorph.image
 

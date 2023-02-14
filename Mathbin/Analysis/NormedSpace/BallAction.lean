@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.ball_action
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,10 +41,9 @@ instance mulActionClosedBallBall : MulAction (closedBall (0 : 𝕜) 1) (ball (0 
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 #align mul_action_closed_ball_ball mulActionClosedBallBall
 
-instance hasContinuousSmul_closedBall_ball :
-    HasContinuousSmul (closedBall (0 : 𝕜) 1) (ball (0 : E) r) :=
+instance continuousSMul_closedBall_ball : ContinuousSMul (closedBall (0 : 𝕜) 1) (ball (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
-#align has_continuous_smul_closed_ball_ball hasContinuousSmul_closedBall_ball
+#align has_continuous_smul_closed_ball_ball continuousSMul_closedBall_ball
 
 instance mulActionClosedBallClosedBall : MulAction (closedBall (0 : 𝕜) 1) (closedBall (0 : E) r)
     where
@@ -58,10 +57,10 @@ instance mulActionClosedBallClosedBall : MulAction (closedBall (0 : 𝕜) 1) (cl
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 #align mul_action_closed_ball_closed_ball mulActionClosedBallClosedBall
 
-instance hasContinuousSmul_closedBall_closedBall :
-    HasContinuousSmul (closedBall (0 : 𝕜) 1) (closedBall (0 : E) r) :=
+instance continuousSMul_closedBall_closedBall :
+    ContinuousSMul (closedBall (0 : 𝕜) 1) (closedBall (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
-#align has_continuous_smul_closed_ball_closed_ball hasContinuousSmul_closedBall_closedBall
+#align has_continuous_smul_closed_ball_closed_ball continuousSMul_closedBall_closedBall
 
 end ClosedBall
 
@@ -74,9 +73,9 @@ instance mulActionSphereBall : MulAction (sphere (0 : 𝕜) 1) (ball (0 : E) r)
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 #align mul_action_sphere_ball mulActionSphereBall
 
-instance hasContinuousSmul_sphere_ball : HasContinuousSmul (sphere (0 : 𝕜) 1) (ball (0 : E) r) :=
+instance continuousSMul_sphere_ball : ContinuousSMul (sphere (0 : 𝕜) 1) (ball (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
-#align has_continuous_smul_sphere_ball hasContinuousSmul_sphere_ball
+#align has_continuous_smul_sphere_ball continuousSMul_sphere_ball
 
 instance mulActionSphereClosedBall : MulAction (sphere (0 : 𝕜) 1) (closedBall (0 : E) r)
     where
@@ -85,10 +84,10 @@ instance mulActionSphereClosedBall : MulAction (sphere (0 : 𝕜) 1) (closedBall
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 #align mul_action_sphere_closed_ball mulActionSphereClosedBall
 
-instance hasContinuousSmul_sphere_closedBall :
-    HasContinuousSmul (sphere (0 : 𝕜) 1) (closedBall (0 : E) r) :=
+instance continuousSMul_sphere_closedBall :
+    ContinuousSMul (sphere (0 : 𝕜) 1) (closedBall (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
-#align has_continuous_smul_sphere_closed_ball hasContinuousSmul_sphere_closedBall
+#align has_continuous_smul_sphere_closed_ball continuousSMul_sphere_closedBall
 
 instance mulActionSphereSphere : MulAction (sphere (0 : 𝕜) 1) (sphere (0 : E) r)
     where
@@ -101,10 +100,9 @@ instance mulActionSphereSphere : MulAction (sphere (0 : 𝕜) 1) (sphere (0 : E)
   mul_smul c₁ c₂ x := Subtype.ext <| mul_smul _ _ _
 #align mul_action_sphere_sphere mulActionSphereSphere
 
-instance hasContinuousSmul_sphere_sphere :
-    HasContinuousSmul (sphere (0 : 𝕜) 1) (sphere (0 : E) r) :=
+instance continuousSMul_sphere_sphere : ContinuousSMul (sphere (0 : 𝕜) 1) (sphere (0 : E) r) :=
   ⟨(continuous_subtype_val.fst'.smul continuous_subtype_val.snd').subtype_mk _⟩
-#align has_continuous_smul_sphere_sphere hasContinuousSmul_sphere_sphere
+#align has_continuous_smul_sphere_sphere continuousSMul_sphere_sphere
 
 end Sphere
 

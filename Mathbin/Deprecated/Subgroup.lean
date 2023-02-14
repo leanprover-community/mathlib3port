@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -155,7 +155,7 @@ theorem IsSubgroup.inter {s₁ s₂ : Set G} (hs₁ : IsSubgroup s₁) (hs₂ : 
 @[to_additive]
 theorem IsSubgroup.interᵢ {ι : Sort _} {s : ι → Set G} (hs : ∀ y : ι, IsSubgroup (s y)) :
     IsSubgroup (Set.interᵢ s) :=
-  { IsSubmonoid.Inter fun y => (hs y).to_isSubmonoid with
+  { IsSubmonoid.interᵢ fun y => (hs y).to_isSubmonoid with
     inv_mem := fun x h =>
       Set.mem_interᵢ.2 fun y => IsSubgroup.inv_mem (hs _) (Set.mem_interᵢ.1 h y) }
 #align is_subgroup.Inter IsSubgroup.interᵢ
@@ -170,7 +170,7 @@ theorem isSubgroup_unionᵢ_of_directed {ι : Type _} [hι : Nonempty ι] {s : �
   { inv_mem := fun a ha =>
       let ⟨i, hi⟩ := Set.mem_unionᵢ.1 ha
       Set.mem_unionᵢ.2 ⟨i, (hs i).inv_mem hi⟩
-    to_isSubmonoid := is_submonoid_Union_of_directed (fun i => (hs i).to_isSubmonoid) Directed }
+    to_isSubmonoid := isSubmonoid_unionᵢ_of_directed (fun i => (hs i).to_isSubmonoid) Directed }
 #align is_subgroup_Union_of_directed isSubgroup_unionᵢ_of_directed
 #align is_add_subgroup_Union_of_directed isAddSubgroup_unionᵢ_of_directed
 -/
@@ -894,8 +894,8 @@ Case conversion may be inaccurate. Consider using '#align group.closure_eq_mclos
 theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.inv ⁻¹' s) :=
   Set.Subset.antisymm
     (@closure_subset _ _ _ (Monoid.Closure (s ∪ Inv.inv ⁻¹' s))
-      { one_mem := (Monoid.closure.IsSubmonoid _).one_mem
-        mul_mem := fun _ _ => (Monoid.closure.IsSubmonoid _).mul_mem
+      { one_mem := (Monoid.closure.isSubmonoid _).one_mem
+        mul_mem := fun _ _ => (Monoid.closure.isSubmonoid _).mul_mem
         inv_mem := fun x hx =>
           Monoid.InClosure.rec_on hx
             (fun x hx =>
@@ -903,9 +903,9 @@ theorem closure_eq_mclosure {s : Set G} : closure s = Monoid.Closure (s ∪ Inv.
                 (fun hx =>
                   Monoid.subset_closure <| Or.inr <| show x⁻¹⁻¹ ∈ s from (inv_inv x).symm ▸ hx)
                 fun hx => Monoid.subset_closure <| Or.inl hx)
-            ((@inv_one G _).symm ▸ IsSubmonoid.one_mem (Monoid.closure.IsSubmonoid _))
+            ((@inv_one G _).symm ▸ IsSubmonoid.one_mem (Monoid.closure.isSubmonoid _))
             fun x y hx hy ihx ihy =>
-            (mul_inv_rev x y).symm ▸ IsSubmonoid.mul_mem (Monoid.closure.IsSubmonoid _) ihy ihx }
+            (mul_inv_rev x y).symm ▸ IsSubmonoid.mul_mem (Monoid.closure.isSubmonoid _) ihy ihx }
       (Set.Subset.trans (Set.subset_union_left _ _) Monoid.subset_closure))
     (Monoid.closure_subset (closure.isSubgroup _).to_isSubmonoid <|
       Set.union_subset subset_closure fun x hx =>

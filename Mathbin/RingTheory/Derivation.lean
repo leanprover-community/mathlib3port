@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1268,8 +1268,8 @@ theorem KaehlerDifferential.kerTotal_map (h : Function.Surjective (algebraMap A 
         Submodule.span A (Set.range fun x : S => single (algebraMap S B x) (1 : B)) =
       (KaehlerDifferential.kerTotal S B).restrictScalars _ :=
   by
-  rw [KaehlerDifferential.kerTotal, Submodule.map_span, KaehlerDifferential.kerTotal, ←
-    Submodule.span_eq_restrictScalars _ _ _ _ h]
+  rw [KaehlerDifferential.kerTotal, Submodule.map_span, KaehlerDifferential.kerTotal,
+    Submodule.restrictScalars_span _ _ h]
   simp_rw [Set.image_union, Submodule.span_union, ← Set.image_univ, Set.image_image, Set.image_univ,
     map_sub, map_add]
   simp only [LinearMap.comp_apply, Finsupp.mapRange.linearMap_apply, Finsupp.mapRange_single,
@@ -1339,7 +1339,7 @@ theorem KaehlerDifferential.map_surjective_of_surjective
     Function.Surjective (KaehlerDifferential.map R S A B) :=
   by
   rw [← LinearMap.range_eq_top, _root_.eq_top_iff, ← @Submodule.restrictScalars_top B A, ←
-    KaehlerDifferential.span_range_derivation, ← Submodule.span_eq_restrictScalars _ _ _ _ h,
+    KaehlerDifferential.span_range_derivation, Submodule.restrictScalars_span _ _ h,
     Submodule.span_le]
   rintro _ ⟨x, rfl⟩
   obtain ⟨y, rfl⟩ := h x

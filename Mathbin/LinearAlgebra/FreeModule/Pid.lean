@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -497,7 +497,7 @@ noncomputable def Submodule.smithNormalFormOfLe [Finite ι] (b : Basis ι R M) (
     ⟨o, n, bO, bN.map (comap_subtype_equiv_of_le N_le_O).symm, (Fin.castLe hno).toEmbedding, a,
       fun i => _⟩
   ext
-  simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symm_apply_coe_coe,
+  simp only [snf, Basis.map_apply, Submodule.comapSubtypeEquivOfLe_symmApply,
     Submodule.coe_smul_of_tower, RelEmbedding.coeFn_toEmbedding]
 #align submodule.smith_normal_form_of_le Submodule.smithNormalFormOfLe
 

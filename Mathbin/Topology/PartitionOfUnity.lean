@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.partition_of_unity
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,8 +134,8 @@ variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
 namespace PartitionOfUnity
 
-variable {E : Type _} [AddCommMonoid E] [SMulWithZero ℝ E] [TopologicalSpace E]
-  [HasContinuousSmul ℝ E] {s : Set X} (f : PartitionOfUnity ι X s)
+variable {E : Type _} [AddCommMonoid E] [SMulWithZero ℝ E] [TopologicalSpace E] [ContinuousSMul ℝ E]
+  {s : Set X} (f : PartitionOfUnity ι X s)
 
 instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨toFun⟩
@@ -188,7 +188,7 @@ theorem continuous_smul {g : X → E} {i : ι} (hg : ∀ x ∈ tsupport (f i), C
 /-- If `f` is a partition of unity on a set `s : set X` and `g : ι → X → E` is a family of functions
 such that each `g i` is continuous at every point of the topological support of `f i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is continuous on the whole space. -/
-theorem continuous_finsum_smul [HasContinuousAdd E] {g : ι → X → E}
+theorem continuous_finsum_smul [ContinuousAdd E] {g : ι → X → E}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContinuousAt (g i) x) :
     Continuous fun x => ∑ᶠ i, f i x • g i x :=
   (continuous_finsum fun i => f.continuous_smul (hg i)) <|
@@ -213,7 +213,7 @@ theorem exists_finset_nhd_support_subset {U : ι → Set X} (hso : f.IsSubordina
 /-- If `f` is a partition of unity that is subordinate to a family of open sets `U i` and
 `g : ι → X → E` is a family of functions such that each `g i` is continuous on `U i`, then the sum
 `λ x, ∑ᶠ i, f i x • g i x` is a continuous function. -/
-theorem IsSubordinate.continuous_finsum_smul [HasContinuousAdd E] {U : ι → Set X}
+theorem IsSubordinate.continuous_finsum_smul [ContinuousAdd E] {U : ι → Set X}
     (ho : ∀ i, IsOpen (U i)) (hf : f.IsSubordinate U) {g : ι → X → E}
     (hg : ∀ i, ContinuousOn (g i) (U i)) : Continuous fun x => ∑ᶠ i, f i x • g i x :=
   f.continuous_finsum_smul fun i x hx => (hg i).ContinuousAt <| (ho i).mem_nhds <| hf i hx

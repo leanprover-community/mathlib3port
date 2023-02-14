@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module order.filter.zero_and_bounded_at_filter
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem zero_zeroAtFilter [Zero β] [TopologicalSpace β] (l : Filter α) :
   tendsto_const_nhds
 #align filter.zero_zero_at_filter Filter.zero_zeroAtFilter
 
-theorem ZeroAtFilter.add [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β] {l : Filter α}
+theorem ZeroAtFilter.add [TopologicalSpace β] [AddZeroClass β] [ContinuousAdd β] {l : Filter α}
     {f g : α → β} (hf : ZeroAtFilter l f) (hg : ZeroAtFilter l g) : ZeroAtFilter l (f + g) := by
   simpa using hf.add hg
 #align filter.zero_at_filter.add Filter.ZeroAtFilter.add
@@ -50,14 +50,14 @@ theorem ZeroAtFilter.neg [TopologicalSpace β] [AddGroup β] [HasContinuousNeg �
 #align filter.zero_at_filter.neg Filter.ZeroAtFilter.neg
 
 theorem ZeroAtFilter.smul {𝕜 : Type _} [TopologicalSpace 𝕜] [TopologicalSpace β] [Zero 𝕜] [Zero β]
-    [SMulWithZero 𝕜 β] [HasContinuousSmul 𝕜 β] {l : Filter α} {f : α → β} (c : 𝕜)
+    [SMulWithZero 𝕜 β] [ContinuousSMul 𝕜 β] {l : Filter α} {f : α → β} (c : 𝕜)
     (hf : ZeroAtFilter l f) : ZeroAtFilter l (c • f) := by simpa using hf.const_smul c
 #align filter.zero_at_filter.smul Filter.ZeroAtFilter.smul
 
 /-- `zero_at_filter_submodule l` is the submodule of `f : α → β` which
 tend to zero along `l`. -/
-def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd β]
-    [HasContinuousMul β] (l : Filter α) : Submodule β (α → β)
+def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [ContinuousAdd β] [ContinuousMul β]
+    (l : Filter α) : Submodule β (α → β)
     where
   carrier := ZeroAtFilter l
   zero_mem' := zero_zeroAtFilter l
@@ -67,7 +67,7 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [HasContinuousAdd 
 
 /-- `zero_at_filter_add_submonoid l` is the additive submonoid of `f : α → β`
 which tend to zero along `l`. -/
-def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [HasContinuousAdd β]
+def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [ContinuousAdd β]
     (l : Filter α) : AddSubmonoid (α → β)
     where
   carrier := ZeroAtFilter l

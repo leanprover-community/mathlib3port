@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.hom.freiman
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,12 +161,12 @@ instance funLike : FunLike (A →*[n] β) α fun _ => β
 #align add_freiman_hom.fun_like AddFreimanHom.funLike
 -/
 
-#print FreimanHom.freiman_hom_class /-
+#print FreimanHom.freimanHomClass /-
 @[to_additive]
-instance freiman_hom_class : FreimanHomClass (A →*[n] β) A β n
+instance freimanHomClass : FreimanHomClass (A →*[n] β) A β n
     where map_prod_eq_map_prod' := map_prod_eq_map_prod'
-#align freiman_hom.freiman_hom_class FreimanHom.freiman_hom_class
-#align add_freiman_hom.freiman_hom_class AddFreimanHom.freiman_hom_class
+#align freiman_hom.freiman_hom_class FreimanHom.freimanHomClass
+#align add_freiman_hom.freiman_hom_class AddFreimanHom.addFreimanHomClass
 -/
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
@@ -178,17 +178,17 @@ instance : CoeFun (A →*[n] β) fun _ => α → β :=
 
 initialize_simps_projections FreimanHom (toFun → apply)
 
-/- warning: freiman_hom.to_fun_eq_coe -> FreimanHom.to_fun_eq_coe is a dubious translation:
+/- warning: freiman_hom.to_fun_eq_coe -> FreimanHom.toFun_eq_coe is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_2 : CommMonoid.{u1} α] [_inst_3 : CommMonoid.{u2} β] {A : Set.{u1} α} {n : Nat} (f : FreimanHom.{u1, u2} α A β _inst_2 _inst_3 n), Eq.{max (succ u1) (succ u2)} (α -> β) (FreimanHom.toFun.{u1, u2} α A β _inst_2 _inst_3 n f) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (FreimanHom.{u1, u2} α A β _inst_2 _inst_3 n) (fun (_x : FreimanHom.{u1, u2} α A β _inst_2 _inst_3 n) => α -> β) (FreimanHom.hasCoeToFun.{u1, u2} α β _inst_2 _inst_3 A n) f)
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_2 : CommMonoid.{u2} α] [_inst_3 : CommMonoid.{u1} β] {A : Set.{u2} α} {n : Nat} (f : FreimanHom.{u2, u1} α A β _inst_2 _inst_3 n), Eq.{max (succ u2) (succ u1)} (α -> β) (FreimanHom.toFun.{u2, u1} α A β _inst_2 _inst_3 n f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (FreimanHom.{u2, u1} α A β _inst_2 _inst_3 n) α (fun (_x : α) => (fun (x._@.Mathlib.Algebra.Hom.Freiman._hyg.2318 : α) => β) _x) (FreimanHom.funLike.{u2, u1} α β _inst_2 _inst_3 A n) f)
-Case conversion may be inaccurate. Consider using '#align freiman_hom.to_fun_eq_coe FreimanHom.to_fun_eq_coeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align freiman_hom.to_fun_eq_coe FreimanHom.toFun_eq_coeₓ'. -/
 @[simp, to_additive]
-theorem to_fun_eq_coe (f : A →*[n] β) : f.toFun = f :=
+theorem toFun_eq_coe (f : A →*[n] β) : f.toFun = f :=
   rfl
-#align freiman_hom.to_fun_eq_coe FreimanHom.to_fun_eq_coe
-#align add_freiman_hom.to_fun_eq_coe AddFreimanHom.to_fun_eq_coe
+#align freiman_hom.to_fun_eq_coe FreimanHom.toFun_eq_coe
+#align add_freiman_hom.to_fun_eq_coe AddFreimanHom.toFun_eq_coe
 
 /- warning: freiman_hom.ext -> FreimanHom.ext is a dubious translation:
 lean 3 declaration is

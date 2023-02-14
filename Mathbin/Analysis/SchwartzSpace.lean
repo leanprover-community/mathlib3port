@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.schwartz_space
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -472,10 +472,10 @@ theorem schwartzWithSeminorms : WithSeminorms (schwartzSeminormFamily 𝕜 E F) 
 
 variable {𝕜 E F}
 
-instance : HasContinuousSmul 𝕜 𝓢(E, F) :=
+instance : ContinuousSMul 𝕜 𝓢(E, F) :=
   by
   rw [(schwartzWithSeminorms 𝕜 E F).withSeminorms_eq]
-  exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.HasContinuousSmul
+  exact (schwartzSeminormFamily 𝕜 E F).ModuleFilterBasis.ContinuousSMul
 
 instance : TopologicalAddGroup 𝓢(E, F) :=
   (schwartzSeminormFamily ℝ E F).AddGroupFilterBasis.is_topological_add_group

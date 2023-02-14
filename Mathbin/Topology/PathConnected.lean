@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.path_connected
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -588,14 +588,14 @@ end Pi
 /-- Pointwise multiplication of paths in a topological group. The additive version is probably more
 useful. -/
 @[to_additive "Pointwise addition of paths in a topological additive group."]
-protected def mul [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁)
-    (γ₂ : Path a₂ b₂) : Path (a₁ * a₂) (b₁ * b₂) :=
+protected def mul [Mul X] [ContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁) (γ₂ : Path a₂ b₂) :
+    Path (a₁ * a₂) (b₁ * b₂) :=
   (γ₁.Prod γ₂).map continuous_mul
 #align path.mul Path.mul
 #align path.add Path.add
 
 @[to_additive]
-protected theorem mul_apply [Mul X] [HasContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁)
+protected theorem mul_apply [Mul X] [ContinuousMul X] {a₁ b₁ a₂ b₂ : X} (γ₁ : Path a₁ b₁)
     (γ₂ : Path a₂ b₂) (t : unitInterval) : (γ₁.mul γ₂) t = γ₁ t * γ₂ t :=
   rfl
 #align path.mul_apply Path.mul_apply

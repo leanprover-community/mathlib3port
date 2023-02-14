@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module linear_algebra.std_basis
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -247,13 +247,13 @@ theorem basis_repr_stdBasis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j))
   by_cases hj : j = j'
   · subst hj
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same,
-      LinearEquiv.piCongrRight_apply, Finsupp.sigmaFinsuppLequivPiFinsupp_symm_apply]
+      LinearEquiv.piCongrRight, Finsupp.sigmaFinsuppLequivPiFinsupp_symm_apply]
     symm
     exact
       Finsupp.single_apply_left
         (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_hEq (Sigma.mk.inj h).2) _ _ _
   simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigmaFinsuppLequivPiFinsupp_symm_apply,
-    LinearEquiv.piCongrRight_apply]
+    LinearEquiv.piCongrRight]
   dsimp
   rw [std_basis_ne _ _ _ _ (Ne.symm hj), LinearEquiv.map_zero, Finsupp.zero_apply,
     Finsupp.single_eq_of_ne]

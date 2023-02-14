@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module topology.algebra.module.character_space
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -41,9 +41,8 @@ namespace WeakDual
 
 /-- The character space of a topological algebra is the subset of elements of the weak dual that
 are also algebra homomorphisms. -/
-def characterSpace (𝕜 : Type _) (A : Type _) [CommSemiring 𝕜] [TopologicalSpace 𝕜]
-    [HasContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜] [NonUnitalNonAssocSemiring A]
-    [TopologicalSpace A] [Module 𝕜 A] :=
+def characterSpace (𝕜 : Type _) (A : Type _) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
+    [ContinuousConstSMul 𝕜 𝕜] [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A] :=
   { φ : WeakDual 𝕜 A | φ ≠ 0 ∧ ∀ x y : A, φ (x * y) = φ x * φ y }
 #align weak_dual.character_space WeakDual.characterSpace
 
@@ -53,7 +52,7 @@ namespace CharacterSpace
 
 section NonUnitalNonAssocSemiring
 
-variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
+variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
   [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A]
 
 @[simp, norm_cast, protected]
@@ -127,8 +126,7 @@ theorem union_zero :
 #align weak_dual.character_space.union_zero WeakDual.characterSpace.union_zero
 
 /-- The `character_space 𝕜 A` along with `0` is always a closed set in `weak_dual 𝕜 A`. -/
-theorem union_zero_isClosed [T2Space 𝕜] [HasContinuousMul 𝕜] :
-    IsClosed (characterSpace 𝕜 A ∪ {0}) :=
+theorem union_zero_isClosed [T2Space 𝕜] [ContinuousMul 𝕜] : IsClosed (characterSpace 𝕜 A ∪ {0}) :=
   by
   simp only [union_zero, Set.setOf_forall]
   exact
@@ -141,7 +139,7 @@ end NonUnitalNonAssocSemiring
 
 section Unital
 
-variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
+variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
   [ContinuousConstSMul 𝕜 𝕜] [TopologicalSpace A] [Semiring A] [Algebra 𝕜 A]
 
 /-- In a unital algebra, elements of the character space are algebra homomorphisms. -/
@@ -181,7 +179,7 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `weak_dual 𝕜 A`. -/
-protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [HasContinuousMul 𝕜] :
+protected theorem isClosed [Nontrivial 𝕜] [T2Space 𝕜] [ContinuousMul 𝕜] :
     IsClosed (characterSpace 𝕜 A) :=
   by
   rw [eq_set_map_one_map_mul, Set.setOf_and]
@@ -193,7 +191,7 @@ end Unital
 
 section Ring
 
-variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
+variable [CommRing 𝕜] [NoZeroDivisors 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
   [ContinuousConstSMul 𝕜 𝕜] [TopologicalSpace A] [Ring A] [Algebra 𝕜 A]
 
 theorem apply_mem_spectrum [Nontrivial 𝕜] (φ : characterSpace 𝕜 A) (a : A) : φ a ∈ spectrum 𝕜 a :=
@@ -214,7 +212,7 @@ end CharacterSpace
 
 section Kernel
 
-variable [Field 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
+variable [Field 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
 
 variable [Ring A] [TopologicalSpace A] [Algebra 𝕜 A]
 

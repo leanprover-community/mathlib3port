@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.group.basic
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ In this section we prove a few statements about groups with continuous `(*)`.
 -/
 
 
-variable [TopologicalSpace G] [Group G] [HasContinuousMul G]
+variable [TopologicalSpace G] [Group G] [ContinuousMul G]
 
 /-- Multiplication from the left in a topological group as a homeomorphism. -/
 @[to_additive "Addition from the left in a topological additive group as a homeomorphism."]
@@ -429,7 +429,7 @@ that the division operation `λ x y, x * y⁻¹` (resp., subtraction) is continu
 
 /-- A topological (additive) group is a group in which the addition and negation operations are
 continuous. -/
-class TopologicalAddGroup (G : Type u) [TopologicalSpace G] [AddGroup G] extends HasContinuousAdd G,
+class TopologicalAddGroup (G : Type u) [TopologicalSpace G] [AddGroup G] extends ContinuousAdd G,
   HasContinuousNeg G : Prop
 #align topological_add_group TopologicalAddGroup
 
@@ -440,19 +440,19 @@ When you declare an instance that does not already have a `uniform_space` instan
 you should also provide an instance of `uniform_space` and `uniform_group` using
 `topological_group.to_uniform_space` and `topological_comm_group_is_uniform`. -/
 @[to_additive]
-class TopologicalGroup (G : Type _) [TopologicalSpace G] [Group G] extends HasContinuousMul G,
+class TopologicalGroup (G : Type _) [TopologicalSpace G] [Group G] extends ContinuousMul G,
   HasContinuousInv G : Prop
 #align topological_group TopologicalGroup
 #align topological_add_group TopologicalAddGroup
 
 section Conj
 
-instance ConjAct.units_continuousConstSMul {M} [Monoid M] [TopologicalSpace M]
-    [HasContinuousMul M] : ContinuousConstSMul (ConjAct Mˣ) M :=
+instance ConjAct.units_continuousConstSMul {M} [Monoid M] [TopologicalSpace M] [ContinuousMul M] :
+    ContinuousConstSMul (ConjAct Mˣ) M :=
   ⟨fun m => (continuous_const.mul continuous_id).mul continuous_const⟩
 #align conj_act.units_has_continuous_const_smul ConjAct.units_continuousConstSMul
 
-variable [TopologicalSpace G] [Inv G] [Mul G] [HasContinuousMul G]
+variable [TopologicalSpace G] [Inv G] [Mul G] [ContinuousMul G]
 
 /-- Conjugation is jointly continuous on `G × G` when both `mul` and `inv` are continuous. -/
 @[to_additive
@@ -499,10 +499,10 @@ instance AddGroup.continuousConstSMul_int {A} [AddGroup A] [TopologicalSpace A]
   ⟨continuous_zsmul⟩
 #align add_group.has_continuous_const_smul_int AddGroup.continuousConstSMul_int
 
-instance AddGroup.hasContinuousSmul_int {A} [AddGroup A] [TopologicalSpace A]
-    [TopologicalAddGroup A] : HasContinuousSmul ℤ A :=
+instance AddGroup.continuousSMul_int {A} [AddGroup A] [TopologicalSpace A] [TopologicalAddGroup A] :
+    ContinuousSMul ℤ A :=
   ⟨continuous_uncurry_of_discreteTopology continuous_zsmul⟩
-#align add_group.has_continuous_smul_int AddGroup.hasContinuousSmul_int
+#align add_group.has_continuous_smul_int AddGroup.continuousSMul_int
 
 @[continuity, to_additive]
 theorem Continuous.zpow {f : α → G} (h : Continuous f) (z : ℤ) : Continuous fun b => f b ^ z :=
@@ -676,7 +676,7 @@ variable {G}
 @[to_additive]
 protected theorem Inducing.topologicalGroup {F : Type _} [Group H] [TopologicalSpace H]
     [MonoidHomClass F H G] (f : F) (hf : Inducing f) : TopologicalGroup H :=
-  { to_hasContinuousMul := hf.HasContinuousMul _
+  { to_continuousMul := hf.ContinuousMul _
     to_hasContinuousInv := hf.HasContinuousInv (map_inv f) }
 #align inducing.topological_group Inducing.topologicalGroup
 #align inducing.topological_add_group Inducing.topological_add_group
@@ -760,7 +760,7 @@ theorem Subgroup.is_normal_topologicalClosure {G : Type _} [TopologicalSpace G] 
 
 @[to_additive]
 theorem mul_mem_connectedComponent_one {G : Type _} [TopologicalSpace G] [MulOneClass G]
-    [HasContinuousMul G] {g h : G} (hg : g ∈ connectedComponent (1 : G))
+    [ContinuousMul G] {g h : G} (hg : g ∈ connectedComponent (1 : G))
     (hh : h ∈ connectedComponent (1 : G)) : g * h ∈ connectedComponent (1 : G) :=
   by
   rw [connectedComponent_eq hg]
@@ -869,8 +869,7 @@ also `uniform_continuous_of_continuous_at_one`. -/
 @[to_additive
       "An additive monoid homomorphism (a bundled morphism of a type that implements\n`add_monoid_hom_class`) from an additive topological group to an additive topological monoid is\ncontinuous provided that it is continuous at zero. See also\n`uniform_continuous_of_continuous_at_zero`."]
 theorem continuous_of_continuousAt_one {M hom : Type _} [MulOneClass M] [TopologicalSpace M]
-    [HasContinuousMul M] [MonoidHomClass hom G M] (f : hom) (hf : ContinuousAt f 1) :
-    Continuous f :=
+    [ContinuousMul M] [MonoidHomClass hom G M] (f : hom) (hf : ContinuousAt f 1) : Continuous f :=
   continuous_iff_continuousAt.2 fun x => by
     simpa only [ContinuousAt, ← map_mul_left_nhds_one x, tendsto_map'_iff, (· ∘ ·), map_mul,
       map_one, mul_one] using hf.tendsto.const_mul (f x)
@@ -914,7 +913,7 @@ theorem TopologicalGroup.of_nhds_one' {G : Type u} [Group G] [TopologicalSpace G
     (hinv : Tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
     (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀ * x) (𝓝 1))
     (hright : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x * x₀) (𝓝 1)) : TopologicalGroup G :=
-  { to_hasContinuousMul := HasContinuousMul.of_nhds_one hmul hleft hright
+  { to_continuousMul := ContinuousMul.of_nhds_one hmul hleft hright
     to_hasContinuousInv :=
       HasContinuousInv.of_nhds_one hinv hleft fun x₀ =>
         le_of_eq
@@ -1738,7 +1737,7 @@ open MulOpposite (continuous_op continuous_unop)
 variable [Monoid α] [TopologicalSpace α] [Monoid β] [TopologicalSpace β]
 
 @[to_additive]
-instance [HasContinuousMul α] : TopologicalGroup αˣ
+instance [ContinuousMul α] : TopologicalGroup αˣ
     where continuous_inv := Units.continuous_iff.2 <| ⟨continuous_coe_inv, continuous_val⟩
 
 /-- The topological group isomorphism between the units of a product of two monoids, and the product
@@ -1769,9 +1768,8 @@ theorem topologicalGroup_infₛ {ts : Set (TopologicalSpace G)}
     (h : ∀ t ∈ ts, @TopologicalGroup G t _) : @TopologicalGroup G (infₛ ts) _ :=
   { to_hasContinuousInv :=
       @hasContinuousInv_infₛ _ _ _ fun t ht => @TopologicalGroup.to_hasContinuousInv G t _ <| h t ht
-    to_hasContinuousMul :=
-      @hasContinuousMul_infₛ _ _ _ fun t ht =>
-        @TopologicalGroup.to_hasContinuousMul G t _ <| h t ht }
+    to_continuousMul :=
+      @continuousMul_infₛ _ _ _ fun t ht => @TopologicalGroup.to_continuousMul G t _ <| h t ht }
 #align topological_group_Inf topologicalGroup_infₛ
 #align topological_add_group_Inf topological_add_group_infₛ
 

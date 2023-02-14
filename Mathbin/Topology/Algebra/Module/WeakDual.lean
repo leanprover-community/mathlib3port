@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kalle Kytölä, Moritz Doll
 
 ! This file was ported from Lean 3 source module topology.algebra.module.weak_dual
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,7 +141,7 @@ theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B}
 #align weak_bilin.tendsto_iff_forall_eval_tendsto WeakBilin.tendsto_iff_forall_eval_tendsto
 
 /-- Addition in `weak_space B` is continuous. -/
-instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) :=
+instance [ContinuousAdd 𝕜] : ContinuousAdd (WeakBilin B) :=
   by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine'
@@ -151,7 +151,7 @@ instance [HasContinuousAdd 𝕜] : HasContinuousAdd (WeakBilin B) :=
   simp only [Function.comp_apply, Pi.add_apply, map_add, LinearMap.add_apply]
 
 /-- Scalar multiplication by `𝕜` on `weak_bilin B` is continuous. -/
-instance [HasContinuousSmul 𝕜 𝕜] : HasContinuousSmul 𝕜 (WeakBilin B) :=
+instance [ContinuousSMul 𝕜 𝕜] : ContinuousSMul 𝕜 (WeakBilin B) :=
   by
   refine' ⟨continuous_induced_rng.2 _⟩
   refine' cast (congr_arg _ _) (continuous_fst.smul ((coe_fn_continuous B).comp continuous_snd))
@@ -173,9 +173,9 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 
 /-- `weak_space B` is a `topological_add_group`, meaning that addition and negation are
 continuous. -/
-instance [HasContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B)
+instance [ContinuousAdd 𝕜] : TopologicalAddGroup (WeakBilin B)
     where
-  to_hasContinuousAdd := by infer_instance
+  to_continuousAdd := by infer_instance
   continuous_neg :=
     by
     refine' continuous_induced_rng.2 (continuous_pi_iff.mpr fun y => _)
@@ -192,13 +192,12 @@ end WeakTopology
 section WeakStarTopology
 
 /-- The canonical pairing of a vector space and its topological dual. -/
-def topDualPairing (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
-    [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] [ContinuousConstSMul 𝕜 𝕜] :
-    (E →L[𝕜] 𝕜) →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
+def topDualPairing (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [AddCommMonoid E]
+    [Module 𝕜 E] [TopologicalSpace E] [ContinuousConstSMul 𝕜 𝕜] : (E →L[𝕜] 𝕜) →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
   ContinuousLinearMap.coeLm 𝕜
 #align top_dual_pairing topDualPairing
 
-variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
+variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
 
 variable [ContinuousConstSMul 𝕜 𝕜]
 
@@ -211,11 +210,11 @@ theorem dual_pairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing 𝕜
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜 -/
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
-def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
-    [ContinuousConstSMul 𝕜 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
+def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
+    [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E)deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜»,
-  TopologicalSpace, HasContinuousAdd
+  TopologicalSpace, ContinuousAdd
 #align weak_dual WeakDual
 
 namespace WeakDual
@@ -259,7 +258,7 @@ instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [C
 /-- If a monoid `M` distributively continuously acts on `𝕜` and this action commutes with
 multiplication on `𝕜`, then it continuously acts on `weak_dual 𝕜 E`. -/
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [TopologicalSpace M]
-    [HasContinuousSmul M 𝕜] : HasContinuousSmul M (WeakDual 𝕜 E) :=
+    [ContinuousSMul M 𝕜] : ContinuousSMul M (WeakDual 𝕜 E) :=
   ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coeFn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
@@ -287,11 +286,11 @@ end WeakDual
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
 @[nolint has_nonempty_instance]
-def WeakSpace (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [HasContinuousAdd 𝕜]
+def WeakSpace (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
     [ContinuousConstSMul 𝕜 𝕜] [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E] :=
   WeakBilin (topDualPairing 𝕜 E).flip deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler module[module] 𝕜»,
-  TopologicalSpace, HasContinuousAdd
+  TopologicalSpace, ContinuousAdd
 #align weak_space WeakSpace
 
 namespace WeakSpace

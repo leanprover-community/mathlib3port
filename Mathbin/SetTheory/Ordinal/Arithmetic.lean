@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.arithmetic
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,9 +87,9 @@ theorem lift_succ (a) : lift (succ a) = succ (lift a) :=
 
 instance add_contravariantClass_le : ContravariantClass Ordinal.{u} Ordinal.{u} (· + ·) (· ≤ ·) :=
   ⟨fun a b c =>
-    induction_on a fun α r hr =>
-      induction_on b fun β₁ s₁ hs₁ =>
-        induction_on c fun β₂ s₂ hs₂ ⟨f⟩ =>
+    inductionOn a fun α r hr =>
+      inductionOn b fun β₁ s₁ hs₁ =>
+        inductionOn c fun β₂ s₂ hs₂ ⟨f⟩ =>
           ⟨have fl : ∀ a, f (Sum.inl a) = Sum.inl a := fun a => by
               simpa only [InitialSeg.trans_apply, InitialSeg.leAdd_apply] using
                 @InitialSeg.eq _ _ _ _ (@Sum.Lex.isWellOrder _ _ _ _ hr hs₂)
@@ -149,8 +149,8 @@ theorem add_right_cancel {a b : Ordinal} (n : ℕ) : a + n = b + n ↔ a = b := 
 #align ordinal.add_right_cancel Ordinal.add_right_cancel
 
 theorem add_eq_zero_iff {a b : Ordinal} : a + b = 0 ↔ a = 0 ∧ b = 0 :=
-  induction_on a fun α r _ =>
-    induction_on b fun β s _ =>
+  inductionOn a fun α r _ =>
+    inductionOn b fun β s _ =>
       by
       simp_rw [← type_sum_lex, type_eq_zero_iff_is_empty]
       exact isEmpty_sum
@@ -492,9 +492,9 @@ theorem IsNormal.le_iff_eq {f} (H : IsNormal f) {a} : f a ≤ a ↔ f a = a :=
 theorem add_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a + b ≤ c ↔ ∀ b' < b, a + b' ≤ c :=
   ⟨fun h b' l => (add_le_add_left l.le _).trans h, fun H =>
     le_of_not_lt <|
-      induction_on a
+      inductionOn a
         (fun α r _ =>
-          induction_on b fun β s _ h H l => by
+          inductionOn b fun β s _ h H l => by
             skip
             suffices ∀ x : β, Sum.Lex r s (Sum.inr x) (enum _ _ l)
               by
@@ -658,7 +658,7 @@ instance : Monoid Ordinal.{u}
               rcases b with ⟨⟨b₁, b₂⟩, b₃⟩
               simp [Prod.lex_def, and_or_left, or_assoc', and_assoc']⟩⟩
   mul_one a :=
-    induction_on a fun α r _ =>
+    inductionOn a fun α r _ =>
       Quotient.sound
         ⟨⟨punitProd _, fun a b => by
             rcases a with ⟨⟨⟨⟩⟩, a⟩ <;> rcases b with ⟨⟨⟨⟩⟩, b⟩ <;>
@@ -666,7 +666,7 @@ instance : Monoid Ordinal.{u}
                 simp only [eq_self_iff_true, true_and_iff] <;>
               rfl⟩⟩
   one_mul a :=
-    induction_on a fun α r _ =>
+    inductionOn a fun α r _ =>
       Quotient.sound
         ⟨⟨prodPUnit _, fun a b => by
             rcases a with ⟨a, ⟨⟨⟩⟩⟩ <;> rcases b with ⟨b, ⟨⟨⟩⟩⟩ <;>
@@ -680,8 +680,8 @@ theorem type_prod_lex {α β : Type u} (r : α → α → Prop) (s : β → β �
 #align ordinal.type_prod_lex Ordinal.type_prod_lex
 
 private theorem mul_eq_zero' {a b : Ordinal} : a * b = 0 ↔ a = 0 ∨ b = 0 :=
-  induction_on a fun α _ _ =>
-    induction_on b fun β _ _ =>
+  inductionOn a fun α _ _ =>
+    inductionOn b fun β _ _ =>
       by
       simp_rw [← type_prod_lex, type_eq_zero_iff_is_empty]
       rw [or_comm']
@@ -806,8 +806,7 @@ private theorem mul_le_of_limit_aux {α β r s} [IsWellOrder α r] [IsWellOrder 
 
 theorem mul_le_of_limit {a b c : Ordinal} (h : IsLimit b) : a * b ≤ c ↔ ∀ b' < b, a * b' ≤ c :=
   ⟨fun h b' l => (mul_le_mul_left' l.le _).trans h, fun H =>
-    le_of_not_lt <|
-      induction_on a (fun α r _ => induction_on b fun β s _ => mul_le_of_limit_aux) h H⟩
+    le_of_not_lt <| inductionOn a (fun α r _ => inductionOn b fun β s _ => mul_le_of_limit_aux) h H⟩
 #align ordinal.mul_le_of_limit Ordinal.mul_le_of_limit
 
 theorem mul_isNormal {a : Ordinal} (h : 0 < a) : IsNormal ((· * ·) a) :=
@@ -1482,7 +1481,7 @@ theorem lt_bsup {o} (f : ∀ a < o, Ordinal) {a} : a < bsup o f ↔ ∃ i hi, a 
 
 theorem IsNormal.bsup {f} (H : IsNormal f) {o} :
     ∀ (g : ∀ a < o, Ordinal) (h : o ≠ 0), f (bsup o g) = bsup o fun a h => f (g a h) :=
-  induction_on o fun α r _ g h => by
+  inductionOn o fun α r _ g h => by
     skip
     haveI := type_ne_zero_iff_nonempty.1 h
     rw [← sup_eq_bsup' r, H.sup, ← sup_eq_bsup' r] <;> rfl
@@ -2798,7 +2797,7 @@ theorem ord_aleph0 : ord.{u} ℵ₀ = ω :=
       by
       rcases Ordinal.lt_lift_iff.1 h with ⟨o, rfl, h'⟩
       rw [lt_ord, ← lift_card, ← lift_aleph0.{0, u}, lift_lt, ← typein_enum (· < ·) h']
-      exact lt_aleph_0_iff_fintype.2 ⟨Set.fintypeLtNat _⟩
+      exact lt_aleph_0_iff_fintype.2 ⟨Set.fintypeLTNat _⟩
 #align cardinal.ord_aleph_0 Cardinal.ord_aleph0
 
 @[simp]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.unit_interval
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,8 +127,9 @@ theorem coe_symm_eq (x : I) : (σ x : ℝ) = 1 - x :=
   rfl
 #align unit_interval.coe_symm_eq unitInterval.coe_symm_eq
 
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:301:22: continuitity! not supported at the moment -/
 @[continuity]
-theorem continuous_symm : Continuous σ := by continuity!
+theorem continuous_symm : Continuous σ := by continuity
 #align unit_interval.continuous_symm unitInterval.continuous_symm
 
 instance : ConnectedSpace I :=

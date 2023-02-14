@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.constructions.borel_space
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -866,13 +866,13 @@ theorem ContinuousOn.measurable_piecewise {f g : α → γ} {s : Set α} [∀ j 
 #align continuous_on.measurable_piecewise ContinuousOn.measurable_piecewise
 
 @[to_additive]
-instance (priority := 100) HasContinuousMul.hasMeasurableMul [Mul γ] [HasContinuousMul γ] :
+instance (priority := 100) ContinuousMul.hasMeasurableMul [Mul γ] [ContinuousMul γ] :
     HasMeasurableMul γ
     where
   measurable_const_mul c := (continuous_const.mul continuous_id).Measurable
   measurable_mul_const c := (continuous_id.mul continuous_const).Measurable
-#align has_continuous_mul.has_measurable_mul HasContinuousMul.hasMeasurableMul
-#align has_continuous_add.has_measurable_add HasContinuousAdd.has_measurable_add
+#align has_continuous_mul.has_measurable_mul ContinuousMul.hasMeasurableMul
+#align has_continuous_add.has_measurable_add ContinuousAdd.has_measurable_add
 
 instance (priority := 100) HasContinuousSub.hasMeasurableSub [Sub γ] [HasContinuousSub γ] :
     HasMeasurableSub γ
@@ -888,12 +888,12 @@ instance (priority := 100) TopologicalGroup.hasMeasurableInv [Group γ] [Topolog
 #align topological_group.has_measurable_inv TopologicalGroup.hasMeasurableInv
 #align topological_add_group.has_measurable_neg TopologicalAddGroup.has_measurable_neg
 
-instance (priority := 100) HasContinuousSmul.hasMeasurableSmul {M α} [TopologicalSpace M]
+instance (priority := 100) ContinuousSMul.hasMeasurableSmul {M α} [TopologicalSpace M]
     [TopologicalSpace α] [MeasurableSpace M] [MeasurableSpace α] [OpensMeasurableSpace M]
-    [BorelSpace α] [SMul M α] [HasContinuousSmul M α] : HasMeasurableSmul M α :=
+    [BorelSpace α] [SMul M α] [ContinuousSMul M α] : HasMeasurableSmul M α :=
   ⟨fun c => (continuous_const_smul _).Measurable, fun y =>
     (continuous_id.smul continuous_const).Measurable⟩
-#align has_continuous_smul.has_measurable_smul HasContinuousSmul.hasMeasurableSmul
+#align has_continuous_smul.has_measurable_smul ContinuousSMul.hasMeasurableSmul
 
 section Lattice
 
@@ -980,23 +980,23 @@ instance (priority := 100) HasContinuousInv₀.hasMeasurableInv [GroupWithZero �
 #align has_continuous_inv₀.has_measurable_inv HasContinuousInv₀.hasMeasurableInv
 
 @[to_additive]
-instance (priority := 100) HasContinuousMul.hasMeasurableMul₂ [SecondCountableTopology γ] [Mul γ]
-    [HasContinuousMul γ] : HasMeasurableMul₂ γ :=
+instance (priority := 100) ContinuousMul.hasMeasurableMul₂ [SecondCountableTopology γ] [Mul γ]
+    [ContinuousMul γ] : HasMeasurableMul₂ γ :=
   ⟨continuous_mul.Measurable⟩
-#align has_continuous_mul.has_measurable_mul₂ HasContinuousMul.hasMeasurableMul₂
-#align has_continuous_add.has_measurable_mul₂ HasContinuousAdd.hasMeasurableMul₂
+#align has_continuous_mul.has_measurable_mul₂ ContinuousMul.hasMeasurableMul₂
+#align has_continuous_add.has_measurable_mul₂ ContinuousAdd.hasMeasurableMul₂
 
 instance (priority := 100) HasContinuousSub.hasMeasurableSub₂ [SecondCountableTopology γ] [Sub γ]
     [HasContinuousSub γ] : HasMeasurableSub₂ γ :=
   ⟨continuous_sub.Measurable⟩
 #align has_continuous_sub.has_measurable_sub₂ HasContinuousSub.hasMeasurableSub₂
 
-instance (priority := 100) HasContinuousSmul.hasMeasurableSmul₂ {M α} [TopologicalSpace M]
+instance (priority := 100) ContinuousSMul.hasMeasurableSmul₂ {M α} [TopologicalSpace M]
     [SecondCountableTopology M] [MeasurableSpace M] [OpensMeasurableSpace M] [TopologicalSpace α]
-    [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] [SMul M α]
-    [HasContinuousSmul M α] : HasMeasurableSmul₂ M α :=
+    [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α] [SMul M α] [ContinuousSMul M α] :
+    HasMeasurableSmul₂ M α :=
   ⟨continuous_smul.Measurable⟩
-#align has_continuous_smul.has_measurable_smul₂ HasContinuousSmul.hasMeasurableSmul₂
+#align has_continuous_smul.has_measurable_smul₂ ContinuousSMul.hasMeasurableSmul₂
 
 end
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Alena Gusakov
 
 ! This file was ported from Lean 3 source module combinatorics.colex
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -407,14 +407,14 @@ theorem empty_toColex_lt [LinearOrder α] {A : Finset α} (hA : A.Nonempty) :
 #align colex.empty_to_colex_lt Colex.empty_toColex_lt
 -/
 
-#print Colex.colex_lt_of_sSubset /-
+#print Colex.colex_lt_of_ssubset /-
 /-- If `A ⊂ B`, then `A` is less than `B` in the colex order. Note the converse does not hold, as
 `⊆` is not a linear order. -/
-theorem colex_lt_of_sSubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
+theorem colex_lt_of_ssubset [LinearOrder α] {A B : Finset α} (h : A ⊂ B) : A.toColex < B.toColex :=
   by
   rw [← sdiff_lt_sdiff_iff_lt, sdiff_eq_empty_iff_subset.2 h.1]
   exact empty_to_colex_lt (by simpa [Finset.Nonempty] using exists_of_ssubset h)
-#align colex.colex_lt_of_ssubset Colex.colex_lt_of_sSubset
+#align colex.colex_lt_of_ssubset Colex.colex_lt_of_ssubset
 -/
 
 #print Colex.empty_toColex_le /-

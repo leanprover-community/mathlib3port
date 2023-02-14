@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.algebra.ring
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -54,7 +54,7 @@ then `topological_ring` should be used. Note: in the presence of `non_assoc_ring
 mathematically equivalent (see `topological_semiring.has_continuous_neg_of_mul` or
 `topological_semiring.to_topological_ring`).  -/
 class TopologicalSemiring [TopologicalSpace α] [NonUnitalNonAssocSemiring α] extends
-  HasContinuousAdd α, HasContinuousMul α : Prop
+  ContinuousAdd α, ContinuousMul α : Prop
 #align topological_semiring TopologicalSemiring
 
 /-- A topological ring is a ring `R` where addition, multiplication and negation are continuous.
@@ -72,7 +72,7 @@ variable {α}
 /-- If `R` is a ring with a continuous multiplication, then negation is continuous as well since it
 is just multiplication with `-1`. -/
 theorem TopologicalSemiring.hasContinuousNeg_of_mul [TopologicalSpace α] [NonAssocRing α]
-    [HasContinuousMul α] : HasContinuousNeg α :=
+    [ContinuousMul α] : HasContinuousNeg α :=
   {
     continuous_neg := by
       simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
@@ -92,7 +92,7 @@ theorem TopologicalSemiring.to_topologicalRing [TopologicalSpace α] [NonAssocRi
 -- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topologicalAddGroup [NonUnitalNonAssocRing α]
     [TopologicalSpace α] [TopologicalRing α] : TopologicalAddGroup α :=
-  { TopologicalRing.to_topologicalSemiring.to_hasContinuousAdd,
+  { TopologicalRing.to_topologicalSemiring.to_continuousAdd,
     TopologicalRing.to_hasContinuousNeg with }
 #align topological_ring.to_topological_add_group TopologicalRing.to_topologicalAddGroup
 
@@ -113,7 +113,7 @@ variable [TopologicalSpace α] [Semiring α] [TopologicalSemiring α]
 namespace Subsemiring
 
 instance (S : Subsemiring α) : TopologicalSemiring S :=
-  { S.toSubmonoid.HasContinuousMul, S.toAddSubmonoid.HasContinuousAdd with }
+  { S.toSubmonoid.ContinuousMul, S.toAddSubmonoid.ContinuousAdd with }
 
 end Subsemiring
 
@@ -180,8 +180,7 @@ section MulOpposite
 
 open MulOpposite
 
-instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousAdd α] :
-    HasContinuousAdd αᵐᵒᵖ
+instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousAdd α] : ContinuousAdd αᵐᵒᵖ
     where continuous_add :=
     continuous_induced_rng.2 <|
       (@continuous_add α _ _ _).comp (continuous_unop.Prod_map continuous_unop)
@@ -202,8 +201,7 @@ section AddOpposite
 
 open AddOpposite
 
-instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [HasContinuousMul α] :
-    HasContinuousMul αᵃᵒᵖ
+instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousMul α] : ContinuousMul αᵃᵒᵖ
     where continuous_mul := by
     convert
       continuous_op.comp <|

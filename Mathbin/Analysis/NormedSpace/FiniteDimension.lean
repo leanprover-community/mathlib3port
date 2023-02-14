@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -127,7 +127,7 @@ section CompleteField
 variable {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Type v} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {F : Type w} [NormedAddCommGroup F] [NormedSpace 𝕜 F] {F' : Type x}
   [AddCommGroup F'] [Module 𝕜 F'] [TopologicalSpace F'] [TopologicalAddGroup F']
-  [HasContinuousSmul 𝕜 F'] [CompleteSpace 𝕜]
+  [ContinuousSMul 𝕜 F'] [CompleteSpace 𝕜]
 
 section Affine
 
@@ -652,7 +652,7 @@ def ContinuousLinearEquiv.piRing (ι : Type _) [Fintype ι] [DecidableEq ι] :
       rw [← nsmul_eq_mul]
       apply op_norm_le_bound _ (nsmul_nonneg (norm_nonneg g) (Fintype.card ι)) fun t => _
       simp_rw [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, Function.comp_apply,
-        LinearMap.coe_to_continuous_linear_map', LinearEquiv.piRing_symm_apply]
+        LinearMap.coe_to_continuous_linear_map', LinearEquiv.piRing_symmApply]
       apply le_trans (norm_sum_le _ _)
       rw [smul_mul_assoc]
       refine' Finset.sum_le_card_nsmul _ _ _ fun i hi => _

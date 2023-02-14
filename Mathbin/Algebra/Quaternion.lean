@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.quaternion
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -102,7 +102,7 @@ theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a
   | ⟨a₁, a₂, a₃, a₄⟩ => rfl
 #align quaternion_algebra.mk.eta QuaternionAlgebra.mk.eta
 
-variable {R : Type _} [CommRing R] {c₁ c₂ : R} (r x y z : R) (a b c : ℍ[R,c₁,c₂])
+variable {S T R : Type _} [CommRing R] {c₁ c₂ : R} (r x y z : R) (a b c : ℍ[R,c₁,c₂])
 
 instance : CoeTC R ℍ[R,c₁,c₂] :=
   ⟨fun x => ⟨x, 0, 0, 0⟩⟩
@@ -219,14 +219,65 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
   rfl
 #align quaternion_algebra.mk_mul_mk QuaternionAlgebra.mk_mul_mk
 
+section
+
+variable [SMul S R] [SMul T R] (s : S)
+
+/-
+The `ring R` argument is not used, but it's also much stronger than the other definitions in this
+file need; for instance `quaternion_algebra.has_zero` only really needs `has_zero R`. For
+simplicity we just keep things consistent.
+-/
+@[nolint unused_arguments]
+instance : SMul S ℍ[R,c₁,c₂] where smul s a := ⟨s • a.1, s • a.2, s • a.3, s • a.4⟩
+
+instance [SMul S T] [IsScalarTower S T R] : IsScalarTower S T ℍ[R,c₁,c₂]
+    where smul_assoc s t x := by ext <;> exact smul_assoc _ _ _
+
+instance [SMulCommClass S T R] : SMulCommClass S T ℍ[R,c₁,c₂]
+    where smul_comm s t x := by ext <;> exact smul_comm _ _ _
+
+@[simp]
+theorem smul_re : (s • a).re = s • a.re :=
+  rfl
+#align quaternion_algebra.smul_re QuaternionAlgebra.smul_re
+
+@[simp]
+theorem smul_imI : (s • a).imI = s • a.imI :=
+  rfl
+#align quaternion_algebra.smul_im_i QuaternionAlgebra.smul_imI
+
+@[simp]
+theorem smul_imJ : (s • a).imJ = s • a.imJ :=
+  rfl
+#align quaternion_algebra.smul_im_j QuaternionAlgebra.smul_imJ
+
+@[simp]
+theorem smul_imK : (s • a).imK = s • a.imK :=
+  rfl
+#align quaternion_algebra.smul_im_k QuaternionAlgebra.smul_imK
+
+@[simp]
+theorem smul_mk (re im_i im_j im_k : R) :
+    s • (⟨re, im_i, im_j, im_k⟩ : ℍ[R,c₁,c₂]) = ⟨s • re, s • im_i, s • im_j, s • im_k⟩ :=
+  rfl
+#align quaternion_algebra.smul_mk QuaternionAlgebra.smul_mk
+
+end
+
+@[simp, norm_cast]
+theorem coe_smul [SMulZeroClass S R] (s : S) (r : R) : (↑(s • r) : ℍ[R,c₁,c₂]) = s • ↑r :=
+  ext _ _ rfl (smul_zero s).symm (smul_zero s).symm (smul_zero s).symm
+#align quaternion_algebra.coe_smul QuaternionAlgebra.coe_smul
+
 instance : AddCommGroup ℍ[R,c₁,c₂] := by
   refine_struct {
                 add := (· + ·)
                 neg := Neg.neg
                 sub := Sub.sub
                 zero := (0 : ℍ[R,c₁,c₂])
-                zsmul := @zsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ ⟨Neg.neg⟩
-                nsmul := @nsmulRec _ ⟨(0 : ℍ[R,c₁,c₂])⟩ ⟨(· + ·)⟩ } <;>
+                nsmul := (· • ·)
+                zsmul := (· • ·) } <;>
             intros <;>
           try rfl <;>
         ext <;>
@@ -308,42 +359,22 @@ instance : Ring ℍ[R,c₁,c₂] := by
       simp <;>
     ring
 
-instance : Algebra R ℍ[R,c₁,c₂]
+@[norm_cast, simp]
+theorem coe_mul : ((x * y : R) : ℍ[R,c₁,c₂]) = x * y := by ext <;> simp
+#align quaternion_algebra.coe_mul QuaternionAlgebra.coe_mul
+
+-- TODO: add weaker `mul_action`, `distrib_mul_action`, and `module` instances (and repeat them
+-- for `ℍ[R]`)
+instance [CommSemiring S] [Algebra S R] : Algebra S ℍ[R,c₁,c₂]
     where
-  smul r a := ⟨r * a.1, r * a.2, r * a.3, r * a.4⟩
-  toFun := coe
-  map_one' := rfl
-  map_zero' := rfl
-  map_mul' x y := by ext <;> simp
-  map_add' x y := by ext <;> simp
-  smul_def' r x := by ext <;> simp
-  commutes' r x := by ext <;> simp [mul_comm]
-
-@[simp]
-theorem smul_re : (r • a).re = r • a.re :=
-  rfl
-#align quaternion_algebra.smul_re QuaternionAlgebra.smul_re
-
-@[simp]
-theorem smul_imI : (r • a).imI = r • a.imI :=
-  rfl
-#align quaternion_algebra.smul_im_i QuaternionAlgebra.smul_imI
-
-@[simp]
-theorem smul_imJ : (r • a).imJ = r • a.imJ :=
-  rfl
-#align quaternion_algebra.smul_im_j QuaternionAlgebra.smul_imJ
-
-@[simp]
-theorem smul_imK : (r • a).imK = r • a.imK :=
-  rfl
-#align quaternion_algebra.smul_im_k QuaternionAlgebra.smul_imK
-
-@[simp]
-theorem smul_mk (re im_i im_j im_k : R) :
-    r • (⟨re, im_i, im_j, im_k⟩ : ℍ[R,c₁,c₂]) = ⟨r • re, r • im_i, r • im_j, r • im_k⟩ :=
-  rfl
-#align quaternion_algebra.smul_mk QuaternionAlgebra.smul_mk
+  smul := (· • ·)
+  toFun s := coe (algebraMap S R s)
+  map_one' := by simpa only [map_one]
+  map_zero' := by simpa only [map_zero]
+  map_mul' x y := by rw [map_mul, coe_mul]
+  map_add' x y := by rw [map_add, coe_add]
+  smul_def' s x := by ext <;> simp [Algebra.smul_def]
+  commutes' s x := by ext <;> simp [Algebra.commutes]
 
 theorem algebraMap_eq (r : R) : algebraMap R ℍ[R,c₁,c₂] r = ⟨r, 0, 0, 0⟩ :=
   rfl
@@ -441,11 +472,6 @@ end
 theorem coe_sub : ((x - y : R) : ℍ[R,c₁,c₂]) = x - y :=
   (algebraMap R ℍ[R,c₁,c₂]).map_sub x y
 #align quaternion_algebra.coe_sub QuaternionAlgebra.coe_sub
-
-@[norm_cast, simp]
-theorem coe_mul : ((x * y : R) : ℍ[R,c₁,c₂]) = x * y :=
-  (algebraMap R ℍ[R,c₁,c₂]).map_mul x y
-#align quaternion_algebra.coe_mul QuaternionAlgebra.coe_mul
 
 @[norm_cast, simp]
 theorem coe_pow (n : ℕ) : (↑(x ^ n) : ℍ[R,c₁,c₂]) = ↑x ^ n :=
@@ -573,8 +599,10 @@ theorem conj_nat_cast (n : ℕ) : conj (n : ℍ[R,c₁,c₂]) = n := by rw [← 
 theorem conj_int_cast (z : ℤ) : conj (z : ℍ[R,c₁,c₂]) = z := by rw [← coe_int_cast, conj_coe]
 #align quaternion_algebra.conj_int_cast QuaternionAlgebra.conj_int_cast
 
-theorem conj_smul : conj (r • a) = r • conj a :=
-  conj.map_smul r a
+@[simp]
+theorem conj_smul [Monoid S] [DistribMulAction S R] (s : S) (a : ℍ[R,c₁,c₂]) :
+    conj (s • a) = s • conj a :=
+  ext _ _ rfl (smul_neg _ _).symm (smul_neg _ _).symm (smul_neg _ _).symm
 #align quaternion_algebra.conj_smul QuaternionAlgebra.conj_smul
 
 @[simp]
@@ -681,7 +709,7 @@ theorem Quaternion.equivTuple_apply (R : Type _) [One R] [Neg R] (x : ℍ[R]) :
 
 namespace Quaternion
 
-variable {R : Type _} [CommRing R] (r x y z : R) (a b c : ℍ[R])
+variable {S T R : Type _} [CommRing R] (r x y z : R) (a b c : ℍ[R])
 
 export QuaternionAlgebra (re imI imJ imK)
 
@@ -694,7 +722,16 @@ instance : Ring ℍ[R] :=
 instance : Inhabited ℍ[R] :=
   QuaternionAlgebra.inhabited
 
-instance : Algebra R ℍ[R] :=
+instance [SMul S R] : SMul S ℍ[R] :=
+  QuaternionAlgebra.hasSmul
+
+instance [SMul S T] [SMul S R] [SMul T R] [IsScalarTower S T R] : IsScalarTower S T ℍ[R] :=
+  QuaternionAlgebra.isScalarTower
+
+instance [SMul S R] [SMul T R] [SMulCommClass S T R] : SMulCommClass S T ℍ[R] :=
+  QuaternionAlgebra.sMulCommClass
+
+instance [CommSemiring S] [Algebra S R] : Algebra S ℍ[R] :=
   QuaternionAlgebra.algebra
 
 instance : StarRing ℍ[R] :=
@@ -949,24 +986,29 @@ theorem coe_inj {x y : R} : (x : ℍ[R]) = y ↔ x = y :=
 #align quaternion.coe_inj Quaternion.coe_inj
 
 @[simp]
-theorem smul_re : (r • a).re = r • a.re :=
+theorem smul_re [SMul S R] (s : S) : (s • a).re = s • a.re :=
   rfl
 #align quaternion.smul_re Quaternion.smul_re
 
 @[simp]
-theorem smul_imI : (r • a).imI = r • a.imI :=
+theorem smul_imI [SMul S R] (s : S) : (s • a).imI = s • a.imI :=
   rfl
 #align quaternion.smul_im_i Quaternion.smul_imI
 
 @[simp]
-theorem smul_imJ : (r • a).imJ = r • a.imJ :=
+theorem smul_imJ [SMul S R] (s : S) : (s • a).imJ = s • a.imJ :=
   rfl
 #align quaternion.smul_im_j Quaternion.smul_imJ
 
 @[simp]
-theorem smul_imK : (r • a).imK = r • a.imK :=
+theorem smul_imK [SMul S R] (s : S) : (s • a).imK = s • a.imK :=
   rfl
 #align quaternion.smul_im_k Quaternion.smul_imK
+
+@[simp, norm_cast]
+theorem coe_smul [SMulZeroClass S R] (s : S) (r : R) : (↑(s • r) : ℍ[R]) = s • ↑r :=
+  QuaternionAlgebra.coe_smul _ _
+#align quaternion.coe_smul Quaternion.coe_smul
 
 theorem coe_commutes : ↑r * a = a * r :=
   QuaternionAlgebra.coe_commutes r a
@@ -1106,8 +1148,9 @@ theorem conj_int_cast (z : ℤ) : conj (z : ℍ[R]) = z :=
 #align quaternion.conj_int_cast Quaternion.conj_int_cast
 
 @[simp]
-theorem conj_smul : conj (r • a) = r • conj a :=
-  a.conj_smul r
+theorem conj_smul [Monoid S] [DistribMulAction S R] (s : S) (a : ℍ[R]) :
+    conj (s • a) = s • conj a :=
+  QuaternionAlgebra.conj_smul _ _
 #align quaternion.conj_smul Quaternion.conj_smul
 
 @[simp]
@@ -1304,8 +1347,11 @@ instance : DivisionRing ℍ[R] :=
   { Quaternion.groupWithZero,
     Quaternion.ring with
     ratCast := fun q => ↑(q : R)
-    ratCast_mk := fun n d hd h => by
-      rw [Rat.cast_mk', coe_mul, coe_int_cast, coe_inv, coe_nat_cast] }
+    ratCast_mk := fun n d hd h => by rw [Rat.cast_mk', coe_mul, coe_int_cast, coe_inv, coe_nat_cast]
+    qsmul := (· • ·)
+    qsmul_eq_mul' := fun q x => by
+      rw [coe_mul_eq_smul]
+      ext <;> exact DivisionRing.qsmul_eq_mul' _ _ }
 
 @[simp, norm_cast]
 theorem rat_cast_re (q : ℚ) : (q : ℍ[R]).re = q :=

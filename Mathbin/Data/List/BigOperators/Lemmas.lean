@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Floris van Doorn, Sébastien Gouëzel, Alex J. Best
 
 ! This file was ported from Lean 3 source module data.list.big_operators.lemmas
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,7 +44,7 @@ theorem list_sum_right [NonUnitalNonAssocSemiring R] (a : R) (l : List R)
   induction' l with x xs ih
   · exact Commute.zero_right _
   · rw [List.sum_cons]
-    exact (h _ <| mem_cons_self _ _).add_right (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
+    exact (h _ <| mem_cons_self _ _).addRight (ih fun j hj => h _ <| mem_cons_of_mem _ hj)
 #align commute.list_sum_right Commute.list_sum_right
 
 /- warning: commute.list_sum_left -> Commute.list_sum_left is a dubious translation:

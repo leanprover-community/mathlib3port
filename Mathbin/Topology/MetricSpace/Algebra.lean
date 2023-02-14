@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.metric_space.algebra
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,9 +81,9 @@ theorem lipschitz_with_lipschitz_const_mul :
 
 -- see Note [lower instance priority]
 @[to_additive]
-instance (priority := 100) HasLipschitzMul.hasContinuousMul : HasContinuousMul β :=
+instance (priority := 100) HasLipschitzMul.continuousMul : ContinuousMul β :=
   ⟨lipschitzWith_lipschitz_const_mul_edist.Continuous⟩
-#align has_lipschitz_mul.has_continuous_mul HasLipschitzMul.hasContinuousMul
+#align has_lipschitz_mul.has_continuous_mul HasLipschitzMul.continuousMul
 #align has_lipschitz_add.has_continuous_add HasLipschitzAdd.has_continuous_add
 
 @[to_additive]
@@ -157,7 +157,7 @@ theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y
 -- see Note [lower instance priority]
 /-- The typeclass `has_bounded_smul` on a metric-space scalar action implies continuity of the
 action. -/
-instance (priority := 100) HasBoundedSmul.hasContinuousSmul : HasContinuousSmul α β
+instance (priority := 100) HasBoundedSmul.continuousSMul : ContinuousSMul α β
     where continuous_smul := by
     rw [Metric.continuous_iff]
     rintro ⟨a, b⟩ ε hε
@@ -190,7 +190,7 @@ instance (priority := 100) HasBoundedSmul.hasContinuousSmul : HasContinuousSmul 
       have : (dist a 0 + dist b 0 + 2)⁻¹ * (ε * (dist a 0 + dist b 0 + δ)) < ε := by
         rw [inv_mul_lt_iff] <;> nlinarith
       nlinarith
-#align has_bounded_smul.has_continuous_smul HasBoundedSmul.hasContinuousSmul
+#align has_bounded_smul.has_continuous_smul HasBoundedSmul.continuousSMul
 
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module analysis.convex.exposed
-! leanprover-community/mathlib commit dc6c365e751e34d100e80fe6e314c3c3e0fd2988
+! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -148,7 +148,7 @@ theorem eq_inter_halfspace [Nontrivial 𝕜] {A B : Set E} (hAB : IsExposed 𝕜
   exact hAB.eq_inter_halfspace' hB
 #align is_exposed.eq_inter_halfspace IsExposed.eq_inter_halfspace
 
-protected theorem inter [HasContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 𝕜 A B)
+protected theorem inter [ContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 𝕜 A B)
     (hC : IsExposed 𝕜 A C) : IsExposed 𝕜 A (B ∩ C) :=
   by
   rintro ⟨w, hwB, hwC⟩
@@ -167,7 +167,7 @@ protected theorem inter [HasContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 
       (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
 #align is_exposed.inter IsExposed.inter
 
-theorem interₛ [HasContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
+theorem interₛ [ContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
     (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) :=
   by
   revert hF F
