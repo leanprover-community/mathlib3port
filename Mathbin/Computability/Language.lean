@@ -34,6 +34,7 @@ variable {α β γ : Type _}
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α) -/
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α) -/
 /- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α) -/
+#print Language /-
 /-- A language is a set of strings over an alphabet. -/
 def Language (α) :=
   Set (List α)deriving
@@ -42,6 +43,7 @@ def Language (α) :=
   «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α)»,
   CompleteBooleanAlgebra
 #align language Language
+-/
 
 namespace Language
 
@@ -69,68 +71,104 @@ instance : Add (Language α) :=
 instance : Mul (Language α) :=
   ⟨image2 (· ++ ·)⟩
 
+#print Language.zero_def /-
 theorem zero_def : (0 : Language α) = (∅ : Set _) :=
   rfl
 #align language.zero_def Language.zero_def
+-/
 
+#print Language.one_def /-
 theorem one_def : (1 : Language α) = {[]} :=
   rfl
 #align language.one_def Language.one_def
+-/
 
+/- warning: language.add_def -> Language.add_def is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) l m) (Union.union.{u1} (Language.{u1} α) (Set.hasUnion.{u1} (List.{u1} α)) l m)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) l m) (Union.union.{u1} (Language.{u1} α) (Set.instUnionSet.{u1} (List.{u1} α)) l m)
+Case conversion may be inaccurate. Consider using '#align language.add_def Language.add_defₓ'. -/
 theorem add_def (l m : Language α) : l + m = l ∪ m :=
   rfl
 #align language.add_def Language.add_def
 
+#print Language.mul_def /-
 theorem mul_def (l m : Language α) : l * m = image2 (· ++ ·) l m :=
   rfl
 #align language.mul_def Language.mul_def
+-/
 
 /-- The Kleene star of a language `L` is the set of all strings which can be written by
 concatenating strings from `L`. -/
 instance : KStar (Language α) :=
   ⟨fun l => { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l }⟩
 
+#print Language.kstar_def /-
 theorem kstar_def (l : Language α) :
     l∗ = { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l } :=
   rfl
 #align language.kstar_def Language.kstar_def
+-/
 
+#print Language.not_mem_zero /-
 @[simp]
 theorem not_mem_zero (x : List α) : x ∉ (0 : Language α) :=
   id
 #align language.not_mem_zero Language.not_mem_zero
+-/
 
+#print Language.mem_one /-
 @[simp]
 theorem mem_one (x : List α) : x ∈ (1 : Language α) ↔ x = [] := by rfl
 #align language.mem_one Language.mem_one
+-/
 
+#print Language.nil_mem_one /-
 theorem nil_mem_one : [] ∈ (1 : Language α) :=
   Set.mem_singleton _
 #align language.nil_mem_one Language.nil_mem_one
+-/
 
+/- warning: language.mem_add -> Language.mem_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α) (x : List.{u1} α), Iff (Membership.Mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Language.hasMem.{u1} α) x (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) l m)) (Or (Membership.Mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Language.hasMem.{u1} α) x l) (Membership.Mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Language.hasMem.{u1} α) x m))
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α) (x : List.{u1} α), Iff (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) l m)) (Or (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x l) (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x m))
+Case conversion may be inaccurate. Consider using '#align language.mem_add Language.mem_addₓ'. -/
 theorem mem_add (l m : Language α) (x : List α) : x ∈ l + m ↔ x ∈ l ∨ x ∈ m :=
   Iff.rfl
 #align language.mem_add Language.mem_add
 
+#print Language.mem_mul /-
 theorem mem_mul : x ∈ l * m ↔ ∃ a b, a ∈ l ∧ b ∈ m ∧ a ++ b = x :=
   mem_image2
 #align language.mem_mul Language.mem_mul
+-/
 
+#print Language.append_mem_mul /-
 theorem append_mem_mul : a ∈ l → b ∈ m → a ++ b ∈ l * m :=
   mem_image2_of_mem
 #align language.append_mem_mul Language.append_mem_mul
+-/
 
+#print Language.mem_kstar /-
 theorem mem_kstar : x ∈ l∗ ↔ ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l :=
   Iff.rfl
 #align language.mem_kstar Language.mem_kstar
+-/
 
+#print Language.join_mem_kstar /-
 theorem join_mem_kstar {L : List (List α)} (h : ∀ y ∈ L, y ∈ l) : L.join ∈ l∗ :=
   ⟨L, rfl, h⟩
 #align language.join_mem_kstar Language.join_mem_kstar
+-/
 
+#print Language.nil_mem_kstar /-
 theorem nil_mem_kstar (l : Language α) : [] ∈ l∗ :=
   ⟨[], rfl, fun _ => False.elim⟩
 #align language.nil_mem_kstar Language.nil_mem_kstar
+-/
 
 instance : Semiring (Language α) where
   add := (· + ·)
@@ -152,11 +190,23 @@ instance : Semiring (Language α) where
   left_distrib _ _ _ := image2_union_right
   right_distrib _ _ _ := image2_union_left
 
+/- warning: language.add_self -> Language.add_self is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) l l) l
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) l l) l
+Case conversion may be inaccurate. Consider using '#align language.add_self Language.add_selfₓ'. -/
 @[simp]
 theorem add_self (l : Language α) : l + l = l :=
   sup_idem
 #align language.add_self Language.add_self
 
+/- warning: language.map -> Language.map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, (α -> β) -> (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β)))
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}}, (α -> β) -> (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.instSemiringLanguage.{u2} β)))
+Case conversion may be inaccurate. Consider using '#align language.map Language.mapₓ'. -/
 /-- Maps the alphabet of a language. -/
 def map (f : α → β) : Language α →+* Language β
     where
@@ -167,15 +217,28 @@ def map (f : α → β) : Language α →+* Language β
   map_mul' _ _ := image_image2_distrib <| map_append _
 #align language.map Language.map
 
+/- warning: language.map_id -> Language.map_id is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (coeFn.{succ u1, succ u1} (RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α))) (fun (_x : RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α))) => (Language.{u1} α) -> (Language.{u1} α)) (RingHom.hasCoeToFun.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α))) (Language.map.{u1, u1} α α (id.{succ u1} α)) l) l
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u1} α) => Language.{u1} α) l) (FunLike.coe.{succ u1, succ u1, succ u1} (RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (Language.{u1} α) (fun (_x : Language.{u1} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u1} α) => Language.{u1} α) _x) (MulHomClass.toFunLike.{u1, u1, u1} (RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (Language.{u1} α) (Language.{u1} α) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)))) (NonUnitalRingHomClass.toMulHomClass.{u1, u1, u1} (RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (Language.{u1} α) (Language.{u1} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (RingHomClass.toNonUnitalRingHomClass.{u1, u1, u1} (RingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))) (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (RingHom.instRingHomClassRingHom.{u1, u1} (Language.{u1} α) (Language.{u1} α) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α)))))) (Language.map.{u1, u1} α α (id.{succ u1} α)) l) l
+Case conversion may be inaccurate. Consider using '#align language.map_id Language.map_idₓ'. -/
 @[simp]
 theorem map_id (l : Language α) : map id l = l := by simp [map]
 #align language.map_id Language.map_id
 
+/- warning: language.map_map -> Language.map_map is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} {γ : Type.{u3}} (g : β -> γ) (f : α -> β) (l : Language.{u1} α), Eq.{succ u3} (Language.{u3} γ) (coeFn.{max (succ u2) (succ u3), max (succ u2) (succ u3)} (RingHom.{u2, u3} (Language.{u2} β) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) (fun (_x : RingHom.{u2, u3} (Language.{u2} β) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) => (Language.{u2} β) -> (Language.{u3} γ)) (RingHom.hasCoeToFun.{u2, u3} (Language.{u2} β) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) (Language.map.{u2, u3} β γ g) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (fun (_x : RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) => (Language.{u1} α) -> (Language.{u2} β)) (RingHom.hasCoeToFun.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (Language.map.{u1, u2} α β f) l)) (coeFn.{max (succ u1) (succ u3), max (succ u1) (succ u3)} (RingHom.{u1, u3} (Language.{u1} α) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) (fun (_x : RingHom.{u1, u3} (Language.{u1} α) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) => (Language.{u1} α) -> (Language.{u3} γ)) (RingHom.hasCoeToFun.{u1, u3} (Language.{u1} α) (Language.{u3} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} γ) (Language.semiring.{u3} γ))) (Language.map.{u1, u3} α γ (Function.comp.{succ u1, succ u2, succ u3} α β γ g f)) l)
+but is expected to have type
+  forall {α : Type.{u3}} {β : Type.{u1}} {γ : Type.{u2}} (g : β -> γ) (f : α -> β) (l : Language.{u3} α), Eq.{succ u2} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u1} β) => Language.{u2} γ) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (fun (a : Language.{u3} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u3} α) => Language.{u1} β) a) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u3} (Language.{u3} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u3, u1} α β f) l)) (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (RingHom.{u1, u2} (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u1} β) (fun (_x : Language.{u1} β) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u1} β) => Language.{u2} γ) _x) (MulHomClass.toFunLike.{max u1 u2, u1, u2} (RingHom.{u1, u2} (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u1} β) (Language.{u2} γ) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} γ) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)))) (NonUnitalRingHomClass.toMulHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u1} β) (Language.{u2} γ) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (RingHomClass.toNonUnitalRingHomClass.{max u1 u2, u1, u2} (RingHom.{u1, u2} (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)) (RingHom.instRingHomClassRingHom.{u1, u2} (Language.{u1} β) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)))))) (Language.map.{u1, u2} β γ g) (FunLike.coe.{max (succ u3) (succ u1), succ u3, succ u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (fun (_x : Language.{u3} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u3} α) => Language.{u1} β) _x) (MulHomClass.toFunLike.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u3} (Language.{u3} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u3 u1, u3, u1} (RingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u3, u1} (Language.{u3} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u3, u1} α β f) l)) (FunLike.coe.{max (succ u3) (succ u2), succ u3, succ u2} (RingHom.{u3, u2} (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u3} α) (fun (_x : Language.{u3} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u3} α) => Language.{u2} γ) _x) (MulHomClass.toFunLike.{max u3 u2, u3, u2} (RingHom.{u3, u2} (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u3} α) (Language.{u2} γ) (NonUnitalNonAssocSemiring.toMul.{u3} (Language.{u3} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)))) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} γ) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)))) (NonUnitalRingHomClass.toMulHomClass.{max u3 u2, u3, u2} (RingHom.{u3, u2} (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u3} α) (Language.{u2} γ) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u3} (Language.{u3} α) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (RingHomClass.toNonUnitalRingHomClass.{max u3 u2, u3, u2} (RingHom.{u3, u2} (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ))) (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)) (RingHom.instRingHomClassRingHom.{u3, u2} (Language.{u3} α) (Language.{u2} γ) (Semiring.toNonAssocSemiring.{u3} (Language.{u3} α) (Language.instSemiringLanguage.{u3} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} γ) (Language.instSemiringLanguage.{u2} γ)))))) (Language.map.{u3, u2} α γ (Function.comp.{succ u3, succ u1, succ u2} α β γ g f)) l)
+Case conversion may be inaccurate. Consider using '#align language.map_map Language.map_mapₓ'. -/
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f l) = map (g ∘ f) l := by
   simp [map, image_image]
 #align language.map_map Language.map_map
 
+#print Language.kstar_def_nonempty /-
 theorem kstar_def_nonempty (l : Language α) :
     l∗ = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } :=
   by
@@ -188,46 +251,97 @@ theorem kstar_def_nonempty (l : Language α) :
   · rintro ⟨S, hx, h⟩
     exact ⟨S, hx, fun y hy => (h y hy).1⟩
 #align language.kstar_def_nonempty Language.kstar_def_nonempty
+-/
 
+/- warning: language.le_iff -> Language.le_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α), Iff (LE.le.{u1} (Language.{u1} α) (Set.hasLe.{u1} (List.{u1} α)) l m) (Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) l m) m)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α) (m : Language.{u1} α), Iff (LE.le.{u1} (Language.{u1} α) (Set.instLESet.{u1} (List.{u1} α)) l m) (Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) l m) m)
+Case conversion may be inaccurate. Consider using '#align language.le_iff Language.le_iffₓ'. -/
 theorem le_iff (l m : Language α) : l ≤ m ↔ l + m = m :=
   sup_eq_right.symm
 #align language.le_iff Language.le_iff
 
+#print Language.le_mul_congr /-
 theorem le_mul_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ * l₂ ≤ m₁ * m₂ :=
   by
   intro h₁ h₂ x hx
   simp only [mul_def, exists_and_left, mem_image2, image_prod] at hx⊢
   tauto
 #align language.le_mul_congr Language.le_mul_congr
+-/
 
+/- warning: language.le_add_congr -> Language.le_add_congr is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l₁ : Language.{u1} α} {l₂ : Language.{u1} α} {m₁ : Language.{u1} α} {m₂ : Language.{u1} α}, (LE.le.{u1} (Language.{u1} α) (Set.hasLe.{u1} (List.{u1} α)) l₁ m₁) -> (LE.le.{u1} (Language.{u1} α) (Set.hasLe.{u1} (List.{u1} α)) l₂ m₂) -> (LE.le.{u1} (Language.{u1} α) (Set.hasLe.{u1} (List.{u1} α)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) l₁ l₂) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) m₁ m₂))
+but is expected to have type
+  forall {α : Type.{u1}} {l₁ : Language.{u1} α} {l₂ : Language.{u1} α} {m₁ : Language.{u1} α} {m₂ : Language.{u1} α}, (LE.le.{u1} (Language.{u1} α) (Set.instLESet.{u1} (List.{u1} α)) l₁ m₁) -> (LE.le.{u1} (Language.{u1} α) (Set.instLESet.{u1} (List.{u1} α)) l₂ m₂) -> (LE.le.{u1} (Language.{u1} α) (Set.instLESet.{u1} (List.{u1} α)) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) l₁ l₂) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m₁ m₂))
+Case conversion may be inaccurate. Consider using '#align language.le_add_congr Language.le_add_congrₓ'. -/
 theorem le_add_congr {l₁ l₂ m₁ m₂ : Language α} : l₁ ≤ m₁ → l₂ ≤ m₂ → l₁ + l₂ ≤ m₁ + m₂ :=
   sup_le_sup
 #align language.le_add_congr Language.le_add_congr
 
+/- warning: language.mem_supr -> Language.mem_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u2}} {ι : Sort.{u1}} {l : ι -> (Language.{u2} α)} {x : List.{u2} α}, Iff (Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (Exists.{u1} ι (fun (i : ι) => Membership.Mem.{u2, u2} (List.{u2} α) (Language.{u2} α) (Language.hasMem.{u2} α) x (l i)))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {l : ι -> (Language.{u1} α)} {x : List.{u1} α}, Iff (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => l i))) (Exists.{u2} ι (fun (i : ι) => Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x (l i)))
+Case conversion may be inaccurate. Consider using '#align language.mem_supr Language.mem_supᵢₓ'. -/
 theorem mem_supᵢ {ι : Sort v} {l : ι → Language α} {x : List α} : (x ∈ ⨆ i, l i) ↔ ∃ i, x ∈ l i :=
   mem_unionᵢ
 #align language.mem_supr Language.mem_supᵢ
 
+/- warning: language.supr_mul -> Language.supᵢ_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) (l i) m))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (l i) m))
+Case conversion may be inaccurate. Consider using '#align language.supr_mul Language.supᵢ_mulₓ'. -/
 theorem supᵢ_mul {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) * m = ⨆ i, l i * m :=
   image2_unionᵢ_left _ _ _
 #align language.supr_mul Language.supᵢ_mul
 
+/- warning: language.mul_supr -> Language.mul_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u2}} {ι : Sort.{u1}} (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HMul.hMul.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHMul.{u2} (Language.{u2} α) (Language.hasMul.{u2} α)) m (l i)))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Sort.{u2}} (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => l i))) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) m (l i)))
+Case conversion may be inaccurate. Consider using '#align language.mul_supr Language.mul_supᵢₓ'. -/
 theorem mul_supᵢ {ι : Sort v} (l : ι → Language α) (m : Language α) :
     (m * ⨆ i, l i) = ⨆ i, m * l i :=
   image2_unionᵢ_right _ _ _
 #align language.mul_supr Language.mul_supᵢ
 
+/- warning: language.supr_add -> Language.supᵢ_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) (l i) m))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => l i)) m) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (l i) m))
+Case conversion may be inaccurate. Consider using '#align language.supr_add Language.supᵢ_addₓ'. -/
 theorem supᵢ_add {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (⨆ i, l i) + m = ⨆ i, l i + m :=
   supᵢ_sup
 #align language.supr_add Language.supᵢ_add
 
+/- warning: language.add_supr -> Language.add_supᵢ is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u2}} {ι : Sort.{u1}} [_inst_1 : Nonempty.{u1} ι] (l : ι -> (Language.{u2} α)) (m : Language.{u2} α), Eq.{succ u2} (Language.{u2} α) (HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => l i))) (supᵢ.{u2, u1} (Language.{u2} α) (Set.hasSup.{u2} (List.{u2} α)) ι (fun (i : ι) => HAdd.hAdd.{u2, u2, u2} (Language.{u2} α) (Language.{u2} α) (Language.{u2} α) (instHAdd.{u2} (Language.{u2} α) (Language.hasAdd.{u2} α)) m (l i)))
+but is expected to have type
+  forall {α : Type.{u1}} {ι : Sort.{u2}} [_inst_1 : Nonempty.{u2} ι] (l : ι -> (Language.{u1} α)) (m : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => l i))) (supᵢ.{u1, u2} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) ι (fun (i : ι) => HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) m (l i)))
+Case conversion may be inaccurate. Consider using '#align language.add_supr Language.add_supᵢₓ'. -/
 theorem add_supᵢ {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Language α) :
     (m + ⨆ i, l i) = ⨆ i, m + l i :=
   sup_supᵢ
 #align language.add_supr Language.add_supᵢ
 
+/- warning: language.mem_pow -> Language.mem_pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {l : Language.{u1} α} {x : List.{u1} α} {n : Nat}, Iff (Membership.Mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Language.hasMem.{u1} α) x (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) l n)) (Exists.{succ u1} (List.{u1} (List.{u1} α)) (fun (S : List.{u1} (List.{u1} α)) => And (Eq.{succ u1} (List.{u1} α) x (List.join.{u1} α S)) (And (Eq.{1} Nat (List.length.{u1} (List.{u1} α) S) n) (forall (y : List.{u1} α), (Membership.Mem.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) (List.hasMem.{u1} (List.{u1} α)) y S) -> (Membership.Mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Language.hasMem.{u1} α) y l)))))
+but is expected to have type
+  forall {α : Type.{u1}} {l : Language.{u1} α} {x : List.{u1} α} {n : Nat}, Iff (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) x (HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) l n)) (Exists.{succ u1} (List.{u1} (List.{u1} α)) (fun (S : List.{u1} (List.{u1} α)) => And (Eq.{succ u1} (List.{u1} α) x (List.join.{u1} α S)) (And (Eq.{1} Nat (List.length.{u1} (List.{u1} α) S) n) (forall (y : List.{u1} α), (Membership.mem.{u1, u1} (List.{u1} α) (List.{u1} (List.{u1} α)) (List.instMembershipList.{u1} (List.{u1} α)) y S) -> (Membership.mem.{u1, u1} (List.{u1} α) (Language.{u1} α) (Set.instMembershipSet.{u1} (List.{u1} α)) y l)))))
+Case conversion may be inaccurate. Consider using '#align language.mem_pow Language.mem_powₓ'. -/
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l :=
   by
@@ -247,6 +361,12 @@ theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
       exact ⟨a, _, hS.1, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 #align language.mem_pow Language.mem_pow
 
+/- warning: language.kstar_eq_supr_pow -> Language.kstar_eq_supᵢ_pow is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l) (supᵢ.{u1, 1} (Language.{u1} α) (Set.hasSup.{u1} (List.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.semiring.{u1} α))))) l i))
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l) (supᵢ.{u1, 1} (Language.{u1} α) (Set.instSupSetSet.{u1} (List.{u1} α)) Nat (fun (i : Nat) => HPow.hPow.{u1, 0, u1} (Language.{u1} α) Nat (Language.{u1} α) (instHPow.{u1, 0} (Language.{u1} α) Nat (Monoid.Pow.{u1} (Language.{u1} α) (MonoidWithZero.toMonoid.{u1} (Language.{u1} α) (Semiring.toMonoidWithZero.{u1} (Language.{u1} α) (Language.instSemiringLanguage.{u1} α))))) l i))
+Case conversion may be inaccurate. Consider using '#align language.kstar_eq_supr_pow Language.kstar_eq_supᵢ_powₓ'. -/
 theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
   by
   ext x
@@ -258,6 +378,12 @@ theorem kstar_eq_supᵢ_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i :=
     exact ⟨S, rfl, hS⟩
 #align language.kstar_eq_supr_pow Language.kstar_eq_supᵢ_pow
 
+/- warning: language.map_kstar -> Language.map_kstar is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} (f : α -> β) (l : Language.{u1} α), Eq.{succ u2} (Language.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (fun (_x : RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) => (Language.{u1} α) -> (Language.{u2} β)) (RingHom.hasCoeToFun.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (Language.map.{u1, u2} α β f) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l)) (KStar.kstar.{u2} (Language.{u2} β) (Language.hasKstar.{u2} β) (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (fun (_x : RingHom.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) => (Language.{u1} α) -> (Language.{u2} β)) (RingHom.hasCoeToFun.{u1, u2} (Language.{u1} α) (Language.{u2} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} α) (Language.semiring.{u1} α)) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} β) (Language.semiring.{u2} β))) (Language.map.{u1, u2} α β f) l))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} (f : α -> β) (l : Language.{u2} α), Eq.{succ u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u2} α) => Language.{u1} β) (KStar.kstar.{u2} (Language.{u2} α) (Language.instKStarLanguage.{u2} α) l)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (fun (_x : Language.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u2} α) => Language.{u1} β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u2, u1} α β f) (KStar.kstar.{u2} (Language.{u2} α) (Language.instKStarLanguage.{u2} α) l)) (KStar.kstar.{u1} ((fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u2} α) => Language.{u1} β) l) (Language.instKStarLanguage.{u1} β) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (fun (_x : Language.{u2} α) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : Language.{u2} α) => Language.{u1} β) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonUnitalNonAssocSemiring.toMul.{u2} (Language.{u2} α) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)))) (NonUnitalNonAssocSemiring.toMul.{u1} (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))) (NonUnitalRingHomClass.toMulHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u2} (Language.{u2} α) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α))) (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} (Language.{u1} β) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (RingHomClass.toNonUnitalRingHomClass.{max u2 u1, u2, u1} (RingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β))) (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)) (RingHom.instRingHomClassRingHom.{u2, u1} (Language.{u2} α) (Language.{u1} β) (Semiring.toNonAssocSemiring.{u2} (Language.{u2} α) (Language.instSemiringLanguage.{u2} α)) (Semiring.toNonAssocSemiring.{u1} (Language.{u1} β) (Language.instSemiringLanguage.{u1} β)))))) (Language.map.{u2, u1} α β f) l))
+Case conversion may be inaccurate. Consider using '#align language.map_kstar Language.map_kstarₓ'. -/
 @[simp]
 theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ :=
   by
@@ -266,10 +392,18 @@ theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ 
   exact image_Union
 #align language.map_kstar Language.map_kstar
 
+#print Language.mul_self_kstar_comm /-
 theorem mul_self_kstar_comm (l : Language α) : l∗ * l = l * l∗ := by
   simp only [kstar_eq_supr_pow, mul_supr, supr_mul, ← pow_succ, ← pow_succ']
 #align language.mul_self_kstar_comm Language.mul_self_kstar_comm
+-/
 
+/- warning: language.one_add_self_mul_kstar_eq_kstar -> Language.one_add_self_mul_kstar_eq_kstar is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) (OfNat.ofNat.{u1} (Language.{u1} α) 1 (OfNat.mk.{u1} (Language.{u1} α) 1 (One.one.{u1} (Language.{u1} α) (Language.hasOne.{u1} α)))) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.hasMul.{u1} α)) l (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l))) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (OfNat.ofNat.{u1} (Language.{u1} α) 1 (One.toOfNat1.{u1} (Language.{u1} α) (Language.instOneLanguage.{u1} α))) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) l (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l))) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l)
+Case conversion may be inaccurate. Consider using '#align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstarₓ'. -/
 @[simp]
 theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ :=
   by
@@ -277,6 +411,12 @@ theorem one_add_self_mul_kstar_eq_kstar (l : Language α) : 1 + l * l∗ = l∗ 
   exact sup_supᵢ_nat_succ _
 #align language.one_add_self_mul_kstar_eq_kstar Language.one_add_self_mul_kstar_eq_kstar
 
+/- warning: language.one_add_kstar_mul_self_eq_kstar -> Language.one_add_kstar_mul_self_eq_kstar is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.hasAdd.{u1} α)) (OfNat.ofNat.{u1} (Language.{u1} α) 1 (OfNat.mk.{u1} (Language.{u1} α) 1 (One.one.{u1} (Language.{u1} α) (Language.hasOne.{u1} α)))) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.hasMul.{u1} α)) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l) l)) (KStar.kstar.{u1} (Language.{u1} α) (Language.hasKstar.{u1} α) l)
+but is expected to have type
+  forall {α : Type.{u1}} (l : Language.{u1} α), Eq.{succ u1} (Language.{u1} α) (HAdd.hAdd.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHAdd.{u1} (Language.{u1} α) (Language.instAddLanguage.{u1} α)) (OfNat.ofNat.{u1} (Language.{u1} α) 1 (One.toOfNat1.{u1} (Language.{u1} α) (Language.instOneLanguage.{u1} α))) (HMul.hMul.{u1, u1, u1} (Language.{u1} α) (Language.{u1} α) (Language.{u1} α) (instHMul.{u1} (Language.{u1} α) (Language.instMulLanguage.{u1} α)) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l) l)) (KStar.kstar.{u1} (Language.{u1} α) (Language.instKStarLanguage.{u1} α) l)
+Case conversion may be inaccurate. Consider using '#align language.one_add_kstar_mul_self_eq_kstar Language.one_add_kstar_mul_self_eq_kstarₓ'. -/
 @[simp]
 theorem one_add_kstar_mul_self_eq_kstar (l : Language α) : 1 + l∗ * l = l∗ := by
   rw [mul_self_kstar_comm, one_add_self_mul_kstar_eq_kstar]

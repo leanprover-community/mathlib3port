@@ -137,12 +137,16 @@ theorem Fintype.piFinset_univ {α : Type _} {β : α → Type _} [DecidableEq α
   rfl
 #align fintype.pi_finset_univ Fintype.piFinset_univ
 
-#print Function.Embedding.fintype /-
+/- warning: function.embedding.fintype -> Function.Embedding.fintype is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] [_inst_3 : DecidableEq.{succ u1} α] [_inst_4 : DecidableEq.{succ u2} β], Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β], Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)
+Case conversion may be inaccurate. Consider using '#align function.embedding.fintype Function.Embedding.fintypeₓ'. -/
 instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] :
     Fintype (α ↪ β) :=
   Fintype.ofEquiv _ (Equiv.subtypeInjectiveEquivEmbedding α β)
 #align function.embedding.fintype Function.Embedding.fintype
--/
 
 /- warning: finset.univ_pi_univ -> Finset.univ_pi_univ is a dubious translation:
 lean 3 declaration is

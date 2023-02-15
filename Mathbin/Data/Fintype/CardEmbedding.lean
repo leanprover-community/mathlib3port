@@ -30,11 +30,23 @@ open Nat BigOperators
 
 namespace Fintype
 
+/- warning: fintype.card_embedding_eq_of_unique -> Fintype.card_embedding_eq_of_unique is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Unique.{succ u1} α] [_inst_2 : Fintype.{u2} β] [_inst_3 : Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)], Eq.{1} Nat (Fintype.card.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β) _inst_3) (Fintype.card.{u2} β _inst_2)
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Unique.{succ u2} α] [_inst_2 : Fintype.{u1} β] [_inst_3 : Fintype.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β)], Eq.{1} Nat (Fintype.card.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β) _inst_3) (Fintype.card.{u1} β _inst_2)
+Case conversion may be inaccurate. Consider using '#align fintype.card_embedding_eq_of_unique Fintype.card_embedding_eq_of_uniqueₓ'. -/
 theorem card_embedding_eq_of_unique {α β : Type _} [Unique α] [Fintype β] [Fintype (α ↪ β)] :
     ‖α ↪ β‖ = ‖β‖ :=
   card_congr Equiv.uniqueEmbeddingEquivResult
 #align fintype.card_embedding_eq_of_unique Fintype.card_embedding_eq_of_unique
 
+/- warning: fintype.card_embedding_eq -> Fintype.card_embedding_eq is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Fintype.{u1} α] [_inst_2 : Fintype.{u2} β] [_inst_3 : Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)], Eq.{1} Nat (Fintype.card.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β) _inst_3) (Nat.descFactorial (Fintype.card.{u2} β _inst_2) (Fintype.card.{u1} α _inst_1))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Fintype.{u2} α] [_inst_2 : Fintype.{u1} β] [_inst_3 : Fintype.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β)], Eq.{1} Nat (Fintype.card.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β) _inst_3) (Nat.descFactorial (Fintype.card.{u1} β _inst_2) (Fintype.card.{u2} α _inst_1))
+Case conversion may be inaccurate. Consider using '#align fintype.card_embedding_eq Fintype.card_embedding_eqₓ'. -/
 -- Establishes the cardinality of the type of all injections between two finite types.
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)] :
@@ -51,6 +63,12 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
         smul_eq_mul, mul_comm]
 #align fintype.card_embedding_eq Fintype.card_embedding_eq
 
+/- warning: fintype.card_embedding_eq_of_infinite -> Fintype.card_embedding_eq_of_infinite is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : Infinite.{succ u1} α] [_inst_2 : Fintype.{u2} β] [_inst_3 : Fintype.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β)], Eq.{1} Nat (Fintype.card.{max u1 u2} (Function.Embedding.{succ u1, succ u2} α β) _inst_3) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+but is expected to have type
+  forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : Infinite.{succ u2} α] [_inst_2 : Fintype.{u1} β] [_inst_3 : Fintype.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β)], Eq.{1} Nat (Fintype.card.{max u2 u1} (Function.Embedding.{succ u2, succ u1} α β) _inst_3) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
+Case conversion may be inaccurate. Consider using '#align fintype.card_embedding_eq_of_infinite Fintype.card_embedding_eq_of_infiniteₓ'. -/
 /- The cardinality of embeddings from an infinite type to a finite type is zero.
 This is a re-statement of the pigeonhole principle. -/
 @[simp]
