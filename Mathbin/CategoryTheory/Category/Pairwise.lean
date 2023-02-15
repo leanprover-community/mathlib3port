@@ -114,8 +114,8 @@ def diagramObj : Pairwise ι → α
 def diagramMap : ∀ {o₁ o₂ : Pairwise ι} (f : o₁ ⟶ o₂), diagramObj U o₁ ⟶ diagramObj U o₂
   | _, _, id_single i => 𝟙 _
   | _, _, id_pair i j => 𝟙 _
-  | _, _, left i j => homOfLe inf_le_left
-  | _, _, right i j => homOfLe inf_le_right
+  | _, _, left i j => homOfLE inf_le_left
+  | _, _, right i j => homOfLE inf_le_right
 #align category_theory.pairwise.diagram_map CategoryTheory.Pairwise.diagramMap
 
 /-- Given a function `U : ι → α` for `[semilattice_inf α]`, we obtain a functor `pairwise ι ⥤ α`,
@@ -138,8 +138,8 @@ variable [CompleteLattice α]
 
 /-- Auxiliary definition for `cocone`. -/
 def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ supᵢ U
-  | single i => homOfLe (le_supᵢ U i)
-  | pair i j => homOfLe inf_le_left ≫ homOfLe (le_supᵢ U i)
+  | single i => homOfLE (le_supᵢ U i)
+  | pair i j => homOfLE inf_le_left ≫ homOfLE (le_supᵢ U i)
 #align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιApp
 
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,
@@ -156,7 +156,7 @@ def cocone : Cocone (diagram U) where
 -/
 def coconeIsColimit : IsColimit (cocone U)
     where desc s :=
-    homOfLe
+    homOfLE
       (by
         apply CompleteLattice.sup_le
         rintro _ ⟨j, rfl⟩

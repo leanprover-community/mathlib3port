@@ -172,7 +172,7 @@ theorem inv_val_c_app {X Y : Scheme} (f : X ⟶ Y) [IsIso f] (U : Opens X.carrie
 this is the induced map `Γ(Y, U) ⟶ Γ(X, V)`. -/
 abbrev Hom.appLe {X Y : Scheme} (f : X ⟶ Y) {V : Opens X.carrier} {U : Opens Y.carrier}
     (e : V ≤ (Opens.map f.1.base).obj U) : Y.Presheaf.obj (op U) ⟶ X.Presheaf.obj (op V) :=
-  f.1.c.app (op U) ≫ X.Presheaf.map (homOfLe e).op
+  f.1.c.app (op U) ≫ X.Presheaf.map (homOfLE e).op
 #align algebraic_geometry.Scheme.hom.app_le AlgebraicGeometry.Scheme.Hom.appLe
 
 /-- The spectrum of a commutative ring, as a scheme.

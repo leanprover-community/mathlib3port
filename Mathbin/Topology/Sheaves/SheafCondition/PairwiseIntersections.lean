@@ -102,8 +102,8 @@ def pairwiseToOpensLeCoverMap :
     ∀ {V W : Pairwise ι}, (V ⟶ W) → (pairwiseToOpensLeCoverObj U V ⟶ pairwiseToOpensLeCoverObj U W)
   | _, _, id_single i => 𝟙 _
   | _, _, id_pair i j => 𝟙 _
-  | _, _, left i j => homOfLe inf_le_left
-  | _, _, right i j => homOfLe inf_le_right
+  | _, _, left i j => homOfLE inf_le_left
+  | _, _, right i j => homOfLE inf_le_right
 #align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover_map TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCoverMap
 
 /-- The category of single and double intersections of the `U i` maps into the category
@@ -309,9 +309,9 @@ open CategoryTheory.Limits
 /-- For a sheaf `F`, `F(U ⊔ V)` is the pullback of `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)`.
 This is the pullback cone. -/
 def interUnionPullbackCone :
-    PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op)
-      (F.1.map (homOfLe inf_le_right).op) :=
-  PullbackCone.mk (F.1.map (homOfLe le_sup_left).op) (F.1.map (homOfLe le_sup_right).op)
+    PullbackCone (F.1.map (homOfLE inf_le_left : U ⊓ V ⟶ _).op)
+      (F.1.map (homOfLE inf_le_right).op) :=
+  PullbackCone.mk (F.1.map (homOfLE le_sup_left).op) (F.1.map (homOfLE le_sup_right).op)
     (by
       rw [← F.1.map_comp, ← F.1.map_comp]
       congr )
@@ -324,19 +324,19 @@ theorem interUnionPullbackCone_x : (interUnionPullbackCone F U V).x = F.1.obj (o
 
 @[simp]
 theorem interUnionPullbackCone_fst :
-    (interUnionPullbackCone F U V).fst = F.1.map (homOfLe le_sup_left).op :=
+    (interUnionPullbackCone F U V).fst = F.1.map (homOfLE le_sup_left).op :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_fst TopCat.Sheaf.interUnionPullbackCone_fst
 
 @[simp]
 theorem interUnionPullbackCone_snd :
-    (interUnionPullbackCone F U V).snd = F.1.map (homOfLe le_sup_right).op :=
+    (interUnionPullbackCone F U V).snd = F.1.map (homOfLE le_sup_right).op :=
   rfl
 #align Top.sheaf.inter_union_pullback_cone_snd TopCat.Sheaf.interUnionPullbackCone_snd
 
 variable
   (s :
-    PullbackCone (F.1.map (homOfLe inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLe inf_le_right).op))
+    PullbackCone (F.1.map (homOfLE inf_le_left : U ⊓ V ⟶ _).op) (F.1.map (homOfLE inf_le_right).op))
 
 /-- (Implementation).
 Every cone over `F(U) ⟶ F(U ⊓ V)` and `F(V) ⟶ F(U ⊓ V)` factors through `F(U ⊔ V)`.
@@ -380,7 +380,7 @@ def interUnionPullbackConeLift : s.x ⟶ F.1.obj (op (U ⊔ V)) :=
 #align Top.sheaf.inter_union_pullback_cone_lift TopCat.Sheaf.interUnionPullbackConeLift
 
 theorem interUnionPullbackConeLift_left :
-    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_left).op = s.fst :=
+    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLE le_sup_left).op = s.fst :=
   by
   erw [category.assoc, ← F.1.map_comp]
   exact
@@ -389,7 +389,7 @@ theorem interUnionPullbackConeLift_left :
 #align Top.sheaf.inter_union_pullback_cone_lift_left TopCat.Sheaf.interUnionPullbackConeLift_left
 
 theorem interUnionPullbackConeLift_right :
-    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLe le_sup_right).op = s.snd :=
+    interUnionPullbackConeLift F U V s ≫ F.1.map (homOfLE le_sup_right).op = s.snd :=
   by
   erw [category.assoc, ← F.1.map_comp]
   exact
@@ -441,8 +441,8 @@ def isLimitPullbackCone : IsLimit (interUnionPullbackCone F U V) :=
 /-- If `U, V` are disjoint, then `F(U ⊔ V) = F(U) × F(V)`. -/
 def isProductOfDisjoint (h : U ⊓ V = ⊥) :
     IsLimit
-      (BinaryFan.mk (F.1.map (homOfLe le_sup_left : _ ⟶ U ⊔ V).op)
-        (F.1.map (homOfLe le_sup_right : _ ⟶ U ⊔ V).op)) :=
+      (BinaryFan.mk (F.1.map (homOfLE le_sup_left : _ ⟶ U ⊔ V).op)
+        (F.1.map (homOfLE le_sup_right : _ ⟶ U ⊔ V).op)) :=
   isProductOfIsTerminalIsPullback _ _ _ _ (F.isTerminalOfEqEmpty h) (isLimitPullbackCone F U V)
 #align Top.sheaf.is_product_of_disjoint TopCat.Sheaf.isProductOfDisjoint
 
@@ -453,7 +453,7 @@ def objSupIsoProdEqLocus {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) 
 #align Top.sheaf.obj_sup_iso_prod_eq_locus TopCat.Sheaf.objSupIsoProdEqLocus
 
 theorem objSupIsoProdEqLocus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLe le_sup_left).op x :=
+    ((F.objSupIsoProdEqLocus U V).Hom x).1.fst = F.1.map (homOfLE le_sup_left).op x :=
   ConcreteCategory.congr_hom
     ((F.isLimitPullbackCone U V).conePointUniqueUpToIso_hom_comp
       (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.left)
@@ -461,7 +461,7 @@ theorem objSupIsoProdEqLocus_hom_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_fst TopCat.Sheaf.objSupIsoProdEqLocus_hom_fst
 
 theorem objSupIsoProdEqLocus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLe le_sup_right).op x :=
+    ((F.objSupIsoProdEqLocus U V).Hom x).1.snd = F.1.map (homOfLE le_sup_right).op x :=
   ConcreteCategory.congr_hom
     ((F.isLimitPullbackCone U V).conePointUniqueUpToIso_hom_comp
       (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.right)
@@ -469,7 +469,7 @@ theorem objSupIsoProdEqLocus_hom_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_hom_snd TopCat.Sheaf.objSupIsoProdEqLocus_hom_snd
 
 theorem objSupIsoProdEqLocus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    F.1.map (homOfLe le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
+    F.1.map (homOfLE le_sup_left).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.1 :=
   ConcreteCategory.congr_hom
     ((F.isLimitPullbackCone U V).conePointUniqueUpToIso_inv_comp
       (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.left)
@@ -477,7 +477,7 @@ theorem objSupIsoProdEqLocus_inv_fst {X : TopCat} (F : X.Sheaf CommRingCat) (U V
 #align Top.sheaf.obj_sup_iso_prod_eq_locus_inv_fst TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst
 
 theorem objSupIsoProdEqLocus_inv_snd {X : TopCat} (F : X.Sheaf CommRingCat) (U V : Opens X) (x) :
-    F.1.map (homOfLe le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
+    F.1.map (homOfLE le_sup_right).op ((F.objSupIsoProdEqLocus U V).inv x) = x.1.2 :=
   ConcreteCategory.congr_hom
     ((F.isLimitPullbackCone U V).conePointUniqueUpToIso_inv_comp
       (CommRingCat.pullbackConeIsLimit _ _) WalkingCospan.right)

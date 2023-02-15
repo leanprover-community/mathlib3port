@@ -40,8 +40,8 @@ def finiteLimitCone [SemilatticeInf α] [OrderTop α] (F : J ⥤ α) : LimitCone
     where
   Cone :=
     { x := Finset.univ.inf F.obj
-      π := { app := fun j => homOfLe (Finset.inf_le (Fintype.complete _)) } }
-  IsLimit := { lift := fun s => homOfLe (Finset.le_inf fun j _ => (s.π.app j).down.down) }
+      π := { app := fun j => homOfLE (Finset.inf_le (Fintype.complete _)) } }
+  IsLimit := { lift := fun s => homOfLE (Finset.le_inf fun j _ => (s.π.app j).down.down) }
 #align category_theory.limits.complete_lattice.finite_limit_cone CategoryTheory.Limits.CompleteLattice.finiteLimitCone
 
 /--
@@ -51,8 +51,8 @@ def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : Colim
     where
   Cocone :=
     { x := Finset.univ.sup F.obj
-      ι := { app := fun i => homOfLe (Finset.le_sup (Fintype.complete _)) } }
-  IsColimit := { desc := fun s => homOfLe (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
+      ι := { app := fun i => homOfLE (Finset.le_sup (Fintype.complete _)) } }
+  IsColimit := { desc := fun s => homOfLE (Finset.sup_le fun j _ => (s.ι.app j).down.down) }
 #align category_theory.limits.complete_lattice.finite_colimit_cocone CategoryTheory.Limits.CompleteLattice.finiteColimitCocone
 
 -- see Note [lower instance priority]
@@ -205,11 +205,11 @@ def limitCone (F : J ⥤ α) : LimitCone F
     where
   Cone :=
     { x := infᵢ F.obj
-      π := { app := fun j => homOfLe (CompleteLattice.inf_le _ _ (Set.mem_range_self _)) } }
+      π := { app := fun j => homOfLE (CompleteLattice.inf_le _ _ (Set.mem_range_self _)) } }
   IsLimit :=
     {
       lift := fun s =>
-        homOfLe (CompleteLattice.le_inf _ _ (by rintro _ ⟨j, rfl⟩; exact (s.π.app j).le)) }
+        homOfLE (CompleteLattice.le_inf _ _ (by rintro _ ⟨j, rfl⟩; exact (s.π.app j).le)) }
 #align category_theory.limits.complete_lattice.limit_cone CategoryTheory.Limits.CompleteLattice.limitCone
 
 /-- The colimit cocone over any functor into a complete lattice.
@@ -218,11 +218,11 @@ def colimitCocone (F : J ⥤ α) : ColimitCocone F
     where
   Cocone :=
     { x := supᵢ F.obj
-      ι := { app := fun j => homOfLe (CompleteLattice.le_sup _ _ (Set.mem_range_self _)) } }
+      ι := { app := fun j => homOfLE (CompleteLattice.le_sup _ _ (Set.mem_range_self _)) } }
   IsColimit :=
     {
       desc := fun s =>
-        homOfLe (CompleteLattice.sup_le _ _ (by rintro _ ⟨j, rfl⟩; exact (s.ι.app j).le)) }
+        homOfLE (CompleteLattice.sup_le _ _ (by rintro _ ⟨j, rfl⟩; exact (s.ι.app j).le)) }
 #align category_theory.limits.complete_lattice.colimit_cocone CategoryTheory.Limits.CompleteLattice.colimitCocone
 
 -- It would be nice to only use the `Inf` half of the complete lattice, but

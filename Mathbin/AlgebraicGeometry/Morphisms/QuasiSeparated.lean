@@ -324,41 +324,41 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
     {x : X.Presheaf.obj (op <| X.basicOpen f)} (h₁ : S.1 ≤ U₁) (h₂ : S.1 ≤ U₂)
     (e₁ :
       X.Presheaf.map
-          (homOfLe <| X.basicOpen_le (X.Presheaf.map (homOfLe le_sup_left).op f) : _ ⟶ U₁).op y₁ =
+          (homOfLE <| X.basicOpen_le (X.Presheaf.map (homOfLE le_sup_left).op f) : _ ⟶ U₁).op y₁ =
         X.Presheaf.map
-              (homOfLe
+              (homOfLE
                   (by
                     erw [X.basic_open_res]
                     exact inf_le_left)).op
-              (X.Presheaf.map (homOfLe le_sup_left).op f) ^
+              (X.Presheaf.map (homOfLE le_sup_left).op f) ^
             n₁ *
           (X.Presheaf.map
-              (homOfLe
+              (homOfLE
                   (by
                     erw [X.basic_open_res]
                     exact inf_le_right)).op)
             x)
     (e₂ :
       X.Presheaf.map
-          (homOfLe <| X.basicOpen_le (X.Presheaf.map (homOfLe le_sup_right).op f) : _ ⟶ U₂).op y₂ =
+          (homOfLE <| X.basicOpen_le (X.Presheaf.map (homOfLE le_sup_right).op f) : _ ⟶ U₂).op y₂ =
         X.Presheaf.map
-              (homOfLe
+              (homOfLE
                   (by
                     rw [X.basic_open_res]
                     exact inf_le_left)).op
-              (X.Presheaf.map (homOfLe le_sup_right).op f) ^
+              (X.Presheaf.map (homOfLE le_sup_right).op f) ^
             n₂ *
           (X.Presheaf.map
-              (homOfLe
+              (homOfLE
                   (by
                     rw [X.basic_open_res]
                     exact inf_le_right)).op)
             x) :
     ∃ n : ℕ,
-      X.Presheaf.map (homOfLe <| h₁).op
-          (X.Presheaf.map (homOfLe le_sup_left).op f ^ (n + n₂) * y₁) =
-        X.Presheaf.map (homOfLe <| h₂).op
-          (X.Presheaf.map (homOfLe le_sup_right).op f ^ (n + n₁) * y₂) :=
+      X.Presheaf.map (homOfLE <| h₁).op
+          (X.Presheaf.map (homOfLE le_sup_left).op f ^ (n + n₂) * y₁) =
+        X.Presheaf.map (homOfLE <| h₂).op
+          (X.Presheaf.map (homOfLE le_sup_right).op f ^ (n + n₁) * y₂) :=
   by
   have :=
     is_localization_basic_open S.2 (X.presheaf.map (hom_of_le <| le_trans h₁ le_sup_left).op f)

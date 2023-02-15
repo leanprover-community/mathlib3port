@@ -96,7 +96,7 @@ theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
 def hallMatchingsFunctor {ι : Type u} {α : Type v} (t : ι → Finset α) : (Finset ι)ᵒᵖ ⥤ Type max u v
     where
   obj ι' := hallMatchingsOn t ι'.unop
-  map ι' ι'' g f := hallMatchingsOn.restrict t (CategoryTheory.le_of_hom g.unop) f
+  map ι' ι'' g f := hallMatchingsOn.restrict t (CategoryTheory.leOfHom g.unop) f
 #align hall_matchings_functor hallMatchingsFunctor
 
 noncomputable instance hallMatchingsOn.fintype {ι : Type u} {α : Type v} (t : ι → Finset α)
@@ -154,7 +154,7 @@ theorem Finset.all_card_le_bunionᵢ_card_iff_exists_injective {ι : Type u} {α
         have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
         have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
         have le : ∀ {s t : Finset ι}, s ⊆ t → s ≤ t := fun _ _ h => h
-        rw [← hu (CategoryTheory.homOfLe (le subi)).op, ← hu (CategoryTheory.homOfLe (le subi')).op]
+        rw [← hu (CategoryTheory.homOfLE (le subi)).op, ← hu (CategoryTheory.homOfLE (le subi')).op]
         let uii' := u (Opposite.op ({i, i'} : Finset ι))
         exact fun h => subtype.mk_eq_mk.mp (uii'.property.1 h)
       · -- Show that it maps each index to the corresponding finite set

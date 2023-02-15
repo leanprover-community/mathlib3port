@@ -161,7 +161,7 @@ instance ThinSkeleton.preorder : Preorder (ThinSkeleton C)
 def toThinSkeleton : C ⥤ ThinSkeleton C
     where
   obj := Quotient.mk'
-  map X Y f := homOfLe (Nonempty.intro f)
+  map X Y f := homOfLE (Nonempty.intro f)
 #align category_theory.to_thin_skeleton CategoryTheory.toThinSkeleton
 
 /-!
@@ -186,7 +186,7 @@ variable {C} {D}
 def map (F : C ⥤ D) : ThinSkeleton C ⥤ ThinSkeleton D
     where
   obj := Quotient.map F.obj fun X₁ X₂ ⟨hX⟩ => ⟨F.mapIso hX⟩
-  map X Y := Quotient.recOnSubsingleton₂ X Y fun x y k => homOfLe (k.le.elim fun t => ⟨F.map t⟩)
+  map X Y := Quotient.recOnSubsingleton₂ X Y fun x y k => homOfLE (k.le.elim fun t => ⟨F.map t⟩)
 #align category_theory.thin_skeleton.map CategoryTheory.ThinSkeleton.map
 
 theorem comp_toThinSkeleton (F : C ⥤ D) : F ⋙ toThinSkeleton D = toThinSkeleton C ⋙ map F :=
@@ -211,12 +211,12 @@ def map₂ (F : C ⥤ D ⥤ E) : ThinSkeleton C ⥤ ThinSkeleton D ⥤ ThinSkele
       map := fun y₁ y₂ =>
         Quotient.recOnSubsingleton x fun X =>
           Quotient.recOnSubsingleton₂ y₁ y₂ fun Y₁ Y₂ hY =>
-            homOfLe (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
+            homOfLE (hY.le.elim fun g => ⟨(F.obj X).map g⟩) }
   map x₁ x₂ :=
     Quotient.recOnSubsingleton₂ x₁ x₂ fun X₁ X₂ f =>
       {
         app := fun y =>
-          Quotient.recOnSubsingleton y fun Y => homOfLe (f.le.elim fun f' => ⟨(F.map f').app Y⟩) }
+          Quotient.recOnSubsingleton y fun Y => homOfLE (f.le.elim fun f' => ⟨(F.map f').app Y⟩) }
 #align category_theory.thin_skeleton.map₂ CategoryTheory.ThinSkeleton.map₂
 
 variable (C)

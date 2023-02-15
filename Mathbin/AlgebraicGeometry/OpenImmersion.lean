@@ -241,7 +241,7 @@ theorem invApp_app (U : Opens X) :
 theorem app_invApp (U : Opens Y) :
     f.c.app (op U) ≫ H.invApp ((Opens.map f.base).obj U) =
       Y.Presheaf.map
-        ((homOfLe (Set.image_preimage_subset f.base U)).op :
+        ((homOfLE (Set.image_preimage_subset f.base U)).op :
           op U ⟶ op (H.openFunctor.obj ((Opens.map f.base).obj U))) :=
   by
   erw [← category.assoc]
@@ -1984,7 +1984,7 @@ theorem Scheme.restrictFunctor_map_app_aux {U V : Opens X.carrier} (i : U ⟶ V)
 
 theorem Scheme.restrictFunctor_map_app {U V : Opens X.carrier} (i : U ⟶ V) (W : Opens V) :
     (X.restrictFunctor.map i).1.1.c.app (op W) =
-      X.Presheaf.map (homOfLe <| X.restrictFunctor_map_app_aux i W).op :=
+      X.Presheaf.map (homOfLE <| X.restrictFunctor_map_app_aux i W).op :=
   by
   have e₁ :=
     Scheme.congr_app (X.restrict_functor_map_of_restrict i)

@@ -345,14 +345,14 @@ def IsOpenMap.functor {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) : Opens X 
 def IsOpenMap.adjunction {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) :
     Adjunction hf.Functor (TopologicalSpace.Opens.map f) :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => homOfLe fun x hxU => ⟨x, hxU, rfl⟩ }
-      counit := { app := fun V => homOfLe fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => homOfLE fun x hxU => ⟨x, hxU, rfl⟩ }
+      counit := { app := fun V => homOfLE fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction IsOpenMap.adjunction
 
 instance IsOpenMap.functorFullOfMono {X Y : TopCat} {f : X ⟶ Y} (hf : IsOpenMap f) [H : Mono f] :
     Full hf.Functor
     where preimage U V i :=
-    homOfLe fun x hx => by
+    homOfLE fun x hx => by
       obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩
       exact (TopCat.mono_iff_injective f).mp H Eq ▸ hy
 #align is_open_map.functor_full_of_mono IsOpenMap.functorFullOfMono

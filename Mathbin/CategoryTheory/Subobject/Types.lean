@@ -48,7 +48,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
   Functor :=
     { obj := fun f => Set.range f.1.Hom
       map := fun f g t =>
-        homOfLe
+        homOfLE
           (by
             rintro a ⟨x, rfl⟩
             exact ⟨t.1 x, congr_fun t.w x⟩) }

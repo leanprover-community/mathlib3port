@@ -88,13 +88,13 @@ instance opensNhdsHomHasCoeToFun {x : X} {U V : OpenNhds x} : CoeFun (U ⟶ V) f
 /-- The inclusion `U ⊓ V ⟶ U` as a morphism in the category of open sets.
 -/
 def infLeLeft {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ U :=
-  homOfLe inf_le_left
+  homOfLE inf_le_left
 #align topological_space.open_nhds.inf_le_left TopologicalSpace.OpenNhds.infLeLeft
 
 /-- The inclusion `U ⊓ V ⟶ V` as a morphism in the category of open sets.
 -/
 def infLeRight {x : X} (U V : OpenNhds x) : U ⊓ V ⟶ V :=
-  homOfLe inf_le_right
+  homOfLE inf_le_right
 #align topological_space.open_nhds.inf_le_right TopologicalSpace.OpenNhds.infLeRight
 
 /-- The inclusion functor from open neighbourhoods of `x`
@@ -181,8 +181,8 @@ def functorNhds (h : IsOpenMap f) (x : X) : OpenNhds x ⥤ OpenNhds (f x)
 -/
 def adjunctionNhds (h : IsOpenMap f) (x : X) : IsOpenMap.functorNhds h x ⊣ OpenNhds.map f x :=
   Adjunction.mkOfUnitCounit
-    { Unit := { app := fun U => homOfLe fun x hxU => ⟨x, hxU, rfl⟩ }
-      counit := { app := fun V => homOfLe fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
+    { Unit := { app := fun U => homOfLE fun x hxU => ⟨x, hxU, rfl⟩ }
+      counit := { app := fun V => homOfLE fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 #align is_open_map.adjunction_nhds IsOpenMap.adjunctionNhds
 
 end IsOpenMap

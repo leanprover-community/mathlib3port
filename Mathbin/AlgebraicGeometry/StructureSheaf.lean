@@ -348,7 +348,7 @@ theorem res_const (f g : R) (U hu V hv i) :
 #align algebraic_geometry.structure_sheaf.res_const AlgebraicGeometry.StructureSheaf.res_const
 
 theorem res_const' (f g : R) (V hv) :
-    (structureSheaf R).1.map (homOfLe hv).op (const R f g (basicOpen g) fun _ => id) =
+    (structureSheaf R).1.map (homOfLE hv).op (const R f g (basicOpen g) fun _ => id) =
       const R f g V hv :=
   rfl
 #align algebraic_geometry.structure_sheaf.res_const' AlgebraicGeometry.StructureSheaf.res_const'
@@ -1165,7 +1165,7 @@ This is a generalization of the fact that, for fixed `U`, the comap of the ident
 to OO_X(U) is the identity.
 -/
 theorem comap_id_eq_map (U V : Opens (PrimeSpectrum.top R)) (iVU : V ⟶ U) :
-    (comap (RingHom.id R) U V fun p hpV => le_of_hom iVU <| by rwa [PrimeSpectrum.comap_id]) =
+    (comap (RingHom.id R) U V fun p hpV => leOfHom iVU <| by rwa [PrimeSpectrum.comap_id]) =
       (structureSheaf R).1.map iVU.op :=
   RingHom.ext fun s =>
     Subtype.eq <|

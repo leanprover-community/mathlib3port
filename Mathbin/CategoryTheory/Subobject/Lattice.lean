@@ -608,7 +608,7 @@ def leInfCone {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s
   WidePullbackShape.mkCone f.arrow
     (fun j =>
       underlying.map
-        (homOfLe
+        (homOfLE
           (k _
             (by
               rcases j with ⟨-, ⟨g, ⟨m, rfl⟩⟩⟩

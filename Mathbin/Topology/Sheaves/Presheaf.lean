@@ -111,7 +111,7 @@ scoped[AlgebraicGeometry] infixl:80 " |_ₕ " => TopCat.Presheaf.restrict
 -- mathport name: «expr |_ₗ ⟪ ⟫»
 scoped[AlgebraicGeometry]
   notation:80 x " |_ₗ " U " ⟪" e "⟫ " =>
-    @TopCat.Presheaf.restrict _ _ _ _ _ _ x U (@homOfLe (Opens _) _ U _ e)
+    @TopCat.Presheaf.restrict _ _ _ _ _ _ x U (@homOfLE (Opens _) _ U _ e)
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic Top.presheaf.restrict_tac' -/
 /-- The restriction of a section along an inclusion of open sets.

@@ -74,14 +74,14 @@ theorem condition {X} {P : Cᵒᵖ ⥤ D} {S : J.cover X} (x : Meq P S) (I : S.R
 
 /-- Refine a term of `meq P T` with respect to a refinement `S ⟶ T` of covers. -/
 def refine {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P T) (e : S ⟶ T) : Meq P S :=
-  ⟨fun I => x ⟨I.y, I.f, (le_of_hom e) _ I.hf⟩, fun I =>
+  ⟨fun I => x ⟨I.y, I.f, (leOfHom e) _ I.hf⟩, fun I =>
     x.condition
-      ⟨I.y₁, I.y₂, I.z, I.g₁, I.g₂, I.f₁, I.f₂, (le_of_hom e) _ I.h₁, (le_of_hom e) _ I.h₂, I.w⟩⟩
+      ⟨I.y₁, I.y₂, I.z, I.g₁, I.g₂, I.f₁, I.f₂, (leOfHom e) _ I.h₁, (leOfHom e) _ I.h₂, I.w⟩⟩
 #align category_theory.meq.refine CategoryTheory.Meq.refine
 
 @[simp]
 theorem refine_apply {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.cover X} (x : Meq P T) (e : S ⟶ T)
-    (I : S.arrow) : x.refine e I = x ⟨I.y, I.f, (le_of_hom e) _ I.hf⟩ :=
+    (I : S.arrow) : x.refine e I = x ⟨I.y, I.f, (leOfHom e) _ I.hf⟩ :=
   rfl
 #align category_theory.meq.refine_apply CategoryTheory.Meq.refine_apply
 
