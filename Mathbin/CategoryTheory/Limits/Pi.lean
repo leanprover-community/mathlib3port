@@ -38,7 +38,7 @@ variable {F : J ⥤ ∀ i, C i}
 
 /-- A cone over `F : J ⥤ Π i, C i` has as its components cones over each of the `F ⋙ pi.eval C i`.
 -/
-def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i)
+def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ Pi.eval C i)
     where
   x := c.x i
   π :=
@@ -49,7 +49,7 @@ def coneCompEval (c : Cone F) (i : I) : Cone (F ⋙ pi.eval C i)
 /--
 A cocone over `F : J ⥤ Π i, C i` has as its components cocones over each of the `F ⋙ pi.eval C i`.
 -/
-def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i)
+def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ Pi.eval C i)
     where
   x := c.x i
   ι :=
@@ -60,7 +60,7 @@ def coconeCompEval (c : Cocone F) (i : I) : Cocone (F ⋙ pi.eval C i)
 /--
 Given a family of cones over the `F ⋙ pi.eval C i`, we can assemble these together as a `cone F`.
 -/
-def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F
+def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ Pi.eval C i)) : Cone F
     where
   x i := (c i).x
   π :=
@@ -73,7 +73,7 @@ def coneOfConeCompEval (c : ∀ i, Cone (F ⋙ pi.eval C i)) : Cone F
 /-- Given a family of cocones over the `F ⋙ pi.eval C i`,
 we can assemble these together as a `cocone F`.
 -/
-def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F
+def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ Pi.eval C i)) : Cocone F
     where
   x i := (c i).x
   ι :=
@@ -86,7 +86,7 @@ def coconeOfCoconeCompEval (c : ∀ i, Cocone (F ⋙ pi.eval C i)) : Cocone F
 /-- Given a family of limit cones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cone F` produces a limit cone.
 -/
-def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLimit (c i)) :
+def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ Pi.eval C i)} (P : ∀ i, IsLimit (c i)) :
     IsLimit (coneOfConeCompEval c)
     where
   lift s i := (P i).lift (coneCompEval s i)
@@ -101,7 +101,7 @@ def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ pi.eval C i)} (P : ∀ i, IsLi
 /-- Given a family of colimit cocones over the `F ⋙ pi.eval C i`,
 assembling them together as a `cocone F` produces a colimit cocone.
 -/
-def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀ i, IsColimit (c i)) :
+def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ Pi.eval C i)} (P : ∀ i, IsColimit (c i)) :
     IsColimit (coconeOfCoconeCompEval c)
     where
   desc s i := (P i).desc (coconeCompEval s i)
@@ -115,7 +115,7 @@ def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ pi.eval C i)} (P : ∀
 
 section
 
-variable [∀ i, HasLimit (F ⋙ pi.eval C i)]
+variable [∀ i, HasLimit (F ⋙ Pi.eval C i)]
 
 /-- If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
 and we have limits for each of the `F ⋙ pi.eval C i`,
@@ -131,7 +131,7 @@ end
 
 section
 
-variable [∀ i, HasColimit (F ⋙ pi.eval C i)]
+variable [∀ i, HasColimit (F ⋙ Pi.eval C i)]
 
 /-- If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
 and colimits exist for each of the `F ⋙ pi.eval C i`,

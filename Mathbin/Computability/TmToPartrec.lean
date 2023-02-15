@@ -1878,7 +1878,7 @@ theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S
   dsimp only <;> split_ifs <;> exact H
 #align turing.partrec_to_TM2.head_supports Turing.PartrecToTM2.head_supports
 
-theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) :=
+theorem retSupports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (Λ'.ret k)) :=
   by
   have W := fun {q} => tr_stmts₁_self q
   cases k
@@ -1892,7 +1892,7 @@ theorem ret_supports {S k} (H₁ : contSupp k ⊆ S) : TM2.SupportsStmt S (tr (�
     intro s; dsimp only; cases nat_end s.iget
     · refine' H₁ (R _ <| L _ <| R _ <| R _ <| L _ W)
     · exact H₁ (R _ <| L _ <| R _ <| R _ <| R _ <| Finset.mem_singleton_self _)
-#align turing.partrec_to_TM2.ret_supports Turing.PartrecToTM2.ret_supports
+#align turing.partrec_to_TM2.ret_supports Turing.PartrecToTM2.retSupports
 
 theorem trStmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts₁ q ⊆ S) :
     Supports (trStmts₁ q) S := by
@@ -2020,9 +2020,9 @@ Turing machine. Starting from the initial state `tr_normal c k`, forward simulat
 states in `code_supp c k`, so this is a finite state machine. Even though the underlying type of
 state labels `Λ'` is infinite, for a given partial recursive function `c` and continuation `k`,
 only finitely many states are accessed, corresponding roughly to subterms of `c`. -/
-theorem tr_supports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
+theorem trSupports (c k) : @TM2.Supports _ _ _ _ _ ⟨trNormal c k⟩ tr (codeSupp c k) :=
   ⟨codeSupp_self _ _ (trStmts₁_self _), fun l' => codeSupp_supports (Finset.Subset.refl _) _⟩
-#align turing.partrec_to_TM2.tr_supports Turing.PartrecToTM2.tr_supports
+#align turing.partrec_to_TM2.tr_supports Turing.PartrecToTM2.trSupports
 
 end
 
