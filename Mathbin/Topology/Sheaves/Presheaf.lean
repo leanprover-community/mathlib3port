@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,7 +75,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit
       dependencies := [] }
 #align Top.presheaf.restrict_attr Top.presheaf.restrict_attr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open` -/
 unsafe def restrict_tac : ∀ n : ℕ, tactic Unit
   | 0 => tactic.fail "`restrict_tac` failed"

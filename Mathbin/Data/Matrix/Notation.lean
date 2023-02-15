@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.notation
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -441,22 +441,22 @@ section One
 variable [Zero α] [One α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_two :
     (1 : Matrix (Fin 2) (Fin 2) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem one_fin_three :
     (1 : Matrix (Fin 3) (Fin 3) α) =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
@@ -465,59 +465,59 @@ theorem one_fin_three :
 end One
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
     A =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem mul_fin_three [AddCommMonoid α] [Mul α]
     (a₁₁ a₁₂ a₁₃ a₂₁ a₂₂ a₂₃ a₃₁ a₃₂ a₃₃ b₁₁ b₁₂ b₁₃ b₂₁ b₂₂ b₂₃ b₃₁ b₃₂ b₃₃ : α) :
     «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" ⬝
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" ⬝
         «expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" =
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" =
       «expr!![ »
-        "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation" :=
   by
   ext (i j)
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]

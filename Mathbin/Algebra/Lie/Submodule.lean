@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.submodule
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -441,12 +441,12 @@ instance : HasInf (LieSubmodule R L M) :=
     { (N ⊓ N' : Submodule R M) with
       lie_mem := fun x m h => mem_inter (N.lie_mem h.1) (N'.lie_mem h.2) }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 instance : InfSet (LieSubmodule R L M) :=
   ⟨fun S =>
     {
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" with
       lie_mem := fun x m h =>
         by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.infₛ_coe, mem_set_of_eq,
@@ -459,12 +459,12 @@ theorem inf_coe : (↑(N ⊓ N') : Set M) = N ∩ N' :=
   rfl
 #align lie_submodule.inf_coe LieSubmodule.inf_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S} -/
 @[simp]
 theorem infₛ_coe_to_submodule (S : Set (LieSubmodule R L M)) :
     (↑(infₛ S) : Submodule R M) =
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R M)) | s «expr ∈ » S}" :=
   rfl
 #align lie_submodule.Inf_coe_to_submodule LieSubmodule.infₛ_coe_to_submodule
 

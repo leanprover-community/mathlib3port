@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.tensor_product
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -674,9 +674,9 @@ def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
   {
     f with
     map_one' := by rw [← (algebraMap R C).map_one, ← w₂, (algebraMap R A).map_one] <;> rfl
-    map_zero' := by rw [LinearMap.to_fun_eq_coe, map_zero]
+    map_zero' := by rw [LinearMap.toFun_eq_coe, map_zero]
     map_mul' := fun x y => by
-      rw [LinearMap.to_fun_eq_coe]
+      rw [LinearMap.toFun_eq_coe]
       apply TensorProduct.induction_on x
       · rw [zero_mul, map_zero, zero_mul]
       · intro a₁ b₁
@@ -688,7 +688,7 @@ def algHomOfLinearMapTensorProduct (f : A ⊗[R] B →ₗ[R] C)
           rw [mul_add, map_add, map_add, mul_add, h₁, h₂]
       · intro x₁ x₂ h₁ h₂
         rw [add_mul, map_add, map_add, add_mul, h₁, h₂]
-    commutes' := fun r => by rw [LinearMap.to_fun_eq_coe, algebra_map_apply, w₂] }
+    commutes' := fun r => by rw [LinearMap.toFun_eq_coe, algebra_map_apply, w₂] }
 #align algebra.tensor_product.alg_hom_of_linear_map_tensor_product Algebra.TensorProduct.algHomOfLinearMapTensorProduct
 
 @[simp]

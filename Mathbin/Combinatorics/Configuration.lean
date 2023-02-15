@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module combinatorics.configuration
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,11 @@ class HasLines extends Nondegenerate P L where
   mkLine_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
 #align configuration.has_lines Configuration.HasLines
 
-open Nondegenerate HasPoints HasLines
+open Nondegenerate
+
+open HasPoints (mkPoint mkPoint_ax)
+
+open HasLines (mkLine mkLine_ax)
 
 instance [Nondegenerate P L] : Nondegenerate (Dual L) (Dual P)
     where
@@ -93,15 +97,15 @@ instance [Nondegenerate P L] : Nondegenerate (Dual L) (Dual P)
   exists_line := @exists_point P L _ _
   eq_or_eq l₁ l₂ p₁ p₂ h₁ h₂ h₃ h₄ := (@eq_or_eq P L _ _ p₁ p₂ l₁ l₂ h₁ h₃ h₂ h₄).symm
 
-instance [HasPoints P L] : HasLines (Dual L) (Dual P)
-    where
-  mkLine := @mkPoint P L _ _
-  mkLine_ax _ _ := mkPoint_ax
+instance [HasPoints P L] : HasLines (Dual L) (Dual P) :=
+  { Dual.nondegenerate _ _ with
+    mkLine := @mkPoint P L _ _
+    mkLine_ax := fun _ _ => mkPoint_ax }
 
-instance [HasLines P L] : HasPoints (Dual L) (Dual P)
-    where
-  mkPoint := @mkLine P L _ _
-  mkPoint_ax _ _ := mkLine_ax
+instance [HasLines P L] : HasPoints (Dual L) (Dual P) :=
+  { Dual.nondegenerate _ _ with
+    mkPoint := @mkLine P L _ _
+    mkPoint_ax := fun _ _ => mkLine_ax }
 
 theorem HasPoints.existsUnique_point [HasPoints P L] (l₁ l₂ : L) (hl : l₁ ≠ l₂) :
     ∃! p, p ∈ l₁ ∧ p ∈ l₂ :=
@@ -347,7 +351,8 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L]
       have key' := ((Fintype.bijective_iff_injective_and_card f).mpr ⟨hf, key'⟩).2
       obtain ⟨q, hq⟩ := key' ⟨l₁, hl₁⟩
       exact ⟨q, (congr_arg _ (subtype.ext_iff.mp hq)).mp (mk_line_ax (this q)).2, q.2⟩
-  { mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl)
+  { ‹HasLines P L› with
+    mkPoint := fun l₁ l₂ hl => Classical.choose (this l₁ l₂ hl)
     mkPoint_ax := fun l₁ l₂ hl => Classical.choose_spec (this l₁ l₂ hl) }
 #align configuration.has_lines.has_points Configuration.HasLines.hasPoints
 
@@ -356,7 +361,8 @@ noncomputable def HasLines.hasPoints [HasLines P L] [Fintype P] [Fintype L]
 noncomputable def HasPoints.hasLines [HasPoints P L] [Fintype P] [Fintype L]
     (h : Fintype.card P = Fintype.card L) : HasLines P L :=
   let this := @HasLines.hasPoints (Dual L) (Dual P) _ _ _ _ h.symm
-  { mkLine := fun _ _ => this.mkPoint
+  { ‹HasPoints P L› with
+    mkLine := fun _ _ => this.mkPoint
     mkLine_ax := fun _ _ => this.mkPoint_ax }
 #align configuration.has_points.has_lines Configuration.HasPoints.hasLines
 
@@ -365,11 +371,7 @@ variable (P L)
 /-- A projective plane is a nondegenerate configuration in which every pair of lines has
   an intersection point, every pair of points has a line through them,
   and which has three points in general position. -/
-class ProjectivePlane extends Nondegenerate P L where
-  mkPoint : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), P
-  mkPoint_ax : ∀ {l₁ l₂ : L} (h : l₁ ≠ l₂), mk_point h ∈ l₁ ∧ mk_point h ∈ l₂
-  mkLine : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), L
-  mkLine_ax : ∀ {p₁ p₂ : P} (h : p₁ ≠ p₂), p₁ ∈ mk_line h ∧ p₂ ∈ mk_line h
+class ProjectivePlane extends HasPoints P L, HasLines P L where
   exists_config :
     ∃ (p₁ p₂ p₃ : P)(l₁ l₂ l₃ : L),
       p₁ ∉ l₂ ∧ p₁ ∉ l₃ ∧ p₂ ∉ l₁ ∧ p₂ ∈ l₂ ∧ p₂ ∈ l₃ ∧ p₃ ∉ l₁ ∧ p₃ ∈ l₂ ∧ p₃ ∉ l₃
@@ -377,29 +379,13 @@ class ProjectivePlane extends Nondegenerate P L where
 
 namespace ProjectivePlane
 
--- see Note [lower instance priority]
-instance (priority := 100) hasPoints [h : ProjectivePlane P L] : HasPoints P L :=
-  { h with }
-#align configuration.projective_plane.has_points Configuration.ProjectivePlane.hasPoints
-
--- see Note [lower instance priority]
-instance (priority := 100) hasLines [h : ProjectivePlane P L] : HasLines P L :=
-  { h with }
-#align configuration.projective_plane.has_lines Configuration.ProjectivePlane.hasLines
-
 variable [ProjectivePlane P L]
 
 instance : ProjectivePlane (Dual L) (Dual P) :=
-  { Dual.nondegenerate P L with
-    mkLine := @mkPoint P L _ _
-    mkLine_ax := fun _ _ => mkPoint_ax
-    mkPoint := @mkLine P L _ _
-    mkPoint_ax := fun _ _ => mkLine_ax
+  { Dual.hasPoints _ _, Dual.hasLines _ _ with
     exists_config :=
-      by
-      obtain ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ :=
-        @exists_config P L _ _
-      exact ⟨l₁, l₂, l₃, p₁, p₂, p₃, h₂₁, h₃₁, h₁₂, h₂₂, h₃₂, h₁₃, h₂₃, h₃₃⟩ }
+      let ⟨p₁, p₂, p₃, l₁, l₂, l₃, h₁₂, h₁₃, h₂₁, h₂₂, h₂₃, h₃₁, h₃₂, h₃₃⟩ := @exists_config P L _ _
+      ⟨l₁, l₂, l₃, p₁, p₂, p₃, h₂₁, h₃₁, h₁₂, h₂₂, h₃₂, h₁₃, h₂₃, h₃₃⟩ }
 
 /-- The order of a projective plane is one less than the number of lines through an arbitrary point.
 Equivalently, it is one less than the number of points on an arbitrary line. -/

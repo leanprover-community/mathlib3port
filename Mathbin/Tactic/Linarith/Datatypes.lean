@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.datatypes
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -370,7 +370,7 @@ unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 #align linarith.certificate_oracle linarith.certificate_oracle
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -384,7 +384,7 @@ unsafe structure linarith_config : Type where
   oracle : Option certificate_oracle := none
 #align linarith.linarith_config linarith.linarith_config
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -441,7 +441,7 @@ open Tactic
       | _ => none
 #align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.associated_prime
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -176,7 +176,7 @@ theorem associatedPrimes.eq_singleton_of_isPrimary [IsNoetherianRing R] (hI : I.
   rw [Set.mem_singleton_iff]
   refine' ⟨IsAssociatedPrime.eq_radical hI, _⟩
   rintro rfl
-  haveI : Nontrivial (R ⧸ I) := ⟨⟨(I : _) 1, (I : _) 0, _⟩⟩
+  haveI : Nontrivial (R ⧸ I) := ⟨⟨(I.Quotient.mk : _) 1, (I.Quotient.mk : _) 0, _⟩⟩
   obtain ⟨a, ha⟩ := associatedPrimes.nonempty R (R ⧸ I)
   exact ha.eq_radical hI ▸ ha
   rw [Ne.def, Ideal.Quotient.eq, sub_zero, ← Ideal.eq_top_iff_one]

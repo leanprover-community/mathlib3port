@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module number_theory.kummer_dedekind
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -189,7 +189,7 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
     R<x> ⧸ I.map (algebraMap R R<x>) ≃+* S ⧸ I.map (algebraMap R S) :=
   RingEquiv.ofBijective
     (Ideal.Quotient.lift (I.map (algebraMap R R<x>))
-      ((I.map (algebraMap R S)).comp (algebraMap R<x> S)) fun r hr =>
+      ((I.map (algebraMap R S)).Quotient.mk.comp (algebraMap R<x> S)) fun r hr =>
       by
       have : algebraMap R S = (algebraMap R<x> S).comp (algebraMap R R<x>) :=
         by
@@ -230,7 +230,8 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
 @[simp]
 theorem quotAdjoinEquivQuotMap_apply_mk (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
     (h_alg : Function.Injective (algebraMap R<x> S)) (a : R<x>) :
-    quotAdjoinEquivQuotMap hx h_alg ((I.map (algebraMap R R<x>)) a) = (I.map (algebraMap R S)) ↑a :=
+    quotAdjoinEquivQuotMap hx h_alg ((I.map (algebraMap R R<x>)).Quotient.mk a) =
+      (I.map (algebraMap R S)).Quotient.mk ↑a :=
   rfl
 #align quot_adjoin_equiv_quot_map_apply_mk quotAdjoinEquivQuotMap_apply_mk
 
@@ -252,7 +253,7 @@ attribute [local instance] Ideal.Quotient.field
 noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMaximal I)
     (hI' : I ≠ ⊥) (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x) :
     { J : Ideal S | J ∈ normalizedFactors (I.map (algebraMap R S)) } ≃
-      { d : (R ⧸ I)[X] | d ∈ normalizedFactors (map I (minpoly R x)) } :=
+      { d : (R ⧸ I)[X] | d ∈ normalizedFactors (map I.Quotient.mk (minpoly R x)) } :=
   (normalizedFactorsEquivOfQuotEquiv
         ((quotAdjoinEquivQuotMap hx
                 (by
@@ -261,8 +262,8 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
           (((Algebra.adjoin.powerBasis' hx').quotientEquivQuotientMinpolyMap I).toRingEquiv.trans
             (quotEquivOfEq
               (show
-                Ideal.span {(minpoly R (Algebra.adjoin.powerBasis' hx').gen).map I} =
-                  Ideal.span {(minpoly R x).map I}
+                Ideal.span {(minpoly R (Algebra.adjoin.powerBasis' hx').gen).map I.Quotient.mk} =
+                  Ideal.span {(minpoly R x).map I.Quotient.mk}
                 by rw [Algebra.adjoin.powerBasis'_minpoly_gen hx']))))
         (--show that `I * S` ≠ ⊥
         show I.map (algebraMap R S) ≠ ⊥ by
@@ -272,10 +273,12 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
         by
           by_contra
           exact
-            (show map I (minpoly R x) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic hx'))
+            (show map I.Quotient.mk (minpoly R x) ≠ 0 from
+                Polynomial.map_monic_ne_zero (minpoly.monic hx'))
               (span_singleton_eq_bot.mp h))).trans
     (normalizedFactorsEquivSpanNormalizedFactors
-        (show map I (minpoly R x) ≠ 0 from Polynomial.map_monic_ne_zero (minpoly.monic hx'))).symm
+        (show map I.Quotient.mk (minpoly R x) ≠ 0 from
+          Polynomial.map_monic_ne_zero (minpoly.monic hx'))).symm
 #align kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
 
 /-- The second half of the **Kummer-Dedekind Theorem** in the monogenic case, stating that the
@@ -285,7 +288,7 @@ theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠
     (hJ : J ∈ normalizedFactors (I.map (algebraMap R S))) :
     multiplicity J (I.map (algebraMap R S)) =
       multiplicity (↑(normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' ⟨J, hJ⟩))
-        (map I (minpoly R x)) :=
+        (map I.Quotient.mk (minpoly R x)) :=
   by
   rw [normalized_factors_map_equiv_normalized_factors_min_poly_mk, Equiv.coe_trans,
     Function.comp_apply,
@@ -300,7 +303,7 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
       Multiset.map
         (fun f =>
           ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm f : Ideal S))
-        (normalizedFactors (Polynomial.map I (minpoly R x))).attach :=
+        (normalizedFactors (Polynomial.map I.Quotient.mk (minpoly R x))).attach :=
   by
   ext J
   -- WLOG, assume J is a normalized factor
@@ -346,11 +349,12 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
 
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
     (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x)
-    (hf : Irreducible (map I (minpoly R x))) : Irreducible (I.map (algebraMap R S)) :=
+    (hf : Irreducible (map I.Quotient.mk (minpoly R x))) : Irreducible (I.map (algebraMap R S)) :=
   by
   have mem_norm_factors :
-    normalize (map I (minpoly R x)) ∈ normalized_factors (map I (minpoly R x)) := by
-    simp [normalized_factors_irreducible hf]
+    normalize (map I.Quotient.mk (minpoly R x)) ∈
+      normalized_factors (map I.Quotient.mk (minpoly R x)) :=
+    by simp [normalized_factors_irreducible hf]
   suffices ∃ y, normalized_factors (I.map (algebraMap R S)) = {y}
     by
     obtain ⟨y, hy⟩ := this
@@ -367,10 +371,10 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
   rw [normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map hI hI' hx hx']
   use
     ((normalized_factors_map_equiv_normalized_factors_min_poly_mk hI hI' hx hx').symm
-        ⟨normalize (map I (minpoly R x)), mem_norm_factors⟩ :
+        ⟨normalize (map I.Quotient.mk (minpoly R x)), mem_norm_factors⟩ :
       Ideal S)
   rw [Multiset.map_eq_singleton]
-  use ⟨normalize (map I (minpoly R x)), mem_norm_factors⟩
+  use ⟨normalize (map I.Quotient.mk (minpoly R x)), mem_norm_factors⟩
   refine' ⟨_, rfl⟩
   apply Multiset.map_injective Subtype.coe_injective
   rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]

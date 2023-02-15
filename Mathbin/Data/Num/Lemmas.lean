@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.lemmas
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -360,7 +360,7 @@ theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
   ⟨fun h => Function.LeftInverse.injective of_to_nat' h, congr_arg _⟩
 #align num.to_nat_inj Num.to_nat_inj
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
@@ -374,7 +374,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align num.transfer_rw num.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
@@ -595,7 +595,7 @@ theorem natSize_to_nat (n) : natSize n = Nat.size n := by rw [← size_eq_nat_si
 theorem natSize_pos (n) : 0 < natSize n := by cases n <;> apply Nat.succ_pos
 #align pos_num.nat_size_pos PosNum.natSize_pos
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
@@ -609,7 +609,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align pos_num.transfer_rw pos_num.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
@@ -1438,7 +1438,7 @@ theorem cast_inj [LinearOrderedRing α] {m n : ZNum} : (m : α) = n ↔ m = n :=
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 #align znum.cast_inj ZNum.cast_inj
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -1452,7 +1452,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align znum.transfer_rw znum.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.

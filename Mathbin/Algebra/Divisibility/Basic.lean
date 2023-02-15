@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.divisibility.basic
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,7 +59,7 @@ Case conversion may be inaccurate. Consider using '#align dvd.intro Dvd.introₓ
 -- TODO: this used to not have `c` explicit, but that seems to be important
 --       for use with tactics, similar to `exists.intro`
 theorem Dvd.intro (c : α) (h : a * c = b) : a ∣ b :=
-  Exists.intro c h
+  Exists.intro c h.symm
 #align dvd.intro Dvd.intro
 
 /- warning: dvd_of_mul_right_eq -> dvd_of_mul_right_eq is a dubious translation:

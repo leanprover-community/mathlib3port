@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johannes Hölzl, Chris Hughes, Jens Wagemaker, Jon Eugster
 
 ! This file was ported from Lean 3 source module algebra.group.units
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1130,6 +1130,7 @@ theorem mul_val_inv (h : IsUnit a) : a * ↑h.Unit⁻¹ = 1 := by convert h.unit
 #align is_add_unit.add_coe_neg IsAddUnit.add_val_neg
 
 /-- `is_unit x` is decidable if we can decide if `x` comes from `Mˣ`. -/
+@[to_additive "`is_add_unit x` is decidable if we can decide if `x` comes from `add_units M"]
 instance (x : M) [h : Decidable (∃ u : Mˣ, ↑u = x)] : Decidable (IsUnit x) :=
   h
 

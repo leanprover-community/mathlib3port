@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.minimal_prime
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,26 +137,32 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes {I : Ideal S} (f : R →+* S)
     (_ : p ∈ (I.comap f).minimalPrimes) : ∃ p' : Ideal S, p'.IsPrime ∧ I ≤ p' ∧ p'.comap f = p :=
   by
   haveI := H.1.1
-  let f' := I f
-  have e : (I f).ker = I.comap f := by
+  let f' := I.Quotient.mk.comp f
+  have e : (I.Quotient.mk.comp f).ker = I.comap f :=
+    by
     ext1
     exact Submodule.Quotient.mk_eq_zero _
-  have : (I f).ker ≤ p := by
+  have : (I.Quotient.mk.comp f).ker.Quotient.mk.ker ≤ p :=
+    by
     rw [Ideal.mk_ker, e]
     exact H.1.2
   obtain ⟨p', hp₁, hp₂⟩ :=
-    Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective (I f).ker_lift_injective
-      (p.map (I f).ker) _
+    Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective
+      (I.Quotient.mk.comp f).ker_lift_injective (p.map (I.Quotient.mk.comp f).ker.Quotient.mk) _
   · skip
-    refine' ⟨p'.comap I, Ideal.IsPrime.comap _, _, _⟩
+    refine' ⟨p'.comap I.Quotient.mk, Ideal.IsPrime.comap _, _, _⟩
     · exact ideal.mk_ker.symm.trans_le (Ideal.comap_mono bot_le)
-    convert congr_arg (Ideal.comap (I f).ker) hp₂
-    rwa [Ideal.comap_map_of_surjective (I f).ker Ideal.Quotient.mk_surjective, eq_comm, sup_eq_left]
+    convert congr_arg (Ideal.comap (I.Quotient.mk.comp f).ker.Quotient.mk) hp₂
+    rwa [Ideal.comap_map_of_surjective (I.Quotient.mk.comp f).ker.Quotient.mk
+        Ideal.Quotient.mk_surjective,
+      eq_comm, sup_eq_left]
   refine' ⟨⟨_, bot_le⟩, _⟩
   · apply Ideal.map_isPrime_of_surjective _ this
     exact Ideal.Quotient.mk_surjective
   · rintro q ⟨hq, -⟩ hq'
-    rw [← Ideal.map_comap_of_surjective (I f).ker Ideal.Quotient.mk_surjective q]
+    rw [←
+      Ideal.map_comap_of_surjective (I.Quotient.mk.comp f).ker.Quotient.mk
+        Ideal.Quotient.mk_surjective q]
     apply Ideal.map_mono
     skip
     apply H.2
@@ -205,8 +211,8 @@ theorem Ideal.comap_minimalPrimes_eq_of_surjective {f : R →+* S} (hf : Functio
     exact Ideal.mimimal_primes_comap_of_surjective hf hJ
 #align ideal.comap_minimal_primes_eq_of_surjective Ideal.comap_minimalPrimes_eq_of_surjective
 
-theorem Ideal.minimalPrimes_eq_comap : I.minimalPrimes = Ideal.comap I '' minimalPrimes (R ⧸ I) :=
-  by
+theorem Ideal.minimalPrimes_eq_comap :
+    I.minimalPrimes = Ideal.comap I.Quotient.mk '' minimalPrimes (R ⧸ I) := by
   rw [minimalPrimes, ← Ideal.comap_minimalPrimes_eq_of_surjective Ideal.Quotient.mk_surjective, ←
     RingHom.ker_eq_comap_bot, Ideal.mk_ker]
 #align ideal.minimal_primes_eq_comap Ideal.minimalPrimes_eq_comap

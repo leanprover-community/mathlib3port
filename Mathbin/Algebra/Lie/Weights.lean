@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.weights
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -138,7 +138,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
       LieModuleHom.coe_to_linearMap, LinearMap.smul_apply, Function.comp_apply, LinearMap.coe_comp,
       LinearMap.rtensor_tmul, LieModuleHom.map_add, LinearMap.add_apply, LieModuleHom.map_sub,
       LinearMap.sub_apply, LinearMap.ltensor_tmul, algebra_tensor_module.curry_apply, curry_apply,
-      LinearMap.to_fun_eq_coe, LinearMap.coe_restrictScalars_eq_coe]
+      LinearMap.toFun_eq_coe, LinearMap.coe_restrictScalars_eq_coe]
     abel
   rsuffices ⟨k, hk⟩ : ∃ k, ((f₁ + f₂) ^ k) (m₁ ⊗ₜ m₂) = 0
   · use k
@@ -157,7 +157,7 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
   have hf_comm : Commute f₁ f₂ := by
     ext (m₁ m₂)
     simp only [LinearMap.mul_apply, LinearMap.rtensor_tmul, LinearMap.ltensor_tmul,
-      algebra_tensor_module.curry_apply, LinearMap.to_fun_eq_coe, LinearMap.ltensor_tmul,
+      algebra_tensor_module.curry_apply, LinearMap.toFun_eq_coe, LinearMap.ltensor_tmul,
       curry_apply, LinearMap.coe_restrictScalars_eq_coe]
   rw [hf_comm.add_pow']
   simp only [TensorProduct.mapIncl, Submodule.subtype_apply, Finset.sum_apply, Submodule.coe_mk,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.finite_dimension
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -444,11 +444,11 @@ theorem toContinuousLinearEquivOfDetNeZero_apply (f : E →L[𝕜] E) (hf : f.de
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem Matrix.toLin_finTwoProd_toContinuousLinearMap (a b c d : 𝕜) :
     (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜)
           («expr!![ »
-            "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
+            "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
   ContinuousLinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _

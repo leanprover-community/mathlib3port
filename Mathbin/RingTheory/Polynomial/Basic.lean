@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.basic
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -771,7 +771,7 @@ theorem polynomialQuotientEquivQuotientPolynomial_symm_mk (I : Ideal R) (f : R[X
 
 @[simp]
 theorem polynomialQuotientEquivQuotientPolynomial_map_mk (I : Ideal R) (f : R[X]) :
-    I.polynomialQuotientEquivQuotientPolynomial (f.map I) = Quotient.mk _ f :=
+    I.polynomialQuotientEquivQuotientPolynomial (f.map I.Quotient.mk) = Quotient.mk _ f :=
   by
   apply (polynomial_quotient_equiv_quotient_polynomial I).symm.Injective
   rw [RingEquiv.symm_apply_apply, polynomial_quotient_equiv_quotient_polynomial_symm_mk]

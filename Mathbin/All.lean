@@ -591,6 +591,7 @@ import Mathbin.Analysis.Convex.Topology
 import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.Fourier.AddCircle
+import Mathbin.Analysis.Fourier.FourierTransform
 import Mathbin.Analysis.Fourier.RiemannLebesgueLemma
 import Mathbin.Analysis.Hofer
 import Mathbin.Analysis.InnerProductSpace.Adjoint

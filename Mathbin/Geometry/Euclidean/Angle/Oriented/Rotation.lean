@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.rotation
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -98,12 +98,12 @@ theorem rotation_symm_apply (θ : Real.Angle) (x : V) :
 #align orientation.rotation_symm_apply Orientation.rotation_symm_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem rotation_eq_matrix_toLin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
     (o.rotation θ).toLinearMap =
       Matrix.toLin (o.basisRightAngleRotation x hx) (o.basisRightAngleRotation x hx)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") :=
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") :=
   by
   apply (o.basis_right_angle_rotation x hx).ext
   intro i

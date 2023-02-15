@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.universal_enveloping
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -106,13 +106,13 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A)
   left_inv f := by
     ext
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
-      LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lieHom,
+      LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lieHom,
       LieHom.coe_mk, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply]
   right_inv F := by
     ext
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_to_linearMap,
-      LinearMap.to_fun_eq_coe, LinearMap.coe_comp, LieHom.coe_linearMap_comp,
+      LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_linearMap_comp,
       AlgHom.comp_toLinearMap, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.coe_to_lieHom, LieHom.coe_mk]
 #align universal_enveloping_algebra.lift UniversalEnvelopingAlgebra.lift

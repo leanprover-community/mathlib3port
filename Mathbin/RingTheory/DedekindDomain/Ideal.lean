@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1124,18 +1124,19 @@ def idealFactorsFunOfQuotHom {f : R ⧸ I →+* A ⧸ J} (hf : Function.Surjecti
     { p : Ideal R | p ∣ I } →o { p : Ideal A | p ∣ J }
     where
   toFun X :=
-    ⟨comap J (map f (map I X)),
+    ⟨comap J.Quotient.mk (map f (map I.Quotient.mk X)),
       by
-      have : J.ker ≤ comap J (map f (map I X)) := ker_le_comap J
+      have : J.Quotient.mk.ker ≤ comap J.Quotient.mk (map f (map I.Quotient.mk X)) :=
+        ker_le_comap J.Quotient.mk
       rw [mk_ker] at this
       exact dvd_iff_le.mpr this⟩
   monotone' := by
     rintro ⟨X, hX⟩ ⟨Y, hY⟩ h
     rw [← Subtype.coe_le_coe, Subtype.coe_mk, Subtype.coe_mk] at h⊢
-    rw [Subtype.coe_mk, comap_le_comap_iff_of_surjective J quotient.mk_surjective,
-      map_le_iff_le_comap, Subtype.coe_mk, comap_map_of_surjective _ hf (map I Y)]
-    suffices map I X ≤ map I Y by exact le_sup_of_le_left this
-    rwa [map_le_iff_le_comap, comap_map_of_surjective I quotient.mk_surjective, ←
+    rw [Subtype.coe_mk, comap_le_comap_iff_of_surjective J.Quotient.mk quotient.mk_surjective,
+      map_le_iff_le_comap, Subtype.coe_mk, comap_map_of_surjective _ hf (map I.Quotient.mk Y)]
+    suffices map I.Quotient.mk X ≤ map I.Quotient.mk Y by exact le_sup_of_le_left this
+    rwa [map_le_iff_le_comap, comap_map_of_surjective I.Quotient.mk quotient.mk_surjective, ←
       RingHom.ker_eq_comap_bot, mk_ker, sup_eq_left.mpr <| le_of_dvd hY]
 #align ideal_factors_fun_of_quot_hom idealFactorsFunOfQuotHom
 
@@ -1145,8 +1146,9 @@ theorem idealFactorsFunOfQuotHom_id :
   OrderHom.ext _ _
     (funext fun X => by
       simp only [idealFactorsFunOfQuotHom, map_id, OrderHom.coe_fun_mk, OrderHom.id_coe, id.def,
-        comap_map_of_surjective J quotient.mk_surjective, ← RingHom.ker_eq_comap_bot J, mk_ker,
-        sup_eq_left.mpr (dvd_iff_le.mp X.prop), Subtype.coe_eta])
+        comap_map_of_surjective J.Quotient.mk quotient.mk_surjective, ←
+        RingHom.ker_eq_comap_bot J.Quotient.mk, mk_ker, sup_eq_left.mpr (dvd_iff_le.mp X.prop),
+        Subtype.coe_eta])
 #align ideal_factors_fun_of_quot_hom_id idealFactorsFunOfQuotHom_id
 
 variable {B : Type _} [CommRing B] [IsDomain B] [IsDedekindDomain B] {L : Ideal B}
@@ -1159,7 +1161,8 @@ theorem idealFactorsFunOfQuotHom_comp {f : R ⧸ I →+* A ⧸ J} {g : A ⧸ J �
   refine' OrderHom.ext _ _ (funext fun x => _)
   rw [idealFactorsFunOfQuotHom, idealFactorsFunOfQuotHom, OrderHom.comp_coe, OrderHom.coe_fun_mk,
     OrderHom.coe_fun_mk, Function.comp_apply, idealFactorsFunOfQuotHom, OrderHom.coe_fun_mk,
-    Subtype.mk_eq_mk, Subtype.coe_mk, map_comap_of_surjective J quotient.mk_surjective, map_map]
+    Subtype.mk_eq_mk, Subtype.coe_mk, map_comap_of_surjective J.Quotient.mk quotient.mk_surjective,
+    map_map]
 #align ideal_factors_fun_of_quot_hom_comp idealFactorsFunOfQuotHom_comp
 
 variable [IsDomain R] [IsDedekindDomain R] (f : R ⧸ I ≃+* A ⧸ J)

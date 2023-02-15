@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Seul Baek
 
 ! This file was ported from Lean 3 source module tactic.omega.nat.main
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,7 +30,7 @@ run_cmd
 attribute [sugar_nat]
   Ne not_le not_lt Nat.lt_iff_add_one_le Nat.succ_eq_add_one or_false_iff false_or_iff and_true_iff true_and_iff GE.ge GT.gt mul_add add_mul mul_comm one_mul mul_one imp_iff_not_or iff_iff_not_or_and_or_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def desugar :=
   sorry
 #align omega.nat.desugar omega.nat.desugar

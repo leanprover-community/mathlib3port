@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.congruence
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -232,7 +232,7 @@ section Zero
 variable [AddZeroClass R] [Mul R] (c : RingCon R)
 
 instance : Zero c.Quotient :=
-  c.toAddCon
+  c.toAddCon.Quotient.Zero
 
 /- warning: ring_con.coe_zero -> RingCon.coe_zero is a dubious translation:
 lean 3 declaration is
@@ -252,7 +252,7 @@ section One
 variable [Add R] [MulOneClass R] (c : RingCon R)
 
 instance : One c.Quotient :=
-  c.toCon
+  c.toCon.Quotient.One
 
 /- warning: ring_con.coe_one -> RingCon.coe_one is a dubious translation:
 lean 3 declaration is
@@ -292,7 +292,7 @@ section NegSubZsmul
 variable [AddGroup R] [Mul R] (c : RingCon R)
 
 instance : Neg c.Quotient :=
-  c.toAddCon
+  c.toAddCon.Neg
 
 /- warning: ring_con.coe_neg -> RingCon.coe_neg is a dubious translation:
 lean 3 declaration is
@@ -306,7 +306,7 @@ theorem coe_neg (x : R) : (↑(-x) : c.Quotient) = -x :=
 #align ring_con.coe_neg RingCon.coe_neg
 
 instance : Sub c.Quotient :=
-  c.toAddCon
+  c.toAddCon.Sub
 
 /- warning: ring_con.coe_sub -> RingCon.coe_sub is a dubious translation:
 lean 3 declaration is
@@ -326,7 +326,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddGroup.{u1} R] [_inst_2 : Mul.{u1} R] (c : RingCon.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))) _inst_2), SMul.{0, u1} Int (RingCon.Quotient.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R (SubNegMonoid.toAddMonoid.{u1} R (AddGroup.toSubNegMonoid.{u1} R _inst_1)))) _inst_2 c)
 Case conversion may be inaccurate. Consider using '#align ring_con.has_zsmul RingCon.hasZsmulₓ'. -/
 instance hasZsmul : SMul ℤ c.Quotient :=
-  c.toAddCon
+  c.toAddCon.Quotient.zsmul
 #align ring_con.has_zsmul RingCon.hasZsmul
 
 /- warning: ring_con.coe_zsmul -> RingCon.coe_zsmul is a dubious translation:
@@ -353,7 +353,7 @@ but is expected to have type
   forall {R : Type.{u1}} [_inst_1 : AddMonoid.{u1} R] [_inst_2 : Mul.{u1} R] (c : RingCon.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)) _inst_2), SMul.{0, u1} Nat (RingCon.Quotient.{u1} R (AddZeroClass.toAdd.{u1} R (AddMonoid.toAddZeroClass.{u1} R _inst_1)) _inst_2 c)
 Case conversion may be inaccurate. Consider using '#align ring_con.has_nsmul RingCon.hasNsmulₓ'. -/
 instance hasNsmul : SMul ℕ c.Quotient :=
-  c.toAddCon
+  c.toAddCon.Quotient.nSMul
 #align ring_con.has_nsmul RingCon.hasNsmul
 
 /- warning: ring_con.coe_nsmul -> RingCon.coe_nsmul is a dubious translation:
@@ -374,7 +374,7 @@ section Pow
 variable [Add R] [Monoid R] (c : RingCon R)
 
 instance : Pow c.Quotient ℕ :=
-  c.toCon
+  c.toCon.Nat.Pow
 
 /- warning: ring_con.coe_pow -> RingCon.coe_pow is a dubious translation:
 lean 3 declaration is
@@ -494,7 +494,7 @@ instance [Monoid α] [NonAssocSemiring R] [DistribMulAction α R] [IsScalarTower
 
 instance [Monoid α] [Semiring R] [MulSemiringAction α R] [IsScalarTower α R R] (c : RingCon R) :
     MulSemiringAction α c.Quotient :=
-  { c, c.toCon.MulDistribMulAction with smul := (· • ·) }
+  { c.Quotient.DistribMulAction, c.toCon.MulDistribMulAction with smul := (· • ·) }
 
 end Algebraic
 

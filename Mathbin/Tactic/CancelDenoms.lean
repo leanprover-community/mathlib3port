@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.cancel_denoms
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -151,9 +151,9 @@ open Tree
       | _ => ( 1 , node 1 Tree.nil Tree.nil )
 #align cancel_factors.find_cancel_factor cancel_factors.find_cancel_factor
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
@@ -227,7 +227,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       "cancel_factors.derive failed to normalize {← e}. Are you sure this is well-behaved division?"
 #align cancel_factors.derive cancel_factors.derive
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
@@ -266,9 +266,9 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
       | _ => none
 #align cancel_factors.find_comp_lemma cancel_factors.find_comp_lemma
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cancel_denominators_in_type h` assumes that `h` is of the form `lhs R rhs`,
 where `R ∈ {<, ≤, =, ≥, >}`.
 It produces an expression `h'` of the form `lhs' R rhs'` and a proof that `h = h'`.

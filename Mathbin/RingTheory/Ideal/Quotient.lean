@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -81,10 +81,10 @@ protected def ringCon (I : Ideal R) : RingCon R :=
 #align ideal.quotient.ring_con Ideal.Quotient.ringCon
 
 instance commRing (I : Ideal R) : CommRing (R ⧸ I) :=
-  {
-    Submodule.Quotient.addCommGroup I,-- to help with unification
-      Quotient.ringCon
-      I with }
+  { Submodule.Quotient.addCommGroup I,
+    (-- to help with unification
+          Quotient.ringCon
+          I).Quotient.CommRing with }
 #align ideal.quotient.comm_ring Ideal.Quotient.commRing
 
 /-- The ring homomorphism from a ring `R` to a quotient ring `R/I`. -/
@@ -132,7 +132,8 @@ protected theorem nontrivial {I : Ideal R} (hI : I ≠ ⊤) : Nontrivial (R ⧸ 
 #align ideal.quotient.nontrivial Ideal.Quotient.nontrivial
 
 theorem subsingleton_iff {I : Ideal R} : Subsingleton (R ⧸ I) ↔ I = ⊤ := by
-  rw [eq_top_iff_one, ← subsingleton_iff_zero_eq_one, eq_comm, ← I, quotient.eq_zero_iff_mem]
+  rw [eq_top_iff_one, ← subsingleton_iff_zero_eq_one, eq_comm, ← I.Quotient.mk.map_one,
+    quotient.eq_zero_iff_mem]
 #align ideal.quotient.subsingleton_iff Ideal.Quotient.subsingleton_iff
 
 instance : Unique (R ⧸ (⊤ : Ideal R)) :=
@@ -268,7 +269,7 @@ theorem lift_surjective_of_surjective (I : Ideal R) {f : R →+* S} (H : ∀ a :
 
 This is the `ideal.quotient` version of `quot.factor` -/
 def factor (S T : Ideal R) (H : S ≤ T) : R ⧸ S →+* R ⧸ T :=
-  Ideal.Quotient.lift S T fun x hx => eq_zero_iff_mem.2 (H hx)
+  Ideal.Quotient.lift S T.Quotient.mk fun x hx => eq_zero_iff_mem.2 (H hx)
 #align ideal.quotient.factor Ideal.Quotient.factor
 
 @[simp]

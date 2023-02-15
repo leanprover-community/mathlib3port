@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.basic
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,7 @@ import Mathbin.Tactic.Interactive
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def tactic.interactive.blast_disjs : tactic Unit :=
   sorry
 #align tactic.interactive.blast_disjs tactic.interactive.blast_disjs
@@ -45,7 +45,7 @@ inductive IsSearchable (lt : α → α → Prop) : Rbnode α → Option α → O
     is_searchable (black_node l v r) lo hi
 #align rbnode.is_searchable Rbnode.IsSearchable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def is_searchable_tactic : tactic Unit :=
   sorry
 #align rbnode.is_searchable_tactic rbnode.is_searchable_tactic

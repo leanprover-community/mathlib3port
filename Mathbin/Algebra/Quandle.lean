@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module algebra.quandle
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -487,8 +487,9 @@ def Conj (G : Type _) :=
 instance Conj.quandle (G : Type _) [Group G] : Quandle (Conj G)
     where
   act x := @MulAut.conj G _ x
-  self_distrib x y z := by
-    dsimp only [[anonymous], MulAut.conj_apply, conj]
+  self_distrib x y z :=
+    by
+    dsimp only [MulEquiv.coe_toEquiv, MulAut.conj_apply, conj]
     group
   invAct x := (@MulAut.conj G _ x).symm
   left_inv x y := by

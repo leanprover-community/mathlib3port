@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -239,16 +239,16 @@ def toDistribMulActionHom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ 
 #align linear_map.to_distrib_mul_action_hom LinearMap.toDistribMulActionHom
 -/
 
-/- warning: linear_map.to_fun_eq_coe -> LinearMap.to_fun_eq_coe is a dubious translation:
+/- warning: linear_map.to_fun_eq_coe -> LinearMap.toFun_eq_coe is a dubious translation:
 lean 3 declaration is
   forall {R : Type.{u1}} {S : Type.{u2}} {M : Type.{u3}} {M₃ : Type.{u4}} [_inst_1 : Semiring.{u1} R] [_inst_2 : Semiring.{u2} S] [_inst_3 : AddCommMonoid.{u3} M] [_inst_6 : AddCommMonoid.{u4} M₃] [_inst_10 : Module.{u1, u3} R M _inst_1 _inst_3] [_inst_12 : Module.{u2, u4} S M₃ _inst_2 _inst_6] {σ : RingHom.{u1, u2} R S (Semiring.toNonAssocSemiring.{u1} R _inst_1) (Semiring.toNonAssocSemiring.{u2} S _inst_2)} {f : LinearMap.{u1, u2, u3, u4} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12}, Eq.{max (succ u3) (succ u4)} (M -> M₃) (LinearMap.toFun.{u1, u2, u3, u4} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12 f) (coeFn.{max (succ u3) (succ u4), max (succ u3) (succ u4)} (LinearMap.{u1, u2, u3, u4} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12) (fun (_x : LinearMap.{u1, u2, u3, u4} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12) => M -> M₃) (LinearMap.hasCoeToFun.{u1, u2, u3, u4} R S M M₃ _inst_1 _inst_2 _inst_3 _inst_6 _inst_10 _inst_12 σ) f)
 but is expected to have type
   forall {R : Type.{u4}} {S : Type.{u3}} {M : Type.{u2}} {M₃ : Type.{u1}} [_inst_1 : Semiring.{u4} R] [_inst_2 : Semiring.{u3} S] [_inst_3 : AddCommMonoid.{u2} M] [_inst_6 : AddCommMonoid.{u1} M₃] [_inst_10 : Module.{u4, u2} R M _inst_1 _inst_3] [_inst_12 : Module.{u3, u1} S M₃ _inst_2 _inst_6] {σ : RingHom.{u4, u3} R S (Semiring.toNonAssocSemiring.{u4} R _inst_1) (Semiring.toNonAssocSemiring.{u3} S _inst_2)} {f : LinearMap.{u4, u3, u2, u1} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12}, Eq.{max (succ u2) (succ u1)} (M -> M₃) (AddHom.toFun.{u2, u1} M M₃ (AddZeroClass.toAdd.{u2} M (AddMonoid.toAddZeroClass.{u2} M (AddCommMonoid.toAddMonoid.{u2} M _inst_3))) (AddZeroClass.toAdd.{u1} M₃ (AddMonoid.toAddZeroClass.{u1} M₃ (AddCommMonoid.toAddMonoid.{u1} M₃ _inst_6))) (LinearMap.toAddHom.{u4, u3, u2, u1} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12 f)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (LinearMap.{u4, u3, u2, u1} R S _inst_1 _inst_2 σ M M₃ _inst_3 _inst_6 _inst_10 _inst_12) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Module.LinearMap._hyg.6178 : M) => M₃) _x) (LinearMap.instFunLikeLinearMap.{u4, u3, u2, u1} R S M M₃ _inst_1 _inst_2 _inst_3 _inst_6 _inst_10 _inst_12 σ) f)
-Case conversion may be inaccurate. Consider using '#align linear_map.to_fun_eq_coe LinearMap.to_fun_eq_coeₓ'. -/
+Case conversion may be inaccurate. Consider using '#align linear_map.to_fun_eq_coe LinearMap.toFun_eq_coeₓ'. -/
 @[simp]
-theorem to_fun_eq_coe {f : M →ₛₗ[σ] M₃} : f.toFun = (f : M → M₃) :=
+theorem toFun_eq_coe {f : M →ₛₗ[σ] M₃} : f.toFun = (f : M → M₃) :=
   rfl
-#align linear_map.to_fun_eq_coe LinearMap.to_fun_eq_coe
+#align linear_map.to_fun_eq_coe LinearMap.toFun_eq_coe
 
 /- warning: linear_map.ext -> LinearMap.ext is a dubious translation:
 lean 3 declaration is

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -614,7 +614,7 @@ def derivationToSquareZeroOfLift (f : A →ₐ[R] B)
     ext
     dsimp only [Submodule.coe_add, Submodule.coe_mk, LinearMap.coe_mk,
       diffToIdealOfQuotientCompEq_apply, Submodule.coe_smul_of_tower, IsScalarTower.coe_to_alg_hom',
-      LinearMap.to_fun_eq_coe]
+      LinearMap.toFun_eq_coe]
     simp only [map_mul, sub_mul, mul_sub, Algebra.smul_def] at this⊢
     rw [sub_eq_iff_eq_add, sub_eq_iff_eq_add] at this
     rw [this]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,7 +275,7 @@ variable (F) (E : Type _) [Field E] [Algebra K E]
 
 theorem norm_eq_prod_embeddings_gen [Algebra R F] (pb : PowerBasis R S)
     (hE : (minpoly R pb.gen).Splits (algebraMap R F)) (hfx : (minpoly R pb.gen).Separable) :
-    algebraMap R F (norm R pb.gen) = (@Finset.univ pb).Prod fun σ => σ pb.gen :=
+    algebraMap R F (norm R pb.gen) = (@Finset.univ pb.AlgHom.Fintype).Prod fun σ => σ pb.gen :=
   by
   letI := Classical.decEq F
   rw [pb.norm_gen_eq_prod_roots hE, Fintype.prod_equiv pb.lift_equiv', Finset.prod_mem_multiset,
@@ -299,7 +299,7 @@ theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
 theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAlgClosed E]
     [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
     (∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
-      ((@Finset.univ pb).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
+      ((@Finset.univ pb.AlgHom.Fintype).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
   haveI : IsSeparable L F := isSeparable_tower_top_of_isSeparable K L F

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.tactic
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,7 +48,7 @@ attribute [measurability]
 
 namespace Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp` when appropriate.
 
 Applying `measurable.comp` is not always a good idea, so we have some
@@ -69,7 +69,7 @@ unsafe def apply_measurable.comp : tactic Unit :=
   sorry
 #align tactic.apply_measurable.comp tactic.apply_measurable.comp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic to apply `measurable.comp_ae_measurable` when appropriate.
 
 Applying `measurable.comp_ae_measurable` is not always a good idea, so we have some
@@ -103,8 +103,8 @@ unsafe def goal_is_not_measurable : tactic Unit := do
     | _ => skip
 #align tactic.goal_is_not_measurable tactic.goal_is_not_measurable
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 /-- List of tactics used by `measurability` internally. The option `use_exfalso := ff` is passed to
 the tactic `apply_assumption` in order to avoid loops in the presence of negated hypotheses in
 the context. -/

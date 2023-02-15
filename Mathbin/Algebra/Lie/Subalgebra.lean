@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.subalgebra
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -280,7 +280,7 @@ def incl : L' →ₗ⁅R⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y =>
       by
-      simp only [LinearMap.to_fun_eq_coe, Submodule.subtype_apply]
+      simp only [LinearMap.toFun_eq_coe, Submodule.subtype_apply]
       rfl }
 #align lie_subalgebra.incl LieSubalgebra.incl
 
@@ -293,7 +293,7 @@ theorem coe_incl : ⇑L'.incl = coe :=
 def incl' : L' →ₗ⁅R,L'⁆ L :=
   { (L' : Submodule R L).Subtype with
     map_lie' := fun x y => by
-      simp only [coe_bracket_of_module, LinearMap.to_fun_eq_coe, Submodule.subtype_apply,
+      simp only [coe_bracket_of_module, LinearMap.toFun_eq_coe, Submodule.subtype_apply,
         coe_bracket] }
 #align lie_subalgebra.incl' LieSubalgebra.incl'
 
@@ -500,12 +500,12 @@ instance : HasInf (LieSubalgebra R L) :=
     { (K ⊓ K' : Submodule R L) with
       lie_mem' := fun x y hx hy => mem_inter (K.lie_mem hx.1 hy.1) (K'.lie_mem hx.2 hy.2) }⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 instance : InfSet (LieSubalgebra R L) :=
   ⟨fun S =>
     {
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
+        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" with
       lie_mem' := fun x y hx hy =>
         by
         simp only [Submodule.mem_carrier, mem_Inter, Submodule.infₛ_coe, mem_set_of_eq,
@@ -518,12 +518,12 @@ theorem inf_coe : (↑(K ⊓ K') : Set L) = K ∩ K' :=
   rfl
 #align lie_subalgebra.inf_coe LieSubalgebra.inf_coe
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S} -/
 @[simp]
 theorem infₛ_coe_to_submodule (S : Set (LieSubalgebra R L)) :
     (↑(infₛ S) : Submodule R L) =
       infₛ
-        "./././Mathport/Syntax/Translate/Expr.lean:369:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
+        "./././Mathport/Syntax/Translate/Expr.lean:370:4: unsupported set replacement {((s : submodule R L)) | s «expr ∈ » S}" :=
   rfl
 #align lie_subalgebra.Inf_coe_to_submodule LieSubalgebra.infₛ_coe_to_submodule
 

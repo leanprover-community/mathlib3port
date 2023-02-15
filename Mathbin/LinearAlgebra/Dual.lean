@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle, Kyle Miller
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -242,11 +242,11 @@ def LinearEquiv.dualMap (f : M₁ ≃ₗ[R] M₂) : Dual R M₂ ≃ₗ[R] Dual R
     invFun := f.symm.toLinearMap.dualMap
     left_inv := by
       intro φ; ext x
-      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.to_fun_eq_coe,
+      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.toFun_eq_coe,
         LinearEquiv.apply_symm_apply]
     right_inv := by
       intro φ; ext x
-      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.to_fun_eq_coe,
+      simp only [LinearMap.dualMap_apply, LinearEquiv.coe_toLinearMap, LinearMap.toFun_eq_coe,
         LinearEquiv.symm_apply_apply] }
 #align linear_equiv.dual_map LinearEquiv.dualMap
 
@@ -643,7 +643,7 @@ variable {R M ι : Type _}
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 -- TODO: In Lean 4 we can remove this and use `by { intros; exact Set.toFinite _ }` as a default
 -- argument.
 /-- Try using `set.to_finite` to dispatch a `set.finite` goal. -/

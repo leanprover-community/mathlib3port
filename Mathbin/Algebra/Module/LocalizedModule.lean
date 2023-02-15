@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.module.localized_module
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -853,7 +853,7 @@ theorem iso_symm_apply_aux (m : M') :
   generalize_proofs _ h2
   apply_fun iso S f using LinearEquiv.injective _
   rw [LinearEquiv.apply_symm_apply]
-  simp only [iso_apply, LinearMap.to_fun_eq_coe, from_localized_module_mk]
+  simp only [iso_apply, LinearMap.toFun_eq_coe, from_localized_module_mk]
   erw [Module.end_algebraMap_isUnit_inv_apply_eq_iff', h2.some_spec]
 #align is_localized_module.iso_symm_apply_aux IsLocalizedModule.iso_symm_apply_aux
 

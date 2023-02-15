@@ -7,7 +7,7 @@ Provides a `subtype_instance` tactic which builds instances for algebraic substr
 (sub-groups, sub-rings...).
 
 ! This file was ported from Lean 3 source module tactic.subtype_instance
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,7 +26,7 @@ def mkMemName (sub : Name) : Name → Name
   | n => n
 #align tactic.mk_mem_name Tactic.mkMemName
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop

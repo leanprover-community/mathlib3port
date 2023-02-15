@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -735,23 +735,23 @@ theorem Matrix.toLinAlgEquiv_mul (A B : Matrix n n R) :
 #align matrix.to_lin_alg_equiv_mul Matrix.toLinAlgEquiv_mul
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 @[simp]
 theorem Matrix.toLin_finTwoProd_apply (a b c d : R) (x : R × R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation")
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation")
         x =
       (a * x.fst + b * x.snd, c * x.fst + d * x.snd) :=
   by simp [Matrix.toLin_apply, Matrix.mulVec, Matrix.dotProduct]
 #align matrix.to_lin_fin_two_prod_apply Matrix.toLin_finTwoProd_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr!![ » -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation -/
 theorem Matrix.toLin_finTwoProd (a b c d : R) :
     Matrix.toLin (Basis.finTwoProd R) (Basis.finTwoProd R)
         («expr!![ »
-          "./././Mathport/Syntax/Translate/Expr.lean:390:14: unsupported user notation matrix.notation") =
+          "./././Mathport/Syntax/Translate/Expr.lean:391:14: unsupported user notation matrix.notation") =
       (a • LinearMap.fst R R R + b • LinearMap.snd R R R).Prod
         (c • LinearMap.fst R R R + d • LinearMap.snd R R R) :=
   LinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _

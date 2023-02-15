@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -82,17 +82,17 @@ elliptic curve, weierstrass equation, j invariant
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def map_simp : tactic Unit :=
   sorry
 #align map_simp map_simp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def eval_simp : tactic Unit :=
   sorry
 #align eval_simp eval_simp
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def C_simp : tactic Unit :=
   sorry
 #align C_simp C_simp
@@ -687,23 +687,24 @@ protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing :=
     (AdjoinRoot.powerBasis' W.monic_polynomial).Basis.reindex <| finCongr W.nat_degree_polynomial
 #align weierstrass_curve.coordinate_ring.basis WeierstrassCurve.CoordinateRing.basis
 
-theorem basis_apply (n : Fin 2) : W n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) :=
-  by
+theorem basis_apply (n : Fin 2) :
+    W.CoordinateRing.Basis n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) := by
   classical
     nontriviality R
     simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R),
       Basis.reindex_apply, PowerBasis.basis_eq_pow]
 #align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.CoordinateRing.basis_apply
 
-theorem basis_zero : W 0 = 1 := by simpa only [basis_apply] using pow_zero _
+theorem basis_zero : W.CoordinateRing.Basis 0 = 1 := by simpa only [basis_apply] using pow_zero _
 #align weierstrass_curve.coordinate_ring.basis_zero WeierstrassCurve.CoordinateRing.basis_zero
 
-theorem basis_one : W 1 = AdjoinRoot.mk W.Polynomial Y := by
+theorem basis_one : W.CoordinateRing.Basis 1 = AdjoinRoot.mk W.Polynomial Y := by
   simpa only [basis_apply] using pow_one _
 #align weierstrass_curve.coordinate_ring.basis_one WeierstrassCurve.CoordinateRing.basis_one
 
 @[simp]
-theorem coe_basis : (W : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial Y] :=
+theorem coe_basis :
+    (W.CoordinateRing.Basis : Fin 2 → W.CoordinateRing) = ![1, AdjoinRoot.mk W.Polynomial Y] :=
   by
   ext n
   fin_cases n
@@ -767,10 +768,10 @@ theorem norm_smul_basis (p q : R[X]) :
       p ^ 2 - p * q * (c W.a₁ * x + c W.a₃) -
         q ^ 2 * (x ^ 3 + c W.a₂ * x ^ 2 + c W.a₄ * x + c W.a₆) :=
   by
-  simp_rw [Algebra.norm_eq_matrix_det W, Matrix.det_fin_two, Algebra.leftMulMatrix_eq_repr_mul,
-    basis_zero, mul_one, basis_one, smul_basis_mul_Y, map_add, Finsupp.add_apply, map_smul,
-    Finsupp.smul_apply, ← basis_zero, ← basis_one, Basis.repr_self_apply, if_pos,
-    if_neg one_ne_zero, if_neg zero_ne_one, smul_eq_mul]
+  simp_rw [Algebra.norm_eq_matrix_det W.CoordinateRing.Basis, Matrix.det_fin_two,
+    Algebra.leftMulMatrix_eq_repr_mul, basis_zero, mul_one, basis_one, smul_basis_mul_Y, map_add,
+    Finsupp.add_apply, map_smul, Finsupp.smul_apply, ← basis_zero, ← basis_one,
+    Basis.repr_self_apply, if_pos, if_neg one_ne_zero, if_neg zero_ne_one, smul_eq_mul]
   ring1
 #align weierstrass_curve.coordinate_ring.norm_smul_basis WeierstrassCurve.CoordinateRing.norm_smul_basis
 

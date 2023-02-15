@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.ramification_inertia
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -199,7 +199,7 @@ noncomputable def inertiaDeg [hp : p.IsMaximal] : ℕ :=
     @finrank (R ⧸ p) (S ⧸ P) _ _ <|
       @Algebra.toModule _ _ _ _ <|
         RingHom.toAlgebra <|
-          Ideal.Quotient.lift p (P f) fun a ha =>
+          Ideal.Quotient.lift p (P.Quotient.mk.comp f) fun a ha =>
             Quotient.eq_zero_iff_mem.mpr <| mem_comap.mp <| hPp.symm ▸ ha
   else 0
 #align ideal.inertia_deg Ideal.inertiaDeg
@@ -527,7 +527,7 @@ omit hfp
 /-- The inclusion `(P^(i + 1) / P^e) ⊂ (P^i / P^e)`. -/
 @[simps]
 def powQuotSuccInclusion (i : ℕ) :
-    Ideal.map (P ^ e) (P ^ (i + 1)) →ₗ[R ⧸ p] Ideal.map (P ^ e) (P ^ i)
+    Ideal.map (P ^ e).Quotient.mk (P ^ (i + 1)) →ₗ[R ⧸ p] Ideal.map (P ^ e).Quotient.mk (P ^ i)
     where
   toFun x := ⟨x, Ideal.map_mono (Ideal.pow_le_pow i.le_succ) x.2⟩
   map_add' x y := rfl
@@ -548,7 +548,7 @@ See `quotient_to_quotient_range_pow_quot_succ` for this as a linear map,
 and `quotient_range_pow_quot_succ_inclusion_equiv` for this as a linear equivalence.
 -/
 noncomputable def quotientToQuotientRangePowQuotSuccAux {i : ℕ} {a : S} (a_mem : a ∈ P ^ i) :
-    S ⧸ P → (P ^ i).map (P ^ e) ⧸ (powQuotSuccInclusion f p P i).range :=
+    S ⧸ P → (P ^ i).map (P ^ e).Quotient.mk ⧸ (powQuotSuccInclusion f p P i).range :=
   Quotient.map' (fun x : S => ⟨_, Ideal.mem_map_of_mem _ (Ideal.mul_mem_left _ x a_mem)⟩)
     fun x y h => by
     rw [Submodule.quotientRel_r_def] at h⊢
@@ -569,7 +569,7 @@ include hfp
 
 /-- `S ⧸ P` embeds into the quotient by `P^(i+1) ⧸ P^e` as a subspace of `P^i ⧸ P^e`. -/
 noncomputable def quotientToQuotientRangePowQuotSucc {i : ℕ} {a : S} (a_mem : a ∈ P ^ i) :
-    S ⧸ P →ₗ[R ⧸ p] (P ^ i).map (P ^ e) ⧸ (powQuotSuccInclusion f p P i).range
+    S ⧸ P →ₗ[R ⧸ p] (P ^ i).map (P ^ e).Quotient.mk ⧸ (powQuotSuccInclusion f p P i).range
     where
   toFun := quotientToQuotientRangePowQuotSuccAux f p P a_mem
   map_add' := by
@@ -653,7 +653,7 @@ theorem quotientToQuotientRangePowQuotSucc_surjective [IsDomain S] [IsDedekindDo
 `R ⧸ p`-linearly isomorphic to `S ⧸ P`. -/
 noncomputable def quotientRangePowQuotSuccInclusionEquiv [IsDomain S] [IsDedekindDomain S]
     [P.IsPrime] (hP : P ≠ ⊥) {i : ℕ} (hi : i < e) :
-    ((P ^ i).map (P ^ e) ⧸ (powQuotSuccInclusion f p P i).range) ≃ₗ[R ⧸ p] S ⧸ P :=
+    ((P ^ i).map (P ^ e).Quotient.mk ⧸ (powQuotSuccInclusion f p P i).range) ≃ₗ[R ⧸ p] S ⧸ P :=
   by
   choose a a_mem a_not_mem using
     SetLike.exists_of_lt
@@ -668,8 +668,9 @@ noncomputable def quotientRangePowQuotSuccInclusionEquiv [IsDomain S] [IsDedekin
 `[P^i / P^e : R / p] = [P^(i+1) / P^e : R / p] + [P / S : R / p]` -/
 theorem dim_pow_quot_aux [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
     {i : ℕ} (hi : i < e) :
-    Module.rank (R ⧸ p) (Ideal.map (P ^ e) (P ^ i)) =
-      Module.rank (R ⧸ p) (S ⧸ P) + Module.rank (R ⧸ p) (Ideal.map (P ^ e) (P ^ (i + 1))) :=
+    Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ i)) =
+      Module.rank (R ⧸ p) (S ⧸ P) +
+        Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ (i + 1))) :=
   by
   letI : Field (R ⧸ p) := Ideal.Quotient.field _
   rw [dim_eq_of_injective _ (pow_quot_succ_inclusion_injective f p P i),
@@ -679,7 +680,8 @@ theorem dim_pow_quot_aux [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPr
 
 theorem dim_pow_quot [IsDomain S] [IsDedekindDomain S] [p.IsMaximal] [P.IsPrime] (hP0 : P ≠ ⊥)
     (i : ℕ) (hi : i ≤ e) :
-    Module.rank (R ⧸ p) (Ideal.map (P ^ e) (P ^ i)) = (e - i) • Module.rank (R ⧸ p) (S ⧸ P) :=
+    Module.rank (R ⧸ p) (Ideal.map (P ^ e).Quotient.mk (P ^ i)) =
+      (e - i) • Module.rank (R ⧸ p) (S ⧸ P) :=
   by
   refine' @Nat.decreasingInduction' _ i e (fun j lt_e le_j ih => _) hi _
   · rw [dim_pow_quot_aux f p P _ lt_e, ih, ← succ_nsmul, Nat.sub_succ, ← Nat.succ_eq_add_one,

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2346,24 +2346,24 @@ theorem mk_ker {I : Ideal R} : (Quotient.mk I).ker = I := by
   ext <;> rw [RingHom.ker, mem_comap, Submodule.mem_bot, quotient.eq_zero_iff_mem]
 #align ideal.mk_ker Ideal.mk_ker
 
-theorem map_mk_eq_bot_of_le {I J : Ideal R} (h : I ≤ J) : I.map J = ⊥ :=
+theorem map_mk_eq_bot_of_le {I J : Ideal R} (h : I ≤ J) : I.map J.Quotient.mk = ⊥ :=
   by
   rw [map_eq_bot_iff_le_ker, mk_ker]
   exact h
 #align ideal.map_mk_eq_bot_of_le Ideal.map_mk_eq_bot_of_le
 
 theorem ker_quotient_lift {S : Type v} [CommRing S] {I : Ideal R} (f : R →+* S) (H : I ≤ f.ker) :
-    (Ideal.Quotient.lift I f H).ker = f.ker.map I :=
+    (Ideal.Quotient.lift I f H).ker = f.ker.map I.Quotient.mk :=
   by
   ext x
   constructor
   · intro hx
     obtain ⟨y, hy⟩ := quotient.mk_surjective x
     rw [RingHom.mem_ker, ← hy, Ideal.Quotient.lift_mk, ← RingHom.mem_ker] at hx
-    rw [← hy, mem_map_iff_of_surjective I quotient.mk_surjective]
+    rw [← hy, mem_map_iff_of_surjective I.Quotient.mk quotient.mk_surjective]
     exact ⟨y, hx, rfl⟩
   · intro hx
-    rw [mem_map_iff_of_surjective I quotient.mk_surjective] at hx
+    rw [mem_map_iff_of_surjective I.Quotient.mk quotient.mk_surjective] at hx
     obtain ⟨y, hy⟩ := hx
     rw [RingHom.mem_ker, ← hy.right, Ideal.Quotient.lift_mk, ← RingHom.mem_ker f]
     exact hy.left
@@ -2470,7 +2470,7 @@ theorem Quotient.mkₐ_eq_mk (I : Ideal A) : ⇑(Quotient.mkₐ R₁ I) = Ideal.
 #align ideal.quotient.mkₐ_eq_mk Ideal.Quotient.mkₐ_eq_mk
 
 @[simp]
-theorem Quotient.algebraMap_eq (I : Ideal R) : algebraMap R (R ⧸ I) = I :=
+theorem Quotient.algebraMap_eq (I : Ideal R) : algebraMap R (R ⧸ I) = I.Quotient.mk :=
   rfl
 #align ideal.quotient.algebra_map_eq Ideal.Quotient.algebraMap_eq
 
@@ -2856,7 +2856,7 @@ def quotLeftToQuotSup : R ⧸ I →+* R ⧸ I ⊔ J :=
 /-- The kernel of `quot_left_to_quot_sup` -/
 theorem ker_quotLeftToQuotSup : (quotLeftToQuotSup I J).ker = J.map (Ideal.Quotient.mk I) := by
   simp only [mk_ker, sup_idem, sup_comm, quot_left_to_quot_sup, quotient.factor, ker_quotient_lift,
-    map_eq_iff_sup_ker_eq_of_surjective I quotient.mk_surjective, ← sup_assoc]
+    map_eq_iff_sup_ker_eq_of_surjective I.Quotient.mk quotient.mk_surjective, ← sup_assoc]
 #align double_quot.ker_quot_left_to_quot_sup DoubleQuot.ker_quotLeftToQuotSup
 
 /-- The ring homomorphism `(R/I)/J' -> R/(I ⊔ J)` induced by `quot_left_to_quot_sup` where `J'`
@@ -2867,8 +2867,8 @@ def quotQuotToQuotSup : (R ⧸ I) ⧸ J.map (Ideal.Quotient.mk I) →+* R ⧸ I 
 #align double_quot.quot_quot_to_quot_sup DoubleQuot.quotQuotToQuotSup
 
 /-- The composite of the maps `R → (R/I)` and `(R/I) → (R/I)/J'` -/
-def quotQuotMk : R →+* (R ⧸ I) ⧸ J.map I :=
-  (J.map I).comp I
+def quotQuotMk : R →+* (R ⧸ I) ⧸ J.map I.Quotient.mk :=
+  (J.map I.Quotient.mk).Quotient.mk.comp I.Quotient.mk
 #align double_quot.quot_quot_mk DoubleQuot.quotQuotMk
 
 /-- The kernel of `quot_quot_mk` -/
@@ -2908,7 +2908,7 @@ theorem quotQuotEquivQuotSup_symm_quotQuotMk (x : R) :
 #align double_quot.quot_quot_equiv_quot_sup_symm_quot_quot_mk DoubleQuot.quotQuotEquivQuotSup_symm_quotQuotMk
 
 /-- The obvious isomorphism `(R/I)/J' → (R/J)/I' `   -/
-def quotQuotEquivComm : (R ⧸ I) ⧸ J.map I ≃+* (R ⧸ J) ⧸ I.map J :=
+def quotQuotEquivComm : (R ⧸ I) ⧸ J.map I.Quotient.mk ≃+* (R ⧸ J) ⧸ I.map J.Quotient.mk :=
   ((quotQuotEquivQuotSup I J).trans (quotEquivOfEq sup_comm)).trans (quotQuotEquivQuotSup J I).symm
 #align double_quot.quot_quot_equiv_comm DoubleQuot.quotQuotEquivComm
 
@@ -2933,28 +2933,28 @@ variable {I J}
 
 /-- **The Third Isomorphism theorem** for rings. See `quot_quot_equiv_quot_sup` for a version
     that does not assume an inclusion of ideals. -/
-def quotQuotEquivQuotOfLe (h : I ≤ J) : (R ⧸ I) ⧸ J.map I ≃+* R ⧸ J :=
+def quotQuotEquivQuotOfLe (h : I ≤ J) : (R ⧸ I) ⧸ J.map I.Quotient.mk ≃+* R ⧸ J :=
   (quotQuotEquivQuotSup I J).trans (Ideal.quotEquivOfEq <| sup_eq_right.mpr h)
 #align double_quot.quot_quot_equiv_quot_of_le DoubleQuot.quotQuotEquivQuotOfLe
 
 @[simp]
 theorem quotQuotEquivQuotOfLe_quotQuotMk (x : R) (h : I ≤ J) :
-    quotQuotEquivQuotOfLe h (quotQuotMk I J x) = J x :=
+    quotQuotEquivQuotOfLe h (quotQuotMk I J x) = J.Quotient.mk x :=
   rfl
 #align double_quot.quot_quot_equiv_quot_of_le_quot_quot_mk DoubleQuot.quotQuotEquivQuotOfLe_quotQuotMk
 
 @[simp]
 theorem quotQuotEquivQuotOfLe_symm_mk (x : R) (h : I ≤ J) :
-    (quotQuotEquivQuotOfLe h).symm (J x) = quotQuotMk I J x :=
+    (quotQuotEquivQuotOfLe h).symm (J.Quotient.mk x) = quotQuotMk I J x :=
   rfl
 #align double_quot.quot_quot_equiv_quot_of_le_symm_mk DoubleQuot.quotQuotEquivQuotOfLe_symm_mk
 
 theorem quotQuotEquivQuotOfLe_comp_quotQuotMk (h : I ≤ J) :
-    RingHom.comp (↑(quotQuotEquivQuotOfLe h)) (quotQuotMk I J) = J := by ext <;> rfl
+    RingHom.comp (↑(quotQuotEquivQuotOfLe h)) (quotQuotMk I J) = J.Quotient.mk := by ext <;> rfl
 #align double_quot.quot_quot_equiv_quot_of_le_comp_quot_quot_mk DoubleQuot.quotQuotEquivQuotOfLe_comp_quotQuotMk
 
 theorem quotQuotEquivQuotOfLe_symm_comp_mk (h : I ≤ J) :
-    RingHom.comp (↑(quotQuotEquivQuotOfLe h).symm) J = quotQuotMk I J := by ext <;> rfl
+    RingHom.comp (↑(quotQuotEquivQuotOfLe h).symm) J.Quotient.mk = quotQuotMk I J := by ext <;> rfl
 #align double_quot.quot_quot_equiv_quot_of_le_symm_comp_mk DoubleQuot.quotQuotEquivQuotOfLe_symm_comp_mk
 
 end

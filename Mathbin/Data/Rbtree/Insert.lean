@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.rbtree.insert
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -488,7 +488,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def simp_fi : tactic Unit :=
   sorry
 #align rbnode.simp_fi rbnode.simp_fi
@@ -620,7 +620,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
 #align rbnode.find_balance1_lt Rbnode.find_balance1_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:333:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:334:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac

@@ -4,16 +4,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.riemann_lebesgue_lemma
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.MeasureTheory.Function.LpSpace
 import Mathbin.MeasureTheory.Function.ContinuousMapDense
-import Mathbin.MeasureTheory.Integral.IntervalIntegral
 import Mathbin.MeasureTheory.Integral.IntegralEqImproper
 import Mathbin.MeasureTheory.Group.Integration
 import Mathbin.Topology.ContinuousFunction.ZeroAtInfty
+import Mathbin.Analysis.Fourier.FourierTransform
 
 /-!
 # The Riemann-Lebesgue Lemma
@@ -163,6 +162,48 @@ theorem tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1 : Cont
   rw [Ennreal.toReal_ofReal hh.le, div_mul_cancel _ hh.ne', two_mul]
   exact lt_add_of_pos_left _ hε
 #align tendsto_integral_mul_exp_at_top_of_continuous_compact_support tendsto_integral_mul_exp_atTop_of_continuous_compact_support
+
+theorem tendsto_integral_mul_exp_atBot_of_continuous_compact_support (hf1 : Continuous f)
+    (hf2 : HasCompactSupport f) :
+    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * i) • f x) atBot (𝓝 0) :=
+  by
+  have hg2 : HasCompactSupport (f ∘ Neg.neg) := by
+    simpa only [neg_one_smul] using hf2.comp_smul (neg_ne_zero.mpr <| one_ne_zero' ℝ)
+  convert
+    (tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1.comp continuous_neg)
+          hg2).comp
+      tendsto_neg_at_bot_at_top
+  ext1 t
+  simp_rw [Function.comp_apply, neg_mul, ← mul_neg]
+  rw [← integral_neg_eq_self]
+#align tendsto_integral_mul_exp_at_bot_of_continuous_compact_support tendsto_integral_mul_exp_atBot_of_continuous_compact_support
+
+theorem zero_at_infty_integral_mul_exp_of_continuous_compact_support (hf1 : Continuous f)
+    (hf2 : HasCompactSupport f) :
+    Tendsto (fun t : ℝ => ∫ x : ℝ, exp (↑(t * x) * i) • f x) (cocompact ℝ) (𝓝 0) :=
+  by
+  rw [Real.cocompact_eq, tendsto_sup]
+  exact
+    ⟨tendsto_integral_mul_exp_atBot_of_continuous_compact_support hf1 hf2,
+      tendsto_integral_mul_exp_atTop_of_continuous_compact_support hf1 hf2⟩
+#align zero_at_infty_integral_mul_exp_of_continuous_compact_support zero_at_infty_integral_mul_exp_of_continuous_compact_support
+
+open FourierTransform
+
+/-- Riemann-Lebesgue lemma for continuous compactly-supported functions: the Fourier transform
+tends to 0 at infinity. -/
+theorem Real.fourierIntegral_zero_at_infty_of_continuous_compact_support (hc : Continuous f)
+    (hs : HasCompactSupport f) : Tendsto (Real.fourierIntegral f) (cocompact ℝ) (𝓝 0) :=
+  by
+  refine'
+    ((zero_at_infty_integral_mul_exp_of_continuous_compact_support hc hs).comp
+          (tendsto_cocompact_mul_left₀
+            (mul_ne_zero (neg_ne_zero.mpr two_ne_zero) real.pi_pos.ne'))).congr
+      fun w => _
+  rw [Real.fourierIntegral_eq_integral_exp_smul, Function.comp_apply]
+  congr 1 with x : 1
+  ring_nf
+#align real.fourier_integral_zero_at_infty_of_continuous_compact_support Real.fourierIntegral_zero_at_infty_of_continuous_compact_support
 
 end ContinuousCompactSupport
 

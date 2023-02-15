@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,7 +80,7 @@ protected theorem eq' {x y : M} : (mk x : M ⧸ p) = mk y ↔ -x + y ∈ p :=
 #align submodule.quotient.eq' Submodule.Quotient.eq'
 
 protected theorem eq {x y : M} : (mk x : M ⧸ p) = mk y ↔ x - y ∈ p :=
-  p.trans (leftRel_apply.symm.trans p.quotientRel_r_def)
+  p.Quotient.eq''.trans (leftRel_apply.symm.trans p.quotientRel_r_def)
 #align submodule.quotient.eq Submodule.Quotient.eq
 
 instance : Zero (M ⧸ p) :=
@@ -160,7 +160,7 @@ variable {S : Type _}
 
 instance mulAction' [Monoid S] [SMul S R] [MulAction S M] [IsScalarTower S R M]
     (P : Submodule R M) : MulAction S (M ⧸ P) :=
-  Function.Surjective.mulAction mk (surjective_quot_mk _) P
+  Function.Surjective.mulAction mk (surjective_quot_mk _) P.Quotient.mk_smul
 #align submodule.quotient.mul_action' Submodule.Quotient.mulAction'
 
 instance mulAction (P : Submodule R M) : MulAction R (M ⧸ P) :=
@@ -169,7 +169,7 @@ instance mulAction (P : Submodule R M) : MulAction R (M ⧸ P) :=
 
 instance smulZeroClass' [SMul S R] [SMulZeroClass S M] [IsScalarTower S R M] (P : Submodule R M) :
     SMulZeroClass S (M ⧸ P) :=
-  ZeroHom.smulZeroClass ⟨mk, mk_zero _⟩ P
+  ZeroHom.smulZeroClass ⟨mk, mk_zero _⟩ P.Quotient.mk_smul
 #align submodule.quotient.smul_zero_class' Submodule.Quotient.smulZeroClass'
 
 instance smulZeroClass (P : Submodule R M) : SMulZeroClass R (M ⧸ P) :=
@@ -178,7 +178,8 @@ instance smulZeroClass (P : Submodule R M) : SMulZeroClass R (M ⧸ P) :=
 
 instance distribSmul' [SMul S R] [DistribSMul S M] [IsScalarTower S R M] (P : Submodule R M) :
     DistribSMul S (M ⧸ P) :=
-  Function.Surjective.distribSMul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
+  Function.Surjective.distribSMul ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _)
+    P.Quotient.mk_smul
 #align submodule.quotient.distrib_smul' Submodule.Quotient.distribSmul'
 
 instance distribSmul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
@@ -187,7 +188,8 @@ instance distribSmul (P : Submodule R M) : DistribSMul R (M ⧸ P) :=
 
 instance distribMulAction' [Monoid S] [SMul S R] [DistribMulAction S M] [IsScalarTower S R M]
     (P : Submodule R M) : DistribMulAction S (M ⧸ P) :=
-  Function.Surjective.distribMulAction ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
+  Function.Surjective.distribMulAction ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _)
+    P.Quotient.mk_smul
 #align submodule.quotient.distrib_mul_action' Submodule.Quotient.distribMulAction'
 
 instance distribMulAction (P : Submodule R M) : DistribMulAction R (M ⧸ P) :=
@@ -196,7 +198,7 @@ instance distribMulAction (P : Submodule R M) : DistribMulAction R (M ⧸ P) :=
 
 instance module' [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] (P : Submodule R M) :
     Module S (M ⧸ P) :=
-  Function.Surjective.module _ ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P
+  Function.Surjective.module _ ⟨mk, rfl, fun _ _ => rfl⟩ (surjective_quot_mk _) P.Quotient.mk_smul
 #align submodule.quotient.module' Submodule.Quotient.module'
 
 instance module (P : Submodule R M) : Module R (M ⧸ P) :=

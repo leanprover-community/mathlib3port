@@ -5,7 +5,7 @@ Authors: Patrick Massot, Kevin Buzzard, Scott Morrison, Johan Commelin, Chris Hu
   Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.group
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -789,18 +789,36 @@ initialize_simps_projections MonoidHom (toFun → apply)
 
 initialize_simps_projections MonoidWithZeroHom (toFun → apply)
 
+/- warning: one_hom.to_fun_eq_coe -> OneHom.toFun_eq_coe is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : One.{u1} M] [_inst_2 : One.{u2} N] (f : OneHom.{u1, u2} M N _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (M -> N) (OneHom.toFun.{u1, u2} M N _inst_1 _inst_2 f) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (OneHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : OneHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (OneHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : One.{u2} M] [_inst_2 : One.{u1} N] (f : OneHom.{u2, u1} M N _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (M -> N) (OneHom.toFun.{u2, u1} M N _inst_1 _inst_2 f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (OneHom.{u2, u1} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.1254 : M) => N) _x) (OneHomClass.toFunLike.{max u2 u1, u2, u1} (OneHom.{u2, u1} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (OneHom.oneHomClass.{u2, u1} M N _inst_1 _inst_2)) f)
+Case conversion may be inaccurate. Consider using '#align one_hom.to_fun_eq_coe OneHom.toFun_eq_coeₓ'. -/
 @[simp, to_additive]
 theorem OneHom.toFun_eq_coe [One M] [One N] (f : OneHom M N) : f.toFun = f :=
   rfl
 #align one_hom.to_fun_eq_coe OneHom.toFun_eq_coe
 #align zero_hom.to_fun_eq_coe ZeroHom.toFun_eq_coe
 
+/- warning: mul_hom.to_fun_eq_coe -> MulHom.toFun_eq_coe is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : Mul.{u1} M] [_inst_2 : Mul.{u2} N] (f : MulHom.{u1, u2} M N _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (M -> N) (MulHom.toFun.{u1, u2} M N _inst_1 _inst_2 f) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MulHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MulHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MulHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : Mul.{u2} M] [_inst_2 : Mul.{u1} N] (f : MulHom.{u2, u1} M N _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (M -> N) (MulHom.toFun.{u2, u1} M N _inst_1 _inst_2 f) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MulHom.{u2, u1} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MulHom.{u2, u1} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MulHom.mulHomClass.{u2, u1} M N _inst_1 _inst_2)) f)
+Case conversion may be inaccurate. Consider using '#align mul_hom.to_fun_eq_coe MulHom.toFun_eq_coeₓ'. -/
 @[simp, to_additive]
 theorem MulHom.toFun_eq_coe [Mul M] [Mul N] (f : M →ₙ* N) : f.toFun = f :=
   rfl
 #align mul_hom.to_fun_eq_coe MulHom.toFun_eq_coe
 #align add_hom.to_fun_eq_coe AddHom.toFun_eq_coe
 
+/- warning: monoid_hom.to_fun_eq_coe -> MonoidHom.toFun_eq_coe is a dubious translation:
+lean 3 declaration is
+  forall {M : Type.{u1}} {N : Type.{u2}} [_inst_1 : MulOneClass.{u1} M] [_inst_2 : MulOneClass.{u2} N] (f : MonoidHom.{u1, u2} M N _inst_1 _inst_2), Eq.{max (succ u1) (succ u2)} (M -> N) (MonoidHom.toFun.{u1, u2} M N _inst_1 _inst_2 f) (coeFn.{max (succ u2) (succ u1), max (succ u1) (succ u2)} (MonoidHom.{u1, u2} M N _inst_1 _inst_2) (fun (_x : MonoidHom.{u1, u2} M N _inst_1 _inst_2) => M -> N) (MonoidHom.hasCoeToFun.{u1, u2} M N _inst_1 _inst_2) f)
+but is expected to have type
+  forall {M : Type.{u2}} {N : Type.{u1}} [_inst_1 : MulOneClass.{u2} M] [_inst_2 : MulOneClass.{u1} N] (f : MonoidHom.{u2, u1} M N _inst_1 _inst_2), Eq.{max (succ u2) (succ u1)} (M -> N) (OneHom.toFun.{u2, u1} M N (MulOneClass.toOne.{u2} M _inst_1) (MulOneClass.toOne.{u1} N _inst_2) (MonoidHom.toOneHom.{u2, u1} M N _inst_1 _inst_2 f)) (FunLike.coe.{max (succ u2) (succ u1), succ u2, succ u1} (MonoidHom.{u2, u1} M N _inst_1 _inst_2) M (fun (_x : M) => (fun (x._@.Mathlib.Algebra.Hom.Group._hyg.2398 : M) => N) _x) (MulHomClass.toFunLike.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N _inst_1 _inst_2) M N (MulOneClass.toMul.{u2} M _inst_1) (MulOneClass.toMul.{u1} N _inst_2) (MonoidHomClass.toMulHomClass.{max u2 u1, u2, u1} (MonoidHom.{u2, u1} M N _inst_1 _inst_2) M N _inst_1 _inst_2 (MonoidHom.monoidHomClass.{u2, u1} M N _inst_1 _inst_2))) f)
+Case conversion may be inaccurate. Consider using '#align monoid_hom.to_fun_eq_coe MonoidHom.toFun_eq_coeₓ'. -/
 @[simp, to_additive]
 theorem MonoidHom.toFun_eq_coe [MulOneClass M] [MulOneClass N] (f : M →* N) : f.toFun = f :=
   rfl
