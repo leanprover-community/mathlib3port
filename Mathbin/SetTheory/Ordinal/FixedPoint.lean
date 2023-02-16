@@ -247,16 +247,16 @@ variable {o : Ordinal.{u}} {f : ∀ b < o, Ordinal.{max u v} → Ordinal.{max u 
 /-- The next common fixed point, at least `a`, for a family of normal functions indexed by ordinals.
 -/
 def nfpBfamily (o : Ordinal) (f : ∀ b < o, Ordinal → Ordinal) : Ordinal → Ordinal :=
-  nfpFamily (familyOfBfamily o f)
+  nfpFamily (familyOfBFamily o f)
 #align ordinal.nfp_bfamily Ordinal.nfpBfamily
 
 theorem nfpBfamily_eq_nfpFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) :
-    nfpBfamily o f = nfpFamily (familyOfBfamily o f) :=
+    nfpBfamily o f = nfpFamily (familyOfBFamily o f) :=
   rfl
 #align ordinal.nfp_bfamily_eq_nfp_family Ordinal.nfpBfamily_eq_nfpFamily
 
 theorem foldr_le_nfpBfamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) (a l) :
-    List.foldr (familyOfBfamily o f) a l ≤ nfpBfamily o f a :=
+    List.foldr (familyOfBFamily o f) a l ≤ nfpBfamily o f a :=
   le_sup _ _
 #align ordinal.foldr_le_nfp_bfamily Ordinal.foldr_le_nfpBfamily
 
@@ -265,17 +265,17 @@ theorem le_nfpBfamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) (a) : a
 #align ordinal.le_nfp_bfamily Ordinal.le_nfpBfamily
 
 theorem lt_nfpBfamily {a b} :
-    a < nfpBfamily o f b ↔ ∃ l, a < List.foldr (familyOfBfamily o f) b l :=
+    a < nfpBfamily o f b ↔ ∃ l, a < List.foldr (familyOfBFamily o f) b l :=
   lt_sup
 #align ordinal.lt_nfp_bfamily Ordinal.lt_nfpBfamily
 
 theorem nfpBfamily_le_iff {o : Ordinal} {f : ∀ b < o, Ordinal → Ordinal} {a b} :
-    nfpBfamily o f a ≤ b ↔ ∀ l, List.foldr (familyOfBfamily o f) a l ≤ b :=
+    nfpBfamily o f a ≤ b ↔ ∀ l, List.foldr (familyOfBFamily o f) a l ≤ b :=
   sup_le_iff
 #align ordinal.nfp_bfamily_le_iff Ordinal.nfpBfamily_le_iff
 
 theorem nfpBfamily_le {o : Ordinal} {f : ∀ b < o, Ordinal → Ordinal} {a b} :
-    (∀ l, List.foldr (familyOfBfamily o f) a l ≤ b) → nfpBfamily o f a ≤ b :=
+    (∀ l, List.foldr (familyOfBFamily o f) a l ≤ b) → nfpBfamily o f a ≤ b :=
   sup_le
 #align ordinal.nfp_bfamily_le Ordinal.nfpBfamily_le
 
@@ -344,11 +344,11 @@ theorem fp_bfamily_unbounded (H : ∀ i hi, IsNormal (f i hi)) :
 
 /-- The derivative of a family of normal functions is the sequence of their common fixed points. -/
 def derivBfamily (o : Ordinal) (f : ∀ b < o, Ordinal → Ordinal) : Ordinal → Ordinal :=
-  derivFamily (familyOfBfamily o f)
+  derivFamily (familyOfBFamily o f)
 #align ordinal.deriv_bfamily Ordinal.derivBfamily
 
 theorem derivBfamily_eq_derivFamily {o : Ordinal} (f : ∀ b < o, Ordinal → Ordinal) :
-    derivBfamily o f = derivFamily (familyOfBfamily o f) :=
+    derivBfamily o f = derivFamily (familyOfBFamily o f) :=
   rfl
 #align ordinal.deriv_bfamily_eq_deriv_family Ordinal.derivBfamily_eq_derivFamily
 

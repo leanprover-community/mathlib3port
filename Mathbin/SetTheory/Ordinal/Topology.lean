@@ -171,7 +171,7 @@ theorem mem_closure_iff_bsup :
       ⟨_, fun h => (type_eq_zero_iff_isEmpty.1 h).elim i, bfamilyOfFamily f, fun i hi => hf _, by
         rwa [bsup_eq_sup]⟩,
       fun ⟨o, ho, f, hf, ha⟩ =>
-      ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBfamily o f, fun i => hf _ _, by
+      ⟨_, out_nonempty_iff_ne_zero.2 ho, familyOfBFamily o f, fun i => hf _ _, by
         rwa [sup_eq_bsup]⟩⟩
 #align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsup
 
