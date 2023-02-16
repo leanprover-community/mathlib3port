@@ -1164,14 +1164,14 @@ theorem toFinset_eq_univ [Fintype α] [Fintype s] : s.toFinset = Finset.univ ↔
 #align set.to_finset_eq_univ Set.toFinset_eq_univ
 -/
 
-#print Set.to_finset_set_of /-
+#print Set.toFinset_setOf /-
 @[simp]
-theorem to_finset_set_of [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype { x | p x }] :
+theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype { x | p x }] :
     { x | p x }.toFinset = Finset.univ.filterₓ p :=
   by
   ext
   simp
-#align set.to_finset_set_of Set.to_finset_set_of
+#align set.to_finset_set_of Set.toFinset_setOf
 -/
 
 /- warning: set.to_finset_ssubset_univ -> Set.toFinset_ssubset_univ is a dubious translation:
