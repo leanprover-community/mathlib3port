@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.span
-! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Order.OmegaCompletePartialOrder
 
 /-!
 # The span of a set of vectors, as a submodule
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 * `submodule.span s` is defined to be the smallest submodule containing the set `s`.
 

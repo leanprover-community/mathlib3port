@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Topology.Instances.Nnreal
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Analysis.Normed.Group.Basic
+import Mathbin.Topology.Algebra.InfiniteSum.Real
 
 /-!
 # Extended non-negative reals

@@ -2601,6 +2601,7 @@ import Mathbin.SetTheory.Lists
 import Mathbin.SetTheory.Ordinal.Arithmetic
 import Mathbin.SetTheory.Ordinal.Basic
 import Mathbin.SetTheory.Ordinal.CantorNormalForm
+import Mathbin.SetTheory.Ordinal.Exponential
 import Mathbin.SetTheory.Ordinal.FixedPoint
 import Mathbin.SetTheory.Ordinal.NaturalOps
 import Mathbin.SetTheory.Ordinal.Notation
@@ -2794,13 +2795,16 @@ import Mathbin.Topology.Algebra.Group.Basic
 import Mathbin.Topology.Algebra.Group.Compact
 import Mathbin.Topology.Algebra.GroupCompletion
 import Mathbin.Topology.Algebra.GroupWithZero
-import Mathbin.Topology.Algebra.InfiniteSum
+import Mathbin.Topology.Algebra.InfiniteSum.Basic
+import Mathbin.Topology.Algebra.InfiniteSum.Module
+import Mathbin.Topology.Algebra.InfiniteSum.Order
+import Mathbin.Topology.Algebra.InfiniteSum.Real
+import Mathbin.Topology.Algebra.InfiniteSum.Ring
 import Mathbin.Topology.Algebra.Localization
 import Mathbin.Topology.Algebra.Module.Basic
 import Mathbin.Topology.Algebra.Module.CharacterSpace
 import Mathbin.Topology.Algebra.Module.Determinant
 import Mathbin.Topology.Algebra.Module.FiniteDimension
-import Mathbin.Topology.Algebra.Module.InfiniteSum
 import Mathbin.Topology.Algebra.Module.LinearPmap
 import Mathbin.Topology.Algebra.Module.LocallyConvex
 import Mathbin.Topology.Algebra.Module.Multilinear

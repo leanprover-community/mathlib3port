@@ -3,24 +3,45 @@ Copyright (c) 2020 Heather Macbeth. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Yury Kudryashov, Frédéric Dupuis
 
-! This file was ported from Lean 3 source module topology.algebra.module.infinite_sum
-! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
+! This file was ported from Lean 3 source module topology.algebra.infinite_sum.module
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Topology.Algebra.InfiniteSum.Basic
 import Mathbin.Topology.Algebra.Module.Basic
-import Mathbin.Topology.Algebra.InfiniteSum
 
 /-! # Infinite sums in topological vector spaces -/
 
+
+variable {ι R R₂ M M₂ : Type _}
+
+section SmulConst
+
+variable [Semiring R] [TopologicalSpace R] [TopologicalSpace M] [AddCommMonoid M] [Module R M]
+  [ContinuousSMul R M] {f : ι → R}
+
+theorem HasSum.smul_const {r : R} (hf : HasSum f r) (a : M) : HasSum (fun z => f z • a) (r • a) :=
+  hf.map ((smulAddHom R M).flip a) (continuous_id.smul continuous_const)
+#align has_sum.smul_const HasSum.smul_const
+
+theorem Summable.smul_const (hf : Summable f) (a : M) : Summable fun z => f z • a :=
+  (hf.HasSum.smul_const _).Summable
+#align summable.smul_const Summable.smul_const
+
+theorem tsum_smul_const [T2Space M] (hf : Summable f) (a : M) : (∑' z, f z • a) = (∑' z, f z) • a :=
+  (hf.HasSum.smul_const _).tsum_eq
+#align tsum_smul_const tsum_smul_const
+
+end SmulConst
 
 section HasSum
 
 -- Results in this section hold for continuous additive monoid homomorphisms or equivalences but we
 -- don't have bundled continuous additive homomorphisms.
-variable {ι R R₂ M M₂ : Type _} [Semiring R] [Semiring R₂] [AddCommMonoid M] [Module R M]
-  [AddCommMonoid M₂] [Module R₂ M₂] [TopologicalSpace M] [TopologicalSpace M₂] {σ : R →+* R₂}
-  {σ' : R₂ →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ]
+variable [Semiring R] [Semiring R₂] [AddCommMonoid M] [Module R M] [AddCommMonoid M₂] [Module R₂ M₂]
+  [TopologicalSpace M] [TopologicalSpace M₂] {σ : R →+* R₂} {σ' : R₂ →+* R} [RingHomInvPair σ σ']
+  [RingHomInvPair σ' σ]
 
 /-- Applying a continuous linear map commutes with taking an (infinite) sum. -/
 protected theorem ContinuousLinearMap.hasSum {f : ι → M} (φ : M →SL[σ] M₂) {x : M}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johannes Hölzl, Yury G. Kudryashov, Patrick Massot
 
 ! This file was ported from Lean 3 source module analysis.specific_limits.basic
-! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,7 @@ import Mathbin.Algebra.GeomSum
 import Mathbin.Order.Filter.Archimedean
 import Mathbin.Order.Iterate
 import Mathbin.Topology.Instances.Ennreal
+import Mathbin.Topology.Algebra.Algebra
 
 /-!
 # A collection of specific limit computations
@@ -54,6 +55,33 @@ theorem tendsto_one_div_add_atTop_nhds_0_nat :
   suffices Tendsto (fun n : ℕ => 1 / (↑(n + 1) : ℝ)) atTop (𝓝 0) by simpa
   (tendsto_add_atTop_iff_nat 1).2 (tendsto_const_div_atTop_nhds_0_nat 1)
 #align tendsto_one_div_add_at_top_nhds_0_nat tendsto_one_div_add_atTop_nhds_0_nat
+
+/-- The limit of `n / (n + x)` is 1, for any constant `x` (valid in `ℝ` or any topological division
+algebra over `ℝ`, e.g., `ℂ`).
+
+TODO: introduce a typeclass saying that `1 / n` tends to 0 at top, making it possible to get this
+statement simultaneously on `ℚ`, `ℝ` and `ℂ`. -/
+theorem tendsto_coe_nat_div_add_atTop {𝕜 : Type _} [DivisionRing 𝕜] [TopologicalSpace 𝕜]
+    [CharZero 𝕜] [Algebra ℝ 𝕜] [ContinuousSMul ℝ 𝕜] [TopologicalDivisionRing 𝕜] (x : 𝕜) :
+    Tendsto (fun n : ℕ => (n : 𝕜) / (n + x)) atTop (𝓝 1) :=
+  by
+  refine' tendsto.congr' ((eventually_ne_at_top 0).mp (eventually_of_forall fun n hn => _)) _
+  · exact fun n : ℕ => 1 / (1 + x / n)
+  · field_simp [nat.cast_ne_zero.mpr hn]
+  · have : 𝓝 (1 : 𝕜) = 𝓝 (1 / (1 + x * ↑(0 : ℝ))) := by
+      rw [algebraMap.coe_zero, mul_zero, add_zero, div_one]
+    rw [this]
+    refine' tendsto_const_nhds.div (tendsto_const_nhds.add _) (by simp)
+    simp_rw [div_eq_mul_inv]
+    refine' tendsto_const_nhds.mul _
+    have : (fun n : ℕ => (n : 𝕜)⁻¹) = fun n : ℕ => ↑(n : ℝ)⁻¹ :=
+      by
+      ext1 n
+      rw [← map_natCast (algebraMap ℝ 𝕜) n, ← map_inv₀ (algebraMap ℝ 𝕜)]
+      rfl
+    rw [this]
+    exact ((continuous_algebraMap ℝ 𝕜).Tendsto _).comp tendsto_inverse_atTop_nhds_0_nat
+#align tendsto_coe_nat_div_add_at_top tendsto_coe_nat_div_add_atTop
 
 /-! ### Powers -/
 

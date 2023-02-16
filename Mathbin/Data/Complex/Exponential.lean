@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir
 
 ! This file was ported from Lean 3 source module data.complex.exponential
-! leanprover-community/mathlib commit 369525b73f229ccd76a6ec0e0e0bf2be57599768
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2059,6 +2059,21 @@ theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x :=
   · exact Real.add_one_le_exp_of_nonneg h
   exact add_one_le_exp_of_nonpos h.le
 #align real.add_one_le_exp Real.add_one_le_exp
+
+theorem one_sub_div_pow_le_exp_neg {n : ℕ} {t : ℝ} (ht' : t ≤ n) : (1 - t / n) ^ n ≤ exp (-t) :=
+  by
+  rcases eq_or_ne n 0 with (rfl | hn)
+  · simp
+    rwa [Nat.cast_zero] at ht'
+  convert pow_le_pow_of_le_left _ (add_one_le_exp (-(t / n))) n
+  · abel
+  · rw [← Real.exp_nat_mul]
+    congr 1
+    field_simp [nat.cast_ne_zero.mpr hn]
+    ring
+  · rwa [add_comm, ← sub_eq_add_neg, sub_nonneg, div_le_one]
+    positivity
+#align real.one_sub_div_pow_le_exp_neg Real.one_sub_div_pow_le_exp_neg
 
 end Real
 
