@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.approximation_corollaries
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,6 +75,14 @@ namespace GeneralizedContinuedFraction
 theorem of_convergents_eq_convergents' : (of v).convergents = (of v).convergents' :=
   @ContinuedFraction.convergents_eq_convergents' _ _ (ContinuedFraction.of v)
 #align generalized_continued_fraction.of_convergents_eq_convergents' GeneralizedContinuedFraction.of_convergents_eq_convergents'
+
+/-- The recurrence relation for the `convergents` of the continued fraction expansion
+of an element `v` of `K` in terms of the convergents of the inverse of its fractional part.
+-/
+theorem convergents_succ (n : ℕ) :
+    (of v).convergents (n + 1) = ⌊v⌋ + 1 / (of (Int.fract v)⁻¹).convergents n := by
+  rw [of_convergents_eq_convergents', convergents'_succ, of_convergents_eq_convergents']
+#align generalized_continued_fraction.convergents_succ GeneralizedContinuedFraction.convergents_succ
 
 section Convergence
 

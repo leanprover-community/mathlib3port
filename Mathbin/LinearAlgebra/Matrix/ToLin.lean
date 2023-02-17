@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.to_lin
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -335,9 +335,9 @@ theorem Matrix.ker_toLin'_eq_bot_iff {M : Matrix n n R} :
 #align matrix.ker_to_lin'_eq_bot_iff Matrix.ker_toLin'_eq_bot_iff
 
 theorem Matrix.range_toLin' (M : Matrix m n R) : M.toLin'.range = span R (range Mᵀ) := by
-  simp_rw [range_eq_map, ← supr_range_std_basis, map_supᵢ, range_eq_map, ← Ideal.span_singleton_one,
-    Ideal.span, Submodule.map_span, image_image, image_singleton, Matrix.toLin'_apply,
-    M.mul_vec_std_basis_apply, supr_span, range_eq_Union]
+  simp_rw [range_eq_map, ← supr_range_std_basis, Submodule.map_supᵢ, range_eq_map, ←
+    Ideal.span_singleton_one, Ideal.span, Submodule.map_span, image_image, image_singleton,
+    Matrix.toLin'_apply, M.mul_vec_std_basis_apply, supr_span, range_eq_Union]
 #align matrix.range_to_lin' Matrix.range_toLin'
 
 /-- If `M` and `M'` are each other's inverse matrices, they provide an equivalence between `m → A`

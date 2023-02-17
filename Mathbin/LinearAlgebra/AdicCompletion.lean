@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module linear_algebra.adic_completion
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -165,7 +165,8 @@ instance : IsHausdorff I (Hausdorffification I M) :=
           by
           have := comap_map_mkq (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) (I ^ n • ⊤)
           simp only [sup_of_le_right (infᵢ_le (fun n => (I ^ n • ⊤ : Submodule R M)) n)] at this
-          rw [← this, map_smul'', mem_comap, map_top, range_mkq, ← Smodeq.zero]; exact hx n⟩
+          rw [← this, map_smul'', mem_comap, Submodule.map_top, range_mkq, ← Smodeq.zero];
+          exact hx n⟩
 
 variable {M} [h : IsHausdorff I N]
 

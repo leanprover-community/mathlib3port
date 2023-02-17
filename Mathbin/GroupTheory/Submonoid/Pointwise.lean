@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.pointwise
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,7 +37,7 @@ Additionally, it provides various degrees of monoid structure:
 * `add_submonoid.mul_one_class`
 * `add_submonoid.semigroup`
 * `add_submonoid.monoid`
-which is available globally to match the monoid structure implied by `submodule.semiring`.
+which is available globally to match the monoid structure implied by `submodule.idem_semiring`.
 
 ## Implementation notes
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek, Robert Y. Lewis, Floris van Doorn
 
 ! This file was ported from Lean 3 source module meta.expr
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

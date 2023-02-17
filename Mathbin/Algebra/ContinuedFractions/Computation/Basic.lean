@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.computation.basic
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,8 +36,7 @@ For an example, refer to `int_fract_pair.stream`.
 - `generalized_continued_fraction.int_fract_pair.stream`: computes the stream of integer and
   fractional parts of a given value as described in the summary.
 - `generalized_continued_fraction.of`: computes the generalised continued fraction of a value `v`.
-  In fact, it computes a regular continued fraction that terminates if and only if `v` is rational
-  (those proofs will be added in a future commit).
+  In fact, it computes a regular continued fraction that terminates if and only if `v` is rational.
 
 ## Implementation Notes
 

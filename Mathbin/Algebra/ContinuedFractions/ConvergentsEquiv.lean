@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.convergents_equiv
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,6 +23,7 @@ direct evaluation (`convergents'`)) for `gcf`s on linear ordered fields. We foll
 [hardy2008introduction], Chapter 10. Here's a sketch:
 
 Let `c` be a continued fraction `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),...]`, visually:
+
                                 a₀
                 h + ---------------------------
                                   a₁

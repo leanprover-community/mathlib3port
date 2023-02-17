@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module algebra.algebra.operations
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,7 @@ import Mathbin.Algebra.Algebra.Equiv
 import Mathbin.Algebra.Module.Submodule.Pointwise
 import Mathbin.Algebra.Module.Submodule.Bilinear
 import Mathbin.Algebra.Module.Opposites
+import Mathbin.Algebra.Order.Kleene
 import Mathbin.Data.Finset.Pointwise
 import Mathbin.Data.Set.Semiring
 import Mathbin.Data.Set.Pointwise.BigOperators
@@ -392,11 +393,13 @@ theorem mem_mul_span_singleton {x y : A} : x ∈ P * span R {y} ↔ ∃ z ∈ P,
   rfl
 #align submodule.mem_mul_span_singleton Submodule.mem_mul_span_singleton
 
-/-- Sub-R-modules of an R-algebra form a semiring. -/
-instance : Semiring (Submodule R A) :=
+/-- Sub-R-modules of an R-algebra form an idempotent semiring. -/
+instance : IdemSemiring (Submodule R A) :=
   { toAddSubmonoid_injective.Semigroup _ fun m n : Submodule R A => mul_toAddSubmonoid m n,
-    AddMonoidWithOne.unary, Submodule.pointwiseAddCommMonoid, Submodule.hasOne,
-    Submodule.hasMul with
+    AddMonoidWithOne.unary, Submodule.pointwiseAddCommMonoid, Submodule.hasOne, Submodule.hasMul,
+    (by infer_instance : OrderBot (Submodule R A)),
+    (by infer_instance :
+      Lattice (Submodule R A)) with
     one_mul := Submodule.one_mul
     mul_one := Submodule.mul_one
     zero_mul := bot_mul
@@ -601,8 +604,8 @@ protected theorem mul_comm : M * N = N * M :=
 #align submodule.mul_comm Submodule.mul_comm
 
 /-- Sub-R-modules of an R-algebra A form a semiring. -/
-instance : CommSemiring (Submodule R A) :=
-  { Submodule.semiring with mul_comm := Submodule.mul_comm }
+instance : IdemCommSemiring (Submodule R A) :=
+  { Submodule.idemSemiring with mul_comm := Submodule.mul_comm }
 
 theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
     (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) :=

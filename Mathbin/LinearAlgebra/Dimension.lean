@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Sander Dahmen, Scott Morrison
 
 ! This file was ported from Lean 3 source module linear_algebra.dimension
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1103,7 +1103,7 @@ theorem dim_add_dim_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd : 
         neg_neg, map_neg, neg_apply]
       exact LinearMap.ext_iff.1 Eq c
   · rw [← ker_eq_bot, ker_cod_restrict, ker_prod, hgd, bot_inf_eq]
-  · rw [← range_eq_top, eq_top_iff, range_cod_restrict, ← map_le_iff_le_comap, map_top,
+  · rw [← range_eq_top, eq_top_iff, range_cod_restrict, ← map_le_iff_le_comap, Submodule.map_top,
       range_subtype]
     rintro ⟨d, e⟩
     have h := eq₂ d (-e)
@@ -1120,9 +1120,9 @@ theorem dim_sup_add_dim_inf_eq (s t : Submodule K V) :
       Module.rank K s + Module.rank K t :=
   dim_add_dim_split (ofLe le_sup_left) (ofLe le_sup_right) (ofLe inf_le_left) (ofLe inf_le_right)
     (by
-      rw [← map_le_map_iff' (ker_subtype <| s ⊔ t), map_sup, map_top, ← LinearMap.range_comp, ←
-        LinearMap.range_comp, subtype_comp_of_le, subtype_comp_of_le, range_subtype, range_subtype,
-        range_subtype]
+      rw [← map_le_map_iff' (ker_subtype <| s ⊔ t), Submodule.map_sup, Submodule.map_top, ←
+        LinearMap.range_comp, ← LinearMap.range_comp, subtype_comp_of_le, subtype_comp_of_le,
+        range_subtype, range_subtype, range_subtype]
       exact le_rfl)
     (ker_ofLe _ _ _) (by ext ⟨x, hx⟩; rfl)
     (by

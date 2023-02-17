@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1917,13 +1917,21 @@ theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast
 
 /- warning: rec_heq_of_heq -> rec_heq_of_heq is a dubious translation:
 lean 3 declaration is
-  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (eq : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b eq) β y)
+  forall {α : Sort.{u1}} {a : α} {b : α} {β : Sort.{u2}} {C : α -> Sort.{u2}} {x : C a} {y : β} (e : Eq.{u1} α a b), (HEq.{u2} (C a) x β y) -> (HEq.{u2} (C b) (Eq.ndrec.{u2, u1} α a C x b e) β y)
 but is expected to have type
-  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (eq : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β eq) b y)
+  forall {α : Sort.{u2}} {a : α} {b : Sort.{u1}} {β : α} {C : α -> Sort.{u1}} {x : C a} {y : b} (e : Eq.{u2} α a β), (HEq.{u1} (C a) x b y) -> (HEq.{u1} (C β) (Eq.ndrec.{u1, u2} α a C x β e) b y)
 Case conversion may be inaccurate. Consider using '#align rec_heq_of_heq rec_heq_of_heqₓ'. -/
-theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (eq : a = b) (h : HEq x y) :
-    HEq (@Eq.ndrec α a C x b Eq) y := by subst Eq <;> exact h
+theorem rec_heq_of_heq {β} {C : α → Sort _} {x : C a} {y : β} (e : a = b) (h : HEq x y) :
+    HEq (@Eq.ndrec α a C x b e) y := by subst e <;> exact h
 #align rec_heq_of_heq rec_heq_of_heq
+
+theorem ndrec_hEq_iff_hEq {β} {C : α → Sort _} {x : C a} {y : β} {e : a = b} :
+    HEq (@Eq.ndrec α a C x b e) y ↔ HEq x y := by subst e
+#align rec_heq_iff_heq ndrec_hEq_iff_hEq
+
+theorem hEq_ndrec_iff_hEq {β} {C : α → Sort _} {x : β} {y : C a} {e : a = b} :
+    HEq x (@Eq.ndrec α a C y b e) ↔ HEq x y := by subst e
+#align heq_rec_iff_heq hEq_ndrec_iff_hEq
 
 /- warning: eq.congr -> Eq.congr is a dubious translation:
 lean 3 declaration is

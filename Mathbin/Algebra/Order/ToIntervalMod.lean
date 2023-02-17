@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module algebra.order.to_interval_mod
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -843,4 +843,91 @@ theorem toIcoMod_zero_one (x : α) : toIcoMod (0 : α) zero_lt_one x = Int.fract
 #align to_Ico_mod_zero_one toIcoMod_zero_one
 
 end LinearOrderedField
+
+/-! ### Lemmas about unions of translates of intervals -/
+
+
+section Union
+
+open Set Int
+
+section LinearOrderedAddCommGroup
+
+variable {α : Type _} [LinearOrderedAddCommGroup α] [Archimedean α] (a : α) {b : α} (hb : 0 < b)
+
+include hb
+
+theorem unionᵢ_Ioc_add_zsmul : (⋃ n : ℤ, Ioc (a + n • b) (a + (n + 1) • b)) = univ :=
+  by
+  refine' eq_univ_iff_forall.mpr fun x => mem_Union.mpr _
+  rcases sub_toIocDiv_zsmul_mem_Ioc a hb x with ⟨hl, hr⟩
+  refine' ⟨toIocDiv a hb x, ⟨lt_sub_iff_add_lt.mp hl, _⟩⟩
+  rw [add_smul, one_smul, ← add_assoc]
+  convert sub_le_iff_le_add.mp hr using 1; abel
+#align Union_Ioc_add_zsmul unionᵢ_Ioc_add_zsmul
+
+theorem unionᵢ_Ico_add_zsmul : (⋃ n : ℤ, Ico (a + n • b) (a + (n + 1) • b)) = univ :=
+  by
+  refine' eq_univ_iff_forall.mpr fun x => mem_Union.mpr _
+  rcases sub_toIcoDiv_zsmul_mem_Ico a hb x with ⟨hl, hr⟩
+  refine' ⟨toIcoDiv a hb x, ⟨le_sub_iff_add_le.mp hl, _⟩⟩
+  rw [add_smul, one_smul, ← add_assoc]
+  convert sub_lt_iff_lt_add.mp hr using 1; abel
+#align Union_Ico_add_zsmul unionᵢ_Ico_add_zsmul
+
+theorem unionᵢ_Icc_add_zsmul : (⋃ n : ℤ, Icc (a + n • b) (a + (n + 1) • b)) = univ := by
+  simpa only [unionᵢ_Ioc_add_zsmul a hb, univ_subset_iff] using
+    Union_mono fun n : ℤ => (Ioc_subset_Icc_self : Ioc (a + n • b) (a + (n + 1) • b) ⊆ Icc _ _)
+#align Union_Icc_add_zsmul unionᵢ_Icc_add_zsmul
+
+theorem unionᵢ_Ioc_zsmul : (⋃ n : ℤ, Ioc (n • b) ((n + 1) • b)) = univ := by
+  simpa only [zero_add] using unionᵢ_Ioc_add_zsmul 0 hb
+#align Union_Ioc_zsmul unionᵢ_Ioc_zsmul
+
+theorem unionᵢ_Ico_zsmul : (⋃ n : ℤ, Ico (n • b) ((n + 1) • b)) = univ := by
+  simpa only [zero_add] using unionᵢ_Ico_add_zsmul 0 hb
+#align Union_Ico_zsmul unionᵢ_Ico_zsmul
+
+theorem unionᵢ_Icc_zsmul : (⋃ n : ℤ, Icc (n • b) ((n + 1) • b)) = univ := by
+  simpa only [zero_add] using unionᵢ_Icc_add_zsmul 0 hb
+#align Union_Icc_zsmul unionᵢ_Icc_zsmul
+
+end LinearOrderedAddCommGroup
+
+section LinearOrderedRing
+
+variable {α : Type _} [LinearOrderedRing α] [Archimedean α] (a : α)
+
+theorem unionᵢ_Ioc_add_int_cast : (⋃ n : ℤ, Ioc (a + n) (a + n + 1)) = Set.univ := by
+  simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
+    unionᵢ_Ioc_add_zsmul a zero_lt_one
+#align Union_Ioc_add_int_cast unionᵢ_Ioc_add_int_cast
+
+theorem unionᵢ_Ico_add_int_cast : (⋃ n : ℤ, Ico (a + n) (a + n + 1)) = Set.univ := by
+  simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
+    unionᵢ_Ico_add_zsmul a zero_lt_one
+#align Union_Ico_add_int_cast unionᵢ_Ico_add_int_cast
+
+theorem unionᵢ_Icc_add_int_cast : (⋃ n : ℤ, Icc (a + n) (a + n + 1)) = Set.univ := by
+  simpa only [zsmul_one, Int.cast_add, Int.cast_one, ← add_assoc] using
+    unionᵢ_Icc_add_zsmul a (zero_lt_one' α)
+#align Union_Icc_add_int_cast unionᵢ_Icc_add_int_cast
+
+variable (α)
+
+theorem unionᵢ_Ioc_int_cast : (⋃ n : ℤ, Ioc (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using unionᵢ_Ioc_add_int_cast (0 : α)
+#align Union_Ioc_int_cast unionᵢ_Ioc_int_cast
+
+theorem unionᵢ_Ico_int_cast : (⋃ n : ℤ, Ico (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using unionᵢ_Ico_add_int_cast (0 : α)
+#align Union_Ico_int_cast unionᵢ_Ico_int_cast
+
+theorem unionᵢ_Icc_int_cast : (⋃ n : ℤ, Icc (n : α) (n + 1)) = Set.univ := by
+  simpa only [zero_add] using unionᵢ_Icc_add_int_cast (0 : α)
+#align Union_Icc_int_cast unionᵢ_Icc_int_cast
+
+end LinearOrderedRing
+
+end Union
 

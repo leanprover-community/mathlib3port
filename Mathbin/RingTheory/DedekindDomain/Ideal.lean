@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenji Nakagawa, Anne Baanen, Filippo A. E. Nuccio
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.ideal
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -672,7 +672,7 @@ instance FractionalIdeal.cancelCommMonoidWithZero :
 #align fractional_ideal.cancel_comm_monoid_with_zero FractionalIdeal.cancelCommMonoidWithZero
 
 instance Ideal.cancelCommMonoidWithZero : CancelCommMonoidWithZero (Ideal A) :=
-  { Ideal.commSemiring,
+  { Ideal.idemCommSemiring,
     Function.Injective.cancelCommMonoidWithZero (coeIdealHom A⁰ (FractionRing A))
       coe_ideal_injective (RingHom.map_zero _) (RingHom.map_one _) (RingHom.map_mul _)
       (RingHom.map_pow _) with }

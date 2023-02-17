@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.translations
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -174,6 +174,15 @@ theorem zeroth_convergent'_aux_eq_zero {s : SeqCat <| Pair K} : convergents'Aux 
 @[simp]
 theorem zeroth_convergent'_eq_h : g.convergents' 0 = g.h := by simp [convergents']
 #align generalized_continued_fraction.zeroth_convergent'_eq_h GeneralizedContinuedFraction.zeroth_convergent'_eq_h
+
+theorem convergents'Aux_succ_none {s : SeqCat (Pair K)} (h : s.headI = none) (n : ℕ) :
+    convergents'Aux s (n + 1) = 0 := by rw [convergents'_aux, h, convergents'_aux._match_1]
+#align generalized_continued_fraction.convergents'_aux_succ_none GeneralizedContinuedFraction.convergents'Aux_succ_none
+
+theorem convergents'Aux_succ_some {s : SeqCat (Pair K)} {p : Pair K} (h : s.headI = some p)
+    (n : ℕ) : convergents'Aux s (n + 1) = p.a / (p.b + convergents'Aux s.tail n) := by
+  rw [convergents'_aux, h, convergents'_aux._match_1]
+#align generalized_continued_fraction.convergents'_aux_succ_some GeneralizedContinuedFraction.convergents'Aux_succ_some
 
 end WithDivisionRing
 

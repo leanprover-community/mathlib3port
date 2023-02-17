@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module ring_theory.coprime.ideal
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -87,13 +87,9 @@ theorem supᵢ_infᵢ_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : 
         exact this _ (Finset.subset_cons _ hb) ab.symm
   · rintro ⟨hs, Hb⟩
     obtain ⟨μ, hμ⟩ := ih.mpr hs
-    obtain ⟨u, hu, v, hv, huv⟩ :=
-      submodule.mem_sup.mp
-        ((eq_top_iff_one _).mp <|
-          sup_infi_eq_top fun b hb =>
-            Hb b hb <| by
-              rintro rfl
-              exact hat hb)
+    have := sup_infi_eq_top fun b hb => Hb b hb (ne_of_mem_of_not_mem hb hat).symm
+    rw [eq_top_iff_one, Submodule.mem_sup] at this
+    obtain ⟨u, hu, v, hv, huv⟩ := this
     refine' ⟨fun i => if hi : i = a then ⟨v, _⟩ else ⟨u * μ i, _⟩, _⟩
     · simp only [mem_infi] at hv⊢
       intro j hj ij

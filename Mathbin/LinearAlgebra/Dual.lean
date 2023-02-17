@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Fabian Glöckle, Kyle Miller
 
 ! This file was ported from Lean 3 source module linear_algebra.dual
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -141,9 +141,7 @@ def eval : M →ₗ[R] Dual R (Dual R M) :=
 
 @[simp]
 theorem eval_apply (v : M) (a : Dual R M) : eval R M v a = a v :=
-  by
-  dsimp only [eval]
-  rw [LinearMap.flip_apply, LinearMap.id_apply]
+  rfl
 #align module.dual.eval_apply Module.Dual.eval_apply
 
 variable {R M} {M' : Type _} [AddCommMonoid M'] [Module R M']
@@ -479,7 +477,7 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
 theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
     cases nonempty_fintype ι
-    rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, map_top, to_dual_range _]
+    rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, Submodule.map_top, to_dual_range _]
     infer_instance
 #align basis.eval_range Basis.eval_range
 

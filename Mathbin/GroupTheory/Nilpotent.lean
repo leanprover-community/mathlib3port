@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, Ines Wright, Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.nilpotent
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -545,7 +545,7 @@ theorem isNilpotent_of_ker_le_center {H : Type _} [Group H] (f : G →* H) (hf1 
   rw [nilpotent_iff_lowerCentralSeries] at *
   rcases hH with ⟨n, hn⟩
   use n + 1
-  refine' lowerCentralSeries_succ_eq_bot (le_trans ((map_eq_bot_iff _).mp _) hf1)
+  refine' lowerCentralSeries_succ_eq_bot (le_trans ((Subgroup.map_eq_bot_iff _).mp _) hf1)
   exact eq_bot_iff.mpr (hn ▸ lowerCentralSeries.map f n)
 #align is_nilpotent_of_ker_le_center isNilpotent_of_ker_le_center
 
@@ -556,7 +556,7 @@ theorem nilpotencyClass_le_of_ker_le_center {H : Type _} [Group H] (f : G →* H
   by
   rw [← lowerCentralSeries_length_eq_nilpotencyClass]
   apply Nat.find_min'
-  refine' lowerCentralSeries_succ_eq_bot (le_trans ((map_eq_bot_iff _).mp _) hf1)
+  refine' lowerCentralSeries_succ_eq_bot (le_trans ((Subgroup.map_eq_bot_iff _).mp _) hf1)
   apply eq_bot_iff.mpr
   apply le_trans (lowerCentralSeries.map f _)
   simp only [lowerCentralSeries_nilpotencyClass, le_bot_iff]
