@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1626,6 +1626,30 @@ theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[
 end Mono
 
 end
+
+section HasSum
+
+variable {μ : Measure ℝ} {f : ℝ → E}
+
+theorem MeasureTheory.Integrable.hasSum_intervalIntegral (hfi : Integrable f μ) (y : ℝ) :
+    HasSum (fun n : ℤ => ∫ x in y + n..y + n + 1, f x ∂μ) (∫ x, f x ∂μ) :=
+  by
+  simp_rw [integral_of_le (le_add_of_nonneg_right zero_le_one)]
+  rw [← integral_univ, ← unionᵢ_Ioc_add_int_cast y]
+  exact
+    has_sum_integral_Union (fun i => measurableSet_Ioc) (pairwise_disjoint_Ioc_add_int_cast y)
+      hfi.integrable_on
+#align measure_theory.integrable.has_sum_interval_integral MeasureTheory.Integrable.hasSum_intervalIntegral
+
+theorem MeasureTheory.Integrable.hasSum_intervalIntegral_comp_add_int (hfi : Integrable f) :
+    HasSum (fun n : ℤ => ∫ x in 0 ..1, f (x + n)) (∫ x, f x) :=
+  by
+  convert hfi.has_sum_interval_integral 0 using 2
+  ext1 n
+  rw [integral_comp_add_right, zero_add, add_comm]
+#align measure_theory.integrable.has_sum_interval_integral_comp_add_int MeasureTheory.Integrable.hasSum_intervalIntegral_comp_add_int
+
+end HasSum
 
 /-!
 ### Fundamental theorem of calculus, part 1, for any measure

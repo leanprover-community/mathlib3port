@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov, Yakov Pechersky, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.operations
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

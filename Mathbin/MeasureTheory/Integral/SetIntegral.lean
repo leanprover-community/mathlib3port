@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -779,6 +779,31 @@ theorem set_integral_nonpos_le {s : Set α} (hs : MeasurableSet s) (hf : Strongl
 #align measure_theory.set_integral_nonpos_le MeasureTheory.set_integral_nonpos_le
 
 end Nonneg
+
+section IntegrableUnion
+
+variable {μ : Measure α} [NormedAddCommGroup E] {f : α → E} [Countable β] {s : β → Set α}
+
+theorem integrableOnUnionOfSummableIntegralNorm (hs : ∀ b : β, MeasurableSet (s b))
+    (hi : ∀ b : β, IntegrableOn f (s b) μ) (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) :
+    IntegrableOn f (unionᵢ s) μ :=
+  by
+  refine' ⟨ae_strongly_measurable.Union fun i => (hi i).1, (lintegral_Union_le _ _).trans_lt _⟩
+  have B := fun b : β => lintegral_coe_eq_integral (fun a : α => ‖f a‖₊) (hi b).norm
+  rw [tsum_congr B]
+  have S' :
+    Summable fun b : β =>
+      (⟨∫ a : α in s b, ‖f a‖₊ ∂μ, set_integral_nonneg (hs b) fun a ha => Nnreal.coe_nonneg _⟩ :
+        Nnreal) :=
+    by
+    rw [← Nnreal.summable_coe]
+    exact h
+  have S'' := Ennreal.tsum_coe_eq S'.has_sum
+  simp_rw [Ennreal.coe_nnreal_eq, Nnreal.coe_mk, coe_nnnorm] at S''
+  convert Ennreal.ofReal_lt_top
+#align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOnUnionOfSummableIntegralNorm
+
+end IntegrableUnion
 
 section TendstoMono
 

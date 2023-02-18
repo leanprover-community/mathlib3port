@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.basic
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -99,17 +99,13 @@ end GeneralizedContinuedFraction.Pair
 variable (α)
 
 /-- A *generalised continued fraction* (gcf) is a potentially infinite expression of the form
-
-                                a₀
-                h + ---------------------------
-                                  a₁
-                      b₀ + --------------------
-                                    a₂
-                            b₁ + --------------
-                                        a₃
-                                  b₂ + --------
-                                      b₃ + ...
-
+$$
+  h + \dfrac{a_0}
+            {b_0 + \dfrac{a_1}
+                         {b_1 + \dfrac{a_2}
+                                      {b_2 + \dfrac{a_3}
+                                                   {b_3 + \dots}}}}
+$$
 where `h` is called the *head term* or *integer part*, the `aᵢ` are called the
 *partial numerators* and the `bᵢ` the *partial denominators* of the gcf.
 We store the sequence of partial numerators and denominators in a sequence of
@@ -187,17 +183,13 @@ end GeneralizedContinuedFraction
 
 /-- A generalized continued fraction is a *simple continued fraction* if all partial numerators are
 equal to one.
-
-                                1
-                h + ---------------------------
-                                  1
-                      b₀ + --------------------
-                                    1
-                            b₁ + --------------
-                                        1
-                                  b₂ + --------
-                                      b₃ + ...
-
+$$
+  h + \dfrac{1}
+            {b_0 + \dfrac{1}
+                         {b_1 + \dfrac{1}
+                                      {b_2 + \dfrac{1}
+                                                   {b_3 + \dots}}}}
+$$
 -/
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α)
     [One α] : Prop :=
@@ -208,17 +200,13 @@ variable (α)
 
 /-- A *simple continued fraction* (scf) is a generalized continued fraction (gcf) whose partial
 numerators are equal to one.
-
-                                1
-                h + ---------------------------
-                                  1
-                      b₀ + --------------------
-                                    1
-                            b₁ + --------------
-                                        1
-                                  b₂ + --------
-                                      b₃ + ...
-
+$$
+  h + \dfrac{1}
+            {b_0 + \dfrac{1}
+                         {b_1 + \dfrac{1}
+                                      {b_2 + \dfrac{1}
+                                                   {b_3 + \dots}}}}
+$$
 For convenience, one often writes `[h; b₀, b₁, b₂,...]`.
 It is encoded as the subtype of gcfs that satisfy
 `generalized_continued_fraction.is_simple_continued_fraction`.

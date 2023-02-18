@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -629,36 +629,29 @@ theorem derivationToSquareZeroOfLift_apply (f : A →ₐ[R] B)
 
 /-- Given a tower of algebras `R → A → B`, and a square-zero `I : ideal B`, each `R`-derivation
 from `A` to `I` corresponds to a lift `A →ₐ[R] B` of the canonical map `A →ₐ[R] B ⧸ I`. -/
+@[simps (config := { attrs := [] })]
 def liftOfDerivationToSquareZero (f : Derivation R A I) : A →ₐ[R] B :=
   {
-    (I.restrictScalars R).Subtype.comp f.toLinearMap +
-      (IsScalarTower.toAlgHom R A
-          B).toLinearMap with
-    map_one' :=
-      show (f 1 : B) + algebraMap A B 1 = 1 by
-        rw [map_one, f.map_one_eq_zero, Submodule.coe_zero, zero_add]
+    ((I.restrictScalars R).Subtype.comp f.toLinearMap + (IsScalarTower.toAlgHom R A B).toLinearMap :
+      A →ₗ[R] B) with
+    toFun := fun x => f x + algebraMap A B x
+    map_one' := by rw [map_one, f.map_one_eq_zero, Submodule.coe_zero, zero_add]
     map_mul' := fun x y =>
       by
       have : (f x : B) * f y = 0 :=
         by
         rw [← Ideal.mem_bot, ← hI, pow_two]
         convert Ideal.mul_mem_mul (f x).2 (f y).2 using 1
-      dsimp
       simp only [map_mul, f.leibniz, add_mul, mul_add, Submodule.coe_add,
         Submodule.coe_smul_of_tower, Algebra.smul_def, this]
       ring
     commutes' := fun r => by
-      dsimp
-      simp [← IsScalarTower.algebraMap_apply R A B r]
+      simp only [Derivation.map_algebraMap, eq_self_iff_true, zero_add, Submodule.coe_zero, ←
+        IsScalarTower.algebraMap_apply R A B r]
     map_zero' :=
       ((I.restrictScalars R).Subtype.comp f.toLinearMap +
           (IsScalarTower.toAlgHom R A B).toLinearMap).map_zero }
 #align lift_of_derivation_to_square_zero liftOfDerivationToSquareZero
-
-theorem liftOfDerivationToSquareZero_apply (f : Derivation R A I) (x : A) :
-    liftOfDerivationToSquareZero I hI f x = f x + algebraMap A B x :=
-  rfl
-#align lift_of_derivation_to_square_zero_apply liftOfDerivationToSquareZero_apply
 
 @[simp]
 theorem liftOfDerivationToSquareZero_mk_apply (d : Derivation R A I) (x : A) :

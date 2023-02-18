@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Kappelmann
 
 ! This file was ported from Lean 3 source module algebra.continued_fractions.convergents_equiv
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -23,17 +23,13 @@ direct evaluation (`convergents'`)) for `gcf`s on linear ordered fields. We foll
 [hardy2008introduction], Chapter 10. Here's a sketch:
 
 Let `c` be a continued fraction `[h; (a₀, b₀), (a₁, b₁), (a₂, b₂),...]`, visually:
-
-                                a₀
-                h + ---------------------------
-                                  a₁
-                      b₀ + --------------------
-                                    a₂
-                            b₁ + --------------
-                                        a₃
-                                  b₂ + --------
-                                      b₃ + ...
-
+$$
+  c = h + \dfrac{a_0}
+                {b_0 + \dfrac{a_1}
+                             {b_1 + \dfrac{a_2}
+                                          {b_2 + \dfrac{a_3}
+                                                       {b_3 + \dots}}}}
+$$
 One can compute the convergents of `c` in two ways:
 1. Directly evaluating the fraction described by `c` up to a given `n` (`convergents'`)
 2. Using the recurrence (`convergents`):

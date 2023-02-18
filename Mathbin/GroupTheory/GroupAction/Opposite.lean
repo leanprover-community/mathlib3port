@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module group_theory.group_action.opposite
-! leanprover-community/mathlib commit 740acc0e6f9adf4423f92a485d0456fc271482da
+! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,9 +168,11 @@ lean 3 declaration is
 but is expected to have type
   forall (α : Type.{u1}) [_inst_1 : CommSemigroup.{u1} α], IsCentralScalar.{u1, u1} α α (Mul.toSMul.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1))) (Mul.toHasOppositeSMul.{u1} α (Semigroup.toMul.{u1} α (CommSemigroup.toSemigroup.{u1} α _inst_1)))
 Case conversion may be inaccurate. Consider using '#align comm_semigroup.is_central_scalar CommSemigroup.isCentralScalarₓ'. -/
+@[to_additive]
 instance CommSemigroup.isCentralScalar [CommSemigroup α] : IsCentralScalar α α :=
   ⟨fun r m => mul_comm _ _⟩
 #align comm_semigroup.is_central_scalar CommSemigroup.isCentralScalar
+#align add_comm_semigroup.is_central_vadd AddCommSemigroup.is_central_vadd
 
 /- warning: monoid.to_opposite_mul_action -> Monoid.toOppositeMulAction is a dubious translation:
 lean 3 declaration is
