@@ -36,7 +36,7 @@ ideal, prime
 -/
 
 
-open Order.Pfilter
+open Order.PFilter
 
 namespace Order
 
@@ -49,7 +49,7 @@ namespace Ideal
 @[nolint has_nonempty_instance]
 structure PrimePair (P : Type _) [Preorder P] where
   i : Ideal P
-  f : Pfilter P
+  f : PFilter P
   isCompl_i_f : IsCompl (I : Set P) F
 #align order.ideal.prime_pair Order.Ideal.PrimePair
 
@@ -89,7 +89,7 @@ end PrimePair
 -/
 @[mk_iff]
 class IsPrime [Preorder P] (I : Ideal P) extends IsProper I : Prop where
-  compl_filter : IsPfilter ((I : Set P)ᶜ)
+  compl_filter : IsPFilter ((I : Set P)ᶜ)
 #align order.ideal.is_prime Order.Ideal.IsPrime
 
 section Preorder
@@ -100,7 +100,7 @@ variable [Preorder P]
 `order.ideal.is_prime`. -/
 def IsPrime.toPrimePair {I : Ideal P} (h : IsPrime I) : PrimePair P :=
   { i
-    f := h.compl_filter.toPfilter
+    f := h.compl_filter.toPFilter
     isCompl_i_f := isCompl_compl }
 #align order.ideal.is_prime.to_prime_pair Order.Ideal.IsPrime.toPrimePair
 
@@ -220,17 +220,17 @@ variable [Preorder P]
 /-- A filter `F` is prime if its complement is an ideal.
 -/
 @[mk_iff]
-class IsPrime (F : Pfilter P) : Prop where
+class IsPrime (F : PFilter P) : Prop where
   compl_ideal : IsIdeal ((F : Set P)ᶜ)
-#align order.pfilter.is_prime Order.Pfilter.IsPrime
+#align order.pfilter.is_prime Order.PFilter.IsPrime
 
 /-- Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate
 `order.pfilter.is_prime`. -/
-def IsPrime.toPrimePair {F : Pfilter P} (h : IsPrime F) : Ideal.PrimePair P :=
+def IsPrime.toPrimePair {F : PFilter P} (h : IsPrime F) : Ideal.PrimePair P :=
   { i := h.compl_ideal.toIdeal
     f
     isCompl_i_f := isCompl_compl.symm }
-#align order.pfilter.is_prime.to_prime_pair Order.Pfilter.IsPrime.toPrimePair
+#align order.pfilter.is_prime.to_prime_pair Order.PFilter.IsPrime.toPrimePair
 
 theorem Order.Ideal.PrimePair.f_isPrime (IF : Ideal.PrimePair P) : IsPrime IF.f :=
   {
