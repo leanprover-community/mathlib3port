@@ -42,9 +42,9 @@ section IsomorphismLaws
 /-- The first isomorphism law for modules. The quotient of `M` by the kernel of `f` is linearly
 equivalent to the range of `f`. -/
 noncomputable def quotKerEquivRange : (M ⧸ f.ker) ≃ₗ[R] f.range :=
-  (LinearEquiv.ofInjective (f.ker.liftq f <| le_rfl) <|
-        ker_eq_bot.mp <| Submodule.ker_liftq_eq_bot _ _ _ (le_refl f.ker)).trans
-    (LinearEquiv.ofEq _ _ <| Submodule.range_liftq _ _ _)
+  (LinearEquiv.ofInjective (f.ker.liftQ f <| le_rfl) <|
+        ker_eq_bot.mp <| Submodule.ker_liftQ_eq_bot _ _ _ (le_refl f.ker)).trans
+    (LinearEquiv.ofEq _ _ <| Submodule.range_liftQ _ _ _)
 #align linear_map.quot_ker_equiv_range LinearMap.quotKerEquivRange
 
 /-- The first isomorphism theorem for surjective linear maps. -/
@@ -61,8 +61,8 @@ theorem quotKerEquivRange_apply_mk (x : M) :
 
 @[simp]
 theorem quotKerEquivRange_symm_apply_image (x : M) (h : f x ∈ f.range) :
-    f.quotKerEquivRange.symm ⟨f x, h⟩ = f.ker.mkq x :=
-  f.quotKerEquivRange.symm_apply_apply (f.ker.mkq x)
+    f.quotKerEquivRange.symm ⟨f x, h⟩ = f.ker.mkQ x :=
+  f.quotKerEquivRange.symm_apply_apply (f.ker.mkQ x)
 #align linear_map.quot_ker_equiv_range_symm_apply_image LinearMap.quotKerEquivRange_symm_apply_image
 
 /-- Canonical linear map from the quotient `p/(p ∩ p')` to `(p+p')/p'`, mapping `x + (p ∩ p')`
@@ -70,7 +70,7 @@ to `x + p'`, where `p` and `p'` are submodules of an ambient module.
 -/
 def quotientInfToSupQuotient (p p' : Submodule R M) :
     p ⧸ comap p.Subtype (p ⊓ p') →ₗ[R] _ ⧸ comap (p ⊔ p').Subtype p' :=
-  (comap p.subtype (p ⊓ p')).liftq ((comap (p ⊔ p').Subtype p').mkq.comp (of_le le_sup_left))
+  (comap p.subtype (p ⊓ p')).liftQ ((comap (p ⊔ p').Subtype p').mkQ.comp (of_le le_sup_left))
     (by
       rw [ker_comp, of_le, comap_cod_restrict, ker_mkq, map_comap_subtype]
       exact comap_mono (inf_le_inf_right _ le_sup_left))
@@ -137,7 +137,7 @@ namespace Submodule
 variable (S T : Submodule R M) (h : S ≤ T)
 
 /-- The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
-def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkq →ₗ[R] M ⧸ T :=
+def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkQ →ₗ[R] M ⧸ T :=
   liftq _ (mapq S T LinearMap.id h)
     (by
       rintro _ ⟨x, hx, rfl⟩
@@ -147,8 +147,8 @@ def quotientQuotientEquivQuotientAux (h : S ≤ T) : (M ⧸ S) ⧸ T.map S.mkq �
 
 @[simp]
 theorem quotientQuotientEquivQuotientAux_mk (x : M ⧸ S) :
-    quotientQuotientEquivQuotientAux S T h (Quotient.mk x) = mapq S T LinearMap.id h x :=
-  liftq_apply _ _ _
+    quotientQuotientEquivQuotientAux S T h (Quotient.mk x) = mapQ S T LinearMap.id h x :=
+  liftQ_apply _ _ _
 #align submodule.quotient_quotient_equiv_quotient_aux_mk Submodule.quotientQuotientEquivQuotientAux_mk
 
 @[simp]
@@ -158,20 +158,20 @@ theorem quotientQuotientEquivQuotientAux_mk_mk (x : M) :
 #align submodule.quotient_quotient_equiv_quotient_aux_mk_mk Submodule.quotientQuotientEquivQuotientAux_mk_mk
 
 /-- **Noether's third isomorphism theorem** for modules: `(M / S) / (T / S) ≃ M / T`. -/
-def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkq) ≃ₗ[R] M ⧸ T :=
+def quotientQuotientEquivQuotient : ((M ⧸ S) ⧸ T.map S.mkQ) ≃ₗ[R] M ⧸ T :=
   {
     quotientQuotientEquivQuotientAux S T
       h with
     toFun := quotientQuotientEquivQuotientAux S T h
-    invFun := mapq _ _ (mkq S) (le_comap_map _ _)
+    invFun := mapQ _ _ (mkQ S) (le_comap_map _ _)
     left_inv := fun x => Quotient.inductionOn' x fun x => Quotient.inductionOn' x fun x => by simp
     right_inv := fun x => Quotient.inductionOn' x fun x => by simp }
 #align submodule.quotient_quotient_equiv_quotient Submodule.quotientQuotientEquivQuotient
 
 /-- Corollary of the third isomorphism theorem: `[S : T] [M : S] = [M : T]` -/
 theorem card_quotient_mul_card_quotient (S T : Submodule R M) (hST : T ≤ S)
-    [DecidablePred fun x => x ∈ S.map T.mkq] [Fintype (M ⧸ S)] [Fintype (M ⧸ T)] :
-    Fintype.card (S.map T.mkq) * Fintype.card (M ⧸ S) = Fintype.card (M ⧸ T) := by
+    [DecidablePred fun x => x ∈ S.map T.mkQ] [Fintype (M ⧸ S)] [Fintype (M ⧸ T)] :
+    Fintype.card (S.map T.mkQ) * Fintype.card (M ⧸ S) = Fintype.card (M ⧸ T) := by
   rw [Submodule.card_eq_card_quotient_mul_card (map T.mkq S),
     fintype.card_eq.mpr ⟨(quotient_quotient_equiv_quotient T S hST).toEquiv⟩]
 #align submodule.card_quotient_mul_card_quotient Submodule.card_quotient_mul_card_quotient

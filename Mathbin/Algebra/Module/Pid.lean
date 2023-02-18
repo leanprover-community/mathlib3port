@@ -208,7 +208,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
             ⟨(((@lequivProdOfRightSplitExact _ _ _ _ _ _ _ _ _ _ _ _
                               ((f.trans ULift.moduleEquiv.{u, u, v}.symm).toLinearMap.comp <| mkq _)
                               ((DirectSum.toModule _ _ _ fun i =>
-                                    (liftqSpanSingleton.{u, u} (p ^ k i)
+                                    (liftQSpanSingleton.{u, u} (p ^ k i)
                                         (LinearMap.toSpanSingleton _ _ _)
                                         (this i).choose_spec.left :
                                       R ⧸ _ →ₗ[R] _)).comp
@@ -227,7 +227,7 @@ theorem torsion_by_prime_power_decomposition (hN : Module.IsTorsion' N (Submonoi
             LinearMap.comp_assoc, ← LinearEquiv.toLinearMap_eq_coe,
             LinearEquiv.toLinearMap_symm_comp_eq, LinearMap.comp_id, ← LinearMap.comp_assoc, ←
             LinearMap.comp_assoc]
-          suffices (f.to_linear_map.comp (R ∙ s j).mkq).comp _ = LinearMap.id by
+          suffices (f.to_linear_map.comp (R ∙ s j).mkQ).comp _ = LinearMap.id by
             rw [← f.to_linear_map_eq_coe, this, LinearMap.id_comp]
           ext i : 3
           simp only [LinearMap.coe_comp, Function.comp_apply, mkq_apply]
@@ -290,11 +290,11 @@ theorem equiv_free_prod_directSum [h' : Module.Finite R N] :
   by
   haveI := isNoetherian_of_fg_of_noetherian' (module.finite_def.mp h')
   haveI := isNoetherian_submodule' (torsion R N)
-  haveI := Module.Finite.of_surjective _ (torsion R N).mkq_surjective
+  haveI := Module.Finite.of_surjective _ (torsion R N).mkQ_surjective
   obtain ⟨I, fI, p, hp, e, ⟨h⟩⟩ := equiv_direct_sum_of_is_torsion (@torsion_is_torsion R N _ _ _)
   obtain ⟨n, ⟨g⟩⟩ := @Module.freeOfFiniteTypeTorsionFree' R _ _ _ (N ⧸ torsion R N) _ _ _ _
   haveI : Module.Projective R (N ⧸ torsion R N) := Module.projectiveOfBasis ⟨g⟩
-  obtain ⟨f, hf⟩ := Module.projective_lifting_property _ LinearMap.id (torsion R N).mkq_surjective
+  obtain ⟨f, hf⟩ := Module.projective_lifting_property _ LinearMap.id (torsion R N).mkQ_surjective
   refine'
     ⟨n, I, fI, p, hp, e,
       ⟨(lequivProdOfRightSplitExact (torsion R N).injective_subtype _ hf).symm.trans <|

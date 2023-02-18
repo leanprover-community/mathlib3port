@@ -355,7 +355,7 @@ theorem isArtinian_of_submodule_of_artinian (R M) [Ring R] [AddCommGroup M] [Mod
 
 theorem isArtinian_of_quotient_of_artinian (R) [Ring R] (M) [AddCommGroup M] [Module R M]
     (N : Submodule R M) (h : IsArtinian R M) : IsArtinian R (M ⧸ N) :=
-  isArtinian_of_surjective M (Submodule.mkq N) (Submodule.Quotient.mk_surjective N)
+  isArtinian_of_surjective M (Submodule.mkQ N) (Submodule.Quotient.mk_surjective N)
 #align is_artinian_of_quotient_of_artinian isArtinian_of_quotient_of_artinian
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Artinian, then `M / S` is

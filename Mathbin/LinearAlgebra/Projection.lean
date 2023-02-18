@@ -78,7 +78,7 @@ open LinearMap
 /-- If `q` is a complement of `p`, then `M/p ≃ q`. -/
 def quotientEquivOfIsCompl (h : IsCompl p q) : (E ⧸ p) ≃ₗ[R] q :=
   LinearEquiv.symm <|
-    LinearEquiv.ofBijective (p.mkq.comp q.Subtype)
+    LinearEquiv.ofBijective (p.mkQ.comp q.Subtype)
       ⟨by rw [← ker_eq_bot, ker_comp, ker_mkq, disjoint_iff_comap_eq_bot.1 h.symm.disjoint], by
         rw [← range_eq_top, range_comp, range_subtype, map_mkq_eq_top, h.sup_eq_top]⟩
 #align submodule.quotient_equiv_of_is_compl Submodule.quotientEquivOfIsCompl

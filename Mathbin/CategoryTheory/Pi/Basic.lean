@@ -137,7 +137,12 @@ section
 
 variable {J : Type w₀} {D : J → Type u₁} [∀ j, Category.{v₁} (D j)]
 
-#print CategoryTheory.Pi.sumElimCategoryₓ /-
+/- warning: category_theory.pi.sum_elim_category -> CategoryTheory.Pi.sumElimCategoryₓ is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} (C : I -> Type.{u3}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u3} (C i)] {J : Type.{u1}} {D : J -> Type.{u3}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u3} (D j)] (s : Sum.{u1, u1} I J), CategoryTheory.Category.{u2, u3} (Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s)
+but is expected to have type
+  forall {I : Type.{u3}} (C : I -> Type.{u1}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u1} (C i)] {J : Type.{u3}} {D : J -> Type.{u1}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u1} (D j)] (s : Sum.{u3, u3} I J), CategoryTheory.Category.{u2, u1} (Sum.elim.{u3, u3, succ (succ u1)} I J Type.{u1} C D s)
+Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum_elim_category CategoryTheory.Pi.sumElimCategoryₓₓ'. -/
 instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inl i => by
     dsimp
@@ -146,9 +151,13 @@ instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
     dsimp
     infer_instance
 #align category_theory.pi.sum_elim_category CategoryTheory.Pi.sumElimCategoryₓ
--/
 
-#print CategoryTheory.Pi.sum /-
+/- warning: category_theory.pi.sum -> CategoryTheory.Pi.sum is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} (C : I -> Type.{u3}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u3} (C i)] {J : Type.{u1}} {D : J -> Type.{u3}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u3} (D j)], CategoryTheory.Functor.{max u1 u2, max (max u1 u3) u1 u2, max u1 u3, max (max u1 u2) u1 u3} (forall (i : I), C i) (CategoryTheory.pi.{u1, u2, u3} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i)) (CategoryTheory.Functor.{max u1 u2, max u1 u2, max u1 u3, max u1 u3} (forall (j : J), D j) (CategoryTheory.pi.{u1, u2, u3} J (fun (j : J) => D j) (fun (i : J) => _inst_2 i)) (forall (s : Sum.{u1, u1} I J), Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (CategoryTheory.pi.{u1, u2, u3} (Sum.{u1, u1} I J) (fun (s : Sum.{u1, u1} I J) => Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (fun (i : Sum.{u1, u1} I J) => CategoryTheory.Pi.sumElimCategoryₓ.{u1, u2, u3} I C (fun (i : I) => _inst_1 i) J D (fun (j : J) => _inst_2 j) i))) (CategoryTheory.Functor.category.{max u1 u2, max u1 u2, max u1 u3, max u1 u3} (forall (j : J), D j) (CategoryTheory.pi.{u1, u2, u3} J (fun (j : J) => D j) (fun (i : J) => _inst_2 i)) (forall (s : Sum.{u1, u1} I J), Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (CategoryTheory.pi.{u1, u2, u3} (Sum.{u1, u1} I J) (fun (s : Sum.{u1, u1} I J) => Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (fun (i : Sum.{u1, u1} I J) => CategoryTheory.Pi.sumElimCategoryₓ.{u1, u2, u3} I C (fun (i : I) => _inst_1 i) J D (fun (j : J) => _inst_2 j) i)))
+but is expected to have type
+  forall {I : Type.{u1}} (C : I -> Type.{u3}) [_inst_1 : forall (i : I), CategoryTheory.Category.{u2, u3} (C i)] {J : Type.{u1}} {D : J -> Type.{u3}} [_inst_2 : forall (j : J), CategoryTheory.Category.{u2, u3} (D j)], CategoryTheory.Functor.{max u2 u1, max (max u3 u2) u1, max u3 u1, max (max u3 u1) u2 u1} (forall (i : I), C i) (CategoryTheory.pi.{u1, u2, u3} I (fun (i : I) => C i) (fun (i : I) => _inst_1 i)) (CategoryTheory.Functor.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (forall (j : J), D j) (CategoryTheory.pi.{u1, u2, u3} J (fun (j : J) => D j) (fun (i : J) => _inst_2 i)) (forall (s : Sum.{u1, u1} I J), Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (CategoryTheory.pi.{u1, u2, u3} (Sum.{u1, u1} I J) (fun (s : Sum.{u1, u1} I J) => Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (fun (i : Sum.{u1, u1} I J) => CategoryTheory.Pi.sumElimCategory.{u1, u2, u3} I C (fun (i : I) => (fun (i : I) => _inst_1 i) i) J D (fun (j : J) => (fun (j : J) => _inst_2 j) j) i))) (CategoryTheory.Functor.category.{max u2 u1, max u2 u1, max u3 u1, max u3 u1} (forall (j : J), D j) (CategoryTheory.pi.{u1, u2, u3} J (fun (j : J) => D j) (fun (i : J) => _inst_2 i)) (forall (s : Sum.{u1, u1} I J), Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (CategoryTheory.pi.{u1, u2, u3} (Sum.{u1, u1} I J) (fun (s : Sum.{u1, u1} I J) => Sum.elim.{u1, u1, succ (succ u3)} I J Type.{u3} C D s) (fun (i : Sum.{u1, u1} I J) => CategoryTheory.Pi.sumElimCategory.{u1, u2, u3} I C (fun (i : I) => (fun (i : I) => _inst_1 i) i) J D (fun (j : J) => (fun (j : J) => _inst_2 j) j) i)))
+Case conversion may be inaccurate. Consider using '#align category_theory.pi.sum CategoryTheory.Pi.sumₓ'. -/
 /-- The bifunctor combining an `I`-indexed family of objects with a `J`-indexed family of objects
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
@@ -160,7 +169,6 @@ def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s
       map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
   map f f' α := { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
 #align category_theory.pi.sum CategoryTheory.Pi.sum
--/
 
 end
 

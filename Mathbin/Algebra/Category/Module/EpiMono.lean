@@ -68,9 +68,9 @@ instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=
   (mono_iff_ker_eq_bot _).mpr (Submodule.ker_subtype U)
 #align Module.mono_as_hom'_subtype ModuleCat.mono_as_hom'_subtype
 
-instance epi_as_hom''_mkq (U : Submodule R X) : Epi (↿U.mkq) :=
-  (epi_iff_range_eq_top _).mpr <| Submodule.range_mkq _
-#align Module.epi_as_hom''_mkq ModuleCat.epi_as_hom''_mkq
+instance epi_as_hom''_mkQ (U : Submodule R X) : Epi (↿U.mkQ) :=
+  (epi_iff_range_eq_top _).mpr <| Submodule.range_mkQ _
+#align Module.epi_as_hom''_mkq ModuleCat.epi_as_hom''_mkQ
 
 instance forget_preservesEpimorphisms : (forget (ModuleCat.{v} R)).PreservesEpimorphisms
     where preserves X Y f hf := by

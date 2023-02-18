@@ -74,18 +74,18 @@ def homOfLE {x y : X} (h : x ≤ y) : x ⟶ y :=
 alias hom_of_le ← _root_.has_le.le.hom
 #align has_le.le.hom LE.le.hom
 
-#print CategoryTheory.hom_of_le_refl /-
+#print CategoryTheory.homOfLE_refl /-
 @[simp]
-theorem hom_of_le_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
+theorem homOfLE_refl {x : X} : (le_refl x).Hom = 𝟙 x :=
   rfl
-#align category_theory.hom_of_le_refl CategoryTheory.hom_of_le_refl
+#align category_theory.hom_of_le_refl CategoryTheory.homOfLE_refl
 -/
 
-#print CategoryTheory.hom_of_le_comp /-
+#print CategoryTheory.homOfLE_comp /-
 @[simp]
-theorem hom_of_le_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom = (h.trans k).Hom :=
+theorem homOfLE_comp {x y z : X} (h : x ≤ y) (k : y ≤ z) : h.Hom ≫ k.Hom = (h.trans k).Hom :=
   rfl
-#align category_theory.hom_of_le_comp CategoryTheory.hom_of_le_comp
+#align category_theory.hom_of_le_comp CategoryTheory.homOfLE_comp
 -/
 
 #print CategoryTheory.leOfHom /-
@@ -99,21 +99,21 @@ theorem leOfHom {x y : X} (h : x ⟶ y) : x ≤ y :=
 alias le_of_hom ← _root_.quiver.hom.le
 #align quiver.hom.le Quiver.Hom.le
 
-#print CategoryTheory.le_of_hom_hom_of_le /-
+#print CategoryTheory.leOfHom_homOfLE /-
 @[simp]
-theorem le_of_hom_hom_of_le {x y : X} (h : x ≤ y) : h.Hom.le = h :=
+theorem leOfHom_homOfLE {x y : X} (h : x ≤ y) : h.Hom.le = h :=
   rfl
-#align category_theory.le_of_hom_hom_of_le CategoryTheory.le_of_hom_hom_of_le
+#align category_theory.le_of_hom_hom_of_le CategoryTheory.leOfHom_homOfLE
 -/
 
-#print CategoryTheory.hom_of_le_le_of_hom /-
+#print CategoryTheory.homOfLE_leOfHom /-
 @[simp]
-theorem hom_of_le_le_of_hom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
+theorem homOfLE_leOfHom {x y : X} (h : x ⟶ y) : h.le.Hom = h :=
   by
   cases h
   cases h
   rfl
-#align category_theory.hom_of_le_le_of_hom CategoryTheory.hom_of_le_le_of_hom
+#align category_theory.hom_of_le_le_of_hom CategoryTheory.homOfLE_leOfHom
 -/
 
 #print CategoryTheory.opHomOfLe /-
@@ -123,10 +123,10 @@ def opHomOfLe {x y : Xᵒᵖ} (h : unop x ≤ unop y) : y ⟶ x :=
 #align category_theory.op_hom_of_le CategoryTheory.opHomOfLe
 -/
 
-#print CategoryTheory.le_ofOp_hom /-
-theorem le_ofOp_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
+#print CategoryTheory.le_of_op_hom /-
+theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
   h.unop.le
-#align category_theory.le_of_op_hom CategoryTheory.le_ofOp_hom
+#align category_theory.le_of_op_hom CategoryTheory.le_of_op_hom
 -/
 
 /- warning: category_theory.unique_to_top -> CategoryTheory.uniqueToTop is a dubious translation:

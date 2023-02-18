@@ -97,7 +97,7 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
   carrier :=
     { f |
       ∀ {m n} (h : m ≤ n),
-        liftq _ (mkq _)
+        liftQ _ (mkQ _)
             (by
               rw [ker_mkq]
               exact smul_mono (Ideal.pow_le_pow h) le_rfl)
@@ -144,7 +144,7 @@ namespace Hausdorffification
 
 /-- The canonical linear map to the Hausdorffification. -/
 def of : M →ₗ[R] Hausdorffification I M :=
-  mkq _
+  mkQ _
 #align Hausdorffification.of Hausdorffification.of
 
 variable {I M}
@@ -175,7 +175,7 @@ include h
 /-- universal property of Hausdorffification: any linear map to a Hausdorff module extends to a
 unique map from the Hausdorffification. -/
 def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
-  liftq _ f <|
+  liftQ _ f <|
     map_le_iff_le_comap.1 <|
       h.infᵢ_pow_smul ▸
         le_infᵢ fun n =>
@@ -230,13 +230,13 @@ namespace adicCompletion
 /-- The canonical linear map to the completion. -/
 def of : M →ₗ[R] adicCompletion I M
     where
-  toFun x := ⟨fun n => mkq _ x, fun m n hmn => rfl⟩
+  toFun x := ⟨fun n => mkQ _ x, fun m n hmn => rfl⟩
   map_add' x y := rfl
   map_smul' c x := rfl
 #align adic_completion.of adicCompletion.of
 
 @[simp]
-theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkq _ x :=
+theorem of_apply (x : M) (n : ℕ) : (of I M x).1 n = mkQ _ x :=
   rfl
 #align adic_completion.of_apply adicCompletion.of_apply
 
@@ -258,12 +258,12 @@ theorem eval_apply (n : ℕ) (f : adicCompletion I M) : eval I M n f = f.1 n :=
   rfl
 #align adic_completion.eval_apply adicCompletion.eval_apply
 
-theorem eval_of (n : ℕ) (x : M) : eval I M n (of I M x) = mkq _ x :=
+theorem eval_of (n : ℕ) (x : M) : eval I M n (of I M x) = mkQ _ x :=
   rfl
 #align adic_completion.eval_of adicCompletion.eval_of
 
 @[simp]
-theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkq _ :=
+theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkQ _ :=
   rfl
 #align adic_completion.eval_comp_of adicCompletion.eval_comp_of
 

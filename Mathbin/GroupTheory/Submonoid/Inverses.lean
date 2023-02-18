@@ -182,17 +182,17 @@ theorem fromLeftInv_mul (x : S.left_inv) : (S.fromLeftInv x : M) * x = 1 := by
 #align submonoid.from_left_inv_mul Submonoid.fromLeftInv_mul
 #align add_submonoid.from_left_neg_add AddSubmonoid.fromLeftNeg_add
 
-/- warning: submonoid.left_inv_le_is_unit -> Submonoid.leftInv_le_is_unit is a dubious translation:
+/- warning: submonoid.left_inv_le_is_unit -> Submonoid.leftInv_le_isUnit is a dubious translation:
 lean 3 declaration is
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] (S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))), LE.le.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (Preorder.toLE.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (SetLike.partialOrder.{u1, u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) M (Submonoid.setLike.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1)))))) (Submonoid.leftInv.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1) S) (IsUnit.submonoid.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))
 but is expected to have type
   forall {M : Type.{u1}} [_inst_1 : CommMonoid.{u1} M] (S : Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))), LE.le.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (Preorder.toLE.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (PartialOrder.toPreorder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (CompleteSemilatticeInf.toPartialOrder.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Submonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))) (Submonoid.instCompleteLatticeSubmonoid.{u1} M (Monoid.toMulOneClass.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))))))) (Submonoid.leftInv.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1) S) (IsUnit.submonoid.{u1} M (CommMonoid.toMonoid.{u1} M _inst_1))
-Case conversion may be inaccurate. Consider using '#align submonoid.left_inv_le_is_unit Submonoid.leftInv_le_is_unitₓ'. -/
+Case conversion may be inaccurate. Consider using '#align submonoid.left_inv_le_is_unit Submonoid.leftInv_le_isUnitₓ'. -/
 @[to_additive]
-theorem leftInv_le_is_unit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ =>
+theorem leftInv_le_isUnit : S.left_inv ≤ IsUnit.submonoid M := fun x ⟨y, hx⟩ =>
   ⟨⟨x, y, hx, mul_comm x y ▸ hx⟩, rfl⟩
-#align submonoid.left_inv_le_is_unit Submonoid.leftInv_le_is_unit
-#align add_submonoid.left_neg_le_is_add_unit AddSubmonoid.leftNeg_le_is_addUnit
+#align submonoid.left_inv_le_is_unit Submonoid.leftInv_le_isUnit
+#align add_submonoid.left_neg_le_is_add_unit AddSubmonoid.leftNeg_le_isAddUnit
 
 /- warning: submonoid.from_left_inv_eq_iff -> Submonoid.fromLeftInv_eq_iff is a dubious translation:
 lean 3 declaration is

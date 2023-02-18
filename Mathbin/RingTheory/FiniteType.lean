@@ -500,7 +500,7 @@ theorem fg_of_finiteType [CommRing R] [Nontrivial R] [h : FiniteType R (AddMonoi
 finite type. -/
 theorem finiteType_iff_group_fg {G : Type _} [AddCommGroup G] [CommRing R] [Nontrivial R] :
     FiniteType R (AddMonoidAlgebra R G) ↔ AddGroup.Fg G := by
-  simpa [AddGroup.FgIffAddMonoid.fg] using finite_type_iff_fg
+  simpa [AddGroup.fg_iff_addMonoid_fg] using finite_type_iff_fg
 #align add_monoid_algebra.finite_type_iff_group_fg AddMonoidAlgebra.finiteType_iff_group_fg
 
 end AddMonoidAlgebra
@@ -643,7 +643,7 @@ theorem fg_of_finiteType [CommRing R] [Nontrivial R] [h : FiniteType R (MonoidAl
 /-- A group `G` is finitely generated if and only if `add_monoid_algebra R G` is of finite type. -/
 theorem finiteType_iff_group_fg {G : Type _} [CommGroup G] [CommRing R] [Nontrivial R] :
     FiniteType R (MonoidAlgebra R G) ↔ Group.Fg G := by
-  simpa [Group.FgIffMonoid.fg] using finite_type_iff_fg
+  simpa [Group.fg_iff_monoid_fg] using finite_type_iff_fg
 #align monoid_algebra.finite_type_iff_group_fg MonoidAlgebra.finiteType_iff_group_fg
 
 end MonoidAlgebra

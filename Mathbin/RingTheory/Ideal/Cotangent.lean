@@ -63,7 +63,7 @@ instance [IsNoetherian R I] : IsNoetherian R I.Cotangent :=
 /-- The quotient map from `I` to `I ⧸ I ^ 2`. -/
 @[simps (config := lemmasOnly) apply]
 def toCotangent : I →ₗ[R] I.Cotangent :=
-  Submodule.mkq _
+  Submodule.mkQ _
 #align ideal.to_cotangent Ideal.toCotangent
 
 theorem map_toCotangent_ker : I.toCotangent.ker.map I.Subtype = I ^ 2 := by
@@ -87,11 +87,11 @@ theorem toCotangent_eq_zero (x : I) : I.toCotangent x = 0 ↔ (x : R) ∈ I ^ 2 
 #align ideal.to_cotangent_eq_zero Ideal.toCotangent_eq_zero
 
 theorem toCotangent_surjective : Function.Surjective I.toCotangent :=
-  Submodule.mkq_surjective _
+  Submodule.mkQ_surjective _
 #align ideal.to_cotangent_surjective Ideal.toCotangent_surjective
 
 theorem toCotangent_range : I.toCotangent.range = ⊤ :=
-  Submodule.range_mkq _
+  Submodule.range_mkQ _
 #align ideal.to_cotangent_range Ideal.toCotangent_range
 
 theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentElem I :=
@@ -109,7 +109,7 @@ theorem cotangent_subsingleton_iff : Subsingleton I.Cotangent ↔ IsIdempotentEl
 
 /-- The inclusion map `I ⧸ I ^ 2` to `R ⧸ I ^ 2`. -/
 def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
-  Submodule.mapq (I • ⊤) (I ^ 2) I.Subtype
+  Submodule.mapQ (I • ⊤) (I ^ 2) I.Subtype
     (by
       rw [← Submodule.map_le_iff_le_comap, Submodule.map_smul'', Submodule.map_top,
         Submodule.range_subtype, smul_eq_mul, pow_two]
@@ -117,13 +117,13 @@ def cotangentToQuotientSquare : I.Cotangent →ₗ[R] R ⧸ I ^ 2 :=
 #align ideal.cotangent_to_quotient_square Ideal.cotangentToQuotientSquare
 
 theorem to_quotient_square_comp_toCotangent :
-    I.cotangentToQuotientSquare.comp I.toCotangent = (I ^ 2).mkq.comp (Submodule.subtype I) :=
+    I.cotangentToQuotientSquare.comp I.toCotangent = (I ^ 2).mkQ.comp (Submodule.subtype I) :=
   LinearMap.ext fun _ => rfl
 #align ideal.to_quotient_square_comp_to_cotangent Ideal.to_quotient_square_comp_toCotangent
 
 @[simp]
 theorem toCotangent_to_quotient_square (x : I) :
-    I.cotangentToQuotientSquare (I.toCotangent x) = (I ^ 2).mkq x :=
+    I.cotangentToQuotientSquare (I.toCotangent x) = (I ^ 2).mkQ x :=
   rfl
 #align ideal.to_cotangent_to_quotient_square Ideal.toCotangent_to_quotient_square
 
@@ -174,7 +174,7 @@ noncomputable def cotangentEquivIdeal : I.Cotangent ≃ₗ[R] I.cotangentIdeal :
     obtain ⟨x, rfl⟩ := I.to_cotangent_surjective x
     obtain ⟨y, rfl⟩ := I.to_cotangent_surjective y
     rw [I.to_cotangent_eq]
-    dsimp only [to_cotangent_to_quotient_square, Submodule.mkq_apply] at e
+    dsimp only [to_cotangent_to_quotient_square, Submodule.mkQ_apply] at e
     rwa [Submodule.Quotient.eq] at e
   · rintro ⟨_, x, hx, rfl⟩
     refine' ⟨I.to_cotangent ⟨x, hx⟩, Subtype.ext rfl⟩
@@ -187,7 +187,7 @@ theorem cotangentEquivIdeal_apply (x : I.Cotangent) :
 #align ideal.cotangent_equiv_ideal_apply Ideal.cotangentEquivIdeal_apply
 
 theorem cotangentEquivIdeal_symm_apply (x : R) (hx : x ∈ I) :
-    I.cotangentEquivIdeal.symm ⟨(I ^ 2).mkq x, Submodule.mem_map_of_mem hx⟩ =
+    I.cotangentEquivIdeal.symm ⟨(I ^ 2).mkQ x, Submodule.mem_map_of_mem hx⟩ =
       I.toCotangent ⟨x, hx⟩ :=
   by
   apply I.cotangent_equiv_ideal.injective

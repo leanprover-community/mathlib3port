@@ -1205,7 +1205,7 @@ simultaneously restricting to `W.dual_annihilator`.
 See `subspace.dual_copairing_nondegenerate`. -/
 def dualCopairing (W : Submodule R M) : W.dualAnnihilator →ₗ[R] M ⧸ W →ₗ[R] R :=
   LinearMap.flip <|
-    W.liftq ((Module.dualPairing R M).domRestrict W.dualAnnihilator).flip
+    W.liftQ ((Module.dualPairing R M).domRestrict W.dualAnnihilator).flip
       (by
         intro w hw
         ext ⟨φ, hφ⟩
@@ -1225,7 +1225,7 @@ is `W.dual_annihilator` by definition).
 
 See `subspace.dual_pairing_nondegenerate`. -/
 def dualPairing (W : Submodule R M) : Module.Dual R M ⧸ W.dualAnnihilator →ₗ[R] W →ₗ[R] R :=
-  W.dualAnnihilator.liftq W.dualRestrict le_rfl
+  W.dualAnnihilator.liftQ W.dualRestrict le_rfl
 #align submodule.dual_pairing Submodule.dualPairing
 
 @[simp]
@@ -1235,7 +1235,7 @@ theorem dualPairing_apply {W : Submodule R M} (φ : Module.Dual R M) (x : W) :
 #align submodule.dual_pairing_apply Submodule.dualPairing_apply
 
 /-- That $\operatorname{im}(q^* : (V/W)^* \to V^*) = \operatorname{ann}(W)$. -/
-theorem range_dualMap_mkq_eq (W : Submodule R M) : W.mkq.dualMap.range = W.dualAnnihilator :=
+theorem range_dualMap_mkQ_eq (W : Submodule R M) : W.mkQ.dualMap.range = W.dualAnnihilator :=
   by
   ext φ
   rw [LinearMap.mem_range]
@@ -1247,7 +1247,7 @@ theorem range_dualMap_mkq_eq (W : Submodule R M) : W.mkq.dualMap.range = W.dualA
     exists W.dual_copairing ⟨φ, hφ⟩
     ext
     rfl
-#align submodule.range_dual_map_mkq_eq Submodule.range_dualMap_mkq_eq
+#align submodule.range_dual_map_mkq_eq Submodule.range_dualMap_mkQ_eq
 
 /-- Equivalence $(M/W)^* \approx \operatorname{ann}(W)$. That is, there is a one-to-one
 correspondence between the dual of `M ⧸ W` and those elements of the dual of `M` that
@@ -1257,8 +1257,8 @@ The inverse of this is `submodule.dual_copairing`. -/
 def dualQuotEquivDualAnnihilator (W : Submodule R M) :
     Module.Dual R (M ⧸ W) ≃ₗ[R] W.dualAnnihilator :=
   LinearEquiv.ofLinear
-    (W.mkq.dualMap.codRestrict W.dualAnnihilator fun φ =>
-      W.range_dualMap_mkq_eq ▸ W.mkq.dualMap.mem_range_self φ)
+    (W.mkQ.dualMap.codRestrict W.dualAnnihilator fun φ =>
+      W.range_dualMap_mkQ_eq ▸ W.mkQ.dualMap.mem_range_self φ)
     W.dualCopairing
     (by
       ext
@@ -1405,7 +1405,7 @@ theorem dualAnnihilator_inf_eq (W W' : Subspace K V₁) :
     (W ⊓ W').dualAnnihilator = W.dualAnnihilator ⊔ W'.dualAnnihilator :=
   by
   refine' le_antisymm _ (sup_dual_annihilator_le_inf W W')
-  let F : V₁ →ₗ[K] (V₁ ⧸ W) × V₁ ⧸ W' := (Submodule.mkq W).Prod (Submodule.mkq W')
+  let F : V₁ →ₗ[K] (V₁ ⧸ W) × V₁ ⧸ W' := (Submodule.mkQ W).Prod (Submodule.mkQ W')
   have : F.ker = W ⊓ W' := by simp only [LinearMap.ker_prod, ker_mkq]
   rw [← this, ← LinearMap.range_dualMap_eq_dualAnnihilator_ker]
   intro φ

@@ -555,7 +555,7 @@ theorem basicOpen_basicOpen_is_basicOpen {X : Scheme} {U : Opens X.carrier} (hU 
   convert inf_le_left using 1
   apply Scheme.basic_open_of_is_unit
   apply
-    Submonoid.leftInv_le_is_unit _
+    Submonoid.leftInv_le_isUnit _
       (IsLocalization.toInvSubmonoid (Submonoid.powers f) (X.presheaf.obj (op <| X.basic_open f))
           _).Prop
 #align algebraic_geometry.basic_open_basic_open_is_basic_open AlgebraicGeometry.basicOpen_basicOpen_is_basicOpen

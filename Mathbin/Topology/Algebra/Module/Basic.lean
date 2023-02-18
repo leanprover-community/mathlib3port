@@ -2753,9 +2753,9 @@ namespace Submodule
 variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [TopologicalSpace M]
   (S : Submodule R M)
 
-theorem isOpenMap_mkq [TopologicalAddGroup M] : IsOpenMap S.mkq :=
+theorem isOpenMap_mkQ [TopologicalAddGroup M] : IsOpenMap S.mkQ :=
   quotientAddGroup.isOpenMap_coe S.toAddSubgroup
-#align submodule.is_open_map_mkq Submodule.isOpenMap_mkq
+#align submodule.is_open_map_mkq Submodule.isOpenMap_mkQ
 
 instance topologicalAddGroup_quotient [TopologicalAddGroup M] : TopologicalAddGroup (M ⧸ S) :=
   topological_add_group_quotient S.toAddSubgroup

@@ -147,24 +147,24 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
 #align dfinsupp.lt_trichotomy_rec dfinsupp.lt_trichotomy_rec
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
-#print Dfinsupp.Lex.decidableLe /-
-irreducible_def Lex.decidableLe : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
+#print Dfinsupp.Lex.decidableLE /-
+irreducible_def Lex.decidableLE : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => isTrue <| Or.inr h) (fun f g h => isTrue <| Or.inl <| congr_arg _ h)
     fun f g h => isFalse fun h' => (lt_irrefl _ (h.trans_le h')).elim
-#align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLe
+#align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLE
 -/
 
-/- warning: dfinsupp.lex.decidable_lt -> Dfinsupp.Lex.decidableLt is a dubious translation:
+/- warning: dfinsupp.lex.decidable_lt -> Dfinsupp.Lex.decidableLT is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Zero.{u2} (α i)] [_inst_2 : LinearOrder.{u1} ι] [_inst_3 : forall (i : ι), LinearOrder.{u2} (α i)], DecidableRel.{succ (max u1 u2)} (Lex.{max u1 u2} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (LT.lt.{max u1 u2} (Lex.{max u1 u2} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (Dfinsupp.Lex.hasLt.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (LinearOrder.toLattice.{u1} ι _inst_2))))) (fun (i : ι) => Preorder.toLT.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (LinearOrder.toLattice.{u2} (α i) (_inst_3 i))))))))
 but is expected to have type
   forall {ι : Type.{u1}} {α : ι -> Type.{u2}} [_inst_1 : forall (i : ι), Zero.{u2} (α i)] [_inst_2 : LinearOrder.{u1} ι] [_inst_3 : forall (i : ι), LinearOrder.{u2} (α i)], DecidableRel.{succ (max u2 u1)} (Lex.{max u2 u1} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (fun (x._@.Mathlib.Data.Dfinsupp.Lex._hyg.1669 : Lex.{max u2 u1} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (x._@.Mathlib.Data.Dfinsupp.Lex._hyg.1671 : Lex.{max u2 u1} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) => LT.lt.{max u1 u2} (Lex.{max u2 u1} (Dfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i))) (Dfinsupp.instLTLexDfinsupp.{u1, u2} ι (fun (i : ι) => α i) (fun (i : ι) => _inst_1 i) (Preorder.toLT.{u1} ι (PartialOrder.toPreorder.{u1} ι (SemilatticeInf.toPartialOrder.{u1} ι (Lattice.toSemilatticeInf.{u1} ι (DistribLattice.toLattice.{u1} ι (instDistribLattice.{u1} ι _inst_2)))))) (fun (i : ι) => Preorder.toLT.{u2} (α i) (PartialOrder.toPreorder.{u2} (α i) (SemilatticeInf.toPartialOrder.{u2} (α i) (Lattice.toSemilatticeInf.{u2} (α i) (DistribLattice.toLattice.{u2} (α i) (instDistribLattice.{u2} (α i) (_inst_3 i)))))))) x._@.Mathlib.Data.Dfinsupp.Lex._hyg.1669 x._@.Mathlib.Data.Dfinsupp.Lex._hyg.1671)
-Case conversion may be inaccurate. Consider using '#align dfinsupp.lex.decidable_lt Dfinsupp.Lex.decidableLtₓ'. -/
+Case conversion may be inaccurate. Consider using '#align dfinsupp.lex.decidable_lt Dfinsupp.Lex.decidableLTₓ'. -/
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
-irreducible_def Lex.decidableLt : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
+irreducible_def Lex.decidableLT : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
   ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h =>
     isFalse h.asymm
-#align dfinsupp.lex.decidable_lt Dfinsupp.Lex.decidableLt
+#align dfinsupp.lex.decidable_lt Dfinsupp.Lex.decidableLT
 
 #print Dfinsupp.Lex.linearOrder /-
 /-- The linear order on `dfinsupp`s obtained by the lexicographic ordering. -/

@@ -262,12 +262,12 @@ variable {M : Type v} [Ring R] [AddCommGroup M] [Module R M]
 
 variable {f : Module.End R M} {p : Submodule R M} (hp : p ≤ p.comap f)
 
-theorem IsNilpotent.mapq (hnp : IsNilpotent f) : IsNilpotent (p.mapq p f hp) :=
+theorem IsNilpotent.mapQ (hnp : IsNilpotent f) : IsNilpotent (p.mapQ p f hp) :=
   by
   obtain ⟨k, hk⟩ := hnp
   use k
   simp [← p.mapq_pow, hk]
-#align module.End.is_nilpotent.mapq Module.End.IsNilpotent.mapq
+#align module.End.is_nilpotent.mapq Module.End.IsNilpotent.mapQ
 
 end Module.End
 

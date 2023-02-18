@@ -204,7 +204,7 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module
     letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i) (pow_ne_zero _ hP)
     letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
     have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
-    suffices hquot : map (P ^ i.succ).mkq (P ^ i) ≃ S ⧸ P
+    suffices hquot : map (P ^ i.succ).mkQ (P ^ i) ≃ S ⧸ P
     · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
         card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
         card_quot_apply P]

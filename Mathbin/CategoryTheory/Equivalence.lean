@@ -1058,14 +1058,14 @@ end IsEquivalence
 
 namespace Equivalence
 
-#print CategoryTheory.Equivalence.ess_surj_of_equivalence /-
+#print CategoryTheory.Equivalence.essSurj_of_equivalence /-
 /-- An equivalence is essentially surjective.
 
 See <https://stacks.math.columbia.edu/tag/02C3>.
 -/
-theorem ess_surj_of_equivalence (F : C ⥤ D) [IsEquivalence F] : EssSurj F :=
+theorem essSurj_of_equivalence (F : C ⥤ D) [IsEquivalence F] : EssSurj F :=
   ⟨fun Y => ⟨F.inv.obj Y, ⟨F.asEquivalence.counitIso.app Y⟩⟩⟩
-#align category_theory.equivalence.ess_surj_of_equivalence CategoryTheory.Equivalence.ess_surj_of_equivalence
+#align category_theory.equivalence.ess_surj_of_equivalence CategoryTheory.Equivalence.essSurj_of_equivalence
 -/
 
 #print CategoryTheory.Equivalence.faithfulOfEquivalence /-

@@ -186,7 +186,7 @@ instance finiteDimensional_submodule [FiniteDimensional K V] (S : Submodule K V)
 /-- A quotient of a finite-dimensional space is also finite-dimensional. -/
 instance finiteDimensional_quotient [FiniteDimensional K V] (S : Submodule K V) :
     FiniteDimensional K (V ⧸ S) :=
-  Module.Finite.of_surjective (Submodule.mkq S) <| surjective_quot_mk _
+  Module.Finite.of_surjective (Submodule.mkQ S) <| surjective_quot_mk _
 #align finite_dimensional.finite_dimensional_quotient FiniteDimensional.finiteDimensional_quotient
 
 variable (K V)

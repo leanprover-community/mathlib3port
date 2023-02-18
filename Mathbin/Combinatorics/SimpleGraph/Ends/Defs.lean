@@ -267,9 +267,9 @@ The functor assigning, to a finite set in `V`, the set of connected components i
 def componentComplFunctor : (Finset V)ᵒᵖ ⥤ Type u
     where
   obj K := G.ComponentCompl K.unop
-  map _ _ f := ComponentCompl.hom (le_ofOp_hom f)
+  map _ _ f := ComponentCompl.hom (le_of_op_hom f)
   map_id' K := funext fun C => C.hom_refl
-  map_comp' K L M h h' := funext fun C => C.hom_trans (le_ofOp_hom h) (le_ofOp_hom h')
+  map_comp' K L M h h' := funext fun C => C.hom_trans (le_of_op_hom h) (le_of_op_hom h')
 #align simple_graph.component_compl_functor SimpleGraph.componentComplFunctor
 
 /-- The end of a graph, defined as the sections of the functor `component_compl_functor` . -/
@@ -280,7 +280,7 @@ def end :=
 
 theorem end_hom_mk_of_mk {s} (sec : s ∈ G.end) {K L : (Finset V)ᵒᵖ} (h : L ⟶ K) {v : V}
     (vnL : v ∉ L.unop) (hs : s L = G.componentComplMk vnL) :
-    s K = G.componentComplMk (Set.not_mem_subset (le_ofOp_hom h) vnL) :=
+    s K = G.componentComplMk (Set.not_mem_subset (le_of_op_hom h) vnL) :=
   by
   rw [← sec h, hs]
   apply component_compl.hom_mk

@@ -36,8 +36,8 @@ variable {R : Type u} [Ring R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 def normalMono (hf : Mono f) : NormalMono f
     where
   z := of R (N ⧸ f.range)
-  g := f.range.mkq
-  w := LinearMap.range_mkq_comp _
+  g := f.range.mkQ
+  w := LinearMap.range_mkQ_comp _
   IsLimit :=/- The following [invalid Lean code](https://github.com/leanprover-community/lean/issues/341)
                 might help you understand what's going on here:
                 ```
@@ -51,7 +51,7 @@ def normalMono (hf : Mono f) : NormalMono f
         _ _ (kernelIsLimit _)
         (LinearEquiv.toModuleIso'
           ((Submodule.quotEquivOfEqBot _ (ker_eq_bot_of_mono _)).symm ≪≫ₗ
-            (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkq _).symm))) <|
+            (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkQ _).symm))) <|
       by
       ext
       rfl

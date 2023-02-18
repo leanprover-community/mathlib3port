@@ -247,7 +247,7 @@ theorem LinearMap.dim_le_of_surjective (f : M →ₗ[R] M₁) (h : Surjective f)
 #align linear_map.dim_le_of_surjective LinearMap.dim_le_of_surjective
 
 theorem dim_quotient_le (p : Submodule R M) : Module.rank R (M ⧸ p) ≤ Module.rank R M :=
-  (mkq p).dim_le_of_surjective (surjective_quot_mk _)
+  (mkQ p).dim_le_of_surjective (surjective_quot_mk _)
 #align dim_quotient_le dim_quotient_le
 
 variable [Nontrivial R]

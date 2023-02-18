@@ -102,7 +102,7 @@ variable (R ι)
 
 /-- The canonical map from a component to the direct limit. -/
 def of (i) : G i →ₗ[R] DirectLimit G f :=
-  (mkq _).comp <| DirectSum.lof R ι G i
+  (mkQ _).comp <| DirectSum.lof R ι G i
 #align module.direct_limit.of Module.DirectLimit.of
 
 variable {R ι G f}
@@ -143,7 +143,7 @@ variable (R ι G f)
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit. -/
 def lift : DirectLimit G f →ₗ[R] P :=
-  liftq _ (DirectSum.toModule R ι P g)
+  liftQ _ (DirectSum.toModule R ι P g)
     (span_le.2 fun a ⟨i, j, hij, x, hx⟩ => by
       rw [← hx, SetLike.mem_coe, LinearMap.sub_mem_ker_iff, DirectSum.toModule_lof,
         DirectSum.toModule_lof, Hg])

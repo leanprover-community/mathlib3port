@@ -41,7 +41,7 @@ variable {Ns : ι → Type _} [∀ i, AddCommGroup (Ns i)] [∀ i, Module R (Ns 
 /-- Lift a family of maps to the direct sum of quotients. -/
 def piQuotientLift [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) (q : Submodule R N)
     (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) : (∀ i, Ms i ⧸ p i) →ₗ[R] N ⧸ q :=
-  lsum R (fun i => Ms i ⧸ p i) R fun i => (p i).mapq q (f i) (hf i)
+  lsum R (fun i => Ms i ⧸ p i) R fun i => (p i).mapQ q (f i) (hf i)
 #align submodule.pi_quotient_lift Submodule.piQuotientLift
 
 @[simp]
@@ -56,7 +56,7 @@ theorem piQuotientLift_mk [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R 
 @[simp]
 theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i))
     (q : Submodule R N) (f : ∀ i, Ms i →ₗ[R] N) (hf : ∀ i, p i ≤ q.comap (f i)) (i)
-    (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapq _ _ (f i) (hf i) x :=
+    (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapQ _ _ (f i) (hf i) x :=
   by
   simp_rw [pi_quotient_lift, lsum_apply, sum_apply, comp_apply, proj_apply]
   rw [Finset.sum_eq_single i]
@@ -71,7 +71,7 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
     (hf : ∀ i, p i ≤ ker (f i)) : (∀ i, Ms i) ⧸ pi Set.univ p →ₗ[R] ∀ i, Ns i :=
-  (pi Set.univ p).liftq (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
+  (pi Set.univ p).liftQ (LinearMap.pi fun i => (f i).comp (proj i)) fun x hx =>
     mem_ker.mpr <| by
       ext i
       simpa using hf i (mem_pi.mp hx i (Set.mem_univ i))
@@ -89,9 +89,9 @@ theorem quotientPiLift_mk (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →�
 def quotientPi [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodule R (Ms i)) :
     ((∀ i, Ms i) ⧸ pi Set.univ p) ≃ₗ[R] ∀ i, Ms i ⧸ p i :=
   {
-    quotientPiLift p (fun i => (p i).mkq) fun i => by
+    quotientPiLift p (fun i => (p i).mkQ) fun i => by
       simp with
-    toFun := quotientPiLift p (fun i => (p i).mkq) fun i => by simp
+    toFun := quotientPiLift p (fun i => (p i).mkQ) fun i => by simp
     invFun := piQuotientLift p (pi Set.univ p) single fun i => le_comap_single_pi p
     left_inv := fun x =>
       Quotient.inductionOn' x fun x' => by

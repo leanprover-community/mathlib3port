@@ -922,7 +922,7 @@ def Derivation.liftKaehlerDifferential (D : Derivation R S M) : Ω[S⁄R] →ₗ
   refine'
     ((KaehlerDifferential.ideal R S • ⊤ :
               Submodule (S ⊗[R] S) (KaehlerDifferential.ideal R S)).restrictScalars
-          S).liftq
+          S).liftQ
       _ _
   · exact D.tensor_product_to.comp ((KaehlerDifferential.ideal R S).Subtype.restrictScalars S)
   · intro x hx
@@ -1132,51 +1132,51 @@ noncomputable def KaehlerDifferential.kerTotal : Submodule S (S →₀ S) :=
 #align kaehler_differential.ker_total KaehlerDifferential.kerTotal
 
 -- mathport name: «expr 𝖣 »
-local notation x "𝖣" y => (KaehlerDifferential.kerTotal R S).mkq (single y x)
+local notation x "𝖣" y => (KaehlerDifferential.kerTotal R S).mkQ (single y x)
 
-theorem KaehlerDifferential.kerTotal_mkq_single_add (x y z) : (z𝖣x + y) = (z𝖣x) + z𝖣y :=
+theorem KaehlerDifferential.kerTotal_mkQ_single_add (x y z) : (z𝖣x + y) = (z𝖣x) + z𝖣y :=
   by
-  rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkq_apply,
+  rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkQ_apply,
     Submodule.Quotient.mk_eq_zero]
   simp_rw [← Finsupp.smul_single_one _ z, ← smul_add, ← smul_sub]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inl <| Or.inl <| ⟨⟨_, _⟩, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_add KaehlerDifferential.kerTotal_mkq_single_add
+#align kaehler_differential.ker_total_mkq_single_add KaehlerDifferential.kerTotal_mkQ_single_add
 
-theorem KaehlerDifferential.kerTotal_mkq_single_mul (x y z) : (z𝖣x * y) = ((z * x)𝖣y) + (z * y)𝖣x :=
+theorem KaehlerDifferential.kerTotal_mkQ_single_mul (x y z) : (z𝖣x * y) = ((z * x)𝖣y) + (z * y)𝖣x :=
   by
-  rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkq_apply,
+  rw [← map_add, eq_comm, ← sub_eq_zero, ← map_sub, Submodule.mkQ_apply,
     Submodule.Quotient.mk_eq_zero]
   simp_rw [← Finsupp.smul_single_one _ z, ← @smul_eq_mul _ _ z, ← Finsupp.smul_single, ← smul_add, ←
     smul_sub]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inl <| Or.inr <| ⟨⟨_, _⟩, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_mul KaehlerDifferential.kerTotal_mkq_single_mul
+#align kaehler_differential.ker_total_mkq_single_mul KaehlerDifferential.kerTotal_mkQ_single_mul
 
-theorem KaehlerDifferential.kerTotal_mkq_single_algebraMap (x y) : (y𝖣algebraMap R S x) = 0 :=
+theorem KaehlerDifferential.kerTotal_mkQ_single_algebraMap (x y) : (y𝖣algebraMap R S x) = 0 :=
   by
-  rw [Submodule.mkq_apply, Submodule.Quotient.mk_eq_zero, ← Finsupp.smul_single_one _ y]
+  rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero, ← Finsupp.smul_single_one _ y]
   exact Submodule.smul_mem _ _ (Submodule.subset_span (Or.inr <| ⟨_, rfl⟩))
-#align kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.kerTotal_mkq_single_algebraMap
+#align kaehler_differential.ker_total_mkq_single_algebra_map KaehlerDifferential.kerTotal_mkQ_single_algebraMap
 
-theorem KaehlerDifferential.kerTotal_mkq_single_algebra_map_one (x) : (x𝖣1) = 0 := by
-  rw [← (algebraMap R S).map_one, KaehlerDifferential.kerTotal_mkq_single_algebraMap]
-#align kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.kerTotal_mkq_single_algebra_map_one
+theorem KaehlerDifferential.kerTotal_mkQ_single_algebra_map_one (x) : (x𝖣1) = 0 := by
+  rw [← (algebraMap R S).map_one, KaehlerDifferential.kerTotal_mkQ_single_algebraMap]
+#align kaehler_differential.ker_total_mkq_single_algebra_map_one KaehlerDifferential.kerTotal_mkQ_single_algebra_map_one
 
-theorem KaehlerDifferential.kerTotal_mkq_single_smul (r : R) (x y) : (y𝖣r • x) = r • y𝖣x := by
-  rw [Algebra.smul_def, KaehlerDifferential.kerTotal_mkq_single_mul,
-    KaehlerDifferential.kerTotal_mkq_single_algebraMap, add_zero, ← LinearMap.map_smul_of_tower,
+theorem KaehlerDifferential.kerTotal_mkQ_single_smul (r : R) (x y) : (y𝖣r • x) = r • y𝖣x := by
+  rw [Algebra.smul_def, KaehlerDifferential.kerTotal_mkQ_single_mul,
+    KaehlerDifferential.kerTotal_mkQ_single_algebraMap, add_zero, ← LinearMap.map_smul_of_tower,
     Finsupp.smul_single, mul_comm, Algebra.smul_def]
-#align kaehler_differential.ker_total_mkq_single_smul KaehlerDifferential.kerTotal_mkq_single_smul
+#align kaehler_differential.ker_total_mkq_single_smul KaehlerDifferential.kerTotal_mkQ_single_smul
 
 /-- The (universal) derivation into `(S →₀ S) ⧸ kaehler_differential.ker_total R S`. -/
 noncomputable def KaehlerDifferential.derivationQuotKerTotal :
     Derivation R S ((S →₀ S) ⧸ KaehlerDifferential.kerTotal R S)
     where
   toFun x := 1𝖣x
-  map_add' x y := KaehlerDifferential.kerTotal_mkq_single_add _ _ _ _ _
-  map_smul' r s := KaehlerDifferential.kerTotal_mkq_single_smul _ _ _ _ _
-  map_one_eq_zero' := KaehlerDifferential.kerTotal_mkq_single_algebra_map_one _ _ _
+  map_add' x y := KaehlerDifferential.kerTotal_mkQ_single_add _ _ _ _ _
+  map_smul' r s := KaehlerDifferential.kerTotal_mkQ_single_smul _ _ _ _ _
+  map_one_eq_zero' := KaehlerDifferential.kerTotal_mkQ_single_algebra_map_one _ _ _
   leibniz' a b :=
-    (KaehlerDifferential.kerTotal_mkq_single_mul _ _ _ _ _).trans
+    (KaehlerDifferential.kerTotal_mkQ_single_mul _ _ _ _ _).trans
       (by
         simp_rw [← Finsupp.smul_single_one _ (1 * _ : S)]
         dsimp
@@ -1191,7 +1191,7 @@ theorem KaehlerDifferential.derivationQuotKerTotal_apply (x) :
 theorem KaehlerDifferential.derivationQuotKerTotal_lift_comp_total :
     (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential.comp
         (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S)) =
-      Submodule.mkq _ :=
+      Submodule.mkQ _ :=
   by
   apply Finsupp.lhom_ext
   intro a b
@@ -1204,7 +1204,7 @@ theorem KaehlerDifferential.kerTotal_eq :
       KaehlerDifferential.kerTotal R S :=
   by
   apply le_antisymm
-  · conv_rhs => rw [← (KaehlerDifferential.kerTotal R S).ker_mkq]
+  · conv_rhs => rw [← (KaehlerDifferential.kerTotal R S).ker_mkQ]
     rw [← KaehlerDifferential.derivationQuotKerTotal_lift_comp_total]
     exact LinearMap.ker_le_ker_comp _ _
   · rw [KaehlerDifferential.kerTotal, Submodule.span_le]
@@ -1221,14 +1221,14 @@ theorem KaehlerDifferential.total_surjective :
 noncomputable def KaehlerDifferential.quotKerTotalEquiv :
     ((S →₀ S) ⧸ KaehlerDifferential.kerTotal R S) ≃ₗ[S] Ω[S⁄R] :=
   {
-    (KaehlerDifferential.kerTotal R S).liftq
+    (KaehlerDifferential.kerTotal R S).liftQ
       (Finsupp.total S (Ω[S⁄R]) S (KaehlerDifferential.d R S))
       (KaehlerDifferential.kerTotal_eq R
           S).ge with
     invFun := (KaehlerDifferential.derivationQuotKerTotal R S).liftKaehlerDifferential
     left_inv := by
       intro x
-      obtain ⟨x, rfl⟩ := Submodule.mkq_surjective _ x
+      obtain ⟨x, rfl⟩ := Submodule.mkQ_surjective _ x
       exact
         LinearMap.congr_fun (KaehlerDifferential.derivationQuotKerTotal_lift_comp_total R S : _) x
     right_inv := by

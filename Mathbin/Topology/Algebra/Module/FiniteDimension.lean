@@ -151,10 +151,10 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
     have hi : Function.Injective (l.ker.liftq l (le_refl _)) :=
       by
       rw [← LinearMap.ker_eq_bot]
-      exact Submodule.ker_liftq_eq_bot _ _ _ (le_refl _)
+      exact Submodule.ker_liftQ_eq_bot _ _ _ (le_refl _)
     have hs : Function.Surjective (l.ker.liftq l (le_refl _)) :=
       by
-      rw [← LinearMap.range_eq_top, Submodule.range_liftq]
+      rw [← LinearMap.range_eq_top, Submodule.range_liftQ]
       exact eq_top_of_finrank_eq ((finrank_self 𝕜).symm ▸ this)
     let φ : (E ⧸ l.ker) ≃ₗ[𝕜] 𝕜 := LinearEquiv.ofBijective (l.ker.liftq l (le_refl _)) ⟨hi, hs⟩
     have hlφ : (l : E → 𝕜) = φ ∘ l.ker.mkq := by ext <;> rfl

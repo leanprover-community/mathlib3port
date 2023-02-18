@@ -352,7 +352,7 @@ theorem Subgroup.fg_iff (P : Subgroup G) :
 
 #print Subgroup.fg_iff_submonoid_fg /-
 /-- A subgroup is finitely generated if and only if it is finitely generated as a submonoid. -/
-@[to_additive AddSubgroup.FgIffAddSubmonoid.fg
+@[to_additive AddSubgroup.fg_iff_addSubmonoid_fg
       "An additive subgroup is finitely generated if\nand only if it is finitely generated as an additive submonoid."]
 theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.Fg ↔ P.toSubmonoid.Fg :=
   by
@@ -368,7 +368,7 @@ theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.Fg ↔ P.toSubmonoid.F
     · rw [← Subgroup.toSubmonoid_le, ← hS, Submonoid.closure_le]
       exact Subgroup.subset_closure
 #align subgroup.fg_iff_submonoid_fg Subgroup.fg_iff_submonoid_fg
-#align add_subgroup.fg_iff_add_submonoid.fg AddSubgroup.FgIffAddSubmonoid.fg
+#align add_subgroup.fg_iff_add_submonoid.fg AddSubgroup.fg_iff_addSubmonoid_fg
 -/
 
 /- warning: subgroup.fg_iff_add_fg -> Subgroup.fg_iff_add_fg is a dubious translation:
@@ -379,7 +379,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align subgroup.fg_iff_add_fg Subgroup.fg_iff_add_fgₓ'. -/
 theorem Subgroup.fg_iff_add_fg (P : Subgroup G) : P.Fg ↔ P.toAddSubgroup.Fg :=
   by
-  rw [Subgroup.fg_iff_submonoid_fg, AddSubgroup.FgIffAddSubmonoid.fg]
+  rw [Subgroup.fg_iff_submonoid_fg, AddSubgroup.fg_iff_addSubmonoid_fg]
   exact (Subgroup.toSubmonoid P).fg_iff_add_fg
 #align subgroup.fg_iff_add_fg Subgroup.fg_iff_add_fg
 
@@ -391,7 +391,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align add_subgroup.fg_iff_mul_fg AddSubgroup.fg_iff_mul_fgₓ'. -/
 theorem AddSubgroup.fg_iff_mul_fg (P : AddSubgroup H) : P.Fg ↔ P.toSubgroup.Fg :=
   by
-  rw [AddSubgroup.FgIffAddSubmonoid.fg, Subgroup.fg_iff_submonoid_fg]
+  rw [AddSubgroup.fg_iff_addSubmonoid_fg, Subgroup.fg_iff_submonoid_fg]
   exact AddSubmonoid.fg_iff_mul_fg (AddSubgroup.toAddSubmonoid P)
 #align add_subgroup.fg_iff_mul_fg AddSubgroup.fg_iff_mul_fg
 
@@ -467,15 +467,15 @@ theorem Group.fg_iff' :
 #align group.fg_iff' Group.fg_iff'
 #align add_group.fg_iff' AddGroup.fg_iff'
 
-#print Group.FgIffMonoid.fg /-
+#print Group.fg_iff_monoid_fg /-
 /-- A group is finitely generated if and only if it is finitely generated as a monoid. -/
-@[to_additive AddGroup.FgIffAddMonoid.fg
+@[to_additive AddGroup.fg_iff_addMonoid_fg
       "An additive group is finitely generated if and only\nif it is finitely generated as an additive monoid."]
-theorem Group.FgIffMonoid.fg : Group.Fg G ↔ Monoid.Fg G :=
+theorem Group.fg_iff_monoid_fg : Group.Fg G ↔ Monoid.Fg G :=
   ⟨fun h => Monoid.fg_def.2 <| (Subgroup.fg_iff_submonoid_fg ⊤).1 (Group.fg_def.1 h), fun h =>
     Group.fg_def.2 <| (Subgroup.fg_iff_submonoid_fg ⊤).2 (Monoid.fg_def.1 h)⟩
-#align group.fg_iff_monoid.fg Group.FgIffMonoid.fg
-#align add_group.fg_iff_add_monoid.fg AddGroup.FgIffAddMonoid.fg
+#align group.fg_iff_monoid.fg Group.fg_iff_monoid_fg
+#align add_group.fg_iff_add_monoid.fg AddGroup.fg_iff_addMonoid_fg
 -/
 
 #print GroupFg.iff_add_fg /-
@@ -522,7 +522,8 @@ Case conversion may be inaccurate. Consider using '#align group.fg_of_surjective
 @[to_additive]
 theorem Group.fg_of_surjective {G' : Type _} [Group G'] [hG : Group.Fg G] {f : G →* G'}
     (hf : Function.Surjective f) : Group.Fg G' :=
-  Group.FgIffMonoid.fg.mpr <| @Monoid.fg_of_surjective G _ G' _ (Group.FgIffMonoid.fg.mp hG) f hf
+  Group.fg_iff_monoid_fg.mpr <|
+    @Monoid.fg_of_surjective G _ G' _ (Group.fg_iff_monoid_fg.mp hG) f hf
 #align group.fg_of_surjective Group.fg_of_surjective
 #align add_group.fg_of_surjective AddGroup.fg_of_surjective
 

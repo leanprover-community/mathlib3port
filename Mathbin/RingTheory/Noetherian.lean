@@ -528,7 +528,7 @@ instance Submodule.Quotient.isNoetherian {R} [Ring R] {M} [AddCommGroup M] [Modu
     (N : Submodule R M) [h : IsNoetherian R M] : IsNoetherian R (M ⧸ N) :=
   by
   rw [isNoetherian_iff_wellFounded] at h⊢
-  exact OrderEmbedding.wellFounded (Submodule.ComapMkq.orderEmbedding N).dual h
+  exact OrderEmbedding.wellFounded (Submodule.comapMkQOrderEmbedding N).dual h
 #align submodule.quotient.is_noetherian Submodule.Quotient.isNoetherian
 
 /-- If `M / S / R` is a scalar tower, and `M / R` is Noetherian, then `M / S` is
