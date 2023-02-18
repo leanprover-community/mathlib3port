@@ -39,6 +39,7 @@ variable (hwf : WellFounded r)
 
 include hwf
 
+#print WellFounded.wellOrderExtension /-
 /-- An arbitrary well order on `α` that extends `r`.
 
 The construction maps `r` into two well-orders: the first map is `well_founded.rank`, which is not
@@ -54,41 +55,58 @@ noncomputable def wellOrderExtension : LinearOrder α :=
   @LinearOrder.lift' α (Ordinal ×ₗ α) _ (fun a : α => (WellFounded.rank.{u} hwf a, a)) fun _ _ =>
     congr_arg Prod.snd
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
+-/
 
+/- warning: well_founded.well_order_extension.is_well_founded_lt -> WellFounded.wellOrderExtension.isWellFounded_lt is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {r : α -> α -> Prop} (hwf : WellFounded.{succ u1} α r), IsWellFounded.{u1} α (LinearOrder.Lt.{u1} α (WellFounded.wellOrderExtension.{u1} α r hwf))
+but is expected to have type
+  forall {α : Type.{u1}} {r : α -> α -> Prop} (hwf : WellFounded.{succ u1} α r), IsWellFounded.{u1} α (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (LinearOrder.toPartialOrder.{u1} α (WellFounded.wellOrderExtension.{u1} α r hwf)))))
+Case conversion may be inaccurate. Consider using '#align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_ltₓ'. -/
 instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
-  ⟨InvImage.wf _ <| Prod.lex_wf Ordinal.wellFoundedLT.wf WellOrderingRel.isWellOrder.wf⟩
+  ⟨InvImage.wf _ <| WellFounded.prod_lex Ordinal.wellFoundedLT.wf WellOrderingRel.isWellOrder.wf⟩
 #align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_lt
 
+#print WellFounded.exists_well_order_ge /-
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/
 theorem exists_well_order_ge : ∃ s, r ≤ s ∧ IsWellOrder α s :=
   ⟨hwf.wellOrderExtension.lt, fun a b h => Prod.Lex.left _ _ (hwf.rank_lt_of_rel h), by constructor⟩
 #align well_founded.exists_well_order_ge WellFounded.exists_well_order_ge
+-/
 
 end WellFounded
 
+#print WellOrderExtension /-
 /-- A type alias for `α`, intended to extend a well-founded order on `α` to a well-order. -/
 def WellOrderExtension (α) : Type _ :=
   α
 #align well_order_extension WellOrderExtension
+-/
 
 instance [Inhabited α] : Inhabited (WellOrderExtension α) :=
   ‹Inhabited (WellOrderExtension α)›
 
+#print toWellOrderExtension /-
 /-- "Identity" equivalence between a well-founded order and its well-order extension. -/
 def toWellOrderExtension : α ≃ WellOrderExtension α :=
   Equiv.refl _
 #align to_well_order_extension toWellOrderExtension
+-/
 
 noncomputable instance [LT α] [WellFoundedLT α] : LinearOrder (WellOrderExtension α) :=
   (IsWellFounded.wf : @WellFounded α (· < ·)).wellOrderExtension
 
+#print WellOrderExtension.wellFoundedLT /-
 instance WellOrderExtension.wellFoundedLT [LT α] [WellFoundedLT α] :
     WellFoundedLT (WellOrderExtension α) :=
   WellFounded.wellOrderExtension.isWellFounded_lt _
 #align well_order_extension.well_founded_lt WellOrderExtension.wellFoundedLT
+-/
 
+#print toWellOrderExtension_strictMono /-
 theorem toWellOrderExtension_strictMono [Preorder α] [WellFoundedLT α] :
     StrictMono (toWellOrderExtension : α → WellOrderExtension α) := fun a b h =>
   Prod.Lex.left _ _ <| WellFounded.rank_lt_of_rel _ h
 #align to_well_order_extension_strict_mono toWellOrderExtension_strictMono
+-/
 

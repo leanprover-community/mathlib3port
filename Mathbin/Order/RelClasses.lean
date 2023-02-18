@@ -632,7 +632,7 @@ instance (priority := 100) IsEmpty.isWellOrder [IsEmpty α] (r : α → α → P
 
 instance Prod.Lex.isWellFounded [IsWellFounded α r] [IsWellFounded β s] :
     IsWellFounded (α × β) (Prod.Lex r s) :=
-  ⟨Prod.lex_wf IsWellFounded.wf IsWellFounded.wf⟩
+  ⟨WellFounded.prod_lex IsWellFounded.wf IsWellFounded.wf⟩
 #align prod.lex.is_well_founded Prod.Lex.isWellFounded
 
 instance Prod.Lex.isWellOrder [IsWellOrder α r] [IsWellOrder β s] :
@@ -655,7 +655,7 @@ instance Prod.Lex.isWellOrder [IsWellOrder α r] [IsWellOrder β s] :
     · exact Prod.Lex.left _ _ ab
     · exact Prod.Lex.left _ _ bc
     · exact Prod.Lex.right _ (trans ab bc)
-  wf := Prod.lex_wf IsWellFounded.wf IsWellFounded.wf
+  wf := WellFounded.prod_lex IsWellFounded.wf IsWellFounded.wf
 #align prod.lex.is_well_order Prod.Lex.isWellOrder
 
 instance InvImage.isWellFounded (r : α → α → Prop) [IsWellFounded α r] (f : β → α) :
