@@ -434,7 +434,7 @@ theorem liftPropWithinAt_congr_of_eventuallyEq (h : LiftPropWithinAt P g s x) (h
     hG.congr_nhds_within' _
       (by simp_rw [Function.comp_apply, (chart_at H x).left_inv (mem_chart_source H x), hx]) h.2
   simp_rw [eventually_eq, Function.comp_apply,
-    (chart_at H x).eventually_nhds_within'
+    (chart_at H x).eventually_nhdsWithin'
       (fun y => chart_at H' (g' x) (g' y) = chart_at H' (g x) (g y)) (mem_chart_source H x)]
   exact h₁.mono fun y hy => by rw [hx, hy]
 #align structure_groupoid.local_invariant_prop.lift_prop_within_at_congr_of_eventually_eq StructureGroupoid.LocalInvariantProp.liftPropWithinAt_congr_of_eventuallyEq

@@ -43,6 +43,12 @@ instance : TopologicalSpace Ordinal.{u} :=
 instance : OrderTopology Ordinal.{u} :=
   ⟨rfl⟩
 
+/- warning: ordinal.is_open_singleton_iff -> Ordinal.isOpen_singleton_iff is a dubious translation:
+lean 3 declaration is
+  forall {a : Ordinal.{u1}}, Iff (IsOpen.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} (Singleton.singleton.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasSingleton.{succ u1} Ordinal.{u1}) a)) (Not (Ordinal.IsLimit.{u1} a))
+but is expected to have type
+  forall {a : Ordinal.{u1}}, Iff (IsOpen.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} (Singleton.singleton.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instSingletonSet.{succ u1} Ordinal.{u1}) a)) (Not (Ordinal.IsLimit.{u1} a))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_open_singleton_iff Ordinal.isOpen_singleton_iffₓ'. -/
 theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
   by
   refine' ⟨fun h ha => _, fun ha => _⟩
@@ -69,6 +75,12 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
     · exact (ha ha').elim
 #align ordinal.is_open_singleton_iff Ordinal.isOpen_singleton_iff
 
+/- warning: ordinal.is_open_iff -> Ordinal.isOpen_iff is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsOpen.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s) (forall (o : Ordinal.{u1}), (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) o s) -> (Ordinal.IsLimit.{u1} o) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => Exists.{0} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) (fun (H : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) => HasSubset.Subset.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasSubset.{succ u1} Ordinal.{u1}) (Set.Ioo.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) a o) s))))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsOpen.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s) (forall (o : Ordinal.{u1}), (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) o s) -> (Ordinal.IsLimit.{u1} o) -> (Exists.{succ (succ u1)} Ordinal.{u1} (fun (a : Ordinal.{u1}) => And (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) (HasSubset.Subset.{succ u1} (Set.{succ u1} Ordinal.{u1}) (Set.instHasSubsetSet.{succ u1} Ordinal.{u1}) (Set.Ioo.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1}) a o) s))))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_open_iff Ordinal.isOpen_iffₓ'. -/
 theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
     refine' ⟨_, fun h => _⟩
@@ -116,6 +128,12 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
         · convert a.prop
 #align ordinal.is_open_iff Ordinal.isOpen_iff
 
+/- warning: ordinal.mem_closure_iff_sup -> Ordinal.mem_closure_iff_sup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) a (closure.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s)) (Exists.{succ (succ u1)} Type.{u1} (fun {ι : Type.{u1}} => Exists.{0} (Nonempty.{succ u1} ι) (fun [_inst_1 : Nonempty.{succ u1} ι] => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (forall (i : ι), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.sup.{u1, u1} ι f) a)))))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, Iff (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a (closure.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s)) (Exists.{succ (succ u1)} Type.{u1} (fun (ι : Type.{u1}) => Exists.{0} (Nonempty.{succ u1} ι) (fun (_inst_1 : Nonempty.{succ u1} ι) => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (forall (i : ι), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.sup.{u1, u1} ι f) a)))))
+Case conversion may be inaccurate. Consider using '#align ordinal.mem_closure_iff_sup Ordinal.mem_closure_iff_supₓ'. -/
 theorem mem_closure_iff_sup :
     a ∈ closure s ↔
       ∃ (ι : Type u)(_ : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a :=
@@ -157,11 +175,23 @@ theorem mem_closure_iff_sup :
     exact ⟨_, hbct ⟨hi, (le_sup.{u, u} f i).trans_lt hac⟩, hf i⟩
 #align ordinal.mem_closure_iff_sup Ordinal.mem_closure_iff_sup
 
+/- warning: ordinal.mem_closed_iff_sup -> Ordinal.mem_closed_iff_sup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (IsClosed.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s) -> (Iff (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) a s) (Exists.{succ (succ u1)} Type.{u1} (fun {ι : Type.{u1}} => Exists.{0} (Nonempty.{succ u1} ι) (fun (hι : Nonempty.{succ u1} ι) => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (forall (i : ι), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.sup.{u1, u1} ι f) a))))))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (IsClosed.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s) -> (Iff (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a s) (Exists.{succ (succ u1)} Type.{u1} (fun (ι : Type.{u1}) => Exists.{0} (Nonempty.{succ u1} ι) (fun (hι : Nonempty.{succ u1} ι) => Exists.{succ (succ u1)} (ι -> Ordinal.{u1}) (fun (f : ι -> Ordinal.{u1}) => And (forall (i : ι), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.sup.{u1, u1} ι f) a))))))
+Case conversion may be inaccurate. Consider using '#align ordinal.mem_closed_iff_sup Ordinal.mem_closed_iff_supₓ'. -/
 theorem mem_closed_iff_sup (hs : IsClosed s) :
     a ∈ s ↔ ∃ (ι : Type u)(hι : Nonempty ι)(f : ι → Ordinal), (∀ i, f i ∈ s) ∧ sup.{u, u} f = a :=
   by rw [← mem_closure_iff_sup, hs.closure_eq]
 #align ordinal.mem_closed_iff_sup Ordinal.mem_closed_iff_sup
 
+/- warning: ordinal.mem_closure_iff_bsup -> Ordinal.mem_closure_iff_bsup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, Iff (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) a (closure.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s)) (Exists.{succ (succ u1)} Ordinal.{u1} (fun {o : Ordinal.{u1}} => Exists.{0} (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (fun (ho : Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) => Exists.{succ (succ u1)} (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{u1}) (fun (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{u1}) => And (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i hi) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.bsup.{u1, u1} o f) a)))))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, Iff (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a (closure.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s)) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Exists.{0} (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.instZeroOrdinal.{u1}))) (fun (ho : Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.instZeroOrdinal.{u1}))) => Exists.{succ (succ u1)} (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) -> Ordinal.{u1}) (fun (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) -> Ordinal.{u1}) => And (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) i o), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i hi) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.bsup.{u1, u1} o f) a)))))
+Case conversion may be inaccurate. Consider using '#align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsupₓ'. -/
 theorem mem_closure_iff_bsup :
     a ∈ closure s ↔
       ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
@@ -175,6 +205,12 @@ theorem mem_closure_iff_bsup :
         rwa [sup_eq_bsup]⟩⟩
 #align ordinal.mem_closure_iff_bsup Ordinal.mem_closure_iff_bsup
 
+/- warning: ordinal.mem_closed_iff_bsup -> Ordinal.mem_closed_iff_bsup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (IsClosed.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s) -> (Iff (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) a s) (Exists.{succ (succ u1)} Ordinal.{u1} (fun {o : Ordinal.{u1}} => Exists.{0} (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) (fun (ho : Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) => Exists.{succ (succ u1)} (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{u1}) (fun (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{u1}) => And (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i hi) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.bsup.{u1, u1} o f) a))))))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (IsClosed.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s) -> (Iff (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a s) (Exists.{succ (succ u1)} Ordinal.{u1} (fun (o : Ordinal.{u1}) => Exists.{0} (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.instZeroOrdinal.{u1}))) (fun (ho : Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.instZeroOrdinal.{u1}))) => Exists.{succ (succ u1)} (forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) -> Ordinal.{u1}) (fun (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) -> Ordinal.{u1}) => And (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) i o), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i hi) s) (Eq.{succ (succ u1)} Ordinal.{u1} (Ordinal.bsup.{u1, u1} o f) a))))))
+Case conversion may be inaccurate. Consider using '#align ordinal.mem_closed_iff_bsup Ordinal.mem_closed_iff_bsupₓ'. -/
 theorem mem_closed_iff_bsup (hs : IsClosed s) :
     a ∈ s ↔
       ∃ (o : Ordinal)(ho : o ≠ 0)(f : ∀ a < o, Ordinal),
@@ -182,6 +218,12 @@ theorem mem_closed_iff_bsup (hs : IsClosed s) :
   by rw [← mem_closure_iff_bsup, hs.closure_eq]
 #align ordinal.mem_closed_iff_bsup Ordinal.mem_closed_iff_bsup
 
+/- warning: ordinal.is_closed_iff_sup -> Ordinal.isClosed_iff_sup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsClosed.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s) (forall {ι : Type.{u1}}, (Nonempty.{succ u1} ι) -> (forall (f : ι -> Ordinal.{u1}), (forall (i : ι), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i) s) -> (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (Ordinal.sup.{u1, u1} ι f) s)))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsClosed.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s) (forall {ι : Type.{u1}}, (Nonempty.{succ u1} ι) -> (forall (f : ι -> Ordinal.{u1}), (forall (i : ι), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i) s) -> (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (Ordinal.sup.{u1, u1} ι f) s)))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_closed_iff_sup Ordinal.isClosed_iff_supₓ'. -/
 theorem isClosed_iff_sup :
     IsClosed s ↔
       ∀ {ι : Type u} (hι : Nonempty ι) (f : ι → Ordinal), (∀ i, f i ∈ s) → sup.{u, u} f ∈ s :=
@@ -193,6 +235,12 @@ theorem isClosed_iff_sup :
   exact h hι f hf
 #align ordinal.is_closed_iff_sup Ordinal.isClosed_iff_sup
 
+/- warning: ordinal.is_closed_iff_bsup -> Ordinal.isClosed_iff_bsup is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsClosed.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s) (forall {o : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (OfNat.mk.{succ u1} Ordinal.{u1} 0 (Zero.zero.{succ u1} Ordinal.{u1} Ordinal.hasZero.{u1})))) -> (forall (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) a o) -> Ordinal.{u1}), (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (f i hi) s) -> (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) (Ordinal.bsup.{u1, u1} o f) s)))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}}, Iff (IsClosed.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s) (forall {o : Ordinal.{u1}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.instZeroOrdinal.{u1}))) -> (forall (f : forall (a : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) a o) -> Ordinal.{u1}), (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) i o), Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (f i hi) s) -> (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) (Ordinal.bsup.{u1, u1} o f) s)))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_closed_iff_bsup Ordinal.isClosed_iff_bsupₓ'. -/
 theorem isClosed_iff_bsup :
     IsClosed s ↔
       ∀ {o : Ordinal} (ho : o ≠ 0) (f : ∀ a < o, Ordinal),
@@ -206,6 +254,12 @@ theorem isClosed_iff_bsup :
     exact fun i hi => hf _
 #align ordinal.is_closed_iff_bsup Ordinal.isClosed_iff_bsup
 
+/- warning: ordinal.is_limit_of_mem_frontier -> Ordinal.isLimit_of_mem_frontier is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (Membership.Mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.hasMem.{succ u1} Ordinal.{u1}) a (frontier.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s)) -> (Ordinal.IsLimit.{u1} a)
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}} {a : Ordinal.{u1}}, (Membership.mem.{succ u1, succ u1} Ordinal.{u1} (Set.{succ u1} Ordinal.{u1}) (Set.instMembershipSet.{succ u1} Ordinal.{u1}) a (frontier.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s)) -> (Ordinal.IsLimit.{u1} a)
+Case conversion may be inaccurate. Consider using '#align ordinal.is_limit_of_mem_frontier Ordinal.isLimit_of_mem_frontierₓ'. -/
 theorem isLimit_of_mem_frontier (ha : a ∈ frontier s) : IsLimit a :=
   by
   simp only [frontier_eq_closure_inter_closure, Set.mem_inter_iff, mem_closure_iff] at ha
@@ -218,6 +272,12 @@ theorem isLimit_of_mem_frontier (ha : a ∈ frontier s) : IsLimit a :=
   exact hc' hb'
 #align ordinal.is_limit_of_mem_frontier Ordinal.isLimit_of_mem_frontier
 
+/- warning: ordinal.is_normal_iff_strict_mono_and_continuous -> Ordinal.isNormal_iff_strictMono_and_continuous is a dubious translation:
+lean 3 declaration is
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}), Iff (Ordinal.IsNormal.{u1, u1} f) (And (StrictMono.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}) f) (Continuous.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} Ordinal.topologicalSpace.{u1} f))
+but is expected to have type
+  forall (f : Ordinal.{u1} -> Ordinal.{u1}), Iff (Ordinal.IsNormal.{u1, u1} f) (And (StrictMono.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1}) (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1}) f) (Continuous.{succ u1, succ u1} Ordinal.{u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} f))
+Case conversion may be inaccurate. Consider using '#align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.isNormal_iff_strictMono_and_continuousₓ'. -/
 theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u}) :
     IsNormal f ↔ StrictMono f ∧ Continuous f :=
   by
@@ -243,6 +303,12 @@ theorem isNormal_iff_strictMono_and_continuous (f : Ordinal.{u} → Ordinal.{u})
         sup_typein_limit ho.2⟩
 #align ordinal.is_normal_iff_strict_mono_and_continuous Ordinal.isNormal_iff_strictMono_and_continuous
 
+/- warning: ordinal.enum_ord_is_normal_iff_is_closed -> Ordinal.enumOrd_isNormal_iff_isClosed is a dubious translation:
+lean 3 declaration is
+  forall {s : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1}))) s) -> (Iff (Ordinal.IsNormal.{u1, u1} (Ordinal.enumOrd.{u1} s)) (IsClosed.{succ u1} Ordinal.{u1} Ordinal.topologicalSpace.{u1} s))
+but is expected to have type
+  forall {s : Set.{succ u1} Ordinal.{u1}}, (Set.Unbounded.{succ u1} Ordinal.{u1} (fun (x._@.Mathlib.SetTheory.Ordinal.Topology._hyg.2433 : Ordinal.{u1}) (x._@.Mathlib.SetTheory.Ordinal.Topology._hyg.2435 : Ordinal.{u1}) => LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.instPartialOrderOrdinal.{u1})) x._@.Mathlib.SetTheory.Ordinal.Topology._hyg.2433 x._@.Mathlib.SetTheory.Ordinal.Topology._hyg.2435) s) -> (Iff (Ordinal.IsNormal.{u1, u1} (Ordinal.enumOrd.{u1} s)) (IsClosed.{succ u1} Ordinal.{u1} Ordinal.instTopologicalSpaceOrdinal.{u1} s))
+Case conversion may be inaccurate. Consider using '#align ordinal.enum_ord_is_normal_iff_is_closed Ordinal.enumOrd_isNormal_iff_isClosedₓ'. -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (b «expr < » a) -/
 theorem enumOrd_isNormal_iff_isClosed (hs : s.Unbounded (· < ·)) :
     IsNormal (enumOrd s) ↔ IsClosed s :=

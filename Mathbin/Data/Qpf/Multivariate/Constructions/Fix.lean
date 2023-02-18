@@ -78,7 +78,7 @@ def recF {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) : q.p.W �
 theorem recF_eq {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (a : q.p.A)
     (f' : q.p.drop.B a ⟹ α) (f : q.p.getLast.B a → q.p.W α) :
     recF g (q.p.wMk a f' f) = g (abs ⟨a, splitFun f' (recF g ∘ f)⟩) := by
-  rw [recF, Mvpfunctor.wRec_eq] <;> rfl
+  rw [recF, MvPFunctor.wRec_eq] <;> rfl
 #align mvqpf.recF_eq Mvqpf.recF_eq
 
 theorem recF_eq' {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (x : q.p.W α) :
@@ -86,7 +86,7 @@ theorem recF_eq' {α : TypeVec n} {β : Type _} (g : F (α.append1 β) → β) (
   by
   apply q.P.W_cases _ x
   intro a f' f
-  rw [recF_eq, q.P.W_dest'_W_mk, Mvpfunctor.map_eq, append_fun_comp_split_fun, TypeVec.id_comp]
+  rw [recF_eq, q.P.W_dest'_W_mk, MvPFunctor.map_eq, append_fun_comp_split_fun, TypeVec.id_comp]
 #align mvqpf.recF_eq' Mvqpf.recF_eq'
 
 /-- Equivalence relation on W-types that represent the same `fix F`
@@ -112,7 +112,7 @@ theorem recF_eq_of_wequiv (α : TypeVec n) {β : Type _} (u : F (α.append1 β) 
   intro a₁ f'₁ f₁
   intro h; induction h
   case ind a f' f₀ f₁ h ih => simp only [recF_eq, Function.comp, ih]
-  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, Mvpfunctor.wDest'_wMk, h]
+  case abs a₀ f'₀ f₀ a₁ f'₁ f₁ h => simp only [recF_eq', abs_map, MvPFunctor.wDest'_wMk, h]
   case trans x y z e₁ e₂ ih₁ ih₂ => exact Eq.trans ih₁ ih₂
 #align mvqpf.recF_eq_of_Wequiv Mvqpf.recF_eq_of_wequiv
 
@@ -156,7 +156,7 @@ theorem wrepr_equiv {α : TypeVec n} (x : q.p.W α) : Wequiv (wrepr x) x :=
   apply Wequiv.trans _ (q.P.W_mk' (append_fun id Wrepr <$$> ⟨a, q.P.append_contents f' f⟩))
   · apply Wequiv.abs'
     rw [Wrepr_W_mk, q.P.W_dest'_W_mk', q.P.W_dest'_W_mk', abs_repr]
-  rw [q.P.map_eq, Mvpfunctor.wMk', append_fun_comp_split_fun, id_comp]
+  rw [q.P.map_eq, MvPFunctor.wMk', append_fun_comp_split_fun, id_comp]
   apply Wequiv.ind; exact ih
 #align mvqpf.Wrepr_equiv Mvqpf.wrepr_equiv
 
@@ -241,8 +241,8 @@ theorem Fix.rec_eq {β : Type u} (g : F (append1 α β) → β) (x : F (append1 
     rw [fix.rec, fix.mk]
     dsimp
   cases' h : repr x with a f
-  rw [Mvpfunctor.map_eq, recF_eq', ← Mvpfunctor.map_eq, Mvpfunctor.wDest'_wMk']
-  rw [← Mvpfunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
+  rw [MvPFunctor.map_eq, recF_eq', ← MvPFunctor.map_eq, MvPFunctor.wDest'_wMk']
+  rw [← MvPFunctor.comp_map, abs_map, ← h, abs_repr, ← append_fun_comp, id_comp, this]
 #align mvqpf.fix.rec_eq Mvqpf.Fix.rec_eq
 
 theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.getLast.B a → q.p.W α) :
@@ -251,11 +251,11 @@ theorem Fix.ind_aux (a : q.p.A) (f' : q.p.drop.B a ⟹ α) (f : q.p.getLast.B a 
   have : Fix.mk (abs ⟨a, q.p.appendContents f' fun x => ⟦f x⟧⟩) = ⟦wrepr (q.p.wMk a f' f)⟧ :=
     by
     apply Quot.sound; apply Wequiv.abs'
-    rw [Mvpfunctor.wDest'_wMk', abs_map, abs_repr, ← abs_map, Mvpfunctor.map_eq]
+    rw [MvPFunctor.wDest'_wMk', abs_map, abs_repr, ← abs_map, MvPFunctor.map_eq]
     conv =>
       rhs
-      rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, Mvpfunctor.map_eq]
-    congr 2; rw [Mvpfunctor.appendContents, Mvpfunctor.appendContents]
+      rw [Wrepr_W_mk, q.P.W_dest'_W_mk', abs_repr, MvPFunctor.map_eq]
+    congr 2; rw [MvPFunctor.appendContents, MvPFunctor.appendContents]
     rw [append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
     rfl
   rw [this]
@@ -275,9 +275,9 @@ theorem Fix.ind_rec {β : Type _} (g₁ g₂ : Fix F α → β)
   show g₁ ⟦q.P.W_mk a f' f⟧ = g₂ ⟦q.P.W_mk a f' f⟧
   rw [← fix.ind_aux a f' f]
   apply h
-  rw [← abs_map, ← abs_map, Mvpfunctor.map_eq, Mvpfunctor.map_eq]
+  rw [← abs_map, ← abs_map, MvPFunctor.map_eq, MvPFunctor.map_eq]
   congr 2
-  rw [Mvpfunctor.appendContents, append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
+  rw [MvPFunctor.appendContents, append_fun, append_fun, ← split_fun_comp, ← split_fun_comp]
   have : (g₁ ∘ fun x => ⟦f x⟧) = g₂ ∘ fun x => ⟦f x⟧ :=
     by
     ext x

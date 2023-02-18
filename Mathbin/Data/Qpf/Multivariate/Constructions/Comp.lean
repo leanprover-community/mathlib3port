@@ -36,7 +36,7 @@ def Comp (v : TypeVec.{u} m) : Type _ :=
 
 namespace Comp
 
-open MvFunctor Mvpfunctor
+open MvFunctor MvPFunctor
 
 variable {F G} {α β : TypeVec.{u} m} (f : α ⟹ β)
 
@@ -92,10 +92,10 @@ include q q'
 
 instance : Mvqpf (Comp F G)
     where
-  p := Mvpfunctor.comp (p F) fun i => p <| G i
-  abs α := Comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get
+  p := MvPFunctor.comp (p F) fun i => p <| G i
+  abs α := Comp.mk ∘ (map fun i => abs) ∘ abs ∘ MvPFunctor.comp.get
   repr α :=
-    Mvpfunctor.comp.mk ∘
+    MvPFunctor.comp.mk ∘
       repr ∘ (map fun i => (repr : G i α → (fun i : Fin2 n => Obj (p (G i)) α) i)) ∘ Comp.get
   abs_repr := by
     intros
@@ -104,7 +104,7 @@ instance : Mvqpf (Comp F G)
     intros
     simp [(· ∘ ·)]
     rw [← abs_map]
-    simp [MvFunctor.id_map, (· ⊚ ·), map_mk, Mvpfunctor.comp.get_map, abs_map, MvFunctor.map_map,
+    simp [MvFunctor.id_map, (· ⊚ ·), map_mk, MvPFunctor.comp.get_map, abs_map, MvFunctor.map_map,
       abs_repr]
 
 end Comp

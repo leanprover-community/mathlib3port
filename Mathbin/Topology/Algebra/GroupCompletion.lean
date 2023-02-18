@@ -40,7 +40,7 @@ variable {M R α β : Type _}
 
 section Group
 
-open UniformSpace CauchyCat Filter Set
+open UniformSpace CauchyFilter Filter Set
 
 variable [UniformSpace α]
 
@@ -166,7 +166,7 @@ instance : AddGroup (Completion α) :=
           rfl }
 
 instance : UniformAddGroup (Completion α) :=
-  ⟨uniform_continuous_map₂ Sub.sub⟩
+  ⟨uniformContinuous_map₂ Sub.sub⟩
 
 instance {M} [Monoid M] [DistribMulAction M α] [HasUniformContinuousConstSmul M α] :
     DistribMulAction M (Completion α) :=

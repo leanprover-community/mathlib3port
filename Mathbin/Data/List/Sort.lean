@@ -169,7 +169,7 @@ variable {n : ℕ} {α : Type uu} [Preorder α] {f : Fin n → α}
 lean 3 declaration is
   forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, Iff (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) _inst_1 f) (List.Sorted.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (List.ofFn.{u1} α n f))
 but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, Iff (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1083 : α) (x._@.Mathlib.Data.List.Sort._hyg.1085 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1083 x._@.Mathlib.Data.List.Sort._hyg.1085) (List.ofFn.{u1} α n f))
+  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, Iff (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1422 : α) (x._@.Mathlib.Data.List.Sort._hyg.1424 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1422 x._@.Mathlib.Data.List.Sort._hyg.1424) (List.ofFn.{u1} α n f))
 Case conversion may be inaccurate. Consider using '#align list.monotone_iff_of_fn_sorted List.monotone_iff_ofFn_sortedₓ'. -/
 /-- A tuple is monotone if and only if the list obtained from it is sorted. -/
 theorem monotone_iff_ofFn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) :=
@@ -178,16 +178,16 @@ theorem monotone_iff_ofFn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) :=
   exact ⟨fun h i j hj hij => h <| fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
 #align list.monotone_iff_of_fn_sorted List.monotone_iff_ofFn_sorted
 
-/- warning: list.monotone.of_fn_sorted -> List.Monotone.ofFn_sorted is a dubious translation:
+/- warning: list.monotone.of_fn_sorted -> Monotone.ofFn_sorted is a dubious translation:
 lean 3 declaration is
   forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.partialOrder n)) _inst_1 f) -> (List.Sorted.{u1} α (LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1)) (List.ofFn.{u1} α n f))
 but is expected to have type
-  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) -> (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1223 : α) (x._@.Mathlib.Data.List.Sort._hyg.1225 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1223 x._@.Mathlib.Data.List.Sort._hyg.1225) (List.ofFn.{u1} α n f))
-Case conversion may be inaccurate. Consider using '#align list.monotone.of_fn_sorted List.Monotone.ofFn_sortedₓ'. -/
+  forall {n : Nat} {α : Type.{u1}} [_inst_1 : Preorder.{u1} α] {f : (Fin n) -> α}, (Monotone.{0, u1} (Fin n) α (PartialOrder.toPreorder.{0} (Fin n) (Fin.instPartialOrderFin n)) _inst_1 f) -> (List.Sorted.{u1} α (fun (x._@.Mathlib.Data.List.Sort._hyg.1381 : α) (x._@.Mathlib.Data.List.Sort._hyg.1383 : α) => LE.le.{u1} α (Preorder.toLE.{u1} α _inst_1) x._@.Mathlib.Data.List.Sort._hyg.1381 x._@.Mathlib.Data.List.Sort._hyg.1383) (List.ofFn.{u1} α n f))
+Case conversion may be inaccurate. Consider using '#align list.monotone.of_fn_sorted Monotone.ofFn_sortedₓ'. -/
 /-- The list obtained from a monotone tuple is sorted. -/
 theorem Monotone.ofFn_sorted (h : Monotone f) : (ofFn f).Sorted (· ≤ ·) :=
   monotone_iff_ofFn_sorted.1 h
-#align list.monotone.of_fn_sorted List.Monotone.ofFn_sorted
+#align list.monotone.of_fn_sorted Monotone.ofFn_sorted
 
 end Monotone
 

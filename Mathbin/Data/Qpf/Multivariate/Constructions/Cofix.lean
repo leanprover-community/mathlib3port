@@ -50,7 +50,7 @@ open MvFunctor
 
 namespace Mvqpf
 
-open TypeVec Mvpfunctor
+open TypeVec MvPFunctor
 
 open MvFunctor (Liftp Liftr)
 
@@ -292,7 +292,7 @@ theorem Cofix.bisim {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)
   apply cofix.bisim_rel
   intro x y rxy
   rcases(liftr_iff (rel_last α r) _ _).mp (h x y rxy) with ⟨a, f₀, f₁, dxeq, dyeq, h'⟩
-  rw [dxeq, dyeq, ← abs_map, ← abs_map, Mvpfunctor.map_eq, Mvpfunctor.map_eq]
+  rw [dxeq, dyeq, ← abs_map, ← abs_map, MvPFunctor.map_eq, MvPFunctor.map_eq]
   rw [← split_drop_fun_last_fun f₀, ← split_drop_fun_last_fun f₁]
   rw [append_fun_comp_split_fun, append_fun_comp_split_fun]
   rw [id_comp, id_comp]

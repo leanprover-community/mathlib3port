@@ -86,7 +86,7 @@ open MvFunctor
 /-- Multivariate quotients of polynomial functors.
 -/
 class Mvqpf {n : ℕ} (F : TypeVec.{u} n → Type _) [MvFunctor F] where
-  p : Mvpfunctor.{u} n
+  p : MvPFunctor.{u} n
   abs : ∀ {α}, P.Obj α → F α
   repr : ∀ {α}, F α → P.Obj α
   abs_repr : ∀ {α} (x : F α), abs (repr x) = x
@@ -275,7 +275,7 @@ theorem liftP_iff_of_isUniform (h : q.IsUniform) {α : TypeVec n} (x : F α) (p 
 theorem supp_map (h : q.IsUniform) {α β : TypeVec n} (g : α ⟹ β) (x : F α) (i) :
     supp (g <$$> x) i = g i '' supp x i :=
   by
-  rw [← abs_repr x]; cases' repr x with a f; rw [← abs_map, Mvpfunctor.map_eq]
+  rw [← abs_repr x]; cases' repr x with a f; rw [← abs_map, MvPFunctor.map_eq]
   rw [supp_eq_of_is_uniform h, supp_eq_of_is_uniform h, ← image_comp]
   rfl
 #align mvqpf.supp_map Mvqpf.supp_map
@@ -284,10 +284,10 @@ theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform :=
   by
   constructor
   · intro h α a a' f f' h' i
-    rw [← Mvpfunctor.supp_eq, ← Mvpfunctor.supp_eq, ← h, h', h]
+    rw [← MvPFunctor.supp_eq, ← MvPFunctor.supp_eq, ← h, h', h]
   · rintro h α ⟨a, f⟩
     ext
-    rwa [supp_eq_of_is_uniform, Mvpfunctor.supp_eq]
+    rwa [supp_eq_of_is_uniform, MvPFunctor.supp_eq]
 #align mvqpf.supp_preservation_iff_uniform Mvqpf.suppPreservation_iff_uniform
 
 theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpPreservation :=
@@ -297,7 +297,7 @@ theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpP
     have h' := h
     rw [supp_preservation_iff_uniform] at h'
     dsimp only [supp_preservation, supp] at h
-    simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, Mvpfunctor.liftP_iff', h',
+    simp only [liftp_iff_of_is_uniform, supp_eq_of_is_uniform, MvPFunctor.liftP_iff', h',
       image_univ, mem_range, exists_imp]
     constructor <;> intros <;> subst_vars <;> solve_by_elim
   · rintro α ⟨a, f⟩

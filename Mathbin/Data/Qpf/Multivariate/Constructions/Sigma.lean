@@ -55,7 +55,7 @@ instance : MvFunctor (Sigma F) where map := fun α β f ⟨a, x⟩ => ⟨a, f <$
 variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent sum -/
-protected def p : Mvpfunctor n :=
+protected def p : MvPFunctor n :=
   ⟨Σa, (p (F a)).A, fun x => (p (F x.1)).B x.2⟩
 #align mvqpf.sigma.P Mvqpf.Sigma.p
 
@@ -77,8 +77,8 @@ instance : Mvqpf (Sigma F) where
   repr := Sigma.repr F
   abs_repr := by rintro α ⟨x, f⟩ <;> simp [sigma.repr, sigma.abs, abs_repr]
   abs_map := by
-    rintro α β f ⟨x, g⟩ <;> simp [sigma.abs, Mvpfunctor.map_eq] <;>
-      simp [(· <$$> ·), mvfunctor._match_1, ← abs_map, ← Mvpfunctor.map_eq]
+    rintro α β f ⟨x, g⟩ <;> simp [sigma.abs, MvPFunctor.map_eq] <;>
+      simp [(· <$$> ·), mvfunctor._match_1, ← abs_map, ← MvPFunctor.map_eq]
 
 end Sigma
 
@@ -89,7 +89,7 @@ instance : MvFunctor (Pi F) where map α β f x a := f <$$> x a
 variable [∀ α, Mvqpf <| F α]
 
 /-- polynomial functor representation of a dependent product -/
-protected def p : Mvpfunctor n :=
+protected def p : MvPFunctor n :=
   ⟨∀ a, (p (F a)).A, fun x i => Σa : A, (p (F a)).B (x a) i⟩
 #align mvqpf.pi.P Mvqpf.Pi.p
 
@@ -109,9 +109,9 @@ instance : Mvqpf (Pi F) where
   repr := Pi.repr F
   abs_repr := by rintro α f <;> ext <;> simp [pi.repr, pi.abs, abs_repr]
   abs_map := by
-    rintro α β f ⟨x, g⟩ <;> simp only [pi.abs, Mvpfunctor.map_eq] <;> ext <;>
+    rintro α β f ⟨x, g⟩ <;> simp only [pi.abs, MvPFunctor.map_eq] <;> ext <;>
           simp only [(· <$$> ·)] <;>
-        simp only [← abs_map, Mvpfunctor.map_eq] <;>
+        simp only [← abs_map, MvPFunctor.map_eq] <;>
       rfl
 
 end Pi

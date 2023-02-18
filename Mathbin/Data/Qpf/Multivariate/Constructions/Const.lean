@@ -42,7 +42,7 @@ instance Const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
 
 namespace Const
 
-open MvFunctor Mvpfunctor
+open MvFunctor MvPFunctor
 
 variable {n} {A : Type u} {α β : TypeVec.{u} n} (f : α ⟹ β)
 
@@ -82,9 +82,9 @@ theorem get_map (x : (Const n A) α) : Const.get (f <$$> x) = Const.get x :=
 
 instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor
     where
-  p := Mvpfunctor.const n A
-  abs α x := Mvpfunctor.const.get x
-  repr α x := Mvpfunctor.const.mk n x
+  p := MvPFunctor.const n A
+  abs α x := MvPFunctor.const.get x
+  repr α x := MvPFunctor.const.mk n x
   abs_repr := by intros <;> simp
   abs_map := by intros <;> simp <;> rfl
 #align mvqpf.const.mvqpf Mvqpf.Const.mvqpf
