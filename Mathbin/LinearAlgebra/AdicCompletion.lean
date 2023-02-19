@@ -127,9 +127,9 @@ protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleto
 
 variable (M)
 
-instance (priority := 100) ofSubsingleton [Subsingleton M] : IsHausdorff I M :=
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
   ⟨fun x _ => Subsingleton.elim _ _⟩
-#align is_Hausdorff.of_subsingleton IsHausdorff.ofSubsingleton
+#align is_Hausdorff.of_subsingleton IsHausdorff.of_subsingleton
 
 variable {I M}
 
@@ -219,9 +219,9 @@ instance top : IsPrecomplete (⊤ : Ideal R) M :=
       exact Smodeq.top⟩⟩
 #align is_precomplete.top IsPrecomplete.top
 
-instance (priority := 100) ofSubsingleton [Subsingleton M] : IsPrecomplete I M :=
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsPrecomplete I M :=
   ⟨fun f hf => ⟨0, fun n => by rw [Subsingleton.elim (f n) 0]⟩⟩
-#align is_precomplete.of_subsingleton IsPrecomplete.ofSubsingleton
+#align is_precomplete.of_subsingleton IsPrecomplete.of_subsingleton
 
 end IsPrecomplete
 
@@ -301,8 +301,8 @@ protected theorem subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingl
   h.1.Subsingleton
 #align is_adic_complete.subsingleton IsAdicComplete.subsingleton
 
-instance (priority := 100) ofSubsingleton [Subsingleton M] : IsAdicComplete I M where
-#align is_adic_complete.of_subsingleton IsAdicComplete.ofSubsingleton
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M where
+#align is_adic_complete.of_subsingleton IsAdicComplete.of_subsingleton
 
 open BigOperators
 

@@ -71,7 +71,7 @@ theorem IsIntegralClosure.range_le_span_dualBasis [IsSeparable K L] {ι : Type _
   by
   let db := (trace_form K L).dualBasis (traceFormNondegenerate K L) b
   rintro _ ⟨x, rfl⟩
-  simp only [LinearMap.coe_restrictScalars_eq_coe, Algebra.linearMap_apply]
+  simp only [LinearMap.coe_restrictScalars, Algebra.linearMap_apply]
   have hx : IsIntegral A (algebraMap C L x) := (IsIntegralClosure.isIntegral A L x).algebraMap
   rsuffices ⟨c, x_eq⟩ : ∃ c : ι → A, algebraMap C L x = ∑ i, c i • db i
   · rw [x_eq]

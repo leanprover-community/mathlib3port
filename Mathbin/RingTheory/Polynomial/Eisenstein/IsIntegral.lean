@@ -44,7 +44,7 @@ local notation "𝓟" => Submodule.span ℤ {p}
 
 open Polynomial
 
-theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
+theorem cyclotomic_comp_x_add_one_isEisensteinAt [hp : Fact p.Prime] :
     ((cyclotomic p ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
@@ -78,9 +78,9 @@ theorem cyclotomicCompXAddOneIsEisensteinAt [hp : Fact p.Prime] :
     nth_rw 1 [← Nat.mul_one p] at hk
     rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
-#align cyclotomic_comp_X_add_one_is_eisenstein_at cyclotomicCompXAddOneIsEisensteinAt
+#align cyclotomic_comp_X_add_one_is_eisenstein_at cyclotomic_comp_x_add_one_isEisensteinAt
 
-theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ) :
+theorem cyclotomic_prime_pow_comp_x_add_one_isEisensteinAt [hp : Fact p.Prime] (n : ℕ) :
     ((cyclotomic (p ^ (n + 1)) ℤ).comp (x + 1)).IsEisensteinAt 𝓟 :=
   by
   refine'
@@ -96,7 +96,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
   · induction' n with n hn
     · intro i hi
       rw [zero_add, pow_one] at hi⊢
-      exact (cyclotomicCompXAddOneIsEisensteinAt p).Mem hi
+      exact (cyclotomic_comp_x_add_one_isEisensteinAt p).Mem hi
     · intro i hi
       rw [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ← ZMod.int_coe_zMod_eq_zero_iff_dvd, ←
         Int.coe_castRingHom, ← coeff_map, map_comp, map_cyclotomic, Polynomial.map_add, map_X,
@@ -125,7 +125,7 @@ theorem cyclotomicPrimePowCompXAddOneIsEisensteinAt [hp : Fact p.Prime] (n : ℕ
     nth_rw 1 [← Nat.mul_one p] at hk
     rw [mul_right_inj' hp.out.ne_zero] at hk
     exact Nat.Prime.not_dvd_one hp.out (Dvd.intro k hk.symm)
-#align cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at cyclotomicPrimePowCompXAddOneIsEisensteinAt
+#align cyclotomic_prime_pow_comp_X_add_one_is_eisenstein_at cyclotomic_prime_pow_comp_x_add_one_isEisensteinAt
 
 end Cyclotomic
 

@@ -246,7 +246,7 @@ Case conversion may be inaccurate. Consider using '#align direct_sum.add_hom_ext
 then they are equal. -/
 theorem addHom_ext {γ : Type _} [AddMonoid γ] ⦃f g : (⨁ i, β i) →+ γ⦄
     (H : ∀ (i : ι) (y : β i), f (of _ i y) = g (of _ i y)) : f = g :=
-  Dfinsupp.add_hom_ext H
+  Dfinsupp.addHom_ext H
 #align direct_sum.add_hom_ext DirectSum.addHom_ext
 
 /- warning: direct_sum.add_hom_ext' -> DirectSum.addHom_ext' is a dubious translation:

@@ -26,6 +26,7 @@ variable (M : Type _) [AddCommMonoid M] [Module k M] [Module A M] [IsScalarTower
 
 variable (N : Type _) [AddCommMonoid N] [Module k N] [Module A N] [IsScalarTower k A N]
 
+#print LinearMap.restrictScalarsLinearMap /-
 /-- Restriction of scalars for linear maps between modules over a `k`-algebra is itself `k`-linear.
 -/
 @[simps]
@@ -35,6 +36,7 @@ def restrictScalarsLinearMap : (M →ₗ[A] N) →ₗ[k] M →ₗ[k] N
   map_add' := by tidy
   map_smul' := by tidy
 #align linear_map.restrict_scalars_linear_map LinearMap.restrictScalarsLinearMap
+-/
 
 end RestrictScalars
 

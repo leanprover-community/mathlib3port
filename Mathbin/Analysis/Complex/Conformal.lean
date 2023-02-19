@@ -60,11 +60,11 @@ theorem isConformalMap_complex_linear {map : ℂ →L[ℂ] E} (nonzero : map ≠
     simp only [LinearMap.smul_apply]
     have : x = x • 1 := by rw [smul_eq_mul, mul_one]
     nth_rw 1 [this]
-    rw [_root_.coe_coe map, LinearMap.coe_coeIsScalarTower]
+    rw [_root_.coe_coe map, LinearMap.coe_restrictScalars]
     simp only [map.coe_coe, map.map_smul, norm_smul, norm_inv, norm_norm]
     field_simp only [one_mul]
   · ext1
-    simp only [minor₁, LinearMap.smul_apply, _root_.coe_coe, LinearMap.coe_coeIsScalarTower,
+    simp only [minor₁, LinearMap.smul_apply, _root_.coe_coe, LinearMap.coe_restrictScalars,
       ContinuousLinearMap.coe_coe, coe_restrict_scalars', coe_smul',
       LinearIsometry.coe_toContinuousLinearMap, LinearIsometry.coe_mk, Pi.smul_apply,
       smul_inv_smul₀, Ne.def, not_false_iff]

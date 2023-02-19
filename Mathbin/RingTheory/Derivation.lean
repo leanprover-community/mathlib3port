@@ -312,7 +312,7 @@ def LinearMap.compDer : Derivation R A M →ₗ[R] Derivation R A N
       map_one_eq_zero' := by simp only [LinearMap.comp_apply, coe_fn_coe, map_one_eq_zero, map_zero]
       leibniz' := fun a b => by
         simp only [coe_fn_coe, LinearMap.comp_apply, LinearMap.map_add, leibniz,
-          LinearMap.coe_coeIsScalarTower, LinearMap.map_smul] }
+          LinearMap.coe_restrictScalars, LinearMap.map_smul] }
   map_add' D₁ D₂ := by
     ext
     exact LinearMap.map_add _ _ _

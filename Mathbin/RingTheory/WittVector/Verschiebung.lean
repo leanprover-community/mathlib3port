@@ -109,11 +109,11 @@ variable (p)
 /-- `witt_vector.verschiebung` has polynomial structure given by `witt_vector.verschiebung_poly`.
 -/
 @[is_poly]
-theorem verschiebungFun_isPoly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr :=
+theorem verschiebungFunIsPoly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rcr :=
   by
   use verschiebung_poly
   simp only [aeval_verschiebung_poly', eq_self_iff_true, forall₃_true_iff]
-#align witt_vector.verschiebung_fun_is_poly WittVector.verschiebungFun_isPoly
+#align witt_vector.verschiebung_fun_is_poly WittVector.verschiebungFunIsPoly
 
 variable {p}
 
@@ -140,9 +140,9 @@ omit hp
 
 /-- `witt_vector.verschiebung` is a polynomial function. -/
 @[is_poly]
-theorem verschiebung_isPoly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
-  verschiebungFun_isPoly p
-#align witt_vector.verschiebung_is_poly WittVector.verschiebung_isPoly
+theorem verschiebungIsPoly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
+  verschiebungFunIsPoly p
+#align witt_vector.verschiebung_is_poly WittVector.verschiebungIsPoly
 
 include hp
 

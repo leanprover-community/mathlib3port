@@ -67,7 +67,7 @@ def lsingle (i) : M i →ₗ[R] Π₀ i, M i :=
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
 theorem lhom_ext ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i x, φ (single i x) = ψ (single i x)) : φ = ψ :=
-  LinearMap.toAddMonoidHom_injective <| add_hom_ext h
+  LinearMap.toAddMonoidHom_injective <| addHom_ext h
 #align dfinsupp.lhom_ext Dfinsupp.lhom_ext
 
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere.
