@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.zmod.basic
-! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
+! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -930,7 +930,7 @@ theorem valMinAbs_def_pos {n : ℕ} [NeZero n] (x : ZMod n) :
   · rfl
 #align zmod.val_min_abs_def_pos ZMod.valMinAbs_def_pos
 
-@[simp]
+@[simp, norm_cast]
 theorem coe_valMinAbs : ∀ {n : ℕ} (x : ZMod n), (x.valMinAbs : ZMod n) = x
   | 0, x => Int.cast_id x
   | k@(n + 1), x => by

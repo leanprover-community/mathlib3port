@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.sum_four_squares
-! leanprover-community/mathlib commit 2738d2ca56cbc63be80c3bd48e9ed90ad94e947d
+! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ namespace Int
 
 theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2) :
     m = ((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2 :=
-  have : Even (x ^ 2 + y ^ 2) := by simp [h.symm, even_mul]
+  have : Even (x ^ 2 + y ^ 2) := by simp [← h, even_mul]
   have hxaddy : Even (x + y) := by simpa [sq, parity_simps]
   have hxsuby : Even (x - y) := by simpa [sq, parity_simps]
   (mul_right_inj' (show (2 * 2 : ℤ) ≠ 0 by decide)).1 <|
@@ -142,7 +142,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             (show a ^ 2 + b ^ 2 + 1 > 0 from
               add_pos_of_nonneg_of_pos (add_nonneg (sq_nonneg _) (sq_nonneg _)) zero_lt_one)
             hk.1,
-      a, b, 1, 0, by simpa [sq] using hk.1⟩
+      a, b, 1, 0, by simpa only [zero_pow two_pos, one_pow, add_zero] using hk.1⟩
   let m := Nat.find hm
   let ⟨a, b, c, d, (habcd : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = m * p)⟩ := (Nat.find_spec hm).snd.2
   haveI hm0 : NeZero m := NeZero.of_pos (Nat.find_spec hm).snd.1
@@ -150,7 +150,11 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
   m.mod_two_eq_zero_or_one.elim
     (fun hm2 : m % 2 = 0 =>
       let ⟨k, hk⟩ := Nat.dvd_iff_mod_eq_zero.2 hm2
-      have hk0 : 0 < k := Nat.pos_of_ne_zero fun _ => by simp_all [lt_irrefl]
+      have hk0 : 0 < k :=
+        Nat.pos_of_ne_zero <| by
+          rintro rfl
+          rw [mul_zero] at hk
+          exact NeZero.ne m hk
       have hkm : k < m := by rw [hk, two_mul]; exact (lt_add_iff_pos_left _).2 hk0
       False.elim <|
         Nat.find_min hm hkm
@@ -170,7 +174,9 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hnat_abs :
         w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 =
           (w.natAbs ^ 2 + x.natAbs ^ 2 + y.natAbs ^ 2 + z.natAbs ^ 2 : ℕ) :=
-        by simp [sq]
+        by
+        push_cast
+        simp_rw [sq_abs]
       have hwxyzlt : w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 < m ^ 2 :=
         calc
           w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 =
@@ -184,7 +190,8 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
                     (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
                   (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _))
                 (Nat.pow_le_pow_of_le_left (ZMod.natAbs_valMinAbs_le _) _)
-          _ = 4 * (m / 2 : ℕ) ^ 2 := by simp [sq, bit0, bit1, mul_add, add_mul, add_assoc]
+          _ = 4 * (m / 2 : ℕ) ^ 2 := by
+            simp only [bit0_mul, one_mul, two_smul, Nat.cast_add, Nat.cast_pow, add_assoc]
           _ < 4 * (m / 2 : ℕ) ^ 2 + ((4 * (m / 2) : ℕ) * (m % 2 : ℕ) + (m % 2 : ℕ) ^ 2) :=
             (lt_add_iff_pos_right _).2
               (by
@@ -198,7 +205,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
       have hwxyzabcd :
         ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) =
           ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : ZMod m) :=
-        by simp [w, x, y, z, sq]
+        by push_cast
       have hwxyz0 : ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) = 0 := by
         rw [hwxyzabcd, habcd, Int.cast_mul, cast_coe_nat, ZMod.nat_cast_self, zero_mul]
       let ⟨n, hn⟩ := (CharP.int_cast_eq_zero_iff _ m _).1 hwxyz0
@@ -209,8 +216,8 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             rw [← Int.coe_nat_eq_zero, ← hnat_abs]
             rwa [hn0, mul_zero] at hn
           have habcd0 : (m : ℤ) ∣ a ∧ (m : ℤ) ∣ b ∧ (m : ℤ) ∣ c ∧ (m : ℤ) ∣ d := by
-            simpa [add_eq_zero_iff' (sq_nonneg (_ : ℤ)) (sq_nonneg _), pow_two, w, x, y, z,
-              CharP.int_cast_eq_zero_iff _ m _, and_assoc] using hwxyz0
+            simpa only [add_eq_zero_iff, Int.natAbs_eq_zero, ZMod.valMinAbs_eq_zero, and_assoc,
+              pow_eq_zero_iff two_pos, CharP.int_cast_eq_zero_iff _ m _] using hwxyz0
           let ⟨ma, hma⟩ := habcd0.1
           let ⟨mb, hmb⟩ := habcd0.2.1
           let ⟨mc, hmc⟩ := habcd0.2.2.1
@@ -228,22 +235,22 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
         (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
           rw [← hwxyz0]
-          simp
-          ring
+          simp_rw [sq]
+          push_cast
       have haxbwczdy : ((m : ℕ) : ℤ) ∣ a * x - b * w - c * z + d * y :=
         (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
-          simp [sub_eq_add_neg]
+          push_cast
           ring
       have haybzcwdx : ((m : ℕ) : ℤ) ∣ a * y + b * z - c * w - d * x :=
         (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
-          simp [sub_eq_add_neg]
+          push_cast
           ring
       have hazbycxdw : ((m : ℕ) : ℤ) ∣ a * z - b * y + c * x - d * w :=
         (CharP.int_cast_eq_zero_iff (ZMod m) m _).1 <|
           by
-          simp [sub_eq_add_neg]
+          push_cast
           ring
       let ⟨s, hs⟩ := hawbxcydz
       let ⟨t, ht⟩ := haxbwczdy
