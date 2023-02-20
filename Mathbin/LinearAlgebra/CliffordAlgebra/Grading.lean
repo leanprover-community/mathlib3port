@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.grading
-! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
+! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

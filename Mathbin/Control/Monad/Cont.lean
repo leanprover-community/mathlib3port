@@ -8,7 +8,7 @@ Haskell's `Cont`, `ContT` and `MonadCont`:
 <http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Cont.html>
 
 ! This file was ported from Lean 3 source module control.monad.cont
-! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
+! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
