@@ -75,7 +75,7 @@ See result `measure_theory.Lp.continuous_map_dense`, in the file
 -/
 
 
-open Ennreal Nnreal
+open Ennreal NNReal
 
 open MeasureTheory MeasureTheory.Measure
 
@@ -189,7 +189,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
   ·
     calc
       (∫⁻ x, ∑' n : ℕ, g n x ∂μ) = ∑' n, ∫⁻ x, g n x ∂μ := by
-        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nnreal_ennreal.AeMeasurable]
+        rw [lintegral_tsum fun n => (gcont n).Measurable.coe_nNReal_ennreal.AeMeasurable]
       _ ≤ ∑' n, (∫⁻ x, eapprox_diff f n x ∂μ) + δ n := Ennreal.tsum_le_tsum hg
       _ = (∑' n, ∫⁻ x, eapprox_diff f n x ∂μ) + ∑' n, δ n := Ennreal.tsum_add
       _ ≤ (∫⁻ x : α, f x ∂μ) + ε := by
@@ -197,7 +197,7 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_refl]
         · intro n
-          exact (simple_func.measurable _).coe_nnreal_ennreal.AeMeasurable
+          exact (simple_func.measurable _).coe_nNReal_ennreal.AeMeasurable
       
 #align measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lowerSemicontinuous_lintegral_ge
 
@@ -213,7 +213,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
   have : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
   rcases exists_pos_lintegral_lt_of_sigma_finite μ this with ⟨w, wpos, wmeas, wint⟩
   let f' x := ((f x + w x : ℝ≥0) : ℝ≥0∞)
-  rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nnreal_ennreal
+  rcases exists_le_lower_semicontinuous_lintegral_ge μ f' (fmeas.add wmeas).coe_nNReal_ennreal
       this with
     ⟨g, le_g, gcont, gint⟩
   refine' ⟨g, fun x => _, gcont, _⟩
@@ -280,7 +280,7 @@ variable {μ}
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `integral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : α → ℝ≥0)
+theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : α → ℝ≥0)
     (fint : Integrable (fun x => (f x : ℝ)) μ) {ε : ℝ} (εpos : 0 < ε) :
     ∃ g : α → ℝ≥0∞,
       (∀ x, (f x : ℝ≥0∞) < g x) ∧
@@ -292,7 +292,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
     by
     convert fint.ae_strongly_measurable.real_to_nnreal.ae_measurable
     ext1 x
-    simp only [Real.toNnreal_coe]
+    simp only [Real.toNNReal_coe]
   lift ε to ℝ≥0 using εpos.le
   obtain ⟨δ, δpos, hδε⟩ : ∃ δ : ℝ≥0, 0 < δ ∧ δ < ε
   exact exists_between εpos
@@ -333,7 +333,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
     · apply Filter.eventually_of_forall fun x => _
       simp
     · apply gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable
-#align measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lowerSemicontinuous_integral_gt_nnreal
+#align measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lowerSemicontinuous_integral_gt_nNReal
 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
@@ -452,7 +452,7 @@ theorem exists_upperSemicontinuous_le_integral_le (f : α → ℝ≥0)
           Integrable (fun x => (g x : ℝ)) μ ∧ (∫ x, (f x : ℝ) ∂μ) - ε ≤ ∫ x, g x ∂μ :=
   by
   lift ε to ℝ≥0 using εpos.le
-  rw [Nnreal.coe_pos, ← Ennreal.coe_pos] at εpos
+  rw [NNReal.coe_pos, ← Ennreal.coe_pos] at εpos
   have If : (∫⁻ x, f x ∂μ) < ∞ := has_finite_integral_iff_of_nnreal.1 fint.has_finite_integral
   rcases exists_upper_semicontinuous_le_lintegral_le f If.ne εpos.ne' with ⟨g, gf, gcont, gint⟩
   have Ig : (∫⁻ x, g x ∂μ) < ∞ :=
@@ -494,11 +494,11 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
   by
   let δ : ℝ≥0 := ⟨ε / 2, (half_pos εpos).le⟩
   have δpos : 0 < δ := half_pos εpos
-  let fp : α → ℝ≥0 := fun x => Real.toNnreal (f x)
+  let fp : α → ℝ≥0 := fun x => Real.toNNReal (f x)
   have int_fp : integrable (fun x => (fp x : ℝ)) μ := hf.real_to_nnreal
   rcases exists_lt_lower_semicontinuous_integral_gt_nnreal fp int_fp δpos with
     ⟨gp, fp_lt_gp, gpcont, gp_lt_top, gp_integrable, gpint⟩
-  let fm : α → ℝ≥0 := fun x => Real.toNnreal (-f x)
+  let fm : α → ℝ≥0 := fun x => Real.toNNReal (-f x)
   have int_fm : integrable (fun x => (fm x : ℝ)) μ := hf.neg.real_to_nnreal
   rcases exists_upper_semicontinuous_le_integral_le fm int_fm δpos with
     ⟨gm, gm_le_fm, gmcont, gm_integrable, gmint⟩
@@ -543,14 +543,14 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
       Ereal.coe_ennreal_ne_bot]
   show ∀ x, (f x : Ereal) < g x
   · intro x
-    rw [Ereal.coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal (f x)]
+    rw [Ereal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (f x)]
     refine' Ereal.sub_lt_sub_of_lt_of_le _ _ _ _
     · simp only [Ereal.coe_ennreal_lt_coe_ennreal_iff, coe_coe]
       exact fp_lt_gp x
     · simp only [Ennreal.coe_le_coe, Ereal.coe_ennreal_le_coe_ennreal_iff, coe_coe]
       exact gm_le_fm x
     · simp only [Ereal.coe_ennreal_ne_bot, Ne.def, not_false_iff, coe_coe]
-    · simp only [Ereal.coe_nnreal_ne_top, Ne.def, not_false_iff, coe_coe]
+    · simp only [Ereal.coe_nNReal_ne_top, Ne.def, not_false_iff, coe_coe]
   show LowerSemicontinuous g
   · apply LowerSemicontinuous.add'
     ·

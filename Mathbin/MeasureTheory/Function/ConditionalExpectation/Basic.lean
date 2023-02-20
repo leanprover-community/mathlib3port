@@ -83,7 +83,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory.lp Filter ContinuousLinearMap
 
-open Nnreal Ennreal Topology BigOperators MeasureTheory
+open NNReal Ennreal Topology BigOperators MeasureTheory
 
 namespace MeasureTheory
 
@@ -1117,7 +1117,7 @@ theorem condexpL2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : μ
     dsimp only at hx
     rw [Pi.zero_apply] at hx⊢
     · rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero] at hx
-    · refine' Measurable.coe_nnreal_ennreal (Measurable.nnnorm _)
+    · refine' Measurable.coe_nNReal_ennreal (Measurable.nnnorm _)
       rw [Lp_meas_coe]
       exact (Lp.strongly_measurable _).Measurable
   refine' le_antisymm _ (zero_le _)

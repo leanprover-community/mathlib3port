@@ -48,7 +48,7 @@ vector measure, signed measure, complex measure
 
 noncomputable section
 
-open Classical BigOperators Nnreal Ennreal MeasureTheory
+open Classical BigOperators NNReal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -1444,10 +1444,10 @@ def toMeasureOfZeroLe (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet
         id.def]
       have h : ∀ n, 0 ≤ s (i ∩ f n) := fun n =>
         s.nonneg_of_zero_le_restrict (s.zero_le_restrict_subset hi₁ (inter_subset_left _ _) hi₂)
-      rw [Nnreal.coe_tsum_of_nonneg h, Ennreal.coe_tsum]
+      rw [NNReal.coe_tsum_of_nonneg h, Ennreal.coe_tsum]
       · refine' tsum_congr fun n => _
         simp_rw [s.restrict_apply hi₁ (hf₁ n), Set.inter_comm]
-      · exact (Nnreal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).Summable)
+      · exact (NNReal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).Summable)
 #align measure_theory.signed_measure.to_measure_of_zero_le MeasureTheory.SignedMeasure.toMeasureOfZeroLe
 
 variable (s : SignedMeasure α) {i j : Set α}

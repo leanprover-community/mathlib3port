@@ -47,7 +47,7 @@ Jordan decomposition theorem
 
 noncomputable section
 
-open Classical MeasureTheory Ennreal Nnreal
+open Classical MeasureTheory Ennreal NNReal
 
 variable {α β : Type _} [MeasurableSpace α]
 
@@ -88,7 +88,7 @@ instance : SMul ℝ≥0 (JordanDecomposition α)
       MutuallySingular.smul _ (MutuallySingular.smul _ j.MutuallySingular.symm).symm⟩
 
 instance hasSmulReal : SMul ℝ (JordanDecomposition α)
-    where smul r j := if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j)
+    where smul r j := if hr : 0 ≤ r then r.toNNReal • j else -((-r).toNNReal • j)
 #align measure_theory.jordan_decomposition.has_smul_real MeasureTheory.JordanDecomposition.hasSmulReal
 
 @[simp]
@@ -122,36 +122,36 @@ theorem smul_negPart (r : ℝ≥0) : (r • j).negPart = r • j.negPart :=
 #align measure_theory.jordan_decomposition.smul_neg_part MeasureTheory.JordanDecomposition.smul_negPart
 
 theorem real_smul_def (r : ℝ) (j : JordanDecomposition α) :
-    r • j = if hr : 0 ≤ r then r.toNnreal • j else -((-r).toNnreal • j) :=
+    r • j = if hr : 0 ≤ r then r.toNNReal • j else -((-r).toNNReal • j) :=
   rfl
 #align measure_theory.jordan_decomposition.real_smul_def MeasureTheory.JordanDecomposition.real_smul_def
 
 @[simp]
 theorem coe_smul (r : ℝ≥0) : (r : ℝ) • j = r • j :=
-  show dite _ _ _ = _ by rw [dif_pos (Nnreal.coe_nonneg r), Real.toNnreal_coe]
+  show dite _ _ _ = _ by rw [dif_pos (NNReal.coe_nonneg r), Real.toNNReal_coe]
 #align measure_theory.jordan_decomposition.coe_smul MeasureTheory.JordanDecomposition.coe_smul
 
-theorem real_smul_nonneg (r : ℝ) (hr : 0 ≤ r) : r • j = r.toNnreal • j :=
+theorem real_smul_nonneg (r : ℝ) (hr : 0 ≤ r) : r • j = r.toNNReal • j :=
   dif_pos hr
 #align measure_theory.jordan_decomposition.real_smul_nonneg MeasureTheory.JordanDecomposition.real_smul_nonneg
 
-theorem real_smul_neg (r : ℝ) (hr : r < 0) : r • j = -((-r).toNnreal • j) :=
+theorem real_smul_neg (r : ℝ) (hr : r < 0) : r • j = -((-r).toNNReal • j) :=
   dif_neg (not_le.2 hr)
 #align measure_theory.jordan_decomposition.real_smul_neg MeasureTheory.JordanDecomposition.real_smul_neg
 
-theorem real_smul_posPart_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).posPart = r.toNnreal • j.posPart :=
+theorem real_smul_posPart_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).posPart = r.toNNReal • j.posPart :=
   by rw [real_smul_def, ← smul_pos_part, dif_pos hr]
 #align measure_theory.jordan_decomposition.real_smul_pos_part_nonneg MeasureTheory.JordanDecomposition.real_smul_posPart_nonneg
 
-theorem real_smul_negPart_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).negPart = r.toNnreal • j.negPart :=
+theorem real_smul_negPart_nonneg (r : ℝ) (hr : 0 ≤ r) : (r • j).negPart = r.toNNReal • j.negPart :=
   by rw [real_smul_def, ← smul_neg_part, dif_pos hr]
 #align measure_theory.jordan_decomposition.real_smul_neg_part_nonneg MeasureTheory.JordanDecomposition.real_smul_negPart_nonneg
 
-theorem real_smul_posPart_neg (r : ℝ) (hr : r < 0) : (r • j).posPart = (-r).toNnreal • j.negPart :=
+theorem real_smul_posPart_neg (r : ℝ) (hr : r < 0) : (r • j).posPart = (-r).toNNReal • j.negPart :=
   by rw [real_smul_def, ← smul_neg_part, dif_neg (not_le.2 hr), neg_pos_part]
 #align measure_theory.jordan_decomposition.real_smul_pos_part_neg MeasureTheory.JordanDecomposition.real_smul_posPart_neg
 
-theorem real_smul_negPart_neg (r : ℝ) (hr : r < 0) : (r • j).negPart = (-r).toNnreal • j.posPart :=
+theorem real_smul_negPart_neg (r : ℝ) (hr : r < 0) : (r • j).negPart = (-r).toNNReal • j.posPart :=
   by rw [real_smul_def, ← smul_pos_part, dif_neg (not_le.2 hr), neg_neg_part]
 #align measure_theory.jordan_decomposition.real_smul_neg_part_neg MeasureTheory.JordanDecomposition.real_smul_negPart_neg
 

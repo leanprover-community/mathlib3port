@@ -30,7 +30,7 @@ period `T`.
 
 open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgroup intervalIntegral
 
-open MeasureTheory Nnreal Ennreal
+open MeasureTheory NNReal Ennreal
 
 attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
 
@@ -90,8 +90,8 @@ interval (t, t + T]. -/
 protected theorem measurePreservingMk (t : ℝ) :
     MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (Ioc t (t + T))) :=
   MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t)
-    (⊤ : PositiveCompacts (AddCircle T)) (by simp) T.toNnreal
-    (by simp [← Ennreal.ofReal_coe_nnreal, Real.coe_toNnreal T hT.out.le])
+    (⊤ : PositiveCompacts (AddCircle T)) (by simp) T.toNNReal
+    (by simp [← Ennreal.ofReal_coe_nNReal, Real.coe_toNNReal T hT.out.le])
 #align add_circle.measure_preserving_mk AddCircle.measurePreservingMk
 
 theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
@@ -122,7 +122,7 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
 
 instance : IsDoublingMeasure (volume : Measure (AddCircle T)) :=
   by
-  refine' ⟨⟨Real.toNnreal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
+  refine' ⟨⟨Real.toNNReal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
   simp only [volume_closed_ball]
   erw [← Ennreal.ofReal_mul zero_le_two]
   apply Ennreal.ofReal_le_ofReal

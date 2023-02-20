@@ -75,7 +75,7 @@ variable {𝕜 : Type _} {E F G H : Type _}
 
 open Filter List
 
-open Topology BigOperators Classical Nnreal Ennreal
+open Topology BigOperators Classical NNReal Ennreal
 
 section Topological
 
@@ -365,7 +365,7 @@ theorem compAlongComposition_nnnorm {n : ℕ} (q : FormalMultilinearSeries 𝕜 
     (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n) :
     ‖q.compAlongComposition p c‖₊ ≤ ‖q c.length‖₊ * ∏ i, ‖p (c.blocksFun i)‖₊ :=
   by
-  rw [← Nnreal.coe_le_coe]
+  rw [← NNReal.coe_le_coe]
   push_cast
   exact q.comp_along_composition_norm p c
 #align formal_multilinear_series.comp_along_composition_nnnorm FormalMultilinearSeries.compAlongComposition_nnnorm
@@ -489,7 +489,7 @@ section
 /-- If two formal multilinear series have positive radius of convergence, then the terms appearing
 in the definition of their composition are also summable (when multiplied by a suitable positive
 geometric term). -/
-theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
+theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
     (hq : 0 < q.radius) (hp : 0 < p.radius) :
     ∃ r > (0 : ℝ≥0),
       Summable fun i : Σn, Composition n => ‖q.compAlongComposition p i.2‖₊ * r ^ i.1 :=
@@ -497,8 +497,8 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   /- This follows from the fact that the growth rate of `‖qₙ‖` and `‖pₙ‖` is at most geometric,
     giving a geometric bound on each `‖q.comp_along_composition p op‖`, together with the
     fact that there are `2^(n-1)` compositions of `n`, giving at most a geometric loss. -/
-  rcases Ennreal.lt_iff_exists_nnreal_btwn.1 (lt_min Ennreal.zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
-  rcases Ennreal.lt_iff_exists_nnreal_btwn.1 (lt_min Ennreal.zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
+  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 (lt_min Ennreal.zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
+  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 (lt_min Ennreal.zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
   simp only [lt_min_iff, Ennreal.coe_lt_one_iff, Ennreal.coe_pos] at hrp hrq rp_pos rq_pos
   obtain ⟨Cq, hCq0, hCq⟩ : ∃ Cq > 0, ∀ n, ‖q n‖₊ * rq ^ n ≤ Cq :=
     q.nnnorm_mul_pow_le_of_lt_radius hrq.2
@@ -507,7 +507,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     rcases p.nnnorm_mul_pow_le_of_lt_radius hrp.2 with ⟨Cp, -, hCp⟩
     exact ⟨max Cp 1, le_max_right _ _, fun n => (hCp n).trans (le_max_left _ _)⟩
   let r0 : ℝ≥0 := (4 * Cp)⁻¹
-  have r0_pos : 0 < r0 := Nnreal.inv_pos.2 (mul_pos zero_lt_four (zero_lt_one.trans_le hCp1))
+  have r0_pos : 0 < r0 := NNReal.inv_pos.2 (mul_pos zero_lt_four (zero_lt_one.trans_le hCp1))
   set r : ℝ≥0 := rp * rq * r0
   have r_pos : 0 < r := mul_pos (mul_pos rp_pos rq_pos) r0_pos
   have I :
@@ -542,7 +542,7 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
         field_simp [mul_pow, (zero_lt_one.trans_le hCp1).ne']
         ring
       
-  refine' ⟨r, r_pos, Nnreal.summable_of_le I _⟩
+  refine' ⟨r, r_pos, NNReal.summable_of_le I _⟩
   simp_rw [div_eq_mul_inv]
   refine' Summable.mul_left _ _
   have : ∀ n : ℕ, HasSum (fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹) (2 ^ (n - 1) / 4 ^ n) :=
@@ -550,13 +550,13 @@ theorem comp_summable_nnreal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     intro n
     convert hasSum_fintype fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹
     simp [Finset.card_univ, composition_card, div_eq_mul_inv]
-  refine' Nnreal.summable_sigma.2 ⟨fun n => (this n).Summable, (Nnreal.summable_nat_add_iff 1).1 _⟩
-  convert (Nnreal.summable_geometric (Nnreal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
+  refine' NNReal.summable_sigma.2 ⟨fun n => (this n).Summable, (NNReal.summable_nat_add_iff 1).1 _⟩
+  convert (NNReal.summable_geometric (NNReal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
   ext1 n
   rw [(this _).tsum_eq, add_tsub_cancel_right]
   field_simp [← mul_assoc, pow_succ', mul_pow, show (4 : ℝ≥0) = 2 * 2 from (two_mul 2).symm,
     mul_right_comm]
-#align formal_multilinear_series.comp_summable_nnreal FormalMultilinearSeries.comp_summable_nnreal
+#align formal_multilinear_series.comp_summable_nnreal FormalMultilinearSeries.comp_summable_nNReal
 
 end
 
@@ -577,7 +577,7 @@ theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G)
       rw [tsum_fintype, ← Finset.sum_mul]
       exact mul_le_mul' (nnnorm_sum_le _ _) le_rfl
     _ ≤ ∑' i : Σn : ℕ, Composition n, ‖comp_along_composition q p i.snd‖₊ * r ^ i.fst :=
-      Nnreal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
+      NNReal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
     
 #align formal_multilinear_series.le_comp_radius_of_summable FormalMultilinearSeries.le_comp_radius_of_summable
 
@@ -879,8 +879,8 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
       CauchySeq fun s : Finset (Σn, Composition n) =>
         ∑ i in s, q.comp_along_composition p i.2 fun j => y :=
       by
-      apply cauchySeq_finset_of_norm_bounded _ (Nnreal.summable_coe.2 hr) _
-      simp only [coe_nnnorm, Nnreal.coe_mul, Nnreal.coe_pow]
+      apply cauchySeq_finset_of_norm_bounded _ (NNReal.summable_coe.2 hr) _
+      simp only [coe_nnnorm, NNReal.coe_mul, NNReal.coe_pow]
       rintro ⟨n, c⟩
       calc
         ‖(comp_along_composition q p c) fun j : Fin n => y‖ ≤
@@ -893,7 +893,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           apply pow_le_pow_of_le_left (norm_nonneg _)
           rw [Emetric.mem_ball, edist_eq_coe_nnnorm] at hy
           have := le_trans (le_of_lt hy) (min_le_right _ _)
-          rwa [Ennreal.coe_le_coe, ← Nnreal.coe_le_coe, coe_nnnorm] at this
+          rwa [Ennreal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this
         
     tendsto_nhds_of_cauchySeq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of

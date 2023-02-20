@@ -150,7 +150,7 @@ Cauchy-Goursat theorem, Cauchy integral formula
 
 open TopologicalSpace Set MeasureTheory intervalIntegral Metric Filter Function
 
-open Interval Real Nnreal Ennreal Topology BigOperators
+open Interval Real NNReal Ennreal Topology BigOperators
 
 noncomputable section
 
@@ -520,7 +520,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
         hasFpowerSeriesOnCauchyIntegral
           ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.coe_nonneg) hR
       refine' this.continuous_on.continuous_at (emetric.is_open_ball.mem_nhds _)
-      rwa [Metric.emetric_ball_nnreal]
+      rwa [Metric.emetric_ball_nNReal]
     have B : ContinuousAt f w := hc.continuous_at (closed_ball_mem_nhds_of_mem hw)
     refine' tendsto_nhds_unique_of_frequently_eq A B ((mem_closure_iff_frequently.1 this).mono _)
     intro z hz
@@ -617,7 +617,7 @@ theorem hasFpowerSeriesOnBallOfDifferentiableOffCountable {R : ℝ≥0} {c : ℂ
       by
       have hw' : c + w ∈ ball c R := by
         simpa only [add_mem_ball_iff_norm, ← coe_nnnorm, mem_emetric_ball_zero_iff,
-          Nnreal.coe_lt_coe, Ennreal.coe_lt_coe] using hw
+          NNReal.coe_lt_coe, Ennreal.coe_lt_coe] using hw
       rw [←
         two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw' hc
           hd]

@@ -55,7 +55,7 @@ noncomputable section
 
 open Set FiniteDimensional TopologicalSpace Filter Asymptotics
 
-open Classical BigOperators Filter Topology Asymptotics Nnreal
+open Classical BigOperators Filter Topology Asymptotics NNReal
 
 namespace LinearIsometry
 
@@ -251,14 +251,14 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
   simp only [sub_self, norm_zero, Finset.sum_const_zero] at this
   refine' (this.eventually (gt_mem_nhds <| inv_pos.2 K0)).mono fun g hg => _
   replace hg : (∑ i, ‖g i - f i‖₊) < K⁻¹
-  · rw [← Nnreal.coe_lt_coe]
+  · rw [← NNReal.coe_lt_coe]
     push_cast
     exact hg
   rw [LinearMap.ker_eq_bot]
   refine' (hK.add_sub_lipschitz_with (LipschitzWith.of_dist_le_mul fun v u => _) hg).Injective
   simp only [dist_eq_norm, LinearMap.lsum_apply, Pi.sub_apply, LinearMap.sum_apply,
     LinearMap.comp_apply, LinearMap.proj_apply, LinearMap.smulRight_apply, LinearMap.id_apply, ←
-    Finset.sum_sub_distrib, ← smul_sub, ← sub_smul, Nnreal.coe_sum, coe_nnnorm, Finset.sum_mul]
+    Finset.sum_sub_distrib, ← smul_sub, ← sub_smul, NNReal.coe_sum, coe_nnnorm, Finset.sum_mul]
   refine' norm_sum_le_of_le _ fun i _ => _
   rw [norm_smul, mul_comm]
   exact mul_le_mul_of_nonneg_left (norm_le_pi_norm (v - u) i) (norm_nonneg _)

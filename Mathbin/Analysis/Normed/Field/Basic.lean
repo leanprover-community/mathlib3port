@@ -24,7 +24,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 open Filter Metric
 
-open Topology BigOperators Nnreal Ennreal uniformity Pointwise
+open Topology BigOperators NNReal Ennreal uniformity Pointwise
 
 /-- A non-unital seminormed ring is a not-necessarily-unital ring
 endowed with a seminorm which satisfies the inequality `‖x y‖ ≤ ‖x‖ ‖y‖`. -/
@@ -129,7 +129,7 @@ attribute [simp] norm_one
 
 @[simp]
 theorem nnnorm_one [SeminormedAddCommGroup α] [One α] [NormOneClass α] : ‖(1 : α)‖₊ = 1 :=
-  Nnreal.eq norm_one
+  NNReal.eq norm_one
 #align nnnorm_one nnnorm_one
 
 theorem NormOneClass.nontrivial (α : Type _) [SeminormedAddCommGroup α] [One α] [NormOneClass α] :
@@ -177,8 +177,8 @@ theorem norm_mul_le (a b : α) : ‖a * b‖ ≤ ‖a‖ * ‖b‖ :=
 #align norm_mul_le norm_mul_le
 
 theorem nnnorm_mul_le (a b : α) : ‖a * b‖₊ ≤ ‖a‖₊ * ‖b‖₊ := by
-  simpa only [← norm_toNnreal, ← Real.toNnreal_mul (norm_nonneg _)] using
-    Real.toNnreal_mono (norm_mul_le _ _)
+  simpa only [← norm_toNNReal, ← Real.toNNReal_mul (norm_nonneg _)] using
+    Real.toNNReal_mono (norm_mul_le _ _)
 #align nnnorm_mul_le nnnorm_mul_le
 
 theorem one_le_norm_one (β) [NormedRing β] [Nontrivial β] : 1 ≤ ‖(1 : β)‖ :=
@@ -243,7 +243,7 @@ instance Pi.nonUnitalSemiNormedRing {π : ι → Type _} [Fintype ι]
     [∀ i, NonUnitalSemiNormedRing (π i)] : NonUnitalSemiNormedRing (∀ i, π i) :=
   { Pi.seminormedAddCommGroup with
     norm_mul := fun x y =>
-      Nnreal.coe_mono <|
+      NNReal.coe_mono <|
         calc
           (Finset.univ.sup fun i => ‖x i * y i‖₊) ≤
               Finset.univ.sup ((fun i => ‖x i‖₊) * fun i => ‖y i‖₊) :=
@@ -294,7 +294,7 @@ theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ‖l.Prod‖ ≤ (l
 #align list.norm_prod_le' List.norm_prod_le'
 
 theorem List.nnnorm_prod_le' {l : List α} (hl : l ≠ []) : ‖l.Prod‖₊ ≤ (l.map nnnorm).Prod :=
-  (List.norm_prod_le' hl).trans_eq <| by simp [Nnreal.coe_list_prod, List.map_map]
+  (List.norm_prod_le' hl).trans_eq <| by simp [NNReal.coe_list_prod, List.map_map]
 #align list.nnnorm_prod_le' List.nnnorm_prod_le'
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -304,7 +304,7 @@ theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ‖l.Prod‖ ≤ 
 #align list.norm_prod_le List.norm_prod_le
 
 theorem List.nnnorm_prod_le [NormOneClass α] (l : List α) : ‖l.Prod‖₊ ≤ (l.map nnnorm).Prod :=
-  l.norm_prod_le.trans_eq <| by simp [Nnreal.coe_list_prod, List.map_map]
+  l.norm_prod_le.trans_eq <| by simp [NNReal.coe_list_prod, List.map_map]
 #align list.nnnorm_prod_le List.nnnorm_prod_le
 
 theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
@@ -317,7 +317,7 @@ theorem Finset.norm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (
 
 theorem Finset.nnnorm_prod_le' {α : Type _} [NormedCommRing α] (s : Finset ι) (hs : s.Nonempty)
     (f : ι → α) : ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
-  (s.norm_prod_le' hs f).trans_eq <| by simp [Nnreal.coe_prod]
+  (s.norm_prod_le' hs f).trans_eq <| by simp [NNReal.coe_prod]
 #align finset.nnnorm_prod_le' Finset.nnnorm_prod_le'
 
 theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι)
@@ -329,7 +329,7 @@ theorem Finset.norm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] 
 
 theorem Finset.nnnorm_prod_le {α : Type _} [NormedCommRing α] [NormOneClass α] (s : Finset ι)
     (f : ι → α) : ‖∏ i in s, f i‖₊ ≤ ∏ i in s, ‖f i‖₊ :=
-  (s.norm_prod_le f).trans_eq <| by simp [Nnreal.coe_prod]
+  (s.norm_prod_le f).trans_eq <| by simp [NNReal.coe_prod]
 #align finset.nnnorm_prod_le Finset.nnnorm_prod_le
 
 /-- If `α` is a seminormed ring, then `‖a ^ n‖₊ ≤ ‖a‖₊ ^ n` for `n > 0`.
@@ -349,7 +349,7 @@ theorem nnnorm_pow_le [NormOneClass α] (a : α) (n : ℕ) : ‖a ^ n‖₊ ≤ 
 
 /-- If `α` is a seminormed ring, then `‖a ^ n‖ ≤ ‖a‖ ^ n` for `n > 0`. See also `norm_pow_le`. -/
 theorem norm_pow_le' (a : α) {n : ℕ} (h : 0 < n) : ‖a ^ n‖ ≤ ‖a‖ ^ n := by
-  simpa only [Nnreal.coe_pow, coe_nnnorm] using Nnreal.coe_mono (nnnorm_pow_le' a h)
+  simpa only [NNReal.coe_pow, coe_nnnorm] using NNReal.coe_mono (nnnorm_pow_le' a h)
 #align norm_pow_le' norm_pow_le'
 
 /-- If `α` is a seminormed ring with `‖1‖ = 1`, then `‖a ^ n‖ ≤ ‖a‖ ^ n`. See also `norm_pow_le'`.-/
@@ -483,7 +483,7 @@ instance isAbsoluteValue_norm : IsAbsoluteValue (norm : α → ℝ)
 
 @[simp]
 theorem nnnorm_mul (a b : α) : ‖a * b‖₊ = ‖a‖₊ * ‖b‖₊ :=
-  Nnreal.eq <| norm_mul a b
+  NNReal.eq <| norm_mul a b
 #align nnnorm_mul nnnorm_mul
 
 /-- `norm` as a `monoid_with_zero_hom`. -/
@@ -533,7 +533,7 @@ theorem norm_inv (a : α) : ‖a⁻¹‖ = ‖a‖⁻¹ :=
 
 @[simp]
 theorem nnnorm_inv (a : α) : ‖a⁻¹‖₊ = ‖a‖₊⁻¹ :=
-  Nnreal.eq <| by simp
+  NNReal.eq <| by simp
 #align nnnorm_inv nnnorm_inv
 
 @[simp]
@@ -754,30 +754,30 @@ noncomputable instance : DenselyNormedField ℝ
 
 namespace Real
 
-theorem toNnreal_mul_nnnorm {x : ℝ} (y : ℝ) (hx : 0 ≤ x) : x.toNnreal * ‖y‖₊ = ‖x * y‖₊ := by
-  simp [Real.toNnreal_of_nonneg, nnnorm, norm_of_nonneg, hx]
-#align real.to_nnreal_mul_nnnorm Real.toNnreal_mul_nnnorm
+theorem toNNReal_mul_nnnorm {x : ℝ} (y : ℝ) (hx : 0 ≤ x) : x.toNNReal * ‖y‖₊ = ‖x * y‖₊ := by
+  simp [Real.toNNReal_of_nonneg, nnnorm, norm_of_nonneg, hx]
+#align real.to_nnreal_mul_nnnorm Real.toNNReal_mul_nnnorm
 
-theorem nnnorm_mul_toNnreal (x : ℝ) {y : ℝ} (hy : 0 ≤ y) : ‖x‖₊ * y.toNnreal = ‖x * y‖₊ := by
-  simp [Real.toNnreal_of_nonneg, nnnorm, norm_of_nonneg, hy]
-#align real.nnnorm_mul_to_nnreal Real.nnnorm_mul_toNnreal
+theorem nnnorm_mul_toNNReal (x : ℝ) {y : ℝ} (hy : 0 ≤ y) : ‖x‖₊ * y.toNNReal = ‖x * y‖₊ := by
+  simp [Real.toNNReal_of_nonneg, nnnorm, norm_of_nonneg, hy]
+#align real.nnnorm_mul_to_nnreal Real.nnnorm_mul_toNNReal
 
 end Real
 
-namespace Nnreal
+namespace NNReal
 
-open Nnreal
+open NNReal
 
 @[simp]
 theorem norm_eq (x : ℝ≥0) : ‖(x : ℝ)‖ = x := by rw [Real.norm_eq_abs, x.abs_eq]
-#align nnreal.norm_eq Nnreal.norm_eq
+#align nnreal.norm_eq NNReal.norm_eq
 
 @[simp]
 theorem nnnorm_eq (x : ℝ≥0) : ‖(x : ℝ)‖₊ = x :=
-  Nnreal.eq <| Real.norm_of_nonneg x.2
-#align nnreal.nnnorm_eq Nnreal.nnnorm_eq
+  NNReal.eq <| Real.norm_of_nonneg x.2
+#align nnreal.nnnorm_eq NNReal.nnnorm_eq
 
-end Nnreal
+end NNReal
 
 @[simp]
 theorem norm_norm [SeminormedAddCommGroup α] (x : α) : ‖‖x‖‖ = ‖x‖ :=

@@ -31,7 +31,7 @@ is isometric, as expressed by the typeclass `[ring_hom_isometric σ]`.
 
 noncomputable section
 
-open Classical Nnreal Topology
+open Classical NNReal Topology
 
 -- the `ₗ` subscript variables are for special cases about linear (as opposed to semilinear) maps
 variable {𝕜 𝕜₂ 𝕜₃ E Eₗ F Fₗ G Gₗ 𝓕 : Type _}
@@ -428,8 +428,8 @@ instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F)
 theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = infₛ { c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ } :=
   by
   ext
-  rw [Nnreal.coe_infₛ, coe_nnnorm, norm_def, Nnreal.coe_image]
-  simp_rw [← Nnreal.coe_le_coe, Nnreal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk,
+  rw [NNReal.coe_infₛ, coe_nnnorm, norm_def, NNReal.coe_image]
+  simp_rw [← NNReal.coe_le_coe, NNReal.coe_mul, coe_nnnorm, mem_set_of_eq, Subtype.coe_mk,
     exists_prop]
 #align continuous_linear_map.nnnorm_def ContinuousLinearMap.nnnorm_def
 
@@ -441,14 +441,14 @@ theorem op_nnnorm_le_bound (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, 
 /-- If one controls the norm of every `A x`, `‖x‖₊ ≠ 0`, then one controls the norm of `A`. -/
 theorem op_nnnorm_le_bound' (f : E →SL[σ₁₂] F) (M : ℝ≥0) (hM : ∀ x, ‖x‖₊ ≠ 0 → ‖f x‖₊ ≤ M * ‖x‖₊) :
     ‖f‖₊ ≤ M :=
-  op_norm_le_bound' f (zero_le M) fun x hx => hM x <| by rwa [← Nnreal.coe_ne_zero]
+  op_norm_le_bound' f (zero_le M) fun x hx => hM x <| by rwa [← NNReal.coe_ne_zero]
 #align continuous_linear_map.op_nnnorm_le_bound' ContinuousLinearMap.op_nnnorm_le_bound'
 
 /-- For a continuous real linear map `f`, if one controls the norm of every `f x`, `‖x‖₊ = 1`, then
 one controls the norm of `f`. -/
 theorem op_nnnorm_le_of_unit_nnnorm [NormedSpace ℝ E] [NormedSpace ℝ F] {f : E →L[ℝ] F} {C : ℝ≥0}
     (hf : ∀ x, ‖x‖₊ = 1 → ‖f x‖₊ ≤ C) : ‖f‖₊ ≤ C :=
-  op_norm_le_of_unit_norm C.coe_nonneg fun x hx => hf x <| by rwa [← Nnreal.coe_eq_one]
+  op_norm_le_of_unit_norm C.coe_nonneg fun x hx => hf x <| by rwa [← NNReal.coe_eq_one]
 #align continuous_linear_map.op_nnnorm_le_of_unit_nnnorm ContinuousLinearMap.op_nnnorm_le_of_unit_nnnorm
 
 theorem op_nnnorm_le_of_lipschitz {f : E →SL[σ₁₂] F} {K : ℝ≥0} (hf : LipschitzWith K f) :
@@ -542,12 +542,12 @@ theorem exists_lt_apply_of_lt_op_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCo
     nnnorm_ne_zero_iff.2 fun heq => by
       simpa only [HEq, nnnorm_zero, map_zero, not_lt_zero'] using hy
   have hfy : ‖f y‖₊ ≠ 0 := (zero_le'.trans_lt hy).ne'
-  rw [← inv_inv ‖f y‖₊, Nnreal.lt_inv_iff_mul_lt (inv_ne_zero hfy), mul_assoc, mul_comm ‖y‖₊, ←
-    mul_assoc, ← Nnreal.lt_inv_iff_mul_lt hy'] at hy
+  rw [← inv_inv ‖f y‖₊, NNReal.lt_inv_iff_mul_lt (inv_ne_zero hfy), mul_assoc, mul_comm ‖y‖₊, ←
+    mul_assoc, ← NNReal.lt_inv_iff_mul_lt hy'] at hy
   obtain ⟨k, hk₁, hk₂⟩ := NormedField.exists_lt_nnnorm_lt 𝕜 hy
-  refine' ⟨k • y, (nnnorm_smul k y).symm ▸ (Nnreal.lt_inv_iff_mul_lt hy').1 hk₂, _⟩
+  refine' ⟨k • y, (nnnorm_smul k y).symm ▸ (NNReal.lt_inv_iff_mul_lt hy').1 hk₂, _⟩
   have : ‖σ₁₂ k‖₊ = ‖k‖₊ := Subtype.ext RingHomIsometric.is_iso
-  rwa [map_smulₛₗ f, nnnorm_smul, ← Nnreal.div_lt_iff hfy, div_eq_mul_inv, this]
+  rwa [map_smulₛₗ f, nnnorm_smul, ← NNReal.div_lt_iff hfy, div_eq_mul_inv, this]
 #align continuous_linear_map.exists_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_lt_apply_of_lt_op_nnnorm
 
 theorem exists_lt_apply_of_lt_op_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
@@ -579,7 +579,7 @@ theorem supₛ_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E]
     [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     supₛ ((fun x => ‖f x‖) '' ball 0 1) = ‖f‖ := by
-  simpa only [Nnreal.coe_supₛ, Set.image_image] using Nnreal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
+  simpa only [NNReal.coe_supₛ, Set.image_image] using NNReal.coe_eq.2 f.Sup_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_unit_ball_eq_norm ContinuousLinearMap.supₛ_unit_ball_eq_norm
 
 theorem supₛ_closed_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type _} [NormedAddCommGroup E]
@@ -602,8 +602,8 @@ theorem supₛ_closed_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type _} [NormedAddCo
     [SeminormedAddCommGroup F] [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂}
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) :
     supₛ ((fun x => ‖f x‖) '' closedBall 0 1) = ‖f‖ := by
-  simpa only [Nnreal.coe_supₛ, Set.image_image] using
-    Nnreal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
+  simpa only [NNReal.coe_supₛ, Set.image_image] using
+    NNReal.coe_eq.2 f.Sup_closed_unit_ball_eq_nnnorm
 #align continuous_linear_map.Sup_closed_unit_ball_eq_norm ContinuousLinearMap.supₛ_closed_unit_ball_eq_norm
 
 end Sup
@@ -1829,7 +1829,7 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
 space is the product of the non-negative norms. -/
 @[simp]
 theorem nnnorm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c f‖₊ = ‖c‖₊ * ‖f‖₊ :=
-  Nnreal.eq <| c.norm_smulRight_apply f
+  NNReal.eq <| c.norm_smulRight_apply f
 #align continuous_linear_map.nnnorm_smul_right_apply ContinuousLinearMap.nnnorm_smulRight_apply
 
 variable (𝕜 E Fₗ)

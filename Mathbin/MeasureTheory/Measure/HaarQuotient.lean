@@ -37,7 +37,7 @@ Note that a group `G` with Haar measure that is both left and right invariant is
 
 open Set MeasureTheory TopologicalSpace MeasureTheory.Measure
 
-open Pointwise Nnreal
+open Pointwise NNReal
 
 variable {G : Type _} [Group G] [MeasurableSpace G] [TopologicalSpace G] [TopologicalGroup G]
   [BorelSpace G] {μ : Measure G} {Γ : Subgroup G}

@@ -43,7 +43,7 @@ The definitions of filtration and adapted can be found in `probability.stopping`
 
 open TopologicalSpace Filter
 
-open Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators
+open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 

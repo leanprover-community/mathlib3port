@@ -116,7 +116,7 @@ theorem dist_of_re_eq {z w : ℂ} (h : z.re = w.re) : dist z w = dist z.im w.im 
 #align complex.dist_of_re_eq Complex.dist_of_re_eq
 
 theorem nndist_of_re_eq {z w : ℂ} (h : z.re = w.re) : nndist z w = nndist z.im w.im :=
-  Nnreal.eq <| dist_of_re_eq h
+  NNReal.eq <| dist_of_re_eq h
 #align complex.nndist_of_re_eq Complex.nndist_of_re_eq
 
 theorem edist_of_re_eq {z w : ℂ} (h : z.re = w.re) : edist z w = edist z.im w.im := by
@@ -128,7 +128,7 @@ theorem dist_of_im_eq {z w : ℂ} (h : z.im = w.im) : dist z w = dist z.re w.re 
 #align complex.dist_of_im_eq Complex.dist_of_im_eq
 
 theorem nndist_of_im_eq {z w : ℂ} (h : z.im = w.im) : nndist z w = nndist z.re w.re :=
-  Nnreal.eq <| dist_of_im_eq h
+  NNReal.eq <| dist_of_im_eq h
 #align complex.nndist_of_im_eq Complex.nndist_of_im_eq
 
 theorem edist_of_im_eq {z w : ℂ} (h : z.im = w.im) : edist z w = edist z.re w.re := by
@@ -141,7 +141,7 @@ theorem dist_conj_self (z : ℂ) : dist (conj z) z = 2 * |z.im| := by
 #align complex.dist_conj_self Complex.dist_conj_self
 
 theorem nndist_conj_self (z : ℂ) : nndist (conj z) z = 2 * Real.nnabs z.im :=
-  Nnreal.eq <| by rw [← dist_nndist, Nnreal.coe_mul, Nnreal.coe_two, Real.coe_nnabs, dist_conj_self]
+  NNReal.eq <| by rw [← dist_nndist, NNReal.coe_mul, NNReal.coe_two, Real.coe_nnabs, dist_conj_self]
 #align complex.nndist_conj_self Complex.nndist_conj_self
 
 theorem dist_self_conj (z : ℂ) : dist z (conj z) = 2 * |z.im| := by rw [dist_comm, dist_conj_self]
@@ -207,7 +207,7 @@ theorem nnnorm_int (n : ℤ) : ‖(n : ℂ)‖₊ = ‖n‖₊ :=
 
 theorem nnnorm_eq_one_of_pow_eq_one {ζ : ℂ} {n : ℕ} (h : ζ ^ n = 1) (hn : n ≠ 0) : ‖ζ‖₊ = 1 :=
   by
-  refine' (@pow_left_inj Nnreal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
+  refine' (@pow_left_inj NNReal _ _ _ _ zero_le' zero_le' hn.bot_lt).mp _
   rw [← nnnorm_pow, h, nnnorm_one, one_pow]
 #align complex.nnnorm_eq_one_of_pow_eq_one Complex.nnnorm_eq_one_of_pow_eq_one
 
@@ -227,7 +227,7 @@ theorem lipschitz_equivRealProd : LipschitzWith 1 equivRealProd := by
   simpa using AddMonoidHomClass.lipschitz_of_bound equiv_real_prod_lm 1 equiv_real_prod_apply_le'
 #align complex.lipschitz_equiv_real_prod Complex.lipschitz_equivRealProd
 
-theorem antilipschitz_equivRealProd : AntilipschitzWith (Nnreal.sqrt 2) equivRealProd := by
+theorem antilipschitz_equivRealProd : AntilipschitzWith (NNReal.sqrt 2) equivRealProd := by
   simpa using AddMonoidHomClass.antilipschitz_of_bound equiv_real_prod_lm abs_le_sqrt_two_mul_max
 #align complex.antilipschitz_equiv_real_prod Complex.antilipschitz_equivRealProd
 

@@ -82,7 +82,7 @@ make no sense. However, the measure is not globally zero if the space is big eno
 
 open MeasureTheory Metric Set Filter TopologicalSpace MeasureTheory.Measure
 
-open Filter Ennreal MeasureTheory Nnreal Topology
+open Filter Ennreal MeasureTheory NNReal Topology
 
 variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ : Measure α} (v : VitaliFamily μ)
   {E : Type _} [NormedAddCommGroup E]
@@ -213,7 +213,7 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
   intro x hx h'x
   refine' tendsto_order.2 ⟨fun z hz => (Ennreal.not_lt_zero hz).elim, fun z hz => _⟩
   obtain ⟨w, w_pos, w_lt⟩ : ∃ w : ℝ≥0, (0 : ℝ≥0∞) < w ∧ (w : ℝ≥0∞) < z :=
-    Ennreal.lt_iff_exists_nnreal_btwn.1 hz
+    Ennreal.lt_iff_exists_nNReal_btwn.1 hz
   obtain ⟨n, hn⟩ : ∃ n, u n < w := ((tendsto_order.1 u_lim).2 w (Ennreal.coe_pos.1 w_pos)).exists
   filter_upwards [hx n, h'x, v.eventually_measure_lt_top x]
   intro a ha μa_pos μa_lt_top
@@ -669,9 +669,9 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         rw [← Ennreal.coe_zpow (zero_lt_one.trans ht).ne', Ennreal.coe_lt_coe, sub_eq_add_neg,
           zpow_add₀ t_ne_zero']
         conv_rhs => rw [← mul_one (t ^ n)]
-        refine' mul_lt_mul' le_rfl _ (zero_le _) (Nnreal.zpow_pos t_ne_zero' _)
+        refine' mul_lt_mul' le_rfl _ (zero_le _) (NNReal.zpow_pos t_ne_zero' _)
         rw [zpow_neg_one]
-        exact Nnreal.inv_lt_one ht
+        exact NNReal.inv_lt_one ht
       
   calc
     ν s =
@@ -1014,7 +1014,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) :
     rfl
   · apply integral_nonneg
     intro x
-    exact Nnreal.coe_nonneg _
+    exact NNReal.coe_nonneg _
 #align vitali_family.ae_tendsto_average_norm_sub VitaliFamily.ae_tendsto_average_norm_sub
 
 /-- *Lebesgue differentiation theorem*: for almost every point `x`, the

@@ -51,7 +51,7 @@ only to prove the more general results:
 
 noncomputable section
 
-open Classical BigOperators Nnreal Ennreal
+open Classical BigOperators NNReal Ennreal
 
 open MeasureTheory
 
@@ -411,13 +411,13 @@ end Ennreal
 /-- Hölder's inequality for functions `α → ℝ≥0`. The integral of the product of two functions
 is bounded by the product of their `ℒp` and `ℒq` seminorms when `p` and `q` are conjugate
 exponents. -/
-theorem Nnreal.lintegral_mul_le_Lp_mul_Lq {p q : ℝ} (hpq : p.IsConjugateExponent q) {f g : α → ℝ≥0}
+theorem NNReal.lintegral_mul_le_Lp_mul_Lq {p q : ℝ} (hpq : p.IsConjugateExponent q) {f g : α → ℝ≥0}
     (hf : AeMeasurable f μ) (hg : AeMeasurable g μ) :
     (∫⁻ a, (f * g) a ∂μ) ≤ (∫⁻ a, f a ^ p ∂μ) ^ (1 / p) * (∫⁻ a, g a ^ q ∂μ) ^ (1 / q) :=
   by
   simp_rw [Pi.mul_apply, Ennreal.coe_mul]
   exact Ennreal.lintegral_mul_le_Lp_mul_Lq μ hpq hf.coe_nnreal_ennreal hg.coe_nnreal_ennreal
-#align nnreal.lintegral_mul_le_Lp_mul_Lq Nnreal.lintegral_mul_le_Lp_mul_Lq
+#align nnreal.lintegral_mul_le_Lp_mul_Lq NNReal.lintegral_mul_le_Lp_mul_Lq
 
 end Lintegral
 

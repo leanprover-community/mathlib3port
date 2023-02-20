@@ -41,7 +41,7 @@ ring_seminorm, ring_norm
 -/
 
 
-open Nnreal
+open NNReal
 
 variable {F R S : Type _} (x y : R) (r : ℝ)
 

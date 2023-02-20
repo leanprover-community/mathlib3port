@@ -37,7 +37,7 @@ filtration, stochastic process
 
 open Filter Order TopologicalSpace
 
-open Classical MeasureTheory Nnreal Ennreal Topology BigOperators
+open Classical MeasureTheory NNReal Ennreal Topology BigOperators
 
 namespace MeasureTheory
 

@@ -52,7 +52,7 @@ that the sets one uses are nonempty and bounded above as these are only conditio
 -/
 
 
-open BigOperators Nnreal Ennreal Topology UniformConvergence
+open BigOperators NNReal Ennreal Topology UniformConvergence
 
 open Set MeasureTheory Filter
 

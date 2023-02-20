@@ -28,7 +28,7 @@ as possible.
 
 open MeasureTheory Set TopologicalSpace
 
-open Classical Ennreal Nnreal
+open Classical Ennreal NNReal
 
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere

@@ -42,7 +42,7 @@ variable {X Y Z : Type _}
 
 open Filter Set
 
-open Nnreal Ennreal Topology
+open NNReal Ennreal Topology
 
 section Emetric
 
@@ -85,7 +85,7 @@ theorem holderOnWith_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f uni
 @[simp]
 theorem holderOnWith_one {C : ℝ≥0} {f : X → Y} {s : Set X} :
     HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
-  simp only [HolderOnWith, LipschitzOnWith, Nnreal.coe_one, Ennreal.rpow_one]
+  simp only [HolderOnWith, LipschitzOnWith, NNReal.coe_one, Ennreal.rpow_one]
 #align holder_on_with_one holderOnWith_one
 
 alias holderOnWith_one ↔ _ LipschitzOnWith.holderOnWith
@@ -126,7 +126,7 @@ theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg r
     HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
   by
   intro x hx y hy
-  rw [Ennreal.coe_mul, mul_comm rg, Nnreal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
+  rw [Ennreal.coe_mul, mul_comm rg, NNReal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
     Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
   exact hg.edist_le_of_le (hst hx) (hst hy) (hf.edist_le hx hy)
 #align holder_on_with.comp HolderOnWith.comp

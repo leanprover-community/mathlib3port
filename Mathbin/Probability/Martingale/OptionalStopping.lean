@@ -30,7 +30,7 @@ This file also contains Doob's maximal inequality: given a non-negative submarti
  -/
 
 
-open Nnreal Ennreal MeasureTheory ProbabilityTheory
+open NNReal Ennreal MeasureTheory ProbabilityTheory
 
 namespace MeasureTheory
 

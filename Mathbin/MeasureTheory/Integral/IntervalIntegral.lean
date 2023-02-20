@@ -174,7 +174,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory Set Classical Filter Function
 
-open Classical Topology Filter Ennreal BigOperators Interval Nnreal
+open Classical Topology Filter Ennreal BigOperators Interval NNReal
 
 variable {ι 𝕜 E F A : Type _} [NormedAddCommGroup E]
 
@@ -2800,7 +2800,7 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
   have intF : integrable_on F (Ioo a b) :=
     by
     refine' ⟨f.measurable.coe_nnreal_real.ae_strongly_measurable, _⟩
-    simpa only [has_finite_integral, Nnreal.nnnorm_eq] using fint
+    simpa only [has_finite_integral, NNReal.nnnorm_eq] using fint
   have A : (∫⁻ x : ℝ in Ioo a b, f x) = Ennreal.ofReal (∫ x in Ioo a b, F x) :=
     lintegral_coe_eq_integral _ intF
   rw [A] at hf
@@ -2809,7 +2809,7 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
     rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab]
     apply integral_le_sub_of_has_deriv_right_of_le hab hcont hderiv _ fun x hx => _
     · rwa [integrableOn_Icc_iff_integrableOn_Ioo]
-    · convert Nnreal.coe_le_coe.2 (fle x)
+    · convert NNReal.coe_le_coe.2 (fle x)
       simp only [Real.norm_of_nonneg (g'pos x hx), coe_nnnorm]
   exact lt_irrefl _ (hf.trans_le (Ennreal.ofReal_le_ofReal B))
 #align interval_integral.integrable_on_deriv_right_of_nonneg intervalIntegral.integrableOnDerivRightOfNonneg

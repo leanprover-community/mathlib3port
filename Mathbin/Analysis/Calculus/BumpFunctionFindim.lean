@@ -31,7 +31,7 @@ noncomputable section
 open
   Set Metric TopologicalSpace Function Asymptotics MeasureTheory FiniteDimensional ContinuousLinearMap Filter MeasureTheory.Measure
 
-open Pointwise Topology Nnreal BigOperators convolution
+open Pointwise Topology NNReal BigOperators convolution
 
 variable {E : Type _} [NormedAddCommGroup E]
 
@@ -135,8 +135,8 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
   have g_comp_supp : ∀ n, HasCompactSupport (g n) := fun n => (g0 n).2.2.1
   have g_nonneg : ∀ n x, 0 ≤ g n x := fun n x => ((g0 n).2.2.2.2 (mem_range_self x)).1
   obtain ⟨δ, δpos, c, δc, c_lt⟩ :
-    ∃ δ : ℕ → ℝ≥0, (∀ i : ℕ, 0 < δ i) ∧ ∃ c : Nnreal, HasSum δ c ∧ c < 1
-  exact Nnreal.exists_pos_sum_of_countable one_ne_zero ℕ
+    ∃ δ : ℕ → ℝ≥0, (∀ i : ℕ, 0 < δ i) ∧ ∃ c : NNReal, HasSum δ c ∧ c < 1
+  exact NNReal.exists_pos_sum_of_countable one_ne_zero ℕ
   have : ∀ n : ℕ, ∃ r : ℝ, 0 < r ∧ ∀ i ≤ n, ∀ x, ‖iteratedFderiv ℝ i (r • g n) x‖ ≤ δ n :=
     by
     intro n
@@ -180,7 +180,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     by
     intro x
     refine' summable_of_nnnorm_bounded _ δc.summable fun n => _
-    rw [← Nnreal.coe_le_coe, coe_nnnorm]
+    rw [← NNReal.coe_le_coe, coe_nnnorm]
     simpa only [norm_iteratedFderiv_zero] using hr n 0 (zero_le n) x
   refine' ⟨fun x => ∑' n, (r n • g n) x, _, _, _⟩
   · apply subset.antisymm
@@ -199,14 +199,14 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
       exact ne_of_gt (tsum_pos (S x) (fun i => mul_nonneg (rpos i).le (g_nonneg i x)) n I)
   · refine'
       contDiff_tsum_of_eventually (fun n => (g_smooth n).const_smul _)
-        (fun k hk => (Nnreal.hasSum_coe.2 δc).Summable) _
+        (fun k hk => (NNReal.hasSum_coe.2 δc).Summable) _
     intro i hi
     simp only [Nat.cofinite_eq_atTop, Pi.smul_apply, Algebra.id.smul_eq_mul,
       Filter.eventually_atTop, ge_iff_le]
     exact ⟨i, fun n hn x => hr _ _ hn _⟩
   · rintro - ⟨y, rfl⟩
     refine' ⟨tsum_nonneg fun n => mul_nonneg (rpos n).le (g_nonneg n y), le_trans _ c_lt.le⟩
-    have A : HasSum (fun n => (δ n : ℝ)) c := Nnreal.hasSum_coe.2 δc
+    have A : HasSum (fun n => (δ n : ℝ)) c := NNReal.hasSum_coe.2 δc
     rw [← A.tsum_eq]
     apply tsum_le_tsum _ (S y) A.summable
     intro n

@@ -49,7 +49,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 -/
 
 
-open Ennreal Nnreal
+open Ennreal NNReal
 
 /-- The *spectral radius* is the supremum of the `nnnorm` (`‖⬝‖₊`) of elements in the spectrum,
     coerced into an element of `ℝ≥0∞`. Note that it is possible for `spectrum 𝕜 a = ∅`. In this
@@ -183,8 +183,8 @@ theorem spectralRadius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
       eval_monomial] using subset_polynomial_aeval a (monomial (n + 1) (1 : 𝕜)) ⟨k, hk, rfl⟩
   -- power of the norm is bounded by norm of the power
   have nnnorm_pow_le : (↑(‖k‖₊ ^ (n + 1)) : ℝ≥0∞) ≤ ‖a ^ (n + 1)‖₊ * ‖(1 : A)‖₊ := by
-    simpa only [Real.toNnreal_mul (norm_nonneg _), norm_toNnreal, nnnorm_pow k (n + 1),
-      Ennreal.coe_mul] using coe_mono (Real.toNnreal_mono (norm_le_norm_mul_of_mem pow_mem))
+    simpa only [Real.toNNReal_mul (norm_nonneg _), norm_toNNReal, nnnorm_pow k (n + 1),
+      Ennreal.coe_mul] using coe_mono (Real.toNNReal_mono (norm_le_norm_mul_of_mem pow_mem))
   -- take (n + 1)ᵗʰ roots and clean up the left-hand side
   have hn : 0 < ((n + 1 : ℕ) : ℝ) := by exact_mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le
@@ -288,7 +288,7 @@ section OneSubSmul
 
 open ContinuousMultilinearMap Ennreal FormalMultilinearSeries
 
-open Nnreal Ennreal
+open NNReal Ennreal
 
 variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
@@ -304,7 +304,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
       by
       refine'
         le_of_forall_nnreal_lt fun r hr => le_radius_of_bound_nnreal _ (max 1 ‖(1 : A)‖₊) fun n => _
-      rw [← norm_toNnreal, norm_mk_pi_field, norm_toNnreal]
+      rw [← norm_toNNReal, norm_mk_pi_field, norm_toNNReal]
       cases n
       · simp only [le_refl, mul_one, or_true_iff, le_max_iff, pow_zero]
       · refine'
@@ -312,7 +312,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
             (le_max_left _ _)
         · by_cases ‖a‖₊ = 0
           · simp only [h, zero_mul, zero_le', pow_succ]
-          · rw [← coe_inv h, coe_lt_coe, Nnreal.lt_inv_iff_mul_lt h] at hr
+          · rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr
             simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
     r_pos := Ennreal.inv_pos.mpr coe_ne_top
     HasSum := fun y hy =>
@@ -321,9 +321,9 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
         by_cases h : ‖a‖₊ = 0
         · simp only [nnnorm_eq_zero.mp h, norm_zero, zero_lt_one, smul_zero]
         · have nnnorm_lt : ‖y‖₊ < ‖a‖₊⁻¹ := by
-            simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
-          rwa [← coe_nnnorm, ← Real.lt_toNnreal_iff_coe_lt, Real.toNnreal_one, nnnorm_smul, ←
-            Nnreal.lt_inv_iff_mul_lt h]
+            simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nNReal] using hy
+          rwa [← coe_nnnorm, ← Real.lt_toNNReal_iff_coe_lt, Real.toNNReal_one, nnnorm_smul, ←
+            NNReal.lt_inv_iff_mul_lt h]
       simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_1 _ norm_lt).hasSum_iff] using
         (NormedRing.inverse_oneSub _ norm_lt).symm }
 #align spectrum.has_fpower_series_on_ball_inverse_one_sub_smul spectrum.hasFpowerSeriesOnBallInverseOneSubSmul
@@ -354,8 +354,8 @@ theorem differentiableOn_inverse_one_sub_smul [CompleteSpace A] {a : A} {r : ℝ
   have hu : IsUnit (1 - z • a) :=
     by
     refine' is_unit_one_sub_smul_of_lt_inv_radius (lt_of_le_of_lt (coe_mono _) hr)
-    simpa only [norm_toNnreal, Real.toNnreal_coe] using
-      Real.toNnreal_mono (mem_closed_ball_zero_iff.mp z_mem)
+    simpa only [norm_toNNReal, Real.toNNReal_coe] using
+      Real.toNNReal_mono (mem_closed_ball_zero_iff.mp z_mem)
   have H₁ : Differentiable 𝕜 fun w : 𝕜 => 1 - w • a := (differentiable_id.smul_const a).const_sub 1
   exact DifferentiableAt.comp z (differentiableAt_inverse hu.unit) H₁.differentiable_at
 #align spectrum.differentiable_on_inverse_one_sub_smul spectrum.differentiableOn_inverse_one_sub_smul
@@ -380,10 +380,10 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectralRadius (a : A) :
     ContinuousMultilinearMap.mkPiField ℂ (Fin n) (a ^ n)
   suffices h : (r : ℝ≥0∞) ≤ p.radius
   · convert h
-    simp only [p.radius_eq_liminf, ← norm_toNnreal, norm_mk_pi_field]
+    simp only [p.radius_eq_liminf, ← norm_toNNReal, norm_mk_pi_field]
     congr
     ext n
-    rw [norm_toNnreal, Ennreal.coe_rpow_def ‖a ^ n‖₊ (1 / n : ℝ), if_neg]
+    rw [norm_toNNReal, Ennreal.coe_rpow_def ‖a ^ n‖₊ (1 / n : ℝ), if_neg]
     exact fun ha => by linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
   · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFpowerSeriesOnBall r_pos
     exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchangeRadius H₁).r_le

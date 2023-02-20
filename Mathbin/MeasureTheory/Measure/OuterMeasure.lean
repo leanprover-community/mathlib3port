@@ -62,7 +62,7 @@ open Set Function Filter
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical BigOperators Nnreal Topology Ennreal MeasureTheory
+open Classical BigOperators NNReal Topology Ennreal MeasureTheory
 
 namespace MeasureTheory
 

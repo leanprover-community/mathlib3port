@@ -66,7 +66,7 @@ We also set up the theory for `pseudo_emetric_space` and `pseudo_metric_space`.
 
 open Real Set Filter IsROrC Bornology
 
-open BigOperators uniformity Topology Nnreal Ennreal
+open BigOperators uniformity Topology NNReal Ennreal
 
 noncomputable section
 
@@ -320,7 +320,7 @@ theorem supᵢ_edist_ne_top_aux {ι : Type _} [Finite ι] {α : ι → Type _}
   cases nonempty_fintype ι
   obtain ⟨M, hM⟩ := Fintype.exists_le fun i => (⟨dist (f i) (g i), dist_nonneg⟩ : ℝ≥0)
   refine' ne_of_lt ((supᵢ_le fun i => _).trans_lt (@Ennreal.coe_lt_top M))
-  simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.ofReal_eq_coe_nnreal dist_nonneg]
+  simp only [edist, PseudoMetricSpace.edist_dist, Ennreal.ofReal_eq_coe_nNReal dist_nonneg]
   exact_mod_cast hM i
 #align pi_Lp.supr_edist_ne_top_aux PiLp.supᵢ_edist_ne_top_aux
 
@@ -395,7 +395,7 @@ theorem antilipschitzWith_equiv_aux :
   by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero,
+  · simp only [edist_eq_supr, Ennreal.div_top, Ennreal.zero_toReal, NNReal.rpow_zero,
       Ennreal.coe_one, one_mul, supᵢ_le_iff]
     exact fun i => Finset.le_sup (Finset.mem_univ i)
   · have pos : 0 < p.to_real := zero_lt_one.trans_le h
@@ -528,7 +528,7 @@ theorem infty_equiv_isometry [∀ i, PseudoEmetricSpace (β i)] : Isometry (PiLp
   fun x y =>
   le_antisymm (by simpa only [Ennreal.coe_one, one_mul] using lipschitz_with_equiv ∞ β x y)
     (by
-      simpa only [Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero, Ennreal.coe_one,
+      simpa only [Ennreal.div_top, Ennreal.zero_toReal, NNReal.rpow_zero, Ennreal.coe_one,
         one_mul] using antilipschitz_with_equiv ∞ β x y)
 #align pi_Lp.infty_equiv_isometry PiLp.infty_equiv_isometry
 
@@ -560,13 +560,13 @@ theorem nnnorm_eq_sum {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _} (hp
     ‖f‖₊ = (∑ i, ‖f i‖₊ ^ p.toReal) ^ (1 / p.toReal) :=
   by
   ext
-  simp [Nnreal.coe_sum, norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
+  simp [NNReal.coe_sum, norm_eq_sum (p.to_real_pos_iff_ne_top.mpr hp)]
 #align pi_Lp.nnnorm_eq_sum PiLp.nnnorm_eq_sum
 
 theorem nnnorm_eq_csupr {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (f : PiLp ∞ β) :
     ‖f‖₊ = ⨆ i, ‖f i‖₊ := by
   ext
-  simp [Nnreal.coe_supᵢ, norm_eq_csupr]
+  simp [NNReal.coe_supᵢ, norm_eq_csupr]
 #align pi_Lp.nnnorm_eq_csupr PiLp.nnnorm_eq_csupr
 
 theorem norm_eq_of_nat {p : ℝ≥0∞} [Fact (1 ≤ p)] {β : ι → Type _}
@@ -587,7 +587,7 @@ theorem norm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)
 #align pi_Lp.norm_eq_of_L2 PiLp.norm_eq_of_L2
 
 theorem nnnorm_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x : PiLp 2 β) :
-    ‖x‖₊ = Nnreal.sqrt (∑ i : ι, ‖x i‖₊ ^ 2) :=
+    ‖x‖₊ = NNReal.sqrt (∑ i : ι, ‖x i‖₊ ^ 2) :=
   Subtype.ext <| by
     push_cast
     exact norm_eq_of_L2 x
@@ -597,8 +597,8 @@ theorem norm_sq_eq_of_L2 (β : ι → Type _) [∀ i, SeminormedAddCommGroup (β
     ‖x‖ ^ 2 = ∑ i : ι, ‖x i‖ ^ 2 :=
   by
   suffices ‖x‖₊ ^ 2 = ∑ i : ι, ‖x i‖₊ ^ 2 by
-    simpa only [Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
-  rw [nnnorm_eq_of_L2, Nnreal.sq_sqrt]
+    simpa only [NNReal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) this
+  rw [nnnorm_eq_of_L2, NNReal.sq_sqrt]
 #align pi_Lp.norm_sq_eq_of_L2 PiLp.norm_sq_eq_of_L2
 
 theorem dist_eq_of_L2 {β : ι → Type _} [∀ i, SeminormedAddCommGroup (β i)] (x y : PiLp 2 β) :
@@ -626,8 +626,8 @@ instance normedSpace [∀ i, SeminormedAddCommGroup (β i)] [∀ i, NormedSpace 
     norm_smul_le := fun c f => by
       rcases p.dichotomy with (rfl | hp)
       · letI : Module 𝕜 (PiLp ∞ β) := Pi.module ι β 𝕜
-        suffices ‖c • f‖₊ = ‖c‖₊ * ‖f‖₊ by exact_mod_cast Nnreal.coe_mono this.le
-        simpa only [nnnorm_eq_csupr, Nnreal.mul_supᵢ, ← nnnorm_smul]
+        suffices ‖c • f‖₊ = ‖c‖₊ * ‖f‖₊ by exact_mod_cast NNReal.coe_mono this.le
+        simpa only [nnnorm_eq_csupr, NNReal.mul_supᵢ, ← nnnorm_smul]
       · have : p.to_real * (1 / p.to_real) = 1 := mul_div_cancel' 1 (zero_lt_one.trans_le hp).ne'
         simp only [norm_eq_sum (zero_lt_one.trans_le hp), norm_smul, mul_rpow, norm_nonneg, ←
           Finset.mul_sum, Pi.smul_apply]
@@ -681,7 +681,7 @@ def equivₗᵢ : PiLp ∞ β ≃ₗᵢ[𝕜] ∀ i, β i :=
     norm_map' := fun f =>
       by
       suffices (finset.univ.sup fun i => ‖f i‖₊) = ⨆ i, ‖f i‖₊ by
-        simpa only [Nnreal.coe_supᵢ] using congr_arg (coe : ℝ≥0 → ℝ) this
+        simpa only [NNReal.coe_supᵢ] using congr_arg (coe : ℝ≥0 → ℝ) this
       refine'
         antisymm (Finset.sup_le fun i _ => le_csupᵢ (Fintype.bddAbove_range fun i => ‖f i‖₊) _) _
       cases isEmpty_or_nonempty ι
@@ -800,8 +800,8 @@ theorem nnnorm_equiv_symm_const {β} [SeminormedAddCommGroup β] (hp : p ≠ ∞
   · exact False.elim (hp h)
   · have ne_zero : p.to_real ≠ 0 := (zero_lt_one.trans_le h).ne'
     simp_rw [nnnorm_eq_sum hp, equiv_symm_apply, Function.const_apply, Finset.sum_const,
-      Finset.card_univ, nsmul_eq_mul, Nnreal.mul_rpow, ← Nnreal.rpow_mul, mul_one_div_cancel NeZero,
-      Nnreal.rpow_one, Ennreal.toReal_div, Ennreal.one_toReal]
+      Finset.card_univ, nsmul_eq_mul, NNReal.mul_rpow, ← NNReal.rpow_mul, mul_one_div_cancel NeZero,
+      NNReal.rpow_one, Ennreal.toReal_div, Ennreal.one_toReal]
 #align pi_Lp.nnnorm_equiv_symm_const PiLp.nnnorm_equiv_symm_const
 
 /-- When `is_empty ι`, this lemma does not hold without the additional assumption `p ≠ ∞` because
@@ -814,7 +814,7 @@ theorem nnnorm_equiv_symm_const' {β} [SeminormedAddCommGroup β] [Nonempty ι] 
   by
   rcases em <| p = ∞ with (rfl | hp)
   ·
-    simp only [equiv_symm_apply, Ennreal.div_top, Ennreal.zero_toReal, Nnreal.rpow_zero, one_mul,
+    simp only [equiv_symm_apply, Ennreal.div_top, Ennreal.zero_toReal, NNReal.rpow_zero, one_mul,
       nnnorm_eq_csupr, Function.const_apply, csupᵢ_const]
   · exact nnnorm_equiv_symm_const hp b
 #align pi_Lp.nnnorm_equiv_symm_const' PiLp.nnnorm_equiv_symm_const'

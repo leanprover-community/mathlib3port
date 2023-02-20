@@ -30,7 +30,7 @@ ball/sphere with another center and radius.
 
 noncomputable section
 
-open UpperHalfPlane ComplexConjugate Nnreal Topology
+open UpperHalfPlane ComplexConjugate NNReal Topology
 
 open Set Metric Filter Real
 

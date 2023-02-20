@@ -84,7 +84,7 @@ open Filter
 
 open BoundedContinuousFunction
 
-open Topology Ennreal Nnreal BoundedContinuousFunction
+open Topology Ennreal NNReal BoundedContinuousFunction
 
 namespace MeasureTheory
 

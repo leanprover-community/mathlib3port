@@ -61,7 +61,7 @@ say that `‖-f‖ = ‖f‖`, instead of the non-working `f.norm_neg`.
 
 noncomputable section
 
-open Nnreal Ennreal BigOperators
+open NNReal Ennreal BigOperators
 
 variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddCommGroup (E i)]
 
@@ -242,7 +242,7 @@ theorem add {f g : ∀ i, E i} (hf : Memℓp f p) (hg : Memℓp g p) : Memℓp (
   · refine' (Real.rpow_le_rpow (norm_nonneg _) (norm_add_le _ _) hp.le).trans _
     dsimp [C]
     split_ifs with h h
-    · simpa using Nnreal.coe_le_coe.2 (Nnreal.rpow_add_le_add_rpow ‖f i‖₊ ‖g i‖₊ hp.le h.le)
+    · simpa using NNReal.coe_le_coe.2 (NNReal.rpow_add_le_add_rpow ‖f i‖₊ ‖g i‖₊ hp.le h.le)
     · let F : Fin 2 → ℝ≥0 := ![‖f i‖₊, ‖g i‖₊]
       have : ∀ i, (0 : ℝ) ≤ F i := fun i => (F i).coe_nonneg
       simp only [not_lt] at h

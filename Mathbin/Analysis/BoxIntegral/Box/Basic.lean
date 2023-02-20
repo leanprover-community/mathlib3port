@@ -59,7 +59,7 @@ open Set Function Metric Filter
 
 noncomputable section
 
-open Nnreal Classical Topology
+open NNReal Classical Topology
 
 namespace BoxIntegral
 
@@ -511,7 +511,7 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     have := div_nonpos_of_nonneg_of_nonpos (sub_nonneg.2 <| J.lower_le_upper i) (not_lt.1 hr)
     rw [← h] at this
     exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
-  simp_rw [Nnreal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
+  simp_rw [NNReal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
 #align box_integral.box.distortion_eq_of_sub_eq_div BoxIntegral.Box.distortion_eq_of_sub_eq_div
 
 theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
@@ -529,7 +529,7 @@ theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
     dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) :=
   by
   have A : I.lower i - I.upper i < 0 := sub_neg.2 (I.lower_lt_upper i)
-  simpa only [← Nnreal.coe_le_coe, ← dist_nndist, Nnreal.coe_mul, Real.dist_eq, abs_of_neg A,
+  simpa only [← NNReal.coe_le_coe, ← dist_nndist, NNReal.coe_mul, Real.dist_eq, abs_of_neg A,
     neg_sub] using I.nndist_le_distortion_mul i
 #align box_integral.box.dist_le_distortion_mul BoxIntegral.Box.dist_le_distortion_mul
 

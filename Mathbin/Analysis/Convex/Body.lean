@@ -35,7 +35,7 @@ convex, convex body
 
 open Pointwise
 
-open Nnreal
+open NNReal
 
 variable (V : Type _) [TopologicalSpace V] [AddCommGroup V] [ContinuousAdd V] [Module ℝ V]
   [ContinuousSMul ℝ V]
@@ -156,7 +156,7 @@ instance : Module ℝ≥0 (ConvexBody V)
   add_smul c d K := by
     ext1
     simp only [coe_smul, coe_add]
-    exact Convex.add_smul K.convex (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)
+    exact Convex.add_smul K.convex (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)
   zero_smul K := by
     ext1
     exact Set.zero_smul_set K.nonempty

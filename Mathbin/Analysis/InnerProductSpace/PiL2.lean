@@ -59,7 +59,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 
 open Real Set Filter IsROrC Submodule Function
 
-open BigOperators uniformity Topology Nnreal Ennreal ComplexConjugate DirectSum
+open BigOperators uniformity Topology NNReal Ennreal ComplexConjugate DirectSum
 
 noncomputable section
 
@@ -117,13 +117,13 @@ def EuclideanSpace (𝕜 : Type _) [IsROrC 𝕜] (n : Type _) [Fintype n] : Type
 #align euclidean_space EuclideanSpace
 
 theorem EuclideanSpace.nnnorm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
-    (x : EuclideanSpace 𝕜 n) : ‖x‖₊ = Nnreal.sqrt (∑ i, ‖x i‖₊ ^ 2) :=
+    (x : EuclideanSpace 𝕜 n) : ‖x‖₊ = NNReal.sqrt (∑ i, ‖x i‖₊ ^ 2) :=
   PiLp.nnnorm_eq_of_L2 x
 #align euclidean_space.nnnorm_eq EuclideanSpace.nnnorm_eq
 
 theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
     (x : EuclideanSpace 𝕜 n) : ‖x‖ = Real.sqrt (∑ i, ‖x i‖ ^ 2) := by
-  simpa only [Real.coe_sqrt, Nnreal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
+  simpa only [Real.coe_sqrt, NNReal.coe_sum] using congr_arg (coe : ℝ≥0 → ℝ) x.nnnorm_eq
 #align euclidean_space.norm_eq EuclideanSpace.norm_eq
 
 theorem EuclideanSpace.dist_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]

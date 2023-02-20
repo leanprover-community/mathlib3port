@@ -33,7 +33,7 @@ We also give analogues of all these notions in the additive world.
 
 noncomputable section
 
-open Nnreal Ennreal Pointwise BigOperators Topology
+open NNReal Ennreal Pointwise BigOperators Topology
 
 open Inv Set Function MeasureTheory.Measure Filter
 

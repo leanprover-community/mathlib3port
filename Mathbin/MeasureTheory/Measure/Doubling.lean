@@ -32,7 +32,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Ennreal Nnreal Topology
+open Ennreal NNReal Topology
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for

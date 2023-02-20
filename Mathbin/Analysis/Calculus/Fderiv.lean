@@ -121,7 +121,7 @@ derivative, differentiable, Fréchet, calculus
 
 open Filter Asymptotics ContinuousLinearMap Set Metric
 
-open Topology Classical Nnreal Filter Asymptotics Ennreal
+open Topology Classical NNReal Filter Asymptotics Ennreal
 
 noncomputable section
 

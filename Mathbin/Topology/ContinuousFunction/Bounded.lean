@@ -26,7 +26,7 @@ the uniform distance.
 
 noncomputable section
 
-open Topology Classical Nnreal uniformity UniformConvergence
+open Topology Classical NNReal uniformity UniformConvergence
 
 open Set Filter Metric Function
 
@@ -243,8 +243,8 @@ instance {α β} [TopologicalSpace α] [MetricSpace β] : MetricSpace (α →ᵇ
 theorem nndist_eq : nndist f g = infₛ { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
   Subtype.ext <|
     dist_eq.trans <| by
-      rw [Nnreal.coe_infₛ, Nnreal.coe_image]
-      simp_rw [mem_set_of_eq, ← Nnreal.coe_le_coe, Subtype.coe_mk, exists_prop, coe_nndist]
+      rw [NNReal.coe_infₛ, NNReal.coe_image]
+      simp_rw [mem_set_of_eq, ← NNReal.coe_le_coe, Subtype.coe_mk, exists_prop, coe_nndist]
 #align bounded_continuous_function.nndist_eq BoundedContinuousFunction.nndist_eq
 
 theorem nndist_set_exists : ∃ C, ∀ x : α, nndist (f x) (g x) ≤ C :=
@@ -268,7 +268,7 @@ theorem dist_eq_supᵢ : dist f g = ⨆ x : α, dist (f x) (g x) :=
 #align bounded_continuous_function.dist_eq_supr BoundedContinuousFunction.dist_eq_supᵢ
 
 theorem nndist_eq_supᵢ : nndist f g = ⨆ x : α, nndist (f x) (g x) :=
-  Subtype.ext <| dist_eq_supᵢ.trans <| by simp_rw [Nnreal.coe_supᵢ, coe_nndist]
+  Subtype.ext <| dist_eq_supᵢ.trans <| by simp_rw [NNReal.coe_supᵢ, coe_nndist]
 #align bounded_continuous_function.nndist_eq_supr BoundedContinuousFunction.nndist_eq_supᵢ
 
 theorem tendsto_iff_tendstoUniformly {ι : Type _} {F : ι → α →ᵇ β} {f : α →ᵇ β} {l : Filter ι} :
@@ -1074,7 +1074,7 @@ theorem nnnorm_const_eq [h : Nonempty α] (b : β) : ‖const α b‖₊ = ‖b�
 #align bounded_continuous_function.nnnorm_const_eq BoundedContinuousFunction.nnnorm_const_eq
 
 theorem nnnorm_eq_supᵢ_nnnorm : ‖f‖₊ = ⨆ x : α, ‖f x‖₊ :=
-  Subtype.ext <| (norm_eq_supᵢ_norm f).trans <| by simp_rw [Nnreal.coe_supᵢ, coe_nnnorm]
+  Subtype.ext <| (norm_eq_supᵢ_norm f).trans <| by simp_rw [NNReal.coe_supᵢ, coe_nnnorm]
 #align bounded_continuous_function.nnnorm_eq_supr_nnnorm BoundedContinuousFunction.nnnorm_eq_supᵢ_nnnorm
 
 theorem abs_diff_coe_le_dist : ‖f x - g x‖ ≤ dist f g :=
@@ -1090,7 +1090,7 @@ theorem coe_le_coe_add_dist {f g : α →ᵇ ℝ} : f x ≤ g x + dist f g :=
 theorem norm_compContinuous_le [TopologicalSpace γ] (f : α →ᵇ β) (g : C(γ, α)) :
     ‖f.comp_continuous g‖ ≤ ‖f‖ :=
   ((lipschitz_compContinuous g).dist_le_mul f 0).trans <| by
-    rw [Nnreal.coe_one, one_mul, dist_zero_right]
+    rw [NNReal.coe_one, one_mul, dist_zero_right]
 #align bounded_continuous_function.norm_comp_continuous_le BoundedContinuousFunction.norm_compContinuous_le
 
 end NormedAddCommGroup
@@ -1484,7 +1484,7 @@ theorem Nnreal.upper_bound {α : Type _} [TopologicalSpace α] (f : α →ᵇ �
   by
   have key : nndist (f x) ((0 : α →ᵇ ℝ≥0) x) ≤ nndist f 0 := @dist_coe_le_dist α ℝ≥0 _ _ f 0 x
   simp only [coe_zero, Pi.zero_apply] at key
-  rwa [Nnreal.nndist_zero_eq_val' (f x)] at key
+  rwa [NNReal.nndist_zero_eq_val' (f x)] at key
 #align bounded_continuous_function.nnreal.upper_bound BoundedContinuousFunction.Nnreal.upper_bound
 
 /-!
@@ -1648,11 +1648,11 @@ variable [TopologicalSpace α]
 /-- The nonnegative part of a bounded continuous `ℝ`-valued function as a bounded
 continuous `ℝ≥0`-valued function. -/
 def nnrealPart (f : α →ᵇ ℝ) : α →ᵇ ℝ≥0 :=
-  BoundedContinuousFunction.comp _ (show LipschitzWith 1 Real.toNnreal from lipschitzWith_pos) f
+  BoundedContinuousFunction.comp _ (show LipschitzWith 1 Real.toNNReal from lipschitzWith_pos) f
 #align bounded_continuous_function.nnreal_part BoundedContinuousFunction.nnrealPart
 
 @[simp]
-theorem nnrealPart_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnrealPart = Real.toNnreal ∘ ⇑f :=
+theorem nnrealPart_coe_fun_eq (f : α →ᵇ ℝ) : ⇑f.nnrealPart = Real.toNNReal ∘ ⇑f :=
   rfl
 #align bounded_continuous_function.nnreal_part_coe_fun_eq BoundedContinuousFunction.nnrealPart_coe_fun_eq
 

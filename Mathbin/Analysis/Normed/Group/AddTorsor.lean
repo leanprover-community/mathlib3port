@@ -23,7 +23,7 @@ spaces.
 
 noncomputable section
 
-open Nnreal Topology
+open NNReal Topology
 
 open Filter
 
@@ -146,12 +146,12 @@ theorem dist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
 
 theorem nndist_vadd_vadd_le (v v' : V) (p p' : P) :
     nndist (v +ᵥ p) (v' +ᵥ p') ≤ nndist v v' + nndist p p' := by
-  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
+  simp only [← NNReal.coe_le_coe, NNReal.coe_add, ← dist_nndist, dist_vadd_vadd_le]
 #align nndist_vadd_vadd_le nndist_vadd_vadd_le
 
 theorem nndist_vsub_vsub_le (p₁ p₂ p₃ p₄ : P) :
     nndist (p₁ -ᵥ p₂) (p₃ -ᵥ p₄) ≤ nndist p₁ p₃ + nndist p₂ p₄ := by
-  simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
+  simp only [← NNReal.coe_le_coe, NNReal.coe_add, ← dist_nndist, dist_vsub_vsub_le]
 #align nndist_vsub_vsub_le nndist_vsub_vsub_le
 
 theorem edist_vadd_vadd_le (v v' : V) (p p' : P) :

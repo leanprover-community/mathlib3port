@@ -26,7 +26,7 @@ noncomputable section
 
 open Classical Set Function Filter Finset Metric Asymptotics
 
-open Classical Topology Nat BigOperators uniformity Nnreal Ennreal
+open Classical Topology Nat BigOperators uniformity NNReal Ennreal
 
 variable {α : Type _} {β : Type _} {ι : Type _}
 

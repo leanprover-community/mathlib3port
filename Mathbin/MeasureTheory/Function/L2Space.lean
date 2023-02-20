@@ -31,7 +31,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory MeasureTheory.lp
 
-open Nnreal Ennreal MeasureTheory
+open NNReal Ennreal MeasureTheory
 
 namespace MeasureTheory
 

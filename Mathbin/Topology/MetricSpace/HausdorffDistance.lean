@@ -35,7 +35,7 @@ This files introduces:
 
 noncomputable section
 
-open Classical Nnreal Ennreal Topology
+open Classical NNReal Ennreal Topology
 
 universe u v w
 
@@ -253,7 +253,7 @@ theorem exists_pos_forall_lt_edist (hs : IsCompact s) (ht : IsClosed t) (hst : D
     hs.exists_forall_le hne continuous_inf_edist.continuous_on
   have : 0 < inf_edist x t :=
     pos_iff_ne_zero.2 fun H => hst.le_bot ⟨hx, (mem_iff_inf_edist_zero_of_closed ht).mpr H⟩
-  rcases Ennreal.lt_iff_exists_nnreal_btwn.1 this with ⟨r, h₀, hr⟩
+  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 this with ⟨r, h₀, hr⟩
   exact ⟨r, ennreal.coe_pos.mp h₀, fun y hy z hz => hr.trans_le <| le_inf_edist.1 (h y hy) z hz⟩
 #align emetric.exists_pos_forall_lt_edist Emetric.exists_pos_forall_lt_edist
 
@@ -1303,7 +1303,7 @@ theorem thickening_unionᵢ (δ : ℝ) (f : ι → Set α) :
 theorem ediam_cthickening_le (ε : ℝ≥0) : Emetric.diam (cthickening ε s) ≤ Emetric.diam s + 2 * ε :=
   by
   refine' diam_le fun x hx y hy => Ennreal.le_of_forall_pos_le_add fun δ hδ _ => _
-  rw [mem_cthickening_iff, Ennreal.ofReal_coe_nnreal] at hx hy
+  rw [mem_cthickening_iff, Ennreal.ofReal_coe_nNReal] at hx hy
   have hε : (ε : ℝ≥0∞) < ε + ↑(δ / 2) := Ennreal.coe_lt_coe.2 (lt_add_of_pos_right _ <| half_pos hδ)
   rw [Ennreal.coe_div two_ne_zero, Ennreal.coe_two] at hε
   replace hx := hx.trans_lt hε
@@ -1372,18 +1372,18 @@ theorem Disjoint.exists_thickenings (hst : Disjoint s t) (hs : IsCompact s) (ht 
     ∃ δ, 0 < δ ∧ Disjoint (thickening δ s) (thickening δ t) :=
   by
   obtain ⟨r, hr, h⟩ := exists_pos_forall_lt_edist hs ht hst
-  refine' ⟨r / 2, half_pos (Nnreal.coe_pos.2 hr), _⟩
+  refine' ⟨r / 2, half_pos (NNReal.coe_pos.2 hr), _⟩
   rw [disjoint_iff_inf_le]
   rintro z ⟨hzs, hzt⟩
   rw [mem_thickening_iff_exists_edist_lt] at hzs hzt
-  rw [← Nnreal.coe_two, ← Nnreal.coe_div, Ennreal.ofReal_coe_nnreal] at hzs hzt
+  rw [← NNReal.coe_two, ← NNReal.coe_div, Ennreal.ofReal_coe_nNReal] at hzs hzt
   obtain ⟨x, hx, hzx⟩ := hzs
   obtain ⟨y, hy, hzy⟩ := hzt
   refine' (h x hx y hy).not_le _
   calc
     edist x y ≤ edist z x + edist z y := edist_triangle_left _ _ _
     _ ≤ ↑(r / 2) + ↑(r / 2) := add_le_add hzx.le hzy.le
-    _ = r := by rw [← Ennreal.coe_add, Nnreal.add_halves]
+    _ = r := by rw [← Ennreal.coe_add, NNReal.add_halves]
     
 #align disjoint.exists_thickenings Disjoint.exists_thickenings
 
@@ -1432,7 +1432,7 @@ theorem cthickening_eq_interᵢ_cthickening' {δ : ℝ} (s : Set ℝ) (hsδ : s 
     intro η η_pos _
     rcases hs (δ + η) (lt_add_of_pos_right _ (nnreal.coe_pos.mpr η_pos)) with ⟨ε, ⟨hsε, hε⟩⟩
     apply ((hx ε hsε).trans (Ennreal.ofReal_le_ofReal hε.2)).trans
-    rw [Ennreal.coe_nnreal_eq η]
+    rw [Ennreal.coe_nNReal_eq η]
     exact Ennreal.ofReal_add_le
 #align metric.cthickening_eq_Inter_cthickening' Metric.cthickening_eq_interᵢ_cthickening'
 

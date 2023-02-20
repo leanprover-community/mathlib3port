@@ -24,7 +24,7 @@ integral, McShane integral, Bochner integral
 -/
 
 
-open Classical Nnreal Ennreal Topology BigOperators
+open Classical NNReal Ennreal Topology BigOperators
 
 universe u v
 
@@ -46,7 +46,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
   by
   refine' has_integral_of_mul ‖y‖ fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
-  rw [Nnreal.coe_pos] at ε0
+  rw [NNReal.coe_pos] at ε0
   /- First we choose a closed set `F ⊆ s ∩ I.Icc` and an open set `U ⊇ s` such that
     both `(s ∩ I.Icc) \ F` and `U \ s` have measuer less than `ε`. -/
   have A : μ (s ∩ I.Icc) ≠ ∞ :=
@@ -113,8 +113,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     measure less than `ε / 2 ^ n / (n + 1)`. Then the norm of the integral sum is less than `ε`. -/
   refine' has_integral_iff.2 fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.lt.le
-  rw [gt_iff_lt, Nnreal.coe_pos] at ε0
-  rcases Nnreal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
+  rw [gt_iff_lt, NNReal.coe_pos] at ε0
+  rcases NNReal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   haveI := Fact.mk (I.measure_coe_lt_top μ)
   change μ.restrict I { x | f x ≠ 0 } = 0 at hf
   set N : (ι → ℝ) → ℕ := fun x => ⌈‖f x‖⌉₊
@@ -135,9 +135,9 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   choose r hrU
   refine' ⟨fun _ => r, fun c => l.r_cond_of_bRiemann_eq_ff hl, fun c π hπ hπp => _⟩
   rw [dist_eq_norm, sub_zero, ← integral_sum_fiberwise fun J => N (π.tag J)]
-  refine' le_trans _ (Nnreal.coe_lt_coe.2 hcε).le
+  refine' le_trans _ (NNReal.coe_lt_coe.2 hcε).le
   refine'
-    (norm_sum_le_of_le _ _).trans (sum_le_hasSum _ (fun n _ => (δ n).2) (Nnreal.hasSum_coe.2 hδc))
+    (norm_sum_le_of_le _ _).trans (sum_le_hasSum _ (fun n _ => (δ n).2) (NNReal.hasSum_coe.2 hδc))
   rintro n -
   dsimp [integral_sum]
   have :
@@ -160,7 +160,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     rintro x ⟨J, ⟨hJ, rfl⟩, hx⟩
     exact ⟨hrU _ (hπ.1 _ hJ (box.coe_subset_Icc hx)), π.le_of_mem' J hJ hx⟩
   lift m to ℝ≥0 using ne_top_of_lt this
-  rw [Ennreal.coe_toReal, ← Nnreal.coe_nat_cast, ← Nnreal.coe_mul, Nnreal.coe_le_coe, ←
+  rw [Ennreal.coe_toReal, ← NNReal.coe_nat_cast, ← NNReal.coe_mul, NNReal.coe_le_coe, ←
     Ennreal.coe_le_coe, Ennreal.coe_mul, Ennreal.coe_nat, mul_comm]
   exact (mul_le_mul_left' this.le _).trans Ennreal.mul_div_le
 #align box_integral.has_integral_zero_of_ae_eq_zero BoxIntegral.hasIntegralZeroOfAeEqZero
@@ -239,14 +239,14 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   have hfg_mono : ∀ (x) {m n}, m ≤ n → ‖f n x - g x‖ ≤ ‖f m x - g x‖ :=
     by
     intro x m n hmn
-    rw [← dist_eq_norm, ← dist_eq_norm, dist_nndist, dist_nndist, Nnreal.coe_le_coe, ←
+    rw [← dist_eq_norm, ← dist_eq_norm, dist_nndist, dist_nndist, NNReal.coe_le_coe, ←
       Ennreal.coe_le_coe, ← edist_nndist, ← edist_nndist]
     exact simple_func.edist_approx_on_mono hg.measurable _ x hmn
   /- Now consider `ε > 0`. We need to find `r` such that for any tagged partition subordinate
     to `r`, the integral sum is `(μ I + 1 + 1) * ε`-close to the Bochner integral. -/
   refine' has_integral_of_mul ((μ I).toReal + 1 + 1) fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
-  rw [Nnreal.coe_pos] at ε0
+  rw [NNReal.coe_pos] at ε0
   have ε0' := Ennreal.coe_pos.2 ε0
   -- Choose `N` such that the integral of `‖f N x - g x‖` is less than or equal to `ε`.
   obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ‖f N x - g x‖ ∂μ) ≤ ε :=
@@ -264,7 +264,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     exact ((eventually_ge_at_top N₀).And <| this <| closed_ball_mem_nhds _ ε0).exists
   choose Nx hNx hNxε
   -- We also choose a convergent series with `∑' i : ℕ, δ i < ε`.
-  rcases Nnreal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
+  rcases NNReal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   /- Since each simple function `fᵢ` is integrable, there exists `rᵢ : ℝⁿ → (0, ∞)` such that
     the integral sum of `f` over any tagged prepartition is `δᵢ`-close to the sum of integrals
     of `fᵢ` over the boxes of this prepartition. For each `x`, we choose `r (Nx x)` as the radius
@@ -296,10 +296,10 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
         to the corresponding integral sum due to the Henstock-Sacks inequality. -/
     rw [← π.to_prepartition.sum_fiberwise fun J => Nx (π.tag J), ←
       π.to_prepartition.sum_fiberwise fun J => Nx (π.tag J)]
-    refine' le_trans _ (Nnreal.coe_lt_coe.2 hcε).le
+    refine' le_trans _ (NNReal.coe_lt_coe.2 hcε).le
     refine'
       (dist_sum_sum_le_of_le _ fun n hn => _).trans
-        (sum_le_hasSum _ (fun n _ => (δ n).2) (Nnreal.hasSum_coe.2 hδc))
+        (sum_le_hasSum _ (fun n _ => (δ n).2) (NNReal.hasSum_coe.2 hδc))
     have hNxn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n, Nx (π.tag J) = n := fun J hJ =>
       (π.mem_filter.1 hJ).2
     have hrn :

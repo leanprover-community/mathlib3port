@@ -80,7 +80,7 @@ open Filter
 
 open BoundedContinuousFunction
 
-open Topology Ennreal Nnreal BoundedContinuousFunction
+open Topology Ennreal NNReal BoundedContinuousFunction
 
 namespace MeasureTheory
 
@@ -117,13 +117,13 @@ instance : Coe (ProbabilityMeasure Ω) (MeasureTheory.Measure Ω) :=
   coeSubtype
 
 instance : CoeFun (ProbabilityMeasure Ω) fun _ => Set Ω → ℝ≥0 :=
-  ⟨fun μ s => (μ s).toNnreal⟩
+  ⟨fun μ s => (μ s).toNNReal⟩
 
 instance (μ : ProbabilityMeasure Ω) : IsProbabilityMeasure (μ : Measure Ω) :=
   μ.Prop
 
 theorem coeFn_eq_toNnreal_coeFn_to_measure (ν : ProbabilityMeasure Ω) :
-    (ν : Set Ω → ℝ≥0) = fun s => ((ν : Measure Ω) s).toNnreal :=
+    (ν : Set Ω → ℝ≥0) = fun s => ((ν : Measure Ω) s).toNNReal :=
   rfl
 #align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_eq_toNnreal_coeFn_to_measure
 
@@ -243,7 +243,7 @@ theorem coe_toWeakDualBcnn (μ : ProbabilityMeasure Ω) :
 
 @[simp]
 theorem toWeakDualBcnn_apply (μ : ProbabilityMeasure Ω) (f : Ω →ᵇ ℝ≥0) :
-    μ.toWeakDualBcnn f = (∫⁻ ω, f ω ∂(μ : Measure Ω)).toNnreal :=
+    μ.toWeakDualBcnn f = (∫⁻ ω, f ω ∂(μ : Measure Ω)).toNNReal :=
   rfl
 #align measure_theory.probability_measure.to_weak_dual_bcnn_apply MeasureTheory.ProbabilityMeasure.toWeakDualBcnn_apply
 
@@ -343,7 +343,7 @@ theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize 
   have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
   simp only [normalize, dif_neg mass_nonzero, Ennreal.toNnreal_mul, Subtype.coe_mk,
     probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, Ennreal.toNnreal_coe,
-    MeasureTheory.Measure.coe_nnreal_smul_apply, mul_inv_cancel_left₀ mass_nonzero,
+    MeasureTheory.Measure.coe_nNReal_smul_apply, mul_inv_cancel_left₀ mass_nonzero,
     finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure]
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
 

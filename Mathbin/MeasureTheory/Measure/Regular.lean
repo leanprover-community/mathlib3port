@@ -134,7 +134,7 @@ proofs or statements do not apply directly.
 
 open Set Filter
 
-open Ennreal Topology Nnreal BigOperators
+open Ennreal Topology NNReal BigOperators
 
 namespace MeasureTheory
 

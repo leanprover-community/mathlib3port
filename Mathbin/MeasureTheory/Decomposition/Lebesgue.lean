@@ -66,7 +66,7 @@ Lebesgue decomposition theorem
 
 noncomputable section
 
-open Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory NNReal Ennreal
 
 open Set
 
@@ -453,9 +453,9 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
     by_cases hb : 0 < νA
     · suffices ∀ b, 0 < b → μA ≤ b by
         by_contra
-        have h' := this (μA / 2) (Nnreal.half_pos (zero_lt_iff.2 h))
+        have h' := this (μA / 2) (NNReal.half_pos (zero_lt_iff.2 h))
         rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
-        exact h' (not_le.2 (Nnreal.half_lt_self h))
+        exact h' (not_le.2 (NNReal.half_lt_self h))
       intro c hc
       have : ∃ n : ℕ, 1 / (n + 1 : ℝ) < c * νA⁻¹
       refine' exists_nat_one_div_lt _
@@ -468,9 +468,9 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
         exact hb
       have h' : 1 / (↑n + 1) * νA < c :=
         by
-        rw [← Nnreal.coe_lt_coe, ← mul_lt_mul_right hb₁, Nnreal.coe_mul, mul_assoc, ←
-          Nnreal.coe_inv, ← Nnreal.coe_mul, _root_.mul_inv_cancel, ← Nnreal.coe_mul, mul_one,
-          Nnreal.coe_inv]
+        rw [← NNReal.coe_lt_coe, ← mul_lt_mul_right hb₁, NNReal.coe_mul, mul_assoc, ←
+          NNReal.coe_inv, ← NNReal.coe_mul, _root_.mul_inv_cancel, ← NNReal.coe_mul, mul_one,
+          NNReal.coe_inv]
         · exact hn
         · exact Ne.symm (ne_of_lt hb)
       refine' le_trans _ (le_of_lt h')
@@ -1166,7 +1166,7 @@ theorem singularPart_neg (s : SignedMeasure α) (μ : Measure α) :
   rw [singular_part, singular_part, neg_sub, h₁, h₂]
 #align measure_theory.signed_measure.singular_part_neg MeasureTheory.SignedMeasure.singularPart_neg
 
-theorem singularPart_smul_nnreal (s : SignedMeasure α) (μ : Measure α) (r : ℝ≥0) :
+theorem singularPart_smul_nNReal (s : SignedMeasure α) (μ : Measure α) (r : ℝ≥0) :
     (r • s).singularPart μ = r • s.singularPart μ :=
   by
   rw [singular_part, singular_part, smul_sub, ← to_signed_measure_smul, ← to_signed_measure_smul]
@@ -1177,7 +1177,7 @@ theorem singularPart_smul_nnreal (s : SignedMeasure α) (μ : Measure α) (r : �
     skip
     congr
     rw [to_jordan_decomposition_smul, jordan_decomposition.smul_neg_part, singular_part_smul]
-#align measure_theory.signed_measure.singular_part_smul_nnreal MeasureTheory.SignedMeasure.singularPart_smul_nnreal
+#align measure_theory.signed_measure.singular_part_smul_nnreal MeasureTheory.SignedMeasure.singularPart_smul_nNReal
 
 theorem singularPart_smul (s : SignedMeasure α) (μ : Measure α) (r : ℝ) :
     (r • s).singularPart μ = r • s.singularPart μ :=
@@ -1196,8 +1196,8 @@ theorem singularPart_smul (s : SignedMeasure α) (μ : Measure α) (r : ℝ) :
       rw [to_jordan_decomposition_smul_real,
         jordan_decomposition.real_smul_neg_part_neg _ _ (not_le.1 hr), singular_part_smul]
     rw [to_signed_measure_smul, to_signed_measure_smul, ← neg_sub, ← smul_sub]
-    change -(((-r).toNnreal : ℝ) • _) = _
-    rw [← neg_smul, Real.coe_toNnreal _ (le_of_lt (neg_pos.mpr (not_le.1 hr))), neg_neg]
+    change -(((-r).toNNReal : ℝ) • _) = _
+    rw [← neg_smul, Real.coe_toNNReal _ (le_of_lt (neg_pos.mpr (not_le.1 hr))), neg_neg]
 #align measure_theory.signed_measure.singular_part_smul MeasureTheory.SignedMeasure.singularPart_smul
 
 theorem singularPart_add (s t : SignedMeasure α) (μ : Measure α) [s.HaveLebesgueDecomposition μ]

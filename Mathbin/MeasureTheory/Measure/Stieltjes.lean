@@ -34,7 +34,7 @@ open Classical Set Filter Function
 
 open Ennreal (ofReal)
 
-open BigOperators Ennreal Nnreal Topology MeasureTheory
+open BigOperators Ennreal NNReal Topology MeasureTheory
 
 /-! ### Basic properties of Stieltjes functions -/
 
@@ -138,10 +138,10 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) :=
     le_antisymm (infᵢ_le_of_le a <| infᵢ₂_le b subset.rfl)
       (le_infᵢ fun a' => le_infᵢ fun b' => le_infᵢ fun h => Ennreal.coe_le_coe.2 _)
   cases' le_or_lt b a with ab ab
-  · rw [Real.toNnreal_of_nonpos (sub_nonpos.2 (f.mono ab))]
+  · rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
   cases' (Ioc_subset_Ioc_iff ab).1 h with h₁ h₂
-  exact Real.toNnreal_le_toNnreal (sub_le_sub (f.mono h₁) (f.mono h₂))
+  exact Real.toNNReal_le_toNNReal (sub_le_sub (f.mono h₁) (f.mono h₂))
 #align stieltjes_function.length_Ioc StieltjesFunction.length_Ioc
 
 theorem length_mono {s₁ s₂ : Set ℝ} (h : s₁ ⊆ s₂) : f.length s₁ ≤ f.length s₂ :=
@@ -227,7 +227,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
       by
       refine' ContinuousWithinAt.sub _ continuousWithinAt_const
       exact (f.right_continuous a).mono Ioi_subset_Ici_self
-    have B : f a - f a < δ := by rwa [sub_self, Nnreal.coe_pos, ← Ennreal.coe_pos]
+    have B : f a - f a < δ := by rwa [sub_self, NNReal.coe_pos, ← Ennreal.coe_pos]
     exact (((tendsto_order.1 A).2 _ B).And self_mem_nhdsWithin).exists
   have :
     ∀ i,
@@ -262,7 +262,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
       add_le_add (f.length_subadditive_Icc_Ioo I_subset) (Ennreal.ofReal_le_ofReal ha'.le)
     _ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
       add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le)
-        (by simp only [Ennreal.ofReal_coe_nnreal, le_rfl])
+        (by simp only [Ennreal.ofReal_coe_nNReal, le_rfl])
     _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [Ennreal.tsum_add]
     _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
     _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, Ennreal.add_halves]

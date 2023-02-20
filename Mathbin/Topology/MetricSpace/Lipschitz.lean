@@ -47,7 +47,7 @@ universe u v w x
 
 open Filter Function Set
 
-open Topology Nnreal Ennreal
+open Topology NNReal Ennreal
 
 variable {α : Type u} {β : Type v} {γ : Type w} {ι : Type x}
 
@@ -327,19 +327,19 @@ variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ] {K
   {x y : α} {r : ℝ}
 
 protected theorem of_dist_le' {K : ℝ} (h : ∀ x y, dist (f x) (f y) ≤ K * dist x y) :
-    LipschitzWith (Real.toNnreal K) f :=
+    LipschitzWith (Real.toNNReal K) f :=
   of_dist_le_mul fun x y =>
-    le_trans (h x y) <| mul_le_mul_of_nonneg_right (Real.le_coe_toNnreal K) dist_nonneg
+    le_trans (h x y) <| mul_le_mul_of_nonneg_right (Real.le_coe_toNNReal K) dist_nonneg
 #align lipschitz_with.of_dist_le' LipschitzWith.of_dist_le'
 
 protected theorem mk_one (h : ∀ x y, dist (f x) (f y) ≤ dist x y) : LipschitzWith 1 f :=
-  of_dist_le_mul <| by simpa only [Nnreal.coe_one, one_mul] using h
+  of_dist_le_mul <| by simpa only [NNReal.coe_one, one_mul] using h
 #align lipschitz_with.mk_one LipschitzWith.mk_one
 
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 doesn't assume `0≤K`. -/
 protected theorem of_le_add_mul' {f : α → ℝ} (K : ℝ) (h : ∀ x y, f x ≤ f y + K * dist x y) :
-    LipschitzWith (Real.toNnreal K) f :=
+    LipschitzWith (Real.toNNReal K) f :=
   have I : ∀ x y, f x - f y ≤ K * dist x y := fun x y => sub_le_iff_le_add'.2 (h x y)
   LipschitzWith.of_dist_le' fun x y => abs_sub_le_iff.2 ⟨I x y, dist_comm y x ▸ I y x⟩
 #align lipschitz_with.of_le_add_mul' LipschitzWith.of_le_add_mul'
@@ -347,11 +347,11 @@ protected theorem of_le_add_mul' {f : α → ℝ} (K : ℝ) (h : ∀ x y, f x �
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 assumes `0≤K`. -/
 protected theorem of_le_add_mul {f : α → ℝ} (K : ℝ≥0) (h : ∀ x y, f x ≤ f y + K * dist x y) :
-    LipschitzWith K f := by simpa only [Real.toNnreal_coe] using LipschitzWith.of_le_add_mul' K h
+    LipschitzWith K f := by simpa only [Real.toNNReal_coe] using LipschitzWith.of_le_add_mul' K h
 #align lipschitz_with.of_le_add_mul LipschitzWith.of_le_add_mul
 
 protected theorem of_le_add {f : α → ℝ} (h : ∀ x y, f x ≤ f y + dist x y) : LipschitzWith 1 f :=
-  LipschitzWith.of_le_add_mul 1 <| by simpa only [Nnreal.coe_one, one_mul]
+  LipschitzWith.of_le_add_mul 1 <| by simpa only [NNReal.coe_one, one_mul]
 #align lipschitz_with.of_le_add LipschitzWith.of_le_add
 
 protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0} (h : LipschitzWith K f) (x y) :
@@ -379,7 +379,7 @@ theorem mapsTo_closedBall (hf : LipschitzWith K f) (x : α) (r : ℝ) :
 
 theorem dist_lt_mul_of_lt (hf : LipschitzWith K f) (hK : K ≠ 0) (hr : dist x y < r) :
     dist (f x) (f y) < K * r :=
-  (hf.dist_le_mul x y).trans_lt <| (mul_lt_mul_left <| Nnreal.coe_pos.2 hK.bot_lt).2 hr
+  (hf.dist_le_mul x y).trans_lt <| (mul_lt_mul_left <| NNReal.coe_pos.2 hK.bot_lt).2 hr
 #align lipschitz_with.dist_lt_mul_of_lt LipschitzWith.dist_lt_mul_of_lt
 
 theorem mapsTo_ball (hf : LipschitzWith K f) (hK : K ≠ 0) (x : α) (r : ℝ) :
@@ -437,7 +437,7 @@ theorem dist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) 
     dist ((f^[n]) x) ((f^[n + 1]) x) ≤ dist x (f x) * K ^ n :=
   by
   rw [iterate_succ, mul_comm]
-  simpa only [Nnreal.coe_pow] using (hf.iterate n).dist_le_mul x (f x)
+  simpa only [NNReal.coe_pow] using (hf.iterate n).dist_le_mul x (f x)
 #align lipschitz_with.dist_iterate_succ_le_geometric LipschitzWith.dist_iterate_succ_le_geometric
 
 theorem lipschitzWith_max : LipschitzWith 1 fun p : ℝ × ℝ => max p.1 p.2 :=
@@ -556,20 +556,20 @@ variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ]
 variable {K : ℝ≥0} {s : Set α} {f : α → β}
 
 protected theorem of_dist_le' {K : ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, dist (f x) (f y) ≤ K * dist x y) :
-    LipschitzOnWith (Real.toNnreal K) f s :=
+    LipschitzOnWith (Real.toNNReal K) f s :=
   of_dist_le_mul fun x hx y hy =>
-    le_trans (h x hx y hy) <| mul_le_mul_of_nonneg_right (Real.le_coe_toNnreal K) dist_nonneg
+    le_trans (h x hx y hy) <| mul_le_mul_of_nonneg_right (Real.le_coe_toNNReal K) dist_nonneg
 #align lipschitz_on_with.of_dist_le' LipschitzOnWith.of_dist_le'
 
 protected theorem mk_one (h : ∀ x ∈ s, ∀ y ∈ s, dist (f x) (f y) ≤ dist x y) :
     LipschitzOnWith 1 f s :=
-  of_dist_le_mul <| by simpa only [Nnreal.coe_one, one_mul] using h
+  of_dist_le_mul <| by simpa only [NNReal.coe_one, one_mul] using h
 #align lipschitz_on_with.mk_one LipschitzOnWith.mk_one
 
 /-- For functions to `ℝ`, it suffices to prove `f x ≤ f y + K * dist x y`; this version
 doesn't assume `0≤K`. -/
 protected theorem of_le_add_mul' {f : α → ℝ} (K : ℝ)
-    (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + K * dist x y) : LipschitzOnWith (Real.toNnreal K) f s :=
+    (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + K * dist x y) : LipschitzOnWith (Real.toNNReal K) f s :=
   have I : ∀ x ∈ s, ∀ y ∈ s, f x - f y ≤ K * dist x y := fun x hx y hy =>
     sub_le_iff_le_add'.2 (h x hx y hy)
   LipschitzOnWith.of_dist_le' fun x hx y hy =>
@@ -580,12 +580,12 @@ protected theorem of_le_add_mul' {f : α → ℝ} (K : ℝ)
 assumes `0≤K`. -/
 protected theorem of_le_add_mul {f : α → ℝ} (K : ℝ≥0)
     (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + K * dist x y) : LipschitzOnWith K f s := by
-  simpa only [Real.toNnreal_coe] using LipschitzOnWith.of_le_add_mul' K h
+  simpa only [Real.toNNReal_coe] using LipschitzOnWith.of_le_add_mul' K h
 #align lipschitz_on_with.of_le_add_mul LipschitzOnWith.of_le_add_mul
 
 protected theorem of_le_add {f : α → ℝ} (h : ∀ x ∈ s, ∀ y ∈ s, f x ≤ f y + dist x y) :
     LipschitzOnWith 1 f s :=
-  LipschitzOnWith.of_le_add_mul 1 <| by simpa only [Nnreal.coe_one, one_mul]
+  LipschitzOnWith.of_le_add_mul 1 <| by simpa only [NNReal.coe_one, one_mul]
 #align lipschitz_on_with.of_le_add LipschitzOnWith.of_le_add
 
 protected theorem le_add_mul {f : α → ℝ} {K : ℝ≥0} (h : LipschitzOnWith K f s) {x : α} (hx : x ∈ s)

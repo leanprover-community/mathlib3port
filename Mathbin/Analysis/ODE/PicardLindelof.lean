@@ -42,7 +42,7 @@ open Filter Function Set Metric TopologicalSpace intervalIntegral MeasureTheory
 
 open MeasureTheory.MeasureSpace (volume)
 
-open Filter Topology Nnreal Ennreal Nat Interval
+open Filter Topology NNReal Ennreal Nat Interval
 
 noncomputable section
 
@@ -362,7 +362,7 @@ theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
   refine' dist_le_of_forall fun t => (dist_iterate_next_apply_le _ _ _ _).trans _
   have : 0 ≤ dist f₁ f₂ := dist_nonneg
   have : |(t - v.t₀ : ℝ)| ≤ v.t_dist := v.dist_t₀_le t
-  mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, Nnreal.coe_nonneg, abs_nonneg, *]
+  mono* <;> simp only [Nat.cast_nonneg, mul_nonneg, NNReal.coe_nonneg, abs_nonneg, *]
 #align picard_lindelof.fun_space.dist_iterate_next_le PicardLindelof.FunSpace.dist_iterate_next_le
 
 end FunSpace

@@ -56,7 +56,7 @@ noncomputable section
 
 open Set Filter TopologicalSpace MeasureTheory Function
 
-open Classical Topology Interval BigOperators Filter Ennreal Nnreal MeasureTheory
+open Classical Topology Interval BigOperators Filter Ennreal NNReal MeasureTheory
 
 variable {α β E F : Type _} [MeasurableSpace α]
 
@@ -232,7 +232,7 @@ theorem tendsto_set_integral_of_monotone {ι : Type _} [Countable ι] [Semilatti
   have : ∀ᶠ i in at_top, ν (s i) ∈ Icc (ν S - ε) (ν S + ε) :=
     tendsto_measure_Union h_mono (Ennreal.Icc_mem_nhds hfi'.ne (Ennreal.coe_pos.2 ε0).ne')
   refine' this.mono fun i hi => _
-  rw [mem_closedBall_iff_norm', ← integral_diff (hsm i) hfi hsub, ← coe_nnnorm, Nnreal.coe_le_coe, ←
+  rw [mem_closedBall_iff_norm', ← integral_diff (hsm i) hfi hsub, ← coe_nnnorm, NNReal.coe_le_coe, ←
     Ennreal.coe_le_coe]
   refine' (ennnorm_integral_le_lintegral_ennnorm _).trans _
   rw [← with_density_apply _ (hSm.diff (hsm _)), ← hν, measure_diff hsub (hsm _)]
@@ -620,7 +620,7 @@ theorem set_integral_gt_gt {R : ℝ} {f : α → ℝ} (hR : 0 ≤ R) (hfm : Meas
     by
     refine' ⟨ae_strongly_measurable_const, lt_of_le_of_lt _ hfint.2⟩
     refine'
-      set_lintegral_mono (Measurable.nnnorm _).coe_nnreal_ennreal hfm.nnnorm.coe_nnreal_ennreal
+      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_ennreal hfm.nnnorm.coe_nnreal_ennreal
         fun x hx => _
     · exact measurable_const
     · simp only [Ennreal.coe_le_coe, Real.nnnorm_of_nonneg hR,
@@ -793,13 +793,13 @@ theorem integrableOnUnionOfSummableIntegralNorm (hs : ∀ b : β, MeasurableSet 
   rw [tsum_congr B]
   have S' :
     Summable fun b : β =>
-      (⟨∫ a : α in s b, ‖f a‖₊ ∂μ, set_integral_nonneg (hs b) fun a ha => Nnreal.coe_nonneg _⟩ :
-        Nnreal) :=
+      (⟨∫ a : α in s b, ‖f a‖₊ ∂μ, set_integral_nonneg (hs b) fun a ha => NNReal.coe_nonneg _⟩ :
+        NNReal) :=
     by
-    rw [← Nnreal.summable_coe]
+    rw [← NNReal.summable_coe]
     exact h
   have S'' := Ennreal.tsum_coe_eq S'.has_sum
-  simp_rw [Ennreal.coe_nnreal_eq, Nnreal.coe_mk, coe_nnnorm] at S''
+  simp_rw [Ennreal.coe_nNReal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert Ennreal.ofReal_lt_top
 #align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOnUnionOfSummableIntegralNorm
 
@@ -1232,13 +1232,13 @@ theorem integral_withDensity_eq_integral_smul {f : α → ℝ≥0} (f_meas : Mea
     simp only [s_meas, integral_const, measure.restrict_apply', univ_inter, with_density_apply]
     rw [lintegral_coe_eq_integral, Ennreal.toReal_ofReal, ← integral_smul_const]
     · rfl
-    · exact integral_nonneg fun x => Nnreal.coe_nonneg _
+    · exact integral_nonneg fun x => NNReal.coe_nonneg _
     · refine' ⟨f_meas.coe_nnreal_real.AeMeasurable.AeStronglyMeasurable, _⟩
       rw [with_density_apply _ s_meas] at hs
       rw [has_finite_integral]
       convert hs
       ext1 x
-      simp only [Nnreal.nnnorm_eq]
+      simp only [NNReal.nnnorm_eq]
   · intro u u' h_disj u_int u'_int h h'
     change
       (∫ a : α, u a + u' a ∂μ.with_density fun x : α => ↑(f x)) = ∫ a : α, f a • (u a + u' a) ∂μ

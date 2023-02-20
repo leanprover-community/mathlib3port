@@ -28,7 +28,7 @@ be an intermediate typeclass for uniform spaces, but the algebraic hierarchy the
 -/
 
 
-open Nnreal
+open NNReal
 
 noncomputable section
 
@@ -111,8 +111,8 @@ instance Real.hasLipschitzAdd : HasLipschitzAdd ℝ
     ⟨2, by
       rw [lipschitzWith_iff_dist_le_mul]
       intro p q
-      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, Nnreal.coe_one,
-        Nnreal.coe_bit0]
+      simp only [Real.dist_eq, Prod.dist_eq, Prod.fst_sub, Prod.snd_sub, NNReal.coe_one,
+        [anonymous]]
       convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
       have := le_max_left (|p.1 - q.1|) (|p.2 - q.2|)
@@ -122,12 +122,12 @@ instance Real.hasLipschitzAdd : HasLipschitzAdd ℝ
 
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
-instance Nnreal.hasLipschitzAdd : HasLipschitzAdd ℝ≥0
+instance NNReal.hasLipschitzAdd : HasLipschitzAdd ℝ≥0
     where lipschitz_add :=
     ⟨HasLipschitzAdd.c ℝ, by
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWith_lipschitz_const_add_edist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
-#align nnreal.has_lipschitz_add Nnreal.hasLipschitzAdd
+#align nnreal.has_lipschitz_add NNReal.hasLipschitzAdd
 
 end HasLipschitzMul
 
@@ -200,11 +200,11 @@ instance Real.hasBoundedSmul : HasBoundedSmul ℝ ℝ
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 #align real.has_bounded_smul Real.hasBoundedSmul
 
-instance Nnreal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0
+instance NNReal.hasBoundedSmul : HasBoundedSmul ℝ≥0 ℝ≥0
     where
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
-#align nnreal.has_bounded_smul Nnreal.hasBoundedSmul
+#align nnreal.has_bounded_smul NNReal.hasBoundedSmul
 
 /-- If a scalar is central, then its right action is bounded when its left action is. -/
 instance HasBoundedSmul.op [SMul αᵐᵒᵖ β] [IsCentralScalar α β] : HasBoundedSmul αᵐᵒᵖ β

@@ -60,7 +60,7 @@ We mostly follow the proof from [Kallenberg, *Foundations of modern probability*
 
 open TopologicalSpace Filter
 
-open Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
+open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 
@@ -992,12 +992,12 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
       rw [(by simp :
           (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
         lintegral_coe_eq_integral, ← Ennreal.ofReal_mul (sub_pos.2 hab).le]
-      · simp_rw [Nnreal.coe_nat_cast]
+      · simp_rw [NNReal.coe_nat_cast]
         exact
           (Ennreal.ofReal_le_ofReal
                 (hf.mul_integral_upcrossings_before_le_integral_pos_part a b N)).trans
             (le_supᵢ _ N)
-      · simp only [Nnreal.coe_nat_cast, hf.adapted.integrable_upcrossings_before hab]
+      · simp only [NNReal.coe_nat_cast, hf.adapted.integrable_upcrossings_before hab]
     ·
       exact fun n =>
         measurable_from_top.comp_ae_measurable

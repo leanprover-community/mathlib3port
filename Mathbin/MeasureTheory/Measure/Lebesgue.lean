@@ -38,7 +38,7 @@ open Classical Set Filter MeasureTheory MeasureTheory.Measure TopologicalSpace
 
 open Ennreal (ofReal)
 
-open BigOperators Ennreal Nnreal Topology
+open BigOperators Ennreal NNReal Topology
 
 /-!
 ### Definition of the Lebesgue measure and lengths of intervals
@@ -99,7 +99,7 @@ theorem volume_singleton {a : ℝ} : volume ({a} : Set ℝ) = 0 := by simp [volu
 
 @[simp]
 theorem volume_univ : volume (univ : Set ℝ) = ∞ :=
-  Ennreal.eq_top_of_forall_nnreal_le fun r =>
+  Ennreal.eq_top_of_forall_nNReal_le fun r =>
     calc
       (r : ℝ≥0∞) = volume (Icc (0 : ℝ) r) := by simp
       _ ≤ volume univ := measure_mono (subset_univ _)
@@ -122,8 +122,8 @@ theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.ball a 
   rcases eq_or_ne r ∞ with (rfl | hr)
   · rw [Metric.emetric_ball_top, volume_univ, two_mul, Ennreal.top_add]
   · lift r to ℝ≥0 using hr
-    rw [Metric.emetric_ball_nnreal, volume_ball, two_mul, ← Nnreal.coe_add,
-      Ennreal.ofReal_coe_nnreal, Ennreal.coe_add, two_mul]
+    rw [Metric.emetric_ball_nNReal, volume_ball, two_mul, ← NNReal.coe_add,
+      Ennreal.ofReal_coe_nNReal, Ennreal.coe_add, two_mul]
 #align real.volume_emetric_ball Real.volume_emetric_ball
 
 @[simp]
@@ -132,8 +132,8 @@ theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (Emetric.c
   rcases eq_or_ne r ∞ with (rfl | hr)
   · rw [Emetric.closedBall_top, volume_univ, two_mul, Ennreal.top_add]
   · lift r to ℝ≥0 using hr
-    rw [Metric.emetric_closedBall_nnreal, volume_closed_ball, two_mul, ← Nnreal.coe_add,
-      Ennreal.ofReal_coe_nnreal, Ennreal.coe_add, two_mul]
+    rw [Metric.emetric_closedBall_nNReal, volume_closed_ball, two_mul, ← NNReal.coe_add,
+      Ennreal.ofReal_coe_nNReal, Ennreal.coe_add, two_mul]
 #align real.volume_emetric_closed_ball Real.volume_emetric_closedBall
 
 instance hasNoAtomsVolume : HasNoAtoms (volume : Measure ℝ) :=
@@ -617,8 +617,8 @@ theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn
     (g_int : IntegrableOn g s μ) (hs : MeasurableSet s) (hfg : f ≤ᵐ[μ.restrict s] g) :
     μ.Prod volume (regionBetween f g s) = Ennreal.ofReal (∫ y in s, (g - f) y ∂μ) :=
   by
-  have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNnreal (g x - f x) :=
-    hfg.mono fun x hx => (Real.coe_toNnreal _ <| sub_nonneg.2 hx).symm
+  have h : g - f =ᵐ[μ.restrict s] fun x => Real.toNNReal (g x - f x) :=
+    hfg.mono fun x hx => (Real.coe_toNNReal _ <| sub_nonneg.2 hx).symm
   rw [volume_regionBetween_eq_lintegral f_int.ae_measurable g_int.ae_measurable hs,
     integral_congr_ae h, lintegral_congr_ae,
     lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int))]

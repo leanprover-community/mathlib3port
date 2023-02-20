@@ -41,7 +41,7 @@ We also generate additive versions of all theorems in this file using the `to_ad
 -/
 
 
-open Ennreal Pointwise Topology Nnreal Ennreal MeasureTheory
+open Ennreal Pointwise Topology NNReal Ennreal MeasureTheory
 
 open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 

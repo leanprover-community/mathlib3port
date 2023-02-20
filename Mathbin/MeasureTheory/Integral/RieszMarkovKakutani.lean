@@ -30,7 +30,7 @@ compact subsets of the space X, rather than the usual construction of open sets 
 
 noncomputable section
 
-open BoundedContinuousFunction Nnreal Ennreal
+open BoundedContinuousFunction NNReal Ennreal
 
 open Set Function TopologicalSpace
 
@@ -100,11 +100,11 @@ finitely subadditive: `λ(K₁ ∪ K₂) ≤ λ(K₁) + λ(K₂)` for any compac
 theorem rieszContentAux_sup_le (K1 K2 : Compacts X) :
     rieszContentAux Λ (K1 ⊔ K2) ≤ rieszContentAux Λ K1 + rieszContentAux Λ K2 :=
   by
-  apply Nnreal.le_of_forall_pos_le_add
+  apply NNReal.le_of_forall_pos_le_add
   intro ε εpos
   --get test functions s.t. `λ(Ki) ≤ Λfi ≤ λ(Ki) + ε/2, i=1,2`
-  obtain ⟨f1, f_test_function_K1⟩ := exists_lt_rieszContentAux_add_pos Λ K1 (Nnreal.half_pos εpos)
-  obtain ⟨f2, f_test_function_K2⟩ := exists_lt_rieszContentAux_add_pos Λ K2 (Nnreal.half_pos εpos)
+  obtain ⟨f1, f_test_function_K1⟩ := exists_lt_rieszContentAux_add_pos Λ K1 (NNReal.half_pos εpos)
+  obtain ⟨f2, f_test_function_K2⟩ := exists_lt_rieszContentAux_add_pos Λ K2 (NNReal.half_pos εpos)
   --let `f := f1 + f2` test function for the content of `K`
   have f_test_function_union : ∀ x ∈ K1 ⊔ K2, (1 : ℝ≥0) ≤ (f1 + f2) x :=
     by
@@ -116,7 +116,7 @@ theorem rieszContentAux_sup_le (K1 K2 : Compacts X) :
   rw [map_add]
   --use that `Λfi` are lower bounds for `λ(Ki) + ε/2`
   apply lt_of_lt_of_le (add_lt_add f_test_function_K1.right f_test_function_K2.right) (le_of_eq _)
-  rw [add_assoc, add_comm (ε / 2), add_assoc, Nnreal.add_halves ε, add_assoc]
+  rw [add_assoc, add_comm (ε / 2), add_assoc, NNReal.add_halves ε, add_assoc]
 #align riesz_content_aux_sup_le rieszContentAux_sup_le
 
 end RieszSubadditive

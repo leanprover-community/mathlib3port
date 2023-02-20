@@ -865,7 +865,7 @@ open BigOperators Topology
 
 open Filter
 
-open Nnreal
+open NNReal
 
 variable (E)
 

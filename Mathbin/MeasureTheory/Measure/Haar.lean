@@ -70,7 +70,7 @@ noncomputable section
 
 open Set Inv Function TopologicalSpace MeasurableSpace
 
-open Nnreal Classical Ennreal Pointwise Topology
+open NNReal Classical Ennreal Pointwise Topology
 
 namespace MeasureTheory
 
@@ -619,11 +619,11 @@ variable [T2Space G]
 def haarContent (K₀ : PositiveCompacts G) : Content G
     where
   toFun K := ⟨chaar K₀ K, chaar_nonneg _ _⟩
-  mono' K₁ K₂ h := by simp only [← Nnreal.coe_le_coe, Subtype.coe_mk, chaar_mono, h]
+  mono' K₁ K₂ h := by simp only [← NNReal.coe_le_coe, Subtype.coe_mk, chaar_mono, h]
   sup_disjoint' K₁ K₂ h := by
     simp only [chaar_sup_eq h]
     rfl
-  sup_le' K₁ K₂ := by simp only [← Nnreal.coe_le_coe, Nnreal.coe_add, Subtype.coe_mk, chaar_sup_le]
+  sup_le' K₁ K₂ := by simp only [← NNReal.coe_le_coe, NNReal.coe_add, Subtype.coe_mk, chaar_sup_le]
 #align measure_theory.measure.haar.haar_content MeasureTheory.Measure.Haar.haarContent
 #align measure_theory.measure.haar.add_haar_content MeasureTheory.Measure.Haar.add_haar_content
 
@@ -632,7 +632,7 @@ def haarContent (K₀ : PositiveCompacts G) : Content G
 
 @[to_additive]
 theorem haarContent_apply (K₀ : PositiveCompacts G) (K : Compacts G) :
-    haarContent K₀ K = show Nnreal from ⟨chaar K₀ K, chaar_nonneg _ _⟩ :=
+    haarContent K₀ K = show NNReal from ⟨chaar K₀ K, chaar_nonneg _ _⟩ :=
   rfl
 #align measure_theory.measure.haar.haar_content_apply MeasureTheory.Measure.Haar.haarContent_apply
 #align measure_theory.measure.haar.add_haar_content_apply MeasureTheory.Measure.Haar.add_haar_content_apply
@@ -650,7 +650,7 @@ theorem haarContent_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.toC
 @[to_additive "The variant of `is_left_invariant_add_chaar` for `add_haar_content`"]
 theorem is_left_invariant_haarContent {K₀ : PositiveCompacts G} (g : G) (K : Compacts G) :
     haarContent K₀ (K.map _ <| continuous_mul_left g) = haarContent K₀ K := by
-  simpa only [Ennreal.coe_eq_coe, ← Nnreal.coe_eq, haar_content_apply] using
+  simpa only [Ennreal.coe_eq_coe, ← NNReal.coe_eq, haar_content_apply] using
     is_left_invariant_chaar g K
 #align measure_theory.measure.haar.is_left_invariant_haar_content MeasureTheory.Measure.Haar.is_left_invariant_haarContent
 #align measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haar_content

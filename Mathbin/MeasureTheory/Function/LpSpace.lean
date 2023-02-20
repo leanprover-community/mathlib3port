@@ -84,7 +84,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory Filter
 
-open Nnreal Ennreal BigOperators Topology MeasureTheory
+open NNReal Ennreal BigOperators Topology MeasureTheory
 
 variable {α E F G : Type _} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measure α}
   [NormedAddCommGroup E] [NormedAddCommGroup F] [NormedAddCommGroup G]
@@ -409,7 +409,7 @@ theorem snorm'_congr_norm_ae {f g : α → F} (hfg : ∀ᵐ x ∂μ, ‖f x‖ =
   by
   have : (fun x => (‖f x‖₊ ^ q : ℝ≥0∞)) =ᵐ[μ] fun x => ‖g x‖₊ ^ q :=
     hfg.mono fun x hx => by
-      simp only [← coe_nnnorm, Nnreal.coe_eq] at hx
+      simp only [← coe_nnnorm, NNReal.coe_eq] at hx
       simp [hx]
   simp only [snorm', lintegral_congr_ae this]
 #align measure_theory.snorm'_congr_norm_ae MeasureTheory.snorm'_congr_norm_ae
@@ -941,7 +941,7 @@ theorem snorm'_trim (hm : m ≤ m0) {f : α → E} (hf : strongly_measurable[m] 
   simp_rw [snorm']
   congr 1
   refine' lintegral_trim hm _
-  refine' @Measurable.pow_const _ _ _ _ _ _ _ m _ (@Measurable.coe_nnreal_ennreal _ m _ _) _
+  refine' @Measurable.pow_const _ _ _ _ _ _ _ m _ (@Measurable.coe_nNReal_ennreal _ m _ _) _
   apply @strongly_measurable.measurable
   exact @strongly_measurable.nnnorm α m _ _ _ hf
 #align measure_theory.snorm'_trim MeasureTheory.snorm'_trim
@@ -1446,7 +1446,7 @@ theorem snorm_le_mul_snorm_aux_of_nonneg {f : α → F} {g : α → G} {c : ℝ}
     snorm f p μ ≤ Ennreal.ofReal c * snorm g p μ :=
   by
   lift c to ℝ≥0 using hc
-  rw [Ennreal.ofReal_coe_nnreal, ← c.nnnorm_eq, ← snorm_norm g, ← snorm_const_smul (c : ℝ)]
+  rw [Ennreal.ofReal_coe_nNReal, ← c.nnnorm_eq, ← snorm_norm g, ← snorm_const_smul (c : ℝ)]
   swap; infer_instance
   refine' snorm_mono_ae _
   simpa
@@ -1560,9 +1560,9 @@ theorem ae_bdd_liminf_atTop_rpow_of_snorm_bdd {p : ℝ≥0∞} {f : ℕ → α �
   have hp : p ≠ 0 := fun h => by simpa [h] using hp0
   have hp' : p ≠ ∞ := fun h => by simpa [h] using hp0
   refine'
-    ae_lt_top (measurable_liminf fun n => (hfmeas n).nnnorm.coe_nnreal_ennreal.pow_const p.to_real)
+    ae_lt_top (measurable_liminf fun n => (hfmeas n).nnnorm.coe_nNReal_ennreal.pow_const p.to_real)
       (lt_of_le_of_lt
-          (lintegral_liminf_le fun n => (hfmeas n).nnnorm.coe_nnreal_ennreal.pow_const p.to_real)
+          (lintegral_liminf_le fun n => (hfmeas n).nnnorm.coe_nNReal_ennreal.pow_const p.to_real)
           (lt_of_le_of_lt _
             (Ennreal.rpow_lt_top_of_nonneg Ennreal.toReal_nonneg Ennreal.coe_ne_top :
               ↑R ^ p.to_real < ∞))).Ne
@@ -2041,7 +2041,7 @@ theorem snorm_indicator_le {E : Type _} [NormedAddCommGroup E] (f : α → E) :
     snorm (s.indicator f) p μ ≤ snorm f p μ :=
   by
   refine' snorm_mono_ae (eventually_of_forall fun x => _)
-  suffices ‖s.indicator f x‖₊ ≤ ‖f x‖₊ by exact Nnreal.coe_mono this
+  suffices ‖s.indicator f x‖₊ ≤ ‖f x‖₊ by exact NNReal.coe_mono this
   rw [nnnorm_indicator_eq_indicator_nnnorm]
   exact s.indicator_le_self _ x
 #align measure_theory.snorm_indicator_le MeasureTheory.snorm_indicator_le
@@ -2617,7 +2617,7 @@ theorem snorm'_lim_eq_lintegral_liminf {ι} [Nonempty ι] [LinearOrder ι] {f : 
   refine' lintegral_congr_ae (h_lim.mono fun a ha => _)
   rw [tendsto.liminf_eq]
   simp_rw [Ennreal.coe_rpow_of_nonneg _ hp_nonneg, Ennreal.tendsto_coe]
-  refine' ((Nnreal.continuous_rpow_const hp_nonneg).Tendsto ‖f_lim a‖₊).comp _
+  refine' ((NNReal.continuous_rpow_const hp_nonneg).Tendsto ‖f_lim a‖₊).comp _
   exact (continuous_nnnorm.tendsto (f_lim a)).comp ha
 #align measure_theory.Lp.snorm'_lim_eq_lintegral_liminf MeasureTheory.lp.snorm'_lim_eq_lintegral_liminf
 

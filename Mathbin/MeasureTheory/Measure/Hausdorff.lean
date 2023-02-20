@@ -117,7 +117,7 @@ Hausdorff measure, measure, metric measure
 -/
 
 
-open Nnreal Ennreal Topology BigOperators
+open NNReal Ennreal Topology BigOperators
 
 open Emetric Set Function Filter Encodable FiniteDimensional TopologicalSpace
 
@@ -631,14 +631,14 @@ theorem hausdorffMeasure_zero_or_top {d₁ d₂ : ℝ} (h : d₁ < d₂) (s : Se
   by_contra' H
   suffices ∀ c : ℝ≥0, c ≠ 0 → μH[d₂] s ≤ c * μH[d₁] s
     by
-    rcases Ennreal.exists_nnreal_pos_mul_lt H.2 H.1 with ⟨c, hc0, hc⟩
+    rcases Ennreal.exists_nNReal_pos_mul_lt H.2 H.1 with ⟨c, hc0, hc⟩
     exact hc.not_le (this c (pos_iff_ne_zero.1 hc0))
   intro c hc
   refine' le_iff'.1 (mk_metric_mono_smul Ennreal.coe_ne_top (by exact_mod_cast hc) _) s
   have : 0 < (c ^ (d₂ - d₁)⁻¹ : ℝ≥0∞) :=
     by
     rw [Ennreal.coe_rpow_of_ne_zero hc, pos_iff_ne_zero, Ne.def, Ennreal.coe_eq_zero,
-      Nnreal.rpow_eq_zero_iff]
+      NNReal.rpow_eq_zero_iff]
     exact mt And.left hc
   filter_upwards [Ico_mem_nhdsWithin_Ici ⟨le_rfl, this⟩]
   rintro r ⟨hr₀, hrc⟩
@@ -924,7 +924,7 @@ variable {K : ℝ≥0} {f : X → Y} {s t : Set X}
 /-- If `f : X → Y` is `K`-Lipschitz on `s`, then `μH[d] (f '' s) ≤ K ^ d * μH[d] s`. -/
 theorem hausdorffMeasure_image_le (h : LipschitzOnWith K f s) {d : ℝ} (hd : 0 ≤ d) :
     μH[d] (f '' s) ≤ K ^ d * μH[d] s := by
-  simpa only [Nnreal.coe_one, one_mul] using
+  simpa only [NNReal.coe_one, one_mul] using
     h.holder_on_with.hausdorff_measure_image_le zero_lt_one hd
 #align lipschitz_on_with.hausdorff_measure_image_le LipschitzOnWith.hausdorffMeasure_image_le
 

@@ -42,7 +42,7 @@ integrable function
 -/
 
 
-open MeasureTheory Topology Interval Nnreal Ennreal
+open MeasureTheory Topology Interval NNReal Ennreal
 
 open MeasureTheory TopologicalSpace Set Filter Asymptotics intervalIntegral
 

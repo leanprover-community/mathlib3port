@@ -34,7 +34,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory.lp Filter ContinuousLinearMap
 
-open Nnreal Ennreal Topology BigOperators MeasureTheory
+open NNReal Ennreal Topology BigOperators MeasureTheory
 
 namespace MeasureTheory
 
@@ -198,15 +198,15 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
     exact
       @measurableSet_lt _ _ _ _ _ m _ _ _ _ _ measurable_const
         strongly_measurable_condexp.norm.measurable
-  simp only [← smul_eq_mul, ← set_integral_const, Nnreal.val_eq_coe, IsROrC.coe_real_eq_id, id.def]
+  simp only [← smul_eq_mul, ← set_integral_const, NNReal.val_eq_coe, IsROrC.coe_real_eq_id, id.def]
   refine' set_integral_mono_ae hfint.abs.integrable_on _ _
   · refine'
       ⟨ae_strongly_measurable_const,
         lt_of_le_of_lt _
           (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
     refine'
-      set_lintegral_mono (Measurable.nnnorm _).coe_nnreal_ennreal
-        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nnreal_ennreal fun x hx => _
+      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_ennreal
+        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nNReal_ennreal fun x hx => _
     · exact measurable_const
     · rw [Ennreal.coe_le_coe, Real.nnnorm_of_nonneg R.coe_nonneg]
       exact Subtype.mk_le_mk.2 (le_of_lt hx)
@@ -239,8 +239,8 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     filter_upwards [@condexp_congr_ae _ _ _ _ _ (ℱ n) m0 μ _ _ hne]with x hx
     simp only [zero_le', Set.setOf_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
   obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl Ennreal.one_ne_top hε
-  set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNnreal with hC
-  have hCpos : 0 < C := mul_pos (Nnreal.inv_pos.2 hδ) (Ennreal.toNnreal_pos hne hg.snorm_lt_top.ne)
+  set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNNReal with hC
+  have hCpos : 0 < C := mul_pos (NNReal.inv_pos.2 hδ) (Ennreal.toNnreal_pos hne hg.snorm_lt_top.ne)
   have : ∀ n, μ { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } ≤ Ennreal.ofReal δ :=
     by
     intro n
@@ -256,7 +256,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     rw [Ennreal.div_le_iff_le_mul (Or.inl (Ennreal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne),
       hC, Nonneg.inv_mk, Ennreal.coe_mul, Ennreal.coe_toNnreal hg.snorm_lt_top.ne, ← mul_assoc, ←
-      Ennreal.ofReal_eq_coe_nnreal, ← Ennreal.ofReal_mul hδ.le, mul_inv_cancel hδ.ne.symm,
+      Ennreal.ofReal_eq_coe_nNReal, ← Ennreal.ofReal_mul hδ.le, mul_inv_cancel hδ.ne.symm,
       Ennreal.ofReal_one, one_mul]
     exact snorm_one_condexp_le_snorm _
   refine' ⟨C, fun n => le_trans _ (h { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } (hmeas n C) (this n))⟩

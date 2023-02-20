@@ -24,7 +24,7 @@ open Function Metric Set Filter Finset
 
 open LinearMap (range ker)
 
-open Classical Topology BigOperators Nnreal
+open Classical Topology BigOperators NNReal
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F)

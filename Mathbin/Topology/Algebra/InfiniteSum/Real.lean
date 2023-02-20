@@ -20,7 +20,7 @@ This file provides lemmas about Cauchy sequences in terms of infinite sums.
 
 open Filter Finset
 
-open BigOperators Nnreal Topology
+open BigOperators NNReal Topology
 
 variable {α : Type _}
 
@@ -29,16 +29,16 @@ by a summable series of `nnreal`s, then the original sequence is a Cauchy sequen
 theorem cauchySeq_of_edist_le_of_summable [PseudoEmetricSpace α] {f : ℕ → α} (d : ℕ → ℝ≥0)
     (hf : ∀ n, edist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f :=
   by
-  refine' Emetric.cauchySeq_iff_nnreal.2 fun ε εpos => _
+  refine' Emetric.cauchySeq_iff_nNReal.2 fun ε εpos => _
   -- Actually we need partial sums of `d` to be a Cauchy sequence
   replace hd : CauchySeq fun n : ℕ => ∑ x in range n, d x :=
     let ⟨_, H⟩ := hd
     H.tendsto_sum_nat.cauchy_seq
   -- Now we take the same `N` as in one of the definitions of a Cauchy sequence
-  refine' (Metric.cauchySeq_iff'.1 hd ε (Nnreal.coe_pos.2 εpos)).imp fun N hN n hn => _
+  refine' (Metric.cauchySeq_iff'.1 hd ε (NNReal.coe_pos.2 εpos)).imp fun N hN n hn => _
   have hsum := hN n hn
   -- We simplify the known inequality
-  rw [dist_nndist, Nnreal.nndist_eq, ← sum_range_add_sum_Ico _ hn, add_tsub_cancel_left] at hsum
+  rw [dist_nndist, NNReal.nndist_eq, ← sum_range_add_sum_Ico _ hn, add_tsub_cancel_left] at hsum
   norm_cast  at hsum
   replace hsum := lt_of_le_of_lt (le_max_left _ _) hsum
   rw [edist_comm]

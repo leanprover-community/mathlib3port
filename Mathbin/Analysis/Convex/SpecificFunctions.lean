@@ -37,7 +37,7 @@ For `p : ℝ`, prove that `λ x, x ^ p` is concave when `0 ≤ p ≤ 1` and stri
 
 open Real Set
 
-open BigOperators Nnreal
+open BigOperators NNReal
 
 /-- `exp` is strictly convex on the whole real line. -/
 theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
@@ -114,11 +114,11 @@ theorem Real.pow_sum_div_card_le_sum_pow {α : Type _} {s : Finset α} {f : α �
     · simpa only [one_div, Finset.sum_const, nsmul_eq_mul] using mul_inv_cancel hs0.ne'
 #align real.pow_sum_div_card_le_sum_pow Real.pow_sum_div_card_le_sum_pow
 
-theorem Nnreal.pow_sum_div_card_le_sum_pow {α : Type _} (s : Finset α) (f : α → ℝ≥0) (n : ℕ) :
+theorem NNReal.pow_sum_div_card_le_sum_pow {α : Type _} (s : Finset α) (f : α → ℝ≥0) (n : ℕ) :
     (∑ x in s, f x) ^ (n + 1) / s.card ^ n ≤ ∑ x in s, f x ^ (n + 1) := by
-  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_sum, Nonneg.coe_div, Nnreal.coe_pow] using
-    @Real.pow_sum_div_card_le_sum_pow α s (coe ∘ f) n fun _ _ => Nnreal.coe_nonneg _
-#align nnreal.pow_sum_div_card_le_sum_pow Nnreal.pow_sum_div_card_le_sum_pow
+  simpa only [← NNReal.coe_le_coe, NNReal.coe_sum, Nonneg.coe_div, NNReal.coe_pow] using
+    @Real.pow_sum_div_card_le_sum_pow α s (coe ∘ f) n fun _ _ => NNReal.coe_nonneg _
+#align nnreal.pow_sum_div_card_le_sum_pow NNReal.pow_sum_div_card_le_sum_pow
 
 theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCommRing β] {f : α → β}
     [DecidablePred fun x => f x ≤ 0] {s : Finset α} (h0 : Even (s.filterₓ fun x => f x ≤ 0).card) :

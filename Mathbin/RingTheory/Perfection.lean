@@ -33,7 +33,7 @@ Define the valuation on the tilt, and define a characteristic predicate for the 
 
 universe u₁ u₂ u₃ u₄
 
-open Nnreal
+open NNReal
 
 /-- The perfection of a monoid `M`, defined to be the projective limit of `M`
 using the `p`-th power maps `M → M` indexed by the natural numbers, implemented as
@@ -517,7 +517,7 @@ theorem v_p_lt_val {x : O} :
     Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
 #align mod_p.v_p_lt_val ModP.v_p_lt_val
 
-open Nnreal
+open NNReal
 
 variable {hv} (hvp)
 

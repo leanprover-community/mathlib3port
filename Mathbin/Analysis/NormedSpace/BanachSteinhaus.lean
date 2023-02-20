@@ -99,8 +99,8 @@ theorem banach_steinhaus_supᵢ_nnnorm {ι : Type _} [CompleteSpace E] {g : ι �
         
   cases' banach_steinhaus h' with C' hC'
   refine' (supᵢ_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
-  rw [← norm_toNnreal]
-  exact coe_mono (Real.toNnreal_le_toNnreal <| hC' i)
+  rw [← norm_toNNReal]
+  exact coe_mono (Real.toNNReal_le_toNNReal <| hC' i)
 #align banach_steinhaus_supr_nnnorm banach_steinhaus_supᵢ_nnnorm
 
 open Topology

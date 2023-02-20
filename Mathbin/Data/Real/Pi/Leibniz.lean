@@ -51,7 +51,7 @@ theorem tendsto_sum_pi_div_four :
   rw [tendsto_iff_norm_tendsto_zero, ← tendsto_zero_iff_norm_tendsto_zero]
   -- (1) We introduce a useful sequence `u` of values in [0,1], then prove that another sequence
   --     constructed from `u` tends to `0` at `+∞`
-  let u := fun k : ℕ => (k : Nnreal) ^ (-1 / (2 * (k : ℝ) + 1))
+  let u := fun k : ℕ => (k : NNReal) ^ (-1 / (2 * (k : ℝ) + 1))
   have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) :=
     by
     convert
@@ -59,7 +59,7 @@ theorem tendsto_sum_pi_div_four :
             tendsto_inv_atTop_zero).comp
         tendsto_nat_cast_atTop_atTop
     · ext k
-      simp only [Nnreal.coe_nat_cast, Function.comp_apply, Nnreal.coe_rpow]
+      simp only [NNReal.coe_nat_cast, Function.comp_apply, NNReal.coe_rpow]
       rw [← rpow_mul (Nat.cast_nonneg k) (-1 / (2 * (k : ℝ) + 1)) (2 * (k : ℝ) + 1),
         @div_mul_cancel _ _ (2 * (k : ℝ) + 1) _
           (by
@@ -95,7 +95,7 @@ theorem tendsto_sum_pi_div_four :
               (by
                 norm_cast
                 exact Nat.succ_pos')))
-  have hU2 := Nnreal.coe_nonneg U
+  have hU2 := NNReal.coe_nonneg U
   -- (4) We compute the derivative of `f`, denoted by `f'`
   let f' := fun x : ℝ => (-x ^ 2) ^ k / (1 + x ^ 2)
   have has_deriv_at_f : ∀ x, HasDerivAt f (f' x) x :=

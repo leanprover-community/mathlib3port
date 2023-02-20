@@ -23,7 +23,7 @@ This file contains lemmas about normed additive torsors over normed spaces.
 
 noncomputable section
 
-open Nnreal Topology
+open NNReal Topology
 
 open Filter
 
@@ -145,7 +145,7 @@ include W
 theorem antilipschitzWith_lineMap {p₁ p₂ : Q} (h : p₁ ≠ p₂) :
     AntilipschitzWith (nndist p₁ p₂)⁻¹ (lineMap p₁ p₂ : 𝕜 → Q) :=
   AntilipschitzWith.of_le_mul_dist fun c₁ c₂ => by
-    rw [dist_lineMap_lineMap, Nnreal.coe_inv, ← dist_nndist, mul_left_comm,
+    rw [dist_lineMap_lineMap, NNReal.coe_inv, ← dist_nndist, mul_left_comm,
       inv_mul_cancel (dist_ne_zero.2 h), mul_one]
 #align antilipschitz_with_line_map antilipschitzWith_lineMap
 

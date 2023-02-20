@@ -51,7 +51,7 @@ norm, seminorm
 
 open Set
 
-open Nnreal
+open NNReal
 
 variable {ι R R' E F G : Type _}
 
@@ -465,12 +465,12 @@ instance : SMul R (AddGroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_zero' := by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_zero, mul_zero]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_zero, mul_zero]
       add_le' := fun _ _ =>
         by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
         exact
-          (mul_le_mul_of_nonneg_left (map_add_le_add _ _ _) <| Nnreal.coe_nonneg _).trans_eq
+          (mul_le_mul_of_nonneg_left (map_add_le_add _ _ _) <| NNReal.coe_nonneg _).trans_eq
             (mul_add _ _ _)
       neg' := fun x => by rw [map_neg_eq_map] }⟩
 
@@ -490,7 +490,7 @@ instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R 
 
 theorem smul_sup (r : R) (p q : AddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
   ext fun x => real.smul_max _ _
 #align add_group_seminorm.smul_sup AddGroupSeminorm.smul_sup
@@ -637,13 +637,13 @@ instance : SMul R (GroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_one' := by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_one_eq_zero p,
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_one_eq_zero p,
           mul_zero]
       mul_le' := fun _ _ =>
         by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
         exact
-          (mul_le_mul_of_nonneg_left (map_mul_le_add p _ _) <| Nnreal.coe_nonneg _).trans_eq
+          (mul_le_mul_of_nonneg_left (map_mul_le_add p _ _) <| NNReal.coe_nonneg _).trans_eq
             (mul_add _ _ _)
       inv' := fun x => by rw [map_inv_eq_map p] }⟩
 
@@ -667,7 +667,7 @@ theorem smul_apply (r : R) (p : GroupSeminorm E) (x : E) : (r • p) x = r • p
 @[to_additive AddGroupSeminorm.smul_sup]
 theorem smul_sup (r : R) (p q : GroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
   ext fun x => real.smul_max _ _
 #align group_seminorm.smul_sup GroupSeminorm.smul_sup
@@ -701,13 +701,13 @@ instance : SMul R (NonarchAddGroupSeminorm E) :=
   ⟨fun r p =>
     { toFun := fun x => r • p x
       map_zero' := by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, map_zero p,
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, map_zero p,
           mul_zero]
       add_le_max' := fun x y =>
         by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul, ←
-          mul_max_of_nonneg _ _ Nnreal.zero_le_coe]
-        exact mul_le_mul_of_nonneg_left (map_add_le_max p _ _) Nnreal.zero_le_coe
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul, ←
+          mul_max_of_nonneg _ _ NNReal.zero_le_coe]
+        exact mul_le_mul_of_nonneg_left (map_add_le_max p _ _) NNReal.zero_le_coe
       neg' := fun x => by rw [map_neg_eq_map p] }⟩
 
 instance [SMul R' ℝ] [SMul R' ℝ≥0] [IsScalarTower R' ℝ≥0 ℝ] [SMul R R'] [IsScalarTower R R' ℝ] :
@@ -726,7 +726,7 @@ theorem smul_apply (r : R) (p : NonarchAddGroupSeminorm E) (x : E) : (r • p) x
 
 theorem smul_sup (r : R) (p q : NonarchAddGroupSeminorm E) : r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
   ext fun x => real.smul_max _ _
 #align nonarch_add_group_seminorm.smul_sup NonarchAddGroupSeminorm.smul_sup

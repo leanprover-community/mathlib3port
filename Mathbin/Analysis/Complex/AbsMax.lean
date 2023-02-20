@@ -84,7 +84,7 @@ maximum modulus principle, complex analysis
 
 open TopologicalSpace Metric Set Filter Asymptotics Function MeasureTheory AffineMap
 
-open Topology Filter Nnreal Real
+open Topology Filter NNReal Real
 
 universe u v w
 

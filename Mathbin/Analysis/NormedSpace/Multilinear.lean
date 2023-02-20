@@ -61,7 +61,7 @@ approach, it turns out that direct proofs are easier and more efficient.
 
 noncomputable section
 
-open Classical BigOperators Nnreal
+open Classical BigOperators NNReal
 
 open Finset Metric
 
@@ -486,7 +486,7 @@ theorem le_op_norm_mul_pow_of_le {Ei : Fin n → Type _} [∀ i, NormedAddCommGr
 /-- The fundamental property of the operator norm of a continuous multilinear map:
 `‖f m‖` is bounded by `‖f‖` times the product of the `‖m i‖`, `nnnorm` version. -/
 theorem le_op_nnnorm : ‖f m‖₊ ≤ ‖f‖₊ * ∏ i, ‖m i‖₊ :=
-  Nnreal.coe_le_coe.1 <| by
+  NNReal.coe_le_coe.1 <| by
     push_cast
     exact f.le_op_norm m
 #align continuous_multilinear_map.le_op_nnnorm ContinuousMultilinearMap.le_op_nnnorm
@@ -544,7 +544,7 @@ theorem norm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
 @[simp]
 theorem nnnorm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
     ‖ofSubsingleton 𝕜 G i'‖₊ = 1 :=
-  Nnreal.eq <| norm_ofSubsingleton _ _ _
+  NNReal.eq <| norm_ofSubsingleton _ _ _
 #align continuous_multilinear_map.nnnorm_of_subsingleton ContinuousMultilinearMap.nnnorm_ofSubsingleton
 
 variable {G} (E)
@@ -560,7 +560,7 @@ theorem norm_constOfIsEmpty [IsEmpty ι] (x : G) : ‖constOfIsEmpty 𝕜 E x‖
 
 @[simp]
 theorem nnnorm_constOfIsEmpty [IsEmpty ι] (x : G) : ‖constOfIsEmpty 𝕜 E x‖₊ = ‖x‖₊ :=
-  Nnreal.eq <| norm_constOfIsEmpty _ _ _
+  NNReal.eq <| norm_constOfIsEmpty _ _ _
 #align continuous_multilinear_map.nnnorm_const_of_is_empty ContinuousMultilinearMap.nnnorm_constOfIsEmpty
 
 end

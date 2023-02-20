@@ -56,7 +56,7 @@ which we currently do not have.
 
 noncomputable section
 
-open Classical MeasureTheory Nnreal Ennreal
+open Classical MeasureTheory NNReal Ennreal
 
 namespace MeasureTheory
 

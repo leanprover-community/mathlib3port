@@ -64,7 +64,7 @@ derivative, strictly differentiable, continuously differentiable, smooth, invers
 
 open Function Set Filter Metric
 
-open Topology Classical Nnreal
+open Topology Classical NNReal
 
 noncomputable section
 
@@ -217,7 +217,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     rw [this]
   have If' : (0 : ℝ) < f'symm.nnnorm := by
     rw [← inv_pos]
-    exact (Nnreal.coe_nonneg _).trans_lt hc
+    exact (NNReal.coe_nonneg _).trans_lt hc
   have Icf' : (c : ℝ) * f'symm.nnnorm < 1 := by rwa [inv_eq_one_div, lt_div_iff If'] at hc
   have Jf' : (f'symm.nnnorm : ℝ) ≠ 0 := ne_of_gt If'
   have Jcf' : (1 : ℝ) - c * f'symm.nnnorm ≠ 0 :=
@@ -267,7 +267,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       _ ≤ c * ‖z + v - z‖ := hf _ (hε hgz) _ (hε hz)
       _ ≤ c * (f'symm.nnnorm * dist (f z) y) :=
         by
-        apply mul_le_mul_of_nonneg_left _ (Nnreal.coe_nonneg c)
+        apply mul_le_mul_of_nonneg_left _ (NNReal.coe_nonneg c)
         simpa [hv, dist_eq_norm'] using f'symm.bound (y - f z)
       _ = c * f'symm.nnnorm * dist (f z) y := by ring
       
@@ -291,13 +291,13 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         by ring
       _ ≤ f'symm.nnnorm * dist (f b) y * 1 :=
         by
-        apply mul_le_mul_of_nonneg_left _ (mul_nonneg (Nnreal.coe_nonneg _) dist_nonneg)
+        apply mul_le_mul_of_nonneg_left _ (mul_nonneg (NNReal.coe_nonneg _) dist_nonneg)
         rw [sub_le_self_iff]
-        exact pow_nonneg (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _)) _
+        exact pow_nonneg (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)) _
       _ ≤ f'symm.nnnorm * (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε) :=
         by
         rw [mul_one]
-        exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (Nnreal.coe_nonneg _)
+        exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (NNReal.coe_nonneg _)
       _ = ε * (1 - c * f'symm.nnnorm) := by
         field_simp
         ring
@@ -327,7 +327,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
             f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) +
               f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n) / (1 - c * f'symm.nnnorm) *
                 dist (f b) y :=
-          add_le_add (mul_le_mul_of_nonneg_left IH.1 (Nnreal.coe_nonneg _)) IH.2
+          add_le_add (mul_le_mul_of_nonneg_left IH.1 (NNReal.coe_nonneg _)) IH.2
         _ =
             f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n.succ) / (1 - c * f'symm.nnnorm) *
               dist (f b) y :=
@@ -340,7 +340,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y :=
         B _ (C n _ IH.2) (C n.succ _ Ign)
       _ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-        mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))
+        mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _))
       _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by ring
       
   -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
@@ -353,7 +353,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         dist (u n) (u (n + 1)) = dist (g (u n)) (u n) := by rw [usucc, dist_comm]
         _ ≤ f'symm.nnnorm * dist (f (u n)) y := A _
         _ ≤ f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
-          mul_le_mul_of_nonneg_left (D n).1 (Nnreal.coe_nonneg _)
+          mul_le_mul_of_nonneg_left (D n).1 (NNReal.coe_nonneg _)
         _ = f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by ring
         
     cauchySeq_of_le_geometric _ _ Icf' this
@@ -375,7 +375,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     rw [tendsto_iff_dist_tendsto_zero]
     refine' squeeze_zero (fun n => dist_nonneg) (fun n => (D n).1) _
     simpa using
-      (tendsto_pow_atTop_nhds_0_of_lt_1 (mul_nonneg (Nnreal.coe_nonneg _) (Nnreal.coe_nonneg _))
+      (tendsto_pow_atTop_nhds_0_of_lt_1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _))
             Icf').mul
         tendsto_const_nhds
   exact tendsto_nhds_unique T1 T2
@@ -506,10 +506,10 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
       congr 2
       simp only [ContinuousLinearEquiv.apply_symm_apply, ContinuousLinearEquiv.map_sub]
       abel
-    _ ≤ N * (c * ‖y' - x'‖) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (Nnreal.coe_nonneg _)
+    _ ≤ N * (c * ‖y' - x'‖) := mul_le_mul_of_nonneg_left (hf _ y's _ x's) (NNReal.coe_nonneg _)
     _ ≤ N * (c * (((N⁻¹ - c)⁻¹ : ℝ≥0) * ‖A y' - A x'‖)) :=
       by
-      apply_rules [mul_le_mul_of_nonneg_left, Nnreal.coe_nonneg]
+      apply_rules [mul_le_mul_of_nonneg_left, NNReal.coe_nonneg]
       rw [← dist_eq_norm, ← dist_eq_norm]
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
     _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ‖A x' - A y'‖ :=
@@ -643,10 +643,10 @@ theorem map_nhds_eq_of_surj [CompleteSpace E] [CompleteSpace F] {f : E → F} {f
   let f'symm := f'.nonlinear_right_inverse_of_surjective h
   set c : ℝ≥0 := f'symm.nnnorm⁻¹ / 2 with hc
   have f'symm_pos : 0 < f'symm.nnnorm := f'.nonlinear_right_inverse_of_surjective_nnnorm_pos h
-  have cpos : 0 < c := by simp [hc, Nnreal.half_pos, Nnreal.inv_pos, f'symm_pos]
+  have cpos : 0 < c := by simp [hc, NNReal.half_pos, NNReal.inv_pos, f'symm_pos]
   obtain ⟨s, s_nhds, hs⟩ : ∃ s ∈ 𝓝 a, ApproximatesLinearOn f f' s c :=
     hf.approximates_deriv_on_nhds (Or.inr cpos)
-  apply hs.map_nhds_eq f'symm s_nhds (Or.inr (Nnreal.half_lt_self _))
+  apply hs.map_nhds_eq f'symm s_nhds (Or.inr (NNReal.half_lt_self _))
   simp [ne_of_gt f'symm_pos]
 #align has_strict_fderiv_at.map_nhds_eq_of_surj HasStrictFderivAt.map_nhds_eq_of_surj
 
@@ -661,7 +661,7 @@ theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[�
   exact
     hf.approximates_deriv_on_nhds <|
       f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
-        Nnreal.half_pos <| Nnreal.inv_pos.2 <| hf'
+        NNReal.half_pos <| NNReal.inv_pos.2 <| hf'
 #align has_strict_fderiv_at.approximates_deriv_on_open_nhds HasStrictFderivAt.approximates_deriv_on_open_nhds
 
 include cs
@@ -676,7 +676,7 @@ def toLocalHomeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : Local
   ApproximatesLinearOn.toLocalHomeomorph f (Classical.choose hf.approximates_deriv_on_open_nhds)
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).snd
     (f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
-      Nnreal.half_lt_self <| ne_of_gt <| Nnreal.inv_pos.2 <| hf')
+      NNReal.half_lt_self <| ne_of_gt <| NNReal.inv_pos.2 <| hf')
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.2
 #align has_strict_fderiv_at.to_local_homeomorph HasStrictFderivAt.toLocalHomeomorph
 

@@ -27,7 +27,7 @@ noncomputable section
 
 open Classical Set Function Filter Finset Metric
 
-open Classical Topology Nat BigOperators uniformity Nnreal Ennreal
+open Classical Topology Nat BigOperators uniformity NNReal Ennreal
 
 variable {α : Type _} {β : Type _} {ι : Type _}
 
@@ -39,16 +39,16 @@ theorem tendsto_const_div_atTop_nhds_0_nat (C : ℝ) : Tendsto (fun n : ℕ => C
   simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_atTop_nhds_0_nat
 #align tendsto_const_div_at_top_nhds_0_nat tendsto_const_div_atTop_nhds_0_nat
 
-theorem Nnreal.tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
+theorem NNReal.tendsto_inverse_atTop_nhds_0_nat : Tendsto (fun n : ℕ => (n : ℝ≥0)⁻¹) atTop (𝓝 0) :=
   by
-  rw [← Nnreal.tendsto_coe]
+  rw [← NNReal.tendsto_coe]
   exact tendsto_inverse_atTop_nhds_0_nat
-#align nnreal.tendsto_inverse_at_top_nhds_0_nat Nnreal.tendsto_inverse_atTop_nhds_0_nat
+#align nnreal.tendsto_inverse_at_top_nhds_0_nat NNReal.tendsto_inverse_atTop_nhds_0_nat
 
-theorem Nnreal.tendsto_const_div_atTop_nhds_0_nat (C : ℝ≥0) :
+theorem NNReal.tendsto_const_div_atTop_nhds_0_nat (C : ℝ≥0) :
     Tendsto (fun n : ℕ => C / n) atTop (𝓝 0) := by
-  simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_atTop_nhds_0_nat
-#align nnreal.tendsto_const_div_at_top_nhds_0_nat Nnreal.tendsto_const_div_atTop_nhds_0_nat
+  simpa using tendsto_const_nhds.mul NNReal.tendsto_inverse_atTop_nhds_0_nat
+#align nnreal.tendsto_const_div_at_top_nhds_0_nat NNReal.tendsto_const_div_atTop_nhds_0_nat
 
 theorem tendsto_one_div_add_atTop_nhds_0_nat :
     Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) atTop (𝓝 0) :=
@@ -165,11 +165,11 @@ theorem tendsto_atTop_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (h
     (tendsto_pow_atTop_atTop_of_one_lt hc).atTop_mul_const h₀
 #align tendsto_at_top_of_geom_le tendsto_atTop_of_geom_le
 
-theorem Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
+theorem NNReal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
-  Nnreal.tendsto_coe.1 <| by
-    simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_atTop_nhds_0_of_lt_1 r.coe_nonneg hr]
-#align nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1
+  NNReal.tendsto_coe.1 <| by
+    simp only [NNReal.coe_pow, NNReal.coe_zero, tendsto_pow_atTop_nhds_0_of_lt_1 r.coe_nonneg hr]
+#align nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 NNReal.tendsto_pow_atTop_nhds_0_of_lt_1
 
 theorem Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
@@ -177,7 +177,7 @@ theorem Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
   rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
   rw [← Ennreal.coe_zero]
   norm_cast  at *
-  apply Nnreal.tendsto_pow_atTop_nhds_0_of_lt_1 hr
+  apply NNReal.tendsto_pow_atTop_nhds_0_of_lt_1 hr
 #align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1
 
 /-! ### Geometric series-/
@@ -266,21 +266,21 @@ theorem tsum_geometric_two' (a : ℝ) : (∑' n : ℕ, a / 2 / 2 ^ n) = a :=
 #align tsum_geometric_two' tsum_geometric_two'
 
 /-- **Sum of a Geometric Series** -/
-theorem Nnreal.hasSum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
+theorem NNReal.hasSum_geometric {r : ℝ≥0} (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) (1 - r)⁻¹ :=
   by
-  apply Nnreal.hasSum_coe.1
+  apply NNReal.hasSum_coe.1
   push_cast
-  rw [Nnreal.coe_sub (le_of_lt hr)]
+  rw [NNReal.coe_sub (le_of_lt hr)]
   exact hasSum_geometric_of_lt_1 r.coe_nonneg hr
-#align nnreal.has_sum_geometric Nnreal.hasSum_geometric
+#align nnreal.has_sum_geometric NNReal.hasSum_geometric
 
-theorem Nnreal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
-  ⟨_, Nnreal.hasSum_geometric hr⟩
-#align nnreal.summable_geometric Nnreal.summable_geometric
+theorem NNReal.summable_geometric {r : ℝ≥0} (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
+  ⟨_, NNReal.hasSum_geometric hr⟩
+#align nnreal.summable_geometric NNReal.summable_geometric
 
-theorem tsum_geometric_nnreal {r : ℝ≥0} (hr : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
-  (Nnreal.hasSum_geometric hr).tsum_eq
-#align tsum_geometric_nnreal tsum_geometric_nnreal
+theorem tsum_geometric_nNReal {r : ℝ≥0} (hr : r < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
+  (NNReal.hasSum_geometric hr).tsum_eq
+#align tsum_geometric_nnreal tsum_geometric_nNReal
 
 /-- The series `pow r` converges to `(1-r)⁻¹`. For `r < 1` the RHS is a finite number,
 and for `1 ≤ r` the RHS equals `∞`. -/
@@ -290,7 +290,7 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
   cases' lt_or_le r 1 with hr hr
   · rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
     norm_cast  at *
-    convert Ennreal.tsum_coe_eq (Nnreal.hasSum_geometric hr)
+    convert Ennreal.tsum_coe_eq (NNReal.hasSum_geometric hr)
     rw [Ennreal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
   · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supᵢ_nat, supᵢ_eq_top]
     refine' fun a ha =>
@@ -519,7 +519,7 @@ theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : 
   exact fun _ _ => (hpos _).le
 #align set.countable.exists_pos_forall_sum_le Set.Countable.exists_pos_forall_sum_le
 
-namespace Nnreal
+namespace NNReal
 
 theorem exists_pos_sum_of_countable {ε : ℝ≥0} (hε : ε ≠ 0) (ι) [Countable ι] :
     ∃ ε' : ι → ℝ≥0, (∀ i, 0 < ε' i) ∧ ∃ c, HasSum ε' c ∧ c < ε :=
@@ -528,12 +528,12 @@ theorem exists_pos_sum_of_countable {ε : ℝ≥0} (hε : ε ≠ 0) (ι) [Counta
   obtain ⟨a, a0, aε⟩ := exists_between (pos_iff_ne_zero.2 hε)
   obtain ⟨ε', hε', c, hc, hcε⟩ := posSumOfEncodable a0 ι
   exact
-    ⟨fun i => ⟨ε' i, (hε' i).le⟩, fun i => Nnreal.coe_lt_coe.1 <| hε' i,
-      ⟨c, hasSum_le (fun i => (hε' i).le) hasSum_zero hc⟩, Nnreal.hasSum_coe.1 hc,
-      aε.trans_le' <| Nnreal.coe_le_coe.1 hcε⟩
-#align nnreal.exists_pos_sum_of_countable Nnreal.exists_pos_sum_of_countable
+    ⟨fun i => ⟨ε' i, (hε' i).le⟩, fun i => NNReal.coe_lt_coe.1 <| hε' i,
+      ⟨c, hasSum_le (fun i => (hε' i).le) hasSum_zero hc⟩, NNReal.hasSum_coe.1 hc,
+      aε.trans_le' <| NNReal.coe_le_coe.1 hcε⟩
+#align nnreal.exists_pos_sum_of_countable NNReal.exists_pos_sum_of_countable
 
-end Nnreal
+end NNReal
 
 namespace Ennreal
 
@@ -542,7 +542,7 @@ theorem exists_pos_sum_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Cou
   by
   rcases exists_between (pos_iff_ne_zero.2 hε) with ⟨r, h0r, hrε⟩
   rcases lt_iff_exists_coe.1 hrε with ⟨x, rfl, hx⟩
-  rcases Nnreal.exists_pos_sum_of_countable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
+  rcases NNReal.exists_pos_sum_of_countable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
   exact ⟨ε', hp, (Ennreal.tsum_coe_eq hc).symm ▸ lt_trans (coe_lt_coe.2 hcr) hrε⟩
 #align ennreal.exists_pos_sum_of_countable Ennreal.exists_pos_sum_of_countable
 
@@ -558,7 +558,7 @@ theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {
   lift w to ι → ℝ≥0 using hw
   rcases exists_pos_sum_of_countable hε ι with ⟨δ', Hpos, Hsum⟩
   have : ∀ i, 0 < max 1 (w i) := fun i => zero_lt_one.trans_le (le_max_left _ _)
-  refine' ⟨fun i => δ' i / max 1 (w i), fun i => Nnreal.div_pos (Hpos _) (this i), _⟩
+  refine' ⟨fun i => δ' i / max 1 (w i), fun i => NNReal.div_pos (Hpos _) (this i), _⟩
   refine' lt_of_le_of_lt (Ennreal.tsum_le_tsum fun i => _) Hsum
   rw [coe_div (this i).ne']
   refine' mul_le_of_le_div' (Ennreal.mul_le_mul le_rfl <| Ennreal.inv_le_inv.2 _)

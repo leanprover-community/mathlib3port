@@ -98,7 +98,7 @@ noncomputable section
 
 open quotientAddGroup Metric Set
 
-open Topology Nnreal
+open Topology NNReal
 
 variable {M N : Type _} [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
 
@@ -531,7 +531,7 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
   apply op_norm_le_bound _ c.coe_nonneg
   intro x
   by_cases hc : c = 0
-  · simp only [hc, Nnreal.coe_zero, zero_mul] at fb⊢
+  · simp only [hc, NNReal.coe_zero, zero_mul] at fb⊢
     obtain ⟨x, rfl⟩ := surjective_quot_mk _ x
     show ‖f x‖ ≤ 0
     calc

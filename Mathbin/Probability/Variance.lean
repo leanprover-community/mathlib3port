@@ -41,7 +41,7 @@ open MeasureTheory Filter Finset
 
 noncomputable section
 
-open BigOperators MeasureTheory ProbabilityTheory Ennreal Nnreal
+open BigOperators MeasureTheory ProbabilityTheory Ennreal NNReal
 
 namespace ProbabilityTheory
 
@@ -113,7 +113,7 @@ theorem evariance_eq_lintegral_ofReal (X : Ω → ℝ) (μ : Measure Ω) :
   ext1 ω
   rw [pow_two, ← Ennreal.coe_mul, ← nnnorm_mul, ← pow_two]
   congr
-  exact (Real.toNnreal_eq_nnnorm_of_nonneg <| sq_nonneg _).symm
+  exact (Real.toNNReal_eq_nnnorm_of_nonneg <| sq_nonneg _).symm
 #align probability_theory.evariance_eq_lintegral_of_real ProbabilityTheory.evariance_eq_lintegral_ofReal
 
 theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 μ) (hXint : μ[X] = 0) :
@@ -170,8 +170,8 @@ theorem evariance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measure Ω) :
   ext1 ω
   rw [Ennreal.ofReal, ← Ennreal.coe_pow, ← Ennreal.coe_pow, ← Ennreal.coe_mul]
   congr
-  rw [← sq_abs, ← Real.rpow_two, Real.toNnreal_rpow_of_nonneg (abs_nonneg _), Nnreal.rpow_two, ←
-    mul_pow, Real.toNnreal_mul_nnnorm _ (abs_nonneg _)]
+  rw [← sq_abs, ← Real.rpow_two, Real.toNNReal_rpow_of_nonneg (abs_nonneg _), NNReal.rpow_two, ←
+    mul_pow, Real.toNNReal_mul_nnnorm _ (abs_nonneg _)]
   conv_rhs => rw [← nnnorm_norm, norm_mul, norm_abs_eq_norm, ← norm_mul, nnnorm_norm, mul_sub]
   congr
   rw [mul_comm]
@@ -268,7 +268,7 @@ theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ
     simp_rw [← Ennreal.coe_pow]
     rw [lintegral_coe_eq_integral]
     · congr 2 with ω
-      simp only [Pi.pow_apply, Nnreal.coe_pow, coe_nnnorm, Real.norm_eq_abs, pow_bit0_abs]
+      simp only [Pi.pow_apply, NNReal.coe_pow, coe_nnnorm, Real.norm_eq_abs, pow_bit0_abs]
     · exact hℒ.abs.integrable_sq
   · symm
     rw [evariance_eq_top hX hℒ, Ennreal.sub_eq_top_iff]
@@ -291,7 +291,7 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AeStronglyMeasurable 
   convert meas_ge_le_mul_pow_snorm ℙ Ennreal.two_ne_zero Ennreal.two_ne_top (hX.sub B) A
   · ext ω
     simp only [Pi.sub_apply, Ennreal.coe_le_coe, ← Real.norm_eq_abs, ← coe_nnnorm,
-      Nnreal.coe_le_coe, Ennreal.ofReal_coe_nnreal]
+      NNReal.coe_le_coe, Ennreal.ofReal_coe_nNReal]
   · rw [snorm_eq_lintegral_rpow_nnnorm Ennreal.two_ne_zero Ennreal.two_ne_top]
     simp only [Ennreal.toReal_bit0, Ennreal.one_toReal, Pi.sub_apply, one_div]
     rw [div_eq_mul_inv, Ennreal.inv_pow, mul_comm, Ennreal.rpow_two]
@@ -307,7 +307,7 @@ theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω 
   by
   rw [Ennreal.ofReal_div_of_pos (sq_pos_of_ne_zero _ hc.ne.symm), hX.of_real_variance_eq]
   convert @meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
-  · simp only [Real.coe_to_nnreal', max_le_iff, abs_nonneg, and_true_iff]
+  · simp only [Real.coe_toNNReal', max_le_iff, abs_nonneg, and_true_iff]
   · rw [Ennreal.ofReal_pow hc.le]
     rfl
 #align probability_theory.meas_ge_le_variance_div_sq ProbabilityTheory.meas_ge_le_variance_div_sq

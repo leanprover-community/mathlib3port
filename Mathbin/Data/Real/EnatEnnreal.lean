@@ -18,7 +18,7 @@ In this file we define a coercion from `ℕ∞` to `ℝ≥0∞` and prove some b
 -/
 
 
-open Classical Nnreal Ennreal
+open Classical NNReal Ennreal
 
 noncomputable section
 
@@ -31,9 +31,9 @@ instance hasCoeEnnreal : CoeTC ℕ∞ ℝ≥0∞ :=
 #align enat.has_coe_ennreal ENat.hasCoeEnnreal
 
 @[simp]
-theorem map_coe_nnreal : WithTop.map (coe : ℕ → ℝ≥0) = (coe : ℕ∞ → ℝ≥0∞) :=
+theorem map_coe_nNReal : WithTop.map (coe : ℕ → ℝ≥0) = (coe : ℕ∞ → ℝ≥0∞) :=
   rfl
-#align enat.map_coe_nnreal ENat.map_coe_nnreal
+#align enat.map_coe_nnreal ENat.map_coe_nNReal
 
 /-- Coercion `ℕ∞ → ℝ≥0∞` as an `order_embedding`. -/
 @[simps (config := { fullyApplied := false })]

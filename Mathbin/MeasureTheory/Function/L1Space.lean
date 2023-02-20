@@ -52,7 +52,7 @@ integrable, function space, l1
 
 noncomputable section
 
-open Classical Topology BigOperators Ennreal MeasureTheory Nnreal
+open Classical Topology BigOperators Ennreal MeasureTheory NNReal
 
 open Set Filter TopologicalSpace Ennreal Emetric MeasureTheory
 
@@ -127,10 +127,10 @@ theorem hasFiniteIntegral_iff_ofReal {f : α → ℝ} (h : 0 ≤ᵐ[μ] f) :
   rw [has_finite_integral, lintegral_nnnorm_eq_of_ae_nonneg h]
 #align measure_theory.has_finite_integral_iff_of_real MeasureTheory.hasFiniteIntegral_iff_ofReal
 
-theorem hasFiniteIntegral_iff_of_nnreal {f : α → ℝ≥0} :
+theorem hasFiniteIntegral_iff_of_nNReal {f : α → ℝ≥0} :
     HasFiniteIntegral (fun x => (f x : ℝ)) μ ↔ (∫⁻ a, f a ∂μ) < ∞ := by
   simp [has_finite_integral_iff_norm]
-#align measure_theory.has_finite_integral_iff_of_nnreal MeasureTheory.hasFiniteIntegral_iff_of_nnreal
+#align measure_theory.has_finite_integral_iff_of_nnreal MeasureTheory.hasFiniteIntegral_iff_of_nNReal
 
 theorem HasFiniteIntegral.mono {f : α → β} {g : α → γ} (hg : HasFiniteIntegral g μ)
     (h : ∀ᵐ a ∂μ, ‖f a‖ ≤ ‖g a‖) : HasFiniteIntegral f μ :=
@@ -792,7 +792,7 @@ theorem Integrable.measure_ge_lt_top {f : α → β} (hf : Integrable f μ) {ε 
     μ { x | ε ≤ ‖f x‖ } < ∞ :=
   by
   rw [show { x | ε ≤ ‖f x‖ } = { x | Ennreal.ofReal ε ≤ ‖f x‖₊ } by
-      simp only [Ennreal.ofReal, Real.toNnreal_le_iff_le_coe, Ennreal.coe_le_coe, coe_nnnorm]]
+      simp only [Ennreal.ofReal, Real.toNNReal_le_iff_le_coe, Ennreal.coe_le_coe, coe_nnnorm]]
   refine' (meas_ge_le_mul_pow_snorm μ one_ne_zero Ennreal.one_ne_top hf.1 _).trans_lt _
   · simpa only [Ne.def, Ennreal.ofReal_eq_zero, not_le] using hε
   apply Ennreal.mul_lt_top
@@ -810,10 +810,10 @@ theorem LipschitzWith.integrable_comp_iff_of_antilipschitz {K K'} {f : α → β
 #align measure_theory.lipschitz_with.integrable_comp_iff_of_antilipschitz MeasureTheory.LipschitzWith.integrable_comp_iff_of_antilipschitz
 
 theorem Integrable.realToNnreal {f : α → ℝ} (hf : Integrable f μ) :
-    Integrable (fun x => ((f x).toNnreal : ℝ)) μ :=
+    Integrable (fun x => ((f x).toNNReal : ℝ)) μ :=
   by
   refine'
-    ⟨hf.ae_strongly_measurable.ae_measurable.real_toNnreal.coeNnrealReal.AeStronglyMeasurable, _⟩
+    ⟨hf.ae_strongly_measurable.ae_measurable.real_toNNReal.coeNnrealReal.AeStronglyMeasurable, _⟩
   rw [has_finite_integral_iff_norm]
   refine' lt_of_le_of_lt _ ((has_finite_integral_iff_norm _).1 hf.has_finite_integral)
   apply lintegral_mono
@@ -830,7 +830,7 @@ theorem ofReal_toReal_ae_eq {f : α → ℝ≥0∞} (hf : ∀ᵐ x ∂μ, f x < 
 #align measure_theory.of_real_to_real_ae_eq MeasureTheory.ofReal_toReal_ae_eq
 
 theorem coe_toNnreal_ae_eq {f : α → ℝ≥0∞} (hf : ∀ᵐ x ∂μ, f x < ∞) :
-    (fun x => ((f x).toNnreal : ℝ≥0∞)) =ᵐ[μ] f :=
+    (fun x => ((f x).toNNReal : ℝ≥0∞)) =ᵐ[μ] f :=
   by
   filter_upwards [hf]
   intro x hx
@@ -851,11 +851,11 @@ theorem integrable_withDensity_iff_integrable_coe_smul {f : α → ℝ≥0} (hf 
     rw [lintegral_with_density_eq_lintegral_mul₀' hf.coe_nnreal_ennreal.ae_measurable]
     · congr
       ext1 x
-      simp only [nnnorm_smul, Nnreal.nnnorm_eq, coe_mul, Pi.mul_apply]
+      simp only [nnnorm_smul, NNReal.nnnorm_eq, coe_mul, Pi.mul_apply]
     · rw [ae_measurable_with_density_ennreal_iff hf]
       convert H.ennnorm
       ext1 x
-      simp only [nnnorm_smul, Nnreal.nnnorm_eq, coe_mul]
+      simp only [nnnorm_smul, NNReal.nnnorm_eq, coe_mul]
   · simp only [integrable, aeStronglyMeasurable_withDensity_iff hf, H, false_and_iff]
 #align measure_theory.integrable_with_density_iff_integrable_coe_smul MeasureTheory.integrable_withDensity_iff_integrable_coe_smul
 
@@ -964,7 +964,7 @@ noncomputable def withDensitySmulLi {f : α → ℝ≥0} (f_meas : Measurable f)
     filter_upwards [(mem_ℒ1_smul_of_L1_with_density f_meas u).coeFn_toLp]with x hx
     rw [hx, Pi.mul_apply]
     change ↑‖(f x : ℝ) • u x‖₊ = ↑(f x) * ↑‖u x‖₊
-    simp only [nnnorm_smul, Nnreal.nnnorm_eq, Ennreal.coe_mul]
+    simp only [nnnorm_smul, NNReal.nnnorm_eq, Ennreal.coe_mul]
 #align measure_theory.with_density_smul_li MeasureTheory.withDensitySmulLi
 
 @[simp]

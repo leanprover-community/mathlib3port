@@ -598,7 +598,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
         _ ≤ (I + 1) * a := by apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_refl]
         
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
-  let a' : Nnreal := ⟨a, apos.le⟩
+  let a' : NNReal := ⟨a, apos.le⟩
   suffices H : (a' : Ennreal) ≤ (p.right_inv i).radius
   · apply lt_of_lt_of_le _ H
     exact_mod_cast apos

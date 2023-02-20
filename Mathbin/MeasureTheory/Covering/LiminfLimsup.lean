@@ -31,7 +31,7 @@ carrying a doubling measure.
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Nnreal Ennreal Topology
+open NNReal Ennreal Topology
 
 variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α]
 

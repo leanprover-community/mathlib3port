@@ -34,7 +34,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Nnreal Topology
+open NNReal Topology
 
 namespace IsDoublingMeasure
 

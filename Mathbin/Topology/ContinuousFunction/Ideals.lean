@@ -73,7 +73,7 @@ ideal, continuous function, compact, Hausdorff
 -/
 
 
-open Nnreal
+open NNReal
 
 namespace ContinuousMap
 
@@ -253,9 +253,9 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
             simp only [coe_sub, coe_one, coe_comp, ContinuousMap.coe_coe, Pi.sub_apply,
               Pi.one_apply, Function.comp_apply, algebraMapClm_apply]
           _ = ‖algebraMap ℝ≥0 𝕜 (1 - g x)‖₊ := by
-            simp only [Algebra.algebraMap_eq_smul_one, Nnreal.smul_def, Nnreal.coe_sub (hg x),
+            simp only [Algebra.algebraMap_eq_smul_one, NNReal.smul_def, NNReal.coe_sub (hg x),
               sub_smul, Nonneg.coe_one, one_smul]
-          _ ≤ 1 := (nnnorm_algebraMap_nnreal 𝕜 (1 - g x)).trans_le tsub_le_self
+          _ ≤ 1 := (nnnorm_algebraMap_nNReal 𝕜 (1 - g x)).trans_le tsub_le_self
           
       calc
         ‖f x - f x * (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g x‖₊ =

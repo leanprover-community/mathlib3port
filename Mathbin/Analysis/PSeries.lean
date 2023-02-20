@@ -33,7 +33,7 @@ p-series, Cauchy condensation test
 
 open Filter
 
-open BigOperators Ennreal Nnreal Topology
+open BigOperators Ennreal NNReal Topology
 
 /-!
 ### Cauchy condensation test
@@ -126,7 +126,7 @@ theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m
 
 end Ennreal
 
-namespace Nnreal
+namespace NNReal
 
 /-- Cauchy condensation test for a series of `nnreal` version. -/
 theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
@@ -141,9 +141,9 @@ theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m 
   · replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
       Ennreal.coe_le_coe.2 (hf hm hmn)
     simpa [h, Ennreal.add_eq_top] using Ennreal.le_tsum_condensed hf
-#align nnreal.summable_condensed_iff Nnreal.summable_condensed_iff
+#align nnreal.summable_condensed_iff NNReal.summable_condensed_iff
 
-end Nnreal
+end NNReal
 
 /-- Cauchy condensation test for series of nonnegative real numbers. -/
 theorem summable_condensed_iff_of_nonneg {f : ℕ → ℝ} (h_nonneg : ∀ n, 0 ≤ f n)
@@ -151,8 +151,8 @@ theorem summable_condensed_iff_of_nonneg {f : ℕ → ℝ} (h_nonneg : ∀ n, 0 
     (Summable fun k : ℕ => 2 ^ k * f (2 ^ k)) ↔ Summable f :=
   by
   lift f to ℕ → ℝ≥0 using h_nonneg
-  simp only [Nnreal.coe_le_coe] at *
-  exact_mod_cast Nnreal.summable_condensed_iff h_mono
+  simp only [NNReal.coe_le_coe] at *
+  exact_mod_cast NNReal.summable_condensed_iff h_mono
 #align summable_condensed_iff_of_nonneg summable_condensed_iff_of_nonneg
 
 open Real
@@ -264,18 +264,18 @@ theorem Real.tendsto_sum_range_one_div_nat_succ_atTop :
 #align real.tendsto_sum_range_one_div_nat_succ_at_top Real.tendsto_sum_range_one_div_nat_succ_atTop
 
 @[simp]
-theorem Nnreal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0) ↔ 1 < p := by
-  simp [← Nnreal.summable_coe]
-#align nnreal.summable_rpow_inv Nnreal.summable_rpow_inv
+theorem NNReal.summable_rpow_inv {p : ℝ} : Summable (fun n => (n ^ p)⁻¹ : ℕ → ℝ≥0) ↔ 1 < p := by
+  simp [← NNReal.summable_coe]
+#align nnreal.summable_rpow_inv NNReal.summable_rpow_inv
 
 @[simp]
-theorem Nnreal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by
-  simp [← Nnreal.summable_coe]
-#align nnreal.summable_rpow Nnreal.summable_rpow
+theorem NNReal.summable_rpow {p : ℝ} : Summable (fun n => n ^ p : ℕ → ℝ≥0) ↔ p < -1 := by
+  simp [← NNReal.summable_coe]
+#align nnreal.summable_rpow NNReal.summable_rpow
 
-theorem Nnreal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by
+theorem NNReal.summable_one_div_rpow {p : ℝ} : Summable (fun n => 1 / n ^ p : ℕ → ℝ≥0) ↔ 1 < p := by
   simp
-#align nnreal.summable_one_div_rpow Nnreal.summable_one_div_rpow
+#align nnreal.summable_one_div_rpow NNReal.summable_one_div_rpow
 
 section
 

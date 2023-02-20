@@ -41,7 +41,7 @@ seminorm, locally convex, LCTVS
 
 open NormedField Set
 
-open BigOperators Nnreal Pointwise Topology
+open BigOperators NNReal Pointwise Topology
 
 variable {R R' 𝕜 𝕜₂ 𝕜₃ 𝕝 E E₂ E₃ F G ι : Type _}
 
@@ -159,7 +159,7 @@ instance [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] : SMul R (S
       toFun := fun x => r • p x
       smul' := fun _ _ =>
         by
-        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def, smul_eq_mul]
+        simp only [← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def, smul_eq_mul]
         rw [map_smul_eq_mul, mul_left_comm] }
 
 instance [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] [SMul R' ℝ] [SMul R' ℝ≥0]
@@ -247,7 +247,7 @@ theorem sup_apply (p q : Seminorm 𝕜 E) (x : E) : (p ⊔ q) x = p x ⊔ q x :=
 theorem smul_sup [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
     r • (p ⊔ q) = r • p ⊔ r • q :=
   have real.smul_max : ∀ x y : ℝ, r • max x y = max (r • x) (r • y) := fun x y => by
-    simpa only [← smul_eq_mul, ← Nnreal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
+    simpa only [← smul_eq_mul, ← NNReal.smul_def, smul_one_smul ℝ≥0 r (_ : ℝ)] using
       mul_max_of_nonneg x y (r • 1 : ℝ≥0).Prop
   ext fun x => real.smul_max _ _
 #align seminorm.smul_sup Seminorm.smul_sup
@@ -366,8 +366,8 @@ theorem smul_le_smul {p q : Seminorm 𝕜 E} {a b : ℝ≥0} (hpq : p ≤ q) (ha
   by
   simp_rw [le_def, Pi.le_def, coe_smul]
   intro x
-  simp_rw [Pi.smul_apply, Nnreal.smul_def, smul_eq_mul]
-  exact mul_le_mul hab (hpq x) (map_nonneg p x) (Nnreal.coe_nonneg b)
+  simp_rw [Pi.smul_apply, NNReal.smul_def, smul_eq_mul]
+  exact mul_le_mul hab (hpq x) (map_nonneg p x) (NNReal.coe_nonneg b)
 #align seminorm.smul_le_smul Seminorm.smul_le_smul
 
 theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
@@ -379,7 +379,7 @@ theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
       Nonneg.coe_zero]
   ·
     rw [Finset.sup_cons, Finset.sup_cons, coe_sup, sup_eq_max, Pi.sup_apply, sup_eq_max,
-      Nnreal.coe_max, Subtype.coe_mk, ih]
+      NNReal.coe_max, Subtype.coe_mk, ih]
 #align seminorm.finset_sup_apply Seminorm.finset_sup_apply
 
 theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i in s, p i := by
@@ -394,7 +394,7 @@ theorem finset_sup_apply_le {p : ι → Seminorm 𝕜 E} {s : Finset ι} {x : E}
     (h : ∀ i, i ∈ s → p i x ≤ a) : s.sup p x ≤ a :=
   by
   lift a to ℝ≥0 using ha
-  rw [finset_sup_apply, Nnreal.coe_le_coe]
+  rw [finset_sup_apply, NNReal.coe_le_coe]
   exact Finset.sup_le h
 #align seminorm.finset_sup_apply_le Seminorm.finset_sup_apply_le
 
@@ -402,7 +402,7 @@ theorem finset_sup_apply_lt {p : ι → Seminorm 𝕜 E} {s : Finset ι} {x : E}
     (h : ∀ i, i ∈ s → p i x < a) : s.sup p x < a :=
   by
   lift a to ℝ≥0 using ha.le
-  rw [finset_sup_apply, Nnreal.coe_lt_coe, Finset.sup_lt_iff]
+  rw [finset_sup_apply, NNReal.coe_lt_coe, Finset.sup_lt_iff]
   · exact h
   · exact nnreal.coe_pos.mpr ha
 #align seminorm.finset_sup_apply_lt Seminorm.finset_sup_apply_lt
@@ -426,7 +426,7 @@ variable [AddCommGroup E] [AddCommGroup E₂] [Module 𝕜 E] [Module 𝕜₂ E�
 theorem comp_smul (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E₂) (c : 𝕜₂) :
     p.comp (c • f) = ‖c‖₊ • p.comp f :=
   ext fun _ => by
-    rw [comp_apply, smul_apply, LinearMap.smul_apply, map_smul_eq_mul, Nnreal.smul_def, coe_nnnorm,
+    rw [comp_apply, smul_apply, LinearMap.smul_apply, map_smul_eq_mul, NNReal.smul_def, coe_nnnorm,
       smul_eq_mul, comp_apply]
 #align seminorm.comp_smul Seminorm.comp_smul
 
@@ -487,7 +487,7 @@ noncomputable instance : Lattice (Seminorm 𝕜 E) :=
 theorem smul_inf [SMul R ℝ] [SMul R ℝ≥0] [IsScalarTower R ℝ≥0 ℝ] (r : R) (p q : Seminorm 𝕜 E) :
     r • (p ⊓ q) = r • p ⊓ r • q := by
   ext
-  simp_rw [smul_apply, inf_apply, smul_apply, ← smul_one_smul ℝ≥0 r (_ : ℝ), Nnreal.smul_def,
+  simp_rw [smul_apply, inf_apply, smul_apply, ← smul_one_smul ℝ≥0 r (_ : ℝ), NNReal.smul_def,
     smul_eq_mul, Real.mul_infᵢ_of_nonneg (Subtype.prop _), mul_add]
 #align seminorm.smul_inf Seminorm.smul_inf
 
@@ -676,18 +676,18 @@ theorem closedBall_zero' (x : E) (hr : 0 < r) : closedBall (0 : Seminorm 𝕜 E)
   eq_univ_of_subset (ball_subset_closedBall _ _ _) (ball_zero' x hr)
 #align seminorm.closed_ball_zero' Seminorm.closedBall_zero'
 
-theorem ball_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : ℝ) (x : E) :
+theorem ball_smul (p : Seminorm 𝕜 E) {c : NNReal} (hc : 0 < c) (r : ℝ) (x : E) :
     (c • p).ball x r = p.ball x (r / c) := by
   ext
-  rw [mem_ball, mem_ball, smul_apply, Nnreal.smul_def, smul_eq_mul, mul_comm,
+  rw [mem_ball, mem_ball, smul_apply, NNReal.smul_def, smul_eq_mul, mul_comm,
     lt_div_iff (nnreal.coe_pos.mpr hc)]
 #align seminorm.ball_smul Seminorm.ball_smul
 
-theorem closedBall_smul (p : Seminorm 𝕜 E) {c : Nnreal} (hc : 0 < c) (r : ℝ) (x : E) :
+theorem closedBall_smul (p : Seminorm 𝕜 E) {c : NNReal} (hc : 0 < c) (r : ℝ) (x : E) :
     (c • p).closedBall x r = p.closedBall x (r / c) :=
   by
   ext
-  rw [mem_closed_ball, mem_closed_ball, smul_apply, Nnreal.smul_def, smul_eq_mul, mul_comm,
+  rw [mem_closed_ball, mem_closed_ball, smul_apply, NNReal.smul_def, smul_eq_mul, mul_comm,
     le_div_iff (nnreal.coe_pos.mpr hc)]
 #align seminorm.closed_ball_smul Seminorm.closedBall_smul
 
@@ -849,17 +849,17 @@ theorem balanced_closedBall_zero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
 theorem ball_finset_sup_eq_interᵢ (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ}
     (hr : 0 < r) : ball (s.sup p) x r = ⋂ i ∈ s, ball (p i) x r :=
   by
-  lift r to Nnreal using hr.le
-  simp_rw [ball, Inter_set_of, finset_sup_apply, Nnreal.coe_lt_coe,
-    Finset.sup_lt_iff (show ⊥ < r from hr), ← Nnreal.coe_lt_coe, Subtype.coe_mk]
+  lift r to NNReal using hr.le
+  simp_rw [ball, Inter_set_of, finset_sup_apply, NNReal.coe_lt_coe,
+    Finset.sup_lt_iff (show ⊥ < r from hr), ← NNReal.coe_lt_coe, Subtype.coe_mk]
 #align seminorm.ball_finset_sup_eq_Inter Seminorm.ball_finset_sup_eq_interᵢ
 
 theorem closedBall_finset_sup_eq_interᵢ (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ}
     (hr : 0 ≤ r) : closedBall (s.sup p) x r = ⋂ i ∈ s, closedBall (p i) x r :=
   by
-  lift r to Nnreal using hr
-  simp_rw [closed_ball, Inter_set_of, finset_sup_apply, Nnreal.coe_le_coe, Finset.sup_le_iff, ←
-    Nnreal.coe_le_coe, Subtype.coe_mk]
+  lift r to NNReal using hr
+  simp_rw [closed_ball, Inter_set_of, finset_sup_apply, NNReal.coe_le_coe, Finset.sup_le_iff, ←
+    NNReal.coe_le_coe, Subtype.coe_mk]
 #align seminorm.closed_ball_finset_sup_eq_Inter Seminorm.closedBall_finset_sup_eq_interᵢ
 
 theorem ball_finset_sup (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ} (hr : 0 < r) :

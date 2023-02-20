@@ -33,7 +33,7 @@ infinite series, absolute convergence, normed group
 -/
 
 
-open Classical BigOperators Topology Nnreal
+open Classical BigOperators Topology NNReal
 
 open Finset Filter Metric
 
@@ -154,7 +154,7 @@ space. -/
 theorem tsum_of_nnnorm_bounded {f : ι → E} {g : ι → ℝ≥0} {a : ℝ≥0} (hg : HasSum g a)
     (h : ∀ i, ‖f i‖₊ ≤ g i) : ‖∑' i : ι, f i‖₊ ≤ a :=
   by
-  simp only [← Nnreal.coe_le_coe, ← Nnreal.hasSum_coe, coe_nnnorm] at *
+  simp only [← NNReal.coe_le_coe, ← NNReal.hasSum_coe, coe_nnnorm] at *
   exact tsum_of_norm_bounded hg h
 #align tsum_of_nnnorm_bounded tsum_of_nnnorm_bounded
 
@@ -176,7 +176,7 @@ theorem summable_of_norm_bounded_eventually {f : ι → E} (g : ι → ℝ) (hg 
 
 theorem summable_of_nnnorm_bounded {f : ι → E} (g : ι → ℝ≥0) (hg : Summable g)
     (h : ∀ i, ‖f i‖₊ ≤ g i) : Summable f :=
-  summable_of_norm_bounded (fun i => (g i : ℝ)) (Nnreal.summable_coe.2 hg) fun i => by
+  summable_of_norm_bounded (fun i => (g i : ℝ)) (NNReal.summable_coe.2 hg) fun i => by
     exact_mod_cast h i
 #align summable_of_nnnorm_bounded summable_of_nnnorm_bounded
 

@@ -49,7 +49,7 @@ of a matrix.
 
 noncomputable section
 
-open BigOperators Nnreal Matrix
+open BigOperators NNReal Matrix
 
 namespace Matrix
 
@@ -271,7 +271,7 @@ theorem linfty_op_nnnorm_row (v : n → α) : ‖row v‖₊ = ∑ i, ‖v i‖�
 
 @[simp]
 theorem linfty_op_norm_row (v : n → α) : ‖row v‖ = ∑ i, ‖v i‖ :=
-  (congr_arg coe <| linfty_op_nnnorm_row v).trans <| by simp [Nnreal.coe_sum]
+  (congr_arg coe <| linfty_op_nnnorm_row v).trans <| by simp [NNReal.coe_sum]
 #align matrix.linfty_op_norm_row Matrix.linfty_op_norm_row
 
 @[simp]
@@ -310,7 +310,7 @@ theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
       Finset.sup_mono_fun fun i hi =>
         Finset.sum_le_sum fun j hj => mul_le_mul_of_nonneg_left (Finset.le_sup hj) (zero_le _)
     _ ≤ (finset.univ.sup fun i => ∑ j, ‖A i j‖₊) * finset.univ.sup fun i => ∑ j, ‖B i j‖₊ := by
-      simp_rw [← Finset.sum_mul, ← Nnreal.finset_sup_mul]
+      simp_rw [← Finset.sum_mul, ← NNReal.finset_sup_mul]
     
 #align matrix.linfty_op_nnnorm_mul Matrix.linfty_op_nnnorm_mul
 
@@ -427,13 +427,13 @@ variable [SeminormedAddCommGroup α] [SeminormedAddCommGroup β]
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem frobenius_nnnorm_def (A : Matrix m n α) :
     ‖A‖₊ = (∑ (i) (j), ‖A i j‖₊ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) := by
-  simp_rw [PiLp.nnnorm_eq_of_L2, Nnreal.sq_sqrt, Nnreal.sqrt_eq_rpow, Nnreal.rpow_two]
+  simp_rw [PiLp.nnnorm_eq_of_L2, NNReal.sq_sqrt, NNReal.sqrt_eq_rpow, NNReal.rpow_two]
 #align matrix.frobenius_nnnorm_def Matrix.frobenius_nnnorm_def
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 theorem frobenius_norm_def (A : Matrix m n α) :
     ‖A‖ = (∑ (i) (j), ‖A i j‖ ^ (2 : ℝ)) ^ (1 / 2 : ℝ) :=
-  (congr_arg coe (frobenius_nnnorm_def A)).trans <| by simp [Nnreal.coe_sum]
+  (congr_arg coe (frobenius_nnnorm_def A)).trans <| by simp [NNReal.coe_sum]
 #align matrix.frobenius_norm_def Matrix.frobenius_norm_def
 
 @[simp]
@@ -508,10 +508,10 @@ theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) :
     PiLp.nnnorm_eq_of_L2]
   let s := (Finset.univ : Finset n).map ⟨fun i : n => (i, i), fun i j h => congr_arg Prod.fst h⟩
   rw [← Finset.sum_subset (Finset.subset_univ s) fun i hi his => _]
-  · rw [Finset.sum_map, Nnreal.sqrt_eq_rpow]
+  · rw [Finset.sum_map, NNReal.sqrt_eq_rpow]
     dsimp
-    simp_rw [diagonal_apply_eq, Nnreal.rpow_two]
-  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, Nnreal.zero_rpow two_ne_zero]
+    simp_rw [diagonal_apply_eq, NNReal.rpow_two]
+  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, NNReal.zero_rpow two_ne_zero]
     intro h
     exact finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
 #align matrix.frobenius_nnnorm_diagonal Matrix.frobenius_nnnorm_diagonal
@@ -525,10 +525,10 @@ theorem frobenius_norm_diagonal [DecidableEq n] (v : n → α) :
 end SeminormedAddCommGroup
 
 theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α] :
-    ‖(1 : Matrix n n α)‖₊ = Nnreal.sqrt (Fintype.card n) * ‖(1 : α)‖₊ :=
+    ‖(1 : Matrix n n α)‖₊ = NNReal.sqrt (Fintype.card n) * ‖(1 : α)‖₊ :=
   by
   refine' (frobenius_nnnorm_diagonal _).trans _
-  simp_rw [PiLp.nnnorm_equiv_symm_const Ennreal.two_ne_top, Nnreal.sqrt_eq_rpow]
+  simp_rw [PiLp.nnnorm_equiv_symm_const Ennreal.two_ne_top, NNReal.sqrt_eq_rpow]
   simp only [Ennreal.toReal_div, Ennreal.one_toReal, Ennreal.toReal_bit0]
 #align matrix.frobenius_nnnorm_one Matrix.frobenius_nnnorm_one
 
@@ -539,18 +539,18 @@ variable [IsROrC α]
 theorem frobenius_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖₊ ≤ ‖A‖₊ * ‖B‖₊ :=
   by
   simp_rw [frobenius_nnnorm_def, Matrix.mul_apply]
-  rw [← Nnreal.mul_rpow, @Finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
-  refine' Nnreal.rpow_le_rpow _ one_half_pos.le
+  rw [← NNReal.mul_rpow, @Finset.sum_comm _ n m, Finset.sum_mul_sum, Finset.sum_product]
+  refine' NNReal.rpow_le_rpow _ one_half_pos.le
   refine' Finset.sum_le_sum fun i hi => Finset.sum_le_sum fun j hj => _
-  rw [← Nnreal.rpow_le_rpow_iff one_half_pos, ← Nnreal.rpow_mul,
-    mul_div_cancel' (1 : ℝ) two_ne_zero, Nnreal.rpow_one, Nnreal.mul_rpow]
+  rw [← NNReal.rpow_le_rpow_iff one_half_pos, ← NNReal.rpow_mul,
+    mul_div_cancel' (1 : ℝ) two_ne_zero, NNReal.rpow_one, NNReal.mul_rpow]
   dsimp only
   have :=
     @nnnorm_inner_le_nnnorm α _ _ _ ((PiLp.equiv 2 fun i => α).symm fun j => star (A i j))
       ((PiLp.equiv 2 fun i => α).symm fun k => B k j)
   simpa only [PiLp.equiv_symm_apply, PiLp.inner_apply, IsROrC.inner_apply, starRingEnd_apply,
-    Pi.nnnorm_def, PiLp.nnnorm_eq_of_L2, star_star, nnnorm_star, Nnreal.sqrt_eq_rpow,
-    Nnreal.rpow_two] using this
+    Pi.nnnorm_def, PiLp.nnnorm_eq_of_L2, star_star, nnnorm_star, NNReal.sqrt_eq_rpow,
+    NNReal.rpow_two] using this
 #align matrix.frobenius_nnnorm_mul Matrix.frobenius_nnnorm_mul
 
 theorem frobenius_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖ ≤ ‖A‖ * ‖B‖ :=

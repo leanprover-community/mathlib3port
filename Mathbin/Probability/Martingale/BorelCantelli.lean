@@ -35,7 +35,7 @@ is required to prove the generalized Borel-Cantelli.
 
 open Filter
 
-open Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
+open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 

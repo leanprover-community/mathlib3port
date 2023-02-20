@@ -44,7 +44,7 @@ convergence in measure and other notions of convergence.
 
 open TopologicalSpace Filter
 
-open Nnreal Ennreal MeasureTheory Topology
+open NNReal Ennreal MeasureTheory Topology
 
 namespace MeasureTheory
 
@@ -118,9 +118,9 @@ theorem tendstoInMeasureOfTendstoAeOfStronglyMeasurable [IsFiniteMeasure μ]
   by_cases hδi : δ = ∞
   · simp only [hδi, imp_true_iff, le_top, exists_const]
   lift δ to ℝ≥0 using hδi
-  rw [gt_iff_lt, Ennreal.coe_pos, ← Nnreal.coe_pos] at hδ
+  rw [gt_iff_lt, Ennreal.coe_pos, ← NNReal.coe_pos] at hδ
   obtain ⟨t, htm, ht, hunif⟩ := tendsto_uniformly_on_of_ae_tendsto' hf hg hfg hδ
-  rw [Ennreal.ofReal_coe_nnreal] at ht
+  rw [Ennreal.ofReal_coe_nNReal] at ht
   rw [Metric.tendstoUniformlyOn_iff] at hunif
   obtain ⟨N, hN⟩ := eventually_at_top.1 (hunif ε hε)
   refine' ⟨N, fun n hn => _⟩

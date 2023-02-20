@@ -24,7 +24,7 @@ function `function.update f c (lim (𝓝[≠] c) f)` is complex differentiable i
 
 open TopologicalSpace Metric Set Filter Asymptotics Function
 
-open Topology Filter Nnreal Real
+open Topology Filter NNReal Real
 
 universe u
 

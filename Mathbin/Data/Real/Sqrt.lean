@@ -41,9 +41,9 @@ square root
 
 open Set Filter
 
-open Filter Nnreal Topology
+open Filter NNReal Topology
 
-namespace Nnreal
+namespace NNReal
 
 variable {x y : ℝ≥0}
 
@@ -51,83 +51,83 @@ variable {x y : ℝ≥0}
 @[pp_nodot]
 noncomputable def sqrt : ℝ≥0 ≃o ℝ≥0 :=
   OrderIso.symm <| powOrderIso 2 two_ne_zero
-#align nnreal.sqrt Nnreal.sqrt
+#align nnreal.sqrt NNReal.sqrt
 
 theorem sqrt_le_sqrt_iff : sqrt x ≤ sqrt y ↔ x ≤ y :=
   sqrt.le_iff_le
-#align nnreal.sqrt_le_sqrt_iff Nnreal.sqrt_le_sqrt_iff
+#align nnreal.sqrt_le_sqrt_iff NNReal.sqrt_le_sqrt_iff
 
 theorem sqrt_lt_sqrt_iff : sqrt x < sqrt y ↔ x < y :=
   sqrt.lt_iff_lt
-#align nnreal.sqrt_lt_sqrt_iff Nnreal.sqrt_lt_sqrt_iff
+#align nnreal.sqrt_lt_sqrt_iff NNReal.sqrt_lt_sqrt_iff
 
 theorem sqrt_eq_iff_sq_eq : sqrt x = y ↔ y ^ 2 = x :=
   sqrt.toEquiv.apply_eq_iff_eq_symm_apply.trans eq_comm
-#align nnreal.sqrt_eq_iff_sq_eq Nnreal.sqrt_eq_iff_sq_eq
+#align nnreal.sqrt_eq_iff_sq_eq NNReal.sqrt_eq_iff_sq_eq
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ x ≤ y ^ 2 :=
   sqrt.to_galoisConnection _ _
-#align nnreal.sqrt_le_iff Nnreal.sqrt_le_iff
+#align nnreal.sqrt_le_iff NNReal.sqrt_le_iff
 
 theorem le_sqrt_iff : x ≤ sqrt y ↔ x ^ 2 ≤ y :=
   (sqrt.symm.to_galoisConnection _ _).symm
-#align nnreal.le_sqrt_iff Nnreal.le_sqrt_iff
+#align nnreal.le_sqrt_iff NNReal.le_sqrt_iff
 
 @[simp]
 theorem sqrt_eq_zero : sqrt x = 0 ↔ x = 0 :=
   sqrt_eq_iff_sq_eq.trans <| by rw [eq_comm, sq, zero_mul]
-#align nnreal.sqrt_eq_zero Nnreal.sqrt_eq_zero
+#align nnreal.sqrt_eq_zero NNReal.sqrt_eq_zero
 
 @[simp]
 theorem sqrt_zero : sqrt 0 = 0 :=
   sqrt_eq_zero.2 rfl
-#align nnreal.sqrt_zero Nnreal.sqrt_zero
+#align nnreal.sqrt_zero NNReal.sqrt_zero
 
 @[simp]
 theorem sqrt_one : sqrt 1 = 1 :=
   sqrt_eq_iff_sq_eq.2 <| one_pow _
-#align nnreal.sqrt_one Nnreal.sqrt_one
+#align nnreal.sqrt_one NNReal.sqrt_one
 
 @[simp]
 theorem sq_sqrt (x : ℝ≥0) : sqrt x ^ 2 = x :=
   sqrt.symm_apply_apply x
-#align nnreal.sq_sqrt Nnreal.sq_sqrt
+#align nnreal.sq_sqrt NNReal.sq_sqrt
 
 @[simp]
 theorem mul_self_sqrt (x : ℝ≥0) : sqrt x * sqrt x = x := by rw [← sq, sq_sqrt]
-#align nnreal.mul_self_sqrt Nnreal.mul_self_sqrt
+#align nnreal.mul_self_sqrt NNReal.mul_self_sqrt
 
 @[simp]
 theorem sqrt_sq (x : ℝ≥0) : sqrt (x ^ 2) = x :=
   sqrt.apply_symm_apply x
-#align nnreal.sqrt_sq Nnreal.sqrt_sq
+#align nnreal.sqrt_sq NNReal.sqrt_sq
 
 @[simp]
 theorem sqrt_mul_self (x : ℝ≥0) : sqrt (x * x) = x := by rw [← sq, sqrt_sq x]
-#align nnreal.sqrt_mul_self Nnreal.sqrt_mul_self
+#align nnreal.sqrt_mul_self NNReal.sqrt_mul_self
 
 theorem sqrt_mul (x y : ℝ≥0) : sqrt (x * y) = sqrt x * sqrt y := by
   rw [sqrt_eq_iff_sq_eq, mul_pow, sq_sqrt, sq_sqrt]
-#align nnreal.sqrt_mul Nnreal.sqrt_mul
+#align nnreal.sqrt_mul NNReal.sqrt_mul
 
 /-- `nnreal.sqrt` as a `monoid_with_zero_hom`. -/
 noncomputable def sqrtHom : ℝ≥0 →*₀ ℝ≥0 :=
   ⟨sqrt, sqrt_zero, sqrt_one, sqrt_mul⟩
-#align nnreal.sqrt_hom Nnreal.sqrtHom
+#align nnreal.sqrt_hom NNReal.sqrtHom
 
 theorem sqrt_inv (x : ℝ≥0) : sqrt x⁻¹ = (sqrt x)⁻¹ :=
   map_inv₀ sqrtHom x
-#align nnreal.sqrt_inv Nnreal.sqrt_inv
+#align nnreal.sqrt_inv NNReal.sqrt_inv
 
 theorem sqrt_div (x y : ℝ≥0) : sqrt (x / y) = sqrt x / sqrt y :=
   map_div₀ sqrtHom x y
-#align nnreal.sqrt_div Nnreal.sqrt_div
+#align nnreal.sqrt_div NNReal.sqrt_div
 
 theorem continuous_sqrt : Continuous sqrt :=
   sqrt.Continuous
-#align nnreal.continuous_sqrt Nnreal.continuous_sqrt
+#align nnreal.continuous_sqrt NNReal.continuous_sqrt
 
-end Nnreal
+end NNReal
 
 namespace Real
 
@@ -162,7 +162,7 @@ end -/
 /-- The square root of a real number. This returns 0 for negative inputs. -/
 @[pp_nodot]
 noncomputable def sqrt (x : ℝ) : ℝ :=
-  Nnreal.sqrt (Real.toNnreal x)
+  NNReal.sqrt (Real.toNNReal x)
 #align real.sqrt Real.sqrt
 
 /-quotient.lift_on x
@@ -177,25 +177,25 @@ noncomputable def sqrt (x : ℝ) : ℝ :=
 variable {x y : ℝ}
 
 @[simp, norm_cast]
-theorem coe_sqrt {x : ℝ≥0} : (Nnreal.sqrt x : ℝ) = Real.sqrt x := by
-  rw [Real.sqrt, Real.toNnreal_coe]
+theorem coe_sqrt {x : ℝ≥0} : (NNReal.sqrt x : ℝ) = Real.sqrt x := by
+  rw [Real.sqrt, Real.toNNReal_coe]
 #align real.coe_sqrt Real.coe_sqrt
 
 @[continuity]
 theorem continuous_sqrt : Continuous sqrt :=
-  Nnreal.continuous_coe.comp <| Nnreal.sqrt.Continuous.comp continuous_real_toNnreal
+  NNReal.continuous_coe.comp <| NNReal.sqrt.Continuous.comp continuous_real_toNNReal
 #align real.continuous_sqrt Real.continuous_sqrt
 
-theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by simp [sqrt, Real.toNnreal_eq_zero.2 h]
+theorem sqrt_eq_zero_of_nonpos (h : x ≤ 0) : sqrt x = 0 := by simp [sqrt, Real.toNNReal_eq_zero.2 h]
 #align real.sqrt_eq_zero_of_nonpos Real.sqrt_eq_zero_of_nonpos
 
 theorem sqrt_nonneg (x : ℝ) : 0 ≤ sqrt x :=
-  Nnreal.coe_nonneg _
+  NNReal.coe_nonneg _
 #align real.sqrt_nonneg Real.sqrt_nonneg
 
 @[simp]
 theorem mul_self_sqrt (h : 0 ≤ x) : sqrt x * sqrt x = x := by
-  rw [sqrt, ← Nnreal.coe_mul, Nnreal.mul_self_sqrt, Real.coe_toNnreal _ h]
+  rw [sqrt, ← NNReal.coe_mul, NNReal.mul_self_sqrt, Real.coe_toNNReal _ h]
 #align real.mul_self_sqrt Real.mul_self_sqrt
 
 @[simp]
@@ -259,7 +259,7 @@ theorem sqrt_one : sqrt 1 = 1 := by simp [sqrt]
 
 @[simp]
 theorem sqrt_le_sqrt_iff (hy : 0 ≤ y) : sqrt x ≤ sqrt y ↔ x ≤ y := by
-  rw [sqrt, sqrt, Nnreal.coe_le_coe, Nnreal.sqrt_le_sqrt_iff, Real.toNnreal_le_toNnreal_iff hy]
+  rw [sqrt, sqrt, NNReal.coe_le_coe, NNReal.sqrt_le_sqrt_iff, Real.toNNReal_le_toNNReal_iff hy]
 #align real.sqrt_le_sqrt_iff Real.sqrt_le_sqrt_iff
 
 @[simp]
@@ -268,12 +268,12 @@ theorem sqrt_lt_sqrt_iff (hx : 0 ≤ x) : sqrt x < sqrt y ↔ x < y :=
 #align real.sqrt_lt_sqrt_iff Real.sqrt_lt_sqrt_iff
 
 theorem sqrt_lt_sqrt_iff_of_pos (hy : 0 < y) : sqrt x < sqrt y ↔ x < y := by
-  rw [sqrt, sqrt, Nnreal.coe_lt_coe, Nnreal.sqrt_lt_sqrt_iff, to_nnreal_lt_to_nnreal_iff hy]
+  rw [sqrt, sqrt, NNReal.coe_lt_coe, NNReal.sqrt_lt_sqrt_iff, to_nnreal_lt_to_nnreal_iff hy]
 #align real.sqrt_lt_sqrt_iff_of_pos Real.sqrt_lt_sqrt_iff_of_pos
 
 theorem sqrt_le_sqrt (h : x ≤ y) : sqrt x ≤ sqrt y :=
   by
-  rw [sqrt, sqrt, Nnreal.coe_le_coe, Nnreal.sqrt_le_sqrt_iff]
+  rw [sqrt, sqrt, NNReal.coe_le_coe, NNReal.sqrt_le_sqrt_iff]
   exact to_nnreal_le_to_nnreal h
 #align real.sqrt_le_sqrt Real.sqrt_le_sqrt
 
@@ -282,8 +282,8 @@ theorem sqrt_lt_sqrt (hx : 0 ≤ x) (h : x < y) : sqrt x < sqrt y :=
 #align real.sqrt_lt_sqrt Real.sqrt_lt_sqrt
 
 theorem sqrt_le_left (hy : 0 ≤ y) : sqrt x ≤ y ↔ x ≤ y ^ 2 := by
-  rw [sqrt, ← Real.le_toNnreal_iff_coe_le hy, Nnreal.sqrt_le_iff, sq, ← Real.toNnreal_mul hy,
-    Real.toNnreal_le_toNnreal_iff (mul_self_nonneg y), sq]
+  rw [sqrt, ← Real.le_toNNReal_iff_coe_le hy, NNReal.sqrt_le_iff, sq, ← Real.toNNReal_mul hy,
+    Real.toNNReal_le_toNNReal_iff (mul_self_nonneg y), sq]
 #align real.sqrt_le_left Real.sqrt_le_left
 
 theorem sqrt_le_iff : sqrt x ≤ y ↔ 0 ≤ y ∧ x ≤ y ^ 2 :=
@@ -340,7 +340,7 @@ theorem sqrt_eq_zero (h : 0 ≤ x) : sqrt x = 0 ↔ x = 0 := by simpa using sqrt
 #align real.sqrt_eq_zero Real.sqrt_eq_zero
 
 theorem sqrt_eq_zero' : sqrt x = 0 ↔ x ≤ 0 := by
-  rw [sqrt, Nnreal.coe_eq_zero, Nnreal.sqrt_eq_zero, Real.toNnreal_eq_zero]
+  rw [sqrt, NNReal.coe_eq_zero, NNReal.sqrt_eq_zero, Real.toNNReal_eq_zero]
 #align real.sqrt_eq_zero' Real.sqrt_eq_zero'
 
 theorem sqrt_ne_zero (h : 0 ≤ x) : sqrt x ≠ 0 ↔ x ≠ 0 := by rw [not_iff_not, sqrt_eq_zero h]
@@ -380,7 +380,7 @@ end
 
 @[simp]
 theorem sqrt_mul (hx : 0 ≤ x) (y : ℝ) : sqrt (x * y) = sqrt x * sqrt y := by
-  simp_rw [sqrt, ← Nnreal.coe_mul, Nnreal.coe_eq, Real.toNnreal_mul hx, Nnreal.sqrt_mul]
+  simp_rw [sqrt, ← NNReal.coe_mul, NNReal.coe_eq, Real.toNNReal_mul hx, NNReal.sqrt_mul]
 #align real.sqrt_mul Real.sqrt_mul
 
 @[simp]
@@ -390,7 +390,7 @@ theorem sqrt_mul' (x) {y : ℝ} (hy : 0 ≤ y) : sqrt (x * y) = sqrt x * sqrt y 
 
 @[simp]
 theorem sqrt_inv (x : ℝ) : sqrt x⁻¹ = (sqrt x)⁻¹ := by
-  rw [sqrt, Real.toNnreal_inv, Nnreal.sqrt_inv, Nnreal.coe_inv, sqrt]
+  rw [sqrt, Real.toNNReal_inv, NNReal.sqrt_inv, NNReal.coe_inv, sqrt]
 #align real.sqrt_inv Real.sqrt_inv
 
 @[simp]

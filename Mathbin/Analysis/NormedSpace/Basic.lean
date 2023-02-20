@@ -26,7 +26,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 open Filter Metric Function Set
 
-open Topology BigOperators Nnreal Ennreal uniformity Pointwise
+open Topology BigOperators NNReal Ennreal uniformity Pointwise
 
 section SeminormedAddCommGroup
 
@@ -104,12 +104,12 @@ theorem dist_smul₀ [NormedSpace α β] (s : α) (x y : β) : dist (s • x) (s
 #align dist_smul₀ dist_smul₀
 
 theorem nnnorm_smul [NormedSpace α β] (s : α) (x : β) : ‖s • x‖₊ = ‖s‖₊ * ‖x‖₊ :=
-  Nnreal.eq <| norm_smul s x
+  NNReal.eq <| norm_smul s x
 #align nnnorm_smul nnnorm_smul
 
 theorem nndist_smul₀ [NormedSpace α β] (s : α) (x y : β) :
     nndist (s • x) (s • y) = ‖s‖₊ * nndist x y :=
-  Nnreal.eq <| dist_smul₀ s x y
+  NNReal.eq <| dist_smul₀ s x y
 #align nndist_smul₀ nndist_smul₀
 
 theorem lipschitzWith_smul [NormedSpace α β] (s : α) : LipschitzWith ‖s‖₊ ((· • ·) s : β → β) :=
@@ -277,7 +277,7 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
       show
         (↑(Finset.sup Finset.univ fun b : ι => ‖a • f b‖₊) : ℝ) =
           ‖a‖₊ * ↑(Finset.sup Finset.univ fun b : ι => ‖f b‖₊)
-        by simp only [(Nnreal.coe_mul _ _).symm, Nnreal.mul_finset_sup, nnnorm_smul]
+        by simp only [(NNReal.coe_mul _ _).symm, NNReal.mul_finset_sup, nnnorm_smul]
 #align pi.normed_space Pi.normedSpace
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
@@ -376,7 +376,7 @@ theorem range_norm : range (norm : E → ℝ) = Ici 0 :=
 #align range_norm range_norm
 
 theorem nnnorm_surjective : Surjective (nnnorm : E → ℝ≥0) := fun c =>
-  (exists_norm_eq E c.coe_nonneg).imp fun x h => Nnreal.eq h
+  (exists_norm_eq E c.coe_nonneg).imp fun x h => NNReal.eq h
 #align nnnorm_surjective nnnorm_surjective
 
 @[simp]
@@ -519,21 +519,21 @@ theorem nnnorm_algebra_map' [NormOneClass 𝕜'] (x : 𝕜) : ‖algebraMap 𝕜
   Subtype.ext <| norm_algebra_map' _ _
 #align nnnorm_algebra_map' nnnorm_algebra_map'
 
-section Nnreal
+section NNReal
 
 variable [NormOneClass 𝕜'] [NormedAlgebra ℝ 𝕜']
 
 @[simp]
-theorem norm_algebraMap_nnreal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖ = x :=
+theorem norm_algebraMap_nNReal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖ = x :=
   (norm_algebra_map' 𝕜' (x : ℝ)).symm ▸ Real.norm_of_nonneg x.Prop
-#align norm_algebra_map_nnreal norm_algebraMap_nnreal
+#align norm_algebra_map_nnreal norm_algebraMap_nNReal
 
 @[simp]
-theorem nnnorm_algebraMap_nnreal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖₊ = x :=
-  Subtype.ext <| norm_algebraMap_nnreal 𝕜' x
-#align nnnorm_algebra_map_nnreal nnnorm_algebraMap_nnreal
+theorem nnnorm_algebraMap_nNReal (x : ℝ≥0) : ‖algebraMap ℝ≥0 𝕜' x‖₊ = x :=
+  Subtype.ext <| norm_algebraMap_nNReal 𝕜' x
+#align nnnorm_algebra_map_nnreal nnnorm_algebraMap_nNReal
 
-end Nnreal
+end NNReal
 
 variable (𝕜 𝕜')
 

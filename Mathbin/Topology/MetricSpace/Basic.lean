@@ -54,7 +54,7 @@ metric, pseudo_metric, dist
 
 open Set Filter TopologicalSpace Bornology
 
-open uniformity Topology BigOperators Filter Nnreal Ennreal
+open uniformity Topology BigOperators Filter NNReal Ennreal
 
 universe u v w
 
@@ -407,19 +407,19 @@ instance (priority := 100) PseudoMetricSpace.toHasNndist : HasNndist α :=
 #align pseudo_metric_space.to_has_nndist PseudoMetricSpace.toHasNndist
 
 /-- Express `nndist` in terms of `edist`-/
-theorem nndist_edist (x y : α) : nndist x y = (edist x y).toNnreal := by
-  simp [nndist, edist_dist, Real.toNnreal, max_eq_left dist_nonneg, Ennreal.ofReal]
+theorem nndist_edist (x y : α) : nndist x y = (edist x y).toNNReal := by
+  simp [nndist, edist_dist, Real.toNNReal, max_eq_left dist_nonneg, Ennreal.ofReal]
 #align nndist_edist nndist_edist
 
 /-- Express `edist` in terms of `nndist`-/
 theorem edist_nndist (x y : α) : edist x y = ↑(nndist x y) := by
-  simpa only [edist_dist, Ennreal.ofReal_eq_coe_nnreal dist_nonneg]
+  simpa only [edist_dist, Ennreal.ofReal_eq_coe_nNReal dist_nonneg]
 #align edist_nndist edist_nndist
 
 @[simp, norm_cast]
-theorem coe_nnreal_ennreal_nndist (x y : α) : ↑(nndist x y) = edist x y :=
+theorem coe_nNReal_ennreal_nndist (x y : α) : ↑(nndist x y) = edist x y :=
   (edist_nndist x y).symm
-#align coe_nnreal_ennreal_nndist coe_nnreal_ennreal_nndist
+#align coe_nnreal_ennreal_nndist coe_nNReal_ennreal_nndist
 
 @[simp, norm_cast]
 theorem edist_lt_coe {x y : α} {c : ℝ≥0} : edist x y < c ↔ nndist x y < c := by
@@ -444,7 +444,7 @@ theorem edist_ne_top (x y : α) : edist x y ≠ ⊤ :=
 /-- `nndist x x` vanishes-/
 @[simp]
 theorem nndist_self (a : α) : nndist a a = 0 :=
-  (Nnreal.coe_eq_zero _).1 (dist_self a)
+  (NNReal.coe_eq_zero _).1 (dist_self a)
 #align nndist_self nndist_self
 
 /-- Express `dist` in terms of `nndist`-/
@@ -479,12 +479,12 @@ theorem edist_le_ofReal {x y : α} {r : ℝ} (hr : 0 ≤ r) :
 #align edist_le_of_real edist_le_ofReal
 
 /-- Express `nndist` in terms of `dist`-/
-theorem nndist_dist (x y : α) : nndist x y = Real.toNnreal (dist x y) := by
-  rw [dist_nndist, Real.toNnreal_coe]
+theorem nndist_dist (x y : α) : nndist x y = Real.toNNReal (dist x y) := by
+  rw [dist_nndist, Real.toNNReal_coe]
 #align nndist_dist nndist_dist
 
 theorem nndist_comm (x y : α) : nndist x y = nndist y x := by
-  simpa only [dist_nndist, Nnreal.coe_eq] using dist_comm x y
+  simpa only [dist_nndist, NNReal.coe_eq] using dist_comm x y
 #align nndist_comm nndist_comm
 
 /-- Triangle inequality for the nonnegative distance-/
@@ -827,8 +827,8 @@ theorem isBounded_iff_exists_ge {s : Set α} (c : ℝ) :
 
 theorem isBounded_iff_nndist {s : Set α} :
     IsBounded s ↔ ∃ C : ℝ≥0, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → nndist x y ≤ C := by
-  simp only [is_bounded_iff_exists_ge 0, Nnreal.exists, ← Nnreal.coe_le_coe, ← dist_nndist,
-    Nnreal.coe_mk, exists_prop]
+  simp only [is_bounded_iff_exists_ge 0, NNReal.exists, ← NNReal.coe_le_coe, ← dist_nndist,
+    NNReal.coe_mk, exists_prop]
 #align metric.is_bounded_iff_nndist Metric.isBounded_iff_nndist
 
 theorem uniformity_basis_dist :
@@ -1348,11 +1348,11 @@ theorem Metric.emetric_ball {x : α} {ε : ℝ} : Emetric.ball x (Ennreal.ofReal
 
 /-- Balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_ball_nnreal {x : α} {ε : ℝ≥0} : Emetric.ball x ε = ball x ε :=
+theorem Metric.emetric_ball_nNReal {x : α} {ε : ℝ≥0} : Emetric.ball x ε = ball x ε :=
   by
   convert Metric.emetric_ball
   simp
-#align metric.emetric_ball_nnreal Metric.emetric_ball_nnreal
+#align metric.emetric_ball_nnreal Metric.emetric_ball_nNReal
 
 /-- Closed balls defined using the distance or the edistance coincide -/
 theorem Metric.emetric_closedBall {x : α} {ε : ℝ} (h : 0 ≤ ε) :
@@ -1362,12 +1362,12 @@ theorem Metric.emetric_closedBall {x : α} {ε : ℝ} (h : 0 ≤ ε) :
 
 /-- Closed balls defined using the distance or the edistance coincide -/
 @[simp]
-theorem Metric.emetric_closedBall_nnreal {x : α} {ε : ℝ≥0} :
+theorem Metric.emetric_closedBall_nNReal {x : α} {ε : ℝ≥0} :
     Emetric.closedBall x ε = closedBall x ε :=
   by
   convert Metric.emetric_closedBall ε.2
   simp
-#align metric.emetric_closed_ball_nnreal Metric.emetric_closedBall_nnreal
+#align metric.emetric_closed_ball_nnreal Metric.emetric_closedBall_nNReal
 
 @[simp]
 theorem Metric.emetric_ball_top (x : α) : Emetric.ball x ⊤ = univ :=
@@ -1375,7 +1375,7 @@ theorem Metric.emetric_ball_top (x : α) : Emetric.ball x ⊤ = univ :=
 #align metric.emetric_ball_top Metric.emetric_ball_top
 
 theorem Metric.inseparable_iff {x y : α} : Inseparable x y ↔ dist x y = 0 := by
-  rw [Emetric.inseparable_iff, edist_nndist, dist_nndist, Ennreal.coe_eq_zero, Nnreal.coe_eq_zero]
+  rw [Emetric.inseparable_iff, edist_nndist, dist_nndist, Ennreal.coe_eq_zero, NNReal.coe_eq_zero]
 #align metric.inseparable_iff Metric.inseparable_iff
 
 /-- Build a new pseudometric space from an old one where the bundled uniform structure is provably
@@ -1865,43 +1865,43 @@ theorem nndist_op (x y : α) : nndist (op x) (op y) = nndist x y :=
 
 end MulOpposite
 
-section Nnreal
+section NNReal
 
 instance : PseudoMetricSpace ℝ≥0 :=
   Subtype.pseudoMetricSpace
 
-theorem Nnreal.dist_eq (a b : ℝ≥0) : dist a b = |(a : ℝ) - b| :=
+theorem NNReal.dist_eq (a b : ℝ≥0) : dist a b = |(a : ℝ) - b| :=
   rfl
-#align nnreal.dist_eq Nnreal.dist_eq
+#align nnreal.dist_eq NNReal.dist_eq
 
-theorem Nnreal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
+theorem NNReal.nndist_eq (a b : ℝ≥0) : nndist a b = max (a - b) (b - a) :=
   by
   wlog h : b ≤ a
   · rw [nndist_comm, max_comm]
     exact this b a (le_of_not_le h)
-  rw [← Nnreal.coe_eq, ← dist_nndist, Nnreal.dist_eq, tsub_eq_zero_iff_le.2 h,
-    max_eq_left (zero_le <| a - b), ← Nnreal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
-#align nnreal.nndist_eq Nnreal.nndist_eq
+  rw [← NNReal.coe_eq, ← dist_nndist, NNReal.dist_eq, tsub_eq_zero_iff_le.2 h,
+    max_eq_left (zero_le <| a - b), ← NNReal.coe_sub h, abs_of_nonneg (a - b).coe_nonneg]
+#align nnreal.nndist_eq NNReal.nndist_eq
 
 @[simp]
-theorem Nnreal.nndist_zero_eq_val (z : ℝ≥0) : nndist 0 z = z := by
-  simp only [Nnreal.nndist_eq, max_eq_right, tsub_zero, zero_tsub, zero_le']
-#align nnreal.nndist_zero_eq_val Nnreal.nndist_zero_eq_val
+theorem NNReal.nndist_zero_eq_val (z : ℝ≥0) : nndist 0 z = z := by
+  simp only [NNReal.nndist_eq, max_eq_right, tsub_zero, zero_tsub, zero_le']
+#align nnreal.nndist_zero_eq_val NNReal.nndist_zero_eq_val
 
 @[simp]
-theorem Nnreal.nndist_zero_eq_val' (z : ℝ≥0) : nndist z 0 = z :=
+theorem NNReal.nndist_zero_eq_val' (z : ℝ≥0) : nndist z 0 = z :=
   by
   rw [nndist_comm]
-  exact Nnreal.nndist_zero_eq_val z
-#align nnreal.nndist_zero_eq_val' Nnreal.nndist_zero_eq_val'
+  exact NNReal.nndist_zero_eq_val z
+#align nnreal.nndist_zero_eq_val' NNReal.nndist_zero_eq_val'
 
-theorem Nnreal.le_add_nndist (a b : ℝ≥0) : a ≤ b + nndist a b :=
+theorem NNReal.le_add_nndist (a b : ℝ≥0) : a ≤ b + nndist a b :=
   by
   suffices (a : ℝ) ≤ (b : ℝ) + dist a b by exact nnreal.coe_le_coe.mp this
   linarith [le_of_abs_le (by rfl : abs (a - b : ℝ) ≤ dist a b)]
-#align nnreal.le_add_nndist Nnreal.le_add_nndist
+#align nnreal.le_add_nndist NNReal.le_add_nndist
 
-end Nnreal
+end NNReal
 
 section ULift
 
@@ -2223,13 +2223,13 @@ instance pseudoMetricSpacePi : PseudoMetricSpace (∀ b, π b) :=
     refine' eventually_congr ((eventually_ge_at_top 0).mono fun C hC => _)
     lift C to ℝ≥0 using hC
     refine'
-      ⟨fun H x hx y hy => Nnreal.coe_le_coe.2 <| Finset.sup_le fun b hb => H b x hx y hy,
-        fun H b x hx y hy => Nnreal.coe_le_coe.2 _⟩
-    simpa only using Finset.sup_le_iff.1 (Nnreal.coe_le_coe.1 <| H hx hy) b (Finset.mem_univ b)
+      ⟨fun H x hx y hy => NNReal.coe_le_coe.2 <| Finset.sup_le fun b hb => H b x hx y hy,
+        fun H b x hx y hy => NNReal.coe_le_coe.2 _⟩
+    simpa only using Finset.sup_le_iff.1 (NNReal.coe_le_coe.1 <| H hx hy) b (Finset.mem_univ b)
 #align pseudo_metric_space_pi pseudoMetricSpacePi
 
 theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndist (f b) (g b) :=
-  Nnreal.eq rfl
+  NNReal.eq rfl
 #align nndist_pi_def nndist_pi_def
 
 theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) : ℝ≥0) :=
@@ -2281,7 +2281,7 @@ theorem dist_pi_const [Nonempty β] (a b : α) : (dist (fun x : β => a) fun _ =
 @[simp]
 theorem nndist_pi_const [Nonempty β] (a b : α) :
     (nndist (fun x : β => a) fun _ => b) = nndist a b :=
-  Nnreal.eq <| dist_pi_const a b
+  NNReal.eq <| dist_pi_const a b
 #align nndist_pi_const nndist_pi_const
 
 theorem nndist_le_pi_nndist (f g : ∀ b, π b) (b : β) : nndist (f b) (g b) ≤ nndist f g :=
@@ -2291,7 +2291,7 @@ theorem nndist_le_pi_nndist (f g : ∀ b, π b) (b : β) : nndist (f b) (g b) �
 #align nndist_le_pi_nndist nndist_le_pi_nndist
 
 theorem dist_le_pi_dist (f g : ∀ b, π b) (b : β) : dist (f b) (g b) ≤ dist f g := by
-  simp only [dist_nndist, Nnreal.coe_le_coe, nndist_le_pi_nndist f g b]
+  simp only [dist_nndist, NNReal.coe_le_coe, nndist_le_pi_nndist f g b]
 #align dist_le_pi_dist dist_le_pi_dist
 
 /-- An open ball in a product space is a product of open balls. See also `metric.ball_pi'`
@@ -2337,7 +2337,7 @@ theorem Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
 theorem Fin.dist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type _}
     [∀ i, PseudoMetricSpace (α i)] (i : Fin (n + 1)) (x y : α i) (f g : ∀ j, α (i.succAbove j)) :
     dist (i.insertNth x f) (i.insertNth y g) = max (dist x y) (dist f g) := by
-  simp only [dist_nndist, Fin.nndist_insertNth_insertNth, Nnreal.coe_max]
+  simp only [dist_nndist, Fin.nndist_insertNth_insertNth, NNReal.coe_max]
 #align fin.dist_insert_nth_insert_nth Fin.dist_insertNth_insertNth
 
 theorem Real.dist_le_of_mem_pi_Icc {x y x' y' : β → ℝ} (hx : x ∈ Icc x' y') (hy : y ∈ Icc x' y') :
@@ -2535,7 +2535,7 @@ theorem second_countable_of_almost_dense_set
     SecondCountableTopology α :=
   by
   refine' Emetric.second_countable_of_almost_dense_set fun ε ε0 => _
-  rcases Ennreal.lt_iff_exists_nnreal_btwn.1 ε0 with ⟨ε', ε'0, ε'ε⟩
+  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 ε0 with ⟨ε', ε'0, ε'ε⟩
   choose s hsc y hys hyx using H ε' (by exact_mod_cast ε'0)
   refine' ⟨s, hsc, Union₂_eq_univ_iff.2 fun x => ⟨y x, hys _, le_trans _ ε'ε.le⟩⟩
   exact_mod_cast hyx x
@@ -3207,18 +3207,18 @@ theorem eq_of_forall_dist_le {x y : γ} (h : ∀ ε > 0, dist x y ≤ ε) : x = 
 
 /-- Deduce the equality of points with the vanishing of the nonnegative distance-/
 theorem eq_of_nndist_eq_zero {x y : γ} : nndist x y = 0 → x = y := by
-  simp only [← Nnreal.eq_iff, ← dist_nndist, imp_self, Nnreal.coe_zero, dist_eq_zero]
+  simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, dist_eq_zero]
 #align eq_of_nndist_eq_zero eq_of_nndist_eq_zero
 
 /-- Characterize the equality of points with the vanishing of the nonnegative distance-/
 @[simp]
 theorem nndist_eq_zero {x y : γ} : nndist x y = 0 ↔ x = y := by
-  simp only [← Nnreal.eq_iff, ← dist_nndist, imp_self, Nnreal.coe_zero, dist_eq_zero]
+  simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, dist_eq_zero]
 #align nndist_eq_zero nndist_eq_zero
 
 @[simp]
 theorem zero_eq_nndist {x y : γ} : 0 = nndist x y ↔ x = y := by
-  simp only [← Nnreal.eq_iff, ← dist_nndist, imp_self, Nnreal.coe_zero, zero_eq_dist]
+  simp only [← NNReal.eq_iff, ← dist_nndist, imp_self, NNReal.coe_zero, zero_eq_dist]
 #align zero_eq_nndist zero_eq_nndist
 
 namespace Metric
@@ -3451,12 +3451,12 @@ instance Real.metricSpace : MetricSpace ℝ :=
 
 end Real
 
-section Nnreal
+section NNReal
 
 instance : MetricSpace ℝ≥0 :=
   Subtype.metricSpace
 
-end Nnreal
+end NNReal
 
 instance [MetricSpace β] : MetricSpace (ULift β) :=
   MetricSpace.induced ULift.down ULift.down_injective ‹_›

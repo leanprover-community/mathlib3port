@@ -30,7 +30,7 @@ rectangular box, box partition
 
 noncomputable section
 
-open Classical Ennreal Nnreal
+open Classical Ennreal NNReal
 
 open Set Function
 

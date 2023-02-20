@@ -28,7 +28,7 @@ The proof is based on the Cauchy integral formula for the derivative of an analy
 
 open TopologicalSpace Metric Set Filter Asymptotics Function MeasureTheory
 
-open Topology Filter Nnreal Real
+open Topology Filter NNReal Real
 
 universe u v
 

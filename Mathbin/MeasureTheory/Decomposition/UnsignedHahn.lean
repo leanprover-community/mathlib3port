@@ -41,13 +41,13 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
       MeasurableSet s ∧
         (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t :=
   by
-  let d : Set α → ℝ := fun s => ((μ s).toNnreal : ℝ) - (ν s).toNnreal
+  let d : Set α → ℝ := fun s => ((μ s).toNNReal : ℝ) - (ν s).toNNReal
   let c : Set ℝ := d '' { s | MeasurableSet s }
   let γ : ℝ := Sup c
   have hμ : ∀ s, μ s ≠ ∞ := measure_ne_top μ
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν
-  have to_nnreal_μ : ∀ s, ((μ s).toNnreal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_toNnreal <| hμ _
-  have to_nnreal_ν : ∀ s, ((ν s).toNnreal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_toNnreal <| hν _
+  have to_nnreal_μ : ∀ s, ((μ s).toNNReal : ℝ≥0∞) = μ s := fun s => Ennreal.coe_toNnreal <| hμ _
+  have to_nnreal_ν : ∀ s, ((ν s).toNNReal : ℝ≥0∞) = ν s := fun s => Ennreal.coe_toNnreal <| hν _
   have d_empty : d ∅ = 0 := by
     change _ - _ = _
     rw [measure_empty, measure_empty, sub_self]
@@ -56,8 +56,8 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro s t hs ht
     simp only [d]
     rw [← measure_inter_add_diff s ht, ← measure_inter_add_diff s ht,
-      Ennreal.toNnreal_add (hμ _) (hμ _), Ennreal.toNnreal_add (hν _) (hν _), Nnreal.coe_add,
-      Nnreal.coe_add]
+      Ennreal.toNnreal_add (hμ _) (hμ _), Ennreal.toNnreal_add (hν _) (hν _), NNReal.coe_add,
+      NNReal.coe_add]
     simp only [sub_eq_add_neg, neg_add]
     abel
   have d_Union :
@@ -65,7 +65,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     by
     intro s hm
     refine' tendsto.sub _ _ <;>
-      refine' Nnreal.tendsto_coe.2 <| (Ennreal.tendsto_toNnreal _).comp <| tendsto_measure_Union hm
+      refine' NNReal.tendsto_coe.2 <| (Ennreal.tendsto_toNnreal _).comp <| tendsto_measure_Union hm
     exact hμ _
     exact hν _
   have d_Inter :
@@ -76,14 +76,14 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     intro s hs hm
     refine' tendsto.sub _ _ <;>
       refine'
-        Nnreal.tendsto_coe.2 <|
+        NNReal.tendsto_coe.2 <|
           (Ennreal.tendsto_toNnreal <| _).comp <| tendsto_measure_Inter hs hm _
     exacts[hμ _, ⟨0, hμ _⟩, hν _, ⟨0, hν _⟩]
   have bdd_c : BddAbove c := by
-    use (μ univ).toNnreal
+    use (μ univ).toNNReal
     rintro r ⟨s, hs, rfl⟩
-    refine' le_trans (sub_le_self _ <| Nnreal.coe_nonneg _) _
-    rw [Nnreal.coe_le_coe, ← Ennreal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
+    refine' le_trans (sub_le_self _ <| NNReal.coe_nonneg _) _
+    rw [NNReal.coe_le_coe, ← Ennreal.coe_le_coe, to_nnreal_μ, to_nnreal_μ]
     exact measure_mono (subset_univ _)
   have c_nonempty : c.nonempty := nonempty.image _ ⟨_, MeasurableSet.empty⟩
   have d_le_γ : ∀ s, MeasurableSet s → d s ≤ γ := fun s hs => le_csupₛ bdd_c ⟨s, hs, rfl⟩
@@ -185,7 +185,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
           _ = d (s \ t) + d t := by rw [d_split _ _ hs ht, inter_eq_self_of_subset_right hts]
           _ ≤ γ + d t := add_le_add (d_le_γ _ (hs.diff ht)) le_rfl
           
-    rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
+    rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← NNReal.coe_le_coe]
     simpa only [d, le_sub_iff_add_le, zero_add] using this
   · intro t ht hts
     have : d t ≤ 0 :=
@@ -197,7 +197,7 @@ theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
               (subset_compl_iff_disjoint_left.1 hts).sdiff_eq_left]
           _ ≤ γ + 0 := by rw [add_zero] <;> exact d_le_γ _ (hs.union ht)
           
-    rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← Nnreal.coe_le_coe]
+    rw [← to_nnreal_μ, ← to_nnreal_ν, Ennreal.coe_le_coe, ← NNReal.coe_le_coe]
     simpa only [d, sub_le_iff_le_add, zero_add] using this
 #align measure_theory.hahn_decomposition MeasureTheory.hahn_decomposition
 

@@ -46,7 +46,7 @@ arc-length, parameterization
 -/
 
 
-open BigOperators Nnreal Ennreal
+open BigOperators NNReal Ennreal
 
 open Set MeasureTheory Classical
 
@@ -293,10 +293,10 @@ theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
   rw [hasConstantSpeedOnWith_iff_ordered]
   rintro _ ⟨b, bs, rfl⟩ _ ⟨c, cs, rfl⟩ h
   rcases le_total c b with (cb | bc)
-  · rw [Nnreal.coe_one, one_mul, le_antisymm h (variationOnFromTo.monotoneOn hf as cs bs cb),
+  · rw [NNReal.coe_one, one_mul, le_antisymm h (variationOnFromTo.monotoneOn hf as cs bs cb),
       sub_self, Ennreal.ofReal_zero, Icc_self, evariationOn.subsingleton]
     exact fun x hx y hy => hx.2.trans hy.2.symm
-  · rw [Nnreal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
+  · rw [NNReal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
       variationOnFromTo.add hf bs as cs, ← variationOnFromTo.eq_neg_swap f]
     rw [←
       evariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _

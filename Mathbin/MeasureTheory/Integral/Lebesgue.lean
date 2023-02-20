@@ -48,7 +48,7 @@ open Filter Ennreal
 
 open Function (support)
 
-open Classical Topology BigOperators Nnreal Ennreal MeasureTheory
+open Classical Topology BigOperators NNReal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -764,10 +764,10 @@ theorem map_coe_ennreal_restrict (f : α →ₛ ℝ≥0) (s : Set α) :
   map_restrict_of_zero Ennreal.coe_zero _ _
 #align measure_theory.simple_func.map_coe_ennreal_restrict MeasureTheory.SimpleFunc.map_coe_ennreal_restrict
 
-theorem map_coe_nnreal_restrict (f : α →ₛ ℝ≥0) (s : Set α) :
+theorem map_coe_nNReal_restrict (f : α →ₛ ℝ≥0) (s : Set α) :
     (f.restrict s).map (coe : ℝ≥0 → ℝ) = (f.map coe).restrict s :=
-  map_restrict_of_zero Nnreal.coe_zero _ _
-#align measure_theory.simple_func.map_coe_nnreal_restrict MeasureTheory.SimpleFunc.map_coe_nnreal_restrict
+  map_restrict_of_zero NNReal.coe_zero _ _
+#align measure_theory.simple_func.map_coe_nnreal_restrict MeasureTheory.SimpleFunc.map_coe_nNReal_restrict
 
 theorem restrict_apply (f : α →ₛ β) {s : Set α} (hs : MeasurableSet s) (a) :
     restrict f s a = indicator s f a := by simp only [f.coe_restrict hs]
@@ -871,7 +871,7 @@ def ennrealRatEmbed (n : ℕ) : ℝ≥0∞ :=
   Ennreal.ofReal ((Encodable.decode ℚ n).getD (0 : ℚ))
 #align measure_theory.simple_func.ennreal_rat_embed MeasureTheory.SimpleFunc.ennrealRatEmbed
 
-theorem ennrealRatEmbed_encode (q : ℚ) : ennrealRatEmbed (Encodable.encode q) = Real.toNnreal q :=
+theorem ennrealRatEmbed_encode (q : ℚ) : ennrealRatEmbed (Encodable.encode q) = Real.toNNReal q :=
   by rw [ennreal_rat_embed, Encodable.encodek] <;> rfl
 #align measure_theory.simple_func.ennreal_rat_embed_encode MeasureTheory.SimpleFunc.ennrealRatEmbed_encode
 
@@ -909,7 +909,7 @@ theorem supᵢ_eapprox_apply (f : α → ℝ≥0∞) (hf : Measurable f) (a : α
   intro h
   rcases Ennreal.lt_iff_exists_rat_btwn.1 h with ⟨q, hq, lt_q, q_lt⟩
   have :
-    (Real.toNnreal q : ℝ≥0∞) ≤ ⨆ (k : ℕ) (h : ennreal_rat_embed k ≤ f a), ennreal_rat_embed k :=
+    (Real.toNNReal q : ℝ≥0∞) ≤ ⨆ (k : ℕ) (h : ennreal_rat_embed k ≤ f a), ennreal_rat_embed k :=
     by
     refine' le_supᵢ_of_le (Encodable.encode q) _
     rw [ennreal_rat_embed_encode q]
@@ -1378,9 +1378,9 @@ theorem lintegral_mono ⦃f g : α → ℝ≥0∞⦄ (hfg : f ≤ g) : (∫⁻ a
   lintegral_mono' (le_refl μ) hfg
 #align measure_theory.lintegral_mono MeasureTheory.lintegral_mono
 
-theorem lintegral_mono_nnreal {f g : α → ℝ≥0} (h : f ≤ g) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ :=
+theorem lintegral_mono_nNReal {f g : α → ℝ≥0} (h : f ≤ g) : (∫⁻ a, f a ∂μ) ≤ ∫⁻ a, g a ∂μ :=
   lintegral_mono fun a => Ennreal.coe_le_coe.2 (h a)
-#align measure_theory.lintegral_mono_nnreal MeasureTheory.lintegral_mono_nnreal
+#align measure_theory.lintegral_mono_nnreal MeasureTheory.lintegral_mono_nNReal
 
 theorem supᵢ_lintegral_measurable_le_eq_lintegral (f : α → ℝ≥0∞) :
     (⨆ (g : α → ℝ≥0∞) (g_meas : Measurable g) (hg : g ≤ f), ∫⁻ a, g a ∂μ) = ∫⁻ a, f a ∂μ :=
@@ -1469,7 +1469,7 @@ end
 /-- `∫⁻ a in s, f a ∂μ` is defined as the supremum of integrals of simple functions
 `φ : α →ₛ ℝ≥0∞` such that `φ ≤ f`. This lemma says that it suffices to take
 functions `φ : α →ₛ ℝ≥0`. -/
-theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ : Measure α) :
+theorem lintegral_eq_nNReal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ : Measure α) :
     (∫⁻ a, f a ∂μ) =
       ⨆ (φ : α →ₛ ℝ≥0) (hf : ∀ x, ↑(φ x) ≤ f x), (φ.map (coe : ℝ≥0 → ℝ≥0∞)).lintegral μ :=
   by
@@ -1493,7 +1493,7 @@ theorem lintegral_eq_nnreal {m : MeasurableSpace α} (f : α → ℝ≥0∞) (μ
     refine' ⟨indicator_le fun x hx => le_trans _ (hφ _), hn⟩
     simp only [mem_preimage, mem_singleton_iff] at hx
     simp only [hx, le_top]
-#align measure_theory.lintegral_eq_nnreal MeasureTheory.lintegral_eq_nnreal
+#align measure_theory.lintegral_eq_nnreal MeasureTheory.lintegral_eq_nNReal
 
 theorem exists_simpleFunc_forall_lintegral_sub_lt_of_pos {f : α → ℝ≥0∞} (h : (∫⁻ x, f x ∂μ) ≠ ∞)
     {ε : ℝ≥0∞} (hε : ε ≠ 0) :
@@ -1605,7 +1605,7 @@ theorem lintegral_nnnorm_eq_of_ae_nonneg {f : α → ℝ} (h_nonneg : 0 ≤ᵐ[�
   by
   apply lintegral_congr_ae
   filter_upwards [h_nonneg]with x hx
-  rw [Real.nnnorm_of_nonneg hx, Ennreal.ofReal_eq_coe_nnreal hx]
+  rw [Real.nnnorm_of_nonneg hx, Ennreal.ofReal_eq_coe_nNReal hx]
 #align measure_theory.lintegral_nnnorm_eq_of_ae_nonneg MeasureTheory.lintegral_nnnorm_eq_of_ae_nonneg
 
 theorem lintegral_nnnorm_eq_of_nonneg {f : α → ℝ} (h_nonneg : 0 ≤ f) :
@@ -2718,7 +2718,7 @@ theorem Ennreal.count_const_le_le_of_tsum_le [MeasurableSingletonClass α] {a : 
 #align ennreal.count_const_le_le_of_tsum_le Ennreal.count_const_le_le_of_tsum_le
 
 /-- Markov's inequality for counting measure with hypothesis using `tsum` in `ℝ≥0`. -/
-theorem Nnreal.count_const_le_le_of_tsum_le [MeasurableSingletonClass α] {a : α → ℝ≥0}
+theorem NNReal.count_const_le_le_of_tsum_le [MeasurableSingletonClass α] {a : α → ℝ≥0}
     (a_mble : Measurable a) (a_summable : Summable a) {c : ℝ≥0} (tsum_le_c : (∑' i, a i) ≤ c)
     {ε : ℝ≥0} (ε_ne_zero : ε ≠ 0) : Measure.count { i : α | ε ≤ a i } ≤ c / ε :=
   by
@@ -2731,7 +2731,7 @@ theorem Nnreal.count_const_le_le_of_tsum_le [MeasurableSingletonClass α] {a : �
       (by exact_mod_cast ε_ne_zero) (@Ennreal.coe_ne_top ε)
   convert ennreal.coe_le_coe.mpr tsum_le_c
   rw [Ennreal.tsum_coe_eq a_summable.has_sum]
-#align nnreal.count_const_le_le_of_tsum_le Nnreal.count_const_le_le_of_tsum_le
+#align nnreal.count_const_le_le_of_tsum_le NNReal.count_const_le_le_of_tsum_le
 
 end DiracAndCount
 
@@ -3057,7 +3057,7 @@ theorem aeMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
     intro x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
     simp only [Ne.def, coe_eq_zero] at h'x
-    simpa only [Nnreal.coe_eq_zero, Ne.def] using h'x
+    simpa only [NNReal.coe_eq_zero, Ne.def] using h'x
 #align measure_theory.ae_measurable_with_density_iff MeasureTheory.aeMeasurable_withDensity_iff
 
 theorem aeMeasurable_withDensity_ennreal_iff {f : α → ℝ≥0} (hf : Measurable f) {g : α → ℝ≥0∞} :

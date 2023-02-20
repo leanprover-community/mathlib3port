@@ -63,7 +63,7 @@ measurable functions, as a basis for the Bochner integral.
 
 open MeasureTheory Filter TopologicalSpace Function Set MeasureTheory.Measure
 
-open Ennreal Topology MeasureTheory Nnreal BigOperators
+open Ennreal Topology MeasureTheory NNReal BigOperators
 
 /-- The typeclass `second_countable_topology_either α β` registers the fact that at least one of
 the two spaces has second countable topology. This is the right assumption to ensure that continuous
@@ -854,10 +854,10 @@ protected theorem ennnorm {m : MeasurableSpace α} {β : Type _} [SeminormedAddC
   (Ennreal.continuous_coe.comp_stronglyMeasurable hf.nnnorm).Measurable
 #align measure_theory.strongly_measurable.ennnorm MeasureTheory.StronglyMeasurable.ennnorm
 
-protected theorem real_toNnreal {m : MeasurableSpace α} {f : α → ℝ} (hf : StronglyMeasurable f) :
-    StronglyMeasurable fun x => (f x).toNnreal :=
-  continuous_real_toNnreal.comp_stronglyMeasurable hf
-#align measure_theory.strongly_measurable.real_to_nnreal MeasureTheory.StronglyMeasurable.real_toNnreal
+protected theorem real_toNNReal {m : MeasurableSpace α} {f : α → ℝ} (hf : StronglyMeasurable f) :
+    StronglyMeasurable fun x => (f x).toNNReal :=
+  continuous_real_toNNReal.comp_stronglyMeasurable hf
+#align measure_theory.strongly_measurable.real_to_nnreal MeasureTheory.StronglyMeasurable.real_toNNReal
 
 theorem MeasurableEmbedding.stronglyMeasurable_extend {f : α → β} {g : α → γ} {g' : γ → β}
     {mα : MeasurableSpace α} {mγ : MeasurableSpace γ} [TopologicalSpace β]
@@ -1530,8 +1530,8 @@ protected theorem edist {β : Type _} [SeminormedAddCommGroup β] {f g : α → 
 #align measure_theory.ae_strongly_measurable.edist MeasureTheory.AeStronglyMeasurable.edist
 
 protected theorem realToNnreal {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
-    AeStronglyMeasurable (fun x => (f x).toNnreal) μ :=
-  continuous_real_toNnreal.compAeStronglyMeasurable hf
+    AeStronglyMeasurable (fun x => (f x).toNNReal) μ :=
+  continuous_real_toNNReal.compAeStronglyMeasurable hf
 #align measure_theory.ae_strongly_measurable.real_to_nnreal MeasureTheory.AeStronglyMeasurable.realToNnreal
 
 theorem aeStronglyMeasurable_indicator_iff [Zero β] {s : Set α} (hs : MeasurableSet s) :
@@ -1874,7 +1874,7 @@ theorem aeStronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
     filter_upwards [hg']with x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
     simp only [Ne.def, Ennreal.coe_eq_zero] at h'x
-    simpa only [Nnreal.coe_eq_zero, Ne.def] using h'x
+    simpa only [NNReal.coe_eq_zero, Ne.def] using h'x
 #align ae_strongly_measurable_with_density_iff aeStronglyMeasurable_withDensity_iff
 
 end AeStronglyMeasurable

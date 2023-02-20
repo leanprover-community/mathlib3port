@@ -51,7 +51,7 @@ variable {𝓕 𝕜 α ι κ E F G : Type _}
 
 open Filter Function Metric
 
-open BigOperators Ennreal Filter Nnreal uniformity Pointwise Topology
+open BigOperators Ennreal Filter NNReal uniformity Pointwise Topology
 
 /-- Auxiliary class, endowing a type `E` with a function `norm : E → ℝ` with notation `‖x‖`. This
 class is designed to be extended in more interesting classes specifying the properties of the norm.
@@ -764,7 +764,7 @@ for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. The analogous condition for a 
 @[to_additive
       "A homomorphism `f` of seminormed groups is Lipschitz, if there exists a constant `C`\nsuch that for all `x`, one has `‖f x‖ ≤ C * ‖x‖`. The analogous condition for a linear map of\n(semi)normed spaces is in `normed_space.operator_norm`."]
 theorem MonoidHomClass.lipschitz_of_bound [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ)
-    (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : LipschitzWith (Real.toNnreal C) f :=
+    (h : ∀ x, ‖f x‖ ≤ C * ‖x‖) : LipschitzWith (Real.toNNReal C) f :=
   LipschitzWith.of_dist_le' fun x y => by simpa only [dist_eq_norm_div, map_div] using h (x / y)
 #align monoid_hom_class.lipschitz_of_bound MonoidHomClass.lipschitz_of_bound
 #align add_monoid_hom_class.lipschitz_of_bound AddMonoidHomClass.lipschitz_of_bound
@@ -868,15 +868,15 @@ theorem coe_comp_nnnorm' : (coe : ℝ≥0 → ℝ) ∘ (nnnorm : E → ℝ≥0) 
 #align coe_comp_nnnorm' coe_comp_nnnorm'
 #align coe_comp_nnnorm coe_comp_nnnorm
 
-@[to_additive norm_toNnreal]
-theorem norm_to_nnreal' : ‖a‖.toNnreal = ‖a‖₊ :=
-  @Real.toNnreal_coe ‖a‖₊
+@[to_additive norm_toNNReal]
+theorem norm_to_nnreal' : ‖a‖.toNNReal = ‖a‖₊ :=
+  @Real.toNNReal_coe ‖a‖₊
 #align norm_to_nnreal' norm_to_nnreal'
-#align norm_to_nnreal norm_toNnreal
+#align norm_to_nnreal norm_toNNReal
 
 @[to_additive]
 theorem nndist_eq_nnnorm_div (a b : E) : nndist a b = ‖a / b‖₊ :=
-  Nnreal.eq <| dist_eq_norm_div _ _
+  NNReal.eq <| dist_eq_norm_div _ _
 #align nndist_eq_nnnorm_div nndist_eq_nnnorm_div
 #align nndist_eq_nnnorm_sub nndist_eq_nnnorm_sub
 
@@ -885,7 +885,7 @@ alias nndist_eq_nnnorm_sub ← nndist_eq_nnnorm
 
 @[simp, to_additive nnnorm_zero]
 theorem nnnorm_one' : ‖(1 : E)‖₊ = 0 :=
-  Nnreal.eq norm_one'
+  NNReal.eq norm_one'
 #align nnnorm_one' nnnorm_one'
 #align nnnorm_zero nnnorm_zero
 
@@ -899,25 +899,25 @@ theorem ne_one_of_nnnorm_ne_zero {a : E} : ‖a‖₊ ≠ 0 → a ≠ 1 :=
 
 @[to_additive nnnorm_add_le]
 theorem nnnorm_mul_le' (a b : E) : ‖a * b‖₊ ≤ ‖a‖₊ + ‖b‖₊ :=
-  Nnreal.coe_le_coe.1 <| norm_mul_le' a b
+  NNReal.coe_le_coe.1 <| norm_mul_le' a b
 #align nnnorm_mul_le' nnnorm_mul_le'
 #align nnnorm_add_le nnnorm_add_le
 
 @[simp, to_additive nnnorm_neg]
 theorem nnnorm_inv' (a : E) : ‖a⁻¹‖₊ = ‖a‖₊ :=
-  Nnreal.eq <| norm_inv' a
+  NNReal.eq <| norm_inv' a
 #align nnnorm_inv' nnnorm_inv'
 #align nnnorm_neg nnnorm_neg
 
 @[to_additive]
 theorem nnnorm_div_le (a b : E) : ‖a / b‖₊ ≤ ‖a‖₊ + ‖b‖₊ :=
-  Nnreal.coe_le_coe.1 <| norm_div_le _ _
+  NNReal.coe_le_coe.1 <| norm_div_le _ _
 #align nnnorm_div_le nnnorm_div_le
 #align nnnorm_sub_le nnnorm_sub_le
 
 @[to_additive nndist_nnnorm_nnnorm_le]
 theorem nndist_nnnorm_nnnorm_le' (a b : E) : nndist ‖a‖₊ ‖b‖₊ ≤ ‖a / b‖₊ :=
-  Nnreal.coe_le_coe.1 <| dist_norm_norm_le' a b
+  NNReal.coe_le_coe.1 <| dist_norm_norm_le' a b
 #align nndist_nnnorm_nnnorm_le' nndist_nnnorm_nnnorm_le'
 #align nndist_nnnorm_nnnorm_le nndist_nnnorm_nnnorm_le
 
@@ -947,7 +947,7 @@ theorem nnnorm_le_mul_nnnorm_add (a b : E) : ‖a‖₊ ≤ ‖a * b‖₊ + ‖
 
 @[to_additive ofReal_norm_eq_coe_nnnorm]
 theorem ofReal_norm_eq_coe_nnnorm' (a : E) : Ennreal.ofReal ‖a‖ = ‖a‖₊ :=
-  Ennreal.ofReal_eq_coe_nnreal _
+  Ennreal.ofReal_eq_coe_nNReal _
 #align of_real_norm_eq_coe_nnnorm' ofReal_norm_eq_coe_nnnorm'
 #align of_real_norm_eq_coe_nnnorm ofReal_norm_eq_coe_nnnorm
 
@@ -972,7 +972,7 @@ theorem mem_emetric_ball_one_iff {r : ℝ≥0∞} : a ∈ Emetric.ball (1 : E) r
 @[to_additive]
 theorem MonoidHomClass.lipschitz_of_bound_nnnorm [MonoidHomClass 𝓕 E F] (f : 𝓕) (C : ℝ≥0)
     (h : ∀ x, ‖f x‖₊ ≤ C * ‖x‖₊) : LipschitzWith C f :=
-  @Real.toNnreal_coe C ▸ MonoidHomClass.lipschitz_of_bound f C h
+  @Real.toNNReal_coe C ▸ MonoidHomClass.lipschitz_of_bound f C h
 #align monoid_hom_class.lipschitz_of_bound_nnnorm MonoidHomClass.lipschitz_of_bound_nnnorm
 #align add_monoid_hom_class.lipschitz_of_bound_nnnorm AddMonoidHomClass.lipschitz_of_bound_nnnorm
 
@@ -1534,7 +1534,7 @@ theorem norm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖ ≤ n * ‖a‖ :=
 
 @[to_additive nnnorm_nsmul_le]
 theorem nnnorm_pow_le_mul_norm (n : ℕ) (a : E) : ‖a ^ n‖₊ ≤ n * ‖a‖₊ := by
-  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul, Nnreal.coe_nat_cast] using
+  simpa only [← NNReal.coe_le_coe, NNReal.coe_mul, NNReal.coe_nat_cast] using
     norm_pow_le_mul_norm n a
 #align nnnorm_pow_le_mul_norm nnnorm_pow_le_mul_norm
 #align nnnorm_nsmul_le nnnorm_nsmul_le
@@ -1647,7 +1647,7 @@ theorem controlled_prod_of_mem_closure_range {j : E →* F} {b : F}
 @[to_additive]
 theorem nndist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
     nndist (a₁ * a₂) (b₁ * b₂) ≤ nndist a₁ b₁ + nndist a₂ b₂ :=
-  Nnreal.coe_le_coe.1 <| dist_mul_mul_le a₁ a₂ b₁ b₂
+  NNReal.coe_le_coe.1 <| dist_mul_mul_le a₁ a₂ b₁ b₂
 #align nndist_mul_mul_le nndist_mul_mul_le
 #align nndist_add_add_le nndist_add_add_le
 
@@ -1663,7 +1663,7 @@ theorem edist_mul_mul_le (a₁ a₂ b₁ b₂ : E) :
 
 @[to_additive]
 theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fun x => ‖x‖₊).Sum :=
-  Nnreal.coe_le_coe.1 <| by
+  NNReal.coe_le_coe.1 <| by
     push_cast
     rw [Multiset.map_map]
     exact norm_multiset_prod_le _
@@ -1672,7 +1672,7 @@ theorem nnnorm_multiset_prod_le (m : Multiset E) : ‖m.Prod‖₊ ≤ (m.map fu
 
 @[to_additive]
 theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊ ≤ ∑ a in s, ‖f a‖₊ :=
-  Nnreal.coe_le_coe.1 <| by
+  NNReal.coe_le_coe.1 <| by
     push_cast
     exact norm_prod_le _ _
 #align nnnorm_prod_le nnnorm_prod_le
@@ -1681,7 +1681,7 @@ theorem nnnorm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ a in s, f a‖₊
 @[to_additive]
 theorem nnnorm_prod_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ≥0} (h : ∀ b ∈ s, ‖f b‖₊ ≤ n b) :
     ‖∏ b in s, f b‖₊ ≤ ∑ b in s, n b :=
-  (norm_prod_le_of_le s h).trans_eq Nnreal.coe_sum.symm
+  (norm_prod_le_of_le s h).trans_eq NNReal.coe_sum.symm
 #align nnnorm_prod_le_of_le nnnorm_prod_le_of_le
 #align nnnorm_sum_le_of_le nnnorm_sum_le_of_le
 
@@ -1716,7 +1716,7 @@ theorem norm_coe_nat (n : ℕ) : ‖(n : ℝ)‖ = n :=
 
 @[simp]
 theorem nnnorm_coe_nat (n : ℕ) : ‖(n : ℝ)‖₊ = n :=
-  Nnreal.eq <| norm_coe_nat _
+  NNReal.eq <| norm_coe_nat _
 #align real.nnnorm_coe_nat Real.nnnorm_coe_nat
 
 @[simp]
@@ -1726,11 +1726,11 @@ theorem norm_two : ‖(2 : ℝ)‖ = 2 :=
 
 @[simp]
 theorem nnnorm_two : ‖(2 : ℝ)‖₊ = 2 :=
-  Nnreal.eq <| by simp
+  NNReal.eq <| by simp
 #align real.nnnorm_two Real.nnnorm_two
 
 theorem nnnorm_of_nonneg (hr : 0 ≤ r) : ‖r‖₊ = ⟨r, hr⟩ :=
-  Nnreal.eq <| norm_of_nonneg hr
+  NNReal.eq <| norm_of_nonneg hr
 #align real.nnnorm_of_nonneg Real.nnnorm_of_nonneg
 
 @[simp]
@@ -1745,12 +1745,12 @@ theorem ennnorm_eq_ofReal_abs (r : ℝ) : (‖r‖₊ : ℝ≥0∞) = Ennreal.of
   rw [← Real.nnnorm_abs r, Real.ennnorm_eq_ofReal (abs_nonneg _)]
 #align real.ennnorm_eq_of_real_abs Real.ennnorm_eq_ofReal_abs
 
-theorem toNnreal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNnreal = ‖r‖₊ :=
+theorem toNNReal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNNReal = ‖r‖₊ :=
   by
-  rw [Real.toNnreal_of_nonneg hr]
+  rw [Real.toNNReal_of_nonneg hr]
   congr
   rw [Real.norm_eq_abs, abs_of_nonneg hr]
-#align real.to_nnreal_eq_nnnorm_of_nonneg Real.toNnreal_eq_nnnorm_of_nonneg
+#align real.to_nnreal_eq_nnnorm_of_nonneg Real.toNNReal_eq_nnnorm_of_nonneg
 
 theorem ofReal_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ‖r‖₊ :=
   by
@@ -1781,21 +1781,21 @@ theorem norm_eq_abs (n : ℤ) : ‖n‖ = |n| :=
 theorem norm_coe_nat (n : ℕ) : ‖(n : ℤ)‖ = n := by simp [Int.norm_eq_abs]
 #align int.norm_coe_nat Int.norm_coe_nat
 
-theorem Nnreal.coe_natAbs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
-  Nnreal.eq <|
+theorem NNReal.coe_natAbs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
+  NNReal.eq <|
     calc
-      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, Nnreal.coe_nat_cast]
+      ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, NNReal.coe_nat_cast]
       _ = |n| := by simp only [Int.coe_natAbs, Int.cast_abs]
       _ = ‖n‖ := rfl
       
-#align nnreal.coe_nat_abs Nnreal.coe_natAbs
+#align nnreal.coe_nat_abs NNReal.coe_natAbs
 
-theorem abs_le_floor_nnreal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ‖z‖₊ ≤ c :=
+theorem abs_le_floor_nNReal_iff (z : ℤ) (c : ℝ≥0) : |z| ≤ ⌊c⌋₊ ↔ ‖z‖₊ ≤ c :=
   by
   rw [Int.abs_eq_natAbs, Int.ofNat_le, Nat.le_floor_iff (zero_le c)]
   congr
-  exact Nnreal.coe_natAbs z
-#align int.abs_le_floor_nnreal_iff Int.abs_le_floor_nnreal_iff
+  exact NNReal.coe_natAbs z
+#align int.abs_le_floor_nnreal_iff Int.abs_le_floor_nNReal_iff
 
 end Int
 
@@ -1831,7 +1831,7 @@ theorem norm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖ ≤ ‖n‖ * ‖
 
 @[to_additive nnnorm_zsmul_le]
 theorem nnnorm_zpow_le_mul_norm (n : ℤ) (a : α) : ‖a ^ n‖₊ ≤ ‖n‖₊ * ‖a‖₊ := by
-  simpa only [← Nnreal.coe_le_coe, Nnreal.coe_mul] using norm_zpow_le_mul_norm n a
+  simpa only [← NNReal.coe_le_coe, NNReal.coe_mul] using norm_zpow_le_mul_norm n a
 #align nnnorm_zpow_le_mul_norm nnnorm_zpow_le_mul_norm
 #align nnnorm_zsmul_le nnnorm_zsmul_le
 
@@ -1878,9 +1878,9 @@ theorem mul_lipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g
   by
   letI : PseudoMetricSpace α := PseudoEmetricSpace.toPseudoMetricSpace hf.edist_ne_top
   refine' AntilipschitzWith.of_le_mul_dist fun x y => _
-  rw [Nnreal.coe_inv, ← div_eq_inv_mul]
-  rw [le_div_iff (Nnreal.coe_pos.2 <| tsub_pos_iff_lt.2 hK)]
-  rw [mul_comm, Nnreal.coe_sub hK.le, sub_mul]
+  rw [NNReal.coe_inv, ← div_eq_inv_mul]
+  rw [le_div_iff (NNReal.coe_pos.2 <| tsub_pos_iff_lt.2 hK)]
+  rw [mul_comm, NNReal.coe_sub hK.le, sub_mul]
   calc
     ↑Kf⁻¹ * dist x y - Kg * dist x y ≤ dist (f x) (f y) - dist (g x) (g y) :=
       sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)
@@ -2004,7 +2004,7 @@ attribute [to_additive] eq_of_norm_div_eq_zero
 
 @[simp, to_additive nnnorm_eq_zero]
 theorem nnnorm_eq_zero' : ‖a‖₊ = 0 ↔ a = 1 := by
-  rw [← Nnreal.coe_eq_zero, coe_nnnorm', norm_eq_zero'']
+  rw [← NNReal.coe_eq_zero, coe_nnnorm', norm_eq_zero'']
 #align nnnorm_eq_zero' nnnorm_eq_zero'
 #align nnnorm_eq_zero nnnorm_eq_zero
 
@@ -2491,7 +2491,7 @@ theorem pi_norm_const' [Nonempty ι] (a : E) : ‖fun i : ι => a‖ = ‖a‖ :
 
 @[simp, to_additive pi_nnnorm_const]
 theorem pi_nnnorm_const' [Nonempty ι] (a : E) : ‖fun i : ι => a‖₊ = ‖a‖₊ :=
-  Nnreal.eq <| pi_norm_const' a
+  NNReal.eq <| pi_norm_const' a
 #align pi_nnnorm_const' pi_nnnorm_const'
 #align pi_nnnorm_const pi_nnnorm_const
 
@@ -2507,7 +2507,7 @@ theorem Pi.sum_norm_apply_le_norm' : (∑ i, ‖f i‖) ≤ Fintype.card ι • 
 @[to_additive Pi.sum_nnnorm_apply_le_nnnorm
       "The $L^1$ norm is less than the $L^\\infty$ norm scaled\nby the cardinality."]
 theorem Pi.sum_nnnorm_apply_le_nnnorm' : (∑ i, ‖f i‖₊) ≤ Fintype.card ι • ‖f‖₊ :=
-  Nnreal.coe_sum.trans_le <| Pi.sum_norm_apply_le_norm' _
+  NNReal.coe_sum.trans_le <| Pi.sum_norm_apply_le_norm' _
 #align pi.sum_nnnorm_apply_le_nnnorm' Pi.sum_nnnorm_apply_le_nnnorm'
 #align pi.sum_nnnorm_apply_le_nnnorm Pi.sum_nnnorm_apply_le_nnnorm
 

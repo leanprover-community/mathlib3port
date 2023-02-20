@@ -209,7 +209,7 @@ theorem hasFderivAt_integral_of_dominated_of_fderiv_le {F : H → α → E} {F' 
     refine'
       (convex_ball _ _).lipschitzOnWith_of_nnnorm_has_fderiv_within_le
         (fun x x_in => (ha_deriv x x_in).HasFderivWithinAt) fun x x_in => _
-    rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
+    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact
     (hasFderivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this
@@ -269,7 +269,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → α → E}
     refine'
       (convex_ball _ _).lipschitzOnWith_of_nnnorm_has_deriv_within_le
         (fun x x_in => (ha_deriv x x_in).HasDerivWithinAt) fun x x_in => _
-    rw [← Nnreal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
+    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.coe_nnabs]
     exact (ha_bound x x_in).trans (le_abs_self _)
   exact
     hasDerivAt_integral_of_dominated_loc_of_lip ε_pos hF_meas hF_int hF'_meas this bound_integrable

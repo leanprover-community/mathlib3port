@@ -59,7 +59,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open Nnreal Ennreal MeasureTheory
+open NNReal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
@@ -445,7 +445,7 @@ def ContentRegular :=
 #align measure_theory.content.content_regular MeasureTheory.Content.ContentRegular
 
 theorem contentRegular_exists_compact (H : ContentRegular μ) (K : TopologicalSpace.Compacts G)
-    {ε : Nnreal} (hε : ε ≠ 0) :
+    {ε : NNReal} (hε : ε ≠ 0) :
     ∃ K' : TopologicalSpace.Compacts G, K.carrier ⊆ interior K'.carrier ∧ μ K' ≤ μ K + ε :=
   by
   by_contra hc

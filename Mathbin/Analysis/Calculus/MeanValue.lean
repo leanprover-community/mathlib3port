@@ -75,7 +75,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {F : Type _} [N
 
 open Metric Set Asymptotics ContinuousLinearMap Filter
 
-open Classical Topology Nnreal
+open Classical Topology NNReal
 
 /-! ### One-dimensional fencing inequalities -/
 

@@ -33,7 +33,7 @@ contracting map, fixed point, Banach fixed point theorem
 -/
 
 
-open Nnreal Topology Classical Ennreal
+open NNReal Topology Classical Ennreal
 
 open Filter Function
 
@@ -386,7 +386,7 @@ theorem isFixedPt_fixedPoint_iterate {n : ℕ} (hf : ContractingWith K (f^[n])) 
   rw [← iterate_succ_apply, iterate_succ_apply', hx] at this
   contrapose! this
   have := dist_pos.2 (Ne.symm this)
-  simpa only [Nnreal.coe_one, one_mul, Nnreal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
+  simpa only [NNReal.coe_one, one_mul, NNReal.val_eq_coe] using (mul_lt_mul_right this).mpr hf.left
 #align contracting_with.is_fixed_pt_fixed_point_iterate ContractingWith.isFixedPt_fixedPoint_iterate
 
 end ContractingWith

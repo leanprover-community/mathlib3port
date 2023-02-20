@@ -35,7 +35,7 @@ to `emetric_space` at the end.
 
 open Set Filter Classical
 
-open uniformity Topology BigOperators Filter Nnreal Ennreal
+open uniformity Topology BigOperators Filter NNReal Ennreal
 
 universe u v w
 
@@ -277,19 +277,19 @@ theorem uniformity_basis_edist_le' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
 #align uniformity_basis_edist_le' uniformity_basis_edist_le'
 
-theorem uniformity_basis_edist_nnreal :
+theorem uniformity_basis_edist_nNReal :
     (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
   Emetric.mk_uniformity_basis (fun _ => Ennreal.coe_pos.2) fun ε ε₀ =>
-    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nnreal_btwn.1 ε₀
+    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nNReal_btwn.1 ε₀
     ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
-#align uniformity_basis_edist_nnreal uniformity_basis_edist_nnreal
+#align uniformity_basis_edist_nnreal uniformity_basis_edist_nNReal
 
-theorem uniformity_basis_edist_nnreal_le :
+theorem uniformity_basis_edist_nNReal_le :
     (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
   Emetric.mk_uniformity_basis_le (fun _ => Ennreal.coe_pos.2) fun ε ε₀ =>
-    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nnreal_btwn.1 ε₀
+    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nNReal_btwn.1 ε₀
     ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
-#align uniformity_basis_edist_nnreal_le uniformity_basis_edist_nnreal_le
+#align uniformity_basis_edist_nnreal_le uniformity_basis_edist_nNReal_le
 
 theorem uniformity_basis_edist_inv_nat :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < (↑n)⁻¹ } :=
@@ -841,10 +841,10 @@ theorem cauchySeq_iff' [Nonempty β] [SemilatticeSup β] {u : β → α} :
 
 /-- A variation of the emetric characterization of Cauchy sequences that deals with
 `ℝ≥0` upper bounds. -/
-theorem cauchySeq_iff_nnreal [Nonempty β] [SemilatticeSup β] {u : β → α} :
+theorem cauchySeq_iff_nNReal [Nonempty β] [SemilatticeSup β] {u : β → α} :
     CauchySeq u ↔ ∀ ε : ℝ≥0, 0 < ε → ∃ N, ∀ n, N ≤ n → edist (u n) (u N) < ε :=
-  uniformity_basis_edist_nnreal.cauchySeq_iff'
-#align emetric.cauchy_seq_iff_nnreal Emetric.cauchySeq_iff_nnreal
+  uniformity_basis_edist_nNReal.cauchySeq_iff'
+#align emetric.cauchy_seq_iff_nnreal Emetric.cauchySeq_iff_nNReal
 
 theorem totallyBounded_iff {s : Set α} :
     TotallyBounded s ↔ ∀ ε > 0, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, ball y ε :=

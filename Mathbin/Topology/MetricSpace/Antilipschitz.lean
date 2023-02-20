@@ -28,7 +28,7 @@ we do not have a `posreal` type.
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open Nnreal Ennreal uniformity
+open NNReal Ennreal uniformity
 
 open Set Filter Bornology
 
@@ -80,7 +80,7 @@ namespace AntilipschitzWith
 
 theorem mul_le_nndist (hf : AntilipschitzWith K f) (x y : α) :
     K⁻¹ * nndist x y ≤ nndist (f x) (f y) := by
-  simpa only [div_eq_inv_mul] using Nnreal.div_le_of_le_mul' (hf.le_mul_nndist x y)
+  simpa only [div_eq_inv_mul] using NNReal.div_le_of_le_mul' (hf.le_mul_nndist x y)
 #align antilipschitz_with.mul_le_nndist AntilipschitzWith.mul_le_nndist
 
 theorem mul_le_dist (hf : AntilipschitzWith K f) (x y : α) :

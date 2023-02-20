@@ -54,7 +54,7 @@ integral
 -/
 
 
-open BigOperators Classical Topology Nnreal Filter uniformity BoxIntegral
+open BigOperators Classical Topology NNReal Filter uniformity BoxIntegral
 
 open Set Finset Function Filter Metric BoxIntegral.IntegrationParams
 

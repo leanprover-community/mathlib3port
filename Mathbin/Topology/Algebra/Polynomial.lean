@@ -147,7 +147,7 @@ theorem exists_forall_norm_le [ProperSpace R] (p : R[X]) : ∃ x, ∀ y, ‖p.ev
 
 section Roots
 
-open Polynomial Nnreal
+open Polynomial NNReal
 
 variable {F K : Type _} [CommRing F] [NormedField K]
 
@@ -185,7 +185,7 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
   obtain ⟨_, ⟨s, hs, rfl⟩, rfl⟩ := hr
   rw [mem_powerset_len] at hs
   lift B to ℝ≥0 using hB
-  rw [← coe_nnnorm, ← Nnreal.coe_pow, Nnreal.coe_le_coe, ← nnnormHom_apply, ← MonoidHom.coe_coe,
+  rw [← coe_nnnorm, ← NNReal.coe_pow, NNReal.coe_le_coe, ← nnnormHom_apply, ← MonoidHom.coe_coe,
     MonoidHom.map_multiset_prod]
   refine' (prod_le_pow_card _ B fun x hx => _).trans_eq (by rw [card_map, hs.2])
   obtain ⟨z, hz, rfl⟩ := Multiset.mem_map.1 hx

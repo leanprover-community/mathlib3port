@@ -86,7 +86,7 @@ Hausdorff measure, Hausdorff dimension, dimension
 -/
 
 
-open MeasureTheory Ennreal Nnreal Topology
+open MeasureTheory Ennreal NNReal Topology
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 
@@ -120,7 +120,7 @@ theorem hausdorffMeasure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s
   by
   simp only [dimH_def, lt_supᵢ_iff] at h
   rcases h with ⟨d', hsd', hdd'⟩
-  rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hdd'
+  rw [Ennreal.coe_lt_coe, ← NNReal.coe_lt_coe] at hdd'
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 #align hausdorff_measure_of_lt_dimH hausdorffMeasure_of_lt_dimH
 
@@ -141,8 +141,8 @@ theorem le_dimH_of_hausdorffMeasure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d]
 theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 :=
   by
   rw [dimH_def] at h
-  rcases Ennreal.lt_iff_exists_nnreal_btwn.1 h with ⟨d', hsd', hd'd⟩
-  rw [Ennreal.coe_lt_coe, ← Nnreal.coe_lt_coe] at hd'd
+  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 h with ⟨d', hsd', hd'd⟩
+  rw [Ennreal.coe_lt_coe, ← NNReal.coe_lt_coe] at hd'd
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supᵢ₂ d' h
 #align hausdorff_measure_of_dimH_lt hausdorffMeasure_of_dimH_lt
 
@@ -496,7 +496,7 @@ theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball
   · rw [← Ennreal.coe_nat]
     have : μH[Fintype.card ι] (Metric.ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
-    refine' dimH_of_hausdorffMeasure_ne_zero_ne_top _ _ <;> rw [Nnreal.coe_nat_cast, this]
+    refine' dimH_of_hausdorffMeasure_ne_zero_ne_top _ _ <;> rw [NNReal.coe_nat_cast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
     · exact Ennreal.ofReal_ne_top
 #align real.dimH_ball_pi Real.dimH_ball_pi

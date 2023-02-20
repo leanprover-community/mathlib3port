@@ -36,7 +36,7 @@ From a process `f`, a filtration `ℱ` and a measure `μ`, we define two process
 
 open TopologicalSpace Filter
 
-open Nnreal Ennreal MeasureTheory ProbabilityTheory BigOperators
+open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 

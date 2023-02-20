@@ -187,30 +187,30 @@ theorem two_pi_pos : 0 < 2 * π := by linarith [pi_pos]
 
 end Real
 
-namespace Nnreal
+namespace NNReal
 
 open Real
 
-open Real Nnreal
+open Real NNReal
 
 /-- `π` considered as a nonnegative real. -/
 noncomputable def pi : ℝ≥0 :=
   ⟨π, Real.pi_pos.le⟩
-#align nnreal.pi Nnreal.pi
+#align nnreal.pi NNReal.pi
 
 @[simp]
 theorem coe_real_pi : (pi : ℝ) = π :=
   rfl
-#align nnreal.coe_real_pi Nnreal.coe_real_pi
+#align nnreal.coe_real_pi NNReal.coe_real_pi
 
 theorem pi_pos : 0 < pi := by exact_mod_cast Real.pi_pos
-#align nnreal.pi_pos Nnreal.pi_pos
+#align nnreal.pi_pos NNReal.pi_pos
 
 theorem pi_ne_zero : pi ≠ 0 :=
   pi_pos.ne'
-#align nnreal.pi_ne_zero Nnreal.pi_ne_zero
+#align nnreal.pi_ne_zero NNReal.pi_ne_zero
 
-end Nnreal
+end NNReal
 
 namespace Real
 

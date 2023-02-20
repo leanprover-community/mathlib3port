@@ -97,7 +97,7 @@ protected theorem continuous [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f :
 
 @[simp]
 theorem nnnorm_map [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) (x : E) : ‖f x‖₊ = ‖x‖₊ :=
-  Nnreal.eq <| norm_map f x
+  NNReal.eq <| norm_map f x
 #align semilinear_isometry_class.nnnorm_map SemilinearIsometryClass.nnnorm_map
 
 protected theorem lipschitz [SemilinearIsometryClass 𝓕 σ₁₂ E E₂] (f : 𝓕) : LipschitzWith 1 f :=
@@ -237,7 +237,7 @@ theorem norm_map (x : E) : ‖f x‖ = ‖x‖ :=
 
 @[simp]
 theorem nnnorm_map (x : E) : ‖f x‖₊ = ‖x‖₊ :=
-  Nnreal.eq <| norm_map f x
+  NNReal.eq <| norm_map f x
 #align linear_isometry.nnnorm_map LinearIsometry.nnnorm_map
 
 protected theorem isometry : Isometry f :=

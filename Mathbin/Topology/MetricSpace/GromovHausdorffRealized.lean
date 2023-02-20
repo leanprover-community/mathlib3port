@@ -37,7 +37,7 @@ space structure on `X ⊕ Y`. The corresponding metric quotient is `optimal_GH_c
 
 noncomputable section
 
-open Classical Topology Nnreal
+open Classical Topology NNReal
 
 universe u v w
 

@@ -29,7 +29,7 @@ measure, mutually singular
 
 open Set
 
-open MeasureTheory Nnreal Ennreal
+open MeasureTheory NNReal Ennreal
 
 namespace MeasureTheory
 

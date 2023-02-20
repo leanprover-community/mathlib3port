@@ -41,9 +41,9 @@ members of the approximating sequence are nonnegative bounded continuous functio
 
 noncomputable section
 
-open Classical Nnreal Ennreal Topology BoundedContinuousFunction
+open Classical NNReal Ennreal Topology BoundedContinuousFunction
 
-open Nnreal Ennreal Set Metric Emetric Filter
+open NNReal Ennreal Set Metric Emetric Filter
 
 section thickenedIndicator
 
@@ -66,7 +66,7 @@ theorem continuous_thickenedIndicatorAux {δ : ℝ} (δ_pos : 0 < δ) (E : Set �
   let f := fun x : α => (⟨1, inf_edist x E / Ennreal.ofReal δ⟩ : ℝ≥0 × ℝ≥0∞)
   let sub := fun p : ℝ≥0 × ℝ≥0∞ => (p.1 : ℝ≥0∞) - p.2
   rw [show (fun x : α => (1 : ℝ≥0∞) - inf_edist x E / Ennreal.ofReal δ) = sub ∘ f by rfl]
-  apply (@Ennreal.continuous_nnreal_sub 1).comp
+  apply (@Ennreal.continuous_nNReal_sub 1).comp
   apply (Ennreal.continuous_div_const (Ennreal.ofReal δ) _).comp continuous_inf_edist
   norm_num [δ_pos]
 #align continuous_thickened_indicator_aux continuous_thickenedIndicatorAux
@@ -168,7 +168,7 @@ See `thickened_indicator_aux` for the unbundled `ℝ≥0∞`-valued function. -/
 @[simps]
 def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ≥0
     where
-  toFun := fun x : α => (thickenedIndicatorAux δ E x).toNnreal
+  toFun := fun x : α => (thickenedIndicatorAux δ E x).toNNReal
   continuous_toFun :=
     by
     apply
@@ -179,9 +179,9 @@ def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ
   map_bounded' := by
     use 2
     intro x y
-    rw [Nnreal.dist_eq]
+    rw [NNReal.dist_eq]
     apply (abs_sub _ _).trans
-    rw [Nnreal.abs_eq, Nnreal.abs_eq, ← one_add_one_eq_two]
+    rw [NNReal.abs_eq, NNReal.abs_eq, ← one_add_one_eq_two]
     have key := @thickenedIndicatorAux_le_one _ _ δ E
     apply add_le_add <;>
       · norm_cast
@@ -258,7 +258,7 @@ theorem thickenedIndicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δse
   intro x
   rw [show
       indicator (closure E) (fun x => (1 : ℝ≥0)) x =
-        (indicator (closure E) (fun x => (1 : ℝ≥0∞)) x).toNnreal
+        (indicator (closure E) (fun x => (1 : ℝ≥0∞)) x).toNNReal
       by refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
   by_cases x_mem : x ∈ closure E <;> simp [x_mem]

@@ -46,7 +46,7 @@ Vitali-Carathéodory theorem, in the file `measure_theory.vitali_caratheodory`.
 -/
 
 
-open Ennreal Nnreal Topology BoundedContinuousFunction
+open Ennreal NNReal Topology BoundedContinuousFunction
 
 open MeasureTheory TopologicalSpace ContinuousMap
 
@@ -97,7 +97,7 @@ theorem boundedContinuousFunction_dense [μ.WeaklyRegular] :
       by
       have : Filter.Tendsto (fun x : ℝ≥0 => 2 * x) (𝓝 0) (𝓝 (2 * 0)) :=
         filter.tendsto_id.const_mul 2
-      convert ((Nnreal.continuousAt_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
+      convert ((NNReal.continuousAt_rpow_const (Or.inr hp₀')).Tendsto.comp this).const_mul _
       simp [hp₀''.ne']
     let ε' : ℝ≥0 := ⟨ε, hε.le⟩
     have hε' : 0 < ε' := by exact_mod_cast hε

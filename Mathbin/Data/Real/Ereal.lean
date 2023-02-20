@@ -55,7 +55,7 @@ real, ereal, complete lattice
 
 open Function
 
-open Ennreal Nnreal
+open Ennreal NNReal
 
 noncomputable section
 
@@ -419,9 +419,9 @@ theorem toReal_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : Ereal) = Ennreal.
   | some x => rfl
 #align ereal.to_real_coe_ennreal Ereal.toReal_coe_ennreal
 
-theorem coe_nnreal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
+theorem coe_nNReal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
   rfl
-#align ereal.coe_nnreal_eq_coe_real Ereal.coe_nnreal_eq_coe_real
+#align ereal.coe_nnreal_eq_coe_real Ereal.coe_nNReal_eq_coe_real
 
 @[simp, norm_cast]
 theorem coe_ennreal_zero : ((0 : ℝ≥0∞) : Ereal) = 0 :=
@@ -446,12 +446,12 @@ theorem coe_ennreal_eq_top_iff : ∀ {x : ℝ≥0∞}, (x : Ereal) = ⊤ ↔ x =
     decide
 #align ereal.coe_ennreal_eq_top_iff Ereal.coe_ennreal_eq_top_iff
 
-theorem coe_nnreal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by decide
-#align ereal.coe_nnreal_ne_top Ereal.coe_nnreal_ne_top
+theorem coe_nNReal_ne_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) ≠ ⊤ := by decide
+#align ereal.coe_nnreal_ne_top Ereal.coe_nNReal_ne_top
 
 @[simp]
-theorem coe_nnreal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by decide
-#align ereal.coe_nnreal_lt_top Ereal.coe_nnreal_lt_top
+theorem coe_nNReal_lt_top (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) < ⊤ := by decide
+#align ereal.coe_nnreal_lt_top Ereal.coe_nNReal_lt_top
 
 theorem coe_ennreal_strictMono : StrictMono (coe : ℝ≥0∞ → Ereal)
   | ⊤, ⊤ => by simp
@@ -535,14 +535,14 @@ theorem coe_ennreal_mul : ∀ x y : ℝ≥0∞, ((x * y : ℝ≥0∞) : Ereal) =
     · simp only [h, coe_ennreal_zero, mul_zero]
     · have A : (0 : ℝ) < y := by
         simp only [Ennreal.coe_eq_zero] at h
-        exact Nnreal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
+        exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
       simp only [coe_nnreal_eq_coe_real, coe_ennreal_top, (· * ·), Ereal.mul, A, if_true]
   | (x : ℝ≥0), ⊤ => by
     rw [Ennreal.mul_top]; split_ifs
     · simp only [h, coe_ennreal_zero, zero_mul]
     · have A : (0 : ℝ) < x := by
         simp only [Ennreal.coe_eq_zero] at h
-        exact Nnreal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
+        exact NNReal.coe_pos.2 (bot_lt_iff_ne_bot.2 h)
       simp only [coe_nnreal_eq_coe_real, coe_ennreal_top, (· * ·), Ereal.mul, A, if_true]
   | (x : ℝ≥0), (y : ℝ≥0) => by simp [← Ennreal.coe_mul, coe_nnreal_eq_coe_real]
 #align ereal.coe_ennreal_mul Ereal.coe_ennreal_mul
@@ -882,26 +882,26 @@ theorem sub_lt_sub_of_lt_of_le {x y z t : Ereal} (h : x < y) (h' : z ≤ t) (hz 
   add_lt_add_of_lt_of_le h (neg_le_neg_iff.2 h') (by simp [ht]) (by simp [hz])
 #align ereal.sub_lt_sub_of_lt_of_le Ereal.sub_lt_sub_of_lt_of_le
 
-theorem coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal (x : ℝ) :
-    (x : Ereal) = Real.toNnreal x - Real.toNnreal (-x) :=
+theorem coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal (x : ℝ) :
+    (x : Ereal) = Real.toNNReal x - Real.toNNReal (-x) :=
   by
   rcases le_or_lt 0 x with (h | h)
-  · have : Real.toNnreal x = ⟨x, h⟩ := by
+  · have : Real.toNNReal x = ⟨x, h⟩ := by
       ext
       simp [h]
-    simp only [Real.toNnreal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero,
+    simp only [Real.toNNReal_of_nonpos (neg_nonpos.mpr h), this, sub_zero, Ennreal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
   · have : (x : Ereal) = -(-x : ℝ) := by simp
     conv_lhs => rw [this]
-    have : Real.toNnreal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩ :=
+    have : Real.toNNReal (-x) = ⟨-x, neg_nonneg.mpr h.le⟩ :=
       by
       ext
       simp [neg_nonneg.mpr h.le]
-    simp only [Real.toNnreal_of_nonpos h.le, this, zero_sub, neg_inj, coe_neg, Ennreal.coe_zero,
+    simp only [Real.toNNReal_of_nonpos h.le, this, zero_sub, neg_inj, coe_neg, Ennreal.coe_zero,
       coe_ennreal_zero, coe_coe]
     rfl
-#align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal Ereal.coe_real_ereal_eq_coe_toNnreal_sub_coe_toNnreal
+#align ereal.coe_real_ereal_eq_coe_to_nnreal_sub_coe_to_nnreal Ereal.coe_real_ereal_eq_coe_toNNReal_sub_coe_toNNReal
 
 theorem toReal_sub {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥) :
     toReal (x - y) = toReal x - toReal y :=

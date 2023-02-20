@@ -49,7 +49,7 @@ small `r`, see `eventually_nonempty_inter_smul_of_density_one`.
 
 open TopologicalSpace Set Filter Metric
 
-open Ennreal Pointwise Topology Nnreal
+open Ennreal Pointwise Topology NNReal
 
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
 def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ
@@ -604,8 +604,8 @@ instance (priority := 100) isDoublingMeasureOfIsAddHaarMeasure : IsDoublingMeasu
   refine' ⟨⟨(2 : ℝ≥0) ^ finrank ℝ E, _⟩⟩
   filter_upwards [self_mem_nhdsWithin]with r hr x
   rw [add_haar_closed_ball_mul μ x zero_le_two (le_of_lt hr), add_haar_closed_ball_center μ x,
-    Ennreal.ofReal, Real.toNnreal_pow zero_le_two]
-  simp only [Real.toNnreal_bit0, Real.toNnreal_one, le_refl]
+    Ennreal.ofReal, Real.toNNReal_pow zero_le_two]
+  simp only [[anonymous], Real.toNNReal_one, le_refl]
 #align measure_theory.measure.is_doubling_measure_of_is_add_haar_measure MeasureTheory.Measure.isDoublingMeasureOfIsAddHaarMeasure
 
 section

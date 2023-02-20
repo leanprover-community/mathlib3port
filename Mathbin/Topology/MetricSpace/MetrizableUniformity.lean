@@ -48,7 +48,7 @@ metrizable space, uniform space
 
 open Set Function Metric List Filter
 
-open Nnreal Filter uniformity
+open NNReal Filter uniformity
 
 variable {X : Type _}
 
@@ -69,18 +69,18 @@ noncomputable def ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
     where
   dist x y := ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0)
   dist_self x :=
-    (Nnreal.coe_eq_zero _).2 <|
+    (NNReal.coe_eq_zero _).2 <|
       nonpos_iff_eq_zero.1 <| (cinfᵢ_le (OrderBot.bddBelow _) []).trans_eq <| by simp [dist_self]
   dist_comm x y :=
-    Nnreal.coe_eq.2 <| by
+    NNReal.coe_eq.2 <| by
       refine' reverse_surjective.infi_congr _ fun l => _
       rw [← sum_reverse, zip_with_distrib_reverse, reverse_append, reverse_reverse,
         reverse_singleton, singleton_append, reverse_cons, reverse_reverse,
         zip_with_comm_of_comm _ dist_comm]
       simp only [length, length_append]
   dist_triangle x y z := by
-    rw [← Nnreal.coe_add, Nnreal.coe_le_coe]
-    refine' Nnreal.le_infᵢ_add_infᵢ fun lxy lyz => _
+    rw [← NNReal.coe_add, NNReal.coe_le_coe]
+    refine' NNReal.le_infᵢ_add_infᵢ fun lxy lyz => _
     calc
       (⨅ l, (zip_with d (x::l) (l ++ [z])).Sum) ≤
           (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
@@ -106,7 +106,7 @@ theorem dist_ofPrenndist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x 
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPrenndist d dist_self dist_comm)) x
         y ≤
       d x y :=
-  Nnreal.coe_le_coe.2 <| (cinfᵢ_le (OrderBot.bddBelow _) []).trans_eq <| by simp
+  NNReal.coe_le_coe.2 <| (cinfᵢ_le (OrderBot.bddBelow _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_ofPrenndist_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -131,7 +131,7 @@ theorem le_two_mul_dist_ofPrenndist (d : X → X → ℝ≥0) (dist_self : ∀ x
     splits the path into two parts of almost equal length: both `d x₀ x₁ + ... + d xₖ₋₁ xₖ` and
     `d xₖ₊₁ xₖ₊₂ + ... + d xₙ₋₁ xₙ` are less than or equal to `L / 2`.
     Then `d x₀ xₖ ≤ L`, `d xₖ xₖ₊₁ ≤ L`, and `d xₖ₊₁ xₙ ≤ L`, thus `d x₀ xₙ ≤ 2 * L`. -/
-  rw [dist_of_prenndist, ← Nnreal.coe_two, ← Nnreal.coe_mul, Nnreal.mul_infᵢ, Nnreal.coe_le_coe]
+  rw [dist_of_prenndist, ← NNReal.coe_two, ← NNReal.coe_mul, NNReal.mul_infᵢ, NNReal.coe_le_coe]
   refine' le_cinfᵢ fun l => _
   have hd₀_trans : Transitive fun x y => d x y = 0 :=
     by
@@ -238,7 +238,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
     have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 :=
-      ⟨Nnreal.half_pos one_pos, Nnreal.half_lt_self one_ne_zero⟩
+      ⟨NNReal.half_pos one_pos, NNReal.half_lt_self one_ne_zero⟩
     letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
     have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_ofPrenndist_le _ _ _
     have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=
@@ -255,7 +255,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       refine' PseudoMetricSpace.le_two_mul_dist_ofPrenndist _ _ _ fun x₁ x₂ x₃ x₄ => _
       by_cases H : ∃ n, (x₁, x₄) ∉ U n
       · refine' (dif_pos H).trans_le _
-        rw [← Nnreal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
+        rw [← NNReal.div_le_iff' two_ne_zero, ← mul_one_div (_ ^ _), ← pow_succ']
         simp only [le_max_iff, hle_d, ← not_and_or]
         rintro ⟨h₁₂, h₂₃, h₃₄⟩
         refine' Nat.find_spec H (hU_comp (lt_add_one <| Nat.find H) _)
@@ -263,13 +263,13 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       · exact (dif_neg H).trans_le (zero_le _)
     refine' ⟨I, uniformSpace_eq <| (uniformity_basis_dist_pow hr.1 hr.2).ext hB.to_has_basis _ _⟩
     · refine' fun n hn => ⟨n, hn, fun x hx => (hdist_le _ _).trans_lt _⟩
-      rwa [← Nnreal.coe_pow, Nnreal.coe_lt_coe, ← not_le, hle_d, Classical.not_not, Prod.mk.eta]
+      rwa [← NNReal.coe_pow, NNReal.coe_lt_coe, ← not_le, hle_d, Classical.not_not, Prod.mk.eta]
     · refine' fun n hn => ⟨n + 1, trivial, fun x hx => _⟩
       rw [mem_set_of_eq] at hx
       contrapose! hx
       refine' le_trans _ ((div_le_iff' (zero_lt_two' ℝ)).2 (hd_le x.1 x.2))
-      rwa [← Nnreal.coe_two, ← Nnreal.coe_div, ← Nnreal.coe_pow, Nnreal.coe_le_coe, pow_succ',
-        mul_one_div, Nnreal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
+      rwa [← NNReal.coe_two, ← NNReal.coe_div, ← NNReal.coe_pow, NNReal.coe_le_coe, pow_succ',
+        mul_one_div, NNReal.div_le_iff two_ne_zero, div_mul_cancel _ (two_ne_zero' ℝ≥0), hle_d,
         Prod.mk.eta]
 #align uniform_space.metrizable_uniformity UniformSpace.metrizable_uniformity
 

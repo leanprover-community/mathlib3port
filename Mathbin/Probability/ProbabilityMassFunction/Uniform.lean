@@ -34,7 +34,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators Nnreal Ennreal
+open Classical BigOperators NNReal Ennreal
 
 section UniformOfFinset
 

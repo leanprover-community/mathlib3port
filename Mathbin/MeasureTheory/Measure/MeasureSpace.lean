@@ -103,7 +103,7 @@ open Function MeasurableSpace
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical Topology BigOperators Filter Ennreal Nnreal Interval MeasureTheory
+open Classical Topology BigOperators Filter Ennreal NNReal Interval MeasureTheory
 
 variable {α β γ δ ι R R' : Type _}
 
@@ -910,10 +910,10 @@ instance [Semiring R] [Module R ℝ≥0∞] [IsScalarTower R ℝ≥0∞ ℝ≥0�
     toOuterMeasure_injective smul_toOuterMeasure
 
 @[simp]
-theorem coe_nnreal_smul_apply {m : MeasurableSpace α} (c : ℝ≥0) (μ : Measure α) (s : Set α) :
+theorem coe_nNReal_smul_apply {m : MeasurableSpace α} (c : ℝ≥0) (μ : Measure α) (s : Set α) :
     (c • μ) s = c * μ s :=
   rfl
-#align measure_theory.measure.coe_nnreal_smul_apply MeasureTheory.Measure.coe_nnreal_smul_apply
+#align measure_theory.measure.coe_nnreal_smul_apply MeasureTheory.Measure.coe_nNReal_smul_apply
 
 theorem ae_smul_measure_iff {p : α → Prop} {c : ℝ≥0∞} (hc : c ≠ 0) :
     (∀ᵐ x ∂c • μ, p x) ↔ ∀ᵐ x ∂μ, p x := by simp [ae_iff, hc]
@@ -1197,10 +1197,10 @@ protected theorem map_smul (c : ℝ≥0∞) (μ : Measure α) (f : α → β) : 
 #align measure_theory.measure.map_smul MeasureTheory.Measure.map_smul
 
 @[simp]
-protected theorem map_smul_nnreal (c : ℝ≥0) (μ : Measure α) (f : α → β) :
+protected theorem map_smul_nNReal (c : ℝ≥0) (μ : Measure α) (f : α → β) :
     (c • μ).map f = c • μ.map f :=
   μ.map_smul (c : ℝ≥0∞) f
-#align measure_theory.measure.map_smul_nnreal MeasureTheory.Measure.map_smul_nnreal
+#align measure_theory.measure.map_smul_nnreal MeasureTheory.Measure.map_smul_nNReal
 
 /-- We can evaluate the pushforward on measurable sets. For non-measurable sets, see
   `measure_theory.measure.le_map_apply` and `measurable_equiv.map_apply`. -/
@@ -3094,7 +3094,7 @@ theorem measure_compl_le_add_iff [IsFiniteMeasure μ] (hs : MeasurableSet s) (ht
 
 /-- The measure of the whole space with respect to a finite measure, considered as `ℝ≥0`. -/
 def measureUnivNnreal (μ : Measure α) : ℝ≥0 :=
-  (μ univ).toNnreal
+  (μ univ).toNNReal
 #align measure_theory.measure_univ_nnreal MeasureTheory.measureUnivNnreal
 
 @[simp]

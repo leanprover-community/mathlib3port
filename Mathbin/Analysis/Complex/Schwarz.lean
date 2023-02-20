@@ -109,7 +109,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   · rw [hc, norm_zero]
     exact div_nonneg hR₂.le hR₁.le
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
-  have hg' : ‖g‖₊ = 1 := Nnreal.eq hg
+  have hg' : ‖g‖₊ = 1 := NNReal.eq hg
   have hg₀ : ‖g‖₊ ≠ 0 := by simpa only [hg'] using one_ne_zero
   calc
     ‖dslope f c z‖ = ‖dslope (g ∘ f) c z‖ :=
@@ -119,7 +119,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
     _ ≤ R₂ / R₁ :=
       by
       refine' schwarz_aux (g.differentiable.comp_differentiable_on hd) (maps_to.comp _ h_maps) hz
-      simpa only [hg', Nnreal.coe_one, one_mul] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
+      simpa only [hg', NNReal.coe_one, one_mul] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
     
 #align complex.norm_dslope_le_div_of_maps_to_ball Complex.norm_dslope_le_div_of_mapsTo_ball
 

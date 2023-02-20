@@ -31,7 +31,7 @@ you should restate it here. You can also use
 
 noncomputable section
 
-open Topology Classical Nnreal BoundedContinuousFunction BigOperators
+open Topology Classical NNReal BoundedContinuousFunction BigOperators
 
 open Set Filter Metric
 

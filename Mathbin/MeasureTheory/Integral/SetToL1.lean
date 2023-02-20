@@ -75,7 +75,7 @@ with finite measure. Its value on other sets is ignored.
 
 noncomputable section
 
-open Classical Topology BigOperators Nnreal Ennreal MeasureTheory Pointwise
+open Classical Topology BigOperators NNReal Ennreal MeasureTheory Pointwise
 
 open Set Filter TopologicalSpace Ennreal Emetric
 
@@ -1333,9 +1333,9 @@ theorem norm_setToL1_le_norm_setToL1sClm (hT : DominatedFinMeasAdditive μ T C) 
       refine'
         ContinuousLinearMap.op_norm_extend_le (set_to_L1s_clm α E μ hT) (coe_to_Lp α E ℝ)
           (simple_func.dense_range one_ne_top) fun x => le_of_eq _
-      rw [Nnreal.coe_one, one_mul]
+      rw [NNReal.coe_one, one_mul]
       rfl
-    _ = ‖setToL1sClm α E μ hT‖ := by rw [Nnreal.coe_one, one_mul]
+    _ = ‖setToL1sClm α E μ hT‖ := by rw [NNReal.coe_one, one_mul]
     
 #align measure_theory.L1.norm_set_to_L1_le_norm_set_to_L1s_clm MeasureTheory.L1.norm_setToL1_le_norm_setToL1sClm
 
@@ -1367,7 +1367,7 @@ theorem norm_setToL1_le' (hT : DominatedFinMeasAdditive μ T C) : ‖setToL1 hT�
 #align measure_theory.L1.norm_set_to_L1_le' MeasureTheory.L1.norm_setToL1_le'
 
 theorem setToL1_lipschitz (hT : DominatedFinMeasAdditive μ T C) :
-    LipschitzWith (Real.toNnreal C) (setToL1 hT) :=
+    LipschitzWith (Real.toNNReal C) (setToL1 hT) :=
   (setToL1 hT).lipschitz.weaken (norm_setToL1_le' hT)
 #align measure_theory.L1.set_to_L1_lipschitz MeasureTheory.L1.setToL1_lipschitz
 
