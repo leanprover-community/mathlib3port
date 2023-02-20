@@ -130,7 +130,7 @@ theorem whiskering_linear_coyoneda₂ :
 instance linearYonedaFull : Full (linearYoneda R C) :=
   let yoneda_full :
     Full (linearYoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R))) :=
-    yoneda.yonedaFull
+    Yoneda.yonedaFull
   full.of_comp_faithful (linear_yoneda R C)
     ((whiskering_right _ _ _).obj (forget (ModuleCat.{v} R)))
 #align category_theory.linear_yoneda_full CategoryTheory.linearYonedaFull
@@ -138,7 +138,7 @@ instance linearYonedaFull : Full (linearYoneda R C) :=
 instance linearCoyonedaFull : Full (linearCoyoneda R C) :=
   let coyoneda_full :
     Full (linearCoyoneda R C ⋙ (whiskeringRight _ _ _).obj (forget (ModuleCat.{v} R))) :=
-    coyoneda.coyonedaFull
+    Coyoneda.coyonedaFull
   full.of_comp_faithful (linear_coyoneda R C)
     ((whiskering_right _ _ _).obj (forget (ModuleCat.{v} R)))
 #align category_theory.linear_coyoneda_full CategoryTheory.linearCoyonedaFull

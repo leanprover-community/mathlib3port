@@ -24,7 +24,7 @@ specification.
 
 universe u
 
-namespace Mvqpf
+namespace MvQPF
 
 open MvFunctor
 
@@ -34,11 +34,11 @@ variable (n : ℕ)
 @[nolint unused_arguments]
 def Const (A : Type _) (v : TypeVec.{u} n) : Type _ :=
   A
-#align mvqpf.const Mvqpf.Const
+#align mvqpf.const MvQPF.Const
 
 instance Const.inhabited {A α} [Inhabited A] : Inhabited (Const n A α) :=
   ⟨(default : A)⟩
-#align mvqpf.const.inhabited Mvqpf.Const.inhabited
+#align mvqpf.const.inhabited MvQPF.Const.inhabited
 
 namespace Const
 
@@ -49,47 +49,47 @@ variable {n} {A : Type u} {α β : TypeVec.{u} n} (f : α ⟹ β)
 /-- Constructor for constant functor -/
 protected def mk (x : A) : (Const n A) α :=
   x
-#align mvqpf.const.mk Mvqpf.Const.mk
+#align mvqpf.const.mk MvQPF.Const.mk
 
 /-- Destructor for constant functor -/
 protected def get (x : (Const n A) α) : A :=
   x
-#align mvqpf.const.get Mvqpf.Const.get
+#align mvqpf.const.get MvQPF.Const.get
 
 @[simp]
 protected theorem mk_get (x : (Const n A) α) : Const.mk (Const.get x) = x :=
   rfl
-#align mvqpf.const.mk_get Mvqpf.Const.mk_get
+#align mvqpf.const.mk_get MvQPF.Const.mk_get
 
 @[simp]
 protected theorem get_mk (x : A) : Const.get (Const.mk x : Const n A α) = x :=
   rfl
-#align mvqpf.const.get_mk Mvqpf.Const.get_mk
+#align mvqpf.const.get_mk MvQPF.Const.get_mk
 
 /-- `map` for constant functor -/
 protected def map : (Const n A) α → (Const n A) β := fun x => x
-#align mvqpf.const.map Mvqpf.Const.map
+#align mvqpf.const.map MvQPF.Const.map
 
 instance : MvFunctor (Const n A) where map α β f := Const.map
 
 theorem map_mk (x : A) : f <$$> Const.mk x = Const.mk x :=
   rfl
-#align mvqpf.const.map_mk Mvqpf.Const.map_mk
+#align mvqpf.const.map_mk MvQPF.Const.map_mk
 
 theorem get_map (x : (Const n A) α) : Const.get (f <$$> x) = Const.get x :=
   rfl
-#align mvqpf.const.get_map Mvqpf.Const.get_map
+#align mvqpf.const.get_map MvQPF.Const.get_map
 
-instance mvqpf : @Mvqpf _ (Const n A) Mvqpf.Const.mvfunctor
+instance mvqpf : @MvQPF _ (Const n A) MvQPF.Const.mvfunctor
     where
   p := MvPFunctor.const n A
   abs α x := MvPFunctor.const.get x
   repr α x := MvPFunctor.const.mk n x
   abs_repr := by intros <;> simp
   abs_map := by intros <;> simp <;> rfl
-#align mvqpf.const.mvqpf Mvqpf.Const.mvqpf
+#align mvqpf.const.mvqpf MvQPF.Const.mvqpf
 
 end Const
 
-end Mvqpf
+end MvQPF
 

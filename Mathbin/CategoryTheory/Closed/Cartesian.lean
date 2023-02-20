@@ -229,7 +229,7 @@ open CartesianClosed
 The typeclass argument is explicit: any instance can be used.
 -/
 def expTerminalIsoSelf [Exponentiable (⊤_ C)] : (⊤_ C) ⟹ X ≅ X :=
-  yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.leftUnitor Y).inv ≫ CartesianClosed.uncurry f)
+  Yoneda.ext ((⊤_ C) ⟹ X) X (fun Y f => (prod.leftUnitor Y).inv ≫ CartesianClosed.uncurry f)
     (fun Y f => CartesianClosed.curry ((prod.leftUnitor Y).Hom ≫ f))
     (fun Z g => by rw [curry_eq_iff, iso.hom_inv_id_assoc]) (fun Z g => by simp) fun Z W f g => by
     rw [uncurry_natural_left, prod.left_unitor_inv_naturality_assoc f]
