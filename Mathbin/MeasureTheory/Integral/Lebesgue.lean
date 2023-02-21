@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module measure_theory.integral.lebesgue
-! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
+! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2877,6 +2877,20 @@ theorem withDensity_add_right (f : α → ℝ≥0∞) {g : α → ℝ≥0∞} (h
     μ.withDensity (f + g) = μ.withDensity f + μ.withDensity g := by
   simpa only [add_comm] using with_density_add_left hg f
 #align measure_theory.with_density_add_right MeasureTheory.withDensity_add_right
+
+theorem withDensity_add_measure {m : MeasurableSpace α} (μ ν : Measure α) (f : α → ℝ≥0∞) :
+    (μ + ν).withDensity f = μ.withDensity f + ν.withDensity f :=
+  by
+  ext1 s hs
+  simp only [with_density_apply f hs, restrict_add, lintegral_add_measure, measure.add_apply]
+#align measure_theory.with_density_add_measure MeasureTheory.withDensity_add_measure
+
+theorem withDensity_sum {ι : Type _} {m : MeasurableSpace α} (μ : ι → Measure α) (f : α → ℝ≥0∞) :
+    (Sum μ).withDensity f = Sum fun n => (μ n).withDensity f :=
+  by
+  ext1 s hs
+  simp_rw [sum_apply _ hs, with_density_apply f hs, restrict_sum μ hs, lintegral_sum_measure]
+#align measure_theory.with_density_sum MeasureTheory.withDensity_sum
 
 theorem withDensity_smul (r : ℝ≥0∞) {f : α → ℝ≥0∞} (hf : Measurable f) :
     μ.withDensity (r • f) = r • μ.withDensity f :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.sum_four_squares
-! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
+! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     by decide
   let f : Fin 4 → ℤ := Vector.get (a ::ᵥ b ::ᵥ c ::ᵥ d ::ᵥ Vector.nil)
   let ⟨i, hσ⟩ :=
-    this (coe ∘ f)
+    this (fun x => coe (f x))
       (by
         rw [← @zero_mul (ZMod 2) _ m, ← show ((2 : ℤ) : ZMod 2) = 0 from rfl, ← Int.cast_mul, ←
               h] <;>
@@ -113,9 +113,11 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
           rfl)
   let σ := swap i 0
   have h01 : 2 ∣ f (σ 0) ^ 2 + f (σ 1) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by simpa [σ] using hσ.1
+    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by
+      simpa only [Int.cast_pow, Int.cast_add, Equiv.swap_apply_right, ZMod.pow_card] using hσ.1
   have h23 : 2 ∣ f (σ 2) ^ 2 + f (σ 3) ^ 2 :=
-    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by simpa using hσ.2
+    (CharP.int_cast_eq_zero_iff (ZMod 2) 2 _).1 <| by
+      simpa only [Int.cast_pow, Int.cast_add, ZMod.pow_card] using hσ.2
   let ⟨x, hx⟩ := h01
   let ⟨y, hy⟩ := h23
   ⟨(f (σ 0) - f (σ 1)) / 2, (f (σ 0) + f (σ 1)) / 2, (f (σ 2) - f (σ 3)) / 2,
@@ -125,8 +127,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
       Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ← mul_right_inj' (show (2 : ℤ) ≠ 0 by decide), ←
       h, mul_add, ← hx, ← hy]
     have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
-    have fin4univ : (univ : Finset (Fin 4)).1 = 0 ::ₘ 1 ::ₘ 2 ::ₘ 3 ::ₘ 0 := by decide
-    simpa [Finset.sum_eq_multiset_sum, fin4univ, Multiset.sum_cons, f, add_assoc] ⟩
+    simpa only [Fin.sum_univ_four, add_assoc] using this⟩
 #align nat.sum_four_squares_of_two_mul_sum_four_squares nat.sum_four_squares_of_two_mul_sum_four_squares
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :

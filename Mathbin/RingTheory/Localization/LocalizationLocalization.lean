@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Mario Carneiro, Johan Commelin, Amelia Livingston, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.localization_localization
-! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
+! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

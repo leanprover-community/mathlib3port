@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.prod
-! leanprover-community/mathlib commit 28aa996fc6fb4317f0083c4e6daf79878d81be33
+! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -314,6 +314,10 @@ theorem prod_ext {f g : M × M₂ →ₗ[R] M₃} (hl : f.comp (inl _ _ _) = g.c
 def prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : M × M₂ →ₗ[R] M₃ × M₄ :=
   (f.comp (fst R M M₂)).Prod (g.comp (snd R M M₂))
 #align linear_map.prod_map LinearMap.prodMap
+
+theorem coe_prodMap (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) : ⇑(f.Prod_map g) = Prod.map f g :=
+  rfl
+#align linear_map.coe_prod_map LinearMap.coe_prodMap
 
 @[simp]
 theorem prodMap_apply (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₄) (x) : f.Prod_map g x = (f x.1, g x.2) :=
