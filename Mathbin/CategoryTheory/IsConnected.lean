@@ -372,7 +372,7 @@ def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] :
     { Functor := Functor.star (Discrete α)
       inverse := Discrete.functor fun _ => Classical.arbitrary _
       unitIso := iso_constant _ (Classical.arbitrary _)
-      counitIso := Functor.punitExt _ _ }
+      counitIso := Functor.pUnitExt _ _ }
 #align category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
 
 variable {C : Type u₂} [Category.{u₁} C]

@@ -66,13 +66,13 @@ attribute [local instance] unique_homset_of_zero
 one morphism.
 -/
 def equivPunit [HasZeroObject C] : C ≌ Discrete PUnit :=
-  Equivalence.mk (Functor.star C) (Functor.fromPunit 0)
+  Equivalence.mk (Functor.star C) (Functor.fromPUnit 0)
     (NatIso.ofComponents
       (fun X =>
         { Hom := default
           inv := default })
       fun X Y f => by decide)
-    (Functor.punitExt _ _)
+    (Functor.pUnitExt _ _)
 #align category_theory.equiv_punit CategoryTheory.equivPunit
 
 end CategoryTheory

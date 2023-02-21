@@ -38,7 +38,7 @@ and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_nonempty_instance]
 def StructuredArrow (S : D) (T : C ⥤ D) :=
-  Comma (Functor.fromPunit S) T deriving Category
+  Comma (Functor.fromPUnit S) T deriving Category
 #align category_theory.structured_arrow CategoryTheory.StructuredArrow
 
 namespace StructuredArrow
@@ -246,7 +246,7 @@ and morphisms `C`-morphisms `Y ⟶ Y'` making the obvious triangle commute.
 -/
 @[nolint has_nonempty_instance]
 def CostructuredArrow (S : C ⥤ D) (T : D) :=
-  Comma S (Functor.fromPunit T)deriving Category
+  Comma S (Functor.fromPUnit T)deriving Category
 #align category_theory.costructured_arrow CategoryTheory.CostructuredArrow
 
 namespace CostructuredArrow
