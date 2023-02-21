@@ -202,7 +202,7 @@ theorem UniformOnFun.continuousSMul_induced_of_image_bounded (h𝔖₁ : 𝔖.No
   by
   have : TopologicalAddGroup H := by
     rw [hφ.induced]
-    exact topological_add_group_induced φ
+    exact topologicalAddGroup_induced φ
   have : (𝓝 0 : Filter H).HasBasis _ _ :=
     by
     rw [hφ.induced, nhds_induced, map_zero]
@@ -254,7 +254,7 @@ theorem UniformOnFun.continuousSMul_submodule_of_image_bounded (h𝔖₁ : 𝔖.
     (h : ∀ u ∈ H, ∀ s ∈ 𝔖, Bornology.IsVonNBounded 𝕜 (u '' s)) :
     @ContinuousSMul 𝕜 H _ _ ((UniformOnFun.topologicalSpace α E 𝔖).induced (coe : H → α →ᵤ[𝔖] E)) :=
   haveI : TopologicalAddGroup H :=
-    topological_add_group_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
+    topologicalAddGroup_induced (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E)
   UniformOnFun.continuousSMul_induced_of_image_bounded 𝕜 α E H h𝔖₁ h𝔖₂
     (linear_map.id.dom_restrict H : H →ₗ[𝕜] α → E) inducing_subtype_val fun ⟨u, hu⟩ => h u hu
 #align uniform_on_fun.has_continuous_smul_submodule_of_image_bounded UniformOnFun.continuousSMul_submodule_of_image_bounded

@@ -53,7 +53,7 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
   ⟨f,
     by
     -- It suffices to show that `f` is continuous at `0`.
-    refine' continuous_of_continuous_at_zero f _
+    refine' continuous_of_continuousAt_zero f _
     rw [continuousAt_def, f.map_zero]
     intro U hU
     -- Continuity means that `U ∈ 𝓝 0` implies that `f ⁻¹' U ∈ 𝓝 0`.

@@ -169,7 +169,7 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
     have : induced φ.to_equiv.symm inferInstance = hnorm.to_uniform_space.to_topological_space :=
       by
       refine'
-        unique_topology_of_t2 (topological_add_group_induced φ.symm.to_linear_map)
+        unique_topology_of_t2 (topologicalAddGroup_induced φ.symm.to_linear_map)
           (continuousSMul_induced φ.symm.to_linear_map) _
       rw [t2Space_iff]
       exact fun x y hxy =>

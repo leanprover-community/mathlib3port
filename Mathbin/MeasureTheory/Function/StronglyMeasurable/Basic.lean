@@ -460,7 +460,7 @@ protected theorem inv [Group β] [TopologicalGroup β] (hf : StronglyMeasurable 
 #align measure_theory.strongly_measurable.neg MeasureTheory.StronglyMeasurable.neg
 
 @[to_additive]
-protected theorem div [Div β] [HasContinuousDiv β] (hf : StronglyMeasurable f)
+protected theorem div [Div β] [ContinuousDiv β] (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable (f / g) :=
   ⟨fun n => hf.approx n / hg.approx n, fun x => (hf.tendsto_approx x).div' (hg.tendsto_approx x)⟩
 #align measure_theory.strongly_measurable.div MeasureTheory.StronglyMeasurable.div
@@ -1127,7 +1127,7 @@ protected theorem neg [AddGroup β] [TopologicalAddGroup β] (hf : FinStronglyMe
   exact hf.fin_support_approx n
 #align measure_theory.fin_strongly_measurable.neg MeasureTheory.FinStronglyMeasurable.neg
 
-protected theorem sub [AddGroup β] [HasContinuousSub β] (hf : FinStronglyMeasurable f μ)
+protected theorem sub [AddGroup β] [ContinuousSub β] (hf : FinStronglyMeasurable f μ)
     (hg : FinStronglyMeasurable g μ) : FinStronglyMeasurable (f - g) μ :=
   ⟨fun n => hf.approx n - hg.approx n, fun n =>
     (measure_mono (Function.support_sub _ _)).trans_lt
@@ -1932,7 +1932,7 @@ protected theorem neg [AddGroup β] [TopologicalAddGroup β] (hf : AeFinStrongly
   ⟨-hf.mk f, hf.finStronglyMeasurableMk.neg, hf.ae_eq_mk.neg⟩
 #align measure_theory.ae_fin_strongly_measurable.neg MeasureTheory.AeFinStronglyMeasurable.neg
 
-protected theorem sub [AddGroup β] [HasContinuousSub β] (hf : AeFinStronglyMeasurable f μ)
+protected theorem sub [AddGroup β] [ContinuousSub β] (hf : AeFinStronglyMeasurable f μ)
     (hg : AeFinStronglyMeasurable g μ) : AeFinStronglyMeasurable (f - g) μ :=
   ⟨hf.mk f - hg.mk g, hf.finStronglyMeasurableMk.sub hg.finStronglyMeasurableMk,
     hf.ae_eq_mk.sub hg.ae_eq_mk⟩

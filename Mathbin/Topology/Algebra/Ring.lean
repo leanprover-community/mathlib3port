@@ -64,19 +64,19 @@ multiplication as it is multiplication with `-1`. (See
 `topological_semiring.has_continuous_neg_of_mul` and
 `topological_semiring.to_topological_add_group`) -/
 class TopologicalRing [TopologicalSpace α] [NonUnitalNonAssocRing α] extends TopologicalSemiring α,
-  HasContinuousNeg α : Prop
+  ContinuousNeg α : Prop
 #align topological_ring TopologicalRing
 
 variable {α}
 
 /-- If `R` is a ring with a continuous multiplication, then negation is continuous as well since it
 is just multiplication with `-1`. -/
-theorem TopologicalSemiring.hasContinuousNeg_of_mul [TopologicalSpace α] [NonAssocRing α]
-    [ContinuousMul α] : HasContinuousNeg α :=
+theorem TopologicalSemiring.continuousNeg_of_mul [TopologicalSpace α] [NonAssocRing α]
+    [ContinuousMul α] : ContinuousNeg α :=
   {
     continuous_neg := by
       simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
-#align topological_semiring.has_continuous_neg_of_mul TopologicalSemiring.hasContinuousNeg_of_mul
+#align topological_semiring.has_continuous_neg_of_mul TopologicalSemiring.continuousNeg_of_mul
 
 /-- If `R` is a ring which is a topological semiring, then it is automatically a topological
 ring. This exists so that one can place a topological ring structure on `R` without explicitly
@@ -85,15 +85,14 @@ theorem TopologicalSemiring.to_topologicalRing [TopologicalSpace α] [NonAssocRi
     (h : TopologicalSemiring α) : TopologicalRing α :=
   { h,
     (haveI := h.to_has_continuous_mul
-      TopologicalSemiring.hasContinuousNeg_of_mul :
-      HasContinuousNeg α) with }
+      TopologicalSemiring.continuousNeg_of_mul :
+      ContinuousNeg α) with }
 #align topological_semiring.to_topological_ring TopologicalSemiring.to_topologicalRing
 
 -- See note [lower instance priority]
 instance (priority := 100) TopologicalRing.to_topologicalAddGroup [NonUnitalNonAssocRing α]
     [TopologicalSpace α] [TopologicalRing α] : TopologicalAddGroup α :=
-  { TopologicalRing.to_topologicalSemiring.to_continuousAdd,
-    TopologicalRing.to_hasContinuousNeg with }
+  { TopologicalRing.to_topologicalSemiring.to_continuousAdd, TopologicalRing.to_continuousNeg with }
 #align topological_ring.to_topological_add_group TopologicalRing.to_topologicalAddGroup
 
 instance (priority := 50) DiscreteTopology.topologicalSemiring [TopologicalSpace α]
@@ -188,7 +187,7 @@ instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousAdd α]
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
     TopologicalSemiring αᵐᵒᵖ where
 
-instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [HasContinuousNeg α] : HasContinuousNeg αᵐᵒᵖ
+instance [NonUnitalNonAssocRing α] [TopologicalSpace α] [ContinuousNeg α] : ContinuousNeg αᵐᵒᵖ
     where continuous_neg :=
     continuous_induced_rng.2 <| (@continuous_neg α _ _ _).comp continuous_unop
 

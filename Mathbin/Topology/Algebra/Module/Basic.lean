@@ -1566,7 +1566,7 @@ section DivisionMonoid
 variable {R M : Type _}
 
 /-- A nonzero continuous linear functional is open. -/
-protected theorem isOpenMap_of_ne_zero [TopologicalSpace R] [DivisionRing R] [HasContinuousSub R]
+protected theorem isOpenMap_of_ne_zero [TopologicalSpace R] [DivisionRing R] [ContinuousSub R]
     [AddCommGroup M] [TopologicalSpace M] [ContinuousAdd M] [Module R M] [ContinuousSMul R M]
     (f : M →L[R] R) (hf : f ≠ 0) : IsOpenMap f :=
   let ⟨x, hx⟩ := exists_ne_zero hf
@@ -2754,11 +2754,11 @@ variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [TopologicalSpace
   (S : Submodule R M)
 
 theorem isOpenMap_mkQ [TopologicalAddGroup M] : IsOpenMap S.mkQ :=
-  quotientAddGroup.isOpenMap_coe S.toAddSubgroup
+  QuotientAddGroup.isOpenMap_coe S.toAddSubgroup
 #align submodule.is_open_map_mkq Submodule.isOpenMap_mkQ
 
 instance topologicalAddGroup_quotient [TopologicalAddGroup M] : TopologicalAddGroup (M ⧸ S) :=
-  topological_add_group_quotient S.toAddSubgroup
+  topologicalAddGroup_quotient S.toAddSubgroup
 #align submodule.topological_add_group_quotient Submodule.topologicalAddGroup_quotient
 
 instance continuousSMul_quotient [TopologicalSpace R] [TopologicalAddGroup M] [ContinuousSMul R M] :

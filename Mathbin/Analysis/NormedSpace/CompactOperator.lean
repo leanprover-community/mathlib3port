@@ -225,7 +225,7 @@ theorem IsCompactOperator.add [ContinuousAdd M₂] {f g : M₁ → M₂} (hf : I
     mem_of_superset (inter_mem hAf hBg) fun x ⟨hxA, hxB⟩ => Set.add_mem_add hxA hxB⟩
 #align is_compact_operator.add IsCompactOperator.add
 
-theorem IsCompactOperator.neg [HasContinuousNeg M₄] {f : M₁ → M₄} (hf : IsCompactOperator f) :
+theorem IsCompactOperator.neg [ContinuousNeg M₄] {f : M₁ → M₄} (hf : IsCompactOperator f) :
     IsCompactOperator (-f) :=
   let ⟨K, hK, hKf⟩ := hf
   ⟨-K, hK.neg, mem_of_superset hKf fun x (hx : f x ∈ K) => Set.neg_mem_neg.mpr hx⟩
@@ -349,7 +349,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   haveI : UniformAddGroup M₂ := topological_add_commGroup_is_uniform
   -- Since `f` is linear, we only need to show that it is continuous at zero.
   -- Let `U` be a neighborhood of `0` in `M₂`.
-  refine' continuous_of_continuous_at_zero f fun U hU => _
+  refine' continuous_of_continuousAt_zero f fun U hU => _
   rw [map_zero] at hU
   -- The compactness of `f` gives us a compact set `K : set M₂` such that `f ⁻¹' K` is a
   -- neighborhood of `0` in `M₁`.

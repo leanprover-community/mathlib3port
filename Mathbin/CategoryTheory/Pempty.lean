@@ -26,6 +26,12 @@ namespace Functor
 
 variable (C : Type u) [Category.{v} C]
 
+/- warning: category_theory.functor.empty_equivalence -> CategoryTheory.Functor.emptyEquivalence is a dubious translation:
+lean 3 declaration is
+  CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} PEmpty.{succ u1}) (CategoryTheory.discreteCategory.{u1} PEmpty.{succ u1}) (CategoryTheory.Discrete.{u2} PEmpty.{succ u2}) (CategoryTheory.discreteCategory.{u2} PEmpty.{succ u2})
+but is expected to have type
+  CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} PEmpty.{succ u1}) (CategoryTheory.Discrete.{u2} PEmpty.{succ u2}) (CategoryTheory.discreteCategory.{u1} PEmpty.{succ u1}) (CategoryTheory.discreteCategory.{u2} PEmpty.{succ u2})
+Case conversion may be inaccurate. Consider using '#align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalenceₓ'. -/
 /-- Equivalence between two empty categories. -/
 def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
   Equivalence.mk
@@ -35,31 +41,39 @@ def emptyEquivalence : Discrete.{w} PEmpty ≌ Discrete.{v} PEmpty :=
       map := fun x => x.as.elim } (by tidy) (by tidy)
 #align category_theory.functor.empty_equivalence CategoryTheory.Functor.emptyEquivalence
 
+#print CategoryTheory.Functor.empty /-
 /-- The canonical functor out of the empty category. -/
 def empty : Discrete.{w} PEmpty ⥤ C :=
   Discrete.functor PEmpty.elim
 #align category_theory.functor.empty CategoryTheory.Functor.empty
+-/
 
 variable {C}
 
+#print CategoryTheory.Functor.emptyExt /-
 /-- Any two functors out of the empty category are isomorphic. -/
 def emptyExt (F G : Discrete.{w} PEmpty ⥤ C) : F ≅ G :=
   Discrete.natIso fun x => x.as.elim
 #align category_theory.functor.empty_ext CategoryTheory.Functor.emptyExt
+-/
 
+#print CategoryTheory.Functor.uniqueFromEmpty /-
 /-- Any functor out of the empty category is isomorphic to the canonical functor from the empty
 category.
 -/
 def uniqueFromEmpty (F : Discrete.{w} PEmpty ⥤ C) : F ≅ empty C :=
   emptyExt _ _
 #align category_theory.functor.unique_from_empty CategoryTheory.Functor.uniqueFromEmpty
+-/
 
+#print CategoryTheory.Functor.empty_ext' /-
 /-- Any two functors out of the empty category are *equal*. You probably want to use
 `empty_ext` instead of this.
 -/
 theorem empty_ext' (F G : Discrete.{w} PEmpty ⥤ C) : F = G :=
   Functor.ext (fun x => x.as.elim) fun x _ _ => x.as.elim
 #align category_theory.functor.empty_ext' CategoryTheory.Functor.empty_ext'
+-/
 
 end Functor
 

@@ -152,17 +152,17 @@ theorem inv_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)
 #align continuous_map.neg_comp ContinuousMap.neg_comp
 
 @[to_additive]
-instance [Div β] [HasContinuousDiv β] : Div C(α, β)
+instance [Div β] [ContinuousDiv β] : Div C(α, β)
     where div f g := ⟨f / g, f.Continuous.div' g.Continuous⟩
 
 @[simp, norm_cast, to_additive]
-theorem coe_div [Div β] [HasContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f / g :=
+theorem coe_div [Div β] [ContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f / g :=
   rfl
 #align continuous_map.coe_div ContinuousMap.coe_div
 #align continuous_map.coe_sub ContinuousMap.coe_sub
 
 @[simp, to_additive]
-theorem div_comp [Div γ] [HasContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)) :
+theorem div_comp [Div γ] [ContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)) :
     (f / g).comp h = f.comp h / g.comp h :=
   rfl
 #align continuous_map.div_comp ContinuousMap.div_comp

@@ -45,7 +45,7 @@ theorem ZeroAtFilter.add [TopologicalSpace β] [AddZeroClass β] [ContinuousAdd 
   simpa using hf.add hg
 #align filter.zero_at_filter.add Filter.ZeroAtFilter.add
 
-theorem ZeroAtFilter.neg [TopologicalSpace β] [AddGroup β] [HasContinuousNeg β] {l : Filter α}
+theorem ZeroAtFilter.neg [TopologicalSpace β] [AddGroup β] [ContinuousNeg β] {l : Filter α}
     {f : α → β} (hf : ZeroAtFilter l f) : ZeroAtFilter l (-f) := by simpa using hf.neg
 #align filter.zero_at_filter.neg Filter.ZeroAtFilter.neg
 

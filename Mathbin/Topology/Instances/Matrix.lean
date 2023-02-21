@@ -64,11 +64,11 @@ instance [TopologicalSpace α] [SMul α R] [ContinuousSMul α R] : ContinuousSMu
 instance [Add R] [ContinuousAdd R] : ContinuousAdd (Matrix m n R) :=
   Pi.continuousAdd
 
-instance [Neg R] [HasContinuousNeg R] : HasContinuousNeg (Matrix m n R) :=
-  Pi.has_continuous_neg
+instance [Neg R] [ContinuousNeg R] : ContinuousNeg (Matrix m n R) :=
+  Pi.continuousNeg
 
 instance [AddGroup R] [TopologicalAddGroup R] : TopologicalAddGroup (Matrix m n R) :=
-  Pi.topological_add_group
+  Pi.topologicalAddGroup
 
 /-- To show a function into matrices is continuous it suffices to show the coefficients of the
 resulting matrix are continuous -/

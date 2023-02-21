@@ -270,14 +270,14 @@ include hx
 theorem continuousAt_equivIco : ContinuousAt (equivIco p a) x :=
   by
   induction x using QuotientAddGroup.induction_on'
-  rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
+  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.codRestrict; exact continuousAt_toIcoMod a hp.out hx
 #align add_circle.continuous_at_equiv_Ico AddCircle.continuousAt_equivIco
 
 theorem continuousAt_equivIoc : ContinuousAt (equivIoc p a) x :=
   by
   induction x using QuotientAddGroup.induction_on'
-  rw [ContinuousAt, Filter.Tendsto, quotientAddGroup.nhds_eq, Filter.map_map]
+  rw [ContinuousAt, Filter.Tendsto, QuotientAddGroup.nhds_eq, Filter.map_map]
   apply ContinuousAt.codRestrict; exact continuousAt_toIocMod a hp.out hx
 #align add_circle.continuous_at_equiv_Ioc AddCircle.continuousAt_equivIoc
 
@@ -520,7 +520,7 @@ instance compactSpace [Fact (0 < p)] : CompactSpace <| AddCircle p :=
 /-- The action on `ℝ` by right multiplication of its the subgroup `zmultiples p` (the multiples of
 `p:ℝ`) is properly discontinuous. -/
 instance : ProperlyDiscontinuousVAdd (zmultiples p).opposite ℝ :=
-  (zmultiples p).properly_discontinuous_vadd_opposite_of_tendsto_cofinite
+  (zmultiples p).properlyDiscontinuousVAdd_opposite_of_tendsto_cofinite
     (AddSubgroup.tendsto_zmultiples_subtype_cofinite p)
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is Hausdorff. -/
@@ -533,7 +533,7 @@ instance [Fact (0 < p)] : NormalSpace (AddCircle p) :=
 
 /-- The "additive circle" `ℝ ⧸ (ℤ ∙ p)` is second-countable. -/
 instance : SecondCountableTopology (AddCircle p) :=
-  quotientAddGroup.second_countable_topology
+  QuotientAddGroup.secondCountableTopology
 
 end AddCircle
 

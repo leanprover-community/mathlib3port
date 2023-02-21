@@ -442,7 +442,7 @@ theorem SeminormFamily.withSeminorms_iff_topologicalSpace_eq_infᵢ (p : Seminor
         ⨅ i, (p i).toAddGroupSeminorm.toSeminormedAddCommGroup.toUniformSpace.toTopologicalSpace :=
   by
   rw [p.with_seminorms_iff_nhds_eq_infi,
-    TopologicalAddGroup.ext_iff inferInstance (topological_add_group_infᵢ fun i => inferInstance),
+    TopologicalAddGroup.ext_iff inferInstance (topologicalAddGroup_infᵢ fun i => inferInstance),
     nhds_infᵢ]
   trace
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `congrm #[[expr «expr = »(_, «expr⨅ , »((i), _))]]"
@@ -591,7 +591,7 @@ theorem continuous_of_continuous_comp {q : SeminormFamily 𝕝₂ F ι'} [Topolo
     [TopologicalAddGroup E] [TopologicalSpace F] [TopologicalAddGroup F] (hq : WithSeminorms q)
     (f : E →ₛₗ[τ₁₂] F) (hf : ∀ i, Continuous ((q i).comp f)) : Continuous f :=
   by
-  refine' continuous_of_continuous_at_zero f _
+  refine' continuous_of_continuousAt_zero f _
   simp_rw [ContinuousAt, f.map_zero, q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.tendsto_infᵢ,
     Filter.tendsto_comap_iff]
   intro i
@@ -718,7 +718,7 @@ theorem LinearMap.withSeminormsInduced [hι : Nonempty ι] {q : SeminormFamily �
     @WithSeminorms 𝕜 E ι _ _ _ _ (q.comp f) (induced f inferInstance) :=
   by
   letI : TopologicalSpace E := induced f inferInstance
-  letI : TopologicalAddGroup E := topological_add_group_induced f
+  letI : TopologicalAddGroup E := topologicalAddGroup_induced f
   rw [(q.comp f).withSeminorms_iff_nhds_eq_infᵢ, nhds_induced, map_zero,
     q.with_seminorms_iff_nhds_eq_infi.mp hq, Filter.comap_infᵢ]
   refine' infᵢ_congr fun i => _

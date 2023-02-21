@@ -874,12 +874,12 @@ instance (priority := 100) ContinuousMul.hasMeasurableMul [Mul γ] [ContinuousMu
 #align has_continuous_mul.has_measurable_mul ContinuousMul.hasMeasurableMul
 #align has_continuous_add.has_measurable_add ContinuousAdd.has_measurable_add
 
-instance (priority := 100) HasContinuousSub.hasMeasurableSub [Sub γ] [HasContinuousSub γ] :
+instance (priority := 100) ContinuousSub.hasMeasurableSub [Sub γ] [ContinuousSub γ] :
     HasMeasurableSub γ
     where
   measurable_const_sub c := (continuous_const.sub continuous_id).Measurable
   measurable_sub_const c := (continuous_id.sub continuous_const).Measurable
-#align has_continuous_sub.has_measurable_sub HasContinuousSub.hasMeasurableSub
+#align has_continuous_sub.has_measurable_sub ContinuousSub.hasMeasurableSub
 
 @[to_additive]
 instance (priority := 100) TopologicalGroup.hasMeasurableInv [Group γ] [TopologicalGroup γ] :
@@ -986,10 +986,10 @@ instance (priority := 100) ContinuousMul.hasMeasurableMul₂ [SecondCountableTop
 #align has_continuous_mul.has_measurable_mul₂ ContinuousMul.hasMeasurableMul₂
 #align has_continuous_add.has_measurable_mul₂ ContinuousAdd.hasMeasurableMul₂
 
-instance (priority := 100) HasContinuousSub.hasMeasurableSub₂ [SecondCountableTopology γ] [Sub γ]
-    [HasContinuousSub γ] : HasMeasurableSub₂ γ :=
+instance (priority := 100) ContinuousSub.hasMeasurableSub₂ [SecondCountableTopology γ] [Sub γ]
+    [ContinuousSub γ] : HasMeasurableSub₂ γ :=
   ⟨continuous_sub.Measurable⟩
-#align has_continuous_sub.has_measurable_sub₂ HasContinuousSub.hasMeasurableSub₂
+#align has_continuous_sub.has_measurable_sub₂ ContinuousSub.hasMeasurableSub₂
 
 instance (priority := 100) ContinuousSMul.hasMeasurableSmul₂ {M α} [TopologicalSpace M]
     [SecondCountableTopology M] [MeasurableSpace M] [OpensMeasurableSpace M] [TopologicalSpace α]

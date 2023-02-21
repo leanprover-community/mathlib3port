@@ -592,7 +592,7 @@ theorem inv_liminf {ι : Sort _} {x : ι → ℝ≥0∞} {l : Filter ι} :
   simp only [limsup_eq_infi_supr, inv_map_infi, inv_map_supr, liminf_eq_supr_infi]
 #align ennreal.inv_liminf Ennreal.inv_liminf
 
-instance : HasContinuousInv ℝ≥0∞ :=
+instance : ContinuousInv ℝ≥0∞ :=
   ⟨OrderIso.invEnnreal.Continuous⟩
 
 @[simp]

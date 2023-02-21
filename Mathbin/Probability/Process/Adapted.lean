@@ -62,8 +62,8 @@ theorem mul [Mul β] [ContinuousMul β] (hu : Adapted f u) (hv : Adapted f v) : 
 #align measure_theory.adapted.add MeasureTheory.Adapted.add
 
 @[protected, to_additive]
-theorem div [Div β] [HasContinuousDiv β] (hu : Adapted f u) (hv : Adapted f v) :
-    Adapted f (u / v) := fun i => (hu i).div (hv i)
+theorem div [Div β] [ContinuousDiv β] (hu : Adapted f u) (hv : Adapted f v) : Adapted f (u / v) :=
+  fun i => (hu i).div (hv i)
 #align measure_theory.adapted.div MeasureTheory.Adapted.div
 #align measure_theory.adapted.sub MeasureTheory.Adapted.sub
 

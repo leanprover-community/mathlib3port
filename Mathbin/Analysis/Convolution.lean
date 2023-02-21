@@ -148,7 +148,7 @@ theorem HasCompactSupport.convolution_integrand_bound_right (hcg : HasCompactSup
   hcg.convolution_integrand_bound_right_of_subset L hg hx Subset.rfl
 #align has_compact_support.convolution_integrand_bound_right HasCompactSupport.convolution_integrand_bound_right
 
-theorem Continuous.convolution_integrand_fst [HasContinuousSub G] (hg : Continuous g) (t : G) :
+theorem Continuous.convolution_integrand_fst [ContinuousSub G] (hg : Continuous g) (t : G) :
     Continuous fun x => L (f t) (g (x - t)) :=
   L.continuous₂.comp₂ continuous_const <| hg.comp <| continuous_id.sub continuous_const
 #align continuous.convolution_integrand_fst Continuous.convolution_integrand_fst
@@ -362,7 +362,7 @@ theorem HasCompactSupport.convolutionExistsAt {x₀ : G}
   ext x
   simp only [Homeomorph.neg, sub_eq_add_neg, coe_toAddUnits, Homeomorph.trans_apply,
     Equiv.neg_apply, Equiv.toFun_as_coe, Homeomorph.homeomorph_mk_coe, Equiv.coe_fn_mk,
-    Homeomorph.coe_add_left]
+    Homeomorph.coe_addLeft]
 #align has_compact_support.convolution_exists_at HasCompactSupport.convolutionExistsAt
 
 theorem HasCompactSupport.convolutionExistsRight (hcg : HasCompactSupport g)

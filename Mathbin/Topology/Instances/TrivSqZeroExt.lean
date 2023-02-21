@@ -120,7 +120,7 @@ instance [Mul R] [Add M] [SMul R M] [ContinuousMul R] [ContinuousSMul R M] [Cont
       ((continuous_fst.comp continuous_fst).smul (continuous_snd.comp continuous_snd)).add
         ((continuous_fst.comp continuous_snd).smul (continuous_snd.comp continuous_fst))⟩
 
-instance [Neg R] [Neg M] [HasContinuousNeg R] [HasContinuousNeg M] : HasContinuousNeg (tsze R M) :=
+instance [Neg R] [Neg M] [ContinuousNeg R] [ContinuousNeg M] : ContinuousNeg (tsze R M) :=
   Prod.has_continuous_neg
 
 instance [Semiring R] [AddCommMonoid M] [Module R M] [TopologicalSemiring R] [ContinuousAdd M]

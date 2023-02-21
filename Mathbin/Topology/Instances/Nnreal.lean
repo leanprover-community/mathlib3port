@@ -149,7 +149,7 @@ theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0)).HasBasis (fun a : ℝ≥0 => 0 < 
   nhds_bot_basis
 #align nnreal.nhds_zero_basis NNReal.nhds_zero_basis
 
-instance : HasContinuousSub ℝ≥0 :=
+instance : ContinuousSub ℝ≥0 :=
   ⟨((continuous_coe.fst'.sub continuous_coe.snd').max continuous_const).subtype_mk _⟩
 
 instance : HasContinuousInv₀ ℝ≥0 :=
