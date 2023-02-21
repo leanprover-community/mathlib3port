@@ -171,31 +171,31 @@ end Nontrivial
 
 variable [CharZero α] {m n : ℕ}
 
-#print Nat.StrictMono_cast /-
-theorem StrictMono_cast : StrictMono (coe : ℕ → α) :=
+#print Nat.strictMono_cast /-
+theorem strictMono_cast : StrictMono (coe : ℕ → α) :=
   mono_cast.strictMono_of_injective cast_injective
-#align nat.strict_mono_cast Nat.StrictMono_cast
+#align nat.strict_mono_cast Nat.strictMono_cast
 -/
 
 #print Nat.castOrderEmbedding /-
 /-- `coe : ℕ → α` as an `order_embedding` -/
 @[simps (config := { fullyApplied := false })]
 def castOrderEmbedding : ℕ ↪o α :=
-  OrderEmbedding.ofStrictMono coe Nat.StrictMono_cast
+  OrderEmbedding.ofStrictMono coe Nat.strictMono_cast
 #align nat.cast_order_embedding Nat.castOrderEmbedding
 -/
 
 #print Nat.cast_le /-
 @[simp, norm_cast]
 theorem cast_le : (m : α) ≤ n ↔ m ≤ n :=
-  StrictMono_cast.le_iff_le
+  strictMono_cast.le_iff_le
 #align nat.cast_le Nat.cast_le
 -/
 
 #print Nat.cast_lt /-
 @[simp, norm_cast, mono]
 theorem cast_lt : (m : α) < n ↔ m < n :=
-  StrictMono_cast.lt_iff_lt
+  strictMono_cast.lt_iff_lt
 #align nat.cast_lt Nat.cast_lt
 -/
 

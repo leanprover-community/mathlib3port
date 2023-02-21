@@ -1181,7 +1181,7 @@ variable (Γ R) [StrictOrderedSemiring Γ]
 
 /-- Casts a power series as a Hahn series with coefficients from an `strict_ordered_semiring`. -/
 def ofPowerSeries : PowerSeries R →+* HahnSeries Γ R :=
-  (HahnSeries.embDomainRingHom (Nat.castAddMonoidHom Γ) Nat.StrictMono_cast.Injective fun _ _ =>
+  (HahnSeries.embDomainRingHom (Nat.castAddMonoidHom Γ) Nat.strictMono_cast.Injective fun _ _ =>
         Nat.cast_le).comp
     (RingEquiv.toRingHom toPowerSeries.symm)
 #align hahn_series.of_power_series HahnSeries.ofPowerSeries
@@ -1196,7 +1196,7 @@ theorem ofPowerSeries_injective : Function.Injective (ofPowerSeries Γ R) :=
 theorem ofPowerSeries_apply (x : PowerSeries R) :
     ofPowerSeries Γ R x =
       HahnSeries.embDomain
-        ⟨⟨(coe : ℕ → Γ), Nat.StrictMono_cast.Injective⟩, fun a b =>
+        ⟨⟨(coe : ℕ → Γ), Nat.strictMono_cast.Injective⟩, fun a b =>
           by
           simp only [Function.Embedding.coeFn_mk]
           exact Nat.cast_le⟩
@@ -1322,7 +1322,7 @@ variable (Γ R) [StrictOrderedSemiring Γ]
   is an algebra homomorphism. -/
 @[simps]
 def ofPowerSeriesAlg : PowerSeries A →ₐ[R] HahnSeries Γ A :=
-  (HahnSeries.embDomainAlgHom (Nat.castAddMonoidHom Γ) Nat.StrictMono_cast.Injective fun _ _ =>
+  (HahnSeries.embDomainAlgHom (Nat.castAddMonoidHom Γ) Nat.strictMono_cast.Injective fun _ _ =>
         Nat.cast_le).comp
     (AlgEquiv.toAlgHom (toPowerSeriesAlg R).symm)
 #align hahn_series.of_power_series_alg HahnSeries.ofPowerSeriesAlg
