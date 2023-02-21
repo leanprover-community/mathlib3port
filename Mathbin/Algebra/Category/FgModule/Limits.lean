@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.limits
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 19a70dceb9dff0994b92d2dd049de7d84d28112b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

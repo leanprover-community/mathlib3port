@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Malo Jaffré
 
 ! This file was ported from Lean 3 source module analysis.convex.slope
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 0ee3e6f52678a420c58b1072870fed5e0240c083
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 8631e2d5ea77f6c13054d9151d82b83069680cb1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

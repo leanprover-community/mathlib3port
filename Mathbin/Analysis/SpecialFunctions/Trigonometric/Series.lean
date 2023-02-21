@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.special_functions.trigonometric.series
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit ccf84e0d918668460a34aa19d02fe2e0e2286da0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

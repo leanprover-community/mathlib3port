@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_map
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 9003f28797c0664a49e4179487267c494477d853
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.rewrite_search.explain
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 3b185739887154f8f8dfb52d14f5c798d3b23549
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

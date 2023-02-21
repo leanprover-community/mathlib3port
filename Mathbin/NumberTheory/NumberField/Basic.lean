@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan, Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.number_field.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 297610838471f6ea3368bf26d2642e63a159fbcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

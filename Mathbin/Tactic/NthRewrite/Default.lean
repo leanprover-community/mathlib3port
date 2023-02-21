@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Keeley Hoek, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.nth_rewrite.default
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit dc34b216eb1a1548161e35d328ea1ab798017033
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich
 
 ! This file was ported from Lean 3 source module measure_theory.measure.sub
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 562bbf524c595c153470e53d36c57b6f891cc480
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

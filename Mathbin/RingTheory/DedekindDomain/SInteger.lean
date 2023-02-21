@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.S_integer
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 00ab77614e085c9ef49479babba1a7d826d3232e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

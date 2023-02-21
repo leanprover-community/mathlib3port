@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Fréd�
   Heather Macbeth
 
 ! This file was ported from Lean 3 source module linear_algebra.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit ac34df03f74e6f797efd6991df2e3b7f7d8d33e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

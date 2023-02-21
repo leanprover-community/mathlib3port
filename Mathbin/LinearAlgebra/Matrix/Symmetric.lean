@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.symmetric
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 55e2dfde0cff928ce5c70926a3f2c7dee3e2dd99
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module tactic.find_unused
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e68fcf8dede813727dd0a47c873938ade3f90ef1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.fin_cases
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 82a53736b96112a948cb35faa4ab72aa705d56f8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

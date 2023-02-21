@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module algebraic_topology.simplex_category
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit dd1f8496baa505636a82748e6b652165ea888733
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

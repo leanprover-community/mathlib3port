@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 56adee5b5eef9e734d82272918300fca4f3e7cef
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

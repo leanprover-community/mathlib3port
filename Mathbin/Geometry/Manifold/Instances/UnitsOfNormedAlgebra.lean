@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.units_of_normed_algebra
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit ef901ea68d3bb1dd08f8bc3034ab6b32b2e6ecdf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

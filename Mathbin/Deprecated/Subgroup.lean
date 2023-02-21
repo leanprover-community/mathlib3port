@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Mitchell Rowett, Scott Morrison, Johan Commelin, Mario
   Michael Howes
 
 ! This file was ported from Lean 3 source module deprecated.subgroup
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit fac369018417f980cec5fcdafc766a69f88d8cfe
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

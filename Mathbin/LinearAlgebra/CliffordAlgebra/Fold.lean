@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.fold
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 446eb51ce0a90f8385f260d2b52e760e2004246b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

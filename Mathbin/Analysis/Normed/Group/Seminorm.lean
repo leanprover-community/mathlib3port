@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.seminorm
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 23c61a3ca8d0bc8e9309e0128fb40936d7a2c806
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

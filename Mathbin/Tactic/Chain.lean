@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.chain
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit a8629a591ccfe7aa27241e843ca13ed7ed7fd152
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

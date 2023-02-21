@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.types
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 7c77279eec0b350e1e15ebda7cc4f74ee3fd58fb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.universal_enveloping
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 32b08ef840dd25ca2e47e035c5da03ce16d2dc3c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

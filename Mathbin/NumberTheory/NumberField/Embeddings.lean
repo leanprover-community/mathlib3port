@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit ff6bde6f523f6228d5d3d90ffd915624da72a2ab
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

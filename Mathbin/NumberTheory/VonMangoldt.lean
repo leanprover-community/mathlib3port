@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module number_theory.von_mangoldt
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit c946d6097a6925ad16d7ec55677bbc977f9846de
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

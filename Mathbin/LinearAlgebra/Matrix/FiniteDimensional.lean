@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Patrick Massot, Casper Putz, Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.finite_dimensional
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 1cfdf5f34e1044ecb65d10be753008baaf118edf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

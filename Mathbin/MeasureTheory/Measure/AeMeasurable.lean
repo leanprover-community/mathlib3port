@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.ae_measurable
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 3310acfa9787aa171db6d4cba3945f6f275fe9f2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

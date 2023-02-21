@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.pi_Lp
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 38d38e090c9bcfba03ecbe350534d1b1a2660bd6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

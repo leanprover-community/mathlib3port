@@ -5,7 +5,7 @@ Authors: Johannes Hölzl, Kenny Lau, Johan Commelin, Mario Carneiro, Kevin Buzza
 Amelia Livingston, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.membership
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 327c3c0d9232d80e250dc8f65e7835b82b266ea5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

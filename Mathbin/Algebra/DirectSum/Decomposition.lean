@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebra.direct_sum.decomposition
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 4e861f25ba5ceef42ba0712d8ffeb32f38ad6441
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

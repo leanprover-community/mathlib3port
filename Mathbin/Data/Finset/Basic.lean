@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Jeremy Avigad, Minchao Wu, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 68cc421841f2ebb8ad2b5a35a853895feb4b850a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

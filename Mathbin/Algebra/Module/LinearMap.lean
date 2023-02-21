@@ -5,7 +5,7 @@ Authors: Nathaniel Thomas, Jeremy Avigad, Johannes Hölzl, Mario Carneiro, Anne 
   Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module algebra.module.linear_map
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit cc8e88c7c8c7bc80f91f84d11adb584bf9bd658f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

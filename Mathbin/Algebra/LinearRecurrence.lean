@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module algebra.linear_recurrence
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 85d9f2189d9489f9983c0d01536575b0233bd305
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

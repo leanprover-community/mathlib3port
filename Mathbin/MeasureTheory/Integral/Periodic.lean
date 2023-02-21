@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Alex Kontorovich, Heather Macbeth
 
 ! This file was ported from Lean 3 source module measure_theory.integral.periodic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 6a033cb3d188a12ca5c509b33e2eaac1c61916cd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

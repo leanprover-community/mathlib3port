@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Paul Lezeau, Junyan Xu
 
 ! This file was ported from Lean 3 source module field_theory.minpoly.is_integrally_closed
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 825edd3cd735e87495b0c2a2114fc3929eefce41
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

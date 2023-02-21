@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.kuratowski
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 95d4f6586d313c8c28e00f36621d2a6a66893aa6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

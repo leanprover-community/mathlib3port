@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.pi.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e97cf15cd1aec9bd5c193b2ffac5a6dc9118912b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

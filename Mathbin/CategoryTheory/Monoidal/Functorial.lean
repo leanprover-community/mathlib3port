@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functorial
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 73dd4b5411ec8fafb18a9d77c9c826907730af80
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

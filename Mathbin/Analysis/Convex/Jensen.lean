@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Yury Kudriashov
 
 ! This file was ported from Lean 3 source module analysis.convex.jensen
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit bfad3f455b388fbcc14c49d0cac884f774f14d20
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

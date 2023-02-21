@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.circle
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit f333194f5ecd1482191452c5ea60b37d4d6afa08
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

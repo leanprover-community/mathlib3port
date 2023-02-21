@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.idempotents.biproducts
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 31019c2504b17f85af7e0577585fad996935a317
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

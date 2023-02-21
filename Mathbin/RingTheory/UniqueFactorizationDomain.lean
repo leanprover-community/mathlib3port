@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Jens Wagemaker, Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.unique_factorization_domain
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit f694c7dead66f5d4c80f446c796a5aad14707f0e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

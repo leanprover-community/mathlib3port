@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ellen Arlt, Blair Shi, Sean Leather, Mario Carneiro, Johan Commelin, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module data.matrix.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 3c72a10e5b1c2b9fa755d858f2e04d964a4c5375
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

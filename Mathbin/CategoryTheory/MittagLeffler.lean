@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.mittag_leffler
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 6cb77a8eaff0ddd100e87b1591c6d3ad319514ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

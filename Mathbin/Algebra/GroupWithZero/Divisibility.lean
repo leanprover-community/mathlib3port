@@ -5,7 +5,7 @@ Authors: Jeremy Avigad, Leonardo de Moura, Floris van Doorn, Amelia Livingston, 
 Neil Strickland, Aaron Anderson
 
 ! This file was ported from Lean 3 source module algebra.group_with_zero.divisibility
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

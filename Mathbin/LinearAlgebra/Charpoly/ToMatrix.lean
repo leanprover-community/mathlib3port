@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module linear_algebra.charpoly.to_matrix
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit baab5d3091555838751562e6caad33c844bea15e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.star.subalgebra
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 160ef3e338a2a4f21a280e4c152d4016156e516d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

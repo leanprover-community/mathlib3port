@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.alternating
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 0f6670b8af2dff699de1c0b4b49039b31bc13c46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

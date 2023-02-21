@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joachim Breitner
 
 ! This file was ported from Lean 3 source module group_theory.noncomm_pi_coprod
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 6f9f36364eae3f42368b04858fd66d6d9ae730d8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

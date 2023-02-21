@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Dhruv Bhatia, Eric Wieser
 
 ! This file was ported from Lean 3 source module tactic.polyrith
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 5fc18b5e34affac9a4020b228bea6d1c67519415
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 2b69cd5eca1cc3c5f4a754abe7dab71111959a9d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

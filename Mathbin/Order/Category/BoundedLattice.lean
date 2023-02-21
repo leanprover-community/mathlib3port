@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.BoundedLattice
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit a057441eb14fe0e65a5588084e7e2c1193b82579
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

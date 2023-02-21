@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.uliftable
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit cc8c90d4ac61725a8f6c92691d8abcd2dec88115
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

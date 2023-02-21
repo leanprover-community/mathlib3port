@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.urysohns_bounded
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit af683b11d1bd89d1e85a03bf1eb5519379aabdc9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.convex.caratheodory
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e6fab1dc073396d45da082c644642c4f8bff2264
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

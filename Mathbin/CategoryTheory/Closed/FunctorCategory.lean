@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor_category
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit c0e00a871b9f6d3aca7c10fb3abdc8720a2c5313
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

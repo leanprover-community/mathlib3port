@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.num.prime
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 58581d0fe523063f5651df0619be2bf65012a94a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

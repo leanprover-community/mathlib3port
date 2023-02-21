@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.where
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 8f16001837e0fcf72ff1ed9c3738a88afc06e53e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

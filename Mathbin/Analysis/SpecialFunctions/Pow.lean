@@ -5,7 +5,7 @@ Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Sébasti
   Rémy Degenne, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.pow
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

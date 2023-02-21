@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.limits_of_products_and_equalizers
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit c3019c79074b0619edb4b27553a91b2e82242395
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Junyan Xu
 
 ! This file was ported from Lean 3 source module data.dfinsupp.ne_locus
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 13a5329a8625701af92e9a96ffc90fa787fff24d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

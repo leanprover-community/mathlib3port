@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Adam Topaz
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.valuation_ring
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit a47cda9662ff3925c6df271090b5808adbca5b46
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

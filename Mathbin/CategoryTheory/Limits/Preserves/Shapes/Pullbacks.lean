@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.pullbacks
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit f11e306adb9f2a393539d2bb4293bf1b42caa7ac
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_constant
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 98cbfb459a053c5ca44aec69f0a5a932b84c0d67
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

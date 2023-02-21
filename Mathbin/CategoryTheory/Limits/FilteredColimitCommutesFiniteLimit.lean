@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.filtered_colimit_commutes_finite_limit
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 3f409bd9df181d26dd223170da7b6830ece18442
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Sébastien Gouëzel, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interactive
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit f89fa08bb6455c96c58e860902fadc8eb2c854ed
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Yaël Dillies
 
 ! This file was ported from Lean 3 source module algebra.order.pointwise
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

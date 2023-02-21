@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul A. Reichert
 
 ! This file was ported from Lean 3 source module analysis.convex.body
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e6c26fe38ddd3d4175caf4bd24d685901eb85fe5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

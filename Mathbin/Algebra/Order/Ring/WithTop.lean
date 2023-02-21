@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e7e2ba8aa216a5833b5ed85a93317263711a36b5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

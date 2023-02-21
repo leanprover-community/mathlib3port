@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.norm_num
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e2621d935895abe70071ab828a4ee6e26a52afe4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

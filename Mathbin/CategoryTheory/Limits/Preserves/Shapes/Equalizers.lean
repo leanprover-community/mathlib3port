@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.preserves.shapes.equalizers
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 4698e35ca56a0d4fa53aa5639c3364e0a77f4eba
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

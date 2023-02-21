@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.sigma.interval
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

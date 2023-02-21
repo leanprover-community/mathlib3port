@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module linear_algebra.free_module.pid
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit b8e1f0f706714622ed3081a0ce1ea6cdc5e17371
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.normed_space.finite_dimension
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

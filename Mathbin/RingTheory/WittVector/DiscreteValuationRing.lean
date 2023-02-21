@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.discrete_valuation_ring
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 4e1eeebe63ac6d44585297e89c6e7ee5cbda487a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

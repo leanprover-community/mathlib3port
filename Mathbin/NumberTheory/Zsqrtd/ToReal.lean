@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module number_theory.zsqrtd.to_real
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e59154361202a34b26176e0de9267ef8e2dcd446
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.log
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 55d224c38461be1e8e4363247dd110137c24a4ff
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module tactic.congr
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 28b66e1a5de3072ff425b43cf9ebb9a03312b435
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

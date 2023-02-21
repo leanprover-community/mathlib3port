@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module analysis.normed.group.add_circle
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 084f76e20c88eae536222583331abd9468b08e1c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

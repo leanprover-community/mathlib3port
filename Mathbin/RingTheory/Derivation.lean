@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 0324bd3f61019c744cf2e88fd9c7373eb2fdb724
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

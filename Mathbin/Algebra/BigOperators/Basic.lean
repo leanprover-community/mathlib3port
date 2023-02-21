@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.basic
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 6c5f73fd6f6cc83122788a80a27cdd54663609f4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

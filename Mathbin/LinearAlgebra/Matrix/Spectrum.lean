@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.spectrum
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

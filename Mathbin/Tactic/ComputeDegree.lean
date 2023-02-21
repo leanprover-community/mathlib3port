@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa
 
 ! This file was ported from Lean 3 source module tactic.compute_degree
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 2d915e4ef8f55de94a850f0e5363ba8b25dc4c29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

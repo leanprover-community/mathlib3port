@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.matrix_algebra
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 6c351a8fb9b06e5a542fdf427bfb9f46724f9453
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

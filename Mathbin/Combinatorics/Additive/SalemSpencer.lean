@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.salem_spencer
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit acf5258c81d0bc7cb254ed026c1352e685df306c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, George Shakan
 
 ! This file was ported from Lean 3 source module combinatorics.additive.pluennecke_ruzsa
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit 4aab2abced69a9e579b1e6dc2856ed3db48e2cbd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

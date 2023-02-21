@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module computability.regular_expressions
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit a239cd3e7ac2c7cde36c913808f9d40c411344f6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

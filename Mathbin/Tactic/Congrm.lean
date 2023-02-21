@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Damiano Testa
 
 ! This file was ported from Lean 3 source module tactic.congrm
-! leanprover-community/mathlib commit bd9851ca476957ea4549eb19b40e7b5ade9428cc
+! leanprover-community/mathlib commit e985d48324225202b17a7f9eb50b29ba09b77b44
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
