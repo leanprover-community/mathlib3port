@@ -403,17 +403,17 @@ theorem nfpFamily_lt_ord {ι} {f : ι → Ordinal → Ordinal} {c} (hc : ℵ₀ 
   nfpFamily_lt_ord_lift hc (by rwa [(#ι).lift_id]) hf
 #align ordinal.nfp_family_lt_ord Ordinal.nfpFamily_lt_ord
 
-theorem nfpBfamily_lt_ord_lift {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
+theorem nfpBFamily_lt_ord_lift {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
     (hc' : o.card.lift < cof c) (hf : ∀ (i hi), ∀ b < c, f i hi b < c) {a} :
-    a < c → nfpBfamily.{u, v} o f a < c :=
+    a < c → nfpBFamily.{u, v} o f a < c :=
   nfpFamily_lt_ord_lift hc (by rwa [mk_ordinal_out]) fun i => hf _ _
-#align ordinal.nfp_bfamily_lt_ord_lift Ordinal.nfpBfamily_lt_ord_lift
+#align ordinal.nfp_bfamily_lt_ord_lift Ordinal.nfpBFamily_lt_ord_lift
 
-theorem nfpBfamily_lt_ord {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
+theorem nfpBFamily_lt_ord {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
     (hc' : o.card < cof c) (hf : ∀ (i hi), ∀ b < c, f i hi b < c) {a} :
-    a < c → nfpBfamily.{u, u} o f a < c :=
-  nfpBfamily_lt_ord_lift hc (by rwa [o.card.lift_id]) hf
-#align ordinal.nfp_bfamily_lt_ord Ordinal.nfpBfamily_lt_ord
+    a < c → nfpBFamily.{u, u} o f a < c :=
+  nfpBFamily_lt_ord_lift hc (by rwa [o.card.lift_id]) hf
+#align ordinal.nfp_bfamily_lt_ord Ordinal.nfpBFamily_lt_ord
 
 theorem nfp_lt_ord {f : Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c) (hf : ∀ i < c, f i < c) {a} :
     a < c → nfp f a < c :=
@@ -1188,19 +1188,19 @@ theorem nfpFamily_lt_ord_of_isRegular {ι} {f : ι → Ordinal → Ordinal} {c} 
   nfpFamily_lt_ord_lift_of_isRegular hc (by rwa [lift_id]) hc' hf
 #align cardinal.nfp_family_lt_ord_of_is_regular Cardinal.nfpFamily_lt_ord_of_isRegular
 
-theorem nfpBfamily_lt_ord_lift_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
+theorem nfpBFamily_lt_ord_lift_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
     (hc : IsRegular c) (ho : o.card.lift < c) (hc' : c ≠ ℵ₀)
     (hf : ∀ (i hi), ∀ b < c.ord, f i hi b < c.ord) {a} :
-    a < c.ord → nfpBfamily.{u, v} o f a < c.ord :=
+    a < c.ord → nfpBFamily.{u, v} o f a < c.ord :=
   nfpFamily_lt_ord_lift_of_isRegular hc (by rwa [mk_ordinal_out]) hc' fun i => hf _ _
-#align cardinal.nfp_bfamily_lt_ord_lift_of_is_regular Cardinal.nfpBfamily_lt_ord_lift_of_isRegular
+#align cardinal.nfp_bfamily_lt_ord_lift_of_is_regular Cardinal.nfpBFamily_lt_ord_lift_of_isRegular
 
-theorem nfpBfamily_lt_ord_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
+theorem nfpBFamily_lt_ord_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
     (hc : IsRegular c) (ho : o.card < c) (hc' : c ≠ ℵ₀)
     (hf : ∀ (i hi), ∀ b < c.ord, f i hi b < c.ord) {a} :
-    a < c.ord → nfpBfamily.{u, u} o f a < c.ord :=
-  nfpBfamily_lt_ord_lift_of_isRegular hc (by rwa [lift_id]) hc' hf
-#align cardinal.nfp_bfamily_lt_ord_of_is_regular Cardinal.nfpBfamily_lt_ord_of_isRegular
+    a < c.ord → nfpBFamily.{u, u} o f a < c.ord :=
+  nfpBFamily_lt_ord_lift_of_isRegular hc (by rwa [lift_id]) hc' hf
+#align cardinal.nfp_bfamily_lt_ord_of_is_regular Cardinal.nfpBFamily_lt_ord_of_isRegular
 
 theorem nfp_lt_ord_of_isRegular {f : Ordinal → Ordinal} {c} (hc : IsRegular c) (hc' : c ≠ ℵ₀)
     (hf : ∀ i < c.ord, f i < c.ord) {a} : a < c.ord → nfp f a < c.ord :=
@@ -1239,18 +1239,18 @@ theorem derivFamily_lt_ord {ι} {f : ι → Ordinal → Ordinal} {c} (hc : IsReg
   derivFamily_lt_ord_lift hc (by rwa [lift_id]) hc' hf
 #align cardinal.deriv_family_lt_ord Cardinal.derivFamily_lt_ord
 
-theorem derivBfamily_lt_ord_lift {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
+theorem derivBFamily_lt_ord_lift {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c}
     (hc : IsRegular c) (hι : o.card.lift < c) (hc' : c ≠ ℵ₀)
     (hf : ∀ (i hi), ∀ b < c.ord, f i hi b < c.ord) {a} :
-    a < c.ord → derivBfamily.{u, v} o f a < c.ord :=
+    a < c.ord → derivBFamily.{u, v} o f a < c.ord :=
   derivFamily_lt_ord_lift hc (by rwa [mk_ordinal_out]) hc' fun i => hf _ _
-#align cardinal.deriv_bfamily_lt_ord_lift Cardinal.derivBfamily_lt_ord_lift
+#align cardinal.deriv_bfamily_lt_ord_lift Cardinal.derivBFamily_lt_ord_lift
 
-theorem derivBfamily_lt_ord {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : IsRegular c)
+theorem derivBFamily_lt_ord {o : Ordinal} {f : ∀ a < o, Ordinal → Ordinal} {c} (hc : IsRegular c)
     (hι : o.card < c) (hc' : c ≠ ℵ₀) (hf : ∀ (i hi), ∀ b < c.ord, f i hi b < c.ord) {a} :
-    a < c.ord → derivBfamily.{u, u} o f a < c.ord :=
-  derivBfamily_lt_ord_lift hc (by rwa [lift_id]) hc' hf
-#align cardinal.deriv_bfamily_lt_ord Cardinal.derivBfamily_lt_ord
+    a < c.ord → derivBFamily.{u, u} o f a < c.ord :=
+  derivBFamily_lt_ord_lift hc (by rwa [lift_id]) hc' hf
+#align cardinal.deriv_bfamily_lt_ord Cardinal.derivBFamily_lt_ord
 
 theorem deriv_lt_ord {f : Ordinal.{u} → Ordinal} {c} (hc : IsRegular c) (hc' : c ≠ ℵ₀)
     (hf : ∀ i < c.ord, f i < c.ord) {a} : a < c.ord → deriv f a < c.ord :=
