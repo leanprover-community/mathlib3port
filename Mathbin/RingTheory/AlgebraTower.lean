@@ -142,7 +142,7 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
   Basis.of_repr
     (c.repr.restrictScalars R ≪≫ₗ
       (Finsupp.lcongr (Equiv.refl _) b.repr ≪≫ₗ
-        ((finsuppProdLequiv R).symm ≪≫ₗ
+        ((finsuppProdLEquiv R).symm ≪≫ₗ
           Finsupp.lcongr (Equiv.prodComm ι' ι) (LinearEquiv.refl _ _))))
 #align basis.smul Basis.smul
 

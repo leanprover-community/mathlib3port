@@ -102,7 +102,7 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
     exists_iff_exists_finsupp, coeff, aeval, eval₂_ring_hom', eval₂_eq_sum, Polynomial.sum, support,
     Finsupp.mem_supported', Finsupp.total, Finsupp.sum, Algebra.smul_def, eval₂_zero, exists_prop,
     LinearMap.id_coe, eval₂_one, id.def, not_lt, Finsupp.coe_lsum, LinearMap.coe_smulRight,
-    Finset.mem_range, AlgHom.coe_mk, Finset.mem_coe]
+    Finset.mem_range, AlgHom.coe_mks, Finset.mem_coe]
   simp_rw [@eq_comm _ y]
   exact Iff.rfl
 #align power_basis.mem_span_pow' PowerBasis.mem_span_pow'

@@ -929,7 +929,7 @@ def liftAlgHom : Ratfunc K →ₐ[S] L :=
   { liftRingHom φ.toRingHom hφ with
     commutes' := fun r => by
       simp_rw [RingHom.toFun_eq_coe, AlgHom.toRingHom_eq_coe, algebra_map_apply r,
-        lift_ring_hom_apply_div, AlgHom.coe_to_ringHom, map_one, div_one, AlgHom.commutes] }
+        lift_ring_hom_apply_div, AlgHom.coe_toRingHom, map_one, div_one, AlgHom.commutes] }
 #align ratfunc.lift_alg_hom Ratfunc.liftAlgHom
 
 theorem liftAlgHom_apply_of_fraction_ring_mk (n : K[X]) (d : K[X]⁰) :

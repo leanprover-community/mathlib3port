@@ -148,7 +148,7 @@ theorem mem_maximalIdeal (x) : x ∈ maximalIdeal R ↔ x ∈ nonunits R :=
 theorem isField_iff_maximalIdeal_eq : IsField R ↔ maximalIdeal R = ⊥ :=
   not_iff_not.mp
     ⟨Ring.ne_bot_of_isMaximal_of_not_isField inferInstance, fun h =>
-      Ring.not_isField_iff_exists_prime.mpr ⟨_, h, Ideal.IsMaximal.is_prime' _⟩⟩
+      Ring.not_isField_iff_exists_prime.mpr ⟨_, h, Ideal.IsMaximal.isPrime' _⟩⟩
 #align local_ring.is_field_iff_maximal_ideal_eq LocalRing.isField_iff_maximalIdeal_eq
 
 end LocalRing

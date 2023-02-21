@@ -74,7 +74,7 @@ def unitClosed : Closed (𝟙_ C)
                 invFun := fun a => (leftUnitor X).Hom ≫ a
                 left_inv := by tidy
                 right_inv := by tidy }
-            homEquiv_naturality_left_symm' := fun X' X Y f g =>
+            homEquiv_naturality_left_symm := fun X' X Y f g =>
               by
               dsimp
               rw [left_unitor_naturality_assoc] } }

@@ -241,7 +241,8 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
     {
       isAdj :=
         { right :=
-            FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => propIhom X.2 Y.2
+            FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y =>
+              prop_ihom X.2 Y.2
           adj :=
             Adjunction.mkOfUnitCounit
               { Unit :=
@@ -250,11 +251,11 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
                 counit :=
                   { app := fun Y => (ihom.ev X.1).app Y.1
                     naturality' := fun Y Z f => ihom.ev_naturality X.1 f }
-                left_triangle' := by
+                left_triangle := by
                   ext Y
                   simp
                   exact ihom.ev_coev X.1 Y.1
-                right_triangle' := by
+                right_triangle := by
                   ext Y
                   simp
                   exact ihom.coev_ev X.1 Y.1 } } }

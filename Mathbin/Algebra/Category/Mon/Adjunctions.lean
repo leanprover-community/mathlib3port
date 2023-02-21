@@ -55,7 +55,7 @@ instance hasForgetToSemigroup : HasForget₂ Mon SemigroupCat
 def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} SemigroupCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun S M => WithOne.lift.symm
-      homEquiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm := by
         intro S T M f g
         ext
         simp only [Equiv.symm_symm, adjoinOne_map, coe_comp]
@@ -64,7 +64,7 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ Mon.{u} SemigroupCat.{u} :=
         · rfl
         · simp }
 #align adjoin_one_adj adjoinOneAdj
-#align adjoin_zero_adj adjoin_zero_adj
+#align adjoin_zero_adj adjoinZeroAdj
 
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
 def free : Type u ⥤ Mon.{u} where
@@ -84,7 +84,7 @@ def free : Type u ⥤ Mon.{u} where
 def adj : free ⊣ forget Mon.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
-      homEquiv_naturality_left_symm' := fun X Y G f g =>
+      homEquiv_naturality_left_symm := fun X Y G f g =>
         by
         ext1
         rfl }

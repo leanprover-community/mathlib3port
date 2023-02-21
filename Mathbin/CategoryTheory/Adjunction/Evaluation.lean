@@ -90,12 +90,12 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
           right_inv := fun f => by
             dsimp
             simp }
-      homEquiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm := by
         intros
         ext
         dsimp
         simp
-      homEquiv_naturality_right' := by
+      homEquiv_naturality_right := by
         intros
         dsimp
         simp }
@@ -178,11 +178,11 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
               fan.mk_π_app]
             congr
             rw [category.comp_id] }
-      homEquiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm := by
         intros
         dsimp
         simp
-      homEquiv_naturality_right' := by
+      homEquiv_naturality_right := by
         intros
         ext
         dsimp

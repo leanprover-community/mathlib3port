@@ -604,8 +604,8 @@ def constLimAdj : (const J : C ⥤ J ⥤ C) ⊣ lim
         { app := limit.π _
           naturality' := by tidy }
       naturality' := fun _ _ _ => by tidy }
-  homEquiv_unit' c g f := limit.hom_ext fun j => by simp
-  homEquiv_counit' c g f := NatTrans.ext _ _ <| funext fun j => rfl
+  homEquiv_unit c g f := limit.hom_ext fun j => by simp
+  homEquiv_counit c g f := NatTrans.ext _ _ <| funext fun j => rfl
 #align category_theory.limits.const_lim_adj CategoryTheory.Limits.constLimAdj
 
 instance : IsRightAdjoint (lim : (J ⥤ C) ⥤ C) :=
@@ -641,7 +641,7 @@ from some other `has_limits_of_size C`.
 -/
 theorem hasLimitsOfSizeShrink [HasLimitsOfSize.{max v₁ v₂, max u₁ u₂} C] :
     HasLimitsOfSize.{v₁, u₁} C :=
-  ⟨fun J hJ => has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v₂, u₂} J).symm⟩
+  ⟨fun J hJ => has_limits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v₂, u₂} J).symm⟩
 #align category_theory.limits.has_limits_of_size_shrink CategoryTheory.Limits.hasLimitsOfSizeShrink
 
 instance (priority := 100) hasSmallestLimitsOfHasLimits [HasLimits C] : HasLimitsOfSize.{0, 0} C :=
@@ -1212,8 +1212,8 @@ def colimConstAdj : (colim : (J ⥤ C) ⥤ C) ⊣ const J
   counit :=
     { app := fun c => colimit.desc _ ⟨_, 𝟙 _⟩
       naturality' := by tidy }
-  homEquiv_unit' _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
-  homEquiv_counit' _ _ _ := colimit.hom_ext fun _ => by simp
+  homEquiv_unit _ _ _ := NatTrans.ext _ _ <| funext fun _ => rfl
+  homEquiv_counit _ _ _ := colimit.hom_ext fun _ => by simp
 #align category_theory.limits.colim_const_adj CategoryTheory.Limits.colimConstAdj
 
 instance : IsLeftAdjoint (colim : (J ⥤ C) ⥤ C) :=
@@ -1250,7 +1250,7 @@ from some other `has_colimits_of_size C`.
 -/
 theorem hasColimitsOfSizeShrink [HasColimitsOfSize.{max v₁ v₂, max u₁ u₂} C] :
     HasColimitsOfSize.{v₁, u₁} C :=
-  ⟨fun J hJ => has_colimits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v₂, u₂} J).symm⟩
+  ⟨fun J hJ => has_colimits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v₂, u₂} J).symm⟩
 #align category_theory.limits.has_colimits_of_size_shrink CategoryTheory.Limits.hasColimitsOfSizeShrink
 
 instance (priority := 100) hasSmallestColimitsOfHasColimits [HasColimits C] :

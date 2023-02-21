@@ -122,9 +122,9 @@ def preorderToPartialOrderForgetAdjunction :
           left_inv := fun f =>
             OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
           right_inv := fun f => OrderHom.ext _ _ <| funext fun x => rfl }
-      homEquiv_naturality_left_symm' := fun X Y Z f g =>
+      homEquiv_naturality_left_symm := fun X Y Z f g =>
         OrderHom.ext _ _ <| funext fun x => Quotient.inductionOn' x fun x => rfl
-      homEquiv_naturality_right' := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
+      homEquiv_naturality_right := fun X Y Z f g => OrderHom.ext _ _ <| funext fun x => rfl }
 #align Preorder_to_PartialOrder_forget_adjunction preorderToPartialOrderForgetAdjunction
 
 /-- `Preorder_to_PartialOrder` and `order_dual` commute. -/

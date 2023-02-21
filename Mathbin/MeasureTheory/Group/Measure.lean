@@ -722,7 +722,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
-  { lt_top_of_isCompact := fun K hK => Ennreal.mul_lt_top ctop hK.measure_lt_top.Ne
+  { lt_top_of_isCompact := fun K hK => Ennreal.mul_lt_top Ctop hK.measure_lt_top.Ne
     toIsOpenPosMeasure := isOpenPosMeasureSmul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 #align measure_theory.measure.is_add_haar_measure.smul MeasureTheory.Measure.IsAddHaarMeasure.smul

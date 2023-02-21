@@ -332,11 +332,11 @@ def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.toLocallyRingedSpace :=
   Adjunction.mkOfUnitCounit
     { Unit := identityToΓSpec
       counit := (NatIso.op specΓIdentity).inv
-      left_triangle' := by
+      left_triangle := by
         ext X
         erw [category.id_comp]
         exact congr_arg Quiver.Hom.op (left_triangle X)
-      right_triangle' := by
+      right_triangle := by
         ext1
         ext1 R
         erw [category.id_comp]

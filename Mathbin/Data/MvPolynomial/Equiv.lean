@@ -419,7 +419,7 @@ theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (
   apply MvPolynomial.algHom_ext
   rw [Fin.forall_fin_succ]
   simp only [aeval_X, Fin.cons_zero, AlgEquiv.toAlgHom_eq_coe, AlgHom.coe_comp,
-    Polynomial.coe_aeval_eq_eval, Polynomial.map_c, AlgHom.coe_mk, RingHom.toFun_eq_coe,
+    Polynomial.coe_aeval_eq_eval, Polynomial.map_c, AlgHom.coe_mks, RingHom.toFun_eq_coe,
     Polynomial.coe_mapRingHom, AlgEquiv.coe_algHom, comp_app, fin_succ_equiv_apply, eval₂_hom_X',
     Fin.cases_zero, Polynomial.map_x, Polynomial.eval_x, eq_self_iff_true, Fin.cons_succ,
     Fin.cases_succ, eval_X, Polynomial.eval_c, imp_true_iff, and_self_iff]

@@ -2511,7 +2511,7 @@ def Quotient.liftₐ (I : Ideal A) (f : A →ₐ[R₁] B) (hI : ∀ a : A, a ∈
       have : algebraMap R₁ (A ⧸ I) r = algebraMap A (A ⧸ I) (algebraMap R₁ A r) := by
         simp_rw [Algebra.algebraMap_eq_smul_one, smul_assoc, one_smul]
       rw [this, Ideal.Quotient.algebraMap_eq, RingHom.toFun_eq_coe, Ideal.Quotient.lift_mk,
-        AlgHom.coe_to_ringHom, Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
+        AlgHom.coe_toRingHom, Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one,
         map_smul, map_one] }
 #align ideal.quotient.liftₐ Ideal.Quotient.liftₐ
 

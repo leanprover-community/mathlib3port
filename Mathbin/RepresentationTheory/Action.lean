@@ -475,7 +475,7 @@ section Abelian
 
 /-- Auxilliary construction for the `abelian (Action V G)` instance. -/
 def abelianAux : Action V G ≌ ULift.{u} (SingleObj G) ⥤ V :=
-  (functorCategoryEquivalence V G).trans (Equivalence.congrLeft Ulift.equivalence)
+  (functorCategoryEquivalence V G).trans (Equivalence.congrLeft ULift.equivalence)
 #align Action.abelian_aux Action.abelianAux
 
 noncomputable instance [Abelian V] : Abelian (Action V G) :=

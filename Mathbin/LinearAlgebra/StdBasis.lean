@@ -235,7 +235,7 @@ protected noncomputable def basis (s : ∀ j, Basis (ιs j) R (Ms j)) :
   by
   -- The `add_comm_monoid (Π j, Ms j)` instance was hard to find.
   -- Defining this in tactic mode seems to shake up instance search enough that it works by itself.
-  refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
+  refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLEquivPiFinsupp R).symm)
   exact LinearEquiv.piCongrRight fun j => (s j).repr
 #align pi.basis Pi.basis
 
@@ -247,12 +247,12 @@ theorem basis_repr_stdBasis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j))
   by_cases hj : j = j'
   · subst hj
     simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same,
-      LinearEquiv.piCongrRight, Finsupp.sigmaFinsuppLequivPiFinsupp_symm_apply]
+      LinearEquiv.piCongrRight, Finsupp.sigmaFinsuppLEquivPiFinsupp_symm_apply]
     symm
     exact
       Finsupp.single_apply_left
         (fun i i' (h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩) => eq_of_hEq (Sigma.mk.inj h).2) _ _ _
-  simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigmaFinsuppLequivPiFinsupp_symm_apply,
+  simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigmaFinsuppLEquivPiFinsupp_symm_apply,
     LinearEquiv.piCongrRight]
   dsimp
   rw [std_basis_ne _ _ _ _ (Ne.symm hj), LinearEquiv.map_zero, Finsupp.zero_apply,

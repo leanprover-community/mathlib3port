@@ -188,7 +188,7 @@ theorem equiv_of_dim_eq_lift_dim
   rw [← Cardinal.lift_inj.1 m.mk_eq_dim, ← Cardinal.lift_inj.1 m'.mk_eq_dim] at h
   rcases Quotient.exact h with ⟨e⟩
   let e := (equiv.ulift.symm.trans e).trans Equiv.ulift
-  exact ⟨m.repr ≪≫ₗ Finsupp.domLcongr e ≪≫ₗ m'.repr.symm⟩
+  exact ⟨m.repr ≪≫ₗ Finsupp.domLCongr e ≪≫ₗ m'.repr.symm⟩
 #align equiv_of_dim_eq_lift_dim equiv_of_dim_eq_lift_dim
 
 /-- Two `K`-vector spaces are equivalent if their dimension is the same. -/

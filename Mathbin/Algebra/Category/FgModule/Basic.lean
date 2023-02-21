@@ -167,10 +167,10 @@ variable (K : Type u) [Field K]
 instance (V W : FgModule K) : Module.Finite K (V ⟶ W) :=
   (by infer_instance : Module.Finite K (V.obj →ₗ[K] W.obj))
 
-instance closedPredicateModuleFinite :
+instance closedPredicate_module_finite :
     MonoidalCategory.ClosedPredicate fun V : ModuleCat.{u} K => Module.Finite K V
     where prop_ihom' X Y hX hY := @LinearMap.finiteDimensional K _ X _ _ hX Y _ _ hY
-#align fgModule.closed_predicate_module_finite FgModule.closedPredicateModuleFinite
+#align fgModule.closed_predicate_module_finite FgModule.closedPredicate_module_finite
 
 instance : MonoidalClosed (FgModule K) := by dsimp_result => dsimp [FgModule]; infer_instance
 

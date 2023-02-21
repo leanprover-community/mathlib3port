@@ -184,7 +184,7 @@ theorem gelfandTransform_bijective : Function.Bijective (gelfandTransform ℂ A)
     `weak_dual.star_hom_class`, which is a nontrivial result. -/
   · obtain ⟨f, ⟨a, rfl⟩, rfl⟩ := subalgebra.mem_map.mp hf
     refine' ⟨star a, ContinuousMap.ext fun ψ => _⟩
-    simpa only [gelfandTransform_map_star a, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom]
+    simpa only [gelfandTransform_map_star a, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
 #align gelfand_transform_bijective gelfandTransform_bijective
 
 /-- The Gelfand transform as a `star_alg_equiv` between a commutative unital C⋆-algebra over `ℂ`

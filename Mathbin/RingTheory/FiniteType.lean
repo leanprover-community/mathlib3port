@@ -184,7 +184,7 @@ theorem isNoetherianRing (R S : Type _) [CommRing R] [CommRing S] [Algebra R S]
   apply
     isNoetherianRing_of_surjective (MvPolynomial s R) S
       (MvPolynomial.aeval coe : MvPolynomial s R →ₐ[R] S)
-  rw [← Set.range_iff_surjective, AlgHom.coe_to_ringHom, ← AlgHom.coe_range, ←
+  rw [← Set.range_iff_surjective, AlgHom.coe_toRingHom, ← AlgHom.coe_range, ←
     Algebra.adjoin_range_eq_range_aeval, Subtype.range_coe_subtype, Finset.setOf_mem, hs]
   rfl
 #align algebra.finite_type.is_noetherian_ring Algebra.FiniteType.isNoetherianRing

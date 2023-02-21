@@ -667,10 +667,10 @@ def sheafificationAdjunction : presheafToSheaf J D ⊣ sheafToPresheaf J D :=
           invFun := fun e => ⟨J.sheafifyLift e Q.2⟩
           left_inv := fun e => Sheaf.Hom.ext _ _ <| (J.sheafifyLift_unique _ _ _ rfl).symm
           right_inv := fun e => J.toSheafify_sheafifyLift _ _ }
-      homEquiv_naturality_left_symm' := by
+      homEquiv_naturality_left_symm := by
         intro P Q R η γ; ext1; dsimp; symm
         apply J.sheafify_map_sheafify_lift
-      homEquiv_naturality_right' := fun P Q R η γ =>
+      homEquiv_naturality_right := fun P Q R η γ =>
         by
         dsimp
         rw [category.assoc] }

@@ -49,11 +49,11 @@ protected def whiskerRight (adj : F ⊣ G) :
             ext
             dsimp
             simp }
-      left_triangle' := by
+      left_triangle := by
         ext
         dsimp
         simp
-      right_triangle' := by
+      right_triangle := by
         ext
         dsimp
         simp }
@@ -82,12 +82,12 @@ protected def whiskerLeft (adj : F ⊣ G) :
             ext
             dsimp
             simp }
-      left_triangle' := by
+      left_triangle := by
         ext x
         dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]
         simp
-      right_triangle' := by
+      right_triangle := by
         ext x
         dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]

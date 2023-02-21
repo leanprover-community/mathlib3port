@@ -206,7 +206,7 @@ theorem matPolyEquiv_eq_x_pow_sub_c {K : Type _} (k : ℕ) [Field K] (M : Matrix
   by
   ext m
   rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
-    AlgHom.coe_to_ringHom, DMatrix.sub_apply, coeff_X_pow]
+    AlgHom.coe_toRingHom, DMatrix.sub_apply, coeff_X_pow]
   by_cases hij : i = j
   · rw [hij, charmatrix_apply_eq, AlgHom.map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow,
       coeff_C]

@@ -28,11 +28,13 @@ open MvFunctor
 variable {n m : ℕ} (F : TypeVec.{u} n → Type _) [fF : MvFunctor F] [q : MvQPF F]
   (G : Fin2 n → TypeVec.{u} m → Type u) [fG : ∀ i, MvFunctor <| G i] [q' : ∀ i, MvQPF <| G i]
 
+#print MvQPF.Comp /-
 /-- Composition of an `n`-ary functor with `n` `m`-ary
 functors gives us one `m`-ary functor -/
 def Comp (v : TypeVec.{u} m) : Type _ :=
   F fun i : Fin2 n => G i v
 #align mvqpf.comp MvQPF.Comp
+-/
 
 namespace Comp
 
@@ -43,21 +45,37 @@ variable {F G} {α β : TypeVec.{u} m} (f : α ⟹ β)
 instance [I : Inhabited (F fun i : Fin2 n => G i α)] : Inhabited (Comp F G α) :=
   I
 
+#print MvQPF.Comp.mk /-
 /-- Constructor for functor composition -/
 protected def mk (x : F fun i => G i α) : (Comp F G) α :=
   x
 #align mvqpf.comp.mk MvQPF.Comp.mk
+-/
 
+#print MvQPF.Comp.get /-
 /-- Destructor for functor composition -/
 protected def get (x : (Comp F G) α) : F fun i => G i α :=
   x
 #align mvqpf.comp.get MvQPF.Comp.get
+-/
 
+/- warning: mvqpf.comp.mk_get -> MvQPF.Comp.mk_get is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u1} n) -> Type.{u2}} {G : (Fin2 n) -> (TypeVec.{u1} m) -> Type.{u1}} {α : TypeVec.{u1} m} (x : MvQPF.Comp.{u1, u2} n m F G α), Eq.{succ u2} (MvQPF.Comp.{u1, u2} n m F G α) (MvQPF.Comp.mk.{u1, u2} n m F G α (MvQPF.Comp.get.{u1, u2} n m F G α x)) x
+but is expected to have type
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u2} n) -> Type.{u1}} {G : (Fin2 n) -> (TypeVec.{u2} m) -> Type.{u2}} {α : TypeVec.{u2} m} (x : MvQPF.Comp.{u2, u1} n m F G α), Eq.{succ u1} (MvQPF.Comp.{u2, u1} n m F (fun (i : Fin2 n) => G i) α) (MvQPF.Comp.mk.{u2, u1} n m F (fun (i : Fin2 n) => G i) α (MvQPF.Comp.get.{u2, u1} n m F G α x)) x
+Case conversion may be inaccurate. Consider using '#align mvqpf.comp.mk_get MvQPF.Comp.mk_getₓ'. -/
 @[simp]
 protected theorem mk_get (x : (Comp F G) α) : Comp.mk (Comp.get x) = x :=
   rfl
 #align mvqpf.comp.mk_get MvQPF.Comp.mk_get
 
+/- warning: mvqpf.comp.get_mk -> MvQPF.Comp.get_mk is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u1} n) -> Type.{u2}} {G : (Fin2 n) -> (TypeVec.{u1} m) -> Type.{u1}} {α : TypeVec.{u1} m} (x : F (fun (i : Fin2 n) => G i α)), Eq.{succ u2} (F (fun (i : Fin2 n) => G i α)) (MvQPF.Comp.get.{u1, u2} n m F G α (MvQPF.Comp.mk.{u1, u2} n m F G α x)) x
+but is expected to have type
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u2} n) -> Type.{u1}} {G : (Fin2 n) -> (TypeVec.{u2} m) -> Type.{u2}} {α : TypeVec.{u2} m} (x : F (fun (i : Fin2 n) => G i α)), Eq.{succ u1} (F (fun (i : Fin2 n) => G i α)) (MvQPF.Comp.get.{u2, u1} n m F (fun (i : Fin2 n) => G i) α (MvQPF.Comp.mk.{u2, u1} n m F (fun (i : Fin2 n) => G i) α x)) x
+Case conversion may be inaccurate. Consider using '#align mvqpf.comp.get_mk MvQPF.Comp.get_mkₓ'. -/
 @[simp]
 protected theorem get_mk (x : F fun i => G i α) : Comp.get (Comp.mk x) = x :=
   rfl
@@ -65,24 +83,40 @@ protected theorem get_mk (x : F fun i => G i α) : Comp.get (Comp.mk x) = x :=
 
 include fG
 
+#print MvQPF.Comp.map' /-
 /-- map operation defined on a vector of functors -/
 protected def map' : (fun i : Fin2 n => G i α) ⟹ fun i : Fin2 n => G i β := fun i => map f
 #align mvqpf.comp.map' MvQPF.Comp.map'
+-/
 
 include fF
 
+#print MvQPF.Comp.map /-
 /-- The composition of functors is itself functorial -/
 protected def map : (Comp F G) α → (Comp F G) β :=
   (map fun i => map f : (F fun i => G i α) → F fun i => G i β)
 #align mvqpf.comp.map MvQPF.Comp.map
+-/
 
 instance : MvFunctor (Comp F G) where map α β := Comp.map
 
+/- warning: mvqpf.comp.map_mk -> MvQPF.Comp.map_mk is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u1} n) -> Type.{u2}} [fF : MvFunctor.{u1, u2} n F] {G : (Fin2 n) -> (TypeVec.{u1} m) -> Type.{u1}} [fG : forall (i : Fin2 n), MvFunctor.{u1, u1} m (G i)] {α : TypeVec.{u1} m} {β : TypeVec.{u1} m} (f : TypeVec.Arrow.{u1, u1} m α β) (x : F (fun (i : Fin2 n) => G i α)), Eq.{succ u2} (MvQPF.Comp.{u1, u2} n m F (fun (i : Fin2 n) {α : TypeVec.{u1} m} => G i α) β) (MvFunctor.map.{u1, u2} m (MvQPF.Comp.{u1, u2} n m F (fun (i : Fin2 n) {α : TypeVec.{u1} m} => G i α)) (MvQPF.Comp.mvfunctor.{u1, u2} n m F fF (fun (i : Fin2 n) {α : TypeVec.{u1} m} => G i α) (fun (i : Fin2 n) => fG i)) α β f (MvQPF.Comp.mk.{u1, u2} n m F (fun (i : Fin2 n) {α : TypeVec.{u1} m} => G i α) α x)) (MvQPF.Comp.mk.{u1, u2} n m F (fun (i : Fin2 n) {α : TypeVec.{u1} m} => G i α) β (MvFunctor.map.{u1, u2} n F fF (fun (i : Fin2 n) => G i α) (fun (i : Fin2 n) => G i β) (fun (i : Fin2 n) (x : G i α) => MvFunctor.map.{u1, u1} m (fun {α : TypeVec.{u1} m} => G i α) (fG i) α β f x) x))
+but is expected to have type
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u2} n) -> Type.{u1}} [fF : MvFunctor.{u2, u1} n F] {G : (Fin2 n) -> (TypeVec.{u2} m) -> Type.{u2}} [fG : forall (i : Fin2 n), MvFunctor.{u2, u2} m (G i)] {α : TypeVec.{u2} m} {β : TypeVec.{u2} m} (f : TypeVec.Arrow.{u2, u2} m α β) (x : F (fun (i : Fin2 n) => G i α)), Eq.{succ u1} (MvQPF.Comp.{u2, u1} n m F (fun (i : Fin2 n) => G i) β) (MvFunctor.map.{u2, u1} m (MvQPF.Comp.{u2, u1} n m F (fun (i : Fin2 n) => G i)) (MvQPF.Comp.instMvFunctorComp.{u2, u1} n m F fF (fun (i : Fin2 n) => G i) (fun (i : Fin2 n) => fG i)) α β f (MvQPF.Comp.mk.{u2, u1} n m F (fun (i : Fin2 n) => G i) α x)) (MvQPF.Comp.mk.{u2, u1} n m F (fun (i : Fin2 n) => G i) β (MvFunctor.map.{u2, u1} n F fF (fun (i : Fin2 n) => G i α) (fun (i : Fin2 n) => G i β) (fun (i : Fin2 n) (x : G i α) => MvFunctor.map.{u2, u2} m (G i) (fG i) α β f x) x))
+Case conversion may be inaccurate. Consider using '#align mvqpf.comp.map_mk MvQPF.Comp.map_mkₓ'. -/
 theorem map_mk (x : F fun i => G i α) :
     f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
 #align mvqpf.comp.map_mk MvQPF.Comp.map_mk
 
+/- warning: mvqpf.comp.get_map -> MvQPF.Comp.get_map is a dubious translation:
+lean 3 declaration is
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u1} n) -> Type.{u2}} [fF : MvFunctor.{u1, u2} n F] {G : (Fin2 n) -> (TypeVec.{u1} m) -> Type.{u1}} [fG : forall (i : Fin2 n), MvFunctor.{u1, u1} m (G i)] {α : TypeVec.{u1} m} {β : TypeVec.{u1} m} (f : TypeVec.Arrow.{u1, u1} m α β) (x : MvQPF.Comp.{u1, u2} n m F G α), Eq.{succ u2} (F (fun (i : Fin2 n) => G i β)) (MvQPF.Comp.get.{u1, u2} n m F G β (MvFunctor.map.{u1, u2} m (MvQPF.Comp.{u1, u2} n m F G) (MvQPF.Comp.mvfunctor.{u1, u2} n m F fF G (fun (i : Fin2 n) => fG i)) α β f x)) (MvFunctor.map.{u1, u2} n F fF (fun (i : Fin2 n) => G i α) (fun (i : Fin2 n) => G i β) (fun (i : Fin2 n) (x : G i α) => MvFunctor.map.{u1, u1} m (fun {α : TypeVec.{u1} m} => G i α) (fG i) α β f x) (MvQPF.Comp.get.{u1, u2} n m F G α x))
+but is expected to have type
+  forall {n : Nat} {m : Nat} {F : (TypeVec.{u2} n) -> Type.{u1}} [fF : MvFunctor.{u2, u1} n F] {G : (Fin2 n) -> (TypeVec.{u2} m) -> Type.{u2}} [fG : forall (i : Fin2 n), MvFunctor.{u2, u2} m (G i)] {α : TypeVec.{u2} m} {β : TypeVec.{u2} m} (f : TypeVec.Arrow.{u2, u2} m α β) (x : MvQPF.Comp.{u2, u1} n m F G α), Eq.{succ u1} (F (fun (i : Fin2 n) => G i β)) (MvQPF.Comp.get.{u2, u1} n m F G β (MvFunctor.map.{u2, u1} m (MvQPF.Comp.{u2, u1} n m F G) (MvQPF.Comp.instMvFunctorComp.{u2, u1} n m F fF G (fun (i : Fin2 n) => fG i)) α β f x)) (MvFunctor.map.{u2, u1} n F fF (fun (i : Fin2 n) => G i α) (fun (i : Fin2 n) => G i β) (fun (i : Fin2 n) (x : G i α) => MvFunctor.map.{u2, u2} m (G i) (fG i) α β f x) (MvQPF.Comp.get.{u2, u1} n m F (fun (i : Fin2 n) => G i) α x))
+Case conversion may be inaccurate. Consider using '#align mvqpf.comp.get_map MvQPF.Comp.get_mapₓ'. -/
 theorem get_map (x : Comp F G α) :
     Comp.get (f <$$> x) = (fun i (x : G i α) => f <$$> x) <$$> Comp.get x :=
   rfl

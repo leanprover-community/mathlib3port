@@ -100,7 +100,7 @@ def limitCone (F : J ⥤ AlgebraCat.{max v w} R) : Cone F
   π :=
     { app := limitπAlgHom F
       naturality' := fun j j' f =>
-        AlgHom.coeFn_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
+        AlgHom.coe_fn_injective ((Types.limitCone (F ⋙ forget _)).π.naturality f) }
 #align Algebra.has_limits.limit_cone AlgebraCat.HasLimits.limitCone
 
 /-- Witness that the limit cone in `Algebra R` is a limit cone.

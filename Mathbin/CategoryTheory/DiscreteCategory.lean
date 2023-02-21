@@ -42,6 +42,7 @@ namespace CategoryTheory
 -- morphism levels before object levels. See note [category_theory universes].
 universe v₁ v₂ v₃ u₁ u₁' u₂ u₃
 
+#print CategoryTheory.Discrete /-
 -- This is intentionally a structure rather than a type synonym
 -- to enforce using `discrete_equiv` (or `discrete.mk` and `discrete.as`) to move between
 -- `discrete α` and `α`. Otherwise there is too much API leakage.
@@ -52,14 +53,18 @@ with the only morphisms being equalities.
 structure Discrete (α : Type u₁) where
   as : α
 #align category_theory.discrete CategoryTheory.Discrete
+-/
 
+#print CategoryTheory.Discrete.mk_as /-
 @[simp]
 theorem Discrete.mk_as {α : Type u₁} (X : Discrete α) : Discrete.mk X.as = X :=
   by
   ext
   rfl
 #align category_theory.discrete.mk_as CategoryTheory.Discrete.mk_as
+-/
 
+#print CategoryTheory.discreteEquiv /-
 /-- `discrete α` is equivalent to the original type `α`.-/
 @[simps]
 def discreteEquiv {α : Type u₁} : Discrete α ≃ α
@@ -69,10 +74,12 @@ def discreteEquiv {α : Type u₁} : Discrete α ≃ α
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.discrete_equiv CategoryTheory.discreteEquiv
+-/
 
 instance {α : Type u₁} [DecidableEq α] : DecidableEq (Discrete α) :=
   discreteEquiv.DecidableEq
 
+#print CategoryTheory.discreteCategory /-
 /-- The "discrete" category on a type, whose morphisms are equalities.
 
 Because we do not allow morphisms in `Prop` (only in `Type`),
@@ -91,6 +98,7 @@ instance discreteCategory (α : Type u₁) : SmallCategory (Discrete α)
     rcases f with ⟨⟨⟨⟩⟩⟩
     exact g
 #align category_theory.discrete_category CategoryTheory.discreteCategory
+-/
 
 namespace Discrete
 
@@ -119,11 +127,14 @@ attribute [local tidy] tactic.discrete_cases
 instance [Unique α] : Unique (Discrete α) :=
   Unique.mk' (Discrete α)
 
+#print CategoryTheory.Discrete.eq_of_hom /-
 /-- Extract the equation from a morphism in a discrete category. -/
 theorem eq_of_hom {X Y : Discrete α} (i : X ⟶ Y) : X.as = Y.as :=
   i.down.down
 #align category_theory.discrete.eq_of_hom CategoryTheory.Discrete.eq_of_hom
+-/
 
+#print CategoryTheory.Discrete.eqToHom /-
 /-- Promote an equation between the wrapped terms in `X Y : discrete α` to a morphism `X ⟶ Y`
 in the discrete category. -/
 abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
@@ -132,7 +143,9 @@ abbrev eqToHom {X Y : Discrete α} (h : X.as = Y.as) : X ⟶ Y :=
       ext
       exact h)
 #align category_theory.discrete.eq_to_hom CategoryTheory.Discrete.eqToHom
+-/
 
+#print CategoryTheory.Discrete.eqToIso /-
 /-- Promote an equation between the wrapped terms in `X Y : discrete α` to an isomorphism `X ≅ Y`
 in the discrete category. -/
 abbrev eqToIso {X Y : Discrete α} (h : X.as = Y.as) : X ≅ Y :=
@@ -141,21 +154,28 @@ abbrev eqToIso {X Y : Discrete α} (h : X.as = Y.as) : X ≅ Y :=
       ext
       exact h)
 #align category_theory.discrete.eq_to_iso CategoryTheory.Discrete.eqToIso
+-/
 
+#print CategoryTheory.Discrete.eqToHom' /-
 /-- A variant of `eq_to_hom` that lifts terms to the discrete category. -/
 abbrev eqToHom' {a b : α} (h : a = b) : Discrete.mk a ⟶ Discrete.mk b :=
   eqToHom h
 #align category_theory.discrete.eq_to_hom' CategoryTheory.Discrete.eqToHom'
+-/
 
+#print CategoryTheory.Discrete.eqToIso' /-
 /-- A variant of `eq_to_iso` that lifts terms to the discrete category. -/
 abbrev eqToIso' {a b : α} (h : a = b) : Discrete.mk a ≅ Discrete.mk b :=
   eqToIso h
 #align category_theory.discrete.eq_to_iso' CategoryTheory.Discrete.eqToIso'
+-/
 
+#print CategoryTheory.Discrete.id_def /-
 @[simp]
 theorem id_def (X : Discrete α) : ULift.up (PLift.up (Eq.refl X.as)) = 𝟙 X :=
   rfl
 #align category_theory.discrete.id_def CategoryTheory.Discrete.id_def
+-/
 
 variable {C : Type u₂} [Category.{v₂} C]
 
@@ -163,6 +183,7 @@ instance {I : Type u₁} {i j : Discrete I} (f : i ⟶ j) : IsIso f :=
   ⟨⟨eqToHom (eq_of_hom f).symm, by tidy⟩⟩
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Discrete.functor /-
 /-- Any function `I → C` gives a functor `discrete I ⥤ C`.
 -/
 def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C
@@ -175,17 +196,31 @@ def functor {I : Type u₁} (F : I → C) : Discrete I ⥤ C
     cases f
     exact 𝟙 (F X)
 #align category_theory.discrete.functor CategoryTheory.Discrete.functor
+-/
 
+/- warning: category_theory.discrete.functor_obj -> CategoryTheory.Discrete.functor_obj is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} (F : I -> C) (i : I), Eq.{succ u3} C (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F) (CategoryTheory.Discrete.mk.{u2} I i)) (F i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} (F : I -> C) (i : I), Eq.{succ u3} C (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F)) (CategoryTheory.Discrete.mk.{u2} I i)) (F i)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.functor_obj CategoryTheory.Discrete.functor_objₓ'. -/
 @[simp]
 theorem functor_obj {I : Type u₁} (F : I → C) (i : I) :
     (Discrete.functor F).obj (Discrete.mk i) = F i :=
   rfl
 #align category_theory.discrete.functor_obj CategoryTheory.Discrete.functor_obj
 
+/- warning: category_theory.discrete.functor_map -> CategoryTheory.Discrete.functor_map is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} (F : I -> C) {i : CategoryTheory.Discrete.{u2} I} (f : Quiver.Hom.{succ u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) i i), Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F) i) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F) i)) (CategoryTheory.Functor.map.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F) i i f) (CategoryTheory.CategoryStruct.id.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) (F (CategoryTheory.Discrete.as.{u2} I i)))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} (F : I -> C) {i : CategoryTheory.Discrete.{u2} I} (f : Quiver.Hom.{succ u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) i i), Eq.{succ u1} (Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F)) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F)) i)) (Prefunctor.map.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I F)) i i f) (CategoryTheory.CategoryStruct.id.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1) (F (CategoryTheory.Discrete.as.{u2} I i)))
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.functor_map CategoryTheory.Discrete.functor_mapₓ'. -/
 theorem functor_map {I : Type u₁} (F : I → C) {i : Discrete I} (f : i ⟶ i) :
     (Discrete.functor F).map f = 𝟙 (F i.as) := by tidy
 #align category_theory.discrete.functor_map CategoryTheory.Discrete.functor_map
 
+#print CategoryTheory.Discrete.functorComp /-
 /-- The discrete functor induced by a composition of maps can be written as a
 composition of two discrete functors.
 -/
@@ -194,7 +229,14 @@ def functorComp {I : Type u₁} {J : Type u₁'} (f : J → C) (g : I → J) :
     Discrete.functor (f ∘ g) ≅ Discrete.functor (Discrete.mk ∘ g) ⋙ Discrete.functor f :=
   NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 #align category_theory.discrete.functor_comp CategoryTheory.Discrete.functorComp
+-/
 
+/- warning: category_theory.discrete.nat_trans -> CategoryTheory.Discrete.natTrans is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F i) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G i)) -> (Quiver.Hom.{succ (max u2 u1), max u2 u1 u2 u3} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max u2 u1 u2 u3} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max u2 u1 u2 u3} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1))) F G)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) -> (Quiver.Hom.{max (succ u2) (succ u1), max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.CategoryStruct.toQuiver.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Category.toCategoryStruct.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1))) F G)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_trans CategoryTheory.Discrete.natTransₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
 a natural transformation is just a collection of maps,
@@ -212,6 +254,12 @@ def natTrans {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F
     simp
 #align category_theory.discrete.nat_trans CategoryTheory.Discrete.natTrans
 
+/- warning: category_theory.discrete.nat_iso -> CategoryTheory.Discrete.natIso is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), CategoryTheory.Iso.{u1, u3} C _inst_1 (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F i) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G i)) -> (CategoryTheory.Iso.{max u2 u1, max u2 u1 u2 u3} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F G)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, (forall (i : CategoryTheory.Discrete.{u2} I), CategoryTheory.Iso.{u1, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) -> (CategoryTheory.Iso.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F G)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIsoₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- For functors out of a discrete category,
 a natural isomorphism is just a collection of isomorphisms,
@@ -227,11 +275,23 @@ def natIso {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.o
     simp
 #align category_theory.discrete.nat_iso CategoryTheory.Discrete.natIso
 
+/- warning: category_theory.discrete.nat_iso_app -> CategoryTheory.Discrete.natIso_app is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} (f : forall (i : CategoryTheory.Discrete.{u2} I), CategoryTheory.Iso.{u1, u3} C _inst_1 (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F i) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G i)) (i : CategoryTheory.Discrete.{u2} I), Eq.{succ u1} (CategoryTheory.Iso.{u1, u3} C _inst_1 (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F i) (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G i)) (CategoryTheory.Iso.app.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F G (CategoryTheory.Discrete.natIso.{u1, u2, u3} C _inst_1 I F G f) i) (f i)
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} {G : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1} (f : forall (i : CategoryTheory.Discrete.{u2} I), CategoryTheory.Iso.{u1, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) (i : CategoryTheory.Discrete.{u2} I), Eq.{succ u1} (CategoryTheory.Iso.{u1, u3} C _inst_1 (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) i) (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 G) i)) (CategoryTheory.Iso.app.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F G (CategoryTheory.Discrete.natIso.{u1, u2, u3} C _inst_1 I F G f) i) (f i)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_iso_app CategoryTheory.Discrete.natIso_appₓ'. -/
 @[simp]
 theorem natIso_app {I : Type u₁} {F G : Discrete I ⥤ C} (f : ∀ i : Discrete I, F.obj i ≅ G.obj i)
     (i : Discrete I) : (Discrete.natIso f).app i = f i := by tidy
 #align category_theory.discrete.nat_iso_app CategoryTheory.Discrete.natIso_app
 
+/- warning: category_theory.discrete.nat_iso_functor -> CategoryTheory.Discrete.natIsoFunctor is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, CategoryTheory.Iso.{max u2 u1, max u2 u1 u2 u3} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I (Function.comp.{succ u2, succ u2, succ u3} I (CategoryTheory.Discrete.{u2} I) C (CategoryTheory.Functor.obj.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F) (CategoryTheory.Discrete.mk.{u2} I)))
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {I : Type.{u2}} {F : CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1}, CategoryTheory.Iso.{max u2 u1, max (max u2 u3) u1} (CategoryTheory.Functor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) (CategoryTheory.Functor.category.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1) F (CategoryTheory.Discrete.functor.{u1, u2, u3} C _inst_1 I (Function.comp.{succ u2, succ u2, succ u3} I (CategoryTheory.Discrete.{u2} I) C (Prefunctor.obj.{succ u2, succ u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.CategoryStruct.toQuiver.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.Category.toCategoryStruct.{u2, u2} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I))) C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u2, u1, u2, u3} (CategoryTheory.Discrete.{u2} I) (CategoryTheory.discreteCategory.{u2} I) C _inst_1 F)) (CategoryTheory.Discrete.mk.{u2} I)))
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.nat_iso_functor CategoryTheory.Discrete.natIsoFunctorₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- Every functor `F` from a discrete category is naturally isomorphic (actually, equal) to
   `discrete.functor (F.obj)`. -/
@@ -244,6 +304,12 @@ def natIsoFunctor {I : Type u₁} {F : Discrete I ⥤ C} : F ≅ Discrete.functo
     rfl
 #align category_theory.discrete.nat_iso_functor CategoryTheory.Discrete.natIsoFunctor
 
+/- warning: category_theory.discrete.comp_nat_iso_discrete -> CategoryTheory.Discrete.compNatIsoDiscrete is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {I : Type.{u3}} {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : I -> C) (G : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2), CategoryTheory.Iso.{max u3 u2, max u3 u2 u3 u5} (CategoryTheory.Functor.{u3, u2, u3, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) D _inst_2) (CategoryTheory.Functor.category.{u3, u2, u3, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) D _inst_2) (CategoryTheory.Functor.comp.{u3, u1, u2, u3, u4, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) C _inst_1 D _inst_2 (CategoryTheory.Discrete.functor.{u1, u3, u4} C _inst_1 I F) G) (CategoryTheory.Discrete.functor.{u2, u3, u5} D _inst_2 I (Function.comp.{succ u3, succ u4, succ u5} I C D (CategoryTheory.Functor.obj.{u1, u2, u4, u5} C _inst_1 D _inst_2 G) F))
+but is expected to have type
+  forall {C : Type.{u4}} [_inst_1 : CategoryTheory.Category.{u1, u4} C] {I : Type.{u3}} {D : Type.{u5}} [_inst_2 : CategoryTheory.Category.{u2, u5} D] (F : I -> C) (G : CategoryTheory.Functor.{u1, u2, u4, u5} C _inst_1 D _inst_2), CategoryTheory.Iso.{max u3 u2, max (max (max u5 u3) u2) u3} (CategoryTheory.Functor.{u3, u2, u3, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) D _inst_2) (CategoryTheory.Functor.category.{u3, u2, u3, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) D _inst_2) (CategoryTheory.Functor.comp.{u3, u1, u2, u3, u4, u5} (CategoryTheory.Discrete.{u3} I) (CategoryTheory.discreteCategory.{u3} I) C _inst_1 D _inst_2 (CategoryTheory.Discrete.functor.{u1, u3, u4} C _inst_1 I F) G) (CategoryTheory.Discrete.functor.{u2, u3, u5} D _inst_2 I (Function.comp.{succ u3, succ u4, succ u5} I C D (Prefunctor.obj.{succ u1, succ u2, u4, u5} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u4} C (CategoryTheory.Category.toCategoryStruct.{u1, u4} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u5} D (CategoryTheory.Category.toCategoryStruct.{u2, u5} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u4, u5} C _inst_1 D _inst_2 G)) F))
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.comp_nat_iso_discrete CategoryTheory.Discrete.compNatIsoDiscreteₓ'. -/
 /-- Composing `discrete.functor F` with another functor `G` amounts to composing `F` with `G.obj` -/
 @[simp]
 def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : I → C) (G : C ⥤ D) :
@@ -251,6 +317,12 @@ def compNatIsoDiscrete {I : Type u₁} {D : Type u₃} [Category.{v₃} D] (F : 
   natIso fun i => Iso.refl _
 #align category_theory.discrete.comp_nat_iso_discrete CategoryTheory.Discrete.compNatIsoDiscrete
 
+/- warning: category_theory.discrete.equivalence -> CategoryTheory.Discrete.equivalence is a dubious translation:
+lean 3 declaration is
+  forall {I : Type.{u1}} {J : Type.{u2}}, (Equiv.{succ u1, succ u2} I J) -> (CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.discreteCategory.{u1} I) (CategoryTheory.Discrete.{u2} J) (CategoryTheory.discreteCategory.{u2} J))
+but is expected to have type
+  forall {I : Type.{u1}} {J : Type.{u2}}, (Equiv.{succ u1, succ u2} I J) -> (CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} I) (CategoryTheory.Discrete.{u2} J) (CategoryTheory.discreteCategory.{u1} I) (CategoryTheory.discreteCategory.{u2} J))
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.equivalence CategoryTheory.Discrete.equivalenceₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /-- We can promote a type-level `equiv` to
@@ -277,6 +349,12 @@ def equivalence {I : Type u₁} {J : Type u₂} (e : I ≃ J) : Discrete I ≌ D
           simp)
 #align category_theory.discrete.equivalence CategoryTheory.Discrete.equivalence
 
+/- warning: category_theory.discrete.equiv_of_equivalence -> CategoryTheory.Discrete.equivOfEquivalence is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {β : Type.{u2}}, (CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} α) (CategoryTheory.discreteCategory.{u1} α) (CategoryTheory.Discrete.{u2} β) (CategoryTheory.discreteCategory.{u2} β)) -> (Equiv.{succ u1, succ u2} α β)
+but is expected to have type
+  forall {α : Type.{u1}} {β : Type.{u2}}, (CategoryTheory.Equivalence.{u1, u2, u1, u2} (CategoryTheory.Discrete.{u1} α) (CategoryTheory.Discrete.{u2} β) (CategoryTheory.discreteCategory.{u1} α) (CategoryTheory.discreteCategory.{u2} β)) -> (Equiv.{succ u1, succ u2} α β)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.equiv_of_equivalence CategoryTheory.Discrete.equivOfEquivalenceₓ'. -/
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
 def equivOfEquivalence {α : Type u₁} {β : Type u₂} (h : Discrete α ≌ Discrete β) : α ≃ β
@@ -295,6 +373,12 @@ variable {J : Type v₁}
 
 open Opposite
 
+/- warning: category_theory.discrete.opposite -> CategoryTheory.Discrete.opposite is a dubious translation:
+lean 3 declaration is
+  forall (α : Type.{u1}), CategoryTheory.Equivalence.{u1, u1, u1, u1} (Opposite.{succ u1} (CategoryTheory.Discrete.{u1} α)) (CategoryTheory.Category.opposite.{u1, u1} (CategoryTheory.Discrete.{u1} α) (CategoryTheory.discreteCategory.{u1} α)) (CategoryTheory.Discrete.{u1} α) (CategoryTheory.discreteCategory.{u1} α)
+but is expected to have type
+  forall (α : Type.{u1}), CategoryTheory.Equivalence.{u1, u1, u1, u1} (Opposite.{succ u1} (CategoryTheory.Discrete.{u1} α)) (CategoryTheory.Discrete.{u1} α) (CategoryTheory.Category.opposite.{u1, u1} (CategoryTheory.Discrete.{u1} α) (CategoryTheory.discreteCategory.{u1} α)) (CategoryTheory.discreteCategory.{u1} α)
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.opposite CategoryTheory.Discrete.oppositeₓ'. -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:72:18: unsupported non-interactive tactic tactic.op_induction' -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:76:14: unsupported tactic `discrete_cases #[] -/
@@ -325,6 +409,12 @@ protected def opposite (α : Type u₁) : (Discrete α)ᵒᵖ ≌ Discrete α :=
 
 variable {C : Type u₂} [Category.{v₂} C]
 
+/- warning: category_theory.discrete.functor_map_id -> CategoryTheory.Discrete.functor_map_id is a dubious translation:
+lean 3 declaration is
+  forall {J : Type.{u1}} {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (F : CategoryTheory.Functor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1) {j : CategoryTheory.Discrete.{u1} J} (f : Quiver.Hom.{succ u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) j j), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.obj.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F j) (CategoryTheory.Functor.obj.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F j)) (CategoryTheory.Functor.map.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F j j f) (CategoryTheory.CategoryStruct.id.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (CategoryTheory.Functor.obj.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F j))
+but is expected to have type
+  forall {J : Type.{u1}} {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u2, u3} C] (F : CategoryTheory.Functor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1) {j : CategoryTheory.Discrete.{u1} J} (f : Quiver.Hom.{succ u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) j j), Eq.{succ u2} (Quiver.Hom.{succ u2, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (Prefunctor.obj.{succ u1, succ u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F) j) (Prefunctor.obj.{succ u1, succ u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F) j)) (Prefunctor.map.{succ u1, succ u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F) j j f) (CategoryTheory.CategoryStruct.id.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1) (Prefunctor.obj.{succ u1, succ u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.CategoryStruct.toQuiver.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.Category.toCategoryStruct.{u1, u1} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J))) C (CategoryTheory.CategoryStruct.toQuiver.{u2, u3} C (CategoryTheory.Category.toCategoryStruct.{u2, u3} C _inst_1)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u1, u3} (CategoryTheory.Discrete.{u1} J) (CategoryTheory.discreteCategory.{u1} J) C _inst_1 F) j))
+Case conversion may be inaccurate. Consider using '#align category_theory.discrete.functor_map_id CategoryTheory.Discrete.functor_map_idₓ'. -/
 @[simp]
 theorem functor_map_id (F : Discrete J ⥤ C) {j : Discrete J} (f : j ⟶ j) : F.map f = 𝟙 (F.obj j) :=
   by

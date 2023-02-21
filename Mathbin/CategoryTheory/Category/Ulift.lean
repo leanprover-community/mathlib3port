@@ -49,27 +49,37 @@ namespace CategoryTheory
 
 variable {C : Type u₁} [Category.{v₁} C]
 
+#print CategoryTheory.ULift.upFunctor /-
 /-- The functorial version of `ulift.up`. -/
 @[simps]
-def Ulift.upFunctor : C ⥤ ULift.{u₂} C where
+def ULift.upFunctor : C ⥤ ULift.{u₂} C where
   obj := ULift.up
   map X Y f := f
-#align category_theory.ulift.up_functor CategoryTheory.Ulift.upFunctor
+#align category_theory.ulift.up_functor CategoryTheory.ULift.upFunctor
+-/
 
+#print CategoryTheory.ULift.downFunctor /-
 /-- The functorial version of `ulift.down`. -/
 @[simps]
-def Ulift.downFunctor : ULift.{u₂} C ⥤ C
+def ULift.downFunctor : ULift.{u₂} C ⥤ C
     where
   obj := ULift.down
   map X Y f := f
-#align category_theory.ulift.down_functor CategoryTheory.Ulift.downFunctor
+#align category_theory.ulift.down_functor CategoryTheory.ULift.downFunctor
+-/
 
+/- warning: category_theory.ulift.equivalence -> CategoryTheory.ULift.equivalence is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, max u2 u3} C _inst_1 (ULift.{u3, u2} C) (CategoryTheory.uliftCategory.{u1, u2, u3} C _inst_1)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, u1, u2, max u3 u2} C (ULift.{u3, u2} C) _inst_1 (CategoryTheory.uliftCategory.{u1, u2, u3} C _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.ulift.equivalence CategoryTheory.ULift.equivalenceₓ'. -/
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
-def Ulift.equivalence : C ≌ ULift.{u₂} C
+def ULift.equivalence : C ≌ ULift.{u₂} C
     where
-  Functor := Ulift.upFunctor
-  inverse := Ulift.downFunctor
+  Functor := ULift.upFunctor
+  inverse := ULift.downFunctor
   unitIso :=
     { Hom := 𝟙 _
       inv := 𝟙 _ }
@@ -95,71 +105,100 @@ def Ulift.equivalence : C ≌ ULift.{u₂} C
   functor_unitIso_comp' X := by
     change 𝟙 X ≫ 𝟙 X = 𝟙 X
     simp
-#align category_theory.ulift.equivalence CategoryTheory.Ulift.equivalence
+#align category_theory.ulift.equivalence CategoryTheory.ULift.equivalence
 
 section UliftHom
 
+#print CategoryTheory.ULiftHom /-
 /-- `ulift_hom.{w} C` is an alias for `C`, which is endowed with a category instance
   whose morphisms are obtained by applying `ulift.{w}` to the morphisms from `C`.
 -/
-def UliftHom.{w, u} (C : Type u) :=
+def ULiftHom.{w, u} (C : Type u) :=
   C
-#align category_theory.ulift_hom CategoryTheory.UliftHom
+#align category_theory.ulift_hom CategoryTheory.ULiftHom
+-/
 
-instance {C} [Inhabited C] : Inhabited (UliftHom C) :=
+instance {C} [Inhabited C] : Inhabited (ULiftHom C) :=
   ⟨(Inhabited.default C : C)⟩
 
+#print CategoryTheory.ULiftHom.objDown /-
 /-- The obvious function `ulift_hom C → C`. -/
-def UliftHom.objDown {C} (A : UliftHom C) : C :=
+def ULiftHom.objDown {C} (A : ULiftHom C) : C :=
   A
-#align category_theory.ulift_hom.obj_down CategoryTheory.UliftHom.objDown
+#align category_theory.ulift_hom.obj_down CategoryTheory.ULiftHom.objDown
+-/
 
+#print CategoryTheory.ULiftHom.objUp /-
 /-- The obvious function `C → ulift_hom C`. -/
-def UliftHom.objUp {C} (A : C) : UliftHom C :=
+def ULiftHom.objUp {C} (A : C) : ULiftHom C :=
   A
-#align category_theory.ulift_hom.obj_up CategoryTheory.UliftHom.objUp
+#align category_theory.ulift_hom.obj_up CategoryTheory.ULiftHom.objUp
+-/
 
+/- warning: category_theory.obj_down_obj_up -> CategoryTheory.objDown_objUp is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} (A : C), Eq.{succ u1} C (CategoryTheory.ULiftHom.objDown.{u1, u2} C (CategoryTheory.ULiftHom.objUp.{u1, u2} C A)) A
+but is expected to have type
+  forall {C : Type.{u2}} (A : C), Eq.{succ u2} C (CategoryTheory.ULiftHom.objDown.{u2, u1} C (CategoryTheory.ULiftHom.objUp.{u2, u1} C A)) A
+Case conversion may be inaccurate. Consider using '#align category_theory.obj_down_obj_up CategoryTheory.objDown_objUpₓ'. -/
 @[simp]
-theorem objDown_objUp {C} (A : C) : (UliftHom.objUp A).objDown = A :=
+theorem objDown_objUp {C} (A : C) : (ULiftHom.objUp A).objDown = A :=
   rfl
 #align category_theory.obj_down_obj_up CategoryTheory.objDown_objUp
 
+/- warning: category_theory.obj_up_obj_down -> CategoryTheory.objUp_objDown is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} (A : CategoryTheory.ULiftHom.{u2, u1} C), Eq.{succ u1} (CategoryTheory.ULiftHom.{u2, u1} C) (CategoryTheory.ULiftHom.objUp.{u1, u2} C (CategoryTheory.ULiftHom.objDown.{u1, u2} C A)) A
+but is expected to have type
+  forall {C : Type.{u2}} (A : CategoryTheory.ULiftHom.{u1, u2} C), Eq.{succ u2} (CategoryTheory.ULiftHom.{u1, u2} C) (CategoryTheory.ULiftHom.objUp.{u2, u1} C (CategoryTheory.ULiftHom.objDown.{u2, u1} C A)) A
+Case conversion may be inaccurate. Consider using '#align category_theory.obj_up_obj_down CategoryTheory.objUp_objDownₓ'. -/
 @[simp]
-theorem objUp_objDown {C} (A : UliftHom C) : UliftHom.objUp A.objDown = A :=
+theorem objUp_objDown {C} (A : ULiftHom C) : ULiftHom.objUp A.objDown = A :=
   rfl
 #align category_theory.obj_up_obj_down CategoryTheory.objUp_objDown
 
-instance : Category.{max v₂ v₁} (UliftHom.{v₂} C)
+instance : Category.{max v₂ v₁} (ULiftHom.{v₂} C)
     where
   Hom A B := ULift.{v₂} <| A.objDown ⟶ B.objDown
   id A := ⟨𝟙 _⟩
   comp A B C f g := ⟨f.down ≫ g.down⟩
 
+#print CategoryTheory.ULiftHom.up /-
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def UliftHom.up : C ⥤ UliftHom C where
-  obj := UliftHom.objUp
+def ULiftHom.up : C ⥤ ULiftHom C where
+  obj := ULiftHom.objUp
   map X Y f := ⟨f⟩
-#align category_theory.ulift_hom.up CategoryTheory.UliftHom.up
+#align category_theory.ulift_hom.up CategoryTheory.ULiftHom.up
+-/
 
+#print CategoryTheory.ULiftHom.down /-
 /-- One half of the quivalence between `C` and `ulift_hom C`. -/
 @[simps]
-def UliftHom.down : UliftHom C ⥤ C where
-  obj := UliftHom.objDown
+def ULiftHom.down : ULiftHom C ⥤ C where
+  obj := ULiftHom.objDown
   map X Y f := f.down
-#align category_theory.ulift_hom.down CategoryTheory.UliftHom.down
+#align category_theory.ulift_hom.down CategoryTheory.ULiftHom.down
+-/
 
+/- warning: category_theory.ulift_hom.equiv -> CategoryTheory.ULiftHom.equiv is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u3 u1, u2, u2} C _inst_1 (CategoryTheory.ULiftHom.{u3, u2} C) (CategoryTheory.ULiftHom.category.{u1, u3, u2} C _inst_1)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u1 u3, u2, u2} C (CategoryTheory.ULiftHom.{u3, u2} C) _inst_1 (CategoryTheory.instCategoryULiftHom.{u1, u3, u2} C _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.ulift_hom.equiv CategoryTheory.ULiftHom.equivₓ'. -/
 /-- The equivalence between `C` and `ulift_hom C`. -/
-def UliftHom.equiv : C ≌ UliftHom C
+def ULiftHom.equiv : C ≌ ULiftHom C
     where
-  Functor := UliftHom.up
-  inverse := UliftHom.down
+  Functor := ULiftHom.up
+  inverse := ULiftHom.down
   unitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
   counitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
-#align category_theory.ulift_hom.equiv CategoryTheory.UliftHom.equiv
+#align category_theory.ulift_hom.equiv CategoryTheory.ULiftHom.equiv
 
 end UliftHom
 
+#print CategoryTheory.AsSmall /-
 /-- `as_small C` is a small category equivalent to `C`.
   More specifically, if `C : Type u` is endowed with `category.{v} C`, then
   `as_small.{w} C : Type (max w v u)` is endowed with an instance of a small category.
@@ -174,6 +213,7 @@ end UliftHom
 def AsSmall.{w, v, u} (C : Type u) [Category.{v} C] :=
   ULift.{max w v} C
 #align category_theory.as_small CategoryTheory.AsSmall
+-/
 
 instance : SmallCategory (AsSmall.{w₁} C)
     where
@@ -181,20 +221,30 @@ instance : SmallCategory (AsSmall.{w₁} C)
   id X := ⟨𝟙 _⟩
   comp X Y Z f g := ⟨f.down ≫ g.down⟩
 
+#print CategoryTheory.AsSmall.up /-
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.up : C ⥤ AsSmall C where
   obj X := ⟨X⟩
   map X Y f := ⟨f⟩
 #align category_theory.as_small.up CategoryTheory.AsSmall.up
+-/
 
+#print CategoryTheory.AsSmall.down /-
 /-- One half of the equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.down : AsSmall C ⥤ C where
   obj X := X.down
   map X Y f := f.down
 #align category_theory.as_small.down CategoryTheory.AsSmall.down
+-/
 
+/- warning: category_theory.as_small.equiv -> CategoryTheory.AsSmall.equiv is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max u2 u3 u1, u2, max u2 u3 u1} C _inst_1 (CategoryTheory.AsSmall.{u3, u1, u2} C _inst_1) (CategoryTheory.AsSmall.smallCategory.{u3, u1, u2} C _inst_1)
+but is expected to have type
+  forall {C : Type.{u2}} [_inst_1 : CategoryTheory.Category.{u1, u2} C], CategoryTheory.Equivalence.{u1, max (max u2 u1) u3, u2, max (max u2 u1) u3} C (CategoryTheory.AsSmall.{u3, u1, u2} C _inst_1) _inst_1 (CategoryTheory.instSmallCategoryAsSmall.{u3, u1, u2} C _inst_1)
+Case conversion may be inaccurate. Consider using '#align category_theory.as_small.equiv CategoryTheory.AsSmall.equivₓ'. -/
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.equiv : C ≌ AsSmall C where
@@ -213,11 +263,17 @@ def AsSmall.equiv : C ≌ AsSmall C where
 instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨Inhabited.default _⟩⟩
 
+/- warning: category_theory.ulift_hom_ulift_category.equiv -> CategoryTheory.ULiftHomULiftCategory.equiv is a dubious translation:
+lean 3 declaration is
+  forall (C : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u3, u4} C], CategoryTheory.Equivalence.{u3, max u1 u3, u4, max u4 u2} C _inst_2 (CategoryTheory.ULiftHom.{u1, max u4 u2} (ULift.{u2, u4} C)) (CategoryTheory.ULiftHom.category.{u3, u1, max u4 u2} (ULift.{u2, u4} C) (CategoryTheory.uliftCategory.{u3, u4, u2} C _inst_2))
+but is expected to have type
+  forall (C : Type.{u4}) [_inst_2 : CategoryTheory.Category.{u3, u4} C], CategoryTheory.Equivalence.{u3, max u3 u1, u4, max u2 u4} C (CategoryTheory.ULiftHom.{u1, max u2 u4} (ULift.{u2, u4} C)) _inst_2 (CategoryTheory.instCategoryULiftHom.{u3, u1, max u4 u2} (ULift.{u2, u4} C) (CategoryTheory.uliftCategory.{u3, u4, u2} C _inst_2))
+Case conversion may be inaccurate. Consider using '#align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.ULiftHomULiftCategory.equivₓ'. -/
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
-def UliftHomUliftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] :
-    C ≌ UliftHom.{v'} (ULift.{u'} C) :=
-  Ulift.equivalence.trans UliftHom.equiv
-#align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.UliftHomUliftCategory.equiv
+def ULiftHomULiftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] :
+    C ≌ ULiftHom.{v'} (ULift.{u'} C) :=
+  ULift.equivalence.trans ULiftHom.equiv
+#align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.ULiftHomULiftCategory.equiv
 
 end CategoryTheory
 

@@ -241,12 +241,12 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
 abbrev cechNerveAdjunction : (Augmented.toArrow : _ ⥤ Arrow C) ⊣ augmentedCechNerve :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechNerveEquiv
-      homEquiv_naturality_left_symm' := fun x y f g h =>
+      homEquiv_naturality_left_symm := fun x y f g h =>
         by
         ext
         · simp
         · simp
-      homEquiv_naturality_right' := fun x y f g h =>
+      homEquiv_naturality_right := fun x y f g h =>
         by
         ext
         · simp
@@ -461,13 +461,13 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
 abbrev cechConerveAdjunction : augmentedCechConerve ⊣ (Augmented.toArrow : _ ⥤ Arrow C) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := cechConerveEquiv
-      homEquiv_naturality_left_symm' := fun x y f g h =>
+      homEquiv_naturality_left_symm := fun x y f g h =>
         by
         ext
         · rfl
         · simp
         · simp
-      homEquiv_naturality_right' := fun x y f g h =>
+      homEquiv_naturality_right := fun x y f g h =>
         by
         ext
         · simp

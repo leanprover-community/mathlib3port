@@ -196,7 +196,7 @@ instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)
     (by
       ext : 2
-      simp only [AlgHom.coe_to_monoidHom, Function.comp_apply, AlgHom.coe_comp,
+      simp only [AlgHom.coe_toMonoidHom, Function.comp_apply, AlgHom.coe_comp,
         Function.comp.left_id, AlgHom.coe_id, AddMonoidAlgebra.of_apply, MonoidHom.coe_comp]
       rw [decompose_aux_single, DirectSum.coeAlgHom_of, Subtype.coe_mk])
     fun i x => by rw [decompose_aux_coe f x]

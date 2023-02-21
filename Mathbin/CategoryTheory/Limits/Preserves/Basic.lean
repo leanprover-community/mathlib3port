@@ -290,7 +290,7 @@ from some other `preserves_limits_of_size F`.
 -/
 def preservesLimitsOfSizeShrink (F : C ⥤ D) [PreservesLimitsOfSize.{max w w₂, max w' w₂'} F] :
     PreservesLimitsOfSize.{w, w'} F :=
-  ⟨fun J hJ => preserves_limits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
+  ⟨fun J hJ => preserves_limits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w₂, w₂'} J).symm F⟩
 #align category_theory.limits.preserves_limits_of_size_shrink CategoryTheory.Limits.preservesLimitsOfSizeShrink
 
 /-- Preserving limits at any universe level implies preserving limits in universe `0`. -/
@@ -356,7 +356,7 @@ from some other `preserves_colimits_of_size F`.
 def preservesColimitsOfSizeShrink (F : C ⥤ D) [PreservesColimitsOfSize.{max w w₂, max w' w₂'} F] :
     PreservesColimitsOfSize.{w, w'} F :=
   ⟨fun J hJ =>
-    preserves_colimits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
+    preserves_colimits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w₂, w₂'} J).symm F⟩
 #align category_theory.limits.preserves_colimits_of_size_shrink CategoryTheory.Limits.preservesColimitsOfSizeShrink
 
 /-- Preserving colimits at any universe implies preserving colimits at universe `0`. -/
@@ -652,7 +652,7 @@ from some other `reflects_limits_of_size F`.
 -/
 def reflectsLimitsOfSizeShrink (F : C ⥤ D) [ReflectsLimitsOfSize.{max w w₂, max w' w₂'} F] :
     ReflectsLimitsOfSize.{w, w'} F :=
-  ⟨fun J hJ => reflects_limits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
+  ⟨fun J hJ => reflects_limits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w₂, w₂'} J).symm F⟩
 #align category_theory.limits.reflects_limits_of_size_shrink CategoryTheory.Limits.reflectsLimitsOfSizeShrink
 
 /-- Reflecting limits at any universe implies reflecting limits at universe `0`. -/
@@ -757,7 +757,7 @@ from some other `reflects_colimits_of_size F`.
 -/
 def reflectsColimitsOfSizeShrink (F : C ⥤ D) [ReflectsColimitsOfSize.{max w w₂, max w' w₂'} F] :
     ReflectsColimitsOfSize.{w, w'} F :=
-  ⟨fun J hJ => reflects_colimits_of_shape_of_equiv (UliftHomUliftCategory.equiv.{w₂, w₂'} J).symm F⟩
+  ⟨fun J hJ => reflects_colimits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w₂, w₂'} J).symm F⟩
 #align category_theory.limits.reflects_colimits_of_size_shrink CategoryTheory.Limits.reflectsColimitsOfSizeShrink
 
 /-- Reflecting colimits at any universe implies reflecting colimits at universe `0`. -/

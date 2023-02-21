@@ -79,7 +79,7 @@ def toSplittingField (s : Finset (MonicIrreducible k)) :
 theorem toSplittingField_evalXSelf {s : Finset (MonicIrreducible k)} {f} (hf : f ∈ s) :
     toSplittingField k s (evalXSelf k f) = 0 :=
   by
-  rw [to_splitting_field, eval_X_self, ← AlgHom.coe_to_ringHom, hom_eval₂, AlgHom.coe_to_ringHom,
+  rw [to_splitting_field, eval_X_self, ← AlgHom.coe_toRingHom, hom_eval₂, AlgHom.coe_toRingHom,
     MvPolynomial.aeval_x, dif_pos hf, ← algebra_map_eq, AlgHom.comp_algebraMap]
   exact map_root_of_splits _ _ _
 #align algebraic_closure.to_splitting_field_eval_X_self AlgebraicClosure.toSplittingField_evalXSelf

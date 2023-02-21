@@ -190,9 +190,9 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
     refine' ⟨q, ⟨_, _⟩⟩
     · simp
     · ext x
-      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_to_ringHom,
-        Polynomial.eval_x, Polynomial.eval_neg, Polynomial.eval_c, Polynomial.eval_smul,
-        smul_eq_mul, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
+      simp only [neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_toRingHom, Polynomial.eval_x,
+        Polynomial.eval_neg, Polynomial.eval_c, Polynomial.eval_smul, smul_eq_mul,
+        Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
         Polynomial.eval_comp, Polynomial.toContinuousMapOnAlgHom_apply,
         Polynomial.toContinuousMapOn_apply, Polynomial.toContinuousMap_apply]
       convert w ⟨_, _⟩ <;> clear w

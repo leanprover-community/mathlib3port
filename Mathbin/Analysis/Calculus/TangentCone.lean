@@ -108,7 +108,7 @@ theorem tangent_cone_univ : tangentConeAt 𝕜 univ x = univ :=
 theorem tangent_cone_mono (h : s ⊆ t) : tangentConeAt 𝕜 s x ⊆ tangentConeAt 𝕜 t x :=
   by
   rintro y ⟨c, d, ds, ctop, clim⟩
-  exact ⟨c, d, mem_of_superset ds fun n hn => h hn, ctop, clim⟩
+  exact ⟨c, d, mem_of_superset ds fun n hn => h hn, Ctop, clim⟩
 #align tangent_cone_mono tangent_cone_mono
 
 /-- Auxiliary lemma ensuring that, under the assumptions defining the tangent cone,
@@ -134,11 +134,11 @@ theorem tangentConeAt.lim_zero {α : Type _} (l : Filter α) {c : α → 𝕜} {
 theorem tangent_cone_mono_nhds (h : 𝓝[s] x ≤ 𝓝[t] x) : tangentConeAt 𝕜 s x ⊆ tangentConeAt 𝕜 t x :=
   by
   rintro y ⟨c, d, ds, ctop, clim⟩
-  refine' ⟨c, d, _, ctop, clim⟩
+  refine' ⟨c, d, _, Ctop, clim⟩
   suffices : tendsto (fun n => x + d n) at_top (𝓝[t] x)
   exact tendsto_principal.1 (tendsto_inf.1 this).2
   refine' (tendsto_inf.2 ⟨_, tendsto_principal.2 ds⟩).mono_right h
-  simpa only [add_zero] using tendsto_const_nhds.add (tangentConeAt.lim_zero at_top ctop clim)
+  simpa only [add_zero] using tendsto_const_nhds.add (tangentConeAt.lim_zero at_top Ctop clim)
 #align tangent_cone_mono_nhds tangent_cone_mono_nhds
 
 /-- Tangent cone of `s` at `x` depends only on `𝓝[s] x`. -/

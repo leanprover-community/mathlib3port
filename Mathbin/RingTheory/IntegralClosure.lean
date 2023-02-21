@@ -158,7 +158,7 @@ theorem isIntegral_algHom_iff {A B : Type _} [Ring A] [Ring B] [Algebra R A] [Al
   refine' ⟨_, map_isIntegral f⟩
   rintro ⟨p, hp, hx⟩
   use p, hp
-  rwa [← f.comp_algebra_map, ← AlgHom.coe_to_ringHom, ← Polynomial.hom_eval₂, AlgHom.coe_to_ringHom,
+  rwa [← f.comp_algebra_map, ← AlgHom.coe_toRingHom, ← Polynomial.hom_eval₂, AlgHom.coe_toRingHom,
     map_eq_zero_iff f hf] at hx
 #align is_integral_alg_hom_iff isIntegral_algHom_iff
 
@@ -697,7 +697,7 @@ theorem IsIntegral.tmul (x : A) {y : B} (h : IsIntegral R y) : IsIntegral A (x �
       algebra.tensor_product.include_left.to_ring_hom (1 ⊗ₜ y) x using
     2
   ·
-    simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom, mul_one, one_mul,
+    simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, mul_one, one_mul,
       Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_mul_tmul]
   convert (mul_zero _).symm
   rw [Polynomial.eval₂_map, Algebra.TensorProduct.includeLeft_comp_algebraMap, ←

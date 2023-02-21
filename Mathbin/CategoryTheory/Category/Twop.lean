@@ -172,7 +172,7 @@ def pointedToTwopFstForgetCompBipointedToPointedFstAdjunction :
             exact f.map_snd.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      homEquiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }
@@ -191,7 +191,7 @@ def pointedToTwopSndForgetCompBipointedToPointedSndAdjunction :
             exact f.map_fst.symm
             rfl
           right_inv := fun f => Pointed.Hom.ext _ _ rfl }
-      homEquiv_naturality_left_symm' := fun X' X Y f g =>
+      homEquiv_naturality_left_symm := fun X' X Y f g =>
         by
         ext
         cases x <;> rfl }

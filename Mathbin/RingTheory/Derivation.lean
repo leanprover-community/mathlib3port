@@ -1026,7 +1026,7 @@ def KaehlerDifferential.quotientCotangentIdealRingEquiv :
       (↑(tensor_product.lmul' R : S ⊗[R] S →ₐ[R] S) : S ⊗[R] S →+* S) :=
     by
     intro x
-    rw [AlgHom.coe_to_ringHom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
+    rw [AlgHom.coe_toRingHom, ← AlgHom.comp_apply, tensor_product.lmul'_comp_include_left]
     rfl
   refine' (Ideal.quotCotangent _).trans _
   refine' (Ideal.quotEquivOfEq _).trans (RingHom.quotientKerEquivOfRightInverse this)

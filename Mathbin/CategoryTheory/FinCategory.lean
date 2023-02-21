@@ -133,7 +133,7 @@ instance finCategoryOpposite {J : Type v} [SmallCategory J] [FinCategory J] : Fi
 
 /-- Applying `ulift` to morphisms and objects of a category preserves finiteness. -/
 instance finCategoryUlift {J : Type v} [SmallCategory J] [FinCategory J] :
-    FinCategory.{max w v} (UliftHom.{w, max w v} (ULift.{w, v} J))
+    FinCategory.{max w v} (ULiftHom.{w, max w v} (ULift.{w, v} J))
     where fintypeObj := ULift.fintype J
 #align category_theory.fin_category_ulift CategoryTheory.finCategoryUlift
 

@@ -131,7 +131,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
     obtain ⟨⟨x, s⟩, eq⟩ := IsLocalization.surj M y
     obtain ⟨u, hu⟩ := H s
     use x * u.inv
-    dsimp only [Algebra.ofId, RingHom.toFun_eq_coe, AlgHom.coe_mk]
+    dsimp only [Algebra.ofId, RingHom.toFun_eq_coe, AlgHom.coe_mks]
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
 #align is_localization.at_units IsLocalization.atUnits

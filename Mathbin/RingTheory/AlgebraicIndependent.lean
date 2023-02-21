@@ -502,7 +502,7 @@ theorem AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
   by
   refine' MvPolynomial.ringHom_ext _ _ <;>
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
-      AlgHom.coe_to_ringHom, AlgHom.coe_to_ringHom]
+      AlgHom.coe_toRingHom, AlgHom.coe_toRingHom]
   · intro r
     rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_c,
       IsScalarTower.algebraMap_apply R (adjoin R (range x)) A]
@@ -520,8 +520,8 @@ theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) 
       ¬IsAlgebraic (adjoin R (Set.range x)) a :=
   by
   erw [algebraicIndependent_iff_injective_aeval, isAlgebraic_iff_not_injective, Classical.not_not, ←
-    AlgHom.coe_to_ringHom, ← hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin,
-    RingHom.coe_comp, injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_to_ringHom]
+    AlgHom.coe_toRingHom, ← hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin,
+    RingHom.coe_comp, injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_toRingHom]
 #align algebraic_independent.option_iff AlgebraicIndependent.option_iff
 
 variable (R)

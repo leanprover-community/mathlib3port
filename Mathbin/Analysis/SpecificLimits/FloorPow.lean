@@ -50,7 +50,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     by
     rcases hlim 2 one_lt_two with ⟨c, cgrowth, ctop, clim⟩
     have : tendsto (fun n => u 0 / c n) at_top (𝓝 0) :=
-      tendsto_const_nhds.div_at_top (tendsto_nat_cast_atTop_iff.2 ctop)
+      tendsto_const_nhds.div_at_top (tendsto_nat_cast_atTop_iff.2 Ctop)
     apply le_of_tendsto_of_tendsto' this clim fun n => _
     simp_rw [div_eq_inv_mul]
     exact mul_le_mul_of_nonneg_left (hmono (zero_le _)) (inv_nonneg.2 (Nat.cast_nonneg _))
@@ -62,7 +62,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       by
       rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
         clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_at_top 0)]with n hn cnpos'
+      filter_upwards [clim εpos, Ctop (Ioi_mem_at_top 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc
         u (c n) - c n * l = (u (c n) / c n - l) * c n := by
@@ -79,7 +79,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     filter_upwards [Ici_mem_at_top M]with n hn
     have exN : ∃ N, n < c N :=
       by
-      rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩
+      rcases(tendsto_at_top.1 Ctop (n + 1)).exists with ⟨N, hN⟩
       exact ⟨N, by linarith only [hN]⟩
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN
@@ -130,7 +130,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
       by
       rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isOCat_one_iff ℝ, Asymptotics.isOCat_iff] at
         clim
-      filter_upwards [clim εpos, ctop (Ioi_mem_at_top 0)]with n hn cnpos'
+      filter_upwards [clim εpos, Ctop (Ioi_mem_at_top 0)]with n hn cnpos'
       have cnpos : 0 < c n := cnpos'
       calc
         (c n : ℝ) * l - u (c n) = -(u (c n) / c n - l) * c n := by
@@ -148,7 +148,7 @@ theorem tendsto_div_of_monotone_of_exists_subseq_tendsto_div (u : ℕ → ℝ) (
     filter_upwards [Ici_mem_at_top M]with n hn
     have exN : ∃ N, n < c N :=
       by
-      rcases(tendsto_at_top.1 ctop (n + 1)).exists with ⟨N, hN⟩
+      rcases(tendsto_at_top.1 Ctop (n + 1)).exists with ⟨N, hN⟩
       exact ⟨N, by linarith only [hN]⟩
     let N := Nat.find exN
     have ncN : n < c N := Nat.find_spec exN

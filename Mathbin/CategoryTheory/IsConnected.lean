@@ -181,9 +181,9 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
 #align category_theory.is_connected.of_induct CategoryTheory.IsConnected.of_induct
 
 /-- Lifting the universe level of morphisms and objects preserves connectedness. -/
-instance [hc : IsConnected J] : IsConnected (UliftHom.{v₂} (ULift.{u₂} J)) :=
+instance [hc : IsConnected J] : IsConnected (ULiftHom.{v₂} (ULift.{u₂} J)) :=
   by
-  have : Nonempty (UliftHom.{v₂} (ULift.{u₂} J)) := by simp [ulift_hom, hc.is_nonempty]
+  have : Nonempty (ULiftHom.{v₂} (ULift.{u₂} J)) := by simp [ulift_hom, hc.is_nonempty]
   apply is_connected.of_induct
   rintro p hj₀ h ⟨j⟩
   let p' : Set J := (fun j : J => p { down := j } : Set J)

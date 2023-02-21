@@ -58,7 +58,7 @@ def free : Type u ⥤ ModuleCat R
 def adj : free R ⊣ forget (ModuleCat.{u} R) :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X M => (Finsupp.lift M R X).toEquiv.symm
-      homEquiv_naturality_left_symm' := fun _ _ M f g =>
+      homEquiv_naturality_left_symm := fun _ _ M f g =>
         Finsupp.lhom_ext' fun x =>
           LinearMap.ext_ring
             (Finsupp.sum_mapDomain_index_addMonoidHom fun y => (smulAddHom R M).flip (g y)).symm }

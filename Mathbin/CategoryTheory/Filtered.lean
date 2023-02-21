@@ -756,16 +756,16 @@ end Opposite
 section ULift
 
 instance [IsFiltered C] : IsFiltered (ULift.{u₂} C) :=
-  IsFiltered.of_equivalence Ulift.equivalence
+  IsFiltered.of_equivalence ULift.equivalence
 
 instance [IsCofiltered C] : IsCofiltered (ULift.{u₂} C) :=
-  IsCofiltered.of_equivalence Ulift.equivalence
+  IsCofiltered.of_equivalence ULift.equivalence
 
-instance [IsFiltered C] : IsFiltered (UliftHom C) :=
-  IsFiltered.of_equivalence UliftHom.equiv
+instance [IsFiltered C] : IsFiltered (ULiftHom C) :=
+  IsFiltered.of_equivalence ULiftHom.equiv
 
-instance [IsCofiltered C] : IsCofiltered (UliftHom C) :=
-  IsCofiltered.of_equivalence UliftHom.equiv
+instance [IsCofiltered C] : IsCofiltered (ULiftHom C) :=
+  IsCofiltered.of_equivalence ULiftHom.equiv
 
 instance [IsFiltered C] : IsFiltered (AsSmall C) :=
   IsFiltered.of_equivalence AsSmall.equiv

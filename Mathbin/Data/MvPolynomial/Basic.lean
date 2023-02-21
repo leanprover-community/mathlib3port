@@ -1359,7 +1359,7 @@ def mapAlgHom [CommSemiring S₂] [Algebra R S₁] [Algebra R S₂] (f : S₁ �
       by
       have h₁ : algebraMap R (MvPolynomial σ S₁) r = C (algebraMap R S₁ r) := rfl
       have h₂ : algebraMap R (MvPolynomial σ S₂) r = C (algebraMap R S₂ r) := rfl
-      rw [h₁, h₂, map, eval₂_hom_C, RingHom.comp_apply, AlgHom.coe_to_ringHom, AlgHom.commutes] }
+      rw [h₁, h₂, map, eval₂_hom_C, RingHom.comp_apply, AlgHom.coe_toRingHom, AlgHom.commutes] }
 #align mv_polynomial.map_alg_hom MvPolynomial.mapAlgHom
 
 @[simp]

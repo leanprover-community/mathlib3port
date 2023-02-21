@@ -125,7 +125,7 @@ def adj : Cat.free ⊣ Quiv.forget :=
             congr
             ext (X Y f)
             exact category.id_comp _ }
-      homEquiv_naturality_left_symm' := fun V W C f g =>
+      homEquiv_naturality_left_symm := fun V W C f g =>
         by
         change (show paths V ⥤ _ from _) = _
         ext

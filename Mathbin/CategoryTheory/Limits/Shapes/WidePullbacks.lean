@@ -145,8 +145,8 @@ def equivalenceOfEquiv (J' : Type w') (h : J ≃ J') : WidePullbackShape J ≌ W
 
 /-- Lifting universe and morphism levels preserves wide pullback diagrams. -/
 def uliftEquivalence :
-    UliftHom.{w'} (ULift.{w'} (WidePullbackShape J)) ≌ WidePullbackShape (ULift J) :=
-  (UliftHomUliftCategory.equiv.{w', w', w, w} (WidePullbackShape J)).symm.trans
+    ULiftHom.{w'} (ULift.{w'} (WidePullbackShape J)) ≌ WidePullbackShape (ULift J) :=
+  (ULiftHomULiftCategory.equiv.{w', w', w, w} (WidePullbackShape J)).symm.trans
     (equivalenceOfEquiv _ (Equiv.ulift.{w', w}.symm : J ≃ ULift.{w'} J))
 #align category_theory.limits.wide_pullback_shape.ulift_equivalence CategoryTheory.Limits.WidePullbackShape.uliftEquivalence
 

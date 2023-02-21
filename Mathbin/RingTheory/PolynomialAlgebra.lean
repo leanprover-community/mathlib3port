@@ -164,7 +164,7 @@ theorem left_inv (x : A ⊗ R[X]) : invFun R A ((toFunAlgHom R A) x) = x :=
   · intro a p
     dsimp only [inv_fun]
     rw [to_fun_alg_hom_apply_tmul, eval₂_sum]
-    simp_rw [eval₂_monomial, AlgHom.coe_to_ringHom, Algebra.TensorProduct.tmul_pow, one_pow,
+    simp_rw [eval₂_monomial, AlgHom.coe_toRingHom, Algebra.TensorProduct.tmul_pow, one_pow,
       Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one,
       one_mul, ← Algebra.commutes, ← Algebra.smul_def, smul_tmul, sum_def, ← tmul_sum]
     conv_rhs => rw [← sum_C_mul_X_pow_eq p]

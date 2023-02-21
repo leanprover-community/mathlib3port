@@ -115,7 +115,7 @@ theorem isIntegrallyClosed_dvd_iff [Nontrivial R] {s : S} (hs : IsIntegral R s) 
 theorem ker_eval {s : S} (hs : IsIntegral R s) :
     ((Polynomial.aeval s).toRingHom : R[X] →+* S).ker = Ideal.span ({minpoly R s} : Set R[X]) := by
   ext p <;>
-    simp_rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom,
+    simp_rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,
       is_integrally_closed_dvd_iff hs, ← Ideal.mem_span_singleton]
 #align minpoly.ker_eval minpoly.ker_eval
 

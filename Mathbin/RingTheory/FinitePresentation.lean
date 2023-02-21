@@ -245,7 +245,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
       have leI : Ideal.span s₀ ≤ I := by
         rw [Ideal.span_le]
         rintro _ (⟨x, hx, rfl⟩ | ⟨⟨x, hx⟩, rfl⟩)
-        all_goals dsimp [g]; rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom]
+        all_goals dsimp [g]; rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
         · rw [MvPolynomial.aeval_map_algebraMap, ← aeval_unique]
           have := Ideal.subset_span hx
           rwa [hs] at this
@@ -254,7 +254,7 @@ theorem of_restrict_scalars_finitePresentation [Algebra A B] [IsScalarTower R A 
             Subtype.coe_mk, sub_self]
       apply leI.antisymm
       intro x hx
-      rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom] at hx
+      rw [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom] at hx
       let s₀ := _
       change x ∈ Ideal.span s₀
       have :
@@ -321,7 +321,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
     have hh' : ∀ x, f (aeval_h x) = f' x := by
       intro x
       rw [← f.coe_to_ring_hom, map_aeval]
-      simp_rw [AlgHom.coe_to_ringHom, hh]
+      simp_rw [AlgHom.coe_toRingHom, hh]
       rw [AlgHom.comp_algebraMap, ← aeval_eq_eval₂_hom, ← aeval_unique]
     let s' := Set.range g' ∪ aeval_h '' s
     have leI : Ideal.span s' ≤ f.to_ring_hom.ker :=
@@ -365,7 +365,7 @@ theorem ker_fg_of_mvPolynomial {n : ℕ} (f : MvPolynomial (Fin n) R →ₐ[R] A
         · exact add_mem (Ideal.mul_mem_right _ _ hy₁) (Ideal.mul_mem_left _ _ hy₂)
     obtain ⟨_, ⟨x, rfl⟩, y, hy, rfl⟩ := add_submonoid.mem_sup.mp this
     refine' add_mem _ hy
-    simp only [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom, map_add,
+    simp only [RingHom.mem_ker, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, map_add,
       show f y = 0 from leI hy, add_zero, hh'] at hx
     suffices Ideal.span (s : Set RXm) ≤ (Ideal.span s').comap aeval_h
       by
@@ -385,7 +385,7 @@ theorem ker_fg_of_surjective (f : A →ₐ[R] B) (hf : Function.Surjective f)
   by
   obtain ⟨n, g, hg, hg'⟩ := hRA
   convert (ker_fg_of_mv_polynomial (f.comp g) (hf.comp hg) hRB).map g.to_ring_hom
-  simp_rw [RingHom.ker_eq_comap_bot, AlgHom.toRingHom_eq_coe, AlgHom.comp_to_ringHom]
+  simp_rw [RingHom.ker_eq_comap_bot, AlgHom.toRingHom_eq_coe, AlgHom.comp_toRingHom]
   rw [← Ideal.comap_comap, Ideal.map_comap_of_surjective (g : MvPolynomial (Fin n) R →+* A) hg]
 #align algebra.finite_presentation.ker_fg_of_surjective Algebra.FinitePresentation.ker_fg_of_surjective
 

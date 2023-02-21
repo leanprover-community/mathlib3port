@@ -36,18 +36,18 @@ namespace CategoryTheory.Over
 /-- Make sure we can derive pullbacks in `over B`. -/
 instance {B : C} [HasPullbacks C] : HasPullbacks (Over B) :=
   by
-  letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_cospan)) C :=
-    has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
-  letI : category (UliftHom.{v} (ULift.{v} walking_cospan)) := inferInstance
-  exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
+  letI : has_limits_of_shape (ULiftHom.{v} (ULift.{v} walking_cospan)) C :=
+    has_limits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v} _)
+  letI : category (ULiftHom.{v} (ULift.{v} walking_cospan)) := inferInstance
+  exact has_limits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v, v} _).symm
 
 /-- Make sure we can derive equalizers in `over B`. -/
 instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) :=
   by
-  letI : has_limits_of_shape (UliftHom.{v} (ULift.{v} walking_parallel_pair)) C :=
-    has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v} _)
-  letI : category (UliftHom.{v} (ULift.{v} walking_parallel_pair)) := inferInstance
-  exact has_limits_of_shape_of_equivalence (UliftHomUliftCategory.equiv.{v, v} _).symm
+  letI : has_limits_of_shape (ULiftHom.{v} (ULift.{v} walking_parallel_pair)) C :=
+    has_limits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v} _)
+  letI : category (ULiftHom.{v} (ULift.{v} walking_parallel_pair)) := inferInstance
+  exact has_limits_of_shape_of_equivalence (ULiftHomULiftCategory.equiv.{v, v} _).symm
 
 instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) :=
   by

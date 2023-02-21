@@ -219,7 +219,7 @@ noncomputable def adj : completionFunctor ⊣ forget₂ CpltSepUniformSpace Unif
             exact
               @completion.extension_coe _ _ _ _ _ (CpltSepUniformSpace.separatedSpace _) f_property
                 _ }
-      homEquiv_naturality_left_symm' := fun X X' Y f g =>
+      homEquiv_naturality_left_symm := fun X X' Y f g =>
         by
         apply hom_ext; funext x; dsimp
         erw [coe_comp, ← completion.extension_map]

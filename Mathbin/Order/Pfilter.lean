@@ -128,7 +128,7 @@ theorem mem_of_le {F : PFilter P} : x ≤ y → x ∈ F → y ∈ F := fun h => 
 theorem ext (h : (s : Set P) = t) : s = t := by
   cases s
   cases t
-  exact congr_arg _ (ideal.ext h)
+  exact congr_arg _ (Ideal.ext h)
 #align order.pfilter.ext Order.PFilter.ext
 -/
 

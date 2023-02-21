@@ -315,7 +315,7 @@ theorem wittStructureInt_prop (Φ : MvPolynomial idx ℤ) (n) :
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   have := wittStructureRat_prop p (map (Int.castRingHom ℚ) Φ) n
   simpa only [map_bind₁, ← eval₂_hom_map_hom, eval₂_hom_C_left, map_rename, map_wittPolynomial,
-    AlgHom.coe_to_ringHom, map_wittStructureInt]
+    AlgHom.coe_toRingHom, map_wittStructureInt]
 #align witt_structure_int_prop wittStructureInt_prop
 
 theorem eq_wittStructureInt (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomial (idx × ℕ) ℤ)
@@ -330,7 +330,7 @@ theorem eq_wittStructureInt (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomi
     specialize h n
     apply_fun map (Int.castRingHom ℚ)  at h
     simpa only [map_bind₁, ← eval₂_hom_map_hom, eval₂_hom_C_left, map_rename, map_wittPolynomial,
-      AlgHom.coe_to_ringHom] using h
+      AlgHom.coe_toRingHom] using h
   · intro n
     apply wittStructureRat_prop
 #align eq_witt_structure_int eq_wittStructureInt

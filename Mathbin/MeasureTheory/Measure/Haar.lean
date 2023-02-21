@@ -832,7 +832,7 @@ instance (priority := 90) regularOfIsHaarMeasure [LocallyCompactSpace G] (μ : M
   obtain ⟨c, c0, ctop, hμ⟩ : ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ∞ ∧ μ = c • haar_measure K :=
     is_haar_measure_eq_smul_is_haar_measure μ _
   rw [hμ]
-  exact regular.smul ctop
+  exact regular.smul Ctop
 #align measure_theory.measure.regular_of_is_haar_measure MeasureTheory.Measure.regularOfIsHaarMeasure
 #align measure_theory.measure.regular_of_is_add_haar_measure MeasureTheory.Measure.regular_of_is_add_haar_measure
 

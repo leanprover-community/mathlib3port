@@ -423,14 +423,14 @@ variable (e : ι ≃ ι')
 
 /-- `b.reindex (e : ι ≃ ι')` is a basis indexed by `ι'` -/
 def reindex : Basis ι' R M :=
-  Basis.of_repr (b.repr.trans (Finsupp.domLcongr e))
+  Basis.of_repr (b.repr.trans (Finsupp.domLCongr e))
 #align basis.reindex Basis.reindex
 
 theorem reindex_apply (i' : ι') : b.reindex e i' = b (e.symm i') :=
   show
-    (b.repr.trans (Finsupp.domLcongr e)).symm (Finsupp.single i' 1) =
+    (b.repr.trans (Finsupp.domLCongr e)).symm (Finsupp.single i' 1) =
       b.repr.symm (Finsupp.single (e.symm i') 1)
-    by rw [LinearEquiv.symm_trans_apply, Finsupp.domLcongr_symm, Finsupp.domLcongr_single]
+    by rw [LinearEquiv.symm_trans_apply, Finsupp.domLCongr_symm, Finsupp.domLCongr_single]
 #align basis.reindex_apply Basis.reindex_apply
 
 @[simp]
@@ -439,7 +439,7 @@ theorem coe_reindex : (b.reindex e : ι' → M) = b ∘ e.symm :=
 #align basis.coe_reindex Basis.coe_reindex
 
 theorem repr_reindex_apply (i' : ι') : (b.reindex e).repr x i' = b.repr x (e.symm i') :=
-  show (Finsupp.domLcongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
+  show (Finsupp.domLCongr e : _ ≃ₗ[R] _) (b.repr x) i' = _ by simp
 #align basis.repr_reindex_apply Basis.repr_reindex_apply
 
 @[simp]
@@ -731,7 +731,7 @@ variable (b' : Basis ι' R M')
 to a `ι ⊕ ι'`-index basis for `M × M'`.
 For the specific case of `R × R`, see also `basis.fin_two_prod`. -/
 protected def prod : Basis (Sum ι ι') R (M × M') :=
-  of_repr ((b.repr.Prod b'.repr).trans (Finsupp.sumFinsuppLequivProdFinsupp R).symm)
+  of_repr ((b.repr.Prod b'.repr).trans (Finsupp.sumFinsuppLEquivProdFinsupp R).symm)
 #align basis.prod Basis.prod
 
 @[simp]
@@ -749,7 +749,7 @@ theorem prod_apply_inl_fst (i) : (b.Prod b' (Sum.inl i)).1 = b i :=
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.toFun_as_coe, Finsupp.fst_sumFinsuppLequivProdFinsupp]
+      Equiv.toFun_as_coe, Finsupp.fst_sumFinsuppLEquivProdFinsupp]
     apply Finsupp.single_apply_left Sum.inl_injective
 #align basis.prod_apply_inl_fst Basis.prod_apply_inl_fst
 
@@ -758,7 +758,7 @@ theorem prod_apply_inr_fst (i) : (b.Prod b' (Sum.inr i)).1 = 0 :=
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.toFun_as_coe, Finsupp.fst_sumFinsuppLequivProdFinsupp, LinearEquiv.map_zero,
+      Equiv.toFun_as_coe, Finsupp.fst_sumFinsuppLEquivProdFinsupp, LinearEquiv.map_zero,
       Finsupp.zero_apply]
     apply Finsupp.single_eq_of_ne Sum.inr_ne_inl
 #align basis.prod_apply_inr_fst Basis.prod_apply_inr_fst
@@ -768,7 +768,7 @@ theorem prod_apply_inl_snd (i) : (b.Prod b' (Sum.inl i)).2 = 0 :=
     ext j
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.toFun_as_coe, Finsupp.snd_sumFinsuppLequivProdFinsupp, LinearEquiv.map_zero,
+      Equiv.toFun_as_coe, Finsupp.snd_sumFinsuppLEquivProdFinsupp, LinearEquiv.map_zero,
       Finsupp.zero_apply]
     apply Finsupp.single_eq_of_ne Sum.inl_ne_inr
 #align basis.prod_apply_inl_snd Basis.prod_apply_inl_snd
@@ -778,7 +778,7 @@ theorem prod_apply_inr_snd (i) : (b.Prod b' (Sum.inr i)).2 = b' i :=
     ext i
     simp only [Basis.prod, Basis.coe_of_repr, LinearEquiv.symm_trans_apply, LinearEquiv.prod_symm,
       LinearEquiv.prod_apply, b'.repr.apply_symm_apply, LinearEquiv.symm_symm, repr_self,
-      Equiv.toFun_as_coe, Finsupp.snd_sumFinsuppLequivProdFinsupp]
+      Equiv.toFun_as_coe, Finsupp.snd_sumFinsuppLEquivProdFinsupp]
     apply Finsupp.single_apply_left Sum.inr_injective
 #align basis.prod_apply_inr_snd Basis.prod_apply_inr_snd
 

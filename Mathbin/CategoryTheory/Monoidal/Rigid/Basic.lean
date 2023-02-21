@@ -483,8 +483,8 @@ then the functor `tensor_left Y'` is left adjoint to `tensor_left Y`.
 def tensorLeftAdjunction (Y Y' : C) [ExactPairing Y Y'] : tensorLeft Y' ⊣ tensorLeft Y :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Z => tensorLeftHomEquiv X Y Y' Z
-      homEquiv_naturality_left_symm' := fun X X' Z f g => tensorLeftHomEquiv_symm_naturality f g
-      homEquiv_naturality_right' := fun X Z Z' f g => tensorLeftHomEquiv_naturality f g }
+      homEquiv_naturality_left_symm := fun X X' Z f g => tensorLeftHomEquiv_symm_naturality f g
+      homEquiv_naturality_right := fun X Z Z' f g => tensorLeftHomEquiv_naturality f g }
 #align category_theory.tensor_left_adjunction CategoryTheory.tensorLeftAdjunction
 
 /-- If `Y Y'` have an exact pairing,
@@ -493,8 +493,8 @@ then the functor `tensor_right Y` is left adjoint to `tensor_right Y'`.
 def tensorRightAdjunction (Y Y' : C) [ExactPairing Y Y'] : tensorRight Y ⊣ tensorRight Y' :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X Z => tensorRightHomEquiv X Y Y' Z
-      homEquiv_naturality_left_symm' := fun X X' Z f g => tensorRightHomEquiv_symm_naturality f g
-      homEquiv_naturality_right' := fun X Z Z' f g => tensorRightHomEquiv_naturality f g }
+      homEquiv_naturality_left_symm := fun X X' Z f g => tensorRightHomEquiv_symm_naturality f g
+      homEquiv_naturality_right := fun X Z Z' f g => tensorRightHomEquiv_naturality f g }
 #align category_theory.tensor_right_adjunction CategoryTheory.tensorRightAdjunction
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

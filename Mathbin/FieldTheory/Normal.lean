@@ -297,7 +297,7 @@ def AlgHom.restrictNormalAux [h : Normal F E] :
       refine'
         Or.resolve_left (h.splits z).def (minpoly.ne_zero (h.is_integral z)) (minpoly.irreducible _)
           (minpoly.dvd E _ (by simp [aeval_alg_hom_apply]))
-      simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom]
+      simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom]
       suffices IsIntegral F _ by exact isIntegral_of_isScalarTower this
       exact map_isIntegral ϕ (map_isIntegral (to_alg_hom F E K₁) (h.is_integral z))⟩
   map_zero' := Subtype.ext ϕ.map_zero
@@ -481,7 +481,7 @@ theorem restrictScalars_eq_supᵢ_adjoin [h : Normal F L] :
     refine'
       le_supᵢ (fun x => adjoin F ((minpoly F x).rootSet L)) x
         (subset_adjoin F ((minpoly F x).rootSet L) _)
-    rw [mem_root_set_of_ne, AlgHom.toRingHom_eq_coe, AlgHom.coe_to_ringHom,
+    rw [mem_root_set_of_ne, AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom,
       Polynomial.aeval_algHom_apply, minpoly.aeval, map_zero]
     exact
       minpoly.ne_zero

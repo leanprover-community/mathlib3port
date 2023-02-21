@@ -144,7 +144,7 @@ theorem Subalgebra.topologicalClosure_comap_homeomorph (s : Subalgebra R A) {B :
   by
   apply SetLike.ext'
   simp only [Subalgebra.topologicalClosure_coe]
-  simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_to_ringHom]
+  simp only [Subalgebra.coe_comap, Subsemiring.coe_comap, AlgHom.coe_toRingHom]
   rw [w]
   exact f'.preimage_closure _
 #align subalgebra.topological_closure_comap_homeomorph Subalgebra.topologicalClosure_comap_homeomorph

@@ -389,7 +389,7 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
       right_inv := to_skyscraper_fromStalk _ }
   Unit := StalkSkyscraperPresheafAdjunctionAuxs.unit _
   counit := StalkSkyscraperPresheafAdjunctionAuxs.counit _
-  homEquiv_unit' 𝓕 c α := by
+  homEquiv_unit 𝓕 c α := by
     ext U;
     simp only [Equiv.coe_fn_mk, to_skyscraper_presheaf_app, nat_trans.comp_app,
       SkyscraperPresheafFunctor.map'_app, skyscraperPresheafFunctor_map, unit_app]
@@ -399,7 +399,7 @@ def skyscraperPresheafStalkAdjunction [HasColimits C] :
         category.assoc, category.assoc, eq_to_hom_trans, eq_to_hom_refl, category.comp_id, ←
         category.assoc _ _ α, eq_to_hom_trans, eq_to_hom_refl, category.id_comp]
     · apply ((if_neg h).symm.rec terminal_is_terminal).hom_ext
-  homEquiv_counit' 𝓕 c α := by
+  homEquiv_counit 𝓕 c α := by
     ext U; simp only [Equiv.coe_fn_symm_mk, counit_app]
     erw [colimit.ι_desc, ← category.assoc, colimit.ι_map, whisker_left_app, category.assoc,
       colimit.ι_desc]
@@ -428,10 +428,10 @@ def stalkSkyscraperSheafAdjunction [HasColimits C] :
         ext1
         apply (StalkSkyscraperPresheafAdjunctionAuxs.unit p₀).naturality }
   counit := StalkSkyscraperPresheafAdjunctionAuxs.counit p₀
-  homEquiv_unit' 𝓐 c f := by
+  homEquiv_unit 𝓐 c f := by
     ext1
     exact (skyscraperPresheafStalkAdjunction p₀).homEquiv_unit
-  homEquiv_counit' 𝓐 c f := (skyscraperPresheafStalkAdjunction p₀).homEquiv_counit
+  homEquiv_counit 𝓐 c f := (skyscraperPresheafStalkAdjunction p₀).homEquiv_counit
 #align stalk_skyscraper_sheaf_adjunction stalkSkyscraperSheafAdjunction
 
 instance [HasColimits C] : IsRightAdjoint (skyscraperSheafFunctor p₀ : C ⥤ Sheaf C X) :=
