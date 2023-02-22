@@ -262,15 +262,15 @@ theorem denseEmbedding_pureCauchy : DenseEmbedding pure_cauchy :=
   uniform_embedding_pure_cauchy.DenseEmbedding dense_range_pure_cauchy
 #align Cauchy.dense_embedding_pure_cauchy CauchyFilter.denseEmbedding_pureCauchy
 
-#print CauchyFilter.nonempty_cauchyCat_iff /-
-theorem nonempty_cauchyCat_iff : Nonempty (CauchyFilter α) ↔ Nonempty α :=
+#print CauchyFilter.nonempty_cauchyFilter_iff /-
+theorem nonempty_cauchyFilter_iff : Nonempty (CauchyFilter α) ↔ Nonempty α :=
   by
   constructor <;> rintro ⟨c⟩
   · have := eq_univ_iff_forall.1 dense_embedding_pure_cauchy.to_dense_inducing.closure_range c
     obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ isOpen_univ trivial
     exact ⟨a⟩
   · exact ⟨pure_cauchy c⟩
-#align Cauchy.nonempty_Cauchy_iff CauchyFilter.nonempty_cauchyCat_iff
+#align Cauchy.nonempty_Cauchy_iff CauchyFilter.nonempty_cauchyFilter_iff
 -/
 
 section
@@ -345,13 +345,13 @@ end Extend
 
 end
 
-/- warning: Cauchy.Cauchy_eq -> CauchyFilter.cauchyCat_eq is a dubious translation:
+/- warning: Cauchy.Cauchy_eq -> CauchyFilter.cauchyFilter_eq is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : CompleteSpace.{u1} α _inst_2] [_inst_4 : SeparatedSpace.{u1} α _inst_2] {f : CauchyFilter.{u1} α _inst_2} {g : CauchyFilter.{u1} α _inst_2}, Iff (Eq.{succ u1} α (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) f)) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) g))) (Membership.Mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Set.hasMem.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2) f g) (separationRel.{u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.uniformSpace.{u1} α _inst_2)))
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : Inhabited.{succ u1} α] [_inst_2 : UniformSpace.{u1} α] [_inst_3 : CompleteSpace.{u1} α _inst_2] [_inst_4 : SeparatedSpace.{u1} α _inst_2] {f : CauchyFilter.{u1} α _inst_2} {g : CauchyFilter.{u1} α _inst_2}, Iff (Eq.{succ u1} α (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) f)) (lim.{u1} α (UniformSpace.toTopologicalSpace.{u1} α _inst_2) (instNonempty.{succ u1} α _inst_1) (Subtype.val.{succ u1} (Filter.{u1} α) (fun (f : Filter.{u1} α) => Cauchy.{u1} α _inst_2 f) g))) (Membership.mem.{u1, u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2)) (Set.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Set.instMembershipSet.{u1} (Prod.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2))) (Prod.mk.{u1, u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.{u1} α _inst_2) f g) (separationRel.{u1} (CauchyFilter.{u1} α _inst_2) (CauchyFilter.instUniformSpaceCauchyFilter.{u1} α _inst_2)))
-Case conversion may be inaccurate. Consider using '#align Cauchy.Cauchy_eq CauchyFilter.cauchyCat_eqₓ'. -/
-theorem cauchyCat_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α]
+Case conversion may be inaccurate. Consider using '#align Cauchy.Cauchy_eq CauchyFilter.cauchyFilter_eqₓ'. -/
+theorem cauchyFilter_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpace α]
     [SeparatedSpace α] {f g : CauchyFilter α} :
     lim f.1 = lim g.1 ↔ (f, g) ∈ separationRel (CauchyFilter α) :=
   by
@@ -382,7 +382,7 @@ theorem cauchyCat_eq {α : Type _} [Inhabited α] [UniformSpace α] [CompleteSpa
     have := dc.closure_subset_iff.2 h
     rw [closure_prod_eq] at this
     refine' dt (this ⟨_, _⟩) <;> dsimp <;> apply limc <;> assumption
-#align Cauchy.Cauchy_eq CauchyFilter.cauchyCat_eq
+#align Cauchy.Cauchy_eq CauchyFilter.cauchyFilter_eq
 
 section
 

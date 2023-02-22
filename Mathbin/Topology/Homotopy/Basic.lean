@@ -259,7 +259,7 @@ theorem trans_apply {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Hom
         G (⟨2 * x.1 - 1, unitInterval.two_mul_sub_one_mem_iff.2 ⟨(not_le.1 h).le, x.1.2.2⟩⟩, x.2) :=
   show ite _ _ _ = _ by
     split_ifs <;>
-      · rw [extend, ContinuousMap.coe_iccExtend, Set.IccExtend_of_mem]
+      · rw [extend, ContinuousMap.coe_IccExtend, Set.IccExtend_of_mem]
         rfl
 #align continuous_map.homotopy.trans_apply ContinuousMap.Homotopy.trans_apply
 

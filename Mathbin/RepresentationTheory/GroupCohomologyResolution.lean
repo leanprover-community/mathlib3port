@@ -425,7 +425,7 @@ theorem d_eq (n : ℕ) : ((GroupCohomology.resolution k G).d (n + 1) n).hom = d 
   by
   ext (x y)
   dsimp [GroupCohomology.resolution]
-  simpa [← @int_cast_smul k, simplicial_object.δ]
+  simpa [← @intCast_smul k, simplicial_object.δ]
 #align group_cohomology.resolution.d_eq GroupCohomology.resolution.d_eq
 
 section Exactness
