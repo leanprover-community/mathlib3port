@@ -875,18 +875,22 @@ theorem image_image₂_right_anticomm {f : α → β' → γ} {g : β → β'} {
   (image_image₂_antidistrib_right fun a b => (h_right_anticomm b a).symm).symm
 #align finset.image_image₂_right_anticomm Finset.image_image₂_right_anticomm
 
+#print Finset.image₂_left_identity /-
 /-- If `a` is a left identity for `f : α → β → β`, then `{a}` is a left identity for
 `finset.image₂ f`. -/
 theorem image₂_left_identity {f : α → γ → γ} {a : α} (h : ∀ b, f a b = b) (t : Finset γ) :
     image₂ f {a} t = t :=
   coe_injective <| by rw [coe_image₂, coe_singleton, Set.image2_left_identity h]
 #align finset.image₂_left_identity Finset.image₂_left_identity
+-/
 
+#print Finset.image₂_right_identity /-
 /-- If `b` is a right identity for `f : α → β → α`, then `{b}` is a right identity for
 `finset.image₂ f`. -/
 theorem image₂_right_identity {f : γ → β → γ} {b : β} (h : ∀ a, f a b = a) (s : Finset γ) :
     image₂ f s {b} = s := by rw [image₂_singleton_right, funext h, image_id']
 #align finset.image₂_right_identity Finset.image₂_right_identity
+-/
 
 end Finset
 
