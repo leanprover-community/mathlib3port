@@ -367,7 +367,7 @@ variable {p}
 
 theorem addOrderOf_period_div {n : ℕ} (h : 0 < n) : addOrderOf ((p / n : 𝕜) : AddCircle p) = n :=
   by
-  rw [add_orderOf_eq_iff h]
+  rw [addOrderOf_eq_iff h]
   replace h : 0 < (n : 𝕜) := Nat.cast_pos.2 h
   refine' ⟨_, fun m hn h0 => _⟩ <;> simp only [Ne, ← coe_nsmul, nsmul_eq_mul]
   · rw [mul_div_cancel' _ h.ne', coe_period]
@@ -383,10 +383,10 @@ variable (p)
 theorem gcd_mul_addOrderOf_div_eq {n : ℕ} (m : ℕ) (hn : 0 < n) :
     m.gcd n * addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n :=
   by
-  rw [mul_comm_div, ← nsmul_eq_mul, coe_nsmul, add_orderOf_nsmul'']
+  rw [mul_comm_div, ← nsmul_eq_mul, coe_nsmul, addOrderOf_nsmul'']
   · rw [add_order_of_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
     exacts[n.gcd_dvd_left m, hp]
-  · rw [← add_orderOf_pos_iff, add_order_of_period_div hn]
+  · rw [← addOrderOf_pos_iff, add_order_of_period_div hn]
     exacts[hn, hp]
 #align add_circle.gcd_mul_add_order_of_div_eq AddCircle.gcd_mul_addOrderOf_div_eq
 
@@ -405,7 +405,7 @@ theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.na
   induction m
   · simp only [Int.ofNat_eq_coe, Int.cast_ofNat, Int.natAbs_ofNat] at h⊢
     exact add_order_of_div_of_gcd_eq_one hn h
-  · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, orderOf_neg]
+  · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, addOrderOf_neg]
     exact add_order_of_div_of_gcd_eq_one hn h
 #align add_circle.add_order_of_div_of_gcd_eq_one' AddCircle.addOrderOf_div_of_gcd_eq_one'
 
@@ -425,7 +425,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   refine' ⟨QuotientAddGroup.induction_on' u fun k hk => _, _⟩; swap
   · rintro ⟨m, h₀, h₁, rfl⟩
     exact add_order_of_div_of_gcd_eq_one h h₁
-  have h0 := add_orderOf_nsmul_eq_zero (k : AddCircle p)
+  have h0 := addOrderOf_nsmul_eq_zero (k : AddCircle p)
   rw [hk, ← coe_nsmul, coe_eq_zero_iff] at h0
   obtain ⟨a, ha⟩ := h0
   have h0 : (_ : 𝕜) ≠ 0 := Nat.cast_ne_zero.2 h.ne'
@@ -446,7 +446,7 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
 
 theorem exists_gcd_eq_one_of_isOfFinAddOrder {u : AddCircle p} (h : IsOfFinAddOrder u) :
     ∃ m : ℕ, m.gcd (addOrderOf u) = 1 ∧ m < addOrderOf u ∧ ↑((m : 𝕜) / addOrderOf u * p) = u :=
-  let ⟨m, hl, hg, he⟩ := (addOrderOf_eq_pos_iff <| add_orderOf_pos' h).1 rfl
+  let ⟨m, hl, hg, he⟩ := (addOrderOf_eq_pos_iff <| addOrderOf_pos' h).1 rfl
   ⟨m, hg, hl, he⟩
 #align add_circle.exists_gcd_eq_one_of_is_of_fin_add_order AddCircle.exists_gcd_eq_one_of_isOfFinAddOrder
 
@@ -483,12 +483,12 @@ theorem card_addOrderOf_eq_totient {n : ℕ} :
     Nat.card { u : AddCircle p // addOrderOf u = n } = n.totient :=
   by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp only [Nat.totient_zero, add_orderOf_eq_zero_iff]
+  · simp only [Nat.totient_zero, addOrderOf_eq_zero_iff]
     rcases em (∃ u : AddCircle p, ¬IsOfFinAddOrder u) with (⟨u, hu⟩ | h)
     · have : Infinite { u : AddCircle p // ¬IsOfFinAddOrder u } :=
         by
         erw [infinite_coe_iff]
-        exact infinite_not_is_of_fin_add_order hu
+        exact infinite_not_isOfFinAddOrder hu
       exact Nat.card_eq_zero_of_infinite
     · have : IsEmpty { u : AddCircle p // ¬IsOfFinAddOrder u } := by simpa using h
       exact Nat.card_of_isEmpty

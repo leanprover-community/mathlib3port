@@ -71,7 +71,7 @@ theorem prime_dvd_char_iff_dvd_card {R : Type _} [CommRing R] [Fintype R] (p : �
       fun h => _⟩
   by_contra h₀
   rcases exists_prime_addOrderOf_dvd_card p h with ⟨r, hr⟩
-  have hr₁ := add_orderOf_nsmul_eq_zero r
+  have hr₁ := addOrderOf_nsmul_eq_zero r
   rw [hr, nsmul_eq_mul] at hr₁
   rcases IsUnit.exists_left_inv ((isUnit_iff_not_dvd_char R p).mpr h₀) with ⟨u, hu⟩
   apply_fun (· * ·) u  at hr₁

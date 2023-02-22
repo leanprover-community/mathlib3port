@@ -170,9 +170,9 @@ namespace AddMonoid
 /-- A module whose scalars are additively torsion is additively torsion. -/
 theorem IsTorsion.module_of_torsion [Semiring R] [Module R M] (tR : IsTorsion R) : IsTorsion M :=
   fun f =>
-  (is_of_fin_add_order_iff_nsmul_eq_zero _).mpr <|
+  (isOfFinAddOrder_iff_nsmul_eq_zero _).mpr <|
     by
-    obtain ⟨n, npos, hn⟩ := (is_of_fin_add_order_iff_nsmul_eq_zero _).mp (tR 1)
+    obtain ⟨n, npos, hn⟩ := (isOfFinAddOrder_iff_nsmul_eq_zero _).mp (tR 1)
     exact ⟨n, npos, by simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
 #align add_monoid.is_torsion.module_of_torsion AddMonoid.IsTorsion.module_of_torsion
 

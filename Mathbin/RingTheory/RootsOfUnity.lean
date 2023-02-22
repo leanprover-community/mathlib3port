@@ -495,7 +495,7 @@ protected theorem iff (hk : 0 < k) :
     ⟨fun h => ⟨h.pow_eq_one, fun l hl' hl => _⟩, fun ⟨hζ, hl⟩ =>
       IsPrimitiveRoot.mk_of_lt ζ hk hζ hl⟩
   rw [h.eq_order_of] at hl
-  exact pow_ne_one_of_lt_order_of' hl'.ne' hl
+  exact pow_ne_one_of_lt_orderOf' hl'.ne' hl
 #align is_primitive_root.iff IsPrimitiveRoot.iff
 
 protected theorem not_iff : ¬IsPrimitiveRoot ζ k ↔ orderOf ζ ≠ k :=

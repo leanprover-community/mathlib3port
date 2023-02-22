@@ -834,9 +834,9 @@ theorem isTorsion_iff_isTorsion_nat [AddCommMonoid M] :
     AddMonoid.IsTorsion M ↔ Module.IsTorsion ℕ M :=
   by
   refine' ⟨fun h x => _, fun h x => _⟩
-  · obtain ⟨n, h0, hn⟩ := (is_of_fin_add_order_iff_nsmul_eq_zero x).mp (h x)
+  · obtain ⟨n, h0, hn⟩ := (isOfFinAddOrder_iff_nsmul_eq_zero x).mp (h x)
     exact ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt h0⟩, hn⟩
-  · rw [is_of_fin_add_order_iff_nsmul_eq_zero]
+  · rw [isOfFinAddOrder_iff_nsmul_eq_zero]
     obtain ⟨n, hn⟩ := @h x
     refine' ⟨n, Nat.pos_of_ne_zero (nonZeroDivisors.coe_ne_zero _), hn⟩
 #align add_monoid.is_torsion_iff_is_torsion_nat AddMonoid.isTorsion_iff_isTorsion_nat
@@ -845,11 +845,11 @@ theorem isTorsion_iff_isTorsion_int [AddCommGroup M] :
     AddMonoid.IsTorsion M ↔ Module.IsTorsion ℤ M :=
   by
   refine' ⟨fun h x => _, fun h x => _⟩
-  · obtain ⟨n, h0, hn⟩ := (is_of_fin_add_order_iff_nsmul_eq_zero x).mp (h x)
+  · obtain ⟨n, h0, hn⟩ := (isOfFinAddOrder_iff_nsmul_eq_zero x).mp (h x)
     exact
       ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt <| int.coe_nat_pos.mpr h0⟩,
         (coe_nat_zsmul _ _).trans hn⟩
-  · rw [is_of_fin_add_order_iff_nsmul_eq_zero]
+  · rw [isOfFinAddOrder_iff_nsmul_eq_zero]
     obtain ⟨n, hn⟩ := @h x
     exact exists_nsmul_eq_zero_of_zsmul_eq_zero (nonZeroDivisors.coe_ne_zero n) hn
 #align add_monoid.is_torsion_iff_is_torsion_int AddMonoid.isTorsion_iff_isTorsion_int

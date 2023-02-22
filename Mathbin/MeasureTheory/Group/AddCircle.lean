@@ -69,7 +69,7 @@ theorem isAddFundamentalDomainOfAeBall (I : Set <| AddCircle T) (u x : AddCircle
   set B := ball x (T / (2 * n))
   have hn : 1 ≤ (n : ℝ) := by
     norm_cast
-    linarith [add_orderOf_pos' hu]
+    linarith [addOrderOf_pos' hu]
   refine' is_add_fundamental_domain.mk_of_measure_univ_le _ _ _ _
   ·-- `null_measurable_set I volume`
     exact measurable_set_ball.null_measurable_set.congr hI.symm
@@ -90,7 +90,7 @@ theorem isAddFundamentalDomainOfAeBall (I : Set <| AddCircle T) (u x : AddCircle
     refine'
       (le_add_order_smul_norm_of_is_of_fin_add_order (hu.of_mem_zmultiples hg) hg').trans
         (nsmul_le_nsmul (norm_nonneg g) _)
-    exact Nat.le_of_dvd (add_order_of_pos_iff.mpr hu) (add_orderOf_dvd_of_mem_zmultiples hg)
+    exact Nat.le_of_dvd (add_order_of_pos_iff.mpr hu) (addOrderOf_dvd_of_mem_zmultiples hg)
   ·-- `∀ (g : G), quasi_measure_preserving (has_vadd.vadd g) volume volume`
     exact fun g => quasi_measure_preserving_add_left volume g
   · -- `volume univ ≤ ∑' (g : G), volume (g +ᵥ I)`
