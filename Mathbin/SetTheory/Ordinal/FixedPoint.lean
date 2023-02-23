@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.fixed_point
-! leanprover-community/mathlib commit f1e061e3caef3022f0daa99d670ecf2c30e0b5c6
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Ordinal.Exponential
 
 /-!
 # Fixed points of normal functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove various statements about the fixed points of normal ordinal functions. We state them in
 three forms: as statements about type-indexed families of normal functions, as statements about

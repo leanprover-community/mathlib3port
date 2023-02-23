@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.combination
-! leanprover-community/mathlib commit 48765fae5044d8a40aa4c1e485f16b8bd87081af
+! leanprover-community/mathlib commit 87c54600fe3cdc7d32ff5b50873ac724d86aef8d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Invertible
 import Mathbin.Algebra.IndicatorFunction
 import Mathbin.Algebra.Module.BigOperators
+import Mathbin.Data.Fintype.BigOperators
 import Mathbin.LinearAlgebra.AffineSpace.AffineMap
 import Mathbin.LinearAlgebra.AffineSpace.AffineSubspace
 import Mathbin.LinearAlgebra.Finsupp

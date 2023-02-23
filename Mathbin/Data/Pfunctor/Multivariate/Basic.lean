@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.basic
-! leanprover-community/mathlib commit ffad43d259e5eb5084c2b76ace1ffa417aec33d5
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Pfunctor.Univariate.Basic
 
 /-!
 # Multivariate polynomial functors.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Multivariate polynomial functors are used for defining M-types and W-types.
 They map a type vector `α` to the type `Σ a : A, B a ⟹ α`, with `A : Type` and

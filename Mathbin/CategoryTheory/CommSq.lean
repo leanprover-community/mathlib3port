@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.comm_sq
-! leanprover-community/mathlib commit 796f267553ae13900b4ce1dec07ccbc57f2b2954
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Arrow
 
 /-!
 # Commutative squares
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provide an API for commutative squares in categories.
 If `top`, `left`, `right` and `bottom` are four morphisms which are the edges

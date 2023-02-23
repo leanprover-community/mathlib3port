@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.dfinsupp.multiset
-! leanprover-community/mathlib commit f694c7dead66f5d4c80f446c796a5aad14707f0e
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Dfinsupp.Order
 
 /-!
 # Equivalence between `multiset` and `ℕ`-valued finitely supported functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This defines `dfinsupp.to_multiset` the equivalence between `Π₀ a : α, ℕ` and `multiset α`, along
 with `multiset.to_dfinsupp` the reverse equivalence.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.prod
-! leanprover-community/mathlib commit 57a30493469f1a4338a5b3237b31ad8e4f3dd661
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.PartialSups
 import Mathbin.Algebra.Algebra.Prod
 
 /-! ### Products of modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines constructors for linear maps whose domains or codomains are products.
 

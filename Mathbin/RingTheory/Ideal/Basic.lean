@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.basic
-! leanprover-community/mathlib commit 6010cf523816335f7bae7f8584cb2edaace73940
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.LinearAlgebra.Finsupp
 /-!
 
 # Ideals over a ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `ideal R`, the type of (left) ideals over a ring `R`.
 Note that over commutative rings, left ideals and two-sided ideals are equivalent.

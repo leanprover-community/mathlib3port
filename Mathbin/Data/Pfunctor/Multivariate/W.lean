@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.multivariate.W
-! leanprover-community/mathlib commit 14b69e9f3c16630440a2cbd46f1ddad0d561dee7
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Pfunctor.Multivariate.Basic
 
 /-!
 # The W construction as a multivariate polynomial functor.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 W types are well-founded tree-like structures. They are defined
 as the least fixpoint of a polynomial functor.

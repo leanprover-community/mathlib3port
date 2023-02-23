@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed.field.basic
-! leanprover-community/mathlib commit 372edc36e5d2caafdd135769e0136b5a59186834
+! leanprover-community/mathlib commit 335232c774b3d0513ab1531582779dc25d6fdc9a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -168,6 +168,11 @@ instance Pi.normOneClass {ι : Type _} {α : ι → Type _} [Nonempty ι] [Finty
   ⟨by simp [Pi.norm_def, Finset.sup_const Finset.univ_nonempty]⟩
 #align pi.norm_one_class Pi.normOneClass
 
+instance MulOpposite.normOneClass [SeminormedAddCommGroup α] [One α] [NormOneClass α] :
+    NormOneClass αᵐᵒᵖ :=
+  ⟨@norm_one α _ _ _⟩
+#align mul_opposite.norm_one_class MulOpposite.normOneClass
+
 section NonUnitalSemiNormedRing
 
 variable [NonUnitalSemiNormedRing α]
@@ -252,6 +257,13 @@ instance Pi.nonUnitalSemiNormedRing {π : ι → Type _} [Fintype ι]
             Finset.sup_mul_le_mul_sup_of_nonneg _ (fun i _ => zero_le _) fun i _ => zero_le _
            }
 #align pi.non_unital_semi_normed_ring Pi.nonUnitalSemiNormedRing
+
+instance MulOpposite.nonUnitalSemiNormedRing : NonUnitalSemiNormedRing αᵐᵒᵖ :=
+  { MulOpposite.seminormedAddCommGroup with
+    norm_mul :=
+      MulOpposite.rec' fun x =>
+        MulOpposite.rec' fun y => (norm_mul_le y x).trans_eq (mul_comm _ _) }
+#align mul_opposite.non_unital_semi_normed_ring MulOpposite.nonUnitalSemiNormedRing
 
 end NonUnitalSemiNormedRing
 
@@ -377,6 +389,10 @@ instance Pi.semiNormedRing {π : ι → Type _} [Fintype ι] [∀ i, SemiNormedR
   { Pi.nonUnitalSemiNormedRing, Pi.seminormedAddCommGroup with }
 #align pi.semi_normed_ring Pi.semiNormedRing
 
+instance MulOpposite.semiNormedRing : SemiNormedRing αᵐᵒᵖ :=
+  { MulOpposite.nonUnitalSemiNormedRing, MulOpposite.seminormedAddCommGroup with }
+#align mul_opposite.semi_normed_ring MulOpposite.semiNormedRing
+
 end SemiNormedRing
 
 section NonUnitalNormedRing
@@ -398,6 +414,10 @@ instance Pi.nonUnitalNormedRing {π : ι → Type _} [Fintype ι] [∀ i, NonUni
     NonUnitalNormedRing (∀ i, π i) :=
   { Pi.normedAddCommGroup with norm_mul := norm_mul_le }
 #align pi.non_unital_normed_ring Pi.nonUnitalNormedRing
+
+instance MulOpposite.nonUnitalNormedRing : NonUnitalNormedRing αᵐᵒᵖ :=
+  { MulOpposite.normedAddCommGroup with norm_mul := norm_mul_le }
+#align mul_opposite.non_unital_normed_ring MulOpposite.nonUnitalNormedRing
 
 end NonUnitalNormedRing
 
@@ -426,6 +446,10 @@ instance Pi.normedRing {π : ι → Type _} [Fintype ι] [∀ i, NormedRing (π 
     NormedRing (∀ i, π i) :=
   { Pi.normedAddCommGroup with norm_mul := norm_mul_le }
 #align pi.normed_ring Pi.normedRing
+
+instance MulOpposite.normedRing : NormedRing αᵐᵒᵖ :=
+  { MulOpposite.normedAddCommGroup with norm_mul := norm_mul_le }
+#align mul_opposite.normed_ring MulOpposite.normedRing
 
 end NormedRing
 

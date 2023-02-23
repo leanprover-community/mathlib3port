@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.topology
-! leanprover-community/mathlib commit e2d165c81d899f79a6f112fa38f2daaa5f6a250d
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Order.Basic
 
 /-!
 ### Topology of ordinals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove some miscellaneous results involving the order topology of ordinals.
 

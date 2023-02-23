@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 2bbc7e3884ba234309d2a43b19144105a753292e
+! leanprover-community/mathlib commit 87c54600fe3cdc7d32ff5b50873ac724d86aef8d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Operations
 import Mathbin.Algebra.Ring.Equiv
 import Mathbin.Data.Nat.Choose.Sum
+import Mathbin.LinearAlgebra.Basis.Bilinear
 import Mathbin.RingTheory.Coprime.Lemmas
 import Mathbin.RingTheory.Ideal.Quotient
 import Mathbin.RingTheory.NonZeroDivisors

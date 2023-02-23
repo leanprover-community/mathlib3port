@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.affine_subspace
-! leanprover-community/mathlib commit 9f26ebf297c6a5ca26573a970411e606bb2ebe63
+! leanprover-community/mathlib commit b875cbb7f2aa2b4c685aaa2f99705689c95322ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1245,22 +1245,37 @@ theorem vectorSpan_range_eq_span_range_vsub_right_ne (p : ι → P) (i₀ : ι) 
   · exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
 #align vector_span_range_eq_span_range_vsub_right_ne vectorSpan_range_eq_span_range_vsub_right_ne
 
-/-- The affine span of a set is nonempty if and only if that set
-is. -/
-theorem affineSpan_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔ s.Nonempty :=
+section
+
+variable {s : Set P}
+
+/-- The affine span of a set is nonempty if and only if that set is. -/
+theorem affineSpan_nonempty : (affineSpan k s : Set P).Nonempty ↔ s.Nonempty :=
   spanPoints_nonempty k s
 #align affine_span_nonempty affineSpan_nonempty
 
+alias affineSpan_nonempty ↔ _ _root_.set.nonempty.affine_span
+#align set.nonempty.affine_span Set.Nonempty.affineSpan
+
 /-- The affine span of a nonempty set is nonempty. -/
-instance {s : Set P} [Nonempty s] : Nonempty (affineSpan k s) :=
-  ((affineSpan_nonempty k s).mpr (nonempty_subtype.mp ‹_›)).to_subtype
+instance [Nonempty s] : Nonempty (affineSpan k s) :=
+  ((nonempty_coe_sort.1 ‹_›).affineSpan _).to_subtype
 
 /-- The affine span of a set is `⊥` if and only if that set is empty. -/
 @[simp]
-theorem affineSpan_eq_bot {s : Set P} : affineSpan k s = ⊥ ↔ s = ∅ := by
+theorem affineSpan_eq_bot : affineSpan k s = ⊥ ↔ s = ∅ := by
   rw [← not_iff_not, ← Ne.def, ← Ne.def, ← nonempty_iff_ne_bot, affineSpan_nonempty,
     nonempty_iff_ne_empty]
 #align affine_span_eq_bot affineSpan_eq_bot
+
+@[simp]
+theorem bot_lt_affineSpan : ⊥ < affineSpan k s ↔ s.Nonempty :=
+  by
+  rw [bot_lt_iff_ne_bot, nonempty_iff_ne_empty]
+  exact (affineSpan_eq_bot _).Not
+#align bot_lt_affine_span bot_lt_affineSpan
+
+end
 
 variable {k}
 

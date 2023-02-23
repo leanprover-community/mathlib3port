@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Kevin Buzzard, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module linear_algebra.quotient
-! leanprover-community/mathlib commit 0d17cfb64a04ded3972434625fa74505ea1780f0
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Span
 
 /-!
 # Quotients by submodules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 * If `p` is a submodule of `M`, `M ⧸ p` is the quotient of `M` with respect to `p`:
   that is, elements of `M` are identified if their difference is in `p`. This is itself a module.

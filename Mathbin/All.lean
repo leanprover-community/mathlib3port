@@ -1895,6 +1895,7 @@ import Mathbin.LinearAlgebra.Alternating
 import Mathbin.LinearAlgebra.AnnihilatingPolynomial
 import Mathbin.LinearAlgebra.Basic
 import Mathbin.LinearAlgebra.Basis
+import Mathbin.LinearAlgebra.Basis.Bilinear
 import Mathbin.LinearAlgebra.BilinearForm
 import Mathbin.LinearAlgebra.BilinearMap
 import Mathbin.LinearAlgebra.Charpoly.Basic

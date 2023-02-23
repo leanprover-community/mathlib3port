@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson, Yaël Dillies
 
 ! This file was ported from Lean 3 source module computability.epsilon_NFA
-! leanprover-community/mathlib commit a239cd3e7ac2c7cde36c913808f9d40c411344f6
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Computability.NFA
 
 /-!
 # Epsilon Nondeterministic Finite Automata
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definition of an epsilon Nondeterministic Finite Automaton (`ε_NFA`), a state
 machine which determines whether a string (implemented as a list over an arbitrary alphabet) is in a

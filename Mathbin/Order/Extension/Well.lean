@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Junyan Xu
 
 ! This file was ported from Lean 3 source module order.extension.well
-! leanprover-community/mathlib commit 2751ae214172a40dfdd28dcbe91767868e0d8b81
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Ordinal.Arithmetic
 
 /-!
 # Extend a well-founded order to a well-order
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file constructs a well-order (linear well-founded order) which is an extension of a given
 well-founded order.

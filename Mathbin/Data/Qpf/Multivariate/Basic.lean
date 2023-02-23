@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.basic
-! leanprover-community/mathlib commit 3c09987c11add055469578d7d49bc0ca0c74b10e
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Pfunctor.Multivariate.Basic
 
 /-!
 # Multivariate quotients of polynomial functors.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Basic definition of multivariate QPF. QPFs form a compositional framework
 for defining inductive and coinductive types, their quotients and nesting.

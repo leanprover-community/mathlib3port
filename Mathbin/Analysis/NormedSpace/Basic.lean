@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module analysis.normed_space.basic
-! leanprover-community/mathlib commit 832a8ba8f10f11fea99367c469ff802e69a5b8ec
+! leanprover-community/mathlib commit 335232c774b3d0513ab1531582779dc25d6fdc9a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -279,6 +279,11 @@ instance Pi.normedSpace {E : ι → Type _} [Fintype ι] [∀ i, SeminormedAddCo
           ‖a‖₊ * ↑(Finset.sup Finset.univ fun b : ι => ‖f b‖₊)
         by simp only [(NNReal.coe_mul _ _).symm, NNReal.mul_finset_sup, nnnorm_smul]
 #align pi.normed_space Pi.normedSpace
+
+instance MulOpposite.normedSpace : NormedSpace α Eᵐᵒᵖ :=
+  { MulOpposite.normedAddCommGroup, MulOpposite.module _ with
+    norm_smul_le := fun s x => (norm_smul s x.unop).le }
+#align mul_opposite.normed_space MulOpposite.normedSpace
 
 /-- A subspace of a normed space is also a normed space, with the restriction of the norm. -/
 instance Submodule.normedSpace {𝕜 R : Type _} [SMul 𝕜 R] [NormedField 𝕜] [Ring R] {E : Type _}
@@ -577,6 +582,11 @@ instance Pi.normedAlgebra {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedRin
     [∀ i, NormedAlgebra 𝕜 (E i)] : NormedAlgebra 𝕜 (∀ i, E i) :=
   { Pi.normedSpace, Pi.algebra _ E with }
 #align pi.normed_algebra Pi.normedAlgebra
+
+instance MulOpposite.normedAlgebra {E : Type _} [SemiNormedRing E] [NormedAlgebra 𝕜 E] :
+    NormedAlgebra 𝕜 Eᵐᵒᵖ :=
+  { MulOpposite.normedSpace with }
+#align mul_opposite.normed_algebra MulOpposite.normedAlgebra
 
 end NormedAlgebra
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Abhimanyu Pallavi Sudhir, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module order.filter.filter_product
-! leanprover-community/mathlib commit 3592f45eeaf90143256b1dee3c20aade62924b0c
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.Filter.Germ
 
 /-!
 # Ultraproducts
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `φ` is an ultrafilter, then the space of germs of functions `f : α → β` at `φ` is called
 the *ultraproduct*. In this file we prove properties of ultraproducts that rely on `φ` being an

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.pfunctor.univariate.M
-! leanprover-community/mathlib commit 356447fe00e75e54777321045cdff7c9ea212e60
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Pfunctor.Univariate.Basic
 
 /-!
 # M-types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 M types are potentially infinite tree-like structures. They are defined
 as the greatest fixpoint of a polynomial functor.

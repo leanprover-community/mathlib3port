@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot, Johannes Hölzl, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.normed.group.basic
-! leanprover-community/mathlib commit 735b22f8f9ff9792cf4212d7cb051c4c994bc685
+! leanprover-community/mathlib commit 335232c774b3d0513ab1531582779dc25d6fdc9a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2535,6 +2535,52 @@ instance Pi.normedCommGroup [∀ i, NormedCommGroup (π i)] : NormedCommGroup (�
 #align pi.normed_add_comm_group Pi.normedAddCommGroup
 
 end Pi
+
+/-! ### Multiplicative opposite -/
+
+
+namespace MulOpposite
+
+/-- The (additive) norm on the multiplicative opposite is the same as the norm on the original type.
+
+Note that we do not provide this more generally as `has_norm Eᵐᵒᵖ`, as this is not always a good
+choice of norm in the multiplicative `seminormed_group E` case.
+
+We could repeat this instance to provide a `[seminormed_group E] : seminormed_group Eᵃᵒᵖ` instance,
+but that case would likely never be used.
+-/
+instance [SeminormedAddGroup E] : SeminormedAddGroup Eᵐᵒᵖ
+    where
+  norm x := ‖x.unop‖
+  dist_eq _ _ := dist_eq_norm _ _
+  toPseudoMetricSpace := MulOpposite.pseudoMetricSpace
+
+theorem norm_op [SeminormedAddGroup E] (a : E) : ‖MulOpposite.op a‖ = ‖a‖ :=
+  rfl
+#align mul_opposite.norm_op MulOpposite.norm_op
+
+theorem norm_unop [SeminormedAddGroup E] (a : Eᵐᵒᵖ) : ‖MulOpposite.unop a‖ = ‖a‖ :=
+  rfl
+#align mul_opposite.norm_unop MulOpposite.norm_unop
+
+theorem nnnorm_op [SeminormedAddGroup E] (a : E) : ‖MulOpposite.op a‖₊ = ‖a‖₊ :=
+  rfl
+#align mul_opposite.nnnorm_op MulOpposite.nnnorm_op
+
+theorem nnnorm_unop [SeminormedAddGroup E] (a : Eᵐᵒᵖ) : ‖MulOpposite.unop a‖₊ = ‖a‖₊ :=
+  rfl
+#align mul_opposite.nnnorm_unop MulOpposite.nnnorm_unop
+
+instance [NormedAddGroup E] : NormedAddGroup Eᵐᵒᵖ :=
+  { MulOpposite.seminormedAddGroup with }
+
+instance [SeminormedAddCommGroup E] : SeminormedAddCommGroup Eᵐᵒᵖ
+    where dist_eq _ _ := dist_eq_norm _ _
+
+instance [NormedAddCommGroup E] : NormedAddCommGroup Eᵐᵒᵖ :=
+  { MulOpposite.seminormedAddCommGroup with }
+
+end MulOpposite
 
 /-! ### Subgroups of normed groups -/
 

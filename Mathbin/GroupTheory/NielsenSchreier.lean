@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Wärn
 
 ! This file was ported from Lean 3 source module group_theory.nielsen_schreier
-! leanprover-community/mathlib commit 56adee5b5eef9e734d82272918300fca4f3e7cef
+! leanprover-community/mathlib commit 1bda4fc53de6ade5ab9da36f2192e24e2084a2ce
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -100,7 +100,7 @@ theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group 
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 #align is_free_groupoid.ext_functor IsFreeGroupoid.ext_functor
 
-/-- An action groupoid over a free froup is free. More generally, one could show that the groupoid
+/-- An action groupoid over a free group is free. More generally, one could show that the groupoid
 of elements over a free groupoid is free, but this version is easier to prove and suffices for our
 purposes.
 

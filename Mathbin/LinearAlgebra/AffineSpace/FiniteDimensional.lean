@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module linear_algebra.affine_space.finite_dimensional
-! leanprover-community/mathlib commit 2f4cdce0c2f2f3b8cd58f05d556d03b468e1eb2e
+! leanprover-community/mathlib commit b875cbb7f2aa2b4c685aaa2f99705689c95322ad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -248,11 +248,10 @@ theorem AffineIndependent.affineSpan_image_finset_eq_of_le_of_card_eq_finrank_ad
     [FiniteDimensional k sp.direction] (hle : affineSpan k (s.image p : Set P) ≤ sp)
     (hc : Finset.card s = finrank k sp.direction + 1) : affineSpan k (s.image p : Set P) = sp :=
   by
-  have hn : (s.image p).Nonempty :=
-    by
-    rw [Finset.Nonempty.image_iff, ← Finset.card_pos, hc]
+  have hn : s.nonempty := by
+    rw [← Finset.card_pos, hc]
     apply Nat.succ_pos
-  refine' eq_of_direction_eq_of_nonempty_of_le _ ((affineSpan_nonempty k _).2 hn) hle
+  refine' eq_of_direction_eq_of_nonempty_of_le _ ((hn.image _).to_set.affineSpan _) hle
   have hd := direction_le hle
   rw [direction_affineSpan] at hd⊢
   exact hi.vector_span_image_finset_eq_of_le_of_card_eq_finrank_add_one hd hc

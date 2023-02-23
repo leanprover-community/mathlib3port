@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module deprecated.subring
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # Unbundled subrings (deprecated)
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is deprecated, and is no longer imported by anything in mathlib other than other
 deprecated files, and test files. You should not need to import it.

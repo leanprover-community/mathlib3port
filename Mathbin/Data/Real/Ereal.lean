@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard
 
 ! This file was ported from Lean 3 source module data.real.ereal
-! leanprover-community/mathlib commit 83871f6cff322a1eafaa382ef70e9515fe240abd
+! leanprover-community/mathlib commit 464e1ddc4026874cdea576f9d698df42779d31c9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -62,7 +62,7 @@ noncomputable section
 /-- ereal : The type `[-∞, ∞]` -/
 def Ereal :=
   WithBot (WithTop ℝ)deriving Bot, Zero, One, Nontrivial, AddMonoid, SupSet, InfSet,
-  CompleteLinearOrder, LinearOrderedAddCommMonoid
+  CompleteLinearOrder, LinearOrderedAddCommMonoid, ZeroLEOneClass
 #align ereal Ereal
 
 /-- The canonical inclusion froms reals to ereals. Do not use directly: as this is registered as
@@ -418,6 +418,11 @@ theorem toReal_coe_ennreal : ∀ {x : ℝ≥0∞}, toReal (x : Ereal) = Ennreal.
   | ⊤ => rfl
   | some x => rfl
 #align ereal.to_real_coe_ennreal Ereal.toReal_coe_ennreal
+
+@[simp]
+theorem coe_ennreal_ofReal {x : ℝ} : (Ennreal.ofReal x : Ereal) = max x 0 :=
+  rfl
+#align ereal.coe_ennreal_of_real Ereal.coe_ennreal_ofReal
 
 theorem coe_nNReal_eq_coe_real (x : ℝ≥0) : ((x : ℝ≥0∞) : Ereal) = (x : ℝ) :=
   rfl
@@ -1058,6 +1063,40 @@ theorem toReal_mul {x y : Ereal} : toReal (x * y) = toReal x * toReal y :=
   · simp only [top_mul_top, to_real_top, mul_zero]
 #align ereal.to_real_mul Ereal.toReal_mul
 
+protected theorem neg_mul (x y : Ereal) : -x * y = -(x * y) :=
+  by
+  induction x using Ereal.rec <;> induction y using Ereal.rec
+  · rfl
+  · rcases lt_trichotomy 0 y with (hy | rfl | hy)
+    · rw [bot_mul_coe_of_pos hy, neg_bot, top_mul_coe_of_pos hy]
+    · rw [coe_zero, mul_zero, mul_zero, neg_zero]
+    · rw [bot_mul_coe_of_neg hy, neg_bot, neg_top, top_mul_coe_of_neg hy]
+  · rfl
+  · rcases lt_trichotomy 0 x with (hx | rfl | hx)
+    · rw [coe_mul_bot_of_pos hx, neg_bot, ← coe_neg, coe_mul_bot_of_neg (neg_neg_of_pos hx)]
+    · rw [coe_zero, zero_mul, neg_zero, zero_mul]
+    · rw [coe_mul_bot_of_neg hx, neg_top, ← coe_neg, coe_mul_bot_of_pos (neg_pos_of_neg hx)]
+  · norm_cast
+    exact neg_mul _ _
+  · rcases lt_trichotomy 0 x with (hx | rfl | hx)
+    · rw [coe_mul_top_of_pos hx, neg_top, ← coe_neg, coe_mul_top_of_neg (neg_neg_of_pos hx)]
+    · rw [coe_zero, zero_mul, neg_zero, zero_mul]
+    · rw [coe_mul_top_of_neg hx, neg_bot, ← coe_neg, coe_mul_top_of_pos (neg_pos_of_neg hx)]
+  · rfl
+  · rcases lt_trichotomy 0 y with (hy | rfl | hy)
+    · rw [top_mul_coe_of_pos hy, neg_top, bot_mul_coe_of_pos hy]
+    · rw [coe_zero, mul_zero, mul_zero, neg_zero]
+    · rw [top_mul_coe_of_neg hy, neg_top, neg_bot, bot_mul_coe_of_neg hy]
+  · rfl
+#align ereal.neg_mul Ereal.neg_mul
+
+instance : HasDistribNeg Ereal :=
+  { Ereal.hasInvolutiveNeg with
+    neg_mul := Ereal.neg_mul
+    mul_neg := fun x y => by
+      rw [x.mul_comm, x.mul_comm]
+      exact y.neg_mul x }
+
 /-! ### Absolute value -/
 
 
@@ -1079,6 +1118,10 @@ theorem abs_bot : (⊥ : Ereal).abs = ⊤ :=
   rfl
 #align ereal.abs_bot Ereal.abs_bot
 
+theorem abs_def (x : ℝ) : (x : Ereal).abs = Ennreal.ofReal (|x|) :=
+  rfl
+#align ereal.abs_def Ereal.abs_def
+
 theorem abs_coe_lt_top (x : ℝ) : (x : Ereal).abs < ⊤ :=
   Ennreal.ofReal_lt_top
 #align ereal.abs_coe_lt_top Ereal.abs_coe_lt_top
@@ -1095,6 +1138,11 @@ theorem abs_eq_zero_iff {x : Ereal} : x.abs = 0 ↔ x = 0 :=
 @[simp]
 theorem abs_zero : (0 : Ereal).abs = 0 := by rw [abs_eq_zero_iff]
 #align ereal.abs_zero Ereal.abs_zero
+
+@[simp]
+theorem coe_abs (x : ℝ) : ((x : Ereal).abs : Ereal) = (|x| : ℝ) := by
+  rcases lt_trichotomy 0 x with (hx | rfl | hx) <;> simp [abs_def]
+#align ereal.coe_abs Ereal.coe_abs
 
 @[simp]
 theorem abs_mul (x y : Ereal) : (x * y).abs = x.abs * y.abs :=
@@ -1195,33 +1243,48 @@ theorem sign_mul (x y : Ereal) : SignType.sign (x * y) = SignType.sign x * SignT
   · rfl
 #align ereal.sign_mul Ereal.sign_mul
 
+theorem sign_mul_abs (x : Ereal) : (SignType.sign x * x.abs : Ereal) = x :=
+  by
+  induction x using Ereal.rec
+  · simp
+  · rcases lt_trichotomy 0 x with (hx | rfl | hx)
+    · simp [sign_pos hx, abs_of_pos hx]
+    · simp
+    · simp [sign_neg hx, abs_of_neg hx]
+  · simp
+#align ereal.sign_mul_abs Ereal.sign_mul_abs
+
 theorem sign_eq_and_abs_eq_iff_eq {x y : Ereal} :
     x.abs = y.abs ∧ SignType.sign x = SignType.sign y ↔ x = y :=
   by
-  constructor; swap
+  constructor
+  · rintro ⟨habs, hsign⟩
+    rw [← x.sign_mul_abs, ← y.sign_mul_abs, habs, hsign]
   · rintro rfl
     simp only [eq_self_iff_true, and_self_iff]
-  rintro ⟨habs, hsign⟩
-  induction x using Ereal.rec <;> induction y using Ereal.rec
-  · rfl
-  · simpa only using abs_coe_lt_top y
-  · simpa only using hsign
-  · simpa only using abs_coe_lt_top x
-  · have : |x| = |y| := by
-      simpa only [Ereal.abs, Ennreal.ofReal_eq_ofReal_iff, abs_nonneg] using habs
-    rcases abs_eq_abs.1 this with (rfl | h)
-    · rfl
-    · rcases lt_trichotomy x 0 with (hx | rfl | hx)
-      · have hy : 0 < y := by simpa only [h, Right.neg_neg_iff] using hx
-        simpa only [hx, hy, sign_coe, sign_neg, sign_pos] using hsign
-      · simp only [zero_eq_neg.1 h]
-      · have hy : y < 0 := by simpa only [h, Right.neg_pos_iff] using hx
-        simpa only [hx, hy, sign_coe, sign_neg, sign_pos] using hsign
-  · simpa only using abs_coe_lt_top x
-  · simpa only
-  · simpa only using abs_coe_lt_top y
-  · rfl
 #align ereal.sign_eq_and_abs_eq_iff_eq Ereal.sign_eq_and_abs_eq_iff_eq
+
+theorem le_iff_sign {x y : Ereal} :
+    x ≤ y ↔
+      SignType.sign x < SignType.sign y ∨
+        SignType.sign x = SignType.neg ∧ SignType.sign y = SignType.neg ∧ y.abs ≤ x.abs ∨
+          SignType.sign x = SignType.zero ∧ SignType.sign y = SignType.zero ∨
+            SignType.sign x = SignType.pos ∧ SignType.sign y = SignType.pos ∧ x.abs ≤ y.abs :=
+  by
+  constructor
+  · intro h
+    rcases(sign.monotone h).lt_or_eq with (hs | hs)
+    · exact Or.inl hs
+    · rw [← x.sign_mul_abs, ← y.sign_mul_abs] at h
+      cases SignType.sign y <;> rw [hs] at *
+      · simp
+      · simp at h⊢
+        exact Or.inl h
+      · simpa using h
+  · rintro (h | h | h | h)
+    · exact (sign.monotone.reflect_lt h).le
+    all_goals rw [← x.sign_mul_abs, ← y.sign_mul_abs]; simp [h]
+#align ereal.le_iff_sign Ereal.le_iff_sign
 
 instance : CommMonoidWithZero Ereal :=
   { Ereal.hasMul, Ereal.hasOne, Ereal.hasZero,
@@ -1230,6 +1293,29 @@ instance : CommMonoidWithZero Ereal :=
       rw [← sign_eq_and_abs_eq_iff_eq]
       simp only [mul_assoc, abs_mul, eq_self_iff_true, sign_mul, and_self_iff]
     mul_comm := Ereal.mul_comm }
+
+instance : PosMulMono Ereal :=
+  posMulMono_iff_covariant_pos.2
+    ⟨by
+      rintro ⟨x, x0⟩ a b h; dsimp
+      rcases le_iff_sign.mp h with (h | h | h | h)
+      · rw [le_iff_sign]
+        left
+        simp [sign_pos x0, h]
+      all_goals
+        rw [← x.sign_mul_abs, ← a.sign_mul_abs, ← b.sign_mul_abs, sign_pos x0]
+        simp only [h]; dsimp
+        simp only [neg_mul, mul_neg, Ereal.neg_le_neg_iff, one_mul, le_refl, zero_mul, mul_zero]
+      all_goals norm_cast; exact mul_le_mul_left' h.2.2 _⟩
+
+instance : MulPosMono Ereal :=
+  posMulMono_iff_mulPosMono.1 Ereal.posMulMono
+
+instance : PosMulReflectLT Ereal :=
+  PosMulMono.toPosMulReflectLT
+
+instance : MulPosReflectLT Ereal :=
+  MulPosMono.toMulPosReflectLT
 
 @[simp, norm_cast]
 theorem coe_pow (x : ℝ) (n : ℕ) : (↑(x ^ n) : Ereal) = x ^ n :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta, Jakob von Raumer
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.category
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Products.Basic
 
 /-!
 # Monoidal categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A monoidal category is a category equipped with a tensor product, unitors, and an associator.
 In the definition, we provide the tensor product as a pair of functions
