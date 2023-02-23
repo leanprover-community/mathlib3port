@@ -37,6 +37,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {E : Type u₃} [Category.{v₃} E]
 
+#print CategoryTheory.ReflectsIsomorphisms /-
 /-- Define what it means for a functor `F : C ⥤ D` to reflect isomorphisms: for any
 morphism `f : A ⟶ B`, if `F.map f` is an isomorphism then `f` is as well.
 Note that we do not assume or require that `F` is faithful.
@@ -44,18 +45,27 @@ Note that we do not assume or require that `F` is faithful.
 class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
   reflects : ∀ {A B : C} (f : A ⟶ B) [IsIso (F.map f)], IsIso f
 #align category_theory.reflects_isomorphisms CategoryTheory.ReflectsIsomorphisms
+-/
 
+/- warning: category_theory.is_iso_of_reflects_iso -> CategoryTheory.isIso_of_reflects_iso is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {A : C} {B : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) A B) (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_4 : CategoryTheory.IsIso.{u2, u4} D _inst_2 (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A) (CategoryTheory.Functor.obj.{u1, u2, u3, u4} C _inst_1 D _inst_2 F B) (CategoryTheory.Functor.map.{u1, u2, u3, u4} C _inst_1 D _inst_2 F A B f)] [_inst_5 : CategoryTheory.ReflectsIsomorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], CategoryTheory.IsIso.{u1, u3} C _inst_1 A B f
+but is expected to have type
+  forall {C : Type.{u3}} [_inst_1 : CategoryTheory.Category.{u1, u3} C] {D : Type.{u4}} [_inst_2 : CategoryTheory.Category.{u2, u4} D] {A : C} {B : C} (f : Quiver.Hom.{succ u1, u3} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) A B) (F : CategoryTheory.Functor.{u1, u2, u3, u4} C _inst_1 D _inst_2) [_inst_4 : CategoryTheory.IsIso.{u2, u4} D _inst_2 (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) A) (Prefunctor.obj.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) B) (Prefunctor.map.{succ u1, succ u2, u3, u4} C (CategoryTheory.CategoryStruct.toQuiver.{u1, u3} C (CategoryTheory.Category.toCategoryStruct.{u1, u3} C _inst_1)) D (CategoryTheory.CategoryStruct.toQuiver.{u2, u4} D (CategoryTheory.Category.toCategoryStruct.{u2, u4} D _inst_2)) (CategoryTheory.Functor.toPrefunctor.{u1, u2, u3, u4} C _inst_1 D _inst_2 F) A B f)] [_inst_5 : CategoryTheory.ReflectsIsomorphisms.{u1, u2, u3, u4} C _inst_1 D _inst_2 F], CategoryTheory.IsIso.{u1, u3} C _inst_1 A B f
+Case conversion may be inaccurate. Consider using '#align category_theory.is_iso_of_reflects_iso CategoryTheory.isIso_of_reflects_isoₓ'. -/
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem isIso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)]
     [ReflectsIsomorphisms F] : IsIso f :=
   ReflectsIsomorphisms.reflects F f
 #align category_theory.is_iso_of_reflects_iso CategoryTheory.isIso_of_reflects_iso
 
+#print CategoryTheory.of_full_and_faithful /-
 instance (priority := 100) of_full_and_faithful (F : C ⥤ D) [Full F] [Faithful F] :
     ReflectsIsomorphisms F
     where reflects X Y f i :=
     ⟨⟨F.preimage (inv (F.map f)), ⟨F.map_injective (by simp), F.map_injective (by simp)⟩⟩⟩
 #align category_theory.of_full_and_faithful CategoryTheory.of_full_and_faithful
+-/
 
 instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphisms G] :
     ReflectsIsomorphisms (F ⋙ G) :=
@@ -64,6 +74,7 @@ instance (F : C ⥤ D) (G : D ⥤ E) [ReflectsIsomorphisms F] [ReflectsIsomorphi
     haveI := is_iso_of_reflects_iso (F.map f) G
     exact is_iso_of_reflects_iso f F⟩
 
+#print CategoryTheory.reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms /-
 instance (priority := 100) reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms
     [Balanced C] (F : C ⥤ D) [ReflectsMonomorphisms F] [ReflectsEpimorphisms F] :
     ReflectsIsomorphisms F
@@ -73,6 +84,7 @@ instance (priority := 100) reflectsIsomorphisms_of_reflectsMonomorphisms_of_refl
     haveI : mono f := mono_of_mono_map F inferInstance
     exact is_iso_of_mono_of_epi f
 #align category_theory.reflects_isomorphisms_of_reflects_monomorphisms_of_reflects_epimorphisms CategoryTheory.reflectsIsomorphisms_of_reflectsMonomorphisms_of_reflectsEpimorphisms
+-/
 
 end ReflectsIso
 
