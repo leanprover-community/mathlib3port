@@ -70,9 +70,9 @@ section
 
 variable [WellPowered C]
 
-instance essentiallySmallMonoOver (X : C) : EssentiallySmall.{v} (MonoOver X) :=
+instance essentiallySmall_monoOver (X : C) : EssentiallySmall.{v} (MonoOver X) :=
   (essentiallySmall_monoOver_iff_small_subobject X).mpr (WellPowered.subobject_small X)
-#align category_theory.essentially_small_mono_over CategoryTheory.essentiallySmallMonoOver
+#align category_theory.essentially_small_mono_over CategoryTheory.essentiallySmall_monoOver
 
 end
 
