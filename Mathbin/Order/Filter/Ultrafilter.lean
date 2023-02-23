@@ -562,10 +562,10 @@ def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
 #align ultrafilter.bind Ultrafilter.bind
 -/
 
-#print Ultrafilter.hasBind /-
-instance hasBind : Bind Ultrafilter :=
+#print Ultrafilter.instBind /-
+instance instBind : Bind Ultrafilter :=
   ⟨@Ultrafilter.bind⟩
-#align ultrafilter.has_bind Ultrafilter.hasBind
+#align ultrafilter.has_bind Ultrafilter.instBind
 -/
 
 #print Ultrafilter.functor /-

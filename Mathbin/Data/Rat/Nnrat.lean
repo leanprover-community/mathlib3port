@@ -394,16 +394,16 @@ def coeHom : ℚ≥0 →+* ℚ :=
   ⟨coe, coe_one, coe_mul, coe_zero, coe_add⟩
 #align nnrat.coe_hom NNRat.coeHom
 
-/- warning: nnrat.coe_nat_cast -> NNRat.coe_nat_cast is a dubious translation:
+/- warning: nnrat.coe_nat_cast -> NNRat.coe_natCast is a dubious translation:
 lean 3 declaration is
   forall (n : Nat), Eq.{1} Rat ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) NNRat Rat (HasLiftT.mk.{1, 1} NNRat Rat (CoeTCₓ.coe.{1, 1} NNRat Rat (coeBase.{1, 1} NNRat Rat NNRat.Rat.hasCoe))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat NNRat (HasLiftT.mk.{1, 1} Nat NNRat (CoeTCₓ.coe.{1, 1} Nat NNRat (Nat.castCoe.{0} NNRat (AddMonoidWithOne.toNatCast.{0} NNRat (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNRat (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNRat (Semiring.toNonAssocSemiring.{0} NNRat (DivisionSemiring.toSemiring.{0} NNRat (Semifield.toDivisionSemiring.{0} NNRat (LinearOrderedSemifield.toSemifield.{0} NNRat (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNRat NNRat.canonicallyLinearOrderedSemifield))))))))))) n)) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) Nat Rat (HasLiftT.mk.{1, 1} Nat Rat (CoeTCₓ.coe.{1, 1} Nat Rat (Nat.castCoe.{0} Rat (AddMonoidWithOne.toNatCast.{0} Rat (AddGroupWithOne.toAddMonoidWithOne.{0} Rat (NonAssocRing.toAddGroupWithOne.{0} Rat (Ring.toNonAssocRing.{0} Rat (DivisionRing.toRing.{0} Rat Rat.divisionRing)))))))) n)
 but is expected to have type
   forall (n : Nat), Eq.{1} Rat (Subtype.val.{1} Rat (fun (q : Rat) => LE.le.{0} Rat Rat.instLERat (OfNat.ofNat.{0} Rat 0 (Rat.instOfNatRat 0)) q) (Nat.cast.{0} NNRat (CanonicallyOrderedCommSemiring.toNatCast.{0} NNRat instNNRatCanonicallyOrderedCommSemiring) n)) (Nat.cast.{0} Rat (NonAssocRing.toNatCast.{0} Rat (Ring.toNonAssocRing.{0} Rat (StrictOrderedRing.toRing.{0} Rat (LinearOrderedRing.toStrictOrderedRing.{0} Rat Rat.instLinearOrderedRingRat)))) n)
-Case conversion may be inaccurate. Consider using '#align nnrat.coe_nat_cast NNRat.coe_nat_castₓ'. -/
+Case conversion may be inaccurate. Consider using '#align nnrat.coe_nat_cast NNRat.coe_natCastₓ'. -/
 @[simp, norm_cast]
-theorem coe_nat_cast (n : ℕ) : (↑(↑n : ℚ≥0) : ℚ) = n :=
+theorem coe_natCast (n : ℕ) : (↑(↑n : ℚ≥0) : ℚ) = n :=
   map_natCast coeHom n
-#align nnrat.coe_nat_cast NNRat.coe_nat_cast
+#align nnrat.coe_nat_cast NNRat.coe_natCast
 
 /- warning: nnrat.mk_coe_nat -> NNRat.mk_coe_nat is a dubious translation:
 lean 3 declaration is
@@ -413,7 +413,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align nnrat.mk_coe_nat NNRat.mk_coe_natₓ'. -/
 @[simp]
 theorem mk_coe_nat (n : ℕ) : @Eq ℚ≥0 (⟨(n : ℚ), n.cast_nonneg⟩ : ℚ≥0) n :=
-  ext (coe_nat_cast n).symm
+  ext (coe_natCast n).symm
 #align nnrat.mk_coe_nat NNRat.mk_coe_nat
 
 /-- The rational numbers are an algebra over the non-negative rationals. -/

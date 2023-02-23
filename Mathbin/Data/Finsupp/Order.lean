@@ -211,15 +211,15 @@ theorem le_iff (f g : ι →₀ α) : f ≤ g ↔ ∀ i ∈ f.support, f i ≤ g
   le_iff' f g <| Subset.refl _
 #align finsupp.le_iff Finsupp.le_iff
 
-/- warning: finsupp.decidable_le -> Finsupp.decidableLe is a dubious translation:
+/- warning: finsupp.decidable_le -> Finsupp.decidableLE is a dubious translation:
 lean 3 declaration is
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CanonicallyOrderedAddMonoid.{u2} α] [_inst_2 : DecidableRel.{succ u2} α (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommMonoid.toPartialOrder.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1)))))], DecidableRel.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι α (AddZeroClass.toHasZero.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1)))))) (LE.le.{max u1 u2} (Finsupp.{u1, u2} ι α (AddZeroClass.toHasZero.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1)))))) (Finsupp.hasLe.{u1, u2} ι α (AddZeroClass.toHasZero.{u2} α (AddMonoid.toAddZeroClass.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1))))) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommMonoid.toPartialOrder.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1))))))
 but is expected to have type
   forall {ι : Type.{u1}} {α : Type.{u2}} [_inst_1 : CanonicallyOrderedAddMonoid.{u2} α] [_inst_2 : DecidableRel.{succ u2} α (LE.le.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommMonoid.toPartialOrder.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1)))))], DecidableRel.{max (succ u1) (succ u2)} (Finsupp.{u1, u2} ι α (AddMonoid.toZero.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1))))) (LE.le.{max u2 u1} (Finsupp.{u1, u2} ι α (AddMonoid.toZero.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1))))) (Finsupp.instLEFinsupp.{u1, u2} ι α (AddMonoid.toZero.{u2} α (AddCommMonoid.toAddMonoid.{u2} α (OrderedAddCommMonoid.toAddCommMonoid.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1)))) (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (OrderedAddCommMonoid.toPartialOrder.{u2} α (CanonicallyOrderedAddMonoid.toOrderedAddCommMonoid.{u2} α _inst_1))))))
-Case conversion may be inaccurate. Consider using '#align finsupp.decidable_le Finsupp.decidableLeₓ'. -/
-instance decidableLe [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
+Case conversion may be inaccurate. Consider using '#align finsupp.decidable_le Finsupp.decidableLEₓ'. -/
+instance decidableLE [DecidableRel (@LE.le α _)] : DecidableRel (@LE.le (ι →₀ α) _) := fun f g =>
   decidable_of_iff _ (le_iff f g).symm
-#align finsupp.decidable_le Finsupp.decidableLe
+#align finsupp.decidable_le Finsupp.decidableLE
 
 /- warning: finsupp.single_le_iff -> Finsupp.single_le_iff is a dubious translation:
 lean 3 declaration is

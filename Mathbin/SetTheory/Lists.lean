@@ -366,11 +366,11 @@ def mem (a : Lists α) : Lists α → Prop
 instance : Membership (Lists α) (Lists α) :=
   ⟨mem⟩
 
-#print Lists.is_list_of_mem /-
-theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
+#print Lists.isList_of_mem /-
+theorem isList_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
   | ⟨_, Lists'.nil⟩, _ => rfl
   | ⟨_, Lists'.cons' _ _⟩, _ => rfl
-#align lists.is_list_of_mem Lists.is_list_of_mem
+#align lists.is_list_of_mem Lists.isList_of_mem
 -/
 
 #print Lists.Equiv.antisymm_iff /-

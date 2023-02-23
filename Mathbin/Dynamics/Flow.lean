@@ -169,14 +169,14 @@ protected theorem continuous {β : Type _} [TopologicalSpace β] {t : β → τ}
   ϕ.cont'.comp (ht.prod_mk hf)
 #align flow.continuous Flow.continuous
 
-/- warning: continuous.flow -> continuous.flow is a dubious translation:
+/- warning: continuous.flow -> Continuous.flow is a dubious translation:
 lean 3 declaration is
   forall {τ : Type.{u1}} [_inst_1 : AddMonoid.{u1} τ] [_inst_2 : TopologicalSpace.{u1} τ] [_inst_3 : ContinuousAdd.{u1} τ _inst_2 (AddZeroClass.toHasAdd.{u1} τ (AddMonoid.toAddZeroClass.{u1} τ _inst_1))] {α : Type.{u2}} [_inst_4 : TopologicalSpace.{u2} α] (ϕ : Flow.{u1, u2} τ _inst_2 _inst_1 _inst_3 α _inst_4) {β : Type.{u3}} [_inst_5 : TopologicalSpace.{u3} β] {t : β -> τ}, (Continuous.{u3, u1} β τ _inst_5 _inst_2 t) -> (forall {f : β -> α}, (Continuous.{u3, u2} β α _inst_5 _inst_4 f) -> (Continuous.{u3, u2} β α _inst_5 _inst_4 (fun (x : β) => coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (Flow.{u1, u2} τ _inst_2 _inst_1 _inst_3 α _inst_4) (fun (_x : Flow.{u1, u2} τ _inst_2 _inst_1 _inst_3 α _inst_4) => τ -> α -> α) (Flow.hasCoeToFun.{u1, u2} τ _inst_1 _inst_2 _inst_3 α _inst_4) ϕ (t x) (f x))))
 but is expected to have type
   forall {τ : Type.{u2}} [_inst_1 : AddMonoid.{u2} τ] [_inst_2 : TopologicalSpace.{u2} τ] [_inst_3 : ContinuousAdd.{u2} τ _inst_2 (AddZeroClass.toAdd.{u2} τ (AddMonoid.toAddZeroClass.{u2} τ _inst_1))] {α : Type.{u1}} [_inst_4 : TopologicalSpace.{u1} α] (ϕ : Flow.{u2, u1} τ _inst_2 _inst_1 _inst_3 α _inst_4) {β : Type.{u3}} [_inst_5 : TopologicalSpace.{u3} β] {t : β -> τ}, (Continuous.{u3, u2} β τ _inst_5 _inst_2 t) -> (forall {f : β -> α}, (Continuous.{u3, u1} β α _inst_5 _inst_4 f) -> (Continuous.{u3, u1} β α _inst_5 _inst_4 (fun (x : β) => Flow.toFun.{u2, u1} τ _inst_2 _inst_1 _inst_3 α _inst_4 ϕ (t x) (f x))))
-Case conversion may be inaccurate. Consider using '#align continuous.flow continuous.flowₓ'. -/
+Case conversion may be inaccurate. Consider using '#align continuous.flow Continuous.flowₓ'. -/
 alias Flow.continuous ← _root_.continuous.flow
-#align continuous.flow continuous.flow
+#align continuous.flow Continuous.flow
 
 /- warning: flow.map_add -> Flow.map_add is a dubious translation:
 lean 3 declaration is

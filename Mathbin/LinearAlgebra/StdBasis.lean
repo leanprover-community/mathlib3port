@@ -193,7 +193,7 @@ theorem linearIndependent_stdBasis [Ring R] [∀ i, AddCommGroup (Ms i)] [∀ i,
     by
     intro j
     exact (hs j).map' _ (ker_std_basis _ _ _)
-  apply linearIndependent_Union_finite hs'
+  apply linearIndependent_unionᵢ_finite hs'
   · intro j J _ hiJ
     simp [(Set.unionᵢ.equations._eqn_1 _).symm, Submodule.span_image, Submodule.span_unionᵢ]
     have h₀ :
