@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Mario Carneiro, Yury Kudryashov, Heather Macbeth
 
 ! This file was ported from Lean 3 source module topology.continuous_function.bounded
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -384,12 +384,23 @@ instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
       exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
 
 /-- Composition of a bounded continuous function and a continuous function. -/
-@[simps (config := { fullyApplied := false })]
 def compContinuous {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) : δ →ᵇ β
     where
   toContinuousMap := f.1.comp g
   map_bounded' := f.map_bounded'.imp fun C hC x y => hC _ _
 #align bounded_continuous_function.comp_continuous BoundedContinuousFunction.compContinuous
+
+@[simp]
+theorem coe_compContinuous {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) :
+    coeFn (f.comp_continuous g) = f ∘ g :=
+  rfl
+#align bounded_continuous_function.coe_comp_continuous BoundedContinuousFunction.coe_compContinuous
+
+@[simp]
+theorem compContinuous_apply {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) (x : δ) :
+    f.comp_continuous g x = f (g x) :=
+  rfl
+#align bounded_continuous_function.comp_continuous_apply BoundedContinuousFunction.compContinuous_apply
 
 theorem lipschitz_compContinuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
     LipschitzWith 1 fun f : α →ᵇ β => f.comp_continuous g :=
@@ -402,10 +413,19 @@ theorem continuous_compContinuous {δ : Type _} [TopologicalSpace δ] (g : C(δ,
 #align bounded_continuous_function.continuous_comp_continuous BoundedContinuousFunction.continuous_compContinuous
 
 /-- Restrict a bounded continuous function to a set. -/
-@[simps (config := { fullyApplied := false }) apply]
 def restrict (f : α →ᵇ β) (s : Set α) : s →ᵇ β :=
   f.comp_continuous <| (ContinuousMap.id _).restrict s
 #align bounded_continuous_function.restrict BoundedContinuousFunction.restrict
+
+@[simp]
+theorem coe_restrict (f : α →ᵇ β) (s : Set α) : coeFn (f.restrict s) = f ∘ coe :=
+  rfl
+#align bounded_continuous_function.coe_restrict BoundedContinuousFunction.coe_restrict
+
+@[simp]
+theorem restrict_apply (f : α →ᵇ β) (s : Set α) (x : s) : f.restrict s x = f x :=
+  rfl
+#align bounded_continuous_function.restrict_apply BoundedContinuousFunction.restrict_apply
 
 /-- Composition (in the target) of a bounded continuous function with a Lipschitz map again
 gives a bounded continuous function -/

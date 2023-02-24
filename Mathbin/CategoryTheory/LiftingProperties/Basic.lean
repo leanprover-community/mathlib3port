@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jakob Scholbach, Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.lifting_properties.basic
-! leanprover-community/mathlib commit 093c5036c7d80f381c16b74813d4ca1d4c3d7c64
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.CommSq
 
 /-!
 # Lifting properties
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the lifting property of two morphisms in a category and
 shows basic properties of this notion.

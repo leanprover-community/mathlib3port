@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.continuous_function.compact
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -245,6 +245,11 @@ theorem norm_eq_supᵢ_norm : ‖f‖ = ⨆ x : α, ‖f x‖ :=
   (mkOfCompact f).norm_eq_supᵢ_norm
 #align continuous_map.norm_eq_supr_norm ContinuousMap.norm_eq_supᵢ_norm
 
+theorem norm_restrict_mono_set {X : Type _} [TopologicalSpace X] (f : C(X, E))
+    {K L : TopologicalSpace.Compacts X} (hKL : K ≤ L) : ‖f.restrict K‖ ≤ ‖f.restrict L‖ :=
+  (norm_le _ (norm_nonneg _)).mpr fun x => norm_coe_le_norm (f.restrict L) <| Set.inclusion hKL x
+#align continuous_map.norm_restrict_mono_set ContinuousMap.norm_restrict_mono_set
+
 end
 
 section
@@ -471,7 +476,14 @@ theorem compRightAlgHom_continuous {X Y : Type _} (R A : Type _) [TopologicalSpa
 
 end CompRight
 
-section Weierstrass
+section LocalNormalConvergence
+
+/-! ### Local normal convergence
+
+A sum of continuous functions (on a locally compact space) is "locally normally convergent" if the
+sum of its sup-norms on any compact subset is summable. This implies convergence in the topology
+of `C(X, E)` (i.e. locally uniform convergence). -/
+
 
 open TopologicalSpace
 
@@ -492,7 +504,7 @@ theorem summable_of_locally_summable_norm {ι : Type _} {F : ι → C(X, E)}
   simpa only [HasSum, A] using summable_of_summable_norm (hF K)
 #align continuous_map.summable_of_locally_summable_norm ContinuousMap.summable_of_locally_summable_norm
 
-end Weierstrass
+end LocalNormalConvergence
 
 /-!
 ### Star structures

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module topology.instances.triv_sq_zero_ext
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -114,20 +114,30 @@ variable {R M}
 instance [Add R] [Add M] [ContinuousAdd R] [ContinuousAdd M] : ContinuousAdd (tsze R M) :=
   Prod.has_continuous_add
 
-instance [Mul R] [Add M] [SMul R M] [ContinuousMul R] [ContinuousSMul R M] [ContinuousAdd M] :
-    ContinuousMul (tsze R M) :=
+instance [Mul R] [Add M] [SMul R M] [SMul Rᵐᵒᵖ M] [ContinuousMul R] [ContinuousSMul R M]
+    [ContinuousSMul Rᵐᵒᵖ M] [ContinuousAdd M] : ContinuousMul (tsze R M) :=
   ⟨((continuous_fst.comp continuous_fst).mul (continuous_fst.comp continuous_snd)).prod_mk <|
       ((continuous_fst.comp continuous_fst).smul (continuous_snd.comp continuous_snd)).add
-        ((continuous_fst.comp continuous_snd).smul (continuous_snd.comp continuous_fst))⟩
+        ((MulOpposite.continuous_op.comp <| continuous_fst.comp <| continuous_snd).smul
+          (continuous_snd.comp continuous_fst))⟩
 
 instance [Neg R] [Neg M] [ContinuousNeg R] [ContinuousNeg M] : ContinuousNeg (tsze R M) :=
   Prod.has_continuous_neg
 
-instance [Semiring R] [AddCommMonoid M] [Module R M] [TopologicalSemiring R] [ContinuousAdd M]
-    [ContinuousSMul R M] : TopologicalSemiring (tsze R M) where
+/-- This is not an instance due to complaints by the `fails_quickly` linter. At any rate, we only
+really care about the `topological_ring` instance below. -/
+theorem topologicalSemiring [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M]
+    [TopologicalSemiring R] [ContinuousAdd M] [ContinuousSMul R M]
+    [ContinuousSMul Rᵐᵒᵖ
+        M] :-- note: lean times out looking for the non_assoc_semiring instance without this hint
+      @TopologicalSemiring
+      (tsze R M) _ (NonAssocSemiring.toNonUnitalNonAssocSemiring _) :=
+  { }
+#align triv_sq_zero_ext.topological_semiring TrivSqZeroExt.topologicalSemiring
 
-instance [CommRing R] [AddCommGroup M] [Module R M] [TopologicalRing R] [TopologicalAddGroup M]
-    [ContinuousSMul R M] : TopologicalRing (tsze R M) where
+instance [Ring R] [AddCommGroup M] [Module R M] [Module Rᵐᵒᵖ M] [TopologicalRing R]
+    [TopologicalAddGroup M] [ContinuousSMul R M] [ContinuousSMul Rᵐᵒᵖ M] :
+    TopologicalRing (tsze R M) where
 
 instance [SMul S R] [SMul S M] [ContinuousConstSMul S R] [ContinuousConstSMul S M] :
     ContinuousConstSMul S (tsze R M) :=

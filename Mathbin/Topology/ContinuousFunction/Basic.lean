@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.basic
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -559,13 +559,24 @@ theorem coe_restrict (f : C(α, β)) : ⇑(f.restrict s) = f ∘ coe :=
   rfl
 #align continuous_map.coe_restrict ContinuousMap.coe_restrict
 
+@[simp]
+theorem restrict_apply (f : C(α, β)) (s : Set α) (x : s) : f.restrict s x = f x :=
+  rfl
+#align continuous_map.restrict_apply ContinuousMap.restrict_apply
+
+@[simp]
+theorem restrict_apply_mk (f : C(α, β)) (s : Set α) (x : α) (hx : x ∈ s) :
+    f.restrict s ⟨x, hx⟩ = f x :=
+  rfl
+#align continuous_map.restrict_apply_mk ContinuousMap.restrict_apply_mk
+
 /- warning: continuous_map.restrict_preimage -> ContinuousMap.restrictPreimage is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (s : Set.{u2} β), ContinuousMap.{u1, u2} (coeSort.{succ u1, succ (succ u1)} (Set.{u1} α) Type.{u1} (Set.hasCoeToSort.{u1} α) (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} α β _inst_1 _inst_2) => α -> β) (ContinuousMap.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f) s)) (coeSort.{succ u2, succ (succ u2)} (Set.{u2} β) Type.{u2} (Set.hasCoeToSort.{u2} β) s) (Subtype.topologicalSpace.{u1} α (fun (x : α) => Membership.Mem.{u1, u1} α (Set.{u1} α) (Set.hasMem.{u1} α) x (Set.preimage.{u1, u2} α β (coeFn.{max (succ u1) (succ u2), max (succ u1) (succ u2)} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (fun (_x : ContinuousMap.{u1, u2} α β _inst_1 _inst_2) => α -> β) (ContinuousMap.hasCoeToFun.{u1, u2} α β _inst_1 _inst_2) f) s)) _inst_1) (Subtype.topologicalSpace.{u2} β (fun (x : β) => Membership.Mem.{u2, u2} β (Set.{u2} β) (Set.hasMem.{u2} β) x s) _inst_2)
 but is expected to have type
   forall {α : Type.{u1}} {β : Type.{u2}} [_inst_1 : TopologicalSpace.{u1} α] [_inst_2 : TopologicalSpace.{u2} β] (f : ContinuousMap.{u1, u2} α β _inst_1 _inst_2) (s : Set.{u2} β), ContinuousMap.{u1, u2} (Set.Elem.{u1} α (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : α) => β) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) α β _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} α β _inst_1 _inst_2)) f) s)) (Set.Elem.{u2} β s) (instTopologicalSpaceSubtype.{u1} α (fun (x : α) => Membership.mem.{u1, u1} α (Set.{u1} α) (Set.instMembershipSet.{u1} α) x (Set.preimage.{u1, u2} α β (FunLike.coe.{max (succ u1) (succ u2), succ u1, succ u2} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) α (fun (_x : α) => (fun (x._@.Mathlib.Topology.ContinuousFunction.Basic._hyg.699 : α) => β) _x) (ContinuousMapClass.toFunLike.{max u1 u2, u1, u2} (ContinuousMap.{u1, u2} α β _inst_1 _inst_2) α β _inst_1 _inst_2 (ContinuousMap.instContinuousMapClassContinuousMap.{u1, u2} α β _inst_1 _inst_2)) f) s)) _inst_1) (instTopologicalSpaceSubtype.{u2} β (fun (x : β) => Membership.mem.{u2, u2} β (Set.{u2} β) (Set.instMembershipSet.{u2} β) x s) _inst_2)
 Case conversion may be inaccurate. Consider using '#align continuous_map.restrict_preimage ContinuousMap.restrictPreimageₓ'. -/
-/-- The restriction of a continuous map onto the preimage of a set. -/
+/-- The restriction of a continuous map to the preimage of a set. -/
 @[simps]
 def restrictPreimage (f : C(α, β)) (s : Set β) : C(f ⁻¹' s, s) :=
   ⟨s.restrictPreimage f, continuous_iff_continuousAt.mpr fun x => f.2.ContinuousAt.restrictPreimage⟩

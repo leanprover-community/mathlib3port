@@ -1656,14 +1656,14 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
     ∃ (f : _)(_ : f ≠ (0 : V →ₗ[K] K)), p ≤ ker f :=
   by
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩; clear hp
-  rcases(LinearPmap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
+  rcases(LinearPMap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
   refine' ⟨f, _, _⟩
   · rintro rfl
     rw [LinearMap.zero_comp] at hf
-    have := LinearPmap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
+    have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
     simpa using (LinearMap.congr_fun hf _).trans this
   · refine' fun x hx => mem_ker.2 _
-    have := LinearPmap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0
+    have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0
     simpa using (LinearMap.congr_fun hf _).trans this
 #align submodule.exists_le_ker_of_lt_top Submodule.exists_le_ker_of_lt_top
 

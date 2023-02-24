@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.comma
-! leanprover-community/mathlib commit 18302a460eb6a071cf0bfe11a4df025c8f8af244
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -59,11 +59,8 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
     change comma_morphism.right (initial.to B') = _
     rw [this]
     rfl
-  right_inv f :=
-    by
-    let B' : structured_arrow A G :=
-      { right := B
-        Hom := f }
+  right_inv f := by
+    let B' : structured_arrow A G := structured_arrow.mk f
     apply (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _)
 #align category_theory.left_adjoint_of_structured_arrow_initials_aux CategoryTheory.leftAdjointOfStructuredArrowInitialsAux
 

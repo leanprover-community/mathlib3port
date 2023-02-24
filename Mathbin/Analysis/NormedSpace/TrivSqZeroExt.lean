@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.triv_sq_zero_ext
-! leanprover-community/mathlib commit 806c0bb86f6128cfa2f702285727518eb5244390
+! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,15 +17,17 @@ import Mathbin.Topology.Instances.TrivSqZeroExt
 
 For now, this file contains results about `exp` for this type.
 
-TODO: actually define a sensible norm on `triv_sq_zero_ext R M`, so that we have access to lemmas
-like `exp_add`.
-
 ## Main results
 
 * `triv_sq_zero_ext.fst_exp`
 * `triv_sq_zero_ext.snd_exp`
 * `triv_sq_zero_ext.exp_inl`
 * `triv_sq_zero_ext.exp_inr`
+
+## TODO
+* Actually define a sensible norm on `triv_sq_zero_ext R M`, so that we have access to lemmas
+  like `exp_add`.
+* Generalize some of these results to non-commutative `R`.
 
 -/
 
@@ -43,8 +45,8 @@ variable [TopologicalSpace R] [TopologicalSpace M]
 
 /-- If `exp R x.fst` converges to `e` then `exp R x` converges to `inl e + inr (e • x.snd)`. -/
 theorem hasSum_expSeries [Field 𝕜] [CharZero 𝕜] [CommRing R] [AddCommGroup M] [Algebra 𝕜 R]
-    [Module R M] [Module 𝕜 M] [IsScalarTower 𝕜 R M] [TopologicalRing R] [TopologicalAddGroup M]
-    [ContinuousSMul R M] (x : tsze R M) {e : R}
+    [Module R M] [Module Rᵐᵒᵖ M] [IsCentralScalar R M] [Module 𝕜 M] [IsScalarTower 𝕜 R M]
+    [TopologicalRing R] [TopologicalAddGroup M] [ContinuousSMul R M] (x : tsze R M) {e : R}
     (h : HasSum (fun n => expSeries 𝕜 R n fun _ => x.fst) e) :
     HasSum (fun n => expSeries 𝕜 (tsze R M) n fun _ => x) (inl e + inr (e • x.snd)) :=
   by
@@ -71,7 +73,9 @@ section NormedRing
 
 variable [IsROrC 𝕜] [NormedCommRing R] [AddCommGroup M]
 
-variable [NormedAlgebra 𝕜 R] [Module R M] [Module 𝕜 M] [IsScalarTower 𝕜 R M]
+variable [NormedAlgebra 𝕜 R] [Module R M] [Module Rᵐᵒᵖ M] [IsCentralScalar R M]
+
+variable [Module 𝕜 M] [IsScalarTower 𝕜 R M]
 
 variable [TopologicalSpace M] [TopologicalRing R]
 
@@ -119,7 +123,9 @@ section NormedField
 
 variable [IsROrC 𝕜] [NormedField R] [AddCommGroup M]
 
-variable [NormedAlgebra 𝕜 R] [Module R M] [Module 𝕜 M] [IsScalarTower 𝕜 R M]
+variable [NormedAlgebra 𝕜 R] [Module R M] [Module Rᵐᵒᵖ M] [IsCentralScalar R M]
+
+variable [Module 𝕜 M] [IsScalarTower 𝕜 R M]
 
 variable [TopologicalSpace M] [TopologicalRing R]
 

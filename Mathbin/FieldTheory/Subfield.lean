@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module field_theory.subfield
-! leanprover-community/mathlib commit feb99064803fd3108e37c18b0f77d0a8344677a3
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Order.Field.InjSurj
 
 /-!
 # Subfields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `K` be a field. This file defines the "bundled" subfield type `subfield K`, a type
 whose terms correspond to subfields of `K`. This is the preferred way to talk

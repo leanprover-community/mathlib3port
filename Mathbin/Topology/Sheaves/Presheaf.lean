@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,10 +316,9 @@ def pullbackObjObjOfImageOpen {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf
     (H : IsOpen (f '' U)) : (pullbackObj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) :=
   by
   let x : costructured_arrow (opens.map f).op (op U) :=
-    { left := op ⟨f '' U, H⟩
-      Hom :=
-        ((@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op :
-          op ((opens.map f).obj ⟨⇑f '' ↑U, H⟩) ⟶ op U) }
+    by
+    refine' @costructured_arrow.mk _ _ _ _ _ (op (opens.mk (f '' U) H)) _ _
+    exact (@hom_of_le _ _ _ ((opens.map f).obj ⟨_, H⟩) (set.image_preimage.le_u_l _)).op
   have hx : is_terminal x :=
     {
       lift := fun s => by

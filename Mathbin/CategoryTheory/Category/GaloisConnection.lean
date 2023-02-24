@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Stephen Morgan, Scott Morrison, Johannes Hölzl, Reid Barton
 
 ! This file was ported from Lean 3 source module category_theory.category.galois_connection
-! leanprover-community/mathlib commit d82b87871d9a274884dff5263fa4f5d93bcce1d6
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Order.GaloisConnection
 /-!
 
 # Galois connections between preorders are adjunctions.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 * `galois_connection.adjunction` is the adjunction associated to a galois connection.
 

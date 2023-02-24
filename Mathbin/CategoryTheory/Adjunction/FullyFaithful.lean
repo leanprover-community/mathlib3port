@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.adjunction.fully_faithful
-! leanprover-community/mathlib commit 9e7c80f638149bfb3504ba8ff48dfdbfc949fb1a
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Yoneda
 
 /-!
 # Adjoints of fully faithful functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A left adjoint is fully faithful, if and only if the unit is an isomorphism
 (and similarly for right adjoints and the counit).

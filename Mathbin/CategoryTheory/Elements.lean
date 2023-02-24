@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.elements
-! leanprover-community/mathlib commit 14b69e9f3c16630440a2cbd46f1ddad0d561dee7
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -171,11 +171,7 @@ theorem fromStructuredArrow_map {X Y} (f : X ⟶ Y) :
 def structuredArrowEquivalence : F.Elements ≌ StructuredArrow PUnit F :=
   Equivalence.mk (toStructuredArrow F) (fromStructuredArrow F)
     (NatIso.ofComponents (fun X => eqToIso (by tidy)) (by tidy))
-    (NatIso.ofComponents
-      (fun X =>
-        { Hom := { right := 𝟙 _ }
-          inv := { right := 𝟙 _ } })
-      (by tidy))
+    (NatIso.ofComponents (fun X => StructuredArrow.isoMk (Iso.refl _) (by tidy)) (by tidy))
 #align category_theory.category_of_elements.structured_arrow_equivalence CategoryTheory.categoryOfElements.structuredArrowEquivalence
 
 open Opposite

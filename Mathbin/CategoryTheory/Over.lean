@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.over
-! leanprover-community/mathlib commit 3e0dd193514c9380edc69f1da92e80c02713c41d
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -48,6 +48,7 @@ def Over (X : T) :=
 instance Over.inhabited [Inhabited T] : Inhabited (Over (default : T))
     where default :=
     { left := default
+      right := default
       Hom := 𝟙 _ }
 #align category_theory.over.inhabited CategoryTheory.Over.inhabited
 
@@ -303,9 +304,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X)
     where
   obj Y := mk <| F.map Y.Hom
-  map Y₁ Y₂ f :=
-    { left := F.map f.left
-      w' := by tidy <;> erw [← F.map_comp, w] }
+  map Y₁ Y₂ f := Over.homMk (F.map f.left) (by tidy <;> erw [← F.map_comp, w])
 #align category_theory.over.post CategoryTheory.Over.post
 
 end
@@ -321,7 +320,8 @@ def Under (X : T) :=
 -- Satisfying the inhabited linter
 instance Under.inhabited [Inhabited T] : Inhabited (Under (default : T))
     where default :=
-    { right := default
+    { left := default
+      right := default
       Hom := 𝟙 _ }
 #align category_theory.under.inhabited CategoryTheory.Under.inhabited
 
@@ -506,9 +506,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X)
     where
   obj Y := mk <| F.map Y.Hom
-  map Y₁ Y₂ f :=
-    { right := F.map f.right
-      w' := by tidy <;> erw [← F.map_comp, w] }
+  map Y₁ Y₂ f := Under.homMk (F.map f.right) (by tidy <;> erw [← F.map_comp, w])
 #align category_theory.under.post CategoryTheory.Under.post
 
 end

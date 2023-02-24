@@ -780,13 +780,13 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
   refine' ⟨f.sup_span_singleton y (-c) hy, _, _⟩
   · refine' lt_iff_le_not_le.2 ⟨f.left_le_sup _ _, fun H => _⟩
     replace H := linear_pmap.domain_mono.monotone H
-    rw [LinearPmap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H
+    rw [LinearPMap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H
     exact hy H.2
   · rintro ⟨z, hz⟩ hzs
     rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
     rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
     simp only [Subtype.coe_mk] at hzs
-    erw [LinearPmap.supSpanSingleton_apply_mk _ _ _ _ _ hx, smul_neg, ← sub_eq_add_neg, sub_nonneg]
+    erw [LinearPMap.supSpanSingleton_apply_mk _ _ _ _ _ hx, smul_neg, ← sub_eq_add_neg, sub_nonneg]
     rcases lt_trichotomy r 0 with (hr | hr | hr)
     · have : -(r⁻¹ • x) - y ∈ s := by
         rwa [← s.smul_mem_iff (neg_pos.2 hr), smul_sub, smul_neg, neg_smul, neg_neg, smul_smul,
@@ -825,12 +825,12 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     clear hp_nonneg hp_dense p
     have cne : c.nonempty := ⟨y, hy⟩
     refine'
-      ⟨LinearPmap.sup c c_chain.directed_on, _, fun _ => LinearPmap.le_sup c_chain.directed_on⟩
+      ⟨LinearPMap.supₛ c c_chain.directed_on, _, fun _ => LinearPMap.le_supₛ c_chain.directed_on⟩
     rintro ⟨x, hx⟩ hxs
-    have hdir : DirectedOn (· ≤ ·) (LinearPmap.domain '' c) :=
+    have hdir : DirectedOn (· ≤ ·) (LinearPMap.domain '' c) :=
       directedOn_image.2 (c_chain.directed_on.mono linear_pmap.domain_mono.monotone)
     rcases(mem_Sup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
-    have : f ≤ LinearPmap.sup c c_chain.directed_on := LinearPmap.le_sup _ hfc
+    have : f ≤ LinearPMap.supₛ c c_chain.directed_on := LinearPMap.le_supₛ _ hfc
     convert ← hcs hfc ⟨x, hfx⟩ hxs
     apply this.2
     rfl
@@ -874,7 +874,7 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
       add_mem' := fun x hx y hy => (N_add _ _).trans (add_le_add hx hy) }
   obtain ⟨g, g_eq, g_nonneg⟩ := riesz_extension s ((-f).coprod (linear_map.id.to_pmap ⊤)) _ _ <;>
     try
-      simp only [LinearPmap.coprod_apply, to_pmap_apply, id_apply, LinearPmap.neg_apply, ←
+      simp only [LinearPMap.coprod_apply, to_pmap_apply, id_apply, LinearPMap.neg_apply, ←
         sub_eq_neg_add, sub_nonneg, Subtype.coe_mk] at *
   replace g_eq : ∀ (x : f.domain) (y : ℝ), g (x, y) = y - f x
   · intro x y

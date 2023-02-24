@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, George Shakan
 
 ! This file was ported from Lean 3 source module combinatorics.additive.pluennecke_ruzsa
-! leanprover-community/mathlib commit 4aab2abced69a9e579b1e6dc2856ed3db48e2cbd
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Rat.Nnrat
 
 /-!
 # The Plünnecke-Ruzsa inequality
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves Ruzsa's triangle inequality, the Plünnecke-Petridis lemma, and the Plünnecke-Ruzsa
 inequality.

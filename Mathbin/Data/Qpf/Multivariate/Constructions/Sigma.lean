@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module data.qpf.multivariate.constructions.sigma
-! leanprover-community/mathlib commit 0a58aefa2730ef45ff8093ccd1fb6a56e625a6ac
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Qpf.Multivariate.Basic
 
 /-!
 # Dependent product and sum of QPFs are QPFs
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

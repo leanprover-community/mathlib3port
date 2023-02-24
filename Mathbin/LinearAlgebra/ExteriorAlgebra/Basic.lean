@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhangir Azerbayev, Adam Topaz, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.basic
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -182,12 +182,14 @@ variable {M}
 
 /-- The canonical map from `exterior_algebra R M` into `triv_sq_zero_ext R M` that sends
 `exterior_algebra.ι` to `triv_sq_zero_ext.inr`. -/
-def toTrivSqZeroExt : ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
+def toTrivSqZeroExt [Module Rᵐᵒᵖ M] [IsCentralScalar R M] :
+    ExteriorAlgebra R M →ₐ[R] TrivSqZeroExt R M :=
   lift R ⟨TrivSqZeroExt.inrHom R M, fun m => TrivSqZeroExt.inr_mul_inr R m m⟩
 #align exterior_algebra.to_triv_sq_zero_ext ExteriorAlgebra.toTrivSqZeroExt
 
 @[simp]
-theorem toTrivSqZeroExt_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
+theorem toTrivSqZeroExt_ι [Module Rᵐᵒᵖ M] [IsCentralScalar R M] (x : M) :
+    toTrivSqZeroExt (ι R x) = TrivSqZeroExt.inr x :=
   lift_ι_apply _ _ _ _
 #align exterior_algebra.to_triv_sq_zero_ext_ι ExteriorAlgebra.toTrivSqZeroExt_ι
 
@@ -196,7 +198,10 @@ theorem toTrivSqZeroExt_ι (x : M) : toTrivSqZeroExt (ι R x) = TrivSqZeroExt.in
 As an implementation detail, we implement this using `triv_sq_zero_ext` which has a suitable
 algebra structure. -/
 def ιInv : ExteriorAlgebra R M →ₗ[R] M :=
-  (TrivSqZeroExt.sndHom R M).comp toTrivSqZeroExt.toLinearMap
+  by
+  letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
+  haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
+  exact (TrivSqZeroExt.sndHom R M).comp to_triv_sq_zero_ext.to_linear_map
 #align exterior_algebra.ι_inv ExteriorAlgebra.ιInv
 
 theorem ι_leftInverse : Function.LeftInverse ιInv (ι R : M → ExteriorAlgebra R M) := fun x => by
@@ -220,7 +225,9 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0
 theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 :=
   by
   refine' ⟨fun h => _, _⟩
-  · have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
+  · letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
+    haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
+    have hf0 : to_triv_sq_zero_ext (ι R x) = (0, x) := to_triv_sq_zero_ext_ι _
     rw [h, AlgHom.commutes] at hf0
     have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
     exact this.symm.imp_left Eq.symm

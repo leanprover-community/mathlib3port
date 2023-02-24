@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module topology.continuous_function.algebra
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Algebra.Pi
+import Mathbin.Algebra.Periodic
 import Mathbin.Algebra.Algebra.Subalgebra.Basic
 import Mathbin.Algebra.Star.StarAlgHom
 import Mathbin.Tactic.FieldSimp
@@ -55,6 +56,7 @@ variable {α : Type _} {β : Type _} {γ : Type _}
 
 variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
+-- ### "mul" and "add"
 @[to_additive]
 instance hasMul [Mul β] [ContinuousMul β] : Mul C(α, β) :=
   ⟨fun f g => ⟨f * g, continuous_mul.comp (f.Continuous.prod_mk g.Continuous : _)⟩⟩
@@ -68,12 +70,19 @@ theorem coe_mul [Mul β] [ContinuousMul β] (f g : C(α, β)) : ⇑(f * g) = f *
 #align continuous_map.coe_add ContinuousMap.coe_add
 
 @[simp, to_additive]
+theorem mul_apply [Mul β] [ContinuousMul β] (f g : C(α, β)) (x : α) : (f * g) x = f x * g x :=
+  rfl
+#align continuous_map.mul_apply ContinuousMap.mul_apply
+#align continuous_map.add_apply ContinuousMap.add_apply
+
+@[simp, to_additive]
 theorem mul_comp [Mul γ] [ContinuousMul γ] (f₁ f₂ : C(β, γ)) (g : C(α, β)) :
     (f₁ * f₂).comp g = f₁.comp g * f₂.comp g :=
   rfl
 #align continuous_map.mul_comp ContinuousMap.mul_comp
 #align continuous_map.add_comp ContinuousMap.add_comp
 
+-- ### "one"
 @[to_additive]
 instance [One β] : One C(α, β) :=
   ⟨const α 1⟩
@@ -85,11 +94,18 @@ theorem coe_one [One β] : ⇑(1 : C(α, β)) = 1 :=
 #align continuous_map.coe_zero ContinuousMap.coe_zero
 
 @[simp, to_additive]
+theorem one_apply [One β] (x : α) : (1 : C(α, β)) x = 1 :=
+  rfl
+#align continuous_map.one_apply ContinuousMap.one_apply
+#align continuous_map.zero_apply ContinuousMap.zero_apply
+
+@[simp, to_additive]
 theorem one_comp [One γ] (g : C(α, β)) : (1 : C(β, γ)).comp g = 1 :=
   rfl
 #align continuous_map.one_comp ContinuousMap.one_comp
 #align continuous_map.zero_comp ContinuousMap.zero_comp
 
+-- ### "nat_cast"
 instance [NatCast β] : NatCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
@@ -98,6 +114,12 @@ theorem coe_nat_cast [NatCast β] (n : ℕ) : ((n : C(α, β)) : α → β) = n 
   rfl
 #align continuous_map.coe_nat_cast ContinuousMap.coe_nat_cast
 
+@[simp]
+theorem nat_cast_apply [NatCast β] (n : ℕ) (x : α) : (n : C(α, β)) x = n :=
+  rfl
+#align continuous_map.nat_cast_apply ContinuousMap.nat_cast_apply
+
+-- ### "int_cast"
 instance [IntCast β] : IntCast C(α, β) :=
   ⟨fun n => ContinuousMap.const _ n⟩
 
@@ -106,6 +128,12 @@ theorem coe_int_cast [IntCast β] (n : ℤ) : ((n : C(α, β)) : α → β) = n 
   rfl
 #align continuous_map.coe_int_cast ContinuousMap.coe_int_cast
 
+@[simp]
+theorem int_cast_apply [IntCast β] (n : ℤ) (x : α) : (n : C(α, β)) x = n :=
+  rfl
+#align continuous_map.int_cast_apply ContinuousMap.int_cast_apply
+
+-- ### "nsmul" and "pow"
 instance hasNsmul [AddMonoid β] [ContinuousAdd β] : SMul ℕ C(α, β) :=
   ⟨fun n f => ⟨n • f, f.Continuous.nsmul n⟩⟩
 #align continuous_map.has_nsmul ContinuousMap.hasNsmul
@@ -122,8 +150,16 @@ theorem coe_pow [Monoid β] [ContinuousMul β] (f : C(α, β)) (n : ℕ) : ⇑(f
 #align continuous_map.coe_pow ContinuousMap.coe_pow
 #align continuous_map.coe_nsmul ContinuousMap.coe_nsmul
 
--- don't make `coe_nsmul` simp as the linter complains it's redundant WRT `coe_smul`
-attribute [simp] coe_pow
+@[to_additive]
+theorem pow_apply [Monoid β] [ContinuousMul β] (f : C(α, β)) (n : ℕ) (x : α) :
+    (f ^ n) x = f x ^ n :=
+  rfl
+#align continuous_map.pow_apply ContinuousMap.pow_apply
+#align continuous_map.nsmul_apply ContinuousMap.nsmul_apply
+
+-- don't make auto-generated `coe_nsmul` and `nsmul_apply` simp, as the linter complains they're
+-- redundant WRT `coe_smul`
+attribute [simp] coe_pow pow_apply
 
 @[to_additive]
 theorem pow_comp [Monoid γ] [ContinuousMul γ] (f : C(β, γ)) (n : ℕ) (g : C(α, β)) :
@@ -135,6 +171,7 @@ theorem pow_comp [Monoid γ] [ContinuousMul γ] (f : C(β, γ)) (n : ℕ) (g : C
 -- don't make `nsmul_comp` simp as the linter complains it's redundant WRT `smul_comp`
 attribute [simp] pow_comp
 
+-- ### "inv" and "neg"
 @[to_additive]
 instance [Group β] [TopologicalGroup β] : Inv C(α, β) where inv f := ⟨f⁻¹, f.Continuous.inv⟩
 
@@ -145,12 +182,19 @@ theorem coe_inv [Group β] [TopologicalGroup β] (f : C(α, β)) : ⇑f⁻¹ = f
 #align continuous_map.coe_neg ContinuousMap.coe_neg
 
 @[simp, to_additive]
+theorem inv_apply [Group β] [TopologicalGroup β] (f : C(α, β)) (x : α) : f⁻¹ x = (f x)⁻¹ :=
+  rfl
+#align continuous_map.inv_apply ContinuousMap.inv_apply
+#align continuous_map.neg_apply ContinuousMap.neg_apply
+
+@[simp, to_additive]
 theorem inv_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (g : C(α, β)) :
     f⁻¹.comp g = (f.comp g)⁻¹ :=
   rfl
 #align continuous_map.inv_comp ContinuousMap.inv_comp
 #align continuous_map.neg_comp ContinuousMap.neg_comp
 
+-- ### "div" and "sub"
 @[to_additive]
 instance [Div β] [ContinuousDiv β] : Div C(α, β)
     where div f g := ⟨f / g, f.Continuous.div' g.Continuous⟩
@@ -162,12 +206,19 @@ theorem coe_div [Div β] [ContinuousDiv β] (f g : C(α, β)) : ⇑(f / g) = f /
 #align continuous_map.coe_sub ContinuousMap.coe_sub
 
 @[simp, to_additive]
+theorem div_apply [Div β] [ContinuousDiv β] (f g : C(α, β)) (x : α) : (f / g) x = f x / g x :=
+  rfl
+#align continuous_map.div_apply ContinuousMap.div_apply
+#align continuous_map.sub_apply ContinuousMap.sub_apply
+
+@[simp, to_additive]
 theorem div_comp [Div γ] [ContinuousDiv γ] (f g : C(β, γ)) (h : C(α, β)) :
     (f / g).comp h = f.comp h / g.comp h :=
   rfl
 #align continuous_map.div_comp ContinuousMap.div_comp
 #align continuous_map.sub_comp ContinuousMap.sub_comp
 
+-- ### "zpow" and "zsmul"
 instance hasZsmul [AddGroup β] [TopologicalAddGroup β] : SMul ℤ C(α, β)
     where smul z f := ⟨z • f, f.Continuous.zsmul z⟩
 #align continuous_map.has_zsmul ContinuousMap.hasZsmul
@@ -184,8 +235,16 @@ theorem coe_zpow [Group β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) : �
 #align continuous_map.coe_zpow ContinuousMap.coe_zpow
 #align continuous_map.coe_zsmul ContinuousMap.coe_zsmul
 
--- don't make `coe_zsmul` simp as the linter complains it's redundant WRT `coe_smul`
-attribute [simp] coe_zpow
+@[to_additive]
+theorem zpow_apply [Group β] [TopologicalGroup β] (f : C(α, β)) (z : ℤ) (x : α) :
+    (f ^ z) x = f x ^ z :=
+  rfl
+#align continuous_map.zpow_apply ContinuousMap.zpow_apply
+#align continuous_map.zsmul_apply ContinuousMap.zsmul_apply
+
+-- don't make auto-generated `coe_zsmul` and `zsmul_apply` simp as the linter complains they're
+-- redundant WRT `coe_smul`
+attribute [simp] coe_zpow zpow_apply
 
 @[to_additive]
 theorem zpow_comp [Group γ] [TopologicalGroup γ] (f : C(β, γ)) (z : ℤ) (g : C(α, β)) :
@@ -1000,6 +1059,29 @@ theorem compStarAlgHom'_comp (g : C(Y, Z)) (f : C(X, Y)) :
     compStarAlgHom' 𝕜 A (g.comp f) = (compStarAlgHom' 𝕜 A f).comp (compStarAlgHom' 𝕜 A g) :=
   StarAlgHom.ext fun _ => ContinuousMap.ext fun _ => rfl
 #align continuous_map.comp_star_alg_hom'_comp ContinuousMap.compStarAlgHom'_comp
+
+section Periodicity
+
+/-! ### Summing translates of a function -/
+
+
+/-- Summing the translates of `f` by `ℤ • p` gives a map which is periodic with period `p`.
+(This is true without any convergence conditions, since if the sum doesn't converge it is taken to
+be the zero map, which is periodic.) -/
+theorem periodic_tsum_comp_add_zsmul [LocallyCompactSpace X] [AddCommGroup X]
+    [TopologicalAddGroup X] [AddCommMonoid Y] [ContinuousAdd Y] [T2Space Y] (f : C(X, Y)) (p : X) :
+    Function.Periodic (⇑(∑' n : ℤ, f.comp (ContinuousMap.addRight (n • p)))) p :=
+  by
+  intro x
+  by_cases h : Summable fun n : ℤ => f.comp (ContinuousMap.addRight (n • p))
+  · convert congr_arg (fun f : C(X, Y) => f x) ((Equiv.addRight (1 : ℤ)).tsum_eq _) using 1
+    simp_rw [← tsum_apply h, ← tsum_apply ((Equiv.addRight (1 : ℤ)).summable_iff.mpr h),
+      Equiv.coe_addRight, comp_apply, coe_add_right, add_one_zsmul, add_comm (_ • p) p, ← add_assoc]
+  · rw [tsum_eq_zero_of_not_summable h]
+    simp only [coe_zero, Pi.zero_apply]
+#align continuous_map.periodic_tsum_comp_add_zsmul ContinuousMap.periodic_tsum_comp_add_zsmul
+
+end Periodicity
 
 end ContinuousMap
 

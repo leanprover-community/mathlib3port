@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.dual_number
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem snd_eps [Zero R] [One R] : snd ε = (1 : R) :=
 
 /-- A version of `triv_sq_zero_ext.snd_mul` with `*` instead of `•`. -/
 @[simp]
-theorem snd_mul [Semiring R] (x y : R[ε]) : snd (x * y) = fst x * snd y + fst y * snd x :=
+theorem snd_mul [Semiring R] (x y : R[ε]) : snd (x * y) = fst x * snd y + snd x * fst y :=
   snd_mul _ _
 #align dual_number.snd_mul DualNumber.snd_mul
 

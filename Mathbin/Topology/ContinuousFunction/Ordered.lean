@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Shing Tak Lam
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ordered
-! leanprover-community/mathlib commit 84dc0bd6619acaea625086d6f53cb35cdd554219
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Bundled continuous maps into orders, with order-compatible topology
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 -/
 

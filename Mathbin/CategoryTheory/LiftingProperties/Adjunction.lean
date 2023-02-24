@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joël Riou
 
 ! This file was ported from Lean 3 source module category_theory.lifting_properties.adjunction
-! leanprover-community/mathlib commit 24855f4682aaf5f53513c918b421ba083d3cccd0
+! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Adjunction.Basic
 /-!
 
 # Lifting properties and adjunction
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we obtain `adjunction.has_lifting_property_iff`, which states
 that when we have an adjunction `adj : G ⊣ F` between two functors `G : C ⥤ D`

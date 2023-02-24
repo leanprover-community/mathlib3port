@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.pairwise_intersections
-! leanprover-community/mathlib commit 85d6221d32c37e68f05b2e42cde6cee658dae5e9
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,8 +117,7 @@ def pairwiseToOpensLeCover : Pairwise ι ⥤ OpensLeCover U
 #align Top.presheaf.sheaf_condition.pairwise_to_opens_le_cover TopCat.Presheaf.SheafCondition.pairwiseToOpensLeCover
 
 instance (V : OpensLeCover U) : Nonempty (StructuredArrow V (pairwiseToOpensLeCover U)) :=
-  ⟨{  right := single V.index
-      Hom := V.homToIndex }⟩
+  ⟨@StructuredArrow.mk _ _ _ _ _ (single V.index) _ V.hom_to_index⟩
 
 -- This is a case bash: for each pair of types of objects in `pairwise ι`,
 -- we have to explicitly construct a zigzag.

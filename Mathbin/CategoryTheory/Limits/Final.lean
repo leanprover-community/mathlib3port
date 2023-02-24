@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.final
-! leanprover-community/mathlib commit 20e597fb24e5e454f85239871146f2c378010e92
+! leanprover-community/mathlib commit 8a318021995877a44630c898d0b2bc376fceef3b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,8 +204,7 @@ def induction {d : D} (Z : ∀ (X : C) (k : d ⟶ F.obj X), Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.Hom) _ _
-      { right := X₀
-        Hom := k₀ } z
+      (structured_arrow.mk k₀) z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.right _ a
     convert f.w.symm
@@ -399,7 +398,7 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ 
     fconstructor
     swap; fconstructor
     left; fconstructor
-    exact { right := f }
+    exact structured_arrow.hom_mk f (by tidy)
   case refl => fconstructor
   case symm x y h ih =>
     apply zigzag_symmetric
@@ -479,8 +478,7 @@ def induction {d : D} (Z : ∀ (X : C) (k : F.obj X ⟶ d), Sort _)
   apply Nonempty.some
   apply
     @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.Hom) _ _
-      { left := X₀
-        Hom := k₀ } z
+      (costructured_arrow.mk k₀) z
   · intro j₁ j₂ f a
     fapply h₁ _ _ _ _ f.left _ a
     convert f.w
