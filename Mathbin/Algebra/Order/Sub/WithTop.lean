@@ -59,12 +59,14 @@ theorem sub_top {a : WithTop α} : a - ⊤ = 0 := by cases a <;> rfl
 #align with_top.sub_top WithTop.sub_top
 -/
 
+#print WithTop.sub_eq_top_iff /-
 @[simp]
 theorem sub_eq_top_iff : ∀ {a b : WithTop α}, a - b = ⊤ ↔ a = ⊤ ∧ b ≠ ⊤
   | _, ⊤ => by simp
   | ⊤, (b : α) => by simp
   | (a : α), (b : α) => by simp only [← coe_sub, coe_ne_top, false_and_iff]
 #align with_top.sub_eq_top_iff WithTop.sub_eq_top_iff
+-/
 
 #print WithTop.map_sub /-
 theorem map_sub [Sub β] [Zero β] {f : α → β} (h : ∀ x y, f (x - y) = f x - f y) (h₀ : f 0 = 0) :

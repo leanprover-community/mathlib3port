@@ -925,6 +925,12 @@ theorem prod_pos [StrictOrderedSemiring R] (l : List R) (h : ∀ a ∈ l, (0 : R
     exact mul_pos (h _ <| mem_cons_self _ _) (ih fun a ha => h a <| mem_cons_of_mem _ ha)
 #align list.prod_pos List.prod_pos
 
+/- warning: canonically_ordered_comm_semiring.list_prod_pos -> CanonicallyOrderedCommSemiring.list_prod_pos is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α] [_inst_2 : Nontrivial.{u1} α] {l : List.{u1} α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (OrderedSemiring.toOrderedAddCommMonoid.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1)))))))))) (List.prod.{u1} α (Distrib.toHasMul.{u1} α (NonUnitalNonAssocSemiring.toDistrib.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) (AddMonoidWithOne.toOne.{u1} α (AddCommMonoidWithOne.toAddMonoidWithOne.{u1} α (NonAssocSemiring.toAddCommMonoidWithOne.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))))) l)) (forall (x : α), (Membership.Mem.{u1, u1} α (List.{u1} α) (List.hasMem.{u1} α) x l) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedAddCommMonoid.toPartialOrder.{u1} α (OrderedSemiring.toOrderedAddCommMonoid.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1)))))) (OfNat.ofNat.{u1} α 0 (OfNat.mk.{u1} α 0 (Zero.zero.{u1} α (MulZeroClass.toHasZero.{u1} α (NonUnitalNonAssocSemiring.toMulZeroClass.{u1} α (NonAssocSemiring.toNonUnitalNonAssocSemiring.{u1} α (Semiring.toNonAssocSemiring.{u1} α (OrderedSemiring.toSemiring.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1)))))))))) x))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : CanonicallyOrderedCommSemiring.{u1} α] [_inst_2 : Nontrivial.{u1} α] {l : List.{u1} α}, Iff (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CanonicallyOrderedCommSemiring.toCommSemiring.{u1} α _inst_1))))) (List.prod.{u1} α (CanonicallyOrderedCommSemiring.toMul.{u1} α _inst_1) (CanonicallyOrderedCommSemiring.toOne.{u1} α _inst_1) l)) (forall (x : α), (Membership.mem.{u1, u1} α (List.{u1} α) (List.instMembershipList.{u1} α) x l) -> (LT.lt.{u1} α (Preorder.toLT.{u1} α (PartialOrder.toPreorder.{u1} α (OrderedSemiring.toPartialOrder.{u1} α (OrderedCommSemiring.toOrderedSemiring.{u1} α (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u1} α _inst_1))))) (OfNat.ofNat.{u1} α 0 (Zero.toOfNat0.{u1} α (CommMonoidWithZero.toZero.{u1} α (CommSemiring.toCommMonoidWithZero.{u1} α (CanonicallyOrderedCommSemiring.toCommSemiring.{u1} α _inst_1))))) x))
+Case conversion may be inaccurate. Consider using '#align canonically_ordered_comm_semiring.list_prod_pos CanonicallyOrderedCommSemiring.list_prod_posₓ'. -/
 /-- A variant of `list.prod_pos` for `canonically_ordered_comm_semiring`. -/
 @[simp]
 theorem CanonicallyOrderedCommSemiring.list_prod_pos {α : Type _} [CanonicallyOrderedCommSemiring α]
@@ -1045,21 +1051,29 @@ theorem alternatingProd_cons (a : α) (l : List α) :
 
 end Alternating
 
+#print List.sum_nat_mod /-
 theorem sum_nat_mod (l : List ℕ) (n : ℕ) : l.Sum % n = (l.map (· % n)).Sum % n := by
   induction l <;> simp [Nat.add_mod, *]
 #align list.sum_nat_mod List.sum_nat_mod
+-/
 
+#print List.prod_nat_mod /-
 theorem prod_nat_mod (l : List ℕ) (n : ℕ) : l.Prod % n = (l.map (· % n)).Prod % n := by
   induction l <;> simp [Nat.mul_mod, *]
 #align list.prod_nat_mod List.prod_nat_mod
+-/
 
+#print List.sum_int_mod /-
 theorem sum_int_mod (l : List ℤ) (n : ℤ) : l.Sum % n = (l.map (· % n)).Sum % n := by
   induction l <;> simp [Int.add_emod, *]
 #align list.sum_int_mod List.sum_int_mod
+-/
 
+#print List.prod_int_mod /-
 theorem prod_int_mod (l : List ℤ) (n : ℤ) : l.Prod % n = (l.map (· % n)).Prod % n := by
   induction l <;> simp [Int.mul_emod, *]
 #align list.prod_int_mod List.prod_int_mod
+-/
 
 end List
 
