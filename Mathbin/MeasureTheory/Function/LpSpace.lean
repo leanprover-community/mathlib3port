@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.lp_space
-! leanprover-community/mathlib commit 59694bd07f0a39c5beccba34bd9f413a160782bf
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1473,10 +1473,9 @@ theorem snorm_le_mul_snorm_of_ae_le_mul {f : α → F} {g : α → G} {c : ℝ}
 
 theorem Memℒp.ofLeMul {f : α → E} {g : α → F} {c : ℝ} (hg : Memℒp g p μ)
     (hf : AeStronglyMeasurable f μ) (hfg : ∀ᵐ x ∂μ, ‖f x‖ ≤ c * ‖g x‖) : Memℒp f p μ :=
-  by
-  simp only [mem_ℒp, hf, true_and_iff]
-  apply lt_of_le_of_lt (snorm_le_mul_snorm_of_ae_le_mul hfg p)
-  simp [lt_top_iff_ne_top, hg.snorm_ne_top]
+  ⟨hf,
+    lt_of_le_of_lt (snorm_le_mul_snorm_of_ae_le_mul hfg p) <|
+      Ennreal.mul_lt_top Ennreal.ofReal_ne_top hg.snorm_ne_top⟩
 #align measure_theory.mem_ℒp.of_le_mul MeasureTheory.Memℒp.ofLeMul
 
 end Monotonicity
@@ -1861,17 +1860,13 @@ theorem norm_neg {f : lp E p μ} : ‖-f‖ = ‖f‖ := by
 theorem norm_le_mul_norm_of_ae_le_mul {c : ℝ} {f : lp E p μ} {g : lp F p μ}
     (h : ∀ᵐ x ∂μ, ‖f x‖ ≤ c * ‖g x‖) : ‖f‖ ≤ c * ‖g‖ :=
   by
-  by_cases pzero : p = 0
-  · simp [pzero, norm_def]
+  simp only [norm_def]
   cases' le_or_lt 0 c with hc hc
-  · have := snorm_le_mul_snorm_aux_of_nonneg h hc p
-    rw [← Ennreal.toReal_le_toReal, Ennreal.toReal_mul, Ennreal.toReal_ofReal hc] at this
-    · exact this
+  · have := snorm_le_mul_snorm_of_ae_le_mul h p
+    rwa [← Ennreal.toReal_le_toReal, Ennreal.toReal_mul, Ennreal.toReal_ofReal hc] at this
     · exact (Lp.mem_ℒp _).snorm_ne_top
-    · simp [(Lp.mem_ℒp _).snorm_ne_top]
+    · exact Ennreal.mul_ne_top Ennreal.ofReal_ne_top (Lp.mem_ℒp _).snorm_ne_top
   · have := snorm_le_mul_snorm_aux_of_neg h hc p
-    simp only [snorm_eq_zero_iff (Lp.ae_strongly_measurable _) pzero, ← eq_zero_iff_ae_eq_zero] at
-      this
     simp [this]
 #align measure_theory.Lp.norm_le_mul_norm_of_ae_le_mul MeasureTheory.lp.norm_le_mul_norm_of_ae_le_mul
 

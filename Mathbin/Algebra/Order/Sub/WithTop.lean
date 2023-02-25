@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module algebra.order.sub.with_top
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,6 +58,13 @@ theorem top_sub_coe {a : α} : (⊤ : WithTop α) - a = ⊤ :=
 theorem sub_top {a : WithTop α} : a - ⊤ = 0 := by cases a <;> rfl
 #align with_top.sub_top WithTop.sub_top
 -/
+
+@[simp]
+theorem sub_eq_top_iff : ∀ {a b : WithTop α}, a - b = ⊤ ↔ a = ⊤ ∧ b ≠ ⊤
+  | _, ⊤ => by simp
+  | ⊤, (b : α) => by simp
+  | (a : α), (b : α) => by simp only [← coe_sub, coe_ne_top, false_and_iff]
+#align with_top.sub_eq_top_iff WithTop.sub_eq_top_iff
 
 #print WithTop.map_sub /-
 theorem map_sub [Sub β] [Zero β] {f : α → β} (h : ∀ x y, f (x - y) = f x - f y) (h₀ : f 0 = 0) :

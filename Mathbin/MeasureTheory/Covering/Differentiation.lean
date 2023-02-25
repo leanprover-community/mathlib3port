@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.covering.differentiation
-! leanprover-community/mathlib commit 70a4f2197832bceab57d7f41379b2592d1110570
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -671,7 +671,7 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         conv_rhs => rw [← mul_one (t ^ n)]
         refine' mul_lt_mul' le_rfl _ (zero_le _) (NNReal.zpow_pos t_ne_zero' _)
         rw [zpow_neg_one]
-        exact NNReal.inv_lt_one ht
+        exact inv_lt_one ht
       
   calc
     ν s =

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: María Inés de Frutos-Fernández
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.adic_valuation
-! leanprover-community/mathlib commit 2032a878972d5672e7c27c957e7a6e297b044973
+! leanprover-community/mathlib commit a8e7ac804fc39df0340c64906075787e0c90fa60
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -395,6 +395,108 @@ instance AdicCompletion.hasLiftT : HasLiftT K (v.adicCompletion K) :=
 def adicCompletionIntegers : ValuationSubring (v.adicCompletion K) :=
   Valued.v.ValuationSubring
 #align is_dedekind_domain.height_one_spectrum.adic_completion_integers IsDedekindDomain.HeightOneSpectrum.adicCompletionIntegers
+
+instance : Inhabited (adicCompletionIntegers K v) :=
+  ⟨0⟩
+
+variable (R K)
+
+theorem mem_adicCompletionIntegers {x : v.adicCompletion K} :
+    x ∈ v.adicCompletionIntegers K ↔ (Valued.v x : ℤₘ₀) ≤ 1 :=
+  Iff.rfl
+#align is_dedekind_domain.height_one_spectrum.mem_adic_completion_integers IsDedekindDomain.HeightOneSpectrum.mem_adicCompletionIntegers
+
+section AlgebraInstances
+
+instance (priority := 100) adicValued.has_uniform_continuous_const_smul' :
+    @HasUniformContinuousConstSmul R K v.adicValued.toUniformSpace _ :=
+  @hasUniformContinuousConstSmul_of_continuous_const_smul R K _ _ _ v.adicValued.toUniformSpace _ _
+#align is_dedekind_domain.height_one_spectrum.adic_valued.has_uniform_continuous_const_smul' IsDedekindDomain.HeightOneSpectrum.adicValued.has_uniform_continuous_const_smul'
+
+instance adicValued.hasUniformContinuousConstSmul :
+    @HasUniformContinuousConstSmul K K v.adicValued.toUniformSpace _ :=
+  @Ring.hasUniformContinuousConstSmul K _ v.adicValued.toUniformSpace _ _
+#align is_dedekind_domain.height_one_spectrum.adic_valued.has_uniform_continuous_const_smul IsDedekindDomain.HeightOneSpectrum.adicValued.hasUniformContinuousConstSmul
+
+instance AdicCompletion.algebra' : Algebra R (v.adicCompletion K) :=
+  @UniformSpace.Completion.algebra K _ v.adicValued.toUniformSpace _ _ R _ _
+    (adicValued.has_uniform_continuous_const_smul' R K v)
+#align is_dedekind_domain.height_one_spectrum.adic_completion.algebra' IsDedekindDomain.HeightOneSpectrum.AdicCompletion.algebra'
+
+@[simp]
+theorem coe_smul_adicCompletion (r : R) (x : K) :
+    (↑(r • x) : v.adicCompletion K) = r • (↑x : v.adicCompletion K) :=
+  @UniformSpace.Completion.coe_smul R K v.adicValued.toUniformSpace _ _ r x
+#align is_dedekind_domain.height_one_spectrum.coe_smul_adic_completion IsDedekindDomain.HeightOneSpectrum.coe_smul_adicCompletion
+
+instance : Algebra K (v.adicCompletion K) :=
+  @UniformSpace.Completion.algebra' K _ v.adicValued.toUniformSpace _ _
+
+theorem algebraMap_adic_completion' :
+    ⇑(algebraMap R <| v.adicCompletion K) = coe ∘ algebraMap R K :=
+  rfl
+#align is_dedekind_domain.height_one_spectrum.algebra_map_adic_completion' IsDedekindDomain.HeightOneSpectrum.algebraMap_adic_completion'
+
+theorem algebraMap_adicCompletion : ⇑(algebraMap K <| v.adicCompletion K) = coe :=
+  rfl
+#align is_dedekind_domain.height_one_spectrum.algebra_map_adic_completion IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion
+
+instance : IsScalarTower R K (v.adicCompletion K) :=
+  @UniformSpace.Completion.isScalarTower R K K v.adicValued.toUniformSpace _ _ _
+    (adicValued.has_uniform_continuous_const_smul' R K v) _ _
+
+instance : Algebra R (v.adicCompletionIntegers K)
+    where
+  smul r x :=
+    ⟨r • (x : v.adicCompletion K),
+      by
+      have h : (algebraMap R (adicCompletion K v)) r = (coe <| algebraMap R K r) := rfl
+      rw [Algebra.smul_def]
+      refine' ValuationSubring.mul_mem _ _ _ _ x.2
+      rw [mem_adic_completion_integers, h, Valued.valuedCompletion_apply]
+      exact v.valuation_le_one _⟩
+  toFun r :=
+    ⟨coe <| algebraMap R K r, by
+      simpa only [mem_adic_completion_integers, Valued.valuedCompletion_apply] using
+        v.valuation_le_one _⟩
+  map_one' := by simp only [map_one] <;> rfl
+  map_mul' x y := by
+    ext
+    simp_rw [RingHom.map_mul, Subring.coe_mul, Subtype.coe_mk, UniformSpace.Completion.coe_mul]
+  map_zero' := by simp only [map_zero] <;> rfl
+  map_add' x y := by
+    ext
+    simp_rw [RingHom.map_add, Subring.coe_add, Subtype.coe_mk, UniformSpace.Completion.coe_add]
+  commutes' r x := by rw [mul_comm]
+  smul_def' r x := by
+    ext
+    simp only [Subring.coe_mul, [anonymous], Algebra.smul_def]
+    rfl
+
+@[simp]
+theorem coe_smul_adicCompletionIntegers (r : R) (x : v.adicCompletionIntegers K) :
+    (↑(r • x) : v.adicCompletion K) = r • (x : v.adicCompletion K) :=
+  rfl
+#align is_dedekind_domain.height_one_spectrum.coe_smul_adic_completion_integers IsDedekindDomain.HeightOneSpectrum.coe_smul_adicCompletionIntegers
+
+instance : NoZeroSMulDivisors R (v.adicCompletionIntegers K)
+    where eq_zero_or_eq_zero_of_smul_eq_zero c x hcx :=
+    by
+    rw [Algebra.smul_def, mul_eq_zero] at hcx
+    refine' hcx.imp_left fun hc => _
+    letI : UniformSpace K := v.adic_valued.to_uniform_space
+    rw [← map_zero (algebraMap R (v.adic_completion_integers K))] at hc
+    exact
+      IsFractionRing.injective R K (UniformSpace.Completion.coe_injective K (subtype.ext_iff.mp hc))
+
+instance AdicCompletion.is_scalar_tower' :
+    IsScalarTower R (v.adicCompletionIntegers K) (v.adicCompletion K)
+    where smul_assoc x y z := by
+    simp only [Algebra.smul_def]
+    apply mul_assoc
+#align is_dedekind_domain.height_one_spectrum.adic_completion.is_scalar_tower' IsDedekindDomain.HeightOneSpectrum.AdicCompletion.is_scalar_tower'
+
+end AlgebraInstances
 
 end IsDedekindDomain.HeightOneSpectrum
 

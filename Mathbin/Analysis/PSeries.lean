@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.p_series
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -137,7 +137,7 @@ theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m 
   constructor <;> intro h
   · replace hf : ∀ m n, 1 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
       Ennreal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
-    simpa [h, Ennreal.add_eq_top] using Ennreal.tsum_condensed_le hf
+    simpa [h, Ennreal.add_eq_top, Ennreal.mul_eq_top] using Ennreal.tsum_condensed_le hf
   · replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
       Ennreal.coe_le_coe.2 (hf hm hmn)
     simpa [h, Ennreal.add_eq_top] using Ennreal.le_tsum_condensed hf

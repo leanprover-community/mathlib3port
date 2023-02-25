@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -481,7 +481,7 @@ theorem mul_le_add_haar_image_of_lt_det (A : E →L[ℝ] E) {m : ℝ≥0}
     · simp only [h, true_or_iff, eventually_const]
     simp only [h, false_or_iff]
     apply Iio_mem_nhds
-    simpa only [h, false_or_iff, NNReal.inv_pos] using B.subsingleton_or_nnnorm_symm_pos
+    simpa only [h, false_or_iff, inv_pos] using B.subsingleton_or_nnnorm_symm_pos
   have L2 :
     ∀ᶠ δ in 𝓝 (0 : ℝ≥0), ‖(B.symm : E →L[ℝ] E)‖₊ * (‖(B.symm : E →L[ℝ] E)‖₊⁻¹ - δ)⁻¹ * δ < δ₀ :=
     by

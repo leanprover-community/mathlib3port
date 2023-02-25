@@ -4,14 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.integral.set_integral
-! leanprover-community/mathlib commit e7286cac412124bcb9114d1403c43c8a0f644f09
+! leanprover-community/mathlib commit 733fa0048f88bd38678c283c8c1bb1445ac5e23b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Integral.IntegrableOn
 import Mathbin.MeasureTheory.Integral.Bochner
+import Mathbin.MeasureTheory.Function.LocallyIntegrable
 import Mathbin.Order.Filter.IndicatorFunction
 import Mathbin.Topology.MetricSpace.ThickenedIndicator
+import Mathbin.Topology.ContinuousFunction.Compact
 
 /-!
 # Set integral
@@ -782,11 +784,11 @@ end Nonneg
 
 section IntegrableUnion
 
-variable {μ : Measure α} [NormedAddCommGroup E] {f : α → E} [Countable β] {s : β → Set α}
+variable {μ : Measure α} [NormedAddCommGroup E] [Countable β]
 
-theorem integrableOnUnionOfSummableIntegralNorm (hs : ∀ b : β, MeasurableSet (s b))
-    (hi : ∀ b : β, IntegrableOn f (s b) μ) (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) :
-    IntegrableOn f (unionᵢ s) μ :=
+theorem integrableOnUnionOfSummableIntegralNorm {f : α → E} {s : β → Set α}
+    (hs : ∀ b : β, MeasurableSet (s b)) (hi : ∀ b : β, IntegrableOn f (s b) μ)
+    (h : Summable fun b : β => ∫ a : α in s b, ‖f a‖ ∂μ) : IntegrableOn f (unionᵢ s) μ :=
   by
   refine' ⟨ae_strongly_measurable.Union fun i => (hi i).1, (lintegral_Union_le _ _).trans_lt _⟩
   have B := fun b : β => lintegral_coe_eq_integral (fun a : α => ‖f a‖₊) (hi b).norm
@@ -802,6 +804,33 @@ theorem integrableOnUnionOfSummableIntegralNorm (hs : ∀ b : β, MeasurableSet 
   simp_rw [Ennreal.coe_nNReal_eq, NNReal.coe_mk, coe_nnnorm] at S''
   convert Ennreal.ofReal_lt_top
 #align measure_theory.integrable_on_Union_of_summable_integral_norm MeasureTheory.integrableOnUnionOfSummableIntegralNorm
+
+variable [TopologicalSpace α] [BorelSpace α] [MetrizableSpace α] [IsLocallyFiniteMeasure μ]
+
+/-- If `s` is a countable family of compact sets, `f` is a continuous function, and the sequence
+`‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable on the union of the `s i`. -/
+theorem integrableOnUnionOfSummableNormRestrict {f : C(α, E)} {s : β → Compacts α}
+    (hf : Summable fun i : β => ‖f.restrict (s i)‖ * Ennreal.toReal (μ <| s i)) :
+    IntegrableOn f (⋃ i : β, s i) μ :=
+  by
+  refine'
+    integrable_on_Union_of_summable_integral_norm (fun i => (s i).IsCompact.IsClosed.MeasurableSet)
+      (fun i => (map_continuous f).ContinuousOn.integrableOnCompact (s i).IsCompact)
+      (summable_of_nonneg_of_le (fun ι => integral_nonneg fun x => norm_nonneg _) (fun i => _) hf)
+  rw [← (Real.norm_of_nonneg (integral_nonneg fun a => norm_nonneg _) : ‖_‖ = ∫ x in s i, ‖f x‖ ∂μ)]
+  exact
+    norm_set_integral_le_of_norm_le_const' (s i).IsCompact.measure_lt_top
+      (s i).IsCompact.IsClosed.MeasurableSet fun x hx =>
+      (norm_norm (f x)).symm ▸ (f.restrict ↑(s i)).norm_coe_le_norm ⟨x, hx⟩
+#align measure_theory.integrable_on_Union_of_summable_norm_restrict MeasureTheory.integrableOnUnionOfSummableNormRestrict
+
+/-- If `s` is a countable family of compact sets covering `α`, `f` is a continuous function, and
+the sequence `‖f.restrict (s i)‖ * μ (s i)` is summable, then `f` is integrable. -/
+theorem integrableOfSummableNormRestrict {f : C(α, E)} {s : β → Compacts α}
+    (hf : Summable fun i : β => ‖f.restrict (s i)‖ * Ennreal.toReal (μ <| s i))
+    (hs : (⋃ i : β, ↑(s i)) = (univ : Set α)) : Integrable f μ := by
+  simpa only [hs, integrable_on_univ] using integrable_on_Union_of_summable_norm_restrict hf
+#align measure_theory.integrable_of_summable_norm_restrict MeasureTheory.integrableOfSummableNormRestrict
 
 end IntegrableUnion
 

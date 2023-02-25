@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.ordinal
-! leanprover-community/mathlib commit 40494fe75ecbd6d2ec61711baa630cf0a7b7d064
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Cardinals and ordinals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Relationships between cardinals and ordinals, properties of cardinals that are proved
 using ordinals.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.metric_space.metrizable_uniformity
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,8 +237,7 @@ protected theorem UniformSpace.metrizable_uniformity (X : Type _) [UniformSpace 
       intro x y
       dsimp only [d]
       simp only [@SymmetricRel.mk_mem_comm _ _ (hU_symm _) x y]
-    have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 :=
-      ⟨NNReal.half_pos one_pos, NNReal.half_lt_self one_ne_zero⟩
+    have hr : (1 / 2 : ℝ≥0) ∈ Ioo (0 : ℝ≥0) 1 := ⟨half_pos one_pos, NNReal.half_lt_self one_ne_zero⟩
     letI I := PseudoMetricSpace.ofPrenndist d (fun x => hd₀.2 (Setoid.refl _)) hd_symm
     have hdist_le : ∀ x y, dist x y ≤ d x y := PseudoMetricSpace.dist_ofPrenndist_le _ _ _
     have hle_d : ∀ {x y : X} {n : ℕ}, (1 / 2) ^ n ≤ d x y ↔ (x, y) ∉ U n :=

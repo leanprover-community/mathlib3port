@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module data.real.nnreal
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1456,19 +1456,6 @@ theorem sum_div {ι} (s : Finset ι) (f : ι → ℝ≥0) (b : ℝ≥0) :
   Finset.sum_div
 #align nnreal.sum_div NNReal.sum_div
 
-@[simp]
-theorem inv_pos {r : ℝ≥0} : 0 < r⁻¹ ↔ 0 < r :=
-  inv_pos
-#align nnreal.inv_pos NNReal.inv_pos
-
-theorem div_pos {r p : ℝ≥0} (hr : 0 < r) (hp : 0 < p) : 0 < r / p :=
-  div_pos hr hp
-#align nnreal.div_pos NNReal.div_pos
-
-theorem div_self_le (r : ℝ≥0) : r / r ≤ 1 :=
-  div_self_le_one r
-#align nnreal.div_self_le NNReal.div_self_le
-
 /- warning: nnreal.inv_le -> NNReal.inv_le is a dubious translation:
 lean 3 declaration is
   forall {r : NNReal} {p : NNReal}, (Ne.{1} NNReal r (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) -> (Iff (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (Inv.inv.{0} NNReal (DivInvMonoid.toHasInv.{0} NNReal (GroupWithZero.toDivInvMonoid.{0} NNReal (DivisionSemiring.toGroupWithZero.{0} NNReal (Semifield.toDivisionSemiring.{0} NNReal (LinearOrderedSemifield.toSemifield.{0} NNReal (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNReal NNReal.canonicallyLinearOrderedSemifield)))))) r) p) (LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (HMul.hMul.{0, 0, 0} NNReal NNReal NNReal (instHMul.{0} NNReal (Distrib.toHasMul.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))) r p)))
@@ -1683,18 +1670,6 @@ theorem le_of_forall_lt_one_mul_le {x y : ℝ≥0} (h : ∀ a < 1, a * x ≤ y) 
     rwa [mul_assoc, inv_mul_cancel hx, mul_one] at this
 #align nnreal.le_of_forall_lt_one_mul_le NNReal.le_of_forall_lt_one_mul_le
 
-theorem div_add_div_same (a b c : ℝ≥0) : a / c + b / c = (a + b) / c :=
-  div_add_div_same _ _ _
-#align nnreal.div_add_div_same NNReal.div_add_div_same
-
-theorem half_pos {a : ℝ≥0} (h : 0 < a) : 0 < a / 2 :=
-  half_pos h
-#align nnreal.half_pos NNReal.half_pos
-
-theorem add_halves (a : ℝ≥0) : a / 2 + a / 2 = a :=
-  add_halves _
-#align nnreal.add_halves NNReal.add_halves
-
 /- warning: nnreal.half_le_self -> NNReal.half_le_self is a dubious translation:
 lean 3 declaration is
   forall (a : NNReal), LE.le.{0} NNReal (Preorder.toLE.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal NNReal.hasDiv) a (OfNat.ofNat.{0} NNReal 2 (OfNat.mk.{0} NNReal 2 (bit0.{0} NNReal (Distrib.toHasAdd.{0} NNReal (NonUnitalNonAssocSemiring.toDistrib.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))) (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))))) a
@@ -1715,10 +1690,6 @@ theorem half_lt_self {a : ℝ≥0} (h : a ≠ 0) : a / 2 < a :=
   half_lt_self h.bot_lt
 #align nnreal.half_lt_self NNReal.half_lt_self
 
-theorem two_inv_lt_one : (2⁻¹ : ℝ≥0) < 1 :=
-  two_inv_lt_one
-#align nnreal.two_inv_lt_one NNReal.two_inv_lt_one
-
 /- warning: nnreal.div_lt_one_of_lt -> NNReal.div_lt_one_of_lt is a dubious translation:
 lean 3 declaration is
   forall {a : NNReal} {b : NNReal}, (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) a b) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (HDiv.hDiv.{0, 0, 0} NNReal NNReal NNReal (instHDiv.{0} NNReal NNReal.hasDiv) a b) (OfNat.ofNat.{0} NNReal 1 (OfNat.mk.{0} NNReal 1 (One.one.{0} NNReal (AddMonoidWithOne.toOne.{0} NNReal (AddCommMonoidWithOne.toAddMonoidWithOne.{0} NNReal (NonAssocSemiring.toAddCommMonoidWithOne.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))))
@@ -1730,22 +1701,6 @@ theorem div_lt_one_of_lt {a b : ℝ≥0} (h : a < b) : a / b < 1 :=
   rwa [div_lt_iff, one_mul]
   exact ne_of_gt (lt_of_le_of_lt (zero_le _) h)
 #align nnreal.div_lt_one_of_lt NNReal.div_lt_one_of_lt
-
-@[field_simps]
-theorem div_add_div (a : ℝ≥0) {b : ℝ≥0} (c : ℝ≥0) {d : ℝ≥0} (hb : b ≠ 0) (hd : d ≠ 0) :
-    a / b + c / d = (a * d + b * c) / (b * d) :=
-  div_add_div _ _ hb hd
-#align nnreal.div_add_div NNReal.div_add_div
-
-@[field_simps]
-theorem add_div' (a b c : ℝ≥0) (hc : c ≠ 0) : b + a / c = (b * c + a) / c :=
-  add_div' _ _ _ hc
-#align nnreal.add_div' NNReal.add_div'
-
-@[field_simps]
-theorem div_add' (a b c : ℝ≥0) (hc : c ≠ 0) : a / c + b = (a + b * c) / c :=
-  div_add' _ _ _ hc
-#align nnreal.div_add' NNReal.div_add'
 
 /- warning: real.to_nnreal_inv -> Real.toNNReal_inv is a dubious translation:
 lean 3 declaration is
@@ -1794,10 +1749,6 @@ theorem inv_lt_one_iff {x : ℝ≥0} (hx : x ≠ 0) : x⁻¹ < 1 ↔ 1 < x := by
   rwa [← one_div, div_lt_iff hx, one_mul]
 #align nnreal.inv_lt_one_iff NNReal.inv_lt_one_iff
 
-theorem inv_lt_one {x : ℝ≥0} (hx : 1 < x) : x⁻¹ < 1 :=
-  inv_lt_one hx
-#align nnreal.inv_lt_one NNReal.inv_lt_one
-
 /- warning: nnreal.zpow_pos -> NNReal.zpow_pos is a dubious translation:
 lean 3 declaration is
   forall {x : NNReal}, (Ne.{1} NNReal x (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) -> (forall (n : Int), LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring))))))) (HPow.hPow.{0, 0, 0} NNReal Int NNReal (instHPow.{0, 0} NNReal Int (DivInvMonoid.Pow.{0} NNReal (GroupWithZero.toDivInvMonoid.{0} NNReal (DivisionSemiring.toGroupWithZero.{0} NNReal (Semifield.toDivisionSemiring.{0} NNReal (LinearOrderedSemifield.toSemifield.{0} NNReal (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNReal NNReal.canonicallyLinearOrderedSemifield))))))) x n))
@@ -1811,10 +1762,6 @@ theorem zpow_pos {x : ℝ≥0} (hx : x ≠ 0) (n : ℤ) : 0 < x ^ n :=
   · simp [pow_pos hx.bot_lt _]
 #align nnreal.zpow_pos NNReal.zpow_pos
 
-theorem inv_lt_inv_iff {x y : ℝ≥0} (hx : x ≠ 0) (hy : y ≠ 0) : y⁻¹ < x⁻¹ ↔ x < y :=
-  inv_lt_inv₀ hy hx
-#align nnreal.inv_lt_inv_iff NNReal.inv_lt_inv_iff
-
 /- warning: nnreal.inv_lt_inv -> NNReal.inv_lt_inv is a dubious translation:
 lean 3 declaration is
   forall {x : NNReal} {y : NNReal}, (Ne.{1} NNReal x (OfNat.ofNat.{0} NNReal 0 (OfNat.mk.{0} NNReal 0 (Zero.zero.{0} NNReal (MulZeroClass.toHasZero.{0} NNReal (NonUnitalNonAssocSemiring.toMulZeroClass.{0} NNReal (NonAssocSemiring.toNonUnitalNonAssocSemiring.{0} NNReal (Semiring.toNonAssocSemiring.{0} NNReal NNReal.semiring)))))))) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) x y) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (OrderedCancelAddCommMonoid.toPartialOrder.{0} NNReal (StrictOrderedSemiring.toOrderedCancelAddCommMonoid.{0} NNReal NNReal.strictOrderedSemiring)))) (Inv.inv.{0} NNReal (DivInvMonoid.toHasInv.{0} NNReal (GroupWithZero.toDivInvMonoid.{0} NNReal (DivisionSemiring.toGroupWithZero.{0} NNReal (Semifield.toDivisionSemiring.{0} NNReal (LinearOrderedSemifield.toSemifield.{0} NNReal (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNReal NNReal.canonicallyLinearOrderedSemifield)))))) y) (Inv.inv.{0} NNReal (DivInvMonoid.toHasInv.{0} NNReal (GroupWithZero.toDivInvMonoid.{0} NNReal (DivisionSemiring.toGroupWithZero.{0} NNReal (Semifield.toDivisionSemiring.{0} NNReal (LinearOrderedSemifield.toSemifield.{0} NNReal (CanonicallyLinearOrderedSemifield.toLinearOrderedSemifield.{0} NNReal NNReal.canonicallyLinearOrderedSemifield)))))) x))
@@ -1822,7 +1769,7 @@ but is expected to have type
   forall {x : NNReal} {y : NNReal}, (Ne.{1} NNReal x (OfNat.ofNat.{0} NNReal 0 (Zero.toOfNat0.{0} NNReal instNNRealZero))) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) x y) -> (LT.lt.{0} NNReal (Preorder.toLT.{0} NNReal (PartialOrder.toPreorder.{0} NNReal (StrictOrderedSemiring.toPartialOrder.{0} NNReal instNNRealStrictOrderedSemiring))) (Inv.inv.{0} NNReal (CanonicallyLinearOrderedSemifield.toInv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal) y) (Inv.inv.{0} NNReal (CanonicallyLinearOrderedSemifield.toInv.{0} NNReal NNReal.instCanonicallyLinearOrderedSemifieldNNReal) x))
 Case conversion may be inaccurate. Consider using '#align nnreal.inv_lt_inv NNReal.inv_lt_invₓ'. -/
 theorem inv_lt_inv {x y : ℝ≥0} (hx : x ≠ 0) (h : x < y) : y⁻¹ < x⁻¹ :=
-  (inv_lt_inv_iff hx (bot_le.trans_lt h).ne').2 h
+  inv_lt_inv_of_lt hx.bot_lt h
 #align nnreal.inv_lt_inv NNReal.inv_lt_inv
 
 end Inv

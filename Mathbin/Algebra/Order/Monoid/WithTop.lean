@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.order.monoid.with_top
-! leanprover-community/mathlib commit e7e2ba8aa216a5833b5ed85a93317263711a36b5
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -194,11 +194,15 @@ theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
 #align with_top.add_ne_top WithTop.add_ne_top
 -/
 
-#print WithTop.add_lt_top /-
-theorem add_lt_top [PartialOrder α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
-  simp_rw [lt_top_iff_ne_top, add_ne_top]
+/- warning: with_top.add_lt_top -> WithTop.add_lt_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_2) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (And (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_2) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_2) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : PartialOrder.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) (HAdd.hAdd.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHAdd.{u1} (WithTop.{u1} α) (WithTop.add.{u1} α _inst_1)) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (And (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))))
+Case conversion may be inaccurate. Consider using '#align with_top.add_lt_top WithTop.add_lt_topₓ'. -/
+theorem add_lt_top [LT α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
+  simp_rw [WithTop.lt_top_iff_ne_top, add_ne_top]
 #align with_top.add_lt_top WithTop.add_lt_top
--/
 
 #print WithTop.add_eq_coe /-
 theorem add_eq_coe :
@@ -759,11 +763,15 @@ theorem add_ne_bot : a + b ≠ ⊥ ↔ a ≠ ⊥ ∧ b ≠ ⊥ :=
 #align with_bot.add_ne_bot WithBot.add_ne_bot
 -/
 
-#print WithBot.bot_lt_add /-
-theorem bot_lt_add [PartialOrder α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < a ∧ ⊥ < b :=
+/- warning: with_bot.bot_lt_add -> WithBot.bot_lt_add is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_2) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) (HAdd.hAdd.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHAdd.{u1} (WithBot.{u1} α) (WithBot.hasAdd.{u1} α _inst_1)) a b)) (And (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_2) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) a) (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_2) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : Add.{u1} α] [_inst_2 : PartialOrder.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) (HAdd.hAdd.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHAdd.{u1} (WithBot.{u1} α) (WithBot.add.{u1} α _inst_1)) a b)) (And (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) a) (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α (PartialOrder.toPreorder.{u1} α _inst_2))) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) b))
+Case conversion may be inaccurate. Consider using '#align with_bot.bot_lt_add WithBot.bot_lt_addₓ'. -/
+theorem bot_lt_add [LT α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < a ∧ ⊥ < b :=
   @WithTop.add_lt_top αᵒᵈ _ _ _ _
 #align with_bot.bot_lt_add WithBot.bot_lt_add
--/
 
 #print WithBot.add_eq_coe /-
 theorem add_eq_coe : a + b = x ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=

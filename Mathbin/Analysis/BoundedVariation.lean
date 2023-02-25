@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.bounded_variation
-! leanprover-community/mathlib commit 92ca63f0fb391a9ca5f22d2409a6080e786d99f7
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -981,11 +981,7 @@ theorem LipschitzOnWith.comp_evariationOn_le {f : E → F} {C : ℝ≥0} {t : Se
 theorem LipschitzOnWith.comp_hasBoundedVariationOn {f : E → F} {C : ℝ≥0} {t : Set E}
     (hf : LipschitzOnWith C f t) {g : α → E} {s : Set α} (hg : MapsTo g s t)
     (h : HasBoundedVariationOn g s) : HasBoundedVariationOn (f ∘ g) s :=
-  by
-  dsimp [HasBoundedVariationOn] at h
-  apply ne_of_lt
-  apply (hf.comp_evariation_on_le hg).trans_lt
-  simp [lt_top_iff_ne_top, h]
+  ne_top_of_le_ne_top (Ennreal.mul_ne_top Ennreal.coe_ne_top h) (hf.comp_evariationOn_le hg)
 #align lipschitz_on_with.comp_has_bounded_variation_on LipschitzOnWith.comp_hasBoundedVariationOn
 
 theorem LipschitzOnWith.comp_hasLocallyBoundedVariationOn {f : E → F} {C : ℝ≥0} {t : Set E}

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.quaternion
-! leanprover-community/mathlib commit 48085f140e684306f9e7da907cd5932056d1aded
+! leanprover-community/mathlib commit d90149e913bf65828b011379540c3379e01105fd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -228,6 +228,11 @@ theorem continuous_imJ : Continuous fun q : ℍ => q.imJ :=
 theorem continuous_imK : Continuous fun q : ℍ => q.imK :=
   (continuous_apply 3).comp linearIsometryEquivTuple.Continuous
 #align quaternion.continuous_im_k Quaternion.continuous_imK
+
+@[continuity]
+theorem continuous_im : Continuous fun q : ℍ => q.im := by
+  simpa only [← sub_self_re] using continuous_id.sub (continuous_coe.comp continuous_re)
+#align quaternion.continuous_im Quaternion.continuous_im
 
 instance : CompleteSpace ℍ :=
   haveI : UniformEmbedding linear_isometry_equiv_tuple.to_linear_equiv.to_equiv.symm :=

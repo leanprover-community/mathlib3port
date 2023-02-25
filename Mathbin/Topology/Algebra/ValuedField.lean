@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valued_field
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit a8e7ac804fc39df0340c64906075787e0c90fa60
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -381,6 +381,11 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀
     simp_rw [← closure_coe_completion_v_lt]
     exact (has_basis_nhds_zero K Γ₀).hasBasis_of_denseInducing completion.dense_inducing_coe
 #align valued.valued_completion Valued.valuedCompletion
+
+@[simp, norm_cast]
+theorem valuedCompletion_apply (x : K) : Valued.v (x : hat K) = v x :=
+  extension_extends x
+#align valued.valued_completion_apply Valued.valuedCompletion_apply
 
 end Valued
 

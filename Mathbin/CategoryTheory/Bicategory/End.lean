@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.End
-! leanprover-community/mathlib commit 6abb6de90754c5613a3aab6261eea9e5c72d539d
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.CategoryTheory.Monoidal.Category
 
 /-!
 # Endomorphisms of an object in a bicategory, as a monoidal category.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

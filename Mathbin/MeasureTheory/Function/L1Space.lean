@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou
 
 ! This file was ported from Lean 3 source module measure_theory.function.l1_space
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,8 @@ theorem hasFiniteIntegral_congr {f g : α → β} (h : f =ᵐ[μ] g) :
 
 theorem hasFiniteIntegral_const_iff {c : β} :
     HasFiniteIntegral (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ := by
-  simp [has_finite_integral, lintegral_const, lt_top_iff_ne_top, or_iff_not_imp_left]
+  simp [has_finite_integral, lintegral_const, lt_top_iff_ne_top, Ennreal.mul_eq_top,
+    or_iff_not_imp_left]
 #align measure_theory.has_finite_integral_const_iff MeasureTheory.hasFiniteIntegral_const_iff
 
 theorem hasFiniteIntegralConst [IsFiniteMeasure μ] (c : β) : HasFiniteIntegral (fun x : α => c) μ :=

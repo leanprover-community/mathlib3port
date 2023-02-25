@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.hausdorff_distance
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1332,10 +1332,11 @@ theorem diam_cthickening_le {α : Type _} [PseudoMetricSpace α] (s : Set α) (h
   by
   by_cases hs : bounded (cthickening ε s)
   · replace hs := hs.mono (self_subset_cthickening _)
-    have : (2 : ℝ≥0∞) * @coe ℝ≥0 _ _ ⟨ε, hε⟩ ≠ ⊤ := by simp
+    lift ε to ℝ≥0 using hε
+    have : (2 : ℝ≥0∞) * ε ≠ ⊤ := by simp [Ennreal.mul_eq_top]
     refine'
       (Ennreal.toReal_mono (Ennreal.add_ne_top.2 ⟨hs.ediam_ne_top, this⟩) <|
-            ediam_cthickening_le ⟨ε, hε⟩).trans_eq
+            ediam_cthickening_le ε).trans_eq
         _
     simp [Ennreal.toReal_add hs.ediam_ne_top this, diam]
   · rw [diam_eq_zero_of_unbounded hs]
@@ -1383,7 +1384,7 @@ theorem Disjoint.exists_thickenings (hst : Disjoint s t) (hs : IsCompact s) (ht 
   calc
     edist x y ≤ edist z x + edist z y := edist_triangle_left _ _ _
     _ ≤ ↑(r / 2) + ↑(r / 2) := add_le_add hzx.le hzy.le
-    _ = r := by rw [← Ennreal.coe_add, NNReal.add_halves]
+    _ = r := by rw [← Ennreal.coe_add, add_halves]
     
 #align disjoint.exists_thickenings Disjoint.exists_thickenings
 

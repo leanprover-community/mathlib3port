@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex J. Best, Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.embeddings
-! leanprover-community/mathlib commit ff6bde6f523f6228d5d3d90ffd915624da72a2ab
+! leanprover-community/mathlib commit 271bf175e6c51b8d31d6c0107b7bb4a967c7277e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -278,11 +278,25 @@ noncomputable def embedding (w : InfinitePlace K) : K →+* ℂ :=
   w.2.some
 #align number_field.infinite_place.embedding NumberField.InfinitePlace.embedding
 
+@[simp]
 theorem mk_embedding (w : InfinitePlace K) : mk (embedding w) = w :=
   Subtype.ext w.2.choose_spec
 #align number_field.infinite_place.mk_embedding NumberField.InfinitePlace.mk_embedding
 
-theorem pos_iff (w : InfinitePlace K) (x : K) : 0 < w x ↔ x ≠ 0 :=
+@[simp]
+theorem abs_embedding (w : InfinitePlace K) (x : K) : Complex.abs (embedding w x) = w x :=
+  congr_fun (congr_arg coeFn w.2.choose_spec) x
+#align number_field.infinite_place.abs_embedding NumberField.InfinitePlace.abs_embedding
+
+theorem eq_iff_eq (x : K) (r : ℝ) : (∀ w : InfinitePlace K, w x = r) ↔ ∀ φ : K →+* ℂ, ‖φ x‖ = r :=
+  ⟨fun hw φ => hw (mk φ), fun hφ ⟨w, ⟨φ, rfl⟩⟩ => hφ φ⟩
+#align number_field.infinite_place.eq_iff_eq NumberField.InfinitePlace.eq_iff_eq
+
+theorem le_iff_le (x : K) (r : ℝ) : (∀ w : InfinitePlace K, w x ≤ r) ↔ ∀ φ : K →+* ℂ, ‖φ x‖ ≤ r :=
+  ⟨fun hw φ => hw (mk φ), fun hφ ⟨w, ⟨φ, rfl⟩⟩ => hφ φ⟩
+#align number_field.infinite_place.le_iff_le NumberField.InfinitePlace.le_iff_le
+
+theorem pos_iff {w : InfinitePlace K} {x : K} : 0 < w x ↔ x ≠ 0 :=
   AbsoluteValue.pos_iff w.1
 #align number_field.infinite_place.pos_iff NumberField.InfinitePlace.pos_iff
 
@@ -339,6 +353,7 @@ def IsComplex (w : InfinitePlace K) : Prop :=
   ∃ φ : K →+* ℂ, ¬ComplexEmbedding.IsReal φ ∧ mk φ = w
 #align number_field.infinite_place.is_complex NumberField.InfinitePlace.IsComplex
 
+@[simp]
 theorem NumberField.ComplexEmbeddings.IsReal.embedding_mk {φ : K →+* ℂ}
     (h : ComplexEmbedding.IsReal φ) : embedding (mk φ) = φ :=
   by
@@ -402,15 +417,35 @@ noncomputable def mkComplex :
   Subtype.map mk fun φ hφ => ⟨φ, hφ, rfl⟩
 #align number_field.infinite_place.mk_complex NumberField.InfinitePlace.mkComplex
 
+theorem mkComplex_embedding (φ : { φ : K →+* ℂ // ¬ComplexEmbedding.IsReal φ }) :
+    (mkComplex K φ : InfinitePlace K).Embedding = φ ∨
+      (mkComplex K φ : InfinitePlace K).Embedding = ComplexEmbedding.conjugate φ :=
+  by
+  rw [@eq_comm _ _ ↑φ, @eq_comm _ _ (complex_embedding.conjugate ↑φ), ← mk_eq_iff, mk_embedding]
+  rfl
+#align number_field.infinite_place.mk_complex_embedding NumberField.InfinitePlace.mkComplex_embedding
+
+@[simp]
+theorem mkReal_coe (φ : { φ : K →+* ℂ // ComplexEmbedding.IsReal φ }) :
+    (mkReal K φ : InfinitePlace K) = mk (φ : K →+* ℂ) :=
+  rfl
+#align number_field.infinite_place.mk_real_coe NumberField.InfinitePlace.mkReal_coe
+
+@[simp]
+theorem mkComplex_coe (φ : { φ : K →+* ℂ // ¬ComplexEmbedding.IsReal φ }) :
+    (mkComplex K φ : InfinitePlace K) = mk (φ : K →+* ℂ) :=
+  rfl
+#align number_field.infinite_place.mk_complex_coe NumberField.InfinitePlace.mkComplex_coe
+
 @[simp]
 theorem mkReal.apply (φ : { φ : K →+* ℂ // ComplexEmbedding.IsReal φ }) (x : K) :
-    Complex.abs (φ x) = mkReal K φ x :=
+    mkReal K φ x = Complex.abs (φ x) :=
   apply φ x
 #align number_field.infinite_place.mk_real.apply NumberField.InfinitePlace.mkReal.apply
 
 @[simp]
 theorem mkComplex.apply (φ : { φ : K →+* ℂ // ¬ComplexEmbedding.IsReal φ }) (x : K) :
-    Complex.abs (φ x) = mkComplex K φ x :=
+    mkComplex K φ x = Complex.abs (φ x) :=
   apply φ x
 #align number_field.infinite_place.mk_complex.apply NumberField.InfinitePlace.mkComplex.apply
 
@@ -474,7 +509,7 @@ theorem prod_eq_abs_norm (x : K) :
       any_goals ext; simp only [Finset.mem_subtype, Finset.mem_univ, not_is_real_iff_is_complex]
       · ext w
         rw [@Finset.prod_congr _ _ _ _ _ (fun φ => w x) _ (Eq.refl _) fun φ hφ =>
-            (mk_complex.apply K φ x).trans
+            (mk_complex.apply K φ x).symm.trans
               (congr_fun (congr_arg coeFn (Finset.mem_filter.1 hφ).2) x),
           Finset.prod_const, mk_complex.filter_card K w]
         rfl

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.order.ring.with_top
-! leanprover-community/mathlib commit e7e2ba8aa216a5833b5ed85a93317263711a36b5
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,6 +51,10 @@ theorem mul_def {a b : WithTop α} : a * b = if a = 0 ∨ b = 0 then 0 else Opti
   rfl
 #align with_top.mul_def WithTop.mul_def
 
+theorem mul_top' {a : WithTop α} : a * ⊤ = if a = 0 then 0 else ⊤ := by
+  induction a using WithTop.recTopCoe <;> simp [mul_def] <;> rfl
+#align with_top.mul_top' WithTop.mul_top'
+
 /- warning: with_top.mul_top -> WithTop.mul_top is a dubious translation:
 lean 3 declaration is
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2))))) -> (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))
@@ -58,8 +62,12 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) -> (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align with_top.mul_top WithTop.mul_topₓ'. -/
 @[simp]
-theorem mul_top {a : WithTop α} (h : a ≠ 0) : a * ⊤ = ⊤ := by cases a <;> simp [mul_def, h] <;> rfl
+theorem mul_top {a : WithTop α} (h : a ≠ 0) : a * ⊤ = ⊤ := by rw [mul_top', if_neg h]
 #align with_top.mul_top WithTop.mul_top
+
+theorem top_mul' {a : WithTop α} : ⊤ * a = if a = 0 then 0 else ⊤ := by
+  induction a using WithTop.recTopCoe <;> simp [mul_def] <;> rfl
+#align with_top.top_mul' WithTop.top_mul'
 
 /- warning: with_top.top_mul -> WithTop.top_mul is a dubious translation:
 lean 3 declaration is
@@ -68,7 +76,7 @@ but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))) -> (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)) a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))
 Case conversion may be inaccurate. Consider using '#align with_top.top_mul WithTop.top_mulₓ'. -/
 @[simp]
-theorem top_mul {a : WithTop α} (h : a ≠ 0) : ⊤ * a = ⊤ := by cases a <;> simp [mul_def, h] <;> rfl
+theorem top_mul {a : WithTop α} (h : a ≠ 0) : ⊤ * a = ⊤ := by rw [top_mul', if_neg h]
 #align with_top.top_mul WithTop.top_mul
 
 /- warning: with_top.top_mul_top -> WithTop.top_mul_top is a dubious translation:
@@ -81,6 +89,36 @@ Case conversion may be inaccurate. Consider using '#align with_top.top_mul_top W
 theorem top_mul_top : (⊤ * ⊤ : WithTop α) = ⊤ :=
   top_mul top_ne_zero
 #align with_top.top_mul_top WithTop.top_mul_top
+
+/- warning: with_top.mul_eq_top_iff -> WithTop.mul_eq_top_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (Or (And (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))) (And (Eq.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (Ne.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α _inst_2)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {_inst_3 : WithTop.{u1} α} {a : WithTop.{u1} α}, Iff (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) _inst_3 a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Or (And (Ne.{succ u1} (WithTop.{u1} α) _inst_3 (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))) (And (Eq.{succ u1} (WithTop.{u1} α) _inst_3 (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2)))))))
+Case conversion may be inaccurate. Consider using '#align with_top.mul_eq_top_iff WithTop.mul_eq_top_iffₓ'. -/
+theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 :=
+  by
+  rw [mul_def, ite_eq_iff, ← none_eq_top, Option.map₂_eq_none_iff]
+  have ha : a = 0 → a ≠ none := fun h => h.symm ▸ zero_ne_top
+  have hb : b = 0 → b ≠ none := fun h => h.symm ▸ zero_ne_top
+  tauto
+#align with_top.mul_eq_top_iff WithTop.mul_eq_top_iff
+
+theorem mul_lt_top' [LT α] {a b : WithTop α} (ha : a < ⊤) (hb : b < ⊤) : a * b < ⊤ :=
+  by
+  rw [WithTop.lt_top_iff_ne_top] at *
+  simp only [Ne.def, mul_eq_top_iff, *, and_false_iff, false_and_iff, false_or_iff, not_false_iff]
+#align with_top.mul_lt_top' WithTop.mul_lt_top'
+
+/- warning: with_top.mul_lt_top -> WithTop.mul_lt_top is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] [_inst_4 : LT.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) -> (Ne.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (WithTop.hasLt.{u1} α _inst_4) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {_inst_4 : WithTop.{u1} α} {a : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) _inst_4 (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_3)) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) _inst_4 a) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))
+Case conversion may be inaccurate. Consider using '#align with_top.mul_lt_top WithTop.mul_lt_topₓ'. -/
+theorem mul_lt_top [LT α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ :=
+  mul_lt_top' (WithTop.lt_top_iff_ne_top.2 ha) (WithTop.lt_top_iff_ne_top.2 hb)
+#align with_top.mul_lt_top WithTop.mul_lt_top
 
 instance [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   by
@@ -101,7 +139,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {a : α} {b : α}, Eq.{succ u1} (WithTop.{u1} α) (WithTop.some.{u1} α (HMul.hMul.{u1, u1, u1} α α α (instHMul.{u1} α (MulZeroClass.toMul.{u1} α _inst_2)) a b)) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) (WithTop.some.{u1} α a) (WithTop.some.{u1} α b))
 Case conversion may be inaccurate. Consider using '#align with_top.coe_mul WithTop.coe_mulₓ'. -/
-@[norm_cast]
+@[simp, norm_cast]
 theorem coe_mul {a b : α} : (↑(a * b) : WithTop α) = a * b :=
   Decidable.byCases (fun this : a = 0 => by simp [this]) fun ha =>
     Decidable.byCases (fun this : b = 0 => by simp [this]) fun hb => by simp [*, mul_def]
@@ -118,35 +156,6 @@ theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, a * b = a.bind f
     show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤ by simp [hb]
   | some a => show ↑a * ↑b = ↑(a * b) from coe_mul.symm
 #align with_top.mul_coe WithTop.mul_coe
-
-/- warning: with_top.mul_eq_top_iff -> WithTop.mul_eq_top_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toHasZero.{u1} α _inst_2) (MulZeroClass.toHasMul.{u1} α _inst_2)))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (Or (And (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_2)))))) (Eq.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))) (And (Eq.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) (Ne.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (OfNat.mk.{u1} (WithTop.{u1} α) 0 (Zero.zero.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_2))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, Iff (Eq.{succ u1} (WithTop.{u1} α) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Or (And (Ne.{succ u1} (WithTop.{u1} α) a (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))) (And (Eq.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) (Ne.{succ u1} (WithTop.{u1} α) b (OfNat.ofNat.{u1} (WithTop.{u1} α) 0 (Zero.toOfNat0.{u1} (WithTop.{u1} α) (WithTop.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align with_top.mul_eq_top_iff WithTop.mul_eq_top_iffₓ'. -/
-@[simp]
-theorem mul_eq_top_iff {a b : WithTop α} : a * b = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 :=
-  by
-  cases a <;> cases b <;> simp only [none_eq_top, some_eq_coe]
-  · simp [← coe_mul]
-  · by_cases hb : b = 0 <;> simp [hb]
-  · by_cases ha : a = 0 <;> simp [ha]
-  · simp [← coe_mul]
-#align with_top.mul_eq_top_iff WithTop.mul_eq_top_iff
-
-/- warning: with_top.mul_lt_top -> WithTop.mul_lt_top is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) -> (Ne.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_3)) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toHasMul.{u1} (WithTop.{u1} α) (WithTop.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toHasZero.{u1} α _inst_2) (MulZeroClass.toHasMul.{u1} α _inst_2)))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.hasTop.{u1} α)))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {a : WithTop.{u1} α} {b : WithTop.{u1} α}, (Ne.{succ u1} (WithTop.{u1} α) a (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (Ne.{succ u1} (WithTop.{u1} α) b (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α))) -> (LT.lt.{u1} (WithTop.{u1} α) (Preorder.toLT.{u1} (WithTop.{u1} α) (WithTop.preorder.{u1} α _inst_3)) (HMul.hMul.{u1, u1, u1} (WithTop.{u1} α) (WithTop.{u1} α) (WithTop.{u1} α) (instHMul.{u1} (WithTop.{u1} α) (MulZeroClass.toMul.{u1} (WithTop.{u1} α) (WithTop.instMulZeroClassWithTop.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) a b) (Top.top.{u1} (WithTop.{u1} α) (WithTop.top.{u1} α)))
-Case conversion may be inaccurate. Consider using '#align with_top.mul_lt_top WithTop.mul_lt_topₓ'. -/
-theorem mul_lt_top [Preorder α] {a b : WithTop α} (ha : a ≠ ⊤) (hb : b ≠ ⊤) : a * b < ⊤ :=
-  by
-  lift a to α using ha
-  lift b to α using hb
-  simp only [← coe_mul, coe_lt_top]
-#align with_top.mul_lt_top WithTop.mul_lt_top
 
 /- warning: with_top.untop'_zero_mul -> WithTop.untop'_zero_mul is a dubious translation:
 lean 3 declaration is
@@ -208,7 +217,7 @@ protected def WithTop.MonoidWithZeroHom.withTopMap {R S : Type _} [MulZeroOneCla
       induction y using WithTop.recTopCoe
       · have : (f x : WithTop S) ≠ 0 := by simpa [hf.eq_iff' (map_zero f)] using hx
         simp [hx, this]
-      simp [← coe_mul] }
+      simp only [← coe_mul, map_coe, map_mul] }
 #align monoid_with_zero_hom.with_top_map WithTop.MonoidWithZeroHom.withTopMap
 
 instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
@@ -243,7 +252,7 @@ private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c :=
   · by_cases ha : a = 0 <;> simp [ha]
   · by_cases hc : c = 0
     · simp [hc]
-    simp [mul_coe hc]
+    simp only [mul_coe hc]
     cases a <;> cases b
     repeat' first |rfl|exact congr_arg some (add_mul _ _ _)
 #align with_top.distrib' with_top.distrib'
@@ -336,6 +345,30 @@ theorem bot_mul_bot : (⊥ * ⊥ : WithBot α) = ⊥ :=
   WithTop.top_mul_top
 #align with_bot.bot_mul_bot WithBot.bot_mul_bot
 
+/- warning: with_bot.mul_eq_bot_iff -> WithBot.mul_eq_bot_iff is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (Or (And (Ne.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)))) (And (Eq.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (Ne.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α _inst_2)))))))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {_inst_3 : WithBot.{u1} α} {a : WithBot.{u1} α}, Iff (Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toMul.{u1} (WithBot.{u1} α) (WithBot.instMulZeroClassWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) _inst_3 a) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) (Or (And (Ne.{succ u1} (WithBot.{u1} α) _inst_3 (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)))) (And (Eq.{succ u1} (WithBot.{u1} α) _inst_3 (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) (Ne.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2)))))))
+Case conversion may be inaccurate. Consider using '#align with_bot.mul_eq_bot_iff WithBot.mul_eq_bot_iffₓ'. -/
+theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ ∨ a = ⊥ ∧ b ≠ 0 :=
+  WithTop.mul_eq_top_iff
+#align with_bot.mul_eq_bot_iff WithBot.mul_eq_bot_iff
+
+theorem bot_lt_mul' [LT α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b :=
+  @WithTop.mul_lt_top' αᵒᵈ _ _ _ _ _ _ ha hb
+#align with_bot.bot_lt_mul' WithBot.bot_lt_mul'
+
+/- warning: with_bot.bot_lt_mul -> WithBot.bot_lt_mul is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : Zero.{u1} α] [_inst_3 : Mul.{u1} α] [_inst_4 : LT.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, (Ne.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) -> (Ne.{succ u1} (WithBot.{u1} α) b (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) -> (LT.lt.{u1} (WithBot.{u1} α) (WithBot.hasLt.{u1} α _inst_4) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) _inst_2 _inst_3))) a b))
+but is expected to have type
+  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {_inst_4 : WithBot.{u1} α} {a : WithBot.{u1} α}, (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) _inst_4) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) a) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toMul.{u1} (WithBot.{u1} α) (WithBot.instMulZeroClassWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) _inst_4 a))
+Case conversion may be inaccurate. Consider using '#align with_bot.bot_lt_mul WithBot.bot_lt_mulₓ'. -/
+theorem bot_lt_mul [LT α] {a b : WithBot α} (ha : a ≠ ⊥) (hb : b ≠ ⊥) : ⊥ < a * b :=
+  @WithTop.mul_lt_top αᵒᵈ _ _ _ _ _ _ ha hb
+#align with_bot.bot_lt_mul WithBot.bot_lt_mul
+
 end Mul
 
 section MulZeroClass
@@ -362,30 +395,6 @@ Case conversion may be inaccurate. Consider using '#align with_bot.mul_coe WithB
 theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : a * b = a.bind fun a : α => ↑(a * b) :=
   WithTop.mul_coe hb
 #align with_bot.mul_coe WithBot.mul_coe
-
-/- warning: with_bot.mul_eq_bot_iff -> WithBot.mul_eq_bot_iff is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toHasZero.{u1} α _inst_2) (MulZeroClass.toHasMul.{u1} α _inst_2)))) a b) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (Or (And (Ne.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_2)))))) (Eq.{succ u1} (WithBot.{u1} α) b (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)))) (And (Eq.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α))) (Ne.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (OfNat.mk.{u1} (WithBot.{u1} α) 0 (Zero.zero.{u1} (WithBot.{u1} α) (WithBot.hasZero.{u1} α (MulZeroClass.toHasZero.{u1} α _inst_2))))))))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, Iff (Eq.{succ u1} (WithBot.{u1} α) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toMul.{u1} (WithBot.{u1} α) (WithBot.instMulZeroClassWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) a b) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) (Or (And (Ne.{succ u1} (WithBot.{u1} α) a (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2))))) (Eq.{succ u1} (WithBot.{u1} α) b (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)))) (And (Eq.{succ u1} (WithBot.{u1} α) a (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α))) (Ne.{succ u1} (WithBot.{u1} α) b (OfNat.ofNat.{u1} (WithBot.{u1} α) 0 (Zero.toOfNat0.{u1} (WithBot.{u1} α) (WithBot.zero.{u1} α (MulZeroClass.toZero.{u1} α _inst_2)))))))
-Case conversion may be inaccurate. Consider using '#align with_bot.mul_eq_bot_iff WithBot.mul_eq_bot_iffₓ'. -/
-@[simp]
-theorem mul_eq_bot_iff {a b : WithBot α} : a * b = ⊥ ↔ a ≠ 0 ∧ b = ⊥ ∨ a = ⊥ ∧ b ≠ 0 :=
-  WithTop.mul_eq_top_iff
-#align with_bot.mul_eq_bot_iff WithBot.mul_eq_bot_iff
-
-/- warning: with_bot.bot_lt_mul -> WithBot.bot_lt_mul is a dubious translation:
-lean 3 declaration is
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) a) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) b) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.hasBot.{u1} α)) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toHasMul.{u1} (WithBot.{u1} α) (WithBot.mulZeroClass.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toHasZero.{u1} α _inst_2) (MulZeroClass.toHasMul.{u1} α _inst_2)))) a b))
-but is expected to have type
-  forall {α : Type.{u1}} [_inst_1 : DecidableEq.{succ u1} α] [_inst_2 : MulZeroClass.{u1} α] [_inst_3 : Preorder.{u1} α] {a : WithBot.{u1} α} {b : WithBot.{u1} α}, (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) a) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) b) -> (LT.lt.{u1} (WithBot.{u1} α) (Preorder.toLT.{u1} (WithBot.{u1} α) (WithBot.preorder.{u1} α _inst_3)) (Bot.bot.{u1} (WithBot.{u1} α) (WithBot.bot.{u1} α)) (HMul.hMul.{u1, u1, u1} (WithBot.{u1} α) (WithBot.{u1} α) (WithBot.{u1} α) (instHMul.{u1} (WithBot.{u1} α) (MulZeroClass.toMul.{u1} (WithBot.{u1} α) (WithBot.instMulZeroClassWithBot.{u1} α (fun (a : α) (b : α) => _inst_1 a b) (MulZeroClass.toZero.{u1} α _inst_2) (MulZeroClass.toMul.{u1} α _inst_2)))) a b))
-Case conversion may be inaccurate. Consider using '#align with_bot.bot_lt_mul WithBot.bot_lt_mulₓ'. -/
-theorem bot_lt_mul [Preorder α] {a b : WithBot α} (ha : ⊥ < a) (hb : ⊥ < b) : ⊥ < a * b :=
-  by
-  lift a to α using ne_bot_of_gt ha
-  lift b to α using ne_bot_of_gt hb
-  simp only [← coe_mul, bot_lt_coe]
-#align with_bot.bot_lt_mul WithBot.bot_lt_mul
 
 end MulZeroClass
 

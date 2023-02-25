@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.local_invariant_properties
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 8e57ff9a1d998da9ab3da9256bada5ba51a35a72
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -575,6 +575,16 @@ theorem liftPropOn_chart_symm [HasGroupoid M G] (hG : G.LocalInvariantProp G Q)
   hG.liftPropOn_symm_of_mem_maximalAtlas hQ (chart_mem_maximalAtlas G x)
 #align structure_groupoid.local_invariant_prop.lift_prop_on_chart_symm StructureGroupoid.LocalInvariantProp.liftPropOn_chart_symm
 
+theorem liftPropAt_of_mem_groupoid (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y)
+    {f : LocalHomeomorph H H} (hf : f ∈ G) {x : H} (hx : x ∈ f.source) : LiftPropAt Q f x :=
+  liftPropAt_of_mem_maximalAtlas hG hQ (G.mem_maximalAtlas_of_mem_groupoid hf) hx
+#align structure_groupoid.local_invariant_prop.lift_prop_at_of_mem_groupoid StructureGroupoid.LocalInvariantProp.liftPropAt_of_mem_groupoid
+
+theorem liftPropOn_of_mem_groupoid (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y)
+    {f : LocalHomeomorph H H} (hf : f ∈ G) : LiftPropOn Q f f.source :=
+  liftPropOn_of_mem_maximalAtlas hG hQ (G.mem_maximalAtlas_of_mem_groupoid hf)
+#align structure_groupoid.local_invariant_prop.lift_prop_on_of_mem_groupoid StructureGroupoid.LocalInvariantProp.liftPropOn_of_mem_groupoid
+
 theorem liftProp_id (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) :
     LiftProp Q (id : M → M) :=
   by
@@ -639,6 +649,59 @@ theorem isLocalStructomorphWithinAt_localInvariantProp [ClosedUnderRestriction G
         simp only [hef ⟨hy.1, hy.2.1⟩, mfld_simps]
       · simpa only [hex, hef ⟨hx, hex⟩, mfld_simps] using hfx }
 #align structure_groupoid.is_local_structomorph_within_at_local_invariant_prop StructureGroupoid.isLocalStructomorphWithinAt_localInvariantProp
+
+/-- A slight reformulation of `is_local_structomorph_within_at` when `f` is a local homeomorph.
+  This gives us an `e` that is defined on a subset of `f.source`. -/
+theorem LocalHomeomorph.isLocalStructomorphWithinAt_iff {G : StructureGroupoid H}
+    [ClosedUnderRestriction G] (f : LocalHomeomorph H H) {s : Set H} {x : H}
+    (hx : x ∈ f.source ∪ sᶜ) :
+    G.IsLocalStructomorphWithinAt (⇑f) s x ↔
+      x ∈ s →
+        ∃ e : LocalHomeomorph H H,
+          e ∈ G ∧ e.source ⊆ f.source ∧ EqOn f (⇑e) (s ∩ e.source) ∧ x ∈ e.source :=
+  by
+  constructor
+  · intro hf h2x
+    obtain ⟨e, he, hfe, hxe⟩ := hf h2x
+    refine' ⟨e.restr f.source, closed_under_restriction' he f.open_source, _, _, hxe, _⟩
+    · simp_rw [LocalHomeomorph.restr_source]
+      refine' (inter_subset_right _ _).trans interior_subset
+    · intro x' hx'
+      exact hfe ⟨hx'.1, hx'.2.1⟩
+    · rw [f.open_source.interior_eq]
+      exact Or.resolve_right hx (not_not.mpr h2x)
+  · intro hf hx
+    obtain ⟨e, he, h2e, hfe, hxe⟩ := hf hx
+    exact ⟨e, he, hfe, hxe⟩
+#align local_homeomorph.is_local_structomorph_within_at_iff LocalHomeomorph.isLocalStructomorphWithinAt_iff
+
+/-- A slight reformulation of `is_local_structomorph_within_at` when `f` is a local homeomorph and
+  the set we're considering is a superset of `f.source`. -/
+theorem LocalHomeomorph.isLocalStructomorphWithinAt_iff' {G : StructureGroupoid H}
+    [ClosedUnderRestriction G] (f : LocalHomeomorph H H) {s : Set H} {x : H} (hs : f.source ⊆ s)
+    (hx : x ∈ f.source ∪ sᶜ) :
+    G.IsLocalStructomorphWithinAt (⇑f) s x ↔
+      x ∈ s →
+        ∃ e : LocalHomeomorph H H,
+          e ∈ G ∧ e.source ⊆ f.source ∧ EqOn f (⇑e) e.source ∧ x ∈ e.source :=
+  by
+  simp_rw [f.is_local_structomorph_within_at_iff hx]
+  refine' imp_congr_right fun hx => exists_congr fun e => and_congr_right fun he => _
+  refine' and_congr_right fun h2e => _
+  rw [inter_eq_right_iff_subset.mpr (h2e.trans hs)]
+#align local_homeomorph.is_local_structomorph_within_at_iff' LocalHomeomorph.isLocalStructomorphWithinAt_iff'
+
+/-- A slight reformulation of `is_local_structomorph_within_at` when `f` is a local homeomorph and
+  the set we're considering is `f.source`. -/
+theorem LocalHomeomorph.isLocalStructomorphWithinAt_source_iff {G : StructureGroupoid H}
+    [ClosedUnderRestriction G] (f : LocalHomeomorph H H) {x : H} :
+    G.IsLocalStructomorphWithinAt (⇑f) f.source x ↔
+      x ∈ f.source →
+        ∃ e : LocalHomeomorph H H,
+          e ∈ G ∧ e.source ⊆ f.source ∧ EqOn f (⇑e) e.source ∧ x ∈ e.source :=
+  haveI : x ∈ f.source ∪ f.sourceᶜ := by simp_rw [union_compl_self]
+  f.is_local_structomorph_within_at_iff' subset.rfl this
+#align local_homeomorph.is_local_structomorph_within_at_source_iff LocalHomeomorph.isLocalStructomorphWithinAt_source_iff
 
 variable {H₁ : Type _} [TopologicalSpace H₁] {H₂ : Type _} [TopologicalSpace H₂] {H₃ : Type _}
   [TopologicalSpace H₃] [ChartedSpace H₁ H₂] [ChartedSpace H₂ H₃] {G₁ : StructureGroupoid H₁}

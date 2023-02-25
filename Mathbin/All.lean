@@ -688,6 +688,7 @@ import Mathbin.Analysis.NormedSpace.Star.Exponential
 import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Analysis.NormedSpace.Star.Matrix
 import Mathbin.Analysis.NormedSpace.Star.Mul
+import Mathbin.Analysis.NormedSpace.Star.Multiplier
 import Mathbin.Analysis.NormedSpace.Star.Spectrum
 import Mathbin.Analysis.NormedSpace.TrivSqZeroExt
 import Mathbin.Analysis.NormedSpace.Units
@@ -1786,6 +1787,7 @@ import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Geometry.Manifold.PartitionOfUnity
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Geometry.Manifold.TangentBundle
+import Mathbin.Geometry.Manifold.VectorBundle
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization
 import Mathbin.GroupTheory.Archimedean
@@ -2440,6 +2442,7 @@ import Mathbin.RingTheory.DedekindDomain.AdicValuation
 import Mathbin.RingTheory.DedekindDomain.Basic
 import Mathbin.RingTheory.DedekindDomain.Dvr
 import Mathbin.RingTheory.DedekindDomain.Factorization
+import Mathbin.RingTheory.DedekindDomain.FiniteAdeleRing
 import Mathbin.RingTheory.DedekindDomain.Ideal
 import Mathbin.RingTheory.DedekindDomain.IntegralClosure
 import Mathbin.RingTheory.DedekindDomain.Pid

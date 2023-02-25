@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov, Patrick Massot, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.integral.interval_integral
-! leanprover-community/mathlib commit e7286cac412124bcb9114d1403c43c8a0f644f09
+! leanprover-community/mathlib commit 733fa0048f88bd38678c283c8c1bb1445ac5e23b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1234,6 +1234,32 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
 #align interval_integral.has_sum_integral_of_dominated_convergence intervalIntegral.hasSum_integral_of_dominated_convergence
 
 open TopologicalSpace
+
+/-- Interval integrals commute with countable sums, when the supremum norms are summable (a
+special case of the dominated convergence theorem). -/
+theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(ℝ, E)}
+    (hf_sum : Summable fun i : ι => ‖(f i).restrict (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖) :
+    HasSum (fun i : ι => ∫ x in a..b, f i x) (∫ x in a..b, ∑' i : ι, f i x) :=
+  by
+  refine'
+    has_sum_integral_of_dominated_convergence
+      (fun i (x : ℝ) => ‖(f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : compacts ℝ)‖)
+      (fun i => (map_continuous <| f i).AeStronglyMeasurable)
+      (fun i =>
+        ae_of_all _ fun x hx =>
+          ((f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : compacts ℝ)).norm_coe_le_norm
+            ⟨x, ⟨hx.1.le, hx.2⟩⟩)
+      (ae_of_all _ fun x hx => hf_sum) intervalIntegrableConst
+      (ae_of_all _ fun x hx => Summable.hasSum _)
+  -- next line is slow, & doesn't work with "exact" in place of "apply" -- ?
+  apply ContinuousMap.summable_apply (summable_of_summable_norm hf_sum) ⟨x, ⟨hx.1.le, hx.2⟩⟩
+#align interval_integral.has_sum_interval_integral_of_summable_norm intervalIntegral.hasSum_intervalIntegral_of_summable_norm
+
+theorem tsum_intervalIntegral_eq_of_summable_norm [Countable ι] {f : ι → C(ℝ, E)}
+    (hf_sum : Summable fun i : ι => ‖(f i).restrict (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖) :
+    (∑' i : ι, ∫ x in a..b, f i x) = ∫ x in a..b, ∑' i : ι, f i x :=
+  (hasSum_intervalIntegral_of_summable_norm hf_sum).tsum_eq
+#align interval_integral.tsum_interval_integral_eq_of_summable_norm intervalIntegral.tsum_intervalIntegral_eq_of_summable_norm
 
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.real
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -240,7 +240,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     simp only [zero_le', Set.setOf_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
   obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl Ennreal.one_ne_top hε
   set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNNReal with hC
-  have hCpos : 0 < C := mul_pos (NNReal.inv_pos.2 hδ) (Ennreal.toNnreal_pos hne hg.snorm_lt_top.ne)
+  have hCpos : 0 < C := mul_pos (inv_pos.2 hδ) (Ennreal.toNnreal_pos hne hg.snorm_lt_top.ne)
   have : ∀ n, μ { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } ≤ Ennreal.ofReal δ :=
     by
     intro n

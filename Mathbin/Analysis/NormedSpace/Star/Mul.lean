@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.mul
-! leanprover-community/mathlib commit 3249a849dbc131395156322a6fdce9611ef83375
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -40,7 +40,7 @@ theorem op_nnnorm_mul : ‖mul 𝕜 E a‖₊ = ‖a‖₊ :=
   · have ha : 0 < ‖a‖₊ := zero_le'.trans_lt hr
     rw [← inv_inv ‖a‖₊, NNReal.lt_inv_iff_mul_lt (inv_ne_zero ha.ne')] at hr
     obtain ⟨k, hk₁, hk₂⟩ :=
-      NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| NNReal.inv_pos.2 ha)
+      NormedField.exists_lt_nnnorm_lt 𝕜 (mul_lt_mul_of_pos_right hr <| inv_pos.2 ha)
     refine' ⟨_, ⟨k • star a, _, rfl⟩, _⟩
     ·
       simpa only [mem_closedBall_zero_iff, norm_smul, one_mul, norm_star] using

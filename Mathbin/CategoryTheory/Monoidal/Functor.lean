@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Jendrusch, Scott Morrison, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Products.Basic
 
 /-!
 # (Lax) monoidal functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A lax monoidal functor `F` between monoidal categories `C` and `D`
 is a functor between the underlying categories equipped with morphisms

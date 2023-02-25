@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module topology.instances.ennreal
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1683,7 +1683,7 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
         filter_upwards [Emetric.ball_mem_nhds x Ennreal.coe_lt_top]
         refine' fun y (hy : edist y x < ⊤) => _
         rw [edist_comm] at hy
-        simpa [hx, hC, hy.ne] using h x y
+        simpa [hx, Ennreal.mul_ne_top hC hy.ne] using h x y
       exact this.continuous_at
     · refine' (Ennreal.tendsto_nhds hx).2 fun ε (ε0 : 0 < ε) => _
       filter_upwards [Emetric.closedBall_mem_nhds x (Ennreal.div_pos_iff.2 ⟨ε0.ne', hC⟩)]

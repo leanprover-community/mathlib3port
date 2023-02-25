@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Heather Macbeth, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.inverse
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -643,7 +643,7 @@ theorem map_nhds_eq_of_surj [CompleteSpace E] [CompleteSpace F] {f : E → F} {f
   let f'symm := f'.nonlinear_right_inverse_of_surjective h
   set c : ℝ≥0 := f'symm.nnnorm⁻¹ / 2 with hc
   have f'symm_pos : 0 < f'symm.nnnorm := f'.nonlinear_right_inverse_of_surjective_nnnorm_pos h
-  have cpos : 0 < c := by simp [hc, NNReal.half_pos, NNReal.inv_pos, f'symm_pos]
+  have cpos : 0 < c := by simp [hc, half_pos, inv_pos, f'symm_pos]
   obtain ⟨s, s_nhds, hs⟩ : ∃ s ∈ 𝓝 a, ApproximatesLinearOn f f' s c :=
     hf.approximates_deriv_on_nhds (Or.inr cpos)
   apply hs.map_nhds_eq f'symm s_nhds (Or.inr (NNReal.half_lt_self _))
@@ -660,8 +660,7 @@ theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[�
   exact fun s t => ApproximatesLinearOn.mono_set
   exact
     hf.approximates_deriv_on_nhds <|
-      f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
-        NNReal.half_pos <| NNReal.inv_pos.2 <| hf'
+      f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' => half_pos <| inv_pos.2 hf'
 #align has_strict_fderiv_at.approximates_deriv_on_open_nhds HasStrictFderivAt.approximates_deriv_on_open_nhds
 
 include cs
@@ -676,7 +675,7 @@ def toLocalHomeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : Local
   ApproximatesLinearOn.toLocalHomeomorph f (Classical.choose hf.approximates_deriv_on_open_nhds)
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).snd
     (f'.subsingleton_or_nnnorm_symm_pos.imp id fun hf' =>
-      NNReal.half_lt_self <| ne_of_gt <| NNReal.inv_pos.2 <| hf')
+      NNReal.half_lt_self <| ne_of_gt <| inv_pos.2 hf')
     (Classical.choose_spec hf.approximates_deriv_on_open_nhds).fst.2
 #align has_strict_fderiv_at.to_local_homeomorph HasStrictFderivAt.toLocalHomeomorph
 

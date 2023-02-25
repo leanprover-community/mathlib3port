@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module analysis.mean_inequalities_pow
-! leanprover-community/mathlib commit 7eaf3412966a5f94513e866fbf6de6d340e2ef32
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -216,7 +216,7 @@ theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ≥0∞) (hw' : (∑
   have hp_not_nonpos : ¬p ≤ 0 := by simp [hp_pos]
   have hp_not_neg : ¬p < 0 := by simp [hp_nonneg]
   have h_top_iff_rpow_top : ∀ (i : ι) (hi : i ∈ s), w i * z i = ⊤ ↔ w i * z i ^ p = ⊤ := by
-    simp [hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
+    simp [Ennreal.mul_eq_top, hp_pos, hp_nonneg, hp_not_nonpos, hp_not_neg]
   refine' le_of_top_imp_top_of_to_nnreal_le _ _
   · -- first, prove `(∑ i in s, w i * z i) ^ p = ⊤ → ∑ i in s, (w i * z i ^ p) = ⊤`
     rw [rpow_eq_top_iff, sum_eq_top_iff, sum_eq_top_iff]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.ennreal
-! leanprover-community/mathlib commit 11c2b8c18d1a8e44fe9ba8ba6b931d51b4734150
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1150,30 +1150,34 @@ theorem mul_max : a * max b c = max (a * b) (a * c) :=
   mul_left_mono.map_max
 #align ennreal.mul_max Ennreal.mul_max
 
-theorem mul_eq_mul_left : a ≠ 0 → a ≠ ∞ → (a * b = a * c ↔ b = c) := by
-  cases a <;> cases b <;> cases c <;>
-    simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, -coe_mul,
-      coe_mul.symm, NNReal.mul_eq_mul_left]
+theorem mul_left_strictMono (h0 : a ≠ 0) (hinf : a ≠ ∞) : StrictMono ((· * ·) a) :=
+  by
+  lift a to ℝ≥0 using hinf
+  rw [coe_ne_zero] at h0
+  intro x y h
+  contrapose! h
+  simpa only [← mul_assoc, ← coe_mul, inv_mul_cancel h0, coe_one, one_mul] using
+    mul_le_mul' (le_refl ↑a⁻¹) h
+#align ennreal.mul_left_strictMono Ennreal.mul_left_strictMono
+
+theorem mul_eq_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b = a * c ↔ b = c :=
+  (mul_left_strictMono h₀ hinf).Injective.eq_iff
 #align ennreal.mul_eq_mul_left Ennreal.mul_eq_mul_left
 
 theorem mul_eq_mul_right : c ≠ 0 → c ≠ ∞ → (a * c = b * c ↔ a = b) :=
   mul_comm c a ▸ mul_comm c b ▸ mul_eq_mul_left
 #align ennreal.mul_eq_mul_right Ennreal.mul_eq_mul_right
 
-theorem mul_le_mul_left : a ≠ 0 → a ≠ ∞ → (a * b ≤ a * c ↔ b ≤ c) :=
-  by
-  cases a <;> cases b <;> cases c <;>
-    simp (config := { contextual := true }) [none_eq_top, some_eq_coe, mul_top, top_mul, -coe_mul,
-      coe_mul.symm]
-  intro h; exact mul_le_mul_left (pos_iff_ne_zero.2 h)
+theorem mul_le_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b ≤ a * c ↔ b ≤ c :=
+  (mul_left_strictMono h₀ hinf).le_iff_le
 #align ennreal.mul_le_mul_left Ennreal.mul_le_mul_left
 
 theorem mul_le_mul_right : c ≠ 0 → c ≠ ∞ → (a * c ≤ b * c ↔ a ≤ b) :=
   mul_comm c a ▸ mul_comm c b ▸ mul_le_mul_left
 #align ennreal.mul_le_mul_right Ennreal.mul_le_mul_right
 
-theorem mul_lt_mul_left : a ≠ 0 → a ≠ ∞ → (a * b < a * c ↔ b < c) := fun h0 ht => by
-  simp only [mul_le_mul_left h0 ht, lt_iff_le_not_le]
+theorem mul_lt_mul_left (h₀ : a ≠ 0) (hinf : a ≠ ∞) : a * b < a * c ↔ b < c :=
+  (mul_left_strictMono h₀ hinf).lt_iff_lt
 #align ennreal.mul_lt_mul_left Ennreal.mul_lt_mul_left
 
 theorem mul_lt_mul_right : c ≠ 0 → c ≠ ∞ → (a * c < b * c ↔ a < b) :=

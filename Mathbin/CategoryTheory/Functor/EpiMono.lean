@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module category_theory.functor.epi_mono
-! leanprover-community/mathlib commit 563aed347eb59dc4181cb732cda0d124d736eaa3
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.LiftingProperties.Adjunction
 
 /-!
 # Preservation and reflection of monomorphisms and epimorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We provide typeclasses that state that a functor preserves or reflects monomorphisms or
 epimorphisms.

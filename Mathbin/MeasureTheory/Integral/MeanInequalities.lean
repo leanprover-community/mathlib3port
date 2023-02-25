@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.mean_inequalities
-! leanprover-community/mathlib commit 11c2b8c18d1a8e44fe9ba8ba6b931d51b4734150
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -125,7 +125,7 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsC
     _ ≤ npf * nqg :=
       by
       rw [lintegral_mul_const' (npf * nqg) _
-          (by simp [hf_nontop, hg_nontop, hf_nonzero, hg_nonzero])]
+          (by simp [hf_nontop, hg_nontop, hf_nonzero, hg_nonzero, Ennreal.mul_eq_top])]
       nth_rw 2 [← one_mul (npf * nqg)]
       refine' mul_le_mul _ (le_refl (npf * nqg))
       have hf1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf_nonzero hf_nontop

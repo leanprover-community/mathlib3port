@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.big_operators.order
-! leanprover-community/mathlib commit bb37dbda903641effc74366a2774cefdf2c6734d
+! leanprover-community/mathlib commit afdb4fa3b32d41106a4a09b371ce549ad7958abd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1039,48 +1039,54 @@ namespace WithTop
 
 open Finset
 
-#print WithTop.prod_lt_top /-
+/- warning: with_top.prod_lt_top -> WithTop.prod_lt_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : CommMonoidWithZero.{u2} R] [_inst_2 : NoZeroDivisors.{u2} R (MulZeroClass.toHasMul.{u2} R (MulZeroOneClass.toMulZeroClass.{u2} R (MonoidWithZero.toMulZeroOneClass.{u2} R (CommMonoidWithZero.toMonoidWithZero.{u2} R _inst_1)))) (MulZeroClass.toHasZero.{u2} R (MulZeroOneClass.toMulZeroClass.{u2} R (MonoidWithZero.toMulZeroOneClass.{u2} R (CommMonoidWithZero.toMonoidWithZero.{u2} R _inst_1))))] [_inst_3 : Nontrivial.{u2} R] [_inst_4 : DecidableEq.{succ u2} R] [_inst_5 : LT.{u2} R] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} R)}, (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Ne.{succ u2} (WithTop.{u2} R) (f i) (Top.top.{u2} (WithTop.{u2} R) (WithTop.hasTop.{u2} R)))) -> (LT.lt.{u2} (WithTop.{u2} R) (WithTop.hasLt.{u2} R _inst_5) (Finset.prod.{u2, u1} (WithTop.{u2} R) ι (CommMonoidWithZero.toCommMonoid.{u2} (WithTop.{u2} R) (WithTop.commMonoidWithZero.{u2} R (fun (a : R) (b : R) => _inst_4 a b) _inst_1 _inst_2 _inst_3)) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} R) (WithTop.hasTop.{u2} R)))
+but is expected to have type
+  forall {ι : Type.{u1}} {R : Type.{u2}} [_inst_1 : CanonicallyOrderedCommSemiring.{u2} R] [_inst_2 : Nontrivial.{u2} R] [_inst_3 : DecidableEq.{succ u2} R] {_inst_4 : Finset.{u1} ι} {_inst_5 : ι -> (WithTop.{u2} R)}, (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i _inst_4) -> (Ne.{succ u2} (WithTop.{u2} R) (_inst_5 i) (Top.top.{u2} (WithTop.{u2} R) (WithTop.top.{u2} R)))) -> (LT.lt.{u2} (WithTop.{u2} R) (Preorder.toLT.{u2} (WithTop.{u2} R) (WithTop.preorder.{u2} R (PartialOrder.toPreorder.{u2} R (OrderedSemiring.toPartialOrder.{u2} R (OrderedCommSemiring.toOrderedSemiring.{u2} R (CanonicallyOrderedCommSemiring.toOrderedCommSemiring.{u2} R _inst_1)))))) (Finset.prod.{u2, u1} (WithTop.{u2} R) ι (CommSemiring.toCommMonoid.{u2} (WithTop.{u2} R) (WithTop.commSemiring.{u2} R (fun (a : R) (b : R) => _inst_3 a b) _inst_1 _inst_2)) _inst_4 (fun (i : ι) => _inst_5 i)) (Top.top.{u2} (WithTop.{u2} R) (WithTop.top.{u2} R)))
+Case conversion may be inaccurate. Consider using '#align with_top.prod_lt_top WithTop.prod_lt_topₓ'. -/
 /-- A product of finite numbers is still finite -/
-theorem prod_lt_top [CanonicallyOrderedCommSemiring R] [Nontrivial R] [DecidableEq R] {s : Finset ι}
-    {f : ι → WithTop R} (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
-  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top h₁.Ne h₂.Ne) (coe_lt_top 1)
-    fun a ha => lt_top_iff_ne_top.2 (h a ha)
+theorem prod_lt_top [CommMonoidWithZero R] [NoZeroDivisors R] [Nontrivial R] [DecidableEq R] [LT R]
+    {s : Finset ι} {f : ι → WithTop R} (h : ∀ i ∈ s, f i ≠ ⊤) : (∏ i in s, f i) < ⊤ :=
+  prod_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => mul_lt_top' h₁ h₂) (coe_lt_top 1) fun a ha =>
+    WithTop.lt_top_iff_ne_top.2 (h a ha)
 #align with_top.prod_lt_top WithTop.prod_lt_top
--/
-
-#print WithTop.sum_lt_top /-
-/-- A sum of finite numbers is still finite -/
-theorem sum_lt_top [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M}
-    (h : ∀ i ∈ s, f i ≠ ⊤) : (∑ i in s, f i) < ⊤ :=
-  sum_induction f (fun a => a < ⊤) (fun a b h₁ h₂ => add_lt_top.2 ⟨h₁, h₂⟩) zero_lt_top fun i hi =>
-    lt_top_iff_ne_top.2 (h i hi)
-#align with_top.sum_lt_top WithTop.sum_lt_top
--/
 
 /- warning: with_top.sum_eq_top_iff -> WithTop.sum_eq_top_iff is a dubious translation:
 lean 3 declaration is
-  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u2} M] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} M)}, Iff (Eq.{succ u2} (WithTop.{u2} M) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_1)) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M))) (Exists.{succ u1} ι (fun (i : ι) => Exists.{0} (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => Eq.{succ u2} (WithTop.{u2} M) (f i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M)))))
+  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} M)}, Iff (Eq.{succ u2} (WithTop.{u2} M) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M _inst_1) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M))) (Exists.{succ u1} ι (fun (i : ι) => Exists.{0} (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) (fun (H : Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) => Eq.{succ u2} (WithTop.{u2} M) (f i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M)))))
 but is expected to have type
   forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u2} M] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} M)}, Iff (Eq.{succ u2} (WithTop.{u2} M) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_1)) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M))) (Exists.{succ u1} ι (fun (i : ι) => And (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i s) (Eq.{succ u2} (WithTop.{u2} M) (f i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M)))))
 Case conversion may be inaccurate. Consider using '#align with_top.sum_eq_top_iff WithTop.sum_eq_top_iffₓ'. -/
 /-- A sum of numbers is infinite iff one of them is infinite -/
-theorem sum_eq_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
+theorem sum_eq_top_iff [AddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
     (∑ i in s, f i) = ⊤ ↔ ∃ i ∈ s, f i = ⊤ := by
-  classical
-    constructor
-    · contrapose!
-      exact fun h => (sum_lt_top fun i hi => h i hi).Ne
-    · rintro ⟨i, his, hi⟩
-      rw [sum_eq_add_sum_diff_singleton his, hi, top_add]
+  induction s using Finset.cons_induction <;> simp [*, or_and_right, exists_or]
 #align with_top.sum_eq_top_iff WithTop.sum_eq_top_iff
 
-#print WithTop.sum_lt_top_iff /-
+/- warning: with_top.sum_lt_top_iff -> WithTop.sum_lt_top_iff is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] [_inst_2 : LT.{u2} M] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} M)}, Iff (LT.lt.{u2} (WithTop.{u2} M) (WithTop.hasLt.{u2} M _inst_2) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M _inst_1) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M))) (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (LT.lt.{u2} (WithTop.{u2} M) (WithTop.hasLt.{u2} M _inst_2) (f i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M))))
+but is expected to have type
+  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u2} M] {_inst_2 : Finset.{u1} ι} {s : ι -> (WithTop.{u2} M)}, Iff (LT.lt.{u2} (WithTop.{u2} M) (Preorder.toLT.{u2} (WithTop.{u2} M) (WithTop.preorder.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_1)))) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_1)) _inst_2 (fun (i : ι) => s i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M))) (forall (i : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) i _inst_2) -> (LT.lt.{u2} (WithTop.{u2} M) (Preorder.toLT.{u2} (WithTop.{u2} M) (WithTop.preorder.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_1)))) (s i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M))))
+Case conversion may be inaccurate. Consider using '#align with_top.sum_lt_top_iff WithTop.sum_lt_top_iffₓ'. -/
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top_iff [OrderedAddCommMonoid M] {s : Finset ι} {f : ι → WithTop M} :
+theorem sum_lt_top_iff [AddCommMonoid M] [LT M] {s : Finset ι} {f : ι → WithTop M} :
     (∑ i in s, f i) < ⊤ ↔ ∀ i ∈ s, f i < ⊤ := by
-  simp only [lt_top_iff_ne_top, Ne.def, sum_eq_top_iff, not_exists]
+  simp only [WithTop.lt_top_iff_ne_top, Ne.def, sum_eq_top_iff, not_exists]
 #align with_top.sum_lt_top_iff WithTop.sum_lt_top_iff
--/
+
+/- warning: with_top.sum_lt_top -> WithTop.sum_lt_top is a dubious translation:
+lean 3 declaration is
+  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : AddCommMonoid.{u2} M] [_inst_2 : LT.{u2} M] {s : Finset.{u1} ι} {f : ι -> (WithTop.{u2} M)}, (forall (i : ι), (Membership.Mem.{u1, u1} ι (Finset.{u1} ι) (Finset.hasMem.{u1} ι) i s) -> (Ne.{succ u2} (WithTop.{u2} M) (f i) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M)))) -> (LT.lt.{u2} (WithTop.{u2} M) (WithTop.hasLt.{u2} M _inst_2) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M _inst_1) s (fun (i : ι) => f i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.hasTop.{u2} M)))
+but is expected to have type
+  forall {ι : Type.{u1}} {M : Type.{u2}} [_inst_1 : OrderedAddCommMonoid.{u2} M] {_inst_2 : Finset.{u1} ι} {s : ι -> (WithTop.{u2} M)}, (forall (ᾰ : ι), (Membership.mem.{u1, u1} ι (Finset.{u1} ι) (Finset.instMembershipFinset.{u1} ι) ᾰ _inst_2) -> (Ne.{succ u2} (WithTop.{u2} M) (s ᾰ) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M)))) -> (LT.lt.{u2} (WithTop.{u2} M) (Preorder.toLT.{u2} (WithTop.{u2} M) (WithTop.preorder.{u2} M (PartialOrder.toPreorder.{u2} M (OrderedAddCommMonoid.toPartialOrder.{u2} M _inst_1)))) (Finset.sum.{u2, u1} (WithTop.{u2} M) ι (WithTop.addCommMonoid.{u2} M (OrderedAddCommMonoid.toAddCommMonoid.{u2} M _inst_1)) _inst_2 (fun (i : ι) => s i)) (Top.top.{u2} (WithTop.{u2} M) (WithTop.top.{u2} M)))
+Case conversion may be inaccurate. Consider using '#align with_top.sum_lt_top WithTop.sum_lt_topₓ'. -/
+/-- A sum of finite numbers is still finite -/
+theorem sum_lt_top [AddCommMonoid M] [LT M] {s : Finset ι} {f : ι → WithTop M}
+    (h : ∀ i ∈ s, f i ≠ ⊤) : (∑ i in s, f i) < ⊤ :=
+  sum_lt_top_iff.2 fun i hi => WithTop.lt_top_iff_ne_top.2 (h i hi)
+#align with_top.sum_lt_top WithTop.sum_lt_top
 
 end WithTop
 
@@ -1096,12 +1102,7 @@ but is expected to have type
 Case conversion may be inaccurate. Consider using '#align absolute_value.sum_le AbsoluteValue.sum_leₓ'. -/
 theorem AbsoluteValue.sum_le [Semiring R] [OrderedSemiring S] (abv : AbsoluteValue R S)
     (s : Finset ι) (f : ι → R) : abv (∑ i in s, f i) ≤ ∑ i in s, abv (f i) :=
-  by
-  letI := Classical.decEq ι
-  refine' Finset.induction_on s _ fun i s hi ih => _
-  · simp
-  · simp only [Finset.sum_insert hi]
-    exact (abv.add_le _ _).trans (add_le_add le_rfl ih)
+  Finset.le_sum_of_subadditive abv (map_zero _) abv.add_le _ _
 #align absolute_value.sum_le AbsoluteValue.sum_le
 
 /- warning: is_absolute_value.abv_sum -> IsAbsoluteValue.abv_sum is a dubious translation:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.liminf_limsup
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -121,7 +121,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
       simpa only [Ennreal.one_le_coe_iff] using
         le_of_tendsto (hd' w (fun j => r₁ (f j)) hr <| eventually_of_forall hw') hη'
     exact (lt_self_iff_false _).mp (lt_of_lt_of_le hη hη')
-  refine' ⟨1 - C⁻¹, tsub_lt_self zero_lt_one (nnreal.inv_pos.mpr hC), _⟩
+  refine' ⟨1 - C⁻¹, tsub_lt_self zero_lt_one (inv_pos.mpr hC), _⟩
   replace hC : C ≠ 0 := ne_of_gt hC
   let b : ℕ → Set α := fun j => closed_ball (w j) (M * r₁ (f j))
   let B : ℕ → Set α := fun j => closed_ball (w j) (r₁ (f j))

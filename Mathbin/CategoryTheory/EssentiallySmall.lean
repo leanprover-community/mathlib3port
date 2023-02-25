@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.essentially_small
-! leanprover-community/mathlib commit f7707875544ef1f81b32cb68c79e0e24e45a0e76
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Skeletal
 
 /-!
 # Essentially small categories.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A category given by `(C : Type u) [category.{v} C]` is `w`-essentially small
 if there exists a `small_model C : Type w` equipped with `[small_category (small_model C)]`.

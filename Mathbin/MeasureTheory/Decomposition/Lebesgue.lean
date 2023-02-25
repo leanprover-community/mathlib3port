@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.decomposition.lebesgue
-! leanprover-community/mathlib commit 70a4f2197832bceab57d7f41379b2592d1110570
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -453,7 +453,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
     by_cases hb : 0 < νA
     · suffices ∀ b, 0 < b → μA ≤ b by
         by_contra
-        have h' := this (μA / 2) (NNReal.half_pos (zero_lt_iff.2 h))
+        have h' := this (μA / 2) (half_pos (zero_lt_iff.2 h))
         rw [← @Classical.not_not (μA ≤ μA / 2)] at h'
         exact h' (not_le.2 (NNReal.half_lt_self h))
       intro c hc

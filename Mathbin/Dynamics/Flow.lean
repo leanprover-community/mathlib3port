@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jean Lo
 
 ! This file was ported from Lean 3 source module dynamics.flow
-! leanprover-community/mathlib commit 717c073262cd9d59b1a1dcda7e8ab570c5b63370
+! leanprover-community/mathlib commit ef7acf407d265ad4081c8998687e994fa80ba70c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Logic.Function.Iterate
 
 /-!
 # Flows and invariant sets
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a flow on a topological space `α` by a topological
 monoid `τ` as a continuous monoid-act of `τ` on `α`. Anticipating the

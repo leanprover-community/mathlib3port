@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Johan Commelin
 
 ! This file was ported from Lean 3 source module analysis.analytic.composition
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -507,7 +507,7 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     rcases p.nnnorm_mul_pow_le_of_lt_radius hrp.2 with ⟨Cp, -, hCp⟩
     exact ⟨max Cp 1, le_max_right _ _, fun n => (hCp n).trans (le_max_left _ _)⟩
   let r0 : ℝ≥0 := (4 * Cp)⁻¹
-  have r0_pos : 0 < r0 := NNReal.inv_pos.2 (mul_pos zero_lt_four (zero_lt_one.trans_le hCp1))
+  have r0_pos : 0 < r0 := inv_pos.2 (mul_pos zero_lt_four (zero_lt_one.trans_le hCp1))
   set r : ℝ≥0 := rp * rq * r0
   have r_pos : 0 < r := mul_pos (mul_pos rp_pos rq_pos) r0_pos
   have I :

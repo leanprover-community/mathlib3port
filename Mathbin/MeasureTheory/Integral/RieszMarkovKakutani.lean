@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jesse Reimann, Kalle Kytölä
 
 ! This file was ported from Lean 3 source module measure_theory.integral.riesz_markov_kakutani
-! leanprover-community/mathlib commit 717c073262cd9d59b1a1dcda7e8ab570c5b63370
+! leanprover-community/mathlib commit b2ff9a3d7a15fd5b0f060b135421d6a89a999c2f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,8 +103,8 @@ theorem rieszContentAux_sup_le (K1 K2 : Compacts X) :
   apply NNReal.le_of_forall_pos_le_add
   intro ε εpos
   --get test functions s.t. `λ(Ki) ≤ Λfi ≤ λ(Ki) + ε/2, i=1,2`
-  obtain ⟨f1, f_test_function_K1⟩ := exists_lt_rieszContentAux_add_pos Λ K1 (NNReal.half_pos εpos)
-  obtain ⟨f2, f_test_function_K2⟩ := exists_lt_rieszContentAux_add_pos Λ K2 (NNReal.half_pos εpos)
+  obtain ⟨f1, f_test_function_K1⟩ := exists_lt_rieszContentAux_add_pos Λ K1 (half_pos εpos)
+  obtain ⟨f2, f_test_function_K2⟩ := exists_lt_rieszContentAux_add_pos Λ K2 (half_pos εpos)
   --let `f := f1 + f2` test function for the content of `K`
   have f_test_function_union : ∀ x ∈ K1 ⊔ K2, (1 : ℝ≥0) ≤ (f1 + f2) x :=
     by
@@ -116,7 +116,7 @@ theorem rieszContentAux_sup_le (K1 K2 : Compacts X) :
   rw [map_add]
   --use that `Λfi` are lower bounds for `λ(Ki) + ε/2`
   apply lt_of_lt_of_le (add_lt_add f_test_function_K1.right f_test_function_K2.right) (le_of_eq _)
-  rw [add_assoc, add_comm (ε / 2), add_assoc, NNReal.add_halves ε, add_assoc]
+  rw [add_assoc, add_comm (ε / 2), add_assoc, add_halves ε, add_assoc]
 #align riesz_content_aux_sup_le rieszContentAux_sup_le
 
 end RieszSubadditive
