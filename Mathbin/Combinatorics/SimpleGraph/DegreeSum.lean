@@ -89,7 +89,7 @@ theorem Dart.edge_fiber (d : G.Dart) :
 
 variable (G)
 
-theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edgeSet) :
+theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edgeSetEmbedding) :
     (univ.filterₓ fun d : G.Dart => d.edge = e).card = 2 :=
   by
   refine' Sym2.ind (fun v w h => _) e h

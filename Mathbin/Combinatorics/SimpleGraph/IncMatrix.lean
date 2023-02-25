@@ -131,7 +131,8 @@ theorem incMatrix_mul_transpose_diag [DecidableEq α] [DecidableRel G.Adj] :
   simp [Matrix.mul_apply, inc_matrix_apply', ← ite_and_mul_zero]
 #align simple_graph.inc_matrix_mul_transpose_diag SimpleGraph.incMatrix_mul_transpose_diag
 
-theorem sum_incMatrix_apply_of_mem_edgeSet : e ∈ G.edgeSet → (∑ a, G.incMatrix R a e) = 2 := by
+theorem sum_incMatrix_apply_of_mem_edgeSetEmbedding :
+    e ∈ G.edgeSetEmbedding → (∑ a, G.incMatrix R a e) = 2 := by
   classical
     refine' e.ind _
     intro a b h
@@ -141,14 +142,15 @@ theorem sum_incMatrix_apply_of_mem_edgeSet : e ∈ G.edgeSet → (∑ a, G.incMa
     congr 2
     ext e
     simp only [mem_filter, mem_univ, true_and_iff, mem_insert, mem_singleton]
-#align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_mem_edgeSet
+#align simple_graph.sum_inc_matrix_apply_of_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_mem_edgeSetEmbedding
 
-theorem sum_incMatrix_apply_of_not_mem_edgeSet (h : e ∉ G.edgeSet) : (∑ a, G.incMatrix R a e) = 0 :=
+theorem sum_incMatrix_apply_of_not_mem_edgeSetEmbedding (h : e ∉ G.edgeSetEmbedding) :
+    (∑ a, G.incMatrix R a e) = 0 :=
   sum_eq_zero fun a _ => G.incMatrix_of_not_mem_incidenceSet fun he => h he.1
-#align simple_graph.sum_inc_matrix_apply_of_not_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_not_mem_edgeSet
+#align simple_graph.sum_inc_matrix_apply_of_not_mem_edge_set SimpleGraph.sum_incMatrix_apply_of_not_mem_edgeSetEmbedding
 
 theorem incMatrix_transpose_mul_diag [DecidableRel G.Adj] :
-    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSet then 2 else 0 := by
+    ((G.incMatrix R)ᵀ ⬝ G.incMatrix R) e e = if e ∈ G.edgeSetEmbedding then 2 else 0 := by
   classical
     simp only [Matrix.mul_apply, inc_matrix_apply', transpose_apply, ← ite_and_mul_zero, one_mul,
       sum_boole, and_self_iff]

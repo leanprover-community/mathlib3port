@@ -460,7 +460,7 @@ theorem comp_mulIndicator_const (c : M) (f : M → N) (hf : f 1 = 1) :
 lean 3 declaration is
   forall {α : Type.{u1}} {M : Type.{u2}} [_inst_1 : One.{u2} M] (s : Set.{u1} α) (f : α -> M) (B : Set.{u2} M), Eq.{succ u1} (Set.{u1} α) (Set.preimage.{u1, u2} α M (Set.mulIndicator.{u1, u2} α M _inst_1 s f) B) (Set.ite.{u1} α s (Set.preimage.{u1, u2} α M f B) (Set.preimage.{u1, u2} α M (OfNat.ofNat.{max u1 u2} (α -> M) 1 (OfNat.mk.{max u1 u2} (α -> M) 1 (One.one.{max u1 u2} (α -> M) (Pi.instOne.{u1, u2} α (fun (ᾰ : α) => M) (fun (i : α) => _inst_1))))) B))
 but is expected to have type
-  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] (s : Set.{u2} α) (f : α -> M) (B : Set.{u1} M), Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α M (Set.mulIndicator.{u2, u1} α M _inst_1 s f) B) (Set.ite.{u2} α s (Set.preimage.{u2, u1} α M f B) (Set.preimage.{u2, u1} α M (OfNat.ofNat.{max u2 u1} (α -> M) 1 (One.toOfNat1.{max u2 u1} (α -> M) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Data.Set.Image._hyg.23 : α) => M) (fun (i : α) => _inst_1)))) B))
+  forall {α : Type.{u2}} {M : Type.{u1}} [_inst_1 : One.{u1} M] (s : Set.{u2} α) (f : α -> M) (B : Set.{u1} M), Eq.{succ u2} (Set.{u2} α) (Set.preimage.{u2, u1} α M (Set.mulIndicator.{u2, u1} α M _inst_1 s f) B) (Set.ite.{u2} α s (Set.preimage.{u2, u1} α M f B) (Set.preimage.{u2, u1} α M (OfNat.ofNat.{max u2 u1} (α -> M) 1 (One.toOfNat1.{max u2 u1} (α -> M) (Pi.instOne.{u2, u1} α (fun (a._@.Mathlib.Data.Set.Image._hyg.26 : α) => M) (fun (i : α) => _inst_1)))) B))
 Case conversion may be inaccurate. Consider using '#align set.mul_indicator_preimage Set.mulIndicator_preimageₓ'. -/
 @[to_additive]
 theorem mulIndicator_preimage (s : Set α) (f : α → M) (B : Set M) :

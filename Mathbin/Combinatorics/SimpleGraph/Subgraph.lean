@@ -241,16 +241,16 @@ def edgeSet (G' : Subgraph G) : Set (Sym2 V) :=
   Sym2.fromRel G'.symm
 #align simple_graph.subgraph.edge_set SimpleGraph.Subgraph.edgeSet
 
-theorem edgeSet_subset (G' : Subgraph G) : G'.edgeSet ⊆ G.edgeSet := fun e =>
+theorem edgeSet_subset (G' : Subgraph G) : G'.edgeSetEmbedding ⊆ G.edgeSetEmbedding := fun e =>
   Quotient.ind (fun e h => G'.adj_sub h) e
 #align simple_graph.subgraph.edge_set_subset SimpleGraph.Subgraph.edgeSet_subset
 
 @[simp]
-theorem mem_edgeSet {G' : Subgraph G} {v w : V} : ⟦(v, w)⟧ ∈ G'.edgeSet ↔ G'.Adj v w :=
+theorem mem_edgeSet {G' : Subgraph G} {v w : V} : ⟦(v, w)⟧ ∈ G'.edgeSetEmbedding ↔ G'.Adj v w :=
   Iff.rfl
 #align simple_graph.subgraph.mem_edge_set SimpleGraph.Subgraph.mem_edgeSet
 
-theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈ G'.edgeSet)
+theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈ G'.edgeSetEmbedding)
     (hv : v ∈ e) : v ∈ G'.verts :=
   by
   refine' Quotient.ind (fun e he hv => _) e he hv
@@ -263,15 +263,15 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
 
 /-- The `incidence_set` is the set of edges incident to a given vertex. -/
 def incidenceSet (G' : Subgraph G) (v : V) : Set (Sym2 V) :=
-  { e ∈ G'.edgeSet | v ∈ e }
+  { e ∈ G'.edgeSetEmbedding | v ∈ e }
 #align simple_graph.subgraph.incidence_set SimpleGraph.Subgraph.incidenceSet
 
 theorem incidenceSet_subset_incidenceSet (G' : Subgraph G) (v : V) :
     G'.incidenceSet v ⊆ G.incidenceSet v := fun e h => ⟨G'.edgeSet_subset h.1, h.2⟩
 #align simple_graph.subgraph.incidence_set_subset_incidence_set SimpleGraph.Subgraph.incidenceSet_subset_incidenceSet
 
-theorem incidenceSet_subset (G' : Subgraph G) (v : V) : G'.incidenceSet v ⊆ G'.edgeSet := fun _ h =>
-  h.1
+theorem incidenceSet_subset (G' : Subgraph G) (v : V) : G'.incidenceSet v ⊆ G'.edgeSetEmbedding :=
+  fun _ h => h.1
 #align simple_graph.subgraph.incidence_set_subset SimpleGraph.Subgraph.incidenceSet_subset
 
 /-- Give a vertex as an element of the subgraph's vertex type. -/
@@ -428,22 +428,24 @@ theorem neighborSet_inf {H H' : G.Subgraph} (v : V) :
 #align simple_graph.subgraph.neighbor_set_inf SimpleGraph.Subgraph.neighborSet_inf
 
 @[simp]
-theorem edgeSet_top : (⊤ : Subgraph G).edgeSet = G.edgeSet :=
+theorem edgeSet_top : (⊤ : Subgraph G).edgeSetEmbedding = G.edgeSetEmbedding :=
   rfl
 #align simple_graph.subgraph.edge_set_top SimpleGraph.Subgraph.edgeSet_top
 
 @[simp]
-theorem edgeSet_bot : (⊥ : Subgraph G).edgeSet = ∅ :=
+theorem edgeSet_bot : (⊥ : Subgraph G).edgeSetEmbedding = ∅ :=
   Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_bot SimpleGraph.Subgraph.edgeSet_bot
 
 @[simp]
-theorem edgeSet_inf {H₁ H₂ : Subgraph G} : (H₁ ⊓ H₂).edgeSet = H₁.edgeSet ∩ H₂.edgeSet :=
+theorem edgeSet_inf {H₁ H₂ : Subgraph G} :
+    (H₁ ⊓ H₂).edgeSetEmbedding = H₁.edgeSetEmbedding ∩ H₂.edgeSetEmbedding :=
   Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_inf SimpleGraph.Subgraph.edgeSet_inf
 
 @[simp]
-theorem edgeSet_sup {H₁ H₂ : Subgraph G} : (H₁ ⊔ H₂).edgeSet = H₁.edgeSet ∪ H₂.edgeSet :=
+theorem edgeSet_sup {H₁ H₂ : Subgraph G} :
+    (H₁ ⊔ H₂).edgeSetEmbedding = H₁.edgeSetEmbedding ∪ H₂.edgeSetEmbedding :=
   Set.ext <| Sym2.ind (by simp)
 #align simple_graph.subgraph.edge_set_sup SimpleGraph.Subgraph.edgeSet_sup
 
@@ -504,12 +506,12 @@ def botEquiv : (⊥ : Subgraph G).coe ≃g (⊥ : SimpleGraph Empty)
   map_rel_iff' a b := Iff.rfl
 #align simple_graph.subgraph.bot_equiv SimpleGraph.Subgraph.botEquiv
 
-theorem edgeSet_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) : H₁.edgeSet ≤ H₂.edgeSet := fun e =>
-  Sym2.ind h.2 e
+theorem edgeSet_mono {H₁ H₂ : Subgraph G} (h : H₁ ≤ H₂) :
+    H₁.edgeSetEmbedding ≤ H₂.edgeSetEmbedding := fun e => Sym2.ind h.2 e
 #align simple_graph.subgraph.edge_set_mono SimpleGraph.Subgraph.edgeSet_mono
 
 theorem Disjoint.edgeSet {H₁ H₂ : Subgraph G} (h : Disjoint H₁ H₂) :
-    Disjoint H₁.edgeSet H₂.edgeSet :=
+    Disjoint H₁.edgeSetEmbedding H₂.edgeSetEmbedding :=
   disjoint_iff_inf_le.mpr <| by simpa using edge_set_mono h.le_bot
 #align disjoint.edge_set Disjoint.edgeSet
 
@@ -764,7 +766,7 @@ theorem neighborSet_singletonSubgraph (v w : V) : (G.singletonSubgraph v).neighb
 #align simple_graph.neighbor_set_singleton_subgraph SimpleGraph.neighborSet_singletonSubgraph
 
 @[simp]
-theorem edgeSet_singletonSubgraph (v : V) : (G.singletonSubgraph v).edgeSet = ∅ :=
+theorem edgeSet_singletonSubgraph (v : V) : (G.singletonSubgraph v).edgeSetEmbedding = ∅ :=
   Sym2.fromRel_bot
 #align simple_graph.edge_set_singleton_subgraph SimpleGraph.edgeSet_singletonSubgraph
 
@@ -790,7 +792,7 @@ instance nonempty_subgraphOfAdj_verts {v w : V} (hvw : G.Adj v w) :
 
 @[simp]
 theorem edgeSet_subgraphOfAdj {v w : V} (hvw : G.Adj v w) :
-    (G.subgraphOfAdj hvw).edgeSet = {⟦(v, w)⟧} :=
+    (G.subgraphOfAdj hvw).edgeSetEmbedding = {⟦(v, w)⟧} :=
   by
   ext e
   refine' e.ind _
@@ -993,13 +995,15 @@ theorem deleteEdges_le_of_le {s s' : Set (Sym2 V)} (h : s ⊆ s') :
 #align simple_graph.subgraph.delete_edges_le_of_le SimpleGraph.Subgraph.deleteEdges_le_of_le
 
 @[simp]
-theorem deleteEdges_inter_edgeSet_left_eq : G'.deleteEdges (G'.edgeSet ∩ s) = G'.deleteEdges s := by
+theorem deleteEdges_inter_edgeSet_left_eq :
+    G'.deleteEdges (G'.edgeSetEmbedding ∩ s) = G'.deleteEdges s := by
   ext <;> simp (config := { contextual := true }) [imp_false]
 #align simple_graph.subgraph.delete_edges_inter_edge_set_left_eq SimpleGraph.Subgraph.deleteEdges_inter_edgeSet_left_eq
 
 @[simp]
-theorem deleteEdges_inter_edgeSet_right_eq : G'.deleteEdges (s ∩ G'.edgeSet) = G'.deleteEdges s :=
-  by ext <;> simp (config := { contextual := true }) [imp_false]
+theorem deleteEdges_inter_edgeSet_right_eq :
+    G'.deleteEdges (s ∩ G'.edgeSetEmbedding) = G'.deleteEdges s := by
+  ext <;> simp (config := { contextual := true }) [imp_false]
 #align simple_graph.subgraph.delete_edges_inter_edge_set_right_eq SimpleGraph.Subgraph.deleteEdges_inter_edgeSet_right_eq
 
 theorem coe_deleteEdges_le : (G'.deleteEdges s).coe ≤ (G'.coe : SimpleGraph G'.verts) := fun v w =>

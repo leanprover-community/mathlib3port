@@ -144,40 +144,60 @@ theorem card_Ioc : (Ioc a b).card = b - a := by
   rw [← Nat.card_Ioc, ← map_subtype_embedding_Ioc, card_map]
 #align pnat.card_Ioc PNat.card_Ioc
 
-#print PNat.card_Ioo /-
+/- warning: pnat.card_Ioo -> PNat.card_Ioo is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Finset.card.{0} PNat (Finset.Ioo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) PNat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Finset.card.{0} PNat (Finset.Ioo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (PNat.val b) (PNat.val a)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align pnat.card_Ioo PNat.card_Iooₓ'. -/
 @[simp]
 theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
   rw [← Nat.card_Ioo, ← map_subtype_embedding_Ioo, card_map]
 #align pnat.card_Ioo PNat.card_Ioo
--/
 
-#print PNat.card_fintype_Icc /-
+/- warning: pnat.card_fintype_Icc -> PNat.card_fintype_Icc is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} PNat) Type (Set.hasCoeToSort.{0} PNat) (Set.Icc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) a b)) (Set.fintypeIcc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) PNat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat Nat.hasAdd) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} PNat (Set.Icc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) a b)) (Set.fintypeIcc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HAdd.hAdd.{0, 0, 0} Nat Nat Nat (instHAdd.{0} Nat instAddNat) (PNat.val b) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (PNat.val a))
+Case conversion may be inaccurate. Consider using '#align pnat.card_fintype_Icc PNat.card_fintype_Iccₓ'. -/
 @[simp]
 theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
   rw [← card_Icc, Fintype.card_ofFinset]
 #align pnat.card_fintype_Icc PNat.card_fintype_Icc
--/
 
-#print PNat.card_fintype_Ico /-
+/- warning: pnat.card_fintype_Ico -> PNat.card_fintype_Ico is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} PNat) Type (Set.hasCoeToSort.{0} PNat) (Set.Ico.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) a b)) (Set.fintypeIco.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) PNat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} PNat (Set.Ico.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) a b)) (Set.fintypeIco.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (PNat.val b) (PNat.val a))
+Case conversion may be inaccurate. Consider using '#align pnat.card_fintype_Ico PNat.card_fintype_Icoₓ'. -/
 @[simp]
 theorem card_fintype_Ico : Fintype.card (Set.Ico a b) = b - a := by
   rw [← card_Ico, Fintype.card_ofFinset]
 #align pnat.card_fintype_Ico PNat.card_fintype_Ico
--/
 
-#print PNat.card_fintype_Ioc /-
+/- warning: pnat.card_fintype_Ioc -> PNat.card_fintype_Ioc is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} PNat) Type (Set.hasCoeToSort.{0} PNat) (Set.Ioc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) a b)) (Set.fintypeIoc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) PNat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} PNat (Set.Ioc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) a b)) (Set.fintypeIoc.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (PNat.val b) (PNat.val a))
+Case conversion may be inaccurate. Consider using '#align pnat.card_fintype_Ioc PNat.card_fintype_Iocₓ'. -/
 @[simp]
 theorem card_fintype_Ioc : Fintype.card (Set.Ioc a b) = b - a := by
   rw [← card_Ioc, Fintype.card_ofFinset]
 #align pnat.card_fintype_Ioc PNat.card_fintype_Ioc
--/
 
-#print PNat.card_fintype_Ioo /-
+/- warning: pnat.card_fintype_Ioo -> PNat.card_fintype_Ioo is a dubious translation:
+lean 3 declaration is
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (coeSort.{1, 2} (Set.{0} PNat) Type (Set.hasCoeToSort.{0} PNat) (Set.Ioo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) a b)) (Set.fintypeIoo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (LinearOrder.toLattice.{0} PNat PNat.linearOrder)))) PNat.locallyFiniteOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat Nat.hasSub) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) b) ((fun (a : Type) (b : Type) [self : HasLiftT.{1, 1} a b] => self.0) PNat Nat (HasLiftT.mk.{1, 1} PNat Nat (CoeTCₓ.coe.{1, 1} PNat Nat (coeBase.{1, 1} PNat Nat coePNatNat))) a)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))))
+but is expected to have type
+  forall (a : PNat) (b : PNat), Eq.{1} Nat (Fintype.card.{0} (Set.Elem.{0} PNat (Set.Ioo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) a b)) (Set.fintypeIoo.{0} PNat (PartialOrder.toPreorder.{0} PNat (SemilatticeInf.toPartialOrder.{0} PNat (Lattice.toSemilatticeInf.{0} PNat (DistribLattice.toLattice.{0} PNat (instDistribLattice.{0} PNat instPNatLinearOrder))))) instLocallyFiniteOrderPNatToPreorderToPartialOrderToSemilatticeInfToLatticeInstDistribLatticeInstPNatLinearOrder a b)) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (HSub.hSub.{0, 0, 0} Nat Nat Nat (instHSub.{0} Nat instSubNat) (PNat.val b) (PNat.val a)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)))
+Case conversion may be inaccurate. Consider using '#align pnat.card_fintype_Ioo PNat.card_fintype_Iooₓ'. -/
 @[simp]
 theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_ofFinset]
 #align pnat.card_fintype_Ioo PNat.card_fintype_Ioo
--/
 
 end PNat
 

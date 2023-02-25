@@ -91,7 +91,7 @@ that these are trails.
 
 Combine with `p.is_circuit` to get an Eulerian circuit (also known as an "Eulerian cycle"). -/
 def IsEulerian {u v : V} (p : G.Walk u v) : Prop :=
-  ∀ e, e ∈ G.edgeSet → p.edges.count e = 1
+  ∀ e, e ∈ G.edgeSetEmbedding → p.edges.count e = 1
 #align simple_graph.walk.is_eulerian SimpleGraph.Walk.IsEulerian
 
 theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsTrail :=
@@ -104,23 +104,24 @@ theorem IsEulerian.isTrail {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : p.IsT
 #align simple_graph.walk.is_eulerian.is_trail SimpleGraph.Walk.IsEulerian.isTrail
 
 theorem IsEulerian.mem_edges_iff {u v : V} {p : G.Walk u v} (h : p.IsEulerian) {e : Sym2 V} :
-    e ∈ p.edges ↔ e ∈ G.edgeSet :=
-  ⟨fun h => p.edges_subset_edgeSet h, fun he => by simpa using (h e he).ge⟩
+    e ∈ p.edges ↔ e ∈ G.edgeSetEmbedding :=
+  ⟨fun h => p.edges_subset_edgeSetEmbedding h, fun he => by simpa using (h e he).ge⟩
 #align simple_graph.walk.is_eulerian.mem_edges_iff SimpleGraph.Walk.IsEulerian.mem_edges_iff
 
 /-- The edge set of an Eulerian graph is finite. -/
-def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) : Fintype G.edgeSet :=
+def IsEulerian.fintypeEdgeSet {u v : V} {p : G.Walk u v} (h : p.IsEulerian) :
+    Fintype G.edgeSetEmbedding :=
   Fintype.ofFinset h.IsTrail.edgesFinset fun e => by
     simp only [Finset.mem_mk, Multiset.mem_coe, h.mem_edges_iff]
 #align simple_graph.walk.is_eulerian.fintype_edge_set SimpleGraph.Walk.IsEulerian.fintypeEdgeSet
 
 theorem IsTrail.isEulerian_of_forall_mem {u v : V} {p : G.Walk u v} (h : p.IsTrail)
-    (hc : ∀ e, e ∈ G.edgeSet → e ∈ p.edges) : p.IsEulerian := fun e he =>
+    (hc : ∀ e, e ∈ G.edgeSetEmbedding → e ∈ p.edges) : p.IsEulerian := fun e he =>
   List.count_eq_one_of_mem h.edges_nodup (hc e he)
 #align simple_graph.walk.is_trail.is_eulerian_of_forall_mem SimpleGraph.Walk.IsTrail.isEulerian_of_forall_mem
 
 theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
-    p.IsEulerian ↔ p.IsTrail ∧ ∀ e, e ∈ G.edgeSet → e ∈ p.edges :=
+    p.IsEulerian ↔ p.IsTrail ∧ ∀ e, e ∈ G.edgeSetEmbedding → e ∈ p.edges :=
   by
   constructor
   · intro h
@@ -129,7 +130,7 @@ theorem isEulerian_iff {u v : V} (p : G.Walk u v) :
     exact h.is_eulerian_of_forall_mem hl
 #align simple_graph.walk.is_eulerian_iff SimpleGraph.Walk.isEulerian_iff
 
-theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSet] {u v : V} {p : G.Walk u v}
+theorem IsEulerian.edgesFinset_eq [Fintype G.edgeSetEmbedding] {u v : V} {p : G.Walk u v}
     (h : p.IsEulerian) : h.IsTrail.edgesFinset = G.edgeFinset :=
   by
   ext e

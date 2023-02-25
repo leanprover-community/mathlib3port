@@ -60,7 +60,8 @@ def IsMatching : Prop :=
 #align simple_graph.subgraph.is_matching SimpleGraph.Subgraph.IsMatching
 
 /-- Given a vertex, returns the unique edge of the matching it is incident to. -/
-noncomputable def IsMatching.toEdge {M : Subgraph G} (h : M.IsMatching) (v : M.verts) : M.edgeSet :=
+noncomputable def IsMatching.toEdge {M : Subgraph G} (h : M.IsMatching) (v : M.verts) :
+    M.edgeSetEmbedding :=
   ⟨⟦(v, (h v.property).some)⟧, (h v.property).choose_spec.1⟩
 #align simple_graph.subgraph.is_matching.to_edge SimpleGraph.Subgraph.IsMatching.toEdge
 

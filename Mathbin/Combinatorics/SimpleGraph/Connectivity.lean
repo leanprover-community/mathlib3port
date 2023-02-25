@@ -693,13 +693,13 @@ theorem chain'_dartAdj_darts : ∀ {u v : V} (p : G.Walk u v), List.Chain' G.Dar
 
 /-- Every edge in a walk's edge list is an edge of the graph.
 It is written in this form (rather than using `⊆`) to avoid unsightly coercions. -/
-theorem edges_subset_edgeSet :
-    ∀ {u v : V} (p : G.Walk u v) ⦃e : Sym2 V⦄ (h : e ∈ p.edges), e ∈ G.edgeSet
+theorem edges_subset_edgeSetEmbedding :
+    ∀ {u v : V} (p : G.Walk u v) ⦃e : Sym2 V⦄ (h : e ∈ p.edges), e ∈ G.edgeSetEmbedding
   | _, _, cons h' p', e, h => by rcases h with ⟨rfl, h⟩ <;> solve_by_elim
-#align simple_graph.walk.edges_subset_edge_set SimpleGraph.Walk.edges_subset_edgeSet
+#align simple_graph.walk.edges_subset_edge_set SimpleGraph.Walk.edges_subset_edgeSetEmbedding
 
 theorem adj_of_mem_edges {u v x y : V} (p : G.Walk u v) (h : ⟦(x, y)⟧ ∈ p.edges) : G.Adj x y :=
-  edges_subset_edgeSet p h
+  edges_subset_edgeSetEmbedding p h
 #align simple_graph.walk.adj_of_mem_edges SimpleGraph.Walk.adj_of_mem_edges
 
 @[simp]
@@ -1722,17 +1722,17 @@ variable {G}
 /-- The walk `p` transferred to lie in `H`, given that `H` contains its edges. -/
 @[protected, simp]
 def transfer :
-    ∀ {u v : V} (p : G.Walk u v) (H : SimpleGraph V) (h : ∀ e, e ∈ p.edges → e ∈ H.edgeSet),
-      H.Walk u v
+    ∀ {u v : V} (p : G.Walk u v) (H : SimpleGraph V)
+      (h : ∀ e, e ∈ p.edges → e ∈ H.edgeSetEmbedding), H.Walk u v
   | _, _, walk.nil, H, h => Walk.nil
   | _, _, walk.cons' u v w a p, H, h =>
     Walk.cons (h (⟦(u, v)⟧ : Sym2 V) (by simp)) (p.transfer H fun e he => h e (by simp [he]))
 #align simple_graph.walk.transfer SimpleGraph.Walk.transfer
 
 variable {u v w : V} (p : G.Walk u v) (q : G.Walk v w) {H : SimpleGraph V}
-  (hp : ∀ e, e ∈ p.edges → e ∈ H.edgeSet) (hq : ∀ e, e ∈ q.edges → e ∈ H.edgeSet)
+  (hp : ∀ e, e ∈ p.edges → e ∈ H.edgeSetEmbedding) (hq : ∀ e, e ∈ q.edges → e ∈ H.edgeSetEmbedding)
 
-theorem transfer_self : p.transfer G p.edges_subset_edgeSet = p := by
+theorem transfer_self : p.transfer G p.edges_subset_edgeSetEmbedding = p := by
   induction p <;> simp only [*, transfer, eq_self_iff_true, heq_iff_eq, and_self_iff]
 #align simple_graph.walk.transfer_self SimpleGraph.Walk.transfer_self
 
@@ -1777,7 +1777,7 @@ protected theorem IsCycle.transfer {p : G.Walk u u} (pc : p.IsCycle) (hp) :
 variable (p)
 
 @[simp]
-theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e ∈ K.edgeSet) :
+theorem transfer_transfer {K : SimpleGraph V} (hp' : ∀ e, e ∈ p.edges → e ∈ K.edgeSetEmbedding) :
     (p.transfer H hp).transfer K
         (by
           rw [p.edges_transfer hp]
@@ -2202,11 +2202,11 @@ theorem verts_toSubgraph (p : G.Walk u v) : p.toSubgraph.verts = { w | w ∈ p.s
 #align simple_graph.walk.verts_to_subgraph SimpleGraph.Walk.verts_toSubgraph
 
 theorem mem_edges_toSubgraph (p : G.Walk u v) {e : Sym2 V} :
-    e ∈ p.toSubgraph.edgeSet ↔ e ∈ p.edges := by induction p <;> simp [*]
+    e ∈ p.toSubgraph.edgeSetEmbedding ↔ e ∈ p.edges := by induction p <;> simp [*]
 #align simple_graph.walk.mem_edges_to_subgraph SimpleGraph.Walk.mem_edges_toSubgraph
 
 @[simp]
-theorem edgeSet_toSubgraph (p : G.Walk u v) : p.toSubgraph.edgeSet = { e | e ∈ p.edges } :=
+theorem edgeSet_toSubgraph (p : G.Walk u v) : p.toSubgraph.edgeSetEmbedding = { e | e ∈ p.edges } :=
   Set.ext fun _ => p.mem_edges_toSubgraph
 #align simple_graph.walk.edge_set_to_subgraph SimpleGraph.Walk.edgeSet_toSubgraph
 
@@ -2407,7 +2407,7 @@ section BridgeEdges
 /-- An edge of a graph is a *bridge* if, after removing it, its incident vertices
 are no longer reachable from one another. -/
 def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
-  e ∈ G.edgeSet ∧
+  e ∈ G.edgeSetEmbedding ∧
     Sym2.lift ⟨fun v w => ¬(G \ fromEdgeSet {e}).Reachable v w, by simp [reachable_comm]⟩ e
 #align simple_graph.is_bridge SimpleGraph.IsBridge
 
@@ -2516,7 +2516,7 @@ theorem isBridge_iff_adj_and_forall_cycle_not_mem {v w : V} :
 #align simple_graph.is_bridge_iff_adj_and_forall_cycle_not_mem SimpleGraph.isBridge_iff_adj_and_forall_cycle_not_mem
 
 theorem isBridge_iff_mem_and_forall_cycle_not_mem {e : Sym2 V} :
-    G.IsBridge e ↔ e ∈ G.edgeSet ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → e ∉ p.edges :=
+    G.IsBridge e ↔ e ∈ G.edgeSetEmbedding ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → e ∉ p.edges :=
   Sym2.ind (fun v w => isBridge_iff_adj_and_forall_cycle_not_mem) e
 #align simple_graph.is_bridge_iff_mem_and_forall_cycle_not_mem SimpleGraph.isBridge_iff_mem_and_forall_cycle_not_mem
 

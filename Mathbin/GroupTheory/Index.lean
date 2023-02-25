@@ -706,7 +706,12 @@ theorem relindex_inf_ne_zero (hH : H.relindex L ≠ 0) (hK : K.relindex L ≠ 0)
 #align subgroup.relindex_inf_ne_zero Subgroup.relindex_inf_ne_zero
 #align add_subgroup.relindex_inf_ne_zero AddSubgroup.relindex_inf_ne_zero
 
-#print Subgroup.index_inf_ne_zero /-
+/- warning: subgroup.index_inf_ne_zero -> Subgroup.index_inf_ne_zero is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 H) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 K) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))) -> (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H K)) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 H) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 K) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))) -> (Ne.{1} Nat (Subgroup.index.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instHasInfSubgroup.{u1} G _inst_1) H K)) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)))
+Case conversion may be inaccurate. Consider using '#align subgroup.index_inf_ne_zero Subgroup.index_inf_ne_zeroₓ'. -/
 @[to_additive]
 theorem index_inf_ne_zero (hH : H.index ≠ 0) (hK : K.index ≠ 0) : (H ⊓ K).index ≠ 0 :=
   by
@@ -714,9 +719,13 @@ theorem index_inf_ne_zero (hH : H.index ≠ 0) (hK : K.index ≠ 0) : (H ⊓ K).
   exact relindex_inf_ne_zero hH hK
 #align subgroup.index_inf_ne_zero Subgroup.index_inf_ne_zero
 #align add_subgroup.index_inf_ne_zero AddSubgroup.index_inf_ne_zero
--/
 
-#print Subgroup.relindex_inf_le /-
+/- warning: subgroup.relindex_inf_le -> Subgroup.relindex_inf_le is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1} {L : Subgroup.{u1} G _inst_1}, LE.le.{0} Nat Nat.hasLe (Subgroup.relindex.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H K) L) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Subgroup.relindex.{u1} G _inst_1 H L) (Subgroup.relindex.{u1} G _inst_1 K L))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1} {L : Subgroup.{u1} G _inst_1}, LE.le.{0} Nat instLENat (Subgroup.relindex.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instHasInfSubgroup.{u1} G _inst_1) H K) L) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Subgroup.relindex.{u1} G _inst_1 H L) (Subgroup.relindex.{u1} G _inst_1 K L))
+Case conversion may be inaccurate. Consider using '#align subgroup.relindex_inf_le Subgroup.relindex_inf_leₓ'. -/
 @[to_additive]
 theorem relindex_inf_le : (H ⊓ K).relindex L ≤ H.relindex L * K.relindex L :=
   by
@@ -727,15 +736,18 @@ theorem relindex_inf_le : (H ⊓ K).relindex L ≤ H.relindex L * K.relindex L :
   exact mul_le_mul_right' (relindex_le_of_le_right inf_le_right h) (K.relindex L)
 #align subgroup.relindex_inf_le Subgroup.relindex_inf_le
 #align add_subgroup.relindex_inf_le AddSubgroup.relindex_inf_le
--/
 
-#print Subgroup.index_inf_le /-
+/- warning: subgroup.index_inf_le -> Subgroup.index_inf_le is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, LE.le.{0} Nat Nat.hasLe (Subgroup.index.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H K)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat Nat.hasMul) (Subgroup.index.{u1} G _inst_1 H) (Subgroup.index.{u1} G _inst_1 K))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, LE.le.{0} Nat instLENat (Subgroup.index.{u1} G _inst_1 (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instHasInfSubgroup.{u1} G _inst_1) H K)) (HMul.hMul.{0, 0, 0} Nat Nat Nat (instHMul.{0} Nat instMulNat) (Subgroup.index.{u1} G _inst_1 H) (Subgroup.index.{u1} G _inst_1 K))
+Case conversion may be inaccurate. Consider using '#align subgroup.index_inf_le Subgroup.index_inf_leₓ'. -/
 @[to_additive]
 theorem index_inf_le : (H ⊓ K).index ≤ H.index * K.index := by
   simp_rw [← relindex_top_right, relindex_inf_le]
 #align subgroup.index_inf_le Subgroup.index_inf_le
 #align add_subgroup.index_inf_le AddSubgroup.index_inf_le
--/
 
 #print Subgroup.relindex_infᵢ_ne_zero /-
 @[to_additive]
@@ -781,7 +793,12 @@ theorem index_infᵢ_le {ι : Type _} [Fintype ι] (f : ι → Subgroup G) :
 #align add_subgroup.index_infi_le AddSubgroup.index_infᵢ_le
 -/
 
-#print Subgroup.index_eq_one /-
+/- warning: subgroup.index_eq_one -> Subgroup.index_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Subgroup.index.{u1} G _inst_1 H) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Eq.{succ u1} (Subgroup.{u1} G _inst_1) H (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1)))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Subgroup.index.{u1} G _inst_1 H) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Eq.{succ u1} (Subgroup.{u1} G _inst_1) H (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1)))
+Case conversion may be inaccurate. Consider using '#align subgroup.index_eq_one Subgroup.index_eq_oneₓ'. -/
 @[simp, to_additive index_eq_one]
 theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=
   ⟨fun h =>
@@ -789,23 +806,30 @@ theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=
     fun h => (congr_arg index h).trans index_top⟩
 #align subgroup.index_eq_one Subgroup.index_eq_one
 #align add_subgroup.index_eq_one AddSubgroup.index_eq_one
--/
 
-#print Subgroup.relindex_eq_one /-
+/- warning: subgroup.relindex_eq_one -> Subgroup.relindex_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Subgroup.relindex.{u1} G _inst_1 H K) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) K H)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Subgroup.relindex.{u1} G _inst_1 H K) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) K H)
+Case conversion may be inaccurate. Consider using '#align subgroup.relindex_eq_one Subgroup.relindex_eq_oneₓ'. -/
 @[simp, to_additive relindex_eq_one]
 theorem relindex_eq_one : H.relindex K = 1 ↔ K ≤ H :=
   index_eq_one.trans subgroupOf_eq_top
 #align subgroup.relindex_eq_one Subgroup.relindex_eq_one
 #align add_subgroup.relindex_eq_one AddSubgroup.relindex_eq_one
--/
 
-#print Subgroup.card_eq_one /-
+/- warning: subgroup.card_eq_one -> Subgroup.card_eq_one is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Nat.card.{u1} (coeSort.{succ u1, succ (succ u1)} (Subgroup.{u1} G _inst_1) Type.{u1} (SetLike.hasCoeToSort.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)) H)) (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne)))) (Eq.{succ u1} (Subgroup.{u1} G _inst_1) H (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1)))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1}, Iff (Eq.{1} Nat (Nat.card.{u1} (Subtype.{succ u1} G (fun (x : G) => Membership.mem.{u1, u1} G (Subgroup.{u1} G _inst_1) (SetLike.instMembership.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.instSetLikeSubgroup.{u1} G _inst_1)) x H))) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))) (Eq.{succ u1} (Subgroup.{u1} G _inst_1) H (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1)))
+Case conversion may be inaccurate. Consider using '#align subgroup.card_eq_one Subgroup.card_eq_oneₓ'. -/
 @[simp, to_additive card_eq_one]
 theorem card_eq_one : Nat.card H = 1 ↔ H = ⊥ :=
   H.relindex_bot_left ▸ relindex_eq_one.trans le_bot_iff
 #align subgroup.card_eq_one Subgroup.card_eq_one
 #align add_subgroup.card_eq_one AddSubgroup.card_eq_one
--/
 
 #print Subgroup.index_ne_zero_of_finite /-
 @[to_additive]
@@ -827,13 +851,17 @@ noncomputable def fintypeOfIndexNeZero (hH : H.index ≠ 0) : Fintype (G ⧸ H) 
 #align add_subgroup.fintype_of_index_ne_zero AddSubgroup.fintypeOfIndexNeZero
 -/
 
-#print Subgroup.one_lt_index_of_ne_top /-
+/- warning: subgroup.one_lt_index_of_ne_top -> Subgroup.one_lt_index_of_ne_top is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} [_inst_2 : Finite.{succ u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.Subgroup.hasQuotient.{u1} G _inst_1) H)], (Ne.{succ u1} (Subgroup.{u1} G _inst_1) H (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasTop.{u1} G _inst_1))) -> (LT.lt.{0} Nat Nat.hasLt (OfNat.ofNat.{0} Nat 1 (OfNat.mk.{0} Nat 1 (One.one.{0} Nat Nat.hasOne))) (Subgroup.index.{u1} G _inst_1 H))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} [_inst_2 : Finite.{succ u1} (HasQuotient.Quotient.{u1, u1} G (Subgroup.{u1} G _inst_1) (QuotientGroup.instHasQuotientSubgroup.{u1} G _inst_1) H)], (Ne.{succ u1} (Subgroup.{u1} G _inst_1) H (Top.top.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instTopSubgroup.{u1} G _inst_1))) -> (LT.lt.{0} Nat instLTNat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (Subgroup.index.{u1} G _inst_1 H))
+Case conversion may be inaccurate. Consider using '#align subgroup.one_lt_index_of_ne_top Subgroup.one_lt_index_of_ne_topₓ'. -/
 @[to_additive one_lt_index_of_ne_top]
 theorem one_lt_index_of_ne_top [Finite (G ⧸ H)] (hH : H ≠ ⊤) : 1 < H.index :=
   Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨index_ne_zero_of_finite, mt index_eq_one.mp hH⟩
 #align subgroup.one_lt_index_of_ne_top Subgroup.one_lt_index_of_ne_top
 #align add_subgroup.one_lt_index_of_ne_top AddSubgroup.one_lt_index_of_ne_top
--/
 
 section FiniteIndex
 
@@ -896,17 +924,26 @@ instance [FiniteIndex H] [FiniteIndex K] : FiniteIndex (H ⊓ K) :=
 
 variable {H K}
 
-#print Subgroup.finiteIndex_of_le /-
+/- warning: subgroup.finite_index_of_le -> Subgroup.finiteIndex_of_le is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1} [_inst_2 : Subgroup.FiniteIndex.{u1} G _inst_1 H], (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) H K) -> (Subgroup.FiniteIndex.{u1} G _inst_1 K)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {H : Subgroup.{u1} G _inst_1} {K : Subgroup.{u1} G _inst_1} [_inst_2 : Subgroup.FiniteIndex.{u1} G _inst_1 H], (LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) H K) -> (Subgroup.FiniteIndex.{u1} G _inst_1 K)
+Case conversion may be inaccurate. Consider using '#align subgroup.finite_index_of_le Subgroup.finiteIndex_of_leₓ'. -/
 @[to_additive]
 theorem finiteIndex_of_le [FiniteIndex H] (h : H ≤ K) : FiniteIndex K :=
   ⟨ne_zero_of_dvd_ne_zero FiniteIndex.finiteIndex (index_dvd_of_le h)⟩
 #align subgroup.finite_index_of_le Subgroup.finiteIndex_of_le
 #align add_subgroup.finite_index_of_le AddSubgroup.finiteIndex_of_le
--/
 
 variable (H K)
 
-#print Subgroup.finiteIndex_ker /-
+/- warning: subgroup.finite_index_ker -> Subgroup.finiteIndex_ker is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {G' : Type.{u2}} [_inst_2 : Group.{u2} G'] (f : MonoidHom.{u1, u2} G G' (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2)))) [_inst_3 : Finite.{succ u2} (coeSort.{succ u2, succ (succ u2)} (Subgroup.{u2} G' _inst_2) Type.{u2} (SetLike.hasCoeToSort.{u2, u2} (Subgroup.{u2} G' _inst_2) G' (Subgroup.setLike.{u2} G' _inst_2)) (MonoidHom.range.{u1, u2} G _inst_1 G' _inst_2 f))], Subgroup.FiniteIndex.{u1} G _inst_1 (MonoidHom.ker.{u1, u2} G _inst_1 G' (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2))) f)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] {G' : Type.{u2}} [_inst_2 : Group.{u2} G'] (f : MonoidHom.{u1, u2} G G' (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2)))) [_inst_3 : Finite.{succ u2} (Subtype.{succ u2} G' (fun (x : G') => Membership.mem.{u2, u2} G' (Subgroup.{u2} G' _inst_2) (SetLike.instMembership.{u2, u2} (Subgroup.{u2} G' _inst_2) G' (Subgroup.instSetLikeSubgroup.{u2} G' _inst_2)) x (MonoidHom.range.{u1, u2} G _inst_1 G' _inst_2 f)))], Subgroup.FiniteIndex.{u1} G _inst_1 (MonoidHom.ker.{u1, u2} G _inst_1 G' (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2))) f)
+Case conversion may be inaccurate. Consider using '#align subgroup.finite_index_ker Subgroup.finiteIndex_kerₓ'. -/
 @[to_additive]
 instance finiteIndex_ker {G' : Type _} [Group G'] (f : G →* G') [Finite f.range] :
     f.ker.FiniteIndex :=
@@ -914,7 +951,6 @@ instance finiteIndex_ker {G' : Type _} [Group G'] (f : G →* G') [Finite f.rang
     (Finite.of_equiv f.range (QuotientGroup.quotientKerEquivRange f).symm)
 #align subgroup.finite_index_ker Subgroup.finiteIndex_ker
 #align add_subgroup.finite_index_ker AddSubgroup.finiteIndex_ker
--/
 
 #print Subgroup.finiteIndex_normalCore /-
 instance finiteIndex_normalCore [H.FiniteIndex] : H.normalCore.FiniteIndex :=

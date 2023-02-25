@@ -256,41 +256,66 @@ theorem commutator_def' [H₁.Normal] [H₂.Normal] :
 #align subgroup.commutator_def' Subgroup.commutator_def'
 -/
 
-#print Subgroup.commutator_le_right /-
+/- warning: subgroup.commutator_le_right -> Subgroup.commutator_le_right is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [h : Subgroup.Normal.{u1} G _inst_1 H₂], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) H₂
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [h : Subgroup.Normal.{u1} G _inst_1 H₂], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) H₂
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_le_right Subgroup.commutator_le_rightₓ'. -/
 theorem commutator_le_right [h : H₂.Normal] : ⁅H₁, H₂⁆ ≤ H₂ :=
   commutator_le.mpr fun g₁ h₁ g₂ h₂ => H₂.mul_mem (h.conj_mem g₂ h₂ g₁) (H₂.inv_mem h₂)
 #align subgroup.commutator_le_right Subgroup.commutator_le_right
--/
 
-#print Subgroup.commutator_le_left /-
+/- warning: subgroup.commutator_le_left -> Subgroup.commutator_le_left is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [_inst_4 : Subgroup.Normal.{u1} G _inst_1 H₁], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) H₁
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [_inst_4 : Subgroup.Normal.{u1} G _inst_1 H₁], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) H₁
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_le_left Subgroup.commutator_le_leftₓ'. -/
 theorem commutator_le_left [H₁.Normal] : ⁅H₁, H₂⁆ ≤ H₁ :=
   commutator_comm H₂ H₁ ▸ commutator_le_right H₂ H₁
 #align subgroup.commutator_le_left Subgroup.commutator_le_left
--/
 
-#print Subgroup.commutator_bot_left /-
+/- warning: subgroup.commutator_bot_left -> Subgroup.commutator_bot_left is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1)) H₁) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1)) H₁) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_bot_left Subgroup.commutator_bot_leftₓ'. -/
 @[simp]
 theorem commutator_bot_left : ⁅(⊥ : Subgroup G), H₁⁆ = ⊥ :=
   le_bot_iff.mp (commutator_le_left ⊥ H₁)
 #align subgroup.commutator_bot_left Subgroup.commutator_bot_left
--/
 
-#print Subgroup.commutator_bot_right /-
+/- warning: subgroup.commutator_bot_right -> Subgroup.commutator_bot_right is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasBot.{u1} G _inst_1))
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1), Eq.{succ u1} (Subgroup.{u1} G _inst_1) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))) (Bot.bot.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instBotSubgroup.{u1} G _inst_1))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_bot_right Subgroup.commutator_bot_rightₓ'. -/
 @[simp]
 theorem commutator_bot_right : ⁅H₁, ⊥⁆ = (⊥ : Subgroup G) :=
   le_bot_iff.mp (commutator_le_right H₁ ⊥)
 #align subgroup.commutator_bot_right Subgroup.commutator_bot_right
--/
 
-#print Subgroup.commutator_le_inf /-
+/- warning: subgroup.commutator_le_inf -> Subgroup.commutator_le_inf is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [_inst_4 : Subgroup.Normal.{u1} G _inst_1 H₁] [_inst_5 : Subgroup.Normal.{u1} G _inst_1 H₂], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (SetLike.partialOrder.{u1, u1} (Subgroup.{u1} G _inst_1) G (Subgroup.setLike.{u1} G _inst_1)))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.hasInf.{u1} G _inst_1) H₁ H₂)
+but is expected to have type
+  forall {G : Type.{u1}} [_inst_1 : Group.{u1} G] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) [_inst_4 : Subgroup.Normal.{u1} G _inst_1 H₁] [_inst_5 : Subgroup.Normal.{u1} G _inst_1 H₂], LE.le.{u1} (Subgroup.{u1} G _inst_1) (Preorder.toLE.{u1} (Subgroup.{u1} G _inst_1) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G _inst_1) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G _inst_1) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instCompleteLatticeSubgroup.{u1} G _inst_1))))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) (HasInf.inf.{u1} (Subgroup.{u1} G _inst_1) (Subgroup.instHasInfSubgroup.{u1} G _inst_1) H₁ H₂)
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_le_inf Subgroup.commutator_le_infₓ'. -/
 theorem commutator_le_inf [Normal H₁] [Normal H₂] : ⁅H₁, H₂⁆ ≤ H₁ ⊓ H₂ :=
   le_inf (commutator_le_left H₁ H₂) (commutator_le_right H₁ H₂)
 #align subgroup.commutator_le_inf Subgroup.commutator_le_inf
--/
 
 end Normal
 
-#print Subgroup.map_commutator /-
+/- warning: subgroup.map_commutator -> Subgroup.map_commutator is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {G' : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} G'] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) (f : MonoidHom.{u1, u2} G G' (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2)))), Eq.{succ u2} (Subgroup.{u2} G' _inst_2) (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂)) (Bracket.bracket.{u2, u2} (Subgroup.{u2} G' _inst_2) (Subgroup.{u2} G' _inst_2) (Subgroup.commutator.{u2} G' _inst_2) (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f H₁) (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f H₂))
+but is expected to have type
+  forall {G : Type.{u2}} {G' : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} G'] (H₁ : Subgroup.{u2} G _inst_1) (H₂ : Subgroup.{u2} G _inst_1) (f : MonoidHom.{u2, u1} G G' (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} G' (DivInvMonoid.toMonoid.{u1} G' (Group.toDivInvMonoid.{u1} G' _inst_2)))), Eq.{succ u1} (Subgroup.{u1} G' _inst_2) (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f (Bracket.bracket.{u2, u2} (Subgroup.{u2} G _inst_1) (Subgroup.{u2} G _inst_1) (Subgroup.commutator.{u2} G _inst_1) H₁ H₂)) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G' _inst_2) (Subgroup.{u1} G' _inst_2) (Subgroup.commutator.{u1} G' _inst_2) (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f H₁) (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f H₂))
+Case conversion may be inaccurate. Consider using '#align subgroup.map_commutator Subgroup.map_commutatorₓ'. -/
 theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁, map f H₂⁆ :=
   by
   simp_rw [le_antisymm_iff, map_le_iff_le_comap, commutator_le, mem_comap, map_commutatorElement]
@@ -301,16 +326,19 @@ theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁,
     rw [← map_commutatorElement]
     exact mem_map_of_mem _ (commutator_mem_commutator hp hq)
 #align subgroup.map_commutator Subgroup.map_commutator
--/
 
 variable {H₁ H₂}
 
-#print Subgroup.commutator_le_map_commutator /-
+/- warning: subgroup.commutator_le_map_commutator -> Subgroup.commutator_le_map_commutator is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {G' : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} G'] {H₁ : Subgroup.{u1} G _inst_1} {H₂ : Subgroup.{u1} G _inst_1} {f : MonoidHom.{u1, u2} G G' (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))) (Monoid.toMulOneClass.{u2} G' (DivInvMonoid.toMonoid.{u2} G' (Group.toDivInvMonoid.{u2} G' _inst_2)))} {K₁ : Subgroup.{u2} G' _inst_2} {K₂ : Subgroup.{u2} G' _inst_2}, (LE.le.{u2} (Subgroup.{u2} G' _inst_2) (Preorder.toLE.{u2} (Subgroup.{u2} G' _inst_2) (PartialOrder.toPreorder.{u2} (Subgroup.{u2} G' _inst_2) (SetLike.partialOrder.{u2, u2} (Subgroup.{u2} G' _inst_2) G' (Subgroup.setLike.{u2} G' _inst_2)))) K₁ (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f H₁)) -> (LE.le.{u2} (Subgroup.{u2} G' _inst_2) (Preorder.toLE.{u2} (Subgroup.{u2} G' _inst_2) (PartialOrder.toPreorder.{u2} (Subgroup.{u2} G' _inst_2) (SetLike.partialOrder.{u2, u2} (Subgroup.{u2} G' _inst_2) G' (Subgroup.setLike.{u2} G' _inst_2)))) K₂ (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f H₂)) -> (LE.le.{u2} (Subgroup.{u2} G' _inst_2) (Preorder.toLE.{u2} (Subgroup.{u2} G' _inst_2) (PartialOrder.toPreorder.{u2} (Subgroup.{u2} G' _inst_2) (SetLike.partialOrder.{u2, u2} (Subgroup.{u2} G' _inst_2) G' (Subgroup.setLike.{u2} G' _inst_2)))) (Bracket.bracket.{u2, u2} (Subgroup.{u2} G' _inst_2) (Subgroup.{u2} G' _inst_2) (Subgroup.commutator.{u2} G' _inst_2) K₁ K₂) (Subgroup.map.{u1, u2} G _inst_1 G' _inst_2 f (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂)))
+but is expected to have type
+  forall {G : Type.{u2}} {G' : Type.{u1}} [_inst_1 : Group.{u2} G] [_inst_2 : Group.{u1} G'] {H₁ : Subgroup.{u2} G _inst_1} {H₂ : Subgroup.{u2} G _inst_1} {f : MonoidHom.{u2, u1} G G' (Monoid.toMulOneClass.{u2} G (DivInvMonoid.toMonoid.{u2} G (Group.toDivInvMonoid.{u2} G _inst_1))) (Monoid.toMulOneClass.{u1} G' (DivInvMonoid.toMonoid.{u1} G' (Group.toDivInvMonoid.{u1} G' _inst_2)))} {K₁ : Subgroup.{u1} G' _inst_2} {K₂ : Subgroup.{u1} G' _inst_2}, (LE.le.{u1} (Subgroup.{u1} G' _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G' _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G' _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G' _inst_2))))) K₁ (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f H₁)) -> (LE.le.{u1} (Subgroup.{u1} G' _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G' _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G' _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G' _inst_2))))) K₂ (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f H₂)) -> (LE.le.{u1} (Subgroup.{u1} G' _inst_2) (Preorder.toLE.{u1} (Subgroup.{u1} G' _inst_2) (PartialOrder.toPreorder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteSemilatticeInf.toPartialOrder.{u1} (Subgroup.{u1} G' _inst_2) (CompleteLattice.toCompleteSemilatticeInf.{u1} (Subgroup.{u1} G' _inst_2) (Subgroup.instCompleteLatticeSubgroup.{u1} G' _inst_2))))) (Bracket.bracket.{u1, u1} (Subgroup.{u1} G' _inst_2) (Subgroup.{u1} G' _inst_2) (Subgroup.commutator.{u1} G' _inst_2) K₁ K₂) (Subgroup.map.{u2, u1} G _inst_1 G' _inst_2 f (Bracket.bracket.{u2, u2} (Subgroup.{u2} G _inst_1) (Subgroup.{u2} G _inst_1) (Subgroup.commutator.{u2} G _inst_1) H₁ H₂)))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_le_map_commutator Subgroup.commutator_le_map_commutatorₓ'. -/
 theorem commutator_le_map_commutator {f : G →* G'} {K₁ K₂ : Subgroup G'} (h₁ : K₁ ≤ H₁.map f)
     (h₂ : K₂ ≤ H₂.map f) : ⁅K₁, K₂⁆ ≤ ⁅H₁, H₂⁆.map f :=
   (commutator_mono h₁ h₂).trans (ge_of_eq (map_commutator H₁ H₂ f))
 #align subgroup.commutator_le_map_commutator Subgroup.commutator_le_map_commutator
--/
 
 variable (H₁ H₂)
 
@@ -323,7 +351,12 @@ instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characte
 #align subgroup.commutator_characteristic Subgroup.commutator_characteristic
 -/
 
-#print Subgroup.commutator_prod_prod /-
+/- warning: subgroup.commutator_prod_prod -> Subgroup.commutator_prod_prod is a dubious translation:
+lean 3 declaration is
+  forall {G : Type.{u1}} {G' : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} G'] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) (K₁ : Subgroup.{u2} G' _inst_2) (K₂ : Subgroup.{u2} G' _inst_2), Eq.{succ (max u1 u2)} (Subgroup.{max u1 u2} (Prod.{u1, u2} G G') (Prod.group.{u1, u2} G G' _inst_1 _inst_2)) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u1 u2} (Prod.{u1, u2} G G') (Prod.group.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.{max u1 u2} (Prod.{u1, u2} G G') (Prod.group.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.commutator.{max u1 u2} (Prod.{u1, u2} G G') (Prod.group.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 H₁ K₁) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 H₂ K₂)) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) (Bracket.bracket.{u2, u2} (Subgroup.{u2} G' _inst_2) (Subgroup.{u2} G' _inst_2) (Subgroup.commutator.{u2} G' _inst_2) K₁ K₂))
+but is expected to have type
+  forall {G : Type.{u1}} {G' : Type.{u2}} [_inst_1 : Group.{u1} G] [_inst_2 : Group.{u2} G'] (H₁ : Subgroup.{u1} G _inst_1) (H₂ : Subgroup.{u1} G _inst_1) (K₁ : Subgroup.{u2} G' _inst_2) (K₂ : Subgroup.{u2} G' _inst_2), Eq.{max (succ u1) (succ u2)} (Subgroup.{max u2 u1} (Prod.{u1, u2} G G') (Prod.instGroupProd.{u1, u2} G G' _inst_1 _inst_2)) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u2 u1} (Prod.{u1, u2} G G') (Prod.instGroupProd.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.{max u2 u1} (Prod.{u1, u2} G G') (Prod.instGroupProd.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.commutator.{max u1 u2} (Prod.{u1, u2} G G') (Prod.instGroupProd.{u1, u2} G G' _inst_1 _inst_2)) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 H₁ K₁) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 H₂ K₂)) (Subgroup.prod.{u1, u2} G _inst_1 G' _inst_2 (Bracket.bracket.{u1, u1} (Subgroup.{u1} G _inst_1) (Subgroup.{u1} G _inst_1) (Subgroup.commutator.{u1} G _inst_1) H₁ H₂) (Bracket.bracket.{u2, u2} (Subgroup.{u2} G' _inst_2) (Subgroup.{u2} G' _inst_2) (Subgroup.commutator.{u2} G' _inst_2) K₁ K₂))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_prod_prod Subgroup.commutator_prod_prodₓ'. -/
 theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
     ⁅H₁.Prod K₁, H₂.Prod K₂⁆ = ⁅H₁, H₂⁆.Prod ⁅K₁, K₂⁆ :=
   by
@@ -338,9 +371,13 @@ theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
           simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl,
             MonoidHom.fst_comp_inr, MonoidHom.snd_comp_inr]
 #align subgroup.commutator_prod_prod Subgroup.commutator_prod_prod
--/
 
-#print Subgroup.commutator_pi_pi_le /-
+/- warning: subgroup.commutator_pi_pi_le -> Subgroup.commutator_pi_pi_le is a dubious translation:
+lean 3 declaration is
+  forall {η : Type.{u1}} {Gs : η -> Type.{u2}} [_inst_4 : forall (i : η), Group.{u2} (Gs i)] (H : forall (i : η), Subgroup.{u2} (Gs i) (_inst_4 i)) (K : forall (i : η), Subgroup.{u2} (Gs i) (_inst_4 i)), LE.le.{max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Preorder.toLE.{max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (PartialOrder.toPreorder.{max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (SetLike.partialOrder.{max u1 u2, max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (forall (i : η), Gs i) (Subgroup.setLike.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i)))))) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.commutator.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u1} η) H) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u1} η) K)) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u1} η) (fun (i : η) => Bracket.bracket.{u2, u2} (Subgroup.{u2} (Gs i) (_inst_4 i)) (Subgroup.{u2} (Gs i) (_inst_4 i)) (Subgroup.commutator.{u2} (Gs i) (_inst_4 i)) (H i) (K i)))
+but is expected to have type
+  forall {η : Type.{u2}} {Gs : η -> Type.{u1}} [_inst_4 : forall (i : η), Group.{u1} (Gs i)] (H : forall (i : η), Subgroup.{u1} (Gs i) (_inst_4 i)) (K : forall (i : η), Subgroup.{u1} (Gs i) (_inst_4 i)), LE.le.{max u2 u1} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Preorder.toLE.{max u2 u1} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (PartialOrder.toPreorder.{max u2 u1} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (CompleteSemilatticeInf.toPartialOrder.{max u2 u1} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (CompleteLattice.toCompleteSemilatticeInf.{max u2 u1} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.instCompleteLatticeSubgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))))))) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.commutator.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i))) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u2} η) H) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u2} η) K)) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_4 i) (Set.univ.{u2} η) (fun (i : η) => Bracket.bracket.{u1, u1} (Subgroup.{u1} (Gs i) (_inst_4 i)) (Subgroup.{u1} (Gs i) (_inst_4 i)) (Subgroup.commutator.{u1} (Gs i) (_inst_4 i)) (H i) (K i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_pi_pi_le Subgroup.commutator_pi_pi_leₓ'. -/
 /-- The commutator of direct product is contained in the direct product of the commutators.
 
 See `commutator_pi_pi_of_finite` for equality given `fintype η`.
@@ -350,9 +387,13 @@ theorem commutator_pi_pi_le {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ ≤ Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
   commutator_le.mpr fun p hp q hq i hi => commutator_mem_commutator (hp i hi) (hq i hi)
 #align subgroup.commutator_pi_pi_le Subgroup.commutator_pi_pi_le
--/
 
-#print Subgroup.commutator_pi_pi_of_finite /-
+/- warning: subgroup.commutator_pi_pi_of_finite -> Subgroup.commutator_pi_pi_of_finite is a dubious translation:
+lean 3 declaration is
+  forall {η : Type.{u1}} [_inst_4 : Finite.{succ u1} η] {Gs : η -> Type.{u2}} [_inst_5 : forall (i : η), Group.{u2} (Gs i)] (H : forall (i : η), Subgroup.{u2} (Gs i) (_inst_5 i)) (K : forall (i : η), Subgroup.{u2} (Gs i) (_inst_5 i)), Eq.{succ (max u1 u2)} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.commutator.{max u1 u2} (forall (i : η), Gs i) (Pi.group.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u1} η) H) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u1} η) K)) (Subgroup.pi.{u1, u2} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u1} η) (fun (i : η) => Bracket.bracket.{u2, u2} (Subgroup.{u2} (Gs i) (_inst_5 i)) (Subgroup.{u2} (Gs i) (_inst_5 i)) (Subgroup.commutator.{u2} (Gs i) (_inst_5 i)) (H i) (K i)))
+but is expected to have type
+  forall {η : Type.{u2}} [_inst_4 : Finite.{succ u2} η] {Gs : η -> Type.{u1}} [_inst_5 : forall (i : η), Group.{u1} (Gs i)] (H : forall (i : η), Subgroup.{u1} (Gs i) (_inst_5 i)) (K : forall (i : η), Subgroup.{u1} (Gs i) (_inst_5 i)), Eq.{max (succ u2) (succ u1)} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Bracket.bracket.{max u1 u2, max u1 u2} (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.commutator.{max u2 u1} (forall (i : η), Gs i) (Pi.group.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i))) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u2} η) H) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u2} η) K)) (Subgroup.pi.{u2, u1} η (fun (i : η) => Gs i) (fun (i : η) => _inst_5 i) (Set.univ.{u2} η) (fun (i : η) => Bracket.bracket.{u1, u1} (Subgroup.{u1} (Gs i) (_inst_5 i)) (Subgroup.{u1} (Gs i) (_inst_5 i)) (Subgroup.commutator.{u1} (Gs i) (_inst_5 i)) (H i) (K i)))
+Case conversion may be inaccurate. Consider using '#align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finiteₓ'. -/
 /-- The commutator of a finite direct product is contained in the direct product of the commutators.
 -/
 theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _} [∀ i, Group (Gs i)]
@@ -373,7 +414,6 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
             simpa using hx
           · simp [h, one_mem]
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
--/
 
 end Subgroup
 
@@ -392,11 +432,15 @@ theorem commutatorSet_def : commutatorSet G = { g | ∃ g₁ g₂ : G, ⁅g₁, 
 #align commutator_set_def commutatorSet_def
 -/
 
-#print one_mem_commutatorSet /-
+/- warning: one_mem_commutator_set -> one_mem_commutatorSet is a dubious translation:
+lean 3 declaration is
+  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G], Membership.Mem.{u1, u1} G (Set.{u1} G) (Set.hasMem.{u1} G) (OfNat.ofNat.{u1} G 1 (OfNat.mk.{u1} G 1 (One.one.{u1} G (MulOneClass.toHasOne.{u1} G (Monoid.toMulOneClass.{u1} G (DivInvMonoid.toMonoid.{u1} G (Group.toDivInvMonoid.{u1} G _inst_1))))))) (commutatorSet.{u1} G _inst_1)
+but is expected to have type
+  forall (G : Type.{u1}) [_inst_1 : Group.{u1} G], Membership.mem.{u1, u1} G (Set.{u1} G) (Set.instMembershipSet.{u1} G) (OfNat.ofNat.{u1} G 1 (One.toOfNat1.{u1} G (InvOneClass.toOne.{u1} G (DivInvOneMonoid.toInvOneClass.{u1} G (DivisionMonoid.toDivInvOneMonoid.{u1} G (Group.toDivisionMonoid.{u1} G _inst_1)))))) (commutatorSet.{u1} G _inst_1)
+Case conversion may be inaccurate. Consider using '#align one_mem_commutator_set one_mem_commutatorSetₓ'. -/
 theorem one_mem_commutatorSet : (1 : G) ∈ commutatorSet G :=
   ⟨1, 1, commutatorElement_self 1⟩
 #align one_mem_commutator_set one_mem_commutatorSet
--/
 
 instance : Nonempty (commutatorSet G) :=
   ⟨⟨1, one_mem_commutatorSet G⟩⟩

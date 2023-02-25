@@ -2384,6 +2384,12 @@ variable {E : Type _} [EquivLike E ι ι']
 
 include ι
 
+/- warning: equiv_like.range_comp -> EquivLike.range_comp is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} {ι : Sort.{u2}} {ι' : Sort.{u3}} {E : Type.{u4}} [_inst_1 : EquivLike.{succ u4, u2, u3} E ι ι'] (f : ι' -> α) (e : E), Eq.{succ u1} (Set.{u1} α) (Set.range.{u1, u2} α ι (Function.comp.{u2, u3, succ u1} ι ι' α f (coeFn.{succ u4, imax u2 u3} E (fun (_x : E) => ι -> ι') (FunLike.hasCoeToFun.{succ u4, u2, u3} E ι (fun (_x : ι) => ι') (EmbeddingLike.toFunLike.{succ u4, u2, u3} E ι ι' (EquivLike.toEmbeddingLike.{succ u4, u2, u3} E ι ι' _inst_1))) e))) (Set.range.{u1, u3} α ι' f)
+but is expected to have type
+  forall {α : Sort.{u3}} {ι : Sort.{u2}} {ι' : Type.{u1}} [E : EquivLike.{succ u1, u3, u2} ι' α ι] {_inst_1 : Type.{u4}} (f : ι -> _inst_1) (e : ι'), Eq.{succ u4} (Set.{u4} _inst_1) (Set.range.{u4, u3} _inst_1 α (Function.comp.{u3, u2, succ u4} α ι _inst_1 f (FunLike.coe.{succ u1, u3, u2} ι' α (fun (_x : α) => (fun (x._@.Mathlib.Data.FunLike.Embedding._hyg.19 : α) => ι) _x) (EmbeddingLike.toFunLike.{succ u1, u3, u2} ι' α ι (EquivLike.toEmbeddingLike.{succ u1, u3, u2} ι' α ι E)) e))) (Set.range.{u4, u2} _inst_1 ι f)
+Case conversion may be inaccurate. Consider using '#align equiv_like.range_comp EquivLike.range_compₓ'. -/
 @[simp]
 theorem range_comp (f : ι' → α) (e : E) : Set.range (f ∘ e) = Set.range f :=
   (EquivLike.surjective _).range_comp _
