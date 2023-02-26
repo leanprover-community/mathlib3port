@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.riemann_lebesgue_lemma
-! leanprover-community/mathlib commit a231f964b9ec8d1e12a28326b556123258a52829
+! leanprover-community/mathlib commit 3353f3371120058977ce1e20bf7fc8986c0fb042
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -193,7 +193,7 @@ open FourierTransform
 /-- Riemann-Lebesgue lemma for continuous compactly-supported functions: the Fourier transform
 tends to 0 at infinity. -/
 theorem Real.fourierIntegral_zero_at_infty_of_continuous_compact_support (hc : Continuous f)
-    (hs : HasCompactSupport f) : Tendsto (Real.fourierIntegral f) (cocompact ℝ) (𝓝 0) :=
+    (hs : HasCompactSupport f) : Tendsto (𝓕 f) (cocompact ℝ) (𝓝 0) :=
   by
   refine'
     ((zero_at_infty_integral_mul_exp_of_continuous_compact_support hc hs).comp

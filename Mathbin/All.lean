@@ -592,6 +592,7 @@ import Mathbin.Analysis.Convex.Uniform
 import Mathbin.Analysis.Convolution
 import Mathbin.Analysis.Fourier.AddCircle
 import Mathbin.Analysis.Fourier.FourierTransform
+import Mathbin.Analysis.Fourier.PoissonSummation
 import Mathbin.Analysis.Fourier.RiemannLebesgueLemma
 import Mathbin.Analysis.Hofer
 import Mathbin.Analysis.InnerProductSpace.Adjoint
@@ -2239,6 +2240,7 @@ import Mathbin.NumberTheory.Padics.PadicNumbers
 import Mathbin.NumberTheory.Padics.PadicVal
 import Mathbin.NumberTheory.Padics.RingHoms
 import Mathbin.NumberTheory.Pell
+import Mathbin.NumberTheory.PellGeneral
 import Mathbin.NumberTheory.PrimeCounting
 import Mathbin.NumberTheory.PrimesCongruentOne
 import Mathbin.NumberTheory.Primorial

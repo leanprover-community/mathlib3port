@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.basic
-! leanprover-community/mathlib commit e50b8c261b0a000b806ec0e1356b41945eda61f7
+! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,6 +25,9 @@ by assigning each set the sum of the probabilities of each of its elements.
 Under this outer measure, every set is Carathéodory-measurable,
 so we can further extend this to a `measure` on `α`, see `pmf.to_measure`.
 `pmf.to_measure.is_probability_measure` shows this associated measure is a probability measure.
+Conversely, given a probability measure `μ` on a measurable space `α` with all singleton sets
+measurable, `μ.to_pmf` constructs a `pmf` on `α`, setting the probability mass of a point `x`
+to be the measure of the singleton set `{x}`.
 
 ## Tags
 
@@ -36,7 +39,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators NNReal Ennreal
+open Classical BigOperators NNReal Ennreal MeasureTheory
 
 /-- A probability mass function, or discrete probability measures is a function `α → ℝ≥0∞` such
   that the values have (infinite) sum `1`. -/
@@ -155,6 +158,15 @@ theorem toOuterMeasure_apply : p.toOuterMeasure s = ∑' x, s.indicator p x :=
 #align pmf.to_outer_measure_apply Pmf.toOuterMeasure_apply
 
 @[simp]
+theorem toOuterMeasure_caratheodory : p.toOuterMeasure.caratheodory = ⊤ :=
+  by
+  refine' eq_top_iff.2 <| le_trans (le_infₛ fun x hx => _) (le_sum_caratheodory _)
+  exact
+    let ⟨y, hy⟩ := hx
+    ((le_of_eq (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eq hy)
+#align pmf.to_outer_measure_caratheodory Pmf.toOuterMeasure_caratheodory
+
+@[simp]
 theorem toOuterMeasure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑ x in s, p x :=
   by
   refine' (to_outer_measure_apply p s).trans ((@tsum_eq_sum _ _ _ _ _ _ s _).trans _)
@@ -168,6 +180,18 @@ theorem toOuterMeasure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a :=
   · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
   · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
 #align pmf.to_outer_measure_apply_singleton Pmf.toOuterMeasure_apply_singleton
+
+theorem toOuterMeasure_injective : (toOuterMeasure : Pmf α → OuterMeasure α).Injective :=
+  fun p q h =>
+  Pmf.ext fun x =>
+    (p.toOuterMeasure_apply_singleton x).symm.trans
+      ((congr_fun (congr_arg _ h) _).trans <| q.toOuterMeasure_apply_singleton x)
+#align pmf.to_outer_measure_injective Pmf.toOuterMeasure_injective
+
+@[simp]
+theorem toOuterMeasure_inj {p q : Pmf α} : p.toOuterMeasure = q.toOuterMeasure ↔ p = q :=
+  toOuterMeasure_injective.eq_iff
+#align pmf.to_outer_measure_inj Pmf.toOuterMeasure_inj
 
 theorem toOuterMeasure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.support s :=
   by
@@ -216,15 +240,6 @@ theorem toOuterMeasure_apply_fintype [Fintype α] : p.toOuterMeasure s = ∑ x, 
   (p.toOuterMeasure_apply s).trans (tsum_eq_sum fun x h => absurd (Finset.mem_univ x) h)
 #align pmf.to_outer_measure_apply_fintype Pmf.toOuterMeasure_apply_fintype
 
-@[simp]
-theorem toOuterMeasure_caratheodory (p : Pmf α) : (toOuterMeasure p).caratheodory = ⊤ :=
-  by
-  refine' eq_top_iff.2 <| le_trans (le_infₛ fun x hx => _) (le_sum_caratheodory _)
-  obtain ⟨y, hy⟩ := hx
-  exact
-    ((le_of_eq (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eq hy)
-#align pmf.to_outer_measure_caratheodory Pmf.toOuterMeasure_caratheodory
-
 end OuterMeasure
 
 section Measure
@@ -254,7 +269,7 @@ theorem toMeasure_apply (hs : MeasurableSet s) : p.toMeasure s = ∑' x, s.indic
 
 theorem toMeasure_apply_singleton (a : α) (h : MeasurableSet ({a} : Set α)) :
     p.toMeasure {a} = p a := by
-  simp [to_measure_apply_eq_to_outer_measure_apply p {a} h, to_outer_measure_apply_singleton]
+  simp [to_measure_apply_eq_to_outer_measure_apply _ _ h, to_outer_measure_apply_singleton]
 #align pmf.to_measure_apply_singleton Pmf.toMeasure_apply_singleton
 
 theorem toMeasure_apply_eq_zero_iff (hs : MeasurableSet s) :
@@ -289,6 +304,18 @@ section MeasurableSingletonClass
 
 variable [MeasurableSingletonClass α]
 
+theorem toMeasure_injective : (toMeasure : Pmf α → Measure α).Injective := fun p q h =>
+  Pmf.ext fun x =>
+    (p.toMeasure_apply_singleton x <| measurableSet_singleton x).symm.trans
+      ((congr_fun (congr_arg _ h) _).trans <|
+        q.toMeasure_apply_singleton x <| measurableSet_singleton x)
+#align pmf.to_measure_injective Pmf.toMeasure_injective
+
+@[simp]
+theorem toMeasure_inj {p q : Pmf α} : p.toMeasure = q.toMeasure ↔ p = q :=
+  toMeasure_injective.eq_iff
+#align pmf.to_measure_inj Pmf.toMeasure_inj
+
 @[simp]
 theorem toMeasure_apply_finset (s : Finset α) : p.toMeasure s = ∑ x in s, p x :=
   (p.toMeasure_apply_eq_toOuterMeasure_apply s s.MeasurableSet).trans
@@ -307,14 +334,75 @@ theorem toMeasure_apply_fintype [Fintype α] : p.toMeasure s = ∑ x, s.indicato
 
 end MeasurableSingletonClass
 
+end Measure
+
+end Pmf
+
+namespace MeasureTheory
+
+open Pmf
+
+namespace Measure
+
+/-- Given that `α` is a countable, measurable space with all singleton sets measurable,
+we can convert any probability measure into a `pmf`, where the mass of a point
+is the measure of the singleton set under the original measure. -/
+def toPmf [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (μ : Measure α)
+    [h : IsProbabilityMeasure μ] : Pmf α :=
+  ⟨fun x => μ ({x} : Set α),
+    Ennreal.summable.hasSum_iff.2
+      (trans
+        (symm <|
+          (tsum_indicator_apply_singleton μ Set.univ MeasurableSet.univ).symm.trans
+            (tsum_congr fun x => congr_fun (Set.indicator_univ _) x))
+        h.measure_univ)⟩
+#align measure_theory.measure.to_pmf MeasureTheory.Measure.toPmf
+
+variable [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (μ : Measure α)
+  [IsProbabilityMeasure μ]
+
+theorem toPmf_apply (x : α) : μ.toPmf x = μ {x} :=
+  rfl
+#align measure_theory.measure.to_pmf_apply MeasureTheory.Measure.toPmf_apply
+
+@[simp]
+theorem toPmf_toMeasure : μ.toPmf.toMeasure = μ :=
+  Measure.ext fun s hs => by
+    simpa only [μ.to_pmf.to_measure_apply s hs, ← μ.tsum_indicator_apply_singleton s hs]
+#align measure_theory.measure.to_pmf_to_measure MeasureTheory.Measure.toPmf_toMeasure
+
+end Measure
+
+end MeasureTheory
+
+namespace Pmf
+
+open MeasureTheory
+
 /-- The measure associated to a `pmf` by `to_measure` is a probability measure -/
-instance toMeasure.isProbabilityMeasure (p : Pmf α) : IsProbabilityMeasure p.toMeasure :=
+instance toMeasure.isProbabilityMeasure [MeasurableSpace α] (p : Pmf α) :
+    IsProbabilityMeasure p.toMeasure :=
   ⟨by
     simpa only [MeasurableSet.univ, to_measure_apply_eq_to_outer_measure_apply, Set.indicator_univ,
       to_outer_measure_apply, Ennreal.coe_eq_one] using tsum_coe p⟩
 #align pmf.to_measure.is_probability_measure Pmf.toMeasure.isProbabilityMeasure
 
-end Measure
+variable [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (p : Pmf α) (μ : Measure α)
+  [IsProbabilityMeasure μ]
+
+@[simp]
+theorem toMeasure_toPmf : p.toMeasure.toPmf = p :=
+  Pmf.ext fun x => by
+    rw [← p.to_measure_apply_singleton x (measurable_set_singleton x), p.to_measure.to_pmf_apply]
+#align pmf.to_measure_to_pmf Pmf.toMeasure_toPmf
+
+theorem toMeasure_eq_iff_eq_toPmf (μ : Measure α) [IsProbabilityMeasure μ] :
+    p.toMeasure = μ ↔ p = μ.toPmf := by rw [← to_measure_inj, measure.to_pmf_to_measure]
+#align pmf.to_measure_eq_iff_eq_to_pmf Pmf.toMeasure_eq_iff_eq_toPmf
+
+theorem toPmf_eq_iff_toMeasure_eq (μ : Measure α) [IsProbabilityMeasure μ] :
+    μ.toPmf = p ↔ μ = p.toMeasure := by rw [← to_measure_inj, measure.to_pmf_to_measure]
+#align pmf.to_pmf_eq_iff_to_measure_eq Pmf.toPmf_eq_iff_toMeasure_eq
 
 end Pmf
 

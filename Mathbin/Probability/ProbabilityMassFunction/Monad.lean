@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.monad
-! leanprover-community/mathlib commit feb165c980c918bb296fede8c3b21dbb4b85bb56
+! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,6 +29,8 @@ noncomputable section
 variable {α β γ : Type _}
 
 open Classical BigOperators NNReal Ennreal
+
+open MeasureTheory
 
 namespace Pmf
 
@@ -73,12 +75,23 @@ theorem toOuterMeasure_pure_apply : (pure a).toOuterMeasure s = if a ∈ s then 
     exact ite_eq_right_iff.2 fun hb => ite_eq_right_iff.2 fun h => (ha <| h ▸ hb).elim
 #align pmf.to_outer_measure_pure_apply Pmf.toOuterMeasure_pure_apply
 
+variable [MeasurableSpace α]
+
 /-- The measure of a set under `pure a` is `1` for sets containing `a` and `0` otherwise -/
 @[simp]
-theorem toMeasure_pure_apply [MeasurableSpace α] (hs : MeasurableSet s) :
+theorem toMeasure_pure_apply (hs : MeasurableSet s) :
     (pure a).toMeasure s = if a ∈ s then 1 else 0 :=
   (toMeasure_apply_eq_toOuterMeasure_apply (pure a) s hs).trans (toOuterMeasure_pure_apply a s)
 #align pmf.to_measure_pure_apply Pmf.toMeasure_pure_apply
+
+theorem toMeasure_pure : (pure a).toMeasure = Measure.dirac a :=
+  Measure.ext fun s hs => by simpa only [to_measure_pure_apply a s hs, measure.dirac_apply' a hs]
+#align pmf.to_measure_pure Pmf.toMeasure_pure
+
+@[simp]
+theorem toPmf_dirac [Countable α] [h : MeasurableSingletonClass α] :
+    (Measure.dirac a).toPmf = pure a := by rw [to_pmf_eq_iff_to_measure_eq, to_measure_pure]
+#align pmf.to_pmf_dirac Pmf.toPmf_dirac
 
 end Measure
 

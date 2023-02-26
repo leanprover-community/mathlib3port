@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.measure
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 950605e4b9b4e2827681f637ba997307814a5ca9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -249,9 +249,9 @@ end HasMeasurableMul
 
 end Mul
 
-section Group
+section DivInvMonoid
 
-variable [Group G]
+variable [DivInvMonoid G]
 
 @[to_additive]
 theorem map_div_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) : map (· / g) μ = μ :=
@@ -259,7 +259,11 @@ theorem map_div_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
 #align measure_theory.map_div_right_eq_self MeasureTheory.map_div_right_eq_self
 #align measure_theory.map_sub_right_eq_self MeasureTheory.map_sub_right_eq_self
 
-variable [HasMeasurableMul G]
+end DivInvMonoid
+
+section Group
+
+variable [Group G] [HasMeasurableMul G]
 
 @[to_additive]
 theorem measurePreservingDivRight (μ : Measure G) [IsMulRightInvariant μ] (g : G) :
@@ -427,9 +431,9 @@ instance (μ : Measure G) [SigmaFinite μ] : SigmaFinite μ.inv :=
 
 end InvolutiveInv
 
-section mul_inv
+section DivisionMonoid
 
-variable [Group G] [HasMeasurableMul G] [HasMeasurableInv G] {μ : Measure G}
+variable [DivisionMonoid G] [HasMeasurableMul G] [HasMeasurableInv G] {μ : Measure G}
 
 @[to_additive]
 instance [IsMulLeftInvariant μ] : IsMulRightInvariant μ.inv :=
@@ -479,6 +483,12 @@ theorem map_mul_right_inv_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLef
 #align measure_theory.measure.map_mul_right_inv_eq_self MeasureTheory.Measure.map_mul_right_inv_eq_self
 #align measure_theory.measure.map_add_right_neg_eq_self MeasureTheory.Measure.map_add_right_neg_eq_self
 
+end DivisionMonoid
+
+section Group
+
+variable [Group G] [HasMeasurableMul G] [HasMeasurableInv G] {μ : Measure G}
+
 @[to_additive]
 theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
     Filter.map (fun t => x / t) μ.ae = μ.ae :=
@@ -486,21 +496,21 @@ theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant
 #align measure_theory.measure.map_div_left_ae MeasureTheory.Measure.map_div_left_ae
 #align measure_theory.measure.map_sub_left_ae MeasureTheory.Measure.map_sub_left_ae
 
-end mul_inv
+end Group
 
 end Measure
 
 section TopologicalGroup
 
-variable [TopologicalSpace G] [BorelSpace G] {μ : Measure G}
-
-variable [Group G] [TopologicalGroup G]
+variable [TopologicalSpace G] [BorelSpace G] {μ : Measure G} [Group G]
 
 @[to_additive]
-instance Measure.Regular.inv [T2Space G] [Regular μ] : Regular μ.inv :=
+instance Measure.Regular.inv [ContinuousInv G] [T2Space G] [Regular μ] : Regular μ.inv :=
   Regular.map (Homeomorph.inv G)
 #align measure_theory.measure.regular.inv MeasureTheory.Measure.Regular.inv
 #align measure_theory.measure.regular.neg MeasureTheory.Measure.Regular.neg
+
+variable [TopologicalGroup G]
 
 @[to_additive]
 theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
@@ -657,9 +667,9 @@ theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSp
 
 end TopologicalGroup
 
-section CommGroup
+section CommSemigroup
 
-variable [CommGroup G]
+variable [CommSemigroup G]
 
 /-- In an abelian group every left invariant measure is also right-invariant.
   We don't declare the converse as an instance, since that would loop type-class inference, and
@@ -672,7 +682,7 @@ instance (priority := 100) IsMulLeftInvariant.isMulRightInvariant {μ : Measure 
 #align measure_theory.is_mul_left_invariant.is_mul_right_invariant MeasureTheory.IsMulLeftInvariant.isMulRightInvariant
 #align is_add_left_invariant.is_add_right_invariant IsAddLeftInvariant.is_add_right_invariant
 
-end CommGroup
+end CommSemigroup
 
 section Haar
 

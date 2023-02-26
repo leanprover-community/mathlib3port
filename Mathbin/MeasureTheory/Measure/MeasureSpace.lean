@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space
-! leanprover-community/mathlib commit a75898643b2d774cced9ae7c0b28c21663b99666
+! leanprover-community/mathlib commit 3f5c9d30716c775bda043456728a1a3ee31412e7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2142,6 +2142,19 @@ theorem map_eq_sum [Countable β] [MeasurableSingletonClass β] (μ : Measure α
 theorem sum_smul_dirac [Countable α] [MeasurableSingletonClass α] (μ : Measure α) :
     (sum fun a => μ {a} • dirac a) = μ := by simpa using (map_eq_sum μ id measurable_id).symm
 #align measure_theory.measure.sum_smul_dirac MeasureTheory.Measure.sum_smul_dirac
+
+/-- Given that `α` is a countable, measurable space with all singleton sets measurable,
+write the measure of a set `s` as the sum of the measure of `{x}` for all `x ∈ s`. -/
+theorem tsum_indicator_apply_singleton [Countable α] [MeasurableSingletonClass α] (μ : Measure α)
+    (s : Set α) (hs : MeasurableSet s) : (∑' x : α, s.indicator (fun x => μ {x}) x) = μ s :=
+  calc
+    (∑' x : α, s.indicator (fun x => μ {x}) x) = Measure.sum (fun a => μ {a} • Measure.dirac a) s :=
+      by
+      simp only [measure.sum_apply _ hs, measure.smul_apply, smul_eq_mul, measure.dirac_apply,
+        Set.indicator_apply, mul_ite, Pi.one_apply, mul_one, mul_zero]
+    _ = μ s := by rw [μ.sum_smul_dirac]
+    
+#align measure_theory.measure.tsum_indicator_apply_singleton MeasureTheory.Measure.tsum_indicator_apply_singleton
 
 omit m0
 

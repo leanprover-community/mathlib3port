@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.fourier_transform
-! leanprover-community/mathlib commit a231f964b9ec8d1e12a28326b556123258a52829
+! leanprover-community/mathlib commit 3353f3371120058977ce1e20bf7fc8986c0fb042
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -265,9 +265,12 @@ theorem fourierIntegral_def (f : ℝ → E) (w : ℝ) :
   rfl
 #align real.fourier_integral_def Real.fourierIntegral_def
 
+-- mathport name: fourier_integral
+scoped[FourierTransform] notation "𝓕" => Real.fourierIntegral
+
 theorem fourierIntegral_eq_integral_exp_smul {E : Type _} [NormedAddCommGroup E] [CompleteSpace E]
     [NormedSpace ℂ E] (f : ℝ → E) (w : ℝ) :
-    fourierIntegral f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.i) • f v := by
+    𝓕 f w = ∫ v : ℝ, Complex.exp (↑(-2 * π * v * w) * Complex.i) • f v := by
   simp_rw [fourier_integral_def, Real.fourierChar_apply, mul_neg, neg_mul, mul_assoc]
 #align real.fourier_integral_eq_integral_exp_smul Real.fourierIntegral_eq_integral_exp_smul
 
