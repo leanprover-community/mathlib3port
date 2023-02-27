@@ -63,7 +63,7 @@ measurable functions, as a basis for the Bochner integral.
 
 open MeasureTheory Filter TopologicalSpace Function Set MeasureTheory.Measure
 
-open Ennreal Topology MeasureTheory NNReal BigOperators
+open ENNReal Topology MeasureTheory NNReal BigOperators
 
 /-- The typeclass `second_countable_topology_either α β` registers the fact that at least one of
 the two spaces has second countable topology. This is the right assumption to ensure that continuous
@@ -851,7 +851,7 @@ protected theorem nnnorm {m : MeasurableSpace α} {β : Type _} [SeminormedAddCo
 
 protected theorem ennnorm {m : MeasurableSpace α} {β : Type _} [SeminormedAddCommGroup β]
     {f : α → β} (hf : StronglyMeasurable f) : Measurable fun a => (‖f a‖₊ : ℝ≥0∞) :=
-  (Ennreal.continuous_coe.comp_stronglyMeasurable hf.nnnorm).Measurable
+  (ENNReal.continuous_coe.comp_stronglyMeasurable hf.nnnorm).Measurable
 #align measure_theory.strongly_measurable.ennnorm MeasureTheory.StronglyMeasurable.ennnorm
 
 protected theorem real_toNNReal {m : MeasurableSpace α} {f : α → ℝ} (hf : StronglyMeasurable f) :
@@ -1114,7 +1114,7 @@ protected theorem add [AddMonoid β] [ContinuousAdd β] (hf : FinStronglyMeasura
   ⟨fun n => hf.approx n + hg.approx n, fun n =>
     (measure_mono (Function.support_add _ _)).trans_lt
       ((measure_union_le _ _).trans_lt
-        (Ennreal.add_lt_top.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩)),
+        (ENNReal.add_lt_top.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩)),
     fun x => (hf.tendsto_approx x).add (hg.tendsto_approx x)⟩
 #align measure_theory.fin_strongly_measurable.add MeasureTheory.FinStronglyMeasurable.add
 
@@ -1132,7 +1132,7 @@ protected theorem sub [AddGroup β] [ContinuousSub β] (hf : FinStronglyMeasurab
   ⟨fun n => hf.approx n - hg.approx n, fun n =>
     (measure_mono (Function.support_sub _ _)).trans_lt
       ((measure_union_le _ _).trans_lt
-        (Ennreal.add_lt_top.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩)),
+        (ENNReal.add_lt_top.mpr ⟨hf.fin_support_approx n, hg.fin_support_approx n⟩)),
     fun x => (hf.tendsto_approx x).sub (hg.tendsto_approx x)⟩
 #align measure_theory.fin_strongly_measurable.sub MeasureTheory.FinStronglyMeasurable.sub
 
@@ -1520,7 +1520,7 @@ protected theorem nnnorm {β : Type _} [SeminormedAddCommGroup β] {f : α → �
 
 protected theorem ennnorm {β : Type _} [SeminormedAddCommGroup β] {f : α → β}
     (hf : AeStronglyMeasurable f μ) : AeMeasurable (fun a => (‖f a‖₊ : ℝ≥0∞)) μ :=
-  (Ennreal.continuous_coe.compAeStronglyMeasurable hf.nnnorm).AeMeasurable
+  (ENNReal.continuous_coe.compAeStronglyMeasurable hf.nnnorm).AeMeasurable
 #align measure_theory.ae_strongly_measurable.ennnorm MeasureTheory.AeStronglyMeasurable.ennnorm
 
 protected theorem edist {β : Type _} [SeminormedAddCommGroup β] {f g : α → β}
@@ -1863,7 +1863,7 @@ theorem aeStronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg'
       rw [ae_restrict_iff' A]
       filter_upwards [hg']with a ha h'a
-      have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne.def, Ennreal.coe_eq_zero] using h'a
+      have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne.def, ENNReal.coe_eq_zero] using h'a
       rw [ha this]
     · filter_upwards [ae_restrict_mem A.compl]with x hx
       simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx
@@ -1873,7 +1873,7 @@ theorem aeStronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
     rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal]
     filter_upwards [hg']with x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
-    simp only [Ne.def, Ennreal.coe_eq_zero] at h'x
+    simp only [Ne.def, ENNReal.coe_eq_zero] at h'x
     simpa only [NNReal.coe_eq_zero, Ne.def] using h'x
 #align ae_strongly_measurable_with_density_iff aeStronglyMeasurable_withDensity_iff
 

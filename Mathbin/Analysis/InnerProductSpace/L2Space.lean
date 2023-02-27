@@ -87,7 +87,7 @@ Hilbert space, Hilbert sum, l2, Hilbert basis, unitary equivalence, isometric is
 
 open IsROrC Submodule Filter
 
-open BigOperators NNReal Ennreal Classical ComplexConjugate Topology
+open BigOperators NNReal ENNReal Classical ComplexConjugate Topology
 
 noncomputable section
 
@@ -471,7 +471,7 @@ protected theorem hasSum_repr_symm (b : HilbertBasis ι 𝕜 E) (f : ℓ²(ι, �
     (fun i : ι => f i • b i) = fun b_1 : ι =>
       b.repr.symm.to_continuous_linear_equiv ((fun i : ι => lp.single 2 i (f i)) b_1)
   · rw [H]
-    have : HasSum (fun i : ι => lp.single 2 i (f i)) f := lp.hasSum_single Ennreal.two_ne_top f
+    have : HasSum (fun i : ι => lp.single 2 i (f i)) f := lp.hasSum_single ENNReal.two_ne_top f
     exact (↑b.repr.symm.to_continuous_linear_equiv : ℓ²(ι, 𝕜) →L[𝕜] E).HasSum this
   ext i
   apply b.repr.injective

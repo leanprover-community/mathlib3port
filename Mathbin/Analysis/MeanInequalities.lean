@@ -95,7 +95,7 @@ universe u v
 
 open Finset
 
-open Classical BigOperators NNReal Ennreal
+open Classical BigOperators NNReal ENNReal
 
 noncomputable section
 
@@ -295,11 +295,11 @@ theorem young_inequality_real (a b : ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateEx
 
 end NNReal
 
-namespace Ennreal
+namespace ENNReal
 
 /-- Young's inequality, `ℝ≥0∞` version with real conjugate exponents. -/
 theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
-    a * b ≤ a ^ p / Ennreal.ofReal p + b ^ q / Ennreal.ofReal q :=
+    a * b ≤ a ^ p / ENNReal.ofReal p + b ^ q / ENNReal.ofReal q :=
   by
   by_cases h : a = ⊤ ∨ b = ⊤
   · refine' le_trans le_top (le_of_eq _)
@@ -308,13 +308,13 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
   push_neg  at h
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
   rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
-    coe_rpow_of_nonneg _ hpq.symm.nonneg, Ennreal.ofReal, Ennreal.ofReal, ←
+    coe_rpow_of_nonneg _ hpq.symm.nonneg, ENNReal.ofReal, ENNReal.ofReal, ←
     @coe_div (Real.toNNReal p) _ (by simp [hpq.pos]), ←
     @coe_div (Real.toNNReal q) _ (by simp [hpq.symm.pos]), ← coe_add, coe_le_coe]
   exact NNReal.young_inequality_real a.to_nnreal b.to_nnreal hpq
-#align ennreal.young_inequality Ennreal.young_inequality
+#align ennreal.young_inequality ENNReal.young_inequality
 
-end Ennreal
+end ENNReal
 
 end Young
 
@@ -752,7 +752,7 @@ theorem Lp_add_le_hasSum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : 
 
 end Real
 
-namespace Ennreal
+namespace ENNReal
 
 variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 
@@ -765,7 +765,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
   by_cases H : (∑ i in s, f i ^ p) ^ (1 / p) = 0 ∨ (∑ i in s, g i ^ q) ^ (1 / q) = 0
   · replace H : (∀ i ∈ s, f i = 0) ∨ ∀ i ∈ s, g i = 0
     ·
-      simpa [Ennreal.rpow_eq_zero_iff, hpq.pos, hpq.symm.pos, asymm hpq.pos, asymm hpq.symm.pos,
+      simpa [ENNReal.rpow_eq_zero_iff, hpq.pos, hpq.symm.pos, asymm hpq.pos, asymm hpq.symm.pos,
         sum_eq_zero_iff_of_nonneg] using H
     have : ∀ i ∈ s, f i * g i = 0 := fun i hi => by cases H <;> simp [H i hi]
     have : (∑ i in s, f i * g i) = ∑ i in s, 0 := sum_congr rfl this
@@ -775,18 +775,18 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
   · cases H' <;> simp [H', -one_div, H]
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
   ·
-    simpa [Ennreal.rpow_eq_top_iff, asymm hpq.pos, asymm hpq.symm.pos, hpq.pos, hpq.symm.pos,
-      Ennreal.sum_eq_top_iff, not_or] using H'
+    simpa [ENNReal.rpow_eq_top_iff, asymm hpq.pos, asymm hpq.symm.pos, hpq.pos, hpq.symm.pos,
+      ENNReal.sum_eq_top_iff, not_or] using H'
   have :=
-    Ennreal.coe_le_coe.2
-      (@NNReal.inner_le_Lp_mul_Lq _ s (fun i => Ennreal.toNnreal (f i))
-        (fun i => Ennreal.toNnreal (g i)) _ _ hpq)
-  simp [← Ennreal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
+    ENNReal.coe_le_coe.2
+      (@NNReal.inner_le_Lp_mul_Lq _ s (fun i => ENNReal.toNNReal (f i))
+        (fun i => ENNReal.toNNReal (g i)) _ _ hpq)
+  simp [← ENNReal.coe_rpow_of_nonneg, le_of_lt hpq.pos, le_of_lt hpq.one_div_pos,
     le_of_lt hpq.symm.pos, le_of_lt hpq.symm.one_div_pos] at this
   convert this using 1 <;> [skip, congr 2] <;> [skip, skip, simp, skip, simp] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi, -WithZero.coe_mul, with_top.coe_mul.symm]
-#align ennreal.inner_le_Lp_mul_Lq Ennreal.inner_le_Lp_mul_Lq
+#align ennreal.inner_le_Lp_mul_Lq ENNReal.inner_le_Lp_mul_Lq
 
 /-- For `1 ≤ p`, the `p`-th power of the sum of `f i` is bounded above by a constant times the
 sum of the `p`-th powers of `f i`. Version for sums over finite sets, with `ℝ≥0∞`-valued functions.
@@ -802,10 +802,10 @@ theorem rpow_sum_le_const_mul_sum_rpow (hp : 1 ≤ p) :
   have hq : 1 / q * p = p - 1 := by
     rw [← hpq.div_conj_eq_sub_one]
     ring
-  simpa only [Ennreal.mul_rpow_of_nonneg _ _ hpq.nonneg, ← Ennreal.rpow_mul, hp₁, hq, coe_one,
+  simpa only [ENNReal.mul_rpow_of_nonneg _ _ hpq.nonneg, ← ENNReal.rpow_mul, hp₁, hq, coe_one,
     one_mul, one_rpow, rpow_one, Pi.one_apply, sum_const, Nat.smul_one_eq_coe] using
-    Ennreal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
-#align ennreal.rpow_sum_le_const_mul_sum_rpow Ennreal.rpow_sum_le_const_mul_sum_rpow
+    ENNReal.rpow_le_rpow (inner_le_Lp_mul_Lq s 1 f hpq.symm) hpq.nonneg
+#align ennreal.rpow_sum_le_const_mul_sum_rpow ENNReal.rpow_sum_le_const_mul_sum_rpow
 
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `ℝ≥0∞` valued nonnegative
@@ -818,18 +818,18 @@ theorem Lp_add_le (hp : 1 ≤ p) :
   · cases H' <;> simp [H', -one_div]
   have pos : 0 < p := lt_of_lt_of_le zero_lt_one hp
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤
-  · simpa [Ennreal.rpow_eq_top_iff, asymm Pos, Pos, Ennreal.sum_eq_top_iff, not_or] using H'
+  · simpa [ENNReal.rpow_eq_top_iff, asymm Pos, Pos, ENNReal.sum_eq_top_iff, not_or] using H'
   have :=
-    Ennreal.coe_le_coe.2
-      (@NNReal.Lp_add_le _ s (fun i => Ennreal.toNnreal (f i)) (fun i => Ennreal.toNnreal (g i)) _
+    ENNReal.coe_le_coe.2
+      (@NNReal.Lp_add_le _ s (fun i => ENNReal.toNNReal (f i)) (fun i => ENNReal.toNNReal (g i)) _
         hp)
-  push_cast [← Ennreal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
+  push_cast [← ENNReal.coe_rpow_of_nonneg, le_of_lt Pos, le_of_lt (one_div_pos.2 Pos)] at this
   convert this using 2 <;> [skip, congr 1, congr 1] <;>
     · apply Finset.sum_congr rfl fun i hi => _
       simp [H'.1 i hi, H'.2 i hi]
-#align ennreal.Lp_add_le Ennreal.Lp_add_le
+#align ennreal.Lp_add_le ENNReal.Lp_add_le
 
-end Ennreal
+end ENNReal
 
 end HolderMinkowski
 

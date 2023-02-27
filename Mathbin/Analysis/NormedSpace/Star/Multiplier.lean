@@ -60,7 +60,7 @@ separately.
 -/
 
 
-open NNReal Ennreal
+open NNReal ENNReal
 
 open NNReal ContinuousLinearMap MulOpposite
 

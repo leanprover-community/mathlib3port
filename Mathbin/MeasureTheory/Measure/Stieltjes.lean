@@ -32,9 +32,9 @@ noncomputable section
 
 open Classical Set Filter Function
 
-open Ennreal (ofReal)
+open ENNReal (ofReal)
 
-open BigOperators Ennreal NNReal Topology MeasureTheory
+open BigOperators ENNReal NNReal Topology MeasureTheory
 
 /-! ### Basic properties of Stieltjes functions -/
 
@@ -136,7 +136,7 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) :=
   by
   refine'
     le_antisymm (infᵢ_le_of_le a <| infᵢ₂_le b subset.rfl)
-      (le_infᵢ fun a' => le_infᵢ fun b' => le_infᵢ fun h => Ennreal.coe_le_coe.2 _)
+      (le_infᵢ fun a' => le_infᵢ fun b' => le_infᵢ fun h => ENNReal.coe_le_coe.2 _)
   cases' le_or_lt b a with ab ab
   · rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]
     apply zero_le
@@ -176,13 +176,13 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
     have e : (⋃ i ∈ (↑hf.to_finset : Set ℕ), Ioo (c i) (d i)) = ⋃ i ∈ s, Ioo (c i) (d i) := by
       simp only [ext_iff, exists_prop, Finset.set_bunionᵢ_coe, mem_Union, forall_const,
         iff_self_iff, finite.mem_to_finset]
-    rw [Ennreal.tsum_eq_supᵢ_sum]
+    rw [ENNReal.tsum_eq_supᵢ_sum]
     refine' le_trans _ (le_supᵢ _ hf.to_finset)
     exact this hf.to_finset _ (by simpa only [e] )
   clear ss b
   refine' fun s => Finset.strongInductionOn s fun s IH b cv => _
   cases' le_total b a with ab ab
-  · rw [Ennreal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
+  · rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
     exact zero_le _
   have := cv ⟨ab, le_rfl⟩
   simp at this
@@ -191,7 +191,7 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
   rw [Finset.coe_insert, bUnion_insert] at cv
   rw [Finset.sum_insert (Finset.not_mem_erase _ _)]
   refine' le_trans _ (add_le_add_left (IH _ (Finset.erase_ssubset is) (c i) _) _)
-  · refine' le_trans (Ennreal.ofReal_le_ofReal _) Ennreal.ofReal_add_le
+  · refine' le_trans (ENNReal.ofReal_le_ofReal _) ENNReal.ofReal_add_le
     rw [sub_add_sub_cancel]
     exact sub_le_sub_right (f.mono bd.le) _
   · rintro x ⟨h₁, h₂⟩
@@ -217,17 +217,17 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
       (by
         rw [← f.length_Ioc]
         apply outer_le_length)
-      (le_infᵢ₂ fun s hs => Ennreal.le_of_forall_pos_le_add fun ε εpos h => _)
+      (le_infᵢ₂ fun s hs => ENNReal.le_of_forall_pos_le_add fun ε εpos h => _)
   let δ := ε / 2
   have δpos : 0 < (δ : ℝ≥0∞) := by simpa using εpos.ne'
-  rcases Ennreal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
+  rcases ENNReal.exists_pos_sum_of_countable δpos.ne' ℕ with ⟨ε', ε'0, hε⟩
   obtain ⟨a', ha', aa'⟩ : ∃ a', f a' - f a < δ ∧ a < a' :=
     by
     have A : ContinuousWithinAt (fun r => f r - f a) (Ioi a) a :=
       by
       refine' ContinuousWithinAt.sub _ continuousWithinAt_const
       exact (f.right_continuous a).mono Ioi_subset_Ici_self
-    have B : f a - f a < δ := by rwa [sub_self, NNReal.coe_pos, ← Ennreal.coe_pos]
+    have B : f a - f a < δ := by rwa [sub_self, NNReal.coe_pos, ← ENNReal.coe_pos]
     exact (((tendsto_order.1 A).2 _ B).And self_mem_nhdsWithin).exists
   have :
     ∀ i,
@@ -235,7 +235,7 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
     by
     intro i
     have :=
-      Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_ne_zero.2 (ε'0 i).ne')
+      ENNReal.lt_add_right ((ENNReal.le_tsum i).trans_lt h).Ne (ENNReal.coe_ne_zero.2 (ε'0 i).ne')
     conv at this =>
       lhs
       rw [length]
@@ -257,15 +257,15 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
       
   calc
     of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by rw [sub_add_sub_cancel]
-    _ ≤ of_real (f b - f a') + of_real (f a' - f a) := Ennreal.ofReal_add_le
+    _ ≤ of_real (f b - f a') + of_real (f a' - f a) := ENNReal.ofReal_add_le
     _ ≤ (∑' i, of_real (f (g i).2 - f (g i).1)) + of_real δ :=
-      add_le_add (f.length_subadditive_Icc_Ioo I_subset) (Ennreal.ofReal_le_ofReal ha'.le)
+      add_le_add (f.length_subadditive_Icc_Ioo I_subset) (ENNReal.ofReal_le_ofReal ha'.le)
     _ ≤ (∑' i, f.length (s i) + ε' i) + δ :=
-      add_le_add (Ennreal.tsum_le_tsum fun i => (hg i).2.le)
-        (by simp only [Ennreal.ofReal_coe_nNReal, le_rfl])
-    _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [Ennreal.tsum_add]
+      add_le_add (ENNReal.tsum_le_tsum fun i => (hg i).2.le)
+        (by simp only [ENNReal.ofReal_coe_nnreal, le_rfl])
+    _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [ENNReal.tsum_add]
     _ ≤ (∑' i, f.length (s i)) + δ + δ := add_le_add (add_le_add le_rfl hε.le) le_rfl
-    _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, Ennreal.add_halves]
+    _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, ENNReal.add_halves]
     
 #align stieltjes_function.outer_Ioc StieltjesFunction.outer_Ioc
 
@@ -284,7 +284,7 @@ theorem measurableSet_Ioi {c : ℝ} : measurable_set[f.outer.caratheodory] (Ioi 
       max_eq_right, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
   ·
     simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, sup_eq_max, ←
-      Ennreal.ofReal_add, f.mono hac, f.mono hbc, sub_nonneg, sub_add_sub_cancel, le_refl,
+      ENNReal.ofReal_add, f.mono hac, f.mono hbc, sub_nonneg, sub_add_sub_cancel, le_refl,
       max_eq_right]
   ·
     simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
@@ -298,16 +298,16 @@ theorem outer_trim : f.outer.trim = f.outer :=
   by
   refine' le_antisymm (fun s => _) (outer_measure.le_trim _)
   rw [outer_measure.trim_eq_infi]
-  refine' le_infᵢ fun t => le_infᵢ fun ht => Ennreal.le_of_forall_pos_le_add fun ε ε0 h => _
-  rcases Ennreal.exists_pos_sum_of_countable (Ennreal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
+  refine' le_infᵢ fun t => le_infᵢ fun ht => ENNReal.le_of_forall_pos_le_add fun ε ε0 h => _
+  rcases ENNReal.exists_pos_sum_of_countable (ENNReal.coe_pos.2 ε0).ne' ℕ with ⟨ε', ε'0, hε⟩
   refine' le_trans _ (add_le_add_left (le_of_lt hε) _)
-  rw [← Ennreal.tsum_add]
+  rw [← ENNReal.tsum_add]
   choose g hg using
     show ∀ i, ∃ s, t i ⊆ s ∧ MeasurableSet s ∧ f.outer s ≤ f.length (t i) + of_real (ε' i)
       by
       intro i
       have :=
-        Ennreal.lt_add_right ((Ennreal.le_tsum i).trans_lt h).Ne (Ennreal.coe_pos.2 (ε'0 i)).ne'
+        ENNReal.lt_add_right ((ENNReal.le_tsum i).trans_lt h).Ne (ENNReal.coe_pos.2 (ε'0 i)).ne'
       conv at this =>
         lhs
         rw [length]
@@ -319,7 +319,7 @@ theorem outer_trim : f.outer.trim = f.outer :=
   apply infᵢ_le_of_le (Union g) _
   apply infᵢ_le_of_le (ht.trans <| Union_mono fun i => (hg i).1) _
   apply infᵢ_le_of_le (MeasurableSet.unionᵢ fun i => (hg i).2.1) _
-  exact le_trans (f.outer.Union _) (Ennreal.tsum_le_tsum fun i => (hg i).2.2)
+  exact le_trans (f.outer.Union _) (ENNReal.tsum_le_tsum fun i => (hg i).2.2)
 #align stieltjes_function.outer_trim StieltjesFunction.outer_trim
 
 theorem borel_le_measurable : borel ℝ ≤ f.outer.caratheodory :=
@@ -365,7 +365,7 @@ theorem measure_singleton (a : ℝ) : f.Measure {a} = ofReal (f a - leftLim f a)
     rw [A]
     refine' tendsto_measure_Inter (fun n => measurableSet_Ioc) (fun m n hmn => _) _
     · exact Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl
-    · exact ⟨0, by simpa only [measure_Ioc] using Ennreal.ofReal_ne_top⟩
+    · exact ⟨0, by simpa only [measure_Ioc] using ENNReal.ofReal_ne_top⟩
   have L2 : tendsto (fun n => f.measure (Ioc (u n) a)) at_top (𝓝 (of_real (f a - left_lim f a))) :=
     by
     simp only [measure_Ioc]
@@ -384,11 +384,11 @@ theorem measure_Icc (a b : ℝ) : f.Measure (Icc a b) = ofReal (f b - leftLim f 
   by
   rcases le_or_lt a b with (hab | hab)
   · have A : Disjoint {a} (Ioc a b) := by simp
-    simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← Ennreal.ofReal_add,
+    simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← ENNReal.ofReal_add,
       f.mono.left_lim_le, measure_union A measurableSet_Ioc, f.mono hab]
   · simp only [hab, measure_empty, Icc_eq_empty, not_le]
     symm
-    simp [Ennreal.ofReal_eq_zero, f.mono.le_left_lim hab]
+    simp [ENNReal.ofReal_eq_zero, f.mono.le_left_lim hab]
 #align stieltjes_function.measure_Icc StieltjesFunction.measure_Icc
 
 @[simp]
@@ -397,14 +397,14 @@ theorem measure_Ioo {a b : ℝ} : f.Measure (Ioo a b) = ofReal (leftLim f b - f 
   rcases le_or_lt b a with (hab | hab)
   · simp only [hab, measure_empty, Ioo_eq_empty, not_lt]
     symm
-    simp [Ennreal.ofReal_eq_zero, f.mono.left_lim_le hab]
+    simp [ENNReal.ofReal_eq_zero, f.mono.left_lim_le hab]
   · have A : Disjoint (Ioo a b) {b} := by simp
     have D : f b - f a = f b - left_lim f b + (left_lim f b - f a) := by abel
     have := f.measure_Ioc a b
     simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
       measure_union A (measurable_set_singleton b), Icc_self] at this
-    rw [D, Ennreal.ofReal_add, add_comm] at this
-    · simpa only [Ennreal.add_right_inj Ennreal.ofReal_ne_top]
+    rw [D, ENNReal.ofReal_add, add_comm] at this
+    · simpa only [ENNReal.add_right_inj ENNReal.ofReal_ne_top]
     · simp only [f.mono.left_lim_le, sub_nonneg]
     · simp only [f.mono.le_left_lim hab, sub_nonneg]
 #align stieltjes_function.measure_Ioo StieltjesFunction.measure_Ioo
@@ -415,10 +415,10 @@ theorem measure_Ico (a b : ℝ) : f.Measure (Ico a b) = ofReal (leftLim f b - le
   rcases le_or_lt b a with (hab | hab)
   · simp only [hab, measure_empty, Ico_eq_empty, not_lt]
     symm
-    simp [Ennreal.ofReal_eq_zero, f.mono.left_lim hab]
+    simp [ENNReal.ofReal_eq_zero, f.mono.left_lim hab]
   · have A : Disjoint {a} (Ioo a b) := by simp
     simp [← Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.mono.left_lim_le,
-      measure_union A measurableSet_Ioo, f.mono.le_left_lim hab, ← Ennreal.ofReal_add]
+      measure_union A measurableSet_Ioo, f.mono.le_left_lim hab, ← ENNReal.ofReal_add]
 #align stieltjes_function.measure_Ico StieltjesFunction.measure_Ico
 
 instance : IsLocallyFiniteMeasure f.Measure :=

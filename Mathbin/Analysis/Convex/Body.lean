@@ -207,7 +207,7 @@ theorem hausdorffDist_coe : Metric.hausdorffDist (K : Set V) L = dist K L :=
 theorem hausdorffEdist_coe : Emetric.hausdorffEdist (K : Set V) L = edist K L :=
   by
   rw [edist_dist]
-  exact (Ennreal.ofReal_toReal Hausdorff_edist_ne_top).symm
+  exact (ENNReal.ofReal_toReal Hausdorff_edist_ne_top).symm
 #align convex_body.Hausdorff_edist_coe ConvexBody.hausdorffEdist_coe
 
 end SeminormedAddCommGroup

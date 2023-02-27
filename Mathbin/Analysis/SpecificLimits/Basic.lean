@@ -27,7 +27,7 @@ noncomputable section
 
 open Classical Set Function Filter Finset Metric
 
-open Classical Topology Nat BigOperators uniformity NNReal Ennreal
+open Classical Topology Nat BigOperators uniformity NNReal ENNReal
 
 variable {α : Type _} {β : Type _} {ι : Type _}
 
@@ -171,14 +171,14 @@ theorem NNReal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0} (hr : r < 1) :
     simp only [NNReal.coe_pow, NNReal.coe_zero, tendsto_pow_atTop_nhds_0_of_lt_1 r.coe_nonneg hr]
 #align nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 NNReal.tendsto_pow_atTop_nhds_0_of_lt_1
 
-theorem Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
+theorem ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
     Tendsto (fun n : ℕ => r ^ n) atTop (𝓝 0) :=
   by
-  rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
-  rw [← Ennreal.coe_zero]
+  rcases ENNReal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
+  rw [← ENNReal.coe_zero]
   norm_cast  at *
   apply NNReal.tendsto_pow_atTop_nhds_0_of_lt_1 hr
-#align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1
+#align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1
 
 /-! ### Geometric series-/
 
@@ -285,21 +285,21 @@ theorem tsum_geometric_nNReal {r : ℝ≥0} (hr : r < 1) : (∑' n : ℕ, r ^ n)
 /-- The series `pow r` converges to `(1-r)⁻¹`. For `r < 1` the RHS is a finite number,
 and for `1 ≤ r` the RHS equals `∞`. -/
 @[simp]
-theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
+theorem ENNReal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
   by
   cases' lt_or_le r 1 with hr hr
-  · rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
+  · rcases ENNReal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
     norm_cast  at *
-    convert Ennreal.tsum_coe_eq (NNReal.hasSum_geometric hr)
-    rw [Ennreal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
-  · rw [tsub_eq_zero_iff_le.mpr hr, Ennreal.inv_zero, Ennreal.tsum_eq_supᵢ_nat, supᵢ_eq_top]
+    convert ENNReal.tsum_coe_eq (NNReal.hasSum_geometric hr)
+    rw [ENNReal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
+  · rw [tsub_eq_zero_iff_le.mpr hr, ENNReal.inv_zero, ENNReal.tsum_eq_supᵢ_nat, supᵢ_eq_top]
     refine' fun a ha =>
-      (Ennreal.exists_nat_gt (lt_top_iff_ne_top.1 ha)).imp fun n hn => lt_of_lt_of_le hn _
+      (ENNReal.exists_nat_gt (lt_top_iff_ne_top.1 ha)).imp fun n hn => lt_of_lt_of_le hn _
     calc
       (n : ℝ≥0∞) = ∑ i in range n, 1 := by rw [sum_const, nsmul_one, card_range]
       _ ≤ ∑ i in range n, r ^ i := sum_le_sum fun k _ => one_le_pow_of_one_le' hr k
       
-#align ennreal.tsum_geometric Ennreal.tsum_geometric
+#align ennreal.tsum_geometric ENNReal.tsum_geometric
 
 end Geometric
 
@@ -325,8 +325,8 @@ then `f` is a Cauchy sequence.-/
 theorem cauchySeq_of_edist_le_geometric : CauchySeq f :=
   by
   refine' cauchySeq_of_edist_le_of_tsum_ne_top _ hu _
-  rw [Ennreal.tsum_mul_left, Ennreal.tsum_geometric]
-  refine' Ennreal.mul_ne_top hC (Ennreal.inv_ne_top.2 _)
+  rw [ENNReal.tsum_mul_left, ENNReal.tsum_geometric]
+  refine' ENNReal.mul_ne_top hC (ENNReal.inv_ne_top.2 _)
   exact (tsub_pos_iff_lt.2 hr).ne'
 #align cauchy_seq_of_edist_le_geometric cauchySeq_of_edist_le_geometric
 
@@ -338,7 +338,7 @@ theorem edist_le_of_edist_le_geometric_of_tendsto {a : α} (ha : Tendsto f atTop
     edist (f n) a ≤ C * r ^ n / (1 - r) :=
   by
   convert edist_le_tsum_of_edist_le_of_tendsto _ hu ha _
-  simp only [pow_add, Ennreal.tsum_mul_left, Ennreal.tsum_geometric, div_eq_mul_inv, mul_assoc]
+  simp only [pow_add, ENNReal.tsum_mul_left, ENNReal.tsum_geometric, div_eq_mul_inv, mul_assoc]
 #align edist_le_of_edist_le_geometric_of_tendsto edist_le_of_edist_le_geometric_of_tendsto
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * r^n`, then the distance from
@@ -360,9 +360,9 @@ include hC hu
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then `f` is a Cauchy sequence.-/
 theorem cauchySeq_of_edist_le_geometric_two : CauchySeq f :=
   by
-  simp only [div_eq_mul_inv, Ennreal.inv_pow] at hu
+  simp only [div_eq_mul_inv, ENNReal.inv_pow] at hu
   refine' cauchySeq_of_edist_le_geometric 2⁻¹ C _ hC hu
-  simp [Ennreal.one_lt_two]
+  simp [ENNReal.one_lt_two]
 #align cauchy_seq_of_edist_le_geometric_two cauchySeq_of_edist_le_geometric_two
 
 omit hC
@@ -373,10 +373,10 @@ include ha
 `f n` to the limit of `f` is bounded above by `2 * C * 2^-n`. -/
 theorem edist_le_of_edist_le_geometric_two_of_tendsto (n : ℕ) : edist (f n) a ≤ 2 * C / 2 ^ n :=
   by
-  simp only [div_eq_mul_inv, Ennreal.inv_pow] at *
+  simp only [div_eq_mul_inv, ENNReal.inv_pow] at *
   rw [mul_assoc, mul_comm]
   convert edist_le_of_edist_le_geometric_of_tendsto 2⁻¹ C hu ha n
-  rw [Ennreal.one_sub_inv_two, inv_inv]
+  rw [ENNReal.one_sub_inv_two, inv_inv]
 #align edist_le_of_edist_le_geometric_two_of_tendsto edist_le_of_edist_le_geometric_two_of_tendsto
 
 /-- If `edist (f n) (f (n+1))` is bounded by `C * 2^-n`, then the distance from
@@ -535,7 +535,7 @@ theorem exists_pos_sum_of_countable {ε : ℝ≥0} (hε : ε ≠ 0) (ι) [Counta
 
 end NNReal
 
-namespace Ennreal
+namespace ENNReal
 
 theorem exists_pos_sum_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Countable ι] :
     ∃ ε' : ι → ℝ≥0, (∀ i, 0 < ε' i) ∧ (∑' i, (ε' i : ℝ≥0∞)) < ε :=
@@ -543,14 +543,14 @@ theorem exists_pos_sum_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Cou
   rcases exists_between (pos_iff_ne_zero.2 hε) with ⟨r, h0r, hrε⟩
   rcases lt_iff_exists_coe.1 hrε with ⟨x, rfl, hx⟩
   rcases NNReal.exists_pos_sum_of_countable (coe_pos.1 h0r).ne' ι with ⟨ε', hp, c, hc, hcr⟩
-  exact ⟨ε', hp, (Ennreal.tsum_coe_eq hc).symm ▸ lt_trans (coe_lt_coe.2 hcr) hrε⟩
-#align ennreal.exists_pos_sum_of_countable Ennreal.exists_pos_sum_of_countable
+  exact ⟨ε', hp, (ENNReal.tsum_coe_eq hc).symm ▸ lt_trans (coe_lt_coe.2 hcr) hrε⟩
+#align ennreal.exists_pos_sum_of_countable ENNReal.exists_pos_sum_of_countable
 
 theorem exists_pos_sum_of_countable' {ε : ℝ≥0∞} (hε : ε ≠ 0) (ι) [Countable ι] :
     ∃ ε' : ι → ℝ≥0∞, (∀ i, 0 < ε' i) ∧ (∑' i, ε' i) < ε :=
   let ⟨δ, δpos, hδ⟩ := exists_pos_sum_of_countable hε ι
-  ⟨fun i => δ i, fun i => Ennreal.coe_pos.2 (δpos i), hδ⟩
-#align ennreal.exists_pos_sum_of_countable' Ennreal.exists_pos_sum_of_countable'
+  ⟨fun i => δ i, fun i => ENNReal.coe_pos.2 (δpos i), hδ⟩
+#align ennreal.exists_pos_sum_of_countable' ENNReal.exists_pos_sum_of_countable'
 
 theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {ι} [Countable ι] (w : ι → ℝ≥0∞)
     (hw : ∀ i, w i ≠ ∞) : ∃ δ : ι → ℝ≥0, (∀ i, 0 < δ i) ∧ (∑' i, (w i * δ i : ℝ≥0∞)) < ε :=
@@ -559,13 +559,13 @@ theorem exists_pos_tsum_mul_lt_of_countable {ε : ℝ≥0∞} (hε : ε ≠ 0) {
   rcases exists_pos_sum_of_countable hε ι with ⟨δ', Hpos, Hsum⟩
   have : ∀ i, 0 < max 1 (w i) := fun i => zero_lt_one.trans_le (le_max_left _ _)
   refine' ⟨fun i => δ' i / max 1 (w i), fun i => div_pos (Hpos _) (this i), _⟩
-  refine' lt_of_le_of_lt (Ennreal.tsum_le_tsum fun i => _) Hsum
+  refine' lt_of_le_of_lt (ENNReal.tsum_le_tsum fun i => _) Hsum
   rw [coe_div (this i).ne']
-  refine' mul_le_of_le_div' (Ennreal.mul_le_mul le_rfl <| Ennreal.inv_le_inv.2 _)
+  refine' mul_le_of_le_div' (ENNReal.mul_le_mul le_rfl <| ENNReal.inv_le_inv.2 _)
   exact coe_le_coe.2 (le_max_right _ _)
-#align ennreal.exists_pos_tsum_mul_lt_of_countable Ennreal.exists_pos_tsum_mul_lt_of_countable
+#align ennreal.exists_pos_tsum_mul_lt_of_countable ENNReal.exists_pos_tsum_mul_lt_of_countable
 
-end Ennreal
+end ENNReal
 
 /-!
 ### Factorial

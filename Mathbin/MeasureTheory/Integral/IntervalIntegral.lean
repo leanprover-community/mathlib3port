@@ -174,7 +174,7 @@ open TopologicalSpace (SecondCountableTopology)
 
 open MeasureTheory Set Classical Filter Function
 
-open Classical Topology Filter Ennreal BigOperators Interval NNReal
+open Classical Topology Filter ENNReal BigOperators Interval NNReal
 
 variable {ι 𝕜 E F A : Type _} [NormedAddCommGroup E]
 
@@ -470,7 +470,7 @@ theorem compMulLeft (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   have A : MeasurableEmbedding fun x => x * c⁻¹ :=
     (Homeomorph.mulRight₀ _ (inv_ne_zero hc)).ClosedEmbedding.MeasurableEmbedding
   rw [← Real.smul_map_volume_mul_right (inv_ne_zero hc), integrable_on, measure.restrict_smul,
-    integrable_smul_measure (by simpa : Ennreal.ofReal (|c⁻¹|) ≠ 0) Ennreal.ofReal_ne_top, ←
+    integrable_smul_measure (by simpa : ENNReal.ofReal (|c⁻¹|) ≠ 0) ENNReal.ofReal_ne_top, ←
     integrable_on, MeasurableEmbedding.integrableOn_map_iff A]
   convert hf using 1
   · ext
@@ -755,8 +755,8 @@ theorem norm_integral_le_of_norm_le_const_ae {a b C : ℝ} {f : ℝ → E}
   by
   rw [norm_integral_eq_norm_integral_Ioc]
   convert norm_set_integral_le_of_norm_le_const_ae'' _ measurableSet_Ioc h
-  · rw [Real.volume_Ioc, max_sub_min_eq_abs, Ennreal.toReal_ofReal (abs_nonneg _)]
-  · simp only [Real.volume_Ioc, Ennreal.ofReal_lt_top]
+  · rw [Real.volume_Ioc, max_sub_min_eq_abs, ENNReal.toReal_ofReal (abs_nonneg _)]
+  · simp only [Real.volume_Ioc, ENNReal.ofReal_lt_top]
 #align interval_integral.norm_integral_le_of_norm_le_const_ae intervalIntegral.norm_integral_le_of_norm_le_const_ae
 
 theorem norm_integral_le_of_norm_le_const {a b C : ℝ} {f : ℝ → E} (h : ∀ x ∈ Ι a b, ‖f x‖ ≤ C) :
@@ -828,7 +828,7 @@ theorem integral_const' (c : E) :
 
 @[simp]
 theorem integral_const (c : E) : (∫ x in a..b, c) = (b - a) • c := by
-  simp only [integral_const', Real.volume_Ioc, Ennreal.toReal_of_real', ← neg_sub b,
+  simp only [integral_const', Real.volume_Ioc, ENNReal.toReal_ofReal', ← neg_sub b,
     max_zero_sub_eq_self]
 #align interval_integral.integral_const intervalIntegral.integral_const
 
@@ -879,7 +879,7 @@ theorem integral_comp_mul_right (hc : c ≠ 0) :
     (Homeomorph.mulRight₀ c hc).ClosedEmbedding.MeasurableEmbedding
   conv_rhs => rw [← Real.smul_map_volume_mul_right hc]
   simp_rw [integral_smul_measure, intervalIntegral, A.set_integral_map,
-    Ennreal.toReal_ofReal (abs_nonneg c)]
+    ENNReal.toReal_ofReal (abs_nonneg c)]
   cases hc.lt_or_lt
   · simp [h, mul_div_cancel, hc, abs_of_neg, measure.restrict_congr_set Ico_ae_eq_Ioc]
   · simp [h, mul_div_cancel, hc, abs_of_pos]
@@ -2587,12 +2587,12 @@ theorem sub_le_integral_of_has_deriv_right_of_le_Ico (hab : a ≤ b)
         (u - t) * y = ∫ v in Icc t u, y := by
           simp only [hu.left.le, MeasureTheory.integral_const, Algebra.id.smul_eq_mul, sub_nonneg,
             MeasurableSet.univ, Real.volume_Icc, measure.restrict_apply, univ_inter,
-            Ennreal.toReal_ofReal]
+            ENNReal.toReal_ofReal]
         _ ≤ ∫ w in t..u, (G' w).toReal :=
           by
           rw [intervalIntegral.integral_of_le hu.1.le, ← integral_Icc_eq_integral_Ioc]
           apply set_integral_mono_ae_restrict
-          · simp only [integrable_on_const, Real.volume_Icc, Ennreal.ofReal_lt_top, or_true_iff]
+          · simp only [integrable_on_const, Real.volume_Icc, ENNReal.ofReal_lt_top, or_true_iff]
           · exact integrable_on.mono_set G'int I
           · have C1 : ∀ᵐ x : ℝ ∂volume.restrict (Icc t u), G' x < ∞ :=
               ae_mono (measure.restrict_mono I le_rfl) G'lt_top
@@ -2814,20 +2814,20 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
     apply (aeMeasurableDerivWithinIoi g _).congr
     refine' (ae_restrict_mem measurableSet_Ioo).mono fun x hx => _
     exact (hderiv x hx).derivWithin (uniqueDiffWithinAt_Ioi _)
-  suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ Ennreal.ofReal (g b - g a)
-  exact ⟨meas_g'.ae_strongly_measurable, H.trans_lt Ennreal.ofReal_lt_top⟩
+  suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ ENNReal.ofReal (g b - g a)
+  exact ⟨meas_g'.ae_strongly_measurable, H.trans_lt ENNReal.ofReal_lt_top⟩
   by_contra' H
   obtain ⟨f, fle, fint, hf⟩ :
     ∃ f : simple_func ℝ ℝ≥0,
       (∀ x, f x ≤ ‖g' x‖₊) ∧
-        (∫⁻ x : ℝ in Ioo a b, f x) < ∞ ∧ Ennreal.ofReal (g b - g a) < ∫⁻ x : ℝ in Ioo a b, f x :=
+        (∫⁻ x : ℝ in Ioo a b, f x) < ∞ ∧ ENNReal.ofReal (g b - g a) < ∫⁻ x : ℝ in Ioo a b, f x :=
     exists_lt_lintegral_simple_func_of_lt_lintegral H
   let F : ℝ → ℝ := coe ∘ f
   have intF : integrable_on F (Ioo a b) :=
     by
     refine' ⟨f.measurable.coe_nnreal_real.ae_strongly_measurable, _⟩
     simpa only [has_finite_integral, NNReal.nnnorm_eq] using fint
-  have A : (∫⁻ x : ℝ in Ioo a b, f x) = Ennreal.ofReal (∫ x in Ioo a b, F x) :=
+  have A : (∫⁻ x : ℝ in Ioo a b, f x) = ENNReal.ofReal (∫ x in Ioo a b, F x) :=
     lintegral_coe_eq_integral _ intF
   rw [A] at hf
   have B : (∫ x : ℝ in Ioo a b, F x) ≤ g b - g a :=
@@ -2837,7 +2837,7 @@ theorem integrableOnDerivRightOfNonneg (hab : a ≤ b) (hcont : ContinuousOn g (
     · rwa [integrableOn_Icc_iff_integrableOn_Ioo]
     · convert NNReal.coe_le_coe.2 (fle x)
       simp only [Real.norm_of_nonneg (g'pos x hx), coe_nnnorm]
-  exact lt_irrefl _ (hf.trans_le (Ennreal.ofReal_le_ofReal B))
+  exact lt_irrefl _ (hf.trans_le (ENNReal.ofReal_le_ofReal B))
 #align interval_integral.integrable_on_deriv_right_of_nonneg intervalIntegral.integrableOnDerivRightOfNonneg
 
 /-- When the derivative of a function is nonnegative, then it is automatically integrable,

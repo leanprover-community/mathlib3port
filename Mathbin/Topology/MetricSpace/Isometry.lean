@@ -31,7 +31,7 @@ variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Function Set
 
-open Topology Ennreal
+open Topology ENNReal
 
 /-- An isometry (also known as isometric embedding) is a map preserving the edistance
 between pseudoemetric spaces, or equivalently the distance between pseudometric space.  -/
@@ -43,7 +43,7 @@ def Isometry [PseudoEmetricSpace α] [PseudoEmetricSpace β] (f : α → β) : P
 distances. -/
 theorem isometry_iff_nndist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :
     Isometry f ↔ ∀ x y, nndist (f x) (f y) = nndist x y := by
-  simp only [Isometry, edist_nndist, Ennreal.coe_eq_coe]
+  simp only [Isometry, edist_nndist, ENNReal.coe_eq_coe]
 #align isometry_iff_nndist_eq isometry_iff_nndist_eq
 
 /-- On pseudometric spaces, a map is an isometry if and only if it preserves distances. -/
@@ -86,7 +86,7 @@ theorem lipschitz (h : Isometry f) : LipschitzWith 1 f :=
 #align isometry.lipschitz Isometry.lipschitz
 
 theorem antilipschitz (h : Isometry f) : AntilipschitzWith 1 f := fun x y => by
-  simp only [h x y, Ennreal.coe_one, one_mul, le_refl]
+  simp only [h x y, ENNReal.coe_one, one_mul, le_refl]
 #align isometry.antilipschitz Isometry.antilipschitz
 
 /-- Any map on a subsingleton is an isometry -/
@@ -614,7 +614,7 @@ theorem diam_preimage (s : Set β) : Metric.diam (h ⁻¹' s) = Metric.diam s :=
 #align isometry_equiv.diam_preimage IsometryEquiv.diam_preimage
 
 theorem diam_univ : Metric.diam (univ : Set α) = Metric.diam (univ : Set β) :=
-  congr_arg Ennreal.toReal h.ediam_univ
+  congr_arg ENNReal.toReal h.ediam_univ
 #align isometry_equiv.diam_univ IsometryEquiv.diam_univ
 
 @[simp]

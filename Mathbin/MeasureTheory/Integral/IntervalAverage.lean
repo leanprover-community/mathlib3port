@@ -49,10 +49,10 @@ theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
   cases' le_or_lt a b with h h
   ·
     rw [set_average_eq, uIoc_of_le h, Real.volume_Ioc, intervalIntegral.integral_of_le h,
-      Ennreal.toReal_ofReal (sub_nonneg.2 h)]
+      ENNReal.toReal_ofReal (sub_nonneg.2 h)]
   ·
     rw [set_average_eq, uIoc_of_lt h, Real.volume_Ioc, intervalIntegral.integral_of_ge h.le,
-      Ennreal.toReal_ofReal (sub_nonneg.2 h.le), smul_neg, ← neg_smul, ← inv_neg, neg_sub]
+      ENNReal.toReal_ofReal (sub_nonneg.2 h.le), smul_neg, ← neg_smul, ← inv_neg, neg_sub]
 #align interval_average_eq interval_average_eq
 
 theorem interval_average_eq_div (f : ℝ → ℝ) (a b : ℝ) :

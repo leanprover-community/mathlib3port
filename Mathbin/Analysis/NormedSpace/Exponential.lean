@@ -69,7 +69,7 @@ We prove most result for an arbitrary field `𝕂`, and then specialize to `𝕂
 
 open Filter IsROrC ContinuousMultilinearMap NormedField Asymptotics
 
-open Nat Topology BigOperators Ennreal
+open Nat Topology BigOperators ENNReal
 
 section TopologicalAlgebra
 
@@ -255,7 +255,7 @@ theorem analyticAt_exp_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.ball (0 : 𝔸
     AnalyticAt 𝕂 (exp 𝕂) x := by
   by_cases h : (expSeries 𝕂 𝔸).radius = 0
   · rw [h] at hx
-    exact (Ennreal.not_lt_zero hx).elim
+    exact (ENNReal.not_lt_zero hx).elim
   · have h := pos_iff_ne_zero.mpr h
     exact (hasFpowerSeriesOnBallExpOfRadiusPos h).analyticAt_of_mem hx
 #align analytic_at_exp_of_mem_ball analyticAt_exp_of_mem_ball

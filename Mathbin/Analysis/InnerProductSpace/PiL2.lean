@@ -59,7 +59,7 @@ For consequences in infinite dimension (Hilbert bases, etc.), see the file
 
 open Real Set Filter IsROrC Submodule Function
 
-open BigOperators uniformity Topology NNReal Ennreal ComplexConjugate DirectSum
+open BigOperators uniformity Topology NNReal ENNReal ComplexConjugate DirectSum
 
 noncomputable section
 

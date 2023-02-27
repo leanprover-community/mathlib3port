@@ -84,7 +84,7 @@ open Filter
 
 open BoundedContinuousFunction
 
-open Topology Ennreal NNReal BoundedContinuousFunction
+open Topology ENNReal NNReal BoundedContinuousFunction
 
 namespace MeasureTheory
 
@@ -127,7 +127,7 @@ theorem le_measure_compl_liminf_of_limsup_measure_le {ι : Type _} {L : Filter �
   rw [obs]
   simp_rw [←
     antitone_const_tsub.map_limsup_of_continuous_at (fun i => μs i E)
-      (Ennreal.continuous_sub_left Ennreal.one_ne_top).ContinuousAt]
+      (ENNReal.continuous_sub_left ENNReal.one_ne_top).ContinuousAt]
   exact antitone_const_tsub h
 #align measure_theory.le_measure_compl_liminf_of_limsup_measure_le MeasureTheory.le_measure_compl_liminf_of_limsup_measure_le
 
@@ -160,7 +160,7 @@ theorem limsup_measure_compl_le_of_le_liminf_measure {ι : Type _} {L : Filter �
   rw [obs]
   simp_rw [←
     antitone_const_tsub.map_liminf_of_continuous_at (fun i => μs i E)
-      (Ennreal.continuous_sub_left Ennreal.one_ne_top).ContinuousAt]
+      (ENNReal.continuous_sub_left ENNReal.one_ne_top).ContinuousAt]
   exact antitone_const_tsub h
 #align measure_theory.limsup_measure_compl_le_of_le_liminf_measure MeasureTheory.limsup_measure_compl_le_of_le_liminf_measure
 
@@ -307,7 +307,7 @@ theorem measure_of_cont_bdd_of_tendsto_filter_indicator {ι : Type _} {L : Filte
   by
   convert finite_measure.tendsto_lintegral_nn_filter_of_le_const μ fs_bdd fs_lim
   have aux : ∀ ω, indicator E (fun ω => (1 : ℝ≥0∞)) ω = ↑(indicator E (fun ω => (1 : ℝ≥0)) ω) :=
-    fun ω => by simp only [Ennreal.coe_indicator, Ennreal.coe_one]
+    fun ω => by simp only [ENNReal.coe_indicator, ENNReal.coe_one]
   simp_rw [← aux, lintegral_indicator _ E_mble]
   simp only [lintegral_one, measure.restrict_apply, MeasurableSet.univ, univ_inter]
 #align measure_theory.measure_of_cont_bdd_of_tendsto_filter_indicator MeasureTheory.measure_of_cont_bdd_of_tendsto_filter_indicator
@@ -364,8 +364,8 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
     (L.limsup fun i => (μs i : Measure Ω) F) ≤ (μ : Measure Ω) F :=
   by
   by_cases L = ⊥
-  · simp only [h, limsup, Filter.map_bot, Limsup_bot, Ennreal.bot_eq_zero, zero_le]
-  apply Ennreal.le_of_forall_pos_le_add
+  · simp only [h, limsup, Filter.map_bot, Limsup_bot, ENNReal.bot_eq_zero, zero_le]
+  apply ENNReal.le_of_forall_pos_le_add
   intro ε ε_pos μ_F_finite
   set δs := fun n : ℕ => (1 : ℝ) / (n + 1) with def_δs
   have δs_pos : ∀ n, 0 < δs n := fun n => Nat.one_div_pos_of_nat
@@ -374,8 +374,8 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
     tendsto_lintegral_thickened_indicator_of_is_closed (μ : Measure Ω) F_closed δs_pos δs_lim
   have room₁ : (μ : Measure Ω) F < (μ : Measure Ω) F + ε / 2 := by
     apply
-      Ennreal.lt_add_right (measure_lt_top (μ : Measure Ω) F).Ne
-        (ennreal.div_pos_iff.mpr ⟨(ennreal.coe_pos.mpr ε_pos).Ne.symm, Ennreal.two_ne_top⟩).Ne.symm
+      ENNReal.lt_add_right (measure_lt_top (μ : Measure Ω) F).Ne
+        (ennreal.div_pos_iff.mpr ⟨(ennreal.coe_pos.mpr ε_pos).Ne.symm, ENNReal.two_ne_top⟩).Ne.symm
   rcases eventually_at_top.mp (eventually_lt_of_tendsto_lt room₁ key₁) with ⟨M, hM⟩
   have key₂ :=
     finite_measure.tendsto_iff_forall_lintegral_tendsto.mp μs_lim (thickenedIndicator (δs_pos M) F)
@@ -384,8 +384,8 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
       (lintegral (μ : Measure Ω) fun a => thickenedIndicator (δs_pos M) F a) + ε / 2 :=
     by
     apply
-      Ennreal.lt_add_right (lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : Measure Ω) _).Ne
-        (ennreal.div_pos_iff.mpr ⟨(ennreal.coe_pos.mpr ε_pos).Ne.symm, Ennreal.two_ne_top⟩).Ne.symm
+      ENNReal.lt_add_right (lintegral_lt_top_of_bounded_continuous_to_nnreal (μ : Measure Ω) _).Ne
+        (ennreal.div_pos_iff.mpr ⟨(ennreal.coe_pos.mpr ε_pos).Ne.symm, ENNReal.two_ne_top⟩).Ne.symm
   have ev_near := eventually.mono (eventually_lt_of_tendsto_lt room₂ key₂) fun n => le_of_lt
   have aux := fun n =>
     le_trans
@@ -396,7 +396,7 @@ theorem FiniteMeasure.limsup_measure_closed_le_of_tendsto {Ω ι : Type _} {L : 
   have : ne_bot L := ⟨h⟩
   rw [limsup_const]
   apply le_trans (add_le_add (hM M rfl.le).le (le_refl (ε / 2 : ℝ≥0∞)))
-  simp only [add_assoc, Ennreal.add_halves, le_refl]
+  simp only [add_assoc, ENNReal.add_halves, le_refl]
 #align measure_theory.finite_measure.limsup_measure_closed_le_of_tendsto MeasureTheory.FiniteMeasure.limsup_measure_closed_le_of_tendsto
 
 /-- One implication of the portmanteau theorem:
@@ -451,9 +451,9 @@ theorem ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto {Ω ι : 
     (E_nullbdry : μ (frontier E) = 0) : Tendsto (fun i => μs i E) L (𝓝 (μ E)) :=
   by
   have E_nullbdry' : (μ : Measure Ω) (frontier E) = 0 := by
-    rw [← probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure, E_nullbdry, Ennreal.coe_zero]
+    rw [← probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure, E_nullbdry, ENNReal.coe_zero]
   have key := probability_measure.tendsto_measure_of_null_frontier_of_tendsto' μs_lim E_nullbdry'
-  exact (Ennreal.tendsto_toNnreal (measure_ne_top (↑μ) E)).comp key
+  exact (ENNReal.tendsto_toNNReal (measure_ne_top (↑μ) E)).comp key
 #align measure_theory.probability_measure.tendsto_measure_of_null_frontier_of_tendsto MeasureTheory.ProbabilityMeasure.tendsto_measure_of_null_frontier_of_tendsto
 
 end ConvergenceImpliesLimsupClosedLe
@@ -477,7 +477,7 @@ theorem exists_null_frontier_thickening (μ : Measure Ω) [SigmaFinite μ] (s : 
   have disjs := Metric.frontier_thickening_disjoint s
   have key := @measure.countable_meas_pos_of_disjoint_Union Ω _ _ μ _ _ mbles disjs
   have aux := @measure_diff_null ℝ _ volume (Ioo a b) _ (Set.Countable.measure_zero key volume)
-  have len_pos : 0 < Ennreal.ofReal (b - a) := by simp only [hab, Ennreal.ofReal_pos, sub_pos]
+  have len_pos : 0 < ENNReal.ofReal (b - a) := by simp only [hab, ENNReal.ofReal_pos, sub_pos]
   rw [← Real.volume_Ioo, ← aux] at len_pos
   rcases nonempty_of_measure_ne_zero len_pos.ne.symm with ⟨r, ⟨r_in_Ioo, hr⟩⟩
   refine' ⟨r, r_in_Ioo, _⟩

@@ -28,7 +28,7 @@ we do not have a `posreal` type.
 
 variable {α : Type _} {β : Type _} {γ : Type _}
 
-open NNReal Ennreal uniformity
+open NNReal ENNReal uniformity
 
 open Set Filter Bornology
 
@@ -40,7 +40,7 @@ def AntilipschitzWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K : ℝ�
 
 theorem AntilipschitzWith.edist_lt_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
     {f : α → β} (h : AntilipschitzWith K f) (x y : α) : edist x y < ⊤ :=
-  (h x y).trans_lt <| Ennreal.mul_lt_top Ennreal.coe_ne_top (edist_ne_top _ _)
+  (h x y).trans_lt <| ENNReal.mul_lt_top ENNReal.coe_ne_top (edist_ne_top _ _)
 #align antilipschitz_with.edist_lt_top AntilipschitzWith.edist_lt_top
 
 theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpace β] {K : ℝ≥0}
@@ -116,7 +116,7 @@ theorem mul_le_edist (hf : AntilipschitzWith K f) (x y : α) :
     (K⁻¹ * edist x y : ℝ≥0∞) ≤ edist (f x) (f y) :=
   by
   rw [mul_comm, ← div_eq_mul_inv]
-  exact Ennreal.div_le_of_le_mul' (hf x y)
+  exact ENNReal.div_le_of_le_mul' (hf x y)
 #align antilipschitz_with.mul_le_edist AntilipschitzWith.mul_le_edist
 
 theorem ediam_preimage_le (hf : AntilipschitzWith K f) (s : Set β) : diam (f ⁻¹' s) ≤ K * diam s :=
@@ -128,15 +128,15 @@ theorem le_mul_ediam_image (hf : AntilipschitzWith K f) (s : Set α) : diam s �
 #align antilipschitz_with.le_mul_ediam_image AntilipschitzWith.le_mul_ediam_image
 
 protected theorem id : AntilipschitzWith 1 (id : α → α) := fun x y => by
-  simp only [Ennreal.coe_one, one_mul, id, le_refl]
+  simp only [ENNReal.coe_one, one_mul, id, le_refl]
 #align antilipschitz_with.id AntilipschitzWith.id
 
 theorem comp {Kg : ℝ≥0} {g : β → γ} (hg : AntilipschitzWith Kg g) {Kf : ℝ≥0} {f : α → β}
     (hf : AntilipschitzWith Kf f) : AntilipschitzWith (Kf * Kg) (g ∘ f) := fun x y =>
   calc
     edist x y ≤ Kf * edist (f x) (f y) := hf x y
-    _ ≤ Kf * (Kg * edist (g (f x)) (g (f y))) := Ennreal.mul_left_mono (hg _ _)
-    _ = _ := by rw [Ennreal.coe_mul, mul_assoc]
+    _ ≤ Kf * (Kg * edist (g (f x)) (g (f y))) := ENNReal.mul_left_mono (hg _ _)
+    _ = _ := by rw [ENNReal.coe_mul, mul_assoc]
     
 #align antilipschitz_with.comp AntilipschitzWith.comp
 
@@ -170,11 +170,11 @@ theorem to_rightInverse (hf : AntilipschitzWith K f) {g : β → α} (hg : Funct
 theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by
   refine' ((uniformity_basis_edist.comap _).le_basis_iffₓ uniformity_basis_edist).2 fun ε h₀ => _
-  refine' ⟨K⁻¹ * ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
+  refine' ⟨K⁻¹ * ε, ENNReal.mul_pos (ENNReal.inv_ne_zero.2 ENNReal.coe_ne_top) h₀.ne', _⟩
   refine' fun x hx => (hf x.1 x.2).trans_lt _
   rw [mul_comm, ← div_eq_mul_inv] at hx
   rw [mul_comm]
-  exact Ennreal.mul_lt_of_lt_div hx
+  exact ENNReal.mul_lt_of_lt_div hx
 #align antilipschitz_with.comap_uniformity_le AntilipschitzWith.comap_uniformity_le
 
 protected theorem uniformInducing (hf : AntilipschitzWith K f) (hfc : UniformContinuous f) :

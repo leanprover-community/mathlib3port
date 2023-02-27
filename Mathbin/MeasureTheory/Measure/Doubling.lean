@@ -32,7 +32,7 @@ noncomputable section
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open Ennreal NNReal Topology
+open ENNReal NNReal Topology
 
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
 /-- A measure `μ` is said to be a doubling measure if there exists a constant `C` such that for
@@ -82,12 +82,12 @@ theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
       μ (closed_ball x (2 ^ (n + 1) * ε)) = μ (closed_ball x (2 ^ n * (2 * ε))) := by
         rw [pow_succ', mul_assoc]
       _ ≤ ↑(C ^ n) * μ (closed_ball x (2 * ε)) := hε.1 x
-      _ ≤ ↑(C ^ n) * (C * μ (closed_ball x ε)) := Ennreal.mul_left_mono (hε.2 x)
-      _ = ↑(C ^ (n + 1)) * μ (closed_ball x ε) := by rw [← mul_assoc, pow_succ', Ennreal.coe_mul]
+      _ ≤ ↑(C ^ n) * (C * μ (closed_ball x ε)) := ENNReal.mul_left_mono (hε.2 x)
+      _ = ↑(C ^ (n + 1)) * μ (closed_ball x ε) := by rw [← mul_assoc, pow_succ', ENNReal.coe_mul]
       
   rcases lt_or_le K 1 with (hK | hK)
   · refine' ⟨1, _⟩
-    simp only [Ennreal.coe_one, one_mul]
+    simp only [ENNReal.coe_one, one_mul]
     exact
       eventually_mem_nhds_within.mono fun ε hε x t ht =>
         measure_mono <| closed_ball_subset_closed_ball (by nlinarith [mem_Ioi.mp hε])
@@ -126,9 +126,9 @@ theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
     simp only [closed_ball_eq_empty.2 this, measure_empty, zero_le']
   · simp only [mul_zero, closed_ball_zero]
     refine' le_mul_of_one_le_of_le _ le_rfl
-    apply Ennreal.one_le_coe_iff.2 (le_max_right _ _)
+    apply ENNReal.one_le_coe_iff.2 (le_max_right _ _)
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
-    exact Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl
+    exact ENNReal.mul_le_mul (ENNReal.coe_le_coe.2 (le_max_left _ _)) le_rfl
 #align is_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsDoublingMeasure.eventually_measure_mul_le_scalingConstantOf_mul
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
@@ -136,7 +136,7 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
   by
   filter_upwards [Classical.choose_spec
       (exists_eventually_forall_measure_closed_ball_le_mul μ K)]with r hr x
-  exact (hr x K le_rfl).trans (Ennreal.mul_le_mul (Ennreal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
+  exact (hr x K le_rfl).trans (ENNReal.mul_le_mul (ENNReal.coe_le_coe.2 (le_max_left _ _)) le_rfl)
 #align is_doubling_measure.eventually_measure_le_scaling_constant_mul IsDoublingMeasure.eventually_measure_le_scaling_constant_mul
 
 theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :

@@ -126,11 +126,11 @@ theorem inv_add_inv_conj_nNReal : 1 / Real.toNNReal p + 1 / Real.toNNReal q = 1 
     Real.toNNReal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
 #align real.is_conjugate_exponent.inv_add_inv_conj_nnreal Real.IsConjugateExponent.inv_add_inv_conj_nNReal
 
-theorem inv_add_inv_conj_ennreal : 1 / Ennreal.ofReal p + 1 / Ennreal.ofReal q = 1 := by
-  rw [← Ennreal.ofReal_one, ← Ennreal.ofReal_div_of_pos h.pos, ←
-    Ennreal.ofReal_div_of_pos h.symm.pos, ←
-    Ennreal.ofReal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
-#align real.is_conjugate_exponent.inv_add_inv_conj_ennreal Real.IsConjugateExponent.inv_add_inv_conj_ennreal
+theorem inv_add_inv_conj_eNNReal : 1 / ENNReal.ofReal p + 1 / ENNReal.ofReal q = 1 := by
+  rw [← ENNReal.ofReal_one, ← ENNReal.ofReal_div_of_pos h.pos, ←
+    ENNReal.ofReal_div_of_pos h.symm.pos, ←
+    ENNReal.ofReal_add h.one_div_nonneg h.symm.one_div_nonneg, h.inv_add_inv_conj]
+#align real.is_conjugate_exponent.inv_add_inv_conj_ennreal Real.IsConjugateExponent.inv_add_inv_conj_eNNReal
 
 end IsConjugateExponent
 

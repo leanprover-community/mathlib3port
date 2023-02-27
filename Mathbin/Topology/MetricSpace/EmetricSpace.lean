@@ -35,7 +35,7 @@ to `emetric_space` at the end.
 
 open Set Filter Classical
 
-open uniformity Topology BigOperators Filter NNReal Ennreal
+open uniformity Topology BigOperators Filter NNReal ENNReal
 
 universe u v w
 
@@ -75,15 +75,15 @@ def uniformSpaceOfEdist (edist : α → α → ℝ≥0∞) (edist_self : ∀ x :
           le_infᵢ fun h =>
             have : (2 : ℝ≥0∞) = (2 : ℕ) := by simp
             have A : 0 < ε / 2 :=
-              Ennreal.div_pos_iff.2 ⟨ne_of_gt h, by convert Ennreal.nat_ne_top 2⟩
+              ENNReal.div_pos_iff.2 ⟨ne_of_gt h, by convert ENNReal.nat_ne_top 2⟩
             lift'_le (mem_infᵢ_of_mem (ε / 2) <| mem_infᵢ_of_mem A (Subset.refl _)) <|
               by
               have : ∀ a b c : α, edist a c < ε / 2 → edist c b < ε / 2 → edist a b < ε :=
                 fun a b c hac hcb =>
                 calc
                   edist a b ≤ edist a c + edist c b := edist_triangle _ _ _
-                  _ < ε / 2 + ε / 2 := Ennreal.add_lt_add hac hcb
-                  _ = ε := by rw [Ennreal.add_halves]
+                  _ < ε / 2 + ε / 2 := ENNReal.add_lt_add hac hcb
+                  _ = ε := by rw [ENNReal.add_halves]
                   
               simpa [compRel]
       symm :=
@@ -215,7 +215,7 @@ theorem uniformity_basis_edist :
       (fun r hr p hp =>
         ⟨min r p, lt_min hr hp, fun x hx => lt_of_lt_of_le hx (min_le_left _ _), fun x hx =>
           lt_of_lt_of_le hx (min_le_right _ _)⟩)
-      ⟨1, Ennreal.zero_lt_one⟩
+      ⟨1, ENNReal.zero_lt_one⟩
 #align uniformity_basis_edist uniformity_basis_edist
 
 /-- Characterization of the elements of the uniformity in terms of the extended distance -/
@@ -279,30 +279,30 @@ theorem uniformity_basis_edist_le' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
 
 theorem uniformity_basis_edist_nNReal :
     (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
-  Emetric.mk_uniformity_basis (fun _ => Ennreal.coe_pos.2) fun ε ε₀ =>
-    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nNReal_btwn.1 ε₀
-    ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
+  Emetric.mk_uniformity_basis (fun _ => ENNReal.coe_pos.2) fun ε ε₀ =>
+    let ⟨δ, hδ⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 ε₀
+    ⟨δ, ENNReal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
 #align uniformity_basis_edist_nnreal uniformity_basis_edist_nNReal
 
 theorem uniformity_basis_edist_nNReal_le :
     (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
-  Emetric.mk_uniformity_basis_le (fun _ => Ennreal.coe_pos.2) fun ε ε₀ =>
-    let ⟨δ, hδ⟩ := Ennreal.lt_iff_exists_nNReal_btwn.1 ε₀
-    ⟨δ, Ennreal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
+  Emetric.mk_uniformity_basis_le (fun _ => ENNReal.coe_pos.2) fun ε ε₀ =>
+    let ⟨δ, hδ⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 ε₀
+    ⟨δ, ENNReal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
 #align uniformity_basis_edist_nnreal_le uniformity_basis_edist_nNReal_le
 
 theorem uniformity_basis_edist_inv_nat :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < (↑n)⁻¹ } :=
-  Emetric.mk_uniformity_basis (fun n _ => Ennreal.inv_pos.2 <| Ennreal.nat_ne_top n) fun ε ε₀ =>
-    let ⟨n, hn⟩ := Ennreal.exists_inv_nat_lt (ne_of_gt ε₀)
+  Emetric.mk_uniformity_basis (fun n _ => ENNReal.inv_pos.2 <| ENNReal.nat_ne_top n) fun ε ε₀ =>
+    let ⟨n, hn⟩ := ENNReal.exists_inv_nat_lt (ne_of_gt ε₀)
     ⟨n, trivial, le_of_lt hn⟩
 #align uniformity_basis_edist_inv_nat uniformity_basis_edist_inv_nat
 
 theorem uniformity_basis_edist_inv_two_pow :
     (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < 2⁻¹ ^ n } :=
-  Emetric.mk_uniformity_basis (fun n _ => Ennreal.pow_pos (Ennreal.inv_pos.2 Ennreal.two_ne_top) _)
+  Emetric.mk_uniformity_basis (fun n _ => ENNReal.pow_pos (ENNReal.inv_pos.2 ENNReal.two_ne_top) _)
     fun ε ε₀ =>
-    let ⟨n, hn⟩ := Ennreal.exists_inv_two_pow_lt (ne_of_gt ε₀)
+    let ⟨n, hn⟩ := ENNReal.exists_inv_two_pow_lt (ne_of_gt ε₀)
     ⟨n, trivial, le_of_lt hn⟩
 #align uniformity_basis_edist_inv_two_pow uniformity_basis_edist_inv_two_pow
 
@@ -662,7 +662,7 @@ theorem closedBall_subset_closedBall (h : ε₁ ≤ ε₂) : closedBall x ε₁ 
 
 theorem ball_disjoint (h : ε₁ + ε₂ ≤ edist x y) : Disjoint (ball x ε₁) (ball y ε₂) :=
   Set.disjoint_left.mpr fun z h₁ h₂ =>
-    (edist_triangle_left x y z).not_lt <| (Ennreal.add_lt_add h₁ h₂).trans_le h
+    (edist_triangle_left x y z).not_lt <| (ENNReal.add_lt_add h₁ h₂).trans_le h
 #align emetric.ball_disjoint Emetric.ball_disjoint
 
 theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) : ball x ε₁ ⊆ ball y ε₂ :=
@@ -670,7 +670,7 @@ theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) :
   calc
     edist z y ≤ edist z x + edist x y := edist_triangle _ _ _
     _ = edist x y + edist z x := add_comm _ _
-    _ < edist x y + ε₁ := Ennreal.add_lt_add_left h' zx
+    _ < edist x y + ε₁ := ENNReal.add_lt_add_left h' zx
     _ ≤ ε₂ := h
     
 #align emetric.ball_subset Emetric.ball_subset
@@ -703,8 +703,8 @@ def edistLtTopSetoid : Setoid α where
   iseqv :=
     ⟨fun x => by
       rw [edist_self]
-      exact Ennreal.coe_lt_top, fun x y h => by rwa [edist_comm], fun x y z hxy hyz =>
-      lt_of_le_of_lt (edist_triangle x y z) (Ennreal.add_lt_top.2 ⟨hxy, hyz⟩)⟩
+      exact ENNReal.coe_lt_top, fun x y h => by rwa [edist_comm], fun x y z hxy hyz =>
+      lt_of_le_of_lt (edist_triangle x y z) (ENNReal.add_lt_top.2 ⟨hxy, hyz⟩)⟩
 #align emetric.edist_lt_top_setoid Emetric.edistLtTopSetoid
 
 @[simp]
@@ -777,9 +777,9 @@ theorem isOpen_ball : IsOpen (ball x ε) :=
 theorem isClosed_ball_top : IsClosed (ball x ⊤) :=
   isOpen_compl_iff.1 <|
     isOpen_iff.2 fun y hy =>
-      ⟨⊤, Ennreal.coe_lt_top,
+      ⟨⊤, ENNReal.coe_lt_top,
         (ball_disjoint <| by
-            rw [Ennreal.top_add]
+            rw [ENNReal.top_add]
             exact le_of_not_lt hy).subset_compl_right⟩
 #align emetric.is_closed_ball_top Emetric.isClosed_ball_top
 
@@ -893,12 +893,12 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     ⟨⋃ n : ℕ, f n⁻¹ '' T n, Union_subset fun n => image_subset_iff.2 fun z hz => hfs _ _,
       countable_Union fun n => (hTc n).image _, _⟩
   refine' fun x hx => mem_closure_iff.2 fun ε ε0 => _
-  rcases Ennreal.exists_inv_nat_lt (Ennreal.half_pos ε0.lt.ne').ne' with ⟨n, hn⟩
+  rcases ENNReal.exists_inv_nat_lt (ENNReal.half_pos ε0.lt.ne').ne' with ⟨n, hn⟩
   rcases mem_Union₂.1 (hsT n hx) with ⟨y, hyn, hyx⟩
   refine' ⟨f n⁻¹ y, mem_Union.2 ⟨n, mem_image_of_mem _ hyn⟩, _⟩
   calc
     edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩
-    _ < ε := Ennreal.mul_lt_of_lt_div hn
+    _ < ε := ENNReal.mul_lt_of_lt_div hn
     
 #align emetric.subset_countable_closure_of_almost_dense_set Emetric.subset_countable_closure_of_almost_dense_set
 
@@ -1008,12 +1008,12 @@ theorem diam_insert : diam (insert x s) = max (⨆ y ∈ s, edist x y) (diam s) 
 #align emetric.diam_insert Emetric.diam_insert
 
 theorem diam_pair : diam ({x, y} : Set α) = edist x y := by
-  simp only [supᵢ_singleton, diam_insert, diam_singleton, Ennreal.max_zero_right]
+  simp only [supᵢ_singleton, diam_insert, diam_singleton, ENNReal.max_zero_right]
 #align emetric.diam_pair Emetric.diam_pair
 
 theorem diam_triple : diam ({x, y, z} : Set α) = max (max (edist x y) (edist x z)) (edist y z) := by
-  simp only [diam_insert, supᵢ_insert, supᵢ_singleton, diam_singleton, Ennreal.max_zero_right,
-    Ennreal.sup_eq_max]
+  simp only [diam_insert, supᵢ_insert, supᵢ_singleton, diam_singleton, ENNReal.max_zero_right,
+    ENNReal.sup_eq_max]
 #align emetric.diam_triple Emetric.diam_triple
 
 /-- The diameter is monotonous with respect to inclusion -/

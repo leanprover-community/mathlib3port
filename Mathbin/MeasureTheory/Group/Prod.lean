@@ -46,7 +46,7 @@ open Function MeasureTheory
 
 open Filter hiding map
 
-open Classical Ennreal Pointwise MeasureTheory
+open Classical ENNReal Pointwise MeasureTheory
 
 variable (G : Type _) [MeasurableSpace G]
 
@@ -317,7 +317,7 @@ theorem ae_measure_preimage_mul_right_lt_top [IsMulLeftInvariant ν] (sm : Measu
     indicator_mul_right _ fun x => ν ((fun y => y * x) ⁻¹' s), Function.comp, Pi.one_apply,
     mul_one] at h1
   rw [← lintegral_indicator _ hA, ← h1]
-  exact Ennreal.mul_ne_top hμs h3A.ne
+  exact ENNReal.mul_ne_top hμs h3A.ne
 #align measure_theory.ae_measure_preimage_mul_right_lt_top MeasureTheory.ae_measure_preimage_mul_right_lt_top
 #align measure_theory.ae_measure_preimage_add_right_lt_top MeasureTheory.ae_measure_preimage_add_right_lt_top
 
@@ -355,7 +355,7 @@ theorem measure_lintegral_div_measure [IsMulLeftInvariant ν] (sm : MeasurableSe
   simp_rw [measure_mul_lintegral_eq μ ν sm g hg, g, inv_inv]
   refine' lintegral_congr_ae _
   refine' (ae_measure_preimage_mul_right_lt_top_of_ne_zero μ ν sm h2s h3s).mono fun x hx => _
-  simp_rw [Ennreal.mul_div_cancel' (measure_mul_right_ne_zero ν h2s _) hx.ne]
+  simp_rw [ENNReal.mul_div_cancel' (measure_mul_right_ne_zero ν h2s _) hx.ne]
 #align measure_theory.measure_lintegral_div_measure MeasureTheory.measure_lintegral_div_measure
 #align measure_theory.measure_lintegral_sub_measure MeasureTheory.measure_lintegral_sub_measure
 
@@ -381,7 +381,7 @@ theorem measure_eq_div_smul [IsMulLeftInvariant ν] (hs : MeasurableSet s) (h2s 
     (h3s : ν s ≠ ∞) : μ = (μ s / ν s) • ν := by
   ext1 t ht
   rw [smul_apply, smul_eq_mul, mul_comm, ← mul_div_assoc, mul_comm,
-    measure_mul_measure_eq μ ν hs ht h2s h3s, mul_div_assoc, Ennreal.mul_div_cancel' h2s h3s]
+    measure_mul_measure_eq μ ν hs ht h2s h3s, mul_div_assoc, ENNReal.mul_div_cancel' h2s h3s]
 #align measure_theory.measure_eq_div_smul MeasureTheory.measure_eq_div_smul
 #align measure_theory.measure_eq_sub_vadd MeasureTheory.measure_eq_sub_vadd
 

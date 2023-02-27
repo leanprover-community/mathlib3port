@@ -35,7 +35,7 @@ giry monad
 
 noncomputable section
 
-open Classical BigOperators Ennreal
+open Classical BigOperators ENNReal
 
 open Classical Set Filter
 

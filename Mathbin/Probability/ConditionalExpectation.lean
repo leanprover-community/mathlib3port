@@ -29,7 +29,7 @@ the main conditional expectation file.
 
 open TopologicalSpace Filter
 
-open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators
+open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators
 
 namespace MeasureTheory
 
@@ -54,9 +54,9 @@ theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFi
         strongly_measurable_const.ae_strongly_measurable').symm
   rw [set_integral_const]
   rw [← mem_ℒp_one_iff_integrable] at hfint
-  refine' hfint.induction_strongly_measurable hle₁ Ennreal.one_ne_top _ _ _ _ _ _
+  refine' hfint.induction_strongly_measurable hle₁ ENNReal.one_ne_top _ _ _ _ _ _
   · intro c t hmt ht
-    rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← Ennreal.toReal_mul,
+    rw [integral_indicator (hle₁ _ hmt), set_integral_const, smul_smul, ← ENNReal.toReal_mul,
       mul_comm, ← hindp _ _ hmt hms, set_integral_indicator (hle₁ _ hmt), set_integral_const,
       Set.inter_comm]
   · intro u v hdisj huint hvint hu hv hu_eq hv_eq

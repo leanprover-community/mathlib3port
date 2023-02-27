@@ -60,7 +60,7 @@ open MeasureTheory Filter Finset Asymptotics
 
 open Set (indicator)
 
-open Topology BigOperators MeasureTheory ProbabilityTheory Ennreal NNReal
+open Topology BigOperators MeasureTheory ProbabilityTheory ENNReal NNReal
 
 namespace ProbabilityTheory
 
@@ -238,7 +238,7 @@ section MomentEstimates
 
 theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) {K : ℕ} {N : ℕ}
     (hKN : K ≤ N) :
-    (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) ≤ Ennreal.ofReal (𝔼[X] + 1) :=
+    (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) ≤ ENNReal.ofReal (𝔼[X] + 1) :=
   by
   let ρ : Measure ℝ := measure.map X ℙ
   haveI : is_probability_measure ρ := is_probability_measure_map hint.ae_measurable
@@ -307,10 +307,10 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         rw [intervalIntegral.integral_of_le (Nat.cast_nonneg _)]
         simp only [integral_const, measure.restrict_apply', measurableSet_Ioc, Set.univ_inter,
           Algebra.id.smul_eq_mul, mul_one]
-        rw [← Ennreal.one_toReal]
-        exact Ennreal.toReal_mono Ennreal.one_ne_top prob_le_one
+        rw [← ENNReal.one_toReal]
+        exact ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
       
-  have B : ∀ a b, ℙ { ω | X ω ∈ Set.Ioc a b } = Ennreal.ofReal (∫ x in Set.Ioc a b, (1 : ℝ) ∂ρ) :=
+  have B : ∀ a b, ℙ { ω | X ω ∈ Set.Ioc a b } = ENNReal.ofReal (∫ x in Set.Ioc a b, (1 : ℝ) ∂ρ) :=
     by
     intro a b
     rw [of_real_set_integral_one ρ _,
@@ -318,30 +318,30 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
     rfl
   calc
     (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) =
-        ∑ j in range K, Ennreal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
+        ∑ j in range K, ENNReal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
       by simp_rw [B]
-    _ = Ennreal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
+    _ = ENNReal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
       by
-      rw [Ennreal.ofReal_sum_of_nonneg]
-      simp only [integral_const, Algebra.id.smul_eq_mul, mul_one, Ennreal.toReal_nonneg,
+      rw [ENNReal.ofReal_sum_of_nonneg]
+      simp only [integral_const, Algebra.id.smul_eq_mul, mul_one, ENNReal.toReal_nonneg,
         imp_true_iff]
-    _ = Ennreal.ofReal (∑ j in range K, ∫ x in (j : ℝ)..N, (1 : ℝ) ∂ρ) :=
+    _ = ENNReal.ofReal (∑ j in range K, ∫ x in (j : ℝ)..N, (1 : ℝ) ∂ρ) :=
       by
       congr 1
       refine' sum_congr rfl fun j hj => _
       rw [intervalIntegral.integral_of_le (Nat.cast_le.2 ((mem_range.1 hj).le.trans hKN))]
-    _ ≤ Ennreal.ofReal (𝔼[X] + 1) := Ennreal.ofReal_le_ofReal A
+    _ ≤ ENNReal.ofReal (𝔼[X] + 1) := ENNReal.ofReal_le_ofReal A
     
 #align probability_theory.sum_prob_mem_Ioc_le ProbabilityTheory.sum_prob_mem_Ioc_le
 
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
     (∑' j : ℕ, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) < ∞ :=
   by
-  suffices : ∀ K : ℕ, (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) ≤ Ennreal.ofReal (𝔼[X] + 1)
+  suffices : ∀ K : ℕ, (∑ j in range K, ℙ { ω | X ω ∈ Set.Ioi (j : ℝ) }) ≤ ENNReal.ofReal (𝔼[X] + 1)
   exact
-    (le_of_tendsto_of_tendsto (Ennreal.tendsto_nat_tsum _) tendsto_const_nhds
+    (le_of_tendsto_of_tendsto (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds
           (eventually_of_forall this)).trans_lt
-      Ennreal.ofReal_lt_top
+      ENNReal.ofReal_lt_top
   intro K
   have A :
     tendsto (fun N : ℕ => ∑ j in range K, ℙ { ω | X ω ∈ Set.Ioc (j : ℝ) N }) at_top
@@ -560,12 +560,12 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   have I3 :
     ∀ N,
       (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) ≤
-        Ennreal.ofReal (ε⁻¹ ^ 2 * C) :=
+        ENNReal.ofReal (ε⁻¹ ^ 2 * C) :=
     by
     intro N
     calc
       (∑ i in range N, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) ≤
-          ∑ i in range N, Ennreal.ofReal (Var[S (u i)] / (u i * ε) ^ 2) :=
+          ∑ i in range N, ENNReal.ofReal (Var[S (u i)] / (u i * ε) ^ 2) :=
         by
         refine' sum_le_sum fun i hi => _
         apply meas_ge_le_variance_div_sq
@@ -575,21 +575,21 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
           apply Nat.le_floor
           rw [Nat.cast_one]
           apply one_le_pow_of_one_le c_one.le
-      _ = Ennreal.ofReal (∑ i in range N, Var[S (u i)] / (u i * ε) ^ 2) :=
+      _ = ENNReal.ofReal (∑ i in range N, Var[S (u i)] / (u i * ε) ^ 2) :=
         by
-        rw [Ennreal.ofReal_sum_of_nonneg fun i hi => _]
+        rw [ENNReal.ofReal_sum_of_nonneg fun i hi => _]
         exact div_nonneg (variance_nonneg _ _) (sq_nonneg _)
-      _ ≤ Ennreal.ofReal (ε⁻¹ ^ 2 * C) :=
+      _ ≤ ENNReal.ofReal (ε⁻¹ ^ 2 * C) :=
         by
-        apply Ennreal.ofReal_le_ofReal
+        apply ENNReal.ofReal_le_ofReal
         simp_rw [div_eq_inv_mul, ← inv_pow, mul_inv, mul_comm _ ε⁻¹, mul_pow, mul_assoc, ← mul_sum]
         refine' mul_le_mul_of_nonneg_left _ (sq_nonneg _)
         simp_rw [inv_pow]
         exact I2 N
       
   have I4 : (∑' i, ℙ { ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]| }) < ∞ :=
-    (le_of_tendsto_of_tendsto' (Ennreal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt
-      Ennreal.ofReal_lt_top
+    (le_of_tendsto_of_tendsto' (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt
+      ENNReal.ofReal_lt_top
   filter_upwards [ae_eventually_not_mem I4.ne]with ω hω
   simp_rw [not_le, mul_comm, S, sum_apply] at hω
   exact hω

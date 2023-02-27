@@ -36,7 +36,7 @@ noncomputable section
 
 open CategoryTheory MeasureTheory
 
-open Ennreal
+open ENNReal
 
 universe u v
 

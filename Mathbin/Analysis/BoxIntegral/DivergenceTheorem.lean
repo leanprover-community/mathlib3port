@@ -44,7 +44,7 @@ Henstock-Kurzweil integral, integral, Stokes theorem, divergence theorem
 -/
 
 
-open Classical BigOperators NNReal Ennreal Topology BoxIntegral
+open Classical BigOperators NNReal ENNReal Topology BoxIntegral
 
 open ContinuousLinearMap (lsmul)
 
@@ -191,7 +191,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
   refine' has_integral_of_le_Henstock_of_forall_is_o GP_le _ _ _ s hs _ _
   ·-- We use the volume as an upper estimate.
     exact (volume : Measure ℝⁿ⁺¹).toBoxAdditive.restrict _ le_top
-  · exact fun J => Ennreal.toReal_nonneg
+  · exact fun J => ENNReal.toReal_nonneg
   · intro c x hx ε ε0
     /- Near `x ∈ s` we choose `δ` so that both vectors are small. `volume J • eᵢ` is small because
         `volume J ≤ (2 * δ) ^ (n + 1)` is small, and the difference of the integrals is small
@@ -290,7 +290,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
         _
     · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩
     · rw [mul_right_comm (2 : ℝ), ← box.volume_apply]
-      exact mul_le_mul_of_nonneg_right hlt.le Ennreal.toReal_nonneg
+      exact mul_le_mul_of_nonneg_right hlt.le ENNReal.toReal_nonneg
 #align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegralGPPderiv
 
 /-- Divergence theorem for a Henstock-Kurzweil style integral.

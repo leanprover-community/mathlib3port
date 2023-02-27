@@ -49,7 +49,7 @@ theorems.
 
 open TopologicalSpace Filter MeasureTheory.Filtration
 
-open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
+open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 
@@ -156,7 +156,7 @@ theorem tendsto_of_uncrossing_lt_top (hf₁ : liminf (fun n => (‖f n ω‖₊ 
     · intro a ha b hb hab
       obtain ⟨⟨a, rfl⟩, ⟨b, rfl⟩⟩ := ha, hb
       exact not_frequently_of_upcrossings_lt_top hab (hf₂ a b (Rat.cast_lt.1 hab)).Ne
-  · obtain ⟨a, b, hab, h₁, h₂⟩ := Ennreal.exists_upcrossings_of_not_bounded_under hf₁.ne h
+  · obtain ⟨a, b, hab, h₁, h₂⟩ := ENNReal.exists_upcrossings_of_not_bounded_under hf₁.ne h
     exact
       False.elim ((hf₂ a b hab).Ne (upcrossings_eq_top_of_frequently_lt (Rat.cast_lt.2 hab) h₁ h₂))
 #align measure_theory.tendsto_of_uncrossing_lt_top MeasureTheory.tendsto_of_uncrossing_lt_top
@@ -167,15 +167,15 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
   by
   refine' ae_lt_top (hf.adapted.measurable_upcrossings hab) _
   have := hf.mul_lintegral_upcrossings_le_lintegral_pos_part a b
-  rw [mul_comm, ← Ennreal.le_div_iff_mul_le] at this
-  · refine' (lt_of_le_of_lt this (Ennreal.div_lt_top _ _)).Ne
+  rw [mul_comm, ← ENNReal.le_div_iff_mul_le] at this
+  · refine' (lt_of_le_of_lt this (ENNReal.div_lt_top _ _)).Ne
     · have hR' : ∀ n, (∫⁻ ω, ‖f n ω - a‖₊ ∂μ) ≤ R + ‖a‖₊ * μ Set.univ :=
         by
         simp_rw [snorm_one_eq_lintegral_nnnorm] at hbdd
         intro n
         refine' (lintegral_mono _ : (∫⁻ ω, ‖f n ω - a‖₊ ∂μ) ≤ ∫⁻ ω, ‖f n ω‖₊ + ‖a‖₊ ∂μ).trans _
         · intro ω
-          simp_rw [sub_eq_add_neg, ← nnnorm_neg a, ← Ennreal.coe_add, Ennreal.coe_le_coe]
+          simp_rw [sub_eq_add_neg, ← nnnorm_neg a, ← ENNReal.coe_add, ENNReal.coe_le_coe]
           exact nnnorm_add_le _ _
         · simp_rw [lintegral_add_right _ measurable_const, lintegral_const]
           exact add_le_add (hbdd _) le_rfl
@@ -183,21 +183,21 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
         ne_of_lt
           (supᵢ_lt_iff.2
             ⟨R + ‖a‖₊ * μ Set.univ,
-              Ennreal.add_lt_top.2
-                ⟨Ennreal.coe_lt_top, Ennreal.mul_lt_top ennreal.coe_lt_top.ne (measure_ne_top _ _)⟩,
+              ENNReal.add_lt_top.2
+                ⟨ENNReal.coe_lt_top, ENNReal.mul_lt_top ennreal.coe_lt_top.ne (measure_ne_top _ _)⟩,
               fun n => le_trans _ (hR' n)⟩)
       refine' lintegral_mono fun ω => _
-      rw [Ennreal.ofReal_le_iff_le_toReal, Ennreal.coe_toReal, coe_nnnorm]
+      rw [ENNReal.ofReal_le_iff_le_toReal, ENNReal.coe_toReal, coe_nnnorm]
       by_cases hnonneg : 0 ≤ f n ω - a
       ·
         rw [LatticeOrderedCommGroup.pos_of_nonneg _ hnonneg, Real.norm_eq_abs,
           abs_of_nonneg hnonneg]
       · rw [LatticeOrderedCommGroup.pos_of_nonpos _ (not_le.1 hnonneg).le]
         exact norm_nonneg _
-      · simp only [Ne.def, Ennreal.coe_ne_top, not_false_iff]
-    · simp only [hab, Ne.def, Ennreal.ofReal_eq_zero, sub_nonpos, not_le]
-  · simp only [hab, Ne.def, Ennreal.ofReal_eq_zero, sub_nonpos, not_le, true_or_iff]
-  · simp only [Ne.def, Ennreal.ofReal_ne_top, not_false_iff, true_or_iff]
+      · simp only [Ne.def, ENNReal.coe_ne_top, not_false_iff]
+    · simp only [hab, Ne.def, ENNReal.ofReal_eq_zero, sub_nonpos, not_le]
+  · simp only [hab, Ne.def, ENNReal.ofReal_eq_zero, sub_nonpos, not_le, true_or_iff]
+  · simp only [Ne.def, ENNReal.ofReal_ne_top, not_false_iff, true_or_iff]
 #align measure_theory.submartingale.upcrossings_ae_lt_top' MeasureTheory.Submartingale.upcrossings_ae_lt_top'
 
 theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
@@ -352,7 +352,7 @@ theorem Submartingale.tendsto_snorm_one_limitProcess (hf : Submartingale f ℱ �
   have hmeas : ∀ n, ae_strongly_measurable (f n) μ := fun n =>
     ((hf.strongly_measurable n).mono (ℱ.le _)).AeStronglyMeasurable
   exact
-    tendsto_Lp_of_tendsto_in_measure _ le_rfl Ennreal.one_ne_top hmeas
+    tendsto_Lp_of_tendsto_in_measure _ le_rfl ENNReal.one_ne_top hmeas
       (mem_ℒp_limit_process_of_snorm_bdd hmeas hR) hunif.2.1
       (tendsto_in_measure_of_tendsto_ae hmeas <| hf.ae_tendsto_limit_process hR)
 #align measure_theory.submartingale.tendsto_snorm_one_limit_process MeasureTheory.Submartingale.tendsto_snorm_one_limitProcess
@@ -471,7 +471,7 @@ This martingale also converges to `g` almost everywhere and this result is provi
 theorem Integrable.tendsto_snorm_condexp (hg : Integrable g μ)
     (hgmeas : strongly_measurable[⨆ n, ℱ n] g) :
     Tendsto (fun n => snorm (μ[g|ℱ n] - g) 1 μ) atTop (𝓝 0) :=
-  tendsto_Lp_of_tendstoInMeasure _ le_rfl Ennreal.one_ne_top
+  tendsto_Lp_of_tendstoInMeasure _ le_rfl ENNReal.one_ne_top
     (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AeStronglyMeasurable)
     (memℒp_one_iff_integrable.2 hg) hg.uniformIntegrableCondexpFiltration.2.1
     (tendstoInMeasureOfTendstoAe

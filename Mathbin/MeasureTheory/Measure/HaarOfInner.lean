@@ -46,7 +46,7 @@ theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
     ext x
     simp only [OrthonormalBasis.coe_reindex, Function.comp_apply, Equiv.symm_apply_apply]
   rw [A, parallelepiped_comp_equiv, AlternatingMap.measure_parallelepiped,
-    o.abs_volume_form_apply_of_orthonormal, Ennreal.ofReal_one]
+    o.abs_volume_form_apply_of_orthonormal, ENNReal.ofReal_one]
 #align orientation.measure_orthonormal_basis Orientation.measure_orthonormalBasis
 
 /-- In an oriented inner product space, the measure coming from the canonical volume form

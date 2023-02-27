@@ -38,7 +38,7 @@ stopping time, stochastic process
 
 open Filter Order TopologicalSpace
 
-open Classical MeasureTheory NNReal Ennreal Topology BigOperators
+open Classical MeasureTheory NNReal ENNReal Topology BigOperators
 
 namespace MeasureTheory
 

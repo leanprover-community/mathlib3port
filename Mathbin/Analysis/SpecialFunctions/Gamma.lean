@@ -69,7 +69,7 @@ noncomputable section
 
 open Filter intervalIntegral Set Real MeasureTheory Asymptotics
 
-open Nat Topology Ennreal BigOperators ComplexConjugate
+open Nat Topology ENNReal BigOperators ComplexConjugate
 
 theorem integral_exp_neg_Ioi : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 :=
   by
@@ -786,8 +786,8 @@ theorem gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < gamma s :=
     rw [Function.mem_support]
     exact mul_ne_zero (exp_pos _).ne' (rpow_pos_of_pos hx _).ne'
   rw [set_integral_pos_iff_support_of_nonneg_ae]
-  · rw [this, volume_Ioi, ← Ennreal.ofReal_zero]
-    exact Ennreal.ofReal_lt_top
+  · rw [this, volume_Ioi, ← ENNReal.ofReal_zero]
+    exact ENNReal.ofReal_lt_top
   · refine' eventually_of_mem (self_mem_ae_restrict measurableSet_Ioi) _
     exact fun x hx => (mul_pos (exp_pos _) (rpow_pos_of_pos hx _)).le
   · exact Gamma_integral_convergent hs
@@ -870,14 +870,14 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
   -- show `f c u` is in `ℒp` for `p = 1/c`:
   have f_mem_Lp :
     ∀ {c u : ℝ} (hc : 0 < c) (hu : 0 < u),
-      mem_ℒp (f c u) (Ennreal.ofReal (1 / c)) (volume.restrict (Ioi 0)) :=
+      mem_ℒp (f c u) (ENNReal.ofReal (1 / c)) (volume.restrict (Ioi 0)) :=
     by
     intro c u hc hu
-    have A : Ennreal.ofReal (1 / c) ≠ 0 := by
-      rwa [Ne.def, Ennreal.ofReal_eq_zero, not_le, one_div_pos]
-    have B : Ennreal.ofReal (1 / c) ≠ ∞ := Ennreal.ofReal_ne_top
-    rw [← mem_ℒp_norm_rpow_iff _ A B, Ennreal.toReal_ofReal (one_div_nonneg.mpr hc.le),
-      Ennreal.div_self A B, mem_ℒp_one_iff_integrable]
+    have A : ENNReal.ofReal (1 / c) ≠ 0 := by
+      rwa [Ne.def, ENNReal.ofReal_eq_zero, not_le, one_div_pos]
+    have B : ENNReal.ofReal (1 / c) ≠ ∞ := ENNReal.ofReal_ne_top
+    rw [← mem_ℒp_norm_rpow_iff _ A B, ENNReal.toReal_ofReal (one_div_nonneg.mpr hc.le),
+      ENNReal.div_self A B, mem_ℒp_one_iff_integrable]
     · apply integrable.congr (Gamma_integral_convergent hu)
       refine' eventually_eq_of_mem (self_mem_ae_restrict measurableSet_Ioi) fun x hx => _
       dsimp only

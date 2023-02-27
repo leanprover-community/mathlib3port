@@ -67,9 +67,9 @@ product measure, Fubini's theorem, Tonelli's theorem, Fubini-Tonelli theorem
 
 noncomputable section
 
-open Classical Topology Ennreal MeasureTheory
+open Classical Topology ENNReal MeasureTheory
 
-open Set Function Real Ennreal
+open Set Function Real ENNReal
 
 open MeasureTheory MeasurableSpace MeasureTheory.Measure
 
@@ -192,7 +192,7 @@ theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α
       measure_Union (fun i j hij => Disjoint.preimage _ (h1f hij)) fun i =>
         measurable_prod_mk_left (h2f i)
     simp_rw [this]
-    apply Measurable.ennreal_tsum h3f
+    apply Measurable.eNNReal_tsum h3f
 #align measurable_measure_prod_mk_left_finite measurable_measure_prod_mk_left_finite
 
 /-- If `ν` is a σ-finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is
@@ -235,7 +235,7 @@ theorem Measurable.lintegral_prod_right' [SigmaFinite ν] :
     ∀ {f : α × β → ℝ≥0∞} (hf : Measurable f), Measurable fun x => ∫⁻ y, f (x, y) ∂ν :=
   by
   have m := @measurable_prod_mk_left
-  refine' Measurable.ennreal_induction _ _ _
+  refine' Measurable.eNNReal_induction _ _ _
   · intro c s hs
     simp only [← indicator_comp_right]
     suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by simpa [lintegral_indicator _ (m hs)]
@@ -310,7 +310,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
       exact ⟨(x, z), rfl⟩
     simp only [simple_func.integral_eq_sum_of_subset (this _)]
     refine' Finset.stronglyMeasurable_sum _ fun x _ => _
-    refine' (Measurable.ennreal_toReal _).StronglyMeasurable.smul_const _
+    refine' (Measurable.eNNReal_toReal _).StronglyMeasurable.smul_const _
     simp (config := { singlePass := true }) only [simple_func.coe_comp, preimage_comp]
     apply measurable_measure_prod_mk_left
     exact (s n).measurableSet_fiber x
@@ -489,7 +489,7 @@ theorem ae_measure_lt_top {s : Set (α × β)} (hs : MeasurableSet s) (h2s : (μ
 theorem integrableMeasureProdMkLeft {s : Set (α × β)} (hs : MeasurableSet s)
     (h2s : (μ.Prod ν) s ≠ ∞) : Integrable (fun x => (ν (Prod.mk x ⁻¹' s)).toReal) μ :=
   by
-  refine' ⟨(measurable_measure_prod_mk_left hs).ennreal_toReal.AeMeasurable.AeStronglyMeasurable, _⟩
+  refine' ⟨(measurable_measure_prod_mk_left hs).eNNReal_toReal.AeMeasurable.AeStronglyMeasurable, _⟩
   simp_rw [has_finite_integral, ennnorm_eq_of_real to_real_nonneg]
   convert h2s.lt_top using 1; simp_rw [prod_apply hs]; apply lintegral_congr_ae
   refine' (ae_measure_lt_top hs h2s).mp _; apply eventually_of_forall; intro x hx
@@ -666,14 +666,14 @@ theorem prod_sum {ι : Type _} [Finite ι] (ν : ι → Measure β) [∀ i, Sigm
     μ.Prod (sum ν) = sum fun i => μ.Prod (ν i) :=
   by
   refine' prod_eq fun s t hs ht => _
-  simp_rw [sum_apply _ (hs.prod ht), sum_apply _ ht, prod_prod, Ennreal.tsum_mul_left]
+  simp_rw [sum_apply _ (hs.prod ht), sum_apply _ ht, prod_prod, ENNReal.tsum_mul_left]
 #align measure_theory.measure.prod_sum MeasureTheory.Measure.prod_sum
 
 theorem sum_prod {ι : Type _} [Finite ι] (μ : ι → Measure α) [∀ i, SigmaFinite (μ i)] :
     (sum μ).Prod ν = sum fun i => (μ i).Prod ν :=
   by
   refine' prod_eq fun s t hs ht => _
-  simp_rw [sum_apply _ (hs.prod ht), sum_apply _ hs, prod_prod, Ennreal.tsum_mul_right]
+  simp_rw [sum_apply _ (hs.prod ht), sum_apply _ hs, prod_prod, ENNReal.tsum_mul_right]
 #align measure_theory.measure.sum_prod MeasureTheory.Measure.sum_prod
 
 theorem prod_add (ν' : Measure β) [SigmaFinite ν'] : μ.Prod (ν + ν') = μ.Prod ν + μ.Prod ν' :=
@@ -872,7 +872,7 @@ theorem lintegral_prod_of_measurable :
     ∀ (f : α × β → ℝ≥0∞) (hf : Measurable f), (∫⁻ z, f z ∂μ.Prod ν) = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ :=
   by
   have m := @measurable_prod_mk_left
-  refine' Measurable.ennreal_induction _ _ _
+  refine' Measurable.eNNReal_induction _ _ _
   · intro c s hs
     simp only [← indicator_comp_right]
     simp [lintegral_indicator, m hs, hs, lintegral_const_mul, measurable_measure_prod_mk_left hs,

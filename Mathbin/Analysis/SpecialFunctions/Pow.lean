@@ -26,7 +26,7 @@ We also prove basic properties of these functions.
 
 noncomputable section
 
-open Classical Real Topology NNReal Ennreal Filter BigOperators ComplexConjugate
+open Classical Real Topology NNReal ENNReal Filter BigOperators ComplexConjugate
 
 open Filter Finset Set
 
@@ -1896,7 +1896,7 @@ theorem tendsto_rpow_atTop {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0 => 
 
 end NNReal
 
-namespace Ennreal
+namespace ENNReal
 
 /-- The real power function `x^y` on extended nonnegative reals, defined for `x : ℝ≥0∞` and
 `y : ℝ` as the restriction of the real power function if `0 < x < ⊤`, and with the natural values
@@ -1905,7 +1905,7 @@ for `0` and `⊤` (i.e., `0 ^ x = 0` for `x > 0`, `1` for `x = 0` and `⊤` for 
 noncomputable def rpow : ℝ≥0∞ → ℝ → ℝ≥0∞
   | some x, y => if x = 0 ∧ y < 0 then ⊤ else (x ^ y : ℝ≥0)
   | none, y => if 0 < y then ⊤ else if y = 0 then 1 else 0
-#align ennreal.rpow Ennreal.rpow
+#align ennreal.rpow ENNReal.rpow
 
 noncomputable instance : Pow ℝ≥0∞ ℝ :=
   ⟨rpow⟩
@@ -1913,43 +1913,43 @@ noncomputable instance : Pow ℝ≥0∞ ℝ :=
 @[simp]
 theorem rpow_eq_pow (x : ℝ≥0∞) (y : ℝ) : rpow x y = x ^ y :=
   rfl
-#align ennreal.rpow_eq_pow Ennreal.rpow_eq_pow
+#align ennreal.rpow_eq_pow ENNReal.rpow_eq_pow
 
 @[simp]
 theorem rpow_zero {x : ℝ≥0∞} : x ^ (0 : ℝ) = 1 := by
   cases x <;>
     · dsimp only [(· ^ ·), rpow]
       simp [lt_irrefl]
-#align ennreal.rpow_zero Ennreal.rpow_zero
+#align ennreal.rpow_zero ENNReal.rpow_zero
 
 theorem top_rpow_def (y : ℝ) : (⊤ : ℝ≥0∞) ^ y = if 0 < y then ⊤ else if y = 0 then 1 else 0 :=
   rfl
-#align ennreal.top_rpow_def Ennreal.top_rpow_def
+#align ennreal.top_rpow_def ENNReal.top_rpow_def
 
 @[simp]
 theorem top_rpow_of_pos {y : ℝ} (h : 0 < y) : (⊤ : ℝ≥0∞) ^ y = ⊤ := by simp [top_rpow_def, h]
-#align ennreal.top_rpow_of_pos Ennreal.top_rpow_of_pos
+#align ennreal.top_rpow_of_pos ENNReal.top_rpow_of_pos
 
 @[simp]
 theorem top_rpow_of_neg {y : ℝ} (h : y < 0) : (⊤ : ℝ≥0∞) ^ y = 0 := by
   simp [top_rpow_def, asymm h, ne_of_lt h]
-#align ennreal.top_rpow_of_neg Ennreal.top_rpow_of_neg
+#align ennreal.top_rpow_of_neg ENNReal.top_rpow_of_neg
 
 @[simp]
 theorem zero_rpow_of_pos {y : ℝ} (h : 0 < y) : (0 : ℝ≥0∞) ^ y = 0 :=
   by
-  rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
+  rw [← ENNReal.coe_zero, ← ENNReal.some_eq_coe]
   dsimp only [(· ^ ·), rpow]
   simp [h, asymm h, ne_of_gt h]
-#align ennreal.zero_rpow_of_pos Ennreal.zero_rpow_of_pos
+#align ennreal.zero_rpow_of_pos ENNReal.zero_rpow_of_pos
 
 @[simp]
 theorem zero_rpow_of_neg {y : ℝ} (h : y < 0) : (0 : ℝ≥0∞) ^ y = ⊤ :=
   by
-  rw [← Ennreal.coe_zero, ← Ennreal.some_eq_coe]
+  rw [← ENNReal.coe_zero, ← ENNReal.some_eq_coe]
   dsimp only [(· ^ ·), rpow]
   simp [h, ne_of_gt h]
-#align ennreal.zero_rpow_of_neg Ennreal.zero_rpow_of_neg
+#align ennreal.zero_rpow_of_neg ENNReal.zero_rpow_of_neg
 
 theorem zero_rpow_def (y : ℝ) : (0 : ℝ≥0∞) ^ y = if 0 < y then 0 else if y = 0 then 1 else ⊤ :=
   by
@@ -1957,7 +1957,7 @@ theorem zero_rpow_def (y : ℝ) : (0 : ℝ≥0∞) ^ y = if 0 < y then 0 else if
   · simp [H, ne_of_gt, zero_rpow_of_pos, lt_irrefl]
   · simp [lt_irrefl]
   · simp [H, asymm H, ne_of_lt, zero_rpow_of_neg]
-#align ennreal.zero_rpow_def Ennreal.zero_rpow_def
+#align ennreal.zero_rpow_def ENNReal.zero_rpow_def
 
 @[simp]
 theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y :=
@@ -1965,15 +1965,15 @@ theorem zero_rpow_mul_self (y : ℝ) : (0 : ℝ≥0∞) ^ y * 0 ^ y = 0 ^ y :=
   rw [zero_rpow_def]
   split_ifs
   exacts[zero_mul _, one_mul _, top_mul_top]
-#align ennreal.zero_rpow_mul_self Ennreal.zero_rpow_mul_self
+#align ennreal.zero_rpow_mul_self ENNReal.zero_rpow_mul_self
 
 @[norm_cast]
 theorem coe_rpow_of_ne_zero {x : ℝ≥0} (h : x ≠ 0) (y : ℝ) : (x : ℝ≥0∞) ^ y = (x ^ y : ℝ≥0) :=
   by
-  rw [← Ennreal.some_eq_coe]
+  rw [← ENNReal.some_eq_coe]
   dsimp only [(· ^ ·), rpow]
   simp [h]
-#align ennreal.coe_rpow_of_ne_zero Ennreal.coe_rpow_of_ne_zero
+#align ennreal.coe_rpow_of_ne_zero ENNReal.coe_rpow_of_ne_zero
 
 @[norm_cast]
 theorem coe_rpow_of_nonneg (x : ℝ≥0) {y : ℝ} (h : 0 ≤ y) : (x : ℝ≥0∞) ^ y = (x ^ y : ℝ≥0) :=
@@ -1983,12 +1983,12 @@ theorem coe_rpow_of_nonneg (x : ℝ≥0) {y : ℝ} (h : 0 ≤ y) : (x : ℝ≥0�
     · simp [hx, H.symm]
     · simp [hx, zero_rpow_of_pos H, NNReal.zero_rpow (ne_of_gt H)]
   · exact coe_rpow_of_ne_zero hx _
-#align ennreal.coe_rpow_of_nonneg Ennreal.coe_rpow_of_nonneg
+#align ennreal.coe_rpow_of_nonneg ENNReal.coe_rpow_of_nonneg
 
 theorem coe_rpow_def (x : ℝ≥0) (y : ℝ) :
     (x : ℝ≥0∞) ^ y = if x = 0 ∧ y < 0 then ⊤ else (x ^ y : ℝ≥0) :=
   rfl
-#align ennreal.coe_rpow_def Ennreal.coe_rpow_def
+#align ennreal.coe_rpow_def ENNReal.coe_rpow_def
 
 @[simp]
 theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x :=
@@ -1998,14 +1998,14 @@ theorem rpow_one (x : ℝ≥0∞) : x ^ (1 : ℝ) = x :=
   · change ite _ _ _ = _
     simp only [NNReal.rpow_one, some_eq_coe, ite_eq_right_iff, top_ne_coe, and_imp]
     exact fun _ => zero_le_one.not_lt
-#align ennreal.rpow_one Ennreal.rpow_one
+#align ennreal.rpow_one ENNReal.rpow_one
 
 @[simp]
 theorem one_rpow (x : ℝ) : (1 : ℝ≥0∞) ^ x = 1 :=
   by
   rw [← coe_one, coe_rpow_of_ne_zero one_ne_zero]
   simp
-#align ennreal.one_rpow Ennreal.one_rpow
+#align ennreal.one_rpow ENNReal.one_rpow
 
 @[simp]
 theorem rpow_eq_zero_iff {x : ℝ≥0∞} {y : ℝ} : x ^ y = 0 ↔ x = 0 ∧ 0 < y ∨ x = ⊤ ∧ y < 0 :=
@@ -2019,7 +2019,7 @@ theorem rpow_eq_zero_iff {x : ℝ≥0∞} {y : ℝ} : x ^ y = 0 ↔ x = 0 ∧ 0 
       rcases lt_trichotomy y 0 with (H | H | H) <;>
         simp [h, H, zero_rpow_of_neg, zero_rpow_of_pos, le_of_lt]
     · simp [coe_rpow_of_ne_zero h, h]
-#align ennreal.rpow_eq_zero_iff Ennreal.rpow_eq_zero_iff
+#align ennreal.rpow_eq_zero_iff ENNReal.rpow_eq_zero_iff
 
 @[simp]
 theorem rpow_eq_top_iff {x : ℝ≥0∞} {y : ℝ} : x ^ y = ⊤ ↔ x = 0 ∧ y < 0 ∨ x = ⊤ ∧ 0 < y :=
@@ -2033,37 +2033,37 @@ theorem rpow_eq_top_iff {x : ℝ≥0∞} {y : ℝ} : x ^ y = ⊤ ↔ x = 0 ∧ y
       rcases lt_trichotomy y 0 with (H | H | H) <;>
         simp [h, H, zero_rpow_of_neg, zero_rpow_of_pos, le_of_lt]
     · simp [coe_rpow_of_ne_zero h, h]
-#align ennreal.rpow_eq_top_iff Ennreal.rpow_eq_top_iff
+#align ennreal.rpow_eq_top_iff ENNReal.rpow_eq_top_iff
 
 theorem rpow_eq_top_iff_of_pos {x : ℝ≥0∞} {y : ℝ} (hy : 0 < y) : x ^ y = ⊤ ↔ x = ⊤ := by
   simp [rpow_eq_top_iff, hy, asymm hy]
-#align ennreal.rpow_eq_top_iff_of_pos Ennreal.rpow_eq_top_iff_of_pos
+#align ennreal.rpow_eq_top_iff_of_pos ENNReal.rpow_eq_top_iff_of_pos
 
 theorem rpow_eq_top_of_nonneg (x : ℝ≥0∞) {y : ℝ} (hy0 : 0 ≤ y) : x ^ y = ⊤ → x = ⊤ :=
   by
-  rw [Ennreal.rpow_eq_top_iff]
+  rw [ENNReal.rpow_eq_top_iff]
   intro h
   cases h
   · exfalso
     rw [lt_iff_not_ge] at h
     exact h.right hy0
   · exact h.left
-#align ennreal.rpow_eq_top_of_nonneg Ennreal.rpow_eq_top_of_nonneg
+#align ennreal.rpow_eq_top_of_nonneg ENNReal.rpow_eq_top_of_nonneg
 
 theorem rpow_ne_top_of_nonneg {x : ℝ≥0∞} {y : ℝ} (hy0 : 0 ≤ y) (h : x ≠ ⊤) : x ^ y ≠ ⊤ :=
-  mt (Ennreal.rpow_eq_top_of_nonneg x hy0) h
-#align ennreal.rpow_ne_top_of_nonneg Ennreal.rpow_ne_top_of_nonneg
+  mt (ENNReal.rpow_eq_top_of_nonneg x hy0) h
+#align ennreal.rpow_ne_top_of_nonneg ENNReal.rpow_ne_top_of_nonneg
 
 theorem rpow_lt_top_of_nonneg {x : ℝ≥0∞} {y : ℝ} (hy0 : 0 ≤ y) (h : x ≠ ⊤) : x ^ y < ⊤ :=
-  lt_top_iff_ne_top.mpr (Ennreal.rpow_ne_top_of_nonneg hy0 h)
-#align ennreal.rpow_lt_top_of_nonneg Ennreal.rpow_lt_top_of_nonneg
+  lt_top_iff_ne_top.mpr (ENNReal.rpow_ne_top_of_nonneg hy0 h)
+#align ennreal.rpow_lt_top_of_nonneg ENNReal.rpow_lt_top_of_nonneg
 
 theorem rpow_add {x : ℝ≥0∞} (y z : ℝ) (hx : x ≠ 0) (h'x : x ≠ ⊤) : x ^ (y + z) = x ^ y * x ^ z :=
   by
   cases x; · exact (h'x rfl).elim
   have : x ≠ 0 := fun h => by simpa [h] using hx
   simp [coe_rpow_of_ne_zero this, NNReal.rpow_add this]
-#align ennreal.rpow_add Ennreal.rpow_add
+#align ennreal.rpow_add ENNReal.rpow_add
 
 theorem rpow_neg (x : ℝ≥0∞) (y : ℝ) : x ^ (-y) = (x ^ y)⁻¹ :=
   by
@@ -2077,14 +2077,14 @@ theorem rpow_neg (x : ℝ≥0∞) (y : ℝ) : x ^ (-y) = (x ^ y)⁻¹ :=
         simp [h, zero_rpow_of_pos, zero_rpow_of_neg, H, neg_pos.mpr]
     · have A : x ^ y ≠ 0 := by simp [h]
       simp [coe_rpow_of_ne_zero h, ← coe_inv A, NNReal.rpow_neg]
-#align ennreal.rpow_neg Ennreal.rpow_neg
+#align ennreal.rpow_neg ENNReal.rpow_neg
 
 theorem rpow_sub {x : ℝ≥0∞} (y z : ℝ) (hx : x ≠ 0) (h'x : x ≠ ⊤) : x ^ (y - z) = x ^ y / x ^ z := by
   rw [sub_eq_add_neg, rpow_add _ _ hx h'x, rpow_neg, div_eq_mul_inv]
-#align ennreal.rpow_sub Ennreal.rpow_sub
+#align ennreal.rpow_sub ENNReal.rpow_sub
 
 theorem rpow_neg_one (x : ℝ≥0∞) : x ^ (-1 : ℝ) = x⁻¹ := by simp [rpow_neg]
-#align ennreal.rpow_neg_one Ennreal.rpow_neg_one
+#align ennreal.rpow_neg_one ENNReal.rpow_neg_one
 
 theorem rpow_mul (x : ℝ≥0∞) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z :=
   by
@@ -2102,7 +2102,7 @@ theorem rpow_mul (x : ℝ≥0∞) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z :=
           mul_pos_of_neg_of_neg, mul_neg_of_neg_of_pos, mul_neg_of_pos_of_neg]
     · have : x ^ y ≠ 0 := by simp [h]
       simp [coe_rpow_of_ne_zero h, coe_rpow_of_ne_zero this, NNReal.rpow_mul]
-#align ennreal.rpow_mul Ennreal.rpow_mul
+#align ennreal.rpow_mul ENNReal.rpow_mul
 
 @[simp, norm_cast]
 theorem rpow_nat_cast (x : ℝ≥0∞) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
@@ -2110,14 +2110,14 @@ theorem rpow_nat_cast (x : ℝ≥0∞) (n : ℕ) : x ^ (n : ℝ) = x ^ n :=
   cases x
   · cases n <;> simp [top_rpow_of_pos (Nat.cast_add_one_pos _), top_pow (Nat.succ_pos _)]
   · simp [coe_rpow_of_nonneg _ (Nat.cast_nonneg n)]
-#align ennreal.rpow_nat_cast Ennreal.rpow_nat_cast
+#align ennreal.rpow_nat_cast ENNReal.rpow_nat_cast
 
 @[simp]
 theorem rpow_two (x : ℝ≥0∞) : x ^ (2 : ℝ) = x ^ 2 :=
   by
   rw [← rpow_nat_cast]
   simp only [Nat.cast_bit0, Nat.cast_one]
-#align ennreal.rpow_two Ennreal.rpow_two
+#align ennreal.rpow_two ENNReal.rpow_two
 
 theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
     (x * y) ^ z = if (x = 0 ∧ y = ⊤ ∨ x = ⊤ ∧ y = 0) ∧ z < 0 then ⊤ else x ^ z * y ^ z :=
@@ -2134,24 +2134,24 @@ theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
   simp only [*, false_and_iff, and_false_iff, false_or_iff, if_false]
   norm_cast  at *
   rw [coe_rpow_of_ne_zero (mul_ne_zero hx0 hy0), NNReal.mul_rpow]
-#align ennreal.mul_rpow_eq_ite Ennreal.mul_rpow_eq_ite
+#align ennreal.mul_rpow_eq_ite ENNReal.mul_rpow_eq_ite
 
 theorem mul_rpow_of_ne_top {x y : ℝ≥0∞} (hx : x ≠ ⊤) (hy : y ≠ ⊤) (z : ℝ) :
     (x * y) ^ z = x ^ z * y ^ z := by simp [*, mul_rpow_eq_ite]
-#align ennreal.mul_rpow_of_ne_top Ennreal.mul_rpow_of_ne_top
+#align ennreal.mul_rpow_of_ne_top ENNReal.mul_rpow_of_ne_top
 
 @[norm_cast]
 theorem coe_mul_rpow (x y : ℝ≥0) (z : ℝ) : ((x : ℝ≥0∞) * y) ^ z = x ^ z * y ^ z :=
   mul_rpow_of_ne_top coe_ne_top coe_ne_top z
-#align ennreal.coe_mul_rpow Ennreal.coe_mul_rpow
+#align ennreal.coe_mul_rpow ENNReal.coe_mul_rpow
 
 theorem mul_rpow_of_ne_zero {x y : ℝ≥0∞} (hx : x ≠ 0) (hy : y ≠ 0) (z : ℝ) :
     (x * y) ^ z = x ^ z * y ^ z := by simp [*, mul_rpow_eq_ite]
-#align ennreal.mul_rpow_of_ne_zero Ennreal.mul_rpow_of_ne_zero
+#align ennreal.mul_rpow_of_ne_zero ENNReal.mul_rpow_of_ne_zero
 
 theorem mul_rpow_of_nonneg (x y : ℝ≥0∞) {z : ℝ} (hz : 0 ≤ z) : (x * y) ^ z = x ^ z * y ^ z := by
   simp [hz.not_lt, mul_rpow_eq_ite]
-#align ennreal.mul_rpow_of_nonneg Ennreal.mul_rpow_of_nonneg
+#align ennreal.mul_rpow_of_nonneg ENNReal.mul_rpow_of_nonneg
 
 theorem inv_rpow (x : ℝ≥0∞) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ :=
   by
@@ -2159,14 +2159,14 @@ theorem inv_rpow (x : ℝ≥0∞) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ :=
   replace hy := hy.lt_or_lt
   rcases eq_or_ne x 0 with (rfl | h0); · cases hy <;> simp [*]
   rcases eq_or_ne x ⊤ with (rfl | h_top); · cases hy <;> simp [*]
-  apply Ennreal.eq_inv_of_mul_eq_one_left
-  rw [← mul_rpow_of_ne_zero (Ennreal.inv_ne_zero.2 h_top) h0, Ennreal.inv_mul_cancel h0 h_top,
+  apply ENNReal.eq_inv_of_mul_eq_one_left
+  rw [← mul_rpow_of_ne_zero (ENNReal.inv_ne_zero.2 h_top) h0, ENNReal.inv_mul_cancel h0 h_top,
     one_rpow]
-#align ennreal.inv_rpow Ennreal.inv_rpow
+#align ennreal.inv_rpow ENNReal.inv_rpow
 
 theorem div_rpow_of_nonneg (x y : ℝ≥0∞) {z : ℝ} (hz : 0 ≤ z) : (x / y) ^ z = x ^ z / y ^ z := by
   rw [div_eq_mul_inv, mul_rpow_of_nonneg _ _ hz, inv_rpow, div_eq_mul_inv]
-#align ennreal.div_rpow_of_nonneg Ennreal.div_rpow_of_nonneg
+#align ennreal.div_rpow_of_nonneg ENNReal.div_rpow_of_nonneg
 
 theorem strictMono_rpow_of_pos {z : ℝ} (h : 0 < z) : StrictMono fun x : ℝ≥0∞ => x ^ z :=
   by
@@ -2176,12 +2176,12 @@ theorem strictMono_rpow_of_pos {z : ℝ} (h : 0 < z) : StrictMono fun x : ℝ≥
   · simp only [top_rpow_of_pos h, coe_rpow_of_nonneg _ h.le, coe_lt_top]
   · lift y to ℝ≥0 using hy
     simp only [coe_rpow_of_nonneg _ h.le, NNReal.rpow_lt_rpow (coe_lt_coe.1 hxy) h, coe_lt_coe]
-#align ennreal.strict_mono_rpow_of_pos Ennreal.strictMono_rpow_of_pos
+#align ennreal.strict_mono_rpow_of_pos ENNReal.strictMono_rpow_of_pos
 
 theorem monotone_rpow_of_nonneg {z : ℝ} (h : 0 ≤ z) : Monotone fun x : ℝ≥0∞ => x ^ z :=
   h.eq_or_lt.elim (fun h0 => h0 ▸ by simp only [rpow_zero, monotone_const]) fun h0 =>
     (strictMono_rpow_of_pos h0).Monotone
-#align ennreal.monotone_rpow_of_nonneg Ennreal.monotone_rpow_of_nonneg
+#align ennreal.monotone_rpow_of_nonneg ENNReal.monotone_rpow_of_nonneg
 
 /-- Bundles `λ x : ℝ≥0∞, x ^ y` into an order isomorphism when `y : ℝ` is positive,
 where the inverse is `λ x : ℝ≥0∞, x ^ (1 / y)`. -/
@@ -2191,51 +2191,51 @@ def orderIsoRpow (y : ℝ) (hy : 0 < y) : ℝ≥0∞ ≃o ℝ≥0∞ :=
     fun x => by
     dsimp
     rw [← rpow_mul, one_div_mul_cancel hy.ne.symm, rpow_one]
-#align ennreal.order_iso_rpow Ennreal.orderIsoRpow
+#align ennreal.order_iso_rpow ENNReal.orderIsoRpow
 
 theorem orderIsoRpow_symm_apply (y : ℝ) (hy : 0 < y) :
     (orderIsoRpow y hy).symm = orderIsoRpow (1 / y) (one_div_pos.2 hy) :=
   by
   simp only [order_iso_rpow, one_div_one_div]
   rfl
-#align ennreal.order_iso_rpow_symm_apply Ennreal.orderIsoRpow_symm_apply
+#align ennreal.order_iso_rpow_symm_apply ENNReal.orderIsoRpow_symm_apply
 
 theorem rpow_le_rpow {x y : ℝ≥0∞} {z : ℝ} (h₁ : x ≤ y) (h₂ : 0 ≤ z) : x ^ z ≤ y ^ z :=
   monotone_rpow_of_nonneg h₂ h₁
-#align ennreal.rpow_le_rpow Ennreal.rpow_le_rpow
+#align ennreal.rpow_le_rpow ENNReal.rpow_le_rpow
 
 theorem rpow_lt_rpow {x y : ℝ≥0∞} {z : ℝ} (h₁ : x < y) (h₂ : 0 < z) : x ^ z < y ^ z :=
   strictMono_rpow_of_pos h₂ h₁
-#align ennreal.rpow_lt_rpow Ennreal.rpow_lt_rpow
+#align ennreal.rpow_lt_rpow ENNReal.rpow_lt_rpow
 
 theorem rpow_le_rpow_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ z ≤ y ^ z ↔ x ≤ y :=
   (strictMono_rpow_of_pos hz).le_iff_le
-#align ennreal.rpow_le_rpow_iff Ennreal.rpow_le_rpow_iff
+#align ennreal.rpow_le_rpow_iff ENNReal.rpow_le_rpow_iff
 
 theorem rpow_lt_rpow_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ z < y ^ z ↔ x < y :=
   (strictMono_rpow_of_pos hz).lt_iff_lt
-#align ennreal.rpow_lt_rpow_iff Ennreal.rpow_lt_rpow_iff
+#align ennreal.rpow_lt_rpow_iff ENNReal.rpow_lt_rpow_iff
 
 theorem le_rpow_one_div_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ≤ y ^ (1 / z) ↔ x ^ z ≤ y :=
   by
   nth_rw 1 [← rpow_one x]
   nth_rw 1 [← @_root_.mul_inv_cancel _ _ z hz.ne']
   rw [rpow_mul, ← one_div, @rpow_le_rpow_iff _ _ (1 / z) (by simp [hz])]
-#align ennreal.le_rpow_one_div_iff Ennreal.le_rpow_one_div_iff
+#align ennreal.le_rpow_one_div_iff ENNReal.le_rpow_one_div_iff
 
 theorem lt_rpow_one_div_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x < y ^ (1 / z) ↔ x ^ z < y :=
   by
   nth_rw 1 [← rpow_one x]
   nth_rw 1 [← @_root_.mul_inv_cancel _ _ z (ne_of_lt hz).symm]
   rw [rpow_mul, ← one_div, @rpow_lt_rpow_iff _ _ (1 / z) (by simp [hz])]
-#align ennreal.lt_rpow_one_div_iff Ennreal.lt_rpow_one_div_iff
+#align ennreal.lt_rpow_one_div_iff ENNReal.lt_rpow_one_div_iff
 
 theorem rpow_one_div_le_iff {x y : ℝ≥0∞} {z : ℝ} (hz : 0 < z) : x ^ (1 / z) ≤ y ↔ x ≤ y ^ z :=
   by
-  nth_rw 1 [← Ennreal.rpow_one y]
+  nth_rw 1 [← ENNReal.rpow_one y]
   nth_rw 2 [← @_root_.mul_inv_cancel _ _ z hz.ne.symm]
-  rw [Ennreal.rpow_mul, ← one_div, Ennreal.rpow_le_rpow_iff (one_div_pos.2 hz)]
-#align ennreal.rpow_one_div_le_iff Ennreal.rpow_one_div_le_iff
+  rw [ENNReal.rpow_mul, ← one_div, ENNReal.rpow_le_rpow_iff (one_div_pos.2 hz)]
+#align ennreal.rpow_one_div_le_iff ENNReal.rpow_one_div_le_iff
 
 theorem rpow_lt_rpow_of_exponent_lt {x : ℝ≥0∞} {y z : ℝ} (hx : 1 < x) (hx' : x ≠ ⊤) (hyz : y < z) :
     x ^ y < x ^ z := by
@@ -2243,7 +2243,7 @@ theorem rpow_lt_rpow_of_exponent_lt {x : ℝ≥0∞} {y z : ℝ} (hx : 1 < x) (h
   rw [one_lt_coe_iff] at hx
   simp [coe_rpow_of_ne_zero (ne_of_gt (lt_trans zero_lt_one hx)),
     NNReal.rpow_lt_rpow_of_exponent_lt hx hyz]
-#align ennreal.rpow_lt_rpow_of_exponent_lt Ennreal.rpow_lt_rpow_of_exponent_lt
+#align ennreal.rpow_lt_rpow_of_exponent_lt ENNReal.rpow_lt_rpow_of_exponent_lt
 
 theorem rpow_le_rpow_of_exponent_le {x : ℝ≥0∞} {y z : ℝ} (hx : 1 ≤ x) (hyz : y ≤ z) :
     x ^ y ≤ x ^ z := by
@@ -2256,14 +2256,14 @@ theorem rpow_le_rpow_of_exponent_le {x : ℝ≥0∞} {y z : ℝ} (hx : 1 ≤ x) 
   · simp only [one_le_coe_iff, some_eq_coe] at hx
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one hx)),
       NNReal.rpow_le_rpow_of_exponent_le hx hyz]
-#align ennreal.rpow_le_rpow_of_exponent_le Ennreal.rpow_le_rpow_of_exponent_le
+#align ennreal.rpow_le_rpow_of_exponent_le ENNReal.rpow_le_rpow_of_exponent_le
 
 theorem rpow_lt_rpow_of_exponent_gt {x : ℝ≥0∞} {y z : ℝ} (hx0 : 0 < x) (hx1 : x < 1) (hyz : z < y) :
     x ^ y < x ^ z := by
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx1 le_top)
   simp only [coe_lt_one_iff, coe_pos] at hx0 hx1
   simp [coe_rpow_of_ne_zero (ne_of_gt hx0), NNReal.rpow_lt_rpow_of_exponent_gt hx0 hx1 hyz]
-#align ennreal.rpow_lt_rpow_of_exponent_gt Ennreal.rpow_lt_rpow_of_exponent_gt
+#align ennreal.rpow_lt_rpow_of_exponent_gt ENNReal.rpow_lt_rpow_of_exponent_gt
 
 theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0∞} {y z : ℝ} (hx1 : x ≤ 1) (hyz : z ≤ y) :
     x ^ y ≤ x ^ z :=
@@ -2278,69 +2278,69 @@ theorem rpow_le_rpow_of_exponent_ge {x : ℝ≥0∞} {y z : ℝ} (hx1 : x ≤ 1)
   · rw [coe_le_one_iff] at hx1
     simp [coe_rpow_of_ne_zero h,
       NNReal.rpow_le_rpow_of_exponent_ge (bot_lt_iff_ne_bot.mpr h) hx1 hyz]
-#align ennreal.rpow_le_rpow_of_exponent_ge Ennreal.rpow_le_rpow_of_exponent_ge
+#align ennreal.rpow_le_rpow_of_exponent_ge ENNReal.rpow_le_rpow_of_exponent_ge
 
 theorem rpow_le_self_of_le_one {x : ℝ≥0∞} {z : ℝ} (hx : x ≤ 1) (h_one_le : 1 ≤ z) : x ^ z ≤ x :=
   by
-  nth_rw 2 [← Ennreal.rpow_one x]
-  exact Ennreal.rpow_le_rpow_of_exponent_ge hx h_one_le
-#align ennreal.rpow_le_self_of_le_one Ennreal.rpow_le_self_of_le_one
+  nth_rw 2 [← ENNReal.rpow_one x]
+  exact ENNReal.rpow_le_rpow_of_exponent_ge hx h_one_le
+#align ennreal.rpow_le_self_of_le_one ENNReal.rpow_le_self_of_le_one
 
 theorem le_rpow_self_of_one_le {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (h_one_le : 1 ≤ z) : x ≤ x ^ z :=
   by
-  nth_rw 1 [← Ennreal.rpow_one x]
-  exact Ennreal.rpow_le_rpow_of_exponent_le hx h_one_le
-#align ennreal.le_rpow_self_of_one_le Ennreal.le_rpow_self_of_one_le
+  nth_rw 1 [← ENNReal.rpow_one x]
+  exact ENNReal.rpow_le_rpow_of_exponent_le hx h_one_le
+#align ennreal.le_rpow_self_of_one_le ENNReal.le_rpow_self_of_one_le
 
 theorem rpow_pos_of_nonneg {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hp_nonneg : 0 ≤ p) : 0 < x ^ p :=
   by
   by_cases hp_zero : p = 0
-  · simp [hp_zero, Ennreal.zero_lt_one]
+  · simp [hp_zero, ENNReal.zero_lt_one]
   · rw [← Ne.def] at hp_zero
     have hp_pos := lt_of_le_of_ne hp_nonneg hp_zero.symm
     rw [← zero_rpow_of_pos hp_pos]
     exact rpow_lt_rpow hx_pos hp_pos
-#align ennreal.rpow_pos_of_nonneg Ennreal.rpow_pos_of_nonneg
+#align ennreal.rpow_pos_of_nonneg ENNReal.rpow_pos_of_nonneg
 
 theorem rpow_pos {p : ℝ} {x : ℝ≥0∞} (hx_pos : 0 < x) (hx_ne_top : x ≠ ⊤) : 0 < x ^ p :=
   by
   cases' lt_or_le 0 p with hp_pos hp_nonpos
   · exact rpow_pos_of_nonneg hx_pos (le_of_lt hp_pos)
-  · rw [← neg_neg p, rpow_neg, Ennreal.inv_pos]
+  · rw [← neg_neg p, rpow_neg, ENNReal.inv_pos]
     exact rpow_ne_top_of_nonneg (right.nonneg_neg_iff.mpr hp_nonpos) hx_ne_top
-#align ennreal.rpow_pos Ennreal.rpow_pos
+#align ennreal.rpow_pos ENNReal.rpow_pos
 
 theorem rpow_lt_one {x : ℝ≥0∞} {z : ℝ} (hx : x < 1) (hz : 0 < z) : x ^ z < 1 :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx le_top)
   simp only [coe_lt_one_iff] at hx
   simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.rpow_lt_one hx hz]
-#align ennreal.rpow_lt_one Ennreal.rpow_lt_one
+#align ennreal.rpow_lt_one ENNReal.rpow_lt_one
 
 theorem rpow_le_one {x : ℝ≥0∞} {z : ℝ} (hx : x ≤ 1) (hz : 0 ≤ z) : x ^ z ≤ 1 :=
   by
   lift x to ℝ≥0 using ne_of_lt (lt_of_le_of_lt hx coe_lt_top)
   simp only [coe_le_one_iff] at hx
   simp [coe_rpow_of_nonneg _ hz, NNReal.rpow_le_one hx hz]
-#align ennreal.rpow_le_one Ennreal.rpow_le_one
+#align ennreal.rpow_le_one ENNReal.rpow_le_one
 
 theorem rpow_lt_one_of_one_lt_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz : z < 0) : x ^ z < 1 :=
   by
   cases x
-  · simp [top_rpow_of_neg hz, Ennreal.zero_lt_one]
+  · simp [top_rpow_of_neg hz, ENNReal.zero_lt_one]
   · simp only [some_eq_coe, one_lt_coe_iff] at hx
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_trans zero_lt_one hx)),
       NNReal.rpow_lt_one_of_one_lt_of_neg hx hz]
-#align ennreal.rpow_lt_one_of_one_lt_of_neg Ennreal.rpow_lt_one_of_one_lt_of_neg
+#align ennreal.rpow_lt_one_of_one_lt_of_neg ENNReal.rpow_lt_one_of_one_lt_of_neg
 
 theorem rpow_le_one_of_one_le_of_neg {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (hz : z < 0) : x ^ z ≤ 1 :=
   by
   cases x
-  · simp [top_rpow_of_neg hz, Ennreal.zero_lt_one]
+  · simp [top_rpow_of_neg hz, ENNReal.zero_lt_one]
   · simp only [one_le_coe_iff, some_eq_coe] at hx
     simp [coe_rpow_of_ne_zero (ne_of_gt (lt_of_lt_of_le zero_lt_one hx)),
       NNReal.rpow_le_one_of_one_le_of_nonpos hx (le_of_lt hz)]
-#align ennreal.rpow_le_one_of_one_le_of_neg Ennreal.rpow_le_one_of_one_le_of_neg
+#align ennreal.rpow_le_one_of_one_le_of_neg ENNReal.rpow_le_one_of_one_le_of_neg
 
 theorem one_lt_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz : 0 < z) : 1 < x ^ z :=
   by
@@ -2348,7 +2348,7 @@ theorem one_lt_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 < x) (hz : 0 < z) : 1 < x
   · simp [top_rpow_of_pos hz]
   · simp only [some_eq_coe, one_lt_coe_iff] at hx
     simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.one_lt_rpow hx hz]
-#align ennreal.one_lt_rpow Ennreal.one_lt_rpow
+#align ennreal.one_lt_rpow ENNReal.one_lt_rpow
 
 theorem one_le_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (hz : 0 < z) : 1 ≤ x ^ z :=
   by
@@ -2356,7 +2356,7 @@ theorem one_le_rpow {x : ℝ≥0∞} {z : ℝ} (hx : 1 ≤ x) (hz : 0 < z) : 1 �
   · simp [top_rpow_of_pos hz]
   · simp only [one_le_coe_iff, some_eq_coe] at hx
     simp [coe_rpow_of_nonneg _ (le_of_lt hz), NNReal.one_le_rpow hx (le_of_lt hz)]
-#align ennreal.one_le_rpow Ennreal.one_le_rpow
+#align ennreal.one_le_rpow ENNReal.one_le_rpow
 
 theorem one_lt_rpow_of_pos_of_lt_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 < x) (hx2 : x < 1)
     (hz : z < 0) : 1 < x ^ z :=
@@ -2364,7 +2364,7 @@ theorem one_lt_rpow_of_pos_of_lt_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 
   lift x to ℝ≥0 using ne_of_lt (lt_of_lt_of_le hx2 le_top)
   simp only [coe_lt_one_iff, coe_pos] at hx1 hx2⊢
   simp [coe_rpow_of_ne_zero (ne_of_gt hx1), NNReal.one_lt_rpow_of_pos_of_lt_one_of_neg hx1 hx2 hz]
-#align ennreal.one_lt_rpow_of_pos_of_lt_one_of_neg Ennreal.one_lt_rpow_of_pos_of_lt_one_of_neg
+#align ennreal.one_lt_rpow_of_pos_of_lt_one_of_neg ENNReal.one_lt_rpow_of_pos_of_lt_one_of_neg
 
 theorem one_le_rpow_of_pos_of_le_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 < x) (hx2 : x ≤ 1)
     (hz : z < 0) : 1 ≤ x ^ z :=
@@ -2373,9 +2373,9 @@ theorem one_le_rpow_of_pos_of_le_one_of_neg {x : ℝ≥0∞} {z : ℝ} (hx1 : 0 
   simp only [coe_le_one_iff, coe_pos] at hx1 hx2⊢
   simp [coe_rpow_of_ne_zero (ne_of_gt hx1),
     NNReal.one_le_rpow_of_pos_of_le_one_of_nonpos hx1 hx2 (le_of_lt hz)]
-#align ennreal.one_le_rpow_of_pos_of_le_one_of_neg Ennreal.one_le_rpow_of_pos_of_le_one_of_neg
+#align ennreal.one_le_rpow_of_pos_of_le_one_of_neg ENNReal.one_le_rpow_of_pos_of_le_one_of_neg
 
-theorem toNnreal_rpow (x : ℝ≥0∞) (z : ℝ) : x.toNNReal ^ z = (x ^ z).toNNReal :=
+theorem toNNReal_rpow (x : ℝ≥0∞) (z : ℝ) : x.toNNReal ^ z = (x ^ z).toNNReal :=
   by
   rcases lt_trichotomy z 0 with (H | H | H)
   · cases x
@@ -2387,22 +2387,22 @@ theorem toNnreal_rpow (x : ℝ≥0∞) (z : ℝ) : x.toNNReal ^ z = (x ^ z).toNN
   · cases x
     · simp [H, ne_of_gt]
     simp [coe_rpow_of_nonneg _ (le_of_lt H)]
-#align ennreal.to_nnreal_rpow Ennreal.toNnreal_rpow
+#align ennreal.to_nnreal_rpow ENNReal.toNNReal_rpow
 
 theorem toReal_rpow (x : ℝ≥0∞) (z : ℝ) : x.toReal ^ z = (x ^ z).toReal := by
-  rw [Ennreal.toReal, Ennreal.toReal, ← NNReal.coe_rpow, Ennreal.toNnreal_rpow]
-#align ennreal.to_real_rpow Ennreal.toReal_rpow
+  rw [ENNReal.toReal, ENNReal.toReal, ← NNReal.coe_rpow, ENNReal.toNNReal_rpow]
+#align ennreal.to_real_rpow ENNReal.toReal_rpow
 
 theorem ofReal_rpow_of_pos {x p : ℝ} (hx_pos : 0 < x) :
-    Ennreal.ofReal x ^ p = Ennreal.ofReal (x ^ p) :=
+    ENNReal.ofReal x ^ p = ENNReal.ofReal (x ^ p) :=
   by
-  simp_rw [Ennreal.ofReal]
+  simp_rw [ENNReal.ofReal]
   rw [coe_rpow_of_ne_zero, coe_eq_coe, Real.toNNReal_rpow_of_nonneg hx_pos.le]
   simp [hx_pos]
-#align ennreal.of_real_rpow_of_pos Ennreal.ofReal_rpow_of_pos
+#align ennreal.of_real_rpow_of_pos ENNReal.ofReal_rpow_of_pos
 
 theorem ofReal_rpow_of_nonneg {x p : ℝ} (hx_nonneg : 0 ≤ x) (hp_nonneg : 0 ≤ p) :
-    Ennreal.ofReal x ^ p = Ennreal.ofReal (x ^ p) :=
+    ENNReal.ofReal x ^ p = ENNReal.ofReal (x ^ p) :=
   by
   by_cases hp0 : p = 0
   · simp [hp0]
@@ -2412,22 +2412,22 @@ theorem ofReal_rpow_of_nonneg {x p : ℝ} (hx_nonneg : 0 ≤ x) (hp_nonneg : 0 �
     simp [hx0, hp_pos, hp_pos.ne.symm]
   rw [← Ne.def] at hx0
   exact of_real_rpow_of_pos (hx_nonneg.lt_of_ne hx0.symm)
-#align ennreal.of_real_rpow_of_nonneg Ennreal.ofReal_rpow_of_nonneg
+#align ennreal.of_real_rpow_of_nonneg ENNReal.ofReal_rpow_of_nonneg
 
 theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0∞ => y ^ x :=
   by
   intro y z hyz
   dsimp only at hyz
   rw [← rpow_one y, ← rpow_one z, ← _root_.mul_inv_cancel hx, rpow_mul, rpow_mul, hyz]
-#align ennreal.rpow_left_injective Ennreal.rpow_left_injective
+#align ennreal.rpow_left_injective ENNReal.rpow_left_injective
 
 theorem rpow_left_surjective {x : ℝ} (hx : x ≠ 0) : Function.Surjective fun y : ℝ≥0∞ => y ^ x :=
   fun y => ⟨y ^ x⁻¹, by simp_rw [← rpow_mul, _root_.inv_mul_cancel hx, rpow_one]⟩
-#align ennreal.rpow_left_surjective Ennreal.rpow_left_surjective
+#align ennreal.rpow_left_surjective ENNReal.rpow_left_surjective
 
 theorem rpow_left_bijective {x : ℝ} (hx : x ≠ 0) : Function.Bijective fun y : ℝ≥0∞ => y ^ x :=
   ⟨rpow_left_injective hx, rpow_left_surjective hx⟩
-#align ennreal.rpow_left_bijective Ennreal.rpow_left_bijective
+#align ennreal.rpow_left_bijective ENNReal.rpow_left_bijective
 
 theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞ => x ^ y) (𝓝 ⊤) (𝓝 ⊤) :=
   by
@@ -2444,7 +2444,7 @@ theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : Tendsto (fun x : ℝ≥0∞
   change ↑c < ↑a at ha
   rw [coe_rpow_of_nonneg _ hy.le]
   exact_mod_cast hc a (by exact_mod_cast ha)
-#align ennreal.tendsto_rpow_at_top Ennreal.tendsto_rpow_at_top
+#align ennreal.tendsto_rpow_at_top ENNReal.tendsto_rpow_at_top
 
 theorem eventually_pow_one_div_le {x : ℝ≥0∞} (hx : x ≠ ∞) {y : ℝ≥0∞} (hy : 1 < y) :
     ∀ᶠ n : ℕ in atTop, x ^ (1 / n : ℝ) ≤ y :=
@@ -2456,7 +2456,7 @@ theorem eventually_pow_one_div_le {x : ℝ≥0∞} (hx : x ≠ ∞) {y : ℝ≥0
     have := NNReal.eventually_pow_one_div_le x (by exact_mod_cast hy : 1 < y)
     refine' this.congr (eventually_of_forall fun n => _)
     rw [coe_rpow_of_nonneg x (by positivity : 0 ≤ (1 / n : ℝ)), coe_le_coe]
-#align ennreal.eventually_pow_one_div_le Ennreal.eventually_pow_one_div_le
+#align ennreal.eventually_pow_one_div_le ENNReal.eventually_pow_one_div_le
 
 private theorem continuous_at_rpow_const_of_pos {x : ℝ≥0∞} {y : ℝ} (h : 0 < y) :
     ContinuousAt (fun a : ℝ≥0∞ => a ^ y) x :=
@@ -2484,21 +2484,21 @@ theorem continuous_rpow_const {y : ℝ} : Continuous fun a : ℝ≥0∞ => a ^ y
     have z_pos : 0 < z := by simpa [hz] using hy
     simp_rw [hz, rpow_neg]
     exact continuous_inv.continuous_at.comp (continuous_at_rpow_const_of_pos z_pos)
-#align ennreal.continuous_rpow_const Ennreal.continuous_rpow_const
+#align ennreal.continuous_rpow_const ENNReal.continuous_rpow_const
 
 theorem tendsto_const_mul_rpow_nhds_zero_of_pos {c : ℝ≥0∞} (hc : c ≠ ∞) {y : ℝ} (hy : 0 < y) :
     Tendsto (fun x : ℝ≥0∞ => c * x ^ y) (𝓝 0) (𝓝 0) :=
   by
-  convert Ennreal.Tendsto.const_mul (ennreal.continuous_rpow_const.tendsto 0) _
+  convert ENNReal.Tendsto.const_mul (ennreal.continuous_rpow_const.tendsto 0) _
   · simp [hy]
   · exact Or.inr hc
-#align ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos
+#align ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos ENNReal.tendsto_const_mul_rpow_nhds_zero_of_pos
 
-end Ennreal
+end ENNReal
 
 theorem Filter.Tendsto.ennrpow_const {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} (r : ℝ)
     (hm : Tendsto m f (𝓝 a)) : Tendsto (fun x => m x ^ r) f (𝓝 (a ^ r)) :=
-  (Ennreal.continuous_rpow_const.Tendsto a).comp hm
+  (ENNReal.continuous_rpow_const.Tendsto a).comp hm
 #align filter.tendsto.ennrpow_const Filter.Tendsto.ennrpow_const
 
 namespace NormNum
@@ -2558,7 +2558,7 @@ unsafe def prove_rpow' (pos neg zero : Name) (α β one a b : expr) : tactic (ex
       pure (c, (expr.const Pos []).mk_app [a, b, b', c, hb, h])
 #align norm_num.prove_rpow' norm_num.prove_rpow'
 
-open NNReal Ennreal
+open NNReal ENNReal
 
 theorem cpow_pos (a b : ℂ) (b' : ℕ) (c : ℂ) (hb : b = b') (h : a ^ b' = c) : a ^ b = c := by
   rw [← h, hb, Complex.cpow_nat_cast]
@@ -2577,12 +2577,12 @@ theorem nnrpow_neg (a : ℝ≥0) (b : ℝ) (b' : ℕ) (c c' : ℝ≥0) (hb : b =
 #align norm_num.nnrpow_neg NormNum.nnrpow_neg
 
 theorem ennrpow_pos (a : ℝ≥0∞) (b : ℝ) (b' : ℕ) (c : ℝ≥0∞) (hb : b = b') (h : a ^ b' = c) :
-    a ^ b = c := by rw [← h, hb, Ennreal.rpow_nat_cast]
+    a ^ b = c := by rw [← h, hb, ENNReal.rpow_nat_cast]
 #align norm_num.ennrpow_pos NormNum.ennrpow_pos
 
 theorem ennrpow_neg (a : ℝ≥0∞) (b : ℝ) (b' : ℕ) (c c' : ℝ≥0∞) (hb : b = b') (h : a ^ b' = c)
     (hc : c⁻¹ = c') : a ^ (-b) = c' := by
-  rw [← hc, ← h, hb, Ennreal.rpow_neg, Ennreal.rpow_nat_cast]
+  rw [← hc, ← h, hb, ENNReal.rpow_neg, ENNReal.rpow_nat_cast]
 #align norm_num.ennrpow_neg NormNum.ennrpow_neg
 
 /-- Evaluate `complex.cpow a b` where `a` is a rational numeral and `b` is an integer. -/
@@ -2597,7 +2597,7 @@ unsafe def prove_nnrpow : expr → expr → tactic (expr × expr) :=
 
 /-- Evaluate `ennreal.rpow a b` where `a` is a rational numeral and `b` is an integer. -/
 unsafe def prove_ennrpow : expr → expr → tactic (expr × expr) :=
-  prove_rpow' `` ennrpow_pos `` ennrpow_neg `` Ennreal.rpow_zero q(ℝ≥0∞) q(ℝ) q((1 : ℝ≥0∞))
+  prove_rpow' `` ennrpow_pos `` ennrpow_neg `` ENNReal.rpow_zero q(ℝ≥0∞) q(ℝ) q((1 : ℝ≥0∞))
 #align norm_num.prove_ennrpow norm_num.prove_ennrpow
 
 /-- Evaluates expressions of the form `rpow a b`, `cpow a b` and `a ^ b` in the special case where
@@ -2610,8 +2610,8 @@ unsafe def eval_rpow_cpow : expr → tactic (expr × expr)
   | q(Complex.cpow $(a) $(b)) => b.to_int >> prove_cpow a b
   | q(@Pow.pow _ _ NNReal.Real.hasPow $(a) $(b)) => b.to_int >> prove_nnrpow a b
   | q(NNReal.rpow $(a) $(b)) => b.to_int >> prove_nnrpow a b
-  | q(@Pow.pow _ _ Ennreal.Real.hasPow $(a) $(b)) => b.to_int >> prove_ennrpow a b
-  | q(Ennreal.rpow $(a) $(b)) => b.to_int >> prove_ennrpow a b
+  | q(@Pow.pow _ _ ENNReal.Real.hasPow $(a) $(b)) => b.to_int >> prove_ennrpow a b
+  | q(ENNReal.rpow $(a) $(b)) => b.to_int >> prove_ennrpow a b
   | _ => tactic.failed
 #align norm_num.eval_rpow_cpow norm_num.eval_rpow_cpow
 
@@ -2644,7 +2644,7 @@ unsafe def prove_nnrpow (a b : expr) : tactic strictness := do
 
 -- We already know `0 ≤ x` for all `x : ℝ≥0`
 private theorem ennrpow_pos {a : ℝ≥0∞} {b : ℝ} (ha : 0 < a) (hb : 0 < b) : 0 < a ^ b :=
-  Ennreal.rpow_pos_of_nonneg ha hb.le
+  ENNReal.rpow_pos_of_nonneg ha hb.le
 #align tactic.positivity.ennrpow_pos tactic.positivity.ennrpow_pos
 
 /-- Auxiliary definition for the `positivity` tactic to handle real powers of extended nonnegative
@@ -2654,7 +2654,7 @@ unsafe def prove_ennrpow (a b : expr) : tactic strictness := do
   let strictness_b ← core b
   match strictness_a, strictness_b with
     | positive pa, positive pb => positive <$> mk_app `` ennrpow_pos [pa, pb]
-    | positive pa, nonnegative pb => positive <$> mk_app `` Ennreal.rpow_pos_of_nonneg [pa, pb]
+    | positive pa, nonnegative pb => positive <$> mk_app `` ENNReal.rpow_pos_of_nonneg [pa, pb]
     | _, _ => failed
 #align tactic.positivity.prove_ennrpow tactic.positivity.prove_ennrpow
 
@@ -2671,8 +2671,8 @@ unsafe def positivity_rpow : expr → tactic strictness
   | q(Real.rpow $(a) $(b)) => prove_rpow a b
   | q(@Pow.pow _ _ NNReal.Real.hasPow $(a) $(b)) => prove_nnrpow a b
   | q(NNReal.rpow $(a) $(b)) => prove_nnrpow a b
-  | q(@Pow.pow _ _ Ennreal.Real.hasPow $(a) $(b)) => prove_ennrpow a b
-  | q(Ennreal.rpow $(a) $(b)) => prove_ennrpow a b
+  | q(@Pow.pow _ _ ENNReal.Real.hasPow $(a) $(b)) => prove_ennrpow a b
+  | q(ENNReal.rpow $(a) $(b)) => prove_ennrpow a b
   | _ => failed
 #align tactic.positivity_rpow tactic.positivity_rpow
 

@@ -49,7 +49,7 @@ universe u
 
 open Metric Set FiniteDimensional MeasureTheory Filter Fin
 
-open Ennreal Topology
+open ENNReal Topology
 
 noncomputable section
 
@@ -172,24 +172,24 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
       _ = 5 / 2 := by norm_num [δ]
       
   have I :
-    (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) ≤
-      Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) :=
+    (s.card : ℝ≥0∞) * ENNReal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) ≤
+      ENNReal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) :=
     calc
-      (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) = μ A :=
+      (s.card : ℝ≥0∞) * ENNReal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) = μ A :=
         by
         rw [hA, measure_bUnion_finset D fun c hc => measurableSet_ball]
         have I : 0 < δ := by norm_num [δ]
         simp only [μ.add_haar_ball_of_pos _ I, one_div, one_pow, Finset.sum_const, nsmul_eq_mul,
           div_pow, mul_assoc]
       _ ≤ μ (ball (0 : E) ρ) := measure_mono A_subset
-      _ = Ennreal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by
+      _ = ENNReal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by
         simp only [μ.add_haar_ball_of_pos _ ρpos]
       
-  have J : (s.card : ℝ≥0∞) * Ennreal.ofReal (δ ^ finrank ℝ E) ≤ Ennreal.ofReal (ρ ^ finrank ℝ E) :=
-    (Ennreal.mul_le_mul_right (measure_ball_pos _ _ zero_lt_one).ne' measure_ball_lt_top.ne).1 I
+  have J : (s.card : ℝ≥0∞) * ENNReal.ofReal (δ ^ finrank ℝ E) ≤ ENNReal.ofReal (ρ ^ finrank ℝ E) :=
+    (ENNReal.mul_le_mul_right (measure_ball_pos _ _ zero_lt_one).ne' measure_ball_lt_top.ne).1 I
   have K : (s.card : ℝ) ≤ (5 : ℝ) ^ finrank ℝ E := by
-    simpa [Ennreal.toReal_mul, div_eq_mul_inv] using
-      Ennreal.toReal_le_of_le_ofReal (pow_nonneg ρpos.le _) J
+    simpa [ENNReal.toReal_mul, div_eq_mul_inv] using
+      ENNReal.toReal_le_of_le_ofReal (pow_nonneg ρpos.le _) J
   exact_mod_cast K
 #align besicovitch.card_le_of_separated Besicovitch.card_le_of_separated
 

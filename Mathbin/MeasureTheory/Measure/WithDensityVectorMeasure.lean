@@ -29,7 +29,7 @@ the Radon-Nikodym theorem for signed measures.
 
 noncomputable section
 
-open Classical MeasureTheory NNReal Ennreal
+open Classical MeasureTheory NNReal ENNReal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 
@@ -199,9 +199,9 @@ theorem withDensityᵥ_toReal {f : α → ℝ≥0∞} (hfm : AeMeasurable f μ) 
 theorem withDensityᵥ_eq_withDensity_pos_part_sub_withDensity_neg_part {f : α → ℝ}
     (hfi : Integrable f μ) :
     μ.withDensityᵥ f =
-      @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal <| f x)
+      @toSignedMeasure α _ (μ.withDensity fun x => ENNReal.ofReal <| f x)
           (isFiniteMeasureWithDensityOfReal hfi.2) -
-        @toSignedMeasure α _ (μ.withDensity fun x => Ennreal.ofReal <| -f x)
+        @toSignedMeasure α _ (μ.withDensity fun x => ENNReal.ofReal <| -f x)
           (isFiniteMeasureWithDensityOfReal hfi.neg.2) :=
   by
   ext (i hi)

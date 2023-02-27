@@ -245,7 +245,7 @@ variable [SeminormedAddCommGroup α]
 
 theorem linfty_op_norm_def (A : Matrix m n α) :
     ‖A‖ = ((Finset.univ : Finset m).sup fun i : m => ∑ j : n, ‖A i j‖₊ : ℝ≥0) := by
-  simp [Pi.norm_def, PiLp.nnnorm_eq_sum Ennreal.one_ne_top]
+  simp [Pi.norm_def, PiLp.nnnorm_eq_sum ENNReal.one_ne_top]
 #align matrix.linfty_op_norm_def Matrix.linfty_op_norm_def
 
 theorem linfty_op_nnnorm_def (A : Matrix m n α) :
@@ -528,8 +528,8 @@ theorem frobenius_nnnorm_one [DecidableEq n] [SeminormedAddCommGroup α] [One α
     ‖(1 : Matrix n n α)‖₊ = NNReal.sqrt (Fintype.card n) * ‖(1 : α)‖₊ :=
   by
   refine' (frobenius_nnnorm_diagonal _).trans _
-  simp_rw [PiLp.nnnorm_equiv_symm_const Ennreal.two_ne_top, NNReal.sqrt_eq_rpow]
-  simp only [Ennreal.toReal_div, Ennreal.one_toReal, Ennreal.toReal_bit0]
+  simp_rw [PiLp.nnnorm_equiv_symm_const ENNReal.two_ne_top, NNReal.sqrt_eq_rpow]
+  simp only [ENNReal.toReal_div, ENNReal.one_toReal, [anonymous]]
 #align matrix.frobenius_nnnorm_one Matrix.frobenius_nnnorm_one
 
 section IsROrC

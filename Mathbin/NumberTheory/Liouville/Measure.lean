@@ -31,7 +31,7 @@ Liouville number, Lebesgue measure, residual, generic property
 -/
 
 
-open Filter BigOperators Ennreal Topology NNReal
+open Filter BigOperators ENNReal Topology NNReal
 
 open Filter Set Metric MeasureTheory Real
 
@@ -113,7 +113,7 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
     by
     intro a b
     rw [Real.volume_ball, mul_one_div, ← NNReal.coe_two, ← NNReal.coe_nat_cast, ← NNReal.coe_rpow, ←
-      NNReal.coe_div, Ennreal.ofReal_coe_nNReal]
+      NNReal.coe_div, ENNReal.ofReal_coe_nnreal]
   have :
     ∀ b : ℕ, volume (⋃ a ∈ Finset.Icc (0 : ℤ) b, B a b) ≤ (2 * (b ^ (1 - r) + b ^ (-r)) : ℝ≥0) :=
     by
@@ -123,13 +123,13 @@ theorem volume_unionᵢ_setOf_liouvilleWith :
         measure_bUnion_finset_le _ _
       _ = ((b + 1) * (2 / b ^ r) : ℝ≥0) := by
         simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
-          Int.toNat_coe_nat, ← Nat.cast_succ, Ennreal.coe_mul, Ennreal.coe_nat]
+          Int.toNat_coe_nat, ← Nat.cast_succ, ENNReal.coe_mul, ENNReal.coe_nat]
       _ = _ := _
       
     have : 1 - r ≠ 0 := by linarith
-    rw [Ennreal.coe_eq_coe]
+    rw [ENNReal.coe_eq_coe]
     simp [add_mul, div_eq_mul_inv, NNReal.rpow_neg, NNReal.rpow_sub' _ this, mul_add, mul_left_comm]
-  refine' ne_top_of_le_ne_top (Ennreal.tsum_coe_ne_top_iff_summable.2 _) (Ennreal.tsum_le_tsum this)
+  refine' ne_top_of_le_ne_top (ENNReal.tsum_coe_ne_top_iff_summable.2 _) (ENNReal.tsum_le_tsum this)
   refine' (Summable.add _ _).mul_left _ <;> simp only [NNReal.summable_rpow] <;> linarith
 #align volume_Union_set_of_liouville_with volume_unionᵢ_setOf_liouvilleWith
 

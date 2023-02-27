@@ -24,7 +24,7 @@ integral, McShane integral, Bochner integral
 -/
 
 
-open Classical NNReal Ennreal Topology BigOperators
+open Classical NNReal ENNReal Topology BigOperators
 
 universe u v
 
@@ -54,10 +54,10 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
   have B : μ (s ∩ I) ≠ ∞ :=
     ((measure_mono <| Set.inter_subset_right _ _).trans_lt (I.measure_coe_lt_top μ)).Ne
   obtain ⟨F, hFs, hFc, hμF⟩ : ∃ (F : _)(_ : F ⊆ s ∩ I.Icc), IsClosed F ∧ μ ((s ∩ I.Icc) \ F) < ε
-  exact (hs.inter I.measurable_set_Icc).exists_isClosed_diff_lt A (Ennreal.coe_pos.2 ε0).ne'
+  exact (hs.inter I.measurable_set_Icc).exists_isClosed_diff_lt A (ENNReal.coe_pos.2 ε0).ne'
   obtain ⟨U, hsU, hUo, hUt, hμU⟩ :
     ∃ (U : _)(_ : U ⊇ s ∩ I.Icc), IsOpen U ∧ μ U < ∞ ∧ μ (U \ (s ∩ I.Icc)) < ε
-  exact (hs.inter I.measurable_set_Icc).exists_isOpen_diff_lt A (Ennreal.coe_pos.2 ε0).ne'
+  exact (hs.inter I.measurable_set_Icc).exists_isOpen_diff_lt A (ENNReal.coe_pos.2 ε0).ne'
   /- Then we choose `r` so that `closed_ball x (r x) ⊆ U` whenever `x ∈ s ∩ I.Icc` and
     `closed_ball x (r x)` is disjoint with `F` otherwise. -/
   have : ∀ x ∈ s ∩ I.Icc, ∃ r : Ioi (0 : ℝ), closed_ball x r ⊆ U := fun x hx =>
@@ -85,12 +85,12 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
     refine' fun J hJ hJs x hx => ⟨hrsU _ ⟨hJs, π.tag_mem_Icc J⟩ _, π.le_of_mem' J hJ hx⟩
     simpa only [r, s.piecewise_eq_of_mem _ _ hJs] using hπ.1 J hJ (box.coe_subset_Icc hx)
   refine' abs_sub_le_iff.2 ⟨_, _⟩
-  · refine' (Ennreal.le_toReal_sub B).trans (Ennreal.toReal_le_coe_of_le_coe _)
+  · refine' (ENNReal.le_toReal_sub B).trans (ENNReal.toReal_le_coe_of_le_coe _)
     refine' (tsub_le_tsub (measure_mono htU) le_rfl).trans (le_measure_diff.trans _)
     refine' (measure_mono fun x hx => _).trans hμU.le
     exact ⟨hx.1.1, fun hx' => hx.2 ⟨hx'.1, hx.1.2⟩⟩
   · have hμt : μ t ≠ ∞ := ((measure_mono (htU.trans (inter_subset_left _ _))).trans_lt hUt).Ne
-    refine' (Ennreal.le_toReal_sub hμt).trans (Ennreal.toReal_le_coe_of_le_coe _)
+    refine' (ENNReal.le_toReal_sub hμt).trans (ENNReal.toReal_le_coe_of_le_coe _)
     refine' le_measure_diff.trans ((measure_mono _).trans hμF.le)
     rintro x ⟨⟨hxs, hxI⟩, hxt⟩
     refine' ⟨⟨hxs, box.coe_subset_Icc hxI⟩, fun hxF => hxt _⟩
@@ -125,7 +125,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     by
     refine' fun n => (N ⁻¹' {n}).exists_isOpen_lt_of_lt _ _
     cases n
-    · simpa [Ennreal.div_zero (Ennreal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
+    · simpa [ENNReal.div_zero (ENNReal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
     · refine' (measure_mono_null _ hf).le.trans_lt _
       · exact fun x hxN hxf => n.succ_ne_zero ((Eq.symm hxN).trans <| N0.2 hxf)
       · simp [(δ0 _).ne']
@@ -145,8 +145,8 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     by
     intro J hJ
     rw [tagged_prepartition.mem_filter] at hJ
-    rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
-    exact mul_le_mul_of_nonneg_left (hJ.2 ▸ Nat.le_ceil _) Ennreal.toReal_nonneg
+    rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
+    exact mul_le_mul_of_nonneg_left (hJ.2 ▸ Nat.le_ceil _) ENNReal.toReal_nonneg
   refine' (norm_sum_le_of_le _ this).trans _
   clear this
   rw [← sum_mul, ← prepartition.measure_Union_to_real]
@@ -160,9 +160,9 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
     rintro x ⟨J, ⟨hJ, rfl⟩, hx⟩
     exact ⟨hrU _ (hπ.1 _ hJ (box.coe_subset_Icc hx)), π.le_of_mem' J hJ hx⟩
   lift m to ℝ≥0 using ne_top_of_lt this
-  rw [Ennreal.coe_toReal, ← NNReal.coe_nat_cast, ← NNReal.coe_mul, NNReal.coe_le_coe, ←
-    Ennreal.coe_le_coe, Ennreal.coe_mul, Ennreal.coe_nat, mul_comm]
-  exact (mul_le_mul_left' this.le _).trans Ennreal.mul_div_le
+  rw [ENNReal.coe_toReal, ← NNReal.coe_nat_cast, ← NNReal.coe_mul, NNReal.coe_le_coe, ←
+    ENNReal.coe_le_coe, ENNReal.coe_mul, ENNReal.coe_nat, mul_comm]
+  exact (mul_le_mul_left' this.le _).trans ENNReal.mul_div_le
 #align box_integral.has_integral_zero_of_ae_eq_zero BoxIntegral.hasIntegralZeroOfAeEqZero
 
 /-- If `f` has integral `y` on a box `I` with respect to a locally finite measure `μ` and `g` is
@@ -240,14 +240,14 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     by
     intro x m n hmn
     rw [← dist_eq_norm, ← dist_eq_norm, dist_nndist, dist_nndist, NNReal.coe_le_coe, ←
-      Ennreal.coe_le_coe, ← edist_nndist, ← edist_nndist]
+      ENNReal.coe_le_coe, ← edist_nndist, ← edist_nndist]
     exact simple_func.edist_approx_on_mono hg.measurable _ x hmn
   /- Now consider `ε > 0`. We need to find `r` such that for any tagged partition subordinate
     to `r`, the integral sum is `(μ I + 1 + 1) * ε`-close to the Bochner integral. -/
   refine' has_integral_of_mul ((μ I).toReal + 1 + 1) fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le
   rw [NNReal.coe_pos] at ε0
-  have ε0' := Ennreal.coe_pos.2 ε0
+  have ε0' := ENNReal.coe_pos.2 ε0
   -- Choose `N` such that the integral of `‖f N x - g x‖` is less than or equal to `ε`.
   obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ‖f N x - g x‖ ∂μ) ≤ ε :=
     by
@@ -286,8 +286,8 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     rw [← hπp.Union_eq, π.to_prepartition.measure_Union_to_real, sum_mul, integral_sum]
     refine' dist_sum_sum_le_of_le _ fun J hJ => _
     dsimp
-    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg Ennreal.toReal_nonneg]
-    refine' mul_le_mul_of_nonneg_left _ Ennreal.toReal_nonneg
+    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
+    refine' mul_le_mul_of_nonneg_left _ ENNReal.toReal_nonneg
     rw [← dist_eq_norm']
     exact hNxε _
   · /- We group the terms of both sums by the values of `Nx (π.tag J)`.

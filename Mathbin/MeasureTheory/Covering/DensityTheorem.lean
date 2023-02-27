@@ -117,7 +117,7 @@ theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ
       linarith
     apply (measure_mono this).trans _
     refine' le_mul_of_one_le_left (zero_le _) _
-    exact Ennreal.one_le_coe_iff.2 (le_max_right _ _)
+    exact ENNReal.one_le_coe_iff.2 (le_max_right _ _)
 #align is_doubling_measure.closed_ball_mem_vitali_family_of_dist_le_mul IsDoublingMeasure.closedBall_mem_vitaliFamily_of_dist_le_mul
 
 theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter ι} (w : ι → α)

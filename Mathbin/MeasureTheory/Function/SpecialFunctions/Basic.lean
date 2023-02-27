@@ -25,7 +25,7 @@ See also `measure_theory.function.special_functions.arctan` and
 
 noncomputable section
 
-open NNReal Ennreal
+open NNReal ENNReal
 
 namespace Real
 
@@ -316,18 +316,18 @@ instance NNReal.hasMeasurablePow : HasMeasurablePow ℝ≥0 ℝ :=
   ⟨(measurable_fst.coeNnrealReal.pow measurable_snd).subtype_mk⟩
 #align nnreal.has_measurable_pow NNReal.hasMeasurablePow
 
-instance Ennreal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=
+instance ENNReal.hasMeasurablePow : HasMeasurablePow ℝ≥0∞ ℝ :=
   by
-  refine' ⟨Ennreal.measurable_of_measurable_nNReal_prod _ _⟩
-  · simp_rw [Ennreal.coe_rpow_def]
-    refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nNReal_ennreal
+  refine' ⟨ENNReal.measurable_of_measurable_nNReal_prod _ _⟩
+  · simp_rw [ENNReal.coe_rpow_def]
+    refine' Measurable.ite _ measurable_const (measurable_fst.pow measurable_snd).coe_nNReal_eNNReal
     exact
       MeasurableSet.inter (measurable_fst (measurable_set_singleton 0))
         (measurable_snd measurableSet_Iio)
-  · simp_rw [Ennreal.top_rpow_def]
+  · simp_rw [ENNReal.top_rpow_def]
     refine' Measurable.ite measurableSet_Ioi measurable_const _
     exact Measurable.ite (measurable_set_singleton 0) measurable_const measurable_const
-#align ennreal.has_measurable_pow Ennreal.hasMeasurablePow
+#align ennreal.has_measurable_pow ENNReal.hasMeasurablePow
 
 end PowInstances
 

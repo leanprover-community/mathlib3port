@@ -66,7 +66,7 @@ Lebesgue decomposition theorem
 
 noncomputable section
 
-open Classical MeasureTheory NNReal Ennreal
+open Classical MeasureTheory NNReal ENNReal
 
 open Set
 
@@ -291,7 +291,7 @@ theorem singularPart_smul (μ ν : Measure α) (r : ℝ≥0) :
       (eq_singular_part ((measurable_rn_deriv μ ν).const_smul (r : ℝ≥0∞))
           (mutually_singular.smul r (have_lebesgue_decomposition_spec _ _).2.1) _).symm
     rw [with_density_smul _ (measurable_rn_deriv _ _), ← smul_add, ←
-      have_lebesgue_decomposition_add μ ν, Ennreal.smul_def]
+      have_lebesgue_decomposition_add μ ν, ENNReal.smul_def]
   · rw [singular_part, singular_part, dif_neg hl, dif_neg, smul_zero]
     refine' fun hl' => hl _
     rw [← inv_smul_smul₀ hr μ]
@@ -443,13 +443,13 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
     by
     intro n
     have := nonpos_of_restrict_le_zero _ (hA₂ n)
-    rwa [to_signed_measure_sub_apply hAmeas, sub_nonpos, Ennreal.toReal_le_toReal] at this
+    rwa [to_signed_measure_sub_apply hAmeas, sub_nonpos, ENNReal.toReal_le_toReal] at this
     exacts[ne_of_lt (measure_lt_top _ _), ne_of_lt (measure_lt_top _ _)]
   have hμ : μ A = 0 :=
     by
     lift μ A to ℝ≥0 using ne_of_lt (measure_lt_top _ _) with μA
     lift ν A to ℝ≥0 using ne_of_lt (measure_lt_top _ _) with νA
-    rw [Ennreal.coe_eq_zero]
+    rw [ENNReal.coe_eq_zero]
     by_cases hb : 0 < νA
     · suffices ∀ b, 0 < b → μA ≤ b by
         by_contra
@@ -474,7 +474,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMe
         · exact hn
         · exact Ne.symm (ne_of_lt hb)
       refine' le_trans _ (le_of_lt h')
-      rw [← Ennreal.coe_le_coe, Ennreal.coe_mul]
+      rw [← ENNReal.coe_le_coe, ENNReal.coe_mul]
       exact hA₃ n
     · rw [not_lt, le_zero_iff] at hb
       specialize hA₃ 0
@@ -508,7 +508,7 @@ theorem zero_mem_measurableLe : (0 : α → ℝ≥0∞) ∈ measurableLe μ ν :
 theorem sup_mem_measurableLe {f g : α → ℝ≥0∞} (hf : f ∈ measurableLe μ ν)
     (hg : g ∈ measurableLe μ ν) : (fun a => f a ⊔ g a) ∈ measurableLe μ ν :=
   by
-  simp_rw [Ennreal.sup_eq_max]
+  simp_rw [ENNReal.sup_eq_max]
   refine' ⟨Measurable.max hf.1 hg.1, fun A hA => _⟩
   have h₁ := hA.inter (measurableSet_le hf.1 hg.1)
   have h₂ := hA.inter (measurableSet_lt hg.1 hf.1)
@@ -522,7 +522,7 @@ theorem supᵢ_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : �
     (⨆ (k : ℕ) (hk : k ≤ m + 1), f k a) = f m.succ a ⊔ ⨆ (k : ℕ) (hk : k ≤ m), f k a :=
   by
   ext x
-  simp only [Option.mem_def, Ennreal.some_eq_coe]
+  simp only [Option.mem_def, ENNReal.some_eq_coe]
   constructor <;> intro h <;> rw [← h]; symm
   all_goals
     set c := ⨆ (k : ℕ) (hk : k ≤ m + 1), f k a with hc
@@ -673,11 +673,11 @@ theorem haveLebesgueDecompositionOfFiniteMeasure [IsFiniteMeasure μ] [IsFiniteM
         have := subset_le_of_restrict_le_restrict _ _ hE₁ hE₃ (inter_subset_right A E)
         rwa [zero_apply, to_signed_measure_sub_apply (hA.inter hE₁),
           measure.sub_apply (hA.inter hE₁) hle,
-          Ennreal.toReal_sub_of_le _ (ne_of_lt (measure_lt_top _ _)), sub_nonneg, le_sub_iff_add_le,
-          ← Ennreal.toReal_add, Ennreal.toReal_le_toReal, measure.coe_smul, Pi.smul_apply,
+          ENNReal.toReal_sub_of_le _ (ne_of_lt (measure_lt_top _ _)), sub_nonneg, le_sub_iff_add_le,
+          ← ENNReal.toReal_add, ENNReal.toReal_le_toReal, measure.coe_smul, Pi.smul_apply,
           with_density_apply _ (hA.inter hE₁), show ε • ν (A ∩ E) = (ε : ℝ≥0∞) * ν (A ∩ E) by rfl, ←
           set_lintegral_const, ← lintegral_add_left measurable_const] at this
-        · rw [Ne.def, Ennreal.add_eq_top, not_or]
+        · rw [Ne.def, ENNReal.add_eq_top, not_or]
           exact ⟨ne_of_lt (measure_lt_top _ _), ne_of_lt (measure_lt_top _ _)⟩
         · exact ne_of_lt (measure_lt_top _ _)
         · exact ne_of_lt (measure_lt_top _ _)
@@ -705,7 +705,7 @@ theorem haveLebesgueDecompositionOfFiniteMeasure [IsFiniteMeasure μ] [IsFiniteM
       -- but this contradicts the maximality of `∫⁻ x, ξ x ∂ν`
       refine' not_lt.2 this _
       rw [hξ₁, lintegral_add_left hξm, lintegral_indicator _ hE₁, set_lintegral_const]
-      refine' Ennreal.lt_add_right _ (Ennreal.mul_pos_iff.2 ⟨Ennreal.coe_pos.2 hε₁, hE₂⟩).ne'
+      refine' ENNReal.lt_add_right _ (ENNReal.mul_pos_iff.2 ⟨ENNReal.coe_pos.2 hε₁, hE₂⟩).ne'
       have := measure_ne_top (ν.with_density ξ) univ
       rwa [with_density_apply _ MeasurableSet.univ, measure.restrict_univ] at this
     -- since `ν.with_density ξ ≤ μ`, it is clear that `μ = μ₁ + ν.with_density ξ`
@@ -752,7 +752,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
     refine' ⟨⟨ξ, f⟩, _, _, _⟩
     ·
       exact
-        Measurable.ennreal_tsum' fun n =>
+        Measurable.eNNReal_tsum' fun n =>
           Measurable.indicator (measurable_rn_deriv (μn n) (νn n)) (S.set_mem n)
     -- We show that `ξ` is mutually singular with respect to `ν`
     · choose A hA₁ hA₂ hA₃ using fun n => mutually_singular_singular_part (μn n) (νn n)
@@ -781,7 +781,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
               rw [disjoint_iff_inter_eq_empty] at this
               rw [this, empty_inter, measure_empty]
             · infer_instance
-          simp_rw [this, tsum_eq_zero_iff Ennreal.summable]
+          simp_rw [this, tsum_eq_zero_iff ENNReal.summable]
           intro n
           exact measure_mono_null (inter_subset_right _ _) (hA₂ n)
         · exact h₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left
@@ -808,7 +808,7 @@ instance (priority := 100) haveLebesgueDecompositionOfSigmaFinite (μ ν : Measu
             rw [top_eq_univ, ← S.spanning, mem_Union] at hx
             obtain ⟨i, hi⟩ := hx
             exact ⟨i, hi, h i hi⟩
-        rw [hcompl.compl_eq, measure_Union, tsum_eq_zero_iff Ennreal.summable]
+        rw [hcompl.compl_eq, measure_Union, tsum_eq_zero_iff ENNReal.summable]
         · intro n
           rw [inter_comm, ← restrict_apply (hA₁ n).compl, ← hA₃ n, hνn, h₁]
         · exact h₂.mono fun i j => Disjoint.mono inf_le_left inf_le_left
@@ -1028,8 +1028,8 @@ variable {s μ}
 
 theorem jordanDecompositionAddWithDensityMutuallySingular {f : α → ℝ} (hf : Measurable f)
     (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) :
-    (t.toJordanDecomposition.posPart + μ.withDensity fun x : α => Ennreal.ofReal (f x)) ⟂ₘ
-      t.toJordanDecomposition.negPart + μ.withDensity fun x : α => Ennreal.ofReal (-f x) :=
+    (t.toJordanDecomposition.posPart + μ.withDensity fun x : α => ENNReal.ofReal (f x)) ⟂ₘ
+      t.toJordanDecomposition.negPart + μ.withDensity fun x : α => ENNReal.ofReal (-f x) :=
   by
   rw [mutually_singular_ennreal_iff, total_variation_mutually_singular_iff] at htμ
   change
@@ -1048,8 +1048,8 @@ theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Me
     (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     s.toJordanDecomposition =
       @JordanDecomposition.mk α _
-        (t.toJordanDecomposition.posPart + μ.withDensity fun x => Ennreal.ofReal (f x))
-        (t.toJordanDecomposition.negPart + μ.withDensity fun x => Ennreal.ofReal (-f x))
+        (t.toJordanDecomposition.posPart + μ.withDensity fun x => ENNReal.ofReal (f x))
+        (t.toJordanDecomposition.negPart + μ.withDensity fun x => ENNReal.ofReal (-f x))
         (by
           haveI := is_finite_measure_with_density_of_real hfi.2
           infer_instance)
@@ -1064,8 +1064,8 @@ theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Me
   simp_rw [jordan_decomposition.to_signed_measure, hadd]
   ext (i hi)
   rw [vector_measure.sub_apply, to_signed_measure_apply_measurable hi,
-      to_signed_measure_apply_measurable hi, add_apply, add_apply, Ennreal.toReal_add,
-      Ennreal.toReal_add, add_sub_add_comm, ← to_signed_measure_apply_measurable hi, ←
+      to_signed_measure_apply_measurable hi, add_apply, add_apply, ENNReal.toReal_add,
+      ENNReal.toReal_add, add_sub_add_comm, ← to_signed_measure_apply_measurable hi, ←
       to_signed_measure_apply_measurable hi, ← vector_measure.sub_apply, ←
       jordan_decomposition.to_signed_measure, to_signed_measure_to_jordan_decomposition,
       vector_measure.add_apply, ← to_signed_measure_apply_measurable hi, ←
@@ -1084,12 +1084,12 @@ private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → �
   rw [vector_measure.equiv_measure.right_inv, total_variation_mutually_singular_iff] at htμ
   refine'
     { posPart := by
-        use ⟨t.to_jordan_decomposition.pos_part, fun x => Ennreal.ofReal (f x)⟩
+        use ⟨t.to_jordan_decomposition.pos_part, fun x => ENNReal.ofReal (f x)⟩
         refine' ⟨hf.ennreal_of_real, htμ.1, _⟩
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
       negPart :=
         by
-        use ⟨t.to_jordan_decomposition.neg_part, fun x => Ennreal.ofReal (-f x)⟩
+        use ⟨t.to_jordan_decomposition.neg_part, fun x => ENNReal.ofReal (-f x)⟩
         refine' ⟨hf.neg.ennreal_of_real, htμ.2, _⟩
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] }
 #align measure_theory.signed_measure.have_lebesgue_decomposition_mk' measure_theory.signed_measure.have_lebesgue_decomposition_mk'
@@ -1118,10 +1118,10 @@ private theorem eq_singular_part' (t : SignedMeasure α) {f : α → ℝ} (hf : 
   · rw [singular_part, ← t.to_signed_measure_to_jordan_decomposition,
       jordan_decomposition.to_signed_measure]
     congr
-    · have hfpos : Measurable fun x => Ennreal.ofReal (f x) := by measurability
+    · have hfpos : Measurable fun x => ENNReal.ofReal (f x) := by measurability
       refine' eq_singular_part hfpos htμ.1 _
       rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
-    · have hfneg : Measurable fun x => Ennreal.ofReal (-f x) := by measurability
+    · have hfneg : Measurable fun x => ENNReal.ofReal (-f x) := by measurability
       refine' eq_singular_part hfneg htμ.2 _
       rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd]
 #align measure_theory.signed_measure.eq_singular_part' measure_theory.signed_measure.eq_singular_part'

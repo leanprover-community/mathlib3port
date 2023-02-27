@@ -37,7 +37,7 @@ namespace Set
 
 section Einfsep
 
-open Ennreal
+open ENNReal
 
 open Function
 
@@ -308,8 +308,8 @@ theorem einfsep_ne_top_iff : s.einfsep ≠ ∞ ↔ s.Nontrivial :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem le_einfsep_of_forall_dist_le {d}
     (h : ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), d ≤ dist x y) :
-    Ennreal.ofReal d ≤ s.einfsep :=
-  le_einfsep fun x hx y hy hxy => (edist_dist x y).symm ▸ Ennreal.ofReal_le_ofReal (h x hx y hy hxy)
+    ENNReal.ofReal d ≤ s.einfsep :=
+  le_einfsep fun x hx y hy hxy => (edist_dist x y).symm ▸ ENNReal.ofReal_le_ofReal (h x hx y hy hxy)
 #align set.le_einfsep_of_forall_dist_le Set.le_einfsep_of_forall_dist_le
 
 end PseudoMetricSpace
@@ -354,13 +354,13 @@ end Einfsep
 
 section Infsep
 
-open Ennreal
+open ENNReal
 
 open Set Function
 
 /-- The "infimum separation" of a set with an edist function. -/
 noncomputable def infsep [HasEdist α] (s : Set α) : ℝ :=
-  Ennreal.toReal s.einfsep
+  ENNReal.toReal s.einfsep
 #align set.infsep Set.infsep
 
 section HasEdist
@@ -368,15 +368,15 @@ section HasEdist
 variable [HasEdist α] {x y : α} {s : Set α}
 
 theorem infsep_zero : s.infsep = 0 ↔ s.einfsep = 0 ∨ s.einfsep = ∞ := by
-  rw [infsep, Ennreal.toReal_eq_zero_iff]
+  rw [infsep, ENNReal.toReal_eq_zero_iff]
 #align set.infsep_zero Set.infsep_zero
 
 theorem infsep_nonneg : 0 ≤ s.infsep :=
-  Ennreal.toReal_nonneg
+  ENNReal.toReal_nonneg
 #align set.infsep_nonneg Set.infsep_nonneg
 
 theorem infsep_pos : 0 < s.infsep ↔ 0 < s.einfsep ∧ s.einfsep < ∞ := by
-  simp_rw [infsep, Ennreal.toReal_pos_iff]
+  simp_rw [infsep, ENNReal.toReal_pos_iff]
 #align set.infsep_pos Set.infsep_pos
 
 theorem Subsingleton.infsep_zero (hs : s.Subsingleton) : s.infsep = 0 :=
@@ -416,7 +416,7 @@ theorem infsep_pair_eq_toReal : ({x, y} : Set α).infsep = (edist x y).toReal :=
   by
   by_cases hxy : x = y
   · rw [hxy]
-    simp only [infsep_singleton, pair_eq_singleton, edist_self, Ennreal.zero_toReal]
+    simp only [infsep_singleton, pair_eq_singleton, edist_self, ENNReal.zero_toReal]
   · rw [infsep, einfsep_pair hxy]
 #align set.infsep_pair_eq_to_real Set.infsep_pair_eq_toReal
 
@@ -429,8 +429,8 @@ variable [PseudoMetricSpace α] {x y z : α} {s t : Set α}
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
 theorem Nontrivial.le_infsep_iff {d} (hs : s.Nontrivial) :
     d ≤ s.infsep ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s) (hxy : x ≠ y), d ≤ dist x y := by
-  simp_rw [infsep, ← Ennreal.ofReal_le_iff_le_toReal hs.einfsep_ne_top, le_einfsep_iff, edist_dist,
-    Ennreal.ofReal_le_ofReal_iff dist_nonneg]
+  simp_rw [infsep, ← ENNReal.ofReal_le_iff_le_toReal hs.einfsep_ne_top, le_einfsep_iff, edist_dist,
+    ENNReal.ofReal_le_ofReal_iff dist_nonneg]
 #align set.nontrivial.le_infsep_iff Set.Nontrivial.le_infsep_iff
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -470,18 +470,18 @@ theorem infsep_le_of_mem_of_edist_le {d x} (hx : x ∈ s) {y} (hy : y ∈ s) (hx
 theorem infsep_pair : ({x, y} : Set α).infsep = dist x y :=
   by
   rw [infsep_pair_eq_to_real, edist_dist]
-  exact Ennreal.toReal_ofReal dist_nonneg
+  exact ENNReal.toReal_ofReal dist_nonneg
 #align set.infsep_pair Set.infsep_pair
 
 theorem infsep_triple (hxy : x ≠ y) (hyz : y ≠ z) (hxz : x ≠ z) :
     ({x, y, z} : Set α).infsep = dist x y ⊓ dist x z ⊓ dist y z := by
-  simp only [infsep, einfsep_triple hxy hyz hxz, Ennreal.toReal_inf, edist_ne_top x y,
+  simp only [infsep, einfsep_triple hxy hyz hxz, ENNReal.toReal_inf, edist_ne_top x y,
     edist_ne_top x z, edist_ne_top y z, dist_edist, Ne.def, inf_eq_top_iff, and_self_iff,
     not_false_iff]
 #align set.infsep_triple Set.infsep_triple
 
 theorem Nontrivial.infsep_anti (hs : s.Nontrivial) (hst : s ⊆ t) : t.infsep ≤ s.infsep :=
-  Ennreal.toReal_mono hs.einfsep_ne_top (einfsep_anti hst)
+  ENNReal.toReal_mono hs.einfsep_ne_top (einfsep_anti hst)
 #align set.nontrivial.infsep_anti Set.Nontrivial.infsep_anti
 
 theorem infsep_eq_infᵢ [Decidable s.Nontrivial] :

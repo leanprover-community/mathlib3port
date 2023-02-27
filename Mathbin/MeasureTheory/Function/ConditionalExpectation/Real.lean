@@ -34,7 +34,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory.lp Filter ContinuousLinearMap
 
-open NNReal Ennreal Topology BigOperators MeasureTheory
+open NNReal ENNReal Topology BigOperators MeasureTheory
 
 namespace MeasureTheory
 
@@ -95,7 +95,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
     _ = snorm f 1 μ :=
       by
       rw [snorm_one_eq_lintegral_nnnorm, snorm_one_eq_lintegral_nnnorm, ←
-        Ennreal.toReal_eq_toReal (ne_of_lt integrable_condexp.2) (ne_of_lt hf.2), ←
+        ENNReal.toReal_eq_toReal (ne_of_lt integrable_condexp.2) (ne_of_lt hf.2), ←
         integral_norm_eq_lintegral_nnnorm
           (strongly_measurable_condexp.mono hm).AeStronglyMeasurable,
         ← integral_norm_eq_lintegral_nnnorm hf.1]
@@ -124,7 +124,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
       mul_zero]
     exact integral_nonneg fun x => abs_nonneg _
   rw [integral_eq_lintegral_of_nonneg_ae, integral_eq_lintegral_of_nonneg_ae]
-  · rw [Ennreal.toReal_le_toReal] <;> simp_rw [← Real.norm_eq_abs, ofReal_norm_eq_coe_nnnorm]
+  · rw [ENNReal.toReal_le_toReal] <;> simp_rw [← Real.norm_eq_abs, ofReal_norm_eq_coe_nnnorm]
     · rw [← snorm_one_eq_lintegral_nnnorm, ← snorm_one_eq_lintegral_nnnorm]
       exact snorm_one_condexp_le_snorm _
     · exact ne_of_lt integrable_condexp.2
@@ -205,10 +205,10 @@ theorem ae_bdd_condexp_of_ae_bdd {R : ℝ≥0} {f : α → ℝ} (hbdd : ∀ᵐ x
         lt_of_le_of_lt _
           (integrable_condexp.integrable_on : integrable_on (μ[f|m]) { x | ↑R < |(μ[f|m]) x| } μ).2⟩
     refine'
-      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_ennreal
-        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nNReal_ennreal fun x hx => _
+      set_lintegral_mono (Measurable.nnnorm _).coe_nNReal_eNNReal
+        (strongly_measurable_condexp.mono hnm).Measurable.nnnorm.coe_nNReal_eNNReal fun x hx => _
     · exact measurable_const
-    · rw [Ennreal.coe_le_coe, Real.nnnorm_of_nonneg R.coe_nonneg]
+    · rw [ENNReal.coe_le_coe, Real.nnnorm_of_nonneg R.coe_nonneg]
       exact Subtype.mk_le_mk.2 (le_of_lt hx)
   · exact hbdd
 #align measure_theory.ae_bdd_condexp_of_ae_bdd MeasureTheory.ae_bdd_condexp_of_ae_bdd
@@ -223,7 +223,7 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
     measurableSet_le measurable_const (strongly_measurable_condexp.mono (hℱ n)).Measurable.nnnorm
   have hg : mem_ℒp g 1 μ := mem_ℒp_one_iff_integrable.2 hint
   refine'
-    uniform_integrable_of le_rfl Ennreal.one_ne_top
+    uniform_integrable_of le_rfl ENNReal.one_ne_top
       (fun n => (strongly_measurable_condexp.mono (hℱ n)).AeStronglyMeasurable) fun ε hε => _
   by_cases hne : snorm g 1 μ = 0
   · rw [snorm_eq_zero_iff hg.1 one_ne_zero] at hne
@@ -238,26 +238,26 @@ theorem Integrable.uniformIntegrableCondexp {ι : Type _} [IsFiniteMeasure μ] {
           (zero_le _)⟩
     filter_upwards [@condexp_congr_ae _ _ _ _ _ (ℱ n) m0 μ _ _ hne]with x hx
     simp only [zero_le', Set.setOf_true, Set.indicator_univ, Pi.zero_apply, hx, condexp_zero]
-  obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl Ennreal.one_ne_top hε
+  obtain ⟨δ, hδ, h⟩ := hg.snorm_indicator_le μ le_rfl ENNReal.one_ne_top hε
   set C : ℝ≥0 := ⟨δ, hδ.le⟩⁻¹ * (snorm g 1 μ).toNNReal with hC
-  have hCpos : 0 < C := mul_pos (inv_pos.2 hδ) (Ennreal.toNnreal_pos hne hg.snorm_lt_top.ne)
-  have : ∀ n, μ { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } ≤ Ennreal.ofReal δ :=
+  have hCpos : 0 < C := mul_pos (inv_pos.2 hδ) (ENNReal.toNNReal_pos hne hg.snorm_lt_top.ne)
+  have : ∀ n, μ { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } ≤ ENNReal.ofReal δ :=
     by
     intro n
     have :=
-      mul_meas_ge_le_pow_snorm' μ one_ne_zero Ennreal.one_ne_top
+      mul_meas_ge_le_pow_snorm' μ one_ne_zero ENNReal.one_ne_top
         ((@strongly_measurable_condexp _ _ _ _ _ (ℱ n) _ μ g).mono (hℱ n)).AeStronglyMeasurable C
-    rw [Ennreal.one_toReal, Ennreal.rpow_one, Ennreal.rpow_one, mul_comm, ←
-      Ennreal.le_div_iff_mul_le (Or.inl (Ennreal.coe_ne_zero.2 hCpos.ne.symm))
+    rw [ENNReal.one_toReal, ENNReal.rpow_one, ENNReal.rpow_one, mul_comm, ←
+      ENNReal.le_div_iff_mul_le (Or.inl (ENNReal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne)] at
       this
-    simp_rw [Ennreal.coe_le_coe] at this
+    simp_rw [ENNReal.coe_le_coe] at this
     refine' this.trans _
-    rw [Ennreal.div_le_iff_le_mul (Or.inl (Ennreal.coe_ne_zero.2 hCpos.ne.symm))
+    rw [ENNReal.div_le_iff_le_mul (Or.inl (ENNReal.coe_ne_zero.2 hCpos.ne.symm))
         (Or.inl ennreal.coe_lt_top.ne),
-      hC, Nonneg.inv_mk, Ennreal.coe_mul, Ennreal.coe_toNnreal hg.snorm_lt_top.ne, ← mul_assoc, ←
-      Ennreal.ofReal_eq_coe_nNReal, ← Ennreal.ofReal_mul hδ.le, mul_inv_cancel hδ.ne.symm,
-      Ennreal.ofReal_one, one_mul]
+      hC, Nonneg.inv_mk, ENNReal.coe_mul, ENNReal.coe_toNNReal hg.snorm_lt_top.ne, ← mul_assoc, ←
+      ENNReal.ofReal_eq_coe_nnreal, ← ENNReal.ofReal_mul hδ.le, mul_inv_cancel hδ.ne.symm,
+      ENNReal.ofReal_one, one_mul]
     exact snorm_one_condexp_le_snorm _
   refine' ⟨C, fun n => le_trans _ (h { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } (hmeas n C) (this n))⟩
   have hmeasℱ : measurable_set[ℱ n] { x : α | C ≤ ‖(μ[g|ℱ n]) x‖₊ } :=

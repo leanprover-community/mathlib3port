@@ -75,7 +75,7 @@ variable {𝕜 : Type _} {E F G H : Type _}
 
 open Filter List
 
-open Topology BigOperators Classical NNReal Ennreal
+open Topology BigOperators Classical NNReal ENNReal
 
 section Topological
 
@@ -497,9 +497,9 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
   /- This follows from the fact that the growth rate of `‖qₙ‖` and `‖pₙ‖` is at most geometric,
     giving a geometric bound on each `‖q.comp_along_composition p op‖`, together with the
     fact that there are `2^(n-1)` compositions of `n`, giving at most a geometric loss. -/
-  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 (lt_min Ennreal.zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
-  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 (lt_min Ennreal.zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
-  simp only [lt_min_iff, Ennreal.coe_lt_one_iff, Ennreal.coe_pos] at hrp hrq rp_pos rq_pos
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min ENNReal.zero_lt_one hq) with ⟨rq, rq_pos, hrq⟩
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 (lt_min ENNReal.zero_lt_one hp) with ⟨rp, rp_pos, hrp⟩
+  simp only [lt_min_iff, ENNReal.coe_lt_one_iff, ENNReal.coe_pos] at hrp hrq rp_pos rq_pos
   obtain ⟨Cq, hCq0, hCq⟩ : ∃ Cq > 0, ∀ n, ‖q n‖₊ * rq ^ n ≤ Cq :=
     q.nnnorm_mul_pow_le_of_lt_radius hrq.2
   obtain ⟨Cp, hCp1, hCp⟩ : ∃ Cp ≥ 1, ∀ n, ‖p n‖₊ * rp ^ n ≤ Cp :=
@@ -802,7 +802,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
     exact ⟨δ, δpos, fun z hz => Hδ hz⟩
   let rf' := min rf δ
   have min_pos : 0 < min rf' r := by
-    simp only [r_pos, Hf.r_pos, δpos, lt_min_iff, Ennreal.coe_pos, and_self_iff]
+    simp only [r_pos, Hf.r_pos, δpos, lt_min_iff, ENNReal.coe_pos, and_self_iff]
   /- We will show that `g ∘ f` admits the power series `q.comp p` in the disk of
     radius `min (r, rf', δ)`. -/
   refine' ⟨min rf' r, _⟩
@@ -893,7 +893,7 @@ theorem HasFpowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           apply pow_le_pow_of_le_left (norm_nonneg _)
           rw [Emetric.mem_ball, edist_eq_coe_nnnorm] at hy
           have := le_trans (le_of_lt hy) (min_le_right _ _)
-          rwa [Ennreal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this
+          rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this
         
     tendsto_nhds_of_cauchySeq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of

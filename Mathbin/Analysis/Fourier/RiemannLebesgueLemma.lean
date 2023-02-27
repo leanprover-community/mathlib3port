@@ -36,7 +36,7 @@ functions are dense in `L¹(ℝ)`, which will be proved in a future iteration.)
 
 open MeasureTheory Filter Complex Set
 
-open Filter Topology Real Ennreal
+open Filter Topology Real ENNReal
 
 section ContinuousCompactSupport
 
@@ -159,7 +159,7 @@ theorem tendsto_integral_mul_exp_atTop_of_continuous_compact_support (hf1 : Cont
   refine' lt_of_le_of_lt bdA2 _
   rw [Real.volume_Icc, (by ring : R - -(R + 1) = 1 + 2 * R)]
   have hh : 0 < 1 + 2 * R := by positivity
-  rw [Ennreal.toReal_ofReal hh.le, div_mul_cancel _ hh.ne', two_mul]
+  rw [ENNReal.toReal_ofReal hh.le, div_mul_cancel _ hh.ne', two_mul]
   exact lt_add_of_pos_left _ hε
 #align tendsto_integral_mul_exp_at_top_of_continuous_compact_support tendsto_integral_mul_exp_atTop_of_continuous_compact_support
 

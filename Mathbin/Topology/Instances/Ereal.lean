@@ -35,7 +35,7 @@ noncomputable section
 
 open Classical Set Filter Metric TopologicalSpace
 
-open Classical Topology Ennreal NNReal BigOperators Filter
+open Classical Topology ENNReal NNReal BigOperators Filter
 
 variable {α : Type _} [TopologicalSpace α]
 
@@ -168,7 +168,7 @@ def neBotTopHomeomorphReal : ({⊥, ⊤}ᶜ : Set Ereal) ≃ₜ ℝ :=
 /-! ### ennreal coercion -/
 
 
-theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
+theorem embedding_coe_eNNReal : Embedding (coe : ℝ≥0∞ → Ereal) :=
   ⟨⟨by
       refine' le_antisymm _ _
       · rw [@OrderTopology.topology_eq_generate_intervals Ereal _, ← coinduced_le_iff_le_induced]
@@ -205,22 +205,22 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → Ereal) :=
         exact ⟨Ioi a, isOpen_Ioi, by simp [Ioi]⟩
         exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => by
     simp only [imp_self, coe_ennreal_eq_coe_ennreal_iff]⟩
-#align ereal.embedding_coe_ennreal Ereal.embedding_coe_ennreal
+#align ereal.embedding_coe_ennreal Ereal.embedding_coe_eNNReal
 
 @[norm_cast]
-theorem tendsto_coe_ennreal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} :
+theorem tendsto_coe_eNNReal {α : Type _} {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} :
     Tendsto (fun a => (m a : Ereal)) f (𝓝 ↑a) ↔ Tendsto m f (𝓝 a) :=
-  embedding_coe_ennreal.tendsto_nhds_iff.symm
-#align ereal.tendsto_coe_ennreal Ereal.tendsto_coe_ennreal
+  embedding_coe_eNNReal.tendsto_nhds_iff.symm
+#align ereal.tendsto_coe_ennreal Ereal.tendsto_coe_eNNReal
 
-theorem continuous_coe_ennreal_ereal : Continuous (coe : ℝ≥0∞ → Ereal) :=
-  embedding_coe_ennreal.Continuous
-#align continuous_coe_ennreal_ereal continuous_coe_ennreal_ereal
+theorem continuous_coe_eNNReal_ereal : Continuous (coe : ℝ≥0∞ → Ereal) :=
+  embedding_coe_eNNReal.Continuous
+#align continuous_coe_ennreal_ereal continuous_coe_eNNReal_ereal
 
-theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
+theorem continuous_coe_eNNReal_iff {f : α → ℝ≥0∞} :
     (Continuous fun a => (f a : Ereal)) ↔ Continuous f :=
-  embedding_coe_ennreal.continuous_iff.symm
-#align ereal.continuous_coe_ennreal_iff Ereal.continuous_coe_ennreal_iff
+  embedding_coe_eNNReal.continuous_iff.symm
+#align ereal.continuous_coe_ennreal_iff Ereal.continuous_coe_eNNReal_iff
 
 /-! ### Neighborhoods of infinity -/
 

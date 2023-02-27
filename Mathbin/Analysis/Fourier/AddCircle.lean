@@ -65,7 +65,7 @@ converges to `f` in the uniform-convergence topology of `C(add_circle T, ℂ)`.
 
 noncomputable section
 
-open Ennreal ComplexConjugate Real
+open ENNReal ComplexConjugate Real
 
 open TopologicalSpace ContinuousMap MeasureTheory MeasureTheory.Measure Algebra Submodule Set
 
@@ -139,7 +139,7 @@ instance : IsProbabilityMeasure (@haarAddCircle T _) :=
   IsProbabilityMeasure.mk add_haar_measure_self
 
 theorem volume_eq_smul_haarAddCircle :
-    (volume : Measure (AddCircle T)) = Ennreal.ofReal T • haarAddCircle :=
+    (volume : Measure (AddCircle T)) = ENNReal.ofReal T • haarAddCircle :=
   rfl
 #align add_circle.volume_eq_smul_haar_add_circle AddCircle.volume_eq_smul_haarAddCircle
 
@@ -323,7 +323,7 @@ theorem orthonormalFourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
       by
       ext1
       exact fourier_zero
-    rw [this, integral_const, measure_univ, Ennreal.one_toReal, Complex.real_smul,
+    rw [this, integral_const, measure_univ, ENNReal.one_toReal, Complex.real_smul,
       Complex.of_real_one, mul_one]
   have hij : -i + j ≠ 0 := by
     rw [add_comm]
@@ -362,7 +362,7 @@ theorem fourierCoeff_eq_intervalIntegral (f : AddCircle T → E) (n : ℤ) (a : 
     rfl
   simp_rw [this]
   rw [fourierCoeff, AddCircle.intervalIntegral_preimage T a, volume_eq_smul_haar_add_circle,
-    integral_smul_measure, Ennreal.toReal_ofReal hT.out.le, ← smul_assoc, smul_eq_mul,
+    integral_smul_measure, ENNReal.toReal_ofReal hT.out.le, ← smul_assoc, smul_eq_mul,
     one_div_mul_cancel hT.out.ne', one_smul]
 #align fourier_coeff_eq_interval_integral fourierCoeff_eq_intervalIntegral
 

@@ -679,10 +679,10 @@ theorem hasFpowerSeriesOnCauchyIntegral {f : ℂ → E} {c : ℂ} {R : ℝ≥0} 
     HasFpowerSeriesOnBall (fun w => (2 * π * i : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z)
       (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchyPowerSeries _ _ _
-    r_pos := Ennreal.coe_pos.2 hR
+    r_pos := ENNReal.coe_pos.2 hR
     HasSum := fun y hy => by
       refine' hasSum_cauchyPowerSeries_integral hf _
-      rw [← norm_eq_abs, ← coe_nnnorm, NNReal.coe_lt_coe, ← Ennreal.coe_lt_coe]
+      rw [← norm_eq_abs, ← coe_nnnorm, NNReal.coe_lt_coe, ← ENNReal.coe_lt_coe]
       exact mem_emetric_ball_zero_iff.1 hy }
 #align has_fpower_series_on_cauchy_integral hasFpowerSeriesOnCauchyIntegral
 

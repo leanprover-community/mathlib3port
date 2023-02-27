@@ -33,7 +33,7 @@ We also give analogues of all these notions in the additive world.
 
 noncomputable section
 
-open NNReal Ennreal Pointwise BigOperators Topology
+open NNReal ENNReal Pointwise BigOperators Topology
 
 open Inv Set Function MeasureTheory.Measure Filter
 
@@ -591,7 +591,7 @@ theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant (U : Set G) (hU : IsOp
     μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := measure_bUnion_finset_le _ _
     _ = Finset.card t * μ U := by simp only [measure_preimage_mul, Finset.sum_const, nsmul_eq_mul]
-    _ < ∞ := Ennreal.mul_lt_top (Ennreal.nat_ne_top _) h
+    _ < ∞ := ENNReal.mul_lt_top (ENNReal.nat_ne_top _) h
     
 #align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant MeasureTheory.measure_lt_top_of_is_compact_of_is_add_left_invariant
@@ -657,9 +657,9 @@ theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSp
   have N : tendsto (fun n => μ (L n)) at_top (𝓝 (∞ * μ K)) :=
     by
     simp_rw [M]
-    apply Ennreal.Tendsto.mul_const _ (Or.inl Ennreal.top_ne_zero)
+    apply ENNReal.Tendsto.mul_const _ (Or.inl ENNReal.top_ne_zero)
     exact ennreal.tendsto_nat_nhds_top.comp (tendsto_add_at_top_nat _)
-  simp only [Ennreal.top_mul, K_pos.ne', if_false] at N
+  simp only [ENNReal.top_mul', K_pos.ne', if_false] at N
   apply top_le_iff.1
   exact le_of_tendsto' N fun n => measure_mono (subset_univ _)
 #align measure_theory.measure_univ_of_is_mul_left_invariant MeasureTheory.measure_univ_of_isMulLeftInvariant
@@ -732,7 +732,7 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
 
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
-  { lt_top_of_isCompact := fun K hK => Ennreal.mul_lt_top Ctop hK.measure_lt_top.Ne
+  { lt_top_of_isCompact := fun K hK => ENNReal.mul_lt_top Ctop hK.measure_lt_top.Ne
     toIsOpenPosMeasure := isOpenPosMeasureSmul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 #align measure_theory.measure.is_add_haar_measure.smul MeasureTheory.Measure.IsAddHaarMeasure.smul
@@ -831,12 +831,12 @@ instance (priority := 100) IsHaarMeasure.hasNoAtoms [TopologicalGroup G] [BorelS
       · intro b hb
         exact measurable_set_singleton b
     rw [B] at A
-    rwa [Ennreal.le_div_iff_mul_le _ (Or.inr μKlt), mul_comm]
+    rwa [ENNReal.le_div_iff_mul_le _ (Or.inr μKlt), mul_comm]
     right
     apply (measure_pos_of_nonempty_interior μ ⟨_, K_int⟩).ne'
   have J : tendsto (fun n : ℕ => μ K / n) at_top (𝓝 (μ K / ∞)) :=
-    Ennreal.Tendsto.const_div Ennreal.tendsto_nat_nhds_top (Or.inr μKlt)
-  simp only [Ennreal.div_top] at J
+    ENNReal.Tendsto.const_div ENNReal.tendsto_nat_nhds_top (Or.inr μKlt)
+  simp only [ENNReal.div_top] at J
   exact ge_of_tendsto' J I
 #align measure_theory.measure.is_haar_measure.has_no_atoms MeasureTheory.Measure.IsHaarMeasure.hasNoAtoms
 #align measure_theory.measure.is_add_haar_measure.has_no_atoms MeasureTheory.Measure.IsAddHaarMeasure.has_no_atoms

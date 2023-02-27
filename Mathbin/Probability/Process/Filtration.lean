@@ -37,7 +37,7 @@ filtration, stochastic process
 
 open Filter Order TopologicalSpace
 
-open Classical MeasureTheory NNReal Ennreal Topology BigOperators
+open Classical MeasureTheory NNReal ENNReal Topology BigOperators
 
 namespace MeasureTheory
 
@@ -370,7 +370,7 @@ theorem memℒpLimitProcessOfSnormBdd {R : ℝ≥0} {p : ℝ≥0∞} {F : Type _
       ⟨strongly_measurable.ae_strongly_measurable
           ((Classical.choose_spec h).1.mono (supₛ_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _)),
         lt_of_le_of_lt (Lp.snorm_lim_le_liminf_snorm hfm _ (Classical.choose_spec h).2)
-          (lt_of_le_of_lt _ (Ennreal.coe_lt_top : ↑R < ∞))⟩
+          (lt_of_le_of_lt _ (ENNReal.coe_lt_top : ↑R < ∞))⟩
     simp_rw [liminf_eq, eventually_at_top]
     exact supₛ_le fun b ⟨a, ha⟩ => (ha a le_rfl).trans (hbdd _)
   · exact zero_mem_ℒp

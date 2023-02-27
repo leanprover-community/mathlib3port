@@ -35,7 +35,7 @@ is required to prove the generalized Borel-Cantelli.
 
 open Filter
 
-open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
+open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 
@@ -141,7 +141,7 @@ theorem norm_stoppedValue_leastGe_le (hr : 0 ≤ r) (hf0 : f 0 = 0)
 
 theorem Submartingale.stoppedValue_leastGe_snorm_le [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
-    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ 2 * μ Set.univ * Ennreal.ofReal (r + R) :=
+    snorm (stoppedValue f (leastGe f r i)) 1 μ ≤ 2 * μ Set.univ * ENNReal.ofReal (r + R) :=
   by
   refine'
     snorm_one_le_of_le' ((hf.stopped_value_least_ge r).Integrable _) _
@@ -154,10 +154,10 @@ theorem Submartingale.stoppedValue_leastGe_snorm_le [IsFiniteMeasure μ] (hf : S
 theorem Submartingale.stoppedValue_leastGe_snorm_le' [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
     snorm (stoppedValue f (leastGe f r i)) 1 μ ≤
-      Ennreal.toNnreal (2 * μ Set.univ * Ennreal.ofReal (r + R)) :=
+      ENNReal.toNNReal (2 * μ Set.univ * ENNReal.ofReal (r + R)) :=
   by
   refine' (hf.stopped_value_least_ge_snorm_le hr hf0 hbdd i).trans _
-  simp [Ennreal.coe_toNnreal (measure_ne_top μ _), Ennreal.coe_toNnreal]
+  simp [ENNReal.coe_toNNReal (measure_ne_top μ _), ENNReal.coe_toNNReal]
 #align measure_theory.submartingale.stopped_value_least_ge_snorm_le' MeasureTheory.Submartingale.stoppedValue_leastGe_snorm_le'
 
 /-- This lemma is superceded by `submartingale.bdd_above_iff_exists_tendsto`. -/

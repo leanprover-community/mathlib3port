@@ -134,7 +134,7 @@ proofs or statements do not apply directly.
 
 open Set Filter
 
-open Ennreal Topology NNReal BigOperators
+open ENNReal Topology NNReal BigOperators
 
 namespace MeasureTheory
 
@@ -172,8 +172,8 @@ theorem exists_subset_lt_add (H : InnerRegular μ p q) (h0 : p ∅) (hU : q U) (
   cases' eq_or_ne (μ U) 0 with h₀ h₀
   · refine' ⟨∅, empty_subset _, h0, _⟩
     rwa [measure_empty, h₀, zero_add, pos_iff_ne_zero]
-  · rcases H hU _ (Ennreal.sub_lt_self hμU h₀ hε) with ⟨K, hKU, hKc, hrK⟩
-    exact ⟨K, hKU, hKc, Ennreal.lt_add_of_sub_lt_right (Or.inl hμU) hrK⟩
+  · rcases H hU _ (ENNReal.sub_lt_self hμU h₀ hε) with ⟨K, hKU, hKc, hrK⟩
+    exact ⟨K, hKU, hKc, ENNReal.lt_add_of_sub_lt_right (Or.inl hμU) hrK⟩
 #align measure_theory.measure.inner_regular.exists_subset_lt_add MeasureTheory.Measure.InnerRegular.exists_subset_lt_add
 
 theorem map {α β} [MeasurableSpace α] [MeasurableSpace β] {μ : Measure α} {pa qa : Set α → Prop}
@@ -192,7 +192,7 @@ theorem smul (H : InnerRegular μ p q) (c : ℝ≥0∞) : InnerRegular (c • μ
   by
   intro U hU r hr
   rw [smul_apply, H.measure_eq_supr hU, smul_eq_mul] at hr
-  simpa only [Ennreal.mul_supᵢ, lt_supᵢ_iff, exists_prop] using hr
+  simpa only [ENNReal.mul_supᵢ, lt_supᵢ_iff, exists_prop] using hr
 #align measure_theory.measure.inner_regular.smul MeasureTheory.Measure.InnerRegular.smul
 
 theorem trans {q' : Set α → Prop} (H : InnerRegular μ p q) (H' : InnerRegular μ q q') :
@@ -275,7 +275,7 @@ theorem Set.measure_eq_infᵢ_isOpen (A : Set α) (μ : Measure α) [OuterRegula
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (U «expr ⊇ » A) -/
 theorem Set.exists_isOpen_lt_add [OuterRegular μ] (A : Set α) (hA : μ A ≠ ∞) {ε : ℝ≥0∞}
     (hε : ε ≠ 0) : ∃ (U : _)(_ : U ⊇ A), IsOpen U ∧ μ U < μ A + ε :=
-  A.exists_isOpen_lt_of_lt _ (Ennreal.lt_add_right hA hε)
+  A.exists_isOpen_lt_of_lt _ (ENNReal.lt_add_right hA hε)
 #align set.exists_is_open_lt_add Set.exists_isOpen_lt_add
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (U «expr ⊇ » A) -/
@@ -285,7 +285,7 @@ theorem Set.exists_isOpen_le_add (A : Set α) (μ : Measure α) [OuterRegular μ
   rcases le_or_lt ∞ (μ A) with (H | H)
   ·
     exact
-      ⟨univ, subset_univ _, isOpen_univ, by simp only [top_le_iff.mp H, Ennreal.top_add, le_top]⟩
+      ⟨univ, subset_univ _, isOpen_univ, by simp only [top_le_iff.mp H, ENNReal.top_add, le_top]⟩
   · rcases A.exists_is_open_lt_add H.ne hε with ⟨U, AU, U_open, hU⟩
     exact ⟨U, AU, U_open, hU.le⟩
 #align set.exists_is_open_le_add Set.exists_isOpen_le_add
@@ -318,7 +318,7 @@ protected theorem smul (μ : Measure α) [OuterRegular μ] {x : ℝ≥0∞} (hx 
     exact outer_regular.zero
   · refine' ⟨fun A hA r hr => _⟩
     rw [smul_apply, A.measure_eq_infi_is_open, smul_eq_mul] at hr
-    simpa only [Ennreal.mul_infᵢ_of_ne h0 hx, gt_iff_lt, infᵢ_lt_iff, exists_prop] using hr
+    simpa only [ENNReal.mul_infᵢ_of_ne h0 hx, gt_iff_lt, infᵢ_lt_iff, exists_prop] using hr
 #align measure_theory.measure.outer_regular.smul MeasureTheory.Measure.OuterRegular.smul
 
 end OuterRegular
@@ -343,7 +343,7 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
         (inter_subset_right _ _).trans (disjointed_subset _ _),
         (disjoint_disjointed s.set).mono fun k l hkl => hkl.mono inf_le_right inf_le_right, _⟩
     rw [← inter_Union, unionᵢ_disjointed, s.spanning, inter_univ]
-  rcases Ennreal.exists_pos_sum_of_countable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
+  rcases ENNReal.exists_pos_sum_of_countable' (tsub_pos_iff_lt.2 hr).ne' ℕ with ⟨δ, δ0, hδε⟩
   rw [lt_tsub_iff_right, add_comm] at hδε
   have : ∀ n, ∃ (U : _)(_ : U ⊇ A n), IsOpen U ∧ μ U < μ (A n) + δ n :=
     by
@@ -359,8 +359,8 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
   refine' ⟨⋃ n, U n, Union_mono hAU, isOpen_unionᵢ hUo, _⟩
   calc
     μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _
-    _ ≤ ∑' n, μ (A n) + δ n := Ennreal.tsum_le_tsum fun n => (hU n).le
-    _ = (∑' n, μ (A n)) + ∑' n, δ n := Ennreal.tsum_add
+    _ ≤ ∑' n, μ (A n) + δ n := ENNReal.tsum_le_tsum fun n => (hU n).le
+    _ = (∑' n, μ (A n)) + ∑' n, δ n := ENNReal.tsum_add
     _ = μ (⋃ n, A n) + ∑' n, δ n := congr_arg₂ (· + ·) (measure_Union hAd hAm).symm rfl
     _ < r := hδε
     
@@ -381,12 +381,12 @@ theorem measurableSetOfOpen [OuterRegular μ] (H : InnerRegular μ p IsOpen) (h0
   obtain ⟨ε, hε, hεs, rfl⟩ : ∃ (ε : _)(_ : ε ≠ 0), ε + ε ≤ μ s ∧ r = μ s - (ε + ε) :=
     by
     use (μ s - r) / 2
-    simp [*, hr.le, Ennreal.add_halves, Ennreal.sub_sub_cancel, le_add_right]
+    simp [*, hr.le, ENNReal.add_halves, ENNReal.sub_sub_cancel, le_add_right]
   rcases hs.exists_is_open_diff_lt hμs hε with ⟨U, hsU, hUo, hUt, hμU⟩
   rcases(U \ s).exists_isOpen_lt_of_lt _ hμU with ⟨U', hsU', hU'o, hμU'⟩
   replace hsU' := diff_subset_comm.1 hsU'
   rcases H.exists_subset_lt_add h0 hUo hUt.ne hε with ⟨K, hKU, hKc, hKr⟩
-  refine' ⟨K \ U', fun x hx => hsU' ⟨hKU hx.1, hx.2⟩, hd hKc hU'o, Ennreal.sub_lt_of_lt_add hεs _⟩
+  refine' ⟨K \ U', fun x hx => hsU' ⟨hKU hx.1, hx.2⟩, hd hKc hU'o, ENNReal.sub_lt_of_lt_add hεs _⟩
   calc
     μ s ≤ μ U := μ.mono hsU
     _ < μ K + ε := hKr
@@ -442,8 +442,8 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
     simp only [measure_compl_le_add_iff, *, hUo.measurable_set, hFc.measurable_set, true_and_iff]
   -- check for disjoint unions
   · intro s hsd hsm H ε ε0
-    have ε0' : ε / 2 ≠ 0 := (Ennreal.half_pos ε0).ne'
-    rcases Ennreal.exists_pos_sum_of_countable' ε0' ℕ with ⟨δ, δ0, hδε⟩
+    have ε0' : ε / 2 ≠ 0 := (ENNReal.half_pos ε0).ne'
+    rcases ENNReal.exists_pos_sum_of_countable' ε0' ℕ with ⟨δ, δ0, hδε⟩
     choose F hFs U hsU hFc hUo hF hU using fun n => H n (δ n) (δ0 n).ne'
     -- the approximating closed set is constructed by considering finitely many sets `s i`, which
     -- cover all the measure up to `ε/2`, approximating each of these by a closed set `F i`, and
@@ -452,7 +452,7 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
       by
       rw [measure_Union hsd hsm]
       exact tendsto.add ennreal.summable.has_sum tendsto_const_nhds
-    rcases(this.eventually <| lt_mem_nhds <| Ennreal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
+    rcases(this.eventually <| lt_mem_nhds <| ENNReal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
     -- the approximating open set is constructed by taking for each `s n` an approximating open set
     -- `U n` with measure at most `μ (s n) + δ n` for a summable `δ`, and taking the union of these.
     refine'
@@ -464,17 +464,17 @@ theorem weaklyRegularOfFinite [BorelSpace α] (μ : Measure α) [IsFiniteMeasure
           rw [← sum_add_distrib]
           exact add_le_add_right (sum_le_sum fun k hk => hF k) _
         _ ≤ (∑ k in t, μ (F k)) + ε / 2 + ε / 2 :=
-          add_le_add_right (add_le_add_left ((Ennreal.sum_le_tsum _).trans hδε.le) _) _
+          add_le_add_right (add_le_add_left ((ENNReal.sum_le_tsum _).trans hδε.le) _) _
         _ = μ (⋃ k ∈ t, F k) + ε := _
         
-      rw [measure_bUnion_finset, add_assoc, Ennreal.add_halves]
+      rw [measure_bUnion_finset, add_assoc, ENNReal.add_halves]
       exacts[fun k _ n _ hkn => (hsd hkn).mono (hFs k) (hFs n), fun k hk => (hFc k).MeasurableSet]
     ·
       calc
         μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _
-        _ ≤ ∑' n, μ (s n) + δ n := Ennreal.tsum_le_tsum hU
-        _ = μ (⋃ n, s n) + ∑' n, δ n := by rw [measure_Union hsd hsm, Ennreal.tsum_add]
-        _ ≤ μ (⋃ n, s n) + ε := add_le_add_left (hδε.le.trans Ennreal.half_le_self) _
+        _ ≤ ∑' n, μ (s n) + δ n := ENNReal.tsum_le_tsum hU
+        _ = μ (⋃ n, s n) + ∑' n, δ n := by rw [measure_Union hsd hsm, ENNReal.tsum_add]
+        _ ≤ μ (⋃ n, s n) + ε := add_le_add_left (hδε.le.trans ENNReal.half_le_self) _
         
 #align measure_theory.measure.inner_regular.weakly_regular_of_finite MeasureTheory.Measure.InnerRegular.weaklyRegularOfFinite
 
@@ -530,7 +530,7 @@ theorem IsOpen.measure_eq_supᵢ_isCompact ⦃U : Set α⦄ (hU : IsOpen U) (μ 
 
 theorem exists_compact_not_null [Regular μ] : (∃ K, IsCompact K ∧ μ K ≠ 0) ↔ μ ≠ 0 := by
   simp_rw [Ne.def, ← measure_univ_eq_zero, is_open_univ.measure_eq_supr_is_compact,
-    Ennreal.supᵢ_eq_zero, not_forall, exists_prop, subset_univ, true_and_iff]
+    ENNReal.supᵢ_eq_zero, not_forall, exists_prop, subset_univ, true_and_iff]
 #align measure_theory.measure.regular.exists_compact_not_null MeasureTheory.Measure.Regular.exists_compact_not_null
 
 /-- If `μ` is a regular measure, then any measurable set of finite measure can be approximated by a

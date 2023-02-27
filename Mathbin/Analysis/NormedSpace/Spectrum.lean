@@ -49,7 +49,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 -/
 
 
-open Ennreal NNReal
+open ENNReal NNReal
 
 /-- The *spectral radius* is the supremum of the `nnnorm` (`‖⬝‖₊`) of elements in the spectrum,
     coerced into an element of `ℝ≥0∞`. Note that it is possible for `spectrum 𝕜 a = ∅`. In this
@@ -165,11 +165,11 @@ theorem spectralRadius_lt_of_forall_lt_of_nonempty [ProperSpace 𝕜] {a : A} (h
     {r : ℝ≥0} (hr : ∀ k ∈ σ a, ‖k‖₊ < r) : spectralRadius 𝕜 a < r :=
   supₛ_image.symm.trans_lt <|
     ((spectrum.isCompact a).supₛ_lt_iff_of_continuous ha
-          (Ennreal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
+          (ENNReal.continuous_coe.comp continuous_nnnorm).ContinuousOn (r : ℝ≥0∞)).mpr
       (by exact_mod_cast hr)
 #align spectrum.spectral_radius_lt_of_forall_lt_of_nonempty spectrum.spectralRadius_lt_of_forall_lt_of_nonempty
 
-open Ennreal Polynomial
+open ENNReal Polynomial
 
 variable (𝕜)
 
@@ -184,28 +184,28 @@ theorem spectralRadius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
   -- power of the norm is bounded by norm of the power
   have nnnorm_pow_le : (↑(‖k‖₊ ^ (n + 1)) : ℝ≥0∞) ≤ ‖a ^ (n + 1)‖₊ * ‖(1 : A)‖₊ := by
     simpa only [Real.toNNReal_mul (norm_nonneg _), norm_toNNReal, nnnorm_pow k (n + 1),
-      Ennreal.coe_mul] using coe_mono (Real.toNNReal_mono (norm_le_norm_mul_of_mem pow_mem))
+      ENNReal.coe_mul] using coe_mono (Real.toNNReal_mono (norm_le_norm_mul_of_mem pow_mem))
   -- take (n + 1)ᵗʰ roots and clean up the left-hand side
   have hn : 0 < ((n + 1 : ℕ) : ℝ) := by exact_mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le
   erw [coe_pow, ← rpow_nat_cast, ← rpow_mul, mul_one_div_cancel hn.ne', rpow_one]
-  rw [Nat.cast_succ, Ennreal.coe_mul_rpow]
+  rw [Nat.cast_succ, ENNReal.coe_mul_rpow]
 #align spectrum.spectral_radius_le_pow_nnnorm_pow_one_div spectrum.spectralRadius_le_pow_nnnorm_pow_one_div
 
 theorem spectralRadius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
     spectralRadius 𝕜 a ≤ atTop.liminf fun n : ℕ => (‖a ^ n‖₊ : ℝ≥0∞) ^ (1 / n : ℝ) :=
   by
-  refine' Ennreal.le_of_forall_lt_one_mul_le fun ε hε => _
+  refine' ENNReal.le_of_forall_lt_one_mul_le fun ε hε => _
   by_cases ε = 0
   · simp only [h, zero_mul, zero_le']
   have hε' : ε⁻¹ ≠ ∞ := fun h' =>
     h (by simpa only [inv_inv, inv_top] using congr_arg (fun x : ℝ≥0∞ => x⁻¹) h')
-  simp only [Ennreal.mul_le_iff_le_inv h (hε.trans_le le_top).Ne, mul_comm ε⁻¹,
-    liminf_eq_supr_infi_of_nat', Ennreal.supᵢ_mul, Ennreal.infᵢ_mul hε']
-  rw [← Ennreal.inv_lt_inv, inv_one] at hε
+  simp only [ENNReal.mul_le_iff_le_inv h (hε.trans_le le_top).Ne, mul_comm ε⁻¹,
+    liminf_eq_supr_infi_of_nat', ENNReal.supᵢ_mul, ENNReal.infᵢ_mul hε']
+  rw [← ENNReal.inv_lt_inv, inv_one] at hε
   obtain ⟨N, hN⟩ :=
     eventually_at_top.mp
-      (Ennreal.eventually_pow_one_div_le (Ennreal.coe_ne_top : ↑‖(1 : A)‖₊ ≠ ∞) hε)
+      (ENNReal.eventually_pow_one_div_le (ENNReal.coe_ne_top : ↑‖(1 : A)‖₊ ≠ ∞) hε)
   refine' le_trans _ (le_supᵢ _ (N + 1))
   refine' le_infᵢ fun n => _
   simp only [← add_assoc]
@@ -286,9 +286,9 @@ end resolvent
 
 section OneSubSmul
 
-open ContinuousMultilinearMap Ennreal FormalMultilinearSeries
+open ContinuousMultilinearMap ENNReal FormalMultilinearSeries
 
-open NNReal Ennreal
+open NNReal ENNReal
 
 variable [NontriviallyNormedField 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A]
 
@@ -314,7 +314,7 @@ theorem hasFpowerSeriesOnBallInverseOneSubSmul [CompleteSpace A] (a : A) :
           · simp only [h, zero_mul, zero_le', pow_succ]
           · rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr
             simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
-    r_pos := Ennreal.inv_pos.mpr coe_ne_top
+    r_pos := ENNReal.inv_pos.mpr coe_ne_top
     HasSum := fun y hy =>
       by
       have norm_lt : ‖y • a‖ < 1 := by
@@ -364,7 +364,7 @@ end OneSubSmul
 
 section GelfandFormula
 
-open Filter Ennreal ContinuousMultilinearMap
+open Filter ENNReal ContinuousMultilinearMap
 
 open Topology
 
@@ -383,7 +383,7 @@ theorem limsup_pow_nnnorm_pow_one_div_le_spectralRadius (a : A) :
     simp only [p.radius_eq_liminf, ← norm_toNNReal, norm_mk_pi_field]
     congr
     ext n
-    rw [norm_toNNReal, Ennreal.coe_rpow_def ‖a ^ n‖₊ (1 / n : ℝ), if_neg]
+    rw [norm_toNNReal, ENNReal.coe_rpow_def ‖a ^ n‖₊ (1 / n : ℝ), if_neg]
     exact fun ha => by linarith [ha.2, (one_div_nonneg.mpr n.cast_nonneg : 0 ≤ (1 / n : ℝ))]
   · have H₁ := (differentiable_on_inverse_one_sub_smul r_lt).HasFpowerSeriesOnBall r_pos
     exact ((has_fpower_series_on_ball_inverse_one_sub_smul ℂ a).exchangeRadius H₁).r_le
@@ -402,7 +402,7 @@ instead of `nnnorm`. -/
 /-- **Gelfand's formula**: Given an element `a : A` of a complex Banach algebra, the
 `spectral_radius` of `a` is the limit of the sequence `‖a ^ n‖₊ ^ (1 / n)` -/
 theorem pow_norm_pow_one_div_tendsto_nhds_spectralRadius (a : A) :
-    Tendsto (fun n : ℕ => Ennreal.ofReal (‖a ^ n‖ ^ (1 / n : ℝ))) atTop (𝓝 (spectralRadius ℂ a)) :=
+    Tendsto (fun n : ℕ => ENNReal.ofReal (‖a ^ n‖ ^ (1 / n : ℝ))) atTop (𝓝 (spectralRadius ℂ a)) :=
   by
   convert pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius a
   ext1

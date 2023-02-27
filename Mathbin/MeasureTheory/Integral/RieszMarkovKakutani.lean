@@ -30,7 +30,7 @@ compact subsets of the space X, rather than the usual construction of open sets 
 
 noncomputable section
 
-open BoundedContinuousFunction NNReal Ennreal
+open BoundedContinuousFunction NNReal ENNReal
 
 open Set Function TopologicalSpace
 

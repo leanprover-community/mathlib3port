@@ -57,7 +57,7 @@ ones for lower semicontinuous functions using `order_dual`.
 -/
 
 
-open Topology BigOperators Ennreal
+open Topology BigOperators ENNReal
 
 open Set Function Filter
 
@@ -662,7 +662,7 @@ theorem lowerSemicontinuousWithinAt_tsum {f : ι → α → ℝ≥0∞}
     (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
     LowerSemicontinuousWithinAt (fun x' => ∑' i, f i x') s x :=
   by
-  simp_rw [Ennreal.tsum_eq_supᵢ_sum]
+  simp_rw [ENNReal.tsum_eq_supᵢ_sum]
   apply lowerSemicontinuousWithinAt_supᵢ fun b => _
   exact lowerSemicontinuousWithinAt_sum fun i hi => h i
 #align lower_semicontinuous_within_at_tsum lowerSemicontinuousWithinAt_tsum

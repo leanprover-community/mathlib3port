@@ -106,7 +106,7 @@ universe u
 
 open Metric Set Filter Fin MeasureTheory TopologicalSpace
 
-open Topology Classical BigOperators Ennreal MeasureTheory NNReal
+open Topology Classical BigOperators ENNReal MeasureTheory NNReal
 
 /-!
 ### Satellite configurations
@@ -636,9 +636,9 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
       (∑ i : Fin N, μ s / N) = μ s :=
         by
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul]
-        rw [Ennreal.mul_div_cancel']
+        rw [ENNReal.mul_div_cancel']
         · simp only [Npos, Ne.def, Nat.cast_eq_zero, not_false_iff]
-        · exact Ennreal.nat_ne_top _
+        · exact ENNReal.nat_ne_top _
       _ ≤ ∑ i, μ (s ∩ v i) := by
         conv_lhs => rw [A]
         apply measure_Union_fintype_le
@@ -646,14 +646,14 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
   obtain ⟨i, -, hi⟩ : ∃ (i : Fin N)(hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) :=
     by
-    apply Ennreal.exists_le_of_sum_le _ S
+    apply ENNReal.exists_le_of_sum_le _ S
     exact ⟨⟨0, bot_lt_iff_ne_bot.2 Npos⟩, Finset.mem_univ _⟩
   replace hi : μ s / (N + 1) < μ (s ∩ v i)
   · apply lt_of_lt_of_le _ hi
-    apply (Ennreal.mul_lt_mul_left hμs.ne' (measure_lt_top μ s).Ne).2
-    rw [Ennreal.inv_lt_inv]
+    apply (ENNReal.mul_lt_mul_left hμs.ne' (measure_lt_top μ s).Ne).2
+    rw [ENNReal.inv_lt_inv]
     conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-    exact Ennreal.add_lt_add_left (Ennreal.nat_ne_top N) Ennreal.zero_lt_one
+    exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) ENNReal.zero_lt_one
   have B : μ (o ∩ v i) = ∑' x : u i, μ (o ∩ closed_ball x (r x)) :=
     by
     have : o ∩ v i = ⋃ (x : s) (hx : x ∈ u i), o ∩ closed_ball x (r x) := by simp only [inter_Union]
@@ -692,7 +692,7 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
       exact MeasurableSet.unionᵢ fun b => MeasurableSet.unionᵢ fun hb => measurableSet_closedBall
     calc
       μ o = 1 / (N + 1) * μ s + N / (N + 1) * μ s := by
-        rw [μo, ← add_mul, Ennreal.div_add_div_same, add_comm, Ennreal.div_self, one_mul] <;> simp
+        rw [μo, ← add_mul, ENNReal.div_add_div_same, add_comm, ENNReal.div_self, one_mul] <;> simp
       _ ≤ μ ((⋃ x ∈ w, closed_ball (↑x) (r ↑x)) ∩ o) + N / (N + 1) * μ s :=
         by
         refine' add_le_add _ le_rfl
@@ -865,17 +865,17 @@ theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measu
         _ ≤ (N / (N + 1)) ^ n.succ * μ s :=
           by
           rw [pow_succ, mul_assoc]
-          exact Ennreal.mul_le_mul le_rfl IH
+          exact ENNReal.mul_le_mul le_rfl IH
         
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
       by
-      apply Ennreal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
-      apply Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1
-      rw [Ennreal.div_lt_iff, one_mul]
+      apply ENNReal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
+      apply ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1
+      rw [ENNReal.div_lt_iff, one_mul]
       · conv_lhs => rw [← add_zero (N : ℝ≥0∞)]
-        exact Ennreal.add_lt_add_left (Ennreal.nat_ne_top N) Ennreal.zero_lt_one
+        exact ENNReal.add_lt_add_left (ENNReal.nat_ne_top N) ENNReal.zero_lt_one
       · simp only [true_or_iff, add_eq_zero_iff, Ne.def, not_false_iff, one_ne_zero, and_false_iff]
-      · simp only [Ennreal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
+      · simp only [ENNReal.nat_ne_top, Ne.def, not_false_iff, or_true_iff]
     rw [zero_mul] at C
     apply le_bot_iff.1
     exact le_of_tendsto_of_tendsto' tendsto_const_nhds C fun n => (A n).trans (B n)
@@ -1009,8 +1009,8 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
   obtain ⟨u, su, u_open, μu⟩ : ∃ (U : _)(_ : U ⊇ s), IsOpen U ∧ μ U ≤ μ s + ε / 2 :=
     Set.exists_isOpen_le_add _ _
       (by
-        simpa only [or_false_iff, Ne.def, Ennreal.div_zero_iff, Ennreal.one_ne_top,
-          Ennreal.bit0_eq_top_iff] using hε)
+        simpa only [or_false_iff, Ne.def, ENNReal.div_eq_zero_iff, ENNReal.one_ne_top,
+          [anonymous]] using hε)
   have : ∀ x ∈ s, ∃ R > 0, ball x R ⊆ u := fun x hx =>
     Metric.mem_nhds_iff.1 (u_open.mem_nhds (su hx))
   choose! R hR using this
@@ -1031,9 +1031,9 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
   obtain ⟨v, s'v, v_open, μv⟩ : ∃ (v : _)(_ : v ⊇ s'), IsOpen v ∧ μ v ≤ μ s' + ε / 2 / N :=
     Set.exists_isOpen_le_add _ _
       (by
-        simp only [hε, Ennreal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, Ennreal.div_zero_iff,
-          Ennreal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
-          Ennreal.bit0_eq_top_iff])
+        simp only [hε, ENNReal.nat_ne_top, WithTop.mul_eq_top_iff, Ne.def, ENNReal.div_eq_zero_iff,
+          ENNReal.one_ne_top, not_false_iff, and_false_iff, false_and_iff, or_self_iff,
+          [anonymous]])
   have : ∀ x ∈ s', ∃ r1 ∈ f x ∩ Ioo (0 : ℝ) 1, closed_ball x r1 ⊆ v :=
     by
     intro x hx
@@ -1166,11 +1166,11 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       (∑' x : t0 ∪ ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤
           (∑' x : t0, μ (closed_ball x (r x))) +
             ∑' x : ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        Ennreal.tsum_union_le (fun x => μ (closed_ball x (r x))) _ _
+        ENNReal.tsum_union_le (fun x => μ (closed_ball x (r x))) _ _
       _ ≤
           (∑' x : t0, μ (closed_ball x (r x))) +
             ∑ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
-        add_le_add le_rfl (Ennreal.tsum_unionᵢ_le (fun x => μ (closed_ball x (r x))) _)
+        add_le_add le_rfl (ENNReal.tsum_unionᵢ_le (fun x => μ (closed_ball x (r x))) _)
       _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N :=
         by
         refine' add_le_add A _
@@ -1179,8 +1179,8 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
         exact B i
       _ ≤ μ s + ε / 2 + ε / 2 := by
         refine' add_le_add le_rfl _
-        simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul, Ennreal.mul_div_le]
-      _ = μ s + ε := by rw [add_assoc, Ennreal.add_halves]
+        simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul, ENNReal.mul_div_le]
+      _ = μ s + ε := by rw [add_assoc, ENNReal.add_halves]
       
 #align besicovitch.exists_closed_ball_covering_tsum_measure_le Besicovitch.exists_closedBall_covering_tsum_measure_le
 

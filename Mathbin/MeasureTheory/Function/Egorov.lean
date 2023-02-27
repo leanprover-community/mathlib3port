@@ -28,7 +28,7 @@ convergence in measure.
 
 noncomputable section
 
-open Classical MeasureTheory NNReal Ennreal Topology
+open Classical MeasureTheory NNReal ENNReal Topology
 
 namespace MeasureTheory
 
@@ -105,14 +105,14 @@ variable [SemilatticeSup ι] [Nonempty ι] [Countable ι]
 theorem exists_notConvergentSeq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
-    ∃ j : ι, μ (s ∩ notConvergentSeq f g n j) ≤ Ennreal.ofReal (ε * 2⁻¹ ^ n) :=
+    ∃ j : ι, μ (s ∩ notConvergentSeq f g n j) ≤ ENNReal.ofReal (ε * 2⁻¹ ^ n) :=
   by
   obtain ⟨N, hN⟩ :=
-    (Ennreal.tendsto_atTop Ennreal.zero_ne_top).1
-      (measure_not_convergent_seq_tendsto_zero hf hg hsm hs hfg n) (Ennreal.ofReal (ε * 2⁻¹ ^ n)) _
+    (ENNReal.tendsto_atTop ENNReal.zero_ne_top).1
+      (measure_not_convergent_seq_tendsto_zero hf hg hsm hs hfg n) (ENNReal.ofReal (ε * 2⁻¹ ^ n)) _
   · rw [zero_add] at hN
     exact ⟨N, (hN N le_rfl).2⟩
-  · rw [gt_iff_lt, Ennreal.ofReal_pos]
+  · rw [gt_iff_lt, ENNReal.ofReal_pos]
     exact mul_pos hε (pow_pos (by norm_num) n)
 #align measure_theory.egorov.exists_not_convergent_seq_lt MeasureTheory.Egorov.exists_notConvergentSeq_lt
 
@@ -131,7 +131,7 @@ theorem notConvergentSeqLtIndex_spec (hε : 0 < ε) (hf : ∀ n, StronglyMeasura
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
     μ (s ∩ notConvergentSeq f g n (notConvergentSeqLtIndex hε hf hg hsm hs hfg n)) ≤
-      Ennreal.ofReal (ε * 2⁻¹ ^ n) :=
+      ENNReal.ofReal (ε * 2⁻¹ ^ n) :=
   Classical.choose_spec <| exists_notConvergentSeq_lt hε hf hg hsm hs hfg n
 #align measure_theory.egorov.not_convergent_seq_lt_index_spec MeasureTheory.Egorov.notConvergentSeqLtIndex_spec
 
@@ -155,15 +155,15 @@ theorem unionNotConvergentSeq_measurableSet (hε : 0 < ε) (hf : ∀ n, Strongly
 theorem measure_unionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
-    μ (unionNotConvergentSeq hε hf hg hsm hs hfg) ≤ Ennreal.ofReal ε :=
+    μ (unionNotConvergentSeq hε hf hg hsm hs hfg) ≤ ENNReal.ofReal ε :=
   by
   refine'
     le_trans (measure_Union_le _)
       (le_trans
-        (Ennreal.tsum_le_tsum <| not_convergent_seq_lt_index_spec (half_pos hε) hf hg hsm hs hfg) _)
-  simp_rw [Ennreal.ofReal_mul (half_pos hε).le]
-  rw [Ennreal.tsum_mul_left, ← Ennreal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
-    Ennreal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
+        (ENNReal.tsum_le_tsum <| not_convergent_seq_lt_index_spec (half_pos hε) hf hg hsm hs hfg) _)
+  simp_rw [ENNReal.ofReal_mul (half_pos hε).le]
+  rw [ENNReal.tsum_mul_left, ← ENNReal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two, ←
+    ENNReal.ofReal_mul (half_pos hε).le, div_mul_cancel ε two_ne_zero]
   · exact le_rfl
   · exact fun n => pow_nonneg (by norm_num) _
   · rw [inv_eq_one_div]
@@ -216,7 +216,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) {ε : ℝ} (hε : 0 < ε) :
     ∃ (t : _)(_ : t ⊆ s),
-      MeasurableSet t ∧ μ t ≤ Ennreal.ofReal ε ∧ TendstoUniformlyOn f g atTop (s \ t) :=
+      MeasurableSet t ∧ μ t ≤ ENNReal.ofReal ε ∧ TendstoUniformlyOn f g atTop (s \ t) :=
   ⟨Egorov.unionNotConvergentSeq hε hf hg hsm hs hfg,
     Egorov.unionNotConvergentSeq_subset hε hf hg hsm hs hfg,
     Egorov.unionNotConvergentSeq_measurableSet hε hf hg hsm hs hfg,
@@ -228,7 +228,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto (hf : ∀ n, StronglyMeasurable (f n))
 theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) {ε : ℝ}
     (hε : 0 < ε) :
-    ∃ t, MeasurableSet t ∧ μ t ≤ Ennreal.ofReal ε ∧ TendstoUniformlyOn f g atTop (tᶜ) :=
+    ∃ t, MeasurableSet t ∧ μ t ≤ ENNReal.ofReal ε ∧ TendstoUniformlyOn f g atTop (tᶜ) :=
   by
   obtain ⟨t, _, ht, htendsto⟩ :=
     tendsto_uniformly_on_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε

@@ -34,7 +34,7 @@ sense). We do not define that quantity here, which is simply the supremum of a m
 
 open MeasureTheory Filter TopologicalSpace
 
-open Ennreal MeasureTheory
+open ENNReal MeasureTheory
 
 variable {α β : Type _} {m : MeasurableSpace α} {μ ν : Measure α}
 
@@ -325,38 +325,38 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
 
 end CompleteLinearOrder
 
-namespace Ennreal
+namespace ENNReal
 
 variable {f : α → ℝ≥0∞}
 
 theorem ae_le_essSup (f : α → ℝ≥0∞) : ∀ᵐ y ∂μ, f y ≤ essSup f μ :=
   eventually_le_limsup f
-#align ennreal.ae_le_ess_sup Ennreal.ae_le_essSup
+#align ennreal.ae_le_ess_sup ENNReal.ae_le_essSup
 
 @[simp]
 theorem essSup_eq_zero_iff : essSup f μ = 0 ↔ f =ᵐ[μ] 0 :=
   limsup_eq_zero_iff
-#align ennreal.ess_sup_eq_zero_iff Ennreal.essSup_eq_zero_iff
+#align ennreal.ess_sup_eq_zero_iff ENNReal.essSup_eq_zero_iff
 
 theorem essSup_const_mul {a : ℝ≥0∞} : essSup (fun x : α => a * f x) μ = a * essSup f μ :=
   limsup_const_mul
-#align ennreal.ess_sup_const_mul Ennreal.essSup_const_mul
+#align ennreal.ess_sup_const_mul ENNReal.essSup_const_mul
 
 theorem essSup_mul_le (f g : α → ℝ≥0∞) : essSup (f * g) μ ≤ essSup f μ * essSup g μ :=
   limsup_mul_le f g
-#align ennreal.ess_sup_mul_le Ennreal.essSup_mul_le
+#align ennreal.ess_sup_mul_le ENNReal.essSup_mul_le
 
 theorem essSup_add_le (f g : α → ℝ≥0∞) : essSup (f + g) μ ≤ essSup f μ + essSup g μ :=
   limsup_add_le f g
-#align ennreal.ess_sup_add_le Ennreal.essSup_add_le
+#align ennreal.ess_sup_add_le ENNReal.essSup_add_le
 
 theorem essSup_liminf_le {ι} [Countable ι] [LinearOrder ι] (f : ι → α → ℝ≥0∞) :
     essSup (fun x => atTop.liminf fun n => f n x) μ ≤
       atTop.liminf fun n => essSup (fun x => f n x) μ :=
   by
   simp_rw [essSup]
-  exact Ennreal.limsup_liminf_le_liminf_limsup fun a b => f b a
-#align ennreal.ess_sup_liminf_le Ennreal.essSup_liminf_le
+  exact ENNReal.limsup_liminf_le_liminf_limsup fun a b => f b a
+#align ennreal.ess_sup_liminf_le ENNReal.essSup_liminf_le
 
-end Ennreal
+end ENNReal
 

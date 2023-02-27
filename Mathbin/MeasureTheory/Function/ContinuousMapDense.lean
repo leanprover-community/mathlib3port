@@ -46,7 +46,7 @@ Vitali-Carathéodory theorem, in the file `measure_theory.vitali_caratheodory`.
 -/
 
 
-open Ennreal NNReal Topology BoundedContinuousFunction
+open ENNReal NNReal Topology BoundedContinuousFunction
 
 open MeasureTheory TopologicalSpace ContinuousMap
 
@@ -68,10 +68,10 @@ variable [NormedSpace ℝ E]
 theorem boundedContinuousFunction_dense [μ.WeaklyRegular] :
     (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
   by
-  have hp₀ : 0 < p := lt_of_lt_of_le Ennreal.zero_lt_one _i.elim
-  have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one Ennreal.toReal_nonneg
+  have hp₀ : 0 < p := lt_of_lt_of_le ENNReal.zero_lt_one _i.elim
+  have hp₀' : 0 ≤ 1 / p.to_real := div_nonneg zero_le_one ENNReal.toReal_nonneg
   have hp₀'' : 0 < p.to_real := by
-    simpa [← Ennreal.toReal_lt_toReal Ennreal.zero_ne_top hp] using hp₀
+    simpa [← ENNReal.toReal_lt_toReal ENNReal.zero_ne_top hp] using hp₀
   -- It suffices to prove that scalar multiples of the indicator function of a finite-measure
   -- measurable set can be approximated by continuous functions
   suffices
@@ -106,21 +106,21 @@ theorem boundedContinuousFunction_dense [μ.WeaklyRegular] :
     obtain ⟨η, hη, hηδ⟩ := exists_between hδ
     refine' ⟨η, hη, _⟩
     exact_mod_cast hδε' hηδ
-  have hη_pos' : (0 : ℝ≥0∞) < η := Ennreal.coe_pos.2 hη_pos
+  have hη_pos' : (0 : ℝ≥0∞) < η := ENNReal.coe_pos.2 hη_pos
   -- Use the regularity of the measure to `η`-approximate `s` by an open superset and a closed
   -- subset
   obtain ⟨u, su, u_open, μu⟩ : ∃ (u : _)(_ : u ⊇ s), IsOpen u ∧ μ u < μ s + ↑η :=
     by
     refine' s.exists_is_open_lt_of_lt _ _
-    simpa using Ennreal.add_lt_add_left hsμ.ne hη_pos'
+    simpa using ENNReal.add_lt_add_left hsμ.ne hη_pos'
   obtain ⟨F, Fs, F_closed, μF⟩ : ∃ (F : _)(_ : F ⊆ s), IsClosed F ∧ μ s < μ F + ↑η :=
     hs.exists_is_closed_lt_add hsμ.ne hη_pos'.ne'
   have : Disjoint (uᶜ) F := (Fs.trans su).disjoint_compl_left
   have h_μ_sdiff : μ (u \ F) ≤ 2 * η :=
     by
     have hFμ : μ F < ⊤ := (measure_mono Fs).trans_lt hsμ
-    refine' Ennreal.le_of_add_le_add_left hFμ.ne _
-    have : μ u < μ F + ↑η + ↑η := μu.trans (Ennreal.add_lt_add_right Ennreal.coe_ne_top μF)
+    refine' ENNReal.le_of_add_le_add_left hFμ.ne _
+    have : μ u < μ F + ↑η + ↑η := μu.trans (ENNReal.add_lt_add_right ENNReal.coe_ne_top μF)
     convert this.le using 1
     · rw [add_comm, ← measure_union, Set.diff_union_of_subset (Fs.trans su)]
       exacts[disjoint_sdiff_self_left, F_closed.measurable_set]
@@ -157,21 +157,21 @@ theorem boundedContinuousFunction_dense [μ.WeaklyRegular] :
     by
     refine' (snorm_mono_ae (Filter.eventually_of_forall gc_bd)).trans _
     rw [snorm_indicator_const (u_open.sdiff F_closed).MeasurableSet hp₀.ne' hp]
-    push_cast [← Ennreal.coe_rpow_of_nonneg _ hp₀']
-    exact Ennreal.mul_left_mono (Ennreal.monotone_rpow_of_nonneg hp₀' h_μ_sdiff)
+    push_cast [← ENNReal.coe_rpow_of_nonneg _ hp₀']
+    exact ENNReal.mul_left_mono (ENNReal.monotone_rpow_of_nonneg hp₀' h_μ_sdiff)
   have gc_cont : Continuous fun x => g x • c := g.continuous.smul continuous_const
   have gc_mem_ℒp : mem_ℒp (fun x => g x • c) p μ :=
     by
     have : mem_ℒp ((fun x => g x • c) - s.indicator fun x => c) p μ :=
       ⟨gc_cont.ae_strongly_measurable.sub
           (strongly_measurable_const.indicator hs).AeStronglyMeasurable,
-        gc_snorm.trans_lt Ennreal.coe_lt_top⟩
+        gc_snorm.trans_lt ENNReal.coe_lt_top⟩
     simpa using this.add (mem_ℒp_indicator_const p hs c (Or.inr hsμ.ne))
   refine' ⟨gc_mem_ℒp.to_Lp _, _, _⟩
   · rw [mem_closedBall_iff_norm]
     refine' le_trans _ hη_le
     rw [simple_func.coe_indicator_const, indicator_const_Lp, ← mem_ℒp.to_Lp_sub, Lp.norm_to_Lp]
-    exact Ennreal.toReal_le_coe_of_le_coe gc_snorm
+    exact ENNReal.toReal_le_coe_of_le_coe gc_snorm
   · rw [SetLike.mem_coe, mem_bounded_continuous_function_iff]
     refine' ⟨BoundedContinuousFunction.ofNormedAddCommGroup _ gc_cont ‖c‖ _, rfl⟩
     intro x

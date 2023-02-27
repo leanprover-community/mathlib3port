@@ -22,7 +22,7 @@ noncomputable section
 
 open Set Metric TopologicalSpace
 
-open Ennreal
+open ENNReal
 
 -- mathport name: exprℓ_infty_ℝ
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
@@ -92,7 +92,7 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
             dist (embedding_of_subset x b) (embedding_of_subset x a) :=
           by
           simpa [dist_eq_norm] using
-            lp.norm_apply_le_norm Ennreal.top_ne_zero
+            lp.norm_apply_le_norm ENNReal.top_ne_zero
               (embedding_of_subset x b - embedding_of_subset x a) n
         nlinarith
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring

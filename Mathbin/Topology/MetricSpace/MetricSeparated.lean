@@ -48,7 +48,7 @@ theorem comm : IsMetricSeparated s t ↔ IsMetricSeparated t s :=
 
 @[simp]
 theorem empty_left (s : Set X) : IsMetricSeparated ∅ s :=
-  ⟨1, Ennreal.zero_lt_one.ne', fun x => False.elim⟩
+  ⟨1, ENNReal.zero_lt_one.ne', fun x => False.elim⟩
 #align is_metric_separated.empty_left IsMetricSeparated.empty_left
 
 @[simp]

@@ -29,7 +29,7 @@ metric space, paracompact space, normal space
 
 variable {α : Type _}
 
-open Ennreal Topology
+open ENNReal Topology
 
 open Set
 
@@ -43,13 +43,13 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
     /- We start with trivial observations about `1 / 2 ^ k`. Here and below we use `1 / 2 ^ k` in
       the comments and `2⁻¹ ^ k` in the code. -/
     have pow_pos : ∀ k : ℕ, (0 : ℝ≥0∞) < 2⁻¹ ^ k := fun k =>
-      Ennreal.pow_pos (Ennreal.inv_pos.2 Ennreal.two_ne_top) _
+      ENNReal.pow_pos (ENNReal.inv_pos.2 ENNReal.two_ne_top) _
     have hpow_le : ∀ {m n : ℕ}, m ≤ n → (2⁻¹ : ℝ≥0∞) ^ n ≤ 2⁻¹ ^ m := fun m n h =>
-      Ennreal.pow_le_pow_of_le_one (Ennreal.inv_le_one.2 ennreal.one_lt_two.le) h
+      ENNReal.pow_le_pow_of_le_one (ENNReal.inv_le_one.2 ennreal.one_lt_two.le) h
     have h2pow : ∀ n : ℕ, 2 * (2⁻¹ : ℝ≥0∞) ^ (n + 1) = 2⁻¹ ^ n :=
       by
       intro n
-      simp [pow_succ, ← mul_assoc, Ennreal.mul_inv_cancel]
+      simp [pow_succ, ← mul_assoc, ENNReal.mul_inv_cancel]
     -- Consider an open covering `S : set (set α)`
     refine' ⟨fun ι s ho hcov => _⟩
     simp only [Union_eq_univ_iff] at hcov
@@ -99,10 +99,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         by
         -- This proof takes 5 lines because we can't import `specific_limits` here
         rcases is_open_iff.1 (ho <| ind x) x (mem_ind x) with ⟨ε, ε0, hε⟩
-        have : 0 < ε / 3 := Ennreal.div_pos_iff.2 ⟨ε0.lt.ne', Ennreal.coe_ne_top⟩
-        rcases Ennreal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
+        have : 0 < ε / 3 := ENNReal.div_pos_iff.2 ⟨ε0.lt.ne', ENNReal.coe_ne_top⟩
+        rcases ENNReal.exists_inv_two_pow_lt this.ne' with ⟨n, hn⟩
         refine' ⟨n, subset.trans (ball_subset_ball _) hε⟩
-        simpa only [div_eq_mul_inv, mul_comm] using (Ennreal.mul_lt_of_lt_div hn).le
+        simpa only [div_eq_mul_inv, mul_comm] using (ENNReal.mul_lt_of_lt_div hn).le
       by_contra' h
       apply h n (ind x)
       exact memD.2 ⟨x, rfl, hn, fun _ _ _ => h _ _, mem_ball_self (pow_pos _)⟩
@@ -120,10 +120,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
       refine' hsub (lt_of_lt_of_le hyx _)
       calc
         2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mul _).symm
-        _ ≤ 3 * 2⁻¹ ^ n := Ennreal.mul_le_mul _ le_rfl
+        _ ≤ 3 * 2⁻¹ ^ n := ENNReal.mul_le_mul _ le_rfl
         
       -- TODO: use `norm_num`
-      have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := Ennreal.coe_nat_le_coe_nat.2 (by norm_num1)
+      have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := ENNReal.coe_nat_le_coe_nat.2 (by norm_num1)
       exact_mod_cast this
     -- Let us show the rest of the properties. Since the definition expects a family indexed
     -- by a single parameter, we use `ℕ × ι` as the domain.
@@ -153,7 +153,7 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
         apply this
         calc
           edist z x ≤ edist y z + edist y x := edist_triangle_left _ _ _
-          _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := Ennreal.add_lt_add hz hyx
+          _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) := ENNReal.add_lt_add hz hyx
           _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
             add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith)
           _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
@@ -174,10 +174,10 @@ instance (priority := 100) [PseudoEmetricSpace α] : ParacompactSpace α := by
           _ ≤ edist z z' + edist z x + (edist y x + edist y y') :=
             add_le_add (edist_triangle_left _ _ _) (edist_triangle_left _ _ _)
           _ < 2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1) + (2⁻¹ ^ (n + k + 1) + 2⁻¹ ^ m) := by
-            apply_rules [Ennreal.add_lt_add]
+            apply_rules [ENNReal.add_lt_add]
           _ = 2 * (2⁻¹ ^ m + 2⁻¹ ^ (n + k + 1)) := by simp only [two_mul, add_comm]
           _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
-            Ennreal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
+            ENNReal.mul_le_mul le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl)
           _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
           
       -- Finally, we glue `Hgt` and `Hle`

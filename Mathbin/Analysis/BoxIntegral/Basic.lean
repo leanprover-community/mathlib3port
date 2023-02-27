@@ -407,7 +407,7 @@ theorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x ∈ I.Icc, 0 ≤ g x) (
   by
   by_cases hgi : integrable I l g μ.to_box_additive.to_smul
   · refine' ge_of_tendsto' hgi.has_integral fun π => sum_nonneg fun J hJ => _
-    exact mul_nonneg Ennreal.toReal_nonneg (hg _ <| π.tag_mem_Icc _)
+    exact mul_nonneg ENNReal.toReal_nonneg (hg _ <| π.tag_mem_Icc _)
   · rw [integral, dif_neg hgi]
 #align box_integral.integral_nonneg BoxIntegral.integral_nonneg
 
@@ -421,8 +421,8 @@ theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x ∈ I.Icc,
   · refine' le_of_tendsto_of_tendsto' hfi.has_integral.norm hg.has_integral fun π => _
     refine' norm_sum_le_of_le _ fun J hJ => _
     simp only [box_additive_map.to_smul_apply, norm_smul, smul_eq_mul, Real.norm_eq_abs,
-      μ.to_box_additive_apply, abs_of_nonneg Ennreal.toReal_nonneg]
-    exact mul_le_mul_of_nonneg_left (hle _ <| π.tag_mem_Icc _) Ennreal.toReal_nonneg
+      μ.to_box_additive_apply, abs_of_nonneg ENNReal.toReal_nonneg]
+    exact mul_le_mul_of_nonneg_left (hle _ <| π.tag_mem_Icc _) ENNReal.toReal_nonneg
   · rw [integral, dif_neg hfi, norm_zero]
     exact integral_nonneg (fun x hx => (norm_nonneg _).trans (hle x hx)) μ
 #align box_integral.norm_integral_le_of_norm_le BoxIntegral.norm_integral_le_of_norm_le
@@ -758,7 +758,7 @@ theorem integrableOfContinuousOn [CompleteSpace E] {I : Box ι} {f : ℝⁿ → 
         μ.to_box_additive J * ε' :=
     by
     intro J hJ
-    have : 0 ≤ μ.to_box_additive J := Ennreal.toReal_nonneg
+    have : 0 ≤ μ.to_box_additive J := ENNReal.toReal_nonneg
     rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg this, ← dist_eq_norm]
     refine' mul_le_mul_of_nonneg_left _ this
     refine' Hδ _ (tagged_prepartition.tag_mem_Icc _ _) _ (tagged_prepartition.tag_mem_Icc _ _) _

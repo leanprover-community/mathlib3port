@@ -150,7 +150,7 @@ Cauchy-Goursat theorem, Cauchy integral formula
 
 open TopologicalSpace Set MeasureTheory intervalIntegral Metric Filter Function
 
-open Interval Real NNReal Ennreal Topology BigOperators
+open Interval Real NNReal ENNReal Topology BigOperators
 
 noncomputable section
 
@@ -612,12 +612,12 @@ theorem hasFpowerSeriesOnBallOfDifferentiableOffCountable {R : ℝ≥0} {c : ℂ
     (hd : ∀ z ∈ ball c R \ s, DifferentiableAt ℂ f z) (hR : 0 < R) :
     HasFpowerSeriesOnBall f (cauchyPowerSeries f c R) c R :=
   { r_le := le_radius_cauchyPowerSeries _ _ _
-    r_pos := Ennreal.coe_pos.2 hR
+    r_pos := ENNReal.coe_pos.2 hR
     HasSum := fun w hw =>
       by
       have hw' : c + w ∈ ball c R := by
         simpa only [add_mem_ball_iff_norm, ← coe_nnnorm, mem_emetric_ball_zero_iff,
-          NNReal.coe_lt_coe, Ennreal.coe_lt_coe] using hw
+          NNReal.coe_lt_coe, ENNReal.coe_lt_coe] using hw
       rw [←
         two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw' hc
           hd]

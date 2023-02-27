@@ -33,7 +33,7 @@ contracting map, fixed point, Banach fixed point theorem
 -/
 
 
-open NNReal Topology Classical Ennreal
+open NNReal Topology Classical ENNReal
 
 open Filter Function
 
@@ -64,14 +64,14 @@ theorem one_sub_K_ne_zero (hf : ContractingWith K f) : (1 : ℝ≥0∞) - K ≠ 
 theorem one_sub_K_ne_top : (1 : ℝ≥0∞) - K ≠ ∞ :=
   by
   norm_cast
-  exact Ennreal.coe_ne_top
+  exact ENNReal.coe_ne_top
 #align contracting_with.one_sub_K_ne_top ContractingWith.one_sub_K_ne_top
 
 theorem edist_inequality (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞) :
     edist x y ≤ (edist x (f x) + edist y (f y)) / (1 - K) :=
   suffices edist x y ≤ edist x (f x) + edist y (f y) + K * edist x y by
-    rwa [Ennreal.le_div_iff_mul_le (Or.inl hf.one_sub_K_ne_zero) (Or.inl one_sub_K_ne_top),
-      mul_comm, Ennreal.sub_mul fun _ _ => h, one_mul, tsub_le_iff_right]
+    rwa [ENNReal.le_div_iff_mul_le (Or.inl hf.one_sub_K_ne_zero) (Or.inl one_sub_K_ne_top),
+      mul_comm, ENNReal.sub_mul fun _ _ => h, one_mul, tsub_le_iff_right]
   calc
     edist x y ≤ edist x (f x) + edist (f x) (f y) + edist (f y) y := edist_triangle4 _ _ _ _
     _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by rw [edist_comm y, add_right_comm]
@@ -88,7 +88,7 @@ theorem eq_or_edist_eq_top_of_fixed_points (hf : ContractingWith K f) {x y} (hx 
     (hy : IsFixedPt f y) : x = y ∨ edist x y = ∞ :=
   by
   refine' or_iff_not_imp_right.2 fun h => edist_le_zero.1 _
-  simpa only [hx.eq, edist_self, add_zero, Ennreal.zero_div] using hf.edist_le_of_fixed_point h hy
+  simpa only [hx.eq, edist_self, add_zero, ENNReal.zero_div] using hf.edist_le_of_fixed_point h hy
 #align contracting_with.eq_or_edist_eq_top_of_fixed_points ContractingWith.eq_or_edist_eq_top_of_fixed_points
 
 /-- If a map `f` is `contracting_with K`, and `s` is a forward-invariant set, then
@@ -112,7 +112,7 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
         Tendsto (fun n => (f^[n]) x) atTop (𝓝 y) ∧
           ∀ n : ℕ, edist ((f^[n]) x) y ≤ edist x (f x) * K ^ n / (1 - K) :=
   have : CauchySeq fun n => (f^[n]) x :=
-    cauchySeq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
+    cauchySeq_of_edist_le_geometric K (edist x (f x)) (ENNReal.coe_lt_one_iff.2 hf.1) hx
       (hf.to_lipschitzWith.edist_iterate_succ_le_geometric x)
   let ⟨y, hy⟩ := cauchySeq_tendsto_of_complete this
   ⟨y, isFixedPt_of_tendsto_iterate hy hf.2.Continuous.ContinuousAt, hy,
@@ -158,7 +158,7 @@ theorem edist_efixedPoint_le (hf : ContractingWith K f) {x : α} (hx : edist x (
 theorem edist_efixedPoint_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint f hf x hx) < ∞ :=
   (hf.edist_efixedPoint_le hx).trans_lt
-    (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
+    (ENNReal.mul_lt_top hx <| ENNReal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 #align contracting_with.edist_efixed_point_lt_top ContractingWith.edist_efixedPoint_lt_top
 
 theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞)
@@ -247,7 +247,7 @@ theorem edist_efixed_point_lt_top' {s : Set α} (hsc : IsComplete s) (hsf : Maps
     (hf : ContractingWith K <| hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
     edist x (efixedPoint' f hsc hsf hf x hxs hx) < ∞ :=
   (hf.edist_efixed_point_le' hsc hsf hxs hx).trans_lt
-    (Ennreal.mul_lt_top hx <| Ennreal.inv_ne_top.2 hf.one_sub_K_ne_zero)
+    (ENNReal.mul_lt_top hx <| ENNReal.inv_ne_top.2 hf.one_sub_K_ne_zero)
 #align contracting_with.edist_efixed_point_lt_top' ContractingWith.edist_efixed_point_lt_top'
 
 /-- If a globally contracting map `f` has two complete forward-invariant sets `s`, `t`,

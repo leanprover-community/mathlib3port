@@ -62,7 +62,7 @@ noncomputable section
 
 open Function Set MeasureTheory.OuterMeasure Filter MeasurableSpace Encodable
 
-open Classical BigOperators Topology Ennreal
+open Classical BigOperators Topology ENNReal
 
 universe u v
 
@@ -387,7 +387,7 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
       _ = ∏ i, μ i (to_measurable (μ i) ((hμ i).Set (e n i))) :=
         pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _
       _ = ∏ i, μ i ((hμ i).Set (e n i)) := by simp only [measure_to_measurable]
-      _ < ∞ := Ennreal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
+      _ < ∞ := ENNReal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
       
   ·
     simp_rw [(surjective_decode_iget (ι → ℕ)).unionᵢ_comp fun x =>
@@ -608,7 +608,7 @@ instance [∀ i, TopologicalSpace (α i)] [∀ i, IsLocallyFiniteMeasure (μ i)]
   choose s hxs ho hμ using fun i => (μ i).exists_isOpen_measure_lt_top (x i)
   refine' ⟨pi univ s, set_pi_mem_nhds finite_univ fun i hi => IsOpen.mem_nhds (ho i) (hxs i), _⟩
   rw [pi_pi]
-  exact Ennreal.prod_lt_top fun i _ => (hμ i).Ne
+  exact ENNReal.prod_lt_top fun i _ => (hμ i).Ne
 
 variable (μ)
 

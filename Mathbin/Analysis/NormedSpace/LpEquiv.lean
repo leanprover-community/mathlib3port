@@ -41,7 +41,7 @@ the subtype of `pre_lp` satisfying `mem_ℓp`.
 -/
 
 
-open Ennreal
+open ENNReal
 
 section LpPiLp
 

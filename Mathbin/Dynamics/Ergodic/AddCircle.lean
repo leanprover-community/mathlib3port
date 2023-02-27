@@ -34,7 +34,7 @@ This file contains proofs of ergodicity for maps of the additive circle.
 
 open Set Function MeasureTheory MeasureTheory.Measure Filter Metric
 
-open MeasureTheory NNReal Ennreal Topology Pointwise
+open MeasureTheory NNReal ENNReal Topology Pointwise
 
 namespace AddCircle
 
@@ -61,7 +61,7 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
   set μ := (volume : Measure <| AddCircle T)
   set n : ι → ℕ := addOrderOf ∘ u
   have hT₀ : 0 < T := hT.out
-  have hT₁ : Ennreal.ofReal T ≠ 0 := by simpa
+  have hT₁ : ENNReal.ofReal T ≠ 0 := by simpa
   rw [ae_eq_empty, ae_eq_univ_iff_measure_eq hs, AddCircle.measure_univ]
   cases' eq_or_ne (μ s) 0 with h h
   · exact Or.inl h
@@ -90,10 +90,10 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
       simp only [δ, Pi.inv_apply, mul_inv_rev, inv_inv, div_eq_inv_mul, ← mul_assoc]
     have hw : ∀ᶠ j in l, d ∈ closed_ball d (1 * δ j) := hδ₀.mono fun j hj => by simp [hj.le]
     exact hd _ δ hδ₁ hw
-  suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / Ennreal.ofReal T
+  suffices ∀ᶠ j in l, μ (s ∩ I j) / μ (I j) = μ s / ENNReal.ofReal T
     by
     replace hd := hd.congr' this
-    rwa [tendsto_const_nhds_iff, Ennreal.div_eq_one_iff hT₁ Ennreal.ofReal_ne_top] at hd
+    rwa [tendsto_const_nhds_iff, ENNReal.div_eq_one_iff hT₁ ENNReal.ofReal_ne_top] at hd
   refine' (hu₂.eventually_gt_at_top 0).mono fun j hj => _
   have huj : IsOfFinAddOrder (u j) := add_order_of_pos_iff.mp hj
   have huj' : 1 ≤ (↑(n j) : ℝ) := by
@@ -101,13 +101,13 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
     exact nat.succ_le_iff.mpr hj
   have hI₀ : μ (I j) ≠ 0 := (measure_closed_ball_pos _ d <| by positivity).Ne.symm
   have hI₁ : μ (I j) ≠ ⊤ := measure_ne_top _ _
-  have hI₂ : μ (I j) * ↑(n j) = Ennreal.ofReal T :=
+  have hI₂ : μ (I j) * ↑(n j) = ENNReal.ofReal T :=
     by
     rw [volume_closed_ball, mul_div, mul_div_mul_left T _ two_ne_zero,
-      min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← Ennreal.ofReal_nsmul,
+      min_eq_right (div_le_self hT₀.le huj'), mul_comm, ← nsmul_eq_mul, ← ENNReal.ofReal_nsmul,
       nsmul_eq_mul, mul_div_cancel']
     exact nat.cast_ne_zero.mpr hj.ne'
-  rw [Ennreal.div_eq_div_iff hT₁ Ennreal.ofReal_ne_top hI₀ hI₁,
+  rw [ENNReal.div_eq_div_iff hT₁ ENNReal.ofReal_ne_top hI₀ hI₁,
     volume_of_add_preimage_eq s _ (u j) d huj (hu₁ j) closed_ball_ae_eq_ball, nsmul_eq_mul, ←
     mul_assoc, hI₂]
 #align add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self

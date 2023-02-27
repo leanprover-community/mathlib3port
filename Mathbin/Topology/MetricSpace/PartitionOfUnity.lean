@@ -30,7 +30,7 @@ metric space, partition of unity, locally finite
 -/
 
 
-open Topology Ennreal BigOperators NNReal Filter
+open Topology ENNReal BigOperators NNReal Filter
 
 open Set Function Filter TopologicalSpace
 
@@ -72,10 +72,10 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) (x : X) :
     ∃ r : ℝ,
       ∀ᶠ y in 𝓝 x,
-        r ∈ Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i } :=
+        r ∈ Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i } :=
   by
   have :=
-    (ennreal.continuous_of_real.tendsto' 0 0 Ennreal.ofReal_zero).Eventually
+    (ennreal.continuous_of_real.tendsto' 0 0 ENNReal.ofReal_zero).Eventually
       (eventually_nhds_zero_forall_closed_ball_subset hK hU hKU hfin x).curry
   rcases this.exists_gt with ⟨r, hr0, hr⟩
   refine' ⟨r, hr.mono fun y hy => ⟨hr0, _⟩⟩
@@ -84,7 +84,7 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
 
 theorem exists_forall_closedBall_subset_aux₂ (y : X) :
     Convex ℝ
-      (Ioi (0 : ℝ) ∩ Ennreal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
+      (Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
   (convex_Ioi _).inter <|
     OrdConnected.convex <|
       OrdConnected.preimage_ennreal_ofReal <|
@@ -98,7 +98,7 @@ exists a positive continuous function `δ : C(X, ℝ)` such that for any `i` and
 we have `emetric.closed_ball x (ennreal.of_real (δ x)) ⊆ U i`. -/
 theorem exists_continuous_real_forall_closedBall_subset (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
-    ∃ δ : C(X, ℝ), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, closedBall x (Ennreal.ofReal <| δ x) ⊆ U i :=
+    ∃ δ : C(X, ℝ), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, closedBall x (ENNReal.ofReal <| δ x) ⊆ U i :=
   by
   simpa only [mem_inter_iff, forall_and, mem_preimage, mem_Inter, @forall_swap ι X] using
     exists_continuous_forall_mem_convex_of_local_const exists_forall_closed_ball_subset_aux₂
@@ -116,19 +116,19 @@ theorem exists_continuous_nNReal_forall_closedBall_subset (hK : ∀ i, IsClosed 
   rcases exists_continuous_real_forall_closed_ball_subset hK hU hKU hfin with ⟨δ, hδ₀, hδ⟩
   lift δ to C(X, ℝ≥0) using fun x => (hδ₀ x).le
   refine' ⟨δ, hδ₀, fun i x hi => _⟩
-  simpa only [← Ennreal.ofReal_coe_nNReal] using hδ i x hi
+  simpa only [← ENNReal.ofReal_coe_nnreal] using hδ i x hi
 #align emetric.exists_continuous_nnreal_forall_closed_ball_subset Emetric.exists_continuous_nNReal_forall_closedBall_subset
 
 /-- Let `X` be an extended metric space. Let `K : ι → set X` be a locally finite family of closed
 sets, let `U : ι → set X` be a family of open sets such that `K i ⊆ U i` for all `i`. Then there
 exists a positive continuous function `δ : C(X, ℝ≥0∞)` such that for any `i` and `x ∈ K i`,
 we have `emetric.closed_ball x (δ x) ⊆ U i`. -/
-theorem exists_continuous_ennreal_forall_closedBall_subset (hK : ∀ i, IsClosed (K i))
+theorem exists_continuous_eNNReal_forall_closedBall_subset (hK : ∀ i, IsClosed (K i))
     (hU : ∀ i, IsOpen (U i)) (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) :
     ∃ δ : C(X, ℝ≥0∞), (∀ x, 0 < δ x) ∧ ∀ (i), ∀ x ∈ K i, closedBall x (δ x) ⊆ U i :=
   let ⟨δ, hδ₀, hδ⟩ := exists_continuous_nNReal_forall_closedBall_subset hK hU hKU hfin
-  ⟨ContinuousMap.comp ⟨coe, Ennreal.continuous_coe⟩ δ, fun x => Ennreal.coe_pos.2 (hδ₀ x), hδ⟩
-#align emetric.exists_continuous_ennreal_forall_closed_ball_subset Emetric.exists_continuous_ennreal_forall_closedBall_subset
+  ⟨ContinuousMap.comp ⟨coe, ENNReal.continuous_coe⟩ δ, fun x => ENNReal.coe_pos.2 (hδ₀ x), hδ⟩
+#align emetric.exists_continuous_ennreal_forall_closed_ball_subset Emetric.exists_continuous_eNNReal_forall_closedBall_subset
 
 end Emetric
 

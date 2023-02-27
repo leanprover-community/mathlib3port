@@ -60,7 +60,7 @@ We mostly follow the proof from [Kallenberg, *Foundations of modern probability*
 
 open TopologicalSpace Filter
 
-open NNReal Ennreal MeasureTheory ProbabilityTheory BigOperators Topology
+open NNReal ENNReal MeasureTheory ProbabilityTheory BigOperators Topology
 
 namespace MeasureTheory
 
@@ -962,39 +962,39 @@ theorem upcrossings_lt_top_iff :
       lift upcrossings a b f ω to ℝ≥0 using h.ne with r hr
       exact ⟨r, le_rfl⟩
     · rintro ⟨k, hk⟩
-      exact lt_of_le_of_lt hk Ennreal.coe_lt_top
+      exact lt_of_le_of_lt hk ENNReal.coe_lt_top
   simp_rw [this, upcrossings, supᵢ_le_iff]
   constructor <;> rintro ⟨k, hk⟩
   · obtain ⟨m, hm⟩ := exists_nat_ge k
-    refine' ⟨m, fun N => Ennreal.coe_nat_le_coe_nat.1 ((hk N).trans _)⟩
-    rwa [← Ennreal.coe_nat, Ennreal.coe_le_coe]
+    refine' ⟨m, fun N => ENNReal.coe_nat_le_coe_nat.1 ((hk N).trans _)⟩
+    rwa [← ENNReal.coe_nat, ENNReal.coe_le_coe]
   · refine' ⟨k, fun N => _⟩
-    simp only [Ennreal.coe_nat, Ennreal.coe_nat_le_coe_nat, hk N]
+    simp only [ENNReal.coe_nat, ENNReal.coe_nat_le_coe_nat, hk N]
 #align measure_theory.upcrossings_lt_top_iff MeasureTheory.upcrossings_lt_top_iff
 
 /-- A variant of Doob's upcrossing estimate obtained by taking the supremum on both sides. -/
 theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteMeasure μ] (a b : ℝ)
     (hf : Submartingale f ℱ μ) :
-    (Ennreal.ofReal (b - a) * ∫⁻ ω, upcrossings a b f ω ∂μ) ≤
-      ⨆ N, ∫⁻ ω, Ennreal.ofReal ((f N ω - a)⁺) ∂μ :=
+    (ENNReal.ofReal (b - a) * ∫⁻ ω, upcrossings a b f ω ∂μ) ≤
+      ⨆ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ :=
   by
   by_cases hab : a < b
   · simp_rw [upcrossings]
-    have : ∀ N, (∫⁻ ω, Ennreal.ofReal ((f N ω - a)⁺) ∂μ) = Ennreal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ) :=
+    have : ∀ N, (∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ) = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ) :=
       by
       intro N
       rw [of_real_integral_eq_lintegral_of_real]
       · exact (hf.sub_martingale (martingale_const _ _ _)).Pos.Integrable _
       · exact eventually_of_forall fun ω => LatticeOrderedCommGroup.pos_nonneg _
     rw [lintegral_supr']
-    · simp_rw [this, Ennreal.mul_supᵢ, supᵢ_le_iff]
+    · simp_rw [this, ENNReal.mul_supᵢ, supᵢ_le_iff]
       intro N
       rw [(by simp :
           (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
-        lintegral_coe_eq_integral, ← Ennreal.ofReal_mul (sub_pos.2 hab).le]
+        lintegral_coe_eq_integral, ← ENNReal.ofReal_mul (sub_pos.2 hab).le]
       · simp_rw [NNReal.coe_nat_cast]
         exact
-          (Ennreal.ofReal_le_ofReal
+          (ENNReal.ofReal_le_ofReal
                 (hf.mul_integral_upcrossings_before_le_integral_pos_part a b N)).trans
             (le_supᵢ _ N)
       · simp only [NNReal.coe_nat_cast, hf.adapted.integrable_upcrossings_before hab]
@@ -1003,10 +1003,10 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
         measurable_from_top.comp_ae_measurable
           (hf.adapted.measurable_upcrossings_before hab).AeMeasurable
     · refine' eventually_of_forall fun ω N M hNM => _
-      rw [Ennreal.coe_nat_le_coe_nat]
+      rw [ENNReal.coe_nat_le_coe_nat]
       exact upcrossings_before_mono hab hNM ω
   · rw [not_lt, ← sub_nonpos] at hab
-    rw [Ennreal.ofReal_of_nonpos hab, zero_mul]
+    rw [ENNReal.ofReal_of_nonpos hab, zero_mul]
     exact zero_le _
 #align measure_theory.submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part MeasureTheory.Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part
 

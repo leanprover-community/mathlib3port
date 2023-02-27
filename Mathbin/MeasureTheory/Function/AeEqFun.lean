@@ -75,9 +75,9 @@ function space, almost everywhere equal, `L⁰`, ae_eq_fun
 
 noncomputable section
 
-open Classical Ennreal Topology
+open Classical ENNReal Topology
 
-open Set Filter TopologicalSpace Ennreal Emetric MeasureTheory Function
+open Set Filter TopologicalSpace ENNReal Emetric MeasureTheory Function
 
 variable {α β γ δ : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
@@ -811,7 +811,7 @@ instance [Semiring 𝕜] [AddCommMonoid γ] [ContinuousAdd γ] [Module 𝕜 γ] 
 
 end Module
 
-open Ennreal
+open ENNReal
 
 /-- For `f : α → ℝ≥0∞`, define `∫ [f]` to be `∫ f` -/
 def lintegral (f : α →ₘ[μ] ℝ≥0∞) : ℝ≥0∞ :=

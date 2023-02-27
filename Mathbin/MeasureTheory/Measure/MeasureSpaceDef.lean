@@ -65,7 +65,7 @@ open Filter hiding map
 
 open Function MeasurableSpace
 
-open Classical Topology BigOperators Filter Ennreal NNReal
+open Classical Topology BigOperators Filter ENNReal NNReal
 
 variable {α β γ δ ι : Type _}
 
@@ -270,7 +270,7 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
   convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext
     rw [finite.mem_to_finset]
-  apply Ennreal.sum_lt_top; simpa only [finite.mem_to_finset]
+  apply ENNReal.sum_lt_top; simpa only [finite.mem_to_finset]
 #align measure_theory.measure_bUnion_lt_top MeasureTheory.measure_bUnion_lt_top
 
 theorem measure_unionᵢ_null [Countable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃ i, s i) = 0 :=
@@ -317,7 +317,7 @@ theorem measure_union_null_iff : μ (s₁ ∪ s₂) = 0 ↔ μ s₁ = 0 ∧ μ s
 #align measure_theory.measure_union_null_iff MeasureTheory.measure_union_null_iff
 
 theorem measure_union_lt_top (hs : μ s < ∞) (ht : μ t < ∞) : μ (s ∪ t) < ∞ :=
-  (measure_union_le s t).trans_lt (Ennreal.add_lt_top.mpr ⟨hs, ht⟩)
+  (measure_union_le s t).trans_lt (ENNReal.add_lt_top.mpr ⟨hs, ht⟩)
 #align measure_theory.measure_union_lt_top MeasureTheory.measure_union_lt_top
 
 @[simp]

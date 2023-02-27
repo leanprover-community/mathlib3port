@@ -75,9 +75,9 @@ with finite measure. Its value on other sets is ignored.
 
 noncomputable section
 
-open Classical Topology BigOperators NNReal Ennreal MeasureTheory Pointwise
+open Classical Topology BigOperators NNReal ENNReal MeasureTheory Pointwise
 
-open Set Filter TopologicalSpace Ennreal Emetric
+open Set Filter TopologicalSpace ENNReal Emetric
 
 namespace MeasureTheory
 
@@ -149,7 +149,7 @@ theorem smul_measure_iff (c : ℝ≥0∞) (hc_ne_zero : c ≠ 0) (hc_ne_top : c 
 theorem map_empty_eq_zero {β} [AddCancelMonoid β] {T : Set α → β} (hT : FinMeasAdditive μ T) :
     T ∅ = 0 :=
   by
-  have h_empty : μ ∅ ≠ ∞ := (measure_empty.le.trans_lt Ennreal.coe_lt_top).Ne
+  have h_empty : μ ∅ ≠ ∞ := (measure_empty.le.trans_lt ENNReal.coe_lt_top).Ne
   specialize hT ∅ ∅ MeasurableSet.empty MeasurableSet.empty h_empty h_empty (Set.inter_empty ∅)
   rw [Set.union_empty] at hT
   nth_rw 1 [← add_zero (T ∅)] at hT
@@ -183,7 +183,7 @@ theorem map_unionᵢ_fin_meas_set_eq_sum (T : Set α → β) (T_empty : T ∅ = 
   ·
     exact
       ((measure_bUnion_finset_le _ _).trans_lt <|
-          Ennreal.sum_lt_top fun i hi => hps i <| Finset.mem_insert_of_mem hi).Ne
+          ENNReal.sum_lt_top fun i hi => hps i <| Finset.mem_insert_of_mem hi).Ne
   · simp_rw [Set.inter_unionᵢ]
     refine' Union_eq_empty.mpr fun i => Union_eq_empty.mpr fun hi => _
     rw [← Set.disjoint_iff_inter_eq_empty]
@@ -218,7 +218,7 @@ theorem eq_zero_of_measure_zero {β : Type _} [NormedAddCommGroup β] {T : Set �
     T s = 0 := by
   refine' norm_eq_zero.mp _
   refine' ((hT.2 s hs (by simp [hs_zero])).trans (le_of_eq _)).antisymm (norm_nonneg _)
-  rw [hs_zero, Ennreal.zero_toReal, mul_zero]
+  rw [hs_zero, ENNReal.zero_toReal, mul_zero]
 #align measure_theory.dominated_fin_meas_additive.eq_zero_of_measure_zero MeasureTheory.DominatedFinMeasAdditive.eq_zero_of_measure_zero
 
 theorem eq_zero {β : Type _} [NormedAddCommGroup β] {T : Set α → β} {C : ℝ} {m : MeasurableSpace α}
@@ -254,7 +254,7 @@ theorem ofMeasureLe {μ' : Measure α} (h : μ ≤ μ') (hT : DominatedFinMeasAd
     exact h s hs
   refine' ⟨hT.1.ofEqTopImpEqTop h', fun s hs hμ's => _⟩
   have hμs : μ s < ∞ := (h s hs).trans_lt hμ's
-  refine' (hT.2 s hs hμs).trans (mul_le_mul le_rfl _ Ennreal.toReal_nonneg hC)
+  refine' (hT.2 s hs hμs).trans (mul_le_mul le_rfl _ ENNReal.toReal_nonneg hC)
   rw [to_real_le_to_real hμs.ne hμ's.ne]
   exact h s hs
 #align measure_theory.dominated_fin_meas_additive.of_measure_le MeasureTheory.DominatedFinMeasAdditive.ofMeasureLe
@@ -736,18 +736,18 @@ theorem norm_eq_sum_mul (f : α →₁ₛ[μ] G) :
   have h_eq := simple_func.map_apply (fun x => (‖x‖₊ : ℝ≥0∞)) (to_simple_func f)
   dsimp only at h_eq
   simp_rw [← h_eq]
-  rw [simple_func.lintegral_eq_lintegral, simple_func.map_lintegral, Ennreal.toReal_sum]
+  rw [simple_func.lintegral_eq_lintegral, simple_func.map_lintegral, ENNReal.toReal_sum]
   · congr
     ext1 x
-    rw [Ennreal.toReal_mul, mul_comm, ← ofReal_norm_eq_coe_nnnorm,
-      Ennreal.toReal_ofReal (norm_nonneg _)]
+    rw [ENNReal.toReal_mul, mul_comm, ← ofReal_norm_eq_coe_nnnorm,
+      ENNReal.toReal_ofReal (norm_nonneg _)]
   · intro x hx
     by_cases hx0 : x = 0
     · rw [hx0]
       simp
     ·
       exact
-        Ennreal.mul_ne_top Ennreal.coe_ne_top
+        ENNReal.mul_ne_top ENNReal.coe_ne_top
           (simple_func.measure_preimage_lt_top_of_integrable _ (simple_func.integrable f) hx0).Ne
 #align measure_theory.L1.simple_func.norm_eq_sum_mul MeasureTheory.L1.SimpleFunc.norm_eq_sum_mul
 
@@ -1756,12 +1756,12 @@ theorem continuous_L1_toL1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ �
     by
     refine' ((snorm_mono_measure _ hμ'_le).trans_lt _).Ne
     rw [snorm_smul_measure_of_ne_zero hc'0, smul_eq_mul]
-    refine' Ennreal.mul_lt_top _ h_snorm_ne_top
+    refine' ENNReal.mul_lt_top _ h_snorm_ne_top
     simp [hc', hc'0]
   calc
     (snorm (g - f) 1 μ').toReal ≤ (c' * snorm (g - f) 1 μ).toReal :=
       by
-      rw [to_real_le_to_real h_snorm_ne_top' (Ennreal.mul_ne_top hc' h_snorm_ne_top)]
+      rw [to_real_le_to_real h_snorm_ne_top' (ENNReal.mul_ne_top hc' h_snorm_ne_top)]
       refine' (snorm_mono_measure (⇑g - ⇑f) hμ'_le).trans _
       rw [snorm_smul_measure_of_ne_zero hc'0, smul_eq_mul]
       simp
@@ -1789,7 +1789,7 @@ theorem setToFun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0∞
     have hμ's : μ' s ≠ ∞ := by
       refine' ((hμ'_le s hs).trans_lt _).Ne
       rw [measure.smul_apply, smul_eq_mul]
-      exact Ennreal.mul_lt_top hc' hμs.ne
+      exact ENNReal.mul_lt_top hc' hμs.ne
     rw [set_to_fun_indicator_const hT hs hμs.ne, set_to_fun_indicator_const hT' hs hμ's]
   · intro f₂ g₂ h_dish hf₂ hg₂ h_eq_f h_eq_g
     rw [set_to_fun_add hT hf₂ hg₂, set_to_fun_add hT' (h_int f₂ hf₂) (h_int g₂ hg₂), h_eq_f, h_eq_g]
@@ -1861,7 +1861,7 @@ theorem setToFun_congr_smul_measure (c : ℝ≥0∞) (hc_ne_top : c ≠ ∞)
     simp [hc0]
   refine' set_to_fun_congr_measure c⁻¹ c _ hc_ne_top (le_of_eq _) le_rfl hT hT_smul f
   · simp [hc0]
-  · rw [smul_smul, Ennreal.inv_mul_cancel hc0 hc_ne_top, one_smul]
+  · rw [smul_smul, ENNReal.inv_mul_cancel hc0 hc_ne_top, one_smul]
 #align measure_theory.set_to_fun_congr_smul_measure MeasureTheory.setToFun_congr_smul_measure
 
 theorem norm_setToFun_le_mul_norm (hT : DominatedFinMeasAdditive μ T C) (f : α →₁[μ] E)
@@ -1929,7 +1929,7 @@ theorem tendsto_setToFun_of_dominated_convergence (hT : DominatedFinMeasAdditive
   -- up to some rewriting, what we need to prove is `h_lim`
   rw [tendsto_iff_norm_tendsto_zero]
   have lintegral_norm_tendsto_zero :
-    tendsto (fun n => Ennreal.toReal <| ∫⁻ a, Ennreal.ofReal ‖fs n a - f a‖ ∂μ) at_top (𝓝 0) :=
+    tendsto (fun n => ENNReal.toReal <| ∫⁻ a, ENNReal.ofReal ‖fs n a - f a‖ ∂μ) at_top (𝓝 0) :=
     (tendsto_to_real zero_ne_top).comp
       (tendsto_lintegral_norm_of_dominated_convergence fs_measurable
         bound_integrable.has_finite_integral h_bound h_lim)

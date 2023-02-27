@@ -30,7 +30,7 @@ This file also contains Doob's maximal inequality: given a non-negative submarti
  -/
 
 
-open NNReal Ennreal MeasureTheory ProbabilityTheory
+open NNReal ENNReal MeasureTheory ProbabilityTheory
 
 namespace MeasureTheory
 
@@ -130,7 +130,7 @@ open Finset
 theorem smul_le_stoppedValue_hitting [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) {ε : ℝ≥0}
     (n : ℕ) :
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } ≤
-      Ennreal.ofReal
+      ENNReal.ofReal
         (∫ ω in { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω },
           stoppedValue f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
   by
@@ -158,10 +158,10 @@ theorem smul_le_stoppedValue_hitting [IsFiniteMeasure μ] (hsub : Submartingale 
       (integrable.integrable_on
         (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
           hitting_le))
-  rw [Ennreal.le_ofReal_iff_toReal_le, Ennreal.toReal_smul]
+  rw [ENNReal.le_ofReal_iff_toReal_le, ENNReal.toReal_smul]
   · exact h
-  · exact Ennreal.mul_ne_top (by simp) (measure_ne_top _ _)
-  · exact le_trans (mul_nonneg ε.coe_nonneg Ennreal.toReal_nonneg) h
+  · exact ENNReal.mul_ne_top (by simp) (measure_ne_top _ _)
+  · exact le_trans (mul_nonneg ε.coe_nonneg ENNReal.toReal_nonneg) h
 #align measure_theory.smul_le_stopped_value_hitting MeasureTheory.smul_le_stoppedValue_hitting
 
 /-- **Doob's maximal inequality**: Given a non-negative submartingale `f`, for all `ε : ℝ≥0`,
@@ -172,26 +172,26 @@ In some literature, the Doob's maximal inequality refers to what we call Doob's 
 theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnonneg : 0 ≤ f) {ε : ℝ≥0}
     (n : ℕ) :
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } ≤
-      Ennreal.ofReal
+      ENNReal.ofReal
         (∫ ω in { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω },
           f n ω ∂μ) :=
   by
   suffices
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } +
-        Ennreal.ofReal
+        ENNReal.ofReal
           (∫ ω in { ω | ((range (n + 1)).sup' nonempty_range_succ fun k => f k ω) < ε }, f n ω ∂μ) ≤
-      Ennreal.ofReal (μ[f n])
+      ENNReal.ofReal (μ[f n])
     by
     have hadd :
-      Ennreal.ofReal (∫ ω, f n ω ∂μ) =
-        Ennreal.ofReal
+      ENNReal.ofReal (∫ ω, f n ω ∂μ) =
+        ENNReal.ofReal
             (∫ ω in { ω | ↑ε ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω },
               f n ω ∂μ) +
-          Ennreal.ofReal
+          ENNReal.ofReal
             (∫ ω in { ω | ((range (n + 1)).sup' nonempty_range_succ fun k => f k ω) < ↑ε },
               f n ω ∂μ) :=
       by
-      rw [← Ennreal.ofReal_add, ← integral_union]
+      rw [← ENNReal.ofReal_add, ← integral_union]
       · conv_lhs => rw [← integral_univ]
         convert rfl
         ext ω
@@ -208,22 +208,22 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
             measurable_const
       exacts[(hsub.integrable _).IntegrableOn, (hsub.integrable _).IntegrableOn,
         integral_nonneg (hnonneg _), integral_nonneg (hnonneg _)]
-    rwa [hadd, Ennreal.add_le_add_iff_right Ennreal.ofReal_ne_top] at this
+    rwa [hadd, ENNReal.add_le_add_iff_right ENNReal.ofReal_ne_top] at this
   calc
     ε • μ { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω } +
-          Ennreal.ofReal
+          ENNReal.ofReal
             (∫ ω in { ω | ((range (n + 1)).sup' nonempty_range_succ fun k => f k ω) < ε },
               f n ω ∂μ) ≤
-        Ennreal.ofReal
+        ENNReal.ofReal
             (∫ ω in { ω | (ε : ℝ) ≤ (range (n + 1)).sup' nonempty_range_succ fun k => f k ω },
               stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) +
-          Ennreal.ofReal
+          ENNReal.ofReal
             (∫ ω in { ω | ((range (n + 1)).sup' nonempty_range_succ fun k => f k ω) < ε },
               stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
       by
       refine'
         add_le_add (smul_le_stopped_value_hitting hsub _)
-          (Ennreal.ofReal_le_ofReal
+          (ENNReal.ofReal_le_ofReal
             (set_integral_mono_on (hsub.integrable n).IntegrableOn
               (integrable.integrable_on
                 (hsub.integrable_stopped_value
@@ -244,9 +244,9 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
           False.elim
             ((not_le.2 hω) ((le_sup'_iff _).2 ⟨m, mem_range.2 (Nat.lt_succ_of_le hm.2), hεm⟩))
       simp_rw [stopped_value, this]
-    _ = Ennreal.ofReal (∫ ω, stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
+    _ = ENNReal.ofReal (∫ ω, stopped_value f (hitting f { y : ℝ | ↑ε ≤ y } 0 n) ω ∂μ) :=
       by
-      rw [← Ennreal.ofReal_add, ← integral_union]
+      rw [← ENNReal.ofReal_add, ← integral_union]
       · conv_rhs => rw [← integral_univ]
         convert rfl
         ext ω
@@ -272,9 +272,9 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
             (hsub.integrable_stopped_value (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
               hitting_le)
       exacts[integral_nonneg fun x => hnonneg _ _, integral_nonneg fun x => hnonneg _ _]
-    _ ≤ Ennreal.ofReal (μ[f n]) :=
+    _ ≤ ENNReal.ofReal (μ[f n]) :=
       by
-      refine' Ennreal.ofReal_le_ofReal _
+      refine' ENNReal.ofReal_le_ofReal _
       rw [← stopped_value_const f n]
       exact
         hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSet_Ici)

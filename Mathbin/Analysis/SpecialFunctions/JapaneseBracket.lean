@@ -31,7 +31,7 @@ than the dimension.
 
 noncomputable section
 
-open BigOperators NNReal Filter Topology Ennreal
+open BigOperators NNReal Filter Topology ENNReal
 
 open Asymptotics Filter Set Real MeasureTheory FiniteDimensional
 
@@ -91,16 +91,16 @@ variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 variable {E}
 
 theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ) < r) :
-    (∫⁻ x : ℝ in Ioc 0 1, Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ :=
+    (∫⁻ x : ℝ in Ioc 0 1, ENNReal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ :=
   by
   have hr : 0 < r := lt_of_le_of_lt n.cast_nonneg hnr
   have h_int :
     ∀ (x : ℝ) (hx : x ∈ Ioc (0 : ℝ) 1),
-      Ennreal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ Ennreal.ofReal (x ^ (-(r⁻¹ * n))) :=
+      ENNReal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) ≤ ENNReal.ofReal (x ^ (-(r⁻¹ * n))) :=
     by
     intro x hx
     have hxr : 0 ≤ x ^ (-r⁻¹) := rpow_nonneg_of_nonneg hx.1.le _
-    apply Ennreal.ofReal_le_ofReal
+    apply ENNReal.ofReal_le_ofReal
     rw [← neg_mul, rpow_mul hx.1.le, rpow_nat_cast]
     refine' pow_le_pow_of_le_left _ (by simp only [sub_le_self_iff, zero_le_one]) n
     rw [le_sub_iff_add_le', add_zero]
@@ -116,7 +116,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
 
 theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
-    (∫⁻ x : E, Ennreal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ :=
+    (∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ :=
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
@@ -130,7 +130,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
   -- 0 to 1 and from 1 to ∞
   have h_int :
     ∀ (t : ℝ) (ht : t ∈ Ioi (0 : ℝ)),
-      (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : Ennreal) =
+      (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : ENNReal) =
         volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
     by
     intro t ht
@@ -141,30 +141,30 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
   rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int)]
   have hIoi_eq : Ioi (0 : ℝ) = Ioc (0 : ℝ) 1 ∪ Ioi 1 := (Set.Ioc_union_Ioi_eq_Ioi zero_le_one).symm
   have hdisjoint : Disjoint (Ioc (0 : ℝ) 1) (Ioi 1) := by simp [disjoint_iff]
-  rw [hIoi_eq, lintegral_union measurableSet_Ioi hdisjoint, Ennreal.add_lt_top]
+  rw [hIoi_eq, lintegral_union measurableSet_Ioi hdisjoint, ENNReal.add_lt_top]
   have h_int' :
     ∀ (t : ℝ) (ht : t ∈ Ioc (0 : ℝ) 1),
-      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) =
-        Ennreal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) *
+      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : ENNReal) =
+        ENNReal.ofReal ((t ^ (-r⁻¹) - 1) ^ FiniteDimensional.finrank ℝ E) *
           volume (Metric.ball (0 : E) 1) :=
     by
     intro t ht
     refine' volume.add_haar_closed_ball (0 : E) _
     rw [le_sub_iff_add_le', add_zero]
     exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos ht.1 ht.2 (by simp [hr.le])
-  have h_meas' : Measurable fun a : ℝ => Ennreal.ofReal ((a ^ (-r⁻¹) - 1) ^ finrank ℝ E) := by
+  have h_meas' : Measurable fun a : ℝ => ENNReal.ofReal ((a ^ (-r⁻¹) - 1) ^ finrank ℝ E) := by
     measurability
   constructor
   -- The integral from 0 to 1:
   · rw [set_lintegral_congr_fun measurableSet_Ioc (ae_of_all volume <| h_int'),
-      lintegral_mul_const _ h_meas', Ennreal.mul_lt_top_iff]
+      lintegral_mul_const _ h_meas', ENNReal.mul_lt_top_iff]
     left
     -- We calculate the integral
     exact ⟨finite_integral_rpow_sub_one_pow_aux (finrank ℝ E) hnr, measure_ball_lt_top⟩
   -- The integral from 1 to ∞ is zero:
   have h_int'' :
     ∀ (t : ℝ) (ht : t ∈ Ioi (1 : ℝ)),
-      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : Ennreal) = 0 :=
+      (volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) : ENNReal) = 0 :=
     fun t ht => by rw [closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
   -- The integral over the constant zero function is finite:
   rw [set_lintegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
@@ -177,7 +177,7 @@ theorem integrableOneAddNorm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAd
   by
   refine' ⟨by measurability, _⟩
   -- Lower Lebesgue integral
-  have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊) = ∫⁻ a : E, Ennreal.ofReal ((1 + ‖a‖) ^ (-r)) :=
+  have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊) = ∫⁻ a : E, ENNReal.ofReal ((1 + ‖a‖) ^ (-r)) :=
     lintegral_nnnorm_eq_of_nonneg fun _ => rpow_nonneg_of_nonneg (by positivity) _
   rw [has_finite_integral, this]
   exact finite_integral_one_add_norm hnr

@@ -28,7 +28,7 @@ as possible.
 
 open MeasureTheory Set TopologicalSpace
 
-open Classical Ennreal NNReal
+open Classical ENNReal NNReal
 
 /-- If a function `f : α → β` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p < q`, then `f` is almost-everywhere
@@ -77,13 +77,13 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
       μ t ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u' p ∩ v p q) :=
         by
         refine' (measure_Union_le _).trans _
-        apply Ennreal.tsum_le_tsum fun p => _
+        apply ENNReal.tsum_le_tsum fun p => _
         apply measure_Union_le _
         exact (s_count.mono (inter_subset_left _ _)).to_subtype
       _ ≤ ∑' (p : s) (q : s ∩ Ioi p), μ (u p q ∩ v p q) :=
         by
-        apply Ennreal.tsum_le_tsum fun p => _
-        refine' Ennreal.tsum_le_tsum fun q => measure_mono _
+        apply ENNReal.tsum_le_tsum fun p => _
+        refine' ENNReal.tsum_le_tsum fun q => measure_mono _
         exact inter_subset_inter_left _ (bInter_subset_of_mem q.2)
       _ = ∑' (p : s) (q : s ∩ Ioi p), (0 : ℝ≥0∞) :=
         by
@@ -128,7 +128,7 @@ theorem MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _}
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable
 supersets which are disjoint up to measure zero when `p` and `q` are finite numbers satisfying
 `p < q`, then `f` is almost-everywhere measurable. -/
-theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α}
+theorem ENNReal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : MeasurableSpace α}
     (μ : Measure α) (f : α → ℝ≥0∞)
     (h :
       ∀ (p : ℝ≥0) (q : ℝ≥0),
@@ -141,12 +141,12 @@ theorem Ennreal.aeMeasurableOfExistAlmostDisjointSupersets {α : Type _} {m : Me
   by
   obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ :
     ∃ s : Set ℝ≥0∞, s.Countable ∧ Dense s ∧ 0 ∉ s ∧ ∞ ∉ s :=
-    Ennreal.exists_countable_dense_no_zero_top
+    ENNReal.exists_countable_dense_no_zero_top
   have I : ∀ x ∈ s, x ≠ ∞ := fun x xs hx => s_top (hx ▸ xs)
   apply MeasureTheory.aeMeasurableOfExistAlmostDisjointSupersets μ s s_count s_dense _
   rintro p hp q hq hpq
   lift p to ℝ≥0 using I p hp
   lift q to ℝ≥0 using I q hq
-  exact h p q (Ennreal.coe_lt_coe.1 hpq)
-#align ennreal.ae_measurable_of_exist_almost_disjoint_supersets Ennreal.aeMeasurableOfExistAlmostDisjointSupersets
+  exact h p q (ENNReal.coe_lt_coe.1 hpq)
+#align ennreal.ae_measurable_of_exist_almost_disjoint_supersets ENNReal.aeMeasurableOfExistAlmostDisjointSupersets
 

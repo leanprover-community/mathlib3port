@@ -58,7 +58,7 @@ open MeasureTheory Filter Finset
 
 noncomputable section
 
-open Topology BigOperators MeasureTheory Ennreal NNReal
+open Topology BigOperators MeasureTheory ENNReal NNReal
 
 variable {α β γ δ : Type _} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
   [MeasurableSpace δ]
@@ -215,7 +215,7 @@ theorem snorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDis
   by_cases h0 : p = 0
   · simp [h0]
   by_cases h_top : p = ∞
-  · simp only [h_top, snorm, snorm_ess_sup, Ennreal.top_ne_zero, eq_self_iff_true, if_true,
+  · simp only [h_top, snorm, snorm_ess_sup, ENNReal.top_ne_zero, eq_self_iff_true, if_true,
       if_false]
     apply ess_sup_eq
     exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
@@ -273,7 +273,7 @@ protected theorem sq [Pow γ ℕ] [HasMeasurablePow γ ℕ] (h : IdentDistrib f 
 
 protected theorem coeNnrealEnnreal {f : α → ℝ≥0} {g : β → ℝ≥0} (h : IdentDistrib f g μ ν) :
     IdentDistrib (fun x => (f x : ℝ≥0∞)) (fun x => (g x : ℝ≥0∞)) μ ν :=
-  h.comp measurable_coe_nNReal_ennreal
+  h.comp measurable_coe_nNReal_eNNReal
 #align probability_theory.ident_distrib.coe_nnreal_ennreal ProbabilityTheory.IdentDistrib.coeNnrealEnnreal
 
 @[to_additive]
@@ -307,7 +307,7 @@ theorem constDiv [Div γ] [HasMeasurableDiv γ] (h : IdentDistrib f g μ ν) (c 
 theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
     evariance f μ = evariance g ν :=
   by
-  convert (h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nNReal_ennreal.sq.lintegral_eq
+  convert (h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nNReal_eNNReal.sq.lintegral_eq
   rw [h.integral_eq]
   rfl
 #align probability_theory.ident_distrib.evariance_eq ProbabilityTheory.IdentDistrib.evariance_eq

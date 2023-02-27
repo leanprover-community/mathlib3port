@@ -56,7 +56,7 @@ which we currently do not have.
 
 noncomputable section
 
-open Classical MeasureTheory NNReal Ennreal
+open Classical MeasureTheory NNReal ENNReal
 
 namespace MeasureTheory
 
@@ -156,7 +156,7 @@ theorem ae_lt_top [IsFiniteMeasure ℙ] {μ : Measure E} {X : Ω → E} : ∀ᵐ
 #align measure_theory.pdf.ae_lt_top MeasureTheory.pdf.ae_lt_top
 
 theorem ofReal_toReal_ae_eq [IsFiniteMeasure ℙ] {X : Ω → E} :
-    (fun x => Ennreal.ofReal (pdf X ℙ μ x).toReal) =ᵐ[μ] pdf X ℙ μ :=
+    (fun x => ENNReal.ofReal (pdf X ℙ μ x).toReal) =ᵐ[μ] pdf X ℙ μ :=
   ofReal_toReal_ae_eq ae_lt_top
 #align measure_theory.pdf.of_real_to_real_ae_eq MeasureTheory.pdf.ofReal_toReal_ae_eq
 
@@ -184,20 +184,20 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
     · congr 2
       · have :
           ∀ x,
-            Ennreal.ofReal (f x * (pdf X ℙ μ x).toReal) =
-              Ennreal.ofReal (pdf X ℙ μ x).toReal * Ennreal.ofReal (f x) :=
+            ENNReal.ofReal (f x * (pdf X ℙ μ x).toReal) =
+              ENNReal.ofReal (pdf X ℙ μ x).toReal * ENNReal.ofReal (f x) :=
           by
           intro x
-          rw [mul_comm, Ennreal.ofReal_mul Ennreal.toReal_nonneg]
+          rw [mul_comm, ENNReal.ofReal_mul ENNReal.toReal_nonneg]
         simp_rw [this]
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
       · have :
           ∀ x,
-            Ennreal.ofReal (-(f x * (pdf X ℙ μ x).toReal)) =
-              Ennreal.ofReal (pdf X ℙ μ x).toReal * Ennreal.ofReal (-f x) :=
+            ENNReal.ofReal (-(f x * (pdf X ℙ μ x).toReal)) =
+              ENNReal.ofReal (pdf X ℙ μ x).toReal * ENNReal.ofReal (-f x) :=
           by
           intro x
-          rw [neg_mul_eq_neg_mul, mul_comm, Ennreal.ofReal_mul Ennreal.toReal_nonneg]
+          rw [neg_mul_eq_neg_mul, mul_comm, ENNReal.ofReal_mul ENNReal.toReal_nonneg]
         simp_rw [this]
         exact lintegral_congr_ae (Filter.EventuallyEq.mul of_real_to_real_ae_eq (ae_eq_refl _))
     · refine' ⟨hf.ae_strongly_measurable, _⟩
@@ -207,12 +207,12 @@ theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPd
       have :
         (fun x => (pdf X ℙ μ * fun x => ↑‖f x‖₊) x) =ᵐ[μ] fun x => ‖f x * (pdf X ℙ μ x).toReal‖₊ :=
         by
-        simp_rw [← smul_eq_mul, nnnorm_smul, Ennreal.coe_mul]
+        simp_rw [← smul_eq_mul, nnnorm_smul, ENNReal.coe_mul]
         rw [smul_eq_mul, mul_comm]
         refine' Filter.EventuallyEq.mul (ae_eq_refl _) (ae_eq_trans of_real_to_real_ae_eq.symm _)
         convert ae_eq_refl _
         ext1 x
-        exact Real.ennnorm_eq_ofReal Ennreal.toReal_nonneg
+        exact Real.ennnorm_eq_ofReal ENNReal.toReal_nonneg
       rw [lintegral_congr_ae this]
       exact hpdf.2
   · rw [integral_undef hpdf, integral_undef]
@@ -327,11 +327,11 @@ theorem hasFiniteIntegralMul {f : ℝ → ℝ} {g : ℝ → ℝ≥0∞} (hg : pd
         (Filter.EventuallyEq.mul (ae_eq_refl fun x => ‖f x‖₊)
           (ae_eq_trans hg.symm of_real_to_real_ae_eq.symm))
         _
-    simp_rw [← smul_eq_mul, nnnorm_smul, Ennreal.coe_mul, smul_eq_mul]
+    simp_rw [← smul_eq_mul, nnnorm_smul, ENNReal.coe_mul, smul_eq_mul]
     refine' Filter.EventuallyEq.mul (ae_eq_refl _) _
     convert ae_eq_refl _
     ext1 x
-    exact Real.ennnorm_eq_ofReal Ennreal.toReal_nonneg
+    exact Real.ennnorm_eq_ofReal ENNReal.toReal_nonneg
   rwa [lt_top_iff_ne_top, ← lintegral_congr_ae this]
 #align measure_theory.pdf.has_finite_integral_mul MeasureTheory.pdf.hasFiniteIntegralMul
 
@@ -373,7 +373,7 @@ theorem pdf_toReal_ae_eq {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
     {s : Set E} (hX : IsUniform X s ℙ μ) :
     (fun x => (pdf X ℙ μ x).toReal) =ᵐ[μ] fun x =>
       (s.indicator ((μ s)⁻¹ • (1 : E → ℝ≥0∞)) x).toReal :=
-  Filter.EventuallyEq.fun_comp hX Ennreal.toReal
+  Filter.EventuallyEq.fun_comp hX ENNReal.toReal
 #align measure_theory.pdf.is_uniform.pdf_to_real_ae_eq MeasureTheory.pdf.IsUniform.pdf_toReal_ae_eq
 
 theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E}
@@ -385,7 +385,7 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
     lintegral_congr_ae hu.restrict]
   simp only [hms, hA, lintegral_indicator, Pi.smul_apply, Pi.one_apply, Algebra.id.smul_eq_mul,
     mul_one, lintegral_const, restrict_apply', Set.univ_inter]
-  rw [Ennreal.div_eq_inv_mul]
+  rw [ENNReal.div_eq_inv_mul]
 #align measure_theory.pdf.is_uniform.measure_preimage MeasureTheory.pdf.IsUniform.measure_preimage
 
 theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E}
@@ -394,7 +394,7 @@ theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Meas
   ⟨by
     have : X ⁻¹' Set.univ = Set.univ := by simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ,
-      Ennreal.div_self hns hnt]⟩
+      ENNReal.div_self hns hnt]⟩
 #align measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.isProbabilityMeasure
 
 variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
@@ -411,10 +411,10 @@ theorem mulPdfIntegrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUnif
     refine' integrable.congr (integrable_zero _ _ _) _
     rw [(by simp : (fun x => 0 : ℝ → ℝ) = fun x => x * (0 : ℝ≥0∞).toReal)]
     refine'
-      Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm Ennreal.toReal)
+      Filter.EventuallyEq.mul (ae_eq_refl _) (Filter.EventuallyEq.fun_comp this.symm ENNReal.toReal)
   refine'
     ⟨ae_strongly_measurable_id.mul
-        (measurable_pdf X ℙ).AeMeasurable.ennreal_toReal.AeStronglyMeasurable,
+        (measurable_pdf X ℙ).AeMeasurable.eNNReal_toReal.AeStronglyMeasurable,
       _⟩
   refine' has_finite_integral_mul huX _
   set ind := (volume s)⁻¹ • (1 : ℝ → ℝ≥0∞) with hind
@@ -425,8 +425,8 @@ theorem mulPdfIntegrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUnif
   rw [lintegral_mul_const _ measurable_nnnorm.coe_nnreal_ennreal]
   ·
     refine'
-      (Ennreal.mul_lt_top (set_lintegral_lt_top_of_is_compact hsupp hcs continuous_nnnorm).Ne
-          (Ennreal.inv_lt_top.2 (pos_iff_ne_zero.mpr hns)).Ne).Ne
+      (ENNReal.mul_lt_top (set_lintegral_lt_top_of_is_compact hsupp hcs continuous_nnnorm).Ne
+          (ENNReal.inv_lt_top.2 (pos_iff_ne_zero.mpr hns)).Ne).Ne
   · infer_instance
 #align measure_theory.pdf.is_uniform.mul_pdf_integrable MeasureTheory.pdf.IsUniform.mulPdfIntegrable
 

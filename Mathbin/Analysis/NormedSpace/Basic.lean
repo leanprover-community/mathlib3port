@@ -26,7 +26,7 @@ variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 open Filter Metric Function Set
 
-open Topology BigOperators NNReal Ennreal uniformity Pointwise
+open Topology BigOperators NNReal ENNReal uniformity Pointwise
 
 section SeminormedAddCommGroup
 

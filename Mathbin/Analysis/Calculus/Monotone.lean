@@ -89,11 +89,11 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
     by
     apply
       tendsto.congr' _
-        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_right x)))
+        ((ENNReal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_right x)))
     filter_upwards [self_mem_nhdsWithin]
     rintro y (hxy : x < y)
     simp only [comp_app, StieltjesFunction.measure_Icc, Real.volume_Icc, Classical.not_not.1 h''x]
-    rw [← Ennreal.ofReal_div_of_pos (sub_pos.2 hxy), Ennreal.toReal_ofReal]
+    rw [← ENNReal.ofReal_div_of_pos (sub_pos.2 hxy), ENNReal.toReal_ofReal]
     exact div_nonneg (sub_nonneg.2 (f.mono hxy.le)) (sub_pos.2 hxy).le
   -- Limit on the left, following from differentiation of measures. Its form is not exactly the one
   -- we need, due to the appearance of a left limit.
@@ -103,11 +103,11 @@ theorem StieltjesFunction.ae_hasDerivAt (f : StieltjesFunction) :
     by
     apply
       tendsto.congr' _
-        ((Ennreal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_left x)))
+        ((ENNReal.tendsto_toReal h'x.ne).comp (hx.comp (Real.tendsto_Icc_vitaliFamily_left x)))
     filter_upwards [self_mem_nhdsWithin]
     rintro y (hxy : y < x)
     simp only [comp_app, StieltjesFunction.measure_Icc, Real.volume_Icc]
-    rw [← Ennreal.ofReal_div_of_pos (sub_pos.2 hxy), Ennreal.toReal_ofReal, ← neg_neg (y - x),
+    rw [← ENNReal.ofReal_div_of_pos (sub_pos.2 hxy), ENNReal.toReal_ofReal, ← neg_neg (y - x),
       div_neg, neg_div', neg_sub, neg_sub]
     exact div_nonneg (sub_nonneg.2 (f.mono.left_lim_le hxy.le)) (sub_pos.2 hxy).le
   -- Shifting a little bit the limit on the left, by `(y - x)^2`.

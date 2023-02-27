@@ -113,7 +113,7 @@ theorem convexHull_ediam (s : Set E) : Emetric.diam (convexHull ℝ s) = Emetric
   refine' (Emetric.diam_le fun x hx y hy => _).antisymm (Emetric.diam_mono <| subset_convexHull ℝ s)
   rcases convexHull_exists_dist_ge2 hx hy with ⟨x', hx', y', hy', H⟩
   rw [edist_dist]
-  apply le_trans (Ennreal.ofReal_le_ofReal H)
+  apply le_trans (ENNReal.ofReal_le_ofReal H)
   rw [← edist_dist]
   exact Emetric.edist_le_diam_of_mem hx' hy'
 #align convex_hull_ediam convexHull_ediam

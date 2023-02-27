@@ -103,7 +103,7 @@ open Function MeasurableSpace
 
 open TopologicalSpace (SecondCountableTopology)
 
-open Classical Topology BigOperators Filter Ennreal NNReal Interval MeasureTheory
+open Classical Topology BigOperators Filter ENNReal NNReal Interval MeasureTheory
 
 variable {α β γ δ ι R R' : Type _}
 
@@ -201,7 +201,7 @@ theorem tsum_meas_le_meas_unionᵢ_of_disjoint {ι : Type _} [MeasurableSpace α
     {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
     (As_disj : Pairwise (Disjoint on As)) : (∑' i, μ (As i)) ≤ μ (⋃ i, As i) :=
   by
-  rcases show Summable fun i => μ (As i) from Ennreal.summable with ⟨S, hS⟩
+  rcases show Summable fun i => μ (As i) from ENNReal.summable with ⟨S, hS⟩
   rw [hS.tsum_eq]
   refine' tendsto_le_of_eventuallyLe hS tendsto_const_nhds (eventually_of_forall _)
   intro s
@@ -238,7 +238,7 @@ theorem measure_add_diff (hs : MeasurableSet s) (t : Set α) : μ s + μ (t \ s)
 
 theorem measure_diff' (s : Set α) (hm : MeasurableSet t) (h_fin : μ t ≠ ∞) :
     μ (s \ t) = μ (s ∪ t) - μ t :=
-  Eq.symm <| Ennreal.sub_eq_of_add_eq h_fin <| by rw [add_comm, measure_add_diff hm, union_comm]
+  Eq.symm <| ENNReal.sub_eq_of_add_eq h_fin <| by rw [add_comm, measure_add_diff hm, union_comm]
 #align measure_theory.measure_diff' MeasureTheory.measure_diff'
 
 theorem measure_diff (h : s₂ ⊆ s₁) (h₂ : MeasurableSet s₂) (h_fin : μ s₂ ≠ ∞) :
@@ -258,7 +258,7 @@ theorem measure_diff_lt_of_lt_add (hs : MeasurableSet s) (hst : s ⊆ t) (hs' : 
     (h : μ t < μ s + ε) : μ (t \ s) < ε :=
   by
   rw [measure_diff hst hs hs']; rw [add_comm] at h
-  exact Ennreal.sub_lt_of_lt_add (measure_mono hst) h
+  exact ENNReal.sub_lt_of_lt_add (measure_mono hst) h
 #align measure_theory.measure_diff_lt_of_lt_add MeasureTheory.measure_diff_lt_of_lt_add
 
 theorem measure_diff_le_iff_le_add (hs : MeasurableSet s) (hst : s ⊆ t) (hs' : μ s ≠ ∞) {ε : ℝ≥0∞} :
@@ -413,7 +413,7 @@ theorem sum_measure_le_measure_univ {s : Finset ι} {t : ι → Set α}
 theorem tsum_measure_le_measure_univ {s : ι → Set α} (hs : ∀ i, MeasurableSet (s i))
     (H : Pairwise (Disjoint on s)) : (∑' i, μ (s i)) ≤ μ (univ : Set α) :=
   by
-  rw [Ennreal.tsum_eq_supᵢ_sum]
+  rw [ENNReal.tsum_eq_supᵢ_sum]
   exact supᵢ_le fun s => sum_measure_le_measure_univ (fun i hi => hs i) fun i hi j hj hij => H hij
 #align measure_theory.tsum_measure_le_measure_univ MeasureTheory.tsum_measure_le_measure_univ
 
@@ -493,7 +493,7 @@ theorem measure_unionᵢ_eq_supᵢ [Countable ι] {s : ι → Set α} (hd : Dire
     μ (⋃ n, t n) ≤ μ (⋃ n, T n) := measure_mono (Union_mono fun i => subset_to_measurable _ _)
     _ = μ (⋃ n, Td n) := by rw [unionᵢ_disjointed]
     _ ≤ ∑' n, μ (Td n) := measure_Union_le _
-    _ = ⨆ I : Finset ℕ, ∑ n in I, μ (Td n) := Ennreal.tsum_eq_supᵢ_sum
+    _ = ⨆ I : Finset ℕ, ∑ n in I, μ (Td n) := ENNReal.tsum_eq_supᵢ_sum
     _ ≤ ⨆ n, μ (t n) := supᵢ_le fun I => _
     
   rcases hd.finset_le I with ⟨N, hN⟩
@@ -522,8 +522,8 @@ theorem measure_interᵢ_eq_infᵢ [Countable ι] {s : ι → Set α} (h : ∀ i
   by
   rcases hfin with ⟨k, hk⟩
   have : ∀ (t) (_ : t ⊆ s k), μ t ≠ ∞ := fun t ht => ne_top_of_le_ne_top hk (measure_mono ht)
-  rw [← Ennreal.sub_sub_cancel hk (infᵢ_le _ k), Ennreal.sub_infᵢ, ←
-    Ennreal.sub_sub_cancel hk (measure_mono (Inter_subset _ k)), ←
+  rw [← ENNReal.sub_sub_cancel hk (infᵢ_le _ k), ENNReal.sub_infᵢ, ←
+    ENNReal.sub_sub_cancel hk (measure_mono (Inter_subset _ k)), ←
     measure_diff (Inter_subset _ k) (MeasurableSet.interᵢ h) (this _ (Inter_subset _ k)),
     diff_Inter, measure_Union_eq_supr]
   · congr 1
@@ -626,7 +626,7 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠
       (tendsto_measure_Inter
         (fun i => MeasurableSet.unionᵢ fun b => measurable_set_to_measurable _ _) _
         ⟨0, ne_top_of_le_ne_top ht (measure_Union_le t)⟩)
-      (Ennreal.tendsto_sum_nat_add (μ ∘ t) ht) fun n => measure_Union_le _
+      (ENNReal.tendsto_sum_nat_add (μ ∘ t) ht) fun n => measure_Union_le _
   intro n m hnm x
   simp only [Set.mem_unionᵢ]
   exact fun ⟨i, hi⟩ => ⟨i + (m - n), by simpa only [add_assoc, tsub_add_cancel_of_le hnm] using hi⟩
@@ -767,7 +767,7 @@ theorem measure_inter_eq_of_measure_eq {s t u : Set α} (hs : MeasurableSet s) (
         add_le_add le_rfl (measure_mono (diff_subset_diff htu subset.rfl))
       
   have B : μ (u \ s) ≠ ∞ := (lt_of_le_of_lt (measure_mono (diff_subset _ _)) ht_ne_top.lt_top).Ne
-  exact Ennreal.le_of_add_le_add_right B A
+  exact ENNReal.le_of_add_le_add_right B A
 #align measure_theory.measure.measure_inter_eq_of_measure_eq MeasureTheory.Measure.measure_inter_eq_of_measure_eq
 
 /-- The measurable superset `to_measurable μ t` of `t` (which has the same measure as `t`)
@@ -810,7 +810,7 @@ instance [MeasurableSpace α] : Add (Measure α) :=
     { toOuterMeasure := μ₁.toOuterMeasure + μ₂.toOuterMeasure
       m_unionᵢ := fun s hs hd =>
         show μ₁ (⋃ i, s i) + μ₂ (⋃ i, s i) = ∑' i, μ₁ (s i) + μ₂ (s i) by
-          rw [Ennreal.tsum_add, measure_Union hd hs, measure_Union hd hs]
+          rw [ENNReal.tsum_add, measure_Union hd hs, measure_Union hd hs]
       trimmed := by rw [outer_measure.trim_add, μ₁.trimmed, μ₂.trimmed] }⟩
 
 @[simp]
@@ -842,7 +842,7 @@ instance [MeasurableSpace α] : SMul R (Measure α) :=
         by
         rw [← smul_one_smul ℝ≥0∞ c (_ : outer_measure α)]
         dsimp
-        simp_rw [measure_Union hd hs, Ennreal.tsum_mul_left]
+        simp_rw [measure_Union hd hs, ENNReal.tsum_mul_left]
       trimmed := by rw [outer_measure.trim_smul, μ.trimmed] }⟩
 
 @[simp]
@@ -928,8 +928,8 @@ theorem measure_eq_left_of_subset_of_measure_add_eq {s t : Set α} (h : (μ + ν
       μ t + ν t = μ s + ν s := h''.symm
       _ ≤ μ s + ν t := add_le_add le_rfl (measure_mono h')
       
-  apply Ennreal.le_of_add_le_add_right _ this
-  simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at h
+  apply ENNReal.le_of_add_le_add_right _ this
+  simp only [not_or, ENNReal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at h
   exact h.2
 #align measure_theory.measure.measure_eq_left_of_subset_of_measure_add_eq MeasureTheory.Measure.measure_eq_left_of_subset_of_measure_add_eq
 
@@ -948,7 +948,7 @@ theorem measure_toMeasurable_add_inter_left {s t : Set α} (hs : MeasurableSet s
       measure_eq_left_of_subset_of_measure_add_eq _ (subset_to_measurable _ _)
         (measure_to_measurable t).symm
     rwa [measure_to_measurable t]
-  · simp only [not_or, Ennreal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at ht
+  · simp only [not_or, ENNReal.add_eq_top, Pi.add_apply, Ne.def, coe_add] at ht
     exact ht.1
 #align measure_theory.measure.measure_to_measurable_add_inter_left MeasureTheory.Measure.measure_toMeasurable_add_inter_left
 
@@ -1917,7 +1917,7 @@ theorem ext_of_generateFrom_of_cover {S T : Set (Set α)} (h_gen : ‹_› = gen
     have := T_eq t ht
     rw [Set.inter_comm] at hvt⊢
     rwa [← measure_inter_add_diff t hv, ← measure_inter_add_diff t hv, ← hvt,
-      Ennreal.add_right_inj] at this
+      ENNReal.add_right_inj] at this
     exact ne_top_of_le_ne_top (htop t ht) (measure_mono <| Set.inter_subset_left _ _)
   · intro f hfd hfm h_eq
     simp only [← restrict_apply (hfm _), ← restrict_apply (MeasurableSet.unionᵢ hfm)] at h_eq⊢
@@ -2031,7 +2031,7 @@ theorem sum_apply (f : ι → Measure α) {s : Set α} (hs : MeasurableSet s) : 
 #align measure_theory.measure.sum_apply MeasureTheory.Measure.sum_apply
 
 theorem le_sum (μ : ι → Measure α) (i : ι) : μ i ≤ sum μ := fun s hs => by
-  simp only [sum_apply μ hs, Ennreal.le_tsum i]
+  simp only [sum_apply μ hs, ENNReal.le_tsum i]
 #align measure_theory.measure.le_sum MeasureTheory.Measure.le_sum
 
 @[simp]
@@ -2057,7 +2057,7 @@ theorem sum_comm {ι' : Type _} (μ : ι → ι' → Measure α) :
   by
   ext1 s hs
   simp_rw [sum_apply _ hs]
-  rw [Ennreal.tsum_comm]
+  rw [ENNReal.tsum_comm]
 #align measure_theory.measure.sum_comm MeasureTheory.Measure.sum_comm
 
 theorem ae_sum_iff [Countable ι] {μ : ι → Measure α} {p : α → Prop} :
@@ -2113,7 +2113,7 @@ theorem sum_add_sum_compl (s : Set ι) (μ : ι → Measure α) :
   by
   ext1 t ht
   simp only [add_apply, sum_apply _ ht]
-  exact @tsum_add_tsum_compl ℝ≥0∞ ι _ _ _ (fun i => μ i t) _ s Ennreal.summable Ennreal.summable
+  exact @tsum_add_tsum_compl ℝ≥0∞ ι _ _ _ (fun i => μ i t) _ s ENNReal.summable ENNReal.summable
 #align measure_theory.measure.sum_add_sum_compl MeasureTheory.Measure.sum_add_sum_compl
 
 theorem sum_congr {μ ν : ℕ → Measure α} (h : ∀ n, μ n = ν n) : sum μ = sum ν :=
@@ -2124,7 +2124,7 @@ theorem sum_add_sum (μ ν : ℕ → Measure α) : sum μ + sum ν = sum fun n =
   by
   ext1 s hs
   simp only [add_apply, sum_apply _ hs, Pi.add_apply, coe_add,
-    tsum_add Ennreal.summable Ennreal.summable]
+    tsum_add ENNReal.summable ENNReal.summable]
 #align measure_theory.measure.sum_add_sum MeasureTheory.Measure.sum_add_sum
 
 /-- If `f` is a map with countable codomain, then `μ.map f` is a sum of Dirac measures. -/
@@ -2190,7 +2190,7 @@ def count : Measure α :=
 theorem le_count_apply : (∑' i : s, 1 : ℝ≥0∞) ≤ count s :=
   calc
     (∑' i : s, 1 : ℝ≥0∞) = ∑' i, indicator s 1 i := tsum_subtype s 1
-    _ ≤ ∑' i, dirac i s := Ennreal.tsum_le_tsum fun x => le_dirac_apply
+    _ ≤ ∑' i, dirac i s := ENNReal.tsum_le_tsum fun x => le_dirac_apply
     _ ≤ count s := le_sum_apply _ _
     
 #align measure_theory.measure.le_count_apply MeasureTheory.Measure.le_count_apply
@@ -2232,7 +2232,7 @@ theorem count_apply_finite [MeasurableSingletonClass α] (s : Set α) (hs : s.Fi
 /-- `count` measure evaluates to infinity at infinite sets. -/
 theorem count_apply_infinite (hs : s.Infinite) : count s = ∞ :=
   by
-  refine' top_unique (le_of_tendsto' Ennreal.tendsto_nat_nhds_top fun n => _)
+  refine' top_unique (le_of_tendsto' ENNReal.tendsto_nat_nhds_top fun n => _)
   rcases hs.exists_subset_card_eq n with ⟨t, ht, rfl⟩
   calc
     (t.card : ℝ≥0∞) = ∑ i in t, 1 := by simp
@@ -2645,7 +2645,7 @@ def cofinite {m0 : MeasurableSpace α} (μ : Measure α) : Filter α
     simp only [compl_inter, mem_set_of_eq]
     calc
       μ (sᶜ ∪ tᶜ) ≤ μ (sᶜ) + μ (tᶜ) := measure_union_le _ _
-      _ < ∞ := Ennreal.add_lt_top.2 ⟨hs, ht⟩
+      _ < ∞ := ENNReal.add_lt_top.2 ⟨hs, ht⟩
       
   sets_of_superset s t hs hst := lt_of_le_of_lt (measure_mono <| compl_subset_compl.2 hst) hs
 #align measure_theory.measure.cofinite MeasureTheory.Measure.cofinite
@@ -3113,7 +3113,7 @@ def measureUnivNnreal (μ : Measure α) : ℝ≥0 :=
 @[simp]
 theorem coe_measureUnivNnreal (μ : Measure α) [IsFiniteMeasure μ] :
     ↑(measureUnivNnreal μ) = μ univ :=
-  Ennreal.coe_toNnreal (measure_ne_top μ univ)
+  ENNReal.coe_toNNReal (measure_ne_top μ univ)
 #align measure_theory.coe_measure_univ_nnreal MeasureTheory.coe_measureUnivNnreal
 
 instance isFiniteMeasureZero : IsFiniteMeasure (0 : Measure α) :=
@@ -3136,12 +3136,12 @@ omit m0
 instance isFiniteMeasureAdd [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFiniteMeasure (μ + ν)
     where measure_univ_lt_top :=
     by
-    rw [measure.coe_add, Pi.add_apply, Ennreal.add_lt_top]
+    rw [measure.coe_add, Pi.add_apply, ENNReal.add_lt_top]
     exact ⟨measure_lt_top _ _, measure_lt_top _ _⟩
 #align measure_theory.is_finite_measure_add MeasureTheory.isFiniteMeasureAdd
 
 instance isFiniteMeasureSmulNnreal [IsFiniteMeasure μ] {r : ℝ≥0} : IsFiniteMeasure (r • μ)
-    where measure_univ_lt_top := Ennreal.mul_lt_top Ennreal.coe_ne_top (measure_ne_top _ _)
+    where measure_univ_lt_top := ENNReal.mul_lt_top ENNReal.coe_ne_top (measure_ne_top _ _)
 #align measure_theory.is_finite_measure_smul_nnreal MeasureTheory.isFiniteMeasureSmulNnreal
 
 instance isFiniteMeasureSmulOfNnrealTower {R} [SMul R ℝ≥0] [SMul R ℝ≥0∞] [IsScalarTower R ℝ≥0 ℝ≥0∞]
@@ -3183,14 +3183,14 @@ theorem measureUnivNnreal_pos [IsFiniteMeasure μ] (hμ : μ ≠ 0) : 0 < measur
 /-- `le_of_add_le_add_left` is normally applicable to `ordered_cancel_add_comm_monoid`,
 but it holds for measures with the additional assumption that μ is finite. -/
 theorem Measure.le_of_add_le_add_left [IsFiniteMeasure μ] (A2 : μ + ν₁ ≤ μ + ν₂) : ν₁ ≤ ν₂ :=
-  fun S B1 => Ennreal.le_of_add_le_add_left (MeasureTheory.measure_ne_top μ S) (A2 S B1)
+  fun S B1 => ENNReal.le_of_add_le_add_left (MeasureTheory.measure_ne_top μ S) (A2 S B1)
 #align measure_theory.measure.le_of_add_le_add_left MeasureTheory.Measure.le_of_add_le_add_left
 
 theorem summable_measure_toReal [hμ : IsFiniteMeasure μ] {f : ℕ → Set α}
     (hf₁ : ∀ i : ℕ, MeasurableSet (f i)) (hf₂ : Pairwise (Disjoint on f)) :
     Summable fun x => (μ (f x)).toReal :=
   by
-  apply Ennreal.summable_toReal
+  apply ENNReal.summable_toReal
   rw [← MeasureTheory.measure_unionᵢ hf₂ hf₁]
   exact ne_of_lt (measure_lt_top _ _)
 #align measure_theory.summable_measure_to_real MeasureTheory.summable_measure_toReal
@@ -3219,7 +3219,7 @@ theorem ae_mem_iff_measure_eq [IsFiniteMeasure μ] {s : Set α} (hs : NullMeasur
 instance [Finite α] [MeasurableSpace α] : IsFiniteMeasure (Measure.count : Measure α) :=
   ⟨by
     cases nonempty_fintype α
-    simpa [measure.count_apply, tsum_fintype] using (Ennreal.nat_ne_top _).lt_top⟩
+    simpa [measure.count_apply, tsum_fintype] using (ENNReal.nat_ne_top _).lt_top⟩
 
 end IsFiniteMeasure
 
@@ -3238,7 +3238,7 @@ attribute [simp] is_probability_measure.measure_univ
 
 instance (priority := 100) IsProbabilityMeasure.toIsFiniteMeasure (μ : Measure α)
     [IsProbabilityMeasure μ] : IsFiniteMeasure μ :=
-  ⟨by simp only [measure_univ, Ennreal.one_lt_top]⟩
+  ⟨by simp only [measure_univ, ENNReal.one_lt_top]⟩
 #align measure_theory.is_probability_measure.to_is_finite_measure MeasureTheory.IsProbabilityMeasure.toIsFiniteMeasure
 
 theorem IsProbabilityMeasure.ne_zero (μ : Measure α) [IsProbabilityMeasure μ] : μ ≠ 0 :=
@@ -3268,7 +3268,7 @@ theorem isProbabilityMeasureSmul [IsFiniteMeasure μ] (h : μ ≠ 0) :
     IsProbabilityMeasure ((μ univ)⁻¹ • μ) :=
   by
   constructor
-  rw [smul_apply, smul_eq_mul, Ennreal.inv_mul_cancel]
+  rw [smul_apply, smul_eq_mul, ENNReal.inv_mul_cancel]
   · rwa [Ne, measure_univ_eq_zero]
   · exact measure_ne_top _ _
 #align measure_theory.is_probability_measure_smul MeasureTheory.isProbabilityMeasureSmul
@@ -3623,7 +3623,7 @@ theorem finite_const_le_meas_of_disjoint_unionᵢ {ι : Type _} [MeasurableSpace
   have aux :=
     lt_of_le_of_lt (tsum_meas_le_meas_Union_of_disjoint μ As_mble As_disj)
       (lt_top_iff_ne_top.mpr Union_As_finite)
-  exact Con (Ennreal.finite_const_le_of_tsum_ne_top aux.ne ε_pos.ne.symm)
+  exact Con (ENNReal.finite_const_le_of_tsum_ne_top aux.ne ε_pos.ne.symm)
 #align measure_theory.measure.finite_const_le_meas_of_disjoint_Union MeasureTheory.Measure.finite_const_le_meas_of_disjoint_unionᵢ
 
 /-- If the union of disjoint measurable sets has finite measure, then there are only
@@ -3634,7 +3634,7 @@ theorem countable_meas_pos_of_disjoint_of_meas_unionᵢ_ne_top {ι : Type _} [Me
     Set.Countable { i : ι | 0 < μ (As i) } :=
   by
   set posmeas := { i : ι | 0 < μ (As i) } with posmeas_def
-  rcases exists_seq_strictAnti_tendsto' Ennreal.zero_lt_one with ⟨as, ⟨as_decr, ⟨as_mem, as_lim⟩⟩⟩
+  rcases exists_seq_strictAnti_tendsto' ENNReal.zero_lt_one with ⟨as, ⟨as_decr, ⟨as_mem, as_lim⟩⟩⟩
   set fairmeas := fun n : ℕ => { i : ι | as n ≤ μ (As i) } with fairmeas_def
   have countable_union : posmeas = ⋃ n, fairmeas n :=
     by
@@ -3893,7 +3893,7 @@ instance Sum.sigmaFinite {ι} [Finite ι] (μ : ι → Measure α) [∀ i, Sigma
   have : ∀ n, MeasurableSet (⋂ i : ι, spanning_sets (μ i) n) := fun n =>
     MeasurableSet.interᵢ fun i => measurable_spanning_sets (μ i) n
   refine' ⟨⟨⟨fun n => ⋂ i, spanning_sets (μ i) n, fun _ => trivial, fun n => _, _⟩⟩⟩
-  · rw [sum_apply _ (this n), tsum_fintype, Ennreal.sum_lt_top_iff]
+  · rw [sum_apply _ (this n), tsum_fintype, ENNReal.sum_lt_top_iff]
     rintro i -
     exact (measure_mono <| Inter_subset _ i).trans_lt (measure_spanning_sets_lt_top (μ i) n)
   · rw [Union_Inter_of_monotone]
@@ -3979,8 +3979,8 @@ instance isLocallyFiniteMeasureSmulNnreal [TopologicalSpace α] (μ : Measure α
   refine' ⟨fun x => _⟩
   rcases μ.exists_is_open_measure_lt_top x with ⟨o, xo, o_open, μo⟩
   refine' ⟨o, o_open.mem_nhds xo, _⟩
-  apply Ennreal.mul_lt_top _ μo.ne
-  simp only [RingHom.toMonoidHom_eq_coe, [anonymous], Ennreal.coe_ne_top, Ennreal.coe_ofNnrealHom,
+  apply ENNReal.mul_lt_top _ μo.ne
+  simp only [RingHom.toMonoidHom_eq_coe, [anonymous], ENNReal.coe_ne_top, ENNReal.coe_ofNNRealHom,
     Ne.def, not_false_iff]
 #align measure_theory.is_locally_finite_measure_smul_nnreal MeasureTheory.isLocallyFiniteMeasureSmulNnreal
 
@@ -4028,7 +4028,7 @@ theorem measure_ball_lt_top [PseudoMetricSpace α] [ProperSpace α] {μ : Measur
 
 protected theorem IsFiniteMeasureOnCompacts.smul [TopologicalSpace α] (μ : Measure α)
     [IsFiniteMeasureOnCompacts μ] {c : ℝ≥0∞} (hc : c ≠ ∞) : IsFiniteMeasureOnCompacts (c • μ) :=
-  ⟨fun K hK => Ennreal.mul_lt_top hc hK.measure_lt_top.Ne⟩
+  ⟨fun K hK => ENNReal.mul_lt_top hc hK.measure_lt_top.Ne⟩
 #align measure_theory.is_finite_measure_on_compacts.smul MeasureTheory.IsFiniteMeasureOnCompacts.smul
 
 /-- Note this cannot be an instance because it would form a typeclass loop with
@@ -4214,7 +4214,7 @@ protected theorem eventually (h : μ.FiniteAtFilter f) : ∀ᶠ s in f.smallSets
 
 theorem filterSup : μ.FiniteAtFilter f → μ.FiniteAtFilter g → μ.FiniteAtFilter (f ⊔ g) :=
   fun ⟨s, hsf, hsμ⟩ ⟨t, htg, htμ⟩ =>
-  ⟨s ∪ t, union_mem_sup hsf htg, (measure_union_le s t).trans_lt (Ennreal.add_lt_top.2 ⟨hsμ, htμ⟩)⟩
+  ⟨s ∪ t, union_mem_sup hsf htg, (measure_union_le s t).trans_lt (ENNReal.add_lt_top.2 ⟨hsμ, htμ⟩)⟩
 #align measure_theory.measure.finite_at_filter.filter_sup MeasureTheory.Measure.FiniteAtFilter.filterSup
 
 end FiniteAtFilter
@@ -4558,7 +4558,7 @@ theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
   · rintro s t ⟨U, hsU, hUo, hU⟩ ⟨V, htV, hVo, hV⟩
     refine'
       ⟨U ∪ V, union_subset_union hsU htV, hUo.union hVo,
-        (measure_union_le _ _).trans_lt <| Ennreal.add_lt_top.2 ⟨hU, hV⟩⟩
+        (measure_union_le _ _).trans_lt <| ENNReal.add_lt_top.2 ⟨hU, hV⟩⟩
   · intro x hx
     rcases(hμ x hx).exists_mem_basis (nhds_basis_opens _) with ⟨U, ⟨hx, hUo⟩, hU⟩
     exact ⟨U, nhdsWithin_le_nhds (hUo.mem_nhds hx), U, subset.rfl, hUo, hU⟩
@@ -4575,7 +4575,7 @@ theorem exists_open_superset_measure_lt_top (h : IsCompact s) (μ : Measure α)
 theorem measure_lt_top_of_nhdsWithin (h : IsCompact s) (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝[s] x)) :
     μ s < ∞ :=
   IsCompact.induction_on h (by simp) (fun s t hst ht => (measure_mono hst).trans_lt ht)
-    (fun s t hs ht => (measure_union_le s t).trans_lt (Ennreal.add_lt_top.2 ⟨hs, ht⟩)) hμ
+    (fun s t hs ht => (measure_union_le s t).trans_lt (ENNReal.add_lt_top.2 ⟨hs, ht⟩)) hμ
 #align is_compact.measure_lt_top_of_nhds_within IsCompact.measure_lt_top_of_nhdsWithin
 
 theorem measure_zero_of_nhdsWithin (hs : IsCompact s) :

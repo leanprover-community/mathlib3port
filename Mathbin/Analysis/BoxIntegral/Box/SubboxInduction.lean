@@ -34,7 +34,7 @@ rectangular box, induction
 
 open Set Finset Function Filter Metric
 
-open Classical Topology Filter Ennreal
+open Classical Topology Filter ENNReal
 
 noncomputable section
 

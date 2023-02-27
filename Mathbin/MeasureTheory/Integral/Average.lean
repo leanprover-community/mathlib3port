@@ -35,7 +35,7 @@ integral, center mass, average value
 
 open MeasureTheory MeasureTheory.Measure Metric Set Filter TopologicalSpace Function
 
-open Topology BigOperators Ennreal Convex
+open Topology BigOperators ENNReal Convex
 
 variable {α E F : Type _} {m0 : MeasurableSpace α} [NormedAddCommGroup E] [NormedSpace ℝ E]
   [CompleteSpace E] [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {μ : Measure α}
@@ -100,7 +100,7 @@ theorem average_eq' (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂(μ univ
 #align measure_theory.average_eq' MeasureTheory.average_eq'
 
 theorem average_eq (f : α → E) : (⨍ x, f x ∂μ) = (μ univ).toReal⁻¹ • ∫ x, f x ∂μ := by
-  rw [average_eq', integral_smul_measure, Ennreal.toReal_inv]
+  rw [average_eq', integral_smul_measure, ENNReal.toReal_inv]
 #align measure_theory.average_eq MeasureTheory.average_eq
 
 theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
@@ -114,7 +114,7 @@ theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) :
   cases' eq_or_ne μ 0 with hμ hμ
   · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
   · rw [average_eq, smul_inv_smul₀]
-    refine' (Ennreal.toReal_pos _ <| measure_ne_top _ _).ne'
+    refine' (ENNReal.toReal_pos _ <| measure_ne_top _ _).ne'
     rwa [Ne.def, measure_univ_eq_zero]
 #align measure_theory.measure_smul_average MeasureTheory.measure_smul_average
 
@@ -141,7 +141,7 @@ theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeas
         ((ν univ).toReal / ((μ univ).toReal + (ν univ).toReal)) • ⨍ x, f x ∂ν :=
   by
   simp only [div_eq_inv_mul, mul_smul, measure_smul_average, ← smul_add, ←
-    integral_add_measure hμ hν, ← Ennreal.toReal_add (measure_ne_top μ _) (measure_ne_top ν _)]
+    integral_add_measure hμ hν, ← ENNReal.toReal_add (measure_ne_top μ _) (measure_ne_top ν _)]
   rw [average_eq, measure.add_apply]
 #align measure_theory.average_add_measure MeasureTheory.average_add_measure
 
@@ -172,8 +172,8 @@ theorem average_union_mem_openSegment {f : α → E} {s t : Set α} (hd : AeDisj
     (hfs : IntegrableOn f s μ) (hft : IntegrableOn f t μ) :
     (⨍ x in s ∪ t, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in t, f x ∂μ) :=
   by
-  replace hs₀ : 0 < (μ s).toReal; exact Ennreal.toReal_pos hs₀ hsμ
-  replace ht₀ : 0 < (μ t).toReal; exact Ennreal.toReal_pos ht₀ htμ
+  replace hs₀ : 0 < (μ s).toReal; exact ENNReal.toReal_pos hs₀ hsμ
+  replace ht₀ : 0 < (μ t).toReal; exact ENNReal.toReal_pos ht₀ htμ
   refine'
     mem_open_segment_iff_div.mpr
       ⟨(μ s).toReal, (μ t).toReal, hs₀, ht₀, (average_union hd ht hsμ htμ hfs hft).symm⟩
@@ -190,11 +190,11 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AeDisjoint
     exact right_mem_segment _ _ _
   · refine'
       mem_segment_iff_div.mpr
-        ⟨(μ s).toReal, (μ t).toReal, Ennreal.toReal_nonneg, Ennreal.toReal_nonneg, _,
+        ⟨(μ s).toReal, (μ t).toReal, ENNReal.toReal_nonneg, ENNReal.toReal_nonneg, _,
           (average_union hd ht hsμ htμ hfs hft).symm⟩
     calc
-      0 < (μ s).toReal := Ennreal.toReal_pos hse hsμ
-      _ ≤ _ := le_add_of_nonneg_right Ennreal.toReal_nonneg
+      0 < (μ s).toReal := ENNReal.toReal_pos hse hsμ
+      _ ≤ _ := le_add_of_nonneg_right ENNReal.toReal_nonneg
       
 #align measure_theory.average_union_mem_segment MeasureTheory.average_union_mem_segment
 
@@ -209,16 +209,16 @@ theorem average_mem_openSegment_compl_self [IsFiniteMeasure μ] {f : α → E} {
 @[simp]
 theorem average_const [IsFiniteMeasure μ] [h : μ.ae.ne_bot] (c : E) : (⨍ x, c ∂μ) = c := by
   simp only [average_eq, integral_const, measure.restrict_apply, MeasurableSet.univ, one_smul,
-    univ_inter, smul_smul, ← Ennreal.toReal_inv, ← Ennreal.toReal_mul, Ennreal.inv_mul_cancel,
+    univ_inter, smul_smul, ← ENNReal.toReal_inv, ← ENNReal.toReal_mul, ENNReal.inv_mul_cancel,
     measure_ne_top μ univ, Ne.def, measure_univ_eq_zero, ae_ne_bot.1 h, not_false_iff,
-    Ennreal.one_toReal]
+    ENNReal.one_toReal]
 #align measure_theory.average_const MeasureTheory.average_const
 
 theorem set_average_const {s : Set α} (hs₀ : μ s ≠ 0) (hs : μ s ≠ ∞) (c : E) :
     (⨍ x in s, c ∂μ) = c := by
   simp only [set_average_eq, integral_const, measure.restrict_apply, MeasurableSet.univ, univ_inter,
-    smul_smul, ← Ennreal.toReal_inv, ← Ennreal.toReal_mul, Ennreal.inv_mul_cancel hs₀ hs,
-    Ennreal.one_toReal, one_smul]
+    smul_smul, ← ENNReal.toReal_inv, ← ENNReal.toReal_mul, ENNReal.inv_mul_cancel hs₀ hs,
+    ENNReal.one_toReal, one_smul]
 #align measure_theory.set_average_const MeasureTheory.set_average_const
 
 end MeasureTheory

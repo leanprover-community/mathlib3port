@@ -260,7 +260,7 @@ theorem Continuous.integrableOfHasCompactSupport (hf : Continuous f) (hcf : HasC
 
 end borel
 
-open Ennreal
+open ENNReal
 
 section Monotone
 

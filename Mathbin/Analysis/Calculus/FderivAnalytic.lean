@@ -22,7 +22,7 @@ Also the special case in terms of `deriv` when the domain is 1-dimensional.
 
 open Filter Asymptotics
 
-open Ennreal
+open ENNReal
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 

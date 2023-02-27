@@ -258,8 +258,8 @@ theorem metrizableSpace_of_t3_second_countable : MetrizableSpace X :=
   hf.MetrizableSpace
 #align topological_space.metrizable_space_of_t3_second_countable TopologicalSpace.metrizableSpace_of_t3_second_countable
 
-instance : MetrizableSpace Ennreal :=
-  metrizableSpace_of_t3_second_countable Ennreal
+instance : MetrizableSpace ENNReal :=
+  metrizableSpace_of_t3_second_countable ENNReal
 
 end TopologicalSpace
 

@@ -36,7 +36,7 @@ noncomputable section
 
 open Set MeasureTheory
 
-open Ennreal MeasureTheory
+open ENNReal MeasureTheory
 
 variable {Ω : Type _} {mΩ : MeasurableSpace Ω} {μ : Measure Ω} {f g : Ω → ℝ≥0∞} {X Y : Ω → ℝ}
 
@@ -54,7 +54,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
   revert f
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun x => c) a :=
     fun g h_mg => h_mg.mul (measurable_const.indicator h_meas_T)
-  apply Measurable.ennreal_induction
+  apply Measurable.eNNReal_induction
   · intro c' s' h_meas_s'
     simp_rw [← inter_indicator_mul]
     rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T),
@@ -72,11 +72,11 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
       right_distrib, h_ind_f', h_ind_g]
   · intro f h_meas_f h_mono_f h_ind_f
     have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
-    simp_rw [Ennreal.supᵢ_mul]
-    rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, Ennreal.supᵢ_mul]
+    simp_rw [ENNReal.supᵢ_mul]
+    rw [lintegral_supr h_measM_f h_mono_f, lintegral_supr, ENNReal.supᵢ_mul]
     · simp_rw [← h_ind_f]
     · exact fun n => h_mul_indicator _ (h_measM_f n)
-    · exact fun m n h_le a => Ennreal.mul_le_mul (h_mono_f h_le a) le_rfl
+    · exact fun m n h_le a => ENNReal.mul_le_mul (h_mono_f h_le a) le_rfl
 #align probability_theory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator ProbabilityTheory.lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
@@ -92,7 +92,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
   by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
-  apply Measurable.ennreal_induction
+  apply Measurable.eNNReal_induction
   · intro c s h_s
     apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
     apply indep_sets_of_indep_sets_of_le_right h_ind
@@ -105,11 +105,11 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
       h_ind_f', h_ind_g']
   · intro f' h_meas_f' h_mono_f' h_ind_f'
     have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
-    simp_rw [Ennreal.mul_supᵢ]
-    rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', Ennreal.mul_supᵢ]
+    simp_rw [ENNReal.mul_supᵢ]
+    rw [lintegral_supr, lintegral_supr h_measM_f' h_mono_f', ENNReal.mul_supᵢ]
     · simp_rw [← h_ind_f']
     · exact fun n => h_measM_f.mul (h_measM_f' n)
-    · exact fun n m (h_le : n ≤ m) a => Ennreal.mul_le_mul le_rfl (h_mono_f' h_le a)
+    · exact fun n m (h_le : n ≤ m) a => ENNReal.mul_le_mul le_rfl (h_mono_f' h_le a)
 #align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurable_space ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
@@ -149,18 +149,18 @@ theorem IndepFunCat.integrableMul {β : Type _} [MeasurableSpace β] {X Y : Ω �
     [NormedDivisionRing β] [BorelSpace β] (hXY : IndepFunCat X Y μ) (hX : Integrable X μ)
     (hY : Integrable Y μ) : Integrable (X * Y) μ :=
   by
-  let nX : Ω → Ennreal := fun a => ‖X a‖₊
-  let nY : Ω → Ennreal := fun a => ‖Y a‖₊
+  let nX : Ω → ENNReal := fun a => ‖X a‖₊
+  let nY : Ω → ENNReal := fun a => ‖Y a‖₊
   have hXY' : indep_fun (fun a => ‖X a‖₊) (fun a => ‖Y a‖₊) μ :=
     hXY.comp measurable_nnnorm measurable_nnnorm
   have hXY'' : indep_fun nX nY μ :=
-    hXY'.comp measurable_coe_nNReal_ennreal measurable_coe_nNReal_ennreal
-  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nNReal_ennreal
-  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coe_nNReal_ennreal
+    hXY'.comp measurable_coe_nNReal_eNNReal measurable_coe_nNReal_eNNReal
+  have hnX : AeMeasurable nX μ := hX.1.AeMeasurable.nnnorm.coe_nNReal_eNNReal
+  have hnY : AeMeasurable nY μ := hY.1.AeMeasurable.nnnorm.coe_nNReal_eNNReal
   have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
     convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
   refine' ⟨hX.1.mul hY.1, _⟩
-  simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, Ennreal.coe_mul, hmul]
+  simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, ENNReal.coe_mul, hmul]
   exact ennreal.mul_lt_top_iff.mpr (Or.inl ⟨hX.2, hY.2⟩)
 #align probability_theory.indep_fun.integrable_mul ProbabilityTheory.IndepFunCat.integrableMul
 
@@ -183,9 +183,9 @@ theorem IndepFunCat.integrableLeftOfIntegrableMul {β : Type _} [MeasurableSpace
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
-  simp only [nnnorm_mul, Ennreal.coe_mul] at A
+  simp only [nnnorm_mul, ENNReal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
-  simpa [Ennreal.top_mul, I] using A
+  simpa [ENNReal.top_mul', I] using A
 #align probability_theory.indep_fun.integrable_left_of_integrable_mul ProbabilityTheory.IndepFunCat.integrableLeftOfIntegrableMul
 
 /-- If the product of two independent real_valued random variables is integrable and the
@@ -207,9 +207,9 @@ theorem IndepFunCat.integrableRightOfIntegrableMul {β : Type _} [MeasurableSpac
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
   have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
-  simp only [nnnorm_mul, Ennreal.coe_mul] at A
+  simp only [nnnorm_mul, ENNReal.coe_mul] at A
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A
-  simpa [Ennreal.top_mul, I] using A
+  simpa [ENNReal.top_mul', I] using A
 #align probability_theory.indep_fun.integrable_right_of_integrable_mul ProbabilityTheory.IndepFunCat.integrableRightOfIntegrableMul
 
 /-- The (Bochner) integral of the product of two independent, nonnegative random
@@ -219,19 +219,19 @@ theorem IndepFunCat.integral_mul_of_nonneg (hXY : IndepFunCat X Y μ) (hXp : 0 �
     (hXm : AeMeasurable X μ) (hYm : AeMeasurable Y μ) :
     integral μ (X * Y) = integral μ X * integral μ Y :=
   by
-  have h1 : AeMeasurable (fun a => Ennreal.ofReal (X a)) μ :=
+  have h1 : AeMeasurable (fun a => ENNReal.ofReal (X a)) μ :=
     ennreal.measurable_of_real.comp_ae_measurable hXm
-  have h2 : AeMeasurable (fun a => Ennreal.ofReal (Y a)) μ :=
+  have h2 : AeMeasurable (fun a => ENNReal.ofReal (Y a)) μ :=
     ennreal.measurable_of_real.comp_ae_measurable hYm
   have h3 : AeMeasurable (X * Y) μ := hXm.mul hYm
   have h4 : 0 ≤ᵐ[μ] X * Y := ae_of_all _ fun ω => mul_nonneg (hXp ω) (hYp ω)
   rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ hXp) hXm.ae_strongly_measurable,
     integral_eq_lintegral_of_nonneg_ae (ae_of_all _ hYp) hYm.ae_strongly_measurable,
     integral_eq_lintegral_of_nonneg_ae h4 h3.ae_strongly_measurable]
-  simp_rw [← Ennreal.toReal_mul, Pi.mul_apply, Ennreal.ofReal_mul (hXp _)]
+  simp_rw [← ENNReal.toReal_mul, Pi.mul_apply, ENNReal.ofReal_mul (hXp _)]
   congr
   apply lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h1 h2
-  exact hXY.comp Ennreal.measurable_ofReal Ennreal.measurable_ofReal
+  exact hXY.comp ENNReal.measurable_ofReal ENNReal.measurable_ofReal
 #align probability_theory.indep_fun.integral_mul_of_nonneg ProbabilityTheory.IndepFunCat.integral_mul_of_nonneg
 
 /-- The (Bochner) integral of the product of two independent, integrable random
@@ -337,10 +337,10 @@ theorem indepFunCat_iff_integral_comp_mul [IsFiniteMeasure μ] {β β' : Type _}
     h (measurable_one.indicator hA) (measurable_one.indicator hB)
       ((integrable_const 1).indicator (hfm.comp measurable_id hA))
       ((integrable_const 1).indicator (hgm.comp measurable_id hB))
-  rwa [← Ennreal.toReal_eq_toReal (measure_ne_top μ _), Ennreal.toReal_mul, ←
+  rwa [← ENNReal.toReal_eq_toReal (measure_ne_top μ _), ENNReal.toReal_mul, ←
     integral_indicator_one ((hfm hA).inter (hgm hB)), ← integral_indicator_one (hfm hA), ←
     integral_indicator_one (hgm hB), Set.inter_indicator_one]
-  exact Ennreal.mul_ne_top (measure_ne_top μ _) (measure_ne_top μ _)
+  exact ENNReal.mul_ne_top (measure_ne_top μ _) (measure_ne_top μ _)
 #align probability_theory.indep_fun_iff_integral_comp_mul ProbabilityTheory.indepFunCat_iff_integral_comp_mul
 
 end ProbabilityTheory

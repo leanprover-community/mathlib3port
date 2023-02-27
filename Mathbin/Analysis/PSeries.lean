@@ -33,7 +33,7 @@ p-series, Cauchy condensation test
 
 open Filter
 
-open BigOperators Ennreal NNReal Topology
+open BigOperators ENNReal NNReal Topology
 
 /-!
 ### Cauchy condensation test
@@ -99,32 +99,32 @@ theorem sum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m)
 
 end Finset
 
-namespace Ennreal
+namespace ENNReal
 
 variable {f : ℕ → ℝ≥0∞}
 
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (∑' k, f k) ≤ f 0 + ∑' k : ℕ, 2 ^ k * f (2 ^ k) :=
   by
-  rw [Ennreal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
+  rw [ENNReal.tsum_eq_supᵢ_nat' (Nat.tendsto_pow_atTop_atTop_of_one_lt _root_.one_lt_two)]
   refine' supᵢ_le fun n => (Finset.le_sum_condensed hf n).trans (add_le_add_left _ _)
   simp only [nsmul_eq_mul, Nat.cast_pow, Nat.cast_two]
-  apply Ennreal.sum_le_tsum
-#align ennreal.le_tsum_condensed Ennreal.le_tsum_condensed
+  apply ENNReal.sum_le_tsum
+#align ennreal.le_tsum_condensed ENNReal.le_tsum_condensed
 
 theorem tsum_condensed_le (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f m) :
     (∑' k : ℕ, 2 ^ k * f (2 ^ k)) ≤ f 1 + 2 * ∑' k, f k :=
   by
-  rw [Ennreal.tsum_eq_supᵢ_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
+  rw [ENNReal.tsum_eq_supᵢ_nat' (tendsto_at_top_mono Nat.le_succ tendsto_id), two_mul, ← two_nsmul]
   refine'
     supᵢ_le fun n =>
       le_trans _
         (add_le_add_left
-          (nsmul_le_nsmul_of_le_right (Ennreal.sum_le_tsum <| Finset.Ico 2 (2 ^ n + 1)) _) _)
+          (nsmul_le_nsmul_of_le_right (ENNReal.sum_le_tsum <| Finset.Ico 2 (2 ^ n + 1)) _) _)
   simpa using Finset.sum_condensed_le hf n
-#align ennreal.tsum_condensed_le Ennreal.tsum_condensed_le
+#align ennreal.tsum_condensed_le ENNReal.tsum_condensed_le
 
-end Ennreal
+end ENNReal
 
 namespace NNReal
 
@@ -132,15 +132,15 @@ namespace NNReal
 theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
     (Summable fun k : ℕ => 2 ^ k * f (2 ^ k)) ↔ Summable f :=
   by
-  simp only [← Ennreal.tsum_coe_ne_top_iff_summable, Ne.def, not_iff_not, Ennreal.coe_mul,
-    Ennreal.coe_pow, Ennreal.coe_two]
+  simp only [← ENNReal.tsum_coe_ne_top_iff_summable, Ne.def, not_iff_not, ENNReal.coe_mul,
+    ENNReal.coe_pow, ENNReal.coe_two]
   constructor <;> intro h
   · replace hf : ∀ m n, 1 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
-      Ennreal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
-    simpa [h, Ennreal.add_eq_top, Ennreal.mul_eq_top] using Ennreal.tsum_condensed_le hf
+      ENNReal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
+    simpa [h, ENNReal.add_eq_top, ENNReal.mul_eq_top] using ENNReal.tsum_condensed_le hf
   · replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
-      Ennreal.coe_le_coe.2 (hf hm hmn)
-    simpa [h, Ennreal.add_eq_top] using Ennreal.le_tsum_condensed hf
+      ENNReal.coe_le_coe.2 (hf hm hmn)
+    simpa [h, ENNReal.add_eq_top] using ENNReal.le_tsum_condensed hf
 #align nnreal.summable_condensed_iff NNReal.summable_condensed_iff
 
 end NNReal

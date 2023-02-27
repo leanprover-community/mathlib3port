@@ -39,7 +39,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators NNReal Ennreal MeasureTheory
+open Classical BigOperators NNReal ENNReal MeasureTheory
 
 /-- A probability mass function, or discrete probability measures is a function `α → ℝ≥0∞` such
   that the values have (infinite) sum `1`. -/
@@ -67,14 +67,14 @@ theorem tsum_coe (p : Pmf α) : (∑' a, p a) = 1 :=
 #align pmf.tsum_coe Pmf.tsum_coe
 
 theorem tsum_coe_ne_top (p : Pmf α) : (∑' a, p a) ≠ ∞ :=
-  p.tsum_coe.symm ▸ Ennreal.one_ne_top
+  p.tsum_coe.symm ▸ ENNReal.one_ne_top
 #align pmf.tsum_coe_ne_top Pmf.tsum_coe_ne_top
 
 theorem tsum_coe_indicator_ne_top (p : Pmf α) (s : Set α) : (∑' a, s.indicator p a) ≠ ∞ :=
   ne_of_lt
     (lt_of_le_of_lt
-      (tsum_le_tsum (fun a => Set.indicator_apply_le fun _ => le_rfl) Ennreal.summable
-        Ennreal.summable)
+      (tsum_le_tsum (fun a => Set.indicator_apply_le fun _ => le_rfl) ENNReal.summable
+        ENNReal.summable)
       (lt_of_le_of_ne le_top p.tsum_coe_ne_top))
 #align pmf.tsum_coe_indicator_ne_top Pmf.tsum_coe_indicator_ne_top
 
@@ -109,12 +109,12 @@ theorem apply_eq_one_iff (p : Pmf α) (a : α) : p a = 1 ↔ p.support = {a} :=
   exact ne_of_lt this p.tsum_coe.symm
   have : 0 < ∑' b, ite (b = a) 0 (p b) :=
     lt_of_le_of_ne' zero_le'
-      ((tsum_ne_zero_iff Ennreal.summable).2
+      ((tsum_ne_zero_iff ENNReal.summable).2
         ⟨a', ite_ne_left_iff.2 ⟨ha, Ne.symm <| (p.mem_support_iff a').2 ha'⟩⟩)
   calc
     1 = 1 + 0 := (add_zero 1).symm
     _ < p a + ∑' b, ite (b = a) 0 (p b) :=
-      Ennreal.add_lt_add_of_le_of_lt Ennreal.one_ne_top (le_of_eq h.symm) this
+      ENNReal.add_lt_add_of_le_of_lt ENNReal.one_ne_top (le_of_eq h.symm) this
     _ = ite (a = a) (p a) 0 + ∑' b, ite (b = a) 0 (p b) := by rw [eq_self_iff_true, if_true]
     _ = (∑' b, ite (b = a) (p b) 0) + ∑' b, ite (b = a) 0 (p b) :=
       by
@@ -134,7 +134,7 @@ theorem coe_le_one (p : Pmf α) (a : α) : p a ≤ 1 :=
 #align pmf.coe_le_one Pmf.coe_le_one
 
 theorem apply_ne_top (p : Pmf α) (a : α) : p a ≠ ∞ :=
-  ne_of_lt (lt_of_le_of_lt (p.coe_le_one a) Ennreal.one_lt_top)
+  ne_of_lt (lt_of_le_of_lt (p.coe_le_one a) ENNReal.one_lt_top)
 #align pmf.apply_ne_top Pmf.apply_ne_top
 
 theorem apply_lt_top (p : Pmf α) (a : α) : p a < ∞ :=
@@ -195,7 +195,7 @@ theorem toOuterMeasure_inj {p q : Pmf α} : p.toOuterMeasure = q.toOuterMeasure 
 
 theorem toOuterMeasure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p.support s :=
   by
-  rw [to_outer_measure_apply, Ennreal.tsum_eq_zero]
+  rw [to_outer_measure_apply, ENNReal.tsum_eq_zero]
   exact function.funext_iff.symm.trans Set.indicator_eq_zero'
 #align pmf.to_outer_measure_apply_eq_zero_iff Pmf.toOuterMeasure_apply_eq_zero_iff
 
@@ -207,7 +207,7 @@ theorem toOuterMeasure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support �
     have hs' : s.indicator p a = 0 := Set.indicator_apply_eq_zero.2 fun hs' => False.elim <| hs hs'
     have hsa : s.indicator p a < p a := hs'.symm ▸ (p.apply_pos_iff a).2 hap
     exact
-      Ennreal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
+      ENNReal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
         (fun x => Set.indicator_apply_le fun _ => le_rfl) hsa
   · suffices : ∀ (x) (_ : x ∉ s), p x = 0
     exact
@@ -350,7 +350,7 @@ is the measure of the singleton set under the original measure. -/
 def toPmf [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (μ : Measure α)
     [h : IsProbabilityMeasure μ] : Pmf α :=
   ⟨fun x => μ ({x} : Set α),
-    Ennreal.summable.hasSum_iff.2
+    ENNReal.summable.hasSum_iff.2
       (trans
         (symm <|
           (tsum_indicator_apply_singleton μ Set.univ MeasurableSet.univ).symm.trans
@@ -384,7 +384,7 @@ instance toMeasure.isProbabilityMeasure [MeasurableSpace α] (p : Pmf α) :
     IsProbabilityMeasure p.toMeasure :=
   ⟨by
     simpa only [MeasurableSet.univ, to_measure_apply_eq_to_outer_measure_apply, Set.indicator_univ,
-      to_outer_measure_apply, Ennreal.coe_eq_one] using tsum_coe p⟩
+      to_outer_measure_apply, ENNReal.coe_eq_one] using tsum_coe p⟩
 #align pmf.to_measure.is_probability_measure Pmf.toMeasure.isProbabilityMeasure
 
 variable [Countable α] [MeasurableSpace α] [MeasurableSingletonClass α] (p : Pmf α) (μ : Measure α)

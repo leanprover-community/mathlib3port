@@ -31,7 +31,7 @@ noncomputable section
 
 open TopologicalSpace MeasureTheory MeasureTheory.lp
 
-open NNReal Ennreal MeasureTheory
+open NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -40,16 +40,16 @@ section
 variable {α F : Type _} {m : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup F]
 
 theorem Memℒp.integrableSq {f : α → ℝ} (h : Memℒp f 2 μ) : Integrable (fun x => f x ^ 2) μ := by
-  simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow Ennreal.two_ne_zero Ennreal.two_ne_top
+  simpa [← mem_ℒp_one_iff_integrable] using h.norm_rpow ENNReal.two_ne_zero ENNReal.two_ne_top
 #align measure_theory.mem_ℒp.integrable_sq MeasureTheory.Memℒp.integrableSq
 
 theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AeStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
-  convert (mem_ℒp_norm_rpow_iff hf Ennreal.two_ne_zero Ennreal.two_ne_top).symm
+  convert (mem_ℒp_norm_rpow_iff hf ENNReal.two_ne_zero ENNReal.two_ne_top).symm
   · simp
-  · rw [div_eq_mul_inv, Ennreal.mul_inv_cancel Ennreal.two_ne_zero Ennreal.two_ne_top]
+  · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel ENNReal.two_ne_zero ENNReal.two_ne_top]
 #align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.memℒp_two_iff_integrable_sq_norm
 
 theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AeStronglyMeasurable f μ) :
@@ -72,9 +72,9 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 theorem snorm_rpow_two_norm_lt_top (f : lp F 2 μ) : snorm (fun x => ‖f x‖ ^ (2 : ℝ)) 1 μ < ∞ :=
   by
-  have h_two : Ennreal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
+  have h_two : ENNReal.ofReal (2 : ℝ) = 2 := by simp [zero_le_one]
   rw [snorm_norm_rpow f zero_lt_two, one_mul, h_two]
-  exact Ennreal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
+  exact ENNReal.rpow_lt_top_of_nonneg zero_le_two (Lp.snorm_ne_top f)
 #align measure_theory.L2.snorm_rpow_two_norm_lt_top MeasureTheory.L2.snorm_rpow_two_norm_lt_top
 
 theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x, g x⟫) 1 μ < ∞ :=
@@ -93,7 +93,7 @@ theorem snorm_inner_lt_top (f g : α →₂[μ] E) : snorm (fun x : α => ⟪f x
   refine' (snorm_mono_ae (ae_of_all _ h')).trans_lt ((snorm_add_le _ _ le_rfl).trans_lt _)
   · exact ((Lp.ae_strongly_measurable f).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
   · exact ((Lp.ae_strongly_measurable g).norm.AeMeasurable.pow_const _).AeStronglyMeasurable
-  simp only [Nat.cast_bit0, Ennreal.add_lt_top, Nat.cast_one]
+  simp only [Nat.cast_bit0, ENNReal.add_lt_top, Nat.cast_one]
   exact ⟨snorm_rpow_two_norm_lt_top f, snorm_rpow_two_norm_lt_top g⟩
 #align measure_theory.L2.snorm_inner_lt_top MeasureTheory.L2.snorm_inner_lt_top
 
@@ -111,7 +111,7 @@ theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a
 #align measure_theory.L2.inner_def MeasureTheory.L2.inner_def
 
 theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
-    (∫ a, ⟪f a, f a⟫ ∂μ) = Ennreal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) :=
+    (∫ a, ⟪f a, f a⟫ ∂μ) = ENNReal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) :=
   by
   simp_rw [inner_self_eq_norm_sq_to_K]
   norm_cast
@@ -123,20 +123,20 @@ theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
   ext1 x
   have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ) := by simp
   rw [← Real.rpow_nat_cast _ 2, ← h_two, ←
-    Ennreal.ofReal_rpow_of_nonneg (norm_nonneg _) zero_le_two, ofReal_norm_eq_coe_nnnorm]
+    ENNReal.ofReal_rpow_of_nonneg (norm_nonneg _) zero_le_two, ofReal_norm_eq_coe_nnnorm]
   norm_cast
 #align measure_theory.L2.integral_inner_eq_sq_snorm MeasureTheory.L2.integral_inner_eq_sq_snorm
 
 private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = IsROrC.re ⟪f, f⟫ :=
   by
   have h_two : (2 : ℝ≥0∞).toReal = 2 := by simp
-  rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ← Ennreal.toReal_pow, IsROrC.of_real_re,
-    Ennreal.toReal_eq_toReal (Ennreal.pow_ne_top (Lp.snorm_ne_top f)) _]
-  · rw [← Ennreal.rpow_nat_cast, snorm_eq_snorm' Ennreal.two_ne_zero Ennreal.two_ne_top, snorm', ←
-      Ennreal.rpow_mul, one_div, h_two]
+  rw [inner_def, integral_inner_eq_sq_snorm, norm_def, ← ENNReal.toReal_pow, IsROrC.of_real_re,
+    ENNReal.toReal_eq_toReal (ENNReal.pow_ne_top (Lp.snorm_ne_top f)) _]
+  · rw [← ENNReal.rpow_nat_cast, snorm_eq_snorm' ENNReal.two_ne_zero ENNReal.two_ne_top, snorm', ←
+      ENNReal.rpow_mul, one_div, h_two]
     simp
   · refine' (lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top zero_lt_two _).Ne
-    rw [← h_two, ← snorm_eq_snorm' Ennreal.two_ne_zero Ennreal.two_ne_top]
+    rw [← h_two, ← snorm_eq_snorm' ENNReal.two_ne_zero ENNReal.two_ne_top]
     exact Lp.snorm_lt_top f
 #align measure_theory.L2.norm_sq_eq_inner' measure_theory.L2.norm_sq_eq_inner'
 

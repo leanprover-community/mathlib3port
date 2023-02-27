@@ -70,7 +70,7 @@ noncomputable section
 
 open Set Inv Function TopologicalSpace MeasurableSpace
 
-open NNReal Classical Ennreal Pointwise Topology
+open NNReal Classical ENNReal Pointwise Topology
 
 namespace MeasureTheory
 
@@ -641,7 +641,7 @@ theorem haarContent_apply (K₀ : PositiveCompacts G) (K : Compacts G) :
 @[to_additive "The variant of `add_chaar_self` for `add_haar_content`."]
 theorem haarContent_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.toCompacts = 1 :=
   by
-  simp_rw [← Ennreal.coe_one, haar_content_apply, Ennreal.coe_eq_coe, chaar_self]
+  simp_rw [← ENNReal.coe_one, haar_content_apply, ENNReal.coe_eq_coe, chaar_self]
   rfl
 #align measure_theory.measure.haar.haar_content_self MeasureTheory.Measure.Haar.haarContent_self
 #align measure_theory.measure.haar.add_haar_content_self MeasureTheory.Measure.Haar.add_haar_content_self
@@ -650,7 +650,7 @@ theorem haarContent_self {K₀ : PositiveCompacts G} : haarContent K₀ K₀.toC
 @[to_additive "The variant of `is_left_invariant_add_chaar` for `add_haar_content`"]
 theorem is_left_invariant_haarContent {K₀ : PositiveCompacts G} (g : G) (K : Compacts G) :
     haarContent K₀ (K.map _ <| continuous_mul_left g) = haarContent K₀ K := by
-  simpa only [Ennreal.coe_eq_coe, ← NNReal.coe_eq, haar_content_apply] using
+  simpa only [ENNReal.coe_eq_coe, ← NNReal.coe_eq, haar_content_apply] using
     is_left_invariant_chaar g K
 #align measure_theory.measure.haar.is_left_invariant_haar_content MeasureTheory.Measure.Haar.is_left_invariant_haarContent
 #align measure_theory.measure.haar.is_left_invariant_add_haar_content MeasureTheory.Measure.Haar.is_left_invariant_add_haar_content
@@ -711,7 +711,7 @@ instance isMulLeftInvariantHaarMeasure (K₀ : PositiveCompacts G) :
 theorem haarMeasure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 1 :=
   by
   haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
-  rw [haar_measure_apply K₀.is_compact.measurable_set, Ennreal.div_self]
+  rw [haar_measure_apply K₀.is_compact.measurable_set, ENNReal.div_self]
   · rw [← pos_iff_ne_zero]
     exact haar_content_outer_measure_self_pos
   · exact (content.outer_measure_lt_top_of_is_compact _ K₀.is_compact).Ne
@@ -724,7 +724,7 @@ instance regularHaarMeasure {K₀ : PositiveCompacts G} : (haarMeasure K₀).reg
   by
   haveI : LocallyCompactSpace G := K₀.locally_compact_space_of_group
   apply regular.smul
-  rw [Ennreal.inv_ne_top]
+  rw [ENNReal.inv_ne_top]
   exact haar_content_outer_measure_self_pos.ne'
 #align measure_theory.measure.regular_haar_measure MeasureTheory.Measure.regularHaarMeasure
 #align measure_theory.measure.regular_add_haar_measure MeasureTheory.Measure.regular_add_haar_measure
@@ -751,7 +751,7 @@ instance isHaarMeasureHaarMeasure (K₀ : PositiveCompacts G) : IsHaarMeasure (h
   · simp only [haar_measure_self]
     exact one_ne_zero
   · simp only [haar_measure_self]
-    exact Ennreal.coe_ne_top
+    exact ENNReal.coe_ne_top
 #align measure_theory.measure.is_haar_measure_haar_measure MeasureTheory.Measure.isHaarMeasureHaarMeasure
 #align measure_theory.measure.is_add_haar_measure_add_haar_measure MeasureTheory.Measure.is_add_haar_measure_add_haar_measure
 
@@ -808,16 +808,16 @@ theorem isHaarMeasure_eq_smul_isHaarMeasure [LocallyCompactSpace G] (μ ν : Mea
   refine' ⟨μ K / ν K, _, _, _⟩
   ·
     simp only [νne, (μ.measure_pos_of_nonempty_interior K.interior_nonempty).ne', Ne.def,
-      Ennreal.div_zero_iff, not_false_iff, or_self_iff]
+      ENNReal.div_eq_zero_iff, not_false_iff, or_self_iff]
   ·
     simp only [div_eq_mul_inv, νpos.ne', K.is_compact.measure_lt_top.Ne, or_self_iff,
-      Ennreal.inv_eq_top, WithTop.mul_eq_top_iff, Ne.def, not_false_iff, and_false_iff,
+      ENNReal.inv_eq_top, WithTop.mul_eq_top_iff, Ne.def, not_false_iff, and_false_iff,
       false_and_iff]
   ·
     calc
       μ = μ K • haar_measure K := haar_measure_unique μ K
       _ = (μ K / ν K) • ν K • haar_measure K := by
-        rw [smul_smul, div_eq_mul_inv, mul_assoc, Ennreal.inv_mul_cancel νpos.ne' νne, mul_one]
+        rw [smul_smul, div_eq_mul_inv, mul_assoc, ENNReal.inv_mul_cancel νpos.ne' νne, mul_one]
       _ = (μ K / ν K) • ν := by rw [← haar_measure_unique ν K]
       
 #align measure_theory.measure.is_haar_measure_eq_smul_is_haar_measure MeasureTheory.Measure.isHaarMeasure_eq_smul_isHaarMeasure
@@ -923,10 +923,10 @@ instance (priority := 100) IsHaarMeasure.isInvInvariant [LocallyCompactSpace G] 
     conv_rhs => rw [μeq]
     simp
   have : c ^ 2 = 1 ^ 2 :=
-    (Ennreal.mul_eq_mul_right (measure_pos_of_nonempty_interior _ K.interior_nonempty).ne'
+    (ENNReal.mul_eq_mul_right (measure_pos_of_nonempty_interior _ K.interior_nonempty).ne'
           K.is_compact.measure_lt_top.ne).1
       this
-  have : c = 1 := (Ennreal.pow_strictMono two_ne_zero).Injective this
+  have : c = 1 := (ENNReal.pow_strictMono two_ne_zero).Injective this
   rw [measure.inv, hc, this, one_smul]
 #align measure_theory.measure.is_haar_measure.is_inv_invariant MeasureTheory.Measure.IsHaarMeasure.isInvInvariant
 #align measure_theory.measure.is_add_haar_measure.is_neg_invariant MeasureTheory.Measure.IsAddHaarMeasure.is_neg_invariant
@@ -947,8 +947,8 @@ theorem measurePreservingZpow [CompactSpace G] [RootableBy G ℤ] {n : ℤ} (hn 
           preimage_univ]
       have hμ₀ : μ univ ≠ 0 := is_open_pos_measure.open_pos univ isOpen_univ univ_nonempty
       have hμ₁ : μ univ ≠ ∞ := compact_space.is_finite_measure.measure_univ_lt_top.ne
-      rwa [hC, smul_apply, Algebra.id.smul_eq_mul, mul_comm, ← Ennreal.eq_div_iff hμ₀ hμ₁,
-        Ennreal.div_self hμ₀ hμ₁] at h_univ }
+      rwa [hC, smul_apply, Algebra.id.smul_eq_mul, mul_comm, ← ENNReal.eq_div_iff hμ₀ hμ₁,
+        ENNReal.div_self hμ₀ hμ₁] at h_univ }
 #align measure_theory.measure.measure_preserving_zpow MeasureTheory.Measure.measurePreservingZpow
 #align measure_theory.measure.measure_preserving_zsmul MeasureTheory.Measure.measure_preserving_zsmul
 

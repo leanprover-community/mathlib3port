@@ -25,7 +25,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 open Set
 
-open Topology Ennreal
+open Topology ENNReal
 
 namespace AnalyticOn
 
@@ -53,17 +53,17 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
   rintro x ⟨xu, xU⟩
   rcases hf x xU with ⟨p, r, hp⟩
   obtain ⟨y, yu, hxy⟩ : ∃ y ∈ u, edist x y < r / 2
-  exact Emetric.mem_closure_iff.1 xu (r / 2) (Ennreal.half_pos hp.r_pos.ne')
+  exact Emetric.mem_closure_iff.1 xu (r / 2) (ENNReal.half_pos hp.r_pos.ne')
   let q := p.change_origin (y - x)
   have has_series : HasFpowerSeriesOnBall f q y (r / 2) :=
     by
     have A : (‖y - x‖₊ : ℝ≥0∞) < r / 2 := by rwa [edist_comm, edist_eq_coe_nnnorm_sub] at hxy
-    have := hp.change_origin (A.trans_le Ennreal.half_le_self)
+    have := hp.change_origin (A.trans_le ENNReal.half_le_self)
     simp only [add_sub_cancel'_right] at this
-    apply this.mono (Ennreal.half_pos hp.r_pos.ne')
-    apply Ennreal.le_sub_of_add_le_left Ennreal.coe_ne_top
+    apply this.mono (ENNReal.half_pos hp.r_pos.ne')
+    apply ENNReal.le_sub_of_add_le_left ENNReal.coe_ne_top
     apply (add_le_add A.le (le_refl (r / 2))).trans (le_of_eq _)
-    exact Ennreal.add_halves _
+    exact ENNReal.add_halves _
   have M : Emetric.ball y (r / 2) ∈ 𝓝 x := emetric.is_open_ball.mem_nhds hxy
   filter_upwards [M]with z hz
   have A : HasSum (fun n : ℕ => q n fun i : Fin n => z - y) (f z) := has_series.has_sum_sub hz

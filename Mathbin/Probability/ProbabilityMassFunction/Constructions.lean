@@ -35,7 +35,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators NNReal Ennreal
+open Classical BigOperators NNReal ENNReal
 
 section Map
 
@@ -114,7 +114,7 @@ theorem monad_seq_eq_seq {α β : Type _} (q : Pmf (α → β)) (p : Pmf α) : q
 theorem seq_apply : (seq q p) b = ∑' (f : α → β) (a : α), if b = f a then q f * p a else 0 :=
   by
   simp only [seq, mul_boole, bind_apply, pure_apply]
-  refine' tsum_congr fun f => Ennreal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
+  refine' tsum_congr fun f => ENNReal.tsum_mul_left.symm.trans (tsum_congr fun a => _)
   simpa only [mul_zero] using mul_ite (b = f a) (q f) (p a) 0
 #align pmf.seq_apply Pmf.seq_apply
 
@@ -237,7 +237,7 @@ section normalize
 /-- Given a `f` with non-zero and non-infinite sum, get a `pmf` by normalizing `f` by its `tsum` -/
 def normalize (f : α → ℝ≥0∞) (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞) : Pmf α :=
   ⟨fun a => f a * (∑' x, f x)⁻¹,
-    Ennreal.summable.hasSum_iff.2 (Ennreal.tsum_mul_right.trans (Ennreal.mul_inv_cancel hf0 hf))⟩
+    ENNReal.summable.hasSum_iff.2 (ENNReal.tsum_mul_right.trans (ENNReal.mul_inv_cancel hf0 hf))⟩
 #align pmf.normalize Pmf.normalize
 
 variable {f : α → ℝ≥0∞} (hf0 : tsum f ≠ 0) (hf : tsum f ≠ ∞)

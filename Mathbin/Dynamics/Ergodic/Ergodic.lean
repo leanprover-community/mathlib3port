@@ -36,7 +36,7 @@ preserving condition is relaxed to quasi measure preserving.
 
 open Set Function Filter MeasureTheory MeasureTheory.Measure
 
-open Ennreal
+open ENNReal
 
 variable {α : Type _} {m : MeasurableSpace α} (f : α → α) {s : Set α}
 

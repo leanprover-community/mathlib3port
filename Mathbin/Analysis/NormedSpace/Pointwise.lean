@@ -203,13 +203,13 @@ theorem disjoint_closedBall_closedBall_iff (hδ : 0 ≤ δ) (hε : 0 ≤ ε) :
   exact h.le_bot ⟨hxz, hzy⟩
 #align disjoint_closed_ball_closed_ball_iff disjoint_closedBall_closedBall_iff
 
-open Emetric Ennreal
+open Emetric ENNReal
 
 @[simp]
 theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
-    infEdist x (thickening δ s) = infEdist x s - Ennreal.ofReal δ :=
+    infEdist x (thickening δ s) = infEdist x s - ENNReal.ofReal δ :=
   by
-  obtain hs | hs := lt_or_le (inf_edist x s) (Ennreal.ofReal δ)
+  obtain hs | hs := lt_or_le (inf_edist x s) (ENNReal.ofReal δ)
   · rw [inf_edist_zero_of_mem, tsub_eq_zero_of_le hs.le]
     exact hs
   refine' (tsub_le_iff_right.2 inf_edist_le_inf_edist_thickening_add).antisymm' _
@@ -229,7 +229,7 @@ theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
   rw [some_eq_coe, edist_lt_coe, ← dist_lt_coe, ← add_sub_cancel'_right δ ↑r] at h
   obtain ⟨y, hxy, hyz⟩ := exists_dist_lt_lt hr hδ h
   refine'
-    (Ennreal.add_lt_add_right of_real_ne_top <|
+    (ENNReal.add_lt_add_right of_real_ne_top <|
           inf_edist_lt_iff.2 ⟨_, mem_thickening_iff.2 ⟨_, hz, hyz⟩, edist_lt_ofReal.2 hxy⟩).trans_le
       _
   rw [← of_real_add hr.le hδ.le, sub_add_cancel, of_real_coe_nnreal]
@@ -253,7 +253,7 @@ theorem cthickening_thickening (hε : 0 ≤ ε) (hδ : 0 < δ) (s : Set E) :
     cthickening ε (thickening δ s) = cthickening (ε + δ) s :=
   (cthickening_thickening_subset hε _ _).antisymm fun x =>
     by
-    simp_rw [mem_cthickening_iff, Ennreal.ofReal_add hε hδ.le, infEdist_thickening hδ]
+    simp_rw [mem_cthickening_iff, ENNReal.ofReal_add hε hδ.le, infEdist_thickening hδ]
     exact tsub_le_iff_right.2
 #align cthickening_thickening cthickening_thickening
 
@@ -267,7 +267,7 @@ theorem closure_thickening (hδ : 0 < δ) (s : Set E) : closure (thickening δ s
 
 @[simp]
 theorem infEdist_cthickening (δ : ℝ) (s : Set E) (x : E) :
-    infEdist x (cthickening δ s) = infEdist x s - Ennreal.ofReal δ :=
+    infEdist x (cthickening δ s) = infEdist x s - ENNReal.ofReal δ :=
   by
   obtain hδ | hδ := le_or_lt δ 0
   · rw [cthickening_of_nonpos hδ, inf_edist_closure, of_real_of_nonpos hδ, tsub_zero]
@@ -288,7 +288,7 @@ theorem cthickening_cthickening (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Set E) :
     cthickening ε (cthickening δ s) = cthickening (ε + δ) s :=
   (cthickening_cthickening_subset hε hδ _).antisymm fun x =>
     by
-    simp_rw [mem_cthickening_iff, Ennreal.ofReal_add hε hδ, infEdist_cthickening]
+    simp_rw [mem_cthickening_iff, ENNReal.ofReal_add hε hδ, infEdist_cthickening]
     exact tsub_le_iff_right.2
 #align cthickening_cthickening cthickening_cthickening
 

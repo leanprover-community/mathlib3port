@@ -47,9 +47,9 @@ For `E` finite-dimensional, simple functions `α →ₛ E` are dense in L^∞ --
 
 noncomputable section
 
-open Set Function Filter TopologicalSpace Ennreal Emetric Finset
+open Set Function Filter TopologicalSpace ENNReal Emetric Finset
 
-open Classical Topology Ennreal MeasureTheory BigOperators
+open Classical Topology ENNReal MeasureTheory BigOperators
 
 variable {α β ι E F 𝕜 : Type _}
 
@@ -301,24 +301,24 @@ protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measure α) :
 theorem measure_preimage_lt_top_of_memℒp (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) (f : α →ₛ E)
     (hf : Memℒp f p μ) (y : E) (hy_ne : y ≠ 0) : μ (f ⁻¹' {y}) < ∞ :=
   by
-  have hp_pos_real : 0 < p.to_real := Ennreal.toReal_pos hp_pos hp_ne_top
+  have hp_pos_real : 0 < p.to_real := ENNReal.toReal_pos hp_pos hp_ne_top
   have hf_snorm := mem_ℒp.snorm_lt_top hf
   rw [snorm_eq_snorm' hp_pos hp_ne_top, f.snorm'_eq, ←
-    @Ennreal.lt_rpow_one_div_iff _ _ (1 / p.to_real) (by simp [hp_pos_real]),
-    @Ennreal.top_rpow_of_pos (1 / (1 / p.to_real)) (by simp [hp_pos_real]),
-    Ennreal.sum_lt_top_iff] at hf_snorm
+    @ENNReal.lt_rpow_one_div_iff _ _ (1 / p.to_real) (by simp [hp_pos_real]),
+    @ENNReal.top_rpow_of_pos (1 / (1 / p.to_real)) (by simp [hp_pos_real]),
+    ENNReal.sum_lt_top_iff] at hf_snorm
   by_cases hyf : y ∈ f.range
   swap
   · suffices h_empty : f ⁻¹' {y} = ∅
     · rw [h_empty, measure_empty]
-      exact Ennreal.coe_lt_top
+      exact ENNReal.coe_lt_top
     ext1 x
     rw [Set.mem_preimage, Set.mem_singleton_iff, mem_empty_iff_false, iff_false_iff]
     refine' fun hxy => hyf _
     rw [mem_range, Set.mem_range]
     exact ⟨x, hxy⟩
   specialize hf_snorm y hyf
-  rw [Ennreal.mul_lt_top_iff] at hf_snorm
+  rw [ENNReal.mul_lt_top_iff] at hf_snorm
   cases hf_snorm
   · exact hf_snorm.2
   cases hf_snorm
@@ -339,11 +339,11 @@ theorem memℒpOfFiniteMeasurePreimage (p : ℝ≥0∞) {f : α →ₛ E}
     exact mem_ℒp_top f μ
   refine' ⟨f.ae_strongly_measurable, _⟩
   rw [snorm_eq_snorm' hp0 hp_top, f.snorm'_eq]
-  refine' Ennreal.rpow_lt_top_of_nonneg (by simp) (ennreal.sum_lt_top_iff.mpr fun y hy => _).Ne
+  refine' ENNReal.rpow_lt_top_of_nonneg (by simp) (ennreal.sum_lt_top_iff.mpr fun y hy => _).Ne
   by_cases hy0 : y = 0
-  · simp [hy0, Ennreal.toReal_pos hp0 hp_top]
-  · refine' Ennreal.mul_lt_top _ (hf y hy0).Ne
-    exact (Ennreal.rpow_lt_top_of_nonneg Ennreal.toReal_nonneg Ennreal.coe_ne_top).Ne
+  · simp [hy0, ENNReal.toReal_pos hp0 hp_top]
+  · refine' ENNReal.mul_lt_top _ (hf y hy0).Ne
+    exact (ENNReal.rpow_lt_top_of_nonneg ENNReal.toReal_nonneg ENNReal.coe_ne_top).Ne
 #align measure_theory.simple_func.mem_ℒp_of_finite_measure_preimage MeasureTheory.SimpleFunc.memℒpOfFiniteMeasurePreimage
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » 0) -/
@@ -355,7 +355,7 @@ theorem memℒp_iff {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (y «expr ≠ » 0) -/
 theorem integrable_iff {f : α →ₛ E} : Integrable f μ ↔ ∀ (y) (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
-  memℒp_one_iff_integrable.symm.trans <| memℒp_iff Ennreal.zero_lt_one.ne' Ennreal.coe_ne_top
+  memℒp_one_iff_integrable.symm.trans <| memℒp_iff ENNReal.zero_lt_one.ne' ENNReal.coe_ne_top
 #align measure_theory.simple_func.integrable_iff MeasureTheory.SimpleFunc.integrable_iff
 
 theorem memℒp_iff_integrable {f : α →ₛ E} (hp_pos : p ≠ 0) (hp_ne_top : p ≠ ∞) :
@@ -584,7 +584,7 @@ theorem toLp_smul (f : α →ₛ E) (hf : Memℒp f p μ) (c : 𝕜) :
 #align measure_theory.Lp.simple_func.to_Lp_smul MeasureTheory.lp.simpleFunc.toLp_smul
 
 theorem norm_toLp [Fact (1 ≤ p)] (f : α →ₛ E) (hf : Memℒp f p μ) :
-    ‖toLp f hf‖ = Ennreal.toReal (snorm f p μ) :=
+    ‖toLp f hf‖ = ENNReal.toReal (snorm f p μ) :=
   norm_toLp f hf
 #align measure_theory.Lp.simple_func.norm_to_Lp MeasureTheory.lp.simpleFunc.norm_toLp
 
@@ -693,7 +693,7 @@ theorem smul_toSimpleFunc (k : 𝕜) (f : lp.simpleFunc E p μ) :
 #align measure_theory.Lp.simple_func.smul_to_simple_func MeasureTheory.lp.simpleFunc.smul_toSimpleFunc
 
 theorem norm_toSimpleFunc [Fact (1 ≤ p)] (f : lp.simpleFunc E p μ) :
-    ‖f‖ = Ennreal.toReal (snorm (toSimpleFunc f) p μ) := by
+    ‖f‖ = ENNReal.toReal (snorm (toSimpleFunc f) p μ) := by
   simpa [to_Lp_to_simple_func] using norm_to_Lp (to_simple_func f) (simple_func.mem_ℒp f)
 #align measure_theory.Lp.simple_func.norm_to_simple_func MeasureTheory.lp.simpleFunc.norm_toSimpleFunc
 
@@ -998,7 +998,7 @@ theorem lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : lp E p �
     (h_closed : IsClosed { f : lp E p μ | P f }) : ∀ f : lp E p μ, P f :=
   by
   refine' fun f => (Lp.simple_func.dense_range hp_ne_top).inductionOn f h_closed _
-  refine' Lp.simple_func.induction (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne' hp_ne_top _ _
+  refine' Lp.simple_func.induction (lt_of_lt_of_le ENNReal.zero_lt_one _i.elim).ne' hp_ne_top _ _
   · exact fun c s => h_ind c
   · exact fun f g hf hg => h_add hf hg
 #align measure_theory.Lp.induction MeasureTheory.lp.induction
@@ -1033,7 +1033,7 @@ theorem Memℒp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : (α
         convert h_ind 0 MeasurableSet.empty (by simp) using 1
         ext
         simp [const]
-      have hp_pos : p ≠ 0 := (lt_of_lt_of_le Ennreal.zero_lt_one _i.elim).ne'
+      have hp_pos : p ≠ 0 := (lt_of_lt_of_le ENNReal.zero_lt_one _i.elim).ne'
       exact h_ind c hs (simple_func.measure_lt_top_of_mem_ℒp_indicator hp_pos hp_ne_top hc hs h)
     · intro f g hfg hf hg int_fg
       rw [simple_func.coe_add,

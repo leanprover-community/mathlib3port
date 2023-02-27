@@ -51,7 +51,7 @@ variable {𝓕 𝕜 α ι κ E F G : Type _}
 
 open Filter Function Metric
 
-open BigOperators Ennreal Filter NNReal uniformity Pointwise Topology
+open BigOperators ENNReal Filter NNReal uniformity Pointwise Topology
 
 /-- Auxiliary class, endowing a type `E` with a function `norm : E → ℝ` with notation `‖x‖`. This
 class is designed to be extended in more interesting classes specifying the properties of the norm.
@@ -946,8 +946,8 @@ theorem nnnorm_le_mul_nnnorm_add (a b : E) : ‖a‖₊ ≤ ‖a * b‖₊ + ‖
 #align nnnorm_le_add_nnnorm_add nnnorm_le_add_nnnorm_add
 
 @[to_additive ofReal_norm_eq_coe_nnnorm]
-theorem ofReal_norm_eq_coe_nnnorm' (a : E) : Ennreal.ofReal ‖a‖ = ‖a‖₊ :=
-  Ennreal.ofReal_eq_coe_nNReal _
+theorem ofReal_norm_eq_coe_nnnorm' (a : E) : ENNReal.ofReal ‖a‖ = ‖a‖₊ :=
+  ENNReal.ofReal_eq_coe_nnreal _
 #align of_real_norm_eq_coe_nnnorm' ofReal_norm_eq_coe_nnnorm'
 #align of_real_norm_eq_coe_nnnorm ofReal_norm_eq_coe_nnnorm
 
@@ -1737,11 +1737,11 @@ theorem nnnorm_of_nonneg (hr : 0 ≤ r) : ‖r‖₊ = ⟨r, hr⟩ :=
 theorem nnnorm_abs (r : ℝ) : ‖|r|‖₊ = ‖r‖₊ := by simp [nnnorm]
 #align real.nnnorm_abs Real.nnnorm_abs
 
-theorem ennnorm_eq_ofReal (hr : 0 ≤ r) : (‖r‖₊ : ℝ≥0∞) = Ennreal.ofReal r := by
+theorem ennnorm_eq_ofReal (hr : 0 ≤ r) : (‖r‖₊ : ℝ≥0∞) = ENNReal.ofReal r := by
   rw [← ofReal_norm_eq_coe_nnnorm, norm_of_nonneg hr]
 #align real.ennnorm_eq_of_real Real.ennnorm_eq_ofReal
 
-theorem ennnorm_eq_ofReal_abs (r : ℝ) : (‖r‖₊ : ℝ≥0∞) = Ennreal.ofReal (|r|) := by
+theorem ennnorm_eq_ofReal_abs (r : ℝ) : (‖r‖₊ : ℝ≥0∞) = ENNReal.ofReal (|r|) := by
   rw [← Real.nnnorm_abs r, Real.ennnorm_eq_ofReal (abs_nonneg _)]
 #align real.ennnorm_eq_of_real_abs Real.ennnorm_eq_ofReal_abs
 
@@ -1752,11 +1752,11 @@ theorem toNNReal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNNReal = ‖r‖₊ :=
   rw [Real.norm_eq_abs, abs_of_nonneg hr]
 #align real.to_nnreal_eq_nnnorm_of_nonneg Real.toNNReal_eq_nnnorm_of_nonneg
 
-theorem ofReal_le_ennnorm (r : ℝ) : Ennreal.ofReal r ≤ ‖r‖₊ :=
+theorem ofReal_le_ennnorm (r : ℝ) : ENNReal.ofReal r ≤ ‖r‖₊ :=
   by
   obtain hr | hr := le_total 0 r
   · exact (Real.ennnorm_eq_ofReal hr).ge
-  · rw [Ennreal.ofReal_eq_zero.2 hr]
+  · rw [ENNReal.ofReal_eq_zero.2 hr]
     exact bot_le
 #align real.of_real_le_ennnorm Real.ofReal_le_ennnorm
 

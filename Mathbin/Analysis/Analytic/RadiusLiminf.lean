@@ -23,7 +23,7 @@ would create a circular dependency once we redefine `exp` using `formal_multilin
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
 
-open Topology Classical BigOperators NNReal Ennreal
+open Topology Classical BigOperators NNReal ENNReal
 
 open Filter Asymptotics
 
@@ -43,11 +43,11 @@ theorem radius_eq_liminf : p.radius = liminf (fun n => 1 / (‖p n‖₊ ^ (1 / 
     intro r n hn
     have : 0 < (n : ℝ) := Nat.cast_pos.2 hn
     conv_lhs =>
-      rw [one_div, Ennreal.le_inv_iff_mul_le, ← Ennreal.coe_mul, Ennreal.coe_le_one_iff, one_div, ←
+      rw [one_div, ENNReal.le_inv_iff_mul_le, ← ENNReal.coe_mul, ENNReal.coe_le_one_iff, one_div, ←
         NNReal.rpow_one r, ← mul_inv_cancel this.ne', NNReal.rpow_mul, ← NNReal.mul_rpow, ←
         NNReal.one_rpow n⁻¹, NNReal.rpow_le_rpow_iff (inv_pos.2 this), mul_comm,
         NNReal.rpow_nat_cast]
-  apply le_antisymm <;> refine' Ennreal.le_of_forall_nNReal_lt fun r hr => _
+  apply le_antisymm <;> refine' ENNReal.le_of_forall_nnreal_lt fun r hr => _
   · rcases((tFAE_exists_lt_isOCat_pow (fun n => ‖p n‖ * r ^ n) 1).out 1 7).1
         (p.is_o_of_lt_radius hr) with ⟨a, ha, H⟩
     refine' le_Liminf_of_le (by infer_param) (eventually_map.2 <| _)

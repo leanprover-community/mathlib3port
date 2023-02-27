@@ -38,7 +38,7 @@ Radon-Nikodym theorem
 
 noncomputable section
 
-open Classical MeasureTheory NNReal Ennreal
+open Classical MeasureTheory NNReal ENNReal
 
 variable {α β : Type _} {m : MeasurableSpace α}
 

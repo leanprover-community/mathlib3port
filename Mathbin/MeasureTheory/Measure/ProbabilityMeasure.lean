@@ -80,7 +80,7 @@ open Filter
 
 open BoundedContinuousFunction
 
-open Topology Ennreal NNReal BoundedContinuousFunction
+open Topology ENNReal NNReal BoundedContinuousFunction
 
 namespace MeasureTheory
 
@@ -122,10 +122,10 @@ instance : CoeFun (ProbabilityMeasure Ω) fun _ => Set Ω → ℝ≥0 :=
 instance (μ : ProbabilityMeasure Ω) : IsProbabilityMeasure (μ : Measure Ω) :=
   μ.Prop
 
-theorem coeFn_eq_toNnreal_coeFn_to_measure (ν : ProbabilityMeasure Ω) :
+theorem coeFn_eq_toNNReal_coeFn_to_measure (ν : ProbabilityMeasure Ω) :
     (ν : Set Ω → ℝ≥0) = fun s => ((ν : Measure Ω) s).toNNReal :=
   rfl
-#align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_eq_toNnreal_coeFn_to_measure
+#align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_eq_toNNReal_coeFn_to_measure
 
 @[simp]
 theorem val_eq_to_measure (ν : ProbabilityMeasure Ω) : ν.val = (ν : Measure Ω) :=
@@ -138,7 +138,7 @@ theorem coe_injective : Function.Injective (coe : ProbabilityMeasure Ω → Meas
 
 @[simp]
 theorem coeFn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
-  congr_arg Ennreal.toNnreal ν.Prop.measure_univ
+  congr_arg ENNReal.toNNReal ν.Prop.measure_univ
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coeFn_univ
 
 theorem coeFn_univ_ne_zero (ν : ProbabilityMeasure Ω) : ν univ ≠ 0 := by
@@ -163,11 +163,11 @@ theorem coeFn_comp_toFiniteMeasure_eq_coeFn (ν : ProbabilityMeasure Ω) :
 #align measure_theory.probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn MeasureTheory.ProbabilityMeasure.coeFn_comp_toFiniteMeasure_eq_coeFn
 
 @[simp]
-theorem ennreal_coeFn_eq_coeFn_to_measure (ν : ProbabilityMeasure Ω) (s : Set Ω) :
+theorem eNNReal_coeFn_eq_coeFn_to_measure (ν : ProbabilityMeasure Ω) (s : Set Ω) :
     (ν s : ℝ≥0∞) = (ν : Measure Ω) s := by
   rw [← coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure,
     coe_comp_to_finite_measure_eq_coe]
-#align measure_theory.probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.ennreal_coeFn_eq_coeFn_to_measure
+#align measure_theory.probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.eNNReal_coeFn_eq_coeFn_to_measure
 
 theorem apply_mono (μ : ProbabilityMeasure Ω) {s₁ s₂ : Set Ω} (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=
   by
@@ -341,8 +341,8 @@ theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize 
   obtain rfl | h := eq_or_ne μ 0
   · simp only [zero.mass, coe_fn_zero, Pi.zero_apply, zero_mul]
   have mass_nonzero : μ.mass ≠ 0 := by rwa [μ.mass_nonzero_iff]
-  simp only [normalize, dif_neg mass_nonzero, Ennreal.toNnreal_mul, Subtype.coe_mk,
-    probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, Ennreal.toNnreal_coe,
+  simp only [normalize, dif_neg mass_nonzero, ENNReal.toNNReal_mul, Subtype.coe_mk,
+    probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure, ENNReal.toNNReal_coe,
     MeasureTheory.Measure.coe_nNReal_smul_apply, mul_inv_cancel_left₀ mass_nonzero,
     finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure]
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
@@ -373,7 +373,7 @@ theorem coe_normalize_eq_of_nonzero (nonzero : μ ≠ 0) : (μ.normalize : Measu
   by
   ext1 s s_mble
   simp only [← μ.normalize.ennreal_coe_fn_eq_coe_fn_to_measure s,
-    μ.normalize_eq_of_nonzero nonzero s, Ennreal.coe_mul, ennreal_coe_fn_eq_coe_fn_to_measure,
+    μ.normalize_eq_of_nonzero nonzero s, ENNReal.coe_mul, ennreal_coe_fn_eq_coe_fn_to_measure,
     measure.coe_nnreal_smul_apply]
 #align measure_theory.finite_measure.coe_normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.coe_normalize_eq_of_nonzero
 
@@ -396,8 +396,8 @@ theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [Norme
   by
   rw [μ.coe_normalize_eq_of_nonzero nonzero, average]
   congr
-  simp only [RingHom.toFun_eq_coe, Ennreal.coe_ofNnrealHom,
-    Ennreal.coe_inv (μ.mass_nonzero_iff.mpr nonzero), ennreal_mass]
+  simp only [RingHom.toFun_eq_coe, ENNReal.coe_ofNNRealHom,
+    ENNReal.coe_inv (μ.mass_nonzero_iff.mpr nonzero), ennreal_mass]
 #align measure_theory.finite_measure.average_eq_integral_normalize MeasureTheory.FiniteMeasure.average_eq_integral_normalize
 
 variable [TopologicalSpace Ω]

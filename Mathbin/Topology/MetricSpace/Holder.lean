@@ -42,7 +42,7 @@ variable {X Y Z : Type _}
 
 open Filter Set
 
-open NNReal Ennreal Topology
+open NNReal ENNReal Topology
 
 section Emetric
 
@@ -85,7 +85,7 @@ theorem holderOnWith_univ {C r : ℝ≥0} {f : X → Y} : HolderOnWith C r f uni
 @[simp]
 theorem holderOnWith_one {C : ℝ≥0} {f : X → Y} {s : Set X} :
     HolderOnWith C 1 f s ↔ LipschitzOnWith C f s := by
-  simp only [HolderOnWith, LipschitzOnWith, NNReal.coe_one, Ennreal.rpow_one]
+  simp only [HolderOnWith, LipschitzOnWith, NNReal.coe_one, ENNReal.rpow_one]
 #align holder_on_with_one holderOnWith_one
 
 alias holderOnWith_one ↔ _ LipschitzOnWith.holderOnWith
@@ -118,7 +118,7 @@ theorem edist_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy : y ∈
 
 theorem edist_le_of_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy : y ∈ s) {d : ℝ≥0∞}
     (hd : edist x y ≤ d) : edist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
-  (h.edist_le hx hy).trans (mul_le_mul_left' (Ennreal.rpow_le_rpow hd r.coe_nonneg) _)
+  (h.edist_le hx hy).trans (mul_le_mul_left' (ENNReal.rpow_le_rpow hd r.coe_nonneg) _)
 #align holder_on_with.edist_le_of_le HolderOnWith.edist_le_of_le
 
 theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg rg g t) {Cf rf : ℝ≥0}
@@ -126,8 +126,8 @@ theorem comp {Cg rg : ℝ≥0} {g : Y → Z} {t : Set Y} (hg : HolderOnWith Cg r
     HolderOnWith (Cg * Cf ^ (rg : ℝ)) (rg * rf) (g ∘ f) s :=
   by
   intro x hx y hy
-  rw [Ennreal.coe_mul, mul_comm rg, NNReal.coe_mul, Ennreal.rpow_mul, mul_assoc, ←
-    Ennreal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← Ennreal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
+  rw [ENNReal.coe_mul, mul_comm rg, NNReal.coe_mul, ENNReal.rpow_mul, mul_assoc, ←
+    ENNReal.coe_rpow_of_nonneg _ rg.coe_nonneg, ← ENNReal.mul_rpow_of_nonneg _ _ rg.coe_nonneg]
   exact hg.edist_le_of_le (hst hx) (hst hy) (hf.edist_le hx hy)
 #align holder_on_with.comp HolderOnWith.comp
 
@@ -143,7 +143,7 @@ protected theorem uniformContinuousOn (hf : HolderOnWith C r f s) (h0 : 0 < r) :
   by
   refine' Emetric.uniformContinuousOn_iff.2 fun ε εpos => _
   have : tendsto (fun d : ℝ≥0∞ => (C : ℝ≥0∞) * d ^ (r : ℝ)) (𝓝 0) (𝓝 0) :=
-    Ennreal.tendsto_const_mul_rpow_nhds_zero_of_pos Ennreal.coe_ne_top h0
+    ENNReal.tendsto_const_mul_rpow_nhds_zero_of_pos ENNReal.coe_ne_top h0
   rcases ennreal.nhds_zero_basis.mem_iff.1 (this (gt_mem_nhds εpos)) with ⟨δ, δ0, H⟩
   exact ⟨δ, δ0, fun x hx y hy h => (hf.edist_le hx hy).trans_lt (H h)⟩
 #align holder_on_with.uniform_continuous_on HolderOnWith.uniformContinuousOn
@@ -242,10 +242,10 @@ namespace HolderWith
 theorem nndist_le_of_le (hf : HolderWith C r f) {x y : X} {d : ℝ≥0} (hd : nndist x y ≤ d) :
     nndist (f x) (f y) ≤ C * d ^ (r : ℝ) :=
   by
-  rw [← Ennreal.coe_le_coe, ← edist_nndist, Ennreal.coe_mul, ←
-    Ennreal.coe_rpow_of_nonneg _ r.coe_nonneg]
+  rw [← ENNReal.coe_le_coe, ← edist_nndist, ENNReal.coe_mul, ←
+    ENNReal.coe_rpow_of_nonneg _ r.coe_nonneg]
   apply hf.edist_le_of_le
-  rwa [edist_nndist, Ennreal.coe_le_coe]
+  rwa [edist_nndist, ENNReal.coe_le_coe]
 #align holder_with.nndist_le_of_le HolderWith.nndist_le_of_le
 
 theorem nndist_le (hf : HolderWith C r f) (x y : X) :

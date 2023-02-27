@@ -28,7 +28,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators NNReal Ennreal
+open Classical BigOperators NNReal ENNReal
 
 open MeasureTheory
 
@@ -102,8 +102,8 @@ section Bind
 /-- The monadic bind operation for `pmf`. -/
 def bind (p : Pmf α) (f : α → Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * f a b,
-    Ennreal.summable.hasSum_iff.2
-      (Ennreal.tsum_comm.trans <| by simp only [Ennreal.tsum_mul_left, tsum_coe, mul_one])⟩
+    ENNReal.summable.hasSum_iff.2
+      (ENNReal.tsum_comm.trans <| by simp only [ENNReal.tsum_mul_left, tsum_coe, mul_one])⟩
 #align pmf.bind Pmf.bind
 
 variable (p : Pmf α) (f : α → Pmf β) (g : β → Pmf γ)
@@ -115,7 +115,7 @@ theorem bind_apply (b : β) : p.bind f b = ∑' a, p a * f a b :=
 
 @[simp]
 theorem support_bind : (p.bind f).support = ⋃ a ∈ p.support, (f a).support :=
-  Set.ext fun b => by simp [mem_support_iff, Ennreal.tsum_eq_zero, not_or]
+  Set.ext fun b => by simp [mem_support_iff, ENNReal.tsum_eq_zero, not_or]
 #align pmf.support_bind Pmf.support_bind
 
 theorem mem_support_bind_iff (b : β) :
@@ -143,14 +143,14 @@ theorem bind_pure : p.bind pure = p :=
 theorem bind_bind : (p.bind f).bind g = p.bind fun a => (f a).bind g :=
   Pmf.ext fun b => by
     simpa only [ennreal.coe_eq_coe.symm, bind_apply, ennreal.tsum_mul_left.symm,
-      ennreal.tsum_mul_right.symm, mul_assoc, mul_left_comm, mul_comm] using Ennreal.tsum_comm
+      ennreal.tsum_mul_right.symm, mul_assoc, mul_left_comm, mul_comm] using ENNReal.tsum_comm
 #align pmf.bind_bind Pmf.bind_bind
 
 theorem bind_comm (p : Pmf α) (q : Pmf β) (f : α → β → Pmf γ) :
     (p.bind fun a => q.bind (f a)) = q.bind fun b => p.bind fun a => f a b :=
   Pmf.ext fun b => by
     simpa only [ennreal.coe_eq_coe.symm, bind_apply, ennreal.tsum_mul_left.symm,
-      ennreal.tsum_mul_right.symm, mul_assoc, mul_left_comm, mul_comm] using Ennreal.tsum_comm
+      ennreal.tsum_mul_right.symm, mul_assoc, mul_left_comm, mul_comm] using ENNReal.tsum_comm
 #align pmf.bind_comm Pmf.bind_comm
 
 section Measure
@@ -167,8 +167,8 @@ theorem toOuterMeasure_bind_apply :
       simp [to_outer_measure_apply, Set.indicator_apply]
     _ = ∑' (b) (a), p a * if b ∈ s then f a b else 0 := tsum_congr fun b => by split_ifs <;> simp
     _ = ∑' (a) (b), p a * if b ∈ s then f a b else 0 :=
-      tsum_comm' Ennreal.summable (fun _ => Ennreal.summable) fun _ => Ennreal.summable
-    _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 := tsum_congr fun a => Ennreal.tsum_mul_left
+      tsum_comm' ENNReal.summable (fun _ => ENNReal.summable) fun _ => ENNReal.summable
+    _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 := tsum_congr fun a => ENNReal.tsum_mul_left
     _ = ∑' a, p a * ∑' b, if b ∈ s then f a b else 0 :=
       tsum_congr fun a => (congr_arg fun x => p a * x) <| tsum_congr fun b => by split_ifs <;> rfl
     _ = ∑' a, p a * (f a).toOuterMeasure s :=
@@ -201,10 +201,10 @@ section BindOnSupport
   `p.bind f` is equivalent to `p.bind_on_support (λ a _, f a)`, see `bind_on_support_eq_bind` -/
 def bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf β) : Pmf β :=
   ⟨fun b => ∑' a, p a * if h : p a = 0 then 0 else f a h b,
-    Ennreal.summable.hasSum_iff.2
+    ENNReal.summable.hasSum_iff.2
       (by
         refine' ennreal.tsum_comm.trans (trans (tsum_congr fun a => _) p.tsum_coe)
-        simp_rw [Ennreal.tsum_mul_left]
+        simp_rw [ENNReal.tsum_mul_left]
         split_ifs with h
         · simp only [h, zero_mul]
         · rw [(f a h).tsum_coe, mul_one])⟩
@@ -223,7 +223,7 @@ theorem support_bindOnSupport :
     (p.bindOnSupport f).support = ⋃ (a : α) (h : a ∈ p.support), (f a h).support :=
   by
   refine' Set.ext fun b => _
-  simp only [Ennreal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
+  simp only [ENNReal.tsum_eq_zero, not_or, mem_support_iff, bind_on_support_apply, Ne.def,
     not_forall, mul_eq_zero, Set.mem_unionᵢ]
   exact
     ⟨fun hb =>
@@ -254,7 +254,7 @@ theorem bindOnSupport_eq_bind (p : Pmf α) (f : α → Pmf β) :
 theorem bindOnSupport_eq_zero_iff (b : β) :
     p.bindOnSupport f b = 0 ↔ ∀ (a) (ha : p a ≠ 0), f a ha b = 0 :=
   by
-  simp only [bind_on_support_apply, Ennreal.tsum_eq_zero, mul_eq_zero, or_iff_not_imp_left]
+  simp only [bind_on_support_apply, ENNReal.tsum_eq_zero, mul_eq_zero, or_iff_not_imp_left]
   exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
 #align pmf.bind_on_support_eq_zero_iff Pmf.bindOnSupport_eq_zero_iff
 
@@ -283,7 +283,7 @@ theorem bindOnSupport_bindOnSupport (p : Pmf α) (f : ∀ a ∈ p.support, Pmf �
   refine' Pmf.ext fun a => _
   simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  simp only [Ennreal.tsum_eq_zero, Ennreal.coe_eq_coe, Ennreal.coe_eq_zero, Ennreal.coe_zero,
+  simp only [ENNReal.tsum_eq_zero, ENNReal.coe_eq_coe, ENNReal.coe_eq_zero, ENNReal.coe_zero,
     dite_eq_left_iff, mul_eq_zero]
   refine' ennreal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => _)
   split_ifs
@@ -301,7 +301,7 @@ theorem bindOnSupport_comm (p : Pmf α) (q : Pmf β) (f : ∀ a ∈ p.support, �
   apply Pmf.ext; rintro c
   simp only [ennreal.coe_eq_coe.symm, bind_on_support_apply, ← tsum_dite_right,
     ennreal.tsum_mul_left.symm, ennreal.tsum_mul_right.symm]
-  refine' trans Ennreal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
+  refine' trans ENNReal.tsum_comm (tsum_congr fun b => tsum_congr fun a => _)
   split_ifs with h1 h2 h2 <;> ring
 #align pmf.bind_on_support_comm Pmf.bindOnSupport_comm
 
@@ -322,9 +322,9 @@ theorem toOuterMeasure_bindOnSupport_apply :
         ∑' (b) (a), ite (b ∈ s) (p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
       tsum_congr fun b => by split_ifs with hbs <;> simp only [eq_self_iff_true, tsum_zero]
     _ = ∑' (a) (b), ite (b ∈ s) (p a * dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
-      Ennreal.tsum_comm
+      ENNReal.tsum_comm
     _ = ∑' a, p a * ∑' b, ite (b ∈ s) (dite (p a = 0) (fun h => 0) fun h => f a h b) 0 :=
-      tsum_congr fun a => by simp only [← Ennreal.tsum_mul_left, mul_ite, mul_zero]
+      tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, mul_zero]
     _ = ∑' a, p a * dite (p a = 0) (fun h => 0) fun h => ∑' b, ite (b ∈ s) (f a h b) 0 :=
       tsum_congr fun a => by split_ifs with ha <;> simp only [if_t_t, tsum_zero, eq_self_iff_true]
     

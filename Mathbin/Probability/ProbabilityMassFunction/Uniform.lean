@@ -34,7 +34,7 @@ noncomputable section
 
 variable {α β γ : Type _}
 
-open Classical BigOperators NNReal Ennreal
+open Classical BigOperators NNReal ENNReal
 
 section UniformOfFinset
 
@@ -47,11 +47,11 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
           Finset.sum_congr rfl fun x hx => by simp [hx]
         _ = (s.card : ℝ≥0∞) * (s.card : ℝ≥0∞)⁻¹ := by rw [Finset.sum_const, nsmul_eq_mul]
         _ = 1 :=
-          Ennreal.mul_inv_cancel
+          ENNReal.mul_inv_cancel
             (by
               simpa only [Ne.def, Nat.cast_eq_zero, Finset.card_eq_zero] using
                 Finset.nonempty_iff_ne_empty.1 hs)
-            (Ennreal.nat_ne_top s.card)
+            (ENNReal.nat_ne_top s.card)
         )
     fun x hx => by simp only [hx, if_false]
 #align pmf.uniform_of_finset Pmf.uniformOfFinset
@@ -94,7 +94,7 @@ theorem toOuterMeasure_uniformOfFinset_apply :
       toOuterMeasure_apply (uniformOfFinset s hs) t
     _ = ∑' x, if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_congr fun x => by
-        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, Ennreal.coe_nat]
+        simp only [uniform_of_finset_apply, and_comm' (x ∈ s), ite_and, ENNReal.coe_nat]
     _ = ∑ x in s.filterₓ (· ∈ t), if x ∈ s ∧ x ∈ t then (s.card : ℝ≥0∞)⁻¹ else 0 :=
       tsum_eq_sum fun x hx => if_neg fun h => hx (Finset.mem_filter.2 h)
     _ = ∑ x in s.filterₓ (· ∈ t), (s.card : ℝ≥0∞)⁻¹ :=
@@ -167,18 +167,18 @@ section OfMultiset
   elements in `s` that are `a`. -/
 def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card,
-    Ennreal.summable.hasSum_iff.2
+    ENNReal.summable.hasSum_iff.2
       (calc
         (∑' b : α, (s.count b : ℝ≥0∞) / s.card) = s.card⁻¹ * ∑' b, s.count b := by
-          simp_rw [Ennreal.div_eq_inv_mul, Ennreal.tsum_mul_left]
+          simp_rw [ENNReal.div_eq_inv_mul, ENNReal.tsum_mul_left]
         _ = s.card⁻¹ * ∑ b in s.toFinset, (s.count b : ℝ≥0∞) :=
           congr_arg (fun x => s.card⁻¹ * x)
             (tsum_eq_sum fun a ha =>
               Nat.cast_eq_zero.2 <| by rwa [Multiset.count_eq_zero, ← Multiset.mem_toFinset])
         _ = 1 := by
           rw [← Nat.cast_sum, Multiset.toFinset_sum_count_eq s,
-            Ennreal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))
-              (Ennreal.nat_ne_top _)]
+            ENNReal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))
+              (ENNReal.nat_ne_top _)]
         )⟩
 #align pmf.of_multiset Pmf.ofMultiset
 
@@ -199,8 +199,8 @@ theorem mem_support_ofMultiset_iff (a : α) : a ∈ (ofMultiset s hs).support �
 #align pmf.mem_support_of_multiset_iff Pmf.mem_support_ofMultiset_iff
 
 theorem ofMultiset_apply_of_not_mem {a : α} (ha : a ∉ s) : ofMultiset s hs a = 0 := by
-  simpa only [of_multiset_apply, Ennreal.div_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,
-    Ennreal.nat_ne_top, or_false_iff] using ha
+  simpa only [of_multiset_apply, ENNReal.div_eq_zero_iff, Nat.cast_eq_zero, Multiset.count_eq_zero,
+    ENNReal.nat_ne_top, or_false_iff] using ha
 #align pmf.of_multiset_apply_of_not_mem Pmf.ofMultiset_apply_of_not_mem
 
 section Measure
@@ -211,7 +211,7 @@ variable (t : Set α)
 theorem toOuterMeasure_ofMultiset_apply :
     (ofMultiset s hs).toOuterMeasure t = (∑' x, (s.filterₓ (· ∈ t)).count x) / s.card :=
   by
-  rw [div_eq_mul_inv, ← Ennreal.tsum_mul_right, to_outer_measure_apply]
+  rw [div_eq_mul_inv, ← ENNReal.tsum_mul_right, to_outer_measure_apply]
   refine' tsum_congr fun x => _
   by_cases hx : x ∈ t <;> simp [Set.indicator, hx, div_eq_mul_inv]
 #align pmf.to_outer_measure_of_multiset_apply Pmf.toOuterMeasure_ofMultiset_apply

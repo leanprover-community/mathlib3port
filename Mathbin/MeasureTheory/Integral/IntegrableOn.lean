@@ -28,7 +28,7 @@ noncomputable section
 
 open Set Filter TopologicalSpace MeasureTheory Function
 
-open Classical Topology Interval BigOperators Filter Ennreal MeasureTheory
+open Classical Topology Interval BigOperators Filter ENNReal MeasureTheory
 
 variable {α β E F : Type _} [MeasurableSpace α]
 
@@ -258,7 +258,7 @@ theorem MeasurePreserving.integrableOn_image [MeasurableSpace β] {e : α → β
 theorem integrable_indicator_iff (hs : MeasurableSet s) :
     Integrable (indicator s f) μ ↔ IntegrableOn f s μ := by
   simp [integrable_on, integrable, has_finite_integral, nnnorm_indicator_eq_indicator_nnnorm,
-    Ennreal.coe_indicator, lintegral_indicator _ hs, aeStronglyMeasurable_indicator_iff hs]
+    ENNReal.coe_indicator, lintegral_indicator _ hs, aeStronglyMeasurable_indicator_iff hs]
 #align measure_theory.integrable_indicator_iff MeasureTheory.integrable_indicator_iff
 
 theorem IntegrableOn.integrableIndicator (h : IntegrableOn f s μ) (hs : MeasurableSet s) :
@@ -380,15 +380,15 @@ theorem integrableOnLpOfMeasureNeTop {E} [NormedAddCommGroup E] {p : ℝ≥0∞}
 #align measure_theory.integrable_on_Lp_of_measure_ne_top MeasureTheory.integrableOnLpOfMeasureNeTop
 
 theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) :
-    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) < ∞ :=
+    (∫⁻ x, ENNReal.ofReal (f x) ∂μ) < ∞ :=
   calc
-    (∫⁻ x, Ennreal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
+    (∫⁻ x, ENNReal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
     _ < ∞ := hf.2
     
 #align measure_theory.integrable.lintegral_lt_top MeasureTheory.Integrable.lintegral_lt_top
 
 theorem IntegrableOn.set_lintegral_lt_top {f : α → ℝ} {s : Set α} (hf : IntegrableOn f s μ) :
-    (∫⁻ x in s, Ennreal.ofReal (f x) ∂μ) < ∞ :=
+    (∫⁻ x in s, ENNReal.ofReal (f x) ∂μ) < ∞ :=
   Integrable.lintegral_lt_top hf
 #align measure_theory.integrable_on.set_lintegral_lt_top MeasureTheory.IntegrableOn.set_lintegral_lt_top
 

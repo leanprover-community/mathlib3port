@@ -43,7 +43,7 @@ variable {α ι : Type _}
 
 open Set Metric MeasureTheory TopologicalSpace Filter
 
-open NNReal Classical Ennreal Topology
+open NNReal Classical ENNReal Topology
 
 namespace Vitali
 
@@ -352,9 +352,9 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
   -- add up to an arbitrarily small number, say `ε / C`.
   obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ (B a)) < ε / C :=
     haveI : 0 < ε / C := by
-      simp only [Ennreal.div_pos_iff, εpos.ne', Ennreal.coe_ne_top, Ne.def, not_false_iff,
+      simp only [ENNReal.div_pos_iff, εpos.ne', ENNReal.coe_ne_top, Ne.def, not_false_iff,
         and_self_iff]
-    ((tendsto_order.1 (Ennreal.tendsto_tsum_compl_atTop_zero I.ne)).2 _ this).exists
+    ((tendsto_order.1 (ENNReal.tendsto_tsum_compl_atTop_zero I.ne)).2 _ this).exists
   -- main property: the points `z` of `s` which are not covered by `u` are contained in the
   -- enlargements of the elements not in `w`.
   have M : (s \ ⋃ a ∈ u, B a) ∩ ball x (R x) ⊆ ⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a) :=
@@ -424,10 +424,10 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     μ ((s \ ⋃ a ∈ u, B a) ∩ ball x (R x)) ≤ μ (⋃ a : { a // a ∉ w }, closed_ball (c a) (3 * r a)) :=
       measure_mono M
     _ ≤ ∑' a : { a // a ∉ w }, μ (closed_ball (c a) (3 * r a)) := measure_Union_le _
-    _ ≤ ∑' a : { a // a ∉ w }, C * μ (B a) := Ennreal.tsum_le_tsum fun a => μB a (ut (vu a.1.2))
-    _ = C * ∑' a : { a // a ∉ w }, μ (B a) := Ennreal.tsum_mul_left
-    _ ≤ C * (ε / C) := Ennreal.mul_le_mul le_rfl hw.le
-    _ ≤ ε := Ennreal.mul_div_le
+    _ ≤ ∑' a : { a // a ∉ w }, C * μ (B a) := ENNReal.tsum_le_tsum fun a => μB a (ut (vu a.1.2))
+    _ = C * ∑' a : { a // a ∉ w }, μ (B a) := ENNReal.tsum_mul_left
+    _ ≤ C * (ε / C) := ENNReal.mul_le_mul le_rfl hw.le
+    _ ≤ ε := ENNReal.mul_div_le
     
 #align vitali.exists_disjoint_covering_ae Vitali.exists_disjoint_covering_ae
 

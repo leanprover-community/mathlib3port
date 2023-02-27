@@ -28,7 +28,7 @@ filtration.
 -/
 
 
-open MeasureTheory ProbabilityTheory Ennreal BigOperators Topology
+open MeasureTheory ProbabilityTheory ENNReal BigOperators Topology
 
 open MeasureTheory ProbabilityTheory MeasurableSpace TopologicalSpace
 
@@ -100,21 +100,21 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
   simp_rw [hω]
   have htends : tendsto (fun n => ∑ k in Finset.range n, μ (s (k + 1))) at_top (𝓝 ∞) :=
     by
-    rw [← Ennreal.tsum_add_one_eq_top hs' (measure_ne_top _ _)]
-    exact Ennreal.tendsto_nat_tsum _
-  rw [Ennreal.tendsto_nhds_top_iff_nNReal] at htends
+    rw [← ENNReal.tsum_add_one_eq_top hs' (measure_ne_top _ _)]
+    exact ENNReal.tendsto_nat_tsum _
+  rw [ENNReal.tendsto_nhds_top_iff_nNReal] at htends
   refine' tendsto_at_top_at_top_of_monotone' _ _
   · refine' monotone_nat_of_le_succ fun n => _
     rw [← sub_nonneg, Finset.sum_range_succ_sub_sum]
-    exact Ennreal.toReal_nonneg
+    exact ENNReal.toReal_nonneg
   · rintro ⟨B, hB⟩
     refine' not_eventually.2 (frequently_of_forall fun n => _) (htends B.to_nnreal)
     rw [mem_upperBounds] at hB
     specialize hB (∑ k : ℕ in Finset.range n, μ (s (k + 1))).toReal _
     · refine' ⟨n, _⟩
-      rw [Ennreal.toReal_sum]
+      rw [ENNReal.toReal_sum]
       exact fun _ _ => measure_ne_top _ _
-    · rw [not_lt, ← Ennreal.toReal_le_toReal (Ennreal.sum_lt_top _).Ne Ennreal.coe_ne_top]
+    · rw [not_lt, ← ENNReal.toReal_le_toReal (ENNReal.sum_lt_top _).Ne ENNReal.coe_ne_top]
       · exact hB.trans (by simp)
       · exact fun _ _ => measure_ne_top _ _
 #align probability_theory.measure_limsup_eq_one ProbabilityTheory.measure_limsup_eq_one

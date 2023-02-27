@@ -44,7 +44,7 @@ convergence in measure and other notions of convergence.
 
 open TopologicalSpace Filter
 
-open NNReal Ennreal MeasureTheory Topology
+open NNReal ENNReal MeasureTheory Topology
 
 namespace MeasureTheory
 
@@ -118,9 +118,9 @@ theorem tendstoInMeasureOfTendstoAeOfStronglyMeasurable [IsFiniteMeasure μ]
   by_cases hδi : δ = ∞
   · simp only [hδi, imp_true_iff, le_top, exists_const]
   lift δ to ℝ≥0 using hδi
-  rw [gt_iff_lt, Ennreal.coe_pos, ← NNReal.coe_pos] at hδ
+  rw [gt_iff_lt, ENNReal.coe_pos, ← NNReal.coe_pos] at hδ
   obtain ⟨t, htm, ht, hunif⟩ := tendsto_uniformly_on_of_ae_tendsto' hf hg hfg hδ
-  rw [Ennreal.ofReal_coe_nNReal] at ht
+  rw [ENNReal.ofReal_coe_nnreal] at ht
   rw [Metric.tendstoUniformlyOn_iff] at hunif
   obtain ⟨N, hN⟩ := eventually_at_top.1 (hunif ε hε)
   refine' ⟨N, fun n hn => _⟩
@@ -153,7 +153,7 @@ theorem exists_nat_measure_lt_two_inv (hfg : TendstoInMeasure μ f atTop g) (n :
     ∃ N, ∀ m ≥ N, μ { x | 2⁻¹ ^ n ≤ dist (f m x) (g x) } ≤ 2⁻¹ ^ n :=
   by
   specialize hfg (2⁻¹ ^ n) (by simp only [zero_lt_bit0, pow_pos, zero_lt_one, inv_pos])
-  rw [Ennreal.tendsto_atTop_zero] at hfg
+  rw [ENNReal.tendsto_atTop_zero] at hfg
   exact hfg (2⁻¹ ^ n) (pos_iff_ne_zero.mpr fun h_zero => by simpa using pow_eq_zero h_zero)
 #align measure_theory.exists_seq_tendsto_ae.exists_nat_measure_lt_two_inv MeasureTheory.ExistsSeqTendstoAe.exists_nat_measure_lt_two_inv
 
@@ -223,8 +223,8 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
   set s := filter.at_top.limsup S with hs
   have hμs : μ s = 0 :=
     by
-    refine' measure_limsup_eq_zero (ne_of_lt <| lt_of_le_of_lt (Ennreal.tsum_le_tsum hμS_le) _)
-    simp only [Ennreal.tsum_geometric, Ennreal.one_sub_inv_two, inv_inv]
+    refine' measure_limsup_eq_zero (ne_of_lt <| lt_of_le_of_lt (ENNReal.tsum_le_tsum hμS_le) _)
+    simp only [ENNReal.tsum_geometric, ENNReal.one_sub_inv_two, inv_inv]
     decide
   have h_tendsto : ∀ x ∈ sᶜ, tendsto (fun i => f (ns i) x) at_top (𝓝 (g x)) :=
     by
@@ -302,23 +302,23 @@ theorem tendstoInMeasureOfTendstoSnormOfStronglyMeasurable (hp_ne_zero : p ≠ 0
   by
   intro ε hε
   replace hfg :=
-    Ennreal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
-      (Or.inr <| @Ennreal.ofReal_ne_top (1 / ε ^ p.to_real))
-  simp only [mul_zero, Ennreal.zero_rpow_of_pos (Ennreal.toReal_pos hp_ne_zero hp_ne_top)] at hfg
-  rw [Ennreal.tendsto_nhds_zero] at hfg⊢
+    ENNReal.Tendsto.const_mul (tendsto.ennrpow_const p.to_real hfg)
+      (Or.inr <| @ENNReal.ofReal_ne_top (1 / ε ^ p.to_real))
+  simp only [mul_zero, ENNReal.zero_rpow_of_pos (ENNReal.toReal_pos hp_ne_zero hp_ne_top)] at hfg
+  rw [ENNReal.tendsto_nhds_zero] at hfg⊢
   intro δ hδ
   refine' (hfg δ hδ).mono fun n hn => _
   refine' le_trans _ hn
-  rw [Ennreal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), Ennreal.ofReal_one, mul_comm,
-    mul_one_div, Ennreal.le_div_iff_mul_le _ (Or.inl Ennreal.ofReal_ne_top), mul_comm]
+  rw [ENNReal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), ENNReal.ofReal_one, mul_comm,
+    mul_one_div, ENNReal.le_div_iff_mul_le _ (Or.inl ENNReal.ofReal_ne_top), mul_comm]
   · convert
       mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AeStronglyMeasurable
-        (Ennreal.ofReal ε)
-    · exact (Ennreal.ofReal_rpow_of_pos hε).symm
+        (ENNReal.ofReal ε)
+    · exact (ENNReal.ofReal_rpow_of_pos hε).symm
     · ext x
-      rw [dist_eq_norm, ← Ennreal.ofReal_le_ofReal_iff (norm_nonneg _), ofReal_norm_eq_coe_nnnorm]
+      rw [dist_eq_norm, ← ENNReal.ofReal_le_ofReal_iff (norm_nonneg _), ofReal_norm_eq_coe_nnnorm]
       exact Iff.rfl
-  · rw [Ne, Ennreal.ofReal_eq_zero, not_le]
+  · rw [Ne, ENNReal.ofReal_eq_zero, not_le]
     exact Or.inl (Real.rpow_pos_of_pos hε _)
 #align measure_theory.tendsto_in_measure_of_tendsto_snorm_of_strongly_measurable MeasureTheory.tendstoInMeasureOfTendstoSnormOfStronglyMeasurable
 
@@ -347,20 +347,20 @@ theorem tendstoInMeasureOfTendstoSnormTop {E} [NormedAddCommGroup E] {f : ι →
     TendstoInMeasure μ f l g := by
   intro δ hδ
   simp only [snorm_exponent_top, snorm_ess_sup] at hfg
-  rw [Ennreal.tendsto_nhds_zero] at hfg⊢
+  rw [ENNReal.tendsto_nhds_zero] at hfg⊢
   intro ε hε
   specialize
-    hfg (Ennreal.ofReal δ / 2)
-      (Ennreal.div_pos_iff.2 ⟨(Ennreal.ofReal_pos.2 hδ).Ne.symm, Ennreal.two_ne_top⟩)
+    hfg (ENNReal.ofReal δ / 2)
+      (ENNReal.div_pos_iff.2 ⟨(ENNReal.ofReal_pos.2 hδ).Ne.symm, ENNReal.two_ne_top⟩)
   refine' hfg.mono fun n hn => _
   simp only [true_and_iff, gt_iff_lt, ge_iff_le, zero_tsub, zero_le, zero_add, Set.mem_Icc,
     Pi.sub_apply] at *
-  have : essSup (fun x : α => (‖f n x - g x‖₊ : ℝ≥0∞)) μ < Ennreal.ofReal δ :=
+  have : essSup (fun x : α => (‖f n x - g x‖₊ : ℝ≥0∞)) μ < ENNReal.ofReal δ :=
     lt_of_le_of_lt hn
-      (Ennreal.half_lt_self (Ennreal.ofReal_pos.2 hδ).Ne.symm ennreal.of_real_lt_top.ne)
+      (ENNReal.half_lt_self (ENNReal.ofReal_pos.2 hδ).Ne.symm ennreal.of_real_lt_top.ne)
   refine' ((le_of_eq _).trans (ae_lt_of_essSup_lt this).le).trans hε.le
   congr with x
-  simp only [Ennreal.ofReal_le_iff_le_toReal ennreal.coe_lt_top.ne, Ennreal.coe_toReal, not_lt,
+  simp only [ENNReal.ofReal_le_iff_le_toReal ennreal.coe_lt_top.ne, ENNReal.coe_toReal, not_lt,
     coe_nnnorm, Set.mem_setOf_eq, Set.mem_compl_iff]
   rw [← dist_eq_norm (f n x) (g x)]
   rfl
@@ -380,7 +380,7 @@ theorem tendstoInMeasureOfTendstoSnorm {l : Filter ι} (hp_ne_zero : p ≠ 0)
 /-- Convergence in Lp implies convergence in measure. -/
 theorem tendstoInMeasureOfTendstoLp [hp : Fact (1 ≤ p)] {f : ι → lp E p μ} {g : lp E p μ}
     {l : Filter ι} (hfg : Tendsto f l (𝓝 g)) : TendstoInMeasure μ (fun n => f n) l g :=
-  tendstoInMeasureOfTendstoSnorm (Ennreal.zero_lt_one.trans_le hp.elim).Ne.symm
+  tendstoInMeasureOfTendstoSnorm (ENNReal.zero_lt_one.trans_le hp.elim).Ne.symm
     (fun n => lp.aeStronglyMeasurable _) (lp.aeStronglyMeasurable _)
     ((lp.tendsto_lp_iff_tendsto_ℒp' _ _).mp hfg)
 #align measure_theory.tendsto_in_measure_of_tendsto_Lp MeasureTheory.tendstoInMeasureOfTendstoLp

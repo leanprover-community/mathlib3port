@@ -61,7 +61,7 @@ conditional, conditioned, bayes
 
 noncomputable section
 
-open Ennreal
+open ENNReal
 
 open MeasureTheory MeasurableSpace
 
@@ -92,7 +92,7 @@ theorem condIsProbabilityMeasure [IsFiniteMeasure μ] (hcs : μ s ≠ 0) :
     IsProbabilityMeasure <| μ[|s] :=
   ⟨by
     rw [cond, measure.smul_apply, measure.restrict_apply MeasurableSet.univ, Set.univ_inter]
-    exact Ennreal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
+    exact ENNReal.inv_mul_cancel hcs (measure_ne_top _ s)⟩
 #align probability_theory.cond_is_probability_measure ProbabilityTheory.condIsProbabilityMeasure
 
 section Bayes
@@ -129,7 +129,7 @@ theorem cond_pos_of_inter_ne_zero [IsFiniteMeasure μ] (hms : MeasurableSet s)
     (hci : μ (s ∩ t) ≠ 0) : 0 < (μ[|s]) t :=
   by
   rw [cond_apply _ hms]
-  refine' Ennreal.mul_pos _ hci
+  refine' ENNReal.mul_pos _ hci
   exact ennreal.inv_ne_zero.mpr (measure_ne_top _ _)
 #align probability_theory.cond_pos_of_inter_ne_zero ProbabilityTheory.cond_pos_of_inter_ne_zero
 
@@ -139,8 +139,8 @@ theorem cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t)
   have hcs : μ s ≠ 0 :=
     (μ.to_outer_measure.pos_of_subset_ne_zero (Set.inter_subset_left _ _) hci).ne'
   ext u
-  simp [*, hms.inter hmt, cond_apply, ← mul_assoc, ← Set.inter_assoc, Ennreal.mul_inv, mul_comm, ←
-    mul_assoc, Ennreal.inv_mul_cancel]
+  simp [*, hms.inter hmt, cond_apply, ← mul_assoc, ← Set.inter_assoc, ENNReal.mul_inv, mul_comm, ←
+    mul_assoc, ENNReal.inv_mul_cancel]
 #align probability_theory.cond_cond_eq_cond_inter' ProbabilityTheory.cond_cond_eq_cond_inter'
 
 /-- Conditioning first on `s` and then on `t` results in the same measure as conditioning
@@ -152,7 +152,7 @@ theorem cond_cond_eq_cond_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hm
 
 theorem cond_mul_eq_inter' (hms : MeasurableSet s) (hcs : μ s ≠ 0) (hcs' : μ s ≠ ∞) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) := by
-  rw [cond_apply μ hms t, mul_comm, ← mul_assoc, Ennreal.mul_inv_cancel hcs hcs', one_mul]
+  rw [cond_apply μ hms t, mul_comm, ← mul_assoc, ENNReal.mul_inv_cancel hcs hcs', one_mul]
 #align probability_theory.cond_mul_eq_inter' ProbabilityTheory.cond_mul_eq_inter'
 
 theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (hcs : μ s ≠ 0) (t : Set Ω) :

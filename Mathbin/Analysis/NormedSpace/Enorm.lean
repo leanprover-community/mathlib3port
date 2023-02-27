@@ -40,7 +40,7 @@ noncomputable section
 
 attribute [local instance] Classical.propDecidable
 
-open Ennreal
+open ENNReal
 
 /-- Extended norm on a vector space. As in the case of normed spaces, we require only
 `‖c • x‖ ≤ ‖c‖ * ‖x‖` in the definition, then prove an equality in `map_smul`. -/
@@ -85,9 +85,9 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
       _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := _
       _ = e (c • x) := _
       
-    · exact Ennreal.mul_le_mul le_rfl (e.map_smul_le' _ _)
+    · exact ENNReal.mul_le_mul le_rfl (e.map_smul_le' _ _)
     ·
-      rw [← mul_assoc, nnnorm_inv, Ennreal.coe_inv, Ennreal.mul_inv_cancel _ Ennreal.coe_ne_top,
+      rw [← mul_assoc, nnnorm_inv, ENNReal.coe_inv, ENNReal.mul_inv_cancel _ ENNReal.coe_ne_top,
           one_mul] <;>
         simp [hc]
 #align enorm.map_smul Enorm.map_smul
@@ -168,11 +168,11 @@ noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
     lt := (· < ·)
     sup := fun e₁ e₂ =>
       { toFun := fun x => max (e₁ x) (e₂ x)
-        eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1
+        eq_zero' := fun x h => e₁.eq_zero_iff.1 (ENNReal.max_eq_zero_iff.1 h).1
         map_add_le' := fun x y =>
           max_le (le_trans (e₁.map_add_le _ _) <| add_le_add (le_max_left _ _) (le_max_left _ _))
             (le_trans (e₂.map_add_le _ _) <| add_le_add (le_max_right _ _) (le_max_right _ _))
-        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, Ennreal.mul_max] }
+        map_smul_le' := fun c x => le_of_eq <| by simp only [map_smul, ENNReal.mul_max] }
     le_sup_left := fun e₁ e₂ x => le_max_left _ _
     le_sup_right := fun e₁ e₂ x => le_max_right _ _
     sup_le := fun e₁ e₂ e₃ h₁ h₂ x => max_le (h₁ x) (h₂ x) }
@@ -206,11 +206,11 @@ def finiteSubspace : Subspace 𝕜 V
     where
   carrier := { x | e x < ⊤ }
   zero_mem' := by simp
-  add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩)
+  add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (ENNReal.add_lt_top.2 ⟨hx, hy⟩)
   smul_mem' c x (hx : _ < _) :=
     calc
       e (c • x) = ‖c‖₊ * e x := e.map_smul c x
-      _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.Ne
+      _ < ⊤ := ENNReal.mul_lt_top ENNReal.coe_ne_top hx.Ne
       
 #align enorm.finite_subspace Enorm.finiteSubspace
 
@@ -221,7 +221,7 @@ instance : MetricSpace e.finiteSubspace :=
   letI := e.emetric_space
   refine' EmetricSpace.toMetricSpace fun x y => _
   change e (x - y) ≠ ⊤
-  exact ne_top_of_le_ne_top (Ennreal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
+  exact ne_top_of_le_ne_top (ENNReal.add_lt_top.2 ⟨x.2, y.2⟩).Ne (e.map_sub_le x y)
 
 theorem finite_dist_eq (x y : e.finiteSubspace) : dist x y = (e (x - y)).toReal :=
   rfl
@@ -244,7 +244,7 @@ theorem finite_norm_eq (x : e.finiteSubspace) : ‖x‖ = (e x).toReal :=
 
 /-- Normed space instance on `e.finite_subspace`. -/
 instance : NormedSpace 𝕜 e.finiteSubspace
-    where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, Ennreal.toReal_mul]
+    where norm_smul_le c x := le_of_eq <| by simp [finite_norm_eq, ENNReal.toReal_mul]
 
 end Enorm
 

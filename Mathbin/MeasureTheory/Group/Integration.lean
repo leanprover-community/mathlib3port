@@ -24,7 +24,7 @@ namespace MeasureTheory
 
 open Measure TopologicalSpace
 
-open Ennreal
+open ENNReal
 
 variable {𝕜 M α G E F : Type _} [MeasurableSpace G]
 

@@ -61,7 +61,7 @@ say that `‖-f‖ = ‖f‖`, instead of the non-working `f.norm_neg`.
 
 noncomputable section
 
-open NNReal Ennreal BigOperators
+open NNReal ENNReal BigOperators
 
 variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddCommGroup (E i)]
 
@@ -89,7 +89,7 @@ theorem memℓp_zero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Mem�
 #align mem_ℓp_zero memℓp_zero
 
 theorem memℓp_infty_iff {f : ∀ i, E i} : Memℓp f ∞ ↔ BddAbove (Set.range fun i => ‖f i‖) := by
-  dsimp [Memℓp] <;> rw [if_neg Ennreal.top_ne_zero, if_pos rfl]
+  dsimp [Memℓp] <;> rw [if_neg ENNReal.top_ne_zero, if_pos rfl]
 #align mem_ℓp_infty_iff memℓp_infty_iff
 
 theorem memℓp_infty {f : ∀ i, E i} (hf : BddAbove (Set.range fun i => ‖f i‖)) : Memℓp f ∞ :=
@@ -99,7 +99,7 @@ theorem memℓp_infty {f : ∀ i, E i} (hf : BddAbove (Set.range fun i => ‖f i
 theorem memℓp_gen_iff (hp : 0 < p.toReal) {f : ∀ i, E i} :
     Memℓp f p ↔ Summable fun i => ‖f i‖ ^ p.toReal :=
   by
-  rw [Ennreal.toReal_pos_iff] at hp
+  rw [ENNReal.toReal_pos_iff] at hp
   dsimp [Memℓp]
   rw [if_neg hp.1.ne', if_neg hp.2.Ne]
 #align mem_ℓp_gen_iff memℓp_gen_iff
@@ -179,7 +179,7 @@ theorem neg_iff {f : ∀ i, E i} : Memℓp (-f) p ↔ Memℓp f p :=
 /- ./././Mathport/Syntax/Translate/Basic.lean:628:2: warning: expanding binder collection (i «expr ∉ » hfq.finite_dsupport.to_finset) -/
 theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (hpq : q ≤ p) : Memℓp f p :=
   by
-  rcases Ennreal.trichotomy₂ hpq with
+  rcases ENNReal.trichotomy₂ hpq with
     (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, hp⟩ | ⟨rfl, rfl⟩ | ⟨hq, rfl⟩ | ⟨hq, hp, hpq'⟩)
   · exact hfq
   · apply memℓp_infty
@@ -404,7 +404,7 @@ theorem norm_eq_card_dsupport (f : lp E 0) : ‖f‖ = (lp.memℓp f).finite_dsu
 theorem norm_eq_csupr (f : lp E ∞) : ‖f‖ = ⨆ i, ‖f i‖ :=
   by
   dsimp [norm]
-  rw [dif_neg Ennreal.top_ne_zero, if_pos rfl]
+  rw [dif_neg ENNReal.top_ne_zero, if_pos rfl]
 #align lp.norm_eq_csupr lp.norm_eq_csupr
 
 theorem isLUB_norm [Nonempty α] (f : lp E ∞) : IsLUB (Set.range fun i => ‖f i‖) ‖f‖ :=
@@ -417,7 +417,7 @@ theorem norm_eq_tsum_rpow (hp : 0 < p.toReal) (f : lp E p) :
     ‖f‖ = (∑' i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal) :=
   by
   dsimp [norm]
-  rw [Ennreal.toReal_pos_iff] at hp
+  rw [ENNReal.toReal_pos_iff] at hp
   rw [dif_neg hp.1.ne', if_neg hp.2.Ne]
 #align lp.norm_eq_tsum_rpow lp.norm_eq_tsum_rpow
 
@@ -578,7 +578,7 @@ theorem norm_apply_le_norm (hp : p ≠ 0) (f : lp E p) (i : α) : ‖f i‖ ≤ 
   rcases eq_or_ne p ∞ with (rfl | hp')
   · haveI : Nonempty α := ⟨i⟩
     exact (is_lub_norm f).1 ⟨i, rfl⟩
-  have hp'' : 0 < p.to_real := Ennreal.toReal_pos hp hp'
+  have hp'' : 0 < p.to_real := ENNReal.toReal_pos hp hp'
   have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
   rw [← Real.rpow_le_rpow_iff (norm_nonneg _) (norm_nonneg' _) hp'']
   convert le_hasSum (has_sum_norm hp'' f) i fun i hi => this i
@@ -735,7 +735,7 @@ instance [hp : Fact (1 ≤ p)] : NormedStarGroup (lp E p)
     where norm_star f := by
     rcases p.trichotomy with (rfl | rfl | h)
     · exfalso
-      have := Ennreal.toReal_mono Ennreal.zero_ne_top hp.elim
+      have := ENNReal.toReal_mono ENNReal.zero_ne_top hp.elim
       norm_num at this
     · simp only [lp.norm_eq_csupr, lp.star_apply, norm_star]
     · simp only [lp.norm_eq_tsum_rpow h, lp.star_apply, norm_star]
@@ -784,8 +784,8 @@ instance : NonUnitalNormedRing (lp B ∞) :=
         calc
           ‖(f * g) i‖ ≤ ‖f i‖ * ‖g i‖ := norm_mul_le _ _
           _ ≤ ‖f‖ * ‖g‖ :=
-            mul_le_mul (lp.norm_apply_le_norm Ennreal.top_ne_zero f i)
-              (lp.norm_apply_le_norm Ennreal.top_ne_zero g i) (norm_nonneg _) (norm_nonneg _)
+            mul_le_mul (lp.norm_apply_le_norm ENNReal.top_ne_zero f i)
+              (lp.norm_apply_le_norm ENNReal.top_ne_zero g i) (norm_nonneg _) (norm_nonneg _)
            }
 
 -- we also want a `non_unital_normed_comm_ring` instance, but this has to wait for #13719
@@ -818,12 +818,12 @@ instance infty_cstarRing [∀ i, CstarRing (B i)] : CstarRing (lp B ∞)
     · rw [← sq]
       refine' lp.norm_le_of_forall_le (sq_nonneg ‖f‖) fun i => _
       simp only [lp.star_apply, CstarRing.norm_star_mul_self, ← sq, infty_coe_fn_mul, Pi.mul_apply]
-      refine' sq_le_sq' _ (lp.norm_apply_le_norm Ennreal.top_ne_zero _ _)
+      refine' sq_le_sq' _ (lp.norm_apply_le_norm ENNReal.top_ne_zero _ _)
       linarith [norm_nonneg (f i), norm_nonneg f]
     · rw [← sq, ← Real.le_sqrt (norm_nonneg _) (norm_nonneg _)]
       refine' lp.norm_le_of_forall_le ‖star f * f‖.sqrt_nonneg fun i => _
       rw [Real.le_sqrt (norm_nonneg _) (norm_nonneg _), sq, ← CstarRing.norm_star_mul_self]
-      exact lp.norm_apply_le_norm Ennreal.top_ne_zero (star f * f) i
+      exact lp.norm_apply_le_norm ENNReal.top_ne_zero (star f * f) i
 #align lp.infty_cstar_ring lp.infty_cstarRing
 
 end StarRing
@@ -1073,7 +1073,7 @@ protected theorem hasSum_single [Fact (1 ≤ p)] (hp : p ≠ ⊤) (f : lp E p) :
     HasSum (fun i : α => lp.single p i (f i : E i)) f :=
   by
   have hp₀ : 0 < p := ennreal.zero_lt_one.trans_le (Fact.out _)
-  have hp' : 0 < p.to_real := Ennreal.toReal_pos hp₀.ne' hp
+  have hp' : 0 < p.to_real := ENNReal.toReal_pos hp₀.ne' hp
   have := lp.hasSum_norm hp' f
   rw [HasSum, Metric.tendsto_nhds] at this⊢
   intro ε hε
@@ -1128,7 +1128,7 @@ theorem norm_apply_le_of_tendsto {C : ℝ} {F : ι → lp E ∞} (hCF : ∀ᶠ k
     (tendsto.comp (continuous_apply a).ContinuousAt hf).norm
   refine' le_of_tendsto this (hCF.mono _)
   intro k hCFk
-  exact (norm_apply_le_norm Ennreal.top_ne_zero (F k) a).trans hCFk
+  exact (norm_apply_le_norm ENNReal.top_ne_zero (F k) a).trans hCFk
 #align lp.norm_apply_le_of_tendsto lp.norm_apply_le_of_tendsto
 
 variable [_i : Fact (1 ≤ p)]
@@ -1140,7 +1140,7 @@ theorem sum_rpow_le_of_tendsto (hp : p ≠ ∞) {C : ℝ} {F : ι → lp E p} (h
     (∑ i : α in s, ‖f i‖ ^ p.toReal) ≤ C ^ p.toReal :=
   by
   have hp' : p ≠ 0 := (ennreal.zero_lt_one.trans_le _i.elim).ne'
-  have hp'' : 0 < p.to_real := Ennreal.toReal_pos hp' hp
+  have hp'' : 0 < p.to_real := ENNReal.toReal_pos hp' hp
   let G : (∀ a, E a) → ℝ := fun f => ∑ a in s, ‖f a‖ ^ p.to_real
   have hG : Continuous G := by
     refine' continuous_finset_sum s _
@@ -1165,7 +1165,7 @@ theorem norm_le_of_tendsto {C : ℝ} {F : ι → lp E p} (hCF : ∀ᶠ k in l, �
   · apply norm_le_of_forall_le hC
     exact norm_apply_le_of_tendsto hCF hf
   · have : 0 < p := ennreal.zero_lt_one.trans_le _i.elim
-    have hp' : 0 < p.to_real := Ennreal.toReal_pos this.ne' hp.ne
+    have hp' : 0 < p.to_real := ENNReal.toReal_pos this.ne' hp.ne
     apply norm_le_of_forall_sum_le hp' hC
     exact sum_rpow_le_of_tendsto hp.ne hCF hf
 #align lp.norm_le_of_tendsto lp.norm_le_of_tendsto

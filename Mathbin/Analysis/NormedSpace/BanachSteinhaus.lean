@@ -78,9 +78,9 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     
 #align banach_steinhaus banach_steinhaus
 
-open Ennreal
+open ENNReal
 
-open Ennreal
+open ENNReal
 
 /-- This version of Banach-Steinhaus is stated in terms of suprema of `↑‖⬝‖₊ : ℝ≥0∞`
 for convenience. -/

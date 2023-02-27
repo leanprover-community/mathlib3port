@@ -28,7 +28,7 @@ The file is a place to collect measure-theoretic results about the additive circ
 
 open Set Function Filter MeasureTheory MeasureTheory.Measure Metric
 
-open MeasureTheory Pointwise BigOperators Topology Ennreal
+open MeasureTheory Pointwise BigOperators Topology ENNReal
 
 namespace AddCircle
 
@@ -40,7 +40,7 @@ theorem closedBall_ae_eq_ball {x : AddCircle T} {ε : ℝ} : closedBall x ε =�
   by
   cases' le_or_lt ε 0 with hε hε
   · rw [ball_eq_empty.mpr hε, ae_eq_empty, volume_closed_ball,
-      min_eq_right (by linarith [hT.out] : 2 * ε ≤ T), Ennreal.ofReal_eq_zero]
+      min_eq_right (by linarith [hT.out] : 2 * ε ≤ T), ENNReal.ofReal_eq_zero]
     exact mul_nonpos_of_nonneg_of_nonpos zero_le_two hε
   · suffices volume (closed_ball x ε) ≤ volume (ball x ε) by
       exact
@@ -49,7 +49,7 @@ theorem closedBall_ae_eq_ball {x : AddCircle T} {ε : ℝ} : closedBall x ε =�
     have : tendsto (fun δ => volume (closed_ball x δ)) (𝓝[<] ε) (𝓝 <| volume (closed_ball x ε)) :=
       by
       simp_rw [volume_closed_ball]
-      refine' Ennreal.tendsto_ofReal (tendsto.min tendsto_const_nhds <| tendsto.const_mul _ _)
+      refine' ENNReal.tendsto_ofReal (tendsto.min tendsto_const_nhds <| tendsto.const_mul _ _)
       convert (@monotone_id ℝ _).tendsto_nhdsWithin_Iio ε
       simp
     refine'
@@ -103,7 +103,7 @@ theorem isAddFundamentalDomainOfAeBall (I : Set <| AddCircle T) (u x : AddCircle
       rfl
     simp_rw [measure_vadd]
     rw [AddCircle.measure_univ, tsum_fintype, Finset.sum_const, measure_congr hI,
-      volume_closed_ball, ← Ennreal.ofReal_nsmul, mul_div, mul_div_mul_comm,
+      volume_closed_ball, ← ENNReal.ofReal_nsmul, mul_div, mul_div_mul_comm,
       div_self (@two_ne_zero ℝ _ _ _ _), one_mul, min_eq_right (div_le_self hT.out.le hn), hG_card,
       nsmul_eq_mul, mul_div_cancel' T (lt_of_lt_of_le zero_lt_one hn).Ne.symm]
     exact le_refl _

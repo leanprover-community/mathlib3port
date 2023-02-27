@@ -61,7 +61,7 @@ in analysis.
 
 open MeasureTheory Filter Set TopologicalSpace
 
-open Ennreal NNReal Topology
+open ENNReal NNReal Topology
 
 namespace MeasureTheory
 
@@ -410,20 +410,20 @@ variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter �
 
 theorem AeCover.integrableOfLintegralNnnormBounded [l.ne_bot] [l.IsCountablyGenerated]
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
-    (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ‖f x‖₊ ∂μ) ≤ Ennreal.ofReal I) : Integrable f μ :=
+    (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ‖f x‖₊ ∂μ) ≤ ENNReal.ofReal I) : Integrable f μ :=
   by
-  refine' ⟨hfm, (le_of_tendsto _ hbounded).trans_lt Ennreal.ofReal_lt_top⟩
+  refine' ⟨hfm, (le_of_tendsto _ hbounded).trans_lt ENNReal.ofReal_lt_top⟩
   exact hφ.lintegral_tendsto_of_countably_generated hfm.ennnorm
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_bounded MeasureTheory.AeCover.integrableOfLintegralNnnormBounded
 
 theorem AeCover.integrableOfLintegralNnnormTendsto [l.ne_bot] [l.IsCountablyGenerated]
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ) (hfm : AeStronglyMeasurable f μ)
-    (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ‖f x‖₊ ∂μ) l (𝓝 <| Ennreal.ofReal I)) :
+    (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ‖f x‖₊ ∂μ) l (𝓝 <| ENNReal.ofReal I)) :
     Integrable f μ :=
   by
   refine' hφ.integrable_of_lintegral_nnnorm_bounded (max 1 (I + 1)) hfm _
   refine' htendsto.eventually (ge_mem_nhds _)
-  refine' (Ennreal.ofReal_lt_ofReal_iff (lt_max_of_lt_left zero_lt_one)).2 _
+  refine' (ENNReal.ofReal_lt_ofReal_iff (lt_max_of_lt_left zero_lt_one)).2 _
   exact lt_max_of_lt_right (lt_add_one I)
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_tendsto MeasureTheory.AeCover.integrableOfLintegralNnnormTendsto
 
@@ -431,14 +431,14 @@ theorem AeCover.integrableOfLintegralNnnormBounded' [l.ne_bot] [l.IsCountablyGen
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (hbounded : ∀ᶠ i in l, (∫⁻ x in φ i, ‖f x‖₊ ∂μ) ≤ I) : Integrable f μ :=
   hφ.integrableOfLintegralNnnormBounded I hfm
-    (by simpa only [Ennreal.ofReal_coe_nNReal] using hbounded)
+    (by simpa only [ENNReal.ofReal_coe_nnreal] using hbounded)
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_bounded' MeasureTheory.AeCover.integrableOfLintegralNnnormBounded'
 
 theorem AeCover.integrableOfLintegralNnnormTendsto' [l.ne_bot] [l.IsCountablyGenerated]
     {φ : ι → Set α} (hφ : AeCover μ l φ) {f : α → E} (I : ℝ≥0) (hfm : AeStronglyMeasurable f μ)
     (htendsto : Tendsto (fun i => ∫⁻ x in φ i, ‖f x‖₊ ∂μ) l (𝓝 I)) : Integrable f μ :=
   hφ.integrableOfLintegralNnnormTendsto I hfm
-    (by simpa only [Ennreal.ofReal_coe_nNReal] using htendsto)
+    (by simpa only [ENNReal.ofReal_coe_nnreal] using htendsto)
 #align measure_theory.ae_cover.integrable_of_lintegral_nnnorm_tendsto' MeasureTheory.AeCover.integrableOfLintegralNnnormTendsto'
 
 theorem AeCover.integrableOfIntegralNormBounded [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}
@@ -451,13 +451,13 @@ theorem AeCover.integrableOfIntegralNormBounded [l.ne_bot] [l.IsCountablyGenerat
   conv at hbounded in integral _ _ =>
     rw [integral_eq_lintegral_of_nonneg_ae (ae_of_all _ fun x => @norm_nonneg E _ (f x))
         hfm.norm.restrict]
-  conv at hbounded in Ennreal.ofReal _ =>
+  conv at hbounded in ENNReal.ofReal _ =>
     dsimp
     rw [← coe_nnnorm]
-    rw [Ennreal.ofReal_coe_nNReal]
+    rw [ENNReal.ofReal_coe_nnreal]
   refine' hbounded.mono fun i hi => _
-  rw [← Ennreal.ofReal_toReal (ne_top_of_lt (hfi i).2)]
-  apply Ennreal.ofReal_le_ofReal hi
+  rw [← ENNReal.ofReal_toReal (ne_top_of_lt (hfi i).2)]
+  apply ENNReal.ofReal_le_ofReal hi
 #align measure_theory.ae_cover.integrable_of_integral_norm_bounded MeasureTheory.AeCover.integrableOfIntegralNormBounded
 
 theorem AeCover.integrableOfIntegralNormTendsto [l.ne_bot] [l.IsCountablyGenerated] {φ : ι → Set α}

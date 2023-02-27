@@ -41,9 +41,9 @@ members of the approximating sequence are nonnegative bounded continuous functio
 
 noncomputable section
 
-open Classical NNReal Ennreal Topology BoundedContinuousFunction
+open Classical NNReal ENNReal Topology BoundedContinuousFunction
 
-open NNReal Ennreal Set Metric Emetric Filter
+open NNReal ENNReal Set Metric Emetric Filter
 
 section thickenedIndicator
 
@@ -56,18 +56,18 @@ these values using `inf_edist _ E`.
 `thickened_indicator_aux` is the unbundled `ℝ≥0∞`-valued function. See `thickened_indicator`
 for the (bundled) bounded continuous function with `ℝ≥0`-values. -/
 def thickenedIndicatorAux (δ : ℝ) (E : Set α) : α → ℝ≥0∞ := fun x : α =>
-  (1 : ℝ≥0∞) - infEdist x E / Ennreal.ofReal δ
+  (1 : ℝ≥0∞) - infEdist x E / ENNReal.ofReal δ
 #align thickened_indicator_aux thickenedIndicatorAux
 
 theorem continuous_thickenedIndicatorAux {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
     Continuous (thickenedIndicatorAux δ E) :=
   by
   unfold thickenedIndicatorAux
-  let f := fun x : α => (⟨1, inf_edist x E / Ennreal.ofReal δ⟩ : ℝ≥0 × ℝ≥0∞)
+  let f := fun x : α => (⟨1, inf_edist x E / ENNReal.ofReal δ⟩ : ℝ≥0 × ℝ≥0∞)
   let sub := fun p : ℝ≥0 × ℝ≥0∞ => (p.1 : ℝ≥0∞) - p.2
-  rw [show (fun x : α => (1 : ℝ≥0∞) - inf_edist x E / Ennreal.ofReal δ) = sub ∘ f by rfl]
-  apply (@Ennreal.continuous_nNReal_sub 1).comp
-  apply (Ennreal.continuous_div_const (Ennreal.ofReal δ) _).comp continuous_inf_edist
+  rw [show (fun x : α => (1 : ℝ≥0∞) - inf_edist x E / ENNReal.ofReal δ) = sub ∘ f by rfl]
+  apply (@ENNReal.continuous_nNReal_sub 1).comp
+  apply (ENNReal.continuous_div_const (ENNReal.ofReal δ) _).comp continuous_inf_edist
   norm_num [δ_pos]
 #align continuous_thickened_indicator_aux continuous_thickenedIndicatorAux
 
@@ -101,14 +101,14 @@ theorem thickenedIndicatorAux_zero {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) {x 
   rw [thickening, mem_set_of_eq, not_lt] at x_out
   unfold thickenedIndicatorAux
   apply le_antisymm _ bot_le
-  have key := tsub_le_tsub (@rfl _ (1 : ℝ≥0∞)).le (Ennreal.div_le_div x_out rfl.le)
-  rw [Ennreal.div_self (ne_of_gt (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key
+  have key := tsub_le_tsub (@rfl _ (1 : ℝ≥0∞)).le (ENNReal.div_le_div x_out rfl.le)
+  rw [ENNReal.div_self (ne_of_gt (ennreal.of_real_pos.mpr δ_pos)) of_real_ne_top] at key
   simpa using key
 #align thickened_indicator_aux_zero thickenedIndicatorAux_zero
 
 theorem thickenedIndicatorAux_mono {δ₁ δ₂ : ℝ} (hle : δ₁ ≤ δ₂) (E : Set α) :
     thickenedIndicatorAux δ₁ E ≤ thickenedIndicatorAux δ₂ E := fun _ =>
-  tsub_le_tsub (@rfl ℝ≥0∞ 1).le (Ennreal.div_le_div rfl.le (ofReal_le_ofReal hle))
+  tsub_le_tsub (@rfl ℝ≥0∞ 1).le (ENNReal.div_le_div rfl.le (ofReal_le_ofReal hle))
 #align thickened_indicator_aux_mono thickenedIndicatorAux_mono
 
 theorem indicator_le_thickenedIndicatorAux (δ : ℝ) (E : Set α) :
@@ -122,7 +122,7 @@ theorem indicator_le_thickenedIndicatorAux (δ : ℝ) (E : Set α) :
 
 theorem thickenedIndicatorAux_subset (δ : ℝ) {E₁ E₂ : Set α} (subset : E₁ ⊆ E₂) :
     thickenedIndicatorAux δ E₁ ≤ thickenedIndicatorAux δ E₂ := fun _ =>
-  tsub_le_tsub (@rfl ℝ≥0∞ 1).le (Ennreal.div_le_div (infEdist_anti subset) rfl.le)
+  tsub_le_tsub (@rfl ℝ≥0∞ 1).le (ENNReal.div_le_div (infEdist_anti subset) rfl.le)
 #align thickened_indicator_aux_subset thickenedIndicatorAux_subset
 
 /-- As the thickening radius δ tends to 0, the δ-thickened indicator of a set E (in α) tends
@@ -190,7 +190,7 @@ def thickenedIndicator {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) : α →ᵇ ℝ
 #align thickened_indicator thickenedIndicator
 
 theorem thickenedIndicator.coeFn_eq_comp {δ : ℝ} (δ_pos : 0 < δ) (E : Set α) :
-    ⇑(thickenedIndicator δ_pos E) = Ennreal.toNnreal ∘ thickenedIndicatorAux δ E :=
+    ⇑(thickenedIndicator δ_pos E) = ENNReal.toNNReal ∘ thickenedIndicatorAux δ E :=
   rfl
 #align thickened_indicator.coe_fn_eq_comp thickenedIndicator.coeFn_eq_comp
 
@@ -238,7 +238,7 @@ theorem thickenedIndicator_mono {δ₁ δ₂ : ℝ} (δ₁_pos : 0 < δ₁) (δ�
 
 theorem thickenedIndicator_subset {δ : ℝ} (δ_pos : 0 < δ) {E₁ E₂ : Set α} (subset : E₁ ⊆ E₂) :
     ⇑(thickenedIndicator δ_pos E₁) ≤ thickenedIndicator δ_pos E₂ := fun x =>
-  (toNnreal_le_toNnreal thickenedIndicatorAux_lt_top.Ne thickenedIndicatorAux_lt_top.Ne).mpr
+  (toNNReal_le_toNNReal thickenedIndicatorAux_lt_top.Ne thickenedIndicatorAux_lt_top.Ne).mpr
     (thickenedIndicatorAux_subset δ subset x)
 #align thickened_indicator_subset thickenedIndicator_subset
 
@@ -259,7 +259,7 @@ theorem thickenedIndicator_tendsto_indicator_closure {δseq : ℕ → ℝ} (δse
   rw [show
       indicator (closure E) (fun x => (1 : ℝ≥0)) x =
         (indicator (closure E) (fun x => (1 : ℝ≥0∞)) x).toNNReal
-      by refine' (congr_fun (comp_indicator_const 1 Ennreal.toNnreal zero_to_nnreal) x).symm]
+      by refine' (congr_fun (comp_indicator_const 1 ENNReal.toNNReal zero_to_nnreal) x).symm]
   refine' tendsto.comp (tendsto_to_nnreal _) (key x)
   by_cases x_mem : x ∈ closure E <;> simp [x_mem]
 #align thickened_indicator_tendsto_indicator_closure thickenedIndicator_tendsto_indicator_closure

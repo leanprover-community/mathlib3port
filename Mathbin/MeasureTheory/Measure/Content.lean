@@ -59,7 +59,7 @@ noncomputable section
 
 open Set TopologicalSpace
 
-open NNReal Ennreal MeasureTheory
+open NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -111,7 +111,7 @@ theorem sup_le (K₁ K₂ : Compacts G) : μ (K₁ ⊔ K₂) ≤ μ K₁ + μ K�
 #align measure_theory.content.sup_le MeasureTheory.Content.sup_le
 
 theorem lt_top (K : Compacts G) : μ K < ∞ :=
-  Ennreal.coe_lt_top
+  ENNReal.coe_lt_top
 #align measure_theory.content.lt_top MeasureTheory.Content.lt_top
 
 theorem empty : μ ⊥ = 0 := by
@@ -162,10 +162,10 @@ theorem innerContent_mono ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h2 
 theorem innerContent_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ ∞) {ε : ℝ≥0}
     (hε : ε ≠ 0) : ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.innerContent U ≤ μ K + ε :=
   by
-  have h'ε := Ennreal.coe_ne_zero.2 hε
+  have h'ε := ENNReal.coe_ne_zero.2 hε
   cases le_or_lt (μ.inner_content U) ε
   · exact ⟨⊥, empty_subset _, le_add_left h⟩
-  have := Ennreal.sub_lt_self hU h.ne_bot h'ε
+  have := ENNReal.sub_lt_self hU h.ne_bot h'ε
   conv at this =>
     rhs
     rw [inner_content];
@@ -199,7 +199,7 @@ theorem innerContent_Sup_nat [T2Space G] (U : ℕ → Opens G) :
   · ext1
     rw [compacts.coe_finset_sup, Finset.sup_eq_supᵢ]
     exact h3K'
-  refine' le_trans (Finset.sum_le_sum _) (Ennreal.sum_le_tsum t)
+  refine' le_trans (Finset.sum_le_sum _) (ENNReal.sum_le_tsum t)
   intro i hi
   refine' le_trans _ (le_supᵢ _ (L i))
   refine' le_trans _ (le_supᵢ _ (h2K' i))
@@ -220,7 +220,7 @@ theorem innerContent_comap (f : G ≃ₜ G) (h : ∀ ⦃K : Compacts G⦄, μ (K
     (U : Opens G) : μ.innerContent (Opens.comap f.toContinuousMap U) = μ.innerContent U :=
   by
   refine' (compacts.equiv f).Surjective.supᵢ_congr _ fun K => supᵢ_congr_Prop image_subset_iff _
-  intro hK; simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, Ennreal.coe_eq_coe, compacts.equiv]
+  intro hK; simp only [Equiv.coe_fn_mk, Subtype.mk_eq_mk, ENNReal.coe_eq_coe, compacts.equiv]
   apply h
 #align measure_theory.content.inner_content_comap MeasureTheory.Content.innerContent_comap
 
@@ -309,7 +309,7 @@ theorem outerMeasure_exists_open {A : Set G} (hA : μ.OuterMeasure A ≠ ∞) {�
     ∃ U : Opens G, A ⊆ U ∧ μ.OuterMeasure U ≤ μ.OuterMeasure A + ε :=
   by
   rcases induced_outer_measure_exists_set _ _ μ.inner_content_mono hA
-      (Ennreal.coe_ne_zero.2 hε) with
+      (ENNReal.coe_ne_zero.2 hε) with
     ⟨U, hU, h2U, h3U⟩
   exact ⟨⟨U, hU⟩, h2U, h3U⟩; swap; exact μ.inner_content_Union_nat
 #align measure_theory.content.outer_measure_exists_open MeasureTheory.Content.outerMeasure_exists_open
@@ -379,7 +379,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
   simp only [inner_content, supᵢ_subtype']
   rw [opens.coe_mk]
   haveI : Nonempty { L : compacts G // (L : Set G) ⊆ U' ∩ U } := ⟨⟨⊥, empty_subset _⟩⟩
-  rw [Ennreal.supᵢ_add]
+  rw [ENNReal.supᵢ_add]
   refine' supᵢ_le _
   rintro ⟨L, hL⟩
   simp only [subset_inter_iff] at hL
@@ -389,7 +389,7 @@ theorem borel_le_caratheodory : S ≤ μ.OuterMeasure.caratheodory :=
   simp only [inner_content, supᵢ_subtype']
   rw [opens.coe_mk]
   haveI : Nonempty { M : compacts G // (M : Set G) ⊆ ↑U' \ L } := ⟨⟨⊥, empty_subset _⟩⟩
-  rw [Ennreal.add_supᵢ]
+  rw [ENNReal.add_supᵢ]
   refine' supᵢ_le _
   rintro ⟨M, hM⟩
   simp only [subset_diff] at hM
@@ -458,7 +458,7 @@ theorem contentRegular_exists_compact (H : ContentRegular μ) (K : TopologicalSp
   exact
     (lt_self_iff_false (μ K)).mp
       (lt_of_le_of_lt' lower_bound_infi
-        (Ennreal.lt_add_right (ne_top_of_lt (μ.lt_top K)) (ennreal.coe_ne_zero.mpr hε)))
+        (ENNReal.lt_add_right (ne_top_of_lt (μ.lt_top K)) (ennreal.coe_ne_zero.mpr hε)))
 #align measure_theory.content.content_regular_exists_compact MeasureTheory.Content.contentRegular_exists_compact
 
 variable [MeasurableSpace G] [T2Space G] [BorelSpace G]
@@ -469,7 +469,7 @@ theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular 
     (K : TopologicalSpace.Compacts G) : μ.Measure ↑K = μ K :=
   by
   refine' le_antisymm _ _
-  · apply Ennreal.le_of_forall_pos_le_add
+  · apply ENNReal.le_of_forall_pos_le_add
     intro ε εpos content_K_finite
     obtain ⟨K', K'_hyp⟩ := content_regular_exists_compact μ H K (ne_bot_of_gt εpos)
     calc

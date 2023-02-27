@@ -41,7 +41,7 @@ We also generate additive versions of all theorems in this file using the `to_ad
 -/
 
 
-open Ennreal Pointwise Topology NNReal Ennreal MeasureTheory
+open ENNReal Pointwise Topology NNReal ENNReal MeasureTheory
 
 open MeasureTheory MeasureTheory.Measure Set Function TopologicalSpace Filter
 
@@ -682,7 +682,7 @@ protected theorem fundamentalInterior : IsFundamentalDomain G (fundamentalInteri
           fundamental_frontier_union_fundamental_interior]
       refine' eq_bot_mono (μ.mono <| compl_subset_compl.2 this) _
       simp only [Union_inv_smul, outer_measure.measure_of_eq_coe, coe_to_outer_measure, compl_sdiff,
-        Ennreal.bot_eq_zero, himp_eq, sup_eq_union, @Union_smul_eq_set_of_exists _ _ _ _ s]
+        ENNReal.bot_eq_zero, himp_eq, sup_eq_union, @Union_smul_eq_set_of_exists _ _ _ _ s]
       exact
         measure_union_null
           (measure_Union_null fun _ => measure_smul_null hs.measure_fundamental_frontier _)

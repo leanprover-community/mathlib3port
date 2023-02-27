@@ -48,7 +48,7 @@ vector measure, signed measure, complex measure
 
 noncomputable section
 
-open Classical BigOperators NNReal Ennreal MeasureTheory
+open Classical BigOperators NNReal ENNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -449,18 +449,18 @@ def toSignedMeasure (μ : Measure α) [hμ : IsFiniteMeasure μ] : SignedMeasure
   not_measurable' _ hi := if_neg hi
   m_Union' := by
     intro _ hf₁ hf₂
-    rw [μ.m_Union hf₁ hf₂, Ennreal.tsum_toReal_eq, if_pos (MeasurableSet.unionᵢ hf₁),
+    rw [μ.m_Union hf₁ hf₂, ENNReal.tsum_toReal_eq, if_pos (MeasurableSet.unionᵢ hf₁),
       Summable.hasSum_iff]
     · congr
       ext n
       rw [if_pos (hf₁ n)]
-    · refine' @summable_of_nonneg_of_le _ (Ennreal.toReal ∘ μ ∘ f) _ _ _ _
+    · refine' @summable_of_nonneg_of_le _ (ENNReal.toReal ∘ μ ∘ f) _ _ _ _
       · intro
         split_ifs
-        exacts[Ennreal.toReal_nonneg, le_rfl]
+        exacts[ENNReal.toReal_nonneg, le_rfl]
       · intro
         split_ifs
-        exacts[le_rfl, Ennreal.toReal_nonneg]
+        exacts[le_rfl, ENNReal.toReal_nonneg]
       exact summable_measure_to_real hf₁ hf₂
     · intro a ha
       apply ne_of_lt hμ.measure_univ_lt_top
@@ -489,7 +489,7 @@ theorem toSignedMeasure_eq_toSignedMeasure_iff {μ ν : Measure α} [IsFiniteMea
   · ext1 i hi
     have : μ.to_signed_measure i = ν.to_signed_measure i := by rw [h]
     rwa [to_signed_measure_apply_measurable hi, to_signed_measure_apply_measurable hi,
-        Ennreal.toReal_eq_toReal] at this <;>
+        ENNReal.toReal_eq_toReal] at this <;>
       · exact measure_ne_top _ _
   · congr
     assumption
@@ -508,7 +508,7 @@ theorem toSignedMeasure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteM
   by
   ext (i hi)
   rw [to_signed_measure_apply_measurable hi, add_apply,
-    Ennreal.toReal_add (ne_of_lt (measure_lt_top _ _)) (ne_of_lt (measure_lt_top _ _)),
+    ENNReal.toReal_add (ne_of_lt (measure_lt_top _ _)) (ne_of_lt (measure_lt_top _ _)),
     vector_measure.add_apply, to_signed_measure_apply_measurable hi,
     to_signed_measure_apply_measurable hi]
   all_goals infer_instance
@@ -520,7 +520,7 @@ theorem toSignedMeasure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0
   by
   ext (i hi)
   rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply,
-    to_signed_measure_apply_measurable hi, coe_smul, Pi.smul_apply, Ennreal.toReal_smul]
+    to_signed_measure_apply_measurable hi, coe_smul, Pi.smul_apply, ENNReal.toReal_smul]
 #align measure_theory.measure.to_signed_measure_smul MeasureTheory.Measure.toSignedMeasure_smul
 
 /-- A measure is a vector measure over `ℝ≥0∞`. -/
@@ -531,7 +531,7 @@ def toEnnrealVectorMeasure (μ : Measure α) : VectorMeasure α ℝ≥0∞
   empty' := by simp [μ.empty]
   not_measurable' _ hi := if_neg hi
   m_Union' _ hf₁ hf₂ := by
-    rw [Summable.hasSum_iff Ennreal.summable]
+    rw [Summable.hasSum_iff ENNReal.summable]
     · rw [if_pos (MeasurableSet.unionᵢ hf₁), MeasureTheory.measure_unionᵢ hf₂ hf₁]
       exact tsum_congr fun n => if_pos (hf₁ n)
 #align measure_theory.measure.to_ennreal_vector_measure MeasureTheory.Measure.toEnnrealVectorMeasure
@@ -1440,11 +1440,11 @@ def toMeasureOfZeroLe (s : SignedMeasure α) (i : Set α) (hi₁ : MeasurableSet
         intro n m hnm
         exact ((hf₂ hnm).inf_left' i).inf_right' i
       simp only [to_measure_of_zero_le', s.restrict_apply hi₁ (MeasurableSet.unionᵢ hf₁),
-        Set.inter_comm, Set.inter_unionᵢ, s.of_disjoint_Union_nat h₁ h₂, Ennreal.some_eq_coe,
+        Set.inter_comm, Set.inter_unionᵢ, s.of_disjoint_Union_nat h₁ h₂, ENNReal.some_eq_coe,
         id.def]
       have h : ∀ n, 0 ≤ s (i ∩ f n) := fun n =>
         s.nonneg_of_zero_le_restrict (s.zero_le_restrict_subset hi₁ (inter_subset_left _ _) hi₂)
-      rw [NNReal.coe_tsum_of_nonneg h, Ennreal.coe_tsum]
+      rw [NNReal.coe_tsum_of_nonneg h, ENNReal.coe_tsum]
       · refine' tsum_congr fun n => _
         simp_rw [s.restrict_apply hi₁ (hf₁ n), Set.inter_comm]
       · exact (NNReal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).Summable)
@@ -1490,7 +1490,7 @@ instance toMeasureOfZeroLeFinite (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) :
     where measure_univ_lt_top :=
     by
     rw [to_measure_of_zero_le_apply s hi hi₁ MeasurableSet.univ]
-    exact Ennreal.coe_lt_top
+    exact ENNReal.coe_lt_top
 #align measure_theory.signed_measure.to_measure_of_zero_le_finite MeasureTheory.SignedMeasure.toMeasureOfZeroLeFinite
 
 /-- `signed_measure.to_measure_of_le_zero` is a finite measure. -/
@@ -1499,7 +1499,7 @@ instance toMeasureOfLeZeroFinite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
     where measure_univ_lt_top :=
     by
     rw [to_measure_of_le_zero_apply s hi hi₁ MeasurableSet.univ]
-    exact Ennreal.coe_lt_top
+    exact ENNReal.coe_lt_top
 #align measure_theory.signed_measure.to_measure_of_le_zero_finite MeasureTheory.SignedMeasure.toMeasureOfLeZeroFinite
 
 theorem toMeasureOfZeroLe_toSignedMeasure (hs : 0 ≤[univ] s) :
@@ -1529,7 +1529,7 @@ theorem zero_le_toSignedMeasure : 0 ≤ μ.toSignedMeasure :=
   rw [← le_restrict_univ_iff_le]
   refine' restrict_le_restrict_of_subset_le _ _ fun j hj₁ _ => _
   simp only [measure.to_signed_measure_apply_measurable hj₁, coe_zero, Pi.zero_apply,
-    Ennreal.toReal_nonneg, vector_measure.coe_zero]
+    ENNReal.toReal_nonneg, vector_measure.coe_zero]
 #align measure_theory.measure.zero_le_to_signed_measure MeasureTheory.Measure.zero_le_toSignedMeasure
 
 theorem toSignedMeasure_toMeasureOfZeroLe :

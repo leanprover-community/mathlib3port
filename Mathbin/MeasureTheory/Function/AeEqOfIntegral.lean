@@ -48,7 +48,7 @@ Generally useful lemmas which are not related to integrals:
 
 open MeasureTheory TopologicalSpace NormedSpace Filter
 
-open Ennreal NNReal MeasureTheory
+open ENNReal NNReal MeasureTheory
 
 namespace MeasureTheory
 
@@ -171,7 +171,7 @@ theorem ae_const_le_iff_forall_lt_measure_zero {β} [LinearOrder β] [Topologica
   exact hc _ (u_lt n)
 #align measure_theory.ae_const_le_iff_forall_lt_measure_zero MeasureTheory.ae_const_le_iff_forall_lt_measure_zero
 
-section Ennreal
+section ENNReal
 
 open Topology
 
@@ -209,11 +209,11 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         _ = N * μ s := by
           simp only [lintegral_const, Set.univ_inter, MeasurableSet.univ, measure.restrict_apply]
         _ < ∞ := by
-          simp only [lt_top_iff_ne_top, s_lt_top.ne, and_false_iff, Ennreal.coe_ne_top,
+          simp only [lt_top_iff_ne_top, s_lt_top.ne, and_false_iff, ENNReal.coe_ne_top,
             WithTop.mul_eq_top_iff, Ne.def, not_false_iff, false_and_iff, or_self_iff]
         
-    have : (ε : ℝ≥0∞) * μ s ≤ 0 := Ennreal.le_of_add_le_add_left B A
-    simpa only [Ennreal.coe_eq_zero, nonpos_iff_eq_zero, mul_eq_zero, εpos.ne', false_or_iff]
+    have : (ε : ℝ≥0∞) * μ s ≤ 0 := ENNReal.le_of_add_le_add_left B A
+    simpa only [ENNReal.coe_eq_zero, nonpos_iff_eq_zero, mul_eq_zero, εpos.ne', false_or_iff]
   obtain ⟨u, u_mono, u_pos, u_lim⟩ :
     ∃ u : ℕ → ℝ≥0, StrictAnti u ∧ (∀ n, 0 < u n) ∧ tendsto u at_top (nhds 0) :=
     exists_seq_strictAnti_tendsto (0 : ℝ≥0)
@@ -225,14 +225,14 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
     have L1 : ∀ᶠ n in at_top, g x + u n ≤ f x :=
       by
       have : tendsto (fun n => g x + u n) at_top (𝓝 (g x + (0 : ℝ≥0))) :=
-        tendsto_const_nhds.add (Ennreal.tendsto_coe.2 u_lim)
+        tendsto_const_nhds.add (ENNReal.tendsto_coe.2 u_lim)
       simp at this
       exact eventually_le_of_tendsto_lt hx this
     have L2 : ∀ᶠ n : ℕ in (at_top : Filter ℕ), g x ≤ (n : ℝ≥0) :=
       haveI : tendsto (fun n : ℕ => ((n : ℝ≥0) : ℝ≥0∞)) at_top (𝓝 ∞) :=
         by
-        simp only [Ennreal.coe_nat]
-        exact Ennreal.tendsto_nat_nhds_top
+        simp only [ENNReal.coe_nat]
+        exact ENNReal.tendsto_nat_nhds_top
       eventually_ge_of_tendsto_gt (hx.trans_le le_top) this
     apply Set.mem_unionᵢ.2
     exact ((L1.and L2).And (eventually_mem_spanning_sets μ x)).exists
@@ -255,7 +255,7 @@ theorem ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite [SigmaFinite μ] {f g : 
   filter_upwards [A, B]with x using le_antisymm
 #align measure_theory.ae_eq_of_forall_set_lintegral_eq_of_sigma_finite MeasureTheory.ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite
 
-end Ennreal
+end ENNReal
 
 section Real
 
@@ -280,10 +280,10 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable (hfm : Str
         intro x hx
         simp only [Set.mem_setOf_eq] at hx
         simpa only [nnnorm, abs_of_neg hb_neg, abs_of_neg (hx.trans_lt hb_neg), Real.norm_eq_abs,
-          Subtype.mk_le_mk, neg_le_neg_iff, Set.mem_setOf_eq, Ennreal.coe_le_coe] using hx
+          Subtype.mk_le_mk, neg_le_neg_iff, Set.mem_setOf_eq, ENNReal.coe_le_coe] using hx
       _ ≤ (∫⁻ x, ‖f x‖₊ ∂μ) / c :=
-        meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos Ennreal.coe_ne_top
-      _ < ∞ := Ennreal.div_lt_top (ne_of_lt hf.2) c_pos
+        meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos ENNReal.coe_ne_top
+      _ < ∞ := ENNReal.div_lt_top (ne_of_lt hf.2) c_pos
       
   have h_int_gt : (∫ x in s, f x ∂μ) ≤ b * (μ s).toReal :=
     by
@@ -300,8 +300,8 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable (hfm : Str
   swap
   · simp_rw [measure.restrict_restrict hs]
     exact hf_zero s hs mus
-  refine' Ennreal.toReal_nonneg.lt_of_ne fun h_eq => h _
-  cases' (Ennreal.toReal_eq_zero_iff _).mp h_eq.symm with hμs_eq_zero hμs_eq_top
+  refine' ENNReal.toReal_nonneg.lt_of_ne fun h_eq => h _
+  cases' (ENNReal.toReal_eq_zero_iff _).mp h_eq.symm with hμs_eq_zero hμs_eq_top
   · exact hμs_eq_zero
   · exact absurd hμs_eq_top mus.ne
 #align measure_theory.ae_nonneg_of_forall_set_integral_nonneg_of_strongly_measurable MeasureTheory.ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable
@@ -566,7 +566,7 @@ theorem Integrable.ae_eq_zero_of_forall_set_integral_eq_zero {f : α → E} (hf 
   let f_Lp := hf_Lp.to_Lp f
   have hf_f_Lp : f =ᵐ[μ] f_Lp := (mem_ℒp.coe_fn_to_Lp hf_Lp).symm
   refine' hf_f_Lp.trans _
-  refine' Lp.ae_eq_zero_of_forall_set_integral_eq_zero f_Lp one_ne_zero Ennreal.coe_ne_top _ _
+  refine' Lp.ae_eq_zero_of_forall_set_integral_eq_zero f_Lp one_ne_zero ENNReal.coe_ne_top _ _
   · exact fun s hs hμs => integrable.integrable_on (L1.integrable_coe_fn _)
   · intro s hs hμs
     rw [integral_congr_ae (ae_restrict_of_ae hf_f_Lp.symm)]
@@ -596,7 +596,7 @@ theorem AeMeasurable.ae_eq_of_forall_set_lintegral_eq {f g : α → ℝ≥0∞} 
     f =ᵐ[μ] g :=
   by
   refine'
-    Ennreal.eventuallyEq_of_toReal_eventuallyEq (ae_lt_top' hf hfi).ne_of_lt
+    ENNReal.eventuallyEq_of_toReal_eventuallyEq (ae_lt_top' hf hfi).ne_of_lt
       (ae_lt_top' hg hgi).ne_of_lt
       (integrable.ae_eq_of_forall_set_integral_eq _ _
         (integrable_to_real_of_lintegral_ne_top hf hfi)
@@ -610,8 +610,8 @@ theorem AeMeasurable.ae_eq_of_forall_set_lintegral_eq {f g : α → ℝ≥0∞} 
     · refine' ae_lt_top' hf.restrict (ne_of_lt (lt_of_le_of_lt _ hfi.lt_top))
       exact @set_lintegral_univ α _ μ f ▸ lintegral_mono_set (Set.subset_univ _)
   -- putting the proofs where they are used is extremely slow
-  exacts[ae_of_all _ fun x => Ennreal.toReal_nonneg,
-    hg.ennreal_to_real.restrict.ae_strongly_measurable, ae_of_all _ fun x => Ennreal.toReal_nonneg,
+  exacts[ae_of_all _ fun x => ENNReal.toReal_nonneg,
+    hg.ennreal_to_real.restrict.ae_strongly_measurable, ae_of_all _ fun x => ENNReal.toReal_nonneg,
     hf.ennreal_to_real.restrict.ae_strongly_measurable]
 #align measure_theory.ae_measurable.ae_eq_of_forall_set_lintegral_eq MeasureTheory.AeMeasurable.ae_eq_of_forall_set_lintegral_eq
 

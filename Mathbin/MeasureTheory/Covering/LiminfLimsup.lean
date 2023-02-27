@@ -31,7 +31,7 @@ carrying a doubling measure.
 
 open Set Filter Metric MeasureTheory TopologicalSpace
 
-open NNReal Ennreal Topology
+open NNReal ENNReal Topology
 
 variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [MeasurableSpace α] [BorelSpace α]
 
@@ -118,7 +118,7 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
     by
     obtain ⟨η, hη, hη'⟩ := this
     replace hη' : 1 ≤ η := by
-      simpa only [Ennreal.one_le_coe_iff] using
+      simpa only [ENNReal.one_le_coe_iff] using
         le_of_tendsto (hd' w (fun j => r₁ (f j)) hr <| eventually_of_forall hw') hη'
     exact (lt_self_iff_false _).mp (lt_of_lt_of_le hη hη')
   refine' ⟨1 - C⁻¹, tsub_lt_self zero_lt_one (inv_pos.mpr hC), _⟩
@@ -148,22 +148,22 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   change μ (W ∩ B j) / μ (B j) ≤ ↑(1 - C⁻¹)
   rcases eq_or_ne (μ (B j)) ∞ with (hB | hB)
   · simp [hB]
-  apply Ennreal.div_le_of_le_mul
-  rw [WithTop.coe_sub, Ennreal.coe_one, Ennreal.sub_mul fun _ _ => hB, one_mul]
+  apply ENNReal.div_le_of_le_mul
+  rw [WithTop.coe_sub, ENNReal.coe_one, ENNReal.sub_mul fun _ _ => hB, one_mul]
   replace hB : ↑C⁻¹ * μ (B j) ≠ ∞
-  · refine' Ennreal.mul_ne_top _ hB
-    rwa [Ennreal.coe_inv hC, Ne.def, Ennreal.inv_eq_top, Ennreal.coe_eq_zero]
+  · refine' ENNReal.mul_ne_top _ hB
+    rwa [ENNReal.coe_inv hC, Ne.def, ENNReal.inv_eq_top, ENNReal.coe_eq_zero]
   obtain ⟨hj₁ : Disjoint (b j) (W ∩ B j), hj₂ : μ (B j) ≤ C * μ (b j)⟩ := hj₀
   replace hj₂ : ↑C⁻¹ * μ (B j) ≤ μ (b j)
-  · rw [Ennreal.coe_inv hC, ← Ennreal.div_eq_inv_mul]
-    exact Ennreal.div_le_of_le_mul' hj₂
+  · rw [ENNReal.coe_inv hC, ← ENNReal.div_eq_inv_mul]
+    exact ENNReal.div_le_of_le_mul' hj₂
   have hj₃ : ↑C⁻¹ * μ (B j) + μ (W ∩ B j) ≤ μ (B j) :=
     by
     refine' le_trans (add_le_add_right hj₂ _) _
     rw [← measure_union' hj₁ measurableSet_closedBall]
     exact measure_mono (union_subset (h₁ j) (h₂ j))
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
-  rwa [Ennreal.add_sub_cancel_left hB] at hj₃
+  rwa [ENNReal.add_sub_cancel_left hB] at hj₃
 #align blimsup_cthickening_ae_le_of_eventually_mul_le_aux blimsup_cthickening_ae_le_of_eventually_mul_le_aux
 
 /-- This is really an auxiliary result en route to `blimsup_cthickening_mul_ae_eq`.

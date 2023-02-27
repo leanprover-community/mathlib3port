@@ -22,7 +22,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [NormedSpace 𝕜 E] {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] {G : Type _}
   [NormedAddCommGroup G] [NormedSpace 𝕜 G]
 
-open Topology Classical BigOperators NNReal Ennreal
+open Topology Classical BigOperators NNReal ENNReal
 
 open Set Filter Asymptotics
 
@@ -52,7 +52,7 @@ theorem fpowerSeries_radius (f : E →L[𝕜] F) (x : E) : (f.fpowerSeries x).ra
 protected theorem hasFpowerSeriesOnBall (f : E →L[𝕜] F) (x : E) :
     HasFpowerSeriesOnBall f (f.fpowerSeries x) x ∞ :=
   { r_le := by simp
-    r_pos := Ennreal.coe_lt_top
+    r_pos := ENNReal.coe_lt_top
     HasSum := fun y _ =>
       (hasSum_nat_add_iff' 2).1 <| by simp [Finset.sum_range_succ, ← sub_sub, hasSum_zero] }
 #align continuous_linear_map.has_fpower_series_on_ball ContinuousLinearMap.hasFpowerSeriesOnBall
@@ -100,7 +100,7 @@ theorem fpowerSeriesBilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × 
 protected theorem hasFpowerSeriesOnBallBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
     HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpowerSeriesBilinear x) x ∞ :=
   { r_le := by simp
-    r_pos := Ennreal.coe_lt_top
+    r_pos := ENNReal.coe_lt_top
     HasSum := fun y _ =>
       (hasSum_nat_add_iff' 3).1 <|
         by

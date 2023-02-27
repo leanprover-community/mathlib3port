@@ -126,7 +126,7 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
   have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ :=
     by
     apply lintegral_mono fun x => _
-    simp only [neg_mul, Ennreal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
+    simp only [neg_mul, ENNReal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
       Real.norm_of_nonneg (exp_pos _).le, coe_nnnorm, one_le_exp_iff, Right.nonneg_neg_iff]
     exact mul_nonpos_of_nonpos_of_nonneg hb (sq_nonneg _)
   simpa using this.trans_lt h.2
@@ -243,7 +243,7 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
     _ = ↑π / b := by
       have : 0 ≤ π + π := by linarith [Real.pi_pos]
       simp only [integral_const, measure.restrict_apply', measurableSet_Ioo, univ_inter, volume_Ioo,
-        sub_neg_eq_add, Ennreal.toReal_ofReal, this]
+        sub_neg_eq_add, ENNReal.toReal_ofReal, this]
       rw [← two_mul, real_smul, mul_one, of_real_mul, of_real_bit0, of_real_one,
         integral_mul_cexp_neg_mul_sq hb]
       field_simp [(by

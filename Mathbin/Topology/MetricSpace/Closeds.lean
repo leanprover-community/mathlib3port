@@ -30,7 +30,7 @@ always finite in this context.
 
 noncomputable section
 
-open Classical Topology Ennreal
+open Classical Topology ENNReal
 
 universe u
 
@@ -105,8 +105,8 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
     completeness, by a standard completeness criterion.
     We use the shorthand `B n = 2^{-n}` in ennreal. -/
   let B : ℕ → ℝ≥0∞ := fun n => 2⁻¹ ^ n
-  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by simp [B, Ennreal.pow_pos]
-  have B_ne_top : ∀ n, B n ≠ ⊤ := by simp [B, Ennreal.pow_ne_top]
+  have B_pos : ∀ n, (0 : ℝ≥0∞) < B n := by simp [B, ENNReal.pow_pos]
+  have B_ne_top : ∀ n, B n ≠ ⊤ := by simp [B, ENNReal.pow_ne_top]
   /- Consider a sequence of closed sets `s n` with `edist (s n) (s (n+1)) < B n`.
     We will show that it converges. The limit set is t0 = ⋂n, closure (⋃m≥n, s m).
     We will have to show that a point in `s n` is close to a point in `t0`, and a point
@@ -138,7 +138,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
           refine' exists_edist_lt_of_Hausdorff_edist_lt _ _
           · exact s (n + l)
           · exact z.2
-          simp only [B, Ennreal.inv_pow, div_eq_mul_inv]
+          simp only [B, ENNReal.inv_pow, div_eq_mul_inv]
           rw [← pow_add]
           apply hs <;> simp
         exact ⟨⟨z', z'_mem⟩, le_of_lt hz'⟩
@@ -194,8 +194,8 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
   -- from this, the convergence of `s n` to `t0` follows.
   refine' tendsto_at_top.2 fun ε εpos => _
   have : tendsto (fun n => 2 * B n) at_top (𝓝 (2 * 0)) :=
-    Ennreal.Tendsto.const_mul
-      (Ennreal.tendsto_pow_atTop_nhds_0_of_lt_1 <| by simp [Ennreal.one_lt_two]) (Or.inr <| by simp)
+    ENNReal.Tendsto.const_mul
+      (ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1 <| by simp [ENNReal.one_lt_two]) (Or.inr <| by simp)
   rw [mul_zero] at this
   obtain ⟨N, hN⟩ : ∃ N, ∀ b ≥ N, ε > 2 * B b
   exact ((tendsto_order.1 this).2 ε εpos).exists_forall_of_atTop
@@ -288,7 +288,7 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
   rw [this]
   refine' isClosed_of_closure_subset fun s hs => ⟨_, _⟩
   · -- take a set set t which is nonempty and at a finite distance of s
-    rcases mem_closure_iff.1 hs ⊤ Ennreal.coe_lt_top with ⟨t, ht, Dst⟩
+    rcases mem_closure_iff.1 hs ⊤ ENNReal.coe_lt_top with ⟨t, ht, Dst⟩
     rw [edist_comm] at Dst
     -- since `t` is nonempty, so is `s`
     exact nonempty_of_Hausdorff_edist_ne_top ht.1 (ne_of_lt Dst)
@@ -296,10 +296,10 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
     refine' totally_bounded_iff.2 fun ε (εpos : 0 < ε) => _
     -- we have to show that s is covered by finitely many eballs of radius ε
     -- pick a nonempty compact set t at distance at most ε/2 of s
-    rcases mem_closure_iff.1 hs (ε / 2) (Ennreal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
+    rcases mem_closure_iff.1 hs (ε / 2) (ENNReal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
     -- cover this space with finitely many balls of radius ε/2
     rcases totally_bounded_iff.1 (isCompact_iff_totallyBounded_isComplete.1 ht.2).1 (ε / 2)
-        (Ennreal.half_pos εpos.ne') with
+        (ENNReal.half_pos εpos.ne') with
       ⟨u, fu, ut⟩
     refine' ⟨u, ⟨fu, fun x hx => _⟩⟩
     -- u : set α,  fu : u.finite,  ut : t ⊆ ⋃ (y : α) (H : y ∈ u), eball y (ε / 2)
@@ -309,8 +309,8 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
     have : edist x y < ε :=
       calc
         edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
-        _ < ε / 2 + ε / 2 := Ennreal.add_lt_add Dxz Dzy
-        _ = ε := Ennreal.add_halves _
+        _ < ε / 2 + ε / 2 := ENNReal.add_lt_add Dxz Dzy
+        _ = ε := ENNReal.add_halves _
         
     exact mem_bUnion hy this
 #align emetric.nonempty_compacts.is_closed_in_closeds Emetric.NonemptyCompacts.isClosed_in_closeds
@@ -352,7 +352,7 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
     · refine' fun t => mem_closure_iff.2 fun ε εpos => _
       -- t is a compact nonempty set, that we have to approximate uniformly by a a set in `v`.
       rcases exists_between εpos with ⟨δ, δpos, δlt⟩
-      have δpos' : 0 < δ / 2 := Ennreal.half_pos δpos.ne'
+      have δpos' : 0 < δ / 2 := ENNReal.half_pos δpos.ne'
       -- construct a map F associating to a point in α an approximating point in s, up to δ/2.
       have Exy : ∀ x, ∃ y, y ∈ s ∧ edist x y < δ / 2 :=
         by
@@ -375,8 +375,8 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
         exists F z, mem_image_of_mem _ za
         calc
           edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
-          _ < δ / 2 + δ / 2 := Ennreal.add_lt_add Dxz (Fspec z).2
-          _ = δ := Ennreal.add_halves _
+          _ < δ / 2 + δ / 2 := ENNReal.add_lt_add Dxz (Fspec z).2
+          _ = δ := ENNReal.add_halves _
           
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
       let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }

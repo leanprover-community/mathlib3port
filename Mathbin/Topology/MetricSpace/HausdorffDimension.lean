@@ -86,7 +86,7 @@ Hausdorff measure, Hausdorff dimension, dimension
 -/
 
 
-open MeasureTheory Ennreal NNReal Topology
+open MeasureTheory ENNReal NNReal Topology
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 
@@ -120,7 +120,7 @@ theorem hausdorffMeasure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s
   by
   simp only [dimH_def, lt_supᵢ_iff] at h
   rcases h with ⟨d', hsd', hdd'⟩
-  rw [Ennreal.coe_lt_coe, ← NNReal.coe_lt_coe] at hdd'
+  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hdd'
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 #align hausdorff_measure_of_lt_dimH hausdorffMeasure_of_lt_dimH
 
@@ -141,8 +141,8 @@ theorem le_dimH_of_hausdorffMeasure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d]
 theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 :=
   by
   rw [dimH_def] at h
-  rcases Ennreal.lt_iff_exists_nNReal_btwn.1 h with ⟨d', hsd', hd'd⟩
-  rw [Ennreal.coe_lt_coe, ← NNReal.coe_lt_coe] at hd'd
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 h with ⟨d', hsd', hd'd⟩
+  rw [ENNReal.coe_lt_coe, ← NNReal.coe_lt_coe] at hd'd
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_supᵢ₂ d' h
 #align hausdorff_measure_of_dimH_lt hausdorffMeasure_of_dimH_lt
 
@@ -174,7 +174,7 @@ theorem dimH_subsingleton {s : Set X} (h : s.Subsingleton) : dimH s = 0 :=
   borelize X
   apply le_antisymm _ (zero_le _)
   refine' dimH_le_of_hausdorffMeasure_ne_top _
-  exact ((hausdorff_measure_le_one_of_subsingleton h le_rfl).trans_lt Ennreal.one_lt_top).Ne
+  exact ((hausdorff_measure_le_one_of_subsingleton h le_rfl).trans_lt ENNReal.one_lt_top).Ne
 #align dimH_subsingleton dimH_subsingleton
 
 alias dimH_subsingleton ← Set.Subsingleton.dimH_zero
@@ -199,7 +199,7 @@ theorem dimH_unionᵢ [Encodable ι] (s : ι → Set X) : dimH (⋃ i, s i) = �
   have : ∀ i, μH[d] (s i) = 0 := fun i =>
     hausdorffMeasure_of_dimH_lt ((le_supᵢ (fun i => dimH (s i)) i).trans_lt hd)
   rw [measure_Union_null this]
-  exact Ennreal.zero_ne_top
+  exact ENNReal.zero_ne_top
 #align dimH_Union dimH_unionᵢ
 
 @[simp]
@@ -217,11 +217,11 @@ theorem dimH_unionₛ {S : Set (Set X)} (hS : S.Countable) : dimH (⋃₀ S) = �
 
 @[simp]
 theorem dimH_union (s t : Set X) : dimH (s ∪ t) = max (dimH s) (dimH t) := by
-  rw [union_eq_Union, dimH_unionᵢ, supᵢ_bool_eq, cond, cond, Ennreal.sup_eq_max]
+  rw [union_eq_Union, dimH_unionᵢ, supᵢ_bool_eq, cond, cond, ENNReal.sup_eq_max]
 #align dimH_union dimH_union
 
 theorem dimH_countable {s : Set X} (hs : s.Countable) : dimH s = 0 :=
-  bunionᵢ_of_singleton s ▸ by simp only [dimH_bUnion hs, dimH_singleton, Ennreal.supᵢ_zero_eq_zero]
+  bunionᵢ_of_singleton s ▸ by simp only [dimH_bUnion hs, dimH_singleton, ENNReal.supᵢ_zero_eq_zero]
 #align dimH_countable dimH_countable
 
 alias dimH_countable ← Set.Countable.dimH_zero
@@ -309,13 +309,13 @@ theorem HolderOnWith.dimH_image_le (h : HolderOnWith C r f s) (hr : 0 < r) :
   borelize X Y
   refine' dimH_le fun d hd => _
   have := h.hausdorff_measure_image_le hr d.coe_nonneg
-  rw [hd, Ennreal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
+  rw [hd, ENNReal.coe_rpow_of_nonneg _ d.coe_nonneg, top_le_iff] at this
   have Hrd : μH[(r * d : ℝ≥0)] s = ⊤ := by
     contrapose this
-    exact Ennreal.mul_ne_top Ennreal.coe_ne_top this
-  rw [Ennreal.le_div_iff_mul_le, mul_comm, ← Ennreal.coe_mul]
-  exacts[le_dimH_of_hausdorffMeasure_eq_top Hrd, Or.inl (mt Ennreal.coe_eq_zero.1 hr.ne'),
-    Or.inl Ennreal.coe_ne_top]
+    exact ENNReal.mul_ne_top ENNReal.coe_ne_top this
+  rw [ENNReal.le_div_iff_mul_le, mul_comm, ← ENNReal.coe_mul]
+  exacts[le_dimH_of_hausdorffMeasure_eq_top Hrd, Or.inl (mt ENNReal.coe_eq_zero.1 hr.ne'),
+    Or.inl ENNReal.coe_ne_top]
 #align holder_on_with.dimH_image_le HolderOnWith.dimH_image_le
 
 namespace HolderWith
@@ -346,7 +346,7 @@ theorem dimH_image_le_of_locally_holder_on [SecondCountableTopology X] {r : ℝ�
   choose! C t htn hC using hf
   rcases countable_cover_nhds_within htn with ⟨u, hus, huc, huU⟩
   replace huU := inter_eq_self_of_subset_left huU; rw [inter_Union₂] at huU
-  rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]; simp only [Ennreal.supᵢ_div]
+  rw [← huU, image_Union₂, dimH_bUnion huc, dimH_bUnion huc]; simp only [ENNReal.supᵢ_div]
   exact supᵢ₂_mono fun x hx => ((hC x (hus hx)).mono (inter_subset_right _ _)).dimH_image_le hr
 #align dimH_image_le_of_locally_holder_on dimH_image_le_of_locally_holder_on
 
@@ -395,7 +395,7 @@ theorem dimH_image_le_of_locally_lipschitz_on [SecondCountableTopology X] {f : X
   by
   have : ∀ x ∈ s, ∃ C : ℝ≥0, ∃ t ∈ 𝓝[s] x, HolderOnWith C 1 f t := by
     simpa only [holderOnWith_one] using hf
-  simpa only [Ennreal.coe_one, div_one] using dimH_image_le_of_locally_holder_on zero_lt_one this
+  simpa only [ENNReal.coe_one, div_one] using dimH_image_le_of_locally_holder_on zero_lt_one this
 #align dimH_image_le_of_locally_lipschitz_on dimH_image_le_of_locally_lipschitz_on
 
 /-- If `f : X → Y` is Lipschitz in a neighborhood of each point `x : X`, then the Hausdorff
@@ -418,7 +418,7 @@ theorem dimH_preimage_le (hf : AntilipschitzWith K f) (s : Set Y) : dimH (f ⁻�
   have := hf.hausdorff_measure_preimage_le d.coe_nonneg s
   rw [hd, top_le_iff] at this
   contrapose! this
-  exact Ennreal.mul_ne_top (by simp) this
+  exact ENNReal.mul_ne_top (by simp) this
 #align antilipschitz_with.dimH_preimage_le AntilipschitzWith.dimH_preimage_le
 
 theorem le_dimH_image (hf : AntilipschitzWith K f) (s : Set X) : dimH s ≤ dimH (f '' s) :=
@@ -493,12 +493,12 @@ theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) : dimH (Metric.ball
   cases isEmpty_or_nonempty ι
   · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
     exact fun x _ y _ => Subsingleton.elim x y
-  · rw [← Ennreal.coe_nat]
-    have : μH[Fintype.card ι] (Metric.ball x r) = Ennreal.ofReal ((2 * r) ^ Fintype.card ι) := by
+  · rw [← ENNReal.coe_nat]
+    have : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι) := by
       rw [hausdorff_measure_pi_real, Real.volume_pi_ball _ hr]
     refine' dimH_of_hausdorffMeasure_ne_zero_ne_top _ _ <;> rw [NNReal.coe_nat_cast, this]
     · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
-    · exact Ennreal.ofReal_ne_top
+    · exact ENNReal.ofReal_ne_top
 #align real.dimH_ball_pi Real.dimH_ball_pi
 
 theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) :
@@ -600,6 +600,6 @@ real vector space `F` of strictly larger dimension, then the complement of the r
 in `F`. -/
 theorem ContDiff.dense_compl_range_of_finrank_lt_finrank [FiniteDimensional ℝ F] {f : E → F}
     (h : ContDiff ℝ 1 f) (hEF : finrank ℝ E < finrank ℝ F) : Dense (range fᶜ) :=
-  dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| Ennreal.coe_nat_lt_coe_nat.2 hEF
+  dense_compl_of_dimH_lt_finrank <| h.dimH_range_le.trans_lt <| ENNReal.coe_nat_lt_coe_nat.2 hEF
 #align cont_diff.dense_compl_range_of_finrank_lt_finrank ContDiff.dense_compl_range_of_finrank_lt_finrank
 

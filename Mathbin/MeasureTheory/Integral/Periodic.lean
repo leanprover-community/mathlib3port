@@ -30,7 +30,7 @@ period `T`.
 
 open Set Function MeasureTheory MeasureTheory.Measure TopologicalSpace AddSubgroup intervalIntegral
 
-open MeasureTheory NNReal Ennreal
+open MeasureTheory NNReal ENNReal
 
 attribute [-instance] QuotientAddGroup.measurableSpace Quotient.measurableSpace
 
@@ -65,11 +65,11 @@ include hT
 /-- Equip the "additive circle" `ℝ ⧸ (ℤ ∙ T)` with, as a standard measure, the Haar measure of total
 mass `T` -/
 noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
-  { AddCircle.measurableSpace with volume := Ennreal.ofReal T • add_haar_measure ⊤ }
+  { AddCircle.measurableSpace with volume := ENNReal.ofReal T • add_haar_measure ⊤ }
 #align add_circle.measure_space AddCircle.measureSpace
 
 @[simp]
-protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = Ennreal.ofReal T :=
+protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = ENNReal.ofReal T :=
   by
   dsimp [volume]
   rw [← positive_compacts.coe_top]
@@ -77,7 +77,7 @@ protected theorem measure_univ : volume (Set.univ : Set (AddCircle T)) = Ennreal
 #align add_circle.measure_univ AddCircle.measure_univ
 
 instance : IsAddHaarMeasure (volume : Measure (AddCircle T)) :=
-  IsAddHaarMeasure.smul _ (by simp [hT.out]) Ennreal.ofReal_ne_top
+  IsAddHaarMeasure.smul _ (by simp [hT.out]) ENNReal.ofReal_ne_top
 
 instance isFiniteMeasure : IsFiniteMeasure (volume : Measure (AddCircle T))
     where measure_univ_lt_top := by simp
@@ -91,11 +91,11 @@ protected theorem measurePreservingMk (t : ℝ) :
     MeasurePreserving (coe : ℝ → AddCircle T) (volume.restrict (Ioc t (t + T))) :=
   MeasurePreservingQuotientAddGroup.mk' (isAddFundamentalDomainIoc' hT.out t)
     (⊤ : PositiveCompacts (AddCircle T)) (by simp) T.toNNReal
-    (by simp [← Ennreal.ofReal_coe_nNReal, Real.coe_toNNReal T hT.out.le])
+    (by simp [← ENNReal.ofReal_coe_nnreal, Real.coe_toNNReal T hT.out.le])
 #align add_circle.measure_preserving_mk AddCircle.measurePreservingMk
 
 theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
-    volume (Metric.closedBall x ε) = Ennreal.ofReal (min T (2 * ε)) :=
+    volume (Metric.closedBall x ε) = ENNReal.ofReal (min T (2 * ε)) :=
   by
   have hT' : |T| = T := abs_eq_self.mpr hT.out.le
   let I := Ioc (-(T / 2)) (T / 2)
@@ -124,8 +124,8 @@ instance : IsDoublingMeasure (volume : Measure (AddCircle T)) :=
   by
   refine' ⟨⟨Real.toNNReal 2, Filter.eventually_of_forall fun ε x => _⟩⟩
   simp only [volume_closed_ball]
-  erw [← Ennreal.ofReal_mul zero_le_two]
-  apply Ennreal.ofReal_le_ofReal
+  erw [← ENNReal.ofReal_mul zero_le_two]
+  apply ENNReal.ofReal_le_ofReal
   rw [mul_min_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
   exact min_le_min (by linarith [hT.out]) (le_refl _)
 

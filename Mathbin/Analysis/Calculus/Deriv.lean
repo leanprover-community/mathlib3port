@@ -91,7 +91,7 @@ universe u v w
 
 noncomputable section
 
-open Classical Topology BigOperators Filter Ennreal Polynomial
+open Classical Topology BigOperators Filter ENNReal Polynomial
 
 open Filter Asymptotics Set
 

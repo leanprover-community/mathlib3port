@@ -24,9 +24,9 @@ local postfix:max "⋆" => star
 
 section
 
-open Topology Ennreal
+open Topology ENNReal
 
-open Filter Ennreal spectrum CstarRing
+open Filter ENNReal spectrum CstarRing
 
 section UnitarySpectrum
 
@@ -72,14 +72,14 @@ theorem IsSelfAdjoint.spectralRadius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
     (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius (a : A)).comp
       (Nat.tendsto_pow_atTop_atTop_of_one_lt one_lt_two)
   refine' funext fun n => _
-  rw [Function.comp_apply, ha.nnnorm_pow_two_pow, Ennreal.coe_pow, ← rpow_nat_cast, ← rpow_mul]
+  rw [Function.comp_apply, ha.nnnorm_pow_two_pow, ENNReal.coe_pow, ← rpow_nat_cast, ← rpow_mul]
   simp
 #align is_self_adjoint.spectral_radius_eq_nnnorm IsSelfAdjoint.spectralRadius_eq_nnnorm
 
 theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
     spectralRadius ℂ a = ‖a‖₊ :=
   by
-  refine' (Ennreal.pow_strictMono two_ne_zero).Injective _
+  refine' (ENNReal.pow_strictMono two_ne_zero).Injective _
   have heq :
     (fun n : ℕ => (‖(a⋆ * a) ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞)) =
       (fun x => x ^ 2) ∘ fun n : ℕ => (‖a ^ n‖₊ ^ (1 / n : ℝ) : ℝ≥0∞) :=
@@ -88,7 +88,7 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
     rw [Function.comp_apply, ← rpow_nat_cast, ← rpow_mul, mul_comm, rpow_mul, rpow_nat_cast, ←
       coe_pow, sq, ← nnnorm_star_mul_self, Commute.mul_pow (star_comm_self' a), star_pow]
   have h₂ :=
-    ((Ennreal.continuous_pow 2).Tendsto (spectralRadius ℂ a)).comp
+    ((ENNReal.continuous_pow 2).Tendsto (spectralRadius ℂ a)).comp
       (spectrum.pow_nnnorm_pow_one_div_tendsto_nhds_spectralRadius a)
   rw [← HEq] at h₂
   convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a⋆ * a))
