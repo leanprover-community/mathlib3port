@@ -50,6 +50,7 @@ open MonoidalCategory
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory.{v₁} C] {D : Type u₂} [Category.{v₂} D]
   [MonoidalCategory.{v₂} D]
 
+#print CategoryTheory.LaxMonoidal /-
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`ε] [] -/
 /- ./././Mathport/Syntax/Translate/Command.lean:388:30: infer kinds are unsupported in Lean 4: #[`μ] [] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -86,6 +87,7 @@ class LaxMonoidal (F : C → D) [Functorial.{v₁, v₂} F] where
   right_unitality' : ∀ X : C, (ρ_ (F X)).Hom = (𝟙 (F X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map F (ρ_ X).Hom := by
     obviously
 #align category_theory.lax_monoidal CategoryTheory.LaxMonoidal
+-/
 
 restate_axiom lax_monoidal.μ_natural'
 
@@ -103,6 +105,7 @@ attribute [simp] lax_monoidal.associativity
 
 namespace LaxMonoidalFunctor
 
+#print CategoryTheory.LaxMonoidalFunctor.of /-
 /-- Construct a bundled `lax_monoidal_functor` from the object level function
 and `functorial` and `lax_monoidal` typeclasses.
 -/
@@ -111,6 +114,7 @@ def of (F : C → D) [I₁ : Functorial.{v₁, v₂} F] [I₂ : LaxMonoidal.{v�
     LaxMonoidalFunctor.{v₁, v₂} C D :=
   { I₁, I₂ with obj := F }
 #align category_theory.lax_monoidal_functor.of CategoryTheory.LaxMonoidalFunctor.of
+-/
 
 end LaxMonoidalFunctor
 
@@ -119,11 +123,13 @@ instance (F : LaxMonoidalFunctor.{v₁, v₂} C D) : LaxMonoidal.{v₁, v₂} F.
 
 section
 
+#print CategoryTheory.laxMonoidalId /-
 instance laxMonoidalId : LaxMonoidal.{v₁, v₁} (id : C → C)
     where
   ε := 𝟙 _
   μ X Y := 𝟙 _
 #align category_theory.lax_monoidal_id CategoryTheory.laxMonoidalId
+-/
 
 end
 
