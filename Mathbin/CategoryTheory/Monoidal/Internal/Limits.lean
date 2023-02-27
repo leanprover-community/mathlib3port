@@ -81,10 +81,10 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F)
         slice_rhs 1 2 =>
           rw [← monoidal_category.tensor_comp, limit.lift_π]
           dsimp }
-  fac' s h := by
+  fac s h := by
     ext
     simp
-  uniq' s m w := by
+  uniq s m w := by
     ext
     dsimp; simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)

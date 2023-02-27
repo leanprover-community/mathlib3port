@@ -148,11 +148,11 @@ def isLimitAux (t : KernelFork f) (lift : ∀ s : KernelFork f, s.x ⟶ t.x)
     (fac : ∀ s : KernelFork f, lift s ≫ t.ι = s.ι)
     (uniq : ∀ (s : KernelFork f) (m : s.x ⟶ t.x) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
   { lift
-    fac' := fun s j => by
+    fac := fun s j => by
       cases j
       · exact fac s
       · simp
-    uniq' := fun s m w => uniq s m (w Limits.WalkingParallelPair.zero) }
+    uniq := fun s m w => uniq s m (w Limits.WalkingParallelPair.zero) }
 #align category_theory.limits.is_limit_aux CategoryTheory.Limits.isLimitAux
 
 /-- This is a more convenient formulation to show that a `kernel_fork` constructed using
@@ -592,11 +592,11 @@ def isColimitAux (t : CokernelCofork f) (desc : ∀ s : CokernelCofork f, t.x �
     (uniq : ∀ (s : CokernelCofork f) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) :
     IsColimit t :=
   { desc
-    fac' := fun s j => by
+    fac := fun s j => by
       cases j
       · simp
       · exact fac s
-    uniq' := fun s m w => uniq s m (w Limits.WalkingParallelPair.one) }
+    uniq := fun s m w => uniq s m (w Limits.WalkingParallelPair.one) }
 #align category_theory.limits.is_colimit_aux CategoryTheory.Limits.isColimitAux
 
 /-- This is a more convenient formulation to show that a `cokernel_cofork` constructed using

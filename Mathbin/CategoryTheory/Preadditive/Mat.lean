@@ -178,7 +178,7 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C)
     where out n :=
     {
       HasBiproduct := fun f =>
-        hasBiproductOfTotal
+        hasBiproduct_of_total
           { x := ⟨Σj, (f j).ι, fun p => (f p.1).x p.2⟩
             π := fun j x y => by
               dsimp at x⊢

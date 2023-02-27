@@ -302,9 +302,9 @@ def colimitCoconeComp (t : ColimitCocone G) : ColimitCocone (F ⋙ G)
   IsColimit := (isColimitWhiskerEquiv F _).symm t.IsColimit
 #align category_theory.functor.final.colimit_cocone_comp CategoryTheory.Functor.Final.colimitCoconeComp
 
-instance (priority := 100) compHasColimit [HasColimit G] : HasColimit (F ⋙ G) :=
+instance (priority := 100) comp_hasColimit [HasColimit G] : HasColimit (F ⋙ G) :=
   HasColimit.mk (colimitCoconeComp F (getColimitCocone G))
-#align category_theory.functor.final.comp_has_colimit CategoryTheory.Functor.Final.compHasColimit
+#align category_theory.functor.final.comp_has_colimit CategoryTheory.Functor.Final.comp_hasColimit
 
 theorem colimit_pre_is_iso_aux {t : Cocone G} (P : IsColimit t) :
     ((isColimitWhiskerEquiv F _).symm P).desc (t.whisker F) = 𝟙 t.x :=
@@ -351,9 +351,9 @@ def colimitCoconeOfComp (t : ColimitCocone (F ⋙ G)) : ColimitCocone G
 We can't make this an instance, because `F` is not determined by the goal.
 (Even if this weren't a problem, it would cause a loop with `comp_has_colimit`.)
 -/
-theorem hasColimitOfComp [HasColimit (F ⋙ G)] : HasColimit G :=
+theorem hasColimit_of_comp [HasColimit (F ⋙ G)] : HasColimit G :=
   HasColimit.mk (colimitCoconeOfComp F (getColimitCocone (F ⋙ G)))
-#align category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.hasColimitOfComp
+#align category_theory.functor.final.has_colimit_of_comp CategoryTheory.Functor.Final.hasColimit_of_comp
 
 section
 
@@ -578,9 +578,9 @@ def limitConeComp (t : LimitCone G) : LimitCone (F ⋙ G)
   IsLimit := (isLimitWhiskerEquiv F _).symm t.IsLimit
 #align category_theory.functor.initial.limit_cone_comp CategoryTheory.Functor.Initial.limitConeComp
 
-instance (priority := 100) compHasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
+instance (priority := 100) comp_hasLimit [HasLimit G] : HasLimit (F ⋙ G) :=
   HasLimit.mk (limitConeComp F (getLimitCone G))
-#align category_theory.functor.initial.comp_has_limit CategoryTheory.Functor.Initial.compHasLimit
+#align category_theory.functor.initial.comp_has_limit CategoryTheory.Functor.Initial.comp_hasLimit
 
 theorem limit_pre_is_iso_aux {t : Cone G} (P : IsLimit t) :
     ((isLimitWhiskerEquiv F _).symm P).lift (t.whisker F) = 𝟙 t.x :=
@@ -627,9 +627,9 @@ def limitConeOfComp (t : LimitCone (F ⋙ G)) : LimitCone G
 We can't make this an instance, because `F` is not determined by the goal.
 (Even if this weren't a problem, it would cause a loop with `comp_has_limit`.)
 -/
-theorem hasLimitOfComp [HasLimit (F ⋙ G)] : HasLimit G :=
+theorem hasLimit_of_comp [HasLimit (F ⋙ G)] : HasLimit G :=
   HasLimit.mk (limitConeOfComp F (getLimitCone (F ⋙ G)))
-#align category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.hasLimitOfComp
+#align category_theory.functor.initial.has_limit_of_comp CategoryTheory.Functor.Initial.hasLimit_of_comp
 
 section
 

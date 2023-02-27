@@ -129,8 +129,8 @@ theorem binaryProductCone_snd (X Y : Type u) : (binaryProductCone X Y).snd = Pro
 def binaryProductLimit (X Y : Type u) : IsLimit (binaryProductCone X Y)
     where
   lift (s : BinaryFan X Y) x := (s.fst x, s.snd x)
-  fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' s m w := funext fun x => Prod.ext (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
+  fac s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
+  uniq s m w := funext fun x => Prod.ext (congr_fun (w ⟨left⟩) x) (congr_fun (w ⟨right⟩) x)
 #align category_theory.limits.types.binary_product_limit CategoryTheory.Limits.Types.binaryProductLimit
 
 /-- The category of types has `X × Y`, the usual cartesian product,
@@ -208,8 +208,8 @@ def binaryCoproductCocone (X Y : Type u) : Cocone (pair X Y) :=
 def binaryCoproductColimit (X Y : Type u) : IsColimit (binaryCoproductCocone X Y)
     where
   desc := fun s : BinaryCofan X Y => Sum.elim s.inl s.inr
-  fac' s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
-  uniq' s m w := funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
+  fac s j := Discrete.recOn j fun j => WalkingPair.casesOn j rfl rfl
+  uniq s m w := funext fun x => Sum.casesOn x (congr_fun (w ⟨left⟩)) (congr_fun (w ⟨right⟩))
 #align category_theory.limits.types.binary_coproduct_colimit CategoryTheory.Limits.Types.binaryCoproductColimit
 
 /-- The category of types has `X ⊕ Y`,
@@ -328,7 +328,7 @@ def productLimitCone {J : Type u} (F : J → Type max u v) : Limits.LimitCone (D
       π := { app := fun j f => f j.as } }
   IsLimit :=
     { lift := fun s x j => s.π.app ⟨j⟩ x
-      uniq' := fun s m w => funext fun x => funext fun j => (congr_fun (w ⟨j⟩) x : _) }
+      uniq := fun s m w => funext fun x => funext fun j => (congr_fun (w ⟨j⟩) x : _) }
 #align category_theory.limits.types.product_limit_cone CategoryTheory.Limits.Types.productLimitCone
 
 /-- The categorical product in `Type u` is the type theoretic product `Π j, F j`. -/
@@ -357,7 +357,7 @@ def coproductColimitCocone {J : Type u} (F : J → Type u) : Limits.ColimitCocon
       ι := { app := fun j x => ⟨j.as, x⟩ } }
   IsColimit :=
     { desc := fun s x => s.ι.app ⟨x.1⟩ x.2
-      uniq' := fun s m w => by
+      uniq := fun s m w => by
         ext ⟨j, x⟩
         have := congr_fun (w ⟨j⟩) x
         exact this }

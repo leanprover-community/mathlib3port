@@ -90,10 +90,10 @@ def coneOfConeEvalIsLimit {c : ∀ i, Cone (F ⋙ Pi.eval C i)} (P : ∀ i, IsLi
     IsLimit (coneOfConeCompEval c)
     where
   lift s i := (P i).lift (coneCompEval s i)
-  fac' s j := by
+  fac s j := by
     ext i
     exact (P i).fac (cone_comp_eval s i) j
-  uniq' s m w := by
+  uniq s m w := by
     ext i
     exact (P i).uniq (cone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 #align category_theory.pi.cone_of_cone_eval_is_limit CategoryTheory.pi.coneOfConeEvalIsLimit
@@ -105,10 +105,10 @@ def coconeOfCoconeEvalIsColimit {c : ∀ i, Cocone (F ⋙ Pi.eval C i)} (P : ∀
     IsColimit (coconeOfCoconeCompEval c)
     where
   desc s i := (P i).desc (coconeCompEval s i)
-  fac' s j := by
+  fac s j := by
     ext i
     exact (P i).fac (cocone_comp_eval s i) j
-  uniq' s m w := by
+  uniq s m w := by
     ext i
     exact (P i).uniq (cocone_comp_eval s i) (m i) fun j => congr_fun (w j) i
 #align category_theory.pi.cocone_of_cocone_eval_is_colimit CategoryTheory.pi.coconeOfCoconeEvalIsColimit
@@ -121,11 +121,11 @@ variable [∀ i, HasLimit (F ⋙ Pi.eval C i)]
 and we have limits for each of the `F ⋙ pi.eval C i`,
 then `F` has a limit.
 -/
-theorem hasLimitOfHasLimitCompEval : HasLimit F :=
+theorem hasLimit_of_hasLimit_comp_eval : HasLimit F :=
   HasLimit.mk
     { Cone := coneOfConeCompEval fun i => Limit.cone _
       IsLimit := coneOfConeEvalIsLimit fun i => limit.isLimit _ }
-#align category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.hasLimitOfHasLimitCompEval
+#align category_theory.pi.has_limit_of_has_limit_comp_eval CategoryTheory.pi.hasLimit_of_hasLimit_comp_eval
 
 end
 
@@ -137,11 +137,11 @@ variable [∀ i, HasColimit (F ⋙ Pi.eval C i)]
 and colimits exist for each of the `F ⋙ pi.eval C i`,
 there is a colimit for `F`.
 -/
-theorem hasColimitOfHasColimitCompEval : HasColimit F :=
+theorem hasColimit_of_hasColimit_comp_eval : HasColimit F :=
   HasColimit.mk
     { Cocone := coconeOfCoconeCompEval fun i => Colimit.cocone _
       IsColimit := coconeOfCoconeEvalIsColimit fun i => colimit.isColimit _ }
-#align category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.hasColimitOfHasColimitCompEval
+#align category_theory.pi.has_colimit_of_has_colimit_comp_eval CategoryTheory.pi.hasColimit_of_hasColimit_comp_eval
 
 end
 

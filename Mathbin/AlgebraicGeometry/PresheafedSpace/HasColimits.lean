@@ -327,8 +327,8 @@ open ColimitCoconeIsColimit
 def colimitCoconeIsColimit (F : J ⥤ PresheafedSpace.{v} C) : IsColimit (colimitCocone F)
     where
   desc s := desc F s
-  fac' s := desc_fac F s
-  uniq' s m w :=
+  fac s := desc_fac F s
+  uniq s m w :=
     by
     -- We need to use the identity on the continuous maps twice, so we prepare that first:
     have t :

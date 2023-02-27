@@ -66,8 +66,8 @@ theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.symm.snd = t.fst :=
 def IsLimit.swapBinaryFan {P Q : C} {t : BinaryFan P Q} (I : IsLimit t) : IsLimit t.symm
     where
   lift s := I.lift (BinaryFan.swap s)
-  fac' s := by rintro ⟨⟨⟩⟩ <;> simp
-  uniq' s m w := by
+  fac s := by rintro ⟨⟨⟩⟩ <;> simp
+  uniq s m w := by
     have h := I.uniq (binary_fan.swap s) m
     rw [h]
     rintro ⟨j⟩
@@ -144,11 +144,11 @@ def IsLimit.assoc {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ : Bin
     (Q : IsLimit sYZ) {s : BinaryFan sXY.x Z} (R : IsLimit s) : IsLimit (s.and_assoc Q)
     where
   lift t := R.lift (BinaryFan.assocInv P t)
-  fac' t := by
+  fac t := by
     rintro ⟨⟨⟩⟩ <;> simp
     apply Q.hom_ext
     rintro ⟨⟨⟩⟩ <;> simp
-  uniq' t m w := by
+  uniq t m w := by
     have h := R.uniq (binary_fan.assoc_inv P t) m
     rw [h]
     rintro ⟨⟨⟩⟩ <;> simp

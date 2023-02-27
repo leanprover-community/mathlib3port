@@ -430,12 +430,15 @@ theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ =
 #align simplicial_object.split.congr_F SimplicialObject.Split.congr_f
 
 /- warning: simplicial_object.split.congr_f clashes with simplicial_object.split.congr_F -> SimplicialObject.Split.congr_f
+warning: simplicial_object.split.congr_f -> SimplicialObject.Split.congr_f is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] {S₁ : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2} {S₂ : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2} {Φ₁ : Quiver.Hom.{succ u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2))) S₁ S₂} {Φ₂ : Quiver.Hom.{succ u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2))) S₁ S₂}, (Eq.{succ u2} (Quiver.Hom.{succ u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2))) S₁ S₂) Φ₁ Φ₂) -> (forall (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₁) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₁) n) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₂) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₂) n)) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S₁ S₂ Φ₁ n) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S₁ S₂ Φ₂ n))
+but is expected to have type
+  PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align simplicial_object.split.congr_f SimplicialObject.Split.congr_fₓ'. -/
-#print SimplicialObject.Split.congr_f /-
 theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) (n : ℕ) : Φ₁.f n = Φ₂.f n := by
   rw [h]
 #align simplicial_object.split.congr_f SimplicialObject.Split.congr_f
--/
 
 @[simp]
 theorem id_f (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.x :=
@@ -443,13 +446,16 @@ theorem id_f (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.x :=
 #align simplicial_object.split.id_F SimplicialObject.Split.id_f
 
 /- warning: simplicial_object.split.id_f clashes with simplicial_object.split.id_F -> SimplicialObject.Split.id_f
+warning: simplicial_object.split.id_f -> SimplicialObject.Split.id_f is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] (S : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S) n) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S) n)) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S S (CategoryTheory.CategoryStruct.id.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2)) S) n) (CategoryTheory.CategoryStruct.id.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S) n))
+but is expected to have type
+  PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align simplicial_object.split.id_f SimplicialObject.Split.id_fₓ'. -/
-#print SimplicialObject.Split.id_f /-
 @[simp]
 theorem id_f (S : Split C) (n : ℕ) : (𝟙 S : S ⟶ S).f n = 𝟙 (S.s.n n) :=
   rfl
 #align simplicial_object.split.id_f SimplicialObject.Split.id_f
--/
 
 @[simp]
 theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) :
@@ -458,14 +464,17 @@ theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ :
 #align simplicial_object.split.comp_F SimplicialObject.Split.comp_f
 
 /- warning: simplicial_object.split.comp_f clashes with simplicial_object.split.comp_F -> SimplicialObject.Split.comp_f
+warning: simplicial_object.split.comp_f -> SimplicialObject.Split.comp_f is a dubious translation:
+lean 3 declaration is
+  forall {C : Type.{u1}} [_inst_1 : CategoryTheory.Category.{u2, u1} C] [_inst_2 : CategoryTheory.Limits.HasFiniteCoproducts.{u2, u1} C _inst_1] {S₁ : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2} {S₂ : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2} {S₃ : SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2} (Φ₁₂ : Quiver.Hom.{succ u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2))) S₁ S₂) (Φ₂₃ : Quiver.Hom.{succ u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.CategoryStruct.toQuiver.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2))) S₂ S₃) (n : Nat), Eq.{succ u2} (Quiver.Hom.{succ u2, u1} C (CategoryTheory.CategoryStruct.toQuiver.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1)) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₁) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₁) n) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₃) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₃) n)) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S₁ S₃ (CategoryTheory.CategoryStruct.comp.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (CategoryTheory.Category.toCategoryStruct.{u2, max u1 u2} (SimplicialObject.Split.{u1, u2} C _inst_1 _inst_2) (SimplicialObject.Split.CategoryTheory.category.{u1, u2} C _inst_1 _inst_2)) S₁ S₂ S₃ Φ₁₂ Φ₂₃) n) (CategoryTheory.CategoryStruct.comp.{u2, u1} C (CategoryTheory.Category.toCategoryStruct.{u2, u1} C _inst_1) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₁) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₁) n) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₂) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₂) n) (SimplicialObject.Splitting.n.{u1, u2} C _inst_1 _inst_2 (SimplicialObject.Split.x.{u1, u2} C _inst_1 _inst_2 S₃) (SimplicialObject.Split.s.{u1, u2} C _inst_1 _inst_2 S₃) n) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S₁ S₂ Φ₁₂ n) (SimplicialObject.Split.Hom.f.{u1, u2} C _inst_1 _inst_2 S₂ S₃ Φ₂₃ n))
+but is expected to have type
+  PUnit.{0}
 Case conversion may be inaccurate. Consider using '#align simplicial_object.split.comp_f SimplicialObject.Split.comp_fₓ'. -/
-#print SimplicialObject.Split.comp_f /-
 @[simp]
 theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) (n : ℕ) :
     (Φ₁₂ ≫ Φ₂₃).f n = Φ₁₂.f n ≫ Φ₂₃.f n :=
   rfl
 #align simplicial_object.split.comp_f SimplicialObject.Split.comp_f
--/
 
 @[simp, reassoc.1]
 theorem ιSummand_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ}

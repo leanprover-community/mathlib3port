@@ -87,12 +87,12 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
     where
   IsLimit :=
     { lift := fun s => ∑ j : J, s.π.app ⟨j⟩ ≫ b.ι j
-      uniq' := fun s m h => by
+      uniq := fun s m h => by
         erw [← category.comp_id m, ← Total, comp_sum]
         apply Finset.sum_congr rfl
         intro j m
         erw [reassoc_of (h ⟨j⟩)]
-      fac' := fun s j => by
+      fac := fun s j => by
         cases j
         simp only [sum_comp, category.assoc, bicone.to_cone_π_app, b.ι_π, comp_dite]
         -- See note [dsimp, simp].
@@ -100,12 +100,12 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
         simp }
   IsColimit :=
     { desc := fun s => ∑ j : J, b.π j ≫ s.ι.app ⟨j⟩
-      uniq' := fun s m h => by
+      uniq := fun s m h => by
         erw [← category.id_comp m, ← Total, sum_comp]
         apply Finset.sum_congr rfl
         intro j m
         erw [category.assoc, h ⟨j⟩]
-      fac' := fun s j => by
+      fac := fun s j => by
         cases j
         simp only [comp_sum, ← category.assoc, bicone.to_cocone_ι_app, b.ι_π, dite_comp]
         dsimp; simp }
@@ -123,12 +123,12 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-theorem hasBiproductOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x) :
-    HasBiproduct f :=
+theorem hasBiproduct_of_total {f : J → C} (b : Bicone f)
+    (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.x) : HasBiproduct f :=
   HasBiproduct.mk
     { Bicone := b
       IsBilimit := isBilimitOfTotal b Total }
-#align category_theory.limits.has_biproduct_of_total CategoryTheory.Limits.hasBiproductOfTotal
+#align category_theory.limits.has_biproduct_of_total CategoryTheory.Limits.hasBiproduct_of_total
 
 /-- In a preadditive category, any finite bicone which is a limit cone is in fact a bilimit
     bicone. -/
@@ -152,14 +152,14 @@ def biconeIsBilimitOfLimitConeOfIsLimit {f : J → C} {t : Cone (Discrete.functo
 
 /-- In a preadditive category, if the product over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem HasBiproduct.ofHasProduct {J : Type} [Finite J] (f : J → C) [HasProduct f] :
+theorem HasBiproduct.of_hasProduct {J : Type} [Finite J] (f : J → C) [HasProduct f] :
     HasBiproduct f := by
   cases nonempty_fintype J <;>
     exact
       has_biproduct.mk
         { Bicone := _
           IsBilimit := bicone_is_bilimit_of_limit_cone_of_is_limit (limit.is_limit _) }
-#align category_theory.limits.has_biproduct.of_has_product CategoryTheory.Limits.HasBiproduct.ofHasProduct
+#align category_theory.limits.has_biproduct.of_has_product CategoryTheory.Limits.HasBiproduct.of_hasProduct
 
 /-- In a preadditive category, any finite bicone which is a colimit cocone is in fact a bilimit
     bicone. -/
@@ -184,24 +184,25 @@ def biconeIsBilimitOfColimitCoconeOfIsColimit {f : J → C} {t : Cocone (Discret
 
 /-- In a preadditive category, if the coproduct over `f : J → C` exists,
     then the biproduct over `f` exists. -/
-theorem HasBiproduct.ofHasCoproduct {J : Type} [Finite J] (f : J → C) [HasCoproduct f] :
+theorem HasBiproduct.of_hasCoproduct {J : Type} [Finite J] (f : J → C) [HasCoproduct f] :
     HasBiproduct f := by
   cases nonempty_fintype J <;>
     exact
       has_biproduct.mk
         { Bicone := _
           IsBilimit := bicone_is_bilimit_of_colimit_cocone_of_is_colimit (colimit.is_colimit _) }
-#align category_theory.limits.has_biproduct.of_has_coproduct CategoryTheory.Limits.HasBiproduct.ofHasCoproduct
+#align category_theory.limits.has_biproduct.of_has_coproduct CategoryTheory.Limits.HasBiproduct.of_hasCoproduct
 
 /-- A preadditive category with finite products has finite biproducts. -/
-theorem HasFiniteBiproducts.ofHasFiniteProducts [HasFiniteProducts C] : HasFiniteBiproducts C :=
-  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.ofHasProduct _ }⟩
-#align category_theory.limits.has_finite_biproducts.of_has_finite_products CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteProducts
+theorem HasFiniteBiproducts.of_hasFiniteProducts [HasFiniteProducts C] : HasFiniteBiproducts C :=
+  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.of_hasProduct _ }⟩
+#align category_theory.limits.has_finite_biproducts.of_has_finite_products CategoryTheory.Limits.HasFiniteBiproducts.of_hasFiniteProducts
 
 /-- A preadditive category with finite coproducts has finite biproducts. -/
-theorem HasFiniteBiproducts.ofHasFiniteCoproducts [HasFiniteCoproducts C] : HasFiniteBiproducts C :=
-  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.ofHasCoproduct _ }⟩
-#align category_theory.limits.has_finite_biproducts.of_has_finite_coproducts CategoryTheory.Limits.HasFiniteBiproducts.ofHasFiniteCoproducts
+theorem HasFiniteBiproducts.of_hasFiniteCoproducts [HasFiniteCoproducts C] :
+    HasFiniteBiproducts C :=
+  ⟨fun n => { HasBiproduct := fun F => HasBiproduct.of_hasCoproduct _ }⟩
+#align category_theory.limits.has_finite_biproducts.of_has_finite_coproducts CategoryTheory.Limits.HasFiniteBiproducts.of_hasFiniteCoproducts
 
 section
 
@@ -313,16 +314,16 @@ def isBinaryBilimitOfTotal {X Y : C} (b : BinaryBicone X Y)
     where
   IsLimit :=
     { lift := fun s => BinaryFan.fst s ≫ b.inl + BinaryFan.snd s ≫ b.inr
-      uniq' := fun s m h => by
+      uniq := fun s m h => by
         erw [← category.comp_id m, ← Total, comp_add, reassoc_of (h ⟨walking_pair.left⟩),
           reassoc_of (h ⟨walking_pair.right⟩)]
-      fac' := fun s j => by rcases j with ⟨⟨⟩⟩ <;> simp }
+      fac := fun s j => by rcases j with ⟨⟨⟩⟩ <;> simp }
   IsColimit :=
     { desc := fun s => b.fst ≫ BinaryCofan.inl s + b.snd ≫ BinaryCofan.inr s
-      uniq' := fun s m h => by
+      uniq := fun s m h => by
         erw [← category.id_comp m, ← Total, add_comp, category.assoc, category.assoc,
           h ⟨walking_pair.left⟩, h ⟨walking_pair.right⟩]
-      fac' := fun s j => by rcases j with ⟨⟨⟩⟩ <;> simp }
+      fac := fun s j => by rcases j with ⟨⟨⟩⟩ <;> simp }
 #align category_theory.limits.is_binary_bilimit_of_total CategoryTheory.Limits.isBinaryBilimitOfTotal
 
 theorem IsBilimit.binary_total {X Y : C} {b : BinaryBicone X Y} (i : b.IsBilimit) :
@@ -335,12 +336,12 @@ any binary bicone `b` satisfying `total : b.fst ≫ b.inl + b.snd ≫ b.inr = �
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-theorem hasBinaryBiproductOfTotal {X Y : C} (b : BinaryBicone X Y)
+theorem hasBinaryBiproduct_of_total {X Y : C} (b : BinaryBicone X Y)
     (total : b.fst ≫ b.inl + b.snd ≫ b.inr = 𝟙 b.x) : HasBinaryBiproduct X Y :=
   HasBinaryBiproduct.mk
     { Bicone := b
       IsBilimit := isBinaryBilimitOfTotal b Total }
-#align category_theory.limits.has_binary_biproduct_of_total CategoryTheory.Limits.hasBinaryBiproductOfTotal
+#align category_theory.limits.has_binary_biproduct_of_total CategoryTheory.Limits.hasBinaryBiproduct_of_total
 
 /-- We can turn any limit cone over a pair into a bicone. -/
 @[simps]
@@ -378,17 +379,17 @@ def binaryBiconeIsBilimitOfLimitConeOfIsLimit {X Y : C} {t : Cone (pair X Y)} (h
 
 /-- In a preadditive category, if the product of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
-theorem HasBinaryBiproduct.ofHasBinaryProduct (X Y : C) [HasBinaryProduct X Y] :
+theorem HasBinaryBiproduct.of_hasBinaryProduct (X Y : C) [HasBinaryProduct X Y] :
     HasBinaryBiproduct X Y :=
   HasBinaryBiproduct.mk
     { Bicone := _
       IsBilimit := binaryBiconeIsBilimitOfLimitConeOfIsLimit (limit.isLimit _) }
-#align category_theory.limits.has_binary_biproduct.of_has_binary_product CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryProduct
+#align category_theory.limits.has_binary_biproduct.of_has_binary_product CategoryTheory.Limits.HasBinaryBiproduct.of_hasBinaryProduct
 
 /-- In a preadditive category, if all binary products exist, then all binary biproducts exist. -/
-theorem HasBinaryBiproducts.ofHasBinaryProducts [HasBinaryProducts C] : HasBinaryBiproducts C :=
-  { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.ofHasBinaryProduct X Y }
-#align category_theory.limits.has_binary_biproducts.of_has_binary_products CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryProducts
+theorem HasBinaryBiproducts.of_hasBinaryProducts [HasBinaryProducts C] : HasBinaryBiproducts C :=
+  { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.of_hasBinaryProduct X Y }
+#align category_theory.limits.has_binary_biproducts.of_has_binary_products CategoryTheory.Limits.HasBinaryBiproducts.of_hasBinaryProducts
 
 /-- We can turn any colimit cocone over a pair into a bicone. -/
 @[simps]
@@ -438,17 +439,18 @@ def binaryBiconeIsBilimitOfColimitCoconeOfIsColimit {X Y : C} {t : Cocone (pair 
 
 /-- In a preadditive category, if the coproduct of `X` and `Y` exists, then the
     binary biproduct of `X` and `Y` exists. -/
-theorem HasBinaryBiproduct.ofHasBinaryCoproduct (X Y : C) [HasBinaryCoproduct X Y] :
+theorem HasBinaryBiproduct.of_hasBinaryCoproduct (X Y : C) [HasBinaryCoproduct X Y] :
     HasBinaryBiproduct X Y :=
   HasBinaryBiproduct.mk
     { Bicone := _
       IsBilimit := binaryBiconeIsBilimitOfColimitCoconeOfIsColimit (colimit.isColimit _) }
-#align category_theory.limits.has_binary_biproduct.of_has_binary_coproduct CategoryTheory.Limits.HasBinaryBiproduct.ofHasBinaryCoproduct
+#align category_theory.limits.has_binary_biproduct.of_has_binary_coproduct CategoryTheory.Limits.HasBinaryBiproduct.of_hasBinaryCoproduct
 
 /-- In a preadditive category, if all binary coproducts exist, then all binary biproducts exist. -/
-theorem HasBinaryBiproducts.ofHasBinaryCoproducts [HasBinaryCoproducts C] : HasBinaryBiproducts C :=
-  { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.ofHasBinaryCoproduct X Y }
-#align category_theory.limits.has_binary_biproducts.of_has_binary_coproducts CategoryTheory.Limits.HasBinaryBiproducts.ofHasBinaryCoproducts
+theorem HasBinaryBiproducts.of_hasBinaryCoproducts [HasBinaryCoproducts C] :
+    HasBinaryBiproducts C :=
+  { HasBinaryBiproduct := fun X Y => HasBinaryBiproduct.of_hasBinaryCoproduct X Y }
+#align category_theory.limits.has_binary_biproducts.of_has_binary_coproducts CategoryTheory.Limits.HasBinaryBiproducts.of_hasBinaryCoproducts
 
 section
 

@@ -233,7 +233,7 @@ theorem of_isIso_of_mono [IsIso a] [Mono f] : IsKernelPair f a a :=
   delta is_kernel_pair
   convert_to is_pullback a (a ≫ 𝟙 X) (𝟙 X ≫ f) f
   · rw [category.comp_id]; · rw [category.id_comp]
-  exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).pasteVert (is_kernel_pair.id_of_mono f)
+  exact (is_pullback.of_horiz_is_iso ⟨rfl⟩).paste_vert (is_kernel_pair.id_of_mono f)
 #align category_theory.is_kernel_pair.of_is_iso_of_mono CategoryTheory.IsKernelPair.of_isIso_of_mono
 
 end IsKernelPair

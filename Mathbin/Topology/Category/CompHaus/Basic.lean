@@ -181,11 +181,11 @@ noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop
 #align CompHaus_to_Top.creates_limits compHausToTop.createsLimits
 
 instance CompHaus.hasLimits : Limits.HasLimits CompHaus :=
-  hasLimitsOfHasLimitsCreatesLimits compHausToTop
+  has_limits_of_has_limits_creates_limits compHausToTop
 #align CompHaus.has_limits CompHaus.hasLimits
 
 instance CompHaus.hasColimits : Limits.HasColimits CompHaus :=
-  hasColimitsOfReflective compHausToTop
+  has_colimits_of_reflective compHausToTop
 #align CompHaus.has_colimits CompHaus.hasColimits
 
 namespace CompHaus
@@ -235,7 +235,7 @@ def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u
     Limits.IsLimit (limitCone F)
     where
   lift S := (TopCat.limitConeIsLimit (F ⋙ compHausToTop)).lift (compHausToTop.mapCone S)
-  uniq' S m h := (TopCat.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
+  uniq S m h := (TopCat.limitConeIsLimit _).uniq (compHausToTop.mapCone S) _ h
 #align CompHaus.limit_cone_is_limit CompHaus.limitConeIsLimit
 
 theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=

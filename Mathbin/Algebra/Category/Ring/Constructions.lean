@@ -181,11 +181,11 @@ def prodFan : BinaryFan A B :=
 def prodFanIsLimit : IsLimit (prodFan A B)
     where
   lift c := RingHom.prod (c.π.app ⟨WalkingPair.left⟩) (c.π.app ⟨WalkingPair.right⟩)
-  fac' c j := by
+  fac c j := by
     ext
     rcases j with ⟨⟨⟩⟩ <;>
       simpa only [binary_fan.π_app_left, binary_fan.π_app_right, comp_apply, RingHom.prod_apply]
-  uniq' s m h := by
+  uniq s m h := by
     ext
     · simpa using congr_hom (h ⟨walking_pair.left⟩) x
     · simpa using congr_hom (h ⟨walking_pair.right⟩) x

@@ -63,7 +63,7 @@ structure Presieve.CoverByImageStructure (G : C ⥤ D) {V U : D} (f : V ⟶ U) w
   obj : C
   lift : V ⟶ G.obj obj
   map : G.obj obj ⟶ U
-  fac' : lift ≫ map = f := by obviously
+  fac : lift ≫ map = f := by obviously
 #align category_theory.presieve.cover_by_image_structure CategoryTheory.Presieve.CoverByImageStructure
 
 restate_axiom presieve.cover_by_image_structure.fac'

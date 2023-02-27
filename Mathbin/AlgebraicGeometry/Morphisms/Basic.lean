@@ -633,7 +633,7 @@ theorem universallyIsLocalAtTarget (P : MorphismProperty Scheme)
   · rw [category.assoc, category.assoc, ← pullback.condition, ← pullback.condition_assoc, H.w]
   refine' (is_pullback.of_right _ (pullback.lift_snd _ _ _) (is_pullback.of_has_pullback _ _)).flip
   rw [pullback.lift_fst, ← pullback.condition]
-  exact (is_pullback.of_has_pullback _ _).pasteHoriz H.flip
+  exact (is_pullback.of_has_pullback _ _).paste_horiz H.flip
 #align algebraic_geometry.universally_is_local_at_target AlgebraicGeometry.universallyIsLocalAtTarget
 
 theorem universallyIsLocalAtTargetOfMorphismRestrict (P : MorphismProperty Scheme)

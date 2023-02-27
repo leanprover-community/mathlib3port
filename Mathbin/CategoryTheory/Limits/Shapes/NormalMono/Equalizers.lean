@@ -32,7 +32,7 @@ variable [HasFiniteProducts C] [HasKernels C] [NormalMonoCategory C]
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The pullback of two monomorphisms exists. -/
-irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] :
+irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] :
   HasLimit (cospan a b) :=
   let ⟨P, f, haf, i⟩ := normalMonoOfMono a
   let ⟨Q, g, hbg, i'⟩ := normalMonoOfMono b
@@ -99,7 +99,7 @@ irreducible_def pullbackOfMono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] 
                     kernel.ι (prod.lift f g) :=
                 by rw [kernel.lift_ι]
                }
-#align category_theory.normal_mono_category.pullback_of_mono CategoryTheory.NormalMonoCategory.pullbackOfMono
+#align category_theory.normal_mono_category.pullback_of_mono CategoryTheory.NormalMonoCategory.pullback_of_mono
 
 section
 
@@ -113,7 +113,7 @@ private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The equalizer of `f` and `g` exists. -/
-irreducible_def hasLimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
+irreducible_def hasLimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   have huv : (pullback.fst : p f g ⟶ X) = pullback.snd :=
     calc
       (pullback.fst : p f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm <| Category.comp_id _
@@ -140,7 +140,7 @@ irreducible_def hasLimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (paral
           (fun s => by simp only [fork.ι_of_ι, pullback.lift_fst]) fun s m h =>
           pullback.hom_ext (by simpa only [pullback.lift_fst] using h)
             (by simpa only [huv.symm, pullback.lift_fst] using h) }
-#align category_theory.normal_mono_category.has_limit_parallel_pair CategoryTheory.NormalMonoCategory.hasLimitParallelPair
+#align category_theory.normal_mono_category.has_limit_parallel_pair CategoryTheory.NormalMonoCategory.hasLimit_parallelPair
 
 end
 
@@ -192,7 +192,7 @@ variable [HasFiniteCoproducts C] [HasCokernels C] [NormalEpiCategory C]
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The pushout of two epimorphisms exists. -/
-irreducible_def pushoutOfEpi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] :
+irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] :
   HasColimit (span a b) :=
   let ⟨P, f, hfa, i⟩ := normalEpiOfEpi a
   let ⟨Q, g, hgb, i'⟩ := normalEpiOfEpi b
@@ -261,7 +261,7 @@ irreducible_def pushoutOfEpi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Ep
                     cokernel.desc (coprod.desc f g) (b ≫ PushoutCocone.inr s) _ :=
                 by rw [cokernel.π_desc]
                }
-#align category_theory.normal_epi_category.pushout_of_epi CategoryTheory.NormalEpiCategory.pushoutOfEpi
+#align category_theory.normal_epi_category.pushout_of_epi CategoryTheory.NormalEpiCategory.pushout_of_epi
 
 section
 
@@ -275,7 +275,7 @@ private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (
 
 /- ./././Mathport/Syntax/Translate/Command.lean:317:38: unsupported irreducible non-definition -/
 /-- The coequalizer of `f` and `g` exists. -/
-irreducible_def hasColimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=
+irreducible_def hasColimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=
   have huv : (pushout.inl : Y ⟶ q f g) = pushout.inr :=
     calc
       (pushout.inl : Y ⟶ q f g) = 𝟙 _ ≫ pushout.inl := Eq.symm <| Category.id_comp _
@@ -304,7 +304,7 @@ irreducible_def hasColimitParallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (p
           (fun s => by simp only [pushout.inl_desc, cofork.π_of_π]) fun s m h =>
           pushout.hom_ext (by simpa only [pushout.inl_desc] using h)
             (by simpa only [huv.symm, pushout.inl_desc] using h) }
-#align category_theory.normal_epi_category.has_colimit_parallel_pair CategoryTheory.NormalEpiCategory.hasColimitParallelPair
+#align category_theory.normal_epi_category.has_colimit_parallel_pair CategoryTheory.NormalEpiCategory.hasColimit_parallelPair
 
 end
 

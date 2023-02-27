@@ -74,8 +74,8 @@ def equalizerConeIsLimit (F : WalkingParallelPair ⥤ C) : IsLimit (equalizerCon
     intro c; apply pullback.lift (c.π.app _) (c.π.app _)
     apply limit.hom_ext
     rintro (_ | _) <;> simp
-  fac' := by rintro c (_ | _) <;> simp
-  uniq' := by
+  fac := by rintro c (_ | _) <;> simp
+  uniq := by
     intro c _ J
     have J0 := J walking_parallel_pair.zero; simp at J0
     apply pullback.hom_ext
@@ -122,14 +122,14 @@ def preservesEqualizersOfPreservesPullbacksAndBinaryProducts [HasBinaryProducts 
             exact
               (c.π.naturality walking_parallel_pair_hom.left).symm.trans
                 (c.π.naturality walking_parallel_pair_hom.right)
-        fac' := fun c j =>
+        fac := fun c j =>
           by
           rcases j with (_ | _) <;>
             simp only [category.comp_id, preserves_pullback.iso_inv_fst, cone.of_fork_π, G.map_comp,
               preserves_pullback.iso_inv_fst_assoc, functor.map_cone_π_app, eq_to_hom_refl,
               category.assoc, fork.of_ι_π_app, pullback.lift_fst, pullback.lift_fst_assoc]
           exact (c.π.naturality walking_parallel_pair_hom.left).symm.trans (category.id_comp _)
-        uniq' := fun s m h => by
+        uniq := fun s m h => by
           rw [iso.eq_comp_inv]
           have := h walking_parallel_pair.zero
           dsimp [equalizer_cone] at this
@@ -178,8 +178,8 @@ def coequalizerCoconeIsColimit (F : WalkingParallelPair ⥤ C) : IsColimit (coeq
     intro c; apply pushout.desc (c.ι.app _) (c.ι.app _)
     apply colimit.hom_ext
     rintro (_ | _) <;> simp
-  fac' := by rintro c (_ | _) <;> simp
-  uniq' := by
+  fac := by rintro c (_ | _) <;> simp
+  uniq := by
     intro c _ J
     have J1 : pushout_inl F ≫ m = c.ι.app walking_parallel_pair.one := by
       simpa using J walking_parallel_pair.one
@@ -229,14 +229,14 @@ def preservesCoequalizersOfPreservesPushoutsAndBinaryCoproducts [HasBinaryCoprod
             exact
               (c.ι.naturality walking_parallel_pair_hom.left).trans
                 (c.ι.naturality walking_parallel_pair_hom.right).symm
-        fac' := fun c j =>
+        fac := fun c j =>
           by
           rcases j with (_ | _) <;>
             simp only [functor.map_cocone_ι_app, cocone.of_cofork_ι, category.id_comp,
               eq_to_hom_refl, category.assoc, functor.map_comp, cofork.of_π_ι_app, pushout.inl_desc,
               preserves_pushout.inl_iso_inv_assoc]
           exact (c.ι.naturality walking_parallel_pair_hom.left).trans (category.comp_id _)
-        uniq' := fun s m h => by
+        uniq := fun s m h => by
           rw [iso.eq_inv_comp]
           have := h walking_parallel_pair.one
           dsimp [coequalizer_cocone] at this

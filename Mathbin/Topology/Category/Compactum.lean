@@ -116,7 +116,7 @@ instance {X Y : Compactum} : CoeFun (X ⟶ Y) fun f => X → Y :=
   ⟨fun f => f.f⟩
 
 instance : HasLimits Compactum :=
-  hasLimitsOfHasLimitsCreatesLimits forget
+  has_limits_of_has_limits_creates_limits forget
 
 /-- The structure map for a compactum, essentially sending an ultrafilter to its limit. -/
 def str (X : Compactum) : Ultrafilter X → X :=

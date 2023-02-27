@@ -44,10 +44,10 @@ variable {X : C}
 
 namespace CategoryTheory.Over
 
-instance hasColimitOfHasColimitCompForget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] :
+instance hasColimit_of_hasColimit_comp_forget (F : J ⥤ Over X) [i : HasColimit (F ⋙ forget X)] :
     HasColimit F :=
   @CostructuredArrow.hasColimit _ _ _ _ i _
-#align category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.hasColimitOfHasColimitCompForget
+#align category_theory.over.has_colimit_of_has_colimit_comp_forget CategoryTheory.Over.hasColimit_of_hasColimit_comp_forget
 
 instance [HasColimitsOfShape J C] : HasColimitsOfShape J (Over X) where
 
@@ -135,10 +135,10 @@ end CategoryTheory.Over
 
 namespace CategoryTheory.Under
 
-instance hasLimitOfHasLimitCompForget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] :
+instance hasLimit_of_hasLimit_comp_forget (F : J ⥤ Under X) [i : HasLimit (F ⋙ forget X)] :
     HasLimit F :=
   @StructuredArrow.hasLimit _ _ _ _ i _
-#align category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.hasLimitOfHasLimitCompForget
+#align category_theory.under.has_limit_of_has_limit_comp_forget CategoryTheory.Under.hasLimit_of_hasLimit_comp_forget
 
 instance [HasLimitsOfShape J C] : HasLimitsOfShape J (Under X) where
 

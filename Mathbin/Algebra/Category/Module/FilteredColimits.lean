@@ -161,7 +161,7 @@ it is a linear map, i.e. preserves scalar multiplication.
 -/
 def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
   {
-    (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
+    (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})).desc
       ((forget₂ (ModuleCat R) AddCommGroupCat.{max v u}).mapCocone t) with
     map_smul' := fun r x => by
@@ -174,11 +174,11 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x :=
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc := colimit_desc
-  fac' t j :=
+  fac t j :=
     LinearMap.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).fac
         ((forget (ModuleCat R)).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     LinearMap.coe_injective <|
       (Types.colimitCoconeIsColimit (F ⋙ forget (ModuleCat R))).uniq
         ((forget (ModuleCat R)).mapCocone t) m fun j => funext fun x => LinearMap.congr_fun (h j) x
@@ -190,7 +190,7 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
     {
       PreservesColimit := fun F =>
         preserves_colimit_of_preserves_colimit_cocone (colimit_cocone_is_colimit F)
-          (AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
+          (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) }
 #align Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits
 

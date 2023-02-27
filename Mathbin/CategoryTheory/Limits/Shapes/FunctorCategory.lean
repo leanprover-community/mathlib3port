@@ -28,13 +28,13 @@ variable {C : Type u₁} [Category.{v₁} C]
 
 variable {D : Type u₂} [Category.{v₂} D]
 
-instance functorCategoryHasFiniteLimits [HasFiniteLimits D] : HasFiniteLimits (C ⥤ D)
+instance functor_category_hasFiniteLimits [HasFiniteLimits D] : HasFiniteLimits (C ⥤ D)
     where out J _ _ := inferInstance
-#align category_theory.limits.functor_category_has_finite_limits CategoryTheory.Limits.functorCategoryHasFiniteLimits
+#align category_theory.limits.functor_category_has_finite_limits CategoryTheory.Limits.functor_category_hasFiniteLimits
 
-instance functorCategoryHasFiniteColimits [HasFiniteColimits D] : HasFiniteColimits (C ⥤ D)
+instance functor_category_hasFiniteColimits [HasFiniteColimits D] : HasFiniteColimits (C ⥤ D)
     where out J _ _ := inferInstance
-#align category_theory.limits.functor_category_has_finite_colimits CategoryTheory.Limits.functorCategoryHasFiniteColimits
+#align category_theory.limits.functor_category_has_finite_colimits CategoryTheory.Limits.functor_category_hasFiniteColimits
 
 end CategoryTheory.Limits
 

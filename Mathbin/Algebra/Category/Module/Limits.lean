@@ -148,7 +148,7 @@ instance hasLimits : HasLimits (ModuleCat.{w} R) :=
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
-  AddCommGroupCat.limit_cone_is_limit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
+  AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
 #align Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
 
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
@@ -241,12 +241,12 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
       by
       rw [← s.w (hom_of_le h)]
       rfl
-  fac' s i := by
+  fac s i := by
     apply LinearMap.ext
     intro x
     dsimp
     exact direct_limit.lift_of s.ι.app _ x
-  uniq' s m h :=
+  uniq s m h :=
     by
     have :
       s.ι.app = fun i =>

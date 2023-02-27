@@ -139,13 +139,13 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     {
       (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ SemiRing Mon.{max v u})).desc
         ((forget₂ SemiRing Mon.{max v u}).mapCocone t),
-      (AddCommMon.FilteredColimits.colimit_cocone_is_colimit
+      (AddCommMon.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ SemiRing AddCommMon.{max v u})).desc
         ((forget₂ SemiRing AddCommMon.{max v u}).mapCocone t) with }
-  fac' t j :=
+  fac t j :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget SemiRing)).fac ((forget SemiRing).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget SemiRing)).uniq ((forget SemiRing).mapCocone t) m
         fun j => funext fun x => RingHom.congr_fun (h j) x
@@ -208,11 +208,11 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     (SemiRing.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ CommSemiRing SemiRing.{max v u})).desc
       ((forget₂ CommSemiRing SemiRing).mapCocone t)
-  fac' t j :=
+  fac t j :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRing)).fac
         ((forget CommSemiRing).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommSemiRing)).uniq
         ((forget CommSemiRing).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x
@@ -274,10 +274,10 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
   desc t :=
     (SemiRing.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ RingCat SemiRing.{max v u})).desc
       ((forget₂ RingCat SemiRing).mapCocone t)
-  fac' t j :=
+  fac t j :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget RingCat)).fac ((forget RingCat).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget RingCat)).uniq ((forget RingCat).mapCocone t) m
         fun j => funext fun x => RingHom.congr_fun (h j) x
@@ -340,11 +340,11 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     (RingCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ CommRingCat RingCat.{max v u})).desc
       ((forget₂ CommRingCat RingCat).mapCocone t)
-  fac' t j :=
+  fac t j :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommRingCat)).fac ((forget CommRingCat).mapCocone t)
         j
-  uniq' t m h :=
+  uniq t m h :=
     RingHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommRingCat)).uniq
         ((forget CommRingCat).mapCocone t) m fun j => funext fun x => RingHom.congr_fun (h j) x

@@ -130,8 +130,8 @@ instance ΓIsEquiv : IsEquivalence Γ.{u} :=
 #align algebraic_geometry.AffineScheme.Γ_is_equiv AlgebraicGeometry.AffineScheme.ΓIsEquiv
 
 instance : HasColimits AffineScheme.{u} :=
-  haveI := Adjunction.hasLimitsOfEquivalence.{u} Γ.{u}
-  Adjunction.hasColimitsOfEquivalence.{u} (op_op_equivalence AffineScheme.{u}).inverse
+  haveI := Adjunction.has_limits_of_equivalence.{u} Γ.{u}
+  Adjunction.has_colimits_of_equivalence.{u} (op_op_equivalence AffineScheme.{u}).inverse
 
 instance : HasLimits AffineScheme.{u} :=
   by

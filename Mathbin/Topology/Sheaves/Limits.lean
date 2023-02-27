@@ -30,16 +30,16 @@ variable {C : Type u} [Category.{v} C] {J : Type v} [SmallCategory J]
 namespace TopCat
 
 instance [HasLimits C] (X : TopCat) : HasLimits (Presheaf C X) :=
-  Limits.functorCategoryHasLimitsOfSize.{v, v}
+  Limits.functor_category_hasLimitsOfSize.{v, v}
 
 instance [HasColimits C] (X : TopCat) : HasColimitsOfSize.{v} (Presheaf C X) :=
-  Limits.functorCategoryHasColimitsOfSize
+  Limits.functor_category_hasColimitsOfSize
 
 instance [HasLimits C] (X : TopCat) : CreatesLimits (Sheaf.forget C X) :=
   Sheaf.CategoryTheory.SheafToPresheaf.CategoryTheory.createsLimits.{u, v, v}
 
 instance [HasLimits C] (X : TopCat) : HasLimitsOfSize.{v} (Sheaf.{v} C X) :=
-  hasLimitsOfHasLimitsCreatesLimits (Sheaf.forget C X)
+  has_limits_of_has_limits_creates_limits (Sheaf.forget C X)
 
 theorem isSheaf_of_isLimit [HasLimits C] {X : TopCat} (F : J ⥤ Presheaf.{v} C X)
     (H : ∀ j, (F.obj j).IsSheaf) {c : Cone F} (hc : IsLimit c) : c.x.IsSheaf :=

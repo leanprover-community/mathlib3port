@@ -30,10 +30,10 @@ namespace AddCommGroupCat
 
 -- As `AddCommGroup` is preadditive, and has all limits, it automatically has biproducts.
 instance : HasBinaryBiproducts AddCommGroupCat :=
-  HasBinaryBiproducts.ofHasBinaryProducts
+  HasBinaryBiproducts.of_hasBinaryProducts
 
 instance : HasFiniteBiproducts AddCommGroupCat :=
-  HasFiniteBiproducts.ofHasFiniteProducts
+  HasFiniteBiproducts.of_hasFiniteProducts
 
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
@@ -51,11 +51,11 @@ def binaryProductLimitCone (G H : AddCommGroupCat.{u}) : Limits.LimitCone (pair 
           naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => AddMonoidHom.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩)
-      fac' := by
+      fac := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
             simp
-      uniq' := fun s m w => by
+      uniq := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align AddCommGroup.binary_product_limit_cone AddCommGroupCat.binaryProductLimitCone
 
@@ -121,11 +121,11 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
       π := Discrete.natTrans fun j => Pi.evalAddMonoidHom (fun j => f j) j.as }
   IsLimit :=
     { lift := lift f
-      fac' := fun s j => by
+      fac := fun s j => by
         cases j
         ext
         simp
-      uniq' := fun s m w => by
+      uniq := fun s m w => by
         ext (x j)
         dsimp only [has_limit.lift]
         simp only [AddMonoidHom.coe_mk]

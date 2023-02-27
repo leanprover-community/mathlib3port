@@ -391,14 +391,14 @@ def IsLimit.mk (lift : ∀ E : Multifork I, E.x ⟶ K.x)
     (uniq : ∀ (E : Multifork I) (m : E.x ⟶ K.x), (∀ i : I.L, m ≫ K.ι i = E.ι i) → m = lift E) :
     IsLimit K :=
   { lift
-    fac' := by
+    fac := by
       rintro E (a | b)
       · apply fac
       · rw [← E.w (walking_multicospan.hom.fst b), ← K.w (walking_multicospan.hom.fst b), ←
           category.assoc]
         congr 1
         apply fac
-    uniq' := by
+    uniq := by
       rintro E m hm
       apply uniq
       intro i
@@ -609,14 +609,14 @@ def IsColimit.mk (desc : ∀ E : Multicofork I, K.x ⟶ E.x)
     (uniq : ∀ (E : Multicofork I) (m : K.x ⟶ E.x), (∀ i : I.R, K.π i ≫ m = E.π i) → m = desc E) :
     IsColimit K :=
   { desc
-    fac' := by
+    fac := by
       rintro S (a | b)
       · rw [← K.w (walking_multispan.hom.fst a), ← S.w (walking_multispan.hom.fst a),
           category.assoc]
         congr 1
         apply fac
       · apply fac
-    uniq' := by
+    uniq := by
       intro S m hm
       apply uniq
       intro i

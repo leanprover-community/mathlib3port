@@ -163,7 +163,7 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfSpecializes {y : X} (h : p�
     IsColimit (skyscraperPresheafCoconeOfSpecializes p₀ A h)
     where
   desc c := eqToHom (if_pos trivial).symm ≫ c.ι.app (op ⊤)
-  fac' c U := by
+  fac c U := by
     rw [← c.w (hom_of_le <| (le_top : unop U ≤ _)).op]
     change _ ≫ _ ≫ dite _ _ _ ≫ _ = _
     rw [dif_pos]
@@ -171,7 +171,7 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfSpecializes {y : X} (h : p�
       simpa only [skyscraperPresheafCoconeOfSpecializes_ι_app, eq_to_hom_trans_assoc,
         eq_to_hom_refl, category.id_comp]
     · exact h.mem_open U.unop.1.2 U.unop.2
-  uniq' c f h := by
+  uniq c f h := by
     rw [← h, skyscraperPresheafCoconeOfSpecializes_ι_app, eq_to_hom_trans_assoc, eq_to_hom_refl,
       category.id_comp]
 #align skyscraper_presheaf_cocone_is_colimit_of_specializes skyscraperPresheafCoconeIsColimitOfSpecializes
@@ -204,14 +204,14 @@ noncomputable def skyscraperPresheafCoconeIsColimitOfNotSpecializes {y : X} (h :
     let ⟨U, ho, h₀, hy⟩ := not_specializes_iff_exists_open.mp h
     ⟨⟨⟨U, ho⟩, h₀⟩, hy⟩
   { desc := fun c => eqToHom (if_neg h1.choose_spec).symm ≫ c.ι.app (op h1.some)
-    fac' := fun c U => by
+    fac := fun c U => by
       change _ = c.ι.app (op U.unop)
       simp only [← c.w (hom_of_le <| @inf_le_left _ _ h1.some U.unop).op, ←
         c.w (hom_of_le <| @inf_le_right _ _ h1.some U.unop).op, ← category.assoc]
       congr 1
       refine' ((if_neg _).symm.rec terminal_is_terminal).hom_ext _ _
       exact fun h => h1.some_spec h.1
-    uniq' := fun c f H => by
+    uniq := fun c f H => by
       rw [← category.id_comp f, ← H, ← category.assoc]
       congr 1; apply terminal_is_terminal.hom_ext }
 #align skyscraper_presheaf_cocone_is_colimit_of_not_specializes skyscraperPresheafCoconeIsColimitOfNotSpecializes

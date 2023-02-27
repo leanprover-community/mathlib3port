@@ -251,17 +251,17 @@ attribute [simps] functor_category_equivalence
 
 instance [HasFiniteProducts V] : HasFiniteProducts (Action V G)
     where out n :=
-    Adjunction.hasLimitsOfShapeOfEquivalence (Action.functorCategoryEquivalence _ _).Functor
+    Adjunction.hasLimitsOfShape_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
 
 instance [HasFiniteLimits V] : HasFiniteLimits (Action V G)
     where out J _ _ :=
     adjunction.has_limits_of_shape_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
 
 instance [HasLimits V] : HasLimits (Action V G) :=
-  Adjunction.hasLimitsOfEquivalence (Action.functorCategoryEquivalence _ _).Functor
+  Adjunction.has_limits_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
 
 instance [HasColimits V] : HasColimits (Action V G) :=
-  Adjunction.hasColimitsOfEquivalence (Action.functorCategoryEquivalence _ _).Functor
+  Adjunction.has_colimits_of_equivalence (Action.functorCategoryEquivalence _ _).Functor
 
 end
 
@@ -793,12 +793,12 @@ def ofMulActionLimitCone {ι : Type v} (G : Type max v u) [Monoid G] (F : ι →
             ext (x j)
             dsimp
             exact congr_fun ((s.π.app ⟨j⟩).comm g) x }
-      fac' := fun s j => by
+      fac := fun s j => by
         ext
         dsimp
         congr
         rw [discrete.mk_as]
-      uniq' := fun s f h => by
+      uniq := fun s f h => by
         ext (x j)
         dsimp at *
         rw [← h ⟨j⟩]

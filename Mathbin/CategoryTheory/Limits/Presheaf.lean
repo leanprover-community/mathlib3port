@@ -180,11 +180,11 @@ def Elements.initial (A : C) : (yoneda.obj A).Elements :=
 def isInitial (A : C) : IsInitial (Elements.initial A)
     where
   desc s := ⟨s.x.2.op, comp_id _⟩
-  uniq' s m w := by
+  uniq s m w := by
     simp_rw [← m.2]
     dsimp [elements.initial]
     simp
-  fac' := by rintro s ⟨⟨⟩⟩
+  fac := by rintro s ⟨⟨⟩⟩
 #align category_theory.colimit_adj.is_initial CategoryTheory.ColimitAdj.isInitial
 
 /--

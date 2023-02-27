@@ -85,7 +85,7 @@ def limitConeIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitCone F)
           dsimp
           erw [← S.w f]
           rfl⟩ }
-  uniq' S m h := by
+  uniq S m h := by
     ext : 3
     simpa [← h]
 #align Top.limit_cone_is_limit TopCat.limitConeIsLimit
@@ -104,17 +104,17 @@ def limitConeInfiIsLimit (F : J ⥤ TopCat.{max v u}) : IsLimit (limitConeInfi F
           (continuous_iff_coinduced_le.mp (s.π.app j).Continuous : _))
 #align Top.limit_cone_infi_is_limit TopCat.limitConeInfiIsLimit
 
-instance topHasLimitsOfSize : HasLimitsOfSize.{v} TopCat.{max v u}
+instance topCat_hasLimitsOfSize : HasLimitsOfSize.{v} TopCat.{max v u}
     where HasLimitsOfShape J 𝒥 :=
     {
       HasLimit := fun F =>
         has_limit.mk
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
-#align Top.Top_has_limits_of_size TopCat.topHasLimitsOfSize
+#align Top.Top_has_limits_of_size TopCat.topCat_hasLimitsOfSize
 
 instance topCat_hasLimits : HasLimits TopCat.{u} :=
-  TopCat.topHasLimitsOfSize.{u, u}
+  TopCat.topCat_hasLimitsOfSize.{u, u}
 #align Top.Top_has_limits TopCat.topCat_hasLimits
 
 instance forgetPreservesLimitsOfSize :
@@ -161,17 +161,17 @@ def colimitCoconeIsColimit (F : J ⥤ TopCat.{max v u}) : IsColimit (colimitCoco
           (continuous_iff_coinduced_le.mp (s.ι.app j).Continuous : _))
 #align Top.colimit_cocone_is_colimit TopCat.colimitCoconeIsColimit
 
-instance topHasColimitsOfSize : HasColimitsOfSize.{v} TopCat.{max v u}
+instance topCat_hasColimitsOfSize : HasColimitsOfSize.{v} TopCat.{max v u}
     where HasColimitsOfShape J 𝒥 :=
     {
       HasColimit := fun F =>
         has_colimit.mk
           { Cocone := colimit_cocone F
             IsColimit := colimit_cocone_is_colimit F } }
-#align Top.Top_has_colimits_of_size TopCat.topHasColimitsOfSize
+#align Top.Top_has_colimits_of_size TopCat.topCat_hasColimitsOfSize
 
 instance topCat_hasColimits : HasColimits TopCat.{u} :=
-  TopCat.topHasColimitsOfSize.{u, u}
+  TopCat.topCat_hasColimitsOfSize.{u, u}
 #align Top.Top_has_colimits TopCat.topCat_hasColimits
 
 instance forgetPreservesColimitsOfSize :
@@ -202,11 +202,11 @@ def piFan {ι : Type v} (α : ι → TopCat.{max v u}) : Fan α :=
 def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan α)
     where
   lift S := { toFun := fun s i => S.π.app ⟨i⟩ s }
-  uniq' := by
+  uniq := by
     intro S m h
     ext (x i)
     simp [← h ⟨i⟩]
-  fac' s j := by
+  fac s j := by
     cases j
     tidy
 #align Top.pi_fan_is_limit TopCat.piFanIsLimit
@@ -255,11 +255,11 @@ def sigmaCofanIsColimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsColimit
   desc S :=
     { toFun := fun s => S.ι.app ⟨s.1⟩ s.2
       continuous_toFun := continuous_sigma fun i => map_continuous (S.ι.app ⟨i⟩) }
-  uniq' := by
+  uniq := by
     intro S m h
     ext ⟨i, x⟩
     simp [← h ⟨i⟩]
-  fac' s j := by
+  fac s j := by
     cases j
     tidy
 #align Top.sigma_cofan_is_colimit TopCat.sigmaCofanIsColimit
@@ -324,10 +324,10 @@ def prodBinaryFan (X Y : TopCat.{u}) : BinaryFan X Y :=
 def prodBinaryFanIsLimit (X Y : TopCat.{u}) : IsLimit (prodBinaryFan X Y)
     where
   lift := fun S : BinaryFan X Y => { toFun := fun s => (S.fst s, S.snd s) }
-  fac' := by
+  fac := by
     rintro S (_ | _)
     tidy
-  uniq' := by
+  uniq := by
     intro S m h
     ext x
     · specialize h ⟨walking_pair.left⟩

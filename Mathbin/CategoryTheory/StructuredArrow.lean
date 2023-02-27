@@ -204,7 +204,7 @@ def mkIdInitial [Full T] [Faithful T] : IsInitial (mk (𝟙 (T.obj Y)))
       (by
         dsimp
         simp)
-  uniq' c m _ := by
+  uniq c m _ := by
     ext
     apply T.map_injective
     simpa only [hom_mk_right, T.image_preimage, ← w m] using (category.id_comp _).symm
@@ -398,7 +398,7 @@ def mkIdTerminal [Full S] [Faithful S] : IsTerminal (mk (𝟙 (S.obj Y)))
       (by
         dsimp
         simp)
-  uniq' := by
+  uniq := by
     rintro c m -
     ext
     apply S.map_injective

@@ -147,7 +147,7 @@ def imageMonoFactorisation {X Y : C} (f : X ⟶ Y) : MonoFactorisation f
   m := kernel.ι _
   m_mono := inferInstance
   e := kernel.lift _ f (cokernel.condition _)
-  fac' := kernel.lift_ι _ _ _
+  fac := kernel.lift_ι _ _ _
 #align category_theory.abelian.of_coimage_image_comparison_is_iso.image_mono_factorisation CategoryTheory.Abelian.OfCoimageImageComparisonIsIso.imageMonoFactorisation
 
 theorem imageMonoFactorisation_e' {X Y : C} (f : X ⟶ Y) :
@@ -275,11 +275,11 @@ variable {C : Type u} [Category.{v} C] [Abelian C]
 
 /-- An abelian category has finite biproducts. -/
 instance (priority := 100) hasFiniteBiproducts : HasFiniteBiproducts C :=
-  Limits.HasFiniteBiproducts.ofHasFiniteProducts
+  Limits.HasFiniteBiproducts.of_hasFiniteProducts
 #align category_theory.abelian.has_finite_biproducts CategoryTheory.Abelian.hasFiniteBiproducts
 
 instance (priority := 100) hasBinaryBiproducts : HasBinaryBiproducts C :=
-  Limits.hasBinaryBiproductsOfFiniteBiproducts _
+  Limits.hasBinaryBiproducts_of_finite_biproducts _
 #align category_theory.abelian.has_binary_biproducts CategoryTheory.Abelian.hasBinaryBiproducts
 
 instance (priority := 100) hasZeroObject : HasZeroObject C :=
@@ -534,11 +534,11 @@ instance (priority := 100) hasPushouts : HasPushouts C :=
 #align category_theory.abelian.has_pushouts CategoryTheory.Abelian.hasPushouts
 
 instance (priority := 100) hasFiniteLimits : HasFiniteLimits C :=
-  Limits.hasFiniteLimitsOfHasEqualizersAndFiniteProducts
+  Limits.hasFiniteLimits_of_hasEqualizers_and_finite_products
 #align category_theory.abelian.has_finite_limits CategoryTheory.Abelian.hasFiniteLimits
 
 instance (priority := 100) hasFiniteColimits : HasFiniteColimits C :=
-  Limits.hasFiniteColimitsOfHasCoequalizersAndFiniteCoproducts
+  Limits.hasFiniteColimits_of_hasCoequalizers_and_finite_coproducts
 #align category_theory.abelian.has_finite_colimits CategoryTheory.Abelian.hasFiniteColimits
 
 end

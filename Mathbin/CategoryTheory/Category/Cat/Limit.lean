@@ -147,8 +147,8 @@ theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ C
 def limitConeIsLimit (F : J ⥤ Cat.{v, v}) : IsLimit (limitCone F)
     where
   lift := limitConeLift F
-  fac' s j := CategoryTheory.Functor.ext (by tidy) fun X Y f => Types.Limit.π_mk _ _ _ _
-  uniq' s m w := by
+  fac s j := CategoryTheory.Functor.ext (by tidy) fun X Y f => Types.Limit.π_mk _ _ _ _
+  uniq s m w := by
     symm
     fapply CategoryTheory.Functor.ext
     · intro X

@@ -158,10 +158,10 @@ instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
           simp
       makesLimit :=
         { lift := fun S => ⟨hE.lift ((sheafToPresheaf J D).mapCone S)⟩
-          fac' := fun S j => by
+          fac := fun S j => by
             ext1
             apply hE.fac ((Sheaf_to_presheaf J D).mapCone S) j
-          uniq' := fun S m hm => by
+          uniq := fun S m hm => by
             ext1
             exact
               hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m.val fun j =>
@@ -170,7 +170,7 @@ instance (F : K ⥤ Sheaf J D) : CreatesLimit F (sheafToPresheaf J D) :=
 instance : CreatesLimitsOfShape K (sheafToPresheaf J D) where
 
 instance : HasLimitsOfShape K (Sheaf J D) :=
-  hasLimitsOfShapeOfHasLimitsOfShapeCreatesLimitsOfShape (sheafToPresheaf J D)
+  hasLimitsOfShape_of_hasLimitsOfShape_createsLimitsOfShape (sheafToPresheaf J D)
 
 end
 
@@ -178,7 +178,7 @@ instance [HasLimits D] : CreatesLimits (sheafToPresheaf J D) :=
   ⟨⟩
 
 instance [HasLimits D] : HasLimits (Sheaf J D) :=
-  hasLimitsOfHasLimitsCreatesLimits (sheafToPresheaf J D)
+  has_limits_of_has_limits_creates_limits (sheafToPresheaf J D)
 
 end Limits
 
@@ -227,13 +227,13 @@ def isColimitSheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPres
     (hE : IsColimit E) : IsColimit (sheafify_cocone E)
     where
   desc S := ⟨J.sheafifyLift (hE.desc ((sheafToPresheaf J D).mapCocone S)) S.x.2⟩
-  fac' := by
+  fac := by
     intro S j
     ext1
     dsimp [sheafify_cocone]
     erw [category.assoc, J.to_sheafify_sheafify_lift, hE.fac]
     rfl
-  uniq' := by
+  uniq := by
     intro S m hm
     ext1
     apply J.sheafify_lift_unique

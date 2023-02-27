@@ -109,8 +109,8 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
           (PresheafedSpace.stalk_map ((forget_to_SheafedSpace.map_cocone s).ι.app i) y) :=
         (s.ι.app i).2 y
       infer_instance⟩
-  fac' s j := LocallyRingedSpace.Hom.ext _ _ (colimit.ι_desc _ _)
-  uniq' s f h :=
+  fac s j := LocallyRingedSpace.Hom.ext _ _ (colimit.ι_desc _ _)
+  uniq s f h :=
     LocallyRingedSpace.Hom.ext _ _
       (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j =>
         congr_arg LocallyRingedSpace.Hom.val (h j))
@@ -325,7 +325,7 @@ noncomputable instance preservesCoequalizer :
 end HasCoequalizer
 
 instance : HasColimits LocallyRingedSpace :=
-  hasColimitsOfHasCoequalizersAndCoproducts
+  has_colimits_of_hasCoequalizers_and_coproducts
 
 noncomputable instance : PreservesColimits LocallyRingedSpace.forgetToSheafedSpace :=
   preservesColimitsOfPreservesCoequalizersAndCoproducts _

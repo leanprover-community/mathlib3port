@@ -100,7 +100,7 @@ def fork {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) : Fork f g :=
       sub_eq_zero] using this
 #align SemiNormedGroup.fork SemiNormedGroup.fork
 
-instance hasLimitParallelPair {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) :
+instance hasLimit_parallelPair {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) :
     HasLimit (parallelPair f g)
     where exists_limit :=
     Nonempty.intro
@@ -119,11 +119,11 @@ instance hasLimitParallelPair {V W : SemiNormedGroup.{u}} (f g : V ⟶ W) :
             dsimp
             rw [← h]
             rfl }
-#align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroup.hasLimitParallelPair
+#align SemiNormedGroup.has_limit_parallel_pair SemiNormedGroup.hasLimit_parallelPair
 
 instance : Limits.HasEqualizers.{u, u + 1} SemiNormedGroup :=
   @hasEqualizers_of_hasLimit_parallelPair SemiNormedGroup _ fun V W f g =>
-    SemiNormedGroup.hasLimitParallelPair f g
+    SemiNormedGroup.hasLimit_parallelPair f g
 
 end EqualizersAndKernels
 

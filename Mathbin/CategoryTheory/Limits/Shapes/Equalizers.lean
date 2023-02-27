@@ -474,10 +474,10 @@ def Fork.IsLimit.mk (t : Fork f g) (lift : ∀ s : Fork f g, s.x ⟶ t.x)
     (fac : ∀ s : Fork f g, lift s ≫ Fork.ι t = Fork.ι s)
     (uniq : ∀ (s : Fork f g) (m : s.x ⟶ t.x) (w : m ≫ t.ι = s.ι), m = lift s) : IsLimit t :=
   { lift
-    fac' := fun s j =>
+    fac := fun s j =>
       WalkingParallelPair.casesOn j (fac s) <| by
         erw [← s.w left, ← t.w left, ← category.assoc, fac] <;> rfl
-    uniq' := fun s m j => by tidy }
+    uniq := fun s m j => by tidy }
 #align category_theory.limits.fork.is_limit.mk CategoryTheory.Limits.Fork.IsLimit.mk
 
 /-- This is another convenient method to verify that a fork is a limit cone. It
@@ -494,10 +494,10 @@ def Cofork.IsColimit.mk (t : Cofork f g) (desc : ∀ s : Cofork f g, t.x ⟶ s.x
     (fac : ∀ s : Cofork f g, Cofork.π t ≫ desc s = Cofork.π s)
     (uniq : ∀ (s : Cofork f g) (m : t.x ⟶ s.x) (w : t.π ≫ m = s.π), m = desc s) : IsColimit t :=
   { desc
-    fac' := fun s j =>
+    fac := fun s j =>
       WalkingParallelPair.casesOn j (by erw [← s.w left, ← t.w left, category.assoc, fac] <;> rfl)
         (fac s)
-    uniq' := by tidy }
+    uniq := by tidy }
 #align category_theory.limits.cofork.is_colimit.mk CategoryTheory.Limits.Cofork.IsColimit.mk
 
 /-- This is another convenient method to verify that a fork is a limit cone. It
@@ -1161,13 +1161,13 @@ abbrev HasCoequalizers :=
 /-- If `C` has all limits of diagrams `parallel_pair f g`, then it has all equalizers -/
 theorem hasEqualizers_of_hasLimit_parallelPair
     [∀ {X Y : C} {f g : X ⟶ Y}, HasLimit (parallelPair f g)] : HasEqualizers C :=
-  { HasLimit := fun F => hasLimitOfIso (diagramIsoParallelPair F).symm }
+  { HasLimit := fun F => hasLimit_of_iso (diagramIsoParallelPair F).symm }
 #align category_theory.limits.has_equalizers_of_has_limit_parallel_pair CategoryTheory.Limits.hasEqualizers_of_hasLimit_parallelPair
 
 /-- If `C` has all colimits of diagrams `parallel_pair f g`, then it has all coequalizers -/
 theorem hasCoequalizers_of_hasColimit_parallelPair
     [∀ {X Y : C} {f g : X ⟶ Y}, HasColimit (parallelPair f g)] : HasCoequalizers C :=
-  { HasColimit := fun F => hasColimitOfIso (diagramIsoParallelPair F) }
+  { HasColimit := fun F => hasColimit_of_iso (diagramIsoParallelPair F) }
 #align category_theory.limits.has_coequalizers_of_has_colimit_parallel_pair CategoryTheory.Limits.hasCoequalizers_of_hasColimit_parallelPair
 
 section

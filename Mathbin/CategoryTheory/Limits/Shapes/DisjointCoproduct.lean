@@ -130,9 +130,9 @@ theorem initialMonoClass_of_disjoint_coproducts [CoproductsDisjoint C] : Initial
     isInitial_mono_from := fun I X hI =>
       CoproductDisjoint.mono_inl _ _ (𝟙 X)
         { desc := fun s : BinaryCofan _ _ => s.inr
-          fac' := fun s j =>
+          fac := fun s j =>
             Discrete.casesOn j fun j => WalkingPair.casesOn j (hI.hom_ext _ _) (id_comp _)
-          uniq' := fun (s : BinaryCofan _ _) m w =>
+          uniq := fun (s : BinaryCofan _ _) m w =>
             (id_comp _).symm.trans (w ⟨WalkingPair.right⟩) } }
 #align category_theory.limits.initial_mono_class_of_disjoint_coproducts CategoryTheory.Limits.initialMonoClass_of_disjoint_coproducts
 

@@ -66,7 +66,7 @@ def isTerminalEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (Y : C) :
       uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
   invFun u :=
     { lift := fun s => (u s.x).default
-      uniq' := fun s _ _ => (u s.x).2 _ }
+      uniq := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_terminal_equiv_unique CategoryTheory.Limits.isTerminalEquivUnique
@@ -98,7 +98,7 @@ def isInitialEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (X : C) :
       uniq := fun f => t.uniq ⟨X, by tidy⟩ f (by tidy) }
   invFun u :=
     { desc := fun s => (u s.x).default
-      uniq' := fun s _ _ => (u s.x).2 _ }
+      uniq := fun s _ _ => (u s.x).2 _ }
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_initial_equiv_unique CategoryTheory.Limits.isInitialEquivUnique
@@ -223,8 +223,8 @@ variable (X : C) {F₁ : Discrete.{w} PEmpty ⥤ C} {F₂ : Discrete.{w'} PEmpty
 def isLimitChangeEmptyCone {c₁ : Cone F₁} (hl : IsLimit c₁) (c₂ : Cone F₂) (hi : c₁.x ≅ c₂.x) :
     IsLimit c₂ where
   lift c := hl.lift ⟨c.x, by tidy⟩ ≫ hi.Hom
-  fac' _ j := j.as.elim
-  uniq' c f _ := by
+  fac _ j := j.as.elim
+  uniq c f _ := by
     erw [← hl.uniq ⟨c.X, by tidy⟩ (f ≫ hi.inv) fun j => j.as.elim]
     simp
 #align category_theory.limits.is_limit_change_empty_cone CategoryTheory.Limits.isLimitChangeEmptyCone
@@ -239,18 +239,18 @@ def isLimitEmptyConeEquiv (c₁ : Cone F₁) (c₂ : Cone F₂) (h : c₁.x ≅ 
   right_inv := by tidy
 #align category_theory.limits.is_limit_empty_cone_equiv CategoryTheory.Limits.isLimitEmptyConeEquiv
 
-theorem hasTerminalChangeDiagram (h : HasLimit F₁) : HasLimit F₂ :=
+theorem has_terminal_change_diagram (h : HasLimit F₁) : HasLimit F₂ :=
   ⟨⟨⟨⟨limit F₁, by tidy⟩, isLimitChangeEmptyCone C (limit.isLimit F₁) _ (eqToIso rfl)⟩⟩⟩
-#align category_theory.limits.has_terminal_change_diagram CategoryTheory.Limits.hasTerminalChangeDiagram
+#align category_theory.limits.has_terminal_change_diagram CategoryTheory.Limits.has_terminal_change_diagram
 
-theorem hasTerminalChangeUniverse [h : HasLimitsOfShape (Discrete.{w} PEmpty) C] :
+theorem has_terminal_change_universe [h : HasLimitsOfShape (Discrete.{w} PEmpty) C] :
     HasLimitsOfShape (Discrete.{w'} PEmpty) C :=
   {
     HasLimit := fun J =>
-      hasTerminalChangeDiagram C
+      has_terminal_change_diagram C
         (let f := h.1
         f (Functor.empty C)) }
-#align category_theory.limits.has_terminal_change_universe CategoryTheory.Limits.hasTerminalChangeUniverse
+#align category_theory.limits.has_terminal_change_universe CategoryTheory.Limits.has_terminal_change_universe
 
 /-- Being initial is independent of the empty diagram, its universe, and the cocone over it,
     as long as the cocone points are isomorphic. -/
@@ -258,8 +258,8 @@ def isColimitChangeEmptyCocone {c₁ : Cocone F₁} (hl : IsColimit c₁) (c₂ 
     (hi : c₁.x ≅ c₂.x) : IsColimit c₂
     where
   desc c := hi.inv ≫ hl.desc ⟨c.x, by tidy⟩
-  fac' _ j := j.as.elim
-  uniq' c f _ := by
+  fac _ j := j.as.elim
+  uniq c f _ := by
     erw [← hl.uniq ⟨c.X, by tidy⟩ (hi.hom ≫ f) fun j => j.as.elim]
     simp
 #align category_theory.limits.is_colimit_change_empty_cocone CategoryTheory.Limits.isColimitChangeEmptyCocone
@@ -275,18 +275,18 @@ def isColimitEmptyCoconeEquiv (c₁ : Cocone F₁) (c₂ : Cocone F₂) (h : c�
   right_inv := by tidy
 #align category_theory.limits.is_colimit_empty_cocone_equiv CategoryTheory.Limits.isColimitEmptyCoconeEquiv
 
-theorem hasInitialChangeDiagram (h : HasColimit F₁) : HasColimit F₂ :=
+theorem has_initial_change_diagram (h : HasColimit F₁) : HasColimit F₂ :=
   ⟨⟨⟨⟨colimit F₁, by tidy⟩, isColimitChangeEmptyCocone C (colimit.isColimit F₁) _ (eqToIso rfl)⟩⟩⟩
-#align category_theory.limits.has_initial_change_diagram CategoryTheory.Limits.hasInitialChangeDiagram
+#align category_theory.limits.has_initial_change_diagram CategoryTheory.Limits.has_initial_change_diagram
 
-theorem hasInitialChangeUniverse [h : HasColimitsOfShape (Discrete.{w} PEmpty) C] :
+theorem has_initial_change_universe [h : HasColimitsOfShape (Discrete.{w} PEmpty) C] :
     HasColimitsOfShape (Discrete.{w'} PEmpty) C :=
   {
     HasColimit := fun J =>
-      hasInitialChangeDiagram C
+      has_initial_change_diagram C
         (let f := h.1
         f (Functor.empty C)) }
-#align category_theory.limits.has_initial_change_universe CategoryTheory.Limits.hasInitialChangeUniverse
+#align category_theory.limits.has_initial_change_universe CategoryTheory.Limits.has_initial_change_universe
 
 end Univ
 
@@ -400,28 +400,28 @@ instance initial.isSplitEpi_to {Y : C} [HasInitial C] (f : Y ⟶ ⊥_ C) : IsSpl
 def terminalOpOfInitial {X : C} (t : IsInitial X) : IsTerminal (Opposite.op X)
     where
   lift s := (t.to s.x.unop).op
-  uniq' s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
+  uniq s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
 #align category_theory.limits.terminal_op_of_initial CategoryTheory.Limits.terminalOpOfInitial
 
 /-- An initial object in the opposite category is terminal in the original category. -/
 def terminalUnopOfInitial {X : Cᵒᵖ} (t : IsInitial X) : IsTerminal X.unop
     where
   lift s := (t.to (Opposite.op s.x)).unop
-  uniq' s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
+  uniq s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
 #align category_theory.limits.terminal_unop_of_initial CategoryTheory.Limits.terminalUnopOfInitial
 
 /-- A terminal object is initial in the opposite category. -/
 def initialOpOfTerminal {X : C} (t : IsTerminal X) : IsInitial (Opposite.op X)
     where
   desc s := (t.from s.x.unop).op
-  uniq' s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
+  uniq s m w := Quiver.Hom.unop_inj (t.hom_ext _ _)
 #align category_theory.limits.initial_op_of_terminal CategoryTheory.Limits.initialOpOfTerminal
 
 /-- A terminal object in the opposite category is initial in the original category. -/
 def initialUnopOfTerminal {X : Cᵒᵖ} (t : IsTerminal X) : IsInitial X.unop
     where
   desc s := (t.from (Opposite.op s.x)).unop
-  uniq' s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
+  uniq s m w := Quiver.Hom.op_inj (t.hom_ext _ _)
 #align category_theory.limits.initial_unop_of_terminal CategoryTheory.Limits.initialUnopOfTerminal
 
 instance hasInitial_op_of_hasTerminal [HasTerminal C] : HasInitial Cᵒᵖ :=
@@ -596,8 +596,7 @@ def limitOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) :
     IsLimit (coneOfDiagramInitial tX F)
     where
   lift s := s.π.app X
-  uniq' s m w :=
-    by
+  uniq s m w := by
     rw [← w X, cone_of_diagram_initial_π_app, tX.hom_ext (tX.to X) (𝟙 _)]
     dsimp; simp
 #align category_theory.limits.limit_of_diagram_initial CategoryTheory.Limits.limitOfDiagramInitial
@@ -663,7 +662,7 @@ def colimitOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) :
     IsColimit (coconeOfDiagramTerminal tX F)
     where
   desc s := s.ι.app X
-  uniq' s m w :=
+  uniq s m w :=
     by
     rw [← w X, cocone_of_diagram_terminal_ι_app, tX.hom_ext (tX.from X) (𝟙 _)]
     simp

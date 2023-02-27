@@ -50,7 +50,7 @@ attribute [local elab_without_expected_type] congr_fun
 def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F)
     where
   lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
-  uniq' := by
+  uniq := by
     intros
     ext (x j)
     exact congr_fun (w j) x

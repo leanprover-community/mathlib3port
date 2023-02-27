@@ -341,16 +341,16 @@ variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F
 
 omit H
 
-theorem hasColimitMultispanComp : HasColimit (D.diagram.multispan ⋙ F) :=
+theorem hasColimit_multispan_comp : HasColimit (D.diagram.multispan ⋙ F) :=
   ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
-#align category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimitMultispanComp
+#align category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimit_multispan_comp
 
 include H
 
 attribute [local instance] has_colimit_multispan_comp
 
 theorem has_colimit_mapGlueData_diagram : HasMulticoequalizer (D.mapGlueData F).diagram :=
-  hasColimitOfIso (D.diagramIso F).symm
+  hasColimit_of_iso (D.diagramIso F).symm
 #align category_theory.glue_data.has_colimit_map_glue_data_diagram CategoryTheory.GlueData.has_colimit_mapGlueData_diagram
 
 attribute [local instance] has_colimit_map_glue_data_diagram

@@ -392,7 +392,7 @@ def imageForgetAdj : image ⊣ forget X :=
                 { i := g.obj.left
                   m := g.arrow
                   e := k.left
-                  fac' := over.w k }
+                  fac := over.w k }
             apply image.lift_fac
           left_inv := fun k => Subsingleton.elim _ _
           right_inv := fun k => by

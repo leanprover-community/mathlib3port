@@ -133,7 +133,7 @@ instance : PreservesColimit 𝖣.diagram.multispan forgetToTop :=
   infer_instance
 
 instance : HasMulticoequalizer 𝖣.diagram :=
-  hasColimitOfCreated _ forgetToLocallyRingedSpace
+  hasColimit_of_created _ forgetToLocallyRingedSpace
 
 /-- The glued scheme of a glued space. -/
 abbrev glued : Scheme :=

@@ -210,7 +210,7 @@ theorem Biprod.isIso_inl_iff_isZero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ 
 #align category_theory.biprod.is_iso_inl_iff_is_zero CategoryTheory.Biprod.isIso_inl_iff_isZero
 
 /-- Any simple object in a preadditive category is indecomposable. -/
-theorem indecomposableOfSimple (X : C) [Simple X] : Indecomposable X :=
+theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
   ⟨Simple.not_isZero X, fun Y Z i =>
     by
     refine' or_iff_not_imp_left.mpr fun h => _
@@ -220,7 +220,7 @@ theorem indecomposableOfSimple (X : C) [Simple X] : Indecomposable X :=
     · rwa [biprod.is_iso_inl_iff_is_zero] at h
     · exact simple.of_iso i.symm
     · infer_instance⟩
-#align category_theory.indecomposable_of_simple CategoryTheory.indecomposableOfSimple
+#align category_theory.indecomposable_of_simple CategoryTheory.indecomposable_of_simple
 
 end Indecomposable
 

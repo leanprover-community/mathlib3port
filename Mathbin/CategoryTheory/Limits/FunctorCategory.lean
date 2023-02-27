@@ -62,8 +62,8 @@ def evaluationJointlyReflectsLimits {F : J ⥤ K ⥤ C} (c : Cone F)
           rw [assoc, (t Y).fac _ j]
           simpa using
             ((t X).fac_assoc ⟨s.X.obj X, whisker_right s.π ((evaluation K C).obj X)⟩ j _).symm }
-  fac' s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
-  uniq' s m w :=
+  fac s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
+  uniq s m w :=
     NatTrans.ext _ _ <|
       funext fun x =>
         (t x).hom_ext fun j =>
@@ -121,8 +121,8 @@ def evaluationJointlyReflectsColimits {F : J ⥤ K ⥤ C} (c : Cocone F)
           erw [(t Y).fac ⟨s.X.obj _, whisker_right s.ι _⟩ j]
           dsimp
           simp }
-  fac' s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
-  uniq' s m w :=
+  fac s j := NatTrans.ext _ _ <| funext fun k => (t k).fac _ j
+  uniq s m w :=
     NatTrans.ext _ _ <|
       funext fun x =>
         (t x).hom_ext fun j =>
@@ -168,29 +168,29 @@ def combinedIsColimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, ColimitCocone (F.flip.
 
 noncomputable section
 
-instance functorCategoryHasLimitsOfShape [HasLimitsOfShape J C] : HasLimitsOfShape J (K ⥤ C)
+instance functor_category_hasLimitsOfShape [HasLimitsOfShape J C] : HasLimitsOfShape J (K ⥤ C)
     where HasLimit F :=
     HasLimit.mk
       { Cone := combineCones F fun k => getLimitCone _
         IsLimit := combinedIsLimit _ _ }
-#align category_theory.limits.functor_category_has_limits_of_shape CategoryTheory.Limits.functorCategoryHasLimitsOfShape
+#align category_theory.limits.functor_category_has_limits_of_shape CategoryTheory.Limits.functor_category_hasLimitsOfShape
 
-instance functorCategoryHasColimitsOfShape [HasColimitsOfShape J C] : HasColimitsOfShape J (K ⥤ C)
+instance functor_category_hasColimitsOfShape [HasColimitsOfShape J C] : HasColimitsOfShape J (K ⥤ C)
     where HasColimit F :=
     HasColimit.mk
       { Cocone := combineCocones _ fun k => getColimitCocone _
         IsColimit := combinedIsColimit _ _ }
-#align category_theory.limits.functor_category_has_colimits_of_shape CategoryTheory.Limits.functorCategoryHasColimitsOfShape
+#align category_theory.limits.functor_category_has_colimits_of_shape CategoryTheory.Limits.functor_category_hasColimitsOfShape
 
-instance functorCategoryHasLimitsOfSize [HasLimitsOfSize.{v₁, u₁} C] :
+instance functor_category_hasLimitsOfSize [HasLimitsOfSize.{v₁, u₁} C] :
     HasLimitsOfSize.{v₁, u₁} (K ⥤ C) :=
   ⟨inferInstance⟩
-#align category_theory.limits.functor_category_has_limits_of_size CategoryTheory.Limits.functorCategoryHasLimitsOfSize
+#align category_theory.limits.functor_category_has_limits_of_size CategoryTheory.Limits.functor_category_hasLimitsOfSize
 
-instance functorCategoryHasColimitsOfSize [HasColimitsOfSize.{v₁, u₁} C] :
+instance functor_category_hasColimitsOfSize [HasColimitsOfSize.{v₁, u₁} C] :
     HasColimitsOfSize.{v₁, u₁} (K ⥤ C) :=
   ⟨inferInstance⟩
-#align category_theory.limits.functor_category_has_colimits_of_size CategoryTheory.Limits.functorCategoryHasColimitsOfSize
+#align category_theory.limits.functor_category_has_colimits_of_size CategoryTheory.Limits.functor_category_hasColimitsOfSize
 
 instance evaluationPreservesLimitsOfShape [HasLimitsOfShape J C] (k : K) :
     PreservesLimitsOfShape J ((evaluation K C).obj k)

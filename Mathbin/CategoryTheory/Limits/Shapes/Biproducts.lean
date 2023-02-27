@@ -325,7 +325,7 @@ class HasFiniteBiproducts : Prop where
 
 variable {J}
 
-theorem hasBiproductsOfShapeOfEquiv {K : Type w'} [HasBiproductsOfShape K C] (e : J ≃ K) :
+theorem hasBiproductsOfShape_of_equiv {K : Type w'} [HasBiproductsOfShape K C] (e : J ≃ K) :
     HasBiproductsOfShape J C :=
   ⟨fun F =>
     let ⟨⟨h⟩⟩ := HasBiproductsOfShape.hasBiproduct (F ∘ e.symm)
@@ -333,23 +333,23 @@ theorem hasBiproductsOfShapeOfEquiv {K : Type w'} [HasBiproductsOfShape K C] (e 
     HasBiproduct.mk <| by
       simpa only [(· ∘ ·), e.symm_apply_apply] using
         limit_bicone.mk (c.whisker e) ((c.whisker_is_bilimit_iff _).2 hc)⟩
-#align category_theory.limits.has_biproducts_of_shape_of_equiv CategoryTheory.Limits.hasBiproductsOfShapeOfEquiv
+#align category_theory.limits.has_biproducts_of_shape_of_equiv CategoryTheory.Limits.hasBiproductsOfShape_of_equiv
 
-instance (priority := 100) hasBiproductsOfShapeFinite [HasFiniteBiproducts C] [Finite J] :
+instance (priority := 100) hasBiproductsOfShape_finite [HasFiniteBiproducts C] [Finite J] :
     HasBiproductsOfShape J C :=
   by
   rcases Finite.exists_equiv_fin J with ⟨n, ⟨e⟩⟩
   haveI := has_finite_biproducts.out C n
   exact has_biproducts_of_shape_of_equiv C e
-#align category_theory.limits.has_biproducts_of_shape_finite CategoryTheory.Limits.hasBiproductsOfShapeFinite
+#align category_theory.limits.has_biproducts_of_shape_finite CategoryTheory.Limits.hasBiproductsOfShape_finite
 
-instance (priority := 100) hasFiniteProductsOfHasFiniteBiproducts [HasFiniteBiproducts C] :
-    HasFiniteProducts C where out n := ⟨fun F => hasLimitOfIso Discrete.natIsoFunctor.symm⟩
-#align category_theory.limits.has_finite_products_of_has_finite_biproducts CategoryTheory.Limits.hasFiniteProductsOfHasFiniteBiproducts
+instance (priority := 100) hasFiniteProducts_of_hasFiniteBiproducts [HasFiniteBiproducts C] :
+    HasFiniteProducts C where out n := ⟨fun F => hasLimit_of_iso Discrete.natIsoFunctor.symm⟩
+#align category_theory.limits.has_finite_products_of_has_finite_biproducts CategoryTheory.Limits.hasFiniteProducts_of_hasFiniteBiproducts
 
-instance (priority := 100) hasFiniteCoproductsOfHasFiniteBiproducts [HasFiniteBiproducts C] :
-    HasFiniteCoproducts C where out n := ⟨fun F => hasColimitOfIso Discrete.natIsoFunctor⟩
-#align category_theory.limits.has_finite_coproducts_of_has_finite_biproducts CategoryTheory.Limits.hasFiniteCoproductsOfHasFiniteBiproducts
+instance (priority := 100) hasFiniteCoproducts_of_hasFiniteBiproducts [HasFiniteBiproducts C] :
+    HasFiniteCoproducts C where out n := ⟨fun F => hasColimit_of_iso Discrete.natIsoFunctor⟩
+#align category_theory.limits.has_finite_coproducts_of_has_finite_biproducts CategoryTheory.Limits.hasFiniteCoproducts_of_hasFiniteBiproducts
 
 variable {J C}
 
@@ -960,9 +960,9 @@ def limitBiconeOfUnique : LimitBicone f
       IsColimit := (colimitCoconeOfUnique f).IsColimit }
 #align category_theory.limits.limit_bicone_of_unique CategoryTheory.Limits.limitBiconeOfUnique
 
-instance (priority := 100) hasBiproductUnique : HasBiproduct f :=
+instance (priority := 100) hasBiproduct_unique : HasBiproduct f :=
   HasBiproduct.mk (limitBiconeOfUnique f)
-#align category_theory.limits.has_biproduct_unique CategoryTheory.Limits.hasBiproductUnique
+#align category_theory.limits.has_biproduct_unique CategoryTheory.Limits.hasBiproduct_unique
 
 /-- A biproduct over a index type with exactly one term is just the object over that term. -/
 @[simps]
@@ -1260,32 +1260,32 @@ attribute [instance] has_binary_biproducts.has_binary_biproduct
 This is not an instance as typically in concrete categories there will be
 an alternative construction with nicer definitional properties.
 -/
-theorem hasBinaryBiproductsOfFiniteBiproducts [HasFiniteBiproducts C] : HasBinaryBiproducts C :=
+theorem hasBinaryBiproducts_of_finite_biproducts [HasFiniteBiproducts C] : HasBinaryBiproducts C :=
   {
     HasBinaryBiproduct := fun P Q =>
       HasBinaryBiproduct.mk
         { Bicone := (Biproduct.bicone (pairFunction P Q)).toBinaryBicone
           IsBilimit := (Bicone.toBinaryBiconeIsBilimit _).symm (Biproduct.isBilimit _) } }
-#align category_theory.limits.has_binary_biproducts_of_finite_biproducts CategoryTheory.Limits.hasBinaryBiproductsOfFiniteBiproducts
+#align category_theory.limits.has_binary_biproducts_of_finite_biproducts CategoryTheory.Limits.hasBinaryBiproducts_of_finite_biproducts
 
 end
 
 variable {P Q : C}
 
-instance HasBinaryBiproduct.hasLimitPair [HasBinaryBiproduct P Q] : HasLimit (pair P Q) :=
+instance HasBinaryBiproduct.hasLimit_pair [HasBinaryBiproduct P Q] : HasLimit (pair P Q) :=
   HasLimit.mk ⟨_, BinaryBiproduct.isLimit P Q⟩
-#align category_theory.limits.has_binary_biproduct.has_limit_pair CategoryTheory.Limits.HasBinaryBiproduct.hasLimitPair
+#align category_theory.limits.has_binary_biproduct.has_limit_pair CategoryTheory.Limits.HasBinaryBiproduct.hasLimit_pair
 
-instance HasBinaryBiproduct.hasColimitPair [HasBinaryBiproduct P Q] : HasColimit (pair P Q) :=
+instance HasBinaryBiproduct.hasColimit_pair [HasBinaryBiproduct P Q] : HasColimit (pair P Q) :=
   HasColimit.mk ⟨_, BinaryBiproduct.isColimit P Q⟩
-#align category_theory.limits.has_binary_biproduct.has_colimit_pair CategoryTheory.Limits.HasBinaryBiproduct.hasColimitPair
+#align category_theory.limits.has_binary_biproduct.has_colimit_pair CategoryTheory.Limits.HasBinaryBiproduct.hasColimit_pair
 
 instance (priority := 100) hasBinaryProducts_of_hasBinaryBiproducts [HasBinaryBiproducts C] :
-    HasBinaryProducts C where HasLimit F := hasLimitOfIso (diagramIsoPair F).symm
+    HasBinaryProducts C where HasLimit F := hasLimit_of_iso (diagramIsoPair F).symm
 #align category_theory.limits.has_binary_products_of_has_binary_biproducts CategoryTheory.Limits.hasBinaryProducts_of_hasBinaryBiproducts
 
 instance (priority := 100) hasBinaryCoproducts_of_hasBinaryBiproducts [HasBinaryBiproducts C] :
-    HasBinaryCoproducts C where HasColimit F := hasColimitOfIso (diagramIsoPair F)
+    HasBinaryCoproducts C where HasColimit F := hasColimit_of_iso (diagramIsoPair F)
 #align category_theory.limits.has_binary_coproducts_of_has_binary_biproducts CategoryTheory.Limits.hasBinaryCoproducts_of_hasBinaryBiproducts
 
 /-- The isomorphism between the specified binary product and the specified binary coproduct for

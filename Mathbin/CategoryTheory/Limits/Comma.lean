@@ -89,7 +89,7 @@ def coneOfPreservesIsLimit [PreservesLimit (F ⋙ snd L R) R] {c₁ : Cone (F �
             limit_auxiliary_cone_π_app, ← L.map_comp_assoc, t₁.fac, R.map_cone_π_app, ← R.map_comp,
             t₂.fac]
           exact (s.π.app j).w }
-  uniq' s m w :=
+  uniq s m w :=
     CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCone s) _ fun j => by simp [← w])
       (t₂.uniq ((snd L R).mapCone s) _ fun j => by simp [← w])
 #align category_theory.comma.cone_of_preserves_is_limit CategoryTheory.Comma.coneOfPreservesIsLimit
@@ -138,7 +138,7 @@ def coconeOfPreservesIsColimit [PreservesColimit (F ⋙ fst L R) L] {c₁ : Coco
             colimit_auxiliary_cocone_ι_app, assoc, ← R.map_comp, t₂.fac, L.map_cocone_ι_app, ←
             L.map_comp_assoc, t₁.fac]
           exact (s.ι.app j).w }
-  uniq' s m w :=
+  uniq s m w :=
     CommaMorphism.ext _ _ (t₁.uniq ((fst L R).mapCocone s) _ (by simp [← w]))
       (t₂.uniq ((snd L R).mapCocone s) _ (by simp [← w]))
 #align category_theory.comma.cocone_of_preserves_is_colimit CategoryTheory.Comma.coconeOfPreservesIsColimit

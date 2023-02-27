@@ -43,9 +43,8 @@ variable {J : Type u₂} [Category.{v₂} J]
 def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.op
     where
   lift s := (hc.desc s.unop).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_colimit.fac] using w (op j)
 #align category_theory.limits.is_limit_cocone_op CategoryTheory.Limits.isLimitCoconeOp
@@ -55,9 +54,8 @@ def isLimitCoconeOp (F : J ⥤ C) {c : Cocone F} (hc : IsColimit c) : IsLimit c.
 def isColimitConeOp (F : J ⥤ C) {c : Cone F} (hc : IsLimit c) : IsColimit c.op
     where
   desc s := (hc.lift s.unop).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_limit.fac] using w (op j)
 #align category_theory.limits.is_colimit_cone_op CategoryTheory.Limits.isColimitConeOp
@@ -68,12 +66,11 @@ def isLimitConeLeftOpOfCocone (F : J ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsColimit
     IsLimit (coneLeftOpOfCocone c)
     where
   lift s := (hc.desc (coconeOfConeLeftOp s)).unop
-  fac' s j :=
+  fac s j :=
     Quiver.Hom.op_inj <| by
       simpa only [cone_left_op_of_cocone_π_app, op_comp, Quiver.Hom.op_unop, is_colimit.fac,
         cocone_of_cone_left_op_ι_app]
-  uniq' s m w :=
-    by
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_colimit.fac, cocone_of_cone_left_op_ι_app] using w (op j)
 #align category_theory.limits.is_limit_cone_left_op_of_cocone CategoryTheory.Limits.isLimitConeLeftOpOfCocone
@@ -84,12 +81,11 @@ def isColimitCoconeLeftOpOfCone (F : J ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLimit c
     IsColimit (coconeLeftOpOfCone c)
     where
   desc s := (hc.lift (coneOfCoconeLeftOp s)).unop
-  fac' s j :=
+  fac s j :=
     Quiver.Hom.op_inj <| by
       simpa only [cocone_left_op_of_cone_ι_app, op_comp, Quiver.Hom.op_unop, is_limit.fac,
         cone_of_cocone_left_op_π_app]
-  uniq' s m w :=
-    by
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_limit.fac, cone_of_cocone_left_op_π_app] using w (op j)
 #align category_theory.limits.is_colimit_cocone_left_op_of_cone CategoryTheory.Limits.isColimitCoconeLeftOpOfCone
@@ -100,9 +96,8 @@ def isLimitConeRightOpOfCocone (F : Jᵒᵖ ⥤ C) {c : Cocone F} (hc : IsColimi
     IsLimit (coneRightOpOfCocone c)
     where
   lift s := (hc.desc (coconeOfConeRightOp s)).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_colimit.fac] using w (unop j)
 #align category_theory.limits.is_limit_cone_right_op_of_cocone CategoryTheory.Limits.isLimitConeRightOpOfCocone
@@ -113,9 +108,8 @@ def isColimitCoconeRightOpOfCone (F : Jᵒᵖ ⥤ C) {c : Cone F} (hc : IsLimit 
     IsColimit (coconeRightOpOfCone c)
     where
   desc s := (hc.lift (coneOfCoconeRightOp s)).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_limit.fac] using w (unop j)
 #align category_theory.limits.is_colimit_cocone_right_op_of_cone CategoryTheory.Limits.isColimitCoconeRightOpOfCone
@@ -126,9 +120,8 @@ def isLimitConeUnopOfCocone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F} (hc : IsCol
     IsLimit (coneUnopOfCocone c)
     where
   lift s := (hc.desc (coconeOfConeUnop s)).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_colimit.fac] using w (unop j)
 #align category_theory.limits.is_limit_cone_unop_of_cocone CategoryTheory.Limits.isLimitConeUnopOfCocone
@@ -139,9 +132,8 @@ def isColimitCoconeUnopOfCone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLim
     IsColimit (coconeUnopOfCone c)
     where
   desc s := (hc.lift (coneOfCoconeUnop s)).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_limit.fac] using w (unop j)
 #align category_theory.limits.is_colimit_cocone_unop_of_cone CategoryTheory.Limits.isColimitCoconeUnopOfCone
@@ -151,9 +143,8 @@ def isColimitCoconeUnopOfCone (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F} (hc : IsLim
 def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) : IsLimit c.unop
     where
   lift s := (hc.desc s.op).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_colimit.fac] using w (unop j)
 #align category_theory.limits.is_limit_cocone_unop CategoryTheory.Limits.isLimitCoconeUnop
@@ -163,9 +154,8 @@ def isLimitCoconeUnop (F : J ⥤ C) {c : Cocone F.op} (hc : IsColimit c) : IsLim
 def isColimitConeUnop (F : J ⥤ C) {c : Cone F.op} (hc : IsLimit c) : IsColimit c.unop
     where
   desc s := (hc.lift s.op).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_limit.fac] using w (unop j)
 #align category_theory.limits.is_colimit_cone_unop CategoryTheory.Limits.isColimitConeUnop
@@ -176,12 +166,11 @@ def isLimitConeOfCoconeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cocone F.leftOp} (hc : Is
     IsLimit (coneOfCoconeLeftOp c)
     where
   lift s := (hc.desc (coconeLeftOpOfCone s)).op
-  fac' s j :=
+  fac s j :=
     Quiver.Hom.unop_inj <| by
       simpa only [cone_of_cocone_left_op_π_app, unop_comp, Quiver.Hom.unop_op, is_colimit.fac,
         cocone_left_op_of_cone_ι_app]
-  uniq' s m w :=
-    by
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_colimit.fac, cone_of_cocone_left_op_π_app] using w (unop j)
 #align category_theory.limits.is_limit_cone_of_cocone_left_op CategoryTheory.Limits.isLimitConeOfCoconeLeftOp
@@ -192,12 +181,11 @@ def isColimitCoconeOfConeLeftOp (F : J ⥤ Cᵒᵖ) {c : Cone F.leftOp} (hc : Is
     IsColimit (coconeOfConeLeftOp c)
     where
   desc s := (hc.lift (coneLeftOpOfCocone s)).op
-  fac' s j :=
+  fac s j :=
     Quiver.Hom.unop_inj <| by
       simpa only [cocone_of_cone_left_op_ι_app, unop_comp, Quiver.Hom.unop_op, is_limit.fac,
         cone_left_op_of_cocone_π_app]
-  uniq' s m w :=
-    by
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_limit.fac, cocone_of_cone_left_op_ι_app] using w (unop j)
 #align category_theory.limits.is_colimit_cocone_of_cone_left_op CategoryTheory.Limits.isColimitCoconeOfConeLeftOp
@@ -208,9 +196,8 @@ def isLimitConeOfCoconeRightOp (F : Jᵒᵖ ⥤ C) {c : Cocone F.rightOp} (hc : 
     IsLimit (coneOfCoconeRightOp c)
     where
   lift s := (hc.desc (coconeRightOpOfCone s)).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_colimit.fac] using w (op j)
 #align category_theory.limits.is_limit_cone_of_cocone_right_op CategoryTheory.Limits.isLimitConeOfCoconeRightOp
@@ -221,9 +208,8 @@ def isColimitCoconeOfConeRightOp (F : Jᵒᵖ ⥤ C) {c : Cone F.rightOp} (hc : 
     IsColimit (coconeOfConeRightOp c)
     where
   desc s := (hc.lift (coneRightOpOfCocone s)).unop
-  fac' s j := Quiver.Hom.op_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.op_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.op_inj (hc.hom_ext fun j => Quiver.Hom.unop_inj _)
     simpa only [Quiver.Hom.op_unop, is_limit.fac] using w (op j)
 #align category_theory.limits.is_colimit_cocone_of_cone_right_op CategoryTheory.Limits.isColimitCoconeOfConeRightOp
@@ -234,9 +220,8 @@ def isLimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cocone F.unop} (hc : 
     IsLimit (coneOfCoconeUnop c)
     where
   lift s := (hc.desc (coconeUnopOfCone s)).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_colimit.fac] using w (op j)
 #align category_theory.limits.is_limit_cone_of_cocone_unop CategoryTheory.Limits.isLimitConeOfCoconeUnop
@@ -247,38 +232,37 @@ def isColimitConeOfCoconeUnop (F : Jᵒᵖ ⥤ Cᵒᵖ) {c : Cone F.unop} (hc : 
     IsColimit (coconeOfConeUnop c)
     where
   desc s := (hc.lift (coneUnopOfCocone s)).op
-  fac' s j := Quiver.Hom.unop_inj (by simpa)
-  uniq' s m w :=
-    by
+  fac s j := Quiver.Hom.unop_inj (by simpa)
+  uniq s m w := by
     refine' Quiver.Hom.unop_inj (hc.hom_ext fun j => Quiver.Hom.op_inj _)
     simpa only [Quiver.Hom.unop_op, is_limit.fac] using w (op j)
 #align category_theory.limits.is_colimit_cone_of_cocone_unop CategoryTheory.Limits.isColimitConeOfCoconeUnop
 
 /-- If `F.left_op : Jᵒᵖ ⥤ C` has a colimit, we can construct a limit for `F : J ⥤ Cᵒᵖ`.
 -/
-theorem hasLimitOfHasColimitLeftOp (F : J ⥤ Cᵒᵖ) [HasColimit F.leftOp] : HasLimit F :=
+theorem hasLimit_of_hasColimit_leftOp (F : J ⥤ Cᵒᵖ) [HasColimit F.leftOp] : HasLimit F :=
   HasLimit.mk
     { Cone := coneOfCoconeLeftOp (Colimit.cocone F.leftOp)
       IsLimit := isLimitConeOfCoconeLeftOp _ (colimit.isColimit _) }
-#align category_theory.limits.has_limit_of_has_colimit_left_op CategoryTheory.Limits.hasLimitOfHasColimitLeftOp
+#align category_theory.limits.has_limit_of_has_colimit_left_op CategoryTheory.Limits.hasLimit_of_hasColimit_leftOp
 
-theorem hasLimitOfHasColimitOp (F : J ⥤ C) [HasColimit F.op] : HasLimit F :=
+theorem hasLimit_of_hasColimit_op (F : J ⥤ C) [HasColimit F.op] : HasLimit F :=
   HasLimit.mk
     { Cone := (Colimit.cocone F.op).unop
       IsLimit := isLimitCoconeUnop _ (colimit.isColimit _) }
-#align category_theory.limits.has_limit_of_has_colimit_op CategoryTheory.Limits.hasLimitOfHasColimitOp
+#align category_theory.limits.has_limit_of_has_colimit_op CategoryTheory.Limits.hasLimit_of_hasColimit_op
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-theorem hasLimitsOfShapeOpOfHasColimitsOfShape [HasColimitsOfShape Jᵒᵖ C] :
+theorem hasLimitsOfShape_op_of_hasColimitsOfShape [HasColimitsOfShape Jᵒᵖ C] :
     HasLimitsOfShape J Cᵒᵖ :=
-  { HasLimit := fun F => hasLimitOfHasColimitLeftOp F }
-#align category_theory.limits.has_limits_of_shape_op_of_has_colimits_of_shape CategoryTheory.Limits.hasLimitsOfShapeOpOfHasColimitsOfShape
+  { HasLimit := fun F => hasLimit_of_hasColimit_leftOp F }
+#align category_theory.limits.has_limits_of_shape_op_of_has_colimits_of_shape CategoryTheory.Limits.hasLimitsOfShape_op_of_hasColimitsOfShape
 
-theorem hasLimitsOfShapeOfHasColimitsOfShapeOp [HasColimitsOfShape Jᵒᵖ Cᵒᵖ] :
+theorem hasLimitsOfShape_of_hasColimitsOfShape_op [HasColimitsOfShape Jᵒᵖ Cᵒᵖ] :
     HasLimitsOfShape J C :=
-  { HasLimit := fun F => hasLimitOfHasColimitOp F }
-#align category_theory.limits.has_limits_of_shape_of_has_colimits_of_shape_op CategoryTheory.Limits.hasLimitsOfShapeOfHasColimitsOfShapeOp
+  { HasLimit := fun F => hasLimit_of_hasColimit_op F }
+#align category_theory.limits.has_limits_of_shape_of_has_colimits_of_shape_op CategoryTheory.Limits.hasLimitsOfShape_of_hasColimitsOfShape_op
 
 attribute [local instance] has_limits_of_shape_op_of_has_colimits_of_shape
 
@@ -292,40 +276,40 @@ theorem hasLimits_of_hasColimits_op [HasColimits Cᵒᵖ] : HasLimits C :=
   { HasLimitsOfShape := fun J hJ => has_limits_of_shape_of_has_colimits_of_shape_op }
 #align category_theory.limits.has_limits_of_has_colimits_op CategoryTheory.Limits.hasLimits_of_hasColimits_op
 
-instance hasCofilteredLimitsOpOfHasFilteredColimits [HasFilteredColimitsOfSize.{v₂, u₂} C] :
+instance has_cofiltered_limits_op_of_has_filtered_colimits [HasFilteredColimitsOfSize.{v₂, u₂} C] :
     HasCofilteredLimitsOfSize.{v₂, u₂} Cᵒᵖ
     where HasLimitsOfShape I hI₁ hI₂ := has_limits_of_shape_op_of_has_colimits_of_shape
-#align category_theory.limits.has_cofiltered_limits_op_of_has_filtered_colimits CategoryTheory.Limits.hasCofilteredLimitsOpOfHasFilteredColimits
+#align category_theory.limits.has_cofiltered_limits_op_of_has_filtered_colimits CategoryTheory.Limits.has_cofiltered_limits_op_of_has_filtered_colimits
 
-theorem hasCofilteredLimitsOfHasFilteredColimitsOp [HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ] :
+theorem has_cofiltered_limits_of_has_filtered_colimits_op [HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ] :
     HasCofilteredLimitsOfSize.{v₂, u₂} C :=
   { HasLimitsOfShape := fun I hI₂ hI₂ => has_limits_of_shape_of_has_colimits_of_shape_op }
-#align category_theory.limits.has_cofiltered_limits_of_has_filtered_colimits_op CategoryTheory.Limits.hasCofilteredLimitsOfHasFilteredColimitsOp
+#align category_theory.limits.has_cofiltered_limits_of_has_filtered_colimits_op CategoryTheory.Limits.has_cofiltered_limits_of_has_filtered_colimits_op
 
 /-- If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
 -/
-theorem hasColimitOfHasLimitLeftOp (F : J ⥤ Cᵒᵖ) [HasLimit F.leftOp] : HasColimit F :=
+theorem hasColimit_of_hasLimit_leftOp (F : J ⥤ Cᵒᵖ) [HasLimit F.leftOp] : HasColimit F :=
   HasColimit.mk
     { Cocone := coconeOfConeLeftOp (Limit.cone F.leftOp)
       IsColimit := isColimitCoconeOfConeLeftOp _ (limit.isLimit _) }
-#align category_theory.limits.has_colimit_of_has_limit_left_op CategoryTheory.Limits.hasColimitOfHasLimitLeftOp
+#align category_theory.limits.has_colimit_of_has_limit_left_op CategoryTheory.Limits.hasColimit_of_hasLimit_leftOp
 
-theorem hasColimitOfHasLimitOp (F : J ⥤ C) [HasLimit F.op] : HasColimit F :=
+theorem hasColimit_of_hasLimit_op (F : J ⥤ C) [HasLimit F.op] : HasColimit F :=
   HasColimit.mk
     { Cocone := (Limit.cone F.op).unop
       IsColimit := isColimitConeUnop _ (limit.isLimit _) }
-#align category_theory.limits.has_colimit_of_has_limit_op CategoryTheory.Limits.hasColimitOfHasLimitOp
+#align category_theory.limits.has_colimit_of_has_limit_op CategoryTheory.Limits.hasColimit_of_hasLimit_op
 
 /-- If `C` has colimits of shape `Jᵒᵖ`, we can construct limits in `Cᵒᵖ` of shape `J`.
 -/
-instance hasColimitsOfShapeOpOfHasLimitsOfShape [HasLimitsOfShape Jᵒᵖ C] : HasColimitsOfShape J Cᵒᵖ
-    where HasColimit F := hasColimitOfHasLimitLeftOp F
-#align category_theory.limits.has_colimits_of_shape_op_of_has_limits_of_shape CategoryTheory.Limits.hasColimitsOfShapeOpOfHasLimitsOfShape
+instance hasColimitsOfShape_op_of_hasLimitsOfShape [HasLimitsOfShape Jᵒᵖ C] :
+    HasColimitsOfShape J Cᵒᵖ where HasColimit F := hasColimit_of_hasLimit_leftOp F
+#align category_theory.limits.has_colimits_of_shape_op_of_has_limits_of_shape CategoryTheory.Limits.hasColimitsOfShape_op_of_hasLimitsOfShape
 
-theorem hasColimitsOfShapeOfHasLimitsOfShapeOp [HasLimitsOfShape Jᵒᵖ Cᵒᵖ] :
+theorem hasColimitsOfShape_of_hasLimitsOfShape_op [HasLimitsOfShape Jᵒᵖ Cᵒᵖ] :
     HasColimitsOfShape J C :=
-  { HasColimit := fun F => hasColimitOfHasLimitOp F }
-#align category_theory.limits.has_colimits_of_shape_of_has_limits_of_shape_op CategoryTheory.Limits.hasColimitsOfShapeOfHasLimitsOfShapeOp
+  { HasColimit := fun F => hasColimit_of_hasLimit_op F }
+#align category_theory.limits.has_colimits_of_shape_of_has_limits_of_shape_op CategoryTheory.Limits.hasColimitsOfShape_of_hasLimitsOfShape_op
 
 /-- If `C` has limits, we can construct colimits for `Cᵒᵖ`.
 -/
@@ -337,14 +321,14 @@ theorem hasColimits_of_hasLimits_op [HasLimits Cᵒᵖ] : HasColimits C :=
   { HasColimitsOfShape := fun J hJ => has_colimits_of_shape_of_has_limits_of_shape_op }
 #align category_theory.limits.has_colimits_of_has_limits_op CategoryTheory.Limits.hasColimits_of_hasLimits_op
 
-instance hasFilteredColimitsOpOfHasCofilteredLimits [HasCofilteredLimitsOfSize.{v₂, u₂} C] :
+instance has_filtered_colimits_op_of_has_cofiltered_limits [HasCofilteredLimitsOfSize.{v₂, u₂} C] :
     HasFilteredColimitsOfSize.{v₂, u₂} Cᵒᵖ where HasColimitsOfShape I hI₁ hI₂ := inferInstance
-#align category_theory.limits.has_filtered_colimits_op_of_has_cofiltered_limits CategoryTheory.Limits.hasFilteredColimitsOpOfHasCofilteredLimits
+#align category_theory.limits.has_filtered_colimits_op_of_has_cofiltered_limits CategoryTheory.Limits.has_filtered_colimits_op_of_has_cofiltered_limits
 
-theorem hasFilteredColimitsOfHasCofilteredLimitsOp [HasCofilteredLimitsOfSize.{v₂, u₂} Cᵒᵖ] :
+theorem has_filtered_colimits_of_has_cofiltered_limits_op [HasCofilteredLimitsOfSize.{v₂, u₂} Cᵒᵖ] :
     HasFilteredColimitsOfSize.{v₂, u₂} C :=
   { HasColimitsOfShape := fun I hI₁ hI₂ => has_colimits_of_shape_of_has_limits_of_shape_op }
-#align category_theory.limits.has_filtered_colimits_of_has_cofiltered_limits_op CategoryTheory.Limits.hasFilteredColimitsOfHasCofilteredLimitsOp
+#align category_theory.limits.has_filtered_colimits_of_has_cofiltered_limits_op CategoryTheory.Limits.has_filtered_colimits_of_has_cofiltered_limits_op
 
 variable (X : Type v₂)
 
@@ -394,21 +378,21 @@ theorem hasCoproducts_of_opposite [HasProducts.{v₂} Cᵒᵖ] : HasCoproducts.{
   hasCoproductsOfShape_of_opposite X
 #align category_theory.limits.has_coproducts_of_opposite CategoryTheory.Limits.hasCoproducts_of_opposite
 
-instance hasFiniteCoproductsOpposite [HasFiniteProducts C] : HasFiniteCoproducts Cᵒᵖ
+instance hasFiniteCoproducts_opposite [HasFiniteProducts C] : HasFiniteCoproducts Cᵒᵖ
     where out n := Limits.hasCoproductsOfShape_opposite _
-#align category_theory.limits.has_finite_coproducts_opposite CategoryTheory.Limits.hasFiniteCoproductsOpposite
+#align category_theory.limits.has_finite_coproducts_opposite CategoryTheory.Limits.hasFiniteCoproducts_opposite
 
-theorem hasFiniteCoproductsOfOpposite [HasFiniteProducts Cᵒᵖ] : HasFiniteCoproducts C :=
+theorem hasFiniteCoproducts_of_opposite [HasFiniteProducts Cᵒᵖ] : HasFiniteCoproducts C :=
   { out := fun n => hasCoproductsOfShape_of_opposite _ }
-#align category_theory.limits.has_finite_coproducts_of_opposite CategoryTheory.Limits.hasFiniteCoproductsOfOpposite
+#align category_theory.limits.has_finite_coproducts_of_opposite CategoryTheory.Limits.hasFiniteCoproducts_of_opposite
 
-instance hasFiniteProductsOpposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ
+instance hasFiniteProducts_opposite [HasFiniteCoproducts C] : HasFiniteProducts Cᵒᵖ
     where out n := inferInstance
-#align category_theory.limits.has_finite_products_opposite CategoryTheory.Limits.hasFiniteProductsOpposite
+#align category_theory.limits.has_finite_products_opposite CategoryTheory.Limits.hasFiniteProducts_opposite
 
-theorem hasFiniteProductsOfOpposite [HasFiniteCoproducts Cᵒᵖ] : HasFiniteProducts C :=
+theorem hasFiniteProducts_of_opposite [HasFiniteCoproducts Cᵒᵖ] : HasFiniteProducts C :=
   { out := fun n => hasProductsOfShape_of_opposite _ }
-#align category_theory.limits.has_finite_products_of_opposite CategoryTheory.Limits.hasFiniteProductsOfOpposite
+#align category_theory.limits.has_finite_products_of_opposite CategoryTheory.Limits.hasFiniteProducts_of_opposite
 
 instance hasEqualizers_opposite [HasCoequalizers C] : HasEqualizers Cᵒᵖ :=
   by
@@ -424,17 +408,17 @@ instance hasCoequalizers_opposite [HasEqualizers C] : HasCoequalizers Cᵒᵖ :=
   infer_instance
 #align category_theory.limits.has_coequalizers_opposite CategoryTheory.Limits.hasCoequalizers_opposite
 
-instance hasFiniteColimitsOpposite [HasFiniteLimits C] : HasFiniteColimits Cᵒᵖ
+instance hasFiniteColimits_opposite [HasFiniteLimits C] : HasFiniteColimits Cᵒᵖ
     where out J 𝒟 𝒥 := by
     skip
     infer_instance
-#align category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.hasFiniteColimitsOpposite
+#align category_theory.limits.has_finite_colimits_opposite CategoryTheory.Limits.hasFiniteColimits_opposite
 
-instance hasFiniteLimitsOpposite [HasFiniteColimits C] : HasFiniteLimits Cᵒᵖ
+instance hasFiniteLimits_opposite [HasFiniteColimits C] : HasFiniteLimits Cᵒᵖ
     where out J 𝒟 𝒥 := by
     skip
     infer_instance
-#align category_theory.limits.has_finite_limits_opposite CategoryTheory.Limits.hasFiniteLimitsOpposite
+#align category_theory.limits.has_finite_limits_opposite CategoryTheory.Limits.hasFiniteLimits_opposite
 
 instance hasPullbacks_opposite [HasPushouts C] : HasPullbacks Cᵒᵖ :=
   by

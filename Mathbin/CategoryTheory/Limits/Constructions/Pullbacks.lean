@@ -28,7 +28,7 @@ namespace CategoryTheory.Limits
 
 /-- If the product `X ⨯ Y` and the equalizer of `π₁ ≫ f` and `π₂ ≫ g` exist, then the
     pullback of `f` and `g` exists: It is given by composing the equalizer with the projections. -/
-theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : Category.{v} C]
+theorem hasLimit_cospan_of_hasLimit_pair_of_hasLimit_parallelPair {C : Type u} [𝒞 : Category.{v} C]
     {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) [HasLimit (pair X Y)]
     [HasLimit (parallelPair (prod.fst ≫ f) (prod.snd ≫ g))] : HasLimit (cospan f g) :=
   let π₁ : X ⨯ Y ⟶ X := prod.fst
@@ -48,7 +48,7 @@ theorem hasLimitCospanOfHasLimitPairOfHasLimitParallelPair {C : Type u} [𝒞 : 
           ext
           · simpa using h₁
           · simpa using h₂ }
-#align category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.hasLimitCospanOfHasLimitPairOfHasLimitParallelPair
+#align category_theory.limits.has_limit_cospan_of_has_limit_pair_of_has_limit_parallel_pair CategoryTheory.Limits.hasLimit_cospan_of_hasLimit_pair_of_hasLimit_parallelPair
 
 section
 
@@ -59,15 +59,15 @@ attribute [local instance] has_limit_cospan_of_has_limit_pair_of_has_limit_paral
     pullbacks. -/
 theorem hasPullbacks_of_hasBinaryProducts_of_hasEqualizers (C : Type u) [𝒞 : Category.{v} C]
     [HasBinaryProducts C] [HasEqualizers C] : HasPullbacks C :=
-  { HasLimit := fun F => hasLimitOfIso (diagramIsoCospan F).symm }
+  { HasLimit := fun F => hasLimit_of_iso (diagramIsoCospan F).symm }
 #align category_theory.limits.has_pullbacks_of_has_binary_products_of_has_equalizers CategoryTheory.Limits.hasPullbacks_of_hasBinaryProducts_of_hasEqualizers
 
 end
 
 /-- If the coproduct `Y ⨿ Z` and the coequalizer of `f ≫ ι₁` and `g ≫ ι₂` exist, then the
     pushout of `f` and `g` exists: It is given by composing the inclusions with the coequalizer. -/
-theorem hasColimitSpanOfHasColimitPairOfHasColimitParallelPair {C : Type u} [𝒞 : Category.{v} C]
-    {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasColimit (pair Y Z)]
+theorem hasColimit_span_of_hasColimit_pair_of_hasColimit_parallelPair {C : Type u}
+    [𝒞 : Category.{v} C] {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) [HasColimit (pair Y Z)]
     [HasColimit (parallelPair (f ≫ coprod.inl) (g ≫ coprod.inr))] : HasColimit (span f g) :=
   let ι₁ : Y ⟶ Y ⨿ Z := coprod.inl
   let ι₂ : Z ⟶ Y ⨿ Z := coprod.inr
@@ -87,7 +87,7 @@ theorem hasColimitSpanOfHasColimitPairOfHasColimitParallelPair {C : Type u} [�
           ext
           · simpa using h₁
           · simpa using h₂ }
-#align category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.hasColimitSpanOfHasColimitPairOfHasColimitParallelPair
+#align category_theory.limits.has_colimit_span_of_has_colimit_pair_of_has_colimit_parallel_pair CategoryTheory.Limits.hasColimit_span_of_hasColimit_pair_of_hasColimit_parallelPair
 
 section
 

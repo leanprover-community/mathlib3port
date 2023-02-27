@@ -143,11 +143,11 @@ def coneOfConeUncurryIsLimit {D : DiagramOfCones F} (Q : ∀ j, IsLimit (D.obj j
               simp only [category.id_comp] at n
               rw [n]
               simp } }
-  fac' s j := by
+  fac s j := by
     apply (Q j).hom_ext
     intro k
     simp
-  uniq' s m w :=
+  uniq s m w :=
     by
     refine'
       P.uniq

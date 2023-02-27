@@ -56,16 +56,16 @@ def finiteColimitCocone [SemilatticeSup α] [OrderBot α] (F : J ⥤ α) : Colim
 #align category_theory.limits.complete_lattice.finite_colimit_cocone CategoryTheory.Limits.CompleteLattice.finiteColimitCocone
 
 -- see Note [lower instance priority]
-instance (priority := 100) hasFiniteLimitsOfSemilatticeInfOrderTop [SemilatticeInf α] [OrderTop α] :
-    HasFiniteLimits α :=
+instance (priority := 100) hasFiniteLimits_of_semilatticeInf_orderTop [SemilatticeInf α]
+    [OrderTop α] : HasFiniteLimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasLimit := fun F => has_limit.mk (finite_limit_cone F) }⟩
-#align category_theory.limits.complete_lattice.has_finite_limits_of_semilattice_inf_order_top CategoryTheory.Limits.CompleteLattice.hasFiniteLimitsOfSemilatticeInfOrderTop
+#align category_theory.limits.complete_lattice.has_finite_limits_of_semilattice_inf_order_top CategoryTheory.Limits.CompleteLattice.hasFiniteLimits_of_semilatticeInf_orderTop
 
 -- see Note [lower instance priority]
-instance (priority := 100) hasFiniteColimitsOfSemilatticeSupOrderBot [SemilatticeSup α]
+instance (priority := 100) hasFiniteColimits_of_semilatticeSup_orderBot [SemilatticeSup α]
     [OrderBot α] : HasFiniteColimits α :=
   ⟨fun J 𝒥₁ 𝒥₂ => { HasColimit := fun F => has_colimit.mk (finite_colimit_cocone F) }⟩
-#align category_theory.limits.complete_lattice.has_finite_colimits_of_semilattice_sup_order_bot CategoryTheory.Limits.CompleteLattice.hasFiniteColimitsOfSemilatticeSupOrderBot
+#align category_theory.limits.complete_lattice.has_finite_colimits_of_semilattice_sup_order_bot CategoryTheory.Limits.CompleteLattice.hasFiniteColimits_of_semilatticeSup_orderBot
 
 /-- The limit of a functor from a finite diagram into a `semilattice_inf` with `order_top` is the
 infimum of the objects in the image.
@@ -118,7 +118,7 @@ instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts
   by
   have : ∀ x y : α, has_limit (pair x y) :=
     by
-    letI := hasFiniteLimitsOfHasFiniteLimitsOfSize.{u} α
+    letI := hasFiniteLimits_of_hasFiniteLimits_of_size.{u} α
     infer_instance
   apply has_binary_products_of_has_limit_pair
 
@@ -143,7 +143,7 @@ instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproduc
   by
   have : ∀ x y : α, has_colimit (pair x y) :=
     by
-    letI := hasFiniteColimitsOfHasFiniteColimitsOfSize.{u} α
+    letI := hasFiniteColimits_of_hasFiniteColimits_of_size.{u} α
     infer_instance
   apply has_binary_coproducts_of_has_colimit_pair
 

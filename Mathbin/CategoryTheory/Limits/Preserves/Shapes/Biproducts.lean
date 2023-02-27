@@ -279,11 +279,11 @@ end
 
 variable [PreservesZeroMorphisms F] [PreservesBiproduct f F]
 
-instance hasBiproductOfPreserves : HasBiproduct (F.obj ∘ f) :=
+instance hasBiproduct_of_preserves : HasBiproduct (F.obj ∘ f) :=
   HasBiproduct.mk
     { Bicone := F.mapBicone (Biproduct.bicone f)
       IsBilimit := PreservesBiproduct.preserves (Biproduct.isBilimit _) }
-#align category_theory.functor.has_biproduct_of_preserves CategoryTheory.Functor.hasBiproductOfPreserves
+#align category_theory.functor.has_biproduct_of_preserves CategoryTheory.Functor.hasBiproduct_of_preserves
 
 /-- If `F` preserves a biproduct, we get a definitionally nice isomorphism
     `F.obj (⨁ f) ≅ ⨁ (F.obj ∘ f)`. -/
@@ -374,11 +374,11 @@ end
 
 variable [PreservesZeroMorphisms F] [PreservesBinaryBiproduct X Y F]
 
-instance hasBinaryBiproductOfPreserves : HasBinaryBiproduct (F.obj X) (F.obj Y) :=
+instance hasBinaryBiproduct_of_preserves : HasBinaryBiproduct (F.obj X) (F.obj Y) :=
   HasBinaryBiproduct.mk
     { Bicone := F.mapBinaryBicone (BinaryBiproduct.bicone X Y)
       IsBilimit := PreservesBinaryBiproduct.preserves (BinaryBiproduct.isBilimit _ _) }
-#align category_theory.functor.has_binary_biproduct_of_preserves CategoryTheory.Functor.hasBinaryBiproductOfPreserves
+#align category_theory.functor.has_binary_biproduct_of_preserves CategoryTheory.Functor.hasBinaryBiproduct_of_preserves
 
 /-- If `F` preserves a binary biproduct, we get a definitionally nice isomorphism
     `F.obj (X ⊞ Y) ≅ F.obj X ⊞ F.obj Y`. -/

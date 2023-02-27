@@ -95,13 +95,13 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
 /-- Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
 is an exponential ideal.
 -/
-theorem ExponentialIdeal.mkOfIso [Reflective i]
+theorem ExponentialIdeal.mk_of_iso [Reflective i]
     (h : ∀ A : C, i ⋙ exp A ⋙ leftAdjoint i ⋙ i ≅ i ⋙ exp A) : ExponentialIdeal i :=
   by
   apply exponential_ideal.mk'
   intro B A
   exact ⟨_, ⟨(h A).app B⟩⟩
-#align category_theory.exponential_ideal.mk_of_iso CategoryTheory.ExponentialIdeal.mkOfIso
+#align category_theory.exponential_ideal.mk_of_iso CategoryTheory.ExponentialIdeal.mk_of_iso
 
 end Ideal
 
@@ -111,9 +111,9 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₁} D]
 
 variable (i : D ⥤ C)
 
-theorem reflectiveProducts [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
-  ⟨fun n => hasLimitsOfShapeOfReflective i⟩
-#align category_theory.reflective_products CategoryTheory.reflectiveProducts
+theorem reflective_products [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
+  ⟨fun n => hasLimitsOfShape_of_reflective i⟩
+#align category_theory.reflective_products CategoryTheory.reflective_products
 
 attribute [local instance] reflective_products
 
@@ -124,7 +124,7 @@ variable [HasFiniteProducts C] [Reflective i] [CartesianClosed C]
 /-- If the reflector preserves binary products, the subcategory is an exponential ideal.
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
-instance (priority := 10) exponentialIdealOfPreservesBinaryProducts
+instance (priority := 10) exponentialIdeal_of_preserves_binary_products
     [PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)] : ExponentialIdeal i :=
   by
   let ir := adjunction.of_right_adjoint i
@@ -146,7 +146,7 @@ instance (priority := 10) exponentialIdealOfPreservesBinaryProducts
     apply is_iso.hom_inv_id_assoc
   haveI : is_split_mono (η.app (A ⟹ i.obj B)) := is_split_mono.mk' ⟨_, this⟩
   apply mem_ess_image_of_unit_is_split_mono
-#align category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdealOfPreservesBinaryProducts
+#align category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdeal_of_preserves_binary_products
 
 variable [ExponentialIdeal i]
 

@@ -262,15 +262,15 @@ def colimitDesc (t : cocone F) : colimit ⟶ t.x
 def colimitCoconeIsColimit : IsColimit colimit_cocone
     where
   desc := colimit_desc
-  fac' t j :=
+  fac t j :=
     MonoidHom.coe_inj
       ((Types.colimitCoconeIsColimit (F ⋙ forget Mon)).fac ((forget Mon).mapCocone t) j)
-  uniq' t m h :=
+  uniq t m h :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget Mon)).uniq ((forget Mon).mapCocone t) m fun j =>
         funext fun x => MonoidHom.congr_fun (h j) x
 #align Mon.filtered_colimits.colimit_cocone_is_colimit Mon.FilteredColimits.colimitCoconeIsColimit
-#align AddMon.filtered_colimits.colimit_cocone_is_colimit AddMon.FilteredColimits.colimit_cocone_is_colimit
+#align AddMon.filtered_colimits.colimit_cocone_is_colimit AddMon.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon.{u})
@@ -280,7 +280,7 @@ instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget Mon
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (types.colimit_cocone_is_colimit (F ⋙ forget Mon.{u})) }
 #align Mon.filtered_colimits.forget_preserves_filtered_colimits Mon.FilteredColimits.forgetPreservesFilteredColimits
-#align AddMon.filtered_colimits.forget_preserves_filtered_colimits AddMon.FilteredColimits.forget_preserves_filtered_colimits
+#align AddMon.filtered_colimits.forget_preserves_filtered_colimits AddMon.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -342,15 +342,15 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
   desc t :=
     Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ CommMon Mon.{max v u})
       ((forget₂ CommMon Mon.{max v u}).mapCocone t)
-  fac' t j :=
+  fac t j :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommMon)).fac ((forget CommMon).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommMon)).uniq ((forget CommMon).mapCocone t) m
         fun j => funext fun x => MonoidHom.congr_fun (h j) x
 #align CommMon.filtered_colimits.colimit_cocone_is_colimit CommMon.FilteredColimits.colimitCoconeIsColimit
-#align AddCommMon.filtered_colimits.colimit_cocone_is_colimit AddCommMon.FilteredColimits.colimit_cocone_is_colimit
+#align AddCommMon.filtered_colimits.colimit_cocone_is_colimit AddCommMon.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ CommMon Mon.{u})
@@ -360,13 +360,13 @@ instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forg
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ CommMon Mon.{u})) }
 #align CommMon.filtered_colimits.forget₂_Mon_preserves_filtered_colimits CommMon.FilteredColimits.forget₂MonPreservesFilteredColimits
-#align AddCommMon.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddCommMon.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits
+#align AddCommMon.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddCommMon.FilteredColimits.forget₂AddMonPreservesFilteredColimits
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommMon.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ CommMon Mon) (forget Mon)
 #align CommMon.filtered_colimits.forget_preserves_filtered_colimits CommMon.FilteredColimits.forgetPreservesFilteredColimits
-#align AddCommMon.filtered_colimits.forget_preserves_filtered_colimits AddCommMon.FilteredColimits.forget_preserves_filtered_colimits
+#align AddCommMon.filtered_colimits.forget_preserves_filtered_colimits AddCommMon.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 

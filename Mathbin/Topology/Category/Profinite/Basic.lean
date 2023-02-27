@@ -225,7 +225,7 @@ def limitConeIsLimit {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) :
   lift S :=
     (CompHaus.limitConeIsLimit.{u, u} (F ⋙ profiniteToCompHaus)).lift
       (profiniteToCompHaus.mapCone S)
-  uniq' S m h := (CompHaus.limitConeIsLimit.{u, u} _).uniq (profiniteToCompHaus.mapCone S) _ h
+  uniq S m h := (CompHaus.limitConeIsLimit.{u, u} _).uniq (profiniteToCompHaus.mapCone S) _ h
 #align Profinite.limit_cone_is_limit Profinite.limitConeIsLimit
 
 /-- The adjunction between CompHaus.to_Profinite and Profinite.to_CompHaus -/
@@ -251,11 +251,11 @@ noncomputable instance toTop.createsLimits : CreatesLimits Profinite.toTop :=
 #align Profinite.to_Top.creates_limits Profinite.toTop.createsLimits
 
 instance hasLimits : Limits.HasLimits Profinite :=
-  hasLimitsOfHasLimitsCreatesLimits Profinite.toTop
+  has_limits_of_has_limits_creates_limits Profinite.toTop
 #align Profinite.has_limits Profinite.hasLimits
 
 instance hasColimits : Limits.HasColimits Profinite :=
-  hasColimitsOfReflective profiniteToCompHaus
+  has_colimits_of_reflective profiniteToCompHaus
 #align Profinite.has_colimits Profinite.hasColimits
 
 noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Profinite) := by

@@ -453,7 +453,7 @@ def descMorphism (s : Cocone F) : colimit F ⟶ s.x
 def colimitIsColimit : IsColimit (colimitCocone F)
     where
   desc s := descMorphism F s
-  uniq' s m w := by
+  uniq s m w := by
     ext
     induction x
     induction x

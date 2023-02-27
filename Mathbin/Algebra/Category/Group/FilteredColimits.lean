@@ -147,15 +147,15 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
   desc t :=
     Mon.FilteredColimits.colimitDesc (F ⋙ forget₂ GroupCat Mon.{max v u})
       ((forget₂ GroupCat Mon).mapCocone t)
-  fac' t j :=
+  fac t j :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).fac ((forget GroupCat).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget GroupCat)).uniq ((forget GroupCat).mapCocone t) m
         fun j => funext fun x => MonoidHom.congr_fun (h j) x
 #align Group.filtered_colimits.colimit_cocone_is_colimit GroupCat.FilteredColimits.colimitCoconeIsColimit
-#align AddGroup.filtered_colimits.colimit_cocone_is_colimit AddGroupCat.FilteredColimits.colimit_cocone_is_colimit
+#align AddGroup.filtered_colimits.colimit_cocone_is_colimit AddGroupCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddMon_preserves_filtered_colimits]
 instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forget₂ GroupCat Mon.{u})
@@ -165,13 +165,13 @@ instance forget₂MonPreservesFilteredColimits : PreservesFilteredColimits (forg
         preserves_colimit_of_preserves_colimit_cocone (colimitCoconeIsColimit.{u, u} F)
           (Mon.FilteredColimits.colimitCoconeIsColimit (F ⋙ forget₂ GroupCat Mon.{u})) }
 #align Group.filtered_colimits.forget₂_Mon_preserves_filtered_colimits GroupCat.FilteredColimits.forget₂MonPreservesFilteredColimits
-#align AddGroup.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddGroupCat.FilteredColimits.forget₂_AddMon_preserves_filtered_colimits
+#align AddGroup.filtered_colimits.forget₂_AddMon_preserves_filtered_colimits AddGroupCat.FilteredColimits.forget₂AddMonPreservesFilteredColimits
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget GroupCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ GroupCat Mon) (forget Mon.{u})
 #align Group.filtered_colimits.forget_preserves_filtered_colimits GroupCat.FilteredColimits.forgetPreservesFilteredColimits
-#align AddGroup.filtered_colimits.forget_preserves_filtered_colimits AddGroupCat.FilteredColimits.forget_preserves_filtered_colimits
+#align AddGroup.filtered_colimits.forget_preserves_filtered_colimits AddGroupCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 
@@ -228,16 +228,16 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
     (GroupCat.FilteredColimits.colimitCoconeIsColimit
           (F ⋙ forget₂ CommGroupCat GroupCat.{max v u})).desc
       ((forget₂ CommGroupCat GroupCat.{max v u}).mapCocone t)
-  fac' t j :=
+  fac t j :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).fac
         ((forget CommGroupCat).mapCocone t) j
-  uniq' t m h :=
+  uniq t m h :=
     MonoidHom.coe_inj <|
       (Types.colimitCoconeIsColimit (F ⋙ forget CommGroupCat)).uniq
         ((forget CommGroupCat).mapCocone t) m fun j => funext fun x => MonoidHom.congr_fun (h j) x
 #align CommGroup.filtered_colimits.colimit_cocone_is_colimit CommGroupCat.FilteredColimits.colimitCoconeIsColimit
-#align AddCommGroup.filtered_colimits.colimit_cocone_is_colimit AddCommGroupCat.FilteredColimits.colimit_cocone_is_colimit
+#align AddCommGroup.filtered_colimits.colimit_cocone_is_colimit AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
 
 @[to_additive forget₂_AddGroup_preserves_filtered_colimits]
 instance forget₂GroupPreservesFilteredColimits :
@@ -249,13 +249,13 @@ instance forget₂GroupPreservesFilteredColimits :
           (GroupCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ CommGroupCat GroupCat.{u})) }
 #align CommGroup.filtered_colimits.forget₂_Group_preserves_filtered_colimits CommGroupCat.FilteredColimits.forget₂GroupPreservesFilteredColimits
-#align AddCommGroup.filtered_colimits.forget₂_AddGroup_preserves_filtered_colimits AddCommGroupCat.FilteredColimits.forget₂_AddGroup_preserves_filtered_colimits
+#align AddCommGroup.filtered_colimits.forget₂_AddGroup_preserves_filtered_colimits AddCommGroupCat.FilteredColimits.forget₂AddGroupPreservesFilteredColimits
 
 @[to_additive]
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget CommGroupCat.{u}) :=
   Limits.compPreservesFilteredColimits (forget₂ CommGroupCat GroupCat) (forget GroupCat.{u})
 #align CommGroup.filtered_colimits.forget_preserves_filtered_colimits CommGroupCat.FilteredColimits.forgetPreservesFilteredColimits
-#align AddCommGroup.filtered_colimits.forget_preserves_filtered_colimits AddCommGroupCat.FilteredColimits.forget_preserves_filtered_colimits
+#align AddCommGroup.filtered_colimits.forget_preserves_filtered_colimits AddCommGroupCat.FilteredColimits.forgetPreservesFilteredColimits
 
 end
 

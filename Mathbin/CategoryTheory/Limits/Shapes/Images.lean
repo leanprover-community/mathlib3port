@@ -77,7 +77,7 @@ structure MonoFactorisation (f : X ⟶ Y) where
   m : I ⟶ Y
   [m_mono : Mono m]
   e : X ⟶ I
-  fac' : e ≫ m = f := by obviously
+  fac : e ≫ m = f := by obviously
 #align category_theory.limits.mono_factorisation CategoryTheory.Limits.MonoFactorisation
 
 restate_axiom mono_factorisation.fac'
@@ -169,7 +169,7 @@ def ofArrowIso {f g : Arrow C} (F : MonoFactorisation f.Hom) (sq : f ⟶ g) [IsI
   m := F.m ≫ sq.right
   e := inv sq.left ≫ F.e
   m_mono := mono_comp _ _
-  fac' := by simp only [fac_assoc, arrow.w, is_iso.inv_comp_eq, category.assoc]
+  fac := by simp only [fac_assoc, arrow.w, is_iso.inv_comp_eq, category.assoc]
 #align category_theory.limits.mono_factorisation.of_arrow_iso CategoryTheory.Limits.MonoFactorisation.ofArrowIso
 
 end MonoFactorisation
@@ -334,7 +334,7 @@ theorem as_factorThruImage : (Image.monoFactorisation f).e = factorThruImage f :
 
 @[simp, reassoc.1]
 theorem image.fac : factorThruImage f ≫ image.ι f = f :=
-  (Image.monoFactorisation f).fac'
+  (Image.monoFactorisation f).fac
 #align category_theory.limits.image.fac CategoryTheory.Limits.image.fac
 
 variable {f}
@@ -1002,7 +1002,7 @@ theorem hasStrongEpiMonoFactorisations_imp_of_isEquivalence (F : C ⥤ D) [IsEqu
         { i := F.obj em.I
           e := F.as_equivalence.counit_iso.inv.app X ≫ F.map em.e
           m := F.map em.m ≫ F.as_equivalence.counit_iso.hom.app Y
-          fac' := by
+          fac := by
             simpa only [category.assoc, ← F.map_comp_assoc, em.fac', is_equivalence.fun_inv_map,
               iso.inv_hom_id_app, iso.inv_hom_id_app_assoc] using category.comp_id _ }⟩
 #align category_theory.functor.has_strong_epi_mono_factorisations_imp_of_is_equivalence CategoryTheory.Functor.hasStrongEpiMonoFactorisations_imp_of_isEquivalence

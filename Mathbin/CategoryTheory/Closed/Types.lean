@@ -45,14 +45,14 @@ instance (X : Type v₁) : IsLeftAdjoint (Types.binaryProductFunctor.obj X)
         counit := { app := fun Z xf => xf.2 xf.1 } }
 
 instance : HasFiniteProducts (Type v₁) :=
-  hasFiniteProductsOfHasProducts.{v₁} _
+  hasFiniteProducts_of_hasProducts.{v₁} _
 
 instance : CartesianClosed (Type v₁)
     where closed' X :=
     { isAdj := Adjunction.leftAdjointOfNatIso (Types.binaryProductIsoProd.app X) }
 
 instance {C : Type u₁} [Category.{v₁} C] : HasFiniteProducts (C ⥤ Type u₁) :=
-  hasFiniteProductsOfHasProducts.{u₁} _
+  hasFiniteProducts_of_hasProducts.{u₁} _
 
 instance {C : Type v₁} [SmallCategory C] : CartesianClosed (C ⥤ Type v₁)
     where closed' F :=

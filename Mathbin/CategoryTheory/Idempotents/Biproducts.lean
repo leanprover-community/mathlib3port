@@ -79,7 +79,7 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
 
 end Biproducts
 
-theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
+theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   {
     out := fun n =>
       {
@@ -110,12 +110,12 @@ theorem karoubiHasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts
               · exfalso
                 exact h rfl
               simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
-#align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubiHasFiniteBiproducts
+#align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_hasFiniteBiproducts
 
 instance {D : Type _} [Category D] [AdditiveCategory D] : AdditiveCategory (Karoubi D)
     where
   toPreadditive := inferInstance
-  toHasFiniteBiproducts := karoubiHasFiniteBiproducts
+  to_hasFiniteBiproducts := karoubi_hasFiniteBiproducts
 
 /-- `P.complement` is the formal direct factor of `P.X` given by the idempotent
 endomorphism `𝟙 P.X - P.p` -/
@@ -128,7 +128,7 @@ def complement (P : Karoubi C) : Karoubi C
 #align category_theory.idempotents.karoubi.complement CategoryTheory.Idempotents.Karoubi.complement
 
 instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
-  hasBinaryBiproductOfTotal
+  hasBinaryBiproduct_of_total
     { x := P.x
       fst := P.decompIdP
       snd := P.complement.decompIdP

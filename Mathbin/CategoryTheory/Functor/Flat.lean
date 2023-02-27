@@ -200,7 +200,7 @@ theorem flat_of_preservesFiniteLimits [HasFiniteLimits C] (F : C ⥤ D) [Preserv
   ⟨fun X =>
     haveI : has_finite_limits (structured_arrow X F) :=
       by
-      apply hasFiniteLimitsOfHasFiniteLimitsOfSize.{v₁} (structured_arrow X F)
+      apply hasFiniteLimits_of_hasFiniteLimits_of_size.{v₁} (structured_arrow X F)
       intro J sJ fJ; skip; constructor
     cofiltered_of_has_finite_limits⟩
 #align category_theory.flat_of_preserves_finite_limits CategoryTheory.flat_of_preservesFiniteLimits
@@ -312,8 +312,8 @@ noncomputable def preservesFiniteLimitsOfFlat (F : C ⥤ D) [RepresentablyFlat F
   intro c hc
   exact
     { lift := preserves_finite_limits_of_flat.lift F hc
-      fac' := preserves_finite_limits_of_flat.fac F hc
-      uniq' := fun s m h => by
+      fac := preserves_finite_limits_of_flat.fac F hc
+      uniq := fun s m h => by
         apply preserves_finite_limits_of_flat.uniq F hc
         exact h
         exact preserves_finite_limits_of_flat.fac F hc s }

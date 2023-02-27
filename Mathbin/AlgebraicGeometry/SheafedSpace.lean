@@ -215,7 +215,7 @@ noncomputable instance [HasLimits C] :
         (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
 
 instance [HasLimits C] : HasColimits (SheafedSpace C) :=
-  hasColimitsOfHasColimitsCreatesColimits forgetToPresheafedSpace
+  has_colimits_of_has_colimits_creates_colimits forgetToPresheafedSpace
 
 noncomputable instance [HasLimits C] : PreservesColimits (forget C) :=
   Limits.compPreservesColimits forgetToPresheafedSpace (PresheafedSpace.forget C)

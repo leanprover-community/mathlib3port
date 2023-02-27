@@ -318,10 +318,10 @@ def Trident.IsLimit.mk [Nonempty J] (t : Trident f) (lift : ∀ s : Trident f, s
         (w : ∀ j : WalkingParallelFamily J, m ≫ t.π.app j = s.π.app j), m = lift s) :
     IsLimit t :=
   { lift
-    fac' := fun s j =>
+    fac := fun s j =>
       WalkingParallelFamily.casesOn j (fac s)
         (by rw [← t.w (line (Classical.arbitrary J)), reassoc_of fac, s.w])
-    uniq' := uniq }
+    uniq := uniq }
 #align category_theory.limits.trident.is_limit.mk CategoryTheory.Limits.Trident.IsLimit.mk
 
 /-- This is another convenient method to verify that a trident is a limit cone. It
@@ -342,10 +342,10 @@ def Cotrident.IsColimit.mk [Nonempty J] (t : Cotrident f) (desc : ∀ s : Cotrid
         (w : ∀ j : WalkingParallelFamily J, t.ι.app j ≫ m = s.ι.app j), m = desc s) :
     IsColimit t :=
   { desc
-    fac' := fun s j =>
+    fac := fun s j =>
       WalkingParallelFamily.casesOn j (by rw [← t.w_assoc (line (Classical.arbitrary J)), fac, s.w])
         (fac s)
-    uniq' := uniq }
+    uniq := uniq }
 #align category_theory.limits.cotrident.is_colimit.mk CategoryTheory.Limits.Cotrident.IsColimit.mk
 
 /-- This is another convenient method to verify that a cotrident is a colimit cocone. It
@@ -747,24 +747,24 @@ abbrev HasWideCoequalizers :=
 theorem hasWideEqualizers_of_hasLimit_parallelFamily
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasLimit (parallelFamily f)] :
     HasWideEqualizers.{w} C := fun J =>
-  { HasLimit := fun F => hasLimitOfIso (diagramIsoParallelFamily F).symm }
+  { HasLimit := fun F => hasLimit_of_iso (diagramIsoParallelFamily F).symm }
 #align category_theory.limits.has_wide_equalizers_of_has_limit_parallel_family CategoryTheory.Limits.hasWideEqualizers_of_hasLimit_parallelFamily
 
 /-- If `C` has all colimits of diagrams `parallel_family f`, then it has all wide coequalizers -/
 theorem hasWideCoequalizers_of_hasColimit_parallelFamily
     [∀ {J : Type w} {X Y : C} {f : J → (X ⟶ Y)}, HasColimit (parallelFamily f)] :
     HasWideCoequalizers.{w} C := fun J =>
-  { HasColimit := fun F => hasColimitOfIso (diagramIsoParallelFamily F) }
+  { HasColimit := fun F => hasColimit_of_iso (diagramIsoParallelFamily F) }
 #align category_theory.limits.has_wide_coequalizers_of_has_colimit_parallel_family CategoryTheory.Limits.hasWideCoequalizers_of_hasColimit_parallelFamily
 
 instance (priority := 10) hasEqualizers_of_hasWideEqualizers [HasWideEqualizers.{w} C] :
     HasEqualizers C :=
-  hasLimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
+  hasLimitsOfShape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 #align category_theory.limits.has_equalizers_of_has_wide_equalizers CategoryTheory.Limits.hasEqualizers_of_hasWideEqualizers
 
 instance (priority := 10) hasCoequalizers_of_hasWideCoequalizers [HasWideCoequalizers.{w} C] :
     HasCoequalizers C :=
-  hasColimitsOfShapeOfEquivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
+  hasColimitsOfShape_of_equivalence.{w} walkingParallelFamilyEquivWalkingParallelPair
 #align category_theory.limits.has_coequalizers_of_has_wide_coequalizers CategoryTheory.Limits.hasCoequalizers_of_hasWideCoequalizers
 
 end CategoryTheory.Limits

@@ -155,7 +155,7 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
     IsInitial (StructuredArrow.mk (h.Unit.app A) : StructuredArrow A G)
     where
   desc B := StructuredArrow.homMk ((h.homEquiv _ _).symm B.x.Hom) (by tidy)
-  uniq' s m w := by
+  uniq s m w := by
     ext
     dsimp
     rw [Equiv.eq_symm_apply, adjunction.hom_equiv_unit]
@@ -168,7 +168,7 @@ def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
     IsTerminal (CostructuredArrow.mk (h.counit.app A) : CostructuredArrow F A)
     where
   lift B := CostructuredArrow.homMk (h.homEquiv _ _ B.x.Hom) (by tidy)
-  uniq' s m w := by
+  uniq s m w := by
     ext
     dsimp
     rw [h.eq_hom_equiv_apply, adjunction.hom_equiv_counit]

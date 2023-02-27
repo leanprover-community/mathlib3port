@@ -366,10 +366,10 @@ def BinaryFan.isLimitMk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (lift : ∀ s : 
         m = lift s) :
     IsLimit (BinaryFan.mk fst snd) :=
   { lift
-    fac' := fun s j => by
+    fac := fun s j => by
       rcases j with ⟨⟨⟩⟩
       exacts[fac_left s, fac_right s]
-    uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
+    uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_fan.is_limit_mk CategoryTheory.Limits.BinaryFan.isLimitMk
 
 /-- This is a more convenient formulation to show that a `binary_cofan` constructed using
@@ -383,10 +383,10 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
         m = desc s) :
     IsColimit (BinaryCofan.mk inl inr) :=
   { desc
-    fac' := fun s j => by
+    fac := fun s j => by
       rcases j with ⟨⟨⟩⟩
       exacts[fac_left s, fac_right s]
-    uniq' := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
+    uniq := fun s m w => uniq s m (w ⟨WalkingPair.left⟩) (w ⟨WalkingPair.right⟩) }
 #align category_theory.limits.binary_cofan.is_colimit_mk CategoryTheory.Limits.BinaryCofan.isColimitMk
 
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
@@ -959,13 +959,13 @@ abbrev HasBinaryCoproducts :=
 /-- If `C` has all limits of diagrams `pair X Y`, then it has all binary products -/
 theorem hasBinaryProducts_of_hasLimit_pair [∀ {X Y : C}, HasLimit (pair X Y)] :
     HasBinaryProducts C :=
-  { HasLimit := fun F => hasLimitOfIso (diagramIsoPair F).symm }
+  { HasLimit := fun F => hasLimit_of_iso (diagramIsoPair F).symm }
 #align category_theory.limits.has_binary_products_of_has_limit_pair CategoryTheory.Limits.hasBinaryProducts_of_hasLimit_pair
 
 /-- If `C` has all colimits of diagrams `pair X Y`, then it has all binary coproducts -/
 theorem hasBinaryCoproducts_of_hasColimit_pair [∀ {X Y : C}, HasColimit (pair X Y)] :
     HasBinaryCoproducts C :=
-  { HasColimit := fun F => hasColimitOfIso (diagramIsoPair F) }
+  { HasColimit := fun F => hasColimit_of_iso (diagramIsoPair F) }
 #align category_theory.limits.has_binary_coproducts_of_has_colimit_pair CategoryTheory.Limits.hasBinaryCoproducts_of_hasColimit_pair
 
 section

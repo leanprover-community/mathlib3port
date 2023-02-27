@@ -124,7 +124,7 @@ instance hasLimits : HasLimits SemiRing.{u} :=
 -/
 def forget₂AddCommMonPreservesLimitsAux (F : J ⥤ SemiRing.{max v u}) :
     IsLimit ((forget₂ SemiRing AddCommMon).mapCone (limitCone F)) := by
-  apply AddCommMon.limit_cone_is_limit (F ⋙ forget₂ SemiRing AddCommMon.{max v u})
+  apply AddCommMon.limitConeIsLimit (F ⋙ forget₂ SemiRing AddCommMon.{max v u})
 #align SemiRing.forget₂_AddCommMon_preserves_limits_aux SemiRing.forget₂AddCommMonPreservesLimitsAux
 
 /-- The forgetful functor from semirings to additive commutative monoids preserves all limits.
@@ -358,7 +358,7 @@ instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ RingCat S
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ RingCat.{max v u}) :
     IsLimit ((forget₂ RingCat AddCommGroupCat).mapCone (limitCone F)) := by
-  apply AddCommGroupCat.limit_cone_is_limit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
+  apply AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
 #align Ring.forget₂_AddCommGroup_preserves_limits_aux RingCat.forget₂AddCommGroupPreservesLimitsAux
 
 /-- The forgetful functor from rings to additive commutative groups preserves all limits.

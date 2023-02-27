@@ -495,14 +495,14 @@ section MultiequalizerConditions
 def isLimitOfIsSheaf {X : C} (S : J.cover X) (hP : IsSheaf J P) : IsLimit (S.Multifork P)
     where
   lift := fun E : Multifork _ => hP.amalgamate S (fun I => E.ι _) fun I => E.condition _
-  fac' := by
+  fac := by
     rintro (E : multifork _) (a | b)
     · apply hP.amalgamate_map
     · rw [← E.w (walking_multicospan.hom.fst b), ←
         (S.multifork P).w (walking_multicospan.hom.fst b), ← assoc]
       congr 1
       apply hP.amalgamate_map
-  uniq' := by
+  uniq := by
     rintro (E : multifork _) m hm
     apply hP.hom_ext S
     intro I

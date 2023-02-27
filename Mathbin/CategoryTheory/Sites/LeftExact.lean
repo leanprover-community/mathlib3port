@@ -84,7 +84,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
   preservesLimitOfEvaluation _ _ fun W =>
     preservesLimitOfPreservesLimitCone (limit.isLimit _)
       { lift := fun E => liftToDiagramLimitObj F E
-        fac' := by
+        fac := by
           intro E k
           dsimp [diagram_nat_trans]
           ext1
@@ -93,7 +93,7 @@ instance (X : C) (K : Type max v u) [SmallCategory K] [HasLimitsOfShape K D] (F 
           dsimp [evaluate_combined_cones]
           erw [category.comp_id, category.assoc, ← nat_trans.comp_app, limit.lift_π, limit.lift_π]
           rfl
-        uniq' := by
+        uniq := by
           intro E m hm
           ext
           delta lift_to_diagram_limit_obj

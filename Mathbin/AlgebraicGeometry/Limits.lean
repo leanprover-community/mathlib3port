@@ -47,7 +47,7 @@ instance : IsAffine (⊤_ Scheme.{u}) :=
   isAffineOfIso (PreservesTerminal.iso Scheme.spec).inv
 
 instance : HasFiniteLimits Scheme :=
-  hasFiniteLimitsOfHasTerminalAndPullbacks
+  hasFiniteLimits_of_hasTerminal_and_pullbacks
 
 section Initial
 

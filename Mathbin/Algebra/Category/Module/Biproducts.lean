@@ -33,10 +33,10 @@ variable {R : Type u} [Ring R]
 
 -- As `Module R` is preadditive, and has all limits, it automatically has biproducts.
 instance : HasBinaryBiproducts (ModuleCat.{v} R) :=
-  HasBinaryBiproducts.ofHasBinaryProducts
+  HasBinaryBiproducts.of_hasBinaryProducts
 
 instance : HasFiniteBiproducts (ModuleCat.{v} R) :=
-  HasFiniteBiproducts.ofHasFiniteProducts
+  HasFiniteBiproducts.of_hasFiniteProducts
 
 -- We now construct explicit limit data,
 -- so we can compare the biproducts to the usual unbundled constructions.
@@ -54,13 +54,13 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
           naturality' := by rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨⟨⟨⟩⟩⟩ <;> rfl } }
   IsLimit :=
     { lift := fun s => LinearMap.prod (s.π.app ⟨WalkingPair.left⟩) (s.π.app ⟨WalkingPair.right⟩)
-      fac' := by
+      fac := by
         rintro s (⟨⟩ | ⟨⟩) <;>
           · ext x
             simp only [binary_fan.π_app_right, binary_fan.π_app_left, ModuleCat.coe_comp,
               Function.comp_apply, LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.prod_apply,
               Pi.prod]
-      uniq' := fun s m w => by
+      uniq := fun s m w => by
         ext <;> [rw [← w ⟨walking_pair.left⟩], rw [← w ⟨walking_pair.right⟩]] <;> rfl }
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
 
@@ -126,11 +126,11 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
       π := Discrete.natTrans fun j => (LinearMap.proj j.as : (∀ j, f j) →ₗ[R] f j.as) }
   IsLimit :=
     { lift := lift f
-      fac' := fun s j => by
+      fac := fun s j => by
         cases j
         ext
         simp
-      uniq' := fun s m w => by
+      uniq := fun s m w => by
         ext (x j)
         dsimp only [has_limit.lift]
         simp only [LinearMap.coe_mk]

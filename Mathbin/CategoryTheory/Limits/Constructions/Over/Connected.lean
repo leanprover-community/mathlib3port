@@ -72,7 +72,7 @@ def raisedConeIsLimit [IsConnected J] {B : C} {F : J â¥¤ Over B} {c : Cone (F â‹
       (by
         dsimp
         simp)
-  uniq' s m K := by
+  uniq s m K := by
     ext1
     apply t.hom_ext
     intro j
@@ -91,9 +91,9 @@ instance forgetCreatesConnectedLimits [IsConnected J] {B : C} : CreatesLimitsOfS
 #align category_theory.over.forget_creates_connected_limits CategoryTheory.Over.forgetCreatesConnectedLimits
 
 /-- The over category has any connected limit which the original category has. -/
-instance hasConnectedLimits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
-    HasLimitsOfShape J (Over B) where HasLimit F := hasLimitOfCreated F (forget B)
-#align category_theory.over.has_connected_limits CategoryTheory.Over.hasConnectedLimits
+instance has_connected_limits {B : C} [IsConnected J] [HasLimitsOfShape J C] :
+    HasLimitsOfShape J (Over B) where HasLimit F := hasLimit_of_created F (forget B)
+#align category_theory.over.has_connected_limits CategoryTheory.Over.has_connected_limits
 
 end CategoryTheory.Over
 

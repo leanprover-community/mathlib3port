@@ -87,12 +87,12 @@ def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f)
   lift s :=
     ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).Monotone h⟩, fun x =>
       funext fun j => (s.π.app ⟨j⟩).Continuous x⟩
-  uniq' s m w := by
+  uniq s m w := by
     ext (t j)
     change m t j = s.π.app ⟨j⟩ t
     rw [← w ⟨j⟩]
     rfl
-  fac' s j := by
+  fac s j := by
     cases j
     tidy
 #align ωCPO.has_products.is_product ωCPO.HasProducts.isProduct
@@ -143,7 +143,7 @@ def isEqualizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : IsLimit (equalizer f g) :=
 end HasEqualizers
 
 instance : HasProducts.{v} ωCPO.{v} := fun J =>
-  { HasLimit := fun F => hasLimitOfIso Discrete.natIsoFunctor.symm }
+  { HasLimit := fun F => hasLimit_of_iso Discrete.natIsoFunctor.symm }
 
 instance {X Y : ωCPO.{v}} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
   HasLimit.mk ⟨_, HasEqualizers.isEqualizer f g⟩
@@ -152,7 +152,7 @@ instance : HasEqualizers ωCPO.{v} :=
   hasEqualizers_of_hasLimit_parallelPair _
 
 instance : HasLimits ωCPO.{v} :=
-  hasLimitsOfHasEqualizersAndProducts
+  has_limits_of_hasEqualizers_and_products
 
 end
 

@@ -610,14 +610,14 @@ def isLimitAux (t : PullbackCone f g) (lift : ∀ s : PullbackCone f g, s.x ⟶ 
         m = lift s) :
     IsLimit t :=
   { lift
-    fac' := fun s j =>
+    fac := fun s j =>
       Option.casesOn j
         (by
           rw [← s.w inl, ← t.w inl, ← category.assoc]
           congr
           exact fac_left s)
         fun j' => WalkingPair.casesOn j' (fac_left s) (fac_right s)
-    uniq' := uniq }
+    uniq := uniq }
 #align category_theory.limits.pullback_cone.is_limit_aux CategoryTheory.Limits.PullbackCone.isLimitAux
 
 /-- This is another convenient method to verify that a pullback cone is a limit cone. It
@@ -856,10 +856,10 @@ def isColimitAux (t : PushoutCocone f g) (desc : ∀ s : PushoutCocone f g, t.x 
         m = desc s) :
     IsColimit t :=
   { desc
-    fac' := fun s j =>
+    fac := fun s j =>
       Option.casesOn j (by simp [← s.w fst, ← t.w fst, fac_left s]) fun j' =>
         WalkingPair.casesOn j' (fac_left s) (fac_right s)
-    uniq' := uniq }
+    uniq := uniq }
 #align category_theory.limits.pushout_cocone.is_colimit_aux CategoryTheory.Limits.PushoutCocone.isColimitAux
 
 /-- This is another convenient method to verify that a pushout cocone is a colimit cocone. It
@@ -2776,13 +2776,13 @@ abbrev HasPushouts :=
 /-- If `C` has all limits of diagrams `cospan f g`, then it has all pullbacks -/
 theorem hasPullbacks_of_hasLimit_cospan
     [∀ {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z}, HasLimit (cospan f g)] : HasPullbacks C :=
-  { HasLimit := fun F => hasLimitOfIso (diagramIsoCospan F).symm }
+  { HasLimit := fun F => hasLimit_of_iso (diagramIsoCospan F).symm }
 #align category_theory.limits.has_pullbacks_of_has_limit_cospan CategoryTheory.Limits.hasPullbacks_of_hasLimit_cospan
 
 /-- If `C` has all colimits of diagrams `span f g`, then it has all pushouts -/
 theorem hasPushouts_of_hasColimit_span
     [∀ {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z}, HasColimit (span f g)] : HasPushouts C :=
-  { HasColimit := fun F => hasColimitOfIso (diagramIsoSpan F) }
+  { HasColimit := fun F => hasColimit_of_iso (diagramIsoSpan F) }
 #align category_theory.limits.has_pushouts_of_has_colimit_span CategoryTheory.Limits.hasPushouts_of_hasColimit_span
 
 /-- The duality equivalence `walking_spanᵒᵖ ≌ walking_cospan` -/
