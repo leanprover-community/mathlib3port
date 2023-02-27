@@ -2031,9 +2031,11 @@ theorem insert_subset_insert_iff (ha : a ∉ s) : insert a s ⊆ insert a t ↔ 
 #align set.insert_subset_insert_iff Set.insert_subset_insert_iff
 -/
 
+#print Set.subset_insert_iff_of_not_mem /-
 theorem subset_insert_iff_of_not_mem (ha : a ∉ s) : s ⊆ insert a t ↔ s ⊆ t :=
   forall₂_congr fun b hb => or_iff_right <| ne_of_mem_of_not_mem hb ha
 #align set.subset_insert_iff_of_not_mem Set.subset_insert_iff_of_not_mem
+-/
 
 /- warning: set.ssubset_iff_insert -> Set.ssubset_iff_insert is a dubious translation:
 lean 3 declaration is
@@ -4104,12 +4106,14 @@ theorem powerset_univ : 𝒫(univ : Set α) = univ :=
 #align set.powerset_univ Set.powerset_univ
 -/
 
+#print Set.powerset_singleton /-
 /-- The powerset of a singleton contains only `∅` and the singleton itself. -/
 theorem powerset_singleton (x : α) : 𝒫({x} : Set α) = {∅, {x}} :=
   by
   ext y
   rw [mem_powerset_iff, subset_singleton_iff_eq, mem_insert_iff, mem_singleton_iff]
 #align set.powerset_singleton Set.powerset_singleton
+-/
 
 /-! ### Sets defined as an if-then-else -/
 

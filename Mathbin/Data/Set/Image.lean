@@ -1083,6 +1083,12 @@ end Image
 /-! ### Lemmas about the powerset and image. -/
 
 
+/- warning: set.powerset_insert -> Set.powerset_insert is a dubious translation:
+lean 3 declaration is
+  forall {α : Type.{u1}} (s : Set.{u1} α) (a : α), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Set.powerset.{u1} α (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a s)) (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.hasUnion.{u1} (Set.{u1} α)) (Set.powerset.{u1} α s) (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.hasInsert.{u1} α) a) (Set.powerset.{u1} α s)))
+but is expected to have type
+  forall {α : Type.{u1}} (s : Set.{u1} α) (a : α), Eq.{succ u1} (Set.{u1} (Set.{u1} α)) (Set.powerset.{u1} α (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a s)) (Union.union.{u1} (Set.{u1} (Set.{u1} α)) (Set.instUnionSet.{u1} (Set.{u1} α)) (Set.powerset.{u1} α s) (Set.image.{u1, u1} (Set.{u1} α) (Set.{u1} α) (Insert.insert.{u1, u1} α (Set.{u1} α) (Set.instInsertSet.{u1} α) a) (Set.powerset.{u1} α s)))
+Case conversion may be inaccurate. Consider using '#align set.powerset_insert Set.powerset_insertₓ'. -/
 /-- The powerset of `{a} ∪ s` is `𝒫 s` together with `{a} ∪ t` for each `t ∈ 𝒫 s`. -/
 theorem powerset_insert (s : Set α) (a : α) : 𝒫 insert a s = 𝒫 s ∪ insert a '' 𝒫 s :=
   by
