@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios, Mario Carneiro
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.fixed_point
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit c6b53304a1c87e90e6c14e3b28ca8fdc39070217
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -364,19 +364,27 @@ theorem nfpBFamily_monotone (hf : ∀ i hi, Monotone (f i hi)) : Monotone (nfpBF
 #align ordinal.nfp_bfamily_monotone Ordinal.nfpBFamily_monotone
 -/
 
-#print Ordinal.apply_lt_nfpBFamily /-
-theorem apply_lt_nfpBFamily (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
-    (∀ i hi, f i hi b < nfpBFamily o f a) ↔ b < nfpBFamily o f a :=
+/- warning: ordinal.apply_lt_nfp_bfamily -> Ordinal.apply_lt_nfpBFamily is a dubious translation:
+lean 3 declaration is
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {a : Ordinal.{max u1 u2}} {b : Ordinal.{max u1 u2}}, (LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) b (Ordinal.nfpBFamily.{u1, u2} o f a)) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{succ (max u1 u2)} Ordinal.{max u1 u2} (Preorder.toLT.{succ (max u1 u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{succ (max u1 u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi b) (Ordinal.nfpBFamily.{u1, u2} o f a)))
+but is expected to have type
+  forall {o : Ordinal.{u1}} {f : forall (b : Ordinal.{u1}), (LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) b o) -> Ordinal.{max u1 u2} -> Ordinal.{max u1 u2}}, (Ne.{succ (succ u1)} Ordinal.{u1} o (OfNat.ofNat.{succ u1} Ordinal.{u1} 0 (Zero.toOfNat0.{succ u1} Ordinal.{u1} Ordinal.zero.{u1}))) -> (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), Ordinal.IsNormal.{max u1 u2, max u1 u2} (f i hi)) -> (forall {b : Ordinal.{max u2 u1}} {hb : Ordinal.{max u1 u2}}, Iff (forall (i : Ordinal.{u1}) (hi : LT.lt.{succ u1} Ordinal.{u1} (Preorder.toLT.{succ u1} Ordinal.{u1} (PartialOrder.toPreorder.{succ u1} Ordinal.{u1} Ordinal.partialOrder.{u1})) i o), LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) (f i hi hb) (Ordinal.nfpBFamily.{u1, u2} o f b)) (LT.lt.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (Preorder.toLT.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} (PartialOrder.toPreorder.{max (succ u1) (succ u2)} Ordinal.{max u1 u2} Ordinal.partialOrder.{max u1 u2})) hb (Ordinal.nfpBFamily.{u1, u2} o f b)))
+Case conversion may be inaccurate. Consider using '#align ordinal.apply_lt_nfp_bfamily Ordinal.apply_lt_nfpBFamilyₓ'. -/
+theorem apply_lt_nfpBFamily (H : ∀ i hi, IsNormal (f i hi)) {a b} (hb : b < nfpBFamily o f a)
+    (i hi) : f i hi b < nfpBFamily o f a :=
   by
-  unfold nfp_bfamily
-  rw [←
-    @apply_lt_nfp_family_iff _ (family_of_bfamily o f) (out_nonempty_iff_ne_zero.2 ho) fun i =>
-      H _ _]
-  refine' ⟨fun h i => h _ (typein_lt_self i), fun h i hio => _⟩
   rw [← family_of_bfamily_enum o f]
-  apply h
+  apply apply_lt_nfp_family _ hb
+  exact fun _ => H _ _
 #align ordinal.apply_lt_nfp_bfamily Ordinal.apply_lt_nfpBFamily
--/
+
+theorem apply_lt_nfpBFamily_iff (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
+    (∀ i hi, f i hi b < nfpBFamily o f a) ↔ b < nfpBFamily o f a :=
+  ⟨fun h => by
+    haveI := out_nonempty_iff_ne_zero.2 ho
+    refine' (apply_lt_nfp_family_iff _).1 fun _ => h _ _
+    exact fun _ => H _ _, apply_lt_nfpBFamily H⟩
+#align ordinal.apply_lt_nfp_bfamily_iff Ordinal.apply_lt_nfpBFamily_iff
 
 #print Ordinal.nfpBFamily_le_apply /-
 theorem nfpBFamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a b} :
@@ -384,7 +392,7 @@ theorem nfpBFamily_le_apply (ho : o ≠ 0) (H : ∀ i hi, IsNormal (f i hi)) {a 
   by
   rw [← not_iff_not]
   push_neg
-  convert apply_lt_nfp_bfamily ho H
+  convert apply_lt_nfp_bfamily_iff ho H
   simp only [not_le]
 #align ordinal.nfp_bfamily_le_apply Ordinal.nfpBFamily_le_apply
 -/

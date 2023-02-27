@@ -4,14 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module number_theory.dioph
-! leanprover-community/mathlib commit 356447fe00e75e54777321045cdff7c9ea212e60
+! leanprover-community/mathlib commit a66d07e27d5b5b8ac1147cacfe353478e5c14002
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Data.Fin.Fin2
 import Mathbin.Data.Pfun
 import Mathbin.Data.Vector3
-import Mathbin.NumberTheory.Pell
+import Mathbin.NumberTheory.PellMatiyasevic
 
 /-!
 # Diophantine functions and Matiyasevic's theorem

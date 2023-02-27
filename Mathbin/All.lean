@@ -1404,6 +1404,7 @@ import Mathbin.Data.Matrix.Basis
 import Mathbin.Data.Matrix.Block
 import Mathbin.Data.Matrix.CharP
 import Mathbin.Data.Matrix.Dmatrix
+import Mathbin.Data.Matrix.DualNumber
 import Mathbin.Data.Matrix.Hadamard
 import Mathbin.Data.Matrix.Kronecker
 import Mathbin.Data.Matrix.Notation
@@ -2240,7 +2241,7 @@ import Mathbin.NumberTheory.Padics.PadicNumbers
 import Mathbin.NumberTheory.Padics.PadicVal
 import Mathbin.NumberTheory.Padics.RingHoms
 import Mathbin.NumberTheory.Pell
-import Mathbin.NumberTheory.PellGeneral
+import Mathbin.NumberTheory.PellMatiyasevic
 import Mathbin.NumberTheory.PrimeCounting
 import Mathbin.NumberTheory.PrimesCongruentOne
 import Mathbin.NumberTheory.Primorial

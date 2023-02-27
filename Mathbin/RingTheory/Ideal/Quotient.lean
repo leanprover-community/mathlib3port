@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Chris Hughes, Mario Carneiro, Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.quotient
-! leanprover-community/mathlib commit e7bab9a85e92cf46c02cb4725a7be2f04691e3a7
+! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,7 +288,7 @@ end Quotient
 
 /-- Quotienting by equal ideals gives equivalent rings.
 
-See also `submodule.quot_equiv_of_eq`.
+See also `submodule.quot_equiv_of_eq` and `ideal.quotient_equiv_alg_of_eq`.
 -/
 def quotEquivOfEq {R : Type _} [CommRing R] {I J : Ideal R} (h : I = J) : R ⧸ I ≃+* R ⧸ J :=
   { Submodule.quotEquivOfEq I J h with

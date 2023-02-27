@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.eval
-! leanprover-community/mathlib commit 565eb991e264d0db702722b4bde52ee5173c9950
+! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -522,6 +522,9 @@ theorem IsRoot.dvd {R : Type _} [CommSemiring R] {p q : R[X]} {x : R} (h : p.IsR
 
 theorem not_isRoot_c (r a : R) (hr : r ≠ 0) : ¬IsRoot (c r) a := by simpa using hr
 #align polynomial.not_is_root_C Polynomial.not_isRoot_c
+
+theorem eval_surjective (x : R) : Function.Surjective <| eval x := fun y => ⟨c y, eval_c⟩
+#align polynomial.eval_surjective Polynomial.eval_surjective
 
 end Eval
 

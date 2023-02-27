@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module measure_theory.measure.measure_space_def
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 146a2eed7ad5887ade571e073d0805d2ac618043
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,10 +21,10 @@ Given a measurable space `α`, a measure on `α` is a function that sends measur
 extended nonnegative reals that satisfies the following conditions:
 1. `μ ∅ = 0`;
 2. `μ` is countably additive. This means that the measure of a countable union of pairwise disjoint
-   sets is equal to the measure of the individual sets.
+   sets is equal to the sum of the measures of the individual sets.
 
 Every measure can be canonically extended to an outer measure, so that it assigns values to
-all subsets, not just the measurable subsets. On the other hand, a measure that is countably
+all subsets, not just the measurable subsets. On the other hand, an outer measure that is countably
 additive on measurable sets can be restricted to measurable sets to obtain a measure.
 In this file a measure is defined to be an outer measure that is countably additive on
 measurable sets, with the additional assumption that the outer measure is the canonical

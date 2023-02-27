@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.finset.lattice
-! leanprover-community/mathlib commit cc70d9141824ea8982d1562ce009952f2c3ece30
+! leanprover-community/mathlib commit 1c857a1f6798cb054be942199463c2cf904cb937
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -926,7 +926,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} β} {f : β -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f)) (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 a (f i)))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_sup_right Finset.disjoint_sup_rightₓ'. -/
-theorem disjoint_sup_right : Disjoint a (s.sup f) ↔ ∀ i ∈ s, Disjoint a (f i) := by
+protected theorem disjoint_sup_right : Disjoint a (s.sup f) ↔ ∀ i ∈ s, Disjoint a (f i) := by
   simp only [disjoint_iff, sup_inf_distrib_left, sup_eq_bot_iff]
 #align finset.disjoint_sup_right Finset.disjoint_sup_right
 
@@ -936,7 +936,7 @@ lean 3 declaration is
 but is expected to have type
   forall {α : Type.{u2}} {β : Type.{u1}} [_inst_1 : DistribLattice.{u2} α] [_inst_2 : OrderBot.{u2} α (Preorder.toLE.{u2} α (PartialOrder.toPreorder.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)))))] {s : Finset.{u1} β} {f : β -> α} {a : α}, Iff (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (Finset.sup.{u2, u1} α β (Lattice.toSemilatticeSup.{u2} α (DistribLattice.toLattice.{u2} α _inst_1)) _inst_2 s f) a) (forall (i : β), (Membership.mem.{u1, u1} β (Finset.{u1} β) (Finset.instMembershipFinset.{u1} β) i s) -> (Disjoint.{u2} α (SemilatticeInf.toPartialOrder.{u2} α (Lattice.toSemilatticeInf.{u2} α (DistribLattice.toLattice.{u2} α _inst_1))) _inst_2 (f i) a))
 Case conversion may be inaccurate. Consider using '#align finset.disjoint_sup_left Finset.disjoint_sup_leftₓ'. -/
-theorem disjoint_sup_left : Disjoint (s.sup f) a ↔ ∀ i ∈ s, Disjoint (f i) a := by
+protected theorem disjoint_sup_left : Disjoint (s.sup f) a ↔ ∀ i ∈ s, Disjoint (f i) a := by
   simp only [disjoint_iff, sup_inf_distrib_right, sup_eq_bot_iff]
 #align finset.disjoint_sup_left Finset.disjoint_sup_left
 

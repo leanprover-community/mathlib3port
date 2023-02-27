@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.div
-! leanprover-community/mathlib commit 3d32bf9cef95940e3fe1ca0dd2412e0f21579f46
+! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Polynomial.AlgebraMap
 import Mathbin.Data.Polynomial.Inductions
 import Mathbin.Data.Polynomial.Monic
 import Mathbin.RingTheory.Multiplicity
@@ -494,6 +495,34 @@ theorem not_isField : ¬IsField R[X] := by
 #align polynomial.not_is_field Polynomial.not_isField
 
 variable {R}
+
+theorem ker_evalRingHom (x : R) : (evalRingHom x).ker = Ideal.span {x - c x} :=
+  by
+  ext y
+  simpa only [Ideal.mem_span_singleton, dvd_iff_is_root]
+#align polynomial.ker_eval_ring_hom Polynomial.ker_evalRingHom
+
+/-- For a commutative ring $R$, evaluating a polynomial at an element $x \in R$ induces an
+isomorphism of $R$-algebras $R[X] / \langle X - x \rangle \cong R$. -/
+noncomputable def quotientSpanXSubCAlgEquiv (x : R) :
+    (R[X] ⧸ Ideal.span ({x - c x} : Set R[X])) ≃ₐ[R] R :=
+  (AlgEquiv.restrictScalars R <|
+          Ideal.quotientEquivAlgOfEq R
+            (ker_eval_ring_hom x : RingHom.ker (aeval x).toRingHom = _)).symm.trans <|
+    Ideal.quotientKerAlgEquivOfRightInverse fun _ => eval_c
+#align polynomial.quotient_span_X_sub_C_alg_equiv Polynomial.quotientSpanXSubCAlgEquiv
+
+@[simp]
+theorem quotientSpanXSubCAlgEquiv_mk (x : R) (p : R[X]) :
+    quotientSpanXSubCAlgEquiv x (Ideal.Quotient.mk _ p) = p.eval x :=
+  rfl
+#align polynomial.quotient_span_X_sub_C_alg_equiv_mk Polynomial.quotientSpanXSubCAlgEquiv_mk
+
+@[simp]
+theorem quotientSpanXSubCAlgEquiv_symm_apply (x : R) (y : R) :
+    (quotientSpanXSubCAlgEquiv x).symm y = algebraMap R _ y :=
+  rfl
+#align polynomial.quotient_span_X_sub_C_alg_equiv_symm_apply Polynomial.quotientSpanXSubCAlgEquiv_symm_apply
 
 section multiplicity
 

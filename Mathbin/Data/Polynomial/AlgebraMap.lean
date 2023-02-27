@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Johannes Hölzl, Scott Morrison, Jens Wagemaker
 
 ! This file was ported from Lean 3 source module data.polynomial.algebra_map
-! leanprover-community/mathlib commit cbdf7b565832144d024caa5a550117c6df0204a5
+! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,6 +288,12 @@ theorem aeval_algebraMap_apply_eq_algebraMap_eval (x : R) (p : R[X]) :
 theorem coe_aeval_eq_eval (r : R) : (aeval r : R[X] → R) = eval r :=
   rfl
 #align polynomial.coe_aeval_eq_eval Polynomial.coe_aeval_eq_eval
+
+@[simp]
+theorem coe_aeval_eq_evalRingHom (x : R) :
+    ((aeval x : R[X] →ₐ[R] R) : R[X] →+* R) = evalRingHom x :=
+  rfl
+#align polynomial.coe_aeval_eq_eval_ring_hom Polynomial.coe_aeval_eq_evalRingHom
 
 @[simp]
 theorem aeval_fn_apply {X : Type _} (g : R[X]) (f : X → R) (x : X) :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.ideal.operations
-! leanprover-community/mathlib commit 87c54600fe3cdc7d32ff5b50873ac724d86aef8d
+! leanprover-community/mathlib commit e064a7bf82ad94c3c17b5128bbd860d1ec34874e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2721,6 +2721,24 @@ theorem algebraMap_quotient_injective {I : Ideal A} [Algebra R A] :
   rw [← RingHom.map_sub] at hab
   exact quotient.eq.mpr hab
 #align ideal.algebra_map_quotient_injective Ideal.algebraMap_quotient_injective
+
+variable (R₁)
+
+/-- Quotienting by equal ideals gives equivalent algebras. -/
+def quotientEquivAlgOfEq {I J : Ideal A} (h : I = J) : (A ⧸ I) ≃ₐ[R₁] A ⧸ J :=
+  quotientEquivAlg I J AlgEquiv.refl <| h ▸ (map_id I).symm
+#align ideal.quotient_equiv_alg_of_eq Ideal.quotientEquivAlgOfEq
+
+@[simp]
+theorem quotientEquivAlgOfEq_mk {I J : Ideal A} (h : I = J) (x : A) :
+    quotientEquivAlgOfEq R₁ h (Ideal.Quotient.mk I x) = Ideal.Quotient.mk J x :=
+  rfl
+#align ideal.quotient_equiv_alg_of_eq_mk Ideal.quotientEquivAlgOfEq_mk
+
+@[simp]
+theorem quotientEquivAlgOfEq_symm {I J : Ideal A} (h : I = J) :
+    (quotientEquivAlgOfEq R₁ h).symm = quotientEquivAlgOfEq R₁ h.symm := by ext <;> rfl
+#align ideal.quotient_equiv_alg_of_eq_symm Ideal.quotientEquivAlgOfEq_symm
 
 end QuotientAlgebra
 

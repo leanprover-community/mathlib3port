@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Eric Wieser
 
 ! This file was ported from Lean 3 source module algebra.triv_sq_zero_ext
-! leanprover-community/mathlib commit b8d2eaa69d69ce8f03179a5cda774fc0cde984e4
+! leanprover-community/mathlib commit eb0cb4511aaef0da2462207b67358a0e1fe1e2ee
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,6 +65,8 @@ def TrivSqZeroExt (R : Type u) (M : Type v) :=
 
 -- mathport name: exprtsze
 local notation "tsze" => TrivSqZeroExt
+
+open BigOperators
 
 namespace TrivSqZeroExt
 
@@ -292,6 +294,16 @@ theorem snd_smul [SMul S R] [SMul S M] (s : S) (x : tsze R M) : (s • x).snd = 
   rfl
 #align triv_sq_zero_ext.snd_smul TrivSqZeroExt.snd_smul
 
+theorem fst_sum {ι} [AddCommMonoid R] [AddCommMonoid M] (s : Finset ι) (f : ι → tsze R M) :
+    (∑ i in s, f i).fst = ∑ i in s, (f i).fst :=
+  Prod.fst_sum
+#align triv_sq_zero_ext.fst_sum TrivSqZeroExt.fst_sum
+
+theorem snd_sum {ι} [AddCommMonoid R] [AddCommMonoid M] (s : Finset ι) (f : ι → tsze R M) :
+    (∑ i in s, f i).snd = ∑ i in s, (f i).snd :=
+  Prod.snd_sum
+#align triv_sq_zero_ext.snd_sum TrivSqZeroExt.snd_sum
+
 section
 
 variable (M)
@@ -323,6 +335,11 @@ theorem inl_smul [Monoid S] [AddMonoid M] [SMul S R] [DistribMulAction S M] (s :
     (inl (s • r) : tsze R M) = s • inl r :=
   ext rfl (smul_zero s).symm
 #align triv_sq_zero_ext.inl_smul TrivSqZeroExt.inl_smul
+
+theorem inl_sum {ι} [AddCommMonoid R] [AddCommMonoid M] (s : Finset ι) (f : ι → R) :
+    (inl (∑ i in s, f i) : tsze R M) = ∑ i in s, inl (f i) :=
+  (LinearMap.inl ℕ _ _).map_sum
+#align triv_sq_zero_ext.inl_sum TrivSqZeroExt.inl_sum
 
 end
 
@@ -357,6 +374,11 @@ theorem inr_smul [Zero R] [Zero S] [SMulWithZero S R] [SMul S M] (r : S) (m : M)
     (inr (r • m) : tsze R M) = r • inr m :=
   ext (smul_zero _).symm rfl
 #align triv_sq_zero_ext.inr_smul TrivSqZeroExt.inr_smul
+
+theorem inr_sum {ι} [AddCommMonoid R] [AddCommMonoid M] (s : Finset ι) (f : ι → M) :
+    (inr (∑ i in s, f i) : tsze R M) = ∑ i in s, inr (f i) :=
+  (LinearMap.inr ℕ _ _).map_sum
+#align triv_sq_zero_ext.inr_sum TrivSqZeroExt.inr_sum
 
 end
 
@@ -557,8 +579,6 @@ instance [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐᵒᵖ M] :
 
 instance [Ring R] [AddCommGroup M] [Module R M] [Module Rᵐᵒᵖ M] : NonAssocRing (tsze R M) :=
   { TrivSqZeroExt.addGroupWithOne, TrivSqZeroExt.nonAssocSemiring with }
-
-open BigOperators
 
 /-- In the general non-commutative case, the power operator is
 
