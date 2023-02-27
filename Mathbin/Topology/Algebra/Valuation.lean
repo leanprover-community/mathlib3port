@@ -106,7 +106,7 @@ structure. -/
 def mk' (v : Valuation R Γ₀) : Valued R Γ₀ :=
   { V
     toUniformSpace := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _
-    to_uniformAddGroup := @topological_add_commGroup_is_uniform _ _ v.subgroups_basis.topology _
+    to_uniformAddGroup := @comm_topologicalAddGroup_is_uniform _ _ v.subgroups_basis.topology _
     is_topological_valuation :=
       by
       letI := @TopologicalAddGroup.toUniformSpace R _ v.subgroups_basis.topology _

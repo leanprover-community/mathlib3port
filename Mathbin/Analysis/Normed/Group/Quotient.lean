@@ -594,7 +594,7 @@ instance Submodule.Quotient.normedAddCommGroup [hS : IsClosed (S : Set M)] :
 #align submodule.quotient.normed_add_comm_group Submodule.Quotient.normedAddCommGroup
 
 instance Submodule.Quotient.completeSpace [CompleteSpace M] : CompleteSpace (M ⧸ S) :=
-  quotientAddGroup.completeSpace M S.toAddSubgroup
+  QuotientAddGroup.completeSpace M S.toAddSubgroup
 #align submodule.quotient.complete_space Submodule.Quotient.completeSpace
 
 /-- For any `x : M ⧸ S` and any `0 < ε`, there is `m : M` such that `submodule.quotient.mk m = x`

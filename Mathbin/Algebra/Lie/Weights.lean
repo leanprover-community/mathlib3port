@@ -255,12 +255,12 @@ def IsWeight (χ : LieCharacter R H) : Prop :=
 
 /-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
 weight with respect to the `⊤` Lie subalgebra. -/
-theorem isWeightZeroOfNilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
+theorem isWeight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     IsWeight (⊤ : LieSubalgebra R L) M 0 :=
   by
   rw [is_weight, LieHom.coe_zero, zero_weight_space_eq_top_of_nilpotent]
   exact top_ne_bot
-#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeightZeroOfNilpotent
+#align lie_module.is_weight_zero_of_nilpotent LieModule.isWeight_zero_of_nilpotent
 
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
 module. -/
@@ -321,7 +321,7 @@ theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
     (∀ y : H, ∃ k : ℕ, (f y ^ k).comp (H.incl : H →ₗ[R] L) x = 0) ↔
       ∀ y : H, ∃ k : ℕ, (H.incl : H →ₗ[R] L).comp (g y ^ k) x = 0
     by
-    simp only [LieHom.coe_to_linearMap, LieSubalgebra.coe_incl, Function.comp_apply,
+    simp only [LieHom.coe_toLinearMap, LieSubalgebra.coe_incl, Function.comp_apply,
       LinearMap.coe_comp, Submodule.coe_eq_zero] at this
     simp only [mem_weight_space, mem_pre_weight_space, LieSubalgebra.coe_incl',
       LieSubmodule.mem_comap, this]
@@ -329,7 +329,7 @@ theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
     by
     rintro ⟨y, hy⟩
     ext ⟨z, hz⟩
-    simp only [Submodule.coe_sub, to_endomorphism_apply_apply, LieHom.coe_to_linearMap,
+    simp only [Submodule.coe_sub, to_endomorphism_apply_apply, LieHom.coe_toLinearMap,
       LinearMap.one_apply, LieSubalgebra.coe_incl, LieSubalgebra.coe_bracket_of_module,
       LieSubalgebra.coe_bracket, LinearMap.smul_apply, Function.comp_apply,
       Submodule.coe_smul_of_tower, LinearMap.coe_comp, LinearMap.sub_apply]

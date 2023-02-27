@@ -211,7 +211,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     (ξ : Basis ι 𝕜 E) : Continuous ξ.equivFun :=
   by
   letI : UniformSpace E := TopologicalAddGroup.toUniformSpace E
-  letI : UniformAddGroup E := topological_add_commGroup_is_uniform
+  letI : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
   letI : SeparatedSpace E := separated_iff_t2.mpr ht2
   induction' hn : Fintype.card ι with n IH generalizing ι E
   · rw [Fintype.card_eq_zero_iff] at hn

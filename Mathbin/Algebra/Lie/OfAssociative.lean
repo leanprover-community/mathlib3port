@@ -320,7 +320,7 @@ theorem LieSubalgebra.ad_comp_incl_eq (K : LieSubalgebra R L) (x : K) :
     (ad R L ↑x).comp (K.incl : K →ₗ[R] L) = (K.incl : K →ₗ[R] L).comp (ad R K x) :=
   by
   ext y
-  simp only [ad_apply, LieHom.coe_to_linearMap, LieSubalgebra.coe_incl, LinearMap.coe_comp,
+  simp only [ad_apply, LieHom.coe_toLinearMap, LieSubalgebra.coe_incl, LinearMap.coe_comp,
     LieSubalgebra.coe_bracket, Function.comp_apply]
 #align lie_subalgebra.ad_comp_incl_eq LieSubalgebra.ad_comp_incl_eq
 

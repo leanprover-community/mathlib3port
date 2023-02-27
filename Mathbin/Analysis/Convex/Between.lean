@@ -595,14 +595,14 @@ theorem Wbtw.sameRay_vsub {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) 
 theorem Wbtw.sameRay_vsub_left {x y z : P} (h : Wbtw R x y z) : SameRay R (y -ᵥ x) (z -ᵥ x) :=
   by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
-  simpa [line_map_apply] using sameRay_nonneg_smul_left (z -ᵥ x) ht0
+  simpa [line_map_apply] using SameRay.sameRay_nonneg_smul_left (z -ᵥ x) ht0
 #align wbtw.same_ray_vsub_left Wbtw.sameRay_vsub_left
 
 theorem Wbtw.sameRay_vsub_right {x y z : P} (h : Wbtw R x y z) : SameRay R (z -ᵥ x) (z -ᵥ y) :=
   by
   rcases h with ⟨t, ⟨ht0, ht1⟩, rfl⟩
   simpa [line_map_apply, vsub_vadd_eq_vsub_sub, sub_smul] using
-    sameRay_nonneg_smul_right (z -ᵥ x) (sub_nonneg.2 ht1)
+    SameRay.sameRay_nonneg_smul_right (z -ᵥ x) (sub_nonneg.2 ht1)
 #align wbtw.same_ray_vsub_right Wbtw.sameRay_vsub_right
 
 end StrictOrderedCommRing

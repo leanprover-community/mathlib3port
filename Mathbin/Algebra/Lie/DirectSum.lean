@@ -245,11 +245,11 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
         ext (j x)
         exact this j i x y
       intro i j y x
-      simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_to_linearMap, to_add_monoid_of,
+      simp only [lie_of R, lie_algebra_of_apply, LieHom.coe_toLinearMap, to_add_monoid_of,
         coe_to_module_eq_coe_to_add_monoid, LinearMap.toAddMonoidHom_coe]
       rcases eq_or_ne i j with (h | h)
       · have h' : f j (h.rec_on y) = f i y := Eq.drec (Eq.refl _) h
-        simp only [h, h', LieHom.coe_to_linearMap, dif_pos, LieHom.map_lie, to_add_monoid_of,
+        simp only [h, h', LieHom.coe_toLinearMap, dif_pos, LieHom.map_lie, to_add_monoid_of,
           LinearMap.toAddMonoidHom_coe]
       · simp only [h, hf j i h.symm x y, dif_neg, not_false_iff, AddMonoidHom.map_zero] }
 #align direct_sum.to_lie_algebra DirectSum.toLieAlgebra

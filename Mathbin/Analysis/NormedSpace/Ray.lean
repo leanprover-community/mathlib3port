@@ -43,7 +43,7 @@ theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| :=
   by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   wlog hab : b ≤ a
-  · rw [sameRay_comm] at h
+  · rw [SameRay.sameRay_comm] at h
     rw [norm_sub_rev, abs_sub_comm]
     exact this u b a hb ha h (le_of_not_le hab)
   rw [← sub_nonneg] at hab
@@ -73,7 +73,7 @@ theorem norm_injOn_ray_left (hx : x ≠ 0) : { y | SameRay ℝ x y }.InjOn norm 
 #align norm_inj_on_ray_left norm_injOn_ray_left
 
 theorem norm_injOn_ray_right (hy : y ≠ 0) : { x | SameRay ℝ x y }.InjOn norm := by
-  simpa only [sameRay_comm] using norm_injOn_ray_left hy
+  simpa only [SameRay.sameRay_comm] using norm_injOn_ray_left hy
 #align norm_inj_on_ray_right norm_injOn_ray_right
 
 theorem sameRay_iff_norm_smul_eq : SameRay ℝ x y ↔ ‖x‖ • y = ‖y‖ • x :=

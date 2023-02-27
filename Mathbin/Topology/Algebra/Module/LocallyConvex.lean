@@ -135,7 +135,7 @@ theorem Disjoint.exists_open_convexes [LocallyConvexSpace 𝕜 E] {s t : Set E} 
     ∃ u v, IsOpen u ∧ IsOpen v ∧ Convex 𝕜 u ∧ Convex 𝕜 v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v :=
   by
   letI : UniformSpace E := TopologicalAddGroup.toUniformSpace E
-  haveI : UniformAddGroup E := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
   have := (LocallyConvexSpace.convex_open_basis_zero 𝕜 E).comap fun x : E × E => x.2 - x.1
   rw [← uniformity_eq_comap_nhds_zero] at this
   rcases disj.exists_uniform_thickening_of_basis this hs₂ ht₂ with ⟨V, ⟨hV0, hVopen, hVconvex⟩, hV⟩

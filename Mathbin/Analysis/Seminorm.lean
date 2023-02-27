@@ -1154,7 +1154,7 @@ protected theorem continuous_of_continuousAt_zero [TopologicalSpace E] [Topologi
     {p : Seminorm 𝕝 E} (hp : ContinuousAt p 0) : Continuous p :=
   by
   letI := TopologicalAddGroup.toUniformSpace E
-  haveI : UniformAddGroup E := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup E := comm_topologicalAddGroup_is_uniform
   exact (Seminorm.uniformContinuous_of_continuousAt_zero hp).Continuous
 #align seminorm.continuous_of_continuous_at_zero Seminorm.continuous_of_continuousAt_zero
 

@@ -67,7 +67,7 @@ theorem hasUniformContinuousConstSmul_of_continuous_const_smul [Monoid R] [AddCo
     [DistribMulAction R M] [UniformSpace M] [UniformAddGroup M] [ContinuousConstSMul R M] :
     HasUniformContinuousConstSmul R M :=
   ⟨fun r =>
-    uniform_continuous_of_continuous_at_zero (DistribMulAction.toAddMonoidHom M r)
+    uniformContinuous_of_continuousAt_zero (DistribMulAction.toAddMonoidHom M r)
       (Continuous.continuousAt (continuous_const_smul r))⟩
 #align has_uniform_continuous_const_smul_of_continuous_const_smul hasUniformContinuousConstSmul_of_continuous_const_smul
 

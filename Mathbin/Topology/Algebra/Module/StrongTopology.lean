@@ -117,14 +117,14 @@ theorem strongUniformity.uniformAddGroup [UniformSpace F] [UniformAddGroup F] (�
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
   rw [strong_uniformity, UniformSpace.replaceTopology_eq]
   let φ : (E →SL[σ] F) →+ E →ᵤ[𝔖] F := ⟨(coeFn : (E →SL[σ] F) → E →ᵤ F), rfl, fun _ _ => rfl⟩
-  exact uniform_add_group_comap φ
+  exact uniformAddGroup_comap φ
 #align continuous_linear_map.strong_uniformity.uniform_add_group ContinuousLinearMap.strongUniformity.uniformAddGroup
 
 theorem strongTopology.topologicalAddGroup [TopologicalSpace F] [TopologicalAddGroup F]
     (𝔖 : Set (Set E)) : @TopologicalAddGroup (E →SL[σ] F) (strongTopology σ F 𝔖) _ :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
   letI : UniformSpace (E →SL[σ] F) := strong_uniformity σ F 𝔖
   haveI : UniformAddGroup (E →SL[σ] F) := strong_uniformity.uniform_add_group σ F 𝔖
   infer_instance
@@ -134,7 +134,7 @@ theorem strongTopology.t2Space [TopologicalSpace F] [TopologicalAddGroup F] [T2S
     (𝔖 : Set (Set E)) (h𝔖 : ⋃₀ 𝔖 = Set.univ) : @T2Space (E →SL[σ] F) (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
   haveI : T2Space (E →ᵤ[𝔖] F) := UniformOnFun.t2Space_of_covering h𝔖
   exact (strong_topology.embedding_coe_fn σ F 𝔖).T2Space
@@ -146,7 +146,7 @@ theorem strongTopology.continuousSMul [RingHomSurjective σ] [RingHomIsometric �
     @ContinuousSMul 𝕜₂ (E →SL[σ] F) _ _ (strongTopology σ F 𝔖) :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
   letI : TopologicalSpace (E →SL[σ] F) := strong_topology σ F 𝔖
   let φ : (E →SL[σ] F) →ₗ[𝕜₂] E →ᵤ[𝔖] F :=
     ⟨(coeFn : (E →SL[σ] F) → E → F), fun _ _ => rfl, fun _ _ => rfl⟩
@@ -162,7 +162,7 @@ theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [Topolog
       fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
-  haveI : UniformAddGroup F := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
   rw [nhds_induced]
   exact (UniformOnFun.hasBasis_nhds_zero_of_basis 𝔖 h𝔖₁ h𝔖₂ h).comap coeFn
 #align continuous_linear_map.strong_topology.has_basis_nhds_zero_of_basis ContinuousLinearMap.strongTopology.hasBasis_nhds_zero_of_basis

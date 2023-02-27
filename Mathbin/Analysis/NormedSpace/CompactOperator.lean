@@ -346,7 +346,7 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
     Continuous f :=
   by
   letI : UniformSpace M₂ := TopologicalAddGroup.toUniformSpace _
-  haveI : UniformAddGroup M₂ := topological_add_commGroup_is_uniform
+  haveI : UniformAddGroup M₂ := comm_topologicalAddGroup_is_uniform
   -- Since `f` is linear, we only need to show that it is continuous at zero.
   -- Let `U` be a neighborhood of `0` in `M₂`.
   refine' continuous_of_continuousAt_zero f fun U hU => _

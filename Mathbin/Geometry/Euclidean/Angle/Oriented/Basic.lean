@@ -489,9 +489,10 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
     · simp [hx]
     rcases lt_trichotomy r 0 with (hr | hr | hr)
     · rw [← neg_smul]
-      exact Or.inr ⟨hx, smul_ne_zero hr.ne hx, sameRay_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
+      exact
+        Or.inr ⟨hx, smul_ne_zero hr.ne hx, SameRay.sameRay_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
     · simp [hr]
-    · exact Or.inl (sameRay_pos_smul_right x hr)
+    · exact Or.inl (SameRay.sameRay_pos_smul_right x hr)
 #align orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul Orientation.oangle_eq_zero_or_eq_pi_iff_right_eq_smul
 
 /-- The oriented angle between two vectors is not zero or `π` if and only if those two vectors

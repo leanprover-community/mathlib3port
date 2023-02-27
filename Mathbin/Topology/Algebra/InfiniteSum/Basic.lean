@@ -1280,7 +1280,7 @@ theorem Summable.vanishing (hf : Summable f) ⦃e : Set G⦄ (he : e ∈ 𝓝 (0
     ∃ s : Finset α, ∀ t, Disjoint t s → (∑ k in t, f k) ∈ e :=
   by
   letI : UniformSpace G := TopologicalAddGroup.toUniformSpace G
-  letI : UniformAddGroup G := topological_add_commGroup_is_uniform
+  letI : UniformAddGroup G := comm_topologicalAddGroup_is_uniform
   rcases hf with ⟨y, hy⟩
   exact cauchySeq_finset_iff_vanishing.1 hy.cauchy_seq e he
 #align summable.vanishing Summable.vanishing

@@ -373,7 +373,7 @@ theorem comap_bracket_eq {J₁ J₂ : LieIdeal R L'} (h : f.IsIdealMorphism) :
     LieSubmodule.sup_coe_to_submodule, f.ker_coe_submodule, ← Submodule.comap_map_eq,
     LieSubmodule.lieIdeal_oper_eq_linear_span, LieSubmodule.lieIdeal_oper_eq_linear_span,
     LinearMap.map_span]
-  congr ; simp only [LieHom.coe_to_linearMap, Set.mem_setOf_eq]; ext y
+  congr ; simp only [LieHom.coe_toLinearMap, Set.mem_setOf_eq]; ext y
   constructor
   · rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩, hy⟩
     rw [← hy]

@@ -239,7 +239,7 @@ open UniformSpace UniformSpace.Completion
 /-- Extension to the completion of a continuous group hom. -/
 def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ β) (hf : Continuous f) :
     Completion α →+ β :=
-  have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf
+  have hf : UniformContinuous f := uniformContinuous_addMonoidHom_of_continuous hf
   { toFun := Completion.extension f
     map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero]
     map_add' := fun a b =>
@@ -253,7 +253,7 @@ def AddMonoidHom.extension [CompleteSpace β] [SeparatedSpace β] (f : α →+ �
 
 theorem AddMonoidHom.extension_coe [CompleteSpace β] [SeparatedSpace β] (f : α →+ β)
     (hf : Continuous f) (a : α) : f.extension hf a = f a :=
-  extension_coe (uniform_continuous_add_monoid_hom_of_continuous hf) a
+  extension_coe (uniformContinuous_addMonoidHom_of_continuous hf) a
 #align add_monoid_hom.extension_coe AddMonoidHom.extension_coe
 
 @[continuity]
@@ -275,7 +275,7 @@ theorem AddMonoidHom.continuous_completion (f : α →+ β) (hf : Continuous f) 
 
 theorem AddMonoidHom.completion_coe (f : α →+ β) (hf : Continuous f) (a : α) :
     f.Completion hf a = f a :=
-  map_coe (uniform_continuous_add_monoid_hom_of_continuous hf) a
+  map_coe (uniformContinuous_addMonoidHom_of_continuous hf) a
 #align add_monoid_hom.completion_coe AddMonoidHom.completion_coe
 
 theorem AddMonoidHom.completion_zero : (0 : α →+ β).Completion continuous_const = 0 :=

@@ -208,7 +208,7 @@ def toModuleHom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
 @[simp]
 theorem toModuleHom_apply (x : L) (m : M) : toModuleHom R L M (x ⊗ₜ m) = ⁅x, m⁆ := by
   simp only [to_module_hom, TensorProduct.LieModule.liftLie_apply, to_endomorphism_apply_apply,
-    LieHom.coe_to_linearMap, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.toFun_eq_coe]
+    LieHom.coe_toLinearMap, LieModuleHom.coe_mk, LinearMap.coe_mk, LinearMap.toFun_eq_coe]
 #align lie_module.to_module_hom_apply LieModule.toModuleHom_apply
 
 end LieModule

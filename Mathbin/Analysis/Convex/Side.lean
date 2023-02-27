@@ -215,10 +215,10 @@ theorem wOppSide_comm {s : AffineSubspace R P} {x y : P} : s.WOppSide x y ↔ s.
   constructor
   · rintro ⟨p₁, hp₁, p₂, hp₂, h⟩
     refine' ⟨p₂, hp₂, p₁, hp₁, _⟩
-    rwa [sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
+    rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
   · rintro ⟨p₁, hp₁, p₂, hp₂, h⟩
     refine' ⟨p₂, hp₂, p₁, hp₁, _⟩
-    rwa [sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
+    rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
 #align affine_subspace.w_opp_side_comm AffineSubspace.wOppSide_comm
 
 alias w_opp_side_comm ↔ w_opp_side.symm _
@@ -340,7 +340,7 @@ theorem wSameSideSmulVsubVaddLeft {s : AffineSubspace R P} {p₁ p₂ : P} (x : 
   by
   refine' ⟨p₂, hp₂, p₁, hp₁, _⟩
   rw [vadd_vsub]
-  exact sameRay_nonneg_smul_left _ ht
+  exact SameRay.sameRay_nonneg_smul_left _ ht
 #align affine_subspace.w_same_side_smul_vsub_vadd_left AffineSubspace.wSameSideSmulVsubVaddLeft
 
 theorem wSameSideSmulVsubVaddRight {s : AffineSubspace R P} {p₁ p₂ : P} (x : P) (hp₁ : p₁ ∈ s)
@@ -363,7 +363,7 @@ theorem wOppSideSmulVsubVaddLeft {s : AffineSubspace R P} {p₁ p₂ : P} (x : P
   by
   refine' ⟨p₂, hp₂, p₁, hp₁, _⟩
   rw [vadd_vsub, ← neg_neg t, neg_smul, ← smul_neg, neg_vsub_eq_vsub_rev]
-  exact sameRay_nonneg_smul_left _ (neg_nonneg.2 ht)
+  exact SameRay.sameRay_nonneg_smul_left _ (neg_nonneg.2 ht)
 #align affine_subspace.w_opp_side_smul_vsub_vadd_left AffineSubspace.wOppSideSmulVsubVaddLeft
 
 theorem wOppSideSmulVsubVaddRight {s : AffineSubspace R P} {p₁ p₂ : P} (x : P) (hp₁ : p₁ ∈ s)
@@ -472,7 +472,7 @@ theorem wSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : 
     s.WSameSide x y ↔ y ∈ s ∨ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) :=
   by
   rw [w_same_side_comm, w_same_side_iff_exists_left h]
-  simp_rw [sameRay_comm]
+  simp_rw [SameRay.sameRay_comm]
 #align affine_subspace.w_same_side_iff_exists_right AffineSubspace.wSameSide_iff_exists_right
 
 theorem sSameSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
@@ -487,7 +487,7 @@ theorem sSameSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : 
     s.SSameSide x y ↔ x ∉ s ∧ y ∉ s ∧ ∃ p₁ ∈ s, SameRay R (x -ᵥ p₁) (y -ᵥ p₂) :=
   by
   rw [s_same_side_comm, s_same_side_iff_exists_left h, ← and_assoc', and_comm' (y ∉ s), and_assoc']
-  simp_rw [sameRay_comm]
+  simp_rw [SameRay.sameRay_comm]
 #align affine_subspace.s_same_side_iff_exists_right AffineSubspace.sSameSide_iff_exists_right
 
 theorem wOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :
@@ -521,11 +521,11 @@ theorem wOppSide_iff_exists_right {s : AffineSubspace R P} {x y p₂ : P} (h : p
   · rintro (hy | ⟨p, hp, hr⟩)
     · exact Or.inl hy
     refine' Or.inr ⟨p, hp, _⟩
-    rwa [sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
+    rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
   · rintro (hy | ⟨p, hp, hr⟩)
     · exact Or.inl hy
     refine' Or.inr ⟨p, hp, _⟩
-    rwa [sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
+    rwa [SameRay.sameRay_comm, ← sameRay_neg_iff, neg_vsub_eq_vsub_rev, neg_vsub_eq_vsub_rev]
 #align affine_subspace.w_opp_side_iff_exists_right AffineSubspace.wOppSide_iff_exists_right
 
 theorem sOppSide_iff_exists_left {s : AffineSubspace R P} {x y p₁ : P} (h : p₁ ∈ s) :

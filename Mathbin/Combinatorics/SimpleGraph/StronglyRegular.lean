@@ -43,6 +43,12 @@ variable [Fintype V] [DecidableEq V]
 
 variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
+/- warning: simple_graph.is_SRG_with -> SimpleGraph.IsSRGWith is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] (G : SimpleGraph.{u1} V) [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)], Nat -> Nat -> Nat -> Nat -> Prop
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] (_inst_2 : SimpleGraph.{u1} V) [G : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V _inst_2)], Nat -> Nat -> Nat -> Nat -> Prop
+Case conversion may be inaccurate. Consider using '#align simple_graph.is_SRG_with SimpleGraph.IsSRGWithₓ'. -/
 /-- A graph is strongly regular with parameters `n k ℓ μ` if
  * its vertex set has cardinality `n`
  * it is regular with degree `k`
@@ -58,6 +64,12 @@ structure IsSRGWith (n k ℓ μ : ℕ) : Prop where
 
 variable {G} {n k ℓ μ : ℕ}
 
+/- warning: simple_graph.bot_strongly_regular -> SimpleGraph.bot_strongly_regular is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {ℓ : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b) (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toHasBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.booleanAlgebra.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero))) ℓ (OfNat.ofNat.{0} Nat 0 (OfNat.mk.{0} Nat 0 (Zero.zero.{0} Nat Nat.hasZero)))
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] {_inst_2 : Nat}, SimpleGraph.IsSRGWith.{u1} V _inst_1 (Bot.bot.{u1} (SimpleGraph.{u1} V) (BooleanAlgebra.toBot.{u1} (SimpleGraph.{u1} V) (SimpleGraph.instBooleanAlgebraSimpleGraph.{u1} V))) (fun (a : V) (b : V) => SimpleGraph.Bot.adjDecidable.{u1} V a b) (Fintype.card.{u1} V _inst_1) (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0)) _inst_2 (OfNat.ofNat.{0} Nat 0 (instOfNatNat 0))
+Case conversion may be inaccurate. Consider using '#align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regularₓ'. -/
 /-- Empty graphs are strongly regular. Note that `ℓ` can take any value
   for empty graphs, since there are no pairs of adjacent vertices. -/
 theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=
@@ -72,6 +84,7 @@ theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 
       simp [mem_common_neighbors] }
 #align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regular
 
+#print SimpleGraph.IsSRGWith.top /-
 /-- Complete graphs are strongly regular. Note that `μ` can take any value
   for complete graphs, since there are no distinct pairs of non-adjacent vertices. -/
 theorem IsSRGWith.top :
@@ -83,7 +96,9 @@ theorem IsSRGWith.top :
       exact h
     of_not_adj := fun v w h h' => False.elim <| by simpa using h }
 #align simple_graph.is_SRG_with.top SimpleGraph.IsSRGWith.top
+-/
 
+#print SimpleGraph.IsSRGWith.card_neighborFinset_union_eq /-
 theorem IsSRGWith.card_neighborFinset_union_eq {v w : V} (h : G.IsSRGWith n k ℓ μ) :
     (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - Fintype.card (G.commonNeighbors v w) :=
   by
@@ -95,7 +110,9 @@ theorem IsSRGWith.card_neighborFinset_union_eq {v w : V} (h : G.IsSRGWith n k �
   · apply le_trans (card_common_neighbors_le_degree_left _ _ _)
     simp [h.regular.degree_eq, two_mul]
 #align simple_graph.is_SRG_with.card_neighbor_finset_union_eq SimpleGraph.IsSRGWith.card_neighborFinset_union_eq
+-/
 
+#print SimpleGraph.IsSRGWith.card_neighborFinset_union_of_not_adj /-
 /-- Assuming `G` is strongly regular, `2*(k + 1) - m` in `G` is the number of vertices that are
   adjacent to either `v` or `w` when `¬G.adj v w`. So it's the cardinality of
   `G.neighbor_set v ∪ G.neighbor_set w`. -/
@@ -105,14 +122,23 @@ theorem IsSRGWith.card_neighborFinset_union_of_not_adj {v w : V} (h : G.IsSRGWit
   rw [← h.of_not_adj v w hne ha]
   apply h.card_neighbor_finset_union_eq
 #align simple_graph.is_SRG_with.card_neighbor_finset_union_of_not_adj SimpleGraph.IsSRGWith.card_neighborFinset_union_of_not_adj
+-/
 
+#print SimpleGraph.IsSRGWith.card_neighborFinset_union_of_adj /-
 theorem IsSRGWith.card_neighborFinset_union_of_adj {v w : V} (h : G.IsSRGWith n k ℓ μ)
     (ha : G.Adj v w) : (G.neighborFinset v ∪ G.neighborFinset w).card = 2 * k - ℓ :=
   by
   rw [← h.of_adj v w ha]
   apply h.card_neighbor_finset_union_eq
 #align simple_graph.is_SRG_with.card_neighbor_finset_union_of_adj SimpleGraph.IsSRGWith.card_neighborFinset_union_of_adj
+-/
 
+/- warning: simple_graph.compl_neighbor_finset_sdiff_inter_eq -> SimpleGraph.compl_neighborFinset_sdiff_inter_eq is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {G : SimpleGraph.{u1} V} [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {v : V} {w : V}, Eq.{succ u1} (Finset.{u1} V) (Inter.inter.{u1} (Finset.{u1} V) (Finset.hasInter.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.hasSdiff.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) v)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.hasSdiff.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) w))) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.hasSdiff.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Inter.inter.{u1} (Finset.{u1} V) (Finset.hasInter.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))) (Union.union.{u1} (Finset.{u1} V) (Finset.hasUnion.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) w) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) v)))
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {G : SimpleGraph.{u1} V} [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {v : V} {w : V}, Eq.{succ u1} (Finset.{u1} V) (Inter.inter.{u1} (Finset.{u1} V) (Finset.instInterFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.instSDiffFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) v)) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.instSDiffFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w))) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) w))) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.instSDiffFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Inter.inter.{u1} (Finset.{u1} V) (Finset.instInterFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))) (Union.union.{u1} (Finset.{u1} V) (Finset.instUnionFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) w) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) v)))
+Case conversion may be inaccurate. Consider using '#align simple_graph.compl_neighbor_finset_sdiff_inter_eq SimpleGraph.compl_neighborFinset_sdiff_inter_eqₓ'. -/
 theorem compl_neighborFinset_sdiff_inter_eq {v w : V} :
     G.neighborFinset vᶜ \ {v} ∩ (G.neighborFinset wᶜ \ {w}) =
       (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) :=
@@ -122,6 +148,12 @@ theorem compl_neighborFinset_sdiff_inter_eq {v w : V} :
   simp [imp_iff_not_or, or_assoc', or_comm', or_left_comm]
 #align simple_graph.compl_neighbor_finset_sdiff_inter_eq SimpleGraph.compl_neighborFinset_sdiff_inter_eq
 
+/- warning: simple_graph.sdiff_compl_neighbor_finset_inter_eq -> SimpleGraph.sdiff_compl_neighborFinset_inter_eq is a dubious translation:
+lean 3 declaration is
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {G : SimpleGraph.{u1} V} [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {v : V} {w : V}, (SimpleGraph.Adj.{u1} V G v w) -> (Eq.{succ u1} (Finset.{u1} V) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.hasSdiff.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Inter.inter.{u1} (Finset.{u1} V) (Finset.hasInter.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))) (Union.union.{u1} (Finset.{u1} V) (Finset.hasUnion.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) w) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.hasSingleton.{u1} V) v))) (Inter.inter.{u1} (Finset.{u1} V) (Finset.hasInter.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.booleanAlgebra.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))))
+but is expected to have type
+  forall {V : Type.{u1}} [_inst_1 : Fintype.{u1} V] [_inst_2 : DecidableEq.{succ u1} V] {G : SimpleGraph.{u1} V} [_inst_3 : DecidableRel.{succ u1} V (SimpleGraph.Adj.{u1} V G)] {v : V} {w : V}, (SimpleGraph.Adj.{u1} V G v w) -> (Eq.{succ u1} (Finset.{u1} V) (SDiff.sdiff.{u1} (Finset.{u1} V) (Finset.instSDiffFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Inter.inter.{u1} (Finset.{u1} V) (Finset.instInterFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))) (Union.union.{u1} (Finset.{u1} V) (Finset.instUnionFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) w) (Singleton.singleton.{u1, u1} V (Finset.{u1} V) (Finset.instSingletonFinset.{u1} V) v))) (Inter.inter.{u1} (Finset.{u1} V) (Finset.instInterFinset.{u1} V (fun (a : V) (b : V) => _inst_2 a b)) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G v (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) v))) (HasCompl.compl.{u1} (Finset.{u1} V) (BooleanAlgebra.toHasCompl.{u1} (Finset.{u1} V) (Finset.instBooleanAlgebraFinset.{u1} V _inst_1 (fun (a : V) (b : V) => _inst_2 a b))) (SimpleGraph.neighborFinset.{u1} V G w (SimpleGraph.neighborSetFintype.{u1} V G _inst_1 (fun (a : V) (b : V) => _inst_3 a b) w)))))
+Case conversion may be inaccurate. Consider using '#align simple_graph.sdiff_compl_neighbor_finset_inter_eq SimpleGraph.sdiff_compl_neighborFinset_inter_eqₓ'. -/
 theorem sdiff_compl_neighborFinset_inter_eq {v w : V} (h : G.Adj v w) :
     (G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ) \ ({w} ∪ {v}) =
       G.neighborFinset vᶜ ∩ G.neighborFinset wᶜ :=
@@ -135,12 +167,15 @@ theorem sdiff_compl_neighborFinset_inter_eq {v w : V} (h : G.Adj v w) :
     rwa [adj_comm]
 #align simple_graph.sdiff_compl_neighbor_finset_inter_eq SimpleGraph.sdiff_compl_neighborFinset_inter_eq
 
+#print SimpleGraph.IsSRGWith.compl_is_regular /-
 theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) : Gᶜ.IsRegularOfDegree (n - k - 1) :=
   by
   rw [← h.card, Nat.sub_sub, add_comm, ← Nat.sub_sub]
   exact h.regular.compl
 #align simple_graph.is_SRG_with.compl_is_regular SimpleGraph.IsSRGWith.compl_is_regular
+-/
 
+#print SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_adj_compl /-
 theorem IsSRGWith.card_commonNeighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (ha : Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - μ) - 2 :=
   by
@@ -157,7 +192,9 @@ theorem IsSRGWith.card_commonNeighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ 
     simp only [mem_union, mem_compl, mem_neighbor_finset, mem_inter, mem_singleton]
     rintro (rfl | rfl) <;> simpa [adj_comm] using ha.2
 #align simple_graph.is_SRG_with.card_common_neighbors_eq_of_adj_compl SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_adj_compl
+-/
 
+#print SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl /-
 theorem IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (hn : v ≠ w) (hna : ¬Gᶜ.Adj v w) : Fintype.card ↥(Gᶜ.commonNeighbors v w) = n - (2 * k - ℓ) :=
   by
@@ -168,7 +205,9 @@ theorem IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k 
   simp_rw [compl_neighbor_finset_sdiff_inter_eq, sdiff_compl_neighbor_finset_inter_eq h2']
   rwa [← Finset.compl_union, card_compl, h.card_neighbor_finset_union_of_adj, ← h.card]
 #align simple_graph.is_SRG_with.card_common_neighbors_eq_of_not_adj_compl SimpleGraph.IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl
+-/
 
+#print SimpleGraph.IsSRGWith.compl /-
 /-- The complement of a strongly regular graph is strongly regular. -/
 theorem IsSRGWith.compl (h : G.IsSRGWith n k ℓ μ) :
     Gᶜ.IsSRGWith n (n - k - 1) (n - (2 * k - μ) - 2) (n - (2 * k - ℓ)) :=
@@ -177,6 +216,7 @@ theorem IsSRGWith.compl (h : G.IsSRGWith n k ℓ μ) :
     of_adj := fun v w ha => h.card_commonNeighbors_eq_of_adj_compl ha
     of_not_adj := fun v w hn hna => h.card_commonNeighbors_eq_of_not_adj_compl hn hna }
 #align simple_graph.is_SRG_with.compl SimpleGraph.IsSRGWith.compl
+-/
 
 end SimpleGraph
 

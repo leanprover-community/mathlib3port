@@ -291,7 +291,7 @@ theorem sameRay_of_mem_segment [StrictOrderedCommRing 𝕜] [AddCommGroup E] [Mo
   rw [segment_eq_image'] at h
   rcases h with ⟨θ, ⟨hθ₀, hθ₁⟩, rfl⟩
   simpa only [add_sub_cancel', ← sub_sub, sub_smul, one_smul] using
-    (sameRay_nonneg_smul_left (z - y) hθ₀).nonneg_smul_right (sub_nonneg.2 hθ₁)
+    (SameRay.sameRay_nonneg_smul_left (z - y) hθ₀).nonneg_smul_right (sub_nonneg.2 hθ₁)
 #align same_ray_of_mem_segment sameRay_of_mem_segment
 
 section LinearOrderedRing

@@ -144,7 +144,7 @@ variable {β : Type u} [UniformSpace β] [Ring β] [UniformAddGroup β] [Topolog
 def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β :=
   have hf' : Continuous (f : α →+ β) := hf
   -- helping the elaborator
-  have hf : UniformContinuous f := uniform_continuous_add_monoid_hom_of_continuous hf'
+  have hf : UniformContinuous f := uniformContinuous_addMonoidHom_of_continuous hf'
   { toFun := Completion.extension f
     map_zero' := by rw [← coe_zero, extension_coe hf, f.map_zero]
     map_add' := fun a b =>
@@ -234,7 +234,7 @@ variable {α : Type _}
 theorem ring_sep_rel (α) [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
   Setoid.ext fun x y =>
-    (add_group_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
+    (addGroup_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
 #align uniform_space.ring_sep_rel UniformSpace.ring_sep_rel
 
 theorem ring_sep_quot (α : Type u) [r : CommRing α] [UniformSpace α] [UniformAddGroup α]
@@ -248,7 +248,7 @@ corresponding to the closure of zero. -/
 def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGroup α]
     [TopologicalRing α] : Quotient (separationSetoid α) ≃ α ⧸ (⊥ : Ideal α).closure :=
   Quotient.congrRight fun x y =>
-    (add_group_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
+    (addGroup_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
 #align uniform_space.sep_quot_equiv_ring_quot UniformSpace.sepQuotEquivRingQuot
 
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer

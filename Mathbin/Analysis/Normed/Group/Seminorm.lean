@@ -193,7 +193,7 @@ instance groupSeminormClass : GroupSeminormClass (GroupSeminorm E) E ℝ
   map_mul_le_add f := f.mul_le'
   map_inv_eq_map f := f.inv'
 #align group_seminorm.group_seminorm_class GroupSeminorm.groupSeminormClass
-#align add_group_seminorm.add_group_seminorm_class AddGroupSeminorm.add_group_seminorm_class
+#align add_group_seminorm.add_group_seminorm_class AddGroupSeminorm.addGroupSeminormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`. -/
 @[to_additive
@@ -752,7 +752,7 @@ instance groupNormClass : GroupNormClass (GroupNorm E) E ℝ
   map_inv_eq_map f := f.inv'
   eq_one_of_map_eq_zero f := f.eq_one_of_map_eq_zero'
 #align group_norm.group_norm_class GroupNorm.groupNormClass
-#align add_group_norm.add_group_norm_class AddGroupNorm.add_group_norm_class
+#align add_group_norm.add_group_norm_class AddGroupNorm.addGroupNormClass
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/

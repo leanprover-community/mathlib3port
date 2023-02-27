@@ -214,7 +214,7 @@ theorem volumeForm_zero_neg [_i : Fact (finrank ℝ E = 0)] :
   by
   dsimp [volume_form, Or.by_cases, positive_orientation]
   apply if_neg
-  rw [ray_eq_iff, sameRay_comm]
+  rw [ray_eq_iff, SameRay.sameRay_comm]
   intro h
   simpa using
     congr_arg alternating_map.const_linear_equiv_of_is_empty.symm (eq_zero_of_sameRay_self_neg h)
