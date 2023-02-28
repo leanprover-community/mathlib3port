@@ -531,9 +531,11 @@ instance : SeparatedSpace (SeparationQuotient α) :=
 instance [Inhabited α] : Inhabited (SeparationQuotient α) :=
   Quotient.inhabited (separationSetoid α)
 
-theorem mk'_eq_mk' {x y : α} : (⟦x⟧ : SeparationQuotient α) = ⟦y⟧ ↔ Inseparable x y :=
+#print UniformSpace.SeparationQuotient.mk_eq_mk /-
+theorem mk_eq_mk {x y : α} : (⟦x⟧ : SeparationQuotient α) = ⟦y⟧ ↔ Inseparable x y :=
   Quotient.eq''.trans separationRel_iff_inseparable
-#align uniform_space.separation_quotient.mk_eq_mk UniformSpace.SeparationQuotient.mk'_eq_mk'
+#align uniform_space.separation_quotient.mk_eq_mk UniformSpace.SeparationQuotient.mk_eq_mk
+-/
 
 #print UniformSpace.SeparationQuotient.lift /-
 /-- Factoring functions to a separated space through the separation quotient. -/

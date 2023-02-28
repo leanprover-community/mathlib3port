@@ -643,7 +643,7 @@ theorem to_glue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
   letI := i.to_uniform_space
   funext
   simp only [comp, to_glue_l, to_glue_r]
-  refine' UniformSpace.SeparationQuotient.mk'_eq_mk'.2 (Metric.inseparable_iff.2 _)
+  refine' UniformSpace.SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
   exact glue_dist_glued_points Φ Ψ 0 x
 #align metric.to_glue_commute Metric.to_glue_commute
 
@@ -766,7 +766,7 @@ theorem toInductiveLimit_commute (I : ∀ n, Isometry (f n)) (n : ℕ) :
   letI := inductive_premetric I
   funext
   simp only [comp, to_inductive_limit]
-  refine' UniformSpace.SeparationQuotient.mk'_eq_mk'.2 (Metric.inseparable_iff.2 _)
+  refine' UniformSpace.SeparationQuotient.mk_eq_mk.2 (Metric.inseparable_iff.2 _)
   show inductive_limit_dist f ⟨n.succ, f n x⟩ ⟨n, x⟩ = 0
   · rw [inductive_limit_dist_eq_dist I ⟨n.succ, f n x⟩ ⟨n, x⟩ n.succ, le_rec_on_self,
       le_rec_on_succ, le_rec_on_self, dist_self]
